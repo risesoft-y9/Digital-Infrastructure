@@ -1,0 +1,148 @@
+﻿<project xmlns="http://maven.apache.org/POM/4.0.0"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+
+	<modelVersion>4.0.0</modelVersion>
+	<!-- <groupId>net.risesoft</groupId> -->
+	<artifactId>risenet-y9boot-support-platform-jpaRepository</artifactId>
+	<version>v9.6.3-SNAPSHOT</version>
+	<packaging>jar</packaging>
+
+	<parent>
+		<groupId>net.risesoft</groupId>
+		<artifactId>y9-digitalbase</artifactId>
+		<version>v9.6.3-SNAPSHOT</version>
+		<relativePath>../../pom.xml</relativePath>
+	</parent>
+
+	<properties>
+
+	</properties>
+
+	<dependencies>
+		<dependency>
+			<groupId>org.hibernate.validator</groupId>
+			<artifactId>hibernate-validator</artifactId>
+		</dependency>
+		
+		<dependency>
+            <groupId>net.risesoft</groupId>
+            <artifactId>risenet-y9boot-starter-idGenerator</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+
+		<dependency>
+			<groupId>net.risesoft</groupId>
+			<artifactId>risenet-y9boot-starter-jpa-public</artifactId>
+			<version>${project.version}</version>
+		</dependency>
+
+		<dependency>
+			<groupId>net.risesoft</groupId>
+			<artifactId>risenet-y9boot-starter-jpa-tenant</artifactId>
+			<version>${project.version}</version>
+		</dependency>
+
+		<dependency>
+			<groupId>net.risesoft</groupId>
+			<artifactId>risenet-y9boot-support-history</artifactId>
+			<version>${project.version}</version>
+		</dependency>
+
+		<dependency>
+			<groupId>org.projectlombok</groupId>
+			<artifactId>lombok</artifactId>
+			<scope>provided</scope>
+		</dependency>
+	</dependencies>
+
+	<build>
+		<plugins>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-source-plugin</artifactId>
+			</plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-compiler-plugin</artifactId>
+			</plugin>
+			<plugin>
+				<groupId>cn.smallbun.screw</groupId>
+				<artifactId>screw-maven-plugin</artifactId>
+				<version>1.0.5</version>
+				<dependencies>
+					<dependency>
+						<groupId>com.zaxxer</groupId>
+						<artifactId>HikariCP</artifactId>
+						<version>3.4.5</version>
+					</dependency>
+					<dependency>
+						<groupId>mysql</groupId>
+						<artifactId>mysql-connector-java</artifactId>
+						<version>8.0.20</version>
+					</dependency>
+				</dependencies>
+				<configuration>
+					<username>root</username>
+					<password>111111</password>
+					<driverClassName>com.mysql.cj.jdbc.Driver</driverClassName>
+					<jdbcUrl>jdbc:mysql://localhost:3306/y9_kernal?serverTimezone=GMT%2B8&amp;nullCatalogMeansCurrent=true&amp;useUnicode=true&amp;characterEncoding=utf-8&amp;rewriteBatchedStatements=true&amp;useCompression=true&amp;useSSL=false</jdbcUrl>
+					<fileType>WORD</fileType>
+					<openOutputDir>true</openOutputDir>
+					<fileOutputDir>../../../y9-digitalbase-pro/docs/smart-docs/platform/api</fileOutputDir>
+					<produceType>freemarker</produceType>
+					<!--文档名称 为空时:将采用[数据库名称-描述-版本号]作为文档名称 -->
+					<fileName>y9开源内核数据库设计</fileName>
+					<description>数据库表</description>
+					<version>${project.version}</version>
+					<title>y9开源内核数据库设计</title>
+				</configuration>
+				<executions>
+					<execution>
+						<phase>deploy2</phase>
+						<goals>
+							<goal>run</goal>
+						</goals>
+					</execution>
+				</executions>
+
+			</plugin>
+		</plugins>
+		<pluginManagement>
+			<plugins>
+				<!--This plugin's configuration is used to store Eclipse m2e settings 
+					only. It has no influence on the Maven build itself. -->
+				<plugin>
+					<groupId>org.eclipse.m2e</groupId>
+					<artifactId>lifecycle-mapping</artifactId>
+					<version>1.0.0</version>
+					<configuration>
+						<lifecycleMappingMetadata>
+							<pluginExecutions>
+								<pluginExecution>
+									<pluginExecutionFilter>
+										<groupId>
+											cn.smallbun.screw
+										</groupId>
+										<artifactId>
+											screw-maven-plugin
+										</artifactId>
+										<versionRange>
+											[1.0.5,)
+										</versionRange>
+										<goals>
+											<goal>run</goal>
+										</goals>
+									</pluginExecutionFilter>
+									<action>
+										<ignore></ignore>
+									</action>
+								</pluginExecution>
+							</pluginExecutions>
+						</lifecycleMappingMetadata>
+					</configuration>
+				</plugin>
+			</plugins>
+		</pluginManagement>
+	</build>
+</project>

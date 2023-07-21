@@ -1,0 +1,7 @@
+server:
+   port: 7058
+spring:
+    kafka:
+        consumer:
+            bootstrap-servers: localhost:9092
+            group-id: y9demo-sync

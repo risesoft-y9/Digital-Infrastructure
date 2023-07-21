@@ -1,0 +1,253 @@
+cas:
+    audit:
+        engine:
+            #alternate-client-addr-header-name: X-Forwarded-For
+            useServerHostAddress: true
+    authn:
+        throttle:
+            failure:
+                #时间范围
+                rangeSeconds: -1
+                #在上述时间段内允许的失败登录尝试次数
+                threshold: -1
+        oauth:
+            crypto:
+                encryption:
+                    key: vO3o3AOVnmpzaDqAiOYa8UOJv6AX7EBygE6fANNN1G0
+                    keySize: 256
+                signing:
+                    key: NXGpoAtRG60AXIh2XmxyxEPh6ZWUBeKp9n994hsGww5cPgYHRmA6Zv-2krWJ5NgZmOtbqV9dmeiaSorX6lz6tw
+                    keySize: 512
+            refreshToken:
+                timeToKillInSeconds: P14D
+            code:
+                timeToKillInSeconds: 600
+                numberOfUses: 1
+            accessToken:
+                timeToKillInSeconds: PT7200S
+                maxTimeToLiveInSeconds: PT28800S
+                createAsJwt: false
+                crypto:
+                    encryption:
+                        key: vO3o3AOVnmpzaDqAiOYa8UOJv6AX7EBygE6fANNN1G0
+                        keySize: 256
+                    signing:
+                        key: NXGpoAtRG60AXIh2XmxyxEPh6ZWUBeKp9n994hsGww5cPgYHRmA6Zv-2krWJ5NgZmOtbqV9dmeiaSorX6lz6tw
+                        keySize: 512
+            grants:
+                resourceOwner:
+                    requireServiceHeader: true
+            core:
+                userProfileViewType: FLAT
+                bypassApprovalPrompt: true
+        token:
+            crypto:
+                encryption:
+                    key: vO3o3AOVnmpzaDqAiOYa8UOJv6AX7EBygE6fANNN1G0
+                    keySize: 256
+                signing:
+                    key: NXGpoAtRG60AXIh2XmxyxEPh6ZWUBeKp9n994hsGww5cPgYHRmA6Zv-2krWJ5NgZmOtbqV9dmeiaSorX6lz6tw
+                    keySize: 512
+
+    httpClient:
+        allowLocalUrls: true
+        hostNameVerifier: none
+    httpWebRequest:
+        header:
+            xframe: false
+            xframeOptions: SAMEORIGIN
+            #contentSecurityPolicy: 'frame-ancestors http://localhost:* http://127.0.0.1:* http://192.168.56.1:*'
+        cors:
+            enabled: true
+            allowCredentials: true
+            allowHeaders: "*"
+            allowMethods: "*"
+            allowOriginPatterns: "*"
+            maxAge: 36000
+    locale:
+        defaultValue: zh_CN
+    theme:
+        defaultThemeName: y9-apereo
+        paramName: theme
+    messageBundle:
+        useCodeMessage: false
+        fallbackSystemLocale: false
+    view:
+        #当service参数为空时，利用defaultRedirectUrl
+        defaultRedirectUrl: http://localhost:7070/home
+        #当defaultRedirectUrl为空、并且service参数为空时，自动计算service
+        authorizedServicesOnSuccessfulLogin: true
+    webflow:
+        crypto:
+            enabled: true
+            encryption:
+                key: YWue7qiEmHJ42I8TMMrg5Q
+                keySize: 16
+            signing:
+                key: CzPeT3D2l7C-dwR2LfV9DFHrwmPGXCSsEReZeTn76xiWNU45De8s1CAdPNXovoBpEilbeTY1PkwPQuMxZdN4mQ
+                keySize: 512
+    logout:
+        followServiceRedirects: true
+        removeDescendantTickets: true
+        confirmLogout: false
+    slo:
+        asynchronous: false
+    server:
+        name: http://localhost:7055
+        prefix: http://localhost:7055/sso
+    serviceRegistry:
+        cache:
+            duration: PT8H
+            cacheSize: 10000
+            initialCapacity: 1000
+        core:
+            initFromJson: true
+        json:
+            location: classpath:/services
+            watcherEnabled: true
+        jpa:
+            dialect: org.hibernate.dialect.MySQL8Dialect
+            driver-class: com.mysql.cj.jdbc.Driver
+            ddl-auto: update
+            url: jdbc:mysql://localhost:3306/y9_kernal?serverTimezone=GMT%2B8&nullCatalogMeansCurrent=true&useUnicode=true&characterEncoding=utf-8&rewriteBatchedStatements=true&useCompression=true&useSSL=false&allowPublicKeyRetrieval=true
+            user: root
+            password: Mysql-83204585
+            idleTimeout: PT10M
+            leakThreshold: 0
+            autocommit: true
+        schedule:
+            enabled: true
+            repeatInterval: "PT30M"
+            startDelay: "PT2M"
+    tgc:
+        crypto:
+            enabled: true
+            encryption:
+                key: vO3o3AOVnmpzaDqAiOYa8UOJv6AX7EBygE6fANNN1G0
+                keySize: 256
+            signing:
+                key: NXGpoAtRG60AXIh2XmxyxEPh6ZWUBeKp9n994hsGww5cPgYHRmA6Zv-2krWJ5NgZmOtbqV9dmeiaSorX6lz6tw
+                keySize: 512
+        httpOnly: true
+        maxAge: -1
+        name: TGC
+        path: /sso/
+        pinToSession: false
+        rememberMeMaxAge: P14D
+        secure: true
+        sameSitePolicy: None
+    ticket:
+        crypto:
+            enabled: false
+            encryption:
+                key: vO3o3AOVnmpzaDqAiOYa8UOJv6AX7EBygE6fANNN1G0
+                keySize: 256
+            signing:
+                key: NXGpoAtRG60AXIh2XmxyxEPh6ZWUBeKp9n994hsGww5cPgYHRmA6Zv-2krWJ5NgZmOtbqV9dmeiaSorX6lz6tw
+                keySize: 512
+        registry:
+            cleaner:
+                schedule:
+                    enabled: true
+            redis:
+                database: 13
+                host: "localhost"
+                password: "Redis-83204585"
+                pool:
+                    maxActive: 20
+                    maxIdle: 5
+                    maxWait: 1000
+                    minIdle: 1
+                port: 6379
+                timeout: 10000
+        st:
+            maxLength: 50
+            numberOfUses: 10
+            timeToKillInSeconds: 600
+        tgt:
+            primary:
+                maxTimeToLiveInSeconds: 28800
+                timeToKillInSeconds: 7200
+            core:
+                maxLength: 50
+            rememberMe:
+                enabled: true
+                timeToKillInSeconds: 28800
+                #supportedUserAgents: 
+                #supportedIpAddresses: 127.0.0.1,0:0:0:0:0:0:0:1
+logging:
+    config: classpath:/log4j2/log4j2.xml
+management:
+    metrics:
+        enable:
+            all: false
+server:
+    intranet:
+        ip: 192.168.x.x,10.x.x.x
+    servlet:
+        encoding:
+            charset: UTF-8
+            enabled: true
+            force: true
+            force-request: true
+            force-response: true
+        session:
+            cookie:
+                http-only: true
+                secure: false
+            timeout: 300
+            tracking-modes: COOKIE
+spring:
+    autoconfigure:
+        exclude:
+            - org.springframework.boot.actuate.autoconfigure.metrics.KafkaMetricsAutoConfiguration
+    datasource:
+        url: jdbc:mysql://localhost:3306/y9_kernal?serverTimezone=GMT%2B8&nullCatalogMeansCurrent=true&useUnicode=true&characterEncoding=utf-8&rewriteBatchedStatements=true&useCompression=true&useSSL=false
+        username: root
+        password: Mysql-83204585
+        driver-class-name: com.mysql.cj.jdbc.Driver
+        hikari:
+            maximum-pool-size: 12
+            minimum-idle: 5
+            idle-timeout: 300000
+            connection-timeout: 20000
+    jpa:
+        open-in-view: false
+        generate-ddl: true
+        show-sql: false
+        hibernate:
+            ddl-auto: update
+            naming:
+                implicit-strategy: org.hibernate.boot.model.naming.ImplicitNamingStrategyLegacyHbmImpl
+                physical-strategy: org.hibernate.boot.model.naming.PhysicalNamingStrategyStandardImpl
+        properties:
+            hibernate:
+                dialect: org.hibernate.dialect.MySQL8Dialect
+    session:
+        store-type: redis
+        timeout: 3600
+        jdbc:
+            initialize-schema: always
+    kafka:
+        bootstrap-servers: localhost:9092
+        consumer:
+            auto-commit-interval: 1000
+            enable-auto-commit: true
+            group-id: y9sso-server
+    main:
+        allow-bean-definition-overriding: true
+        allow-circular-references: false
+    thymeleaf:
+        cache: false
+        excluded-view-names: /api/*
+        mode: HTML
+        prefix: classpath:/templates/
+        suffix: .html
+        template-resolver-order: 1
+systemName: risesso
+y9:
+    app:
+        y9sso:
+            enableEventListener: true
+            casLoginView: "casLoginView-y9-v3.0"
+            credentialPropsOptional: "isValidateIE,screenDimension,userAgent,systemName,clientIp,clientMac,clientDiskId,clientHostName,deptId,positionId,pwdEcodeType"

@@ -1,0 +1,249 @@
+//全局样式
+html{
+	background-color: #eff1f7;
+}
+@mixin textEllipsis {
+	//文本超出一行略号
+	overflow: hidden;
+	text-overflow: ellipsis;
+	white-space: nowrap;
+}
+
+//webkit内核浏览器 滚动条大小
+::-webkit-scrollbar {
+	width: 00px;
+	height: 0px;
+	background-color: transparent;
+}
+
+::-moz-scrollbar {
+	width: 0px;
+	height: 0px;
+	background-color: red;
+}
+
+::-ms-scrollbar {
+	width: 0px;
+	height: 0px;
+	background-color: transparent;
+}
+
+
+
+
+//webkit内核浏览器 滚动条上的滚动滑块 边框圆角
+::-webkit-scrollbar-thumb {
+	border-radius: 4px;
+	background-color: transparent;
+}
+
+//webkit内核浏览器 滚动条上的滚动滑块 鼠标经过显示背景颜色
+:hover::-webkit-scrollbar-thumb {
+	background-color: hsla(0, 0%, 53%, 0.4);
+}
+
+//webkit内核浏览器 滚动条轨道 鼠标经过背景颜色
+:hover::-webkit-scrollbar-track {
+	background-color: hsla(0, 0%, 53%, 0.1);
+}
+
+
+
+//暂无数据-样式
+.y9-no-data {
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	color: var(--el-text-color-secondary);
+}
+
+.flex-direction-column {
+	display: flex;
+	flex-direction: column;
+}
+
+.flex-center {
+	//水平垂直居中
+	display: flex;
+	align-items: center;
+	justify-content: center;
+}
+
+.flex-horizontal-center {
+	//仅水平居中
+	display: flex;
+	justify-content: center;
+}
+
+.flex-vertical-center {
+	//仅垂直居中
+	display: flex;
+	align-items: center;
+}
+
+.inline-flex-center {
+	//内联水平垂直居中
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+}
+
+.inline-flex-horizontal-center {
+	//内联仅水平居中
+	display: inline-flex;
+	justify-content: center;
+}
+
+.inline-flex-vertical-center {
+	//内联仅垂直居中
+	display: inline-flex;
+	align-items: center;
+}
+
+.flex-space-between {
+	display: flex;
+	justify-content: space-between;
+}
+
+.flex-end {
+	display: flex;
+	justify-content: flex-end;
+}
+
+.flex-start {
+	display: flex;
+}
+
+
+.margin-bottom-20 {
+	margin-bottom: 20px;
+}
+
+.margin-top-20 {
+	margin-top: 20px;
+}
+
+.margin-right-10 {
+	margin-right: 10px;
+}
+
+//全局变量
+$borderBottom: solid 1px #ebeef5; //分割线
+
+$padding: 16px; //内填充
+
+$btnHeight: 30px; //按钮高度
+
+$textFontSize: 14px; //文本字体大小
+
+$titleFontSize: 16px; //标题字体大小
+
+$iconColor: #909399; //图标颜色
+
+$iconFontSize: 18px; //图标大小
+
+$boxShadow: 2px 2px 2px 1px rgba(0, 0, 0, 0.06); //阴影
+
+$hoverBgColor: rgb(231, 236, 237);
+
+//全局按钮
+:deep(.el-button) {
+	// min-width: 62px;
+	// // font-size: 12px;
+	// height: $btnHeight;
+	// line-height: $btnHeight;
+	box-shadow: $boxShadow;
+	// padding: 10px;
+
+	i {
+		margin-right: 4px;
+	}
+}
+
+//主按钮
+.global-btn-main {
+	background-color: var(--el-color-primary) !important;
+	color: var(--el-color-white) !important;
+	border: none !important;
+}
+
+.global-btn-main:hover {
+	background-color: var(--el-button-hover-bg-color) !important;
+}
+
+//次要按钮
+.global-btn-second {
+	border-color: var(--el-color-primary) !important;
+	color: var(--el-color-primary) !important;
+	// border: none !important;
+	background-color: #fff;
+}
+
+.global-btn-second:hover {
+	background-color: var(--el-button-hover-bg-color) !important;
+}
+
+//第三种按钮样式
+.global-btn-third {
+	background-color: transparent !important;
+	color: var(--el-color-primary) !important;
+	border: solid 1px var(--el-color-primary) !important;
+}
+
+:deep(.el-button--large) {
+	padding: 8px 15px;
+}
+
+:deep(.el-message) {
+
+	z-index: 10000 !important;
+
+}
+
+:deep(.el-select) {
+	width: 100%;
+}
+
+//自定义验证符号 * 的样式
+.custom-validator-symbol {
+	color: red;
+	margin-left: 4px;
+}
+
+//自定义验证文字的样式
+.custom-validator-text {
+	color: red;
+	font-size: 0.5rem;
+	margin-top: 4px;
+	line-height: 0.5rem;
+}
+
+@media screen and (max-width: 400px) {
+	.el-message-box {
+		width: 80% !important;
+	}
+}
+
+
+/* 表格多选框 */ 
+:deep(.el-table__body-wrapper) {
+	.el-table-column--selection > .cell {
+		justify-content: center;
+	}
+
+} 
+/* 表格多选框 end */ 
+
+/* 选择框 */ 
+:deep(.el-date-editor){
+	.el-range__icon {
+		margin-left: 10px;
+	}
+}
+
+/* 表单的label 字体 */
+:deep(.el-form) {
+	.el-form-item__label {
+		font-size: v-bind('fontSizeObj.baseFontSize');
+	}
+}

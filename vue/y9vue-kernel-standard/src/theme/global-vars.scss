@@ -1,0 +1,40 @@
+// logo宽度
+$logoWidth: 34px;
+// 菜单宽度
+$leftSideBarWidth: 260px;
+// 头部高度
+$headerHeight: 60px;
+// 头部下方面包屑高度
+$headerBreadcrumbHeight: 80px;
+// 头部下方面包屑宽度
+$headerBreadcrumbWidth: 1000px;
+// 头部面包屑下tab导航高度
+$headerTabNavHeight: 36px;
+// Menu
+$menu-collapsed-width: 54px;
+// menu separate后的边界宽度
+$sidebar-separate-margin-left: 20px;
+//pc main-padding
+$main-padding: 35px;
+//mobile main-padding
+$mobile-main-padding: 15px;
+// 固定背景色
+$background-color: #eff1f7;
+
+// 滚轴适应性和样式
+@mixin scrollbar {
+    ::-webkit-scrollbar {
+        width: 6px;
+        height: 6px;
+    }
+    ::-webkit-scrollbar-thumb {
+        background: hsla(0,0%,100%,.2);
+        border-radius: 3px;
+        box-shadow: inset 0 0 5px hsla(0,0%,100%,.05);
+    }
+    ::-webkit-scrollbar-track {
+        background: hsla(0,0%,100%,.15);
+        border-radius: 3px;
+        box-shadow: inset 0 0 5px rgba(37,37,37,.05);
+    }
+}

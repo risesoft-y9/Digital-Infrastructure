@@ -1,0 +1,35 @@
+systemName: y9demo_kernel_api
+server:
+   port: 7057
+y9:
+    app:
+       log:
+        kafkaEnabled: true
+    feature:
+        log: 
+           #是否发布日志信息开关
+           enabled: true
+        #单点登录配置信息
+        oauth2:
+            resource:
+                enabled: true
+                saveLogMessage: false
+                saveOnlineMessage: false
+                allowBasicAuthentication: true
+                allowFormEncodedBodyParameter: true
+                allowUriQueryParameter: true
+                protectedUrlPatterns: /*
+                opaque:
+                    client-id: clientid
+                    client-secret: secret
+                    introspection-uri: http://localhost:7055/sso/oauth2.0/introspect
+                    profile-uri: http://localhost:7055/sso/oauth2.0/profile
+        #接口调用配置信息
+    common:
+        orgBaseUrl: http://localhost:7055/platform
+#日志发布消息kafka配置
+spring:
+    kafka:
+        bootstrap-servers: localhost:9092
+        consumer:
+            group-id: y9demo-kernel-api-server

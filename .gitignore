@@ -1,0 +1,28 @@
+# Build and Release Folders
+target/
+
+# Eclipse
+.settings/
+*.classpath
+*.project
+*.factorypath
+
+# IntelliJ IDEA
+.idea
+*.iml
+
+# vscode
+.vscode
+
+# JRebel
+rebel.xml
+
+# macOS
+.DS_Store
+
+# svn
+.svn/
+
+# vue
+kernel-standard/
+node_modules/

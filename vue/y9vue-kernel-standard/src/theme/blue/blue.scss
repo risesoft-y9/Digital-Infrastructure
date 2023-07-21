@@ -1,0 +1,13 @@
+@forward "element-plus/theme-chalk/src/common/var.scss" with (
+  $colors: (
+    "primary": (
+      "base": #1e5896,
+    ),
+  ),
+  $bg-color: ("":"#ffffff !default")
+);
+
+// .theme-test2:root {
+//     --primary-color: #448800;
+//     --ddd: #55f900;
+//   }

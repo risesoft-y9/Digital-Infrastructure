@@ -1,0 +1,420 @@
+package y9.client.platform.org;
+
+import java.util.List;
+import java.util.Map;
+
+import org.springframework.cloud.openfeign.FeignClient;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+
+import net.risesoft.api.org.PersonApi;
+import net.risesoft.model.Group;
+import net.risesoft.model.OrgUnit;
+import net.risesoft.model.Person;
+import net.risesoft.model.PersonExt;
+import net.risesoft.model.Position;
+import net.risesoft.model.Role;
+import net.risesoft.pojo.Y9Page;
+
+/**
+ * 人员服务组件
+ *
+ * @author dingzhaojun
+ * @author qinman
+ * @author mengjuhua
+ * @date 2022/2/10
+ * @since 9.6.0
+ */
+@FeignClient(contextId = "PersonApiClient", name = "y9platform", url = "${y9.common.orgBaseUrl}", path = "/services/rest/person")
+public interface PersonApiClient extends PersonApi {
+
+    /**
+     * 改变人员的禁用状态
+     *
+     * @param tenantId 租户id
+     * @param personId 人员id
+     * @return true:禁用成功，false:禁用失败
+     * @since 9.6.0
+     */
+    @Override
+    @GetMapping("/changeDisabled")
+    boolean changeDisabled(@RequestParam("tenantId") String tenantId, @RequestParam("personId") String personId);
+
+    /**
+     * 检查用户名
+     *
+     * @param tenantId 租户id
+     * @param personId 人员id
+     * @param loginName 登录名
+     * @return boolean 用户名是否存在
+     * @since 9.6.0
+     */
+    @Override
+    @GetMapping("/checkLoginName")
+    boolean checkLoginName(@RequestParam("tenantId") String tenantId, @RequestParam("personId") String personId, @RequestParam("loginName") String loginName);
+
+    /**
+     * 检查手机号码是否存在
+     *
+     * @param personId 人员id
+     * @param mobile 电话号码
+     * @return boolean 是否存在
+     * @since 9.6.0
+     */
+    @Override
+    @GetMapping("/checkMobile")
+    boolean checkMobile(@RequestParam("tenantId") String tenantId, @RequestParam("personId") String personId, @RequestParam("mobile") String mobile);
+
+    /**
+     * 新增人员
+     *
+     * @param tenantId 租户id
+     * @param personJson 人员对象
+     * @return Person 人员对象
+     * @since 9.6.0
+     */
+    @Override
+    @PostMapping("/createPerson")
+    Person createPerson(@RequestParam("tenantId") String tenantId, @RequestParam("personJson") String personJson);
+
+    /**
+     * 删除人员
+     *
+     * @param tenantId 租户id
+     * @param personId 人员id
+     * @return true:删除成功，false:删除失败
+     * @since 9.6.0
+     */
+    @Override
+    @PostMapping("/deleteById")
+    boolean deleteById(@RequestParam("tenantId") String tenantId, @RequestParam("personId") String personId);
+
+    /**
+     * 根据租户id和人员id获取委办局
+     *
+     * @param tenantId 租户id
+     * @param personId 人员id
+     * @return OrgUnit 机构对象
+     * @since 9.6.0
+     */
+    @Override
+    @GetMapping("/getBureau")
+    OrgUnit getBureau(@RequestParam("tenantId") String tenantId, @RequestParam("personId") String personId);
+
+    /**
+     * 根据登陆名和父节点id，获取人员信息
+     *
+     * @param tenantId 租户id
+     * @param loginName 登录名称
+     * @param parentId 父节点id
+     * @return Person 人员对象
+     * @since 9.6.0
+     */
+    @Override
+    @GetMapping("/getByLoginNameAndParentId")
+    Person getByLoginNameAndParentId(@RequestParam("tenantId") String tenantId, @RequestParam("loginName") String loginName, @RequestParam("parentId") String parentId);
+
+    /**
+     * 获取人员父节点
+     *
+     * @param tenantId 租户id
+     * @param personId 人员唯一标识
+     * @return OrgUnit 机构对象
+     * @since 9.6.0
+     */
+    @Override
+    @GetMapping("/getParent")
+    OrgUnit getParent(@RequestParam("tenantId") String tenantId, @RequestParam("personId") String personId);
+
+    /**
+     * 根据id获得人员对象
+     *
+     * @param tenantId 租户id
+     * @param personId 人员唯一标识
+     * @return Person 人员对象
+     * @since 9.6.0
+     */
+    @Override
+    @GetMapping("/getPerson")
+    Person getPerson(@RequestParam("tenantId") String tenantId, @RequestParam("personId") String personId);
+
+    /**
+     * 获得人员对象（该方法不会从缓存中读取人员）
+     *
+     * @param tenantId 租户id
+     * @param personId 人员id
+     * @return Person 人员对象
+     * @since 9.6.0
+     */
+    @Override
+    @GetMapping("/getPersonById")
+    Person getPersonById(@RequestParam("tenantId") String tenantId, @RequestParam("personId") String personId);
+
+    /**
+     * 根据登录名称和租户id，获得人员对象
+     *
+     * @param loginName 人员登录名
+     * @param tenantId 租户id
+     * @return Person 人员对象
+     * @since 9.6.0
+     */
+    @Override
+    @GetMapping("/getPersonByLoginNameAndTenantId")
+    Person getPersonByLoginNameAndTenantId(@RequestParam("loginName") String loginName, @RequestParam("tenantId") String tenantId);
+
+    /**
+     * 根据人员id，获取人员扩展信息
+     *
+     * @param tenantId 租户id
+     * @param personId 人员id
+     * @return PersonExt
+     * @since 9.6.0
+     */
+    @Override
+    @GetMapping("/getPersonExtByPersonId")
+    PersonExt getPersonExtByPersonId(@RequestParam("tenantId") String tenantId, @RequestParam("personId") String personId);
+
+    /**
+     * 获取 Base64加密之后的照片字符串
+     *
+     * @param tenantId 租户id
+     * @param personId 人员id
+     * @return String Base64加密之后的照片字符串
+     * @since 9.6.0
+     */
+    @Override
+    @GetMapping("/getPersonPhoto")
+    String getPersonPhoto(@RequestParam("tenantId") String tenantId, @RequestParam("personId") String personId);
+
+    /**
+     * 获取全部人员
+     *
+     * @param tenantId 租户id
+     * @return List&lt;Person&gt; 人员对象集合
+     * @since 9.6.0
+     */
+    @Override
+    @GetMapping("/listAllPersons")
+    List<Person> listAllPersons(@RequestParam("tenantId") String tenantId);
+
+    /**
+     * 根据证件类型和证件号码，获取人员列表
+     *
+     * @param tenantId 租户id
+     * @param idType 证件类型
+     * @param idNum 证件号码
+     * @return
+     * @since 9.6.0
+     */
+    @Override
+    @GetMapping("/listByIdTypeAndIdNum")
+    List<Person> listByIdTypeAndIdNum(@RequestParam("tenantId") String tenantId, @RequestParam("idType") String idType, @RequestParam("idNum") String idNum);
+
+    /**
+     * 根据人员名称 名称、租户id获取人员基本信息
+     *
+     * @param tenantId 租户id
+     * @param name 人员名称
+     * @return List&lt;Person&gt;
+     * @since 9.6.2
+     */
+    @Override
+    @GetMapping("/listByNameLike")
+    List<Person> listByNameLike(@RequestParam("tenantId") String tenantId, @RequestParam(name = "name", required = false) String name);
+
+    /**
+     * 获取人员所在用户组列表
+     *
+     * @param tenantId 租户id
+     * @param personId 人员唯一标识
+     * @return List&lt;Group&gt; 用户组对象集合
+     * @since 9.6.0
+     */
+    @Override
+    @GetMapping("/listGroups")
+    List<Group> listGroups(@RequestParam("tenantId") String tenantId, @RequestParam("personId") String personId);
+
+    /**
+     * 根据人员id，获取父节点列表
+     *
+     * @param tenantId 租户id
+     * @param personId 人员id
+     * @return List&lt;OrgUnit&gt; 父节点对象集合
+     * @since 9.6.0
+     */
+    @Override
+    @GetMapping("/listParents")
+    List<OrgUnit> listParents(@RequestParam("tenantId") String tenantId, @RequestParam("personId") String personId);
+
+    /**
+     * 根据人员名称 名称、租户id获取人员基本信息，图像，岗位等
+     *
+     * @param tenantId 租户id
+     * @param name 人员名称
+     * @return List&lt;Map&lt;String, Object&gt;&gt;
+     * @since 9.6.2
+     */
+    @Override
+    @GetMapping("/listPersonInfoByNameLike")
+    List<Map<String, Object>> listPersonInfoByNameLike(@RequestParam("tenantId") String tenantId, @RequestParam(name = "name", required = false) String name);
+
+    /**
+     * 获取人员所在岗位列表
+     *
+     * @param tenantId 租户id
+     * @param personId 人员唯一标识
+     * @return List&lt;Position&gt; 岗位对象集合
+     * @since 9.6.0
+     */
+    @Override
+    @GetMapping("/listPositions")
+    List<Position> listPositions(@RequestParam("tenantId") String tenantId, @RequestParam("personId") String personId);
+
+    /**
+     * 获取角色
+     *
+     * @param tenantId 租户id
+     * @param personId 人员唯一标识
+     * @return List 角色对象集合
+     * @since 9.6.0
+     */
+    @Override
+    @GetMapping("/listRoles")
+    List<Role> listRoles(@RequestParam("tenantId") String tenantId, @RequestParam("personId") String personId);
+
+    /**
+     * 修改人员密码
+     *
+     * @param tenantId 租户id
+     * @param personId 人员id
+     * @param newPassword 新明文密码
+     * @return Person 人员对象
+     * @since 9.6.0
+     */
+    @Override
+    @PostMapping("/modifyPassword")
+    Person modifyPassword(@RequestParam("tenantId") String tenantId, @RequestParam("personId") String personId, @RequestParam("newPassword") String newPassword);
+
+    /**
+     * 模糊搜索人员分页列表（不含禁用和删除）
+     *
+     * @param tenantId 租户id
+     * @param name 人员名称
+     * @param page 页数
+     * @param rows 条数
+     * @return
+     */
+    @Override
+    @GetMapping("/pageByNameLike")
+    Y9Page<Person> pageByNameLike(@RequestParam("tenantId") String tenantId, @RequestParam(required = false) String name, @RequestParam("page") int page, @RequestParam("rows") int rows);
+
+    /**
+     * 获取父节点下的全部人员
+     *
+     * @param tenantId 租户ID
+     * @param parentId 部门ID
+     * @param disabled 是否禁用
+     * @param page 页号
+     * @param rows 条数
+     * @return Y9Page<Person> 人员对象集合
+     * @since 9.6.0
+     */
+    @GetMapping("/pageByParentId")
+    @Override
+    Y9Page<Person> pageByParentId(@RequestParam("tenantId") String tenantId, @RequestParam("parentId") String parentId, @RequestParam("disabled") boolean disabled, @RequestParam("page") int page, @RequestParam("rows") int rows);
+
+    /**
+     * 获取父节点下的全部人员
+     *
+     * @param tenantId 租户ID
+     * @param parentId 部门ID
+     * @param disabled 是否禁用
+     * @param userName 用户名称
+     * @param page 页号
+     * @param rows 条数
+     * @return Y9Page&lt;Person&gt; 人员对象集合
+     * @since 9.6.0
+     */
+    @Override
+    @GetMapping("/pageByParentIdAndUserName")
+    Y9Page<Person> pageByParentIdAndUserName(@RequestParam("tenantId") String tenantId, @RequestParam("parentId") String parentId, @RequestParam("disabled") boolean disabled, @RequestParam("userName") String userName, @RequestParam("page") int page, @RequestParam("rows") int rows);
+
+    /**
+     * 保存人员
+     *
+     * @param tenantId 租户id
+     * @param personJson 人员对象
+     * @return Person 人员对象
+     * @since 9.6.0
+     */
+    @Override
+    @PostMapping("/savePerson")
+    Person savePerson(@RequestParam("tenantId") String tenantId, @RequestParam("personJson") String personJson);
+
+    /**
+     * 保存人员头像
+     *
+     * @param tenantId 租户id
+     * @param personId 人员id
+     * @param avator 人员头像路径
+     * @return Person 人员对象
+     * @since 9.6.0
+     */
+    @Override
+    @PostMapping("/savePersonAvator")
+    Person savePersonAvator(@RequestParam("tenantId") String tenantId, @RequestParam("personId") String personId, @RequestParam("avator") String avator);
+
+    /**
+     * 保存人员头像(Base64)
+     *
+     * @param tenantId 租户id
+     * @param personId 人员id
+     * @param picnote 人员头像
+     * @param fileExt 文件类型(png,jpg...)
+     * @return Person 人员对象
+     * @since 9.6.0
+     */
+    @Override
+    @PostMapping("/savePersonAvatorByBase64")
+    Person savePersonAvatorByBase64(@RequestParam("tenantId") String tenantId, @RequestParam("personId") String personId, @RequestParam("picnote") String picnote, @RequestParam("fileExt") String fileExt);
+
+    /**
+     * 保存用户照片接口
+     *
+     * @param tenantId 租户id
+     * @param personId 人员id
+     * @param photo Base64加密之后的照片字符串
+     * @return Boolean 是否保存成功
+     * @since 9.6.0
+     */
+    @Override
+    @PostMapping("/savePersonPhoto")
+    Boolean savePersonPhoto(@RequestParam("tenantId") String tenantId, @RequestParam("personId") String personId, @RequestParam("photo") String photo);
+
+    /**
+     * 保存人员
+     *
+     * @param tenantId 租户id
+     * @param personJson 人员对象
+     * @param personextJson 人员扩展信息对象
+     * @return Person
+     * @since 9.6.0
+     */
+    @Override
+    @PostMapping("/savePersonWithExt")
+    Person savePersonWithExt(@RequestParam("tenantId") String tenantId, @RequestParam("personJson") String personJson, @RequestParam("personextJson") String personextJson);
+
+    /**
+     * 保存人员的微信id
+     *
+     * @param tenantId 租户id
+     * @param personId 人员id
+     * @param weixinId 微信id
+     * @return Person 人员对象
+     * @since 9.6.0
+     */
+    @Override
+    @PostMapping("/saveWeixinId")
+    Person saveWeixinId(@RequestParam("tenantId") String tenantId, @RequestParam("personId") String personId, @RequestParam("weixinId") String weixinId);
+}

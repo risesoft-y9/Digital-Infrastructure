@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta name="viewport" content="width=device-width, initial-scale=1"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+<title>修改密码-确认账号</title>
+
+<link rel="stylesheet" type="text/css" th:href="@{/y9static/css/dzxh/dzxh_sso.css}" />
+<link type="text/css" rel="stylesheet"  th:href="@{/y9static/css/modifyPassword/modifyPassword.css}" />
+<link type="text/css" rel="stylesheet"  th:href="@{/y9static/css/modifyPassword/checkLoginName.css}" />
+<script type="text/javascript" language="javascript" th:src="@{/y9static/js/jquery/jquery-1.10.2.min.js}"></script>
+<script type="text/javascript" language="javascript" th:src="@{/y9static/js/jquery/jquery.cookie.js}"></script>
+<style type="text/css">
+
+</style>
+</head>
+<body>
+<div class="head">
+	<img th:src="@{/y9static/css/dzxh/img/LOGO.png}" style="" class="logo"/>
+	<label class="yanse messages topss">
+		<font color="white">中国地质灾害防治工程行业协会 &nbsp;&nbsp;&nbsp; &nbsp; 密码修改</font>
+	</label>
+</div>
+<div class="login" style="margin-top: 50px;">
+	<div class="header">
+		<ul class="step-container">
+			<li class="step-past">确认账号 <span class="arrow arrow-past"> <span class="arrow-pre"></span> <span class="arrow-next"></span></span></li>
+			<li class="step-current">安全认证 <span class="arrow arrow-current"> <span class="arrow-pre"></span> <span class="arrow-next"></span></span></li>
+			<li class="step-next">重置密码</li>
+		</ul>
+	</div>
+	<div class="web_qr_login" id="web_qr_login" style="display: block; height: 235px;">
+		<div class="web_login" id="web_login">
+			<div class="login-box">
+				<div class="login_form">
+					<form id="myform" method="post" th:action="@{/api/dzxh/modifyPassword/securityVerification}">
+						<div class="uinArea" id="uinArea">
+							&nbsp;&nbsp;<font color="red">*</font><font style="font-size: 13px">登录名称：</font>
+							<input type="text" name="loginName" th:value="${loginName}" id="loginName" onblur="getTenant();" style="height: 25px"/> 
+							<span id="tenantIDdiv"></span>
+						</div>
+						<div>
+							<font color="red">*</font>图片验证码： 
+							<input type="text" name="captcha" th:value="${captcha}" id="captcha"/> 
+							<input type="hidden" name="captchaKey" th:value="${captchaKey}" id="captchaKey"/>
+							<input type="hidden" name="msg" th:value="${msg}" id="msg"/>
+							<img id="captcha1" style="vertical-align: middle;" alt="验证码" /> &nbsp;&nbsp;<a href="javascript:refreshCaptcha();" class="change">换一张</a></br>
+						</div>
+						<div class="submit_div">
+							<input type="submit" value="下一步" style="width: 150px;" class="button_blue" />
+						</div>
+					</form>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+<div class="jianyi" style="color: white;">
+	版权所有: 中国地址灾害防治工程行业协会&nbsp;&nbsp;&nbsp;技术支持: 北京有生博大软件股份有限公司&nbsp;&nbsp;&nbsp;电话: 010-25888318
+	&nbsp;&nbsp;&nbsp;最佳分辨率: 1440×900
+</div>
+
+<script type="text/javascript">
+		var ctx = "[(${#request.getContextPath()})]";
+		$(function() {
+			var loginNameInit="${loginName}";
+			var msg=$("#msg").val();
+			refreshCaptcha();
+			$("#captcha").val("");
+			if(msg!=null&&msg!=""&&$.trim(String(msg))!=""){
+				loginNameInit="";
+				if(msg=="1"){
+					alert("输入验证码不正确！");
+					var tenantID="${tenantID}";
+					$("#tenantIDdiv").html('<input type="hidden" name="tenantID" value="'+tenantID+'"></input>');
+					$("#captcha").focus();
+				}
+				if(msg=="2"){
+					alert("根据输入的登录名,没有找到相关的人员信息！");
+					$("#loginName").focus();
+				}
+				if(msg=="3"){
+					alert("根据输入的登录名,找到的人员没有绑定手机！");
+					$("#loginName").focus();
+				}
+			}
+			
+			if(loginNameInit!=null&&loginNameInit!=""&&$.trim(String(loginNameInit))!=""){
+				$("#loginName").focus();
+			}
+		});
+		
+		function check(){
+		   var loginName = $("#loginName").val();
+		   var captcha = $("#captcha").val();
+
+		   if(loginName==""){
+		     alert("登录名不能为空！");
+		     $("#loginName").focus();
+		     return false;
+		   }
+		   
+		   if(captcha ==""){
+			     alert("验证码不能为空！");
+			     $("#captcha").focus();
+			     return false;
+		   }
+		   
+		   $("#myform").submit();
+		}
+		
+		//根据用户名获取相应租户列表
+		function getTenant() {
+			var loginName = $('#loginName').val();
+			if ($.trim(loginName).length<=0) {
+				$("#loginName").focus();
+				return;
+			}
+			$.ajax({
+				type : 'POST',
+				dataType : 'json',
+				data:{
+					loginName: loginName
+				},
+				url: ctx+'/api/tenants4ModifyPassword',
+				success : function(data) {
+					if(data.length<=0){
+						alert("当前用户不存在或者已禁用!");
+						return;
+					}
+					var htmlStr="";
+					$.each(data,function(i,item) {
+						if(data.length==1){
+							htmlStr='<input type="hidden" name="tenantID" value="'+item.tenantID+'"></input>';
+						}else{
+							htmlStr+='<option value="'+item.tenantID+'">'+item.tenantName+'</option>';
+						}
+					});
+					if(data.length==1){
+						$("#tenantIDdiv").html(htmlStr);
+					}else{
+						$("#tenantIDdiv").html('<select id="tenantID" name="tenantID">'+htmlStr+'</select>');
+					}
+				}
+			}); 
+		}
+		
+		//更新验证码
+		function refreshCaptcha() {
+			var date = new Date().getTime();
+			$.ajax({
+				type : "post",
+				url : ctx+'/api/getCaptchaData?t='+date,
+				dataType : "json",
+				success : function(map) {
+					if (map.success) {
+						var ds = map.data.split('||');
+						$("#captchaKey").val(ds[0]);
+						$("#captcha1").attr({
+							'src' : ds[1]
+						});
+					} else {
+						alert("登录获取验证码失败！！！");
+					}
+				}
+			});
+		}
+	</script>
+</body>
+</html>

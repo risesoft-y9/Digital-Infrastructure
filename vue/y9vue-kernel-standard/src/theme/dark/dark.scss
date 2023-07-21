@@ -1,0 +1,38 @@
+@forward 'element-plus/theme-chalk/src/common/var.scss' with (
+    $colors: (
+        'primary': (
+            'base': #3F4561,
+            "light-1": #212133,
+            "light-2": #181C2F,
+            "light-3": #ededed,
+            "light-4": #d9dade,
+            "light-5": #c4c6cf,
+            "light-6": #9b9fb0,
+            "light-7": #3f4561,
+            "light-8": #343850,
+            "light-9": #2a2a3f
+        ),
+    ),
+    $color-white:#1e1e2d,
+    $bg-color:  ("":"#1e1e2d !default"),
+    $text-color: (
+        'primary': #ededed,
+        'regular': #e2e2e2,
+        'secondary': #cdcdcd,
+        'placeholder': var(--el-color-primary-light-5),
+    ),
+    $input:(
+        'text-color': var(--el-color-primary-light-5)
+    ),
+    $border-color:(
+        'base':var(--el-bg-color),
+        'light': #222231,
+        'lighter': #2D2D3B,
+        'extra-light': #575762,
+    ),
+    $menu:(
+        'bg-color':#1e1e2d,
+        'text-color':#c7c7cb,
+        'hover-text-color':#ededed
+    ),
+);

@@ -1,0 +1,27 @@
+{
+  "name": "demo-kernel-api-vue3",
+  "private": true,
+  "version": "0.0.0",
+  "type": "module",
+  "scripts": {
+    "serve": "vite --mode development",
+    "build": "vite build",
+    "preview": "vite preview"
+  },
+  "dependencies": {
+    "axios": "^0.24.0",
+    "core-js": "^3.25.1",
+    "js-cookie": "^3.0.1",
+    "md5": "^2.3.0",
+    "qs": "^6.11.0",
+    "vue": "^3.2.37",
+    "vue-router": "^4.0.13"
+  },
+  "devDependencies": {
+    "@vitejs/plugin-vue": "^3.1.0",
+    "sass": "^1.54.9",
+    "unplugin-auto-import": "^0.11.2",
+    "unplugin-vue-components": "^0.22.7",
+    "vite": "^3.1.0"
+  }
+}

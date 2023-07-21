@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+    <workbook>
+        <worksheet name="Sheet1">
+			<section startRow="0" endRow="0"></section>
+            <loop startRow="1" endRow="1" items="personList" var="person" varType="net.risesoft.pojo.PersonInformation">
+                <section startRow="1" endRow="1">
+                    <mapping row="1" col="0">person.name</mapping>
+                    <mapping row="1" col="1">person.loginName</mapping>
+                    <mapping row="1" col="2">person.fullPath</mapping>
+                    <mapping row="1" col="3">person.sex</mapping>
+                    <mapping row="1" col="4">person.mobile</mapping>
+                    <mapping row="1" col="5">person.email</mapping>
+                </section>
+				<loopbreakcondition>
+                    <rowcheck offset="0">
+                        <cellcheck offset="0"></cellcheck>
+                    </rowcheck>
+                </loopbreakcondition>
+            </loop>
+        </worksheet>
+    </workbook>

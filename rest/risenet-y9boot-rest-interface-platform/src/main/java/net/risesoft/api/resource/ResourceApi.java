@@ -1,0 +1,96 @@
+package net.risesoft.api.resource;
+
+import java.util.List;
+
+import net.risesoft.enums.ResourceTypeEnum;
+import net.risesoft.model.Resource;
+
+/**
+ * 资源管理组件
+ *
+ * @author dingzhaojun
+ * @author qinman
+ * @author mengjuhua
+ * @date 2022/2/10
+ * @since 9.6.0
+ */
+public interface ResourceApi {
+
+    /**
+     * 创建菜单资源
+     *
+     * @param resourceId 资源id
+     * @param resourceName 资源名称
+     * @param parentResourceId 父资源id
+     * @param customId 自定义标识
+     * @return Resource 新创建的资源对象
+     * @since 9.6.0
+     */
+    Resource createMenuResource(String resourceId, String resourceName, String parentResourceId, String customId);
+    
+    /**
+     * 根据 customId 获取资源
+     *
+     * @param customId 自定义标识
+     * @return Resource 资源对象
+     * @since 9.6.0
+     */
+    Resource findByCustomId(String customId);
+
+    /**
+     * 根据 customId 和 parentId 获取资源
+     *
+     * @param customId 自定义标识
+     * @param parentId 资源id
+     * @param resourceType 资源类型 {@link ResourceTypeEnum}
+     * @return Resource 资源对象
+     * @since 9.6.0
+     */
+    Resource findByCustomIdAndParentId(String customId, String parentId, Integer resourceType);
+
+    /**
+     * 获得指定资源的父资源
+     *
+     * @param resourceId：资源的唯一标识
+     * @return Resource 父资源
+     * @since 9.6.0
+     */
+    Resource getParentResource(String resourceId);
+
+    /**
+     * 获得指定资源对象
+     *
+     * @param resourceId 资源唯一标示
+     * @return Resource 资源对象
+     * @since 9.6.0
+     */
+    Resource getResource(String resourceId);
+
+    /**
+     * 根据系统标识获取该系统的资源树的顶级节点
+     *
+     * @param systemName 系统标识
+     * @return Resource 资源节点
+     * @since 9.6.0
+     */
+    Resource getRootResourceBySystemName(String systemName);
+
+    /**
+     * 获取指定资源的子菜单资源
+     *
+     * @param resourceId 资源id
+     * @return List&lt;Resource&gt; 资源对象集合
+     * @since 9.6.0
+     */
+    List<Resource> listSubMenus(String resourceId);
+
+    /**
+     * 获得指定资源的子资源
+     *
+     * @param resourceId 资源唯一标识
+     * @return List&lt;Resource&gt; 资源对象集合
+     * @since 9.6.0
+     */
+    List<Resource> listSubResources(String resourceId);
+
+}

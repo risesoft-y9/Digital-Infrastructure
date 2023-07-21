@@ -1,0 +1,113 @@
+package net.risesoft.entity;
+
+import javax.persistence.Column;
+import javax.persistence.Id;
+import javax.persistence.MappedSuperclass;
+import javax.persistence.Version;
+import javax.validation.constraints.NotBlank;
+
+import org.hibernate.annotations.ColumnDefault;
+import org.hibernate.annotations.Comment;
+import org.hibernate.annotations.Type;
+
+import lombok.Data;
+import lombok.NoArgsConstructor;
+
+import net.risesoft.base.BaseEntity;
+import net.risesoft.enums.OrgTypeEnum;
+
+/**
+ * 组织基类
+ *
+ * @author dingzhaojun
+ * @author qinman
+ * @author mengjuhua
+ * @date 2022/2/10
+ */
+@MappedSuperclass
+@NoArgsConstructor
+@Data
+public class Y9OrgBase extends BaseEntity implements Comparable<Y9OrgBase> {
+
+    private static final long serialVersionUID = 4564661506322616943L;
+
+    /** 唯一id */
+    @Id
+    @Column(name = "ID", length = 38, nullable = false)
+    @Comment("UUID字段")
+    protected String id;
+
+    /** 父节点id */
+    @Column(name = "PARENT_ID", length = 38)
+    @Comment("父节点id")
+    protected String parentId;
+
+    /** 租户id */
+    @Column(name = "TENANT_ID", length = 38)
+    @Comment("租户id")
+    protected String tenantId;
+
+    /** 版本号,乐观锁 */
+    @Column(name = "VERSION")
+    @Comment("版本号,乐观锁")
+    @Version
+    protected Integer version;
+    
+    /** 是否可用 */
+    @Type(type = "numeric_boolean")
+    @Column(name = "DISABLED", nullable = false)
+    @Comment("是否可用")
+    @ColumnDefault("0")
+    protected Boolean disabled = false;
+
+    /** 描述 */
+    @Column(name = "DESCRIPTION", length = 255)
+    @Comment("描述")
+    protected String description;
+
+    /** 自定义id */
+    @Column(name = "CUSTOM_ID", length = 255)
+    @Comment("自定义id")
+    protected String customId;
+
+    /** 由name组成的父子关系列表(倒序)，之间用逗号分隔 */
+    @Column(name = "DN", length = 2000)
+    @Comment("由name组成的父子关系列表(倒序)，之间用逗号分隔")
+    protected String dn;
+
+    /** 名称 */
+    @NotBlank
+    @Column(name = "NAME", length = 255, nullable = false)
+    @Comment("名称")
+    protected String name;
+
+    /**
+     * 组织类型
+     *
+     * {@link OrgTypeEnum}
+     */
+    @Column(name = "ORG_TYPE", length = 255, nullable = false)
+    @Comment("组织类型")
+    protected String orgType;
+
+    /** 扩展属性 */
+    @Column(name = "PROPERTIES", length = 500)
+    @Comment("扩展属性")
+    protected String properties;
+
+    /** 排序号 */
+    @Column(name = "TAB_INDEX", nullable = false)
+    @Comment("排序号")
+    protected Integer tabIndex = 0;
+
+    /** 由ID组成的父子关系列表(正序)，之间用逗号分隔 */
+    @Column(name = "GUID_PATH", unique = true, length = 400)
+    @Comment("由ID组成的父子关系列表(正序)，之间用逗号分隔")
+    protected String guidPath;
+
+    @Override
+    public int compareTo(Y9OrgBase o) {
+        return this.tabIndex.compareTo(o.getTabIndex());
+    }
+
+}
