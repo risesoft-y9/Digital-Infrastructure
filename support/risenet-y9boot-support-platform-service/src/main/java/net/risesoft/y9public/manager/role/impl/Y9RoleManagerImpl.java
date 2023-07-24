@@ -139,6 +139,8 @@ public class Y9RoleManagerImpl implements Y9RoleManager {
                 Y9Position position = (Y9Position)y9OrgBaseManager.getOrgBase(positionId);
                 getOrgUnitIdsByUpwardRecursion(orgUnitIds, position.getParentId());
             }
+        } else if (OrgTypeEnum.POSITION.getEnName().equals(y9OrgBase.getOrgType())) {
+            getOrgUnitIdsByUpwardRecursion(orgUnitIds, y9OrgBase.getParentId());
         } else {
             getOrgUnitIdsByUpwardRecursion(orgUnitIds, y9OrgBase.getParentId());
         }

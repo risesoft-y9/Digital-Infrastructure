@@ -41,6 +41,5 @@ public interface Y9PositionRepository extends JpaRepository<Y9Position, String> 
     Y9Position getTopByOrderByTabIndexDesc();
 
     @Query("select id from Y9Position where guidPath like ?1")
-    List<String> listByGuidPathLike(String guidPath);
-
+    List<String> getPositionIdByGuidPathLike(String guidPath);
 }

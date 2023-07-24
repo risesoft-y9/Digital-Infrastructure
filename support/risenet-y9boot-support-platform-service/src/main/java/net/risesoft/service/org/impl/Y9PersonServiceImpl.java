@@ -1225,8 +1225,8 @@ public class Y9PersonServiceImpl implements Y9PersonService {
             OrgTypeEnum orgType = OrgTypeEnum.getByEnName(y9OrgBase.getOrgType());
             switch (orgType) {
                 case ORGANIZATION:
-                    String dn = y9OrgBase.getDn();
-                    List<String> personIdList = y9PersonRepository.getPersonIdByDnLike("%" + dn);
+                    String guidPath = y9OrgBase.getGuidPath();
+                    List<String> personIdList = y9PersonRepository.getPersonIdByGuidPathLike("%" + guidPath);
                     for (String personId : personIdList) {
                         this.updatePersonRoles(getById(personId));
                     }
