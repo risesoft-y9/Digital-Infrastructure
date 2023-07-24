@@ -15,13 +15,6 @@ import net.risesoft.y9.exception.Y9NotFoundException;
 public interface Y9PositionService {
 
     /**
-     * 缓存岗位拥有的角色
-     *
-     * @param personId 人员id
-     */
-    void cachePositionRoles(String personId);
-
-    /**
      * 创建岗位
      *
      * @param y9Position 岗位对象

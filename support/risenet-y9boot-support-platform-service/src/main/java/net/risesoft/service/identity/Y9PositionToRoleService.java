@@ -15,6 +15,13 @@ import net.risesoft.entity.identity.position.Y9PositionToRole;
 public interface Y9PositionToRoleService {
 
     /**
+     * 重新计算岗位角色
+     *
+     * @param positionId 岗位id
+     */
+    void recalculate(String positionId);
+
+    /**
      * 查看岗位是否拥有 customId 对应的角色
      *
      * @param positionId 岗位id

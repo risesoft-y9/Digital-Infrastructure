@@ -8,6 +8,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import net.risesoft.entity.identity.person.Y9PersonToRole;
+import net.risesoft.service.identity.Y9PersonToRoleService;
 import org.apache.commons.codec.binary.Base64;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.context.annotation.Primary;
@@ -77,6 +79,7 @@ public class PersonApiImpl implements PersonApi {
     private final Y9UserService y9UserService;
     private final Y9FileStoreService y9FileStoreService;
     private final Y9Properties y9conf;
+    private final Y9PersonToRoleService y9PersonToRoleService;
 
     /**
      * 改变人员的禁用状态
@@ -463,19 +466,11 @@ public class PersonApiImpl implements PersonApi {
     @GetMapping("/listRoles")
     public List<Role> listRoles(@RequestParam String tenantId, @RequestParam String personId) {
         Y9LoginUserHolder.setTenantId(tenantId);
-
-        Y9Person y9Person = y9PersonService.findById(personId);
         List<Role> roleList = new ArrayList<>();
-        if (StringUtils.isNotBlank(y9Person.getRoles())) {
-            String[] roles = y9Person.getRoles().split(",");
-            for (String acRoleId : roles) {
-                roleList.add(ModelConvertUtil.y9RoleToRole(y9RoleService.findById(acRoleId)));
-            }
-            return roleList;
-        }
-        List<Y9Role> roleNodeList = y9RoleService.listOrgUnitRelatedWithoutNegative(personId);
-        for (Y9Role acRoleNode : roleNodeList) {
-            roleList.add(ModelConvertUtil.y9RoleToRole(acRoleNode));
+        List<Y9PersonToRole> y9PersonToRoleList = y9PersonToRoleService.listByPersonId(personId);
+        for (Y9PersonToRole y9PersonToRole : y9PersonToRoleList) {
+            Y9Role y9Role = y9RoleService.findById(y9PersonToRole.getRoleId());
+            roleList.add(ModelConvertUtil.y9RoleToRole(y9Role));
         }
         return roleList;
     }

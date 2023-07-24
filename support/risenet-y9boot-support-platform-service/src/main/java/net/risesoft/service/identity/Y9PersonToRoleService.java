@@ -18,6 +18,13 @@ import net.risesoft.y9public.entity.role.Y9Role;
 public interface Y9PersonToRoleService {
 
     /**
+     * 重新计算人员的角色
+     *
+     * @param personId 人员id
+     */
+    void recalculate(String personId);
+
+    /**
      * 根据人员id对个人授权计数
      *
      * @param personId
@@ -251,4 +258,12 @@ public interface Y9PersonToRoleService {
      * @return
      */
     void updateByRole(Y9Role y9Role);
+
+    /**
+     * 根据人员id获取拥有的角色id（,分隔）
+     *
+     * @param personId id
+     * @return {@link String}
+     */
+    String getRoleIdsByPersonId(String personId);
 }

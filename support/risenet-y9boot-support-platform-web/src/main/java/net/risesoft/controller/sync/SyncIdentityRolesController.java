@@ -11,13 +11,17 @@ import org.springframework.web.bind.annotation.RestController;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
-import net.risesoft.enums.ManagerLevelEnum;
+import net.risesoft.entity.Y9Person;
+import net.risesoft.entity.Y9Position;
+import net.risesoft.enums.TenantTypeEnum;
 import net.risesoft.log.annotation.RiseLog;
+import net.risesoft.service.identity.Y9PersonToRoleService;
+import net.risesoft.service.identity.Y9PositionToRoleService;
 import net.risesoft.service.org.Y9PersonService;
 import net.risesoft.service.org.Y9PositionService;
 import net.risesoft.y9.Y9LoginUserHolder;
-import net.risesoft.y9public.entity.user.Y9User;
-import net.risesoft.y9public.service.user.Y9UserService;
+import net.risesoft.y9public.entity.tenant.Y9Tenant;
+import net.risesoft.y9public.service.tenant.Y9TenantService;
 
 /**
  * 同步人员权限信息
@@ -34,9 +38,11 @@ import net.risesoft.y9public.service.user.Y9UserService;
 public class SyncIdentityRolesController {
     private final FastDateFormat fdf = FastDateFormat.getInstance("yyyy-MM-dd HH:mm:ss");
 
-    private final Y9PersonService y9PersonService;
+    private final Y9PersonToRoleService y9PersonToRoleService;
+    private final Y9PositionToRoleService y9PositionToRoleService;
     private final Y9PositionService y9PositionService;
-    private final Y9UserService y9UserService;
+    private final Y9TenantService y9TenantService;
+    private final Y9PersonService y9PersonService;
 
     /**
      * 同步所有租户的所有人员的人员角色对应表
@@ -46,15 +52,20 @@ public class SyncIdentityRolesController {
     public String syncIdentityRoles() {
         double start = System.currentTimeMillis();
         LOGGER.info("更新个人权限开始时间--------------->>{}", fdf.format(new Date()));
-        List<Y9User> listUser = y9UserService.listAll();
-        for (Y9User user : listUser) {
-            if (ManagerLevelEnum.GENERAL_USER.getValue().equals(user.getManagerLevel())) {
-                Y9LoginUserHolder.setTenantId(user.getTenantId());
-                y9PersonService.updatePersonRoles(user.getPersonId());
-                y9PositionService.cachePositionRoles(user.getPersonId());
+        
+        List<Y9Tenant> y9TenantList = y9TenantService.listByTenantType(TenantTypeEnum.TENANT.getValue());
+        for (Y9Tenant y9Tenant : y9TenantList) {
+            Y9LoginUserHolder.setTenantId(y9Tenant.getId());
+            List<Y9Person> y9PersonList = y9PersonService.listAll();
+            for (Y9Person y9Person : y9PersonList) {
+                y9PersonToRoleService.recalculate(y9Person.getId());
+            }
+            List<Y9Position> y9PositionList = y9PositionService.listAll();
+            for (Y9Position y9Position : y9PositionList) {
+                y9PositionToRoleService.recalculate(y9Position.getId());
             }
         }
-
+        
         double end = System.currentTimeMillis();
         double time = end - start;
         LOGGER.info("更新个人权限完成时间--------------->>{}", fdf.format(new Date()));
@@ -74,13 +85,14 @@ public class SyncIdentityRolesController {
         double start = System.currentTimeMillis();
         LOGGER.info("更新个人权限开始时间--------------->>{},租户id--->{}", fdf.format(new Date()), tenantId);
 
-        List<Y9User> listUser = y9UserService.listByTenantId(tenantId);
         Y9LoginUserHolder.setTenantId(tenantId);
-        for (Y9User user : listUser) {
-            if (ManagerLevelEnum.GENERAL_USER.getValue().equals(user.getManagerLevel())) {
-                y9PersonService.updatePersonRoles(user.getPersonId());
-                y9PositionService.cachePositionRoles(user.getPersonId());
-            }
+        List<Y9Person> y9PersonList = y9PersonService.listAll();
+        for (Y9Person y9Person : y9PersonList) {
+            y9PersonToRoleService.recalculate(y9Person.getId());
+        }
+        List<Y9Position> y9PositionList = y9PositionService.listAll();
+        for (Y9Position y9Position : y9PositionList) {
+            y9PositionToRoleService.recalculate(y9Position.getId());
         }
 
         double end = System.currentTimeMillis();

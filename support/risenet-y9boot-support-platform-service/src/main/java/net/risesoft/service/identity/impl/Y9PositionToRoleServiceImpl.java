@@ -2,6 +2,11 @@ package net.risesoft.service.identity.impl;
 
 import java.util.List;
 
+import net.risesoft.entity.Y9Position;
+import net.risesoft.manager.authorization.Y9PositionToRoleManager;
+import net.risesoft.manager.org.Y9PositionManager;
+import net.risesoft.y9public.entity.role.Y9Role;
+import net.risesoft.y9public.manager.role.Y9RoleManager;
 import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Service;
@@ -27,6 +32,18 @@ import net.risesoft.service.identity.Y9PositionToRoleService;
 public class Y9PositionToRoleServiceImpl implements Y9PositionToRoleService {
 
     private final Y9PositionToRoleRepository y9PositionToRoleRepository;
+
+    private final Y9RoleManager y9RoleManager;
+    private final Y9PositionManager y9PositionManager;
+    private final Y9PositionToRoleManager y9PositionToRoleManager;
+
+    @Override
+    @Transactional(readOnly = false)
+    public void recalculate(String positionId) {
+        List<Y9Role> positionRelatedY9RoleList = y9RoleManager.listOrgUnitRelatedWithoutNegative(positionId);
+        Y9Position y9Position = y9PositionManager.getById(positionId);
+        y9PositionToRoleManager.update(y9Position, positionRelatedY9RoleList);
+    }
     
     @Override
     public Boolean hasRole(String positionId, String customId) {

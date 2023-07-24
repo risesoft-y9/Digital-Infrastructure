@@ -96,4 +96,12 @@ public interface Y9PersonsToPositionsService {
      * @return
      */
     List<Y9PersonsToPositions> orderPositions(String personId, String[] positionIds);
+
+    /**
+     * 根据人员id获取所拥有的岗位id（,分隔）
+     *
+     * @param personId 人员id
+     * @return {@link String}
+     */
+    String getPositionIdsByPersonId(String personId);
 }

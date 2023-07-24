@@ -71,4 +71,7 @@ public interface Y9PersonToRoleRepository extends JpaRepository<Y9PersonToRole, 
 
     @Query("select distinct p.roleId from Y9PersonToRole p where p.personId = ?1")
     List<String> listRoleIdsByPersonId(String personId);
+
+    @Query("select p.roleId from Y9PersonToRole p where p.personId = ?1")
+    List<String> findRoleIdByPersonId(String personId);
 }

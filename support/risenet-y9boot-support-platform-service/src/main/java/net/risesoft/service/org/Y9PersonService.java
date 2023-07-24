@@ -436,27 +436,6 @@ public interface Y9PersonService {
     List<Y9Person> search(String whereClause);
 
     /**
-     * 更新人员关联的角色
-     *
-     * @param personId 人员id
-     */
-    void updatePersonRoles(String personId);
-
-    /**
-     * 更新人员关联的角色id
-     *
-     * @param person 人员对象
-     */
-    void updatePersonRoles(Y9Person person);
-
-    /**
-     * 更新人员关联的角色id
-     *
-     * @param orgId 组织节点id
-     */
-    void updatePersonRolesByOrgId(String orgId);
-
-    /**
      * 更新排序序列号
      *
      * @param id 人员id

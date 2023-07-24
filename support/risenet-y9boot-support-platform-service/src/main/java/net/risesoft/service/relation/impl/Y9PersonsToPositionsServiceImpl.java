@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -162,5 +163,11 @@ public class Y9PersonsToPositionsServiceImpl implements Y9PersonsToPositionsServ
             orgPositionsPersonsList.add(y9PersonsToPositions);
         }
         return orgPositionsPersonsList;
+    }
+
+    @Override
+    public String getPositionIdsByPersonId(String personId) {
+        List<String> positionIdList = y9PersonsToPositionsRepository.listPositionIdsByPersonId(personId);
+        return StringUtils.join(positionIdList, ",");
     }
 }

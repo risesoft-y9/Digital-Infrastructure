@@ -182,8 +182,6 @@ public class Y9PersonServiceImpl implements Y9PersonService {
             person.setTabIndex(maxIndex);
             person.setDn(OrgLevelConsts.getOrgLevel(OrgTypeEnum.PERSON) + person.getName() + OrgLevelConsts.SEPARATOR + parent.getDn());
             person.setOrgType(OrgTypeEnum.PERSON.getEnName());
-            // 新增人员时，递归获取父级节点的所有权限，并赋予给当前人员。
-            person.setRoles(getRoles(person.getParentId()));
             person = save(person);
 
             Y9Context.publishEvent(new Y9EntityCreatedEvent<>(person));
@@ -714,11 +712,6 @@ public class Y9PersonServiceImpl implements Y9PersonService {
         return list;
     }
 
-    private String getRoles(String orgId) {
-        List<Y9Role> y9RoleList = y9RoleManager.listOrgUnitRelatedWithoutNegative(orgId);
-        return y9RoleList.stream().map(Y9Role::getId).collect(Collectors.joining(","));
-    }
-
     @Override
     public List<Y9Person> list() {
         return y9PersonRepository.findAll();
@@ -1000,9 +993,6 @@ public class Y9PersonServiceImpl implements Y9PersonService {
                         deleteLogically(personTemp.getId());
                     }
                 }
-                if (updatedPerson.getRoles() == null) {
-                    updatedPerson.setRoles(getRoles(updatedPerson.getId()));
-                }
                 if (Boolean.TRUE.equals(updatedPerson.getOriginal()) && null != personExt) {
                     updatePersonByOriginalId(updatedPerson, personExt);
                 }
@@ -1066,7 +1056,6 @@ public class Y9PersonServiceImpl implements Y9PersonService {
         person.setParentId(parent.getId());
 
         // 新增人员时，递归获取父级节点的所有权限，并赋予给当前人员。
-        person.setRoles(getRoles(person.getParentId()));
         person.setPassword(Y9MessageDigest.hashpw(password));
         person = save(person);
         if (null != personExt) {
@@ -1195,70 +1184,6 @@ public class Y9PersonServiceImpl implements Y9PersonService {
         }
     }
 
-    @Override
-    @Transactional(readOnly = false)
-    public void updatePersonRoles(String personId) {
-        Y9Person person = this.findById(personId);
-        if (person != null) {
-            this.updatePersonRoles(person);
-        }
-    }
-
-    @Override
-    @Transactional(readOnly = false)
-    @CacheEvict(key = "#person.id")
-    public void updatePersonRoles(Y9Person person) {
-        if (person.getId() != null) {
-            List<Y9Role> personRelatedY9RoleList = y9RoleManager.listOrgUnitRelatedWithoutNegative(person.getId());
-            y9PersonToRoleManager.update(person, personRelatedY9RoleList);
-
-            person.setRoles(toRoleIdStringSplitWithComma(personRelatedY9RoleList));
-            y9PersonRepository.save(person);
-        }
-    }
-
-    @Override
-    @Transactional(readOnly = false)
-    public void updatePersonRolesByOrgId(final String orgId) {
-        Y9OrgBase y9OrgBase = y9OrgBaseManager.getOrgBase(orgId);
-        if (y9OrgBase != null && y9OrgBase.getId() != null) {
-            OrgTypeEnum orgType = OrgTypeEnum.getByEnName(y9OrgBase.getOrgType());
-            switch (orgType) {
-                case ORGANIZATION:
-                    String guidPath = y9OrgBase.getGuidPath();
-                    List<String> personIdList = y9PersonRepository.getPersonIdByGuidPathLike("%" + guidPath);
-                    for (String personId : personIdList) {
-                        this.updatePersonRoles(getById(personId));
-                    }
-                    break;
-                case DEPARTMENT:
-                    List<String> personIds = y9PersonRepository.getPersonIdByParentId(orgId);
-                    for (String personId : personIds) {
-                        this.updatePersonRoles(getById(personId));
-                    }
-                    break;
-                case POSITION:
-                    List<Y9PersonsToPositions> orgPositionPersons = y9PersonsToPositionsRepository.findByPositionId(orgId);
-                    for (Y9PersonsToPositions orgPositionsPerson : orgPositionPersons) {
-                        String orgPersonId = orgPositionsPerson.getPersonId();
-                        this.updatePersonRoles(this.getById(orgPersonId));
-                    }
-                    break;
-                case GROUP:
-                    List<Y9PersonsToGroups> y9PersonsToGroups = y9PersonsToGroupsRepository.findByGroupId(orgId);
-                    for (Y9PersonsToGroups orgPersonsGroup : y9PersonsToGroups) {
-                        String orgPersonId = orgPersonsGroup.getPersonId();
-                        this.updatePersonRoles(this.getById(orgPersonId));
-                    }
-                    break;
-                case PERSON:
-                    this.updatePersonRoles(this.getById(orgId));
-                    break;
-                default:
-
-            }
-        }
-    }
 
     @Override
     @Transactional(readOnly = false)

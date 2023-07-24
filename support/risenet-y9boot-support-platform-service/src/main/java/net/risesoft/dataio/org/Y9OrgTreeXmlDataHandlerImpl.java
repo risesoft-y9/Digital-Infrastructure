@@ -264,7 +264,6 @@ public class Y9OrgTreeXmlDataHandlerImpl implements Y9OrgTreeDataHandler {
             personElement.addElement("tenantId").addText(person.getTenantId() == null ? "" : person.getTenantId());
             personElement.addElement("version").addText(person.getVersion() == null ? "" : person.getVersion() + "");
             personElement.addElement("parentId").addText(person.getParentId() == null ? "" : person.getParentId());
-            personElement.addElement("roles").addText(person.getRoles() == null ? "" : person.getParentId());
             personElement.addElement("guidPath").addText(person.getGuidPath() == null ? "" : person.getParentId());
 
             personElement.addElement("original").addText(person.getOriginal() == null ? "true" : person.getOriginal() + "");

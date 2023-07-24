@@ -95,16 +95,6 @@ public class Y9PositionServiceImpl implements Y9PositionService {
 
     @Override
     @Transactional(readOnly = false)
-    public void cachePositionRoles(String personId) {
-        List<Y9Position> y9PositionList = this.listByPersonId(personId);
-        for (Y9Position y9Position : y9PositionList) {
-            List<Y9Role> y9RoleList = y9RoleManager.listOrgUnitRelatedWithoutNegative(y9Position.getId());
-            y9PositionToRoleManager.update(y9Position, y9RoleList);
-        }
-    }
-
-    @Override
-    @Transactional(readOnly = false)
     public Y9Position createPosition(Y9Position y9Position, Y9OrgBase parent) {
         if (y9Position == null || parent == null) {
             return null;

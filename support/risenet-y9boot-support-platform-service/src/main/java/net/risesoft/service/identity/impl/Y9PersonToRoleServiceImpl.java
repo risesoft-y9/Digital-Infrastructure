@@ -6,6 +6,9 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
+import net.risesoft.entity.Y9Person;
+import net.risesoft.manager.org.Y9PersonManager;
+import net.risesoft.y9public.manager.role.Y9RoleManager;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.data.domain.Page;
@@ -43,6 +46,16 @@ public class Y9PersonToRoleServiceImpl implements Y9PersonToRoleService {
     private final Y9PersonToRoleRepository y9PersonToRoleRepository;
     private final Y9RoleRepository y9RoleRepository;
     private final Y9PersonToRoleManager y9PersonToRoleManager;
+    private final Y9RoleManager y9RoleManager;
+    private final Y9PersonManager y9PersonManager;
+
+    @Override
+    @Transactional(readOnly = false)
+    public void recalculate(String personId) {
+        Y9Person y9Person = y9PersonManager.getById(personId);
+        List<Y9Role> personRelatedY9RoleList = y9RoleManager.listOrgUnitRelatedWithoutNegative(y9Person.getId());
+        y9PersonToRoleManager.update(y9Person, personRelatedY9RoleList);
+    }
     
     @Override
     public long countByPersonId(String personId) {
@@ -908,5 +921,11 @@ public class Y9PersonToRoleServiceImpl implements Y9PersonToRoleService {
             positionToRole.setDescription(y9Role.getDescription());
             y9PersonToRoleRepository.save(positionToRole);
         }
+    }
+
+    @Override
+    public String getRoleIdsByPersonId(String personId) {
+        List<String> roleIdList = y9PersonToRoleRepository.findRoleIdByPersonId(personId);
+        return StringUtils.join(roleIdList, ",");
     }
 }

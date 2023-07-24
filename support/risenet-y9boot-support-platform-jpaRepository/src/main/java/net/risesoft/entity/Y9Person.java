@@ -125,14 +125,6 @@ public class Y9Person extends Y9OrgBase {
     private Integer sex = SexEnum.MALE.getValue();
 
     /**
-     * 拥有的角色列表
-     */
-    @Lob
-    @Column(name = "ROLES")
-    @Comment("拥有的角色列表")
-    private String roles;
-
-    /**
      * 人员类型
      */
     @ColumnDefault("'deptPerson'")
