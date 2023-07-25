@@ -5,6 +5,7 @@ import java.util.List;
 
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import lombok.RequiredArgsConstructor;
@@ -31,8 +32,8 @@ public class PositionRolesController {
     private final Y9PositionToRoleService y9PositionToRoleService;
 
     @GetMapping
-    public Y9Result<List<RolePermissionVO>> getByPersonId(String personId) {
-        List<Y9PositionToRole> rolePermissionVOList = y9PositionToRoleService.listByPositionId(personId);
+    public Y9Result<List<RolePermissionVO>> getByPositionId(@RequestParam String positionId) {
+        List<Y9PositionToRole> rolePermissionVOList = y9PositionToRoleService.listByPositionId(positionId);
         return Y9Result.success(rolePermissionVOBuilder.buildRolePermissionVOList(new ArrayList<>(rolePermissionVOList)));
     }
     

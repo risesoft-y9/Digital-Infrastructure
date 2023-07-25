@@ -1,18 +1,21 @@
 package net.risesoft.controller.identity;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
+
+import net.risesoft.consts.DefaultIdConsts;
+import org.springframework.stereotype.Component;
+
 import lombok.RequiredArgsConstructor;
+
 import net.risesoft.controller.identity.vo.RolePermissionVO;
 import net.risesoft.entity.identity.Y9IdentityToRoleBase;
 import net.risesoft.y9public.entity.resource.Y9App;
 import net.risesoft.y9public.entity.role.Y9Role;
 import net.risesoft.y9public.service.resource.Y9AppService;
 import net.risesoft.y9public.service.role.Y9RoleService;
-import org.springframework.stereotype.Component;
-
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.stream.Collectors;
 
 /**
  * 构建 角色权限Vo 集合
@@ -57,11 +60,14 @@ public class RolePermissionVOBuilder {
 
     private RolePermissionVO.App buildApp(String appId, List<Y9IdentityToRoleBase> y9IdentityToRoleBaseList) {
         RolePermissionVO.App app = new RolePermissionVO.App();
+        
         Y9App y9App = y9AppService.findById(appId);
         if (y9App != null) {
-            app.setName(app.getName());
-            app.setPermissionDetailList(buildPermissionDetailList(y9IdentityToRoleBaseList));
+            app.setAppName(y9App.getName());
+        } else if (DefaultIdConsts.TOP_PUBLIC_ROLE_ID.equals(appId)) {
+            app.setAppName("公共角色");
         }
+        app.setPermissionDetailList(buildPermissionDetailList(y9IdentityToRoleBaseList));
         return app;
     }
 

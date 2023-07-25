@@ -1,20 +1,20 @@
 package net.risesoft.controller.identity;
 
-import net.risesoft.controller.identity.vo.ResourcePermissionVO;
-import net.risesoft.controller.identity.vo.RolePermissionVO;
-import net.risesoft.entity.identity.person.Y9PersonToResourceAndAuthority;
-import net.risesoft.entity.identity.person.Y9PersonToRole;
-import net.risesoft.pojo.Y9Result;
-import net.risesoft.service.identity.Y9PersonToRoleService;
+import java.util.ArrayList;
+import java.util.List;
+
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import lombok.RequiredArgsConstructor;
 
-import java.util.ArrayList;
-import java.util.List;
+import net.risesoft.controller.identity.vo.RolePermissionVO;
+import net.risesoft.entity.identity.person.Y9PersonToRole;
+import net.risesoft.pojo.Y9Result;
+import net.risesoft.service.identity.Y9PersonToRoleService;
 
 /**
  * 权限展示
@@ -26,7 +26,7 @@ import java.util.List;
  */
 @Validated
 @RestController
-@RequestMapping(value = "/api/rest/personalRoles", produces = "application/json")
+@RequestMapping(value = "/api/rest/personRoles", produces = "application/json")
 @RequiredArgsConstructor
 public class PersonRolesController {
 
@@ -34,7 +34,7 @@ public class PersonRolesController {
     private final Y9PersonToRoleService y9PersonToRoleService;
 
     @GetMapping
-    public Y9Result<List<RolePermissionVO>> getByPersonId(String personId) {
+    public Y9Result<List<RolePermissionVO>> getByPersonId(@RequestParam String personId) {
         List<Y9PersonToRole> rolePermissionVOList = y9PersonToRoleService.listByPersonId(personId);
         return Y9Result.success(rolePermissionVOBuilder.buildRolePermissionVOList(new ArrayList<>(rolePermissionVOList)));
     }

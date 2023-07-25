@@ -23,7 +23,7 @@ public class RolePermissionVO {
     @Data
     public static class App {
         /** 应用名 */
-        private String name;
+        private String appName;
 
         /** 权限详细列表 */
         private List<PermissionDetail> permissionDetailList;
