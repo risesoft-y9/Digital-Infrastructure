@@ -62,24 +62,8 @@ public class DeptManagerController {
     @RiseLog(operationName = "根据部门id，验证该成员是否部门管理员", operationType = OperationTypeEnum.BROWSE)
     @PostMapping(value = "/checkDeptManager")
     public Y9Result<Boolean> checkDeptManager(@RequestParam String deptId) {
-        // TODO move to Service?
-        UserInfo person = Y9LoginUserHolder.getUserInfo();
-        Boolean tenantPerson = person.isGlobalManager();
-        if (tenantPerson) {
-            return Y9Result.success(true, "验证完成！，是全局管理员！");
-        } else {
-            Y9Department orgDepartment = y9DepartmentService.getById(deptId);
-            Y9Department managerDept = y9DepartmentService.getById(person.getParentId());
-            String check = orgDepartment.getGuidPath();
-            String mapping = managerDept.getGuidPath();
-            if (check.contains(mapping) && (!check.equals(mapping))) {
-                return Y9Result.success(true, "验证完成！该部门为子部门！");
-            }
-            if (check.equals(mapping)) {
-                return Y9Result.success(true, "验证完成！，该部门为当前部门！");
-            }
-        }
-        return Y9Result.success(false, "验证完成！，是普通用户！");
+        UserInfo userInfo = Y9LoginUserHolder.getUserInfo();
+        return Y9Result.success(y9ManagerService.isDeptManager(userInfo.getPersonId(), deptId));
     }
 
     /**

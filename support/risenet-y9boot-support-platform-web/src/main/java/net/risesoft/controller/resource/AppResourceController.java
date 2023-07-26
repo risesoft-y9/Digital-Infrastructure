@@ -139,22 +139,7 @@ public class AppResourceController {
 
         // TODO move to Service?
         y9AppService.verifyApp(y9App.getId(), true, Y9LoginUserHolder.getUserInfo().getName());
-        Y9TenantSystem ts = y9TenantSystemService.getByTenantIdAndSystemId(Y9LoginUserHolder.getTenantId(), savedApp.getSystemId());
-        if (ts == null) {
-            boolean saveSuccess = true;
-            try {
-                y9TenantSystemService.saveTenantSystem(savedApp.getSystemId(), Y9LoginUserHolder.getTenantId());
-            } catch (Exception e1) {
-                LOGGER.warn(e1.getMessage(), e1);
-                saveSuccess = false;
-            }
-            if (saveSuccess) {
-                Y9MessageCommon event = new Y9MessageCommon();
-                event.setEventObject("TENANT_DATASOURCE_SYNC");
-                event.setEventType(Y9EventCommon.TENANT_DATASOURCE_SYNC);
-                y9PublishService.publishMessageCommon(event);
-            }
-        }
+        y9TenantSystemService.registerTenantSystem(Y9LoginUserHolder.getTenantId(), savedApp.getSystemId());
         y9TenantAppService.save(savedApp.getId(), Y9LoginUserHolder.getTenantId(), Y9LoginUserHolder.getUserInfo().getName(), "微内核默认租用");
         return Y9Result.success(savedApp, "成功保存应用");
     }

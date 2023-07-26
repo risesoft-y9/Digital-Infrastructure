@@ -16,7 +16,13 @@ public interface Y9PersonManager {
      */
     Y9Person getById(String id);
 
+    Y9Person findById(String id);
+
     List<Y9Person> listByPositionId(String positionId);
 
     List<Y9Person> listByGroupId(String groupId);
+
+    void delete(Y9Person y9Person);
+
+    Y9Person save(Y9Person y9Person);
 }

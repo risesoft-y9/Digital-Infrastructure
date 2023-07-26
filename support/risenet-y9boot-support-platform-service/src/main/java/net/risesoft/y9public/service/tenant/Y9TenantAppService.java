@@ -7,6 +7,12 @@ import org.springframework.data.domain.Page;
 
 import net.risesoft.y9public.entity.tenant.Y9TenantApp;
 
+/**
+ * @author dingzhaojun
+ * @author qinman
+ * @author mengjuhua
+ * @date 2022/2/10
+ */
 public interface Y9TenantAppService {
 
     /**

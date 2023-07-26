@@ -83,6 +83,7 @@ public class Y9ManagerImpl implements Y9ManagerService {
         if (Boolean.TRUE.equals(y9Manager.getGlobalManager())) {
             return true;
         } else {
+            // 验证是否为某个部门的三员（小三员）
             Y9Department targetDepartment = y9DepartmentManager.getById(deptId);
             Y9Department managerDept = y9DepartmentManager.getById(y9Manager.getParentId());
             String targetDepartmentGuidPath = targetDepartment.getGuidPath();

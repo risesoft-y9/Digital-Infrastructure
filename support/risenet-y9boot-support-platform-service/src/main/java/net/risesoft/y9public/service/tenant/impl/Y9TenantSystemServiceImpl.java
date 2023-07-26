@@ -6,9 +6,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
-import net.risesoft.model.System;
-import net.risesoft.model.Tenant;
-import net.risesoft.y9.util.Y9ModelConvertUtil;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -21,6 +18,7 @@ import lombok.extern.slf4j.Slf4j;
 
 import net.risesoft.id.IdType;
 import net.risesoft.id.Y9IdGenerator;
+import net.risesoft.y9.Y9LoginUserHolder;
 import net.risesoft.y9.pubsub.Y9PublishService;
 import net.risesoft.y9.pubsub.message.Y9MessageCommon;
 import net.risesoft.y9public.entity.resource.Y9System;
@@ -276,5 +274,18 @@ public class Y9TenantSystemServiceImpl implements Y9TenantSystemService {
             }
         }
         return y9SystemList;
+    }
+
+    @Override
+    @Transactional(readOnly = false)
+    public void registerTenantSystem(String tenantId, String systemId) {
+        Y9TenantSystem y9TenantSystem = this.getByTenantIdAndSystemId(Y9LoginUserHolder.getTenantId(), systemId);
+        if (y9TenantSystem == null) {
+            this.saveTenantSystem(systemId, Y9LoginUserHolder.getTenantId());
+
+            // 发送同步数据源的消息
+            Y9MessageCommon event = new Y9MessageCommon(Y9MessageCommon.TENANT_DATASOURCE_SYNC, "all");
+            y9PublishService.publishMessageCommon(event);
+        }
     }
 }

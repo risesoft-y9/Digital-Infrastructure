@@ -51,6 +51,12 @@ public class Y9PositionManagerImpl implements Y9PositionManager {
         return y9PositionRepository.findById(id).orElseThrow(() -> Y9ExceptionUtil.notFoundException(PositionErrorCodeEnum.POSITION_NOT_FOUND, id));
     }
 
+    @Override
+    @Cacheable(key = "#id", condition = "#id!=null", unless = "#result==null")
+    public Y9Position findById(String id) {
+        return y9PositionRepository.findById(id).orElse(null);
+    }
+
     private void checkHeadCountAvailability(Y9Position position) {
         Integer personCount = y9PersonsToPositionsRepository.countByPositionId(position.getId());
         Y9Assert.lessThanOrEqualTo(personCount, position.getCapacity(), PositionErrorCodeEnum.POSITION_IS_FULL, position.getName());
@@ -143,5 +149,12 @@ public class Y9PositionManagerImpl implements Y9PositionManager {
         y9OrgBaseManager.getOrderedPathRecursiveUp(sb, position);
         position.setOrderedPath(sb.toString());
         return y9PositionRepository.save(position);
+    }
+
+    @Override
+    @Transactional(readOnly = false)
+    @CacheEvict(key = "#y9Position.id")
+    public void delete(Y9Position y9Position) {
+        y9PositionRepository.delete(y9Position);
     }
 }

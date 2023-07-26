@@ -9,24 +9,20 @@ import javax.persistence.Query;
 
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.cache.annotation.CacheConfig;
-import org.springframework.cache.annotation.CacheEvict;
-import org.springframework.cache.annotation.Cacheable;
 import org.springframework.orm.jpa.EntityManagerFactoryUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.Assert;
 
-import net.risesoft.consts.CacheNameConsts;
 import net.risesoft.consts.OrgLevelConsts;
 import net.risesoft.entity.Y9OrgBase;
 import net.risesoft.entity.Y9Organization;
 import net.risesoft.enums.AuthorizationPrincipalTypeEnum;
 import net.risesoft.enums.OrgTypeEnum;
-import net.risesoft.exception.OrganizationErrorCodeEnum;
 import net.risesoft.id.IdType;
 import net.risesoft.id.Y9IdGenerator;
 import net.risesoft.manager.org.Y9OrgBaseManager;
+import net.risesoft.manager.org.Y9OrganizationManager;
 import net.risesoft.model.Organization;
 import net.risesoft.repository.Y9OrganizationRepository;
 import net.risesoft.repository.permission.Y9AuthorizationRepository;
@@ -35,7 +31,6 @@ import net.risesoft.service.org.Y9OrganizationService;
 import net.risesoft.util.Y9PublishServiceUtil;
 import net.risesoft.y9.Y9Context;
 import net.risesoft.y9.Y9LoginUserHolder;
-import net.risesoft.y9.exception.util.Y9ExceptionUtil;
 import net.risesoft.y9.pubsub.constant.Y9OrgEventConst;
 import net.risesoft.y9.pubsub.event.Y9EntityDeletedEvent;
 import net.risesoft.y9.pubsub.message.Y9MessageOrg;
@@ -49,7 +44,6 @@ import net.risesoft.y9.util.Y9ModelConvertUtil;
  * @date 2022/2/10
  */
 @Transactional(value = "rsTenantTransactionManager", readOnly = true)
-@CacheConfig(cacheNames = CacheNameConsts.ORG_ORGANIZATION)
 @Service
 public class Y9OrganizationServiceImpl implements Y9OrganizationService {
 
@@ -60,14 +54,16 @@ public class Y9OrganizationServiceImpl implements Y9OrganizationService {
     private final EntityManagerFactory entityManagerFactory;
 
     private final Y9OrgBaseManager y9OrgBaseManager;
+    private final Y9OrganizationManager y9OrganizationManager;
 
     public Y9OrganizationServiceImpl(Y9OrganizationRepository y9OrganizationRepository, @Qualifier("rsTenantEntityManagerFactory") EntityManagerFactory entityManagerFactory, Y9OrgBaseManager y9OrgBaseManager, Y9OrgBasesToRolesRepository y9OrgBasesToRolesRepository,
-        Y9AuthorizationRepository y9AuthorizationRepository) {
+        Y9AuthorizationRepository y9AuthorizationRepository, Y9OrganizationManager y9OrganizationManager) {
         this.y9OrganizationRepository = y9OrganizationRepository;
         this.entityManagerFactory = entityManagerFactory;
         this.y9OrgBaseManager = y9OrgBaseManager;
         this.y9OrgBasesToRolesRepository = y9OrgBasesToRolesRepository;
         this.y9AuthorizationRepository = y9AuthorizationRepository;
+        this.y9OrganizationManager = y9OrganizationManager;
     }
 
     @Override
@@ -89,7 +85,6 @@ public class Y9OrganizationServiceImpl implements Y9OrganizationService {
     }
 
     @Override
-    @CacheEvict(key = "#id")
     @Transactional(readOnly = false)
     public void delete(String id) {
 
@@ -100,7 +95,7 @@ public class Y9OrganizationServiceImpl implements Y9OrganizationService {
         Y9MessageOrg msg = new Y9MessageOrg(Y9ModelConvertUtil.convert(org, Organization.class), Y9OrgEventConst.RISEORGEVENT_TYPE_DELETE_ORGANIZATION, Y9LoginUserHolder.getTenantId());
         Y9PublishServiceUtil.persistAndPublishMessageOrg(msg, "删除组织机构", "删除 " + org.getName());
 
-        y9OrganizationRepository.delete(org);
+        y9OrganizationManager.delete(org);
 
         // 删除组织关联数据
         y9OrgBasesToRolesRepository.deleteByOrgId(org.getId());
@@ -113,15 +108,13 @@ public class Y9OrganizationServiceImpl implements Y9OrganizationService {
     }
 
     @Override
-    @Cacheable(key = "#id", condition = "#id!=null", unless = "#result==null")
     public Y9Organization findById(String id) {
-        return y9OrganizationRepository.findById(id).orElse(null);
+        return y9OrganizationManager.findById(id);
     }
 
     @Override
-    @Cacheable(key = "#id", condition = "#id!=null", unless = "#result==null")
     public Y9Organization getById(String id) {
-        return y9OrganizationRepository.findById(id).orElseThrow(() -> Y9ExceptionUtil.notFoundException(OrganizationErrorCodeEnum.ORGANIZATION_NOT_FOUND, id));
+        return y9OrganizationManager.getById(id);
     }
 
     @Override
@@ -169,12 +162,11 @@ public class Y9OrganizationServiceImpl implements Y9OrganizationService {
         return y9OrganizationRepository.findByTenantIdOrderByTabIndexAsc(tenantId);
     }
 
-    @CacheEvict(key = "#orgId")
     @Transactional(readOnly = false)
     public Y9Organization saveOrder(String orgId, int tabIndex) {
         Y9Organization org = this.getById(orgId);
         org.setTabIndex(tabIndex);
-        org = y9OrganizationRepository.save(org);
+        org = y9OrganizationManager.save(org);
 
         Y9MessageOrg msg = new Y9MessageOrg(Y9ModelConvertUtil.convert(org, Organization.class), Y9OrgEventConst.RISEORGEVENT_TYPE_UPDATE_ORGANIZATION, Y9LoginUserHolder.getTenantId());
         Y9PublishServiceUtil.publishMessageOrg(msg);
@@ -195,10 +187,9 @@ public class Y9OrganizationServiceImpl implements Y9OrganizationService {
 
     @Override
     @Transactional(readOnly = false)
-    @CacheEvict(key = "#org.id", condition = "#org.id!=null")
     public Y9Organization saveOrUpdate(Y9Organization org) {
         if (StringUtils.isNotEmpty(org.getId())) {
-            Y9Organization oldOrg = y9OrganizationRepository.findById(org.getId()).orElse(null);
+            Y9Organization oldOrg = y9OrganizationManager.findById(org.getId());
             if (oldOrg != null) {
                 // 是否需要递归DN
                 boolean recursionDn = !org.getName().equals(oldOrg.getName());
@@ -207,7 +198,7 @@ public class Y9OrganizationServiceImpl implements Y9OrganizationService {
                 oldOrg.setDn(OrgLevelConsts.getOrgLevel(OrgTypeEnum.ORGANIZATION) + org.getName());
                 oldOrg.setGuidPath(org.getId());
                 oldOrg.setTenantId(Y9LoginUserHolder.getTenantId());
-                oldOrg = y9OrganizationRepository.save(oldOrg);
+                oldOrg = y9OrganizationManager.save(oldOrg);
                 if (recursionDn) {
                     y9OrgBaseManager.recursivelyUpdateProperties(oldOrg);
                 }
@@ -224,7 +215,7 @@ public class Y9OrganizationServiceImpl implements Y9OrganizationService {
                 org.setDn(OrgLevelConsts.getOrgLevel(OrgTypeEnum.ORGANIZATION) + org.getName());
                 org.setGuidPath(org.getId());
                 org.setTenantId(Y9LoginUserHolder.getTenantId());
-                org = y9OrganizationRepository.save(org);
+                org = y9OrganizationManager.save(org);
 
                 Y9MessageOrg msg = new Y9MessageOrg(Y9ModelConvertUtil.convert(org, Organization.class), Y9OrgEventConst.RISEORGEVENT_TYPE_ADD_ORGANIZATION, Y9LoginUserHolder.getTenantId());
                 Y9PublishServiceUtil.persistAndPublishMessageOrg(msg, "新增组织机构", "新增" + org.getName());
@@ -241,7 +232,7 @@ public class Y9OrganizationServiceImpl implements Y9OrganizationService {
         org.setDn(OrgLevelConsts.getOrgLevel(OrgTypeEnum.ORGANIZATION) + org.getName());
         org.setGuidPath(org.getId());
         org.setTenantId(Y9LoginUserHolder.getTenantId());
-        org = y9OrganizationRepository.save(org);
+        org = y9OrganizationManager.save(org);
 
         Y9MessageOrg msg = new Y9MessageOrg(Y9ModelConvertUtil.convert(org, Organization.class), Y9OrgEventConst.RISEORGEVENT_TYPE_ADD_ORGANIZATION, Y9LoginUserHolder.getTenantId());
         Y9PublishServiceUtil.persistAndPublishMessageOrg(msg, "新增组织机构", "新增" + org.getName());
@@ -251,11 +242,10 @@ public class Y9OrganizationServiceImpl implements Y9OrganizationService {
 
     @Override
     @Transactional(readOnly = false)
-    @CacheEvict(key = "#orgId")
     public Y9Organization saveProperties(String orgId, String properties) {
         Y9Organization org = this.getById(orgId);
         org.setProperties(properties);
-        org = y9OrganizationRepository.save(org);
+        org = y9OrganizationManager.save(org);
 
         Y9MessageOrg msg = new Y9MessageOrg(Y9ModelConvertUtil.convert(org, Organization.class), Y9OrgEventConst.RISEORGEVENT_TYPE_UPDATE_ORGANIZATION, Y9LoginUserHolder.getTenantId());
         Y9PublishServiceUtil.publishMessageOrg(msg);

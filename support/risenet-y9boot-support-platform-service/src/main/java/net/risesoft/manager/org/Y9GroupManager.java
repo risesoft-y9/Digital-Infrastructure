@@ -2,6 +2,7 @@ package net.risesoft.manager.org;
 
 import net.risesoft.entity.Y9Group;
 import net.risesoft.y9.exception.Y9NotFoundException;
+import org.springframework.cache.annotation.Cacheable;
 
 public interface Y9GroupManager {
 
@@ -14,4 +15,9 @@ public interface Y9GroupManager {
      */
     Y9Group getById(String id);
 
+    Y9Group findById(String id);
+
+    Y9Group save(Y9Group y9Group);
+
+    void delete(Y9Group y9Group);
 }

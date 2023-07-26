@@ -1,13 +1,11 @@
 package net.risesoft.service.org.impl;
 
-import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.context.ApplicationListener;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import lombok.RequiredArgsConstructor;
 
-import net.risesoft.consts.CacheNameConsts;
 import net.risesoft.entity.Y9OrgBase;
 import net.risesoft.entity.Y9OrgBaseDeleted;
 import net.risesoft.id.Y9IdGenerator;
@@ -24,7 +22,6 @@ import net.risesoft.y9.pubsub.event.Y9EntityDeletedEvent;
  * @date 2022/2/10
  */
 @Transactional(value = "rsTenantTransactionManager", readOnly = true)
-@CacheConfig(cacheNames = CacheNameConsts.ORG_BASE_DELETED)
 @Service
 @RequiredArgsConstructor
 public abstract class Y9OrgBaseDeletedServiceImpl implements Y9OrgBaseDeletedService, ApplicationListener<Y9EntityDeletedEvent<? extends Y9OrgBase>> {

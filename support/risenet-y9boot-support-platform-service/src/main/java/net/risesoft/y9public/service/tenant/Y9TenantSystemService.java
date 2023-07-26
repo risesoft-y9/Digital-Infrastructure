@@ -3,12 +3,18 @@ package net.risesoft.y9public.service.tenant;
 import java.util.List;
 import java.util.Map;
 
-import net.risesoft.y9public.entity.tenant.Y9Tenant;
 import org.springframework.data.domain.Page;
 
 import net.risesoft.y9public.entity.resource.Y9System;
+import net.risesoft.y9public.entity.tenant.Y9Tenant;
 import net.risesoft.y9public.entity.tenant.Y9TenantSystem;
 
+/**
+ * @author dingzhaojun
+ * @author qinman
+ * @author mengjuhua
+ * @date 2022/2/10
+ */
 public interface Y9TenantSystemService {
 
     /**
@@ -176,4 +182,12 @@ public interface Y9TenantSystemService {
     List<Y9Tenant> listTenantBySystemName(String systemName);
 
     List<Y9System> listSystemByTenantId(String tenantId);
+
+    /**
+     * 租户租用系统，发送消息通知系统重新加载数据源
+     *
+     * @param tenantId 租户id
+     * @param systemId 系统id
+     */
+    void registerTenantSystem(String tenantId, String systemId);
 }

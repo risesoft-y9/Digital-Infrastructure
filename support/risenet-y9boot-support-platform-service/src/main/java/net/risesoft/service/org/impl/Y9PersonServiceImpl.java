@@ -11,7 +11,6 @@ import javax.persistence.Query;
 
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.context.event.EventListener;
@@ -26,7 +25,6 @@ import org.springframework.util.Assert;
 
 import lombok.extern.slf4j.Slf4j;
 
-import net.risesoft.consts.CacheNameConsts;
 import net.risesoft.consts.OrgLevelConsts;
 import net.risesoft.entity.Y9Department;
 import net.risesoft.entity.Y9Group;
@@ -39,15 +37,13 @@ import net.risesoft.entity.relation.Y9PersonsToGroups;
 import net.risesoft.entity.relation.Y9PersonsToPositions;
 import net.risesoft.enums.AuthorizationPrincipalTypeEnum;
 import net.risesoft.enums.OrgTypeEnum;
-import net.risesoft.exception.PersonErrorCodeEnum;
 import net.risesoft.id.IdType;
 import net.risesoft.id.Y9IdGenerator;
 import net.risesoft.manager.org.Y9OrgBaseManager;
 import net.risesoft.manager.org.Y9PersonExtManager;
 import net.risesoft.manager.org.Y9PersonManager;
-import net.risesoft.manager.authorization.Y9PersonToRoleManager;
-import net.risesoft.manager.relation.Y9PersonsToPositionsManager;
 import net.risesoft.manager.org.Y9PositionManager;
+import net.risesoft.manager.relation.Y9PersonsToPositionsManager;
 import net.risesoft.model.Message;
 import net.risesoft.repository.Y9DepartmentPropRepository;
 import net.risesoft.repository.Y9DepartmentRepository;
@@ -67,7 +63,6 @@ import net.risesoft.util.Y9PublishServiceUtil;
 import net.risesoft.y9.Y9Context;
 import net.risesoft.y9.Y9LoginUserHolder;
 import net.risesoft.y9.configuration.Y9Properties;
-import net.risesoft.y9.exception.util.Y9ExceptionUtil;
 import net.risesoft.y9.json.Y9JsonUtil;
 import net.risesoft.y9.pubsub.constant.Y9OrgEventConst;
 import net.risesoft.y9.pubsub.event.Y9EntityCreatedEvent;
@@ -77,9 +72,7 @@ import net.risesoft.y9.pubsub.message.Y9MessageOrg;
 import net.risesoft.y9.util.Y9BeanUtil;
 import net.risesoft.y9.util.base64.Y9Base64Util;
 import net.risesoft.y9.util.signing.Y9MessageDigest;
-import net.risesoft.y9public.entity.role.Y9Role;
 import net.risesoft.y9public.entity.user.Y9User;
-import net.risesoft.y9public.manager.role.Y9RoleManager;
 import net.risesoft.y9public.repository.user.Y9UserRepository;
 
 /**
@@ -89,7 +82,6 @@ import net.risesoft.y9public.repository.user.Y9UserRepository;
  * @date 2022/2/10
  */
 @Transactional(value = "rsTenantTransactionManager", readOnly = true)
-@CacheConfig(cacheNames = CacheNameConsts.ORG_PERSON)
 @Service
 @Slf4j
 public class Y9PersonServiceImpl implements Y9PersonService {
@@ -113,10 +105,8 @@ public class Y9PersonServiceImpl implements Y9PersonService {
 
     private final Y9PersonExtManager y9PersonExtManager;
     private final Y9OrgBaseManager y9OrgBaseManager;
-    private final Y9RoleManager y9RoleManager;
     private final Y9PositionManager y9PositionManager;
     private final Y9PersonsToPositionsManager y9PersonsToPositionsManager;
-    private final Y9PersonToRoleManager y9PersonToRoleManager;
     private final Y9PersonManager y9PersonManager;
 
     private final Y9Properties y9config;
@@ -124,7 +114,7 @@ public class Y9PersonServiceImpl implements Y9PersonService {
     public Y9PersonServiceImpl(Y9PersonRepository y9PersonRepository, @Qualifier("rsTenantEntityManagerFactory") EntityManagerFactory entityManagerFactory, Y9PersonsToGroupsRepository y9PersonsToGroupsRepository, Y9PersonsToPositionsRepository y9PersonsToPositionsRepository,
         Y9DepartmentRepository y9DepartmentRepository, Y9GroupRepository y9GroupRepository, Y9PositionRepository y9PositionRepository, Y9UserRepository y9UserRepository, Y9PersonExtManager y9PersonExtManager, Y9OrgBaseManager y9OrgBaseManager, Y9Properties y9config,
         Y9OrgBasesToRolesRepository y9OrgBasesToRolesRepository, Y9AuthorizationRepository y9AuthorizationRepository, Y9DepartmentPropRepository y9DepartmentPropRepository, Y9PersonToResourceAndAuthorityRepository y9PersonToResourceAndAuthorityRepository,
-        Y9PersonToRoleRepository y9PersonToRoleRepository, Y9PersonToRoleManager y9PersonToRoleManager, Y9PersonsToPositionsManager y9PersonsToPositionsManager, Y9RoleManager y9RoleManager, Y9PositionManager y9PositionManager, Y9PersonManager y9PersonManager) {
+        Y9PersonToRoleRepository y9PersonToRoleRepository, Y9PersonsToPositionsManager y9PersonsToPositionsManager, Y9PositionManager y9PositionManager, Y9PersonManager y9PersonManager) {
         this.y9PersonRepository = y9PersonRepository;
         this.entityManagerFactory = entityManagerFactory;
         this.y9PersonsToGroupsRepository = y9PersonsToGroupsRepository;
@@ -141,9 +131,7 @@ public class Y9PersonServiceImpl implements Y9PersonService {
         this.y9DepartmentPropRepository = y9DepartmentPropRepository;
         this.y9PersonToResourceAndAuthorityRepository = y9PersonToResourceAndAuthorityRepository;
         this.y9PersonToRoleRepository = y9PersonToRoleRepository;
-        this.y9PersonToRoleManager = y9PersonToRoleManager;
         this.y9PersonsToPositionsManager = y9PersonsToPositionsManager;
-        this.y9RoleManager = y9RoleManager;
         this.y9PositionManager = y9PositionManager;
         this.y9PersonManager = y9PersonManager;
     }
@@ -467,7 +455,7 @@ public class Y9PersonServiceImpl implements Y9PersonService {
         Y9Person y9Person = this.getById(id);
         boolean disabled = y9Person.getDisabled();
         y9Person.setDisabled(!disabled);
-        y9Person = y9PersonRepository.save(y9Person);
+        y9Person = y9PersonManager.save(y9Person);
 
         Y9MessageOrg msg = new Y9MessageOrg(ModelConvertUtil.orgPersonToPerson(y9Person), Y9OrgEventConst.RISEORGEVENT_TYPE_UPDATE_PERSON, Y9LoginUserHolder.getTenantId());
         String event = "禁用";
@@ -566,7 +554,7 @@ public class Y9PersonServiceImpl implements Y9PersonService {
         y9PersonToRoleRepository.deleteByPersonId(id);
         y9AuthorizationRepository.deleteByPrincipalIdAndPrincipalType(id, AuthorizationPrincipalTypeEnum.PERSON.getValue());
 
-        y9PersonRepository.delete(y9Person);
+        y9PersonManager.delete(y9Person);
         // 发布事件，程序内部监听处理相关业务
         Y9Context.publishEvent(new Y9EntityDeletedEvent<>(y9Person));
         Y9MessageOrg msg = new Y9MessageOrg(ModelConvertUtil.orgPersonToPerson(y9Person), Y9OrgEventConst.RISEORGEVENT_TYPE_DELETE_PERSON, Y9LoginUserHolder.getTenantId());
@@ -608,7 +596,7 @@ public class Y9PersonServiceImpl implements Y9PersonService {
         }
         y9Person.setDescription(y9Person.getDescription() + ",parentId:" + y9Person.getParentId());
         Y9Context.publishEvent(new Y9EntityDeletedEvent<>(y9Person));
-        y9PersonRepository.save(y9Person);
+        y9PersonManager.save(y9Person);
     }
 
     @Override
@@ -619,7 +607,7 @@ public class Y9PersonServiceImpl implements Y9PersonService {
     @Override
     @Cacheable(key = "#id", condition = "#id!=null", unless = "#result==null")
     public Y9Person findById(String id) {
-        return y9PersonRepository.findById(id).orElse(null);
+        return y9PersonManager.findById(id);
     }
 
     @Override
@@ -631,7 +619,7 @@ public class Y9PersonServiceImpl implements Y9PersonService {
     @Transactional(readOnly = true)
     @Cacheable(key = "#id", condition = "#id!=null", unless = "#result==null")
     public Y9Person getById(String id) {
-        return y9PersonRepository.findById(id).orElseThrow(() -> Y9ExceptionUtil.notFoundException(PersonErrorCodeEnum.PERSON_NOT_FOUND, id));
+        return y9PersonManager.getById(id);
     }
 
     @Override
@@ -795,7 +783,7 @@ public class Y9PersonServiceImpl implements Y9PersonService {
             y9Person = this.getById(personId);
             if (StringUtils.isNotBlank(newPassword)) {
                 y9Person.setPassword(Y9MessageDigest.hashpw(newPassword));
-                y9Person = y9PersonRepository.save(y9Person);
+                y9Person = y9PersonManager.save(y9Person);
                 Y9Context.publishEvent(new Y9EntityUpdatedEvent<>(y9Person, y9Person));
                 Y9MessageOrg msg = new Y9MessageOrg(ModelConvertUtil.orgPersonToPerson(y9Person), Y9OrgEventConst.RISEORGEVENT_TYPE_UPDATE_PERSON, Y9LoginUserHolder.getTenantId());
                 Y9PublishServiceUtil.persistAndPublishMessageOrg(msg, "修改密码", "修改" + y9Person.getName() + "的密码");
@@ -909,7 +897,7 @@ public class Y9PersonServiceImpl implements Y9PersonService {
             Y9Person origPerson = this.getById(personId);
             String password = y9config.getCommon().getDefaultPassword();
             origPerson.setPassword(Y9MessageDigest.hashpw(password));
-            Y9Person y9Person = y9PersonRepository.save(origPerson);
+            Y9Person y9Person = y9PersonManager.save(origPerson);
 
             Y9Context.publishEvent(new Y9EntityUpdatedEvent<>(origPerson, y9Person));
             Y9MessageOrg msg = new Y9MessageOrg(ModelConvertUtil.orgPersonToPerson(y9Person), Y9OrgEventConst.RISEORGEVENT_TYPE_UPDATE_PERSON, Y9LoginUserHolder.getTenantId());
@@ -936,7 +924,7 @@ public class Y9PersonServiceImpl implements Y9PersonService {
         if (person.getOriginal() == null) {
             person.setOriginal(Boolean.TRUE);
         }
-        return y9PersonRepository.save(person);
+        return y9PersonManager.save(person);
     }
 
     @Override
@@ -975,7 +963,7 @@ public class Y9PersonServiceImpl implements Y9PersonService {
     public Y9Person saveOrUpdate(Y9Person person, Y9PersonExt personExt, Y9OrgBase parent) {
         String password = y9config.getCommon().getDefaultPassword();
         if (StringUtils.isNotEmpty(person.getId())) {
-            Y9Person originPerson = y9PersonRepository.findById(person.getId()).orElse(null);
+            Y9Person originPerson = y9PersonManager.findById(person.getId());
             if (null != originPerson) {
                 // 判断为更新信息
                 Y9Person updatedPerson = new Y9Person();
@@ -1074,7 +1062,7 @@ public class Y9PersonServiceImpl implements Y9PersonService {
     @Transactional(readOnly = false)
     @CacheEvict(key = "#person.id")
     public Y9Person saveOrUpdate4ImpOrg(Y9Person person, Y9PersonExt personExt, Y9OrgBase parent) {
-        Y9Person oldperson = y9PersonRepository.findById(person.getId()).orElse(null);
+        Y9Person oldperson = y9PersonManager.findById(person.getId());
         if (null != oldperson) {
             // 判断为更新信息
             person.setDn(OrgLevelConsts.getOrgLevel(OrgTypeEnum.PERSON) + person.getName() + OrgLevelConsts.SEPARATOR + parent.getDn());
@@ -1120,7 +1108,7 @@ public class Y9PersonServiceImpl implements Y9PersonService {
     public Y9Person saveProperties(String personId, String properties) {
         Y9Person person = this.getById(personId);
         person.setProperties(properties);
-        Y9Person y9Person = y9PersonRepository.save(person);
+        Y9Person y9Person = y9PersonManager.save(person);
 
         Y9MessageOrg msg = new Y9MessageOrg(ModelConvertUtil.orgPersonToPerson(y9Person), Y9OrgEventConst.RISEORGEVENT_TYPE_UPDATE_PERSON, Y9LoginUserHolder.getTenantId());
         Y9PublishServiceUtil.publishMessageOrg(msg);
@@ -1143,16 +1131,6 @@ public class Y9PersonServiceImpl implements Y9PersonService {
         return query.getResultList();
     }
 
-    /**
-     * 从角色列表中获取角色id转化为用,分割的字符串
-     *
-     * @param y9RoleList
-     * @return
-     */
-    private String toRoleIdStringSplitWithComma(List<Y9Role> y9RoleList) {
-        return y9RoleList.stream().map(Y9Role::getId).collect(Collectors.joining(","));
-    }
-
     @Transactional(readOnly = false)
     @CacheEvict(key = "#originalPerson.id")
     public void updatePersonByOriginalId(Y9Person originalPerson, Y9PersonExt originalExt) {
@@ -1167,7 +1145,7 @@ public class Y9PersonServiceImpl implements Y9PersonService {
             Y9OrgBase parent = y9OrgBaseManager.getOrgBase(person.getParentId());
             person.setDn(OrgLevelConsts.getOrgLevel(OrgTypeEnum.PERSON) + person.getName() + OrgLevelConsts.SEPARATOR + parent.getDn());
 
-            y9PersonRepository.save(person);
+            y9PersonManager.save(person);
 
             Y9PersonExt ext = y9PersonExtManager.findByPersonId(person.getId());
             if (ext == null) {

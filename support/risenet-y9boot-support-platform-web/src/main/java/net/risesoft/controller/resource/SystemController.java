@@ -17,9 +17,7 @@ import net.risesoft.log.annotation.RiseLog;
 import net.risesoft.pojo.Y9Result;
 import net.risesoft.y9.Y9LoginUserHolder;
 import net.risesoft.y9.pubsub.Y9PublishService;
-import net.risesoft.y9.pubsub.message.Y9MessageCommon;
 import net.risesoft.y9public.entity.resource.Y9System;
-import net.risesoft.y9public.entity.tenant.Y9TenantSystem;
 import net.risesoft.y9public.service.resource.Y9SystemService;
 import net.risesoft.y9public.service.tenant.Y9TenantSystemService;
 
@@ -126,18 +124,9 @@ public class SystemController {
     @PostMapping(value = "/save")
     public Y9Result<Y9System> save(@Validated Y9System y9System) {
         Y9System savedSystem = y9SystemService.saveOrUpdate(y9System);
-
         // TODO move to Service?
-        Y9TenantSystem y9TenantSystem = y9TenantSystemService.getByTenantIdAndSystemId(Y9LoginUserHolder.getTenantId(), savedSystem.getId());
-        if (y9TenantSystem == null) {
-            // 新增系统时租户直接租用以兼容数字底座
-            y9TenantSystemService.saveTenantSystem(savedSystem.getId(), Y9LoginUserHolder.getTenantId());
-
-            // 同步数据源
-            Y9MessageCommon event = new Y9MessageCommon(Y9MessageCommon.TENANT_DATASOURCE_SYNC, "all");
-            y9PublishService.publishMessageCommon(event);
-        }
-
+        // 新增系统时租户直接租用以兼容数字底座
+        y9TenantSystemService.registerTenantSystem(Y9LoginUserHolder.getTenantId(), savedSystem.getId());
         return Y9Result.success(savedSystem, "保存系统成功");
     }
 

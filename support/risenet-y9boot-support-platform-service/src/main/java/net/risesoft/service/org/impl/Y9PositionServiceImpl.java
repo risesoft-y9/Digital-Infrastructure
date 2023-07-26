@@ -9,16 +9,12 @@ import javax.persistence.Query;
 
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.cache.annotation.CacheConfig;
-import org.springframework.cache.annotation.CacheEvict;
-import org.springframework.cache.annotation.Cacheable;
 import org.springframework.context.event.EventListener;
 import org.springframework.orm.jpa.EntityManagerFactoryUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.Assert;
 
-import net.risesoft.consts.CacheNameConsts;
 import net.risesoft.consts.OrgLevelConsts;
 import net.risesoft.entity.Y9Department;
 import net.risesoft.entity.Y9OrgBase;
@@ -31,7 +27,6 @@ import net.risesoft.id.IdType;
 import net.risesoft.id.Y9IdGenerator;
 import net.risesoft.manager.org.Y9OrgBaseManager;
 import net.risesoft.manager.org.Y9PositionManager;
-import net.risesoft.manager.authorization.Y9PositionToRoleManager;
 import net.risesoft.model.Position;
 import net.risesoft.repository.Y9PositionRepository;
 import net.risesoft.repository.identity.position.Y9PositionToResourceAndAuthorityRepository;
@@ -49,8 +44,6 @@ import net.risesoft.y9.pubsub.event.Y9EntityUpdatedEvent;
 import net.risesoft.y9.pubsub.message.Y9MessageOrg;
 import net.risesoft.y9.util.Y9BeanUtil;
 import net.risesoft.y9.util.Y9ModelConvertUtil;
-import net.risesoft.y9public.entity.role.Y9Role;
-import net.risesoft.y9public.manager.role.Y9RoleManager;
 
 /**
  * @author dingzhaojun
@@ -59,7 +52,6 @@ import net.risesoft.y9public.manager.role.Y9RoleManager;
  * @date 2022/2/10
  */
 @Transactional(value = "rsTenantTransactionManager", readOnly = true)
-@CacheConfig(cacheNames = CacheNameConsts.ORG_POSITION)
 @Service
 public class Y9PositionServiceImpl implements Y9PositionService {
 
@@ -74,12 +66,9 @@ public class Y9PositionServiceImpl implements Y9PositionService {
 
     private final Y9OrgBaseManager y9OrgBaseManager;
     private final Y9PositionManager y9PositionManager;
-    private final Y9PositionToRoleManager y9PositionToRoleManager;
-    private final Y9RoleManager y9RoleManager;
 
     public Y9PositionServiceImpl(@Qualifier("rsTenantEntityManagerFactory") EntityManagerFactory entityManagerFactory, Y9PositionRepository y9PositionRepository, Y9PersonsToPositionsRepository y9PersonsToPositionsRepository, Y9OrgBaseManager y9OrgBaseManager,
-        Y9OrgBasesToRolesRepository y9OrgBasesToRolesRepository, Y9PositionToResourceAndAuthorityRepository y9PositionToResourceAndAuthorityRepository, Y9PositionToRoleRepository y9PositionToRoleRepository, Y9AuthorizationRepository y9AuthorizationRepository, Y9PositionManager y9PositionManager,
-        Y9PositionToRoleManager y9PositionToRoleManager, Y9RoleManager y9RoleManager) {
+        Y9OrgBasesToRolesRepository y9OrgBasesToRolesRepository, Y9PositionToResourceAndAuthorityRepository y9PositionToResourceAndAuthorityRepository, Y9PositionToRoleRepository y9PositionToRoleRepository, Y9AuthorizationRepository y9AuthorizationRepository, Y9PositionManager y9PositionManager) {
         this.entityManagerFactory = entityManagerFactory;
         this.y9PositionRepository = y9PositionRepository;
         this.y9PersonsToPositionsRepository = y9PersonsToPositionsRepository;
@@ -89,8 +78,6 @@ public class Y9PositionServiceImpl implements Y9PositionService {
         this.y9PositionToRoleRepository = y9PositionToRoleRepository;
         this.y9AuthorizationRepository = y9AuthorizationRepository;
         this.y9PositionManager = y9PositionManager;
-        this.y9PositionToRoleManager = y9PositionToRoleManager;
-        this.y9RoleManager = y9RoleManager;
     }
 
     @Override
@@ -125,7 +112,6 @@ public class Y9PositionServiceImpl implements Y9PositionService {
     }
 
     @Override
-    @CacheEvict(key = "#positionId")
     @Transactional(readOnly = false)
     public void deleteById(String positionId) {
         Y9Position y9Position = this.getById(positionId);
@@ -138,7 +124,7 @@ public class Y9PositionServiceImpl implements Y9PositionService {
         y9PositionToRoleRepository.deleteByPositionId(positionId);
         y9AuthorizationRepository.deleteByPrincipalIdAndPrincipalType(positionId, AuthorizationPrincipalTypeEnum.POSITION.getValue());
 
-        y9PositionRepository.delete(y9Position);
+        y9PositionManager.delete(y9Position);
         // 发布事件，程序内部监听处理相关业务
         Y9Context.publishEvent(new Y9EntityDeletedEvent<>(y9Position));
 
@@ -161,9 +147,8 @@ public class Y9PositionServiceImpl implements Y9PositionService {
     }
 
     @Override
-    @Cacheable(key = "#id", condition = "#id!=null", unless = "#result==null")
     public Y9Position findById(String id) {
-        return y9PositionRepository.findById(id).orElse(null);
+        return y9PositionManager.findById(id);
     }
 
     @Override
@@ -173,9 +158,8 @@ public class Y9PositionServiceImpl implements Y9PositionService {
 
     @Override
     @Transactional(readOnly = true)
-    @Cacheable(key = "#id", condition = "#id!=null", unless = "#result==null")
     public Y9Position getById(String id) {
-        return y9PositionRepository.findById(id).orElse(null);
+        return y9PositionManager.getById(id);
     }
 
     @Override
@@ -241,7 +225,6 @@ public class Y9PositionServiceImpl implements Y9PositionService {
 
     @Override
     @Transactional(readOnly = false)
-    @CacheEvict(key = "#positionId")
     public Y9Position move(String positionId, String parentId) {
         Y9Position originPosition = this.getById(positionId);
         Y9Position updatedPosition = new Y9Position();
@@ -286,13 +269,11 @@ public class Y9PositionServiceImpl implements Y9PositionService {
 
     @Override
     @Transactional(readOnly = false)
-    @CacheEvict(key = "#position.id")
     public Y9Position save(Y9Position position) {
         return y9PositionManager.save(position);
     }
 
     @Transactional(readOnly = false)
-    @CacheEvict(key = "#positionId")
     public Y9Position saveOrder(String positionId, String tabIndex) {
         Y9Position position = this.getById(positionId);
         position.setTabIndex(Integer.parseInt(tabIndex));
@@ -326,18 +307,16 @@ public class Y9PositionServiceImpl implements Y9PositionService {
 
     @Override
     @Transactional(readOnly = false)
-    @CacheEvict(key = "#position.id")
     public Y9Position saveOrUpdate(Y9Position position, Y9OrgBase parent) {
         return y9PositionManager.saveOrUpdate(position, parent);
     }
 
     @Override
     @Transactional(readOnly = false)
-    @CacheEvict(key = "#positionId")
     public Y9Position saveProperties(String positionId, String properties) {
         Y9Position position = this.getById(positionId);
         position.setProperties(properties);
-        position = y9PositionRepository.save(position);
+        position = y9PositionManager.save(position);
 
         Y9MessageOrg msg = new Y9MessageOrg(Y9ModelConvertUtil.convert(position, Position.class), Y9OrgEventConst.RISEORGEVENT_TYPE_UPDATE_POSITION, Y9LoginUserHolder.getTenantId());
         Y9PublishServiceUtil.publishMessageOrg(msg);
@@ -373,11 +352,10 @@ public class Y9PositionServiceImpl implements Y9PositionService {
 
     @Override
     @Transactional(readOnly = false)
-    @CacheEvict(key = "#id")
     public Y9Position updateTabIndex(String id, int tabIndex) {
         Y9Position position = this.getById(id);
         position.setTabIndex(tabIndex);
-        position = y9PositionRepository.save(position);
+        position = y9PositionManager.save(position);
 
         Y9MessageOrg msg = new Y9MessageOrg(Y9ModelConvertUtil.convert(position, Position.class), Y9OrgEventConst.RISEORGEVENT_TYPE_UPDATE_POSITION_TABINDEX, Y9LoginUserHolder.getTenantId());
         Y9PublishServiceUtil.persistAndPublishMessageOrg(msg, "更新岗位排序号", position.getName() + "的排序号更新为" + tabIndex);

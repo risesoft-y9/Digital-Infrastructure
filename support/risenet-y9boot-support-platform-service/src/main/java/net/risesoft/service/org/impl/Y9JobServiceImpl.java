@@ -4,9 +4,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.apache.commons.lang3.StringUtils;
-import org.springframework.cache.annotation.CacheConfig;
-import org.springframework.cache.annotation.CacheEvict;
-import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -16,10 +13,10 @@ import org.springframework.transaction.annotation.Transactional;
 
 import lombok.RequiredArgsConstructor;
 
-import net.risesoft.consts.CacheNameConsts;
 import net.risesoft.entity.Y9Job;
 import net.risesoft.exception.JobErrorCodeEnum;
 import net.risesoft.id.Y9IdGenerator;
+import net.risesoft.manager.org.Y9JobManager;
 import net.risesoft.model.Job;
 import net.risesoft.repository.Y9JobRepository;
 import net.risesoft.repository.Y9PositionRepository;
@@ -27,7 +24,6 @@ import net.risesoft.service.org.Y9JobService;
 import net.risesoft.util.Y9PublishServiceUtil;
 import net.risesoft.y9.Y9Context;
 import net.risesoft.y9.Y9LoginUserHolder;
-import net.risesoft.y9.exception.util.Y9ExceptionUtil;
 import net.risesoft.y9.pubsub.constant.Y9OrgEventConst;
 import net.risesoft.y9.pubsub.event.Y9EntityUpdatedEvent;
 import net.risesoft.y9.pubsub.message.Y9MessageOrg;
@@ -42,12 +38,13 @@ import net.risesoft.y9.util.Y9ModelConvertUtil;
  */
 @Service
 @Transactional(value = "rsTenantTransactionManager", readOnly = true)
-@CacheConfig(cacheNames = CacheNameConsts.ORG_JOB)
 @RequiredArgsConstructor
 public class Y9JobServiceImpl implements Y9JobService {
 
     private final Y9JobRepository y9JobRepository;
     private final Y9PositionRepository y9PositionRepository;
+
+    private final Y9JobManager y9JobManager;
 
     private void checkIfPositionExists(String name) {
         Y9Assert.lessThanOrEqualTo(y9JobRepository.countByName(name), 0, JobErrorCodeEnum.JOB_EXISTS, name);
@@ -67,23 +64,21 @@ public class Y9JobServiceImpl implements Y9JobService {
 
     @Override
     @Transactional(readOnly = false)
-    @CacheEvict(key = "#id")
     public void deleteById(String id) {
         checkIfRelatedPositionExists(id);
 
-        y9JobRepository.deleteById(id);
+        Y9Job y9Job = y9JobManager.getById(id);
+        y9JobManager.delete(y9Job);
     }
 
     @Override
-    @Cacheable(key = "#id", condition = "#id!=null", unless = "#result==null")
     public Y9Job findById(String id) {
-        return y9JobRepository.findById(id).orElse(null);
+        return y9JobManager.findById(id);
     }
 
     @Override
-    @Cacheable(key = "#id", condition = "#id!=null", unless = "#result==null")
     public Y9Job getById(String id) {
-        return y9JobRepository.findById(id).orElseThrow(() -> Y9ExceptionUtil.notFoundException(JobErrorCodeEnum.JOB_NOT_FOUND, id));
+        return y9JobManager.getById(id);
     }
 
     private Integer getMaxTabIndex() {
@@ -105,7 +100,6 @@ public class Y9JobServiceImpl implements Y9JobService {
     }
 
     @Transactional(readOnly = false)
-    @CacheEvict(key = "#jobId")
     public Y9Job order(String jobId, String tabIndexArray) {
         Y9Job y9Job = this.getById(jobId);
         y9Job.setTabIndex(Integer.parseInt(tabIndexArray));
@@ -130,7 +124,6 @@ public class Y9JobServiceImpl implements Y9JobService {
 
     @Override
     @Transactional(readOnly = false)
-    @CacheEvict(key = "#job.id", condition = "#job.id!=null")
     public Y9Job saveOrUpdate(Y9Job job) {
         if (StringUtils.isNotBlank(job.getId())) {
             // 修改职位
@@ -139,7 +132,7 @@ public class Y9JobServiceImpl implements Y9JobService {
                 Y9Job updatedY9Job = new Y9Job();
                 Y9BeanUtil.copyProperties(originY9Job, updatedY9Job);
                 Y9BeanUtil.copyProperties(job, updatedY9Job);
-                updatedY9Job = y9JobRepository.save(updatedY9Job);
+                updatedY9Job = y9JobManager.save(updatedY9Job);
 
                 Y9Context.publishEvent(new Y9EntityUpdatedEvent<>(originY9Job, updatedY9Job));
 
@@ -164,7 +157,7 @@ public class Y9JobServiceImpl implements Y9JobService {
         y9Job.setName(job.getName());
         Integer maxTabIndex = getMaxTabIndex();
         y9Job.setTabIndex(maxTabIndex != null ? maxTabIndex + 1 : 0);
-        y9Job = y9JobRepository.save(y9Job);
+        y9Job = y9JobManager.save(y9Job);
 
         Y9MessageOrg msg = new Y9MessageOrg(Y9ModelConvertUtil.convert(y9Job, Job.class), Y9OrgEventConst.RISEORGEVENT_TYPE_ADD_JOB, Y9LoginUserHolder.getTenantId());
         Y9PublishServiceUtil.persistAndPublishMessageOrg(msg, "新增职位信息", "新增职位" + job.getName());

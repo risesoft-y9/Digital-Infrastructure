@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import org.springframework.cache.annotation.CacheConfig;
+import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -39,6 +40,13 @@ public class Y9PersonManagerImpl implements Y9PersonManager {
     }
 
     @Override
+    @Cacheable(key = "#id", condition = "#id!=null", unless = "#result==null")
+    public Y9Person findById(String id) {
+        return y9PersonRepository.findById(id).orElse(null);
+    }
+
+
+    @Override
     public List<Y9Person> listByPositionId(String positionId) {
         List<Y9PersonsToPositions> pps = y9PersonsToPositionsRepository.findByPositionIdOrderByPersonOrder(positionId);
         List<String> personIdList = pps.stream().map(Y9PersonsToPositions::getPersonId).collect(Collectors.toList());
@@ -58,5 +66,19 @@ public class Y9PersonManagerImpl implements Y9PersonManager {
             personList.add(getById(personId));
         }
         return personList;
+    }
+
+    @Override
+    @CacheEvict(key = "#y9Person.id")
+    @Transactional(readOnly = false)
+    public void delete(Y9Person y9Person) {
+        y9PersonRepository.delete(y9Person);
+    }
+
+    @Override
+    @CacheEvict(key = "#y9Person.id")
+    @Transactional(readOnly = false)
+    public Y9Person save(Y9Person y9Person) {
+        return y9PersonRepository.save(y9Person);
     }
 }
