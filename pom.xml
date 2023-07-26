@@ -49,7 +49,6 @@
 		<module>support/risenet-y9boot-support-history</module>
 
 		<module>webapp/risenet-y9boot-webapp-sso-server-6.6.x</module>
-
 		<module>webapp/risenet-y9boot-webapp-platform</module>
 		<module>webapp/risenet-y9boot-webapp-log</module>
 	</modules>
