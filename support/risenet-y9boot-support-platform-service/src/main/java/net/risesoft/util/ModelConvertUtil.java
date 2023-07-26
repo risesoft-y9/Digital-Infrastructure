@@ -4,9 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-import net.risesoft.y9.util.Y9BeanUtil;
 import org.apache.commons.lang3.StringUtils;
-import org.springframework.beans.BeanUtils;
 
 import net.risesoft.entity.Y9Department;
 import net.risesoft.entity.Y9Group;
@@ -26,6 +24,7 @@ import net.risesoft.model.Position;
 import net.risesoft.model.Resource;
 import net.risesoft.model.Role;
 import net.risesoft.y9.json.Y9JsonUtil;
+import net.risesoft.y9.util.Y9BeanUtil;
 import net.risesoft.y9.util.Y9ModelConvertUtil;
 import net.risesoft.y9public.entity.resource.Y9ResourceBase;
 import net.risesoft.y9public.entity.role.Y9Role;

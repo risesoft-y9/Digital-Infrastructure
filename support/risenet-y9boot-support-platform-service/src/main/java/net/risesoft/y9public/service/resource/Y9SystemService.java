@@ -2,7 +2,6 @@ package net.risesoft.y9public.service.resource;
 
 import java.util.List;
 
-import net.risesoft.y9public.entity.tenant.Y9Tenant;
 import org.springframework.data.domain.Page;
 
 import net.risesoft.y9.exception.Y9NotFoundException;

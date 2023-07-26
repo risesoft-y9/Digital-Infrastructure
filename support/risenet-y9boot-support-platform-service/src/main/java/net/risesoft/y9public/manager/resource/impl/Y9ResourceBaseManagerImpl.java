@@ -2,9 +2,7 @@ package net.risesoft.y9public.manager.resource.impl;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 
-import net.risesoft.consts.CacheNameConsts;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.Sort;
@@ -13,6 +11,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import lombok.RequiredArgsConstructor;
 
+import net.risesoft.consts.CacheNameConsts;
 import net.risesoft.enums.ResourceTypeEnum;
 import net.risesoft.y9public.entity.resource.Y9App;
 import net.risesoft.y9public.entity.resource.Y9Menu;

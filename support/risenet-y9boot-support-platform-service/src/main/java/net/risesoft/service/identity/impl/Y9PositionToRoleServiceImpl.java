@@ -2,22 +2,20 @@ package net.risesoft.service.identity.impl;
 
 import java.util.List;
 
-import net.risesoft.entity.Y9Position;
-import net.risesoft.manager.authorization.Y9PositionToRoleManager;
-import net.risesoft.manager.org.Y9PositionManager;
-import net.risesoft.y9public.entity.role.Y9Role;
-import net.risesoft.y9public.manager.role.Y9RoleManager;
-import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import lombok.RequiredArgsConstructor;
 
-import net.risesoft.consts.CacheNameConsts;
+import net.risesoft.entity.Y9Position;
 import net.risesoft.entity.identity.position.Y9PositionToRole;
+import net.risesoft.manager.authorization.Y9PositionToRoleManager;
+import net.risesoft.manager.org.Y9PositionManager;
 import net.risesoft.repository.identity.position.Y9PositionToRoleRepository;
 import net.risesoft.service.identity.Y9PositionToRoleService;
+import net.risesoft.y9public.entity.role.Y9Role;
+import net.risesoft.y9public.manager.role.Y9RoleManager;
 
 /**
  * PositionToRoleServiceImpl
@@ -26,7 +24,6 @@ import net.risesoft.service.identity.Y9PositionToRoleService;
  * @date 2022/4/6
  */
 @Transactional(value = "rsTenantTransactionManager", readOnly = true)
-@CacheConfig(cacheNames = CacheNameConsts.POSITIONS_TO_ROLES)
 @Service
 @RequiredArgsConstructor
 public class Y9PositionToRoleServiceImpl implements Y9PositionToRoleService {

@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.apache.commons.lang3.StringUtils;
-import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -14,13 +13,12 @@ import org.springframework.transaction.annotation.Transactional;
 
 import lombok.RequiredArgsConstructor;
 
-import net.risesoft.consts.CacheNameConsts;
 import net.risesoft.entity.Y9Person;
 import net.risesoft.entity.relation.Y9CustomGroupMember;
 import net.risesoft.enums.OrgTypeEnum;
-import net.risesoft.manager.relation.Y9CustomGroupMembersManager;
 import net.risesoft.manager.org.Y9OrgBaseManager;
 import net.risesoft.manager.org.Y9PersonManager;
+import net.risesoft.manager.relation.Y9CustomGroupMembersManager;
 import net.risesoft.repository.relation.Y9CustomGroupMembersRepository;
 import net.risesoft.service.relation.Y9CustomGroupMembersService;
 
@@ -31,7 +29,6 @@ import net.risesoft.service.relation.Y9CustomGroupMembersService;
  * @date 2022/2/10
  */
 @Transactional(value = "rsTenantTransactionManager", readOnly = true)
-@CacheConfig(cacheNames = CacheNameConsts.CUSTOM_GROUP_MEMBERS)
 @Service
 @RequiredArgsConstructor
 public class Y9CustomGroupMembersServiceImpl implements Y9CustomGroupMembersService {

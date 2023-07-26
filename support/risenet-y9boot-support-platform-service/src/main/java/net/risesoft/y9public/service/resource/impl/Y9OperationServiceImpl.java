@@ -2,20 +2,14 @@ package net.risesoft.y9public.service.resource.impl;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 
 import org.apache.commons.lang3.StringUtils;
-import org.springframework.cache.annotation.CacheConfig;
-import org.springframework.cache.annotation.CacheEvict;
-import org.springframework.cache.annotation.Cacheable;
 import org.springframework.context.event.EventListener;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import lombok.RequiredArgsConstructor;
 
-import net.risesoft.consts.CacheNameConsts;
-import net.risesoft.exception.OperationErrorCodeEnum;
 import net.risesoft.id.IdType;
 import net.risesoft.id.Y9IdGenerator;
 import net.risesoft.repository.identity.person.Y9PersonToResourceAndAuthorityRepository;
@@ -23,7 +17,6 @@ import net.risesoft.repository.identity.position.Y9PositionToResourceAndAuthorit
 import net.risesoft.repository.permission.Y9AuthorizationRepository;
 import net.risesoft.y9.Y9Context;
 import net.risesoft.y9.Y9LoginUserHolder;
-import net.risesoft.y9.exception.util.Y9ExceptionUtil;
 import net.risesoft.y9.pubsub.event.Y9EntityCreatedEvent;
 import net.risesoft.y9.pubsub.event.Y9EntityDeletedEvent;
 import net.risesoft.y9.pubsub.event.Y9EntityUpdatedEvent;
@@ -32,6 +25,7 @@ import net.risesoft.y9public.entity.resource.Y9App;
 import net.risesoft.y9public.entity.resource.Y9Menu;
 import net.risesoft.y9public.entity.resource.Y9Operation;
 import net.risesoft.y9public.entity.tenant.Y9TenantApp;
+import net.risesoft.y9public.manager.resource.Y9OperationManager;
 import net.risesoft.y9public.repository.resource.Y9OperationRepository;
 import net.risesoft.y9public.repository.tenant.Y9TenantAppRepository;
 import net.risesoft.y9public.service.resource.Y9OperationService;
@@ -43,7 +37,6 @@ import net.risesoft.y9public.service.resource.Y9OperationService;
  * @date 2022/2/10
  */
 @Service
-@CacheConfig(cacheNames = CacheNameConsts.RESOURCE_OPERATION)
 @Transactional(value = "rsPublicTransactionManager", readOnly = true)
 @RequiredArgsConstructor
 public class Y9OperationServiceImpl implements Y9OperationService {
@@ -54,6 +47,8 @@ public class Y9OperationServiceImpl implements Y9OperationService {
     private final Y9PersonToResourceAndAuthorityRepository y9PersonToResourceAndAuthorityRepository;
     private final Y9PositionToResourceAndAuthorityRepository y9PositionToResourceAndAuthorityRepository;
 
+    private final Y9OperationManager y9OperationManager;
+    
     @Override
     @Transactional(readOnly = false)
     public void delete(List<String> idList) {
@@ -63,7 +58,6 @@ public class Y9OperationServiceImpl implements Y9OperationService {
     }
 
     @Override
-    @CacheEvict(key = "#id")
     @Transactional(readOnly = false)
     public void delete(String id) {
         Y9Operation y9Operation = this.getById(id);
@@ -79,7 +73,7 @@ public class Y9OperationServiceImpl implements Y9OperationService {
             y9PositionToResourceAndAuthorityRepository.deleteByResourceId(y9Operation.getId());
         }
         
-        y9OperationRepository.deleteById(id);
+        y9OperationManager.delete(y9Operation);
     }
 
     @Transactional(readOnly = false)
@@ -101,7 +95,6 @@ public class Y9OperationServiceImpl implements Y9OperationService {
     }
 
     @Override
-    @CacheEvict(key = "#id")
     @Transactional(readOnly = false)
     public Y9Operation disable(String id) {
         Y9Operation y9Operation = this.getById(id);
@@ -120,7 +113,6 @@ public class Y9OperationServiceImpl implements Y9OperationService {
     }
 
     @Override
-    @CacheEvict(key = "#id")
     @Transactional(readOnly = false)
     public Y9Operation enable(String id) {
         Y9Operation y9Operation = this.getById(id);
@@ -134,9 +126,8 @@ public class Y9OperationServiceImpl implements Y9OperationService {
     }
 
     @Override
-    @Cacheable(key = "#id", condition = "#id!=null", unless = "#result==null")
     public Y9Operation findById(String id) {
-        return y9OperationRepository.findById(id).orElse(null);
+        return y9OperationManager.findById(id);
     }
 
     @Override
@@ -150,13 +141,11 @@ public class Y9OperationServiceImpl implements Y9OperationService {
     }
 
     @Override
-    @Cacheable(key = "#id", condition = "#id!=null", unless = "#result==null")
     public Y9Operation getById(String id) {
-        return y9OperationRepository.findById(id).orElseThrow(() -> Y9ExceptionUtil.notFoundException(OperationErrorCodeEnum.OPERATION_NOT_FOUND, id));
+        return y9OperationManager.getById(id);
     }
 
     @Override
-    @CacheEvict(key = "#id")
     @Transactional(readOnly = false)
     public Y9Operation move(String id, String parentId) {
         Y9Operation y9Operation = this.getById(id);
@@ -177,17 +166,15 @@ public class Y9OperationServiceImpl implements Y9OperationService {
     }
 
     @Override
-    @CacheEvict(key = "#y9Operation.id", condition = "#y9Operation.id!=null")
     @Transactional(readOnly = false)
     public Y9Operation saveOrUpdate(Y9Operation y9Operation) {
         if (StringUtils.isNotBlank(y9Operation.getId())) {
-            Optional<Y9Operation> y9OperationOptional = y9OperationRepository.findById(y9Operation.getId());
-            if (y9OperationOptional.isPresent()) {
-                Y9Operation originOperationResource = y9OperationOptional.get();
+            Y9Operation originOperationResource = y9OperationManager.findById(y9Operation.getId());
+            if (originOperationResource != null) {
                 Y9Operation updatedOperationResource = new Y9Operation();
                 Y9BeanUtil.copyProperties(originOperationResource, updatedOperationResource);
                 Y9BeanUtil.copyProperties(y9Operation, updatedOperationResource);
-                updatedOperationResource = y9OperationRepository.save(updatedOperationResource);
+                updatedOperationResource = y9OperationManager.save(updatedOperationResource);
 
                 Y9Context.publishEvent(new Y9EntityUpdatedEvent<>(originOperationResource, updatedOperationResource));
 
@@ -199,11 +186,10 @@ public class Y9OperationServiceImpl implements Y9OperationService {
 
         Y9Context.publishEvent(new Y9EntityCreatedEvent<>(y9Operation));
 
-        return y9OperationRepository.save(y9Operation);
+        return y9OperationManager.save(y9Operation);
     }
 
     @Override
-    @CacheEvict(key = "#id")
     @Transactional(readOnly = false)
     public Y9Operation updateTabIndex(String id, int index) {
         Y9Operation y9Operation = this.getById(id);

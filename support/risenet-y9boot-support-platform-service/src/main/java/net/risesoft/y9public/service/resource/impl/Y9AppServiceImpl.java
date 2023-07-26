@@ -6,9 +6,6 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import org.apache.commons.lang3.StringUtils;
-import org.springframework.cache.annotation.CacheConfig;
-import org.springframework.cache.annotation.CacheEvict;
-import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -18,7 +15,6 @@ import org.springframework.transaction.annotation.Transactional;
 
 import lombok.RequiredArgsConstructor;
 
-import net.risesoft.consts.CacheNameConsts;
 import net.risesoft.id.IdType;
 import net.risesoft.id.Y9IdGenerator;
 import net.risesoft.pojo.Y9PageQuery;
@@ -41,7 +37,6 @@ import net.risesoft.y9public.specification.Y9AppSpecification;
  * @date 2022/2/10
  */
 @Service
-@CacheConfig(cacheNames = CacheNameConsts.RESOURCE_APP)
 @Transactional(value = "rsPublicTransactionManager", readOnly = true)
 @RequiredArgsConstructor
 public class Y9AppServiceImpl implements Y9AppService {
@@ -65,7 +60,6 @@ public class Y9AppServiceImpl implements Y9AppService {
     }
 
     @Override
-    @CacheEvict(key = "#id")
     @Transactional(readOnly = false)
     public void delete(String id) {
         y9AppManager.delete(id);
@@ -82,7 +76,6 @@ public class Y9AppServiceImpl implements Y9AppService {
     }
 
     @Override
-    @CacheEvict(key = "#id")
     @Transactional(readOnly = false)
     public Y9App disable(String id) {
         Y9App y9App = this.getById(id);
@@ -98,7 +91,7 @@ public class Y9AppServiceImpl implements Y9AppService {
             boolean appEnabled = y9App.getEnabled();
             if (appEnabled) {
                 y9App.setEnabled(false);
-                y9AppRepository.save(y9App);
+                y9AppManager.save(y9App);
             }
         }
     }
@@ -114,7 +107,6 @@ public class Y9AppServiceImpl implements Y9AppService {
     }
 
     @Override
-    @CacheEvict(key = "#id")
     @Transactional(readOnly = false)
     public Y9App enable(String id) {
         Y9App y9App = this.getById(id);
@@ -123,7 +115,6 @@ public class Y9AppServiceImpl implements Y9AppService {
     }
 
     @Override
-    @CacheEvict(allEntries = true)
     @Transactional(readOnly = false)
     public void enableBySystemId(String systemId) {
         List<Y9App> list = y9AppRepository.findBySystemId(systemId);
@@ -131,7 +122,7 @@ public class Y9AppServiceImpl implements Y9AppService {
             boolean appEnabled = y9App.getEnabled();
             if (!appEnabled) {
                 y9App.setEnabled(true);
-                y9AppRepository.save(y9App);
+                y9AppManager.save(y9App);
             }
         }
     }
@@ -154,7 +145,6 @@ public class Y9AppServiceImpl implements Y9AppService {
     }
 
     @Override
-    @Cacheable(key = "#id", condition = "#id!=null", unless = "#result==null")
     public Y9App findById(String id) {
         return y9AppManager.findById(id);
     }
@@ -288,31 +278,29 @@ public class Y9AppServiceImpl implements Y9AppService {
     }
 
     @Override
-    @CacheEvict(allEntries = true)
     @Transactional(readOnly = false)
     public void saveOrder(String[] appIds) {
         if (appIds.length > 0) {
             for (int i = 0, len = appIds.length; i < len; i++) {
                 Y9App app = getById(appIds[i]);
                 app.setTabIndex(i + 1);
-                y9AppRepository.save(app);
+                y9AppManager.save(app);
             }
         }
     }
 
     @Override
-    @CacheEvict(key = "#y9App.id")
     @Transactional(readOnly = false)
     public Y9App saveOrUpdate(Y9App y9App) {
         // 每次保存都更改审核状态为未审核
         y9App.setChecked(false);
         if (StringUtils.isNotBlank(y9App.getId())) {
-            Y9App originY9AppResource = y9AppRepository.findById(y9App.getId()).orElse(null);
+            Y9App originY9AppResource = y9AppManager.findById(y9App.getId());
             if (originY9AppResource != null) {
                 Y9App updatedY9AppResource = new Y9App();
                 Y9BeanUtil.copyProperties(originY9AppResource, updatedY9AppResource);
                 Y9BeanUtil.copyProperties(y9App, updatedY9AppResource);
-                updatedY9AppResource = y9AppRepository.save(updatedY9AppResource);
+                updatedY9AppResource = y9AppManager.save(updatedY9AppResource);
 
                 Y9Context.publishEvent(new Y9EntityUpdatedEvent<>(originY9AppResource, updatedY9AppResource));
 
@@ -321,7 +309,7 @@ public class Y9AppServiceImpl implements Y9AppService {
         } else {
             y9App.setId(Y9IdGenerator.genId(IdType.SNOWFLAKE));
         }
-        y9App = y9AppRepository.save(y9App);
+        y9App = y9AppManager.save(y9App);
 
         Y9Context.publishEvent(new Y9EntityCreatedEvent<>(y9App));
 
@@ -337,13 +325,12 @@ public class Y9AppServiceImpl implements Y9AppService {
     }
 
     @Override
-    @CacheEvict(key = "#id")
     @Transactional(readOnly = false)
     public Y9App verifyApp(String id, boolean checked, String verifyUserName) {
         Y9App y9App = this.getById(id);
         y9App.setChecked(checked);
         y9App.setVerifyUserName(verifyUserName);
-        return y9AppRepository.save(y9App);
+        return y9AppManager.save(y9App);
     }
 
 }

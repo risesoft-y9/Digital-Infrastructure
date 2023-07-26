@@ -1,6 +1,5 @@
 package net.risesoft.api.tenant;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.context.annotation.Primary;
@@ -17,8 +16,6 @@ import net.risesoft.model.Tenant;
 import net.risesoft.y9.util.Y9ModelConvertUtil;
 import net.risesoft.y9public.entity.resource.Y9System;
 import net.risesoft.y9public.entity.tenant.Y9Tenant;
-import net.risesoft.y9public.service.resource.Y9SystemService;
-import net.risesoft.y9public.service.tenant.Y9TenantService;
 import net.risesoft.y9public.service.tenant.Y9TenantSystemService;
 
 /**

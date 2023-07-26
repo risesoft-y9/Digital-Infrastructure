@@ -2,21 +2,14 @@ package net.risesoft.y9public.service.resource.impl;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 
-import net.risesoft.y9public.manager.resource.Y9MenuManager;
 import org.apache.commons.lang3.StringUtils;
-import org.springframework.cache.annotation.CacheConfig;
-import org.springframework.cache.annotation.CacheEvict;
-import org.springframework.cache.annotation.Cacheable;
 import org.springframework.context.event.EventListener;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import lombok.RequiredArgsConstructor;
 
-import net.risesoft.consts.CacheNameConsts;
-import net.risesoft.exception.MenuErrorCodeEnum;
 import net.risesoft.id.IdType;
 import net.risesoft.id.Y9IdGenerator;
 import net.risesoft.repository.identity.person.Y9PersonToResourceAndAuthorityRepository;
@@ -24,7 +17,6 @@ import net.risesoft.repository.identity.position.Y9PositionToResourceAndAuthorit
 import net.risesoft.repository.permission.Y9AuthorizationRepository;
 import net.risesoft.y9.Y9Context;
 import net.risesoft.y9.Y9LoginUserHolder;
-import net.risesoft.y9.exception.util.Y9ExceptionUtil;
 import net.risesoft.y9.pubsub.event.Y9EntityCreatedEvent;
 import net.risesoft.y9.pubsub.event.Y9EntityDeletedEvent;
 import net.risesoft.y9.pubsub.event.Y9EntityUpdatedEvent;
@@ -32,6 +24,7 @@ import net.risesoft.y9.util.Y9BeanUtil;
 import net.risesoft.y9public.entity.resource.Y9App;
 import net.risesoft.y9public.entity.resource.Y9Menu;
 import net.risesoft.y9public.entity.tenant.Y9TenantApp;
+import net.risesoft.y9public.manager.resource.Y9MenuManager;
 import net.risesoft.y9public.repository.resource.Y9MenuRepository;
 import net.risesoft.y9public.repository.tenant.Y9TenantAppRepository;
 import net.risesoft.y9public.service.resource.Y9MenuService;
@@ -43,7 +36,6 @@ import net.risesoft.y9public.service.resource.Y9MenuService;
  * @date 2022/2/10
  */
 @Service
-@CacheConfig(cacheNames = CacheNameConsts.RESOURCE_MENU)
 @Transactional(value = "rsPublicTransactionManager", readOnly = true)
 @RequiredArgsConstructor
 public class Y9MenuServiceImpl implements Y9MenuService {
@@ -65,7 +57,6 @@ public class Y9MenuServiceImpl implements Y9MenuService {
     }
 
     @Override
-    @CacheEvict(key = "#id")
     @Transactional(readOnly = false)
     public void delete(String id) {
         Y9Menu y9Menu = this.getById(id);
@@ -81,7 +72,7 @@ public class Y9MenuServiceImpl implements Y9MenuService {
             y9PositionToResourceAndAuthorityRepository.deleteByResourceId(y9Menu.getId());
         }
         
-        y9MenuRepository.delete(y9Menu);
+        y9MenuManager.delete(y9Menu);
     }
 
     @Transactional(readOnly = false)
@@ -103,7 +94,6 @@ public class Y9MenuServiceImpl implements Y9MenuService {
     }
 
     @Override
-    @CacheEvict(key = "#id")
     @Transactional(readOnly = false)
     public Y9Menu disable(String id) {
         Y9Menu y9Menu = this.getById(id);
@@ -122,7 +112,6 @@ public class Y9MenuServiceImpl implements Y9MenuService {
     }
 
     @Override
-    @CacheEvict(key = "#id")
     @Transactional(readOnly = false)
     public Y9Menu enable(String id) {
         Y9Menu y9Menu = this.getById(id);
@@ -135,7 +124,6 @@ public class Y9MenuServiceImpl implements Y9MenuService {
         return y9MenuRepository.existsById(id);
     }
 
-    @Cacheable(key = "#id", condition = "#id!=null", unless = "#result==null")
     @Override
     public Y9Menu findById(String id) {
         return y9MenuManager.findById(id);
@@ -153,11 +141,10 @@ public class Y9MenuServiceImpl implements Y9MenuService {
 
     @Override
     public Y9Menu getById(String id) {
-        return y9MenuRepository.findById(id).orElseThrow(() -> Y9ExceptionUtil.notFoundException(MenuErrorCodeEnum.MENU_NOT_FOUND, id));
+        return y9MenuManager.getById(id);
     }
 
     @Override
-    @CacheEvict(key = "#id")
     @Transactional(readOnly = false)
     public Y9Menu move(String id, String parentId) {
         Y9Menu y9Menu = this.getById(id);
@@ -178,17 +165,15 @@ public class Y9MenuServiceImpl implements Y9MenuService {
     }
 
     @Override
-    @CacheEvict(key = "#y9Menu.id", condition = "#y9Menu.id!=null")
     @Transactional(readOnly = false)
     public Y9Menu saveOrUpdate(Y9Menu y9Menu) {
         if (StringUtils.isNotBlank(y9Menu.getId())) {
-            Optional<Y9Menu> y9MenuOptional = y9MenuRepository.findById(y9Menu.getId());
-            if (y9MenuOptional.isPresent()) {
-                Y9Menu originMenuResource = y9MenuOptional.get();
+            Y9Menu originMenuResource = y9MenuManager.findById(y9Menu.getId());
+            if (originMenuResource != null) {
                 Y9Menu updatedMenuResource = new Y9Menu();
                 Y9BeanUtil.copyProperties(originMenuResource, updatedMenuResource);
                 Y9BeanUtil.copyProperties(y9Menu, updatedMenuResource);
-                updatedMenuResource = y9MenuRepository.save(updatedMenuResource);
+                updatedMenuResource = y9MenuManager.save(updatedMenuResource);
 
                 Y9Context.publishEvent(new Y9EntityUpdatedEvent<>(originMenuResource, updatedMenuResource));
 
@@ -197,7 +182,7 @@ public class Y9MenuServiceImpl implements Y9MenuService {
         } else {
             y9Menu.setId(Y9IdGenerator.genId(IdType.SNOWFLAKE));
         }
-        y9Menu = y9MenuRepository.save(y9Menu);
+        y9Menu = y9MenuManager.save(y9Menu);
 
         Y9Context.publishEvent(new Y9EntityCreatedEvent<>(y9Menu));
 

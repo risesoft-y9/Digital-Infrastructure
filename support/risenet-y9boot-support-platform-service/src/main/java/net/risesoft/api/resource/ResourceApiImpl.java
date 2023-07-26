@@ -1,9 +1,7 @@
 package net.risesoft.api.resource;
 
-import java.util.ArrayList;
 import java.util.List;
 
-import net.risesoft.y9.util.Y9ModelConvertUtil;
 import org.springframework.context.annotation.Primary;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -17,6 +15,7 @@ import lombok.RequiredArgsConstructor;
 import net.risesoft.enums.ResourceTypeEnum;
 import net.risesoft.model.Resource;
 import net.risesoft.util.ModelConvertUtil;
+import net.risesoft.y9.util.Y9ModelConvertUtil;
 import net.risesoft.y9public.entity.resource.Y9App;
 import net.risesoft.y9public.entity.resource.Y9Menu;
 import net.risesoft.y9public.entity.resource.Y9ResourceBase;

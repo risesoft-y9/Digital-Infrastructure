@@ -3,7 +3,6 @@ package net.risesoft.manager.org;
 import net.risesoft.entity.Y9OrgBase;
 import net.risesoft.entity.Y9Position;
 import net.risesoft.y9.exception.Y9NotFoundException;
-import org.springframework.cache.annotation.Cacheable;
 
 public interface Y9PositionManager {
 

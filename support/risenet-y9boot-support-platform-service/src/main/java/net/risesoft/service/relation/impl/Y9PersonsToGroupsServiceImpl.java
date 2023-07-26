@@ -4,13 +4,11 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import lombok.RequiredArgsConstructor;
 
-import net.risesoft.consts.CacheNameConsts;
 import net.risesoft.entity.Y9Group;
 import net.risesoft.entity.Y9Person;
 import net.risesoft.entity.relation.Y9PersonsToGroups;
@@ -35,7 +33,6 @@ import net.risesoft.y9.pubsub.message.Y9MessageOrg;
  * @date 2022/2/10
  */
 @Transactional(value = "rsTenantTransactionManager", readOnly = true)
-@CacheConfig(cacheNames = CacheNameConsts.PERSONS_TO_GROUPS)
 @Service
 @RequiredArgsConstructor
 public class Y9PersonsToGroupsServiceImpl implements Y9PersonsToGroupsService {

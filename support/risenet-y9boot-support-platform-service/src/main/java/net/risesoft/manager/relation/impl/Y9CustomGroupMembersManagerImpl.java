@@ -16,8 +16,8 @@ import net.risesoft.entity.relation.Y9CustomGroupMember;
 import net.risesoft.enums.OrgTypeEnum;
 import net.risesoft.id.IdType;
 import net.risesoft.id.Y9IdGenerator;
-import net.risesoft.manager.relation.Y9CustomGroupMembersManager;
 import net.risesoft.manager.org.Y9OrgBaseManager;
+import net.risesoft.manager.relation.Y9CustomGroupMembersManager;
 import net.risesoft.repository.relation.Y9CustomGroupMembersRepository;
 import net.risesoft.y9.util.Y9BeanUtil;
 

@@ -2,14 +2,15 @@ package net.risesoft.y9public.manager.resource.impl;
 
 import java.util.List;
 
-import net.risesoft.consts.CacheNameConsts;
 import org.springframework.cache.annotation.CacheConfig;
+import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import lombok.RequiredArgsConstructor;
 
+import net.risesoft.consts.CacheNameConsts;
 import net.risesoft.exception.AppErrorCodeEnum;
 import net.risesoft.y9.Y9Context;
 import net.risesoft.y9.exception.util.Y9ExceptionUtil;
@@ -50,6 +51,7 @@ public class Y9AppManagerImpl implements Y9AppManager {
 
     @Override
     @Transactional(readOnly = false)
+    @CacheEvict(key = "#id")
     public void delete(String id) {
         Y9App y9App = this.getById(id);
         Y9Context.publishEvent(new Y9EntityDeletedEvent<>(y9App));
@@ -62,6 +64,7 @@ public class Y9AppManagerImpl implements Y9AppManager {
     }
 
     @Override
+    @Cacheable(key = "#id", condition = "#id!=null", unless = "#result==null")
     public Y9App getById(String id) {
         return y9AppRepository.findById(id).orElseThrow(() -> Y9ExceptionUtil.notFoundException(AppErrorCodeEnum.APP_NOT_FOUND, id));
     }
@@ -71,5 +74,12 @@ public class Y9AppManagerImpl implements Y9AppManager {
     public Y9App findById(String id) {
         return y9AppRepository.findById(id).orElse(null);
     }
-    
+
+    @Override
+    @Transactional(readOnly = false)
+    @CacheEvict(key = "#y9App.id")
+    public Y9App save(Y9App y9App) {
+        return y9AppRepository.save(y9App);
+    }
+
 }

@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import net.risesoft.service.identity.Y9PersonToResourceAndAuthorityService;
 import org.springframework.stereotype.Component;
 
 import lombok.RequiredArgsConstructor;
@@ -14,6 +13,7 @@ import net.risesoft.entity.identity.person.Y9PersonToResourceAndAuthority;
 import net.risesoft.enums.ResourceTypeEnum;
 import net.risesoft.model.VueButton;
 import net.risesoft.model.VueMenu;
+import net.risesoft.service.identity.Y9PersonToResourceAndAuthorityService;
 import net.risesoft.y9public.entity.resource.Y9Menu;
 import net.risesoft.y9public.entity.resource.Y9Operation;
 import net.risesoft.y9public.service.resource.Y9MenuService;

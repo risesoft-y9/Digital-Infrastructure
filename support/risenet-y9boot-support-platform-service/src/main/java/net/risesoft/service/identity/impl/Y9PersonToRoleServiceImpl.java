@@ -6,11 +6,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
-import net.risesoft.entity.Y9Person;
-import net.risesoft.manager.org.Y9PersonManager;
-import net.risesoft.y9public.manager.role.Y9RoleManager;
 import org.apache.commons.lang3.StringUtils;
-import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -21,13 +17,15 @@ import org.springframework.transaction.annotation.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
-import net.risesoft.consts.CacheNameConsts;
+import net.risesoft.entity.Y9Person;
 import net.risesoft.entity.identity.person.Y9PersonToRole;
 import net.risesoft.manager.authorization.Y9PersonToRoleManager;
+import net.risesoft.manager.org.Y9PersonManager;
 import net.risesoft.pojo.Y9Page;
 import net.risesoft.repository.identity.person.Y9PersonToRoleRepository;
 import net.risesoft.service.identity.Y9PersonToRoleService;
 import net.risesoft.y9public.entity.role.Y9Role;
+import net.risesoft.y9public.manager.role.Y9RoleManager;
 import net.risesoft.y9public.repository.role.Y9RoleRepository;
 
 /**
@@ -37,7 +35,6 @@ import net.risesoft.y9public.repository.role.Y9RoleRepository;
  * @date 2022/2/10
  */
 @Transactional(value = "rsTenantTransactionManager", readOnly = true)
-@CacheConfig(cacheNames = CacheNameConsts.PERSONS_TO_ROLES)
 @Service
 @Slf4j
 @RequiredArgsConstructor

@@ -4,13 +4,11 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import lombok.RequiredArgsConstructor;
 
-import net.risesoft.consts.CacheNameConsts;
 import net.risesoft.entity.Y9Person;
 import net.risesoft.entity.identity.Y9IdentityToResourceAndAuthorityBase;
 import net.risesoft.entity.identity.person.Y9PersonToResourceAndAuthority;
@@ -37,7 +35,6 @@ import net.risesoft.y9public.manager.tenant.Y9TenantAppManager;
  * @date 2022/2/10
  */
 @Transactional(value = "rsTenantTransactionManager", readOnly = true)
-@CacheConfig(cacheNames = CacheNameConsts.PERSONS_TO_RESOURCES)
 @Service
 @RequiredArgsConstructor
 public class Y9PersonToResourceAndAuthorityServiceImpl implements Y9PersonToResourceAndAuthorityService {

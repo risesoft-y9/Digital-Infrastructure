@@ -2,23 +2,16 @@ package net.risesoft.service.identity.impl;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Set;
 import java.util.stream.Collectors;
 
-import net.risesoft.entity.identity.Y9IdentityToResourceAndAuthorityBase;
-import net.risesoft.model.Resource;
-import net.risesoft.y9.util.Y9ModelConvertUtil;
-import net.risesoft.y9public.entity.resource.Y9Menu;
-import net.risesoft.y9public.manager.resource.Y9MenuManager;
 import org.apache.commons.lang3.StringUtils;
-import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import lombok.RequiredArgsConstructor;
 
-import net.risesoft.consts.CacheNameConsts;
 import net.risesoft.entity.Y9Position;
+import net.risesoft.entity.identity.Y9IdentityToResourceAndAuthorityBase;
 import net.risesoft.entity.identity.position.Y9PositionToResourceAndAuthority;
 import net.risesoft.entity.permission.Y9Authorization;
 import net.risesoft.enums.ResourceTypeEnum;
@@ -28,9 +21,11 @@ import net.risesoft.repository.identity.position.Y9PositionToResourceAndAuthorit
 import net.risesoft.service.identity.Y9PositionToResourceAndAuthorityService;
 import net.risesoft.y9.Y9LoginUserHolder;
 import net.risesoft.y9public.entity.resource.Y9App;
+import net.risesoft.y9public.entity.resource.Y9Menu;
 import net.risesoft.y9public.entity.resource.Y9ResourceBase;
 import net.risesoft.y9public.entity.tenant.Y9TenantApp;
 import net.risesoft.y9public.manager.resource.Y9AppManager;
+import net.risesoft.y9public.manager.resource.Y9MenuManager;
 import net.risesoft.y9public.manager.resource.Y9ResourceBaseManager;
 import net.risesoft.y9public.manager.tenant.Y9TenantAppManager;
 
@@ -42,7 +37,6 @@ import net.risesoft.y9public.manager.tenant.Y9TenantAppManager;
  * @date 2022/4/6
  */
 @Transactional(value = "rsTenantTransactionManager", readOnly = true)
-@CacheConfig(cacheNames = CacheNameConsts.POSITIONS_TO_RESOURCES)
 @Service
 @RequiredArgsConstructor
 public class Y9PositionToResourceAndAuthorityServiceImpl implements Y9PositionToResourceAndAuthorityService {

@@ -1,7 +1,5 @@
 package net.risesoft.manager.org.impl;
 
-import net.risesoft.exception.OrganizationErrorCodeEnum;
-import net.risesoft.y9.exception.util.Y9ExceptionUtil;
 import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
@@ -12,8 +10,10 @@ import lombok.RequiredArgsConstructor;
 
 import net.risesoft.consts.CacheNameConsts;
 import net.risesoft.entity.Y9Organization;
+import net.risesoft.exception.OrganizationErrorCodeEnum;
 import net.risesoft.manager.org.Y9OrganizationManager;
 import net.risesoft.repository.Y9OrganizationRepository;
+import net.risesoft.y9.exception.util.Y9ExceptionUtil;
 
 /**
  * 组织 manager 实现类

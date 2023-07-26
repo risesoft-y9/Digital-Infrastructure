@@ -5,19 +5,17 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import org.apache.commons.lang3.StringUtils;
-import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import lombok.RequiredArgsConstructor;
 
-import net.risesoft.consts.CacheNameConsts;
 import net.risesoft.entity.Y9Person;
 import net.risesoft.entity.Y9Position;
 import net.risesoft.entity.relation.Y9PersonsToPositions;
 import net.risesoft.manager.org.Y9PersonManager;
-import net.risesoft.manager.relation.Y9PersonsToPositionsManager;
 import net.risesoft.manager.org.Y9PositionManager;
+import net.risesoft.manager.relation.Y9PersonsToPositionsManager;
 import net.risesoft.model.PersonsPositions;
 import net.risesoft.repository.relation.Y9PersonsToPositionsRepository;
 import net.risesoft.service.relation.Y9PersonsToPositionsService;
@@ -34,7 +32,6 @@ import net.risesoft.y9.pubsub.message.Y9MessageOrg;
  * @date 2022/2/10
  */
 @Transactional(value = "rsTenantTransactionManager", readOnly = true)
-@CacheConfig(cacheNames = CacheNameConsts.PERSONS_TO_POSITIONS)
 @Service
 @RequiredArgsConstructor
 public class Y9PersonsToPositionsServiceImpl implements Y9PersonsToPositionsService {

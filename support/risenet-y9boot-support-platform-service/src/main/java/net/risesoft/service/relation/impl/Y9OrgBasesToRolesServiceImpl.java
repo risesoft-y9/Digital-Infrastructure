@@ -6,15 +6,12 @@ import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-import org.springframework.cache.annotation.CacheConfig;
-import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import lombok.RequiredArgsConstructor;
 
-import net.risesoft.consts.CacheNameConsts;
 import net.risesoft.entity.Y9OrgBase;
 import net.risesoft.entity.relation.Y9OrgBasesToRoles;
 import net.risesoft.repository.Y9DepartmentRepository;
@@ -36,7 +33,6 @@ import net.risesoft.y9.pubsub.event.Y9EntityDeletedEvent;
  * @date 2022/2/10
  */
 @Transactional(value = "rsTenantTransactionManager", readOnly = true)
-@CacheConfig(cacheNames = CacheNameConsts.ORGBASES_TO_ROLES)
 @Service
 @RequiredArgsConstructor
 public class Y9OrgBasesToRolesServiceImpl implements Y9OrgBasesToRolesService {
@@ -158,7 +154,6 @@ public class Y9OrgBasesToRolesServiceImpl implements Y9OrgBasesToRolesService {
     }
 
     @Transactional(readOnly = false)
-    @CacheEvict(key = "#orgId")
     public void remove(String roleId, String orgId) {
         List<Y9OrgBasesToRoles> y9OrgBasesToRolesList = y9OrgBasesToRolesRepository.findByRoleIdAndOrgId(roleId, orgId);
         for (Y9OrgBasesToRoles y9OrgBasesToRoles : y9OrgBasesToRolesList) {
@@ -188,7 +183,6 @@ public class Y9OrgBasesToRolesServiceImpl implements Y9OrgBasesToRolesService {
     }
 
     @Transactional(readOnly = false)
-    @CacheEvict(key = "#orgId")
     public Y9OrgBasesToRoles saveOrUpdate(String roleId, String orgId, Boolean negative) {
         Y9OrgBasesToRoles oldOrgBasesToRoles = y9OrgBasesToRolesRepository.findByRoleIdAndOrgIdAndNegative(roleId, orgId, negative);
         if (oldOrgBasesToRoles == null) {
