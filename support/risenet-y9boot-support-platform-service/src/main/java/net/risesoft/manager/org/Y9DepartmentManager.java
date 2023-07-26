@@ -11,4 +11,10 @@ import net.risesoft.entity.Y9Department;
  */
 public interface Y9DepartmentManager {
     Y9Department getById(String id);
+
+    Y9Department save(Y9Department y9Department);
+
+    void delete(Y9Department y9Department);
+
+    Y9Department findById(String id);
 }

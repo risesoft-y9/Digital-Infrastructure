@@ -23,14 +23,6 @@ public interface Y9DepartmentService {
     Y9Department changeDisable(String deptId);
 
     /**
-     * 禁用/启用部门
-     *
-     * @param deptId 部门id
-     * @return {@link Y9Department}
-     */
-    Y9Department changeDisableById(String deptId);
-
-    /**
      * 根据主键id删除部门实例
      *
      * @param deptId 部门id
@@ -190,14 +182,6 @@ public interface Y9DepartmentService {
     void removeViceLeader(String deptId, String personId);
 
     /**
-     * 添加部门
-     *
-     * @param y9Department 部门对象
-     * @return {@link Y9Department}
-     */
-    Y9Department save(Y9Department y9Department);
-
-    /**
      * 保存新的部门排序
      *
      * @param deptIds 部门id数组
@@ -230,14 +214,6 @@ public interface Y9DepartmentService {
      * @return {@link List}<{@link Y9Department}>
      */
     List<Y9Department> search(String whereClause);
-
-    /**
-     * 设置部门为已删除状态
-     *
-     * @param id 部门唯一标识
-     * @return boolean
-     */
-    boolean setDepartmentDeleted(String id);
 
     /**
      * 设置部门主管领导

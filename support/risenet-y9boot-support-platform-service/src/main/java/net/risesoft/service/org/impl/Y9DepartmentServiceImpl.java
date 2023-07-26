@@ -9,9 +9,6 @@ import javax.persistence.EntityManagerFactory;
 import javax.persistence.Query;
 
 import org.apache.commons.lang3.StringUtils;
-import org.springframework.cache.annotation.CacheConfig;
-import org.springframework.cache.annotation.CacheEvict;
-import org.springframework.cache.annotation.Cacheable;
 import org.springframework.context.event.EventListener;
 import org.springframework.orm.jpa.EntityManagerFactoryUtils;
 import org.springframework.stereotype.Service;
@@ -19,7 +16,6 @@ import org.springframework.transaction.annotation.Transactional;
 
 import lombok.RequiredArgsConstructor;
 
-import net.risesoft.consts.CacheNameConsts;
 import net.risesoft.consts.OrgLevelConsts;
 import net.risesoft.entity.Y9Department;
 import net.risesoft.entity.Y9DepartmentProp;
@@ -57,7 +53,6 @@ import net.risesoft.y9.util.Y9ModelConvertUtil;
  * @date 2022/2/10
  */
 @Transactional(value = "rsTenantTransactionManager", readOnly = true)
-@CacheConfig(cacheNames = CacheNameConsts.ORG_DEPARTMENT)
 @Service
 @RequiredArgsConstructor
 public class Y9DepartmentServiceImpl implements Y9DepartmentService {
@@ -72,7 +67,6 @@ public class Y9DepartmentServiceImpl implements Y9DepartmentService {
     private final Y9DepartmentManager y9DepartmentManager;
 
     @Override
-    @CacheEvict(key = "#deptId")
     @Transactional(readOnly = false)
     public Y9Department changeDisable(String deptId) {
         Y9Department dept = this.getById(deptId);
@@ -93,21 +87,13 @@ public class Y9DepartmentServiceImpl implements Y9DepartmentService {
             changeDisable(childDept.getId());
         }
         // 禁用本部门
-        dept = this.changeDisableById(deptId);
+        dept.setDisabled(!dept.getDisabled());
+        dept = y9DepartmentManager.save(dept);
 
         Y9MessageOrg msg = new Y9MessageOrg(Y9ModelConvertUtil.convert(dept, Department.class), Y9OrgEventConst.RISEORGEVENT_TYPE_UPDATE_DEPARTMENT, Y9LoginUserHolder.getTenantId());
         Y9PublishServiceUtil.persistAndPublishMessageOrg(msg, event + "部门", event + dept.getName());
 
         return dept;
-    }
-
-    @Override
-    @Transactional(readOnly = false)
-    @CacheEvict(key = "#deptId")
-    public Y9Department changeDisableById(String deptId) {
-        Y9Department y9Department = this.getById(deptId);
-        y9Department.setDisabled(!y9Department.getDisabled());
-        return y9DepartmentRepository.save(y9Department);
     }
 
     /**
@@ -125,12 +111,11 @@ public class Y9DepartmentServiceImpl implements Y9DepartmentService {
     }
 
     @Override
-    @CacheEvict(key = "#id")
     @Transactional(readOnly = false)
     public void delete(String id) {
         Y9Department y9Department = this.getById(id);
 
-        y9DepartmentRepository.delete(y9Department);
+        y9DepartmentManager.delete(y9Department);
 
         // 删除部门关联数据
         y9OrgBasesToRolesRepository.deleteByOrgId(id);
@@ -150,9 +135,8 @@ public class Y9DepartmentServiceImpl implements Y9DepartmentService {
     }
 
     @Override
-    @Cacheable(key = "#id", condition = "#id!=null", unless = "#result==null")
     public Y9Department findById(String id) {
-        return y9DepartmentRepository.findById(id).orElse(null);
+        return y9DepartmentManager.findById(id);
     }
 
     @Override
@@ -265,7 +249,6 @@ public class Y9DepartmentServiceImpl implements Y9DepartmentService {
     }
 
     @Override
-    @CacheEvict(key = "#deptId")
     @Transactional(readOnly = false)
     public Y9Department move(String deptId, String parentId) {
         Y9Department originDepartment = getById(deptId);
@@ -278,7 +261,7 @@ public class Y9DepartmentServiceImpl implements Y9DepartmentService {
         updatedDepartment.setParentId(parent.getId());
         updatedDepartment.setDn(OrgLevelConsts.getOrgLevel(OrgTypeEnum.DEPARTMENT) + updatedDepartment.getName() + OrgLevelConsts.SEPARATOR + parent.getDn());
         updatedDepartment.setGuidPath(parent.getGuidPath() + OrgLevelConsts.SEPARATOR + updatedDepartment.getId());
-        updatedDepartment = save(updatedDepartment);
+        updatedDepartment = y9DepartmentManager.save(updatedDepartment);
 
         Y9Context.publishEvent(new Y9EntityUpdatedEvent<>(originDepartment, updatedDepartment));
 
@@ -355,21 +338,12 @@ public class Y9DepartmentServiceImpl implements Y9DepartmentService {
             y9DepartmentPropRepository.delete(y9DepartmentProp);
         }
     }
-
-    @Override
+    
     @Transactional(readOnly = false)
-    @CacheEvict(key = "#y9Department.id")
-    public Y9Department save(Y9Department y9Department) {
-        y9Department.setTenantId(Y9LoginUserHolder.getTenantId());
-        return y9DepartmentRepository.save(y9Department);
-    }
-
-    @Transactional(readOnly = false)
-    @CacheEvict(key = "#deptId")
     public Y9Department saveOrder(String deptId, int i) {
         Y9Department dept = this.getById(deptId);
         dept.setTabIndex(i);
-        return y9DepartmentRepository.save(dept);
+        return y9DepartmentManager.save(dept);
     }
 
     @Override
@@ -384,10 +358,9 @@ public class Y9DepartmentServiceImpl implements Y9DepartmentService {
 
     @Override
     @Transactional(readOnly = false)
-    @CacheEvict(key = "#dept.id", condition = "#dept.id!=null")
     public Y9Department saveOrUpdate(Y9Department dept, Y9OrgBase parent) {
         if (StringUtils.isNotEmpty(dept.getId())) {
-            Y9Department origDepartment = y9DepartmentRepository.findById(dept.getId()).orElse(null);
+            Y9Department origDepartment = y9DepartmentManager.findById(dept.getId());
             if (origDepartment != null) {
                 // 是否需要递归DN
                 boolean recursionDn = dept.getName().equals(origDepartment.getName());
@@ -398,7 +371,7 @@ public class Y9DepartmentServiceImpl implements Y9DepartmentService {
                 origDepartment.setParentId(parent.getId());
                 origDepartment.setGuidPath(parent.getGuidPath() + OrgLevelConsts.SEPARATOR + dept.getId());
 
-                origDepartment = y9DepartmentRepository.save(origDepartment);
+                origDepartment = y9DepartmentManager.save(origDepartment);
 
                 if (recursionDn) {
                     // 更新下级节点的dn
@@ -421,7 +394,7 @@ public class Y9DepartmentServiceImpl implements Y9DepartmentService {
                 dept.setTenantId(Y9LoginUserHolder.getTenantId());
                 dept.setGuidPath(parent.getGuidPath() + OrgLevelConsts.SEPARATOR + dept.getId());
 
-                dept = y9DepartmentRepository.save(dept);
+                dept = y9DepartmentManager.save(dept);
 
                 Y9MessageOrg msg = new Y9MessageOrg(Y9ModelConvertUtil.convert(dept, Department.class), Y9OrgEventConst.RISEORGEVENT_TYPE_ADD_DEPARTMENT, Y9LoginUserHolder.getTenantId());
                 Y9PublishServiceUtil.persistAndPublishMessageOrg(msg, "新增部门", "新增" + dept.getName());
@@ -442,7 +415,7 @@ public class Y9DepartmentServiceImpl implements Y9DepartmentService {
         dept.setTenantId(Y9LoginUserHolder.getTenantId());
         dept.setGuidPath(parent.getGuidPath() + OrgLevelConsts.SEPARATOR + dept.getId());
 
-        dept = y9DepartmentRepository.save(dept);
+        dept = y9DepartmentManager.save(dept);
 
         Y9MessageOrg msg = new Y9MessageOrg(Y9ModelConvertUtil.convert(dept, Department.class), Y9OrgEventConst.RISEORGEVENT_TYPE_ADD_DEPARTMENT, Y9LoginUserHolder.getTenantId());
         Y9PublishServiceUtil.persistAndPublishMessageOrg(msg, "新增部门", "新增" + dept.getName());
@@ -452,11 +425,10 @@ public class Y9DepartmentServiceImpl implements Y9DepartmentService {
 
     @Override
     @Transactional(readOnly = false)
-    @CacheEvict(key = "#id")
     public Y9Department saveProperties(String id, String properties) {
         Y9Department dept = this.getById(id);
         dept.setProperties(properties);
-        dept = y9DepartmentRepository.save(dept);
+        dept = y9DepartmentManager.save(dept);
 
         Y9MessageOrg msg = new Y9MessageOrg(Y9ModelConvertUtil.convert(dept, Department.class), Y9OrgEventConst.RISEORGEVENT_TYPE_UPDATE_DEPARTMENT, Y9LoginUserHolder.getTenantId());
         Y9PublishServiceUtil.publishMessageOrg(msg);
@@ -479,19 +451,6 @@ public class Y9DepartmentServiceImpl implements Y9DepartmentService {
             return query.getResultList();
         }
         return Collections.emptyList();
-    }
-
-    @Override
-    @Transactional(readOnly = false)
-    @CacheEvict(key = "#id")
-    public boolean setDepartmentDeleted(String id) {
-        Y9Department y9Department = this.getById(id);
-        if (y9Department != null) {
-            y9Department.setDisabled(true);
-            y9DepartmentRepository.save(y9Department);
-            return true;
-        }
-        return false;
     }
 
     @Override
@@ -596,11 +555,10 @@ public class Y9DepartmentServiceImpl implements Y9DepartmentService {
 
     @Override
     @Transactional(readOnly = false)
-    @CacheEvict(key = "#id")
     public Y9Department updateTabIndex(String id, int tabIndex) {
         Y9Department department = this.getById(id);
         department.setTabIndex(tabIndex);
-        department = y9DepartmentRepository.save(department);
+        department = y9DepartmentManager.save(department);
 
         Y9MessageOrg msg = new Y9MessageOrg(Y9ModelConvertUtil.convert(department, Department.class), Y9OrgEventConst.RISEORGEVENT_TYPE_UPDATE_DEPARTMENT_TABINDEX, Y9LoginUserHolder.getTenantId());
         Y9PublishServiceUtil.persistAndPublishMessageOrg(msg, "更新部门排序号", department.getName() + "的排序号更新为" + tabIndex);

@@ -1,6 +1,7 @@
 package net.risesoft.manager.org.impl;
 
 import org.springframework.cache.annotation.CacheConfig;
+import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -27,5 +28,25 @@ public class Y9DepartmentManagerImpl implements Y9DepartmentManager {
     public Y9Department getById(String id) {
         return y9DepartmentRepository.findById(id).orElseThrow(() -> Y9ExceptionUtil.notFoundException(DepartmentErrorCodeEnum.DEPARTMENT_NOT_FOUND, id));
     }
-    
+
+    @Override
+    @CacheEvict(key = "#y9Department.id")
+    @Transactional(readOnly = false)
+    public void delete(Y9Department y9Department) {
+        y9DepartmentRepository.delete(y9Department);
+    }
+
+    @Override
+    @CacheEvict(key = "#y9Department.id")
+    @Transactional(readOnly = false)
+    public Y9Department save(Y9Department y9Department) {
+        return y9DepartmentRepository.save(y9Department);
+    }
+
+    @Override
+    @Cacheable(key = "#id", condition = "#id!=null", unless = "#result==null")
+    public Y9Department findById(String id) {
+        return y9DepartmentRepository.findById(id).orElse(null);
+    }
+
 }
