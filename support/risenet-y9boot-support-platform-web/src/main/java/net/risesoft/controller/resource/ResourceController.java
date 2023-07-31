@@ -26,7 +26,7 @@ import net.risesoft.y9.Y9LoginUserHolder;
 import net.risesoft.y9.util.Y9ModelConvertUtil;
 import net.risesoft.y9public.entity.resource.Y9App;
 import net.risesoft.y9public.entity.resource.Y9ResourceBase;
-import net.risesoft.y9public.manager.resource.Y9ResourceBaseManager;
+import net.risesoft.y9public.service.resource.CompositeResourceService;
 import net.risesoft.y9public.service.resource.Y9AppService;
 import net.risesoft.y9public.service.resource.Y9MenuService;
 import net.risesoft.y9public.service.resource.Y9OperationService;
@@ -43,7 +43,7 @@ import net.risesoft.y9public.service.tenant.Y9TenantAppService;
 @RequiredArgsConstructor
 public class ResourceController {
     
-    private final Y9ResourceBaseManager y9ResourceBaseManager;
+    private final CompositeResourceService compositeResourceService;
     private final Y9AppService y9AppService;
     private final Y9MenuService y9MenuService;
     private final Y9OperationService y9OperationService;
@@ -62,7 +62,7 @@ public class ResourceController {
     @RiseLog(operationName = "查询所有的根资源（App资源）")
     @GetMapping(value = "/allTreeRoot")
     public Y9Result<List<ResourceBaseVO>> getAllTreeRoot() {
-        List<Y9ResourceBase> appResourceList = y9ResourceBaseManager.listRootResourceList();
+        List<Y9ResourceBase> appResourceList = compositeResourceService.listRootResourceList();
         return Y9Result.success(Y9ModelConvertUtil.convert(appResourceList, ResourceBaseVO.class), "查询所有的根资源成功");
     }
 
@@ -75,7 +75,7 @@ public class ResourceController {
     @RiseLog(operationName = "根据父资源id获取子资源列表")
     @GetMapping(value = "/listByParentId")
     public Y9Result<List<ResourceBaseVO>> getListByParentId(@RequestParam String parentId) {
-        List<Y9ResourceBase> y9ResourceBaseList = y9ResourceBaseManager.listByParentId(parentId);
+        List<Y9ResourceBase> y9ResourceBaseList = compositeResourceService.listByParentId(parentId);
         return Y9Result.success(Y9ModelConvertUtil.convert(y9ResourceBaseList, ResourceBaseVO.class), "根据父资源id获取子资源列表成功");
     }
 
@@ -87,7 +87,7 @@ public class ResourceController {
     @RiseLog(operationName = "查询所有的根资源（有权限的App资源）")
     @GetMapping(value = "/treeRoot")
     public Y9Result<List<ResourceBaseVO>> getTreeRoot() {
-        List<Y9ResourceBase> appResourceList = y9ResourceBaseManager.listRootResourceList();
+        List<Y9ResourceBase> appResourceList = compositeResourceService.listRootResourceList();
         List<String> appIds = y9TenantAppService.listAppIdByTenantId(Y9LoginUserHolder.getTenantId(), Boolean.TRUE, Boolean.TRUE);
         List<Y9ResourceBase> asscAppResourceList = appResourceList.stream().filter(resource -> appIds.contains(resource.getId())).collect(Collectors.toList());
         return Y9Result.success(Y9ModelConvertUtil.convert(asscAppResourceList, ResourceBaseVO.class), "查询所有的根资源成功");
@@ -115,7 +115,7 @@ public class ResourceController {
     @RiseLog(operationName = "根据系统id查询所有的根资源（有权限的App资源）")
     @GetMapping(value = "/treeRoot/{systemId}")
     public Y9Result<List<ResourceBaseVO>> getTreeRootBySystemId(@PathVariable String systemId) {
-        List<Y9ResourceBase> appResourceList = y9ResourceBaseManager.listRootResourceBySystemId(systemId);
+        List<Y9ResourceBase> appResourceList = compositeResourceService.listRootResourceBySystemId(systemId);
         List<String> appIds = y9TenantAppService.listAppIdByTenantId(Y9LoginUserHolder.getTenantId(), Boolean.TRUE, Boolean.TRUE);
         List<Y9ResourceBase> asscAppResourceList = appResourceList.stream().filter(resource -> appIds.contains(resource.getId())).collect(Collectors.toList());
         return Y9Result.success(Y9ModelConvertUtil.convert(asscAppResourceList, ResourceBaseVO.class), "根据系统id查询所有的根资源成功");
@@ -130,20 +130,7 @@ public class ResourceController {
     @RiseLog(operationName = "对同一级的资源进行排序", operationType = OperationTypeEnum.MODIFY)
     @GetMapping(value = "/sort")
     public Y9Result<Object> sort(@RequestParam String[] ids) {
-        // TODO move to Service?
-        if (ids != null) {
-            for (int i = 0; i < ids.length; i++) {
-                String id = ids[i];
-                Y9ResourceBase y9ResourceBase = y9ResourceBaseManager.findById(id);
-                if (ResourceTypeEnum.APP.getValue().equals(y9ResourceBase.getResourceType())) {
-                    y9AppService.updateTabIndex(id, i);
-                } else if (ResourceTypeEnum.MENU.getValue().equals(y9ResourceBase.getResourceType())) {
-                    y9MenuService.updateTabIndex(id, i);
-                } else if (ResourceTypeEnum.OPERATION.getValue().equals(y9ResourceBase.getResourceType())) {
-                    y9OperationService.updateTabIndex(id, i);
-                }
-            }
-        }
+        compositeResourceService.sort(ids);
         return Y9Result.successMsg("对同一级的资源进行排序成功");
     }
 
@@ -156,7 +143,7 @@ public class ResourceController {
     @RiseLog(operationName = "根据名称查询资源树")
     @GetMapping(value = "/treeSearch")
     public Y9Result<List<ResourceBaseVO>> treeSearch(@RequestParam String name, String appId) {
-        List<Y9ResourceBase> appResourceList = y9ResourceBaseManager.treeSearch(name);
+        List<Y9ResourceBase> appResourceList = compositeResourceService.treeSearch(name);
         List<String> appIds = y9TenantAppService.listAppIdByTenantId(Y9LoginUserHolder.getTenantId(), Boolean.TRUE, Boolean.TRUE);
         List<Y9ResourceBase> accessAppResourceList = appResourceList.stream().filter(resource -> appIds.contains(resource.getAppId())).filter(distinctByKey(Y9ResourceBase::getId)).collect(Collectors.toList());
         if (StringUtils.isNotBlank(appId)) {

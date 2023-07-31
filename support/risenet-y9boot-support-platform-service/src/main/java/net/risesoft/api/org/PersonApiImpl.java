@@ -28,7 +28,6 @@ import net.risesoft.entity.Y9Person;
 import net.risesoft.entity.Y9PersonExt;
 import net.risesoft.entity.Y9Position;
 import net.risesoft.entity.identity.person.Y9PersonToRole;
-import net.risesoft.manager.org.Y9OrgBaseManager;
 import net.risesoft.model.Group;
 import net.risesoft.model.OrgUnit;
 import net.risesoft.model.Person;
@@ -37,6 +36,7 @@ import net.risesoft.model.Position;
 import net.risesoft.model.Role;
 import net.risesoft.pojo.Y9Page;
 import net.risesoft.service.identity.Y9PersonToRoleService;
+import net.risesoft.service.org.CompositeOrgBaseService;
 import net.risesoft.service.org.Y9GroupService;
 import net.risesoft.service.org.Y9PersonExtService;
 import net.risesoft.service.org.Y9PersonService;
@@ -70,7 +70,7 @@ import net.risesoft.y9public.service.user.Y9UserService;
 @RequiredArgsConstructor
 public class PersonApiImpl implements PersonApi {
 
-    private final Y9OrgBaseManager y9OrgBaseManager;
+    private final CompositeOrgBaseService compositeOrgBaseService;
     private final Y9GroupService y9GroupService;
     private final Y9PersonExtService y9PersonExtService;
     private final Y9PersonService y9PersonService;
@@ -149,7 +149,7 @@ public class PersonApiImpl implements PersonApi {
         Y9LoginUserHolder.setTenantId(tenantId);
 
         Y9Person y9Person = Y9JsonUtil.readValue(pjson, Y9Person.class);
-        y9Person = y9PersonService.createPerson(y9Person, y9OrgBaseManager.getOrgBase(y9Person.getParentId()));
+        y9Person = y9PersonService.createPerson(y9Person, compositeOrgBaseService.getOrgBase(y9Person.getParentId()));
         return Y9ModelConvertUtil.convert(y9Person, Person.class);
     }
 
@@ -218,7 +218,7 @@ public class PersonApiImpl implements PersonApi {
     public OrgUnit getParent(@RequestParam String tenantId, @RequestParam String personId) {
         Y9LoginUserHolder.setTenantId(tenantId);
 
-        Y9OrgBase parent = y9OrgBaseManager.getParent(personId);
+        Y9OrgBase parent = compositeOrgBaseService.getParent(personId);
         return ModelConvertUtil.orgBaseToOrgUnit(parent);
     }
 
@@ -570,7 +570,7 @@ public class PersonApiImpl implements PersonApi {
 
         Y9Person y9Person = Y9JsonUtil.readValue(personJson, Y9Person.class);
         Y9PersonExt y9PersonExt = Y9JsonUtil.readValue(personJson, Y9PersonExt.class);
-        y9Person = y9PersonService.saveOrUpdate(y9Person, y9PersonExt, y9OrgBaseManager.getOrgBase(y9Person.getParentId()));
+        y9Person = y9PersonService.saveOrUpdate(y9Person, y9PersonExt, compositeOrgBaseService.getOrgBase(y9Person.getParentId()));
         return Y9ModelConvertUtil.convert(y9Person, Person.class);
     }
 
@@ -671,7 +671,7 @@ public class PersonApiImpl implements PersonApi {
 
         Y9Person y9Person = Y9JsonUtil.readValue(personJson, Y9Person.class);
         Y9PersonExt y9PersonExt = Y9JsonUtil.readValue(personextJson, Y9PersonExt.class);
-        y9Person = y9PersonService.saveOrUpdate(y9Person, y9PersonExt, y9OrgBaseManager.getOrgBase(y9Person.getParentId()));
+        y9Person = y9PersonService.saveOrUpdate(y9Person, y9PersonExt, compositeOrgBaseService.getOrgBase(y9Person.getParentId()));
         return Y9ModelConvertUtil.convert(y9Person, Person.class);
     }
 

@@ -30,10 +30,10 @@ import net.risesoft.entity.relation.Y9OrgBasesToRoles;
 import net.risesoft.enums.OrgTypeEnum;
 import net.risesoft.enums.ResourceTypeEnum;
 import net.risesoft.enums.Y9RoleTypeEnum;
-import net.risesoft.manager.org.Y9OrgBaseManager;
 import net.risesoft.model.OrgUnit;
 import net.risesoft.pojo.Y9Result;
 import net.risesoft.service.authorization.Y9AuthorizationService;
+import net.risesoft.service.org.CompositeOrgBaseService;
 import net.risesoft.service.relation.Y9OrgBasesToRolesService;
 import net.risesoft.util.ModelConvertUtil;
 import net.risesoft.y9.Y9LoginUserHolder;
@@ -43,7 +43,7 @@ import net.risesoft.y9public.entity.resource.Y9App;
 import net.risesoft.y9public.entity.resource.Y9ResourceBase;
 import net.risesoft.y9public.entity.resource.Y9System;
 import net.risesoft.y9public.entity.role.Y9Role;
-import net.risesoft.y9public.manager.resource.Y9ResourceBaseManager;
+import net.risesoft.y9public.service.resource.CompositeResourceService;
 import net.risesoft.y9public.service.resource.Y9AppService;
 import net.risesoft.y9public.service.resource.Y9SystemService;
 import net.risesoft.y9public.service.role.Y9RoleService;
@@ -58,8 +58,8 @@ public class Y9RoleXmlDataHandlerImpl implements Y9RoleDataHandler {
     private final Y9RoleService y9RoleService;
     private final Y9AppService y9AppService;
     private final Y9SystemService y9SystemService;
-    private final Y9OrgBaseManager y9OrgBaseManager;
-    private final Y9ResourceBaseManager y9ResourceBaseManager;
+    private final CompositeOrgBaseService compositeOrgBaseService;
+    private final CompositeResourceService compositeResourceService;
     private final Y9Properties y9Config;
     
     private final SimpleDateFormat fmt = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS");
@@ -358,7 +358,7 @@ public class Y9RoleXmlDataHandlerImpl implements Y9RoleDataHandler {
             String roleId = includeElement.attributeValue("roleId");
             String orgId = includeElement.attributeValue("orgId");
 
-            Y9OrgBase y9OrgBase = y9OrgBaseManager.getOrgBase(orgId);
+            Y9OrgBase y9OrgBase = compositeOrgBaseService.getOrgBase(orgId);
             if (null == y9OrgBase) {
                 continue;
             }
@@ -385,7 +385,7 @@ public class Y9RoleXmlDataHandlerImpl implements Y9RoleDataHandler {
             String authority = permissionElement.attributeValue("authority");
             String authorizer = StringUtils.isNotBlank(permissionElement.attributeValue("authorizer")) ? permissionElement.attributeValue("authorizer") : "导入的角色授权信息没有授权人节点或者授权人为空";
 
-            Y9ResourceBase acResource = y9ResourceBaseManager.findById(resourceId);
+            Y9ResourceBase acResource = compositeResourceService.findById(resourceId);
             if (null == acResource) {
                 continue;
             }
@@ -404,22 +404,22 @@ public class Y9RoleXmlDataHandlerImpl implements Y9RoleDataHandler {
 
     private OrgUnit getParent(String tenantId, String orgUnitId) {
         Y9LoginUserHolder.setTenantId(tenantId);
-        Y9OrgBase y9OrgBase = y9OrgBaseManager.getOrgBase(orgUnitId);
+        Y9OrgBase y9OrgBase = compositeOrgBaseService.getOrgBase(orgUnitId);
         Y9OrgBase parent = null;
         if (y9OrgBase.getOrgType().equals(OrgTypeEnum.ORGANIZATION.getEnName())) {
             return null;
         } else if (y9OrgBase.getOrgType().equals(OrgTypeEnum.DEPARTMENT.getEnName())) {
             Y9Department y9Department = (Y9Department)y9OrgBase;
-            parent = y9OrgBaseManager.getOrgBase(y9Department.getParentId());
+            parent = compositeOrgBaseService.getOrgBase(y9Department.getParentId());
         } else if (y9OrgBase.getOrgType().equals(OrgTypeEnum.GROUP.getEnName())) {
             Y9Group y9Group = (Y9Group)y9OrgBase;
-            parent = y9OrgBaseManager.getOrgBase(y9Group.getParentId());
+            parent = compositeOrgBaseService.getOrgBase(y9Group.getParentId());
         } else if (y9OrgBase.getOrgType().equals(OrgTypeEnum.POSITION.getEnName())) {
             Y9Position y9Position = (Y9Position)y9OrgBase;
-            parent = y9OrgBaseManager.getOrgBase(y9Position.getParentId());
+            parent = compositeOrgBaseService.getOrgBase(y9Position.getParentId());
         } else if (y9OrgBase.getOrgType().equals(OrgTypeEnum.PERSON.getEnName())) {
             Y9Person y9Person = (Y9Person)y9OrgBase;
-            parent = y9OrgBaseManager.getOrgBase(y9Person.getParentId());
+            parent = compositeOrgBaseService.getOrgBase(y9Person.getParentId());
         }
         return ModelConvertUtil.orgBaseToOrgUnit(parent);
     }

@@ -21,7 +21,12 @@ import net.risesoft.manager.org.Y9PersonManager;
 import net.risesoft.repository.Y9PersonRepository;
 import net.risesoft.repository.relation.Y9PersonsToGroupsRepository;
 import net.risesoft.repository.relation.Y9PersonsToPositionsRepository;
+import net.risesoft.util.ModelConvertUtil;
+import net.risesoft.util.Y9PublishServiceUtil;
+import net.risesoft.y9.Y9LoginUserHolder;
 import net.risesoft.y9.exception.util.Y9ExceptionUtil;
+import net.risesoft.y9.pubsub.constant.Y9OrgEventConst;
+import net.risesoft.y9.pubsub.message.Y9MessageOrg;
 
 @Service
 @Transactional(value = "rsTenantTransactionManager", readOnly = true)
@@ -80,5 +85,19 @@ public class Y9PersonManagerImpl implements Y9PersonManager {
     @Transactional(readOnly = false)
     public Y9Person save(Y9Person y9Person) {
         return y9PersonRepository.save(y9Person);
+    }
+
+    @Override
+    @Transactional(readOnly = false)
+    @CacheEvict(key = "#id")
+    public Y9Person updateTabIndex(String id, int tabIndex) {
+        Y9Person person = this.getById(id);
+        person.setTabIndex(tabIndex);
+        person = this.save(person);
+
+        Y9MessageOrg msg = new Y9MessageOrg(ModelConvertUtil.orgPersonToPerson(person), Y9OrgEventConst.RISEORGEVENT_TYPE_UPDATE_PERSON_TABINDEX, Y9LoginUserHolder.getTenantId());
+        Y9PublishServiceUtil.persistAndPublishMessageOrg(msg, "更新人员排序号", person.getName() + "的排序号更新为" + tabIndex);
+
+        return person;
     }
 }

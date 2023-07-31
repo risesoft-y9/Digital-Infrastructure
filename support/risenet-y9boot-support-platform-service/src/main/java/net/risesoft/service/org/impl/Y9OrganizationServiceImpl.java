@@ -21,7 +21,7 @@ import net.risesoft.enums.AuthorizationPrincipalTypeEnum;
 import net.risesoft.enums.OrgTypeEnum;
 import net.risesoft.id.IdType;
 import net.risesoft.id.Y9IdGenerator;
-import net.risesoft.manager.org.Y9OrgBaseManager;
+import net.risesoft.manager.org.CompositeOrgBaseManager;
 import net.risesoft.manager.org.Y9OrganizationManager;
 import net.risesoft.model.Organization;
 import net.risesoft.repository.Y9OrganizationRepository;
@@ -53,14 +53,14 @@ public class Y9OrganizationServiceImpl implements Y9OrganizationService {
 
     private final EntityManagerFactory entityManagerFactory;
 
-    private final Y9OrgBaseManager y9OrgBaseManager;
+    private final CompositeOrgBaseManager compositeOrgBaseManager;
     private final Y9OrganizationManager y9OrganizationManager;
 
-    public Y9OrganizationServiceImpl(Y9OrganizationRepository y9OrganizationRepository, @Qualifier("rsTenantEntityManagerFactory") EntityManagerFactory entityManagerFactory, Y9OrgBaseManager y9OrgBaseManager, Y9OrgBasesToRolesRepository y9OrgBasesToRolesRepository,
-        Y9AuthorizationRepository y9AuthorizationRepository, Y9OrganizationManager y9OrganizationManager) {
+    public Y9OrganizationServiceImpl(Y9OrganizationRepository y9OrganizationRepository, @Qualifier("rsTenantEntityManagerFactory") EntityManagerFactory entityManagerFactory, CompositeOrgBaseManager compositeOrgBaseManager, Y9OrgBasesToRolesRepository y9OrgBasesToRolesRepository,
+                                     Y9AuthorizationRepository y9AuthorizationRepository, Y9OrganizationManager y9OrganizationManager) {
         this.y9OrganizationRepository = y9OrganizationRepository;
         this.entityManagerFactory = entityManagerFactory;
-        this.y9OrgBaseManager = y9OrgBaseManager;
+        this.compositeOrgBaseManager = compositeOrgBaseManager;
         this.y9OrgBasesToRolesRepository = y9OrgBasesToRolesRepository;
         this.y9AuthorizationRepository = y9AuthorizationRepository;
         this.y9OrganizationManager = y9OrganizationManager;
@@ -119,12 +119,12 @@ public class Y9OrganizationServiceImpl implements Y9OrganizationService {
 
     @Override
     public Y9Organization getByOrgBaseId(String orgBaseId) {
-        Y9OrgBase y9OrgBase = y9OrgBaseManager.getOrgBase(orgBaseId);
+        Y9OrgBase y9OrgBase = compositeOrgBaseManager.getOrgBase(orgBaseId);
         if (y9OrgBase.getOrgType().equals(OrgTypeEnum.ORGANIZATION.getEnName())) {
             return this.getById(orgBaseId);
         } else {
             do {
-                y9OrgBase = y9OrgBaseManager.getOrgBase(y9OrgBase.getParentId());
+                y9OrgBase = compositeOrgBaseManager.getOrgBase(y9OrgBase.getParentId());
             } while (!y9OrgBase.getOrgType().equals(OrgTypeEnum.ORGANIZATION.getEnName()));
             return this.getById(y9OrgBase.getId());
         }
@@ -200,7 +200,7 @@ public class Y9OrganizationServiceImpl implements Y9OrganizationService {
                 oldOrg.setTenantId(Y9LoginUserHolder.getTenantId());
                 oldOrg = y9OrganizationManager.save(oldOrg);
                 if (recursionDn) {
-                    y9OrgBaseManager.recursivelyUpdateProperties(oldOrg);
+                    compositeOrgBaseManager.recursivelyUpdateProperties(oldOrg);
                 }
 
                 Y9MessageOrg msg = new Y9MessageOrg(Y9ModelConvertUtil.convert(oldOrg, Organization.class), Y9OrgEventConst.RISEORGEVENT_TYPE_UPDATE_ORGANIZATION, Y9LoginUserHolder.getTenantId());

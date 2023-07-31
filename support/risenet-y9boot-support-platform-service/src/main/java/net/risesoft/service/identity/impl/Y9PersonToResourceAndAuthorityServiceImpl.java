@@ -15,7 +15,7 @@ import net.risesoft.entity.identity.person.Y9PersonToResourceAndAuthority;
 import net.risesoft.entity.permission.Y9Authorization;
 import net.risesoft.enums.ResourceTypeEnum;
 import net.risesoft.manager.authorization.Y9PersonToResourceAndAuthorityManager;
-import net.risesoft.manager.org.Y9OrgBaseManager;
+import net.risesoft.manager.org.CompositeOrgBaseManager;
 import net.risesoft.repository.identity.person.Y9PersonToResourceAndAuthorityRepository;
 import net.risesoft.service.identity.Y9PersonToResourceAndAuthorityService;
 import net.risesoft.y9.Y9LoginUserHolder;
@@ -25,7 +25,7 @@ import net.risesoft.y9public.entity.resource.Y9ResourceBase;
 import net.risesoft.y9public.entity.tenant.Y9TenantApp;
 import net.risesoft.y9public.manager.resource.Y9AppManager;
 import net.risesoft.y9public.manager.resource.Y9MenuManager;
-import net.risesoft.y9public.manager.resource.Y9ResourceBaseManager;
+import net.risesoft.y9public.service.resource.CompositeResourceService;
 import net.risesoft.y9public.manager.tenant.Y9TenantAppManager;
 
 /**
@@ -41,9 +41,9 @@ public class Y9PersonToResourceAndAuthorityServiceImpl implements Y9PersonToReso
     
     private final Y9PersonToResourceAndAuthorityRepository y9PersonToResourceAndAuthorityRepository;
 
-    private final Y9OrgBaseManager y9OrgBaseManager;
+    private final CompositeOrgBaseManager compositeOrgBaseManager;
     private final Y9PersonToResourceAndAuthorityManager y9PersonToResourceAndAuthorityManager;
-    private final Y9ResourceBaseManager y9ResourceBaseManager;
+    private final CompositeResourceService compositeResourceService;
     private final Y9AppManager y9AppManager;
     private final Y9MenuManager y9MenuManager;
     private final Y9TenantAppManager y9TenantAppManager;
@@ -63,7 +63,7 @@ public class Y9PersonToResourceAndAuthorityServiceImpl implements Y9PersonToReso
     @Transactional(readOnly = false)
     @Override
     public void deleteByAuthorizationIdAndOrgUnitId(String authorizationId, String orgUnitId) {
-        List<Y9Person> allPersons = y9OrgBaseManager.listAllPersonsRecursionDownward(orgUnitId);
+        List<Y9Person> allPersons = compositeOrgBaseManager.listAllPersonsRecursionDownward(orgUnitId);
         for (Y9Person y9Person : allPersons) {
             deleteByAuthorizationIdAndPersonId(authorizationId, y9Person.getId());
         }
@@ -78,7 +78,7 @@ public class Y9PersonToResourceAndAuthorityServiceImpl implements Y9PersonToReso
     @Transactional(readOnly = false)
     @Override
     public void deleteByOrgUnitId(String orgUnitId) {
-        List<Y9Person> personList = y9OrgBaseManager.listAllPersonsRecursionDownward(orgUnitId);
+        List<Y9Person> personList = compositeOrgBaseManager.listAllPersonsRecursionDownward(orgUnitId);
         for (Y9Person y9Person : personList) {
             deleteByPersonId(y9Person.getId());
         }
@@ -166,7 +166,7 @@ public class Y9PersonToResourceAndAuthorityServiceImpl implements Y9PersonToReso
         List<Y9PersonToResourceAndAuthority> y9PersonToResourceAndAuthorityList = this.list(personId, resourceId, authority);
 
         for (Y9PersonToResourceAndAuthority personResource : y9PersonToResourceAndAuthorityList) {
-            Y9ResourceBase y9ResourceBase = y9ResourceBaseManager.findByIdAndResourceType(personResource.getResourceId(), personResource.getResourceType());
+            Y9ResourceBase y9ResourceBase = compositeResourceService.findByIdAndResourceType(personResource.getResourceId(), personResource.getResourceType());
             if (y9ResourceBase != null && !returnResourceList.contains(y9ResourceBase)) {
                 returnResourceList.add(y9ResourceBase);
             }

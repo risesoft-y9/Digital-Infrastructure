@@ -22,7 +22,7 @@ import net.risesoft.exception.ManagerErrorCodeEnum;
 import net.risesoft.id.IdType;
 import net.risesoft.id.Y9IdGenerator;
 import net.risesoft.manager.org.Y9DepartmentManager;
-import net.risesoft.manager.org.Y9OrgBaseManager;
+import net.risesoft.manager.org.CompositeOrgBaseManager;
 import net.risesoft.repository.Y9ManagerRepository;
 import net.risesoft.service.org.Y9ManagerService;
 import net.risesoft.y9.Y9Context;
@@ -49,7 +49,7 @@ public class Y9ManagerImpl implements Y9ManagerService {
     private static final int MOBILE_NUMBER_LENGTH = 11;
 
     private final Y9ManagerRepository y9ManagerRepository;
-    private final Y9OrgBaseManager y9OrgBaseManager;
+    private final CompositeOrgBaseManager compositeOrgBaseManager;
     private final Y9DepartmentManager y9DepartmentManager;
     private final Y9Properties y9config;
 
@@ -285,7 +285,7 @@ public class Y9ManagerImpl implements Y9ManagerService {
     public Y9Manager saveOrUpdate(Y9Manager y9Manager) {
         String mobile = y9Manager.getMobile();
         String password = y9config.getCommon().getDefaultPassword();
-        Y9OrgBase y9OrgBase = y9OrgBaseManager.getOrgBase(y9Manager.getParentId());
+        Y9OrgBase y9OrgBase = compositeOrgBaseManager.getOrgBase(y9Manager.getParentId());
         if (StringUtils.isNotBlank(y9Manager.getId())) {
             Y9Manager oldManager = y9ManagerRepository.findById(y9Manager.getId()).orElse(null);
             if (oldManager != null) {
@@ -296,7 +296,7 @@ public class Y9ManagerImpl implements Y9ManagerService {
                 return oldManager;
             } else {
                 y9Manager.setTenantId(Y9LoginUserHolder.getTenantId());
-                y9Manager.setTabIndex(y9OrgBaseManager.getMaxSubTabIndex(y9Manager.getParentId(), OrgTypeEnum.MANAGER));
+                y9Manager.setTabIndex(compositeOrgBaseManager.getMaxSubTabIndex(y9Manager.getParentId(), OrgTypeEnum.MANAGER));
                 y9Manager.setDn(OrgLevelConsts.getOrgLevel(OrgTypeEnum.MANAGER) + y9Manager.getName() + OrgLevelConsts.SEPARATOR + y9OrgBase.getDn());
                 y9Manager.setDisabled(false);
                 y9Manager.setOrgType(OrgTypeEnum.MANAGER.getEnName());
@@ -305,11 +305,11 @@ public class Y9ManagerImpl implements Y9ManagerService {
                 }
                 y9Manager.setPassword(Y9MessageDigest.hashpw(password));
                 StringBuilder sb = new StringBuilder();
-                y9OrgBaseManager.getGuidPathRecursiveUp(sb, y9Manager);
+                compositeOrgBaseManager.getGuidPathRecursiveUp(sb, y9Manager);
                 y9Manager.setGuidPath(sb.toString());
 
                 sb = new StringBuilder();
-                y9OrgBaseManager.getOrderedPathRecursiveUp(sb, y9Manager);
+                compositeOrgBaseManager.getOrderedPathRecursiveUp(sb, y9Manager);
                 y9Manager.setOrderedPath(sb.toString());
                 y9Manager = y9ManagerRepository.save(y9Manager);
 
@@ -319,7 +319,7 @@ public class Y9ManagerImpl implements Y9ManagerService {
         }
         y9Manager.setId(Y9IdGenerator.genId(IdType.SNOWFLAKE));
         y9Manager.setTenantId(Y9LoginUserHolder.getTenantId());
-        y9Manager.setTabIndex(y9OrgBaseManager.getMaxSubTabIndex(y9Manager.getParentId(), OrgTypeEnum.MANAGER));
+        y9Manager.setTabIndex(compositeOrgBaseManager.getMaxSubTabIndex(y9Manager.getParentId(), OrgTypeEnum.MANAGER));
         y9Manager.setDn(OrgLevelConsts.getOrgLevel(OrgTypeEnum.MANAGER) + y9Manager.getName() + OrgLevelConsts.SEPARATOR + y9OrgBase.getDn());
         y9Manager.setDisabled(true);
         if (mobile != null && mobile.length() == MOBILE_NUMBER_LENGTH) {
@@ -327,11 +327,11 @@ public class Y9ManagerImpl implements Y9ManagerService {
         }
         y9Manager.setPassword(Y9MessageDigest.hashpw(password));
         StringBuilder sb = new StringBuilder();
-        y9OrgBaseManager.getGuidPathRecursiveUp(sb, y9Manager);
+        compositeOrgBaseManager.getGuidPathRecursiveUp(sb, y9Manager);
         y9Manager.setGuidPath(sb.toString());
 
         sb = new StringBuilder();
-        y9OrgBaseManager.getOrderedPathRecursiveUp(sb, y9Manager);
+        compositeOrgBaseManager.getOrderedPathRecursiveUp(sb, y9Manager);
         y9Manager.setOrderedPath(sb.toString());
         y9Manager.setOrgType(OrgTypeEnum.MANAGER.getEnName());
         y9Manager = y9ManagerRepository.save(y9Manager);

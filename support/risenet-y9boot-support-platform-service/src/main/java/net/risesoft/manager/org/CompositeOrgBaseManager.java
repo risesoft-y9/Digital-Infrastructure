@@ -15,7 +15,7 @@ import net.risesoft.enums.OrgTypeEnum;
  * @author mengjuhua
  * @date 2022/2/10
  */
-public interface Y9OrgBaseManager {
+public interface CompositeOrgBaseManager {
 
     /**
      * 根据组织节点id获取所在委办局
@@ -24,14 +24,6 @@ public interface Y9OrgBaseManager {
      * @return
      */
     Y9OrgBase getOrgUnitBureau(String orgUnitId);
-
-    /**
-     * 获取部门管理员树
-     *
-     * @param id
-     * @return
-     */
-    List<Y9OrgBase> getDeptManageTree(String id);
 
     /**
      * 递归得到 guid路径
@@ -69,10 +61,10 @@ public interface Y9OrgBaseManager {
     /**
      * 根据指定id获取已删除的ORGBase对象(可以是org的任意类型)
      *
-     * @param orgId 组织id
+     * @param orgUnitId 组织节点id
      * @return
      */
-    Y9OrgBase getOrgBaseDeletedByOrgId(String orgId);
+    Y9OrgBase getOrgBaseDeletedByOrgUnitId(String orgUnitId);
 
     /**
      * 根据组织节点id，获取父节点(parent只可能是组织机构和部门)

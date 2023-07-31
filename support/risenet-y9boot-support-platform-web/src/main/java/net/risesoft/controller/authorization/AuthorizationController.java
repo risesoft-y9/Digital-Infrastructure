@@ -25,13 +25,13 @@ import net.risesoft.enums.AuthorizationPrincipalTypeEnum;
 import net.risesoft.enums.OrgTypeEnum;
 import net.risesoft.log.OperationTypeEnum;
 import net.risesoft.log.annotation.RiseLog;
-import net.risesoft.manager.org.Y9OrgBaseManager;
 import net.risesoft.pojo.Y9Page;
 import net.risesoft.pojo.Y9Result;
 import net.risesoft.service.authorization.Y9AuthorizationService;
+import net.risesoft.service.org.CompositeOrgBaseService;
 import net.risesoft.y9public.entity.resource.Y9ResourceBase;
 import net.risesoft.y9public.entity.role.Y9Role;
-import net.risesoft.y9public.manager.resource.Y9ResourceBaseManager;
+import net.risesoft.y9public.service.resource.CompositeResourceService;
 import net.risesoft.y9public.service.role.Y9RoleService;
 
 /**
@@ -51,8 +51,8 @@ import net.risesoft.y9public.service.role.Y9RoleService;
 public class AuthorizationController {
 
     private final Y9AuthorizationService y9AuthorizationService;
-    private final Y9ResourceBaseManager y9ResourceBaseManager;
-    private final Y9OrgBaseManager y9OrgBaseManager;
+    private final CompositeResourceService compositeResourceService;
+    private final CompositeOrgBaseService compositeOrgBaseService;
     private final Y9RoleService y9RoleService;
 
     /**
@@ -72,7 +72,7 @@ public class AuthorizationController {
     private AuthorizationVO getAuthorizationVOForOrgBase(Y9Authorization y9Authorization) {
         AuthorizationVO authorizationVO = new AuthorizationVO();
         String orgId = y9Authorization.getPrincipalId();
-        Y9OrgBase y9OrgBase = y9OrgBaseManager.getOrgBase(orgId);
+        Y9OrgBase y9OrgBase = compositeOrgBaseService.getOrgBase(orgId);
         String dn = y9OrgBase.getDn();
         authorizationVO.setId(y9Authorization.getId());
         authorizationVO.setOrgId(y9OrgBase.getId());
@@ -141,7 +141,7 @@ public class AuthorizationController {
         List<AuthorizationVO> authorizationVOList = new ArrayList<>();
         for (Y9Authorization y9Authorization : y9AuthorizationPage) {
             String resourceId = y9Authorization.getResourceId();
-            Y9ResourceBase acResource = y9ResourceBaseManager.findById(resourceId);
+            Y9ResourceBase acResource = compositeResourceService.findById(resourceId);
             if (acResource == null) {
                 try {
                     y9AuthorizationService.delete(y9Authorization);
@@ -259,7 +259,7 @@ public class AuthorizationController {
     @RiseLog(operationName = "根据角色ID，资源名,和code模糊查询 ")
     @RequestMapping(value = "/searchOperations")
     public Y9Result<List<AuthorizationVO>> searchResourceOperations(@RequestParam("roleId") String roleId, String resourceName, @RequestParam("operationType") Integer operationType) {
-        List<Y9ResourceBase> list = y9ResourceBaseManager.searchByName(resourceName);
+        List<Y9ResourceBase> list = compositeResourceService.searchByName(resourceName);
         List<String> resourceIds = list.stream().map(Y9ResourceBase::getId).collect(Collectors.toList());
         List<Y9Authorization> y9AuthorizationList = new ArrayList<>();
         if (!resourceIds.isEmpty()) {
@@ -269,7 +269,7 @@ public class AuthorizationController {
 
         for (Y9Authorization authorization : y9AuthorizationList) {
             String resourceId = authorization.getResourceId();
-            Y9ResourceBase acResource = y9ResourceBaseManager.findById(resourceId);
+            Y9ResourceBase acResource = compositeResourceService.findById(resourceId);
             if (acResource == null) {
                 try {
                     y9AuthorizationService.delete(authorization);

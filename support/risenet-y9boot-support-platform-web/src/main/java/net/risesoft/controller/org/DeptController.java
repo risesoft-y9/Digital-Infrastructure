@@ -13,15 +13,11 @@ import lombok.RequiredArgsConstructor;
 import net.risesoft.consts.TreeTypeConsts;
 import net.risesoft.entity.Y9Department;
 import net.risesoft.entity.Y9OrgBase;
-import net.risesoft.enums.OrgTypeEnum;
 import net.risesoft.log.OperationTypeEnum;
 import net.risesoft.log.annotation.RiseLog;
-import net.risesoft.manager.org.Y9OrgBaseManager;
 import net.risesoft.pojo.Y9Result;
+import net.risesoft.service.org.CompositeOrgBaseService;
 import net.risesoft.service.org.Y9DepartmentService;
-import net.risesoft.service.org.Y9GroupService;
-import net.risesoft.service.org.Y9PersonService;
-import net.risesoft.service.org.Y9PositionService;
 
 /**
  * 部门管理
@@ -37,11 +33,8 @@ import net.risesoft.service.org.Y9PositionService;
 @RequiredArgsConstructor
 public class DeptController {
 
-    private final Y9OrgBaseManager y9OrgBaseManager;
+    private final CompositeOrgBaseService compositeOrgBaseService;
     private final Y9DepartmentService y9DepartmentService;
-    private final Y9GroupService y9GroupService;
-    private final Y9PersonService y9PersonService;
-    private final Y9PositionService y9PositionService;
 
     /**
      * 禁用/解除禁用部门
@@ -118,7 +111,7 @@ public class DeptController {
     @RiseLog(operationName = "获取部门排序列表")
     @RequestMapping(value = "/listOrderDepts")
     public Y9Result<List<Y9OrgBase>> listOrderDepts(@RequestParam String parentId) {
-        List<Y9OrgBase> deptList = y9OrgBaseManager.getTree(parentId, TreeTypeConsts.TREE_TYPE_ORG, false);
+        List<Y9OrgBase> deptList = compositeOrgBaseService.getTree(parentId, TreeTypeConsts.TREE_TYPE_ORG, false);
         return Y9Result.success(deptList, "获取数据成功");
     }
 
@@ -223,7 +216,7 @@ public class DeptController {
     @RiseLog(operationName = "保存部门排序", operationType = OperationTypeEnum.MODIFY)
     @PostMapping(value = "/saveOrder")
     public Y9Result<String> saveOrder(@RequestParam String[] deptIds) {
-        updateTabindex(deptIds);
+        compositeOrgBaseService.sort(deptIds);
         return Y9Result.successMsg("保存部门排序成功");
     }
 
@@ -237,7 +230,7 @@ public class DeptController {
     @RiseLog(operationName = "保存部门信息", operationType = OperationTypeEnum.ADD)
     @PostMapping(value = "/saveOrUpdate")
     public Y9Result<Y9Department> saveOrUpdate(@Validated Y9Department dept, @RequestParam String parentId) {
-        Y9Department returnDept = y9DepartmentService.saveOrUpdate(dept, y9OrgBaseManager.getOrgBase(parentId));
+        Y9Department returnDept = y9DepartmentService.saveOrUpdate(dept, compositeOrgBaseService.getOrgBase(parentId));
         return Y9Result.success(returnDept, "保存成功");
     }
 
@@ -291,37 +284,6 @@ public class DeptController {
     public Y9Result<String> setDeptViceLeaders(@RequestParam String deptId, @RequestParam String[] orgBaseIds) {
         y9DepartmentService.setDeptViceLeaders(deptId, orgBaseIds);
         return Y9Result.successMsg("设置部门副领导成功");
-    }
-
-    /**
-     * 更新子节点的排序号
-     *
-     * @param orgIds 组织节点id数组
-     */
-    private void updateTabindex(String[] orgIds) {
-        // TODO move to Service?
-        for (int tabIndex = 0; tabIndex < orgIds.length; tabIndex++) {
-            String id = orgIds[tabIndex];
-            Y9OrgBase y9OrgBase = y9OrgBaseManager.getOrgBase(id);
-            String orgType = y9OrgBase.getOrgType();
-            if (orgType.equals(OrgTypeEnum.DEPARTMENT.getEnName())) {
-
-                y9DepartmentService.updateTabIndex(y9OrgBase.getId(), tabIndex);
-
-            } else if (orgType.equals(OrgTypeEnum.GROUP.getEnName())) {
-
-                y9GroupService.updateTabIndex(y9OrgBase.getId(), tabIndex);
-
-            } else if (orgType.equals(OrgTypeEnum.POSITION.getEnName())) {
-
-                y9PositionService.updateTabIndex(y9OrgBase.getId(), tabIndex);
-
-            } else if (orgType.equals(OrgTypeEnum.PERSON.getEnName())) {
-
-                y9PersonService.updateTabIndex(y9OrgBase.getId(), tabIndex);
-
-            }
-        }
     }
 
 }

@@ -19,8 +19,8 @@ import net.risesoft.enums.OrgTypeEnum;
 import net.risesoft.enums.Y9DepartmentPropCategoryEnum;
 import net.risesoft.log.OperationTypeEnum;
 import net.risesoft.log.annotation.RiseLog;
-import net.risesoft.manager.org.Y9OrgBaseManager;
 import net.risesoft.pojo.Y9Result;
+import net.risesoft.service.org.CompositeOrgBaseService;
 import net.risesoft.service.org.Y9DepartmentPropService;
 import net.risesoft.service.org.Y9DepartmentService;
 import net.risesoft.service.relation.Y9OrgBasesToRolesService;
@@ -41,7 +41,7 @@ import net.risesoft.y9public.service.role.Y9RoleService;
 @RequiredArgsConstructor
 public class RoleMemberController {
 
-    private final Y9OrgBaseManager y9OrgBaseManager;
+    private final CompositeOrgBaseService compositeOrgBaseService;
     private final Y9OrgBasesToRolesService y9OrgBasesToRolesService;
     private final Y9DepartmentPropService y9DepartmentPropService;
     private final Y9DepartmentService y9DepartmentService;
@@ -65,7 +65,7 @@ public class RoleMemberController {
             List<Y9DepartmentProp> deptProps = y9DepartmentPropService.listByOrgBaseIdAndCategory(Y9LoginUserHolder.getPersonId(), Y9DepartmentPropCategoryEnum.ADMIN.getCategory());
             List<String> accessibleOrgUnitId = new ArrayList<>();
             for (String orgUnitId : orgUnitIds) {
-                Y9OrgBase y9OrgBase = y9OrgBaseManager.getOrgBase(orgUnitId);
+                Y9OrgBase y9OrgBase = compositeOrgBaseService.getOrgBase(orgUnitId);
                 for (Y9DepartmentProp deptProp : deptProps) {
                     String dn = y9DepartmentService.getById(deptProp.getDeptId()).getDn();
                     if (y9OrgBase.getDn().contains(dn)) {
@@ -82,7 +82,7 @@ public class RoleMemberController {
         for (Y9OrgBasesToRoles roleMapping : roleMappingList) {
             RoleMember roleMember = new RoleMember();
             roleMember.setId(roleMember.getId());
-            Y9OrgBase y9OrgBase = y9OrgBaseManager.getOrgBase(roleMapping.getOrgId());
+            Y9OrgBase y9OrgBase = compositeOrgBaseService.getOrgBase(roleMapping.getOrgId());
             roleMember.setOrgUnitId(roleMapping.getOrgId());
             roleMember.setUnitName(y9OrgBase.getName());
             roleMember.setUnitTypeName(OrgTypeEnum.ORG_TYPE_MAP.get(y9OrgBase.getOrgType()));
@@ -108,7 +108,7 @@ public class RoleMemberController {
         List<RoleMember> memberList = new ArrayList<>();
         if (Y9LoginUserHolder.getUserInfo().isGlobalManager()) {
             for (Y9OrgBasesToRoles roleMapping : roleMappingList) {
-                Y9OrgBase y9OrgBase = y9OrgBaseManager.getOrgBase(roleMapping.getOrgId());
+                Y9OrgBase y9OrgBase = compositeOrgBaseService.getOrgBase(roleMapping.getOrgId());
                 if (y9OrgBase == null) {
                     continue;
                 }
@@ -124,7 +124,7 @@ public class RoleMemberController {
         } else {
             List<Y9DepartmentProp> deptProps = y9DepartmentPropService.listByOrgBaseIdAndCategory(Y9LoginUserHolder.getPersonId(), Y9DepartmentPropCategoryEnum.ADMIN.getCategory());
             for (Y9OrgBasesToRoles roleMapping : roleMappingList) {
-                Y9OrgBase y9OrgBase = y9OrgBaseManager.getOrgBase(roleMapping.getOrgId());
+                Y9OrgBase y9OrgBase = compositeOrgBaseService.getOrgBase(roleMapping.getOrgId());
                 if (y9OrgBase == null) {
                     continue;
                 }
@@ -194,7 +194,7 @@ public class RoleMemberController {
         List<Y9OrgBasesToRoles> roleMappingList = y9OrgBasesToRolesService.listByRoleId(roleId);
         List<RoleMember> memberList = new ArrayList<>();
         for (Y9OrgBasesToRoles roleMapping : roleMappingList) {
-            Y9OrgBase y9OrgBase = y9OrgBaseManager.getOrgBase(roleMapping.getOrgId());
+            Y9OrgBase y9OrgBase = compositeOrgBaseService.getOrgBase(roleMapping.getOrgId());
             if (y9OrgBase == null) {
                 continue;
             }

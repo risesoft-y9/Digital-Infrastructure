@@ -55,4 +55,12 @@ public class Y9MenuManagerImpl implements Y9MenuManager {
     public void delete(Y9Menu y9Menu) {
         y9MenuRepository.delete(y9Menu);
     }
+
+    @Override
+    @Transactional(readOnly = false)
+    public Y9Menu updateTabIndex(String id, int index) {
+        Y9Menu y9Menu = this.getById(id);
+        y9Menu.setTabIndex(index);
+        return this.save(y9Menu);
+    }
 }

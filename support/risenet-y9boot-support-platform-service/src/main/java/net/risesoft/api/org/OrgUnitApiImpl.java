@@ -13,10 +13,10 @@ import lombok.RequiredArgsConstructor;
 
 import net.risesoft.entity.Y9Department;
 import net.risesoft.entity.Y9OrgBase;
-import net.risesoft.manager.org.Y9OrgBaseManager;
 import net.risesoft.model.Department;
 import net.risesoft.model.OrgUnit;
 import net.risesoft.model.Organization;
+import net.risesoft.service.org.CompositeOrgBaseService;
 import net.risesoft.service.org.Y9DepartmentService;
 import net.risesoft.util.ModelConvertUtil;
 import net.risesoft.y9.Y9LoginUserHolder;
@@ -37,7 +37,7 @@ import net.risesoft.y9.util.Y9ModelConvertUtil;
 @RequiredArgsConstructor
 public class OrgUnitApiImpl implements OrgUnitApi {
 
-    private final Y9OrgBaseManager y9OrgBaseManager;
+    private final CompositeOrgBaseService compositeOrgBaseService;
     private final Y9DepartmentService y9DepartmentService;
 
     /**
@@ -53,7 +53,7 @@ public class OrgUnitApiImpl implements OrgUnitApi {
     public OrgUnit getBureau(@RequestParam String tenantId, @RequestParam String orgUnitId) {
         Y9LoginUserHolder.setTenantId(tenantId);
         
-        return ModelConvertUtil.orgBaseToOrgUnit(y9OrgBaseManager.getOrgUnitBureau(orgUnitId));
+        return ModelConvertUtil.orgBaseToOrgUnit(compositeOrgBaseService.getOrgUnitBureau(orgUnitId));
     }
 
     /**
@@ -86,7 +86,7 @@ public class OrgUnitApiImpl implements OrgUnitApi {
     public Organization getOrganization(@RequestParam String tenantId, @RequestParam String orgUnitId) {
         Y9LoginUserHolder.setTenantId(tenantId);
         
-        Y9OrgBase y9OrgBase = y9OrgBaseManager.getOrgUnitOrganization(orgUnitId);
+        Y9OrgBase y9OrgBase = compositeOrgBaseService.getOrgUnitOrganization(orgUnitId);
         return Y9ModelConvertUtil.convert(y9OrgBase, Organization.class);
     }
 
@@ -103,7 +103,7 @@ public class OrgUnitApiImpl implements OrgUnitApi {
     public OrgUnit getOrgUnit(@RequestParam String tenantId, @RequestParam String orgUnitId) {
         Y9LoginUserHolder.setTenantId(tenantId);
         
-        return ModelConvertUtil.orgBaseToOrgUnit(y9OrgBaseManager.getOrgBase(orgUnitId));
+        return ModelConvertUtil.orgBaseToOrgUnit(compositeOrgBaseService.getOrgBase(orgUnitId));
     }
 
     /**
@@ -119,7 +119,7 @@ public class OrgUnitApiImpl implements OrgUnitApi {
     public OrgUnit getOrgUnitDeletedById(String tenantId, String orgUnitId) {
         Y9LoginUserHolder.setTenantId(tenantId);
         
-        return ModelConvertUtil.orgBaseToOrgUnit(y9OrgBaseManager.getOrgBaseDeletedByOrgId(orgUnitId));
+        return ModelConvertUtil.orgBaseToOrgUnit(compositeOrgBaseService.getOrgBaseDeletedByOrgUnitId(orgUnitId));
     }
 
     /**
@@ -135,7 +135,7 @@ public class OrgUnitApiImpl implements OrgUnitApi {
     public OrgUnit getParent(@RequestParam String tenantId, @RequestParam String orgUnitId) {
         Y9LoginUserHolder.setTenantId(tenantId);
         
-        Y9OrgBase parent = y9OrgBaseManager.getParent(orgUnitId);
+        Y9OrgBase parent = compositeOrgBaseService.getParent(orgUnitId);
         return ModelConvertUtil.orgBaseToOrgUnit(parent);
     }
 
@@ -154,7 +154,7 @@ public class OrgUnitApiImpl implements OrgUnitApi {
     public List<OrgUnit> getSubTree(@RequestParam String tenantId, @RequestParam String orgUnitId, @RequestParam String treeType) {
         Y9LoginUserHolder.setTenantId(tenantId);
         
-        List<Y9OrgBase> y9OrgBaseList = y9OrgBaseManager.getTree(orgUnitId, treeType, false);
+        List<Y9OrgBase> y9OrgBaseList = compositeOrgBaseService.getTree(orgUnitId, treeType, false);
         return ModelConvertUtil.orgBaseToOrgUnit(y9OrgBaseList);
     }
 
@@ -173,7 +173,7 @@ public class OrgUnitApiImpl implements OrgUnitApi {
     public List<OrgUnit> treeSearch(@RequestParam String tenantId, @RequestParam String name, @RequestParam String treeType) {
         Y9LoginUserHolder.setTenantId(tenantId);
         
-        List<Y9OrgBase> y9OrgBaseList = y9OrgBaseManager.treeSearch(name, treeType, false);
+        List<Y9OrgBase> y9OrgBaseList = compositeOrgBaseService.treeSearch(name, treeType, false);
         return ModelConvertUtil.orgBaseToOrgUnit(y9OrgBaseList);
     }
 
@@ -193,7 +193,7 @@ public class OrgUnitApiImpl implements OrgUnitApi {
     public List<OrgUnit> treeSearchByDn(@RequestParam String tenantId, @RequestParam String name, @RequestParam String treeType, @RequestParam String dnName) {
         Y9LoginUserHolder.setTenantId(tenantId);
         
-        List<Y9OrgBase> y9OrgBaseList = y9OrgBaseManager.treeSearch(name, treeType, dnName);
+        List<Y9OrgBase> y9OrgBaseList = compositeOrgBaseService.treeSearch(name, treeType, dnName);
         return ModelConvertUtil.orgBaseToOrgUnit(y9OrgBaseList);
     }
 

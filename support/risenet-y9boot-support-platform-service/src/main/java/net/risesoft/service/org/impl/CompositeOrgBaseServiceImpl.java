@@ -1,4 +1,4 @@
-package net.risesoft.manager.org.impl;
+package net.risesoft.service.org.impl;
 
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -30,7 +30,11 @@ import net.risesoft.entity.Y9Position;
 import net.risesoft.entity.relation.Y9PersonsToGroups;
 import net.risesoft.entity.relation.Y9PersonsToPositions;
 import net.risesoft.enums.OrgTypeEnum;
-import net.risesoft.manager.org.Y9OrgBaseManager;
+import net.risesoft.manager.org.CompositeOrgBaseManager;
+import net.risesoft.manager.org.Y9DepartmentManager;
+import net.risesoft.manager.org.Y9GroupManager;
+import net.risesoft.manager.org.Y9PersonManager;
+import net.risesoft.manager.org.Y9PositionManager;
 import net.risesoft.model.Department;
 import net.risesoft.model.Group;
 import net.risesoft.model.Organization;
@@ -55,16 +59,22 @@ import net.risesoft.y9.pubsub.constant.Y9OrgEventConst;
 import net.risesoft.y9.pubsub.message.Y9MessageOrg;
 
 /**
- * @author dingzhaojun
- * @author qinman
- * @author mengjuhua
- * @date 2022/2/10
+ * @author shidaobang
+ * @date 2023/07/31
+ * @since 9.6.3
  */
-@Transactional(value = "rsTenantTransactionManager", readOnly = true)
 @Service
-@Slf4j
+@Transactional(value = "rsTenantTransactionManager", readOnly = true)
 @RequiredArgsConstructor
-public class Y9OrgBaseManagerImpl implements Y9OrgBaseManager {
+@Slf4j
+public class CompositeOrgBaseServiceImpl implements net.risesoft.service.org.CompositeOrgBaseService {
+
+    private final CompositeOrgBaseManager compositeOrgBaseManager;
+    private final Y9DepartmentManager y9DepartmentManager;
+    private final Y9GroupManager y9GroupManager;
+    private final Y9PositionManager y9PositionManager;
+    private final Y9PersonManager y9PersonManager;
+
 
     private final Y9PersonsToGroupsRepository y9PersonsToGroupsRepository;
     private final Y9PersonsToPositionsRepository y9PersonsToPositionsRepository;
@@ -135,7 +145,7 @@ public class Y9OrgBaseManagerImpl implements Y9OrgBaseManager {
     private List<Y9Department> findDepartmentByParentId(String parentId) {
         return y9DepartmentRepository.findByParentIdOrderByTabIndexAsc(parentId);
     }
-    
+
     private List<Y9Group> findGroupByNameLike(String name) {
         return y9GroupRepository.findByNameContainingOrderByTabIndexAsc(name);
     }
@@ -151,7 +161,7 @@ public class Y9OrgBaseManagerImpl implements Y9OrgBaseManager {
     private List<Y9Manager> findManagerByNameLike(String name) {
         return y9ManagerRepository.findByNameContainingAndGlobalManagerFalse(name);
     }
-    
+
     private List<Y9Manager> findManagerByNameLike(String name, String dnName) {
         return y9ManagerRepository.findByNameContainingAndDnContaining(name, dnName);
     }
@@ -207,7 +217,7 @@ public class Y9OrgBaseManagerImpl implements Y9OrgBaseManager {
     private List<Y9Position> findPositionByParentId(String parentId) {
         return y9PositionRepository.findByParentIdOrderByTabIndexAsc(parentId);
     }
-    
+
     private void getAllPositionListByDownwardRecursion(String parentId, List<Y9Position> positionList) {
         positionList.addAll(findPositionByParentId(parentId));
 
@@ -231,23 +241,7 @@ public class Y9OrgBaseManagerImpl implements Y9OrgBaseManager {
             }
         } else {
             return getOrgUnitBureau(y9OrgBase.getParentId());
-        } 
-    }
-
-    @Override
-    public List<Y9OrgBase> getDeptManageTree(String id) {
-        List<Y9OrgBase> childrenList = new CopyOnWriteArrayList<>();
-        childrenList.addAll(findDepartmentByParentId(id));
-        List<Y9Manager> list = y9ManagerRepository.findByParentIdAndGlobalManagerFalse(id);
-        childrenList.addAll(list);
-        try {
-            // ORGBase实现了comparable接口，按照tabIndex字段升序排列
-            Collections.sort(childrenList);
-        } catch (Exception e) {
-            LOGGER.warn(e.getMessage(), e);
         }
-
-        return childrenList;
     }
 
     @Override
@@ -390,8 +384,8 @@ public class Y9OrgBaseManagerImpl implements Y9OrgBaseManager {
     }
 
     @Override
-    public Y9OrgBase getOrgBaseDeletedByOrgId(String orgId) {
-        Y9OrgBaseDeleted deleted = y9OrgBaseDeletedRepository.findByOrgId(orgId);
+    public Y9OrgBase getOrgBaseDeletedByOrgUnitId(String orgUnitId) {
+        Y9OrgBaseDeleted deleted = y9OrgBaseDeletedRepository.findByOrgId(orgUnitId);
         if (deleted != null) {
             String jsonContent = deleted.getJsonContent();
             if (deleted.getOrgType().equals(OrgTypeEnum.ORGANIZATION.getEnName())) {
@@ -408,7 +402,7 @@ public class Y9OrgBaseManagerImpl implements Y9OrgBaseManager {
             }
             if (deleted.getOrgType().equals(OrgTypeEnum.PERSON.getEnName())) {
                 return Y9JsonUtil.readValue(jsonContent, Y9Person.class);
-            } 
+            }
             if (deleted.getOrgType().equals(OrgTypeEnum.MANAGER.getEnName())) {
                 return Y9JsonUtil.readValue(jsonContent, Y9Manager.class);
             }
@@ -493,7 +487,7 @@ public class Y9OrgBaseManagerImpl implements Y9OrgBaseManager {
             getPersonListByDownwardRecursion(dept.getId(), personList, disabled, name);
         }
     }
-    
+
     @Override
     public HashMap<String, Serializable> getSyncMap(String syncId, String orgType, Integer needRecursion) {
         HashMap<String, Serializable> dataMap = new HashMap<>(16);
@@ -614,7 +608,7 @@ public class Y9OrgBaseManagerImpl implements Y9OrgBaseManager {
                 if (managerDeptId.equals(id) || checkPath.contains(managerDeptGuidPath)) {
                     childrenList.addAll(findDepartmentByParentId(id));
                     if (treeType.equals(TreeTypeConsts.TREE_TYPE_ORG)
-                            || treeType.equals(TreeTypeConsts.TREE_TYPE_GROUP) 
+                            || treeType.equals(TreeTypeConsts.TREE_TYPE_GROUP)
                             || TreeTypeConsts.TREE_TYPE_ORG_PERSON.equals(treeType)) {
                         childrenList.addAll(findGroupByParentId(id));
                     }
@@ -951,5 +945,33 @@ public class Y9OrgBaseManagerImpl implements Y9OrgBaseManager {
             }
         }
         return null;
+    }
+
+    @Override
+    @Transactional(readOnly = false)
+    public void sort(String[] orgUnitIds) {
+
+        for (int tabIndex = 0; tabIndex < orgUnitIds.length; tabIndex++) {
+            String id = orgUnitIds[tabIndex];
+            Y9OrgBase y9OrgBase = compositeOrgBaseManager.getOrgBase(id);
+            String orgType = y9OrgBase.getOrgType();
+            if (orgType.equals(OrgTypeEnum.DEPARTMENT.getEnName())) {
+
+                y9DepartmentManager.updateTabIndex(y9OrgBase.getId(), tabIndex);
+
+            } else if (orgType.equals(OrgTypeEnum.GROUP.getEnName())) {
+
+                y9GroupManager.updateTabIndex(y9OrgBase.getId(), tabIndex);
+
+            } else if (orgType.equals(OrgTypeEnum.POSITION.getEnName())) {
+
+                y9PositionManager.updateTabIndex(y9OrgBase.getId(), tabIndex);
+
+            } else if (orgType.equals(OrgTypeEnum.PERSON.getEnName())) {
+
+                y9PersonManager.updateTabIndex(y9OrgBase.getId(), tabIndex);
+
+            }
+        }
     }
 }

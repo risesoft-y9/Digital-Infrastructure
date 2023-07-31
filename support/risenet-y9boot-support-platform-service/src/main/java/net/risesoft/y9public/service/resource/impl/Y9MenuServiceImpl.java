@@ -190,10 +190,8 @@ public class Y9MenuServiceImpl implements Y9MenuService {
     }
 
     @Override
-    @Transactional(readOnly = false)
     public Y9Menu updateTabIndex(String id, int index) {
-        Y9Menu y9Menu = this.getById(id);
-        y9Menu.setTabIndex(index);
-        return this.saveOrUpdate(y9Menu);
+        return y9MenuManager.updateTabIndex(id, index);
     }
+
 }

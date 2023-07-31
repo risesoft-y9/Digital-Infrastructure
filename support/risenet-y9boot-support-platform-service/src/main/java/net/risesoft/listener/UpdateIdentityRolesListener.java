@@ -18,13 +18,13 @@ import net.risesoft.entity.relation.Y9OrgBasesToRoles;
 import net.risesoft.entity.relation.Y9PersonsToGroups;
 import net.risesoft.entity.relation.Y9PersonsToPositions;
 import net.risesoft.enums.OrgTypeEnum;
-import net.risesoft.manager.org.Y9OrgBaseManager;
 import net.risesoft.repository.Y9PersonRepository;
 import net.risesoft.repository.Y9PositionRepository;
 import net.risesoft.repository.relation.Y9PersonsToGroupsRepository;
 import net.risesoft.repository.relation.Y9PersonsToPositionsRepository;
 import net.risesoft.service.identity.Y9PersonToRoleService;
 import net.risesoft.service.identity.Y9PositionToRoleService;
+import net.risesoft.service.org.CompositeOrgBaseService;
 import net.risesoft.util.Y9OrgUtil;
 import net.risesoft.y9.pubsub.event.Y9EntityCreatedEvent;
 import net.risesoft.y9.pubsub.event.Y9EntityDeletedEvent;
@@ -42,7 +42,7 @@ import net.risesoft.y9.pubsub.event.Y9EntityUpdatedEvent;
 @RequiredArgsConstructor
 public class UpdateIdentityRolesListener {
 
-    private final Y9OrgBaseManager y9OrgBaseManager;
+    private final CompositeOrgBaseService compositeOrgBaseService;
 
     private final Y9PersonToRoleService y9PersonToRoleService;
     private final Y9PositionToRoleService y9PositionToRoleService;
@@ -184,7 +184,7 @@ public class UpdateIdentityRolesListener {
     }
 
     public void updateIdentityRolesByOrgId(final String orgId) {
-        Y9OrgBase y9OrgBase = y9OrgBaseManager.getOrgBase(orgId);
+        Y9OrgBase y9OrgBase = compositeOrgBaseService.getOrgBase(orgId);
         if (y9OrgBase != null && y9OrgBase.getId() != null) {
             OrgTypeEnum orgType = OrgTypeEnum.getByEnName(y9OrgBase.getOrgType());
             switch (orgType) {

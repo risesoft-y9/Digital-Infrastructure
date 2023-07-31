@@ -55,4 +55,13 @@ public class Y9OperationManagerImpl implements Y9OperationManager {
         y9OperationRepository.delete(y9Operation);
     }
 
+
+    @Override
+    @Transactional(readOnly = false)
+    public Y9Operation updateTabIndex(String id, int index) {
+        Y9Operation y9Operation = this.getById(id);
+        y9Operation.setTabIndex(index);
+        return this.save(y9Operation);
+    }
+
 }

@@ -1,4 +1,4 @@
-package net.risesoft.y9public.manager.resource.impl;
+package net.risesoft.y9public.service.resource.impl;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -17,10 +17,13 @@ import net.risesoft.y9public.entity.resource.Y9App;
 import net.risesoft.y9public.entity.resource.Y9Menu;
 import net.risesoft.y9public.entity.resource.Y9Operation;
 import net.risesoft.y9public.entity.resource.Y9ResourceBase;
-import net.risesoft.y9public.manager.resource.Y9ResourceBaseManager;
+import net.risesoft.y9public.manager.resource.Y9AppManager;
+import net.risesoft.y9public.manager.resource.Y9MenuManager;
+import net.risesoft.y9public.manager.resource.Y9OperationManager;
 import net.risesoft.y9public.repository.resource.Y9AppRepository;
 import net.risesoft.y9public.repository.resource.Y9MenuRepository;
 import net.risesoft.y9public.repository.resource.Y9OperationRepository;
+import net.risesoft.y9public.service.resource.CompositeResourceService;
 
 /**
  * @author dingzhaojun
@@ -31,11 +34,15 @@ import net.risesoft.y9public.repository.resource.Y9OperationRepository;
 @Service
 @Transactional(value = "rsPublicTransactionManager", readOnly = true)
 @RequiredArgsConstructor
-public class Y9ResourceBaseManagerImpl implements Y9ResourceBaseManager {
+public class CompositeResourceServiceImpl implements CompositeResourceService {
 
     private final Y9AppRepository y9AppRepository;
     private final Y9MenuRepository y9MenuRepository;
     private final Y9OperationRepository y9OperationRepository;
+
+    private final Y9AppManager y9AppManager;
+    private final Y9MenuManager y9MenuManager;
+    private final Y9OperationManager y9OperationManager;
 
     @Cacheable(cacheNames = CacheNameConsts.RESOURCE_APP, key = "#id", condition = "#id!=null", unless = "#result==null")
     public Y9App findAppById(String id) {
@@ -147,5 +154,23 @@ public class Y9ResourceBaseManagerImpl implements Y9ResourceBaseManager {
             recursionUpToRoot(resource, returnList);
         }
         return returnList;
+    }
+
+    @Override
+    @Transactional(readOnly = false)
+    public void sort(String[] ids) {
+        if (ids != null) {
+            for (int i = 0; i < ids.length; i++) {
+                String id = ids[i];
+                Y9ResourceBase y9ResourceBase = this.findById(id);
+                if (ResourceTypeEnum.APP.getValue().equals(y9ResourceBase.getResourceType())) {
+                    y9AppManager.updateTabIndex(id, i);
+                } else if (ResourceTypeEnum.MENU.getValue().equals(y9ResourceBase.getResourceType())) {
+                    y9MenuManager.updateTabIndex(id, i);
+                } else if (ResourceTypeEnum.OPERATION.getValue().equals(y9ResourceBase.getResourceType())) {
+                    y9OperationManager.updateTabIndex(id, i);
+                }
+            }
+        }
     }
 }

@@ -21,10 +21,10 @@ import net.risesoft.entity.relation.Y9OrgBasesToRoles;
 import net.risesoft.enums.AuthorizationPrincipalTypeEnum;
 import net.risesoft.enums.OrgTypeEnum;
 import net.risesoft.enums.ResourceTypeEnum;
-import net.risesoft.manager.org.Y9OrgBaseManager;
 import net.risesoft.service.authorization.Y9AuthorizationService;
 import net.risesoft.service.identity.Y9PersonToResourceAndAuthorityService;
 import net.risesoft.service.identity.Y9PositionToResourceAndAuthorityService;
+import net.risesoft.service.org.CompositeOrgBaseService;
 import net.risesoft.service.relation.Y9OrgBasesToRolesService;
 import net.risesoft.util.Y9OrgUtil;
 import net.risesoft.util.Y9ResourceUtil;
@@ -54,7 +54,7 @@ public class UpdateIdentityResourceAndAuthorityListener {
     private final Y9AuthorizationService y9AuthorizationService;
     private final Y9OrgBasesToRolesService y9OrgBasesToRolesService;
 
-    private final Y9OrgBaseManager y9OrgBaseManager;
+    private final CompositeOrgBaseService compositeOrgBaseService;
     private final Y9SystemRepository y9SystemRepository;
 
     private final KafkaTemplate<String, Object> y9KafkaTemplate;
@@ -213,12 +213,12 @@ public class UpdateIdentityResourceAndAuthorityListener {
 
             for (Y9OrgBasesToRoles y9OrgBasesToRoles : y9OrgBasesToRolesList) {
                 if (OrgTypeEnum.PERSON.getEnName().equals(y9OrgBasesToRoles.getOrgType())) {
-                    y9PersonSet.add((Y9Person)y9OrgBaseManager.getOrgBase(y9OrgBasesToRoles.getOrgId()));
+                    y9PersonSet.add((Y9Person) compositeOrgBaseService.getOrgBase(y9OrgBasesToRoles.getOrgId()));
                 } else if (OrgTypeEnum.POSITION.getEnName().equals(y9OrgBasesToRoles.getOrgType())) {
-                    y9PositionSet.add((Y9Position)y9OrgBaseManager.getOrgBase(y9OrgBasesToRoles.getOrgId()));
+                    y9PositionSet.add((Y9Position) compositeOrgBaseService.getOrgBase(y9OrgBasesToRoles.getOrgId()));
                 } else {
-                    y9PersonSet.addAll(y9OrgBaseManager.listAllPersonsRecursionDownward(y9OrgBasesToRoles.getOrgId()));
-                    y9PositionSet.addAll(y9OrgBaseManager.listAllPositionsRecursionDownward(y9OrgBasesToRoles.getOrgId()));
+                    y9PersonSet.addAll(compositeOrgBaseService.listAllPersonsRecursionDownward(y9OrgBasesToRoles.getOrgId()));
+                    y9PositionSet.addAll(compositeOrgBaseService.listAllPositionsRecursionDownward(y9OrgBasesToRoles.getOrgId()));
                 }
             }
             for (Y9Person y9Person : y9PersonSet) {

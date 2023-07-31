@@ -4,6 +4,8 @@ import java.util.List;
 
 import net.risesoft.entity.Y9Person;
 import net.risesoft.y9.exception.Y9NotFoundException;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.transaction.annotation.Transactional;
 
 public interface Y9PersonManager {
 
@@ -25,4 +27,6 @@ public interface Y9PersonManager {
     void delete(Y9Person y9Person);
 
     Y9Person save(Y9Person y9Person);
+
+    Y9Person updateTabIndex(String id, int tabIndex);
 }

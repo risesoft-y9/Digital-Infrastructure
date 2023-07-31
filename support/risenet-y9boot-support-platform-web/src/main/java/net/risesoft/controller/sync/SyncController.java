@@ -16,9 +16,9 @@ import net.risesoft.entity.Y9Person;
 import net.risesoft.entity.Y9Position;
 import net.risesoft.log.OperationTypeEnum;
 import net.risesoft.log.annotation.RiseLog;
-import net.risesoft.manager.org.Y9OrgBaseManager;
 import net.risesoft.pojo.Y9Result;
 import net.risesoft.service.dictionary.Y9OptionClassService;
+import net.risesoft.service.org.CompositeOrgBaseService;
 import net.risesoft.service.org.Y9ManagerService;
 import net.risesoft.service.org.Y9OrganizationService;
 import net.risesoft.service.org.Y9PersonService;
@@ -40,7 +40,7 @@ import net.risesoft.y9public.entity.tenant.Y9Tenant;
 @RequiredArgsConstructor
 public class SyncController {
 
-    private final Y9OrgBaseManager y9OrgBaseManager;
+    private final CompositeOrgBaseService compositeOrgBaseService;
     private final Y9OrganizationService y9OrganizationService;
     private final Y9PersonService y9PersonService;
     private final Y9PositionService y9PositionService;
@@ -104,10 +104,10 @@ public class SyncController {
             Y9LoginUserHolder.setTenantId(tenantId);
             List<Y9Organization> y9OrganizationList = y9OrganizationService.list();
             for (Y9Organization organization : y9OrganizationList) {
-                List<Y9Person> persons = y9OrgBaseManager.listAllPersonsRecursionDownward(organization.getId());
+                List<Y9Person> persons = compositeOrgBaseService.listAllPersonsRecursionDownward(organization.getId());
                 for (Y9Person person : persons) {
                     if (person != null && person.getId() != null) {
-                        y9PersonService.saveOrUpdate(person, null, y9OrgBaseManager.getOrgBase(person.getParentId()));
+                        y9PersonService.saveOrUpdate(person, null, compositeOrgBaseService.getOrgBase(person.getParentId()));
                     }
                 }
             }
@@ -132,7 +132,7 @@ public class SyncController {
         List<Y9Person> persons = y9PersonService.list();
         for (Y9Person person : persons) {
             if (person != null && person.getId() != null) {
-                y9PersonService.saveOrUpdate(person, null, y9OrgBaseManager.getOrgBase(person.getParentId()));
+                y9PersonService.saveOrUpdate(person, null, compositeOrgBaseService.getOrgBase(person.getParentId()));
 
             }
         }
@@ -157,7 +157,7 @@ public class SyncController {
         Y9LoginUserHolder.setTenantId(tenantId);
         Y9Person person = y9PersonService.getPersonByLoginNameAndTenantId(loginName, tenantId);
         if (person != null && person.getId() != null) {
-            y9PersonService.saveOrUpdate(person, null, y9OrgBaseManager.getOrgBase(person.getParentId()));
+            y9PersonService.saveOrUpdate(person, null, compositeOrgBaseService.getOrgBase(person.getParentId()));
         }
         return Y9Result.successMsg("根据租户id和登录名称同步人员信息完成");
     }
@@ -176,7 +176,7 @@ public class SyncController {
             List<Y9Position> positions = y9PositionService.listAll();
             for (Y9Position position : positions) {
                 if (position != null && position.getId() != null) {
-                    y9PositionService.saveOrUpdate(position, y9OrgBaseManager.getOrgBase(position.getParentId()));
+                    y9PositionService.saveOrUpdate(position, compositeOrgBaseService.getOrgBase(position.getParentId()));
                 }
             }
         }

@@ -22,10 +22,10 @@ import net.risesoft.enums.ManagerLevelEnum;
 import net.risesoft.enums.OrgTypeEnum;
 import net.risesoft.log.OperationTypeEnum;
 import net.risesoft.log.annotation.RiseLog;
-import net.risesoft.manager.org.Y9OrgBaseManager;
 import net.risesoft.model.Organization;
 import net.risesoft.model.user.UserInfo;
 import net.risesoft.pojo.Y9Result;
+import net.risesoft.service.org.CompositeOrgBaseService;
 import net.risesoft.service.org.Y9DepartmentService;
 import net.risesoft.service.org.Y9OrganizationService;
 import net.risesoft.service.org.Y9PersonService;
@@ -47,7 +47,7 @@ import net.risesoft.y9.util.Y9ModelConvertUtil;
 public class OrgController {
 
     private final Y9DepartmentService y9DepartmentService;
-    private final Y9OrgBaseManager y9OrgBaseManager;
+    private final CompositeOrgBaseService compositeOrgBaseService;
     private final Y9OrganizationService y9OrganizationService;
     private final Y9PersonService y9PersonService;
 
@@ -117,9 +117,9 @@ public class OrgController {
         String personId = userInfo.getPersonId();
         List<Y9OrgBase> treeList = new ArrayList<>();
         if (userInfo.isGlobalManager() && userInfo.getManagerLevel() > 0) {
-            treeList = y9OrgBaseManager.getTree(id, treeType, disabled);
+            treeList = compositeOrgBaseService.getTree(id, treeType, disabled);
         } else if (userInfo.getManagerLevel() > 0) {
-            treeList = y9OrgBaseManager.getTree(id, treeType, personId);
+            treeList = compositeOrgBaseService.getTree(id, treeType, personId);
         }
         return Y9Result.success(treeList, "获取机构树成功！");
     }
@@ -136,7 +136,7 @@ public class OrgController {
     @RiseLog(operationName = "获取组织机构树")
     @RequestMapping(value = "/getTreeNoPerson")
     public Y9Result<List<Y9OrgBase>> getTreeNoPerson(@RequestParam String id, @RequestParam String treeType, @RequestParam boolean disabled) {
-        List<Y9OrgBase> treeList = y9OrgBaseManager.getTree(id, treeType, false, disabled);
+        List<Y9OrgBase> treeList = compositeOrgBaseService.getTree(id, treeType, false, disabled);
         return Y9Result.success(treeList, "获取机构树成功！");
     }
 
@@ -223,7 +223,7 @@ public class OrgController {
     @RiseLog(operationName = "同步数据", operationType = OperationTypeEnum.ADD)
     @PostMapping(value = "/sync")
     public Y9Result<String> sync(@RequestParam String syncId, @RequestParam String orgType, @RequestParam Integer needRecursion) {
-        y9OrgBaseManager.sync(syncId, orgType, needRecursion);
+        compositeOrgBaseService.sync(syncId, orgType, needRecursion);
         return Y9Result.success(null, "发送同步数据事件完成");
     }
 
@@ -241,9 +241,9 @@ public class OrgController {
         UserInfo userInfo = Y9LoginUserHolder.getUserInfo();
         List<Y9OrgBase> treeList = new ArrayList<>();
         if (userInfo.isGlobalManager()) {
-            treeList = y9OrgBaseManager.treeSearch(name, treeType);
+            treeList = compositeOrgBaseService.treeSearch(name, treeType);
         } else if (userInfo.getManagerLevel().equals(ManagerLevelEnum.SYSTEM_MANAGER.getValue()) || userInfo.getManagerLevel().equals(ManagerLevelEnum.SECURITY_MANAGER.getValue())) {
-            treeList = y9OrgBaseManager.treeSearch(name, treeType);
+            treeList = compositeOrgBaseService.treeSearch(name, treeType);
         }
         return Y9Result.success(treeList, "获取机构树成功！");
     }

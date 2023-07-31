@@ -23,7 +23,7 @@ import net.risesoft.enums.AuthorizationPrincipalTypeEnum;
 import net.risesoft.enums.OrgTypeEnum;
 import net.risesoft.enums.Y9RoleTypeEnum;
 import net.risesoft.exception.RoleErrorCodeEnum;
-import net.risesoft.manager.org.Y9OrgBaseManager;
+import net.risesoft.manager.org.CompositeOrgBaseManager;
 import net.risesoft.repository.identity.person.Y9PersonToResourceAndAuthorityRepository;
 import net.risesoft.repository.identity.person.Y9PersonToRoleRepository;
 import net.risesoft.repository.identity.position.Y9PositionToResourceAndAuthorityRepository;
@@ -52,7 +52,7 @@ public class Y9RoleManagerImpl implements Y9RoleManager {
 
     private final Y9RoleRepository y9RoleRepository;
     private final Y9OrgBasesToRolesRepository y9OrgBasesToRolesRepository;
-    private final Y9OrgBaseManager y9OrgBaseManager;
+    private final CompositeOrgBaseManager compositeOrgBaseManager;
     private final Y9PersonsToGroupsRepository y9PersonsToGroupsRepository;
     private final Y9PersonsToPositionsRepository y9PersonsToPositionsRepository;
     private final Y9AuthorizationRepository y9AuthorizationRepository;
@@ -117,7 +117,7 @@ public class Y9RoleManagerImpl implements Y9RoleManager {
     }
 
     private void getOrgUnitIdsByUpwardRecursion(List<String> orgUnitIds, String orgUnitId) {
-        Y9OrgBase y9OrgBase = y9OrgBaseManager.getOrgBase(orgUnitId);
+        Y9OrgBase y9OrgBase = compositeOrgBaseManager.getOrgBase(orgUnitId);
         if (y9OrgBase == null) {
             return;
         }
@@ -129,14 +129,14 @@ public class Y9RoleManagerImpl implements Y9RoleManager {
             List<String> groupList = y9PersonsToGroupsRepository.listGroupIdsByPersonId(y9OrgBase.getId());
             orgUnitIds.addAll(groupList);
             for (String groupId : groupList) {
-                Y9Group group = (Y9Group)y9OrgBaseManager.getOrgBase(groupId);
+                Y9Group group = (Y9Group) compositeOrgBaseManager.getOrgBase(groupId);
                 getOrgUnitIdsByUpwardRecursion(orgUnitIds, group.getParentId());
             }
 
             List<String> positionIds = y9PersonsToPositionsRepository.listPositionIdsByPersonId(y9OrgBase.getId());
             orgUnitIds.addAll(positionIds);
             for (String positionId : positionIds) {
-                Y9Position position = (Y9Position)y9OrgBaseManager.getOrgBase(positionId);
+                Y9Position position = (Y9Position) compositeOrgBaseManager.getOrgBase(positionId);
                 getOrgUnitIdsByUpwardRecursion(orgUnitIds, position.getParentId());
             }
         } else if (OrgTypeEnum.POSITION.getEnName().equals(y9OrgBase.getOrgType())) {

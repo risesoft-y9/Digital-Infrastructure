@@ -2,6 +2,7 @@ package net.risesoft.manager.org;
 
 import net.risesoft.entity.Y9Group;
 import net.risesoft.y9.exception.Y9NotFoundException;
+import org.springframework.transaction.annotation.Transactional;
 
 public interface Y9GroupManager {
 
@@ -19,4 +20,6 @@ public interface Y9GroupManager {
     Y9Group save(Y9Group y9Group);
 
     void delete(Y9Group y9Group);
+
+    Y9Group updateTabIndex(String id, int tabIndex);
 }

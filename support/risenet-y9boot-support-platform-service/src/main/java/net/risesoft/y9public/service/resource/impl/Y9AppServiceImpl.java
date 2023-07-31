@@ -317,11 +317,8 @@ public class Y9AppServiceImpl implements Y9AppService {
     }
 
     @Override
-    @Transactional(readOnly = false)
     public Y9App updateTabIndex(String id, int index) {
-        Y9App y9App = this.getById(id);
-        y9App.setTabIndex(index);
-        return this.saveOrUpdate(y9App);
+        return y9AppManager.updateTabIndex(id, index);
     }
 
     @Override

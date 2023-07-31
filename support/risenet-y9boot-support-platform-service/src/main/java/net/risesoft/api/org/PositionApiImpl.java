@@ -17,10 +17,10 @@ import lombok.extern.slf4j.Slf4j;
 import net.risesoft.entity.Y9OrgBase;
 import net.risesoft.entity.Y9Person;
 import net.risesoft.entity.Y9Position;
-import net.risesoft.manager.org.Y9OrgBaseManager;
 import net.risesoft.model.OrgUnit;
 import net.risesoft.model.Person;
 import net.risesoft.model.Position;
+import net.risesoft.service.org.CompositeOrgBaseService;
 import net.risesoft.service.org.Y9PersonService;
 import net.risesoft.service.org.Y9PositionService;
 import net.risesoft.service.relation.Y9PersonsToPositionsService;
@@ -45,7 +45,7 @@ import net.risesoft.y9.util.Y9ModelConvertUtil;
 @RequiredArgsConstructor
 public class PositionApiImpl implements PositionApi {
 
-    private final Y9OrgBaseManager y9OrgBaseManager;
+    private final CompositeOrgBaseService compositeOrgBaseService;
     private final Y9PersonService orgPersonService;
     private final Y9PositionService y9PositionService;
     private final Y9PersonsToPositionsService orgPositionsPersonsService;
@@ -91,7 +91,7 @@ public class PositionApiImpl implements PositionApi {
         Y9LoginUserHolder.setTenantId(tenantId);
         
         Y9Position y9Position = Y9JsonUtil.readValue(positionJson, Y9Position.class);
-        y9Position = y9PositionService.createPosition(y9Position, y9OrgBaseManager.getOrgBase(y9Position.getParentId()));
+        y9Position = y9PositionService.createPosition(y9Position, compositeOrgBaseService.getOrgBase(y9Position.getParentId()));
         return Y9ModelConvertUtil.convert(y9Position, Position.class);
     }
 
@@ -128,7 +128,7 @@ public class PositionApiImpl implements PositionApi {
     public OrgUnit getParent(@RequestParam String tenantId, @RequestParam String positionId) {
         Y9LoginUserHolder.setTenantId(tenantId);
         
-        Y9OrgBase parent = y9OrgBaseManager.getParent(positionId);
+        Y9OrgBase parent = compositeOrgBaseService.getParent(positionId);
         return ModelConvertUtil.orgBaseToOrgUnit(parent);
     }
 
@@ -259,7 +259,7 @@ public class PositionApiImpl implements PositionApi {
         Y9LoginUserHolder.setTenantId(tenantId);
         
         Y9Position y9Position = Y9JsonUtil.readValue(positionJson, Y9Position.class);
-        y9Position = y9PositionService.saveOrUpdate(y9Position, y9OrgBaseManager.getOrgBase(y9Position.getParentId()));
+        y9Position = y9PositionService.saveOrUpdate(y9Position, compositeOrgBaseService.getOrgBase(y9Position.getParentId()));
         return Y9ModelConvertUtil.convert(y9Position, Position.class);
     }
 }

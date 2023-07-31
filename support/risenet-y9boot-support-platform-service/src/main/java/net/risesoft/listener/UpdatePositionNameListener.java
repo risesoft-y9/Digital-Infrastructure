@@ -20,7 +20,7 @@ import net.risesoft.entity.Y9Person;
 import net.risesoft.entity.Y9Position;
 import net.risesoft.entity.relation.Y9PersonsToPositions;
 import net.risesoft.enums.OrgTypeEnum;
-import net.risesoft.manager.org.Y9OrgBaseManager;
+import net.risesoft.service.org.CompositeOrgBaseService;
 import net.risesoft.service.org.Y9JobService;
 import net.risesoft.service.org.Y9PersonService;
 import net.risesoft.service.org.Y9PositionService;
@@ -46,7 +46,7 @@ public class UpdatePositionNameListener {
     private final Y9PositionService y9PositionService;
     private final Y9PersonService y9PersonService;
     private final Y9PersonsToPositionsService y9PersonsToPositionsService;
-    private final Y9OrgBaseManager y9OrgBaseManager;
+    private final CompositeOrgBaseService compositeOrgBaseService;
 
     @TransactionalEventListener
     @Async
@@ -117,7 +117,7 @@ public class UpdatePositionNameListener {
             name = MessageFormat.format(pattern, y9Job.getName(), personNames);
         }
 
-        Y9OrgBase parent = y9OrgBaseManager.getOrgBase(y9Position.getParentId());
+        Y9OrgBase parent = compositeOrgBaseService.getOrgBase(y9Position.getParentId());
         y9Position.setName(name);
         y9Position.setHeadCount(headcount);
         y9Position.setGuidPath(parent.getGuidPath() + OrgLevelConsts.SEPARATOR + y9Position.getId());

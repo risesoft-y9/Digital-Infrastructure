@@ -1,6 +1,7 @@
 package net.risesoft.y9public.manager.resource;
 
 import net.risesoft.y9public.entity.resource.Y9Operation;
+import org.springframework.transaction.annotation.Transactional;
 
 /**
  * 按钮 manager
@@ -17,4 +18,7 @@ public interface Y9OperationManager {
     Y9Operation save(Y9Operation y9Operation);
     
     void delete(Y9Operation y9Operation);
+
+    @Transactional(readOnly = false)
+    Y9Operation updateTabIndex(String id, int index);
 }

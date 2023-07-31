@@ -82,4 +82,13 @@ public class Y9AppManagerImpl implements Y9AppManager {
         return y9AppRepository.save(y9App);
     }
 
+
+    @Override
+    @Transactional(readOnly = false)
+    public Y9App updateTabIndex(String id, int index) {
+        Y9App y9App = this.getById(id);
+        y9App.setTabIndex(index);
+        return this.save(y9App);
+    }
+
 }

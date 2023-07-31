@@ -1,16 +1,18 @@
-package net.risesoft.y9public.manager.resource;
+package net.risesoft.y9public.service.resource;
 
 import java.util.List;
 
 import net.risesoft.y9public.entity.resource.Y9ResourceBase;
 
 /**
+ * 组合的资源 service
+ * 
  * @author dingzhaojun
  * @author qinman
  * @author mengjuhua
  * @date 2022/2/10
  */
-public interface Y9ResourceBaseManager {
+public interface CompositeResourceService {
 
     /**
      * 根据customID和parentId获取资源
@@ -85,4 +87,10 @@ public interface Y9ResourceBaseManager {
      */
     List<Y9ResourceBase> treeSearch(String name);
 
+    /**
+     * 排序
+     *
+     * @param ids id
+     */
+    void sort(String[] ids);
 }

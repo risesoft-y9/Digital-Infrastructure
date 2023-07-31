@@ -190,11 +190,8 @@ public class Y9OperationServiceImpl implements Y9OperationService {
     }
 
     @Override
-    @Transactional(readOnly = false)
     public Y9Operation updateTabIndex(String id, int index) {
-        Y9Operation y9Operation = this.getById(id);
-        y9Operation.setTabIndex(index);
-        return this.saveOrUpdate(y9Operation);
+        return y9OperationManager.updateTabIndex(id, index);
     }
 
 }

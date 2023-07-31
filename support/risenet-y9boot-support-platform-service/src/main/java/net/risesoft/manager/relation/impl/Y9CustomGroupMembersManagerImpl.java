@@ -16,7 +16,7 @@ import net.risesoft.entity.relation.Y9CustomGroupMember;
 import net.risesoft.enums.OrgTypeEnum;
 import net.risesoft.id.IdType;
 import net.risesoft.id.Y9IdGenerator;
-import net.risesoft.manager.org.Y9OrgBaseManager;
+import net.risesoft.manager.org.CompositeOrgBaseManager;
 import net.risesoft.manager.relation.Y9CustomGroupMembersManager;
 import net.risesoft.repository.relation.Y9CustomGroupMembersRepository;
 import net.risesoft.y9.util.Y9BeanUtil;
@@ -35,13 +35,13 @@ public class Y9CustomGroupMembersManagerImpl implements Y9CustomGroupMembersMana
 
     private final Y9CustomGroupMembersRepository customGroupMembersRepository;
 
-    private final Y9OrgBaseManager y9OrgBaseManager;
+    private final CompositeOrgBaseManager compositeOrgBaseManager;
     
     @Override
     @Transactional(readOnly = false)
     public void save(List<String> orgUnitList, String groupId) {
         for (String id : orgUnitList) {
-            Y9OrgBase y9OrgBase = y9OrgBaseManager.getOrgBase(id);
+            Y9OrgBase y9OrgBase = compositeOrgBaseManager.getOrgBase(id);
             if (y9OrgBase != null) {
                 Y9CustomGroupMember member = customGroupMembersRepository.findByGroupIdAndMemberId(groupId, id);
                 if (null == member) {

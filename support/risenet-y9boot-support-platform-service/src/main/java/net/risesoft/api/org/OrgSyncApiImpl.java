@@ -21,7 +21,6 @@ import net.risesoft.entity.Y9Organization;
 import net.risesoft.entity.Y9Person;
 import net.risesoft.entity.Y9Position;
 import net.risesoft.enums.OrgTypeEnum;
-import net.risesoft.manager.org.Y9OrgBaseManager;
 import net.risesoft.model.Department;
 import net.risesoft.model.Group;
 import net.risesoft.model.MessageOrg;
@@ -30,6 +29,7 @@ import net.risesoft.model.Organization;
 import net.risesoft.model.Person;
 import net.risesoft.model.Position;
 import net.risesoft.pojo.Y9Result;
+import net.risesoft.service.org.CompositeOrgBaseService;
 import net.risesoft.service.org.Y9DepartmentService;
 import net.risesoft.service.org.Y9GroupService;
 import net.risesoft.service.org.Y9OrganizationService;
@@ -59,7 +59,7 @@ import net.risesoft.y9public.service.event.Y9PublishedEventSyncHistoryService;
 @RequiredArgsConstructor
 public class OrgSyncApiImpl implements OrgSyncApi {
 
-    private final Y9OrgBaseManager y9OrgBaseManager;
+    private final CompositeOrgBaseService compositeOrgBaseService;
     private final Y9DepartmentService orgDepartmentService;
     private final Y9GroupService orgGroupService;
     private final Y9OrganizationService orgOrganizationService;
@@ -149,7 +149,7 @@ public class OrgSyncApiImpl implements OrgSyncApi {
     public Y9Result<MessageOrg> fullSync(@RequestParam String appName, @RequestParam String tenantId, @RequestParam String organizationId) {
         Y9LoginUserHolder.setTenantId(tenantId);
         Date syncTime = new Date();
-        HashMap<String, Serializable> dateMap = y9OrgBaseManager.getSyncMap(organizationId, OrgTypeEnum.ORGANIZATION.getEnName(), 1);
+        HashMap<String, Serializable> dateMap = compositeOrgBaseService.getSyncMap(organizationId, OrgTypeEnum.ORGANIZATION.getEnName(), 1);
         MessageOrg event = new MessageOrg(dateMap, Y9OrgEventConst.RISEORGEVENT_TYPE_SYNC, Y9LoginUserHolder.getTenantId());
         y9PublishedEventSyncHistoryService.saveOrUpdate(tenantId, appName, syncTime);
         return Y9Result.success(event, "获取成功！");

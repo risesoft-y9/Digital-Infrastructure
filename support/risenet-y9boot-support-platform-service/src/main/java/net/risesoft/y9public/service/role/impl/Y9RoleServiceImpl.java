@@ -21,7 +21,7 @@ import net.risesoft.entity.relation.Y9OrgBasesToRoles;
 import net.risesoft.enums.OrgTypeEnum;
 import net.risesoft.id.IdType;
 import net.risesoft.id.Y9IdGenerator;
-import net.risesoft.manager.org.Y9OrgBaseManager;
+import net.risesoft.manager.org.CompositeOrgBaseManager;
 import net.risesoft.repository.relation.Y9OrgBasesToRolesRepository;
 import net.risesoft.service.identity.Y9PersonToRoleService;
 import net.risesoft.y9.Y9Context;
@@ -47,15 +47,15 @@ public class Y9RoleServiceImpl implements Y9RoleService {
     private final Y9RoleRepository y9RoleRepository;
     private final Y9OrgBasesToRolesRepository y9OrgBasesToRolesRepository;
 
-    private final Y9OrgBaseManager y9OrgBaseManager;
+    private final CompositeOrgBaseManager compositeOrgBaseManager;
     private final Y9RoleManager y9RoleManager;
 
     public Y9RoleServiceImpl(@Qualifier("jdbcTemplate4Public") JdbcTemplate jdbcTemplate4Public, Y9RoleRepository y9RoleRepository, Y9OrgBasesToRolesRepository y9OrgBasesToRolesRepository,
-                              Y9OrgBaseManager y9OrgBaseManager, Y9RoleManager y9RoleManager) {
+                             CompositeOrgBaseManager compositeOrgBaseManager, Y9RoleManager y9RoleManager) {
         this.jdbcTemplate4Public = jdbcTemplate4Public;
         this.y9RoleRepository = y9RoleRepository;
         this.y9OrgBasesToRolesRepository = y9OrgBasesToRolesRepository;
-        this.y9OrgBaseManager = y9OrgBaseManager;
+        this.compositeOrgBaseManager = compositeOrgBaseManager;
         this.y9RoleManager = y9RoleManager;
     }
 
@@ -288,12 +288,12 @@ public class Y9RoleServiceImpl implements Y9RoleService {
 
         List<Y9OrgBasesToRoles> y9OrgBasesToRolesList = y9OrgBasesToRolesRepository.findByRoleId(id);
         for (Y9OrgBasesToRoles y9OrgBasesToRoles : y9OrgBasesToRolesList) {
-            Y9OrgBase y9OrgBase = y9OrgBaseManager.getOrgBase(y9OrgBasesToRoles.getOrgId());
+            Y9OrgBase y9OrgBase = compositeOrgBaseManager.getOrgBase(y9OrgBasesToRoles.getOrgId());
             if (OrgTypeEnum.PERSON.getEnName().equals(y9OrgBase.getOrgType())) {
                 Y9Person person = (Y9Person)y9OrgBase;
                 y9PersonList.add(person);
             } else {
-                y9PersonList.addAll(y9OrgBaseManager.listAllPersonsRecursionDownward(y9OrgBasesToRoles.getOrgId()));
+                y9PersonList.addAll(compositeOrgBaseManager.listAllPersonsRecursionDownward(y9OrgBasesToRoles.getOrgId()));
             }
         }
         return y9PersonList;
@@ -304,12 +304,12 @@ public class Y9RoleServiceImpl implements Y9RoleService {
         List<Y9Position> y9PositionList = new ArrayList<>();
         List<Y9OrgBasesToRoles> y9OrgBasesToRolesList = y9OrgBasesToRolesRepository.findByRoleId(id);
         for (Y9OrgBasesToRoles y9OrgBasesToRoles : y9OrgBasesToRolesList) {
-            Y9OrgBase y9OrgBase = y9OrgBaseManager.getOrgBase(y9OrgBasesToRoles.getOrgId());
+            Y9OrgBase y9OrgBase = compositeOrgBaseManager.getOrgBase(y9OrgBasesToRoles.getOrgId());
             if (OrgTypeEnum.POSITION.getEnName().equals(y9OrgBase.getOrgType())) {
                 Y9Position y9Position = (Y9Position)y9OrgBase;
                 y9PositionList.add(y9Position);
             } else {
-                y9PositionList.addAll(y9OrgBaseManager.listAllPositionsRecursionDownward(y9OrgBasesToRoles.getOrgId()));
+                y9PositionList.addAll(compositeOrgBaseManager.listAllPositionsRecursionDownward(y9OrgBasesToRoles.getOrgId()));
             }
         }
         return y9PositionList;

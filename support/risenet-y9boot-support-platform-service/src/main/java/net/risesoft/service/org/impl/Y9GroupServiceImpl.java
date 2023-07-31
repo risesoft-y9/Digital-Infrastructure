@@ -21,7 +21,7 @@ import net.risesoft.enums.OrgTypeEnum;
 import net.risesoft.id.IdType;
 import net.risesoft.id.Y9IdGenerator;
 import net.risesoft.manager.org.Y9GroupManager;
-import net.risesoft.manager.org.Y9OrgBaseManager;
+import net.risesoft.manager.org.CompositeOrgBaseManager;
 import net.risesoft.model.Group;
 import net.risesoft.repository.Y9GroupRepository;
 import net.risesoft.repository.permission.Y9AuthorizationRepository;
@@ -54,7 +54,7 @@ public class Y9GroupServiceImpl implements Y9GroupService {
     private final Y9OrgBasesToRolesRepository y9OrgBasesToRolesRepository;
     private final Y9AuthorizationRepository y9AuthorizationRepository;
 
-    private final Y9OrgBaseManager y9OrgBaseManager;
+    private final CompositeOrgBaseManager compositeOrgBaseManager;
     private final Y9GroupManager y9GroupManager;
 
     @Override
@@ -172,7 +172,7 @@ public class Y9GroupServiceImpl implements Y9GroupService {
         Y9Group updatedY9Group = new Y9Group();
         Y9BeanUtil.copyProperties(originY9Group, updatedY9Group);
 
-        Y9OrgBase parent = y9OrgBaseManager.getOrgBase(parentId);
+        Y9OrgBase parent = compositeOrgBaseManager.getOrgBase(parentId);
         updatedY9Group.setParentId(parent.getId());
         updatedY9Group.setDn(OrgLevelConsts.getOrgLevel(OrgTypeEnum.GROUP) + updatedY9Group.getName() + OrgLevelConsts.SEPARATOR + parent.getDn());
         updatedY9Group.setGuidPath(parent.getGuidPath() + OrgLevelConsts.SEPARATOR + updatedY9Group.getId());
@@ -265,7 +265,7 @@ public class Y9GroupServiceImpl implements Y9GroupService {
         group.setDn(OrgLevelConsts.getOrgLevel(OrgTypeEnum.GROUP) + group.getName() + OrgLevelConsts.SEPARATOR + parent.getDn());
         group.setDisabled(false);
         group.setParentId(parent.getId());
-        group.setTabIndex(y9OrgBaseManager.getMaxSubTabIndex(parent.getId(), OrgTypeEnum.GROUP));
+        group.setTabIndex(compositeOrgBaseManager.getMaxSubTabIndex(parent.getId(), OrgTypeEnum.GROUP));
         group.setGuidPath(parent.getGuidPath() + OrgLevelConsts.SEPARATOR + group.getId());
         group = y9GroupManager.save(group);
 

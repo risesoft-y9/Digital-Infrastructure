@@ -25,7 +25,7 @@ import net.risesoft.enums.AuthorizationPrincipalTypeEnum;
 import net.risesoft.enums.OrgTypeEnum;
 import net.risesoft.id.IdType;
 import net.risesoft.id.Y9IdGenerator;
-import net.risesoft.manager.org.Y9OrgBaseManager;
+import net.risesoft.manager.org.CompositeOrgBaseManager;
 import net.risesoft.manager.org.Y9PositionManager;
 import net.risesoft.model.Position;
 import net.risesoft.repository.Y9PositionRepository;
@@ -64,15 +64,15 @@ public class Y9PositionServiceImpl implements Y9PositionService {
     private final Y9PositionToRoleRepository y9PositionToRoleRepository;
     private final Y9AuthorizationRepository y9AuthorizationRepository;
 
-    private final Y9OrgBaseManager y9OrgBaseManager;
+    private final CompositeOrgBaseManager compositeOrgBaseManager;
     private final Y9PositionManager y9PositionManager;
 
-    public Y9PositionServiceImpl(@Qualifier("rsTenantEntityManagerFactory") EntityManagerFactory entityManagerFactory, Y9PositionRepository y9PositionRepository, Y9PersonsToPositionsRepository y9PersonsToPositionsRepository, Y9OrgBaseManager y9OrgBaseManager,
+    public Y9PositionServiceImpl(@Qualifier("rsTenantEntityManagerFactory") EntityManagerFactory entityManagerFactory, Y9PositionRepository y9PositionRepository, Y9PersonsToPositionsRepository y9PersonsToPositionsRepository, CompositeOrgBaseManager compositeOrgBaseManager,
         Y9OrgBasesToRolesRepository y9OrgBasesToRolesRepository, Y9PositionToResourceAndAuthorityRepository y9PositionToResourceAndAuthorityRepository, Y9PositionToRoleRepository y9PositionToRoleRepository, Y9AuthorizationRepository y9AuthorizationRepository, Y9PositionManager y9PositionManager) {
         this.entityManagerFactory = entityManagerFactory;
         this.y9PositionRepository = y9PositionRepository;
         this.y9PersonsToPositionsRepository = y9PersonsToPositionsRepository;
-        this.y9OrgBaseManager = y9OrgBaseManager;
+        this.compositeOrgBaseManager = compositeOrgBaseManager;
         this.y9OrgBasesToRolesRepository = y9OrgBasesToRolesRepository;
         this.y9PositionToResourceAndAuthorityRepository = y9PositionToResourceAndAuthorityRepository;
         this.y9PositionToRoleRepository = y9PositionToRoleRepository;
@@ -230,7 +230,7 @@ public class Y9PositionServiceImpl implements Y9PositionService {
         Y9Position updatedPosition = new Y9Position();
         Y9BeanUtil.copyProperties(originPosition, updatedPosition);
 
-        Y9OrgBase parent = y9OrgBaseManager.getOrgBase(parentId);
+        Y9OrgBase parent = compositeOrgBaseManager.getOrgBase(parentId);
         updatedPosition.setParentId(parent.getId());
         updatedPosition.setGuidPath(parent.getGuidPath() + OrgLevelConsts.SEPARATOR + updatedPosition.getId());
         updatedPosition.setDn(OrgLevelConsts.getOrgLevel(OrgTypeEnum.POSITION) + updatedPosition.getName() + OrgLevelConsts.SEPARATOR + parent.getDn());
@@ -298,7 +298,7 @@ public class Y9PositionServiceImpl implements Y9PositionService {
     @Override
     @Transactional(readOnly = false)
     public Y9Position saveOrUpdate(Y9Position position, String parentId) {
-        Y9OrgBase y9OrgBase = y9OrgBaseManager.getOrgBase(parentId);
+        Y9OrgBase y9OrgBase = compositeOrgBaseManager.getOrgBase(parentId);
         if (null == y9OrgBase) {
             y9OrgBase = this.getById(parentId);
         }

@@ -26,10 +26,10 @@ import net.risesoft.entity.Y9Person;
 import net.risesoft.entity.relation.Y9OrgBasesToRoles;
 import net.risesoft.enums.OrgTypeEnum;
 import net.risesoft.enums.Y9RoleTypeEnum;
-import net.risesoft.manager.org.Y9OrgBaseManager;
 import net.risesoft.model.OrgUnit;
 import net.risesoft.model.Person;
 import net.risesoft.model.Role;
+import net.risesoft.service.org.CompositeOrgBaseService;
 import net.risesoft.service.org.Y9PersonService;
 import net.risesoft.service.relation.Y9OrgBasesToRolesService;
 import net.risesoft.util.ModelConvertUtil;
@@ -54,7 +54,7 @@ import net.risesoft.y9public.service.role.Y9RoleService;
 @RequiredArgsConstructor
 public class RoleApiImpl implements RoleApi {
 
-    private final Y9OrgBaseManager y9OrgBaseManager;
+    private final CompositeOrgBaseService compositeOrgBaseService;
     private final Y9OrgBasesToRolesService y9OrgBasesToRolesService;
     private final Y9PersonService y9PersonService;
     private final Y9RoleService y9RoleService;
@@ -255,12 +255,12 @@ public class RoleApiImpl implements RoleApi {
         List<Y9OrgBasesToRoles> roleMappingList = y9OrgBasesToRolesService.listByRoleId(roleId);
         for (Y9OrgBasesToRoles roleMapping : roleMappingList) {
             if (Boolean.TRUE.equals(roleMapping.getNegative())) {
-                Y9OrgBase y9OrgBase = y9OrgBaseManager.getOrgBase(roleMapping.getOrgId());
+                Y9OrgBase y9OrgBase = compositeOrgBaseService.getOrgBase(roleMapping.getOrgId());
                 if (OrgTypeEnum.PERSON.getEnName().equals(y9OrgBase.getOrgType())) {
                     Y9Person person = (Y9Person)y9OrgBase;
                     negativePersonSet.add(person);
                 } else if (OrgTypeEnum.DEPARTMENT.getEnName().equals(y9OrgBase.getOrgType())) {
-                    negativePersonSet.addAll(y9OrgBaseManager.listAllPersonsRecursionDownward(y9OrgBase.getId()));
+                    negativePersonSet.addAll(compositeOrgBaseService.listAllPersonsRecursionDownward(y9OrgBase.getId()));
                 } else if (OrgTypeEnum.GROUP.getEnName().equals(y9OrgBase.getOrgType())) {
                     negativePersonSet.addAll(y9PersonService.listByGroupId(y9OrgBase.getId()));
                 } else if (OrgTypeEnum.POSITION.getEnName().equals(y9OrgBase.getOrgType())) {
@@ -270,12 +270,12 @@ public class RoleApiImpl implements RoleApi {
         }
         for (Y9OrgBasesToRoles roleMapping : roleMappingList) {
             if (!Boolean.TRUE.equals(roleMapping.getNegative())) {
-                Y9OrgBase y9OrgBase = y9OrgBaseManager.getOrgBase(roleMapping.getOrgId());
+                Y9OrgBase y9OrgBase = compositeOrgBaseService.getOrgBase(roleMapping.getOrgId());
                 if (OrgTypeEnum.PERSON.getEnName().equals(y9OrgBase.getOrgType())) {
                     Y9Person person = (Y9Person)y9OrgBase;
                     personSet.add(person);
                 } else if (OrgTypeEnum.DEPARTMENT.getEnName().equals(y9OrgBase.getOrgType())) {
-                    personSet.addAll(y9OrgBaseManager.listAllPersonsRecursionDownward(y9OrgBase.getId()));
+                    personSet.addAll(compositeOrgBaseService.listAllPersonsRecursionDownward(y9OrgBase.getId()));
                 } else if (OrgTypeEnum.GROUP.getEnName().equals(y9OrgBase.getOrgType())) {
                     personSet.addAll(y9PersonService.listByGroupId(y9OrgBase.getId()));
                 } else if (OrgTypeEnum.POSITION.getEnName().equals(y9OrgBase.getOrgType())) {
@@ -311,7 +311,7 @@ public class RoleApiImpl implements RoleApi {
         List<Y9OrgBase> y9OrgBaseList = new ArrayList<>();
         for (Y9OrgBasesToRoles roleMapping : roleMappingList) {
             if (!Boolean.TRUE.equals(roleMapping.getNegative())) {
-                Y9OrgBase y9OrgBase = y9OrgBaseManager.getOrgBase(roleMapping.getOrgId());
+                Y9OrgBase y9OrgBase = compositeOrgBaseService.getOrgBase(roleMapping.getOrgId());
                 if (y9OrgBase == null || !orgType.equals(y9OrgBase.getOrgType())) {
                     continue;
                 }
@@ -338,7 +338,7 @@ public class RoleApiImpl implements RoleApi {
         List<Person> persons = new ArrayList<>();
         for (Y9OrgBasesToRoles roleMapping : roleMappingList) {
             if (!Boolean.TRUE.equals(roleMapping.getNegative())) {
-                Y9OrgBase y9OrgBase = y9OrgBaseManager.getOrgBase(roleMapping.getOrgId());
+                Y9OrgBase y9OrgBase = compositeOrgBaseService.getOrgBase(roleMapping.getOrgId());
                 if (y9OrgBase == null || !("Person".equals(y9OrgBase.getOrgType()))) {
                     continue;
                 }

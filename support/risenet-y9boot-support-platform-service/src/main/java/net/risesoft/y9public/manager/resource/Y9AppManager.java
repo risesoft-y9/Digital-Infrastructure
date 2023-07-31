@@ -1,6 +1,7 @@
 package net.risesoft.y9public.manager.resource;
 
 import net.risesoft.y9public.entity.resource.Y9App;
+import org.springframework.transaction.annotation.Transactional;
 
 /**
  * 应用 Manager
@@ -19,4 +20,7 @@ public interface Y9AppManager {
     Y9App findById(String id);
 
     Y9App save(Y9App y9App);
+
+    @Transactional(readOnly = false)
+    Y9App updateTabIndex(String id, int index);
 }

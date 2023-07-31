@@ -1,5 +1,6 @@
 package net.risesoft.manager.org.impl;
 
+import net.risesoft.y9.util.Y9ModelConvertUtil;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.cache.annotation.CacheEvict;
@@ -17,7 +18,7 @@ import net.risesoft.enums.OrgTypeEnum;
 import net.risesoft.exception.PositionErrorCodeEnum;
 import net.risesoft.id.IdType;
 import net.risesoft.id.Y9IdGenerator;
-import net.risesoft.manager.org.Y9OrgBaseManager;
+import net.risesoft.manager.org.CompositeOrgBaseManager;
 import net.risesoft.manager.org.Y9PositionManager;
 import net.risesoft.model.Position;
 import net.risesoft.repository.Y9PositionRepository;
@@ -43,7 +44,7 @@ public class Y9PositionManagerImpl implements Y9PositionManager {
     private final Y9PersonsToPositionsRepository y9PersonsToPositionsRepository;
     private final Y9PositionRepository y9PositionRepository;
 
-    private final Y9OrgBaseManager y9OrgBaseManager;
+    private final CompositeOrgBaseManager compositeOrgBaseManager;
 
     @Override
     @Cacheable(key = "#id", condition = "#id!=null", unless = "#result==null")
@@ -124,7 +125,7 @@ public class Y9PositionManagerImpl implements Y9PositionManager {
         if (StringUtils.isEmpty(position.getId())) {
             position.setId(Y9IdGenerator.genId(IdType.SNOWFLAKE));
         }
-        position.setTabIndex(y9OrgBaseManager.getMaxSubTabIndex(parent.getId(), OrgTypeEnum.POSITION));
+        position.setTabIndex(compositeOrgBaseManager.getMaxSubTabIndex(parent.getId(), OrgTypeEnum.POSITION));
         position.setOrgType(OrgTypeEnum.POSITION.getEnName());
         position.setDutyLevel(0);
         position.setDisabled(false);
@@ -146,7 +147,7 @@ public class Y9PositionManagerImpl implements Y9PositionManager {
     @CacheEvict(key = "#position.id")
     public Y9Position save(Y9Position position) {
         StringBuilder sb = new StringBuilder();
-        y9OrgBaseManager.getOrderedPathRecursiveUp(sb, position);
+        compositeOrgBaseManager.getOrderedPathRecursiveUp(sb, position);
         position.setOrderedPath(sb.toString());
         return y9PositionRepository.save(position);
     }
@@ -156,5 +157,18 @@ public class Y9PositionManagerImpl implements Y9PositionManager {
     @CacheEvict(key = "#y9Position.id")
     public void delete(Y9Position y9Position) {
         y9PositionRepository.delete(y9Position);
+    }
+
+    @Override
+    @Transactional(readOnly = false)
+    public Y9Position updateTabIndex(String id, int tabIndex) {
+        Y9Position position = this.getById(id);
+        position.setTabIndex(tabIndex);
+        position = this.save(position);
+
+        Y9MessageOrg msg = new Y9MessageOrg(Y9ModelConvertUtil.convert(position, Position.class), Y9OrgEventConst.RISEORGEVENT_TYPE_UPDATE_POSITION_TABINDEX, Y9LoginUserHolder.getTenantId());
+        Y9PublishServiceUtil.persistAndPublishMessageOrg(msg, "更新岗位排序号", position.getName() + "的排序号更新为" + tabIndex);
+
+        return position;
     }
 }

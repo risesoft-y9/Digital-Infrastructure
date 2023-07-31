@@ -15,6 +15,7 @@ import java.util.Map;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import net.risesoft.service.org.CompositeOrgBaseService;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -33,7 +34,7 @@ import net.risesoft.dataio.system.model.Y9SystemExportModel;
 import net.risesoft.entity.Y9OrgBase;
 import net.risesoft.log.OperationTypeEnum;
 import net.risesoft.log.annotation.RiseLog;
-import net.risesoft.manager.org.Y9OrgBaseManager;
+import net.risesoft.manager.org.CompositeOrgBaseManager;
 import net.risesoft.pojo.Y9Result;
 import net.risesoft.util.StringUtil;
 import net.risesoft.y9.json.Y9JsonUtil;
@@ -63,7 +64,7 @@ public class ImportExportController {
     private final Y9OrgTreeDataHandler y9OrgTreeExcelDataHandler;
     private final Y9OrgTreeDataHandler y9OrgTreeXmlDataHandler;
     private final Y9RoleService y9RoleService;
-    private final Y9OrgBaseManager y9OrgBaseManager;
+    private final CompositeOrgBaseService compositeOrgBaseService;
     private final Y9SystemService y9SystemService;
     private final Y9AppService y9AppService;
     private final Y9RoleDataHandler y9RoleDataHandler;
@@ -71,13 +72,13 @@ public class ImportExportController {
 
     public ImportExportController(@Qualifier("y9OrgTreeExcelDataHandler") Y9OrgTreeDataHandler y9OrgTreeExcelDataHandler
             , @Qualifier("y9OrgTreeXmlDataHandler") Y9OrgTreeDataHandler y9OrgTreeXmlDataHandler
-            , Y9RoleService y9RoleService, Y9OrgBaseManager y9OrgBaseManager
+            , Y9RoleService y9RoleService, CompositeOrgBaseService compositeOrgBaseService
             , Y9SystemService y9SystemService, Y9AppService y9AppService
             , Y9RoleDataHandler y9RoleDataHandler, Y9SystemDataHandler y9SystemDataHandler) {
         this.y9OrgTreeExcelDataHandler = y9OrgTreeExcelDataHandler;
         this.y9OrgTreeXmlDataHandler = y9OrgTreeXmlDataHandler;
         this.y9RoleService = y9RoleService;
-        this.y9OrgBaseManager = y9OrgBaseManager;
+        this.compositeOrgBaseService = compositeOrgBaseService;
         this.y9SystemService = y9SystemService;
         this.y9AppService = y9AppService;
         this.y9RoleDataHandler = y9RoleDataHandler;
@@ -123,7 +124,7 @@ public class ImportExportController {
     public void exportOrgTreeXls(@RequestParam String resourceId, HttpServletResponse response) {
         // 获取数据
         Map<String, Object> map = y9OrgTreeExcelDataHandler.xlsData(resourceId);
-        Y9OrgBase base = y9OrgBaseManager.getOrgBase(resourceId);
+        Y9OrgBase base = compositeOrgBaseService.getOrgBase(resourceId);
         
         try (OutputStream outStream = response.getOutputStream(); InputStream in = new ClassPathResource("/template/exportTemplate.xlsx").getStream()) {
 
@@ -163,7 +164,7 @@ public class ImportExportController {
         xmlString = StringUtil.strChangeToXml(xmlString.getBytes(StandardCharsets.UTF_8));
         
         try (OutputStream outStream = response.getOutputStream(); InputStream in = new ByteArrayInputStream(xmlString.getBytes(StandardCharsets.UTF_8))) {
-            Y9OrgBase y9OrgBase = y9OrgBaseManager.getOrgBase(orgBaseId);
+            Y9OrgBase y9OrgBase = compositeOrgBaseService.getOrgBase(orgBaseId);
 
             String filename = DownloadFileNameUtil.standardize(y9OrgBase.getName() + "-组织架构-" + new SimpleDateFormat("yyyyMMddHHmmss").format(new Date()) + ".xml");
             response.setContentType("application/octet-stream");
@@ -191,7 +192,7 @@ public class ImportExportController {
     public void exportOrgXls(@RequestParam String orgBaseId, HttpServletRequest request, HttpServletResponse response) {
         // 获取数据
         Map<String, Object> map = y9OrgTreeExcelDataHandler.xlsPersonData(orgBaseId);
-        Y9OrgBase base = y9OrgBaseManager.getOrgBase(orgBaseId);
+        Y9OrgBase base = compositeOrgBaseService.getOrgBase(orgBaseId);
         
         try (OutputStream outStream = response.getOutputStream(); InputStream in = new ClassPathResource("/template/exportSimpleTemplate.xlsx").getStream()) {
             String filename = DownloadFileNameUtil.standardize(base.getName() + "-组织架构" + new SimpleDateFormat("yyyyMMddHHmmss").format(new Date()) + ".xlsx");

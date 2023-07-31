@@ -7,23 +7,23 @@ import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-import net.risesoft.entity.Y9OrgBase;
-import net.risesoft.enums.AuthorizationPrincipalTypeEnum;
-import net.risesoft.manager.org.Y9OrgBaseManager;
-import net.risesoft.y9public.entity.role.Y9Role;
-import net.risesoft.y9public.service.role.Y9RoleService;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Component;
 
 import lombok.RequiredArgsConstructor;
 
 import net.risesoft.controller.identity.vo.ResourcePermissionVO;
+import net.risesoft.entity.Y9OrgBase;
 import net.risesoft.entity.identity.Y9IdentityToResourceAndAuthorityBase;
 import net.risesoft.entity.permission.Y9Authorization;
+import net.risesoft.enums.AuthorizationPrincipalTypeEnum;
 import net.risesoft.enums.ResourceTypeEnum;
 import net.risesoft.service.authorization.Y9AuthorizationService;
+import net.risesoft.service.org.CompositeOrgBaseService;
 import net.risesoft.y9public.entity.resource.Y9ResourceBase;
-import net.risesoft.y9public.manager.resource.Y9ResourceBaseManager;
+import net.risesoft.y9public.entity.role.Y9Role;
+import net.risesoft.y9public.service.resource.CompositeResourceService;
+import net.risesoft.y9public.service.role.Y9RoleService;
 
 /**
  * 构建 资源权限Vo 集合
@@ -35,8 +35,8 @@ import net.risesoft.y9public.manager.resource.Y9ResourceBaseManager;
 @RequiredArgsConstructor
 public class ResourcePermissionVOBuilder {
 
-    private final Y9ResourceBaseManager y9ResourceBaseManager;
-    private final Y9OrgBaseManager y9OrgBaseManager;
+    private final CompositeResourceService compositeResourceService;
+    private final CompositeOrgBaseService compositeOrgBaseService;
     
     private final Y9AuthorizationService y9AuthorizationService;
     private final Y9RoleService y9RoleService;
@@ -105,7 +105,7 @@ public class ResourcePermissionVOBuilder {
                     detail.setPrincipalName(y9Role.getName());
                 }
             } else {
-                Y9OrgBase orgBase = y9OrgBaseManager.getOrgBase(y9Authorization.getPrincipalId());
+                Y9OrgBase orgBase = compositeOrgBaseService.getOrgBase(y9Authorization.getPrincipalId());
                 if (orgBase != null) {
                     detail.setPrincipalName(orgBase.getName());
                 }
@@ -124,7 +124,7 @@ public class ResourcePermissionVOBuilder {
 
     private void recursivelyGetResource(String resourceId, Set<Y9ResourceBase> y9ResourceBaseSet) {
         if (StringUtils.isNotBlank(resourceId)) {
-            Y9ResourceBase y9ResourceBase = y9ResourceBaseManager.findById(resourceId);
+            Y9ResourceBase y9ResourceBase = compositeResourceService.findById(resourceId);
             if (y9ResourceBase != null) {
                 y9ResourceBaseSet.add(y9ResourceBase);
                 recursivelyGetResource(y9ResourceBase.getParentId(), y9ResourceBaseSet);

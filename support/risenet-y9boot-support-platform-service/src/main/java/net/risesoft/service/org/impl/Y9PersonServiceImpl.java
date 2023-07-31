@@ -11,8 +11,6 @@ import javax.persistence.Query;
 
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.cache.annotation.CacheEvict;
-import org.springframework.cache.annotation.Cacheable;
 import org.springframework.context.event.EventListener;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -39,7 +37,7 @@ import net.risesoft.enums.AuthorizationPrincipalTypeEnum;
 import net.risesoft.enums.OrgTypeEnum;
 import net.risesoft.id.IdType;
 import net.risesoft.id.Y9IdGenerator;
-import net.risesoft.manager.org.Y9OrgBaseManager;
+import net.risesoft.manager.org.CompositeOrgBaseManager;
 import net.risesoft.manager.org.Y9PersonExtManager;
 import net.risesoft.manager.org.Y9PersonManager;
 import net.risesoft.manager.org.Y9PositionManager;
@@ -104,7 +102,7 @@ public class Y9PersonServiceImpl implements Y9PersonService {
     private final Y9PersonToRoleRepository y9PersonToRoleRepository;
 
     private final Y9PersonExtManager y9PersonExtManager;
-    private final Y9OrgBaseManager y9OrgBaseManager;
+    private final CompositeOrgBaseManager compositeOrgBaseManager;
     private final Y9PositionManager y9PositionManager;
     private final Y9PersonsToPositionsManager y9PersonsToPositionsManager;
     private final Y9PersonManager y9PersonManager;
@@ -112,9 +110,9 @@ public class Y9PersonServiceImpl implements Y9PersonService {
     private final Y9Properties y9config;
 
     public Y9PersonServiceImpl(Y9PersonRepository y9PersonRepository, @Qualifier("rsTenantEntityManagerFactory") EntityManagerFactory entityManagerFactory, Y9PersonsToGroupsRepository y9PersonsToGroupsRepository, Y9PersonsToPositionsRepository y9PersonsToPositionsRepository,
-        Y9DepartmentRepository y9DepartmentRepository, Y9GroupRepository y9GroupRepository, Y9PositionRepository y9PositionRepository, Y9UserRepository y9UserRepository, Y9PersonExtManager y9PersonExtManager, Y9OrgBaseManager y9OrgBaseManager, Y9Properties y9config,
-        Y9OrgBasesToRolesRepository y9OrgBasesToRolesRepository, Y9AuthorizationRepository y9AuthorizationRepository, Y9DepartmentPropRepository y9DepartmentPropRepository, Y9PersonToResourceAndAuthorityRepository y9PersonToResourceAndAuthorityRepository,
-        Y9PersonToRoleRepository y9PersonToRoleRepository, Y9PersonsToPositionsManager y9PersonsToPositionsManager, Y9PositionManager y9PositionManager, Y9PersonManager y9PersonManager) {
+                               Y9DepartmentRepository y9DepartmentRepository, Y9GroupRepository y9GroupRepository, Y9PositionRepository y9PositionRepository, Y9UserRepository y9UserRepository, Y9PersonExtManager y9PersonExtManager, CompositeOrgBaseManager compositeOrgBaseManager, Y9Properties y9config,
+                               Y9OrgBasesToRolesRepository y9OrgBasesToRolesRepository, Y9AuthorizationRepository y9AuthorizationRepository, Y9DepartmentPropRepository y9DepartmentPropRepository, Y9PersonToResourceAndAuthorityRepository y9PersonToResourceAndAuthorityRepository,
+                               Y9PersonToRoleRepository y9PersonToRoleRepository, Y9PersonsToPositionsManager y9PersonsToPositionsManager, Y9PositionManager y9PositionManager, Y9PersonManager y9PersonManager) {
         this.y9PersonRepository = y9PersonRepository;
         this.entityManagerFactory = entityManagerFactory;
         this.y9PersonsToGroupsRepository = y9PersonsToGroupsRepository;
@@ -124,7 +122,7 @@ public class Y9PersonServiceImpl implements Y9PersonService {
         this.y9PositionRepository = y9PositionRepository;
         this.y9UserRepository = y9UserRepository;
         this.y9PersonExtManager = y9PersonExtManager;
-        this.y9OrgBaseManager = y9OrgBaseManager;
+        this.compositeOrgBaseManager = compositeOrgBaseManager;
         this.y9config = y9config;
         this.y9OrgBasesToRolesRepository = y9OrgBasesToRolesRepository;
         this.y9AuthorizationRepository = y9AuthorizationRepository;
@@ -140,7 +138,7 @@ public class Y9PersonServiceImpl implements Y9PersonService {
     @Transactional(readOnly = false)
     public List<Y9Person> addPersons(String parentId, String[] personIds) {
         List<Y9Person> personList = new ArrayList<>();
-        Y9OrgBase parent = y9OrgBaseManager.getOrgBase(parentId);
+        Y9OrgBase parent = compositeOrgBaseManager.getOrgBase(parentId);
         for (String originalId : personIds) {
             Y9Person originalPerson = getById(originalId);
             if (StringUtils.isNotBlank(originalPerson.getOriginalId())) {
@@ -160,7 +158,7 @@ public class Y9PersonServiceImpl implements Y9PersonService {
                 personList.add(oldperson);
                 continue;
             }
-            Integer maxIndex = y9OrgBaseManager.getMaxSubTabIndex(parentId, OrgTypeEnum.PERSON);
+            Integer maxIndex = compositeOrgBaseManager.getMaxSubTabIndex(parentId, OrgTypeEnum.PERSON);
             Y9Person person = new Y9Person();
             Y9BeanUtil.copyProperties(originalPerson, person);
             person.setId(Y9IdGenerator.genId(IdType.SNOWFLAKE));
@@ -450,7 +448,6 @@ public class Y9PersonServiceImpl implements Y9PersonService {
 
     @Override
     @Transactional(readOnly = false)
-    @CacheEvict(key = "#id")
     public Y9Person changeDisabled(String id) {
         Y9Person y9Person = this.getById(id);
         boolean disabled = y9Person.getDisabled();
@@ -514,7 +511,7 @@ public class Y9PersonServiceImpl implements Y9PersonService {
         if (StringUtils.isBlank(person.getEmail())) {
             person.setEmail(null);
         }
-        person.setTabIndex(y9OrgBaseManager.getMaxSubTabIndex(parent.getId(), OrgTypeEnum.PERSON));
+        person.setTabIndex(compositeOrgBaseManager.getMaxSubTabIndex(parent.getId(), OrgTypeEnum.PERSON));
         if (person.getSex() == null) {
             person.setSex(1);
         }
@@ -539,7 +536,6 @@ public class Y9PersonServiceImpl implements Y9PersonService {
 
     @Override
     @Transactional(readOnly = false)
-    @CacheEvict(key = "#id")
     public void delete(String id) {
         Y9Person y9Person = this.getById(id);
 
@@ -584,7 +580,6 @@ public class Y9PersonServiceImpl implements Y9PersonService {
      * @param id
      */
     @Transactional(readOnly = false)
-    @CacheEvict(key = "#id")
     public void deleteLogically(String id) {
         Y9Person y9Person = this.getById(id);
         String guid = Y9IdGenerator.genId(IdType.SNOWFLAKE);
@@ -605,19 +600,17 @@ public class Y9PersonServiceImpl implements Y9PersonService {
     }
 
     @Override
-    @Cacheable(key = "#id", condition = "#id!=null", unless = "#result==null")
     public Y9Person findById(String id) {
         return y9PersonManager.findById(id);
     }
 
     @Override
     public Y9OrgBase getBureau(String id) {
-        return y9OrgBaseManager.getOrgUnitBureau(id);
+        return compositeOrgBaseManager.getOrgUnitBureau(id);
     }
 
     @Override
     @Transactional(readOnly = true)
-    @Cacheable(key = "#id", condition = "#id!=null", unless = "#result==null")
     public Y9Person getById(String id) {
         return y9PersonManager.getById(id);
     }
@@ -776,7 +769,6 @@ public class Y9PersonServiceImpl implements Y9PersonService {
 
     @Override
     @Transactional(readOnly = false)
-    @CacheEvict(key = "#personId")
     public Y9Person modifyPassword(String personId, String newPassword) {
         Y9Person y9Person = null;
         if (StringUtils.isNotEmpty(personId)) {
@@ -794,18 +786,17 @@ public class Y9PersonServiceImpl implements Y9PersonService {
     }
 
     @Override
-    @CacheEvict(key = "#personId")
     @Transactional(readOnly = false)
     public Y9Person move(String personId, String parentId) {
         Y9Person originPerson = this.getById(personId);
         Y9Person updatedPerson = new Y9Person();
 
         Y9BeanUtil.copyProperties(originPerson, updatedPerson);
-        updatedPerson.setTabIndex(y9OrgBaseManager.getMaxSubTabIndex(parentId, OrgTypeEnum.PERSON));
+        updatedPerson.setTabIndex(compositeOrgBaseManager.getMaxSubTabIndex(parentId, OrgTypeEnum.PERSON));
         updatedPerson.setParentId(parentId);
         updatedPerson = this.save(updatedPerson);
 
-        Y9OrgBase parent = y9OrgBaseManager.getOrgBase(parentId);
+        Y9OrgBase parent = compositeOrgBaseManager.getOrgBase(parentId);
         Y9MessageOrg msg = new Y9MessageOrg(ModelConvertUtil.orgPersonToPerson(updatedPerson), Y9OrgEventConst.RISEORGEVENT_TYPE_UPDATE_PERSON, Y9LoginUserHolder.getTenantId());
         Y9PublishServiceUtil.persistAndPublishMessageOrg(msg, "移动人员", updatedPerson.getName() + "移动到" + parent.getName());
 
@@ -829,7 +820,6 @@ public class Y9PersonServiceImpl implements Y9PersonService {
     }
 
     @Transactional(readOnly = false)
-    @CacheEvict(key = "#personId")
     public Y9Person order(String personId, String tabIndex) {
         Y9Person person = this.getById(personId);
         person.setTabIndex(Integer.parseInt(tabIndex));
@@ -891,7 +881,6 @@ public class Y9PersonServiceImpl implements Y9PersonService {
 
     @Override
     @Transactional(readOnly = false)
-    @CacheEvict(key = "#personId")
     public void resetPassword(String personId) {
         if (StringUtils.isNotEmpty(personId)) {
             Y9Person origPerson = this.getById(personId);
@@ -908,17 +897,16 @@ public class Y9PersonServiceImpl implements Y9PersonService {
 
     @Override
     @Transactional(readOnly = false)
-    @CacheEvict(key = "#person.id")
     public Y9Person save(Y9Person person) {
         String tenantId = Y9LoginUserHolder.getTenantId();
         person.setTenantId(tenantId);
 
         StringBuilder sb = new StringBuilder();
-        y9OrgBaseManager.getGuidPathRecursiveUp(sb, person);
+        compositeOrgBaseManager.getGuidPathRecursiveUp(sb, person);
         person.setGuidPath(sb.toString());
 
         sb = new StringBuilder();
-        y9OrgBaseManager.getOrderedPathRecursiveUp(sb, person);
+        compositeOrgBaseManager.getOrderedPathRecursiveUp(sb, person);
         person.setOrderedPath(sb.toString());
 
         if (person.getOriginal() == null) {
@@ -929,9 +917,8 @@ public class Y9PersonServiceImpl implements Y9PersonService {
 
     @Override
     @Transactional(readOnly = false)
-    @CacheEvict(key = "#person.id")
     public Y9Person saveOrUpdate(Y9Person person, Y9PersonExt ext, String parentId, String[] positionIds, String[] jobIds) {
-        Y9OrgBase parent = y9OrgBaseManager.getOrgBase(parentId);
+        Y9OrgBase parent = compositeOrgBaseManager.getOrgBase(parentId);
 
         person = this.saveOrUpdate(person, ext, parent);
 
@@ -959,7 +946,6 @@ public class Y9PersonServiceImpl implements Y9PersonService {
 
     @Override
     @Transactional(readOnly = false)
-    @CacheEvict(key = "#person.id")
     public Y9Person saveOrUpdate(Y9Person person, Y9PersonExt personExt, Y9OrgBase parent) {
         String password = y9config.getCommon().getDefaultPassword();
         if (StringUtils.isNotEmpty(person.getId())) {
@@ -1035,7 +1021,7 @@ public class Y9PersonServiceImpl implements Y9PersonService {
         if (StringUtils.isBlank(person.getEmail())) {
             person.setEmail(null);
         }
-        person.setTabIndex(y9OrgBaseManager.getMaxSubTabIndex(parent.getId(), OrgTypeEnum.PERSON));
+        person.setTabIndex(compositeOrgBaseManager.getMaxSubTabIndex(parent.getId(), OrgTypeEnum.PERSON));
         person.setOfficial(1);
         person.setVersion(OrgTypeEnum.Y9_VERSION);
         person.setOrgType(OrgTypeEnum.PERSON.getEnName());
@@ -1060,7 +1046,6 @@ public class Y9PersonServiceImpl implements Y9PersonService {
 
     @Override
     @Transactional(readOnly = false)
-    @CacheEvict(key = "#person.id")
     public Y9Person saveOrUpdate4ImpOrg(Y9Person person, Y9PersonExt personExt, Y9OrgBase parent) {
         Y9Person oldperson = y9PersonManager.findById(person.getId());
         if (null != oldperson) {
@@ -1104,7 +1089,6 @@ public class Y9PersonServiceImpl implements Y9PersonService {
 
     @Override
     @Transactional(readOnly = false)
-    @CacheEvict(key = "#personId")
     public Y9Person saveProperties(String personId, String properties) {
         Y9Person person = this.getById(personId);
         person.setProperties(properties);
@@ -1132,7 +1116,6 @@ public class Y9PersonServiceImpl implements Y9PersonService {
     }
 
     @Transactional(readOnly = false)
-    @CacheEvict(key = "#originalPerson.id")
     public void updatePersonByOriginalId(Y9Person originalPerson, Y9PersonExt originalExt) {
         List<Y9Person> persons = y9PersonRepository.findByOriginalId(originalPerson.getId());
         for (Y9Person person : persons) {
@@ -1142,7 +1125,7 @@ public class Y9PersonServiceImpl implements Y9PersonService {
             person.setMobile(originalPerson.getMobile());
             person.setPassword(originalPerson.getPassword());
 
-            Y9OrgBase parent = y9OrgBaseManager.getOrgBase(person.getParentId());
+            Y9OrgBase parent = compositeOrgBaseManager.getOrgBase(person.getParentId());
             person.setDn(OrgLevelConsts.getOrgLevel(OrgTypeEnum.PERSON) + person.getName() + OrgLevelConsts.SEPARATOR + parent.getDn());
 
             y9PersonManager.save(person);
@@ -1165,7 +1148,6 @@ public class Y9PersonServiceImpl implements Y9PersonService {
 
     @Override
     @Transactional(readOnly = false)
-    @CacheEvict(key = "#id")
     public Y9Person updateTabIndex(String id, int tabIndex) {
         Y9Person person = this.getById(id);
         person.setTabIndex(tabIndex);
@@ -1195,7 +1177,7 @@ public class Y9PersonServiceImpl implements Y9PersonService {
         List<String> parentIds = this.listParentIdByPersonId(personId);
         List<Y9OrgBase> parentList = new ArrayList<>();
         for (String parentId : parentIds) {
-            Y9OrgBase parent = y9OrgBaseManager.getOrgBase(parentId);
+            Y9OrgBase parent = compositeOrgBaseManager.getOrgBase(parentId);
             parentList.add(parent);
         }
         return parentList;
@@ -1203,7 +1185,6 @@ public class Y9PersonServiceImpl implements Y9PersonService {
 
     @Override
     @Transactional(readOnly = false)
-    @CacheEvict(key = "#personId")
     public Y9Person changeWeixinId(String personId, String weixinId) {
         Y9Person y9Person = this.getById(personId);
         y9Person.setWeixinId(weixinId);

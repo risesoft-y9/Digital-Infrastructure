@@ -17,10 +17,10 @@ import lombok.extern.slf4j.Slf4j;
 import net.risesoft.entity.Y9Group;
 import net.risesoft.entity.Y9OrgBase;
 import net.risesoft.entity.Y9Person;
-import net.risesoft.manager.org.Y9OrgBaseManager;
 import net.risesoft.model.Group;
 import net.risesoft.model.OrgUnit;
 import net.risesoft.model.Person;
+import net.risesoft.service.org.CompositeOrgBaseService;
 import net.risesoft.service.org.Y9GroupService;
 import net.risesoft.service.org.Y9PersonService;
 import net.risesoft.service.relation.Y9PersonsToGroupsService;
@@ -45,7 +45,7 @@ import net.risesoft.y9.util.Y9ModelConvertUtil;
 @RequiredArgsConstructor
 public class GroupApiImpl implements GroupApi {
 
-    private final Y9OrgBaseManager y9OrgBaseManager;
+    private final CompositeOrgBaseService compositeOrgBaseService;
     private final Y9PersonsToGroupsService y9PersonsToGroupsService;
     private final Y9GroupService y9GroupService;
     private final Y9PersonService y9PersonService;
@@ -91,7 +91,7 @@ public class GroupApiImpl implements GroupApi {
         Y9LoginUserHolder.setTenantId(tenantId);
         
         Y9Group y9Group = Y9JsonUtil.readValue(groupJson, Y9Group.class);
-        y9Group = y9GroupService.createGroup(y9Group, y9OrgBaseManager.getOrgBase(y9Group.getParentId()));
+        y9Group = y9GroupService.createGroup(y9Group, compositeOrgBaseService.getOrgBase(y9Group.getParentId()));
         return Y9ModelConvertUtil.convert(y9Group, Group.class);
     }
 
@@ -145,7 +145,7 @@ public class GroupApiImpl implements GroupApi {
     public OrgUnit getParent(@RequestParam String tenantId, @RequestParam String groupId) {
         Y9LoginUserHolder.setTenantId(tenantId);
         
-        Y9OrgBase parent = y9OrgBaseManager.getParent(groupId);
+        Y9OrgBase parent = compositeOrgBaseService.getParent(groupId);
         return ModelConvertUtil.orgBaseToOrgUnit(parent);
     }
 
@@ -221,7 +221,7 @@ public class GroupApiImpl implements GroupApi {
         Y9LoginUserHolder.setTenantId(tenantId);
         
         Y9Group y9Group = Y9JsonUtil.readValue(groupJson, Y9Group.class);
-        y9Group = y9GroupService.saveOrUpdate(y9Group, y9OrgBaseManager.getOrgBase(y9Group.getParentId()));
+        y9Group = y9GroupService.saveOrUpdate(y9Group, compositeOrgBaseService.getOrgBase(y9Group.getParentId()));
         return Y9ModelConvertUtil.convert(y9Group, Group.class);
     }
 

@@ -1,6 +1,7 @@
 package net.risesoft.manager.org;
 
 import net.risesoft.entity.Y9Department;
+import org.springframework.transaction.annotation.Transactional;
 
 /**
  * 部门 Manager
@@ -17,4 +18,6 @@ public interface Y9DepartmentManager {
     void delete(Y9Department y9Department);
 
     Y9Department findById(String id);
+
+    Y9Department updateTabIndex(String id, int tabIndex);
 }

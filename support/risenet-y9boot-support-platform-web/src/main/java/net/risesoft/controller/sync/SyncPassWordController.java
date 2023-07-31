@@ -13,8 +13,8 @@ import net.risesoft.entity.Y9Organization;
 import net.risesoft.entity.Y9Person;
 import net.risesoft.log.OperationTypeEnum;
 import net.risesoft.log.annotation.RiseLog;
-import net.risesoft.manager.org.Y9OrgBaseManager;
 import net.risesoft.pojo.Y9Result;
+import net.risesoft.service.org.CompositeOrgBaseService;
 import net.risesoft.service.org.Y9ManagerService;
 import net.risesoft.service.org.Y9OrganizationService;
 import net.risesoft.service.org.Y9PersonService;
@@ -36,7 +36,7 @@ import net.risesoft.y9.util.signing.Y9MessageDigest;
 @RequiredArgsConstructor
 public class SyncPassWordController {
 
-    private final Y9OrgBaseManager y9OrgBaseManager;
+    private final CompositeOrgBaseService compositeOrgBaseService;
     private final Y9OrganizationService y9OrganizationService;
     private final Y9PersonService y9PersonService;
     private final Y9ManagerService y9ManagerService;
@@ -77,7 +77,7 @@ public class SyncPassWordController {
             Y9LoginUserHolder.setTenantId(tenantId);
             List<Y9Organization> y9OrganizationList = y9OrganizationService.list();
             for (Y9Organization organization : y9OrganizationList) {
-                List<Y9Person> persons = y9OrgBaseManager.listAllPersonsRecursionDownward(organization.getId());
+                List<Y9Person> persons = compositeOrgBaseService.listAllPersonsRecursionDownward(organization.getId());
                 for (Y9Person person : persons) {
                     restPersonPwd(person);
                 }

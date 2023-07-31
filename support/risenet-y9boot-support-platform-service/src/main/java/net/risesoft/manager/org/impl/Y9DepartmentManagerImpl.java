@@ -1,5 +1,11 @@
 package net.risesoft.manager.org.impl;
 
+import net.risesoft.model.Department;
+import net.risesoft.util.Y9PublishServiceUtil;
+import net.risesoft.y9.Y9LoginUserHolder;
+import net.risesoft.y9.pubsub.constant.Y9OrgEventConst;
+import net.risesoft.y9.pubsub.message.Y9MessageOrg;
+import net.risesoft.y9.util.Y9ModelConvertUtil;
 import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
@@ -49,4 +55,16 @@ public class Y9DepartmentManagerImpl implements Y9DepartmentManager {
         return y9DepartmentRepository.findById(id).orElse(null);
     }
 
+    @Override
+    @Transactional(readOnly = false)
+    public Y9Department updateTabIndex(String id, int tabIndex) {
+        Y9Department department = this.getById(id);
+        department.setTabIndex(tabIndex);
+        department = this.save(department);
+
+        Y9MessageOrg msg = new Y9MessageOrg(Y9ModelConvertUtil.convert(department, Department.class), Y9OrgEventConst.RISEORGEVENT_TYPE_UPDATE_DEPARTMENT_TABINDEX, Y9LoginUserHolder.getTenantId());
+        Y9PublishServiceUtil.persistAndPublishMessageOrg(msg, "更新部门排序号", department.getName() + "的排序号更新为" + tabIndex);
+
+        return department;
+    }
 }

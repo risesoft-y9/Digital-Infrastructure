@@ -26,11 +26,11 @@ import net.risesoft.entity.Y9Position;
 import net.risesoft.enums.OrgTypeEnum;
 import net.risesoft.id.IdType;
 import net.risesoft.id.Y9IdGenerator;
-import net.risesoft.manager.org.Y9OrgBaseManager;
 import net.risesoft.pojo.ObjectSheet;
 import net.risesoft.pojo.PersonInformation;
 import net.risesoft.pojo.PersonSheet;
 import net.risesoft.pojo.Y9Result;
+import net.risesoft.service.org.CompositeOrgBaseService;
 import net.risesoft.service.org.Y9DepartmentService;
 import net.risesoft.service.org.Y9GroupService;
 import net.risesoft.service.org.Y9OrganizationService;
@@ -43,7 +43,7 @@ import net.risesoft.y9.Y9LoginUserHolder;
 @RequiredArgsConstructor
 public class Y9OrgTreeExcelDataHandlerImpl implements Y9OrgTreeDataHandler {
     
-    private final Y9OrgBaseManager y9OrgBaseManager;
+    private final CompositeOrgBaseService compositeOrgBaseService;
     private final Y9DepartmentService y9DepartmentService;
     private final Y9PersonService y9PersonService;
     private final Y9OrganizationService y9OrganizationService;
@@ -260,7 +260,7 @@ public class Y9OrgTreeExcelDataHandlerImpl implements Y9OrgTreeDataHandler {
             fullPath = pf.getFullPath() + "," + pf.getName();
         }
         String[] paths = fullPath.split(",");
-        Y9OrgBase orgbase = y9OrgBaseManager.getOrgBase(orgId);
+        Y9OrgBase orgbase = compositeOrgBaseService.getOrgBase(orgId);
         String dn = orgbase.getDn();
         String parentId = orgbase.getId();
         for (int i = 0, lenth = paths.length; i < lenth; i++) {
@@ -290,7 +290,7 @@ public class Y9OrgTreeExcelDataHandlerImpl implements Y9OrgTreeDataHandler {
                                 orgperson.setMobile(new BigDecimal(personMobile).toString().replaceAll("\\s*", ""));
                                 orgperson.setLoginName(pf.getLoginName().replaceAll("\\s*", ""));
                                 orgperson.setSex("男".equals(pf.getSex()) ? 1 : 0);
-                                y9PersonService.saveOrUpdate(orgperson, null, y9OrgBaseManager.getOrgBase(parentId));
+                                y9PersonService.saveOrUpdate(orgperson, null, compositeOrgBaseService.getOrgBase(parentId));
                             }
                         } else {
                             // 人员号码错误
@@ -318,7 +318,7 @@ public class Y9OrgTreeExcelDataHandlerImpl implements Y9OrgTreeDataHandler {
                     department.setTenantId(Y9LoginUserHolder.getTenantId());
                     department.setName(paths[i].replaceAll("\\s*", ""));
                     department.setOrgType(OrgTypeEnum.DEPARTMENT.getEnName());
-                    Y9Department dept = y9DepartmentService.saveOrUpdate(department, y9OrgBaseManager.getOrgBase(parentId));
+                    Y9Department dept = y9DepartmentService.saveOrUpdate(department, compositeOrgBaseService.getOrgBase(parentId));
                     parentId = dept.getId();
                 }
             }
@@ -362,7 +362,7 @@ public class Y9OrgTreeExcelDataHandlerImpl implements Y9OrgTreeDataHandler {
     public Map<String, Object> xlsPersonData(String orgBaseId) {
         Map<String, Object> map = new HashMap<>();
 
-        List<Y9Person> persons = y9OrgBaseManager.listAllPersonsRecursionDownward(orgBaseId);
+        List<Y9Person> persons = compositeOrgBaseService.listAllPersonsRecursionDownward(orgBaseId);
         List<PersonInformation> personList = new ArrayList<>();
         for (Y9Person person : persons) {
             PersonInformation pf = new PersonInformation();

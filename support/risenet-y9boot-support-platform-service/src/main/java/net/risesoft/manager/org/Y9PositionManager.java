@@ -3,6 +3,7 @@ package net.risesoft.manager.org;
 import net.risesoft.entity.Y9OrgBase;
 import net.risesoft.entity.Y9Position;
 import net.risesoft.y9.exception.Y9NotFoundException;
+import org.springframework.transaction.annotation.Transactional;
 
 public interface Y9PositionManager {
 
@@ -22,4 +23,6 @@ public interface Y9PositionManager {
     Y9Position save(Y9Position position);
 
     void delete(Y9Position y9Position);
+
+    Y9Position updateTabIndex(String id, int tabIndex);
 }

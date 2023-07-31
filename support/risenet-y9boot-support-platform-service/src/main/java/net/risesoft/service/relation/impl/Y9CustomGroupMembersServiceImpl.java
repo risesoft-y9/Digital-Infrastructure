@@ -16,7 +16,7 @@ import lombok.RequiredArgsConstructor;
 import net.risesoft.entity.Y9Person;
 import net.risesoft.entity.relation.Y9CustomGroupMember;
 import net.risesoft.enums.OrgTypeEnum;
-import net.risesoft.manager.org.Y9OrgBaseManager;
+import net.risesoft.manager.org.CompositeOrgBaseManager;
 import net.risesoft.manager.org.Y9PersonManager;
 import net.risesoft.manager.relation.Y9CustomGroupMembersManager;
 import net.risesoft.repository.relation.Y9CustomGroupMembersRepository;
@@ -35,7 +35,7 @@ public class Y9CustomGroupMembersServiceImpl implements Y9CustomGroupMembersServ
 
     private final Y9CustomGroupMembersRepository customGroupMembersRepository;
 
-    private final Y9OrgBaseManager y9OrgBaseManager;
+    private final CompositeOrgBaseManager compositeOrgBaseManager;
     private final Y9CustomGroupMembersManager y9CustomGroupMembersManager;
     private final Y9PersonManager y9PersonManager;
 
@@ -69,10 +69,10 @@ public class Y9CustomGroupMembersServiceImpl implements Y9CustomGroupMembersServ
             OrgTypeEnum orgType = OrgTypeEnum.getByEnName(y9CustomGroupMember.getMemberType());
             switch (orgType) {
                 case ORGANIZATION:
-                    orgPersonList.addAll(y9OrgBaseManager.listAllPersonsRecursionDownward(y9CustomGroupMember.getMemberId(), false));
+                    orgPersonList.addAll(compositeOrgBaseManager.listAllPersonsRecursionDownward(y9CustomGroupMember.getMemberId(), false));
                     break;
                 case DEPARTMENT:
-                    orgPersonList.addAll(y9OrgBaseManager.listAllPersonsRecursionDownward(y9CustomGroupMember.getMemberId(), false));
+                    orgPersonList.addAll(compositeOrgBaseManager.listAllPersonsRecursionDownward(y9CustomGroupMember.getMemberId(), false));
                     break;
                 case POSITION:
                     orgPersonList.addAll(y9PersonManager.listByPositionId(y9CustomGroupMember.getMemberId()));
