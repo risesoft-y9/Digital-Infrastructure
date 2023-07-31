@@ -109,7 +109,7 @@ cas:
             dialect: org.hibernate.dialect.MySQL8Dialect
             driver-class: com.mysql.cj.jdbc.Driver
             ddl-auto: update
-            url: jdbc:mysql://localhost:3306/y9_kernal?serverTimezone=GMT%2B8&nullCatalogMeansCurrent=true&useUnicode=true&characterEncoding=utf-8&rewriteBatchedStatements=true&useCompression=true&useSSL=false&allowPublicKeyRetrieval=true
+            url: jdbc:mysql://localhost:3306/y9_public?serverTimezone=GMT%2B8&nullCatalogMeansCurrent=true&useUnicode=true&characterEncoding=utf-8&rewriteBatchedStatements=true&useCompression=true&useSSL=false&allowPublicKeyRetrieval=true
             user: root
             password: Mysql-83204585
             idleTimeout: PT10M
@@ -202,7 +202,7 @@ spring:
         exclude:
             - org.springframework.boot.actuate.autoconfigure.metrics.KafkaMetricsAutoConfiguration
     datasource:
-        url: jdbc:mysql://localhost:3306/y9_kernal?serverTimezone=GMT%2B8&nullCatalogMeansCurrent=true&useUnicode=true&characterEncoding=utf-8&rewriteBatchedStatements=true&useCompression=true&useSSL=false
+        url: jdbc:mysql://localhost:3306/y9_public?serverTimezone=GMT%2B8&nullCatalogMeansCurrent=true&useUnicode=true&characterEncoding=utf-8&rewriteBatchedStatements=true&useCompression=true&useSSL=false
         username: root
         password: Mysql-83204585
         driver-class-name: com.mysql.cj.jdbc.Driver

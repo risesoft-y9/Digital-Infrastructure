@@ -127,8 +127,8 @@ public class OnApplicationReady implements ApplicationListener<ApplicationReadyE
             String url = dataSource.getUrl();
             if (url.indexOf("/y9_public?") > -1) {
                 y9DataSource.setUrl(url.replace("/y9_public?", "/y9_default?"));
-            } else if (url.indexOf("/y9_kernal?") > -1) {
-                y9DataSource.setUrl(url.replace("/y9_kernal?", "/y9_default?"));
+            } else if (url.indexOf("/y9_kernel?") > -1) {
+                y9DataSource.setUrl(url.replace("/y9_kernel?", "/y9_default?"));
             }
             y9DataSource.setUsername(dataSource.getUsername());
             y9DataSource.setPassword(dataSource.getPassword());

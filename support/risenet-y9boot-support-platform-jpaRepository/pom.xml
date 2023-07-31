@@ -86,7 +86,7 @@
 					<username>root</username>
 					<password>111111</password>
 					<driverClassName>com.mysql.cj.jdbc.Driver</driverClassName>
-					<jdbcUrl>jdbc:mysql://localhost:3306/y9_kernal?serverTimezone=GMT%2B8&amp;nullCatalogMeansCurrent=true&amp;useUnicode=true&amp;characterEncoding=utf-8&amp;rewriteBatchedStatements=true&amp;useCompression=true&amp;useSSL=false</jdbcUrl>
+					<jdbcUrl>jdbc:mysql://localhost:3306/y9_public?serverTimezone=GMT%2B8&amp;nullCatalogMeansCurrent=true&amp;useUnicode=true&amp;characterEncoding=utf-8&amp;rewriteBatchedStatements=true&amp;useCompression=true&amp;useSSL=false</jdbcUrl>
 					<fileType>WORD</fileType>
 					<openOutputDir>true</openOutputDir>
 					<fileOutputDir>../../../y9-digitalbase-pro/docs/smart-docs/platform/api</fileOutputDir>
