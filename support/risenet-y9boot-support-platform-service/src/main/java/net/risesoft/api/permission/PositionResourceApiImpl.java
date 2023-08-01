@@ -4,6 +4,7 @@ import java.util.List;
 
 import org.springframework.context.annotation.Primary;
 import org.springframework.http.MediaType;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -30,6 +31,7 @@ import net.risesoft.y9public.entity.resource.Y9ResourceBase;
  * @since 9.6.0
  */
 @Primary
+@Validated
 @RestController
 @RequestMapping(value = "/services/rest/positionResource", produces = MediaType.APPLICATION_JSON_VALUE)
 @RequiredArgsConstructor

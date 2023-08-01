@@ -116,16 +116,6 @@ public interface PersonApi {
     Person getPerson(String tenantId, String personId);
 
     /**
-     * 获得人员对象（从数据库中查找）
-     *
-     * @param tenantId 租户id
-     * @param personId 人员id
-     * @return Person 人员对象
-     * @since 9.6.0
-     */
-    Person getPersonById(String tenantId, String personId);
-
-    /**
      * 根据登录名称和租户id，获得人员对象
      *
      * @param loginName 人员登录名

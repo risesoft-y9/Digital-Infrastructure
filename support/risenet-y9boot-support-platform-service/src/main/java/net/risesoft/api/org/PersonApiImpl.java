@@ -8,11 +8,14 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import javax.validation.constraints.NotBlank;
+
 import org.apache.commons.codec.binary.Base64;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.context.annotation.Primary;
 import org.springframework.data.domain.Page;
 import org.springframework.http.MediaType;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -64,6 +67,7 @@ import net.risesoft.y9public.service.user.Y9UserService;
  * @since 9.6.0
  */
 @Primary
+@Validated
 @RestController
 @RequestMapping(value = "/services/rest/person", produces = MediaType.APPLICATION_JSON_VALUE)
 @Slf4j
@@ -223,7 +227,7 @@ public class PersonApiImpl implements PersonApi {
     }
 
     /**
-     * 根据id获得人员对象（从缓存中查找）
+     * 根据id获得人员对象
      *
      * @param tenantId 租户id
      * @param personId 人员唯一标识
@@ -233,25 +237,6 @@ public class PersonApiImpl implements PersonApi {
     @Override
     @GetMapping("/getPerson")
     public Person getPerson(@RequestParam String tenantId, @RequestParam String personId) {
-        if (StringUtils.isNotBlank(tenantId)) {
-            Y9LoginUserHolder.setTenantId(tenantId);
-        }
-
-        Y9Person y9Person = y9PersonService.findById(personId);
-        return Y9ModelConvertUtil.convert(y9Person, Person.class);
-    }
-
-    /**
-     * 获得人员对象（从数据库中查找）
-     *
-     * @param tenantId 租户id
-     * @param personId 人员id
-     * @return Person 人员对象
-     * @since 9.6.0
-     */
-    @Override
-    @GetMapping("/getPersonById")
-    public Person getPersonById(@RequestParam String tenantId, @RequestParam String personId) {
         if (StringUtils.isNotBlank(tenantId)) {
             Y9LoginUserHolder.setTenantId(tenantId);
         }
@@ -347,6 +332,14 @@ public class PersonApiImpl implements PersonApi {
         return Y9ModelConvertUtil.convert(y9PersonList, Person.class);
     }
 
+    /**
+     * 根据人员名称 名称、租户id获取人员基本信息
+     *
+     * @param tenantId 租户id
+     * @param name 人员名称
+     * @return List&lt;Person&gt;
+     * @since 9.6.2
+     */
     @Override
     @GetMapping("/listByNameLike")
     public List<Person> listByNameLike(String tenantId, String name) {

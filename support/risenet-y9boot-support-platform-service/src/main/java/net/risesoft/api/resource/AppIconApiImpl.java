@@ -3,6 +3,7 @@ package net.risesoft.api.resource;
 import java.util.List;
 
 import org.springframework.http.MediaType;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -25,6 +26,7 @@ import net.risesoft.y9public.service.resource.Y9AppIconService;
  * @since 9.6.0
  */
 @RestController
+@Validated
 @RequestMapping(value = "/services/rest/appIcon", produces = MediaType.APPLICATION_JSON_VALUE)
 @RequiredArgsConstructor
 public class AppIconApiImpl implements AppIconApi {

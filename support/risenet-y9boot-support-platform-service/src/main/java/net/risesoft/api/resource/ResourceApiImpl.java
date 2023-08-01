@@ -4,6 +4,7 @@ import java.util.List;
 
 import org.springframework.context.annotation.Primary;
 import org.springframework.http.MediaType;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -20,8 +21,8 @@ import net.risesoft.y9public.entity.resource.Y9App;
 import net.risesoft.y9public.entity.resource.Y9Menu;
 import net.risesoft.y9public.entity.resource.Y9ResourceBase;
 import net.risesoft.y9public.entity.resource.Y9System;
-import net.risesoft.y9public.service.resource.CompositeResourceService;
 import net.risesoft.y9public.repository.resource.Y9AppRepository;
+import net.risesoft.y9public.service.resource.CompositeResourceService;
 import net.risesoft.y9public.service.resource.Y9MenuService;
 import net.risesoft.y9public.service.resource.Y9SystemService;
 
@@ -35,6 +36,7 @@ import net.risesoft.y9public.service.resource.Y9SystemService;
  * @since 9.6.0
  */
 @Primary
+@Validated
 @RestController
 @RequestMapping(value = "/services/rest/resource", produces = MediaType.APPLICATION_JSON_VALUE)
 @RequiredArgsConstructor

@@ -2,6 +2,7 @@ package net.risesoft.api.permission;
 
 import org.springframework.context.annotation.Primary;
 import org.springframework.http.MediaType;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -28,6 +29,7 @@ import net.risesoft.y9.Y9LoginUserHolder;
  * @since 9.6.0
  */
 @Primary
+@Validated
 @RestController
 @RequestMapping(value = "/services/rest/authorization", produces = MediaType.APPLICATION_JSON_VALUE)
 @RequiredArgsConstructor

@@ -4,6 +4,7 @@ import java.util.List;
 
 import org.springframework.context.annotation.Primary;
 import org.springframework.http.MediaType;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
@@ -25,6 +26,7 @@ import net.risesoft.y9.Y9LoginUserHolder;
  * @since 9.6.0
  */
 @Primary
+@Validated
 @RestController
 @RequestMapping(value = "/services/rest/auth", produces = MediaType.APPLICATION_JSON_VALUE)
 @RequiredArgsConstructor

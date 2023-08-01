@@ -138,19 +138,7 @@ public interface PersonApiClient extends PersonApi {
     @Override
     @GetMapping("/getPerson")
     Person getPerson(@RequestParam("tenantId") String tenantId, @RequestParam("personId") String personId);
-
-    /**
-     * 获得人员对象（该方法不会从缓存中读取人员）
-     *
-     * @param tenantId 租户id
-     * @param personId 人员id
-     * @return Person 人员对象
-     * @since 9.6.0
-     */
-    @Override
-    @GetMapping("/getPersonById")
-    Person getPersonById(@RequestParam("tenantId") String tenantId, @RequestParam("personId") String personId);
-
+    
     /**
      * 根据登录名称和租户id，获得人员对象
      *
