@@ -4,7 +4,6 @@ import org.apache.commons.lang3.StringUtils;
 import org.springframework.context.annotation.Primary;
 import org.springframework.http.MediaType;
 import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
@@ -44,7 +43,6 @@ public class ManagerApiImpl implements ManagerApi {
      * @since 9.6.0
      */
     @Override
-    @GetMapping("/getManager")
     public Manager getManager(@RequestParam String tenantId, @RequestParam String userId) {
         if (StringUtils.isNotBlank(tenantId)) {
             Y9LoginUserHolder.setTenantId(tenantId);

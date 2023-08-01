@@ -2,6 +2,10 @@ package net.risesoft.api.permission;
 
 import java.util.List;
 
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+
 import net.risesoft.model.PersonIconItem;
 import net.risesoft.pojo.Y9Page;
 import net.risesoft.pojo.Y9Result;
@@ -24,9 +28,9 @@ public interface PersonIconApi {
      * @param personId 人员id
      * @return Y9Result&lt;Boolean&gt; 操作结果
      * @since 9.6.2
-     *
      */
-    Y9Result<Boolean> buildPersonalAppIconForPerson(String tenantId, String personId);
+    @PostMapping("/buildPersonalAppIconForPerson")
+    Y9Result<Boolean> buildPersonalAppIconForPerson(@RequestParam("tenantId") String tenantId, @RequestParam("personId") String personId);
 
     /**
      * 刷新岗位图标信息
@@ -36,7 +40,8 @@ public interface PersonIconApi {
      * @return Y9Result&lt;Boolean&gt; 操作结果
      * @since 9.6.2
      */
-    Y9Result<Boolean> buildPersonalAppIconForPosition(String tenantId, String positionId);
+    @PostMapping("/buildPersonalAppIconForPosition")
+    Y9Result<Boolean> buildPersonalAppIconForPosition(@RequestParam("tenantId") String tenantId, @RequestParam("positionId") String positionId);
 
     /**
      * 根据人员ID和租户ID，返回个人图标列表
@@ -46,7 +51,8 @@ public interface PersonIconApi {
      * @return List&lt;PersonIconItem&gt; 应用图标列表
      * @since 9.6.2
      */
-    List<PersonIconItem> listByOrgUnitId(String tenantId, String orgUnitId);
+    @GetMapping("/listByOrgUnitId")
+    List<PersonIconItem> listByOrgUnitId(@RequestParam("tenantId") String tenantId, @RequestParam("orgUnitId") String orgUnitId);
 
     /**
      * 根据人员/岗位id和图标类别，获取图标信息列表
@@ -57,7 +63,8 @@ public interface PersonIconApi {
      * @return List&lt;PersonIconItem&gt; 应用图标列表
      * @since 9.6.2
      */
-    List<PersonIconItem> listByOrgUnitIdAndIconType(String tenantId, String orgUnitId, Integer iconType);
+    @GetMapping("/listByOrgUnitIdAndIconType")
+    List<PersonIconItem> listByOrgUnitIdAndIconType(@RequestParam("tenantId") String tenantId, @RequestParam("orgUnitId") String orgUnitId, @RequestParam("iconType") Integer iconType);
 
     /**
      * 获取人员/岗位图标分页列表
@@ -69,7 +76,8 @@ public interface PersonIconApi {
      * @return Y9Page&lt;PersonIconItem&gt; 应用图标分页列表
      * @since 9.6.2
      */
-    Y9Page<PersonIconItem> pageByOrgUnitId(String tenantId, String orgUnitId, int page, int rows);
+    @GetMapping("/pageByOrgUnitId")
+    Y9Page<PersonIconItem> pageByOrgUnitId(@RequestParam("tenantId") String tenantId, @RequestParam("orgUnitId") String orgUnitId, @RequestParam("page") int page, @RequestParam("rows") int rows);
 
     /**
      * 设置常用应用
@@ -80,6 +88,8 @@ public interface PersonIconApi {
      * @return Y9Result&lt;Boolean&gt; 操作结果
      * @since 9.6.2
      */
-    Y9Result<Boolean> setCommApps(String tenantId, String orgUnitId, String[] appIds);
+    @PostMapping("/setCommApps")
+    Y9Result<Boolean> setCommApps(@RequestParam("tenantId") String tenantId, @RequestParam("orgUnitId") String orgUnitId, @RequestParam("appIds") String[] appIds);
+
 
 }

@@ -2,12 +2,12 @@ package net.risesoft.api.org;
 
 import java.util.List;
 
+import javax.validation.constraints.NotBlank;
+
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.context.annotation.Primary;
 import org.springframework.http.MediaType;
 import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
@@ -62,7 +62,6 @@ public class GroupApiImpl implements GroupApi {
      * @since 9.6.0
      */
     @Override
-    @GetMapping("/addPerson2Group")
     public boolean addPerson2Group(@RequestParam String tenantId, @RequestParam String groupId, @RequestParam String personId) {
         if (StringUtils.isBlank(tenantId) || StringUtils.isBlank(groupId) || StringUtils.isBlank(personId)) {
             return false;
@@ -85,7 +84,6 @@ public class GroupApiImpl implements GroupApi {
      * @since 9.6.0
      */
     @Override
-    @PostMapping("/createGroup")
     public Group createGroup(@RequestParam String tenantId, @RequestParam String groupJson) {
         if (StringUtils.isBlank(tenantId) || StringUtils.isBlank(groupJson)) {
             return null;
@@ -106,7 +104,6 @@ public class GroupApiImpl implements GroupApi {
      * @since 9.6.0
      */
     @Override
-    @GetMapping("/deleteGroup")
     public boolean deleteGroup(@RequestParam String tenantId, @RequestParam String groupId) {
         if (StringUtils.isBlank(tenantId) || StringUtils.isBlank(groupId)) {
             return false;
@@ -126,8 +123,7 @@ public class GroupApiImpl implements GroupApi {
      * @since 9.6.0
      */
     @Override
-    @GetMapping("/get")
-    public Group getGroup(@RequestParam String tenantId, @RequestParam String groupId) {
+    public Group getGroup(@RequestParam @NotBlank String tenantId, @RequestParam @NotBlank String groupId) {
         Y9LoginUserHolder.setTenantId(tenantId);
         
         Y9Group y9Group = y9GroupService.findById(groupId);
@@ -143,7 +139,6 @@ public class GroupApiImpl implements GroupApi {
      * @since 9.6.0
      */
     @Override
-    @GetMapping("/getParent")
     public OrgUnit getParent(@RequestParam String tenantId, @RequestParam String groupId) {
         Y9LoginUserHolder.setTenantId(tenantId);
         
@@ -160,7 +155,6 @@ public class GroupApiImpl implements GroupApi {
      * @since 9.6.0
      */
     @Override
-    @GetMapping("/listByDn")
     public List<Group> listByDn(@RequestParam String tenantId, @RequestParam String dn) {
         Y9LoginUserHolder.setTenantId(tenantId);
         
@@ -177,7 +171,6 @@ public class GroupApiImpl implements GroupApi {
      * @since 9.6.0
      */
     @Override
-    @GetMapping("/listPersons")
     public List<Person> listPersons(@RequestParam String tenantId, @RequestParam String groupId) {
         Y9LoginUserHolder.setTenantId(tenantId);
         
@@ -195,7 +188,6 @@ public class GroupApiImpl implements GroupApi {
      * @since 9.6.0
      */
     @Override
-    @GetMapping("/removePerson")
     public boolean removePerson(@RequestParam String tenantId, @RequestParam String groupId, @RequestParam String personId) {
         if (StringUtils.isBlank(tenantId) || StringUtils.isBlank(groupId) || StringUtils.isBlank(personId)) {
             return false;
@@ -215,7 +207,6 @@ public class GroupApiImpl implements GroupApi {
      * @since 9.6.0
      */
     @Override
-    @PostMapping("/updateGroup")
     public Group updateGroup(@RequestParam String tenantId, @RequestParam String groupJson) {
         if (StringUtils.isBlank(tenantId) || StringUtils.isBlank(groupJson)) {
             return null;

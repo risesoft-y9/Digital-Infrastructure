@@ -2,6 +2,9 @@ package net.risesoft.api.permission;
 
 import java.util.List;
 
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+
 import net.risesoft.enums.AuthorityEnum;
 import net.risesoft.model.Resource;
 
@@ -15,8 +18,9 @@ import net.risesoft.model.Resource;
  * @since 9.6.0
  */
 public interface PositionResourceApi {
+
     /**
-     * 判断岗位对资源是否有指定的操作权限
+     * 判断person对resource是否有指定的操作权限
      *
      * @param tenantId 租户id
      * @param positionId 操作者唯一标识
@@ -25,7 +29,8 @@ public interface PositionResourceApi {
      * @return Boolean 是否有权限
      * @since 9.6.0
      */
-    boolean hasPermission(String tenantId, String positionId, String resourceId, Integer authority);
+    @GetMapping("/hasPermission")
+    boolean hasPermission(@RequestParam("tenantId") String tenantId, @RequestParam("positionId") String positionId, @RequestParam("resourceId") String resourceId, @RequestParam("authority") Integer authority);
 
     /**
      * 判断岗位对 customId 对应的资源是否有指定的操作权限
@@ -37,7 +42,8 @@ public interface PositionResourceApi {
      * @return boolean
      * @since 9.6.0
      */
-    boolean hasPermissionByCustomId(String tenantId, String positionId, String customId, Integer authority);
+    @GetMapping("/hasPermissionByCustomId")
+    boolean hasPermissionByCustomId(@RequestParam("tenantId") String tenantId, @RequestParam("positionId") String positionId, @RequestParam("customId") String customId, @RequestParam("authority") Integer authority);
 
     /**
      * 获得某一资源下,主体对象有相应操作权限的子菜单
@@ -49,7 +55,8 @@ public interface PositionResourceApi {
      * @return List&lt;Resource&gt; 有操作权限的子菜单
      * @since 9.6.0
      */
-    List<Resource> listSubMenus(String tenantId, String positionId, Integer authority, String resourceId);
+    @GetMapping("/listSubMenus")
+    List<Resource> listSubMenus(@RequestParam("tenantId") String tenantId, @RequestParam("positionId") String positionId, @RequestParam("authority") Integer authority, @RequestParam("resourceId") String resourceId);
 
     /**
      * 获得某一资源下,主体对象有相应操作权限的子节点
@@ -61,5 +68,6 @@ public interface PositionResourceApi {
      * @return List&lt;Resource&gt; 有操作权限的子节点
      * @since 9.6.0
      */
-    List<Resource> listSubResources(String tenantId, String positionId, Integer authority, String resourceId);
+    @GetMapping("/listSubResources")
+    List<Resource> listSubResources(@RequestParam("tenantId") String tenantId, @RequestParam("positionId") String positionId, @RequestParam("authority") Integer authority, @RequestParam(name = "resourceId", required = false) String resourceId);
 }

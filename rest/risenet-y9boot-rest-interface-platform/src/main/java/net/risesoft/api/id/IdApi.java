@@ -1,5 +1,7 @@
 package net.risesoft.api.id;
 
+import org.springframework.web.bind.annotation.GetMapping;
+
 /**
  * 唯一标识组件
  * 
@@ -12,10 +14,11 @@ package net.risesoft.api.id;
 public interface IdApi {
 
     /**
-     * 获取 snowflake id
+     * 获取snowflake id
      *
      * @return String id
      * @since 9.6.0
      */
+    @GetMapping("/getNextId")
     String getNextId();
 }

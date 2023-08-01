@@ -5,7 +5,6 @@ import java.util.List;
 import org.springframework.context.annotation.Primary;
 import org.springframework.http.MediaType;
 import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
@@ -51,7 +50,6 @@ public class OrgUnitApiImpl implements OrgUnitApi {
      * @since 9.6.0
      */
     @Override
-    @GetMapping("/getBureau")
     public OrgUnit getBureau(@RequestParam String tenantId, @RequestParam String orgUnitId) {
         Y9LoginUserHolder.setTenantId(tenantId);
         
@@ -67,7 +65,6 @@ public class OrgUnitApiImpl implements OrgUnitApi {
      * @since 9.6.0
      */
     @Override
-    @GetMapping("/getDeptTrees")
     public List<Department> getDeptTrees(@RequestParam String tenantId, @RequestParam String orgUnitId) {
         Y9LoginUserHolder.setTenantId(tenantId);
         
@@ -84,7 +81,6 @@ public class OrgUnitApiImpl implements OrgUnitApi {
      * @since 9.6.0
      */
     @Override
-    @GetMapping("/getOrganization")
     public Organization getOrganization(@RequestParam String tenantId, @RequestParam String orgUnitId) {
         Y9LoginUserHolder.setTenantId(tenantId);
         
@@ -101,7 +97,6 @@ public class OrgUnitApiImpl implements OrgUnitApi {
      * @since 9.6.0
      */
     @Override
-    @GetMapping("/get")
     public OrgUnit getOrgUnit(@RequestParam String tenantId, @RequestParam String orgUnitId) {
         Y9LoginUserHolder.setTenantId(tenantId);
         
@@ -117,7 +112,6 @@ public class OrgUnitApiImpl implements OrgUnitApi {
      * @since 9.6.2
      */
     @Override
-    @GetMapping("/getOrgUnitDeletedById")
     public OrgUnit getOrgUnitDeletedById(String tenantId, String orgUnitId) {
         Y9LoginUserHolder.setTenantId(tenantId);
         
@@ -133,7 +127,6 @@ public class OrgUnitApiImpl implements OrgUnitApi {
      * @since 9.6.0
      */
     @Override
-    @GetMapping("/getParent")
     public OrgUnit getParent(@RequestParam String tenantId, @RequestParam String orgUnitId) {
         Y9LoginUserHolder.setTenantId(tenantId);
         
@@ -152,7 +145,6 @@ public class OrgUnitApiImpl implements OrgUnitApi {
      * @since 9.6.0
      */
     @Override
-    @GetMapping(value = "/getSubTree")
     public List<OrgUnit> getSubTree(@RequestParam String tenantId, @RequestParam String orgUnitId, @RequestParam String treeType) {
         Y9LoginUserHolder.setTenantId(tenantId);
         
@@ -171,7 +163,6 @@ public class OrgUnitApiImpl implements OrgUnitApi {
      * @since 9.6.0
      */
     @Override
-    @GetMapping("/treeSearch")
     public List<OrgUnit> treeSearch(@RequestParam String tenantId, @RequestParam String name, @RequestParam String treeType) {
         Y9LoginUserHolder.setTenantId(tenantId);
         
@@ -191,7 +182,6 @@ public class OrgUnitApiImpl implements OrgUnitApi {
      * @since 9.6.0
      */
     @Override
-    @GetMapping("/treeSearchByDn")
     public List<OrgUnit> treeSearchByDn(@RequestParam String tenantId, @RequestParam String name, @RequestParam String treeType, @RequestParam String dnName) {
         Y9LoginUserHolder.setTenantId(tenantId);
         

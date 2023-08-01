@@ -2,6 +2,10 @@ package net.risesoft.api.resource;
 
 import java.util.List;
 
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+
 import net.risesoft.enums.ResourceTypeEnum;
 import net.risesoft.model.Resource;
 
@@ -17,7 +21,7 @@ import net.risesoft.model.Resource;
 public interface ResourceApi {
 
     /**
-     * 创建菜单资源
+     * 创建资源
      *
      * @param resourceId 资源id
      * @param resourceName 资源名称
@@ -26,27 +30,30 @@ public interface ResourceApi {
      * @return Resource 新创建的资源对象
      * @since 9.6.0
      */
-    Resource createMenuResource(String resourceId, String resourceName, String parentResourceId, String customId);
-    
+    @PostMapping("/createMenuResource")
+    Resource createMenuResource(@RequestParam("resourceId") String resourceId, @RequestParam("resourceName") String resourceName, @RequestParam("parentResourceId") String parentResourceId, @RequestParam("customId") String customId);
+
     /**
-     * 根据 customId 获取资源
+     * 根据customId获取资源，用于工作流，customId保存的是processDefinitionKey
      *
-     * @param customId 自定义标识
+     * @param customId customId
      * @return Resource 资源对象
      * @since 9.6.0
      */
-    Resource findByCustomId(String customId);
+    @GetMapping("/findByCustomId")
+    Resource findByCustomId(@RequestParam("customId") String customId);
 
     /**
-     * 根据 customId 和 parentId 获取资源
+     * 根据customId和parentId获取资源
      *
-     * @param customId 自定义标识
+     * @param customId customId
      * @param parentId 资源id
      * @param resourceType 资源类型 {@link ResourceTypeEnum}
      * @return Resource 资源对象
      * @since 9.6.0
      */
-    Resource findByCustomIdAndParentId(String customId, String parentId, Integer resourceType);
+    @GetMapping("/findByCustomIdAndParentId")
+    Resource findByCustomIdAndParentId(@RequestParam("customId") String customId, @RequestParam("parentId") String parentId, @RequestParam("resourceType") Integer resourceType);
 
     /**
      * 获得指定资源的父资源
@@ -55,7 +62,8 @@ public interface ResourceApi {
      * @return Resource 父资源
      * @since 9.6.0
      */
-    Resource getParentResource(String resourceId);
+    @GetMapping("/getParentResource")
+    Resource getParentResource(@RequestParam("resourceId") String resourceId);
 
     /**
      * 获得指定资源对象
@@ -64,7 +72,8 @@ public interface ResourceApi {
      * @return Resource 资源对象
      * @since 9.6.0
      */
-    Resource getResource(String resourceId);
+    @GetMapping("/getResource")
+    Resource getResource(@RequestParam("resourceId") String resourceId);
 
     /**
      * 根据系统标识获取该系统的资源树的顶级节点
@@ -73,16 +82,18 @@ public interface ResourceApi {
      * @return Resource 资源节点
      * @since 9.6.0
      */
-    Resource getRootResourceBySystemName(String systemName);
+    @GetMapping("/getRootResourceBySystemName")
+    Resource getRootResourceBySystemName(@RequestParam("systemName") String systemName);
 
     /**
-     * 获取指定资源的子菜单资源
+     * 获取指定资源的菜单子资源
      *
      * @param resourceId 资源id
      * @return List&lt;Resource&gt; 资源对象集合
      * @since 9.6.0
      */
-    List<Resource> listSubMenus(String resourceId);
+    @GetMapping("/listSubMenus")
+    List<Resource> listSubMenus(@RequestParam("resourceId") String resourceId);
 
     /**
      * 获得指定资源的子资源
@@ -91,6 +102,7 @@ public interface ResourceApi {
      * @return List&lt;Resource&gt; 资源对象集合
      * @since 9.6.0
      */
-    List<Resource> listSubResources(String resourceId);
+    @GetMapping("/listSubResources")
+    List<Resource> listSubResources(@RequestParam("resourceId") String resourceId);
 
 }

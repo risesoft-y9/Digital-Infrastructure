@@ -2,6 +2,9 @@ package net.risesoft.api.dictionary;
 
 import java.util.List;
 
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+
 import net.risesoft.model.OptionValue;
 
 /**
@@ -20,8 +23,9 @@ public interface OptionValueApi {
      *
      * @param tenantId 租户id
      * @param type 类型
-     * @return 字典数据列表
+     * @return List&lt;OptionValue&gt;
      * @since 9.6.0
      */
-    List<OptionValue> listByType(String tenantId, String type);
+    @GetMapping("/listByType")
+    List<OptionValue> listByType(@RequestParam("tenantId") String tenantId, @RequestParam("type") String type);
 }

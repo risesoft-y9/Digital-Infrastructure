@@ -12,8 +12,6 @@ import org.apache.commons.lang3.StringUtils;
 import org.springframework.context.annotation.Primary;
 import org.springframework.http.MediaType;
 import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
@@ -71,7 +69,6 @@ public class RoleApiImpl implements RoleApi {
      * @since 9.6.0
      */
     @Override
-    @PostMapping("/addPerson")
     public boolean addPerson(@RequestParam String personId, @RequestParam String roleId, @RequestParam String tenantId) {
         if (personId == null || roleId == null || tenantId == null) {
             return false;
@@ -96,7 +93,6 @@ public class RoleApiImpl implements RoleApi {
      * @since 9.6.0
      */
     @Override
-    @PostMapping("/createRoleNodeAddCustomId")
     public Role createRoleNodeAddCustomId(@RequestParam String roleId, @RequestParam String roleName, @RequestParam String parentId, @RequestParam String customId, @RequestParam String type, @RequestParam String systemName, @RequestParam String systemCnName) {
         Y9Role roleNode = y9RoleService.findByCustomIdAndParentId(customId, parentId);
         if (roleNode == null) {
@@ -121,7 +117,6 @@ public class RoleApiImpl implements RoleApi {
      * @since 9.6.0
      */
     @Override
-    @PostMapping("/deleteRole")
     public Boolean deleteRole(@RequestParam String roleId) {
         boolean flag = false;
         try {
@@ -142,7 +137,6 @@ public class RoleApiImpl implements RoleApi {
      * @since 9.6.0
      */
     @Override
-    @GetMapping("/findByCustomIdAndParentId")
     public Role findByCustomIdAndParentId(@RequestParam String customId, @RequestParam String parentId) {
         Y9Role roleNode = y9RoleService.findByCustomIdAndParentId(customId, parentId);
         return ModelConvertUtil.y9RoleToRole(roleNode);
@@ -156,7 +150,6 @@ public class RoleApiImpl implements RoleApi {
      * @since 9.6.0
      */
     @Override
-    @GetMapping("/getRole")
     public Role getRole(@RequestParam String roleId) {
         Y9Role acRoleNode = y9RoleService.findById(roleId);
         return ModelConvertUtil.y9RoleToRole(acRoleNode);
@@ -172,7 +165,6 @@ public class RoleApiImpl implements RoleApi {
      * @since 9.6.0
      */
     @Override
-    @GetMapping("/hasPublicRole")
     public boolean hasPublicRole(String tenantId, String roleName, String personId) {
         List<Y9Role> list = y9RoleService.listByParentIdAndName(DefaultIdConsts.TOP_PUBLIC_ROLE_ID, roleName);
         if (!list.isEmpty()) {
@@ -199,7 +191,6 @@ public class RoleApiImpl implements RoleApi {
      * @since 9.6.0
      */
     @Override
-    @GetMapping("/hasRole")
     public Boolean hasRole(@RequestParam String tenantId, @RequestParam String systemName, @RequestParam(required = false) String properties, @RequestParam String roleName, @RequestParam String personId) {
         List<Y9Role> list = null;
         if (StringUtils.isBlank(properties)) {
@@ -230,7 +221,6 @@ public class RoleApiImpl implements RoleApi {
      * @since 9.6.0
      */
     @Override
-    @GetMapping("/hasRoleByTenantIdAndRoleIdAndOrgUnitId")
     public Boolean hasRoleByTenantIdAndRoleIdAndOrgUnitId(@RequestParam String tenantId, @RequestParam String roleId, @RequestParam String orgUnitId) {
         Y9LoginUserHolder.setTenantId(tenantId);
         List<String> orgUnitIds = y9RoleService.listOrgUnitIdRecursively(orgUnitId);
@@ -247,7 +237,6 @@ public class RoleApiImpl implements RoleApi {
      * @since 9.6.0
      */
     @Override
-    @GetMapping("/listAllPersonsById")
     public List<Person> listAllPersonsById(@RequestParam String tenantId, @RequestParam String roleId) {
         Y9LoginUserHolder.setTenantId(tenantId);
         Set<Y9Person> personSet = new HashSet<>();
@@ -306,7 +295,6 @@ public class RoleApiImpl implements RoleApi {
      * @since 9.6.0
      */
     @Override
-    @GetMapping("/listOrgUnitsById")
     public List<OrgUnit> listOrgUnitsById(@RequestParam String tenantId, @RequestParam String roleId, @RequestParam String orgType) {
         Y9LoginUserHolder.setTenantId(tenantId);
         List<Y9OrgBasesToRoles> roleMappingList = y9OrgBasesToRolesService.listByRoleId(roleId);
@@ -333,7 +321,6 @@ public class RoleApiImpl implements RoleApi {
      * @since 9.6.0
      */
     @Override
-    @GetMapping("/listPersonsById")
     public List<Person> listPersonsById(@RequestParam String tenantId, @RequestParam String roleId) {
         Y9LoginUserHolder.setTenantId(tenantId);
         List<Y9OrgBasesToRoles> roleMappingList = y9OrgBasesToRolesService.listByRoleId(roleId);
@@ -360,7 +347,6 @@ public class RoleApiImpl implements RoleApi {
      * @since 9.6.0
      */
     @Override
-    @GetMapping("/listRelateRoleByPersonId")
     public List<Role> listRelateRoleByPersonId(@RequestParam String tenantId, @RequestParam String personId) {
         Y9LoginUserHolder.setTenantId(tenantId);
         List<Y9Role> roleNodeList = y9RoleService.listOrgUnitRelatedWithoutNegative(personId);
@@ -383,7 +369,6 @@ public class RoleApiImpl implements RoleApi {
      * @since 9.6.0
      */
     @Override
-    @GetMapping("/listRoleByOrgUnitId")
     public List<Role> listRoleByOrgUnitId(@RequestParam String tenantId, @RequestParam String orgUnitId) {
         Y9LoginUserHolder.setTenantId(tenantId);
         List<Y9Role> roleNodeList = y9RoleService.listByOrgUnitIdWithoutNegative(orgUnitId);
@@ -405,7 +390,6 @@ public class RoleApiImpl implements RoleApi {
      * @since 9.6.0
      */
     @Override
-    @GetMapping("/listRoleByParentId")
     public List<Role> listRoleByParentId(@RequestParam String roleId) {
         List<Y9Role> roleNodeList = y9RoleService.listByParentId(roleId);
         List<Role> roleList = null;
@@ -428,7 +412,6 @@ public class RoleApiImpl implements RoleApi {
      * @since 9.6.0
      */
     @Override
-    @PostMapping("/removePerson")
     public boolean removePerson(@RequestParam String personId, @RequestParam String roleId, @RequestParam String tenantId) {
         if (personId == null || roleId == null || tenantId == null) {
             return false;

@@ -2,6 +2,9 @@ package net.risesoft.api.resource;
 
 import java.util.List;
 
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+
 import net.risesoft.model.System;
 
 /**
@@ -22,15 +25,17 @@ public interface SystemApi {
      * @return System 系统信息
      * @since 9.6.2
      */
-    System getById(String id);
+    @GetMapping("/getById")
+    System getById(@RequestParam("id") String id);
 
     /**
      * 根据系统名称获取系统
      *
      * @param name 系统名称
-     * @return System 系统管理员
+     * @return System 系统信息
      */
-    System getByName(String name);
+    @GetMapping("/getByName")
+    System getByName(@RequestParam("name") String name);
 
     /**
      * 根据系统id，获取系统名称列表
@@ -38,5 +43,6 @@ public interface SystemApi {
      * @param systemIds 系统id集合（List&lt;String&lt;）
      * @return List&lt;String&gt; 系统名称列表
      */
-    List<String> listSystemNameByIds(List<String> systemIds);
+    @GetMapping("/listSystemNameByIds")
+    List<String> listSystemNameByIds(@RequestParam("systemIds") List<String> systemIds);
 }

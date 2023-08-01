@@ -1,5 +1,8 @@
 package net.risesoft.api.permission;
 
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+
 import net.risesoft.enums.AuthorityEnum;
 
 /**
@@ -23,6 +26,7 @@ public interface AuthorizationApi {
      * @param authority 操作类型 {@link AuthorityEnum}
      * @since 9.6.0
      */
-    void save(String tenantId, String personId, String resourceId, String roleId, Integer authority);
+    @PostMapping("/save")
+    void save(@RequestParam("tenantId") String tenantId, @RequestParam("personId") String personId, @RequestParam("resourceId") String resourceId, @RequestParam("roleId") String roleId, @RequestParam("authority") Integer authority);
 
 }

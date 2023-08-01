@@ -44,7 +44,6 @@ public class AuthenticateApiImpl implements AuthenticateApi {
      * @since 9.6.0
      */
     @Override
-    @RequestMapping("/authenticate3")
     public Message authenticate3(@RequestParam String tenantShortName, @RequestParam String loginName, @RequestParam String password) {
         List<String> tenantIds = Y9PlatformUtil.getTenantByLoginName(tenantShortName);
         if (!tenantIds.isEmpty()) {
@@ -64,7 +63,6 @@ public class AuthenticateApiImpl implements AuthenticateApi {
      * @since 9.6.0
      */
     @Override
-    @RequestMapping("/authenticate5")
     public Message authenticate5(@RequestParam String tenantShortName, @RequestParam String mobile, @RequestParam String password) {
         List<String> tenantIds = Y9PlatformUtil.getTenantByLoginName(tenantShortName);
         if (!tenantIds.isEmpty()) {

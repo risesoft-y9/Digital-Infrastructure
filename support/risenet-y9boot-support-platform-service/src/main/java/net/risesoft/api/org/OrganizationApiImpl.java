@@ -5,7 +5,6 @@ import java.util.List;
 import org.springframework.context.annotation.Primary;
 import org.springframework.http.MediaType;
 import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
@@ -61,7 +60,6 @@ public class OrganizationApiImpl implements OrganizationApi {
      * @since 9.6.0
      */
     @Override
-    @GetMapping("/get")
     public Organization getOrganization(@RequestParam String tenantId, @RequestParam String organizationId) {
         Y9LoginUserHolder.setTenantId(tenantId);
         
@@ -78,7 +76,6 @@ public class OrganizationApiImpl implements OrganizationApi {
      * @since 9.6.0
      */
     @Override
-    @GetMapping("/listAllBureaus")
     public List<Department> listAllBureaus(@RequestParam String tenantId, @RequestParam String organizationId) {
         Y9LoginUserHolder.setTenantId(tenantId);
         
@@ -94,7 +91,6 @@ public class OrganizationApiImpl implements OrganizationApi {
      * @since 9.6.0
      */
     @Override
-    @GetMapping(value = "/listAllOrganizations")
     public List<Organization> listAllOrganizations(@RequestParam String tenantId) {
         Y9LoginUserHolder.setTenantId(tenantId);
         
@@ -111,7 +107,6 @@ public class OrganizationApiImpl implements OrganizationApi {
      * @since 9.6.0
      */
     @Override
-    @GetMapping("/listByType")
     public List<Organization> listByType(@RequestParam String tenantId, @RequestParam Boolean virtual) {
         Y9LoginUserHolder.setTenantId(tenantId);
         
@@ -128,7 +123,6 @@ public class OrganizationApiImpl implements OrganizationApi {
      * @since 9.6.0
      */
     @Override
-    @GetMapping("/listDepartments")
     public List<Department> listDepartments(@RequestParam String tenantId, @RequestParam String organizationId) {
         Y9LoginUserHolder.setTenantId(tenantId);
         
@@ -145,7 +139,6 @@ public class OrganizationApiImpl implements OrganizationApi {
      * @since 9.6.0
      */
     @Override
-    @GetMapping("/listGroups")
     public List<Group> listGroups(@RequestParam String tenantId, @RequestParam String organizationId) {
         Y9LoginUserHolder.setTenantId(tenantId);
         
@@ -162,7 +155,6 @@ public class OrganizationApiImpl implements OrganizationApi {
      * @since 9.6.0
      */
     @Override
-    @GetMapping("/listPersons")
     public List<Person> listPersons(@RequestParam String tenantId, @RequestParam String organizationId) {
         Y9LoginUserHolder.setTenantId(tenantId);
         
@@ -179,7 +171,6 @@ public class OrganizationApiImpl implements OrganizationApi {
      * @since 9.6.0
      */
     @Override
-    @GetMapping("/listPositions")
     public List<Position> listPositions(@RequestParam String tenantId, @RequestParam String organizationId) {
         Y9LoginUserHolder.setTenantId(tenantId);
         

@@ -3,7 +3,6 @@ package net.risesoft.api.id;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Primary;
 import org.springframework.http.MediaType;
-import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -36,7 +35,6 @@ public class IdApiImpl implements IdApi {
      * @since 9.6.0
      */
     @Override
-    @GetMapping("/getNextId")
     public String getNextId() {
         return y9IdGenerator.getNextId();
     }

@@ -2,6 +2,10 @@ package net.risesoft.api.org;
 
 import java.util.List;
 
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+
 import net.risesoft.enums.Y9DepartmentPropCategoryEnum;
 import net.risesoft.model.Department;
 import net.risesoft.model.DepartmentProp;
@@ -25,11 +29,12 @@ public interface DepartmentApi {
      * 新建部门
      *
      * @param tenantId 租户id
-     * @param departmentJson 部门JSON字符串
+     * @param departmentJson 部门对象
      * @return Department 部门对象
      * @since 9.6.0
      */
-    Department createDepartment(String tenantId, String departmentJson);
+    @PostMapping("/createDepartment")
+    Department createDepartment(@RequestParam("tenantId") String tenantId, @RequestParam("departmentJson") String departmentJson);
 
     /**
      * 删除部门
@@ -39,7 +44,8 @@ public interface DepartmentApi {
      * @return boolean 是否删除成功
      * @since 9.6.0
      */
-    boolean deleteDepartment(String deptId, String tenantId);
+    @GetMapping("/deleteDepartment")
+    boolean deleteDepartment(@RequestParam("deptId") String deptId, @RequestParam("tenantId") String tenantId);
 
     /**
      * 禁用部门
@@ -49,17 +55,19 @@ public interface DepartmentApi {
      * @return true：禁用成功，false：禁用失败
      * @since 9.6.0
      */
-    boolean disableDepartment(String tenantId, String departmentId);
+    @GetMapping("/disableDepartment")
+    boolean disableDepartment(@RequestParam("tenantId") String tenantId, @RequestParam("departmentId") String departmentId);
 
     /**
-     * 获取委办局
+     * 根据租户id和部门id，获取委办局
      *
      * @param tenantId 租户id
      * @param departmentId 部门id
      * @return OrgUnit 组织机构节点对象
      * @since 9.6.0
      */
-    OrgUnit getBureau(String tenantId, String departmentId);
+    @GetMapping("/getBureau")
+    OrgUnit getBureau(@RequestParam("tenantId") String tenantId, @RequestParam("departmentId") String departmentId);
 
     /**
      * 根据id获得部门对象
@@ -69,7 +77,8 @@ public interface DepartmentApi {
      * @return Department 部门对象
      * @since 9.6.0
      */
-    Department getDepartment(String tenantId, String departmentId);
+    @GetMapping("/getDepartment")
+    Department getDepartment(@RequestParam("tenantId") String tenantId, @RequestParam("departmentId") String departmentId);
 
     /**
      * 获取部门父节点
@@ -79,7 +88,8 @@ public interface DepartmentApi {
      * @return OrgUnit 组织机构节点对象
      * @since 9.6.0
      */
-    OrgUnit getParent(String tenantId, String departmentId);
+    @GetMapping("/getParent")
+    OrgUnit getParent(@RequestParam("tenantId") String tenantId, @RequestParam("departmentId") String departmentId);
 
     /**
      * 获取部门下的所有人员(递归，包含部门下对应的人员)
@@ -89,10 +99,11 @@ public interface DepartmentApi {
      * @return List&lt;Person&gt; 人员对象集合
      * @since 9.6.0
      */
-    List<Person> listAllPersons(String tenantId, String departmentId);
+    @GetMapping("/listAllPersons")
+    List<Person> listAllPersons(@RequestParam("tenantId") String tenantId, @RequestParam("departmentId") String departmentId);
 
     /**
-     * 获取部门下的所有未禁用/禁用的人员(递归)
+     * 获取部门下的所有没有禁用/禁用的人员(递归,对应的人员)
      *
      * @param tenantId 租户id
      * @param departmentId 部门id
@@ -100,7 +111,8 @@ public interface DepartmentApi {
      * @return List&lt;Person&gt; 人员对象集合
      * @since 9.6.0
      */
-    List<Person> listAllPersonsByDisabled(String tenantId, String departmentId, Boolean disabled);
+    @GetMapping("/listAllPersonsByDisabled")
+    List<Person> listAllPersonsByDisabled(@RequestParam("tenantId") String tenantId, @RequestParam("departmentId") String departmentId, @RequestParam("disabled") Boolean disabled);
 
     /**
      * 根据是否禁用，人员姓名获取部门下所有人员
@@ -112,7 +124,8 @@ public interface DepartmentApi {
      * @return List&lt;Person&gt; 人员对象集合
      * @since 9.6.0
      */
-    List<Person> listAllPersonsByDisabledAndName(String tenantId, String departmentId, Boolean disabled, String name);
+    @GetMapping("/listAllPersonsByDisabledAndName")
+    List<Person> listAllPersonsByDisabledAndName(@RequestParam("tenantId") String tenantId, @RequestParam("departmentId") String departmentId, @RequestParam("disabled") Boolean disabled, @RequestParam("name") String name);
 
     /**
      * 根据租户id和路径获取所有部门对象
@@ -122,7 +135,8 @@ public interface DepartmentApi {
      * @return List&lt;Department&gt; 部门对象集合
      * @since 9.6.0
      */
-    List<Department> listByDn(String tenantId, String dn);
+    @GetMapping("/listByDn")
+    List<Department> listByDn(@RequestParam("tenantId") String tenantId, @RequestParam("dn") String dn);
 
     /**
      * 根据组织节点id查找管理的部门部门属性配置
@@ -133,17 +147,19 @@ public interface DepartmentApi {
      * @return List&lt;DepartmentProp&gt; 部门部门属性配置集合
      * @since 9.6.0
      */
-    List<DepartmentProp> listByOrgBaseIdAndCategory(String tenantId, String orgBaseId, Integer category);
+    @GetMapping("/listByOrgBaseIdAndCategory")
+    List<DepartmentProp> listByOrgBaseIdAndCategory(@RequestParam("tenantId") String tenantId, @RequestParam("orgBaseId") String orgBaseId, @RequestParam("category") Integer category);
 
     /**
      * 根据部门名称，模糊查询部门列表
      *
      * @param tenantId 租户id
      * @param deptName 部门名称
-     * @return List&lt;Department&gt; 部门对象集合
+     * @return
      * @since 9.6.0
      */
-    List<Department> listByTenantIdAndDeptName(String tenantId, String deptName);
+    @GetMapping("/listByTenantIdAndDeptName")
+    List<Department> listByTenantIdAndDeptName(@RequestParam("tenantId") String tenantId, @RequestParam("deptName") String deptName);
 
     /**
      * 获得一组部门对象
@@ -153,7 +169,8 @@ public interface DepartmentApi {
      * @return List&lt;Department&gt; 部门对象集合
      * @since 9.6.0
      */
-    List<Department> listDepartments(String tenantId, List<String> ids);
+    @GetMapping("/listDepartments")
+    List<Department> listDepartments(@RequestParam("tenantId") String tenantId, @RequestParam("ids") List<String> ids);
 
     /**
      * 获取用户组(下一级)
@@ -163,40 +180,44 @@ public interface DepartmentApi {
      * @return List&lt;Group&gt; 用户组对象集合
      * @since 9.6.0
      */
-    List<Group> listGroups(String tenantId, String departmentId);
+    @GetMapping("/listGroups")
+    List<Group> listGroups(@RequestParam("tenantId") String tenantId, @RequestParam("departmentId") String departmentId);
 
     /**
      * 获取部门领导
      *
      * @param tenantId 租户id
      * @param departmentId 部门唯一标识
-     * @return List&lt;OrgUnit&gt; 人员对象集合
+     * @return List&lt;Person&gt; 人员对象集合
      * @since 9.6.0
      */
-    List<OrgUnit> listLeaders(String tenantId, String departmentId);
+    @GetMapping("/listLeaders")
+    List<OrgUnit> listLeaders(@RequestParam("tenantId") String tenantId, @RequestParam("departmentId") String departmentId);
 
     /**
      * 获取部门主管领导
      *
      * @param tenantId 租户id
      * @param departmentId 部门唯一标识
-     * @return List&lt;OrgUnit&gt; 人员对象集合
+     * @return List&lt;Person&gt; 人员对象集合
      * @since 9.6.0
      */
-    List<OrgUnit> listManagers(String tenantId, String departmentId);
+    @GetMapping("/listManagers")
+    List<OrgUnit> listManagers(@RequestParam("tenantId") String tenantId, @RequestParam("departmentId") String departmentId);
 
     /**
-     * 获取部门下的未删除的人员(下一级)
+     * 获取部门下的人员(下一级，包含部门下对应的人员)
      *
      * @param tenantId 租户id
      * @param departmentId 部门唯一标识
      * @return List&lt;Person&gt; 岗位对象集合
      * @since 9.6.0
      */
-    List<Person> listPersons(String tenantId, String departmentId);
+    @GetMapping("/listPersons")
+    List<Person> listPersons(@RequestParam("tenantId") String tenantId, @RequestParam("departmentId") String departmentId);
 
     /**
-     * 获取部门下的未禁用/禁用的人员(下一级)
+     * 获取部门下的没有禁用/禁用的人员(下一级，包含部门下对应的人员)
      *
      * @param tenantId 租户id
      * @param departmentId 部门id
@@ -204,7 +225,8 @@ public interface DepartmentApi {
      * @return List&lt;Person&gt; 人员对象集合
      * @since 9.6.0
      */
-    List<Person> listPersonsByDisabled(String tenantId, String departmentId, Boolean disabled);
+    @GetMapping("/listPersonsByDisabled")
+    List<Person> listPersonsByDisabled(@RequestParam("tenantId") String tenantId, @RequestParam("departmentId") String departmentId, @RequestParam("disabled") Boolean disabled);
 
     /**
      * 获取岗位(下一级)
@@ -214,7 +236,8 @@ public interface DepartmentApi {
      * @return List&lt;Position&gt; 岗位对象集合
      * @since 9.6.0
      */
-    List<Position> listPositions(String tenantId, String departmentId);
+    @GetMapping("/listPositions")
+    List<Position> listPositions(@RequestParam("tenantId") String tenantId, @RequestParam("departmentId") String departmentId);
 
     /**
      * 获取子部门(下一级)
@@ -224,7 +247,8 @@ public interface DepartmentApi {
      * @return List&lt;Department&gt; 部门对象集合
      * @since 9.6.0
      */
-    List<Department> listSubDepartments(String tenantId, String departmentId);
+    @GetMapping("/listSubDepartments")
+    List<Department> listSubDepartments(@RequestParam("tenantId") String tenantId, @RequestParam("departmentId") String departmentId);
 
     /**
      * 保存部门
@@ -234,7 +258,8 @@ public interface DepartmentApi {
      * @return Department 部门对象
      * @since 9.6.0
      */
-    Department saveDepartment(String tenantId, String departmentJson);
+    @PostMapping("/saveDepartment")
+    Department saveDepartment(@RequestParam("tenantId") String tenantId, @RequestParam("departmentJson") String departmentJson);
 
     /**
      * 根据条件查询部门对象
@@ -244,5 +269,7 @@ public interface DepartmentApi {
      * @return List&lt;Department&gt; 部门对象集合
      * @since 9.6.0
      */
-    List<Department> search(String tenantId, String whereClause);
+    @GetMapping("/search")
+    List<Department> search(@RequestParam("tenantId") String tenantId, @RequestParam("whereClause") String whereClause);
+
 }

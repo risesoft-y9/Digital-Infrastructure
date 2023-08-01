@@ -147,7 +147,6 @@ public class OrgSyncApiImpl implements OrgSyncApi {
      * @since 9.6.0
      */
     @Override
-    @RequestMapping("/fullSync")
     public Y9Result<MessageOrg> fullSync(@RequestParam String appName, @RequestParam String tenantId, @RequestParam String organizationId) {
         Y9LoginUserHolder.setTenantId(tenantId);
         Date syncTime = new Date();
@@ -167,7 +166,6 @@ public class OrgSyncApiImpl implements OrgSyncApi {
      * @since 9.6.0
      */
     @Override
-    @RequestMapping("/incrSync")
     public Y9Result<List<MessageOrg>> incrSync(@RequestParam String appName, @RequestParam String tenantId) {
         Y9LoginUserHolder.setTenantId(tenantId);
         Date syncTime = new Date();

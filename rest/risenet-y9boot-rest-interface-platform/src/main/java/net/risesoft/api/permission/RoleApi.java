@@ -2,6 +2,10 @@ package net.risesoft.api.permission;
 
 import java.util.List;
 
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+
 import net.risesoft.model.OrgUnit;
 import net.risesoft.model.Person;
 import net.risesoft.model.Role;
@@ -24,10 +28,11 @@ public interface RoleApi {
      * @return bolean 是否增加成功
      * @since 9.6.0
      */
-    boolean addPerson(String personId, String roleId, String tenantId);
+    @PostMapping("/addPerson")
+    boolean addPerson(@RequestParam("personId") String personId, @RequestParam("roleId") String roleId, @RequestParam("tenantId") String tenantId);
 
     /**
-     * 新增角色节点（带自定义标示customId）
+     * 新增角色节点
      *
      * @param roleId 角色id
      * @param roleName 角色名称
@@ -39,26 +44,31 @@ public interface RoleApi {
      * @return Role 角色对象
      * @since 9.6.0
      */
-    Role createRoleNodeAddCustomId(String roleId, String roleName, String parentId, String customId, String type, String systemName, String systemCnName);
+    @PostMapping("/createRoleNodeAddCustomId")
+    Role createRoleNodeAddCustomId(@RequestParam("roleId") String roleId, @RequestParam("roleName") String roleName, @RequestParam("parentId") String parentId, @RequestParam("customId") String customId, @RequestParam("type") String type, @RequestParam("systemName") String systemName,
+                                   @RequestParam("systemCnName") String systemCnName);
 
     /**
-     * 删除角色（同事删除该角色的授权关系）
+     * 删除权限节点
      *
      * @param roleId 角色id
      * @return Boolean 是否删除成功
      * @since 9.6.0
      */
-    Boolean deleteRole(String roleId);
+
+    @PostMapping("/deleteRole")
+    Boolean deleteRole(@RequestParam("roleId") String roleId);
 
     /**
-     * 根据customId和parentId获取角色
+     * 根据customId(对应taskdefineKey或者processDefineKey)和parentId
      *
      * @param customId customId
      * @param parentId 角色的父节点id
      * @return Role 角色对象
      * @since 9.6.0
      */
-    Role findByCustomIdAndParentId(String customId, String parentId);
+    @GetMapping("/findByCustomIdAndParentId")
+    Role findByCustomIdAndParentId(@RequestParam("customId") String customId, @RequestParam("parentId") String parentId);
 
     /**
      * 根据id获取相应角色节点
@@ -67,7 +77,8 @@ public interface RoleApi {
      * @return Role 角色对象
      * @since 9.6.0
      */
-    Role getRole(String roleId);
+    @GetMapping("/getRole")
+    Role getRole(@RequestParam("roleId") String roleId);
 
     /**
      * 根据人员id判断该人员是否拥有roleName这个公共角色
@@ -78,7 +89,8 @@ public interface RoleApi {
      * @return boolean
      * @since 9.6.0
      */
-    boolean hasPublicRole(String tenantId, String roleName, String personId);
+    @GetMapping("/hasPublicRole")
+    boolean hasPublicRole(@RequestParam("tenantId") String tenantId, @RequestParam("roleName") String roleName, @RequestParam("personId") String personId);
 
     /**
      * 根据人员id判断该人员是否拥有 roleName 这个角色
@@ -91,7 +103,9 @@ public interface RoleApi {
      * @return Boolean 是否拥有
      * @since 9.6.0
      */
-    Boolean hasRole(String tenantId, String systemName, String properties, String roleName, String personId);
+
+    @GetMapping("/hasRole")
+    Boolean hasRole(@RequestParam("tenantId") String tenantId, @RequestParam("systemName") String systemName, @RequestParam(value = "properties", required = false) String properties, @RequestParam("roleName") String roleName, @RequestParam("personId") String personId);
 
     /**
      * 判断orgUnitId是否有角色roleId
@@ -102,7 +116,9 @@ public interface RoleApi {
      * @return Boolean 是否有
      * @since 9.6.0
      */
-    Boolean hasRoleByTenantIdAndRoleIdAndOrgUnitId(String tenantId, String roleId, String orgUnitId);
+
+    @GetMapping("/hasRoleByTenantIdAndRoleIdAndOrgUnitId")
+    Boolean hasRoleByTenantIdAndRoleIdAndOrgUnitId(@RequestParam("tenantId") String tenantId, @RequestParam("roleId") String roleId, @RequestParam("orgUnitId") String orgUnitId);
 
     /**
      * 根据角色Id获取角色下所有人员（递归）
@@ -112,18 +128,20 @@ public interface RoleApi {
      * @return List&lt;Person&gt; 人员对象集合
      * @since 9.6.0
      */
-    List<Person> listAllPersonsById(String tenantId, String roleId);
+    @GetMapping("/listAllPersonsById")
+    List<Person> listAllPersonsById(@RequestParam("tenantId") String tenantId, @RequestParam("roleId") String roleId);
 
     /**
      * 根据角色Id获取相应OrgUnits
      *
      * @param tenantId 租户id
      * @param roleId 角色唯一标识
-     * @param orgType 组织类型
+     * @param orgType 数据类型
      * @return List&lt;OrgUnit&gt; 机构对象集合
      * @since 9.6.0
      */
-    List<OrgUnit> listOrgUnitsById(String tenantId, String roleId, String orgType);
+    @GetMapping("/listOrgUnitsById")
+    List<OrgUnit> listOrgUnitsById(@RequestParam("tenantId") String tenantId, @RequestParam("roleId") String roleId, @RequestParam("orgType") String orgType);
 
     /**
      * 根据角色Id获取相应人员
@@ -133,7 +151,8 @@ public interface RoleApi {
      * @return List&lt;Person&gt; 人员对象集合
      * @since 9.6.0
      */
-    List<Person> listPersonsById(String tenantId, String roleId);
+    @GetMapping("/listPersonsById")
+    List<Person> listPersonsById(@RequestParam("tenantId") String tenantId, @RequestParam("roleId") String roleId);
 
     /**
      * 根据人员id获取所有关联的角色
@@ -143,7 +162,8 @@ public interface RoleApi {
      * @return List&lt;Role&gt; 角色对象集合
      * @since 9.6.0
      */
-    List<Role> listRelateRoleByPersonId(String tenantId, String personId);
+    @GetMapping("/listRelateRoleByPersonId")
+    List<Role> listRelateRoleByPersonId(@RequestParam("tenantId") String tenantId, @RequestParam("personId") String personId);
 
     /**
      * 根据orgUnitId获取角色节点
@@ -153,7 +173,8 @@ public interface RoleApi {
      * @return List&lt;Role&gt; 角色对象集合
      * @since 9.6.0
      */
-    List<Role> listRoleByOrgUnitId(String tenantId, String orgUnitId);
+    @GetMapping("/listRoleByOrgUnitId")
+    List<Role> listRoleByOrgUnitId(@RequestParam("tenantId") String tenantId, @RequestParam("orgUnitId") String orgUnitId);
 
     /**
      * 根据父节点Id获取相应子级角色节点
@@ -162,7 +183,8 @@ public interface RoleApi {
      * @return List&lt;Role&gt; 角色对象集合
      * @since 9.6.0
      */
-    List<Role> listRoleByParentId(String roleId);
+    @GetMapping("/listRoleByParentId")
+    List<Role> listRoleByParentId(@RequestParam("roleId") String roleId);
 
     /**
      * 删除角色中的人员
@@ -173,5 +195,7 @@ public interface RoleApi {
      * @return boolean 是否删除成功
      * @since 9.6.0
      */
-    boolean removePerson(String personId, String roleId, String tenantId);
+
+    @PostMapping("/removePerson")
+    boolean removePerson(@RequestParam("personId") String personId, @RequestParam("roleId") String roleId, @RequestParam("tenantId") String tenantId);
 }

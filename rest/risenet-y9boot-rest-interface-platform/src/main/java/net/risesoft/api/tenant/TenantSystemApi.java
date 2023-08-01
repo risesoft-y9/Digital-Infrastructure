@@ -2,6 +2,9 @@ package net.risesoft.api.tenant;
 
 import java.util.List;
 
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+
 import net.risesoft.model.System;
 import net.risesoft.model.Tenant;
 
@@ -23,32 +26,36 @@ public interface TenantSystemApi {
      * @return List&lt;AdminSystem&gt; 系统对象集合
      * @since 9.6.0
      */
-    List<System> listSystemByTenantId(String tenantId);
+    @GetMapping("/listSystemByTenantId")
+    List<System> listSystemByTenantId(@RequestParam("tenantId") String tenantId);
 
     /**
-     * 根据租户id，获取租用的系统id列表
+     * 根据租户id，获取租用的系统ID列表
      *
      * @param tenantId 租户ID
      * @return List&lt;String&gt; 系统id列表
      * @since 9.6.0
      */
-    List<String> listSystemIdByTenantId(String tenantId);
+    @GetMapping("/listSystemIdByTenantId")
+    List<String> listSystemIdByTenantId(@RequestParam("tenantId") String tenantId);
 
     /**
-     * 根据系统id,获取租用该系统的租户列表
+     * 根据系统查询该系统被哪儿些租户租用了
      *
      * @param systemId 系统id
      * @return List&lt;Tenant&gt; 租户对象集合
      * @since 9.6.0
      */
-    List<Tenant> listTenantBySystemId(String systemId);
+    @GetMapping("/listTenantBySystemId")
+    List<Tenant> listTenantBySystemId(@RequestParam("systemId") String systemId);
 
     /**
-     * 根据系统名,获取租用该系统的租户列表
+     * 根据系统名该系统被哪些租户租用了
      *
      * @param systemName 系统名
      * @return List&lt;Tenant&gt; 租户对象集合
      * @since 9.6.0
      */
-    List<Tenant> listTenantBySystemName(String systemName);
+    @GetMapping("/listTenantBySystemName")
+    List<Tenant> listTenantBySystemName(@RequestParam("systemName") String systemName);
 }

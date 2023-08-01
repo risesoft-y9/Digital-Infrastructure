@@ -1,15 +1,8 @@
 package y9.client.platform.org;
 
-import java.util.List;
-
 import org.springframework.cloud.openfeign.FeignClient;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 
 import net.risesoft.api.org.OrgSyncApi;
-import net.risesoft.model.MessageOrg;
-import net.risesoft.pojo.Y9Result;
 
 /**
  * 组织同步组件
@@ -22,31 +15,5 @@ import net.risesoft.pojo.Y9Result;
  */
 @FeignClient(contextId = "OrgEventApiClient", name = "y9platform", url = "${y9.common.orgBaseUrl}", path = "/services/rest/orgSync")
 public interface OrgSyncApiClient extends OrgSyncApi {
-
-    /**
-     * 根据机构id，全量获取整个组织机构数据
-     *
-     * @param appName  应用名称
-     * @param tenantId 租户id
-     * @param organizationId 机构id
-     * @return Y9Result&lt;MessageOrg&gt; 整个组织机构对象集合
-     * @since 9.6.0
-     */
-    @Override
-    @GetMapping("/fullSync")
-    Y9Result<MessageOrg> fullSync(@RequestParam String appName, @RequestParam("tenantId") String tenantId, @RequestParam("organizationId") String organizationId);
-
-    /**
-     * 增量获取组织操作列表
-     * 系统记录了上一次同步的时间，从上一次同步时间往后获取数据
-     *
-     * @param appName  应用名称
-     * @param tenantId 租户id
-     * @return Y9Result&lt;List&lt;MessageOrg&gt;&gt; 事件列表
-     * @since 9.6.0
-     */
-    @Override
-    @RequestMapping("/incrSync")
-    Y9Result<List<MessageOrg>> incrSync(@RequestParam("appName") String appName, @RequestParam("tenantId") String tenantId);
 
 }

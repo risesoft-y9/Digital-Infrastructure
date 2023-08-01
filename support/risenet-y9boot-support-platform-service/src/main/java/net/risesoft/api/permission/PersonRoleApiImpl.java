@@ -5,7 +5,6 @@ import java.util.Map;
 import org.springframework.context.annotation.Primary;
 import org.springframework.http.MediaType;
 import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
@@ -43,7 +42,6 @@ public class PersonRoleApiImpl implements PersonRoleApi {
      * @since 9.6.0
      */
     @Override
-    @GetMapping("/countByPersonId")
     public long countByPersonId(@RequestParam String tenantId, @RequestParam String personId) {
         Y9LoginUserHolder.setTenantId(tenantId);
         
@@ -60,7 +58,6 @@ public class PersonRoleApiImpl implements PersonRoleApi {
      * @since 9.6.0
      */
     @Override
-    @GetMapping("/hasRole")
     public Boolean hasRole(@RequestParam String tenantId, @RequestParam String personId, @RequestParam String customId) {
         Y9LoginUserHolder.setTenantId(tenantId);
 
@@ -82,7 +79,6 @@ public class PersonRoleApiImpl implements PersonRoleApi {
      * @since 9.6.0
      */
     @Override
-    @GetMapping("/pagePersonPermission")
     public Y9Page<Map<String, Object>> pagePersonPermission(@RequestParam String tenantId, @RequestParam String personId, @RequestParam String type, @RequestParam String systemCnName, @RequestParam String appName, @RequestParam String roleName, @RequestParam int page, @RequestParam int rows) {
         Y9LoginUserHolder.setTenantId(tenantId);
         
@@ -104,7 +100,6 @@ public class PersonRoleApiImpl implements PersonRoleApi {
      * @since 9.6.0
      */
     @Override
-    @GetMapping("/pagePersonPermissionWithSpecial")
     public Y9Page<Map<String, Object>> pagePersonPermissionWithSpecial(@RequestParam String tenantId, @RequestParam String personId, @RequestParam String type, @RequestParam String systemCnName, @RequestParam String appName, @RequestParam String roleName, @RequestParam int page,
         @RequestParam int rows) {
         Y9LoginUserHolder.setTenantId(tenantId);

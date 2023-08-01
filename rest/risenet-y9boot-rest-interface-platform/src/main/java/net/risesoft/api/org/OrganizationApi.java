@@ -2,6 +2,9 @@ package net.risesoft.api.org;
 
 import java.util.List;
 
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+
 import net.risesoft.model.Department;
 import net.risesoft.model.Group;
 import net.risesoft.model.Organization;
@@ -27,36 +30,40 @@ public interface OrganizationApi {
      * @return Organization 对象
      * @since 9.6.0
      */
-    Organization getOrganization(String tenantId, String organizationId);
+    @GetMapping("/get")
+    Organization getOrganization(@RequestParam("tenantId") String tenantId, @RequestParam("organizationId") String organizationId);
 
     /**
-     * 获取所有委办局
+     * 返回所有委办局
      *
      * @param tenantId 租户id
      * @param organizationId 机构id
      * @return List&lt;Department&gt; 部门对象集合
      * @since 9.6.0
      */
-    List<Department> listAllBureaus(String tenantId, String organizationId);
+    @GetMapping("/listAllBureaus")
+    List<Department> listAllBureaus(@RequestParam("tenantId") String tenantId, @RequestParam("organizationId") String organizationId);
 
     /**
-     * 根据租户id获取机构
+     * 根据租户id获取所有机构
      *
      * @param tenantId 租户id
      * @return List&lt;Organization&gt; 机构对象集合
      * @since 9.6.0
      */
-    List<Organization> listAllOrganizations(String tenantId);
+    @GetMapping("/listAllOrganizations")
+    List<Organization> listAllOrganizations(@RequestParam("tenantId") String tenantId);
 
     /**
      * 通过类型，获取组织架构列表
      *
      * @param tenantId 租户id
-     * @param virtual 是否虚拟组织
+     * @param virtual 是否为虚拟组织
      * @return List&lt;Organization&gt; 组织架构对象集合
      * @since 9.6.0
      */
-    List<Organization> listByType(String tenantId, Boolean virtual);
+    @GetMapping("/listByType")
+    List<Organization> listByType(@RequestParam("tenantId") String tenantId, @RequestParam("virtual") Boolean virtual);
 
     /**
      * 获取机构下的部门（下一级）
@@ -66,7 +73,8 @@ public interface OrganizationApi {
      * @return List&lt;Department&gt; 部门对象集合
      * @since 9.6.0
      */
-    List<Department> listDepartments(String tenantId, String organizationId);
+    @GetMapping("/listDepartments")
+    List<Department> listDepartments(@RequestParam("tenantId") String tenantId, @RequestParam("organizationId") String organizationId);
 
     /**
      * 获取用户组（下一级）
@@ -76,7 +84,8 @@ public interface OrganizationApi {
      * @return List&lt;Group&gt; 用户组对象集合
      * @since 9.6.0
      */
-    List<Group> listGroups(String tenantId, String organizationId);
+    @GetMapping("/listGroups")
+    List<Group> listGroups(@RequestParam("tenantId") String tenantId, @RequestParam("organizationId") String organizationId);
 
     /**
      * 获取人员（下一级）
@@ -86,7 +95,8 @@ public interface OrganizationApi {
      * @return List&lt;Person&gt; 人员对象集合
      * @since 9.6.0
      */
-    List<Person> listPersons(String tenantId, String organizationId);
+    @GetMapping("/listPersons")
+    List<Person> listPersons(@RequestParam("tenantId") String tenantId, @RequestParam("organizationId") String organizationId);
 
     /**
      * 获取岗位（下一级）
@@ -96,5 +106,7 @@ public interface OrganizationApi {
      * @return List&lt;Position&gt; 岗位对象集合
      * @since 9.6.0
      */
-    List<Position> listPositions(String tenantId, String organizationId);
+    @GetMapping("/listPositions")
+    List<Position> listPositions(@RequestParam("tenantId") String tenantId, @RequestParam("organizationId") String organizationId);
+
 }

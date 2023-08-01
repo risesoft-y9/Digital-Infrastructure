@@ -2,6 +2,9 @@ package net.risesoft.api.tenant;
 
 import java.util.List;
 
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+
 import net.risesoft.model.Tenant;
 
 /**
@@ -16,13 +19,14 @@ import net.risesoft.model.Tenant;
 public interface TenantApi {
 
     /**
-     * 根据租户id获取租户对象
+     * 根据租户id获取一个租户对象
      *
      * @param tenantId 租户id
      * @return Tenant 租户对象
      * @since 9.6.0
      */
-    Tenant getById(String tenantId);
+    @GetMapping("/getById")
+    Tenant getById(@RequestParam("tenantId") String tenantId);
 
     /**
      * 获取所有租户对象
@@ -30,6 +34,7 @@ public interface TenantApi {
      * @return List&lt;Tenant&gt; 所有租户对象的集合
      * @since 9.6.0
      */
+    @GetMapping("/listAllTenants")
     List<Tenant> listAllTenants();
 
     /**
@@ -39,7 +44,8 @@ public interface TenantApi {
      * @return List&lt;Tenant&gt; 租户对象集合
      * @since 9.6.0
      */
-    List<Tenant> listByName(String tenantName);
+    @GetMapping("/listByName")
+    List<Tenant> listByName(@RequestParam("tenantName") String tenantName);
 
     /**
      * 根据租户登录名称（租户英文名称），获取租户列表
@@ -48,15 +54,17 @@ public interface TenantApi {
      * @return List&lt;Tenant&gt; 租户对象集合
      * @since 9.6.0
      */
-    List<Tenant> listByShortName(String shortName);
+    @GetMapping("/listByShortName")
+    List<Tenant> listByShortName(@RequestParam("shortName") String shortName);
 
     /**
      * 获取指定租户类型的所有租户对象
      *
-     * @param tenantType 租户类型 {@link net.risesoft.enums.TenantTypeEnum}
+     * @param tenantType 租户类型： 0=用户，2=开发商，1=运维团队，3=普通租户
      * @return List&lt;Tenant&gt; 所有租户对象的集合
      * @since 9.6.0
      */
-    List<Tenant> listByTenantType(Integer tenantType);
+    @GetMapping("/listByTenantType")
+    List<Tenant> listByTenantType(@RequestParam("tenantType") Integer tenantType);
 
 }

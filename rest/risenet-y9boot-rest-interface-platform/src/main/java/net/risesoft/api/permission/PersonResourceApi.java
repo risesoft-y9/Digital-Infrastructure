@@ -2,6 +2,9 @@ package net.risesoft.api.permission;
 
 import java.util.List;
 
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+
 import net.risesoft.enums.AuthorityEnum;
 import net.risesoft.model.Menu;
 import net.risesoft.model.Resource;
@@ -19,7 +22,7 @@ import net.risesoft.model.VueMenu;
 public interface PersonResourceApi {
 
     /**
-     * 判断person对resource是否有指定的操作权限
+     * 判断actor对resource是否有指定的操作权限
      *
      * @param tenantId 租户id
      * @param personId 操作者唯一标识
@@ -28,7 +31,8 @@ public interface PersonResourceApi {
      * @return Boolean 是否有权限
      * @since 9.6.0
      */
-    boolean hasPermission(String tenantId, String personId, String resourceId, Integer authority);
+    @GetMapping("/hasPermission")
+    boolean hasPermission(@RequestParam("tenantId") String tenantId, @RequestParam("personId") String personId, @RequestParam("resourceId") String resourceId, @RequestParam("authority") Integer authority);
 
     /**
      * 判断 person 对 customId 对应的 resource 是否有指定的操作权限
@@ -40,22 +44,11 @@ public interface PersonResourceApi {
      * @return boolean
      * @since 9.6.0
      */
-    boolean hasPermissionByCustomId(String tenantId, String personId, String customId, Integer authority);
+    @GetMapping("/hasPermissionByCustomId")
+    boolean hasPermissionByCustomId(@RequestParam("tenantId") String tenantId, @RequestParam("personId") String personId, @RequestParam("customId") String customId, @RequestParam("authority") Integer authority);
 
     /**
-     * 递归获得某一资源下,主体对象有相应权限的菜单和按钮
-     *
-     * @param tenantId 租户id
-     * @param personId 操作者唯一标识
-     * @param authority 操作类型 {@link AuthorityEnum}
-     * @param resourceId 资源唯一标识
-     * @return List&lt;Resource&gt; 有权限的资源
-     * @since 9.6.0
-     */
-    List<VueMenu> listMenusRecursively(String tenantId, String personId, Integer authority, String resourceId);
-
-    /**
-     * 获得某一资源下,主体对象有相应操作权限的子菜单
+     * 递归获得某一资源下,主体对象有相应权限的菜单
      *
      * @param tenantId 租户id
      * @param personId 操作者唯一标识
@@ -64,7 +57,21 @@ public interface PersonResourceApi {
      * @return List&lt;Resource&gt; 有权限的子菜单
      * @since 9.6.0
      */
-    List<Menu> listSubMenus(String tenantId, String personId, Integer authority, String resourceId);
+    @GetMapping("/listMenusRecursively")
+    List<VueMenu> listMenusRecursively(@RequestParam("tenantId") String tenantId, @RequestParam("personId") String personId, @RequestParam("authority") Integer authority, @RequestParam("resourceId") String resourceId);
+
+    /**
+     * 获得某一资源下,主体对象有相应操作权限的子节点(子节点必须为菜单)
+     *
+     * @param tenantId 租户id
+     * @param personId 操作者唯一标识
+     * @param authority 操作类型 {@link AuthorityEnum}
+     * @param resourceId 资源唯一标识
+     * @return List&lt;Resource&gt; 有操作权限的子菜单
+     * @since 9.6.0
+     */
+    @GetMapping("/listSubMenus")
+    List<Menu> listSubMenus(@RequestParam("tenantId") String tenantId, @RequestParam("personId") String personId, @RequestParam("authority") Integer authority, @RequestParam("resourceId") String resourceId);
 
     /**
      * 获得某一资源下,主体对象有相应操作权限的子节点
@@ -76,5 +83,6 @@ public interface PersonResourceApi {
      * @return List&lt;Resource&gt; 有操作权限的子节点
      * @since 9.6.0
      */
-    List<Resource> listSubResources(String tenantId, String personId, Integer authority, String resourceId);
+    @GetMapping("/listSubResources")
+    List<Resource> listSubResources(@RequestParam("tenantId") String tenantId, @RequestParam("personId") String personId, @RequestParam("authority") Integer authority, @RequestParam("resourceId") String resourceId);
 }

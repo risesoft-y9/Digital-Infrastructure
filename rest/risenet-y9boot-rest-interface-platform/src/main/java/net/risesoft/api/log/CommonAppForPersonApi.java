@@ -1,5 +1,9 @@
 package net.risesoft.api.log;
 
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+
 /**
  * 个人常用应用组件
  *
@@ -17,7 +21,8 @@ public interface CommonAppForPersonApi {
      * @return String 常用应用名称列表
      * @since 9.6.0
      */
-    public String getAppNamesByPersonId(String tenantId, String personId);
+    @GetMapping(value = "/getAppNames")
+    String getAppNamesByPersonId(@RequestParam("tenantId") String tenantId, @RequestParam("personId") String personId);
 
     /**
      * 根据用户id，从日志中提取常用应用名称列表
@@ -27,7 +32,8 @@ public interface CommonAppForPersonApi {
      * @return String 常用应用名称列表
      * @since 9.6.0
      */
-    public String getAppNamesByPersonIdFromLog(String tenantId, String personId);
+    @GetMapping(value = "/getAppNamesFromLog")
+    String getAppNamesByPersonIdFromLog(@RequestParam("tenantId") String tenantId, @RequestParam("personId") String personId);
 
     /**
      * 半年应用点击次数
@@ -35,7 +41,8 @@ public interface CommonAppForPersonApi {
      * @return long 点击次数
      * @since 9.6.0
      */
-    public long getCount();
+    @GetMapping(value = "/getCount")
+    long getCount();
 
     /**
      * 保存常用应用
@@ -43,7 +50,8 @@ public interface CommonAppForPersonApi {
      * @return String 操作结果
      * @since 9.6.0
      */
-    public String saveCommonApp();
+    @PostMapping(value = "/save")
+    String saveCommonApp();
 
     /**
      * 同步近半年的数据
@@ -51,5 +59,6 @@ public interface CommonAppForPersonApi {
      * @return String 操作结果
      * @since 9.6.0
      */
-    public String syncData();
+    @PostMapping(value = "/syncData")
+    String syncData();
 }

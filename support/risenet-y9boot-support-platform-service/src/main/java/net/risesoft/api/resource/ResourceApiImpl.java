@@ -5,8 +5,6 @@ import java.util.List;
 import org.springframework.context.annotation.Primary;
 import org.springframework.http.MediaType;
 import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
@@ -58,7 +56,6 @@ public class ResourceApiImpl implements ResourceApi {
      * @since 9.6.0
      */
     @Override
-    @PostMapping("/createMenuResource")
     public Resource createMenuResource(@RequestParam String resourceId, @RequestParam String resourceName, @RequestParam String parentResourceId, @RequestParam String customId) {
         Y9ResourceBase parentResoucre = compositeResourceService.findById(parentResourceId);
         Y9Menu y9Menu = y9MenuService.findById(resourceId);
@@ -87,7 +84,6 @@ public class ResourceApiImpl implements ResourceApi {
      * @since 9.6.0
      */
     @Override
-    @GetMapping("/findByCustomId")
     public Resource findByCustomId(@RequestParam String customId) {
         return null;
     }
@@ -101,7 +97,6 @@ public class ResourceApiImpl implements ResourceApi {
      * @since 9.6.0
      */
     @Override
-    @GetMapping("/findByCustomIdAndParentId")
     public Resource findByCustomIdAndParentId(@RequestParam String customId, @RequestParam String parentId, @RequestParam Integer resourceType) {
         return ModelConvertUtil.resourceBaseToResource(compositeResourceService.findByCustomIdAndParentId(customId, parentId, resourceType));
     }
@@ -114,7 +109,6 @@ public class ResourceApiImpl implements ResourceApi {
      * @since 9.6.0
      */
     @Override
-    @GetMapping("/getParentResource")
     public Resource getParentResource(@RequestParam String resourceId) {
         Y9ResourceBase acResource = compositeResourceService.findById(resourceId);
         if (acResource == null) {
@@ -132,7 +126,6 @@ public class ResourceApiImpl implements ResourceApi {
      * @since 9.6.0
      */
     @Override
-    @GetMapping("/getResource")
     public Resource getResource(@RequestParam String resourceId) {
         Y9ResourceBase acResource = compositeResourceService.findById(resourceId);
         return ModelConvertUtil.resourceBaseToResource(acResource);
@@ -146,7 +139,6 @@ public class ResourceApiImpl implements ResourceApi {
      * @since 9.6.0
      */
     @Override
-    @GetMapping("/getRootResourceBySystemName")
     public Resource getRootResourceBySystemName(@RequestParam String systemName) {
         Y9System system = y9SystemService.findByName(systemName);
         if (system != null) {
@@ -166,7 +158,6 @@ public class ResourceApiImpl implements ResourceApi {
      * @since 9.6.0
      */
     @Override
-    @GetMapping("/listSubMenus")
     public List<Resource> listSubMenus(@RequestParam String resourceId) {
         List<Y9Menu> y9MenuList = y9MenuService.findByParentId(resourceId);
         return Y9ModelConvertUtil.convert(y9MenuList, Resource.class);
@@ -180,7 +171,6 @@ public class ResourceApiImpl implements ResourceApi {
      * @since 9.6.0
      */
     @Override
-    @GetMapping("/listSubResources")
     public List<Resource> listSubResources(@RequestParam String resourceId) {
         List<Y9ResourceBase> y9ResourceBaseList = compositeResourceService.listRootResourceBySystemId(resourceId);
         return Y9ModelConvertUtil.convert(y9ResourceBaseList, Resource.class);

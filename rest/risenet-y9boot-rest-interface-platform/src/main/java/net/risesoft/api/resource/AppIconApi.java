@@ -2,6 +2,9 @@ package net.risesoft.api.resource;
 
 import java.util.List;
 
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+
 import net.risesoft.model.AppIcon;
 
 /**
@@ -21,6 +24,7 @@ public interface AppIconApi {
      * @return List&lt;AppIcon&gt;
      * @since 9.6.0
      */
+    @GetMapping("/listAllIcon")
     List<AppIcon> listAllIcon();
 
     /**
@@ -30,5 +34,6 @@ public interface AppIconApi {
      * @return List&lt;AppIcon&gt;
      * @since 9.6.0
      */
-    List<AppIcon> searchAppIcon(String name);
+    @GetMapping("/searchAppIcon")
+    List<AppIcon> searchAppIcon(@RequestParam("name") String name);
 }

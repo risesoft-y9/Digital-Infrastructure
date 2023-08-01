@@ -3,6 +3,10 @@ package net.risesoft.api.org;
 import java.util.List;
 import java.util.Map;
 
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+
 import net.risesoft.model.Group;
 import net.risesoft.model.OrgUnit;
 import net.risesoft.model.Person;
@@ -30,10 +34,11 @@ public interface PersonApi {
      * @return true:禁用成功，false:禁用失败
      * @since 9.6.0
      */
-    boolean changeDisabled(String tenantId, String personId);
+    @GetMapping("/changeDisabled")
+    boolean changeDisabled(@RequestParam("tenantId") String tenantId, @RequestParam("personId") String personId);
 
     /**
-     * 检查登录名是否存在
+     * 检查用户名
      *
      * @param tenantId 租户id
      * @param personId 人员id
@@ -41,18 +46,19 @@ public interface PersonApi {
      * @return boolean 用户名是否存在
      * @since 9.6.0
      */
-    boolean checkLoginName(String tenantId, String personId, String loginName);
+    @GetMapping("/checkLoginName")
+    boolean checkLoginName(@RequestParam("tenantId") String tenantId, @RequestParam("personId") String personId, @RequestParam("loginName") String loginName);
 
     /**
      * 检查手机号码是否存在
      *
-     * @param tenantId 租户id
      * @param personId 人员id
      * @param mobile 电话号码
      * @return boolean 是否存在
      * @since 9.6.0
      */
-    boolean checkMobile(String tenantId, String personId, String mobile);
+    @GetMapping("/checkMobile")
+    boolean checkMobile(@RequestParam("tenantId") String tenantId, @RequestParam("personId") String personId, @RequestParam("mobile") String mobile);
 
     /**
      * 新增人员
@@ -62,7 +68,8 @@ public interface PersonApi {
      * @return Person 人员对象
      * @since 9.6.0
      */
-    Person createPerson(String tenantId, String personJson);
+    @PostMapping("/createPerson")
+    Person createPerson(@RequestParam("tenantId") String tenantId, @RequestParam("personJson") String personJson);
 
     /**
      * 删除人员
@@ -72,7 +79,8 @@ public interface PersonApi {
      * @return true:删除成功，false:删除失败
      * @since 9.6.0
      */
-    boolean deleteById(String tenantId, String personId);
+    @PostMapping("/deleteById")
+    boolean deleteById(@RequestParam("tenantId") String tenantId, @RequestParam("personId") String personId);
 
     /**
      * 根据租户id和人员id获取委办局
@@ -82,7 +90,8 @@ public interface PersonApi {
      * @return OrgUnit 机构对象
      * @since 9.6.0
      */
-    OrgUnit getBureau(String tenantId, String personId);
+    @GetMapping("/getBureau")
+    OrgUnit getBureau(@RequestParam("tenantId") String tenantId, @RequestParam("personId") String personId);
 
     /**
      * 根据登陆名和父节点id，获取人员信息
@@ -93,7 +102,8 @@ public interface PersonApi {
      * @return Person 人员对象
      * @since 9.6.0
      */
-    Person getByLoginNameAndParentId(String tenantId, String loginName, String parentId);
+    @GetMapping("/getByLoginNameAndParentId")
+    Person getByLoginNameAndParentId(@RequestParam("tenantId") String tenantId, @RequestParam("loginName") String loginName, @RequestParam("parentId") String parentId);
 
     /**
      * 获取人员父节点
@@ -103,17 +113,19 @@ public interface PersonApi {
      * @return OrgUnit 机构对象
      * @since 9.6.0
      */
-    OrgUnit getParent(String tenantId, String personId);
+    @GetMapping("/getParent")
+    OrgUnit getParent(@RequestParam("tenantId") String tenantId, @RequestParam("personId") String personId);
 
     /**
-     * 根据id获得人员对象（从缓存中查找）
+     * 根据id获得人员对象
      *
      * @param tenantId 租户id
      * @param personId 人员唯一标识
      * @return Person 人员对象
      * @since 9.6.0
      */
-    Person getPerson(String tenantId, String personId);
+    @GetMapping("/getPerson")
+    Person getPerson(@RequestParam("tenantId") String tenantId, @RequestParam("personId") String personId);
 
     /**
      * 根据登录名称和租户id，获得人员对象
@@ -123,17 +135,19 @@ public interface PersonApi {
      * @return Person 人员对象
      * @since 9.6.0
      */
-    Person getPersonByLoginNameAndTenantId(String loginName, String tenantId);
+    @GetMapping("/getPersonByLoginNameAndTenantId")
+    Person getPersonByLoginNameAndTenantId(@RequestParam("loginName") String loginName, @RequestParam("tenantId") String tenantId);
 
     /**
      * 根据人员id，获取人员扩展信息
      *
      * @param tenantId 租户id
      * @param personId 人员id
-     * @return PersonExt 人员扩展信息
+     * @return PersonExt
      * @since 9.6.0
      */
-    PersonExt getPersonExtByPersonId(String tenantId, String personId);
+    @GetMapping("/getPersonExtByPersonId")
+    PersonExt getPersonExtByPersonId(@RequestParam("tenantId") String tenantId, @RequestParam("personId") String personId);
 
     /**
      * 获取 Base64加密之后的照片字符串
@@ -143,7 +157,8 @@ public interface PersonApi {
      * @return String Base64加密之后的照片字符串
      * @since 9.6.0
      */
-    String getPersonPhoto(String tenantId, String personId);
+    @GetMapping("/getPersonPhoto")
+    String getPersonPhoto(@RequestParam("tenantId") String tenantId, @RequestParam("personId") String personId);
 
     /**
      * 获取全部人员
@@ -152,7 +167,8 @@ public interface PersonApi {
      * @return List&lt;Person&gt; 人员对象集合
      * @since 9.6.0
      */
-    List<Person> listAllPersons(String tenantId);
+    @GetMapping("/listAllPersons")
+    List<Person> listAllPersons(@RequestParam("tenantId") String tenantId);
 
     /**
      * 根据证件类型和证件号码，获取人员列表
@@ -160,10 +176,11 @@ public interface PersonApi {
      * @param tenantId 租户id
      * @param idType 证件类型
      * @param idNum 证件号码
-     * @return List&lt;Person&gt; 人员对象集合
+     * @return
      * @since 9.6.0
      */
-    List<Person> listByIdTypeAndIdNum(String tenantId, String idType, String idNum);
+    @GetMapping("/listByIdTypeAndIdNum")
+    List<Person> listByIdTypeAndIdNum(@RequestParam("tenantId") String tenantId, @RequestParam("idType") String idType, @RequestParam("idNum") String idNum);
 
     /**
      * 根据人员名称 名称、租户id获取人员基本信息
@@ -173,7 +190,8 @@ public interface PersonApi {
      * @return List&lt;Person&gt;
      * @since 9.6.2
      */
-    List<Person> listByNameLike(String tenantId, String name);
+    @GetMapping("/listByNameLike")
+    List<Person> listByNameLike(@RequestParam("tenantId") String tenantId, @RequestParam(name = "name", required = false) String name);
 
     /**
      * 获取人员所在用户组列表
@@ -183,7 +201,8 @@ public interface PersonApi {
      * @return List&lt;Group&gt; 用户组对象集合
      * @since 9.6.0
      */
-    List<Group> listGroups(String tenantId, String personId);
+    @GetMapping("/listGroups")
+    List<Group> listGroups(@RequestParam("tenantId") String tenantId, @RequestParam("personId") String personId);
 
     /**
      * 根据人员id，获取父节点列表
@@ -193,7 +212,8 @@ public interface PersonApi {
      * @return List&lt;OrgUnit&gt; 父节点对象集合
      * @since 9.6.0
      */
-    List<OrgUnit> listParents(String tenantId, String personId);
+    @GetMapping("/listParents")
+    List<OrgUnit> listParents(@RequestParam("tenantId") String tenantId, @RequestParam("personId") String personId);
 
     /**
      * 根据人员名称 名称、租户id获取人员基本信息，图像，岗位等
@@ -203,7 +223,8 @@ public interface PersonApi {
      * @return List&lt;Map&lt;String, Object&gt;&gt;
      * @since 9.6.2
      */
-    List<Map<String, Object>> listPersonInfoByNameLike(String tenantId, String name);
+    @GetMapping("/listPersonInfoByNameLike")
+    List<Map<String, Object>> listPersonInfoByNameLike(@RequestParam("tenantId") String tenantId, @RequestParam(name = "name", required = false) String name);
 
     /**
      * 获取人员所在岗位列表
@@ -213,17 +234,19 @@ public interface PersonApi {
      * @return List&lt;Position&gt; 岗位对象集合
      * @since 9.6.0
      */
-    List<Position> listPositions(String tenantId, String personId);
+    @GetMapping("/listPositions")
+    List<Position> listPositions(@RequestParam("tenantId") String tenantId, @RequestParam("personId") String personId);
 
     /**
      * 获取角色
      *
      * @param tenantId 租户id
      * @param personId 人员唯一标识
-     * @return List&lt;Role&gt; 角色对象集合
+     * @return List 角色对象集合
      * @since 9.6.0
      */
-    List<Role> listRoles(String tenantId, String personId);
+    @GetMapping("/listRoles")
+    List<Role> listRoles(@RequestParam("tenantId") String tenantId, @RequestParam("personId") String personId);
 
     /**
      * 修改人员密码
@@ -234,7 +257,8 @@ public interface PersonApi {
      * @return Person 人员对象
      * @since 9.6.0
      */
-    Person modifyPassword(String tenantId, String personId, String newPassword);
+    @PostMapping("/modifyPassword")
+    Person modifyPassword(@RequestParam("tenantId") String tenantId, @RequestParam("personId") String personId, @RequestParam("newPassword") String newPassword);
 
     /**
      * 模糊搜索人员分页列表（不含禁用和删除）
@@ -243,9 +267,10 @@ public interface PersonApi {
      * @param name 人员名称
      * @param page 页数
      * @param rows 条数
-     * @return Y9Page&lt;Person&gt; 人员对象集合
+     * @return
      */
-    Y9Page<Person> pageByNameLike(String tenantId, String name, int page, int rows);
+    @GetMapping("/pageByNameLike")
+    Y9Page<Person> pageByNameLike(@RequestParam("tenantId") String tenantId, @RequestParam(required = false) String name, @RequestParam("page") int page, @RequestParam("rows") int rows);
 
     /**
      * 获取父节点下的全部人员
@@ -255,10 +280,11 @@ public interface PersonApi {
      * @param disabled 是否禁用
      * @param page 页号
      * @param rows 条数
-     * @return Y9Page&lt;Person&gt; 人员对象集合
+     * @return Y9Page<Person> 人员对象集合
      * @since 9.6.0
      */
-    Y9Page<Person> pageByParentId(String tenantId, String parentId, boolean disabled, int page, int rows);
+    @GetMapping("/pageByParentId")
+    Y9Page<Person> pageByParentId(@RequestParam("tenantId") String tenantId, @RequestParam("parentId") String parentId, @RequestParam("disabled") boolean disabled, @RequestParam("page") int page, @RequestParam("rows") int rows);
 
     /**
      * 获取父节点下的全部人员
@@ -272,7 +298,8 @@ public interface PersonApi {
      * @return Y9Page&lt;Person&gt; 人员对象集合
      * @since 9.6.0
      */
-    Y9Page<Person> pageByParentIdAndUserName(String tenantId, String parentId, boolean disabled, String userName, int page, int rows);
+    @GetMapping("/pageByParentIdAndUserName")
+    Y9Page<Person> pageByParentIdAndUserName(@RequestParam("tenantId") String tenantId, @RequestParam("parentId") String parentId, @RequestParam("disabled") boolean disabled, @RequestParam("userName") String userName, @RequestParam("page") int page, @RequestParam("rows") int rows);
 
     /**
      * 保存人员
@@ -282,7 +309,8 @@ public interface PersonApi {
      * @return Person 人员对象
      * @since 9.6.0
      */
-    Person savePerson(String tenantId, String personJson);
+    @PostMapping("/savePerson")
+    Person savePerson(@RequestParam("tenantId") String tenantId, @RequestParam("personJson") String personJson);
 
     /**
      * 保存人员头像
@@ -293,7 +321,8 @@ public interface PersonApi {
      * @return Person 人员对象
      * @since 9.6.0
      */
-    Person savePersonAvator(String tenantId, String personId, String avator);
+    @PostMapping("/savePersonAvator")
+    Person savePersonAvator(@RequestParam("tenantId") String tenantId, @RequestParam("personId") String personId, @RequestParam("avator") String avator);
 
     /**
      * 保存人员头像(Base64)
@@ -305,7 +334,8 @@ public interface PersonApi {
      * @return Person 人员对象
      * @since 9.6.0
      */
-    Person savePersonAvatorByBase64(String tenantId, String personId, String picnote, String fileExt);
+    @PostMapping("/savePersonAvatorByBase64")
+    Person savePersonAvatorByBase64(@RequestParam("tenantId") String tenantId, @RequestParam("personId") String personId, @RequestParam("picnote") String picnote, @RequestParam("fileExt") String fileExt);
 
     /**
      * 保存用户照片接口
@@ -316,7 +346,8 @@ public interface PersonApi {
      * @return Boolean 是否保存成功
      * @since 9.6.0
      */
-    Boolean savePersonPhoto(String tenantId, String personId, String photo);
+    @PostMapping("/savePersonPhoto")
+    Boolean savePersonPhoto(@RequestParam("tenantId") String tenantId, @RequestParam("personId") String personId, @RequestParam("photo") String photo);
 
     /**
      * 保存人员
@@ -327,7 +358,8 @@ public interface PersonApi {
      * @return Person
      * @since 9.6.0
      */
-    Person savePersonWithExt(String tenantId, String personJson, String personextJson);
+    @PostMapping("/savePersonWithExt")
+    Person savePersonWithExt(@RequestParam("tenantId") String tenantId, @RequestParam("personJson") String personJson, @RequestParam("personextJson") String personextJson);
 
     /**
      * 保存人员的微信id
@@ -338,5 +370,7 @@ public interface PersonApi {
      * @return Person 人员对象
      * @since 9.6.0
      */
-    Person saveWeixinId(String tenantId, String personId, String weixinId);
+    @PostMapping("/saveWeixinId")
+    Person saveWeixinId(@RequestParam("tenantId") String tenantId, @RequestParam("personId") String personId, @RequestParam("weixinId") String weixinId);
+
 }

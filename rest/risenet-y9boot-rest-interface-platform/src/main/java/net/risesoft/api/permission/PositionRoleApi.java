@@ -1,5 +1,8 @@
 package net.risesoft.api.permission;
 
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+
 /**
  * 岗位角色接口
  *
@@ -15,9 +18,10 @@ public interface PositionRoleApi {
      * @param tenantId 租户id
      * @param positionId 岗位id
      * @param customId 自定义id
-     * @return Boolean 是否拥有角色
+     * @return
      * @since 9.6.0
      */
-    Boolean hasRole(String tenantId, String positionId, String customId);
+    @GetMapping("/hasRole")
+    Boolean hasRole(@RequestParam("tenantId") String tenantId, @RequestParam("positionId") String positionId, @RequestParam("customId") String customId);
 
 }

@@ -4,7 +4,6 @@ import java.util.List;
 
 import org.springframework.http.MediaType;
 import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
@@ -40,7 +39,6 @@ public class AppIconApiImpl implements AppIconApi {
      * @since 9.6.0
      */
     @Override
-    @GetMapping("/listAllIcon")
     public List<AppIcon> listAllIcon() {
         List<Y9AppIcon> appIconList = appIconService.listAll();
         return Y9ModelConvertUtil.convert(appIconList, AppIcon.class);
@@ -54,7 +52,6 @@ public class AppIconApiImpl implements AppIconApi {
      * @since 9.6.0
      */
     @Override
-    @GetMapping("/searchAppIcon")
     public List<AppIcon> searchAppIcon(@RequestParam String name) {
         List<Y9AppIcon> appIconList = appIconService.listByName(name);
         return Y9ModelConvertUtil.convert(appIconList, AppIcon.class);

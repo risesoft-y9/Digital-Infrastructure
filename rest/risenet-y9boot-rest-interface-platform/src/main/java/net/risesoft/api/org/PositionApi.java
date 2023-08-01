@@ -2,6 +2,10 @@ package net.risesoft.api.org;
 
 import java.util.List;
 
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+
 import net.risesoft.model.OrgUnit;
 import net.risesoft.model.Person;
 import net.risesoft.model.Position;
@@ -18,7 +22,7 @@ import net.risesoft.model.Position;
 public interface PositionApi {
 
     /**
-     * 岗位增加人员
+     * 向岗位增加人员
      *
      * @param tenantId 租户id
      * @param positionId 岗位id
@@ -26,7 +30,8 @@ public interface PositionApi {
      * @return boolean true 移除成功，false 移除失败
      * @since 9.6.0
      */
-    boolean addPerson(String tenantId, String positionId, String personId);
+    @PostMapping("/addPerson")
+    boolean addPerson(@RequestParam("tenantId") String tenantId, @RequestParam("positionId") String positionId, @RequestParam("personId") String personId);
 
     /**
      * 创建岗位
@@ -36,7 +41,8 @@ public interface PositionApi {
      * @return Position 岗位对象
      * @since 9.6.0
      */
-    Position createPosition(String tenantId, String positionJson);
+    @PostMapping("/createPosition")
+    Position createPosition(@RequestParam("tenantId") String tenantId, @RequestParam("positionJson") String positionJson);
 
     /**
      * 根据岗位id删除岗位
@@ -46,7 +52,8 @@ public interface PositionApi {
      * @return boolean s是否删除成功
      * @since 9.6.0
      */
-    boolean deletePosition(String tenantId, String positoinId);
+    @PostMapping("/deletePosition")
+    boolean deletePosition(@RequestParam("tenantId") String tenantId, @RequestParam("positoinId") String positoinId);
 
     /**
      * 获取岗位父节点
@@ -56,7 +63,8 @@ public interface PositionApi {
      * @return OrgUnit 机构对象
      * @since 9.6.0
      */
-    OrgUnit getParent(String tenantId, String positionId);
+    @GetMapping("/getParent")
+    OrgUnit getParent(@RequestParam("tenantId") String tenantId, @RequestParam("positionId") String positionId);
 
     /**
      * 根据id获得岗位对象
@@ -66,7 +74,8 @@ public interface PositionApi {
      * @return Position 岗位对象
      * @since 9.6.0
      */
-    Position getPosition(String tenantId, String positionId);
+    @GetMapping("/getPosition")
+    Position getPosition(@RequestParam("tenantId") String tenantId, @RequestParam("positionId") String positionId);
 
     /**
      * 根据人员id和岗位id判断该人员是否拥有此岗位
@@ -77,7 +86,8 @@ public interface PositionApi {
      * @return boolean 是否拥有该岗位
      * @since 9.6.0
      */
-    boolean hasPosition(String tenantId, String positionName, String personId);
+    @GetMapping("/hasPosition")
+    boolean hasPosition(@RequestParam("tenantId") String tenantId, @RequestParam("positionName") String positionName, @RequestParam("personId") String personId);
 
     /**
      * 根据父节点获取岗位列表
@@ -87,7 +97,8 @@ public interface PositionApi {
      * @return List&lt;Position&gt; 岗位对象集合
      * @since 9.6.0
      */
-    List<Position> listByParentId(String tenantId, String parentId);
+    @GetMapping("/listByParentId")
+    List<Position> listByParentId(@RequestParam("tenantId") String tenantId, @RequestParam("parentId") String parentId);
 
     /**
      * 根据用户ID,获取岗位列表
@@ -97,17 +108,19 @@ public interface PositionApi {
      * @return List&lt;Position&gt; 岗位对象集合
      * @since 9.6.0
      */
-    List<Position> listByPersonId(String tenantId, String personId);
+    @GetMapping("/listByPersonId")
+    List<Position> listByPersonId(@RequestParam("tenantId") String tenantId, @RequestParam("personId") String personId);
 
     /**
-     * 获取岗位的人员列表
+     * 获取所在岗位的人员列表
      *
      * @param tenantId 租户id
      * @param positionId 岗位唯一标识
      * @return List&lt;Person&gt; 人员对象集合
      * @since 9.6.0
      */
-    List<Person> listPersons(String tenantId, String positionId);
+    @GetMapping("/listPersons")
+    List<Person> listPersons(@RequestParam("tenantId") String tenantId, @RequestParam("positionId") String positionId);
 
     /**
      * 从岗位移除人员
@@ -118,7 +131,8 @@ public interface PositionApi {
      * @return boolean true 移除成功，false 移除失败
      * @since 9.6.0
      */
-    boolean removePerson(String tenantId, String positionId, String personId);
+    @PostMapping("/removePerson")
+    boolean removePerson(@RequestParam("tenantId") String tenantId, @RequestParam("positionId") String positionId, @RequestParam("personId") String personId);
 
     /**
      * 更新岗位
@@ -128,5 +142,7 @@ public interface PositionApi {
      * @return Position 岗位对象
      * @since 9.6.0
      */
-    Position updatePosition(String tenantId, String positionJson);
+    @PostMapping("/updatePosition")
+    Position updatePosition(@RequestParam("tenantId") String tenantId, @RequestParam("positionJson") String positionJson);
+
 }

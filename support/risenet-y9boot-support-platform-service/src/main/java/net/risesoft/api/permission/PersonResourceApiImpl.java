@@ -6,7 +6,6 @@ import java.util.List;
 import org.springframework.context.annotation.Primary;
 import org.springframework.http.MediaType;
 import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
@@ -54,7 +53,6 @@ public class PersonResourceApiImpl implements PersonResourceApi {
      * @since 9.6.0
      */
     @Override
-    @GetMapping("/hasPermission")
     public boolean hasPermission(@RequestParam String tenantId, @RequestParam String personId, @RequestParam String resourceId, @RequestParam Integer authority) {
         Y9LoginUserHolder.setTenantId(tenantId);
         
@@ -72,7 +70,6 @@ public class PersonResourceApiImpl implements PersonResourceApi {
      * @since 9.6.0
      */
     @Override
-    @GetMapping("/hasPermissionByCustomId")
     public boolean hasPermissionByCustomId(@RequestParam String tenantId, @RequestParam String personId, @RequestParam String customId, @RequestParam Integer authority) {
         Y9LoginUserHolder.setTenantId(tenantId);
         
@@ -90,7 +87,6 @@ public class PersonResourceApiImpl implements PersonResourceApi {
      * @since 9.6.0
      */
     @Override
-    @GetMapping("/listMenusRecursively")
     public List<VueMenu> listMenusRecursively(@RequestParam String tenantId, @RequestParam String personId, @RequestParam Integer authority, @RequestParam String resourceId) {
         Y9LoginUserHolder.setTenantId(tenantId);
         
@@ -111,7 +107,6 @@ public class PersonResourceApiImpl implements PersonResourceApi {
      * @since 9.6.0
      */
     @Override
-    @GetMapping("/listSubMenus")
     public List<Menu> listSubMenus(@RequestParam String tenantId, @RequestParam String personId, @RequestParam Integer authority, @RequestParam String resourceId) {
         Y9LoginUserHolder.setTenantId(tenantId);
 
@@ -130,7 +125,6 @@ public class PersonResourceApiImpl implements PersonResourceApi {
      * @since 9.6.0
      */
     @Override
-    @GetMapping("/listSubResources")
     public List<Resource> listSubResources(@RequestParam String tenantId, @RequestParam String personId, @RequestParam Integer authority, @RequestParam String resourceId) {
         Y9LoginUserHolder.setTenantId(tenantId);
 

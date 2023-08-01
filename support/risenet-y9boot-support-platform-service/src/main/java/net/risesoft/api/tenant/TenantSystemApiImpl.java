@@ -5,7 +5,6 @@ import java.util.List;
 import org.springframework.context.annotation.Primary;
 import org.springframework.http.MediaType;
 import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
@@ -44,7 +43,6 @@ public class TenantSystemApiImpl implements TenantSystemApi {
      * @return List&lt;AdminSystem&gt; 系统对象集合
      * @since 9.6.0
      */
-    @GetMapping("/listSystemByTenantId")
     @Override
     public List<System> listSystemByTenantId(@RequestParam String tenantId) {
         List<Y9System> y9SystemList = y9TenantSystemService.listSystemByTenantId(tenantId);
@@ -58,7 +56,6 @@ public class TenantSystemApiImpl implements TenantSystemApi {
      * @return List&lt;String&gt; 系统id列表
      * @since 9.6.0
      */
-    @GetMapping("/listSystemIdByTenantId")
     @Override
     public List<String> listSystemIdByTenantId(@RequestParam String tenantId) {
         return y9TenantSystemService.listSystemIdByTenantId(tenantId);
@@ -71,7 +68,6 @@ public class TenantSystemApiImpl implements TenantSystemApi {
      * @return List&lt;Tenant&gt; 租户对象集合
      * @since 9.6.0
      */
-    @GetMapping("/listTenantBySystemId")
     @Override
     public List<Tenant> listTenantBySystemId(@RequestParam String systemId) {
         List<Y9Tenant> y9TenantList = y9TenantSystemService.listTenantBySystemId(systemId);
@@ -85,7 +81,6 @@ public class TenantSystemApiImpl implements TenantSystemApi {
      * @return List&lt;Tenant&gt; 租户对象集合
      * @since 9.6.0
      */
-    @GetMapping("/listTenantBySystemName")
     @Override
     public List<Tenant> listTenantBySystemName(@RequestParam String systemName) {
         List<Y9Tenant> y9TenantList = y9TenantSystemService.listTenantBySystemName(systemName);

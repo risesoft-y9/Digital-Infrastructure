@@ -6,8 +6,6 @@ import org.apache.commons.lang3.StringUtils;
 import org.springframework.context.annotation.Primary;
 import org.springframework.http.MediaType;
 import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
@@ -62,7 +60,6 @@ public class PositionApiImpl implements PositionApi {
      * @since 9.6.0
      */
     @Override
-    @PostMapping("/addPerson")
     public boolean addPerson(@RequestParam String tenantId, @RequestParam String positionId, @RequestParam String personId) {
         if (StringUtils.isBlank(tenantId) || StringUtils.isBlank(positionId) || StringUtils.isBlank(personId)) {
             return false;
@@ -85,7 +82,6 @@ public class PositionApiImpl implements PositionApi {
      * @since 9.6.0
      */
     @Override
-    @PostMapping("/createPosition")
     public Position createPosition(@RequestParam String tenantId, @RequestParam String positionJson) {
         if (StringUtils.isBlank(tenantId) || StringUtils.isBlank(positionJson)) {
             return null;
@@ -106,7 +102,6 @@ public class PositionApiImpl implements PositionApi {
      * @since 9.6.0
      */
     @Override
-    @PostMapping("/deletePosition")
     public boolean deletePosition(@RequestParam String tenantId, @RequestParam String positionId) {
         if (StringUtils.isBlank(positionId)) {
             return false;
@@ -126,7 +121,6 @@ public class PositionApiImpl implements PositionApi {
      * @since 9.6.0
      */
     @Override
-    @GetMapping("/getParent")
     public OrgUnit getParent(@RequestParam String tenantId, @RequestParam String positionId) {
         Y9LoginUserHolder.setTenantId(tenantId);
         
@@ -143,7 +137,6 @@ public class PositionApiImpl implements PositionApi {
      * @since 9.6.0
      */
     @Override
-    @GetMapping("/getPosition")
     public Position getPosition(@RequestParam String tenantId, @RequestParam String positionId) {
         Y9LoginUserHolder.setTenantId(tenantId);
         
@@ -161,7 +154,6 @@ public class PositionApiImpl implements PositionApi {
      * @since 9.6.0
      */
     @Override
-    @GetMapping("/hasPosition")
     public boolean hasPosition(@RequestParam String tenantId, @RequestParam String positionName, @RequestParam String personId) {
         Y9LoginUserHolder.setTenantId(tenantId);
         
@@ -177,7 +169,6 @@ public class PositionApiImpl implements PositionApi {
      * @since 9.6.0
      */
     @Override
-    @GetMapping("/listByParentId")
     public List<Position> listByParentId(@RequestParam String tenantId, @RequestParam String parentId) {
         Y9LoginUserHolder.setTenantId(tenantId);
         
@@ -194,7 +185,6 @@ public class PositionApiImpl implements PositionApi {
      * @since 9.6.0
      */
     @Override
-    @GetMapping("/listByPersonId")
     public List<Position> listByPersonId(@RequestParam String tenantId, @RequestParam String personId) {
         Y9LoginUserHolder.setTenantId(tenantId);
         
@@ -211,7 +201,6 @@ public class PositionApiImpl implements PositionApi {
      * @since 9.6.0
      */
     @Override
-    @GetMapping("/listPersons")
     public List<Person> listPersons(@RequestParam String tenantId, @RequestParam String positionId) {
         Y9LoginUserHolder.setTenantId(tenantId);
         
@@ -229,7 +218,6 @@ public class PositionApiImpl implements PositionApi {
      * @since 9.6.0
      */
     @Override
-    @PostMapping("/removePerson")
     public boolean removePerson(@RequestParam String tenantId, @RequestParam String positionId, @RequestParam String personId) {
         if (StringUtils.isBlank(tenantId) || StringUtils.isBlank(positionId) || StringUtils.isBlank(personId)) {
             return false;
@@ -253,7 +241,6 @@ public class PositionApiImpl implements PositionApi {
      * @since 9.6.0
      */
     @Override
-    @PostMapping("/updatePosition")
     public Position updatePosition(@RequestParam String tenantId, @RequestParam String positionJson) {
         if (StringUtils.isBlank(tenantId) || StringUtils.isBlank(positionJson)) {
             return null;

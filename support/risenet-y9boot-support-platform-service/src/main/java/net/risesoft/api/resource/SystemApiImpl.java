@@ -5,7 +5,6 @@ import java.util.List;
 import org.springframework.context.annotation.Primary;
 import org.springframework.http.MediaType;
 import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
@@ -42,7 +41,6 @@ public class SystemApiImpl implements SystemApi {
      * @return AdminSystem 系统管理员
      * @since 9.6.2
      */
-    @GetMapping("/getById")
     @Override
     public System getById(String id) {
         Y9System y9System = y9SystemService.getById(id);
@@ -55,7 +53,6 @@ public class SystemApiImpl implements SystemApi {
      * @param name 系统名称
      * @return System 系统
      */
-    @GetMapping("/getByName")
     @Override
     public System getByName(@RequestParam String name) {
         Y9System y9System = y9SystemService.findByName(name);
@@ -68,7 +65,6 @@ public class SystemApiImpl implements SystemApi {
      * @param systemIds 系统id集合（List&lt;String&lt;）
      * @return List&lt;String&gt; 系统名称列表
      */
-    @GetMapping("/listSystemNameByIds")
     @Override
     public List<String> listSystemNameByIds(@RequestParam List<String> systemIds) {
         return y9SystemService.listSystemNameByIds(systemIds);

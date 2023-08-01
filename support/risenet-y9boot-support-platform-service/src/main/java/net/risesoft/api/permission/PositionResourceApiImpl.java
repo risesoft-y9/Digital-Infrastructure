@@ -5,7 +5,6 @@ import java.util.List;
 import org.springframework.context.annotation.Primary;
 import org.springframework.http.MediaType;
 import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
@@ -50,7 +49,6 @@ public class PositionResourceApiImpl implements PositionResourceApi {
      * @since 9.6.0
      */
     @Override
-    @GetMapping("/hasPermission")
     public boolean hasPermission(@RequestParam String tenantId, @RequestParam String positionId, @RequestParam String resourceId, @RequestParam Integer authority) {
         Y9LoginUserHolder.setTenantId(tenantId);
         
@@ -68,7 +66,6 @@ public class PositionResourceApiImpl implements PositionResourceApi {
      * @since 9.6.0
      */
     @Override
-    @GetMapping("/hasPermissionByCustomId")
     public boolean hasPermissionByCustomId(String tenantId, String positionId, String customId, Integer authority) {
         Y9LoginUserHolder.setTenantId(tenantId);
         
@@ -86,7 +83,6 @@ public class PositionResourceApiImpl implements PositionResourceApi {
      * @since 9.6.0
      */
     @Override
-    @GetMapping("/listSubMenus")
     public List<Resource> listSubMenus(@RequestParam String tenantId, @RequestParam String positionId, @RequestParam Integer authority, @RequestParam String resourceId) {
         Y9LoginUserHolder.setTenantId(tenantId);
 
@@ -105,7 +101,6 @@ public class PositionResourceApiImpl implements PositionResourceApi {
      * @since 9.6.0
      */
     @Override
-    @GetMapping("/listSubResources")
     public List<Resource> listSubResources(@RequestParam String tenantId, @RequestParam String positionId, @RequestParam Integer authority, @RequestParam(required = false) String resourceId) {
         Y9LoginUserHolder.setTenantId(tenantId);
         

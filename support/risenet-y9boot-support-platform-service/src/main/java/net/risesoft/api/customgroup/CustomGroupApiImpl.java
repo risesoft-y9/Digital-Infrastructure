@@ -6,8 +6,6 @@ import org.springframework.context.annotation.Primary;
 import org.springframework.data.domain.Page;
 import org.springframework.http.MediaType;
 import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
@@ -57,7 +55,6 @@ public class CustomGroupApiImpl implements CustomGroupApi {
      * @since 9.6.0
      */
     @Override
-    @GetMapping("/addMember")
     public void addMember(@RequestParam String tenantId, @RequestParam String customGroupId, @RequestParam List<String> orgUnitList) {
         Y9LoginUserHolder.setTenantId(tenantId);
         
@@ -73,7 +70,6 @@ public class CustomGroupApiImpl implements CustomGroupApi {
      * @since 9.6.0
      */
     @Override
-    @PostMapping("/deleteAllGroup")
     public boolean deleteAllGroup(@RequestParam String tenantId, @RequestParam("groupIds") List<String> groupIdList) {
         Y9LoginUserHolder.setTenantId(tenantId);
 
@@ -90,7 +86,6 @@ public class CustomGroupApiImpl implements CustomGroupApi {
      * @since 9.6.0
      */
     @Override
-    @GetMapping("/findCustomGroupByCustomId")
     public CustomGroup findCustomGroupByCustomId(@RequestParam String tenantId, @RequestParam String customId) {
         Y9LoginUserHolder.setTenantId(tenantId);
         
@@ -108,7 +103,6 @@ public class CustomGroupApiImpl implements CustomGroupApi {
      * @since 9.6.0
      */
     @Override
-    @GetMapping("/findCustomGroupById")
     public CustomGroup findCustomGroupById(@RequestParam String tenantId, @RequestParam String personId, @RequestParam String groupId) {
         Y9LoginUserHolder.setTenantId(tenantId);
         
@@ -125,7 +119,6 @@ public class CustomGroupApiImpl implements CustomGroupApi {
      * @since 9.6.0
      */
     @Override
-    @GetMapping("/listAllPersonByGroupId")
     public List<Person> listAllPersonByGroupId(@RequestParam String tenantId, @RequestParam String groupId) {
         Y9LoginUserHolder.setTenantId(tenantId);
         
@@ -142,7 +135,6 @@ public class CustomGroupApiImpl implements CustomGroupApi {
      * @since 9.6.0
      */
     @Override
-    @GetMapping("/listCustomGroupByUserId")
     public List<CustomGroup> listCustomGroupByUserId(@RequestParam String tenantId, @RequestParam String personId) {
         Y9LoginUserHolder.setTenantId(tenantId);
         
@@ -160,7 +152,6 @@ public class CustomGroupApiImpl implements CustomGroupApi {
      * @since 9.6.0
      */
     @Override
-    @GetMapping("/listCustomGroupMemberByGroupId")
     public List<CustomGroupMember> listCustomGroupMemberByGroupId(@RequestParam String tenantId, @RequestParam String personId, @RequestParam String groupId) {
         Y9LoginUserHolder.setTenantId(tenantId);
         
@@ -179,7 +170,6 @@ public class CustomGroupApiImpl implements CustomGroupApi {
      * @since 9.6.0
      */
     @Override
-    @GetMapping("/listCustomGroupMemberByGroupIdAndMemberType")
     public List<CustomGroupMember> listCustomGroupMemberByGroupIdAndMemberType(@RequestParam String tenantId, @RequestParam String personId, @RequestParam String groupId, @RequestParam String memberType) {
         Y9LoginUserHolder.setTenantId(tenantId);
         
@@ -198,7 +188,6 @@ public class CustomGroupApiImpl implements CustomGroupApi {
      * @since 9.6.0
      */
     @Override
-    @GetMapping("/pageCustomGroupByPersonId")
     public Y9Page<CustomGroup> pageCustomGroupByPersonId(@RequestParam String tenantId, @RequestParam String personId, @RequestParam int page, @RequestParam int rows) {
         Y9LoginUserHolder.setTenantId(tenantId);
         
@@ -217,7 +206,6 @@ public class CustomGroupApiImpl implements CustomGroupApi {
      * @since 9.6.0
      */
     @Override
-    @GetMapping("/pageCustomGroupMemberByGroupId")
     public Y9Page<CustomGroupMember> pageCustomGroupMemberByGroupId(@RequestParam String tenantId, @RequestParam String groupId, @RequestParam int page, @RequestParam int rows) {
         Y9LoginUserHolder.setTenantId(tenantId);
         
@@ -237,7 +225,6 @@ public class CustomGroupApiImpl implements CustomGroupApi {
      * @since 9.6.0
      */
     @Override
-    @GetMapping("/pageCustomGroupMemberByGroupIdAndMemberType")
     public Y9Page<CustomGroupMember> pageCustomGroupMemberByGroupIdAndMemberType(@RequestParam String tenantId, @RequestParam String groupId, @RequestParam String memberType, @RequestParam int page, @RequestParam int rows) {
         Y9LoginUserHolder.setTenantId(tenantId);
         
@@ -254,7 +241,6 @@ public class CustomGroupApiImpl implements CustomGroupApi {
      * @since 9.6.0
      */
     @Override
-    @PostMapping("/removeMembers")
     public boolean removeMembers(@RequestParam String tenantId, @RequestParam("memberIds") List<String> memberIdList) {
         Y9LoginUserHolder.setTenantId(tenantId);
         
@@ -271,7 +257,6 @@ public class CustomGroupApiImpl implements CustomGroupApi {
      * @since 9.6.0
      */
     @Override
-    @PostMapping("/saveCustomGroup")
     public CustomGroup saveCustomGroup(@RequestParam String tenantId, CustomGroup customGroup) {
         Y9LoginUserHolder.setTenantId(tenantId);
         
@@ -289,7 +274,6 @@ public class CustomGroupApiImpl implements CustomGroupApi {
      * @since 9.6.0
      */
     @Override
-    @PostMapping("/saveCustomGroupOrder")
     public boolean saveCustomGroupOrder(@RequestParam String tenantId, @RequestParam("sortIds") List<String> sortIdList) {
         Y9LoginUserHolder.setTenantId(tenantId);
         
@@ -305,7 +289,6 @@ public class CustomGroupApiImpl implements CustomGroupApi {
      * @since 9.6.0
      */
     @Override
-    @PostMapping("/saveMemberOrder")
     public boolean saveMemberOrder(@RequestParam String tenantId, @RequestParam("memberIds") List<String> memberIdList) {
         Y9LoginUserHolder.setTenantId(tenantId);
         
@@ -324,7 +307,6 @@ public class CustomGroupApiImpl implements CustomGroupApi {
      * @since 9.6.0
      */
     @Override
-    @PostMapping("/saveOrUpdateCustomGroup")
     public CustomGroup saveOrUpdateCustomGroup(@RequestParam String tenantId, @RequestParam String personId, @RequestParam("personIds") List<String> personIdList, @RequestParam String groupId, @RequestParam String groupName) {
         Y9LoginUserHolder.setTenantId(tenantId);
         
@@ -342,7 +324,6 @@ public class CustomGroupApiImpl implements CustomGroupApi {
      * @since 9.6.0
      */
     @Override
-    @PostMapping("/shareCustomGroup")
     public boolean shareCustomGroup(@RequestParam String tenantId, @RequestParam("personIds") List<String> personIdList, @RequestParam("groupIds") List<String> groupIdList) {
         Y9LoginUserHolder.setTenantId(tenantId);
         

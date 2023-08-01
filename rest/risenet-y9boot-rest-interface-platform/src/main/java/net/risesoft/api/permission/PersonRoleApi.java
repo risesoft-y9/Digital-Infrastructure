@@ -2,6 +2,9 @@ package net.risesoft.api.permission;
 
 import java.util.Map;
 
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+
 import net.risesoft.pojo.Y9Page;
 
 /**
@@ -16,25 +19,27 @@ import net.risesoft.pojo.Y9Page;
 public interface PersonRoleApi {
 
     /**
-     * 根据人员id获取该人员拥有的角色个数
+     * 根据人员id获取该人员拥有的角色数
      *
      * @param tenantId 租户id
      * @param personId 人员唯一标识
      * @return long 角色数
      * @since 9.6.0
      */
-    long countByPersonId(String tenantId, String personId);
+    @GetMapping("/countByPersonId")
+    long countByPersonId(@RequestParam("tenantId") String tenantId, @RequestParam("personId") String personId);
 
     /**
      * 判断人员是否拥有 customId 对应的角色
      *
      * @param tenantId 租户id
-     * @param personId 人员唯一标识
+     * @param personId 人员id
      * @param customId 自定义id
-     * @return Boolean 是否拥有权限
+     * @return {@link Boolean}
      * @since 9.6.0
      */
-    Boolean hasRole(String tenantId, String personId, String customId);
+    @GetMapping("/hasRole")
+    Boolean hasRole(@RequestParam("tenantId") String tenantId, @RequestParam("positionId") String personId, @RequestParam("customId") String customId);
 
     /**
      * 获取人员的权限分页列表
@@ -47,10 +52,12 @@ public interface PersonRoleApi {
      * @param roleName 角色名称
      * @param page 第几页
      * @param rows 多少条数据
-     * @return Y9Page&lt;Map&lt;String, Object&gt;&gt; 角色权限列表
+     * @return Y9Page<Map<String, Object>> 角色权限列表
      * @since 9.6.0
      */
-    Y9Page<Map<String, Object>> pagePersonPermission(String tenantId, String personId, String type, String systemCnName, String appName, String roleName, int page, int rows);
+    @GetMapping("/pagePersonPermission")
+    Y9Page<Map<String, Object>> pagePersonPermission(@RequestParam("tenantId") String tenantId, @RequestParam("personId") String personId, @RequestParam("type") String type, @RequestParam("systemCnName") String systemCnName, @RequestParam("appName") String appName,
+                                                     @RequestParam("roleName") String roleName, @RequestParam("page") int page, @RequestParam("rows") int rows);
 
     /**
      * 获取个人权限分页列表（拥有门户网站的权限查看角色才能查看到特殊角色）
@@ -63,8 +70,10 @@ public interface PersonRoleApi {
      * @param roleName 角色名称
      * @param page 第几页
      * @param rows 多少条数据
-     * @return Y9Page&lt;Map&lt;String, Object&gt;&gt; 角色权限列表
+     * @return Y9Page<Map<String, Object>> 角色权限列表
      * @since 9.6.0
      */
-    Y9Page<Map<String, Object>> pagePersonPermissionWithSpecial(String tenantId, String personId, String type, String systemCnName, String appName, String roleName, int page, int rows);
+    @GetMapping("/pagePersonPermissionWithSpecial")
+    Y9Page<Map<String, Object>> pagePersonPermissionWithSpecial(@RequestParam("tenantId") String tenantId, @RequestParam("personId") String personId, @RequestParam("type") String type, @RequestParam("systemCnName") String systemCnName, @RequestParam("appName") String appName,
+                                                                @RequestParam("roleName") String roleName, @RequestParam("page") int page, @RequestParam("rows") int rows);
 }

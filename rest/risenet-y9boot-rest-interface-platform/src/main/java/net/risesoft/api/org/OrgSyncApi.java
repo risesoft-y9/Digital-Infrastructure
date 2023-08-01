@@ -2,6 +2,10 @@ package net.risesoft.api.org;
 
 import java.util.List;
 
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+
 import net.risesoft.model.MessageOrg;
 import net.risesoft.pojo.Y9Result;
 
@@ -25,7 +29,8 @@ public interface OrgSyncApi {
      * @return Y9Result&lt;MessageOrg&gt; 整个组织机构对象集合
      * @since 9.6.0
      */
-    Y9Result<MessageOrg> fullSync(String appName, String tenantId, String organizationId);
+    @GetMapping("/fullSync")
+    Y9Result<MessageOrg> fullSync(@RequestParam String appName, @RequestParam("tenantId") String tenantId, @RequestParam("organizationId") String organizationId);
 
     /**
      * 增量获取组织操作列表
@@ -36,6 +41,7 @@ public interface OrgSyncApi {
      * @return Y9Result&lt;List&lt;MessageOrg&gt;&gt; 事件列表
      * @since 9.6.0
      */
-    Y9Result<List<MessageOrg>> incrSync(String appName, String tenantId);
+    @RequestMapping("/incrSync")
+    Y9Result<List<MessageOrg>> incrSync(@RequestParam("appName") String appName, @RequestParam("tenantId") String tenantId);
 
 }

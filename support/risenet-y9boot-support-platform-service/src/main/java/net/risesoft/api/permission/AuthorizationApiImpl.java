@@ -3,7 +3,6 @@ package net.risesoft.api.permission;
 import org.springframework.context.annotation.Primary;
 import org.springframework.http.MediaType;
 import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
@@ -49,7 +48,6 @@ public class AuthorizationApiImpl implements AuthorizationApi {
      * @since 9.6.0
      */
     @Override
-    @PostMapping("/save")
     public void save(@RequestParam String tenantId, @RequestParam String personId, @RequestParam String resourceId, @RequestParam String roleId, @RequestParam Integer authority) {
         Y9LoginUserHolder.setTenantId(tenantId);
         

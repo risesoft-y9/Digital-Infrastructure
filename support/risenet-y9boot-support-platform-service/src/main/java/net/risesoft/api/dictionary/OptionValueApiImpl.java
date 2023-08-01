@@ -5,7 +5,6 @@ import java.util.List;
 import org.springframework.context.annotation.Primary;
 import org.springframework.http.MediaType;
 import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
@@ -45,7 +44,6 @@ public class OptionValueApiImpl implements OptionValueApi {
      * @since 9.6.0
      */
     @Override
-    @GetMapping("/listByType")
     public List<OptionValue> listByType(@RequestParam String tenantId, @RequestParam String type) {
         Y9LoginUserHolder.setTenantId(tenantId);
         

@@ -1,5 +1,8 @@
 package net.risesoft.api.org;
 
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+
 import net.risesoft.model.Manager;
 
 /**
@@ -21,17 +24,18 @@ public interface ManagerApi {
      * @return Manager 人员对象
      * @since 9.6.0
      */
-    Manager getManager(String tenantId, String userId);
+    @GetMapping("/getManager")
+    Manager getManager(@RequestParam("tenantId") String tenantId, @RequestParam("userId") String userId);
 
     /**
      * 判断是否为该部门的三员
      *
      * @param tenantId 租户id
-     * @param managerId 三员唯一标识
-     * @param deptId 部门唯一标识
+     * @param managerId 人员唯一标识
+     * @param deptId 三员唯一标识
      * @return boolean 是否为该部门的三员
      * @since 9.6.0
      */
-    boolean isDeptManager(String tenantId, String managerId, String deptId);
-
+    @GetMapping("/isDeptManager")
+    boolean isDeptManager(@RequestParam("tenantId") String tenantId, @RequestParam("managerId") String managerId, @RequestParam("deptId") String deptId);
 }

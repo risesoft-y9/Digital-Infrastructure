@@ -2,6 +2,9 @@ package net.risesoft.api.org;
 
 import java.util.List;
 
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+
 import net.risesoft.model.Department;
 import net.risesoft.model.OrgUnit;
 import net.risesoft.model.Organization;
@@ -25,7 +28,8 @@ public interface OrgUnitApi {
      * @return OrgUnit 机构对象
      * @since 9.6.0
      */
-    OrgUnit getBureau(String tenantId, String orgUnitId);
+    @GetMapping("/getBureau")
+    OrgUnit getBureau(@RequestParam("tenantId") String tenantId, @RequestParam("orgUnitId") String orgUnitId);
 
     /**
      * 获得部门树
@@ -35,7 +39,8 @@ public interface OrgUnitApi {
      * @return List&lt;Department&gt; 部门对象集合
      * @since 9.6.0
      */
-    List<Department> getDeptTrees(String tenantId, String orgUnitId);
+    @GetMapping("/getDeptTrees")
+    List<Department> getDeptTrees(@RequestParam("tenantId") String tenantId, @RequestParam("orgUnitId") String orgUnitId);
 
     /**
      * 获取组织节点所在的组织机构
@@ -45,17 +50,19 @@ public interface OrgUnitApi {
      * @return Organization 机构对象
      * @since 9.6.0
      */
-    Organization getOrganization(String tenantId, String orgUnitId);
+    @GetMapping("/getOrganization")
+    Organization getOrganization(@RequestParam("tenantId") String tenantId, @RequestParam("orgUnitId") String orgUnitId);
 
     /**
      * 根据id获得机构对象
      *
      * @param tenantId 租户id
-     * @param orgUnitId 机构节点唯一标识
+     * @param orgUnitId 机构唯一标识
      * @return OrgUnit 机构对象
      * @since 9.6.0
      */
-    OrgUnit getOrgUnit(String tenantId, String orgUnitId);
+    @GetMapping("/get")
+    OrgUnit getOrgUnit(@RequestParam("tenantId") String tenantId, @RequestParam("orgUnitId") String orgUnitId);
 
     /**
      * 根据id，获取已删除的机构主体
@@ -65,7 +72,8 @@ public interface OrgUnitApi {
      * @return OrgUnit 机构对象
      * @since 9.6.2
      */
-    OrgUnit getOrgUnitDeletedById(String tenantId, String orgUnitId);
+    @GetMapping("/getOrgUnitDeletedById")
+    OrgUnit getOrgUnitDeletedById(@RequestParam("tenantId") String tenantId, @RequestParam("orgUnitId") String orgUnitId);
 
     /**
      * 根据id获得父对象
@@ -75,7 +83,8 @@ public interface OrgUnitApi {
      * @return OrgUnit 机构对象
      * @since 9.6.0
      */
-    OrgUnit getParent(String tenantId, String orgUnitId);
+    @GetMapping("/getParent")
+    OrgUnit getParent(@RequestParam("tenantId") String tenantId, @RequestParam("orgUnitId") String orgUnitId);
 
     /**
      * 获得子节点
@@ -87,10 +96,11 @@ public interface OrgUnitApi {
      * @return List&lt;OrgUnit&gt; 机构对象集合
      * @since 9.6.0
      */
-    List<OrgUnit> getSubTree(String tenantId, String orgUnitId, String treeType);
+    @GetMapping("/getSubTree")
+    List<OrgUnit> getSubTree(@RequestParam("tenantId") String tenantId, @RequestParam("orgUnitId") String orgUnitId, @RequestParam("treeType") String treeType);
 
     /**
-     * 根据节点名称，和树类型查询机构节点
+     * query the org node by name and treeType 根据节点名称，和树类型查询机构节点
      *
      * @param tenantId 租户id
      * @param name 组织架构节点名称
@@ -99,10 +109,11 @@ public interface OrgUnitApi {
      * @return List&lt;OrgUnit&gt; 机构对象集合
      * @since 9.6.0
      */
-    List<OrgUnit> treeSearch(String tenantId, String name, String treeType);
+    @GetMapping("/treeSearch")
+    List<OrgUnit> treeSearch(@RequestParam("tenantId") String tenantId, @RequestParam("name") String name, @RequestParam("treeType") String treeType);
 
     /**
-     * 根据name，和结构树类型查询机构主体
+     * query the org node by name and treeType 根据name，和结构树类型查询机构主体
      *
      * @param tenantId 租户id
      * @param name 组织架构节点名称
@@ -112,6 +123,7 @@ public interface OrgUnitApi {
      * @return List&lt;OrgUnit&gt; 机构对象集合
      * @since 9.6.0
      */
-    List<OrgUnit> treeSearchByDn(String tenantId, String name, String treeType, String dnName);
+    @GetMapping("/treeSearchByDn")
+    List<OrgUnit> treeSearchByDn(@RequestParam("tenantId") String tenantId, @RequestParam("name") String name, @RequestParam("treeType") String treeType, @RequestParam("dnName") String dnName);
 
 }

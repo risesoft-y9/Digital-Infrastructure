@@ -1,5 +1,8 @@
 package net.risesoft.api.log;
 
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+
 import net.risesoft.model.ClickedApp;
 
 /**
@@ -17,6 +20,7 @@ public interface ClickedAppApi {
      * @return boolean 是否保存成功
      * @since 9.6.0
      */
+    @PostMapping("/saveClickedAppLog")
     boolean saveClickedAppLog(ClickedApp clickedApp);
 
     /**
@@ -26,5 +30,6 @@ public interface ClickedAppApi {
      * @return boolean 是否保存成功
      * @since 9.6.0
      */
-    boolean saveClickedAppLogByJson(String clickedAppJson);
+    @PostMapping("/saveClickedAppLogByJson")
+    boolean saveClickedAppLogByJson(@RequestParam("clickedAppJson") String clickedAppJson);
 }

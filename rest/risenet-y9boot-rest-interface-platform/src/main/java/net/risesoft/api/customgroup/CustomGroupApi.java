@@ -2,6 +2,10 @@ package net.risesoft.api.customgroup;
 
 import java.util.List;
 
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+
 import net.risesoft.model.CustomGroup;
 import net.risesoft.model.CustomGroupMember;
 import net.risesoft.model.Person;
@@ -26,7 +30,8 @@ public interface CustomGroupApi {
      * @param orgUnitList 组织id列表
      * @since 9.6.0
      */
-    void addMember(String tenantId, String customGroupId, List<String> orgUnitList);
+    @GetMapping("/addMember")
+    void addMember(@RequestParam("tenantId") String tenantId, @RequestParam("customGroupId") String customGroupId, @RequestParam("orgUnitList") List<String> orgUnitList);
 
     /**
      * 删除用户组
@@ -36,7 +41,8 @@ public interface CustomGroupApi {
      * @return boolean 删除是否成功
      * @since 9.6.0
      */
-    boolean deleteAllGroup(String tenantId, List<String> groupIds);
+    @PostMapping("/deleteAllGroup")
+    boolean deleteAllGroup(@RequestParam("tenantId") String tenantId, @RequestParam("groupIds") List<String> groupIds);
 
     /**
      * 根据自定义id查找自定义用户组
@@ -46,7 +52,8 @@ public interface CustomGroupApi {
      * @return CustomGroup 自定义用户组对象
      * @since 9.6.0
      */
-    CustomGroup findCustomGroupByCustomId(String tenantId, String customId);
+    @GetMapping("/findCustomGroupByCustomId")
+    CustomGroup findCustomGroupByCustomId(@RequestParam("tenantId") String tenantId, @RequestParam("customId") String customId);
 
     /**
      * 根据id获取用户组
@@ -57,7 +64,8 @@ public interface CustomGroupApi {
      * @return CustomGroup 用户组对象
      * @since 9.6.0
      */
-    CustomGroup findCustomGroupById(String tenantId, String personId, String groupId);
+    @GetMapping("/findCustomGroupById")
+    CustomGroup findCustomGroupById(@RequestParam("tenantId") String tenantId, @RequestParam("personId") String personId, @RequestParam("groupId") String groupId);
 
     /**
      * 根据用户组id 解析该用户组下所有人员
@@ -67,17 +75,19 @@ public interface CustomGroupApi {
      * @return List&lt;Person&gt; 人员列表
      * @since 9.6.0
      */
-    List<Person> listAllPersonByGroupId(String tenantId, String groupId);
+    @GetMapping("/listAllPersonByGroupId")
+    List<Person> listAllPersonByGroupId(@RequestParam("tenantId") String tenantId, @RequestParam("groupId") String groupId);
 
     /**
      * 根据人员id获取用户组列表
      *
      * @param tenantId 租户id
      * @param personId 人员Id
-     * @return List&lt;CustomGroup&gt; 用户组对象列表
+     * @return List&lt;CustomGroup&gt;
      * @since 9.6.0
      */
-    List<CustomGroup> listCustomGroupByUserId(String tenantId, String personId);
+    @GetMapping("/listCustomGroupByUserId")
+    List<CustomGroup> listCustomGroupByUserId(@RequestParam("tenantId") String tenantId, @RequestParam("personId") String personId);
 
     /**
      * 根据用户组id获取用户组成员
@@ -88,7 +98,8 @@ public interface CustomGroupApi {
      * @return List&lt;CustomGroupMember&gt; 用户组成员列表
      * @since 9.6.0
      */
-    List<CustomGroupMember> listCustomGroupMemberByGroupId(String tenantId, String personId, String groupId);
+    @GetMapping("/listCustomGroupMemberByGroupId")
+    List<CustomGroupMember> listCustomGroupMemberByGroupId(@RequestParam("tenantId") String tenantId, @RequestParam("personId") String personId, @RequestParam("groupId") String groupId);
 
     /**
      * 根据用户组id和成员类型，获取用户组员列表
@@ -100,8 +111,8 @@ public interface CustomGroupApi {
      * @return List&lt;CustomGroupMember&gt; 用户组员列表
      * @since 9.6.0
      */
-    List<CustomGroupMember> listCustomGroupMemberByGroupIdAndMemberType(String tenantId, String personId,
-        String groupId, String memberType);
+    @GetMapping("/listCustomGroupMemberByGroupIdAndMemberType")
+    List<CustomGroupMember> listCustomGroupMemberByGroupIdAndMemberType(@RequestParam("tenantId") String tenantId, @RequestParam("personId") String personId, @RequestParam("groupId") String groupId, @RequestParam("memberType") String memberType);
 
     /**
      * 分页获取自定义用户组
@@ -110,10 +121,11 @@ public interface CustomGroupApi {
      * @param personId 人员id
      * @param page 第几页
      * @param rows 返回多少条数据
-     * @return Y9Page&lt;Map&lt;String, Object&gt;&gt;
+     * @return Y9Page&ltMap&lt;String, Object&gt&gt;
      * @since 9.6.0
      */
-    Y9Page<CustomGroup> pageCustomGroupByPersonId(String tenantId, String personId, int page, int rows);
+    @GetMapping("/pageCustomGroupByPersonId")
+    Y9Page<CustomGroup> pageCustomGroupByPersonId(@RequestParam("tenantId") String tenantId, @RequestParam("personId") String personId, @RequestParam("page") int page, @RequestParam("rows") int rows);
 
     /**
      * 获取人员分页列表
@@ -122,10 +134,11 @@ public interface CustomGroupApi {
      * @param groupId 用户组Id
      * @param page 第几页
      * @param rows 返回多少条数据
-     * @return Y9Page&lt;Map&lt;String, Object&gt;&gt; 人员分页列表
+     * @return Y9Page&ltMap&lt;String, Object&gt&gt; 人员分页列表
      * @since 9.6.0
      */
-    Y9Page<CustomGroupMember> pageCustomGroupMemberByGroupId(String tenantId, String groupId, int page, int rows);
+    @GetMapping("/pageCustomGroupMemberByGroupId")
+    Y9Page<CustomGroupMember> pageCustomGroupMemberByGroupId(@RequestParam("tenantId") String tenantId, @RequestParam("groupId") String groupId, @RequestParam("page") int page, @RequestParam("rows") int rows);
 
     /**
      * 根据用户组id和成员类型，获取人员分页列表
@@ -138,18 +151,19 @@ public interface CustomGroupApi {
      * @return Map&lt;String, Object&gt; 人员分页列表
      * @since 9.6.0
      */
-    Y9Page<CustomGroupMember> pageCustomGroupMemberByGroupIdAndMemberType(String tenantId, String groupId,
-        String memberType, int page, int rows);
+    @GetMapping("/pageCustomGroupMemberByGroupIdAndMemberType")
+    Y9Page<CustomGroupMember> pageCustomGroupMemberByGroupIdAndMemberType(@RequestParam("tenantId") String tenantId, @RequestParam("groupId") String groupId, @RequestParam("memberType") String memberType, @RequestParam("page") int page, @RequestParam("rows") int rows);
 
     /**
      * 删除组成员
      *
      * @param tenantId 租户id
-     * @param memberIdList id集合
+     * @param memberIds ids,多个“,”隔开
      * @return boolean 是否删除成功
      * @since 9.6.0
      */
-    boolean removeMembers(String tenantId, List<String> memberIdList);
+    @PostMapping("/removeMembers")
+    boolean removeMembers(@RequestParam("tenantId") String tenantId, @RequestParam("memberIds") List<String> memberIds);
 
     /**
      * 保存用户组
@@ -159,7 +173,8 @@ public interface CustomGroupApi {
      * @return CustomGroup 用户组对象
      * @since 9.6.0
      */
-    CustomGroup saveCustomGroup(String tenantId, CustomGroup customGroup);
+    @PostMapping("/saveCustomGroup")
+    CustomGroup saveCustomGroup(@RequestParam("tenantId") String tenantId, CustomGroup customGroup);
 
     /**
      * 保存用户组排序
@@ -169,7 +184,8 @@ public interface CustomGroupApi {
      * @return boolean 是否保存排序成功
      * @since 9.6.0
      */
-    boolean saveCustomGroupOrder(String tenantId, List<String> sortIds);
+    @PostMapping("/saveCustomGroupOrder")
+    boolean saveCustomGroupOrder(@RequestParam("tenantId") String tenantId, @RequestParam("sortIds") List<String> sortIds);
 
     /**
      * 保存成员排序
@@ -179,10 +195,11 @@ public interface CustomGroupApi {
      * @return boolean 是否保存排序成功
      * @since 9.6.0
      */
-    boolean saveMemberOrder(String tenantId, List<String> memberIds);
+    @PostMapping("/saveMemberOrder")
+    boolean saveMemberOrder(@RequestParam("tenantId") String tenantId, @RequestParam("memberIds") List<String> memberIds);
 
     /**
-     * 保存或者更新用户组
+     * 保存用户组
      *
      * @param tenantId 租户id
      * @param personId 人员Id
@@ -192,8 +209,8 @@ public interface CustomGroupApi {
      * @return CustomGroup 用户组对象
      * @since 9.6.0
      */
-    CustomGroup saveOrUpdateCustomGroup(String tenantId, String personId, List<String> personIds, String groupId,
-        String groupName);
+    @PostMapping("/saveOrUpdateCustomGroup")
+    CustomGroup saveOrUpdateCustomGroup(@RequestParam("tenantId") String tenantId, @RequestParam("personId") String personId, @RequestParam("personIds") List<String> personIds, @RequestParam("groupId") String groupId, @RequestParam("groupName") String groupName);
 
     /**
      * 共享用户组
@@ -204,5 +221,7 @@ public interface CustomGroupApi {
      * @return boolean 分享是否成功
      * @since 9.6.0
      */
-    boolean shareCustomGroup(String tenantId, List<String> personIds, List<String> groupIds);
+    @PostMapping("/shareCustomGroup")
+    boolean shareCustomGroup(@RequestParam("tenantId") String tenantId, @RequestParam("personIds") List<String> personIds, @RequestParam("groupIds") List<String> groupIds);
+
 }

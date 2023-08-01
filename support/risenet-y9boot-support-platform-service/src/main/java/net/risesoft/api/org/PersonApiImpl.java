@@ -8,16 +8,12 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import javax.validation.constraints.NotBlank;
-
 import org.apache.commons.codec.binary.Base64;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.context.annotation.Primary;
 import org.springframework.data.domain.Page;
 import org.springframework.http.MediaType;
 import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
@@ -94,7 +90,6 @@ public class PersonApiImpl implements PersonApi {
      * @since 9.6.0
      */
     @Override
-    @GetMapping("/changeDisabled")
     public boolean changeDisabled(@RequestParam String tenantId, @RequestParam String personId) {
         if (StringUtils.isBlank(tenantId) || StringUtils.isBlank(personId)) {
             return false;
@@ -115,7 +110,6 @@ public class PersonApiImpl implements PersonApi {
      * @since 9.6.0
      */
     @Override
-    @GetMapping("/checkLoginName")
     public boolean checkLoginName(@RequestParam String tenantId, @RequestParam String personId, @RequestParam String loginName) {
         Y9LoginUserHolder.setTenantId(tenantId);
 
@@ -131,7 +125,6 @@ public class PersonApiImpl implements PersonApi {
      * @since 9.6.0
      */
     @Override
-    @GetMapping("/checkMobile")
     public boolean checkMobile(@RequestParam String tenantId, @RequestParam String personId, @RequestParam String mobile) {
         Y9LoginUserHolder.setTenantId(tenantId);
 
@@ -148,7 +141,6 @@ public class PersonApiImpl implements PersonApi {
      * @since 9.6.0
      */
     @Override
-    @PostMapping("/createPerson")
     public Person createPerson(@RequestParam String tenantId, @RequestParam String pjson) {
         Y9LoginUserHolder.setTenantId(tenantId);
 
@@ -166,7 +158,6 @@ public class PersonApiImpl implements PersonApi {
      * @since 9.6.0
      */
     @Override
-    @PostMapping("/deleteById")
     public boolean deleteById(@RequestParam String tenantId, @RequestParam String personId) {
         Y9LoginUserHolder.setTenantId(tenantId);
 
@@ -183,7 +174,6 @@ public class PersonApiImpl implements PersonApi {
      * @since 9.6.0
      */
     @Override
-    @GetMapping("/getBureau")
     public OrgUnit getBureau(@RequestParam String tenantId, @RequestParam String personId) {
         Y9LoginUserHolder.setTenantId(tenantId);
 
@@ -201,7 +191,6 @@ public class PersonApiImpl implements PersonApi {
      * @since 9.6.0
      */
     @Override
-    @GetMapping("/getByLoginNameAndParentId")
     public Person getByLoginNameAndParentId(@RequestParam String tenantId, @RequestParam String loginName, @RequestParam String parentId) {
         Y9LoginUserHolder.setTenantId(tenantId);
 
@@ -218,7 +207,6 @@ public class PersonApiImpl implements PersonApi {
      * @since 9.6.0
      */
     @Override
-    @GetMapping("/getParent")
     public OrgUnit getParent(@RequestParam String tenantId, @RequestParam String personId) {
         Y9LoginUserHolder.setTenantId(tenantId);
 
@@ -235,7 +223,6 @@ public class PersonApiImpl implements PersonApi {
      * @since 9.6.0
      */
     @Override
-    @GetMapping("/getPerson")
     public Person getPerson(@RequestParam String tenantId, @RequestParam String personId) {
         if (StringUtils.isNotBlank(tenantId)) {
             Y9LoginUserHolder.setTenantId(tenantId);
@@ -254,7 +241,6 @@ public class PersonApiImpl implements PersonApi {
      * @since 9.6.0
      */
     @Override
-    @GetMapping("/getPersonByLoginNameAndTenantId")
     public Person getPersonByLoginNameAndTenantId(@RequestParam String loginName, @RequestParam String tenantId) {
         if (StringUtils.isNotBlank(tenantId)) {
             Y9LoginUserHolder.setTenantId(tenantId);
@@ -273,7 +259,6 @@ public class PersonApiImpl implements PersonApi {
      * @since 9.6.0
      */
     @Override
-    @GetMapping("/getPersonExtByPersonId")
     public PersonExt getPersonExtByPersonId(@RequestParam String tenantId, @RequestParam String personId) {
         Y9LoginUserHolder.setTenantId(tenantId);
 
@@ -290,7 +275,6 @@ public class PersonApiImpl implements PersonApi {
      * @since 9.6.0
      */
     @Override
-    @GetMapping("/getPersonPhoto")
     public String getPersonPhoto(@RequestParam String tenantId, @RequestParam String personId) {
         Y9LoginUserHolder.setTenantId(tenantId);
 
@@ -305,7 +289,6 @@ public class PersonApiImpl implements PersonApi {
      * @since 9.6.0
      */
     @Override
-    @GetMapping("/listAllPersons")
     public List<Person> listAllPersons(@RequestParam String tenantId) {
         Y9LoginUserHolder.setTenantId(tenantId);
 
@@ -324,7 +307,6 @@ public class PersonApiImpl implements PersonApi {
      * @since 9.6.0
      */
     @Override
-    @GetMapping("/listByIdTypeAndIdNum")
     public List<Person> listByIdTypeAndIdNum(@RequestParam String tenantId, @RequestParam String idType, @RequestParam String idNum) {
         Y9LoginUserHolder.setTenantId(tenantId);
 
@@ -341,7 +323,6 @@ public class PersonApiImpl implements PersonApi {
      * @since 9.6.2
      */
     @Override
-    @GetMapping("/listByNameLike")
     public List<Person> listByNameLike(String tenantId, String name) {
         Y9LoginUserHolder.setTenantId(tenantId);
 
@@ -358,7 +339,6 @@ public class PersonApiImpl implements PersonApi {
      * @since 9.6.0
      */
     @Override
-    @GetMapping("/listGroups")
     public List<Group> listGroups(@RequestParam String tenantId, @RequestParam String personId) {
         Y9LoginUserHolder.setTenantId(tenantId);
 
@@ -375,7 +355,6 @@ public class PersonApiImpl implements PersonApi {
      * @since 9.6.0
      */
     @Override
-    @GetMapping("/listParents")
     public List<OrgUnit> listParents(@RequestParam String tenantId, @RequestParam String personId) {
         Y9LoginUserHolder.setTenantId(tenantId);
 
@@ -392,7 +371,6 @@ public class PersonApiImpl implements PersonApi {
      * @since 9.6.2
      */
     @Override
-    @GetMapping("/listPersonInfoByNameLike")
     public List<Map<String, Object>> listPersonInfoByNameLike(@RequestParam String tenantId, String name) {
         Y9LoginUserHolder.setTenantId(tenantId);
 
@@ -439,7 +417,6 @@ public class PersonApiImpl implements PersonApi {
      * @since 9.6.0
      */
     @Override
-    @GetMapping("/listPositions")
     public List<Position> listPositions(@RequestParam String tenantId, @RequestParam String personId) {
         Y9LoginUserHolder.setTenantId(tenantId);
 
@@ -456,7 +433,6 @@ public class PersonApiImpl implements PersonApi {
      * @since 9.6.0
      */
     @Override
-    @GetMapping("/listRoles")
     public List<Role> listRoles(@RequestParam String tenantId, @RequestParam String personId) {
         Y9LoginUserHolder.setTenantId(tenantId);
         List<Role> roleList = new ArrayList<>();
@@ -478,7 +454,6 @@ public class PersonApiImpl implements PersonApi {
      * @since 9.6.0
      */
     @Override
-    @PostMapping("/modifyPassword")
     public Person modifyPassword(@RequestParam String tenantId, @RequestParam String personId, @RequestParam String newPassword) {
         Y9LoginUserHolder.setTenantId(tenantId);
 
@@ -496,7 +471,6 @@ public class PersonApiImpl implements PersonApi {
      * @return
      */
     @Override
-    @GetMapping("/pageByNameLike")
     public Y9Page<Person> pageByNameLike(@RequestParam String tenantId, String name, @RequestParam int page, @RequestParam int rows) {
         Y9LoginUserHolder.setTenantId(tenantId);
 
@@ -517,7 +491,6 @@ public class PersonApiImpl implements PersonApi {
      * @since 9.6.0
      */
     @Override
-    @GetMapping("/pageByParentId")
     public Y9Page<Person> pageByParentId(@RequestParam String tenantId, @RequestParam String parentId, @RequestParam boolean disabled, @RequestParam int page, @RequestParam int rows) {
         Y9LoginUserHolder.setTenantId(tenantId);
 
@@ -539,7 +512,6 @@ public class PersonApiImpl implements PersonApi {
      * @since 9.6.0
      */
     @Override
-    @GetMapping("/pageByParentIdAndUserName")
     public Y9Page<Person> pageByParentIdAndUserName(@RequestParam String tenantId, @RequestParam String parentId, @RequestParam boolean disabled, @RequestParam String userName, @RequestParam int page, @RequestParam int rows) {
         Y9LoginUserHolder.setTenantId(tenantId);
 
@@ -557,7 +529,6 @@ public class PersonApiImpl implements PersonApi {
      * @since 9.6.0
      */
     @Override
-    @PostMapping("/savePerson")
     public Person savePerson(@RequestParam String tenantId, @RequestParam String personJson) {
         Y9LoginUserHolder.setTenantId(tenantId);
 
@@ -577,7 +548,6 @@ public class PersonApiImpl implements PersonApi {
      * @since 9.6.0
      */
     @Override
-    @PostMapping("/savePersonAvator")
     public Person savePersonAvator(@RequestParam String tenantId, @RequestParam String personId, @RequestParam String avator) {
         Y9LoginUserHolder.setTenantId(tenantId);
 
@@ -599,7 +569,6 @@ public class PersonApiImpl implements PersonApi {
      * @since 9.6.0
      */
     @Override
-    @PostMapping("/savePersonAvatorByBase64")
     public Person savePersonAvatorByBase64(@RequestParam String tenantId, @RequestParam String personId, @RequestParam String picnote, @RequestParam String fileExt) {
         Y9LoginUserHolder.setTenantId(tenantId);
 
@@ -640,7 +609,6 @@ public class PersonApiImpl implements PersonApi {
      * @since 9.6.0
      */
     @Override
-    @PostMapping("/savePersonPhoto")
     public Boolean savePersonPhoto(@RequestParam String tenantId, @RequestParam String personId, @RequestParam String photo) {
         Y9LoginUserHolder.setTenantId(tenantId);
 
@@ -658,7 +626,6 @@ public class PersonApiImpl implements PersonApi {
      * @since 9.6.0
      */
     @Override
-    @PostMapping("/savePersonWithExt")
     public Person savePersonWithExt(String tenantId, String personJson, String personextJson) {
         Y9LoginUserHolder.setTenantId(tenantId);
 
@@ -678,7 +645,6 @@ public class PersonApiImpl implements PersonApi {
      * @since 9.6.0
      */
     @Override
-    @PostMapping("/saveWeixinId")
     public Person saveWeixinId(@RequestParam String tenantId, @RequestParam String personId, @RequestParam String weixinId) {
         Y9LoginUserHolder.setTenantId(tenantId);
 

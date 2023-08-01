@@ -8,8 +8,6 @@ import org.apache.commons.lang3.StringUtils;
 import org.springframework.context.annotation.Primary;
 import org.springframework.http.MediaType;
 import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
@@ -74,7 +72,6 @@ public class DepartmentApiImpl implements DepartmentApi {
      * @since 9.6.0
      */
     @Override
-    @PostMapping("/createDepartment")
     public Department createDepartment(@RequestParam String tenantId, @RequestParam String departmentJson) {
         Y9LoginUserHolder.setTenantId(tenantId);
 
@@ -92,7 +89,6 @@ public class DepartmentApiImpl implements DepartmentApi {
      * @since 9.6.0
      */
     @Override
-    @GetMapping("/deleteDepartment")
     public boolean deleteDepartment(@RequestParam String tenantId, @RequestParam String departmentId) {
         Y9LoginUserHolder.setTenantId(tenantId);
 
@@ -109,7 +105,6 @@ public class DepartmentApiImpl implements DepartmentApi {
      * @since 9.6.0
      */
     @Override
-    @GetMapping("/disableDepartment")
     public boolean disableDepartment(@RequestParam String tenantId, @RequestParam String departmentId) {
         if (StringUtils.isBlank(tenantId) || StringUtils.isBlank(departmentId)) {
             return false;
@@ -131,7 +126,6 @@ public class DepartmentApiImpl implements DepartmentApi {
      * @since 9.6.0
      */
     @Override
-    @GetMapping("/getBureau")
     public OrgUnit getBureau(@RequestParam String tenantId, @RequestParam String departmentId) {
         Y9LoginUserHolder.setTenantId(tenantId);
 
@@ -148,7 +142,6 @@ public class DepartmentApiImpl implements DepartmentApi {
      * @since 9.6.0
      */
     @Override
-    @GetMapping("/getDepartment")
     public Department getDepartment(@RequestParam String tenantId, @RequestParam String departmentId) {
         Y9LoginUserHolder.setTenantId(tenantId);
 
@@ -165,7 +158,6 @@ public class DepartmentApiImpl implements DepartmentApi {
      * @since 9.6.0
      */
     @Override
-    @GetMapping("/getParent")
     public OrgUnit getParent(@RequestParam String tenantId, @RequestParam String departmentId) {
         Y9LoginUserHolder.setTenantId(tenantId);
         
@@ -182,7 +174,6 @@ public class DepartmentApiImpl implements DepartmentApi {
      * @since 9.6.0
      */
     @Override
-    @GetMapping("/listAllPersons")
     public List<Person> listAllPersons(@RequestParam String tenantId, @RequestParam String departmentId) {
         Y9LoginUserHolder.setTenantId(tenantId);
 
@@ -200,7 +191,6 @@ public class DepartmentApiImpl implements DepartmentApi {
      * @since 9.6.0
      */
     @Override
-    @GetMapping("/listAllPersonsByDisabled")
     public List<Person> listAllPersonsByDisabled(@RequestParam String tenantId, @RequestParam String departmentId, @RequestParam Boolean disabled) {
         Y9LoginUserHolder.setTenantId(tenantId);
 
@@ -219,7 +209,6 @@ public class DepartmentApiImpl implements DepartmentApi {
      * @since 9.6.0
      */
     @Override
-    @GetMapping("/listAllPersonsByDisabledAndName")
     public List<Person> listAllPersonsByDisabledAndName(@RequestParam String tenantId,
         @RequestParam String departmentId, @RequestParam Boolean disabled, @RequestParam String name) {
         Y9LoginUserHolder.setTenantId(tenantId);
@@ -237,7 +226,6 @@ public class DepartmentApiImpl implements DepartmentApi {
      * @since 9.6.0
      */
     @Override
-    @GetMapping("/listByDn")
     public List<Department> listByDn(@RequestParam String tenantId, @RequestParam String dn) {
         Y9LoginUserHolder.setTenantId(tenantId);
 
@@ -255,7 +243,6 @@ public class DepartmentApiImpl implements DepartmentApi {
      * @since 9.6.0
      */
     @Override
-    @GetMapping("/listByOrgBaseIdAndCategory")
     public List<DepartmentProp> listByOrgBaseIdAndCategory(@RequestParam String tenantId, @RequestParam String orgBaseId, @RequestParam Integer category) {
         if (StringUtils.isBlank(tenantId) || StringUtils.isBlank(orgBaseId)) {
             return new ArrayList<>();
@@ -275,7 +262,6 @@ public class DepartmentApiImpl implements DepartmentApi {
      * @since 9.6.0
      */
     @Override
-    @GetMapping("/listByTenantIdAndDeptName")
     public List<Department> listByTenantIdAndDeptName(@RequestParam String tenantId, @RequestParam String deptName) {
         Y9LoginUserHolder.setTenantId(tenantId);
 
@@ -292,7 +278,6 @@ public class DepartmentApiImpl implements DepartmentApi {
      * @since 9.6.0
      */
     @Override
-    @GetMapping("/listDepartments")
     public List<Department> listDepartments(@RequestParam String tenantId, @RequestParam List<String> ids) {
         Y9LoginUserHolder.setTenantId(tenantId);
 
@@ -309,7 +294,6 @@ public class DepartmentApiImpl implements DepartmentApi {
      * @since 9.6.0
      */
     @Override
-    @GetMapping("/listGroups")
     public List<Group> listGroups(@RequestParam String tenantId, @RequestParam String departmentId) {
         Y9LoginUserHolder.setTenantId(tenantId);
 
@@ -326,7 +310,6 @@ public class DepartmentApiImpl implements DepartmentApi {
      * @since 9.6.0
      */
     @Override
-    @GetMapping("/listLeaders")
     public List<OrgUnit> listLeaders(@RequestParam String tenantId, @RequestParam String departmentId) {
         Y9LoginUserHolder.setTenantId(tenantId);
 
@@ -343,7 +326,6 @@ public class DepartmentApiImpl implements DepartmentApi {
      * @since 9.6.0
      */
     @Override
-    @GetMapping("/listManagers")
     public List<OrgUnit> listManagers(@RequestParam String tenantId, @RequestParam String departmentId) {
         Y9LoginUserHolder.setTenantId(tenantId);
 
@@ -360,7 +342,6 @@ public class DepartmentApiImpl implements DepartmentApi {
      * @since 9.6.0
      */
     @Override
-    @GetMapping("/listPersons")
     public List<Person> listPersons(@RequestParam String tenantId, @RequestParam String departmentId) {
         Y9LoginUserHolder.setTenantId(tenantId);
 
@@ -378,7 +359,6 @@ public class DepartmentApiImpl implements DepartmentApi {
      * @since 9.6.0
      */
     @Override
-    @GetMapping("/listPersonsByDisabled")
     public List<Person> listPersonsByDisabled(@RequestParam String tenantId, @RequestParam String departmentId, @RequestParam Boolean disabled) {
         Y9LoginUserHolder.setTenantId(tenantId);
 
@@ -395,7 +375,6 @@ public class DepartmentApiImpl implements DepartmentApi {
      * @since 9.6.0
      */
     @Override
-    @GetMapping("/listPositions")
     public List<Position> listPositions(@RequestParam String tenantId, @RequestParam String departmentId) {
         Y9LoginUserHolder.setTenantId(tenantId);
 
@@ -412,7 +391,6 @@ public class DepartmentApiImpl implements DepartmentApi {
      * @since 9.6.0
      */
     @Override
-    @GetMapping("/listSubDepartments")
     public List<Department> listSubDepartments(@RequestParam String tenantId, @RequestParam String departmentId) {
         Y9LoginUserHolder.setTenantId(tenantId);
 
@@ -429,7 +407,6 @@ public class DepartmentApiImpl implements DepartmentApi {
      * @since 9.6.0
      */
     @Override
-    @PostMapping("/saveDepartment")
     public Department saveDepartment(@RequestParam String tenantId, @RequestParam String departmentJson) {
         Y9LoginUserHolder.setTenantId(tenantId);
 
@@ -447,7 +424,6 @@ public class DepartmentApiImpl implements DepartmentApi {
      * @since 9.6.0
      */
     @Override
-    @GetMapping("/search")
     public List<Department> search(@RequestParam String tenantId, @RequestParam String whereClause) {
         Y9LoginUserHolder.setTenantId(tenantId);
 

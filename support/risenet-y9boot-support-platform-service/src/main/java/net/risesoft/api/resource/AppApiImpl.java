@@ -4,8 +4,6 @@ import java.util.List;
 
 import org.springframework.http.MediaType;
 import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
@@ -47,7 +45,6 @@ public class AppApiImpl implements AppApi {
      * @param appId 应用id
      * @return
      */
-    @GetMapping("/findByIdInCache")
     @Override
     public App findByIdInCache(String appId) {
         Y9App y9App = y9AppService.findById(appId);
@@ -62,7 +59,6 @@ public class AppApiImpl implements AppApi {
      * @return App 应用
      * @since 9.6.0
      */
-    @GetMapping("/findBySystemIdAndCustomId")
     @Override
     public App findBySystemIdAndCustomId(@RequestParam String systemId, @RequestParam String customId) {
         Y9App y9App = y9AppService.findBySystemIdAndCustomId(systemId, customId);
@@ -77,7 +73,6 @@ public class AppApiImpl implements AppApi {
      * @return App 应用
      * @since 9.6.0
      */
-    @GetMapping("/findBySystemNameAndCustomId")
     @Override
     public App findBySystemNameAndCustomId(@RequestParam String systemName, @RequestParam String customId) {
         Y9App y9App = y9AppService.findBySystemNameAndCustomId(systemName, customId);
@@ -94,7 +89,6 @@ public class AppApiImpl implements AppApi {
      * @since 9.6.0
      */
     @Override
-    @GetMapping("/listAccessAppForPerson")
     public List<App> listAccessAppForPerson(@RequestParam String tenantId, @RequestParam String personId, @RequestParam Integer authority) {
         Y9LoginUserHolder.setTenantId(tenantId);
         
@@ -112,7 +106,6 @@ public class AppApiImpl implements AppApi {
      * @since 9.6.0
      */
     @Override
-    @GetMapping("/listAccessAppForPosition")
     public List<App> listAccessAppForPosition(@RequestParam String tenantId, @RequestParam String positionId, @RequestParam Integer authority) {
         Y9LoginUserHolder.setTenantId(tenantId);
         
@@ -128,7 +121,6 @@ public class AppApiImpl implements AppApi {
      * @since 9.6.0
      */
     @Override
-    @GetMapping("/listByCustomId")
     public List<App> listByCustomId(@RequestParam String customId) {
         List<Y9App> y9AppList = y9AppService.listByCustomId(customId);
         return Y9ModelConvertUtil.convert(y9AppList, App.class);
@@ -142,7 +134,6 @@ public class AppApiImpl implements AppApi {
      * @since 9.6.0
      */
     @Override
-    @GetMapping("/listBySystemId")
     public List<App> listBySystemId(@RequestParam String systemId) {
         List<Y9App> y9AppList = y9AppService.listBySystemId(systemId);
         return Y9ModelConvertUtil.convert(y9AppList, App.class);
@@ -156,7 +147,6 @@ public class AppApiImpl implements AppApi {
      * @since 9.6.0
      */
     @Override
-    @GetMapping("/listBySystemName")
     public List<App> listBySystemName(@RequestParam String systemName) {
         List<Y9App> y9AppList = y9AppService.listBySystemName(systemName);
         return Y9ModelConvertUtil.convert(y9AppList, App.class);
@@ -171,7 +161,6 @@ public class AppApiImpl implements AppApi {
      * @since 9.6.0
      */
     @Override
-    @PostMapping("/saveIsvApp")
     public App saveIsvApp(App app, @RequestParam String systemId) {
         Y9App y9App = new Y9App();
         Y9BeanUtil.copyProperties(app, y9App);

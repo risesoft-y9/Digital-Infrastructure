@@ -5,7 +5,6 @@ import java.util.List;
 import org.springframework.context.annotation.Primary;
 import org.springframework.http.MediaType;
 import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
@@ -42,7 +41,6 @@ public class TenantApiImpl implements TenantApi {
      * @return Tenant 租户对象
      * @since 9.6.0
      */
-    @GetMapping("/getById")
     @Override
     public Tenant getById(@RequestParam String tenantId) {
         Y9Tenant y9Tenant = y9TenantService.getById(tenantId);
@@ -55,7 +53,6 @@ public class TenantApiImpl implements TenantApi {
      * @return List&lt;Tenant&gt; 所有租户对象的集合
      * @since 9.6.0
      */
-    @GetMapping("/listAllTenants")
     @Override
     public List<Tenant> listAllTenants() {
         List<Y9Tenant> tenantEntityList = y9TenantService.listAll();
@@ -69,7 +66,6 @@ public class TenantApiImpl implements TenantApi {
      * @return List&lt;Tenant&gt; 租户对象集合
      * @since 9.6.0
      */
-    @GetMapping("/listByName")
     @Override
     public List<Tenant> listByName(@RequestParam String tenantName) {
         List<Y9Tenant> y9TenantList = y9TenantService.listByTenantName(tenantName);
@@ -83,7 +79,6 @@ public class TenantApiImpl implements TenantApi {
      * @return List&lt;Tenant&gt; 租户对象集合
      * @since 9.6.0
      */
-    @GetMapping("/listByShortName")
     @Override
     public List<Tenant> listByShortName(@RequestParam String shortName) {
         List<Y9Tenant> y9TenantList = y9TenantService.listByShortName(shortName);
@@ -97,7 +92,6 @@ public class TenantApiImpl implements TenantApi {
      * @return List&lt;Tenant&gt; 所有租户对象的集合
      * @since 9.6.0
      */
-    @GetMapping("/listByTenantType")
     @Override
     public List<Tenant> listByTenantType(Integer tenantType) {
         List<Y9Tenant> y9TenantList = y9TenantService.listByTenantType(tenantType);

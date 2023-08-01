@@ -1,5 +1,8 @@
 package net.risesoft.api.org;
 
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+
 import net.risesoft.model.Message;
 
 /**
@@ -14,7 +17,7 @@ import net.risesoft.model.Message;
 public interface AuthenticateApi {
 
     /**
-     * 根据用户名和密码认证
+     * 用户登录名密码认证
      *
      * @param tenantShortName 租户英文名称
      * @param loginName 登录名称
@@ -22,10 +25,11 @@ public interface AuthenticateApi {
      * @return Message
      * @since 9.6.0
      */
-    Message authenticate3(String tenantShortName, String loginName, String password);
+    @RequestMapping("/authenticate3")
+    Message authenticate3(@RequestParam("tenantShortName") String tenantShortName, @RequestParam("loginName") String loginName, @RequestParam("password") String password);
 
     /**
-     * 根据手机号和密码认证
+     * 用户手机号码密码认证
      *
      * @param tenantShortName 租户英文名称
      * @param mobile 手机号
@@ -33,5 +37,7 @@ public interface AuthenticateApi {
      * @return Message
      * @since 9.6.0
      */
-    Message authenticate5(String tenantShortName, String mobile, String password);
+    @RequestMapping("/authenticate5")
+    Message authenticate5(@RequestParam("tenantShortName") String tenantShortName, @RequestParam("mobile") String mobile, @RequestParam("password") String password);
+
 }
