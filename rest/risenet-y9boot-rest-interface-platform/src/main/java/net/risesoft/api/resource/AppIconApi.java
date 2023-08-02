@@ -2,10 +2,13 @@ package net.risesoft.api.resource;
 
 import java.util.List;
 
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import net.risesoft.model.AppIcon;
+
+import javax.validation.constraints.NotBlank;
 
 /**
  * 应用图标管理组件
@@ -16,6 +19,7 @@ import net.risesoft.model.AppIcon;
  * @date 2022/2/10
  * @since 9.6.0
  */
+@Validated
 public interface AppIconApi {
 
     /**
@@ -35,5 +39,5 @@ public interface AppIconApi {
      * @since 9.6.0
      */
     @GetMapping("/searchAppIcon")
-    List<AppIcon> searchAppIcon(@RequestParam("name") String name);
+    List<AppIcon> searchAppIcon(@RequestParam("name") @NotBlank String name);
 }

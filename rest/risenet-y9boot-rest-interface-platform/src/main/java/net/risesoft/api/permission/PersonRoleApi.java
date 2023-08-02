@@ -2,10 +2,13 @@ package net.risesoft.api.permission;
 
 import java.util.Map;
 
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import net.risesoft.pojo.Y9Page;
+
+import javax.validation.constraints.NotBlank;
 
 /**
  * 人员角色接口
@@ -16,6 +19,7 @@ import net.risesoft.pojo.Y9Page;
  * @date 2022/2/10
  * @since 9.6.0
  */
+@Validated
 public interface PersonRoleApi {
 
     /**
@@ -27,7 +31,7 @@ public interface PersonRoleApi {
      * @since 9.6.0
      */
     @GetMapping("/countByPersonId")
-    long countByPersonId(@RequestParam("tenantId") String tenantId, @RequestParam("personId") String personId);
+    long countByPersonId(@RequestParam("tenantId") @NotBlank String tenantId, @RequestParam("personId") @NotBlank String personId);
 
     /**
      * 判断人员是否拥有 customId 对应的角色
@@ -39,7 +43,7 @@ public interface PersonRoleApi {
      * @since 9.6.0
      */
     @GetMapping("/hasRole")
-    Boolean hasRole(@RequestParam("tenantId") String tenantId, @RequestParam("positionId") String personId, @RequestParam("customId") String customId);
+    Boolean hasRole(@RequestParam("tenantId") @NotBlank String tenantId, @RequestParam("positionId") @NotBlank String personId, @RequestParam("customId") @NotBlank String customId);
 
     /**
      * 获取人员的权限分页列表

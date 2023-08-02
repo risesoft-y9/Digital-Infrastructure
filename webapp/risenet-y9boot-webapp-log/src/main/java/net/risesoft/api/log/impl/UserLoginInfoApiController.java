@@ -12,6 +12,7 @@ import java.util.concurrent.TimeUnit;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import lombok.RequiredArgsConstructor;
@@ -29,6 +30,8 @@ import net.risesoft.pojo.Y9Page;
 import net.risesoft.util.AccessLogModelConvertUtil;
 
 import cn.hutool.core.thread.ThreadFactoryBuilder;
+
+import javax.validation.constraints.NotBlank;
 
 /**
  * 个人登录日志组件
@@ -58,7 +61,7 @@ public class UserLoginInfoApiController implements UserLoginInfoApi {
      */
     @Override
     @GetMapping("/listDistinctUserHostIpByUserIdAndLoginTime")
-    public List<Object[]> listDistinctUserHostIpByUserIdAndLoginTime(String personId, Date startTime, Date endTime) {
+    public List<Object[]> listDistinctUserHostIpByUserIdAndLoginTime(@RequestParam("personId") @NotBlank String personId, @RequestParam("startTime") Date startTime, @RequestParam("endTime") Date endTime) {
         return userLoginInfoService.listDistinctUserHostIpByUserIdAndLoginTime(personId, startTime, endTime);
     }
 
@@ -78,7 +81,8 @@ public class UserLoginInfoApiController implements UserLoginInfoApi {
      */
     @Override
     @GetMapping("/pageByUserIdAndLoginTime")
-    public Y9Page<LoginInfo> pageByUserIdAndLoginTime(String userHostIp, String personId, String tenantId, String success, String startTime, String endTime, int page, int rows) {
+    public Y9Page<LoginInfo> pageByUserIdAndLoginTime(@RequestParam(value = "userHostIp", required = false) String userHostIp, @RequestParam("personId") String personId, @RequestParam("tenantId") String tenantId, @RequestParam(value = "success", required = false) String success,
+                                                      @RequestParam(value = "startTime", required = false) String startTime, @RequestParam(value = "endTime", required = false) String endTime, @RequestParam("page") int page, @RequestParam("rows") int rows) {
         Y9Page<Y9logUserLoginInfo> loginList = userLoginInfoService.pageByUserHostIpAndUserIdAndTenantIdAndLoginTime(userHostIp, personId, tenantId, success, startTime, endTime, page, rows);
         List<Y9logUserLoginInfo> list = loginList.getRows();
         List<LoginInfo> infoList = AccessLogModelConvertUtil.userLoginInfoESListToModels(list);
@@ -101,7 +105,8 @@ public class UserLoginInfoApiController implements UserLoginInfoApi {
      */
     @Override
     @GetMapping("/pageSearch")
-    public Y9Page<LoginInfo> pageSearch(String userHostIp, String personId, String tenantId, String success, String startTime, String endTime, int page, int rows) {
+    public Y9Page<LoginInfo> pageSearch(@RequestParam(value = "userHostIp", required = false) String userHostIp, @RequestParam("personId") String personId, @RequestParam("tenantId") String tenantId, @RequestParam(value = "success", required = false) String success,
+                                        @RequestParam(value = "startTime", required = false) String startTime, @RequestParam(value = "endTime", required = false) String endTime, @RequestParam("page") int page, @RequestParam("rows") int rows) {
         Y9Page<Y9logUserLoginInfo> loginList = userLoginInfoService.page(userHostIp, userHostIp, success, startTime, endTime, page, rows);
         List<Y9logUserLoginInfo> list = loginList.getRows();
         List<LoginInfo> infoList = AccessLogModelConvertUtil.userLoginInfoESListToModels(list);

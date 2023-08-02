@@ -24,6 +24,8 @@ import net.risesoft.y9public.service.resource.CompositeResourceService;
 import net.risesoft.y9public.service.resource.Y9MenuService;
 import net.risesoft.y9public.service.resource.Y9SystemService;
 
+import javax.validation.constraints.NotBlank;
+
 /**
  * 资源管理组件
  *
@@ -56,16 +58,16 @@ public class ResourceApiImpl implements ResourceApi {
      * @since 9.6.0
      */
     @Override
-    public Resource createMenuResource(@RequestParam String resourceId, @RequestParam String resourceName, @RequestParam String parentResourceId, @RequestParam String customId) {
-        Y9ResourceBase parentResoucre = compositeResourceService.findById(parentResourceId);
+    public Resource createMenuResource(@RequestParam("resourceId") @NotBlank String resourceId, @RequestParam("resourceName") @NotBlank String resourceName, @RequestParam("parentResourceId") @NotBlank String parentResourceId, @RequestParam("customId") @NotBlank String customId) {
+        Y9ResourceBase parentResource = compositeResourceService.findById(parentResourceId);
         Y9Menu y9Menu = y9MenuService.findById(resourceId);
         if (y9Menu == null) {
             y9Menu = new Y9Menu();
             y9Menu.setId(resourceId);
         }
-        if (parentResoucre != null) {
-            y9Menu.setAppId(parentResoucre.getAppId());
-            y9Menu.setSystemId(parentResoucre.getSystemId());
+        if (parentResource != null) {
+            y9Menu.setAppId(parentResource.getAppId());
+            y9Menu.setSystemId(parentResource.getSystemId());
         }
         y9Menu.setName(resourceName);
         y9Menu.setResourceType(ResourceTypeEnum.MENU.getValue());
@@ -84,7 +86,7 @@ public class ResourceApiImpl implements ResourceApi {
      * @since 9.6.0
      */
     @Override
-    public Resource findByCustomId(@RequestParam String customId) {
+    public Resource findByCustomId(@RequestParam("customId") @NotBlank String customId) {
         return null;
     }
 
@@ -97,7 +99,7 @@ public class ResourceApiImpl implements ResourceApi {
      * @since 9.6.0
      */
     @Override
-    public Resource findByCustomIdAndParentId(@RequestParam String customId, @RequestParam String parentId, @RequestParam Integer resourceType) {
+    public Resource findByCustomIdAndParentId(@RequestParam("customId") @NotBlank String customId, @RequestParam("parentId") @NotBlank String parentId, @RequestParam("resourceType") @NotBlank Integer resourceType) {
         return ModelConvertUtil.resourceBaseToResource(compositeResourceService.findByCustomIdAndParentId(customId, parentId, resourceType));
     }
 
@@ -109,7 +111,7 @@ public class ResourceApiImpl implements ResourceApi {
      * @since 9.6.0
      */
     @Override
-    public Resource getParentResource(@RequestParam String resourceId) {
+    public Resource getParentResource(@RequestParam("resourceId") @NotBlank String resourceId) {
         Y9ResourceBase acResource = compositeResourceService.findById(resourceId);
         if (acResource == null) {
             return null;
@@ -126,7 +128,7 @@ public class ResourceApiImpl implements ResourceApi {
      * @since 9.6.0
      */
     @Override
-    public Resource getResource(@RequestParam String resourceId) {
+    public Resource getResource(@RequestParam("resourceId") @NotBlank String resourceId) {
         Y9ResourceBase acResource = compositeResourceService.findById(resourceId);
         return ModelConvertUtil.resourceBaseToResource(acResource);
     }
@@ -139,7 +141,7 @@ public class ResourceApiImpl implements ResourceApi {
      * @since 9.6.0
      */
     @Override
-    public Resource getRootResourceBySystemName(@RequestParam String systemName) {
+    public Resource getRootResourceBySystemName(@RequestParam("systemName") @NotBlank String systemName) {
         Y9System system = y9SystemService.findByName(systemName);
         if (system != null) {
             Y9App app = y9AppRepository.findBySystemIdAndCustomId(system.getId(), systemName);
@@ -158,7 +160,7 @@ public class ResourceApiImpl implements ResourceApi {
      * @since 9.6.0
      */
     @Override
-    public List<Resource> listSubMenus(@RequestParam String resourceId) {
+    public List<Resource> listSubMenus(@RequestParam("resourceId") @NotBlank String resourceId) {
         List<Y9Menu> y9MenuList = y9MenuService.findByParentId(resourceId);
         return Y9ModelConvertUtil.convert(y9MenuList, Resource.class);
     }
@@ -171,7 +173,7 @@ public class ResourceApiImpl implements ResourceApi {
      * @since 9.6.0
      */
     @Override
-    public List<Resource> listSubResources(@RequestParam String resourceId) {
+    public List<Resource> listSubResources(@RequestParam("resourceId") @NotBlank String resourceId) {
         List<Y9ResourceBase> y9ResourceBaseList = compositeResourceService.listRootResourceBySystemId(resourceId);
         return Y9ModelConvertUtil.convert(y9ResourceBaseList, Resource.class);
     }

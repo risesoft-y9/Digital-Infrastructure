@@ -15,6 +15,8 @@ import net.risesoft.y9.util.Y9ModelConvertUtil;
 import net.risesoft.y9public.entity.resource.Y9AppIcon;
 import net.risesoft.y9public.service.resource.Y9AppIconService;
 
+import javax.validation.constraints.NotBlank;
+
 /**
  * 应用图标管理组件
  *
@@ -52,7 +54,7 @@ public class AppIconApiImpl implements AppIconApi {
      * @since 9.6.0
      */
     @Override
-    public List<AppIcon> searchAppIcon(@RequestParam String name) {
+    public List<AppIcon> searchAppIcon(@RequestParam("name") @NotBlank String name) {
         List<Y9AppIcon> appIconList = appIconService.listByName(name);
         return Y9ModelConvertUtil.convert(appIconList, AppIcon.class);
     }

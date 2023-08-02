@@ -2,6 +2,10 @@ package net.risesoft.api.permission;
 
 import java.util.List;
 
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotEmpty;
+
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -19,6 +23,7 @@ import net.risesoft.pojo.Y9Result;
  * @date 2022/2/10
  * @since 9.6.0
  */
+@Validated
 public interface PersonIconApi {
 
     /**
@@ -30,7 +35,7 @@ public interface PersonIconApi {
      * @since 9.6.2
      */
     @PostMapping("/buildPersonalAppIconForPerson")
-    Y9Result<Boolean> buildPersonalAppIconForPerson(@RequestParam("tenantId") String tenantId, @RequestParam("personId") String personId);
+    Y9Result<Boolean> buildPersonalAppIconForPerson(@RequestParam("tenantId") @NotBlank String tenantId, @RequestParam("personId") @NotBlank String personId);
 
     /**
      * 刷新岗位图标信息
@@ -41,7 +46,7 @@ public interface PersonIconApi {
      * @since 9.6.2
      */
     @PostMapping("/buildPersonalAppIconForPosition")
-    Y9Result<Boolean> buildPersonalAppIconForPosition(@RequestParam("tenantId") String tenantId, @RequestParam("positionId") String positionId);
+    Y9Result<Boolean> buildPersonalAppIconForPosition(@RequestParam("tenantId") @NotBlank String tenantId, @RequestParam("positionId") @NotBlank String positionId);
 
     /**
      * 根据人员ID和租户ID，返回个人图标列表
@@ -52,7 +57,7 @@ public interface PersonIconApi {
      * @since 9.6.2
      */
     @GetMapping("/listByOrgUnitId")
-    List<PersonIconItem> listByOrgUnitId(@RequestParam("tenantId") String tenantId, @RequestParam("orgUnitId") String orgUnitId);
+    List<PersonIconItem> listByOrgUnitId(@RequestParam("tenantId") @NotBlank String tenantId, @RequestParam("orgUnitId") @NotBlank String orgUnitId);
 
     /**
      * 根据人员/岗位id和图标类别，获取图标信息列表
@@ -64,7 +69,7 @@ public interface PersonIconApi {
      * @since 9.6.2
      */
     @GetMapping("/listByOrgUnitIdAndIconType")
-    List<PersonIconItem> listByOrgUnitIdAndIconType(@RequestParam("tenantId") String tenantId, @RequestParam("orgUnitId") String orgUnitId, @RequestParam("iconType") Integer iconType);
+    List<PersonIconItem> listByOrgUnitIdAndIconType(@RequestParam("tenantId") @NotBlank String tenantId, @RequestParam("orgUnitId") @NotBlank String orgUnitId, @RequestParam("iconType") Integer iconType);
 
     /**
      * 获取人员/岗位图标分页列表
@@ -77,7 +82,7 @@ public interface PersonIconApi {
      * @since 9.6.2
      */
     @GetMapping("/pageByOrgUnitId")
-    Y9Page<PersonIconItem> pageByOrgUnitId(@RequestParam("tenantId") String tenantId, @RequestParam("orgUnitId") String orgUnitId, @RequestParam("page") int page, @RequestParam("rows") int rows);
+    Y9Page<PersonIconItem> pageByOrgUnitId(@RequestParam("tenantId") @NotBlank String tenantId, @RequestParam("orgUnitId") @NotBlank String orgUnitId, @RequestParam("page") int page, @RequestParam("rows") int rows);
 
     /**
      * 设置常用应用
@@ -89,7 +94,7 @@ public interface PersonIconApi {
      * @since 9.6.2
      */
     @PostMapping("/setCommApps")
-    Y9Result<Boolean> setCommApps(@RequestParam("tenantId") String tenantId, @RequestParam("orgUnitId") String orgUnitId, @RequestParam("appIds") String[] appIds);
+    Y9Result<Boolean> setCommApps(@RequestParam("tenantId") @NotBlank String tenantId, @RequestParam("orgUnitId") @NotBlank String orgUnitId, @RequestParam("appIds") @NotEmpty String[] appIds);
 
 
 }

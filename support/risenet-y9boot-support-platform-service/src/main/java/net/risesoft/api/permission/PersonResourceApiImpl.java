@@ -23,6 +23,8 @@ import net.risesoft.y9.util.Y9ModelConvertUtil;
 import net.risesoft.y9public.entity.resource.Y9Menu;
 import net.risesoft.y9public.entity.resource.Y9ResourceBase;
 
+import javax.validation.constraints.NotBlank;
+
 /**
  * 人员资源权限查看组件
  *
@@ -53,7 +55,7 @@ public class PersonResourceApiImpl implements PersonResourceApi {
      * @since 9.6.0
      */
     @Override
-    public boolean hasPermission(@RequestParam String tenantId, @RequestParam String personId, @RequestParam String resourceId, @RequestParam Integer authority) {
+    public boolean hasPermission(@RequestParam("tenantId") @NotBlank String tenantId, @RequestParam("personId") @NotBlank String personId, @RequestParam("resourceId") @NotBlank String resourceId, @RequestParam("authority") Integer authority) {
         Y9LoginUserHolder.setTenantId(tenantId);
         
         return y9PersonToResourceAndAuthorityService.hasPermission(personId, resourceId, authority);
@@ -70,7 +72,7 @@ public class PersonResourceApiImpl implements PersonResourceApi {
      * @since 9.6.0
      */
     @Override
-    public boolean hasPermissionByCustomId(@RequestParam String tenantId, @RequestParam String personId, @RequestParam String customId, @RequestParam Integer authority) {
+    public boolean hasPermissionByCustomId(@RequestParam("tenantId") @NotBlank String tenantId, @RequestParam("personId") @NotBlank String personId, @RequestParam("customId") @NotBlank String customId, @RequestParam("authority") Integer authority) {
         Y9LoginUserHolder.setTenantId(tenantId);
         
         return y9PersonToResourceAndAuthorityService.hasPermissionByCustomId(personId, customId, authority);
@@ -87,7 +89,7 @@ public class PersonResourceApiImpl implements PersonResourceApi {
      * @since 9.6.0
      */
     @Override
-    public List<VueMenu> listMenusRecursively(@RequestParam String tenantId, @RequestParam String personId, @RequestParam Integer authority, @RequestParam String resourceId) {
+    public List<VueMenu> listMenusRecursively(@RequestParam("tenantId") @NotBlank String tenantId, @RequestParam("personId") @NotBlank String personId, @RequestParam("authority") Integer authority, @RequestParam("resourceId") @NotBlank String resourceId) {
         Y9LoginUserHolder.setTenantId(tenantId);
         
         List<VueMenu> vueMenuList = new ArrayList<>();
@@ -107,7 +109,7 @@ public class PersonResourceApiImpl implements PersonResourceApi {
      * @since 9.6.0
      */
     @Override
-    public List<Menu> listSubMenus(@RequestParam String tenantId, @RequestParam String personId, @RequestParam Integer authority, @RequestParam String resourceId) {
+    public List<Menu> listSubMenus(@RequestParam("tenantId") @NotBlank String tenantId, @RequestParam("personId") @NotBlank String personId, @RequestParam("authority") Integer authority, @RequestParam("resourceId") @NotBlank String resourceId) {
         Y9LoginUserHolder.setTenantId(tenantId);
 
         List<Y9Menu> y9MenuList = y9PersonToResourceAndAuthorityService.listSubMenus(personId, resourceId, ResourceTypeEnum.MENU.getValue(), authority);
@@ -125,7 +127,7 @@ public class PersonResourceApiImpl implements PersonResourceApi {
      * @since 9.6.0
      */
     @Override
-    public List<Resource> listSubResources(@RequestParam String tenantId, @RequestParam String personId, @RequestParam Integer authority, @RequestParam String resourceId) {
+    public List<Resource> listSubResources(@RequestParam("tenantId") @NotBlank String tenantId, @RequestParam("personId") @NotBlank String personId, @RequestParam("authority") Integer authority, @RequestParam("resourceId") @NotBlank String resourceId) {
         Y9LoginUserHolder.setTenantId(tenantId);
 
         List<Y9ResourceBase> y9ResourceBaseList = y9PersonToResourceAndAuthorityService.listSubResources(personId, resourceId, authority);

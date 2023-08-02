@@ -2,12 +2,15 @@ package net.risesoft.api.org;
 
 import java.util.List;
 
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import net.risesoft.model.Department;
 import net.risesoft.model.OrgUnit;
 import net.risesoft.model.Organization;
+
+import javax.validation.constraints.NotBlank;
 
 /**
  * 组织节点组件
@@ -18,6 +21,7 @@ import net.risesoft.model.Organization;
  * @date 2022/2/10
  * @since 9.6.0
  */
+@Validated
 public interface OrgUnitApi {
 
     /**
@@ -29,7 +33,7 @@ public interface OrgUnitApi {
      * @since 9.6.0
      */
     @GetMapping("/getBureau")
-    OrgUnit getBureau(@RequestParam("tenantId") String tenantId, @RequestParam("orgUnitId") String orgUnitId);
+    OrgUnit getBureau(@RequestParam("tenantId") @NotBlank String tenantId, @RequestParam("orgUnitId") @NotBlank String orgUnitId);
 
     /**
      * 获得部门树
@@ -40,7 +44,7 @@ public interface OrgUnitApi {
      * @since 9.6.0
      */
     @GetMapping("/getDeptTrees")
-    List<Department> getDeptTrees(@RequestParam("tenantId") String tenantId, @RequestParam("orgUnitId") String orgUnitId);
+    List<Department> getDeptTrees(@RequestParam("tenantId") @NotBlank String tenantId, @RequestParam("orgUnitId") @NotBlank String orgUnitId);
 
     /**
      * 获取组织节点所在的组织机构
@@ -51,7 +55,7 @@ public interface OrgUnitApi {
      * @since 9.6.0
      */
     @GetMapping("/getOrganization")
-    Organization getOrganization(@RequestParam("tenantId") String tenantId, @RequestParam("orgUnitId") String orgUnitId);
+    Organization getOrganization(@RequestParam("tenantId") @NotBlank String tenantId, @RequestParam("orgUnitId") @NotBlank String orgUnitId);
 
     /**
      * 根据id获得机构对象
@@ -62,7 +66,7 @@ public interface OrgUnitApi {
      * @since 9.6.0
      */
     @GetMapping("/get")
-    OrgUnit getOrgUnit(@RequestParam("tenantId") String tenantId, @RequestParam("orgUnitId") String orgUnitId);
+    OrgUnit getOrgUnit(@RequestParam("tenantId") @NotBlank String tenantId, @RequestParam("orgUnitId") @NotBlank String orgUnitId);
 
     /**
      * 根据id，获取已删除的机构主体
@@ -73,7 +77,7 @@ public interface OrgUnitApi {
      * @since 9.6.2
      */
     @GetMapping("/getOrgUnitDeletedById")
-    OrgUnit getOrgUnitDeletedById(@RequestParam("tenantId") String tenantId, @RequestParam("orgUnitId") String orgUnitId);
+    OrgUnit getOrgUnitDeletedById(@RequestParam("tenantId") @NotBlank String tenantId, @RequestParam("orgUnitId") @NotBlank String orgUnitId);
 
     /**
      * 根据id获得父对象
@@ -84,7 +88,7 @@ public interface OrgUnitApi {
      * @since 9.6.0
      */
     @GetMapping("/getParent")
-    OrgUnit getParent(@RequestParam("tenantId") String tenantId, @RequestParam("orgUnitId") String orgUnitId);
+    OrgUnit getParent(@RequestParam("tenantId") @NotBlank String tenantId, @RequestParam("orgUnitId") @NotBlank String orgUnitId);
 
     /**
      * 获得子节点
@@ -97,7 +101,7 @@ public interface OrgUnitApi {
      * @since 9.6.0
      */
     @GetMapping("/getSubTree")
-    List<OrgUnit> getSubTree(@RequestParam("tenantId") String tenantId, @RequestParam("orgUnitId") String orgUnitId, @RequestParam("treeType") String treeType);
+    List<OrgUnit> getSubTree(@RequestParam("tenantId") @NotBlank String tenantId, @RequestParam("orgUnitId") @NotBlank String orgUnitId, @RequestParam("treeType") @NotBlank String treeType);
 
     /**
      * query the org node by name and treeType 根据节点名称，和树类型查询机构节点
@@ -110,7 +114,7 @@ public interface OrgUnitApi {
      * @since 9.6.0
      */
     @GetMapping("/treeSearch")
-    List<OrgUnit> treeSearch(@RequestParam("tenantId") String tenantId, @RequestParam("name") String name, @RequestParam("treeType") String treeType);
+    List<OrgUnit> treeSearch(@RequestParam("tenantId") @NotBlank String tenantId, @RequestParam("name") @NotBlank String name, @RequestParam("treeType") @NotBlank String treeType);
 
     /**
      * query the org node by name and treeType 根据name，和结构树类型查询机构主体
@@ -124,6 +128,6 @@ public interface OrgUnitApi {
      * @since 9.6.0
      */
     @GetMapping("/treeSearchByDn")
-    List<OrgUnit> treeSearchByDn(@RequestParam("tenantId") String tenantId, @RequestParam("name") String name, @RequestParam("treeType") String treeType, @RequestParam("dnName") String dnName);
+    List<OrgUnit> treeSearchByDn(@RequestParam("tenantId") @NotBlank String tenantId, @RequestParam("name") @NotBlank String name, @RequestParam("treeType") @NotBlank String treeType, @RequestParam("dnName") @NotBlank String dnName);
 
 }

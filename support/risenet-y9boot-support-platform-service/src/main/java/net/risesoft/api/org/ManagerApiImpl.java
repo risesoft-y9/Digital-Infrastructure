@@ -1,6 +1,5 @@
 package net.risesoft.api.org;
 
-import org.apache.commons.lang3.StringUtils;
 import org.springframework.context.annotation.Primary;
 import org.springframework.http.MediaType;
 import org.springframework.validation.annotation.Validated;
@@ -15,6 +14,8 @@ import net.risesoft.model.Manager;
 import net.risesoft.service.org.Y9ManagerService;
 import net.risesoft.y9.Y9LoginUserHolder;
 import net.risesoft.y9.util.Y9ModelConvertUtil;
+
+import javax.validation.constraints.NotBlank;
 
 /**
  * 三员服务组件
@@ -43,10 +44,8 @@ public class ManagerApiImpl implements ManagerApi {
      * @since 9.6.0
      */
     @Override
-    public Manager getManager(@RequestParam String tenantId, @RequestParam String userId) {
-        if (StringUtils.isNotBlank(tenantId)) {
-            Y9LoginUserHolder.setTenantId(tenantId);
-        }
+    public Manager getManager(@RequestParam("tenantId") @NotBlank String tenantId, @RequestParam("userId") @NotBlank String userId) {
+        Y9LoginUserHolder.setTenantId(tenantId);
         
         Y9Manager y9Manager = y9ManagerService.findById(userId);
         return Y9ModelConvertUtil.convert(y9Manager, Manager.class);
@@ -62,10 +61,8 @@ public class ManagerApiImpl implements ManagerApi {
      * @since 9.6.0
      */
     @Override
-    public boolean isDeptManager(@RequestParam String tenantId, @RequestParam String managerId, @RequestParam String deptId) {
-        if (StringUtils.isNotBlank(tenantId)) {
-            Y9LoginUserHolder.setTenantId(tenantId);
-        }
+    public boolean isDeptManager(@RequestParam("tenantId") @NotBlank String tenantId, @RequestParam("managerId") @NotBlank String managerId, @RequestParam("deptId") @NotBlank String deptId) {
+        Y9LoginUserHolder.setTenantId(tenantId);
         
         return y9ManagerService.isDeptManager(managerId, deptId);
     }

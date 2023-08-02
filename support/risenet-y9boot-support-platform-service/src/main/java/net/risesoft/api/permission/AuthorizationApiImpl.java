@@ -18,6 +18,8 @@ import net.risesoft.service.authorization.Y9AuthorizationService;
 import net.risesoft.service.org.Y9PersonService;
 import net.risesoft.y9.Y9LoginUserHolder;
 
+import javax.validation.constraints.NotBlank;
+
 /**
  * 权限管理组件
  *
@@ -48,7 +50,7 @@ public class AuthorizationApiImpl implements AuthorizationApi {
      * @since 9.6.0
      */
     @Override
-    public void save(@RequestParam String tenantId, @RequestParam String personId, @RequestParam String resourceId, @RequestParam String roleId, @RequestParam Integer authority) {
+    public void save(@RequestParam("tenantId") @NotBlank String tenantId, @RequestParam("personId") @NotBlank String personId, @RequestParam("resourceId") @NotBlank String resourceId, @RequestParam("roleId") @NotBlank String roleId, @RequestParam("authority") @NotBlank Integer authority) {
         Y9LoginUserHolder.setTenantId(tenantId);
         
         Y9Person y9Person = y9PersonService.getById(personId);

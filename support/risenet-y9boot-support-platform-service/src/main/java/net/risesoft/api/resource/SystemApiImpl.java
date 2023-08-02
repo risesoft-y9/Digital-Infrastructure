@@ -16,6 +16,9 @@ import net.risesoft.y9.util.Y9ModelConvertUtil;
 import net.risesoft.y9public.entity.resource.Y9System;
 import net.risesoft.y9public.service.resource.Y9SystemService;
 
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotEmpty;
+
 /**
  * 系统管理组件
  *
@@ -42,7 +45,7 @@ public class SystemApiImpl implements SystemApi {
      * @since 9.6.2
      */
     @Override
-    public System getById(String id) {
+    public System getById(@RequestParam("id") @NotBlank String id) {
         Y9System y9System = y9SystemService.getById(id);
         return Y9ModelConvertUtil.convert(y9System, System.class);
     }
@@ -54,7 +57,7 @@ public class SystemApiImpl implements SystemApi {
      * @return System 系统
      */
     @Override
-    public System getByName(@RequestParam String name) {
+    public System getByName(@RequestParam("name") @NotBlank String name) {
         Y9System y9System = y9SystemService.findByName(name);
         return Y9ModelConvertUtil.convert(y9System, System.class);
     }
@@ -66,7 +69,7 @@ public class SystemApiImpl implements SystemApi {
      * @return List&lt;String&gt; 系统名称列表
      */
     @Override
-    public List<String> listSystemNameByIds(@RequestParam List<String> systemIds) {
+    public List<String> listSystemNameByIds(@RequestParam("systemIds") @NotEmpty List<String> systemIds) {
         return y9SystemService.listSystemNameByIds(systemIds);
     }
 }

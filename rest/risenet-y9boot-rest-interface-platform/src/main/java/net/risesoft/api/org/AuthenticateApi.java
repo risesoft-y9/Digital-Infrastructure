@@ -1,9 +1,12 @@
 package net.risesoft.api.org;
 
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import net.risesoft.model.Message;
+
+import javax.validation.constraints.NotBlank;
 
 /**
  * 用户身份验证服务组件
@@ -14,6 +17,7 @@ import net.risesoft.model.Message;
  * @date 2022/2/10
  * @since 9.6.0
  */
+@Validated
 public interface AuthenticateApi {
 
     /**
@@ -26,7 +30,7 @@ public interface AuthenticateApi {
      * @since 9.6.0
      */
     @RequestMapping("/authenticate3")
-    Message authenticate3(@RequestParam("tenantShortName") String tenantShortName, @RequestParam("loginName") String loginName, @RequestParam("password") String password);
+    Message authenticate3(@RequestParam("tenantShortName") @NotBlank String tenantShortName, @RequestParam("loginName") @NotBlank String loginName, @RequestParam("password") @NotBlank String password);
 
     /**
      * 用户手机号码密码认证
@@ -38,6 +42,6 @@ public interface AuthenticateApi {
      * @since 9.6.0
      */
     @RequestMapping("/authenticate5")
-    Message authenticate5(@RequestParam("tenantShortName") String tenantShortName, @RequestParam("mobile") String mobile, @RequestParam("password") String password);
+    Message authenticate5(@RequestParam("tenantShortName") @NotBlank String tenantShortName, @RequestParam("mobile") @NotBlank String mobile, @RequestParam("password") @NotBlank String password);
 
 }

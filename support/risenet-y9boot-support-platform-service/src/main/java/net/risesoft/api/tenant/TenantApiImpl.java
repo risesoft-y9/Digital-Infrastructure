@@ -16,6 +16,8 @@ import net.risesoft.y9.util.Y9ModelConvertUtil;
 import net.risesoft.y9public.entity.tenant.Y9Tenant;
 import net.risesoft.y9public.service.tenant.Y9TenantService;
 
+import javax.validation.constraints.NotBlank;
+
 /**
  * 租户管理组件
  *
@@ -42,7 +44,7 @@ public class TenantApiImpl implements TenantApi {
      * @since 9.6.0
      */
     @Override
-    public Tenant getById(@RequestParam String tenantId) {
+    public Tenant getById(@RequestParam("tenantId") @NotBlank String tenantId) {
         Y9Tenant y9Tenant = y9TenantService.getById(tenantId);
         return Y9ModelConvertUtil.convert(y9Tenant, Tenant.class);
     }
@@ -67,7 +69,7 @@ public class TenantApiImpl implements TenantApi {
      * @since 9.6.0
      */
     @Override
-    public List<Tenant> listByName(@RequestParam String tenantName) {
+    public List<Tenant> listByName(@RequestParam("tenantName") @NotBlank String tenantName) {
         List<Y9Tenant> y9TenantList = y9TenantService.listByTenantName(tenantName);
         return Y9ModelConvertUtil.convert(y9TenantList, Tenant.class);
     }
@@ -80,7 +82,7 @@ public class TenantApiImpl implements TenantApi {
      * @since 9.6.0
      */
     @Override
-    public List<Tenant> listByShortName(@RequestParam String shortName) {
+    public List<Tenant> listByShortName(@RequestParam("shortName") @NotBlank String shortName) {
         List<Y9Tenant> y9TenantList = y9TenantService.listByShortName(shortName);
         return Y9ModelConvertUtil.convert(y9TenantList, Tenant.class);
     }
@@ -93,7 +95,7 @@ public class TenantApiImpl implements TenantApi {
      * @since 9.6.0
      */
     @Override
-    public List<Tenant> listByTenantType(Integer tenantType) {
+    public List<Tenant> listByTenantType(@RequestParam("tenantType") @NotBlank Integer tenantType) {
         List<Y9Tenant> y9TenantList = y9TenantService.listByTenantType(tenantType);
         return Y9ModelConvertUtil.convert(y9TenantList, Tenant.class);
     }

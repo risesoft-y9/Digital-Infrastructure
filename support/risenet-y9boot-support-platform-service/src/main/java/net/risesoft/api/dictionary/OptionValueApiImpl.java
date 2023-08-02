@@ -17,6 +17,8 @@ import net.risesoft.service.dictionary.Y9OptionValueService;
 import net.risesoft.y9.Y9LoginUserHolder;
 import net.risesoft.y9.util.Y9ModelConvertUtil;
 
+import javax.validation.constraints.NotBlank;
+
 /**
  * 字典表管理组件
  *
@@ -44,7 +46,7 @@ public class OptionValueApiImpl implements OptionValueApi {
      * @since 9.6.0
      */
     @Override
-    public List<OptionValue> listByType(@RequestParam String tenantId, @RequestParam String type) {
+    public List<OptionValue> listByType(@RequestParam("tenantId") @NotBlank String tenantId, @RequestParam("type") @NotBlank String type) {
         Y9LoginUserHolder.setTenantId(tenantId);
         
         List<Y9OptionValue> y9OptionValueList = optionValueService.listByType(type);

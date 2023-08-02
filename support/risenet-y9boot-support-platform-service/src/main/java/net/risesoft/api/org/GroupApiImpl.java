@@ -4,7 +4,6 @@ import java.util.List;
 
 import javax.validation.constraints.NotBlank;
 
-import org.apache.commons.lang3.StringUtils;
 import org.springframework.context.annotation.Primary;
 import org.springframework.http.MediaType;
 import org.springframework.validation.annotation.Validated;
@@ -62,10 +61,7 @@ public class GroupApiImpl implements GroupApi {
      * @since 9.6.0
      */
     @Override
-    public boolean addPerson2Group(@RequestParam String tenantId, @RequestParam String groupId, @RequestParam String personId) {
-        if (StringUtils.isBlank(tenantId) || StringUtils.isBlank(groupId) || StringUtils.isBlank(personId)) {
-            return false;
-        }
+    public boolean addPerson2Group(@RequestParam("tenantId") @NotBlank String tenantId, @RequestParam("groupId") @NotBlank String groupId, @RequestParam("personId") @NotBlank String personId) {
         Y9LoginUserHolder.setTenantId(tenantId);
         
         if (y9GroupService.existsById(groupId) && y9PersonService.existsById(personId)) {
@@ -84,10 +80,7 @@ public class GroupApiImpl implements GroupApi {
      * @since 9.6.0
      */
     @Override
-    public Group createGroup(@RequestParam String tenantId, @RequestParam String groupJson) {
-        if (StringUtils.isBlank(tenantId) || StringUtils.isBlank(groupJson)) {
-            return null;
-        }
+    public Group createGroup(@RequestParam("tenantId") @NotBlank String tenantId, @RequestParam("groupJson") @NotBlank String groupJson) {
         Y9LoginUserHolder.setTenantId(tenantId);
         
         Y9Group y9Group = Y9JsonUtil.readValue(groupJson, Y9Group.class);
@@ -104,10 +97,7 @@ public class GroupApiImpl implements GroupApi {
      * @since 9.6.0
      */
     @Override
-    public boolean deleteGroup(@RequestParam String tenantId, @RequestParam String groupId) {
-        if (StringUtils.isBlank(tenantId) || StringUtils.isBlank(groupId)) {
-            return false;
-        }
+    public boolean deleteGroup(@RequestParam("tenantId") @NotBlank String tenantId, @RequestParam("groupId") @NotBlank String groupId) {
         Y9LoginUserHolder.setTenantId(tenantId);
         
         y9GroupService.delete(groupId);
@@ -139,7 +129,7 @@ public class GroupApiImpl implements GroupApi {
      * @since 9.6.0
      */
     @Override
-    public OrgUnit getParent(@RequestParam String tenantId, @RequestParam String groupId) {
+    public OrgUnit getParent(@RequestParam("tenantId") @NotBlank String tenantId, @RequestParam("groupId") @NotBlank String groupId) {
         Y9LoginUserHolder.setTenantId(tenantId);
         
         Y9OrgBase parent = compositeOrgBaseService.getParent(groupId);
@@ -155,7 +145,7 @@ public class GroupApiImpl implements GroupApi {
      * @since 9.6.0
      */
     @Override
-    public List<Group> listByDn(@RequestParam String tenantId, @RequestParam String dn) {
+    public List<Group> listByDn(@RequestParam("tenantId") @NotBlank String tenantId, @RequestParam("dn") @NotBlank String dn) {
         Y9LoginUserHolder.setTenantId(tenantId);
         
         List<Y9Group> y9GroupList = y9GroupService.listByDn(dn);
@@ -171,7 +161,7 @@ public class GroupApiImpl implements GroupApi {
      * @since 9.6.0
      */
     @Override
-    public List<Person> listPersons(@RequestParam String tenantId, @RequestParam String groupId) {
+    public List<Person> listPersons(@RequestParam("tenantId") @NotBlank String tenantId, @RequestParam("groupId") @NotBlank String groupId) {
         Y9LoginUserHolder.setTenantId(tenantId);
         
         List<Y9Person> y9PersonList = y9PersonService.listByGroupId(groupId);
@@ -188,10 +178,7 @@ public class GroupApiImpl implements GroupApi {
      * @since 9.6.0
      */
     @Override
-    public boolean removePerson(@RequestParam String tenantId, @RequestParam String groupId, @RequestParam String personId) {
-        if (StringUtils.isBlank(tenantId) || StringUtils.isBlank(groupId) || StringUtils.isBlank(personId)) {
-            return false;
-        }
+    public boolean removePerson(@RequestParam("tenantId") @NotBlank String tenantId, @RequestParam("groupId") @NotBlank String groupId, @RequestParam("personId") @NotBlank String personId) {
         Y9LoginUserHolder.setTenantId(tenantId);
         
         y9PersonsToGroupsService.removePersons(groupId, new String[] {personId});
@@ -207,10 +194,7 @@ public class GroupApiImpl implements GroupApi {
      * @since 9.6.0
      */
     @Override
-    public Group updateGroup(@RequestParam String tenantId, @RequestParam String groupJson) {
-        if (StringUtils.isBlank(tenantId) || StringUtils.isBlank(groupJson)) {
-            return null;
-        }
+    public Group updateGroup(@RequestParam("tenantId") @NotBlank String tenantId, @RequestParam("groupJson") @NotBlank String groupJson) {
         Y9LoginUserHolder.setTenantId(tenantId);
         
         Y9Group y9Group = Y9JsonUtil.readValue(groupJson, Y9Group.class);

@@ -3,6 +3,7 @@ package net.risesoft.api.org;
 import java.util.List;
 import java.util.Map;
 
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -15,6 +16,8 @@ import net.risesoft.model.Position;
 import net.risesoft.model.Role;
 import net.risesoft.pojo.Y9Page;
 
+import javax.validation.constraints.NotBlank;
+
 /**
  * 人员服务组件
  *
@@ -24,6 +27,7 @@ import net.risesoft.pojo.Y9Page;
  * @date 2022/2/10
  * @since 9.6.0
  */
+@Validated
 public interface PersonApi {
 
     /**
@@ -35,7 +39,7 @@ public interface PersonApi {
      * @since 9.6.0
      */
     @GetMapping("/changeDisabled")
-    boolean changeDisabled(@RequestParam("tenantId") String tenantId, @RequestParam("personId") String personId);
+    boolean changeDisabled(@RequestParam("tenantId") @NotBlank String tenantId, @RequestParam("personId") @NotBlank String personId);
 
     /**
      * 检查用户名
@@ -47,7 +51,7 @@ public interface PersonApi {
      * @since 9.6.0
      */
     @GetMapping("/checkLoginName")
-    boolean checkLoginName(@RequestParam("tenantId") String tenantId, @RequestParam("personId") String personId, @RequestParam("loginName") String loginName);
+    boolean checkLoginName(@RequestParam("tenantId") @NotBlank String tenantId, @RequestParam("personId") @NotBlank String personId, @RequestParam("loginName") @NotBlank String loginName);
 
     /**
      * 检查手机号码是否存在
@@ -58,7 +62,7 @@ public interface PersonApi {
      * @since 9.6.0
      */
     @GetMapping("/checkMobile")
-    boolean checkMobile(@RequestParam("tenantId") String tenantId, @RequestParam("personId") String personId, @RequestParam("mobile") String mobile);
+    boolean checkMobile(@RequestParam("tenantId") @NotBlank String tenantId, @RequestParam("personId") @NotBlank String personId, @RequestParam("mobile") @NotBlank String mobile);
 
     /**
      * 新增人员
@@ -69,7 +73,7 @@ public interface PersonApi {
      * @since 9.6.0
      */
     @PostMapping("/createPerson")
-    Person createPerson(@RequestParam("tenantId") String tenantId, @RequestParam("personJson") String personJson);
+    Person createPerson(@RequestParam("tenantId") @NotBlank String tenantId, @RequestParam("personJson") @NotBlank String personJson);
 
     /**
      * 删除人员
@@ -80,7 +84,7 @@ public interface PersonApi {
      * @since 9.6.0
      */
     @PostMapping("/deleteById")
-    boolean deleteById(@RequestParam("tenantId") String tenantId, @RequestParam("personId") String personId);
+    boolean deleteById(@RequestParam("tenantId") @NotBlank String tenantId, @RequestParam("personId") @NotBlank String personId);
 
     /**
      * 根据租户id和人员id获取委办局
@@ -91,7 +95,7 @@ public interface PersonApi {
      * @since 9.6.0
      */
     @GetMapping("/getBureau")
-    OrgUnit getBureau(@RequestParam("tenantId") String tenantId, @RequestParam("personId") String personId);
+    OrgUnit getBureau(@RequestParam("tenantId") @NotBlank String tenantId, @RequestParam("personId") @NotBlank String personId);
 
     /**
      * 根据登陆名和父节点id，获取人员信息
@@ -103,7 +107,7 @@ public interface PersonApi {
      * @since 9.6.0
      */
     @GetMapping("/getByLoginNameAndParentId")
-    Person getByLoginNameAndParentId(@RequestParam("tenantId") String tenantId, @RequestParam("loginName") String loginName, @RequestParam("parentId") String parentId);
+    Person getByLoginNameAndParentId(@RequestParam("tenantId") @NotBlank String tenantId, @RequestParam("loginName") @NotBlank String loginName, @RequestParam("parentId") @NotBlank String parentId);
 
     /**
      * 获取人员父节点
@@ -114,7 +118,7 @@ public interface PersonApi {
      * @since 9.6.0
      */
     @GetMapping("/getParent")
-    OrgUnit getParent(@RequestParam("tenantId") String tenantId, @RequestParam("personId") String personId);
+    OrgUnit getParent(@RequestParam("tenantId") @NotBlank String tenantId, @RequestParam("personId") @NotBlank String personId);
 
     /**
      * 根据id获得人员对象
@@ -125,7 +129,7 @@ public interface PersonApi {
      * @since 9.6.0
      */
     @GetMapping("/getPerson")
-    Person getPerson(@RequestParam("tenantId") String tenantId, @RequestParam("personId") String personId);
+    Person getPerson(@RequestParam("tenantId") @NotBlank String tenantId, @RequestParam("personId") @NotBlank String personId);
 
     /**
      * 根据登录名称和租户id，获得人员对象
@@ -136,7 +140,7 @@ public interface PersonApi {
      * @since 9.6.0
      */
     @GetMapping("/getPersonByLoginNameAndTenantId")
-    Person getPersonByLoginNameAndTenantId(@RequestParam("loginName") String loginName, @RequestParam("tenantId") String tenantId);
+    Person getPersonByLoginNameAndTenantId(@RequestParam("loginName") @NotBlank String loginName, @RequestParam("tenantId") @NotBlank String tenantId);
 
     /**
      * 根据人员id，获取人员扩展信息
@@ -147,7 +151,7 @@ public interface PersonApi {
      * @since 9.6.0
      */
     @GetMapping("/getPersonExtByPersonId")
-    PersonExt getPersonExtByPersonId(@RequestParam("tenantId") String tenantId, @RequestParam("personId") String personId);
+    PersonExt getPersonExtByPersonId(@RequestParam("tenantId") @NotBlank String tenantId, @RequestParam("personId") @NotBlank String personId);
 
     /**
      * 获取 Base64加密之后的照片字符串
@@ -158,7 +162,7 @@ public interface PersonApi {
      * @since 9.6.0
      */
     @GetMapping("/getPersonPhoto")
-    String getPersonPhoto(@RequestParam("tenantId") String tenantId, @RequestParam("personId") String personId);
+    String getPersonPhoto(@RequestParam("tenantId") @NotBlank String tenantId, @RequestParam("personId") @NotBlank String personId);
 
     /**
      * 获取全部人员
@@ -168,7 +172,7 @@ public interface PersonApi {
      * @since 9.6.0
      */
     @GetMapping("/listAllPersons")
-    List<Person> listAllPersons(@RequestParam("tenantId") String tenantId);
+    List<Person> listAllPersons(@RequestParam("tenantId") @NotBlank String tenantId);
 
     /**
      * 根据证件类型和证件号码，获取人员列表
@@ -180,10 +184,10 @@ public interface PersonApi {
      * @since 9.6.0
      */
     @GetMapping("/listByIdTypeAndIdNum")
-    List<Person> listByIdTypeAndIdNum(@RequestParam("tenantId") String tenantId, @RequestParam("idType") String idType, @RequestParam("idNum") String idNum);
+    List<Person> listByIdTypeAndIdNum(@RequestParam("tenantId") @NotBlank String tenantId, @RequestParam("idType") @NotBlank String idType, @RequestParam("idNum") @NotBlank String idNum);
 
     /**
-     * 根据人员名称 名称、租户id获取人员基本信息
+     * 根据人员名称、租户id获取人员基本信息
      *
      * @param tenantId 租户id
      * @param name 人员名称
@@ -191,7 +195,7 @@ public interface PersonApi {
      * @since 9.6.2
      */
     @GetMapping("/listByNameLike")
-    List<Person> listByNameLike(@RequestParam("tenantId") String tenantId, @RequestParam(name = "name", required = false) String name);
+    List<Person> listByNameLike(@RequestParam("tenantId") @NotBlank String tenantId, @RequestParam(name = "name", required = false) String name);
 
     /**
      * 获取人员所在用户组列表
@@ -202,7 +206,7 @@ public interface PersonApi {
      * @since 9.6.0
      */
     @GetMapping("/listGroups")
-    List<Group> listGroups(@RequestParam("tenantId") String tenantId, @RequestParam("personId") String personId);
+    List<Group> listGroups(@RequestParam("tenantId") @NotBlank String tenantId, @RequestParam("personId") @NotBlank String personId);
 
     /**
      * 根据人员id，获取父节点列表
@@ -213,7 +217,7 @@ public interface PersonApi {
      * @since 9.6.0
      */
     @GetMapping("/listParents")
-    List<OrgUnit> listParents(@RequestParam("tenantId") String tenantId, @RequestParam("personId") String personId);
+    List<OrgUnit> listParents(@RequestParam("tenantId") @NotBlank String tenantId, @RequestParam("personId") @NotBlank String personId);
 
     /**
      * 根据人员名称 名称、租户id获取人员基本信息，图像，岗位等
@@ -224,7 +228,7 @@ public interface PersonApi {
      * @since 9.6.2
      */
     @GetMapping("/listPersonInfoByNameLike")
-    List<Map<String, Object>> listPersonInfoByNameLike(@RequestParam("tenantId") String tenantId, @RequestParam(name = "name", required = false) String name);
+    List<Map<String, Object>> listPersonInfoByNameLike(@RequestParam("tenantId") @NotBlank String tenantId, @RequestParam(name = "name", required = false) String name);
 
     /**
      * 获取人员所在岗位列表
@@ -235,7 +239,7 @@ public interface PersonApi {
      * @since 9.6.0
      */
     @GetMapping("/listPositions")
-    List<Position> listPositions(@RequestParam("tenantId") String tenantId, @RequestParam("personId") String personId);
+    List<Position> listPositions(@RequestParam("tenantId") @NotBlank String tenantId, @RequestParam("personId") @NotBlank String personId);
 
     /**
      * 获取角色
@@ -246,7 +250,7 @@ public interface PersonApi {
      * @since 9.6.0
      */
     @GetMapping("/listRoles")
-    List<Role> listRoles(@RequestParam("tenantId") String tenantId, @RequestParam("personId") String personId);
+    List<Role> listRoles(@RequestParam("tenantId") @NotBlank String tenantId, @RequestParam("personId") @NotBlank String personId);
 
     /**
      * 修改人员密码
@@ -258,7 +262,7 @@ public interface PersonApi {
      * @since 9.6.0
      */
     @PostMapping("/modifyPassword")
-    Person modifyPassword(@RequestParam("tenantId") String tenantId, @RequestParam("personId") String personId, @RequestParam("newPassword") String newPassword);
+    Person modifyPassword(@RequestParam("tenantId") @NotBlank String tenantId, @RequestParam("personId") @NotBlank String personId, @RequestParam("newPassword") @NotBlank String newPassword);
 
     /**
      * 模糊搜索人员分页列表（不含禁用和删除）
@@ -270,7 +274,7 @@ public interface PersonApi {
      * @return
      */
     @GetMapping("/pageByNameLike")
-    Y9Page<Person> pageByNameLike(@RequestParam("tenantId") String tenantId, @RequestParam(required = false) String name, @RequestParam("page") int page, @RequestParam("rows") int rows);
+    Y9Page<Person> pageByNameLike(@RequestParam("tenantId") @NotBlank String tenantId, @RequestParam(required = false) String name, @RequestParam("page") int page, @RequestParam("rows") int rows);
 
     /**
      * 获取父节点下的全部人员
@@ -284,7 +288,7 @@ public interface PersonApi {
      * @since 9.6.0
      */
     @GetMapping("/pageByParentId")
-    Y9Page<Person> pageByParentId(@RequestParam("tenantId") String tenantId, @RequestParam("parentId") String parentId, @RequestParam("disabled") boolean disabled, @RequestParam("page") int page, @RequestParam("rows") int rows);
+    Y9Page<Person> pageByParentId(@RequestParam("tenantId") @NotBlank String tenantId, @RequestParam("parentId") @NotBlank String parentId, @RequestParam("disabled") boolean disabled, @RequestParam("page") int page, @RequestParam("rows") int rows);
 
     /**
      * 获取父节点下的全部人员
@@ -299,7 +303,7 @@ public interface PersonApi {
      * @since 9.6.0
      */
     @GetMapping("/pageByParentIdAndUserName")
-    Y9Page<Person> pageByParentIdAndUserName(@RequestParam("tenantId") String tenantId, @RequestParam("parentId") String parentId, @RequestParam("disabled") boolean disabled, @RequestParam("userName") String userName, @RequestParam("page") int page, @RequestParam("rows") int rows);
+    Y9Page<Person> pageByParentIdAndUserName(@RequestParam("tenantId") @NotBlank String tenantId, @RequestParam("parentId") @NotBlank String parentId, @RequestParam("disabled") boolean disabled, @RequestParam("userName") @NotBlank String userName, @RequestParam("page") int page, @RequestParam("rows") int rows);
 
     /**
      * 保存人员
@@ -310,7 +314,7 @@ public interface PersonApi {
      * @since 9.6.0
      */
     @PostMapping("/savePerson")
-    Person savePerson(@RequestParam("tenantId") String tenantId, @RequestParam("personJson") String personJson);
+    Person savePerson(@RequestParam("tenantId") @NotBlank String tenantId, @RequestParam("personJson") @NotBlank String personJson);
 
     /**
      * 保存人员头像
@@ -322,7 +326,7 @@ public interface PersonApi {
      * @since 9.6.0
      */
     @PostMapping("/savePersonAvator")
-    Person savePersonAvator(@RequestParam("tenantId") String tenantId, @RequestParam("personId") String personId, @RequestParam("avator") String avator);
+    Person savePersonAvator(@RequestParam("tenantId") @NotBlank String tenantId, @RequestParam("personId") @NotBlank String personId, @RequestParam("avator") @NotBlank String avator);
 
     /**
      * 保存人员头像(Base64)
@@ -335,7 +339,7 @@ public interface PersonApi {
      * @since 9.6.0
      */
     @PostMapping("/savePersonAvatorByBase64")
-    Person savePersonAvatorByBase64(@RequestParam("tenantId") String tenantId, @RequestParam("personId") String personId, @RequestParam("picnote") String picnote, @RequestParam("fileExt") String fileExt);
+    Person savePersonAvatorByBase64(@RequestParam("tenantId") @NotBlank String tenantId, @RequestParam("personId") @NotBlank String personId, @RequestParam("picnote") @NotBlank String picnote, @RequestParam("fileExt") String fileExt);
 
     /**
      * 保存用户照片接口
@@ -347,7 +351,7 @@ public interface PersonApi {
      * @since 9.6.0
      */
     @PostMapping("/savePersonPhoto")
-    Boolean savePersonPhoto(@RequestParam("tenantId") String tenantId, @RequestParam("personId") String personId, @RequestParam("photo") String photo);
+    Boolean savePersonPhoto(@RequestParam("tenantId") @NotBlank String tenantId, @RequestParam("personId") @NotBlank String personId, @RequestParam("photo") @NotBlank String photo);
 
     /**
      * 保存人员
@@ -359,7 +363,7 @@ public interface PersonApi {
      * @since 9.6.0
      */
     @PostMapping("/savePersonWithExt")
-    Person savePersonWithExt(@RequestParam("tenantId") String tenantId, @RequestParam("personJson") String personJson, @RequestParam("personextJson") String personextJson);
+    Person savePersonWithExt(@RequestParam("tenantId") @NotBlank String tenantId, @RequestParam("personJson") @NotBlank String personJson, @RequestParam("personextJson") @NotBlank String personextJson);
 
     /**
      * 保存人员的微信id
@@ -371,6 +375,6 @@ public interface PersonApi {
      * @since 9.6.0
      */
     @PostMapping("/saveWeixinId")
-    Person saveWeixinId(@RequestParam("tenantId") String tenantId, @RequestParam("personId") String personId, @RequestParam("weixinId") String weixinId);
+    Person saveWeixinId(@RequestParam("tenantId") @NotBlank String tenantId, @RequestParam("personId") @NotBlank String personId, @RequestParam("weixinId") @NotBlank String weixinId);
 
 }

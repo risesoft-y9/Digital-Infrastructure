@@ -2,6 +2,9 @@ package net.risesoft.api.org;
 
 import java.util.List;
 
+import javax.validation.constraints.NotBlank;
+
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -18,6 +21,7 @@ import net.risesoft.pojo.Y9Result;
  * @date 2022/2/10
  * @since 9.6.0
  */
+@Validated
 public interface OrgSyncApi {
 
     /**
@@ -30,7 +34,7 @@ public interface OrgSyncApi {
      * @since 9.6.0
      */
     @GetMapping("/fullSync")
-    Y9Result<MessageOrg> fullSync(@RequestParam String appName, @RequestParam("tenantId") String tenantId, @RequestParam("organizationId") String organizationId);
+    Y9Result<MessageOrg> fullSync(@RequestParam("appName") @NotBlank String appName, @RequestParam("tenantId") @NotBlank String tenantId, @RequestParam("organizationId") @NotBlank String organizationId);
 
     /**
      * 增量获取组织操作列表
@@ -42,6 +46,6 @@ public interface OrgSyncApi {
      * @since 9.6.0
      */
     @RequestMapping("/incrSync")
-    Y9Result<List<MessageOrg>> incrSync(@RequestParam("appName") String appName, @RequestParam("tenantId") String tenantId);
+    Y9Result<List<MessageOrg>> incrSync(@RequestParam("appName") @NotBlank String appName, @RequestParam("tenantId") @NotBlank String tenantId);
 
 }

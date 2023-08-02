@@ -15,6 +15,8 @@ import net.risesoft.pojo.Y9Page;
 import net.risesoft.service.identity.Y9PersonToRoleService;
 import net.risesoft.y9.Y9LoginUserHolder;
 
+import javax.validation.constraints.NotBlank;
+
 /**
  * 权限查看组件
  *
@@ -42,7 +44,7 @@ public class PersonRoleApiImpl implements PersonRoleApi {
      * @since 9.6.0
      */
     @Override
-    public long countByPersonId(@RequestParam String tenantId, @RequestParam String personId) {
+    public long countByPersonId(@RequestParam("tenantId") @NotBlank String tenantId, @RequestParam("personId") @NotBlank String personId) {
         Y9LoginUserHolder.setTenantId(tenantId);
         
         return y9PersonToRoleService.countByPersonId(personId);
@@ -58,7 +60,7 @@ public class PersonRoleApiImpl implements PersonRoleApi {
      * @since 9.6.0
      */
     @Override
-    public Boolean hasRole(@RequestParam String tenantId, @RequestParam String personId, @RequestParam String customId) {
+    public Boolean hasRole(@RequestParam("tenantId") @NotBlank String tenantId, @RequestParam("positionId") @NotBlank String personId, @RequestParam("customId") @NotBlank String customId) {
         Y9LoginUserHolder.setTenantId(tenantId);
 
         return y9PersonToRoleService.hasRole(personId, customId);
@@ -79,7 +81,8 @@ public class PersonRoleApiImpl implements PersonRoleApi {
      * @since 9.6.0
      */
     @Override
-    public Y9Page<Map<String, Object>> pagePersonPermission(@RequestParam String tenantId, @RequestParam String personId, @RequestParam String type, @RequestParam String systemCnName, @RequestParam String appName, @RequestParam String roleName, @RequestParam int page, @RequestParam int rows) {
+    public Y9Page<Map<String, Object>> pagePersonPermission(@RequestParam("tenantId") String tenantId, @RequestParam("personId") String personId, @RequestParam("type") String type, @RequestParam("systemCnName") String systemCnName, @RequestParam("appName") String appName,
+                                                            @RequestParam("roleName") String roleName, @RequestParam("page") int page, @RequestParam("rows") int rows) {
         Y9LoginUserHolder.setTenantId(tenantId);
         
         return y9PersonToRoleService.pagePersonPermission(personId, type, systemCnName, appName, roleName, page, rows);
@@ -100,8 +103,8 @@ public class PersonRoleApiImpl implements PersonRoleApi {
      * @since 9.6.0
      */
     @Override
-    public Y9Page<Map<String, Object>> pagePersonPermissionWithSpecial(@RequestParam String tenantId, @RequestParam String personId, @RequestParam String type, @RequestParam String systemCnName, @RequestParam String appName, @RequestParam String roleName, @RequestParam int page,
-        @RequestParam int rows) {
+    public Y9Page<Map<String, Object>> pagePersonPermissionWithSpecial(@RequestParam("tenantId") String tenantId, @RequestParam("personId") String personId, @RequestParam("type") String type, @RequestParam("systemCnName") String systemCnName, @RequestParam("appName") String appName,
+                                                                       @RequestParam("roleName") String roleName, @RequestParam("page") int page, @RequestParam("rows") int rows) {
         Y9LoginUserHolder.setTenantId(tenantId);
         
         return y9PersonToRoleService.pagePersonAccessPermission(personId, type, systemCnName, appName, roleName, page, rows);

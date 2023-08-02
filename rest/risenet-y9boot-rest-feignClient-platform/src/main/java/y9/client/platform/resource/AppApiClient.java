@@ -28,5 +28,5 @@ public interface AppApiClient extends AppApi {
      */
     @Override
     @PostMapping("/saveIsvApp")
-    App saveIsvApp(@SpringQueryMap App app, @RequestParam("systemEntityId") String systemEntityId);
+    App saveIsvApp(@SpringQueryMap App app, @RequestParam("systemId") String systemEntityId);
 }

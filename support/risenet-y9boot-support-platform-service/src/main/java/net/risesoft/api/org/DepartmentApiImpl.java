@@ -1,10 +1,8 @@
 package net.risesoft.api.org;
 
-import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-import org.apache.commons.lang3.StringUtils;
 import org.springframework.context.annotation.Primary;
 import org.springframework.http.MediaType;
 import org.springframework.validation.annotation.Validated;
@@ -39,6 +37,9 @@ import net.risesoft.y9.Y9LoginUserHolder;
 import net.risesoft.y9.json.Y9JsonUtil;
 import net.risesoft.y9.util.Y9ModelConvertUtil;
 
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotEmpty;
+
 /**
  * 部门服务组件
  *
@@ -72,7 +73,7 @@ public class DepartmentApiImpl implements DepartmentApi {
      * @since 9.6.0
      */
     @Override
-    public Department createDepartment(@RequestParam String tenantId, @RequestParam String departmentJson) {
+    public Department createDepartment(@RequestParam("tenantId") @NotBlank String tenantId, @RequestParam("departmentJson") @NotBlank String departmentJson) {
         Y9LoginUserHolder.setTenantId(tenantId);
 
         Y9Department y9Department = Y9JsonUtil.readValue(departmentJson, Y9Department.class);
@@ -83,16 +84,16 @@ public class DepartmentApiImpl implements DepartmentApi {
     /**
      * 删除部门
      *
-     * @param departmentId 部门id
+     * @param deptId 部门id
      * @param tenantId 租户id
      * @return boolean 是否删除成功
      * @since 9.6.0
      */
     @Override
-    public boolean deleteDepartment(@RequestParam String tenantId, @RequestParam String departmentId) {
+    public boolean deleteDepartment(@RequestParam("deptId") @NotBlank String deptId, @RequestParam("tenantId") @NotBlank String tenantId) {
         Y9LoginUserHolder.setTenantId(tenantId);
 
-        y9DepartmentService.delete(departmentId);
+        y9DepartmentService.delete(deptId);
         return true;
     }
 
@@ -105,11 +106,7 @@ public class DepartmentApiImpl implements DepartmentApi {
      * @since 9.6.0
      */
     @Override
-    public boolean disableDepartment(@RequestParam String tenantId, @RequestParam String departmentId) {
-        if (StringUtils.isBlank(tenantId) || StringUtils.isBlank(departmentId)) {
-            return false;
-        }
-
+    public boolean disableDepartment(@RequestParam("tenantId") @NotBlank String tenantId, @RequestParam("departmentId") @NotBlank String departmentId) {
         Y9LoginUserHolder.setTenantId(tenantId);
 
         y9DepartmentService.changeDisable(departmentId);
@@ -126,7 +123,7 @@ public class DepartmentApiImpl implements DepartmentApi {
      * @since 9.6.0
      */
     @Override
-    public OrgUnit getBureau(@RequestParam String tenantId, @RequestParam String departmentId) {
+    public OrgUnit getBureau(@RequestParam("tenantId") @NotBlank String tenantId, @RequestParam("departmentId") @NotBlank String departmentId) {
         Y9LoginUserHolder.setTenantId(tenantId);
 
         Y9OrgBase bureau = compositeOrgBaseService.getOrgUnitBureau(departmentId);
@@ -142,7 +139,7 @@ public class DepartmentApiImpl implements DepartmentApi {
      * @since 9.6.0
      */
     @Override
-    public Department getDepartment(@RequestParam String tenantId, @RequestParam String departmentId) {
+    public Department getDepartment(@RequestParam("tenantId") @NotBlank String tenantId, @RequestParam("departmentId") @NotBlank String departmentId) {
         Y9LoginUserHolder.setTenantId(tenantId);
 
         Y9Department y9Department = y9DepartmentService.findById(departmentId);
@@ -158,7 +155,7 @@ public class DepartmentApiImpl implements DepartmentApi {
      * @since 9.6.0
      */
     @Override
-    public OrgUnit getParent(@RequestParam String tenantId, @RequestParam String departmentId) {
+    public OrgUnit getParent(@RequestParam("tenantId") @NotBlank String tenantId, @RequestParam("departmentId") @NotBlank String departmentId) {
         Y9LoginUserHolder.setTenantId(tenantId);
         
         Y9OrgBase parent = compositeOrgBaseService.getParent(departmentId);
@@ -174,7 +171,7 @@ public class DepartmentApiImpl implements DepartmentApi {
      * @since 9.6.0
      */
     @Override
-    public List<Person> listAllPersons(@RequestParam String tenantId, @RequestParam String departmentId) {
+    public List<Person> listAllPersons(@RequestParam("tenantId") @NotBlank String tenantId, @RequestParam("departmentId") @NotBlank String departmentId) {
         Y9LoginUserHolder.setTenantId(tenantId);
 
         List<Y9Person> y9PersonList = compositeOrgBaseService.listAllPersonsRecursionDownward(departmentId);
@@ -191,7 +188,7 @@ public class DepartmentApiImpl implements DepartmentApi {
      * @since 9.6.0
      */
     @Override
-    public List<Person> listAllPersonsByDisabled(@RequestParam String tenantId, @RequestParam String departmentId, @RequestParam Boolean disabled) {
+    public List<Person> listAllPersonsByDisabled(@RequestParam("tenantId") @NotBlank String tenantId, @RequestParam("departmentId") @NotBlank String departmentId, @RequestParam("disabled") Boolean disabled) {
         Y9LoginUserHolder.setTenantId(tenantId);
 
         List<Y9Person> y9PersonList = compositeOrgBaseService.listAllPersonsRecursionDownward(departmentId, disabled);
@@ -209,8 +206,7 @@ public class DepartmentApiImpl implements DepartmentApi {
      * @since 9.6.0
      */
     @Override
-    public List<Person> listAllPersonsByDisabledAndName(@RequestParam String tenantId,
-        @RequestParam String departmentId, @RequestParam Boolean disabled, @RequestParam String name) {
+    public List<Person> listAllPersonsByDisabledAndName(@RequestParam("tenantId") @NotBlank String tenantId, @RequestParam("departmentId") @NotBlank String departmentId, @RequestParam("disabled") Boolean disabled, @RequestParam("name") @NotBlank String name) {
         Y9LoginUserHolder.setTenantId(tenantId);
 
         List<Y9Person> y9PersonList = compositeOrgBaseService.searchAllPersonsRecursionDownward(departmentId, disabled, name);
@@ -226,7 +222,7 @@ public class DepartmentApiImpl implements DepartmentApi {
      * @since 9.6.0
      */
     @Override
-    public List<Department> listByDn(@RequestParam String tenantId, @RequestParam String dn) {
+    public List<Department> listByDn(@RequestParam("tenantId") @NotBlank String tenantId, @RequestParam("dn") @NotBlank String dn) {
         Y9LoginUserHolder.setTenantId(tenantId);
 
         List<Y9Department> y9DepartmentList = y9DepartmentService.listByDn(dn);
@@ -243,10 +239,7 @@ public class DepartmentApiImpl implements DepartmentApi {
      * @since 9.6.0
      */
     @Override
-    public List<DepartmentProp> listByOrgBaseIdAndCategory(@RequestParam String tenantId, @RequestParam String orgBaseId, @RequestParam Integer category) {
-        if (StringUtils.isBlank(tenantId) || StringUtils.isBlank(orgBaseId)) {
-            return new ArrayList<>();
-        }
+    public List<DepartmentProp> listByOrgBaseIdAndCategory(@RequestParam("tenantId") @NotBlank String tenantId, @RequestParam("orgBaseId") @NotBlank String orgBaseId, @RequestParam("category") @NotBlank Integer category) {
         Y9LoginUserHolder.setTenantId(tenantId);
 
         List<Y9DepartmentProp> y9DepartmentPropList = y9DepartmentPropService.listByOrgBaseIdAndCategory(orgBaseId, category);
@@ -262,7 +255,7 @@ public class DepartmentApiImpl implements DepartmentApi {
      * @since 9.6.0
      */
     @Override
-    public List<Department> listByTenantIdAndDeptName(@RequestParam String tenantId, @RequestParam String deptName) {
+    public List<Department> listByTenantIdAndDeptName(@RequestParam("tenantId") @NotBlank String tenantId, @RequestParam("deptName") @NotBlank String deptName) {
         Y9LoginUserHolder.setTenantId(tenantId);
 
         List<Y9Department> y9DepartmentList = y9DepartmentService.listByNameLike(deptName);
@@ -278,7 +271,7 @@ public class DepartmentApiImpl implements DepartmentApi {
      * @since 9.6.0
      */
     @Override
-    public List<Department> listDepartments(@RequestParam String tenantId, @RequestParam List<String> ids) {
+    public List<Department> listDepartments(@RequestParam("tenantId") @NotBlank String tenantId, @RequestParam("ids") @NotEmpty List<String> ids) {
         Y9LoginUserHolder.setTenantId(tenantId);
 
         List<Y9Department> y9DepartmentList = y9DepartmentService.list(ids);
@@ -294,7 +287,7 @@ public class DepartmentApiImpl implements DepartmentApi {
      * @since 9.6.0
      */
     @Override
-    public List<Group> listGroups(@RequestParam String tenantId, @RequestParam String departmentId) {
+    public List<Group> listGroups(@RequestParam("tenantId") @NotBlank String tenantId, @RequestParam("departmentId") @NotBlank String departmentId) {
         Y9LoginUserHolder.setTenantId(tenantId);
 
         List<Y9Group> y9GroupList = y9GroupService.listByParentId(departmentId);
@@ -310,7 +303,7 @@ public class DepartmentApiImpl implements DepartmentApi {
      * @since 9.6.0
      */
     @Override
-    public List<OrgUnit> listLeaders(@RequestParam String tenantId, @RequestParam String departmentId) {
+    public List<OrgUnit> listLeaders(@RequestParam("tenantId") @NotBlank String tenantId, @RequestParam("departmentId") @NotBlank String departmentId) {
         Y9LoginUserHolder.setTenantId(tenantId);
 
         List<Y9OrgBase> y9OrgBaseList = y9DepartmentService.listLeaders(departmentId);
@@ -326,7 +319,7 @@ public class DepartmentApiImpl implements DepartmentApi {
      * @since 9.6.0
      */
     @Override
-    public List<OrgUnit> listManagers(@RequestParam String tenantId, @RequestParam String departmentId) {
+    public List<OrgUnit> listManagers(@RequestParam("tenantId") @NotBlank String tenantId, @RequestParam("departmentId") @NotBlank String departmentId) {
         Y9LoginUserHolder.setTenantId(tenantId);
 
         List<Y9OrgBase> y9OrgBaseList = y9DepartmentService.listManagers(departmentId);
@@ -342,7 +335,7 @@ public class DepartmentApiImpl implements DepartmentApi {
      * @since 9.6.0
      */
     @Override
-    public List<Person> listPersons(@RequestParam String tenantId, @RequestParam String departmentId) {
+    public List<Person> listPersons(@RequestParam("tenantId") @NotBlank String tenantId, @RequestParam("departmentId") @NotBlank String departmentId) {
         Y9LoginUserHolder.setTenantId(tenantId);
 
         List<Y9Person> y9PersonList = y9PersonService.listByParentId(departmentId);
@@ -359,7 +352,7 @@ public class DepartmentApiImpl implements DepartmentApi {
      * @since 9.6.0
      */
     @Override
-    public List<Person> listPersonsByDisabled(@RequestParam String tenantId, @RequestParam String departmentId, @RequestParam Boolean disabled) {
+    public List<Person> listPersonsByDisabled(@RequestParam("tenantId") @NotBlank String tenantId, @RequestParam("departmentId") @NotBlank String departmentId, @RequestParam("disabled") Boolean disabled) {
         Y9LoginUserHolder.setTenantId(tenantId);
 
         List<Y9Person> y9PersonList = y9PersonService.listByParentIdAndDisabled(departmentId, disabled);
@@ -375,7 +368,7 @@ public class DepartmentApiImpl implements DepartmentApi {
      * @since 9.6.0
      */
     @Override
-    public List<Position> listPositions(@RequestParam String tenantId, @RequestParam String departmentId) {
+    public List<Position> listPositions(@RequestParam("tenantId") @NotBlank String tenantId, @RequestParam("departmentId") @NotBlank String departmentId) {
         Y9LoginUserHolder.setTenantId(tenantId);
 
         List<Y9Position> y9PositionList = y9PositionService.listByParentId(departmentId);
@@ -391,7 +384,7 @@ public class DepartmentApiImpl implements DepartmentApi {
      * @since 9.6.0
      */
     @Override
-    public List<Department> listSubDepartments(@RequestParam String tenantId, @RequestParam String departmentId) {
+    public List<Department> listSubDepartments(@RequestParam("tenantId") @NotBlank String tenantId, @RequestParam("departmentId") @NotBlank String departmentId) {
         Y9LoginUserHolder.setTenantId(tenantId);
 
         List<Y9Department> y9DepartmentList = y9DepartmentService.listByParentId(departmentId);
@@ -407,7 +400,7 @@ public class DepartmentApiImpl implements DepartmentApi {
      * @since 9.6.0
      */
     @Override
-    public Department saveDepartment(@RequestParam String tenantId, @RequestParam String departmentJson) {
+    public Department saveDepartment(@RequestParam("tenantId") @NotBlank String tenantId, @RequestParam("departmentJson") @NotBlank String departmentJson) {
         Y9LoginUserHolder.setTenantId(tenantId);
 
         Y9Department y9Department = Y9JsonUtil.readValue(departmentJson, Y9Department.class);
@@ -424,7 +417,7 @@ public class DepartmentApiImpl implements DepartmentApi {
      * @since 9.6.0
      */
     @Override
-    public List<Department> search(@RequestParam String tenantId, @RequestParam String whereClause) {
+    public List<Department> search(@RequestParam("tenantId") @NotBlank String tenantId, @RequestParam("whereClause") @NotBlank String whereClause) {
         Y9LoginUserHolder.setTenantId(tenantId);
 
         List<Y9Department> y9DepartmentList = y9DepartmentService.search(whereClause);

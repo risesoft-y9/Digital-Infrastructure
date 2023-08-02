@@ -2,10 +2,13 @@ package net.risesoft.api.tenant;
 
 import java.util.List;
 
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import net.risesoft.model.Tenant;
+
+import javax.validation.constraints.NotBlank;
 
 /**
  * 租户管理组件
@@ -16,6 +19,7 @@ import net.risesoft.model.Tenant;
  * @date 2022/2/10
  * @since 9.6.0
  */
+@Validated
 public interface TenantApi {
 
     /**
@@ -26,7 +30,7 @@ public interface TenantApi {
      * @since 9.6.0
      */
     @GetMapping("/getById")
-    Tenant getById(@RequestParam("tenantId") String tenantId);
+    Tenant getById(@RequestParam("tenantId") @NotBlank String tenantId);
 
     /**
      * 获取所有租户对象
@@ -45,7 +49,7 @@ public interface TenantApi {
      * @since 9.6.0
      */
     @GetMapping("/listByName")
-    List<Tenant> listByName(@RequestParam("tenantName") String tenantName);
+    List<Tenant> listByName(@RequestParam("tenantName") @NotBlank String tenantName);
 
     /**
      * 根据租户登录名称（租户英文名称），获取租户列表
@@ -55,7 +59,7 @@ public interface TenantApi {
      * @since 9.6.0
      */
     @GetMapping("/listByShortName")
-    List<Tenant> listByShortName(@RequestParam("shortName") String shortName);
+    List<Tenant> listByShortName(@RequestParam("shortName") @NotBlank String shortName);
 
     /**
      * 获取指定租户类型的所有租户对象
@@ -65,6 +69,6 @@ public interface TenantApi {
      * @since 9.6.0
      */
     @GetMapping("/listByTenantType")
-    List<Tenant> listByTenantType(@RequestParam("tenantType") Integer tenantType);
+    List<Tenant> listByTenantType(@RequestParam("tenantType") @NotBlank Integer tenantType);
 
 }

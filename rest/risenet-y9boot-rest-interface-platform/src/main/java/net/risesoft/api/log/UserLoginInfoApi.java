@@ -3,12 +3,15 @@ package net.risesoft.api.log;
 import java.util.Date;
 import java.util.List;
 
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import net.risesoft.model.userlogininfo.LoginInfo;
 import net.risesoft.pojo.Y9Page;
+
+import javax.validation.constraints.NotBlank;
 
 /**
  * 个人登录日志组件
@@ -17,6 +20,7 @@ import net.risesoft.pojo.Y9Page;
  * @date 2022/10/19
  * @since 9.6.0
  */
+@Validated
 public interface UserLoginInfoApi {
     /**
      * 获取个人使用的ip和登录次数列表
@@ -28,7 +32,7 @@ public interface UserLoginInfoApi {
      * @since 9.6.0
      */
     @GetMapping("/listDistinctUserHostIpByUserIdAndLoginTime")
-    List<Object[]> listDistinctUserHostIpByUserIdAndLoginTime(@RequestParam("personId") String personId, @RequestParam("startTime") Date startTime, @RequestParam("endTime") Date endTime);
+    List<Object[]> listDistinctUserHostIpByUserIdAndLoginTime(@RequestParam("personId") @NotBlank String personId, @RequestParam("startTime") Date startTime, @RequestParam("endTime") Date endTime);
 
     /**
      * 获取个人日志列表

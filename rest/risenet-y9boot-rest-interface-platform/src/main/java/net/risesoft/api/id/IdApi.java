@@ -1,5 +1,6 @@
 package net.risesoft.api.id;
 
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
 
 /**
@@ -11,6 +12,7 @@ import org.springframework.web.bind.annotation.GetMapping;
  * @date 2022/2/10
  * @since 9.6.0
  */
+@Validated
 public interface IdApi {
 
     /**

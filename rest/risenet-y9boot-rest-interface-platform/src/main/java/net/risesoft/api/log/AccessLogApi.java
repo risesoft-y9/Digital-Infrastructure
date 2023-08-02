@@ -4,6 +4,9 @@ import java.text.ParseException;
 import java.util.List;
 import java.util.Map;
 
+import javax.validation.constraints.NotBlank;
+
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -18,6 +21,7 @@ import net.risesoft.pojo.Y9Page;
  * @date 2022/10/19
  * @since 9.6.0
  */
+@Validated
 public interface AccessLogApi {
     /**
      * 异步保存访问日志
@@ -35,7 +39,7 @@ public interface AccessLogApi {
      * @since 9.6.0
      */
     @PostMapping("/asyncSaveLogByJson")
-    void asyncSaveLogByJson(@RequestParam("accessLogJson") String accessLogJson);
+    void asyncSaveLogByJson(@RequestParam("accessLogJson") @NotBlank String accessLogJson);
 
     /**
      * 获取模块访问次数
@@ -61,7 +65,7 @@ public interface AccessLogApi {
      * @since 9.6.0
      */
     @GetMapping("/pageByOperateType")
-    Y9Page<AccessLog> pageByOperateType(@RequestParam("operateType") String operateType, @RequestParam("page") Integer page, @RequestParam("rows") Integer rows);
+    Y9Page<AccessLog> pageByOperateType(@RequestParam("operateType") @NotBlank String operateType, @RequestParam("page") Integer page, @RequestParam("rows") Integer rows);
 
     /**
      * 根据组织架构类型分页查找日志
@@ -76,7 +80,7 @@ public interface AccessLogApi {
      * @since 9.6.0
      */
     @GetMapping("/pageByOrgType")
-    Y9Page<AccessLog> pageByOrgType(@RequestParam("tenantId") String tenantId, @RequestParam("orgId") String orgId, @RequestParam("orgType") String orgType, @RequestParam("operateType") String operateType, @RequestParam("page") Integer page, @RequestParam("rows") Integer rows);
+    Y9Page<AccessLog> pageByOrgType(@RequestParam("tenantId") @NotBlank String tenantId, @RequestParam("orgId") @NotBlank String orgId, @RequestParam("orgType") @NotBlank String orgType, @RequestParam("operateType") @NotBlank String operateType, @RequestParam("page") Integer page, @RequestParam("rows") Integer rows);
 
     /**
      * 保存访问日志
@@ -96,7 +100,7 @@ public interface AccessLogApi {
      * @since 9.6.0
      */
     @PostMapping("/saveLogByJson")
-    boolean saveLogByJson(@RequestParam("accessLogJson") String accessLogJson);
+    boolean saveLogByJson(@RequestParam("accessLogJson") @NotBlank String accessLogJson);
 
     /**
      * 多条件分页查询
@@ -131,6 +135,6 @@ public interface AccessLogApi {
      * @since 9.6.0
      */
     @GetMapping("/searchLog")
-    List<String> searchLog(@RequestParam("loginName") String loginName, @RequestParam("startTime") Long startTime, @RequestParam("endTime") Long endTime, @RequestParam("tenantId") String tenantId);
+    List<String> searchLog(@RequestParam("loginName") @NotBlank String loginName, @RequestParam("startTime") Long startTime, @RequestParam("endTime") Long endTime, @RequestParam("tenantId") String tenantId);
 
 }

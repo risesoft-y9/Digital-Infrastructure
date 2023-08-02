@@ -16,6 +16,8 @@ import net.risesoft.service.org.Y9PersonService;
 import net.risesoft.util.Y9PlatformUtil;
 import net.risesoft.y9.Y9LoginUserHolder;
 
+import javax.validation.constraints.NotBlank;
+
 /**
  * 用户身份验证服务组件
  *
@@ -44,7 +46,7 @@ public class AuthenticateApiImpl implements AuthenticateApi {
      * @since 9.6.0
      */
     @Override
-    public Message authenticate3(@RequestParam String tenantShortName, @RequestParam String loginName, @RequestParam String password) {
+    public Message authenticate3(@RequestParam("tenantShortName") @NotBlank String tenantShortName, @RequestParam("loginName") @NotBlank String loginName, @RequestParam("password") @NotBlank String password) {
         List<String> tenantIds = Y9PlatformUtil.getTenantByLoginName(tenantShortName);
         if (!tenantIds.isEmpty()) {
             String tenantId = tenantIds.get(0);
@@ -63,7 +65,7 @@ public class AuthenticateApiImpl implements AuthenticateApi {
      * @since 9.6.0
      */
     @Override
-    public Message authenticate5(@RequestParam String tenantShortName, @RequestParam String mobile, @RequestParam String password) {
+    public Message authenticate5(@RequestParam("tenantShortName") @NotBlank String tenantShortName, @RequestParam("mobile") @NotBlank String mobile, @RequestParam("password") @NotBlank String password) {
         List<String> tenantIds = Y9PlatformUtil.getTenantByLoginName(tenantShortName);
         if (!tenantIds.isEmpty()) {
             String tenantId = tenantIds.get(0);

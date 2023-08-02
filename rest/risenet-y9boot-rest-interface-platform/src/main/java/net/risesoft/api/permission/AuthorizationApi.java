@@ -1,9 +1,12 @@
 package net.risesoft.api.permission;
 
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import net.risesoft.enums.AuthorityEnum;
+
+import javax.validation.constraints.NotBlank;
 
 /**
  * 权限管理组件
@@ -14,6 +17,7 @@ import net.risesoft.enums.AuthorityEnum;
  * @date 2022/2/10
  * @since 9.6.0
  */
+@Validated
 public interface AuthorizationApi {
 
     /**
@@ -27,6 +31,6 @@ public interface AuthorizationApi {
      * @since 9.6.0
      */
     @PostMapping("/save")
-    void save(@RequestParam("tenantId") String tenantId, @RequestParam("personId") String personId, @RequestParam("resourceId") String resourceId, @RequestParam("roleId") String roleId, @RequestParam("authority") Integer authority);
+    void save(@RequestParam("tenantId") @NotBlank String tenantId, @RequestParam("personId") @NotBlank String personId, @RequestParam("resourceId") @NotBlank String resourceId, @RequestParam("roleId") @NotBlank String roleId, @RequestParam("authority") @NotBlank Integer authority);
 
 }

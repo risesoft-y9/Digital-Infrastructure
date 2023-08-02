@@ -10,10 +10,13 @@ import java.util.concurrent.ThreadFactory;
 import java.util.concurrent.ThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
 
+import javax.validation.constraints.NotBlank;
+
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import lombok.RequiredArgsConstructor;
@@ -76,7 +79,7 @@ public class AccessLogApiController implements AccessLogApi {
      */
     @PostMapping("/asyncSaveLogByJson")
     @Override
-    public void asyncSaveLogByJson(String accessLogJson) {
+    public void asyncSaveLogByJson(@RequestParam("accessLogJson") @NotBlank String accessLogJson) {
         ThreadFactory myThread = new ThreadFactoryBuilder().setNamePrefix("y9-asyncSaveLogByJson").build();
         ThreadPoolExecutor threadPool = new ThreadPoolExecutor(2, 2, 100, TimeUnit.SECONDS, new LinkedBlockingDeque<>(5), myThread);
         threadPool.execute(() -> saveLogByJson(accessLogJson));
@@ -128,7 +131,7 @@ public class AccessLogApiController implements AccessLogApi {
      */
     @GetMapping("/pageByOperateType")
     @Override
-    public Y9Page<AccessLog> pageByOperateType(String operateType, Integer page, Integer rows) {
+    public Y9Page<AccessLog> pageByOperateType(@RequestParam("operateType") @NotBlank String operateType, @RequestParam("page") Integer page, @RequestParam("rows") Integer rows) {
         Y9Page<AccessLog> map = accessLogService.pageByOperateType(operateType, page, rows);
         return map;
     }
@@ -146,7 +149,7 @@ public class AccessLogApiController implements AccessLogApi {
      */
     @Override
     @GetMapping("/pageByOrgType")
-    public Y9Page<AccessLog> pageByOrgType(String tenantId, String orgId, String orgType, String operateType, Integer page, Integer rows) {
+    public Y9Page<AccessLog> pageByOrgType(@RequestParam("tenantId") @NotBlank String tenantId, @RequestParam("orgId") @NotBlank String orgId, @RequestParam("orgType") @NotBlank String orgType, @RequestParam("operateType") @NotBlank String operateType, @RequestParam("page") Integer page, @RequestParam("rows") Integer rows) {
         Y9Page<AccessLog> map = accessLogService.pageByOrgType(tenantId, orgId, orgType, operateType, page, rows);
         return map;
     }
@@ -181,7 +184,7 @@ public class AccessLogApiController implements AccessLogApi {
      */
     @Override
     @PostMapping("/saveLogByJson")
-    public boolean saveLogByJson(String accessLogJson) {
+    public boolean saveLogByJson(@RequestParam("accessLogJson") @NotBlank String accessLogJson) {
         boolean ret = true;
         try {
             Y9logAccessLog accessLog = Y9JsonUtil.readValue(accessLogJson, Y9logAccessLog.class);
@@ -212,7 +215,9 @@ public class AccessLogApiController implements AccessLogApi {
      */
     @Override
     @GetMapping("/search")
-    public Y9Page<AccessLog> search(String logLevel, String success, String operateType, String operateName, String userName, String userHostIp, String startTime, String endTime, Integer page, Integer rows) throws ParseException {
+    public Y9Page<AccessLog> search(@RequestParam(value = "logLevel", required = false) String logLevel, @RequestParam(value = "success", required = false) String success, @RequestParam(value = "operateType", required = false) String operateType,
+                                    @RequestParam(value = "operateName", required = false) String operateName, @RequestParam(value = "userName", required = false) String userName, @RequestParam(value = "userHostIp", required = false) String userHostIp, @RequestParam(value = "startTime", required = false) String startTime,
+                                    @RequestParam(value = "endTime", required = false) String endTime, @RequestParam("page") Integer page, @RequestParam("rows") Integer rows) throws ParseException {
         LogInfoModel search = new LogInfoModel();
         search.setLogLevel(logLevel);
         search.setOperateName(operateName);
@@ -235,7 +240,7 @@ public class AccessLogApiController implements AccessLogApi {
      */
     @Override
     @GetMapping("/searchLog")
-    public List<String> searchLog(String loginName, Long startTime, Long endTime, String tenantId) {
+    public List<String> searchLog(@RequestParam("loginName") @NotBlank String loginName, @RequestParam("startTime") Long startTime, @RequestParam("endTime") Long endTime, @RequestParam("tenantId") String tenantId) {
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         String sTime = "";
         String eTime = "";

@@ -45,6 +45,8 @@ import net.risesoft.y9public.entity.event.Y9PublishedEventSyncHistory;
 import net.risesoft.y9public.service.event.Y9PublishedEventService;
 import net.risesoft.y9public.service.event.Y9PublishedEventSyncHistoryService;
 
+import javax.validation.constraints.NotBlank;
+
 /**
  * 组织同步组件
  *
@@ -70,7 +72,7 @@ public class OrgSyncApiImpl implements OrgSyncApi {
     private final Y9PublishedEventService y9PublishedEventService;
     private final Y9PublishedEventSyncHistoryService y9PublishedEventSyncHistoryService;
 
-    private OrgUnit getOrgBase(@RequestParam String eventType, @RequestParam String objId) {
+    private OrgUnit getOrgBase(String eventType, String objId) {
         if (StringUtils.isBlank(objId)) {
             return null;
         }
@@ -147,8 +149,9 @@ public class OrgSyncApiImpl implements OrgSyncApi {
      * @since 9.6.0
      */
     @Override
-    public Y9Result<MessageOrg> fullSync(@RequestParam String appName, @RequestParam String tenantId, @RequestParam String organizationId) {
+    public Y9Result<MessageOrg> fullSync(@RequestParam("appName") @NotBlank String appName, @RequestParam("tenantId") @NotBlank String tenantId, @RequestParam("organizationId") @NotBlank String organizationId) {
         Y9LoginUserHolder.setTenantId(tenantId);
+        
         Date syncTime = new Date();
         HashMap<String, Serializable> dateMap = compositeOrgBaseService.getSyncMap(organizationId, OrgTypeEnum.ORGANIZATION.getEnName(), 1);
         MessageOrg event = new MessageOrg(dateMap, Y9OrgEventConst.RISEORGEVENT_TYPE_SYNC, Y9LoginUserHolder.getTenantId());
@@ -166,10 +169,10 @@ public class OrgSyncApiImpl implements OrgSyncApi {
      * @since 9.6.0
      */
     @Override
-    public Y9Result<List<MessageOrg>> incrSync(@RequestParam String appName, @RequestParam String tenantId) {
+    public Y9Result<List<MessageOrg>> incrSync(@RequestParam("appName") @NotBlank String appName, @RequestParam("tenantId") @NotBlank String tenantId) {
         Y9LoginUserHolder.setTenantId(tenantId);
+        
         Date syncTime = new Date();
-
         Date startTime = null;
         Y9PublishedEventSyncHistory history = y9PublishedEventSyncHistoryService.findByTenantIdAndAppName(tenantId, appName);
         if (history != null) {

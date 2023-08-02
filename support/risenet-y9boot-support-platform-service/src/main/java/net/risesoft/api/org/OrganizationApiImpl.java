@@ -29,6 +29,8 @@ import net.risesoft.service.org.Y9PositionService;
 import net.risesoft.y9.Y9LoginUserHolder;
 import net.risesoft.y9.util.Y9ModelConvertUtil;
 
+import javax.validation.constraints.NotBlank;
+
 /**
  * 机构服务组件
  *
@@ -60,7 +62,7 @@ public class OrganizationApiImpl implements OrganizationApi {
      * @since 9.6.0
      */
     @Override
-    public Organization getOrganization(@RequestParam String tenantId, @RequestParam String organizationId) {
+    public Organization getOrganization(@RequestParam("tenantId") @NotBlank String tenantId, @RequestParam("organizationId") @NotBlank String organizationId) {
         Y9LoginUserHolder.setTenantId(tenantId);
         
         Y9Organization y9Organization = orgOrganizationService.findById(organizationId);
@@ -76,7 +78,7 @@ public class OrganizationApiImpl implements OrganizationApi {
      * @since 9.6.0
      */
     @Override
-    public List<Department> listAllBureaus(@RequestParam String tenantId, @RequestParam String organizationId) {
+    public List<Department> listAllBureaus(@RequestParam("tenantId") @NotBlank String tenantId, @RequestParam("organizationId") @NotBlank String organizationId) {
         Y9LoginUserHolder.setTenantId(tenantId);
         
         List<Y9Department> y9DepartmentList = y9DepartmentService.listBureau(organizationId);
@@ -91,7 +93,7 @@ public class OrganizationApiImpl implements OrganizationApi {
      * @since 9.6.0
      */
     @Override
-    public List<Organization> listAllOrganizations(@RequestParam String tenantId) {
+    public List<Organization> listAllOrganizations(@RequestParam("tenantId") @NotBlank String tenantId) {
         Y9LoginUserHolder.setTenantId(tenantId);
         
         List<Y9Organization> y9OrganizationList = orgOrganizationService.list(false);
@@ -107,7 +109,7 @@ public class OrganizationApiImpl implements OrganizationApi {
      * @since 9.6.0
      */
     @Override
-    public List<Organization> listByType(@RequestParam String tenantId, @RequestParam Boolean virtual) {
+    public List<Organization> listByType(@RequestParam("tenantId") @NotBlank String tenantId, @RequestParam("virtual") Boolean virtual) {
         Y9LoginUserHolder.setTenantId(tenantId);
         
         List<Y9Organization> y9OrganizationList = orgOrganizationService.list(virtual);
@@ -123,7 +125,7 @@ public class OrganizationApiImpl implements OrganizationApi {
      * @since 9.6.0
      */
     @Override
-    public List<Department> listDepartments(@RequestParam String tenantId, @RequestParam String organizationId) {
+    public List<Department> listDepartments(@RequestParam("tenantId") @NotBlank String tenantId, @RequestParam("organizationId") @NotBlank String organizationId) {
         Y9LoginUserHolder.setTenantId(tenantId);
         
         List<Y9Department> y9DepartmentList = y9DepartmentService.listByParentId(organizationId);
@@ -139,7 +141,7 @@ public class OrganizationApiImpl implements OrganizationApi {
      * @since 9.6.0
      */
     @Override
-    public List<Group> listGroups(@RequestParam String tenantId, @RequestParam String organizationId) {
+    public List<Group> listGroups(@RequestParam("tenantId") @NotBlank String tenantId, @RequestParam("organizationId") @NotBlank String organizationId) {
         Y9LoginUserHolder.setTenantId(tenantId);
         
         List<Y9Group> y9GroupList = orgGroupService.listByParentId(organizationId);
@@ -155,7 +157,7 @@ public class OrganizationApiImpl implements OrganizationApi {
      * @since 9.6.0
      */
     @Override
-    public List<Person> listPersons(@RequestParam String tenantId, @RequestParam String organizationId) {
+    public List<Person> listPersons(@RequestParam("tenantId") @NotBlank String tenantId, @RequestParam("organizationId") @NotBlank String organizationId) {
         Y9LoginUserHolder.setTenantId(tenantId);
         
         List<Y9Person> y9PersonList = orgPersonService.listByParentId(organizationId);
@@ -171,7 +173,7 @@ public class OrganizationApiImpl implements OrganizationApi {
      * @since 9.6.0
      */
     @Override
-    public List<Position> listPositions(@RequestParam String tenantId, @RequestParam String organizationId) {
+    public List<Position> listPositions(@RequestParam("tenantId") @NotBlank String tenantId, @RequestParam("organizationId") @NotBlank String organizationId) {
         Y9LoginUserHolder.setTenantId(tenantId);
         
         List<Y9Position> y9PositionList = orgPositionService.listByParentId(organizationId);

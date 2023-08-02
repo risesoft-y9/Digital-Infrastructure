@@ -1,5 +1,8 @@
 package net.risesoft.api.log;
 
+import javax.validation.constraints.NotBlank;
+
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
@@ -12,6 +15,7 @@ import net.risesoft.model.ClickedApp;
  * @date 2022/10/19
  * @since 9.6.0
  */
+@Validated
 public interface ClickedAppApi {
     /**
      * 保存点击的图标的人员Id和应用名称等信息
@@ -31,5 +35,5 @@ public interface ClickedAppApi {
      * @since 9.6.0
      */
     @PostMapping("/saveClickedAppLogByJson")
-    boolean saveClickedAppLogByJson(@RequestParam("clickedAppJson") String clickedAppJson);
+    boolean saveClickedAppLogByJson(@RequestParam("clickedAppJson") @NotBlank String clickedAppJson);
 }

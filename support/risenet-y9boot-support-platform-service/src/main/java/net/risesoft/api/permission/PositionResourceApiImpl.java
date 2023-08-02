@@ -20,6 +20,8 @@ import net.risesoft.y9.util.Y9ModelConvertUtil;
 import net.risesoft.y9public.entity.resource.Y9Menu;
 import net.risesoft.y9public.entity.resource.Y9ResourceBase;
 
+import javax.validation.constraints.NotBlank;
+
 /**
  * 岗位资源权限组件
  *
@@ -49,7 +51,7 @@ public class PositionResourceApiImpl implements PositionResourceApi {
      * @since 9.6.0
      */
     @Override
-    public boolean hasPermission(@RequestParam String tenantId, @RequestParam String positionId, @RequestParam String resourceId, @RequestParam Integer authority) {
+    public boolean hasPermission(@RequestParam("tenantId") @NotBlank String tenantId, @RequestParam("positionId") @NotBlank String positionId, @RequestParam("resourceId") @NotBlank String resourceId, @RequestParam("authority") Integer authority) {
         Y9LoginUserHolder.setTenantId(tenantId);
         
         return y9PositionToResourceAndAuthorityService.hasPermission(positionId, resourceId, authority);
@@ -66,7 +68,7 @@ public class PositionResourceApiImpl implements PositionResourceApi {
      * @since 9.6.0
      */
     @Override
-    public boolean hasPermissionByCustomId(String tenantId, String positionId, String customId, Integer authority) {
+    public boolean hasPermissionByCustomId(@RequestParam("tenantId") @NotBlank String tenantId, @RequestParam("positionId") @NotBlank String positionId, @RequestParam("customId") @NotBlank String customId, @RequestParam("authority") Integer authority) {
         Y9LoginUserHolder.setTenantId(tenantId);
         
         return y9PositionToResourceAndAuthorityService.hasPermissionByCustomId(positionId, customId, authority);
@@ -83,7 +85,7 @@ public class PositionResourceApiImpl implements PositionResourceApi {
      * @since 9.6.0
      */
     @Override
-    public List<Resource> listSubMenus(@RequestParam String tenantId, @RequestParam String positionId, @RequestParam Integer authority, @RequestParam String resourceId) {
+    public List<Resource> listSubMenus(@RequestParam("tenantId") @NotBlank String tenantId, @RequestParam("positionId") @NotBlank String positionId, @RequestParam("authority") Integer authority, @RequestParam("resourceId") @NotBlank String resourceId) {
         Y9LoginUserHolder.setTenantId(tenantId);
 
         List<Y9Menu> y9MenuList = y9PositionToResourceAndAuthorityService.listSubMenus(positionId, resourceId, ResourceTypeEnum.MENU.getValue(), authority);
@@ -101,7 +103,7 @@ public class PositionResourceApiImpl implements PositionResourceApi {
      * @since 9.6.0
      */
     @Override
-    public List<Resource> listSubResources(@RequestParam String tenantId, @RequestParam String positionId, @RequestParam Integer authority, @RequestParam(required = false) String resourceId) {
+    public List<Resource> listSubResources(@RequestParam("tenantId") @NotBlank String tenantId, @RequestParam("positionId") @NotBlank String positionId, @RequestParam("authority") Integer authority, @RequestParam(name = "resourceId", required = false) String resourceId) {
         Y9LoginUserHolder.setTenantId(tenantId);
         
         List<Y9ResourceBase> returnResourceList = y9PositionToResourceAndAuthorityService.listSubResources(positionId, resourceId, authority);

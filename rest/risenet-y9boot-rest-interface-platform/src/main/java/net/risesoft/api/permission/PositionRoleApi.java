@@ -1,7 +1,10 @@
 package net.risesoft.api.permission;
 
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+
+import javax.validation.constraints.NotBlank;
 
 /**
  * 岗位角色接口
@@ -10,6 +13,7 @@ import org.springframework.web.bind.annotation.RequestParam;
  * @date 2022/11/11
  * @since 9.6.0
  */
+@Validated
 public interface PositionRoleApi {
 
     /**
@@ -22,6 +26,6 @@ public interface PositionRoleApi {
      * @since 9.6.0
      */
     @GetMapping("/hasRole")
-    Boolean hasRole(@RequestParam("tenantId") String tenantId, @RequestParam("positionId") String positionId, @RequestParam("customId") String customId);
+    Boolean hasRole(@RequestParam("tenantId") @NotBlank String tenantId, @RequestParam("positionId") @NotBlank String positionId, @RequestParam("customId") @NotBlank String customId);
 
 }

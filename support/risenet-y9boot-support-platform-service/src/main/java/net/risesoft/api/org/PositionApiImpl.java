@@ -219,9 +219,6 @@ public class PositionApiImpl implements PositionApi {
      */
     @Override
     public boolean removePerson(@RequestParam String tenantId, @RequestParam String positionId, @RequestParam String personId) {
-        if (StringUtils.isBlank(tenantId) || StringUtils.isBlank(positionId) || StringUtils.isBlank(personId)) {
-            return false;
-        }
         Y9LoginUserHolder.setTenantId(tenantId);
         
         if (y9PositionService.existsById(positionId) && orgPersonService.existsById(personId)) {
@@ -242,9 +239,6 @@ public class PositionApiImpl implements PositionApi {
      */
     @Override
     public Position updatePosition(@RequestParam String tenantId, @RequestParam String positionJson) {
-        if (StringUtils.isBlank(tenantId) || StringUtils.isBlank(positionJson)) {
-            return null;
-        }
         Y9LoginUserHolder.setTenantId(tenantId);
         
         Y9Position y9Position = Y9JsonUtil.readValue(positionJson, Y9Position.class);

@@ -2,6 +2,9 @@ package net.risesoft.api.dictionary;
 
 import java.util.List;
 
+import javax.validation.constraints.NotBlank;
+
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
@@ -16,6 +19,7 @@ import net.risesoft.model.OptionValue;
  * @date 2022/2/10
  * @since 9.6.0
  */
+@Validated
 public interface OptionValueApi {
 
     /**
@@ -27,5 +31,5 @@ public interface OptionValueApi {
      * @since 9.6.0
      */
     @GetMapping("/listByType")
-    List<OptionValue> listByType(@RequestParam("tenantId") String tenantId, @RequestParam("type") String type);
+    List<OptionValue> listByType(@RequestParam("tenantId") @NotBlank String tenantId, @RequestParam("type") @NotBlank String type);
 }

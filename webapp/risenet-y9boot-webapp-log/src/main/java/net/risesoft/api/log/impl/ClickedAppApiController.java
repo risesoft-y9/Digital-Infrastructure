@@ -2,6 +2,7 @@ package net.risesoft.api.log.impl;
 
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import lombok.RequiredArgsConstructor;
@@ -12,6 +13,8 @@ import net.risesoft.log.entity.Y9ClickedApp;
 import net.risesoft.log.service.Y9ClickedAppService;
 import net.risesoft.model.ClickedApp;
 import net.risesoft.y9.json.Y9JsonUtil;
+
+import javax.validation.constraints.NotBlank;
 
 /**
  * 应用点击详情
@@ -56,7 +59,7 @@ public class ClickedAppApiController implements ClickedAppApi {
      */
     @Override
     @PostMapping("/saveClickedAppLogByJson")
-    public boolean saveClickedAppLogByJson(String clickedAppJson) {
+    public boolean saveClickedAppLogByJson(@RequestParam("clickedAppJson") @NotBlank String clickedAppJson) {
         boolean result = true;
         try {
             Y9ClickedApp clickedApp = Y9JsonUtil.readValue(clickedAppJson, Y9ClickedApp.class);
