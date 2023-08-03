@@ -17,7 +17,7 @@ import net.risesoft.y9public.entity.resource.Y9Operation;
 @SuppressWarnings("AlibabaAbstractMethodOrInterfaceMethodMustUseJavadoc")
 @Repository
 @Transactional(value = "rsPublicTransactionManager", readOnly = true)
-//@JaversSpringDataAuditable
+// @JaversSpringDataAuditable
 public interface Y9OperationRepository extends JpaRepository<Y9Operation, String> {
 
     List<Y9Operation> findByNameContainingOrderByTabIndex(String name);

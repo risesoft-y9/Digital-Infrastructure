@@ -41,7 +41,7 @@ public class Y9PositionToRoleServiceImpl implements Y9PositionToRoleService {
         Y9Position y9Position = y9PositionManager.getById(positionId);
         y9PositionToRoleManager.update(y9Position, positionRelatedY9RoleList);
     }
-    
+
     @Override
     public Boolean hasRole(String positionId, String customId) {
         long count = y9PositionToRoleRepository.countByPositionIdAndRoleCustomId(positionId, customId);
@@ -57,7 +57,7 @@ public class Y9PositionToRoleServiceImpl implements Y9PositionToRoleService {
     public List<Y9PositionToRole> listByPositionIdAndSystemName(String positionId, String systemName) {
         return y9PositionToRoleRepository.findByPositionIdAndSystemNameOrderByAppName(positionId, systemName);
     }
-    
+
     @Override
     public Page<Y9PositionToRole> pageByPositionId(String positionId, int page, int rows, String sort) {
         return null;
@@ -71,7 +71,7 @@ public class Y9PositionToRoleServiceImpl implements Y9PositionToRoleService {
             y9PositionToRoleRepository.deleteAll(y9PositionToRoleList);
         }
     }
-    
+
     @Override
     @Transactional(readOnly = false)
     public void removeByRoleId(String roleId) {
@@ -80,7 +80,6 @@ public class Y9PositionToRoleServiceImpl implements Y9PositionToRoleService {
             y9PositionToRoleRepository.deleteAll(y9PositionToRoleList);
         }
     }
-
 
     @Override
     @Transactional(readOnly = false)

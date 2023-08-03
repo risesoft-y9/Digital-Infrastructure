@@ -20,7 +20,8 @@ import net.risesoft.entity.identity.position.Y9PositionToResourceAndAuthority;
 @SuppressWarnings("AlibabaAbstractMethodOrInterfaceMethodMustUseJavadoc")
 @Repository
 @Transactional(value = "rsTenantTransactionManager", readOnly = true)
-public interface Y9PositionToResourceAndAuthorityRepository extends JpaRepository<Y9PositionToResourceAndAuthority, Integer> {
+public interface Y9PositionToResourceAndAuthorityRepository
+    extends JpaRepository<Y9PositionToResourceAndAuthority, Integer> {
 
     @Modifying
     @Transactional(readOnly = false)
@@ -46,19 +47,27 @@ public interface Y9PositionToResourceAndAuthorityRepository extends JpaRepositor
 
     Page<Y9PositionToResourceAndAuthority> findByPositionId(String positionId, Pageable pageable);
 
-    List<Y9PositionToResourceAndAuthority> findByPositionIdAndAuthorityAndResourceTypeOrderByResourceTabIndex(String positionId, Integer authority, Integer resourceType);
+    List<Y9PositionToResourceAndAuthority> findByPositionIdAndAuthorityAndResourceTypeOrderByResourceTabIndex(
+        String positionId, Integer authority, Integer resourceType);
 
-    List<Y9PositionToResourceAndAuthority> findByPositionIdAndParentResourceIdAndAuthorityAndResourceTypeOrderByResourceTabIndex(String positionId, String parentResourceId, Integer authority, Integer resourceType);
+    List<Y9PositionToResourceAndAuthority>
+        findByPositionIdAndParentResourceIdAndAuthorityAndResourceTypeOrderByResourceTabIndex(String positionId,
+            String parentResourceId, Integer authority, Integer resourceType);
 
-    List<Y9PositionToResourceAndAuthority> findByPositionIdAndParentResourceIdAndAuthorityOrderByResourceTabIndex(String positionId, String parentResourceId, Integer authority);
+    List<Y9PositionToResourceAndAuthority> findByPositionIdAndParentResourceIdAndAuthorityOrderByResourceTabIndex(
+        String positionId, String parentResourceId, Integer authority);
 
-    List<Y9PositionToResourceAndAuthority> findByPositionIdAndParentResourceIdIsNullAndAuthorityOrderByResourceTabIndex(String positionId, Integer authority);
+    List<Y9PositionToResourceAndAuthority> findByPositionIdAndParentResourceIdIsNullAndAuthorityOrderByResourceTabIndex(
+        String positionId, Integer authority);
 
-    List<Y9PositionToResourceAndAuthority> findByPositionIdAndResourceCustomIdAndAuthority(String positionId, String customId, Integer authority);
+    List<Y9PositionToResourceAndAuthority> findByPositionIdAndResourceCustomIdAndAuthority(String positionId,
+        String customId, Integer authority);
 
-    List<Y9PositionToResourceAndAuthority> findByPositionIdAndResourceIdAndAuthority(String positionId, String resourceId, Integer authority);
+    List<Y9PositionToResourceAndAuthority> findByPositionIdAndResourceIdAndAuthority(String positionId,
+        String resourceId, Integer authority);
 
-    Y9PositionToResourceAndAuthority findByPositionIdAndResourceIdAndAuthorizationIdAndAuthority(String positionId, String resourceId, String authorizationId, Integer authority);
+    Y9PositionToResourceAndAuthority findByPositionIdAndResourceIdAndAuthorizationIdAndAuthority(String positionId,
+        String resourceId, String authorizationId, Integer authority);
 
     List<Y9PositionToResourceAndAuthority> findByResourceId(String resourceId);
 }

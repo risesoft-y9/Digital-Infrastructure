@@ -17,13 +17,11 @@ import net.risesoft.y9.pubsub.constant.Y9TopicConst;
 @Slf4j
 @RequiredArgsConstructor
 public class SaveLogInfo4Kafka {
-    
+
     private KafkaTemplate<String, Object> y9KafkaTemplate;
 
     private final Environment environment;
-    
-    
-    
+
     @Async("y9ThreadPoolTaskExecutor")
     public void asyncSave(final AccessLog log) {
         try {

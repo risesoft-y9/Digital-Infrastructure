@@ -37,7 +37,8 @@ public class HistoryController {
     private final Javers javers;
 
     @RequestMapping(value = "/changes", produces = "text/plain")
-    public Y9Result<String> getEntityChanges(@RequestParam String entity, @RequestParam Optional<Object> id, @RequestParam Optional<String> author) {
+    public Y9Result<String> getEntityChanges(@RequestParam String entity, @RequestParam Optional<Object> id,
+        @RequestParam Optional<String> author) {
         QueryBuilder jqlQuery = null;
         if (id.isPresent()) {
             jqlQuery = QueryBuilder.byInstanceId(id, entity);
@@ -62,7 +63,8 @@ public class HistoryController {
     }
 
     @RequestMapping("/shadows")
-    public Y9Result<List<Object>> getEntityShadows(@RequestParam String entity, @RequestParam Optional<Object> id, @RequestParam Optional<String> author) {
+    public Y9Result<List<Object>> getEntityShadows(@RequestParam String entity, @RequestParam Optional<Object> id,
+        @RequestParam Optional<String> author) {
         QueryBuilder jqlQuery = null;
         if (id.isPresent()) {
             jqlQuery = QueryBuilder.byInstanceId(id, entity);
@@ -88,7 +90,8 @@ public class HistoryController {
     }
 
     @RequestMapping("/getShadowRows")
-    public Y9Result<List<Map<String, Object>>> getEntityShadowsRows(@RequestParam String entity, @RequestParam Optional<String> id, @RequestParam Optional<String> author) throws ClassNotFoundException {
+    public Y9Result<List<Map<String, Object>>> getEntityShadowsRows(@RequestParam String entity,
+        @RequestParam Optional<String> id, @RequestParam Optional<String> author) throws ClassNotFoundException {
         QueryBuilder jqlQuery = null;
         this.getClass();
         if (id.isPresent()) {
@@ -99,7 +102,8 @@ public class HistoryController {
         DateTimeFormatter sdf = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
         jqlQuery = author.isPresent() ? jqlQuery.byAuthor(author.get()) : jqlQuery;
         List<CdoSnapshot> snapshots = javers.findSnapshots(jqlQuery.build());
-        snapshots.sort((o1, o2) -> -1 * o1.getCommitMetadata().getCommitDate().compareTo(o2.getCommitMetadata().getCommitDate()));
+        snapshots.sort(
+            (o1, o2) -> -1 * o1.getCommitMetadata().getCommitDate().compareTo(o2.getCommitMetadata().getCommitDate()));
         Map<String, Object> map = new HashMap<>();
         JsonConverter jsonConverter = javers.getJsonConverter();
         List<Map<String, Object>> columns = new ArrayList<>();
@@ -108,14 +112,18 @@ public class HistoryController {
             CommitMetadata commit = shot.getCommitMetadata();
             String json = jsonConverter.toJson(state);
             map = Y9JsonUtil.readHashMap(json, String.class, Object.class);
-            map.put("commitAuthor", "修改时间：" + commit.getCommitDate().format(sdf) + "  修改人员：" + commit.getProperties().getOrDefault("authorName", " ") + "(IP:" + commit.getProperties().getOrDefault("hostIp", "无") + ")");
+            map.put("commitAuthor",
+                "修改时间：" + commit.getCommitDate().format(sdf) + "  修改人员："
+                    + commit.getProperties().getOrDefault("authorName", " ") + "(IP:"
+                    + commit.getProperties().getOrDefault("hostIp", "无") + ")");
             columns.add(map);
         }
         return Y9Result.success(columns);
     }
 
     @RequestMapping("/snapshots")
-    public Y9Result<List<CdoSnapshot>> getEntitySnapshots(@RequestParam String entity, @RequestParam Optional<Object> id, @RequestParam Optional<String> author) {
+    public Y9Result<List<CdoSnapshot>> getEntitySnapshots(@RequestParam String entity,
+        @RequestParam Optional<Object> id, @RequestParam Optional<String> author) {
         QueryBuilder jqlQuery = null;
         if (id.isPresent()) {
             jqlQuery = QueryBuilder.byInstanceId(id, entity);
@@ -133,13 +141,15 @@ public class HistoryController {
 
         List<CdoSnapshot> snapshots = javers.findSnapshots(jqlQuery.build());
 
-        snapshots.sort((o1, o2) -> -1 * o1.getCommitMetadata().getCommitDate().compareTo(o2.getCommitMetadata().getCommitDate()));
+        snapshots.sort(
+            (o1, o2) -> -1 * o1.getCommitMetadata().getCommitDate().compareTo(o2.getCommitMetadata().getCommitDate()));
 
         return Y9Result.success(snapshots);
     }
 
     @RequestMapping("/getShadowTitles")
-    public Y9Result<Set<String>> getShadowTitles(@RequestParam String entity, @RequestParam Optional<Object> id, @RequestParam Optional<String> author) {
+    public Y9Result<Set<String>> getShadowTitles(@RequestParam String entity, @RequestParam Optional<Object> id,
+        @RequestParam Optional<String> author) {
         Set<String> titles = new HashSet<>();
         try {
             Optional<CdoSnapshot> snapshot = javers.getLatestSnapshot(id.orElse(null), Class.forName(entity));

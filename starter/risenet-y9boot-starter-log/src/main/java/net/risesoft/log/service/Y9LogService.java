@@ -12,5 +12,6 @@ import net.risesoft.model.AccessLog;
  * @date 2022/05/26
  */
 public interface Y9LogService {
-    public void process(MethodInvocation invocation, AccessLog log, HttpServletRequest request, HttpServletResponse response);
+    public void process(MethodInvocation invocation, AccessLog log, HttpServletRequest request,
+        HttpServletResponse response);
 }

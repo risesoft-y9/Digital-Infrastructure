@@ -42,7 +42,8 @@ public interface Y9PublishedEventService {
      * @param endTime 结束事件
      * @return {@link Page}<{@link Y9PublishedEvent}>
      */
-    Page<Y9PublishedEvent> page(int page, int rows, String eventName, String eventDescription, Date startTime, Date endTime);
+    Page<Y9PublishedEvent> page(int page, int rows, String eventName, String eventDescription, Date startTime,
+        Date endTime);
 
     /**
      * 分页查询
@@ -56,5 +57,6 @@ public interface Y9PublishedEventService {
      * @param endTime 结束事件
      * @return {@link Page}<{@link Y9PublishedEvent}>
      */
-    Page<Y9PublishedEvent> page(int page, int rows, String tenantId, String eventName, String eventDescription, Date startTime, Date endTime);
+    Page<Y9PublishedEvent> page(int page, int rows, String tenantId, String eventName, String eventDescription,
+        Date startTime, Date endTime);
 }

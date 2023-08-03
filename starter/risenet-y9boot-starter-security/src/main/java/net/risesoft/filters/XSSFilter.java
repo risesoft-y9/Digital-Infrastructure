@@ -11,7 +11,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 public class XSSFilter implements Filter {
-    
+
     /**
      * 判断Request ,Response 类型
      *
@@ -30,7 +30,8 @@ public class XSSFilter implements Filter {
     }
 
     @Override
-    public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) throws IOException, ServletException {
+    public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain)
+        throws IOException, ServletException {
         // 判断是否使用HTTP
         checkRequestResponse(request, response);
         // 转型

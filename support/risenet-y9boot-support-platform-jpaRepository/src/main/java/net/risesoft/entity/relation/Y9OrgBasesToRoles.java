@@ -32,7 +32,7 @@ import net.risesoft.enums.OrgTypeEnum;
 @NoArgsConstructor
 @Data
 public class Y9OrgBasesToRoles extends BaseEntity {
-    
+
     private static final long serialVersionUID = 3967117431373531659L;
 
     /** 主键 */
@@ -61,7 +61,7 @@ public class Y9OrgBasesToRoles extends BaseEntity {
     @Column(name = "ORG_TYPE", length = 255)
     @Comment("组织类型")
     protected String orgType;
-    
+
     /** 父节点唯一标识 */
     @Column(name = "ORG_PARENT_ID")
     @Comment("父节点唯一标识")
@@ -71,7 +71,7 @@ public class Y9OrgBasesToRoles extends BaseEntity {
     @Column(name = "ORG_ORDER", nullable = false)
     @Comment("关联排序号")
     private Integer orgOrder;
-    
+
     /** 是否为负角色关联 */
     @Type(type = "numeric_boolean")
     @Column(name = "NEGATIVE", nullable = false)

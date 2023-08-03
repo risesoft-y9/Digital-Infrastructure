@@ -5,6 +5,7 @@ import lombok.Setter;
 
 /**
  * kafka 消息发布配置
+ * 
  * @author liansen
  * @date 2022/09/28
  */

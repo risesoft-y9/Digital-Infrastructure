@@ -23,7 +23,7 @@ public enum TenantTypeEnum {
     ISV("开发商", 2),
     /** 租户 */
     TENANT("租户", 3);
-    
+
     private final String name;
     private final Integer value;
 }

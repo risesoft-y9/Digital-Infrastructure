@@ -57,5 +57,5 @@ public class Y9LicenseProperties {
      * 产品版本
      */
     private String productVersion;
-    
+
 }

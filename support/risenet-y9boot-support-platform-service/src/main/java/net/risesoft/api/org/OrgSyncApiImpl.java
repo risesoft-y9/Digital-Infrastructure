@@ -6,6 +6,8 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 
+import javax.validation.constraints.NotBlank;
+
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.context.annotation.Primary;
 import org.springframework.http.MediaType;
@@ -45,8 +47,6 @@ import net.risesoft.y9public.entity.event.Y9PublishedEventSyncHistory;
 import net.risesoft.y9public.service.event.Y9PublishedEventService;
 import net.risesoft.y9public.service.event.Y9PublishedEventSyncHistoryService;
 
-import javax.validation.constraints.NotBlank;
-
 /**
  * 组织同步组件
  *
@@ -83,55 +83,55 @@ public class OrgSyncApiImpl implements OrgSyncApi {
         if (Y9OrgEventConst.RISEORGEVENT_TYPE_ADD_DEPARTMENT.equals(eventType)) {
             Y9Department dept = orgDepartmentService.getById(objId);
             return Y9ModelConvertUtil.convert(dept, Department.class);
-        } 
+        }
         if (Y9OrgEventConst.RISEORGEVENT_TYPE_ADD_PERSON.equals(eventType)) {
             Y9Person person = orgPersonService.getById(objId);
             return Y9ModelConvertUtil.convert(person, Person.class);
-        } 
+        }
         if (Y9OrgEventConst.RISEORGEVENT_TYPE_UPDATE_ORGANIZATION.equals(eventType)) {
             Y9Organization org = orgOrganizationService.getById(objId);
             return Y9ModelConvertUtil.convert(org, Organization.class);
-        } 
+        }
         if (Y9OrgEventConst.RISEORGEVENT_TYPE_UPDATE_DEPARTMENT.equals(eventType)) {
             Y9Department dept = orgDepartmentService.getById(objId);
             return Y9ModelConvertUtil.convert(dept, Department.class);
-        } 
+        }
         if (Y9OrgEventConst.RISEORGEVENT_TYPE_UPDATE_PERSON.equals(eventType)) {
             Y9Person person = orgPersonService.getById(objId);
             return Y9ModelConvertUtil.convert(person, Person.class);
-        } 
+        }
         if (Y9OrgEventConst.RISEORGEVENT_TYPE_DELETE_ORGANIZATION.equals(eventType)) {
             Y9Organization org = orgOrganizationService.getById(objId);
             return Y9ModelConvertUtil.convert(org, Organization.class);
-        } 
+        }
         if (Y9OrgEventConst.RISEORGEVENT_TYPE_DELETE_DEPARTMENT.equals(eventType)) {
             Y9Department dept = orgDepartmentService.getById(objId);
             return Y9ModelConvertUtil.convert(dept, Department.class);
-        } 
+        }
         if (Y9OrgEventConst.RISEORGEVENT_TYPE_DELETE_PERSON.equals(eventType)) {
             Y9Person person = orgPersonService.getById(objId);
             return Y9ModelConvertUtil.convert(person, Person.class);
-        } 
+        }
         if (Y9OrgEventConst.RISEORGEVENT_TYPE_ADD_GROUP.equals(eventType)) {
             Y9Group group = orgGroupService.getById(objId);
             return Y9ModelConvertUtil.convert(group, Group.class);
-        } 
+        }
         if (Y9OrgEventConst.RISEORGEVENT_TYPE_ADD_POSITION.equals(eventType)) {
             Y9Position position = orgPositionService.getById(objId);
             return Y9ModelConvertUtil.convert(position, Position.class);
-        } 
+        }
         if (Y9OrgEventConst.RISEORGEVENT_TYPE_UPDATE_GROUP.equals(eventType)) {
             Y9Group group = orgGroupService.getById(objId);
             return Y9ModelConvertUtil.convert(group, Group.class);
-        } 
+        }
         if (Y9OrgEventConst.RISEORGEVENT_TYPE_UPDATE_POSITION.equals(eventType)) {
             Y9Position position = orgPositionService.getById(objId);
             return Y9ModelConvertUtil.convert(position, Position.class);
-        } 
+        }
         if (Y9OrgEventConst.RISEORGEVENT_TYPE_DELETE_GROUP.equals(eventType)) {
             Y9Group group = orgGroupService.getById(objId);
             return Y9ModelConvertUtil.convert(group, Group.class);
-        } 
+        }
         if (Y9OrgEventConst.RISEORGEVENT_TYPE_DELETE_POSITION.equals(eventType)) {
             Y9Position position = orgPositionService.getById(objId);
             return Y9ModelConvertUtil.convert(position, Position.class);
@@ -142,39 +142,44 @@ public class OrgSyncApiImpl implements OrgSyncApi {
     /**
      * 根据机构id，全量获取整个组织机构数据
      *
-     * @param appName  应用名称
+     * @param appName 应用名称
      * @param tenantId 租户id
      * @param organizationId 机构id
      * @return Y9Result&lt;MessageOrg&gt; 整个组织机构对象集合
      * @since 9.6.0
      */
     @Override
-    public Y9Result<MessageOrg> fullSync(@RequestParam("appName") @NotBlank String appName, @RequestParam("tenantId") @NotBlank String tenantId, @RequestParam("organizationId") @NotBlank String organizationId) {
+    public Y9Result<MessageOrg> fullSync(@RequestParam("appName") @NotBlank String appName,
+        @RequestParam("tenantId") @NotBlank String tenantId,
+        @RequestParam("organizationId") @NotBlank String organizationId) {
         Y9LoginUserHolder.setTenantId(tenantId);
-        
+
         Date syncTime = new Date();
-        HashMap<String, Serializable> dateMap = compositeOrgBaseService.getSyncMap(organizationId, OrgTypeEnum.ORGANIZATION.getEnName(), 1);
-        MessageOrg event = new MessageOrg(dateMap, Y9OrgEventConst.RISEORGEVENT_TYPE_SYNC, Y9LoginUserHolder.getTenantId());
+        HashMap<String, Serializable> dateMap =
+            compositeOrgBaseService.getSyncMap(organizationId, OrgTypeEnum.ORGANIZATION.getEnName(), 1);
+        MessageOrg event =
+            new MessageOrg(dateMap, Y9OrgEventConst.RISEORGEVENT_TYPE_SYNC, Y9LoginUserHolder.getTenantId());
         y9PublishedEventSyncHistoryService.saveOrUpdate(tenantId, appName, syncTime);
         return Y9Result.success(event, "获取成功！");
     }
 
     /**
-     * 增量获取组织操作列表
-     * 系统记录了上一次同步的时间，从上一次同步时间往后获取数据
+     * 增量获取组织操作列表 系统记录了上一次同步的时间，从上一次同步时间往后获取数据
      *
-     * @param appName  应用名称
+     * @param appName 应用名称
      * @param tenantId 租户id
      * @return Y9Result&lt;List&lt;MessageOrg&gt;&gt; 事件列表
      * @since 9.6.0
      */
     @Override
-    public Y9Result<List<MessageOrg>> incrSync(@RequestParam("appName") @NotBlank String appName, @RequestParam("tenantId") @NotBlank String tenantId) {
+    public Y9Result<List<MessageOrg>> incrSync(@RequestParam("appName") @NotBlank String appName,
+        @RequestParam("tenantId") @NotBlank String tenantId) {
         Y9LoginUserHolder.setTenantId(tenantId);
-        
+
         Date syncTime = new Date();
         Date startTime = null;
-        Y9PublishedEventSyncHistory history = y9PublishedEventSyncHistoryService.findByTenantIdAndAppName(tenantId, appName);
+        Y9PublishedEventSyncHistory history =
+            y9PublishedEventSyncHistoryService.findByTenantIdAndAppName(tenantId, appName);
         if (history != null) {
             startTime = history.getLastSyncTime();
         }
@@ -184,7 +189,8 @@ public class OrgSyncApiImpl implements OrgSyncApi {
         for (Y9PublishedEvent event : list) {
             if (StringUtils.isBlank(event.getEntityJson())) {
                 OrgUnit org = getOrgBase(event.getEventType(), event.getObjId());
-                MessageOrg riseEvent = new MessageOrg(Y9JsonUtil.writeValueAsString(org), event.getEventType(), tenantId);
+                MessageOrg riseEvent =
+                    new MessageOrg(Y9JsonUtil.writeValueAsString(org), event.getEventType(), tenantId);
                 eventList.add(riseEvent);
             } else {
                 MessageOrg riseEvent = new MessageOrg(event.getEntityJson(), event.getEventType(), tenantId);

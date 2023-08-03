@@ -34,16 +34,16 @@ import jodd.util.Base64;
 @RequestMapping("/syncPhoto")
 @Slf4j
 public class SyncPhotoController {
-    
+
     private final JdbcTemplate jdbcTemplate4Tenant;
     private final JdbcTemplate jdbcTemplate;
 
     private final Y9PersonService y9PersonService;
     private final Y9PersonExtService y9PersonExtService;
 
-    public SyncPhotoController(@Qualifier("jdbcTemplate4Tenant") JdbcTemplate jdbcTemplate4Tenant
-            , @Qualifier("jdbcTemplate4Public") JdbcTemplate jdbcTemplate
-            , Y9PersonService y9PersonService, Y9PersonExtService y9PersonExtService) {
+    public SyncPhotoController(@Qualifier("jdbcTemplate4Tenant") JdbcTemplate jdbcTemplate4Tenant,
+        @Qualifier("jdbcTemplate4Public") JdbcTemplate jdbcTemplate, Y9PersonService y9PersonService,
+        Y9PersonExtService y9PersonExtService) {
         this.jdbcTemplate4Tenant = jdbcTemplate4Tenant;
         this.jdbcTemplate = jdbcTemplate;
         this.y9PersonService = y9PersonService;
@@ -51,7 +51,8 @@ public class SyncPhotoController {
     }
 
     public String getPhotoById(@RequestParam String personId) {
-        List<Blob> photoList = jdbcTemplate4Tenant.queryForList("select PHOTO from Y9_ORG_PERSON t where t.id=? ", Blob.class, personId);
+        List<Blob> photoList =
+            jdbcTemplate4Tenant.queryForList("select PHOTO from Y9_ORG_PERSON t where t.id=? ", Blob.class, personId);
         if (!photoList.isEmpty() && null != photoList.get(0)) {
             Blob p = photoList.get(0);
             try {

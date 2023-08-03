@@ -5,6 +5,7 @@ import lombok.Getter;
 
 /**
  * 催办类型
+ * 
  * @author qinman
  * @date 2022/12/20
  */
@@ -19,7 +20,7 @@ public enum ItemUrgeTypeEnum {
     SITEINFO("3", "站内信"),
     /** 节点完成 */
     TODOINFO("4", "待办列表中");
-    
+
     private final String value;
     private final String name;
 }

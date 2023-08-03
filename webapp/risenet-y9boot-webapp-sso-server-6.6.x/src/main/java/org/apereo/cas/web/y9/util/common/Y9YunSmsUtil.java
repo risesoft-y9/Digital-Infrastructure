@@ -53,7 +53,8 @@ public class Y9YunSmsUtil {
     private static final String NONCE = "123456";
     private static final String CODELEN = "6";
 
-    private static final char[] HEX_DIGITS = {'0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'a', 'b', 'c', 'd', 'e', 'f'};
+    private static final char[] HEX_DIGITS =
+        {'0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'a', 'b', 'c', 'd', 'e', 'f'};
 
     private static String encode(String algorithm, String value) {
         if (value == null) {

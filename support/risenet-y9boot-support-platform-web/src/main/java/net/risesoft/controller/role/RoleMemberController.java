@@ -57,12 +57,14 @@ public class RoleMemberController {
      */
     @RiseLog(operationName = "添加组织机构节点,对此角色的映射", operationType = OperationTypeEnum.ADD)
     @PostMapping(value = "/addOrgUnits")
-    public Y9Result<List<RoleMember>> addOrgUnits(@RequestParam String roleId, @RequestParam String[] orgUnitIds, @RequestParam Boolean negative) {
+    public Y9Result<List<RoleMember>> addOrgUnits(@RequestParam String roleId, @RequestParam String[] orgUnitIds,
+        @RequestParam Boolean negative) {
         String[] acssOrgUnitIds;
         if (Y9LoginUserHolder.getUserInfo().isGlobalManager()) {
             acssOrgUnitIds = orgUnitIds;
         } else {
-            List<Y9DepartmentProp> deptProps = y9DepartmentPropService.listByOrgBaseIdAndCategory(Y9LoginUserHolder.getPersonId(), Y9DepartmentPropCategoryEnum.ADMIN.getCategory());
+            List<Y9DepartmentProp> deptProps = y9DepartmentPropService.listByOrgBaseIdAndCategory(
+                Y9LoginUserHolder.getPersonId(), Y9DepartmentPropCategoryEnum.ADMIN.getCategory());
             List<String> accessibleOrgUnitId = new ArrayList<>();
             for (String orgUnitId : orgUnitIds) {
                 Y9OrgBase y9OrgBase = compositeOrgBaseService.getOrgBase(orgUnitId);
@@ -77,7 +79,8 @@ public class RoleMemberController {
             acssOrgUnitIds = accessibleOrgUnitId.toArray(new String[accessibleOrgUnitId.size()]);
         }
 
-        List<Y9OrgBasesToRoles> roleMappingList = y9OrgBasesToRolesService.addOrgBases(roleId, acssOrgUnitIds, negative);
+        List<Y9OrgBasesToRoles> roleMappingList =
+            y9OrgBasesToRolesService.addOrgBases(roleId, acssOrgUnitIds, negative);
         List<RoleMember> memberList = new ArrayList<>();
         for (Y9OrgBasesToRoles roleMapping : roleMappingList) {
             RoleMember roleMember = new RoleMember();
@@ -122,7 +125,8 @@ public class RoleMemberController {
                 memberList.add(roleMember);
             }
         } else {
-            List<Y9DepartmentProp> deptProps = y9DepartmentPropService.listByOrgBaseIdAndCategory(Y9LoginUserHolder.getPersonId(), Y9DepartmentPropCategoryEnum.ADMIN.getCategory());
+            List<Y9DepartmentProp> deptProps = y9DepartmentPropService.listByOrgBaseIdAndCategory(
+                Y9LoginUserHolder.getPersonId(), Y9DepartmentPropCategoryEnum.ADMIN.getCategory());
             for (Y9OrgBasesToRoles roleMapping : roleMappingList) {
                 Y9OrgBase y9OrgBase = compositeOrgBaseService.getOrgBase(roleMapping.getOrgId());
                 if (y9OrgBase == null) {
@@ -170,7 +174,8 @@ public class RoleMemberController {
      */
     @RiseLog(operationName = "对组织机构节点,添加角色的映射", operationType = OperationTypeEnum.ADD)
     @PostMapping(value = "/saveRoles")
-    public Y9Result<List<Y9Role>> saveRoles(@RequestParam String orgUnitId, @RequestParam String[] roleIds, @RequestParam Boolean negative) {
+    public Y9Result<List<Y9Role>> saveRoles(@RequestParam String orgUnitId, @RequestParam String[] roleIds,
+        @RequestParam Boolean negative) {
         List<Y9OrgBasesToRoles> mappingList = y9OrgBasesToRolesService.saveRoles(orgUnitId, roleIds, negative);
         List<Y9Role> roleList = new ArrayList<>();
         for (Y9OrgBasesToRoles roleMapping : mappingList) {
@@ -190,7 +195,8 @@ public class RoleMemberController {
      */
     @RiseLog(operationName = "根据名称和所属部门查找角色成员")
     @RequestMapping(value = "/searchByUnitNameAndUnitDN")
-    public Y9Result<List<RoleMember>> searchByUnitNameAndUnitDn(@RequestParam String roleId, String unitName, String unitDn) {
+    public Y9Result<List<RoleMember>> searchByUnitNameAndUnitDn(@RequestParam String roleId, String unitName,
+        String unitDn) {
         List<Y9OrgBasesToRoles> roleMappingList = y9OrgBasesToRolesService.listByRoleId(roleId);
         List<RoleMember> memberList = new ArrayList<>();
         for (Y9OrgBasesToRoles roleMapping : roleMappingList) {

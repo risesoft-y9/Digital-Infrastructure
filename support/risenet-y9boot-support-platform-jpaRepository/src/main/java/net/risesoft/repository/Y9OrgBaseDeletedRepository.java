@@ -15,7 +15,8 @@ import net.risesoft.entity.Y9OrgBaseDeleted;
  */
 @Repository
 @Transactional(value = "rsTenantTransactionManager", readOnly = true)
-public interface Y9OrgBaseDeletedRepository extends JpaRepository<Y9OrgBaseDeleted, String>, JpaSpecificationExecutor<Y9OrgBaseDeleted> {
+public interface Y9OrgBaseDeletedRepository
+    extends JpaRepository<Y9OrgBaseDeleted, String>, JpaSpecificationExecutor<Y9OrgBaseDeleted> {
 
     Y9OrgBaseDeleted findByOrgId(String orgId);
 }

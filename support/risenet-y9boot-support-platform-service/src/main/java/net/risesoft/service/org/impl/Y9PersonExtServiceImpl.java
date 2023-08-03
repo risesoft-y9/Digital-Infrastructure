@@ -29,7 +29,7 @@ import jodd.util.Base64;
 public class Y9PersonExtServiceImpl implements Y9PersonExtService {
 
     private final Y9PersonExtRepository y9PersonExtRepository;
-    
+
     private final Y9PersonExtManager y9PersonExtManager;
     private final Y9PersonManager y9PersonManager;
 
@@ -40,7 +40,8 @@ public class Y9PersonExtServiceImpl implements Y9PersonExtService {
 
     @Override
     public Y9PersonExt getById(String id) {
-        return y9PersonExtRepository.findById(id).orElseThrow(() -> Y9ExceptionUtil.notFoundException(PersonErrorCodeEnum.PERSON_EXT_NOT_FOUND, id));
+        return y9PersonExtRepository.findById(id)
+            .orElseThrow(() -> Y9ExceptionUtil.notFoundException(PersonErrorCodeEnum.PERSON_EXT_NOT_FOUND, id));
     }
 
     @Override

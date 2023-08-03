@@ -13,16 +13,16 @@ public class TreeTypeConsts {
 
     /** 组织机构树，显示 机构、部门、用户组、岗位、人员 */
     public static final String TREE_TYPE_ORG = "tree_type_org";
-    
+
     /** 人员组织机构树，显示 机构、部门、用户组、人员 */
     public static final String TREE_TYPE_ORG_PERSON = "tree_type_org_person";
-    
+
     /** 岗位组织机构树，显示 机构、部门、用户组、岗位 */
     public static final String TREE_TYPE_ORG_POSITION = "tree_type_org_position";
-    
+
     /** 三员树，显示 机构、部门、三员 */
     public static final String TREE_TYPE_ORG_MANAGER = "tree_type_org_manager";
-    
+
     /** 委办局树，显示 机构、委办局 */
     public static final String TREE_TYPE_BUREAU = "tree_type_bureau";
 

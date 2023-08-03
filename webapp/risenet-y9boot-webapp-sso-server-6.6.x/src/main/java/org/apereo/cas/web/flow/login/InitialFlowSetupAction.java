@@ -40,7 +40,8 @@ import lombok.extern.slf4j.Slf4j;
  * <p>
  * Note: This is technically not thread-safe, but because its overriding with a constant value it doesn't matter.
  * <p>
- * Note: As of CAS 3.1, this is a required class that retrieves and exposes the values in the two cookies for subclasses to use.
+ * Note: As of CAS 3.1, this is a required class that retrieves and exposes the values in the two cookies for subclasses
+ * to use.
  *
  * @author Scott Battaglia
  * @since 3.1
@@ -99,7 +100,8 @@ public class InitialFlowSetupAction extends AbstractAction {
                 LOGGER.debug("Setting path for cookies for warn cookie generator to: [{}]", cookiePath);
                 this.warnCookieGenerator.setCookiePath(cookiePath);
             } else {
-                LOGGER.trace("Warning cookie is set to [{}] with path [{}]", this.warnCookieGenerator.getCookieDomain(), path);
+                LOGGER.trace("Warning cookie is set to [{}] with path [{}]", this.warnCookieGenerator.getCookieDomain(),
+                    path);
             }
         }
 
@@ -109,7 +111,8 @@ public class InitialFlowSetupAction extends AbstractAction {
                 LOGGER.debug("Setting path for cookies for TGC cookie generator to: [{}]", cookiePath);
                 this.ticketGrantingTicketCookieGenerator.setCookiePath(cookiePath);
             } else {
-                LOGGER.trace("Ticket-granting cookie domain is [{}] with path [{}]", this.ticketGrantingTicketCookieGenerator.getCookieDomain(), path);
+                LOGGER.trace("Ticket-granting cookie domain is [{}] with path [{}]",
+                    this.ticketGrantingTicketCookieGenerator.getCookieDomain(), path);
             }
         }
     }
@@ -123,18 +126,24 @@ public class InitialFlowSetupAction extends AbstractAction {
         val request = WebUtils.getHttpServletRequestFromExternalWebflowContext(context);
         String noLoginScreen = request.getParameter("noLoginScreen");
         if (!"true".equalsIgnoreCase(noLoginScreen)) {
-            WebUtils.putTicketGrantingTicketInScopes(context, this.ticketGrantingTicketCookieGenerator.retrieveCookieValue(request));
+            WebUtils.putTicketGrantingTicketInScopes(context,
+                this.ticketGrantingTicketCookieGenerator.retrieveCookieValue(request));
         }
         WebUtils.putWarningCookie(context, Boolean.valueOf(this.warnCookieGenerator.retrieveCookieValue(request)));
 
         WebUtils.putGeoLocationTrackingIntoFlowScope(context, casProperties.getEvents().getCore().isTrackGeolocation());
-        WebUtils.putRememberMeAuthenticationEnabled(context, casProperties.getTicket().getTgt().getRememberMe().isEnabled());
+        WebUtils.putRememberMeAuthenticationEnabled(context,
+            casProperties.getTicket().getTgt().getRememberMe().isEnabled());
 
-        val staticAuthEnabled = (casProperties.getAuthn().getAccept().isEnabled() && StringUtils.isNotBlank(casProperties.getAuthn().getAccept().getUsers())) || StringUtils.isNotBlank(casProperties.getAuthn().getReject().getUsers());
+        val staticAuthEnabled = (casProperties.getAuthn().getAccept().isEnabled()
+            && StringUtils.isNotBlank(casProperties.getAuthn().getAccept().getUsers()))
+            || StringUtils.isNotBlank(casProperties.getAuthn().getReject().getUsers());
         WebUtils.putStaticAuthenticationIntoFlowScope(context, staticAuthEnabled);
 
         if (casProperties.getAuthn().getPolicy().isSourceSelectionEnabled()) {
-            val availableHandlers = authenticationEventExecutionPlan.getAuthenticationHandlers().stream().filter(h -> h.supports(UsernamePasswordCredential.class)).map(h -> StringUtils.capitalize(h.getName().trim())).distinct().sorted().collect(Collectors.toList());
+            val availableHandlers = authenticationEventExecutionPlan.getAuthenticationHandlers().stream()
+                .filter(h -> h.supports(UsernamePasswordCredential.class))
+                .map(h -> StringUtils.capitalize(h.getName().trim())).distinct().sorted().collect(Collectors.toList());
             WebUtils.putAvailableAuthenticationHandleNames(context, availableHandlers);
         }
     }
@@ -156,7 +165,8 @@ public class InitialFlowSetupAction extends AbstractAction {
     protected void configureWebflowForServices(final RequestContext context) {
         val response = WebUtils.getHttpServletResponseFromExternalWebflowContext(context);
         if (HttpStatus.valueOf(response.getStatus()).isError()) {
-            throw new UnauthorizedServiceException(UnauthorizedServiceException.CODE_UNAUTHZ_SERVICE, StringUtils.EMPTY);
+            throw new UnauthorizedServiceException(UnauthorizedServiceException.CODE_UNAUTHZ_SERVICE,
+                StringUtils.EMPTY);
         }
 
         val service = WebUtils.getService(this.argumentExtractors, context);
@@ -166,13 +176,17 @@ public class InitialFlowSetupAction extends AbstractAction {
             val registeredService = servicesManager.findServiceBy(selectedService);
             RegisteredServiceAccessStrategyUtils.ensureServiceAccessIsAllowed(service.getId(), registeredService);
             if (registeredService != null && registeredService.getAccessStrategy().isServiceAccessAllowed()) {
-                LOGGER.debug("Placing registered service [{}] with id [{}] in context scope", registeredService.getServiceId(), registeredService.getId());
+                LOGGER.debug("Placing registered service [{}] with id [{}] in context scope",
+                    registeredService.getServiceId(), registeredService.getId());
                 WebUtils.putRegisteredService(context, registeredService);
 
                 val accessStrategy = registeredService.getAccessStrategy();
                 if (accessStrategy.getUnauthorizedRedirectUrl() != null) {
-                    LOGGER.debug("Placing registered service's unauthorized redirect url [{}] with id [{}] in context scope", accessStrategy.getUnauthorizedRedirectUrl(), registeredService.getServiceId());
-                    WebUtils.putUnauthorizedRedirectUrlIntoFlowScope(context, accessStrategy.getUnauthorizedRedirectUrl());
+                    LOGGER.debug(
+                        "Placing registered service's unauthorized redirect url [{}] with id [{}] in context scope",
+                        accessStrategy.getUnauthorizedRedirectUrl(), registeredService.getServiceId());
+                    WebUtils.putUnauthorizedRedirectUrlIntoFlowScope(context,
+                        accessStrategy.getUnauthorizedRedirectUrl());
                 }
             }
             WebUtils.putServiceIntoFlowScope(context, service);
@@ -185,13 +199,16 @@ public class InitialFlowSetupAction extends AbstractAction {
      * @param context the webflow context
      * @param ticketGrantingTicketId the TGT identifier
      */
-    protected void configureWebflowForSsoParticipation(final RequestContext context, final String ticketGrantingTicketId) {
-        SingleSignOnParticipationRequest ssoRequest = SingleSignOnParticipationRequest.builder().requestContext(context).build();
+    protected void configureWebflowForSsoParticipation(final RequestContext context,
+        final String ticketGrantingTicketId) {
+        SingleSignOnParticipationRequest ssoRequest =
+            SingleSignOnParticipationRequest.builder().requestContext(context).build();
         val ssoParticipation = renewalStrategy.supports(ssoRequest) && renewalStrategy.isParticipating(ssoRequest);
         if (!ssoParticipation && StringUtils.isNotBlank(ticketGrantingTicketId)) {
             val auth = this.ticketRegistrySupport.getAuthenticationFrom(ticketGrantingTicketId);
             WebUtils.putExistingSingleSignOnSessionAvailable(context, auth != null);
-            WebUtils.putExistingSingleSignOnSessionPrincipal(context, Optional.ofNullable(auth).map(Authentication::getPrincipal).orElse(NullPrincipal.getInstance()));
+            WebUtils.putExistingSingleSignOnSessionPrincipal(context,
+                Optional.ofNullable(auth).map(Authentication::getPrincipal).orElse(NullPrincipal.getInstance()));
         }
     }
 
@@ -210,7 +227,8 @@ public class InitialFlowSetupAction extends AbstractAction {
             // 免登陆先登出才能触发重新登录
             String noLoginScreen = request.getParameter("noLoginScreen");
             if ("true".equalsIgnoreCase(noLoginScreen)) {
-                logoutManager.performLogout(SingleLogoutExecutionRequest.builder().ticketGrantingTicket(ticket).httpServletRequest(Optional.of(request)).httpServletResponse(Optional.of(response)).build());
+                logoutManager.performLogout(SingleLogoutExecutionRequest.builder().ticketGrantingTicket(ticket)
+                    .httpServletRequest(Optional.of(request)).httpServletResponse(Optional.of(response)).build());
             } else {
                 WebUtils.putTicketGrantingTicketInScopes(context, ticket.getId());
                 return ticket.getId();

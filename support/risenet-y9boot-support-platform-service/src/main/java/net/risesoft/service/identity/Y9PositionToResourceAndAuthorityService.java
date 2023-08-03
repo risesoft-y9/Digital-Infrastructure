@@ -110,13 +110,14 @@ public interface Y9PositionToResourceAndAuthorityService {
      * @param authority
      * @return
      */
-    List<Y9PositionToResourceAndAuthority> list(String positionId, String parentResourceId, Integer resourceType, Integer authority);
+    List<Y9PositionToResourceAndAuthority> list(String positionId, String parentResourceId, Integer resourceType,
+        Integer authority);
 
     /**
      * 根据岗位id 及授权类型查找应用列表
      *
      * @param positionId 岗位id
-     * @param authority  {@link AuthorityEnum}
+     * @param authority {@link AuthorityEnum}
      * @return
      */
     List<Y9App> listAppsByAuthority(String positionId, Integer authority);
@@ -129,7 +130,8 @@ public interface Y9PositionToResourceAndAuthorityService {
      */
     List<Y9PositionToResourceAndAuthority> listByPositionId(String positionId);
 
-    void saveOrUpdate(Y9ResourceBase y9ResourceBase, Y9Position y9Position, Y9Authorization y9Authorization, Boolean inherit);
+    void saveOrUpdate(Y9ResourceBase y9ResourceBase, Y9Position y9Position, Y9Authorization y9Authorization,
+        Boolean inherit);
 
     /**
      * 更新
@@ -141,14 +143,15 @@ public interface Y9PositionToResourceAndAuthorityService {
      * @param description
      * @return
      */
-    void updateByResourceId(String resourceId, String resourceName, String systemName, String systemCnName, String description);
+    void updateByResourceId(String resourceId, String resourceName, String systemName, String systemCnName,
+        String description);
 
     /**
      * 获得某一资源下，有相应操作权限的子节点
      *
      * @param positionId 岗位id
      * @param resourceId 资源id
-     * @param authority  权限类型
+     * @param authority 权限类型
      * @return {@link List}<{@link Y9ResourceBase}>
      */
     List<Y9ResourceBase> listSubResources(String positionId, String resourceId, Integer authority);

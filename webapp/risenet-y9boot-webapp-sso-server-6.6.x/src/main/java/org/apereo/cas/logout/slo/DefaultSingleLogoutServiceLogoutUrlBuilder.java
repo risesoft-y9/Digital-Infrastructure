@@ -18,13 +18,17 @@ import org.apereo.cas.web.UrlValidator;
  * @since 5.0.0
  */
 public class DefaultSingleLogoutServiceLogoutUrlBuilder extends BaseSingleLogoutServiceLogoutUrlBuilder {
-    public DefaultSingleLogoutServiceLogoutUrlBuilder(final ServicesManager servicesManager, final UrlValidator urlValidator) {
+    public DefaultSingleLogoutServiceLogoutUrlBuilder(final ServicesManager servicesManager,
+        final UrlValidator urlValidator) {
         super(servicesManager, urlValidator);
     }
 
     @Override
-    public boolean supports(final RegisteredService registeredService, final WebApplicationService singleLogoutService, final Optional<HttpServletRequest> httpRequest) {
-        return super.supports(registeredService, singleLogoutService, httpRequest) && (registeredService.getFriendlyName().equalsIgnoreCase(CasRegisteredService.FRIENDLY_NAME) || registeredService.getFriendlyName().equalsIgnoreCase("OAuth2 Client"));
+    public boolean supports(final RegisteredService registeredService, final WebApplicationService singleLogoutService,
+        final Optional<HttpServletRequest> httpRequest) {
+        return super.supports(registeredService, singleLogoutService, httpRequest)
+            && (registeredService.getFriendlyName().equalsIgnoreCase(CasRegisteredService.FRIENDLY_NAME)
+                || registeredService.getFriendlyName().equalsIgnoreCase("OAuth2 Client"));
     }
 
 }

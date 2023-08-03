@@ -1,19 +1,19 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <configuration>
-	<include resource="org/springframework/boot/logging/logback/base.xml" />
-	<logger name="y9.autoconfiguration" level="DEBUG" />
-	<logger name="net.risesoft" level="DEBUG" />
-	<logger name="com.alibaba.cloud.nacos" level="INFO" />
-	<logger name="org.springframework.cloud.endpoint.event" level="INFO" />
-	<logger name="org.mongodb" level="WARN" />
-	<logger name="org.hibernate" level="WARN" />
-	
-<!--	<logger name="org.hibernate.SQL" level="DEBUG"/>-->
-<!--	<logger name="org.hibernate.type.descriptor.sql" level="trace"/>-->
-	
-	<logger name="org.apache.catalina.startup.Catalina" level="INFO" />
-	<root level="INFO">
-		<appender-ref ref="CONSOLE" />
-		<appender-ref ref="FILE" />
-	</root>
+    <include resource="org/springframework/boot/logging/logback/base.xml"/>
+    <logger name="y9.autoconfiguration" level="DEBUG"/>
+    <logger name="net.risesoft" level="DEBUG"/>
+    <logger name="com.alibaba.cloud.nacos" level="INFO"/>
+    <logger name="org.springframework.cloud.endpoint.event" level="INFO"/>
+    <logger name="org.mongodb" level="WARN"/>
+    <logger name="org.hibernate" level="WARN"/>
+
+    <!--	<logger name="org.hibernate.SQL" level="DEBUG"/>-->
+    <!--	<logger name="org.hibernate.type.descriptor.sql" level="trace"/>-->
+
+    <logger name="org.apache.catalina.startup.Catalina" level="INFO"/>
+    <root level="INFO">
+        <appender-ref ref="CONSOLE"/>
+        <appender-ref ref="FILE"/>
+    </root>
 </configuration>

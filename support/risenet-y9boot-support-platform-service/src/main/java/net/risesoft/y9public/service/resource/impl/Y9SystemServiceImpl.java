@@ -92,7 +92,8 @@ public class Y9SystemServiceImpl implements Y9SystemService {
 
     @Override
     public Y9System getById(String id) {
-        return y9SystemRepository.findById(id).orElseThrow(() -> Y9ExceptionUtil.notFoundException(SystemErrorCodeEnum.SYSTEM_NOT_FOUND, id));
+        return y9SystemRepository.findById(id)
+            .orElseThrow(() -> Y9ExceptionUtil.notFoundException(SystemErrorCodeEnum.SYSTEM_NOT_FOUND, id));
     }
 
     @Override

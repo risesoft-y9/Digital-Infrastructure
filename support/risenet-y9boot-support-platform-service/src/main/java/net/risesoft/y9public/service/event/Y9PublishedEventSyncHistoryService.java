@@ -25,7 +25,7 @@ public interface Y9PublishedEventSyncHistoryService {
      * 保存
      *
      * @param tenantId 租户id
-     * @param appName  应用名
+     * @param appName 应用名
      * @param syncTime
      * @return {@link Y9PublishedEventSyncHistory}
      */

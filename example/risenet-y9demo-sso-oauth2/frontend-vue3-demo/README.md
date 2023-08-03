@@ -1,12 +1,15 @@
 # demo说明
 
 ## 主要流程说明
+
 ```
 1、main.js传入单点登录必须的参数到插件
 2、插件先在本地缓存一份
 3、在插件的任意函数中从缓存中直接获取参数
 ```
+
 ## 主要的api
+
 ```
 1、登录的API：ssoLoginApi 
 2、检查登录的API：checkSsoLoginInfoApi
@@ -21,6 +24,7 @@
 ```
 
 ## 重要函数说明
+
 ```
 1、checkToken
 是vue框架中作为检查token的全局入口，缓存中有sso的token信息且没有过期返回true，无或者过期返回false

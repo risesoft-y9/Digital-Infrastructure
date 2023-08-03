@@ -22,7 +22,7 @@ public interface Y9RoleManager {
      * @return {@link List}<{@link Y9Role}>
      */
     List<Y9Role> listOrgUnitRelatedWithoutNegative(String orgUnitId);
-    
+
     /**
      * 从给定节点开始，向上递归，返回递归链上所有的节点id(如果是人员，会包括所在组，岗位id)
      *

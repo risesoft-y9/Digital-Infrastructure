@@ -1,7 +1,6 @@
 package net.risesoft.manager.org;
 
 import net.risesoft.entity.Y9Department;
-import org.springframework.transaction.annotation.Transactional;
 
 /**
  * 部门 Manager

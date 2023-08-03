@@ -46,7 +46,8 @@ public class PositionController {
      */
     @RiseLog(operationName = "为岗位添加人员", operationType = OperationTypeEnum.ADD)
     @PostMapping(value = "/addPersons")
-    public Y9Result<List<Y9PersonsToPositions>> addPersons(@RequestParam String positionId, @RequestParam String[] personIds) {
+    public Y9Result<List<Y9PersonsToPositions>> addPersons(@RequestParam String positionId,
+        @RequestParam String[] personIds) {
         List<Y9PersonsToPositions> orgPersonList = y9PersonsToPositionsService.addPersons(positionId, personIds);
         return Y9Result.success(orgPersonList, "为岗位添加人员成功");
     }

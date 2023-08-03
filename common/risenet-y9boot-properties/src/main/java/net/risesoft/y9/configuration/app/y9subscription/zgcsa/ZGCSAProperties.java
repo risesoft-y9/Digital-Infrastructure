@@ -11,7 +11,7 @@ import lombok.Setter;
 public class ZGCSAProperties {
 
     private String name = "中关村软联";
-    
+
     private String tenantId = "b25ab1d500f0470e8956a7e8dd3e9dce";
 
 }

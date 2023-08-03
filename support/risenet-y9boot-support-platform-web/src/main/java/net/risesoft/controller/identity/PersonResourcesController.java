@@ -32,8 +32,10 @@ public class PersonResourcesController {
 
     @GetMapping
     public Y9Result<List<ResourcePermissionVO>> getByPersonId(String personId) {
-        List<Y9PersonToResourceAndAuthority> y9PersonToResourceAndAuthorityList = y9PersonToResourceAndAuthorityService.list(personId);
-        return Y9Result.success(resourcePermissionVOBuilder.buildResourcePermissionVOList(new ArrayList<>(y9PersonToResourceAndAuthorityList)));
+        List<Y9PersonToResourceAndAuthority> y9PersonToResourceAndAuthorityList =
+            y9PersonToResourceAndAuthorityService.list(personId);
+        return Y9Result.success(resourcePermissionVOBuilder
+            .buildResourcePermissionVOList(new ArrayList<>(y9PersonToResourceAndAuthorityList)));
     }
 
 }

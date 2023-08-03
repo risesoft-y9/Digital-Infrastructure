@@ -13,7 +13,8 @@ import net.risesoft.api.org.OrgSyncApi;
  * @date 2022/2/10
  * @since 9.6.0
  */
-@FeignClient(contextId = "OrgEventApiClient", name = "y9platform", url = "${y9.common.orgBaseUrl}", path = "/services/rest/orgSync")
+@FeignClient(contextId = "OrgEventApiClient", name = "y9platform", url = "${y9.common.orgBaseUrl}",
+    path = "/services/rest/orgSync")
 public interface OrgSyncApiClient extends OrgSyncApi {
 
 }

@@ -1,65 +1,125 @@
 {
-  "serverUrl": "https://vue.youshengyun.com", //设置服务器地址,非必须
-  "pathPrefix": "/platform", //设置path前缀,非必须。如配置Servlet ContextPath 。@since 2.2.3
-  "isStrict": false, //是否开启严格模式
-  "allInOne": true,  //是否将文档合并到一个文件中，一般推荐为true
-  "outPath": "../../../y9-digitalbase-pro/docs/smart-docs/platform/vue", //指定文档的输出路径
-  "coverOld": true,  //是否覆盖旧的文件，主要用于mardown文件覆盖
-  "createDebugPage": true,//@since 2.0.0 smart-doc支持创建可以测试的html页面，仅在AllInOne模式中起作用。
-  "packageFilters": "net.risesoft.controller",//controller包过滤，多个包用英文逗号隔开
-  "md5EncryptedHtmlName": false,//只有每个controller生成一个html文件是才使用
-  "style":"xt256", //基于highlight.js的代码高设置,可选值很多可查看码云wiki，喜欢配色统一简洁的同学可以不设置
-  "projectName": "组织身份后端接口文档",//配置自己的项目名称
-  "framework": "spring",//smart-doc默认支持spring和dubbo框架的文档，使用默认框架不用配置，当前支持spring、dubbo、JAX-RS、solon
-  "skipTransientField": true,//目前未实现
-  "sortByTitle":false,//接口标题排序，默认为false,@since 1.8.7版本开始
-  "showAuthor":true,//是否显示接口作者名称，默认是true,不想显示可关闭
-  "requestFieldToUnderline":false,//自动将驼峰入参字段在文档中转为下划线格式,//@since 1.8.7版本开始
-  "responseFieldToUnderline":false,//自动将驼峰入参字段在文档中转为下划线格式,//@since 1.8.7版本开始
-  "inlineEnum":true,//设置为true会将枚举详情展示到参数表中，默认关闭，//@since 1.8.8版本开始
-  "recursionLimit":7,//设置允许递归执行的次数用于避免一些对象解析卡主，默认是7，正常为3次以内，//@since 1.8.8版本开始
-  "allInOneDocFileName":"index.html",//自定义设置输出文档名称, @since 1.9.0
-  "requestExample":"true",//是否将请求示例展示在文档中，默认true，@since 1.9.0
-  "responseExample":"true",//是否将响应示例展示在文档中，默认为true，@since 1.9.0
-  "urlSuffix":"",//支持SpringMVC旧项目的url后缀,@since 2.1.0
-  "displayActualType":false,//配置true会在注释栏自动显示泛型的真实类型短类名，@since 1.9.6
-  "dataDictionaries": [{ //配置数据字典，没有需求可以不设置
-    "title": "http状态码字典", //数据字典的名称
-    "enumClassName": "com.power.common.enums.HttpCodeEnum", //数据字典枚举类名称
-    "codeField": "code",//数据字典字典码对应的字段名称
-    "descField": "message"//数据字典对象的描述信息字典
-  }],
-  "errorCodeDictionaries": [{ //错误码列表，没有需求可以不设置
-    "enumClassName": "net.risesoft.exception.ErrorCode", //错误码枚举类
-    "codeField": "code",//错误码的code码字段名称
-    "descField": "description"//错误码的描述信息对应的字段名
-  }],
-  "revisionLogs": [{ //文档变更记录，非必须
-    "version": "1.0", //文档版本号
-    "revisionTime": "2021/5/10",
-    "status": "创建", //变更操作状态，一般为：创建、更新等
-    "author": "mengjuhua", //文档变更作者
-    "remarks": "第一版门户网站后端接口文档" //变更描述
-  }],
-  "requestHeaders": [{ //设置请求头，没有需求可以不设置
-    "name": "Authorization",//请求头名称
-    "type": "string",//请求头类型
-    "desc": "单点登陆认证通过后得到的token",//请求头描述信息
-    "value": " Bearer {token}",//不设置默认null
-    "required": true,//是否必须
-    "since": "-",//什么版本添加的改请求头
-    "pathPatterns": "/api/*",//请看https://smart-doc-group.github.io/#/zh-cn/diy/advancedFeatures?id=公共请求头
-    "excludePathPatterns":"/app/page/**"//请看https://smart-doc-group.github.io/#/zh-cn/diy/advancedFeatures?id=公共请求头
-  }],
-  "responseBodyAdvice":{ //自smart-doc 1.9.8起，非必须项，ResponseBodyAdvice统一返回设置(不要随便配置根据项目的技术来配置)，可用ignoreResponseBodyAdvice tag来忽略
-    "className":"net.risesoft.pojo.Y9Result" //通用响应体
+  "serverUrl": "https://vue.youshengyun.com",
+  //设置服务器地址,非必须
+  "pathPrefix": "/platform",
+  //设置path前缀,非必须。如配置Servlet ContextPath 。@since 2.2.3
+  "isStrict": false,
+  //是否开启严格模式
+  "allInOne": true,
+  //是否将文档合并到一个文件中，一般推荐为true
+  "outPath": "../../../y9-digitalbase-pro/docs/smart-docs/platform/vue",
+  //指定文档的输出路径
+  "coverOld": true,
+  //是否覆盖旧的文件，主要用于mardown文件覆盖
+  "createDebugPage": true,
+  //@since 2.0.0 smart-doc支持创建可以测试的html页面，仅在AllInOne模式中起作用。
+  "packageFilters": "net.risesoft.controller",
+  //controller包过滤，多个包用英文逗号隔开
+  "md5EncryptedHtmlName": false,
+  //只有每个controller生成一个html文件是才使用
+  "style": "xt256",
+  //基于highlight.js的代码高设置,可选值很多可查看码云wiki，喜欢配色统一简洁的同学可以不设置
+  "projectName": "组织身份后端接口文档",
+  //配置自己的项目名称
+  "framework": "spring",
+  //smart-doc默认支持spring和dubbo框架的文档，使用默认框架不用配置，当前支持spring、dubbo、JAX-RS、solon
+  "skipTransientField": true,
+  //目前未实现
+  "sortByTitle": false,
+  //接口标题排序，默认为false,@since 1.8.7版本开始
+  "showAuthor": true,
+  //是否显示接口作者名称，默认是true,不想显示可关闭
+  "requestFieldToUnderline": false,
+  //自动将驼峰入参字段在文档中转为下划线格式,//@since 1.8.7版本开始
+  "responseFieldToUnderline": false,
+  //自动将驼峰入参字段在文档中转为下划线格式,//@since 1.8.7版本开始
+  "inlineEnum": true,
+  //设置为true会将枚举详情展示到参数表中，默认关闭，//@since 1.8.8版本开始
+  "recursionLimit": 7,
+  //设置允许递归执行的次数用于避免一些对象解析卡主，默认是7，正常为3次以内，//@since 1.8.8版本开始
+  "allInOneDocFileName": "index.html",
+  //自定义设置输出文档名称, @since 1.9.0
+  "requestExample": "true",
+  //是否将请求示例展示在文档中，默认true，@since 1.9.0
+  "responseExample": "true",
+  //是否将响应示例展示在文档中，默认为true，@since 1.9.0
+  "urlSuffix": "",
+  //支持SpringMVC旧项目的url后缀,@since 2.1.0
+  "displayActualType": false,
+  //配置true会在注释栏自动显示泛型的真实类型短类名，@since 1.9.6
+  "dataDictionaries": [
+    {
+      //配置数据字典，没有需求可以不设置
+      "title": "http状态码字典",
+      //数据字典的名称
+      "enumClassName": "com.power.common.enums.HttpCodeEnum",
+      //数据字典枚举类名称
+      "codeField": "code",
+      //数据字典字典码对应的字段名称
+      "descField": "message"
+      //数据字典对象的描述信息字典
+    }
+  ],
+  "errorCodeDictionaries": [
+    {
+      //错误码列表，没有需求可以不设置
+      "enumClassName": "net.risesoft.exception.ErrorCode",
+      //错误码枚举类
+      "codeField": "code",
+      //错误码的code码字段名称
+      "descField": "description"
+      //错误码的描述信息对应的字段名
+    }
+  ],
+  "revisionLogs": [
+    {
+      //文档变更记录，非必须
+      "version": "1.0",
+      //文档版本号
+      "revisionTime": "2021/5/10",
+      "status": "创建",
+      //变更操作状态，一般为：创建、更新等
+      "author": "mengjuhua",
+      //文档变更作者
+      "remarks": "第一版门户网站后端接口文档"
+      //变更描述
+    }
+  ],
+  "requestHeaders": [
+    {
+      //设置请求头，没有需求可以不设置
+      "name": "Authorization",
+      //请求头名称
+      "type": "string",
+      //请求头类型
+      "desc": "单点登陆认证通过后得到的token",
+      //请求头描述信息
+      "value": " Bearer {token}",
+      //不设置默认null
+      "required": true,
+      //是否必须
+      "since": "-",
+      //什么版本添加的改请求头
+      "pathPatterns": "/api/*",
+      //请看https://smart-doc-group.github.io/#/zh-cn/diy/advancedFeatures?id=公共请求头
+      "excludePathPatterns": "/app/page/**"
+      //请看https://smart-doc-group.github.io/#/zh-cn/diy/advancedFeatures?id=公共请求头
+    }
+  ],
+  "responseBodyAdvice": {
+    //自smart-doc 1.9.8起，非必须项，ResponseBodyAdvice统一返回设置(不要随便配置根据项目的技术来配置)，可用ignoreResponseBodyAdvice tag来忽略
+    "className": "net.risesoft.pojo.Y9Result"
+    //通用响应体
   },
-  "requestBodyAdvice":{ ////自smart-doc 2.1.4 起，支持设置RequestBodyAdvice统一请求包装类，非必须
-    "className":"net.risesoft.pojo.Y9Result"
+  "requestBodyAdvice": {
+    ////自smart-doc 2.1.4 起，支持设置RequestBodyAdvice统一请求包装类，非必须
+    "className": "net.risesoft.pojo.Y9Result"
   },
   "appToken": "a9fa6c840e2a4324903e8a8268dcf284",
   "openUrl": "https://dev.youshengyun.com/torna/api",
   "replace": true,
-  "requestParamsTable": true, // 是否将请求参数表展示在文档中，默认true，@since 2.2.5
-  "responseParamsTable": true //是否将响应参数表展示在文档中, 默认true，@since 2.2.5
+  "requestParamsTable": true,
+  // 是否将请求参数表展示在文档中，默认true，@since 2.2.5
+  "responseParamsTable": true
+  //是否将响应参数表展示在文档中, 默认true，@since 2.2.5
 }

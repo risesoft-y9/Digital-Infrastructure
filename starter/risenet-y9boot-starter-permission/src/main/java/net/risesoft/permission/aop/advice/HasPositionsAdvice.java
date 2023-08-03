@@ -19,7 +19,7 @@ public class HasPositionsAdvice implements MethodBeforeAdvice {
     public void before(Method method, Object[] args, Object target) throws Throwable {
         HasPositions hasPositions = AnnotationUtils.findAnnotation(method, HasPositions.class);
         if (hasPositions != null) {
-            
+
         }
     }
 

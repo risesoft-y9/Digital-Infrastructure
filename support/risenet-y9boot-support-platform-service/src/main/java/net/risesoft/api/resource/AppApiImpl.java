@@ -2,6 +2,8 @@ package net.risesoft.api.resource;
 
 import java.util.List;
 
+import javax.validation.constraints.NotBlank;
+
 import org.springframework.http.MediaType;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -19,8 +21,6 @@ import net.risesoft.y9.util.Y9BeanUtil;
 import net.risesoft.y9.util.Y9ModelConvertUtil;
 import net.risesoft.y9public.entity.resource.Y9App;
 import net.risesoft.y9public.service.resource.Y9AppService;
-
-import javax.validation.constraints.NotBlank;
 
 /**
  * 应用管理组件
@@ -62,7 +62,8 @@ public class AppApiImpl implements AppApi {
      * @since 9.6.0
      */
     @Override
-    public App findBySystemIdAndCustomId(@RequestParam("systemId") @NotBlank String systemId, @RequestParam("customId") @NotBlank String customId) {
+    public App findBySystemIdAndCustomId(@RequestParam("systemId") @NotBlank String systemId,
+        @RequestParam("customId") @NotBlank String customId) {
         Y9App y9App = y9AppService.findBySystemIdAndCustomId(systemId, customId);
         return Y9ModelConvertUtil.convert(y9App, App.class);
     }
@@ -76,7 +77,8 @@ public class AppApiImpl implements AppApi {
      * @since 9.6.0
      */
     @Override
-    public App findBySystemNameAndCustomId(@RequestParam("systemName") @NotBlank String systemName, @RequestParam("customId") @NotBlank String customId) {
+    public App findBySystemNameAndCustomId(@RequestParam("systemName") @NotBlank String systemName,
+        @RequestParam("customId") @NotBlank String customId) {
         Y9App y9App = y9AppService.findBySystemNameAndCustomId(systemName, customId);
         return Y9ModelConvertUtil.convert(y9App, App.class);
     }
@@ -91,9 +93,10 @@ public class AppApiImpl implements AppApi {
      * @since 9.6.0
      */
     @Override
-    public List<App> listAccessAppForPerson(@RequestParam("tenantId") @NotBlank String tenantId, @RequestParam("personId") @NotBlank String personId, @RequestParam("authority") Integer authority) {
+    public List<App> listAccessAppForPerson(@RequestParam("tenantId") @NotBlank String tenantId,
+        @RequestParam("personId") @NotBlank String personId, @RequestParam("authority") Integer authority) {
         Y9LoginUserHolder.setTenantId(tenantId);
-        
+
         List<Y9App> appList = y9PersonToResourceAndAuthorityService.listAppsByAuthority(personId, authority);
         return Y9ModelConvertUtil.convert(appList, App.class);
     }
@@ -108,9 +111,10 @@ public class AppApiImpl implements AppApi {
      * @since 9.6.0
      */
     @Override
-    public List<App> listAccessAppForPosition(@RequestParam("tenantId") @NotBlank String tenantId, @RequestParam("positionId") @NotBlank String positionId, @RequestParam("authority") Integer authority) {
+    public List<App> listAccessAppForPosition(@RequestParam("tenantId") @NotBlank String tenantId,
+        @RequestParam("positionId") @NotBlank String positionId, @RequestParam("authority") Integer authority) {
         Y9LoginUserHolder.setTenantId(tenantId);
-        
+
         List<Y9App> appList = y9PositionToResourceAndAuthorityService.listAppsByAuthority(positionId, authority);
         return Y9ModelConvertUtil.convert(appList, App.class);
     }

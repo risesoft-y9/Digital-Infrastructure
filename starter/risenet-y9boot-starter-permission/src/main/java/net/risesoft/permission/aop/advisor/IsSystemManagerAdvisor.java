@@ -14,7 +14,7 @@ import net.risesoft.permission.annotation.IsSystemManager;
 @Slf4j
 public class IsSystemManagerAdvisor extends StaticMethodMatcherPointcutAdvisor {
     private static final long serialVersionUID = 1790605582584464487L;
-    
+
     public IsSystemManagerAdvisor() {
         LOGGER.debug("IsSystemManagerAdvisor init............");
     }

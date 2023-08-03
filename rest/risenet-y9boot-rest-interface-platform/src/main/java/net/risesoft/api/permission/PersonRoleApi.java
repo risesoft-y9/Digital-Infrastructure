@@ -1,14 +1,10 @@
 package net.risesoft.api.permission;
 
-import java.util.Map;
+import javax.validation.constraints.NotBlank;
 
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
-
-import net.risesoft.pojo.Y9Page;
-
-import javax.validation.constraints.NotBlank;
 
 /**
  * 人员角色接口
@@ -31,7 +27,8 @@ public interface PersonRoleApi {
      * @since 9.6.0
      */
     @GetMapping("/countByPersonId")
-    long countByPersonId(@RequestParam("tenantId") @NotBlank String tenantId, @RequestParam("personId") @NotBlank String personId);
+    long countByPersonId(@RequestParam("tenantId") @NotBlank String tenantId,
+        @RequestParam("personId") @NotBlank String personId);
 
     /**
      * 判断人员是否拥有 customId 对应的角色
@@ -43,6 +40,7 @@ public interface PersonRoleApi {
      * @since 9.6.0
      */
     @GetMapping("/hasRole")
-    Boolean hasRole(@RequestParam("tenantId") @NotBlank String tenantId, @RequestParam("positionId") @NotBlank String personId, @RequestParam("customId") @NotBlank String customId);
-    
+    Boolean hasRole(@RequestParam("tenantId") @NotBlank String tenantId,
+        @RequestParam("positionId") @NotBlank String personId, @RequestParam("customId") @NotBlank String customId);
+
 }

@@ -11,7 +11,7 @@ public enum LogLevelEnum {
     RSLOG("普通日志"),
     /** 管理日志 */
     MANAGERLOG("管理日志");
-    
+
     private final String value;
 
     LogLevelEnum(String value) {

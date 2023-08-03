@@ -209,16 +209,19 @@ public class UpdateIdentityResourceAndAuthorityListener {
             Set<Y9Person> y9PersonSet = new HashSet<>();
             Set<Y9Position> y9PositionSet = new HashSet<>();
 
-            List<Y9OrgBasesToRoles> y9OrgBasesToRolesList = y9OrgBasesToRolesService.listByRoleId(y9Authorization.getPrincipalId());
+            List<Y9OrgBasesToRoles> y9OrgBasesToRolesList =
+                y9OrgBasesToRolesService.listByRoleId(y9Authorization.getPrincipalId());
 
             for (Y9OrgBasesToRoles y9OrgBasesToRoles : y9OrgBasesToRolesList) {
                 if (OrgTypeEnum.PERSON.getEnName().equals(y9OrgBasesToRoles.getOrgType())) {
-                    y9PersonSet.add((Y9Person) compositeOrgBaseService.getOrgBase(y9OrgBasesToRoles.getOrgId()));
+                    y9PersonSet.add((Y9Person)compositeOrgBaseService.getOrgBase(y9OrgBasesToRoles.getOrgId()));
                 } else if (OrgTypeEnum.POSITION.getEnName().equals(y9OrgBasesToRoles.getOrgType())) {
-                    y9PositionSet.add((Y9Position) compositeOrgBaseService.getOrgBase(y9OrgBasesToRoles.getOrgId()));
+                    y9PositionSet.add((Y9Position)compositeOrgBaseService.getOrgBase(y9OrgBasesToRoles.getOrgId()));
                 } else {
-                    y9PersonSet.addAll(compositeOrgBaseService.listAllPersonsRecursionDownward(y9OrgBasesToRoles.getOrgId()));
-                    y9PositionSet.addAll(compositeOrgBaseService.listAllPositionsRecursionDownward(y9OrgBasesToRoles.getOrgId()));
+                    y9PersonSet
+                        .addAll(compositeOrgBaseService.listAllPersonsRecursionDownward(y9OrgBasesToRoles.getOrgId()));
+                    y9PositionSet.addAll(
+                        compositeOrgBaseService.listAllPositionsRecursionDownward(y9OrgBasesToRoles.getOrgId()));
                 }
             }
             for (Y9Person y9Person : y9PersonSet) {
@@ -243,15 +246,20 @@ public class UpdateIdentityResourceAndAuthorityListener {
     public void onY9OrgBasesToRolesCreated(Y9EntityCreatedEvent<Y9OrgBasesToRoles> event) {
         Y9OrgBasesToRoles y9OrgBasesToRoles = event.getEntity();
         if (Boolean.TRUE.equals(y9OrgBasesToRoles.getNegative())) {
-            List<Y9Authorization> authorizationList = y9AuthorizationService.listByPrincipalIdAndPrincipalType(y9OrgBasesToRoles.getRoleId(), AuthorizationPrincipalTypeEnum.ROLE);
+            List<Y9Authorization> authorizationList = y9AuthorizationService
+                .listByPrincipalIdAndPrincipalType(y9OrgBasesToRoles.getRoleId(), AuthorizationPrincipalTypeEnum.ROLE);
             for (Y9Authorization y9Authorization : authorizationList) {
                 if (OrgTypeEnum.PERSON.getEnName().equals(y9OrgBasesToRoles.getOrgType())) {
-                    y9PersonToResourceAndAuthorityService.deleteByAuthorizationIdAndPersonId(y9Authorization.getId(), y9OrgBasesToRoles.getOrgId());
+                    y9PersonToResourceAndAuthorityService.deleteByAuthorizationIdAndPersonId(y9Authorization.getId(),
+                        y9OrgBasesToRoles.getOrgId());
                 } else if (OrgTypeEnum.POSITION.getEnName().equals(y9OrgBasesToRoles.getOrgType())) {
-                    y9PositionToResourceAndAuthorityService.deleteByAuthorizationIdAndPositionId(y9Authorization.getId(), y9OrgBasesToRoles.getOrgId());
+                    y9PositionToResourceAndAuthorityService
+                        .deleteByAuthorizationIdAndPositionId(y9Authorization.getId(), y9OrgBasesToRoles.getOrgId());
                 } else {
-                    y9PersonToResourceAndAuthorityService.deleteByAuthorizationIdAndOrgUnitId(y9Authorization.getId(), y9OrgBasesToRoles.getOrgId());
-                    y9PositionToResourceAndAuthorityService.deleteByAuthorizationIdAndOrgUnitId(y9Authorization.getId(), y9OrgBasesToRoles.getOrgId());
+                    y9PersonToResourceAndAuthorityService.deleteByAuthorizationIdAndOrgUnitId(y9Authorization.getId(),
+                        y9OrgBasesToRoles.getOrgId());
+                    y9PositionToResourceAndAuthorityService.deleteByAuthorizationIdAndOrgUnitId(y9Authorization.getId(),
+                        y9OrgBasesToRoles.getOrgId());
                 }
             }
         } else {
@@ -269,15 +277,20 @@ public class UpdateIdentityResourceAndAuthorityListener {
         if (Boolean.TRUE.equals(orgBasesToRoles.getNegative())) {
             y9AuthorizationService.syncToIdentityResourceAndAuthority(orgBasesToRoles.getOrgId());
         } else {
-            List<Y9Authorization> authorizationList = y9AuthorizationService.listByPrincipalIdAndPrincipalType(orgBasesToRoles.getRoleId(), AuthorizationPrincipalTypeEnum.ROLE);
+            List<Y9Authorization> authorizationList = y9AuthorizationService
+                .listByPrincipalIdAndPrincipalType(orgBasesToRoles.getRoleId(), AuthorizationPrincipalTypeEnum.ROLE);
             for (Y9Authorization y9Authorization : authorizationList) {
                 if (OrgTypeEnum.PERSON.getEnName().equals(orgBasesToRoles.getOrgType())) {
-                    y9PersonToResourceAndAuthorityService.deleteByAuthorizationIdAndPersonId(y9Authorization.getId(), orgBasesToRoles.getOrgId());
+                    y9PersonToResourceAndAuthorityService.deleteByAuthorizationIdAndPersonId(y9Authorization.getId(),
+                        orgBasesToRoles.getOrgId());
                 } else if (OrgTypeEnum.POSITION.getEnName().equals(orgBasesToRoles.getOrgType())) {
-                    y9PositionToResourceAndAuthorityService.deleteByAuthorizationIdAndPositionId(y9Authorization.getId(), orgBasesToRoles.getOrgId());
+                    y9PositionToResourceAndAuthorityService
+                        .deleteByAuthorizationIdAndPositionId(y9Authorization.getId(), orgBasesToRoles.getOrgId());
                 } else {
-                    y9PersonToResourceAndAuthorityService.deleteByAuthorizationIdAndOrgUnitId(y9Authorization.getId(), orgBasesToRoles.getOrgId());
-                    y9PositionToResourceAndAuthorityService.deleteByAuthorizationIdAndOrgUnitId(y9Authorization.getId(), orgBasesToRoles.getOrgId());
+                    y9PersonToResourceAndAuthorityService.deleteByAuthorizationIdAndOrgUnitId(y9Authorization.getId(),
+                        orgBasesToRoles.getOrgId());
+                    y9PositionToResourceAndAuthorityService.deleteByAuthorizationIdAndOrgUnitId(y9Authorization.getId(),
+                        orgBasesToRoles.getOrgId());
                 }
             }
             y9AuthorizationService.syncToIdentityResourceAndAuthority(orgBasesToRoles.getOrgId());

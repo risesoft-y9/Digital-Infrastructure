@@ -11,8 +11,7 @@ import net.risesoft.enums.IdentityEnum;
 import net.risesoft.enums.LogicalEnum;
 
 /**
- * 是否拥有相应的资源权限
- * 只有拥有相应权限，方法才能继续调用
+ * 是否拥有相应的资源权限 只有拥有相应权限，方法才能继续调用
  *
  * @author shidaobang
  * @date 2022/11/10
@@ -21,7 +20,7 @@ import net.risesoft.enums.LogicalEnum;
 @Target({ElementType.TYPE, ElementType.METHOD})
 @Retention(RetentionPolicy.RUNTIME)
 public @interface HasAuthorities {
-    
+
     /**
      * 资源自定义标识 customId 数组
      */
@@ -36,7 +35,7 @@ public @interface HasAuthorities {
      * 身份类型
      */
     IdentityEnum identity() default IdentityEnum.PERSON;
-    
+
     /**
      * 检查资源权限的逻辑操作 与 和 或，默认是 与
      */

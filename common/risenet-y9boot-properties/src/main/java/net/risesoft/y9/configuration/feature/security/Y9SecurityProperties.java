@@ -32,5 +32,5 @@ public class Y9SecurityProperties {
 
     @NestedConfigurationProperty
     private Y9CorsProperties cors = new Y9CorsProperties();
-    
+
 }

@@ -21,8 +21,8 @@ import net.risesoft.enums.SexEnum;
 import net.risesoft.exception.ManagerErrorCodeEnum;
 import net.risesoft.id.IdType;
 import net.risesoft.id.Y9IdGenerator;
-import net.risesoft.manager.org.Y9DepartmentManager;
 import net.risesoft.manager.org.CompositeOrgBaseManager;
+import net.risesoft.manager.org.Y9DepartmentManager;
 import net.risesoft.repository.Y9ManagerRepository;
 import net.risesoft.service.org.Y9ManagerService;
 import net.risesoft.y9.Y9Context;
@@ -220,7 +220,8 @@ public class Y9ManagerImpl implements Y9ManagerService {
 
     @Override
     public Y9Manager getById(String id) {
-        return y9ManagerRepository.findById(id).orElseThrow(() -> Y9ExceptionUtil.notFoundException(ManagerErrorCodeEnum.MANAGER_NOT_FOUND, id));
+        return y9ManagerRepository.findById(id)
+            .orElseThrow(() -> Y9ExceptionUtil.notFoundException(ManagerErrorCodeEnum.MANAGER_NOT_FOUND, id));
     }
 
     @Override
@@ -296,8 +297,10 @@ public class Y9ManagerImpl implements Y9ManagerService {
                 return oldManager;
             } else {
                 y9Manager.setTenantId(Y9LoginUserHolder.getTenantId());
-                y9Manager.setTabIndex(compositeOrgBaseManager.getMaxSubTabIndex(y9Manager.getParentId(), OrgTypeEnum.MANAGER));
-                y9Manager.setDn(OrgLevelConsts.getOrgLevel(OrgTypeEnum.MANAGER) + y9Manager.getName() + OrgLevelConsts.SEPARATOR + y9OrgBase.getDn());
+                y9Manager.setTabIndex(
+                    compositeOrgBaseManager.getMaxSubTabIndex(y9Manager.getParentId(), OrgTypeEnum.MANAGER));
+                y9Manager.setDn(OrgLevelConsts.getOrgLevel(OrgTypeEnum.MANAGER) + y9Manager.getName()
+                    + OrgLevelConsts.SEPARATOR + y9OrgBase.getDn());
                 y9Manager.setDisabled(false);
                 y9Manager.setOrgType(OrgTypeEnum.MANAGER.getEnName());
                 if (mobile != null && mobile.length() == MOBILE_NUMBER_LENGTH) {
@@ -320,7 +323,8 @@ public class Y9ManagerImpl implements Y9ManagerService {
         y9Manager.setId(Y9IdGenerator.genId(IdType.SNOWFLAKE));
         y9Manager.setTenantId(Y9LoginUserHolder.getTenantId());
         y9Manager.setTabIndex(compositeOrgBaseManager.getMaxSubTabIndex(y9Manager.getParentId(), OrgTypeEnum.MANAGER));
-        y9Manager.setDn(OrgLevelConsts.getOrgLevel(OrgTypeEnum.MANAGER) + y9Manager.getName() + OrgLevelConsts.SEPARATOR + y9OrgBase.getDn());
+        y9Manager.setDn(OrgLevelConsts.getOrgLevel(OrgTypeEnum.MANAGER) + y9Manager.getName() + OrgLevelConsts.SEPARATOR
+            + y9OrgBase.getDn());
         y9Manager.setDisabled(true);
         if (mobile != null && mobile.length() == MOBILE_NUMBER_LENGTH) {
             password = mobile.substring(mobile.length() - 6);

@@ -1,5 +1,5 @@
 server:
-   port: 7056
+    port: 7056
 y9:
     feature:
         oauth2:

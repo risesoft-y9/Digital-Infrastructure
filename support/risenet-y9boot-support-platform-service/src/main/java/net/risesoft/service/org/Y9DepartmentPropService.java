@@ -60,7 +60,7 @@ public interface Y9DepartmentPropService {
     /**
      * 根据部门唯一标识和类别查找部门配置信息
      *
-     * @param deptId   部门id
+     * @param deptId 部门id
      * @param category 类别
      * @return {@link List}<{@link Y9DepartmentProp}>
      */
@@ -70,7 +70,7 @@ public interface Y9DepartmentPropService {
      * 根据人员唯一标识查找管理的部门
      *
      * @param orgBaseId 组织节点id
-     * @param category  类别
+     * @param category 类别
      * @return {@link List}<{@link Y9DepartmentProp}>
      */
     List<Y9DepartmentProp> listByOrgBaseIdAndCategory(String orgBaseId, Integer category);

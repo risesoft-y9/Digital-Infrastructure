@@ -43,7 +43,7 @@ redisRequest.interceptors.response.use(
             return res;
         } else {
             res = response;
-            const { status } = res;
+            const {status} = res;
             if (status == 200) {
                 return res;
             }

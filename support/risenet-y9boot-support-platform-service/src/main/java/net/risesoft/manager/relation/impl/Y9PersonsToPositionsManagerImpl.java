@@ -44,7 +44,6 @@ public class Y9PersonsToPositionsManagerImpl implements Y9PersonsToPositionsMana
     private final Y9PersonManager y9PersonManager;
     private final Y9PositionManager y9PositionManager;
 
-
     @Override
     @Transactional(readOnly = false)
     public void deleteByPersonId(String personId) {
@@ -73,7 +72,8 @@ public class Y9PersonsToPositionsManagerImpl implements Y9PersonsToPositionsMana
     public Y9PersonsToPositions save(String personId, String positionId) {
         // 校验岗位容量是否已满
         Y9Position y9Position = y9PositionManager.getById(positionId);
-        Y9Assert.lessThanOrEqualTo(countByPositionId(positionId) + 1, y9Position.getCapacity(), PositionErrorCodeEnum.POSITION_IS_FULL);
+        Y9Assert.lessThanOrEqualTo(countByPositionId(positionId) + 1, y9Position.getCapacity(),
+            PositionErrorCodeEnum.POSITION_IS_FULL);
 
         Integer maxPositionsOrder = getMaxPositionOrderByPersonId(personId);
         Integer maxPersonsOrder = getMaxPersonOrderByPositionId(positionId);
@@ -87,12 +87,13 @@ public class Y9PersonsToPositionsManagerImpl implements Y9PersonsToPositionsMana
         Y9Context.publishEvent(new Y9EntityCreatedEvent<>(savedPersonToPositions));
 
         Y9Person person = y9PersonManager.getById(personId);
-        Y9MessageOrg msg = new Y9MessageOrg(ModelConvertUtil.convert(y9PersonsToPositions, PersonsPositions.class), Y9OrgEventConst.RISEORGEVENT_TYPE_POSITION_ADDPERSON, Y9LoginUserHolder.getTenantId());
-        Y9PublishServiceUtil.persistAndPublishMessageOrg(msg, "添加岗位人员", y9Position.getName() + "添加成员" + person.getName());
+        Y9MessageOrg msg = new Y9MessageOrg(ModelConvertUtil.convert(y9PersonsToPositions, PersonsPositions.class),
+            Y9OrgEventConst.RISEORGEVENT_TYPE_POSITION_ADDPERSON, Y9LoginUserHolder.getTenantId());
+        Y9PublishServiceUtil.persistAndPublishMessageOrg(msg, "添加岗位人员",
+            y9Position.getName() + "添加成员" + person.getName());
 
         return savedPersonToPositions;
     }
-
 
     public Integer countByPositionId(String positionId) {
         return y9PersonsToPositionsRepository.countByPositionId(positionId);
@@ -105,7 +106,7 @@ public class Y9PersonsToPositionsManagerImpl implements Y9PersonsToPositionsMana
 
         delete(y9PersonsToPositions);
     }
-    
+
     public Y9PersonsToPositions getByPositionIdAndPersonId(String positionId, String personId) {
         return y9PersonsToPositionsRepository.findByPositionIdAndPersonId(positionId, personId);
     }
@@ -116,22 +117,26 @@ public class Y9PersonsToPositionsManagerImpl implements Y9PersonsToPositionsMana
         Y9Context.publishEvent(new Y9EntityDeletedEvent<>(y9PersonsToPositions));
 
         Y9Person person = y9PersonManager.getById(y9PersonsToPositions.getPersonId());
-        Y9MessageOrg msg = new Y9MessageOrg(ModelConvertUtil.convert(y9PersonsToPositions, PersonsPositions.class), Y9OrgEventConst.RISEORGEVENT_TYPE_POSITION_REMOVEPERSON, Y9LoginUserHolder.getTenantId());
+        Y9MessageOrg msg = new Y9MessageOrg(ModelConvertUtil.convert(y9PersonsToPositions, PersonsPositions.class),
+            Y9OrgEventConst.RISEORGEVENT_TYPE_POSITION_REMOVEPERSON, Y9LoginUserHolder.getTenantId());
         Y9Position y9Position = y9PositionManager.getById(y9PersonsToPositions.getPositionId());
-        Y9PublishServiceUtil.persistAndPublishMessageOrg(msg, "移除岗位人员", y9Position.getName() + "移除成员" + person.getName());
+        Y9PublishServiceUtil.persistAndPublishMessageOrg(msg, "移除岗位人员",
+            y9Position.getName() + "移除成员" + person.getName());
 
         y9PersonsToPositionsRepository.delete(y9PersonsToPositions);
     }
 
     @Override
     public Integer getMaxPositionOrderByPersonId(String personId) {
-        Y9PersonsToPositions y9PersonsToPositions = y9PersonsToPositionsRepository.findTopByPersonIdOrderByPositionOrderDesc(personId);
+        Y9PersonsToPositions y9PersonsToPositions =
+            y9PersonsToPositionsRepository.findTopByPersonIdOrderByPositionOrderDesc(personId);
         return y9PersonsToPositions != null ? y9PersonsToPositions.getPositionOrder() : 0;
     }
 
     @Override
     public Integer getMaxPersonOrderByPositionId(String positionId) {
-        Y9PersonsToPositions y9PersonsToPositions = y9PersonsToPositionsRepository.findTopByPositionIdOrderByPersonOrderDesc(positionId);
+        Y9PersonsToPositions y9PersonsToPositions =
+            y9PersonsToPositionsRepository.findTopByPositionIdOrderByPersonOrderDesc(positionId);
         if (y9PersonsToPositions != null) {
             return y9PersonsToPositions.getPersonOrder();
         }

@@ -14,7 +14,8 @@ import net.risesoft.y9public.entity.tenant.Y9TenantSystem;
 @SuppressWarnings("AlibabaAbstractMethodOrInterfaceMethodMustUseJavadoc")
 @Repository
 @Transactional(value = "rsPublicTransactionManager", readOnly = true)
-public interface Y9TenantSystemRepository extends JpaRepository<Y9TenantSystem, String>, JpaSpecificationExecutor<Y9TenantSystem> {
+public interface Y9TenantSystemRepository
+    extends JpaRepository<Y9TenantSystem, String>, JpaSpecificationExecutor<Y9TenantSystem> {
 
     long countBySystemId(String systemId);
 

@@ -44,36 +44,40 @@ public class Y9PublishedEventServiceImpl implements Y9PublishedEventService {
     @Override
     public List<Y9PublishedEvent> listByTenantId(String tenantId, Date startTime) {
         Sort sort = Sort.by(Sort.Direction.ASC, "createTime");
-        return y9PublishedEventRepository.findAll(new Y9PublishedEventSpecification(tenantId, startTime)
-            {
-                private static final long serialVersionUID = 4690624487610572887L;
+        return y9PublishedEventRepository.findAll(new Y9PublishedEventSpecification(tenantId, startTime) {
+            private static final long serialVersionUID = 4690624487610572887L;
 
-                @Override
-                public Predicate toPredicate(Root<Y9PublishedEvent> root, CriteriaQuery<?> query, CriteriaBuilder criteriaBuilder) {
-                    Predicate predicate = criteriaBuilder.conjunction();
-                    List<Expression<Boolean>> expressions = predicate.getExpressions();
-                    if (StringUtils.isNotBlank(tenantId)) {
-                        expressions.add(criteriaBuilder.equal(root.<String>get("tenantId"), tenantId));
-                    }
-                    if (startTime != null) {
-                        expressions.add(criteriaBuilder.greaterThanOrEqualTo(root.<Date>get("createTime"), startTime));
-                    }
-                    return predicate;
+            @Override
+            public Predicate toPredicate(Root<Y9PublishedEvent> root, CriteriaQuery<?> query,
+                CriteriaBuilder criteriaBuilder) {
+                Predicate predicate = criteriaBuilder.conjunction();
+                List<Expression<Boolean>> expressions = predicate.getExpressions();
+                if (StringUtils.isNotBlank(tenantId)) {
+                    expressions.add(criteriaBuilder.equal(root.<String>get("tenantId"), tenantId));
                 }
-            }, sort);
+                if (startTime != null) {
+                    expressions.add(criteriaBuilder.greaterThanOrEqualTo(root.<Date>get("createTime"), startTime));
+                }
+                return predicate;
+            }
+        }, sort);
     }
 
     @Override
-    public Page<Y9PublishedEvent> page(int page, int rows, String eventName, String eventDescription, Date startTime, Date endTime) {
+    public Page<Y9PublishedEvent> page(int page, int rows, String eventName, String eventDescription, Date startTime,
+        Date endTime) {
         Pageable pageable = PageRequest.of(page > 0 ? page - 1 : 0, rows, Sort.by(Sort.Direction.DESC, "createTime"));
-        Y9PublishedEventSpecification spec = new Y9PublishedEventSpecification(eventName, eventDescription, startTime, endTime);
+        Y9PublishedEventSpecification spec =
+            new Y9PublishedEventSpecification(eventName, eventDescription, startTime, endTime);
         return y9PublishedEventRepository.findAll(spec, pageable);
     }
 
     @Override
-    public Page<Y9PublishedEvent> page(int page, int rows, String tenantId, String eventName, String eventDescription, Date startTime, Date endTime) {
+    public Page<Y9PublishedEvent> page(int page, int rows, String tenantId, String eventName, String eventDescription,
+        Date startTime, Date endTime) {
         Pageable pageable = PageRequest.of(page > 0 ? page - 1 : 0, rows, Sort.by(Sort.Direction.DESC, "createTime"));
-        Y9PublishedEventSpecification spec = new Y9PublishedEventSpecification(tenantId, eventName, eventDescription, startTime, endTime);
+        Y9PublishedEventSpecification spec =
+            new Y9PublishedEventSpecification(tenantId, eventName, eventDescription, startTime, endTime);
         return y9PublishedEventRepository.findAll(spec, pageable);
     }
 }

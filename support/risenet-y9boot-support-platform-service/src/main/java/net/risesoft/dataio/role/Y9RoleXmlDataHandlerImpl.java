@@ -61,11 +61,10 @@ public class Y9RoleXmlDataHandlerImpl implements Y9RoleDataHandler {
     private final CompositeOrgBaseService compositeOrgBaseService;
     private final CompositeResourceService compositeResourceService;
     private final Y9Properties y9Config;
-    
+
     private final SimpleDateFormat fmt = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS");
     private final List<Y9Result<Object>> y9Results = new ArrayList<>();
     private String createDateTime = "";
-
 
     public Element buildChildElement(Element resources, String roleId) {
         List<Y9Role> roleList = y9RoleService.listByParentId(roleId);
@@ -88,7 +87,8 @@ public class Y9RoleXmlDataHandlerImpl implements Y9RoleDataHandler {
                 element.addElement("appId").addText(role.getAppId() != null ? role.getAppId() : "");
                 element.addElement("appCnName").addText(role.getAppCnName() != null ? role.getAppCnName() : "");
                 element.addElement("systemName").addText(role.getSystemName() != null ? role.getSystemName() : "");
-                element.addElement("systemCnName").addText(role.getSystemCnName() != null ? role.getSystemCnName() : "");
+                element.addElement("systemCnName")
+                    .addText(role.getSystemCnName() != null ? role.getSystemCnName() : "");
                 buildChildElement(element, role.getId());
             }
         }
@@ -101,7 +101,8 @@ public class Y9RoleXmlDataHandlerImpl implements Y9RoleDataHandler {
             Element roleElement = twoElement.addElement("RoleNodeMapping");
             roleElement.addAttribute("orgId", acRoleNodeMapping.getOrgId());
             roleElement.addAttribute("roleId", acRoleNodeMapping.getRoleId());
-            roleElement.addAttribute("orgOrder", acRoleNodeMapping.getOrgOrder() != null ? acRoleNodeMapping.getOrgOrder() + "" : "");
+            roleElement.addAttribute("orgOrder",
+                acRoleNodeMapping.getOrgOrder() != null ? acRoleNodeMapping.getOrgOrder() + "" : "");
         }
         List<Y9Authorization> permissionList = y9AuthorizationService.listByPrincipalId(roleId);
         for (Y9Authorization permission : permissionList) {
@@ -111,9 +112,11 @@ public class Y9RoleXmlDataHandlerImpl implements Y9RoleDataHandler {
             roleElement.addAttribute("roleId", permission.getPrincipalId());
             createDateTime = fmt.format(permission.getCreateTime() == null ? new Date() : permission.getCreateTime());
             roleElement.addAttribute("createDateTime", createDateTime);
-            roleElement.addAttribute("authority", permission.getAuthority() != null ? permission.getAuthority().toString() : "");
+            roleElement.addAttribute("authority",
+                permission.getAuthority() != null ? permission.getAuthority().toString() : "");
             roleElement.addAttribute("tenantId", permission.getTenantId() != null ? permission.getTenantId() : "");
-            roleElement.addAttribute("authorizer", permission.getAuthorizer() != null ? permission.getAuthorizer() : "");
+            roleElement.addAttribute("authorizer",
+                permission.getAuthorizer() != null ? permission.getAuthorizer() : "");
         }
         return twoElement;
     }
@@ -127,12 +130,14 @@ public class Y9RoleXmlDataHandlerImpl implements Y9RoleDataHandler {
             oneElement.addAttribute("id", y9System.getId());
             createDateTime = fmt.format(y9System.getCreateTime() == null ? new Date() : y9System.getCreateTime());
             oneElement.addElement("name").addText(y9System.getName() != null ? y9System.getName() : "");
-            oneElement.addElement("description").addText(y9System.getDescription() != null ? y9System.getDescription() : "");
+            oneElement.addElement("description")
+                .addText(y9System.getDescription() != null ? y9System.getDescription() : "");
             oneElement.addElement("customId").addText("");
             oneElement.addElement("createTime").addText(createDateTime);
             oneElement.addElement("dn").addText("");
             oneElement.addElement("type").addText("");
-            oneElement.addElement("tabIndex").addText(y9System.getTabIndex() != null ? y9System.getTabIndex() + "" : "");
+            oneElement.addElement("tabIndex")
+                .addText(y9System.getTabIndex() != null ? y9System.getTabIndex() + "" : "");
             oneElement.addElement("properties").addText("");
             oneElement.addElement("parentId").addText("");
             oneElement.addElement("systemName").addText(y9System.getName());
@@ -143,12 +148,14 @@ public class Y9RoleXmlDataHandlerImpl implements Y9RoleDataHandler {
                     twoElement.addAttribute("id", y9App.getId());
                     createDateTime = fmt.format(y9App.getCreateTime() == null ? new Date() : y9App.getCreateTime());
                     twoElement.addElement("name").addText(y9App.getName() != null ? y9App.getName() : "");
-                    twoElement.addElement("description").addText(y9App.getDescription() != null ? y9App.getDescription() : "");
+                    twoElement.addElement("description")
+                        .addText(y9App.getDescription() != null ? y9App.getDescription() : "");
                     twoElement.addElement("customId").addText(y9App.getCustomId() != null ? y9App.getCustomId() : "");
                     twoElement.addElement("createTime").addText(createDateTime);
                     twoElement.addElement("dn").addText("");
                     twoElement.addElement("type").addText(y9App.getType() != null ? y9App.getType().toString() : "");
-                    twoElement.addElement("tabIndex").addText(y9App.getTabIndex() != null ? y9App.getTabIndex() + "" : "");
+                    twoElement.addElement("tabIndex")
+                        .addText(y9App.getTabIndex() != null ? y9App.getTabIndex() + "" : "");
                     twoElement.addElement("properties").addText("");
                     twoElement.addElement("parentId").addText(y9App.getSystemId() != null ? y9App.getSystemId() : "");
                     Y9System system = y9SystemService.getById(y9App.getSystemId());
@@ -383,7 +390,8 @@ public class Y9RoleXmlDataHandlerImpl implements Y9RoleDataHandler {
             String resourceId = permissionElement.attributeValue("resourceId");
             String roleId = permissionElement.attributeValue("roleId");
             String authority = permissionElement.attributeValue("authority");
-            String authorizer = StringUtils.isNotBlank(permissionElement.attributeValue("authorizer")) ? permissionElement.attributeValue("authorizer") : "导入的角色授权信息没有授权人节点或者授权人为空";
+            String authorizer = StringUtils.isNotBlank(permissionElement.attributeValue("authorizer"))
+                ? permissionElement.attributeValue("authorizer") : "导入的角色授权信息没有授权人节点或者授权人为空";
 
             Y9ResourceBase acResource = compositeResourceService.findById(resourceId);
             if (null == acResource) {

@@ -117,7 +117,7 @@ public interface Y9TenantService {
     /**
      * 根据父节点id和租户类型，获取租户列表
      *
-     * @param parentId   父节点id
+     * @param parentId 父节点id
      * @param tenantType 租户类型 {@link net.risesoft.enums.TenantTypeEnum}
      * @return {@link List}<{@link Y9Tenant}>
      */
@@ -188,7 +188,7 @@ public interface Y9TenantService {
     /**
      * 保存租户实体类
      *
-     * @param entity   租户实体
+     * @param entity 租户实体
      * @param parentId 父节点id
      * @return {@link Y9Tenant}
      */

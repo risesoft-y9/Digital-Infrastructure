@@ -21,7 +21,8 @@ import net.risesoft.entity.identity.Y9IdentityToResourceAndAuthorityBase;
  * @date 2022/2/10
  */
 @Entity
-@Table(name = "Y9_ORG_PERSONS_RESOURCES", indexes = {@Index(columnList = "PERSON_ID,RESOURCE_ID,AUTHORIZATION_ID,AUTHORITY", unique = true)})
+@Table(name = "Y9_ORG_PERSONS_RESOURCES",
+    indexes = {@Index(columnList = "PERSON_ID,RESOURCE_ID,AUTHORIZATION_ID,AUTHORITY", unique = true)})
 @org.hibernate.annotations.Table(comment = "人员与（资源、权限）关系表", appliesTo = "Y9_ORG_PERSONS_RESOURCES")
 @NoArgsConstructor
 @Data

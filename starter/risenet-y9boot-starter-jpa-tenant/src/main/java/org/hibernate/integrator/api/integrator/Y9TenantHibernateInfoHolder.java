@@ -50,9 +50,11 @@ public class Y9TenantHibernateInfoHolder {
             String ddlAuto2 = env.getProperty("spring.jpa.properties.hibernate.hbm2ddl.auto");
             if (("update".equals(ddlAuto2) || "update".equals(ddlAuto1)) && null != metadata) {
                 SessionFactoryImplementor sessionFactory = Y9TenantHibernateInfoHolder.getSessionFactory();
-                StandardServiceRegistry standardServiceRegistry = new StandardServiceRegistryBuilder().applySettings(sessionFactory.getProperties()).build();
+                StandardServiceRegistry standardServiceRegistry =
+                    new StandardServiceRegistryBuilder().applySettings(sessionFactory.getProperties()).build();
                 MetadataSources sources = new MetadataSources(standardServiceRegistry);
-                new Reflections("net.risesoft.entity").getTypesAnnotatedWith(Entity.class).forEach(sources::addAnnotatedClass);
+                new Reflections("net.risesoft.entity").getTypesAnnotatedWith(Entity.class)
+                    .forEach(sources::addAnnotatedClass);
                 Metadata metadata = sources.buildMetadata();
 
                 String rootPath = env.getProperty("java.io.tmpdir");
@@ -70,7 +72,8 @@ public class Y9TenantHibernateInfoHolder {
                 SchemaExport schemaExport = new SchemaExport();
                 schemaExport.setOverrideOutputFileContent();
                 schemaExport.setOutputFile(rootPath + File.separator + systemName + "-all.sql");
-                schemaExport.execute(targetTypes, Action.CREATE, Y9TenantHibernateInfoHolder.getMetadata(), Y9TenantHibernateInfoHolder.getServiceRegistry());
+                schemaExport.execute(targetTypes, Action.CREATE, Y9TenantHibernateInfoHolder.getMetadata(),
+                    Y9TenantHibernateInfoHolder.getServiceRegistry());
             }
         } catch (Exception e) {
             LOGGER.warn(e.getMessage(), e);

@@ -26,7 +26,7 @@ import net.risesoft.y9.pubsub.constant.Y9TopicConst;
 @Slf4j
 @RequiredArgsConstructor
 public class Y9UserLoginInfoListener {
-    
+
     private final Y9logUserLoginInfoService y9logUserLoginInfoService;
     private final Y9logUserHostIpInfoService y9logUserHostIpInfoService;
     private final Y9logIpDeptMappingService y9logIpDeptMappingService;

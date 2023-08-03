@@ -24,10 +24,11 @@ import net.risesoft.y9.pubsub.event.Y9EntityDeletedEvent;
 @Transactional(value = "rsTenantTransactionManager", readOnly = true)
 @Service
 @RequiredArgsConstructor
-public abstract class Y9OrgBaseDeletedServiceImpl implements Y9OrgBaseDeletedService, ApplicationListener<Y9EntityDeletedEvent<? extends Y9OrgBase>> {
+public abstract class Y9OrgBaseDeletedServiceImpl
+    implements Y9OrgBaseDeletedService, ApplicationListener<Y9EntityDeletedEvent<? extends Y9OrgBase>> {
 
     private final Y9OrgBaseDeletedRepository y9OrgBaseDeletedRepository;
-    
+
     @Override
     public Y9OrgBaseDeletedRepository getRepository() {
         return y9OrgBaseDeletedRepository;

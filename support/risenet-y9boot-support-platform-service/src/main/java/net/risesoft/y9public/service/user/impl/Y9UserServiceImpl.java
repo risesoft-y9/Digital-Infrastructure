@@ -83,7 +83,8 @@ public class Y9UserServiceImpl implements Y9UserService {
             y9UserRepository.deleteById(id);
 
             String json = Y9JsonUtil.writeValueAsString(orgUser.get());
-            Y9MessageOrg riseEvent = new Y9MessageOrg(json, Y9OrgEventConst.RISEORGEVENT_TYPE_DELETE_USER, Y9LoginUserHolder.getTenantId());
+            Y9MessageOrg riseEvent =
+                new Y9MessageOrg(json, Y9OrgEventConst.RISEORGEVENT_TYPE_DELETE_USER, Y9LoginUserHolder.getTenantId());
             y9KafkaTemplate.send(Y9TopicConst.Y9_USER_EVENT, Y9JsonUtil.writeValueAsString(riseEvent));
         }
     }
@@ -141,7 +142,8 @@ public class Y9UserServiceImpl implements Y9UserService {
         Y9User saved = y9UserRepository.save(orgUser);
 
         String json = Y9JsonUtil.writeValueAsString(saved);
-        Y9MessageOrg riseEvent = new Y9MessageOrg(json, Y9OrgEventConst.RISEORGEVENT_TYPE_UPDATE_USER, Y9LoginUserHolder.getTenantId());
+        Y9MessageOrg riseEvent =
+            new Y9MessageOrg(json, Y9OrgEventConst.RISEORGEVENT_TYPE_UPDATE_USER, Y9LoginUserHolder.getTenantId());
         y9KafkaTemplate.send(Y9TopicConst.Y9_USER_EVENT, Y9JsonUtil.writeValueAsString(riseEvent));
         return saved;
     }
@@ -151,7 +153,8 @@ public class Y9UserServiceImpl implements Y9UserService {
         List<Y9User> orgUsers = y9UserRepository.findAll();
         if (!orgUsers.isEmpty()) {
             String json = Y9JsonUtil.writeValueAsString(orgUsers);
-            Y9MessageOrg riseEvent = new Y9MessageOrg(json, Y9OrgEventConst.RISEORGEVENT_TYPE_USER_SYNC, Y9LoginUserHolder.getTenantId());
+            Y9MessageOrg riseEvent =
+                new Y9MessageOrg(json, Y9OrgEventConst.RISEORGEVENT_TYPE_USER_SYNC, Y9LoginUserHolder.getTenantId());
             y9KafkaTemplate.send(Y9TopicConst.Y9_USER_EVENT, Y9JsonUtil.writeValueAsString(riseEvent));
         }
     }

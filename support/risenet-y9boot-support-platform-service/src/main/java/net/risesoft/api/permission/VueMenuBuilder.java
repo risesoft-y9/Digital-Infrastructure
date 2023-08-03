@@ -35,8 +35,10 @@ public class VueMenuBuilder {
     private final Y9PersonToResourceAndAuthorityService y9PersonToResourceAndAuthorityService;
 
     public void buildVueMenus(String personId, Integer authority, String resourceId, List<VueMenu> vueMenuList) {
-        List<Y9PersonToResourceAndAuthority> authorizedMenuList = y9PersonToResourceAndAuthorityService.list(personId, resourceId, ResourceTypeEnum.MENU.getValue(), authority);
-        List<String> menuIdList = authorizedMenuList.stream().map(Y9IdentityToResourceAndAuthorityBase::getResourceId).distinct().collect(Collectors.toList());
+        List<Y9PersonToResourceAndAuthority> authorizedMenuList = y9PersonToResourceAndAuthorityService.list(personId,
+            resourceId, ResourceTypeEnum.MENU.getValue(), authority);
+        List<String> menuIdList = authorizedMenuList.stream().map(Y9IdentityToResourceAndAuthorityBase::getResourceId)
+            .distinct().collect(Collectors.toList());
         for (String menuId : menuIdList) {
             Y9Menu y9Menu = y9MenuService.getById(menuId);
             VueMenu vueMenu = buildVueMenu(personId, authority, menuId, y9Menu);
@@ -64,8 +66,10 @@ public class VueMenuBuilder {
 
     private List<VueButton> buildVueButtons(String personId, Integer authority, String menuId) {
         List<VueButton> buttonList = new ArrayList<>();
-        List<Y9PersonToResourceAndAuthority> authorizedButtonList = y9PersonToResourceAndAuthorityService.list(personId, menuId, ResourceTypeEnum.OPERATION.getValue(), authority);
-        List<String> buttonIdList = authorizedButtonList.stream().map(Y9IdentityToResourceAndAuthorityBase::getResourceId).distinct().collect(Collectors.toList());
+        List<Y9PersonToResourceAndAuthority> authorizedButtonList = y9PersonToResourceAndAuthorityService.list(personId,
+            menuId, ResourceTypeEnum.OPERATION.getValue(), authority);
+        List<String> buttonIdList = authorizedButtonList.stream()
+            .map(Y9IdentityToResourceAndAuthorityBase::getResourceId).distinct().collect(Collectors.toList());
         for (String buttonId : buttonIdList) {
             Y9Operation y9Operation = y9OperationService.getById(buttonId);
             buttonList.add(buildVueButton(y9Operation));

@@ -105,9 +105,11 @@ public class RoleController {
         Y9App y9App = y9AppService.findById(resourceId);
         String xmlString = y9RoleDataHandler.doExport(resourceId);
         xmlString = StringUtil.strChangeToXml(xmlString.getBytes(StandardCharsets.UTF_8));
-        try (OutputStream outStream = response.getOutputStream(); InputStream in = new ByteArrayInputStream(xmlString.getBytes(StandardCharsets.UTF_8))) {
+        try (OutputStream outStream = response.getOutputStream();
+            InputStream in = new ByteArrayInputStream(xmlString.getBytes(StandardCharsets.UTF_8))) {
             response.setContentType("application/octet-stream");
-            response.setHeader("Content-Disposition", DownloadFileNameUtil.standardize(y9App.getName() + "-角色信息-" + new SimpleDateFormat("yyyyMMddHHmmss").format(new Date()) + ".xml"));
+            response.setHeader("Content-Disposition", DownloadFileNameUtil.standardize(
+                y9App.getName() + "-角色信息-" + new SimpleDateFormat("yyyyMMddHHmmss").format(new Date()) + ".xml"));
 
             int len;
             byte[] buf = new byte[1024];
@@ -177,7 +179,8 @@ public class RoleController {
      */
     @RiseLog(operationName = "导入角色", operationType = OperationTypeEnum.ADD)
     @RequestMapping(value = "/impRoleXml")
-    public Y9Result<String> impRoleXml(@RequestParam MultipartFile file, @RequestParam String roleId) throws IOException {
+    public Y9Result<String> impRoleXml(@RequestParam MultipartFile file, @RequestParam String roleId)
+        throws IOException {
         String uploadDir = Y9Context.getRealPath("/file/temp/");
         File f = Y9FileUtil.writeFile(file.getInputStream(), ".xml", uploadDir);
         FileInputStream fileInputStream = new FileInputStream(f);

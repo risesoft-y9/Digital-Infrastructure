@@ -91,10 +91,12 @@ public class Y9BookMark4Docx {
         for (int i = 1; i < nodeStack.size(); i++) {
             toDelete = nodeStack.elementAt(i);
             if (toDelete.getNodeName().contains(Y9BookMark4Docx.BOOKMARK_START_TAG)) {
-                bookmarkStartId = Integer.parseInt(toDelete.getAttributes().getNamedItem(Y9BookMark4Docx.BOOKMARK_ID_ATTR_NAME).getNodeValue());
+                bookmarkStartId = Integer.parseInt(
+                    toDelete.getAttributes().getNamedItem(Y9BookMark4Docx.BOOKMARK_ID_ATTR_NAME).getNodeValue());
                 inNestedBookmark = true;
             } else if (toDelete.getNodeName().contains(Y9BookMark4Docx.BOOKMARK_END_TAG)) {
-                bookmarkEndId = Integer.parseInt(toDelete.getAttributes().getNamedItem(Y9BookMark4Docx.BOOKMARK_ID_ATTR_NAME).getNodeValue());
+                bookmarkEndId = Integer.parseInt(
+                    toDelete.getAttributes().getNamedItem(Y9BookMark4Docx.BOOKMARK_ID_ATTR_NAME).getNodeValue());
                 if (bookmarkEndId == bookmarkStartId) {
                     inNestedBookmark = false;
                 }
@@ -133,7 +135,8 @@ public class Y9BookMark4Docx {
         Node styleNode = null;
         if (parentNode != null) {
 
-            if (parentNode.getNodeName().equalsIgnoreCase(Y9BookMark4Docx.RUN_NODE_NAME) && parentNode.hasChildNodes()) {
+            if (parentNode.getNodeName().equalsIgnoreCase(Y9BookMark4Docx.RUN_NODE_NAME)
+                && parentNode.hasChildNodes()) {
                 childNode = parentNode.getFirstChild();
                 if ("w:rPr".equals(childNode.getNodeName())) {
                     styleNode = childNode;
@@ -164,7 +167,8 @@ public class Y9BookMark4Docx {
             nextNode = nextNode.getNextSibling();
             if (nextNode.getNodeName().contains(Y9BookMark4Docx.BOOKMARK_END_TAG)) {
                 try {
-                    endBookmarkId = Integer.parseInt(nextNode.getAttributes().getNamedItem(Y9BookMark4Docx.BOOKMARK_ID_ATTR_NAME).getNodeValue());
+                    endBookmarkId = Integer.parseInt(
+                        nextNode.getAttributes().getNamedItem(Y9BookMark4Docx.BOOKMARK_ID_ATTR_NAME).getNodeValue());
                 } catch (NumberFormatException nfe) {
                     endBookmarkId = startBookmarkId;
                 }
@@ -225,7 +229,8 @@ public class Y9BookMark4Docx {
             nextNode = nextNode.getNextSibling();
             if (nextNode.getNodeName().contains(Y9BookMark4Docx.BOOKMARK_END_TAG)) {
                 try {
-                    bookmarkEndId = Integer.parseInt(nextNode.getAttributes().getNamedItem(Y9BookMark4Docx.BOOKMARK_ID_ATTR_NAME).getNodeValue());
+                    bookmarkEndId = Integer.parseInt(
+                        nextNode.getAttributes().getNamedItem(Y9BookMark4Docx.BOOKMARK_ID_ATTR_NAME).getNodeValue());
                 } catch (NumberFormatException nfe) {
                     bookmarkEndId = bookmarkStartId;
                 }
@@ -239,7 +244,8 @@ public class Y9BookMark4Docx {
         insertBeforeNode = nextNode.getNextSibling();
 
         if (styleNode != null) {
-            run.getCTR().getDomNode().insertBefore(styleNode.cloneNode(true), run.getCTR().getDomNode().getFirstChild());
+            run.getCTR().getDomNode().insertBefore(styleNode.cloneNode(true),
+                run.getCTR().getDomNode().getFirstChild());
         }
         if (insertBeforeNode != null) {
             this.para.getCTP().getDomNode().insertBefore(run.getCTR().getDomNode(), insertBeforeNode);
@@ -255,7 +261,8 @@ public class Y9BookMark4Docx {
         if (childNode != null) {
             styleNode = this.getStyleNode(childNode);
             if (styleNode != null) {
-                run.getCTR().getDomNode().insertBefore(styleNode.cloneNode(true), run.getCTR().getDomNode().getFirstChild());
+                run.getCTR().getDomNode().insertBefore(styleNode.cloneNode(true),
+                    run.getCTR().getDomNode().getFirstChild());
             }
         }
         this.para.getCTP().getDomNode().insertBefore(run.getCTR().getDomNode(), insertBeforeNode);
@@ -306,7 +313,8 @@ public class Y9BookMark4Docx {
 
             if (nextNode.getNodeName().contains(Y9BookMark4Docx.BOOKMARK_END_TAG)) {
                 try {
-                    bookmarkEndId = Integer.parseInt(nextNode.getAttributes().getNamedItem(Y9BookMark4Docx.BOOKMARK_ID_ATTR_NAME).getNodeValue());
+                    bookmarkEndId = Integer.parseInt(
+                        nextNode.getAttributes().getNamedItem(Y9BookMark4Docx.BOOKMARK_ID_ATTR_NAME).getNodeValue());
                 } catch (NumberFormatException nfe) {
                     bookmarkEndId = bookmarkStartId;
                 }
@@ -321,7 +329,8 @@ public class Y9BookMark4Docx {
             if ((lastRunNode.getNodeName().equals(Y9BookMark4Docx.RUN_NODE_NAME))) {
                 styleNode = this.getStyleNode(lastRunNode);
                 if (styleNode != null) {
-                    run.getCTR().getDomNode().insertBefore(styleNode.cloneNode(true), run.getCTR().getDomNode().getFirstChild());
+                    run.getCTR().getDomNode().insertBefore(styleNode.cloneNode(true),
+                        run.getCTR().getDomNode().getFirstChild());
                 }
             }
             this.deleteChildNodes(nodeStack);

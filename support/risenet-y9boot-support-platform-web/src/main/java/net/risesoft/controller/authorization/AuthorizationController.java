@@ -64,8 +64,10 @@ public class AuthorizationController {
      */
     @RiseLog(operationName = "获取角色权限许可对象")
     @RequestMapping(value = "/get")
-    public Y9Result<Y9Authorization> get(@NotBlank @RequestParam("roleId") String roleId, @NotBlank @RequestParam("resourceId") String resourceId) {
-        Y9Authorization y9Authorization = y9AuthorizationService.listByPrincipalIdAndResourceId(roleId, resourceId).get(0);
+    public Y9Result<Y9Authorization> get(@NotBlank @RequestParam("roleId") String roleId,
+        @NotBlank @RequestParam("resourceId") String resourceId) {
+        Y9Authorization y9Authorization =
+            y9AuthorizationService.listByPrincipalIdAndResourceId(roleId, resourceId).get(0);
         return Y9Result.success(y9Authorization, "获取角色权限许可对象成功！");
     }
 
@@ -85,7 +87,8 @@ public class AuthorizationController {
         return authorizationVO;
     }
 
-    private AuthorizationVO getAuthorizationVOForResourceBase(Y9Authorization y9Authorization, Y9ResourceBase acResource) {
+    private AuthorizationVO getAuthorizationVOForResourceBase(Y9Authorization y9Authorization,
+        Y9ResourceBase acResource) {
         AuthorizationVO authorizationVO = new AuthorizationVO();
         authorizationVO.setId(y9Authorization.getId());
         authorizationVO.setResourceId(acResource.getId());
@@ -121,8 +124,10 @@ public class AuthorizationController {
     @RiseLog(operationName = "根据资源id获取关联的组织列表 ")
     @RequestMapping(value = "/listRelateOrgList")
     public Y9Result<List<AuthorizationVO>> listRelateOrgList(@NotBlank @RequestParam("resourceId") String resourceId) {
-        List<Y9Authorization> y9AuthorizationList = y9AuthorizationService.listByPrincipalTypeNotAndResourceId(AuthorizationPrincipalTypeEnum.ROLE.getValue(), resourceId);
-        List<AuthorizationVO> authorizationVOList = y9AuthorizationList.stream().map(this::getAuthorizationVOForOrgBase).collect(Collectors.toList());
+        List<Y9Authorization> y9AuthorizationList = y9AuthorizationService
+            .listByPrincipalTypeNotAndResourceId(AuthorizationPrincipalTypeEnum.ROLE.getValue(), resourceId);
+        List<AuthorizationVO> authorizationVOList =
+            y9AuthorizationList.stream().map(this::getAuthorizationVOForOrgBase).collect(Collectors.toList());
         return Y9Result.success(authorizationVOList, "获取数据成功！");
     }
 
@@ -136,7 +141,8 @@ public class AuthorizationController {
      */
     @RiseLog(operationName = "根据角色ID获取权限列表 ")
     @RequestMapping(value = "/listRelateResource")
-    public Y9Page<AuthorizationVO> listRelateResource(@RequestParam("roleId") String roleId, @RequestParam("page") Integer page, @RequestParam("rows") Integer rows) {
+    public Y9Page<AuthorizationVO> listRelateResource(@RequestParam("roleId") String roleId,
+        @RequestParam("page") Integer page, @RequestParam("rows") Integer rows) {
         Page<Y9Authorization> y9AuthorizationPage = y9AuthorizationService.pageByPrincipalId(roleId, rows, page);
         List<AuthorizationVO> authorizationVOList = new ArrayList<>();
         for (Y9Authorization y9Authorization : y9AuthorizationPage) {
@@ -153,7 +159,8 @@ public class AuthorizationController {
             authorizationVOList.add(getAuthorizationVOForResourceBase(y9Authorization, acResource));
         }
 
-        return Y9Page.success(page, y9AuthorizationPage.getTotalPages(), y9AuthorizationPage.getTotalElements(), authorizationVOList, "获取数据成功");
+        return Y9Page.success(page, y9AuthorizationPage.getTotalPages(), y9AuthorizationPage.getTotalElements(),
+            authorizationVOList, "获取数据成功");
     }
 
     /**
@@ -166,7 +173,8 @@ public class AuthorizationController {
      */
     @RiseLog(operationName = "根据资源id获取关联的角色列表 ")
     @RequestMapping(value = "/listRelateRole")
-    public Y9Result<List<AuthorizationVO>> listRelateRole(@RequestParam("resourceId") String resourceId, String roleName, @RequestParam("authority") Integer authority) {
+    public Y9Result<List<AuthorizationVO>> listRelateRole(@RequestParam("resourceId") String resourceId,
+        String roleName, @RequestParam("authority") Integer authority) {
         List<AuthorizationVO> authorizationVOList = new ArrayList<>();
         List<Y9Authorization> y9AuthorizationList;
 
@@ -179,7 +187,8 @@ public class AuthorizationController {
                 y9AuthorizationList = new ArrayList<>();
             }
         } else {
-            y9AuthorizationList = y9AuthorizationService.listByPrincipalTypeAndResourceId(AuthorizationPrincipalTypeEnum.ROLE.getValue(), resourceId);
+            y9AuthorizationList = y9AuthorizationService
+                .listByPrincipalTypeAndResourceId(AuthorizationPrincipalTypeEnum.ROLE.getValue(), resourceId);
         }
         for (Y9Authorization y9Authorization : y9AuthorizationList) {
             if (AuthorizationPrincipalTypeEnum.ROLE.getValue().equals(y9Authorization.getPrincipalType())) {
@@ -213,8 +222,9 @@ public class AuthorizationController {
      */
     @RiseLog(operationName = "保存管理资源权限许可对象 ", operationType = OperationTypeEnum.MODIFY)
     @PostMapping(value = "/saveOrUpdate")
-    public Y9Result<String> saveOrUpdate(Integer authority, String principalId, Integer principalType, @RequestParam("resourceIds") String[] resourceIds) {
-        y9AuthorizationService.save(authority, principalId, principalType , resourceIds);
+    public Y9Result<String> saveOrUpdate(Integer authority, String principalId, Integer principalType,
+        @RequestParam("resourceIds") String[] resourceIds) {
+        y9AuthorizationService.save(authority, principalId, principalType, resourceIds);
         return Y9Result.successMsg("授权成功！");
     }
 
@@ -228,7 +238,8 @@ public class AuthorizationController {
      */
     @RiseLog(operationName = "保存资源授权管理关联组织信息", operationType = OperationTypeEnum.MODIFY)
     @PostMapping(value = "/saveOrUpdateOrg")
-    public Y9Result<String> saveOrUpdateOrg(Integer authority, String resourceId, @RequestParam("orgIds") String[] orgIds) {
+    public Y9Result<String> saveOrUpdateOrg(Integer authority, String resourceId,
+        @RequestParam("orgIds") String[] orgIds) {
         y9AuthorizationService.saveByOrg(authority, resourceId, orgIds);
         return Y9Result.successMsg("授权成功！");
     }
@@ -243,7 +254,8 @@ public class AuthorizationController {
      */
     @RiseLog(operationName = "保存关联角色权限许可对象 ", operationType = OperationTypeEnum.MODIFY)
     @PostMapping(value = "/saveOrUpdateRole")
-    public Y9Result<String> saveOrUpdateRole(Integer authority, String resourceId, @RequestParam("roleIds") String[] roleIds) {
+    public Y9Result<String> saveOrUpdateRole(Integer authority, String resourceId,
+        @RequestParam("roleIds") String[] roleIds) {
         y9AuthorizationService.saveByRoles(authority, resourceId, roleIds);
         return Y9Result.successMsg("授权成功！");
     }
@@ -258,7 +270,8 @@ public class AuthorizationController {
      */
     @RiseLog(operationName = "根据角色ID，资源名,和code模糊查询 ")
     @RequestMapping(value = "/searchOperations")
-    public Y9Result<List<AuthorizationVO>> searchResourceOperations(@RequestParam("roleId") String roleId, String resourceName, @RequestParam("operationType") Integer operationType) {
+    public Y9Result<List<AuthorizationVO>> searchResourceOperations(@RequestParam("roleId") String roleId,
+        String resourceName, @RequestParam("operationType") Integer operationType) {
         List<Y9ResourceBase> list = compositeResourceService.searchByName(resourceName);
         List<String> resourceIds = list.stream().map(Y9ResourceBase::getId).collect(Collectors.toList());
         List<Y9Authorization> y9AuthorizationList = new ArrayList<>();

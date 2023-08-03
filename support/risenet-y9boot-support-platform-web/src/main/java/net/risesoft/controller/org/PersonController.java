@@ -79,8 +79,10 @@ public class PersonController {
      */
     @RiseLog(operationName = "为人员添加岗位", operationType = OperationTypeEnum.ADD)
     @PostMapping(value = "/addPositions")
-    public Y9Result<List<Y9PersonsToPositions>> addPositions(@RequestParam String personId, @RequestParam String[] positionIds) {
-        List<Y9PersonsToPositions> personsToPositionsList = y9PersonsToPositionsService.addPositions(personId, positionIds);
+    public Y9Result<List<Y9PersonsToPositions>> addPositions(@RequestParam String personId,
+        @RequestParam String[] positionIds) {
+        List<Y9PersonsToPositions> personsToPositionsList =
+            y9PersonsToPositionsService.addPositions(personId, positionIds);
         return Y9Result.success(personsToPositionsList, "为人员添加岗位成功");
     }
 
@@ -105,7 +107,8 @@ public class PersonController {
      */
     @RiseLog(operationName = "判断同一个租户CA认证码是否重复")
     @RequestMapping(value = "/checkCaid")
-    public Y9Result<Boolean> checkCaid(@RequestParam(required = false) String personId, @NotBlank @RequestParam String caid) {
+    public Y9Result<Boolean> checkCaid(@RequestParam(required = false) String personId,
+        @NotBlank @RequestParam String caid) {
         return Y9Result.success(y9UserService.checkCaidAvailability(personId, caid), "判断同一个租户CA认证码是否重复操作成功");
     }
 
@@ -120,7 +123,7 @@ public class PersonController {
     public Y9Result<Boolean> checkEmail(@NotBlank @RequestParam String email) {
         return Y9Result.success(y9PersonService.checkEmailAvailability(email), "判断邮箱是否可用成功");
     }
-    
+
     /**
      * 判断登录名是否可用（同一个租户）
      *
@@ -129,7 +132,8 @@ public class PersonController {
      */
     @RiseLog(operationName = "判断登录名是否可用")
     @RequestMapping(value = "/checkLoginName")
-    public Y9Result<Boolean> checkLoginName(@RequestParam(required = false) String personId, @NotBlank @RequestParam String loginName) {
+    public Y9Result<Boolean> checkLoginName(@RequestParam(required = false) String personId,
+        @NotBlank @RequestParam String loginName) {
         return Y9Result.success(y9PersonService.checkLoginNameAvailability(personId, loginName), "判断登录名是否可用成功");
     }
 
@@ -337,7 +341,9 @@ public class PersonController {
      */
     @RiseLog(operationName = "新建或者更新人员信息", operationType = OperationTypeEnum.ADD)
     @PostMapping(value = "/saveOrUpdate")
-    public Y9Result<Y9Person> saveOrUpdate(@Validated Y9Person person, @Validated Y9PersonExt ext, @RequestParam String parentId, @RequestParam(value = "positionIds", required = false) String[] positionIds, @RequestParam(value = "jobIds", required = false) String[] jobIds) {
+    public Y9Result<Y9Person> saveOrUpdate(@Validated Y9Person person, @Validated Y9PersonExt ext,
+        @RequestParam String parentId, @RequestParam(value = "positionIds", required = false) String[] positionIds,
+        @RequestParam(value = "jobIds", required = false) String[] jobIds) {
         Y9Person y9Person = y9PersonService.saveOrUpdate(person, ext, parentId, positionIds, jobIds);
         return Y9Result.success(y9Person, "保存人员信息成功");
     }

@@ -116,7 +116,7 @@ public class OfficeInfo implements Serializable {
      * 历程信息
      */
     private List<HistoryInfo> historys;
-    
+
     /**
      * 表单信息
      */

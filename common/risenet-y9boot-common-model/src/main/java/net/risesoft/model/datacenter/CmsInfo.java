@@ -13,7 +13,7 @@ import lombok.Data;
 @Builder
 public class CmsInfo implements Serializable {
     private static final long serialVersionUID = -1900080157365837431L;
-    
+
     /**
      * 主键
      */

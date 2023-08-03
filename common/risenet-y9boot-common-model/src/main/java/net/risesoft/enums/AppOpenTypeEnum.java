@@ -15,7 +15,7 @@ import lombok.Getter;
 @Getter
 @AllArgsConstructor
 public enum AppOpenTypeEnum {
-    /** 桌面窗口 */ 
+    /** 桌面窗口 */
     DESKTOP(0, "桌面窗口"),
     /** 新浏览器窗口 */
     BROWSE(1, "新浏览器窗口");

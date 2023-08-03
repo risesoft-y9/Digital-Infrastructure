@@ -17,5 +17,5 @@ public class Y9LogProperties {
      * 是否启用
      */
     private boolean enabled;
-    
+
 }

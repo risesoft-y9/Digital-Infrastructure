@@ -31,7 +31,8 @@ public class Y9PublishedEventSyncHistoryServiceImpl implements Y9PublishedEventS
 
     @Override
     public Y9PublishedEventSyncHistory saveOrUpdate(String tenantId, String appName, Date syncTime) {
-        Y9PublishedEventSyncHistory history = y9PublishedEventSyncHistoryRepository.findByTenantIdAndAppName(tenantId, appName);
+        Y9PublishedEventSyncHistory history =
+            y9PublishedEventSyncHistoryRepository.findByTenantIdAndAppName(tenantId, appName);
         if (history != null) {
             history.setLastSyncTime(syncTime);
             return y9PublishedEventSyncHistoryRepository.save(history);

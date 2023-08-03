@@ -19,6 +19,6 @@ public enum DataSourceTypeEnum {
     JNDI(1),
     /** DRUID */
     DRUID(2);
-    
+
     private final Integer value;
 }

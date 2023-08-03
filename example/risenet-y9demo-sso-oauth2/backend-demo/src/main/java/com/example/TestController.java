@@ -14,5 +14,5 @@ public class TestController {
     public Y9Result<UserInfo> getUserInfo() {
         return Y9Result.success(Y9LoginUserHolder.getUserInfo());
     }
-    
+
 }

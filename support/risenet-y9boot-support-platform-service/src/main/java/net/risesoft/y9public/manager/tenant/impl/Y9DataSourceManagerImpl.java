@@ -39,7 +39,8 @@ public class Y9DataSourceManagerImpl implements Y9DataSourceManager {
     private final Y9Properties y9config;
     private final Y9DataSourceRepository datasourceRepository;
 
-    public Y9DataSourceManagerImpl(@Qualifier("jdbcTemplate4Public") JdbcTemplate jdbcTemplate4Public, Y9Properties y9config, Y9DataSourceRepository datasourceRepository) {
+    public Y9DataSourceManagerImpl(@Qualifier("jdbcTemplate4Public") JdbcTemplate jdbcTemplate4Public,
+        Y9Properties y9config, Y9DataSourceRepository datasourceRepository) {
         this.jdbcTemplate4Public = jdbcTemplate4Public;
         this.y9config = y9config;
         this.datasourceRepository = datasourceRepository;
@@ -89,7 +90,6 @@ public class Y9DataSourceManagerImpl implements Y9DataSourceManager {
         return sb.toString();
     }
 
-
     @Override
     @Transactional(readOnly = false)
     public Y9DataSource createTenantDefaultDataSource(String dbName) {
@@ -132,12 +132,15 @@ public class Y9DataSourceManagerImpl implements Y9DataSourceManager {
             String newTableSpace = y9config.getApp().getY9DigitalBase().getOrclNewTableSpace() + username + "_DATA.DBF";
             // 创建临时表空间
             // String newTempSpace = y9config.getApp().getY9DigitalBase().getOrclNewTableSpace()+username+"_TEMP.DBF";
-            // String sql0 = "CREATE TEMPORARY TABLESPACE "+username+"_TEMP TEMPFILE '"+newTempSpace+"' SIZE 10M AUTOEXTEND ON NEXT 10M EXTENT MANAGEMENT LOCAL";
+            // String sql0 = "CREATE TEMPORARY TABLESPACE "+username+"_TEMP TEMPFILE '"+newTempSpace+"' SIZE 10M
+            // AUTOEXTEND ON NEXT 10M EXTENT MANAGEMENT LOCAL";
 
             // 创建表空间
-            String sql1 = "CREATE TABLESPACE " + username + "_DATA DATAFILE '" + newTableSpace + "' SIZE 100M AUTOEXTEND ON NEXT 10M MAXSIZE UNLIMITED EXTENT MANAGEMENT LOCAL";
+            String sql1 = "CREATE TABLESPACE " + username + "_DATA DATAFILE '" + newTableSpace
+                + "' SIZE 100M AUTOEXTEND ON NEXT 10M MAXSIZE UNLIMITED EXTENT MANAGEMENT LOCAL";
             // 创建用户
-            String sql2 = "CREATE USER " + username + " IDENTIFIED BY " + password + " ACCOUNT UNLOCK DEFAULT TABLESPACE " + username + "_DATA TEMPORARY TABLESPACE TEMP PROFILE DEFAULT";
+            String sql2 = "CREATE USER " + username + " IDENTIFIED BY " + password
+                + " ACCOUNT UNLOCK DEFAULT TABLESPACE " + username + "_DATA TEMPORARY TABLESPACE TEMP PROFILE DEFAULT";
             // 给用户授权
             String sql3 = "GRANT DBA TO " + username + " WITH ADMIN OPTION";
             // 修改权限
@@ -220,7 +223,7 @@ public class Y9DataSourceManagerImpl implements Y9DataSourceManager {
         }
         return dataSource;
     }
-    
+
     @Override
     @Transactional(readOnly = false)
     public void dropTenantDefaultDataSource(String dataSourceId, String dbName) {

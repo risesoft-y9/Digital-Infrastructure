@@ -104,7 +104,7 @@ public interface Y9OrgBasesToRolesService {
      * @param id
      */
     void remove(Integer id);
-    
+
     /**
      * 根据id数组移除
      *

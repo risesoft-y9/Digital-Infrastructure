@@ -14,5 +14,6 @@ import net.risesoft.y9public.entity.resource.Y9ResourceBase;
 public interface Y9PositionToResourceAndAuthorityManager {
     void deleteByAuthorizationId(String authorizationId);
 
-    void saveOrUpdate(Y9ResourceBase y9ResourceBase, Y9Position y9Position, Y9Authorization y9Authorization, Boolean inherit);
+    void saveOrUpdate(Y9ResourceBase y9ResourceBase, Y9Position y9Position, Y9Authorization y9Authorization,
+        Boolean inherit);
 }

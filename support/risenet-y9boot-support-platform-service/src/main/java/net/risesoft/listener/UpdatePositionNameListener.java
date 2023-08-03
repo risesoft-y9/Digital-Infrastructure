@@ -40,7 +40,7 @@ import net.risesoft.y9.pubsub.event.Y9EntityUpdatedEvent;
 @RequiredArgsConstructor
 @Slf4j
 public class UpdatePositionNameListener {
-    
+
     private final Y9Properties y9Properties;
     private final Y9JobService y9JobService;
     private final Y9PositionService y9PositionService;
@@ -78,7 +78,7 @@ public class UpdatePositionNameListener {
         Y9PersonsToPositions y9PersonsToPositions = event.getEntity();
 
         this.updatePositionName(y9PersonsToPositions.getPositionId());
-        
+
         if (LOGGER.isDebugEnabled()) {
             LOGGER.debug("新建人员和岗位的映射触发的重新计算权限缓存执行完成");
         }
@@ -98,9 +98,10 @@ public class UpdatePositionNameListener {
 
     public void updatePositionName(Y9Position y9Position) {
         Y9Job y9Job = y9JobService.getById(y9Position.getJobId());
-        
+
         String name;
-        List<Y9PersonsToPositions> personsToPositionsList = y9PersonsToPositionsService.listByPositionId(y9Position.getId());
+        List<Y9PersonsToPositions> personsToPositionsList =
+            y9PersonsToPositionsService.listByPositionId(y9Position.getId());
         int headcount = personsToPositionsList.size();
 
         String pattern = y9Properties.getApp().getPlatform().getPositionNamePattern();
@@ -113,7 +114,8 @@ public class UpdatePositionNameListener {
                 Y9Person person = y9PersonService.getById(y9PersonsToPositions.getPersonId());
                 personList.add(person);
             }
-            String personNames = personList.stream().sorted((Comparator.comparing(Y9Person::getOrderedPath))).map(Y9OrgBase::getName).collect(Collectors.joining("，"));
+            String personNames = personList.stream().sorted((Comparator.comparing(Y9Person::getOrderedPath)))
+                .map(Y9OrgBase::getName).collect(Collectors.joining("，"));
             name = MessageFormat.format(pattern, y9Job.getName(), personNames);
         }
 
@@ -121,7 +123,8 @@ public class UpdatePositionNameListener {
         y9Position.setName(name);
         y9Position.setHeadCount(headcount);
         y9Position.setGuidPath(parent.getGuidPath() + OrgLevelConsts.SEPARATOR + y9Position.getId());
-        y9Position.setDn(OrgLevelConsts.getOrgLevel(OrgTypeEnum.POSITION) + y9Position.getName() + OrgLevelConsts.SEPARATOR + parent.getDn());
+        y9Position.setDn(OrgLevelConsts.getOrgLevel(OrgTypeEnum.POSITION) + y9Position.getName()
+            + OrgLevelConsts.SEPARATOR + parent.getDn());
 
         y9PositionService.save(y9Position);
     }

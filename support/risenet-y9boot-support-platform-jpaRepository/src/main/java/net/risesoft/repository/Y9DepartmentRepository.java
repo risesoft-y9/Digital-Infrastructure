@@ -18,11 +18,11 @@ import net.risesoft.entity.Y9Department;
 @SuppressWarnings("AlibabaAbstractMethodOrInterfaceMethodMustUseJavadoc")
 @Repository
 @Transactional(value = "rsTenantTransactionManager", readOnly = true)
-//@JaversSpringDataAuditable
+// @JaversSpringDataAuditable
 public interface Y9DepartmentRepository extends JpaRepository<Y9Department, String> {
 
     List<Y9Department> findByBureauAndDnContainingOrderByTabIndexAsc(boolean bureau, String dn);
-    
+
     List<Y9Department> findByNameContainingOrderByTabIndexAsc(String name);
 
     List<Y9Department> findByNameContainingAndDnContainingOrderByTabIndexAsc(String name, String dnName);

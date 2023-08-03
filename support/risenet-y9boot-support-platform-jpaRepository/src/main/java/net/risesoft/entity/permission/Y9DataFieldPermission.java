@@ -26,7 +26,7 @@ import net.risesoft.base.BaseEntity;
 @NoArgsConstructor
 @Data
 public class Y9DataFieldPermission extends BaseEntity {
-    
+
     private static final long serialVersionUID = 8456154957926701479L;
 
     /** 主键 */

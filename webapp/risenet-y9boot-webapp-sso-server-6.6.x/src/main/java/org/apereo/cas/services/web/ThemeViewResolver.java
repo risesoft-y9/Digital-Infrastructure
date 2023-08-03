@@ -54,7 +54,8 @@ public class ThemeViewResolver extends AbstractCachingViewResolver {
         @Override
         public ThemeViewResolver create(final String theme) {
             LOGGER.trace("Creating theme view resolver based on theme [{}]", theme);
-            val resolver = new ThemeViewResolver(delegate, thymeleafProperties, theme, thymeleafViewResolverConfigurers);
+            val resolver =
+                new ThemeViewResolver(delegate, thymeleafProperties, theme, thymeleafViewResolverConfigurers);
             resolver.setApplicationContext(applicationContext);
             resolver.setCache(thymeleafProperties.isCache());
             return resolver;
@@ -81,7 +82,8 @@ public class ThemeViewResolver extends AbstractCachingViewResolver {
         if (applicationContext != null && location.exists(applicationContext)) {
             thymeleafView.setTemplateName(templateName);
         } else {
-            final TemplateLocation location2 = new TemplateLocation(thymeleafProperties.getPrefix().concat(templateName).concat(thymeleafProperties.getSuffix()));
+            final TemplateLocation location2 = new TemplateLocation(
+                thymeleafProperties.getPrefix().concat(templateName).concat(thymeleafProperties.getSuffix()));
             if (location2.exists(applicationContext)) {
                 thymeleafView.setTemplateName(templateName);
             } else {
@@ -103,13 +105,15 @@ public class ThemeViewResolver extends AbstractCachingViewResolver {
     protected View loadView(final String viewName, final Locale locale) throws Exception {
         LOGGER.trace("Attempting to resolve view [{}] via locale [{}]", viewName, locale);
         val applicationContext = obtainApplicationContext();
-        val view = applicationContext.containsBean(viewName) ? applicationContext.getBean(viewName, View.class) : delegate.resolveViewName(viewName, locale);
+        val view = applicationContext.containsBean(viewName) ? applicationContext.getBean(viewName, View.class)
+            : delegate.resolveViewName(viewName, locale);
 
         if (view instanceof AbstractThymeleafView) {
             val thymeleafView = (AbstractThymeleafView)view;
             configureTemplateThemeDefaultLocation(thymeleafView);
 
-            thymeleafViewResolverConfigurers.stream().sorted(OrderComparator.INSTANCE).forEach(configurer -> configurer.configureThymeleafView(thymeleafView));
+            thymeleafViewResolverConfigurers.stream().sorted(OrderComparator.INSTANCE)
+                .forEach(configurer -> configurer.configureThymeleafView(thymeleafView));
         }
         return view;
     }

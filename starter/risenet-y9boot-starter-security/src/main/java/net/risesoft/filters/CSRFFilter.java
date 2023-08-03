@@ -19,7 +19,8 @@ import net.risesoft.y9.configuration.Y9Properties;
 public class CSRFFilter implements Filter {
 
     @Override
-    public void doFilter(ServletRequest servletRequest, ServletResponse servletResponse, FilterChain filterChain) throws IOException, ServletException {
+    public void doFilter(ServletRequest servletRequest, ServletResponse servletResponse, FilterChain filterChain)
+        throws IOException, ServletException {
         HttpServletRequest httpRequest = (HttpServletRequest)servletRequest;
         HttpServletResponse httpResponse = (HttpServletResponse)servletResponse;
 
@@ -43,7 +44,8 @@ public class CSRFFilter implements Filter {
      */
     public boolean isRefererValid(HttpServletRequest request) {
         String referer = request.getHeader("Referer");
-        if (StringUtils.isNotBlank(referer) && !referer.contains(request.getContextPath()) && !isAcceptedReferer(referer)) {
+        if (StringUtils.isNotBlank(referer) && !referer.contains(request.getContextPath())
+            && !isAcceptedReferer(referer)) {
             return false;
         }
         return true;

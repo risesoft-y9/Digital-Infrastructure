@@ -74,7 +74,8 @@ public class Y9PermissionConfiguration {
 
     @Bean
     @ConditionalOnMissingBean(HasAuthoritiesAdvice.class)
-    public HasAuthoritiesAdvice hasAuthoritiesAdvice(PersonResourceApi personResourceApi, PositionResourceApi positionResourceApi) {
+    public HasAuthoritiesAdvice hasAuthoritiesAdvice(PersonResourceApi personResourceApi,
+        PositionResourceApi positionResourceApi) {
         return new HasAuthoritiesAdvice(personResourceApi, positionResourceApi);
     }
 

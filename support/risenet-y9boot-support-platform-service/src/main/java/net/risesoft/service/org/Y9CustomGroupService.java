@@ -84,10 +84,10 @@ public interface Y9CustomGroupService {
     /**
      * 保存用户组
      *
-     * @param personId     人员id
+     * @param personId 人员id
      * @param personIdList 人员Ids
-     * @param groupId      用户组Id,绑定人员时传入
-     * @param groupName    用户组名称
+     * @param groupId 用户组Id,绑定人员时传入
+     * @param groupName 用户组名称
      * @return {@link Y9CustomGroup}
      */
     Y9CustomGroup saveOrUpdate(String personId, List<String> personIdList, String groupId, String groupName);
@@ -96,7 +96,7 @@ public interface Y9CustomGroupService {
      * 共享用户组
      *
      * @param personIds 人员Ids
-     * @param groupIds  用户组Ids
+     * @param groupIds 用户组Ids
      * @return boolean
      */
     boolean share(List<String> personIds, List<String> groupIds);

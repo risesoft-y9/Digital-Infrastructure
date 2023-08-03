@@ -21,14 +21,12 @@ import lombok.Data;
 @Data
 // Jackson框架下的多态反序列化
 @JsonTypeInfo(use = JsonTypeInfo.Id.NAME, property = "orgType")
-@JsonSubTypes({
-        @JsonSubTypes.Type(value = Department.class, name = "Department"),
-        @JsonSubTypes.Type(value = Group.class, name = "Group"),
-        @JsonSubTypes.Type(value = Manager.class, name = "Manager"),
-        @JsonSubTypes.Type(value = Organization.class, name = "Organization"),
-        @JsonSubTypes.Type(value = Person.class, name = "Person"),
-        @JsonSubTypes.Type(value = Position.class, name = "Position")
-})
+@JsonSubTypes({@JsonSubTypes.Type(value = Department.class, name = "Department"),
+    @JsonSubTypes.Type(value = Group.class, name = "Group"),
+    @JsonSubTypes.Type(value = Manager.class, name = "Manager"),
+    @JsonSubTypes.Type(value = Organization.class, name = "Organization"),
+    @JsonSubTypes.Type(value = Person.class, name = "Person"),
+    @JsonSubTypes.Type(value = Position.class, name = "Position")})
 public class OrgUnit implements Serializable {
     private static final long serialVersionUID = 4473986529965103226L;
 

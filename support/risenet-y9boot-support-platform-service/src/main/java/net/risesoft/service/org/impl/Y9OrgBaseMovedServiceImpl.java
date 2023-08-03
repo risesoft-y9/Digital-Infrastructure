@@ -25,7 +25,8 @@ import net.risesoft.y9.pubsub.event.Y9EntityUpdatedEvent;
 @Transactional(value = "rsTenantTransactionManager", readOnly = true)
 @Service
 @RequiredArgsConstructor
-public class Y9OrgBaseMovedServiceImpl implements Y9OrgBaseMovedService, ApplicationListener<Y9EntityUpdatedEvent<? extends Y9OrgBase>> {
+public class Y9OrgBaseMovedServiceImpl
+    implements Y9OrgBaseMovedService, ApplicationListener<Y9EntityUpdatedEvent<? extends Y9OrgBase>> {
 
     private final Y9OrgBaseMovedRepository y9OrgBaseMovedRepository;
 

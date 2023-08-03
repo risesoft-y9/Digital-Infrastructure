@@ -140,7 +140,9 @@ public class OAuth20IntrospectionAccessTokenResponse {
 
     @Override
     public String toString() {
-        return "OAuth20IntrospectionAccessTokenResponse [active=" + active + ", attr=" + attr + ", sub=" + sub + ", scope=" + scope + ", iat=" + iat + ", exp=" + exp + ", realmName=" + realmName + ", uniqueSecurityName=" + uniqueSecurityName + ", tokenType=" + tokenType + ", aud=" + aud + ", iss="
+        return "OAuth20IntrospectionAccessTokenResponse [active=" + active + ", attr=" + attr + ", sub=" + sub
+            + ", scope=" + scope + ", iat=" + iat + ", exp=" + exp + ", realmName=" + realmName
+            + ", uniqueSecurityName=" + uniqueSecurityName + ", tokenType=" + tokenType + ", aud=" + aud + ", iss="
             + iss + ", clientId=" + clientId + ", grantType=" + grantType + "]";
     }
 

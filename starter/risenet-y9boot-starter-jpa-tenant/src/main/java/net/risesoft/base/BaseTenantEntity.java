@@ -27,11 +27,11 @@ import lombok.EqualsAndHashCode;
 public class BaseTenantEntity implements Serializable {
 
     private static final long serialVersionUID = 7442864321155282821L;
-    
+
     /** 租户id */
     @Column(name = "TENANT_ID", length = 38)
     @Comment("租户id")
-    //@TenantId
+    // @TenantId
     protected String tenantId;
 
     /**

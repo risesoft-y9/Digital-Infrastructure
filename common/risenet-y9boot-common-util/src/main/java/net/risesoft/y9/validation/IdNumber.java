@@ -20,10 +20,10 @@ import javax.validation.Payload;
 @Target({ElementType.FIELD})
 @Constraint(validatedBy = IdNumberValidator.class)
 public @interface IdNumber {
-    
+
     // 默认校验错误提示
     String message() default "证件号不合法";
-    
+
     // 分组
     Class<?>[] groups() default {};
 

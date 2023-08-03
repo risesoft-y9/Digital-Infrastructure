@@ -1,16 +1,9 @@
 package net.risesoft.service.identity.impl;
 
-import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.stream.Collectors;
 
 import org.apache.commons.lang3.StringUtils;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -21,12 +14,10 @@ import net.risesoft.entity.Y9Person;
 import net.risesoft.entity.identity.person.Y9PersonToRole;
 import net.risesoft.manager.authorization.Y9PersonToRoleManager;
 import net.risesoft.manager.org.Y9PersonManager;
-import net.risesoft.pojo.Y9Page;
 import net.risesoft.repository.identity.person.Y9PersonToRoleRepository;
 import net.risesoft.service.identity.Y9PersonToRoleService;
 import net.risesoft.y9public.entity.role.Y9Role;
 import net.risesoft.y9public.manager.role.Y9RoleManager;
-import net.risesoft.y9public.repository.role.Y9RoleRepository;
 
 /**
  * @author dingzhaojun
@@ -52,7 +43,7 @@ public class Y9PersonToRoleServiceImpl implements Y9PersonToRoleService {
         List<Y9Role> personRelatedY9RoleList = y9RoleManager.listOrgUnitRelatedWithoutNegative(y9Person.getId());
         y9PersonToRoleManager.update(y9Person, personRelatedY9RoleList);
     }
-    
+
     @Override
     public long countByPersonId(String personId) {
         return y9PersonToRoleRepository.countByPersonId(personId);
@@ -80,7 +71,7 @@ public class Y9PersonToRoleServiceImpl implements Y9PersonToRoleService {
         List<Y9PersonToRole> y9PersonToRoleList = y9PersonToRoleRepository.findByPersonId(personId);
         y9PersonToRoleRepository.deleteAll(y9PersonToRoleList);
     }
-    
+
     @Override
     @Transactional(readOnly = false)
     public void removeByRoleId(String roleId) {

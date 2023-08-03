@@ -24,7 +24,7 @@ public interface Y9ManagerService {
     /**
      * 判断管理员登录名
      *
-     * @param id        管理员id
+     * @param id 管理员id
      * @param loginName 登录名称
      * @return boolean
      */
@@ -145,7 +145,7 @@ public interface Y9ManagerService {
     /**
      * 更改密码
      *
-     * @param id          id
+     * @param id id
      * @param newPassword 新密码
      */
     void changePassword(String id, String newPassword);
@@ -154,7 +154,7 @@ public interface Y9ManagerService {
      * 是否为子域三员
      *
      * @param managerId 经理id
-     * @param deptId    部门id
+     * @param deptId 部门id
      * @return boolean
      */
     boolean isDeptManager(String managerId, String deptId);

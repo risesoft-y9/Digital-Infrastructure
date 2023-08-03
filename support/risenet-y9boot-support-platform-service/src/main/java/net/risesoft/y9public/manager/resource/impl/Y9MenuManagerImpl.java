@@ -27,7 +27,7 @@ import net.risesoft.y9public.repository.resource.Y9MenuRepository;
 @Transactional(value = "rsPublicTransactionManager", readOnly = true)
 @RequiredArgsConstructor
 public class Y9MenuManagerImpl implements Y9MenuManager {
-    
+
     private final Y9MenuRepository y9MenuRepository;
 
     @Override
@@ -46,7 +46,8 @@ public class Y9MenuManagerImpl implements Y9MenuManager {
     @Override
     @Cacheable(key = "#id", condition = "#id!=null", unless = "#result==null")
     public Y9Menu getById(String id) {
-        return y9MenuRepository.findById(id).orElseThrow(() -> Y9ExceptionUtil.notFoundException(MenuErrorCodeEnum.MENU_NOT_FOUND, id));
+        return y9MenuRepository.findById(id)
+            .orElseThrow(() -> Y9ExceptionUtil.notFoundException(MenuErrorCodeEnum.MENU_NOT_FOUND, id));
     }
 
     @Override

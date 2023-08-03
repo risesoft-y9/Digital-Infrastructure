@@ -1,12 +1,12 @@
 package net.risesoft.api.org;
 
+import javax.validation.constraints.NotBlank;
+
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import net.risesoft.model.Manager;
-
-import javax.validation.constraints.NotBlank;
 
 /**
  * 三员服务组件
@@ -29,7 +29,8 @@ public interface ManagerApi {
      * @since 9.6.0
      */
     @GetMapping("/getManager")
-    Manager getManager(@RequestParam("tenantId") @NotBlank String tenantId, @RequestParam("userId") @NotBlank String userId);
+    Manager getManager(@RequestParam("tenantId") @NotBlank String tenantId,
+        @RequestParam("userId") @NotBlank String userId);
 
     /**
      * 判断是否为该部门的三员
@@ -41,5 +42,6 @@ public interface ManagerApi {
      * @since 9.6.0
      */
     @GetMapping("/isDeptManager")
-    boolean isDeptManager(@RequestParam("tenantId") @NotBlank String tenantId, @RequestParam("managerId") @NotBlank String managerId, @RequestParam("deptId") @NotBlank String deptId);
+    boolean isDeptManager(@RequestParam("tenantId") @NotBlank String tenantId,
+        @RequestParam("managerId") @NotBlank String managerId, @RequestParam("deptId") @NotBlank String deptId);
 }

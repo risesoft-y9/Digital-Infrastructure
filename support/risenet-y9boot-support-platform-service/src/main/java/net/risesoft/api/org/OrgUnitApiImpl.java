@@ -2,6 +2,8 @@ package net.risesoft.api.org;
 
 import java.util.List;
 
+import javax.validation.constraints.NotBlank;
+
 import org.springframework.context.annotation.Primary;
 import org.springframework.http.MediaType;
 import org.springframework.validation.annotation.Validated;
@@ -21,8 +23,6 @@ import net.risesoft.service.org.Y9DepartmentService;
 import net.risesoft.util.ModelConvertUtil;
 import net.risesoft.y9.Y9LoginUserHolder;
 import net.risesoft.y9.util.Y9ModelConvertUtil;
-
-import javax.validation.constraints.NotBlank;
 
 /**
  * 实体服务组件
@@ -52,9 +52,10 @@ public class OrgUnitApiImpl implements OrgUnitApi {
      * @since 9.6.0
      */
     @Override
-    public OrgUnit getBureau(@RequestParam("tenantId") @NotBlank String tenantId, @RequestParam("orgUnitId") @NotBlank String orgUnitId) {
+    public OrgUnit getBureau(@RequestParam("tenantId") @NotBlank String tenantId,
+        @RequestParam("orgUnitId") @NotBlank String orgUnitId) {
         Y9LoginUserHolder.setTenantId(tenantId);
-        
+
         return ModelConvertUtil.orgBaseToOrgUnit(compositeOrgBaseService.getOrgUnitBureau(orgUnitId));
     }
 
@@ -67,9 +68,10 @@ public class OrgUnitApiImpl implements OrgUnitApi {
      * @since 9.6.0
      */
     @Override
-    public List<Department> getDeptTrees(@RequestParam("tenantId") @NotBlank String tenantId, @RequestParam("orgUnitId") @NotBlank String orgUnitId) {
+    public List<Department> getDeptTrees(@RequestParam("tenantId") @NotBlank String tenantId,
+        @RequestParam("orgUnitId") @NotBlank String orgUnitId) {
         Y9LoginUserHolder.setTenantId(tenantId);
-        
+
         List<Y9Department> y9DepartmentList = y9DepartmentService.getDeptTrees(orgUnitId);
         return Y9ModelConvertUtil.convert(y9DepartmentList, Department.class);
     }
@@ -83,9 +85,10 @@ public class OrgUnitApiImpl implements OrgUnitApi {
      * @since 9.6.0
      */
     @Override
-    public Organization getOrganization(@RequestParam("tenantId") @NotBlank String tenantId, @RequestParam("orgUnitId") @NotBlank String orgUnitId) {
+    public Organization getOrganization(@RequestParam("tenantId") @NotBlank String tenantId,
+        @RequestParam("orgUnitId") @NotBlank String orgUnitId) {
         Y9LoginUserHolder.setTenantId(tenantId);
-        
+
         Y9OrgBase y9OrgBase = compositeOrgBaseService.getOrgUnitOrganization(orgUnitId);
         return Y9ModelConvertUtil.convert(y9OrgBase, Organization.class);
     }
@@ -99,9 +102,10 @@ public class OrgUnitApiImpl implements OrgUnitApi {
      * @since 9.6.0
      */
     @Override
-    public OrgUnit getOrgUnit(@RequestParam("tenantId") @NotBlank String tenantId, @RequestParam("orgUnitId") @NotBlank String orgUnitId) {
+    public OrgUnit getOrgUnit(@RequestParam("tenantId") @NotBlank String tenantId,
+        @RequestParam("orgUnitId") @NotBlank String orgUnitId) {
         Y9LoginUserHolder.setTenantId(tenantId);
-        
+
         return ModelConvertUtil.orgBaseToOrgUnit(compositeOrgBaseService.getOrgBase(orgUnitId));
     }
 
@@ -114,9 +118,10 @@ public class OrgUnitApiImpl implements OrgUnitApi {
      * @since 9.6.2
      */
     @Override
-    public OrgUnit getOrgUnitDeletedById(@RequestParam("tenantId") @NotBlank String tenantId, @RequestParam("orgUnitId") @NotBlank String orgUnitId) {
+    public OrgUnit getOrgUnitDeletedById(@RequestParam("tenantId") @NotBlank String tenantId,
+        @RequestParam("orgUnitId") @NotBlank String orgUnitId) {
         Y9LoginUserHolder.setTenantId(tenantId);
-        
+
         return ModelConvertUtil.orgBaseToOrgUnit(compositeOrgBaseService.getOrgBaseDeletedByOrgUnitId(orgUnitId));
     }
 
@@ -129,9 +134,10 @@ public class OrgUnitApiImpl implements OrgUnitApi {
      * @since 9.6.0
      */
     @Override
-    public OrgUnit getParent(@RequestParam("tenantId") @NotBlank String tenantId, @RequestParam("orgUnitId") @NotBlank String orgUnitId) {
+    public OrgUnit getParent(@RequestParam("tenantId") @NotBlank String tenantId,
+        @RequestParam("orgUnitId") @NotBlank String orgUnitId) {
         Y9LoginUserHolder.setTenantId(tenantId);
-        
+
         Y9OrgBase parent = compositeOrgBaseService.getParent(orgUnitId);
         return ModelConvertUtil.orgBaseToOrgUnit(parent);
     }
@@ -147,9 +153,10 @@ public class OrgUnitApiImpl implements OrgUnitApi {
      * @since 9.6.0
      */
     @Override
-    public List<OrgUnit> getSubTree(@RequestParam("tenantId") @NotBlank String tenantId, @RequestParam("orgUnitId") @NotBlank String orgUnitId, @RequestParam("treeType") @NotBlank String treeType) {
+    public List<OrgUnit> getSubTree(@RequestParam("tenantId") @NotBlank String tenantId,
+        @RequestParam("orgUnitId") @NotBlank String orgUnitId, @RequestParam("treeType") @NotBlank String treeType) {
         Y9LoginUserHolder.setTenantId(tenantId);
-        
+
         List<Y9OrgBase> y9OrgBaseList = compositeOrgBaseService.getTree(orgUnitId, treeType, false);
         return ModelConvertUtil.orgBaseToOrgUnit(y9OrgBaseList);
     }
@@ -165,9 +172,10 @@ public class OrgUnitApiImpl implements OrgUnitApi {
      * @since 9.6.0
      */
     @Override
-    public List<OrgUnit> treeSearch(@RequestParam("tenantId") @NotBlank String tenantId, @RequestParam("name") @NotBlank String name, @RequestParam("treeType") @NotBlank String treeType) {
+    public List<OrgUnit> treeSearch(@RequestParam("tenantId") @NotBlank String tenantId,
+        @RequestParam("name") @NotBlank String name, @RequestParam("treeType") @NotBlank String treeType) {
         Y9LoginUserHolder.setTenantId(tenantId);
-        
+
         List<Y9OrgBase> y9OrgBaseList = compositeOrgBaseService.treeSearch(name, treeType, false);
         return ModelConvertUtil.orgBaseToOrgUnit(y9OrgBaseList);
     }
@@ -184,9 +192,11 @@ public class OrgUnitApiImpl implements OrgUnitApi {
      * @since 9.6.0
      */
     @Override
-    public List<OrgUnit> treeSearchByDn(@RequestParam("tenantId") @NotBlank String tenantId, @RequestParam("name") @NotBlank String name, @RequestParam("treeType") @NotBlank String treeType, @RequestParam("dnName") @NotBlank String dnName) {
+    public List<OrgUnit> treeSearchByDn(@RequestParam("tenantId") @NotBlank String tenantId,
+        @RequestParam("name") @NotBlank String name, @RequestParam("treeType") @NotBlank String treeType,
+        @RequestParam("dnName") @NotBlank String dnName) {
         Y9LoginUserHolder.setTenantId(tenantId);
-        
+
         List<Y9OrgBase> y9OrgBaseList = compositeOrgBaseService.treeSearch(name, treeType, dnName);
         return ModelConvertUtil.orgBaseToOrgUnit(y9OrgBaseList);
     }

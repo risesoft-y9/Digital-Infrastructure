@@ -26,7 +26,7 @@ import net.risesoft.y9public.repository.tenant.Y9TenantAppRepository;
 @Transactional(value = "rsPublicTransactionManager", readOnly = true)
 @RequiredArgsConstructor
 public class Y9TenantAppManagerImpl implements Y9TenantAppManager {
-    
+
     private final Y9TenantAppRepository y9TenantAppRepository;
     private final Y9AuthorizationRepository y9AuthorizationRepository;
     private final Y9PersonToResourceAndAuthorityRepository y9PersonToResourceAndAuthorityRepository;
@@ -37,13 +37,13 @@ public class Y9TenantAppManagerImpl implements Y9TenantAppManager {
     public void deleteByAppId(String appId) {
         List<Y9TenantApp> y9TenantAppList = y9TenantAppRepository.findByAppId(appId);
         for (Y9TenantApp y9TenantApp : y9TenantAppList) {
-            
+
             Y9LoginUserHolder.setTenantId(y9TenantApp.getTenantId());
 
             y9AuthorizationRepository.deleteByResourceId(y9TenantApp.getAppId());
             y9PersonToResourceAndAuthorityRepository.deleteByResourceId(y9TenantApp.getAppId());
             y9PositionToResourceAndAuthorityRepository.deleteByResourceId(y9TenantApp.getAppId());
-            
+
             y9TenantAppRepository.delete(y9TenantApp);
         }
     }

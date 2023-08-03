@@ -32,12 +32,14 @@ public class RiseAuthenticationHandler extends AbstractAuthenticationHandler {
     private SaveLoginInfoService saveLoginInfoService;
     private CasRedisTemplate<Object, Object> redisTemplate;
 
-    public RiseAuthenticationHandler(String name, ServicesManager servicesManager, PrincipalFactory principalFactory, Integer order) {
+    public RiseAuthenticationHandler(String name, ServicesManager servicesManager, PrincipalFactory principalFactory,
+        Integer order) {
         super(name, servicesManager, principalFactory, order);
     }
 
     @Override
-    public AuthenticationHandlerExecutionResult authenticate(Credential credential, Service service) throws GeneralSecurityException, PreventedException {
+    public AuthenticationHandlerExecutionResult authenticate(Credential credential, Service service)
+        throws GeneralSecurityException, PreventedException {
         if (y9UserDao == null) {
             y9UserDao = Y9Context.getBean(Y9UserDao.class);
             saveLoginInfoService = Y9Context.getBean(SaveLoginInfoService.class);
@@ -56,7 +58,7 @@ public class RiseAuthenticationHandler extends AbstractAuthenticationHandler {
 
         try {
             username = Base64Util.decode(username, "Unicode");
-            if(StringUtils.isNotBlank(pwdEcodeType)) {
+            if (StringUtils.isNotBlank(pwdEcodeType)) {
                 Object obj = redisTemplate.opsForValue().get(pwdEcodeType);
                 if (null != obj) {
                     password = RSAUtil.privateDecrypt(password, String.valueOf(obj));
@@ -75,9 +77,11 @@ public class RiseAuthenticationHandler extends AbstractAuthenticationHandler {
 
                 List<Y9User> agentUsers = null;
                 if (StringUtils.isNotBlank(deptId)) {
-                    agentUsers = y9UserDao.findByTenantShortNameAndMobileAndParentId(agentTenantShortName, agentUserName, deptId);
+                    agentUsers = y9UserDao.findByTenantShortNameAndMobileAndParentId(agentTenantShortName,
+                        agentUserName, deptId);
                 } else {
-                    agentUsers = y9UserDao.findByTenantShortNameAndLoginNameAndOriginal(agentTenantShortName, agentUserName, Boolean.TRUE);
+                    agentUsers = y9UserDao.findByTenantShortNameAndLoginNameAndOriginal(agentTenantShortName,
+                        agentUserName, Boolean.TRUE);
                 }
                 if (agentUsers == null || agentUsers.isEmpty()) {
                     throw new FailedLoginException("没有找到这个【代理】用户。");
@@ -101,7 +105,8 @@ public class RiseAuthenticationHandler extends AbstractAuthenticationHandler {
 
         try {
             if ("caid".equals(loginType)) {
-                AuthenticationHandlerExecutionResult hr = new DefaultAuthenticationHandlerExecutionResult(this, new BasicCredentialMetaData(riseCredential), principalFactory.createPrincipal(username));
+                AuthenticationHandlerExecutionResult hr = new DefaultAuthenticationHandlerExecutionResult(this,
+                    new BasicCredentialMetaData(riseCredential), principalFactory.createPrincipal(username));
                 return hr;
             } else {
                 List<Y9User> users = null;
@@ -109,19 +114,24 @@ public class RiseAuthenticationHandler extends AbstractAuthenticationHandler {
                     if (StringUtils.isNotBlank(deptId)) {
                         users = y9UserDao.findByTenantShortNameAndMobileAndParentId(tenantShortName, username, deptId);
                     } else {
-                        users = y9UserDao.findByTenantShortNameAndMobileAndOriginal(tenantShortName, username, Boolean.TRUE);
+                        users = y9UserDao.findByTenantShortNameAndMobileAndOriginal(tenantShortName, username,
+                            Boolean.TRUE);
                     }
                 } else if ("loginMobileName".equals(loginType)) {
                     if (StringUtils.isNotBlank(deptId)) {
-                        users = y9UserDao.findByTenantShortNameAndLoginNameAndParentId(tenantShortName, username, deptId);
+                        users =
+                            y9UserDao.findByTenantShortNameAndLoginNameAndParentId(tenantShortName, username, deptId);
                     } else {
-                        users = y9UserDao.findByTenantShortNameAndLoginNameAndOriginal(tenantShortName, username, Boolean.TRUE);
+                        users = y9UserDao.findByTenantShortNameAndLoginNameAndOriginal(tenantShortName, username,
+                            Boolean.TRUE);
                     }
                 } else {
                     if (StringUtils.isNotBlank(deptId)) {
-                        users = y9UserDao.findByTenantShortNameAndLoginNameAndParentId(tenantShortName, username, deptId);
+                        users =
+                            y9UserDao.findByTenantShortNameAndLoginNameAndParentId(tenantShortName, username, deptId);
                     } else {
-                        users = y9UserDao.findByTenantShortNameAndLoginNameAndOriginal(tenantShortName, username, Boolean.TRUE);
+                        users = y9UserDao.findByTenantShortNameAndLoginNameAndOriginal(tenantShortName, username,
+                            Boolean.TRUE);
                     }
                 }
 
@@ -142,7 +152,8 @@ public class RiseAuthenticationHandler extends AbstractAuthenticationHandler {
                     } catch (Exception e) {
                         LOGGER.error(e.getMessage(), e);
                     }
-                    AuthenticationHandlerExecutionResult hr = new DefaultAuthenticationHandlerExecutionResult(this, new BasicCredentialMetaData(riseCredential), principalFactory.createPrincipal(username));
+                    AuthenticationHandlerExecutionResult hr = new DefaultAuthenticationHandlerExecutionResult(this,
+                        new BasicCredentialMetaData(riseCredential), principalFactory.createPrincipal(username));
                     return hr;
                 } else {
                     throw new FailedLoginException("没有找到这个用户。");

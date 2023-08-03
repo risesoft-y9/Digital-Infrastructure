@@ -21,7 +21,8 @@ import net.risesoft.entity.Y9CustomGroup;
 @SuppressWarnings("AlibabaAbstractMethodOrInterfaceMethodMustUseJavadoc")
 @Repository
 @Transactional(value = "rsTenantTransactionManager", readOnly = true)
-public interface Y9CustomGroupRepository extends JpaRepository<Y9CustomGroup, String>, JpaSpecificationExecutor<Y9CustomGroup> {
+public interface Y9CustomGroupRepository
+    extends JpaRepository<Y9CustomGroup, String>, JpaSpecificationExecutor<Y9CustomGroup> {
 
     Y9CustomGroup findByCustomId(String customId);
 

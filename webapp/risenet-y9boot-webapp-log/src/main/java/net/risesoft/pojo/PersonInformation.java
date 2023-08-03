@@ -74,7 +74,8 @@ public class PersonInformation implements Serializable {
 
     @Override
     public String toString() {
-        return "PersonInformation [fullPath=" + fullPath + ", name=" + name + ", loginName=" + loginName + ", sex=" + sex + ", mobile=" + mobile + ", email=" + email + "]";
+        return "PersonInformation [fullPath=" + fullPath + ", name=" + name + ", loginName=" + loginName + ", sex="
+            + sex + ", mobile=" + mobile + ", email=" + email + "]";
     }
 
 }

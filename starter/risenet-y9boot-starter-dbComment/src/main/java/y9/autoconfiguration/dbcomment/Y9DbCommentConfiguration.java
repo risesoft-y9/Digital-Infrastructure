@@ -22,7 +22,8 @@ public class Y9DbCommentConfiguration {
     }
 
     @Bean
-    public Y9DatabaseCommentEndpoint y9DatabaseCommentEndpoint(@Qualifier("y9PublicDS") DataSource y9PublicDs, @Qualifier("y9TenantDataSource") Y9TenantDataSource y9TenantDataSource) {
+    public Y9DatabaseCommentEndpoint y9DatabaseCommentEndpoint(@Qualifier("y9PublicDS") DataSource y9PublicDs,
+        @Qualifier("y9TenantDataSource") Y9TenantDataSource y9TenantDataSource) {
         return new Y9DatabaseCommentEndpoint(y9PublicDs, y9TenantDataSource);
     }
 

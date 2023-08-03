@@ -16,7 +16,8 @@ import net.risesoft.y9public.entity.event.Y9PublishedEventSyncHistory;
 @SuppressWarnings("AlibabaAbstractMethodOrInterfaceMethodMustUseJavadoc")
 @Repository
 @Transactional(value = "rsPublicTransactionManager", readOnly = true)
-public interface Y9PublishedEventSyncHistoryRepository extends JpaRepository<Y9PublishedEventSyncHistory, String>, JpaSpecificationExecutor<Y9PublishedEventSyncHistory> {
+public interface Y9PublishedEventSyncHistoryRepository
+    extends JpaRepository<Y9PublishedEventSyncHistory, String>, JpaSpecificationExecutor<Y9PublishedEventSyncHistory> {
 
     Y9PublishedEventSyncHistory findByTenantIdAndAppName(String tenantId, String appName);
 }

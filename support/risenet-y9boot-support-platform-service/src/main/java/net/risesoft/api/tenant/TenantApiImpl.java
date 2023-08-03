@@ -2,6 +2,8 @@ package net.risesoft.api.tenant;
 
 import java.util.List;
 
+import javax.validation.constraints.NotBlank;
+
 import org.springframework.context.annotation.Primary;
 import org.springframework.http.MediaType;
 import org.springframework.validation.annotation.Validated;
@@ -15,8 +17,6 @@ import net.risesoft.model.Tenant;
 import net.risesoft.y9.util.Y9ModelConvertUtil;
 import net.risesoft.y9public.entity.tenant.Y9Tenant;
 import net.risesoft.y9public.service.tenant.Y9TenantService;
-
-import javax.validation.constraints.NotBlank;
 
 /**
  * 租户管理组件

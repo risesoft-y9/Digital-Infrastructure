@@ -36,6 +36,7 @@ public class MergeCommand extends AbstractCommand {
             }
         }
     }
+
     private String cols;
     private String rows;
     private CellStyle cellStyle;
@@ -102,7 +103,8 @@ public class MergeCommand extends AbstractCommand {
 
     protected Size jexcelMerge(CellRef cellRef, Context context, JexcelTransformer transformer, int rows, int cols) {
         try {
-            transformer.getWritableWorkbook().getSheet(cellRef.getSheetName()).mergeCells(cellRef.getRow(), cellRef.getCol(), cellRef.getRow() + rows - 1, cellRef.getCol() + cols - 1);
+            transformer.getWritableWorkbook().getSheet(cellRef.getSheetName()).mergeCells(cellRef.getRow(),
+                cellRef.getCol(), cellRef.getRow() + rows - 1, cellRef.getCol() + cols - 1);
             area.applyAt(cellRef, context);
         } catch (WriteException e) {
             throw new IllegalArgumentException("合并单元格失败");
@@ -112,7 +114,8 @@ public class MergeCommand extends AbstractCommand {
 
     protected Size poiMerge(CellRef cellRef, Context context, PoiTransformer transformer, int rows, int cols) {
         Sheet sheet = transformer.getWorkbook().getSheet(cellRef.getSheetName());
-        CellRangeAddress region = new CellRangeAddress(cellRef.getRow(), cellRef.getRow() + rows - 1, cellRef.getCol(), cellRef.getCol() + cols - 1);
+        CellRangeAddress region = new CellRangeAddress(cellRef.getRow(), cellRef.getRow() + rows - 1, cellRef.getCol(),
+            cellRef.getCol() + cols - 1);
         sheet.addMergedRegion(region);
 
         // 合并之后单元格样式会丢失，以下操作将合并后的单元格恢复成合并前第一个单元格的样式

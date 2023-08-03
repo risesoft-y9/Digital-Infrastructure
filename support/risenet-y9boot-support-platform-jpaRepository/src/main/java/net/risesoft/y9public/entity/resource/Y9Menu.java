@@ -23,7 +23,7 @@ import net.risesoft.enums.ResourceTypeEnum;
 @org.hibernate.annotations.Table(comment = "应用的菜单表", appliesTo = "Y9_COMMON_MENU")
 @Data
 public class Y9Menu extends Y9ResourceBase {
-    
+
     private static final long serialVersionUID = 7952871346132443097L;
 
     /** 应用id */

@@ -27,7 +27,7 @@ import net.risesoft.base.BaseEntity;
 @NoArgsConstructor
 @Data
 public class Y9OptionClass extends BaseEntity {
-    
+
     private static final long serialVersionUID = -5901383621072805572L;
 
     /** 主键，类型名称 */

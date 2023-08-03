@@ -44,7 +44,8 @@ public class PersonalCenterController {
      */
     @RiseLog(operationName = "校验密码")
     @RequestMapping("/checkPassword")
-    public Y9Result<Boolean> checkPassword(@RequestParam(required = true) String personId, @RequestParam(required = true) String password) {
+    public Y9Result<Boolean> checkPassword(@RequestParam(required = true) String personId,
+        @RequestParam(required = true) String password) {
         Y9Manager manager = y9ManagerService.getById(personId);
         return Y9Result.success(Y9MessageDigest.checkpw(password, manager.getPassword()), "校验密码操作成功");
     }

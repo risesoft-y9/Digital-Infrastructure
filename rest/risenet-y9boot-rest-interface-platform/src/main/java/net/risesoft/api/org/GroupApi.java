@@ -35,7 +35,8 @@ public interface GroupApi {
      * @since 9.6.0
      */
     @GetMapping("/addPerson2Group")
-    boolean addPerson2Group(@RequestParam("tenantId") @NotBlank String tenantId, @RequestParam("groupId") @NotBlank String groupId, @RequestParam("personId") @NotBlank String personId);
+    boolean addPerson2Group(@RequestParam("tenantId") @NotBlank String tenantId,
+        @RequestParam("groupId") @NotBlank String groupId, @RequestParam("personId") @NotBlank String personId);
 
     /**
      * 创建用户组
@@ -46,7 +47,8 @@ public interface GroupApi {
      * @since 9.6.0
      */
     @PostMapping("/createGroup")
-    Group createGroup(@RequestParam("tenantId") @NotBlank String tenantId, @RequestParam("groupJson") @NotBlank String groupJson);
+    Group createGroup(@RequestParam("tenantId") @NotBlank String tenantId,
+        @RequestParam("groupJson") @NotBlank String groupJson);
 
     /**
      * 删除用户组
@@ -57,7 +59,8 @@ public interface GroupApi {
      * @since 9.6.0
      */
     @GetMapping("/deleteGroup")
-    boolean deleteGroup(@RequestParam("tenantId") @NotBlank String tenantId, @RequestParam("groupId") @NotBlank String groupId);
+    boolean deleteGroup(@RequestParam("tenantId") @NotBlank String tenantId,
+        @RequestParam("groupId") @NotBlank String groupId);
 
     /**
      * 根据id获得用户组对象
@@ -79,7 +82,8 @@ public interface GroupApi {
      * @since 9.6.0
      */
     @GetMapping("/getParent")
-    OrgUnit getParent(@RequestParam("tenantId") @NotBlank String tenantId, @RequestParam("groupId") @NotBlank String groupId);
+    OrgUnit getParent(@RequestParam("tenantId") @NotBlank String tenantId,
+        @RequestParam("groupId") @NotBlank String groupId);
 
     /**
      * 根据租户id和路径获取所有用户组
@@ -101,7 +105,8 @@ public interface GroupApi {
      * @since 9.6.0
      */
     @GetMapping("/listPersons")
-    List<Person> listPersons(@RequestParam("tenantId") @NotBlank String tenantId, @RequestParam("groupId") @NotBlank String groupId);
+    List<Person> listPersons(@RequestParam("tenantId") @NotBlank String tenantId,
+        @RequestParam("groupId") @NotBlank String groupId);
 
     /**
      * 从用户组移除人员
@@ -113,7 +118,8 @@ public interface GroupApi {
      * @since 9.6.0
      */
     @GetMapping("/removePerson")
-    boolean removePerson(@RequestParam("tenantId") @NotBlank String tenantId, @RequestParam("groupId") @NotBlank String groupId, @RequestParam("personId") @NotBlank String personId);
+    boolean removePerson(@RequestParam("tenantId") @NotBlank String tenantId,
+        @RequestParam("groupId") @NotBlank String groupId, @RequestParam("personId") @NotBlank String personId);
 
     /**
      * 更新用户组
@@ -124,5 +130,6 @@ public interface GroupApi {
      * @since 9.6.0
      */
     @PostMapping("/updateGroup")
-    Group updateGroup(@RequestParam("tenantId") @NotBlank String tenantId, @RequestParam("groupJson") @NotBlank String groupJson);
+    Group updateGroup(@RequestParam("tenantId") @NotBlank String tenantId,
+        @RequestParam("groupJson") @NotBlank String groupJson);
 }

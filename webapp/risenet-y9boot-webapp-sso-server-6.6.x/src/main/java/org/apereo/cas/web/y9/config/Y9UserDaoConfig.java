@@ -27,7 +27,8 @@ public class Y9UserDaoConfig {
 
     @Primary
     @Bean
-    public PlatformTransactionManager y9SessionTransactionManager(@Qualifier("y9UserDataSource") DataSource y9UserDataSource) {
+    public PlatformTransactionManager
+        y9SessionTransactionManager(@Qualifier("y9UserDataSource") DataSource y9UserDataSource) {
         return new DataSourceTransactionManager(y9UserDataSource);
     }
 

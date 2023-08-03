@@ -18,7 +18,7 @@ import net.risesoft.log.service.Y9ClickedAppService;
 @Service
 @RequiredArgsConstructor
 public class Y9ClickedAppServiceImpl implements Y9ClickedAppService {
-    
+
     private final Y9ClickedAppRepository y9ClickedAppRepository;
 
     @Override

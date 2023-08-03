@@ -4,8 +4,6 @@ import java.util.List;
 
 import net.risesoft.entity.Y9Person;
 import net.risesoft.y9.exception.Y9NotFoundException;
-import org.springframework.cache.annotation.CacheEvict;
-import org.springframework.transaction.annotation.Transactional;
 
 public interface Y9PersonManager {
 

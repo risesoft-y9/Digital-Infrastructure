@@ -18,16 +18,17 @@ import y9.apisix.register.Y9RegisterByApisixRestApi;
 @EnableConfigurationProperties(Y9Properties.class)
 @ConditionalOnProperty(name = "y9.feature.apisix.enabled", havingValue = "true")
 public class Y9ApisixRegisterConfiguration {
-    
+
     @Bean
     @DependsOn("y9Context")
     public Y9RegisterByApisixRestApi y9RegisterByApisixRestApi() {
         return new Y9RegisterByApisixRestApi();
     }
-    
+
     @Bean
     @DependsOn("y9Context")
-    public OnY9ApisixRegisterApplicationReady onY9ApisixRegisterApplicationReady(Y9RegisterByApisixRestApi y9RegisterByApisixRestApi) {
+    public OnY9ApisixRegisterApplicationReady
+        onY9ApisixRegisterApplicationReady(Y9RegisterByApisixRestApi y9RegisterByApisixRestApi) {
         return new OnY9ApisixRegisterApplicationReady(y9RegisterByApisixRestApi);
     }
 

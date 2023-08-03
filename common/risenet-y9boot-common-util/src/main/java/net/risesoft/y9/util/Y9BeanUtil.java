@@ -15,6 +15,7 @@ import org.springframework.util.Assert;
 
 /**
  * 在更新实体类的时候用来复制实体属性到之前的实体类中
+ * 
  * @see org.springframework.beans.BeanUtils
  * 
  * @author 安一伟
@@ -38,7 +39,7 @@ public class Y9BeanUtil {
      * @throws BeansException
      */
     public static void copyProperties(Object source, Object target) throws BeansException {
-        copyProperties(source, target, null, (String[]) null);
+        copyProperties(source, target, null, (String[])null);
     }
 
     /**
@@ -51,7 +52,7 @@ public class Y9BeanUtil {
      * @throws BeansException
      */
     public static void copyProperties(Object source, Object target, Class<?> editable) {
-        copyProperties(source, target, editable, (String[]) null);
+        copyProperties(source, target, editable, (String[])null);
     }
 
     /**
@@ -67,15 +68,16 @@ public class Y9BeanUtil {
         copyProperties(source, target, null, ignoreProperties);
     }
 
-    private static void copyProperties(Object source, Object target, Class<?> editable, String... ignoreProperties) throws BeansException {
+    private static void copyProperties(Object source, Object target, Class<?> editable, String... ignoreProperties)
+        throws BeansException {
         Assert.notNull(source, "Source must not be null");
         Assert.notNull(target, "Target must not be null");
 
         Class<?> actualEditable = target.getClass();
         if (editable != null) {
             if (!editable.isInstance(target)) {
-                throw new IllegalArgumentException("Target class [" + target.getClass().getName() +
-                        "] not assignable to Editable class [" + editable.getName() + "]");
+                throw new IllegalArgumentException("Target class [" + target.getClass().getName()
+                    + "] not assignable to Editable class [" + editable.getName() + "]");
             }
             actualEditable = editable;
         }

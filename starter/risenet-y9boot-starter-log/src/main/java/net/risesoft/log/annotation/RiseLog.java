@@ -28,8 +28,7 @@ public @interface RiseLog {
     boolean enable() default true;
 
     /**
-     * 日志级别
-     * {@link LogLevelEnum}
+     * 日志级别 {@link LogLevelEnum}
      * 
      * @return
      */
@@ -55,5 +54,5 @@ public @interface RiseLog {
      * @return
      */
     OperationTypeEnum operationType() default OperationTypeEnum.BROWSE;
-    
+
 }

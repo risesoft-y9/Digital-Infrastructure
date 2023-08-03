@@ -22,7 +22,7 @@ public enum AuthorizationErrorCodeEnum implements ErrorCode {
     public int systemCode() {
         return ErrorCodeConsts.SYSTEM_CODE;
     }
-    
+
     @Override
     public int moduleCode() {
         return ErrorCodeConsts.AUTHORIZATION_MODULE_CODE;

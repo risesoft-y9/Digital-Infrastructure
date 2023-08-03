@@ -10,7 +10,7 @@ import lombok.Getter;
  */
 @Getter
 public class Y9BusinessException extends Y9BaseException {
-    
+
     private static final long serialVersionUID = 7938636025971118356L;
 
     protected int code;

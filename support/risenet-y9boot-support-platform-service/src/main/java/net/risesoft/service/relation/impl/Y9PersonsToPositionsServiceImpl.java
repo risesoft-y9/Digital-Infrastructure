@@ -37,11 +37,11 @@ import net.risesoft.y9.pubsub.message.Y9MessageOrg;
 public class Y9PersonsToPositionsServiceImpl implements Y9PersonsToPositionsService {
 
     private final Y9PersonsToPositionsRepository y9PersonsToPositionsRepository;
-    
+
     private final Y9PersonManager y9PersonManager;
     private final Y9PositionManager y9PositionManager;
     private final Y9PersonsToPositionsManager y9PersonsToPositionsManager;
-    
+
     @Override
     @Transactional(readOnly = false)
     public List<Y9PersonsToPositions> addPersons(String positionId, String[] personIds) {
@@ -82,7 +82,8 @@ public class Y9PersonsToPositionsServiceImpl implements Y9PersonsToPositionsServ
     @Override
     @Transactional(readOnly = false)
     public void deleteByPositionId(String positionId) {
-        List<Y9PersonsToPositions> y9PersonsToPositionsList = y9PersonsToPositionsRepository.findByPositionId(positionId);
+        List<Y9PersonsToPositions> y9PersonsToPositionsList =
+            y9PersonsToPositionsRepository.findByPositionId(positionId);
         for (Y9PersonsToPositions y9PersonsToPositions : y9PersonsToPositionsList) {
             y9PersonsToPositionsManager.delete(y9PersonsToPositions);
         }
@@ -104,7 +105,6 @@ public class Y9PersonsToPositionsServiceImpl implements Y9PersonsToPositionsServ
         }
     }
 
-
     @Override
     public List<Y9PersonsToPositions> listByPersonId(String personId) {
         return y9PersonsToPositionsRepository.getByPersonId(personId);
@@ -117,7 +117,8 @@ public class Y9PersonsToPositionsServiceImpl implements Y9PersonsToPositionsServ
 
     @Override
     public List<String> listPositionIdsByPersonId(String personId) {
-        List<Y9PersonsToPositions> list = y9PersonsToPositionsRepository.findByPersonIdOrderByPositionOrderAsc(personId);
+        List<Y9PersonsToPositions> list =
+            y9PersonsToPositionsRepository.findByPersonIdOrderByPositionOrderAsc(personId);
         return list.stream().map(Y9PersonsToPositions::getPositionId).collect(Collectors.toList());
     }
 
@@ -126,16 +127,19 @@ public class Y9PersonsToPositionsServiceImpl implements Y9PersonsToPositionsServ
     public List<Y9PersonsToPositions> orderPersons(String positionId, String[] personIds) {
         List<Y9PersonsToPositions> orgPositionsPersonsList = new ArrayList<>();
         for (int i = 0; i < personIds.length; i++) {
-            Y9PersonsToPositions y9PersonsToPositions = y9PersonsToPositionsRepository.findByPositionIdAndPersonId(positionId, personIds[i]);
+            Y9PersonsToPositions y9PersonsToPositions =
+                y9PersonsToPositionsRepository.findByPositionIdAndPersonId(positionId, personIds[i]);
             y9PersonsToPositions.setPersonOrder(i);
 
             y9PersonsToPositions = y9PersonsToPositionsRepository.save(y9PersonsToPositions);
 
             Y9Position y9Position = y9PositionManager.getById(positionId);
-            Y9MessageOrg msg = new Y9MessageOrg(ModelConvertUtil.convert(y9PersonsToPositions, PersonsPositions.class), Y9OrgEventConst.RISEORGEVENT_TYPE_POSITION_ORDER, Y9LoginUserHolder.getTenantId());
+            Y9MessageOrg msg = new Y9MessageOrg(ModelConvertUtil.convert(y9PersonsToPositions, PersonsPositions.class),
+                Y9OrgEventConst.RISEORGEVENT_TYPE_POSITION_ORDER, Y9LoginUserHolder.getTenantId());
 
             Y9Person person = y9PersonManager.getById(y9PersonsToPositions.getPersonId());
-            Y9PublishServiceUtil.persistAndPublishMessageOrg(msg, "更新岗位的人员排序", y9Position.getName() + "的成员：" + person.getName() + "排序更改为" + y9PersonsToPositions.getPersonOrder());
+            Y9PublishServiceUtil.persistAndPublishMessageOrg(msg, "更新岗位的人员排序",
+                y9Position.getName() + "的成员：" + person.getName() + "排序更改为" + y9PersonsToPositions.getPersonOrder());
 
             orgPositionsPersonsList.add(y9PersonsToPositions);
         }
@@ -148,14 +152,17 @@ public class Y9PersonsToPositionsServiceImpl implements Y9PersonsToPositionsServ
         List<Y9PersonsToPositions> orgPositionsPersonsList = new ArrayList<>();
 
         for (int i = 0; i < positionIds.length; i++) {
-            Y9PersonsToPositions y9PersonsToPositions = y9PersonsToPositionsRepository.findByPositionIdAndPersonId(positionIds[i], personId);
+            Y9PersonsToPositions y9PersonsToPositions =
+                y9PersonsToPositionsRepository.findByPositionIdAndPersonId(positionIds[i], personId);
             y9PersonsToPositions.setPositionOrder(i);
             y9PersonsToPositions = y9PersonsToPositionsRepository.save(y9PersonsToPositions);
 
             Y9Person person = y9PersonManager.getById(personId);
-            Y9MessageOrg msg = new Y9MessageOrg(ModelConvertUtil.convert(y9PersonsToPositions, PersonsPositions.class), Y9OrgEventConst.RISEORGEVENT_TYPE_POSITION_ORDER, Y9LoginUserHolder.getTenantId());
+            Y9MessageOrg msg = new Y9MessageOrg(ModelConvertUtil.convert(y9PersonsToPositions, PersonsPositions.class),
+                Y9OrgEventConst.RISEORGEVENT_TYPE_POSITION_ORDER, Y9LoginUserHolder.getTenantId());
             Y9Position y9Position = y9PositionManager.getById(y9PersonsToPositions.getPositionId());
-            Y9PublishServiceUtil.persistAndPublishMessageOrg(msg, "更新人员的岗位排序", person.getName() + "的岗位：" + y9Position.getName() + "排序更改为" + y9PersonsToPositions.getPositionOrder());
+            Y9PublishServiceUtil.persistAndPublishMessageOrg(msg, "更新人员的岗位排序",
+                person.getName() + "的岗位：" + y9Position.getName() + "排序更改为" + y9PersonsToPositions.getPositionOrder());
 
             orgPositionsPersonsList.add(y9PersonsToPositions);
         }

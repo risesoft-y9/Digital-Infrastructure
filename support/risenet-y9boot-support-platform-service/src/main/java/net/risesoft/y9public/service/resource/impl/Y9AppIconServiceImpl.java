@@ -31,7 +31,7 @@ import jodd.util.Base64;
 public class Y9AppIconServiceImpl implements Y9AppIconService {
 
     private final Y9AppIconRepository appIconRepository;
-    
+
     private final Y9FileStoreService y9FileStoreService;
 
     @Override

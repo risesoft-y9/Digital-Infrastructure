@@ -15,7 +15,7 @@ import lombok.Data;
 public class Menu extends Resource {
 
     private static final long serialVersionUID = -6176260086899514125L;
-    
+
     /**
      * 应用id
      */

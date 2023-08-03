@@ -24,12 +24,14 @@ import net.risesoft.base.BaseEntity;
  * @date 2022/2/10
  */
 @Entity
-@Table(name = "Y9_ORG_POSITIONS_GROUPS", indexes = {@Index(columnList = "GROUP_ID,POSITION_ID", unique = true), @Index(columnList = "POSITION_ID,GROUP_ID", unique = true)})
+@Table(name = "Y9_ORG_POSITIONS_GROUPS",
+    indexes = {@Index(columnList = "GROUP_ID,POSITION_ID", unique = true),
+        @Index(columnList = "POSITION_ID,GROUP_ID", unique = true)})
 @org.hibernate.annotations.Table(comment = "岗位与岗位组关联表", appliesTo = "Y9_ORG_POSITIONS_GROUPS")
 @NoArgsConstructor
 @Data
 public class Y9PositionsToGroups extends BaseEntity {
-    
+
     private static final long serialVersionUID = 2899191697180789119L;
 
     /** 主键 */

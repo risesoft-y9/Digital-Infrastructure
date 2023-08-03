@@ -30,15 +30,17 @@ import lombok.extern.slf4j.Slf4j;
 public class TenantController {
 
     private final Y9UserDao y9UserDao;
-    
+
     @RequestMapping(value = "/checkUser")
-    public final ResponseEntity<String> checkUser(@RequestParam String loginName, @RequestParam String tenantShortName) {
+    public final ResponseEntity<String> checkUser(@RequestParam String loginName,
+        @RequestParam String tenantShortName) {
         List<Map<String, Object>> list = new ArrayList<Map<String, Object>>();
         try {
             loginName = XSSCheckUtil.filter(loginName);
             tenantShortName = XSSCheckUtil.filter(tenantShortName);
 
-            List<Y9User> users = y9UserDao.findByTenantShortNameAndLoginNameAndOriginal(tenantShortName, loginName, Boolean.TRUE);
+            List<Y9User> users =
+                y9UserDao.findByTenantShortNameAndLoginNameAndOriginal(tenantShortName, loginName, Boolean.TRUE);
             if (!users.isEmpty()) {
                 for (Y9User user : users) {
                     Map<String, Object> mapTemp = new HashMap<String, Object>();
@@ -189,7 +191,8 @@ public class TenantController {
             tenentlist.add("isv");
             tenentlist.add("operation");
 
-            List<Y9User> users = y9UserDao.findByTenantShortNameNotInAndLoginNameAndOriginal(tenentlist, loginName, Boolean.TRUE);
+            List<Y9User> users =
+                y9UserDao.findByTenantShortNameNotInAndLoginNameAndOriginal(tenentlist, loginName, Boolean.TRUE);
             if (!users.isEmpty()) {
                 for (Y9User user : users) {
                     Map<String, Object> mapTemp = new HashMap<String, Object>();
@@ -219,13 +222,15 @@ public class TenantController {
      * @return
      */
     @RequestMapping(value = "/getByLoginNameAndTenantShortName")
-    public final ResponseEntity<String> getUsersByLoginNameAndTenantShortName(@RequestParam String loginName, @RequestParam String tenantShortName) {
+    public final ResponseEntity<String> getUsersByLoginNameAndTenantShortName(@RequestParam String loginName,
+        @RequestParam String tenantShortName) {
         List<Map<String, Object>> list = new ArrayList<Map<String, Object>>();
         try {
             loginName = XSSCheckUtil.filter(loginName);
             tenantShortName = XSSCheckUtil.filter(tenantShortName);
 
-            List<Y9User> users = y9UserDao.findByTenantShortNameAndLoginNameAndOriginal(tenantShortName, loginName, Boolean.TRUE);
+            List<Y9User> users =
+                y9UserDao.findByTenantShortNameAndLoginNameAndOriginal(tenantShortName, loginName, Boolean.TRUE);
             if (!users.isEmpty()) {
                 for (Y9User user : users) {
                     Map<String, Object> mapTemp = new HashMap<String, Object>();
@@ -261,7 +266,8 @@ public class TenantController {
         try {
             loginName = XSSCheckUtil.filter(loginName);
 
-            List<Y9User> users = y9UserDao.findByLoginNameContainingAndOriginalOrderByTenantShortName(loginName, Boolean.TRUE);
+            List<Y9User> users =
+                y9UserDao.findByLoginNameContainingAndOriginalOrderByTenantShortName(loginName, Boolean.TRUE);
             if (!users.isEmpty()) {
                 for (Y9User user : users) {
                     Map<String, Object> mapTemp = new HashMap<String, Object>();

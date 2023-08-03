@@ -64,13 +64,15 @@ public class InetAddressUtil {
     }
 
     public static void getApplicationProperties() {
-        try (InputStream inputStream = InetAddressUtil.class.getClassLoader().getResourceAsStream("application.properties")) {
+        try (InputStream inputStream =
+            InetAddressUtil.class.getClassLoader().getResourceAsStream("application.properties")) {
             properties.load(inputStream);
         } catch (IOException ignored) {
         }
 
         if (properties.isEmpty()) {
-            try (InputStream inputStream2 = InetAddressUtil.class.getClassLoader().getResourceAsStream("properties/application.properties");) {
+            try (InputStream inputStream2 =
+                InetAddressUtil.class.getClassLoader().getResourceAsStream("properties/application.properties");) {
                 properties.load(inputStream2);
             } catch (IOException ignored) {
             }
@@ -189,14 +191,16 @@ public class InetAddressUtil {
                 socket.connect(addr, 1000);
                 return socket.getLocalAddress();
             } catch (Exception e) {
-                LOGGER.warn(String.format("Failed to retrieve local address by connecting to dest host:port(%s:%s) false", host, port), e);
+                LOGGER.warn(String.format(
+                    "Failed to retrieve local address by connecting to dest host:port(%s:%s) false", host, port), e);
             }
         }
         return null;
     }
 
     public static boolean isInvalidLocalHost(String host) {
-        return host == null || host.length() == 0 || "localhost".equalsIgnoreCase(host) || "0.0.0.0".equals(host) || (LOCAL_IP_PATTERN.matcher(host).matches());
+        return host == null || host.length() == 0 || "localhost".equalsIgnoreCase(host) || "0.0.0.0".equals(host)
+            || (LOCAL_IP_PATTERN.matcher(host).matches());
     }
 
     public static boolean isValidAddress(InetAddress address) {
@@ -205,7 +209,8 @@ public class InetAddressUtil {
         }
 
         String ipAddress = address.getHostAddress();
-        boolean valid = ipAddress != null && !ANYHOST.equals(ipAddress) && !LOCALHOST.equals(ipAddress) && IP_PATTERN.matcher(ipAddress).matches();
+        boolean valid = ipAddress != null && !ANYHOST.equals(ipAddress) && !LOCALHOST.equals(ipAddress)
+            && IP_PATTERN.matcher(ipAddress).matches();
         if (valid == false) {
             return false;
         }

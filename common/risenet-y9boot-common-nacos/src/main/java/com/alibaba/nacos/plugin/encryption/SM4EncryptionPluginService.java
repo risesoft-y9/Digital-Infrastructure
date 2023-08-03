@@ -13,7 +13,7 @@ import cn.hutool.crypto.symmetric.SymmetricCrypto;
 
 @Slf4j
 public class SM4EncryptionPluginService implements EncryptionPluginService {
-    
+
     private static final String DEFAULT_SECRET_KEY = "LENGLENGLENGLENG";
 
     @Override
@@ -46,7 +46,7 @@ public class SM4EncryptionPluginService implements EncryptionPluginService {
 
     @Override
     public String generateSecretKey() {
-        //return DEFAULT_SECRET_KEY;
+        // return DEFAULT_SECRET_KEY;
         return RandomUtil.randomString(32);
     }
 

@@ -21,7 +21,7 @@ import net.risesoft.repository.Y9OptionValueRepository;
 @Transactional(value = "rsTenantTransactionManager", readOnly = true)
 @RequiredArgsConstructor
 public class Y9OptionValueManagerImpl implements Y9OptionValueManager {
-    
+
     private final Y9OptionValueRepository orgOptionValueRepository;
 
     @Override

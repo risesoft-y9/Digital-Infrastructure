@@ -9,6 +9,7 @@ import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
+
 import net.risesoft.exception.GlobalErrorCodeEnum;
 
 /**
@@ -33,7 +34,8 @@ public class Y9Page<T> implements Serializable {
     }
 
     public static <T> Y9Page<T> success(int currPage, int totalPages, long total, List<T> rows, String msg) {
-        return new Y9Page<>(currPage, totalPages, total, rows, GlobalErrorCodeEnum.SUCCESS.getCode(), msg, Boolean.TRUE);
+        return new Y9Page<>(currPage, totalPages, total, rows, GlobalErrorCodeEnum.SUCCESS.getCode(), msg,
+            Boolean.TRUE);
     }
 
     public static <T> Y9Page<T> failure(int currPage, int totalPages, long total, List<T> rows, String msg, long code) {

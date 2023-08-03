@@ -6,7 +6,6 @@ import net.risesoft.id.impl.TimeBasedUuidGenerator;
 public interface Y9IdGenerator {
     String getNextId();
 
-
     /**
      * 默认使用雪花算法生成id
      *

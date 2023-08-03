@@ -9,8 +9,8 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 /**
- *  组织消息
- *  
+ * 组织消息
+ * 
  * @author dingzhaojun
  * @author qinman
  * @author mengjuhua

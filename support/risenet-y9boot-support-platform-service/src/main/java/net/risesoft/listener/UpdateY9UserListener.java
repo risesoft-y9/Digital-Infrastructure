@@ -31,12 +31,12 @@ import net.risesoft.y9public.service.user.Y9UserService;
 @Slf4j
 @RequiredArgsConstructor
 public class UpdateY9UserListener {
-    
+
     private final Y9TenantService y9TenantService;
     private final Y9UserService y9UserService;
     private final Y9PersonsToPositionsService y9PersonsToPositionsService;
     private final Y9PersonToRoleService y9PersonToRoleService;
-    
+
     /**
      * 监听人员添加事件
      *
@@ -332,10 +332,11 @@ public class UpdateY9UserListener {
     @Async
     public void onY9PersonsToPositionsDeleted(Y9EntityDeletedEvent<Y9PersonsToPositions> event) {
         Y9PersonsToPositions y9PersonsToPositions = event.getEntity();
-        
+
         Y9User y9User = y9UserService.findByPersonId(y9PersonsToPositions.getPersonId());
         if (y9User != null) {
-            String positionIds = y9PersonsToPositionsService.getPositionIdsByPersonId(y9PersonsToPositions.getPersonId());
+            String positionIds =
+                y9PersonsToPositionsService.getPositionIdsByPersonId(y9PersonsToPositions.getPersonId());
             y9User.setPositions(positionIds);
             y9UserService.save(y9User);
         }
@@ -357,7 +358,8 @@ public class UpdateY9UserListener {
 
         Y9User y9User = y9UserService.findByPersonId(y9PersonsToPositions.getPersonId());
         if (y9User != null) {
-            String positionIds = y9PersonsToPositionsService.getPositionIdsByPersonId(y9PersonsToPositions.getPersonId());
+            String positionIds =
+                y9PersonsToPositionsService.getPositionIdsByPersonId(y9PersonsToPositions.getPersonId());
             y9User.setPositions(positionIds);
             y9UserService.save(y9User);
         }

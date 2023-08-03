@@ -1,6 +1,5 @@
 /* Top level is idpSelectIdPSelector */
-#idpSelectIdPSelector
-{
+#idpSelectIdPSelector {
     width: 80%;
     text-align: justify-all;
     background-color: #FFFFFF;
@@ -13,20 +12,18 @@
  * The preferred IdP tile (if present) has a specified height, so
  * we can fit the preselected * IdPs in there
  */
-#idpSelectPreferredIdPTile
-{
-    height:138px;
+#idpSelectPreferredIdPTile {
+    height: 138px;
 }
-#idpSelectPreferredIdPTileNoImg
-{
-    height:80px;
+
+#idpSelectPreferredIdPTileNoImg {
+    height: 80px;
 }
 
 /***
  *  The preselect buttons
  */
-div.IdPSelectPreferredIdPButton
-{
+div.IdPSelectPreferredIdPButton {
     margin: 3px;
     width: 120px;
     float: left;
@@ -35,29 +32,28 @@ div.IdPSelectPreferredIdPButton
 /*
  *  Make the entire box look like a hyperlink
  */
-div.IdPSelectPreferredIdPButton a
-{
+div.IdPSelectPreferredIdPButton a {
     float: left;
     width: 99%;
-    
+
 }
-div.IdPSelectTextDiv{
+
+div.IdPSelectTextDiv {
     height: 3.5ex;
     font-size: 15px;
     clear: left;
 }
 
-div.IdPSelectPreferredIdPImg
-{
-/*  max-width: 95%; */
+div.IdPSelectPreferredIdPImg {
+    /*  max-width: 95%; */
     height: 69px; /* We need the absolute height to force all buttons to the same size */
     margin: 2px;
 }
 
 img.IdPSelectIdPImg {
-   /*width:84px;*/
-   /*height:64px;*/
-    width:auto;
+    /*width:84px;*/
+    /*height:64px;*/
+    width: auto;
 }
 
 div.IdPSelectautoDispatchTile {
@@ -65,53 +61,51 @@ div.IdPSelectautoDispatchTile {
 }
 
 div.IdPSelectautoDispatchArea {
-    margin-top: 30px ;
+    margin-top: 30px;
 }
 
-div.IdPSelectPreferredIdPButton img
-{
-    display: block;    /* Block display to allow auto centring */
-    max-width:  114px; /* Specify max to allow scaling, percent does work */
-    max-height: 64px;  /* Specify max to allow scaling, percent doesn't work */
-    margin-top: 3px ;
-    margin-bottom: 3px ;
-    border: solid 0px #000000;  /* Strip any embellishments the brower may give us */
+div.IdPSelectPreferredIdPButton img {
+    display: block; /* Block display to allow auto centring */
+    max-width: 114px; /* Specify max to allow scaling, percent does work */
+    max-height: 64px; /* Specify max to allow scaling, percent doesn't work */
+    margin-top: 3px;
+    margin-bottom: 3px;
+    border: solid 0px #000000; /* Strip any embellishments the brower may give us */
     margin-left: auto; /* Auto centring */
-    margin-right: auto;  /* Auto centring */
+    margin-right: auto; /* Auto centring */
 
 }
 
-div.IdPSelectPreferredIdPButton div.IdPSelectTextDiv
-{
+div.IdPSelectPreferredIdPButton div.IdPSelectTextDiv {
     text-align: center;
     font-size: 12px;
     font-weight: normal;
     max-width: 95%;
-    height: 30px;       /* Specify max height to allow two lines.  The 
-                         * Javascript controlls the max length of the
-                         * strings 
-                         */
+    height: 30px;
+    /* Specify max height to allow two lines.  The 
+                      * Javascript controlls the max length of the
+                      * strings 
+                      */
 }
 
 /*
  * Force the size of the selectors and the buttons
  */
-#idpSelectInput, #idpSelectSelector
-{
+#idpSelectInput, #idpSelectSelector {
     width: 80%;
 }
+
 /*
  * For some reason a <select> width includes the border and an
  * <input> doesn't hence we have to force a margin onto the <select>
  */
-#idpSelectSelector
-{
+#idpSelectSelector {
     margin-left: 2px;
     margin-right: 2px;
 
 }
-#idpSelectSelectButton, #idpSelectListButton
-{
+
+#idpSelectSelectButton, #idpSelectListButton {
     padding-left: 4px;
     padding-right: 2px;
     margin-left: 5px;
@@ -125,21 +119,17 @@ div.IdPSelectPreferredIdPButton div.IdPSelectTextDiv
 /*
  * change underlining of HREFS
  */
-#idpSelectIdPSelector a:link 
-{
+#idpSelectIdPSelector a:link {
     text-decoration: none;
 }
 
-#idpSelectIdPSelector a:visited 
-{
+#idpSelectIdPSelector a:visited {
     text-decoration: none;
 }
 
-#idpSelectIdPSelector a:hover 
-{
+#idpSelectIdPSelector a:hover {
     text-decoration: underline;
 }
-
 
 
 /* 
@@ -147,14 +137,12 @@ div.IdPSelectPreferredIdPButton div.IdPSelectTextDiv
  * help button on the right 
  */
 
-a.IdPSelectDropDownToggle
-{
+a.IdPSelectDropDownToggle {
     display: inline-block;
     width: 80%;
 }
 
-a.IdPSelectHelpButton
-{
+a.IdPSelectHelpButton {
     display: none;
     text-align: right;
     width: 20%;
@@ -172,7 +160,7 @@ ul.IdPSelectDropDown {
     padding-left: 0px;
     border: 1px solid black;
     z-index: 6;
-    position: absolute;   
+    position: absolute;
 }
 
 ul.IdPSelectDropDown li {
@@ -194,7 +182,7 @@ div.IdPSelectDropDown {
     box-sizing: border-box;
     border: 1px solid black;
     z-index: 6;
-    position: absolute;   
+    position: absolute;
 }
 
 div.IdPSelectDropDown div {
@@ -203,8 +191,9 @@ div.IdPSelectDropDown div {
     padding: 0px 3px;
 }
 
- div.IdPSelectDropDown div.IdPSelectCurrent {
+div.IdPSelectDropDown div.IdPSelectCurrent {
     background-color: #3366cc;
     color: white;
 }
+
 /* END */

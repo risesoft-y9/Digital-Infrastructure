@@ -13,7 +13,7 @@ import net.risesoft.y9.util.base64.Y9Base64Util;
  * @date 2022/08/04
  */
 public class FieldBase64Converter implements AttributeConverter<String, String> {
-    
+
     @Override
     public String convertToDatabaseColumn(String attribute) {
         if (StringUtils.isNotBlank(attribute)) {
@@ -29,5 +29,5 @@ public class FieldBase64Converter implements AttributeConverter<String, String> 
         }
         return dbData;
     }
-    
+
 }

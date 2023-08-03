@@ -49,7 +49,7 @@ public class HasAuthoritiesAdvice implements MethodBeforeAdvice {
                 checkAnyPersonPermission(customIds, authority);
                 return;
             }
-            
+
             if (IdentityEnum.POSITION.equals(identity) && LogicalEnum.AND.equals(logical)) {
                 checkAllPositionPermission(customIds, authority);
                 return;
@@ -59,7 +59,7 @@ public class HasAuthoritiesAdvice implements MethodBeforeAdvice {
                 checkAnyPositionPermission(customIds, authority);
                 return;
             }
-            
+
         }
     }
 
@@ -77,7 +77,8 @@ public class HasAuthoritiesAdvice implements MethodBeforeAdvice {
                 return;
             }
         }
-        throw Y9ExceptionUtil.permissionException(GlobalErrorCodeEnum.PERSON_UNAUTHORIZED_RESOURCE, Arrays.toString(customIds));
+        throw Y9ExceptionUtil.permissionException(GlobalErrorCodeEnum.PERSON_UNAUTHORIZED_RESOURCE,
+            Arrays.toString(customIds));
     }
 
     private void checkAllPositionPermission(String[] customIds, Integer authority) {
@@ -94,15 +95,18 @@ public class HasAuthoritiesAdvice implements MethodBeforeAdvice {
                 return;
             }
         }
-        throw Y9ExceptionUtil.permissionException(GlobalErrorCodeEnum.POSITION_UNAUTHORIZED_RESOURCE, Arrays.toString(customIds));
+        throw Y9ExceptionUtil.permissionException(GlobalErrorCodeEnum.POSITION_UNAUTHORIZED_RESOURCE,
+            Arrays.toString(customIds));
     }
 
     private boolean hasPersonPermission(String customId, Integer authority) {
-        return personResourceApi.hasPermissionByCustomId(Y9LoginUserHolder.getTenantId(), Y9LoginUserHolder.getPersonId(), customId, authority);
+        return personResourceApi.hasPermissionByCustomId(Y9LoginUserHolder.getTenantId(),
+            Y9LoginUserHolder.getPersonId(), customId, authority);
     }
 
     private boolean hasPositionPermission(String customId, Integer authority) {
-        return positionResourceApi.hasPermissionByCustomId(Y9LoginUserHolder.getTenantId(), Y9LoginUserHolder.getPositionId(), customId, authority);
+        return positionResourceApi.hasPermissionByCustomId(Y9LoginUserHolder.getTenantId(),
+            Y9LoginUserHolder.getPositionId(), customId, authority);
     }
 
 }

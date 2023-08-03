@@ -33,7 +33,7 @@ public class Y9PositionToResourceAndAuthorityManagerImpl implements Y9PositionTo
     private final Y9PositionToResourceAndAuthorityRepository y9PositionToResourceAndAuthorityRepository;
     private final Y9AppRepository y9AppRepository;
     private final Y9SystemRepository y9SystemRepository;
-    
+
     @Transactional(readOnly = false)
     @Override
     public void deleteByAuthorizationId(String authorizationId) {
@@ -42,8 +42,11 @@ public class Y9PositionToResourceAndAuthorityManagerImpl implements Y9PositionTo
 
     @Transactional(readOnly = false)
     @Override
-    public void saveOrUpdate(Y9ResourceBase y9ResourceBase, Y9Position y9Position, Y9Authorization y9Authorization, Boolean inherit) {
-        Y9PositionToResourceAndAuthority y9PositionToResourceAndAuthority = y9PositionToResourceAndAuthorityRepository.findByPositionIdAndResourceIdAndAuthorizationIdAndAuthority(y9Position.getId(), y9ResourceBase.getId(), y9Authorization.getId(), y9Authorization.getAuthority());
+    public void saveOrUpdate(Y9ResourceBase y9ResourceBase, Y9Position y9Position, Y9Authorization y9Authorization,
+        Boolean inherit) {
+        Y9PositionToResourceAndAuthority y9PositionToResourceAndAuthority =
+            y9PositionToResourceAndAuthorityRepository.findByPositionIdAndResourceIdAndAuthorizationIdAndAuthority(
+                y9Position.getId(), y9ResourceBase.getId(), y9Authorization.getId(), y9Authorization.getAuthority());
         if (y9PositionToResourceAndAuthority == null) {
             y9PositionToResourceAndAuthority = new Y9PositionToResourceAndAuthority();
             y9PositionToResourceAndAuthority.setTenantId(y9Position.getTenantId());

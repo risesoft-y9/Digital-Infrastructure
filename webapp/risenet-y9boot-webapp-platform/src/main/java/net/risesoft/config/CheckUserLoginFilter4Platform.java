@@ -31,7 +31,8 @@ public class CheckUserLoginFilter4Platform implements Filter {
     public void destroy() {}
 
     @Override
-    public void doFilter(ServletRequest servletRequest, ServletResponse servletResponse, FilterChain chain) throws IOException, ServletException {
+    public void doFilter(ServletRequest servletRequest, ServletResponse servletResponse, FilterChain chain)
+        throws IOException, ServletException {
         HttpServletRequest request = (HttpServletRequest)servletRequest;
         HttpSession session = request.getSession();
         HttpServletResponse response = (HttpServletResponse)servletResponse;
@@ -46,12 +47,14 @@ public class CheckUserLoginFilter4Platform implements Filter {
             if (loginUser == null) {
                 throw new RuntimeException("No user was found in httpsession !!!");
             } else {
-//                Boolean isTenantPerson = loginUser.isGlobalManager();
-//                Y9DepartmentPropService y9DepartmentPropService = Y9Context.getBean(Y9DepartmentPropService.class);
-//                List<Y9DepartmentProp> list = y9DepartmentPropService.findByOrgBaseIdAndCategory(loginUser.getPersonId(), Y9DepartmentPropCategoryEnum.ADMIN.getCategory());
-//                if (!isTenantPerson && list.size() == 0) {
-//                    throw new RuntimeException("This user is not an administrator, without permission !!!");
-//                }
+                // Boolean isTenantPerson = loginUser.isGlobalManager();
+                // Y9DepartmentPropService y9DepartmentPropService = Y9Context.getBean(Y9DepartmentPropService.class);
+                // List<Y9DepartmentProp> list =
+                // y9DepartmentPropService.findByOrgBaseIdAndCategory(loginUser.getPersonId(),
+                // Y9DepartmentPropCategoryEnum.ADMIN.getCategory());
+                // if (!isTenantPerson && list.size() == 0) {
+                // throw new RuntimeException("This user is not an administrator, without permission !!!");
+                // }
             }
         } catch (RuntimeException e) {
             LOGGER.info(e.getMessage(), e);

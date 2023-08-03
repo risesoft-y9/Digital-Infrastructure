@@ -31,5 +31,6 @@ public interface OptionValueApi {
      * @since 9.6.0
      */
     @GetMapping("/listByType")
-    List<OptionValue> listByType(@RequestParam("tenantId") @NotBlank String tenantId, @RequestParam("type") @NotBlank String type);
+    List<OptionValue> listByType(@RequestParam("tenantId") @NotBlank String tenantId,
+        @RequestParam("type") @NotBlank String type);
 }

@@ -26,7 +26,10 @@ import net.risesoft.enums.AuthorizationPrincipalTypeEnum;
  * @date 2022/2/10
  */
 @Entity
-@Table(name = "Y9_ORG_AUTHORIZATION", indexes = {@Index(columnList = "PRINCIPAL_ID,RESOURCE_ID,AUTHORITY", unique = true), @Index(columnList = "TENANT_ID,PRINCIPAL_ID ASC", unique = false), @Index(columnList = "TENANT_ID,RESOURCE_ID ASC", unique = false)})
+@Table(name = "Y9_ORG_AUTHORIZATION",
+    indexes = {@Index(columnList = "PRINCIPAL_ID,RESOURCE_ID,AUTHORITY", unique = true),
+        @Index(columnList = "TENANT_ID,PRINCIPAL_ID ASC", unique = false),
+        @Index(columnList = "TENANT_ID,RESOURCE_ID ASC", unique = false)})
 @org.hibernate.annotations.Table(comment = "权限配置表", appliesTo = "Y9_ORG_AUTHORIZATION")
 @NoArgsConstructor
 @Data

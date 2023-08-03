@@ -21,10 +21,7 @@ import net.risesoft.pojo.Y9PageQuery;
 import net.risesoft.pojo.Y9Result;
 import net.risesoft.y9.Y9LoginUserHolder;
 import net.risesoft.y9.pubsub.Y9PublishService;
-import net.risesoft.y9.pubsub.event.Y9EventCommon;
-import net.risesoft.y9.pubsub.message.Y9MessageCommon;
 import net.risesoft.y9public.entity.resource.Y9App;
-import net.risesoft.y9public.entity.tenant.Y9TenantSystem;
 import net.risesoft.y9public.service.resource.Y9AppService;
 import net.risesoft.y9public.service.tenant.Y9TenantAppService;
 import net.risesoft.y9public.service.tenant.Y9TenantSystemService;
@@ -123,7 +120,8 @@ public class AppResourceController {
     @GetMapping(value = "/page")
     public Y9Page<Y9App> pageBySystemId(Y9PageQuery pageQuery, @RequestParam String systemId, String name) {
         Page<Y9App> appResourcePage = y9AppService.page(pageQuery, systemId, name);
-        return Y9Page.success(pageQuery.getPage(), appResourcePage.getTotalPages(), appResourcePage.getTotalElements(), appResourcePage.getContent());
+        return Y9Page.success(pageQuery.getPage(), appResourcePage.getTotalPages(), appResourcePage.getTotalElements(),
+            appResourcePage.getContent());
     }
 
     /**
@@ -140,7 +138,8 @@ public class AppResourceController {
         // TODO move to Service?
         y9AppService.verifyApp(y9App.getId(), true, Y9LoginUserHolder.getUserInfo().getName());
         y9TenantSystemService.registerTenantSystem(Y9LoginUserHolder.getTenantId(), savedApp.getSystemId());
-        y9TenantAppService.save(savedApp.getId(), Y9LoginUserHolder.getTenantId(), Y9LoginUserHolder.getUserInfo().getName(), "微内核默认租用");
+        y9TenantAppService.save(savedApp.getId(), Y9LoginUserHolder.getTenantId(),
+            Y9LoginUserHolder.getUserInfo().getName(), "微内核默认租用");
         return Y9Result.success(savedApp, "成功保存应用");
     }
 

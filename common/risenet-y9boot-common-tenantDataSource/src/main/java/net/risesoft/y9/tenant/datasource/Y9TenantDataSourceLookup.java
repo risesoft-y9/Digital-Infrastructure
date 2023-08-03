@@ -58,8 +58,10 @@ public class Y9TenantDataSourceLookup implements DataSourceLookup {
     }
 
     private void createDefaultTenantDataSource(JdbcTemplate publicJdbcTemplate) {
-        List<Map<String, Object>> defaultTenant = publicJdbcTemplate.queryForList("SELECT ID, DEFAULT_DATA_SOURCE_ID FROM Y9_COMMON_TENANT WHERE ID=?", DefaultIdConsts.TENANT_ID);
-        List<Map<String, Object>> defaultDataSource = publicJdbcTemplate.queryForList("SELECT * FROM Y9_COMMON_DATASOURCE T WHERE T.ID = ?", DefaultIdConsts.DATASOURCE_ID);
+        List<Map<String, Object>> defaultTenant = publicJdbcTemplate.queryForList(
+            "SELECT ID, DEFAULT_DATA_SOURCE_ID FROM Y9_COMMON_TENANT WHERE ID=?", DefaultIdConsts.TENANT_ID);
+        List<Map<String, Object>> defaultDataSource = publicJdbcTemplate
+            .queryForList("SELECT * FROM Y9_COMMON_DATASOURCE T WHERE T.ID = ?", DefaultIdConsts.DATASOURCE_ID);
         if (!defaultTenant.isEmpty() && !defaultDataSource.isEmpty()) {
             createOrUpdateDataSource(defaultDataSource.get(0), null, DefaultIdConsts.TENANT_ID);
         }
@@ -210,7 +212,8 @@ public class Y9TenantDataSourceLookup implements DataSourceLookup {
         JdbcTemplate publicJdbcTemplate = new JdbcTemplate(this.publicDataSource);
 
         // 1 移除不存在的租户的连接池
-        List<Map<String, Object>> allTenants = publicJdbcTemplate.queryForList("select ID, DEFAULT_DATA_SOURCE_ID FROM Y9_COMMON_TENANT");
+        List<Map<String, Object>> allTenants =
+            publicJdbcTemplate.queryForList("select ID, DEFAULT_DATA_SOURCE_ID FROM Y9_COMMON_TENANT");
         Set<String> keys = this.dataSources.keySet();
         for (String key : keys) {
             boolean exist = false;
@@ -231,13 +234,15 @@ public class Y9TenantDataSourceLookup implements DataSourceLookup {
 
         // 2 重新设置租户的连接池
         Set<String> systemTenantIds = new HashSet<String>();
-        List<Map<String, Object>> systems = publicJdbcTemplate.queryForList("SELECT ID FROM Y9_COMMON_SYSTEM WHERE NAME=?", this.systemName);
+        List<Map<String, Object>> systems =
+            publicJdbcTemplate.queryForList("SELECT ID FROM Y9_COMMON_SYSTEM WHERE NAME=?", this.systemName);
 
         // 2.1 系统存在(已在开源内核的应用系统管理添加系统),重新设置租户的连接池
         if (systems.size() > 0) {
             Map<String, Object> systemMap = systems.get(0);
             String systemId = (String)systemMap.get("ID");
-            List<Map<String, Object>> tenantSystems = publicJdbcTemplate.queryForList("SELECT TENANT_ID, TENANT_DATA_SOURCE FROM Y9_COMMON_TENANT_SYSTEM WHERE SYSTEM_ID = ?", systemId);
+            List<Map<String, Object>> tenantSystems = publicJdbcTemplate.queryForList(
+                "SELECT TENANT_ID, TENANT_DATA_SOURCE FROM Y9_COMMON_TENANT_SYSTEM WHERE SYSTEM_ID = ?", systemId);
 
             // 2.1.1 有租户租用系统
             if (!tenantSystems.isEmpty()) {
@@ -247,7 +252,8 @@ public class Y9TenantDataSourceLookup implements DataSourceLookup {
                     systemTenantIds.add(tenantId);
 
                     String tenantDataSource = (String)tenantSystem.get("TENANT_DATA_SOURCE");
-                    List<Map<String, Object>> dataSources = publicJdbcTemplate.queryForList("SELECT * FROM Y9_COMMON_DATASOURCE WHERE ID = ?", tenantDataSource);
+                    List<Map<String, Object>> dataSources = publicJdbcTemplate
+                        .queryForList("SELECT * FROM Y9_COMMON_DATASOURCE WHERE ID = ?", tenantDataSource);
                     if (!dataSources.isEmpty()) {
                         Map<String, Object> dsMap = dataSources.get(0);
                         createOrUpdateDataSource(dsMap, ds, tenantId);
@@ -260,13 +266,13 @@ public class Y9TenantDataSourceLookup implements DataSourceLookup {
                         // 如果给租户租用系统时指定了数据源则配置优先
                         continue;
                     }
-
+                
                     DruidDataSource ds = this.dataSources.get(tenantId);
                     String defaultDataSourceId = (String)tenant.get("DEFAULT_DATA_SOURCE_ID");
                     if (StringUtils.isEmpty(defaultDataSourceId)) {
                         Assert.notNull(defaultDataSourceId, "tenant defaultDataSourceId must not be null");
                     }
-
+                
                     List<Map<String, Object>> list3 = publicJdbcTemplate.queryForList("select * from Y9_COMMON_DATASOURCE t where t.ID = ?", defaultDataSourceId);
                     if (list3.size() > 0) {
                         Map<String, Object> dsMap = list3.get(0);

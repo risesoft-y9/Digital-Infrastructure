@@ -76,7 +76,8 @@ public class Y9Oauth2ResourceFilter implements Filter {
 
     @SuppressWarnings("unchecked")
     @Override
-    public void doFilter(ServletRequest servletRequest, ServletResponse servletResponse, FilterChain filterChain) throws IOException, ServletException {
+    public void doFilter(ServletRequest servletRequest, ServletResponse servletResponse, FilterChain filterChain)
+        throws IOException, ServletException {
         HttpServletRequest request = (HttpServletRequest)servletRequest;
         HttpServletResponse response = (HttpServletResponse)servletResponse;
         // HttpSession session = request.getSession();
@@ -103,12 +104,14 @@ public class Y9Oauth2ResourceFilter implements Filter {
             introspectionUri = this.env.getProperty("y9.feature.oauth2.resource.opaque.introspection-uri");
             profileUri = this.env.getProperty("y9.feature.oauth2.resource.opaque.profile-uri");
 
-            tokenCachedInSession = Boolean.parseBoolean(this.env.getProperty("y9.feature.oauth2.resource.opaque.tokenCachedInSession", "false"));
+            tokenCachedInSession = Boolean
+                .parseBoolean(this.env.getProperty("y9.feature.oauth2.resource.opaque.tokenCachedInSession", "false"));
 
             // restTemplateBasicAuth = new RestTemplate();
             // restTemplateBasicAuth.getInterceptors().add(new BasicAuthenticationInterceptor(clientId, clientSecret,
             // StandardCharsets.UTF_8));
-            boolean prop = this.env.getProperty("y9.feature.oauth2.resource.saveOnlineMessage", Boolean.class, Boolean.TRUE);
+            boolean prop =
+                this.env.getProperty("y9.feature.oauth2.resource.saveOnlineMessage", Boolean.class, Boolean.TRUE);
             if (prop) {
                 saveOnlineMessage = true;
             }
@@ -193,7 +196,8 @@ public class Y9Oauth2ResourceFilter implements Filter {
                             }
                         }
                     } else {
-                        setResponse(response, HttpStatus.UNAUTHORIZED, GlobalErrorCodeEnum.ACCESS_TOKEN_VERIFICATION_FAILED);
+                        setResponse(response, HttpStatus.UNAUTHORIZED,
+                            GlobalErrorCodeEnum.ACCESS_TOKEN_VERIFICATION_FAILED);
                         return;
                     }
                 }
@@ -265,7 +269,8 @@ public class Y9Oauth2ResourceFilter implements Filter {
 
         URI uri = URI.create(this.introspectionUri + "?token=" + accessToken);
         RequestEntity<?> requestEntity = new RequestEntity<>(headers, HttpMethod.POST, uri);
-        ResponseEntity<OAuth20IntrospectionAccessTokenResponse> responseEntity = this.restTemplate.exchange(requestEntity, OAuth20IntrospectionAccessTokenResponse.class);
+        ResponseEntity<OAuth20IntrospectionAccessTokenResponse> responseEntity =
+            this.restTemplate.exchange(requestEntity, OAuth20IntrospectionAccessTokenResponse.class);
         return responseEntity;
     }
 
@@ -280,8 +285,10 @@ public class Y9Oauth2ResourceFilter implements Filter {
         return responseEntity;
     }
 
-    private void remoteSaveLog(String url, UserInfo userInfo, String hostIp, long elapsedTime, String success, String errorMessage, String throwable, String userAgent) {
-        if (url.endsWith(".js") || url.endsWith(".css") || url.endsWith(".gif") || url.endsWith(".jpg") || url.endsWith(".png") || url.endsWith(".svg")) {
+    private void remoteSaveLog(String url, UserInfo userInfo, String hostIp, long elapsedTime, String success,
+        String errorMessage, String throwable, String userAgent) {
+        if (url.endsWith(".js") || url.endsWith(".css") || url.endsWith(".gif") || url.endsWith(".jpg")
+            || url.endsWith(".png") || url.endsWith(".svg")) {
             // do nothing,skip
         } else {
             try {

@@ -22,7 +22,8 @@ import net.risesoft.entity.relation.Y9CustomGroupMember;
 @SuppressWarnings("AlibabaAbstractMethodOrInterfaceMethodMustUseJavadoc")
 @Repository
 @Transactional(value = "rsTenantTransactionManager", readOnly = true)
-public interface Y9CustomGroupMembersRepository extends JpaRepository<Y9CustomGroupMember, String>, JpaSpecificationExecutor<Y9CustomGroupMember> {
+public interface Y9CustomGroupMembersRepository
+    extends JpaRepository<Y9CustomGroupMember, String>, JpaSpecificationExecutor<Y9CustomGroupMember> {
 
     @Modifying
     @Transactional(readOnly = false)

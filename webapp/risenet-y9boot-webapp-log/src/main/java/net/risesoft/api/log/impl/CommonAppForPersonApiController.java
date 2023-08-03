@@ -1,5 +1,7 @@
 package net.risesoft.api.log.impl;
 
+import javax.validation.constraints.NotBlank;
+
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -10,8 +12,6 @@ import lombok.RequiredArgsConstructor;
 
 import net.risesoft.api.log.CommonAppForPersonApi;
 import net.risesoft.log.service.Y9CommonAppForPersonService;
-
-import javax.validation.constraints.NotBlank;
 
 /**
  * 个人常用应用组件
@@ -37,7 +37,8 @@ public class CommonAppForPersonApiController implements CommonAppForPersonApi {
      */
     @Override
     @GetMapping(value = "/getAppNames")
-    public String getAppNamesByPersonId(@RequestParam("tenantId") String tenantId, @RequestParam("personId") @NotBlank String personId) {
+    public String getAppNamesByPersonId(@RequestParam("tenantId") String tenantId,
+        @RequestParam("personId") @NotBlank String personId) {
         return commonAppForPersonService.getAppNamesByPersonId(personId);
     }
 
@@ -51,7 +52,8 @@ public class CommonAppForPersonApiController implements CommonAppForPersonApi {
      */
     @Override
     @GetMapping(value = "/getAppNamesFromLog")
-    public String getAppNamesByPersonIdFromLog(@RequestParam("tenantId") String tenantId, @RequestParam("personId") @NotBlank String personId) {
+    public String getAppNamesByPersonIdFromLog(@RequestParam("tenantId") String tenantId,
+        @RequestParam("personId") @NotBlank String personId) {
         return commonAppForPersonService.getAppNamesFromLog(personId);
     }
 

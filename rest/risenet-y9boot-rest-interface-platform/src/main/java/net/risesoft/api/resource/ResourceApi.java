@@ -2,6 +2,8 @@ package net.risesoft.api.resource;
 
 import java.util.List;
 
+import javax.validation.constraints.NotBlank;
+
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -9,8 +11,6 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 import net.risesoft.enums.ResourceTypeEnum;
 import net.risesoft.model.Resource;
-
-import javax.validation.constraints.NotBlank;
 
 /**
  * 资源管理组件
@@ -35,7 +35,10 @@ public interface ResourceApi {
      * @since 9.6.0
      */
     @PostMapping("/createMenuResource")
-    Resource createMenuResource(@RequestParam("resourceId") @NotBlank String resourceId, @RequestParam("resourceName") @NotBlank String resourceName, @RequestParam("parentResourceId") @NotBlank String parentResourceId, @RequestParam("customId") @NotBlank String customId);
+    Resource createMenuResource(@RequestParam("resourceId") @NotBlank String resourceId,
+        @RequestParam("resourceName") @NotBlank String resourceName,
+        @RequestParam("parentResourceId") @NotBlank String parentResourceId,
+        @RequestParam("customId") @NotBlank String customId);
 
     /**
      * 根据customId获取资源，用于工作流，customId保存的是processDefinitionKey
@@ -57,7 +60,9 @@ public interface ResourceApi {
      * @since 9.6.0
      */
     @GetMapping("/findByCustomIdAndParentId")
-    Resource findByCustomIdAndParentId(@RequestParam("customId") @NotBlank String customId, @RequestParam("parentId") @NotBlank String parentId, @RequestParam("resourceType") @NotBlank Integer resourceType);
+    Resource findByCustomIdAndParentId(@RequestParam("customId") @NotBlank String customId,
+        @RequestParam("parentId") @NotBlank String parentId,
+        @RequestParam("resourceType") @NotBlank Integer resourceType);
 
     /**
      * 获得指定资源的父资源

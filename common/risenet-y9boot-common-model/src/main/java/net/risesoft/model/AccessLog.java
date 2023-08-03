@@ -23,7 +23,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class AccessLog implements Serializable {
     private static final long serialVersionUID = 8905896381019503361L;
-    
+
     /**
      * 唯一标识
      */

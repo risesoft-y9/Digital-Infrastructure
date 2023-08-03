@@ -17,7 +17,7 @@ import net.risesoft.y9public.entity.resource.Y9Menu;
 @SuppressWarnings("AlibabaAbstractMethodOrInterfaceMethodMustUseJavadoc")
 @Repository
 @Transactional(value = "rsPublicTransactionManager", readOnly = true)
-//@JaversSpringDataAuditable
+// @JaversSpringDataAuditable
 public interface Y9MenuRepository extends JpaRepository<Y9Menu, String> {
 
     List<Y9Menu> findByNameContainingOrderByTabIndex(String name);

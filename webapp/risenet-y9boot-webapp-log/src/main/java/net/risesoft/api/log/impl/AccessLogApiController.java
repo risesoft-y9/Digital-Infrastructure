@@ -67,7 +67,8 @@ public class AccessLogApiController implements AccessLogApi {
     @Override
     public void asyncSaveLog(AccessLog accessLog) {
         ThreadFactory myThread = new ThreadFactoryBuilder().setNamePrefix("y9-asyncSaveLog").build();
-        ThreadPoolExecutor threadPool = new ThreadPoolExecutor(2, 2, 100, TimeUnit.SECONDS, new LinkedBlockingDeque<>(5), myThread);
+        ThreadPoolExecutor threadPool =
+            new ThreadPoolExecutor(2, 2, 100, TimeUnit.SECONDS, new LinkedBlockingDeque<>(5), myThread);
         threadPool.execute(() -> saveLog(accessLog));
         threadPool.shutdown();
     }
@@ -81,7 +82,8 @@ public class AccessLogApiController implements AccessLogApi {
     @Override
     public void asyncSaveLogByJson(@RequestParam("accessLogJson") @NotBlank String accessLogJson) {
         ThreadFactory myThread = new ThreadFactoryBuilder().setNamePrefix("y9-asyncSaveLogByJson").build();
-        ThreadPoolExecutor threadPool = new ThreadPoolExecutor(2, 2, 100, TimeUnit.SECONDS, new LinkedBlockingDeque<>(5), myThread);
+        ThreadPoolExecutor threadPool =
+            new ThreadPoolExecutor(2, 2, 100, TimeUnit.SECONDS, new LinkedBlockingDeque<>(5), myThread);
         threadPool.execute(() -> saveLogByJson(accessLogJson));
         threadPool.shutdown();
     }
@@ -116,7 +118,8 @@ public class AccessLogApiController implements AccessLogApi {
      */
     @Override
     @GetMapping("/getModuleCount")
-    public Map<String, Object> getModuleCount(String orgId, String orgType, String tenantId, String startDay, String endDay) {
+    public Map<String, Object> getModuleCount(String orgId, String orgType, String tenantId, String startDay,
+        String endDay) {
         Map<String, Object> map = accessLogService.getModuleNameCount(orgId, orgType, tenantId, startDay, endDay);
         return map;
     }
@@ -131,7 +134,8 @@ public class AccessLogApiController implements AccessLogApi {
      */
     @GetMapping("/pageByOperateType")
     @Override
-    public Y9Page<AccessLog> pageByOperateType(@RequestParam("operateType") @NotBlank String operateType, @RequestParam("page") Integer page, @RequestParam("rows") Integer rows) {
+    public Y9Page<AccessLog> pageByOperateType(@RequestParam("operateType") @NotBlank String operateType,
+        @RequestParam("page") Integer page, @RequestParam("rows") Integer rows) {
         Y9Page<AccessLog> map = accessLogService.pageByOperateType(operateType, page, rows);
         return map;
     }
@@ -149,7 +153,10 @@ public class AccessLogApiController implements AccessLogApi {
      */
     @Override
     @GetMapping("/pageByOrgType")
-    public Y9Page<AccessLog> pageByOrgType(@RequestParam("tenantId") @NotBlank String tenantId, @RequestParam("orgId") @NotBlank String orgId, @RequestParam("orgType") @NotBlank String orgType, @RequestParam("operateType") @NotBlank String operateType, @RequestParam("page") Integer page, @RequestParam("rows") Integer rows) {
+    public Y9Page<AccessLog> pageByOrgType(@RequestParam("tenantId") @NotBlank String tenantId,
+        @RequestParam("orgId") @NotBlank String orgId, @RequestParam("orgType") @NotBlank String orgType,
+        @RequestParam("operateType") @NotBlank String operateType, @RequestParam("page") Integer page,
+        @RequestParam("rows") Integer rows) {
         Y9Page<AccessLog> map = accessLogService.pageByOrgType(tenantId, orgId, orgType, operateType, page, rows);
         return map;
     }
@@ -215,9 +222,15 @@ public class AccessLogApiController implements AccessLogApi {
      */
     @Override
     @GetMapping("/search")
-    public Y9Page<AccessLog> search(@RequestParam(value = "logLevel", required = false) String logLevel, @RequestParam(value = "success", required = false) String success, @RequestParam(value = "operateType", required = false) String operateType,
-                                    @RequestParam(value = "operateName", required = false) String operateName, @RequestParam(value = "userName", required = false) String userName, @RequestParam(value = "userHostIp", required = false) String userHostIp, @RequestParam(value = "startTime", required = false) String startTime,
-                                    @RequestParam(value = "endTime", required = false) String endTime, @RequestParam("page") Integer page, @RequestParam("rows") Integer rows) throws ParseException {
+    public Y9Page<AccessLog> search(@RequestParam(value = "logLevel", required = false) String logLevel,
+        @RequestParam(value = "success", required = false) String success,
+        @RequestParam(value = "operateType", required = false) String operateType,
+        @RequestParam(value = "operateName", required = false) String operateName,
+        @RequestParam(value = "userName", required = false) String userName,
+        @RequestParam(value = "userHostIp", required = false) String userHostIp,
+        @RequestParam(value = "startTime", required = false) String startTime,
+        @RequestParam(value = "endTime", required = false) String endTime, @RequestParam("page") Integer page,
+        @RequestParam("rows") Integer rows) throws ParseException {
         LogInfoModel search = new LogInfoModel();
         search.setLogLevel(logLevel);
         search.setOperateName(operateName);
@@ -240,7 +253,9 @@ public class AccessLogApiController implements AccessLogApi {
      */
     @Override
     @GetMapping("/searchLog")
-    public List<String> searchLog(@RequestParam("loginName") @NotBlank String loginName, @RequestParam("startTime") Long startTime, @RequestParam("endTime") Long endTime, @RequestParam("tenantId") String tenantId) {
+    public List<String> searchLog(@RequestParam("loginName") @NotBlank String loginName,
+        @RequestParam("startTime") Long startTime, @RequestParam("endTime") Long endTime,
+        @RequestParam("tenantId") String tenantId) {
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         String sTime = "";
         String eTime = "";

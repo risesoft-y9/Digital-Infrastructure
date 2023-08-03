@@ -87,30 +87,50 @@ public class Y9OrgTreeXmlDataHandlerImpl implements Y9OrgTreeDataHandler {
         updateTime = fmt.format(orgdepartment.getUpdateTime() == null ? new Date() : orgdepartment.getUpdateTime());
         orgDepartment.addElement("createTime").addText(createTime);
         orgDepartment.addElement("updateTime").addText(updateTime);
-        orgDepartment.addElement("description").addText(orgdepartment.getDescription() == null ? "" : orgdepartment.getDescription());
-        orgDepartment.addElement("customId").addText(orgdepartment.getCustomId() == null ? "" : orgdepartment.getCustomId());
+        orgDepartment.addElement("description")
+            .addText(orgdepartment.getDescription() == null ? "" : orgdepartment.getDescription());
+        orgDepartment.addElement("customId")
+            .addText(orgdepartment.getCustomId() == null ? "" : orgdepartment.getCustomId());
         orgDepartment.addElement("disabled").addText(Boolean.toString(orgdepartment.getDisabled()));
         orgDepartment.addElement("dn").addText(orgdepartment.getDn() == null ? "" : orgdepartment.getDn());
-        orgDepartment.addElement("orgType").addText(orgdepartment.getOrgType() == null ? "" : orgdepartment.getOrgType());
-        orgDepartment.addElement("tabIndex").addText(orgdepartment.getTabIndex() == null ? "" : orgdepartment.getTabIndex() + "");
+        orgDepartment.addElement("orgType")
+            .addText(orgdepartment.getOrgType() == null ? "" : orgdepartment.getOrgType());
+        orgDepartment.addElement("tabIndex")
+            .addText(orgdepartment.getTabIndex() == null ? "" : orgdepartment.getTabIndex() + "");
 
-        orgDepartment.addElement("aliasName").addText(orgdepartment.getAliasName() == null ? "" : orgdepartment.getAliasName());
-        orgDepartment.addElement("deptAddress").addText(orgdepartment.getDeptAddress() == null ? "" : orgdepartment.getDeptAddress());
-        orgDepartment.addElement("deptFax").addText(orgdepartment.getDeptFax() == null ? "" : orgdepartment.getDeptFax());
-        orgDepartment.addElement("deptGivenName").addText(orgdepartment.getDeptGivenName() == null ? "" : orgdepartment.getDeptGivenName());
-        orgDepartment.addElement("deptOffice").addText(orgdepartment.getDeptOffice() == null ? "" : orgdepartment.getDeptOffice());
-        orgDepartment.addElement("deptPhone").addText(orgdepartment.getDeptPhone() == null ? "" : orgdepartment.getDeptPhone());
-        orgDepartment.addElement("deptType").addText(orgdepartment.getDeptType() == null ? "" : orgdepartment.getDeptType());
-        orgDepartment.addElement("divisionCode").addText(orgdepartment.getDivisionCode() == null ? "" : orgdepartment.getDivisionCode());
+        orgDepartment.addElement("aliasName")
+            .addText(orgdepartment.getAliasName() == null ? "" : orgdepartment.getAliasName());
+        orgDepartment.addElement("deptAddress")
+            .addText(orgdepartment.getDeptAddress() == null ? "" : orgdepartment.getDeptAddress());
+        orgDepartment.addElement("deptFax")
+            .addText(orgdepartment.getDeptFax() == null ? "" : orgdepartment.getDeptFax());
+        orgDepartment.addElement("deptGivenName")
+            .addText(orgdepartment.getDeptGivenName() == null ? "" : orgdepartment.getDeptGivenName());
+        orgDepartment.addElement("deptOffice")
+            .addText(orgdepartment.getDeptOffice() == null ? "" : orgdepartment.getDeptOffice());
+        orgDepartment.addElement("deptPhone")
+            .addText(orgdepartment.getDeptPhone() == null ? "" : orgdepartment.getDeptPhone());
+        orgDepartment.addElement("deptType")
+            .addText(orgdepartment.getDeptType() == null ? "" : orgdepartment.getDeptType());
+        orgDepartment.addElement("divisionCode")
+            .addText(orgdepartment.getDivisionCode() == null ? "" : orgdepartment.getDivisionCode());
         orgDepartment.addElement("enName").addText(orgdepartment.getEnName() == null ? "" : orgdepartment.getEnName());
-        orgDepartment.addElement("establishDate").addText(orgdepartment.getEstablishDate() == null ? "" : fmt2.format(orgdepartment.getEstablishDate()));
-        orgDepartment.addElement("gradeCode").addText(orgdepartment.getGradeCode() == null ? "" : orgdepartment.getGradeCode());
-        orgDepartment.addElement("tenantId").addText(orgdepartment.getTenantId() == null ? "" : orgdepartment.getTenantId());
-        orgDepartment.addElement("version").addText(orgdepartment.getVersion() == null ? "" : orgdepartment.getVersion() + "");
-        orgDepartment.addElement("zipCode").addText(orgdepartment.getZipCode() == null ? "" : orgdepartment.getZipCode());
-        orgDepartment.addElement("parentId").addText(orgdepartment.getParentId() == null ? "" : orgdepartment.getParentId());
-        orgDepartment.addElement("deptTypeName").addText(orgdepartment.getDeptTypeName() == null ? "" : orgdepartment.getDeptTypeName());
-        orgDepartment.addElement("gradeCodeName").addText(orgdepartment.getGradeCodeName() == null ? "" : orgdepartment.getGradeCodeName());
+        orgDepartment.addElement("establishDate")
+            .addText(orgdepartment.getEstablishDate() == null ? "" : fmt2.format(orgdepartment.getEstablishDate()));
+        orgDepartment.addElement("gradeCode")
+            .addText(orgdepartment.getGradeCode() == null ? "" : orgdepartment.getGradeCode());
+        orgDepartment.addElement("tenantId")
+            .addText(orgdepartment.getTenantId() == null ? "" : orgdepartment.getTenantId());
+        orgDepartment.addElement("version")
+            .addText(orgdepartment.getVersion() == null ? "" : orgdepartment.getVersion() + "");
+        orgDepartment.addElement("zipCode")
+            .addText(orgdepartment.getZipCode() == null ? "" : orgdepartment.getZipCode());
+        orgDepartment.addElement("parentId")
+            .addText(orgdepartment.getParentId() == null ? "" : orgdepartment.getParentId());
+        orgDepartment.addElement("deptTypeName")
+            .addText(orgdepartment.getDeptTypeName() == null ? "" : orgdepartment.getDeptTypeName());
+        orgDepartment.addElement("gradeCodeName")
+            .addText(orgdepartment.getGradeCodeName() == null ? "" : orgdepartment.getGradeCodeName());
         orgDepartment.addElement("bureau").addText(Boolean.toString(orgdepartment.getBureau()));
 
         Element pElements = orgDepartment.addElement("properties");
@@ -163,13 +183,15 @@ public class Y9OrgTreeXmlDataHandlerImpl implements Y9OrgTreeDataHandler {
             updateTime = fmt.format(y9Group.getUpdateTime() == null ? new Date() : y9Group.getUpdateTime());
             groupElement.addElement("createTime").addText(createTime);
             groupElement.addElement("updateTime").addText(updateTime);
-            groupElement.addElement("description").addText(y9Group.getDescription() == null ? "" : y9Group.getDescription());
+            groupElement.addElement("description")
+                .addText(y9Group.getDescription() == null ? "" : y9Group.getDescription());
             groupElement.addElement("customId").addText(y9Group.getCustomId() == null ? "" : y9Group.getCustomId());
             groupElement.addElement("disabled").addText(Boolean.toString(y9Group.getDisabled()));
             groupElement.addElement("dn").addText(y9Group.getDn() == null ? "" : y9Group.getDn());
             groupElement.addElement("orgType").addText(y9Group.getOrgType() == null ? "" : y9Group.getOrgType());
             groupElement.addElement("type").addText(y9Group.getType() == null ? "" : y9Group.getType());
-            groupElement.addElement("tabIndex").addText(y9Group.getTabIndex() == null ? "" : y9Group.getTabIndex() + "");
+            groupElement.addElement("tabIndex")
+                .addText(y9Group.getTabIndex() == null ? "" : y9Group.getTabIndex() + "");
 
             groupElement.addElement("parentId").addText(y9Group.getParentId() == null ? "" : y9Group.getParentId());
 
@@ -185,7 +207,8 @@ public class Y9OrgTreeXmlDataHandlerImpl implements Y9OrgTreeDataHandler {
                 groupInclude.addElement(OrgTypeEnum.PERSON.getEnName()).addText(y9PersonsToGroups.getPersonId());
             }
 
-            List<Y9PositionsToGroups> y9PositionsToGroupsList = y9PositionsToGroupsService.listByGroupId(y9Group.getId());
+            List<Y9PositionsToGroups> y9PositionsToGroupsList =
+                y9PositionsToGroupsService.listByGroupId(y9Group.getId());
             for (Y9PositionsToGroups positionsToGroup : y9PositionsToGroupsList) {
                 groupInclude.addElement(OrgTypeEnum.POSITION.getEnName()).addText(positionsToGroup.getPositionId());
             }
@@ -204,18 +227,26 @@ public class Y9OrgTreeXmlDataHandlerImpl implements Y9OrgTreeDataHandler {
             updateTime = fmt.format(y9Position.getUpdateTime() == null ? new Date() : y9Position.getUpdateTime());
             positionElement.addElement("createTime").addText(createTime);
             positionElement.addElement("updateTime").addText(updateTime);
-            positionElement.addElement("description").addText(y9Position.getDescription() == null ? "" : y9Position.getDescription());
-            positionElement.addElement("customId").addText(y9Position.getCustomId() == null ? "" : y9Position.getCustomId());
+            positionElement.addElement("description")
+                .addText(y9Position.getDescription() == null ? "" : y9Position.getDescription());
+            positionElement.addElement("customId")
+                .addText(y9Position.getCustomId() == null ? "" : y9Position.getCustomId());
             positionElement.addElement("disabled").addText(Boolean.toString(y9Position.getDisabled()));
             positionElement.addElement("dn").addText(y9Position.getDn() == null ? "" : y9Position.getDn());
-            positionElement.addElement("orgType").addText(y9Position.getOrgType() == null ? "" : y9Position.getOrgType());
-            positionElement.addElement("tabIndex").addText(y9Position.getTabIndex() == null ? "" : y9Position.getTabIndex() + "");
+            positionElement.addElement("orgType")
+                .addText(y9Position.getOrgType() == null ? "" : y9Position.getOrgType());
+            positionElement.addElement("tabIndex")
+                .addText(y9Position.getTabIndex() == null ? "" : y9Position.getTabIndex() + "");
 
             positionElement.addElement("duty").addText(y9Position.getDuty() == null ? "" : y9Position.getDuty());
-            positionElement.addElement("dutyLevel").addText(y9Position.getDutyLevel() == null ? "" : y9Position.getDutyLevel() + "");
-            positionElement.addElement("dutyLevelName").addText(y9Position.getDutyLevelName() == null ? "" : y9Position.getDutyLevelName());
-            positionElement.addElement("dutyType").addText(y9Position.getDutyType() == null ? "" : y9Position.getDutyType());
-            positionElement.addElement("parentId").addText(y9Position.getParentId() == null ? "" : y9Position.getParentId());
+            positionElement.addElement("dutyLevel")
+                .addText(y9Position.getDutyLevel() == null ? "" : y9Position.getDutyLevel() + "");
+            positionElement.addElement("dutyLevelName")
+                .addText(y9Position.getDutyLevelName() == null ? "" : y9Position.getDutyLevelName());
+            positionElement.addElement("dutyType")
+                .addText(y9Position.getDutyType() == null ? "" : y9Position.getDutyType());
+            positionElement.addElement("parentId")
+                .addText(y9Position.getParentId() == null ? "" : y9Position.getParentId());
 
             Element pElements = positionElement.addElement("properties");
             String properties = y9Position.getProperties();
@@ -224,7 +255,8 @@ public class Y9OrgTreeXmlDataHandlerImpl implements Y9OrgTreeDataHandler {
             }
 
             Element positionInclude = positionElement.addElement("include");
-            List<Y9PersonsToPositions> orgPositionsPersonsList = y9PersonsToPositionsService.listByPositionId(y9Position.getId());
+            List<Y9PersonsToPositions> orgPositionsPersonsList =
+                y9PersonsToPositionsService.listByPositionId(y9Position.getId());
             for (Y9PersonsToPositions y9PersonsToPositions : orgPositionsPersonsList) {
                 positionInclude.addElement(OrgTypeEnum.PERSON.getEnName()).addText(y9PersonsToPositions.getPersonId());
             }
@@ -243,7 +275,8 @@ public class Y9OrgTreeXmlDataHandlerImpl implements Y9OrgTreeDataHandler {
             updateTime = fmt.format(person.getUpdateTime() == null ? new Date() : person.getUpdateTime());
             personElement.addElement("createTime").addText(createTime);
             personElement.addElement("updateTime").addText(updateTime);
-            personElement.addElement("description").addText(person.getDescription() == null ? "" : person.getDescription());
+            personElement.addElement("description")
+                .addText(person.getDescription() == null ? "" : person.getDescription());
             personElement.addElement("customId").addText(person.getCustomId() == null ? "" : person.getCustomId());
             personElement.addElement("disabled").addText(Boolean.toString(person.getDisabled()));
             personElement.addElement("dn").addText(person.getDn() == null ? "" : person.getDn());
@@ -254,11 +287,14 @@ public class Y9OrgTreeXmlDataHandlerImpl implements Y9OrgTreeDataHandler {
             personElement.addElement("email").addText(person.getEmail() == null ? "" : person.getEmail());
             personElement.addElement("loginName").addText(person.getLoginName() == null ? "" : person.getLoginName());
             personElement.addElement("mobile").addText(person.getMobile() == null ? "" : person.getMobile());
-            personElement.addElement("officeAddress").addText(person.getOfficeAddress() == null ? "" : person.getOfficeAddress());
+            personElement.addElement("officeAddress")
+                .addText(person.getOfficeAddress() == null ? "" : person.getOfficeAddress());
             personElement.addElement("officeFax").addText(person.getOfficeFax() == null ? "" : person.getOfficeFax());
-            personElement.addElement("officePhone").addText(person.getOfficePhone() == null ? "" : person.getOfficePhone());
+            personElement.addElement("officePhone")
+                .addText(person.getOfficePhone() == null ? "" : person.getOfficePhone());
             personElement.addElement("official").addText(person.getOfficial() == null ? "" : person.getOfficial() + "");
-            personElement.addElement("officialType").addText(person.getOfficialType() == null ? "" : person.getOfficialType());
+            personElement.addElement("officialType")
+                .addText(person.getOfficialType() == null ? "" : person.getOfficialType());
             personElement.addElement("password").addText(person.getPassword() == null ? "" : person.getPassword());
             personElement.addElement("sex").addText(person.getSex() == null ? "" : person.getSex() + "");
             personElement.addElement("tenantId").addText(person.getTenantId() == null ? "" : person.getTenantId());
@@ -266,24 +302,31 @@ public class Y9OrgTreeXmlDataHandlerImpl implements Y9OrgTreeDataHandler {
             personElement.addElement("parentId").addText(person.getParentId() == null ? "" : person.getParentId());
             personElement.addElement("guidPath").addText(person.getGuidPath() == null ? "" : person.getParentId());
 
-            personElement.addElement("original").addText(person.getOriginal() == null ? "true" : person.getOriginal() + "");
-            personElement.addElement("originalId").addText(person.getOriginalId() == null ? "" : person.getOriginalId());
+            personElement.addElement("original")
+                .addText(person.getOriginal() == null ? "true" : person.getOriginal() + "");
+            personElement.addElement("originalId")
+                .addText(person.getOriginalId() == null ? "" : person.getOriginalId());
 
             Y9PersonExt ext = y9PersonExtService.findByPersonId(person.getId());
             if (null != ext) {
                 personElement.addElement("city").addText(ext.getCity() == null ? "" : ext.getCity());
                 personElement.addElement("country").addText(ext.getCountry() == null ? "" : ext.getCountry());
                 personElement.addElement("education").addText(ext.getEducation() == null ? "" : ext.getEducation());
-                personElement.addElement("homeAddress").addText(ext.getHomeAddress() == null ? "" : ext.getHomeAddress());
+                personElement.addElement("homeAddress")
+                    .addText(ext.getHomeAddress() == null ? "" : ext.getHomeAddress());
                 personElement.addElement("homePhone").addText(ext.getHomePhone() == null ? "" : ext.getHomePhone());
                 personElement.addElement("idNum").addText(ext.getIdNum() == null ? "" : ext.getIdNum());
                 personElement.addElement("idType").addText(ext.getIdType() == null ? "" : ext.getIdType());
-                personElement.addElement("maritalStatus").addText(ext.getMaritalStatus() == null ? "" : ext.getMaritalStatus() + "");
-                personElement.addElement("policitalStatus").addText(ext.getPoliticalStatus() == null ? "" : ext.getPoliticalStatus());
-                personElement.addElement("professional").addText(ext.getProfessional() == null ? "" : ext.getProfessional());
+                personElement.addElement("maritalStatus")
+                    .addText(ext.getMaritalStatus() == null ? "" : ext.getMaritalStatus() + "");
+                personElement.addElement("policitalStatus")
+                    .addText(ext.getPoliticalStatus() == null ? "" : ext.getPoliticalStatus());
+                personElement.addElement("professional")
+                    .addText(ext.getProfessional() == null ? "" : ext.getProfessional());
                 personElement.addElement("province").addText(ext.getProvince() == null ? "" : ext.getProvince());
                 personElement.addElement("sign").addText(ext.getSign() == null ? "" : new String(ext.getSign()));
-                personElement.addElement("photo").addText(ext.getPhoto() == null ? "" : Y9Base64Util.encode(ext.getPhoto()));
+                personElement.addElement("photo")
+                    .addText(ext.getPhoto() == null ? "" : Y9Base64Util.encode(ext.getPhoto()));
                 if (null != ext.getWorkTime()) {
                     personElement.addElement("worktime").addText(fmt2.format(ext.getWorkTime()));
                 }
@@ -314,18 +357,26 @@ public class Y9OrgTreeXmlDataHandlerImpl implements Y9OrgTreeDataHandler {
         updateTime = fmt.format(y9Organization.getUpdateTime() == null ? new Date() : y9Organization.getUpdateTime());
         orgElement.addElement("createTime").addText(createTime);
         orgElement.addElement("updateTime").addText(updateTime);
-        orgElement.addElement("description").addText(y9Organization.getDescription() != null ? y9Organization.getDescription() : "");
-        orgElement.addElement("customId").addText(y9Organization.getCustomId() != null ? y9Organization.getCustomId() : "");
+        orgElement.addElement("description")
+            .addText(y9Organization.getDescription() != null ? y9Organization.getDescription() : "");
+        orgElement.addElement("customId")
+            .addText(y9Organization.getCustomId() != null ? y9Organization.getCustomId() : "");
         orgElement.addElement("disabled").addText(Boolean.toString(y9Organization.getDisabled()));
         orgElement.addElement("dn").addText(y9Organization.getDn() != null ? y9Organization.getDn() : "");
-        orgElement.addElement("orgType").addText(y9Organization.getOrgType() != null ? y9Organization.getOrgType() : "");
-        orgElement.addElement("tabIndex").addText(y9Organization.getTabIndex() != null ? y9Organization.getTabIndex() + "" : "");
+        orgElement.addElement("orgType")
+            .addText(y9Organization.getOrgType() != null ? y9Organization.getOrgType() : "");
+        orgElement.addElement("tabIndex")
+            .addText(y9Organization.getTabIndex() != null ? y9Organization.getTabIndex() + "" : "");
 
         orgElement.addElement("enName").addText(y9Organization.getEnName() != null ? y9Organization.getEnName() : "");
-        orgElement.addElement("organizationCode").addText(y9Organization.getOrganizationCode() != null ? y9Organization.getOrganizationCode() : "");
-        orgElement.addElement("organizationType").addText(y9Organization.getOrganizationType() != null ? y9Organization.getOrganizationType() : "");
-        orgElement.addElement("tenantId").addText(y9Organization.getTenantId() != null ? y9Organization.getTenantId() : "");
-        orgElement.addElement("version").addText(y9Organization.getVersion() != null ? y9Organization.getVersion() + "" : "");
+        orgElement.addElement("organizationCode")
+            .addText(y9Organization.getOrganizationCode() != null ? y9Organization.getOrganizationCode() : "");
+        orgElement.addElement("organizationType")
+            .addText(y9Organization.getOrganizationType() != null ? y9Organization.getOrganizationType() : "");
+        orgElement.addElement("tenantId")
+            .addText(y9Organization.getTenantId() != null ? y9Organization.getTenantId() : "");
+        orgElement.addElement("version")
+            .addText(y9Organization.getVersion() != null ? y9Organization.getVersion() + "" : "");
         orgElement.addElement("virtual").addText(Boolean.toString(y9Organization.getVirtual()));
 
         Element pElements = orgElement.addElement("properties");
@@ -339,7 +390,8 @@ public class Y9OrgTreeXmlDataHandlerImpl implements Y9OrgTreeDataHandler {
     private void buildPropertyElement(String properties, Element pElements) {
         HashMap<String, String> map = null;
         try {
-            map = Y9JsonUtil.objectMapper.readValue(properties, TypeFactory.defaultInstance().constructMapType(HashMap.class, String.class, String.class));
+            map = Y9JsonUtil.objectMapper.readValue(properties,
+                TypeFactory.defaultInstance().constructMapType(HashMap.class, String.class, String.class));
             for (Map.Entry<String, String> entry : map.entrySet()) {
                 Element pElement = pElements.addElement("property");
                 pElement.addAttribute("name", entry.getKey());
@@ -547,7 +599,8 @@ public class Y9OrgTreeXmlDataHandlerImpl implements Y9OrgTreeDataHandler {
                 errorMsg += message;
             }
         } else if (OrgTypeEnum.DEPARTMENT.getEnName().equals(nodeName)) {
-            String aliasName, deptAddress, deptFax, deptGivenName, deptOffice, deptPhone, deptType, divisionCode, enName;
+            String aliasName, deptAddress, deptFax, deptGivenName, deptOffice, deptPhone, deptType, divisionCode,
+                enName;
             String establishDate, gradeCode, zipCode, deptTypeName, gradeCodeName, bureau;
             Y9Department dept = null;
             try {
@@ -659,7 +712,8 @@ public class Y9OrgTreeXmlDataHandlerImpl implements Y9OrgTreeDataHandler {
             Y9Group group = null;
             String type = "";
             try {
-                Element parentNode = (Element)document.selectSingleNode("/org/Organization[include/Group=\"" + uid + "\"] | /org/Department[include/Group=\"" + uid + "\"]");
+                Element parentNode = (Element)document.selectSingleNode("/org/Organization[include/Group=\"" + uid
+                    + "\"] | /org/Department[include/Group=\"" + uid + "\"]");
                 tabIndex = currentNode.elementText("tabIndex");
                 type = currentNode.elementText("type");
 
@@ -719,7 +773,8 @@ public class Y9OrgTreeXmlDataHandlerImpl implements Y9OrgTreeDataHandler {
                 tabIndex = currentNode.elementText("tabIndex");
 
                 Y9OrgBase parent = null;
-                Element parentNode = (Element)document.selectSingleNode("/org/Organization[include/Position=\"" + uid + "\"] | /org/Department[include/Position=\"" + uid + "\"]");
+                Element parentNode = (Element)document.selectSingleNode("/org/Organization[include/Position=\"" + uid
+                    + "\"] | /org/Department[include/Position=\"" + uid + "\"]");
                 String pid = parentNode.attributeValue("uid");
                 if (OrgTypeEnum.ORGANIZATION.getEnName().equals(parentNode.getName())) {
                     parent = y9OrganizationService.findById(pid);
@@ -761,7 +816,8 @@ public class Y9OrgTreeXmlDataHandlerImpl implements Y9OrgTreeDataHandler {
             }
         } else if (OrgTypeEnum.PERSON.getEnName().equals(nodeName)) {
             String avator, birthday, caid, city, country, education, email, homeAddress, homePhone, idNum;
-            String idType, loginName, maritalStatus, mobile, officeAddress, officeFax, officePhone, official, officialType, password, photo;
+            String idType, loginName, maritalStatus, mobile, officeAddress, officeFax, officePhone, official,
+                officialType, password, photo;
             String policitalStatus, professional, province, sex, sign, worktime, originalId, original;
             Y9Person person = null;
             try {
@@ -805,7 +861,8 @@ public class Y9OrgTreeXmlDataHandlerImpl implements Y9OrgTreeDataHandler {
                 }
 
                 Y9OrgBase parent = null;
-                Element parentNode = (Element)document.selectSingleNode("/org/Organization[include/Person=\"" + uid + "\"] | /org/Department[include/Person=\"" + uid + "\"]");
+                Element parentNode = (Element)document.selectSingleNode("/org/Organization[include/Person=\"" + uid
+                    + "\"] | /org/Department[include/Person=\"" + uid + "\"]");
                 String pid = parentNode.attributeValue("uid");
                 if (OrgTypeEnum.ORGANIZATION.getEnName().equals(parentNode.getName())) {
                     parent = y9OrganizationService.findById(pid);

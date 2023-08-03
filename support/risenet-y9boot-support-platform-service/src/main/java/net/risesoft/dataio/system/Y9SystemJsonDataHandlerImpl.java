@@ -26,13 +26,12 @@ import net.risesoft.y9public.service.role.Y9RoleService;
 @Service
 @RequiredArgsConstructor
 public class Y9SystemJsonDataHandlerImpl implements Y9SystemDataHandler {
-    
+
     private final Y9SystemService y9SystemService;
     private final Y9AppService y9AppService;
     private final Y9MenuService y9MenuService;
     private final Y9OperationService y9OperationService;
     private final Y9RoleService y9RoleService;
-
 
     @Override
     public Y9AppExportModel buildApp(String appId) {
@@ -91,7 +90,8 @@ public class Y9SystemJsonDataHandlerImpl implements Y9SystemDataHandler {
 
     private List<Y9OperationExportModel> buildOperationList(String parentId) {
         List<Y9Operation> y9OperationList = y9OperationService.findByParentId(parentId);
-        List<Y9OperationExportModel> y9OperationExportModelList = Y9ModelConvertUtil.convert(y9OperationList, Y9OperationExportModel.class);
+        List<Y9OperationExportModel> y9OperationExportModelList =
+            Y9ModelConvertUtil.convert(y9OperationList, Y9OperationExportModel.class);
         for (Y9OperationExportModel y9OperationExportModel : y9OperationExportModelList) {
             y9OperationExportModel.setSubMenuList(buildMenuList(y9OperationExportModel.getId()));
             y9OperationExportModel.setSubOperationList(buildOperationList(y9OperationExportModel.getId()));

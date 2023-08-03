@@ -2,6 +2,8 @@ package net.risesoft.api.resource;
 
 import java.util.List;
 
+import javax.validation.constraints.NotBlank;
+
 import org.springframework.context.annotation.Primary;
 import org.springframework.http.MediaType;
 import org.springframework.validation.annotation.Validated;
@@ -23,8 +25,6 @@ import net.risesoft.y9public.repository.resource.Y9AppRepository;
 import net.risesoft.y9public.service.resource.CompositeResourceService;
 import net.risesoft.y9public.service.resource.Y9MenuService;
 import net.risesoft.y9public.service.resource.Y9SystemService;
-
-import javax.validation.constraints.NotBlank;
 
 /**
  * 资源管理组件
@@ -58,7 +58,10 @@ public class ResourceApiImpl implements ResourceApi {
      * @since 9.6.0
      */
     @Override
-    public Resource createMenuResource(@RequestParam("resourceId") @NotBlank String resourceId, @RequestParam("resourceName") @NotBlank String resourceName, @RequestParam("parentResourceId") @NotBlank String parentResourceId, @RequestParam("customId") @NotBlank String customId) {
+    public Resource createMenuResource(@RequestParam("resourceId") @NotBlank String resourceId,
+        @RequestParam("resourceName") @NotBlank String resourceName,
+        @RequestParam("parentResourceId") @NotBlank String parentResourceId,
+        @RequestParam("customId") @NotBlank String customId) {
         Y9ResourceBase parentResource = compositeResourceService.findById(parentResourceId);
         Y9Menu y9Menu = y9MenuService.findById(resourceId);
         if (y9Menu == null) {
@@ -99,8 +102,11 @@ public class ResourceApiImpl implements ResourceApi {
      * @since 9.6.0
      */
     @Override
-    public Resource findByCustomIdAndParentId(@RequestParam("customId") @NotBlank String customId, @RequestParam("parentId") @NotBlank String parentId, @RequestParam("resourceType") @NotBlank Integer resourceType) {
-        return ModelConvertUtil.resourceBaseToResource(compositeResourceService.findByCustomIdAndParentId(customId, parentId, resourceType));
+    public Resource findByCustomIdAndParentId(@RequestParam("customId") @NotBlank String customId,
+        @RequestParam("parentId") @NotBlank String parentId,
+        @RequestParam("resourceType") @NotBlank Integer resourceType) {
+        return ModelConvertUtil.resourceBaseToResource(
+            compositeResourceService.findByCustomIdAndParentId(customId, parentId, resourceType));
     }
 
     /**

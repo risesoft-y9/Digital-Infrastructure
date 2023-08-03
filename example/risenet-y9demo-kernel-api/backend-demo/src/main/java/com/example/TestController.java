@@ -30,7 +30,8 @@ public class TestController {
     private final AppApi appApi;
     private final PersonResourceApi personResourceApi;
 
-    public TestController(OrgUnitApi orgUnitApi, OrganizationApi organizationApi, AppApi appApi, PersonResourceApi personResourceApi) {
+    public TestController(OrgUnitApi orgUnitApi, OrganizationApi organizationApi, AppApi appApi,
+        PersonResourceApi personResourceApi) {
         this.orgUnitApi = orgUnitApi;
         this.organizationApi = organizationApi;
         this.appApi = appApi;
@@ -42,9 +43,11 @@ public class TestController {
         List<Organization> organizationList = organizationApi.listByType(Y9LoginUserHolder.getTenantId(), false);
         for (Organization organization : organizationList) {
             // 组织机构树第二层
-            List<OrgUnit> orgUnitList1 = orgUnitApi.getSubTree(Y9LoginUserHolder.getTenantId(), organization.getId(), TreeTypeConsts.TREE_TYPE_ORG);
+            List<OrgUnit> orgUnitList1 = orgUnitApi.getSubTree(Y9LoginUserHolder.getTenantId(), organization.getId(),
+                TreeTypeConsts.TREE_TYPE_ORG);
             // 组织岗位树第二层
-            List<OrgUnit> orgUnitList2 = orgUnitApi.getSubTree(Y9LoginUserHolder.getTenantId(), organization.getId(), TreeTypeConsts.TREE_TYPE_POSITION);
+            List<OrgUnit> orgUnitList2 = orgUnitApi.getSubTree(Y9LoginUserHolder.getTenantId(), organization.getId(),
+                TreeTypeConsts.TREE_TYPE_POSITION);
         }
 
     }
@@ -66,7 +69,8 @@ public class TestController {
         // 获取当前系统第一个应用，当前用户有权限的菜单
         List<Menu> menuList = new ArrayList<>();
         if (!appList.isEmpty()) {
-            menuList = personResourceApi.listSubMenus(tenantId, personId, AuthorityEnum.BROWSE.getValue(), appList.get(0).getId());
+            menuList = personResourceApi.listSubMenus(tenantId, personId, AuthorityEnum.BROWSE.getValue(),
+                appList.get(0).getId());
         }
         return Y9Result.success(menuList);
     }

@@ -38,7 +38,8 @@ public class CheckController {
 
     private final CasRedisTemplate<Object, Object> redisTemplate;
 
-    public CheckController(Y9UserDao y9UserDao, @Qualifier("y9RedisTemplate") CasRedisTemplate<Object, Object> redisTemplate) {
+    public CheckController(Y9UserDao y9UserDao,
+        @Qualifier("y9RedisTemplate") CasRedisTemplate<Object, Object> redisTemplate) {
         this.y9UserDao = y9UserDao;
         this.redisTemplate = redisTemplate;
     }
@@ -63,7 +64,8 @@ public class CheckController {
             }
 
             if (originalSessionId.equals(newSessionId)) {
-                LOGGER.warn("Your servlet container did not change the session ID when a new session was created. You will not be adequately protected against session-fixation attacks");
+                LOGGER.warn(
+                    "Your servlet container did not change the session ID when a new session was created. You will not be adequately protected against session-fixation attacks");
             }
         }
     }
@@ -92,7 +94,8 @@ public class CheckController {
 
     @ResponseBody
     @RequestMapping(value = "/checkSsoLoginInfo", method = RequestMethod.POST)
-    public Map<String, Object> checkSsoLoginInfo(final RememberMeUsernamePasswordCredential riseCredential, final HttpServletRequest request, final HttpServletResponse response) {
+    public Map<String, Object> checkSsoLoginInfo(final RememberMeUsernamePasswordCredential riseCredential,
+        final HttpServletRequest request, final HttpServletResponse response) {
         Map<String, Object> map = new HashMap<String, Object>();
         map.put("success", true);
         map.put("msg", "认证成功!");
@@ -102,9 +105,9 @@ public class CheckController {
             String username = riseCredential.getUsername();
             String password = riseCredential.toPassword();
             String pwdEcodeType = riseCredential.getPwdEcodeType();
-            
+
             username = Base64Util.decode(username, "Unicode");
-            if(StringUtils.isNotBlank(pwdEcodeType)) {
+            if (StringUtils.isNotBlank(pwdEcodeType)) {
                 Object obj = redisTemplate.opsForValue().get(pwdEcodeType);
                 if (null != obj) {
                     password = RSAUtil.privateDecrypt(password, String.valueOf(obj));

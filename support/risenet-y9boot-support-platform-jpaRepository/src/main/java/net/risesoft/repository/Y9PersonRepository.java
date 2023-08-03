@@ -22,15 +22,15 @@ import net.risesoft.entity.Y9Person;
 @Transactional(value = "rsTenantTransactionManager", readOnly = true)
 // @JaversSpringDataAuditable
 public interface Y9PersonRepository extends JpaRepository<Y9Person, String> {
-    
+
     long countByDisabledAndGuidPathContaining(boolean disabled, String guidPath);
 
     long countByParentId(String parentId);
-    
+
     Page<Y9Person> findByDisabledAndNameContaining(boolean disabled, String userName, Pageable pageable);
-    
+
     Page<Y9Person> findByDisabledAndParentId(boolean disabled, String parentId, Pageable pageable);
-    
+
     List<Y9Person> findByDisabledAndParentIdOrderByTabIndex(boolean disabled, String parentId);
 
     Y9Person findByDisabledFalseAndMobileAndOriginal(String mobile, Boolean original);
@@ -44,7 +44,7 @@ public interface Y9PersonRepository extends JpaRepository<Y9Person, String> {
     Y9Person findByLoginNameAndOriginalTrue(String loginName);
 
     Y9Person findByLoginNameAndParentId(String loginName, String parentId);
-    
+
     List<Y9Person> findByLoginNameAndTenantIdAndOriginal(String loginName, String tenantId, Boolean original);
 
     List<Y9Person> findByMobileAndOriginal(String mobile, Boolean original);
@@ -61,9 +61,11 @@ public interface Y9PersonRepository extends JpaRepository<Y9Person, String> {
 
     Y9Person findByOriginalIdAndParentId(String originalId, String parentId);
 
-    Page<Y9Person> findByParentIdAndDisabledAndNameContaining(String parentId, boolean disabled, String userName, Pageable pageable);
+    Page<Y9Person> findByParentIdAndDisabledAndNameContaining(String parentId, boolean disabled, String userName,
+        Pageable pageable);
 
-    List<Y9Person> findByParentIdAndDisabledAndNameContainingOrderByTabIndex(String parentId, boolean disabled, String name);
+    List<Y9Person> findByParentIdAndDisabledAndNameContainingOrderByTabIndex(String parentId, boolean disabled,
+        String name);
 
     List<Y9Person> findByParentIdOrderByTabIndex(String parentId);
 

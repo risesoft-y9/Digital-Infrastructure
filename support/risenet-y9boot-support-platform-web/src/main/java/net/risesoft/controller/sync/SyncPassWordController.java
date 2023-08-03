@@ -114,7 +114,8 @@ public class SyncPassWordController {
      */
     @RequestMapping("/restPwd/{tenantId}/{loginName}")
     @RiseLog(operationType = OperationTypeEnum.MODIFY, operationName = "根据租户id和登陆名称，更改个人密码")
-    public Y9Result<String> restPwdByTenantIdAndLoginName(@PathVariable String tenantId, @PathVariable String loginName) {
+    public Y9Result<String> restPwdByTenantIdAndLoginName(@PathVariable String tenantId,
+        @PathVariable String loginName) {
         Y9LoginUserHolder.setTenantId(tenantId);
         Y9Person person = y9PersonService.getPersonByLoginNameAndTenantId(loginName, tenantId);
         if (person != null) {

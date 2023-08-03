@@ -47,7 +47,7 @@ public interface Y9PersonExtService {
      * 保存/更新
      *
      * @param y9PersonExt 人员扩展信息对象
-     * @param person      人员对象
+     * @param person 人员对象
      * @return {@link Y9PersonExt}
      */
     Y9PersonExt saveOrUpdate(Y9PersonExt y9PersonExt, Y9Person person);
@@ -56,7 +56,7 @@ public interface Y9PersonExtService {
      * 保存个人头像信息
      *
      * @param person 人员对象
-     * @param photo  照片字节数组
+     * @param photo 照片字节数组
      * @return {@link Y9PersonExt}
      */
     Y9PersonExt savePersonPhoto(Y9Person person, byte[] photo);
@@ -65,7 +65,7 @@ public interface Y9PersonExtService {
      * 保存个人头像信息
      *
      * @param person 人员对象
-     * @param photo  照片的base64
+     * @param photo 照片的base64
      * @return {@link Y9PersonExt}
      */
     Y9PersonExt savePersonPhoto(Y9Person person, String photo);
@@ -74,7 +74,7 @@ public interface Y9PersonExtService {
      * 保存个人头像信息
      *
      * @param personId 人员id
-     * @param photo  照片的base64
+     * @param photo 照片的base64
      * @return {@link Y9PersonExt}
      */
     Y9PersonExt savePersonPhoto(String personId, String photo);

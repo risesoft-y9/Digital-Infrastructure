@@ -13,7 +13,8 @@ import net.risesoft.api.org.OrgUnitApi;
  * @date 2022/2/10
  * @since 9.6.0
  */
-@FeignClient(contextId = "OrgUnitApiClient", name = "y9platform", url = "${y9.common.orgBaseUrl}", path = "/services/rest/orgUnit")
+@FeignClient(contextId = "OrgUnitApiClient", name = "y9platform", url = "${y9.common.orgBaseUrl}",
+    path = "/services/rest/orgUnit")
 public interface OrgUnitApiClient extends OrgUnitApi {
 
 }

@@ -52,6 +52,6 @@ public class RememberMeUsernamePasswordCredential extends UsernamePasswordCreden
     private String clientDiskId;
 
     private String clientHostName;
-    
+
     private String pwdEcodeType;
 }

@@ -22,7 +22,7 @@ import net.risesoft.y9public.repository.tenant.Y9TenantSystemRepository;
 @Transactional(value = "rsPublicTransactionManager", readOnly = true)
 @RequiredArgsConstructor
 public class Y9TenantSystemManagerImpl implements Y9TenantSystemManager {
-    
+
     private final Y9TenantSystemRepository y9TenantSystemRepository;
 
     @Override
@@ -39,7 +39,7 @@ public class Y9TenantSystemManagerImpl implements Y9TenantSystemManager {
     public void delete(String id) {
         y9TenantSystemRepository.deleteById(id);
     }
-    
+
     @Override
     public String getDataSourceIdByTenantIdAndSystemId(String tenantId, String systemId) {
         Y9TenantSystem y9TenantSystem = y9TenantSystemRepository.findByTenantIdAndSystemId(tenantId, systemId);

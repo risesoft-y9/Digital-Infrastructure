@@ -34,7 +34,7 @@ public interface Y9OrgBasesToRolesRepository extends JpaRepository<Y9OrgBasesToR
     @Modifying
     @Transactional(readOnly = false)
     void deleteByRoleId(String roleId);
-    
+
     List<Y9OrgBasesToRoles> findByOrgIdAndNegativeOrderByOrgOrderDesc(String orgId, Boolean negative);
 
     List<Y9OrgBasesToRoles> findByParentId(String parentId);

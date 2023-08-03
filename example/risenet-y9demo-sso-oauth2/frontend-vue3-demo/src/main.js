@@ -22,7 +22,7 @@ const env = {
 }
 
 const app = createApp(App)
-app.use(sso, { env })
+app.use(sso, {env})
 app.use(router)
 app.mount('#app')
 export const $y9_SSO = app.$y9_SSO;

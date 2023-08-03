@@ -14,7 +14,7 @@ import net.risesoft.permission.annotation.HasAuthorities;
 @Slf4j
 public class HasAuthoritiesAdvisor extends StaticMethodMatcherPointcutAdvisor {
     private static final long serialVersionUID = 1790605582584464487L;
-    
+
     public HasAuthoritiesAdvisor() {
         LOGGER.debug("HasAuthoritiesAdvisor init............");
     }

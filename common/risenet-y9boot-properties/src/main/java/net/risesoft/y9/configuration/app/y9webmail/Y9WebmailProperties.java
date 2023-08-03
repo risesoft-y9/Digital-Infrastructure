@@ -38,5 +38,5 @@ public class Y9WebmailProperties {
      * james jmx 管理端口
      */
     private Integer jmxPort = 9999;
-    
+
 }

@@ -62,12 +62,14 @@ public class Y9CustomGroupServiceImpl implements Y9CustomGroupService {
 
     @Override
     public Y9CustomGroup getById(String id) {
-        return customGroupRepository.findById(id).orElseThrow(() -> Y9ExceptionUtil.notFoundException(CustomGroupErrorCodeEnum.CUSTOM_GROUP_NOT_FOUND, id));
+        return customGroupRepository.findById(id)
+            .orElseThrow(() -> Y9ExceptionUtil.notFoundException(CustomGroupErrorCodeEnum.CUSTOM_GROUP_NOT_FOUND, id));
     }
 
     @Override
     public List<Y9CustomGroup> listByPersonId(String personId) {
-        return StringUtils.isNotEmpty(personId) ? customGroupRepository.findByPersonIdOrderByTabIndexAsc(personId) : null;
+        return StringUtils.isNotEmpty(personId) ? customGroupRepository.findByPersonIdOrderByTabIndexAsc(personId)
+            : null;
     }
 
     @Override

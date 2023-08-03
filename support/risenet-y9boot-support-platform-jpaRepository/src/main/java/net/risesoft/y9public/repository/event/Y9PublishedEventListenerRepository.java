@@ -15,6 +15,7 @@ import net.risesoft.y9public.entity.event.Y9PublishedEventListener;
  */
 @Repository
 @Transactional(value = "rsPublicTransactionManager", readOnly = true)
-public interface Y9PublishedEventListenerRepository extends JpaRepository<Y9PublishedEventListener, String>, JpaSpecificationExecutor<Y9PublishedEventListener> {
+public interface Y9PublishedEventListenerRepository
+    extends JpaRepository<Y9PublishedEventListener, String>, JpaSpecificationExecutor<Y9PublishedEventListener> {
 
 }

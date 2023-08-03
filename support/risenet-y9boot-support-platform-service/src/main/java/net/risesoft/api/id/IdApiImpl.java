@@ -21,7 +21,7 @@ import net.risesoft.id.Y9IdGenerator;
 @RestController
 @RequestMapping(value = "/services/rest/id", produces = MediaType.APPLICATION_JSON_VALUE)
 public class IdApiImpl implements IdApi {
-    
+
     private final Y9IdGenerator y9IdGenerator;
 
     public IdApiImpl(@Qualifier("snowflakeIdGenerator") Y9IdGenerator y9IdGenerator) {

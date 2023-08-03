@@ -18,7 +18,7 @@ import net.risesoft.y9public.entity.tenant.Y9Tenant;
 @SuppressWarnings("AlibabaAbstractMethodOrInterfaceMethodMustUseJavadoc")
 @Repository
 @Transactional(value = "rsPublicTransactionManager", readOnly = true)
-//@JaversSpringDataAuditable
+// @JaversSpringDataAuditable
 public interface Y9TenantRepository extends JpaRepository<Y9Tenant, String>, JpaSpecificationExecutor<Y9Tenant> {
 
     List<Y9Tenant> findByName(String name);

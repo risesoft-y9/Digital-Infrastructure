@@ -73,7 +73,8 @@ public class OrgController {
     @RiseLog(operationName = "根据组织机构id，获取组织机构信息")
     @RequestMapping(value = "/getOrganizationById")
     public Y9Result<Organization> getOrganizationById(@NotBlank @RequestParam String orgId) {
-        return Y9Result.success(Y9ModelConvertUtil.convert(y9OrganizationService.getById(orgId), Organization.class), "根据组织机构id，获取组织机构信息成功！");
+        return Y9Result.success(Y9ModelConvertUtil.convert(y9OrganizationService.getById(orgId), Organization.class),
+            "根据组织机构id，获取组织机构信息成功！");
     }
 
     /**
@@ -135,7 +136,8 @@ public class OrgController {
      */
     @RiseLog(operationName = "获取组织机构树")
     @RequestMapping(value = "/getTreeNoPerson")
-    public Y9Result<List<Y9OrgBase>> getTreeNoPerson(@RequestParam String id, @RequestParam String treeType, @RequestParam boolean disabled) {
+    public Y9Result<List<Y9OrgBase>> getTreeNoPerson(@RequestParam String id, @RequestParam String treeType,
+        @RequestParam boolean disabled) {
         List<Y9OrgBase> treeList = compositeOrgBaseService.getTree(id, treeType, false, disabled);
         return Y9Result.success(treeList, "获取机构树成功！");
     }
@@ -150,12 +152,14 @@ public class OrgController {
     @RequestMapping(value = "/list")
     public Y9Result<List<Organization>> list(@RequestParam(required = false) boolean virtual) {
         if (Y9LoginUserHolder.getUserInfo().isGlobalManager()) {
-            return Y9Result.success(Y9ModelConvertUtil.convert(y9OrganizationService.list(virtual), Organization.class), "获取组织架构列表成功！");
+            return Y9Result.success(Y9ModelConvertUtil.convert(y9OrganizationService.list(virtual), Organization.class),
+                "获取组织架构列表成功！");
         } else {
             List<Y9Organization> orgList = y9OrganizationService.list(false);
             Y9Department managerDept = y9DepartmentService.getById(Y9LoginUserHolder.getUserInfo().getParentId());
             String mapping = managerDept.getGuidPath();
-            List<Y9Organization> authOrgList = orgList.stream().filter(org -> mapping.contains(org.getGuidPath())).collect(Collectors.toList());
+            List<Y9Organization> authOrgList =
+                orgList.stream().filter(org -> mapping.contains(org.getGuidPath())).collect(Collectors.toList());
             return Y9Result.success(Y9ModelConvertUtil.convert(authOrgList, Organization.class), "获取组织架构列表成功！");
         }
     }
@@ -222,7 +226,8 @@ public class OrgController {
      */
     @RiseLog(operationName = "同步数据", operationType = OperationTypeEnum.ADD)
     @PostMapping(value = "/sync")
-    public Y9Result<String> sync(@RequestParam String syncId, @RequestParam String orgType, @RequestParam Integer needRecursion) {
+    public Y9Result<String> sync(@RequestParam String syncId, @RequestParam String orgType,
+        @RequestParam Integer needRecursion) {
         compositeOrgBaseService.sync(syncId, orgType, needRecursion);
         return Y9Result.success(null, "发送同步数据事件完成");
     }
@@ -242,7 +247,8 @@ public class OrgController {
         List<Y9OrgBase> treeList = new ArrayList<>();
         if (userInfo.isGlobalManager()) {
             treeList = compositeOrgBaseService.treeSearch(name, treeType);
-        } else if (userInfo.getManagerLevel().equals(ManagerLevelEnum.SYSTEM_MANAGER.getValue()) || userInfo.getManagerLevel().equals(ManagerLevelEnum.SECURITY_MANAGER.getValue())) {
+        } else if (userInfo.getManagerLevel().equals(ManagerLevelEnum.SYSTEM_MANAGER.getValue())
+            || userInfo.getManagerLevel().equals(ManagerLevelEnum.SECURITY_MANAGER.getValue())) {
             treeList = compositeOrgBaseService.treeSearch(name, treeType);
         }
         return Y9Result.success(treeList, "获取机构树成功！");

@@ -19,7 +19,7 @@ public interface Y9GroupService {
      * 创建用户组
      *
      * @param y9Group 用户组对象
-     * @param parent  父组织节点
+     * @param parent 父组织节点
      * @return {@link Y9Group}
      */
     Y9Group createGroup(Y9Group y9Group, Y9OrgBase parent);
@@ -140,7 +140,7 @@ public interface Y9GroupService {
     /**
      * 保存或者更新用户组扩展信息
      *
-     * @param groupId    用户组id
+     * @param groupId 用户组id
      * @param properties 扩展信息
      * @return {@link Y9Group}
      */

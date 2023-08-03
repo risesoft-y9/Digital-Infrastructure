@@ -26,7 +26,7 @@ import net.risesoft.entity.identity.Y9IdentityToRoleBase;
 @NoArgsConstructor
 @Data
 public class Y9PositionToRole extends Y9IdentityToRoleBase {
-    
+
     private static final long serialVersionUID = -8527781135976550912L;
 
     /** 身份(岗位)唯一标识 */

@@ -22,11 +22,12 @@ import net.risesoft.y9public.repository.tenant.Y9TenantRepository;
 @Transactional(value = "rsPublicTransactionManager", readOnly = true)
 @RequiredArgsConstructor
 public class Y9TenantManagerImpl implements Y9TenantManager {
-    
+
     private final Y9TenantRepository y9TenantRepository;
 
     @Override
     public Y9Tenant getById(String id) {
-        return y9TenantRepository.findById(id).orElseThrow(() -> Y9ExceptionUtil.notFoundException(TenantErrorCodeEnum.TENANT_NOT_FOUND, id));
+        return y9TenantRepository.findById(id)
+            .orElseThrow(() -> Y9ExceptionUtil.notFoundException(TenantErrorCodeEnum.TENANT_NOT_FOUND, id));
     }
 }

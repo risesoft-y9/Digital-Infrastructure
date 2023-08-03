@@ -15,6 +15,7 @@ import net.risesoft.entity.permission.Y9DataRowPermission;
  */
 @Repository
 @Transactional(value = "rsTenantTransactionManager", readOnly = true)
-public interface Y9DataRowPermissionRepository extends JpaRepository<Y9DataRowPermission, String>, JpaSpecificationExecutor<Y9DataRowPermission> {
+public interface Y9DataRowPermissionRepository
+    extends JpaRepository<Y9DataRowPermission, String>, JpaSpecificationExecutor<Y9DataRowPermission> {
 
 }

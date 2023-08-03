@@ -21,7 +21,7 @@ import net.risesoft.y9.json.Y9JsonUtil;
 @ConditionalOnProperty(name = "y9.feature.security.enabled", havingValue = "true", matchIfMissing = true)
 @Slf4j
 public class Y9SecurityConfiguration {
-    
+
     @Bean
     @ConditionalOnProperty(name = "y9.feature.security.cors.enabled", havingValue = "true", matchIfMissing = true)
     public FilterRegistrationBean<CorsFilter> corsFilter(Y9Properties y9Properties) {
@@ -46,7 +46,8 @@ public class Y9SecurityConfiguration {
     @Bean
     @ConditionalOnProperty(name = "y9.feature.security.xss.enabled", havingValue = "true", matchIfMissing = true)
     public FilterRegistrationBean<XSSFilter> xssFilter(Y9Properties y9Properties) {
-        LOGGER.info("XSSFilter init. Configuration:{}", Y9JsonUtil.writeValueAsString(y9Properties.getFeature().getSecurity().getXss()));
+        LOGGER.info("XSSFilter init. Configuration:{}",
+            Y9JsonUtil.writeValueAsString(y9Properties.getFeature().getSecurity().getXss()));
 
         FilterRegistrationBean<XSSFilter> filterBean = new FilterRegistrationBean<>();
         filterBean.setFilter(new XSSFilter());
@@ -59,7 +60,8 @@ public class Y9SecurityConfiguration {
     @Bean
     @ConditionalOnProperty(name = "y9.feature.security.csrf.enabled", havingValue = "true", matchIfMissing = true)
     public FilterRegistrationBean<CSRFFilter> csrfFilter(Y9Properties y9Properties) {
-        LOGGER.info("CSRFFilter init. Configuration:{}", Y9JsonUtil.writeValueAsString(y9Properties.getFeature().getSecurity().getCsrf()));
+        LOGGER.info("CSRFFilter init. Configuration:{}",
+            Y9JsonUtil.writeValueAsString(y9Properties.getFeature().getSecurity().getCsrf()));
 
         FilterRegistrationBean<CSRFFilter> filterBean = new FilterRegistrationBean<>();
         filterBean.setFilter(new CSRFFilter());

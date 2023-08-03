@@ -46,7 +46,7 @@ public class OAuth20IntrospectionAccessTokenSuccessResponse extends BaseOAuth20I
 
     @JsonProperty("grant_type")
     private String grantType;
-    
+
     private String attr; // y9 add
 
     @JsonProperty("cnf")

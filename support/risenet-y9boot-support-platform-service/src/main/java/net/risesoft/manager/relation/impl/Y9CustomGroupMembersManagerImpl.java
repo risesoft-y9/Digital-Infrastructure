@@ -36,7 +36,7 @@ public class Y9CustomGroupMembersManagerImpl implements Y9CustomGroupMembersMana
     private final Y9CustomGroupMembersRepository customGroupMembersRepository;
 
     private final CompositeOrgBaseManager compositeOrgBaseManager;
-    
+
     @Override
     @Transactional(readOnly = false)
     public void save(List<String> orgUnitList, String groupId) {
@@ -90,7 +90,8 @@ public class Y9CustomGroupMembersManagerImpl implements Y9CustomGroupMembersMana
     @Override
     @Transactional(readOnly = false)
     public void share(String sourceGroupId, String targetGroupId) {
-        List<Y9CustomGroupMember> customGroupMemberList = customGroupMembersRepository.findByGroupIdOrderByTabIndexAsc(sourceGroupId);
+        List<Y9CustomGroupMember> customGroupMemberList =
+            customGroupMembersRepository.findByGroupIdOrderByTabIndexAsc(sourceGroupId);
         for (Y9CustomGroupMember customGroupMember : customGroupMemberList) {
             Y9CustomGroupMember cgm = new Y9CustomGroupMember();
             Y9BeanUtil.copyProperties(customGroupMember, cgm);

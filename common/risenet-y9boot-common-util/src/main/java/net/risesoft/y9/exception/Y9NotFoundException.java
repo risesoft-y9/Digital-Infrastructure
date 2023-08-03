@@ -7,7 +7,7 @@ package net.risesoft.y9.exception;
  * @date 2022/3/3
  */
 public class Y9NotFoundException extends Y9BusinessException {
-    
+
     private static final long serialVersionUID = -6973279273770807478L;
 
     public Y9NotFoundException(int code, String message) {

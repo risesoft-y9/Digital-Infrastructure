@@ -137,5 +137,5 @@ public class EmailDTO implements Serializable {
      * @ignore
      */
     private Integer type;
-    
+
 }

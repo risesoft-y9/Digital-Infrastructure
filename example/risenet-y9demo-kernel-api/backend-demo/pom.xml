@@ -35,14 +35,14 @@
             <url>https://svn.youshengyun.com:9900/nexus/repository/maven-public/</url>
         </pluginRepository>
     </pluginRepositories>
-    
+
     <dependencies>
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-web</artifactId>
         </dependency>
 
-		<!-- 单点登录-开始 -->
+        <!-- 单点登录-开始 -->
         <dependency>
             <groupId>net.risesoft</groupId>
             <artifactId>risenet-y9boot-starter-sso-oauth2-resource</artifactId>
@@ -50,14 +50,14 @@
         </dependency>
         <!-- 单点登录-结束 -->
 
-		<!-- 接口调用-开始 -->
+        <!-- 接口调用-开始 -->
         <dependency>
             <groupId>net.risesoft</groupId>
             <artifactId>risenet-y9boot-rest-feignClient-platform</artifactId>
             <version>v9.6.3-SNAPSHOT</version>
         </dependency>
         <!-- 接口调用-结束 -->
-        
+
         <!-- 日志组件-开始 -->
         <dependency>
             <groupId>net.risesoft</groupId>
@@ -65,7 +65,7 @@
             <version>v9.6.3-SNAPSHOT</version>
         </dependency>
         <!-- 日志组件-结束 -->
-        
+
     </dependencies>
 
     <build>

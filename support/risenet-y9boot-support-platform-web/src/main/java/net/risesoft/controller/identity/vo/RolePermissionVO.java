@@ -1,8 +1,8 @@
 package net.risesoft.controller.identity.vo;
 
-import lombok.Data;
-
 import java.util.List;
+
+import lombok.Data;
 
 /**
  * 主体的拥有的某个系统所有角色权限详情
@@ -16,7 +16,7 @@ public class RolePermissionVO {
 
     /** 系统中文名称 */
     private String systemCnName;
-    
+
     /** 资源列表 */
     private List<App> appList;
 
@@ -28,12 +28,12 @@ public class RolePermissionVO {
         /** 权限详细列表 */
         private List<PermissionDetail> permissionDetailList;
     }
-    
+
     @Data
     public static class PermissionDetail {
         /** 角色名 */
         private String roleName;
-        
+
         /** 角色描述 */
         private String roleDescription;
     }

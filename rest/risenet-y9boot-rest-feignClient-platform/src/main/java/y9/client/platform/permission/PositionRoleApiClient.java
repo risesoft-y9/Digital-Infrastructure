@@ -13,7 +13,8 @@ import net.risesoft.api.permission.PositionRoleApi;
  * @date 2022/2/10
  * @since 9.6.0
  */
-@FeignClient(contextId = "PositionRoleApiClient", name = "y9platform", url = "${y9.common.orgBaseUrl}", path = "/services/rest/positionRole", primary = false)
+@FeignClient(contextId = "PositionRoleApiClient", name = "y9platform", url = "${y9.common.orgBaseUrl}",
+    path = "/services/rest/positionRole", primary = false)
 public interface PositionRoleApiClient extends PositionRoleApi {
 
 }

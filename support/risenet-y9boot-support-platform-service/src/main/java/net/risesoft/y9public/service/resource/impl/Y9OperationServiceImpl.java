@@ -48,7 +48,7 @@ public class Y9OperationServiceImpl implements Y9OperationService {
     private final Y9PositionToResourceAndAuthorityRepository y9PositionToResourceAndAuthorityRepository;
 
     private final Y9OperationManager y9OperationManager;
-    
+
     @Override
     @Transactional(readOnly = false)
     public void delete(List<String> idList) {
@@ -64,7 +64,8 @@ public class Y9OperationServiceImpl implements Y9OperationService {
         // 删除关联数据
         Y9Context.publishEvent(new Y9EntityDeletedEvent<>(y9Operation));
 
-        List<Y9TenantApp> y9TenantAppList = y9TenantAppRepository.findByAppIdAndTenancy(y9Operation.getAppId(), Boolean.TRUE);
+        List<Y9TenantApp> y9TenantAppList =
+            y9TenantAppRepository.findByAppIdAndTenancy(y9Operation.getAppId(), Boolean.TRUE);
         for (Y9TenantApp y9TenantApp : y9TenantAppList) {
             Y9LoginUserHolder.setTenantId(y9TenantApp.getTenantId());
 
@@ -72,7 +73,7 @@ public class Y9OperationServiceImpl implements Y9OperationService {
             y9PersonToResourceAndAuthorityRepository.deleteByResourceId(y9Operation.getId());
             y9PositionToResourceAndAuthorityRepository.deleteByResourceId(y9Operation.getId());
         }
-        
+
         y9OperationManager.delete(y9Operation);
     }
 

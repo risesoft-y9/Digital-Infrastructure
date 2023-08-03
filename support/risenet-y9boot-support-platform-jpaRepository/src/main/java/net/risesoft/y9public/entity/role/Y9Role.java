@@ -30,7 +30,7 @@ import net.risesoft.enums.Y9RoleTypeEnum;
 @NoArgsConstructor
 @Data
 public class Y9Role extends BaseEntity implements Comparable<Y9Role> {
-    
+
     private static final long serialVersionUID = 4830591654511156717L;
 
     /** 主键 */

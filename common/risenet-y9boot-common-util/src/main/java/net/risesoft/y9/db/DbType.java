@@ -36,7 +36,8 @@ public enum DbType {
 
     trino(1 << 39),
 
-    ingres(0), cloudscape(0), timesten(0), as400(0), sapdb(0), kdb(0), log4jdbc(0), xugu(0), firebirdsql(0), JSQLConnect(0), JTurbo(0), interbase(0), pointbase(0), edbc(0), mimer(0),
+    ingres(0), cloudscape(0), timesten(0), as400(0), sapdb(0), kdb(0), log4jdbc(0), xugu(0), firebirdsql(0),
+    JSQLConnect(0), JTurbo(0), interbase(0), pointbase(0), edbc(0), mimer(0),
 
     ;
 
@@ -74,6 +75,7 @@ public enum DbType {
         this.mask = mask;
         this.hashCode64 = FnvHash.hashCode64(name());
     }
+
     public final boolean equals(String other) {
         return this == of(other);
     }

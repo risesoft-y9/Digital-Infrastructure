@@ -77,7 +77,8 @@ public interface Y9AuthorizationService {
      * @param principalTypeEnum 授权主体类型 {@link AuthorizationPrincipalTypeEnum}
      * @return {@link List}<{@link Y9Authorization}>
      */
-    List<Y9Authorization> listByPrincipalIdAndPrincipalType(String principalId, AuthorizationPrincipalTypeEnum principalTypeEnum);
+    List<Y9Authorization> listByPrincipalIdAndPrincipalType(String principalId,
+        AuthorizationPrincipalTypeEnum principalTypeEnum);
 
     /**
      * 根据principalIds和resourceId查询
@@ -154,8 +155,8 @@ public interface Y9AuthorizationService {
     /**
      * 根据资源id分页查询授权记录
      *
-     * @param pageQuery     分页查询
-     * @param resourceId    资源id
+     * @param pageQuery 分页查询
+     * @param resourceId 资源id
      * @param principalType
      * @return {@link Page}<{@link Y9Authorization}>
      */

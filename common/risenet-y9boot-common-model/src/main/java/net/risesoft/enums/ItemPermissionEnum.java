@@ -5,6 +5,7 @@ import lombok.Getter;
 
 /**
  * 拒绝类型
+ * 
  * @author qinman
  * @date 2022/12/20
  */
@@ -31,7 +32,7 @@ public enum ItemPermissionEnum {
     ORGANIZATION_VIRTUAL(9, "虚拟组织机构"),
     /**  */
     DEPARTMENT_VIRTUAL(10, "虚拟组织机构下的部门");
-    
+
     private final Integer value;
     private final String name;
 }

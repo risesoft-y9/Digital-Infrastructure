@@ -10,6 +10,7 @@ import net.risesoft.y9.configuration.feature.oauth2.resource.Y9Oauth2ResourcePro
 
 /**
  * oauth2 配置
+ * 
  * @author liansen
  * @date 2022/09/28
  */

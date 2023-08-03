@@ -30,7 +30,7 @@ import net.risesoft.base.BaseEntity;
 public class Y9Job extends BaseEntity {
 
     private static final long serialVersionUID = 3545620512323461654L;
-    
+
     /** 主键id */
     @Id
     @Column(name = "ID", length = 38, nullable = false)

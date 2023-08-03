@@ -71,5 +71,5 @@ public class Y9Oauth2ResourceProperties {
      */
     @NestedConfigurationProperty
     private Y9Oauth2ResourceOpaqueTokenProperties opaque = new Y9Oauth2ResourceOpaqueTokenProperties();
-    
+
 }

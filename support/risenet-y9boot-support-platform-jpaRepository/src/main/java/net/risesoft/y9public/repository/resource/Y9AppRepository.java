@@ -22,7 +22,7 @@ import net.risesoft.y9public.entity.resource.Y9App;
 @SuppressWarnings("AlibabaAbstractMethodOrInterfaceMethodMustUseJavadoc")
 @Repository
 @Transactional(value = "rsPublicTransactionManager", readOnly = true)
-//@JaversSpringDataAuditable
+// @JaversSpringDataAuditable
 public interface Y9AppRepository extends JpaRepository<Y9App, String>, JpaSpecificationExecutor<Y9App> {
 
     long countBySystemId(String systemId);

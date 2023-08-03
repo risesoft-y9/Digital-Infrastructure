@@ -1,14 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <weblogic-web-app>
-	<container-descriptor>
-		<show-archived-real-path-enabled>true</show-archived-real-path-enabled>
-		<prefer-application-packages>
-			<package-name>org.bouncycastle.*</package-name>
-			<package-name>org.joda.*</package-name>
-			<package-name>org.hibernate.*</package-name>
-			<package-name>com.google.*</package-name>
-			<package-name>com.fasterxml.*</package-name>
-			<package-name>org.slf4j.*</package-name>
-		</prefer-application-packages>
-	</container-descriptor>
+    <container-descriptor>
+        <show-archived-real-path-enabled>true</show-archived-real-path-enabled>
+        <prefer-application-packages>
+            <package-name>org.bouncycastle.*</package-name>
+            <package-name>org.joda.*</package-name>
+            <package-name>org.hibernate.*</package-name>
+            <package-name>com.google.*</package-name>
+            <package-name>com.fasterxml.*</package-name>
+            <package-name>org.slf4j.*</package-name>
+        </prefer-application-packages>
+    </container-descriptor>
 </weblogic-web-app>

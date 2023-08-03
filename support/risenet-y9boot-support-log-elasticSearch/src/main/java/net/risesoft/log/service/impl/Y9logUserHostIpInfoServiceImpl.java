@@ -54,7 +54,8 @@ public class Y9logUserHostIpInfoServiceImpl implements Y9logUserHostIpInfoServic
     @Override
     public List<String> listUserHostIpByUserHostIpLike(String userHostIp) {
         List<Y9logUserHostIpInfo> list = y9logUserHostIpInfoRepository.findByUserHostIpStartingWith(userHostIp);
-        List<String> userHostIpList = list.stream().map(Y9logUserHostIpInfo::getUserHostIp).collect(Collectors.toList());
+        List<String> userHostIpList =
+            list.stream().map(Y9logUserHostIpInfo::getUserHostIp).collect(Collectors.toList());
         return userHostIpList;
     }
 

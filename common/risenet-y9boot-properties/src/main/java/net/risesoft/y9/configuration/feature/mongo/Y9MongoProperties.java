@@ -32,5 +32,5 @@ public class Y9MongoProperties {
      * 租户库 Repository 包扫描路径
      */
     private String packagesToScanRepositoryTenant;
-    
+
 }

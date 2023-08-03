@@ -44,26 +44,33 @@ import y9.autoconfiguration.jpa.JpaPublicConfiguration;
 @Import({RegisterJsonTypeAdaptersPlugin.class})
 @AutoConfigureAfter({HibernateJpaAutoConfiguration.class, JpaPublicConfiguration.class})
 @AutoConfigureBefore(JaversSqlAutoConfiguration.class)
-@ComponentScan(basePackages = {"net.risesoft.repository", "net.risesoft.y9public.repository", "org.javers.spring.repository"})
+@ComponentScan(
+    basePackages = {"net.risesoft.repository", "net.risesoft.y9public.repository", "org.javers.spring.repository"})
 @Slf4j
 public class JaversSpringJpaApplicationConfig {
 
     @Autowired(required = false)
     private List<JaversBuilderPlugin> plugins = new ArrayList<>();
-    
+
     @Bean
-    public DialectName y9javersSqlDialectName(@Qualifier(value = "rsPublicEntityManagerFactory") EntityManagerFactory entityManagerFactory) {
+    public DialectName y9javersSqlDialectName(
+        @Qualifier(value = "rsPublicEntityManagerFactory") EntityManagerFactory entityManagerFactory) {
         SessionFactoryImplementor sessionFactory = entityManagerFactory.unwrap(SessionFactoryImplementor.class);
         Dialect hibernateDialect = sessionFactory.getJdbcServices().getDialect();
         LOGGER.info("detected Hibernate dialect: {}", hibernateDialect.getClass().getSimpleName());
         DialectMapper dialectMapper = new DialectMapper();
         return dialectMapper.map(hibernateDialect);
     }
-    
+
     @Bean(name = "JaversFromStarter")
     @ConditionalOnMissingBean
-    public Javers javers(JaversSqlRepository sqlRepository, @Qualifier("rsPublicTransactionManager") PlatformTransactionManager transactionManager, JaversSqlProperties javersSqlProperties) {
-        JaversBuilder javersBuilder = TransactionalJpaJaversBuilder.javers().withTxManager(transactionManager).registerJaversRepository(sqlRepository).withObjectAccessHook(javersSqlProperties.createObjectAccessHookInstance()).withProperties(javersSqlProperties);
+    public Javers javers(JaversSqlRepository sqlRepository,
+        @Qualifier("rsPublicTransactionManager") PlatformTransactionManager transactionManager,
+        JaversSqlProperties javersSqlProperties) {
+        JaversBuilder javersBuilder = TransactionalJpaJaversBuilder.javers().withTxManager(transactionManager)
+            .registerJaversRepository(sqlRepository)
+            .withObjectAccessHook(javersSqlProperties.createObjectAccessHookInstance())
+            .withProperties(javersSqlProperties);
 
         plugins.forEach(plugin -> plugin.beforeAssemble(javersBuilder));
 
@@ -72,19 +79,22 @@ public class JaversSpringJpaApplicationConfig {
 
     @Bean(name = "JaversSqlRepositoryFromStarter")
     @ConditionalOnMissingBean
-    public JaversSqlRepository javersSqlRepository(ConnectionProvider connectionProvider, JaversSqlProperties javersSqlProperties, DialectName y9javersSqlDialectName) {
-        return SqlRepositoryBuilder.sqlRepository()
-                .withSchema(javersSqlProperties.getSqlSchema())
-                .withConnectionProvider(connectionProvider)
-                .withDialect(y9javersSqlDialectName)
-                .withSchemaManagementEnabled(javersSqlProperties.isSqlSchemaManagementEnabled())
-            .withGlobalIdCacheDisabled(javersSqlProperties.isSqlGlobalIdCacheDisabled()).withGlobalIdTableName(javersSqlProperties.getSqlGlobalIdTableName()).withCommitTableName(javersSqlProperties.getSqlCommitTableName()).withSnapshotTableName(javersSqlProperties.getSqlSnapshotTableName())
+    public JaversSqlRepository javersSqlRepository(ConnectionProvider connectionProvider,
+        JaversSqlProperties javersSqlProperties, DialectName y9javersSqlDialectName) {
+        return SqlRepositoryBuilder.sqlRepository().withSchema(javersSqlProperties.getSqlSchema())
+            .withConnectionProvider(connectionProvider).withDialect(y9javersSqlDialectName)
+            .withSchemaManagementEnabled(javersSqlProperties.isSqlSchemaManagementEnabled())
+            .withGlobalIdCacheDisabled(javersSqlProperties.isSqlGlobalIdCacheDisabled())
+            .withGlobalIdTableName(javersSqlProperties.getSqlGlobalIdTableName())
+            .withCommitTableName(javersSqlProperties.getSqlCommitTableName())
+            .withSnapshotTableName(javersSqlProperties.getSqlSnapshotTableName())
             .withCommitPropertyTableName(javersSqlProperties.getSqlCommitPropertyTableName()).build();
     }
 
     @Bean(name = "JpaHibernateConnectionProvider")
     @ConditionalOnMissingBean
-    public ConnectionProvider jpaConnectionProvider(@Qualifier(value = "rsPublicEntityManagerFactory") EntityManagerFactory entityManagerFactory) {
+    public ConnectionProvider jpaConnectionProvider(
+        @Qualifier(value = "rsPublicEntityManagerFactory") EntityManagerFactory entityManagerFactory) {
         return new Y9JpaHibernateConnectionProvider(entityManagerFactory.createEntityManager());
     }
 }

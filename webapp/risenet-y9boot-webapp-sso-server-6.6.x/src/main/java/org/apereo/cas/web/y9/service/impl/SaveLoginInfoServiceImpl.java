@@ -63,15 +63,19 @@ public class SaveLoginInfoServiceImpl implements SaveLoginInfoService {
                 List<Y9User> users = null;
                 if ("mobile".equals(loginType)) {
                     if (StringUtils.hasText(deptId)) {
-                        users = y9UserDao.findByTenantShortNameAndMobileAndParentId(tenantShortName, userLoginName, deptId);
+                        users =
+                            y9UserDao.findByTenantShortNameAndMobileAndParentId(tenantShortName, userLoginName, deptId);
                     } else {
-                        users = y9UserDao.findByTenantShortNameAndMobileAndOriginal(tenantShortName, userLoginName, Boolean.TRUE);
+                        users = y9UserDao.findByTenantShortNameAndMobileAndOriginal(tenantShortName, userLoginName,
+                            Boolean.TRUE);
                     }
                 } else {
                     if (StringUtils.hasText(deptId)) {
-                        users = y9UserDao.findByTenantShortNameAndLoginNameAndParentId(tenantShortName, userLoginName, deptId);
+                        users = y9UserDao.findByTenantShortNameAndLoginNameAndParentId(tenantShortName, userLoginName,
+                            deptId);
                     } else {
-                        users = y9UserDao.findByTenantShortNameAndLoginNameAndOriginal(tenantShortName, userLoginName, Boolean.TRUE);
+                        users = y9UserDao.findByTenantShortNameAndLoginNameAndOriginal(tenantShortName, userLoginName,
+                            Boolean.TRUE);
                     }
                 }
                 if (users != null && users.size() > 0) {

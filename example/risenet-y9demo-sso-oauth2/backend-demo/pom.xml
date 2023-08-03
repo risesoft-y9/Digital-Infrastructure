@@ -35,7 +35,7 @@
             <url>https://svn.youshengyun.com:9900/nexus/repository/maven-public/</url>
         </pluginRepository>
     </pluginRepositories>
-    
+
     <dependencies>
         <dependency>
             <groupId>org.springframework.boot</groupId>
@@ -47,7 +47,7 @@
             <artifactId>risenet-y9boot-starter-sso-oauth2-resource</artifactId>
             <version>v9.6.3-SNAPSHOT</version>
         </dependency>
-        
+
     </dependencies>
 
     <build>

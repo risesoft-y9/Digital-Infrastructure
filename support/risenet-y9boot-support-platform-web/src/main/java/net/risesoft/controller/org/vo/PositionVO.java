@@ -13,7 +13,7 @@ import lombok.Data;
 @Data
 public class PositionVO implements Serializable {
     private static final long serialVersionUID = -236845145715510206L;
-    
+
     private String id;
     private String name;
     private Integer capacity;

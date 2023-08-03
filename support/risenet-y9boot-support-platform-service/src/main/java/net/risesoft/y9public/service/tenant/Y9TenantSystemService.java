@@ -156,7 +156,8 @@ public interface Y9TenantSystemService {
      * @param tenantId 租户id
      * @return {@link Map}<{@link String}, {@link Object}>
      */
-    Map<String, Object> saveAndInitializedTenantSystem(Y9TenantSystem y9TenantSystem, Y9System y9System, String tenantId);
+    Map<String, Object> saveAndInitializedTenantSystem(Y9TenantSystem y9TenantSystem, Y9System y9System,
+        String tenantId);
 
     /**
      * 保存租户租用的系统

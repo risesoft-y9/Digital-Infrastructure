@@ -30,7 +30,7 @@ public enum AuthorizationPrincipalTypeEnum {
 
     private final String name;
     private final Integer value;
-    
+
     public static Integer getValueByName(String name) {
         for (AuthorizationPrincipalTypeEnum orgTypeEnum : AuthorizationPrincipalTypeEnum.values()) {
             if (orgTypeEnum.getName().equals(name)) {

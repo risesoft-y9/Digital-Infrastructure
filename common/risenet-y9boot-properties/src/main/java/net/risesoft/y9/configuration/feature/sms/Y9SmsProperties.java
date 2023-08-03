@@ -32,5 +32,5 @@ public class Y9SmsProperties {
      * jtds 密码
      */
     private String jtdsPassword = "4l7xUhYlg8j4GlYUiLclkE2uTRk0fp71";
-    
+
 }

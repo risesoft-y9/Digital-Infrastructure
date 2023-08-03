@@ -68,8 +68,11 @@ public class InitializeLoginAction extends AbstractAction {
         val service = WebUtils.getService(requestContext);
         if (service == null && !casProperties.getSso().isAllowMissingServiceParameter()) {
             val request = WebUtils.getHttpServletRequestFromExternalWebflowContext(requestContext);
-            LOGGER.warn("No service authentication request is available at [{}]. CAS is configured to disable the flow.", request.getRequestURL());
-            throw new NoSuchFlowExecutionException(requestContext.getFlowExecutionContext().getKey(), new UnauthorizedServiceException("screen.service.required.message", "Service is required"));
+            LOGGER.warn(
+                "No service authentication request is available at [{}]. CAS is configured to disable the flow.",
+                request.getRequestURL());
+            throw new NoSuchFlowExecutionException(requestContext.getFlowExecutionContext().getKey(),
+                new UnauthorizedServiceException("screen.service.required.message", "Service is required"));
         }
 
         HttpServletRequest request = WebUtils.getHttpServletRequestFromExternalWebflowContext(requestContext);
@@ -81,7 +84,8 @@ public class InitializeLoginAction extends AbstractAction {
             }
             if (StringUtils.isNotBlank(tgtId)) {
                 TicketGrantingTicket ticket = ticketRegistry.getTicket(tgtId, TicketGrantingTicket.class);
-                logoutManager.performLogout(SingleLogoutExecutionRequest.builder().ticketGrantingTicket(ticket).httpServletRequest(Optional.of(request)).httpServletResponse(Optional.of(response)).build());
+                logoutManager.performLogout(SingleLogoutExecutionRequest.builder().ticketGrantingTicket(ticket)
+                    .httpServletRequest(Optional.of(request)).httpServletResponse(Optional.of(response)).build());
             }
         } catch (Exception e) {
             LOGGER.error(e.getMessage(), e);

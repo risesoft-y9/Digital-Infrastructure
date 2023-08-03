@@ -26,7 +26,7 @@ import net.risesoft.base.BaseEntity;
 @NoArgsConstructor
 @Data
 public class Y9PublishedEventListener extends BaseEntity {
-    
+
     private static final long serialVersionUID = 6579436882467488027L;
 
     /** 主键 */

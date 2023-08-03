@@ -19,6 +19,6 @@ public enum PositionTypeEnum {
     POSITION("position"),
     /** 节点 */
     NODE("node");
-    
+
     private final String name;
 }

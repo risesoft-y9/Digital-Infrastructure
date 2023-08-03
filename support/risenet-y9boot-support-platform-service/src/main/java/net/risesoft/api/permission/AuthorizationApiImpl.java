@@ -1,5 +1,7 @@
 package net.risesoft.api.permission;
 
+import javax.validation.constraints.NotBlank;
+
 import org.springframework.context.annotation.Primary;
 import org.springframework.http.MediaType;
 import org.springframework.validation.annotation.Validated;
@@ -18,8 +20,6 @@ import net.risesoft.service.authorization.Y9AuthorizationService;
 import net.risesoft.service.org.Y9PersonService;
 import net.risesoft.y9.Y9LoginUserHolder;
 
-import javax.validation.constraints.NotBlank;
-
 /**
  * 权限管理组件
  *
@@ -35,7 +35,7 @@ import javax.validation.constraints.NotBlank;
 @RequestMapping(value = "/services/rest/authorization", produces = MediaType.APPLICATION_JSON_VALUE)
 @RequiredArgsConstructor
 public class AuthorizationApiImpl implements AuthorizationApi {
-    
+
     private final Y9AuthorizationService y9AuthorizationService;
     private final Y9PersonService y9PersonService;
 
@@ -50,9 +50,11 @@ public class AuthorizationApiImpl implements AuthorizationApi {
      * @since 9.6.0
      */
     @Override
-    public void save(@RequestParam("tenantId") @NotBlank String tenantId, @RequestParam("personId") @NotBlank String personId, @RequestParam("resourceId") @NotBlank String resourceId, @RequestParam("roleId") @NotBlank String roleId, @RequestParam("authority") @NotBlank Integer authority) {
+    public void save(@RequestParam("tenantId") @NotBlank String tenantId,
+        @RequestParam("personId") @NotBlank String personId, @RequestParam("resourceId") @NotBlank String resourceId,
+        @RequestParam("roleId") @NotBlank String roleId, @RequestParam("authority") @NotBlank Integer authority) {
         Y9LoginUserHolder.setTenantId(tenantId);
-        
+
         Y9Person y9Person = y9PersonService.getById(personId);
         Y9Authorization y9Authorization = new Y9Authorization();
         y9Authorization.setAuthorizer(y9Person.getName());

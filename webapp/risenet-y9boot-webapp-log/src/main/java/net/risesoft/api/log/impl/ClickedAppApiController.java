@@ -1,5 +1,7 @@
 package net.risesoft.api.log.impl;
 
+import javax.validation.constraints.NotBlank;
+
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -14,8 +16,6 @@ import net.risesoft.log.service.Y9ClickedAppService;
 import net.risesoft.model.ClickedApp;
 import net.risesoft.y9.json.Y9JsonUtil;
 
-import javax.validation.constraints.NotBlank;
-
 /**
  * 应用点击详情
  *
@@ -27,7 +27,7 @@ import javax.validation.constraints.NotBlank;
 @Slf4j
 @RequiredArgsConstructor
 public class ClickedAppApiController implements ClickedAppApi {
-    
+
     private final Y9ClickedAppService y9ClickedAppService;
 
     /**

@@ -1,11 +1,11 @@
 package net.risesoft.api.log;
 
+import javax.validation.constraints.NotBlank;
+
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
-
-import javax.validation.constraints.NotBlank;
 
 /**
  * 个人常用应用组件
@@ -26,7 +26,8 @@ public interface CommonAppForPersonApi {
      * @since 9.6.0
      */
     @GetMapping(value = "/getAppNames")
-    String getAppNamesByPersonId(@RequestParam("tenantId") String tenantId, @RequestParam("personId") @NotBlank String personId);
+    String getAppNamesByPersonId(@RequestParam("tenantId") String tenantId,
+        @RequestParam("personId") @NotBlank String personId);
 
     /**
      * 根据用户id，从日志中提取常用应用名称列表
@@ -37,7 +38,8 @@ public interface CommonAppForPersonApi {
      * @since 9.6.0
      */
     @GetMapping(value = "/getAppNamesFromLog")
-    String getAppNamesByPersonIdFromLog(@RequestParam("tenantId") String tenantId, @RequestParam("personId") @NotBlank String personId);
+    String getAppNamesByPersonIdFromLog(@RequestParam("tenantId") String tenantId,
+        @RequestParam("personId") @NotBlank String personId);
 
     /**
      * 半年应用点击次数

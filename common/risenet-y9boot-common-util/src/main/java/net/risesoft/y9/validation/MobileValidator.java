@@ -14,7 +14,7 @@ import cn.hutool.core.lang.Validator;
  * @date 2022/08/04
  */
 public class MobileValidator implements ConstraintValidator<Mobile, String> {
-    
+
     @Override
     public boolean isValid(String mobile, ConstraintValidatorContext constraintValidatorContext) {
         if (StringUtils.isEmpty(mobile)) {

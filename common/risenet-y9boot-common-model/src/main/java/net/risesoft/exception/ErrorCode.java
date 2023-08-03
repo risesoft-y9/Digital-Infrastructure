@@ -13,7 +13,6 @@ package net.risesoft.exception;
  */
 public interface ErrorCode {
 
-
     /**
      * 获取错误码 <br>
      * 由{两位系统码}-{两位模块码}-{两位错误序号}组成
@@ -25,7 +24,6 @@ public interface ErrorCode {
         String errorIndexStr = String.format("%02d", moduleErrorCode());
         return Integer.parseInt(systemCode() + moduleCodeStr + errorIndexStr);
     }
-
 
     /**
      * 系统代码<br>
@@ -45,5 +43,5 @@ public interface ErrorCode {
      * @return {@link String}
      */
     String getDescription();
-    
+
 }

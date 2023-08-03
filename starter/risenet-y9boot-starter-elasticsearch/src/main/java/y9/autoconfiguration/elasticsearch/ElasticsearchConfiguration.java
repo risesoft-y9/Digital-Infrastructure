@@ -31,7 +31,9 @@ import co.elastic.clients.transport.ElasticsearchTransport;
 import co.elastic.clients.transport.rest_client.RestClientTransport;
 
 @Configuration
-@EnableElasticsearchRepositories(basePackages = {"${y9.feature.elasticsearch.packagesToScanRepositoryPublic}"}, includeFilters = {@ComponentScan.Filter(classes = ElasticsearchRepository.class, type = FilterType.ASSIGNABLE_TYPE)})
+@EnableElasticsearchRepositories(basePackages = {"${y9.feature.elasticsearch.packagesToScanRepositoryPublic}"},
+    includeFilters = {
+        @ComponentScan.Filter(classes = ElasticsearchRepository.class, type = FilterType.ASSIGNABLE_TYPE)})
 public class ElasticsearchConfiguration extends AbstractElasticsearchConfiguration {
 
     @Autowired
@@ -52,10 +54,13 @@ public class ElasticsearchConfiguration extends AbstractElasticsearchConfigurati
         String connectionTimeout = environment.getProperty("spring.elasticsearch.rest.connection-timeout");
         String readTimeout = environment.getProperty("spring.elasticsearch.rest.read-timeout");
         if (StringUtils.hasText(username) && StringUtils.hasText(password)) {
-            ClientConfiguration clientConfiguration = ClientConfiguration.builder().connectedTo(uri).withConnectTimeout(Duration.ofMinutes(5)).withSocketTimeout(Duration.ofMinutes(5)).withBasicAuth(username, password).build();
+            ClientConfiguration clientConfiguration =
+                ClientConfiguration.builder().connectedTo(uri).withConnectTimeout(Duration.ofMinutes(5))
+                    .withSocketTimeout(Duration.ofMinutes(5)).withBasicAuth(username, password).build();
             return RestClients.create(clientConfiguration).rest();
         } else {
-            ClientConfiguration clientConfiguration = ClientConfiguration.builder().connectedTo(uri).withConnectTimeout(Duration.ofMinutes(5)).withSocketTimeout(Duration.ofMinutes(5)).build();
+            ClientConfiguration clientConfiguration = ClientConfiguration.builder().connectedTo(uri)
+                .withConnectTimeout(Duration.ofMinutes(5)).withSocketTimeout(Duration.ofMinutes(5)).build();
             return RestClients.create(clientConfiguration).rest();
         }
     }
@@ -70,25 +75,24 @@ public class ElasticsearchConfiguration extends AbstractElasticsearchConfigurati
         list.add(documentEntityPath);
         return list;
     }
-    
+
     @Bean
-    public ElasticsearchClient client(){
-    	String[] uri = environment.getProperty("spring.elasticsearch.rest.uris").split(":");
-    	String username = environment.getProperty("spring.elasticsearch.rest.username");
+    public ElasticsearchClient client() {
+        String[] uri = environment.getProperty("spring.elasticsearch.rest.uris").split(":");
+        String username = environment.getProperty("spring.elasticsearch.rest.username");
         String password = environment.getProperty("spring.elasticsearch.rest.password");
         if (StringUtils.hasText(username) && StringUtils.hasText(password)) {
-        	BasicCredentialsProvider credentialsProvider = new BasicCredentialsProvider();
+            BasicCredentialsProvider credentialsProvider = new BasicCredentialsProvider();
             credentialsProvider.setCredentials(AuthScope.ANY, new UsernamePasswordCredentials(username, password));
 
             RestClient httpClient = RestClient.builder(new HttpHost(uri[0], Integer.valueOf(uri[1])))
-                .setHttpClientConfigCallback(hc -> hc.setDefaultCredentialsProvider(credentialsProvider))
-                .build();
+                .setHttpClientConfigCallback(hc -> hc.setDefaultCredentialsProvider(credentialsProvider)).build();
 
             ElasticsearchTransport transport = new RestClientTransport(httpClient, new JacksonJsonpMapper());
             return new ElasticsearchClient(transport);
-        }else {
-        	RestClient client = RestClient.builder(new HttpHost(uri[0], Integer.valueOf(uri[1]))).build();
-            ElasticsearchTransport transport = new RestClientTransport(client,new JacksonJsonpMapper());
+        } else {
+            RestClient client = RestClient.builder(new HttpHost(uri[0], Integer.valueOf(uri[1]))).build();
+            ElasticsearchTransport transport = new RestClientTransport(client, new JacksonJsonpMapper());
             return new ElasticsearchClient(transport);
         }
     }

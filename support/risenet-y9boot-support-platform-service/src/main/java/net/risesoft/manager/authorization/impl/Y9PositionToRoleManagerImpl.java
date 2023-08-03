@@ -25,7 +25,7 @@ import net.risesoft.y9public.entity.role.Y9Role;
 @Transactional(value = "rsTenantTransactionManager", readOnly = true)
 @RequiredArgsConstructor
 public class Y9PositionToRoleManagerImpl implements Y9PositionToRoleManager {
-    
+
     private final Y9PositionToRoleRepository y9PositionToRoleRepository;
 
     @Override
@@ -39,7 +39,7 @@ public class Y9PositionToRoleManagerImpl implements Y9PositionToRoleManager {
             }
         }
     }
-    
+
     /**
      * 移除失效的关联记录（即在最新计算的角色中不再包含的关联记录）
      *
@@ -48,22 +48,23 @@ public class Y9PositionToRoleManagerImpl implements Y9PositionToRoleManager {
      */
     private void removeInvalid(String positionId, List<Y9Role> newCalculatedY9RoleList) {
         List<String> originY9RoleIdList = this.listRoleIdByPositionId(positionId);
-        List<String> newCalculatedY9RoleIdList = newCalculatedY9RoleList.stream().map(Y9Role::getId).collect(Collectors.toList());
+        List<String> newCalculatedY9RoleIdList =
+            newCalculatedY9RoleList.stream().map(Y9Role::getId).collect(Collectors.toList());
         for (String roleId : originY9RoleIdList) {
             if (!newCalculatedY9RoleIdList.contains(roleId)) {
                 this.removeByPositionIdAndRoleId(positionId, roleId);
             }
         }
     }
-    
+
     public List<String> listRoleIdByPositionId(String positionId) {
         return y9PositionToRoleRepository.listRoleIdsByPositionId(positionId);
     }
-    
+
     public Y9PositionToRole findByPositionIdAndRoleId(String positionId, String roleId) {
         return y9PositionToRoleRepository.findByPositionIdAndRoleId(positionId, roleId);
     }
-    
+
     @Transactional(readOnly = false)
     public void removeByPositionIdAndRoleId(String positionId, String roleId) {
         Y9PositionToRole y9PositionToRole = y9PositionToRoleRepository.findByPositionIdAndRoleId(positionId, roleId);

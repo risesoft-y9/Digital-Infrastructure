@@ -61,7 +61,7 @@ import net.risesoft.y9public.service.tenant.Y9TenantSystemService;
 @Component
 @Slf4j
 public class OnApplicationReady implements ApplicationListener<ApplicationReadyEvent> {
-    
+
     private final JdbcTemplate jdbcTemplate4Public;
     private final Y9TenantService y9TenantService;
     private final Y9SystemService y9SystemService;
@@ -77,10 +77,13 @@ public class OnApplicationReady implements ApplicationListener<ApplicationReadyE
     private final Y9OptionClassService y9OptionClassService;
     private final Y9JobService y9JobService;
 
-    public OnApplicationReady(@Qualifier("jdbcTemplate4Public") JdbcTemplate jdbcTemplate4Public, Y9TenantService y9TenantService, Y9SystemService y9SystemService
-            , Y9AppService y9AppService, Y9DataSourceService y9DataSourceService, Y9OrganizationService y9OrganizationService, Y9PersonService y9PersonService
-            , Y9ManagerService y9ManagerService, Y9TenantDataSourceLookup y9TenantDataSourceLookup, Y9TenantSystemService y9TenantSystemService, Y9Properties y9Config
-            , Y9RoleService y9RoleService, Y9OptionClassService y9OptionClassService, Y9JobService y9JobService) {
+    public OnApplicationReady(@Qualifier("jdbcTemplate4Public") JdbcTemplate jdbcTemplate4Public,
+        Y9TenantService y9TenantService, Y9SystemService y9SystemService, Y9AppService y9AppService,
+        Y9DataSourceService y9DataSourceService, Y9OrganizationService y9OrganizationService,
+        Y9PersonService y9PersonService, Y9ManagerService y9ManagerService,
+        Y9TenantDataSourceLookup y9TenantDataSourceLookup, Y9TenantSystemService y9TenantSystemService,
+        Y9Properties y9Config, Y9RoleService y9RoleService, Y9OptionClassService y9OptionClassService,
+        Y9JobService y9JobService) {
         this.jdbcTemplate4Public = jdbcTemplate4Public;
         this.y9TenantService = y9TenantService;
         this.y9SystemService = y9SystemService;
@@ -132,7 +135,7 @@ public class OnApplicationReady implements ApplicationListener<ApplicationReadyE
             y9DataSource.setMaxActive(dataSource.getMaxActive());
             y9DataSource.setMinIdle(dataSource.getMinIdle());
             y9DataSourceService.save(y9DataSource);
-            
+
             try {
                 // 增加了租户，创建租户的数据库
                 jdbcTemplate4Public.execute("CREATE DATABASE y9_default DEFAULT CHARACTER SET utf8 COLLATE utf8_bin");
@@ -254,13 +257,18 @@ public class OnApplicationReady implements ApplicationListener<ApplicationReadyE
             LOGGER.warn(e.getMessage(), e);
         }
         Y9LoginUserHolder.setTenantId(DefaultIdConsts.TENANT_ID);
-        y9OrganizationService.createOrganization(DefaultIdConsts.TENANT_ID, DefaultIdConsts.ORGANIZATION_VIRTUAL_ID, "组织", Boolean.TRUE);
-        y9OrganizationService.createOrganization(DefaultIdConsts.TENANT_ID, DefaultIdConsts.ORGANIZATION_TENANT_ID, "业务组织", Boolean.FALSE);
+        y9OrganizationService.createOrganization(DefaultIdConsts.TENANT_ID, DefaultIdConsts.ORGANIZATION_VIRTUAL_ID,
+            "组织", Boolean.TRUE);
+        y9OrganizationService.createOrganization(DefaultIdConsts.TENANT_ID, DefaultIdConsts.ORGANIZATION_TENANT_ID,
+            "业务组织", Boolean.FALSE);
         y9JobService.create(DefaultIdConsts.JOB_ID, "普通职位", "001");
         createPerson(DefaultIdConsts.PERSON_ID, DefaultIdConsts.TENANT_ID, DefaultIdConsts.ORGANIZATION_TENANT_ID);
-        y9ManagerService.createSystemManager(DefaultIdConsts.SYSTEM_MANAGER_ID, DefaultIdConsts.TENANT_ID, DefaultIdConsts.ORGANIZATION_VIRTUAL_ID);
-        y9ManagerService.createSecurityManager(DefaultIdConsts.SECURITY_MANAGER_ID, DefaultIdConsts.TENANT_ID, DefaultIdConsts.ORGANIZATION_VIRTUAL_ID);
-        y9ManagerService.createAuditManager(DefaultIdConsts.AUDIT_MANAGER_ID, DefaultIdConsts.TENANT_ID, DefaultIdConsts.ORGANIZATION_VIRTUAL_ID);
+        y9ManagerService.createSystemManager(DefaultIdConsts.SYSTEM_MANAGER_ID, DefaultIdConsts.TENANT_ID,
+            DefaultIdConsts.ORGANIZATION_VIRTUAL_ID);
+        y9ManagerService.createSecurityManager(DefaultIdConsts.SECURITY_MANAGER_ID, DefaultIdConsts.TENANT_ID,
+            DefaultIdConsts.ORGANIZATION_VIRTUAL_ID);
+        y9ManagerService.createAuditManager(DefaultIdConsts.AUDIT_MANAGER_ID, DefaultIdConsts.TENANT_ID,
+            DefaultIdConsts.ORGANIZATION_VIRTUAL_ID);
         y9OptionClassService.initOptionClass();
     }
 

@@ -46,7 +46,8 @@ public class HistoryConfig {
                 map.put("deptId", deptId);
                 String userHostIp = "";
                 try {
-                    ServletRequestAttributes sra = (ServletRequestAttributes)RequestContextHolder.getRequestAttributes();
+                    ServletRequestAttributes sra =
+                        (ServletRequestAttributes)RequestContextHolder.getRequestAttributes();
                     if (sra != null) {
                         HttpServletRequest request = sra.getRequest();
                         userHostIp = Y9Context.getIpAddr(request);

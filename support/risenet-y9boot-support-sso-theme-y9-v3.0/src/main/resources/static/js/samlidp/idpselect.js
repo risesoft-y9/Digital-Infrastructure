@@ -633,14 +633,14 @@ function IdPSelectUI() {
          * This section is customized and specific to Apereo CAS.
          */
         if (aN != null && aT.myEntityID !== null) {
-            aN.forEach(function(el) {
+            aN.forEach(function (el) {
                 if (!aT.myEntityID.includes(el)) {
                     O(A("fatal.wrongEntityId") + '"' + aN + '" != "' + aT.myEntityID + '"');
                     return false
                 }
             });
         }
-         
+
         if (null === B || B.length === 0) {
             O(A("fatal.noReturnURL"));
             return false

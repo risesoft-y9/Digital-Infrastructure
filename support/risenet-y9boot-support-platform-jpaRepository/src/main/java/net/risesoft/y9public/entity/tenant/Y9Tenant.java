@@ -31,7 +31,7 @@ import net.risesoft.enums.TenantTypeEnum;
 @NoArgsConstructor
 @Data
 public class Y9Tenant extends BaseEntity {
-    
+
     private static final long serialVersionUID = 2987678891147576268L;
 
     /** 主键id */

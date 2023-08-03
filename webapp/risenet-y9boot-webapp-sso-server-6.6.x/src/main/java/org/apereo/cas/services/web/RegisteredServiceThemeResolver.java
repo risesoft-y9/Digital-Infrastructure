@@ -52,7 +52,8 @@ public class RegisteredServiceThemeResolver extends AbstractThemeResolver {
 
     private final ObjectProvider<CasConfigurationProperties> casProperties;
 
-    protected String determineThemeNameToChoose(final HttpServletRequest request, final Service service, final WebBasedRegisteredService rService) {
+    protected String determineThemeNameToChoose(final HttpServletRequest request, final Service service,
+        final WebBasedRegisteredService rService) {
         HttpResponse response = null;
         try {
             LOGGER.debug("Service [{}] is configured to use a custom theme [{}]", rService, rService.getTheme());
@@ -60,13 +61,16 @@ public class RegisteredServiceThemeResolver extends AbstractThemeResolver {
             val resource = ResourceUtils.getRawResourceFrom(rService.getTheme());
             if (resource instanceof FileSystemResource && resource.exists()) {
                 LOGGER.debug("Executing groovy script to determine theme for [{}]", service.getId());
-                val result = ScriptingUtils.executeGroovyScript(resource, new Object[] {service, rService, request.getQueryString(), HttpRequestUtils.getRequestHeaders(request), LOGGER}, String.class, true);
+                val result = ScriptingUtils.executeGroovyScript(resource, new Object[] {service, rService,
+                    request.getQueryString(), HttpRequestUtils.getRequestHeaders(request), LOGGER}, String.class, true);
                 return StringUtils.defaultIfBlank(result, getDefaultThemeName());
             }
             if (resource instanceof UrlResource) {
                 val url = resource.getURL().toExternalForm();
                 LOGGER.debug("Executing URL [{}] to determine theme for [{}]", url, service.getId());
-                val exec = HttpUtils.HttpExecutionRequest.builder().parameters(CollectionUtils.wrap("service", service.getId())).url(url).method(HttpMethod.GET).build();
+                val exec = HttpUtils.HttpExecutionRequest.builder()
+                    .parameters(CollectionUtils.wrap("service", service.getId())).url(url).method(HttpMethod.GET)
+                    .build();
                 response = HttpUtils.execute(exec);
                 if (response != null && response.getStatusLine().getStatusCode() == HttpStatus.SC_OK) {
                     val result = IOUtils.toString(response.getEntity().getContent(), StandardCharsets.UTF_8);
@@ -78,7 +82,8 @@ public class RegisteredServiceThemeResolver extends AbstractThemeResolver {
                 LOGGER.trace("Found custom theme [{}] for service [{}]", theme, rService);
                 return theme;
             }
-            LOGGER.warn("Custom theme [{}] for service [{}] cannot be located. Falling back to default theme...", rService.getTheme(), rService.getName());
+            LOGGER.warn("Custom theme [{}] for service [{}] cannot be located. Falling back to default theme...",
+                rService.getTheme(), rService.getName());
         } catch (final Exception e) {
             LoggingUtils.error(LOGGER, e);
         } finally {
@@ -98,12 +103,15 @@ public class RegisteredServiceThemeResolver extends AbstractThemeResolver {
         return themeName;
     }
 
-    protected String resolveThemeForService(final WebBasedRegisteredService registeredService, final HttpServletRequest request) {
+    protected String resolveThemeForService(final WebBasedRegisteredService registeredService,
+        final HttpServletRequest request) {
         val messageSource = new CasThemeResourceBundleMessageSource();
         val theme = SpringExpressionLanguageValueResolver.getInstance().resolve(registeredService.getTheme());
         messageSource.setBasename(theme);
 
-        if (casProperties.getObject().getView().getTemplatePrefixes().stream().map(prefix -> StringUtils.appendIfMissing(prefix, "/").concat(theme).concat(".properties")).anyMatch(ResourceUtils::doesResourceExist)) {
+        if (casProperties.getObject().getView().getTemplatePrefixes().stream()
+            .map(prefix -> StringUtils.appendIfMissing(prefix, "/").concat(theme).concat(".properties"))
+            .anyMatch(ResourceUtils::doesResourceExist)) {
             LOGGER.trace("Found custom extrnal theme [{}] for service [{}]", theme, registeredService.getName());
             return theme;
         }
@@ -124,17 +132,20 @@ public class RegisteredServiceThemeResolver extends AbstractThemeResolver {
         val serviceContext = WebUtils.getService(context);
         val service = authenticationRequestServiceSelectionStrategies.getObject().resolveService(serviceContext);
         if (service == null) {
-            LOGGER.trace("No service is found in the request context. Falling back to the default theme [{}]", getDefaultThemeName());
+            LOGGER.trace("No service is found in the request context. Falling back to the default theme [{}]",
+                getDefaultThemeName());
             return rememberThemeName(request);
         }
 
         val rService = (WebBasedRegisteredService)servicesManager.getObject().findServiceBy(service);
         if (rService == null || !rService.getAccessStrategy().isServiceAccessAllowed()) {
-            LOGGER.warn("No registered service is found to match [{}] or access is denied. Using default theme [{}]", service, getDefaultThemeName());
+            LOGGER.warn("No registered service is found to match [{}] or access is denied. Using default theme [{}]",
+                service, getDefaultThemeName());
             return rememberThemeName(request);
         }
         if (StringUtils.isBlank(rService.getTheme())) {
-            LOGGER.trace("No theme name is specified for service [{}]. Using default theme [{}]", rService, getDefaultThemeName());
+            LOGGER.trace("No theme name is specified for service [{}]. Using default theme [{}]", rService,
+                getDefaultThemeName());
             return rememberThemeName(request);
         }
 
@@ -143,6 +154,7 @@ public class RegisteredServiceThemeResolver extends AbstractThemeResolver {
     }
 
     @Override
-    public void setThemeName(@Nonnull final HttpServletRequest request, final HttpServletResponse response, final String themeName) {}
+    public void setThemeName(@Nonnull final HttpServletRequest request, final HttpServletResponse response,
+        final String themeName) {}
 
 }

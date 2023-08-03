@@ -14,7 +14,7 @@ import net.risesoft.permission.annotation.HasPositions;
 @Slf4j
 public class HasPositionsAdvisor extends StaticMethodMatcherPointcutAdvisor {
     private static final long serialVersionUID = 1790605582584464487L;
-    
+
     public HasPositionsAdvisor() {
         LOGGER.debug("HasPositionsAdvisor init............");
     }

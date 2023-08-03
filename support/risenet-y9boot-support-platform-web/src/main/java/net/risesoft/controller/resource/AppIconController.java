@@ -89,7 +89,8 @@ public class AppIconController {
     @RequestMapping("/pageAppIcons")
     public Y9Page<Y9AppIcon> pageAppIcons(Y9PageQuery pageQuery) {
         Page<Y9AppIcon> pageList = appIconService.pageAll(pageQuery.getPage(), pageQuery.getSize());
-        return Y9Page.success(pageQuery.getPage(), pageList.getTotalPages(), pageList.getTotalElements(), pageList.getContent(), "获取数据成功");
+        return Y9Page.success(pageQuery.getPage(), pageList.getTotalPages(), pageList.getTotalElements(),
+            pageList.getContent(), "获取数据成功");
     }
 
     /**
@@ -156,7 +157,8 @@ public class AppIconController {
     @RequestMapping("/searchIconPageByName")
     public Y9Page<Y9AppIcon> searchIconPageByName(Y9PageQuery pageQuery, String name) {
         Page<Y9AppIcon> pageList = appIconService.searchByName(pageQuery.getPage(), pageQuery.getSize(), name);
-        return Y9Page.success(pageQuery.getPage(), pageList.getTotalPages(), pageList.getTotalElements(), pageList.getContent(), "获取数据成功");
+        return Y9Page.success(pageQuery.getPage(), pageList.getTotalPages(), pageList.getTotalElements(),
+            pageList.getContent(), "获取数据成功");
     }
 
     /**
@@ -167,7 +169,8 @@ public class AppIconController {
      */
     @RiseLog(operationType = OperationTypeEnum.ADD, operationName = "上传图标")
     @RequestMapping("/uploadIcon")
-    public Y9Result<String> uploadIcon(@RequestParam MultipartFile iconFile, @RequestParam String remark) throws Exception {
+    public Y9Result<String> uploadIcon(@RequestParam MultipartFile iconFile, @RequestParam String remark)
+        throws Exception {
         if (iconFile != null && iconFile.getSize() != 0) {
             // 文件名称
             String originalFilename = iconFile.getOriginalFilename();

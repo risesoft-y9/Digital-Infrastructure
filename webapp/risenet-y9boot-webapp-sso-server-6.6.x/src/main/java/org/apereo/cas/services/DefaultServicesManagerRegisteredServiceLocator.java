@@ -33,13 +33,18 @@ public class DefaultServicesManagerRegisteredServiceLocator implements ServicesM
 
     @Override
     public RegisteredService locate(final Collection<RegisteredService> candidates, final Service service) {
-        return candidates.stream().filter(registeredService -> supports(registeredService, service)).filter(registeredService -> registeredServiceFilter.test(registeredService, service)).findFirst().orElse(null);
+        return candidates.stream().filter(registeredService -> supports(registeredService, service))
+            .filter(registeredService -> registeredServiceFilter.test(registeredService, service)).findFirst()
+            .orElse(null);
     }
 
     @Override
     public boolean supports(final RegisteredService registeredService, final Service service) {
-        return (OAuthRegisteredService.class.isAssignableFrom(registeredService.getClass()) && registeredService.getFriendlyName().equalsIgnoreCase("OAuth2 Client"))
-            || (CasRegisteredService.class.isAssignableFrom(registeredService.getClass()) && registeredService.getFriendlyName().equalsIgnoreCase(CasRegisteredService.FRIENDLY_NAME))
-            || (RegexRegisteredService.class.isAssignableFrom(registeredService.getClass()) && registeredService.getFriendlyName().equalsIgnoreCase(CasRegisteredService.FRIENDLY_NAME));
+        return (OAuthRegisteredService.class.isAssignableFrom(registeredService.getClass())
+            && registeredService.getFriendlyName().equalsIgnoreCase("OAuth2 Client"))
+            || (CasRegisteredService.class.isAssignableFrom(registeredService.getClass())
+                && registeredService.getFriendlyName().equalsIgnoreCase(CasRegisteredService.FRIENDLY_NAME))
+            || (RegexRegisteredService.class.isAssignableFrom(registeredService.getClass())
+                && registeredService.getFriendlyName().equalsIgnoreCase(CasRegisteredService.FRIENDLY_NAME));
     }
 }

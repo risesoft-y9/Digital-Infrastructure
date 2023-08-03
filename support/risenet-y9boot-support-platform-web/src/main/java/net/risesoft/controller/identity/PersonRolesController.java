@@ -36,7 +36,8 @@ public class PersonRolesController {
     @GetMapping
     public Y9Result<List<RolePermissionVO>> getByPersonId(@RequestParam String personId) {
         List<Y9PersonToRole> rolePermissionVOList = y9PersonToRoleService.listByPersonId(personId);
-        return Y9Result.success(rolePermissionVOBuilder.buildRolePermissionVOList(new ArrayList<>(rolePermissionVOList)));
+        return Y9Result
+            .success(rolePermissionVOBuilder.buildRolePermissionVOList(new ArrayList<>(rolePermissionVOList)));
     }
-    
+
 }

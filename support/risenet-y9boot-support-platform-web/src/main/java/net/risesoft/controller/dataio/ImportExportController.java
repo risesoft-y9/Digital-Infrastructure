@@ -15,7 +15,6 @@ import java.util.Map;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import net.risesoft.service.org.CompositeOrgBaseService;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -34,8 +33,8 @@ import net.risesoft.dataio.system.model.Y9SystemExportModel;
 import net.risesoft.entity.Y9OrgBase;
 import net.risesoft.log.OperationTypeEnum;
 import net.risesoft.log.annotation.RiseLog;
-import net.risesoft.manager.org.CompositeOrgBaseManager;
 import net.risesoft.pojo.Y9Result;
+import net.risesoft.service.org.CompositeOrgBaseService;
 import net.risesoft.util.StringUtil;
 import net.risesoft.y9.json.Y9JsonUtil;
 import net.risesoft.y9.util.mime.DownloadFileNameUtil;
@@ -60,7 +59,7 @@ import cn.hutool.core.io.resource.ClassPathResource;
 @RequestMapping(value = "/api/rest/impExp", produces = "application/json")
 @Slf4j
 public class ImportExportController {
-    
+
     private final Y9OrgTreeDataHandler y9OrgTreeExcelDataHandler;
     private final Y9OrgTreeDataHandler y9OrgTreeXmlDataHandler;
     private final Y9RoleService y9RoleService;
@@ -70,11 +69,11 @@ public class ImportExportController {
     private final Y9RoleDataHandler y9RoleDataHandler;
     private final Y9SystemDataHandler y9SystemDataHandler;
 
-    public ImportExportController(@Qualifier("y9OrgTreeExcelDataHandler") Y9OrgTreeDataHandler y9OrgTreeExcelDataHandler
-            , @Qualifier("y9OrgTreeXmlDataHandler") Y9OrgTreeDataHandler y9OrgTreeXmlDataHandler
-            , Y9RoleService y9RoleService, CompositeOrgBaseService compositeOrgBaseService
-            , Y9SystemService y9SystemService, Y9AppService y9AppService
-            , Y9RoleDataHandler y9RoleDataHandler, Y9SystemDataHandler y9SystemDataHandler) {
+    public ImportExportController(
+        @Qualifier("y9OrgTreeExcelDataHandler") Y9OrgTreeDataHandler y9OrgTreeExcelDataHandler,
+        @Qualifier("y9OrgTreeXmlDataHandler") Y9OrgTreeDataHandler y9OrgTreeXmlDataHandler, Y9RoleService y9RoleService,
+        CompositeOrgBaseService compositeOrgBaseService, Y9SystemService y9SystemService, Y9AppService y9AppService,
+        Y9RoleDataHandler y9RoleDataHandler, Y9SystemDataHandler y9SystemDataHandler) {
         this.y9OrgTreeExcelDataHandler = y9OrgTreeExcelDataHandler;
         this.y9OrgTreeXmlDataHandler = y9OrgTreeXmlDataHandler;
         this.y9RoleService = y9RoleService;
@@ -97,9 +96,11 @@ public class ImportExportController {
         Y9App y9App = y9AppService.getById(appId);
         Y9AppExportModel y9AppExportModel = y9SystemDataHandler.buildApp(appId);
         String jsonStr = Y9JsonUtil.writeValueAsStringWithDefaultPrettyPrinter(y9AppExportModel);
-        try (OutputStream outStream = response.getOutputStream(); InputStream in = new ByteArrayInputStream(jsonStr.getBytes(StandardCharsets.UTF_8))) {
+        try (OutputStream outStream = response.getOutputStream();
+            InputStream in = new ByteArrayInputStream(jsonStr.getBytes(StandardCharsets.UTF_8))) {
 
-            String filename = DownloadFileNameUtil.standardize(y9App.getName() + "-应用信息-" + new SimpleDateFormat("yyyyMMddHHmmss").format(new Date()) + ".json");
+            String filename = DownloadFileNameUtil.standardize(
+                y9App.getName() + "-应用信息-" + new SimpleDateFormat("yyyyMMddHHmmss").format(new Date()) + ".json");
             response.setContentType("application/octet-stream");
             response.setHeader("Content-Disposition", filename);
             int len;
@@ -125,13 +126,15 @@ public class ImportExportController {
         // 获取数据
         Map<String, Object> map = y9OrgTreeExcelDataHandler.xlsData(resourceId);
         Y9OrgBase base = compositeOrgBaseService.getOrgBase(resourceId);
-        
-        try (OutputStream outStream = response.getOutputStream(); InputStream in = new ClassPathResource("/template/exportTemplate.xlsx").getStream()) {
 
-            String filename = DownloadFileNameUtil.standardize(base.getName() + "-组织架构" + new SimpleDateFormat("yyyyMMddHHmmss").format(new Date()) + ".xlsx");
+        try (OutputStream outStream = response.getOutputStream();
+            InputStream in = new ClassPathResource("/template/exportTemplate.xlsx").getStream()) {
+
+            String filename = DownloadFileNameUtil.standardize(
+                base.getName() + "-组织架构" + new SimpleDateFormat("yyyyMMddHHmmss").format(new Date()) + ".xlsx");
             response.setContentType("application/octet-stream");
             response.setHeader("Content-Disposition", filename);
-            
+
             List<String> listSheetNames = new ArrayList<>();
             listSheetNames.add("组织机构");
             listSheetNames.add("部门");
@@ -162,14 +165,16 @@ public class ImportExportController {
     public void exportOrgTreeXml(@RequestParam String orgBaseId, HttpServletResponse response) {
         String xmlString = y9OrgTreeXmlDataHandler.doExport(orgBaseId);
         xmlString = StringUtil.strChangeToXml(xmlString.getBytes(StandardCharsets.UTF_8));
-        
-        try (OutputStream outStream = response.getOutputStream(); InputStream in = new ByteArrayInputStream(xmlString.getBytes(StandardCharsets.UTF_8))) {
+
+        try (OutputStream outStream = response.getOutputStream();
+            InputStream in = new ByteArrayInputStream(xmlString.getBytes(StandardCharsets.UTF_8))) {
             Y9OrgBase y9OrgBase = compositeOrgBaseService.getOrgBase(orgBaseId);
 
-            String filename = DownloadFileNameUtil.standardize(y9OrgBase.getName() + "-组织架构-" + new SimpleDateFormat("yyyyMMddHHmmss").format(new Date()) + ".xml");
+            String filename = DownloadFileNameUtil.standardize(
+                y9OrgBase.getName() + "-组织架构-" + new SimpleDateFormat("yyyyMMddHHmmss").format(new Date()) + ".xml");
             response.setContentType("application/octet-stream");
             response.setHeader("Content-Disposition", filename);
-            
+
             int len;
             byte[] buf = new byte[1024];
             while ((len = in.read(buf, 0, 1024)) != -1) {
@@ -193,9 +198,11 @@ public class ImportExportController {
         // 获取数据
         Map<String, Object> map = y9OrgTreeExcelDataHandler.xlsPersonData(orgBaseId);
         Y9OrgBase base = compositeOrgBaseService.getOrgBase(orgBaseId);
-        
-        try (OutputStream outStream = response.getOutputStream(); InputStream in = new ClassPathResource("/template/exportSimpleTemplate.xlsx").getStream()) {
-            String filename = DownloadFileNameUtil.standardize(base.getName() + "-组织架构" + new SimpleDateFormat("yyyyMMddHHmmss").format(new Date()) + ".xlsx");
+
+        try (OutputStream outStream = response.getOutputStream();
+            InputStream in = new ClassPathResource("/template/exportSimpleTemplate.xlsx").getStream()) {
+            String filename = DownloadFileNameUtil.standardize(
+                base.getName() + "-组织架构" + new SimpleDateFormat("yyyyMMddHHmmss").format(new Date()) + ".xlsx");
             response.setContentType("application/octet-stream");
             response.setHeader("Content-Disposition", filename);
 
@@ -217,10 +224,12 @@ public class ImportExportController {
     public void exportRoleXml(@RequestParam String resourceId, HttpServletResponse response) {
         String xmlString = y9RoleDataHandler.doExport(resourceId);
         xmlString = StringUtil.strChangeToXml(xmlString.getBytes(StandardCharsets.UTF_8));
-        
-        try (OutputStream outStream = response.getOutputStream(); InputStream in = new ByteArrayInputStream(xmlString.getBytes(StandardCharsets.UTF_8))) {
+
+        try (OutputStream outStream = response.getOutputStream();
+            InputStream in = new ByteArrayInputStream(xmlString.getBytes(StandardCharsets.UTF_8))) {
             Y9Role y9Role = y9RoleService.findById(resourceId);
-            String filename = DownloadFileNameUtil.standardize(y9Role.getName() + "-角色信息-" + new SimpleDateFormat("yyyyMMddHHmmss").format(new Date()) + ".xml");
+            String filename = DownloadFileNameUtil.standardize(
+                y9Role.getName() + "-角色信息-" + new SimpleDateFormat("yyyyMMddHHmmss").format(new Date()) + ".xml");
             response.setContentType("application/octet-stream");
             response.setHeader("Content-Disposition", filename);
             int len;
@@ -246,9 +255,11 @@ public class ImportExportController {
         Y9System y9System = y9SystemService.getById(systemId);
         Y9SystemExportModel y9SystemExportModel = y9SystemDataHandler.buildSystem(systemId);
         String jsonStr = Y9JsonUtil.writeValueAsStringWithDefaultPrettyPrinter(y9SystemExportModel);
-        
-        try (OutputStream outStream = response.getOutputStream(); InputStream in = new ByteArrayInputStream(jsonStr.getBytes(StandardCharsets.UTF_8))) {
-            String filename = DownloadFileNameUtil.standardize(y9System.getCnName() + "-系统信息-" + new SimpleDateFormat("yyyyMMddHHmmss").format(new Date()) + ".json");
+
+        try (OutputStream outStream = response.getOutputStream();
+            InputStream in = new ByteArrayInputStream(jsonStr.getBytes(StandardCharsets.UTF_8))) {
+            String filename = DownloadFileNameUtil.standardize(
+                y9System.getCnName() + "-系统信息-" + new SimpleDateFormat("yyyyMMddHHmmss").format(new Date()) + ".json");
             response.setContentType("application/octet-stream");
             response.setHeader("Content-Disposition", filename);
             int len;
@@ -288,7 +299,10 @@ public class ImportExportController {
     @RiseLog(operationName = "上传组织机构XLS", operationType = OperationTypeEnum.ADD)
     @RequestMapping(value = "/importOrgTreeXls")
     public Y9Result<Object> importOrgTreeXls(@RequestParam MultipartFile file, @RequestParam String orgId) {
-        try (InputStream xmlfis = new BufferedInputStream(this.getClass().getResourceAsStream("/template/xmlconfig.xml")); InputStream datafis = file.getInputStream();) {
+        try (
+            InputStream xmlfis =
+                new BufferedInputStream(this.getClass().getResourceAsStream("/template/xmlconfig.xml"));
+            InputStream datafis = file.getInputStream();) {
             return y9OrgTreeExcelDataHandler.impXlsData(datafis, xmlfis, orgId);
         } catch (Exception e) {
             LOGGER.warn(e.getMessage(), e);

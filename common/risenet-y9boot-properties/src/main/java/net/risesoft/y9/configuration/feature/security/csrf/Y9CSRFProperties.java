@@ -25,5 +25,5 @@ public class Y9CSRFProperties {
      * 允许的请求 referer 填入域名即可
      */
     private List<String> acceptedReferer = Arrays.asList("localhost", "127.0.0.1", "youshengyun.com");
-    
+
 }

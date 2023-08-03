@@ -23,7 +23,8 @@ import net.risesoft.y9.util.InetAddressUtil;
 @Slf4j
 public class ApisixUtil {
 
-    public static String bindRouteToUpstream(String adminAddress, String adminKey, String uri, String upstreamId, String routeId, String methodDescription, boolean consumerEnabled, String authenticationType) {
+    public static String bindRouteToUpstream(String adminAddress, String adminKey, String uri, String upstreamId,
+        String routeId, String methodDescription, boolean consumerEnabled, String authenticationType) {
         String result = "";
         String url = adminAddress + "routes/" + routeId;
 
@@ -58,14 +59,16 @@ public class ApisixUtil {
         if (success) {
             result = "create route success, routeId: " + routeId;
         } else {
-            result = "----create route failed, routeId: " + routeId + ", response: " + responseMap.get("msg").toString();
+            result =
+                "----create route failed, routeId: " + routeId + ", response: " + responseMap.get("msg").toString();
         }
         LOGGER.info(result);
 
         return result;
     }
 
-    public static String createService(String adminAddress, String adminKey, String serviceId, String upstreamNodes, String upstreamType, String desc) {
+    public static String createService(String adminAddress, String adminKey, String serviceId, String upstreamNodes,
+        String upstreamType, String desc) {
         String result = "";
         String url = adminAddress + "services/" + serviceId;
 
@@ -105,14 +108,16 @@ public class ApisixUtil {
         if (success) {
             result = "create Service success, serviceId:" + serviceId;
         } else {
-            result = "----create Service failed, serviceId:" + serviceId + ", response:" + responseMap.get("msg").toString();
+            result =
+                "----create Service failed, serviceId:" + serviceId + ", response:" + responseMap.get("msg").toString();
         }
         LOGGER.info(result);
 
         return result;
     }
 
-    public static String createUpStream(String adminAddress, String adminKey, String upstreamId, String upstreamNodes, String upstreamType, String desc) {
+    public static String createUpStream(String adminAddress, String adminKey, String upstreamId, String upstreamNodes,
+        String upstreamType, String desc) {
         String result = "";
         String url = adminAddress + "upstreams/" + upstreamId;
 
@@ -165,7 +170,8 @@ public class ApisixUtil {
         if (success) {
             result = "create Upsteam success, upstreamId:" + upstreamId;
         } else {
-            result = "----create Upsteam failed, upstreamId:" + upstreamId + ", response:" + responseMap.get("msg").toString();
+            result = "----create Upsteam failed, upstreamId:" + upstreamId + ", response:"
+                + responseMap.get("msg").toString();
         }
         LOGGER.info(result);
 
@@ -320,7 +326,8 @@ public class ApisixUtil {
         return routeIdList;
     }
 
-    public static List<Map<String, Object>> getUpstreamNodeList(String adminAddress, String adminKey, String upstreamId) {
+    public static List<Map<String, Object>> getUpstreamNodeList(String adminAddress, String adminKey,
+        String upstreamId) {
         List<Map<String, Object>> returnNodeList = new ArrayList<>();
         String url = adminAddress + "upstreams/" + upstreamId;
 
@@ -403,7 +410,8 @@ public class ApisixUtil {
         return returnMap;
     }
 
-    public static Map<String, Integer> getUpstreamNodeMapByService(String adminAddress, String adminKey, String serviceId) {
+    public static Map<String, Integer> getUpstreamNodeMapByService(String adminAddress, String adminKey,
+        String serviceId) {
         Map<String, Integer> returnMap = new HashMap<>(16);
         String url = adminAddress + "services/" + serviceId;
 

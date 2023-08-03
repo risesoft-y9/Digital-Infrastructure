@@ -1,38 +1,52 @@
 {
-  "@class" : "org.apereo.cas.support.oauth.services.OAuthRegisteredService",
+  "@class": "org.apereo.cas.support.oauth.services.OAuthRegisteredService",
   "clientId": "clientid",
   "clientSecret": "secret",
-  "serviceId" : "^(https?)://.*",
-  "name" : "oauthServiceDemo",
-  "description" : "oauth Authentication app demo",
+  "serviceId": "^(https?)://.*",
+  "name": "oauthServiceDemo",
+  "description": "oauth Authentication app demo",
   "theme": "y9-apereo",
-  "id" : 1002,
+  "id": 1002,
   "evaluationOrder": 1002,
-  "logoutType" : "BACK_CHANNEL",
-  "logoutUrl" : "http://localhost:7055/oauth/public/oauth/callback",
-  "proxyPolicy" : {
-    "@class" : "org.apereo.cas.services.RefuseRegisteredServiceProxyPolicy"
+  "logoutType": "BACK_CHANNEL",
+  "logoutUrl": "http://localhost:7055/oauth/public/oauth/callback",
+  "proxyPolicy": {
+    "@class": "org.apereo.cas.services.RefuseRegisteredServiceProxyPolicy"
   },
-  "usernameAttributeProvider" : {
-    "@class" : "org.apereo.cas.services.DefaultRegisteredServiceUsernameProvider"
+  "usernameAttributeProvider": {
+    "@class": "org.apereo.cas.services.DefaultRegisteredServiceUsernameProvider"
   },
-  "attributeReleasePolicy" : {
-    "@class" : "org.apereo.cas.services.ReturnAllAttributeReleasePolicy",
-    "principalAttributesRepository" : {
-      "@class" : "org.apereo.cas.authentication.principal.DefaultPrincipalAttributesRepository"
+  "attributeReleasePolicy": {
+    "@class": "org.apereo.cas.services.ReturnAllAttributeReleasePolicy",
+    "principalAttributesRepository": {
+      "@class": "org.apereo.cas.authentication.principal.DefaultPrincipalAttributesRepository"
     },
-    "authorizedToReleaseCredentialPassword" : true,
-    "authorizedToReleaseProxyGrantingTicket" : true,
-    "excludeDefaultAttributes" : false
+    "authorizedToReleaseCredentialPassword": true,
+    "authorizedToReleaseProxyGrantingTicket": true,
+    "excludeDefaultAttributes": false
   },
-  "accessStrategy" : {
-    "@class" : "org.apereo.cas.services.DefaultRegisteredServiceAccessStrategy",
-	"enabled" : true,
-	"ssoEnabled" : true,
-	"requireAllAttributes" : true
+  "accessStrategy": {
+    "@class": "org.apereo.cas.services.DefaultRegisteredServiceAccessStrategy",
+    "enabled": true,
+    "ssoEnabled": true,
+    "requireAllAttributes": true
   },
-  "supportedGrantTypes": [ "java.util.HashSet", [ "authorization_code", "password", "client_credentials", "refresh_token" ] ],
-  "supportedResponseTypes": [ "java.util.HashSet", [ "code", "token" ] ],
+  "supportedGrantTypes": [
+    "java.util.HashSet",
+    [
+      "authorization_code",
+      "password",
+      "client_credentials",
+      "refresh_token"
+    ]
+  ],
+  "supportedResponseTypes": [
+    "java.util.HashSet",
+    [
+      "code",
+      "token"
+    ]
+  ],
   "bypassApprovalPrompt": true,
   "generateRefreshToken": true,
   "renewRefreshToken": true,

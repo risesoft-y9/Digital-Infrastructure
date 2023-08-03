@@ -21,7 +21,7 @@ import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 public class InetAddressUtil {
-    
+
     public static final String LOCALHOST = "127.0.0.1";
 
     public static final String ANYHOST = "0.0.0.0";
@@ -54,13 +54,15 @@ public class InetAddressUtil {
     }
 
     public static void getApplicationProperties() {
-        try (InputStream inputStream = InetAddressUtil.class.getClassLoader().getResourceAsStream("application.properties")) {
+        try (InputStream inputStream =
+            InetAddressUtil.class.getClassLoader().getResourceAsStream("application.properties")) {
             properties.load(inputStream);
         } catch (IOException e) {
         }
 
         if (properties.isEmpty()) {
-            try (InputStream inputStream = InetAddressUtil.class.getClassLoader().getResourceAsStream("properties/application.properties")) {
+            try (InputStream inputStream =
+                InetAddressUtil.class.getClassLoader().getResourceAsStream("properties/application.properties")) {
                 properties.load(inputStream);
             } catch (IOException e) {
             }
@@ -179,14 +181,17 @@ public class InetAddressUtil {
                 socket.connect(addr, 1000);
                 return socket.getLocalAddress();
             } catch (Exception e) {
-                LOGGER.warn(String.format("Failed to retrieving local address by connecting to dest host:port(%s:%s) false, e=%s", host, port, e));
+                LOGGER.warn(String.format(
+                    "Failed to retrieving local address by connecting to dest host:port(%s:%s) false, e=%s", host, port,
+                    e));
             }
         }
         return null;
     }
 
     public static boolean isInvalidLocalHost(String host) {
-        return host == null || host.length() == 0 || host.equalsIgnoreCase("localhost") || host.equals("0.0.0.0") || (LOCAL_IP_PATTERN.matcher(host).matches());
+        return host == null || host.length() == 0 || host.equalsIgnoreCase("localhost") || host.equals("0.0.0.0")
+            || (LOCAL_IP_PATTERN.matcher(host).matches());
     }
 
     public static boolean isValidAddress(InetAddress address) {
@@ -194,7 +199,8 @@ public class InetAddressUtil {
             return false;
         }
         String ipAddress = address.getHostAddress();
-        boolean valid = ipAddress != null && !ANYHOST.equals(ipAddress) && !LOCALHOST.equals(ipAddress) && IP_PATTERN.matcher(ipAddress).matches();
+        boolean valid = ipAddress != null && !ANYHOST.equals(ipAddress) && !LOCALHOST.equals(ipAddress)
+            && IP_PATTERN.matcher(ipAddress).matches();
         if (valid == false) {
             return false;
         }

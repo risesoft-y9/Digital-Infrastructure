@@ -17,7 +17,8 @@ public class Y9Oauth2ResourceConfiguration {
     @Bean
     @ConditionalOnMissingBean(name = "y9Oauth2ResourceFilter")
     public FilterRegistrationBean<Y9Oauth2ResourceFilter> y9Oauth2ResourceFilter(Environment env) {
-        String protectedUrlPatterns = env.getProperty("y9.feature.oauth2.resource.protectedUrlPatterns", "/services/rest/*");
+        String protectedUrlPatterns =
+            env.getProperty("y9.feature.oauth2.resource.protectedUrlPatterns", "/services/rest/*");
         final FilterRegistrationBean<Y9Oauth2ResourceFilter> filterBean = new FilterRegistrationBean<>();
         filterBean.setFilter(new Y9Oauth2ResourceFilter());
         filterBean.setAsyncSupported(false);

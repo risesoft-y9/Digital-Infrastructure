@@ -18,11 +18,11 @@ import net.risesoft.entity.Y9Position;
 @SuppressWarnings("AlibabaAbstractMethodOrInterfaceMethodMustUseJavadoc")
 @Repository
 @Transactional(value = "rsTenantTransactionManager", readOnly = true)
-//@JaversSpringDataAuditable
+// @JaversSpringDataAuditable
 public interface Y9PositionRepository extends JpaRepository<Y9Position, String> {
 
     int countByJobId(String jobId);
-    
+
     List<Y9Position> findByJobId(String jobId);
 
     List<Y9Position> findByNameContainingOrderByTabIndexAsc(String name);

@@ -20,25 +20,32 @@ import org.springframework.webflow.execution.Action;
 @Configuration
 public class Y9AuthenticationConfiguration {
 
-	@Bean
-	public AuthenticationEventExecutionPlanConfigurer riseAuthenticationEventExecutionPlanConfigurer(@Qualifier(ServicesManager.BEAN_NAME) final ServicesManager servicesManager, PrincipalResolver risePersonDirectoryPrincipalResolver) {
-		RiseAuthenticationHandler handler = new RiseAuthenticationHandler("y9AuthenticationHandler", servicesManager, risePrincipalFactory(), 0);
-		return plan -> plan.registerAuthenticationHandlerWithPrincipalResolver(handler, risePersonDirectoryPrincipalResolver);
-	}
+    @Bean
+    public AuthenticationEventExecutionPlanConfigurer riseAuthenticationEventExecutionPlanConfigurer(
+        @Qualifier(ServicesManager.BEAN_NAME) final ServicesManager servicesManager,
+        PrincipalResolver risePersonDirectoryPrincipalResolver) {
+        RiseAuthenticationHandler handler =
+            new RiseAuthenticationHandler("y9AuthenticationHandler", servicesManager, risePrincipalFactory(), 0);
+        return plan -> plan.registerAuthenticationHandlerWithPrincipalResolver(handler,
+            risePersonDirectoryPrincipalResolver);
+    }
 
-	@Bean
-	public Action riseCredentialNonInteractiveCredentialsAction(@Qualifier("adaptiveAuthenticationPolicy") final AdaptiveAuthenticationPolicy adaptiveAuthenticationPolicy, @Qualifier("serviceTicketRequestWebflowEventResolver") final CasWebflowEventResolver serviceTicketRequestWebflowEventResolver,
-			@Qualifier("initialAuthenticationAttemptWebflowEventResolver") final CasDelegatingWebflowEventResolver initialAuthenticationAttemptWebflowEventResolver) {
-		return new RiseCredentialNonInteractiveCredentialsAction(initialAuthenticationAttemptWebflowEventResolver, serviceTicketRequestWebflowEventResolver, adaptiveAuthenticationPolicy);
-	}
+    @Bean
+    public Action riseCredentialNonInteractiveCredentialsAction(
+        @Qualifier("adaptiveAuthenticationPolicy") final AdaptiveAuthenticationPolicy adaptiveAuthenticationPolicy,
+        @Qualifier("serviceTicketRequestWebflowEventResolver") final CasWebflowEventResolver serviceTicketRequestWebflowEventResolver,
+        @Qualifier("initialAuthenticationAttemptWebflowEventResolver") final CasDelegatingWebflowEventResolver initialAuthenticationAttemptWebflowEventResolver) {
+        return new RiseCredentialNonInteractiveCredentialsAction(initialAuthenticationAttemptWebflowEventResolver,
+            serviceTicketRequestWebflowEventResolver, adaptiveAuthenticationPolicy);
+    }
 
-	@Bean
-	public PrincipalResolver risePersonDirectoryPrincipalResolver(Y9UserDao y9UserDao) {
-		return new RisePersonDirectoryPrincipalResolver(y9UserDao);
-	}
+    @Bean
+    public PrincipalResolver risePersonDirectoryPrincipalResolver(Y9UserDao y9UserDao) {
+        return new RisePersonDirectoryPrincipalResolver(y9UserDao);
+    }
 
-	@Bean
-	public PrincipalFactory risePrincipalFactory() {
-		return new DefaultPrincipalFactory();
-	}
+    @Bean
+    public PrincipalFactory risePrincipalFactory() {
+        return new DefaultPrincipalFactory();
+    }
 }

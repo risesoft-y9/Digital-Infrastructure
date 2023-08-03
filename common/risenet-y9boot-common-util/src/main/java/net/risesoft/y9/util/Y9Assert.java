@@ -15,13 +15,12 @@ import net.risesoft.y9.exception.util.Y9ExceptionUtil;
 public class Y9Assert {
 
     /**
-     * 当前值需小于或等于最大值
-     * 反之则抛出异常 {@link Y9BusinessException} 
+     * 当前值需小于或等于最大值 反之则抛出异常 {@link Y9BusinessException}
      * 
      * @param currentValue
      * @param maxValue
      * @param errorCode
-     * @param arguments 
+     * @param arguments
      */
     public static void lessThanOrEqualTo(int currentValue, int maxValue, ErrorCode errorCode, Object... arguments) {
         if (currentValue > maxValue) {

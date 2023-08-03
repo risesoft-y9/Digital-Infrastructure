@@ -45,8 +45,12 @@ public class PublishedEventController {
      */
     @RiseLog(operationName = "分页获取操作事件")
     @RequestMapping("/pagePublishedEventList")
-    public Y9Page<Y9PublishedEvent> pagePublishedEventList(@RequestParam int page, @RequestParam int rows, String eventName, String eventDescription, @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss") Date startTime, @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss") Date endTime) {
-        Page<Y9PublishedEvent> pageList = y9PublishedEventService.page(page, rows, Y9LoginUserHolder.getTenantId(), eventName, eventDescription, startTime, endTime);
-        return Y9Page.success(page, pageList.getTotalPages(), pageList.getTotalElements(), pageList.getContent(), "获取数据成功");
+    public Y9Page<Y9PublishedEvent> pagePublishedEventList(@RequestParam int page, @RequestParam int rows,
+        String eventName, String eventDescription, @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss") Date startTime,
+        @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss") Date endTime) {
+        Page<Y9PublishedEvent> pageList = y9PublishedEventService.page(page, rows, Y9LoginUserHolder.getTenantId(),
+            eventName, eventDescription, startTime, endTime);
+        return Y9Page.success(page, pageList.getTotalPages(), pageList.getTotalElements(), pageList.getContent(),
+            "获取数据成功");
     }
 }

@@ -19,7 +19,8 @@ import net.risesoft.model.user.UserInfo;
 public abstract class Y9LoginUserHolder {
     private static final TransmittableThreadLocal<String> TENANT_ID_HOLDER = new TransmittableThreadLocal<String>();
     private static final TransmittableThreadLocal<String> TENANT_NAME_HOLDER = new TransmittableThreadLocal<String>();
-    private static final TransmittableThreadLocal<String> TENANT_SHORT_NAME_HOLDER = new TransmittableThreadLocal<String>();
+    private static final TransmittableThreadLocal<String> TENANT_SHORT_NAME_HOLDER =
+        new TransmittableThreadLocal<String>();
 
     private static final TransmittableThreadLocal<UserInfo> USER_INFO_HOLDER = new TransmittableThreadLocal<UserInfo>();
     private static final TransmittableThreadLocal<String> PERSON_ID_HOLDER = new TransmittableThreadLocal<String>();
@@ -27,7 +28,8 @@ public abstract class Y9LoginUserHolder {
     private static final TransmittableThreadLocal<Position> POSITION_HOLDER = new TransmittableThreadLocal<Position>();
     private static final TransmittableThreadLocal<String> POSITION_ID_HOLDER = new TransmittableThreadLocal<String>();
 
-    private static final TransmittableThreadLocal<Map<String, Object>> MAP_HOLDER = new TransmittableThreadLocal<Map<String, Object>>();
+    private static final TransmittableThreadLocal<Map<String, Object>> MAP_HOLDER =
+        new TransmittableThreadLocal<Map<String, Object>>();
 
     public static void clear() {
         TENANT_ID_HOLDER.remove();

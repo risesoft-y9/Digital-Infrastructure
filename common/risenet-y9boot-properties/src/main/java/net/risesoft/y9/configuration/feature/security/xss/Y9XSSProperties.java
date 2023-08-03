@@ -8,6 +8,7 @@ import lombok.Setter;
 
 /**
  * xss 配置
+ * 
  * @author liansen
  * @date 2022/09/28
  */

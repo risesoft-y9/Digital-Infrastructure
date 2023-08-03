@@ -2,40 +2,40 @@
 <beans xmlns="http://www.springframework.org/schema/beans" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
        xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-4.2.xsd">
 
-	<bean id="refreshServiceStatusJob" class="org.springframework.scheduling.quartz.JobDetailFactoryBean">
-		<property name="name" value="refreshServiceStatusJob" />
-		<property name="group" value="y9dc" />
-		<property name="jobClass" value="net.risesoft.quartz.RefreshServiceStatusJob" />
-		<property name="durability" value="true" />
-	</bean>
-	
-	<!-- 配置每10分钟开始执行的任务 -->
-	<bean id="trigger1" class="org.springframework.scheduling.quartz.SimpleTriggerFactoryBean">
-		<property name="jobDetail" ref="refreshServiceStatusJob" />
-		<property name="repeatInterval" value="2000" />
-		<property name="repeatCount" value="1" />
-	</bean>
+    <bean id="refreshServiceStatusJob" class="org.springframework.scheduling.quartz.JobDetailFactoryBean">
+        <property name="name" value="refreshServiceStatusJob"/>
+        <property name="group" value="y9dc"/>
+        <property name="jobClass" value="net.risesoft.quartz.RefreshServiceStatusJob"/>
+        <property name="durability" value="true"/>
+    </bean>
 
-	<bean id="ServiceInvokeScheduler" class="org.springframework.scheduling.quartz.SchedulerFactoryBean">
-		<property name="quartzProperties">
-			<props>
-				<prop key="org.quartz.scheduler.skipUpdateCheck">true</prop>
-				<prop key="org.quartz.jobStore.class">org.quartz.simpl.RAMJobStore</prop>
-			</props>
-		</property>
-		<property name="jobFactory">
-			<bean class="org.springframework.scheduling.quartz.SpringBeanJobFactory" />
-		</property>
-		<property name="applicationContextSchedulerContextKey" value="ctx" />
-		<property name="startupDelay" value="120" />
-		<property name="overwriteExistingJobs" value="true" />
-		<property name="exposeSchedulerInRepository" value="true" />
-		<property name="waitForJobsToCompleteOnShutdown" value="true" />
-		<property name="triggers">
-			<list>
-				<ref bean="trigger1" />
-			</list>
-		</property>
-	</bean>
+    <!-- 配置每10分钟开始执行的任务 -->
+    <bean id="trigger1" class="org.springframework.scheduling.quartz.SimpleTriggerFactoryBean">
+        <property name="jobDetail" ref="refreshServiceStatusJob"/>
+        <property name="repeatInterval" value="2000"/>
+        <property name="repeatCount" value="1"/>
+    </bean>
+
+    <bean id="ServiceInvokeScheduler" class="org.springframework.scheduling.quartz.SchedulerFactoryBean">
+        <property name="quartzProperties">
+            <props>
+                <prop key="org.quartz.scheduler.skipUpdateCheck">true</prop>
+                <prop key="org.quartz.jobStore.class">org.quartz.simpl.RAMJobStore</prop>
+            </props>
+        </property>
+        <property name="jobFactory">
+            <bean class="org.springframework.scheduling.quartz.SpringBeanJobFactory"/>
+        </property>
+        <property name="applicationContextSchedulerContextKey" value="ctx"/>
+        <property name="startupDelay" value="120"/>
+        <property name="overwriteExistingJobs" value="true"/>
+        <property name="exposeSchedulerInRepository" value="true"/>
+        <property name="waitForJobsToCompleteOnShutdown" value="true"/>
+        <property name="triggers">
+            <list>
+                <ref bean="trigger1"/>
+            </list>
+        </property>
+    </bean>
 
 </beans>

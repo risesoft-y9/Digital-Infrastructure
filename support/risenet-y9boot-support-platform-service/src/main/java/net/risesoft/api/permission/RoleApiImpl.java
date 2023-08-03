@@ -8,6 +8,8 @@ import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 
+import javax.validation.constraints.NotBlank;
+
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.context.annotation.Primary;
 import org.springframework.http.MediaType;
@@ -36,8 +38,6 @@ import net.risesoft.y9.Y9LoginUserHolder;
 import net.risesoft.y9.util.Y9ModelConvertUtil;
 import net.risesoft.y9public.entity.role.Y9Role;
 import net.risesoft.y9public.service.role.Y9RoleService;
-
-import javax.validation.constraints.NotBlank;
 
 /**
  * 角色组件
@@ -71,9 +71,10 @@ public class RoleApiImpl implements RoleApi {
      * @since 9.6.0
      */
     @Override
-    public boolean addPerson(@RequestParam("personId") @NotBlank String personId, @RequestParam("roleId") @NotBlank String roleId, @RequestParam("tenantId") @NotBlank String tenantId) {
+    public boolean addPerson(@RequestParam("personId") @NotBlank String personId,
+        @RequestParam("roleId") @NotBlank String roleId, @RequestParam("tenantId") @NotBlank String tenantId) {
         Y9LoginUserHolder.setTenantId(tenantId);
-                 
+
         y9OrgBasesToRolesService.addOrgBases(roleId, new String[] {personId}, Boolean.TRUE);
         return true;
     }
@@ -92,8 +93,10 @@ public class RoleApiImpl implements RoleApi {
      * @since 9.6.0
      */
     @Override
-    public Role createRoleNodeAddCustomId(@RequestParam("roleId") String roleId, @RequestParam("roleName") String roleName, @RequestParam("parentId") String parentId, @RequestParam("customId") String customId, @RequestParam("type") String type, @RequestParam("systemName") String systemName,
-                                          @RequestParam("systemCnName") String systemCnName) {
+    public Role createRoleNodeAddCustomId(@RequestParam("roleId") String roleId,
+        @RequestParam("roleName") String roleName, @RequestParam("parentId") String parentId,
+        @RequestParam("customId") String customId, @RequestParam("type") String type,
+        @RequestParam("systemName") String systemName, @RequestParam("systemCnName") String systemCnName) {
         Y9Role roleNode = y9RoleService.findByCustomIdAndParentId(customId, parentId);
         if (roleNode == null) {
             roleNode = new Y9Role();
@@ -137,7 +140,8 @@ public class RoleApiImpl implements RoleApi {
      * @since 9.6.0
      */
     @Override
-    public Role findByCustomIdAndParentId(@RequestParam("customId") @NotBlank String customId, @RequestParam("parentId") @NotBlank String parentId) {
+    public Role findByCustomIdAndParentId(@RequestParam("customId") @NotBlank String customId,
+        @RequestParam("parentId") @NotBlank String parentId) {
         Y9Role roleNode = y9RoleService.findByCustomIdAndParentId(customId, parentId);
         return ModelConvertUtil.y9RoleToRole(roleNode);
     }
@@ -165,7 +169,8 @@ public class RoleApiImpl implements RoleApi {
      * @since 9.6.0
      */
     @Override
-    public boolean hasPublicRole(@RequestParam("tenantId") @NotBlank String tenantId, @RequestParam("roleName") @NotBlank String roleName, @RequestParam("personId") @NotBlank String personId) {
+    public boolean hasPublicRole(@RequestParam("tenantId") @NotBlank String tenantId,
+        @RequestParam("roleName") @NotBlank String roleName, @RequestParam("personId") @NotBlank String personId) {
         List<Y9Role> list = y9RoleService.listByParentIdAndName(DefaultIdConsts.TOP_PUBLIC_ROLE_ID, roleName);
         if (!list.isEmpty()) {
             Y9Role node = list.get(0);
@@ -191,12 +196,16 @@ public class RoleApiImpl implements RoleApi {
      * @since 9.6.0
      */
     @Override
-    public Boolean hasRole(@RequestParam("tenantId") @NotBlank String tenantId, @RequestParam("systemName") @NotBlank String systemName, @RequestParam(value = "properties", required = false) String properties, @RequestParam("roleName") @NotBlank String roleName, @RequestParam("personId") @NotBlank String personId) {
+    public Boolean hasRole(@RequestParam("tenantId") @NotBlank String tenantId,
+        @RequestParam("systemName") @NotBlank String systemName,
+        @RequestParam(value = "properties", required = false) String properties,
+        @RequestParam("roleName") @NotBlank String roleName, @RequestParam("personId") @NotBlank String personId) {
         List<Y9Role> list = null;
         if (StringUtils.isBlank(properties)) {
             list = y9RoleService.listByNameAndSystemNameAndType(roleName, systemName, Y9RoleTypeEnum.ROLE.getValue());
         } else {
-            list = y9RoleService.listByNameAndSystemNameAndPropertiesAndType(roleName, systemName, properties, Y9RoleTypeEnum.ROLE.getValue());
+            list = y9RoleService.listByNameAndSystemNameAndPropertiesAndType(roleName, systemName, properties,
+                Y9RoleTypeEnum.ROLE.getValue());
         }
 
         if (null != list && !list.isEmpty()) {
@@ -221,7 +230,8 @@ public class RoleApiImpl implements RoleApi {
      * @since 9.6.0
      */
     @Override
-    public Boolean hasRoleByTenantIdAndRoleIdAndOrgUnitId(@RequestParam("tenantId") @NotBlank String tenantId, @RequestParam("roleId") @NotBlank String roleId, @RequestParam("orgUnitId") @NotBlank String orgUnitId) {
+    public Boolean hasRoleByTenantIdAndRoleIdAndOrgUnitId(@RequestParam("tenantId") @NotBlank String tenantId,
+        @RequestParam("roleId") @NotBlank String roleId, @RequestParam("orgUnitId") @NotBlank String orgUnitId) {
         Y9LoginUserHolder.setTenantId(tenantId);
         List<String> orgUnitIds = y9RoleService.listOrgUnitIdRecursively(orgUnitId);
         long count = y9OrgBasesToRolesService.countByRoleIdAndOrgIdsWithoutNegative(roleId, orgUnitIds);
@@ -237,9 +247,10 @@ public class RoleApiImpl implements RoleApi {
      * @since 9.6.0
      */
     @Override
-    public List<Person> listAllPersonsById(@RequestParam("tenantId") @NotBlank String tenantId, @RequestParam("roleId") @NotBlank String roleId) {
+    public List<Person> listAllPersonsById(@RequestParam("tenantId") @NotBlank String tenantId,
+        @RequestParam("roleId") @NotBlank String roleId) {
         Y9LoginUserHolder.setTenantId(tenantId);
-        
+
         Set<Y9Person> personSet = new HashSet<>();
         List<Person> personList = new ArrayList<>();
         Set<Y9Person> negativePersonSet = new HashSet<>();
@@ -252,7 +263,8 @@ public class RoleApiImpl implements RoleApi {
                     Y9Person person = (Y9Person)y9OrgBase;
                     negativePersonSet.add(person);
                 } else if (OrgTypeEnum.DEPARTMENT.getEnName().equals(y9OrgBase.getOrgType())) {
-                    negativePersonSet.addAll(compositeOrgBaseService.listAllPersonsRecursionDownward(y9OrgBase.getId()));
+                    negativePersonSet
+                        .addAll(compositeOrgBaseService.listAllPersonsRecursionDownward(y9OrgBase.getId()));
                 } else if (OrgTypeEnum.GROUP.getEnName().equals(y9OrgBase.getOrgType())) {
                     negativePersonSet.addAll(y9PersonService.listByGroupId(y9OrgBase.getId()));
                 } else if (OrgTypeEnum.POSITION.getEnName().equals(y9OrgBase.getOrgType())) {
@@ -296,9 +308,10 @@ public class RoleApiImpl implements RoleApi {
      * @since 9.6.0
      */
     @Override
-    public List<OrgUnit> listOrgUnitsById(@RequestParam("tenantId") @NotBlank String tenantId, @RequestParam("roleId") @NotBlank String roleId, @RequestParam("orgType") @NotBlank String orgType) {
+    public List<OrgUnit> listOrgUnitsById(@RequestParam("tenantId") @NotBlank String tenantId,
+        @RequestParam("roleId") @NotBlank String roleId, @RequestParam("orgType") @NotBlank String orgType) {
         Y9LoginUserHolder.setTenantId(tenantId);
-        
+
         List<Y9OrgBasesToRoles> roleMappingList = y9OrgBasesToRolesService.listByRoleId(roleId);
         List<Y9OrgBase> y9OrgBaseList = new ArrayList<>();
         for (Y9OrgBasesToRoles roleMapping : roleMappingList) {
@@ -323,9 +336,10 @@ public class RoleApiImpl implements RoleApi {
      * @since 9.6.0
      */
     @Override
-    public List<Person> listPersonsById(@RequestParam("tenantId") @NotBlank String tenantId, @RequestParam("roleId") @NotBlank String roleId) {
+    public List<Person> listPersonsById(@RequestParam("tenantId") @NotBlank String tenantId,
+        @RequestParam("roleId") @NotBlank String roleId) {
         Y9LoginUserHolder.setTenantId(tenantId);
-        
+
         List<Y9OrgBasesToRoles> roleMappingList = y9OrgBasesToRolesService.listByRoleId(roleId);
         List<Person> persons = new ArrayList<>();
         for (Y9OrgBasesToRoles roleMapping : roleMappingList) {
@@ -350,9 +364,10 @@ public class RoleApiImpl implements RoleApi {
      * @since 9.6.0
      */
     @Override
-    public List<Role> listRelateRoleByPersonId(@RequestParam("tenantId") @NotBlank String tenantId, @RequestParam("personId") @NotBlank String personId) {
+    public List<Role> listRelateRoleByPersonId(@RequestParam("tenantId") @NotBlank String tenantId,
+        @RequestParam("personId") @NotBlank String personId) {
         Y9LoginUserHolder.setTenantId(tenantId);
-        
+
         List<Y9Role> roleNodeList = y9RoleService.listOrgUnitRelatedWithoutNegative(personId);
         List<Role> roleList = null;
         if (null != roleNodeList && !roleNodeList.isEmpty()) {
@@ -373,9 +388,10 @@ public class RoleApiImpl implements RoleApi {
      * @since 9.6.0
      */
     @Override
-    public List<Role> listRoleByOrgUnitId(@RequestParam("tenantId") @NotBlank String tenantId, @RequestParam("orgUnitId") @NotBlank String orgUnitId) {
+    public List<Role> listRoleByOrgUnitId(@RequestParam("tenantId") @NotBlank String tenantId,
+        @RequestParam("orgUnitId") @NotBlank String orgUnitId) {
         Y9LoginUserHolder.setTenantId(tenantId);
-        
+
         List<Y9Role> roleNodeList = y9RoleService.listByOrgUnitIdWithoutNegative(orgUnitId);
         List<Role> roleList = null;
         if (null != roleNodeList && !roleNodeList.isEmpty()) {
@@ -417,9 +433,10 @@ public class RoleApiImpl implements RoleApi {
      * @since 9.6.0
      */
     @Override
-    public boolean removePerson(@RequestParam("personId") @NotBlank String personId, @RequestParam("roleId") @NotBlank String roleId, @RequestParam("tenantId") @NotBlank String tenantId) {
+    public boolean removePerson(@RequestParam("personId") @NotBlank String personId,
+        @RequestParam("roleId") @NotBlank String roleId, @RequestParam("tenantId") @NotBlank String tenantId) {
         Y9LoginUserHolder.setTenantId(tenantId);
-        
+
         try {
             y9OrgBasesToRolesService.removeOrgBases(roleId, new String[] {personId});
             return true;

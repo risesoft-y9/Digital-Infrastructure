@@ -1,6 +1,5 @@
 package net.risesoft.model;
 
-
 import java.io.Serializable;
 
 import lombok.Data;

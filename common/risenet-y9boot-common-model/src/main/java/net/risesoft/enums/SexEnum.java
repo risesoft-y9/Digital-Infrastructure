@@ -19,7 +19,7 @@ public enum SexEnum {
     MALE(1, "男"),
     /** 女 */
     FEMALE(0, "女");
-    
+
     private final Integer value;
     private final String description;
 }

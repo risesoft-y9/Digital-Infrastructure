@@ -13,7 +13,8 @@ public class Y9TenantIntegrator implements org.hibernate.integrator.spi.Integrat
     public void disintegrate(SessionFactoryImplementor sessionFactory, SessionFactoryServiceRegistry serviceRegistry) {}
 
     @Override
-    public void integrate(Metadata metadata, SessionFactoryImplementor sessionFactory, SessionFactoryServiceRegistry serviceRegistry) {
+    public void integrate(Metadata metadata, SessionFactoryImplementor sessionFactory,
+        SessionFactoryServiceRegistry serviceRegistry) {
         Collection<PersistentClass> classes = metadata.getEntityBindings();
         if (classes.size() > 0) {
             String name = (String)sessionFactory.getProperties().get("hibernate.persistenceUnitName");

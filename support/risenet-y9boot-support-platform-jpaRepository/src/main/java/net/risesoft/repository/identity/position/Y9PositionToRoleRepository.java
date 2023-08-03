@@ -22,7 +22,7 @@ import net.risesoft.entity.identity.position.Y9PositionToRole;
 @Repository
 @Transactional(value = "rsTenantTransactionManager", readOnly = true)
 public interface Y9PositionToRoleRepository extends JpaRepository<Y9PositionToRole, Integer> {
-    
+
     long countByPositionId(String positionId);
 
     long countByPositionIdAndRoleCustomId(String positionId, String customId);
@@ -43,9 +43,11 @@ public interface Y9PositionToRoleRepository extends JpaRepository<Y9PositionToRo
 
     Page<Y9PositionToRole> findByPositionIdAndAppName(String positionId, String appName, Pageable pageable);
 
-    Page<Y9PositionToRole> findByPositionIdAndAppNameAndSystemCnName(String positionId, String appName, String systemCnName, Pageable pageable);
+    Page<Y9PositionToRole> findByPositionIdAndAppNameAndSystemCnName(String positionId, String appName,
+        String systemCnName, Pageable pageable);
 
-    Page<Y9PositionToRole> findByPositionIdAndAppNameAndSystemCnNameAndRoleName(String positionId, String appName, String systemCnName, String roleName, Pageable pageable);
+    Page<Y9PositionToRole> findByPositionIdAndAppNameAndSystemCnNameAndRoleName(String positionId, String appName,
+        String systemCnName, String roleName, Pageable pageable);
 
     Page<Y9PositionToRole> findByPositionIdAndAppNameNotIn(String positionId, List<String> appNames, Pageable pageable);
 
@@ -53,17 +55,22 @@ public interface Y9PositionToRoleRepository extends JpaRepository<Y9PositionToRo
 
     Page<Y9PositionToRole> findByPositionIdAndRoleName(String positionId, String roleName, Pageable pageable);
 
-    Page<Y9PositionToRole> findByPositionIdAndRoleNameAndAppName(String positionId, String roleName, String appName, Pageable pageable);
+    Page<Y9PositionToRole> findByPositionIdAndRoleNameAndAppName(String positionId, String roleName, String appName,
+        Pageable pageable);
 
-    Page<Y9PositionToRole> findByPositionIdAndRoleNameAndAppNameNotIn(String positionId, String roleName, List<String> appNames, Pageable pageable);
+    Page<Y9PositionToRole> findByPositionIdAndRoleNameAndAppNameNotIn(String positionId, String roleName,
+        List<String> appNames, Pageable pageable);
 
-    Page<Y9PositionToRole> findByPositionIdAndRoleNameAndSystemCnNameAndAppNameNotIn(String positionId, String roleName, String systemCnName, List<String> appNames, Pageable pageable);
+    Page<Y9PositionToRole> findByPositionIdAndRoleNameAndSystemCnNameAndAppNameNotIn(String positionId, String roleName,
+        String systemCnName, List<String> appNames, Pageable pageable);
 
     Page<Y9PositionToRole> findByPositionIdAndSystemCnName(String positionId, String systemCnName, Pageable pageable);
 
-    Page<Y9PositionToRole> findByPositionIdAndSystemCnNameAndAppNameNotIn(String positionId, String systemCnName, List<String> appNames, Pageable pageable);
+    Page<Y9PositionToRole> findByPositionIdAndSystemCnNameAndAppNameNotIn(String positionId, String systemCnName,
+        List<String> appNames, Pageable pageable);
 
-    Page<Y9PositionToRole> findByPositionIdAndSystemCnNameAndRoleName(String positionId, String systemCnName, String roleName, Pageable pageable);
+    Page<Y9PositionToRole> findByPositionIdAndSystemCnNameAndRoleName(String positionId, String systemCnName,
+        String roleName, Pageable pageable);
 
     List<Y9PositionToRole> findByPositionIdAndSystemNameOrderByAppName(String positionId, String systemName);
 

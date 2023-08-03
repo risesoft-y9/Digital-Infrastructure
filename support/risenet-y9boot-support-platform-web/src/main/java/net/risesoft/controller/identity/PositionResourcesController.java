@@ -32,8 +32,10 @@ public class PositionResourcesController {
 
     @GetMapping
     public Y9Result<List<ResourcePermissionVO>> getByPositionId(String positionId) {
-        List<Y9PositionToResourceAndAuthority> y9PositionToResourceAndAuthorityList = y9PositionToResourceAndAuthorityService.list(positionId);
-        return Y9Result.success(resourcePermissionVOBuilder.buildResourcePermissionVOList(new ArrayList<>(y9PositionToResourceAndAuthorityList)));
+        List<Y9PositionToResourceAndAuthority> y9PositionToResourceAndAuthorityList =
+            y9PositionToResourceAndAuthorityService.list(positionId);
+        return Y9Result.success(resourcePermissionVOBuilder
+            .buildResourcePermissionVOList(new ArrayList<>(y9PositionToResourceAndAuthorityList)));
     }
 
 }

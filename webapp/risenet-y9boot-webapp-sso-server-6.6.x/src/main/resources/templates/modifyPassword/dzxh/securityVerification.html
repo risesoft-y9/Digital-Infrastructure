@@ -1,150 +1,161 @@
 <!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
 <head>
-<meta name="viewport" content="width=device-width, initial-scale=1"/>
-<meta http-equiv="X-UA-Compatible" content="IE=edge" />
-<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
-<title>修改密码-安全认证</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1"/>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+    <title>修改密码-安全认证</title>
 
-<link rel="stylesheet" type="text/css" th:href="@{/y9static/css/dzxh/dzxh_sso.css}" />
-<link type="text/css" rel="stylesheet"  th:href="@{/y9static/css/modifyPassword/modifyPassword.css}" />
-<link type="text/css" rel="stylesheet"  th:href="@{/y9static/css/modifyPassword/securityVerification.css}" />
-<script type="text/javascript" language="javascript" th:src="@{/y9static/js/jquery/jquery-1.10.2.min.js}"></script>
-<script type="text/javascript" language="javascript" th:src="@{/y9static/js/jquery/jquery.cookie.js}"></script>
+    <link rel="stylesheet" type="text/css" th:href="@{/y9static/css/dzxh/dzxh_sso.css}"/>
+    <link type="text/css" rel="stylesheet" th:href="@{/y9static/css/modifyPassword/modifyPassword.css}"/>
+    <link type="text/css" rel="stylesheet" th:href="@{/y9static/css/modifyPassword/securityVerification.css}"/>
+    <script type="text/javascript" language="javascript" th:src="@{/y9static/js/jquery/jquery-1.10.2.min.js}"></script>
+    <script type="text/javascript" language="javascript" th:src="@{/y9static/js/jquery/jquery.cookie.js}"></script>
 </head>
 <body>
 <div class="head" style="">
-	<img th:src="@{/y9static/css/dzxh/img/LOGO.png}" style="width: 60px; height: 60px; margin-top: 10px; margin-left: 30px;" />
-	<label class="yanse messages topss" style="font-size: 25px; margin-top: 15px;"><font color="white">中国地质灾害防治工程行业协会 &nbsp;&nbsp;&nbsp; &nbsp; 密码修改</font></label>
+    <img th:src="@{/y9static/css/dzxh/img/LOGO.png}"
+         style="width: 60px; height: 60px; margin-top: 10px; margin-left: 30px;"/>
+    <label class="yanse messages topss" style="font-size: 25px; margin-top: 15px;"><font color="white">中国地质灾害防治工程行业协会
+        &nbsp;&nbsp;&nbsp; &nbsp; 密码修改</font></label>
 </div>
 <div class="login" style="margin-top:50px;">
     <div class="header">
-       	<ul class="step-container">
-			<li class="step-past">确认账号
-	            <span class="arrow arrow-past">
+        <ul class="step-container">
+            <li class="step-past">确认账号
+                <span class="arrow arrow-past">
 	                <span class="arrow-pre"></span>
 	                <span class="arrow-next"></span>
 	            </span>
-	        </li>
-			<li class="step-current">安全认证
-	            <span class="arrow arrow-current">
+            </li>
+            <li class="step-current">安全认证
+                <span class="arrow arrow-current">
 	                <span class="arrow-pre"></span>
 	                <span class="arrow-next"></span>
 	            </span>
-	        </li>
-			<li class="step-next">重置密码</li>
-		</ul>
-    </div>    
-    <div class="web_qr_login" id="web_qr_login" style="display: block; height: 235px;">    
-       <div class="web_login" id="web_login">
-			<div class="login-box">
-				<div class="login_form">
-					<form id="myform" method="post" th:action="@{/api/dzxh/modifyPassword/resetPassword}">
-						<div  class="uinArea" id="uinArea">
-		                   	 &nbsp;&nbsp;&nbsp;&nbsp;手机号码：<span th:utext="${mobileEncrypt}"></span>
-				  			<input type="hidden" name="mobileKey" th:value="${mobileKey}" id="mobileKey"></input>
-				  			<input type="hidden" name="mobileEncrypt" th:value="${mobileEncrypt}" id="mobileEncrypt"></input>
-				 		 	<input type="button" value="获取短信验证码" onclick="sendSms();" id="doSendSms" class="doSendSms"/>
-							<div id="tip" align="right" style="margin-right: 30px"></div>
-						</div>
-          	 			<div  class="uinArea" id="uinArea">
-								<font color="red">*</font>短信验证码：
-						        <input type="text" name="smsCaptcha" th:value="${smsCaptcha}" id="smsCaptcha"></input>
-								<input type="hidden" name="smsCaptchaKey" th:value="${smsCaptchaKey}" id="smsCaptchaKey"></input>
-								<input type="hidden" name="personID" th:value="${personID}" id="personID">
-								<input type="hidden" name="tenantID" th:value="${tenantID}" id="tenantID">
-								<input type="hidden" name="loginName" th:value="${loginName}" id="loginName">
-								<input type="hidden" name="msg" th:value="${msg}" id="msg"></input>
-           				</div>
-	         			<div>
-	         				<input type="button" value="上一步" onclick ="lastStep();" class="button_blue" style="width:100px;float: left;"></input>
-							<input type="button" value="下一步" onclick ="check();" class="button_blue" style="width:100px;float: right;"></input>
-	     				</div>
-					</form>
-				</div>
-			</div>
-		</div>
-	</div>
+            </li>
+            <li class="step-next">重置密码</li>
+        </ul>
+    </div>
+    <div class="web_qr_login" id="web_qr_login" style="display: block; height: 235px;">
+        <div class="web_login" id="web_login">
+            <div class="login-box">
+                <div class="login_form">
+                    <form id="myform" method="post" th:action="@{/api/dzxh/modifyPassword/resetPassword}">
+                        <div class="uinArea" id="uinArea">
+                            &nbsp;&nbsp;&nbsp;&nbsp;手机号码：<span th:utext="${mobileEncrypt}"></span>
+                            <input type="hidden" name="mobileKey" th:value="${mobileKey}" id="mobileKey"></input>
+                            <input type="hidden" name="mobileEncrypt" th:value="${mobileEncrypt}"
+                                   id="mobileEncrypt"></input>
+                            <input type="button" value="获取短信验证码" onclick="sendSms();" id="doSendSms"
+                                   class="doSendSms"/>
+                            <div id="tip" align="right" style="margin-right: 30px"></div>
+                        </div>
+                        <div class="uinArea" id="uinArea">
+                            <font color="red">*</font>短信验证码：
+                            <input type="text" name="smsCaptcha" th:value="${smsCaptcha}" id="smsCaptcha"></input>
+                            <input type="hidden" name="smsCaptchaKey" th:value="${smsCaptchaKey}"
+                                   id="smsCaptchaKey"></input>
+                            <input type="hidden" name="personID" th:value="${personID}" id="personID">
+                            <input type="hidden" name="tenantID" th:value="${tenantID}" id="tenantID">
+                            <input type="hidden" name="loginName" th:value="${loginName}" id="loginName">
+                            <input type="hidden" name="msg" th:value="${msg}" id="msg"></input>
+                        </div>
+                        <div>
+                            <input type="button" value="上一步" onclick="lastStep();" class="button_blue"
+                                   style="width:100px;float: left;"></input>
+                            <input type="button" value="下一步" onclick="check();" class="button_blue"
+                                   style="width:100px;float: right;"></input>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
 </div>
 <div class="jianyi" style="color: white;">
-	版权所有: 中国地址灾害防治工程行业协会&nbsp;&nbsp;&nbsp;技术支持: 北京有生博大软件股份有限公司&nbsp;&nbsp;&nbsp;电话: 010-25888318
-	&nbsp;&nbsp;&nbsp;最佳分辨率: 1440×900
+    版权所有: 中国地址灾害防治工程行业协会&nbsp;&nbsp;&nbsp;技术支持: 北京有生博大软件股份有限公司&nbsp;&nbsp;&nbsp;电话:
+    010-25888318
+    &nbsp;&nbsp;&nbsp;最佳分辨率: 1440×900
 </div>
 </body>
 <script type="text/javascript">
-		var ctx = "[(${#request.getContextPath()})]";
-		$(function() {
-			var msg=$("#msg").val();
-			if(msg!=null&&msg!=""&&$.trim(String(msg))!=""){
-				alert(msg);
-			}
-		});
-	
-		function check(){
-		   var smsCaptchaKey = $("#smsCaptchaKey").val();
-		   var smsCaptcha = $("#smsCaptcha").val();
+    var ctx = "[(${#request.getContextPath()})]";
+    $(function () {
+        var msg = $("#msg").val();
+        if (msg != null && msg != "" && $.trim(String(msg)) != "") {
+            alert(msg);
+        }
+    });
 
-		   if($.trim(smsCaptcha).length<=0){
-			     alert("短信验证码不能为空！");
-			     return false;
-		   }
-		   
-		   if($.trim(smsCaptchaKey).length<=0){
-			   alert("发生异常，captchaKey为空！");
-		     return false;
-		   }
-		   
-		   $("#myform").submit();
-		}
-		
-		function sendSms(){
-			   var mobileKey = $("#mobileKey").val();
-			   if($.trim(mobileKey).length<=0){
-			     alert("发生异常，mobileKey为空！");
-			     return false;
-			   }
-				$.ajax({
-				     async:false,
-				     cache: false,
-			         type: "POST",
-			         url: ctx+"/api/sendSmsToModifyPassword",
-			         data: {mobileKey:mobileKey},
-			         dataType: "json",
-			         success: function(data){
-			              if(data.success){
-			            	  $("#smsCaptchaKey").val(data.smsCaptchaKey);
-			            	  countdown();
-			              }else{
-			            	  alert("获取验证码失败！");
-			              }
-			          }
-				});
-			   
-		}
-		
-		function lastStep(){
-			var loginName=$("#loginName").val();
-			if($.trim(loginName).length<=0){
-			     alert("发生异常，mobileKey为空！");
-			     return false;
-			}
-			window.location.href=ctx+"/api/dzxh/modifyPassword/checkLoginName?loginName="+encodeURI(loginName);
-		}
-		
-		var wait=60;
-		function countdown(){
-			if (wait == 0) {
-				document.getElementById('doSendSms').disabled=false;//用jquery获取Id不行
-				$("#doSendSms").attr('class', 'doSendSms');
-	            $("#tip").html("");
-	            wait = 60;
-	        } else {
-	        	document.getElementById('doSendSms').disabled=true;//用jquery获取Id不行
-	        	$("#doSendSms").attr('class','');
-	        	$("#tip").html('<font color="red">'+wait+'秒后重新获取手机动态验证码'+'</font>');
-	            wait--;
-	            setTimeout(function() {countdown();},1000)
-	        }
-		}
-	</script>
+    function check() {
+        var smsCaptchaKey = $("#smsCaptchaKey").val();
+        var smsCaptcha = $("#smsCaptcha").val();
+
+        if ($.trim(smsCaptcha).length <= 0) {
+            alert("短信验证码不能为空！");
+            return false;
+        }
+
+        if ($.trim(smsCaptchaKey).length <= 0) {
+            alert("发生异常，captchaKey为空！");
+            return false;
+        }
+
+        $("#myform").submit();
+    }
+
+    function sendSms() {
+        var mobileKey = $("#mobileKey").val();
+        if ($.trim(mobileKey).length <= 0) {
+            alert("发生异常，mobileKey为空！");
+            return false;
+        }
+        $.ajax({
+            async: false,
+            cache: false,
+            type: "POST",
+            url: ctx + "/api/sendSmsToModifyPassword",
+            data: {mobileKey: mobileKey},
+            dataType: "json",
+            success: function (data) {
+                if (data.success) {
+                    $("#smsCaptchaKey").val(data.smsCaptchaKey);
+                    countdown();
+                } else {
+                    alert("获取验证码失败！");
+                }
+            }
+        });
+
+    }
+
+    function lastStep() {
+        var loginName = $("#loginName").val();
+        if ($.trim(loginName).length <= 0) {
+            alert("发生异常，mobileKey为空！");
+            return false;
+        }
+        window.location.href = ctx + "/api/dzxh/modifyPassword/checkLoginName?loginName=" + encodeURI(loginName);
+    }
+
+    var wait = 60;
+
+    function countdown() {
+        if (wait == 0) {
+            document.getElementById('doSendSms').disabled = false;//用jquery获取Id不行
+            $("#doSendSms").attr('class', 'doSendSms');
+            $("#tip").html("");
+            wait = 60;
+        } else {
+            document.getElementById('doSendSms').disabled = true;//用jquery获取Id不行
+            $("#doSendSms").attr('class', '');
+            $("#tip").html('<font color="red">' + wait + '秒后重新获取手机动态验证码' + '</font>');
+            wait--;
+            setTimeout(function () {
+                countdown();
+            }, 1000)
+        }
+    }
+</script>
 </html>

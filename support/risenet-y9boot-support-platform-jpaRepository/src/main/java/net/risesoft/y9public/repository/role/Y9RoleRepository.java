@@ -20,7 +20,7 @@ import net.risesoft.y9public.entity.role.Y9Role;
 @SuppressWarnings("AlibabaAbstractMethodOrInterfaceMethodMustUseJavadoc")
 @Repository
 @Transactional(value = "rsPublicTransactionManager", readOnly = true)
-//@JaversSpringDataAuditable
+// @JaversSpringDataAuditable
 public interface Y9RoleRepository extends JpaRepository<Y9Role, String>, JpaSpecificationExecutor<Y9Role> {
 
     List<Y9Role> findByAppIdAndParentId(String appId, String parentId);
@@ -35,9 +35,11 @@ public interface Y9RoleRepository extends JpaRepository<Y9Role, String>, JpaSpec
 
     Page<Y9Role> findByNameAndSystemCnNameAndType(String name, String systemCnName, String type, Pageable pageable);
 
-    Page<Y9Role> findByNameAndSystemCnNameAndTypeAndParentIdNotIn(String name, String systemCnName, String type, List<String> ids, Pageable pageable);
+    Page<Y9Role> findByNameAndSystemCnNameAndTypeAndParentIdNotIn(String name, String systemCnName, String type,
+        List<String> ids, Pageable pageable);
 
-    List<Y9Role> findByNameAndSystemNameAndPropertiesAndType(String name, String systemName, String properties, String type);
+    List<Y9Role> findByNameAndSystemNameAndPropertiesAndType(String name, String systemName, String properties,
+        String type);
 
     List<Y9Role> findByNameAndSystemNameAndType(String name, String systemName, String type);
 
@@ -49,7 +51,8 @@ public interface Y9RoleRepository extends JpaRepository<Y9Role, String>, JpaSpec
 
     List<Y9Role> findByNameContainingOrderByTabIndexAsc(String name);
 
-    List<Y9Role> findByParentIdAndCustomIdAndSystemNameAndType(String parentId, String customId, String systemName, String type);
+    List<Y9Role> findByParentIdAndCustomIdAndSystemNameAndType(String parentId, String customId, String systemName,
+        String type);
 
     List<Y9Role> findByParentIdAndName(String parentId, String name);
 
@@ -63,11 +66,14 @@ public interface Y9RoleRepository extends JpaRepository<Y9Role, String>, JpaSpec
 
     Page<Y9Role> findBySystemCnNameAndType(String systemCnName, String type, Pageable pageable);
 
-    Page<Y9Role> findBySystemCnNameAndTypeAndDnContaining(String systemCnName, String type, String dn, Pageable pageable);
+    Page<Y9Role> findBySystemCnNameAndTypeAndDnContaining(String systemCnName, String type, String dn,
+        Pageable pageable);
 
-    Page<Y9Role> findBySystemCnNameAndTypeAndParentId(String systemCnName, String type, String parentId, Pageable pageable);
+    Page<Y9Role> findBySystemCnNameAndTypeAndParentId(String systemCnName, String type, String parentId,
+        Pageable pageable);
 
-    Page<Y9Role> findBySystemCnNameAndTypeAndParentIdNotIn(String systemCnName, String type, List<String> ids, Pageable pageable);
+    Page<Y9Role> findBySystemCnNameAndTypeAndParentIdNotIn(String systemCnName, String type, List<String> ids,
+        Pageable pageable);
 
     List<Y9Role> findBySystemNameAndNameContainingOrderByTabIndexAsc(String systemName, String name);
 

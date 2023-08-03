@@ -56,8 +56,10 @@ public class Y9OrganizationServiceImpl implements Y9OrganizationService {
     private final CompositeOrgBaseManager compositeOrgBaseManager;
     private final Y9OrganizationManager y9OrganizationManager;
 
-    public Y9OrganizationServiceImpl(Y9OrganizationRepository y9OrganizationRepository, @Qualifier("rsTenantEntityManagerFactory") EntityManagerFactory entityManagerFactory, CompositeOrgBaseManager compositeOrgBaseManager, Y9OrgBasesToRolesRepository y9OrgBasesToRolesRepository,
-                                     Y9AuthorizationRepository y9AuthorizationRepository, Y9OrganizationManager y9OrganizationManager) {
+    public Y9OrganizationServiceImpl(Y9OrganizationRepository y9OrganizationRepository,
+        @Qualifier("rsTenantEntityManagerFactory") EntityManagerFactory entityManagerFactory,
+        CompositeOrgBaseManager compositeOrgBaseManager, Y9OrgBasesToRolesRepository y9OrgBasesToRolesRepository,
+        Y9AuthorizationRepository y9AuthorizationRepository, Y9OrganizationManager y9OrganizationManager) {
         this.y9OrganizationRepository = y9OrganizationRepository;
         this.entityManagerFactory = entityManagerFactory;
         this.compositeOrgBaseManager = compositeOrgBaseManager;
@@ -92,14 +94,16 @@ public class Y9OrganizationServiceImpl implements Y9OrganizationService {
         // 发布事件，程序内部监听处理相关业务
         Y9Context.publishEvent(new Y9EntityDeletedEvent<>(org));
 
-        Y9MessageOrg msg = new Y9MessageOrg(Y9ModelConvertUtil.convert(org, Organization.class), Y9OrgEventConst.RISEORGEVENT_TYPE_DELETE_ORGANIZATION, Y9LoginUserHolder.getTenantId());
+        Y9MessageOrg msg = new Y9MessageOrg(Y9ModelConvertUtil.convert(org, Organization.class),
+            Y9OrgEventConst.RISEORGEVENT_TYPE_DELETE_ORGANIZATION, Y9LoginUserHolder.getTenantId());
         Y9PublishServiceUtil.persistAndPublishMessageOrg(msg, "删除组织机构", "删除 " + org.getName());
 
         y9OrganizationManager.delete(org);
 
         // 删除组织关联数据
         y9OrgBasesToRolesRepository.deleteByOrgId(org.getId());
-        y9AuthorizationRepository.deleteByPrincipalIdAndPrincipalType(org.getId(), AuthorizationPrincipalTypeEnum.DEPARTMENT.getValue());
+        y9AuthorizationRepository.deleteByPrincipalIdAndPrincipalType(org.getId(),
+            AuthorizationPrincipalTypeEnum.DEPARTMENT.getValue());
     }
 
     @Override
@@ -168,7 +172,8 @@ public class Y9OrganizationServiceImpl implements Y9OrganizationService {
         org.setTabIndex(tabIndex);
         org = y9OrganizationManager.save(org);
 
-        Y9MessageOrg msg = new Y9MessageOrg(Y9ModelConvertUtil.convert(org, Organization.class), Y9OrgEventConst.RISEORGEVENT_TYPE_UPDATE_ORGANIZATION, Y9LoginUserHolder.getTenantId());
+        Y9MessageOrg msg = new Y9MessageOrg(Y9ModelConvertUtil.convert(org, Organization.class),
+            Y9OrgEventConst.RISEORGEVENT_TYPE_UPDATE_ORGANIZATION, Y9LoginUserHolder.getTenantId());
         Y9PublishServiceUtil.publishMessageOrg(msg);
 
         return org;
@@ -203,7 +208,8 @@ public class Y9OrganizationServiceImpl implements Y9OrganizationService {
                     compositeOrgBaseManager.recursivelyUpdateProperties(oldOrg);
                 }
 
-                Y9MessageOrg msg = new Y9MessageOrg(Y9ModelConvertUtil.convert(oldOrg, Organization.class), Y9OrgEventConst.RISEORGEVENT_TYPE_UPDATE_ORGANIZATION, Y9LoginUserHolder.getTenantId());
+                Y9MessageOrg msg = new Y9MessageOrg(Y9ModelConvertUtil.convert(oldOrg, Organization.class),
+                    Y9OrgEventConst.RISEORGEVENT_TYPE_UPDATE_ORGANIZATION, Y9LoginUserHolder.getTenantId());
                 Y9PublishServiceUtil.persistAndPublishMessageOrg(msg, "更新组织机构", "更新" + org.getName());
 
                 return oldOrg;
@@ -217,7 +223,8 @@ public class Y9OrganizationServiceImpl implements Y9OrganizationService {
                 org.setTenantId(Y9LoginUserHolder.getTenantId());
                 org = y9OrganizationManager.save(org);
 
-                Y9MessageOrg msg = new Y9MessageOrg(Y9ModelConvertUtil.convert(org, Organization.class), Y9OrgEventConst.RISEORGEVENT_TYPE_ADD_ORGANIZATION, Y9LoginUserHolder.getTenantId());
+                Y9MessageOrg msg = new Y9MessageOrg(Y9ModelConvertUtil.convert(org, Organization.class),
+                    Y9OrgEventConst.RISEORGEVENT_TYPE_ADD_ORGANIZATION, Y9LoginUserHolder.getTenantId());
                 Y9PublishServiceUtil.persistAndPublishMessageOrg(msg, "新增组织机构", "新增" + org.getName());
 
                 return org;
@@ -234,7 +241,8 @@ public class Y9OrganizationServiceImpl implements Y9OrganizationService {
         org.setTenantId(Y9LoginUserHolder.getTenantId());
         org = y9OrganizationManager.save(org);
 
-        Y9MessageOrg msg = new Y9MessageOrg(Y9ModelConvertUtil.convert(org, Organization.class), Y9OrgEventConst.RISEORGEVENT_TYPE_ADD_ORGANIZATION, Y9LoginUserHolder.getTenantId());
+        Y9MessageOrg msg = new Y9MessageOrg(Y9ModelConvertUtil.convert(org, Organization.class),
+            Y9OrgEventConst.RISEORGEVENT_TYPE_ADD_ORGANIZATION, Y9LoginUserHolder.getTenantId());
         Y9PublishServiceUtil.persistAndPublishMessageOrg(msg, "新增组织机构", "新增" + org.getName());
 
         return org;
@@ -247,7 +255,8 @@ public class Y9OrganizationServiceImpl implements Y9OrganizationService {
         org.setProperties(properties);
         org = y9OrganizationManager.save(org);
 
-        Y9MessageOrg msg = new Y9MessageOrg(Y9ModelConvertUtil.convert(org, Organization.class), Y9OrgEventConst.RISEORGEVENT_TYPE_UPDATE_ORGANIZATION, Y9LoginUserHolder.getTenantId());
+        Y9MessageOrg msg = new Y9MessageOrg(Y9ModelConvertUtil.convert(org, Organization.class),
+            Y9OrgEventConst.RISEORGEVENT_TYPE_UPDATE_ORGANIZATION, Y9LoginUserHolder.getTenantId());
         Y9PublishServiceUtil.publishMessageOrg(msg);
 
         return org;
@@ -263,7 +272,8 @@ public class Y9OrganizationServiceImpl implements Y9OrganizationService {
             query = em.createNativeQuery("SELECT * FROM Y9_ORG_ORGANIZATION ", Y9Organization.class);
 
         } else {
-            query = em.createNativeQuery("SELECT * FROM Y9_ORG_ORGANIZATION WHERE " + whereClause, Y9Organization.class);
+            query =
+                em.createNativeQuery("SELECT * FROM Y9_ORG_ORGANIZATION WHERE " + whereClause, Y9Organization.class);
         }
         return query.getResultList();
     }

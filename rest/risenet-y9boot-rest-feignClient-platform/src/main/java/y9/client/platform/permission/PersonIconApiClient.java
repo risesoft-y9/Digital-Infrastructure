@@ -13,7 +13,8 @@ import net.risesoft.api.permission.PersonIconApi;
  * @date 2022/2/10
  * @since 9.6.0
  */
-@FeignClient(contextId = "PersonIconApiClient", name = "y9platform", url = "${y9.common.y9DigitalBaseUrl}", path = "/services/rest/personIcon")
+@FeignClient(contextId = "PersonIconApiClient", name = "y9platform", url = "${y9.common.y9DigitalBaseUrl}",
+    path = "/services/rest/personIcon")
 public interface PersonIconApiClient extends PersonIconApi {
 
 }

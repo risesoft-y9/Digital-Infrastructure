@@ -2,6 +2,8 @@ package net.risesoft.api.permission;
 
 import java.util.List;
 
+import javax.validation.constraints.NotBlank;
+
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -10,8 +12,6 @@ import net.risesoft.enums.AuthorityEnum;
 import net.risesoft.model.Menu;
 import net.risesoft.model.Resource;
 import net.risesoft.model.VueMenu;
-
-import javax.validation.constraints.NotBlank;
 
 /**
  * 人员资源权限组件
@@ -36,7 +36,9 @@ public interface PersonResourceApi {
      * @since 9.6.0
      */
     @GetMapping("/hasPermission")
-    boolean hasPermission(@RequestParam("tenantId") @NotBlank String tenantId, @RequestParam("personId") @NotBlank String personId, @RequestParam("resourceId") @NotBlank String resourceId, @RequestParam("authority") Integer authority);
+    boolean hasPermission(@RequestParam("tenantId") @NotBlank String tenantId,
+        @RequestParam("personId") @NotBlank String personId, @RequestParam("resourceId") @NotBlank String resourceId,
+        @RequestParam("authority") Integer authority);
 
     /**
      * 判断 person 对 customId 对应的 resource 是否有指定的操作权限
@@ -49,7 +51,9 @@ public interface PersonResourceApi {
      * @since 9.6.0
      */
     @GetMapping("/hasPermissionByCustomId")
-    boolean hasPermissionByCustomId(@RequestParam("tenantId") @NotBlank String tenantId, @RequestParam("personId") @NotBlank String personId, @RequestParam("customId") @NotBlank String customId, @RequestParam("authority") Integer authority);
+    boolean hasPermissionByCustomId(@RequestParam("tenantId") @NotBlank String tenantId,
+        @RequestParam("personId") @NotBlank String personId, @RequestParam("customId") @NotBlank String customId,
+        @RequestParam("authority") Integer authority);
 
     /**
      * 递归获得某一资源下,主体对象有相应权限的菜单
@@ -62,7 +66,9 @@ public interface PersonResourceApi {
      * @since 9.6.0
      */
     @GetMapping("/listMenusRecursively")
-    List<VueMenu> listMenusRecursively(@RequestParam("tenantId") @NotBlank String tenantId, @RequestParam("personId") @NotBlank String personId, @RequestParam("authority") Integer authority, @RequestParam("resourceId") @NotBlank String resourceId);
+    List<VueMenu> listMenusRecursively(@RequestParam("tenantId") @NotBlank String tenantId,
+        @RequestParam("personId") @NotBlank String personId, @RequestParam("authority") Integer authority,
+        @RequestParam("resourceId") @NotBlank String resourceId);
 
     /**
      * 获得某一资源下,主体对象有相应操作权限的子节点(子节点必须为菜单)
@@ -75,7 +81,9 @@ public interface PersonResourceApi {
      * @since 9.6.0
      */
     @GetMapping("/listSubMenus")
-    List<Menu> listSubMenus(@RequestParam("tenantId") @NotBlank String tenantId, @RequestParam("personId") @NotBlank String personId, @RequestParam("authority") Integer authority, @RequestParam("resourceId") @NotBlank String resourceId);
+    List<Menu> listSubMenus(@RequestParam("tenantId") @NotBlank String tenantId,
+        @RequestParam("personId") @NotBlank String personId, @RequestParam("authority") Integer authority,
+        @RequestParam("resourceId") @NotBlank String resourceId);
 
     /**
      * 获得某一资源下,主体对象有相应操作权限的子节点
@@ -88,5 +96,7 @@ public interface PersonResourceApi {
      * @since 9.6.0
      */
     @GetMapping("/listSubResources")
-    List<Resource> listSubResources(@RequestParam("tenantId") @NotBlank String tenantId, @RequestParam("personId") @NotBlank String personId, @RequestParam("authority") Integer authority, @RequestParam("resourceId") @NotBlank String resourceId);
+    List<Resource> listSubResources(@RequestParam("tenantId") @NotBlank String tenantId,
+        @RequestParam("personId") @NotBlank String personId, @RequestParam("authority") Integer authority,
+        @RequestParam("resourceId") @NotBlank String resourceId);
 }

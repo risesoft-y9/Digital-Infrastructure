@@ -20,7 +20,7 @@ import lombok.Data;
 public class ClickedApp implements Serializable {
 
     private static final long serialVersionUID = 7190005083758488330L;
-    
+
     /**
      * id
      */

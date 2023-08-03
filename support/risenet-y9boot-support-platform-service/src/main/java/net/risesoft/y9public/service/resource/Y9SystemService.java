@@ -129,10 +129,10 @@ public interface Y9SystemService {
     /**
      * 根据开发商id及系统名分页查询系统
      *
-     * @param page    页数
-     * @param rows    每页行数
+     * @param page 页数
+     * @param rows 每页行数
      * @param isvGuid 开发商id
-     * @param name    系统名
+     * @param name 系统名
      * @return {@link Page}<{@link Y9System}>
      */
     Page<Y9System> page(int page, int rows, String isvGuid, String name);

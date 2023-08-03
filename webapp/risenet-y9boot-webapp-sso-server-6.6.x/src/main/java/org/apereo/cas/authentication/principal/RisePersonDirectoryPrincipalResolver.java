@@ -32,7 +32,7 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 @RequiredArgsConstructor
 public class RisePersonDirectoryPrincipalResolver implements PrincipalResolver {
-    
+
     private boolean returnNullIfNoAttributes = false;
 
     private PrincipalFactory principalFactory = new DefaultPrincipalFactory();
@@ -47,10 +47,12 @@ public class RisePersonDirectoryPrincipalResolver implements PrincipalResolver {
      * @return the pair
      */
     @SuppressWarnings("unchecked")
-    protected Pair<String, Map<String, List<Object>>> convertPersonAttributesToPrincipal(final String extractedPrincipalId, final Map<String, List<Object>> attributes) {
+    protected Pair<String, Map<String, List<Object>>> convertPersonAttributesToPrincipal(
+        final String extractedPrincipalId, final Map<String, List<Object>> attributes) {
         val convertedAttributes = new LinkedHashMap<String, List<Object>>();
         attributes.forEach((key, attrValue) -> {
-            val values = ((List<Object>)CollectionUtils.toCollection(attrValue, ArrayList.class)).stream().filter(Objects::nonNull).collect(toList());
+            val values = ((List<Object>)CollectionUtils.toCollection(attrValue, ArrayList.class)).stream()
+                .filter(Objects::nonNull).collect(toList());
             LOGGER.debug("Found attribute [{}] with value(s) [{}]", key, values);
             convertedAttributes.put(key, values);
         });
@@ -58,17 +60,22 @@ public class RisePersonDirectoryPrincipalResolver implements PrincipalResolver {
         var principalId = extractedPrincipalId;
 
         val attrNames = org.springframework.util.StringUtils.commaDelimitedListToSet("username");
-        val result = attrNames.stream().map(String::trim).filter(attributes::containsKey).map(attributes::get).findFirst();
+        val result =
+            attrNames.stream().map(String::trim).filter(attributes::containsKey).map(attributes::get).findFirst();
 
         if (result.isPresent()) {
             val values = result.get();
             if (!values.isEmpty()) {
                 principalId = CollectionUtils.firstElement(values).get().toString();
-                LOGGER.debug("Found principal id attribute value [{}] and removed it from the collection of attributes", principalId);
+                LOGGER.debug("Found principal id attribute value [{}] and removed it from the collection of attributes",
+                    principalId);
             }
         } else {
-            LOGGER.warn("Principal resolution is set to resolve the authenticated principal via attribute(s) [username], and yet " + "the collection of attributes retrieved [{}] do not contain any of those attributes. This is likely due to misconfiguration "
-                + "and CAS will switch to use [{}] as the final principal id", attributes.keySet(), principalId);
+            LOGGER.warn(
+                "Principal resolution is set to resolve the authenticated principal via attribute(s) [username], and yet "
+                    + "the collection of attributes retrieved [{}] do not contain any of those attributes. This is likely due to misconfiguration "
+                    + "and CAS will switch to use [{}] as the final principal id",
+                attributes.keySet(), principalId);
         }
 
         return Pair.of(principalId, convertedAttributes);
@@ -88,7 +95,8 @@ public class RisePersonDirectoryPrincipalResolver implements PrincipalResolver {
     }
 
     @Override
-    public Principal resolve(Credential credential, Optional<Principal> currentPrincipal, Optional<AuthenticationHandler> handler) {
+    public Principal resolve(Credential credential, Optional<Principal> currentPrincipal,
+        Optional<AuthenticationHandler> handler) {
         RememberMeUsernamePasswordCredential c = (RememberMeUsernamePasswordCredential)credential;
         String tenantShortName = c.getTenantShortName();
         String deptId = c.getDeptId();
@@ -142,8 +150,10 @@ public class RisePersonDirectoryPrincipalResolver implements PrincipalResolver {
             attr.put("password", Lists.newArrayList(y9User.getPassword() == null ? "" : y9User.getPassword()));
             attr.put("original", Lists.newArrayList(y9User.getOriginal() == null ? 1 : y9User.getOriginal()));
             attr.put("originalId", Lists.newArrayList(y9User.getOriginalId() == null ? "" : y9User.getOriginalId()));
-            attr.put("globalManager", Lists.newArrayList(y9User.getGlobalManager() == null ? false : y9User.getGlobalManager()));
-            attr.put("managerLevel", Lists.newArrayList(y9User.getManagerLevel() == null ? 0 : y9User.getManagerLevel()));
+            attr.put("globalManager",
+                Lists.newArrayList(y9User.getGlobalManager() == null ? false : y9User.getGlobalManager()));
+            attr.put("managerLevel",
+                Lists.newArrayList(y9User.getManagerLevel() == null ? 0 : y9User.getManagerLevel()));
             attr.put("roles", Lists.newArrayList(y9User.getRoles() == null ? "" : y9User.getRoles()));
 
             attr.put("positions", Lists.newArrayList(y9User.getPositions() == null ? "" : y9User.getPositions()));
@@ -153,7 +163,8 @@ public class RisePersonDirectoryPrincipalResolver implements PrincipalResolver {
                 String[] positionIds = StringUtils.commaDelimitedListToStringArray(y9User.getPositions());
                 Optional<String> positionIdOptional = Arrays.stream(positionIds).findFirst();
                 // 当前登陆岗位默认返回排序靠前的岗位id
-                attr.put("positionId", Lists.newArrayList(positionIdOptional.isPresent() ? positionIdOptional.get() : ""));
+                attr.put("positionId",
+                    Lists.newArrayList(positionIdOptional.isPresent() ? positionIdOptional.get() : ""));
             }
             personAttributes = new AttributeNamedPersonImpl(username, attr);
         }

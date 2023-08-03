@@ -102,7 +102,8 @@ public class RemoteCallUtil {
                         stringBuffer.append(b);
                     }
                     String response = stringBuffer.toString();
-                    List<T> value = objectMapper.readValue(response, objectMapper.getTypeFactory().constructCollectionType(ArrayList.class, clz));
+                    List<T> value = objectMapper.readValue(response,
+                        objectMapper.getTypeFactory().constructCollectionType(ArrayList.class, clz));
                     return value;
                 }
             }
@@ -119,7 +120,8 @@ public class RemoteCallUtil {
         return null;
     }
 
-    public static <T> T getCallRemoteServiceWhithHeader(String url, List<NameValuePair> headerParams, List<NameValuePair> params, Class<T> clz) {
+    public static <T> T getCallRemoteServiceWhithHeader(String url, List<NameValuePair> headerParams,
+        List<NameValuePair> params, Class<T> clz) {
         HttpClient client = new HttpClient();
         client.getParams().setParameter(HttpMethodParams.BUFFER_WARN_TRIGGER_LIMIT, 1024 * 1024 * 10);
         client.getParams().setParameter(HttpMethodParams.HTTP_CONTENT_CHARSET, StandardCharsets.UTF_8);
@@ -162,7 +164,8 @@ public class RemoteCallUtil {
         return null;
     }
 
-    public static <T> List<T> getCallRemoteServiceWhithHeaderToList(String url, List<NameValuePair> headerParams, List<NameValuePair> params, Class<T> clz) {
+    public static <T> List<T> getCallRemoteServiceWhithHeaderToList(String url, List<NameValuePair> headerParams,
+        List<NameValuePair> params, Class<T> clz) {
         HttpClient client = new HttpClient();
         client.getParams().setParameter(HttpMethodParams.BUFFER_WARN_TRIGGER_LIMIT, 1024 * 1024 * 10);
         client.getParams().setParameter(HttpMethodParams.HTTP_CONTENT_CHARSET, StandardCharsets.UTF_8);
@@ -189,7 +192,8 @@ public class RemoteCallUtil {
                         stringBuffer.append(b);
                     }
                     String response = stringBuffer.toString();
-                    List<T> value = objectMapper.readValue(response, objectMapper.getTypeFactory().constructCollectionType(ArrayList.class, clz));
+                    List<T> value = objectMapper.readValue(response,
+                        objectMapper.getTypeFactory().constructCollectionType(ArrayList.class, clz));
                     return value;
                 }
             }
@@ -265,7 +269,8 @@ public class RemoteCallUtil {
                         stringBuffer.append(b);
                     }
                     String response = stringBuffer.toString();
-                    List<T> value = objectMapper.readValue(response, objectMapper.getTypeFactory().constructCollectionType(ArrayList.class, clz));
+                    List<T> value = objectMapper.readValue(response,
+                        objectMapper.getTypeFactory().constructCollectionType(ArrayList.class, clz));
                     return value;
                 }
             }
@@ -282,7 +287,8 @@ public class RemoteCallUtil {
         return null;
     }
 
-    public static <T> T postCallRemoteServiceWhithHeader(String url, List<NameValuePair> headerParams, List<NameValuePair> params, Class<T> clz) {
+    public static <T> T postCallRemoteServiceWhithHeader(String url, List<NameValuePair> headerParams,
+        List<NameValuePair> params, Class<T> clz) {
         HttpClient client = new HttpClient();
         client.getParams().setParameter(HttpMethodParams.BUFFER_WARN_TRIGGER_LIMIT, 1024 * 1024 * 10);
         client.getParams().setParameter(HttpMethodParams.HTTP_CONTENT_CHARSET, StandardCharsets.UTF_8);
@@ -324,7 +330,8 @@ public class RemoteCallUtil {
         return null;
     }
 
-    public static <T> List<T> postCallRemoteServiceWhithHeaderToList(String url, List<NameValuePair> headerParams, List<NameValuePair> params, Class<T> clz) {
+    public static <T> List<T> postCallRemoteServiceWhithHeaderToList(String url, List<NameValuePair> headerParams,
+        List<NameValuePair> params, Class<T> clz) {
         HttpClient client = new HttpClient();
         client.getParams().setParameter(HttpMethodParams.BUFFER_WARN_TRIGGER_LIMIT, 1024 * 1024 * 10);
         client.getParams().setParameter(HttpMethodParams.HTTP_CONTENT_CHARSET, StandardCharsets.UTF_8);
@@ -349,7 +356,8 @@ public class RemoteCallUtil {
                         stringBuffer.append(b);
                     }
                     String response = stringBuffer.toString();
-                    List<T> value = objectMapper.readValue(response, objectMapper.getTypeFactory().constructCollectionType(ArrayList.class, clz));
+                    List<T> value = objectMapper.readValue(response,
+                        objectMapper.getTypeFactory().constructCollectionType(ArrayList.class, clz));
                     return value;
                 }
             }

@@ -2,6 +2,8 @@ package net.risesoft.api.org;
 
 import java.util.List;
 
+import javax.validation.constraints.NotBlank;
+
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -11,8 +13,6 @@ import net.risesoft.model.Group;
 import net.risesoft.model.Organization;
 import net.risesoft.model.Person;
 import net.risesoft.model.Position;
-
-import javax.validation.constraints.NotBlank;
 
 /**
  * 机构服务组件
@@ -35,7 +35,8 @@ public interface OrganizationApi {
      * @since 9.6.0
      */
     @GetMapping("/get")
-    Organization getOrganization(@RequestParam("tenantId") @NotBlank String tenantId, @RequestParam("organizationId") @NotBlank String organizationId);
+    Organization getOrganization(@RequestParam("tenantId") @NotBlank String tenantId,
+        @RequestParam("organizationId") @NotBlank String organizationId);
 
     /**
      * 返回所有委办局
@@ -46,7 +47,8 @@ public interface OrganizationApi {
      * @since 9.6.0
      */
     @GetMapping("/listAllBureaus")
-    List<Department> listAllBureaus(@RequestParam("tenantId") @NotBlank String tenantId, @RequestParam("organizationId") @NotBlank String organizationId);
+    List<Department> listAllBureaus(@RequestParam("tenantId") @NotBlank String tenantId,
+        @RequestParam("organizationId") @NotBlank String organizationId);
 
     /**
      * 根据租户id获取所有机构
@@ -67,7 +69,8 @@ public interface OrganizationApi {
      * @since 9.6.0
      */
     @GetMapping("/listByType")
-    List<Organization> listByType(@RequestParam("tenantId") @NotBlank String tenantId, @RequestParam("virtual") Boolean virtual);
+    List<Organization> listByType(@RequestParam("tenantId") @NotBlank String tenantId,
+        @RequestParam("virtual") Boolean virtual);
 
     /**
      * 获取机构下的部门（下一级）
@@ -78,7 +81,8 @@ public interface OrganizationApi {
      * @since 9.6.0
      */
     @GetMapping("/listDepartments")
-    List<Department> listDepartments(@RequestParam("tenantId") @NotBlank String tenantId, @RequestParam("organizationId") @NotBlank String organizationId);
+    List<Department> listDepartments(@RequestParam("tenantId") @NotBlank String tenantId,
+        @RequestParam("organizationId") @NotBlank String organizationId);
 
     /**
      * 获取用户组（下一级）
@@ -89,7 +93,8 @@ public interface OrganizationApi {
      * @since 9.6.0
      */
     @GetMapping("/listGroups")
-    List<Group> listGroups(@RequestParam("tenantId") @NotBlank String tenantId, @RequestParam("organizationId") @NotBlank String organizationId);
+    List<Group> listGroups(@RequestParam("tenantId") @NotBlank String tenantId,
+        @RequestParam("organizationId") @NotBlank String organizationId);
 
     /**
      * 获取人员（下一级）
@@ -100,7 +105,8 @@ public interface OrganizationApi {
      * @since 9.6.0
      */
     @GetMapping("/listPersons")
-    List<Person> listPersons(@RequestParam("tenantId") @NotBlank String tenantId, @RequestParam("organizationId") @NotBlank String organizationId);
+    List<Person> listPersons(@RequestParam("tenantId") @NotBlank String tenantId,
+        @RequestParam("organizationId") @NotBlank String organizationId);
 
     /**
      * 获取岗位（下一级）
@@ -111,6 +117,7 @@ public interface OrganizationApi {
      * @since 9.6.0
      */
     @GetMapping("/listPositions")
-    List<Position> listPositions(@RequestParam("tenantId") @NotBlank String tenantId, @RequestParam("organizationId") @NotBlank String organizationId);
+    List<Position> listPositions(@RequestParam("tenantId") @NotBlank String tenantId,
+        @RequestParam("organizationId") @NotBlank String organizationId);
 
 }

@@ -20,8 +20,8 @@ import net.risesoft.enums.AuthorizationPrincipalTypeEnum;
 import net.risesoft.enums.OrgTypeEnum;
 import net.risesoft.id.IdType;
 import net.risesoft.id.Y9IdGenerator;
-import net.risesoft.manager.org.Y9GroupManager;
 import net.risesoft.manager.org.CompositeOrgBaseManager;
+import net.risesoft.manager.org.Y9GroupManager;
 import net.risesoft.model.Group;
 import net.risesoft.repository.Y9GroupRepository;
 import net.risesoft.repository.permission.Y9AuthorizationRepository;
@@ -70,7 +70,8 @@ public class Y9GroupServiceImpl implements Y9GroupService {
             y9Group.setTabIndex(Integer.MAX_VALUE);
         }
         y9Group.setOrgType(OrgTypeEnum.GROUP.getEnName());
-        y9Group.setDn(OrgLevelConsts.getOrgLevel(OrgTypeEnum.GROUP) + y9Group.getName() + OrgLevelConsts.SEPARATOR + parent.getDn());
+        y9Group.setDn(OrgLevelConsts.getOrgLevel(OrgTypeEnum.GROUP) + y9Group.getName() + OrgLevelConsts.SEPARATOR
+            + parent.getDn());
         y9Group.setDisabled(false);
         y9Group.setParentId(parent.getId());
 
@@ -87,11 +88,13 @@ public class Y9GroupServiceImpl implements Y9GroupService {
         // 删除用户组关联数据
         y9OrgBasesToRolesRepository.deleteByOrgId(groupId);
         y9PersonsToGroupsRepository.deleteByGroupId(groupId);
-        y9AuthorizationRepository.deleteByPrincipalIdAndPrincipalType(groupId, AuthorizationPrincipalTypeEnum.GROUP.getValue());
+        y9AuthorizationRepository.deleteByPrincipalIdAndPrincipalType(groupId,
+            AuthorizationPrincipalTypeEnum.GROUP.getValue());
 
         Y9Context.publishEvent(new Y9EntityDeletedEvent<>(y9Group));
 
-        Y9MessageOrg msg = new Y9MessageOrg(Y9ModelConvertUtil.convert(y9Group, Group.class), Y9OrgEventConst.RISEORGEVENT_TYPE_DELETE_GROUP, Y9LoginUserHolder.getTenantId());
+        Y9MessageOrg msg = new Y9MessageOrg(Y9ModelConvertUtil.convert(y9Group, Group.class),
+            Y9OrgEventConst.RISEORGEVENT_TYPE_DELETE_GROUP, Y9LoginUserHolder.getTenantId());
         Y9PublishServiceUtil.persistAndPublishMessageOrg(msg, "删除用户组", "删除" + y9Group.getName());
 
     }
@@ -174,14 +177,17 @@ public class Y9GroupServiceImpl implements Y9GroupService {
 
         Y9OrgBase parent = compositeOrgBaseManager.getOrgBase(parentId);
         updatedY9Group.setParentId(parent.getId());
-        updatedY9Group.setDn(OrgLevelConsts.getOrgLevel(OrgTypeEnum.GROUP) + updatedY9Group.getName() + OrgLevelConsts.SEPARATOR + parent.getDn());
+        updatedY9Group.setDn(OrgLevelConsts.getOrgLevel(OrgTypeEnum.GROUP) + updatedY9Group.getName()
+            + OrgLevelConsts.SEPARATOR + parent.getDn());
         updatedY9Group.setGuidPath(parent.getGuidPath() + OrgLevelConsts.SEPARATOR + updatedY9Group.getId());
         updatedY9Group = y9GroupManager.save(updatedY9Group);
 
         Y9Context.publishEvent(new Y9EntityUpdatedEvent<>(originY9Group, updatedY9Group));
 
-        Y9MessageOrg msg = new Y9MessageOrg(Y9ModelConvertUtil.convert(updatedY9Group, Group.class), Y9OrgEventConst.RISEORGEVENT_TYPE_UPDATE_GROUP, Y9LoginUserHolder.getTenantId());
-        Y9PublishServiceUtil.persistAndPublishMessageOrg(msg, "移动用户组", updatedY9Group.getName() + "移动到" + parent.getName());
+        Y9MessageOrg msg = new Y9MessageOrg(Y9ModelConvertUtil.convert(updatedY9Group, Group.class),
+            Y9OrgEventConst.RISEORGEVENT_TYPE_UPDATE_GROUP, Y9LoginUserHolder.getTenantId());
+        Y9PublishServiceUtil.persistAndPublishMessageOrg(msg, "移动用户组",
+            updatedY9Group.getName() + "移动到" + parent.getName());
 
         return updatedY9Group;
     }
@@ -206,7 +212,8 @@ public class Y9GroupServiceImpl implements Y9GroupService {
         group.setTabIndex(tabIndex);
         group = y9GroupManager.save(group);
 
-        Y9MessageOrg msg = new Y9MessageOrg(Y9ModelConvertUtil.convert(group, Group.class), Y9OrgEventConst.RISEORGEVENT_TYPE_UPDATE_GROUP, Y9LoginUserHolder.getTenantId());
+        Y9MessageOrg msg = new Y9MessageOrg(Y9ModelConvertUtil.convert(group, Group.class),
+            Y9OrgEventConst.RISEORGEVENT_TYPE_UPDATE_GROUP, Y9LoginUserHolder.getTenantId());
         Y9PublishServiceUtil.publishMessageOrg(msg);
 
         return group;
@@ -231,14 +238,16 @@ public class Y9GroupServiceImpl implements Y9GroupService {
                 origGroup.setName(group.getName());
                 origGroup.setDescription(group.getDescription());
                 origGroup.setParentId(parent.getId());
-                origGroup.setDn(OrgLevelConsts.getOrgLevel(OrgTypeEnum.GROUP) + group.getName() + OrgLevelConsts.SEPARATOR + parent.getDn());
+                origGroup.setDn(OrgLevelConsts.getOrgLevel(OrgTypeEnum.GROUP) + group.getName()
+                    + OrgLevelConsts.SEPARATOR + parent.getDn());
                 origGroup.setGuidPath(parent.getGuidPath() + OrgLevelConsts.SEPARATOR + group.getId());
                 if (group.getTabIndex() != null) {
                     origGroup.setTabIndex(group.getTabIndex());
                 }
                 origGroup = y9GroupManager.save(origGroup);
 
-                Y9MessageOrg msg = new Y9MessageOrg(Y9ModelConvertUtil.convert(origGroup, Group.class), Y9OrgEventConst.RISEORGEVENT_TYPE_UPDATE_GROUP, Y9LoginUserHolder.getTenantId());
+                Y9MessageOrg msg = new Y9MessageOrg(Y9ModelConvertUtil.convert(origGroup, Group.class),
+                    Y9OrgEventConst.RISEORGEVENT_TYPE_UPDATE_GROUP, Y9LoginUserHolder.getTenantId());
                 Y9PublishServiceUtil.persistAndPublishMessageOrg(msg, "更新用户组信息", "更新" + group.getName());
 
                 return origGroup;
@@ -248,11 +257,13 @@ public class Y9GroupServiceImpl implements Y9GroupService {
                 }
                 group.setOrgType(OrgTypeEnum.GROUP.getEnName());
                 group.setParentId(parent.getId());
-                group.setDn(OrgLevelConsts.getOrgLevel(OrgTypeEnum.GROUP) + group.getName() + OrgLevelConsts.SEPARATOR + parent.getDn());
+                group.setDn(OrgLevelConsts.getOrgLevel(OrgTypeEnum.GROUP) + group.getName() + OrgLevelConsts.SEPARATOR
+                    + parent.getDn());
                 group.setGuidPath(parent.getGuidPath() + OrgLevelConsts.SEPARATOR + group.getId());
                 group = y9GroupManager.save(group);
 
-                Y9MessageOrg msg = new Y9MessageOrg(Y9ModelConvertUtil.convert(group, Group.class), Y9OrgEventConst.RISEORGEVENT_TYPE_ADD_GROUP, Y9LoginUserHolder.getTenantId());
+                Y9MessageOrg msg = new Y9MessageOrg(Y9ModelConvertUtil.convert(group, Group.class),
+                    Y9OrgEventConst.RISEORGEVENT_TYPE_ADD_GROUP, Y9LoginUserHolder.getTenantId());
                 Y9PublishServiceUtil.persistAndPublishMessageOrg(msg, "新增用户组信息", "新增" + group.getName());
 
                 return group;
@@ -262,14 +273,16 @@ public class Y9GroupServiceImpl implements Y9GroupService {
         group.setId(Y9IdGenerator.genId(IdType.SNOWFLAKE));
         group.setTenantId(Y9LoginUserHolder.getTenantId());
         group.setOrgType(OrgTypeEnum.GROUP.getEnName());
-        group.setDn(OrgLevelConsts.getOrgLevel(OrgTypeEnum.GROUP) + group.getName() + OrgLevelConsts.SEPARATOR + parent.getDn());
+        group.setDn(OrgLevelConsts.getOrgLevel(OrgTypeEnum.GROUP) + group.getName() + OrgLevelConsts.SEPARATOR
+            + parent.getDn());
         group.setDisabled(false);
         group.setParentId(parent.getId());
         group.setTabIndex(compositeOrgBaseManager.getMaxSubTabIndex(parent.getId(), OrgTypeEnum.GROUP));
         group.setGuidPath(parent.getGuidPath() + OrgLevelConsts.SEPARATOR + group.getId());
         group = y9GroupManager.save(group);
 
-        Y9MessageOrg msg = new Y9MessageOrg(Y9ModelConvertUtil.convert(group, Group.class), Y9OrgEventConst.RISEORGEVENT_TYPE_ADD_GROUP, Y9LoginUserHolder.getTenantId());
+        Y9MessageOrg msg = new Y9MessageOrg(Y9ModelConvertUtil.convert(group, Group.class),
+            Y9OrgEventConst.RISEORGEVENT_TYPE_ADD_GROUP, Y9LoginUserHolder.getTenantId());
         Y9PublishServiceUtil.persistAndPublishMessageOrg(msg, "新增用户组信息", "新增" + group.getName());
 
         return group;
@@ -282,7 +295,8 @@ public class Y9GroupServiceImpl implements Y9GroupService {
         group.setProperties(properties);
         group = y9GroupManager.save(group);
 
-        Y9MessageOrg msg = new Y9MessageOrg(Y9ModelConvertUtil.convert(group, Group.class), Y9OrgEventConst.RISEORGEVENT_TYPE_UPDATE_GROUP, Y9LoginUserHolder.getTenantId());
+        Y9MessageOrg msg = new Y9MessageOrg(Y9ModelConvertUtil.convert(group, Group.class),
+            Y9OrgEventConst.RISEORGEVENT_TYPE_UPDATE_GROUP, Y9LoginUserHolder.getTenantId());
         Y9PublishServiceUtil.publishMessageOrg(msg);
 
         return group;
@@ -295,7 +309,8 @@ public class Y9GroupServiceImpl implements Y9GroupService {
         group.setTabIndex(tabIndex);
         group = y9GroupManager.save(group);
 
-        Y9MessageOrg msg = new Y9MessageOrg(Y9ModelConvertUtil.convert(group, Group.class), Y9OrgEventConst.RISEORGEVENT_TYPE_UPDATE_GROUP_TABINDEX, Y9LoginUserHolder.getTenantId());
+        Y9MessageOrg msg = new Y9MessageOrg(Y9ModelConvertUtil.convert(group, Group.class),
+            Y9OrgEventConst.RISEORGEVENT_TYPE_UPDATE_GROUP_TABINDEX, Y9LoginUserHolder.getTenantId());
         Y9PublishServiceUtil.persistAndPublishMessageOrg(msg, "更新用户组排序号", group.getName() + "的排序号更新为" + tabIndex);
 
         return group;

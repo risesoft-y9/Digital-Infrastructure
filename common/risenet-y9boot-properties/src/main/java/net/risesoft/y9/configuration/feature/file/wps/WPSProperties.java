@@ -5,6 +5,7 @@ import lombok.Setter;
 
 /**
  * wps 云文档配置
+ * 
  * @author liansen
  * @date 2022/09/26
  */
@@ -31,5 +32,5 @@ public class WPSProperties {
      * 应用程序秘钥
      */
     private String appSecret = "0vWYUIerHYir";
-    
+
 }

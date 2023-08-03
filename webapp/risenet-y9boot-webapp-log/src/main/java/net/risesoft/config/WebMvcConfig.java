@@ -19,7 +19,7 @@ import net.risesoft.y9.Y9Context;
 @Configuration
 @EnableKafka
 public class WebMvcConfig implements WebMvcConfigurer {
-    
+
     // starter-log工程用到了RequestContextHolder
     // https://github.com/spring-projects/spring-boot/issues/2637
     // https://github.com/spring-projects/spring-boot/issues/4331
@@ -51,6 +51,6 @@ public class WebMvcConfig implements WebMvcConfigurer {
 
     @Bean
     public EsIndexDate esIndexDate() {
-    	return new EsIndexDate();
+        return new EsIndexDate();
     }
 }

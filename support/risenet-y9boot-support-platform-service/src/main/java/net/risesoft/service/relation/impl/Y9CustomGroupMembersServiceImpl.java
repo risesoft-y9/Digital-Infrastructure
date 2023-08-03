@@ -64,15 +64,18 @@ public class Y9CustomGroupMembersServiceImpl implements Y9CustomGroupMembersServ
     @Override
     public List<Y9Person> listAllPersonsByGroupId(String groupId) {
         List<Y9Person> orgPersonList = new ArrayList<>();
-        List<Y9CustomGroupMember> orgCustomGroupMemberList = customGroupMembersRepository.findByGroupIdOrderByTabIndexAsc(groupId);
+        List<Y9CustomGroupMember> orgCustomGroupMemberList =
+            customGroupMembersRepository.findByGroupIdOrderByTabIndexAsc(groupId);
         for (Y9CustomGroupMember y9CustomGroupMember : orgCustomGroupMemberList) {
             OrgTypeEnum orgType = OrgTypeEnum.getByEnName(y9CustomGroupMember.getMemberType());
             switch (orgType) {
                 case ORGANIZATION:
-                    orgPersonList.addAll(compositeOrgBaseManager.listAllPersonsRecursionDownward(y9CustomGroupMember.getMemberId(), false));
+                    orgPersonList.addAll(compositeOrgBaseManager
+                        .listAllPersonsRecursionDownward(y9CustomGroupMember.getMemberId(), false));
                     break;
                 case DEPARTMENT:
-                    orgPersonList.addAll(compositeOrgBaseManager.listAllPersonsRecursionDownward(y9CustomGroupMember.getMemberId(), false));
+                    orgPersonList.addAll(compositeOrgBaseManager
+                        .listAllPersonsRecursionDownward(y9CustomGroupMember.getMemberId(), false));
                     break;
                 case POSITION:
                     orgPersonList.addAll(y9PersonManager.listByPositionId(y9CustomGroupMember.getMemberId()));
@@ -91,7 +94,8 @@ public class Y9CustomGroupMembersServiceImpl implements Y9CustomGroupMembersServ
 
     @Override
     public List<Y9CustomGroupMember> listByGroupId(String groupId) {
-        return StringUtils.isNotEmpty(groupId) ? customGroupMembersRepository.findByGroupIdOrderByTabIndexAsc(groupId) : null;
+        return StringUtils.isNotEmpty(groupId) ? customGroupMembersRepository.findByGroupIdOrderByTabIndexAsc(groupId)
+            : null;
     }
 
     @Override

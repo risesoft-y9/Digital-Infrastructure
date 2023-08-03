@@ -1,12 +1,8 @@
 package net.risesoft.service.identity;
 
 import java.util.List;
-import java.util.Map;
-
-import org.springframework.data.domain.Page;
 
 import net.risesoft.entity.identity.person.Y9PersonToRole;
-import net.risesoft.pojo.Y9Page;
 import net.risesoft.y9public.entity.role.Y9Role;
 
 /**
@@ -57,7 +53,7 @@ public interface Y9PersonToRoleService {
      * @return
      */
     List<Y9PersonToRole> listByPersonId(String personId);
-    
+
     /**
      * 根据人员id删除
      *

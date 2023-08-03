@@ -41,7 +41,7 @@ import net.risesoft.y9.Y9Context;
  */
 @Slf4j
 public class Y9FileUtil {
-    
+
     private static final long KB = 1024;
     private static final long MB = KB * 1024;
     private static final long GB = MB * 1024;
@@ -55,7 +55,8 @@ public class Y9FileUtil {
      * @param fileType
      * @return
      */
-    public static String exportFile(String uploadDir, List<Map<String, Object>> list, List<String> names, String fileType) {
+    public static String exportFile(String uploadDir, List<Map<String, Object>> list, List<String> names,
+        String fileType) {
         File dir = new File(uploadDir);
         if (!dir.exists()) {
             dir.mkdirs();
@@ -63,7 +64,7 @@ public class Y9FileUtil {
         String fileName = System.currentTimeMillis() + "_" + getRandomNum(3) + fileType;
         String filePath = uploadDir + File.separator + fileName;
         File file = new File(filePath);
-        
+
         try (FileWriter fw = new FileWriter(file); BufferedWriter bw = new BufferedWriter(fw)) {
             StringBuffer str = new StringBuffer("");
             str.append("<?xml version=\"1.0\" encoding=\"utf-8\"?>\n");
@@ -106,9 +107,10 @@ public class Y9FileUtil {
             LOGGER.warn("file too big...");
             return null;
         }
-        
+
         String content = "";
-        try (BufferedReader reader = new BufferedReader(new InputStreamReader(new FileInputStream(file), StandardCharsets.UTF_8));) {
+        try (BufferedReader reader =
+            new BufferedReader(new InputStreamReader(new FileInputStream(file), StandardCharsets.UTF_8));) {
             String line;
             while ((line = reader.readLine()) != null) {
                 content += line + "\n";
@@ -316,7 +318,7 @@ public class Y9FileUtil {
     public static void writerLogByStr(String prefix, String message) {
         String fileName = Y9Context.getRealPath("/file/temp/") + prefix + ".log";
         try (FileWriterWithEncoding fw = new FileWriterWithEncoding(fileName, "utf-8", true);
-             BufferedWriter bw = new BufferedWriter(fw)) {
+            BufferedWriter bw = new BufferedWriter(fw)) {
             bw.write(message);
             bw.flush();
         } catch (IOException e) {
@@ -326,9 +328,9 @@ public class Y9FileUtil {
 
     // 导出xml文件
     public static void writerXml(String fileName, List<Map<String, Object>> list, List<String> names) {
-        
-        try (FileWriter fw = new FileWriter(fileName);// 用来写入字符文件的便捷类
-             BufferedWriter bw = new BufferedWriter(fw)) {
+
+        try (FileWriter fw = new FileWriter(fileName); // 用来写入字符文件的便捷类
+            BufferedWriter bw = new BufferedWriter(fw)) {
             StringBuffer str = new StringBuffer(""); // 用来存储xml字符串的
             str.append("<?xml version=\"1.0\" encoding=\"utf-8\"?>\n");
             str.append("<root>\n");
@@ -392,7 +394,7 @@ public class Y9FileUtil {
         if (fileSize < 0) {
             throw new IllegalArgumentException("文件字节数不应为负数");
         }
-        
+
         DecimalFormat df = new DecimalFormat("#.00");
         String displayFileSize;
 

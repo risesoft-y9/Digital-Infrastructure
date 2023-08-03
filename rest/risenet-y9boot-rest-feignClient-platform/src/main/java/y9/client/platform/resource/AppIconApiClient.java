@@ -13,7 +13,8 @@ import net.risesoft.api.resource.AppIconApi;
  * @date 2022/2/10
  * @since 9.6.0
  */
-@FeignClient(contextId = "AppIconApiClient", name = "y9platform", url = "${y9.common.orgBaseUrl}", path = "/services/rest/appIcon")
+@FeignClient(contextId = "AppIconApiClient", name = "y9platform", url = "${y9.common.orgBaseUrl}",
+    path = "/services/rest/appIcon")
 public interface AppIconApiClient extends AppIconApi {
 
 }

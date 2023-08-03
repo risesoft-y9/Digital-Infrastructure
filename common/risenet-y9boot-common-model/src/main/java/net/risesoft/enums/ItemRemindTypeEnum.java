@@ -5,6 +5,7 @@ import lombok.Getter;
 
 /**
  * 消息提醒类型
+ * 
  * @author qinman
  * @date 2022/12/20
  */
@@ -19,7 +20,7 @@ public enum ItemRemindTypeEnum {
     NODEARRIVE("nodeArrive", "节点到达"),
     /** 节点完成 */
     NODECOMPLETE("nodeComplete", "节点完成");
-    
+
     private final String value;
     private final String name;
 }

@@ -43,9 +43,11 @@ public interface Y9PersonToRoleRepository extends JpaRepository<Y9PersonToRole, 
 
     Page<Y9PersonToRole> findByPersonIdAndAppName(String personId, String appName, Pageable pageable);
 
-    Page<Y9PersonToRole> findByPersonIdAndAppNameAndSystemCnName(String personId, String appName, String systemCnName, Pageable pageable);
+    Page<Y9PersonToRole> findByPersonIdAndAppNameAndSystemCnName(String personId, String appName, String systemCnName,
+        Pageable pageable);
 
-    Page<Y9PersonToRole> findByPersonIdAndAppNameAndSystemCnNameAndRoleName(String personId, String appName, String systemCnName, String roleName, Pageable pageable);
+    Page<Y9PersonToRole> findByPersonIdAndAppNameAndSystemCnNameAndRoleName(String personId, String appName,
+        String systemCnName, String roleName, Pageable pageable);
 
     Page<Y9PersonToRole> findByPersonIdAndAppNameNotIn(String personId, List<String> appNames, Pageable pageable);
 
@@ -53,17 +55,22 @@ public interface Y9PersonToRoleRepository extends JpaRepository<Y9PersonToRole, 
 
     Page<Y9PersonToRole> findByPersonIdAndRoleName(String personId, String roleName, Pageable pageable);
 
-    Page<Y9PersonToRole> findByPersonIdAndRoleNameAndAppName(String personId, String roleName, String appName, Pageable pageable);
+    Page<Y9PersonToRole> findByPersonIdAndRoleNameAndAppName(String personId, String roleName, String appName,
+        Pageable pageable);
 
-    Page<Y9PersonToRole> findByPersonIdAndRoleNameAndAppNameNotIn(String personId, String roleName, List<String> appNames, Pageable pageable);
+    Page<Y9PersonToRole> findByPersonIdAndRoleNameAndAppNameNotIn(String personId, String roleName,
+        List<String> appNames, Pageable pageable);
 
-    Page<Y9PersonToRole> findByPersonIdAndRoleNameAndSystemCnNameAndAppNameNotIn(String personId, String roleName, String systemCnName, List<String> appNames, Pageable pageable);
+    Page<Y9PersonToRole> findByPersonIdAndRoleNameAndSystemCnNameAndAppNameNotIn(String personId, String roleName,
+        String systemCnName, List<String> appNames, Pageable pageable);
 
     Page<Y9PersonToRole> findByPersonIdAndSystemCnName(String personId, String systemCnName, Pageable pageable);
 
-    Page<Y9PersonToRole> findByPersonIdAndSystemCnNameAndAppNameNotIn(String personId, String systemCnName, List<String> appNames, Pageable pageable);
+    Page<Y9PersonToRole> findByPersonIdAndSystemCnNameAndAppNameNotIn(String personId, String systemCnName,
+        List<String> appNames, Pageable pageable);
 
-    Page<Y9PersonToRole> findByPersonIdAndSystemCnNameAndRoleName(String personId, String systemCnName, String roleName, Pageable pageable);
+    Page<Y9PersonToRole> findByPersonIdAndSystemCnNameAndRoleName(String personId, String systemCnName, String roleName,
+        Pageable pageable);
 
     List<Y9PersonToRole> findByPersonIdAndSystemNameOrderByAppName(String personId, String systemName);
 

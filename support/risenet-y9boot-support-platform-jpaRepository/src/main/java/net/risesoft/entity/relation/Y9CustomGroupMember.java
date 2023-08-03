@@ -26,7 +26,7 @@ import net.risesoft.base.BaseEntity;
 @NoArgsConstructor
 @Data
 public class Y9CustomGroupMember extends BaseEntity {
-    
+
     private static final long serialVersionUID = 4266888031261592065L;
 
     /** 主键 */

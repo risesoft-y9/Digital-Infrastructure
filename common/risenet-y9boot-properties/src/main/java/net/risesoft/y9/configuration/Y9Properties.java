@@ -12,6 +12,7 @@ import net.risesoft.y9.configuration.feature.Y9FeatureProperties;
 
 /**
  * 配置属性
+ * 
  * @author liansen
  * @date 2022/09/28
  */

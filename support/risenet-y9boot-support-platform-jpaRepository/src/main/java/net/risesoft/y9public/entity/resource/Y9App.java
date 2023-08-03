@@ -31,7 +31,7 @@ import net.risesoft.enums.ResourceTypeEnum;
 public class Y9App extends Y9ResourceBase {
 
     private static final long serialVersionUID = 1771730705695533602L;
-    
+
     /** 资源别名 */
     @Column(name = "ALIAS_NAME", length = 255)
     @Comment("资源别名")

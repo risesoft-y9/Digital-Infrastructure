@@ -23,5 +23,5 @@ public class Y9sessionProperties {
 
     @NestedConfigurationProperty
     private Y9SessionRedisProperties redis = new Y9SessionRedisProperties();
-    
+
 }

@@ -90,7 +90,8 @@ public class FieldMappingController {
     @GetMapping(value = "/page")
     public Y9Page<Y9logMapping> page(Y9PageQuery pageQuery, String sort) {
         Page<Y9logMapping> resultPage = y9logMappingService.page(pageQuery.getPage(), pageQuery.getSize(), sort);
-        return Y9Page.success(pageQuery.getPage(), resultPage.getTotalPages(), resultPage.getTotalElements(), resultPage.getContent());
+        return Y9Page.success(pageQuery.getPage(), resultPage.getTotalPages(), resultPage.getTotalElements(),
+            resultPage.getContent());
     }
 
     /**
@@ -104,8 +105,10 @@ public class FieldMappingController {
     @RiseLog(operationName = "搜索字段映射分页列表")
     @GetMapping(value = "/pageSearchList")
     public Y9Page<Y9logMapping> pageSearchList(String modularName, String modularCnName, Y9PageQuery pageQuery) {
-        Page<Y9logMapping> resultPage = y9logMappingService.pageSearchList(pageQuery.getPage(), pageQuery.getSize(), modularName, modularCnName);
-        return Y9Page.success(pageQuery.getPage(), resultPage.getTotalPages(), resultPage.getTotalElements(), resultPage.getContent());
+        Page<Y9logMapping> resultPage =
+            y9logMappingService.pageSearchList(pageQuery.getPage(), pageQuery.getSize(), modularName, modularCnName);
+        return Y9Page.success(pageQuery.getPage(), resultPage.getTotalPages(), resultPage.getTotalElements(),
+            resultPage.getContent());
     }
 
     /**

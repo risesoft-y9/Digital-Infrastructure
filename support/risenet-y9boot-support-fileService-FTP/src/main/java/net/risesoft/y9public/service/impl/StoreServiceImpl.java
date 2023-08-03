@@ -17,7 +17,7 @@ import net.risesoft.y9public.service.StoreService;
 @Service
 @RequiredArgsConstructor
 public class StoreServiceImpl implements StoreService {
-    
+
     private final FtpClientHelper ftpClientHelper;
 
     @Override

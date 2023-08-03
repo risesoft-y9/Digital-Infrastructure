@@ -11,7 +11,7 @@ const storageType = sessionStorage;
 // const storageType = localStorage;
 
 export default {
-    type: function(str) {
+    type: function (str) {
         // 为空 使用默认设定类型
         if (!str) {
             return storageType;
@@ -24,7 +24,7 @@ export default {
             return localStorage;
         }
     },
-    isAvailable: function(type) {
+    isAvailable: function (type) {
         var storage;
         try {
             storage = window[type];
@@ -47,16 +47,16 @@ export default {
                 (storage && storage.length !== 0);
         }
     },
-    setStringItem: function(key, string) {
-        if (typeof(string) === 'string' || typeof(string) === 'number') {
+    setStringItem: function (key, string) {
+        if (typeof (string) === 'string' || typeof (string) === 'number') {
             storageType.setItem(key, string);
             return true;
         }
-        console.log(`setStringItem - ${key}-不是String类型-${typeof(string)}`);
+        console.log(`setStringItem - ${key}-不是String类型-${typeof (string)}`);
         return false;
 
     },
-    getStringItem: function(key) {
+    getStringItem: function (key) {
         const str = storageType.getItem(key);
         if (!str || str == 'undefined') {
             console.log(`getStringItem - 没有${key}这个缓存`);
@@ -64,14 +64,14 @@ export default {
         }
         return str;
     },
-    setObjectItem: function(key, obj) {
-        if (typeof(obj) !== 'object') {
+    setObjectItem: function (key, obj) {
+        if (typeof (obj) !== 'object') {
             return false;
         }
         storageType.setItem(key, JSON.stringify(obj));
         return true;
     },
-    getObjectItem: function(key, item = '') {
+    getObjectItem: function (key, item = '') {
         const object = storageType.getItem(key);
         if (!object) {
             // console.log(`getObjectItem - 没有${object}这个缓存`);

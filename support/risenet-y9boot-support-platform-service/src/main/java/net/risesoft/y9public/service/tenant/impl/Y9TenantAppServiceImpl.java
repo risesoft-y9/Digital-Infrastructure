@@ -172,7 +172,8 @@ public class Y9TenantAppServiceImpl implements Y9TenantAppService {
 
     @Override
     public List<String> listAppIdByTenantId(String tenantId, Boolean verify, Boolean tenancy) {
-        List<Y9TenantApp> tas = y9TenantAppRepository.findByTenantIdAndVerifyAndTenancyOrderByCreateTimeDesc(tenantId, verify, tenancy);
+        List<Y9TenantApp> tas =
+            y9TenantAppRepository.findByTenantIdAndVerifyAndTenancyOrderByCreateTimeDesc(tenantId, verify, tenancy);
         if (tas != null) {
             return tas.stream().map(Y9TenantApp::getAppId).collect(Collectors.toList());
         }
@@ -222,18 +223,22 @@ public class Y9TenantAppServiceImpl implements Y9TenantAppService {
     }
 
     @Override
-    public Page<Y9TenantApp> page(Integer page, Integer rows, Boolean verify, String tenantName, String createTime, String verifyTime, Boolean tenancy, String systemId) {
+    public Page<Y9TenantApp> page(Integer page, Integer rows, Boolean verify, String tenantName, String createTime,
+        String verifyTime, Boolean tenancy, String systemId) {
         Sort sort = Sort.by(Sort.Direction.ASC, "verify").and(Sort.by(Sort.Direction.DESC, "createTime"));
         PageRequest pageable = PageRequest.of(page > 0 ? page - 1 : 0, rows, sort);
-        Y9TenantAppSpecification<Y9TenantApp> spec = new Y9TenantAppSpecification<>(verify, tenantName, createTime, verifyTime, tenancy, systemId);
+        Y9TenantAppSpecification<Y9TenantApp> spec =
+            new Y9TenantAppSpecification<>(verify, tenantName, createTime, verifyTime, tenancy, systemId);
         return y9TenantAppRepository.findAll(spec, pageable);
     }
 
     @Override
-    public Page<Y9TenantApp> page(Integer page, Integer rows, Boolean verify, String tenantName, String createTime, String verifyTime, Boolean tenancy, String appName, String systemIds) {
+    public Page<Y9TenantApp> page(Integer page, Integer rows, Boolean verify, String tenantName, String createTime,
+        String verifyTime, Boolean tenancy, String appName, String systemIds) {
         Sort sort = Sort.by(Sort.Direction.DESC, "createTime").and(Sort.by(Sort.Direction.ASC, "verify"));
         PageRequest pageable = PageRequest.of(page > 0 ? page - 1 : 0, rows, sort);
-        Y9TenantAppSpecification<Y9TenantApp> spec = new Y9TenantAppSpecification<>(verify, tenantName, createTime, verifyTime, tenancy, systemIds, appName);
+        Y9TenantAppSpecification<Y9TenantApp> spec =
+            new Y9TenantAppSpecification<>(verify, tenantName, createTime, verifyTime, tenancy, systemIds, appName);
         return y9TenantAppRepository.findAll(spec, pageable);
     }
 
@@ -259,7 +264,8 @@ public class Y9TenantAppServiceImpl implements Y9TenantAppService {
     public Y9TenantApp save(String appId, String tenantId, String applyName, String applyReason) {
         Y9TenantApp y9TenantApp = y9TenantAppRepository.findByTenantIdAndAppIdAndTenancy(tenantId, appId, Boolean.TRUE);
         Y9App y9App = y9AppRepository.findById(appId).orElse(null);
-        String tenantDataSource = y9TenantSystemManager.getDataSourceIdByTenantIdAndSystemId(tenantId, y9App.getSystemId());
+        String tenantDataSource =
+            y9TenantSystemManager.getDataSourceIdByTenantIdAndSystemId(tenantId, y9App.getSystemId());
         if (null != y9TenantApp) {
             if (tenantDataSource != null && !y9TenantApp.getVerify()) {
                 y9TenantApp.setVerify(true);
@@ -320,7 +326,8 @@ public class Y9TenantAppServiceImpl implements Y9TenantAppService {
 
     @Override
     @Transactional(readOnly = false)
-    public int updateByAppIdAndTenantId(Boolean tenancy, String deletedName, Date deletedTime, String appId, String tenantId, Boolean currentTenancy) {
+    public int updateByAppIdAndTenantId(Boolean tenancy, String deletedName, Date deletedTime, String appId,
+        String tenantId, Boolean currentTenancy) {
         try {
             Y9TenantApp ta = y9TenantAppRepository.findByTenantIdAndAppIdAndTenancy(tenantId, appId, currentTenancy);
             if (null != ta) {

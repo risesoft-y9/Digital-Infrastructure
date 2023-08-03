@@ -47,8 +47,9 @@ import y9.jpa.extension.Y9EnableJpaRepositories;
 @AutoConfigureBefore(DruidDataSourceAutoConfigure.class)
 @EnableConfigurationProperties(JpaProperties.class)
 @EnableTransactionManagement(proxyTargetClass = true, mode = AdviceMode.ASPECTJ)
-@Y9EnableJpaRepositories(basePackages = {"${y9.feature.jpa.packagesToScanRepositoryTenant}"}, includeFilters = {@ComponentScan.Filter(classes = JpaRepository.class, type = FilterType.ASSIGNABLE_TYPE)}, entityManagerFactoryRef = "rsTenantEntityManagerFactory",
-    transactionManagerRef = "rsTenantTransactionManager")
+@Y9EnableJpaRepositories(basePackages = {"${y9.feature.jpa.packagesToScanRepositoryTenant}"},
+    includeFilters = {@ComponentScan.Filter(classes = JpaRepository.class, type = FilterType.ASSIGNABLE_TYPE)},
+    entityManagerFactoryRef = "rsTenantEntityManagerFactory", transactionManagerRef = "rsTenantTransactionManager")
 @Slf4j
 public class SpringMultiTenantConfiguration {
 
@@ -77,7 +78,8 @@ public class SpringMultiTenantConfiguration {
         Boolean clearFiltersEnable = environment.getProperty(prefix + "clearFiltersEnable", Boolean.class);
         Boolean resetStatEnable = environment.getProperty(prefix + "resetStatEnable", Boolean.class);
         Integer notFullTimeoutRetryCount = environment.getProperty(prefix + "notFullTimeoutRetryCount", Integer.class);
-        Long timeBetweenEvictionRunsMillis = environment.getProperty(prefix + "timeBetweenEvictionRunsMillis", Long.class);
+        Long timeBetweenEvictionRunsMillis =
+            environment.getProperty(prefix + "timeBetweenEvictionRunsMillis", Long.class);
         Integer maxWaithThreadCount = environment.getProperty(prefix + "maxWaithThreadCount", Integer.class);
         Long maxWaitMillis = environment.getProperty(prefix + "maxWaitMillis", Long.class);
         Boolean failFast = environment.getProperty(prefix + "failFast", Boolean.class);
@@ -95,9 +97,11 @@ public class SpringMultiTenantConfiguration {
         Integer initialSize = environment.getProperty(prefix + "initialSize", Integer.class);
         Integer minIdle = environment.getProperty(prefix + "minIdle", Integer.class);
         Integer maxActive = environment.getProperty(prefix + "maxActive", Integer.class);
-        Boolean killWhenSocketReadTimeout = environment.getProperty(prefix + "killWhenSocketReadTimeout", Boolean.class);
+        Boolean killWhenSocketReadTimeout =
+            environment.getProperty(prefix + "killWhenSocketReadTimeout", Boolean.class);
         String connectionProperties = environment.getProperty(prefix + "connectionProperties", String.class);
-        Integer maxPoolPreparedStatementPerConnectionSize = environment.getProperty(prefix + "maxPoolPreparedStatementPerConnectionSize", Integer.class);
+        Integer maxPoolPreparedStatementPerConnectionSize =
+            environment.getProperty(prefix + "maxPoolPreparedStatementPerConnectionSize", Integer.class);
         String initConnectionSqls = environment.getProperty(prefix + "initConnectionSqls", String.class);
 
         if (jdbcUrl != null) {
@@ -230,7 +234,8 @@ public class SpringMultiTenantConfiguration {
 
     @Primary
     @Bean({"rsTenantEntityManagerFactory", "entityManagerFactory"})
-    public LocalContainerEntityManagerFactoryBean rsTenantEntityManagerFactory(@Qualifier("y9TenantDataSource") DataSource ds, JpaProperties jpaProperties, Environment environment) {
+    public LocalContainerEntityManagerFactoryBean rsTenantEntityManagerFactory(
+        @Qualifier("y9TenantDataSource") DataSource ds, JpaProperties jpaProperties, Environment environment) {
         LocalContainerEntityManagerFactoryBean em = new LocalContainerEntityManagerFactoryBean();
         em.setPersistenceUnitName("y9Tenant");
         em.setDataSource(ds);
@@ -244,7 +249,8 @@ public class SpringMultiTenantConfiguration {
 
     @Primary
     @Bean({"rsTenantTransactionManager", "transactionManager"})
-    public PlatformTransactionManager rsTenantTransactionManager(@Qualifier("rsTenantEntityManagerFactory") EntityManagerFactory emf) {
+    public PlatformTransactionManager
+        rsTenantTransactionManager(@Qualifier("rsTenantEntityManagerFactory") EntityManagerFactory emf) {
         JpaTransactionManager transactionManager = new JpaTransactionManager();
         transactionManager.setEntityManagerFactory(emf);
         return transactionManager;
@@ -265,7 +271,8 @@ public class SpringMultiTenantConfiguration {
 
     @Primary
     @Bean("y9TenantDataSource")
-    public DataSource y9TenantDataSource(@Qualifier("defaultDataSource") DruidDataSource defaultDataSource, @Qualifier("y9TenantDataSourceLookup") Y9TenantDataSourceLookup y9TenantDataSourceLookup) {
+    public DataSource y9TenantDataSource(@Qualifier("defaultDataSource") DruidDataSource defaultDataSource,
+        @Qualifier("y9TenantDataSourceLookup") Y9TenantDataSourceLookup y9TenantDataSourceLookup) {
         Y9TenantDataSource ds = new Y9TenantDataSource();
         ds.setDefaultDataSource(defaultDataSource);
         ds.setDataSourceLookup(y9TenantDataSourceLookup);
@@ -273,13 +280,14 @@ public class SpringMultiTenantConfiguration {
     }
 
     @Bean("y9TenantDataSourceLookup")
-    public Y9TenantDataSourceLookup y9TenantDataSourceLookup(@Qualifier("y9PublicDS") DruidDataSource ds, Environment environment) {
+    public Y9TenantDataSourceLookup y9TenantDataSourceLookup(@Qualifier("y9PublicDS") DruidDataSource ds,
+        Environment environment) {
         Y9TenantDataSourceLookup lookup = new Y9TenantDataSourceLookup();
         lookup.setPublicDataSource(ds);
         lookup.setSystemName(environment.getProperty("y9.systemName"));
         return lookup;
     }
-    
+
     @Bean
     public OnY9MultiTenantApplicationReady onY9MultiTenantApplicationReady() {
         return new OnY9MultiTenantApplicationReady();

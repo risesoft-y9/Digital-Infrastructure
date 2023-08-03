@@ -56,7 +56,7 @@ public class Y9PersonToRoleManagerImpl implements Y9PersonToRoleManager {
         matrix.setDescription(role.getDescription());
         return y9PersonToRoleRepository.save(matrix);
     }
-    
+
     public Y9PersonToRole findByPersonIdAndRoleId(String personId, String roleId) {
         return y9PersonToRoleRepository.findByPersonIdAndRoleId(personId, roleId);
     }
@@ -70,20 +70,20 @@ public class Y9PersonToRoleManagerImpl implements Y9PersonToRoleManager {
     @Transactional(readOnly = false)
     public void removeInvalid(String personId, List<Y9Role> newCalculatedY9RoleList) {
         List<String> originY9RoleIdList = this.listRoleIdsByPersonId(personId);
-        List<String> newCalculatedY9RoleIdList = newCalculatedY9RoleList.stream().map(Y9Role::getId).collect(Collectors.toList());
+        List<String> newCalculatedY9RoleIdList =
+            newCalculatedY9RoleList.stream().map(Y9Role::getId).collect(Collectors.toList());
         for (String roleId : originY9RoleIdList) {
             if (!newCalculatedY9RoleIdList.contains(roleId)) {
                 this.removeByPersonIdAndRoleId(personId, roleId);
             }
         }
     }
-    
+
     @Override
     public List<String> listRoleIdsByPersonId(String personId) {
         List<Y9PersonToRole> personRoleMappings = y9PersonToRoleRepository.findByPersonId(personId);
         return personRoleMappings.stream().map(Y9PersonToRole::getRoleId).collect(Collectors.toList());
     }
-
 
     @Transactional(readOnly = false)
     public void removeByPersonIdAndRoleId(String personId, String roleId) {

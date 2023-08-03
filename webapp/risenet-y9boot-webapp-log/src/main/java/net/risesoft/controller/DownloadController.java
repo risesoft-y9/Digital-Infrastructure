@@ -49,11 +49,13 @@ public class DownloadController {
             Y9LoginUserHolder.setTenantId(tenantID);
         }
 
-        try (OutputStream outStream = response.getOutputStream(); InputStream in = new ClassPathResource("/template/exportSimpleTemplate.xlsx").getInputStream()) {
+        try (OutputStream outStream = response.getOutputStream();
+            InputStream in = new ClassPathResource("/template/exportSimpleTemplate.xlsx").getInputStream()) {
 
             Map<String, Object> map = xlsLoginData2(tenantID);
             response.setContentType("application/octet-stream");
-            response.setHeader("Content-Disposition", DownloadFileNameUtil.standardize("有生云未登录信息-" + new SimpleDateFormat("yyyyMMddHHmmss").format(new Date()) + ".xlsx"));
+            response.setHeader("Content-Disposition", DownloadFileNameUtil
+                .standardize("有生云未登录信息-" + new SimpleDateFormat("yyyyMMddHHmmss").format(new Date()) + ".xlsx"));
 
             JxlsUtil jxlsUtil = new JxlsUtil();
             jxlsUtil.exportExcel(in, outStream, map);
@@ -69,10 +71,12 @@ public class DownloadController {
         if (StringUtils.isNotBlank(tenantID)) {
             Y9LoginUserHolder.setTenantId(tenantID);
         }
-        try (OutputStream outStream = response.getOutputStream(); InputStream in = new ClassPathResource("/template/exportSimpleTemplate.xlsx").getInputStream()) {
+        try (OutputStream outStream = response.getOutputStream();
+            InputStream in = new ClassPathResource("/template/exportSimpleTemplate.xlsx").getInputStream()) {
             Map<String, Object> map = xlsLoginData(tenantID);
             response.setContentType("application/octet-stream");
-            response.setHeader("Content-Disposition", DownloadFileNameUtil.standardize("有生云登录信息-" + new SimpleDateFormat("yyyyMMddHHmmss").format(new Date()) + ".xlsx"));
+            response.setHeader("Content-Disposition", DownloadFileNameUtil
+                .standardize("有生云登录信息-" + new SimpleDateFormat("yyyyMMddHHmmss").format(new Date()) + ".xlsx"));
 
             JxlsUtil jxlsUtil = new JxlsUtil();
             jxlsUtil.exportExcel(in, outStream, map);

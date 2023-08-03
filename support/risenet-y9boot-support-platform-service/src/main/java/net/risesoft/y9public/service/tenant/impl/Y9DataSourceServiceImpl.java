@@ -40,7 +40,8 @@ public class Y9DataSourceServiceImpl implements Y9DataSourceService {
     private final ConcurrentMap<String, DataSource> dataSourceMap = Maps.newConcurrentMap();
     private final ConcurrentMap<String, Y9DataSource> dsMap = Maps.newConcurrentMap();
 
-    public Y9DataSourceServiceImpl(Y9DataSourceRepository datasourceRepository, Y9DataSourceManager y9DataSourceManager) {
+    public Y9DataSourceServiceImpl(Y9DataSourceRepository datasourceRepository,
+        Y9DataSourceManager y9DataSourceManager) {
         this.datasourceRepository = datasourceRepository;
         this.y9DataSourceManager = y9DataSourceManager;
     }
@@ -91,7 +92,8 @@ public class Y9DataSourceServiceImpl implements Y9DataSourceService {
 
     @Override
     public Y9DataSource getById(String id) {
-        return datasourceRepository.findById(id).orElseThrow(() -> Y9ExceptionUtil.notFoundException(DataSourceErrorCodeEnum.DATA_SOURCE_NOT_FOUND, id));
+        return datasourceRepository.findById(id)
+            .orElseThrow(() -> Y9ExceptionUtil.notFoundException(DataSourceErrorCodeEnum.DATA_SOURCE_NOT_FOUND, id));
     }
 
     @Override

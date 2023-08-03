@@ -30,5 +30,5 @@ public class ResourcePermission implements Serializable {
     private String roleNodeId;
     private String systemName;
     private String url;
-    
+
 }

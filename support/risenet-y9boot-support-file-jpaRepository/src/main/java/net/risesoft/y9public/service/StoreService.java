@@ -10,7 +10,7 @@ public interface StoreService {
     Integer getStoreType();
 
     byte[] retrieveFileBytes(String fullPath, String realFileName) throws Exception;
-    
+
     void retrieveFileStream(String fullPath, String realFileName, OutputStream outputStream) throws Exception;
 
     void storeFile(String fullPath, String realFileName, byte[] bytes) throws Exception;

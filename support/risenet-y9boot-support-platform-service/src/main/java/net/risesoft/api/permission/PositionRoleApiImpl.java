@@ -1,5 +1,7 @@
 package net.risesoft.api.permission;
 
+import javax.validation.constraints.NotBlank;
+
 import org.springframework.context.annotation.Primary;
 import org.springframework.http.MediaType;
 import org.springframework.validation.annotation.Validated;
@@ -11,8 +13,6 @@ import lombok.RequiredArgsConstructor;
 
 import net.risesoft.service.identity.Y9PositionToRoleService;
 import net.risesoft.y9.Y9LoginUserHolder;
-
-import javax.validation.constraints.NotBlank;
 
 /**
  * 岗位角色接口实现类
@@ -40,7 +40,8 @@ public class PositionRoleApiImpl implements PositionRoleApi {
      * @since 9.6.0
      */
     @Override
-    public Boolean hasRole(@RequestParam("tenantId") @NotBlank String tenantId, @RequestParam("positionId") @NotBlank String positionId, @RequestParam("customId") @NotBlank String customId) {
+    public Boolean hasRole(@RequestParam("tenantId") @NotBlank String tenantId,
+        @RequestParam("positionId") @NotBlank String positionId, @RequestParam("customId") @NotBlank String customId) {
         Y9LoginUserHolder.setTenantId(tenantId);
 
         return y9PositionToRoleService.hasRole(positionId, customId);

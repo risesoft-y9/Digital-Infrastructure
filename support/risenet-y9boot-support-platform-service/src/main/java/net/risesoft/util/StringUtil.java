@@ -44,7 +44,8 @@ public class StringUtil {
      *
      * @return
      */
-    public static String parseXmlStr(String tagName1, List<Map<String, Object>> list1, String[] proNames1, String tagName2, List<Map<String, Object>> list2, String[] proNames2) {
+    public static String parseXmlStr(String tagName1, List<Map<String, Object>> list1, String[] proNames1,
+        String tagName2, List<Map<String, Object>> list2, String[] proNames2) {
         StringBuilder str = new StringBuilder("");
         str.append("<?xml version=\"1.0\" encoding=\"utf-8\"?>\n");
         str.append("<root>\n");

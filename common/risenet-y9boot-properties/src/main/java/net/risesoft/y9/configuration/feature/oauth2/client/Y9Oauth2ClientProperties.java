@@ -66,5 +66,5 @@ public class Y9Oauth2ClientProperties {
      * 受保护的 url 正则
      */
     private String protectedUrlPatterns;
-    
+
 }

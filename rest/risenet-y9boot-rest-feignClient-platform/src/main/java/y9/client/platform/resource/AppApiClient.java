@@ -15,7 +15,8 @@ import net.risesoft.model.App;
  * @date 2022/2/10
  * @since 9.6.0
  */
-@FeignClient(contextId = "AppApiClient", name = "y9platform", url = "${y9.common.orgBaseUrl}", path = "/services/rest/app")
+@FeignClient(contextId = "AppApiClient", name = "y9platform", url = "${y9.common.orgBaseUrl}",
+    path = "/services/rest/app")
 public interface AppApiClient extends AppApi {
 
     /**

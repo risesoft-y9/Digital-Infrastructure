@@ -249,7 +249,8 @@ public class Y9AppServiceImpl implements Y9AppService {
     @Override
     public Page<Y9App> page(Y9PageQuery pageQuery, String systemId, String name) {
         Y9AppSpecification<Y9App> specification = new Y9AppSpecification<>(systemId, name);
-        PageRequest pageRequest = PageRequest.of(pageQuery.getPage4Db(), pageQuery.getSize(), Sort.by(Sort.Direction.ASC, "tabIndex").and(Sort.by(Sort.Direction.DESC, "createTime")));
+        PageRequest pageRequest = PageRequest.of(pageQuery.getPage4Db(), pageQuery.getSize(),
+            Sort.by(Sort.Direction.ASC, "tabIndex").and(Sort.by(Sort.Direction.DESC, "createTime")));
         return y9AppRepository.findAll(specification, pageRequest);
     }
 

@@ -27,8 +27,8 @@ import net.risesoft.enums.Y9DepartmentPropCategoryEnum;
 import net.risesoft.exception.DepartmentErrorCodeEnum;
 import net.risesoft.id.IdType;
 import net.risesoft.id.Y9IdGenerator;
-import net.risesoft.manager.org.Y9DepartmentManager;
 import net.risesoft.manager.org.CompositeOrgBaseManager;
+import net.risesoft.manager.org.Y9DepartmentManager;
 import net.risesoft.model.Department;
 import net.risesoft.repository.Y9DepartmentPropRepository;
 import net.risesoft.repository.Y9DepartmentRepository;
@@ -90,7 +90,8 @@ public class Y9DepartmentServiceImpl implements Y9DepartmentService {
         dept.setDisabled(!dept.getDisabled());
         dept = y9DepartmentManager.save(dept);
 
-        Y9MessageOrg msg = new Y9MessageOrg(Y9ModelConvertUtil.convert(dept, Department.class), Y9OrgEventConst.RISEORGEVENT_TYPE_UPDATE_DEPARTMENT, Y9LoginUserHolder.getTenantId());
+        Y9MessageOrg msg = new Y9MessageOrg(Y9ModelConvertUtil.convert(dept, Department.class),
+            Y9OrgEventConst.RISEORGEVENT_TYPE_UPDATE_DEPARTMENT, Y9LoginUserHolder.getTenantId());
         Y9PublishServiceUtil.persistAndPublishMessageOrg(msg, event + "部门", event + dept.getName());
 
         return dept;
@@ -106,7 +107,8 @@ public class Y9DepartmentServiceImpl implements Y9DepartmentService {
         List<Y9OrgBase> parentList = new ArrayList<>();
         recursionParent(parentId, parentList);
         if (parentList.contains(dept)) {
-            throw new Y9BusinessException(DepartmentErrorCodeEnum.MOVE_TO_SUB_DEPARTMENT_NOT_PERMITTED.getCode(), DepartmentErrorCodeEnum.MOVE_TO_SUB_DEPARTMENT_NOT_PERMITTED.getDescription());
+            throw new Y9BusinessException(DepartmentErrorCodeEnum.MOVE_TO_SUB_DEPARTMENT_NOT_PERMITTED.getCode(),
+                DepartmentErrorCodeEnum.MOVE_TO_SUB_DEPARTMENT_NOT_PERMITTED.getDescription());
         }
     }
 
@@ -120,12 +122,14 @@ public class Y9DepartmentServiceImpl implements Y9DepartmentService {
         // 删除部门关联数据
         y9OrgBasesToRolesRepository.deleteByOrgId(id);
         y9DepartmentPropRepository.deleteByDeptId(id);
-        y9AuthorizationRepository.deleteByPrincipalIdAndPrincipalType(id, AuthorizationPrincipalTypeEnum.DEPARTMENT.getValue());
+        y9AuthorizationRepository.deleteByPrincipalIdAndPrincipalType(id,
+            AuthorizationPrincipalTypeEnum.DEPARTMENT.getValue());
 
         // 发布事件，程序内部监听处理相关业务
         Y9Context.publishEvent(new Y9EntityDeletedEvent<>(y9Department));
 
-        Y9MessageOrg msg = new Y9MessageOrg(Y9ModelConvertUtil.convert(y9Department, Department.class), Y9OrgEventConst.RISEORGEVENT_TYPE_DELETE_DEPARTMENT, Y9LoginUserHolder.getTenantId());
+        Y9MessageOrg msg = new Y9MessageOrg(Y9ModelConvertUtil.convert(y9Department, Department.class),
+            Y9OrgEventConst.RISEORGEVENT_TYPE_DELETE_DEPARTMENT, Y9LoginUserHolder.getTenantId());
         Y9PublishServiceUtil.persistAndPublishMessageOrg(msg, "删除部门", "删除 " + y9Department.getName());
     }
 
@@ -147,7 +151,8 @@ public class Y9DepartmentServiceImpl implements Y9DepartmentService {
     @Override
     public List<Y9OrgBase> getDeptSecretarys(String deptId) {
         List<Y9OrgBase> y9OrgBaseList = new ArrayList<>();
-        List<Y9DepartmentProp> propList = y9DepartmentPropRepository.findByDeptIdAndCategoryOrderByTabIndex(deptId, Y9DepartmentPropCategoryEnum.SECRETARY.getCategory());
+        List<Y9DepartmentProp> propList = y9DepartmentPropRepository.findByDeptIdAndCategoryOrderByTabIndex(deptId,
+            Y9DepartmentPropCategoryEnum.SECRETARY.getCategory());
         for (Y9DepartmentProp prop : propList) {
             Y9OrgBase y9OrgBase = compositeOrgBaseManager.getOrgBase(prop.getOrgBaseId());
             if (y9OrgBase != null) {
@@ -212,7 +217,8 @@ public class Y9DepartmentServiceImpl implements Y9DepartmentService {
     @Override
     public List<Y9OrgBase> listLeaders(String deptId) {
         List<Y9OrgBase> y9OrgBaseList = new ArrayList<>();
-        List<Y9DepartmentProp> propList = y9DepartmentPropRepository.findByDeptIdAndCategoryOrderByTabIndex(deptId, Y9DepartmentPropCategoryEnum.LEADER.getCategory());
+        List<Y9DepartmentProp> propList = y9DepartmentPropRepository.findByDeptIdAndCategoryOrderByTabIndex(deptId,
+            Y9DepartmentPropCategoryEnum.LEADER.getCategory());
         for (Y9DepartmentProp prop : propList) {
             Y9OrgBase y9OrgBase = compositeOrgBaseManager.getOrgBase(prop.getOrgBaseId());
             if (y9OrgBase != null) {
@@ -225,7 +231,8 @@ public class Y9DepartmentServiceImpl implements Y9DepartmentService {
     @Override
     public List<Y9OrgBase> listManagers(String deptId) {
         List<Y9OrgBase> y9OrgBaseList = new ArrayList<>();
-        List<Y9DepartmentProp> propList = y9DepartmentPropRepository.findByDeptIdAndCategoryOrderByTabIndex(deptId, Y9DepartmentPropCategoryEnum.MANAGER.getCategory());
+        List<Y9DepartmentProp> propList = y9DepartmentPropRepository.findByDeptIdAndCategoryOrderByTabIndex(deptId,
+            Y9DepartmentPropCategoryEnum.MANAGER.getCategory());
         for (Y9DepartmentProp prop : propList) {
             Y9OrgBase y9OrgBase = compositeOrgBaseManager.getOrgBase(prop.getOrgBaseId());
             if (y9OrgBase != null) {
@@ -238,7 +245,8 @@ public class Y9DepartmentServiceImpl implements Y9DepartmentService {
     @Override
     public List<Y9OrgBase> listViceLeaders(String deptId) {
         List<Y9OrgBase> y9OrgBaseList = new ArrayList<>();
-        List<Y9DepartmentProp> propList = y9DepartmentPropRepository.findByDeptIdAndCategoryOrderByTabIndex(deptId, Y9DepartmentPropCategoryEnum.VICE_LEADER.getCategory());
+        List<Y9DepartmentProp> propList = y9DepartmentPropRepository.findByDeptIdAndCategoryOrderByTabIndex(deptId,
+            Y9DepartmentPropCategoryEnum.VICE_LEADER.getCategory());
         for (Y9DepartmentProp prop : propList) {
             Y9OrgBase y9OrgBase = compositeOrgBaseManager.getOrgBase(prop.getOrgBaseId());
             if (y9OrgBase != null) {
@@ -259,13 +267,15 @@ public class Y9DepartmentServiceImpl implements Y9DepartmentService {
 
         Y9OrgBase parent = compositeOrgBaseManager.getOrgBase(parentId);
         updatedDepartment.setParentId(parent.getId());
-        updatedDepartment.setDn(OrgLevelConsts.getOrgLevel(OrgTypeEnum.DEPARTMENT) + updatedDepartment.getName() + OrgLevelConsts.SEPARATOR + parent.getDn());
+        updatedDepartment.setDn(OrgLevelConsts.getOrgLevel(OrgTypeEnum.DEPARTMENT) + updatedDepartment.getName()
+            + OrgLevelConsts.SEPARATOR + parent.getDn());
         updatedDepartment.setGuidPath(parent.getGuidPath() + OrgLevelConsts.SEPARATOR + updatedDepartment.getId());
         updatedDepartment = y9DepartmentManager.save(updatedDepartment);
 
         Y9Context.publishEvent(new Y9EntityUpdatedEvent<>(originDepartment, updatedDepartment));
 
-        Y9MessageOrg msg = new Y9MessageOrg(Y9ModelConvertUtil.convert(updatedDepartment, Department.class), Y9OrgEventConst.RISEORGEVENT_TYPE_UPDATE_DEPARTMENT, Y9LoginUserHolder.getTenantId());
+        Y9MessageOrg msg = new Y9MessageOrg(Y9ModelConvertUtil.convert(updatedDepartment, Department.class),
+            Y9OrgEventConst.RISEORGEVENT_TYPE_UPDATE_DEPARTMENT, Y9LoginUserHolder.getTenantId());
         Y9PublishServiceUtil.persistAndPublishMessageOrg(msg, "移动部门", "移动" + updatedDepartment.getName());
 
         compositeOrgBaseManager.recursivelyUpdateProperties(updatedDepartment);
@@ -306,7 +316,8 @@ public class Y9DepartmentServiceImpl implements Y9DepartmentService {
     @Override
     @Transactional(readOnly = false)
     public void removeLeader(String deptId, String orgBaseId) {
-        Y9DepartmentProp y9DepartmentProp = y9DepartmentPropRepository.findByDeptIdAndOrgBaseIdAndCategory(deptId, orgBaseId, Y9DepartmentPropCategoryEnum.LEADER.getCategory());
+        Y9DepartmentProp y9DepartmentProp = y9DepartmentPropRepository.findByDeptIdAndOrgBaseIdAndCategory(deptId,
+            orgBaseId, Y9DepartmentPropCategoryEnum.LEADER.getCategory());
         if (null != y9DepartmentProp) {
             y9DepartmentPropRepository.delete(y9DepartmentProp);
         }
@@ -315,7 +326,8 @@ public class Y9DepartmentServiceImpl implements Y9DepartmentService {
     @Override
     @Transactional(readOnly = false)
     public void removeManager(String deptId, String orgBaseId) {
-        Y9DepartmentProp y9DepartmentProp = y9DepartmentPropRepository.findByDeptIdAndOrgBaseIdAndCategory(deptId, orgBaseId, Y9DepartmentPropCategoryEnum.MANAGER.getCategory());
+        Y9DepartmentProp y9DepartmentProp = y9DepartmentPropRepository.findByDeptIdAndOrgBaseIdAndCategory(deptId,
+            orgBaseId, Y9DepartmentPropCategoryEnum.MANAGER.getCategory());
         if (null != y9DepartmentProp) {
             y9DepartmentPropRepository.delete(y9DepartmentProp);
         }
@@ -324,7 +336,8 @@ public class Y9DepartmentServiceImpl implements Y9DepartmentService {
     @Override
     @Transactional(readOnly = false)
     public void removeSecretary(String deptId, String personId) {
-        Y9DepartmentProp y9DepartmentProp = y9DepartmentPropRepository.findByDeptIdAndOrgBaseIdAndCategory(deptId, personId, Y9DepartmentPropCategoryEnum.SECRETARY.getCategory());
+        Y9DepartmentProp y9DepartmentProp = y9DepartmentPropRepository.findByDeptIdAndOrgBaseIdAndCategory(deptId,
+            personId, Y9DepartmentPropCategoryEnum.SECRETARY.getCategory());
         if (null != y9DepartmentProp) {
             y9DepartmentPropRepository.delete(y9DepartmentProp);
         }
@@ -333,12 +346,13 @@ public class Y9DepartmentServiceImpl implements Y9DepartmentService {
     @Override
     @Transactional(readOnly = false)
     public void removeViceLeader(String deptId, String personId) {
-        Y9DepartmentProp y9DepartmentProp = y9DepartmentPropRepository.findByDeptIdAndOrgBaseIdAndCategory(deptId, personId, Y9DepartmentPropCategoryEnum.VICE_LEADER.getCategory());
+        Y9DepartmentProp y9DepartmentProp = y9DepartmentPropRepository.findByDeptIdAndOrgBaseIdAndCategory(deptId,
+            personId, Y9DepartmentPropCategoryEnum.VICE_LEADER.getCategory());
         if (null != y9DepartmentProp) {
             y9DepartmentPropRepository.delete(y9DepartmentProp);
         }
     }
-    
+
     @Transactional(readOnly = false)
     public Y9Department saveOrder(String deptId, int i) {
         Y9Department dept = this.getById(deptId);
@@ -365,7 +379,8 @@ public class Y9DepartmentServiceImpl implements Y9DepartmentService {
                 // 是否需要递归DN
                 boolean recursionDn = dept.getName().equals(origDepartment.getName());
 
-                origDepartment.setDn(OrgLevelConsts.getOrgLevel(OrgTypeEnum.DEPARTMENT) + dept.getName() + OrgLevelConsts.SEPARATOR + parent.getDn());
+                origDepartment.setDn(OrgLevelConsts.getOrgLevel(OrgTypeEnum.DEPARTMENT) + dept.getName()
+                    + OrgLevelConsts.SEPARATOR + parent.getDn());
 
                 Y9BeanUtil.copyProperties(dept, origDepartment);
                 origDepartment.setParentId(parent.getId());
@@ -378,25 +393,29 @@ public class Y9DepartmentServiceImpl implements Y9DepartmentService {
                     compositeOrgBaseManager.recursivelyUpdateProperties(origDepartment);
                 }
 
-                Y9MessageOrg msg = new Y9MessageOrg(Y9ModelConvertUtil.convert(origDepartment, Department.class), Y9OrgEventConst.RISEORGEVENT_TYPE_UPDATE_DEPARTMENT, Y9LoginUserHolder.getTenantId());
+                Y9MessageOrg msg = new Y9MessageOrg(Y9ModelConvertUtil.convert(origDepartment, Department.class),
+                    Y9OrgEventConst.RISEORGEVENT_TYPE_UPDATE_DEPARTMENT, Y9LoginUserHolder.getTenantId());
                 Y9PublishServiceUtil.persistAndPublishMessageOrg(msg, "修改部门", "修改 " + dept.getName());
 
                 return origDepartment;
             } else {
                 if (null == dept.getTabIndex()) {
-                    Integer maxTabIndex = compositeOrgBaseManager.getMaxSubTabIndex(parent.getId(), OrgTypeEnum.DEPARTMENT);
+                    Integer maxTabIndex =
+                        compositeOrgBaseManager.getMaxSubTabIndex(parent.getId(), OrgTypeEnum.DEPARTMENT);
                     dept.setTabIndex(maxTabIndex);
                 }
                 dept.setParentId(parent.getId());
                 dept.setOrgType(OrgTypeEnum.DEPARTMENT.getEnName());
                 dept.setVersion(OrgTypeEnum.Y9_VERSION);
-                dept.setDn(OrgLevelConsts.getOrgLevel(OrgTypeEnum.DEPARTMENT) + dept.getName() + OrgLevelConsts.SEPARATOR + parent.getDn());
+                dept.setDn(OrgLevelConsts.getOrgLevel(OrgTypeEnum.DEPARTMENT) + dept.getName()
+                    + OrgLevelConsts.SEPARATOR + parent.getDn());
                 dept.setTenantId(Y9LoginUserHolder.getTenantId());
                 dept.setGuidPath(parent.getGuidPath() + OrgLevelConsts.SEPARATOR + dept.getId());
 
                 dept = y9DepartmentManager.save(dept);
 
-                Y9MessageOrg msg = new Y9MessageOrg(Y9ModelConvertUtil.convert(dept, Department.class), Y9OrgEventConst.RISEORGEVENT_TYPE_ADD_DEPARTMENT, Y9LoginUserHolder.getTenantId());
+                Y9MessageOrg msg = new Y9MessageOrg(Y9ModelConvertUtil.convert(dept, Department.class),
+                    Y9OrgEventConst.RISEORGEVENT_TYPE_ADD_DEPARTMENT, Y9LoginUserHolder.getTenantId());
                 Y9PublishServiceUtil.persistAndPublishMessageOrg(msg, "新增部门", "新增" + dept.getName());
 
                 return dept;
@@ -409,7 +428,8 @@ public class Y9DepartmentServiceImpl implements Y9DepartmentService {
         dept.setTabIndex(maxTabIndex);
         dept.setVersion(OrgTypeEnum.Y9_VERSION);
         dept.setOrgType(OrgTypeEnum.DEPARTMENT.getEnName());
-        dept.setDn(OrgLevelConsts.getOrgLevel(OrgTypeEnum.DEPARTMENT) + dept.getName() + OrgLevelConsts.SEPARATOR + parent.getDn());
+        dept.setDn(OrgLevelConsts.getOrgLevel(OrgTypeEnum.DEPARTMENT) + dept.getName() + OrgLevelConsts.SEPARATOR
+            + parent.getDn());
         dept.setDisabled(false);
         dept.setParentId(parent.getId());
         dept.setTenantId(Y9LoginUserHolder.getTenantId());
@@ -417,7 +437,8 @@ public class Y9DepartmentServiceImpl implements Y9DepartmentService {
 
         dept = y9DepartmentManager.save(dept);
 
-        Y9MessageOrg msg = new Y9MessageOrg(Y9ModelConvertUtil.convert(dept, Department.class), Y9OrgEventConst.RISEORGEVENT_TYPE_ADD_DEPARTMENT, Y9LoginUserHolder.getTenantId());
+        Y9MessageOrg msg = new Y9MessageOrg(Y9ModelConvertUtil.convert(dept, Department.class),
+            Y9OrgEventConst.RISEORGEVENT_TYPE_ADD_DEPARTMENT, Y9LoginUserHolder.getTenantId());
         Y9PublishServiceUtil.persistAndPublishMessageOrg(msg, "新增部门", "新增" + dept.getName());
 
         return dept;
@@ -430,7 +451,8 @@ public class Y9DepartmentServiceImpl implements Y9DepartmentService {
         dept.setProperties(properties);
         dept = y9DepartmentManager.save(dept);
 
-        Y9MessageOrg msg = new Y9MessageOrg(Y9ModelConvertUtil.convert(dept, Department.class), Y9OrgEventConst.RISEORGEVENT_TYPE_UPDATE_DEPARTMENT, Y9LoginUserHolder.getTenantId());
+        Y9MessageOrg msg = new Y9MessageOrg(Y9ModelConvertUtil.convert(dept, Department.class),
+            Y9OrgEventConst.RISEORGEVENT_TYPE_UPDATE_DEPARTMENT, Y9LoginUserHolder.getTenantId());
         Y9PublishServiceUtil.publishMessageOrg(msg);
 
         return dept;
@@ -446,7 +468,8 @@ public class Y9DepartmentServiceImpl implements Y9DepartmentService {
                 query = em.createNativeQuery(" SELECT * FROM Y9_ORG_DEPARTMENT ", Y9Department.class);
 
             } else {
-                query = em.createNativeQuery(" SELECT * FROM Y9_ORG_DEPARTMENT where " + whereClause, Y9Department.class);
+                query =
+                    em.createNativeQuery(" SELECT * FROM Y9_ORG_DEPARTMENT where " + whereClause, Y9Department.class);
             }
             return query.getResultList();
         }
@@ -458,7 +481,8 @@ public class Y9DepartmentServiceImpl implements Y9DepartmentService {
     public void setDeptLeaders(String deptId, String[] orgBaseIds) {
         Y9DepartmentProp y9DepartmentProp = null;
         for (String orgBaseId : orgBaseIds) {
-            y9DepartmentProp = y9DepartmentPropRepository.findByDeptIdAndOrgBaseIdAndCategory(deptId, orgBaseId, Y9DepartmentPropCategoryEnum.LEADER.getCategory());
+            y9DepartmentProp = y9DepartmentPropRepository.findByDeptIdAndOrgBaseIdAndCategory(deptId, orgBaseId,
+                Y9DepartmentPropCategoryEnum.LEADER.getCategory());
             if (null == y9DepartmentProp) {
                 y9DepartmentProp = new Y9DepartmentProp();
                 y9DepartmentProp.setId(Y9IdGenerator.genId(IdType.SNOWFLAKE));
@@ -466,7 +490,8 @@ public class Y9DepartmentServiceImpl implements Y9DepartmentService {
                 y9DepartmentProp.setOrgBaseId(orgBaseId);
                 y9DepartmentProp.setCategory(Y9DepartmentPropCategoryEnum.LEADER.getCategory());
 
-                Integer tabIndex = y9DepartmentPropRepository.getMaxTabIndex(deptId, Y9DepartmentPropCategoryEnum.LEADER.getCategory());
+                Integer tabIndex = y9DepartmentPropRepository.getMaxTabIndex(deptId,
+                    Y9DepartmentPropCategoryEnum.LEADER.getCategory());
                 if (null == tabIndex) {
                     tabIndex = 1;
                 } else {
@@ -483,7 +508,8 @@ public class Y9DepartmentServiceImpl implements Y9DepartmentService {
     public void setDeptManagers(String deptId, String[] orgBaseIds) {
         Y9DepartmentProp y9DepartmentProp = null;
         for (String orgBaseId : orgBaseIds) {
-            y9DepartmentProp = y9DepartmentPropRepository.findByDeptIdAndOrgBaseIdAndCategory(deptId, orgBaseId, Y9DepartmentPropCategoryEnum.MANAGER.getCategory());
+            y9DepartmentProp = y9DepartmentPropRepository.findByDeptIdAndOrgBaseIdAndCategory(deptId, orgBaseId,
+                Y9DepartmentPropCategoryEnum.MANAGER.getCategory());
             if (null == y9DepartmentProp) {
                 y9DepartmentProp = new Y9DepartmentProp();
                 y9DepartmentProp.setId(Y9IdGenerator.genId(IdType.SNOWFLAKE));
@@ -491,7 +517,8 @@ public class Y9DepartmentServiceImpl implements Y9DepartmentService {
                 y9DepartmentProp.setOrgBaseId(orgBaseId);
                 y9DepartmentProp.setCategory(Y9DepartmentPropCategoryEnum.MANAGER.getCategory());
 
-                Integer tabIndex = y9DepartmentPropRepository.getMaxTabIndex(deptId, Y9DepartmentPropCategoryEnum.MANAGER.getCategory());
+                Integer tabIndex = y9DepartmentPropRepository.getMaxTabIndex(deptId,
+                    Y9DepartmentPropCategoryEnum.MANAGER.getCategory());
                 if (null == tabIndex) {
                     tabIndex = 1;
                 } else {
@@ -508,7 +535,8 @@ public class Y9DepartmentServiceImpl implements Y9DepartmentService {
     public void setDeptSecretarys(String deptId, String[] orgBaseIds) {
         Y9DepartmentProp y9DepartmentProp = null;
         for (String orgBaseId : orgBaseIds) {
-            y9DepartmentProp = y9DepartmentPropRepository.findByDeptIdAndOrgBaseIdAndCategory(deptId, orgBaseId, Y9DepartmentPropCategoryEnum.SECRETARY.getCategory());
+            y9DepartmentProp = y9DepartmentPropRepository.findByDeptIdAndOrgBaseIdAndCategory(deptId, orgBaseId,
+                Y9DepartmentPropCategoryEnum.SECRETARY.getCategory());
             if (null == y9DepartmentProp) {
                 y9DepartmentProp = new Y9DepartmentProp();
                 y9DepartmentProp.setId(Y9IdGenerator.genId(IdType.SNOWFLAKE));
@@ -516,7 +544,8 @@ public class Y9DepartmentServiceImpl implements Y9DepartmentService {
                 y9DepartmentProp.setOrgBaseId(orgBaseId);
                 y9DepartmentProp.setCategory(Y9DepartmentPropCategoryEnum.SECRETARY.getCategory());
 
-                Integer tabIndex = y9DepartmentPropRepository.getMaxTabIndex(deptId, Y9DepartmentPropCategoryEnum.SECRETARY.getCategory());
+                Integer tabIndex = y9DepartmentPropRepository.getMaxTabIndex(deptId,
+                    Y9DepartmentPropCategoryEnum.SECRETARY.getCategory());
                 if (null == tabIndex) {
                     tabIndex = 1;
                 } else {
@@ -533,7 +562,8 @@ public class Y9DepartmentServiceImpl implements Y9DepartmentService {
     public void setDeptViceLeaders(String deptId, String[] orgBaseIds) {
         Y9DepartmentProp y9DepartmentProp = null;
         for (String orgBaseId : orgBaseIds) {
-            y9DepartmentProp = y9DepartmentPropRepository.findByDeptIdAndOrgBaseIdAndCategory(deptId, orgBaseId, Y9DepartmentPropCategoryEnum.VICE_LEADER.getCategory());
+            y9DepartmentProp = y9DepartmentPropRepository.findByDeptIdAndOrgBaseIdAndCategory(deptId, orgBaseId,
+                Y9DepartmentPropCategoryEnum.VICE_LEADER.getCategory());
             if (null == y9DepartmentProp) {
                 y9DepartmentProp = new Y9DepartmentProp();
                 y9DepartmentProp.setId(Y9IdGenerator.genId(IdType.SNOWFLAKE));
@@ -541,7 +571,8 @@ public class Y9DepartmentServiceImpl implements Y9DepartmentService {
                 y9DepartmentProp.setOrgBaseId(orgBaseId);
                 y9DepartmentProp.setCategory(Y9DepartmentPropCategoryEnum.VICE_LEADER.getCategory());
 
-                Integer tabIndex = y9DepartmentPropRepository.getMaxTabIndex(deptId, Y9DepartmentPropCategoryEnum.VICE_LEADER.getCategory());
+                Integer tabIndex = y9DepartmentPropRepository.getMaxTabIndex(deptId,
+                    Y9DepartmentPropCategoryEnum.VICE_LEADER.getCategory());
                 if (null == tabIndex) {
                     tabIndex = 1;
                 } else {
@@ -560,7 +591,8 @@ public class Y9DepartmentServiceImpl implements Y9DepartmentService {
         department.setTabIndex(tabIndex);
         department = y9DepartmentManager.save(department);
 
-        Y9MessageOrg msg = new Y9MessageOrg(Y9ModelConvertUtil.convert(department, Department.class), Y9OrgEventConst.RISEORGEVENT_TYPE_UPDATE_DEPARTMENT_TABINDEX, Y9LoginUserHolder.getTenantId());
+        Y9MessageOrg msg = new Y9MessageOrg(Y9ModelConvertUtil.convert(department, Department.class),
+            Y9OrgEventConst.RISEORGEVENT_TYPE_UPDATE_DEPARTMENT_TABINDEX, Y9LoginUserHolder.getTenantId());
         Y9PublishServiceUtil.persistAndPublishMessageOrg(msg, "更新部门排序号", department.getName() + "的排序号更新为" + tabIndex);
 
         return department;

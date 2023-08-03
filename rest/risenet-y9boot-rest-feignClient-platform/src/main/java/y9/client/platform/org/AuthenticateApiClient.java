@@ -13,7 +13,8 @@ import net.risesoft.api.org.AuthenticateApi;
  * @date 2022/2/10
  * @since 9.6.0
  */
-@FeignClient(contextId = "AuthenticateApiClient", name = "y9platform", url = "${y9.common.orgBaseUrl}", path = "/services/rest/auth")
+@FeignClient(contextId = "AuthenticateApiClient", name = "y9platform", url = "${y9.common.orgBaseUrl}",
+    path = "/services/rest/auth")
 public interface AuthenticateApiClient extends AuthenticateApi {
-    
+
 }

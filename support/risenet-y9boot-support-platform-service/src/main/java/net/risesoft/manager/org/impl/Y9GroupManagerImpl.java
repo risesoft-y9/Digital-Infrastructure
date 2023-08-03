@@ -1,11 +1,5 @@
 package net.risesoft.manager.org.impl;
 
-import net.risesoft.model.Group;
-import net.risesoft.util.Y9PublishServiceUtil;
-import net.risesoft.y9.Y9LoginUserHolder;
-import net.risesoft.y9.pubsub.constant.Y9OrgEventConst;
-import net.risesoft.y9.pubsub.message.Y9MessageOrg;
-import net.risesoft.y9.util.Y9ModelConvertUtil;
 import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
@@ -18,21 +12,28 @@ import net.risesoft.consts.CacheNameConsts;
 import net.risesoft.entity.Y9Group;
 import net.risesoft.exception.GroupErrorCodeEnum;
 import net.risesoft.manager.org.Y9GroupManager;
+import net.risesoft.model.Group;
 import net.risesoft.repository.Y9GroupRepository;
+import net.risesoft.util.Y9PublishServiceUtil;
+import net.risesoft.y9.Y9LoginUserHolder;
 import net.risesoft.y9.exception.util.Y9ExceptionUtil;
+import net.risesoft.y9.pubsub.constant.Y9OrgEventConst;
+import net.risesoft.y9.pubsub.message.Y9MessageOrg;
+import net.risesoft.y9.util.Y9ModelConvertUtil;
 
 @Service
 @Transactional(value = "rsTenantTransactionManager", readOnly = true)
 @CacheConfig(cacheNames = CacheNameConsts.ORG_GROUP)
 @RequiredArgsConstructor
 public class Y9GroupManagerImpl implements Y9GroupManager {
-    
+
     private final Y9GroupRepository y9GroupRepository;
-    
+
     @Override
     @Cacheable(key = "#id", condition = "#id!=null", unless = "#result==null")
     public Y9Group getById(String id) {
-        return y9GroupRepository.findById(id).orElseThrow(() -> Y9ExceptionUtil.notFoundException(GroupErrorCodeEnum.GROUP_NOT_FOUND, id));
+        return y9GroupRepository.findById(id)
+            .orElseThrow(() -> Y9ExceptionUtil.notFoundException(GroupErrorCodeEnum.GROUP_NOT_FOUND, id));
     }
 
     @Override
@@ -62,7 +63,8 @@ public class Y9GroupManagerImpl implements Y9GroupManager {
         group.setTabIndex(tabIndex);
         group = this.save(group);
 
-        Y9MessageOrg msg = new Y9MessageOrg(Y9ModelConvertUtil.convert(group, Group.class), Y9OrgEventConst.RISEORGEVENT_TYPE_UPDATE_GROUP_TABINDEX, Y9LoginUserHolder.getTenantId());
+        Y9MessageOrg msg = new Y9MessageOrg(Y9ModelConvertUtil.convert(group, Group.class),
+            Y9OrgEventConst.RISEORGEVENT_TYPE_UPDATE_GROUP_TABINDEX, Y9LoginUserHolder.getTenantId());
         Y9PublishServiceUtil.persistAndPublishMessageOrg(msg, "更新用户组排序号", group.getName() + "的排序号更新为" + tabIndex);
 
         return group;

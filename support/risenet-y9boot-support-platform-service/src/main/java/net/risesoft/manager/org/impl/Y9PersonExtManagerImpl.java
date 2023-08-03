@@ -44,7 +44,7 @@ public class Y9PersonExtManagerImpl implements Y9PersonExtManager {
 
         return y9PersonExtRepository.save(y9PersonExt);
     }
-    
+
     @Override
     public List<Y9PersonExt> listByIdTypeAndIdNum(String idType, String idNum) {
         return y9PersonExtRepository.findByIdTypeAndIdNum(idType, idNum);

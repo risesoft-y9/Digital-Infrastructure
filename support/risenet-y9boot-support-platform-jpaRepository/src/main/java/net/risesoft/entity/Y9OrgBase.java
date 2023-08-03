@@ -52,7 +52,7 @@ public class Y9OrgBase extends BaseEntity implements Comparable<Y9OrgBase> {
     @Comment("版本号,乐观锁")
     @Version
     protected Integer version;
-    
+
     /** 是否可用 */
     @Type(type = "numeric_boolean")
     @Column(name = "DISABLED", nullable = false)

@@ -27,24 +27,24 @@ public class IsAuditManagerAdvice implements MethodBeforeAdvice {
                 checkDeptAuditManager();
             } else {
                 checkGlobalAuditManager();
-            } 
+            }
         }
     }
 
     private static void checkGlobalAuditManager() {
         if (!(Y9LoginUserHolder.getUserInfo().isGlobalManager()
-                && ManagerLevelEnum.AUDIT_MANAGER.getValue().equals(Y9LoginUserHolder.getUserInfo().getManagerLevel()))) {
-            throw new Y9PermissionException(GlobalErrorCodeEnum.NOT_GLOBAL_AUDIT_MANAGER.getCode(), GlobalErrorCodeEnum.NOT_GLOBAL_AUDIT_MANAGER.getDescription());
+            && ManagerLevelEnum.AUDIT_MANAGER.getValue().equals(Y9LoginUserHolder.getUserInfo().getManagerLevel()))) {
+            throw new Y9PermissionException(GlobalErrorCodeEnum.NOT_GLOBAL_AUDIT_MANAGER.getCode(),
+                GlobalErrorCodeEnum.NOT_GLOBAL_AUDIT_MANAGER.getDescription());
         }
     }
 
     private static void checkDeptAuditManager() {
-        if (!(!Y9LoginUserHolder.getUserInfo().isGlobalManager() 
-                && ManagerLevelEnum.AUDIT_MANAGER.getValue().equals(Y9LoginUserHolder.getUserInfo().getManagerLevel()))) {
-            throw new Y9PermissionException(GlobalErrorCodeEnum.NOT_DEPT_AUDIT_MANAGER.getCode(), GlobalErrorCodeEnum.NOT_DEPT_AUDIT_MANAGER.getDescription());
+        if (!(!Y9LoginUserHolder.getUserInfo().isGlobalManager()
+            && ManagerLevelEnum.AUDIT_MANAGER.getValue().equals(Y9LoginUserHolder.getUserInfo().getManagerLevel()))) {
+            throw new Y9PermissionException(GlobalErrorCodeEnum.NOT_DEPT_AUDIT_MANAGER.getCode(),
+                GlobalErrorCodeEnum.NOT_DEPT_AUDIT_MANAGER.getDescription());
         }
     }
-    
-    
 
 }

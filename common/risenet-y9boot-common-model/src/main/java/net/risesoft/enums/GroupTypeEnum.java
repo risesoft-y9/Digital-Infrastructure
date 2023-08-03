@@ -19,6 +19,6 @@ public enum GroupTypeEnum {
     POSITION("position"),
     /** 人员组 */
     PERSON("person");
-    
+
     private final String name;
 }

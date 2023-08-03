@@ -42,7 +42,7 @@ import net.risesoft.y9.Y9LoginUserHolder;
 @Slf4j
 @RequiredArgsConstructor
 public class Y9OrgTreeExcelDataHandlerImpl implements Y9OrgTreeDataHandler {
-    
+
     private final CompositeOrgBaseService compositeOrgBaseService;
     private final Y9DepartmentService y9DepartmentService;
     private final Y9PersonService y9PersonService;
@@ -204,9 +204,11 @@ public class Y9OrgTreeExcelDataHandlerImpl implements Y9OrgTreeDataHandler {
                     // 有手机号码重复，提示用户手动修改
                     if ("true".equals(retMap.get("isMobileRepeat"))) {
                         if (StringUtils.isBlank(repeatMobiles)) {
-                            repeatMobiles = retMap.get("mobileNames").toString() + ":" + retMap.get("mobiles").toString();
+                            repeatMobiles =
+                                retMap.get("mobileNames").toString() + ":" + retMap.get("mobiles").toString();
                         } else {
-                            repeatMobiles = repeatMobiles + "、" + retMap.get("mobileNames").toString() + ":" + retMap.get("mobiles").toString();
+                            repeatMobiles = repeatMobiles + "、" + retMap.get("mobileNames").toString() + ":"
+                                + retMap.get("mobiles").toString();
                         }
                     }
                 }
@@ -290,7 +292,8 @@ public class Y9OrgTreeExcelDataHandlerImpl implements Y9OrgTreeDataHandler {
                                 orgperson.setMobile(new BigDecimal(personMobile).toString().replaceAll("\\s*", ""));
                                 orgperson.setLoginName(pf.getLoginName().replaceAll("\\s*", ""));
                                 orgperson.setSex("男".equals(pf.getSex()) ? 1 : 0);
-                                y9PersonService.saveOrUpdate(orgperson, null, compositeOrgBaseService.getOrgBase(parentId));
+                                y9PersonService.saveOrUpdate(orgperson, null,
+                                    compositeOrgBaseService.getOrgBase(parentId));
                             }
                         } else {
                             // 人员号码错误
@@ -318,7 +321,8 @@ public class Y9OrgTreeExcelDataHandlerImpl implements Y9OrgTreeDataHandler {
                     department.setTenantId(Y9LoginUserHolder.getTenantId());
                     department.setName(paths[i].replaceAll("\\s*", ""));
                     department.setOrgType(OrgTypeEnum.DEPARTMENT.getEnName());
-                    Y9Department dept = y9DepartmentService.saveOrUpdate(department, compositeOrgBaseService.getOrgBase(parentId));
+                    Y9Department dept =
+                        y9DepartmentService.saveOrUpdate(department, compositeOrgBaseService.getOrgBase(parentId));
                     parentId = dept.getId();
                 }
             }
@@ -335,7 +339,7 @@ public class Y9OrgTreeExcelDataHandlerImpl implements Y9OrgTreeDataHandler {
     @Override
     public Map<String, Object> xlsData(String organizationId) {
         Map<String, Object> map = new HashMap<>();
-        
+
         List<Y9Organization> organizationList = new ArrayList<>();
         Y9Organization y9Organization = y9OrganizationService.getById(organizationId);
         organizationList.add(y9Organization);
@@ -351,7 +355,7 @@ public class Y9OrgTreeExcelDataHandlerImpl implements Y9OrgTreeDataHandler {
         map.put("positionList", positionList);
         return map;
     }
-    
+
     /**
      * 导出人员信息到Excel
      *

@@ -2,13 +2,14 @@ package org.apereo.cas.web.y9.y9user;
 
 /**
  * 操作码
+ * 
  * @author shidaobang
  * @date 2022/12/29
  */
 public enum CodeEnum {
-    /**操作成功代码*/
+    /** 操作成功代码 */
     SUCCESS(200, "操作成功"),
-    /**服务器内部错误代码*/
+    /** 服务器内部错误代码 */
     FAILURE(500, "服务器内部错误");
 
     private int code;

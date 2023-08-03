@@ -1,5 +1,5 @@
 ﻿//Ajax提交
-function AjaxPost(Url,JsonData,LodingFun,ReturnFun) {
+function AjaxPost(Url, JsonData, LodingFun, ReturnFun) {
     $.ajax({
         type: "post",
         url: Url,
@@ -7,10 +7,13 @@ function AjaxPost(Url,JsonData,LodingFun,ReturnFun) {
         dataType: 'json',
         async: 'false',
         beforeSend: LodingFun,
-        error: function () { AjaxErro({ "Status": "Erro", "Erro": "500" }); },
+        error: function () {
+            AjaxErro({"Status": "Erro", "Erro": "500"});
+        },
         success: ReturnFun
     });
 }
+
 //示例
 //AjaxPost("ajax调用路径", ajax传参,
 //                function () {
@@ -24,10 +27,19 @@ function AjaxPost(Url,JsonData,LodingFun,ReturnFun) {
 
 //弹出
 function ErroAlert(e) {
-    var index = layer.alert(e, { icon: 5, time: 2000, offset: 't', closeBtn: 0, title: '错误信息', btn: [], anim: 2, shade: 0 });
+    var index = layer.alert(e, {
+        icon: 5,
+        time: 2000,
+        offset: 't',
+        closeBtn: 0,
+        title: '错误信息',
+        btn: [],
+        anim: 2,
+        shade: 0
+    });
     layer.style(index, {
         color: '#777'
-    }); 
+    });
 }
 
 //Ajax 错误返回处理
@@ -51,6 +63,7 @@ function AjaxErro(e) {
 
 //生成验证码
 var code = "";
+
 function createCode(e) {
     code = "";
     var codeLength = 4;
@@ -62,11 +75,11 @@ function createCode(e) {
     if (code.length != codeLength) {
         createCode(e);
     }
-	if(canGetCookie == 1){
-    	setCookie(e, code, 60 * 60 * 60, '/');
-	}else{
-		return code;
-	}
+    if (canGetCookie == 1) {
+        setCookie(e, code, 60 * 60 * 60, '/');
+    } else {
+        return code;
+    }
 }
 
 
@@ -82,6 +95,7 @@ function setCookie(name, value, hours, path) {
     _expires = (typeof hours) == "string" ? "" : ";expires=" + expires.toUTCString();
     document.cookie = name + "=" + value + _expires + path;
 }
+
 //cookie名获取值  
 function getCookieValue(name) {
     var name = escape(name);
@@ -97,6 +111,5 @@ function getCookieValue(name) {
         if (end == -1) end = allcookies.length; //如果end值为-1说明cookie列表里只有一个cookie     
         var value = allcookies.substring(start, end);  //提取cookie的值     
         return unescape(value);       //对它解码           
-    }
-    else return "-1";    //搜索失败，返回-1  
+    } else return "-1";    //搜索失败，返回-1  
 }    

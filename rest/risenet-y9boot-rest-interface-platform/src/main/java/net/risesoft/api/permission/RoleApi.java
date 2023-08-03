@@ -2,6 +2,8 @@ package net.risesoft.api.permission;
 
 import java.util.List;
 
+import javax.validation.constraints.NotBlank;
+
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -10,8 +12,6 @@ import org.springframework.web.bind.annotation.RequestParam;
 import net.risesoft.model.OrgUnit;
 import net.risesoft.model.Person;
 import net.risesoft.model.Role;
-
-import javax.validation.constraints.NotBlank;
 
 /**
  * @author dingzhaojun
@@ -33,7 +33,8 @@ public interface RoleApi {
      * @since 9.6.0
      */
     @PostMapping("/addPerson")
-    boolean addPerson(@RequestParam("personId") @NotBlank String personId, @RequestParam("roleId") @NotBlank String roleId, @RequestParam("tenantId") @NotBlank String tenantId);
+    boolean addPerson(@RequestParam("personId") @NotBlank String personId,
+        @RequestParam("roleId") @NotBlank String roleId, @RequestParam("tenantId") @NotBlank String tenantId);
 
     /**
      * 新增角色节点
@@ -49,8 +50,10 @@ public interface RoleApi {
      * @since 9.6.0
      */
     @PostMapping("/createRoleNodeAddCustomId")
-    Role createRoleNodeAddCustomId(@RequestParam("roleId") String roleId, @RequestParam("roleName") String roleName, @RequestParam("parentId") String parentId, @RequestParam("customId") String customId, @RequestParam("type") String type, @RequestParam("systemName") String systemName,
-                                   @RequestParam("systemCnName") String systemCnName);
+    Role createRoleNodeAddCustomId(@RequestParam("roleId") String roleId, @RequestParam("roleName") String roleName,
+        @RequestParam("parentId") String parentId, @RequestParam("customId") String customId,
+        @RequestParam("type") String type, @RequestParam("systemName") String systemName,
+        @RequestParam("systemCnName") String systemCnName);
 
     /**
      * 删除权限节点
@@ -72,7 +75,8 @@ public interface RoleApi {
      * @since 9.6.0
      */
     @GetMapping("/findByCustomIdAndParentId")
-    Role findByCustomIdAndParentId(@RequestParam("customId") @NotBlank String customId, @RequestParam("parentId") @NotBlank String parentId);
+    Role findByCustomIdAndParentId(@RequestParam("customId") @NotBlank String customId,
+        @RequestParam("parentId") @NotBlank String parentId);
 
     /**
      * 根据id获取相应角色节点
@@ -94,7 +98,8 @@ public interface RoleApi {
      * @since 9.6.0
      */
     @GetMapping("/hasPublicRole")
-    boolean hasPublicRole(@RequestParam("tenantId") @NotBlank String tenantId, @RequestParam("roleName") @NotBlank String roleName, @RequestParam("personId") @NotBlank String personId);
+    boolean hasPublicRole(@RequestParam("tenantId") @NotBlank String tenantId,
+        @RequestParam("roleName") @NotBlank String roleName, @RequestParam("personId") @NotBlank String personId);
 
     /**
      * 根据人员id判断该人员是否拥有 roleName 这个角色
@@ -109,7 +114,10 @@ public interface RoleApi {
      */
 
     @GetMapping("/hasRole")
-    Boolean hasRole(@RequestParam("tenantId") @NotBlank String tenantId, @RequestParam("systemName") @NotBlank String systemName, @RequestParam(value = "properties", required = false) String properties, @RequestParam("roleName") @NotBlank String roleName, @RequestParam("personId") @NotBlank String personId);
+    Boolean hasRole(@RequestParam("tenantId") @NotBlank String tenantId,
+        @RequestParam("systemName") @NotBlank String systemName,
+        @RequestParam(value = "properties", required = false) String properties,
+        @RequestParam("roleName") @NotBlank String roleName, @RequestParam("personId") @NotBlank String personId);
 
     /**
      * 判断orgUnitId是否有角色roleId
@@ -122,7 +130,8 @@ public interface RoleApi {
      */
 
     @GetMapping("/hasRoleByTenantIdAndRoleIdAndOrgUnitId")
-    Boolean hasRoleByTenantIdAndRoleIdAndOrgUnitId(@RequestParam("tenantId") @NotBlank String tenantId, @RequestParam("roleId") @NotBlank String roleId, @RequestParam("orgUnitId") @NotBlank String orgUnitId);
+    Boolean hasRoleByTenantIdAndRoleIdAndOrgUnitId(@RequestParam("tenantId") @NotBlank String tenantId,
+        @RequestParam("roleId") @NotBlank String roleId, @RequestParam("orgUnitId") @NotBlank String orgUnitId);
 
     /**
      * 根据角色Id获取角色下所有人员（递归）
@@ -133,7 +142,8 @@ public interface RoleApi {
      * @since 9.6.0
      */
     @GetMapping("/listAllPersonsById")
-    List<Person> listAllPersonsById(@RequestParam("tenantId") @NotBlank String tenantId, @RequestParam("roleId") @NotBlank String roleId);
+    List<Person> listAllPersonsById(@RequestParam("tenantId") @NotBlank String tenantId,
+        @RequestParam("roleId") @NotBlank String roleId);
 
     /**
      * 根据角色Id获取相应OrgUnits
@@ -145,7 +155,8 @@ public interface RoleApi {
      * @since 9.6.0
      */
     @GetMapping("/listOrgUnitsById")
-    List<OrgUnit> listOrgUnitsById(@RequestParam("tenantId") @NotBlank String tenantId, @RequestParam("roleId") @NotBlank String roleId, @RequestParam("orgType") @NotBlank String orgType);
+    List<OrgUnit> listOrgUnitsById(@RequestParam("tenantId") @NotBlank String tenantId,
+        @RequestParam("roleId") @NotBlank String roleId, @RequestParam("orgType") @NotBlank String orgType);
 
     /**
      * 根据角色Id获取相应人员
@@ -156,7 +167,8 @@ public interface RoleApi {
      * @since 9.6.0
      */
     @GetMapping("/listPersonsById")
-    List<Person> listPersonsById(@RequestParam("tenantId") @NotBlank String tenantId, @RequestParam("roleId") @NotBlank String roleId);
+    List<Person> listPersonsById(@RequestParam("tenantId") @NotBlank String tenantId,
+        @RequestParam("roleId") @NotBlank String roleId);
 
     /**
      * 根据人员id获取所有关联的角色
@@ -167,7 +179,8 @@ public interface RoleApi {
      * @since 9.6.0
      */
     @GetMapping("/listRelateRoleByPersonId")
-    List<Role> listRelateRoleByPersonId(@RequestParam("tenantId") @NotBlank String tenantId, @RequestParam("personId") @NotBlank String personId);
+    List<Role> listRelateRoleByPersonId(@RequestParam("tenantId") @NotBlank String tenantId,
+        @RequestParam("personId") @NotBlank String personId);
 
     /**
      * 根据orgUnitId获取角色节点
@@ -178,7 +191,8 @@ public interface RoleApi {
      * @since 9.6.0
      */
     @GetMapping("/listRoleByOrgUnitId")
-    List<Role> listRoleByOrgUnitId(@RequestParam("tenantId") @NotBlank String tenantId, @RequestParam("orgUnitId") @NotBlank String orgUnitId);
+    List<Role> listRoleByOrgUnitId(@RequestParam("tenantId") @NotBlank String tenantId,
+        @RequestParam("orgUnitId") @NotBlank String orgUnitId);
 
     /**
      * 根据父节点Id获取相应子级角色节点
@@ -201,5 +215,6 @@ public interface RoleApi {
      */
 
     @PostMapping("/removePerson")
-    boolean removePerson(@RequestParam("personId") @NotBlank String personId, @RequestParam("roleId") @NotBlank String roleId, @RequestParam("tenantId") @NotBlank String tenantId);
+    boolean removePerson(@RequestParam("personId") @NotBlank String personId,
+        @RequestParam("roleId") @NotBlank String roleId, @RequestParam("tenantId") @NotBlank String tenantId);
 }

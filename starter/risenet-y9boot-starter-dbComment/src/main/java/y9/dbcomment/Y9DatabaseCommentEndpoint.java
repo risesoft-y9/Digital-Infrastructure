@@ -25,14 +25,15 @@ import net.risesoft.y9.tenant.datasource.Y9TenantDataSource;
 @Endpoint(id = "databaseComment")
 @RequiredArgsConstructor
 public class Y9DatabaseCommentEndpoint {
-    
+
     private final DataSource y9PublicDs;
     private final Y9TenantDataSource y9TenantDataSource;
 
     @ReadOperation
     public String databaseComment() {
         if (this.y9PublicDs != null) {
-            String scanPackagePublic = Y9Context.getProperty("y9.feature.jpa.packagesToScanEntityPublic", "net.risesoft.y9public.entity");
+            String scanPackagePublic =
+                Y9Context.getProperty("y9.feature.jpa.packagesToScanEntityPublic", "net.risesoft.y9public.entity");
             JdbcTemplate jdbcTemplate4Public = new JdbcTemplate(this.y9PublicDs);
             DbType dbType = DbUtil.getDbType(this.y9PublicDs);
             if (DbType.mysql.equals(dbType)) {
@@ -43,7 +44,8 @@ public class Y9DatabaseCommentEndpoint {
         }
 
         if (this.y9TenantDataSource != null) {
-            String scanPackageTenant = Y9Context.getProperty("y9.feature.jpa.packagesToScanEntityTenant", "net.risesoft.entity");
+            String scanPackageTenant =
+                Y9Context.getProperty("y9.feature.jpa.packagesToScanEntityTenant", "net.risesoft.entity");
             JdbcTemplate jdbcTemplate4Tenant = new JdbcTemplate(this.y9TenantDataSource);
 
             JdbcTemplate jdbcTemplate4Public = new JdbcTemplate(this.y9PublicDs);

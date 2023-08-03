@@ -44,17 +44,20 @@ public class CompositeResourceServiceImpl implements CompositeResourceService {
     private final Y9MenuManager y9MenuManager;
     private final Y9OperationManager y9OperationManager;
 
-    @Cacheable(cacheNames = CacheNameConsts.RESOURCE_APP, key = "#id", condition = "#id!=null", unless = "#result==null")
+    @Cacheable(cacheNames = CacheNameConsts.RESOURCE_APP, key = "#id", condition = "#id!=null",
+        unless = "#result==null")
     public Y9App findAppById(String id) {
         return y9AppRepository.findById(id).orElse(null);
     }
 
-    @Cacheable(cacheNames = CacheNameConsts.RESOURCE_MENU, key = "#id", condition = "#id!=null", unless = "#result==null")
+    @Cacheable(cacheNames = CacheNameConsts.RESOURCE_MENU, key = "#id", condition = "#id!=null",
+        unless = "#result==null")
     public Y9Menu findMenuById(String id) {
         return y9MenuRepository.findById(id).orElse(null);
     }
 
-    @Cacheable(cacheNames = CacheNameConsts.RESOURCE_OPERATION, key = "#id", condition = "#id!=null", unless = "#result==null")
+    @Cacheable(cacheNames = CacheNameConsts.RESOURCE_OPERATION, key = "#id", condition = "#id!=null",
+        unless = "#result==null")
     public Y9Operation findOperationById(String id) {
         return y9OperationRepository.findById(id).orElse(null);
     }

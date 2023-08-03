@@ -51,22 +51,22 @@ public class ModelConvertUtil extends Y9ModelConvertUtil {
         }
         OrgUnit orgUnit;
         if (OrgTypeEnum.PERSON.getEnName().equals(base.getOrgType())) {
-            Y9Person person = (Y9Person) base;
+            Y9Person person = (Y9Person)base;
             orgUnit = convert(person, Person.class);
         } else if (OrgTypeEnum.MANAGER.getEnName().equals(base.getOrgType())) {
-            Y9Manager manager = (Y9Manager) base;
+            Y9Manager manager = (Y9Manager)base;
             orgUnit = convert(manager, Manager.class);
         } else if (OrgTypeEnum.DEPARTMENT.getEnName().equals(base.getOrgType())) {
-            Y9Department dept = (Y9Department) base;
+            Y9Department dept = (Y9Department)base;
             orgUnit = convert(dept, Department.class);
         } else if (OrgTypeEnum.GROUP.getEnName().equals(base.getOrgType())) {
-            Y9Group group = (Y9Group) base;
+            Y9Group group = (Y9Group)base;
             orgUnit = convert(group, Group.class);
         } else if (OrgTypeEnum.POSITION.getEnName().equals(base.getOrgType())) {
-            Y9Position position = (Y9Position) base;
+            Y9Position position = (Y9Position)base;
             orgUnit = convert(position, Position.class);
         } else {
-            Y9Organization org = (Y9Organization) base;
+            Y9Organization org = (Y9Organization)base;
             orgUnit = convert(org, Organization.class);
         }
         return orgUnit;
@@ -92,7 +92,7 @@ public class ModelConvertUtil extends Y9ModelConvertUtil {
         if (y9Role == null) {
             return null;
         }
-        
+
         Role role = new Role();
         Y9BeanUtil.copyProperties(y9Role, role);
         if (StringUtils.isNotEmpty(y9Role.getProperties())) {

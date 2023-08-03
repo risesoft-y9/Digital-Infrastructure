@@ -15,6 +15,7 @@ import net.risesoft.entity.Y9OrgBaseMoved;
  */
 @Repository
 @Transactional(value = "rsTenantTransactionManager", readOnly = true)
-public interface Y9OrgBaseMovedRepository extends JpaRepository<Y9OrgBaseMoved, String>, JpaSpecificationExecutor<Y9OrgBaseMoved> {
+public interface Y9OrgBaseMovedRepository
+    extends JpaRepository<Y9OrgBaseMoved, String>, JpaSpecificationExecutor<Y9OrgBaseMoved> {
 
 }

@@ -18,7 +18,7 @@ public enum ItemWordTypeEnum {
     REDHEADWORD("1", "红头文件"),
     /** jsp */
     PDF("2", "流式文件"),
-    //FIXME
+    // FIXME
     /** quikui */
     PDF1("3", "PDF1"),
     /** freemarker */

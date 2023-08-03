@@ -69,7 +69,8 @@ public class HasRolesAdvice implements MethodBeforeAdvice {
             }
         }
 
-        throw Y9ExceptionUtil.permissionException(GlobalErrorCodeEnum.POSITION_NOT_HAS_ROLE, Arrays.toString(customIds));
+        throw Y9ExceptionUtil.permissionException(GlobalErrorCodeEnum.POSITION_NOT_HAS_ROLE,
+            Arrays.toString(customIds));
     }
 
     private boolean hasPositionRole(String customId) {

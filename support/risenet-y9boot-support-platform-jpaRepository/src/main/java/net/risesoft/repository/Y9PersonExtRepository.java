@@ -18,7 +18,8 @@ import net.risesoft.entity.Y9PersonExt;
 @SuppressWarnings("AlibabaAbstractMethodOrInterfaceMethodMustUseJavadoc")
 @Repository
 @Transactional(value = "rsTenantTransactionManager", readOnly = true)
-public interface Y9PersonExtRepository extends JpaRepository<Y9PersonExt, String>, JpaSpecificationExecutor<Y9PersonExt> {
+public interface Y9PersonExtRepository
+    extends JpaRepository<Y9PersonExt, String>, JpaSpecificationExecutor<Y9PersonExt> {
 
     List<Y9PersonExt> findByIdTypeAndIdNum(String idType, String idNum);
 

@@ -40,7 +40,7 @@ public interface Y9AppService extends ResourceCommonService<Y9App> {
      * 验证该应用是否已存在
      *
      * @param systemId 系统的唯一标识
-     * @param name     应用名
+     * @param name 应用名
      * @return boolean
      */
     boolean existBySystemIdAndName(String systemId, String name);
@@ -49,7 +49,7 @@ public interface Y9AppService extends ResourceCommonService<Y9App> {
      * 验证应用的链接地址是否已存在
      *
      * @param systemId 系统id
-     * @param url      链接地址
+     * @param url 链接地址
      * @return boolean
      */
     boolean existBySystemIdAndUrl(String systemId, String url);
@@ -67,7 +67,7 @@ public interface Y9AppService extends ResourceCommonService<Y9App> {
      * 根据系统名称和自定义id查找应用
      *
      * @param systemName 系统名
-     * @param customId   自定义id
+     * @param customId 自定义id
      * @return {@link Y9App}
      */
     Y9App findBySystemNameAndCustomId(String systemName, String customId);
@@ -101,7 +101,7 @@ public interface Y9AppService extends ResourceCommonService<Y9App> {
      * 获取应用列表
      *
      * @param autoInit 是否自动租用
-     * @param checked  是否审核通过
+     * @param checked 是否审核通过
      * @return {@link List}<{@link Y9App}>
      */
     List<Y9App> listByAutoInitAndChecked(Boolean autoInit, Boolean checked);
@@ -150,8 +150,8 @@ public interface Y9AppService extends ResourceCommonService<Y9App> {
      * 根据系统id和名称分页查询系统
      *
      * @param pageQuery 分页查询
-     * @param systemId  系统id
-     * @param name      系统名称
+     * @param systemId 系统id
+     * @param name 系统名称
      * @return {@link Page}<{@link Y9App}>
      */
     Page<Y9App> page(Y9PageQuery pageQuery, String systemId, String name);
@@ -168,8 +168,8 @@ public interface Y9AppService extends ResourceCommonService<Y9App> {
     /**
      * 根据systemId ，分页查询应用入口（按createDateTime DESC排序）
      *
-     * @param page     页数
-     * @param rows     每页行数
+     * @param page 页数
+     * @param rows 每页行数
      * @param systemId 系统id
      * @return Page<App>
      */
@@ -178,10 +178,10 @@ public interface Y9AppService extends ResourceCommonService<Y9App> {
     /**
      * 根据systemId ，应用名称，模糊分页查询应用入口（按createDateTime DESC排序）
      *
-     * @param page     页数
-     * @param rows     每页行数
+     * @param page 页数
+     * @param rows 每页行数
      * @param systemId 系统id
-     * @param appName  应用名
+     * @param appName 应用名
      * @return {@link Page}<{@link Y9App}>
      */
     Page<Y9App> pageBySystemIdAndName(int page, int rows, String systemId, String appName);
@@ -189,7 +189,7 @@ public interface Y9AppService extends ResourceCommonService<Y9App> {
     /**
      * 保存isv应用
      *
-     * @param app      应用程序
+     * @param app 应用程序
      * @param systemId 系统id
      * @return {@link Y9App}
      */
@@ -205,8 +205,8 @@ public interface Y9AppService extends ResourceCommonService<Y9App> {
     /**
      * 审核应用
      *
-     * @param id             id
-     * @param checked        是否已审核
+     * @param id id
+     * @param checked 是否已审核
      * @param verifyUserName 审核人
      * @return int
      */

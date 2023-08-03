@@ -23,7 +23,7 @@ public class Y9EmailProperties {
      * 微信提醒api
      */
     private String weChatMsgApi = "https://www.youshengyun.com/Youshengyun/Api/pushEmailMessage";
-    
+
     /**
      * 超大附件功能启用
      */
@@ -38,5 +38,5 @@ public class Y9EmailProperties {
      * 超大附件过期天数
      */
     private int bigAttachmentExpireDays = 30;
-    
+
 }

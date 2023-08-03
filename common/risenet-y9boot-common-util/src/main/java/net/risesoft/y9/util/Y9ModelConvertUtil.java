@@ -18,7 +18,7 @@ import lombok.extern.slf4j.Slf4j;
 public class Y9ModelConvertUtil {
 
     public static <T> List<T> convert(List<?> sourceList, Class<T> targetClass) {
-        return convert(sourceList, targetClass, (String[]) null);
+        return convert(sourceList, targetClass, (String[])null);
     }
 
     public static <T> List<T> convert(List<?> sourceList, Class<T> targetClass, String... ignoreProperties) {
@@ -32,7 +32,7 @@ public class Y9ModelConvertUtil {
     }
 
     public static <T> T convert(Object source, Class<T> modelClass) {
-        return convert(source, modelClass, (String[]) null);
+        return convert(source, modelClass, (String[])null);
     }
 
     public static <T> T convert(Object source, Class<T> modelClass, String... ignoreProperties) {

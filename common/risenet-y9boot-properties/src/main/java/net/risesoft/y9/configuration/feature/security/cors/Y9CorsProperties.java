@@ -26,7 +26,8 @@ public class Y9CorsProperties {
     /**
      * 允许的 origin 正则
      */
-    private List<String> allowedOriginPatterns = Arrays.asList("https://*.youshengyun.com", "http://*.youshengyun.com", "http://localhost:8080", "http://127.0.0.1:8080");
+    private List<String> allowedOriginPatterns = Arrays.asList("https://*.youshengyun.com", "http://*.youshengyun.com",
+        "http://localhost:8080", "http://127.0.0.1:8080");
 
     /**
      * 允许的请求方法
@@ -36,7 +37,8 @@ public class Y9CorsProperties {
     /**
      * 允许的请求头 目前默认 * 即允许所有请求头
      */
-    // private List<String> allowedHeaders = Arrays.asList("x-requested-with", "content-type", "auth-tenantId", "auth-userId", "access_token", "WWW-Authenticate", "token", "y9Site", "Authorization");
+    // private List<String> allowedHeaders = Arrays.asList("x-requested-with", "content-type", "auth-tenantId",
+    // "auth-userId", "access_token", "WWW-Authenticate", "token", "y9Site", "Authorization");
     private List<String> allowedHeaders = Arrays.asList("*");
 
     /**

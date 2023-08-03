@@ -42,7 +42,8 @@ public class Y9CmsUtil {
         return map;
     }
 
-    private static Map<String, String> getRequestMap(ServletRequest request, String prefix, String[] contains, boolean nameWithPrefix) {
+    private static Map<String, String> getRequestMap(ServletRequest request, String prefix, String[] contains,
+        boolean nameWithPrefix) {
         Map<String, String> map = new HashMap<>(16);
         Enumeration<String> names = request.getParameterNames();
         String name, key, value;
@@ -63,7 +64,8 @@ public class Y9CmsUtil {
         return getRequestMap(request, prefix, true);
     }
 
-    public static Map<String, String> getRequestMapWithPrefix(ServletRequest request, String prefix, String[] contains) {
+    public static Map<String, String> getRequestMapWithPrefix(ServletRequest request, String prefix,
+        String[] contains) {
         return getRequestMap(request, prefix, contains, false);
     }
 

@@ -31,7 +31,7 @@ public class QRCodeController {
 
     @Value("${cas.server.name}")
     private String name;
-    
+
     private final CasRedisTemplate<Object, Object> redisTemplate;
 
     public QRCodeController(@Qualifier("y9RedisTemplate") CasRedisTemplate<Object, Object> redisTemplate) {
@@ -49,7 +49,8 @@ public class QRCodeController {
             name = name.endsWith("/") ? name : name + "/";
             String uuid = UUID.randomUUID().toString();
             String url = name + "sso/login?url=" + name + "sso/api/saveScanResult&uuid=" + uuid;
-            InputStream imgis = this.getClass().getClassLoader().getResourceAsStream("static/y9static/y9new/img/qrCodeLogo.png");
+            InputStream imgis =
+                this.getClass().getClassLoader().getResourceAsStream("static/y9static/y9new/img/qrCodeLogo.png");
             String img = Y9QRCode.encode(url, 512, 512, imgis);
             redisTemplate.opsForValue().set("QRCode:" + uuid, 2, 120, TimeUnit.SECONDS);
             map.put("img", img);

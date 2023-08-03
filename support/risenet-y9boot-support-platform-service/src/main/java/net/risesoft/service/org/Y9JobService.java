@@ -13,7 +13,6 @@ import net.risesoft.entity.Y9Job;
  */
 public interface Y9JobService {
 
-
     /**
      * 根据id数组删除
      *
@@ -62,7 +61,7 @@ public interface Y9JobService {
     /**
      * 按照tabindexs的顺序重新排序职位列表
      *
-     * @param jobIds    岗位id
+     * @param jobIds 岗位id
      * @param tabIndexs 排序序列号
      * @return {@link List}<{@link Y9Job}>
      */

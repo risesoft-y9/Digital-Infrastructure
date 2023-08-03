@@ -1,6 +1,5 @@
 package net.risesoft.y9.configuration.feature.file.ftp;
 
-
 import lombok.Getter;
 import lombok.Setter;
 
@@ -47,8 +46,7 @@ public class Y9FtpProperties {
      */
     private int bufferSize = 10240;
     /**
-     * 传输数据格式
-     * 2=binary二进制数据
+     * 传输数据格式 2=binary二进制数据
      */
     private int fileType = 2;
     /**

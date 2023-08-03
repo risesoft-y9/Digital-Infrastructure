@@ -1,6 +1,6 @@
 package net.risesoft.api.permission;
 
-import java.util.Map;
+import javax.validation.constraints.NotBlank;
 
 import org.springframework.context.annotation.Primary;
 import org.springframework.http.MediaType;
@@ -11,11 +11,8 @@ import org.springframework.web.bind.annotation.RestController;
 
 import lombok.RequiredArgsConstructor;
 
-import net.risesoft.pojo.Y9Page;
 import net.risesoft.service.identity.Y9PersonToRoleService;
 import net.risesoft.y9.Y9LoginUserHolder;
-
-import javax.validation.constraints.NotBlank;
 
 /**
  * 权限查看组件
@@ -44,9 +41,10 @@ public class PersonRoleApiImpl implements PersonRoleApi {
      * @since 9.6.0
      */
     @Override
-    public long countByPersonId(@RequestParam("tenantId") @NotBlank String tenantId, @RequestParam("personId") @NotBlank String personId) {
+    public long countByPersonId(@RequestParam("tenantId") @NotBlank String tenantId,
+        @RequestParam("personId") @NotBlank String personId) {
         Y9LoginUserHolder.setTenantId(tenantId);
-        
+
         return y9PersonToRoleService.countByPersonId(personId);
     }
 
@@ -60,10 +58,11 @@ public class PersonRoleApiImpl implements PersonRoleApi {
      * @since 9.6.0
      */
     @Override
-    public Boolean hasRole(@RequestParam("tenantId") @NotBlank String tenantId, @RequestParam("positionId") @NotBlank String personId, @RequestParam("customId") @NotBlank String customId) {
+    public Boolean hasRole(@RequestParam("tenantId") @NotBlank String tenantId,
+        @RequestParam("positionId") @NotBlank String personId, @RequestParam("customId") @NotBlank String customId) {
         Y9LoginUserHolder.setTenantId(tenantId);
 
         return y9PersonToRoleService.hasRole(personId, customId);
     }
-    
+
 }

@@ -61,7 +61,7 @@
                     <!-- 表单隐藏数据块开始 -->
                     <input type="hidden" id="loginType" name="loginType" value="loginName"/>
                     <input type="hidden" id="captchaKey" name="captchaKey" value=""/>
-                    <input type="hidden" id="screenDimension" name="screenDimension" value="" /> 
+                    <input type="hidden" id="screenDimension" name="screenDimension" value=""/>
                     <input type="hidden" id="noLoginScreen" name="noLoginScreen" value="false"/>
 
                     <input type="hidden" name="execution" th:value="${flowExecutionKey}"/>
@@ -93,9 +93,11 @@
             </div>
             <div class="links">
                 <p class="line copyright">
-                    <span class="slide">Copyright 北京有生博大软件股份有限公司　版权所有　<a href="https://beian.miit.gov.cn/" target="_blank">京ICP备16060306号-4</a>
+                    <span class="slide">Copyright 北京有生博大软件股份有限公司　版权所有　<a
+                            href="https://beian.miit.gov.cn/" target="_blank">京ICP备16060306号-4</a>
 						<img th:src="@{/y9static/images/risecloud/guohui.png}">
-						<a href="http://www.beian.gov.cn/portal/registerSystemInfo?recordcode=11010802026965" target="_blank">京公网安备11010802026965号</a>
+						<a href="http://www.beian.gov.cn/portal/registerSystemInfo?recordcode=11010802026965"
+                           target="_blank">京公网安备11010802026965号</a>
                     </span>
                 </p>
             </div>
@@ -124,10 +126,10 @@
     }
 
     function validateIE() {
-    	try {
-			$("#screenDimension").val(window.screen.width + '*' + window.screen.height);
-		} catch (e) {
-		}
+        try {
+            $("#screenDimension").val(window.screen.width + '*' + window.screen.height);
+        } catch (e) {
+        }
         var userAgent = navigator.userAgent.toLowerCase();
         //alert(userAgent);
         if (userAgent.indexOf("msie 9") > 0 || userAgent.indexOf("msie 10") > 0 || userAgent.indexOf("rv:11") > 0) {

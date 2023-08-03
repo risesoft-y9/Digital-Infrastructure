@@ -16,7 +16,7 @@ import net.risesoft.enums.Y9DepartmentPropCategoryEnum;
  */
 @Data
 public class DepartmentProp implements Serializable {
-    
+
     private static final long serialVersionUID = 1239795207430901518L;
 
     /**

@@ -27,7 +27,7 @@ import net.risesoft.enums.ResourceTypeEnum;
 @NoArgsConstructor
 @Data
 public abstract class Y9ResourceBase extends BaseEntity implements Comparable<Y9ResourceBase> {
-    
+
     private static final long serialVersionUID = -1618076945780899968L;
 
     /** 主键 */

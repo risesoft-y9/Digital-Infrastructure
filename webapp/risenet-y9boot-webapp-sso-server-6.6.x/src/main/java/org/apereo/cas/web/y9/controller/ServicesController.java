@@ -28,7 +28,8 @@ public class ServicesController {
     private final ServicesManager servicesManager;
 
     @PostMapping(value = "/oAuthService")
-    public Y9Result<String> oAuthService(String clientId, String clientSecret, String serviceId, String name, String description) {
+    public Y9Result<String> oAuthService(String clientId, String clientSecret, String serviceId, String name,
+        String description) {
         Y9Result<String> y9result = new Y9Result<>();
         y9result.setCode(200);
         y9result.setMsg("刷新失败");
@@ -46,10 +47,12 @@ public class ServicesController {
             returnAllAttributeReleasePolicy.setAuthorizedToReleaseCredentialPassword(true);
             returnAllAttributeReleasePolicy.setAuthorizedToReleaseProxyGrantingTicket(true);
             returnAllAttributeReleasePolicy.setExcludeDefaultAttributes(false);
-            DefaultPrincipalAttributesRepository defaultPrincipalAttributesRepository = new DefaultPrincipalAttributesRepository();
+            DefaultPrincipalAttributesRepository defaultPrincipalAttributesRepository =
+                new DefaultPrincipalAttributesRepository();
             returnAllAttributeReleasePolicy.setPrincipalAttributesRepository(defaultPrincipalAttributesRepository);
             oAuthRegisteredService.setAttributeReleasePolicy(returnAllAttributeReleasePolicy);
-            oAuthRegisteredService.setSupportedGrantTypes(new HashSet<>(Arrays.asList("authorization_code", "password", "client_credentials", "refresh_token")));
+            oAuthRegisteredService.setSupportedGrantTypes(
+                new HashSet<>(Arrays.asList("authorization_code", "password", "client_credentials", "refresh_token")));
             oAuthRegisteredService.setSupportedResponseTypes(new HashSet<>(Arrays.asList("code", "token")));
             oAuthRegisteredService.setBypassApprovalPrompt(true);
             oAuthRegisteredService.setGenerateRefreshToken(true);
@@ -85,11 +88,14 @@ public class ServicesController {
             returnAllAttributeReleasePolicy.setAuthorizedToReleaseCredentialPassword(true);
             returnAllAttributeReleasePolicy.setAuthorizedToReleaseProxyGrantingTicket(true);
             returnAllAttributeReleasePolicy.setExcludeDefaultAttributes(false);
-            DefaultPrincipalAttributesRepository defaultPrincipalAttributesRepository = new DefaultPrincipalAttributesRepository();
+            DefaultPrincipalAttributesRepository defaultPrincipalAttributesRepository =
+                new DefaultPrincipalAttributesRepository();
             returnAllAttributeReleasePolicy.setPrincipalAttributesRepository(defaultPrincipalAttributesRepository);
             regexRegisteredService.setAttributeReleasePolicy(returnAllAttributeReleasePolicy);
-            DefaultRegisteredServiceMultifactorPolicy defaultRegisteredServiceMultifactorPolicy = new DefaultRegisteredServiceMultifactorPolicy();
-            defaultRegisteredServiceMultifactorPolicy.setFailureMode(BaseMultifactorAuthenticationProviderProperties.MultifactorAuthenticationProviderFailureModes.CLOSED);
+            DefaultRegisteredServiceMultifactorPolicy defaultRegisteredServiceMultifactorPolicy =
+                new DefaultRegisteredServiceMultifactorPolicy();
+            defaultRegisteredServiceMultifactorPolicy.setFailureMode(
+                BaseMultifactorAuthenticationProviderProperties.MultifactorAuthenticationProviderFailureModes.CLOSED);
             defaultRegisteredServiceMultifactorPolicy.setBypassEnabled(false);
             regexRegisteredService.setMultifactorAuthenticationPolicy(defaultRegisteredServiceMultifactorPolicy);
             servicesManager.save(regexRegisteredService);

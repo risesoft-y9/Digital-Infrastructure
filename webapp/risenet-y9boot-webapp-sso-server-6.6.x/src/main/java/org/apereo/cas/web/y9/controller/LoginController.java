@@ -56,11 +56,10 @@ public class LoginController {
 
     private final Y9UserDao y9UserDao;
 
-    public LoginController(CentralAuthenticationService centralAuthenticationService
-            , @Qualifier("ticketGrantingTicketCookieGenerator") CasCookieBuilder ticketGrantingTicketCookieGenerator
-            , @Qualifier("defaultAuthenticationSystemSupport") AuthenticationSystemSupport authenticationSystemSupport
-            , @Qualifier("webApplicationServiceFactory") ServiceFactory webApplicationServiceFactory
-            , Y9UserDao y9UserDao) {
+    public LoginController(CentralAuthenticationService centralAuthenticationService,
+        @Qualifier("ticketGrantingTicketCookieGenerator") CasCookieBuilder ticketGrantingTicketCookieGenerator,
+        @Qualifier("defaultAuthenticationSystemSupport") AuthenticationSystemSupport authenticationSystemSupport,
+        @Qualifier("webApplicationServiceFactory") ServiceFactory webApplicationServiceFactory, Y9UserDao y9UserDao) {
         this.centralAuthenticationService = centralAuthenticationService;
         this.ticketGrantingTicketCookieGenerator = ticketGrantingTicketCookieGenerator;
         this.authenticationSystemSupport = authenticationSystemSupport;
@@ -68,7 +67,8 @@ public class LoginController {
         this.y9UserDao = y9UserDao;
     }
 
-    public Map<String, Object> checkSsoLoginInfo(String tenantShortName, String username, String password, String pwdEcodeType, String loginType, final HttpServletRequest request, final HttpServletResponse response) {
+    public Map<String, Object> checkSsoLoginInfo(String tenantShortName, String username, String password,
+        String pwdEcodeType, String loginType, final HttpServletRequest request, final HttpServletResponse response) {
         Map<String, Object> map = new HashMap<String, Object>();
         boolean validation = false;
         try {
@@ -127,7 +127,9 @@ public class LoginController {
     }
 
     @PostMapping(value = "/logon", consumes = MediaType.ALL_VALUE)
-    public final ResponseEntity<Map<String, Object>> logon(RememberMeUsernamePasswordCredential credential, @RequestBody(required = false) final MultiValueMap<String, String> requestBody, final HttpServletRequest request, final HttpServletResponse response) {
+    public final ResponseEntity<Map<String, Object>> logon(RememberMeUsernamePasswordCredential credential,
+        @RequestBody(required = false) final MultiValueMap<String, String> requestBody,
+        final HttpServletRequest request, final HttpServletResponse response) {
         Map<String, Object> ret_map = new HashMap<String, Object>();
         ret_map.put("success", false);
 
@@ -136,15 +138,19 @@ public class LoginController {
 
         try {
             if (credential == null) {
-                throw new BadRestRequestException("No credentials are provided or extracted to authenticate the REST request");
+                throw new BadRestRequestException(
+                    "No credentials are provided or extracted to authenticate the REST request");
             }
-            ret_map = checkSsoLoginInfo(credential.getTenantShortName(), credential.getUsername(), credential.toPassword(), request.getParameter("pwdEcodeType"), credential.getLoginType(), request, response);
+            ret_map =
+                checkSsoLoginInfo(credential.getTenantShortName(), credential.getUsername(), credential.toPassword(),
+                    request.getParameter("pwdEcodeType"), credential.getLoginType(), request, response);
             if (ret_map.get("success").toString().equals("false")) {
                 return new ResponseEntity<Map<String, Object>>(ret_map, headers, HttpStatus.UNAUTHORIZED);
             }
 
             final Service service = this.webApplicationServiceFactory.createService(request);
-            val authenticationResult = authenticationSystemSupport.finalizeAuthenticationTransaction(service, credential);
+            val authenticationResult =
+                authenticationSystemSupport.finalizeAuthenticationTransaction(service, credential);
             if (authenticationResult == null) {
                 throw new FailedLoginException("Authentication failed");
             }
@@ -152,7 +158,8 @@ public class LoginController {
             TicketGrantingTicket tgt = centralAuthenticationService.createTicketGrantingTicket(authenticationResult);
             String tgtId = tgt.getId();
             ticketGrantingTicketCookieGenerator.addCookie(request, response, tgtId);
-            final ServiceTicket serviceTicket = this.centralAuthenticationService.grantServiceTicket(tgtId, service, authenticationResult);
+            final ServiceTicket serviceTicket =
+                this.centralAuthenticationService.grantServiceTicket(tgtId, service, authenticationResult);
 
             ret_map.put("success", true);
             ret_map.put("msg", serviceTicket.getId());

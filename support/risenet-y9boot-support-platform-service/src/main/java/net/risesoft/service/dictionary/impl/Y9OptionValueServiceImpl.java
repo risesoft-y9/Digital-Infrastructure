@@ -29,7 +29,7 @@ public class Y9OptionValueServiceImpl implements Y9OptionValueService {
 
     private final Y9OptionValueRepository orgOptionValueRepository;
     private final Y9OptionValueManager y9OptionValueManager;
-    
+
     @Override
     @Transactional(readOnly = false)
     public Y9OptionValue create(String code, String name, String type) {

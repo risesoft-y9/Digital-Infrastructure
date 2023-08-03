@@ -30,7 +30,7 @@ import net.risesoft.enums.OrgTypeEnum;
 @org.hibernate.annotations.Table(comment = "部门实体表", appliesTo = "Y9_ORG_DEPARTMENT")
 @Data
 public class Y9Department extends Y9OrgBase {
-    
+
     private static final long serialVersionUID = 231356577350213851L;
 
     public Y9Department() {

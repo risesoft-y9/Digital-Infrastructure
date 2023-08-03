@@ -53,14 +53,15 @@ public class Y9RegisterByApisixRestApi {
     String upstreamId;
     boolean consumerEnabled;
     String authenticationType;
-    
+
     @Autowired
     public void setBuildProperties(BuildProperties buildProperties) {
         this.buildProperties = buildProperties;
     }
 
     private String createUpStream() {
-        return ApisixUtil.createUpStream(adminAddress, adminKey, upstreamId, upstreamNodes, upstreamType, "api版本：" + apiVersion);
+        return ApisixUtil.createUpStream(adminAddress, adminKey, upstreamId, upstreamNodes, upstreamType,
+            "api版本：" + apiVersion);
     }
 
     private void cxfApiRegister(List<String> routeIdsList, List<String> resultList, ScanResult scanResult) {
@@ -73,7 +74,8 @@ public class Y9RegisterByApisixRestApi {
                 }
 
                 AnnotationInfo pathAnnotationInfo = classInfo.getAnnotationInfo("javax.ws.rs.Path");
-                Map<String, AnnotationParameterValue> pathAnnotationParameterValueMap = pathAnnotationInfo.getParameterValues().asMap();
+                Map<String, AnnotationParameterValue> pathAnnotationParameterValueMap =
+                    pathAnnotationInfo.getParameterValues().asMap();
                 String[] classAnnotationValues = (String[])pathAnnotationParameterValueMap.get("value").getValue();
 
                 MethodInfoList methodInfoList = classInfo.getMethodInfo();
@@ -83,23 +85,29 @@ public class Y9RegisterByApisixRestApi {
                     if (i > -1) {
                         // methodDescription不能长于255个字符，否则bindUpstreamToRoute出错。
                         methodDescription = methodDescription.substring(i + 1);
-                        methodDescription = methodDescription.substring(0, methodDescription.length() > 255 ? 255 : methodDescription.length());
+                        methodDescription = methodDescription.substring(0,
+                            methodDescription.length() > 255 ? 255 : methodDescription.length());
                     }
 
-                    AnnotationInfo methodAnnotationInfo = methodInfo.getAnnotationInfo("y9.apisix.annotation.NoApiMethod");
+                    AnnotationInfo methodAnnotationInfo =
+                        methodInfo.getAnnotationInfo("y9.apisix.annotation.NoApiMethod");
                     if (null != methodAnnotationInfo) {
                         continue;
                     }
 
                     AnnotationInfo annotationInfo = methodInfo.getAnnotationInfo("javax.ws.rs.Path");
-                    Map<String, AnnotationParameterValue> methodPathParameterMap = annotationInfo.getParameterValues().asMap();
+                    Map<String, AnnotationParameterValue> methodPathParameterMap =
+                        annotationInfo.getParameterValues().asMap();
                     String[] methodAnnotationValues = (String[])methodPathParameterMap.get("value").getValue();
 
                     for (String classAnnotationValue : classAnnotationValues) {
                         for (String methodAnnotationValue : methodAnnotationValues) {
-                            methodAnnotationValue = methodAnnotationValue.contains("{") ? methodAnnotationValue.substring(0, methodAnnotationValue.indexOf("{")) + "*" : methodAnnotationValue;
+                            methodAnnotationValue = methodAnnotationValue.contains("{")
+                                ? methodAnnotationValue.substring(0, methodAnnotationValue.indexOf("{")) + "*"
+                                : methodAnnotationValue;
 
-                            String uri = new StringBuilder("/").append(contextPath).append("/services/rest").append(classAnnotationValue).append(methodAnnotationValue).toString();
+                            String uri = new StringBuilder("/").append(contextPath).append("/services/rest")
+                                .append(classAnnotationValue).append(methodAnnotationValue).toString();
                             String routeId = upstreamId + "_cxf" + uri.replaceAll("/", "_").replaceAll("\\*", ".");
 
                             // apisx Admin API 的id长度不能超过64，
@@ -109,7 +117,8 @@ public class Y9RegisterByApisixRestApi {
                             }
 
                             routeIdsList.add(routeId);
-                            String result = ApisixUtil.bindRouteToUpstream(adminAddress, adminKey, uri, upstreamId, routeId, methodDescription, consumerEnabled, authenticationType);
+                            String result = ApisixUtil.bindRouteToUpstream(adminAddress, adminKey, uri, upstreamId,
+                                routeId, methodDescription, consumerEnabled, authenticationType);
                             resultList.add(result);
                         }
                     }
@@ -214,16 +223,20 @@ public class Y9RegisterByApisixRestApi {
 
     private void restApiRegister(List<String> routeIdsList, List<String> resultList, ScanResult scanResult) {
         try {
-            ClassInfoList classInfoList = scanResult.getClassesWithAnnotation("org.springframework.web.bind.annotation.RequestMapping");
+            ClassInfoList classInfoList =
+                scanResult.getClassesWithAnnotation("org.springframework.web.bind.annotation.RequestMapping");
             for (ClassInfo classInfo : classInfoList) {
                 AnnotationInfo classAnnotationInfo = classInfo.getAnnotationInfo("y9.apisix.annotation.NoApiClass");
                 if (null != classAnnotationInfo) {
                     continue;
                 }
 
-                AnnotationInfo classRequestMappingAnnotationInfo = classInfo.getAnnotationInfo("org.springframework.web.bind.annotation.RequestMapping");
-                Map<String, AnnotationParameterValue> requestMappingAnnotationValueMap = classRequestMappingAnnotationInfo.getParameterValues().asMap();
-                String[] classRequestMappingAnnotationValues = (String[])requestMappingAnnotationValueMap.get("value").getValue();
+                AnnotationInfo classRequestMappingAnnotationInfo =
+                    classInfo.getAnnotationInfo("org.springframework.web.bind.annotation.RequestMapping");
+                Map<String, AnnotationParameterValue> requestMappingAnnotationValueMap =
+                    classRequestMappingAnnotationInfo.getParameterValues().asMap();
+                String[] classRequestMappingAnnotationValues =
+                    (String[])requestMappingAnnotationValueMap.get("value").getValue();
                 MethodInfoList methodInfoList = classInfo.getMethodInfo();
 
                 for (String classRequestMappingAnnotationValue : classRequestMappingAnnotationValues) {
@@ -233,22 +246,31 @@ public class Y9RegisterByApisixRestApi {
                         if (i > -1) {
                             // methodDescription不能长于255个字符，否则bindUpstreamToRoute出错。
                             methodDescription = methodDescription.substring(i + 1);
-                            methodDescription = methodDescription.substring(0, Math.min(methodDescription.length(), 255));
+                            methodDescription =
+                                methodDescription.substring(0, Math.min(methodDescription.length(), 255));
                         }
 
-                        AnnotationInfo methodAnnotationInfo = methodInfo.getAnnotationInfo("y9.apisix.annotation.NoApiMethod");
+                        AnnotationInfo methodAnnotationInfo =
+                            methodInfo.getAnnotationInfo("y9.apisix.annotation.NoApiMethod");
                         if (null != methodAnnotationInfo) {
                             continue;
                         }
 
-                        AnnotationInfo getMappingAnnotationInfo = methodInfo.getAnnotationInfo("org.springframework.web.bind.annotation.GetMapping");
+                        AnnotationInfo getMappingAnnotationInfo =
+                            methodInfo.getAnnotationInfo("org.springframework.web.bind.annotation.GetMapping");
                         if (null != getMappingAnnotationInfo) {
-                            String[] getMappingAnnotationValues = (String[])getMappingAnnotationInfo.getParameterValues().asMap().get("value").getValue();
+                            String[] getMappingAnnotationValues =
+                                (String[])getMappingAnnotationInfo.getParameterValues().asMap().get("value").getValue();
 
                             for (String getMappingAnnotationValue : getMappingAnnotationValues) {
-                                getMappingAnnotationValue = getMappingAnnotationValue.contains("{") ? getMappingAnnotationValue.substring(0, getMappingAnnotationValue.indexOf("{")) + "*" : getMappingAnnotationValue;
+                                getMappingAnnotationValue = getMappingAnnotationValue.contains("{")
+                                    ? getMappingAnnotationValue.substring(0, getMappingAnnotationValue.indexOf("{"))
+                                        + "*"
+                                    : getMappingAnnotationValue;
 
-                                String uri = new StringBuilder("/").append(contextPath).append(classRequestMappingAnnotationValue).append(getMappingAnnotationValue).toString();
+                                String uri = new StringBuilder("/").append(contextPath)
+                                    .append(classRequestMappingAnnotationValue).append(getMappingAnnotationValue)
+                                    .toString();
                                 String routeId = upstreamId + uri.replaceAll("/", "_").replaceAll("\\*", ".");
 
                                 if (routeId.length() > 64) {
@@ -256,19 +278,27 @@ public class Y9RegisterByApisixRestApi {
                                 }
 
                                 routeIdsList.add(routeId);
-                                String result = ApisixUtil.bindRouteToUpstream(adminAddress, adminKey, uri, upstreamId, routeId, methodDescription, consumerEnabled, authenticationType);
+                                String result = ApisixUtil.bindRouteToUpstream(adminAddress, adminKey, uri, upstreamId,
+                                    routeId, methodDescription, consumerEnabled, authenticationType);
                                 resultList.add(result);
                             }
                         }
 
-                        AnnotationInfo postMappingAnnotationInfo = methodInfo.getAnnotationInfo("org.springframework.web.bind.annotation.PostMapping");
+                        AnnotationInfo postMappingAnnotationInfo =
+                            methodInfo.getAnnotationInfo("org.springframework.web.bind.annotation.PostMapping");
                         if (null != postMappingAnnotationInfo) {
-                            String[] postMappingAnnotationValues = (String[])postMappingAnnotationInfo.getParameterValues().get("value").getValue();
+                            String[] postMappingAnnotationValues =
+                                (String[])postMappingAnnotationInfo.getParameterValues().get("value").getValue();
 
                             for (String postMappingAnnotationValue : postMappingAnnotationValues) {
-                                postMappingAnnotationValue = postMappingAnnotationValue.contains("{") ? postMappingAnnotationValue.subSequence(0, postMappingAnnotationValue.indexOf("{")) + "*" : postMappingAnnotationValue;
+                                postMappingAnnotationValue = postMappingAnnotationValue.contains("{")
+                                    ? postMappingAnnotationValue.subSequence(0, postMappingAnnotationValue.indexOf("{"))
+                                        + "*"
+                                    : postMappingAnnotationValue;
 
-                                String uri = new StringBuilder("/").append(contextPath).append(classRequestMappingAnnotationValue).append(postMappingAnnotationValue).toString();
+                                String uri = new StringBuilder("/").append(contextPath)
+                                    .append(classRequestMappingAnnotationValue).append(postMappingAnnotationValue)
+                                    .toString();
                                 String routeId = upstreamId + uri.replaceAll("/", "_").replaceAll("\\*", ".");
 
                                 if (routeId.length() > 64) {
@@ -276,18 +306,26 @@ public class Y9RegisterByApisixRestApi {
                                 }
 
                                 routeIdsList.add(routeId);
-                                String result = ApisixUtil.bindRouteToUpstream(adminAddress, adminKey, uri, upstreamId, routeId, methodDescription, consumerEnabled, authenticationType);
+                                String result = ApisixUtil.bindRouteToUpstream(adminAddress, adminKey, uri, upstreamId,
+                                    routeId, methodDescription, consumerEnabled, authenticationType);
                                 resultList.add(result);
                             }
                         }
 
-                        AnnotationInfo methodRequestMappingAnnotationInfo = methodInfo.getAnnotationInfo("org.springframework.web.bind.annotation.RequestMapping");
+                        AnnotationInfo methodRequestMappingAnnotationInfo =
+                            methodInfo.getAnnotationInfo("org.springframework.web.bind.annotation.RequestMapping");
                         if (null != methodRequestMappingAnnotationInfo) {
-                            String[] methodRequestMappingAnnotationValues = (String[])methodRequestMappingAnnotationInfo.getParameterValues().asMap().get("value").getValue();
+                            String[] methodRequestMappingAnnotationValues = (String[])methodRequestMappingAnnotationInfo
+                                .getParameterValues().asMap().get("value").getValue();
 
                             for (String methodRequestMappingAnnotationValue : methodRequestMappingAnnotationValues) {
-                                methodRequestMappingAnnotationValue = methodRequestMappingAnnotationValue.contains("{") ? methodRequestMappingAnnotationValue.subSequence(0, methodRequestMappingAnnotationValue.indexOf("{")) + "*" : methodRequestMappingAnnotationValue;
-                                String uri = new StringBuilder("/").append(contextPath).append(classRequestMappingAnnotationValue).append(methodRequestMappingAnnotationValue).toString();
+                                methodRequestMappingAnnotationValue = methodRequestMappingAnnotationValue.contains("{")
+                                    ? methodRequestMappingAnnotationValue.subSequence(0,
+                                        methodRequestMappingAnnotationValue.indexOf("{")) + "*"
+                                    : methodRequestMappingAnnotationValue;
+                                String uri = new StringBuilder("/").append(contextPath)
+                                    .append(classRequestMappingAnnotationValue)
+                                    .append(methodRequestMappingAnnotationValue).toString();
                                 String routeId = upstreamId + uri.replaceAll("/", "_").replaceAll("\\*", ".");
 
                                 if (routeId.length() > 64) {
@@ -296,7 +334,8 @@ public class Y9RegisterByApisixRestApi {
 
                                 routeIdsList.add(routeId);
 
-                                String result = ApisixUtil.bindRouteToUpstream(adminAddress, adminKey, uri, upstreamId, routeId, methodDescription, consumerEnabled, authenticationType);
+                                String result = ApisixUtil.bindRouteToUpstream(adminAddress, adminKey, uri, upstreamId,
+                                    routeId, methodDescription, consumerEnabled, authenticationType);
                                 resultList.add(result);
                             }
                         }

@@ -26,15 +26,15 @@ import feign.codec.ErrorDecoder;
 // @ConditionalOnProperty(name = "y9.app.platform.feign.enabled", havingValue = "true", matchIfMissing = true)
 @EnableFeignClients("y9.client.platform")
 public class Y9PlatformFeignConfiguration implements RequestInterceptor {
-    
+
     @Bean
     public ErrorDecoder errorDecoder(ObjectMapper objectMapper) {
         return new Y9ErrorDecoder(objectMapper);
     }
-    
+
     @Override
     public void apply(RequestTemplate requestTemplate) {
-        ServletRequestAttributes attrs = (ServletRequestAttributes) RequestContextHolder.getRequestAttributes();
+        ServletRequestAttributes attrs = (ServletRequestAttributes)RequestContextHolder.getRequestAttributes();
         if (attrs != null) {
             HttpServletRequest request = attrs.getRequest();
             HttpSession session = request.getSession(false);

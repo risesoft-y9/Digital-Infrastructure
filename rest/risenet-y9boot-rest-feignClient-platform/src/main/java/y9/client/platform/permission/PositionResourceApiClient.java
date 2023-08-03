@@ -13,7 +13,8 @@ import net.risesoft.api.permission.PositionResourceApi;
  * @date 2022/2/10
  * @since 9.6.0
  */
-@FeignClient(contextId = "PositionResourceApiClient", name = "y9platform", url = "${y9.common.orgBaseUrl}", path = "/services/rest/positionResource")
+@FeignClient(contextId = "PositionResourceApiClient", name = "y9platform", url = "${y9.common.orgBaseUrl}",
+    path = "/services/rest/positionResource")
 public interface PositionResourceApiClient extends PositionResourceApi {
 
 }

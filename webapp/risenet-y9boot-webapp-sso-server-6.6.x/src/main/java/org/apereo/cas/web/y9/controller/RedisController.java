@@ -18,7 +18,7 @@ import lombok.extern.slf4j.Slf4j;
 @RequestMapping("/api/session")
 @Slf4j
 public class RedisController {
-    
+
     private final CasRedisTemplate<Object, Object> redisTemplate;
 
     public RedisController(@Qualifier("y9RedisTemplate") CasRedisTemplate<Object, Object> redisTemplate) {
@@ -113,7 +113,9 @@ public class RedisController {
                 if (null == timeout) {
                     timeout = Long.valueOf(3600);
                 }
-                redisTemplate.opsForValue().set("y9vue_client_session:" + getIpAddr(request) + ":" + request.getHeader("User-Agent") + key, obj, timeout, TimeUnit.SECONDS);
+                redisTemplate.opsForValue().set(
+                    "y9vue_client_session:" + getIpAddr(request) + ":" + request.getHeader("User-Agent") + key, obj,
+                    timeout, TimeUnit.SECONDS);
                 y9result.setCode(200);
                 y9result.setMsg("刷新成功");
                 y9result.setSuccess(true);

@@ -12,7 +12,7 @@ import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 public class FtpClientFactory extends BasePooledObjectFactory<FTPClient> {
-    
+
     private FtpPoolConfig ftpPoolConfig;
 
     /**
@@ -41,7 +41,8 @@ public class FtpClientFactory extends BasePooledObjectFactory<FTPClient> {
             boolean result = ftpClient.login(ftpPoolConfig.getUsername(), ftpPoolConfig.getPassword());
             if (!result) {
                 LOGGER.error("ftpClient 登录失败!");
-                throw new Exception("ftpClient 登录失败! userName:" + ftpPoolConfig.getUsername() + ", password:" + ftpPoolConfig.getPassword());
+                throw new Exception("ftpClient 登录失败! userName:" + ftpPoolConfig.getUsername() + ", password:"
+                    + ftpPoolConfig.getPassword());
             }
 
             ftpClient.setBufferSize(ftpPoolConfig.getBufferSize());

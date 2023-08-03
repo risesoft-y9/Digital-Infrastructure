@@ -37,11 +37,12 @@ public class Y9PersonManagerImpl implements Y9PersonManager {
     private final Y9PersonRepository y9PersonRepository;
     private final Y9PersonsToGroupsRepository y9PersonsToGroupsRepository;
     private final Y9PersonsToPositionsRepository y9PersonsToPositionsRepository;
-    
+
     @Override
     @Cacheable(key = "#id", condition = "#id!=null", unless = "#result==null")
     public Y9Person getById(String id) {
-        return y9PersonRepository.findById(id).orElseThrow(() -> Y9ExceptionUtil.notFoundException(PersonErrorCodeEnum.PERSON_NOT_FOUND, id));
+        return y9PersonRepository.findById(id)
+            .orElseThrow(() -> Y9ExceptionUtil.notFoundException(PersonErrorCodeEnum.PERSON_NOT_FOUND, id));
     }
 
     @Override
@@ -49,7 +50,6 @@ public class Y9PersonManagerImpl implements Y9PersonManager {
     public Y9Person findById(String id) {
         return y9PersonRepository.findById(id).orElse(null);
     }
-
 
     @Override
     public List<Y9Person> listByPositionId(String positionId) {
@@ -60,8 +60,8 @@ public class Y9PersonManagerImpl implements Y9PersonManager {
             personList.add(getById(personId));
         }
         return personList;
-    }    
-    
+    }
+
     @Override
     public List<Y9Person> listByGroupId(String groupId) {
         List<Y9PersonsToGroups> pgs = y9PersonsToGroupsRepository.findByGroupIdOrderByPersonOrder(groupId);
@@ -95,7 +95,8 @@ public class Y9PersonManagerImpl implements Y9PersonManager {
         person.setTabIndex(tabIndex);
         person = this.save(person);
 
-        Y9MessageOrg msg = new Y9MessageOrg(ModelConvertUtil.orgPersonToPerson(person), Y9OrgEventConst.RISEORGEVENT_TYPE_UPDATE_PERSON_TABINDEX, Y9LoginUserHolder.getTenantId());
+        Y9MessageOrg msg = new Y9MessageOrg(ModelConvertUtil.orgPersonToPerson(person),
+            Y9OrgEventConst.RISEORGEVENT_TYPE_UPDATE_PERSON_TABINDEX, Y9LoginUserHolder.getTenantId());
         Y9PublishServiceUtil.persistAndPublishMessageOrg(msg, "更新人员排序号", person.getName() + "的排序号更新为" + tabIndex);
 
         return person;

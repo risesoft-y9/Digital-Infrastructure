@@ -2,7 +2,7 @@ import {createRouter, createWebHashHistory} from 'vue-router';
 import {$y9_SSO} from '@/main';
 
 const routes = [
-	
+
     {
         path: '/',
         name: 'index',
@@ -12,17 +12,16 @@ const routes = [
         path: '/login', //登录页
         name: 'login',
         component: () => import('@/components/demo.vue')
-    
+
     },
-	
+
 ];
 
 const router = createRouter({
     history: createWebHashHistory(),
-	scrollBehavior: () => ({ y: 0 }),
+    scrollBehavior: () => ({y: 0}),
     routes
 });
-
 
 
 // 路由白名单过滤
@@ -60,7 +59,7 @@ function checkWriteList(to, from, next) {
 }
 
 let flag = 0;
-router.beforeEach(async(to, from, next) => {
+router.beforeEach(async (to, from, next) => {
     // 检查路由白名单
     checkWriteList(to, from, next);
     let result = sessionStorage.getItem(import.meta.env.VUE_APP_SESSIONSTORAGE_GUID);

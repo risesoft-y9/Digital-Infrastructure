@@ -19,7 +19,8 @@ import net.risesoft.y9public.entity.event.Y9PublishedEvent;
 @SuppressWarnings("AlibabaAbstractMethodOrInterfaceMethodMustUseJavadoc")
 @Repository
 @Transactional(value = "rsPublicTransactionManager", readOnly = true)
-public interface Y9PublishedEventRepository extends JpaRepository<Y9PublishedEvent, String>, JpaSpecificationExecutor<Y9PublishedEvent> {
+public interface Y9PublishedEventRepository
+    extends JpaRepository<Y9PublishedEvent, String>, JpaSpecificationExecutor<Y9PublishedEvent> {
 
     List<Y9PublishedEvent> findByTenantId(String tenantId, Sort sort);
 }

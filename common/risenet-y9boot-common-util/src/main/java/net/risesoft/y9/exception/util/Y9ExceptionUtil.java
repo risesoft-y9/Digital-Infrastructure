@@ -15,20 +15,20 @@ import cn.hutool.core.util.StrUtil;
  * @since 9.6.2
  */
 public class Y9ExceptionUtil {
-    
+
     public static Y9NotFoundException notFoundException(ErrorCode errorCode, Object... arguments) {
         String message = StrUtil.format(errorCode.getDescription(), arguments);
         return new Y9NotFoundException(errorCode.getCode(), message);
     }
-    
+
     public static Y9BusinessException businessException(ErrorCode errorCode, Object... arguments) {
         String message = StrUtil.format(errorCode.getDescription(), arguments);
         return new Y9BusinessException(errorCode.getCode(), message);
     }
-    
+
     public static Y9PermissionException permissionException(ErrorCode errorCode, Object... arguments) {
         String message = StrUtil.format(errorCode.getDescription(), arguments);
         return new Y9PermissionException(errorCode.getCode(), message);
     }
-    
+
 }

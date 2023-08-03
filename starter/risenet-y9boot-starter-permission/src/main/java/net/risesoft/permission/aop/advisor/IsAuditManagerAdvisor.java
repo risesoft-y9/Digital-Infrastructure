@@ -14,7 +14,7 @@ import net.risesoft.permission.annotation.IsAuditManager;
 @Slf4j
 public class IsAuditManagerAdvisor extends StaticMethodMatcherPointcutAdvisor {
     private static final long serialVersionUID = 1790605582584464487L;
-    
+
     public IsAuditManagerAdvisor() {
         LOGGER.debug("IsAuditManagerAdvisor init............");
     }

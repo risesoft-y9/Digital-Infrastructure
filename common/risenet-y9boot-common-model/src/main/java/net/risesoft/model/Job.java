@@ -14,7 +14,7 @@ import lombok.Data;
 public class Job implements Serializable {
 
     private static final long serialVersionUID = 1878774546924910882L;
-    
+
     /** 主键id */
     private String id;
 
@@ -26,5 +26,5 @@ public class Job implements Serializable {
 
     /** 排序号 */
     private Integer tabIndex;
-    
+
 }

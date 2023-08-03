@@ -72,7 +72,8 @@ public class Y9JacksonUtil {
         System.out.println("aaa==" + map2.get("aaa"));
         System.out.println("bbb==" + map2.get("bbb"));
 
-        List<Map<String, Object>> list4 = Y9JacksonUtil.readListOfMap(Y9JacksonUtil.writeValueAsString(map2.get("bbb")), String.class, Object.class);
+        List<Map<String, Object>> list4 =
+            Y9JacksonUtil.readListOfMap(Y9JacksonUtil.writeValueAsString(map2.get("bbb")), String.class, Object.class);
         for (Map<String, Object> map : list4) {
             System.out.println("q==" + map.get("q"));
         }
@@ -94,7 +95,8 @@ public class Y9JacksonUtil {
 
     public static HashMap<String, Object> readHashMap(String content) {
         try {
-            return objectMapper.readValue(content, objectMapper.getTypeFactory().constructMapType(HashMap.class, String.class, Object.class));
+            return objectMapper.readValue(content,
+                objectMapper.getTypeFactory().constructMapType(HashMap.class, String.class, Object.class));
         } catch (JsonParseException e) {
             LOGGER.warn(e.getMessage(), e);
         } catch (JsonMappingException e) {
@@ -107,7 +109,8 @@ public class Y9JacksonUtil {
 
     public static <K, V> HashMap<K, V> readHashMap(String content, Class<K> keyClass, Class<V> valueClass) {
         try {
-            return objectMapper.readValue(content, objectMapper.getTypeFactory().constructMapType(HashMap.class, keyClass, valueClass));
+            return objectMapper.readValue(content,
+                objectMapper.getTypeFactory().constructMapType(HashMap.class, keyClass, valueClass));
         } catch (JsonParseException e) {
             LOGGER.warn(e.getMessage(), e);
         } catch (JsonMappingException e) {
@@ -120,7 +123,8 @@ public class Y9JacksonUtil {
 
     public static <T> List<T> readList(String content, Class<T> valueType) {
         try {
-            return objectMapper.readValue(content, objectMapper.getTypeFactory().constructCollectionType(ArrayList.class, valueType));
+            return objectMapper.readValue(content,
+                objectMapper.getTypeFactory().constructCollectionType(ArrayList.class, valueType));
         } catch (JsonParseException e) {
             LOGGER.warn(e.getMessage(), e);
         } catch (JsonMappingException e) {
@@ -134,7 +138,8 @@ public class Y9JacksonUtil {
     public static List<Map<String, Object>> readListOfMap(String content) {
         try {
             JavaType inner = objectMapper.getTypeFactory().constructMapType(Map.class, String.class, Object.class);
-            return objectMapper.readValue(content, objectMapper.getTypeFactory().constructCollectionType(ArrayList.class, inner));
+            return objectMapper.readValue(content,
+                objectMapper.getTypeFactory().constructCollectionType(ArrayList.class, inner));
         } catch (JsonParseException e) {
             LOGGER.warn(e.getMessage(), e);
         } catch (JsonMappingException e) {
@@ -148,7 +153,8 @@ public class Y9JacksonUtil {
     public static <K, V> List<Map<K, V>> readListOfMap(String content, Class<K> keyClass, Class<V> valueClass) {
         try {
             JavaType inner = objectMapper.getTypeFactory().constructMapType(Map.class, keyClass, valueClass);
-            return objectMapper.readValue(content, objectMapper.getTypeFactory().constructCollectionType(ArrayList.class, inner));
+            return objectMapper.readValue(content,
+                objectMapper.getTypeFactory().constructCollectionType(ArrayList.class, inner));
         } catch (JsonParseException e) {
             LOGGER.warn(e.getMessage(), e);
         } catch (JsonMappingException e) {
@@ -211,9 +217,11 @@ public class Y9JacksonUtil {
     public static String writeValueAsString(Object value, boolean include, String... filters) {
         FilterProvider filterProvider = null;
         if (include) {
-            filterProvider = new SimpleFilterProvider().addFilter("propertyFilter", SimpleBeanPropertyFilter.filterOutAllExcept(filters));
+            filterProvider = new SimpleFilterProvider().addFilter("propertyFilter",
+                SimpleBeanPropertyFilter.filterOutAllExcept(filters));
         } else {
-            filterProvider = new SimpleFilterProvider().addFilter("propertyFilter", SimpleBeanPropertyFilter.serializeAllExcept(filters));
+            filterProvider = new SimpleFilterProvider().addFilter("propertyFilter",
+                SimpleBeanPropertyFilter.serializeAllExcept(filters));
         }
         ObjectWriter writer = objectMapper.writer(filterProvider);
         String s = "";

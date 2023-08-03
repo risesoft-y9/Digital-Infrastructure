@@ -7,46 +7,46 @@ import lombok.Data;
 @Data
 public class ItemModel implements Serializable {
 
-	private static final long serialVersionUID = -2211904374246635797L;
+    private static final long serialVersionUID = -2211904374246635797L;
 
-	private String id;// 主键
+    private String id;// 主键
 
-	private String name;// 事项名称
+    private String name;// 事项名称
 
-	private String type; // 事项类型
+    private String type; // 事项类型
 
-	private String accountability; // 事项责任制
+    private String accountability; // 事项责任制
 
-	private String nature; // 事项性质
+    private String nature; // 事项性质
 
-	private String starterId; // 首办角色id
+    private String starterId; // 首办角色id
 
-	private String starter; // 首办角色名称
+    private String starter; // 首办角色名称
 
-	private String sysLevel; // 系统级别
+    private String sysLevel; // 系统级别
 
-	private Integer legalLimit; // 法定期限
+    private Integer legalLimit; // 法定期限
 
-	private Integer expired; // 承诺时限
+    private Integer expired; // 承诺时限
 
-	private String workflowGuid; // 工作流GUID
+    private String workflowGuid; // 工作流GUID
 
-	private String isOnline; // 是否网上申办，1“是”、0“否”
+    private String isOnline; // 是否网上申办，1“是”、0“否”
 
-	private String isDocking; // 是否对接，1“是”、0“否”
+    private String isDocking; // 是否对接，1“是”、0“否”
 
-	private String dockingSystem;// 对接外部系统标识
+    private String dockingSystem;// 对接外部系统标识
 
-	private String dockingItemId;// 对接事项id
+    private String dockingItemId;// 对接事项id
 
-	private Integer formType; // 1为使用电子表单，2为使用y9表单
+    private Integer formType; // 1为使用电子表单，2为使用y9表单
 
-	private String systemName;
+    private String systemName;
 
-	private String todoTaskUrlPrefix;
+    private String todoTaskUrlPrefix;
 
-	private String iconData;// 图标内容
+    private String iconData;// 图标内容
 
-	private Boolean customItem;// 是否可定制事项
+    private Boolean customItem;// 是否可定制事项
 
 }

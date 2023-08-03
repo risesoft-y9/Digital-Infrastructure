@@ -29,7 +29,8 @@ import io.github.classgraph.ScanResult;
  */
 @Slf4j
 public class Y9CommentUtil {
-    public static void scanClassInfo(ClassInfo classInfo, Map<String, String> tableCommitMap, Map<String, String> fieldCommitMap) {
+    public static void scanClassInfo(ClassInfo classInfo, Map<String, String> tableCommitMap,
+        Map<String, String> fieldCommitMap) {
         AnnotationInfoList annotationInfoList = classInfo.getAnnotationInfo();
         List<String> annotationNames = annotationInfoList.getNames();
         for (String annotationName : annotationNames) {
@@ -216,10 +217,16 @@ public class Y9CommentUtil {
     public static void scanner4Mysql(JdbcTemplate jdbcTemplate, String... scanPackage) {
         String schema = DbUtil.getSchema(jdbcTemplate.getDataSource());
 
-        String sql = "SELECT " + "table_name," + "column_name," + "CONCAT('ALTER TABLE `'," + "        table_name," + "        '` CHANGE `'," + "        column_name," + "        '` `'," + "        column_name," + "        '` '," + "        column_type," + "        ' ',"
-            + "        IF(is_nullable = 'YES', '' , 'NOT NULL ')," + "        IF(column_default IS NOT NULL, CONCAT('DEFAULT ', IF(column_default = 'CURRENT_TIMESTAMP', column_default, CONCAT('\\'',column_default,'\\'') ), ' '), ''),"
-            + "        IF(column_default IS NULL AND is_nullable = 'YES' AND column_key = '' AND column_type = 'timestamp','NULL ', '')," + "        IF(column_default IS NULL AND is_nullable = 'YES' AND column_key = '','DEFAULT NULL ', '')," + "        extra,"
-            + "        ' COMMENT \\'column_comment\\' ;') AS script " + "FROM information_schema.columns " + "WHERE table_schema=? AND table_name=? " + "ORDER BY table_name, column_name";
+        String sql = "SELECT " + "table_name," + "column_name," + "CONCAT('ALTER TABLE `'," + "        table_name,"
+            + "        '` CHANGE `'," + "        column_name," + "        '` `'," + "        column_name,"
+            + "        '` '," + "        column_type," + "        ' ',"
+            + "        IF(is_nullable = 'YES', '' , 'NOT NULL '),"
+            + "        IF(column_default IS NOT NULL, CONCAT('DEFAULT ', IF(column_default = 'CURRENT_TIMESTAMP', column_default, CONCAT('\\'',column_default,'\\'') ), ' '), ''),"
+            + "        IF(column_default IS NULL AND is_nullable = 'YES' AND column_key = '' AND column_type = 'timestamp','NULL ', ''),"
+            + "        IF(column_default IS NULL AND is_nullable = 'YES' AND column_key = '','DEFAULT NULL ', ''),"
+            + "        extra," + "        ' COMMENT \\'column_comment\\' ;') AS script "
+            + "FROM information_schema.columns " + "WHERE table_schema=? AND table_name=? "
+            + "ORDER BY table_name, column_name";
 
         try (ScanResult scanResult = new ClassGraph().enableAllInfo().acceptPackages(scanPackage).scan()) {
             ClassInfoList classInfoList = scanResult.getClassesWithAnnotation("javax.persistence.Table");

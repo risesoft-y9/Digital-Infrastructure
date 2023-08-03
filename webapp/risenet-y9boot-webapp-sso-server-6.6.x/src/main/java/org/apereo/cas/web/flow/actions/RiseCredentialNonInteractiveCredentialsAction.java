@@ -14,9 +14,13 @@ import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 public final class RiseCredentialNonInteractiveCredentialsAction extends AbstractNonInteractiveCredentialsAction {
-    
-    public RiseCredentialNonInteractiveCredentialsAction(final CasDelegatingWebflowEventResolver initialAuthenticationAttemptWebflowEventResolver, final CasWebflowEventResolver serviceTicketRequestWebflowEventResolver, final AdaptiveAuthenticationPolicy adaptiveAuthenticationPolicy) {
-        super(initialAuthenticationAttemptWebflowEventResolver, serviceTicketRequestWebflowEventResolver, adaptiveAuthenticationPolicy);
+
+    public RiseCredentialNonInteractiveCredentialsAction(
+        final CasDelegatingWebflowEventResolver initialAuthenticationAttemptWebflowEventResolver,
+        final CasWebflowEventResolver serviceTicketRequestWebflowEventResolver,
+        final AdaptiveAuthenticationPolicy adaptiveAuthenticationPolicy) {
+        super(initialAuthenticationAttemptWebflowEventResolver, serviceTicketRequestWebflowEventResolver,
+            adaptiveAuthenticationPolicy);
     }
 
     @Override

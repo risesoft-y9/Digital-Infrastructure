@@ -16,7 +16,7 @@ import net.risesoft.log.annotation.RiseLog;
 @RestController
 @RequestMapping(value = "/api/rest/id", produces = "application/json")
 public class IdGeneratorController {
-    
+
     private final Y9IdGenerator y9IdGenerator;
 
     public IdGeneratorController(@Qualifier("snowflakeIdGenerator") Y9IdGenerator y9IdGenerator) {

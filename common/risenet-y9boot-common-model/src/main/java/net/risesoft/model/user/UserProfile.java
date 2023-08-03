@@ -21,7 +21,7 @@ public class UserProfile implements Serializable {
 
     /** 主键 */
     private String id;
-    
+
     /** 参数 */
     private Map<String, Object> attributes = new HashMap<>(16);
 }

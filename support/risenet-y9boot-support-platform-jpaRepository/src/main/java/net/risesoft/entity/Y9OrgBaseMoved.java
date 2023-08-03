@@ -29,7 +29,7 @@ import net.risesoft.enums.OrgTypeEnum;
 @NoArgsConstructor
 @Data
 public class Y9OrgBaseMoved extends BaseEntity {
-    
+
     private static final long serialVersionUID = -5165264734456244849L;
 
     /** 主键 */
@@ -43,7 +43,7 @@ public class Y9OrgBaseMoved extends BaseEntity {
     @Comment("组织id")
     protected String orgId;
 
-    /** 
+    /**
      * 组织类型
      *
      * {@link OrgTypeEnum}

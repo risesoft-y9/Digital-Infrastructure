@@ -16,7 +16,7 @@ public class Y9EntityUpdatedEvent<T> extends ApplicationEvent implements Resolva
 
     private final T originEntity;
     private final T updatedEntity;
-    
+
     public Y9EntityUpdatedEvent(T originEntity, T updatedEntity) {
         super(updatedEntity);
         this.originEntity = originEntity;

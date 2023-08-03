@@ -14,7 +14,8 @@ import net.risesoft.model.ClickedApp;
  * @date 2022/10/19
  * @since 9.6.0
  */
-@FeignClient(contextId = "ClickedAppApiClient", name = "clickedApp", url = "${y9.common.logBaseUrl}", path = "/services/rest/clickedApp")
+@FeignClient(contextId = "ClickedAppApiClient", name = "clickedApp", url = "${y9.common.logBaseUrl}",
+    path = "/services/rest/clickedApp")
 public interface ClickedAppApiClient extends ClickedAppApi {
 
     /**

@@ -34,7 +34,8 @@ public class PositionRolesController {
     @GetMapping
     public Y9Result<List<RolePermissionVO>> getByPositionId(@RequestParam String positionId) {
         List<Y9PositionToRole> rolePermissionVOList = y9PositionToRoleService.listByPositionId(positionId);
-        return Y9Result.success(rolePermissionVOBuilder.buildRolePermissionVOList(new ArrayList<>(rolePermissionVOList)));
+        return Y9Result
+            .success(rolePermissionVOBuilder.buildRolePermissionVOList(new ArrayList<>(rolePermissionVOList)));
     }
-    
+
 }

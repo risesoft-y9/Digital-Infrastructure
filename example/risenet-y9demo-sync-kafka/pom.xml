@@ -13,7 +13,7 @@
     <version>v9.6.3-SNAPSHOT</version>
     <name>risenet-y9demo-sync-kafka</name>
     <description>risenet-y9demo-sync-kafka</description>
-    
+
     <properties>
         <java.version>11</java.version>
         <maven.deploy.skip>true</maven.deploy.skip>
@@ -36,7 +36,7 @@
             <url>https://svn.youshengyun.com:9900/nexus/repository/maven-public/</url>
         </pluginRepository>
     </pluginRepositories>
-    
+
     <dependencies>
         <dependency>
             <groupId>org.springframework.boot</groupId>
@@ -54,7 +54,7 @@
             <artifactId>risenet-y9boot-starter-listener-kafka</artifactId>
             <version>v9.6.3-SNAPSHOT</version>
         </dependency>
-        
+
     </dependencies>
 
     <build>

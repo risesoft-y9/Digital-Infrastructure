@@ -52,7 +52,7 @@ public class SyncIdentityRolesController {
     public String syncIdentityRoles() {
         double start = System.currentTimeMillis();
         LOGGER.info("更新个人权限开始时间--------------->>{}", fdf.format(new Date()));
-        
+
         List<Y9Tenant> y9TenantList = y9TenantService.listByTenantType(TenantTypeEnum.TENANT.getValue());
         for (Y9Tenant y9Tenant : y9TenantList) {
             Y9LoginUserHolder.setTenantId(y9Tenant.getId());
@@ -65,7 +65,7 @@ public class SyncIdentityRolesController {
                 y9PositionToRoleService.recalculate(y9Position.getId());
             }
         }
-        
+
         double end = System.currentTimeMillis();
         double time = end - start;
         LOGGER.info("更新个人权限完成时间--------------->>{}", fdf.format(new Date()));

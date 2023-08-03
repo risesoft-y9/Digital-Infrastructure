@@ -73,7 +73,8 @@ public class SyncIdentityResourceController {
     @RequestMapping("/identityResources/{tenantId}/{orgUnitId}")
     public Y9Result<Object> identityResources(@PathVariable String tenantId, @PathVariable String orgUnitId) {
         double start = System.currentTimeMillis();
-        LOGGER.info("更新人员与（资源、权限）关系表开始时间--------------->>{},租户id---->>{},组织id---->>>{}", fdf.format(new Date()), tenantId, orgUnitId);
+        LOGGER.info("更新人员与（资源、权限）关系表开始时间--------------->>{},租户id---->>{},组织id---->>>{}", fdf.format(new Date()),
+            tenantId, orgUnitId);
 
         Y9LoginUserHolder.setTenantId(tenantId);
         y9AuthorizationService.syncToIdentityResourceAndAuthority(orgUnitId);

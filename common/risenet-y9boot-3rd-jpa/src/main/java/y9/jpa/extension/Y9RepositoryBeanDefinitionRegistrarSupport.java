@@ -19,20 +19,24 @@ import org.springframework.data.repository.config.RepositoryConfigurationExtensi
 import org.springframework.data.repository.config.RepositoryConfigurationUtils;
 import org.springframework.util.Assert;
 
-public abstract class Y9RepositoryBeanDefinitionRegistrarSupport implements ImportBeanDefinitionRegistrar, ResourceLoaderAware, EnvironmentAware {
+public abstract class Y9RepositoryBeanDefinitionRegistrarSupport
+    implements ImportBeanDefinitionRegistrar, ResourceLoaderAware, EnvironmentAware {
 
     private ResourceLoader resourceLoader;
     private Environment environment;
 
     /**
-     * Return the annotation to obtain configuration information from. Will be wrappen into an {@link AnnotationRepositoryConfigurationSource} so have a look at the constants in there for what annotation attributes it expects.
+     * Return the annotation to obtain configuration information from. Will be wrappen into an
+     * {@link AnnotationRepositoryConfigurationSource} so have a look at the constants in there for what annotation
+     * attributes it expects.
      *
      * @return
      */
     protected abstract Class<? extends Annotation> getAnnotation();
 
     /**
-     * Returns the {@link RepositoryConfigurationExtension} for store specific callbacks and {@link BeanDefinition} post-processing.
+     * Returns the {@link RepositoryConfigurationExtension} for store specific callbacks and {@link BeanDefinition}
+     * post-processing.
      *
      * @see RepositoryConfigurationExtensionSupport
      * @return
@@ -40,10 +44,15 @@ public abstract class Y9RepositoryBeanDefinitionRegistrarSupport implements Impo
     protected abstract RepositoryConfigurationExtension getExtension();
 
     /**
-     * Forwarding to {@link #registerBeanDefinitions(AnnotationMetadata, BeanDefinitionRegistry, BeanNameGenerator)} for backwards compatibility reasons so that tests in downstream modules do not accidentally invoke the super type's default implementation.
+     * Forwarding to {@link #registerBeanDefinitions(AnnotationMetadata, BeanDefinitionRegistry, BeanNameGenerator)} for
+     * backwards compatibility reasons so that tests in downstream modules do not accidentally invoke the super type's
+     * default implementation.
      *
-     * @see org.springframework.context.annotation.ImportBeanDefinitionRegistrar#registerBeanDefinitions(org.springframework.core.type.AnnotationMetadata, org.springframework.beans.factory.support.BeanDefinitionRegistry)
-     * @deprecated since 2.2, call {@link #registerBeanDefinitions(AnnotationMetadata, BeanDefinitionRegistry, BeanNameGenerator)} instead.
+     * @see org.springframework.context.annotation.ImportBeanDefinitionRegistrar#registerBeanDefinitions(org.springframework.core.type.AnnotationMetadata,
+     *      org.springframework.beans.factory.support.BeanDefinitionRegistry)
+     * @deprecated since 2.2, call
+     *             {@link #registerBeanDefinitions(AnnotationMetadata, BeanDefinitionRegistry, BeanNameGenerator)}
+     *             instead.
      * @see ConfigurationClassPostProcessor#IMPORT_BEAN_NAME_GENERATOR
      */
     @Override
@@ -58,7 +67,8 @@ public abstract class Y9RepositoryBeanDefinitionRegistrarSupport implements Impo
      * @see org.springframework.context.annotation.ImportBeanDefinitionRegistrar#registerBeanDefinitions(org.springframework.core.type.AnnotationMetadata, org.springframework.beans.factory.support.BeanDefinitionRegistry, org.springframework.beans.factory.support.BeanNameGenerator)
      */
     @Override
-    public void registerBeanDefinitions(AnnotationMetadata metadata, BeanDefinitionRegistry registry, BeanNameGenerator generator) {
+    public void registerBeanDefinitions(AnnotationMetadata metadata, BeanDefinitionRegistry registry,
+        BeanNameGenerator generator) {
 
         Assert.notNull(metadata, "AnnotationMetadata must not be null!");
         Assert.notNull(registry, "BeanDefinitionRegistry must not be null!");
@@ -69,12 +79,14 @@ public abstract class Y9RepositoryBeanDefinitionRegistrarSupport implements Impo
             return;
         }
 
-        Y9AnnotationRepositoryConfigurationSource configurationSource = new Y9AnnotationRepositoryConfigurationSource(metadata, getAnnotation(), resourceLoader, environment, registry, generator);
+        Y9AnnotationRepositoryConfigurationSource configurationSource = new Y9AnnotationRepositoryConfigurationSource(
+            metadata, getAnnotation(), resourceLoader, environment, registry, generator);
 
         RepositoryConfigurationExtension extension = getExtension();
         RepositoryConfigurationUtils.exposeRegistration(extension, registry, configurationSource);
 
-        RepositoryConfigurationDelegate delegate = new RepositoryConfigurationDelegate(configurationSource, resourceLoader, environment);
+        RepositoryConfigurationDelegate delegate =
+            new RepositoryConfigurationDelegate(configurationSource, resourceLoader, environment);
 
         delegate.registerRepositoriesIn(registry, extension);
     }

@@ -89,9 +89,9 @@ public interface Y9PersonToResourceAndAuthorityService {
      * @return
      */
     boolean hasPermissionByCustomId(String personId, String resourceCustomId, Integer authority);
-    
+
     List<Y9PersonToResourceAndAuthority> list(String personId);
-    
+
     /**
      * 根据人员id、父资源id及授权类型查找
      *
@@ -107,17 +107,18 @@ public interface Y9PersonToResourceAndAuthorityService {
      *
      * @param personId
      * @param parentResourceId
-     * @param resourceType     资源类型{@link ResourceTypeEnum}
-     * @param authority        授权类型{@link AuthorityEnum}
+     * @param resourceType 资源类型{@link ResourceTypeEnum}
+     * @param authority 授权类型{@link AuthorityEnum}
      * @return
      * @see net.risesoft.enums.AuthorityEnum
      */
-    List<Y9PersonToResourceAndAuthority> list(String personId, String parentResourceId, Integer resourceType, Integer authority);
+    List<Y9PersonToResourceAndAuthority> list(String personId, String parentResourceId, Integer resourceType,
+        Integer authority);
 
     /**
      * 根据人员id 及授权类型查找应用列表
      *
-     * @param personId  人员id
+     * @param personId 人员id
      * @param authority {@link AuthorityEnum}
      * @return
      */
@@ -147,9 +148,9 @@ public interface Y9PersonToResourceAndAuthorityService {
     /**
      * 获得某一资源下,有相应操作权限的子节点
      *
-     * @param personId   人员id
+     * @param personId 人员id
      * @param resourceId 资源id
-     * @param authority  权限类型
+     * @param authority 权限类型
      * @return {@link List}<{@link Y9ResourceBase}>
      */
     List<Y9ResourceBase> listSubResources(String personId, String resourceId, Integer authority);
@@ -157,10 +158,10 @@ public interface Y9PersonToResourceAndAuthorityService {
     /**
      * 子菜单列表
      *
-     * @param personId   人员id
+     * @param personId 人员id
      * @param resourceId 资源id
      * @param resourceType 资源类型
-     * @param authority  权限类型
+     * @param authority 权限类型
      * @return {@link List}<{@link Y9Menu}>
      */
     List<Y9Menu> listSubMenus(String personId, String resourceId, Integer resourceType, Integer authority);

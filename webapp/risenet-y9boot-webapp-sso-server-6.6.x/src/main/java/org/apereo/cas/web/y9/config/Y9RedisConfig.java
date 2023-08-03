@@ -13,8 +13,10 @@ public class Y9RedisConfig {
 
     @Bean
     @RefreshScope
-    public CasRedisTemplate<Object, Object> y9RedisTemplate(@Qualifier("redisTicketConnectionFactory") final RedisConnectionFactory redisTicketConnectionFactory) {
-        CasRedisTemplate<Object, Object> redisTemplate = RedisObjectFactory.newRedisTemplate(redisTicketConnectionFactory);
+    public CasRedisTemplate<Object, Object> y9RedisTemplate(
+        @Qualifier("redisTicketConnectionFactory") final RedisConnectionFactory redisTicketConnectionFactory) {
+        CasRedisTemplate<Object, Object> redisTemplate =
+            RedisObjectFactory.newRedisTemplate(redisTicketConnectionFactory);
         return redisTemplate;
     }
 }

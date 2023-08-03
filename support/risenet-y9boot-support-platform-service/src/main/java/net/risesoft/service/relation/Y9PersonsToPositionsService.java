@@ -60,7 +60,6 @@ public interface Y9PersonsToPositionsService {
      */
     void deletePositions(String personId, String[] positionIds);
 
-
     List<Y9PersonsToPositions> listByPersonId(String personId);
 
     /**

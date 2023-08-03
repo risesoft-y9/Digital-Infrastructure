@@ -7,8 +7,7 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 /**
- * 是否为审计管理员
- * 只有当前登录用户为审计管理员，方法才能继续调用
+ * 是否为审计管理员 只有当前登录用户为审计管理员，方法才能继续调用
  * 
  * @author shidaobang
  * @date 2022/11/11
@@ -22,5 +21,5 @@ public @interface IsAuditManager {
      * 部门级三员中的审计管理员
      */
     boolean departmental() default false;
-    
+
 }

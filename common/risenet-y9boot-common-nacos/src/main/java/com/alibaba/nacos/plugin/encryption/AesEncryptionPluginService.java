@@ -20,7 +20,7 @@ import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 public class AesEncryptionPluginService implements EncryptionPluginService {
-    
+
     public static final String AES_NAME = "aes";
 
     private static final String AES_MODE = "AES/CBC/PKCS5Padding";

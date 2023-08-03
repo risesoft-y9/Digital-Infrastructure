@@ -41,7 +41,8 @@ public class Y9PublishedEventSpecification implements Specification<Y9PublishedE
         this.endTime = endTime;
     }
 
-    public Y9PublishedEventSpecification(String tenantId, String eventName, String eventDescription, Date startTime, Date endTime) {
+    public Y9PublishedEventSpecification(String tenantId, String eventName, String eventDescription, Date startTime,
+        Date endTime) {
         this.tenantId = tenantId;
         this.eventName = eventName;
         this.eventDescription = eventDescription;
@@ -50,7 +51,8 @@ public class Y9PublishedEventSpecification implements Specification<Y9PublishedE
     }
 
     @Override
-    public Predicate toPredicate(Root<Y9PublishedEvent> root, CriteriaQuery<?> criteriaQuery, CriteriaBuilder criteriaBuilder) {
+    public Predicate toPredicate(Root<Y9PublishedEvent> root, CriteriaQuery<?> criteriaQuery,
+        CriteriaBuilder criteriaBuilder) {
         Predicate predicate = criteriaBuilder.conjunction();
         List<Expression<Boolean>> expressions = predicate.getExpressions();
         if (StringUtils.hasText(tenantId)) {

@@ -53,7 +53,9 @@ public interface AccessLogApi {
      * @since 9.6.0
      */
     @GetMapping("/getModuleCount")
-    Map<String, Object> getModuleCount(@RequestParam("orgId") String orgId, @RequestParam("orgType") String orgType, @RequestParam("tenantId") String tenantId, @RequestParam("startDay") String startDay, @RequestParam("endDay") String endDay);
+    Map<String, Object> getModuleCount(@RequestParam("orgId") String orgId, @RequestParam("orgType") String orgType,
+        @RequestParam("tenantId") String tenantId, @RequestParam("startDay") String startDay,
+        @RequestParam("endDay") String endDay);
 
     /**
      * 根据操作类型分页查找日志
@@ -65,7 +67,8 @@ public interface AccessLogApi {
      * @since 9.6.0
      */
     @GetMapping("/pageByOperateType")
-    Y9Page<AccessLog> pageByOperateType(@RequestParam("operateType") @NotBlank String operateType, @RequestParam("page") Integer page, @RequestParam("rows") Integer rows);
+    Y9Page<AccessLog> pageByOperateType(@RequestParam("operateType") @NotBlank String operateType,
+        @RequestParam("page") Integer page, @RequestParam("rows") Integer rows);
 
     /**
      * 根据组织架构类型分页查找日志
@@ -80,7 +83,10 @@ public interface AccessLogApi {
      * @since 9.6.0
      */
     @GetMapping("/pageByOrgType")
-    Y9Page<AccessLog> pageByOrgType(@RequestParam("tenantId") @NotBlank String tenantId, @RequestParam("orgId") @NotBlank String orgId, @RequestParam("orgType") @NotBlank String orgType, @RequestParam("operateType") @NotBlank String operateType, @RequestParam("page") Integer page, @RequestParam("rows") Integer rows);
+    Y9Page<AccessLog> pageByOrgType(@RequestParam("tenantId") @NotBlank String tenantId,
+        @RequestParam("orgId") @NotBlank String orgId, @RequestParam("orgType") @NotBlank String orgType,
+        @RequestParam("operateType") @NotBlank String operateType, @RequestParam("page") Integer page,
+        @RequestParam("rows") Integer rows);
 
     /**
      * 保存访问日志
@@ -120,9 +126,15 @@ public interface AccessLogApi {
      * @since 9.6.0
      */
     @GetMapping("/search")
-    Y9Page<AccessLog> search(@RequestParam(value = "logLevel", required = false) String logLevel, @RequestParam(value = "success", required = false) String success, @RequestParam(value = "operateType", required = false) String operateType,
-                             @RequestParam(value = "operateName", required = false) String operateName, @RequestParam(value = "userName", required = false) String userName, @RequestParam(value = "userHostIp", required = false) String userHostIp, @RequestParam(value = "startTime", required = false) String startTime,
-                             @RequestParam(value = "endTime", required = false) String endTime, @RequestParam("page") Integer page, @RequestParam("rows") Integer rows) throws ParseException;
+    Y9Page<AccessLog> search(@RequestParam(value = "logLevel", required = false) String logLevel,
+        @RequestParam(value = "success", required = false) String success,
+        @RequestParam(value = "operateType", required = false) String operateType,
+        @RequestParam(value = "operateName", required = false) String operateName,
+        @RequestParam(value = "userName", required = false) String userName,
+        @RequestParam(value = "userHostIp", required = false) String userHostIp,
+        @RequestParam(value = "startTime", required = false) String startTime,
+        @RequestParam(value = "endTime", required = false) String endTime, @RequestParam("page") Integer page,
+        @RequestParam("rows") Integer rows) throws ParseException;
 
     /**
      * 获取日志
@@ -135,6 +147,8 @@ public interface AccessLogApi {
      * @since 9.6.0
      */
     @GetMapping("/searchLog")
-    List<String> searchLog(@RequestParam("loginName") @NotBlank String loginName, @RequestParam("startTime") Long startTime, @RequestParam("endTime") Long endTime, @RequestParam("tenantId") String tenantId);
+    List<String> searchLog(@RequestParam("loginName") @NotBlank String loginName,
+        @RequestParam("startTime") Long startTime, @RequestParam("endTime") Long endTime,
+        @RequestParam("tenantId") String tenantId);
 
 }

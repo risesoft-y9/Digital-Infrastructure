@@ -1,13 +1,13 @@
 package net.risesoft.service.org;
 
+import java.io.Serializable;
+import java.util.HashMap;
+import java.util.List;
+
 import net.risesoft.entity.Y9OrgBase;
 import net.risesoft.entity.Y9Person;
 import net.risesoft.entity.Y9Position;
 import net.risesoft.enums.OrgTypeEnum;
-
-import java.io.Serializable;
-import java.util.HashMap;
-import java.util.List;
 
 /**
  * 组合的组织节点 service
@@ -24,7 +24,7 @@ public interface CompositeOrgBaseService {
      * @param orgUnitIds 组织节点id
      */
     void sort(String[] orgUnitIds);
-    
+
     /**
      * 根据组织节点id获取所在委办局
      *
@@ -73,7 +73,7 @@ public interface CompositeOrgBaseService {
      * @return
      */
     Y9OrgBase getOrgBaseDeletedByOrgUnitId(String orgUnitId);
-    
+
     /**
      * 根据组织节点id，获取父节点(parent只可能是组织机构和部门)
      *
@@ -211,7 +211,6 @@ public interface CompositeOrgBaseService {
      * @return
      */
     List<Y9OrgBase> treeSearch(String name, String treeType, boolean isDisabledIncluded);
-
 
     /**
      * 获取组织节点所在组织机构

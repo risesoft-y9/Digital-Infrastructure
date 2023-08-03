@@ -21,19 +21,19 @@ public class RoleMember implements Serializable {
 
     /** id */
     private Integer id;
-    
+
     /** 是否为负角色关联 */
     private String negative;
-    
+
     /** 组织节点id */
     private String orgUnitId;
-    
+
     /** 组织节点dn */
     private String unitDn;
-    
+
     /** 组织节点名称 */
     private String unitName;
-    
+
     /** 组织节点类型 */
     private String unitTypeName;
 

@@ -448,7 +448,7 @@ public interface Y9PersonService {
      * 根据idType和idNum查询
      *
      * @param idType 证件类型
-     * @param idNum  证件号
+     * @param idNum 证件号
      * @return {@link List}<{@link Y9Person}>
      */
     List<Y9Person> listByIdTypeAndIdNum(String idType, String idNum);

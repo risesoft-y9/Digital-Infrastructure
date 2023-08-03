@@ -135,15 +135,20 @@ public class Y9BookMarks4Docx {
                         firstColIndex = Integer.parseInt(colFirstNode.getNodeValue());
                         lastColIndex = Integer.parseInt(colLastNode.getNodeValue());
                         if (firstColIndex == lastColIndex) {
-                            this.bookmarks.put(bookmark.getName(), new Y9BookMark4Docx(bookmark, paragraph, tableRow.getCell(firstColIndex)));
+                            this.bookmarks.put(bookmark.getName(),
+                                new Y9BookMark4Docx(bookmark, paragraph, tableRow.getCell(firstColIndex)));
                         } else {
-                            LOGGER.info("This bookmark {} identifies a number of cells in the table. That condition is not handled yet.", bookmark.getName());
+                            LOGGER.info(
+                                "This bookmark {} identifies a number of cells in the table. That condition is not handled yet.",
+                                bookmark.getName());
                         }
                     } else {
-                        this.bookmarks.put(bookmark.getName(), new Y9BookMark4Docx(bookmark, paragraph, tableRow.getCell(1)));
+                        this.bookmarks.put(bookmark.getName(),
+                            new Y9BookMark4Docx(bookmark, paragraph, tableRow.getCell(1)));
                     }
                 } else {
-                    this.bookmarks.put(bookmark.getName(), new Y9BookMark4Docx(bookmark, paragraph, tableRow.getCell(1)));
+                    this.bookmarks.put(bookmark.getName(),
+                        new Y9BookMark4Docx(bookmark, paragraph, tableRow.getCell(1)));
                 }
             }
         }

@@ -83,5 +83,4 @@ public interface Y9PositionToRoleService {
      */
     void update(String roleId, String roleName, String systemName, String systemCnName, String description);
 
-
 }

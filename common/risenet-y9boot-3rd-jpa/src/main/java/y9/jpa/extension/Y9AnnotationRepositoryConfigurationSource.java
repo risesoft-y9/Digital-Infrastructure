@@ -21,7 +21,9 @@ public class Y9AnnotationRepositoryConfigurationSource extends AnnotationReposit
 
     private final Environment environment;
 
-    Y9AnnotationRepositoryConfigurationSource(AnnotationMetadata metadata, Class<? extends Annotation> annotation, ResourceLoader resourceLoader, Environment environment, BeanDefinitionRegistry registry, @Nullable BeanNameGenerator generator) {
+    Y9AnnotationRepositoryConfigurationSource(AnnotationMetadata metadata, Class<? extends Annotation> annotation,
+        ResourceLoader resourceLoader, Environment environment, BeanDefinitionRegistry registry,
+        @Nullable BeanNameGenerator generator) {
         super(metadata, annotation, resourceLoader, environment, registry, generator);
 
         this.environment = environment;
@@ -45,9 +47,11 @@ public class Y9AnnotationRepositoryConfigurationSource extends AnnotationReposit
         String packages = this.environment.getProperty(propertyName);
 
         if (!StringUtils.hasText(packages)) {
-            throw new IllegalStateException(String.format("Could not resolve the following packages definition: %s", rawPackage));
+            throw new IllegalStateException(
+                String.format("Could not resolve the following packages definition: %s", rawPackage));
         }
 
-        return Arrays.stream(packages.split(",")).map(String::trim).filter(StringUtils::hasText).collect(Collectors.toList());
+        return Arrays.stream(packages.split(",")).map(String::trim).filter(StringUtils::hasText)
+            .collect(Collectors.toList());
     }
 }

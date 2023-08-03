@@ -26,8 +26,8 @@ import net.risesoft.y9public.entity.resource.Y9ResourceBase;
 import net.risesoft.y9public.entity.tenant.Y9TenantApp;
 import net.risesoft.y9public.manager.resource.Y9AppManager;
 import net.risesoft.y9public.manager.resource.Y9MenuManager;
-import net.risesoft.y9public.service.resource.CompositeResourceService;
 import net.risesoft.y9public.manager.tenant.Y9TenantAppManager;
+import net.risesoft.y9public.service.resource.CompositeResourceService;
 
 /**
  * PositionToResourceAndAuthorityServiceImpl
@@ -40,7 +40,7 @@ import net.risesoft.y9public.manager.tenant.Y9TenantAppManager;
 @Service
 @RequiredArgsConstructor
 public class Y9PositionToResourceAndAuthorityServiceImpl implements Y9PositionToResourceAndAuthorityService {
-    
+
     private final Y9PositionToResourceAndAuthorityRepository y9PositionToResourceAndAuthorityRepository;
 
     private final CompositeOrgBaseManager compositeOrgBaseManager;
@@ -100,42 +100,54 @@ public class Y9PositionToResourceAndAuthorityServiceImpl implements Y9PositionTo
 
     @Override
     public boolean hasPermission(String positionId, String resourceId, Integer authority) {
-        return !y9PositionToResourceAndAuthorityRepository.findByPositionIdAndResourceIdAndAuthority(positionId, resourceId, authority).isEmpty();
+        return !y9PositionToResourceAndAuthorityRepository
+            .findByPositionIdAndResourceIdAndAuthority(positionId, resourceId, authority).isEmpty();
     }
 
     @Override
     public boolean hasPermissionByCustomId(String positionId, String customId, Integer authority) {
-        return !y9PositionToResourceAndAuthorityRepository.findByPositionIdAndResourceCustomIdAndAuthority(positionId, customId, authority).isEmpty();
+        return !y9PositionToResourceAndAuthorityRepository
+            .findByPositionIdAndResourceCustomIdAndAuthority(positionId, customId, authority).isEmpty();
     }
 
     @Override
     public List<Y9PositionToResourceAndAuthority> list(String positionId) {
         return y9PositionToResourceAndAuthorityRepository.findByPositionId(positionId);
     }
-    
+
     @Override
     public List<Y9PositionToResourceAndAuthority> list(String positionId, String parentResourceId, Integer authority) {
         if (StringUtils.isBlank(parentResourceId)) {
             List<Y9PositionToResourceAndAuthority> list = new ArrayList<>();
-            list.addAll(y9PositionToResourceAndAuthorityRepository.findByPositionIdAndParentResourceIdIsNullAndAuthorityOrderByResourceTabIndex(positionId, authority));
-            list.addAll(y9PositionToResourceAndAuthorityRepository.findByPositionIdAndParentResourceIdAndAuthorityOrderByResourceTabIndex(positionId, "", authority));
+            list.addAll(y9PositionToResourceAndAuthorityRepository
+                .findByPositionIdAndParentResourceIdIsNullAndAuthorityOrderByResourceTabIndex(positionId, authority));
+            list.addAll(y9PositionToResourceAndAuthorityRepository
+                .findByPositionIdAndParentResourceIdAndAuthorityOrderByResourceTabIndex(positionId, "", authority));
             return list;
         }
-        return y9PositionToResourceAndAuthorityRepository.findByPositionIdAndParentResourceIdAndAuthorityOrderByResourceTabIndex(positionId, parentResourceId, authority);
+        return y9PositionToResourceAndAuthorityRepository
+            .findByPositionIdAndParentResourceIdAndAuthorityOrderByResourceTabIndex(positionId, parentResourceId,
+                authority);
     }
 
     @Override
-    public List<Y9PositionToResourceAndAuthority> list(String positionId, String parentResourceId, Integer resourceType, Integer authority) {
-        return y9PositionToResourceAndAuthorityRepository.findByPositionIdAndParentResourceIdAndAuthorityAndResourceTypeOrderByResourceTabIndex(positionId, parentResourceId, authority, resourceType);
+    public List<Y9PositionToResourceAndAuthority> list(String positionId, String parentResourceId, Integer resourceType,
+        Integer authority) {
+        return y9PositionToResourceAndAuthorityRepository
+            .findByPositionIdAndParentResourceIdAndAuthorityAndResourceTypeOrderByResourceTabIndex(positionId,
+                parentResourceId, authority, resourceType);
     }
 
     @Override
     public List<Y9App> listAppsByAuthority(String positionId, Integer authority) {
-        List<Y9PositionToResourceAndAuthority> resourceList = y9PositionToResourceAndAuthorityRepository.findByPositionIdAndAuthorityAndResourceTypeOrderByResourceTabIndex(positionId, authority, ResourceTypeEnum.APP.getValue());
+        List<Y9PositionToResourceAndAuthority> resourceList = y9PositionToResourceAndAuthorityRepository
+            .findByPositionIdAndAuthorityAndResourceTypeOrderByResourceTabIndex(positionId, authority,
+                ResourceTypeEnum.APP.getValue());
         List<Y9App> appList = new ArrayList<>();
         if (null != resourceList) {
             for (Y9PositionToResourceAndAuthority r : resourceList) {
-                Y9TenantApp y9TenantApp = y9TenantAppManager.getByTenantIdAndAppIdAndTenancy(Y9LoginUserHolder.getTenantId(), r.getAppId(), true);
+                Y9TenantApp y9TenantApp = y9TenantAppManager
+                    .getByTenantIdAndAppIdAndTenancy(Y9LoginUserHolder.getTenantId(), r.getAppId(), true);
                 if (y9TenantApp != null) {
                     Y9App y9App = y9AppManager.findById(r.getAppId());
                     if (null != y9App && !appList.contains(y9App)) {
@@ -154,14 +166,17 @@ public class Y9PositionToResourceAndAuthorityServiceImpl implements Y9PositionTo
 
     @Transactional(readOnly = false)
     @Override
-    public void saveOrUpdate(Y9ResourceBase y9ResourceBase, Y9Position y9Position, Y9Authorization y9Authorization, Boolean inherit) {
+    public void saveOrUpdate(Y9ResourceBase y9ResourceBase, Y9Position y9Position, Y9Authorization y9Authorization,
+        Boolean inherit) {
         y9PositionToResourceAndAuthorityManager.saveOrUpdate(y9ResourceBase, y9Position, y9Authorization, inherit);
     }
 
     @Transactional(readOnly = false)
     @Override
-    public void updateByResourceId(String resourceId, String resourceName, String systemName, String systemCnName, String description) {
-        List<Y9PositionToResourceAndAuthority> list = y9PositionToResourceAndAuthorityRepository.findByResourceId(resourceId);
+    public void updateByResourceId(String resourceId, String resourceName, String systemName, String systemCnName,
+        String description) {
+        List<Y9PositionToResourceAndAuthority> list =
+            y9PositionToResourceAndAuthorityRepository.findByResourceId(resourceId);
         for (Y9PositionToResourceAndAuthority y9PositionToResourceAndAuthority : list) {
             y9PositionToResourceAndAuthority.setResourceName(resourceName);
             y9PositionToResourceAndAuthority.setSystemName(systemName);
@@ -174,9 +189,11 @@ public class Y9PositionToResourceAndAuthorityServiceImpl implements Y9PositionTo
     @Override
     public List<Y9ResourceBase> listSubResources(String positionId, String resourceId, Integer authority) {
         List<Y9ResourceBase> returnResourceList = new ArrayList<>();
-        List<Y9PositionToResourceAndAuthority> personToResourceAndAuthorityList = this.list(positionId, resourceId, authority);
+        List<Y9PositionToResourceAndAuthority> personToResourceAndAuthorityList =
+            this.list(positionId, resourceId, authority);
         for (Y9PositionToResourceAndAuthority personResource : personToResourceAndAuthorityList) {
-            Y9ResourceBase y9ResourceBase = compositeResourceService.findByIdAndResourceType(personResource.getResourceId(), personResource.getResourceType());
+            Y9ResourceBase y9ResourceBase = compositeResourceService
+                .findByIdAndResourceType(personResource.getResourceId(), personResource.getResourceType());
             if (y9ResourceBase != null && !returnResourceList.contains(y9ResourceBase)) {
                 returnResourceList.add(y9ResourceBase);
             }
@@ -186,8 +203,10 @@ public class Y9PositionToResourceAndAuthorityServiceImpl implements Y9PositionTo
 
     @Override
     public List<Y9Menu> listSubMenus(String positionId, String resourceId, Integer resourceType, Integer authority) {
-        List<Y9PositionToResourceAndAuthority> personToResourceAndAuthorityList = this.list(positionId, resourceId, resourceType, authority);
-        List<String> menuIdList = personToResourceAndAuthorityList.stream().map(Y9IdentityToResourceAndAuthorityBase::getResourceId).distinct().collect(Collectors.toList());
+        List<Y9PositionToResourceAndAuthority> personToResourceAndAuthorityList =
+            this.list(positionId, resourceId, resourceType, authority);
+        List<String> menuIdList = personToResourceAndAuthorityList.stream()
+            .map(Y9IdentityToResourceAndAuthorityBase::getResourceId).distinct().collect(Collectors.toList());
         List<Y9Menu> y9MenuList = new ArrayList<>();
         for (String menuId : menuIdList) {
             Y9Menu y9Menu = y9MenuManager.findById(menuId);

@@ -18,7 +18,7 @@ public interface Y9PositionService {
      * 创建岗位
      *
      * @param y9Position 岗位对象
-     * @param parent     父节点对象
+     * @param parent 父节点对象
      * @return {@link Y9Position}
      */
     Y9Position createPosition(Y9Position y9Position, Y9OrgBase parent);
@@ -88,7 +88,7 @@ public interface Y9PositionService {
      * 查询某人是否有某岗位
      *
      * @param positionName 岗位名
-     * @param personId     人员id
+     * @param personId 人员id
      * @return {@link Boolean}
      */
     Boolean hasPosition(String positionName, String personId);
@@ -153,7 +153,7 @@ public interface Y9PositionService {
      * 保存新的序号
      *
      * @param positionIds 岗位id数组
-     * @param tabIndexs   排列序号数组
+     * @param tabIndexs 排列序号数组
      * @return {@link List}<{@link Y9Position}>
      */
     List<Y9Position> saveOrder(String[] positionIds, String[] tabIndexs);

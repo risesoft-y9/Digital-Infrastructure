@@ -24,9 +24,9 @@ import net.risesoft.y9public.support.FileNameConverter;
 @org.hibernate.annotations.Table(comment = "文件仓库表", appliesTo = "Y9_COMMON_FILE_STORE")
 // @EntityListeners({ Y9FileStoreListener.class })
 public class Y9FileStore implements Serializable {
-    
+
     private static final long serialVersionUID = 5215025303846508704L;
-    
+
     @Id
     @Column(name = "STOREID", length = 38)
     @Comment("主键")
@@ -93,7 +93,7 @@ public class Y9FileStore implements Serializable {
     private Date uploadTime;
 
     public Y9FileStore() {}
-    
+
     public static String buildFullPath(String... paths) {
         StringBuilder sb = new StringBuilder();
         for (String path : paths) {
@@ -407,8 +407,10 @@ public class Y9FileStore implements Serializable {
 
     @Override
     public String toString() {
-        return "Y9FileStore [id=" + id + ", storeType=" + storeType + ", fullPath=" + fullPath + ", fileName=" + fileName + ", realFileName=" + realFileName + ", fileSize=" + fileSize + ", fileSha=" + fileSha + ", fileExt=" + fileExt + ", url=" + url + ", systemName=" + systemName + ", prefix="
-            + prefix + ", tenantId=" + tenantId + ", uploader=" + uploader + ", uploadTime=" + uploadTime + "]";
+        return "Y9FileStore [id=" + id + ", storeType=" + storeType + ", fullPath=" + fullPath + ", fileName="
+            + fileName + ", realFileName=" + realFileName + ", fileSize=" + fileSize + ", fileSha=" + fileSha
+            + ", fileExt=" + fileExt + ", url=" + url + ", systemName=" + systemName + ", prefix=" + prefix
+            + ", tenantId=" + tenantId + ", uploader=" + uploader + ", uploadTime=" + uploadTime + "]";
     }
 
 }

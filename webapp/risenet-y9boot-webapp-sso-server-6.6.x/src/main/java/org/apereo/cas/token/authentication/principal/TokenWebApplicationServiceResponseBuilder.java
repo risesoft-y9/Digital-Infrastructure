@@ -34,21 +34,27 @@ public class TokenWebApplicationServiceResponseBuilder extends WebApplicationSer
 
     private final transient TokenTicketBuilder tokenTicketBuilder;
 
-    public TokenWebApplicationServiceResponseBuilder(final ServicesManager servicesManager, final TokenTicketBuilder tokenTicketBuilder, final UrlValidator urlValidator) {
+    public TokenWebApplicationServiceResponseBuilder(final ServicesManager servicesManager,
+        final TokenTicketBuilder tokenTicketBuilder, final UrlValidator urlValidator) {
         super(servicesManager, urlValidator);
         this.tokenTicketBuilder = tokenTicketBuilder;
     }
 
     @Override
-    protected WebApplicationService buildInternal(final WebApplicationService service, final Map<String, String> parameters) {
+    protected WebApplicationService buildInternal(final WebApplicationService service,
+        final Map<String, String> parameters) {
         val registeredService = this.servicesManager.findServiceBy(service);
         RegisteredServiceAccessStrategyUtils.ensureServiceAccessIsAllowed(service, registeredService);
-        val tokenAsResponse = RegisteredServiceProperty.RegisteredServiceProperties.TOKEN_AS_SERVICE_TICKET.isAssignedTo(registeredService);
+        val tokenAsResponse = RegisteredServiceProperty.RegisteredServiceProperties.TOKEN_AS_SERVICE_TICKET
+            .isAssignedTo(registeredService);
         val ticketIdAvailable = isTicketIdAvailable(parameters);
 
         if (!tokenAsResponse || !ticketIdAvailable) {
             if (ticketIdAvailable) {
-                LOGGER.debug("Registered service [{}] is not configured to issue JWTs for service tickets. " + "Make sure the service property [{}] is defined and set to true", registeredService, RegisteredServiceProperties.TOKEN_AS_SERVICE_TICKET.getPropertyName());
+                LOGGER.debug(
+                    "Registered service [{}] is not configured to issue JWTs for service tickets. "
+                        + "Make sure the service property [{}] is defined and set to true",
+                    registeredService, RegisteredServiceProperties.TOKEN_AS_SERVICE_TICKET.getPropertyName());
             }
             return super.buildInternal(service, parameters);
         }
@@ -57,7 +63,8 @@ public class TokenWebApplicationServiceResponseBuilder extends WebApplicationSer
         parameters.put("serviceTicketId", serviceTicketId);// y9 add
 
         val jwt = generateToken(service, parameters);
-        val jwtService = new TokenWebApplicationService(service.getId(), service.getOriginalUrl(), service.getArtifactId());
+        val jwtService =
+            new TokenWebApplicationService(service.getId(), service.getOriginalUrl(), service.getArtifactId());
         jwtService.setFormat(service.getFormat());
         jwtService.setLoggedOutAlready(service.isLoggedOutAlready());
 

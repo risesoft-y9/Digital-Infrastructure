@@ -11,7 +11,9 @@ import y9_storage from "./utils/storage";
 
 // Parse a query string into an object
 export const parseQueryString = (string) => {
-    if (string == "") { return false; }
+    if (string == "") {
+        return false;
+    }
     var segments = string.split("&").map(s => s.split("="));
     var queryString = {};
     segments.forEach(s => queryString[s[0]] = s[1]);
@@ -19,7 +21,7 @@ export const parseQueryString = (string) => {
 }
 
 // 登陆
-export const ssoLogin = async(username, password, tenantName, sso_callback_url) => {
+export const ssoLogin = async (username, password, tenantName, sso_callback_url) => {
     // console.log(username, password, sso_callback_url);
     const config_logon = {
         loginType: 'loginName', // 固定
@@ -30,12 +32,12 @@ export const ssoLogin = async(username, password, tenantName, sso_callback_url) 
         service: sso_callback_url
     };
     // checkSsoLoginInfo - API
-    const check = await checkSsoLoginInfoApi({ params: config_logon }).catch((e) => {
+    const check = await checkSsoLoginInfoApi({params: config_logon}).catch((e) => {
         console.log('checkSsoLoginInfo-API- catch到error = ', e);
     });
     if (check.success) {
         // sso登陆
-        return await ssoLoginApi({ params: config_logon }).then(res => {
+        return await ssoLoginApi({params: config_logon}).then(res => {
             // console.log('res = ', res);
             // 登陆失败的错误信息
             if (res.success) {
@@ -66,7 +68,7 @@ export const ssoLogin = async(username, password, tenantName, sso_callback_url) 
 
 }
 
-export const ssoGetAccessToken = async(value, Code = 0, grantType = y9_storage.getObjectItem('sso', "VUE_APP_GRANT_TYPE"), key = 'redirect_uri') => {
+export const ssoGetAccessToken = async (value, Code = 0, grantType = y9_storage.getObjectItem('sso', "VUE_APP_GRANT_TYPE"), key = 'redirect_uri') => {
     if (!Code) {
         return false;
     }
@@ -82,7 +84,7 @@ export const ssoGetAccessToken = async(value, Code = 0, grantType = y9_storage.g
         delete config_token.code
     }
     // console.log('config_token -> ',config_token)
-    const getAccessToken = await ssoGetAccessTokenApi({ params: config_token }).then(res => {
+    const getAccessToken = await ssoGetAccessTokenApi({params: config_token}).then(res => {
         return res;
     }).catch((e) => {
         // y9_storage.type().clear();
@@ -99,11 +101,11 @@ export const ssoGetAccessToken = async(value, Code = 0, grantType = y9_storage.g
 }
 
 
-export const getUserInfo = async(token) => {
+export const getUserInfo = async (token) => {
     const config_getUserInfo = {
         access_token: token
     };
-    const get_user_info = await ssoGetUserInfoApi({ params: config_getUserInfo }).then(res => {
+    const get_user_info = await ssoGetUserInfoApi({params: config_getUserInfo}).then(res => {
         y9_storage.type().setItem('y9UserInfo', JSON.stringify(res));
         return res;
     }).catch((e) => {
@@ -114,7 +116,7 @@ export const getUserInfo = async(token) => {
 
 // 传参的obj应该定义一个默认值，否则会打印一个不影响程序运行的错误，
 // 但是如果修复的话，发现单点登录无法登陆进去，因为cookie中的TGC设置了sameSite = none（不携带cookie），TGC立马就过期了，被拒绝了
-export const ssoLogout = async(obj) => {
+export const ssoLogout = async (obj) => {
     let logoutUrl;
     if (obj.logoutUrl) {
         logoutUrl = obj.logoutUrl;
@@ -126,7 +128,7 @@ export const ssoLogout = async(obj) => {
     // 清除redis缓存
     await ssoRedisDeleteApi({
         key: y9_storage.getStringItem(y9_storage.getObjectItem('sso', "VUE_APP_REDISKEY"))
-    }).then(async() => {
+    }).then(async () => {
         sessionStorage.clear();
         localStorage.clear();
         // window.location.href = logoutUrl;

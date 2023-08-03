@@ -60,13 +60,17 @@ public class Y9PublishServiceUtil {
         persistMessageOrg(msg, eventName, description);
     }
 
-    private static void persistMessageCommon(Y9MessageCommon msg, String eventName, String description, String clientIp) {
+    private static void persistMessageCommon(Y9MessageCommon msg, String eventName, String description,
+        String clientIp) {
         try {
             String objId = "";
             String tenantId = "";
-            String operator = Y9LoginUserHolder.getUserInfo() == null ? "系统" : Y9LoginUserHolder.getUserInfo().getName();
-            jdbcTemplate.update("insert into Y9_EVENT_PUBLISHEDEVENT(ID,TENANT_ID,EVENT_TYPE,EVENT_NAME,OBJ_ID,OPERATOR,CLIENT_IP,EVENT_DESCRIPTION, CREATE_TIME) values(?,?,?,?,?,?,?,?,?)", Y9IdGenerator.genId(IdType.SNOWFLAKE), tenantId, msg.getEventType(), eventName, objId, operator, clientIp,
-                description, new Date());
+            String operator =
+                Y9LoginUserHolder.getUserInfo() == null ? "系统" : Y9LoginUserHolder.getUserInfo().getName();
+            jdbcTemplate.update(
+                "insert into Y9_EVENT_PUBLISHEDEVENT(ID,TENANT_ID,EVENT_TYPE,EVENT_NAME,OBJ_ID,OPERATOR,CLIENT_IP,EVENT_DESCRIPTION, CREATE_TIME) values(?,?,?,?,?,?,?,?,?)",
+                Y9IdGenerator.genId(IdType.SNOWFLAKE), tenantId, msg.getEventType(), eventName, objId, operator,
+                clientIp, description, new Date());
         } catch (Exception e) {
             LOGGER.warn(e.getMessage(), e);
         }
@@ -74,7 +78,8 @@ public class Y9PublishServiceUtil {
 
     private static void persistMessageOrg(Y9MessageOrg msg, String eventName, String description) {
         try {
-            String operator = Y9LoginUserHolder.getUserInfo() == null ? "系统" : Y9LoginUserHolder.getUserInfo().getName();
+            String operator =
+                Y9LoginUserHolder.getUserInfo() == null ? "系统" : Y9LoginUserHolder.getUserInfo().getName();
             String clientIp = null;
             ServletRequestAttributes sra = (ServletRequestAttributes)RequestContextHolder.getRequestAttributes();
             if (sra != null) {
@@ -91,14 +96,17 @@ public class Y9PublishServiceUtil {
                 objId = orgUnit.getId();
             }
 
-            jdbcTemplate.update("insert into Y9_EVENT_PUBLISHEDEVENT(ID,TENANT_ID,EVENT_TYPE,EVENT_NAME,OBJ_ID,OPERATOR,CLIENT_IP,EVENT_DESCRIPTION,ENTITY_JSON, CREATE_TIME) values(?,?,?,?,?,?,?,?,?,?)", Y9IdGenerator.genId(IdType.SNOWFLAKE), msg.getTenantId(), msg.getEventType(), eventName, objId,
+            jdbcTemplate.update(
+                "insert into Y9_EVENT_PUBLISHEDEVENT(ID,TENANT_ID,EVENT_TYPE,EVENT_NAME,OBJ_ID,OPERATOR,CLIENT_IP,EVENT_DESCRIPTION,ENTITY_JSON, CREATE_TIME) values(?,?,?,?,?,?,?,?,?,?)",
+                Y9IdGenerator.genId(IdType.SNOWFLAKE), msg.getTenantId(), msg.getEventType(), eventName, objId,
                 operator, clientIp, description, Y9JsonUtil.writeValueAsString(orgObj), new Date());
         } catch (Exception e) {
             LOGGER.warn(e.getMessage(), e);
         }
     }
 
-    public static void persistPublishMessageCommon(Y9MessageCommon msg, String eventName, String description, String clientIp) {
+    public static void persistPublishMessageCommon(Y9MessageCommon msg, String eventName, String description,
+        String clientIp) {
         checkBeans();
 
         persistMessageCommon(msg, eventName, description, clientIp);

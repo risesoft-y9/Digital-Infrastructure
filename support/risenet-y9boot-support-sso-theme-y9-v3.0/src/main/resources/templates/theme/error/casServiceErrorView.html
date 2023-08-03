@@ -6,12 +6,13 @@
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no"/>
 
     <title th:text="#{screen.service.error.header}">Service Error View</title>
-    <link href="../../static/css/cas.css" rel="stylesheet" th:remove="tag" />
+    <link href="../../static/css/cas.css" rel="stylesheet" th:remove="tag"/>
 </head>
 
 <body>
 <main role="main" class="container mt-3 mb-3">
-    <div layout:fragment="content" class="banner banner-danger alert alert-danger mdc-card card p-4 m-auto w-lg-66 text-justify">
+    <div layout:fragment="content"
+         class="banner banner-danger alert alert-danger mdc-card card p-4 m-auto w-lg-66 text-justify">
         <h2 th:utext="#{screen.service.error.header}">Application Not Authorized to Use CAS</h2>
         <p th:if="${rootCauseException != null and rootCauseException.code != null}"
            th:utext="#{${rootCauseException.code}}">

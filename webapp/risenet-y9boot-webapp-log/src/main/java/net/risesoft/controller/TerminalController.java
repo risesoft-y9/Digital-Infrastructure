@@ -69,11 +69,13 @@ public class TerminalController {
         try {
             if (!clientIpList.isEmpty()) {
                 for (String clientIp : clientIpList) {
-                    long count = y9logUserLoginInfoService.countByUserHostIpLikeAndLoginTimeBetweenAndSuccess(clientIp, formater.parse(startTime), formater.parse(endTime), "true");
+                    long count = y9logUserLoginInfoService.countByUserHostIpLikeAndLoginTimeBetweenAndSuccess(clientIp,
+                        formater.parse(startTime), formater.parse(endTime), "true");
                     countList.add(count);
                 }
             }
-            long personCount = y9logUserLoginInfoService.countByLoginTimeBetweenAndSuccess(formater.parse(startTime), formater.parse(endTime), "true");
+            long personCount = y9logUserLoginInfoService.countByLoginTimeBetweenAndSuccess(formater.parse(startTime),
+                formater.parse(endTime), "true");
             map.put("personCount", personCount);
         } catch (ParseException e) {
             LOGGER.warn(e.getMessage(), e);
@@ -171,8 +173,10 @@ public class TerminalController {
     public Y9Page<Map<String, Object>> pagePersonByDeptId(String parentId, Y9PageQuery pageQuery) {
         String tenantId = Y9LoginUserHolder.getTenantId();
         List<Map<String, Object>> list = new ArrayList<>();
-        Y9Page<Person> personPage = personManager.pageByParentId(tenantId, parentId, false, pageQuery.getPage(), pageQuery.getSize());
-        List<Person> personList = Y9JsonUtil.readList(Y9JsonUtil.writeValueAsString(personPage.getRows()), Person.class);
+        Y9Page<Person> personPage =
+            personManager.pageByParentId(tenantId, parentId, false, pageQuery.getPage(), pageQuery.getSize());
+        List<Person> personList =
+            Y9JsonUtil.readList(Y9JsonUtil.writeValueAsString(personPage.getRows()), Person.class);
         if (!personList.isEmpty()) {
             personList.forEach(person -> {
                 Map<String, Object> map = new HashMap<>();
@@ -199,11 +203,14 @@ public class TerminalController {
      */
     @RiseLog(operationName = "根据部门id以及人员名称模糊查询该部门下的人员")
     @GetMapping(value = "/pagePersonByDeptIdAndUserName")
-    public Y9Page<Map<String, Object>> pagePersonByDeptIdAndUserName(String parentId, String userName, Y9PageQuery pageQuery) {
+    public Y9Page<Map<String, Object>> pagePersonByDeptIdAndUserName(String parentId, String userName,
+        Y9PageQuery pageQuery) {
         String tenantId = Y9LoginUserHolder.getTenantId();
         List<Map<String, Object>> list = new ArrayList<>();
-        Y9Page<Person> personPage = personManager.pageByParentIdAndUserName(tenantId, parentId, false, userName, pageQuery.getPage(), pageQuery.getSize());
-        List<Person> personList = Y9JsonUtil.readList(Y9JsonUtil.writeValueAsString(personPage.getRows()), Person.class);
+        Y9Page<Person> personPage = personManager.pageByParentIdAndUserName(tenantId, parentId, false, userName,
+            pageQuery.getPage(), pageQuery.getSize());
+        List<Person> personList =
+            Y9JsonUtil.readList(Y9JsonUtil.writeValueAsString(personPage.getRows()), Person.class);
         if (!personList.isEmpty()) {
             for (Person orgPerson : personList) {
                 Integer countNum = y9logUserLoginInfoService.countByPersonId(orgPerson.getId());
@@ -231,7 +238,8 @@ public class TerminalController {
      */
     @RiseLog(operationName = "根据终端C段IP和时间段查询出该时间段终端IP的登录详情")
     @GetMapping(value = "/pageSearchByLoginTime")
-    public Y9Page<Y9logUserLoginInfo> pageSearchByLoginTime(String startTime, String endTime, String userHostIp, Y9PageQuery pageQuery) {
+    public Y9Page<Y9logUserLoginInfo> pageSearchByLoginTime(String startTime, String endTime, String userHostIp,
+        Y9PageQuery pageQuery) {
         Date start = null;
         Date end = null;
         SimpleDateFormat formater = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
@@ -251,9 +259,11 @@ public class TerminalController {
         }
         Y9Page<Y9logUserLoginInfo> userLoginInfoList = null;
         if (StringUtils.isNotBlank(userHostIp)) {
-            userLoginInfoList = y9logUserLoginInfoService.search(userHostIp, start, end, "true", pageQuery.getPage(), pageQuery.getSize());
+            userLoginInfoList = y9logUserLoginInfoService.search(userHostIp, start, end, "true", pageQuery.getPage(),
+                pageQuery.getSize());
         } else {
-            userLoginInfoList = y9logUserLoginInfoService.search(start, end, "true", pageQuery.getPage(), pageQuery.getSize());
+            userLoginInfoList =
+                y9logUserLoginInfoService.search(start, end, "true", pageQuery.getPage(), pageQuery.getSize());
         }
 
         return userLoginInfoList;
@@ -271,8 +281,10 @@ public class TerminalController {
      */
     @RiseLog(operationName = "根据终端IP和人员以及时间段模糊搜索改人员的详细信息")
     @GetMapping(value = "/pageSearchList")
-    public Y9Page<Y9logUserLoginInfo> pageSearchList(String userHostIp, String userId, String startTime, String endTime, Y9PageQuery pageQuery) {
-        return y9logUserLoginInfoService.page(userHostIp, userId, "true", startTime, endTime, pageQuery.getPage(), pageQuery.getSize());
+    public Y9Page<Y9logUserLoginInfo> pageSearchList(String userHostIp, String userId, String startTime, String endTime,
+        Y9PageQuery pageQuery) {
+        return y9logUserLoginInfoService.page(userHostIp, userId, "true", startTime, endTime, pageQuery.getPage(),
+            pageQuery.getSize());
     }
 
     /**
@@ -285,11 +297,14 @@ public class TerminalController {
      */
     @RiseLog(operationName = "根据不同的终端IP，查询相关人员信息")
     @GetMapping(value = "/pageUserLoginListData")
-    public Y9Page<Map<String, Object>> pageUserLoginListData(String userHostIp, String userName, Y9PageQuery pageQuery) {
+    public Y9Page<Map<String, Object>> pageUserLoginListData(String userHostIp, String userName,
+        Y9PageQuery pageQuery) {
         if (StringUtils.isNotBlank(userName)) {
-            return y9logUserLoginInfoService.pageByUserHostIpAndSuccessAndUserNameLike(userHostIp, "true", userName, pageQuery.getPage(), pageQuery.getSize());
+            return y9logUserLoginInfoService.pageByUserHostIpAndSuccessAndUserNameLike(userHostIp, "true", userName,
+                pageQuery.getPage(), pageQuery.getSize());
         }
-        return y9logUserLoginInfoService.pageByUserHostIpAndSuccess(userHostIp, "true", pageQuery.getPage(), pageQuery.getSize());
+        return y9logUserLoginInfoService.pageByUserHostIpAndSuccess(userHostIp, "true", pageQuery.getPage(),
+            pageQuery.getSize());
     }
 
     /**
@@ -303,7 +318,9 @@ public class TerminalController {
     @RiseLog(operationName = "根据终端IP和人员获取人员的详细信息")
     @GetMapping(value = "/pageUserTerminalDetail")
     public Y9Page<Y9logUserLoginInfo> pageUserTerminalDetail(String userId, String userHostIp, Y9PageQuery pageQuery) {
-        Page<Y9logUserLoginInfo> userLoginInfoList = y9logUserLoginInfoService.pageBySuccessAndServerIpAndUserName("true", userHostIp, userId, pageQuery.getPage(), pageQuery.getSize());
-        return Y9Page.success(pageQuery.getPage(), userLoginInfoList.getTotalPages(), userLoginInfoList.getTotalElements(), userLoginInfoList.getContent());
+        Page<Y9logUserLoginInfo> userLoginInfoList = y9logUserLoginInfoService
+            .pageBySuccessAndServerIpAndUserName("true", userHostIp, userId, pageQuery.getPage(), pageQuery.getSize());
+        return Y9Page.success(pageQuery.getPage(), userLoginInfoList.getTotalPages(),
+            userLoginInfoList.getTotalElements(), userLoginInfoList.getContent());
     }
 }

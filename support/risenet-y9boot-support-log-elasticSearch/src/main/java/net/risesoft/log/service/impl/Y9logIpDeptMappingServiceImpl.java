@@ -60,7 +60,8 @@ public class Y9logIpDeptMappingServiceImpl implements Y9logIpDeptMappingService 
     @Override
     public List<Y9logIpDeptMapping> listAll() {
         List<Y9logIpDeptMapping> list = new ArrayList<>();
-        Iterable<Y9logIpDeptMapping> ipDeptIterable = y9logIpDeptMappingRepository.findAll(Sort.by(Sort.Direction.DESC, "tabIndex"));
+        Iterable<Y9logIpDeptMapping> ipDeptIterable =
+            y9logIpDeptMappingRepository.findAll(Sort.by(Sort.Direction.DESC, "tabIndex"));
         Iterator<Y9logIpDeptMapping> iterator = ipDeptIterable.iterator();
         while (iterator.hasNext()) {
             list.add(iterator.next());
@@ -71,7 +72,8 @@ public class Y9logIpDeptMappingServiceImpl implements Y9logIpDeptMappingService 
     @Override
     public List<Y9logIpDeptMapping> listAllOrderByClientIpSection() {
         List<Y9logIpDeptMapping> list = new ArrayList<>();
-        Iterable<Y9logIpDeptMapping> ipDeptIterable = y9logIpDeptMappingRepository.findAll(Sort.by(Sort.Direction.ASC, "clientIpSection"));
+        Iterable<Y9logIpDeptMapping> ipDeptIterable =
+            y9logIpDeptMappingRepository.findAll(Sort.by(Sort.Direction.ASC, "clientIpSection"));
         Iterator<Y9logIpDeptMapping> iterator = ipDeptIterable.iterator();
         while (iterator.hasNext()) {
             list.add(iterator.next());
@@ -86,7 +88,8 @@ public class Y9logIpDeptMappingServiceImpl implements Y9logIpDeptMappingService 
 
     @Override
     public List<String> listClientIpSections() {
-        List<String> clientIpSectionList = this.listAllOrderByClientIpSection().stream().map(Y9logIpDeptMapping::getClientIpSection).collect(Collectors.toList());
+        List<String> clientIpSectionList = this.listAllOrderByClientIpSection().stream()
+            .map(Y9logIpDeptMapping::getClientIpSection).collect(Collectors.toList());
         return clientIpSectionList;
     }
 
@@ -102,8 +105,11 @@ public class Y9logIpDeptMappingServiceImpl implements Y9logIpDeptMappingService 
         if (StringUtils.isNotBlank(clientIp4Abc)) {
             query.must(QueryBuilders.wildcardQuery("clientIpSection", "*" + clientIp4Abc + "*"));
         }
-        NativeSearchQuery searchQuery = new NativeSearchQueryBuilder().withQuery(query).withPageable(PageRequest.of((page < 1) ? 0 : page - 1, rows)).withSorts(SortBuilders.fieldSort("clientIpSection").order(SortOrder.ASC)).build();
-        SearchHits<Y9logIpDeptMapping> searchHits = elasticsearchOperations.search(searchQuery, Y9logIpDeptMapping.class, index);
+        NativeSearchQuery searchQuery = new NativeSearchQueryBuilder().withQuery(query)
+            .withPageable(PageRequest.of((page < 1) ? 0 : page - 1, rows))
+            .withSorts(SortBuilders.fieldSort("clientIpSection").order(SortOrder.ASC)).build();
+        SearchHits<Y9logIpDeptMapping> searchHits =
+            elasticsearchOperations.search(searchQuery, Y9logIpDeptMapping.class, index);
 
         List<Y9logIpDeptMapping> list = searchHits.stream().map(SearchHit::getContent).collect(Collectors.toList());
         long total = searchHits.getTotalHits();

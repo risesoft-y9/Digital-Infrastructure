@@ -120,7 +120,7 @@ public interface Y9OrganizationService {
     /**
      * 保存或者更新组织机构扩展信息
      *
-     * @param orgId      组织机构id
+     * @param orgId 组织机构id
      * @param properties 扩展属性
      * @return {@link Y9Organization}
      */

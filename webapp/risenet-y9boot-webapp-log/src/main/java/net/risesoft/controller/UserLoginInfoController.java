@@ -46,8 +46,10 @@ public class UserLoginInfoController {
         if (DefaultIdConsts.OPERATION_TENANT_ID.equals(Y9LoginUserHolder.getTenantId())) {
             managerLevel = ManagerLevelEnum.OPERATION_AUDIT_MANAGER.getValue();
         }
-        Page<Y9logUserLoginInfo> pageList = userLoginInfoService.pageByTenantIdAndManagerLevel(tenantId, String.valueOf(managerLevel), pageQuery.getPage(), pageQuery.getSize());
-        return Y9Page.success(pageQuery.getPage(), pageList.getTotalPages(), pageList.getTotalElements(), pageList.getContent(), "获取日志分页列表成功");
+        Page<Y9logUserLoginInfo> pageList = userLoginInfoService.pageByTenantIdAndManagerLevel(tenantId,
+            String.valueOf(managerLevel), pageQuery.getPage(), pageQuery.getSize());
+        return Y9Page.success(pageQuery.getPage(), pageList.getTotalPages(), pageList.getTotalElements(),
+            pageList.getContent(), "获取日志分页列表成功");
     }
 
     /**
@@ -64,8 +66,10 @@ public class UserLoginInfoController {
         if (DefaultIdConsts.OPERATION_TENANT_ID.equals(Y9LoginUserHolder.getTenantId())) {
             managerLevel = ManagerLevelEnum.OPERATION_SECURITY_MANAGER.getValue();
         }
-        Page<Y9logUserLoginInfo> pageList = userLoginInfoService.pageByTenantIdAndManagerLevel(tenantId, String.valueOf(managerLevel), pageQuery.getPage(), pageQuery.getSize());
-        return Y9Page.success(pageQuery.getPage(), pageList.getTotalPages(), pageList.getTotalElements(), pageList.getContent(), "获取日志分页列表成功");
+        Page<Y9logUserLoginInfo> pageList = userLoginInfoService.pageByTenantIdAndManagerLevel(tenantId,
+            String.valueOf(managerLevel), pageQuery.getPage(), pageQuery.getSize());
+        return Y9Page.success(pageQuery.getPage(), pageList.getTotalPages(), pageList.getTotalElements(),
+            pageList.getContent(), "获取日志分页列表成功");
     }
 
     /**
@@ -82,8 +86,10 @@ public class UserLoginInfoController {
         if (DefaultIdConsts.OPERATION_TENANT_ID.equals(Y9LoginUserHolder.getTenantId())) {
             managerLevel = ManagerLevelEnum.OPERATION_SYSTEM_MANAGER.getValue();
         }
-        Page<Y9logUserLoginInfo> pageList = userLoginInfoService.pageByTenantIdAndManagerLevel(tenantId, String.valueOf(managerLevel), pageQuery.getPage(), pageQuery.getSize());
-        return Y9Page.success(pageQuery.getPage(), pageList.getTotalPages(), pageList.getTotalElements(), pageList.getContent(), "获取日志分页列表成功");
+        Page<Y9logUserLoginInfo> pageList = userLoginInfoService.pageByTenantIdAndManagerLevel(tenantId,
+            String.valueOf(managerLevel), pageQuery.getPage(), pageQuery.getSize());
+        return Y9Page.success(pageQuery.getPage(), pageList.getTotalPages(), pageList.getTotalElements(),
+            pageList.getContent(), "获取日志分页列表成功");
     }
 
     /**
@@ -95,8 +101,11 @@ public class UserLoginInfoController {
     @RiseLog(moduleName = "日志系统", operationName = "查看用户登录日志")
     @RequestMapping(value = "/pageByUsers")
     public Y9Page<Y9logUserLoginInfo> pageByUsers(Y9PageQuery pageQuery) {
-        Page<Y9logUserLoginInfo> pageList = userLoginInfoService.pageByTenantIdAndManagerLevel(Y9LoginUserHolder.getTenantId(), String.valueOf(ManagerLevelEnum.GENERAL_USER.getValue()), pageQuery.getPage(), pageQuery.getSize());
-        return Y9Page.success(pageQuery.getPage(), pageList.getTotalPages(), pageList.getTotalElements(), pageList.getContent(), "获取日志分页列表成功");
+        Page<Y9logUserLoginInfo> pageList =
+            userLoginInfoService.pageByTenantIdAndManagerLevel(Y9LoginUserHolder.getTenantId(),
+                String.valueOf(ManagerLevelEnum.GENERAL_USER.getValue()), pageQuery.getPage(), pageQuery.getSize());
+        return Y9Page.success(pageQuery.getPage(), pageList.getTotalPages(), pageList.getTotalElements(),
+            pageList.getContent(), "获取日志分页列表成功");
     }
 
     /**
@@ -114,8 +123,10 @@ public class UserLoginInfoController {
         if (DefaultIdConsts.OPERATION_TENANT_ID.equals(Y9LoginUserHolder.getTenantId())) {
             managerLevel = ManagerLevelEnum.OPERATION_AUDIT_MANAGER.getValue();
         }
-        Y9Page<Y9logUserLoginInfo> pageList = userLoginInfoService.searchQuery(tenantId, String.valueOf(managerLevel), loginInfoModel, pageQuery.getPage(), pageQuery.getSize());
-        return Y9Page.success(pageQuery.getPage(), pageList.getTotalPages(), pageList.getTotal(), pageList.getRows(), "获取日志分页列表成功");
+        Y9Page<Y9logUserLoginInfo> pageList = userLoginInfoService.searchQuery(tenantId, String.valueOf(managerLevel),
+            loginInfoModel, pageQuery.getPage(), pageQuery.getSize());
+        return Y9Page.success(pageQuery.getPage(), pageList.getTotalPages(), pageList.getTotal(), pageList.getRows(),
+            "获取日志分页列表成功");
     }
 
     /**
@@ -133,8 +144,10 @@ public class UserLoginInfoController {
         if (DefaultIdConsts.OPERATION_TENANT_ID.equals(Y9LoginUserHolder.getTenantId())) {
             managerLevel = ManagerLevelEnum.OPERATION_SECURITY_MANAGER.getValue();
         }
-        Y9Page<Y9logUserLoginInfo> pageList = userLoginInfoService.searchQuery(tenantId, String.valueOf(managerLevel), loginInfoModel, pageQuery.getPage(), pageQuery.getSize());
-        return Y9Page.success(pageQuery.getPage(), pageList.getTotalPages(), pageList.getTotal(), pageList.getRows(), "获取日志分页列表成功");
+        Y9Page<Y9logUserLoginInfo> pageList = userLoginInfoService.searchQuery(tenantId, String.valueOf(managerLevel),
+            loginInfoModel, pageQuery.getPage(), pageQuery.getSize());
+        return Y9Page.success(pageQuery.getPage(), pageList.getTotalPages(), pageList.getTotal(), pageList.getRows(),
+            "获取日志分页列表成功");
     }
 
     /**
@@ -152,8 +165,10 @@ public class UserLoginInfoController {
         if (DefaultIdConsts.OPERATION_TENANT_ID.equals(Y9LoginUserHolder.getTenantId())) {
             managerLevel = ManagerLevelEnum.OPERATION_SYSTEM_MANAGER.getValue();
         }
-        Y9Page<Y9logUserLoginInfo> pageList = userLoginInfoService.searchQuery(tenantId, String.valueOf(managerLevel), loginInfoModel, pageQuery.getPage(), pageQuery.getSize());
-        return Y9Page.success(pageQuery.getPage(), pageList.getTotalPages(), pageList.getTotal(), pageList.getRows(), "获取日志分页列表成功");
+        Y9Page<Y9logUserLoginInfo> pageList = userLoginInfoService.searchQuery(tenantId, String.valueOf(managerLevel),
+            loginInfoModel, pageQuery.getPage(), pageQuery.getSize());
+        return Y9Page.success(pageQuery.getPage(), pageList.getTotalPages(), pageList.getTotal(), pageList.getRows(),
+            "获取日志分页列表成功");
     }
 
     /**
@@ -166,7 +181,10 @@ public class UserLoginInfoController {
     @RiseLog(moduleName = "日志系统", operationName = "查询用户登录日志")
     @RequestMapping(value = "/searchUsers")
     public Y9Page<Y9logUserLoginInfo> searchUsers(LogInfoModel loginInfoModel, Y9PageQuery pageQuery) {
-        Y9Page<Y9logUserLoginInfo> pageList = userLoginInfoService.searchQuery(Y9LoginUserHolder.getTenantId(), String.valueOf(ManagerLevelEnum.GENERAL_USER.getValue()), loginInfoModel, pageQuery.getPage(), pageQuery.getSize());
-        return Y9Page.success(pageQuery.getPage(), pageList.getTotalPages(), pageList.getTotal(), pageList.getRows(), "获取日志分页列表成功");
+        Y9Page<Y9logUserLoginInfo> pageList = userLoginInfoService.searchQuery(Y9LoginUserHolder.getTenantId(),
+            String.valueOf(ManagerLevelEnum.GENERAL_USER.getValue()), loginInfoModel, pageQuery.getPage(),
+            pageQuery.getSize());
+        return Y9Page.success(pageQuery.getPage(), pageList.getTotalPages(), pageList.getTotal(), pageList.getRows(),
+            "获取日志分页列表成功");
     }
 }

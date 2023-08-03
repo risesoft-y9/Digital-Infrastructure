@@ -107,7 +107,7 @@ public class UserInfo implements Serializable {
     private String jsonStr;
     private String orderedPath;
     private String weixinId;
-
+    
     private Integer official;
     private String officialType;
     private String duty;
@@ -117,7 +117,7 @@ public class UserInfo implements Serializable {
     private String officeAddress;
     private String officePhone;
     private String officeFax;
-
+    
     private String id;
     private Date createTime;
     private Date updateTime;

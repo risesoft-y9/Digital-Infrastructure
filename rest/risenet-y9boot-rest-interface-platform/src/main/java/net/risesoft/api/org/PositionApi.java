@@ -2,6 +2,8 @@ package net.risesoft.api.org;
 
 import java.util.List;
 
+import javax.validation.constraints.NotBlank;
+
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -10,8 +12,6 @@ import org.springframework.web.bind.annotation.RequestParam;
 import net.risesoft.model.OrgUnit;
 import net.risesoft.model.Person;
 import net.risesoft.model.Position;
-
-import javax.validation.constraints.NotBlank;
 
 /**
  * 岗位服务组件
@@ -35,7 +35,8 @@ public interface PositionApi {
      * @since 9.6.0
      */
     @PostMapping("/addPerson")
-    boolean addPerson(@RequestParam("tenantId") @NotBlank String tenantId, @RequestParam("positionId") @NotBlank String positionId, @RequestParam("personId") @NotBlank String personId);
+    boolean addPerson(@RequestParam("tenantId") @NotBlank String tenantId,
+        @RequestParam("positionId") @NotBlank String positionId, @RequestParam("personId") @NotBlank String personId);
 
     /**
      * 创建岗位
@@ -46,7 +47,8 @@ public interface PositionApi {
      * @since 9.6.0
      */
     @PostMapping("/createPosition")
-    Position createPosition(@RequestParam("tenantId") @NotBlank String tenantId, @RequestParam("positionJson") @NotBlank String positionJson);
+    Position createPosition(@RequestParam("tenantId") @NotBlank String tenantId,
+        @RequestParam("positionJson") @NotBlank String positionJson);
 
     /**
      * 根据岗位id删除岗位
@@ -57,7 +59,8 @@ public interface PositionApi {
      * @since 9.6.0
      */
     @PostMapping("/deletePosition")
-    boolean deletePosition(@RequestParam("tenantId") @NotBlank String tenantId, @RequestParam("positionId") @NotBlank String positionId);
+    boolean deletePosition(@RequestParam("tenantId") @NotBlank String tenantId,
+        @RequestParam("positionId") @NotBlank String positionId);
 
     /**
      * 获取岗位父节点
@@ -68,7 +71,8 @@ public interface PositionApi {
      * @since 9.6.0
      */
     @GetMapping("/getParent")
-    OrgUnit getParent(@RequestParam("tenantId") @NotBlank String tenantId, @RequestParam("positionId") @NotBlank String positionId);
+    OrgUnit getParent(@RequestParam("tenantId") @NotBlank String tenantId,
+        @RequestParam("positionId") @NotBlank String positionId);
 
     /**
      * 根据id获得岗位对象
@@ -79,7 +83,8 @@ public interface PositionApi {
      * @since 9.6.0
      */
     @GetMapping("/getPosition")
-    Position getPosition(@RequestParam("tenantId") @NotBlank String tenantId, @RequestParam("positionId") @NotBlank String positionId);
+    Position getPosition(@RequestParam("tenantId") @NotBlank String tenantId,
+        @RequestParam("positionId") @NotBlank String positionId);
 
     /**
      * 根据人员id和岗位id判断该人员是否拥有此岗位
@@ -91,7 +96,9 @@ public interface PositionApi {
      * @since 9.6.0
      */
     @GetMapping("/hasPosition")
-    boolean hasPosition(@RequestParam("tenantId") @NotBlank String tenantId, @RequestParam("positionName") @NotBlank String positionName, @RequestParam("personId") @NotBlank String personId);
+    boolean hasPosition(@RequestParam("tenantId") @NotBlank String tenantId,
+        @RequestParam("positionName") @NotBlank String positionName,
+        @RequestParam("personId") @NotBlank String personId);
 
     /**
      * 根据父节点获取岗位列表
@@ -102,7 +109,8 @@ public interface PositionApi {
      * @since 9.6.0
      */
     @GetMapping("/listByParentId")
-    List<Position> listByParentId(@RequestParam("tenantId") @NotBlank String tenantId, @RequestParam("parentId") @NotBlank String parentId);
+    List<Position> listByParentId(@RequestParam("tenantId") @NotBlank String tenantId,
+        @RequestParam("parentId") @NotBlank String parentId);
 
     /**
      * 根据用户ID,获取岗位列表
@@ -113,7 +121,8 @@ public interface PositionApi {
      * @since 9.6.0
      */
     @GetMapping("/listByPersonId")
-    List<Position> listByPersonId(@RequestParam("tenantId") @NotBlank String tenantId, @RequestParam("personId") @NotBlank String personId);
+    List<Position> listByPersonId(@RequestParam("tenantId") @NotBlank String tenantId,
+        @RequestParam("personId") @NotBlank String personId);
 
     /**
      * 获取所在岗位的人员列表
@@ -124,7 +133,8 @@ public interface PositionApi {
      * @since 9.6.0
      */
     @GetMapping("/listPersons")
-    List<Person> listPersons(@RequestParam("tenantId") @NotBlank String tenantId, @RequestParam("positionId") @NotBlank String positionId);
+    List<Person> listPersons(@RequestParam("tenantId") @NotBlank String tenantId,
+        @RequestParam("positionId") @NotBlank String positionId);
 
     /**
      * 从岗位移除人员
@@ -136,7 +146,8 @@ public interface PositionApi {
      * @since 9.6.0
      */
     @PostMapping("/removePerson")
-    boolean removePerson(@RequestParam("tenantId") @NotBlank String tenantId, @RequestParam("positionId") @NotBlank String positionId, @RequestParam("personId") @NotBlank String personId);
+    boolean removePerson(@RequestParam("tenantId") @NotBlank String tenantId,
+        @RequestParam("positionId") @NotBlank String positionId, @RequestParam("personId") @NotBlank String personId);
 
     /**
      * 更新岗位
@@ -147,6 +158,7 @@ public interface PositionApi {
      * @since 9.6.0
      */
     @PostMapping("/updatePosition")
-    Position updatePosition(@RequestParam("tenantId") @NotBlank String tenantId, @RequestParam("positionJson") @NotBlank String positionJson);
+    Position updatePosition(@RequestParam("tenantId") @NotBlank String tenantId,
+        @RequestParam("positionJson") @NotBlank String positionJson);
 
 }

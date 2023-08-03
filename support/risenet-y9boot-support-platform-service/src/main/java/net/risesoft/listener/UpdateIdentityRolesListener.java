@@ -189,27 +189,32 @@ public class UpdateIdentityRolesListener {
             OrgTypeEnum orgType = OrgTypeEnum.getByEnName(y9OrgBase.getOrgType());
             switch (orgType) {
                 case ORGANIZATION:
-                    List<String> personIdList = y9PersonRepository.getPersonIdByGuidPathLike("%" + y9OrgBase.getGuidPath());
+                    List<String> personIdList =
+                        y9PersonRepository.getPersonIdByGuidPathLike("%" + y9OrgBase.getGuidPath());
                     for (String personId : personIdList) {
                         y9PersonToRoleService.recalculate(personId);
                     }
-                    List<String> positionIdList = y9PositionRepository.getPositionIdByGuidPathLike("%" + y9OrgBase.getGuidPath());
+                    List<String> positionIdList =
+                        y9PositionRepository.getPositionIdByGuidPathLike("%" + y9OrgBase.getGuidPath());
                     for (String positionId : positionIdList) {
                         y9PositionToRoleService.recalculate(positionId);
                     }
                     break;
                 case DEPARTMENT:
-                    List<String> personIds = y9PersonRepository.getPersonIdByGuidPathLike("%" + y9OrgBase.getGuidPath());
+                    List<String> personIds =
+                        y9PersonRepository.getPersonIdByGuidPathLike("%" + y9OrgBase.getGuidPath());
                     for (String personId : personIds) {
                         y9PersonToRoleService.recalculate(personId);
                     }
-                    List<String> positionIds = y9PositionRepository.getPositionIdByGuidPathLike("%" + y9OrgBase.getGuidPath());
+                    List<String> positionIds =
+                        y9PositionRepository.getPositionIdByGuidPathLike("%" + y9OrgBase.getGuidPath());
                     for (String positionId : positionIds) {
                         y9PositionToRoleService.recalculate(positionId);
                     }
                     break;
                 case POSITION:
-                    List<Y9PersonsToPositions> orgPositionPersons = y9PersonsToPositionsRepository.findByPositionId(orgId);
+                    List<Y9PersonsToPositions> orgPositionPersons =
+                        y9PersonsToPositionsRepository.findByPositionId(orgId);
                     for (Y9PersonsToPositions orgPositionsPerson : orgPositionPersons) {
                         String orgPersonId = orgPositionsPerson.getPersonId();
                         y9PersonToRoleService.recalculate(orgPersonId);

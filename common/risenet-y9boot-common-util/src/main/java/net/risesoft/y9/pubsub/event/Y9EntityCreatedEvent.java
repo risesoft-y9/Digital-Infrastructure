@@ -13,7 +13,7 @@ import org.springframework.core.ResolvableTypeProvider;
 public class Y9EntityCreatedEvent<T> extends ApplicationEvent implements ResolvableTypeProvider {
 
     private static final long serialVersionUID = -178737462829509713L;
-    
+
     private final T entity;
 
     public Y9EntityCreatedEvent(T entity) {

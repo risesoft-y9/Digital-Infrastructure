@@ -5,6 +5,7 @@ import lombok.Setter;
 
 /**
  * elasticsearch 配置
+ * 
  * @author liansen
  * @date 2022/09/26
  */

@@ -62,10 +62,12 @@ public class SyncController {
                 Y9LoginUserHolder.setTenantId(tenantId);
                 List<Y9Organization> y9OrganizationList = y9OrganizationService.list();
                 String organizationId = "";
-                List<String> y9OrganizationIdList = y9OrganizationList.stream().map(Y9Organization::getId).collect(Collectors.toList());
+                List<String> y9OrganizationIdList =
+                    y9OrganizationList.stream().map(Y9Organization::getId).collect(Collectors.toList());
                 organizationId = DefaultIdConsts.ORGANIZATION_VIRTUAL_ID;
                 if (!y9OrganizationIdList.contains(organizationId)) {
-                    y9OrganizationService.createOrganization(tenantId, DefaultIdConsts.ORGANIZATION_VIRTUAL_ID, "组织", Boolean.TRUE);
+                    y9OrganizationService.createOrganization(tenantId, DefaultIdConsts.ORGANIZATION_VIRTUAL_ID, "组织",
+                        Boolean.TRUE);
                 }
                 y9ManagerService.createSystemManager(DefaultIdConsts.SYSTEM_MANAGER_ID, tenantId, organizationId);
                 y9ManagerService.createSecurityManager(DefaultIdConsts.SECURITY_MANAGER_ID, tenantId, organizationId);
@@ -107,7 +109,8 @@ public class SyncController {
                 List<Y9Person> persons = compositeOrgBaseService.listAllPersonsRecursionDownward(organization.getId());
                 for (Y9Person person : persons) {
                     if (person != null && person.getId() != null) {
-                        y9PersonService.saveOrUpdate(person, null, compositeOrgBaseService.getOrgBase(person.getParentId()));
+                        y9PersonService.saveOrUpdate(person, null,
+                            compositeOrgBaseService.getOrgBase(person.getParentId()));
                     }
                 }
             }
@@ -147,13 +150,14 @@ public class SyncController {
     /**
      * 根据租户id和登录名称同步人员信息
      *
-     * @param tenantId  租户id
+     * @param tenantId 租户id
      * @param loginName 登录名
      * @return
      */
     @RequestMapping("/personInfo/{tenantId}/{loginName}")
     @RiseLog(operationName = "根据租户id和登录名称同步人员信息", operationType = OperationTypeEnum.MODIFY)
-    public Y9Result<String> syncPersonByTenantIdAndLoginName(@PathVariable String tenantId, @PathVariable String loginName) {
+    public Y9Result<String> syncPersonByTenantIdAndLoginName(@PathVariable String tenantId,
+        @PathVariable String loginName) {
         Y9LoginUserHolder.setTenantId(tenantId);
         Y9Person person = y9PersonService.getPersonByLoginNameAndTenantId(loginName, tenantId);
         if (person != null && person.getId() != null) {
@@ -176,7 +180,8 @@ public class SyncController {
             List<Y9Position> positions = y9PositionService.listAll();
             for (Y9Position position : positions) {
                 if (position != null && position.getId() != null) {
-                    y9PositionService.saveOrUpdate(position, compositeOrgBaseService.getOrgBase(position.getParentId()));
+                    y9PositionService.saveOrUpdate(position,
+                        compositeOrgBaseService.getOrgBase(position.getParentId()));
                 }
             }
         }

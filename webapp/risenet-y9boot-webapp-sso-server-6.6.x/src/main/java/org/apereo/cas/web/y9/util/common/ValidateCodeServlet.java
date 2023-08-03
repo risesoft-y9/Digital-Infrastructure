@@ -35,9 +35,10 @@ public class ValidateCodeServlet extends HttpServlet {
     private int fontHeight;
     private int codeY;
 
-    char[] codeSequence = {'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'J', 'K', 'M', 'N', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', '3', '4', '5', '6', '7', '8', '9'}; // O
-                                                                                                                                                                             // 和
-                                                                                                                                                                             // 0比较类似，我去掉了。
+    char[] codeSequence = {'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'J', 'K', 'M', 'N', 'P', 'Q', 'R', 'S', 'T', 'U',
+        'V', 'W', 'X', 'Y', '3', '4', '5', '6', '7', '8', '9'}; // O
+                                                                // 和
+                                                                // 0比较类似，我去掉了。
 
     @Override
     public void doGet(HttpServletRequest request, HttpServletResponse response) {

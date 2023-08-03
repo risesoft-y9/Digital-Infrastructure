@@ -27,7 +27,8 @@ public class JxlsUtil {
         }
         JxlsHelper jxlsHelper = JxlsHelper.getInstance();
         Transformer transformer = jxlsHelper.createTransformer(is, os);
-        JexlExpressionEvaluator evaluator = (JexlExpressionEvaluator)transformer.getTransformationConfig().getExpressionEvaluator();
+        JexlExpressionEvaluator evaluator =
+            (JexlExpressionEvaluator)transformer.getTransformationConfig().getExpressionEvaluator();
         Map<String, Object> funcs = new HashMap<String, Object>();
         funcs.put("jx", new JxlsUtil()); // 添加自定义功能
         // evaluator.getJexlEngine().setFunctions(funcs);

@@ -10,11 +10,11 @@ package net.risesoft.id;
  * @date 2022/4/21
  */
 public enum IdType {
-    /**分布式自增*/
-    SNOWFLAKE(1), 
-    /**UUID*/
+    /** 分布式自增 */
+    SNOWFLAKE(1),
+    /** UUID */
     UUID(2);
-    
+
     private final Integer value;
 
     IdType(Integer value) {

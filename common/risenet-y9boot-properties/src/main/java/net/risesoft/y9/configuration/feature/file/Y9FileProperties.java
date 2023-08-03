@@ -45,7 +45,8 @@ public class Y9FileProperties {
     /**
      * 公钥
      */
-    private String publicKey = "MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQCdx8LAhyCs9whK0Eu/jRaiwFuUhh8PieOOKM37mf0puqS1MyA5LCe//5rZgQysnX8ft3V26go3f0BmG1flwpOBZnxiR8uFqWlMDnOcIdlKAgRPUhHVzqZrxUledB3FsVJ3LHOrn6/wacuSrZLN0bGdHO95RBOhThXs3E5W7aAzIQIDAQAB";
+    private String publicKey =
+        "MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQCdx8LAhyCs9whK0Eu/jRaiwFuUhh8PieOOKM37mf0puqS1MyA5LCe//5rZgQysnX8ft3V26go3f0BmG1flwpOBZnxiR8uFqWlMDnOcIdlKAgRPUhHVzqZrxUledB3FsVJ3LHOrn6/wacuSrZLN0bGdHO95RBOhThXs3E5W7aAzIQIDAQAB";
 
     /**
      * ftp

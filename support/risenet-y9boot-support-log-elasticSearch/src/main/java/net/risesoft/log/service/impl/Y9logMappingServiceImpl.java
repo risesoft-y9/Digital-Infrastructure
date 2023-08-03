@@ -65,7 +65,8 @@ public class Y9logMappingServiceImpl implements Y9logMappingService {
             Pageable pageable = PageRequest.of((page < 1) ? 0 : page - 1, rows, Sort.by(Sort.Direction.DESC, sort));
             return y9logMappingRepository.findAll(pageable);
         }
-        Pageable pageable = PageRequest.of((page < 1) ? 0 : page - 1, rows, Sort.by(Sort.Direction.DESC, "modularName"));
+        Pageable pageable =
+            PageRequest.of((page < 1) ? 0 : page - 1, rows, Sort.by(Sort.Direction.DESC, "modularName"));
         return y9logMappingRepository.findAll(pageable);
     }
 

@@ -27,9 +27,9 @@ import net.risesoft.y9.exception.util.Y9ExceptionUtil;
 @CacheConfig(cacheNames = CacheNameConsts.ORG_ORGANIZATION)
 @RequiredArgsConstructor
 public class Y9OrganizationManagerImpl implements Y9OrganizationManager {
-    
+
     private final Y9OrganizationRepository y9OrganizationRepository;
-    
+
     @Override
     @Transactional(readOnly = false)
     @CacheEvict(key = "#y9Organization.id", condition = "#y9Organization.id!=null")
@@ -46,7 +46,8 @@ public class Y9OrganizationManagerImpl implements Y9OrganizationManager {
     @Override
     @Cacheable(key = "#id", condition = "#id!=null", unless = "#result==null")
     public Y9Organization getById(String id) {
-        return y9OrganizationRepository.findById(id).orElseThrow(() -> Y9ExceptionUtil.notFoundException(OrganizationErrorCodeEnum.ORGANIZATION_NOT_FOUND, id));
+        return y9OrganizationRepository.findById(id)
+            .orElseThrow(() -> Y9ExceptionUtil.notFoundException(OrganizationErrorCodeEnum.ORGANIZATION_NOT_FOUND, id));
     }
 
     @Override

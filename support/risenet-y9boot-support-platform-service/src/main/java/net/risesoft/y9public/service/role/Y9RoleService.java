@@ -118,7 +118,8 @@ public interface Y9RoleService {
      * @param type 类型
      * @return {@link List}<{@link Y9Role}>
      */
-    List<Y9Role> listByNameAndSystemNameAndPropertiesAndType(String name, String systemName, String properties, String type);
+    List<Y9Role> listByNameAndSystemNameAndPropertiesAndType(String name, String systemName, String properties,
+        String type);
 
     /**
      * 根据name,systemName,type查询角色
@@ -163,7 +164,8 @@ public interface Y9RoleService {
      * @param type 类型
      * @return {@link List}<{@link Y9Role}>
      */
-    List<Y9Role> listByParentIdAndCustomIdAndSystemNameAndType(String parentId, String customId, String systemName, String type);
+    List<Y9Role> listByParentIdAndCustomIdAndSystemNameAndType(String parentId, String customId, String systemName,
+        String type);
 
     /**
      * 根据父节点id和角色名称，获取角色列表
@@ -295,7 +297,7 @@ public interface Y9RoleService {
      * @return {@link List}<{@link Y9Role}>
      */
     List<Y9Role> treeSearchBySystemName(String name, String systemName);
-    
+
     /**
      * 从给定节点开始，向上递归，返回递归链上所有的节点id(如果是人员，会包括所在组，岗位id)
      *

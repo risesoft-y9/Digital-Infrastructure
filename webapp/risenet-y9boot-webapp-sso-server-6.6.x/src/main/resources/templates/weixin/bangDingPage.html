@@ -1,91 +1,94 @@
 <!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
 <head>
-<meta name="viewport" content="width=device-width, initial-scale=1"/>
-<meta http-equiv="X-UA-Compatible" content="IE=edge" />
-<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
-<title>绑定账号</title>
-<script type="text/javascript" language="javascript" th:src="@{/y9static/js/jquery/jquery-1.10.2.min.js}"></script>
-<script type="text/javascript" language="javascript" th:src="@{/y9static/js/jquery/jquery.cookie.js}"></script>
-<script type="text/javascript" language="javascript" th:src="@{/y9static/js/base64.js}"></script>
-<link type="text/css" rel="stylesheet"  th:href="@{/y9static/css/modifyPassword/modifyPassword.css}" />
-<link type="text/css" rel="stylesheet"  th:href="@{/y9static/css/modifyPassword/checkLoginName.css}" />
+    <meta name="viewport" content="width=device-width, initial-scale=1"/>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+    <title>绑定账号</title>
+    <script type="text/javascript" language="javascript" th:src="@{/y9static/js/jquery/jquery-1.10.2.min.js}"></script>
+    <script type="text/javascript" language="javascript" th:src="@{/y9static/js/jquery/jquery.cookie.js}"></script>
+    <script type="text/javascript" language="javascript" th:src="@{/y9static/js/base64.js}"></script>
+    <link type="text/css" rel="stylesheet" th:href="@{/y9static/css/modifyPassword/modifyPassword.css}"/>
+    <link type="text/css" rel="stylesheet" th:href="@{/y9static/css/modifyPassword/checkLoginName.css}"/>
 </head>
 <body>
-	<h1><img th:src="@{/y9static/images/login/LOGO.png}"></h1>
-	<div class="login" style="margin-top:50px;">
-		<div class="header" style="text-align: center;">
-        	<span style="font-size: 16px;">微信绑定账号</span>
-    	</div> 
-	    <div class="web_qr_login" id="web_qr_login" style="display: block; height: 235px;">    
-	        <div class="web_login" id="web_login">
-	           <div class="login-box">
-					<div class="login_form">
-						<form id="myform" method="post">
-			               <div class="uinArea" id="uinArea">
-			                   	<font color="red">*</font><font style="font-size: 13px">账号名称：</font>
-			                   	<input type="text" name="loginName" value="" id="loginName" style="height: 25px"></input>
-								<input type="hidden" id="tenantname" name="tenantname" value="luohu">
-			               </div>
-			               <div class="uinArea" id="uinArea">
-			                   	 <font color="red">*</font>账号密码：
-			                   	 <input type="password" name="password" value="" id="password"></input>
-			                   	 <input name="weixinId" th:value="${weixinId}" id="weixinId" type="hidden"></input>
-		                   </div>
-			               <div style="padding-left:50px;margin-top:10px;">
-	                		     <input type="button" value="确定" onclick ="save();" style="width:150px;" class="button_blue"></input>
-	                	   </div><br/>
-	                	   <div style="text-align: center;margin-top: 25px;">
-	                	   		<span style="font-size: 12px;color: red;">注：绑定账号成功后再进行微信扫描登陆</span>
-	                	   </div>
-			          	</form>
-	         		</div>
-	        	</div>
-	       </div>
-	  </div>
-	</div>
-	<div class="jianyi">
-		<span>版权所有 北京有生博大软件股份有限公司  建议IE9浏览器、1366*768分辨率及以上浏览器和分辨率浏览本网</span><br>
-	</div>
+<h1><img th:src="@{/y9static/images/login/LOGO.png}"></h1>
+<div class="login" style="margin-top:50px;">
+    <div class="header" style="text-align: center;">
+        <span style="font-size: 16px;">微信绑定账号</span>
+    </div>
+    <div class="web_qr_login" id="web_qr_login" style="display: block; height: 235px;">
+        <div class="web_login" id="web_login">
+            <div class="login-box">
+                <div class="login_form">
+                    <form id="myform" method="post">
+                        <div class="uinArea" id="uinArea">
+                            <font color="red">*</font><font style="font-size: 13px">账号名称：</font>
+                            <input type="text" name="loginName" value="" id="loginName" style="height: 25px"></input>
+                            <input type="hidden" id="tenantname" name="tenantname" value="luohu">
+                        </div>
+                        <div class="uinArea" id="uinArea">
+                            <font color="red">*</font>账号密码：
+                            <input type="password" name="password" value="" id="password"></input>
+                            <input name="weixinId" th:value="${weixinId}" id="weixinId" type="hidden"></input>
+                        </div>
+                        <div style="padding-left:50px;margin-top:10px;">
+                            <input type="button" value="确定" onclick="save();" style="width:150px;"
+                                   class="button_blue"></input>
+                        </div>
+                        <br/>
+                        <div style="text-align: center;margin-top: 25px;">
+                            <span style="font-size: 12px;color: red;">注：绑定账号成功后再进行微信扫描登陆</span>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="jianyi">
+    <span>版权所有 北京有生博大软件股份有限公司  建议IE9浏览器、1366*768分辨率及以上浏览器和分辨率浏览本网</span><br>
+</div>
 </body>
 <script type="text/javascript">
-	var ctx = "[(${#request.getContextPath()})]";
-	function save(){
-	   var password = $("#password").val();
-	   var loginName = $("#loginName").val();
-	   var tenantName = $("#tenantname").val();
-	   var weixinId = $("#weixinId").val();
-	   if($.trim(loginName).length<=0){
-		   alert("账号名称不能为空！");
-		   return false; 
-	   }
-	   if($.trim(password).length<=0){
-	       alert("账号密码不能为空！");
-	       return false;
-	   }
-	   $.ajax({
-		     async:false,
-		     cache: false,
-	         type: "POST",
-	         url: ctx+"/weixinLogin/saveInfo",
-	         data: {
-	        	 loginName:encode64(loginName),
-	        	 password:encode64(password),
-	        	 tenantName:tenantName,
-	        	 weixinId:encode64(weixinId)
-	         },
-	         dataType: "json",
-	         success: function(data){
-	              if(data.success){
-	            	  alert(data.msg);
-	            	  window.history.go(-1);
-	              }else{
-	            	  $("#loginName").val("");
-	       		   	  $("#password").val("");
-	            	  alert(data.msg);
-	              }
-	        }
-	    });
-	}
+    var ctx = "[(${#request.getContextPath()})]";
+
+    function save() {
+        var password = $("#password").val();
+        var loginName = $("#loginName").val();
+        var tenantName = $("#tenantname").val();
+        var weixinId = $("#weixinId").val();
+        if ($.trim(loginName).length <= 0) {
+            alert("账号名称不能为空！");
+            return false;
+        }
+        if ($.trim(password).length <= 0) {
+            alert("账号密码不能为空！");
+            return false;
+        }
+        $.ajax({
+            async: false,
+            cache: false,
+            type: "POST",
+            url: ctx + "/weixinLogin/saveInfo",
+            data: {
+                loginName: encode64(loginName),
+                password: encode64(password),
+                tenantName: tenantName,
+                weixinId: encode64(weixinId)
+            },
+            dataType: "json",
+            success: function (data) {
+                if (data.success) {
+                    alert(data.msg);
+                    window.history.go(-1);
+                } else {
+                    $("#loginName").val("");
+                    $("#password").val("");
+                    alert(data.msg);
+                }
+            }
+        });
+    }
 </script>
 </html>

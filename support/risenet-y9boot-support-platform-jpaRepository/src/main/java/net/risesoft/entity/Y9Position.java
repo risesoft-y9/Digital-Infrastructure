@@ -24,7 +24,7 @@ import net.risesoft.enums.OrgTypeEnum;
 @org.hibernate.annotations.Table(comment = "岗位表", appliesTo = "Y9_ORG_POSITION")
 @Data
 public class Y9Position extends Y9OrgBase {
-    
+
     private static final long serialVersionUID = -5753173583033676828L;
 
     public Y9Position() {
@@ -72,7 +72,7 @@ public class Y9Position extends Y9OrgBase {
     @Column(name = "CAPACITY", nullable = false)
     @Comment("岗位容量，默认容量为1，即一人一岗")
     private Integer capacity = 1;
-    
+
     /** 当前岗位人数，小于或等于岗位容量 */
     @ColumnDefault("0")
     @Column(name = "HEAD_COUNT", nullable = false)

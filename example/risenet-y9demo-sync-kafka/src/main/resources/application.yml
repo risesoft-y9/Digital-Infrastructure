@@ -1,5 +1,5 @@
 server:
-   port: 7058
+    port: 7058
 spring:
     kafka:
         consumer:

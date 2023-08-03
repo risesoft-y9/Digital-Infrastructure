@@ -21,6 +21,6 @@ public enum MaritalStatusEnum {
     MARRIED(1),
     /** 未婚 */
     UNMARRIED(2);
-    
+
     private final Integer value;
 }

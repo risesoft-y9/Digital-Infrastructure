@@ -17,9 +17,10 @@ import net.risesoft.model.CustomGroup;
  * @date 2022/2/10
  * @since 9.6.0
  */
-@FeignClient(contextId = "CustomGroupApiClient", name = "y9platform", url = "${y9.common.orgBaseUrl}", path = "/services/rest/customGroup")
+@FeignClient(contextId = "CustomGroupApiClient", name = "y9platform", url = "${y9.common.orgBaseUrl}",
+    path = "/services/rest/customGroup")
 public interface CustomGroupApiClient extends CustomGroupApi {
-    
+
     /**
      * 保存用户组
      *

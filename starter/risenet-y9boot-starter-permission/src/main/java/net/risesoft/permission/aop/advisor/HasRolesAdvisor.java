@@ -14,7 +14,7 @@ import net.risesoft.permission.annotation.HasRoles;
 @Slf4j
 public class HasRolesAdvisor extends StaticMethodMatcherPointcutAdvisor {
     private static final long serialVersionUID = 1790605582584464487L;
-    
+
     public HasRolesAdvisor() {
         LOGGER.debug("HasRolesAdvisor init............");
     }

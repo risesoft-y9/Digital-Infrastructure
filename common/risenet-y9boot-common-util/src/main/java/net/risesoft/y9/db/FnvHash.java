@@ -966,7 +966,8 @@ public final class FnvHash {
         if (len > 2) {
             char c0 = name.charAt(0);
             char c1 = name.charAt(len - 1);
-            if ((c0 == '`' && c1 == '`') || (c0 == '"' && c1 == '"') || (c0 == '\'' && c1 == '\'') || (c0 == '[' && c1 == ']')) {
+            if ((c0 == '`' && c1 == '`') || (c0 == '"' && c1 == '"') || (c0 == '\'' && c1 == '\'')
+                || (c0 == '[' && c1 == ']')) {
                 quote = true;
             }
         }
@@ -1020,7 +1021,8 @@ public final class FnvHash {
         if (len > 2) {
             char c0 = name.charAt(0);
             char c1 = name.charAt(len - 1);
-            if ((c0 == '`' && c1 == '`') || (c0 == '"' && c1 == '"') || (c0 == '\'' && c1 == '\'') || (c0 == '[' && c1 == ']')) {
+            if ((c0 == '`' && c1 == '`') || (c0 == '"' && c1 == '"') || (c0 == '\'' && c1 == '\'')
+                || (c0 == '[' && c1 == ']')) {
                 quote = true;
             }
         }
@@ -1066,7 +1068,8 @@ public final class FnvHash {
             if (len > 2) {
                 char c0 = item.charAt(0);
                 char c1 = item.charAt(len - 1);
-                if ((c0 == '`' && c1 == '`') || (c0 == '"' && c1 == '"') || (c0 == '\'' && c1 == '\'') || (c0 == '[' && c1 == ']')) {
+                if ((c0 == '`' && c1 == '`') || (c0 == '"' && c1 == '"') || (c0 == '\'' && c1 == '\'')
+                    || (c0 == '[' && c1 == ']')) {
                     quote = true;
                 }
             }
@@ -1097,7 +1100,8 @@ public final class FnvHash {
             if (len > 2) {
                 char c0 = item.charAt(0);
                 char c1 = item.charAt(len - 1);
-                if ((c0 == '`' && c1 == '`') || (c0 == '"' && c1 == '"') || (c0 == '\'' && c1 == '\'') || (c0 == '[' && c1 == ']')) {
+                if ((c0 == '`' && c1 == '`') || (c0 == '"' && c1 == '"') || (c0 == '\'' && c1 == '\'')
+                    || (c0 == '[' && c1 == ']')) {
                     quote = true;
                 }
             }

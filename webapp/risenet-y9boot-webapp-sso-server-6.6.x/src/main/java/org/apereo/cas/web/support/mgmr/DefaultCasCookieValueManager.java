@@ -19,9 +19,12 @@ import lombok.val;
 import lombok.extern.slf4j.Slf4j;
 
 /**
- * The {@link DefaultCasCookieValueManager} is responsible for creating the CAS SSO cookie and encrypting and signing its value.
+ * The {@link DefaultCasCookieValueManager} is responsible for creating the CAS SSO cookie and encrypting and signing
+ * its value.
  *
- * This class by default ({@code CookieProperties.isPinToSession=true}) ensures the cookie is used on a request from same IP and with the same user-agent as when cookie was created. The client info (with original client ip) may be null if cluster failover occurs and session replication not working.
+ * This class by default ({@code CookieProperties.isPinToSession=true}) ensures the cookie is used on a request from
+ * same IP and with the same user-agent as when cookie was created. The client info (with original client ip) may be
+ * null if cluster failover occurs and session replication not working.
  *
  * @author Misagh Moayyed
  * @since 4.1
@@ -34,7 +37,8 @@ public class DefaultCasCookieValueManager extends EncryptedCookieValueManager {
 
     private final PinnableCookieProperties cookieProperties;
 
-    public DefaultCasCookieValueManager(final CipherExecutor<Serializable, Serializable> cipherExecutor, final PinnableCookieProperties cookieProperties) {
+    public DefaultCasCookieValueManager(final CipherExecutor<Serializable, Serializable> cipherExecutor,
+        final PinnableCookieProperties cookieProperties) {
         super(cipherExecutor);
         this.cookieProperties = cookieProperties;
     }
@@ -82,22 +86,29 @@ public class DefaultCasCookieValueManager extends EncryptedCookieValueManager {
 
         val clientInfo = ClientInfoHolder.getClientInfo();
         if (clientInfo == null) {
-            throw new InvalidCookieException("Unable to match required remote address " + cookieIpAddress + " because client ip at time of cookie creation is unknown");
+            throw new InvalidCookieException("Unable to match required remote address " + cookieIpAddress
+                + " because client ip at time of cookie creation is unknown");
         }
 
         if (!cookieIpAddress.equals(clientInfo.getClientIpAddress())) {
-            if (StringUtils.isBlank(cookieProperties.getAllowedIpAddressesPattern()) || !RegexUtils.find(cookieProperties.getAllowedIpAddressesPattern(), clientInfo.getClientIpAddress())) {
-                throw new InvalidCookieException("Invalid cookie. Required remote address " + cookieIpAddress + " does not match " + clientInfo.getClientIpAddress());
+            if (StringUtils.isBlank(cookieProperties.getAllowedIpAddressesPattern())
+                || !RegexUtils.find(cookieProperties.getAllowedIpAddressesPattern(), clientInfo.getClientIpAddress())) {
+                throw new InvalidCookieException("Invalid cookie. Required remote address " + cookieIpAddress
+                    + " does not match " + clientInfo.getClientIpAddress());
             }
-            LOGGER.debug("Required remote address [{}] does not match [{}], but it's authorized proceed", cookieIpAddress, clientInfo.getClientIpAddress());
+            LOGGER.debug("Required remote address [{}] does not match [{}], but it's authorized proceed",
+                cookieIpAddress, clientInfo.getClientIpAddress());
         }
 
         val agent = HttpRequestUtils.getHttpServletRequestUserAgent(request);
         if (!cookieUserAgent.equals(agent)) {
-            if (cookieUserAgent.contains("Chrome") && agent.contains("Chrome") && !cookieUserAgent.substring(0, cookieUserAgent.indexOf("Chrome")).equals(agent.substring(0, agent.indexOf("Chrome")))) {
-                throw new IllegalStateException("Invalid cookie. Required user-agent " + cookieUserAgent + " does not match " + agent);
+            if (cookieUserAgent.contains("Chrome") && agent.contains("Chrome") && !cookieUserAgent
+                .substring(0, cookieUserAgent.indexOf("Chrome")).equals(agent.substring(0, agent.indexOf("Chrome")))) {
+                throw new IllegalStateException(
+                    "Invalid cookie. Required user-agent " + cookieUserAgent + " does not match " + agent);
             }
-            // throw new InvalidCookieException("Invalid cookie. Required user-agent " + cookieUserAgent + " does not match " + agent);
+            // throw new InvalidCookieException("Invalid cookie. Required user-agent " + cookieUserAgent + " does not
+            // match " + agent);
         }
         return cookieValue;
     }

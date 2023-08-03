@@ -43,15 +43,16 @@ import net.risesoft.y9public.service.role.Y9RoleService;
 public class Y9RoleServiceImpl implements Y9RoleService {
 
     private final JdbcTemplate jdbcTemplate4Public;
-    
+
     private final Y9RoleRepository y9RoleRepository;
     private final Y9OrgBasesToRolesRepository y9OrgBasesToRolesRepository;
 
     private final CompositeOrgBaseManager compositeOrgBaseManager;
     private final Y9RoleManager y9RoleManager;
 
-    public Y9RoleServiceImpl(@Qualifier("jdbcTemplate4Public") JdbcTemplate jdbcTemplate4Public, Y9RoleRepository y9RoleRepository, Y9OrgBasesToRolesRepository y9OrgBasesToRolesRepository,
-                             CompositeOrgBaseManager compositeOrgBaseManager, Y9RoleManager y9RoleManager) {
+    public Y9RoleServiceImpl(@Qualifier("jdbcTemplate4Public") JdbcTemplate jdbcTemplate4Public,
+        Y9RoleRepository y9RoleRepository, Y9OrgBasesToRolesRepository y9OrgBasesToRolesRepository,
+        CompositeOrgBaseManager compositeOrgBaseManager, Y9RoleManager y9RoleManager) {
         this.jdbcTemplate4Public = jdbcTemplate4Public;
         this.y9RoleRepository = y9RoleRepository;
         this.y9OrgBasesToRolesRepository = y9OrgBasesToRolesRepository;
@@ -187,7 +188,8 @@ public class Y9RoleServiceImpl implements Y9RoleService {
     }
 
     @Override
-    public List<Y9Role> listByNameAndSystemNameAndPropertiesAndType(String name, String systemName, String properties, String type) {
+    public List<Y9Role> listByNameAndSystemNameAndPropertiesAndType(String name, String systemName, String properties,
+        String type) {
         return y9RoleRepository.findByNameAndSystemNameAndPropertiesAndType(name, systemName, properties, type);
     }
 
@@ -228,7 +230,8 @@ public class Y9RoleServiceImpl implements Y9RoleService {
     }
 
     @Override
-    public List<Y9Role> listByParentIdAndCustomIdAndSystemNameAndType(String parentId, String customId, String systemName, String type) {
+    public List<Y9Role> listByParentIdAndCustomIdAndSystemNameAndType(String parentId, String customId,
+        String systemName, String type) {
         return y9RoleRepository.findByParentIdAndCustomIdAndSystemNameAndType(parentId, customId, systemName, type);
     }
 
@@ -271,7 +274,7 @@ public class Y9RoleServiceImpl implements Y9RoleService {
         }
         return y9RoleList;
     }
-    
+
     @Override
     public List<String> listOrgUnitIdRecursively(String orgUnitId) {
         return y9RoleManager.listOrgUnitIdRecursively(orgUnitId);
@@ -293,7 +296,8 @@ public class Y9RoleServiceImpl implements Y9RoleService {
                 Y9Person person = (Y9Person)y9OrgBase;
                 y9PersonList.add(person);
             } else {
-                y9PersonList.addAll(compositeOrgBaseManager.listAllPersonsRecursionDownward(y9OrgBasesToRoles.getOrgId()));
+                y9PersonList
+                    .addAll(compositeOrgBaseManager.listAllPersonsRecursionDownward(y9OrgBasesToRoles.getOrgId()));
             }
         }
         return y9PersonList;
@@ -309,7 +313,8 @@ public class Y9RoleServiceImpl implements Y9RoleService {
                 Y9Position y9Position = (Y9Position)y9OrgBase;
                 y9PositionList.add(y9Position);
             } else {
-                y9PositionList.addAll(compositeOrgBaseManager.listAllPositionsRecursionDownward(y9OrgBasesToRoles.getOrgId()));
+                y9PositionList
+                    .addAll(compositeOrgBaseManager.listAllPositionsRecursionDownward(y9OrgBasesToRoles.getOrgId()));
             }
         }
         return y9PositionList;
@@ -485,7 +490,8 @@ public class Y9RoleServiceImpl implements Y9RoleService {
 
     @Override
     public List<Y9Role> treeSearchBySystemName(String name, String systemName) {
-        List<Y9Role> roleNodeList = y9RoleRepository.findBySystemNameAndNameContainingOrderByTabIndexAsc(systemName, name);
+        List<Y9Role> roleNodeList =
+            y9RoleRepository.findBySystemNameAndNameContainingOrderByTabIndexAsc(systemName, name);
         List<Y9Role> returnList = new ArrayList<>();
         returnList.addAll(roleNodeList);
         for (Y9Role role : roleNodeList) {

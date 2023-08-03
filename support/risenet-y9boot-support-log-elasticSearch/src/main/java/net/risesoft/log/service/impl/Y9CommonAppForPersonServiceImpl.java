@@ -54,7 +54,7 @@ import net.risesoft.y9.util.Y9Util;
 @Slf4j
 @RequiredArgsConstructor
 public class Y9CommonAppForPersonServiceImpl implements Y9CommonAppForPersonService {
-    
+
     private static final String APP_MODULARNAME = "net.risesoft.controller.admin.WebsiteController.saveAppCheckCount";
 
     private final Y9CommonAppForPersonRepository commonAppForPersonRepository;
@@ -67,11 +67,14 @@ public class Y9CommonAppForPersonServiceImpl implements Y9CommonAppForPersonServ
         BoolQueryBuilder query = QueryBuilders.boolQuery();
         if (StringUtils.isNotBlank(personId)) {
             query.must(QueryBuilders.queryStringQuery(Y9Util.escape(personId)).field("personId"));
-            query.must(QueryBuilders.queryStringQuery(Y9Util.escape(Y9LoginUserHolder.getTenantId())).field(Y9LogSearchConsts.TENANT_ID));
+            query.must(QueryBuilders.queryStringQuery(Y9Util.escape(Y9LoginUserHolder.getTenantId()))
+                .field(Y9LogSearchConsts.TENANT_ID));
         }
 
         SearchRequest request = new SearchRequest(Y9ESIndexConst.CLICKED_APP_INDEX);
-        SearchSourceBuilder searchSourceBuilder = new SearchSourceBuilder().aggregation(AggregationBuilders.terms("by_appName").field("appName").size(100000)).query(query).trackTotalHits(true);
+        SearchSourceBuilder searchSourceBuilder =
+            new SearchSourceBuilder().aggregation(AggregationBuilders.terms("by_appName").field("appName").size(100000))
+                .query(query).trackTotalHits(true);
         request.source(searchSourceBuilder);
         try {
             SearchResponse response = restHighLevelClient.search(request, RequestOptions.DEFAULT);
@@ -105,7 +108,9 @@ public class Y9CommonAppForPersonServiceImpl implements Y9CommonAppForPersonServ
         query.must(QueryBuilders.rangeQuery(Y9LogSearchConsts.LOG_TIME).from(startTime).to(endTime));
 
         SearchRequest request = new SearchRequest(Y9ESIndexConst.ACCESS_LOG_INDEX);
-        SearchSourceBuilder searchSourceBuilder = new SearchSourceBuilder().query(query).aggregation(AggregationBuilders.terms("by_methodName").field("methodName").size(100000)).trackTotalHits(true);
+        SearchSourceBuilder searchSourceBuilder = new SearchSourceBuilder().query(query)
+            .aggregation(AggregationBuilders.terms("by_methodName").field("methodName").size(100000))
+            .trackTotalHits(true);
         request.source(searchSourceBuilder);
 
         try {
@@ -160,7 +165,8 @@ public class Y9CommonAppForPersonServiceImpl implements Y9CommonAppForPersonServ
 
         // 聚合子查询
         TermsAggregationBuilder userIdBuilder = AggregationBuilders.terms("by_userId").field("userId").size(100000);
-        TermsAggregationBuilder methodNameBuilder = AggregationBuilders.terms("by_methodName").field("methodName").size(100000);
+        TermsAggregationBuilder methodNameBuilder =
+            AggregationBuilders.terms("by_methodName").field("methodName").size(100000);
         userIdBuilder.subAggregation(methodNameBuilder);
 
         SearchRequest request = new SearchRequest(Y9ESIndexConst.ACCESS_LOG_INDEX);
@@ -222,12 +228,15 @@ public class Y9CommonAppForPersonServiceImpl implements Y9CommonAppForPersonServ
                 long eTime = sTime + tempTime - 1;
 
                 BoolQueryBuilder queryBuilder = QueryBuilders.boolQuery();
-                queryBuilder.must(QueryBuilders.queryStringQuery(APP_MODULARNAME).field(Y9LogSearchConsts.MODULAR_NAME));
+                queryBuilder
+                    .must(QueryBuilders.queryStringQuery(APP_MODULARNAME).field(Y9LogSearchConsts.MODULAR_NAME));
                 queryBuilder.must(QueryBuilders.rangeQuery(Y9LogSearchConsts.LOG_TIME).from(sTime).to(eTime));
 
-                NativeSearchQuery query = new NativeSearchQueryBuilder().withQuery(queryBuilder).withTrackTotalHits(true).build();
+                NativeSearchQuery query =
+                    new NativeSearchQueryBuilder().withQuery(queryBuilder).withTrackTotalHits(true).build();
                 // 使用bulk批量插入数据
-                SearchHitsIterator<Y9logAccessLog> searchForStream = elasticsearchOperations.searchForStream(query, Y9logAccessLog.class, IndexCoordinates.of(Y9ESIndexConst.ACCESS_LOG_INDEX));
+                SearchHitsIterator<Y9logAccessLog> searchForStream = elasticsearchOperations.searchForStream(query,
+                    Y9logAccessLog.class, IndexCoordinates.of(Y9ESIndexConst.ACCESS_LOG_INDEX));
                 while (searchForStream.hasNext()) {
                     SearchHit<Y9logAccessLog> searchHit = searchForStream.next();
                     Y9logAccessLog y9logAccessLog = searchHit.getContent();
@@ -237,7 +246,8 @@ public class Y9CommonAppForPersonServiceImpl implements Y9CommonAppForPersonServ
                     clickedApp.setPersonId(y9logAccessLog.getUserId());
                     clickedApp.setSaveDate(y9logAccessLog.getLogTime());
 
-                    IndexQuery indexQuery = new IndexQueryBuilder().withId(clickedApp.getId()).withObject(clickedApp).build();
+                    IndexQuery indexQuery =
+                        new IndexQueryBuilder().withId(clickedApp.getId()).withObject(clickedApp).build();
                     queries.add(indexQuery);
                     if (++count % 1000 == 0) {
                         elasticsearchOperations.bulkIndex(queries, Y9ClickedApp.class);

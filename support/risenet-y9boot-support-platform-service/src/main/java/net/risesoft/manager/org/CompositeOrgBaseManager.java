@@ -1,7 +1,5 @@
 package net.risesoft.manager.org;
 
-import java.io.Serializable;
-import java.util.HashMap;
 import java.util.List;
 
 import net.risesoft.entity.Y9OrgBase;

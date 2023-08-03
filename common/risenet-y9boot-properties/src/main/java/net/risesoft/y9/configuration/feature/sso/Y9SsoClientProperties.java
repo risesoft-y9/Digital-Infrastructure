@@ -115,5 +115,5 @@ public class Y9SsoClientProperties {
      * 验证类型
      */
     private String validationType = "CAS3";
-    
+
 }

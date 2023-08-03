@@ -25,7 +25,7 @@ import net.risesoft.enums.OrgTypeEnum;
 @org.hibernate.annotations.Table(comment = "用户组表", appliesTo = "Y9_ORG_GROUP")
 @Data
 public class Y9Group extends Y9OrgBase {
-    
+
     private static final long serialVersionUID = -8480745083494990707L;
 
     public Y9Group() {

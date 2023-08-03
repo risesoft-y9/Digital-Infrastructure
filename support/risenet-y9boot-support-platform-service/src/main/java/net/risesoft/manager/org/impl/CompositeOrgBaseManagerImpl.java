@@ -55,18 +55,19 @@ public class CompositeOrgBaseManagerImpl implements CompositeOrgBaseManager {
     private final Y9PositionRepository y9PositionRepository;
     private final Y9ManagerRepository y9ManagerRepository;
 
-
     @Cacheable(cacheNames = CacheNameConsts.ORG_GROUP, key = "#id", condition = "#id!=null", unless = "#result==null")
     public Y9Group findGroupById(String id) {
         return y9GroupRepository.findById(id).orElse(null);
     }
 
-    @Cacheable(cacheNames = CacheNameConsts.ORG_DEPARTMENT, key = "#id", condition = "#id!=null", unless = "#result==null")
+    @Cacheable(cacheNames = CacheNameConsts.ORG_DEPARTMENT, key = "#id", condition = "#id!=null",
+        unless = "#result==null")
     public Y9Department findDepartmentById(String id) {
         return y9DepartmentRepository.findById(id).orElse(null);
     }
 
-    @Cacheable(cacheNames = CacheNameConsts.ORG_ORGANIZATION, key = "#id", condition = "#id!=null", unless = "#result==null")
+    @Cacheable(cacheNames = CacheNameConsts.ORG_ORGANIZATION, key = "#id", condition = "#id!=null",
+        unless = "#result==null")
     public Y9Organization findOrganizationById(String id) {
         return y9OrganizationRepository.findById(id).orElse(null);
     }
@@ -76,15 +77,16 @@ public class CompositeOrgBaseManagerImpl implements CompositeOrgBaseManager {
         return y9PersonRepository.findById(id).orElse(null);
     }
 
-    @Cacheable(cacheNames = CacheNameConsts.ORG_POSITION, key = "#id", condition = "#id!=null", unless = "#result==null")
+    @Cacheable(cacheNames = CacheNameConsts.ORG_POSITION, key = "#id", condition = "#id!=null",
+        unless = "#result==null")
     public Y9Position findPositionById(String id) {
         return y9PositionRepository.findById(id).orElse(null);
     }
-    
+
     private List<Y9Department> findDepartmentByParentId(String parentId) {
         return y9DepartmentRepository.findByParentIdOrderByTabIndexAsc(parentId);
     }
-    
+
     private List<Y9Group> findGroupByParentId(String parentId) {
         return y9GroupRepository.findByParentIdOrderByTabIndexAsc(parentId);
     }
@@ -124,7 +126,7 @@ public class CompositeOrgBaseManagerImpl implements CompositeOrgBaseManager {
     private List<Y9Position> findPositionByParentId(String parentId) {
         return y9PositionRepository.findByParentIdOrderByTabIndexAsc(parentId);
     }
-    
+
     private void getAllPositionListByDownwardRecursion(String parentId, List<Y9Position> positionList) {
         positionList.addAll(findPositionByParentId(parentId));
 
@@ -140,7 +142,7 @@ public class CompositeOrgBaseManagerImpl implements CompositeOrgBaseManager {
         if (OrgTypeEnum.ORGANIZATION.getEnName().equals(y9OrgBase.getOrgType())) {
             return y9OrgBase;
         } else if (OrgTypeEnum.DEPARTMENT.getEnName().equals(y9OrgBase.getOrgType())) {
-            Y9Department dept = (Y9Department) y9OrgBase;
+            Y9Department dept = (Y9Department)y9OrgBase;
             if (Boolean.TRUE.equals(dept.getBureau())) {
                 return dept;
             } else {
@@ -148,7 +150,7 @@ public class CompositeOrgBaseManagerImpl implements CompositeOrgBaseManager {
             }
         } else {
             return getOrgUnitBureau(y9OrgBase.getParentId());
-        } 
+        }
     }
 
     @Override
@@ -334,7 +336,8 @@ public class CompositeOrgBaseManagerImpl implements CompositeOrgBaseManager {
         // 部门
         List<Y9Department> deptList = findDepartmentByParentId(parent.getId());
         for (Y9Department dept : deptList) {
-            dept.setDn(OrgLevelConsts.getOrgLevel(OrgTypeEnum.DEPARTMENT) + dept.getName() + OrgLevelConsts.SEPARATOR + parent.getDn());
+            dept.setDn(OrgLevelConsts.getOrgLevel(OrgTypeEnum.DEPARTMENT) + dept.getName() + OrgLevelConsts.SEPARATOR
+                + parent.getDn());
             dept.setGuidPath(parent.getGuidPath() + OrgLevelConsts.SEPARATOR + dept.getId());
             y9DepartmentRepository.save(dept);
             recursivelyUpdateProperties(dept);
@@ -343,7 +346,8 @@ public class CompositeOrgBaseManagerImpl implements CompositeOrgBaseManager {
         // 用户组
         List<Y9Group> groupList = findGroupByParentId(parent.getId());
         for (Y9Group group : groupList) {
-            group.setDn(OrgLevelConsts.getOrgLevel(OrgTypeEnum.GROUP) + group.getName() + OrgLevelConsts.SEPARATOR + parent.getDn());
+            group.setDn(OrgLevelConsts.getOrgLevel(OrgTypeEnum.GROUP) + group.getName() + OrgLevelConsts.SEPARATOR
+                + parent.getDn());
             group.setGuidPath(parent.getGuidPath() + OrgLevelConsts.SEPARATOR + group.getId());
             y9GroupRepository.save(group);
         }
@@ -351,7 +355,8 @@ public class CompositeOrgBaseManagerImpl implements CompositeOrgBaseManager {
         // 岗位
         List<Y9Position> positionList = findPositionByParentId(parent.getId());
         for (Y9Position position : positionList) {
-            position.setDn(OrgLevelConsts.getOrgLevel(OrgTypeEnum.POSITION) + position.getName() + OrgLevelConsts.SEPARATOR + parent.getDn());
+            position.setDn(OrgLevelConsts.getOrgLevel(OrgTypeEnum.POSITION) + position.getName()
+                + OrgLevelConsts.SEPARATOR + parent.getDn());
             position.setGuidPath(parent.getGuidPath() + OrgLevelConsts.SEPARATOR + position.getId());
             y9PositionRepository.save(position);
         }
@@ -359,7 +364,8 @@ public class CompositeOrgBaseManagerImpl implements CompositeOrgBaseManager {
         // 人员
         List<Y9Person> personList = findPersonByParentId(parent.getId());
         for (Y9Person person : personList) {
-            person.setDn(OrgLevelConsts.getOrgLevel(OrgTypeEnum.PERSON) + person.getName() + OrgLevelConsts.SEPARATOR + parent.getDn());
+            person.setDn(OrgLevelConsts.getOrgLevel(OrgTypeEnum.PERSON) + person.getName() + OrgLevelConsts.SEPARATOR
+                + parent.getDn());
             person.setGuidPath(parent.getGuidPath() + OrgLevelConsts.SEPARATOR + person.getId());
             y9PersonRepository.save(person);
         }

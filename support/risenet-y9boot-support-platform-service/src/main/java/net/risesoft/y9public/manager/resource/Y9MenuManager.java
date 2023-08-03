@@ -1,7 +1,8 @@
 package net.risesoft.y9public.manager.resource;
 
-import net.risesoft.y9public.entity.resource.Y9Menu;
 import org.springframework.transaction.annotation.Transactional;
+
+import net.risesoft.y9public.entity.resource.Y9Menu;
 
 /**
  * 菜单 Manager

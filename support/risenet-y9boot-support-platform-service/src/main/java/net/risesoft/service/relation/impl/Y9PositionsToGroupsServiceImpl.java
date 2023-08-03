@@ -55,7 +55,8 @@ public class Y9PositionsToGroupsServiceImpl implements Y9PositionsToGroupsServic
 
     @Override
     public Integer getMaxGroupIdOrderByPositionId(String positionId) {
-        Y9PositionsToGroups position = y9PositionsToGroupsRepository.findTopByPositionIdOrderByGroupOrderDesc(positionId);
+        Y9PositionsToGroups position =
+            y9PositionsToGroupsRepository.findTopByPositionIdOrderByGroupOrderDesc(positionId);
         if (position != null) {
             return position.getGroupOrder();
         }
@@ -78,7 +79,8 @@ public class Y9PositionsToGroupsServiceImpl implements Y9PositionsToGroupsServic
 
     @Override
     public List<Y9Position> listPositionsByGroupId(String groupId) {
-        List<Y9PositionsToGroups> orgGroupPositions = y9PositionsToGroupsRepository.findByGroupIdOrderByPositionOrder(groupId);
+        List<Y9PositionsToGroups> orgGroupPositions =
+            y9PositionsToGroupsRepository.findByGroupIdOrderByPositionOrder(groupId);
         List<Y9Position> orgPositions = new ArrayList<>();
         for (Y9PositionsToGroups group : orgGroupPositions) {
             orgPositions.add(y9PositionRepository.findById(group.getPositionId()).orElse(null));
@@ -91,7 +93,8 @@ public class Y9PositionsToGroupsServiceImpl implements Y9PositionsToGroupsServic
     public List<Y9PositionsToGroups> orderPositions(String groupId, String[] positionIds) {
         List<Y9PositionsToGroups> positionList = new ArrayList<>();
         for (int i = 0; i < positionIds.length; i++) {
-            Y9PositionsToGroups groupPosition = y9PositionsToGroupsRepository.findByGroupIdAndPositionId(groupId, positionIds[i]);
+            Y9PositionsToGroups groupPosition =
+                y9PositionsToGroupsRepository.findByGroupIdAndPositionId(groupId, positionIds[i]);
             groupPosition.setPositionOrder(i);
             positionList.add(y9PositionsToGroupsRepository.save(groupPosition));
         }
@@ -102,7 +105,8 @@ public class Y9PositionsToGroupsServiceImpl implements Y9PositionsToGroupsServic
     @Transactional(readOnly = false)
     public void removePositions(String groupId, String[] positionIds) {
         for (int i = 0; i < positionIds.length; i++) {
-            Y9PositionsToGroups groupPosition = y9PositionsToGroupsRepository.findByGroupIdAndPositionId(groupId, positionIds[i]);
+            Y9PositionsToGroups groupPosition =
+                y9PositionsToGroupsRepository.findByGroupIdAndPositionId(groupId, positionIds[i]);
             delete(groupPosition);
         }
     }

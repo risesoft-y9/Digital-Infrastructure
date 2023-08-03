@@ -19,16 +19,16 @@ public class VueButton implements Serializable {
 
     /** 图标 */
     private String icon;
-    
+
     /** 按钮自定义id */
     private String buttonId;
-    
+
     /** 链接地址 */
     private String url;
 
     /** 事件名称 */
     private String eventName;
-    
+
     /**
      * 展示方式
      * 

@@ -39,7 +39,7 @@ public interface Y9TenantAppService {
      * @return int
      */
     int deleteByTenantIdAndAppId(String tenantId, String appId);
-    
+
     /**
      * 根据id，获取租户应用
      *
@@ -141,7 +141,8 @@ public interface Y9TenantAppService {
      * @param systemId 系统id
      * @return {@link Page}<{@link Y9TenantApp}>
      */
-    Page<Y9TenantApp> page(Integer page, Integer rows, Boolean verify, String tenantName, String createTime, String verifyTime, Boolean tenancy, String systemId);
+    Page<Y9TenantApp> page(Integer page, Integer rows, Boolean verify, String tenantName, String createTime,
+        String verifyTime, Boolean tenancy, String systemId);
 
     /**
      * 获取租户应用租用情况信息
@@ -157,7 +158,8 @@ public interface Y9TenantAppService {
      * @param systemIds 管理的应用ids
      * @return {@link Page}<{@link Y9TenantApp}>
      */
-    Page<Y9TenantApp> page(Integer page, Integer rows, Boolean verify, String tenantName, String createTime, String verifyTime, Boolean tenancy, String appName, String systemIds);
+    Page<Y9TenantApp> page(Integer page, Integer rows, Boolean verify, String tenantName, String createTime,
+        String verifyTime, Boolean tenancy, String appName, String systemIds);
 
     /**
      * 根据系统id，获取应用租户详情
@@ -217,13 +219,14 @@ public interface Y9TenantAppService {
      * @param currentTenancy 当前是否已租用
      * @return int
      */
-    int updateByAppIdAndTenantId(Boolean tenancy, String deletedName, Date deletedTime, String appId, String tenantId, Boolean currentTenancy);
+    int updateByAppIdAndTenantId(Boolean tenancy, String deletedName, Date deletedTime, String appId, String tenantId,
+        Boolean currentTenancy);
 
     /**
      * 根据id，租户应用的审核状态
      *
      * @param verify 审核状态
-     * @param id     唯一标识
+     * @param id 唯一标识
      * @return int
      */
     int updateStatus(Boolean verify, String id);

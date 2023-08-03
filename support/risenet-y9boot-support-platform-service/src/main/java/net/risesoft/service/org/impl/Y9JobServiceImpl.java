@@ -136,7 +136,8 @@ public class Y9JobServiceImpl implements Y9JobService {
 
                 Y9Context.publishEvent(new Y9EntityUpdatedEvent<>(originY9Job, updatedY9Job));
 
-                Y9MessageOrg msg = new Y9MessageOrg(Y9ModelConvertUtil.convert(updatedY9Job, Job.class), Y9OrgEventConst.RISEORGEVENT_TYPE_UPDATE_JOB, Y9LoginUserHolder.getTenantId());
+                Y9MessageOrg msg = new Y9MessageOrg(Y9ModelConvertUtil.convert(updatedY9Job, Job.class),
+                    Y9OrgEventConst.RISEORGEVENT_TYPE_UPDATE_JOB, Y9LoginUserHolder.getTenantId());
                 Y9PublishServiceUtil.persistAndPublishMessageOrg(msg, "更新职位信息", "更新职位" + updatedY9Job.getName());
 
                 return updatedY9Job;
@@ -145,7 +146,7 @@ public class Y9JobServiceImpl implements Y9JobService {
 
         // 新增职位
         checkIfPositionExists(job.getName());
-        
+
         Y9Job y9Job = new Y9Job();
         if (StringUtils.isNotBlank(job.getId())) {
             // 使用指定的id
@@ -159,7 +160,8 @@ public class Y9JobServiceImpl implements Y9JobService {
         y9Job.setTabIndex(maxTabIndex != null ? maxTabIndex + 1 : 0);
         y9Job = y9JobManager.save(y9Job);
 
-        Y9MessageOrg msg = new Y9MessageOrg(Y9ModelConvertUtil.convert(y9Job, Job.class), Y9OrgEventConst.RISEORGEVENT_TYPE_ADD_JOB, Y9LoginUserHolder.getTenantId());
+        Y9MessageOrg msg = new Y9MessageOrg(Y9ModelConvertUtil.convert(y9Job, Job.class),
+            Y9OrgEventConst.RISEORGEVENT_TYPE_ADD_JOB, Y9LoginUserHolder.getTenantId());
         Y9PublishServiceUtil.persistAndPublishMessageOrg(msg, "新增职位信息", "新增职位" + job.getName());
 
         return y9Job;

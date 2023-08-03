@@ -8,61 +8,69 @@
   "createDebugPage": false,
   "packageFilters": "net.risesoft.api",
   "md5EncryptedHtmlName": false,
-  "style":"xt256",
+  "style": "xt256",
   "projectName": "组织身份后端接口文档",
   "framework": "spring",
   "skipTransientField": true,
-  "sortByTitle":false,
-  "showAuthor":true,
-  "requestFieldToUnderline":false,
-  "responseFieldToUnderline":false,
-  "inlineEnum":true,
-  "recursionLimit":7,
-  "allInOneDocFileName":"index.html",
-  "requestExample":"true",
-  "responseExample":"true",
-  "urlSuffix":"",
-  "displayActualType":false,
-  "dataDictionaries": [{
-    "title": "http状态码字典",
-    "enumClassName": "com.power.common.enums.HttpCodeEnum",
-    "codeField": "code",
-    "descField": "message"
-  }],
-  "errorCodeDictionaries": [{
-    "enumClassName": "net.risesoft.exception.ErrorCode",
-    "codeField": "code",
-    "descField": "description"
-  }],
-  "revisionLogs": [{
-    "version": "1.0",
-    "revisionTime": "2021/5/10",
-    "status": "创建",
-    "author": "mengjuhua,zhaobo",
-    "remarks": "创建后端接口文档"
-  },
+  "sortByTitle": false,
+  "showAuthor": true,
+  "requestFieldToUnderline": false,
+  "responseFieldToUnderline": false,
+  "inlineEnum": true,
+  "recursionLimit": 7,
+  "allInOneDocFileName": "index.html",
+  "requestExample": "true",
+  "responseExample": "true",
+  "urlSuffix": "",
+  "displayActualType": false,
+  "dataDictionaries": [
     {
-    "version": "2.0",
-    "revisionTime": "2022/4/10",
-    "status": "更新",
-    "author": "qinman,shidaobang,dingzhaojun",
-    "remarks": "更新后端接口文档"
-  }],
-  "requestHeaders": [{
-    "name": "Authorization",
-    "type": "string",
-    "desc": "单点登陆认证通过后得到的token",
-    "value": " Bearer {token}",
-    "required": true,
-    "since": "-",
-    "pathPatterns": "/api/*",
-    "excludePathPatterns":"/app/page/**"
-  }],
-  "responseBodyAdvice":{
-    "className":"net.risesoft.pojo.Y9Result"
+      "title": "http状态码字典",
+      "enumClassName": "com.power.common.enums.HttpCodeEnum",
+      "codeField": "code",
+      "descField": "message"
+    }
+  ],
+  "errorCodeDictionaries": [
+    {
+      "enumClassName": "net.risesoft.exception.ErrorCode",
+      "codeField": "code",
+      "descField": "description"
+    }
+  ],
+  "revisionLogs": [
+    {
+      "version": "1.0",
+      "revisionTime": "2021/5/10",
+      "status": "创建",
+      "author": "mengjuhua,zhaobo",
+      "remarks": "创建后端接口文档"
+    },
+    {
+      "version": "2.0",
+      "revisionTime": "2022/4/10",
+      "status": "更新",
+      "author": "qinman,shidaobang,dingzhaojun",
+      "remarks": "更新后端接口文档"
+    }
+  ],
+  "requestHeaders": [
+    {
+      "name": "Authorization",
+      "type": "string",
+      "desc": "单点登陆认证通过后得到的token",
+      "value": " Bearer {token}",
+      "required": true,
+      "since": "-",
+      "pathPatterns": "/api/*",
+      "excludePathPatterns": "/app/page/**"
+    }
+  ],
+  "responseBodyAdvice": {
+    "className": "net.risesoft.pojo.Y9Result"
   },
-  "requestBodyAdvice":{
-    "className":"net.risesoft.pojo.Y9Result"
+  "requestBodyAdvice": {
+    "className": "net.risesoft.pojo.Y9Result"
   },
   "groups": [
     {

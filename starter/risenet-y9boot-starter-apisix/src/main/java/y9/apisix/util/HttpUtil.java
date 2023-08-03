@@ -121,7 +121,8 @@ public class HttpUtil {
         setHeaders(httpPatch, headers);
         httpPatch.setEntity(new StringEntity(bodyJsonStr, Charset.forName("UTF-8")));
         try (CloseableHttpResponse response = httpClient.execute(httpPatch)) {
-            if (response.getStatusLine().getStatusCode() == HttpStatus.SC_CREATED || response.getStatusLine().getStatusCode() == HttpStatus.SC_OK) {
+            if (response.getStatusLine().getStatusCode() == HttpStatus.SC_CREATED
+                || response.getStatusLine().getStatusCode() == HttpStatus.SC_OK) {
                 HttpEntity entity = response.getEntity();
                 responseBody = EntityUtils.toString(entity);
                 map.put("success", true);
@@ -147,7 +148,8 @@ public class HttpUtil {
         try (CloseableHttpResponse response = httpClient.execute(httpPut)) {
             if (response != null) {
                 map.put("msg", response.getStatusLine().getReasonPhrase());
-                if (response.getStatusLine().getStatusCode() == HttpStatus.SC_CREATED || response.getStatusLine().getStatusCode() == HttpStatus.SC_OK) {
+                if (response.getStatusLine().getStatusCode() == HttpStatus.SC_CREATED
+                    || response.getStatusLine().getStatusCode() == HttpStatus.SC_OK) {
                     HttpEntity entity = response.getEntity();
                     String responseBody = EntityUtils.toString(entity);
                     map.put("success", true);

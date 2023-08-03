@@ -35,7 +35,7 @@ public enum PersonTypeEnum {
         PERSON_TYPE_MAP.put(EXPERT.getEnName(), EXPERT.getName());
         PERSON_TYPE_MAP.put(USER.getEnName(), USER.getName());
     }
-    
+
     private final String name;
     private final String enName;
 }

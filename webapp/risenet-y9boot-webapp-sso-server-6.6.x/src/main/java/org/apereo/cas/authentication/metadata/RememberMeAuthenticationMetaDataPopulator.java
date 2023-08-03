@@ -16,7 +16,8 @@ import lombok.ToString;
 import lombok.val;
 
 /**
- * Determines if the credential provided are for Remember Me Services and then sets the appropriate Authentication attribute if remember me services have been requested.
+ * Determines if the credential provided are for Remember Me Services and then sets the appropriate Authentication
+ * attribute if remember me services have been requested.
  *
  * @author Scott Battaglia
  * @since 3.2.1

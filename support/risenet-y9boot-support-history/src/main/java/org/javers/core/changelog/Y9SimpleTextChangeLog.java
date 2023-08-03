@@ -45,7 +45,8 @@ public class Y9SimpleTextChangeLog extends AbstractTextChangeLog {
 
     @Override
     public void onCommit(CommitMetadata commitMetadata) {
-        appendln("提交序号 " + commitMetadata.getId() + ", 提交者： " + commitMetadata.getAuthor() + ", " + PrettyValuePrinter.getDefault().format(commitMetadata.getCommitDate()));
+        appendln("提交序号 " + commitMetadata.getId() + ", 提交者： " + commitMetadata.getAuthor() + ", "
+            + PrettyValuePrinter.getDefault().format(commitMetadata.getCommitDate()));
     }
 
     @Override
@@ -70,7 +71,8 @@ public class Y9SimpleTextChangeLog extends AbstractTextChangeLog {
 
     @Override
     public void onReferenceChange(ReferenceChange referenceChange) {
-        appendln("    引用属性  '" + referenceChange.getPropertyName() + "': '" + referenceChange.getLeft() + "' -> '" + referenceChange.getRight() + "'");
+        appendln("    引用属性  '" + referenceChange.getPropertyName() + "': '" + referenceChange.getLeft() + "' -> '"
+            + referenceChange.getRight() + "'");
     }
 
     @Override
@@ -80,7 +82,9 @@ public class Y9SimpleTextChangeLog extends AbstractTextChangeLog {
 
     @Override
     public void onValueChange(ValueChange valueChange) {
-        appendln("    值属性 '" + valueChange.getPropertyName() + "': '" + PrettyValuePrinter.getDefault().format(valueChange.getLeft()) + "' -> '" + PrettyValuePrinter.getDefault().format(valueChange.getRight()) + "'");
+        appendln("    值属性 '" + valueChange.getPropertyName() + "': '"
+            + PrettyValuePrinter.getDefault().format(valueChange.getLeft()) + "' -> '"
+            + PrettyValuePrinter.getDefault().format(valueChange.getRight()) + "'");
     }
 
 }

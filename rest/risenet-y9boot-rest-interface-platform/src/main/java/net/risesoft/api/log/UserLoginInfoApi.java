@@ -3,6 +3,8 @@ package net.risesoft.api.log;
 import java.util.Date;
 import java.util.List;
 
+import javax.validation.constraints.NotBlank;
+
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -10,8 +12,6 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 import net.risesoft.model.userlogininfo.LoginInfo;
 import net.risesoft.pojo.Y9Page;
-
-import javax.validation.constraints.NotBlank;
 
 /**
  * 个人登录日志组件
@@ -32,7 +32,8 @@ public interface UserLoginInfoApi {
      * @since 9.6.0
      */
     @GetMapping("/listDistinctUserHostIpByUserIdAndLoginTime")
-    List<Object[]> listDistinctUserHostIpByUserIdAndLoginTime(@RequestParam("personId") @NotBlank String personId, @RequestParam("startTime") Date startTime, @RequestParam("endTime") Date endTime);
+    List<Object[]> listDistinctUserHostIpByUserIdAndLoginTime(@RequestParam("personId") @NotBlank String personId,
+        @RequestParam("startTime") Date startTime, @RequestParam("endTime") Date endTime);
 
     /**
      * 获取个人日志列表
@@ -49,8 +50,12 @@ public interface UserLoginInfoApi {
      * @since 9.6.0
      */
     @GetMapping("/pageByUserIdAndLoginTime")
-    Y9Page<LoginInfo> pageByUserIdAndLoginTime(@RequestParam(value = "userHostIp", required = false) String userHostIp, @RequestParam("personId") String personId, @RequestParam("tenantId") String tenantId, @RequestParam(value = "success", required = false) String success,
-                                               @RequestParam(value = "startTime", required = false) String startTime, @RequestParam(value = "endTime", required = false) String endTime, @RequestParam("page") int page, @RequestParam("rows") int rows);
+    Y9Page<LoginInfo> pageByUserIdAndLoginTime(@RequestParam(value = "userHostIp", required = false) String userHostIp,
+        @RequestParam("personId") String personId, @RequestParam("tenantId") String tenantId,
+        @RequestParam(value = "success", required = false) String success,
+        @RequestParam(value = "startTime", required = false) String startTime,
+        @RequestParam(value = "endTime", required = false) String endTime, @RequestParam("page") int page,
+        @RequestParam("rows") int rows);
 
     /**
      * 获取个人日志列表
@@ -67,8 +72,12 @@ public interface UserLoginInfoApi {
      * @since 9.6.0
      */
     @GetMapping("/pageSearch")
-    Y9Page<LoginInfo> pageSearch(@RequestParam(value = "userHostIp", required = false) String userHostIp, @RequestParam("personId") String personId, @RequestParam("tenantId") String tenantId, @RequestParam(value = "success", required = false) String success,
-                                 @RequestParam(value = "startTime", required = false) String startTime, @RequestParam(value = "endTime", required = false) String endTime, @RequestParam("page") int page, @RequestParam("rows") int rows);
+    Y9Page<LoginInfo> pageSearch(@RequestParam(value = "userHostIp", required = false) String userHostIp,
+        @RequestParam("personId") String personId, @RequestParam("tenantId") String tenantId,
+        @RequestParam(value = "success", required = false) String success,
+        @RequestParam(value = "startTime", required = false) String startTime,
+        @RequestParam(value = "endTime", required = false) String endTime, @RequestParam("page") int page,
+        @RequestParam("rows") int rows);
 
     /**
      * 保存登录信息

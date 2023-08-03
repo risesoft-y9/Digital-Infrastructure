@@ -20,7 +20,8 @@ import net.risesoft.entity.Y9DepartmentProp;
 @SuppressWarnings("AlibabaAbstractMethodOrInterfaceMethodMustUseJavadoc")
 @Repository
 @Transactional(value = "rsTenantTransactionManager", readOnly = true)
-public interface Y9DepartmentPropRepository extends JpaRepository<Y9DepartmentProp, String>, JpaSpecificationExecutor<Y9DepartmentProp> {
+public interface Y9DepartmentPropRepository
+    extends JpaRepository<Y9DepartmentProp, String>, JpaSpecificationExecutor<Y9DepartmentProp> {
 
     @Modifying
     @Transactional(readOnly = false)
@@ -37,9 +38,9 @@ public interface Y9DepartmentPropRepository extends JpaRepository<Y9DepartmentPr
     List<Y9DepartmentProp> findByDeptIdAndCategoryOrderByTabIndex(String deptId, Integer category);
 
     Y9DepartmentProp findByDeptIdAndOrgBaseIdAndCategory(String deptId, String orgBaseId, Integer category);
-    
+
     List<Y9DepartmentProp> findByOrgBaseIdAndCategoryOrderByTabIndex(String orgBaseId, Integer category);
-    
+
     @Query("select max(tabIndex) from Y9DepartmentProp where deptId = ?1 and category = ?2")
     Integer getMaxTabIndex(String deptId, Integer category);
 }

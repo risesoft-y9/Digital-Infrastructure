@@ -17,8 +17,7 @@ import net.risesoft.enums.OrgTypeEnum;
 import net.risesoft.enums.SexEnum;
 
 /**
- * 三员
- * 不在组织架构树中展示
+ * 三员 不在组织架构树中展示
  *
  * @author dingzhaojun
  * @author qinman
@@ -26,7 +25,7 @@ import net.risesoft.enums.SexEnum;
  * @date 2022/2/10
  */
 @Entity
-//@EntityListeners({Y9ManagerListener.class})
+// @EntityListeners({Y9ManagerListener.class})
 @Table(name = "Y9_ORG_MANAGER")
 @org.hibernate.annotations.Table(comment = "三员表", appliesTo = "Y9_ORG_MANAGER")
 @Data

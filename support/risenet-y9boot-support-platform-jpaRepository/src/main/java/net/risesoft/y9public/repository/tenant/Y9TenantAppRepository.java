@@ -15,7 +15,8 @@ import net.risesoft.y9public.entity.tenant.Y9TenantApp;
 @SuppressWarnings("AlibabaAbstractMethodOrInterfaceMethodMustUseJavadoc")
 @Repository
 @Transactional(value = "rsPublicTransactionManager", readOnly = true)
-public interface Y9TenantAppRepository extends JpaRepository<Y9TenantApp, String>, JpaSpecificationExecutor<Y9TenantApp> {
+public interface Y9TenantAppRepository
+    extends JpaRepository<Y9TenantApp, String>, JpaSpecificationExecutor<Y9TenantApp> {
 
     long countByTenantIdAndSystemId(String tenantId, String systemId);
 
@@ -35,7 +36,8 @@ public interface Y9TenantAppRepository extends JpaRepository<Y9TenantApp, String
 
     Y9TenantApp findByTenantIdAndAppIdAndTenancy(String tenantId, String appId, Boolean tenancy);
 
-    Y9TenantApp findByTenantIdAndAppIdAndVerifyAndTenancy(String tenantId, String appId, Boolean verify, Boolean tenancy);
+    Y9TenantApp findByTenantIdAndAppIdAndVerifyAndTenancy(String tenantId, String appId, Boolean verify,
+        Boolean tenancy);
 
     List<Y9TenantApp> findByTenantIdAndAppIdAndVerifyTrue(String tenantId, String appId);
 
@@ -49,7 +51,8 @@ public interface Y9TenantAppRepository extends JpaRepository<Y9TenantApp, String
 
     List<Y9TenantApp> findByTenantIdAndVerify(String tenantId, Boolean verify);
 
-    List<Y9TenantApp> findByTenantIdAndVerifyAndTenancyOrderByCreateTimeDesc(String tenantId, Boolean verify, Boolean tenancy);
+    List<Y9TenantApp> findByTenantIdAndVerifyAndTenancyOrderByCreateTimeDesc(String tenantId, Boolean verify,
+        Boolean tenancy);
 
     List<Y9TenantApp> findByTenantName(String tenantName);
 

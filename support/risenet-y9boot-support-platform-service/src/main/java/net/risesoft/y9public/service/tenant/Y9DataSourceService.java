@@ -22,7 +22,7 @@ public interface Y9DataSourceService {
     /**
      * 创建租户默认数据库和数据源
      *
-     * @param shortName  租户名
+     * @param shortName 租户名
      * @param tenantType 租户类型
      * @param systemName 系统名称
      * @return String 数据源id

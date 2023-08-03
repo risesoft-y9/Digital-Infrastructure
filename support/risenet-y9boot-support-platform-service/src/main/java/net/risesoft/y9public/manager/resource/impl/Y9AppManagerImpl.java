@@ -35,10 +35,10 @@ import net.risesoft.y9public.repository.resource.Y9AppRepository;
 public class Y9AppManagerImpl implements Y9AppManager {
 
     private final Y9AppRepository y9AppRepository;
-    
+
     private final Y9TenantAppManager y9TenantAppManager;
     private final Y9RoleManager y9RoleManager;
-    
+
     @Override
     @Transactional(readOnly = false)
     public void deleteBySystemId(String systemId) {
@@ -48,25 +48,25 @@ public class Y9AppManagerImpl implements Y9AppManager {
         }
     }
 
-
     @Override
     @Transactional(readOnly = false)
     @CacheEvict(key = "#id")
     public void delete(String id) {
         Y9App y9App = this.getById(id);
         Y9Context.publishEvent(new Y9EntityDeletedEvent<>(y9App));
-        
+
         y9RoleManager.deleteByApp(id);
-        
+
         y9AppRepository.delete(y9App);
-        
+
         y9TenantAppManager.deleteByAppId(id);
     }
 
     @Override
     @Cacheable(key = "#id", condition = "#id!=null", unless = "#result==null")
     public Y9App getById(String id) {
-        return y9AppRepository.findById(id).orElseThrow(() -> Y9ExceptionUtil.notFoundException(AppErrorCodeEnum.APP_NOT_FOUND, id));
+        return y9AppRepository.findById(id)
+            .orElseThrow(() -> Y9ExceptionUtil.notFoundException(AppErrorCodeEnum.APP_NOT_FOUND, id));
     }
 
     @Override
@@ -81,7 +81,6 @@ public class Y9AppManagerImpl implements Y9AppManager {
     public Y9App save(Y9App y9App) {
         return y9AppRepository.save(y9App);
     }
-
 
     @Override
     @Transactional(readOnly = false)

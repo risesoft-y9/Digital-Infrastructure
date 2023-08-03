@@ -18,7 +18,7 @@ import net.risesoft.entity.Y9Group;
 @SuppressWarnings("AlibabaAbstractMethodOrInterfaceMethodMustUseJavadoc")
 @Repository
 @Transactional(value = "rsTenantTransactionManager", readOnly = true)
-//@JaversSpringDataAuditable
+// @JaversSpringDataAuditable
 public interface Y9GroupRepository extends JpaRepository<Y9Group, String> {
 
     List<Y9Group> findByIdIn(List<String> groupIdList);

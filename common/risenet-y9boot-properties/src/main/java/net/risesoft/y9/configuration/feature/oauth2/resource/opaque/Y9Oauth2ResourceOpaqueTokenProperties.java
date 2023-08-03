@@ -32,5 +32,5 @@ public class Y9Oauth2ResourceOpaqueTokenProperties {
      * 用户信息 uri
      */
     private String profileUri;
-    
+
 }

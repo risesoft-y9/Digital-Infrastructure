@@ -1,6 +1,5 @@
 package net.risesoft.y9.configuration.feature.apisix;
 
-
 import lombok.Getter;
 import lombok.Setter;
 

@@ -5,6 +5,7 @@ import lombok.Getter;
 
 /**
  * 拒绝类型
+ * 
  * @author qinman
  * @date 2022/12/20
  */
@@ -17,7 +18,7 @@ public enum ItemRejectTypeEnum {
     TAKEBACK(2, "收回"),
     /** 重定向 */
     REPOSITION(3, "重定向");
-    
+
     private final Integer value;
     private final String name;
 }

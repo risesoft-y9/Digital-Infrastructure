@@ -10,6 +10,7 @@ import lombok.Setter;
 
 /**
  * 任务事件
+ * 
  * @author dingzhaojun
  * @author qinman
  * @author mengjuhua

@@ -45,7 +45,7 @@ public class XSSHttpRequestWrapper extends HttpServletRequestWrapper {
     }
 
     private static Policy policy;
-    
+
     static {
         try {
             policy = Policy.getInstance(new ClassPathResource("antisamy-y9.xml").getInputStream());
@@ -145,7 +145,8 @@ public class XSSHttpRequestWrapper extends HttpServletRequestWrapper {
      * @return
      */
     private boolean isParamIgnorable(String paramName) {
-        List<String> ignoreParamList = Y9Context.getBean(Y9Properties.class).getFeature().getSecurity().getXss().getIgnoreParam();
+        List<String> ignoreParamList =
+            Y9Context.getBean(Y9Properties.class).getFeature().getSecurity().getXss().getIgnoreParam();
         return ignoreParamList.stream().anyMatch(paramName::equals);
     }
 }

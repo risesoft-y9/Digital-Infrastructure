@@ -1,11 +1,5 @@
 package net.risesoft.manager.org.impl;
 
-import net.risesoft.model.Department;
-import net.risesoft.util.Y9PublishServiceUtil;
-import net.risesoft.y9.Y9LoginUserHolder;
-import net.risesoft.y9.pubsub.constant.Y9OrgEventConst;
-import net.risesoft.y9.pubsub.message.Y9MessageOrg;
-import net.risesoft.y9.util.Y9ModelConvertUtil;
 import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
@@ -18,8 +12,14 @@ import net.risesoft.consts.CacheNameConsts;
 import net.risesoft.entity.Y9Department;
 import net.risesoft.exception.DepartmentErrorCodeEnum;
 import net.risesoft.manager.org.Y9DepartmentManager;
+import net.risesoft.model.Department;
 import net.risesoft.repository.Y9DepartmentRepository;
+import net.risesoft.util.Y9PublishServiceUtil;
+import net.risesoft.y9.Y9LoginUserHolder;
 import net.risesoft.y9.exception.util.Y9ExceptionUtil;
+import net.risesoft.y9.pubsub.constant.Y9OrgEventConst;
+import net.risesoft.y9.pubsub.message.Y9MessageOrg;
+import net.risesoft.y9.util.Y9ModelConvertUtil;
 
 @Transactional(value = "rsTenantTransactionManager", readOnly = true)
 @CacheConfig(cacheNames = CacheNameConsts.ORG_DEPARTMENT)
@@ -32,7 +32,8 @@ public class Y9DepartmentManagerImpl implements Y9DepartmentManager {
     @Override
     @Cacheable(key = "#id", condition = "#id != null", unless = "#result == null")
     public Y9Department getById(String id) {
-        return y9DepartmentRepository.findById(id).orElseThrow(() -> Y9ExceptionUtil.notFoundException(DepartmentErrorCodeEnum.DEPARTMENT_NOT_FOUND, id));
+        return y9DepartmentRepository.findById(id)
+            .orElseThrow(() -> Y9ExceptionUtil.notFoundException(DepartmentErrorCodeEnum.DEPARTMENT_NOT_FOUND, id));
     }
 
     @Override
@@ -62,7 +63,8 @@ public class Y9DepartmentManagerImpl implements Y9DepartmentManager {
         department.setTabIndex(tabIndex);
         department = this.save(department);
 
-        Y9MessageOrg msg = new Y9MessageOrg(Y9ModelConvertUtil.convert(department, Department.class), Y9OrgEventConst.RISEORGEVENT_TYPE_UPDATE_DEPARTMENT_TABINDEX, Y9LoginUserHolder.getTenantId());
+        Y9MessageOrg msg = new Y9MessageOrg(Y9ModelConvertUtil.convert(department, Department.class),
+            Y9OrgEventConst.RISEORGEVENT_TYPE_UPDATE_DEPARTMENT_TABINDEX, Y9LoginUserHolder.getTenantId());
         Y9PublishServiceUtil.persistAndPublishMessageOrg(msg, "更新部门排序号", department.getName() + "的排序号更新为" + tabIndex);
 
         return department;

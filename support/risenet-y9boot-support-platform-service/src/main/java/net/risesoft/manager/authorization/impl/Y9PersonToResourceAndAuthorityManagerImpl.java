@@ -42,8 +42,11 @@ public class Y9PersonToResourceAndAuthorityManagerImpl implements Y9PersonToReso
 
     @Transactional(readOnly = false)
     @Override
-    public void saveOrUpdate(Y9ResourceBase y9ResourceBase, Y9Person person, Y9Authorization y9Authorization, Boolean inherit) {
-        Y9PersonToResourceAndAuthority y9PersonToResourceAndAuthority = y9PersonToResourceAndAuthorityRepository.findByPersonIdAndResourceIdAndAuthorizationIdAndAuthority(person.getId(), y9ResourceBase.getId(), y9Authorization.getId(), y9Authorization.getAuthority());
+    public void saveOrUpdate(Y9ResourceBase y9ResourceBase, Y9Person person, Y9Authorization y9Authorization,
+        Boolean inherit) {
+        Y9PersonToResourceAndAuthority y9PersonToResourceAndAuthority =
+            y9PersonToResourceAndAuthorityRepository.findByPersonIdAndResourceIdAndAuthorizationIdAndAuthority(
+                person.getId(), y9ResourceBase.getId(), y9Authorization.getId(), y9Authorization.getAuthority());
         if (y9PersonToResourceAndAuthority == null) {
             y9PersonToResourceAndAuthority = new Y9PersonToResourceAndAuthority();
             y9PersonToResourceAndAuthority.setTenantId(person.getTenantId());

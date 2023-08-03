@@ -14,11 +14,11 @@ import lombok.Data;
 @Data
 public class Group extends OrgUnit {
 
-	private static final long serialVersionUID = 1095290600377937717L;
+    private static final long serialVersionUID = 1095290600377937717L;
 
-	/**
-	 * 岗位组或者用户组
-	 */
-	private String type;
+    /**
+     * 岗位组或者用户组
+     */
+    private String type;
 
 }

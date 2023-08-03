@@ -73,7 +73,8 @@ public class AesUtil {
             }
             destFile.createNewFile();
             CipherOutputStream cout = null;
-            try (FileInputStream in = new FileInputStream(sourceFile); FileOutputStream out = new FileOutputStream(destFile);) {
+            try (FileInputStream in = new FileInputStream(sourceFile);
+                FileOutputStream out = new FileOutputStream(destFile);) {
 
                 Key k = toKey(Base64.decodeBase64(key));
                 byte[] raw = k.getEncoded();

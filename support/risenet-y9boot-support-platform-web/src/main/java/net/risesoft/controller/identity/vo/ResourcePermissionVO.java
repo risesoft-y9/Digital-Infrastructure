@@ -16,7 +16,7 @@ public class ResourcePermissionVO {
 
     /** 系统中文名称 */
     private String systemCnName;
-    
+
     /** 资源列表 */
     private List<Resource> resourceList;
 
@@ -27,19 +27,19 @@ public class ResourcePermissionVO {
 
         /** 资源层级 */
         private int level = 0;
-        
+
         /** 资源类型 */
         private Integer resourceType;
-        
+
         /** 权限详细列表 */
         private List<PermissionDetail> permissionDetailList;
     }
-    
+
     @Data
     public static class PermissionDetail {
         /** 权限类型 */
         private Integer authority;
-        
+
         /** 授权主体类型 */
         private Integer principalType;
 

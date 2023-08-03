@@ -86,7 +86,8 @@ public class Y9DepartmentExtServiceImpl implements Y9DepartmentPropService {
         prop.setDeptId(y9DepartmentProp.getDeptId());
         prop.setOrgBaseId(y9DepartmentProp.getOrgBaseId());
         prop.setCategory(y9DepartmentProp.getCategory());
-        Integer tabIndex = y9DepartmentPropRepository.getMaxTabIndex(y9DepartmentProp.getDeptId(), y9DepartmentProp.getCategory());
+        Integer tabIndex =
+            y9DepartmentPropRepository.getMaxTabIndex(y9DepartmentProp.getDeptId(), y9DepartmentProp.getCategory());
         if (null == tabIndex) {
             tabIndex = 1;
         } else {

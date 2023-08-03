@@ -69,7 +69,7 @@ public class Role implements Serializable {
      * 父节点
      */
     private String parentId;
-    
+
     /**
      * 承继节点
      */
@@ -94,7 +94,6 @@ public class Role implements Serializable {
      * 动态角色
      */
     private Boolean dynamic = false;
-
 
     /**
      * 扩展属性键值对

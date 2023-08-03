@@ -25,7 +25,7 @@ import net.risesoft.enums.ResourceTypeEnum;
 @org.hibernate.annotations.Table(comment = "页面按钮操作表", appliesTo = "Y9_COMMON_OPERATION")
 @Data
 public class Y9Operation extends Y9ResourceBase {
-    
+
     private static final long serialVersionUID = -138076174688809730L;
 
     /** 应用id */

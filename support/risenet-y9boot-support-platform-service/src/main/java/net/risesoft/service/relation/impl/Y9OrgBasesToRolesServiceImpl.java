@@ -124,7 +124,8 @@ public class Y9OrgBasesToRolesServiceImpl implements Y9OrgBasesToRolesService {
 
     @Override
     public List<String> listOrgIdsByRoleId(String roleId) {
-        List<Y9OrgBasesToRoles> lists = y9OrgBasesToRolesRepository.findByRoleId(roleId, Sort.by(Sort.Direction.DESC, "orgOrder"));
+        List<Y9OrgBasesToRoles> lists =
+            y9OrgBasesToRolesRepository.findByRoleId(roleId, Sort.by(Sort.Direction.DESC, "orgOrder"));
         return lists.stream().map(Y9OrgBasesToRoles::getOrgId).collect(Collectors.toList());
     }
 
@@ -135,7 +136,8 @@ public class Y9OrgBasesToRolesServiceImpl implements Y9OrgBasesToRolesService {
 
     @Override
     public List<String> listRoleIdsByOrgIdAndNegative(String orgId, Boolean negative) {
-        List<Y9OrgBasesToRoles> roleNodeMappings = y9OrgBasesToRolesRepository.findByOrgIdAndNegativeOrderByOrgOrderDesc(orgId, negative);
+        List<Y9OrgBasesToRoles> roleNodeMappings =
+            y9OrgBasesToRolesRepository.findByOrgIdAndNegativeOrderByOrgOrderDesc(orgId, negative);
         return roleNodeMappings.stream().map(Y9OrgBasesToRoles::getRoleId).collect(Collectors.toList());
     }
 
@@ -184,7 +186,8 @@ public class Y9OrgBasesToRolesServiceImpl implements Y9OrgBasesToRolesService {
 
     @Transactional(readOnly = false)
     public Y9OrgBasesToRoles saveOrUpdate(String roleId, String orgId, Boolean negative) {
-        Y9OrgBasesToRoles oldOrgBasesToRoles = y9OrgBasesToRolesRepository.findByRoleIdAndOrgIdAndNegative(roleId, orgId, negative);
+        Y9OrgBasesToRoles oldOrgBasesToRoles =
+            y9OrgBasesToRolesRepository.findByRoleIdAndOrgIdAndNegative(roleId, orgId, negative);
         if (oldOrgBasesToRoles == null) {
             Integer maxOrgUnitsOrder = y9OrgBasesToRolesRepository.getMaxOrgOrderByRoleId(roleId);
             Y9OrgBase orgBase = getOrgBaseById(orgId);

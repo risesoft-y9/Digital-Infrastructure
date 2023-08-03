@@ -35,8 +35,9 @@ import y9.jpa.extension.Y9EnableJpaRepositories;
 @AutoConfigureBefore(DruidDataSourceAutoConfigure.class)
 @EnableConfigurationProperties(JpaProperties.class)
 @EnableTransactionManagement(proxyTargetClass = true, mode = AdviceMode.ASPECTJ)
-@Y9EnableJpaRepositories(basePackages = {"${y9.feature.jpa.packagesToScanRepositoryPublic}"}, includeFilters = {@ComponentScan.Filter(classes = JpaRepository.class, type = FilterType.ASSIGNABLE_TYPE)}, entityManagerFactoryRef = "rsPublicEntityManagerFactory",
-    transactionManagerRef = "rsPublicTransactionManager")
+@Y9EnableJpaRepositories(basePackages = {"${y9.feature.jpa.packagesToScanRepositoryPublic}"},
+    includeFilters = {@ComponentScan.Filter(classes = JpaRepository.class, type = FilterType.ASSIGNABLE_TYPE)},
+    entityManagerFactoryRef = "rsPublicEntityManagerFactory", transactionManagerRef = "rsPublicTransactionManager")
 public class JpaPublicConfiguration {
 
     @Bean(name = {"jdbcTemplate4Public"})
@@ -52,7 +53,8 @@ public class JpaPublicConfiguration {
     }
 
     @Bean
-    public LocalContainerEntityManagerFactoryBean rsPublicEntityManagerFactory(@Qualifier("y9PublicDS") DruidDataSource y9PublicDS, JpaProperties jpaProperties, Environment environment) {
+    public LocalContainerEntityManagerFactoryBean rsPublicEntityManagerFactory(
+        @Qualifier("y9PublicDS") DruidDataSource y9PublicDS, JpaProperties jpaProperties, Environment environment) {
         LocalContainerEntityManagerFactoryBean em = new LocalContainerEntityManagerFactoryBean();
         em.setPersistenceUnitName("y9Public");
         em.setDataSource(y9PublicDS);
@@ -65,7 +67,8 @@ public class JpaPublicConfiguration {
     }
 
     @Bean
-    public PlatformTransactionManager rsPublicTransactionManager(@Qualifier("rsPublicEntityManagerFactory") EntityManagerFactory emf) {
+    public PlatformTransactionManager
+        rsPublicTransactionManager(@Qualifier("rsPublicEntityManagerFactory") EntityManagerFactory emf) {
         JpaTransactionManager transactionManager = new JpaTransactionManager();
         transactionManager.setEntityManagerFactory(emf);
         return transactionManager;

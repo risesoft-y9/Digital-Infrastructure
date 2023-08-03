@@ -28,7 +28,8 @@ import net.risesoft.enums.ResourceTypeEnum;
 @MappedSuperclass
 @NoArgsConstructor
 @Data
-public abstract class Y9IdentityToResourceAndAuthorityBase extends BaseEntity implements Comparable<Y9IdentityToResourceAndAuthorityBase> {
+public abstract class Y9IdentityToResourceAndAuthorityBase extends BaseEntity
+    implements Comparable<Y9IdentityToResourceAndAuthorityBase> {
 
     private static final long serialVersionUID = 5073573498005834150L;
 

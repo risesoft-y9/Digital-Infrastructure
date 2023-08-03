@@ -24,5 +24,5 @@ public class Y9AppExportModel extends Y9App {
     private List<Y9OperationExportModel> subOperationList;
 
     private List<Y9RoleExportModel> subRoleList;
-    
+
 }

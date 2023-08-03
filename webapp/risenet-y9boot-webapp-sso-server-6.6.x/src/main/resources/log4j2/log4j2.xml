@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <Configuration monitorInterval="300">
     <Properties>
-        <Property name="cas.log.dir" >c:/logs/sso-server</Property>
-        <Property name="cas.log.level" >debug</Property>
+        <Property name="cas.log.dir">c:/logs/sso-server</Property>
+        <Property name="cas.log.level">debug</Property>
     </Properties>
     <Appenders>
         <Console name="console" target="SYSTEM_OUT">
@@ -12,18 +12,18 @@
                      filePattern="${sys:cas.log.dir}/cas-%d{yyyy-MM-dd-HH}-%i.log">
             <PatternLayout pattern="%d %p [%c] - &lt;%m&gt;%n"/>
             <Policies>
-                <OnStartupTriggeringPolicy />
+                <OnStartupTriggeringPolicy/>
                 <SizeBasedTriggeringPolicy size="10 MB"/>
-                <TimeBasedTriggeringPolicy />
+                <TimeBasedTriggeringPolicy/>
             </Policies>
         </RollingFile>
         <RollingFile name="auditlogfile" fileName="${sys:cas.log.dir}/cas_audit.log" append="true"
                      filePattern="${sys:cas.log.dir}/cas_audit-%d{yyyy-MM-dd-HH}-%i.log">
             <PatternLayout pattern="%d %p [%c] - %m%n"/>
             <Policies>
-                <OnStartupTriggeringPolicy />
+                <OnStartupTriggeringPolicy/>
                 <SizeBasedTriggeringPolicy size="10 MB"/>
-                <TimeBasedTriggeringPolicy />
+                <TimeBasedTriggeringPolicy/>
             </Policies>
         </RollingFile>
 
@@ -31,23 +31,23 @@
                      filePattern="${sys:cas.log.dir}/perfStats-%d{yyyy-MM-dd-HH}-%i.log">
             <PatternLayout pattern="%m%n"/>
             <Policies>
-                <OnStartupTriggeringPolicy />
+                <OnStartupTriggeringPolicy/>
                 <SizeBasedTriggeringPolicy size="10 MB"/>
-                <TimeBasedTriggeringPolicy />
+                <TimeBasedTriggeringPolicy/>
             </Policies>
         </RollingFile>
 
         <CasAppender name="casAudit">
-            <AppenderRef ref="auditlogfile" />
+            <AppenderRef ref="auditlogfile"/>
         </CasAppender>
         <CasAppender name="casFile">
-            <AppenderRef ref="file" />
+            <AppenderRef ref="file"/>
         </CasAppender>
         <CasAppender name="casConsole">
-            <AppenderRef ref="console" />
+            <AppenderRef ref="console"/>
         </CasAppender>
         <CasAppender name="casPerf">
-            <AppenderRef ref="perfFileAppender" />
+            <AppenderRef ref="perfFileAppender"/>
         </CasAppender>
     </Appenders>
     <Loggers>
@@ -56,22 +56,22 @@
         <AsyncLogger name="org.apereo" level="${sys:cas.log.level}" includeLocation="true"/>
         <AsyncLogger name="org.apereo.services.persondir" level="${sys:cas.log.level}" includeLocation="true"/>
         <AsyncLogger name="org.apereo.cas.web.flow" level="${sys:cas.log.level}" includeLocation="true"/>
-        <AsyncLogger name="org.apereo.cas.ticket.registry.AbstractTicketRegistry" level="error" />
-        <AsyncLogger name="org.apache" level="warn" />
-        <AsyncLogger name="org.apache.http" level="error" />
-        <AsyncLogger name="org.springframework" level="warn" />
-        <AsyncLogger name="org.thymeleaf" level="warn" />
-        <AsyncLogger name="org.pac4j" level="warn" />
+        <AsyncLogger name="org.apereo.cas.ticket.registry.AbstractTicketRegistry" level="error"/>
+        <AsyncLogger name="org.apache" level="warn"/>
+        <AsyncLogger name="org.apache.http" level="error"/>
+        <AsyncLogger name="org.springframework" level="warn"/>
+        <AsyncLogger name="org.thymeleaf" level="warn"/>
+        <AsyncLogger name="org.pac4j" level="warn"/>
         <AsyncLogger name="org.opensaml" level="warn"/>
-        <AsyncLogger name="net.sf.ehcache" level="warn" />
+        <AsyncLogger name="net.sf.ehcache" level="warn"/>
         <AsyncLogger name="com.couchbase" level="warn" includeLocation="true"/>
-        <AsyncLogger name="com.ryantenney.metrics" level="warn" />
-        <AsyncLogger name="net.jradius" level="warn" />
-        <AsyncLogger name="org.openid4java" level="warn" />
-        <AsyncLogger name="org.ldaptive" level="warn" />
-        <AsyncLogger name="com.hazelcast" level="warn" />
-        <AsyncLogger name="org.jasig.spring" level="warn" />
-        <AsyncLogger name="org.apache.catalina.startup.Catalina" level="info" />
+        <AsyncLogger name="com.ryantenney.metrics" level="warn"/>
+        <AsyncLogger name="net.jradius" level="warn"/>
+        <AsyncLogger name="org.openid4java" level="warn"/>
+        <AsyncLogger name="org.ldaptive" level="warn"/>
+        <AsyncLogger name="com.hazelcast" level="warn"/>
+        <AsyncLogger name="org.jasig.spring" level="warn"/>
+        <AsyncLogger name="org.apache.catalina.startup.Catalina" level="info"/>
 
         <!-- Log perf stats only to perfStats.log -->
         <AsyncLogger name="perfStatsLogger" level="warn" additivity="false" includeLocation="true">
@@ -79,7 +79,7 @@
         </AsyncLogger>
 
         <!-- Log audit to all root appenders, and also to audit log (additivity is not false) -->
-        <AsyncLogger name="org.apereo.inspektr.audit.support" level="warn" includeLocation="true" >
+        <AsyncLogger name="org.apereo.inspektr.audit.support" level="warn" includeLocation="true">
             <AppenderRef ref="casAudit"/>
         </AsyncLogger>
 

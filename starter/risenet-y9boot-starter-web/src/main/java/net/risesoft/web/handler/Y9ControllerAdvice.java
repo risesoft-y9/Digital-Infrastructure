@@ -47,7 +47,8 @@ public class Y9ControllerAdvice {
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     public Y9Result<Object> processException(ConstraintViolationException e) {
         LOGGER.warn(e.getMessage(), e);
-        return Y9Result.failure(GlobalErrorCodeEnum.INVALID_ARGUMENT, StringUtils.isNotBlank(e.getMessage()) ? e.getMessage() : GlobalErrorCodeEnum.INVALID_ARGUMENT.getDescription());
+        return Y9Result.failure(GlobalErrorCodeEnum.INVALID_ARGUMENT, StringUtils.isNotBlank(e.getMessage())
+            ? e.getMessage() : GlobalErrorCodeEnum.INVALID_ARGUMENT.getDescription());
     }
 
     /**
@@ -61,7 +62,8 @@ public class Y9ControllerAdvice {
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     public Y9Result<Object> processException(MissingServletRequestParameterException e) {
         LOGGER.warn(e.getMessage(), e);
-        return Y9Result.failure(GlobalErrorCodeEnum.INVALID_ARGUMENT, StringUtils.isNotBlank(e.getMessage()) ? e.getMessage() : GlobalErrorCodeEnum.INVALID_ARGUMENT.getDescription());
+        return Y9Result.failure(GlobalErrorCodeEnum.INVALID_ARGUMENT, StringUtils.isNotBlank(e.getMessage())
+            ? e.getMessage() : GlobalErrorCodeEnum.INVALID_ARGUMENT.getDescription());
     }
 
     /**
@@ -75,7 +77,8 @@ public class Y9ControllerAdvice {
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     public Y9Result<Object> processException(MethodArgumentTypeMismatchException e) {
         LOGGER.warn(e.getMessage(), e);
-        String message = String.format("参数[%s]类型应为[%s]，当前参数值为[%s]", e.getParameter().getParameterName(), e.getRequiredType().getSimpleName(), e.getValue());
+        String message = String.format("参数[%s]类型应为[%s]，当前参数值为[%s]", e.getParameter().getParameterName(),
+            e.getRequiredType().getSimpleName(), e.getValue());
         return Y9Result.failure(GlobalErrorCodeEnum.INVALID_ARGUMENT, message);
     }
 
@@ -90,7 +93,8 @@ public class Y9ControllerAdvice {
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     public Y9Result<Object> processException(MissingPathVariableException e) {
         LOGGER.warn(e.getMessage(), e);
-        return Y9Result.failure(GlobalErrorCodeEnum.INVALID_ARGUMENT, StringUtils.isNotBlank(e.getMessage()) ? e.getMessage() : GlobalErrorCodeEnum.INVALID_ARGUMENT.getDescription());
+        return Y9Result.failure(GlobalErrorCodeEnum.INVALID_ARGUMENT, StringUtils.isNotBlank(e.getMessage())
+            ? e.getMessage() : GlobalErrorCodeEnum.INVALID_ARGUMENT.getDescription());
     }
 
     /**
@@ -107,13 +111,15 @@ public class Y9ControllerAdvice {
         // 拿到@NotNull,@NotBlank和 @NotEmpty等注解上的message值
         FieldError fieldError = e.getBindingResult().getFieldError();
         if (fieldError != null && StringUtils.isNotBlank(fieldError.getDefaultMessage())) {
-            return Y9Result.failure(GlobalErrorCodeEnum.INVALID_ARGUMENT, fieldError.getObjectName() + "." + fieldError.getField() + fieldError.getDefaultMessage());
+            return Y9Result.failure(GlobalErrorCodeEnum.INVALID_ARGUMENT,
+                fieldError.getObjectName() + "." + fieldError.getField() + fieldError.getDefaultMessage());
         }
 
         // 参数类型不匹配检验
         StringBuilder msg = new StringBuilder();
         List<FieldError> fieldErrors = e.getFieldErrors();
-        fieldErrors.forEach((oe) -> msg.append(oe.getObjectName()).append(".").append(oe.getField()).append("=").append(oe.getRejectedValue()).append("，与预期的字段类型不匹配"));
+        fieldErrors.forEach((oe) -> msg.append(oe.getObjectName()).append(".").append(oe.getField()).append("=")
+            .append(oe.getRejectedValue()).append("，与预期的字段类型不匹配"));
         return Y9Result.failure(GlobalErrorCodeEnum.INVALID_ARGUMENT, msg.toString());
     }
 
@@ -129,7 +135,8 @@ public class Y9ControllerAdvice {
     public Y9Result<Object> processException(MethodArgumentNotValidException e) {
         LOGGER.warn(e.getMessage(), e);
         FieldError fieldError = e.getBindingResult().getFieldError();
-        return Y9Result.failure(GlobalErrorCodeEnum.INVALID_ARGUMENT, fieldError != null ? fieldError.getDefaultMessage() : GlobalErrorCodeEnum.INVALID_ARGUMENT.getDescription());
+        return Y9Result.failure(GlobalErrorCodeEnum.INVALID_ARGUMENT, fieldError != null
+            ? fieldError.getDefaultMessage() : GlobalErrorCodeEnum.INVALID_ARGUMENT.getDescription());
     }
 
     /**
@@ -144,7 +151,8 @@ public class Y9ControllerAdvice {
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     public Y9Result<Object> processException(Y9BusinessException e) {
         LOGGER.warn(e.getMessage(), e);
-        return Y9Result.failure(e.getCode(), StringUtils.isNotBlank(e.getMessage()) ? e.getMessage() : GlobalErrorCodeEnum.FAILURE.getDescription());
+        return Y9Result.failure(e.getCode(),
+            StringUtils.isNotBlank(e.getMessage()) ? e.getMessage() : GlobalErrorCodeEnum.FAILURE.getDescription());
     }
 
     /**
@@ -158,7 +166,8 @@ public class Y9ControllerAdvice {
     @ResponseStatus(HttpStatus.FORBIDDEN)
     public Y9Result<Object> processException(Y9PermissionException e) {
         LOGGER.warn(e.getMessage(), e);
-        return Y9Result.failure(e.getCode(), StringUtils.isNotBlank(e.getMessage()) ? e.getMessage() : GlobalErrorCodeEnum.PERMISSION_DENIED.getDescription());
+        return Y9Result.failure(e.getCode(), StringUtils.isNotBlank(e.getMessage()) ? e.getMessage()
+            : GlobalErrorCodeEnum.PERMISSION_DENIED.getDescription());
     }
 
     /**

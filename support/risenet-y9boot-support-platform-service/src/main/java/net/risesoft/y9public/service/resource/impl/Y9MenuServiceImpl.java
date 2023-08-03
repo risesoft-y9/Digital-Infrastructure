@@ -63,7 +63,8 @@ public class Y9MenuServiceImpl implements Y9MenuService {
         // 删除关联数据
         Y9Context.publishEvent(new Y9EntityDeletedEvent<>(y9Menu));
 
-        List<Y9TenantApp> y9TenantAppList = y9TenantAppRepository.findByAppIdAndTenancy(y9Menu.getAppId(), Boolean.TRUE);
+        List<Y9TenantApp> y9TenantAppList =
+            y9TenantAppRepository.findByAppIdAndTenancy(y9Menu.getAppId(), Boolean.TRUE);
         for (Y9TenantApp y9TenantApp : y9TenantAppList) {
             Y9LoginUserHolder.setTenantId(y9TenantApp.getTenantId());
 
@@ -71,7 +72,7 @@ public class Y9MenuServiceImpl implements Y9MenuService {
             y9PersonToResourceAndAuthorityRepository.deleteByResourceId(y9Menu.getId());
             y9PositionToResourceAndAuthorityRepository.deleteByResourceId(y9Menu.getId());
         }
-        
+
         y9MenuManager.delete(y9Menu);
     }
 
