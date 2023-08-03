@@ -65,49 +65,5 @@ public class PersonRoleApiImpl implements PersonRoleApi {
 
         return y9PersonToRoleService.hasRole(personId, customId);
     }
-
-    /**
-     * 获取人员的权限分页列表
-     *
-     * @param tenantId 租户id
-     * @param personId 人员ID
-     * @param type 查询类型，0：查询所有，1：查询拥有的角色
-     * @param systemCnName 系统中文名称
-     * @param appName 应用名称
-     * @param roleName 角色名称
-     * @param page 第几页
-     * @param rows 多少条数据
-     * @return Map<String, Object>
-     * @since 9.6.0
-     */
-    @Override
-    public Y9Page<Map<String, Object>> pagePersonPermission(@RequestParam("tenantId") String tenantId, @RequestParam("personId") String personId, @RequestParam("type") String type, @RequestParam("systemCnName") String systemCnName, @RequestParam("appName") String appName,
-                                                            @RequestParam("roleName") String roleName, @RequestParam("page") int page, @RequestParam("rows") int rows) {
-        Y9LoginUserHolder.setTenantId(tenantId);
-        
-        return y9PersonToRoleService.pagePersonPermission(personId, type, systemCnName, appName, roleName, page, rows);
-    }
-
-    /**
-     * 获取个人权限分页列表（拥有门户网站的权限查看角色才能查看到特殊角色）
-     *
-     * @param tenantId 租户id
-     * @param personId 人员唯一标识
-     * @param type 节点类型,0：查询所有，1：查询拥有的角色
-     * @param systemCnName 系统中文名称
-     * @param appName 应用名称
-     * @param roleName 角色名称
-     * @param page page
-     * @param rows rows
-     * @return Map<String, Object>
-     * @since 9.6.0
-     */
-    @Override
-    public Y9Page<Map<String, Object>> pagePersonPermissionWithSpecial(@RequestParam("tenantId") String tenantId, @RequestParam("personId") String personId, @RequestParam("type") String type, @RequestParam("systemCnName") String systemCnName, @RequestParam("appName") String appName,
-                                                                       @RequestParam("roleName") String roleName, @RequestParam("page") int page, @RequestParam("rows") int rows) {
-        Y9LoginUserHolder.setTenantId(tenantId);
-        
-        return y9PersonToRoleService.pagePersonAccessPermission(personId, type, systemCnName, appName, roleName, page, rows);
-    }
-
+    
 }
