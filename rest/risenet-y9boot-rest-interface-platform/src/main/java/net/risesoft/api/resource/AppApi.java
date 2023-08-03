@@ -30,8 +30,8 @@ public interface AppApi {
      * @param appId 应用id
      * @return
      */
-    @GetMapping("/findByIdInCache")
-    App findByIdInCache(@RequestParam("appId") @NotBlank String appId);
+    @GetMapping("/findById")
+    App findById(@RequestParam("appId") @NotBlank String appId);
 
     /**
      * 根据系统唯一标示和自定义标识查找应用

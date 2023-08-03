@@ -48,7 +48,7 @@ public class AppApiImpl implements AppApi {
      * @return
      */
     @Override
-    public App findByIdInCache(@RequestParam("appId") @NotBlank String appId) {
+    public App findById(@RequestParam("appId") @NotBlank String appId) {
         Y9App y9App = y9AppService.findById(appId);
         return Y9ModelConvertUtil.convert(y9App, App.class);
     }
