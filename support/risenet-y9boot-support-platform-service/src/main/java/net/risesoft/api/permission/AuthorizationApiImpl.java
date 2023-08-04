@@ -52,7 +52,7 @@ public class AuthorizationApiImpl implements AuthorizationApi {
     @Override
     public void save(@RequestParam("tenantId") @NotBlank String tenantId,
         @RequestParam("personId") @NotBlank String personId, @RequestParam("resourceId") @NotBlank String resourceId,
-        @RequestParam("roleId") @NotBlank String roleId, @RequestParam("authority") @NotBlank Integer authority) {
+        @RequestParam("roleId") @NotBlank String roleId, @RequestParam("authority") Integer authority) {
         Y9LoginUserHolder.setTenantId(tenantId);
 
         Y9Person y9Person = y9PersonService.getById(personId);

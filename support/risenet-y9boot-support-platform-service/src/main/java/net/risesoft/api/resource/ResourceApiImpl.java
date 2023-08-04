@@ -103,8 +103,7 @@ public class ResourceApiImpl implements ResourceApi {
      */
     @Override
     public Resource findByCustomIdAndParentId(@RequestParam("customId") @NotBlank String customId,
-        @RequestParam("parentId") @NotBlank String parentId,
-        @RequestParam("resourceType") @NotBlank Integer resourceType) {
+        @RequestParam("parentId") @NotBlank String parentId, @RequestParam("resourceType") Integer resourceType) {
         return ModelConvertUtil.resourceBaseToResource(
             compositeResourceService.findByCustomIdAndParentId(customId, parentId, resourceType));
     }

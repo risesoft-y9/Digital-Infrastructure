@@ -69,6 +69,6 @@ public interface TenantApi {
      * @since 9.6.0
      */
     @GetMapping("/listByTenantType")
-    List<Tenant> listByTenantType(@RequestParam("tenantType") @NotBlank Integer tenantType);
+    List<Tenant> listByTenantType(@RequestParam("tenantType") Integer tenantType);
 
 }

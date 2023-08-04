@@ -33,6 +33,6 @@ public interface AuthorizationApi {
     @PostMapping("/save")
     void save(@RequestParam("tenantId") @NotBlank String tenantId, @RequestParam("personId") @NotBlank String personId,
         @RequestParam("resourceId") @NotBlank String resourceId, @RequestParam("roleId") @NotBlank String roleId,
-        @RequestParam("authority") @NotBlank Integer authority);
+        @RequestParam("authority") Integer authority);
 
 }

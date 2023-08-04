@@ -165,7 +165,7 @@ public interface DepartmentApi {
      */
     @GetMapping("/listByOrgBaseIdAndCategory")
     List<DepartmentProp> listByOrgBaseIdAndCategory(@RequestParam("tenantId") @NotBlank String tenantId,
-        @RequestParam("orgBaseId") @NotBlank String orgBaseId, @RequestParam("category") @NotBlank Integer category);
+        @RequestParam("orgBaseId") @NotBlank String orgBaseId, @RequestParam("category") Integer category);
 
     /**
      * 根据部门名称，模糊查询部门列表

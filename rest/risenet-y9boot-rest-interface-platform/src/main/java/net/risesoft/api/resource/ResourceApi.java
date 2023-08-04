@@ -61,8 +61,7 @@ public interface ResourceApi {
      */
     @GetMapping("/findByCustomIdAndParentId")
     Resource findByCustomIdAndParentId(@RequestParam("customId") @NotBlank String customId,
-        @RequestParam("parentId") @NotBlank String parentId,
-        @RequestParam("resourceType") @NotBlank Integer resourceType);
+        @RequestParam("parentId") @NotBlank String parentId, @RequestParam("resourceType") Integer resourceType);
 
     /**
      * 获得指定资源的父资源

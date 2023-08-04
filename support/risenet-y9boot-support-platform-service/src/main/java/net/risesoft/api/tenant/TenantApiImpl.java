@@ -95,7 +95,7 @@ public class TenantApiImpl implements TenantApi {
      * @since 9.6.0
      */
     @Override
-    public List<Tenant> listByTenantType(@RequestParam("tenantType") @NotBlank Integer tenantType) {
+    public List<Tenant> listByTenantType(@RequestParam("tenantType") Integer tenantType) {
         List<Y9Tenant> y9TenantList = y9TenantService.listByTenantType(tenantType);
         return Y9ModelConvertUtil.convert(y9TenantList, Tenant.class);
     }

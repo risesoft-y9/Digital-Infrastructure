@@ -253,7 +253,7 @@ public class DepartmentApiImpl implements DepartmentApi {
      */
     @Override
     public List<DepartmentProp> listByOrgBaseIdAndCategory(@RequestParam("tenantId") @NotBlank String tenantId,
-        @RequestParam("orgBaseId") @NotBlank String orgBaseId, @RequestParam("category") @NotBlank Integer category) {
+        @RequestParam("orgBaseId") @NotBlank String orgBaseId, @RequestParam("category") Integer category) {
         Y9LoginUserHolder.setTenantId(tenantId);
 
         List<Y9DepartmentProp> y9DepartmentPropList =
