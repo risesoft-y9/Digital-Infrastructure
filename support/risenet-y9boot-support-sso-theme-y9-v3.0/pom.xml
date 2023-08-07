@@ -7,7 +7,7 @@
     <groupId>net.risesoft</groupId>
     <artifactId>risenet-y9boot-support-sso-theme-y9-v3.0</artifactId>
     <packaging>jar</packaging>
-    <version>v9.6.3-SNAPSHOT</version>
+    <version>v9.6.2</version>
 
     <properties>
         <maven.compiler.source>11</maven.compiler.source>
