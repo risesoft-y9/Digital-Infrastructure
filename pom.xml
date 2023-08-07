@@ -6,7 +6,7 @@
     <groupId>net.risesoft</groupId>
     <artifactId>y9-digitalbase</artifactId>
     <packaging>pom</packaging>
-    <version>v9.6.3-SNAPSHOT</version>
+    <version>v9.6.2</version>
 
     <modules>
         <module>common/risenet-y9boot-properties</module>
