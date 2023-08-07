@@ -1,4 +1,4 @@
-package y9.autoconfiguration;
+package y9.support;
 
 import java.io.IOException;
 import java.io.Reader;
@@ -9,7 +9,6 @@ import org.springframework.http.HttpStatus;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import net.risesoft.pojo.Y9Result;
-import net.risesoft.y9.exception.Y9BusinessException;
 
 import feign.Response;
 import feign.codec.ErrorDecoder;
@@ -34,7 +33,7 @@ public class Y9ErrorDecoder extends ErrorDecoder.Default {
             try {
                 Reader reader = response.body().asReader(Charset.defaultCharset());
                 Y9Result<?> y9Result = objectMapper.readValue(reader, Y9Result.class);
-                return new Y9BusinessException(y9Result.getCode(), y9Result.getMsg());
+                return new Y9ApiException(y9Result.getCode(), y9Result.getMsg());
             } catch (IOException ignored) {
             }
         }
