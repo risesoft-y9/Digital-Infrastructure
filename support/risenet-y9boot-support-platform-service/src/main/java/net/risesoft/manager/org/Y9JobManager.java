@@ -7,7 +7,7 @@ import net.risesoft.entity.Y9Job;
  * 
  * @author shidaobang
  * @date 2023/07/26
- * @since 9.6.3
+ * @since 9.6.2
  */
 public interface Y9JobManager {
 

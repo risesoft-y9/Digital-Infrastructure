@@ -20,7 +20,7 @@ import net.risesoft.y9public.repository.resource.Y9OperationRepository;
  * 
  * @author shidaobang
  * @date 2023/07/26
- * @since 9.6.3
+ * @since 9.6.2
  */
 @Service
 @CacheConfig(cacheNames = CacheNameConsts.RESOURCE_OPERATION)

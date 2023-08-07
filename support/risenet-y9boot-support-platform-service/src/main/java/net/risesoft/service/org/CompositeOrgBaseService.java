@@ -14,7 +14,7 @@ import net.risesoft.enums.OrgTypeEnum;
  * 
  * @author shidaobang
  * @date 2023/07/31
- * @since 9.6.3
+ * @since 9.6.2
  */
 public interface CompositeOrgBaseService {
 

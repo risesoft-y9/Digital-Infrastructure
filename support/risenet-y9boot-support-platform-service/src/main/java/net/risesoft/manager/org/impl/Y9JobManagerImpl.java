@@ -20,7 +20,7 @@ import net.risesoft.y9.exception.util.Y9ExceptionUtil;
  * 
  * @author shidaobang
  * @date 2023/07/26
- * @since 9.6.3
+ * @since 9.6.2
  */
 @Service
 @Transactional(value = "rsTenantTransactionManager", readOnly = true)

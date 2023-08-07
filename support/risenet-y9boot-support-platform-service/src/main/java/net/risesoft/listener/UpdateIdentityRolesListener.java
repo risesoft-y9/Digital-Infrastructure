@@ -35,7 +35,7 @@ import net.risesoft.y9.pubsub.event.Y9EntityUpdatedEvent;
  *
  * @author shidaobang
  * @date 2023/07/24
- * @since 9.6.3
+ * @since 9.6.2
  */
 @Component
 @Slf4j

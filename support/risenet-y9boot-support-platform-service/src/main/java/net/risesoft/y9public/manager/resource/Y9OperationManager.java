@@ -9,7 +9,7 @@ import net.risesoft.y9public.entity.resource.Y9Operation;
  * 
  * @author shidaobang
  * @date 2023/07/26
- * @since 9.6.3
+ * @since 9.6.2
  */
 public interface Y9OperationManager {
     Y9Operation findById(String id);
