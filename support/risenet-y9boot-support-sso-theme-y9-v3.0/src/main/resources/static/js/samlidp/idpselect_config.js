@@ -1,11 +1,11 @@
-function IdPSelectUIParms() {
+function IdPSelectUIParms(){
     this.alwaysShow = true;          // If true, this will show results as soon as you start typing
     this.defaultLanguage = 'en';     // Language to use if the browser local doesnt have a bundle
 
     this.defaultLogoWidth = 64;
-    this.defaultLogoHeight = 64;
+    this.defaultLogoHeight = 64 ;
     //this.defaultReturn = null;       // If non null, then the default place to send users who are not
-    // Approaching via the Discovery Protocol for example
+                                     // Approaching via the Discovery Protocol for example
     //this.defaultReturn = "https://example.org/Shibboleth.sso/DS?SAMLDS=1&target=https://example.org/secure";
     //this.defaultReturnIDParam = "";
     this.returnWhiteList = [];
@@ -24,7 +24,7 @@ function IdPSelectUIParms() {
     this.testGUI = false;
 
     this.autoFollowCookie = '_shibboleth_eds';    //  If you want auto-dispatch, set this to the cookie name to use
-    this.autoFollowCookieTTLs = [1, 60, 270]; // Cookie life (in days).  Changing this requires changes to idp_select_languages
+    this.autoFollowCookieTTLs = [ 1, 60, 270 ]; // Cookie life (in days).  Changing this requires changes to idp_select_languages
 
     //
     // Language support. 

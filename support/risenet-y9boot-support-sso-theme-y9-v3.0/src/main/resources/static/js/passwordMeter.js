@@ -1,5 +1,4 @@
 /* global jqueryReady, policyPattern, zxcvbn, passwordStrengthI18n */
-
 /*eslint-disable no-unused-vars*/
 function jqueryReady() {
     var strength = passwordStrengthI18n;
@@ -43,19 +42,23 @@ function jqueryReady() {
                     //weak
                     $(progressBar).removeClass(settings.allProgressBarClasses).addClass(settings.progressBarClass0);
                     $(indicator).html(strength[0]);
-                } else if (result.score == 1) {
+                }
+                else if (result.score == 1) {
                     //normal
                     $(progressBar).removeClass(settings.allProgressBarClasses).addClass(settings.progressBarClass1);
                     $(indicator).html(strength[1]);
-                } else if (result.score == 2) {
+                }
+                else if (result.score == 2) {
                     //medium
                     $(progressBar).removeClass(settings.allProgressBarClasses).addClass(settings.progressBarClass2);
                     $(indicator).html(strength[2]);
-                } else if (result.score == 3) {
+                }
+                else if (result.score == 3) {
                     //strong
                     $(progressBar).removeClass(settings.allProgressBarClasses).addClass(settings.progressBarClass3);
                     $(indicator).html(strength[3]);
-                } else if (result.score == 4) {
+                }
+                else if (result.score == 4) {
                     //very strong
                     $(progressBar).removeClass(settings.allProgressBarClasses).addClass(settings.progressBarClass4);
                     $(indicator).html(strength[4]);
@@ -98,7 +101,7 @@ function jqueryReady() {
         $('#submit').prop('disabled', disableSubmit);
 
         var result = zxcvbn(val);
-        $('#strengthProgressBar').zxcvbnProgressBar({passwordInput: 'password', materialBar: materialBar});
+        $('#strengthProgressBar').zxcvbnProgressBar({ passwordInput: 'password', materialBar: materialBar });
 
         // Check strength, update the text indicator
         if (val !== '') {
