@@ -20,10 +20,6 @@
         <maven.compiler.target>11</maven.compiler.target>
         <maven.deploy.skip>true</maven.deploy.skip>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-
-        <alibaba-nacos.version>2.2.0</alibaba-nacos.version>
-        <alibaba-cloud.version>2021.0.4.0</alibaba-cloud.version>
-        <jasypt.version>3.0.5</jasypt.version>
     </properties>
 
     <dependencies>
@@ -123,7 +119,6 @@
             <groupId>com.google.guava</groupId>
             <artifactId>guava</artifactId>
         </dependency>
-
 
     </dependencies>
 

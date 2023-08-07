@@ -19,7 +19,6 @@
 
         <alibaba-nacos.version>2.2.0</alibaba-nacos.version>
         <alibaba-cloud.version>2021.0.4.0</alibaba-cloud.version>
-        <jasypt.version>3.0.5</jasypt.version>
     </properties>
 
     <dependencies>
@@ -39,36 +38,6 @@
             <groupId>net.risesoft</groupId>
             <artifactId>risenet-y9boot-starter-log</artifactId>
             <version>${project.version}</version>
-        </dependency>
-
-        <dependency>
-            <groupId>org.springframework.kafka</groupId>
-            <artifactId>spring-kafka</artifactId>
-        </dependency>
-
-        <!-- JXLS -->
-        <dependency>
-            <groupId>org.jxls</groupId>
-            <artifactId>jxls</artifactId>
-            <version>2.9.0</version>
-        </dependency>
-
-        <dependency>
-            <groupId>org.jxls</groupId>
-            <artifactId>jxls-poi</artifactId>
-            <version>2.9.0</version>
-        </dependency>
-
-        <dependency>
-            <groupId>org.jxls</groupId>
-            <artifactId>jxls-jexcel</artifactId>
-            <version>1.0.9</version>
-        </dependency>
-
-        <dependency>
-            <groupId>org.jxls</groupId>
-            <artifactId>jxls-reader</artifactId>
-            <version>2.0.6</version>
         </dependency>
 
         <dependency>
@@ -93,6 +62,11 @@
             <groupId>net.risesoft</groupId>
             <artifactId>risenet-y9boot-starter-web</artifactId>
             <version>${project.version}</version>
+        </dependency>
+        
+         <dependency>
+            <groupId>org.springframework.kafka</groupId>
+            <artifactId>spring-kafka</artifactId>
         </dependency>
 
         <!--<dependency>
@@ -126,6 +100,31 @@
             <groupId>javax.servlet</groupId>
             <artifactId>javax.servlet-api</artifactId>
             <scope>provided</scope>
+        </dependency>
+        
+        <!-- JXLS -->
+        <dependency>
+            <groupId>org.jxls</groupId>
+            <artifactId>jxls</artifactId>
+            <version>2.13.0</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.jxls</groupId>
+            <artifactId>jxls-poi</artifactId>
+            <version>2.13.0</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.jxls</groupId>
+            <artifactId>jxls-jexcel</artifactId>
+            <version>1.0.9</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.jxls</groupId>
+            <artifactId>jxls-reader</artifactId>
+            <version>2.1.0</version>
         </dependency>
     </dependencies>
 

@@ -52,13 +52,13 @@
         <dependency>
             <groupId>net.risesoft</groupId>
             <artifactId>risenet-y9boot-properties</artifactId>
-            <version>v9.6.3-SNAPSHOT</version>
+            <version>${project.version}</version>
         </dependency>
 
         <dependency>
             <groupId>net.risesoft</groupId>
             <artifactId>risenet-y9boot-common-util</artifactId>
-            <version>v9.6.3-SNAPSHOT</version>
+            <version>${project.version}</version>
         </dependency>
 
         <dependency>
