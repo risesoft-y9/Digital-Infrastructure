@@ -19,10 +19,10 @@ import org.springframework.util.Assert;
 
 import com.alibaba.druid.pool.DruidDataSource;
 
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
 import net.risesoft.consts.DefaultIdConsts;
-import net.risesoft.y9.Y9Context;
 import net.risesoft.y9.util.base64.Y9Base64Util;
 
 /**
@@ -34,28 +34,16 @@ import net.risesoft.y9.util.base64.Y9Base64Util;
  *
  */
 @Slf4j
+@RequiredArgsConstructor
 public class Y9TenantDataSourceLookup implements DataSourceLookup {
-    private final Map<String, DruidDataSource> dataSources = new ConcurrentHashMap<>();
+
+    private final DruidDataSource publicDataSource;
+    private final String systemName;
+    
+    /** 已加载的租户id和数据源Map：目前包括默认租户和租用了当前系统的租户 */
+    private final Map<String, DruidDataSource> loadedTenantIdDataSourceMap = new ConcurrentHashMap<>();
     private final JndiDataSourceLookup jndiDataSourceLookup = new JndiDataSourceLookup();
     private boolean loaded = false;
-    private DruidDataSource publicDataSource;
-    private String systemName;
-
-    public Y9TenantDataSourceLookup() {}
-
-    public Y9TenantDataSourceLookup(Map<String, DruidDataSource> dataSources) {
-        setDataSources(dataSources);
-    }
-
-    public Y9TenantDataSourceLookup(String dataSourceName, DruidDataSource dataSource) {
-        addDataSource(dataSourceName, dataSource);
-    }
-
-    public void addDataSource(String dataSourceName, DruidDataSource dataSource) {
-        Assert.notNull(dataSourceName, "DataSource name must not be null");
-        Assert.notNull(dataSource, "DataSource must not be null");
-        this.dataSources.put(dataSourceName, dataSource);
-    }
 
     private void createDefaultTenantDataSource(JdbcTemplate publicJdbcTemplate) {
         List<Map<String, Object>> defaultTenant = publicJdbcTemplate.queryForList(
@@ -75,7 +63,7 @@ public class Y9TenantDataSourceLookup implements DataSourceLookup {
             try {
                 if (ds == null) {
                     ds = (DruidDataSource)this.jndiDataSourceLookup.getDataSource(jndiName);
-                    this.dataSources.put(tenantId, ds);
+                    this.loadedTenantIdDataSourceMap.put(tenantId, ds);
                 } else {
                     // 用旧的还是新的？
                     // ds = (DruidDataSource) this.jndiDataSourceLookup.getDataSource(jndiName);
@@ -117,7 +105,7 @@ public class Y9TenantDataSourceLookup implements DataSourceLookup {
                 ds.setUrl(url);
                 ds.setUsername(username);
                 ds.setPassword(password);
-                this.dataSources.put(tenantId, ds);
+                this.loadedTenantIdDataSourceMap.put(tenantId, ds);
             } else {
                 // 可能连接池的参数调整了
                 // url,username,password等属性在DruidDataSource初始化完成后不允许更改，否则抛出异常
@@ -168,7 +156,7 @@ public class Y9TenantDataSourceLookup implements DataSourceLookup {
                         ds.setMinIdle(minIdle);
                     }
                 }
-                this.dataSources.put(tenantId, ds);
+                this.loadedTenantIdDataSourceMap.put(tenantId, ds);
             }
         }
     }
@@ -181,7 +169,7 @@ public class Y9TenantDataSourceLookup implements DataSourceLookup {
         }
 
         Assert.notNull(dataSourceName, "DataSource name must not be null");
-        return this.dataSources.get(dataSourceName);
+        return this.loadedTenantIdDataSourceMap.get(dataSourceName);
     }
 
     /**
@@ -194,7 +182,7 @@ public class Y9TenantDataSourceLookup implements DataSourceLookup {
             loadDataSources();
             loaded = true;
         }
-        return Collections.unmodifiableMap(this.dataSources);
+        return Collections.unmodifiableMap(this.loadedTenantIdDataSourceMap);
     }
 
     public DataSource getPublicDataSource() {
@@ -214,26 +202,26 @@ public class Y9TenantDataSourceLookup implements DataSourceLookup {
         // 1 移除不存在的租户的连接池
         List<Map<String, Object>> allTenants =
             publicJdbcTemplate.queryForList("select ID, DEFAULT_DATA_SOURCE_ID FROM Y9_COMMON_TENANT");
-        Set<String> keys = this.dataSources.keySet();
-        for (String key : keys) {
-            boolean exist = false;
+        Set<String> loadedTenantIdSet = this.loadedTenantIdDataSourceMap.keySet();
+        for (String loadedTenantId : loadedTenantIdSet) {
+            boolean removed = true;
             for (Map<String, Object> tenant : allTenants) {
                 String tenantId = (String)tenant.get("ID");
-                if (tenantId.equals(key)) {
-                    exist = true;
+                if (tenantId.equals(loadedTenantId)) {
+                    removed = false;
                     break;
                 }
             }
-            if (exist == false) {
-                DruidDataSource ds = this.dataSources.get(key);
-                this.dataSources.remove(key);
+            if (removed) {
+                DruidDataSource ds = this.loadedTenantIdDataSourceMap.get(loadedTenantId);
+                this.loadedTenantIdDataSourceMap.remove(loadedTenantId);
                 ds.setMinIdle(0);
                 ds.setMaxActive(1);
+                // FIXME 不需要将此数据源关闭？
             }
         }
 
         // 2 重新设置租户的连接池
-        Set<String> systemTenantIds = new HashSet<String>();
         List<Map<String, Object>> systems =
             publicJdbcTemplate.queryForList("SELECT ID FROM Y9_COMMON_SYSTEM WHERE NAME=?", this.systemName);
 
@@ -246,9 +234,10 @@ public class Y9TenantDataSourceLookup implements DataSourceLookup {
 
             // 2.1.1 有租户租用系统
             if (!tenantSystems.isEmpty()) {
+                Set<String> systemTenantIds = new HashSet<>();
                 for (Map<String, Object> tenantSystem : tenantSystems) {
                     String tenantId = (String)tenantSystem.get("TENANT_ID");
-                    DruidDataSource ds = this.dataSources.get(tenantId);
+                    DruidDataSource ds = this.loadedTenantIdDataSourceMap.get(tenantId);
                     systemTenantIds.add(tenantId);
 
                     String tenantDataSource = (String)tenantSystem.get("TENANT_DATA_SOURCE");
@@ -289,7 +278,7 @@ public class Y9TenantDataSourceLookup implements DataSourceLookup {
         }
 
         // 3 初始化租户的数据库连接池
-        Collection<DruidDataSource> druidDataSources = dataSources.values();
+        Collection<DruidDataSource> druidDataSources = loadedTenantIdDataSourceMap.values();
         if (!druidDataSources.isEmpty()) {
             for (DruidDataSource ds : druidDataSources) {
                 try {
@@ -299,21 +288,5 @@ public class Y9TenantDataSourceLookup implements DataSourceLookup {
                 }
             }
         }
-        Y9TenantDataSource y9TenantDataSource = Y9Context.getBean(Y9TenantDataSource.class);
-        y9TenantDataSource.setDataSourceLookup(this);
-    };
-
-    public void setDataSources(Map<String, DruidDataSource> dataSources) {
-        if (dataSources != null) {
-            this.dataSources.putAll(dataSources);
-        }
-    }
-
-    public void setPublicDataSource(DruidDataSource publicDataSource) {
-        this.publicDataSource = publicDataSource;
-    }
-
-    public void setSystemName(String systemName) {
-        this.systemName = systemName;
     }
 }

@@ -3,14 +3,13 @@ package net.risesoft.y9.tenant.datasource;
 import java.sql.Connection;
 import java.sql.SQLException;
 
-import javax.sql.DataSource;
-
 import org.springframework.jdbc.datasource.AbstractDataSource;
-import org.springframework.jdbc.datasource.lookup.DataSourceLookup;
 import org.springframework.util.StringUtils;
 
 import com.alibaba.druid.pool.DruidDataSource;
 
+import lombok.Getter;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
 import net.risesoft.y9.Y9LoginUserHolder;
@@ -23,30 +22,29 @@ import net.risesoft.y9.Y9LoginUserHolder;
  *
  */
 @Slf4j
+@RequiredArgsConstructor
+@Getter
 public class Y9TenantDataSource extends AbstractDataSource {
 
-    private DruidDataSource defaultDataSource;
-
-    private DataSourceLookup dataSourceLookup;
+    private final DruidDataSource defaultDataSource;
+    private final Y9TenantDataSourceLookup dataSourceLookup;
 
     public DruidDataSource determineTargetDataSource() {
+        DruidDataSource dataSource = defaultDataSource;
+
         String lookupKey = Y9LoginUserHolder.getTenantId();
         if (StringUtils.hasText(lookupKey)) {
-            DruidDataSource dataSource = (DruidDataSource)this.dataSourceLookup.getDataSource(lookupKey);
-            if (dataSource == null) {
-                LOGGER.error("未找到租户【" + lookupKey + "】的数据源。");
-                dataSource = this.defaultDataSource;
+            DruidDataSource tenantDataSource = (DruidDataSource)this.dataSourceLookup.getDataSource(lookupKey);
+            if (tenantDataSource == null) {
+                LOGGER.error("租户[{}]未租用系统[{}]，将使用默认数据源", lookupKey, this.dataSourceLookup.getSystemName());
+            } else {
+                dataSource = tenantDataSource;
             }
-            if (dataSource == null) {
-                throw new IllegalStateException("没设置缺省数据源 defaultDataSource!!!");
-            }
-            return dataSource;
         } else {
-            LOGGER.error("当前线程中租户ID为空!!!");
-            // throw new IllegalStateException("当前线程中租户ID为空!!!");
-            return this.defaultDataSource;
+            LOGGER.error("当前线程中租户ID为空，将使用默认数据源");
         }
 
+        return dataSource;
     }
 
     @Override
@@ -59,22 +57,6 @@ public class Y9TenantDataSource extends AbstractDataSource {
     public Connection getConnection(String username, String password) throws SQLException {
         DruidDataSource ds = determineTargetDataSource();
         return ds.getConnection(username, password);
-    }
-
-    public DataSourceLookup getDataSourceLookup() {
-        return dataSourceLookup;
-    }
-
-    public DataSource getDefaultDataSource() {
-        return defaultDataSource;
-    }
-
-    public void setDataSourceLookup(DataSourceLookup dataSourceLookup) {
-        this.dataSourceLookup = dataSourceLookup;
-    }
-
-    public void setDefaultDataSource(DruidDataSource defaultDataSource) {
-        this.defaultDataSource = defaultDataSource;
     }
 
 }
