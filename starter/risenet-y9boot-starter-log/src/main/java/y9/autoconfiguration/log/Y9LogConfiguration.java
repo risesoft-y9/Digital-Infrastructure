@@ -62,7 +62,6 @@ public class Y9LogConfiguration {
     }
 
     @Bean("y9KafkaTemplate")
-    @ConditionalOnProperty(name = "y9.app.log.kafkaEnabled", havingValue = "true", matchIfMissing = true)
     @ConditionalOnMissingBean(name = "y9KafkaTemplate")
     public KafkaTemplate<?, ?> y9KafkaTemplate(ProducerFactory<Object, Object> kafkaProducerFactory) {
         return new KafkaTemplate<>(kafkaProducerFactory);

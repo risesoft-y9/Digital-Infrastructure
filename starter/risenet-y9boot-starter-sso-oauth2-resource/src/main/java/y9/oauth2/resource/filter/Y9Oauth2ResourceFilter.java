@@ -70,8 +70,7 @@ public class Y9Oauth2ResourceFilter implements Filter {
         StringWriter stringWriter = new StringWriter();
         PrintWriter printWriter = new PrintWriter(stringWriter);
         ex.printStackTrace(printWriter);
-        String s = stringWriter.toString();
-        return s;
+        return stringWriter.toString();
     }
 
     @SuppressWarnings("unchecked")
@@ -189,10 +188,7 @@ public class Y9Oauth2ResourceFilter implements Filter {
                             Y9LoginUserHolder.setUserInfo(userInfo);
 
                             if (saveOnlineMessage) {
-                                remoteSaveUserOnline(url, userInfo);
-                            }
-                            if (saveLogMessage) {
-
+                                remoteSaveUserOnline(userInfo);
                             }
                         }
                     } else {
@@ -326,7 +322,7 @@ public class Y9Oauth2ResourceFilter implements Filter {
         }
     }
 
-    private void remoteSaveUserOnline(String url, UserInfo userInfo) {
+    private void remoteSaveUserOnline(UserInfo userInfo) {
         if (userInfo != null) {
             try {
                 String jsonString = Y9JsonUtil.writeValueAsString(userInfo);

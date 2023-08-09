@@ -144,8 +144,6 @@ spring:
 y9:
     systemName: riseplatform
     app:
-        log:
-            kafkaEnabled: true
         platform:
             checkPermission: false
             enableIpAddressWhiteList: false

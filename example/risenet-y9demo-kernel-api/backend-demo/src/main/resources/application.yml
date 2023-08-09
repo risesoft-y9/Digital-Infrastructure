@@ -2,9 +2,6 @@ systemName: y9demo_kernel_api
 server:
     port: 7057
 y9:
-    app:
-        log:
-            kafkaEnabled: true
     feature:
         log:
             #是否发布日志信息开关
