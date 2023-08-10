@@ -1,11 +1,10 @@
 <!--
  * @Author: hongzhew
  * @Date: 2022-04-07 17:43:02
- * @LastEditors: hongzhew
- * @LastEditTime: 2022-04-07 17:44:07
- * @Description: 
+ * @LastEditors: mengjuhua
+ * @LastEditTime: 2023-08-03 15:20:05
+ * @Description: 应用管理
 -->
-<!--  -->
 <template>
     <div class="application">
         <!-- 应用列表表格 -->
@@ -18,35 +17,50 @@
             @on-page-size-change="onPageSizeChange"
         >
             <template v-slot:slotSearch>
-                <el-button class="global-btn-main" :style="{ fontSize: fontSizeObj.baseFontSize }"
-                 :size="fontSizeObj.buttonSize"
-                type="primary" @click="getAppList">
+                <el-button
+                    class="global-btn-main"
+                    :style="{ fontSize: fontSizeObj.baseFontSize }"
+                    :size="fontSizeObj.buttonSize"
+                    type="primary"
+                    @click="getAppList"
+                >
                     <i class="ri-search-line"></i>
                     {{ $t('搜索') }}
                 </el-button>
             </template>
             <template v-slot:slotBtns>
-                <el-button @click="handlerSort" :style="{ fontSize: fontSizeObj.baseFontSize }"
-                 :size="fontSizeObj.buttonSize"
-                class="global-btn-second">
+                <el-button
+                    @click="handlerSort"
+                    :style="{ fontSize: fontSizeObj.baseFontSize }"
+                    :size="fontSizeObj.buttonSize"
+                    class="global-btn-second"
+                >
                     <i class="ri-arrow-up-down-line"></i>
                     <span> {{ $t('排序') }}</span>
                 </el-button>
-                <el-button class="global-btn-second" :style="{ fontSize: fontSizeObj.baseFontSize }"
-                 :size="fontSizeObj.buttonSize" @click="handlerAppAdd">
+                <el-button
+                    class="global-btn-second"
+                    :style="{ fontSize: fontSizeObj.baseFontSize }"
+                    :size="fontSizeObj.buttonSize"
+                    @click="handlerAppAdd"
+                >
                     <i class="ri-add-line"></i>
                     {{ $t('新增') }}
                 </el-button>
-                <el-button class="global-btn-second" :style="{ fontSize: fontSizeObj.baseFontSize }"
-                 :size="fontSizeObj.buttonSize"
-                v-loading.fullscreen.lock="loading" @click="handlerDelete">
+                <el-button
+                    class="global-btn-second"
+                    :style="{ fontSize: fontSizeObj.baseFontSize }"
+                    :size="fontSizeObj.buttonSize"
+                    v-loading.fullscreen.lock="loading"
+                    @click="handlerDelete"
+                >
                     <i class="ri-close-line" />
                     {{ $t('删除') }}
                 </el-button>
                 <el-button
                     class="global-btn-second"
                     :style="{ fontSize: fontSizeObj.baseFontSize }"
-                 :size="fontSizeObj.buttonSize"
+                    :size="fontSizeObj.buttonSize"
                     v-loading.fullscreen.lock="loading"
                     @click="handlerDisableEnable(1)"
                 >
@@ -56,7 +70,7 @@
                 <el-button
                     class="global-btn-second"
                     :style="{ fontSize: fontSizeObj.baseFontSize }"
-                 :size="fontSizeObj.buttonSize"
+                    :size="fontSizeObj.buttonSize"
                     v-loading.fullscreen.lock="loading"
                     @click="handlerDisableEnable(2)"
                 >
@@ -66,9 +80,10 @@
                 <el-upload
                     accept=".json"
                     :http-request="handlerUpload"
-                    style="display: inline-block;margin: 0 15px;"
-                    :show-file-list="false">
-                    <el-button  class="global-btn-second"  >
+                    style="display: inline-block; margin: 0 15px"
+                    :show-file-list="false"
+                >
+                    <el-button class="global-btn-second">
                         <i class="ri-file-download-line"></i>
                         {{ $t('导入') }}
                     </el-button>
@@ -82,8 +97,7 @@
         <!-- 增加应用 -->
         <y9Dialog v-model:config="addDialogConfig">
             <template v-slot>
-                <y9Form  ref="ruleFormRef" :config="ruleFormConfig" >
-                </y9Form>
+                <y9Form ref="ruleFormRef" :config="ruleFormConfig"> </y9Form>
             </template>
         </y9Dialog>
         <!-- 应用图标的选择 -->
@@ -100,7 +114,7 @@
                         class="global-btn-main"
                         type="primary"
                         :style="{ fontSize: fontSizeObj.baseFontSize }"
-                 :size="fontSizeObj.buttonSize"
+                        :size="fontSizeObj.buttonSize"
                         style="margin-left: 15px"
                         @click="handlerSearchIcon"
                     >
@@ -122,10 +136,11 @@
 </template>
 
 <script lang="ts" setup>
-    import type { FormInstance, FormRules, ElMessage } from 'element-plus';
+    import { inject, watch, reactive, computed, h, onMounted, ref, toRefs } from 'vue';
+    import { ElMessage, ElMessageBox, ElNotification } from 'element-plus';
     import { useI18n } from 'vue-i18n';
     import { useSettingStore } from '@/store/modules/settingStore';
-    import { $validCheck } from '@/utils/validate'
+    import { $validCheck } from '@/utils/validate';
     import {
         applicationList, // 应用列表
         applicationAdd, // 增加应用
@@ -139,15 +154,14 @@
 
     // 应用图标列表 搜索接口
     import { searchIconPageByName, getAppIconPageList } from '@/api/appIcon/index';
-    import { computed, inject, ref, watch } from 'vue';
-    import settings from "@/settings";
+    import settings from '@/settings';
     import y9_storage from '@/utils/storage';
-    import {importAppJSON} from "@/api/impExp";
+    import { importAppJSON } from '@/api/impExp';
 
     const { t } = useI18n();
     const settingStore = useSettingStore();
     // 注入 字体对象
-    const fontSizeObj: any = inject('sizeObjInfo');  
+    const fontSizeObj: any = inject('sizeObjInfo');
     // import { iconList } from '../data.js';
 
     // loading
@@ -209,17 +223,17 @@
     const appListTableConfig = ref({
         columns: [
             { title: '', type: 'selection', fixed: 'left', width: 70 },
-            { title: computed(() => t("应用名称")), key: 'name', minWidth: 120 },
-            { title:  computed(() => t("链接地址")), key: 'url', minWidth: 200 },
+            { title: computed(() => t('应用名称')), key: 'name', minWidth: 120 },
+            { title: computed(() => t('链接地址')), key: 'url', minWidth: 200 },
             {
-                title:  computed(() => t("显示数字")),
+                title: computed(() => t('显示数字')),
                 render: (row) => {
                     return row.showNumber ? '是' : '否';
                 },
             },
-            { title:  computed(() => t("获取数字地址")), key: 'numberUrl', minWidth: 120 },
+            { title: computed(() => t('获取数字地址')), key: 'numberUrl', minWidth: 120 },
             {
-                title:  computed(() => t("所属类别")),
+                title: computed(() => t('所属类别')),
                 render: (row) => {
                     switch (row.type) {
                         case 1:
@@ -233,22 +247,22 @@
             },
             // { title: '排列序号', key: 'tabIndex' },
             {
-                title:  computed(() => t("是否可用")),
+                title: computed(() => t('是否可用')),
                 render: (row) => {
                     return row.enabled ? '是' : '否';
                 },
             },
             {
-                title:  computed(() => t("审核状态")),
+                title: computed(() => t('审核状态')),
                 key: 'checked',
                 render: (row) => {
                     return row.checked ? '已审核' : '未审核';
                 },
             },
-            { title:  computed(() => t("创建日期")), key: 'createTime', width: 165 },
-            { title:  computed(() => t("更新日期")), key: 'updateTime', width: 165 },
+            { title: computed(() => t('创建日期')), key: 'createTime', width: 165 },
+            { title: computed(() => t('更新日期')), key: 'updateTime', width: 165 },
             {
-                title:  computed(() => t("操作")),
+                title: computed(() => t('操作')),
                 fixed: 'right',
                 width: 100,
                 showOverflowTooltip: false,
@@ -259,10 +273,10 @@
                             {
                                 onClick: async () => {
                                     const result = await applicationInfoGet(row.id);
-                   
+
                                     ruleFormConfig.value.model = result.data;
                                     addDialogConfig.value.show = true;
-                                    addDialogConfig.value.title = computed(() => t("编辑应用"));
+                                    addDialogConfig.value.title = computed(() => t('编辑应用'));
                                 },
                             },
                             t('编辑')
@@ -271,16 +285,18 @@
                             'span',
                             {
                                 style: {
-                                  marginLeft: '10px',
-                                  display: 'inline-flex',
-                                  alignItems: 'center',
+                                    marginLeft: '10px',
+                                    display: 'inline-flex',
+                                    alignItems: 'center',
                                 },
                                 onClick: async () => {
-                                  const url =
-                                    import.meta.env.VUE_APP_CONTEXT +
-                                    'api/rest/impExp/exportAppJSON?appId=' + row.id +
-                                    '&access_token=' + y9_storage.getObjectItem(settings.siteTokenKey, 'access_token');
-                                  window.open(url);
+                                    const url =
+                                        import.meta.env.VUE_APP_CONTEXT +
+                                        'api/rest/impExp/exportAppJSON?appId=' +
+                                        row.id +
+                                        '&access_token=' +
+                                        y9_storage.getObjectItem(settings.siteTokenKey, 'access_token');
+                                    window.open(url);
                                 },
                             },
                             t('导出')
@@ -307,7 +323,7 @@
                 type: 'input',
                 value: '',
                 key: 'name',
-                label: computed(() => t("应用名称")),
+                label: computed(() => t('应用名称')),
                 span: settingStore.device === 'mobile' ? 16 : 5,
             },
             {
@@ -339,7 +355,7 @@
         iconSelectTable.value.tableData = result.rows;
         iconSelectTable.value.pageConfig.total = result.total;
         iconSelectDialog.value.show = true;
-        iconSelectDialog.value.title = computed(() => t("选择图标"));
+        iconSelectDialog.value.title = computed(() => t('选择图标'));
     }
     // 搜索 图标
     async function handlerSearchIcon() {
@@ -355,25 +371,25 @@
     // dialog 图标选择
     let iconSelectDialog = ref({
         show: false,
-        title: computed(() => t("选择图标")),
+        title: computed(() => t('选择图标')),
         width: '40%',
         showFooter: false,
     });
     // 选择图标 列表 配置
     let iconSelectTable = ref({
         columns: [
-            { title: computed(() => t("序号")), type: 'index', width: '100px' },
+            { title: computed(() => t('序号')), type: 'index', width: '100px' },
             {
-                title: computed(() => t("图标")),
+                title: computed(() => t('图标')),
                 showOverflowTooltip: false,
                 key: 'iconData',
                 imgConfig: {
                     type: 'base64',
                 },
             },
-            { title: computed(() => t("应用图标名称")), key: 'name' },
+            { title: computed(() => t('应用图标名称')), key: 'name' },
             {
-                title: computed(() => t("操作")),
+                title: computed(() => t('操作')),
                 showOverflowTooltip: false,
                 render: (row) => {
                     return h(
@@ -382,8 +398,8 @@
                             onClick: () => {
                                 // base64 转 url
                                 ruleFormConfig.value.model = ruleFormRef.value?.model;
-                                ruleFormConfig.value.model.iconData= `data:image/${row.type};base64,${row.iconData}`;
-              
+                                ruleFormConfig.value.model.iconData = `data:image/${row.type};base64,${row.iconData}`;
+
                                 iconSelectDialog.value.show = false;
                                 iconUrl.value = row.path;
                                 name.value = '';
@@ -420,7 +436,7 @@
                 type: 'input',
                 value: '',
                 key: 'name',
-                label: computed(() => t("应用图标名称")),
+                label: computed(() => t('应用图标名称')),
                 span: 9,
             },
             {
@@ -433,17 +449,18 @@
     });
 
     // 应用 添加 修改表单ref
-    const ruleFormRef = ref<FormInstance>();
+    const ruleFormRef = ref();
     const validateUrl = (rule: any, value: any, callback: any) => {
-        let result =  $validCheck('url',value,true);
-        if(!result.valid){
-                callback(new Error(result.msg));
-        }else{
-            callback()
+        let result = $validCheck('url', value, true);
+        if (!result.valid) {
+            callback(new Error(result.msg));
+        } else {
+            callback();
         }
-    }
+    };
     // 表单
-    let ruleFormConfig = ref({//表单配置
+    let ruleFormConfig = ref({
+        //表单配置
         model: {
             name: '',
             url: '',
@@ -453,165 +470,163 @@
             enabled: true,
             showNumber: false,
         },
-        rules:{//	表单验证规则。类型：FormRules
-            name: [
-                { required: true, message: computed(() => t("请输入应用名称")),  trigger: 'blur', },
-            ],
+        rules: {
+            //	表单验证规则。类型：FormRules
+            name: [{ required: true, message: computed(() => t('请输入应用名称')), trigger: 'blur' }],
             url: [
-                { required: true, message: computed(() => t("请输入链接地址")), trigger: 'blur', },
-                { validator:  validateUrl, trigger: 'blur', }
+                { required: true, message: computed(() => t('请输入链接地址')), trigger: 'blur' },
+                { validator: validateUrl, trigger: 'blur' },
             ],
-        }, 
-        itemList:[
+        },
+        itemList: [
             {
-                type:"input",
-                label: computed(() => t("应用名称")),
-                prop:"name",
+                type: 'input',
+                label: computed(() => t('应用名称')),
+                prop: 'name',
             },
             {
-                type:"input",
-                label: computed(() => t("链接地址")),
-                prop:"url",
+                type: 'input',
+                label: computed(() => t('链接地址')),
+                prop: 'url',
             },
             {
-                type:"select",
-                label: computed(() => t("打开方式")),
-                prop:"opentype",
+                type: 'select',
+                label: computed(() => t('打开方式')),
+                prop: 'opentype',
                 props: {
                     options: [
                         //选项列表
-                        { label: computed(() => t("在桌面窗口打开")), value: 0, },
-                        { label: computed(() => t("在新浏览器窗口打开")), value: 1, },
+                        { label: computed(() => t('在桌面窗口打开')), value: 0 },
+                        { label: computed(() => t('在新浏览器窗口打开')), value: 1 },
                     ],
                 },
             },
             {
-                type:"select",
-                label: computed(() => t("所属类别")),
-                prop:"type",
+                type: 'select',
+                label: computed(() => t('所属类别')),
+                prop: 'type',
                 props: {
                     options: [
-                        { value: 1,  label: computed(() => t("业务协同")), },
-                        { value: 2,  label: computed(() => t("事项办理")), },
-                        { value: 3,  label: computed(() => t("数据服务")), },
+                        { value: 1, label: computed(() => t('业务协同')) },
+                        { value: 2, label: computed(() => t('事项办理')) },
+                        { value: 3, label: computed(() => t('数据服务')) },
                     ],
                 },
             },
             {
-                type: "radio",
-                label: computed(() => t("是否可用")),
-                prop: "enabled",
+                type: 'radio',
+                label: computed(() => t('是否可用')),
+                prop: 'enabled',
                 required: true,
                 props: {
-                    radioType: "radio",
+                    radioType: 'radio',
                     options: [
-                        { label: computed(() => t("是")), value: true },
-                        { label: computed(() => t("否")),  value: false },
+                        { label: computed(() => t('是')), value: true },
+                        { label: computed(() => t('否')), value: false },
                     ],
-                }
+                },
             },
             {
-                type: "radio",
-                label: computed(() => t("是否显示数字")),
-                prop: "showNumber",
+                type: 'radio',
+                label: computed(() => t('是否显示数字')),
+                prop: 'showNumber',
                 required: true,
                 props: {
-                    radioType: "radio",
+                    radioType: 'radio',
                     options: [
-                        { label: computed(() => t("是")), value: true },
-                        { label: computed(() => t("否")),  value: false },
+                        { label: computed(() => t('是')), value: true },
+                        { label: computed(() => t('否')), value: false },
                     ],
-                }
-            },
-            {
-                type:"text",//文本类型类型
-                props:{
-                    render:()=>{//文本内容
-                        return h('div', { onClick: handlerIconSelect, className: 'icon-select'}, [
-                        ruleFormConfig.value.model?.iconData ? 
-                           h('img', { src: ruleFormConfig.value.model?.iconData}) :
-                           h('span', {class: 'icon-text'}, t('点击获取图标'))
-                        ])
-                    }
                 },
-                label: computed(() => t("应用图标")),
-                prop: 'iconData'
             },
             {
-                type:"input",
-                label: computed(() => t("角色管理的URL")),
-                prop:"roleAdminUrl",
-            },
-            {
-                type:"input",
-                label: computed(() => t("资源管理的URL")),
-                prop:"resourceAdminUrl",
-            },
-            {
-                type:"input",
-                label: computed(() => t("自定义ID")),
-                prop:"customId",
-            },
-            {
-                type:"input",
-                label: computed(() => t("排序序号")),
-                prop:"tabIndex",
-            },
-            {
-                type:"textarea",
-                label: computed(() => t("应用概述")),
-                prop:"description",
-                props:{//文本域类型的属性
-                    rows:3,//输入框行数,类型：number
+                type: 'text', //文本类型类型
+                props: {
+                    render: () => {
+                        //文本内容
+                        return h('div', { onClick: handlerIconSelect, className: 'icon-select' }, [
+                            ruleFormConfig.value.model?.iconData
+                                ? h('img', { src: ruleFormConfig.value.model?.iconData })
+                                : h('span', { class: 'icon-text' }, t('点击获取图标')),
+                        ]);
+                    },
                 },
-            }
+                label: computed(() => t('应用图标')),
+                prop: 'iconData',
+            },
+            {
+                type: 'input',
+                label: computed(() => t('角色管理的URL')),
+                prop: 'roleAdminUrl',
+            },
+            {
+                type: 'input',
+                label: computed(() => t('资源管理的URL')),
+                prop: 'resourceAdminUrl',
+            },
+            {
+                type: 'input',
+                label: computed(() => t('自定义ID')),
+                prop: 'customId',
+            },
+            {
+                type: 'input',
+                label: computed(() => t('排序序号')),
+                prop: 'tabIndex',
+            },
+            {
+                type: 'textarea',
+                label: computed(() => t('应用概述')),
+                prop: 'description',
+                props: {
+                    //文本域类型的属性
+                    rows: 3, //输入框行数,类型：number
+                },
+            },
         ],
         descriptionsFormConfig: {
             labelWidth: '200px',
-            labelAlign: 'center'
+            labelAlign: 'center',
         },
     });
 
     watch(
         () => ruleFormRef.value?.model?.showNumber,
         (newVal) => {
-
-            if(newVal === true || newVal === false) {
-                handlerChange(newVal)
+            if (newVal === true || newVal === false) {
+                handlerChange(newVal);
             }
-            
         }
-    )
+    );
     // 单选框change
     function handlerChange(value) {
         ruleFormConfig.value.model = ruleFormRef.value?.model;
         ruleFormConfig.value.model.showNumber = value;
-        if(value) {
-            ruleFormConfig.value.itemList.splice(6, 0,  {
-                type:"input",
-                label: computed(() => t("获取数字地址")),
+        if (value) {
+            ruleFormConfig.value.itemList.splice(6, 0, {
+                type: 'input',
+                label: computed(() => t('获取数字地址')),
                 prop: 'numberUrl',
                 props: {
-                    placeholder: '返回数据格式如:{count: 12345},默认参数为tenantId、userId'
-                }
+                    placeholder: '返回数据格式如:{count: 12345},默认参数为tenantId、userId',
+                },
             });
-        }else {
-            ruleFormConfig.value.itemList = ruleFormConfig.value.itemList.filter(item => item.prop !== 'numberUrl');
+        } else {
+            ruleFormConfig.value.itemList = ruleFormConfig.value.itemList.filter((item) => item.prop !== 'numberUrl');
             ruleFormConfig.value.model.numberUrl = '';
         }
-    };
+    }
     // 增加 修改应用 弹框的变量配置 控制
     let addDialogConfig = ref({
         show: false,
-        title: computed(() => t("新增应用")),
+        title: computed(() => t('新增应用')),
         width: '40%',
         onOkLoading: true,
         onOk: (newConfig) => {
             return new Promise(async (resolve, reject) => {
                 const y9RuleFormInstance = ruleFormRef.value?.elFormRef;
                 await y9RuleFormInstance.validate(async (valid) => {
-                    if(valid) {
-
+                    if (valid) {
                         ruleFormRef.value.model.iconUrl = iconUrl.value;
 
                         // Id 为null 表示当时为 添加
@@ -621,55 +636,58 @@
                         };
 
                         // 将数值为''的值去除
-                        Object.keys(params).forEach(key => {
-                            if(key == 'numberUrl') {
+                        Object.keys(params).forEach((key) => {
+                            if (key == 'numberUrl') {
                                 // 数字地址没有得传给后端 保存后链接地址才会没有
                                 return;
-                            }else if(params[key] === '' || params[key] === null){
-                                delete params[key]
+                            } else if (params[key] === '' || params[key] === null) {
+                                delete params[key];
                                 return;
                             }
-                        })
-
-                        await applicationAdd(params).then(result => {
-                            ElNotification({
-                                title: result.success ? t('成功') : t('失败'),
-                                message: result.success ? t('操作成功') : t('操作失败'),
-                                type: result.success ? 'success' : 'error',
-                                duration: 2000,
-                                offset: 80,
-                            });
-                            // 选中的数据容器 清空
-                            ids.value = [];
-                            // 更新成功后 表单的数据 清空
-                            ruleFormConfig.value.model = {
-                                name: '',
-                                url: '',
-                                iconData: null,
-                                opentype: 0,
-                                type: 1,
-                                enabled: true,
-                                showNumber: false,
-                            };
-                            iconUrl.value = '';
-                            ruleFormConfig.value.itemList = ruleFormConfig.value.itemList.filter(item => item.prop !== 'numberUrl');
-                            // 重新获取应用列表 数据
-                            getAppList();
-                            resolve();
-                        }).catch(() => {
-                            reject();
                         });
-                       
-                    }else {
+
+                        await applicationAdd(params)
+                            .then((result) => {
+                                ElNotification({
+                                    title: result.success ? t('成功') : t('失败'),
+                                    message: result.success ? t('操作成功') : t('操作失败'),
+                                    type: result.success ? 'success' : 'error',
+                                    duration: 2000,
+                                    offset: 80,
+                                });
+                                // 选中的数据容器 清空
+                                ids.value = [];
+                                // 更新成功后 表单的数据 清空
+                                ruleFormConfig.value.model = {
+                                    name: '',
+                                    url: '',
+                                    iconData: null,
+                                    opentype: 0,
+                                    type: 1,
+                                    enabled: true,
+                                    showNumber: false,
+                                };
+                                iconUrl.value = '';
+                                ruleFormConfig.value.itemList = ruleFormConfig.value.itemList.filter(
+                                    (item) => item.prop !== 'numberUrl'
+                                );
+                                // 重新获取应用列表 数据
+                                getAppList();
+                                resolve();
+                            })
+                            .catch(() => {
+                                reject();
+                            });
+                    } else {
                         reject();
                     }
-                })
+                });
             });
         },
     });
     // 新增应用  函数事件
     function handlerAppAdd() {
-        addDialogConfig.value.title = computed(() => t("新增应用"));
+        addDialogConfig.value.title = computed(() => t('新增应用'));
         ruleFormConfig.value.model = {
             name: '',
             url: '',
@@ -725,7 +743,6 @@
     // 导入
     function handlerUpload(params) {
         importAppJSON(params.file).then((res) => {
-
             ElNotification({
                 title: t('成功'),
                 message: res.msg,
@@ -740,7 +757,7 @@
         });
     }
 
-    function handlerSort(){
+    function handlerSort() {
         sortDialogConfig.value.show = true;
         sortDialogConfig.value.title = computed(() => t('排序'));
     }
@@ -748,15 +765,15 @@
     // 查看 修改日志 的弹框 变量 配置控制
     let dialogModifyLog = reactive({
         show: false,
-        title: computed(() => t("查看修改日志")),
+        title: computed(() => t('查看修改日志')),
         showFooter: false, //是否显示底部
     });
     // 查看修改日志 的表格 配置信息
     const modifyLogTableConfig = ref({
         columns: [
             { title: '', type: 'index' },
-            { title: computed(() => t("操作信息")), key: '' },
-            { title: computed(() => t("描述")), key: '' },
+            { title: computed(() => t('操作信息')), key: '' },
+            { title: computed(() => t('描述')), key: '' },
             { title: 'id', key: '' },
         ],
         tableData: [],
@@ -841,10 +858,12 @@
                 tableData.forEach((element) => {
                     ids.push(element.id);
                 });
-                await appSaveOrder(ids.toString()).then(res => {
-                    result = res; 
-                }).catch(() => {});
-               
+                await appSaveOrder(ids.toString())
+                    .then((res) => {
+                        result = res;
+                    })
+                    .catch(() => {});
+
                 ElNotification({
                     title: result.success ? t('成功') : t('失败'),
                     message: result.msg,
@@ -856,10 +875,9 @@
                     // 重新获取应用列表 数据
                     getAppList();
                     resolve();
-                }else {
+                } else {
                     reject();
                 }
-                
             });
         },
     });
@@ -914,7 +932,5 @@
                 cursor: pointer;
             }
         }
-    }   
-    
-
+    }
 </style>

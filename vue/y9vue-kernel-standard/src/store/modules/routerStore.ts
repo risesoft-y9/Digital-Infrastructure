@@ -21,7 +21,7 @@ export const useRouterStore = defineStore('routerStore', {
         },
     },
     actions: {
-        addTab (item) {
+        addTab(item) {
             // 当前 active路由
             this.activeRoute = item.path
             // 检查是否存在
@@ -33,9 +33,9 @@ export const useRouterStore = defineStore('routerStore', {
                 this.tabs.push(item)
             }
             // tabs是否超过6个
-            
+
         },
-        removeTab (tabName: String, tabPosition: String) {
+        removeTab(tabName: String, tabPosition: String) {
             // 位置是top时  移除时，如果有则留下一个名为首页的标签
             if (tabPosition === 'top' && tabName !== '首页') {
                 this.tabs = remove(this.tabs, (item) => item.path !== tabName)

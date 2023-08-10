@@ -1,10 +1,18 @@
+<!--
+ * @Descripttion: 子域三员列表
+ * @version: 
+ * @Author: zhangchongjie
+ * @Date: 2022-06-28 10:03:00
+ * @LastEditors: mengjuhua
+ * @LastEditTime: 2023-08-03 10:38:49
+-->
 <template>
     <y9Card :title="`${currInfo.name ? currInfo.name : ''}`">
         <div class="add-action">
             <el-button
                 type="primary"
                 :disabled="disabled1"
-                :size="fontSizeObj.buttonSize" 
+                :size="fontSizeObj.buttonSize"
                 :style="{ fontSize: fontSizeObj.baseFontSize }"
                 @click="onAddTreeManage(1, '系统管理员', '')"
                 v-show="showSysBnt === true"
@@ -15,7 +23,7 @@
             <el-button
                 type="primary"
                 :disabled="disabled2"
-                :size="fontSizeObj.buttonSize" 
+                :size="fontSizeObj.buttonSize"
                 :style="{ fontSize: fontSizeObj.baseFontSize }"
                 @click="onAddTreeManage(2, '安全保密员', '')"
                 v-show="showSysBnt === true"
@@ -26,7 +34,7 @@
             <el-button
                 type="primary"
                 :disabled="disabled3"
-                :size="fontSizeObj.buttonSize" 
+                :size="fontSizeObj.buttonSize"
                 :style="{ fontSize: fontSizeObj.baseFontSize }"
                 @click="onAddTreeManage(3, '安全审计员', '')"
                 v-show="showSysBnt === true"
@@ -45,6 +53,8 @@
 </template>
 
 <script lang="ts" setup>
+    import { inject, watch, reactive, computed, h, onMounted, ref, toRefs } from 'vue';
+    import { ElMessage, ElMessageBox, ElNotification } from 'element-plus';
     import { $deepAssignObject } from '@/utils/object';
     import {
         getManagersByParentId,
@@ -56,17 +66,16 @@
         changeDisabled,
     } from '@/api/deptManager/index';
     import { useI18n } from 'vue-i18n';
-    import { h, inject, onMounted, ref, toRefs, watch } from 'vue';
     import y9_storage from '@/utils/storage';
-    import { useSettingStore } from "@/store/modules/settingStore";
-    const settingStore = useSettingStore()  
+    import { useSettingStore } from '@/store/modules/settingStore';
+    const settingStore = useSettingStore();
     // 注入 字体对象
     const fontSizeObj: any = inject('sizeObjInfo');
-    
+
     const { t } = useI18n();
 
-    const y9UserInfo =JSON.parse(sessionStorage.getItem('ssoUserInfo'));
-
+    const y9UserInfo = JSON.parse(sessionStorage.getItem('ssoUserInfo'));
+    let y9FormRef = ref();
     const props = defineProps({
         currTreeNodeInfo: {
             //当前tree节点信息
@@ -101,30 +110,30 @@
         tableConfig: {
             columns: [
                 {
-                    title: computed(() => t("序号")),
+                    title: computed(() => t('序号')),
                     type: 'index',
                     width: '100px',
                     fixed: 'left',
                 },
                 {
-                    title: computed(() => t("名称")),
+                    title: computed(() => t('名称')),
                     key: 'name',
                 },
                 {
-                    title: computed(() => t("登录名称")),
+                    title: computed(() => t('登录名称')),
                     key: 'loginName',
                 },
                 {
-                    title: computed(() => t("移动电话")),
+                    title: computed(() => t('移动电话')),
                     key: 'mobile',
                 },
                 {
-                    title: computed(() => t("人员类型")),
+                    title: computed(() => t('人员类型')),
                     key: 'userType',
                     width: 150,
                 },
                 {
-                    title: computed(() => t("操作")),
+                    title: computed(() => t('操作')),
                     width: settingStore.getTwoBtnWidth,
                     fixed: 'right',
                     showOverflowTooltip: false,
@@ -177,8 +186,6 @@
                                                 });
                                                 if (res.success) {
                                                     getManagersList();
-													
-													
                                                 }
                                                 loading.value = false;
                                             })
@@ -368,6 +375,7 @@
             ],
             tableData: [],
             pageConfig: false, //取消分页
+            loading: false,
         },
         //弹窗配置
         dialogConfig: {
@@ -384,21 +392,23 @@
                             let prefix = formConfig.value.itemList[1].props.prependText;
                             data.loginName = prefix + data.loginName;
                             // data
-                            await saveOrUpdate(data).then(res => {
-                                ElNotification({
-                                    title: res.success ? t('成功') : t('失败'),
-                                    message: res.msg,
-                                    type: res.success ? 'success' : 'error',
-                                    duration: 2000,
-                                    offset: 80,
+                            await saveOrUpdate(data)
+                                .then((res) => {
+                                    ElNotification({
+                                        title: res.success ? t('成功') : t('失败'),
+                                        message: res.msg,
+                                        type: res.success ? 'success' : 'error',
+                                        duration: 2000,
+                                        offset: 80,
+                                    });
+                                    if (res.success) {
+                                        getManagersList();
+                                    }
+                                    resolve();
+                                })
+                                .catch(() => {
+                                    reject();
                                 });
-                                if(res.success) {
-                                    getManagersList();
-                                }
-                                resolve();
-                            }).catch(() => {
-                                reject();
-                            })
                         } else {
                             ElMessage({
                                 type: 'error',
@@ -425,18 +435,18 @@
             },
             rules: {
                 //	表单验证规则。类型：FormRules
-                name: [{ required: true, message: computed(() => t("请输入姓名")), trigger: 'blur' }],
+                name: [{ required: true, message: computed(() => t('请输入姓名')), trigger: 'blur' }],
                 loginName: [{ required: true, validator: checkLoginName, trigger: 'blur' }],
             },
             itemList: [
                 {
                     type: 'input',
-                    label: computed(() => t("人员名称")),
+                    label: computed(() => t('人员名称')),
                     prop: 'name',
                 },
                 {
                     type: 'input',
-                    label: computed(() => t("登录名称")),
+                    label: computed(() => t('登录名称')),
                     prop: 'loginName',
                     props: {
                         prependText: '',
@@ -444,29 +454,27 @@
                 },
                 {
                     type: 'input',
-                    label: computed(() => t("电子邮件")),
+                    label: computed(() => t('电子邮件')),
                     prop: 'email',
                 },
                 {
                     type: 'input',
-                    label: computed(() => t("移动电话")),
+                    label: computed(() => t('移动电话')),
                     prop: 'mobile',
                 },
                 {
                     type: 'textarea',
-                    label: computed(() => t("人员描述")),
+                    label: computed(() => t('人员描述')),
                     prop: 'description',
                 },
             ],
         },
-        y9FormRef: '',
         disabled1: false,
         disabled2: false,
         disabled3: false,
     });
 
-    let { currInfo, tableConfig, dialogConfig, formConfig, loading, y9FormRef, disabled1, disabled2, disabled3 } =
-        toRefs(data);
+    let { currInfo, tableConfig, dialogConfig, formConfig, loading, disabled1, disabled2, disabled3 } = toRefs(data);
 
     let showSysBnt = ref(true);
     watch(
@@ -548,7 +556,7 @@
             show: true,
             title: id == '' ? computed(() => t(`新增${title}`)) : computed(() => t(`编辑${title}`)),
             type: type,
-            showFooter: true
+            showFooter: true,
         });
     }
 </script>

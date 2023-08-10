@@ -74,7 +74,12 @@
                 </td>
                 <td class="lefttd">{{ $t('性别') }}</td>
                 <td class="rigthtd">
-                    <el-select v-if="isEditState" v-model="personForm.sex" :placeholder="$t('请选择')" :size="fontSizeObj.buttonSize">
+                    <el-select
+                        v-if="isEditState"
+                        v-model="personForm.sex"
+                        :placeholder="$t('请选择')"
+                        :size="fontSizeObj.buttonSize"
+                    >
                         <el-option
                             v-for="(item, index) in $dictionary().sex"
                             :key="index"
@@ -108,8 +113,13 @@
                 </td>
                 <td class="lefttd">{{ $t('人员职务') }}</td>
                 <td class="rigthtd">
-                    <el-select v-if="isEditState" v-model="personForm.duty" :placeholder="$t('请选择')"
-                    :size="fontSizeObj.buttonSize" clearable>
+                    <el-select
+                        v-if="isEditState"
+                        v-model="personForm.duty"
+                        :placeholder="$t('请选择')"
+                        :size="fontSizeObj.buttonSize"
+                        clearable
+                    >
                         <el-option
                             v-for="(item, index) in $dictionary().duty"
                             :key="index"
@@ -125,8 +135,12 @@
             <tr>
                 <td class="lefttd">{{ $t('是否在编') }}</td>
                 <td class="rigthtd">
-                    <el-select v-if="isEditState" v-model="personForm.official" :placeholder="$t('请选择')"
-                    :size="fontSizeObj.buttonSize">
+                    <el-select
+                        v-if="isEditState"
+                        v-model="personForm.official"
+                        :placeholder="$t('请选择')"
+                        :size="fontSizeObj.buttonSize"
+                    >
                         <el-option
                             v-for="(item, index) in $dictionary().booleanNum"
                             :key="index"
@@ -190,9 +204,19 @@
             <tr>
                 <td class="lefttd">{{ $t('是否禁用') }}</td>
                 <td class="rigthtd">
-                    <el-select v-if="isEditState" v-model="personForm.disabled" :placeholder="$t('请选择')" :size="fontSizeObj.buttonSize">
-                        <el-option v-for="(item, index) in $dictionary().boolean" :key="index" :label="$t(item.name)"
-                        :style="{ fontSize: fontSizeObj.baseFontSize }" :value="item.id" />
+                    <el-select
+                        v-if="isEditState"
+                        v-model="personForm.disabled"
+                        :placeholder="$t('请选择')"
+                        :size="fontSizeObj.buttonSize"
+                    >
+                        <el-option
+                            v-for="(item, index) in $dictionary().boolean"
+                            :key="index"
+                            :label="$t(item.name)"
+                            :style="{ fontSize: fontSizeObj.baseFontSize }"
+                            :value="item.id"
+                        />
                     </el-select>
                     <span v-else>{{ currInfo.disabled ? $t('是') : $t('否') }}</span>
                 </td>
@@ -245,7 +269,7 @@
                 </td>
                 <td class="lefttd">{{ $t('居住城市') }}</td>
                 <td class="rigthtd">
-                    <el-input v-if="isEditState" v-model="personForm.city" :size="fontSizeObj.buttonSize"/>
+                    <el-input v-if="isEditState" v-model="personForm.city" :size="fontSizeObj.buttonSize" />
                     <span v-else>{{ currInfo.city }}</span>
                 </td>
             </tr>
@@ -262,7 +286,13 @@
                 </td>
                 <td class="lefttd">{{ $t('证件类型') }}</td>
                 <td class="rigthtd">
-                    <el-select v-if="isEditState" v-model="personForm.idType" :placeholder="$t('请选择')" clearable :size="fontSizeObj.buttonSize">
+                    <el-select
+                        v-if="isEditState"
+                        v-model="personForm.idType"
+                        :placeholder="$t('请选择')"
+                        clearable
+                        :size="fontSizeObj.buttonSize"
+                    >
                         <el-option
                             v-for="(item, index) in $dictionary().principalIDType"
                             :label="$t(item.name)"
@@ -323,7 +353,13 @@
             <tr>
                 <td class="lefttd">{{ $t('学历') }}</td>
                 <td class="rigthtd">
-                    <el-select v-if="isEditState" v-model="personForm.education" :placeholder="$t('请选择')" clearable   :size="fontSizeObj.buttonSize">
+                    <el-select
+                        v-if="isEditState"
+                        v-model="personForm.education"
+                        :placeholder="$t('请选择')"
+                        clearable
+                        :size="fontSizeObj.buttonSize"
+                    >
                         <el-option
                             v-for="(item, index) in $dictionary().education"
                             :label="$t(item.name)"
@@ -336,7 +372,7 @@
                 </td>
                 <td class="lefttd">{{ $t('人员籍贯') }}</td>
                 <td class="rigthtd">
-                    <el-input v-if="isEditState" v-model="personForm.province"  :size="fontSizeObj.buttonSize" />
+                    <el-input v-if="isEditState" v-model="personForm.province" :size="fontSizeObj.buttonSize" />
                     <span v-else>{{ currInfo.province }}</span>
                 </td>
                 <td class="lefttd">{{ $t('出生日期') }}</td>
@@ -357,14 +393,20 @@
             <tr>
                 <td class="lefttd">{{ $t('家庭住址') }}</td>
                 <td class="rigthtd" colspan="5">
-                    <el-input v-if="isEditState" v-model="personForm.homeAddress"  :size="fontSizeObj.buttonSize" />
+                    <el-input v-if="isEditState" v-model="personForm.homeAddress" :size="fontSizeObj.buttonSize" />
                     <span v-else>{{ currInfo.homeAddress }}</span>
                 </td>
             </tr>
             <tr>
                 <td class="lefttd">{{ $t('人员描述') }}</td>
                 <td class="rigthtd" colspan="5">
-                    <el-input v-if="isEditState" v-model="personForm.description" type="textarea" :rows="3"  :size="fontSizeObj.buttonSize"/>
+                    <el-input
+                        v-if="isEditState"
+                        v-model="personForm.description"
+                        type="textarea"
+                        :rows="3"
+                        :size="fontSizeObj.buttonSize"
+                    />
                     <span v-else>{{ currInfo.description }}</span>
                 </td>
             </tr>
@@ -435,7 +477,12 @@
             </el-descriptions-item>
 
             <el-descriptions-item :label="$t('性别')">
-                <el-select v-if="isEditState" v-model="personForm.sex" :placeholder="$t('请选择')"  :size="fontSizeObj.buttonSize">
+                <el-select
+                    v-if="isEditState"
+                    v-model="personForm.sex"
+                    :placeholder="$t('请选择')"
+                    :size="fontSizeObj.buttonSize"
+                >
                     <el-option
                         v-for="(item, index) in $dictionary().sex"
                         :key="index"
@@ -447,7 +494,13 @@
                 <span v-else>{{ currInfo.sex == 1 ? $t('男') : $t('女') }}</span>
             </el-descriptions-item>
             <el-descriptions-item :label="$t('人员职级')">
-                <el-select v-if="isEditState" v-model="personForm.dutyLevelName" :placeholder="$t('请选择')" clearable :size="fontSizeObj.buttonSize">
+                <el-select
+                    v-if="isEditState"
+                    v-model="personForm.dutyLevelName"
+                    :placeholder="$t('请选择')"
+                    clearable
+                    :size="fontSizeObj.buttonSize"
+                >
                     <el-option
                         v-for="(item, index) in $dictionary().dutyLevel"
                         :key="index"
@@ -459,7 +512,13 @@
                 <span v-else>{{ currInfo.dutyLevelName }}</span>
             </el-descriptions-item>
             <el-descriptions-item :label="$t('人员职务')">
-                <el-select v-if="isEditState" v-model="personForm.duty" :placeholder="$t('请选择')" clearable  :size="fontSizeObj.buttonSize">
+                <el-select
+                    v-if="isEditState"
+                    v-model="personForm.duty"
+                    :placeholder="$t('请选择')"
+                    clearable
+                    :size="fontSizeObj.buttonSize"
+                >
                     <el-option
                         v-for="(item, index) in $dictionary().duty"
                         :key="index"
@@ -471,7 +530,12 @@
                 <span v-else>{{ currInfo.duty }}</span>
             </el-descriptions-item>
             <el-descriptions-item :label="$t('是否在编')">
-                <el-select v-if="isEditState" v-model="personForm.official" :placeholder="$t('请选择')" :size="fontSizeObj.buttonSize">
+                <el-select
+                    v-if="isEditState"
+                    v-model="personForm.official"
+                    :placeholder="$t('请选择')"
+                    :size="fontSizeObj.buttonSize"
+                >
                     <el-option
                         v-for="(item, index) in $dictionary().booleanNum"
                         :key="index"
@@ -483,7 +547,13 @@
                 <span v-else>{{ currInfo.official == 1 ? $t('是') : $t('否') }}</span>
             </el-descriptions-item>
             <el-descriptions-item :label="$t('编制类型')">
-                <el-select v-if="isEditState" v-model="personForm.officialType" :placeholder="$t('请选择')" clearable  :size="fontSizeObj.buttonSize">
+                <el-select
+                    v-if="isEditState"
+                    v-model="personForm.officialType"
+                    :placeholder="$t('请选择')"
+                    clearable
+                    :size="fontSizeObj.buttonSize"
+                >
                     <el-option
                         v-for="(item, index) in $dictionary().officialType"
                         :key="index"
@@ -495,15 +565,15 @@
                 <span v-else>{{ currInfo.officialType }}</span>
             </el-descriptions-item>
             <el-descriptions-item :label="$t('办公室')">
-                <el-input v-if="isEditState" v-model="personForm.officeAddress"  :size="fontSizeObj.buttonSize" />
+                <el-input v-if="isEditState" v-model="personForm.officeAddress" :size="fontSizeObj.buttonSize" />
                 <span v-else>{{ currInfo.officeAddress }}</span>
             </el-descriptions-item>
             <el-descriptions-item :label="$t('办公电话')">
-                <el-input v-if="isEditState" v-model="personForm.officePhone"  :size="fontSizeObj.buttonSize" />
+                <el-input v-if="isEditState" v-model="personForm.officePhone" :size="fontSizeObj.buttonSize" />
                 <span v-else>{{ currInfo.officePhone }}</span>
             </el-descriptions-item>
             <el-descriptions-item :label="$t('办公传真')">
-                <el-input v-if="isEditState" v-model="personForm.officeFax"  :size="fontSizeObj.buttonSize" />
+                <el-input v-if="isEditState" v-model="personForm.officeFax" :size="fontSizeObj.buttonSize" />
                 <span v-else>{{ currInfo.officeFax }}</span>
             </el-descriptions-item>
             <el-descriptions-item :label="$t('电子邮件')">
@@ -516,9 +586,19 @@
                 <span v-else>{{ currInfo.email }}</span>
             </el-descriptions-item>
             <el-descriptions-item :label="$t('是否禁用')">
-                <el-select v-if="isEditState" v-model="personForm.disabled" :placeholder="$t('请选择')"  :size="fontSizeObj.buttonSize">
-                    <el-option v-for="(item, index) in $dictionary().boolean" :key="index" :label="$t(item.name)"
-                    :style="{ fontSize: fontSizeObj.baseFontSize }" :value="item.id" />
+                <el-select
+                    v-if="isEditState"
+                    v-model="personForm.disabled"
+                    :placeholder="$t('请选择')"
+                    :size="fontSizeObj.buttonSize"
+                >
+                    <el-option
+                        v-for="(item, index) in $dictionary().boolean"
+                        :key="index"
+                        :label="$t(item.name)"
+                        :style="{ fontSize: fontSizeObj.baseFontSize }"
+                        :value="item.id"
+                    />
                 </el-select>
                 <span v-else>{{ currInfo.disabled ? $t('是') : $t('否') }}</span>
             </el-descriptions-item>
@@ -544,7 +624,13 @@
 
         <el-descriptions column="1" border :title="$t('个人信息')" style="margin-top: 20px">
             <el-descriptions-item :label="$t('婚姻状况')">
-                <el-select v-if="isEditState" v-model="personForm.maritalStatus" :placeholder="$t('请选择')" clearable :size="fontSizeObj.buttonSize">
+                <el-select
+                    v-if="isEditState"
+                    v-model="personForm.maritalStatus"
+                    :placeholder="$t('请选择')"
+                    clearable
+                    :size="fontSizeObj.buttonSize"
+                >
                     <el-option
                         v-for="(item, index) in $dictionary().maritalStatus"
                         :label="$t(item.name)"
@@ -572,7 +658,13 @@
                 <span v-else>{{ currInfo.homePhone }}</span>
             </el-descriptions-item>
             <el-descriptions-item :label="$t('证件类型')">
-                <el-select v-if="isEditState" v-model="personForm.idType" :placeholder="$t('请选择')" clearable :size="fontSizeObj.buttonSize">
+                <el-select
+                    v-if="isEditState"
+                    v-model="personForm.idType"
+                    :placeholder="$t('请选择')"
+                    clearable
+                    :size="fontSizeObj.buttonSize"
+                >
                     <el-option
                         v-for="(item, index) in $dictionary().principalIDType"
                         :label="$t(item.name)"
@@ -624,14 +716,25 @@
                 <span v-else>{{ currInfo.workTime }}</span>
             </el-descriptions-item>
             <el-descriptions-item :label="$t('学历')">
-                <el-select v-if="isEditState" v-model="personForm.education" :placeholder="$t('请选择')" clearable  :size="fontSizeObj.buttonSize">
-                    <el-option v-for="(item, index) in $dictionary().education" :key="index" :label="$t(item.name)"
-                    :style="{ fontSize: fontSizeObj.baseFontSize }" :value="item.id" />
+                <el-select
+                    v-if="isEditState"
+                    v-model="personForm.education"
+                    :placeholder="$t('请选择')"
+                    clearable
+                    :size="fontSizeObj.buttonSize"
+                >
+                    <el-option
+                        v-for="(item, index) in $dictionary().education"
+                        :key="index"
+                        :label="$t(item.name)"
+                        :style="{ fontSize: fontSizeObj.baseFontSize }"
+                        :value="item.id"
+                    />
                 </el-select>
                 <span v-else>{{ currInfo.education }}</span>
             </el-descriptions-item>
             <el-descriptions-item :label="$t('人员籍贯')">
-                <el-input v-if="isEditState" v-model="personForm.province"  :size="fontSizeObj.buttonSize" />
+                <el-input v-if="isEditState" v-model="personForm.province" :size="fontSizeObj.buttonSize" />
                 <span v-else>{{ currInfo.province }}</span>
             </el-descriptions-item>
             <el-descriptions-item :label="$t('出生日期')">
@@ -648,11 +751,17 @@
                 <span v-else>{{ currInfo.birthday }}</span>
             </el-descriptions-item>
             <el-descriptions-item :label="$t('家庭住址')">
-                <el-input v-if="isEditState" v-model="personForm.homeAddress"  :size="fontSizeObj.buttonSize" />
+                <el-input v-if="isEditState" v-model="personForm.homeAddress" :size="fontSizeObj.buttonSize" />
                 <span v-else>{{ currInfo.homeAddress }}</span>
             </el-descriptions-item>
             <el-descriptions-item :label="$t('人员描述')">
-                <el-input v-if="isEditState" v-model="personForm.description" type="textarea" :rows="3" :size="fontSizeObj.buttonSize" />
+                <el-input
+                    v-if="isEditState"
+                    v-model="personForm.description"
+                    type="textarea"
+                    :rows="3"
+                    :size="fontSizeObj.buttonSize"
+                />
                 <span v-else>{{ currInfo.description }}</span>
             </el-descriptions-item>
         </el-descriptions>
@@ -661,6 +770,8 @@
 
 <script lang="ts" setup>
     import { useI18n } from 'vue-i18n';
+    import { inject, watch, reactive, toRefs } from 'vue';
+    import { ElNotification } from 'element-plus';
     import { $keyNameAssign } from '@/utils/object';
     import { $dictionary } from '@/utils/data';
     import { loginNameCheck, getPersonExtById, getPersonExtByIdWithEncry } from '@/api/person/index';
@@ -670,7 +781,6 @@
     import type { UploadProps } from 'element-plus';
     import { useSettingStore } from '@/store/modules/settingStore';
     import { UserFilled } from '@element-plus/icons-vue';
-    import { inject, ref, watch } from 'vue';
     const { t } = useI18n();
     const settingStore = useSettingStore();
     // 注入 字体变量
@@ -875,7 +985,6 @@
                 mobileRef.value.blur();
             }, 0);
 
-
             if (!mobileRef.value.ref?.elInputCheckResult) {
                 return false;
             }
@@ -917,7 +1026,7 @@
             border-color: #e6e6e6;
             display: table-cell;
             vertical-align: inherit;
-			color: var(--el-text-color-primary);
+            color: var(--el-text-color-primary);
         }
 
         .lefttd {
@@ -925,16 +1034,15 @@
             text-align: center;
             color: var(--el-text-color-regular);
             width: 14%;
-			
         }
 
         .rigthtd {
             div {
-				font-size: v-bind('fontSizeObj.baseFontSize');
-			}
-			:deep(.el-input) {
-				font-size: v-bind('fontSizeObj.baseFontSize');
-			}
+                font-size: v-bind('fontSizeObj.baseFontSize');
+            }
+            :deep(.el-input) {
+                font-size: v-bind('fontSizeObj.baseFontSize');
+            }
         }
     }
 
@@ -954,12 +1062,12 @@
             border-radius: 0;
         }
     }
-	:deep(.el-descriptions__label){
-		font-weight: normal !important;
-	}
-	:deep(.el-descriptions__cell){
-		font-weight: normal !important;
-	}
+    :deep(.el-descriptions__label) {
+        font-weight: normal !important;
+    }
+    :deep(.el-descriptions__cell) {
+        font-weight: normal !important;
+    }
 </style>
 
 <style lang="scss">

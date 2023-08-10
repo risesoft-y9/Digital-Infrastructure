@@ -6,8 +6,13 @@
         </svg>
     </div>
     <div class="margin-bottom-20">
-        <el-button type="primary" class="global-btn-main" :style="{ fontSize: fontSizeObj.baseFontSize }"
-        :size="fontSizeObj.buttonSize"  @click="onAddExtendAttr">
+        <el-button
+            type="primary"
+            class="global-btn-main"
+            :style="{ fontSize: fontSizeObj.baseFontSize }"
+            :size="fontSizeObj.buttonSize"
+            @click="onAddExtendAttr"
+        >
             <i class="ri-external-link-line"></i>
             <span>{{ $t('扩展属性') }}</span>
         </el-button>
@@ -27,15 +32,16 @@
 
 <script lang="ts" setup>
     import { useI18n } from 'vue-i18n';
+    import { inject, reactive, computed, h, onMounted, toRefs } from 'vue';
+    import { ElMessage, ElMessageBox } from 'element-plus';
     import { $keyNameAssign, $tableHandleRender } from '@/utils/object';
     import { saveDeptExtendProperties } from '@/api/dept/index';
     import { savePersonExtendProperties } from '@/api/person/index';
     import { saveOrgExtendProperties } from '@/api/org/index';
-	import { saveGroupExtendProperties } from '@/api/group/index';
-	import { savePositionExtendProperties } from '@/api/position/index';
-    import { useSettingStore } from "@/store/modules/settingStore";
-    import { inject, ref, watch } from 'vue';
-	const settingStore = useSettingStore();
+    import { saveGroupExtendProperties } from '@/api/group/index';
+    import { savePositionExtendProperties } from '@/api/position/index';
+    import { useSettingStore } from '@/store/modules/settingStore';
+    const settingStore = useSettingStore();
     // 注入 字体对象
     const fontSizeObj: any = inject('sizeObjInfo');
     const { t } = useI18n();
@@ -47,8 +53,8 @@
                 return {};
             },
         },
-		
-		handAssginNode: {
+
+        handAssginNode: {
             //手动合并节点信息
             type: Function,
         },
@@ -64,17 +70,17 @@
             //表格配置
             columns: [
                 {
-                    title: computed(() => t("标识")),
+                    title: computed(() => t('标识')),
                     key: 'name',
                     slot: 'name',
                 },
                 {
-                    title: computed(() => t("属性值")),
+                    title: computed(() => t('属性值')),
                     key: 'attrValue',
                     slot: 'attrValue',
                 },
                 {
-                    title: computed(() => t("操作")),
+                    title: computed(() => t('操作')),
                     width: settingStore.getTwoBtnWidth,
                     render: (row, params) => {
                         let editActions = $tableHandleRender([
@@ -109,12 +115,16 @@
                                                     const item = tableConfig.value.tableData[i];
                                                     if (item.id === row.id) {
                                                         tableConfig.value.tableData.splice(i, 1);
-														let propertiesObj = {};
-														tableConfig.value.tableData.forEach((item) => {
-														    propertiesObj[item.name] = item.attrValue;
-														});
-														let propertiesString = JSON.stringify(propertiesObj);
-														props.handAssginNode && props.handAssginNode({properties:propertiesString},props.currInfo.id)
+                                                        let propertiesObj = {};
+                                                        tableConfig.value.tableData.forEach((item) => {
+                                                            propertiesObj[item.name] = item.attrValue;
+                                                        });
+                                                        let propertiesString = JSON.stringify(propertiesObj);
+                                                        props.handAssginNode &&
+                                                            props.handAssginNode(
+                                                                { properties: propertiesString },
+                                                                props.currInfo.id
+                                                            );
                                                         break;
                                                     }
                                                 }
@@ -194,15 +204,25 @@
                                             result = await saveOrgExtendProperties(props.currInfo.id, propertiesString);
                                         } else if (props.currInfo.orgType == 'Group') {
                                             loading.value = true;
-                                            result = await saveGroupExtendProperties(props.currInfo.id, propertiesString);
+                                            result = await saveGroupExtendProperties(
+                                                props.currInfo.id,
+                                                propertiesString
+                                            );
                                         } else if (props.currInfo.orgType == 'Position') {
                                             loading.value = true;
-                                            result = await savePositionExtendProperties(props.currInfo.id, propertiesString);
+                                            result = await savePositionExtendProperties(
+                                                props.currInfo.id,
+                                                propertiesString
+                                            );
                                         }
 
                                         loading.value = false;
                                         if (result.success) {
-											props.handAssginNode && props.handAssginNode({properties:propertiesString},props.currInfo.id)
+                                            props.handAssginNode &&
+                                                props.handAssginNode(
+                                                    { properties: propertiesString },
+                                                    props.currInfo.id
+                                                );
                                         }
 
                                         //初始化表单

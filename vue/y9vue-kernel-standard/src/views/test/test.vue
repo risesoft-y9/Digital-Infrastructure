@@ -6,24 +6,19 @@
  * @Description: 
 -->
 
-
 <script lang="ts" setup>
-	function digui(data,targetId,moveInfo){
-		data.forEach(item => {
-			
-			if(item.id === targetId){
-				item.push(moveInfo)
-			}
-			if(item.id === moveInfo.id){
-				delete item
-			}
-			
-			if(item.children){
-				digui(item.children,targetId,moveInfo)
-			}
-			
-			
-		})
-		
-	}
+    function digui(data, targetId, moveInfo) {
+        data.forEach((item) => {
+            if (item.id === targetId) {
+                item.push(moveInfo);
+            }
+            if (item.id === moveInfo.id) {
+                delete item;
+            }
+
+            if (item.children) {
+                digui(item.children, targetId, moveInfo);
+            }
+        });
+    }
 </script>
