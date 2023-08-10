@@ -1,8 +1,8 @@
 package net.risesoft.y9public.entity.resource;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Table;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.Table;
 
 import org.hibernate.annotations.ColumnDefault;
 import org.hibernate.annotations.Comment;
@@ -22,7 +22,7 @@ import net.risesoft.enums.ResourceTypeEnum;
  */
 @Entity
 @Table(name = "Y9_COMMON_OPERATION")
-@org.hibernate.annotations.Table(comment = "页面按钮操作表", appliesTo = "Y9_COMMON_OPERATION")
+@Comment("页面按钮操作表")
 @Data
 public class Y9Operation extends Y9ResourceBase {
 
@@ -36,7 +36,7 @@ public class Y9Operation extends Y9ResourceBase {
     /**
      * 展示方式
      * 
-     * {@link net.risesoft.enums.OperationDisplayTypeEnum}
+     * {@link OperationDisplayTypeEnum}
      */
     @ColumnDefault("0")
     @Column(name = "DISPLAY_TYPE")

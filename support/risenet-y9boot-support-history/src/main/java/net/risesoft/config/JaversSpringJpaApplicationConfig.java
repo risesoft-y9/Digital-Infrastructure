@@ -3,7 +3,7 @@ package net.risesoft.config;
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.persistence.EntityManagerFactory;
+import jakarta.persistence.EntityManagerFactory;
 
 import org.hibernate.dialect.Dialect;
 import org.hibernate.engine.spi.SessionFactoryImplementor;
@@ -89,12 +89,5 @@ public class JaversSpringJpaApplicationConfig {
             .withCommitTableName(javersSqlProperties.getSqlCommitTableName())
             .withSnapshotTableName(javersSqlProperties.getSqlSnapshotTableName())
             .withCommitPropertyTableName(javersSqlProperties.getSqlCommitPropertyTableName()).build();
-    }
-
-    @Bean(name = "JpaHibernateConnectionProvider")
-    @ConditionalOnMissingBean
-    public ConnectionProvider jpaConnectionProvider(
-        @Qualifier(value = "rsPublicEntityManagerFactory") EntityManagerFactory entityManagerFactory) {
-        return new Y9JpaHibernateConnectionProvider(entityManagerFactory.createEntityManager());
     }
 }

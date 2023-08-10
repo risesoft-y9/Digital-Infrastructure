@@ -1,17 +1,15 @@
 package net.risesoft.y9public.entity.resource;
 
-import javax.persistence.Column;
-import javax.persistence.Id;
-import javax.persistence.MappedSuperclass;
-import javax.validation.constraints.NotBlank;
-
 import org.hibernate.annotations.ColumnDefault;
 import org.hibernate.annotations.Comment;
-import org.hibernate.annotations.Type;
 
+import jakarta.persistence.Column;
+import jakarta.persistence.Convert;
+import jakarta.persistence.Id;
+import jakarta.persistence.MappedSuperclass;
+import jakarta.validation.constraints.NotBlank;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-
 import net.risesoft.base.BaseEntity;
 import net.risesoft.enums.ResourceTypeEnum;
 
@@ -58,14 +56,14 @@ public abstract class Y9ResourceBase extends BaseEntity implements Comparable<Y9
     protected String description;
 
     /** 启用状态:1=启用,0=禁用 */
-    @Type(type = "numeric_boolean")
+    @Convert(converter = org.hibernate.type.NumericBooleanConverter.class)
     @ColumnDefault("1")
     @Column(name = "ENABLED", nullable = false)
     @Comment("启用状态:1=启用,0=禁用")
     protected Boolean enabled = Boolean.TRUE;
 
     /** 是否隐藏:1=隐藏,0=显示 */
-    @Type(type = "numeric_boolean")
+    @Convert(converter = org.hibernate.type.NumericBooleanConverter.class)
     @ColumnDefault("0")
     @Column(name = "HIDDEN", nullable = false)
     @Comment("是否隐藏:1=隐藏,0=显示")
@@ -102,7 +100,7 @@ public abstract class Y9ResourceBase extends BaseEntity implements Comparable<Y9
     protected Integer resourceType = ResourceTypeEnum.APP.getValue();
 
     /** 是否为继承上级节点的权限:1=继承,0=不继承 */
-    @Type(type = "numeric_boolean")
+    @Convert(converter = org.hibernate.type.NumericBooleanConverter.class)
     @ColumnDefault("0")
     @Column(name = "INHERIT", nullable = false)
     @Comment("是否为继承上级节点的权限:1=继承,0=不继承")

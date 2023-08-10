@@ -1,10 +1,10 @@
 package net.risesoft.entity;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Id;
-import javax.persistence.Table;
-import javax.validation.constraints.NotBlank;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.Id;
+import jakarta.persistence.Table;
+import jakarta.validation.constraints.NotBlank;
 
 import org.hibernate.annotations.Comment;
 
@@ -24,7 +24,7 @@ import net.risesoft.base.BaseEntity;
  */
 @Entity
 @Table(name = "Y9_ORG_JOB")
-@org.hibernate.annotations.Table(comment = "职位表", appliesTo = "Y9_ORG_JOB")
+@Comment("职位表")
 @NoArgsConstructor
 @Data
 public class Y9Job extends BaseEntity {

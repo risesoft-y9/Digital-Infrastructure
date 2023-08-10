@@ -1,8 +1,8 @@
 package net.risesoft.y9public.entity.resource;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Table;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.Table;
 
 import org.hibernate.annotations.Comment;
 
@@ -20,7 +20,7 @@ import net.risesoft.enums.ResourceTypeEnum;
  */
 @Entity
 @Table(name = "Y9_COMMON_MENU")
-@org.hibernate.annotations.Table(comment = "应用的菜单表", appliesTo = "Y9_COMMON_MENU")
+@Comment("应用的菜单表")
 @Data
 public class Y9Menu extends Y9ResourceBase {
 

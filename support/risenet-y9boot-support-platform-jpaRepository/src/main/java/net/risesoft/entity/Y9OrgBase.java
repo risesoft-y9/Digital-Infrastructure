@@ -1,18 +1,16 @@
 package net.risesoft.entity;
 
-import javax.persistence.Column;
-import javax.persistence.Id;
-import javax.persistence.MappedSuperclass;
-import javax.persistence.Version;
-import javax.validation.constraints.NotBlank;
-
 import org.hibernate.annotations.ColumnDefault;
 import org.hibernate.annotations.Comment;
-import org.hibernate.annotations.Type;
 
+import jakarta.persistence.Column;
+import jakarta.persistence.Convert;
+import jakarta.persistence.Id;
+import jakarta.persistence.MappedSuperclass;
+import jakarta.persistence.Version;
+import jakarta.validation.constraints.NotBlank;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-
 import net.risesoft.base.BaseEntity;
 import net.risesoft.enums.OrgTypeEnum;
 
@@ -54,7 +52,7 @@ public class Y9OrgBase extends BaseEntity implements Comparable<Y9OrgBase> {
     protected Integer version;
 
     /** 是否可用 */
-    @Type(type = "numeric_boolean")
+    @Convert(converter = org.hibernate.type.NumericBooleanConverter.class)
     @Column(name = "DISABLED", nullable = false)
     @Comment("是否可用")
     @ColumnDefault("0")

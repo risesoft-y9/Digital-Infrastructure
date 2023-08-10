@@ -1,7 +1,7 @@
 /*
  * @Author: your name
  * @Date: 2021-04-09 18:53:30
- * @LastEditTime: 2023-08-03 15:34:19
+ * @LastEditTime: 2022-12-01 11:05:09
  * @LastEditors: mengjuhua
  * @Description: In User Settings Edit
  * @FilePath: \workspace-y9boot-9.5-vuee:\workspace-y9boot-9.6-vue\y9vue-kernel-dcat-style\src\api\org\index.ts
@@ -13,7 +13,7 @@ import qs from 'qs';
 const platformRequest = Request();
 
 // 树组件 - 一级接口数据
-export const treeInterface = async () => {
+export const treeInterface = async (params) => {
   return await platformRequest({
     //url: 'http://127.0.0.1:4523/mock/891645/platform/api/rest/org/list',
     url: '/api/rest/org/list',
@@ -22,21 +22,6 @@ export const treeInterface = async () => {
     params: {}
   });
 };
-
-/**
- * 获取组织架构列表
- * @param virtual 是否为虚拟组织 
- */
-export const treeInterface2 = async (params) => {
-  return await platformRequest({
-    //url: 'http://127.0.0.1:4523/mock/891645/platform/api/rest/org/list',
-    url: '/api/rest/org/list',
-    method: 'get',
-    cType: false,
-    params: { 'virtual': params.virtual }
-  });
-};
-
 // 树组件 - 二（三）级接口数据
 export const getTreeItemById = async (params) => {
 

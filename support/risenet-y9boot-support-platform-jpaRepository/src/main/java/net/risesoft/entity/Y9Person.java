@@ -1,17 +1,15 @@
 package net.risesoft.entity;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Table;
-import javax.validation.constraints.Email;
-import javax.validation.constraints.NotBlank;
-
 import org.hibernate.annotations.ColumnDefault;
 import org.hibernate.annotations.Comment;
-import org.hibernate.annotations.Type;
 
+import jakarta.persistence.Column;
+import jakarta.persistence.Convert;
+import jakarta.persistence.Entity;
+import jakarta.persistence.Table;
+import jakarta.validation.constraints.Email;
+import jakarta.validation.constraints.NotBlank;
 import lombok.Data;
-
 import net.risesoft.enums.OrgTypeEnum;
 import net.risesoft.enums.PersonTypeEnum;
 import net.risesoft.enums.SexEnum;
@@ -27,7 +25,7 @@ import net.risesoft.y9.validation.Mobile;
  */
 @Entity
 @Table(name = "Y9_ORG_PERSON")
-@org.hibernate.annotations.Table(comment = "人员表", appliesTo = "Y9_ORG_PERSON")
+@Comment("人员表")
 @Data
 public class Y9Person extends Y9OrgBase {
 
@@ -116,7 +114,7 @@ public class Y9Person extends Y9OrgBase {
     /**
      * 性别
      * <p>
-     * {@link net.risesoft.enums.SexEnum}
+     * {@link SexEnum}
      */
     @ColumnDefault("1")
     @Column(name = "SEX", nullable = false)
@@ -148,7 +146,7 @@ public class Y9Person extends Y9OrgBase {
     /**
      * 0:添加的人员，1：新增的人员
      */
-    @Type(type = "numeric_boolean")
+    @Convert(converter = org.hibernate.type.NumericBooleanConverter.class)
     @ColumnDefault("1")
     @Column(name = "ORIGINAL", length = 10, nullable = false)
     @Comment("0:添加的人员，1：新增的人员")

@@ -2,7 +2,7 @@ package net.risesoft.web.handler;
 
 import java.util.List;
 
-import javax.validation.ConstraintViolationException;
+import jakarta.validation.ConstraintViolationException;
 
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.http.HttpStatus;
@@ -37,7 +37,7 @@ import net.risesoft.y9.exception.Y9PermissionException;
 public class Y9ControllerAdvice {
 
     /**
-     * 参数校验失败 例如 {@link javax.validation.constraints.NotBlank}
+     * 参数校验失败 例如 {@link jakarta.validation.constraints.NotBlank}
      *
      * @param e e
      * @return {@link Y9Result}<{@link Object}>

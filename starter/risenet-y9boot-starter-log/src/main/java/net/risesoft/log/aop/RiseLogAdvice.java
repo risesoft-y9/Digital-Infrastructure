@@ -3,13 +3,14 @@ package net.risesoft.log.aop;
 import java.io.PrintWriter;
 import java.io.StringWriter;
 import java.lang.reflect.Method;
+import java.util.Collection;
 import java.util.Date;
 import java.util.Map;
 import java.util.UUID;
 
-import javax.annotation.PostConstruct;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
+import jakarta.annotation.PostConstruct;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 
 import org.aopalliance.intercept.MethodInterceptor;
 import org.aopalliance.intercept.MethodInvocation;
@@ -22,6 +23,7 @@ import lombok.extern.slf4j.Slf4j;
 
 import net.risesoft.log.annotation.RiseLog;
 import net.risesoft.log.service.SaveLogInfo4Kafka;
+import net.risesoft.log.service.Y9LogService;
 import net.risesoft.model.AccessLog;
 import net.risesoft.model.user.UserInfo;
 import net.risesoft.y9.Y9Context;
@@ -153,13 +155,24 @@ public class RiseLogAdvice implements MethodInterceptor {
                         log.setGuidPath(userInfo.getGuidPath());
                         log.setManagerLevel(String.valueOf(userInfo.getManagerLevel()));
                     }
-                    
+
+                    try {
+                        Map<String, Y9LogService> beans = Y9Context.getAc().getBeansOfType(Y9LogService.class);
+                        Collection<Y9LogService> logServices = beans.values();
+                        if (!logServices.isEmpty()) {
+                            for (Y9LogService logService : logServices) {
+                                logService.process(invocation, log, request, response);
+                            }
+                        }
+                    } catch (Exception e) {
+                        LOGGER.warn(e.getMessage(), e);
+                    }
                     if (saveLogInfo4Kafka == null) {
                         this.saveLogInfo4Kafka = Y9Context.getBean(SaveLogInfo4Kafka.class);
                     }
                     saveLogInfo4Kafka.asyncSave(log);
                     if (response != null) {
-                        // Y9CommonFilter 见到这个标志后，就不再记录日志了，因为这里已经写了日志，不需要重复写。
+                        // Y9CommonFilter见到这个标志后，就不再记录日志了，因为这里已经写了日志，不需要重复写。
                         response.addHeader("y9aoplog", "true");
                     }
 

@@ -8,7 +8,7 @@ import java.io.OutputStream;
 import java.util.Date;
 import java.util.concurrent.Future;
 
-import javax.annotation.PostConstruct;
+import jakarta.annotation.PostConstruct;
 
 import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.lang3.StringUtils;

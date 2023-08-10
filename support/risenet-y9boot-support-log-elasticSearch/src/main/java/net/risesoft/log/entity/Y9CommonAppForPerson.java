@@ -14,10 +14,6 @@ import lombok.NoArgsConstructor;
 @Data
 @Document(indexName = "common_app_for_person")
 public class Y9CommonAppForPerson implements Serializable {
-
-    /**
-     *
-     */
     private static final long serialVersionUID = -6201670055765212286L;
 
     @Id

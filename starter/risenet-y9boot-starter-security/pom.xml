@@ -3,20 +3,20 @@
     <modelVersion>4.0.0</modelVersion>
     <!-- <groupId>net.risesoft</groupId> -->
     <artifactId>risenet-y9boot-starter-security</artifactId>
-    <!-- <version>v9.6.3-SNAPSHOT</version> -->
+    <!-- <version>v9.7.0-SNAPSHOT</version> -->
     <packaging>jar</packaging>
 
     <parent>
         <groupId>net.risesoft</groupId>
         <artifactId>y9-digitalbase</artifactId>
-        <version>v9.6.3-SNAPSHOT</version>
+        <version>v9.7.0-SNAPSHOT</version>
         <relativePath>../../pom.xml</relativePath>
     </parent>
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <maven.build.timestamp.format>yyyy-MM-dd_HH_mm</maven.build.timestamp.format>
-        <java.version>1.8</java.version>
+        <java.version>17</java.version>
     </properties>
 
     <dependencies>
@@ -59,11 +59,10 @@
         </dependency>
 
         <dependency>
-            <groupId>javax.servlet</groupId>
-            <artifactId>javax.servlet-api</artifactId>
+            <groupId>jakarta.servlet</groupId>
+            <artifactId>jakarta.servlet-api</artifactId>
             <scope>provided</scope>
         </dependency>
-
     </dependencies>
 
     <build>

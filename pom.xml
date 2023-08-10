@@ -6,7 +6,7 @@
     <groupId>net.risesoft</groupId>
     <artifactId>y9-digitalbase</artifactId>
     <packaging>pom</packaging>
-    <version>v9.6.3-SNAPSHOT</version>
+    <version>v9.7.0-SNAPSHOT</version>
 
     <modules>
         <module>common/risenet-y9boot-properties</module>
@@ -14,7 +14,6 @@
         <module>common/risenet-y9boot-common-nacos</module>
         <module>common/risenet-y9boot-common-util</module>
         <module>common/risenet-y9boot-common-tenantDataSource</module>
-        <module>common/risenet-y9boot-3rd-jpa</module>
 
         <module>example/risenet-y9demo-kernel-api/backend-demo</module>
         <module>example/risenet-y9demo-sso-oauth2/backend-demo</module>
@@ -44,11 +43,10 @@
         <module>support/risenet-y9boot-support-platform-jpaRepository</module>
         <module>support/risenet-y9boot-support-platform-service</module>
         <module>support/risenet-y9boot-support-platform-web</module>
-        <module>support/risenet-y9boot-support-sso-theme-y9-v3.0</module>
         <module>support/risenet-y9boot-support-log-elasticSearch</module>
         <module>support/risenet-y9boot-support-history</module>
 
-        <module>webapp/risenet-y9boot-webapp-sso-server-6.6.x</module>
+        <module>webapp/risenet-y9boot-webapp-sso-server-7.0.x</module>
         <module>webapp/risenet-y9boot-webapp-platform</module>
         <module>webapp/risenet-y9boot-webapp-log</module>
     </modules>
@@ -88,7 +86,7 @@
     </distributionManagement>
 
     <properties>
-        <java.version>11</java.version>
+        <java.version>17</java.version>
         <resource.delimiter>@</resource.delimiter>
         <maven.compiler.source>${java.version}</maven.compiler.source>
         <maven.compiler.target>${java.version}</maven.compiler.target>
@@ -97,27 +95,24 @@
         <maven.build.timestamp.format>yyyy-MM-dd_HH_mm</maven.build.timestamp.format>
         <maven.javadoc.failOnError>false</maven.javadoc.failOnError>
 
-        <spring-boot.version>2.7.10</spring-boot.version>
-        <spring-cloud.version>2021.0.5</spring-cloud.version>
+        <spring-boot.version>3.1.2</spring-boot.version>
+        <spring-cloud.version>2022.0.3</spring-cloud.version>
 
         <aspectj.version>1.9.19</aspectj.version>
+        <guava.version>32.1.2-jre</guava.version>
 
-        <fastjson.version>2.0.33</fastjson.version>
-        <rs-api.version>2.1.1</rs-api.version>
-
-        <guava.version>31.1-jre</guava.version>
+        <fastjson.version>2.0.38</fastjson.version>
         <druid.version>1.2.18</druid.version>
         <druid-starter.version>1.2.18</druid-starter.version>
 
-        <commons-fileupload.version>1.5</commons-fileupload.version>
-        <commons-lang3.version>3.12.0</commons-lang3.version>
-        <commons-io.version>2.11.0</commons-io.version>
+        <commons-lang3.version>3.13.0</commons-lang3.version>
+        <commons-io.version>2.13.0</commons-io.version>
         <commons-net.version>3.9.0</commons-net.version>
         <commons-pool2.version>2.11.1</commons-pool2.version>
 
-        <javers.version>6.13.0</javers.version>
+        <javers.version>7.3.1</javers.version>
         <org-dom4j.version>2.1.4</org-dom4j.version>
-        <oshi.version>6.4.3</oshi.version>
+        <oshi.version>6.4.4</oshi.version>
         <lombok.version>1.18.28</lombok.version>
     </properties>
 
@@ -140,12 +135,6 @@
             </dependency>
 
             <dependency>
-                <groupId>javax.ws.rs</groupId>
-                <artifactId>javax.ws.rs-api</artifactId>
-                <version>${rs-api.version}</version>
-            </dependency>
-
-            <dependency>
                 <groupId>com.alibaba</groupId>
                 <artifactId>fastjson</artifactId>
                 <version>${fastjson.version}</version>
@@ -158,7 +147,7 @@
 
             <dependency>
                 <groupId>com.alibaba</groupId>
-                <artifactId>druid-spring-boot-starter</artifactId>
+                <artifactId>druid-spring-boot-3-starter</artifactId>
                 <version>${druid-starter.version}</version>
             </dependency>
 
@@ -173,11 +162,6 @@
                 <groupId>org.apache.commons</groupId>
                 <artifactId>commons-lang3</artifactId>
                 <version>${commons-lang3.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>commons-fileupload</groupId>
-                <artifactId>commons-fileupload</artifactId>
-                <version>${commons-fileupload.version}</version>
             </dependency>
             <dependency>
                 <groupId>commons-io</groupId>
@@ -203,12 +187,12 @@
             <dependency>
                 <groupId>org.jodd</groupId>
                 <artifactId>jodd-mail</artifactId>
-                <version>6.0.5</version>
+                <version>7.0.0</version>
             </dependency>
             <dependency>
                 <groupId>org.jodd</groupId>
                 <artifactId>jodd-http</artifactId>
-                <version>6.2.1</version>
+                <version>6.3.0</version>
             </dependency>
             <dependency>
                 <groupId>org.jodd</groupId>
@@ -391,7 +375,7 @@
                 <plugin>
                     <groupId>org.apache.maven.plugins</groupId>
                     <artifactId>maven-dependency-plugin</artifactId>
-                    <version>3.5.0</version>
+                    <version>3.6.0</version>
                     <executions>
                         <execution>
                             <phase>package</phase>
@@ -511,7 +495,7 @@
                                 <pluginExecution>
                                     <pluginExecutionFilter>
                                         <groupId>
-                                            com.nickwongdev
+                                            dev.aspectj
                                         </groupId>
                                         <artifactId>
                                             aspectj-maven-plugin

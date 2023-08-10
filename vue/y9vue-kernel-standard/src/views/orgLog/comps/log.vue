@@ -5,7 +5,7 @@
 </template>
 
 <script lang="ts" setup>
-    import { $deepAssignObject } from '@/utils/object';
+    import { $deepAssignObject } from '@/utils/object.ts';
     import { getShadowTitles, getShadowRows } from '@/api/org/index';
     import { onMounted, reactive, ref, toRefs, watch } from 'vue';
     const props = defineProps({

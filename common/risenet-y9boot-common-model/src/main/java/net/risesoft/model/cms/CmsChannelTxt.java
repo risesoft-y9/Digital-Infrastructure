@@ -17,11 +17,11 @@ public class CmsChannelTxt implements Serializable {
     /**
      * 唯一标识
      */
-    private java.lang.Integer id;
+    private Integer id;
 
     /**
      * 栏目说明
      */
-    private java.lang.String txtval;
+    private String txtval;
 
 }

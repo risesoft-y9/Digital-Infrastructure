@@ -1,6 +1,6 @@
 package net.risesoft.y9public.support;
 
-import javax.persistence.AttributeConverter;
+import jakarta.persistence.AttributeConverter;
 
 import net.risesoft.y9.Y9Context;
 import net.risesoft.y9.util.base64.Y9Base64Util;

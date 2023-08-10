@@ -6,15 +6,15 @@
  * @Description: 
 -->
 <template>
-    <div>测试页面3 —— 组织架构</div>
+<div>测试页面3 —— 组织架构</div>
 </template>
 <style lang="scss" scoped>
-    div {
-        width: 100%;
-        height: 100vh;
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        background-color: var(--el-bg-color);
-    }
+div{
+    width: 100%;
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: var(--el-bg-color);
+}
 </style>

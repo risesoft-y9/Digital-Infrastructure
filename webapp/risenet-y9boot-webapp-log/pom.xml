@@ -4,13 +4,13 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>net.risesoft</groupId>
     <artifactId>risenet-y9boot-webapp-log</artifactId>
-    <version>v9.6.3-SNAPSHOT</version>
+    <version>v9.7.0-SNAPSHOT</version>
     <packaging>war</packaging>
 
     <parent>
         <groupId>net.risesoft</groupId>
         <artifactId>y9-digitalbase</artifactId>
-        <version>v9.6.3-SNAPSHOT</version>
+        <version>v9.7.0-SNAPSHOT</version>
         <relativePath>../../pom.xml</relativePath>
     </parent>
 
@@ -49,7 +49,7 @@
         <dependency>
             <groupId>net.risesoft</groupId>
             <artifactId>risenet-y9boot-starter-sso-oauth2-resource</artifactId>
-            <version>v9.6.3-SNAPSHOT</version>
+            <version>v9.7.0-SNAPSHOT</version>
         </dependency>
 
         <dependency>
@@ -93,12 +93,8 @@
         </dependency>
 
         <dependency>
-            <groupId>javax.servlet</groupId>
-            <artifactId>jstl</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>javax.servlet</groupId>
-            <artifactId>javax.servlet-api</artifactId>
+            <groupId>jakarta.servlet</groupId>
+            <artifactId>jakarta.servlet-api</artifactId>
             <scope>provided</scope>
         </dependency>
         

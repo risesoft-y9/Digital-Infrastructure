@@ -4,7 +4,7 @@ import java.text.ParseException;
 import java.util.List;
 import java.util.Map;
 
-import javax.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotBlank;
 
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;

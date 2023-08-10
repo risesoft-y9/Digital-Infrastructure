@@ -5,32 +5,21 @@
     <modelVersion>4.0.0</modelVersion>
     <!-- <groupId>net.risesoft</groupId> -->
     <artifactId>risenet-y9boot-common-model</artifactId>
-    <version>v9.6.3-SNAPSHOT</version>
+    <version>v9.7.0-SNAPSHOT</version>
     <packaging>jar</packaging>
 
     <parent>
         <groupId>net.risesoft</groupId>
         <artifactId>y9-digitalbase</artifactId>
-        <version>v9.6.3-SNAPSHOT</version>
+        <version>v9.7.0-SNAPSHOT</version>
         <relativePath>../../pom.xml</relativePath>
     </parent>
-
-    <distributionManagement>
-        <repository>
-            <id>releases</id>
-            <url>https://svn.youshengyun.com:9900/nexus/repository/maven-releases/</url>
-        </repository>
-        <snapshotRepository>
-            <id>snapshots</id>
-            <url>https://svn.youshengyun.com:9900/nexus/repository/maven-snapshots/</url>
-        </snapshotRepository>
-    </distributionManagement>
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <maven.build.timestamp.format>yyyy-MM-dd_HH_mm</maven.build.timestamp.format>
 
-        <java.version>11</java.version>
+        <java.version>17</java.version>
 
         <maven.javadoc.skip>true</maven.javadoc.skip>
         <maven.javadoc.failOnError>false</maven.javadoc.failOnError>

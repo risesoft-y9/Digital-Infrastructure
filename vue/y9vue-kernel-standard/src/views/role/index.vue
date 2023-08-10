@@ -2,8 +2,8 @@
  * @Author: hongzhew
  * @Date: 2022-04-07 17:43:02
  * @LastEditors: mengjuhua
- * @LastEditTime: 2023-08-03 15:20:55
- * @Description: 应用角色管理
+ * @LastEditTime: 2022-12-08 17:11:13
+ * @Description: 
 -->
 <template>
     <div>
@@ -25,7 +25,7 @@
                                         <el-button
                                             class="global-btn-main"
                                             type="primary"
-                                            :size="fontSizeObj.buttonSize"
+                                            :size="fontSizeObj.buttonSize" 
                                             :style="{ fontSize: fontSizeObj.baseFontSize }"
                                             v-if="editBtnFlag"
                                             @click="editBtnFlag = false"
@@ -37,43 +37,35 @@
                                             <el-button
                                                 class="global-btn-main"
                                                 type="primary"
-                                                :size="fontSizeObj.buttonSize"
-                                                :style="{ fontSize: fontSizeObj.baseFontSize }"
+                                                :size="fontSizeObj.buttonSize" 
+                                            :style="{ fontSize: fontSizeObj.baseFontSize }"
                                                 :loading="saveBtnLoading"
                                                 @click="saveBtnClick = true"
                                             >
                                                 <i class="ri-save-line"></i>
                                                 {{ $t('保存') }}
                                             </el-button>
-                                            <el-button
-                                                class="global-btn-second"
-                                                :size="fontSizeObj.buttonSize"
-                                                :style="{ fontSize: fontSizeObj.baseFontSize }"
-                                                @click="editBtnFlag = true"
-                                            >
+                                            <el-button class="global-btn-second"
+                                            :size="fontSizeObj.buttonSize" 
+                                            :style="{ fontSize: fontSizeObj.baseFontSize }"
+                                             @click="editBtnFlag = true">
                                                 <i class="ri-close-line"></i>
                                                 {{ $t('取消') }}
                                             </el-button>
                                         </span>
                                     </span>
                                     <span v-if="currData.type !== 'role'">
-                                        <el-button
-                                            class="global-btn-main"
-                                            :size="fontSizeObj.buttonSize"
+                                        <el-button class="global-btn-main"
+                                        :size="fontSizeObj.buttonSize" 
                                             :style="{ fontSize: fontSizeObj.baseFontSize }"
-                                            type="primary"
-                                            @click="handlerAddNode"
-                                        >
+                                        type="primary" @click="handlerAddNode">
                                             <i class="ri-add-line"></i>
                                             {{ $t('子节点') }}
                                         </el-button>
-                                        <el-button
-                                            class="global-btn-main"
-                                            :size="fontSizeObj.buttonSize"
+                                        <el-button class="global-btn-main"
+                                        :size="fontSizeObj.buttonSize" 
                                             :style="{ fontSize: fontSizeObj.baseFontSize }"
-                                            type="primary"
-                                            @click="handlerAddRole"
-                                        >
+                                         type="primary" @click="handlerAddRole">
                                             <i class="ri-add-line"></i>
                                             {{ $t('角色') }}
                                         </el-button>
@@ -83,8 +75,8 @@
                                     <el-button
                                         v-if="currData.type !== 'role'"
                                         class="global-btn-second"
-                                        :size="fontSizeObj.buttonSize"
-                                        :style="{ fontSize: fontSizeObj.baseFontSize }"
+                                        :size="fontSizeObj.buttonSize" 
+                                            :style="{ fontSize: fontSizeObj.baseFontSize }"
                                         @click="onSort('sort')"
                                     >
                                         <i class="ri-order-play-line"></i>
@@ -93,7 +85,7 @@
                                     <!-- v-if="currData.resourceType !== 0" -->
                                     <el-button
                                         @click="onSort('move')"
-                                        :size="fontSizeObj.buttonSize"
+                                        :size="fontSizeObj.buttonSize" 
                                         :style="{ fontSize: fontSizeObj.baseFontSize }"
                                         v-if="currData.resourceType !== 0"
                                         class="global-btn-second"
@@ -138,42 +130,27 @@
                             :filterConfig="filterConfig"
                         >
                             <template v-slot:filterBtnSlot>
-                                <el-button
-                                    class="global-btn-main"
-                                    @click="initList"
-                                    :size="fontSizeObj.buttonSize"
-                                    :style="{ fontSize: fontSizeObj.baseFontSize }"
-                                    type="primary"
-                                >
+                                <el-button class="global-btn-main" @click="initList"  :size="fontSizeObj.buttonSize" 
+                                            :style="{ fontSize: fontSizeObj.baseFontSize }" type="primary">
                                     <i class="ri-search-line"></i>
                                     {{ $t('搜索') }}
                                 </el-button>
                                 <div class="widthBtn">
-                                    <el-button
-                                        @click="handlerClick('positive')"
-                                        :size="fontSizeObj.buttonSize"
-                                        :style="{ fontSize: fontSizeObj.baseFontSize }"
-                                        class="global-btn-second"
-                                    >
+                                    <el-button @click="handlerClick('positive')"
+                                    :size="fontSizeObj.buttonSize" 
+                                            :style="{ fontSize: fontSizeObj.baseFontSize }"  class="global-btn-second">
                                         <i class="ri-add-line"></i>
                                         {{ $t('正权限人员') }}
                                     </el-button>
-                                    <el-button
-                                        @click="handlerClick('negative')"
-                                        :size="fontSizeObj.buttonSize"
-                                        :style="{ fontSize: fontSizeObj.baseFontSize }"
-                                        class="global-btn-second"
-                                    >
+                                    <el-button @click="handlerClick('negative')"
+                                    :size="fontSizeObj.buttonSize" 
+                                            :style="{ fontSize: fontSizeObj.baseFontSize }"  class="global-btn-second">
                                         <i class="ri-add-line"></i>
                                         {{ $t('负权限人员') }}
                                     </el-button>
                                 </div>
-                                <el-button
-                                    @click="handlerDeleteClick('roleMember')"
-                                    :size="fontSizeObj.buttonSize"
-                                    :style="{ fontSize: fontSizeObj.baseFontSize }"
-                                    class="global-btn-second"
-                                >
+                                <el-button @click="handlerDeleteClick('roleMember')"  :size="fontSizeObj.buttonSize" 
+                                            :style="{ fontSize: fontSizeObj.baseFontSize }"  class="global-btn-second">
                                     <i class="ri-close-line"></i>
                                     {{ $t('删除') }}
                                 </el-button>
@@ -198,22 +175,17 @@
 					                {{ $t('搜索') }}
 					            </el-button> -->
                                 <div class="widthBtn">
-                                    <el-button
-                                        @click="onSort('resource')"
-                                        class="global-btn-second"
-                                        :size="fontSizeObj.buttonSize"
-                                        :style="{ fontSize: fontSizeObj.baseFontSize }"
-                                    >
+                                    <el-button @click="onSort('resource')" 
+                                    class="global-btn-second"  :size="fontSizeObj.buttonSize" 
+                                            :style="{ fontSize: fontSizeObj.baseFontSize }">
                                         <i class="ri-add-line"></i>
                                         {{ $t('资源授权') }}
                                     </el-button>
                                 </div>
-                                <el-button
-                                    @click="handlerDeleteClick('resource')"
-                                    :size="fontSizeObj.buttonSize"
-                                    :style="{ fontSize: fontSizeObj.baseFontSize }"
-                                    class="global-btn-second"
-                                >
+                                <el-button @click="handlerDeleteClick('resource')"
+                                :size="fontSizeObj.buttonSize" 
+                                            :style="{ fontSize: fontSizeObj.baseFontSize }"
+                                class="global-btn-second">
                                     <i class="ri-close-line"></i>
                                     {{ $t('删除') }}
                                 </el-button>
@@ -234,70 +206,68 @@
         <!-- 移动 -->
         <y9Dialog v-model:config="moveConfigDialog">
             <selectTree
-                ref="moveSelectTreeRef"
-                checkStrictly
+				ref="moveSelectTreeRef"
+				checkStrictly
                 :selectField="[{ fieldName: 'type', value: 'folder' }]"
                 :treeApiObj="treeMoveApiObj"
                 :showHeader="false"
-                @onCheckChange="handlerMoveTreeCheckChange"
-                @onNodeExpand="onNodeExpand"
+				@onCheckChange="handlerMoveTreeCheckChange"
+				@onNodeExpand="onNodeExpand"
             ></selectTree>
         </y9Dialog>
         <!-- 正权限 负权限 -->
         <y9Dialog v-model:config="negativeConfigDialog">
             <selectTree
                 ref="selectTreeRef"
-                checkStrictly
+				checkStrictly
                 :treeApiObj="negativeTreeApiObj"
                 :selectField="selectField"
             ></selectTree>
         </y9Dialog>
         <!-- 资源授权 -->
         <y9Dialog v-model:config="iconSourceConfigDialog">
-            <y9Filter
-                ref="resourceFilterRef"
-                :itemList="filtersListSource"
-                :filtersValueCallBack="sourceFiltersValueCallBack"
-                showBorder
-            >
-                <template #treeFilter>
-                    <div class="custom-select-tree-filter">
-                        <el-button
-                            @click="onRefreshTree"
-                            class="global-btn-second refresh-btn"
-                            :size="fontSizeObj.buttonSize"
-                            :style="{ fontSize: fontSizeObj.baseFontSize }"
-                        >
-                            <i class="ri-refresh-line"></i>
-                            <span>{{ $t('刷新') }}</span>
-                        </el-button>
-
-                        <input type="password" hidden autocomplete="new-password" />
-                        <el-input
-                            class="search-input"
-                            type="search"
-                            :size="fontSizeObj.buttonSize"
-                            :style="{ fontSize: fontSizeObj.baseFontSize }"
-                            name="select-tree-search"
-                            v-model="searchKey"
-                            :placeholder="$t('请搜索')"
-                            autocomplete
-                            @input="onSearchKeyChange"
-                        >
-                            <template #prefix>
-                                <i class="ri-search-line"></i>
-                            </template>
-                        </el-input>
-                    </div>
-                </template>
+           <y9Filter
+			ref="resourceFilterRef"
+			:itemList="filtersListSource"
+			:filtersValueCallBack="sourceFiltersValueCallBack"
+			showBorder>
+				<template #treeFilter>
+					<div class="custom-select-tree-filter">
+						<el-button @click="onRefreshTree" class="global-btn-second refresh-btn" :size="fontSizeObj.buttonSize"
+						:style="{ fontSize: fontSizeObj.baseFontSize }"
+						>
+						    <i class="ri-refresh-line"></i>
+						    <span>{{ $t('刷新') }}</span>
+						</el-button>
+						
+						<input type="password" hidden autocomplete="new-password" />
+						<el-input
+							class="search-input"
+						    type="search"
+						    :size="fontSizeObj.buttonSize"
+							:style="{fontSize: fontSizeObj.baseFontSize}"
+						    name="select-tree-search"
+						    v-model="searchKey"
+						    :placeholder="$t('请搜索')"
+						    autocomplete
+						    @input="onSearchKeyChange"
+						>
+						    <template #prefix>
+						        <i class="ri-search-line"></i>
+						    </template>
+						</el-input>
+					</div>
+					
+				</template>
+				
             </y9Filter>
             <!-- tree树 -->
             <selectTree
-                ref="resourceSelectTree"
-                checkStrictly
+				ref="resourceSelectTree"
+				checkStrictly
                 :treeApiObj="sourceTreeApiObj"
                 :selectField="selectResourceField"
-                :showHeader="false"
+				:showHeader="false"
             ></selectTree>
         </y9Dialog>
         <el-button style="display: none" v-loading.fullscreen.lock="loading"></el-button>
@@ -305,8 +275,8 @@
 </template>
 
 <script lang="ts" setup>
-    import { inject, watch, computed, ref, toRefs } from 'vue';
-    import { ElMessage, ElMessageBox, ElNotification } from 'element-plus';
+    import type { FormInstance, FormRules } from 'element-plus';
+    import { inject, reactive, ref, watch } from 'vue';
     import y9_storage from '@/utils/storage';
     import {
         roleTreeList,
@@ -332,69 +302,69 @@
     const { t } = useI18n();
     const settingStore = useSettingStore();
     // 注入 字体对象
-    const fontSizeObj: any = inject('sizeObjInfo');
+    const fontSizeObj: any = inject('sizeObjInfo');  
     const managerLevel = y9_storage.getObjectItem('ssoUserInfo', 'managerLevel');
 
     let sortRef = ref();
     // 资源排序 弹框的变量配置 控制
     let sortDialogConfig = ref({
         show: false,
-        title: computed(() => t('资源排序')),
+        title: computed(() => t("资源排序")),
         width: '40%',
         showFooter: true, //是否显示底部
         onOk: (newConfig) => {
             return new Promise(async (resolve, reject) => {
+
                 let tableData = sortRef.value.tableConfig.tableData;
                 const ids = [] as any;
                 tableData.forEach((element) => {
                     ids.push(element.id);
                 });
-                await saveOrder(ids.toString())
-                    .then(async (result) => {
-                        /**
-                         * 对树进行操作：手动更新当前节点的子节点信息
-                         */
-                        //1.更新当前节点的子节点信息
-                        const treeData = fixedTreeRef.value.getTreeData(); //获取tree数据
-                        const currNode = fixedTreeRef.value.findNode(treeData, currData.value.id); //找到树节点对应的节点信息
-                        const childData = await postNode({ id: currData.value.id }); //重新请求当前节点的子节点，获取格式化后的子节点信息
-                        Object.assign(currNode, { children: childData }); //合并节点信息
+                await saveOrder(ids.toString()).then(async result => {
+                    /**
+                    * 对树进行操作：手动更新当前节点的子节点信息
+                    */
+                    //1.更新当前节点的子节点信息
+                    const treeData = fixedTreeRef.value.getTreeData();//获取tree数据
+                    const currNode = fixedTreeRef.value.findNode(treeData,currData.value.id);//找到树节点对应的节点信息
+                    const childData = await postNode({id:currData.value.id})//重新请求当前节点的子节点，获取格式化后的子节点信息
+                    Object.assign(currNode,{children:childData})//合并节点信息
+                    
+                    //2.手动设置重新点击当前节点
+                    fixedTreeRef.value?.handClickNode(currNode)//手动设置点击当前节点
 
-                        //2.手动设置重新点击当前节点
-                        fixedTreeRef.value?.handClickNode(currNode); //手动设置点击当前节点
-
-                        ElNotification({
-                            title: result.success ? t('成功') : t('失败'),
-                            message: result.msg,
-                            type: result.success ? 'success' : 'error',
-                            duration: 2000,
-                            offset: 80,
-                        });
-                        resolve();
-                    })
-                    .catch(() => {
-                        reject();
+                    ElNotification({
+                        title: result.success ? t('成功') : t('失败'),
+                        message: result.msg,
+                        type: result.success ? 'success' : 'error',
+                        duration: 2000,
+                        offset: 80,
                     });
+                    resolve();
+                }).catch(() => {
+                    reject();
+                });
+                
             });
         },
     });
 
     //排序按钮点击时触发
     const onSort = (type) => {
-        if (type === 'sort') {
+        if(type === 'sort'){
             Object.assign(sortDialogConfig.value, {
                 show: true,
-                title: computed(() => t('资源排序')),
+                title:computed(() => t("资源排序")),
             });
-        } else if (type === 'move') {
+        }else if(type === 'move'){
             Object.assign(moveConfigDialog.value, {
                 show: true,
-                title: computed(() => t('移动')),
+                title:computed(() => t("移动")),
             });
-        } else if (type === 'resource') {
+        } else if(type === 'resource') {
             Object.assign(iconSourceConfigDialog.value, {
                 show: true,
-                title: computed(() => t('添加资源授权')),
+                title:computed(() => t("添加资源授权")),
             });
         }
     };
@@ -415,26 +385,29 @@
         }
     }
     // 树 ref
-    const fixedTreeRef = ref();
+    const fixedTreeRef = ref<FormInstance>();
     // 树的一级 子级的请求接口函数
     const treeApiObj = ref({
         topLevel: resourceTreeList,
         childLevel: {
             //子级（二级及二级以上）tree接口
             api: roleTreeList,
-            params: {},
+            params: {
+            },
         },
         search: {
             //搜索接口及参数
             api: treeSelect,
-            params: {},
+            params: {
+            },
         },
     });
+	
 
     // 删除角色
     function roleRemove(data) {
         let infoText = `${t('是否删除')}【${data.name}】?`;
-        if (data.type == 'folder') {
+        if(data.type == 'folder'){
             infoText = `${t('删除后会级联删除其子节点')}，${t('是否删除')}【${data.name}】?`;
         }
         ElMessageBox.confirm(infoText, t('提示'), {
@@ -445,24 +418,24 @@
             .then(async () => {
                 loading.value = true;
                 let result = await deleteRoleById(data.id);
-
-                /**
-                 * 对树进行操作
-                 */
-                //1.删除前，需要手动点击的节点信息，如果有父节点则默认点击父节点，没有则点击tree数据的第一个节点
-                const treeData = fixedTreeRef.value.getTreeData(); //获取tree数据
-                let clickNode = null;
-                if (data.parentId) {
-                    clickNode = fixedTreeRef.value.findNode(treeData, data.parentId); //找到父节点的信息
-                    fixedTreeRef.value?.y9TreeRef?.remove(data); //删除此节点
-                } else if (treeData.length > 0) {
-                    fixedTreeRef.value?.y9TreeRef?.remove(data); //删除此节点
-                    clickNode = treeData[0];
-                }
-                if (clickNode) {
-                    fixedTreeRef.value?.handClickNode(clickNode); //手动设置点击当前节点
-                }
-
+				
+				/**
+				 * 对树进行操作
+				 */
+				//1.删除前，需要手动点击的节点信息，如果有父节点则默认点击父节点，没有则点击tree数据的第一个节点
+				const treeData = fixedTreeRef.value.getTreeData();//获取tree数据
+				let clickNode = null;
+				if(data.parentId){
+					clickNode = fixedTreeRef.value.findNode(treeData,data.parentId);//找到父节点的信息
+					 fixedTreeRef.value?.y9TreeRef?.remove(data);//删除此节点
+				}else if(treeData.length > 0){
+					 fixedTreeRef.value?.y9TreeRef?.remove(data);//删除此节点
+					clickNode = treeData[0]
+				}
+				if(clickNode){
+					fixedTreeRef.value?.handClickNode(clickNode)//手动设置点击当前节点
+				}
+				
                 loading.value = false;
                 ElNotification({
                     title: result.success ? t('成功') : t('失败'),
@@ -493,17 +466,17 @@
         // 更新基本信息 接口操作 --
         // data 为基本信息 数据
         const result = await saveOrUpdate(data);
-
-        /**
-         * 对树进行操作：手动更新节点信息
-         */
-        //1.更新当前节点的信息
-        const treeData = fixedTreeRef.value.getTreeData(); //获取tree数据
-        const currNode = fixedTreeRef.value.findNode(treeData, currData.value.id); //找到树节点对应的节点信息
-        Object.assign(currNode, data); //合并节点信息
-        //2.手动设置点击当前节点
-        fixedTreeRef.value?.handClickNode(currNode); //手动设置点击当前节点
-
+		
+		/**
+		* 对树进行操作：手动更新节点信息
+		*/
+		//1.更新当前节点的信息
+		const treeData = fixedTreeRef.value.getTreeData();//获取tree数据
+		const currNode = fixedTreeRef.value.findNode(treeData,currData.value.id);//找到树节点对应的节点信息
+		Object.assign(currNode,data)//合并节点信息
+		//2.手动设置点击当前节点
+		fixedTreeRef.value?.handClickNode(currNode)//手动设置点击当前节点
+		
         ElNotification({
             message: result.success ? t('保存成功') : t('保存失败'),
             type: result.success ? 'success' : 'error',
@@ -517,49 +490,52 @@
     }
 
     // 表单ref
-    const roleFormRef = ref();
+    const roleFormRef = ref<FormInstance>();
     // config 配置表单
     let roleFormConfig = ref({
         model: {},
         rules: {
-            name: [{ required: true, message: computed(() => t('请输入名称')), trigger: 'blur' }],
+            name: [
+                { required: true, message: computed(() => t("请输入名称")), trigger: 'blur', },
+            ],
         },
         itemList: [
             {
                 type: 'input',
                 prop: 'name',
-                label: computed(() => t('名称')),
+                label: computed(() => t("名称")),
                 required: true,
             },
             {
                 type: 'input',
                 prop: 'customId',
-                label: computed(() => t('自定义ID')),
+                label: computed(() => t("自定义ID"))
             },
             {
                 type: 'textarea',
                 prop: 'description',
-                label: computed(() => t('描述')),
+                label: computed(() => t("描述")),
                 rows: 3,
             },
             {
                 type: 'textarea',
                 prop: 'properties',
-                label: computed(() => t('扩展属性')),
+                label: computed(() => t("扩展属性")),
                 rows: 3,
-            },
+            }
         ],
         descriptionsFormConfig: {
             labelWidth: '200px',
-            labelAlign: 'center',
+            labelAlign: 'center'
         },
-    });
+
+    })
     // 系统的增加表单
     let roleForm = ref({} as any);
     // 点击新增 子节点 事件
     function handlerAddNode() {
         // 弹框出现 标题修改 子节点事件  type
-        addChildNodeDialog.value.title = computed(() => t('新增子节点'));
+        addChildNodeDialog.value.title = computed(() => t("新增子节点"));
         roleForm.value = {};
         roleForm.value.type = 'folder';
         addChildNodeDialog.value.show = true;
@@ -567,7 +543,7 @@
     // 点击新增 角色 事件
     function handlerAddRole() {
         // 弹框出现 标题修改 角色事件  type
-        addChildNodeDialog.value.title = computed(() => t('新增角色'));
+        addChildNodeDialog.value.title = computed(() => t("新增角色"));
         roleForm.value = {};
         roleForm.value.type = 'role';
         addChildNodeDialog.value.show = true;
@@ -575,171 +551,164 @@
     // 增加子资源 弹框的 表单变量配置 控制
     let addChildNodeDialog = ref({
         show: false,
-        title: computed(() => t('新增子节点')),
+        title: computed(() => t("新增子节点")),
         width: '40%',
         onOkLoading: true,
         onOk: (newConfig) => {
             return new Promise(async (resolve, reject) => {
                 const y9RoleFormInstance = roleFormRef.value?.elFormRef;
-                await y9RoleFormInstance.validate(async (valid) => {
-                    if (valid) {
+                await y9RoleFormInstance.validate(async (valid) =>{
+                    if(valid) {
                         const params = {
                             appId: currData.value.appId,
                             parentId: currData.value.id,
                             type: roleForm.value.type,
-                            ...roleFormRef.value?.model,
-                        };
-                        await saveOrUpdate(params)
-                            .then(async (result) => {
-                                /**
-                                 * 对树进行操作：新增节点进入树
-                                 */
-                                if (result.success) {
-                                    //1.更新当前节点的子节点信息
-                                    const treeData = fixedTreeRef.value.getTreeData(); //获取tree数据
-                                    const currNode = fixedTreeRef.value.findNode(treeData, currData.value.id); //找到树节点对应的节点信息
-                                    const childData = await postNode({ id: currNode.id }); //重新请求当前节点的子节点，获取格式化后的子节点信息
-                                    Object.assign(currNode, { children: childData }); //合并节点信息
-                                    //2.手动设置点击当前节点
-                                    fixedTreeRef.value?.handClickNode(currNode); //手动设置点击当前节点
-                                }
-                                ElNotification({
-                                    message: result.success ? t('新增成功') : t('新增失败'),
-                                    type: result.success ? 'success' : 'error',
-                                    duration: 2000,
-                                    offset: 80,
-                                });
-
-                                // 表单 弹框消失 表单数据清空 重新刷新树列表
-                                roleForm.value = {};
-                                resolve();
-                            })
-                            .catch(() => {
-                                reject();
+                            ...roleFormRef.value?.model
+                        }
+                        await saveOrUpdate(params).then(async result => {
+                            /**
+                             * 对树进行操作：新增节点进入树
+                             */
+                            if(result.success) {
+                                //1.更新当前节点的子节点信息
+                                const treeData = fixedTreeRef.value.getTreeData();//获取tree数据
+                                const currNode = fixedTreeRef.value.findNode(treeData,currData.value.id);//找到树节点对应的节点信息
+                                const childData = await postNode({id:currNode.id})//重新请求当前节点的子节点，获取格式化后的子节点信息
+                                Object.assign(currNode,{children:childData})//合并节点信息
+                                //2.手动设置点击当前节点
+                                fixedTreeRef.value?.handClickNode(currNode)//手动设置点击当前节点
+                            }
+                            ElNotification({
+                                message: result.success ? t('新增成功') : t('新增失败'),
+                                type: result.success ? 'success' : 'error',
+                                duration: 2000,
+                                offset: 80,
                             });
-                    } else {
+                            
+                            // 表单 弹框消失 表单数据清空 重新刷新树列表
+                            roleForm.value = {};
+                            resolve();
+                        }).catch(() => {
+                            reject();
+                        });
+						
+                    }else {
                         reject();
                     }
-                });
+                })
             });
         },
     });
-
-    //移动-选择树节点展开时触发
-    const selectTreeExpandNode = ref();
-    function onNodeExpand(node) {
-        selectTreeExpandNode.value = node;
-    }
-
+	
+	//移动-选择树节点展开时触发
+	const selectTreeExpandNode = ref()
+	function onNodeExpand(node){
+		selectTreeExpandNode.value = node;
+	}
+   
     // treeObj
     const treeMoveApiObj = ref({
         topLevel: async () => {
-            let data = [];
-            const res = await getResourceTree(currData.value.appId);
-            data = res.data;
-            data.forEach((item) => {
-                if (item.resourceType === 0) {
-                    item.type = 'folder';
-                }
-            });
+			let data = [];
+			const res = await getResourceTree(currData.value.appId);
+			data = res.data;
+			data.forEach(item => {
+				if(item.resourceType === 0){
+					item.type = "folder"
+				}
+			});
             return data;
         },
         childLevel: {
-            api: async () => {
-                const res = await roleTreeList({
-                    parentId: selectTreeExpandNode.value.id,
-                });
-
-                const data = res.data || [];
-
-                for (let i = 0; i < data.length; i++) {
-                    const item = data[i];
-                    if (item.id == currData.value.id) {
-                        item.disabled = true;
-                        break;
-                    }
-                }
-
-                return data;
-            },
+			api: async () => {
+				const res = await roleTreeList({
+					parentId:selectTreeExpandNode.value.id,
+				})
+				
+				const data = res.data || [];
+				
+				for(let i = 0; i < data.length; i++){
+					const item = data[i];
+					if(item.id == currData.value.id){
+						item.disabled = true;
+						break;
+					}
+				}
+				
+				return data
+				
+			},
             params: {},
         },
     });
-
-    //移动树实例
-    const moveSelectTreeRef = ref();
-
-    //移动树的复选框被点击时触发
-    function handlerMoveTreeCheckChange(node, isChecked, childIsHaveChecked) {
-        //已经选择的节点
-        const alreadyCheckedNode = moveSelectTreeRef.value?.y9TreeRef?.getCheckedNodes();
-        if (isChecked && alreadyCheckedNode.length > 1) {
-            alreadyCheckedNode.forEach((item) => {
-                //取消其他选择，做成单选效果
-                if (item.id !== node.id) {
-                    moveSelectTreeRef.value?.y9TreeRef?.setChecked(item, false, false);
-                }
-            });
-        }
-    }
-
+	
+	//移动树实例
+	const moveSelectTreeRef = ref()
+	
+	//移动树的复选框被点击时触发
+	function handlerMoveTreeCheckChange(node,isChecked,childIsHaveChecked){
+		//已经选择的节点
+		const alreadyCheckedNode = moveSelectTreeRef.value?.y9TreeRef?.getCheckedNodes();
+		if(isChecked && alreadyCheckedNode.length>1){
+			alreadyCheckedNode.forEach(item => {//取消其他选择，做成单选效果
+				if(item.id !== node.id){
+					moveSelectTreeRef.value?.y9TreeRef?.setChecked(item,false,false);
+				}
+			})
+		}
+	}
+	
+	
     // 移动弹框的 配置
     let moveConfigDialog = ref({
         show: false,
-        title: computed(() => t('移动')),
+        title: computed(() => t("移动")),
         width: '30%',
         onOkLoading: true,
-        okText: computed(() => t('保存')),
-        cancelText: computed(() => t('关闭')),
+        okText: computed(() => t("保存")),
+        cancelText: computed(() => t("关闭")),
         onOk: (newConfig) => {
             return new Promise(async (resolve, reject) => {
-                const removeIds = moveSelectTreeRef.value?.y9TreeRef?.getCheckedKeys();
-                if (removeIds.length === 0) {
-                    ElNotification({
-                        title: t('失败'),
-                        message: t('请选择移动目标节点'),
-                        type: 'error',
-                        duration: 2000,
-                        offset: 80,
-                    });
-                    reject();
-                    return;
-                }
-
-                const removeId = removeIds[0];
+				const removeIds = moveSelectTreeRef.value?.y9TreeRef?.getCheckedKeys();
+				if(removeIds.length === 0){
+					ElNotification({title: t('失败'),message: t('请选择移动目标节点'),type: 'error',duration: 2000,offset: 80});
+					reject();
+					return;
+				}
+				
+				const removeId = removeIds[0]
                 let params = {
                     id: currData.value.id,
                     parentId: removeId,
                 };
-
-                await saveMoveRole(params)
-                    .then(async (result) => {
-                        /**
-                         * 对树进行操作：手动更新当前节点的子节点信息
-                         */
-                        //1.删除被移动的节点
-                        fixedTreeRef.value.y9TreeRef.remove(currData.value);
-
-                        //2.重新请求，移动的目标节点，获得最新的子节点信息
-                        const treeData = fixedTreeRef.value.getTreeData(); //获取tree数据
-                        const currNode = fixedTreeRef.value.findNode(treeData, removeId); //找到移动的目标树节点对应的节点信息
-                        const childData = await postNode({ id: removeId }); //重新请求当前节点，获取格式化后的子节点信息
-                        Object.assign(currNode, { children: childData }); //合并节点信息
-
-                        //3.手动设置点击当前节点
-                        fixedTreeRef.value?.handClickNode(currNode); //手动设置点击当前节点
-
-                        ElNotification({
-                            message: result.success ? t('移动成功') : t('移动失败'),
-                            type: result.success ? 'success' : 'error',
-                            duration: 2000,
-                            offset: 80,
-                        });
-                        resolve();
-                    })
-                    .catch(() => {
-                        reject();
+				
+                await saveMoveRole(params).then(async result => {
+                    /**
+                     * 对树进行操作：手动更新当前节点的子节点信息
+                     */
+                    //1.删除被移动的节点
+                    fixedTreeRef.value.y9TreeRef.remove(currData.value);
+                    
+                    //2.重新请求，移动的目标节点，获得最新的子节点信息
+                    const treeData = fixedTreeRef.value.getTreeData();//获取tree数据
+                    const currNode = fixedTreeRef.value.findNode(treeData,removeId);//找到移动的目标树节点对应的节点信息
+                    const childData = await postNode({id:removeId})//重新请求当前节点，获取格式化后的子节点信息
+                    Object.assign(currNode,{children:childData})//合并节点信息
+                    
+                    //3.手动设置点击当前节点
+                    fixedTreeRef.value?.handClickNode(currNode)//手动设置点击当前节点
+                    
+                    ElNotification({
+                        message: result.success ? t('移动成功') : t('移动失败'),
+                        type: result.success ? 'success' : 'error',
+                        duration: 2000,
+                        offset: 80,
                     });
+                    resolve();
+                }).catch(() => {
+                    reject();
+                });
+
             });
         },
     });
@@ -748,7 +717,7 @@
     // 搜索条件
     let filterData = ref({} as any);
     // 树 ref
-    const selectTreeRef = ref();
+    const selectTreeRef = ref<FormInstance>();
     // 表格 过滤条件
     const filterConfig = ref({
         filtersValueCallBack: (filters) => {
@@ -760,7 +729,7 @@
                 type: 'input',
                 value: '',
                 key: 'rolePersonName',
-                label: computed(() => t('名称')),
+                label: computed(() => t("名称")),
                 span: settingStore.device === 'mobile' ? 24 : 5,
                 clearable: true,
             },
@@ -768,7 +737,7 @@
                 type: 'input',
                 value: '',
                 key: 'deptName',
-                label: computed(() => t('部门')),
+                label: computed(() => t("部门")),
                 span: settingStore.device === 'mobile' ? 24 : 5,
                 clearable: true,
             },
@@ -779,16 +748,17 @@
             },
         ],
     });
+ 
 
     // 表格 配置属性
     let tableConfig = ref({
         columns: [
             { type: 'selection', fixed: 'left', width: 60 },
-            { title: computed(() => t('序号')), type: 'index', width: 60, showOverflowTooltip: false },
-            { title: computed(() => t('名称')), key: 'unitName' },
-            { title: computed(() => t('类型')), key: 'unitTypeName' },
-            { title: computed(() => t('所属部门')), key: 'unitDn' },
-            { title: computed(() => t('是否为负权限成员')), key: 'negative' },
+            { title: computed(() => t("序号")), type: 'index', width: 60, showOverflowTooltip: false },
+            { title: computed(() => t("名称")), key: 'unitName' },
+            { title: computed(() => t("类型")), key: 'unitTypeName' },
+            { title: computed(() => t("所属部门")), key: 'unitDn' },
+            { title: computed(() => t("是否为负权限成员")), key: 'negative' },
         ],
         tableData: [],
         pageConfig: false,
@@ -824,18 +794,18 @@
     const resourceTableConfig = ref({
         columns: [
             { type: 'selection', fixed: 'left', width: 60 },
-            { title: computed(() => t('序号')), type: 'index', width: 60, showOverflowTooltip: false },
-            { title: computed(() => t('资源名称')), key: 'resourceName' },
+            { title: computed(() => t("序号")), type: 'index', width: 60, showOverflowTooltip: false },
+            { title: computed(() => t("资源名称")), key: 'resourceName' },
             {
-                title: computed(() => t('操作')),
+                title: computed(() => t("操作")),
                 key: 'authority',
                 render: (row) => {
                     return getAuthrity(row.authority);
                 },
             },
-            { title: computed(() => t('授权者')), key: 'authorizer' },
-            { title: computed(() => t('授权时间')), key: 'authorizeTime', width: settingStore.getDatetimeSpan },
-            { title: computed(() => t('是否继承')), key: 'inherit' },
+            { title: computed(() => t("授权者")), key: 'authorizer' },
+            { title: computed(() => t("授权时间")), key: 'authorizeTime', width: settingStore.getDatetimeSpan },
+            { title: computed(() => t("是否继承")), key: 'inherit' },
         ],
         tableData: [],
         pageConfig: {
@@ -919,33 +889,23 @@
         onOk: () => {
             return new Promise(async (resolve, reject) => {
                 let ids = selectTreeRef.value?.y9TreeRef?.getCheckedKeys();
-
-                if (ids.length === 0) {
-                    ElNotification({
-                        title: t('失败'),
-                        message: t('请选择需要添加权限的节点'),
-                        type: 'error',
-                        duration: 2000,
-                        offset: 80,
-                    });
-                    reject();
-                    return;
-                }
-
+				
+				if(ids.length === 0){
+					ElNotification({title: t('失败'),message: t('请选择需要添加权限的节点'),type: 'error',duration: 2000,offset: 80});
+					reject();
+					return;
+				}
+				
                 let result;
 
-                if (negativeConfigDialog.value.title == computed(() => t('添加正权限人员')).value) {
-                    await addOrgUnits(currData.value.id, ids.join(','), false)
-                        .then((res) => {
-                            result = res;
-                        })
-                        .catch(() => {});
-                } else if (negativeConfigDialog.value.title == computed(() => t('添加负权限人员')).value) {
-                    await addOrgUnits(currData.value.id, ids.join(','), true)
-                        .then((res) => {
-                            result = res;
-                        })
-                        .catch(() => {});
+                if (negativeConfigDialog.value.title == computed(() => t("添加正权限人员")).value) {
+                    await addOrgUnits(currData.value.id, ids.join(','), false).then(res => {
+                        result = res;
+                    }).catch(() => {});
+                } else if (negativeConfigDialog.value.title == computed(() => t("添加负权限人员")).value) {
+                    await addOrgUnits(currData.value.id, ids.join(','), true).then(res => {
+                        result = res;
+                    }).catch(() => {});
                 }
                 ElNotification({
                     message: result.success ? t('添加权限成功') : t('添加权限失败'),
@@ -955,20 +915,21 @@
                 });
                 // 重新请求接口
                 initList();
-                if (result.success) {
+                if(result.success) {
                     resolve();
-                } else {
+                }else {
                     reject();
                 }
+                
             });
         },
     });
     // 点击 添加正权限 添加负权限
     function handlerClick(type) {
         if (type === 'positive') {
-            negativeConfigDialog.value.title = computed(() => t('添加正权限人员'));
+            negativeConfigDialog.value.title = computed(() => t("添加正权限人员"));
         } else {
-            negativeConfigDialog.value.title = computed(() => t('添加负权限人员'));
+            negativeConfigDialog.value.title = computed(() => t("添加负权限人员"));
         }
         negativeConfigDialog.value.show = true;
     }
@@ -1053,7 +1014,7 @@
             label: '',
             key: 'searchKey',
             props: {
-                placeholder: computed(() => t('输入内容按回车键搜索')),
+                placeholder: computed(() => t("输入内容按回车键搜索")),
             },
         },
         {
@@ -1094,28 +1055,22 @@
     const resourceFilterRef = ref(null);
     // 资源授权的 操作权限
     let resourceOperationType = ref(1);
-
-    const resourceSelectTree = ref();
-
+	
+	const resourceSelectTree = ref()
+	
     // 资源授权  弹框
     let iconSourceConfigDialog = ref({
         show: false,
-        title: computed(() => t('添加资源授权')),
+        title: computed(() => t("添加资源授权")),
         width: '45%',
         onOk: () => {
             return new Promise(async (resolve, reject) => {
                 let ids = resourceSelectTree.value?.y9TreeRef?.getCheckedKeys();
-                if (ids.length == 0) {
-                    ElNotification({
-                        title: t('失败'),
-                        message: t('请选择需要授权的资源'),
-                        type: 'error',
-                        duration: 2000,
-                        offset: 80,
-                    });
-                    reject();
-                    return;
-                }
+				if(ids.length == 0){
+					ElNotification({title: t('失败'),message: t('请选择需要授权的资源'),type: 'error',duration: 2000,offset: 80});
+					reject();
+					return;
+				}
 
                 // 保存操作
                 const params = {
@@ -1125,72 +1080,71 @@
                     resourceIds: ids.toString(),
                 };
 
-                await saveOrUpdateRelateResource(params)
-                    .then((result) => {
-                        ElNotification({
-                            message: result.success ? t('添加权限成功') : t('添加权限失败'),
-                            type: result.success ? 'success' : 'error',
-                            duration: 2000,
-                            offset: 80,
-                        });
-                        if (result.success) {
-                            // 重新请求接口
-                            getRelateResourceListFn();
-                            resolve();
-                        }
-                    })
-                    .catch(() => {
-                        reject();
+                await saveOrUpdateRelateResource(params).then(result => {
+                    ElNotification({
+                        message: result.success ? t('添加权限成功') : t('添加权限失败'),
+                        type: result.success ? 'success' : 'error',
+                        duration: 2000,
+                        offset: 80,
                     });
+                    if(result.success) {
+                        // 重新请求接口
+                        getRelateResourceListFn();
+                        resolve();
+                    }
+                }).catch(() => {
+                    reject();
+                });
+            
             });
         },
     });
     // 资源授权 弹框 选择树过滤
     let filtersListSource = ref([
-        {
-            type: 'slot',
-            slotName: 'treeFilter',
-            span: settingStore.device === 'mobile' ? 24 : 16,
-        },
+		{
+			type: "slot",
+			slotName: "treeFilter",
+			span: settingStore.device === 'mobile' ? 24 : 16,
+		},
         {
             type: 'select',
             value: 1,
             span: settingStore.device === 'mobile' ? 24 : 8,
-            label: computed(() => t('操作权限')),
+            label: computed(() => t("操作权限")),
             key: 'operationType',
             props: {
                 clearable: false,
                 options: [
                     {
-                        label: computed(() => t('隐藏')),
+                        label: computed(() => t("隐藏")),
                         value: 0,
                     },
                     {
-                        label: computed(() => t('浏览')),
+                        label: computed(() => t("浏览")),
                         value: 1,
                     },
                     {
-                        label: computed(() => t('维护')),
+                        label: computed(() => t("维护")),
                         value: 2,
                     },
                     {
-                        label: computed(() => t('管理')),
+                        label: computed(() => t("管理")),
                         value: 3,
                     },
                 ],
             },
         },
     ]);
-
-    //请求某个节点，返回格式化好的数据
-    function postNode(node) {
-        return new Promise((resolve, reject) => {
-            fixedTreeRef.value.onTreeLazyLoad(node, (data) => {
-                resolve(data);
-            });
-        });
-    }
-
+	
+	//请求某个节点，返回格式化好的数据
+	function postNode(node){
+		return new Promise((resolve,reject) => {
+			fixedTreeRef.value.onTreeLazyLoad(node,data => {
+				resolve(data)
+			})
+		})
+	}
+	
     function sourceFiltersValueCallBack(filters) {
         resourceOperationType.value = filters.operationType;
     }
@@ -1208,35 +1162,38 @@
     // 资源授权 请求的tree接口
     let sourceTreeApiObj = ref({
         topLevel: async () => {
-            let data = [];
-            const res = await appTreeRoot(currData.value.appId);
-            data = res.data;
+			let data = [];
+			const res = await appTreeRoot(currData.value.appId)
+			data = res.data;
             return data;
         },
         childLevel: {
             //子级（二级及二级以上）tree接口
             api: resourceTreeRoot,
-            params: {},
+            params: {
+            },
         },
         search: {
             //搜索接口及参数
             api: treeSearch,
-            params: {},
+            params: {
+            },
         },
     });
-    const searchKey = ref();
-    function onRefreshTree() {
-        resourceSelectTree.value.onRefreshTree();
-    }
-
-    let searchTimer = null;
-    function onSearchKeyChange(searchVal) {
-        clearTimeout(searchTimer);
-        searchTimer = setTimeout(() => {
-            sourceTreeApiObj.value.search.params.key = searchVal;
+	const searchKey = ref()
+	function onRefreshTree() {
+		resourceSelectTree.value.onRefreshTree()
+	}
+	
+	let searchTimer = null;
+	function onSearchKeyChange(searchVal){
+		clearTimeout(searchTimer);
+		searchTimer = setTimeout(() => {
+			sourceTreeApiObj.value.search.params.key = searchVal;
             sourceTreeApiObj.value.search.params.appId = currData.value.appId;
-        }, 500);
-    }
+		},500)
+	
+	}
 </script>
 <style scoped lang="scss">
     .basic-btns {
@@ -1257,12 +1214,13 @@
             min-width: 90px;
         }
     }
-    .custom-select-tree-filter {
-        display: flex;
-        .refresh-btn {
-        }
-        .search-input {
-            margin-left: 15px;
-        }
-    }
+	.custom-select-tree-filter{
+		display: flex;
+		.refresh-btn{
+			
+		}
+		.search-input{
+			margin-left: 15px;
+		}
+	}
 </style>

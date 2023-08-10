@@ -38,11 +38,24 @@ spring:
         elasticsearch:
             repositories:
                 enabled: true
+        redis:
+            database: 8
+            host: localhost
+            port: 7379
+            username: default
+            password: y9i-83204585
+            lettuce:
+                pool:
+                    max-active: 8
+                    max-idle: 8
+                    max-wait: -1
+                    min-idle: 0
+            ssl: 
+                enabled: false
     elasticsearch:
-        rest:
-            uris: localhost:9200
-            username: elastic
-            password: 'risesoft'
+        uris: localhost:9200
+        username: elastic
+        password: 'risesoft'
     kafka:
         bootstrap-servers: localhost:9092
         consumer:
@@ -51,20 +64,7 @@ spring:
             group-id: y9log-server
     main:
         allow-bean-definition-overriding: true
-    redis:
-        database: 8
-        host: localhost
-        lettuce:
-            pool:
-                max-active: 8
-                max-idle: 8
-                max-wait: -1
-                min-idle: 0
-            shutdown-timeout: 100ms
-        password: y9i-83204585
-        port: 6379
-        ssl: false
-        timeout: 10000
+    
 y9:
     systemName: ${spring.application.name}
     app:

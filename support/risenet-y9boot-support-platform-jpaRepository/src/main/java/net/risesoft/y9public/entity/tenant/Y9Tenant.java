@@ -1,19 +1,17 @@
 package net.risesoft.y9public.entity.tenant;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
-import javax.persistence.Table;
-
 import org.hibernate.annotations.ColumnDefault;
 import org.hibernate.annotations.Comment;
 import org.hibernate.annotations.GenericGenerator;
-import org.hibernate.annotations.Type;
 
+import jakarta.persistence.Column;
+import jakarta.persistence.Convert;
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.Id;
+import jakarta.persistence.Table;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-
 import net.risesoft.base.BaseEntity;
 import net.risesoft.enums.TenantTypeEnum;
 
@@ -27,7 +25,7 @@ import net.risesoft.enums.TenantTypeEnum;
  */
 @Entity
 @Table(name = "Y9_COMMON_TENANT")
-@org.hibernate.annotations.Table(comment = "租户信息表", appliesTo = "Y9_COMMON_TENANT")
+@Comment("租户信息表")
 @NoArgsConstructor
 @Data
 public class Y9Tenant extends BaseEntity {
@@ -68,7 +66,7 @@ public class Y9Tenant extends BaseEntity {
     private String description;
 
     /** 是否启用 */
-    @Type(type = "numeric_boolean")
+    @Convert(converter = org.hibernate.type.NumericBooleanConverter.class)
     @ColumnDefault("1")
     @Column(name = "ENABLED", nullable = false)
     @Comment("是否启用")

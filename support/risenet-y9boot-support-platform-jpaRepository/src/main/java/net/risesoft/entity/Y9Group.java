@@ -1,8 +1,8 @@
 package net.risesoft.entity;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Table;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.Table;
 
 import org.hibernate.annotations.ColumnDefault;
 import org.hibernate.annotations.Comment;
@@ -22,7 +22,7 @@ import net.risesoft.enums.OrgTypeEnum;
  */
 @Entity
 @Table(name = "Y9_ORG_GROUP")
-@org.hibernate.annotations.Table(comment = "用户组表", appliesTo = "Y9_ORG_GROUP")
+@Comment("用户组表")
 @Data
 public class Y9Group extends Y9OrgBase {
 
@@ -35,7 +35,7 @@ public class Y9Group extends Y9OrgBase {
     /**
      * 岗位组或者用户组
      * 
-     * {@link net.risesoft.enums.GroupTypeEnum}
+     * {@link GroupTypeEnum}
      */
     @ColumnDefault("'person'")
     @Column(name = "TYPE", length = 10, nullable = false)

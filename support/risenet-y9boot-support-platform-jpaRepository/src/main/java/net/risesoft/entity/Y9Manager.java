@@ -1,17 +1,15 @@
 package net.risesoft.entity;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Table;
-import javax.validation.constraints.Email;
-import javax.validation.constraints.NotBlank;
-
 import org.hibernate.annotations.ColumnDefault;
 import org.hibernate.annotations.Comment;
-import org.hibernate.annotations.Type;
 
+import jakarta.persistence.Column;
+import jakarta.persistence.Convert;
+import jakarta.persistence.Entity;
+import jakarta.persistence.Table;
+import jakarta.validation.constraints.Email;
+import jakarta.validation.constraints.NotBlank;
 import lombok.Data;
-
 import net.risesoft.enums.ManagerLevelEnum;
 import net.risesoft.enums.OrgTypeEnum;
 import net.risesoft.enums.SexEnum;
@@ -25,9 +23,8 @@ import net.risesoft.enums.SexEnum;
  * @date 2022/2/10
  */
 @Entity
-// @EntityListeners({Y9ManagerListener.class})
 @Table(name = "Y9_ORG_MANAGER")
-@org.hibernate.annotations.Table(comment = "三员表", appliesTo = "Y9_ORG_MANAGER")
+@Comment("三员表")
 @Data
 public class Y9Manager extends Y9OrgBase {
 
@@ -86,7 +83,7 @@ public class Y9Manager extends Y9OrgBase {
     /**
      * 性别
      * <p>
-     * {@link net.risesoft.enums.SexEnum}
+     * {@link SexEnum}
      */
     @ColumnDefault("1")
     @Column(name = "SEX", nullable = false)
@@ -106,7 +103,7 @@ public class Y9Manager extends Y9OrgBase {
     /**
      * 区分大三员（true），小三员（false）
      */
-    @Type(type = "numeric_boolean")
+    @Convert(converter = org.hibernate.type.NumericBooleanConverter.class)
     @Column(name = "GLOBAL_MANAGER", nullable = false)
     @Comment("是否全局管理员")
     @ColumnDefault("0")

@@ -2,7 +2,7 @@ package org.apereo.cas.logout.slo;
 
 import java.util.Optional;
 
-import javax.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletRequest;
 
 import org.apereo.cas.authentication.principal.WebApplicationService;
 import org.apereo.cas.services.CasRegisteredService;

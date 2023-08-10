@@ -110,7 +110,7 @@ public interface Y9PersonToResourceAndAuthorityService {
      * @param resourceType 资源类型{@link ResourceTypeEnum}
      * @param authority 授权类型{@link AuthorityEnum}
      * @return
-     * @see net.risesoft.enums.AuthorityEnum
+     * @see AuthorityEnum
      */
     List<Y9PersonToResourceAndAuthority> list(String personId, String parentResourceId, Integer resourceType,
         Integer authority);

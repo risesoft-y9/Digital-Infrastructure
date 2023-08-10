@@ -1,18 +1,16 @@
 package net.risesoft.y9public.entity.role;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Id;
-import javax.persistence.Table;
-import javax.validation.constraints.NotBlank;
-
 import org.hibernate.annotations.ColumnDefault;
 import org.hibernate.annotations.Comment;
-import org.hibernate.annotations.Type;
 
+import jakarta.persistence.Column;
+import jakarta.persistence.Convert;
+import jakarta.persistence.Entity;
+import jakarta.persistence.Id;
+import jakarta.persistence.Table;
+import jakarta.validation.constraints.NotBlank;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-
 import net.risesoft.base.BaseEntity;
 import net.risesoft.enums.Y9RoleTypeEnum;
 
@@ -26,7 +24,7 @@ import net.risesoft.enums.Y9RoleTypeEnum;
  */
 @Entity
 @Table(name = "Y9_ORG_ROLE")
-@org.hibernate.annotations.Table(comment = "角色表", appliesTo = "Y9_ORG_ROLE")
+@Comment("角色表")
 @NoArgsConstructor
 @Data
 public class Y9Role extends BaseEntity implements Comparable<Y9Role> {
@@ -103,7 +101,7 @@ public class Y9Role extends BaseEntity implements Comparable<Y9Role> {
     private String systemCnName;
 
     /** 租户自定义 */
-    @Type(type = "numeric_boolean")
+    @Convert(converter = org.hibernate.type.NumericBooleanConverter.class)
     @ColumnDefault("0")
     @Column(name = "TENANT_CUSTOM", nullable = false)
     @Comment("租户自定义")
@@ -115,7 +113,7 @@ public class Y9Role extends BaseEntity implements Comparable<Y9Role> {
     private String tenantId;
 
     /** 动态角色 */
-    @Type(type = "numeric_boolean")
+    @Convert(converter = org.hibernate.type.NumericBooleanConverter.class)
     @ColumnDefault("0")
     @Column(name = "DYNAMIC", nullable = false)
     @Comment("动态角色")

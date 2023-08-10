@@ -1,10 +1,10 @@
 package net.risesoft.y9public.entity.tenant;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Id;
-import javax.persistence.Table;
-import javax.validation.constraints.NotBlank;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.Id;
+import jakarta.persistence.Table;
+import jakarta.validation.constraints.NotBlank;
 
 import org.hibernate.annotations.Comment;
 
@@ -24,7 +24,7 @@ import net.risesoft.enums.DataSourceTypeEnum;
  */
 @Entity
 @Table(name = "Y9_COMMON_DATASOURCE")
-@org.hibernate.annotations.Table(comment = "数据源基本信息表", appliesTo = "Y9_COMMON_DATASOURCE")
+@Comment("数据源基本信息表")
 @NoArgsConstructor
 @Data
 public class Y9DataSource extends BaseEntity {

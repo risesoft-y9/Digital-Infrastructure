@@ -1,20 +1,12 @@
 <template>
     <div class="margin-bottom-20">
-        <el-button
-            @click="upPerson"
-            class="global-btn-second"
-            :size="fontSizeObj.buttonSize"
-            :style="{ fontSize: fontSizeObj.baseFontSize }"
-        >
+        <el-button @click="upPerson" class="global-btn-second"
+        :size="fontSizeObj.buttonSize" :style="{ fontSize: fontSizeObj.baseFontSize }">
             <i class="ri-arrow-up-line"></i>
             <span>{{ $t('上移') }}</span>
         </el-button>
-        <el-button
-            @click="downPerson"
-            class="global-btn-second"
-            :size="fontSizeObj.buttonSize"
-            :style="{ fontSize: fontSizeObj.baseFontSize }"
-        >
+        <el-button @click="downPerson" class="global-btn-second"
+        :size="fontSizeObj.buttonSize" :style="{ fontSize: fontSizeObj.baseFontSize }">
             <i class="ri-arrow-down-line"></i>
             <span>{{ $t('下移') }}</span>
         </el-button>
@@ -23,8 +15,7 @@
 </template>
 
 <script lang="ts" setup>
-    import { ElNotification } from 'element-plus';
-    import { computed, inject, nextTick, reactive, toRefs, watch } from 'vue';
+    import { inject, nextTick, reactive, toRefs, watch } from 'vue';
     import { useI18n } from 'vue-i18n';
     const { t } = useI18n();
     // 注入 字体对象
@@ -56,8 +47,8 @@
         //当前节点信息
         tableConfig: {
             //人员列表表格配置
-            columns: [] as any,
-            tableData: [] as any,
+            columns: [],
+            tableData: [],
             pageConfig: false, //取消分页
         },
         currentRow: '',
@@ -67,29 +58,32 @@
     let { tableConfig, currentRow, selecedtVal } = toRefs(data);
 
     let defaultColumn = [
-        {
-            type: 'radio',
-            title: computed(() => t('请选择')),
-            width: 200,
-        },
-        {
-            title: computed(() => t('名称')),
-            key: 'name',
-        },
-    ];
+                {
+                    type: 'radio',
+                    title: computed(() => t('请选择')),
+                    width: 200,
+                },
+                {
+                    title: computed(() => t('名称')),
+                    key: 'name',
+                },
+            ]
     watch(
         () => props.columns,
         (newVal) => {
-            if (!newVal) {
-                tableConfig.value.columns = defaultColumn;
-            } else {
+            if(!newVal){
+                tableConfig.value.columns = defaultColumn
+            }else{
                 tableConfig.value.columns = newVal;
             }
+            
         },
         {
             immediate: true,
         }
     );
+
+    
 
     watch(
         () => props.currInfo,
@@ -133,18 +127,6 @@
                 } else if (item.orgType == 'Group') {
                     item.orgType = '用户组';
                 }
-
-                switch (item.type) {
-                    case 0:
-                        item.type = '应用';
-                        break;
-                    case 2:
-                        item.type = '按钮';
-                        break;
-                    default:
-                        item.type = '菜单';
-                        break;
-                }
                 tableConfig.value.tableData.push(item);
             });
         }
@@ -158,13 +140,7 @@
 
     async function upPerson() {
         if (currentRow.value == '' || currentRow.value == null) {
-            ElNotification({
-                title: t('失败'),
-                message: t('请选择一行数据'),
-                type: 'error',
-                duration: 2000,
-                offset: 80,
-            });
+            ElNotification({ title: t('失败'), message: t('请选择一行数据'), type: 'error', duration: 2000, offset: 80 });
             return;
         }
         let tableData = tableConfig.value.tableData;
@@ -191,13 +167,7 @@
 
     async function downPerson() {
         if (currentRow.value == '' || currentRow.value == null) {
-            ElNotification({
-                title: t('失败'),
-                message: t('请选择一行数据'),
-                type: 'error',
-                duration: 2000,
-                offset: 80,
-            });
+            ElNotification({ title: t('失败'), message: t('请选择一行数据'), type: 'error', duration: 2000, offset: 80 });
             return;
         }
         let tableData = tableConfig.value.tableData;

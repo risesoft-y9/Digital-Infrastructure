@@ -4,31 +4,20 @@
     <modelVersion>4.0.0</modelVersion>
     <!-- <groupId>net.risesoft</groupId> -->
     <artifactId>risenet-y9boot-starter-jpa-public</artifactId>
-    <version>v9.6.3-SNAPSHOT</version>
+    <version>v9.7.0-SNAPSHOT</version>
     <packaging>jar</packaging>
 
     <parent>
         <groupId>net.risesoft</groupId>
         <artifactId>y9-digitalbase</artifactId>
-        <version>v9.6.3-SNAPSHOT</version>
+        <version>v9.7.0-SNAPSHOT</version>
         <relativePath>../../pom.xml</relativePath>
     </parent>
-
-    <distributionManagement>
-        <repository>
-            <id>releases</id>
-            <url>https://svn.youshengyun.com:9900/nexus/repository/maven-releases/</url>
-        </repository>
-        <snapshotRepository>
-            <id>snapshots</id>
-            <url>https://svn.youshengyun.com:9900/nexus/repository/maven-snapshots/</url>
-        </snapshotRepository>
-    </distributionManagement>
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <maven.build.timestamp.format>yyyy-MM-dd_HH_mm</maven.build.timestamp.format>
-        <java.version>1.8</java.version>
+        <java.version>17</java.version>
     </properties>
 
     <dependencies>
@@ -48,25 +37,7 @@
 
         <dependency>
             <groupId>net.risesoft</groupId>
-            <artifactId>risenet-y9boot-properties</artifactId>
-            <version>${project.version}</version>
-        </dependency>
-
-        <dependency>
-            <groupId>net.risesoft</groupId>
-            <artifactId>risenet-y9boot-common-model</artifactId>
-            <version>${project.version}</version>
-        </dependency>
-
-        <dependency>
-            <groupId>net.risesoft</groupId>
             <artifactId>risenet-y9boot-common-util</artifactId>
-            <version>${project.version}</version>
-        </dependency>
-
-        <dependency>
-            <groupId>net.risesoft</groupId>
-            <artifactId>risenet-y9boot-3rd-jpa</artifactId>
             <version>${project.version}</version>
         </dependency>
 
@@ -77,7 +48,7 @@
 
         <dependency>
             <groupId>com.alibaba</groupId>
-            <artifactId>druid-spring-boot-starter</artifactId>
+            <artifactId>druid-spring-boot-3-starter</artifactId>
         </dependency>
 
         <dependency>
@@ -90,17 +61,17 @@
             <artifactId>ojdbc11</artifactId>
         </dependency>
 
-        <dependency>
+        <!--<dependency>
             <groupId>com.dameng</groupId>
-            <artifactId>DmDialect-for-hibernate5.3</artifactId>
-            <version>8.1.1.49</version>
+            <artifactId>DmDialect-for-hibernate5.6</artifactId>
+            <version>8.1.2.192</version>
         </dependency>
 
         <dependency>
             <groupId>com.dameng</groupId>
             <artifactId>Dm8JdbcDriver18</artifactId>
             <version>8.1.1.49</version>
-        </dependency>
+        </dependency>-->
 
         <!-- 人大金仓数据库 -->
         <!-- <dependency> <groupId>cn.com.kingbase</groupId> <artifactId>kingbase8</artifactId> 

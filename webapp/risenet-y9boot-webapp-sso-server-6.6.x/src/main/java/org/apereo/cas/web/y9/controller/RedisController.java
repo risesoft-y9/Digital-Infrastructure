@@ -2,7 +2,7 @@ package org.apereo.cas.web.y9.controller;
 
 import java.util.concurrent.TimeUnit;
 
-import javax.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletRequest;
 
 import org.apache.commons.lang3.StringUtils;
 import org.apereo.cas.redis.core.CasRedisTemplate;

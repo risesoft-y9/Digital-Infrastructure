@@ -1,17 +1,15 @@
 package net.risesoft.y9public.entity.resource;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Lob;
-import javax.persistence.Table;
-import javax.persistence.Transient;
-
 import org.hibernate.annotations.ColumnDefault;
 import org.hibernate.annotations.Comment;
-import org.hibernate.annotations.Type;
 
+import jakarta.persistence.Column;
+import jakarta.persistence.Convert;
+import jakarta.persistence.Entity;
+import jakarta.persistence.Lob;
+import jakarta.persistence.Table;
+import jakarta.persistence.Transient;
 import lombok.Data;
-
 import net.risesoft.enums.AppOpenTypeEnum;
 import net.risesoft.enums.AppTypeEnum;
 import net.risesoft.enums.ResourceTypeEnum;
@@ -26,7 +24,7 @@ import net.risesoft.enums.ResourceTypeEnum;
  */
 @Entity
 @Table(name = "Y9_COMMON_APP_STORE")
-@org.hibernate.annotations.Table(comment = "应用市场表", appliesTo = "Y9_COMMON_APP_STORE")
+@Comment("应用市场表")
 @Data
 public class Y9App extends Y9ResourceBase {
 
@@ -38,7 +36,7 @@ public class Y9App extends Y9ResourceBase {
     private String aliasName;
 
     /** 是否审核通过 */
-    @Type(type = "numeric_boolean")
+    @Convert(converter = org.hibernate.type.NumericBooleanConverter.class)
     @ColumnDefault("0")
     @Column(name = "CHECKED", nullable = false)
     @Comment("是否审核通过")
@@ -50,7 +48,7 @@ public class Y9App extends Y9ResourceBase {
     private String verifyUserName;
 
     /** 是否显示右上角数字，0=不显示，1=显示 */
-    @Type(type = "numeric_boolean")
+    @Convert(converter = org.hibernate.type.NumericBooleanConverter.class)
     @ColumnDefault("0")
     @Column(name = "SHOW_NUMBER", nullable = false)
     @Comment("是否显示右上角数字，0=不显示，1=显示")
@@ -96,7 +94,7 @@ public class Y9App extends Y9ResourceBase {
     private String iconData;
 
     /** 是否自动租用应用 */
-    @Type(type = "numeric_boolean")
+    @Convert(converter = org.hibernate.type.NumericBooleanConverter.class)
     @Column(name = "AUTO_INIT", nullable = false)
     @Comment("是否自动租用应用")
     @ColumnDefault("0")

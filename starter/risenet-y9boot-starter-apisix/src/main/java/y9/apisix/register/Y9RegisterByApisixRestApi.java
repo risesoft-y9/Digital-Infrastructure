@@ -6,8 +6,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-import javax.annotation.PostConstruct;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.info.BuildProperties;
 import org.springframework.util.StringUtils;
@@ -25,6 +23,7 @@ import io.github.classgraph.ClassInfoList;
 import io.github.classgraph.MethodInfo;
 import io.github.classgraph.MethodInfoList;
 import io.github.classgraph.ScanResult;
+import jakarta.annotation.PostConstruct;
 import y9.apisix.util.ApisixUtil;
 import y9.apisix.util.EtcdUtil;
 import y9.apisix.util.MD5;
@@ -62,73 +61,6 @@ public class Y9RegisterByApisixRestApi {
     private String createUpStream() {
         return ApisixUtil.createUpStream(adminAddress, adminKey, upstreamId, upstreamNodes, upstreamType,
             "api版本：" + apiVersion);
-    }
-
-    private void cxfApiRegister(List<String> routeIdsList, List<String> resultList, ScanResult scanResult) {
-        try {
-            ClassInfoList cxfClassInfoList = scanResult.getClassesWithAnnotation("javax.jws.WebService");
-            for (ClassInfo classInfo : cxfClassInfoList) {
-                AnnotationInfo classAnnotationInfo = classInfo.getAnnotationInfo("y9.apisix.annotation.NoApiClass");
-                if (null != classAnnotationInfo) {
-                    continue;
-                }
-
-                AnnotationInfo pathAnnotationInfo = classInfo.getAnnotationInfo("javax.ws.rs.Path");
-                Map<String, AnnotationParameterValue> pathAnnotationParameterValueMap =
-                    pathAnnotationInfo.getParameterValues().asMap();
-                String[] classAnnotationValues = (String[])pathAnnotationParameterValueMap.get("value").getValue();
-
-                MethodInfoList methodInfoList = classInfo.getMethodInfo();
-                for (MethodInfo methodInfo : methodInfoList) {
-                    String methodDescription = methodInfo.toStringWithSimpleNames();
-                    int i = methodDescription.indexOf(" public ");
-                    if (i > -1) {
-                        // methodDescription不能长于255个字符，否则bindUpstreamToRoute出错。
-                        methodDescription = methodDescription.substring(i + 1);
-                        methodDescription = methodDescription.substring(0,
-                            methodDescription.length() > 255 ? 255 : methodDescription.length());
-                    }
-
-                    AnnotationInfo methodAnnotationInfo =
-                        methodInfo.getAnnotationInfo("y9.apisix.annotation.NoApiMethod");
-                    if (null != methodAnnotationInfo) {
-                        continue;
-                    }
-
-                    AnnotationInfo annotationInfo = methodInfo.getAnnotationInfo("javax.ws.rs.Path");
-                    Map<String, AnnotationParameterValue> methodPathParameterMap =
-                        annotationInfo.getParameterValues().asMap();
-                    String[] methodAnnotationValues = (String[])methodPathParameterMap.get("value").getValue();
-
-                    for (String classAnnotationValue : classAnnotationValues) {
-                        for (String methodAnnotationValue : methodAnnotationValues) {
-                            methodAnnotationValue = methodAnnotationValue.contains("{")
-                                ? methodAnnotationValue.substring(0, methodAnnotationValue.indexOf("{")) + "*"
-                                : methodAnnotationValue;
-
-                            String uri = new StringBuilder("/").append(contextPath).append("/services/rest")
-                                .append(classAnnotationValue).append(methodAnnotationValue).toString();
-                            String routeId = upstreamId + "_cxf" + uri.replaceAll("/", "_").replaceAll("\\*", ".");
-
-                            // apisx Admin API 的id长度不能超过64，
-                            // 目前处理是：routeId超过64，就转成MD5 hash,也可以改apisix的代码，修改各个参数长度的限制
-                            if (routeId.length() > 64) {
-                                routeId = MD5.hash(routeId, Charset.forName("UTF-8"));
-                            }
-
-                            routeIdsList.add(routeId);
-                            String result = ApisixUtil.bindRouteToUpstream(adminAddress, adminKey, uri, upstreamId,
-                                routeId, methodDescription, consumerEnabled, authenticationType);
-                            resultList.add(result);
-                        }
-                    }
-                }
-            }
-        } catch (Exception e) {
-            resultList.add(e.getMessage());
-
-            LOGGER.warn(e.getMessage(), e);
-        }
     }
 
     public List<String> deleteAllRoute() {
@@ -213,7 +145,6 @@ public class Y9RegisterByApisixRestApi {
             resultList.add(result);
         } else {
             ScanResult scanResult = new ClassGraph().enableAllInfo().acceptPackages(apiBasePackages.split(",")).scan();
-            cxfApiRegister(routeIdsList, resultList, scanResult);
             restApiRegister(routeIdsList, resultList, scanResult);
             deleteUselessApi(routeIdsList, resultList);
             // deleteUselessApiFromEtcd(routeIdsList, resultList);

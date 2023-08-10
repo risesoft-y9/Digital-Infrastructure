@@ -4,29 +4,18 @@
     <modelVersion>4.0.0</modelVersion>
     <!-- <groupId>net.risesoft</groupId> -->
     <artifactId>risenet-y9boot-starter-apisix</artifactId>
-    <version>v9.6.3-SNAPSHOT</version>
+    <version>v9.7.0-SNAPSHOT</version>
     <packaging>jar</packaging>
 
     <parent>
         <groupId>net.risesoft</groupId>
         <artifactId>y9-digitalbase</artifactId>
-        <version>v9.6.3-SNAPSHOT</version>
+        <version>v9.7.0-SNAPSHOT</version>
         <relativePath>../../pom.xml</relativePath>
     </parent>
 
-    <distributionManagement>
-        <repository>
-            <id>releases</id>
-            <url>https://svn.youshengyun.com:9900/nexus/repository/maven-releases/</url>
-        </repository>
-        <snapshotRepository>
-            <id>snapshots</id>
-            <url>https://svn.youshengyun.com:9900/nexus/repository/maven-snapshots/</url>
-        </snapshotRepository>
-    </distributionManagement>
-
     <properties>
-        <java.version>11</java.version>
+        <java.version>17</java.version>
     </properties>
 
     <dependencies>
@@ -64,7 +53,7 @@
         <dependency>
             <groupId>io.github.classgraph</groupId>
             <artifactId>classgraph</artifactId>
-            <version>4.8.109</version>
+            <version>4.8.162</version>
         </dependency>
 
         <dependency>
@@ -80,8 +69,8 @@
         </dependency>
 
         <dependency>
-            <groupId>javax.servlet</groupId>
-            <artifactId>javax.servlet-api</artifactId>
+            <groupId>jakarta.servlet</groupId>
+            <artifactId>jakarta.servlet-api</artifactId>
             <scope>provided</scope>
         </dependency>
     </dependencies>

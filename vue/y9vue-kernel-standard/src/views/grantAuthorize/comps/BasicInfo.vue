@@ -2,7 +2,7 @@
  * @Author: hongzhew
  * @Date: 2022-04-07 17:43:02
  * @LastEditors: mengjuhua
- * @LastEditTime: 2023-08-03 10:31:44
+ * @LastEditTime: 2023-06-19 15:43:29
  * @Description: 
 -->
 <!--  -->
@@ -11,7 +11,7 @@
 </template>
 
 <script lang="ts" setup>
-    import { inject, watch, reactive, computed, h, onMounted, ref, toRefs } from 'vue';
+    import { computed, h, onMounted, ref, watch } from 'vue';
     import { useI18n } from 'vue-i18n';
     import { resourceInfo, getMenuInfo, getOperationInfo } from '@/api/resource/index';
     import { useSettingStore } from '@/store/modules/settingStore';

@@ -4,7 +4,7 @@ import java.security.GeneralSecurityException;
 import java.util.List;
 
 import javax.security.auth.login.FailedLoginException;
-import javax.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletRequest;
 
 import org.apache.commons.lang3.StringUtils;
 import org.apereo.cas.authentication.credential.RememberMeUsernamePasswordCredential;

@@ -1,18 +1,16 @@
 package net.risesoft.y9public.entity.resource;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Id;
-import javax.persistence.Table;
-import javax.validation.constraints.NotBlank;
-
 import org.hibernate.annotations.ColumnDefault;
 import org.hibernate.annotations.Comment;
-import org.hibernate.annotations.Type;
 
+import jakarta.persistence.Column;
+import jakarta.persistence.Convert;
+import jakarta.persistence.Entity;
+import jakarta.persistence.Id;
+import jakarta.persistence.Table;
+import jakarta.validation.constraints.NotBlank;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-
 import net.risesoft.base.BaseEntity;
 
 /**
@@ -25,7 +23,7 @@ import net.risesoft.base.BaseEntity;
  */
 @Entity
 @Table(name = "Y9_COMMON_SYSTEM")
-@org.hibernate.annotations.Table(comment = "系统信息表", appliesTo = "Y9_COMMON_SYSTEM")
+@Comment("系统信息表")
 @NoArgsConstructor
 @Data
 public class Y9System extends BaseEntity {
@@ -66,7 +64,7 @@ public class Y9System extends BaseEntity {
     private String contextPath;
 
     /** 是否启用 */
-    @Type(type = "numeric_boolean")
+    @Convert(converter = org.hibernate.type.NumericBooleanConverter.class)
     @Column(name = "ENABLED")
     @Comment("是否启用")
     private Boolean enabled;
@@ -77,14 +75,14 @@ public class Y9System extends BaseEntity {
     private Integer tabIndex = 0;
 
     /** 是否启用独立数据源 */
-    @Type(type = "numeric_boolean")
+    @Convert(converter = org.hibernate.type.NumericBooleanConverter.class)
     @Column(name = "SINGE_DATASOURCE", nullable = false)
     @Comment("是否启用独立数据源")
     @ColumnDefault("0")
     private Boolean singleDatasource = Boolean.FALSE;
 
     /** 是否自动租用系统 */
-    @Type(type = "numeric_boolean")
+    @Convert(converter = org.hibernate.type.NumericBooleanConverter.class)
     @Column(name = "AUTO_INIT", nullable = false)
     @Comment("是否自动租用系统")
     @ColumnDefault("0")

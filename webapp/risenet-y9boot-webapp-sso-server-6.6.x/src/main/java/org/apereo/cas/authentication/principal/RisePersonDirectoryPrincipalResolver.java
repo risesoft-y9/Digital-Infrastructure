@@ -59,7 +59,7 @@ public class RisePersonDirectoryPrincipalResolver implements PrincipalResolver {
 
         var principalId = extractedPrincipalId;
 
-        val attrNames = org.springframework.util.StringUtils.commaDelimitedListToSet("username");
+        val attrNames = StringUtils.commaDelimitedListToSet("username");
         val result =
             attrNames.stream().map(String::trim).filter(attributes::containsKey).map(attributes::get).findFirst();
 

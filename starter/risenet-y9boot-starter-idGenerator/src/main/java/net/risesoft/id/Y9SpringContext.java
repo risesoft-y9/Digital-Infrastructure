@@ -47,7 +47,7 @@ public class Y9SpringContext implements ApplicationContextAware, EnvironmentAwar
      * 
      * @param name
      * @return
-     * @throws org.springframework.beans.factory.NoSuchBeanDefinitionException
+     * @throws NoSuchBeanDefinitionException
      */
     public static String[] getAliases(String name) throws NoSuchBeanDefinitionException {
         return applicationContext.getAliases(name);
@@ -59,7 +59,7 @@ public class Y9SpringContext implements ApplicationContextAware, EnvironmentAwar
      * 
      * @param clz
      * @return
-     * @throws org.springframework.beans.BeansException
+     * @throws BeansException
      */
     public static <T> T getBean(Class<T> clz) throws BeansException {
         T result = (T)applicationContext.getBean(clz);
@@ -73,7 +73,7 @@ public class Y9SpringContext implements ApplicationContextAware, EnvironmentAwar
      * @param name
      * @return Object 一个以所给名字注册的bean的实例
      * 
-     * @throws org.springframework.beans.BeansException
+     * @throws BeansException
      */
     @SuppressWarnings("unchecked")
     public static <T> T getBean(String name) throws BeansException {
@@ -96,7 +96,7 @@ public class Y9SpringContext implements ApplicationContextAware, EnvironmentAwar
      * @param name
      * @return Class 注册对象的类型
      * 
-     * @throws org.springframework.beans.factory.NoSuchBeanDefinitionException
+     * @throws NoSuchBeanDefinitionException
      */
     public static Class<?> getType(String name) throws NoSuchBeanDefinitionException {
         return applicationContext.getType(name);
@@ -108,7 +108,7 @@ public class Y9SpringContext implements ApplicationContextAware, EnvironmentAwar
      * 
      * @param name
      * @return boolean
-     * @throws org.springframework.beans.factory.NoSuchBeanDefinitionException
+     * @throws NoSuchBeanDefinitionException
      */
     public static boolean isSingleton(String name) throws NoSuchBeanDefinitionException {
         return applicationContext.isSingleton(name);

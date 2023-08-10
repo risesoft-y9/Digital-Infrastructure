@@ -20,10 +20,12 @@ public class SaveLogInfo4Kafka {
 
     private KafkaTemplate<String, Object> y9KafkaTemplate;
 
+    private final Environment environment;
+
     @Async("y9ThreadPoolTaskExecutor")
     public void asyncSave(final AccessLog log) {
         try {
-            if (this.y9KafkaTemplate == null) {
+            if (this.y9KafkaTemplate == null && Boolean.valueOf(environment.getProperty("y9.app.log.kafkaEnabled"))) {
                 y9KafkaTemplate = Y9Context.getBean("y9KafkaTemplate");
             }
         } catch (Exception e) {

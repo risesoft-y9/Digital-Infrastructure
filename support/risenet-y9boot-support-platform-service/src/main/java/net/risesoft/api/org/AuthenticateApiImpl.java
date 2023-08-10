@@ -2,7 +2,7 @@ package net.risesoft.api.org;
 
 import java.util.List;
 
-import javax.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotBlank;
 
 import org.springframework.context.annotation.Primary;
 import org.springframework.http.MediaType;

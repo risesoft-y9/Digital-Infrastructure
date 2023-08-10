@@ -13,7 +13,7 @@ import org.springframework.web.filter.RequestContextFilter;
 import org.springframework.web.servlet.config.annotation.DefaultServletHandlerConfigurer;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
-import net.risesoft.util.EsIndexDate;
+import net.risesoft.log.util.EsIndexYear;
 import net.risesoft.y9.Y9Context;
 
 @Configuration
@@ -50,7 +50,7 @@ public class WebMvcConfig implements WebMvcConfigurer {
     }
 
     @Bean
-    public EsIndexDate esIndexDate() {
-        return new EsIndexDate();
+    public EsIndexYear esIndexYear() {
+        return new EsIndexYear();
     }
 }

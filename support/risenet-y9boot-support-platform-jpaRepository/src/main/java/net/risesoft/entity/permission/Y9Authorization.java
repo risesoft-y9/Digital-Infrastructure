@@ -1,10 +1,10 @@
 package net.risesoft.entity.permission;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Id;
-import javax.persistence.Index;
-import javax.persistence.Table;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.Id;
+import jakarta.persistence.Index;
+import jakarta.persistence.Table;
 
 import org.hibernate.annotations.ColumnDefault;
 import org.hibernate.annotations.Comment;
@@ -30,7 +30,7 @@ import net.risesoft.enums.AuthorizationPrincipalTypeEnum;
     indexes = {@Index(columnList = "PRINCIPAL_ID,RESOURCE_ID,AUTHORITY", unique = true),
         @Index(columnList = "TENANT_ID,PRINCIPAL_ID ASC", unique = false),
         @Index(columnList = "TENANT_ID,RESOURCE_ID ASC", unique = false)})
-@org.hibernate.annotations.Table(comment = "权限配置表", appliesTo = "Y9_ORG_AUTHORIZATION")
+@Comment("权限配置表")
 @NoArgsConstructor
 @Data
 public class Y9Authorization extends BaseEntity {

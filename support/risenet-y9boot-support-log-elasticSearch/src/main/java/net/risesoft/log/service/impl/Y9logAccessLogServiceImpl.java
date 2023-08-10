@@ -1,70 +1,23 @@
 package net.risesoft.log.service.impl;
 
-import java.io.IOException;
 import java.net.UnknownHostException;
 import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
-import java.util.stream.Collectors;
 
-import org.apache.commons.collections.CollectionUtils;
-import org.apache.commons.lang3.StringUtils;
-import org.elasticsearch.action.admin.indices.alias.get.GetAliasesRequest;
-import org.elasticsearch.action.search.SearchRequest;
-import org.elasticsearch.action.search.SearchResponse;
-import org.elasticsearch.action.search.SearchType;
-import org.elasticsearch.client.GetAliasesResponse;
-import org.elasticsearch.client.RequestOptions;
-import org.elasticsearch.client.RestHighLevelClient;
-import org.elasticsearch.cluster.metadata.AliasMetadata;
-import org.elasticsearch.index.query.BoolQueryBuilder;
-import org.elasticsearch.index.query.QueryBuilder;
-import org.elasticsearch.index.query.QueryBuilders;
-import org.elasticsearch.search.aggregations.AggregationBuilders;
-import org.elasticsearch.search.aggregations.bucket.terms.Terms;
-import org.elasticsearch.search.builder.SearchSourceBuilder;
-import org.joda.time.DateTime;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageImpl;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
-import org.springframework.data.domain.Sort.Direction;
-import org.springframework.data.domain.Sort.Order;
 import org.springframework.data.elasticsearch.core.ElasticsearchOperations;
-import org.springframework.data.elasticsearch.core.SearchHit;
-import org.springframework.data.elasticsearch.core.SearchHits;
-import org.springframework.data.elasticsearch.core.mapping.IndexCoordinates;
-import org.springframework.data.elasticsearch.core.query.Criteria;
-import org.springframework.data.elasticsearch.core.query.CriteriaQuery;
-import org.springframework.data.elasticsearch.core.query.NativeSearchQuery;
-import org.springframework.data.elasticsearch.core.query.NativeSearchQueryBuilder;
 import org.springframework.stereotype.Service;
 
+import co.elastic.clients.elasticsearch.ElasticsearchClient;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-
-import net.risesoft.enums.OrgTypeEnum;
-import net.risesoft.log.AccessLogModelConvertUtil;
-import net.risesoft.log.constant.Y9ESIndexConst;
-import net.risesoft.log.constant.Y9LogSearchConsts;
 import net.risesoft.log.entity.Y9logAccessLog;
 import net.risesoft.log.service.Y9logAccessLogService;
 import net.risesoft.log.service.Y9logMappingService;
 import net.risesoft.model.AccessLog;
-import net.risesoft.model.Person;
-import net.risesoft.model.Tenant;
 import net.risesoft.model.log.LogInfoModel;
 import net.risesoft.pojo.Y9Page;
-import net.risesoft.y9.Y9LoginUserHolder;
-import net.risesoft.y9.util.Y9Day;
-
 import y9.client.platform.org.DepartmentApiClient;
 import y9.client.platform.org.GroupApiClient;
 import y9.client.platform.org.OrganizationApiClient;
@@ -81,7 +34,6 @@ import y9.client.platform.tenant.TenantApiClient;
 @Slf4j
 @RequiredArgsConstructor
 public class Y9logAccessLogServiceImpl implements Y9logAccessLogService {
-
     private final DepartmentApiClient departmentManager;
     private final PersonApiClient personManager;
     private final PositionApiClient positionManager;
@@ -89,9 +41,87 @@ public class Y9logAccessLogServiceImpl implements Y9logAccessLogService {
     private final OrganizationApiClient organizationManager;
     private final TenantApiClient tenantManager;
     private final Y9logMappingService y9logMappingService;
-    private final RestHighLevelClient elasticsearchClient;
+    private final ElasticsearchClient elasticsearchClient;
     private final ElasticsearchOperations elasticsearchOperations;
+    
+    
+	@Override
+	public Map<String, Object> getAppClickCount(String orgId, String orgType, String tenantId, String startDay, String endDay) throws UnknownHostException {
+		// TODO Auto-generated method stub
+		return null;
+	}
+	@Override
+	public Map<String, Object> getModuleNameCount(String orgId, String orgType, String tenantId, String startDay, String endDay) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+	@Override
+	public Map<String, Object> getOperateStatusCount(String selectedDate) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+	@Override
+	public List<String> listAccessLog(String startTime, String endTime, String loginName, String tenantId) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+	@Override
+	public List<Long> listOperateTimeCount(String startDay, String endDay) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+	@Override
+	public Page<Y9logAccessLog> page(int page, int rows, String sort) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+	@Override
+	public Y9Page<AccessLog> pageByCondition(LogInfoModel search, String startTime, String endTime, Integer page, Integer rows) throws ParseException {
+		// TODO Auto-generated method stub
+		return null;
+	}
+	@Override
+	public Y9Page<AccessLog> pageByOperateType(String operateType, Integer page, Integer rows) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+	@Override
+	public Y9Page<AccessLog> pageByOrgType(String tenantId, String orgId, String orgType, String operateType, Integer page, Integer rows) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+	@Override
+	public Page<Y9logAccessLog> pageByTenantIdAndManagerLevelAndUserId(String tenantId, String managerLevel, String userId, int page, int rows, String sort) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+	@Override
+	public Page<Y9logAccessLog> pageElapsedTimeByCondition(LogInfoModel search, String startDay, String endDay, String startTime, String endTime, int rows, int page) throws ParseException {
+		// TODO Auto-generated method stub
+		return null;
+	}
+	@Override
+	public Page<Y9logAccessLog> pageOperateStatusByOperateStatus(LogInfoModel search, String operateStatus, String date, String hour, Integer page, Integer rows) throws ParseException {
+		// TODO Auto-generated method stub
+		return null;
+	}
+	@Override
+	public Page<Y9logAccessLog> pageSearchByCondition(LogInfoModel search, String startTime, String endTime, Integer page, Integer rows) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+	@Override
+	public void save(Y9logAccessLog y9logAccessLog) {
+		// TODO Auto-generated method stub
+		
+	}
+	@Override
+	public Page<Y9logAccessLog> searchQuery(String tenantId, String managerLevel, LogInfoModel loginInfoModel, int page, int rows) {
+		// TODO Auto-generated method stub
+		return null;
+	}
 
+    /*
     // 目前日志查询页有两种情况：一种是有开始时间和结束时间，另一种是只选一个时间
     private String[] createIndexNames(String startDate, String endDate) {
         List<String> indexNameList = new ArrayList<>();
@@ -112,7 +142,7 @@ public class Y9logAccessLogServiceImpl implements Y9logAccessLogService {
         }
         return indexNameList.toArray(new String[0]);
     }
-
+    
     private String[] getAllLogindexName() {
         List<String> indexNameList = new ArrayList<>();
         try {
@@ -838,4 +868,5 @@ public class Y9logAccessLogServiceImpl implements Y9logAccessLogService {
         List<Y9logAccessLog> list = searchHits.stream().map(SearchHit::getContent).collect(Collectors.toList());
         return new PageImpl<>(list, pageable, searchHits.getTotalHits());
     }
+    */
 }

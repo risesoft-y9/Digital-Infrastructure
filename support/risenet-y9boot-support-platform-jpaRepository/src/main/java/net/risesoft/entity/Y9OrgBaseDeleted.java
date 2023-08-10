@@ -1,10 +1,10 @@
 package net.risesoft.entity;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Id;
-import javax.persistence.Lob;
-import javax.persistence.Table;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.Id;
+import jakarta.persistence.Lob;
+import jakarta.persistence.Table;
 
 import org.hibernate.annotations.Comment;
 
@@ -24,7 +24,7 @@ import net.risesoft.enums.OrgTypeEnum;
  */
 @Entity
 @Table(name = "Y9_ORGBASE_DELETED")
-@org.hibernate.annotations.Table(comment = "删除的组织表", appliesTo = "Y9_ORGBASE_DELETED")
+@Comment("删除的组织表")
 @NoArgsConstructor
 @Data
 public class Y9OrgBaseDeleted extends BaseEntity {

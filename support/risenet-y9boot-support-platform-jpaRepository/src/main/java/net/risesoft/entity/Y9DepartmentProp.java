@@ -1,9 +1,9 @@
 package net.risesoft.entity;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Id;
-import javax.persistence.Table;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.Id;
+import jakarta.persistence.Table;
 
 import org.hibernate.annotations.Comment;
 
@@ -23,7 +23,7 @@ import net.risesoft.enums.Y9DepartmentPropCategoryEnum;
  */
 @Entity
 @Table(name = "Y9_ORG_DEPARTMENT_PROP")
-@org.hibernate.annotations.Table(comment = "部门信息配置表", appliesTo = "Y9_ORG_DEPARTMENT_PROP")
+@Comment("部门信息配置表")
 @NoArgsConstructor
 @Data
 public class Y9DepartmentProp extends BaseEntity {

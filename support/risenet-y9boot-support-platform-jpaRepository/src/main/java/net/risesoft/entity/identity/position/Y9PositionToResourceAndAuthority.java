@@ -1,9 +1,9 @@
 package net.risesoft.entity.identity.position;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Index;
-import javax.persistence.Table;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.Index;
+import jakarta.persistence.Table;
 
 import org.hibernate.annotations.Comment;
 
@@ -24,7 +24,7 @@ import net.risesoft.entity.identity.Y9IdentityToResourceAndAuthorityBase;
 @Entity
 @Table(name = "Y9_ORG_POSITIONS_RESOURCES",
     indexes = {@Index(columnList = "POSITION_ID,RESOURCE_ID,AUTHORIZATION_ID,AUTHORITY", unique = true)})
-@org.hibernate.annotations.Table(comment = "岗位与（资源、权限）关系表", appliesTo = "Y9_ORG_POSITIONS_RESOURCES")
+@Comment("岗位与（资源、权限）关系表")
 @NoArgsConstructor
 @Data
 public class Y9PositionToResourceAndAuthority extends Y9IdentityToResourceAndAuthorityBase {

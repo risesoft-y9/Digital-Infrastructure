@@ -3,8 +3,6 @@ package net.risesoft.log.aop;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Method;
 
-import javax.ws.rs.Path;
-
 import org.aopalliance.aop.Advice;
 import org.springframework.aop.support.StaticMethodMatcherPointcutAdvisor;
 import org.springframework.core.annotation.AnnotationUtils;
@@ -20,7 +18,7 @@ public class RiseLogAdvisor extends StaticMethodMatcherPointcutAdvisor {
 
     @SuppressWarnings("unchecked")
     private static final Class<? extends Annotation>[] ANNOTATION_CLASSES =
-        new Class[] {RiseLog.class, Path.class, RequestMapping.class};
+        new Class[] {RiseLog.class, RequestMapping.class};
 
     public RiseLogAdvisor() {
         LOGGER.debug("RiseLogAdvisor init...............");

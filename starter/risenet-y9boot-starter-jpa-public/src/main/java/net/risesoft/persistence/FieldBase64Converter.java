@@ -1,6 +1,6 @@
 package net.risesoft.persistence;
 
-import javax.persistence.AttributeConverter;
+import jakarta.persistence.AttributeConverter;
 
 import org.apache.commons.lang3.StringUtils;
 

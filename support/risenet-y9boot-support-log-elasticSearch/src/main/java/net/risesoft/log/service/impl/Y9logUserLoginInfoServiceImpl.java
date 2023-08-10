@@ -1,56 +1,21 @@
 package net.risesoft.log.service.impl;
 
-import java.io.IOException;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.Date;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
-import java.util.stream.Collectors;
 
-import org.apache.commons.lang3.StringUtils;
-import org.elasticsearch.action.search.SearchRequest;
-import org.elasticsearch.action.search.SearchResponse;
-import org.elasticsearch.action.search.SearchType;
-import org.elasticsearch.client.RequestOptions;
-import org.elasticsearch.client.RestHighLevelClient;
-import org.elasticsearch.index.query.BoolQueryBuilder;
-import org.elasticsearch.index.query.QueryBuilders;
-import org.elasticsearch.index.query.WildcardQueryBuilder;
-import org.elasticsearch.search.SearchHit;
-import org.elasticsearch.search.aggregations.AggregationBuilder;
-import org.elasticsearch.search.aggregations.AggregationBuilders;
-import org.elasticsearch.search.aggregations.bucket.terms.Terms;
-import org.elasticsearch.search.aggregations.bucket.terms.TermsAggregationBuilder;
-import org.elasticsearch.search.aggregations.metrics.TopHits;
-import org.elasticsearch.search.builder.SearchSourceBuilder;
-import org.elasticsearch.search.sort.SortBuilders;
-import org.elasticsearch.search.sort.SortOrder;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
-import org.springframework.data.elasticsearch.core.ElasticsearchOperations;
-import org.springframework.data.elasticsearch.core.SearchHits;
-import org.springframework.data.elasticsearch.core.mapping.IndexCoordinates;
-import org.springframework.data.elasticsearch.core.query.NativeSearchQuery;
-import org.springframework.data.elasticsearch.core.query.NativeSearchQueryBuilder;
+import org.springframework.data.elasticsearch.client.elc.ElasticsearchTemplate;
 import org.springframework.stereotype.Service;
 
+import co.elastic.clients.elasticsearch.ElasticsearchClient;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-
-import net.risesoft.log.constant.Y9ESIndexConst;
-import net.risesoft.log.constant.Y9LogSearchConsts;
 import net.risesoft.log.entity.Y9logUserLoginInfo;
 import net.risesoft.log.repository.Y9logUserLoginInfoRepository;
 import net.risesoft.log.service.Y9logUserLoginInfoService;
 import net.risesoft.model.log.LogInfoModel;
 import net.risesoft.pojo.Y9Page;
-import net.risesoft.y9.util.Y9Util;
 
 /**
  *
@@ -63,11 +28,112 @@ import net.risesoft.y9.util.Y9Util;
 @Slf4j
 @RequiredArgsConstructor
 public class Y9logUserLoginInfoServiceImpl implements Y9logUserLoginInfoService {
-
-    private final RestHighLevelClient elasticsearchRestHighLevelClient;
+    private final ElasticsearchClient elasticsearchClient;
     private final Y9logUserLoginInfoRepository y9logUserLoginInfoRepository;
-    private final ElasticsearchOperations elasticsearchOperations;
+    private final ElasticsearchTemplate elasticsearchTemplate;
+    
+	@Override
+	public long countByLoginTimeBetweenAndSuccess(Date startTime, Date endTime, String success) {
+		// TODO Auto-generated method stub
+		return 0;
+	}
+	@Override
+	public Integer countByPersonId(String personId) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+	@Override
+	public long countBySuccessAndUserHostIpAndUserId(String success, String userHostIp, String userId) {
+		// TODO Auto-generated method stub
+		return 0;
+	}
+	@Override
+	public long countByUserHostIpAndSuccess(String userHostIp, String success) {
+		// TODO Auto-generated method stub
+		return 0;
+	}
+	@Override
+	public long countByUserHostIpAndSuccessAndUserName(String userHostIp, String success, String userName) {
+		// TODO Auto-generated method stub
+		return 0;
+	}
+	@Override
+	public long countByUserHostIpLikeAndLoginTimeBetweenAndSuccess(String userHostIp, Date startTime, Date endTime, String success) {
+		// TODO Auto-generated method stub
+		return 0;
+	}
+	@Override
+	public Iterable<Y9logUserLoginInfo> listAll() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+	@Override
+	public List<Object[]> listDistinctUserHostIpByUserIdAndLoginTime(String userId, Date startTime, Date endTime) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+	@Override
+	public List<Map<String, Object>> listUserHostIpByCip(String cip) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+	@Override
+	public List<String> listUserHostIpByUserId(String userId, String success) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+	@Override
+	public Y9Page<Y9logUserLoginInfo> page(String userHostIp, String userId, String success, String startTime, String endTime, int page, int rows) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+	@Override
+	public Page<Y9logUserLoginInfo> pageBySuccessAndServerIpAndUserName(String success, String userHostIp, String userId, int page, int rows) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+	@Override
+	public Page<Y9logUserLoginInfo> pageByTenantIdAndManagerLevel(String tenantId, String managerLevel, int page, int rows) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+	@Override
+	public Y9Page<Map<String, Object>> pageByUserHostIpAndSuccess(String userHostIp, String success, int page, int rows) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+	@Override
+	public Y9Page<Map<String, Object>> pageByUserHostIpAndSuccessAndUserNameLike(String userHostIp, String success, String userName, int page, int rows) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+	@Override
+	public Y9Page<Y9logUserLoginInfo> pageByUserHostIpAndUserIdAndTenantIdAndLoginTime(String hostIp, String personId, String tenantId, String success, String startTime, String endTime, int page, int rows) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+	@Override
+	public void save(Y9logUserLoginInfo y9logUserLoginInfo) {
+		// TODO Auto-generated method stub
+		
+	}
+	@Override
+	public Y9Page<Y9logUserLoginInfo> search(Date startTime, Date endTime, String success, int page, int rows) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+	@Override
+	public Y9Page<Y9logUserLoginInfo> search(String userHostIp, Date startTime, Date endTime, String success, int page, int rows) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+	@Override
+	public Y9Page<Y9logUserLoginInfo> searchQuery(String tenantId, String managerLevel, LogInfoModel loginInfoModel, int page, int rows) {
+		// TODO Auto-generated method stub
+		return null;
+	}
 
+    /*
     @Override
     public long countByLoginTimeBetweenAndSuccess(Date startTime, Date endTime, String success) {
         IndexCoordinates index = IndexCoordinates.of(Y9ESIndexConst.LOGIN_INFO_INDEX);
@@ -418,7 +484,7 @@ public class Y9logUserLoginInfoServiceImpl implements Y9logUserLoginInfoService 
         IndexCoordinates index = IndexCoordinates.of(Y9ESIndexConst.LOGIN_INFO_INDEX);
         Pageable pageable =
             PageRequest.of((page < 1) ? 0 : page - 1, rows, Sort.by(Sort.Direction.ASC, Y9LogSearchConsts.LOGIN_TIME));
-        BoolQueryBuilder builder = QueryBuilders.boolQuery();
+        BoolQuery.Builder builder = QueryBuilders.bool();
 
         if (StringUtils.isNotBlank(userHostIp)) {
             builder.must(QueryBuilders.queryStringQuery(userHostIp).field(Y9LogSearchConsts.USER_HOST_IP));
@@ -580,5 +646,5 @@ public class Y9logUserLoginInfoServiceImpl implements Y9logUserLoginInfoService 
         int totalPages = (int)searchHits.getTotalHits() / rows;
         return Y9Page.success(page, searchHits.getTotalHits() % rows == 0 ? totalPages : totalPages + 1,
             searchHits.getTotalHits(), list);
-    }
+    }*/
 }

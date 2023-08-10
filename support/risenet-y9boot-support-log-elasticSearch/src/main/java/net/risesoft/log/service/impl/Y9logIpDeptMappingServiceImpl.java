@@ -8,29 +8,19 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import org.apache.commons.lang3.StringUtils;
-import org.elasticsearch.index.query.BoolQueryBuilder;
-import org.elasticsearch.index.query.QueryBuilders;
-import org.elasticsearch.search.sort.SortBuilders;
-import org.elasticsearch.search.sort.SortOrder;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.domain.Sort.Direction;
+import org.springframework.data.elasticsearch.client.elc.ElasticsearchTemplate;
 import org.springframework.data.elasticsearch.core.ElasticsearchOperations;
-import org.springframework.data.elasticsearch.core.SearchHit;
-import org.springframework.data.elasticsearch.core.SearchHits;
-import org.springframework.data.elasticsearch.core.mapping.IndexCoordinates;
-import org.springframework.data.elasticsearch.core.query.NativeSearchQuery;
-import org.springframework.data.elasticsearch.core.query.NativeSearchQueryBuilder;
 import org.springframework.stereotype.Service;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-
 import net.risesoft.id.IdType;
 import net.risesoft.id.Y9IdGenerator;
-import net.risesoft.log.constant.Y9ESIndexConst;
 import net.risesoft.log.entity.Y9logIpDeptMapping;
 import net.risesoft.log.repository.Y9logIpDeptMappingRepository;
 import net.risesoft.log.service.Y9logIpDeptMappingService;
@@ -48,9 +38,8 @@ import net.risesoft.y9.Y9LoginUserHolder;
 @Slf4j
 @RequiredArgsConstructor
 public class Y9logIpDeptMappingServiceImpl implements Y9logIpDeptMappingService {
-
     private final Y9logIpDeptMappingRepository y9logIpDeptMappingRepository;
-    private final ElasticsearchOperations elasticsearchOperations;
+    private final ElasticsearchTemplate elasticsearchTemplate;
 
     @Override
     public Y9logIpDeptMapping getById(String id) {
@@ -61,7 +50,7 @@ public class Y9logIpDeptMappingServiceImpl implements Y9logIpDeptMappingService 
     public List<Y9logIpDeptMapping> listAll() {
         List<Y9logIpDeptMapping> list = new ArrayList<>();
         Iterable<Y9logIpDeptMapping> ipDeptIterable =
-            y9logIpDeptMappingRepository.findAll(Sort.by(Sort.Direction.DESC, "tabIndex"));
+            y9logIpDeptMappingRepository.findAll(Sort.by(Direction.DESC, "tabIndex"));
         Iterator<Y9logIpDeptMapping> iterator = ipDeptIterable.iterator();
         while (iterator.hasNext()) {
             list.add(iterator.next());
@@ -73,7 +62,7 @@ public class Y9logIpDeptMappingServiceImpl implements Y9logIpDeptMappingService 
     public List<Y9logIpDeptMapping> listAllOrderByClientIpSection() {
         List<Y9logIpDeptMapping> list = new ArrayList<>();
         Iterable<Y9logIpDeptMapping> ipDeptIterable =
-            y9logIpDeptMappingRepository.findAll(Sort.by(Sort.Direction.ASC, "clientIpSection"));
+            y9logIpDeptMappingRepository.findAll(Sort.by(Direction.ASC, "clientIpSection"));
         Iterator<Y9logIpDeptMapping> iterator = ipDeptIterable.iterator();
         while (iterator.hasNext()) {
             list.add(iterator.next());
@@ -93,6 +82,13 @@ public class Y9logIpDeptMappingServiceImpl implements Y9logIpDeptMappingService 
         return clientIpSectionList;
     }
 
+	@Override
+	public Y9Page<Y9logIpDeptMapping> pageSearchList(int page, int rows, String clientIpSection, String deptName) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+	
+    /*
     @Override
     public Y9Page<Y9logIpDeptMapping> pageSearchList(int page, int rows, String clientIp4Abc, String deptName) {
         IndexCoordinates index = IndexCoordinates.of(Y9ESIndexConst.IP_DEPT_MAPPING_INDEX);
@@ -115,7 +111,7 @@ public class Y9logIpDeptMappingServiceImpl implements Y9logIpDeptMappingService 
         long total = searchHits.getTotalHits();
         int totalPages = (int)total / rows;
         return Y9Page.success(page, total % rows == 0 ? totalPages : totalPages + 1, total, list);
-    }
+    }*/
 
     @Override
     public void removeOrganWords(String[] ipDeptMappingIds) {
@@ -172,4 +168,5 @@ public class Y9logIpDeptMappingServiceImpl implements Y9logIpDeptMappingService 
             LOGGER.warn(e.getMessage(), e);
         }
     }
+
 }

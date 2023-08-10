@@ -1,27 +1,16 @@
 package net.risesoft.log.service.impl;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
-import org.apache.commons.lang3.StringUtils;
-import org.elasticsearch.index.query.BoolQueryBuilder;
-import org.elasticsearch.index.query.QueryBuilders;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
-import org.springframework.data.elasticsearch.core.ElasticsearchOperations;
-import org.springframework.data.elasticsearch.core.SearchHit;
-import org.springframework.data.elasticsearch.core.SearchHits;
-import org.springframework.data.elasticsearch.core.mapping.IndexCoordinates;
-import org.springframework.data.elasticsearch.core.query.NativeSearchQuery;
-import org.springframework.data.elasticsearch.core.query.NativeSearchQueryBuilder;
+import org.springframework.data.elasticsearch.client.elc.ElasticsearchTemplate;
 import org.springframework.stereotype.Service;
 
+import co.elastic.clients.elasticsearch.ElasticsearchClient;
 import lombok.RequiredArgsConstructor;
-
-import net.risesoft.log.constant.Y9ESIndexConst;
 import net.risesoft.log.entity.Y9logMapping;
 import net.risesoft.log.repository.Y9logMappingRepository;
 import net.risesoft.log.service.Y9logMappingService;
@@ -36,9 +25,9 @@ import net.risesoft.log.service.Y9logMappingService;
 @Service
 @RequiredArgsConstructor
 public class Y9logMappingServiceImpl implements Y9logMappingService {
-
     private final Y9logMappingRepository y9logMappingRepository;
-    private final ElasticsearchOperations elasticsearchOperations;
+    private final ElasticsearchTemplate elasticsearchTemplate;
+    private final ElasticsearchClient elasticsearchClient;
 
     @Override
     public void deleteFieldMapping(String id) {
@@ -70,6 +59,13 @@ public class Y9logMappingServiceImpl implements Y9logMappingService {
         return y9logMappingRepository.findAll(pageable);
     }
 
+	@Override
+	public Page<Y9logMapping> pageSearchList(Integer page, Integer rows, String modularName, String modularCnName) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+    /*
     @Override
     public Page<Y9logMapping> pageSearchList(Integer page, Integer rows, String modularName, String modularCnName) {
         IndexCoordinates index = IndexCoordinates.of(Y9ESIndexConst.LOG_MAPPING_INDEX);
@@ -90,7 +86,7 @@ public class Y9logMappingServiceImpl implements Y9logMappingService {
         List<Y9logMapping> list = searchHits.stream().map(SearchHit::getContent).collect(Collectors.toList());
         Page<Y9logMapping> pageResult = new PageImpl<>(list, pageable, searchHits.getTotalHits());
         return pageResult;
-    }
+    })*/
 
     @Override
     public void save(Y9logMapping y9logMapping) {

@@ -2,24 +2,22 @@ package net.risesoft.y9public.entity.tenant;
 
 import java.util.Date;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
-import javax.persistence.Table;
-import javax.persistence.Temporal;
-import javax.persistence.TemporalType;
-
 import org.hibernate.annotations.ColumnDefault;
 import org.hibernate.annotations.Comment;
 import org.hibernate.annotations.GenericGenerator;
-import org.hibernate.annotations.Type;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 
+import jakarta.persistence.Column;
+import jakarta.persistence.Convert;
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.Id;
+import jakarta.persistence.Table;
+import jakarta.persistence.Temporal;
+import jakarta.persistence.TemporalType;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-
 import net.risesoft.base.BaseEntity;
 
 /**
@@ -32,7 +30,7 @@ import net.risesoft.base.BaseEntity;
  */
 @Entity
 @Table(name = "Y9_COMMON_TENANT_APP")
-@org.hibernate.annotations.Table(comment = "租户应用信息表", appliesTo = "Y9_COMMON_TENANT_APP")
+@Comment("租户应用信息表")
 @NoArgsConstructor
 @Data
 public class Y9TenantApp extends BaseEntity {
@@ -108,7 +106,7 @@ public class Y9TenantApp extends BaseEntity {
     private String reason;
 
     /** 租户是否租用状态。用于判断有效或失效的状态 */
-    @Type(type = "numeric_boolean")
+    @Convert(converter = org.hibernate.type.NumericBooleanConverter.class)
     @Column(name = "TENANCY", nullable = false)
     @Comment("租户是否租用状态。用于判断有效或失效的状态")
     @ColumnDefault("0")

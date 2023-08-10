@@ -1,0 +1,368 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1"/>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+    <title>有生云服务 登录</title>
+    <link rel="shortcut icon" th:href="@{/y9static/images/risecloud/yun.ico}" type="image/x-icon"/>
+    <link rel="stylesheet" type="text/css" th:href="@{/y9static/css/risecloud/bootstrap.min.css}" id="logincss"/>
+    <link rel="stylesheet" type="text/css" th:href="@{/y9static/css/risecloud/risecloud.css?v=1.3}"/>
+    <!--[if IE 8]>
+    <script type="text/javascript" language="javascript" th:src="@{/y9static/js/html5shiv.min.js}"></script>
+    <script type="text/javascript" language="javascript" th:src="@{/y9static/js/respond.min.js}"></script>
+    <![endif]-->
+    <script type="text/javascript" language="javascript" th:src="@{/y9static/js/jquery/jquery-1.10.2.min.js}"></script>
+    <script type="text/javascript" language="javascript" th:src="@{/y9static/js/jquery/jquery-ui.js}"></script>
+    <script type="text/javascript" language="javascript" th:src="@{/y9static/js/jquery/jquery.cookie.js}"></script>
+    <script type="text/javascript" language="javascript" th:src="@{/y9static/js/base64.js}"></script>
+    <script type="text/javascript" language="javascript" th:src="@{/y9static/js/jquery/jqueryLayer/layer.js}"></script>
+    <script type="text/javascript" language="javascript" th:src="@{/y9static/js/particles.min.js}"></script>
+</head>
+<body>
+
+<div id="particles-js"></div>
+
+<div class="container" style="padding-top: 50px">
+    <div class="row">
+        <div class="col-md-8">
+            <div class="logo">
+                <img alt="有生云" th:src="@{/y9static/images/risecloud/yun2.png}">
+                <span>有生云</span>
+            </div>
+            <div class="slogan">
+                <h2>选择有生云</h2>
+                <ul>
+                    <li>√　业务成熟、平台开放</li>
+                    <li>√　持续创新、持续进化</li>
+                </ul>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div style="background-color: white; padding: 30px; border-radius: 5px" class="centerDiv">
+                <h2>登 录</h2>
+                <form method="post" id="fm1" th:object="${credential}">
+                    <div class="alert alert-danger" th:if="${#fields.hasErrors('*')}">
+                        <span th:each="err : ${#fields.errors('*')}" th:utext="${err}"/>
+                    </div>
+                    <input tabindex="1" id="username" type="text" class="form-control" autocomplete="off"
+                           htmlEscape="true" value="" placeholder="用户名"/>
+                    <input type="hidden" id="username1" name="username" style="width: 150px;" autocomplete="false"
+                           htmlEscape="true"/>
+                    <input tabindex="2" id="password" type="password" htmlEscape="true" autocomplete="off"
+                           class="form-control" value="" onfocus="changeType(this)" placeholder="密码"/>
+                    <input type="hidden" id="password1" name="password" htmlEscape="true" autocomplete="off"/>
+
+                    <input type="hidden" id="tenantShortName" name="tenantShortName" value="risesoft">
+                    <input type="hidden" id="isValidateIE" name="isValidateIE" value="true">
+
+                    <a href="javascript:submitLoginForm();" class="btn commonBtn" style="width: 100%">登录</a>
+
+                    <!-- 表单隐藏数据块开始 -->
+                    <input type="hidden" id="loginType" name="loginType" value="loginName"/>
+                    <input type="hidden" id="captchaKey" name="captchaKey" value=""/>
+                    <input type="hidden" id="screenDimension" name="screenDimension" value="" /> 
+                    <input type="hidden" id="noLoginScreen" name="noLoginScreen" value="false"/>
+
+                    <input type="hidden" name="execution" th:value="${flowExecutionKey}"/>
+                    <input type="hidden" name="_eventId" value="submit"/>
+                    <input type="hidden" name="geolocation"/>
+                    <!-- 表单隐藏数据块结束 -->
+                </form>
+                <div style="margin-top: 10px;">
+                    <a id="forgetPassword" style="cursor: pointer;color: grey">忘了密码？</a>
+                </div>
+                <div style="border-top: 1px solid lightgray;margin-top: 10px">
+                    <h4 style="margin-top: 10px;">还没有注册有生云账号？</h4>
+                </div>
+                <a class="btn borderBtn" style="width: 100%" id="regiest">立即注册</a>
+            </div>
+        </div>
+    </div>
+</div>
+<footer class="footer-blogroll footer navbar-fixed-bottom">
+    <div class="blogroll-inner">
+        <div class="link-set">
+            <div class="department">
+                <a href="http://www.risesoft.net" class="slide" target="_blank">关于有生</a>
+                <a href="http://www.youshengyun.com/risecloud/portal/index" class="slide" target="_blank">有生云平台</a>
+                <a href="http://www.youshengyun.com/risecloud/portal/support" class="slide" target="_blank">支持中心</a>
+                <a href="http://www.youshengyun.com/risecloud/portal/ask/askResponse" class="slide"
+                   target="_blank">常见问题</a>
+                <a href="http://www.risesoft.net" class="slide" target="_blank">联系我们</a>
+            </div>
+            <div class="links">
+                <p class="line copyright">
+                    <span class="slide">Copyright 北京有生博大软件股份有限公司　版权所有　<a href="https://beian.miit.gov.cn/" target="_blank">京ICP备16060306号-4</a>
+						<img th:src="@{/y9static/images/risecloud/guohui.png}">
+						<a href="http://www.beian.gov.cn/portal/registerSystemInfo?recordcode=11010802026965" target="_blank">京公网安备11010802026965号</a>
+                    </span>
+                </p>
+            </div>
+        </div>
+    </div>
+</footer>
+<script type="text/javascript">
+    var ctx = "[(${#request.getContextPath()})]";
+    var basePash = "[(${#request.getScheme()})]" + "://" + "[(${#request.getServerName()})]" + ":" + "[(${#request.getServerPort()})]";
+
+    //错误信息提示
+    function showErrors() {
+        try {
+            var msg = document.getElementById("status");
+            if (msg.innerText != '') {
+                if (msg.innerText == "login.captcha.error") {
+                    alert("验证码错误！");
+                } else if (msg.innerText == "Invalid credentials.") {
+                    alert("无效凭据!");
+                } else {
+                    alert(msg.innerText);
+                }
+            }
+        } catch (e) {
+        }
+    }
+
+    function validateIE() {
+    	try {
+			$("#screenDimension").val(window.screen.width + '*' + window.screen.height);
+		} catch (e) {
+		}
+        var userAgent = navigator.userAgent.toLowerCase();
+        //alert(userAgent);
+        if (userAgent.indexOf("msie 9") > 0 || userAgent.indexOf("msie 10") > 0 || userAgent.indexOf("rv:11") > 0) {
+            $("#isValidateIE").val("true");
+            initInputType();
+        } else if (userAgent.indexOf("msie 6") > 0 || userAgent.indexOf("msie 7") > 0 || userAgent.indexOf("msie 8") > 0) {
+            $("#isValidateIE").val("false");
+        } else {
+            $("#isValidateIE").val("true");
+            initInputType();
+        }
+    }
+
+    //获取焦点的时候，改变
+    function changeType(obj) {
+        if (obj.type == "text") {
+            $("#password").attr('type', 'password');
+        } else {
+            $("#password").val('');
+        }
+    }
+
+    //初始化页面的时候,改变密码框类型为文本框
+    function initInputType() {
+        $("#password").attr('type', 'text');
+        $("#password").val('');//解决个别浏览器用户记住密码时，且勾选记住用户名时，出现明文密码的问题
+    }
+
+    $(function () {
+        validateIE();
+        //按回车
+        document.onkeydown = function (e) {
+            var ev = document.all ? window.event : e;
+            if (ev.keyCode == 13) {// 如（ev.ctrlKey && ev.keyCode==13）为ctrl+Center 触发
+                $("#password").blur();//防止回车键后，密码框获取焦点从而使密码输入框变空
+                submitLoginForm();
+            }
+        }
+        jzyhm();
+
+        $("#regiest").click(function () {
+            window.open(basePash + "/risecloud/registe/personalRegiste", "Registe");
+        });
+
+        $("#forgetPassword").click(function () {
+            window.open(basePash + "/risecloud/resetPassword/validateEmail", "forgetPassword");
+        });
+    });
+
+    //加载页面的时候设置密码为空
+    function emptyPassword() {
+        $("#password").val('');
+    }
+
+    //记住用户名
+    function jzyhm() {
+        var username = $.cookie("username");
+        if (username != null && username.length > 0) {
+            $("#username").val(username);
+            $("#username1").val(username);
+            $("#jzyhm").attr("checked", "checked");
+        }
+    }
+
+    /**
+     * 系统登录校验
+     */
+    function submitLoginForm() {
+        var userName = $('#username').val();
+        var tenantShortName = $("#tenantShortName").val();
+        var password = $("#password").val();
+        if (userName.length == 0) {
+            alert("用户名不能为空!");
+            $("#username").focus();
+            return;
+        } else if (password.length == 0) {
+            alert("密码不能为空!");
+            $("#password").focus();
+            return;
+        } else {
+            if ($("#jzyhm").prop("checked")) {
+                var username = $("#username").val();
+                $.cookie("username", null);
+                $.cookie("username", username, {
+                    expires: 365
+                });
+            } else {
+                $.cookie("username", null, {
+                    expires: 365
+                });
+                $.cookie("tenantShortName", null, {
+                    expires: 365
+                });
+                $.cookie("password", null, {
+                    expires: 365
+                });
+            }
+            $("#username1").val(encode64(userName));
+            $("#password1").val(encode64(password));
+            $.ajax({
+                async: false,
+                cache: false,
+                type: "POST",
+                url: ctx + "/api/checkSsoLoginInfo",
+                data: {
+                    username: $("#username1").val(),
+                    password: $("#password1").val(),
+                    tenantShortName: tenantShortName,
+                },
+                dataType: "json",
+                success: function (data) {
+                    if (data.success) {
+                        $("#fm1").submit();
+                    } else {
+                        var msg = data.msg;
+                        if (msg != null && msg.length > 0) {
+                            alert(msg);
+                        }
+                    }
+                }
+            });
+        }
+    }
+
+    /* ---- particles.js config ---- */
+    particlesJS("particles-js", {
+        "particles": {
+            "number": {
+                "value": 78,
+                "density": {
+                    "enable": true,
+                    "value_area": 700
+                }
+            },
+            "color": {
+                "value": "#ffffff"
+            },
+            "shape": {
+                "type": "circle",
+                "stroke": {
+                    "width": 0,
+                    "color": "#000000"
+                },
+                "polygon": {
+                    "nb_sides": 5
+                },
+                "image": {
+                    "src": "",
+                    "width": 100,
+                    "height": 100
+                }
+            },
+            "opacity": {
+                "value": 0.2,
+                "random": false,
+                "anim": {
+                    "enable": false,
+                    "speed": 1,
+                    "opacity_min": 0.1,
+                    "sync": false
+                }
+            },
+            "size": {
+                "value": 3,
+                "random": true,
+                "anim": {
+                    "enable": false,
+                    "speed": 30,
+                    "size_min": 0.3,
+                    "sync": false
+                }
+            },
+            "line_linked": {
+                "enable": true,
+                "distance": 140,
+                "color": "#ffffff",
+                "opacity": 0.5,
+                "width": 1
+            },
+            "move": {
+                "enable": true,
+                "speed": 2,
+                "direction": "none",
+                "random": false,
+                "straight": false,
+                "out_mode": "out",
+                "bounce": false,
+                "attract": {
+                    "enable": false,
+                    "rotateX": 600,
+                    "rotateY": 1100
+                }
+            }
+        },
+        "interactivity": {
+            "detect_on": "canvas",
+            "events": {
+                "onhover": {
+                    "enable": true,
+                    "mode": "grab"
+                },
+                "onclick": {
+                    "enable": true,
+                    "mode": "push"
+                },
+                "resize": true
+            },
+            "modes": {
+                "grab": {
+                    "distance": 140,
+                    "line_linked": {
+                        "opacity": 1
+                    }
+                },
+                "bubble": {
+                    "distance": 400,
+                    "size": 40,
+                    "duration": 2,
+                    "opacity": 8,
+                    "speed": 3
+                },
+                "repulse": {
+                    "distance": 200,
+                    "duration": 0.4
+                },
+                "push": {
+                    "particles_nb": 4
+                },
+                "remove": {
+                    "particles_nb": 2
+                }
+            }
+        },
+        "retina_detect": true
+    });
+</script>
+</body>
+</html>

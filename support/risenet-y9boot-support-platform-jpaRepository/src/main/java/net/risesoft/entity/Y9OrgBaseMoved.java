@@ -1,17 +1,15 @@
 package net.risesoft.entity;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Id;
-import javax.persistence.Table;
-
 import org.hibernate.annotations.ColumnDefault;
 import org.hibernate.annotations.Comment;
-import org.hibernate.annotations.Type;
 
+import jakarta.persistence.Column;
+import jakarta.persistence.Convert;
+import jakarta.persistence.Entity;
+import jakarta.persistence.Id;
+import jakarta.persistence.Table;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-
 import net.risesoft.base.BaseEntity;
 import net.risesoft.enums.OrgTypeEnum;
 
@@ -25,7 +23,7 @@ import net.risesoft.enums.OrgTypeEnum;
  */
 @Entity
 @Table(name = "Y9_ORGBASE_MOVED")
-@org.hibernate.annotations.Table(comment = "移动的组织表", appliesTo = "Y9_ORGBASE_MOVED")
+@Comment("移动的组织表")
 @NoArgsConstructor
 @Data
 public class Y9OrgBaseMoved extends BaseEntity {
@@ -68,7 +66,7 @@ public class Y9OrgBaseMoved extends BaseEntity {
     protected String parentIdTo;
 
     /** 工作交接是否完成 */
-    @Type(type = "numeric_boolean")
+    @Convert(converter = org.hibernate.type.NumericBooleanConverter.class)
     @Column(name = "FINISHED", nullable = false)
     @Comment("工作交接是否完成")
     @ColumnDefault("0")

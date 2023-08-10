@@ -2,19 +2,17 @@ package net.risesoft.entity;
 
 import java.util.Date;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Table;
-import javax.persistence.Temporal;
-import javax.persistence.TemporalType;
-
 import org.hibernate.annotations.ColumnDefault;
 import org.hibernate.annotations.Comment;
-import org.hibernate.annotations.Type;
 import org.springframework.format.annotation.DateTimeFormat;
 
+import jakarta.persistence.Column;
+import jakarta.persistence.Convert;
+import jakarta.persistence.Entity;
+import jakarta.persistence.Table;
+import jakarta.persistence.Temporal;
+import jakarta.persistence.TemporalType;
 import lombok.Data;
-
 import net.risesoft.enums.OrgTypeEnum;
 
 /**
@@ -27,7 +25,7 @@ import net.risesoft.enums.OrgTypeEnum;
  */
 @Entity
 @Table(name = "Y9_ORG_DEPARTMENT")
-@org.hibernate.annotations.Table(comment = "部门实体表", appliesTo = "Y9_ORG_DEPARTMENT")
+@Comment("部门实体表")
 @Data
 public class Y9Department extends Y9OrgBase {
 
@@ -110,7 +108,7 @@ public class Y9Department extends Y9OrgBase {
     private String gradeCodeName;
 
     /** 是否委办局 */
-    @Type(type = "numeric_boolean")
+    @Convert(converter = org.hibernate.type.NumericBooleanConverter.class)
     @Column(name = "BUREAU", nullable = false)
     @Comment("是否委办局")
     @ColumnDefault("0")

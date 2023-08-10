@@ -1,18 +1,16 @@
 package net.risesoft.y9public.entity.tenant;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Id;
-import javax.persistence.Table;
-import javax.persistence.Transient;
-
 import org.hibernate.annotations.ColumnDefault;
 import org.hibernate.annotations.Comment;
-import org.hibernate.annotations.Type;
 
+import jakarta.persistence.Column;
+import jakarta.persistence.Convert;
+import jakarta.persistence.Entity;
+import jakarta.persistence.Id;
+import jakarta.persistence.Table;
+import jakarta.persistence.Transient;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-
 import net.risesoft.base.BaseEntity;
 
 /**
@@ -25,7 +23,7 @@ import net.risesoft.base.BaseEntity;
  */
 @Entity
 @Table(name = "Y9_COMMON_TENANT_SYSTEM")
-@org.hibernate.annotations.Table(comment = "租户系统表", appliesTo = "Y9_COMMON_TENANT_SYSTEM")
+@Comment("租户系统表")
 @NoArgsConstructor
 @Data
 public class Y9TenantSystem extends BaseEntity {
@@ -54,7 +52,7 @@ public class Y9TenantSystem extends BaseEntity {
     private String tenantDataSource;
 
     /** 租户数据已经初始化 */
-    @Type(type = "numeric_boolean")
+    @Convert(converter = org.hibernate.type.NumericBooleanConverter.class)
     @Column(name = "INITIALIZED", nullable = false)
     @Comment("租户数据已经初始化")
     @ColumnDefault("0")

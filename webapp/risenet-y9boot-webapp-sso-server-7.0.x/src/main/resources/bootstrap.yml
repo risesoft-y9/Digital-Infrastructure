@@ -1,0 +1,10 @@
+spring:
+    aop:
+        auto: true
+        proxy-target-class: false
+    cloud:
+        config:
+            enabled: false
+            fail-fast: true
+            import-check:
+                enabled: true

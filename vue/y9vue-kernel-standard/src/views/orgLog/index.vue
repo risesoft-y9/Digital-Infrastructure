@@ -1,12 +1,10 @@
-<!--
- * @Author: hongzhew
- * @Date: 2022-04-07 17:43:02
- * @LastEditors: mengjuhua
- * @LastEditTime: 2023-08-03 15:24:59
- * @Description: 组织操作日志
--->
 <template>
-    <fixedTreeModule :treeApiObj="treeApiObj" nodeLabel="newName" @onTreeClick="onTreeClick">
+    <fixedTreeModule
+        :treeApiObj="treeApiObj"
+        nodeLabel="newName"
+        @onTreeClick="onTreeClick"
+    >
+
         <template #rightContainer>
             <template v-if="Object.keys(currTreeNodeInfo).length > 0">
                 <Log :currTreeNodeInfo="currTreeNodeInfo"></Log>
@@ -48,6 +46,7 @@
 
     const { treeApiObj, currTreeNodeInfo, logRef, loading } = toRefs(data);
 
+
     //点击tree的回调
     async function onTreeClick(currTreeNode) {
         let isDeptManager = true;
@@ -60,6 +59,7 @@
         currTreeNodeInfo.value = currTreeNode;
         currTreeNodeInfo.value.haveEditAuth = isDeptManager; //是否有编辑权限
     }
+
 </script>
 
 <style lang="scss" scoped></style>

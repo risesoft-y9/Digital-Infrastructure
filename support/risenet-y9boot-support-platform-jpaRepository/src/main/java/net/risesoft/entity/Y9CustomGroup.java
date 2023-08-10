@@ -1,9 +1,9 @@
 package net.risesoft.entity;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Id;
-import javax.persistence.Table;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.Id;
+import jakarta.persistence.Table;
 
 import org.hibernate.annotations.Comment;
 
@@ -22,7 +22,7 @@ import net.risesoft.base.BaseEntity;
  */
 @Entity
 @Table(name = "Y9_ORG_PERSON_CUSTOMGROUP")
-@org.hibernate.annotations.Table(comment = "自定义群组", appliesTo = "Y9_ORG_PERSON_CUSTOMGROUP")
+@Comment("自定义群组")
 @NoArgsConstructor
 @Data
 public class Y9CustomGroup extends BaseEntity {

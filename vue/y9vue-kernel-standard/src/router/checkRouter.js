@@ -1,9 +1,10 @@
 /*
  * @Author: your name
  * @Date: 2021-12-22 14:38:02
- * @LastEditTime: 2023-08-03 10:25:21
- * @LastEditors: mengjuhua
- * @Description: 路由判定
+ * @LastEditTime: 2022-02-08 17:25:26
+ * @LastEditors: Please set LastEditors
+ * @Description: 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
+ * @FilePath: /sz-team-frontend-9.5.x/y9vue-home/src/router/checkRouter.js
  */
 import '@/assets/css/nprogress.css'; // progress bar style
 import router from '@/router';
@@ -44,7 +45,7 @@ export async function checkWriteList(to, from) {
         if (to.path === '/' || to.path === '/login') {
             // 登陆过 导航直接跳过login页面进入系统
             const isRight = await $y9_SSO.checkToken();
-            if (isRight) {
+            if ( isRight) {
                 window.location = import.meta.env.VUE_APP_HOST_INDEX;
             }
         }
@@ -70,15 +71,15 @@ async function check() {
         userRole = ['systemAdmin'];
     } else if (y9UserInfo.managerLevel === 2 && y9UserInfo.globalManager) {
         userRole = ['securityAdmin'];
-    } else if (y9UserInfo.managerLevel === 3) {
+    } else if (y9UserInfo.managerLevel === 3 ) {
         userRole = ['auditAdmin'];
     } else if (y9UserInfo.managerLevel === 1) {
         userRole = ['subSystemAdmin'];
     } else if (y9UserInfo.managerLevel === 2) {
         userRole = ['subSecurityAdmin'];
-    } else {
+    }else{
         // 抱歉，该登录账号非管理员用户账号，没有权限！！！
-        window.location = window.location.origin + import.meta.env.VUE_APP_PUBLIC_PATH + `401`;
+        window.location = window.location.origin + import.meta.env.VUE_APP_PUBLIC_PATH + `401`
     }
 
     isRoleValid = (await checkRole(userRole)) ? true : false;
@@ -126,27 +127,25 @@ function isFresh(role, path) {
 }
 // 所有路由上带的参数塞到一个对象里
 const parseQueryString = (string) => {
-    if (string == '') {
-        return false;
-    }
-    var segments = string.split('&').map((s) => s.split('='));
+    if (string == "") { return false; }
+    var segments = string.split("&").map(s => s.split("="));
     var queryString = {};
-    segments.forEach((s) => (queryString[s[0]] = s[1]));
+    segments.forEach(s => queryString[s[0]] = s[1]);
     return queryString;
-};
+}
 // 存储任意路由的参数
 const cacheQuery = (query) => {
     // 维护同一个参数，任意组件内可取出使用对应的参数
-    let session_query = y9_storage.getObjectItem('query');
+    let session_query = y9_storage.getObjectItem("query");
     if (session_query) {
         for (const key in query) {
-            session_query[key] = query[key];
+            session_query[key] = query[key]
         }
-        y9_storage.setObjectItem('query', session_query);
-    } else {
-        y9_storage.setObjectItem('query', query);
+        y9_storage.setObjectItem("query", session_query);
+    }else{
+        y9_storage.setObjectItem("query", query);
     }
-};
+}
 
 let flag = 0;
 export const routerBeforeEach = async (to, from) => {
@@ -173,19 +172,19 @@ export const routerBeforeEach = async (to, from) => {
         if (!to.name) {
             let array = await router.getRoutes();
             // 没有权限访问的路由 跳转到401
-            const list = array.forEach((item) => item.path === to.path);
-            if (!list) {
+            const list = array.forEach(item => item.path === to.path);
+            if(!list){
                 router.push({ path: '/401' });
             }
-            array.forEach((item) => {
+            array.forEach(item => {
                 if (item.path === to.path && item.name) {
-                    router.push({ name: item.name });
+                    router.push({name: item.name})
                 }
             });
-        } else {
+        }else{
             return true;
         }
-    } else {
+    }else{
         await $y9_SSO.checkLogin();
     }
 };

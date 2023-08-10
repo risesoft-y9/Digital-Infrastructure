@@ -1,8 +1,8 @@
 <!--
  * @Author: your name
  * @Date: 2022-05-05 09:43:05
- * @LastEditTime: 2023-08-03 11:30:13
- * @LastEditors: mengjuhua
+ * @LastEditTime: 2022-12-21 17:55:44
+ * @LastEditors: error: git config user.name && git config user.email & please set dead value or install git
  * @Description: 安全保密员日志 - 操作日志 
 -->
 <template>
@@ -16,7 +16,7 @@
                     @on-page-size-change="handlerSizeChange"
                     border
                     :filterConfig="filterOperaConfig"
-                    @window-height-change="windowHeightChange"
+					@window-height-change="windowHeightChange"
                 >
                     <template v-slot:slotDate>
                         <el-form>
@@ -31,7 +31,7 @@
                                     format="YYYY-MM-DD"
                                     value-format="YYYY-MM-DD"
                                     @change="selectdDate()"
-                                    style="width: 100%; height: var(--el-input-height)"
+                                    style="width: 100%;height: var(--el-input-height);"
                                 ></el-date-picker>
                             </el-form-item>
                         </el-form>
@@ -46,13 +46,10 @@
                                 @click="search()"
                                 >{{ $t('查询') }}</el-button
                             >
-                            <el-button
-                                class="global-btn-second"
-                                :style="{ fontSize: fontSizeObj.baseFontSize }"
-                                :size="fontSizeObj.buttonSize"
-                                @click="reset()"
-                                >{{ $t('重置') }}</el-button
-                            >
+                            <el-button class="global-btn-second" :style="{ fontSize: fontSizeObj.baseFontSize }"
+                             :size="fontSizeObj.buttonSize" @click="reset()">{{
+                                $t('重置')
+                            }}</el-button>
                         </el-divider>
                     </template>
                 </y9Table>
@@ -62,7 +59,7 @@
 </template>
 
 <script lang="ts" setup>
-    import { inject, computed, ref } from 'vue';
+    import { inject, ref, watch } from 'vue';
     import { searchLogInfoList4SecurityManagers } from '@/api/log/index';
     import { useSettingStore } from '@/store/modules/settingStore';
     import { useI18n } from 'vue-i18n';
@@ -71,7 +68,7 @@
     // 注入 字体对象
     const fontSizeObj: any = inject('sizeObjInfo');
     const query: any = ref({});
-    const filterRef = ref();
+    const filterRef = ref('');
 
     const selectedDate = ref('');
     const shortcuts = [
@@ -117,7 +114,7 @@
                 type: 'input',
                 value: '',
                 key: 'userName',
-                label: computed(() => t('用户名称')),
+                label: computed(() => t("用户名称")),
                 labelWidth: '82px',
                 span: settingStore.device === 'mobile' ? 24 : 6,
             },
@@ -126,14 +123,14 @@
                 value: '',
                 key: 'userHostIp',
                 labelWidth: '82px',
-                label: computed(() => t('客户端IP')),
+                label: computed(() => t("客户端IP")),
                 span: settingStore.device === 'mobile' ? 24 : 6,
             },
             {
                 type: 'input',
                 value: '',
                 key: 'modularName',
-                label: computed(() => t('模块名称')),
+                label: computed(() => t("模块名称")),
                 labelWidth: '82px',
                 span: settingStore.device === 'mobile' ? 24 : 6,
             },
@@ -141,7 +138,7 @@
                 type: 'input',
                 value: '',
                 key: 'operateName',
-                label: computed(() => t('操作名称')),
+                label: computed(() => t("操作名称")),
                 labelWidth: '82px',
                 span: settingStore.device === 'mobile' ? 24 : 6,
             },
@@ -149,49 +146,49 @@
                 type: 'select',
                 value: '',
                 key: 'operateType',
-                label: computed(() => t('操作类型')),
+                label: computed(() => t("操作类型")),
                 labelWidth: '82px',
                 props: {
                     options: [
                         //选项列表
                         {
-                            label: computed(() => t('全部')),
+                            label: computed(() => t("全部")),
                             value: '',
                         },
                         {
-                            label: computed(() => t('使用')),
+                            label: computed(() => t("使用")),
                             value: '使用',
                         },
                         {
-                            label: computed(() => t('登录')),
+                            label: computed(() => t("登录")),
                             value: '登录',
                         },
                         {
-                            label: computed(() => t('退出')),
+                            label: computed(() => t("退出")),
                             value: '退出',
                         },
                         {
-                            label: computed(() => t('查看')),
+                            label: computed(() => t("查看")),
                             value: '查看',
                         },
                         {
-                            label: computed(() => t('增加')),
+                            label: computed(() => t("增加")),
                             value: '增加',
                         },
                         {
-                            label: computed(() => t('修改')),
+                            label: computed(() => t("修改")),
                             value: '修改',
                         },
                         {
-                            label: computed(() => t('删除')),
+                            label: computed(() => t("删除")),
                             value: '删除',
                         },
                         {
-                            label: computed(() => t('发送')),
+                            label: computed(() => t("发送")),
                             value: '发送',
                         },
                         {
-                            label: computed(() => t('活动')),
+                            label: computed(() => t("活动")),
                             value: '活动',
                         },
                     ],
@@ -202,21 +199,21 @@
                 type: 'select',
                 value: '',
                 key: 'success',
-                label: computed(() => t('操作状态')),
+                label: computed(() => t("操作状态")),
                 labelWidth: '82px',
                 props: {
                     options: [
                         //选项列表
                         {
-                            label: computed(() => t('全部')),
+                            label: computed(() => t("全部")),
                             value: '',
                         },
                         {
-                            label: computed(() => t('成功')),
+                            label: computed(() => t("成功")),
                             value: '成功',
                         },
                         {
-                            label: computed(() => t('出错')),
+                            label: computed(() => t("出错")),
                             value: '出错',
                         },
                     ],
@@ -227,41 +224,41 @@
                 type: 'select',
                 value: '',
                 key: 'logLevel',
-                label: computed(() => t('日志级别')),
+                label: computed(() => t("日志级别")),
                 labelWidth: '82px',
                 props: {
                     options: [
                         //选项列表
                         {
-                            label: computed(() => t('全部')),
+                            label: computed(() => t("全部")),
                             value: '',
                         },
                         {
-                            label: computed(() => t('错误')),
+                            label: computed(() => t("错误")),
                             value: 'ERROR',
                         },
                         {
-                            label: computed(() => t('警告')),
+                            label: computed(() => t("警告")),
                             value: 'WARN',
                         },
                         {
-                            label: computed(() => t('调试')),
+                            label: computed(() => t("调试")),
                             value: 'DEBUG',
                         },
                         {
-                            label: computed(() => t('跟踪')),
+                            label: computed(() => t("跟踪")),
                             value: 'TRACE',
                         },
                         {
-                            label: computed(() => t('记录日志')),
+                            label: computed(() => t("记录日志")),
                             value: 'RSLOG',
                         },
                         {
-                            label: computed(() => t('管理日志')),
+                            label: computed(() => t("管理日志")),
                             value: 'MANAGERLOG',
                         },
                         {
-                            label: computed(() => t('通知')),
+                            label: computed(() => t("通知")),
                             value: 'INFO',
                         },
                     ],
@@ -309,25 +306,25 @@
             return Math.round(s * Math.pow(10, 3)) / Math.pow(10, 3) + '秒';
         }
     };
-
-    //窗口变动时触发，获取表格的高度
-    function windowHeightChange(tableHeight) {
-        operationLogsTable.value.maxHeight = tableHeight - 35 - 35; //35 35 是y9-card-content样式中上padding、下padding的值
-    }
+	
+	//窗口变动时触发，获取表格的高度
+	function windowHeightChange(tableHeight){
+		operationLogsTable.value.maxHeight = tableHeight - 35 - 35; //35 35 是y9-card-content样式中上padding、下padding的值
+	}
 
     // 表格 配置
     let operationLogsTable = ref({
         columns: [
-            { title: computed(() => t('序号')), showOverflowTooltip: false, type: 'index', width: 80 },
-            { title: computed(() => t('用户名称')), key: 'userName', width: 130 },
-            { title: computed(() => t('客户端IP')), key: 'userHostIp', width: 150 },
-            { title: computed(() => t('模块名称')), key: 'modularName', width: 120 },
-            { title: computed(() => t('操作方法')), key: 'methodName' },
-            { title: computed(() => t('操作名称')), key: 'operateName' },
-            { title: computed(() => t('操作类型')), key: 'operateType', width: 100 },
-            { title: computed(() => t('操作状态')), key: 'success', width: 100 },
+            { title: computed(() => t("序号")), showOverflowTooltip: false, type: 'index', width: 80 },
+            { title: computed(() => t("用户名称")), key: 'userName', width: 130 },
+            { title: computed(() => t("客户端IP")), key: 'userHostIp', width: 150 },
+            { title: computed(() => t("模块名称")), key: 'modularName', width: 120 },
+            { title: computed(() => t("操作方法")), key: 'methodName' },
+            { title: computed(() => t("操作名称")), key: 'operateName' },
+            { title: computed(() => t("操作类型")), key: 'operateType', width: 100 },
+            { title: computed(() => t("操作状态")), key: 'success', width: 100 },
             {
-                title: computed(() => t('日志级别')),
+                title: computed(() => t("日志级别")),
                 key: 'logLevel',
                 width: 120,
                 render: (row) => {
@@ -349,14 +346,9 @@
                     }
                 },
             },
-            { title: computed(() => t('操作用时')), key: 'elapsedTime', formatter: elapsedTimeFormat, width: 150 },
-            {
-                title: computed(() => t('操作时间')),
-                key: 'logTime',
-                formatter: logTimeFormat,
-                width: settingStore.getDatetimeSpan,
-            },
-            { title: computed(() => t('错误信息')), key: 'throwable' },
+            { title: computed(() => t("操作用时")), key: 'elapsedTime', formatter: elapsedTimeFormat, width: 150 },
+            { title: computed(() => t("操作时间")), key: 'logTime', formatter: logTimeFormat, width: settingStore.getDatetimeSpan },
+            { title: computed(() => t("错误信息")), key: 'throwable' },
         ],
         tableData: [],
         pageConfig: {
@@ -453,8 +445,7 @@
         margin: 0;
     }
     :deep(.el-date-editor) {
-        i,
-        input {
+        i, input {
             font-size: v-bind('fontSizeObj.baseFontSize');
         }
     }

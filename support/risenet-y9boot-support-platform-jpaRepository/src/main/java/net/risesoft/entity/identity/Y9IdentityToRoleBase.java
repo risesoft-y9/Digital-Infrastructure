@@ -1,9 +1,9 @@
 package net.risesoft.entity.identity;
 
-import javax.persistence.Column;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
-import javax.persistence.MappedSuperclass;
+import jakarta.persistence.Column;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.Id;
+import jakarta.persistence.MappedSuperclass;
 
 import org.hibernate.annotations.Comment;
 import org.hibernate.annotations.GenericGenerator;
@@ -26,7 +26,6 @@ import net.risesoft.base.BaseEntity;
 @NoArgsConstructor
 @Data
 public class Y9IdentityToRoleBase extends BaseEntity {
-
     private static final long serialVersionUID = -1406915289962175747L;
 
     /** id */

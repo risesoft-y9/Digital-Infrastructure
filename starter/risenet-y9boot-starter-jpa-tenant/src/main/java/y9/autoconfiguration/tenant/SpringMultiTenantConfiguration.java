@@ -5,7 +5,7 @@ import java.sql.SQLException;
 import java.util.Collections;
 import java.util.StringTokenizer;
 
-import javax.persistence.EntityManagerFactory;
+import jakarta.persistence.EntityManagerFactory;
 import javax.sql.DataSource;
 
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -22,6 +22,7 @@ import org.springframework.context.annotation.FilterType;
 import org.springframework.context.annotation.Primary;
 import org.springframework.core.env.Environment;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.orm.jpa.JpaTransactionManager;
 import org.springframework.orm.jpa.JpaVendorAdapter;
@@ -32,8 +33,8 @@ import org.springframework.transaction.annotation.EnableTransactionManagement;
 import org.springframework.util.StringUtils;
 
 import com.alibaba.druid.pool.DruidDataSource;
-import com.alibaba.druid.spring.boot.autoconfigure.DruidDataSourceAutoConfigure;
-import com.alibaba.druid.spring.boot.autoconfigure.DruidDataSourceBuilder;
+import com.alibaba.druid.spring.boot3.autoconfigure.DruidDataSourceAutoConfigure;
+import com.alibaba.druid.spring.boot3.autoconfigure.DruidDataSourceBuilder;
 
 import lombok.extern.slf4j.Slf4j;
 
@@ -41,13 +42,11 @@ import net.risesoft.y9.Y9Context;
 import net.risesoft.y9.tenant.datasource.Y9TenantDataSource;
 import net.risesoft.y9.tenant.datasource.Y9TenantDataSourceLookup;
 
-import y9.jpa.extension.Y9EnableJpaRepositories;
-
 @Configuration
 @AutoConfigureBefore(DruidDataSourceAutoConfigure.class)
 @EnableConfigurationProperties(JpaProperties.class)
 @EnableTransactionManagement(proxyTargetClass = true, mode = AdviceMode.ASPECTJ)
-@Y9EnableJpaRepositories(basePackages = {"${y9.feature.jpa.packagesToScanRepositoryTenant}"},
+@EnableJpaRepositories(basePackages = {"${y9.feature.jpa.packagesToScanRepositoryTenant}"},
     includeFilters = {@ComponentScan.Filter(classes = JpaRepository.class, type = FilterType.ASSIGNABLE_TYPE)},
     entityManagerFactoryRef = "rsTenantEntityManagerFactory", transactionManagerRef = "rsTenantTransactionManager")
 @Slf4j

@@ -36,7 +36,7 @@ public class Y9CommentUtil {
         for (String annotationName : annotationNames) {
             AnnotationInfo annotationInfo = annotationInfoList.get(annotationName);
 
-            if ("javax.persistence.Table".equals(annotationName)) {
+            if ("jakarta.persistence.Table".equals(annotationName)) {
                 try {
                     List<AnnotationParameterValue> pvs = annotationInfo.getParameterValues();
                     if (pvs != null) {
@@ -94,7 +94,7 @@ public class Y9CommentUtil {
             for (String annotationName : annotationNames) {
                 AnnotationInfo annotationInfo = annotationInfoList.get(annotationName);
 
-                if ("javax.persistence.Column".equals(annotationName)) {
+                if ("jakarta.persistence.Column".equals(annotationName)) {
                     List<AnnotationParameterValue> pvs = annotationInfo.getParameterValues();
                     if (pvs != null) {
                         for (AnnotationParameterValue pv : pvs) {
@@ -106,7 +106,7 @@ public class Y9CommentUtil {
                     }
                 }
 
-                if ("javax.persistence.JoinColumn".equals(annotationName)) {
+                if ("jakarta.persistence.JoinColumn".equals(annotationName)) {
                     List<AnnotationParameterValue> pvs = annotationInfo.getParameterValues();
                     if (pvs != null) {
                         for (AnnotationParameterValue pv : pvs) {
@@ -160,7 +160,7 @@ public class Y9CommentUtil {
             for (String annotationName : annotationNames) {
                 AnnotationInfo annotationInfo = annotationInfoList.get(annotationName);
 
-                if ("javax.persistence.Column".equals(annotationName)) {
+                if ("jakarta.persistence.Column".equals(annotationName)) {
                     List<AnnotationParameterValue> pvs = annotationInfo.getParameterValues();
                     if (pvs != null) {
                         for (AnnotationParameterValue pv : pvs) {
@@ -172,7 +172,7 @@ public class Y9CommentUtil {
                     }
                 }
 
-                if ("javax.persistence.JoinColumn".equals(annotationName)) {
+                if ("jakarta.persistence.JoinColumn".equals(annotationName)) {
                     List<AnnotationParameterValue> pvs = annotationInfo.getParameterValues();
                     if (pvs != null) {
                         for (AnnotationParameterValue pv : pvs) {
@@ -229,7 +229,7 @@ public class Y9CommentUtil {
             + "ORDER BY table_name, column_name";
 
         try (ScanResult scanResult = new ClassGraph().enableAllInfo().acceptPackages(scanPackage).scan()) {
-            ClassInfoList classInfoList = scanResult.getClassesWithAnnotation("javax.persistence.Table");
+            ClassInfoList classInfoList = scanResult.getClassesWithAnnotation("jakarta.persistence.Table");
             List<String> classInfoNames = classInfoList.getNames();
             for (String className : classInfoNames) {
                 LOGGER.debug(className);
@@ -284,7 +284,7 @@ public class Y9CommentUtil {
 
     public static void scanner4Oracle(JdbcTemplate jdbcTemplate, String... scanPackage) {
         try (ScanResult scanResult = new ClassGraph().enableAllInfo().acceptPackages(scanPackage).scan()) {
-            ClassInfoList classInfoList = scanResult.getClassesWithAnnotation("javax.persistence.Table");
+            ClassInfoList classInfoList = scanResult.getClassesWithAnnotation("jakarta.persistence.Table");
             List<String> classInfoNames = classInfoList.getNames();
             for (String className : classInfoNames) {
                 LOGGER.debug(className);

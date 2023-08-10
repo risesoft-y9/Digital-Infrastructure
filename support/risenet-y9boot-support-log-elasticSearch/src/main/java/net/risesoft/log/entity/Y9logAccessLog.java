@@ -23,7 +23,7 @@ import net.risesoft.enums.ManagerLevelEnum;
  */
 @NoArgsConstructor
 @Data
-@Document(indexName = "logindex-#{@esIndexDate.getDateStr()}")
+@Document(indexName = "logindex-#{@esIndexYear.getYearStr()}")
 public class Y9logAccessLog implements Serializable {
     private static final long serialVersionUID = 8905896381019503361L;
 

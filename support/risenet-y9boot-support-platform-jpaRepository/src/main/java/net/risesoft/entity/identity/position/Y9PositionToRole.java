@@ -1,9 +1,9 @@
 package net.risesoft.entity.identity.position;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Index;
-import javax.persistence.Table;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.Index;
+import jakarta.persistence.Table;
 
 import org.hibernate.annotations.Comment;
 
@@ -22,7 +22,7 @@ import net.risesoft.entity.identity.Y9IdentityToRoleBase;
  */
 @Entity
 @Table(name = "Y9_ORG_POSITIONS_ROLES", indexes = {@Index(columnList = "POSITION_ID,ROLE_ID", unique = true)})
-@org.hibernate.annotations.Table(comment = "岗位与角色关系表", appliesTo = "Y9_ORG_POSITIONS_ROLES")
+@Comment("岗位与角色关系表")
 @NoArgsConstructor
 @Data
 public class Y9PositionToRole extends Y9IdentityToRoleBase {

@@ -2,14 +2,14 @@ package net.risesoft.entity;
 
 import java.util.Date;
 
-import javax.persistence.Column;
-import javax.persistence.Convert;
-import javax.persistence.Entity;
-import javax.persistence.Id;
-import javax.persistence.Lob;
-import javax.persistence.Table;
-import javax.persistence.Temporal;
-import javax.persistence.TemporalType;
+import jakarta.persistence.Column;
+import jakarta.persistence.Convert;
+import jakarta.persistence.Entity;
+import jakarta.persistence.Id;
+import jakarta.persistence.Lob;
+import jakarta.persistence.Table;
+import jakarta.persistence.Temporal;
+import jakarta.persistence.TemporalType;
 
 import org.hibernate.annotations.ColumnDefault;
 import org.hibernate.annotations.Comment;
@@ -33,7 +33,7 @@ import net.risesoft.y9.validation.IdNumber;
  */
 @Entity
 @Table(name = "Y9_ORG_PERSON_EXT")
-@org.hibernate.annotations.Table(comment = "人员信息扩展表", appliesTo = "Y9_ORG_PERSON_EXT")
+@Comment("人员信息扩展表")
 @NoArgsConstructor
 @Data
 public class Y9PersonExt extends BaseEntity {
@@ -110,7 +110,7 @@ public class Y9PersonExt extends BaseEntity {
     /**
      * 婚姻状况
      *
-     * {@link net.risesoft.enums.MaritalStatusEnum}
+     * {@link MaritalStatusEnum}
      */
     @Column(name = "MARITAL_STATUS", nullable = false)
     @Comment("婚姻状况")

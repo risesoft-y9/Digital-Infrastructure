@@ -25,7 +25,6 @@ import net.risesoft.log.service.Y9logUserHostIpInfoService;
 @Service
 @RequiredArgsConstructor
 public class Y9logUserHostIpInfoServiceImpl implements Y9logUserHostIpInfoService {
-
     private final Y9logUserHostIpInfoRepository y9logUserHostIpInfoRepository;
 
     @Override

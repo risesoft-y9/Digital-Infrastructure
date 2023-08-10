@@ -48,8 +48,8 @@ public abstract class Y9RepositoryBeanDefinitionRegistrarSupport
      * backwards compatibility reasons so that tests in downstream modules do not accidentally invoke the super type's
      * default implementation.
      *
-     * @see org.springframework.context.annotation.ImportBeanDefinitionRegistrar#registerBeanDefinitions(org.springframework.core.type.AnnotationMetadata,
-     *      org.springframework.beans.factory.support.BeanDefinitionRegistry)
+     * @see ImportBeanDefinitionRegistrar#registerBeanDefinitions(AnnotationMetadata,
+     *      BeanDefinitionRegistry)
      * @deprecated since 2.2, call
      *             {@link #registerBeanDefinitions(AnnotationMetadata, BeanDefinitionRegistry, BeanNameGenerator)}
      *             instead.

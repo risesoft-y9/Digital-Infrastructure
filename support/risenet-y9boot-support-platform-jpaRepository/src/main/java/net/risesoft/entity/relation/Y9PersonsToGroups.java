@@ -1,11 +1,11 @@
 package net.risesoft.entity.relation;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
-import javax.persistence.Index;
-import javax.persistence.Table;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.Id;
+import jakarta.persistence.Index;
+import jakarta.persistence.Table;
 
 import org.hibernate.annotations.Comment;
 import org.hibernate.annotations.GenericGenerator;
@@ -27,7 +27,7 @@ import net.risesoft.base.BaseEntity;
 @Table(name = "Y9_ORG_PERSONS_GROUPS",
     indexes = {@Index(columnList = "GROUP_ID,PERSON_ID", unique = true),
         @Index(columnList = "PERSON_ID,GROUP_ID", unique = true)})
-@org.hibernate.annotations.Table(comment = "人员用户组关联表", appliesTo = "Y9_ORG_PERSONS_GROUPS")
+@Comment("人员用户组关联表")
 @NoArgsConstructor
 @Data
 public class Y9PersonsToGroups extends BaseEntity {

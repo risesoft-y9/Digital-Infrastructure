@@ -6,28 +6,18 @@ import java.util.Calendar;
 import java.util.List;
 
 import org.apache.commons.lang3.StringUtils;
-import org.elasticsearch.action.search.SearchRequest;
-import org.elasticsearch.action.search.SearchResponse;
+
 import org.elasticsearch.client.RequestOptions;
-import org.elasticsearch.client.RestHighLevelClient;
-import org.elasticsearch.index.query.BoolQueryBuilder;
-import org.elasticsearch.index.query.QueryBuilders;
-import org.elasticsearch.search.aggregations.AggregationBuilders;
-import org.elasticsearch.search.aggregations.Aggregations;
-import org.elasticsearch.search.aggregations.bucket.terms.Terms;
-import org.elasticsearch.search.aggregations.bucket.terms.Terms.Bucket;
-import org.elasticsearch.search.aggregations.bucket.terms.TermsAggregationBuilder;
-import org.elasticsearch.search.builder.SearchSourceBuilder;
+import org.springframework.data.elasticsearch.client.elc.ElasticsearchTemplate;
 import org.springframework.data.elasticsearch.core.ElasticsearchOperations;
 import org.springframework.data.elasticsearch.core.SearchHit;
 import org.springframework.data.elasticsearch.core.SearchHitsIterator;
 import org.springframework.data.elasticsearch.core.mapping.IndexCoordinates;
 import org.springframework.data.elasticsearch.core.query.IndexQuery;
 import org.springframework.data.elasticsearch.core.query.IndexQueryBuilder;
-import org.springframework.data.elasticsearch.core.query.NativeSearchQuery;
-import org.springframework.data.elasticsearch.core.query.NativeSearchQueryBuilder;
 import org.springframework.stereotype.Service;
 
+import co.elastic.clients.elasticsearch.ElasticsearchClient;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
@@ -54,13 +44,49 @@ import net.risesoft.y9.util.Y9Util;
 @Slf4j
 @RequiredArgsConstructor
 public class Y9CommonAppForPersonServiceImpl implements Y9CommonAppForPersonService {
-
     private static final String APP_MODULARNAME = "net.risesoft.controller.admin.WebsiteController.saveAppCheckCount";
 
     private final Y9CommonAppForPersonRepository commonAppForPersonRepository;
-    private final ElasticsearchOperations elasticsearchOperations;
-    private final RestHighLevelClient restHighLevelClient;
+    private final ElasticsearchTemplate elasticsearchTemplate;
+    private final ElasticsearchClient elasticsearchClient;
+    
+	@Override
+	public String getAppNamesByPersonId(String personId) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+	@Override
+	public String getAppNamesFromLog(String personId) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+	@Override
+	public Y9CommonAppForPerson getCommonAppForPersonByPersonId(String personId) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+	@Override
+	public long getCount() {
+		// TODO Auto-generated method stub
+		return 0;
+	}
+	@Override
+	public String saveForQuery() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+	@Override
+	public void saveOrUpdate(Y9CommonAppForPerson cafp) {
+		// TODO Auto-generated method stub
+		
+	}
+	@Override
+	public String syncData() {
+		// TODO Auto-generated method stub
+		return null;
+	}
 
+    /*
     @Override
     public String getAppNamesByPersonId(String personId) {
         String appNameStr = "";
@@ -77,7 +103,7 @@ public class Y9CommonAppForPersonServiceImpl implements Y9CommonAppForPersonServ
                 .query(query).trackTotalHits(true);
         request.source(searchSourceBuilder);
         try {
-            SearchResponse response = restHighLevelClient.search(request, RequestOptions.DEFAULT);
+            SearchResponse response = elasticsearchClient.search(request, RequestOptions.DEFAULT);
             Terms terms = response.getAggregations().get("by_appName");
             List<? extends Bucket> buckets = terms.getBuckets();
             List<String> list = new ArrayList<>();
@@ -114,7 +140,7 @@ public class Y9CommonAppForPersonServiceImpl implements Y9CommonAppForPersonServ
         request.source(searchSourceBuilder);
 
         try {
-            SearchResponse response = restHighLevelClient.search(request, RequestOptions.DEFAULT);
+            SearchResponse response = elasticsearchClient.search(request, RequestOptions.DEFAULT);
             Terms terms = response.getAggregations().get("by_methodName");
             List<? extends Bucket> buckets = terms.getBuckets();
             List<String> list = new ArrayList<>();
@@ -173,7 +199,7 @@ public class Y9CommonAppForPersonServiceImpl implements Y9CommonAppForPersonServ
         SearchSourceBuilder searchSourceBuilder = new SearchSourceBuilder().query(query).aggregation(userIdBuilder);
         request.source(searchSourceBuilder);
         try {
-            SearchResponse response = restHighLevelClient.search(request, RequestOptions.DEFAULT);
+            SearchResponse response = elasticsearchClient.search(request, RequestOptions.DEFAULT);
             Terms terms = response.getAggregations().get("by_userId");
             List<? extends Bucket> buckets = terms.getBuckets();
             for (Bucket bucket : buckets) {
@@ -265,4 +291,6 @@ public class Y9CommonAppForPersonServiceImpl implements Y9CommonAppForPersonServ
         }
         return "success";
     }
+    */
+    
 }

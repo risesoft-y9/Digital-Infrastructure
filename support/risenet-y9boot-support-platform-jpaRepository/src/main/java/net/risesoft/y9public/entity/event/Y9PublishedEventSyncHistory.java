@@ -2,10 +2,10 @@ package net.risesoft.y9public.entity.event;
 
 import java.util.Date;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Id;
-import javax.persistence.Table;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.Id;
+import jakarta.persistence.Table;
 
 import org.hibernate.annotations.Comment;
 
@@ -26,7 +26,7 @@ import net.risesoft.base.BaseEntity;
  */
 @Entity
 @Table(name = "Y9_EVENT_SYNC_HISTORY")
-@org.hibernate.annotations.Table(comment = "事件监听api获取记录表", appliesTo = "Y9_EVENT_SYNC_HISTORY")
+@Comment("事件监听api获取记录表")
 @NoArgsConstructor
 @Data
 public class Y9PublishedEventSyncHistory extends BaseEntity {
