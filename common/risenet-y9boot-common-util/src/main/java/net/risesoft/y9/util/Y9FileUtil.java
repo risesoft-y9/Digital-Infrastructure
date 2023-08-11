@@ -287,7 +287,7 @@ public class Y9FileUtil {
      * @param in
      * @param fileName
      * @param filePath
-     * @throws IOException
+     * @throws java.io.IOException
      */
     public static File writeFile2(InputStream in, String fileName, String filePath) {
         File dir = new File(filePath);

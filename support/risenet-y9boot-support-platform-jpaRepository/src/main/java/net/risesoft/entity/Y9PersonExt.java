@@ -110,7 +110,7 @@ public class Y9PersonExt extends BaseEntity {
     /**
      * 婚姻状况
      *
-     * {@link MaritalStatusEnum}
+     * {@link net.risesoft.enums.MaritalStatusEnum}
      */
     @Column(name = "MARITAL_STATUS", nullable = false)
     @Comment("婚姻状况")

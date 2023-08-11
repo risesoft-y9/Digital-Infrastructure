@@ -114,7 +114,7 @@ public class Y9Person extends Y9OrgBase {
     /**
      * 性别
      * <p>
-     * {@link SexEnum}
+     * {@link net.risesoft.enums.SexEnum}
      */
     @ColumnDefault("1")
     @Column(name = "SEX", nullable = false)

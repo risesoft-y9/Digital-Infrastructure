@@ -35,7 +35,7 @@ public class Y9Group extends Y9OrgBase {
     /**
      * 岗位组或者用户组
      * 
-     * {@link GroupTypeEnum}
+     * {@link net.risesoft.enums.GroupTypeEnum}
      */
     @ColumnDefault("'person'")
     @Column(name = "TYPE", length = 10, nullable = false)

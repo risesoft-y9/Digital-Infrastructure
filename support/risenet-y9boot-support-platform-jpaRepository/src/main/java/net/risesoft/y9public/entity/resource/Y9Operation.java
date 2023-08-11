@@ -36,7 +36,7 @@ public class Y9Operation extends Y9ResourceBase {
     /**
      * 展示方式
      * 
-     * {@link OperationDisplayTypeEnum}
+     * {@link net.risesoft.enums.OperationDisplayTypeEnum}
      */
     @ColumnDefault("0")
     @Column(name = "DISPLAY_TYPE")
