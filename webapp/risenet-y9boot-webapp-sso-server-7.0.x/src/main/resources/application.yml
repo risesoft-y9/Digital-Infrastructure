@@ -266,24 +266,6 @@ server:
             min-spare: 10
         uri-encoding: UTF-8
 spring:
-    aop:
-        auto: true
-        proxy-target-class: false
-    cloud:
-        config:
-            enabled: false
-            fail-fast: true
-            import-check:
-                enabled: true
-    jmx:
-        enabled: false
-    session:
-        store-type: redis
-        timeout: 3600
-    main:
-        allow-bean-definition-overriding: true
-        allow-circular-references: false
-        lazy-initialization: false
     data:
         redis:
             database: 8
@@ -299,6 +281,15 @@ spring:
                     min-idle: 0
             ssl: 
                 enabled: false
+    jmx:
+        enabled: false
+    session:
+        store-type: redis
+        timeout: 3600
+    main:
+        allow-bean-definition-overriding: true
+        allow-circular-references: false
+        lazy-initialization: false
     security:
         user:
             name: y9admin
