@@ -43,8 +43,6 @@ public class DefaultServicesManagerRegisteredServiceLocator implements ServicesM
         return (OAuthRegisteredService.class.isAssignableFrom(registeredService.getClass())
             && registeredService.getFriendlyName().equalsIgnoreCase("OAuth2 Client"))
             || (CasRegisteredService.class.isAssignableFrom(registeredService.getClass())
-                && registeredService.getFriendlyName().equalsIgnoreCase(CasRegisteredService.FRIENDLY_NAME))
-            || (CasRegisteredService.class.isAssignableFrom(registeredService.getClass())
                 && registeredService.getFriendlyName().equalsIgnoreCase(CasRegisteredService.FRIENDLY_NAME));
     }
 }
