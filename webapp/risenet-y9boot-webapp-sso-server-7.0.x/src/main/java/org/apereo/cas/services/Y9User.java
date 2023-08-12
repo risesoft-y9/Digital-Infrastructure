@@ -22,7 +22,7 @@ import lombok.NoArgsConstructor;
 
 @Entity
 @Table(name = "Y9_COMMON_ACCOUNT", indexes = { @Index(columnList = "LOGIN_NAME") })
-@Comment("人员信息表")
+@Comment("用户账号表")
 @NoArgsConstructor
 @Data
 public class Y9User implements Serializable {
