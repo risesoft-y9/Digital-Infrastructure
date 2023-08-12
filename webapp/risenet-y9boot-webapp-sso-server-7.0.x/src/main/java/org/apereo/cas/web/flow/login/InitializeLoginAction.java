@@ -46,17 +46,11 @@ public class InitializeLoginAction extends BaseCasWebflowAction {
      */
     protected final CasConfigurationProperties casProperties;
     
-    @Autowired
-    @Qualifier("logoutManager")
-    private LogoutManager logoutManager; //y9 add
+    protected final  LogoutManager logoutManager; //y9 add
 
-    @Autowired
-    @Qualifier("ticketGrantingTicketCookieGenerator")
-    private CasCookieBuilder ticketGrantingTicketCookieGenerator; //y9 add
+    protected final  CasCookieBuilder ticketGrantingTicketCookieGenerator; //y9 add
 
-    @Autowired
-    @Qualifier("ticketRegistry")
-    private TicketRegistry ticketRegistry; //y9 add
+    protected final  TicketRegistry ticketRegistry; //y9 add
     
     @Override
     protected Event doExecute(final RequestContext requestContext) throws Exception {
@@ -94,6 +88,7 @@ public class InitializeLoginAction extends BaseCasWebflowAction {
         return success();
     }
     
+    // y9 add
     protected Event nonInteractiveLogin() {
         return getEventFactorySupport().event(this, "nonInteractiveLogin");
     }
