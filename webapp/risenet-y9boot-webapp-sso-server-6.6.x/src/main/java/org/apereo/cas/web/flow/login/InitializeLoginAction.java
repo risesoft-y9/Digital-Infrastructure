@@ -20,6 +20,9 @@ import org.apereo.cas.web.support.WebUtils;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import lombok.val;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.webflow.execution.Event;
 import org.springframework.webflow.execution.RequestContext;
 import org.springframework.webflow.execution.repository.NoSuchFlowExecutionException;
@@ -43,11 +46,17 @@ public class InitializeLoginAction extends BaseCasWebflowAction {
      */
     protected final CasConfigurationProperties casProperties;
     
-    protected final  LogoutManager logoutManager; //y9 add
+    @Autowired
+    @Qualifier("logoutManager")
+    private LogoutManager logoutManager; //y9 add
 
-    protected final  CasCookieBuilder ticketGrantingTicketCookieGenerator; //y9 add
+    @Autowired
+    @Qualifier("ticketGrantingTicketCookieGenerator")
+    private CasCookieBuilder ticketGrantingTicketCookieGenerator; //y9 add
 
-    protected final  TicketRegistry ticketRegistry; //y9 add
+    @Autowired
+    @Qualifier("ticketRegistry")
+    private TicketRegistry ticketRegistry; //y9 add
     
     @Override
     protected Event doExecute(final RequestContext requestContext) throws Exception {

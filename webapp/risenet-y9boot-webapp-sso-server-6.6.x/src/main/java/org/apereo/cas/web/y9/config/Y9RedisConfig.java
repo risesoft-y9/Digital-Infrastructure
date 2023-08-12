@@ -21,8 +21,7 @@ public class Y9RedisConfig {
     @RefreshScope
     public CasRedisTemplate<Object, Object> y9RedisTemplate(
         @Qualifier("redisTicketConnectionFactory") final RedisConnectionFactory redisTicketConnectionFactory) {
-        CasRedisTemplate<Object, Object> redisTemplate =
-            RedisObjectFactory.newRedisTemplate(redisTicketConnectionFactory);
+        CasRedisTemplate<Object, Object> redisTemplate = RedisObjectFactory.newRedisTemplate(redisTicketConnectionFactory);
         return redisTemplate;
     }
 }

@@ -109,7 +109,7 @@ cas:
             dialect: org.hibernate.dialect.MySQL8Dialect
             driver-class: com.mysql.cj.jdbc.Driver
             ddl-auto: update
-            url: jdbc:mysql://localhost:3306/y9_public?serverTimezone=GMT%2B8&nullCatalogMeansCurrent=true&useUnicode=true&characterEncoding=utf-8&rewriteBatchedStatements=true&useCompression=true&useSSL=false&allowPublicKeyRetrieval=true
+            url: jdbc:mysql://localhost:3309/y9_public?serverTimezone=GMT%2B8&nullCatalogMeansCurrent=true&useUnicode=true&characterEncoding=utf-8&rewriteBatchedStatements=true&useCompression=true&useSSL=false&allowPublicKeyRetrieval=true
             user: root
             password: Y9i-83204585
             idleTimeout: PT10M
@@ -149,17 +149,32 @@ cas:
             cleaner:
                 schedule:
                     enabled: true
+                    startDelay: "PT15S"
+                    repeatInterval: "PT30M"
             redis:
-                database: 13
+                enabled: true
+                useSsl: false
                 host: "localhost"
+                port: 7379
+                database: 13
+                #username: default
                 password: "y9i-83204585"
+                timeout: "PT60S"
                 pool:
+                    enabled: true
+                    testWhileIdle: true
                     maxActive: 20
                     maxIdle: 5
                     maxWait: 1000
                     minIdle: 1
-                port: 6379
-                timeout: 10000
+                crypto:
+                    enabled: true
+                    encryption:
+                        key: "6vJAg4gWORY0f8dF5XIc8Q"
+                        keySize: 16
+                    signing:
+                        key: "CzPeT3D2l7C-dwR2LfV9DFHrwmPGXCSsEReZeTn76xiWNU45De8s1CAdPNXovoBpEilbeTY1PkwPQuMxZdN4mQ"
+                        keySize: 512
         st:
             maxLength: 50
             numberOfUses: 10
@@ -201,53 +216,25 @@ spring:
     autoconfigure:
         exclude:
             - org.springframework.boot.actuate.autoconfigure.metrics.KafkaMetricsAutoConfiguration
-    datasource:
-        url: jdbc:mysql://localhost:3306/y9_public?serverTimezone=GMT%2B8&nullCatalogMeansCurrent=true&useUnicode=true&characterEncoding=utf-8&rewriteBatchedStatements=true&useCompression=true&useSSL=false
-        username: root
-        password: Mysql-83204585
-        driver-class-name: com.mysql.cj.jdbc.Driver
-        hikari:
-            maximum-pool-size: 12
-            minimum-idle: 5
-            idle-timeout: 300000
-            connection-timeout: 20000
-    jpa:
-        open-in-view: false
-        generate-ddl: true
-        show-sql: false
-        hibernate:
-            ddl-auto: update
-            naming:
-                implicit-strategy: org.hibernate.boot.model.naming.ImplicitNamingStrategyLegacyHbmImpl
-                physical-strategy: org.hibernate.boot.model.naming.PhysicalNamingStrategyStandardImpl
-        properties:
-            hibernate:
-                dialect: org.hibernate.dialect.MySQL8Dialect
-    session:
-        store-type: redis
-        timeout: 3600
-        jdbc:
-            initialize-schema: always
-    kafka:
-        bootstrap-servers: localhost:9092
-        consumer:
-            auto-commit-interval: 1000
-            enable-auto-commit: true
-            group-id: y9sso-server
     main:
         allow-bean-definition-overriding: true
         allow-circular-references: false
+    session:
+        store-type: redis
+        timeout: 3600
+    security:
+        user:
+            name: y9admin
+            password: risesoft
     thymeleaf:
-        cache: false
-        excluded-view-names: /api/*
+        cache: true
         mode: HTML
-        prefix: classpath:/templates/
-        suffix: .html
-        template-resolver-order: 1
+        encoding: UTF-8
+        #prefix: classpath:/templates/
+        #suffix: .html
+        template-resolver-order: 100
 systemName: risesso
 y9:
-    app:
-        y9sso:
-            enableEventListener: true
-            casLoginView: "casLoginView-y9-v3.0"
-            credentialPropsOptional: "isValidateIE,screenDimension,userAgent,systemName,clientIp,clientMac,clientDiskId,clientHostName,deptId,positionId,pwdEcodeType"
+    login:
+        casLoginView: "casLoginView-y9-v3.0"
+        credentialPropsOptional: "isValidateIE,screenDimension,userAgent,systemName,clientIp,clientMac,clientDiskId,clientHostName,deptId,positionId,pwdEcodeType"

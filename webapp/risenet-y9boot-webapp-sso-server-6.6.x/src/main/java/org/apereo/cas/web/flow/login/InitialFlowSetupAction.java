@@ -25,6 +25,8 @@ import lombok.extern.slf4j.Slf4j;
 import lombok.val;
 import org.apache.commons.lang3.StringUtils;
 import org.jooq.lambda.Unchecked;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
 import org.springframework.webflow.execution.Event;
@@ -69,7 +71,9 @@ public class InitialFlowSetupAction extends BaseCasWebflowAction {
 
     private final TicketRegistrySupport ticketRegistrySupport;
     
-    private final LogoutManager logoutManager;// y9 add
+    @Autowired
+    @Qualifier("logoutManager")
+    private LogoutManager logoutManager;// y9 add
 
     /**
      * Configure the POST parameters in webflow.
