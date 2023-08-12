@@ -5,10 +5,11 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.apereo.cas.services.Y9User;
+import org.apereo.cas.web.y9.service.Y9UserService;
 import org.apereo.cas.web.y9.util.MobileUtil;
 import org.apereo.cas.web.y9.util.common.XSSCheckUtil;
-import org.apereo.cas.web.y9.y9user.Y9User;
-import org.apereo.cas.web.y9.y9user.Y9UserDao;
+
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -29,7 +30,7 @@ import lombok.extern.slf4j.Slf4j;
 @RequiredArgsConstructor
 public class TenantController {
 
-    private final Y9UserDao y9UserDao;
+	private final Y9UserService y9UserService;
 
     @RequestMapping(value = "/checkUser")
     public final ResponseEntity<String> checkUser(@RequestParam String loginName,
@@ -39,8 +40,7 @@ public class TenantController {
             loginName = XSSCheckUtil.filter(loginName);
             tenantShortName = XSSCheckUtil.filter(tenantShortName);
 
-            List<Y9User> users =
-                y9UserDao.findByTenantShortNameAndLoginNameAndOriginal(tenantShortName, loginName, Boolean.TRUE);
+            List<Y9User> users = y9UserService.findByTenantShortNameAndLoginNameAndOriginal(tenantShortName, loginName, Boolean.TRUE);
             if (!users.isEmpty()) {
                 for (Y9User user : users) {
                     Map<String, Object> mapTemp = new HashMap<String, Object>();
@@ -74,7 +74,7 @@ public class TenantController {
         List<Map<String, Object>> list = new ArrayList<Map<String, Object>>();
         try {
             loginName = XSSCheckUtil.filter(loginName);
-            List<Y9User> y9users = y9UserDao.findByOriginalAndLoginNameStartingWith(Boolean.TRUE, loginName);
+            List<Y9User> y9users = y9UserService.findByOriginalAndLoginNameStartingWith(Boolean.TRUE, loginName);
             if (!y9users.isEmpty()) {
                 for (Y9User user : y9users) {
                     Map<String, Object> mapTemp = new HashMap<String, Object>();
@@ -108,7 +108,7 @@ public class TenantController {
         try {
             loginName = XSSCheckUtil.filter(loginName);
             if (MobileUtil.isMobile(loginName)) {
-                List<Y9User> users = y9UserDao.findByMobileAndOriginal(loginName, Boolean.TRUE);
+                List<Y9User> users = y9UserService.findByMobileAndOriginal(loginName, Boolean.TRUE);
                 if (users.size() > 0) {
                     for (Y9User user : users) {
                         Map<String, Object> mapTemp = new HashMap<String, Object>();
@@ -118,7 +118,7 @@ public class TenantController {
                     }
                 }
             } else {
-                List<Y9User> users = y9UserDao.findByLoginNameAndOriginal(loginName, Boolean.TRUE);
+                List<Y9User> users = y9UserService.findByLoginNameAndOriginal(loginName, Boolean.TRUE);
                 if (!users.isEmpty()) {
                     for (Y9User user : users) {
                         Map<String, Object> mapTemp = new HashMap<String, Object>();
@@ -154,7 +154,7 @@ public class TenantController {
         try {
             loginName = XSSCheckUtil.filter(loginName);
             tenantName = XSSCheckUtil.filter(tenantName);
-            List<Y9User> users = y9UserDao.findByTenantNameAndLoginNameAndOriginal(tenantName, loginName, Boolean.TRUE);
+            List<Y9User> users = y9UserService.findByTenantNameAndLoginNameAndOriginal(tenantName, loginName, Boolean.TRUE);
             if (users.size() > 0) {
                 for (Y9User user : users) {
                     Map<String, Object> mapTemp = new HashMap<String, Object>();
@@ -191,8 +191,7 @@ public class TenantController {
             tenentlist.add("isv");
             tenentlist.add("operation");
 
-            List<Y9User> users =
-                y9UserDao.findByTenantShortNameNotInAndLoginNameAndOriginal(tenentlist, loginName, Boolean.TRUE);
+            List<Y9User> users = y9UserService.findByTenantShortNameNotInAndLoginNameAndOriginal(tenentlist, loginName, Boolean.TRUE);
             if (!users.isEmpty()) {
                 for (Y9User user : users) {
                     Map<String, Object> mapTemp = new HashMap<String, Object>();
@@ -229,8 +228,7 @@ public class TenantController {
             loginName = XSSCheckUtil.filter(loginName);
             tenantShortName = XSSCheckUtil.filter(tenantShortName);
 
-            List<Y9User> users =
-                y9UserDao.findByTenantShortNameAndLoginNameAndOriginal(tenantShortName, loginName, Boolean.TRUE);
+            List<Y9User> users = y9UserService.findByTenantShortNameAndLoginNameAndOriginal(tenantShortName, loginName, Boolean.TRUE);
             if (!users.isEmpty()) {
                 for (Y9User user : users) {
                     Map<String, Object> mapTemp = new HashMap<String, Object>();
@@ -266,8 +264,7 @@ public class TenantController {
         try {
             loginName = XSSCheckUtil.filter(loginName);
 
-            List<Y9User> users =
-                y9UserDao.findByLoginNameContainingAndOriginalOrderByTenantShortName(loginName, Boolean.TRUE);
+            List<Y9User> users = y9UserService.findByLoginNameContainingAndOriginalOrderByTenantShortName(loginName, Boolean.TRUE);
             if (!users.isEmpty()) {
                 for (Y9User user : users) {
                     Map<String, Object> mapTemp = new HashMap<String, Object>();

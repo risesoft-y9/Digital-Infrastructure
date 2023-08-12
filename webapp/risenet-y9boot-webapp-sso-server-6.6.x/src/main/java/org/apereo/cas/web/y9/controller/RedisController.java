@@ -6,7 +6,7 @@ import javax.servlet.http.HttpServletRequest;
 
 import org.apache.commons.lang3.StringUtils;
 import org.apereo.cas.redis.core.CasRedisTemplate;
-import org.apereo.cas.web.y9.y9user.Y9Result;
+import org.apereo.cas.web.y9.util.Y9Result;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;

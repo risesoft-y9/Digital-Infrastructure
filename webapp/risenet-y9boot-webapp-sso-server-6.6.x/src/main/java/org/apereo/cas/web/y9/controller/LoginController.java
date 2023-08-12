@@ -15,14 +15,15 @@ import org.apereo.cas.authentication.credential.RememberMeUsernamePasswordCreden
 import org.apereo.cas.authentication.principal.Service;
 import org.apereo.cas.authentication.principal.ServiceFactory;
 import org.apereo.cas.rest.BadRestRequestException;
+import org.apereo.cas.services.Y9User;
 import org.apereo.cas.ticket.ServiceTicket;
 import org.apereo.cas.ticket.TicketGrantingTicket;
 import org.apereo.cas.web.cookie.CasCookieBuilder;
+import org.apereo.cas.web.y9.service.Y9UserService;
 import org.apereo.cas.web.y9.util.Y9MessageDigest;
 import org.apereo.cas.web.y9.util.common.Base64Util;
 import org.apereo.cas.web.y9.util.common.CheckPassWord;
-import org.apereo.cas.web.y9.y9user.Y9User;
-import org.apereo.cas.web.y9.y9user.Y9UserDao;
+
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -54,17 +55,17 @@ public class LoginController {
     private final AuthenticationSystemSupport authenticationSystemSupport;
     private final ServiceFactory webApplicationServiceFactory;
 
-    private final Y9UserDao y9UserDao;
+    private final Y9UserService y9UserService;
 
     public LoginController(CentralAuthenticationService centralAuthenticationService,
         @Qualifier("ticketGrantingTicketCookieGenerator") CasCookieBuilder ticketGrantingTicketCookieGenerator,
         @Qualifier("defaultAuthenticationSystemSupport") AuthenticationSystemSupport authenticationSystemSupport,
-        @Qualifier("webApplicationServiceFactory") ServiceFactory webApplicationServiceFactory, Y9UserDao y9UserDao) {
+        @Qualifier("webApplicationServiceFactory") ServiceFactory webApplicationServiceFactory, Y9UserService y9UserService) {
         this.centralAuthenticationService = centralAuthenticationService;
         this.ticketGrantingTicketCookieGenerator = ticketGrantingTicketCookieGenerator;
         this.authenticationSystemSupport = authenticationSystemSupport;
         this.webApplicationServiceFactory = webApplicationServiceFactory;
-        this.y9UserDao = y9UserDao;
+        this.y9UserService = y9UserService;
     }
 
     public Map<String, Object> checkSsoLoginInfo(String tenantShortName, String username, String password,
@@ -84,9 +85,9 @@ public class LoginController {
             String encryptedPassword = password;
             List<Y9User> users = null;
             if ("mobile".equals(loginType)) {
-                users = y9UserDao.findByTenantShortNameAndMobile(tenantShortName, username);
+                users = y9UserService.findByTenantShortNameAndMobile(tenantShortName, username);
             } else {
-                users = y9UserDao.findByTenantShortNameAndLoginName(tenantShortName, username);
+                users = y9UserService.findByTenantShortNameAndLoginName(tenantShortName, username);
             }
             if (users.isEmpty()) {
                 map.put("msg", "该账号不存在，请检查账号输入是否正确！");

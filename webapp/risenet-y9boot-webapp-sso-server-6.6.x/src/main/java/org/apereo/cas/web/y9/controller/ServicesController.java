@@ -10,7 +10,7 @@ import org.apereo.cas.services.RegexRegisteredService;
 import org.apereo.cas.services.ReturnAllAttributeReleasePolicy;
 import org.apereo.cas.services.ServicesManager;
 import org.apereo.cas.support.oauth.services.OAuthRegisteredService;
-import org.apereo.cas.web.y9.y9user.Y9Result;
+import org.apereo.cas.web.y9.util.Y9Result;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;

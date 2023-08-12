@@ -44,7 +44,7 @@
     </distributionManagement>
 
     <properties>
-        <cas.version>6.6.7</cas.version>
+        <cas.version>6.6.9</cas.version>
         <springboot.version>2.7.3</springboot.version>
         <jodd-http.version>6.0.8</jodd-http.version>
         <pac4j.version>5.4.6</pac4j.version>
@@ -189,22 +189,10 @@
             <artifactId>cas-server-support-redis-core</artifactId>
         </dependency>
 
-        <!-- <dependency> <groupId>org.apereo.cas</groupId> <artifactId>cas-server-support-audit-redis</artifactId> 
-            </dependency> -->
-        <!-- <dependency> <groupId>org.apereo.cas</groupId> <artifactId>cas-server-support-audit-jdbc</artifactId> 
-            </dependency> -->
-
-        <!-- <dependency> <groupId>org.apereo.cas</groupId> <artifactId>cas-server-support-throttle-redis</artifactId> 
-            </dependency> -->
-        <!-- <dependency> <groupId>org.apereo.cas</groupId> <artifactId>cas-server-support-throttle-jdbc</artifactId> 
-            </dependency> -->
-
         <dependency>
             <groupId>org.apereo.cas</groupId>
             <artifactId>cas-server-support-redis-ticket-registry</artifactId>
         </dependency>
-        <!-- <dependency> <groupId>org.apereo.cas</groupId> <artifactId>cas-server-support-jpa-ticket-registry</artifactId> 
-            </dependency> -->
 
         <dependency>
             <groupId>org.apereo.cas</groupId>
@@ -214,8 +202,6 @@
             <groupId>org.springframework.session</groupId>
             <artifactId>spring-session-data-redis</artifactId>
         </dependency>
-        <!-- <dependency> <groupId>org.apereo.cas</groupId> <artifactId>cas-server-support-session-jdbc</artifactId> 
-            </dependency> -->
 
         <dependency>
             <groupId>org.apereo.cas</groupId>
@@ -238,12 +224,6 @@
             <groupId>org.apereo.cas</groupId>
             <artifactId>cas-server-support-oauth-services</artifactId>
         </dependency>
-
-        <!-- <dependency> <groupId>org.apereo.cas</groupId> <artifactId>cas-server-support-oidc</artifactId> 
-            </dependency> <dependency> <groupId>org.apereo.cas</groupId> <artifactId>cas-server-support-oidc-core</artifactId> 
-            </dependency> <dependency> <groupId>org.apereo.cas</groupId> <artifactId>cas-server-support-oidc-core-api</artifactId> 
-            </dependency> <dependency> <groupId>org.apereo.cas</groupId> <artifactId>cas-server-support-oidc-services</artifactId> 
-            </dependency> -->
 
         <dependency>
             <groupId>org.apereo.cas</groupId>
@@ -289,8 +269,6 @@
             <groupId>org.pac4j</groupId>
             <artifactId>pac4j-oauth</artifactId>
         </dependency>
-        <!-- <dependency> <groupId>org.pac4j</groupId> <artifactId>pac4j-oidc</artifactId> 
-            </dependency> -->
         <dependency>
             <groupId>org.pac4j</groupId>
             <artifactId>pac4j-saml</artifactId>
@@ -323,10 +301,10 @@
             <artifactId>jose4j</artifactId>
         </dependency>
 
-        <dependency>
+        <!--<dependency>
             <groupId>org.springframework.kafka</groupId>
             <artifactId>spring-kafka</artifactId>
-        </dependency>
+        </dependency>-->
 
         <dependency>
             <groupId>org.jodd</groupId>
@@ -396,7 +374,6 @@
         <dependency>
             <groupId>com.google.zxing</groupId>
             <artifactId>core</artifactId>
-            <version>3.5.0</version>
         </dependency>
         <!-- 二维码-结束 -->
     </dependencies>

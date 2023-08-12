@@ -1,4 +1,4 @@
-package org.apereo.cas.web.y9.y9user;
+package org.apereo.cas.web.y9.util;
 
 /**
  * 操作码

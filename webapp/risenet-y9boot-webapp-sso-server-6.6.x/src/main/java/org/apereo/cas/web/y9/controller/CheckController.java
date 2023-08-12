@@ -13,13 +13,14 @@ import javax.servlet.http.HttpSession;
 import org.apache.commons.lang3.StringUtils;
 import org.apereo.cas.authentication.credential.RememberMeUsernamePasswordCredential;
 import org.apereo.cas.redis.core.CasRedisTemplate;
+import org.apereo.cas.services.Y9User;
+import org.apereo.cas.web.y9.service.Y9UserService;
 import org.apereo.cas.web.y9.util.Y9MessageDigest;
+import org.apereo.cas.web.y9.util.Y9Result;
 import org.apereo.cas.web.y9.util.common.Base64Util;
 import org.apereo.cas.web.y9.util.common.CheckPassWord;
 import org.apereo.cas.web.y9.util.common.RSAUtil;
-import org.apereo.cas.web.y9.y9user.Y9Result;
-import org.apereo.cas.web.y9.y9user.Y9User;
-import org.apereo.cas.web.y9.y9user.Y9UserDao;
+
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -34,13 +35,12 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 public class CheckController {
 
-    private final Y9UserDao y9UserDao;
+	private final Y9UserService y9UserService;
 
     private final CasRedisTemplate<Object, Object> redisTemplate;
 
-    public CheckController(Y9UserDao y9UserDao,
-        @Qualifier("y9RedisTemplate") CasRedisTemplate<Object, Object> redisTemplate) {
-        this.y9UserDao = y9UserDao;
+    public CheckController(Y9UserService y9UserService, @Qualifier("y9RedisTemplate") CasRedisTemplate<Object, Object> redisTemplate) {
+        this.y9UserService = y9UserService;
         this.redisTemplate = redisTemplate;
     }
 
@@ -126,9 +126,9 @@ public class CheckController {
 
             List<Y9User> users = null;
             if ("mobile".equals(loginType)) {
-                users = y9UserDao.findByTenantShortNameAndMobile(tenantShortName, username);
+                users = y9UserService.findByTenantShortNameAndMobile(tenantShortName, username);
             } else {
-                users = y9UserDao.findByTenantShortNameAndLoginName(tenantShortName, username);
+                users = y9UserService.findByTenantShortNameAndLoginName(tenantShortName, username);
             }
 
             if (users.isEmpty()) {

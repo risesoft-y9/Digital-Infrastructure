@@ -15,29 +15,29 @@ import org.apache.commons.lang3.tuple.Pair;
 import org.apereo.cas.authentication.AuthenticationHandler;
 import org.apereo.cas.authentication.Credential;
 import org.apereo.cas.authentication.credential.RememberMeUsernamePasswordCredential;
+import org.apereo.cas.services.Y9User;
 import org.apereo.cas.util.CollectionUtils;
-import org.apereo.cas.web.y9.y9user.Y9User;
-import org.apereo.cas.web.y9.y9user.Y9UserDao;
+import org.apereo.cas.web.y9.service.Y9UserService;
 import org.apereo.services.persondir.IPersonAttributeDao;
 import org.apereo.services.persondir.IPersonAttributes;
 import org.apereo.services.persondir.support.AttributeNamedPersonImpl;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.util.StringUtils;
 
 import com.google.common.collect.Lists;
 
-import lombok.RequiredArgsConstructor;
 import lombok.val;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
-@RequiredArgsConstructor
 public class RisePersonDirectoryPrincipalResolver implements PrincipalResolver {
 
     private boolean returnNullIfNoAttributes = false;
 
     private PrincipalFactory principalFactory = new DefaultPrincipalFactory();
 
-    private final Y9UserDao y9UserDao;
+    @Autowired
+	private Y9UserService y9UserService;
 
     /**
      * Convert person attributes to principal pair.
@@ -114,15 +114,15 @@ public class RisePersonDirectoryPrincipalResolver implements PrincipalResolver {
         List<Y9User> users = null;
         if ("mobile".equals(loginType)) {
             if (StringUtils.hasText(deptId)) {
-                users = y9UserDao.findByTenantShortNameAndMobileAndParentId(tenantShortName, username, deptId);
+                users = y9UserService.findByTenantShortNameAndMobileAndParentId(tenantShortName, username, deptId);
             } else {
-                users = y9UserDao.findByTenantShortNameAndMobileAndOriginal(tenantShortName, username, Boolean.TRUE);
+                users = y9UserService.findByTenantShortNameAndMobileAndOriginal(tenantShortName, username, Boolean.TRUE);
             }
         } else {
             if (StringUtils.hasText(deptId)) {
-                users = y9UserDao.findByTenantShortNameAndLoginNameAndParentId(tenantShortName, username, deptId);
+                users = y9UserService.findByTenantShortNameAndLoginNameAndParentId(tenantShortName, username, deptId);
             } else {
-                users = y9UserDao.findByTenantShortNameAndLoginNameAndOriginal(tenantShortName, username, Boolean.TRUE);
+                users = y9UserService.findByTenantShortNameAndLoginNameAndOriginal(tenantShortName, username, Boolean.TRUE);
             }
         }
         if (users != null && !users.isEmpty()) {

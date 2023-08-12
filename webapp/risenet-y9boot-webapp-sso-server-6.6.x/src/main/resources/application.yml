@@ -93,8 +93,8 @@ cas:
     slo:
         asynchronous: false
     server:
-        name: http://localhost:7055
-        prefix: http://localhost:7055/sso
+        name: http://127.0.0.1:7055
+        prefix: http://127.0.0.1:7055/sso
     serviceRegistry:
         cache:
             duration: PT8H
@@ -111,7 +111,7 @@ cas:
             ddl-auto: update
             url: jdbc:mysql://localhost:3306/y9_public?serverTimezone=GMT%2B8&nullCatalogMeansCurrent=true&useUnicode=true&characterEncoding=utf-8&rewriteBatchedStatements=true&useCompression=true&useSSL=false&allowPublicKeyRetrieval=true
             user: root
-            password: Mysql-83204585
+            password: Y9i-83204585
             idleTimeout: PT10M
             leakThreshold: 0
             autocommit: true
@@ -152,7 +152,7 @@ cas:
             redis:
                 database: 13
                 host: "localhost"
-                password: "Redis-83204585"
+                password: "y9i-83204585"
                 pool:
                     maxActive: 20
                     maxIdle: 5

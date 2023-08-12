@@ -11,7 +11,6 @@ import org.apereo.cas.services.ServicesManager;
 import org.apereo.cas.web.flow.actions.RiseCredentialNonInteractiveCredentialsAction;
 import org.apereo.cas.web.flow.resolver.CasDelegatingWebflowEventResolver;
 import org.apereo.cas.web.flow.resolver.CasWebflowEventResolver;
-import org.apereo.cas.web.y9.y9user.Y9UserDao;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -40,8 +39,8 @@ public class Y9AuthenticationConfiguration {
     }
 
     @Bean
-    public PrincipalResolver risePersonDirectoryPrincipalResolver(Y9UserDao y9UserDao) {
-        return new RisePersonDirectoryPrincipalResolver(y9UserDao);
+    public PrincipalResolver risePersonDirectoryPrincipalResolver() {
+        return new RisePersonDirectoryPrincipalResolver();
     }
 
     @Bean
