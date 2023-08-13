@@ -97,12 +97,12 @@
         <maven.build.timestamp.format>yyyy-MM-dd_HH_mm</maven.build.timestamp.format>
         <maven.javadoc.failOnError>false</maven.javadoc.failOnError>
 
-        <spring-boot.version>2.7.10</spring-boot.version>
-        <spring-cloud.version>2021.0.5</spring-cloud.version>
+        <spring-boot.version>2.7.14</spring-boot.version>
+        <spring-cloud.version>2021.0.8</spring-cloud.version>
 
         <aspectj.version>1.9.19</aspectj.version>
 
-        <fastjson.version>2.0.33</fastjson.version>
+        <fastjson.version>2.0.38</fastjson.version>
         <rs-api.version>2.1.1</rs-api.version>
 
         <guava.version>31.1-jre</guava.version>
@@ -115,9 +115,9 @@
         <commons-net.version>3.9.0</commons-net.version>
         <commons-pool2.version>2.11.1</commons-pool2.version>
 
-        <javers.version>6.13.0</javers.version>
+        <javers.version>6.14.0</javers.version>
         <org-dom4j.version>2.1.4</org-dom4j.version>
-        <oshi.version>6.4.3</oshi.version>
+        <oshi.version>6.4.4</oshi.version>
         <lombok.version>1.18.28</lombok.version>
     </properties>
 
