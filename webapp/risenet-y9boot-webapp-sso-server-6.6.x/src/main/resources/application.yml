@@ -93,8 +93,8 @@ cas:
     slo:
         asynchronous: false
     server:
-        name: http://localhost:7055
-        prefix: http://localhost:7055/sso
+        name: http://192.168.31.61:7055
+        prefix: http://192.168.31.61:7055/sso
     serviceRegistry:
         cache:
             duration: PT8H
@@ -132,7 +132,7 @@ cas:
         maxAge: -1
         name: TGC
         path: /sso/
-        pinToSession: false
+        pinToSession: true
         rememberMeMaxAge: P14D
         secure: true
         sameSitePolicy: None

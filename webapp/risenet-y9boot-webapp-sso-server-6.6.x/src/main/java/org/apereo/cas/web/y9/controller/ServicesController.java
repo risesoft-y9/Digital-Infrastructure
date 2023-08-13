@@ -5,8 +5,8 @@ import java.util.HashSet;
 
 import org.apereo.cas.authentication.principal.DefaultPrincipalAttributesRepository;
 import org.apereo.cas.configuration.model.support.mfa.BaseMultifactorAuthenticationProviderProperties;
+import org.apereo.cas.services.CasRegisteredService;
 import org.apereo.cas.services.DefaultRegisteredServiceMultifactorPolicy;
-import org.apereo.cas.services.RegexRegisteredService;
 import org.apereo.cas.services.ReturnAllAttributeReleasePolicy;
 import org.apereo.cas.services.ServicesManager;
 import org.apereo.cas.support.oauth.services.OAuthRegisteredService;
@@ -78,7 +78,7 @@ public class ServicesController {
         y9result.setMsg("刷新失败");
         y9result.setSuccess(false);
         try {
-            RegexRegisteredService regexRegisteredService = new RegexRegisteredService();
+            CasRegisteredService regexRegisteredService = new CasRegisteredService();
             regexRegisteredService.setServiceId(serviceId);
             regexRegisteredService.setName(name);
             regexRegisteredService.setDescription(description);
