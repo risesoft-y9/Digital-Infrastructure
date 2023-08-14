@@ -108,7 +108,7 @@ public class DefaultCasCookieValueManager extends EncryptedCookieValueManager {
         val agent = HttpRequestUtils.getHttpServletRequestUserAgent(request);
         if (!cookieUserAgent.equals(agent)) {
         	if (cookieUserAgent.contains("Chrome") && agent.contains("Chrome") && !cookieUserAgent.substring(0, cookieUserAgent.indexOf("Chrome")).equals(agent.substring(0, agent.indexOf("Chrome")))) {  //y9 edit
-                val message = "Invalid cookie. Required user-agent %s does not match %s".formatted(cookieUserAgent, agent);
+                val message = String.format("Invalid cookie. Required user-agent %s does not match %s", cookieUserAgent, agent);
                 LOGGER.warn(message);
                 throw new InvalidCookieException(message);
         	} //y9 edit 
