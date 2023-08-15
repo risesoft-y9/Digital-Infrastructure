@@ -23,6 +23,16 @@
             <groupId>com.alibaba</groupId>
             <artifactId>druid-spring-boot-3-starter</artifactId>
         </dependency>
+  1.4
+        <dependency>
+            <groupId>javax.servlet</groupId>
+            <artifactId>jstl</artifactId>
+        </dependency>
+        替换为：
+        <dependency>
+          <groupId>jakarta.servlet.jsp.jstl</groupId>
+          <artifactId>jakarta.servlet.jsp.jstl-api</artifactId>
+        </dependency>
 		
 2、Java源代码的修改：
 
