@@ -63,4 +63,6 @@
   2.8、实体类上的注释：@org.hibernate.annotations.Table(comment 全部替换为： @Comment("")
 
   2.9、实体类字段上的注解： @Type(type = "numeric_boolean") 全部替换为： @Convert(converter = org.hibernate.type.NumericBooleanConverter.class)
+  
+  3.0 升级后 elasticsearch 变化较大，为过编译打包，已经将原代码注释，需要修改的地方已加了注释方便找到 // FIXME elasticsearch 
     

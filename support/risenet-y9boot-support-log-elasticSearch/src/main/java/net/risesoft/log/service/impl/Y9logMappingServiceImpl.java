@@ -9,11 +9,13 @@ import org.springframework.data.domain.Sort;
 import org.springframework.data.elasticsearch.client.elc.ElasticsearchTemplate;
 import org.springframework.stereotype.Service;
 
-import co.elastic.clients.elasticsearch.ElasticsearchClient;
 import lombok.RequiredArgsConstructor;
+
 import net.risesoft.log.entity.Y9logMapping;
 import net.risesoft.log.repository.Y9logMappingRepository;
 import net.risesoft.log.service.Y9logMappingService;
+
+import co.elastic.clients.elasticsearch.ElasticsearchClient;
 
 /**
  *
@@ -59,12 +61,13 @@ public class Y9logMappingServiceImpl implements Y9logMappingService {
         return y9logMappingRepository.findAll(pageable);
     }
 
-	@Override
-	public Page<Y9logMapping> pageSearchList(Integer page, Integer rows, String modularName, String modularCnName) {
-		// TODO Auto-generated method stub
-		return null;
-	}
+    @Override
+    public Page<Y9logMapping> pageSearchList(Integer page, Integer rows, String modularName, String modularCnName) {
+        // TODO Auto-generated method stub
+        return null;
+    }
 
+    // FIXME elasticsearch
     /*
     @Override
     public Page<Y9logMapping> pageSearchList(Integer page, Integer rows, String modularName, String modularCnName) {
@@ -72,7 +75,7 @@ public class Y9logMappingServiceImpl implements Y9logMappingService {
         NativeSearchQueryBuilder searchQueryBuilder = new NativeSearchQueryBuilder();
         Sort sort = Sort.by(Sort.Direction.DESC, "modularCnName");
         Pageable pageable = PageRequest.of((page < 1) ? 0 : page - 1, rows, sort);
-
+    
         BoolQueryBuilder query = QueryBuilders.boolQuery();
         if (StringUtils.isNotBlank(modularCnName)) {
             query.must(QueryBuilders.termQuery("modularCnName", modularCnName));

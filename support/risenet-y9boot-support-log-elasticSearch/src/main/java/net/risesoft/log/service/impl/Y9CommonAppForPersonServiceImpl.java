@@ -1,37 +1,16 @@
 package net.risesoft.log.service.impl;
 
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.List;
-
-import org.apache.commons.lang3.StringUtils;
-
-import org.elasticsearch.client.RequestOptions;
 import org.springframework.data.elasticsearch.client.elc.ElasticsearchTemplate;
-import org.springframework.data.elasticsearch.core.ElasticsearchOperations;
-import org.springframework.data.elasticsearch.core.SearchHit;
-import org.springframework.data.elasticsearch.core.SearchHitsIterator;
-import org.springframework.data.elasticsearch.core.mapping.IndexCoordinates;
-import org.springframework.data.elasticsearch.core.query.IndexQuery;
-import org.springframework.data.elasticsearch.core.query.IndexQueryBuilder;
 import org.springframework.stereotype.Service;
 
-import co.elastic.clients.elasticsearch.ElasticsearchClient;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
-import net.risesoft.id.IdType;
-import net.risesoft.id.Y9IdGenerator;
-import net.risesoft.log.constant.Y9ESIndexConst;
-import net.risesoft.log.constant.Y9LogSearchConsts;
-import net.risesoft.log.entity.Y9ClickedApp;
 import net.risesoft.log.entity.Y9CommonAppForPerson;
-import net.risesoft.log.entity.Y9logAccessLog;
 import net.risesoft.log.repository.Y9CommonAppForPersonRepository;
 import net.risesoft.log.service.Y9CommonAppForPersonService;
-import net.risesoft.y9.Y9LoginUserHolder;
-import net.risesoft.y9.util.Y9Util;
+
+import co.elastic.clients.elasticsearch.ElasticsearchClient;
 
 /**
  *
@@ -49,43 +28,50 @@ public class Y9CommonAppForPersonServiceImpl implements Y9CommonAppForPersonServ
     private final Y9CommonAppForPersonRepository commonAppForPersonRepository;
     private final ElasticsearchTemplate elasticsearchTemplate;
     private final ElasticsearchClient elasticsearchClient;
-    
-	@Override
-	public String getAppNamesByPersonId(String personId) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-	@Override
-	public String getAppNamesFromLog(String personId) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-	@Override
-	public Y9CommonAppForPerson getCommonAppForPersonByPersonId(String personId) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-	@Override
-	public long getCount() {
-		// TODO Auto-generated method stub
-		return 0;
-	}
-	@Override
-	public String saveForQuery() {
-		// TODO Auto-generated method stub
-		return null;
-	}
-	@Override
-	public void saveOrUpdate(Y9CommonAppForPerson cafp) {
-		// TODO Auto-generated method stub
-		
-	}
-	@Override
-	public String syncData() {
-		// TODO Auto-generated method stub
-		return null;
-	}
 
+    @Override
+    public String getAppNamesByPersonId(String personId) {
+        // TODO Auto-generated method stub
+        return null;
+    }
+
+    @Override
+    public String getAppNamesFromLog(String personId) {
+        // TODO Auto-generated method stub
+        return null;
+    }
+
+    @Override
+    public Y9CommonAppForPerson getCommonAppForPersonByPersonId(String personId) {
+        // TODO Auto-generated method stub
+        return null;
+    }
+
+    @Override
+    public long getCount() {
+        // TODO Auto-generated method stub
+        return 0;
+    }
+
+    @Override
+    public String saveForQuery() {
+        // TODO Auto-generated method stub
+        return null;
+    }
+
+    @Override
+    public void saveOrUpdate(Y9CommonAppForPerson cafp) {
+        // TODO Auto-generated method stub
+
+    }
+
+    @Override
+    public String syncData() {
+        // TODO Auto-generated method stub
+        return null;
+    }
+
+    // FIXME elasticsearch
     /*
     @Override
     public String getAppNamesByPersonId(String personId) {
@@ -96,7 +82,7 @@ public class Y9CommonAppForPersonServiceImpl implements Y9CommonAppForPersonServ
             query.must(QueryBuilders.queryStringQuery(Y9Util.escape(Y9LoginUserHolder.getTenantId()))
                 .field(Y9LogSearchConsts.TENANT_ID));
         }
-
+    
         SearchRequest request = new SearchRequest(Y9ESIndexConst.CLICKED_APP_INDEX);
         SearchSourceBuilder searchSourceBuilder =
             new SearchSourceBuilder().aggregation(AggregationBuilders.terms("by_appName").field("appName").size(100000))
@@ -118,7 +104,7 @@ public class Y9CommonAppForPersonServiceImpl implements Y9CommonAppForPersonServ
             return null;
         }
     }
-
+    
     @Override
     public String getAppNamesFromLog(String personId) {
         String appNamesStr = "";
@@ -132,13 +118,13 @@ public class Y9CommonAppForPersonServiceImpl implements Y9CommonAppForPersonServ
         c.add(Calendar.MONTH, -6);
         long startTime = c.getTime().getTime();
         query.must(QueryBuilders.rangeQuery(Y9LogSearchConsts.LOG_TIME).from(startTime).to(endTime));
-
+    
         SearchRequest request = new SearchRequest(Y9ESIndexConst.ACCESS_LOG_INDEX);
         SearchSourceBuilder searchSourceBuilder = new SearchSourceBuilder().query(query)
             .aggregation(AggregationBuilders.terms("by_methodName").field("methodName").size(100000))
             .trackTotalHits(true);
         request.source(searchSourceBuilder);
-
+    
         try {
             SearchResponse response = elasticsearchClient.search(request, RequestOptions.DEFAULT);
             Terms terms = response.getAggregations().get("by_methodName");
@@ -155,12 +141,12 @@ public class Y9CommonAppForPersonServiceImpl implements Y9CommonAppForPersonServ
         }
         return appNamesStr;
     }
-
+    
     @Override
     public Y9CommonAppForPerson getCommonAppForPersonByPersonId(String personId) {
         return commonAppForPersonRepository.findByPersonId(personId);
     }
-
+    
     @Override
     public long getCount() {
         BoolQueryBuilder query = QueryBuilders.boolQuery();
@@ -171,13 +157,13 @@ public class Y9CommonAppForPersonServiceImpl implements Y9CommonAppForPersonServ
         c.add(Calendar.MONTH, -6);
         long startTime = c.getTime().getTime();
         query.must(QueryBuilders.rangeQuery(Y9LogSearchConsts.LOG_TIME).from(startTime).to(endTime));
-
+    
         IndexCoordinates index = IndexCoordinates.of(Y9ESIndexConst.ACCESS_LOG_INDEX);
         NativeSearchQuery searchQuery = new NativeSearchQueryBuilder().withQuery(query).build();
         searchQuery.setTrackTotalHits(true);
         return elasticsearchOperations.count(searchQuery, index);
     }
-
+    
     @Override
     public String saveForQuery() {
         BoolQueryBuilder query = QueryBuilders.boolQuery();
@@ -188,13 +174,13 @@ public class Y9CommonAppForPersonServiceImpl implements Y9CommonAppForPersonServ
         c.add(Calendar.MONTH, -6);
         long startTime = c.getTime().getTime();
         query.must(QueryBuilders.rangeQuery(Y9LogSearchConsts.LOG_TIME).from(startTime).to(endTime));
-
+    
         // 聚合子查询
         TermsAggregationBuilder userIdBuilder = AggregationBuilders.terms("by_userId").field("userId").size(100000);
         TermsAggregationBuilder methodNameBuilder =
             AggregationBuilders.terms("by_methodName").field("methodName").size(100000);
         userIdBuilder.subAggregation(methodNameBuilder);
-
+    
         SearchRequest request = new SearchRequest(Y9ESIndexConst.ACCESS_LOG_INDEX);
         SearchSourceBuilder searchSourceBuilder = new SearchSourceBuilder().query(query).aggregation(userIdBuilder);
         request.source(searchSourceBuilder);
@@ -231,12 +217,12 @@ public class Y9CommonAppForPersonServiceImpl implements Y9CommonAppForPersonServ
         }
         return "成功";
     }
-
+    
     @Override
     public void saveOrUpdate(Y9CommonAppForPerson cafp) {
         commonAppForPersonRepository.save(cafp);
     }
-
+    
     @Override
     public String syncData() {
         // 最近半年
@@ -245,19 +231,19 @@ public class Y9CommonAppForPersonServiceImpl implements Y9CommonAppForPersonServ
         c.add(Calendar.MONTH, -6);
         long startTime = c.getTime().getTime();
         long tempTime = (endTime - startTime) / 10;
-
+    
         try {
             for (int i = 1; i <= 10; i++) {
                 List<IndexQuery> queries = new ArrayList<>();
                 int count = 0;
                 long sTime = startTime + tempTime * (i - 1);
                 long eTime = sTime + tempTime - 1;
-
+    
                 BoolQueryBuilder queryBuilder = QueryBuilders.boolQuery();
                 queryBuilder
                     .must(QueryBuilders.queryStringQuery(APP_MODULARNAME).field(Y9LogSearchConsts.MODULAR_NAME));
                 queryBuilder.must(QueryBuilders.rangeQuery(Y9LogSearchConsts.LOG_TIME).from(sTime).to(eTime));
-
+    
                 NativeSearchQuery query =
                     new NativeSearchQueryBuilder().withQuery(queryBuilder).withTrackTotalHits(true).build();
                 // 使用bulk批量插入数据
@@ -271,7 +257,7 @@ public class Y9CommonAppForPersonServiceImpl implements Y9CommonAppForPersonServ
                     clickedApp.setAppName(y9logAccessLog.getMethodName());
                     clickedApp.setPersonId(y9logAccessLog.getUserId());
                     clickedApp.setSaveDate(y9logAccessLog.getLogTime());
-
+    
                     IndexQuery indexQuery =
                         new IndexQueryBuilder().withId(clickedApp.getId()).withObject(clickedApp).build();
                     queries.add(indexQuery);
@@ -292,5 +278,5 @@ public class Y9CommonAppForPersonServiceImpl implements Y9CommonAppForPersonServ
         return "success";
     }
     */
-    
+
 }

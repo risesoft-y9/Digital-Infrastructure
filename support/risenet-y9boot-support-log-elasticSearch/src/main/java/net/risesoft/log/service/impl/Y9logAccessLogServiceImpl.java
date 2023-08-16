@@ -9,15 +9,17 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.elasticsearch.core.ElasticsearchOperations;
 import org.springframework.stereotype.Service;
 
-import co.elastic.clients.elasticsearch.ElasticsearchClient;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+
 import net.risesoft.log.entity.Y9logAccessLog;
 import net.risesoft.log.service.Y9logAccessLogService;
 import net.risesoft.log.service.Y9logMappingService;
 import net.risesoft.model.AccessLog;
 import net.risesoft.model.log.LogInfoModel;
 import net.risesoft.pojo.Y9Page;
+
+import co.elastic.clients.elasticsearch.ElasticsearchClient;
 import y9.client.platform.org.DepartmentApiClient;
 import y9.client.platform.org.GroupApiClient;
 import y9.client.platform.org.OrganizationApiClient;
@@ -43,95 +45,118 @@ public class Y9logAccessLogServiceImpl implements Y9logAccessLogService {
     private final Y9logMappingService y9logMappingService;
     private final ElasticsearchClient elasticsearchClient;
     private final ElasticsearchOperations elasticsearchOperations;
-    
-    
-	@Override
-	public Map<String, Object> getAppClickCount(String orgId, String orgType, String tenantId, String startDay, String endDay) throws UnknownHostException {
-		// TODO Auto-generated method stub
-		return null;
-	}
-	@Override
-	public Map<String, Object> getModuleNameCount(String orgId, String orgType, String tenantId, String startDay, String endDay) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-	@Override
-	public Map<String, Object> getOperateStatusCount(String selectedDate) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-	@Override
-	public List<String> listAccessLog(String startTime, String endTime, String loginName, String tenantId) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-	@Override
-	public List<Long> listOperateTimeCount(String startDay, String endDay) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-	@Override
-	public Page<Y9logAccessLog> page(int page, int rows, String sort) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-	@Override
-	public Y9Page<AccessLog> pageByCondition(LogInfoModel search, String startTime, String endTime, Integer page, Integer rows) throws ParseException {
-		// TODO Auto-generated method stub
-		return null;
-	}
-	@Override
-	public Y9Page<AccessLog> pageByOperateType(String operateType, Integer page, Integer rows) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-	@Override
-	public Y9Page<AccessLog> pageByOrgType(String tenantId, String orgId, String orgType, String operateType, Integer page, Integer rows) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-	@Override
-	public Page<Y9logAccessLog> pageByTenantIdAndManagerLevelAndUserId(String tenantId, String managerLevel, String userId, int page, int rows, String sort) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-	@Override
-	public Page<Y9logAccessLog> pageElapsedTimeByCondition(LogInfoModel search, String startDay, String endDay, String startTime, String endTime, int rows, int page) throws ParseException {
-		// TODO Auto-generated method stub
-		return null;
-	}
-	@Override
-	public Page<Y9logAccessLog> pageOperateStatusByOperateStatus(LogInfoModel search, String operateStatus, String date, String hour, Integer page, Integer rows) throws ParseException {
-		// TODO Auto-generated method stub
-		return null;
-	}
-	@Override
-	public Page<Y9logAccessLog> pageSearchByCondition(LogInfoModel search, String startTime, String endTime, Integer page, Integer rows) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-	@Override
-	public void save(Y9logAccessLog y9logAccessLog) {
-		// TODO Auto-generated method stub
-		
-	}
-	@Override
-	public Page<Y9logAccessLog> searchQuery(String tenantId, String managerLevel, LogInfoModel loginInfoModel, int page, int rows) {
-		// TODO Auto-generated method stub
-		return null;
-	}
 
+    @Override
+    public Map<String, Object> getAppClickCount(String orgId, String orgType, String tenantId, String startDay,
+        String endDay) throws UnknownHostException {
+        // TODO Auto-generated method stub
+        return null;
+    }
+
+    @Override
+    public Map<String, Object> getModuleNameCount(String orgId, String orgType, String tenantId, String startDay,
+        String endDay) {
+        // TODO Auto-generated method stub
+        return null;
+    }
+
+    @Override
+    public Map<String, Object> getOperateStatusCount(String selectedDate) {
+        // TODO Auto-generated method stub
+        return null;
+    }
+
+    @Override
+    public List<String> listAccessLog(String startTime, String endTime, String loginName, String tenantId) {
+        // TODO Auto-generated method stub
+        return null;
+    }
+
+    @Override
+    public List<Long> listOperateTimeCount(String startDay, String endDay) {
+        // TODO Auto-generated method stub
+        return null;
+    }
+
+    @Override
+    public Page<Y9logAccessLog> page(int page, int rows, String sort) {
+        // TODO Auto-generated method stub
+        return null;
+    }
+
+    @Override
+    public Y9Page<AccessLog> pageByCondition(LogInfoModel search, String startTime, String endTime, Integer page,
+        Integer rows) throws ParseException {
+        // TODO Auto-generated method stub
+        return null;
+    }
+
+    @Override
+    public Y9Page<AccessLog> pageByOperateType(String operateType, Integer page, Integer rows) {
+        // TODO Auto-generated method stub
+        return null;
+    }
+
+    @Override
+    public Y9Page<AccessLog> pageByOrgType(String tenantId, String orgId, String orgType, String operateType,
+        Integer page, Integer rows) {
+        // TODO Auto-generated method stub
+        return null;
+    }
+
+    @Override
+    public Page<Y9logAccessLog> pageByTenantIdAndManagerLevelAndUserId(String tenantId, String managerLevel,
+        String userId, int page, int rows, String sort) {
+        // TODO Auto-generated method stub
+        return null;
+    }
+
+    @Override
+    public Page<Y9logAccessLog> pageElapsedTimeByCondition(LogInfoModel search, String startDay, String endDay,
+        String startTime, String endTime, int rows, int page) throws ParseException {
+        // TODO Auto-generated method stub
+        return null;
+    }
+
+    @Override
+    public Page<Y9logAccessLog> pageOperateStatusByOperateStatus(LogInfoModel search, String operateStatus, String date,
+        String hour, Integer page, Integer rows) throws ParseException {
+        // TODO Auto-generated method stub
+        return null;
+    }
+
+    @Override
+    public Page<Y9logAccessLog> pageSearchByCondition(LogInfoModel search, String startTime, String endTime,
+        Integer page, Integer rows) {
+        // TODO Auto-generated method stub
+        return null;
+    }
+
+    @Override
+    public void save(Y9logAccessLog y9logAccessLog) {
+        // TODO Auto-generated method stub
+
+    }
+
+    @Override
+    public Page<Y9logAccessLog> searchQuery(String tenantId, String managerLevel, LogInfoModel loginInfoModel, int page,
+        int rows) {
+        // TODO Auto-generated method stub
+        return null;
+    }
+
+    // FIXME elasticsearch
     /*
     // 目前日志查询页有两种情况：一种是有开始时间和结束时间，另一种是只选一个时间
     private String[] createIndexNames(String startDate, String endDate) {
         List<String> indexNameList = new ArrayList<>();
         if (StringUtils.isBlank(startDate) && StringUtils.isBlank(endDate)) {
             indexNameList.add(getCurrentYearIndexName());
-
+    
         } else if (null != startDate && StringUtils.isBlank(endDate)) {
             String yearString = startDate.split("-")[0];
             indexNameList.add(Y9ESIndexConst.ACCESS_LOG_INDEX + "-" + yearString);
-
+    
         } else {
             int minYearInt = Integer.parseInt(startDate.split("-")[0]);
             int maxYearInt = Integer.parseInt(endDate.split("-")[0]);
@@ -160,7 +185,7 @@ public class Y9logAccessLogServiceImpl implements Y9logAccessLogService {
         }
         return indexNameList.toArray(new String[0]);
     }
-
+    
     @Override
     public Map<String, Object> getAppClickCount(String orgId, String orgType, String tenantId, String startDay,
         String endDay) throws UnknownHostException {
@@ -168,7 +193,7 @@ public class Y9logAccessLogServiceImpl implements Y9logAccessLogService {
         Map<String, Object> returnMap = new HashMap<>();
         List<String> strList = new ArrayList<>();
         List<Long> longList = new ArrayList<>();
-
+    
         SearchResponse response = null;
         BoolQueryBuilder query = QueryBuilders.boolQuery();
         query.must(QueryBuilders.queryStringQuery("net.risesoft.controller.admin.WebsiteController.saveAppCheckCount")
@@ -179,7 +204,7 @@ public class Y9logAccessLogServiceImpl implements Y9logAccessLogService {
         if (StringUtils.isNotBlank(guidPath)) {
             query.must(QueryBuilders.queryStringQuery(guidPath + "*").field(Y9LogSearchConsts.GUID_PATH));
         }
-
+    
         if (StringUtils.isNotBlank(startDay) && StringUtils.isNotBlank(endDay)) {
             Date sDay = new Date();
             Date eDay = new Date();
@@ -191,7 +216,7 @@ public class Y9logAccessLogServiceImpl implements Y9logAccessLogService {
             }
             query.must(QueryBuilders.rangeQuery(Y9LogSearchConsts.LOG_TIME).from(sDay.getTime()).to(eDay.getTime()));
         }
-
+    
         SearchSourceBuilder searchSourceBuilder = new SearchSourceBuilder();
         searchSourceBuilder.query(query)
             .aggregation(AggregationBuilders.terms("by_appName").size(10000).field(Y9LogSearchConsts.METHOD_NAME));
@@ -203,7 +228,7 @@ public class Y9logAccessLogServiceImpl implements Y9logAccessLogService {
         } catch (IOException e) {
             LOGGER.warn(e.getMessage(), e);
         }
-
+    
         Terms terms = response.getAggregations().get("by_appName");
         int length = terms.getBuckets().size();
         for (int i = length - 1; i >= 0; i--) {
@@ -216,14 +241,14 @@ public class Y9logAccessLogServiceImpl implements Y9logAccessLogService {
         returnMap.put("value", longList);
         return returnMap;
     }
-
+    
     public long getCountByQueryCondition(BoolQueryBuilder query, String startDay, String endDay) {
         String tenantId = Y9LoginUserHolder.getTenantId();
-
+    
         if (!getTenantType(tenantId).equals(1)) {
             query.must(QueryBuilders.queryStringQuery(tenantId).field(Y9LogSearchConsts.TENANT_ID));
         }
-
+    
         SearchRequest searchRequest = new SearchRequest(createIndexNames(startDay, endDay));
         searchRequest.searchType(SearchType.DFS_QUERY_THEN_FETCH);
         SearchSourceBuilder searchSourceBuilder = new SearchSourceBuilder();
@@ -235,15 +260,15 @@ public class Y9logAccessLogServiceImpl implements Y9logAccessLogService {
         } catch (IOException e) {
             LOGGER.warn(e.getMessage(), e);
         }
-
+    
         return count;
     }
-
+    
     public String getCurrentYearIndexName() {
         String yearStr = String.valueOf(new DateTime().getYear());
         return Y9ESIndexConst.ACCESS_LOG_INDEX + "-" + yearStr;
     }
-
+    
     public String getGuidPath(String orgId, String orgType, String tenantId) {
         String guidPath = null;
         if (StringUtils.isNotBlank(orgId) && StringUtils.isNotBlank(orgType)) {
@@ -265,7 +290,7 @@ public class Y9logAccessLogServiceImpl implements Y9logAccessLogService {
         }
         return guidPath;
     }
-
+    
     @Override
     public Map<String, Object> getModuleNameCount(String orgId, String orgType, String tenantId, String startDay,
         String endDay) {
@@ -276,7 +301,7 @@ public class Y9logAccessLogServiceImpl implements Y9logAccessLogService {
         SearchResponse response = null;
         BoolQueryBuilder query = QueryBuilders.boolQuery();
         query.must(QueryBuilders.existsQuery(Y9LogSearchConsts.USER_NAME));
-
+    
         if (StringUtils.isNotBlank(guidPath)) {
             // guidPath = Y9Util.escape(guidPath);
             query.must(QueryBuilders.queryStringQuery(guidPath + "*").field(Y9LogSearchConsts.GUID_PATH));
@@ -284,7 +309,7 @@ public class Y9logAccessLogServiceImpl implements Y9logAccessLogService {
         if (StringUtils.isNotBlank(tenantId)) {
             query.must(QueryBuilders.queryStringQuery(tenantId).field(Y9LogSearchConsts.TENANT_ID));
         }
-
+    
         if (StringUtils.isNotBlank(startDay) && StringUtils.isNotBlank(endDay)) {
             Date sDay = new Date();
             Date eDay = new Date();
@@ -296,7 +321,7 @@ public class Y9logAccessLogServiceImpl implements Y9logAccessLogService {
             }
             query.must(QueryBuilders.rangeQuery(Y9LogSearchConsts.LOG_TIME).from(sDay.getTime()).to(eDay.getTime()));
         }
-
+    
         SearchRequest request = new SearchRequest(createIndexNames(startDay, endDay));
         SearchSourceBuilder searchSourceBuilder = new SearchSourceBuilder();
         searchSourceBuilder.query(query)
@@ -323,7 +348,7 @@ public class Y9logAccessLogServiceImpl implements Y9logAccessLogService {
         map.put("number", num);
         return map;
     }
-
+    
     @SuppressWarnings("deprecation")
     @Override
     public Map<String, Object> getOperateStatusCount(String selectedDate) {
@@ -350,22 +375,22 @@ public class Y9logAccessLogServiceImpl implements Y9logAccessLogService {
                 cal.add(Calendar.MINUTE, 59);
                 cal.add(Calendar.SECOND, 59);
                 endOfTime = cal.getTime();
-
+    
                 BoolQueryBuilder squery = QueryBuilders.boolQuery();
                 BoolQueryBuilder equery = QueryBuilders.boolQuery();
-
+    
                 squery.must(QueryBuilders.queryStringQuery(success).field(Y9LogSearchConsts.SUCCESS));
                 squery.must(QueryBuilders.existsQuery(Y9LogSearchConsts.USER_NAME));
                 squery.must(QueryBuilders.rangeQuery(Y9LogSearchConsts.LOG_TIME).from(startOfTime.getTime())
                     .to(endOfTime.getTime()));
                 countOfSuccess.add(getCountByQueryCondition(squery, selectedDate, null));
-
+    
                 equery.must(QueryBuilders.queryStringQuery(error).field(Y9LogSearchConsts.SUCCESS));
                 equery.must(QueryBuilders.existsQuery(Y9LogSearchConsts.USER_NAME));
                 equery.must(QueryBuilders.rangeQuery(Y9LogSearchConsts.LOG_TIME).from(startOfTime.getTime())
                     .to(endOfTime.getTime()));
                 countOfError.add(getCountByQueryCondition(equery, selectedDate, null));
-
+    
                 time.add(startOfTime.getHours());
             }
         }
@@ -374,28 +399,28 @@ public class Y9logAccessLogServiceImpl implements Y9logAccessLogService {
         map.put("totalOfError", countOfError);
         return map;
     }
-
+    
     private Page<Y9logAccessLog> getSearchList(QueryBuilder query, Integer page, Integer rows, String startDay,
         String endDay) {
         IndexCoordinates index = IndexCoordinates.of(createIndexNames(startDay, endDay));
-
+    
         PageRequest pageable =
             PageRequest.of((page < 1) ? 0 : page - 1, rows, Direction.DESC, Y9LogSearchConsts.LOG_TIME);
         NativeSearchQuery searchQuery = new NativeSearchQueryBuilder().withQuery(query).withPageable(pageable).build();
         searchQuery.setTrackTotalHits(true);
         SearchHits<Y9logAccessLog> searchHits =
             elasticsearchOperations.search(searchQuery, Y9logAccessLog.class, index);
-
+    
         List<Y9logAccessLog> list = searchHits.stream().map(SearchHit::getContent).collect(Collectors.toList());
         Page<Y9logAccessLog> pageResult = new PageImpl<>(list, pageable, searchHits.getTotalHits());
         return pageResult;
     }
-
+    
     private List<String> getTenantIds() {
         List<Tenant> tenantList = tenantManager.listAllTenants();
         return tenantList.stream().map(Tenant::getId).collect(Collectors.toList());
     }
-
+    
     private Integer getTenantType(String tenantId) {
         Integer num = 0;
         Tenant tenant = tenantManager.getById(tenantId);
@@ -404,7 +429,7 @@ public class Y9logAccessLogServiceImpl implements Y9logAccessLogService {
         }
         return num;
     }
-
+    
     @Override
     public List<String> listAccessLog(String startTime, String endTime, String loginName, String tenantId) {
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
@@ -417,7 +442,7 @@ public class Y9logAccessLogServiceImpl implements Y9logAccessLogService {
         } catch (ParseException e1) {
             LOGGER.warn(e1.getMessage(), e1);
         }
-
+    
         BoolQueryBuilder query = QueryBuilders.boolQuery();
         query.must(QueryBuilders.queryStringQuery(loginName).field(Y9LogSearchConsts.USER_NAME));
         query
@@ -425,7 +450,7 @@ public class Y9logAccessLogServiceImpl implements Y9logAccessLogService {
         if (StringUtils.isNotBlank(tenantId)) {
             query.must(QueryBuilders.queryStringQuery(tenantId).field(Y9LogSearchConsts.TENANT_ID));
         }
-
+    
         SearchRequest searchRequest =
             new SearchRequest(createIndexNames(startTime, endTime)).searchType(SearchType.DFS_QUERY_THEN_FETCH);
         SearchSourceBuilder searchSourceBuilder = new SearchSourceBuilder();
@@ -443,14 +468,14 @@ public class Y9logAccessLogServiceImpl implements Y9logAccessLogService {
         }
         return strList;
     }
-
+    
     @Override
     public List<Long> listOperateTimeCount(String startDay, String endDay) {
         Date sDay = null;
         Date eDay = null;
         List<Long> list = new ArrayList<>();
         long[] longArray = {1L, 1000000L, 10000000L, 100000000L, 1000000000L, 5000000000L, 10000000000L};
-
+    
         if (StringUtils.isNotBlank(startDay)) {
             try {
                 Date day = new SimpleDateFormat("yyyy-MM-dd").parse(startDay);
@@ -481,26 +506,26 @@ public class Y9logAccessLogServiceImpl implements Y9logAccessLogService {
         }
         return list;
     }
-
+    
     @Override
     public Page<Y9logAccessLog> page(int page, int rows, String sort) {
         IndexCoordinates index = IndexCoordinates.of(getCurrentYearIndexName());
         NativeSearchQueryBuilder searchQueryBuilder = new NativeSearchQueryBuilder();
         Pageable pageable;
-
+    
         String tenantId = Y9LoginUserHolder.getTenantId();
         BoolQueryBuilder query = QueryBuilders.boolQuery();
         query.must(QueryBuilders.existsQuery(Y9LogSearchConsts.USER_NAME));
         if (tenantId != null) {
             query.must(QueryBuilders.queryStringQuery(tenantId).field(Y9LogSearchConsts.TENANT_ID));
         }
-
+    
         if (StringUtils.isNoneBlank(sort)) {
             pageable = PageRequest.of((page < 1) ? 0 : page - 1, rows, Direction.DESC, sort);
         } else {
             pageable = PageRequest.of((page < 1) ? 0 : page - 1, rows, Direction.DESC, Y9LogSearchConsts.LOG_TIME);
         }
-
+    
         NativeSearchQuery searchQuery = searchQueryBuilder.withQuery(query).withPageable(pageable).build();
         // https://www.elastic.co/guide/en/elasticsearch/reference/7.0/search-request-track-total-hits.html
         searchQuery.setTrackTotalHits(true);
@@ -510,7 +535,7 @@ public class Y9logAccessLogServiceImpl implements Y9logAccessLogService {
         Page<Y9logAccessLog> pageResult = new PageImpl<>(list, pageable, searchHits.getTotalHits());
         return pageResult;
     }
-
+    
     @Override
     public Y9Page<AccessLog> pageByCondition(LogInfoModel searchDto, String startTime, String endTime, Integer page,
         Integer rows) throws ParseException {
@@ -547,7 +572,7 @@ public class Y9logAccessLogServiceImpl implements Y9logAccessLogService {
         query.must(QueryBuilders.queryStringQuery("*").field(Y9LogSearchConsts.USER_NAME));
         Pageable pageable =
             PageRequest.of((page < 1) ? 0 : page - 1, rows, Sort.Direction.DESC, Y9LogSearchConsts.LOG_TIME);
-
+    
         NativeSearchQuery searchQuery = new NativeSearchQueryBuilder().withQuery(query).withPageable(pageable).build();
         searchQuery.setTrackTotalHits(true);
         SearchHits<Y9logAccessLog> searchHits =
@@ -559,7 +584,7 @@ public class Y9logAccessLogServiceImpl implements Y9logAccessLogService {
         return Y9Page.success(page, total % rows == 0 ? totalPages : totalPages + 1, total,
             AccessLogModelConvertUtil.logEsListToModels(list));
     }
-
+    
     @Override
     public Y9Page<AccessLog> pageByOperateType(String operateType, Integer page, Integer rows) {
         IndexCoordinates index = IndexCoordinates.of(getCurrentYearIndexName());
@@ -567,7 +592,7 @@ public class Y9logAccessLogServiceImpl implements Y9logAccessLogService {
         query.must(QueryBuilders.queryStringQuery(operateType).field(Y9LogSearchConsts.OPERATE_TYPE));
         Pageable pageable =
             PageRequest.of((page < 1) ? 0 : page - 1, rows, Sort.Direction.DESC, Y9LogSearchConsts.LOG_TIME);
-
+    
         NativeSearchQuery searchQuery = new NativeSearchQueryBuilder().withQuery(query).withPageable(pageable).build();
         searchQuery.setTrackTotalHits(true);
         SearchHits<Y9logAccessLog> searchHits =
@@ -579,7 +604,7 @@ public class Y9logAccessLogServiceImpl implements Y9logAccessLogService {
         return Y9Page.success(page, total % rows == 0 ? totalPages : totalPages + 1, total,
             AccessLogModelConvertUtil.logEsListToModels(list));
     }
-
+    
     @Override
     public Y9Page<AccessLog> pageByOrgType(String tenantId, String orgId, String orgType, String operateType,
         Integer page, Integer rows) {
@@ -605,13 +630,13 @@ public class Y9logAccessLogServiceImpl implements Y9logAccessLogService {
                         .and(new Criteria(Y9LogSearchConsts.USER_ID).in(ids)))
                         .setPageable(PageRequest.of((page < 1) ? 0 : page - 1, rows))
                         .addSort(Sort.by(Order.desc(Y9LogSearchConsts.LOG_TIME)));
-
+    
                 SearchHits<Y9logAccessLog> searchHits =
                     elasticsearchOperations.search(criteriaQuery, Y9logAccessLog.class, index);
                 List<Y9logAccessLog> list =
                     searchHits.stream().map(org.springframework.data.elasticsearch.core.SearchHit::getContent)
                         .collect(Collectors.toList());
-
+    
                 long total = searchHits.getTotalHits();
                 int totalPages = (int)total / rows;
                 return Y9Page.success(page, total % rows == 0 ? totalPages : totalPages + 1, total,
@@ -622,14 +647,14 @@ public class Y9logAccessLogServiceImpl implements Y9logAccessLogService {
         }
         return null;
     }
-
+    
     @Override
     public Page<Y9logAccessLog> pageByTenantIdAndManagerLevelAndUserId(String tenantId, String managerLevel,
         String userId, int page, int rows, String sort) {
         IndexCoordinates index = IndexCoordinates.of(getCurrentYearIndexName());
         NativeSearchQueryBuilder searchQueryBuilder = new NativeSearchQueryBuilder();
         Pageable pageable;
-
+    
         BoolQueryBuilder queryBuilder = QueryBuilders.boolQuery();
         queryBuilder.must(QueryBuilders.existsQuery(Y9LogSearchConsts.USER_NAME));
         if (tenantId != null) {
@@ -646,7 +671,7 @@ public class Y9logAccessLogServiceImpl implements Y9logAccessLogService {
         } else {
             pageable = PageRequest.of((page < 1) ? 0 : page - 1, rows, Direction.DESC, Y9LogSearchConsts.LOG_TIME);
         }
-
+    
         NativeSearchQuery searchQuery = searchQueryBuilder.withQuery(queryBuilder).withPageable(pageable).build();
         // https://www.elastic.co/guide/en/elasticsearch/reference/7.0/search-request-track-total-hits.html
         searchQuery.setTrackTotalHits(true);
@@ -656,7 +681,7 @@ public class Y9logAccessLogServiceImpl implements Y9logAccessLogService {
         Page<Y9logAccessLog> pageResult = new PageImpl<>(list, pageable, searchHits.getTotalHits());
         return pageResult;
     }
-
+    
     @Override
     public Page<Y9logAccessLog> pageElapsedTimeByCondition(LogInfoModel searchDto, String startDay, String endDay,
         String sTime, String lTime, int rows, int page) throws ParseException {
@@ -693,7 +718,7 @@ public class Y9logAccessLogServiceImpl implements Y9logAccessLogService {
         Page<Y9logAccessLog> esPage = getSearchList(query, page, rows, startDay, endDay);
         return esPage;
     }
-
+    
     @Override
     public Page<Y9logAccessLog> pageOperateStatusByOperateStatus(LogInfoModel searchDto, String operateStatus,
         String date, String hour, Integer page, Integer rows) throws ParseException {
@@ -735,7 +760,7 @@ public class Y9logAccessLogServiceImpl implements Y9logAccessLogService {
         }
         return getSearchList(query, page, rows, date, null);
     }
-
+    
     @Override
     public Page<Y9logAccessLog> pageSearchByCondition(LogInfoModel searchDto, String startTime, String endTime,
         Integer page, Integer rows) {
@@ -785,19 +810,19 @@ public class Y9logAccessLogServiceImpl implements Y9logAccessLogService {
         Page<Y9logAccessLog> esPage = getSearchList(query, page, rows, startTime, endTime);
         return esPage;
     }
-
+    
     @Override
     public void save(Y9logAccessLog y9logAccessLog) {
         elasticsearchOperations.save(y9logAccessLog);
     }
-
+    
     @Override
     public Page<Y9logAccessLog> searchQuery(String tenantId, String managerLevel, LogInfoModel loginInfoModel, int page,
         int rows) {
         IndexCoordinates index = IndexCoordinates.of(getCurrentYearIndexName());
         NativeSearchQueryBuilder searchQueryBuilder = new NativeSearchQueryBuilder();
         Pageable pageable;
-
+    
         BoolQueryBuilder queryBuilder = QueryBuilders.boolQuery();
         // queryBuilder.must(QueryBuilders.existsQuery(USER_NAME));
         if (StringUtils.isNotBlank(tenantId)) {
@@ -853,13 +878,13 @@ public class Y9logAccessLogServiceImpl implements Y9logAccessLogService {
                 LOGGER.warn(e.getMessage(), e);
             }
         }
-
+    
         if (StringUtils.isNotBlank(loginInfoModel.getSortName())) {
             pageable = PageRequest.of((page < 1) ? 0 : page - 1, rows, Direction.DESC, loginInfoModel.getSortName());
         } else {
             pageable = PageRequest.of((page < 1) ? 0 : page - 1, rows, Direction.DESC, Y9LogSearchConsts.LOG_TIME);
         }
-
+    
         NativeSearchQuery searchQuery = searchQueryBuilder.withQuery(queryBuilder).withPageable(pageable).build();
         // https://www.elastic.co/guide/en/elasticsearch/reference/7.0/search-request-track-total-hits.html
         searchQuery.setTrackTotalHits(true);

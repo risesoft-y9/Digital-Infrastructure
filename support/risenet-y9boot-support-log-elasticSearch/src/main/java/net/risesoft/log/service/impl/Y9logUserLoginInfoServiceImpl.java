@@ -8,14 +8,16 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.elasticsearch.client.elc.ElasticsearchTemplate;
 import org.springframework.stereotype.Service;
 
-import co.elastic.clients.elasticsearch.ElasticsearchClient;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+
 import net.risesoft.log.entity.Y9logUserLoginInfo;
 import net.risesoft.log.repository.Y9logUserLoginInfoRepository;
 import net.risesoft.log.service.Y9logUserLoginInfoService;
 import net.risesoft.model.log.LogInfoModel;
 import net.risesoft.pojo.Y9Page;
+
+import co.elastic.clients.elasticsearch.ElasticsearchClient;
 
 /**
  *
@@ -31,114 +33,143 @@ public class Y9logUserLoginInfoServiceImpl implements Y9logUserLoginInfoService 
     private final ElasticsearchClient elasticsearchClient;
     private final Y9logUserLoginInfoRepository y9logUserLoginInfoRepository;
     private final ElasticsearchTemplate elasticsearchTemplate;
-    
-	@Override
-	public long countByLoginTimeBetweenAndSuccess(Date startTime, Date endTime, String success) {
-		// TODO Auto-generated method stub
-		return 0;
-	}
-	@Override
-	public Integer countByPersonId(String personId) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-	@Override
-	public long countBySuccessAndUserHostIpAndUserId(String success, String userHostIp, String userId) {
-		// TODO Auto-generated method stub
-		return 0;
-	}
-	@Override
-	public long countByUserHostIpAndSuccess(String userHostIp, String success) {
-		// TODO Auto-generated method stub
-		return 0;
-	}
-	@Override
-	public long countByUserHostIpAndSuccessAndUserName(String userHostIp, String success, String userName) {
-		// TODO Auto-generated method stub
-		return 0;
-	}
-	@Override
-	public long countByUserHostIpLikeAndLoginTimeBetweenAndSuccess(String userHostIp, Date startTime, Date endTime, String success) {
-		// TODO Auto-generated method stub
-		return 0;
-	}
-	@Override
-	public Iterable<Y9logUserLoginInfo> listAll() {
-		// TODO Auto-generated method stub
-		return null;
-	}
-	@Override
-	public List<Object[]> listDistinctUserHostIpByUserIdAndLoginTime(String userId, Date startTime, Date endTime) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-	@Override
-	public List<Map<String, Object>> listUserHostIpByCip(String cip) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-	@Override
-	public List<String> listUserHostIpByUserId(String userId, String success) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-	@Override
-	public Y9Page<Y9logUserLoginInfo> page(String userHostIp, String userId, String success, String startTime, String endTime, int page, int rows) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-	@Override
-	public Page<Y9logUserLoginInfo> pageBySuccessAndServerIpAndUserName(String success, String userHostIp, String userId, int page, int rows) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-	@Override
-	public Page<Y9logUserLoginInfo> pageByTenantIdAndManagerLevel(String tenantId, String managerLevel, int page, int rows) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-	@Override
-	public Y9Page<Map<String, Object>> pageByUserHostIpAndSuccess(String userHostIp, String success, int page, int rows) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-	@Override
-	public Y9Page<Map<String, Object>> pageByUserHostIpAndSuccessAndUserNameLike(String userHostIp, String success, String userName, int page, int rows) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-	@Override
-	public Y9Page<Y9logUserLoginInfo> pageByUserHostIpAndUserIdAndTenantIdAndLoginTime(String hostIp, String personId, String tenantId, String success, String startTime, String endTime, int page, int rows) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-	@Override
-	public void save(Y9logUserLoginInfo y9logUserLoginInfo) {
-		// TODO Auto-generated method stub
-		
-	}
-	@Override
-	public Y9Page<Y9logUserLoginInfo> search(Date startTime, Date endTime, String success, int page, int rows) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-	@Override
-	public Y9Page<Y9logUserLoginInfo> search(String userHostIp, Date startTime, Date endTime, String success, int page, int rows) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-	@Override
-	public Y9Page<Y9logUserLoginInfo> searchQuery(String tenantId, String managerLevel, LogInfoModel loginInfoModel, int page, int rows) {
-		// TODO Auto-generated method stub
-		return null;
-	}
 
+    @Override
+    public long countByLoginTimeBetweenAndSuccess(Date startTime, Date endTime, String success) {
+        // TODO Auto-generated method stub
+        return 0;
+    }
+
+    @Override
+    public Integer countByPersonId(String personId) {
+        // TODO Auto-generated method stub
+        return null;
+    }
+
+    @Override
+    public long countBySuccessAndUserHostIpAndUserId(String success, String userHostIp, String userId) {
+        // TODO Auto-generated method stub
+        return 0;
+    }
+
+    @Override
+    public long countByUserHostIpAndSuccess(String userHostIp, String success) {
+        // TODO Auto-generated method stub
+        return 0;
+    }
+
+    @Override
+    public long countByUserHostIpAndSuccessAndUserName(String userHostIp, String success, String userName) {
+        // TODO Auto-generated method stub
+        return 0;
+    }
+
+    @Override
+    public long countByUserHostIpLikeAndLoginTimeBetweenAndSuccess(String userHostIp, Date startTime, Date endTime,
+        String success) {
+        // TODO Auto-generated method stub
+        return 0;
+    }
+
+    @Override
+    public Iterable<Y9logUserLoginInfo> listAll() {
+        // TODO Auto-generated method stub
+        return null;
+    }
+
+    @Override
+    public List<Object[]> listDistinctUserHostIpByUserIdAndLoginTime(String userId, Date startTime, Date endTime) {
+        // TODO Auto-generated method stub
+        return null;
+    }
+
+    @Override
+    public List<Map<String, Object>> listUserHostIpByCip(String cip) {
+        // TODO Auto-generated method stub
+        return null;
+    }
+
+    @Override
+    public List<String> listUserHostIpByUserId(String userId, String success) {
+        // TODO Auto-generated method stub
+        return null;
+    }
+
+    @Override
+    public Y9Page<Y9logUserLoginInfo> page(String userHostIp, String userId, String success, String startTime,
+        String endTime, int page, int rows) {
+        // TODO Auto-generated method stub
+        return null;
+    }
+
+    @Override
+    public Page<Y9logUserLoginInfo> pageBySuccessAndServerIpAndUserName(String success, String userHostIp,
+        String userId, int page, int rows) {
+        // TODO Auto-generated method stub
+        return null;
+    }
+
+    @Override
+    public Page<Y9logUserLoginInfo> pageByTenantIdAndManagerLevel(String tenantId, String managerLevel, int page,
+        int rows) {
+        // TODO Auto-generated method stub
+        return null;
+    }
+
+    @Override
+    public Y9Page<Map<String, Object>> pageByUserHostIpAndSuccess(String userHostIp, String success, int page,
+        int rows) {
+        // TODO Auto-generated method stub
+        return null;
+    }
+
+    @Override
+    public Y9Page<Map<String, Object>> pageByUserHostIpAndSuccessAndUserNameLike(String userHostIp, String success,
+        String userName, int page, int rows) {
+        // TODO Auto-generated method stub
+        return null;
+    }
+
+    @Override
+    public Y9Page<Y9logUserLoginInfo> pageByUserHostIpAndUserIdAndTenantIdAndLoginTime(String hostIp, String personId,
+        String tenantId, String success, String startTime, String endTime, int page, int rows) {
+        // TODO Auto-generated method stub
+        return null;
+    }
+
+    @Override
+    public void save(Y9logUserLoginInfo y9logUserLoginInfo) {
+        // TODO Auto-generated method stub
+
+    }
+
+    @Override
+    public Y9Page<Y9logUserLoginInfo> search(Date startTime, Date endTime, String success, int page, int rows) {
+        // TODO Auto-generated method stub
+        return null;
+    }
+
+    @Override
+    public Y9Page<Y9logUserLoginInfo> search(String userHostIp, Date startTime, Date endTime, String success, int page,
+        int rows) {
+        // TODO Auto-generated method stub
+        return null;
+    }
+
+    @Override
+    public Y9Page<Y9logUserLoginInfo> searchQuery(String tenantId, String managerLevel, LogInfoModel loginInfoModel,
+        int page, int rows) {
+        // TODO Auto-generated method stub
+        return null;
+    }
+
+    // FIXME elasticsearch
     /*
     @Override
     public long countByLoginTimeBetweenAndSuccess(Date startTime, Date endTime, String success) {
         IndexCoordinates index = IndexCoordinates.of(Y9ESIndexConst.LOGIN_INFO_INDEX);
         BoolQueryBuilder builder = QueryBuilders.boolQuery();
-
+    
         if (StringUtils.isNotBlank(success)) {
             builder.must(QueryBuilders.queryStringQuery(success).field(Y9LogSearchConsts.SUCCESS));
         }
@@ -147,19 +178,19 @@ public class Y9logUserLoginInfoServiceImpl implements Y9logUserLoginInfoService 
         NativeSearchQuery query = new NativeSearchQueryBuilder().withQuery(builder).build();
         return elasticsearchOperations.count(query, index);
     }
-
+    
     @Override
     public Integer countByPersonId(String personId) {
         String parserPersonId = Y9Util.escape(personId);
         List<Y9logUserLoginInfo> list = y9logUserLoginInfoRepository.findByUserId(parserPersonId);
         return list.size();
     }
-
+    
     @Override
     public long countBySuccessAndUserHostIpAndUserId(String success, String userHostIp, String userId) {
         IndexCoordinates index = IndexCoordinates.of(Y9ESIndexConst.LOGIN_INFO_INDEX);
         BoolQueryBuilder builder = QueryBuilders.boolQuery();
-
+    
         if (StringUtils.isNotBlank(success)) {
             builder.must(QueryBuilders.queryStringQuery(success).field(Y9LogSearchConsts.SUCCESS));
         }
@@ -174,7 +205,7 @@ public class Y9logUserLoginInfoServiceImpl implements Y9logUserLoginInfoService 
         NativeSearchQuery nativeSearchQuery = new NativeSearchQueryBuilder().withQuery(builder).build();
         return elasticsearchOperations.count(nativeSearchQuery, index);
     }
-
+    
     @Override
     public long countByUserHostIpAndSuccess(String userHostIp, String success) {
         long count = 0L;
@@ -199,18 +230,18 @@ public class Y9logUserLoginInfoServiceImpl implements Y9logUserLoginInfoService 
         }
         return count;
     }
-
+    
     @Override
     public long countByUserHostIpAndSuccessAndUserName(String userHostIp, String success, String userName) {
         return y9logUserLoginInfoRepository.countByUserHostIpAndSuccessAndUserName(userHostIp, success, userName);
     }
-
+    
     @Override
     public long countByUserHostIpLikeAndLoginTimeBetweenAndSuccess(String userHostIp, Date startTime, Date endTime,
         String success) {
         IndexCoordinates index = IndexCoordinates.of(Y9ESIndexConst.LOGIN_INFO_INDEX);
         BoolQueryBuilder builder = QueryBuilders.boolQuery();
-
+    
         if (StringUtils.isNotBlank(userHostIp)) {
             builder.must(QueryBuilders.wildcardQuery(Y9LogSearchConsts.USER_HOST_IP, userHostIp + "*"));
         }
@@ -220,15 +251,15 @@ public class Y9logUserLoginInfoServiceImpl implements Y9logUserLoginInfoService 
         builder.must(
             QueryBuilders.rangeQuery(Y9LogSearchConsts.LOGIN_TIME).from(startTime.getTime()).to(endTime.getTime()));
         NativeSearchQuery query = new NativeSearchQueryBuilder().withQuery(builder).build();
-
+    
         return elasticsearchOperations.count(query, index);
     }
-
+    
     @Override
     public Iterable<Y9logUserLoginInfo> listAll() {
         return y9logUserLoginInfoRepository.findAll();
     }
-
+    
     @Override
     public List<Object[]> listDistinctUserHostIpByUserIdAndLoginTime(String userId, Date startTime, Date endTime) {
         List<Object[]> strList = new ArrayList<>();
@@ -265,7 +296,7 @@ public class Y9logUserLoginInfoServiceImpl implements Y9logUserLoginInfoService 
         }
         return strList;
     }
-
+    
     @Override
     public List<Map<String, Object>> listUserHostIpByCip(String cip) {
         List<Map<String, Object>> list = new ArrayList<>();
@@ -273,7 +304,7 @@ public class Y9logUserLoginInfoServiceImpl implements Y9logUserLoginInfoService 
         SearchRequest searchRequest =
             new SearchRequest().indices(Y9ESIndexConst.LOGIN_INFO_INDEX).searchType(SearchType.DFS_QUERY_THEN_FETCH);
         SearchSourceBuilder sourceBuilder = new SearchSourceBuilder();
-
+    
         BoolQueryBuilder boolQueryBuilder = QueryBuilders.boolQuery();
         WildcardQueryBuilder wildcardQueryBuilder =
             QueryBuilders.wildcardQuery(Y9LogSearchConsts.USER_HOST_IP, cip + "*");
@@ -283,7 +314,7 @@ public class Y9logUserLoginInfoServiceImpl implements Y9logUserLoginInfoService 
         TermsAggregationBuilder aggregation = AggregationBuilders.terms("by_UserHostIP")
             .field(Y9LogSearchConsts.USER_HOST_IP).subAggregation(AggregationBuilders.topHits("top").size(1));
         sourceBuilder.aggregation(aggregation);
-
+    
         searchRequest.source(sourceBuilder);
         try {
             searchResponse = elasticsearchRestHighLevelClient.search(searchRequest, RequestOptions.DEFAULT);
@@ -303,7 +334,7 @@ public class Y9logUserLoginInfoServiceImpl implements Y9logUserLoginInfoService 
         }
         return list;
     }
-
+    
     @Override
     public List<String> listUserHostIpByUserId(String userId, String success) {
         String parserUserId = Y9Util.escape(userId);
@@ -313,12 +344,12 @@ public class Y9logUserLoginInfoServiceImpl implements Y9logUserLoginInfoService 
         userHostIpList.addAll(userHostIpSet);
         return userHostIpList;
     }
-
+    
     @Override
     public Y9Page<Y9logUserLoginInfo> page(String userHostIp, String userId, String success, String startTime,
         String endTime, int page, int rows) {
         IndexCoordinates index = IndexCoordinates.of(Y9ESIndexConst.LOGIN_INFO_INDEX);
-
+    
         String parserUserId = Y9Util.escape(userId);
         BoolQueryBuilder builder = QueryBuilders.boolQuery();
         if (StringUtils.isNotBlank(userHostIp)) {
@@ -345,14 +376,14 @@ public class Y9logUserLoginInfoServiceImpl implements Y9logUserLoginInfoService 
             .withSort(SortBuilders.fieldSort(Y9LogSearchConsts.LOGIN_TIME).order(SortOrder.DESC)).build();
         SearchHits<Y9logUserLoginInfo> searchHits =
             elasticsearchOperations.search(nativeSearchQuery, Y9logUserLoginInfo.class, index);
-
+    
         List<Y9logUserLoginInfo> list = searchHits.stream()
             .map(org.springframework.data.elasticsearch.core.SearchHit::getContent).collect(Collectors.toList());
         int totalPages = (int)searchHits.getTotalHits() / rows;
         return Y9Page.success(page, searchHits.getTotalHits() % rows == 0 ? totalPages : totalPages + 1,
             searchHits.getTotalHits(), list);
     }
-
+    
     @Override
     public Page<Y9logUserLoginInfo> pageBySuccessAndServerIpAndUserName(String success, String userHostIp,
         String userId, int page, int rows) {
@@ -364,7 +395,7 @@ public class Y9logUserLoginInfoServiceImpl implements Y9logUserLoginInfoService 
             .findBySuccessAndUserHostIpAndUserId(success, parserUserHostIp, parserUserId, pageable);
         return userLoginInfoPage;
     }
-
+    
     @Override
     public Page<Y9logUserLoginInfo> pageByTenantIdAndManagerLevel(String tenantId, String managerLevel, int page,
         int rows) {
@@ -374,7 +405,7 @@ public class Y9logUserLoginInfoServiceImpl implements Y9logUserLoginInfoService 
             y9logUserLoginInfoRepository.findByTenantIdAndManagerLevel(tenantId, managerLevel, pageable);
         return userLoginInfoPage;
     }
-
+    
     @Override
     public Y9Page<Map<String, Object>> pageByUserHostIpAndSuccess(String userHostIp, String success, int page,
         int rows) {
@@ -403,11 +434,11 @@ public class Y9logUserLoginInfoServiceImpl implements Y9logUserLoginInfoService 
         }
         if (searchResponse != null) {
             totalCount = searchResponse.getHits().getHits().length;
-
+    
             Terms aggs = searchResponse.getAggregations().get("aggs");
             aggs.getBuckets().forEach(bucket -> {
                 long count = bucket.getDocCount();
-
+    
                 TopHits topHits = bucket.getAggregations().get("top");
                 topHits.getHits().forEach(hit -> {
                     Map<String, Object> sourceMap = hit.getSourceAsMap();
@@ -423,7 +454,7 @@ public class Y9logUserLoginInfoServiceImpl implements Y9logUserLoginInfoService 
         }
         return Y9Page.success(page, (int)Math.ceil((float)totalCount / (float)page), totalCount, strList);
     }
-
+    
     @Override
     public Y9Page<Map<String, Object>> pageByUserHostIpAndSuccessAndUserNameLike(String userHostIp, String success,
         String userName, int page, int rows) {
@@ -431,7 +462,7 @@ public class Y9logUserLoginInfoServiceImpl implements Y9logUserLoginInfoService 
         int endIndex = page * rows;
         List<Map<String, Object>> strList = new ArrayList<>();
         Map<String, Object> pageMap = new HashMap<>();
-
+    
         SearchRequest searchRequest = new SearchRequest(Y9ESIndexConst.LOGIN_INFO_INDEX);
         searchRequest.searchType(SearchType.DFS_QUERY_THEN_FETCH);
         SearchSourceBuilder searchSourceBuilder = new SearchSourceBuilder();
@@ -477,7 +508,7 @@ public class Y9logUserLoginInfoServiceImpl implements Y9logUserLoginInfoService 
         }
         return Y9Page.success(page, (int)Math.ceil((float)totalCount / (float)page), totalCount, strList);
     }
-
+    
     @Override
     public Y9Page<Y9logUserLoginInfo> pageByUserHostIpAndUserIdAndTenantIdAndLoginTime(String userHostIp, String userId,
         String tenantId, String success, String startTime, String endTime, int page, int rows) {
@@ -485,7 +516,7 @@ public class Y9logUserLoginInfoServiceImpl implements Y9logUserLoginInfoService 
         Pageable pageable =
             PageRequest.of((page < 1) ? 0 : page - 1, rows, Sort.by(Sort.Direction.ASC, Y9LogSearchConsts.LOGIN_TIME));
         BoolQuery.Builder builder = QueryBuilders.bool();
-
+    
         if (StringUtils.isNotBlank(userHostIp)) {
             builder.must(QueryBuilders.queryStringQuery(userHostIp).field(Y9LogSearchConsts.USER_HOST_IP));
         }
@@ -517,16 +548,16 @@ public class Y9logUserLoginInfoServiceImpl implements Y9logUserLoginInfoService 
         return Y9Page.success(page, searchHits.getTotalHits() % rows == 0 ? totalPages : totalPages + 1,
             searchHits.getTotalHits(), list);
     }
-
+    
     @Override
     public void save(Y9logUserLoginInfo y9logUserLoginInfo) {
         y9logUserLoginInfoRepository.save(y9logUserLoginInfo);
     }
-
+    
     @Override
     public Y9Page<Y9logUserLoginInfo> search(Date startTime, Date endTime, String success, int page, int rows) {
         IndexCoordinates index = IndexCoordinates.of(Y9ESIndexConst.LOGIN_INFO_INDEX);
-
+    
         BoolQueryBuilder builder = QueryBuilders.boolQuery();
         if (StringUtils.isNotBlank(success)) {
             builder.must(QueryBuilders.queryStringQuery(success).field(Y9LogSearchConsts.SUCCESS));
@@ -535,7 +566,7 @@ public class Y9logUserLoginInfoServiceImpl implements Y9logUserLoginInfoService 
             builder.must(
                 QueryBuilders.rangeQuery(Y9LogSearchConsts.LOGIN_TIME).from(startTime.getTime()).to(endTime.getTime()));
         }
-
+    
         NativeSearchQuery query = new NativeSearchQueryBuilder().withQuery(builder)
             .withPageable(PageRequest.of((page < 1) ? 0 : page - 1, rows))
             .withSort(SortBuilders.fieldSort(Y9LogSearchConsts.LOGIN_TIME).order(SortOrder.DESC)).build();
@@ -547,12 +578,12 @@ public class Y9logUserLoginInfoServiceImpl implements Y9logUserLoginInfoService 
         return Y9Page.success(page, searchHits.getTotalHits() % rows == 0 ? totalPages : totalPages + 1,
             searchHits.getTotalHits(), list);
     }
-
+    
     @Override
     public Y9Page<Y9logUserLoginInfo> search(String userHostIp, Date startTime, Date endTime, String success, int page,
         int rows) {
         IndexCoordinates index = IndexCoordinates.of(Y9ESIndexConst.LOGIN_INFO_INDEX);
-
+    
         BoolQueryBuilder builder = QueryBuilders.boolQuery();
         if (StringUtils.isNotBlank(userHostIp)) {
             builder.must(QueryBuilders.wildcardQuery(Y9LogSearchConsts.USER_HOST_IP, userHostIp + "*"));
@@ -569,14 +600,14 @@ public class Y9logUserLoginInfoServiceImpl implements Y9logUserLoginInfoService 
             .withSort(SortBuilders.fieldSort(Y9LogSearchConsts.LOGIN_TIME).order(SortOrder.DESC)).build();
         SearchHits<Y9logUserLoginInfo> searchHits =
             elasticsearchOperations.search(searchQuery, Y9logUserLoginInfo.class, index);
-
+    
         List<Y9logUserLoginInfo> list = searchHits.stream()
             .map(org.springframework.data.elasticsearch.core.SearchHit::getContent).collect(Collectors.toList());
         int totalPages = (int)searchHits.getTotalHits() / rows;
         return Y9Page.success(page, searchHits.getTotalHits() % rows == 0 ? totalPages : totalPages + 1,
             searchHits.getTotalHits(), list);
     }
-
+    
     @Override
     public Y9Page<Y9logUserLoginInfo> searchQuery(String tenantId, String managerLevel, LogInfoModel loginInfoModel,
         int page, int rows) {
@@ -584,7 +615,7 @@ public class Y9logUserLoginInfoServiceImpl implements Y9logUserLoginInfoService 
         Pageable pageable =
             PageRequest.of((page < 1) ? 0 : page - 1, rows, Sort.by(Sort.Direction.DESC, Y9LogSearchConsts.LOGIN_TIME));
         BoolQueryBuilder builder = QueryBuilders.boolQuery();
-
+    
         if (StringUtils.isNotBlank(tenantId)) {
             builder.must(QueryBuilders.queryStringQuery(tenantId).field(Y9LogSearchConsts.TENANT_ID));
         }

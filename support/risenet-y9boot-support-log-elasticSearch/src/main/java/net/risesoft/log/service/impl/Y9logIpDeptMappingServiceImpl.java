@@ -14,11 +14,11 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.domain.Sort.Direction;
 import org.springframework.data.elasticsearch.client.elc.ElasticsearchTemplate;
-import org.springframework.data.elasticsearch.core.ElasticsearchOperations;
 import org.springframework.stereotype.Service;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+
 import net.risesoft.id.IdType;
 import net.risesoft.id.Y9IdGenerator;
 import net.risesoft.log.entity.Y9logIpDeptMapping;
@@ -82,17 +82,18 @@ public class Y9logIpDeptMappingServiceImpl implements Y9logIpDeptMappingService 
         return clientIpSectionList;
     }
 
-	@Override
-	public Y9Page<Y9logIpDeptMapping> pageSearchList(int page, int rows, String clientIpSection, String deptName) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-	
+    @Override
+    public Y9Page<Y9logIpDeptMapping> pageSearchList(int page, int rows, String clientIpSection, String deptName) {
+        // TODO Auto-generated method stub
+        return null;
+    }
+    
+    // FIXME elasticsearch
     /*
     @Override
     public Y9Page<Y9logIpDeptMapping> pageSearchList(int page, int rows, String clientIp4Abc, String deptName) {
         IndexCoordinates index = IndexCoordinates.of(Y9ESIndexConst.IP_DEPT_MAPPING_INDEX);
-
+    
         BoolQueryBuilder query = QueryBuilders.boolQuery();
         query.must(QueryBuilders.existsQuery("clientIpSection"));
         if (StringUtils.isNotBlank(deptName)) {
@@ -106,7 +107,7 @@ public class Y9logIpDeptMappingServiceImpl implements Y9logIpDeptMappingService 
             .withSorts(SortBuilders.fieldSort("clientIpSection").order(SortOrder.ASC)).build();
         SearchHits<Y9logIpDeptMapping> searchHits =
             elasticsearchOperations.search(searchQuery, Y9logIpDeptMapping.class, index);
-
+    
         List<Y9logIpDeptMapping> list = searchHits.stream().map(SearchHit::getContent).collect(Collectors.toList());
         long total = searchHits.getTotalHits();
         int totalPages = (int)total / rows;
