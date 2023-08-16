@@ -1,8 +1,5 @@
 package net.risesoft.y9.util.word;
 
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
@@ -62,7 +59,7 @@ public class Y9WordTool4Docx {
                 List<XWPFTableCell> rowCell = row.getTableCells();
                 for (int i = 0; i < rowCell.size(); i++) {
                     columnMap.put(i + "", rowCell.get(i).getText().trim());
-                    LOGGER.debug("fontSize={}", rowCell.get(i).getParagraphs().get(0).createRun().getFontSize());
+                    LOGGER.debug("fontSize={}", rowCell.get(i).getParagraphs().get(0).createRun().getFontSizeAsDouble());
                     LOGGER.debug("ctp={}", rowCell.get(i).getParagraphs().get(0).getCTP());
                     LOGGER.debug("style={}", rowCell.get(i).getParagraphs().get(0).getStyle());
 
@@ -223,18 +220,6 @@ public class Y9WordTool4Docx {
                     }
                 }
             }
-        } catch (IOException e) {
-            LOGGER.warn(e.getMessage(), e);
-        }
-    }
-
-    public static void saveAs(InputStream is) {
-        File newFile = new File("e:\\test\\Word模版_REPLACE.docx");
-        try (FileOutputStream fos = new FileOutputStream(newFile)) {
-            XWPFDocument document = new XWPFDocument(is);
-            document.write(fos);
-        } catch (FileNotFoundException e) {
-            LOGGER.warn(e.getMessage(), e);
         } catch (IOException e) {
             LOGGER.warn(e.getMessage(), e);
         }
