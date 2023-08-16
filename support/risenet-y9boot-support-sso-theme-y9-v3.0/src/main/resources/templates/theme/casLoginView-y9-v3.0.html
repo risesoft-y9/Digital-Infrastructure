@@ -58,7 +58,6 @@
             <input type="hidden" id="loginType" name="loginType" value="loginName"/>
             <input type="hidden" id="captchaKey" name="captchaKey" value=""/>
             <input type="hidden" id="noLoginScreen" name="noLoginScreen" value="false"/>
-            <input type="hidden" id="isValidateIE" name="isValidateIE" value="true">
             <input type="hidden" id="screenDimension" name="screenDimension" value=""/>
             <input type="hidden" id="pwdEcodeType" name="pwdEcodeType" value=""/>
             <input type="hidden" name="execution" th:value="${flowExecutionKey}"/>
@@ -117,14 +116,6 @@
         try {
             $("#screenDimension").val(window.screen.width + '*' + window.screen.height);
         } catch (e) {
-        }
-        var userAgent = navigator.userAgent.toLowerCase();
-        if (userAgent.indexOf("msie 9") > 0 || userAgent.indexOf("msie 10") > 0 || userAgent.indexOf("rv:11") > 0) {
-            $("#isValidateIE").val("true");
-        } else if (userAgent.indexOf("msie 6") > 0 || userAgent.indexOf("msie 7") > 0 || userAgent.indexOf("msie 8") > 0) {
-            $("#isValidateIE").val("false");
-        } else {
-            $("#isValidateIE").val("true");
         }
     }
 

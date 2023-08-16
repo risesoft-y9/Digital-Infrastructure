@@ -128,7 +128,7 @@ public class DefaultLoginWebflowConfigurer extends AbstractCasWebflowConfigurer 
 
         val binder = createStateBinderConfiguration(propertiesToBind);
 
-        String optional = environment.getProperty("y9.login.credentialPropsOptional", "isValidateIE,screenDimension,userAgent,systemName,clientIp,clientMac,clientDiskId,clientHostName,deptId,positionId");
+        String optional = environment.getProperty("y9.login.credentialPropsOptional", "screenDimension,userAgent,systemName,clientIp,clientMac,clientDiskId,clientHostName,deptId,positionId");
         String[] optionalArray = optional.split(",");
         for (String prop : optionalArray) {
             String s = prop.trim();

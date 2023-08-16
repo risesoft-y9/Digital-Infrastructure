@@ -70,8 +70,8 @@ cas:
         defaultThemeName: y9-apereo
         paramName: theme
     messageBundle:
-        useCodeMessage: false
-        fallbackSystemLocale: false
+        useCodeMessage: true
+        fallbackSystemLocale: true
     view:
         #当service参数为空时，利用defaultRedirectUrl
         defaultRedirectUrl: http://localhost:7070/home
@@ -237,4 +237,4 @@ systemName: risesso
 y9:
     login:
         casLoginView: "casLoginView-y9-v3.0"
-        credentialPropsOptional: "isValidateIE,screenDimension,userAgent,systemName,clientIp,clientMac,clientDiskId,clientHostName,deptId,positionId,pwdEcodeType"
+        credentialPropsOptional: "screenDimension,userAgent,systemName,clientIp,clientMac,clientDiskId,clientHostName,deptId,positionId,pwdEcodeType"

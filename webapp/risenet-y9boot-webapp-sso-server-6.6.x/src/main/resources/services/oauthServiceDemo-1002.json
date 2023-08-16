@@ -9,7 +9,7 @@
   "id": 1002,
   "evaluationOrder": 1002,
   "logoutType": "BACK_CHANNEL",
-  "logoutUrl": "http://127.0.0.1:7055/oauth/public/oauth/callback",
+  "logoutUrl": "http://localhost:7055/oauth/public/oauth/callback",
   "proxyPolicy": {
     "@class": "org.apereo.cas.services.RefuseRegisteredServiceProxyPolicy"
   },
