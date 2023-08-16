@@ -22,7 +22,7 @@ import net.risesoft.entity.identity.Y9IdentityToRoleBase;
  */
 @Entity
 @Table(name = "Y9_ORG_PERSONS_ROLES", indexes = {@Index(columnList = "PERSON_ID,ROLE_ID", unique = true)})
-@org.hibernate.annotations.Table(comment = "人员与角色关系表", appliesTo = "Y9_ORG_PERSONS_ROLES")
+@Comment("人员与角色关系表")
 @NoArgsConstructor
 @Data
 public class Y9PersonToRole extends Y9IdentityToRoleBase {
