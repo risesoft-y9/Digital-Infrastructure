@@ -93,8 +93,8 @@ cas:
     slo:
         asynchronous: false
     server:
-        name: http://192.168.31.61:7055
-        prefix: http://192.168.31.61:7055/sso
+        name: http://127.0.0.1:7055
+        prefix: http://127.0.0.1:7055/sso
     serviceRegistry:
         cache:
             duration: PT8H

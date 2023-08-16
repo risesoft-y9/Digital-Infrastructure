@@ -145,7 +145,7 @@ public class Y9Oauth2ResourceFilter implements Filter {
 					}
 				}
 				if (needVerifyToken) {
-					ResponseEntity<OAuth20IntrospectionAccessTokenResponse> introspectEntity = null;
+					ResponseEntity<OAuth20IntrospectionAccessTokenSuccessResponse> introspectEntity = null;
 					try {
 						introspectEntity = invokeIntrospectEndpoint(accessToken);
 					} catch (Exception ex) {
@@ -155,7 +155,7 @@ public class Y9Oauth2ResourceFilter implements Filter {
 					}
 
 					if (introspectEntity.getStatusCodeValue() == HttpStatus.OK.value()) {
-						OAuth20IntrospectionAccessTokenResponse introspectionResponse = introspectEntity.getBody();
+						OAuth20IntrospectionAccessTokenSuccessResponse introspectionResponse = introspectEntity.getBody();
 						if (!introspectionResponse.isActive()) {
 							setResponse(response, HttpStatus.UNAUTHORIZED, GlobalErrorCodeEnum.ACCESS_TOKEN_EXPIRED);
 							return;
@@ -261,7 +261,7 @@ public class Y9Oauth2ResourceFilter implements Filter {
 		this.serverIp = InetAddressUtil.getLocalAddress().getHostAddress();
 	}
 
-	private ResponseEntity<OAuth20IntrospectionAccessTokenResponse> invokeIntrospectEndpoint(String accessToken) {
+	private ResponseEntity<OAuth20IntrospectionAccessTokenSuccessResponse> invokeIntrospectEndpoint(String accessToken) {
 		HttpHeaders headers = new HttpHeaders();
 		headers.setAccept(Collections.singletonList(MediaType.APPLICATION_JSON));
 		headers.setContentType(MediaType.APPLICATION_FORM_URLENCODED);
@@ -269,7 +269,7 @@ public class Y9Oauth2ResourceFilter implements Filter {
 
 		URI uri = URI.create(this.introspectionUri + "?token=" + accessToken);
 		RequestEntity<?> requestEntity = new RequestEntity<>(headers, HttpMethod.POST, uri);
-		ResponseEntity<OAuth20IntrospectionAccessTokenResponse> responseEntity = this.restTemplate.exchange(requestEntity, OAuth20IntrospectionAccessTokenResponse.class);
+		ResponseEntity<OAuth20IntrospectionAccessTokenSuccessResponse> responseEntity = this.restTemplate.exchange(requestEntity, OAuth20IntrospectionAccessTokenSuccessResponse.class);
 		return responseEntity;
 	}
 
