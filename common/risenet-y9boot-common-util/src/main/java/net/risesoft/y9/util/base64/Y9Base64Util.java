@@ -1,5 +1,6 @@
 package net.risesoft.y9.util.base64;
 
+import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 
 import org.apache.commons.codec.binary.Base64;
@@ -23,6 +24,14 @@ public class Y9Base64Util {
     public static byte[] decodeAsBytes(String encryptedText) {
         Base64 dec = new Base64(-1);
         return dec.decode(encryptedText);
+    }
+    
+    public static String byteToBase64(byte[] bytes) {
+        return new String(Base64.encodeBase64(bytes));
+    }
+
+    public static byte[] base64ToByte(String base64Key) throws IOException {
+        return Base64.decodeBase64(base64Key);
     }
 
     public static String encode(byte[] bytes) {
