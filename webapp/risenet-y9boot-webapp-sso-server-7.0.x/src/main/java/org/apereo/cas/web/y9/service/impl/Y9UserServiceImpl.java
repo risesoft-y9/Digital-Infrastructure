@@ -32,10 +32,10 @@ public class Y9UserServiceImpl implements Y9UserService {
 	}
 
 	@Override
-	public Y9User findById(String id) {
+	public Y9User findByPersonIdAndTenantId(String id, String tenantId) {
 		return transactionTemplate.execute(status -> {
-			String sql = SELECT_QUERY.concat("WHERE r.id = :id");
-			TypedQuery<Y9User> query = entityManager.createQuery(sql, Y9User.class).setParameter("id", id);
+			String sql = SELECT_QUERY.concat("WHERE r.personId = :id and r.tenantId = :tenantId");
+			TypedQuery<Y9User> query = entityManager.createQuery(sql, Y9User.class).setParameter("id", id).setParameter("tenantId", tenantId);
 			return query.getSingleResult();
 		});
 	}

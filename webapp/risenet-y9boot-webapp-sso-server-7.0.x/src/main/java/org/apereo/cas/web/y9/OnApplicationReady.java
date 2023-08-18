@@ -19,7 +19,7 @@ public class OnApplicationReady implements ApplicationListener<ApplicationReadyE
 		// System.out.println(event.getApplicationContext().getEnvironment().getProperty("path"));
 		Y9User y9User = null;
 		try {
-			y9User = y9UserService.findById("11111111-1111-1111-1111-111111111117");
+			y9User = y9UserService.findByPersonIdAndTenantId("11111111-1111-1111-1111-111111111117","11111111-1111-1111-1111-111111111113");
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
