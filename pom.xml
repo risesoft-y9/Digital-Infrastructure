@@ -44,7 +44,6 @@
         <module>support/risenet-y9boot-support-platform-jpaRepository</module>
         <module>support/risenet-y9boot-support-platform-service</module>
         <module>support/risenet-y9boot-support-platform-web</module>
-        <module>support/risenet-y9boot-support-sso-theme-y9-v3.0</module>
         <module>support/risenet-y9boot-support-log-elasticSearch</module>
         <module>support/risenet-y9boot-support-history</module>
 

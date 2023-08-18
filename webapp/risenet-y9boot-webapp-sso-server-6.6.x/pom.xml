@@ -329,12 +329,6 @@
             <artifactId>hibernate-core</artifactId>
         </dependency>
 
-        <!--<dependency>
-            <groupId>net.risesoft</groupId>
-            <artifactId>risenet-y9boot-support-sso-theme-y9-v3.0</artifactId>
-            <version>${project.version}</version>
-        </dependency>-->
-
         <dependency>
             <groupId>de.svenkubiak</groupId>
             <artifactId>jBCrypt</artifactId>
