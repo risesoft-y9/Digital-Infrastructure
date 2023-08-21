@@ -25,7 +25,6 @@
 
         <module>starter/risenet-y9boot-starter-apisix</module>
         <module>starter/risenet-y9boot-starter-cache-redis</module>
-        <module>starter/risenet-y9boot-starter-dbComment</module>
         <module>starter/risenet-y9boot-starter-idGenerator</module>
         <module>starter/risenet-y9boot-starter-jpa-public</module>
         <module>starter/risenet-y9boot-starter-jpa-tenant</module>
