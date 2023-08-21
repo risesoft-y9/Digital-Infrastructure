@@ -38,8 +38,10 @@ public class Y9FileController {
         Y9Assert.notNull(y9FileStore, Y9FileErrorCodeEnum.FILE_NOT_FOUND, id);
 
         try (ServletOutputStream out = response.getOutputStream()) {
-            response.setHeader("Content-disposition", ContentDispositionUtil.standardizeAttachment(y9FileStore.getFileName()));
-            response.setContentType(MediaTypeUtils.getMediaTypeForFileName(servletContext, y9FileStore.getFileName()).toString());
+            response.setHeader("Content-disposition",
+                ContentDispositionUtil.standardizeAttachment(y9FileStore.getFileName()));
+            response.setContentType(
+                MediaTypeUtils.getMediaTypeForFileName(servletContext, y9FileStore.getFileName()).toString());
             response.setContentLengthLong(y9FileStore.getFileSize());
 
             y9FileStoreService.downloadFileToOutputStream(id, out);

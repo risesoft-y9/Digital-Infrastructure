@@ -37,7 +37,7 @@ public class RisePersonDirectoryPrincipalResolver implements PrincipalResolver {
     private PrincipalFactory principalFactory = new DefaultPrincipalFactory();
 
     @Autowired
-	private Y9UserService y9UserService;
+    private Y9UserService y9UserService;
 
     /**
      * Convert person attributes to principal pair.
@@ -116,13 +116,15 @@ public class RisePersonDirectoryPrincipalResolver implements PrincipalResolver {
             if (StringUtils.hasText(deptId)) {
                 users = y9UserService.findByTenantShortNameAndMobileAndParentId(tenantShortName, username, deptId);
             } else {
-                users = y9UserService.findByTenantShortNameAndMobileAndOriginal(tenantShortName, username, Boolean.TRUE);
+                users =
+                    y9UserService.findByTenantShortNameAndMobileAndOriginal(tenantShortName, username, Boolean.TRUE);
             }
         } else {
             if (StringUtils.hasText(deptId)) {
                 users = y9UserService.findByTenantShortNameAndLoginNameAndParentId(tenantShortName, username, deptId);
             } else {
-                users = y9UserService.findByTenantShortNameAndLoginNameAndOriginal(tenantShortName, username, Boolean.TRUE);
+                users =
+                    y9UserService.findByTenantShortNameAndLoginNameAndOriginal(tenantShortName, username, Boolean.TRUE);
             }
         }
         if (users != null && !users.isEmpty()) {

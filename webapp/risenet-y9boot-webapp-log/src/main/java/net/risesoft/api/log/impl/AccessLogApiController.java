@@ -31,12 +31,13 @@ import net.risesoft.model.log.LogInfoModel;
 import net.risesoft.pojo.Y9Page;
 import net.risesoft.y9.json.Y9JsonUtil;
 
-import cn.hutool.core.thread.ThreadFactoryBuilder;
 import y9.client.platform.org.DepartmentApiClient;
 import y9.client.platform.org.GroupApiClient;
 import y9.client.platform.org.OrganizationApiClient;
 import y9.client.platform.org.PersonApiClient;
 import y9.client.platform.org.PositionApiClient;
+
+import cn.hutool.core.thread.ThreadFactoryBuilder;
 
 /**
  * 访问日志组件

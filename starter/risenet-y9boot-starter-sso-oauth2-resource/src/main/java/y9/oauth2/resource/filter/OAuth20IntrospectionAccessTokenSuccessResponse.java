@@ -21,7 +21,7 @@ public class OAuth20IntrospectionAccessTokenSuccessResponse implements Serializa
 
     private static final long serialVersionUID = 9173277430150840002L;
 
-	private String token;
+    private String token;
 
     @JsonInclude(JsonInclude.Include.ALWAYS)
     private boolean active;

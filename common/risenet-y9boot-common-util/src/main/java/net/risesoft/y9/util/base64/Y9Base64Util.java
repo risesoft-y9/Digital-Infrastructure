@@ -25,7 +25,7 @@ public class Y9Base64Util {
         Base64 dec = new Base64(-1);
         return dec.decode(encryptedText);
     }
-    
+
     public static String byteToBase64(byte[] bytes) {
         return new String(Base64.encodeBase64(bytes));
     }

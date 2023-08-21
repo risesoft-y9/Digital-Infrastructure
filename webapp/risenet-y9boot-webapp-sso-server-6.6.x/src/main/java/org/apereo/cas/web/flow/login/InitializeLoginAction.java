@@ -16,16 +16,15 @@ import org.apereo.cas.ticket.registry.TicketRegistry;
 import org.apereo.cas.web.cookie.CasCookieBuilder;
 import org.apereo.cas.web.flow.actions.BaseCasWebflowAction;
 import org.apereo.cas.web.support.WebUtils;
-
-import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
-import lombok.val;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.webflow.execution.Event;
 import org.springframework.webflow.execution.RequestContext;
 import org.springframework.webflow.execution.repository.NoSuchFlowExecutionException;
+
+import lombok.RequiredArgsConstructor;
+import lombok.val;
+import lombok.extern.slf4j.Slf4j;
 
 /**
  * This is {@link InitializeLoginAction}.
@@ -45,30 +44,32 @@ public class InitializeLoginAction extends BaseCasWebflowAction {
      * CAS Properties.
      */
     protected final CasConfigurationProperties casProperties;
-    
+
     @Autowired
     @Qualifier("logoutManager")
-    private LogoutManager logoutManager; //y9 add
+    private LogoutManager logoutManager; // y9 add
 
     @Autowired
     @Qualifier("ticketGrantingTicketCookieGenerator")
-    private CasCookieBuilder ticketGrantingTicketCookieGenerator; //y9 add
+    private CasCookieBuilder ticketGrantingTicketCookieGenerator; // y9 add
 
     @Autowired
     @Qualifier("ticketRegistry")
-    private TicketRegistry ticketRegistry; //y9 add
-    
+    private TicketRegistry ticketRegistry; // y9 add
+
     @Override
     protected Event doExecute(final RequestContext requestContext) throws Exception {
         LOGGER.trace("Initialized login sequence");
         val service = WebUtils.getService(requestContext);
         if (service == null && !casProperties.getSso().isAllowMissingServiceParameter()) {
             val request = WebUtils.getHttpServletRequestFromExternalWebflowContext(requestContext);
-            LOGGER.warn("No service authentication request is available at [{}]. CAS is configured to disable the flow.", request.getRequestURL());
+            LOGGER.warn(
+                "No service authentication request is available at [{}]. CAS is configured to disable the flow.",
+                request.getRequestURL());
             throw new NoSuchFlowExecutionException(requestContext.getFlowExecutionContext().getKey(),
                 new UnauthorizedServiceException("screen.service.required.message", "Service is required"));
         }
-        
+
         // y9 add
         HttpServletRequest request = WebUtils.getHttpServletRequestFromExternalWebflowContext(requestContext);
         HttpServletResponse response = WebUtils.getHttpServletResponseFromExternalWebflowContext(requestContext);
@@ -79,7 +80,8 @@ public class InitializeLoginAction extends BaseCasWebflowAction {
             }
             if (StringUtils.isNotBlank(tgtId)) {
                 TicketGrantingTicket ticket = ticketRegistry.getTicket(tgtId, TicketGrantingTicket.class);
-                logoutManager.performLogout(SingleLogoutExecutionRequest.builder().ticketGrantingTicket(ticket).httpServletRequest(Optional.of(request)).httpServletResponse(Optional.of(response)).build());
+                logoutManager.performLogout(SingleLogoutExecutionRequest.builder().ticketGrantingTicket(ticket)
+                    .httpServletRequest(Optional.of(request)).httpServletResponse(Optional.of(response)).build());
             }
         } catch (Exception e) {
             LOGGER.error(e.getMessage(), e);
@@ -90,7 +92,7 @@ public class InitializeLoginAction extends BaseCasWebflowAction {
             return nonInteractiveLogin();
         }
         // y9 add
-        
+
         return success();
     }
 

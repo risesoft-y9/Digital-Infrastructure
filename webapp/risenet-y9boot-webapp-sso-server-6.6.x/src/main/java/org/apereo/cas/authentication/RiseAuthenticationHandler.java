@@ -27,7 +27,7 @@ import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 public class RiseAuthenticationHandler extends AbstractAuthenticationHandler {
-	private Y9UserService y9UserService;
+    private Y9UserService y9UserService;
     private Y9LoginUserService y9LoginUserService;
     private CasRedisTemplate<Object, Object> redisTemplate;
 
@@ -40,7 +40,7 @@ public class RiseAuthenticationHandler extends AbstractAuthenticationHandler {
     public AuthenticationHandlerExecutionResult authenticate(Credential credential, Service service)
         throws GeneralSecurityException, PreventedException {
         if (y9UserService == null) {
-        	y9UserService = Y9Context.getBean(Y9UserService.class);
+            y9UserService = Y9Context.getBean(Y9UserService.class);
             y9LoginUserService = Y9Context.getBean(Y9LoginUserService.class);
             redisTemplate = Y9Context.getBean("y9RedisTemplate");
         }
@@ -111,23 +111,24 @@ public class RiseAuthenticationHandler extends AbstractAuthenticationHandler {
                 List<Y9User> users = null;
                 if ("mobile".equals(loginType)) {
                     if (StringUtils.isNotBlank(deptId)) {
-                        users = y9UserService.findByTenantShortNameAndMobileAndParentId(tenantShortName, username, deptId);
+                        users =
+                            y9UserService.findByTenantShortNameAndMobileAndParentId(tenantShortName, username, deptId);
                     } else {
                         users = y9UserService.findByTenantShortNameAndMobileAndOriginal(tenantShortName, username,
                             Boolean.TRUE);
                     }
                 } else if ("loginMobileName".equals(loginType)) {
                     if (StringUtils.isNotBlank(deptId)) {
-                        users =
-                        		y9UserService.findByTenantShortNameAndLoginNameAndParentId(tenantShortName, username, deptId);
+                        users = y9UserService.findByTenantShortNameAndLoginNameAndParentId(tenantShortName, username,
+                            deptId);
                     } else {
                         users = y9UserService.findByTenantShortNameAndLoginNameAndOriginal(tenantShortName, username,
                             Boolean.TRUE);
                     }
                 } else {
                     if (StringUtils.isNotBlank(deptId)) {
-                        users =
-                        		y9UserService.findByTenantShortNameAndLoginNameAndParentId(tenantShortName, username, deptId);
+                        users = y9UserService.findByTenantShortNameAndLoginNameAndParentId(tenantShortName, username,
+                            deptId);
                     } else {
                         users = y9UserService.findByTenantShortNameAndLoginNameAndOriginal(tenantShortName, username,
                             Boolean.TRUE);
@@ -147,7 +148,7 @@ public class RiseAuthenticationHandler extends AbstractAuthenticationHandler {
                         riseCredential.setTenantShortName(oldTenantname);
                     }
                     try {
-                    	y9LoginUserService.save(riseCredential, "true", "登录成功");
+                        y9LoginUserService.save(riseCredential, "true", "登录成功");
                     } catch (Exception e) {
                         LOGGER.error(e.getMessage(), e);
                     }

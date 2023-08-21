@@ -59,7 +59,8 @@ public class Y9WordTool4Docx {
                 List<XWPFTableCell> rowCell = row.getTableCells();
                 for (int i = 0; i < rowCell.size(); i++) {
                     columnMap.put(i + "", rowCell.get(i).getText().trim());
-                    LOGGER.debug("fontSize={}", rowCell.get(i).getParagraphs().get(0).createRun().getFontSizeAsDouble());
+                    LOGGER.debug("fontSize={}",
+                        rowCell.get(i).getParagraphs().get(0).createRun().getFontSizeAsDouble());
                     LOGGER.debug("ctp={}", rowCell.get(i).getParagraphs().get(0).getCTP());
                     LOGGER.debug("style={}", rowCell.get(i).getParagraphs().get(0).getStyle());
 

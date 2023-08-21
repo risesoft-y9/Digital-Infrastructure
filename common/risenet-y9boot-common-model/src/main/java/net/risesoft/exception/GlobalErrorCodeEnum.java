@@ -1,6 +1,8 @@
 package net.risesoft.exception;
 
-import static net.risesoft.exception.GlobalErrorCodeConsts.*;
+import static net.risesoft.exception.GlobalErrorCodeConsts.AUTH_MODULE_CODE;
+import static net.risesoft.exception.GlobalErrorCodeConsts.NONE_MODULE_CODE;
+import static net.risesoft.exception.GlobalErrorCodeConsts.PERMISSION_MODULE_CODE;
 
 import lombok.AllArgsConstructor;
 

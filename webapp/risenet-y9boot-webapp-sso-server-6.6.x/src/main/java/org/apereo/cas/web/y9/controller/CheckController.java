@@ -20,7 +20,6 @@ import org.apereo.cas.web.y9.util.Y9Result;
 import org.apereo.cas.web.y9.util.common.Base64Util;
 import org.apereo.cas.web.y9.util.common.CheckPassWord;
 import org.apereo.cas.web.y9.util.common.RSAUtil;
-
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -35,11 +34,12 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 public class CheckController {
 
-	private final Y9UserService y9UserService;
+    private final Y9UserService y9UserService;
 
     private final CasRedisTemplate<Object, Object> redisTemplate;
 
-    public CheckController(Y9UserService y9UserService, @Qualifier("y9RedisTemplate") CasRedisTemplate<Object, Object> redisTemplate) {
+    public CheckController(Y9UserService y9UserService,
+        @Qualifier("y9RedisTemplate") CasRedisTemplate<Object, Object> redisTemplate) {
         this.y9UserService = y9UserService;
         this.redisTemplate = redisTemplate;
     }

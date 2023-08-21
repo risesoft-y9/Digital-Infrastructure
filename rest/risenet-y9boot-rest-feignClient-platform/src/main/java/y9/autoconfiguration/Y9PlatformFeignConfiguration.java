@@ -12,10 +12,11 @@ import org.springframework.web.context.request.ServletRequestAttributes;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
+import y9.support.Y9ErrorDecoder;
+
 import feign.RequestInterceptor;
 import feign.RequestTemplate;
 import feign.codec.ErrorDecoder;
-import y9.support.Y9ErrorDecoder;
 
 /**
  * platform open feign 自动配置类

@@ -21,13 +21,17 @@ public interface Y9UserService {
 
     List<Y9User> findByTenantShortNameAndLoginName(String tenantShortName, String loginName);
 
-    List<Y9User> findByTenantShortNameAndLoginNameAndOriginal(String tenantShortName, String loginName, Boolean original);
+    List<Y9User> findByTenantShortNameAndLoginNameAndOriginal(String tenantShortName, String loginName,
+        Boolean original);
 
-    List<Y9User> findByTenantShortNameAndLoginNameAndParentId(String tenantShortName, String loginName, String parentId);
+    List<Y9User> findByTenantShortNameAndLoginNameAndParentId(String tenantShortName, String loginName,
+        String parentId);
 
-    List<Y9User> findByTenantShortNameAndLoginNameAndPassword(String tenantShortName, String loginName, String password);
+    List<Y9User> findByTenantShortNameAndLoginNameAndPassword(String tenantShortName, String loginName,
+        String password);
 
-    List<Y9User> findByTenantShortNameAndLoginNameAndPasswordAndOriginal(String tenantShortName, String loginName, String password, Boolean original);
+    List<Y9User> findByTenantShortNameAndLoginNameAndPasswordAndOriginal(String tenantShortName, String loginName,
+        String password, Boolean original);
 
     List<Y9User> findByTenantShortNameAndMobile(String tenantShortName, String mobile);
 
@@ -37,7 +41,8 @@ public interface Y9UserService {
 
     List<Y9User> findByTenantShortNameAndMobileAndPassword(String tenantShortName, String mobile, String password);
 
-    List<Y9User> findByTenantShortNameNotInAndLoginNameAndOriginal(List<String> tenantlist, String loginName, Boolean original);
+    List<Y9User> findByTenantShortNameNotInAndLoginNameAndOriginal(List<String> tenantlist, String loginName,
+        Boolean original);
 
     List<Y9User> findByTenantNameAndLoginNameAndOriginal(String tenantName, String loginName, Boolean original);
 

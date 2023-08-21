@@ -1,6 +1,5 @@
 package net.risesoft.log.service;
 
-import org.springframework.core.env.Environment;
 import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Component;

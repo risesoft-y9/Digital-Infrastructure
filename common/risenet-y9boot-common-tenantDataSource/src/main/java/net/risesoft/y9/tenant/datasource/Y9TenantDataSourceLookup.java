@@ -39,7 +39,7 @@ public class Y9TenantDataSourceLookup implements DataSourceLookup {
 
     private final DruidDataSource publicDataSource;
     private final String systemName;
-    
+
     /** 已加载的租户id和数据源Map：目前包括默认租户和租用了当前系统的租户 */
     private final Map<String, DruidDataSource> loadedTenantIdDataSourceMap = new ConcurrentHashMap<>();
     private final JndiDataSourceLookup jndiDataSourceLookup = new JndiDataSourceLookup();

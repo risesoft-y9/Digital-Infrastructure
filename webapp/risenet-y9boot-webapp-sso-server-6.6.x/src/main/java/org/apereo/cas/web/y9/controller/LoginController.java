@@ -23,7 +23,6 @@ import org.apereo.cas.web.y9.service.Y9UserService;
 import org.apereo.cas.web.y9.util.Y9MessageDigest;
 import org.apereo.cas.web.y9.util.common.Base64Util;
 import org.apereo.cas.web.y9.util.common.CheckPassWord;
-
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -60,7 +59,8 @@ public class LoginController {
     public LoginController(CentralAuthenticationService centralAuthenticationService,
         @Qualifier("ticketGrantingTicketCookieGenerator") CasCookieBuilder ticketGrantingTicketCookieGenerator,
         @Qualifier("defaultAuthenticationSystemSupport") AuthenticationSystemSupport authenticationSystemSupport,
-        @Qualifier("webApplicationServiceFactory") ServiceFactory webApplicationServiceFactory, Y9UserService y9UserService) {
+        @Qualifier("webApplicationServiceFactory") ServiceFactory webApplicationServiceFactory,
+        Y9UserService y9UserService) {
         this.centralAuthenticationService = centralAuthenticationService;
         this.ticketGrantingTicketCookieGenerator = ticketGrantingTicketCookieGenerator;
         this.authenticationSystemSupport = authenticationSystemSupport;

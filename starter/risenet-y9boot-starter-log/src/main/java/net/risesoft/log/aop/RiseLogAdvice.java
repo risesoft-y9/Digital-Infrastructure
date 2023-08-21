@@ -153,7 +153,7 @@ public class RiseLogAdvice implements MethodInterceptor {
                         log.setGuidPath(userInfo.getGuidPath());
                         log.setManagerLevel(String.valueOf(userInfo.getManagerLevel()));
                     }
-                    
+
                     if (saveLogInfo4Kafka == null) {
                         this.saveLogInfo4Kafka = Y9Context.getBean(SaveLogInfo4Kafka.class);
                     }

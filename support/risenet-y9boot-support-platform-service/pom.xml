@@ -119,7 +119,7 @@
                 </exclusion>
             </exclusions>
         </dependency>
-        
+
         <!-- JXLS -->
         <dependency>
             <groupId>org.jxls</groupId>
