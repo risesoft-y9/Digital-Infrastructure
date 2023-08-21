@@ -11,6 +11,16 @@
 
     <repositories>
         <repository>
+            <id>aliyun-repo</id>
+            <url>https://maven.aliyun.com/repository/public</url>
+            <releases>
+                <enabled>true</enabled>
+            </releases>
+            <snapshots>
+                <enabled>true</enabled>
+            </snapshots>
+        </repository>
+        <repository>
             <id>y9-repo</id>
             <name>local private nexus</name>
             <url>https://svn.youshengyun.com:9900/nexus/repository/maven-public/</url>
@@ -25,6 +35,10 @@
         </repository>
     </repositories>
     <pluginRepositories>
+        <pluginRepository>
+            <id>aliyun-repo-plugin</id>
+            <url>https://maven.aliyun.com/repository/public</url>
+        </pluginRepository>
         <pluginRepository>
             <id>y9-repo-plugin</id>
             <name>local private plugin nexus</name>
