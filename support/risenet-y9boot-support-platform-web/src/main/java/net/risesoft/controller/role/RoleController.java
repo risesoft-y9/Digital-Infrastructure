@@ -40,7 +40,7 @@ import net.risesoft.util.StringUtil;
 import net.risesoft.y9.Y9Context;
 import net.risesoft.y9.util.Y9FileUtil;
 import net.risesoft.y9.util.Y9ModelConvertUtil;
-import net.risesoft.y9.util.mime.DownloadFileNameUtil;
+import net.risesoft.y9.util.mime.ContentDispositionUtil;
 import net.risesoft.y9public.entity.resource.Y9App;
 import net.risesoft.y9public.entity.resource.Y9System;
 import net.risesoft.y9public.entity.role.Y9Role;
@@ -108,7 +108,7 @@ public class RoleController {
         try (OutputStream outStream = response.getOutputStream();
             InputStream in = new ByteArrayInputStream(xmlString.getBytes(StandardCharsets.UTF_8))) {
             response.setContentType("application/octet-stream");
-            response.setHeader("Content-Disposition", DownloadFileNameUtil.standardize(
+            response.setHeader("Content-Disposition", ContentDispositionUtil.standardizeAttachment(
                 y9App.getName() + "-角色信息-" + new SimpleDateFormat("yyyyMMddHHmmss").format(new Date()) + ".xml"));
 
             int len;

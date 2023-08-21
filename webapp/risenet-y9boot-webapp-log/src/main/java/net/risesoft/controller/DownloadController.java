@@ -29,7 +29,7 @@ import net.risesoft.pojo.LoginInformation;
 import net.risesoft.pojo.PersonInformation;
 import net.risesoft.util.JxlsUtil;
 import net.risesoft.y9.Y9LoginUserHolder;
-import net.risesoft.y9.util.mime.DownloadFileNameUtil;
+import net.risesoft.y9.util.mime.ContentDispositionUtil;
 
 import y9.client.platform.org.PersonApiClient;
 
@@ -54,8 +54,8 @@ public class DownloadController {
 
             Map<String, Object> map = xlsLoginData2(tenantID);
             response.setContentType("application/octet-stream");
-            response.setHeader("Content-Disposition", DownloadFileNameUtil
-                .standardize("有生云未登录信息-" + new SimpleDateFormat("yyyyMMddHHmmss").format(new Date()) + ".xlsx"));
+            response.setHeader("Content-Disposition", ContentDispositionUtil
+                .standardizeAttachment("有生云未登录信息-" + new SimpleDateFormat("yyyyMMddHHmmss").format(new Date()) + ".xlsx"));
 
             JxlsUtil jxlsUtil = new JxlsUtil();
             jxlsUtil.exportExcel(in, outStream, map);
@@ -75,8 +75,8 @@ public class DownloadController {
             InputStream in = new ClassPathResource("/template/exportSimpleTemplate.xlsx").getInputStream()) {
             Map<String, Object> map = xlsLoginData(tenantID);
             response.setContentType("application/octet-stream");
-            response.setHeader("Content-Disposition", DownloadFileNameUtil
-                .standardize("有生云登录信息-" + new SimpleDateFormat("yyyyMMddHHmmss").format(new Date()) + ".xlsx"));
+            response.setHeader("Content-Disposition", ContentDispositionUtil
+                .standardizeAttachment("有生云登录信息-" + new SimpleDateFormat("yyyyMMddHHmmss").format(new Date()) + ".xlsx"));
 
             JxlsUtil jxlsUtil = new JxlsUtil();
             jxlsUtil.exportExcel(in, outStream, map);
