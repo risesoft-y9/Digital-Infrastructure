@@ -1,8 +1,6 @@
 package org.apereo.cas.web.y9.util.common;
 
-import java.awt.Color;
-import java.awt.Font;
-import java.awt.Graphics2D;
+import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.util.Random;
 

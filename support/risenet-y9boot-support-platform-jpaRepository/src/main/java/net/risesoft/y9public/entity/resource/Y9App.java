@@ -1,15 +1,17 @@
 package net.risesoft.y9public.entity.resource;
 
-import org.hibernate.annotations.ColumnDefault;
-import org.hibernate.annotations.Comment;
-
 import jakarta.persistence.Column;
 import jakarta.persistence.Convert;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Lob;
 import jakarta.persistence.Table;
 import jakarta.persistence.Transient;
+
+import org.hibernate.annotations.ColumnDefault;
+import org.hibernate.annotations.Comment;
+
 import lombok.Data;
+
 import net.risesoft.enums.AppOpenTypeEnum;
 import net.risesoft.enums.AppTypeEnum;
 import net.risesoft.enums.ResourceTypeEnum;

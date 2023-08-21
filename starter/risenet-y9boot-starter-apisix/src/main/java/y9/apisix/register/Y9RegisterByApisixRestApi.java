@@ -1,5 +1,7 @@
 package y9.apisix.register;
 
+import jakarta.annotation.PostConstruct;
+
 import java.io.IOException;
 import java.nio.charset.Charset;
 import java.util.ArrayList;
@@ -15,6 +17,10 @@ import lombok.extern.slf4j.Slf4j;
 import net.risesoft.y9.Y9Context;
 import net.risesoft.y9.configuration.Y9Properties;
 
+import y9.apisix.util.ApisixUtil;
+import y9.apisix.util.EtcdUtil;
+import y9.apisix.util.MD5;
+
 import io.github.classgraph.AnnotationInfo;
 import io.github.classgraph.AnnotationParameterValue;
 import io.github.classgraph.ClassGraph;
@@ -23,10 +29,6 @@ import io.github.classgraph.ClassInfoList;
 import io.github.classgraph.MethodInfo;
 import io.github.classgraph.MethodInfoList;
 import io.github.classgraph.ScanResult;
-import jakarta.annotation.PostConstruct;
-import y9.apisix.util.ApisixUtil;
-import y9.apisix.util.EtcdUtil;
-import y9.apisix.util.MD5;
 
 /**
  * Apisix Rest服务注册

@@ -1,5 +1,10 @@
 package org.apereo.cas.token.authentication.principal;
 
+import java.io.Serial;
+import java.util.Locale;
+import java.util.Map;
+
+import org.apache.commons.lang3.StringUtils;
 import org.apereo.cas.CasProtocolConstants;
 import org.apereo.cas.authentication.principal.Response;
 import org.apereo.cas.authentication.principal.WebApplicationService;
@@ -11,13 +16,8 @@ import org.apereo.cas.services.ServicesManager;
 import org.apereo.cas.token.TokenTicketBuilder;
 import org.apereo.cas.web.UrlValidator;
 
-import lombok.extern.slf4j.Slf4j;
 import lombok.val;
-import org.apache.commons.lang3.StringUtils;
-
-import java.io.Serial;
-import java.util.Locale;
-import java.util.Map;
+import lombok.extern.slf4j.Slf4j;
 
 /**
  * This is {@link TokenWebApplicationServiceResponseBuilder}.
@@ -33,34 +33,36 @@ public class TokenWebApplicationServiceResponseBuilder extends WebApplicationSer
     private final transient TokenTicketBuilder tokenTicketBuilder;
 
     public TokenWebApplicationServiceResponseBuilder(final ServicesManager servicesManager,
-                                                     final TokenTicketBuilder tokenTicketBuilder,
-                                                     final UrlValidator urlValidator) {
+        final TokenTicketBuilder tokenTicketBuilder, final UrlValidator urlValidator) {
         super(servicesManager, urlValidator);
         this.tokenTicketBuilder = tokenTicketBuilder;
     }
 
     @Override
-    protected WebApplicationService buildInternal(final WebApplicationService service, final Map<String, String> parameters) {
+    protected WebApplicationService buildInternal(final WebApplicationService service,
+        final Map<String, String> parameters) {
         val registeredService = this.servicesManager.findServiceBy(service);
         RegisteredServiceAccessStrategyUtils.ensureServiceAccessIsAllowed(service, registeredService);
-        val tokenAsResponse = RegisteredServiceProperty.RegisteredServiceProperties.TOKEN_AS_SERVICE_TICKET.isAssignedTo(registeredService);
+        val tokenAsResponse = RegisteredServiceProperty.RegisteredServiceProperties.TOKEN_AS_SERVICE_TICKET
+            .isAssignedTo(registeredService);
         val ticketIdAvailable = isTicketIdAvailable(parameters);
 
         if (!tokenAsResponse || !ticketIdAvailable) {
             if (ticketIdAvailable) {
-                LOGGER.debug("Registered service [{}] is not configured to issue JWTs for service tickets. "
-                             +"Make sure the service property [{}] is defined and set to true", 
-                             registeredService,
-                             RegisteredServiceProperties.TOKEN_AS_SERVICE_TICKET.getPropertyName()); 
+                LOGGER.debug(
+                    "Registered service [{}] is not configured to issue JWTs for service tickets. "
+                        + "Make sure the service property [{}] is defined and set to true",
+                    registeredService, RegisteredServiceProperties.TOKEN_AS_SERVICE_TICKET.getPropertyName());
             }
             return super.buildInternal(service, parameters);
         }
-        
+
         String serviceTicketId = parameters.get(CasProtocolConstants.PARAMETER_TICKET);// y9 add
         parameters.put("serviceTicketId", serviceTicketId);// y9 add
 
         val jwt = generateToken(service, parameters);
-        val jwtService = new TokenWebApplicationService(service.getId(), service.getOriginalUrl(), service.getArtifactId());
+        val jwtService =
+            new TokenWebApplicationService(service.getId(), service.getOriginalUrl(), service.getArtifactId());
         jwtService.setFormat(service.getFormat());
         jwtService.setLoggedOutAlready(service.isLoggedOutAlready());
 
@@ -69,15 +71,15 @@ public class TokenWebApplicationServiceResponseBuilder extends WebApplicationSer
 
         return jwtService;
     }
-    
-    private static boolean isTicketIdAvailable(final Map<String, String> parameters){
+
+    private static boolean isTicketIdAvailable(final Map<String, String> parameters) {
         return StringUtils.isNotBlank(parameters.get(CasProtocolConstants.PARAMETER_TICKET));
     }
 
     /**
      * Generate token string.
      *
-     * @param service    the service
+     * @param service the service
      * @param parameters the parameters
      * @return the jwt
      */

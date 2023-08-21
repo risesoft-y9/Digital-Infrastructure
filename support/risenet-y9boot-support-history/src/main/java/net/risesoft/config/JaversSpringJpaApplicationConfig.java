@@ -1,9 +1,9 @@
 package net.risesoft.config;
 
+import jakarta.persistence.EntityManagerFactory;
+
 import java.util.ArrayList;
 import java.util.List;
-
-import jakarta.persistence.EntityManagerFactory;
 
 import org.hibernate.dialect.Dialect;
 import org.hibernate.engine.spi.SessionFactoryImplementor;

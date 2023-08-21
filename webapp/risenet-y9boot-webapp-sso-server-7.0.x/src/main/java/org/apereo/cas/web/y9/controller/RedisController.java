@@ -1,5 +1,7 @@
 package org.apereo.cas.web.y9.controller;
 
+import jakarta.servlet.http.HttpServletRequest;
+
 import java.util.concurrent.TimeUnit;
 
 import org.apache.commons.lang3.StringUtils;
@@ -10,14 +12,13 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import jakarta.servlet.http.HttpServletRequest;
 import lombok.extern.slf4j.Slf4j;
 
 @RestController
 @RequestMapping("/api/session")
 @Slf4j
 public class RedisController {
-    
+
     private final CasRedisTemplate<Object, Object> redisTemplate;
 
     public RedisController(@Qualifier("y9RedisTemplate") CasRedisTemplate<Object, Object> redisTemplate) {
@@ -112,7 +113,9 @@ public class RedisController {
                 if (null == timeout) {
                     timeout = Long.valueOf(3600);
                 }
-                redisTemplate.opsForValue().set("y9vue_client_session:" + getIpAddr(request) + ":" + request.getHeader("User-Agent") + key, obj, timeout, TimeUnit.SECONDS);
+                redisTemplate.opsForValue().set(
+                    "y9vue_client_session:" + getIpAddr(request) + ":" + request.getHeader("User-Agent") + key, obj,
+                    timeout, TimeUnit.SECONDS);
                 y9result.setCode(200);
                 y9result.setMsg("刷新成功");
                 y9result.setSuccess(true);

@@ -1,5 +1,7 @@
 package org.apereo.cas.web.y9.controller;
 
+import jakarta.servlet.http.HttpServletResponse;
+
 import java.io.InputStream;
 import java.util.HashMap;
 import java.util.Map;
@@ -20,7 +22,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import jakarta.servlet.http.HttpServletResponse;
 import lombok.extern.slf4j.Slf4j;
 
 @Controller
@@ -30,7 +31,7 @@ public class QRCodeController {
 
     @Value("${cas.server.name}")
     private String name;
-    
+
     private final CasRedisTemplate<Object, Object> redisTemplate;
 
     public QRCodeController(@Qualifier("y9RedisTemplate") CasRedisTemplate<Object, Object> redisTemplate) {
@@ -48,7 +49,8 @@ public class QRCodeController {
             name = name.endsWith("/") ? name : name + "/";
             String uuid = UUID.randomUUID().toString();
             String url = name + "sso/login?url=" + name + "sso/api/saveScanResult&uuid=" + uuid;
-            InputStream imgis = this.getClass().getClassLoader().getResourceAsStream("static/y9static/y9new/img/qrCodeLogo.png");
+            InputStream imgis =
+                this.getClass().getClassLoader().getResourceAsStream("static/y9static/y9new/img/qrCodeLogo.png");
             String img = Y9QRCode.encode(url, 512, 512, imgis);
             redisTemplate.opsForValue().set("QRCode:" + uuid, 2, 120, TimeUnit.SECONDS);
             map.put("img", img);

@@ -1,5 +1,7 @@
 package net.risesoft.y9.util.word;
 
+import jakarta.servlet.http.HttpServletResponse;
+
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
@@ -14,8 +16,6 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
-
-import jakarta.servlet.http.HttpServletResponse;
 
 import org.apache.poi.ooxml.POIXMLDocument;
 import org.apache.poi.xwpf.usermodel.ParagraphAlignment;

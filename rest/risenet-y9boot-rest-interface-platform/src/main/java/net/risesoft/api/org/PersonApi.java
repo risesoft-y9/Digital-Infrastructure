@@ -1,9 +1,9 @@
 package net.risesoft.api.org;
 
+import jakarta.validation.constraints.NotBlank;
+
 import java.util.List;
 import java.util.Map;
-
-import jakarta.validation.constraints.NotBlank;
 
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;

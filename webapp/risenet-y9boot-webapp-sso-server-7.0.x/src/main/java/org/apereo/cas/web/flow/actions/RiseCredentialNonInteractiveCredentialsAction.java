@@ -16,8 +16,12 @@ public final class RiseCredentialNonInteractiveCredentialsAction extends Abstrac
 
     private static final Logger LOGGER = LoggerFactory.getLogger(RiseCredentialNonInteractiveCredentialsAction.class);
 
-    public RiseCredentialNonInteractiveCredentialsAction(final CasDelegatingWebflowEventResolver initialAuthenticationAttemptWebflowEventResolver, final CasWebflowEventResolver serviceTicketRequestWebflowEventResolver, final AdaptiveAuthenticationPolicy adaptiveAuthenticationPolicy) {
-        super(initialAuthenticationAttemptWebflowEventResolver, serviceTicketRequestWebflowEventResolver, adaptiveAuthenticationPolicy);
+    public RiseCredentialNonInteractiveCredentialsAction(
+        final CasDelegatingWebflowEventResolver initialAuthenticationAttemptWebflowEventResolver,
+        final CasWebflowEventResolver serviceTicketRequestWebflowEventResolver,
+        final AdaptiveAuthenticationPolicy adaptiveAuthenticationPolicy) {
+        super(initialAuthenticationAttemptWebflowEventResolver, serviceTicketRequestWebflowEventResolver,
+            adaptiveAuthenticationPolicy);
     }
 
     @Override

@@ -17,8 +17,8 @@ import lombok.Setter;
 @Getter
 @Setter
 public class OAuth20IntrospectionAccessTokenSuccessResponse extends BaseOAuth20IntrospectionAccessTokenResponse {
-	@Serial
-	private static final long serialVersionUID = -7917281748569741345L;
+    @Serial
+    private static final long serialVersionUID = -7917281748569741345L;
 
     private String token;
 
@@ -48,7 +48,7 @@ public class OAuth20IntrospectionAccessTokenSuccessResponse extends BaseOAuth20I
 
     @JsonProperty("grant_type")
     private String grantType;
-    
+
     private String attr; // y9 add
 
     @JsonProperty("cnf")

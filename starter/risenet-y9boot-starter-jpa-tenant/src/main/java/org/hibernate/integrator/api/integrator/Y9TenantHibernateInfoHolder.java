@@ -29,7 +29,7 @@ public class Y9TenantHibernateInfoHolder {
     }
 
     public static void schemaUpdate(Environment env) {
-    	/*
+        /*
         try {
             String systemName = env.getProperty("y9.systemName");
             String ddlAuto1 = env.getProperty("spring.jpa.hibernate.ddl-auto");
@@ -42,18 +42,18 @@ public class Y9TenantHibernateInfoHolder {
                 new Reflections("net.risesoft.entity").getTypesAnnotatedWith(Entity.class)
                     .forEach(sources::addAnnotatedClass);
                 Metadata metadata = sources.buildMetadata();
-
+        
                 String rootPath = env.getProperty("java.io.tmpdir");
                 if (Y9Context.getServletContext() != null) {
                     rootPath = Y9Context.getWebRootRealPath();
                 }
-
+        
                 EnumSet<TargetType> targetTypes = EnumSet.of(TargetType.DATABASE, TargetType.SCRIPT, TargetType.STDOUT);
                 SchemaUpdate schemaUpdate = new SchemaUpdate();
                 schemaUpdate.setOutputFile(rootPath + File.separator + systemName + "-update.sql");
                 schemaUpdate.setOverrideOutputFileContent();
                 schemaUpdate.execute(targetTypes, metadata);
-
+        
                 targetTypes = EnumSet.of(TargetType.SCRIPT, TargetType.STDOUT);
                 SchemaExport schemaExport = new SchemaExport();
                 schemaExport.setOverrideOutputFileContent();

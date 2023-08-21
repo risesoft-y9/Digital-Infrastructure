@@ -19,13 +19,14 @@ import net.risesoft.model.AccessLog;
 import net.risesoft.model.log.LogInfoModel;
 import net.risesoft.pojo.Y9Page;
 
-import co.elastic.clients.elasticsearch.ElasticsearchClient;
 import y9.client.platform.org.DepartmentApiClient;
 import y9.client.platform.org.GroupApiClient;
 import y9.client.platform.org.OrganizationApiClient;
 import y9.client.platform.org.PersonApiClient;
 import y9.client.platform.org.PositionApiClient;
 import y9.client.platform.tenant.TenantApiClient;
+
+import co.elastic.clients.elasticsearch.ElasticsearchClient;
 
 /**
  * @author guoweijun

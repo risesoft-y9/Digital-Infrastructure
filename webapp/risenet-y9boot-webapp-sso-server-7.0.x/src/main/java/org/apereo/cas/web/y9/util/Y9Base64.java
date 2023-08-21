@@ -21,7 +21,7 @@ public class Y9Base64 {
         String str = encoder.encodeToString(plainText.getBytes());
         return str;
     }
-    
+
     public static String byteToBase64(byte[] bytes) {
         return new String(Base64.encodeBase64(bytes));
     }

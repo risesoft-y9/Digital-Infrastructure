@@ -12,15 +12,17 @@ import org.springframework.data.redis.connection.RedisConnectionFactory;
 @Configuration(proxyBeanMethods = false)
 public class Y9RedisConfig {
 
-	@Bean
-	public Y9Context y9Context() {
-		return new Y9Context();
-	}
+    @Bean
+    public Y9Context y9Context() {
+        return new Y9Context();
+    }
 
-	@Bean
-	@RefreshScope
-	public CasRedisTemplate<Object, Object> y9RedisTemplate(@Qualifier("redisTicketConnectionFactory") final RedisConnectionFactory redisTicketConnectionFactory) {
-		CasRedisTemplate<Object, Object> redisTemplate = RedisObjectFactory.newRedisTemplate(redisTicketConnectionFactory);
-		return redisTemplate;
-	}
+    @Bean
+    @RefreshScope
+    public CasRedisTemplate<Object, Object> y9RedisTemplate(
+        @Qualifier("redisTicketConnectionFactory") final RedisConnectionFactory redisTicketConnectionFactory) {
+        CasRedisTemplate<Object, Object> redisTemplate =
+            RedisObjectFactory.newRedisTemplate(redisTicketConnectionFactory);
+        return redisTemplate;
+    }
 }

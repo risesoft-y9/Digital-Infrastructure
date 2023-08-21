@@ -87,7 +87,7 @@ public class Y9logIpDeptMappingServiceImpl implements Y9logIpDeptMappingService 
         // TODO Auto-generated method stub
         return null;
     }
-    
+
     // FIXME elasticsearch
     /*
     @Override

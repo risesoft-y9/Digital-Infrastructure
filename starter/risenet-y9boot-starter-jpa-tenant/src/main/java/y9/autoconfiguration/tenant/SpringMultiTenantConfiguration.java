@@ -1,11 +1,12 @@
 
 package y9.autoconfiguration.tenant;
 
+import jakarta.persistence.EntityManagerFactory;
+
 import java.sql.SQLException;
 import java.util.Collections;
 import java.util.StringTokenizer;
 
-import jakarta.persistence.EntityManagerFactory;
 import javax.sql.DataSource;
 
 import org.springframework.beans.factory.annotation.Qualifier;

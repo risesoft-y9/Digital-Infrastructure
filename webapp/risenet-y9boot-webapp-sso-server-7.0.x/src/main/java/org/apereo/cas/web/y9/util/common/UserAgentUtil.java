@@ -1,8 +1,8 @@
 package org.apereo.cas.web.y9.util.common;
 
-import java.io.IOException;
-
 import jakarta.servlet.http.HttpServletRequest;
+
+import java.io.IOException;
 
 import cz.mallat.uasparser.OnlineUpdater;
 import cz.mallat.uasparser.UASparser;
@@ -29,9 +29,10 @@ public class UserAgentUtil {
     public static boolean checkBrowser(HttpServletRequest request) {
         String userAgent = request.getHeader("User-Agent");
         String browserName = GetBrowserName.getBrowserName(userAgent);
-        String ieStr ="IE";
+        String ieStr = "IE";
         if (ieStr.equals(browserName.toUpperCase())) {
-            if (userAgent.indexOf("MSIE 9") > 0 || userAgent.indexOf("MSIE 10") > 0 || userAgent.indexOf("like Gecko") > 0) {
+            if (userAgent.indexOf("MSIE 9") > 0 || userAgent.indexOf("MSIE 10") > 0
+                || userAgent.indexOf("like Gecko") > 0) {
                 return true;
             }
         }
@@ -43,7 +44,8 @@ public class UserAgentUtil {
             return "";
         }
         String browserName = GetBrowserName.getBrowserName(userAgent);
-        if (userAgent.indexOf("msie 9") > 0 || userAgent.indexOf("msie 10") > 0 || userAgent.indexOf("rv:11") > 0 || userAgent.indexOf("msie 6") > 0 || userAgent.indexOf("msie 7") > 0 || userAgent.indexOf("msie 8") > 0) {
+        if (userAgent.indexOf("msie 9") > 0 || userAgent.indexOf("msie 10") > 0 || userAgent.indexOf("rv:11") > 0
+            || userAgent.indexOf("msie 6") > 0 || userAgent.indexOf("msie 7") > 0 || userAgent.indexOf("msie 8") > 0) {
             return "IE";
         }
         return browserName;

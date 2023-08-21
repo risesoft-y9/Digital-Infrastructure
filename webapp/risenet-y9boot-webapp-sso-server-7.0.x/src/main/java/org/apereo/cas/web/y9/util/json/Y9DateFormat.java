@@ -26,9 +26,11 @@ public class Y9DateFormat extends DateFormat {
         }
 
         String str = source.trim();
-        if (str.length() == "yyyy-MM-dd HH:mm:ss".length() && str.contains("-") && str.contains(" ") && str.contains(":")) {
+        if (str.length() == "yyyy-MM-dd HH:mm:ss".length() && str.contains("-") && str.contains(" ")
+            && str.contains(":")) {
             return df1;
-        } else if (str.length() == "yyyy-MM-dd HH:mm".length() && str.contains("-") && str.contains(" ") && str.contains(":")) {
+        } else if (str.length() == "yyyy-MM-dd HH:mm".length() && str.contains("-") && str.contains(" ")
+            && str.contains(":")) {
             return df2;
         }
         return defaultDF;

@@ -1,9 +1,9 @@
 package net.risesoft.api.customgroup;
 
-import java.util.List;
-
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotEmpty;
+
+import java.util.List;
 
 import org.springframework.context.annotation.Primary;
 import org.springframework.data.domain.Page;

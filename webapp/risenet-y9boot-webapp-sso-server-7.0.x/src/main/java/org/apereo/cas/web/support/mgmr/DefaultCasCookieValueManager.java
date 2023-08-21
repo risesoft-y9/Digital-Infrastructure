@@ -1,5 +1,13 @@
 package org.apereo.cas.web.support.mgmr;
 
+import jakarta.servlet.http.HttpServletRequest;
+
+import java.io.Serial;
+import java.io.Serializable;
+import java.util.Objects;
+import java.util.stream.Stream;
+
+import org.apache.commons.lang3.StringUtils;
 import org.apereo.cas.authentication.adaptive.geo.GeoLocationService;
 import org.apereo.cas.configuration.model.support.cookie.PinnableCookieProperties;
 import org.apereo.cas.util.HttpRequestUtils;
@@ -7,26 +15,22 @@ import org.apereo.cas.util.RegexUtils;
 import org.apereo.cas.util.crypto.CipherExecutor;
 import org.apereo.cas.web.cookie.CookieSameSitePolicy;
 import org.apereo.cas.web.support.InvalidCookieException;
-import com.google.common.base.Splitter;
-import lombok.extern.slf4j.Slf4j;
-import lombok.val;
-import org.apache.commons.lang3.StringUtils;
 import org.apereo.inspektr.common.web.ClientInfo;
 import org.apereo.inspektr.common.web.ClientInfoHolder;
 import org.springframework.beans.factory.ObjectProvider;
-import jakarta.servlet.http.HttpServletRequest;
-import java.io.Serial;
-import java.io.Serializable;
-import java.util.Objects;
-import java.util.stream.Stream;
+
+import com.google.common.base.Splitter;
+
+import lombok.val;
+import lombok.extern.slf4j.Slf4j;
 
 /**
- * The {@link DefaultCasCookieValueManager} is responsible for creating
- * the CAS SSO cookie and encrypting and signing its value.
+ * The {@link DefaultCasCookieValueManager} is responsible for creating the CAS SSO cookie and encrypting and signing
+ * its value.
  * <p>
- * This class by default ({@code CookieProperties.isPinToSession=true}) ensures the cookie is used on a
- * request from same IP and with the same user-agent as when cookie was created.
- * The client info (with original client ip) may be null if cluster failover occurs and session replication not working.
+ * This class by default ({@code CookieProperties.isPinToSession=true}) ensures the cookie is used on a request from
+ * same IP and with the same user-agent as when cookie was created. The client info (with original client ip) may be
+ * null if cluster failover occurs and session replication not working.
  *
  * @author Misagh Moayyed
  * @since 4.1
@@ -45,9 +49,8 @@ public class DefaultCasCookieValueManager extends EncryptedCookieValueManager {
     private final ObjectProvider<GeoLocationService> geoLocationService;
 
     public DefaultCasCookieValueManager(final CipherExecutor<Serializable, Serializable> cipherExecutor,
-                                        final ObjectProvider<GeoLocationService> geoLocationService,
-                                        final CookieSameSitePolicy cookieSameSitePolicy,
-                                        final PinnableCookieProperties cookieProperties) {
+        final ObjectProvider<GeoLocationService> geoLocationService, final CookieSameSitePolicy cookieSameSitePolicy,
+        final PinnableCookieProperties cookieProperties) {
         super(cipherExecutor, cookieSameSitePolicy);
         this.geoLocationService = geoLocationService;
         this.cookieProperties = cookieProperties;
@@ -60,8 +63,7 @@ public class DefaultCasCookieValueManager extends EncryptedCookieValueManager {
         if (cookieProperties.isPinToSession()) {
             val clientInfo = ClientInfoHolder.getClientInfo();
             if (clientInfo != null) {
-                val clientLocation = cookieProperties.isGeoLocateClientSession()
-                    ? getClientGeoLocation(clientInfo)
+                val clientLocation = cookieProperties.isGeoLocateClientSession() ? getClientGeoLocation(clientInfo)
                     : clientInfo.getClientIpAddress();
                 builder.append(COOKIE_FIELD_SEPARATOR).append(clientLocation);
             }
@@ -78,18 +80,14 @@ public class DefaultCasCookieValueManager extends EncryptedCookieValueManager {
     }
 
     private String getClientGeoLocation(final ClientInfo clientInfo) {
-        return geoLocationService
-            .stream()
-            .map(service -> {
-                val geoLocation = service.locate(clientInfo.getClientIpAddress());
-                if (geoLocation != null && geoLocation.getAddresses() != null && !geoLocation.getAddresses().isEmpty()) {
-                    return org.springframework.util.StringUtils.collectionToCommaDelimitedString(geoLocation.getAddresses());
-                }
-                return clientInfo.getClientIpAddress();
-            })
-            .filter(Objects::nonNull)
-            .findFirst()
-            .orElseGet(clientInfo::getClientIpAddress);
+        return geoLocationService.stream().map(service -> {
+            val geoLocation = service.locate(clientInfo.getClientIpAddress());
+            if (geoLocation != null && geoLocation.getAddresses() != null && !geoLocation.getAddresses().isEmpty()) {
+                return org.springframework.util.StringUtils
+                    .collectionToCommaDelimitedString(geoLocation.getAddresses());
+            }
+            return clientInfo.getClientIpAddress();
+        }).filter(Objects::nonNull).findFirst().orElseGet(clientInfo::getClientIpAddress);
     }
 
     @Override
@@ -114,7 +112,9 @@ public class DefaultCasCookieValueManager extends EncryptedCookieValueManager {
 
         val clientInfo = ClientInfoHolder.getClientInfo();
         if (clientInfo == null) {
-            val message = "Unable to match required remote address %s because client ip at time of cookie creation is unknown".formatted(cookieClientLocationOrIp);
+            val message =
+                "Unable to match required remote address %s because client ip at time of cookie creation is unknown"
+                    .formatted(cookieClientLocationOrIp);
             LOGGER.warn(message);
             throw new InvalidCookieException(message);
         }
@@ -122,7 +122,8 @@ public class DefaultCasCookieValueManager extends EncryptedCookieValueManager {
         if (cookieProperties.isGeoLocateClientSession()) {
             val clientLocationOrIp = getClientGeoLocation(clientInfo);
             if (!cookieClientLocationOrIp.equals(clientLocationOrIp)) {
-                val message = "Invalid cookie. Required remote address %s does not match %s".formatted(cookieClientLocationOrIp, clientLocationOrIp);
+                val message = "Invalid cookie. Required remote address %s does not match %s"
+                    .formatted(cookieClientLocationOrIp, clientLocationOrIp);
                 LOGGER.warn(message);
                 throw new InvalidCookieException(message);
             }
@@ -131,7 +132,8 @@ public class DefaultCasCookieValueManager extends EncryptedCookieValueManager {
             if (!cookieClientLocationOrIp.equals(clientIpAddress)) {
                 if (StringUtils.isBlank(cookieProperties.getAllowedIpAddressesPattern())
                     || !RegexUtils.find(cookieProperties.getAllowedIpAddressesPattern(), clientIpAddress)) {
-                    val message = "Invalid cookie. Required remote address %s does not match %s".formatted(cookieClientLocationOrIp, clientIpAddress);
+                    val message = "Invalid cookie. Required remote address %s does not match %s"
+                        .formatted(cookieClientLocationOrIp, clientIpAddress);
                     LOGGER.warn(message);
                     throw new InvalidCookieException(message);
                 }
@@ -142,11 +144,14 @@ public class DefaultCasCookieValueManager extends EncryptedCookieValueManager {
 
         val agent = HttpRequestUtils.getHttpServletRequestUserAgent(request);
         if (!cookieUserAgent.equals(agent)) {
-        	if (cookieUserAgent.contains("Chrome") && agent.contains("Chrome") && !cookieUserAgent.substring(0, cookieUserAgent.indexOf("Chrome")).equals(agent.substring(0, agent.indexOf("Chrome")))) {  //y9 edit
-                val message = "Invalid cookie. Required user-agent %s does not match %s".formatted(cookieUserAgent, agent);
+            if (cookieUserAgent.contains("Chrome") && agent.contains("Chrome") && !cookieUserAgent
+                .substring(0, cookieUserAgent.indexOf("Chrome")).equals(agent.substring(0, agent.indexOf("Chrome")))) { // y9
+                                                                                                                        // edit
+                val message =
+                    "Invalid cookie. Required user-agent %s does not match %s".formatted(cookieUserAgent, agent);
                 LOGGER.warn(message);
                 throw new InvalidCookieException(message);
-        	} //y9 edit 
+            } // y9 edit
         }
         return cookieValue;
     }

@@ -1,22 +1,22 @@
 package org.apereo.cas.authentication.metadata;
 
+import org.apache.commons.lang3.StringUtils;
 import org.apereo.cas.authentication.AuthenticationBuilder;
 import org.apereo.cas.authentication.AuthenticationTransaction;
 import org.apereo.cas.authentication.Credential;
 import org.apereo.cas.authentication.RememberMeCredential;
 import org.apereo.cas.configuration.model.core.ticket.RememberMeAuthenticationProperties;
 import org.apereo.cas.util.RegexUtils;
+import org.apereo.inspektr.common.web.ClientInfoHolder;
 
 import lombok.RequiredArgsConstructor;
 import lombok.ToString;
-import lombok.extern.slf4j.Slf4j;
 import lombok.val;
-import org.apache.commons.lang3.StringUtils;
-import org.apereo.inspektr.common.web.ClientInfoHolder;
+import lombok.extern.slf4j.Slf4j;
 
 /**
- * Determines if the credential provided are for Remember Me Services and then sets the appropriate
- * Authentication attribute if remember me services have been requested.
+ * Determines if the credential provided are for Remember Me Services and then sets the appropriate Authentication
+ * attribute if remember me services have been requested.
  *
  * @author Scott Battaglia
  * @since 3.2.1
@@ -36,13 +36,15 @@ public class RememberMeAuthenticationMetaDataPopulator extends BaseAuthenticatio
                 var rememberMe = true;
                 val clientInfo = ClientInfoHolder.getClientInfo();
                 if (clientInfo != null) {
-                    if (StringUtils.isNotBlank(properties.getSupportedUserAgents()) && StringUtils.isNotBlank(properties.getSupportedIpAddresses())) {
+                    if (StringUtils.isNotBlank(properties.getSupportedUserAgents())
+                        && StringUtils.isNotBlank(properties.getSupportedIpAddresses())) {
                         rememberMe = RegexUtils.find(properties.getSupportedUserAgents(), clientInfo.getUserAgent())
-                                     && RegexUtils.find(properties.getSupportedIpAddresses(), clientInfo.getClientIpAddress());
+                            && RegexUtils.find(properties.getSupportedIpAddresses(), clientInfo.getClientIpAddress());
                     } else if (StringUtils.isNotBlank(properties.getSupportedUserAgents())) {
                         rememberMe = RegexUtils.find(properties.getSupportedUserAgents(), clientInfo.getUserAgent());
                     } else if (StringUtils.isNotBlank(properties.getSupportedIpAddresses())) {
-                        rememberMe = RegexUtils.find(properties.getSupportedIpAddresses(), clientInfo.getClientIpAddress());
+                        rememberMe =
+                            RegexUtils.find(properties.getSupportedIpAddresses(), clientInfo.getClientIpAddress());
                     }
                 }
 

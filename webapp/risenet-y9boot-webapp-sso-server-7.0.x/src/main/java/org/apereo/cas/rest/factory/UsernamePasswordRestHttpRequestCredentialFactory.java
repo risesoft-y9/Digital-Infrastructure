@@ -1,9 +1,9 @@
 package org.apereo.cas.rest.factory;
 
+import jakarta.servlet.http.HttpServletRequest;
+
 import java.util.ArrayList;
 import java.util.List;
-
-import jakarta.servlet.http.HttpServletRequest;
 
 import org.apereo.cas.authentication.Credential;
 import org.apereo.cas.authentication.credential.RememberMeUsernamePasswordCredential;
@@ -27,7 +27,8 @@ public class UsernamePasswordRestHttpRequestCredentialFactory implements RestHtt
     private int order = Integer.MIN_VALUE;
 
     @Override
-    public List<Credential> fromRequest(final HttpServletRequest request, final MultiValueMap<String, String> requestBody) {
+    public List<Credential> fromRequest(final HttpServletRequest request,
+        final MultiValueMap<String, String> requestBody) {
         if (requestBody == null || requestBody.isEmpty()) {
             LOGGER.debug("Skipping {} because the requestBody is null or empty", getClass().getSimpleName());
             return new ArrayList<>(0);

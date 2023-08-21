@@ -63,7 +63,8 @@ public class InetAddressUtil {
         }
 
         if (properties.isEmpty()) {
-            inputStream = InetAddressUtil.class.getClassLoader().getResourceAsStream("properties/application.properties");
+            inputStream =
+                InetAddressUtil.class.getClassLoader().getResourceAsStream("properties/application.properties");
             try {
                 properties.load(inputStream);
                 inputStream.close();
@@ -192,14 +193,17 @@ public class InetAddressUtil {
                     }
                 }
             } catch (Exception e) {
-                logger.warn(String.format("Failed to retriving local address by connecting to dest host:port(%s:%s) false, e=%s", host, port, e));
+                logger.warn(String.format(
+                    "Failed to retriving local address by connecting to dest host:port(%s:%s) false, e=%s", host, port,
+                    e));
             }
         }
         return null;
     }
 
     public static boolean isInvalidLocalHost(String host) {
-        return host == null || host.length() == 0 || host.equalsIgnoreCase("localhost") || host.equals("0.0.0.0") || (LOCAL_IP_PATTERN.matcher(host).matches());
+        return host == null || host.length() == 0 || host.equalsIgnoreCase("localhost") || host.equals("0.0.0.0")
+            || (LOCAL_IP_PATTERN.matcher(host).matches());
     }
 
     public static boolean isValidAddress(InetAddress address) {
@@ -207,7 +211,8 @@ public class InetAddressUtil {
             return false;
         }
         String ipAddress = address.getHostAddress();
-        boolean valid = ipAddress != null && !ANYHOST.equals(ipAddress) && !LOCALHOST.equals(ipAddress) && IP_PATTERN.matcher(ipAddress).matches();
+        boolean valid = ipAddress != null && !ANYHOST.equals(ipAddress) && !LOCALHOST.equals(ipAddress)
+            && IP_PATTERN.matcher(ipAddress).matches();
         if (valid == false) {
             return false;
         }
