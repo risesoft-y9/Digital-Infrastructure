@@ -37,7 +37,7 @@ import net.risesoft.pojo.Y9Result;
 import net.risesoft.service.org.CompositeOrgBaseService;
 import net.risesoft.util.StringUtil;
 import net.risesoft.y9.json.Y9JsonUtil;
-import net.risesoft.y9.util.mime.DownloadFileNameUtil;
+import net.risesoft.y9.util.mime.ContentDispositionUtil;
 import net.risesoft.y9public.entity.resource.Y9App;
 import net.risesoft.y9public.entity.resource.Y9System;
 import net.risesoft.y9public.entity.role.Y9Role;
@@ -99,7 +99,7 @@ public class ImportExportController {
         try (OutputStream outStream = response.getOutputStream();
             InputStream in = new ByteArrayInputStream(jsonStr.getBytes(StandardCharsets.UTF_8))) {
 
-            String filename = DownloadFileNameUtil.standardize(
+            String filename = ContentDispositionUtil.standardizeAttachment(
                 y9App.getName() + "-应用信息-" + new SimpleDateFormat("yyyyMMddHHmmss").format(new Date()) + ".json");
             response.setContentType("application/octet-stream");
             response.setHeader("Content-Disposition", filename);
@@ -130,7 +130,7 @@ public class ImportExportController {
         try (OutputStream outStream = response.getOutputStream();
             InputStream in = new ClassPathResource("/template/exportTemplate.xlsx").getStream()) {
 
-            String filename = DownloadFileNameUtil.standardize(
+            String filename = ContentDispositionUtil.standardizeAttachment(
                 base.getName() + "-组织架构" + new SimpleDateFormat("yyyyMMddHHmmss").format(new Date()) + ".xlsx");
             response.setContentType("application/octet-stream");
             response.setHeader("Content-Disposition", filename);
@@ -170,7 +170,7 @@ public class ImportExportController {
             InputStream in = new ByteArrayInputStream(xmlString.getBytes(StandardCharsets.UTF_8))) {
             Y9OrgBase y9OrgBase = compositeOrgBaseService.getOrgBase(orgBaseId);
 
-            String filename = DownloadFileNameUtil.standardize(
+            String filename = ContentDispositionUtil.standardizeAttachment(
                 y9OrgBase.getName() + "-组织架构-" + new SimpleDateFormat("yyyyMMddHHmmss").format(new Date()) + ".xml");
             response.setContentType("application/octet-stream");
             response.setHeader("Content-Disposition", filename);
@@ -201,7 +201,7 @@ public class ImportExportController {
 
         try (OutputStream outStream = response.getOutputStream();
             InputStream in = new ClassPathResource("/template/exportSimpleTemplate.xlsx").getStream()) {
-            String filename = DownloadFileNameUtil.standardize(
+            String filename = ContentDispositionUtil.standardizeAttachment(
                 base.getName() + "-组织架构" + new SimpleDateFormat("yyyyMMddHHmmss").format(new Date()) + ".xlsx");
             response.setContentType("application/octet-stream");
             response.setHeader("Content-Disposition", filename);
@@ -228,7 +228,7 @@ public class ImportExportController {
         try (OutputStream outStream = response.getOutputStream();
             InputStream in = new ByteArrayInputStream(xmlString.getBytes(StandardCharsets.UTF_8))) {
             Y9Role y9Role = y9RoleService.findById(resourceId);
-            String filename = DownloadFileNameUtil.standardize(
+            String filename = ContentDispositionUtil.standardizeAttachment(
                 y9Role.getName() + "-角色信息-" + new SimpleDateFormat("yyyyMMddHHmmss").format(new Date()) + ".xml");
             response.setContentType("application/octet-stream");
             response.setHeader("Content-Disposition", filename);
@@ -258,7 +258,7 @@ public class ImportExportController {
 
         try (OutputStream outStream = response.getOutputStream();
             InputStream in = new ByteArrayInputStream(jsonStr.getBytes(StandardCharsets.UTF_8))) {
-            String filename = DownloadFileNameUtil.standardize(
+            String filename = ContentDispositionUtil.standardizeAttachment(
                 y9System.getCnName() + "-系统信息-" + new SimpleDateFormat("yyyyMMddHHmmss").format(new Date()) + ".json");
             response.setContentType("application/octet-stream");
             response.setHeader("Content-Disposition", filename);
