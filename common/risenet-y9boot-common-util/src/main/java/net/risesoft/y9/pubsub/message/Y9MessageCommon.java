@@ -22,9 +22,6 @@ import lombok.NoArgsConstructor;
 public class Y9MessageCommon implements Serializable {
     private static final long serialVersionUID = -1107265840539410276L;
 
-    public static final String TENANT_DATASOURCE_SYNC = "TENANT_DATASOURCE_SYNC";
-    public static final String REFRESH_REMOTE_APPLICATION_EVENT = "RefreshRemoteApplicationEvent";
-
     /** 解决 jackson 序列化丢失类型 */
     @JsonTypeInfo(use = JsonTypeInfo.Id.CLASS)
     private Serializable eventObject;

@@ -20,9 +20,6 @@ import lombok.Setter;
 public class Y9EventCommon extends ApplicationEvent {
     private static final long serialVersionUID = 6197864557550039984L;
 
-    public static final String TENANT_DATASOURCE_SYNC = "TENANT_DATASOURCE_SYNC";
-    public static final String REFRESH_REMOTE_APPLICATION_EVENT = "RefreshRemoteApplicationEvent";
-
     private Object eventObject;
     private String eventType;
 
