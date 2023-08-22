@@ -109,18 +109,10 @@ public class Y9PersonServiceImpl implements Y9PersonService {
 
     private final Y9Properties y9config;
 
-    public Y9PersonServiceImpl(Y9PersonRepository y9PersonRepository,
-        @Qualifier("rsTenantEntityManagerFactory") EntityManagerFactory entityManagerFactory,
-        Y9PersonsToGroupsRepository y9PersonsToGroupsRepository,
-        Y9PersonsToPositionsRepository y9PersonsToPositionsRepository, Y9DepartmentRepository y9DepartmentRepository,
-        Y9GroupRepository y9GroupRepository, Y9PositionRepository y9PositionRepository,
-        Y9UserRepository y9UserRepository, Y9PersonExtManager y9PersonExtManager,
-        CompositeOrgBaseManager compositeOrgBaseManager, Y9Properties y9config,
-        Y9OrgBasesToRolesRepository y9OrgBasesToRolesRepository, Y9AuthorizationRepository y9AuthorizationRepository,
-        Y9DepartmentPropRepository y9DepartmentPropRepository,
-        Y9PersonToResourceAndAuthorityRepository y9PersonToResourceAndAuthorityRepository,
-        Y9PersonToRoleRepository y9PersonToRoleRepository, Y9PersonsToPositionsManager y9PersonsToPositionsManager,
-        Y9PositionManager y9PositionManager, Y9PersonManager y9PersonManager) {
+    public Y9PersonServiceImpl(Y9PersonRepository y9PersonRepository, @Qualifier("rsTenantEntityManagerFactory") EntityManagerFactory entityManagerFactory, Y9PersonsToGroupsRepository y9PersonsToGroupsRepository, Y9PersonsToPositionsRepository y9PersonsToPositionsRepository,
+        Y9DepartmentRepository y9DepartmentRepository, Y9GroupRepository y9GroupRepository, Y9PositionRepository y9PositionRepository, Y9UserRepository y9UserRepository, Y9PersonExtManager y9PersonExtManager, CompositeOrgBaseManager compositeOrgBaseManager, Y9Properties y9config,
+        Y9OrgBasesToRolesRepository y9OrgBasesToRolesRepository, Y9AuthorizationRepository y9AuthorizationRepository, Y9DepartmentPropRepository y9DepartmentPropRepository, Y9PersonToResourceAndAuthorityRepository y9PersonToResourceAndAuthorityRepository,
+        Y9PersonToRoleRepository y9PersonToRoleRepository, Y9PersonsToPositionsManager y9PersonsToPositionsManager, Y9PositionManager y9PositionManager, Y9PersonManager y9PersonManager) {
         this.y9PersonRepository = y9PersonRepository;
         this.entityManagerFactory = entityManagerFactory;
         this.y9PersonsToGroupsRepository = y9PersonsToGroupsRepository;
@@ -155,8 +147,7 @@ public class Y9PersonServiceImpl implements Y9PersonService {
             }
             Y9Person oldperson = y9PersonRepository.findByOriginalIdAndParentId(originalId, parentId);
             if (null != oldperson) {
-                oldperson.setDn(OrgLevelConsts.getOrgLevel(OrgTypeEnum.PERSON) + oldperson.getName()
-                    + OrgLevelConsts.SEPARATOR + parent.getDn());
+                oldperson.setDn(OrgLevelConsts.getOrgLevel(OrgTypeEnum.PERSON) + oldperson.getName() + OrgLevelConsts.SEPARATOR + parent.getDn());
                 oldperson.setDisabled(false);
                 oldperson.setName(originalPerson.getName());
                 oldperson.setLoginName(originalPerson.getLoginName());
@@ -175,15 +166,13 @@ public class Y9PersonServiceImpl implements Y9PersonService {
             person.setOriginalId(originalId);
             person.setParentId(parentId);
             person.setTabIndex(maxIndex);
-            person.setDn(OrgLevelConsts.getOrgLevel(OrgTypeEnum.PERSON) + person.getName() + OrgLevelConsts.SEPARATOR
-                + parent.getDn());
+            person.setDn(OrgLevelConsts.getOrgLevel(OrgTypeEnum.PERSON) + person.getName() + OrgLevelConsts.SEPARATOR + parent.getDn());
             person.setOrgType(OrgTypeEnum.PERSON.getEnName());
             person = save(person);
 
             Y9Context.publishEvent(new Y9EntityCreatedEvent<>(person));
 
-            Y9MessageOrg msg = new Y9MessageOrg(ModelConvertUtil.orgPersonToPerson(person),
-                Y9OrgEventConst.RISEORGEVENT_TYPE_ADD_PERSON, Y9LoginUserHolder.getTenantId());
+            Y9MessageOrg msg = new Y9MessageOrg(ModelConvertUtil.orgPersonToPerson(person), Y9OrgEventConst.RISEORGEVENT_TYPE_ADD_PERSON, Y9LoginUserHolder.getTenantId());
             Y9PublishServiceUtil.persistAndPublishMessageOrg(msg, "添加人员", "添加" + person.getName());
 
             personList.add(person);
@@ -395,8 +384,7 @@ public class Y9PersonServiceImpl implements Y9PersonService {
     }
 
     @Override
-    public Message authenticate6(final String tenantShortName, final String loginName, final String password,
-        final String parentId) {
+    public Message authenticate6(final String tenantShortName, final String loginName, final String password, final String parentId) {
         Message message = new Message();
         if (StringUtils.isEmpty(tenantShortName)) {
             message.setStatus(Message.STATUS_FAIL);
@@ -466,8 +454,7 @@ public class Y9PersonServiceImpl implements Y9PersonService {
         y9Person.setDisabled(!disabled);
         y9Person = y9PersonManager.save(y9Person);
 
-        Y9MessageOrg msg = new Y9MessageOrg(ModelConvertUtil.orgPersonToPerson(y9Person),
-            Y9OrgEventConst.RISEORGEVENT_TYPE_UPDATE_PERSON, Y9LoginUserHolder.getTenantId());
+        Y9MessageOrg msg = new Y9MessageOrg(ModelConvertUtil.orgPersonToPerson(y9Person), Y9OrgEventConst.RISEORGEVENT_TYPE_UPDATE_PERSON, Y9LoginUserHolder.getTenantId());
         String event = "禁用";
         if (Boolean.TRUE.equals(disabled)) {
             event = "启用";
@@ -535,8 +522,7 @@ public class Y9PersonServiceImpl implements Y9PersonService {
             person.setVersion(OrgTypeEnum.Y9_VERSION);
         }
         person.setOrgType(OrgTypeEnum.PERSON.getEnName());
-        person.setDn(OrgLevelConsts.getOrgLevel(OrgTypeEnum.PERSON) + person.getName() + OrgLevelConsts.SEPARATOR
-            + parent.getDn());
+        person.setDn(OrgLevelConsts.getOrgLevel(OrgTypeEnum.PERSON) + person.getName() + OrgLevelConsts.SEPARATOR + parent.getDn());
         person.setDisabled(false);
         person.setParentId(parent.getId());
         String pwd = person.getPassword();
@@ -562,14 +548,12 @@ public class Y9PersonServiceImpl implements Y9PersonService {
 
         y9PersonToResourceAndAuthorityRepository.deleteByPersonId(id);
         y9PersonToRoleRepository.deleteByPersonId(id);
-        y9AuthorizationRepository.deleteByPrincipalIdAndPrincipalType(id,
-            AuthorizationPrincipalTypeEnum.PERSON.getValue());
+        y9AuthorizationRepository.deleteByPrincipalIdAndPrincipalType(id, AuthorizationPrincipalTypeEnum.PERSON.getValue());
 
         y9PersonManager.delete(y9Person);
         // 发布事件，程序内部监听处理相关业务
         Y9Context.publishEvent(new Y9EntityDeletedEvent<>(y9Person));
-        Y9MessageOrg msg = new Y9MessageOrg(ModelConvertUtil.orgPersonToPerson(y9Person),
-            Y9OrgEventConst.RISEORGEVENT_TYPE_DELETE_PERSON, Y9LoginUserHolder.getTenantId());
+        Y9MessageOrg msg = new Y9MessageOrg(ModelConvertUtil.orgPersonToPerson(y9Person), Y9OrgEventConst.RISEORGEVENT_TYPE_DELETE_PERSON, Y9LoginUserHolder.getTenantId());
         Y9PublishServiceUtil.persistAndPublishMessageOrg(msg, "删除人员", "删除" + y9Person.getName());
     }
 
@@ -691,8 +675,7 @@ public class Y9PersonServiceImpl implements Y9PersonService {
         // 查找部门下的所有岗位
         List<Y9Position> positions = y9PositionRepository.findByParentIdOrderByTabIndexAsc(parentId);
         for (Y9Position y9Position : positions) {
-            List<Y9PersonsToPositions> orgPositionPersons =
-                y9PersonsToPositionsRepository.findByPositionId(y9Position.getId());
+            List<Y9PersonsToPositions> orgPositionPersons = y9PersonsToPositionsRepository.findByPositionId(y9Position.getId());
             for (Y9PersonsToPositions orgPositionsPerson : orgPositionPersons) {
                 List<Y9Person> positionPersons = this.listByPositionId(orgPositionsPerson.getPositionId());
                 list.addAll(positionPersons);
@@ -735,6 +718,19 @@ public class Y9PersonServiceImpl implements Y9PersonService {
     @Override
     public List<Y9Person> listByGroupId(String groupId) {
         return y9PersonManager.listByGroupId(groupId);
+    }
+
+    @Override
+    public List<Y9Person> listByIdTypeAndIdNum(String idType, String idNum) {
+        List<Y9PersonExt> y9PersonExtList = y9PersonExtManager.listByIdTypeAndIdNum(idType, idNum);
+        List<Y9Person> y9PersonList = new ArrayList<>();
+        for (Y9PersonExt ext : y9PersonExtList) {
+            Y9Person y9Person = this.findById(ext.getPersonId());
+            if (y9Person != null) {
+                y9PersonList.add(y9Person);
+            }
+        }
+        return y9PersonList;
     }
 
     @Override
@@ -784,6 +780,17 @@ public class Y9PersonServiceImpl implements Y9PersonService {
     }
 
     @Override
+    public List<Y9OrgBase> listParents(String personId) {
+        List<String> parentIds = this.listParentIdByPersonId(personId);
+        List<Y9OrgBase> parentList = new ArrayList<>();
+        for (String parentId : parentIds) {
+            Y9OrgBase parent = compositeOrgBaseManager.getOrgBase(parentId);
+            parentList.add(parent);
+        }
+        return parentList;
+    }
+
+    @Override
     @Transactional(readOnly = false)
     public Y9Person modifyPassword(String personId, String newPassword) {
         Y9Person y9Person = null;
@@ -793,8 +800,7 @@ public class Y9PersonServiceImpl implements Y9PersonService {
                 y9Person.setPassword(Y9MessageDigest.hashpw(newPassword));
                 y9Person = y9PersonManager.save(y9Person);
                 Y9Context.publishEvent(new Y9EntityUpdatedEvent<>(y9Person, y9Person));
-                Y9MessageOrg msg = new Y9MessageOrg(ModelConvertUtil.orgPersonToPerson(y9Person),
-                    Y9OrgEventConst.RISEORGEVENT_TYPE_UPDATE_PERSON, Y9LoginUserHolder.getTenantId());
+                Y9MessageOrg msg = new Y9MessageOrg(ModelConvertUtil.orgPersonToPerson(y9Person), Y9OrgEventConst.RISEORGEVENT_TYPE_UPDATE_PERSON, Y9LoginUserHolder.getTenantId());
                 Y9PublishServiceUtil.persistAndPublishMessageOrg(msg, "修改密码", "修改" + y9Person.getName() + "的密码");
 
             }
@@ -814,10 +820,8 @@ public class Y9PersonServiceImpl implements Y9PersonService {
         updatedPerson = this.save(updatedPerson);
 
         Y9OrgBase parent = compositeOrgBaseManager.getOrgBase(parentId);
-        Y9MessageOrg msg = new Y9MessageOrg(ModelConvertUtil.orgPersonToPerson(updatedPerson),
-            Y9OrgEventConst.RISEORGEVENT_TYPE_UPDATE_PERSON, Y9LoginUserHolder.getTenantId());
-        Y9PublishServiceUtil.persistAndPublishMessageOrg(msg, "移动人员",
-            updatedPerson.getName() + "移动到" + parent.getName());
+        Y9MessageOrg msg = new Y9MessageOrg(ModelConvertUtil.orgPersonToPerson(updatedPerson), Y9OrgEventConst.RISEORGEVENT_TYPE_UPDATE_PERSON, Y9LoginUserHolder.getTenantId());
+        Y9PublishServiceUtil.persistAndPublishMessageOrg(msg, "移动人员", updatedPerson.getName() + "移动到" + parent.getName());
 
         Y9Context.publishEvent(new Y9EntityUpdatedEvent<>(originPerson, updatedPerson));
 
@@ -844,8 +848,7 @@ public class Y9PersonServiceImpl implements Y9PersonService {
         person.setTabIndex(Integer.parseInt(tabIndex));
         Y9Person y9Person = this.save(person);
 
-        Y9MessageOrg msg = new Y9MessageOrg(ModelConvertUtil.orgPersonToPerson(y9Person),
-            Y9OrgEventConst.RISEORGEVENT_TYPE_UPDATE_PERSON, Y9LoginUserHolder.getTenantId());
+        Y9MessageOrg msg = new Y9MessageOrg(ModelConvertUtil.orgPersonToPerson(y9Person), Y9OrgEventConst.RISEORGEVENT_TYPE_UPDATE_PERSON, Y9LoginUserHolder.getTenantId());
         Y9PublishServiceUtil.publishMessageOrg(msg);
 
         return y9Person;
@@ -909,8 +912,7 @@ public class Y9PersonServiceImpl implements Y9PersonService {
             Y9Person y9Person = y9PersonManager.save(origPerson);
 
             Y9Context.publishEvent(new Y9EntityUpdatedEvent<>(origPerson, y9Person));
-            Y9MessageOrg msg = new Y9MessageOrg(ModelConvertUtil.orgPersonToPerson(y9Person),
-                Y9OrgEventConst.RISEORGEVENT_TYPE_UPDATE_PERSON, Y9LoginUserHolder.getTenantId());
+            Y9MessageOrg msg = new Y9MessageOrg(ModelConvertUtil.orgPersonToPerson(y9Person), Y9OrgEventConst.RISEORGEVENT_TYPE_UPDATE_PERSON, Y9LoginUserHolder.getTenantId());
             Y9PublishServiceUtil.persistAndPublishMessageOrg(msg, "重置密码", "重置" + y9Person.getName() + "的密码");
 
         }
@@ -938,8 +940,17 @@ public class Y9PersonServiceImpl implements Y9PersonService {
 
     @Override
     @Transactional(readOnly = false)
-    public Y9Person saveOrUpdate(Y9Person person, Y9PersonExt ext, String parentId, String[] positionIds,
-        String[] jobIds) {
+    public Y9Person saveAvator(String personId, String avatorUrl) {
+        Y9Person y9Person = this.getById(personId);
+        y9Person.setAvator(avatorUrl);
+        y9Person = this.save(y9Person);
+        Y9Context.publishEvent(new Y9EntityUpdatedEvent<>(y9Person, y9Person));
+        return y9Person;
+    }
+
+    @Override
+    @Transactional(readOnly = false)
+    public Y9Person saveOrUpdate(Y9Person person, Y9PersonExt ext, String parentId, String[] positionIds, String[] jobIds) {
         Y9OrgBase parent = compositeOrgBaseManager.getOrgBase(parentId);
 
         person = this.saveOrUpdate(person, ext, parent);
@@ -977,8 +988,7 @@ public class Y9PersonServiceImpl implements Y9PersonService {
                 Y9Person updatedPerson = new Y9Person();
                 Y9BeanUtil.copyProperties(originPerson, updatedPerson);
                 Y9BeanUtil.copyProperties(person, updatedPerson);
-                updatedPerson.setDn(OrgLevelConsts.getOrgLevel(OrgTypeEnum.PERSON) + updatedPerson.getName()
-                    + OrgLevelConsts.SEPARATOR + parent.getDn());
+                updatedPerson.setDn(OrgLevelConsts.getOrgLevel(OrgTypeEnum.PERSON) + updatedPerson.getName() + OrgLevelConsts.SEPARATOR + parent.getDn());
                 updatedPerson.setParentId(parent.getId());
                 if (StringUtils.isBlank(updatedPerson.getEmail())) {
                     updatedPerson.setEmail(null);
@@ -997,8 +1007,7 @@ public class Y9PersonServiceImpl implements Y9PersonService {
 
                 Y9Context.publishEvent(new Y9EntityUpdatedEvent<>(originPerson, updatedPerson));
 
-                Y9MessageOrg msg = new Y9MessageOrg(ModelConvertUtil.orgPersonToPerson(person),
-                    Y9OrgEventConst.RISEORGEVENT_TYPE_UPDATE_PERSON, Y9LoginUserHolder.getTenantId());
+                Y9MessageOrg msg = new Y9MessageOrg(ModelConvertUtil.orgPersonToPerson(person), Y9OrgEventConst.RISEORGEVENT_TYPE_UPDATE_PERSON, Y9LoginUserHolder.getTenantId());
                 Y9PublishServiceUtil.persistAndPublishMessageOrg(msg, "更新人员信息", "更新" + person.getName());
 
                 if (personExt != null) {
@@ -1010,8 +1019,7 @@ public class Y9PersonServiceImpl implements Y9PersonService {
                 // 判断为从xml导入的代码并且数据库中没有相应信息,把密码统一设置为defaultPassword
                 Integer maxTabIndex = getMaxTabIndex();
                 person.setTabIndex(maxTabIndex != null ? maxTabIndex + 1 : 0);
-                person.setDn(OrgLevelConsts.getOrgLevel(OrgTypeEnum.PERSON) + person.getName()
-                    + OrgLevelConsts.SEPARATOR + parent.getDn());
+                person.setDn(OrgLevelConsts.getOrgLevel(OrgTypeEnum.PERSON) + person.getName() + OrgLevelConsts.SEPARATOR + parent.getDn());
                 person.setOrgType(OrgTypeEnum.PERSON.getEnName());
                 person.setVersion(OrgTypeEnum.Y9_VERSION);
                 person.setParentId(parent.getId());
@@ -1032,8 +1040,7 @@ public class Y9PersonServiceImpl implements Y9PersonService {
 
                 Y9Context.publishEvent(new Y9EntityCreatedEvent<>(person));
 
-                Y9MessageOrg msg = new Y9MessageOrg(ModelConvertUtil.orgPersonToPerson(person),
-                    Y9OrgEventConst.RISEORGEVENT_TYPE_ADD_PERSON, Y9LoginUserHolder.getTenantId());
+                Y9MessageOrg msg = new Y9MessageOrg(ModelConvertUtil.orgPersonToPerson(person), Y9OrgEventConst.RISEORGEVENT_TYPE_ADD_PERSON, Y9LoginUserHolder.getTenantId());
                 Y9PublishServiceUtil.persistAndPublishMessageOrg(msg, "新增人员信息", "新增" + person.getName());
 
                 return person;
@@ -1051,8 +1058,7 @@ public class Y9PersonServiceImpl implements Y9PersonService {
         person.setOfficial(1);
         person.setVersion(OrgTypeEnum.Y9_VERSION);
         person.setOrgType(OrgTypeEnum.PERSON.getEnName());
-        person.setDn(OrgLevelConsts.getOrgLevel(OrgTypeEnum.PERSON) + person.getName() + OrgLevelConsts.SEPARATOR
-            + parent.getDn());
+        person.setDn(OrgLevelConsts.getOrgLevel(OrgTypeEnum.PERSON) + person.getName() + OrgLevelConsts.SEPARATOR + parent.getDn());
         person.setDisabled(false);
         person.setParentId(parent.getId());
 
@@ -1065,8 +1071,7 @@ public class Y9PersonServiceImpl implements Y9PersonService {
 
         Y9Context.publishEvent(new Y9EntityCreatedEvent<>(person));
 
-        Y9MessageOrg msg = new Y9MessageOrg(ModelConvertUtil.orgPersonToPerson(person),
-            Y9OrgEventConst.RISEORGEVENT_TYPE_ADD_PERSON, Y9LoginUserHolder.getTenantId());
+        Y9MessageOrg msg = new Y9MessageOrg(ModelConvertUtil.orgPersonToPerson(person), Y9OrgEventConst.RISEORGEVENT_TYPE_ADD_PERSON, Y9LoginUserHolder.getTenantId());
         Y9PublishServiceUtil.persistAndPublishMessageOrg(msg, "新增人员信息", "新增" + person.getName());
 
         return person;
@@ -1078,8 +1083,7 @@ public class Y9PersonServiceImpl implements Y9PersonService {
         Y9Person oldperson = y9PersonManager.findById(person.getId());
         if (null != oldperson) {
             // 判断为更新信息
-            person.setDn(OrgLevelConsts.getOrgLevel(OrgTypeEnum.PERSON) + person.getName() + OrgLevelConsts.SEPARATOR
-                + parent.getDn());
+            person.setDn(OrgLevelConsts.getOrgLevel(OrgTypeEnum.PERSON) + person.getName() + OrgLevelConsts.SEPARATOR + parent.getDn());
             Y9BeanUtil.copyProperties(person, oldperson);
             oldperson.setParentId(parent.getId());
             oldperson = save(oldperson);
@@ -1094,8 +1098,7 @@ public class Y9PersonServiceImpl implements Y9PersonService {
                 Integer maxTabIndex = getMaxTabIndex();
                 person.setTabIndex(maxTabIndex != null ? maxTabIndex + 1 : 0);
             }
-            person.setDn(OrgLevelConsts.getOrgLevel(OrgTypeEnum.PERSON) + person.getName() + OrgLevelConsts.SEPARATOR
-                + parent.getDn());
+            person.setDn(OrgLevelConsts.getOrgLevel(OrgTypeEnum.PERSON) + person.getName() + OrgLevelConsts.SEPARATOR + parent.getDn());
             person.setOrgType(OrgTypeEnum.PERSON.getEnName());
             person.setVersion(OrgTypeEnum.Y9_VERSION);
             person.setParentId(parent.getId());
@@ -1124,10 +1127,18 @@ public class Y9PersonServiceImpl implements Y9PersonService {
         person.setProperties(properties);
         Y9Person y9Person = y9PersonManager.save(person);
 
-        Y9MessageOrg msg = new Y9MessageOrg(ModelConvertUtil.orgPersonToPerson(y9Person),
-            Y9OrgEventConst.RISEORGEVENT_TYPE_UPDATE_PERSON, Y9LoginUserHolder.getTenantId());
+        Y9MessageOrg msg = new Y9MessageOrg(ModelConvertUtil.orgPersonToPerson(y9Person), Y9OrgEventConst.RISEORGEVENT_TYPE_UPDATE_PERSON, Y9LoginUserHolder.getTenantId());
         Y9PublishServiceUtil.publishMessageOrg(msg);
+        return y9Person;
+    }
 
+    @Override
+    @Transactional(readOnly = false)
+    public Y9Person saveWeixinId(String personId, String weixinId) {
+        Y9Person y9Person = this.getById(personId);
+        y9Person.setWeixinId(weixinId);
+        y9Person = this.save(y9Person);
+        Y9Context.publishEvent(new Y9EntityUpdatedEvent<>(y9Person, y9Person));
         return y9Person;
     }
 
@@ -1157,8 +1168,7 @@ public class Y9PersonServiceImpl implements Y9PersonService {
             person.setPassword(originalPerson.getPassword());
 
             Y9OrgBase parent = compositeOrgBaseManager.getOrgBase(person.getParentId());
-            person.setDn(OrgLevelConsts.getOrgLevel(OrgTypeEnum.PERSON) + person.getName() + OrgLevelConsts.SEPARATOR
-                + parent.getDn());
+            person.setDn(OrgLevelConsts.getOrgLevel(OrgTypeEnum.PERSON) + person.getName() + OrgLevelConsts.SEPARATOR + parent.getDn());
 
             y9PersonManager.save(person);
 
@@ -1184,44 +1194,9 @@ public class Y9PersonServiceImpl implements Y9PersonService {
         person.setTabIndex(tabIndex);
         person = this.save(person);
 
-        Y9MessageOrg msg = new Y9MessageOrg(ModelConvertUtil.orgPersonToPerson(person),
-            Y9OrgEventConst.RISEORGEVENT_TYPE_UPDATE_PERSON_TABINDEX, Y9LoginUserHolder.getTenantId());
+        Y9MessageOrg msg = new Y9MessageOrg(ModelConvertUtil.orgPersonToPerson(person), Y9OrgEventConst.RISEORGEVENT_TYPE_UPDATE_PERSON_TABINDEX, Y9LoginUserHolder.getTenantId());
         Y9PublishServiceUtil.persistAndPublishMessageOrg(msg, "更新人员排序号", person.getName() + "的排序号更新为" + tabIndex);
 
         return person;
-    }
-
-    @Override
-    public List<Y9Person> listByIdTypeAndIdNum(String idType, String idNum) {
-        List<Y9PersonExt> y9PersonExtList = y9PersonExtManager.listByIdTypeAndIdNum(idType, idNum);
-        List<Y9Person> y9PersonList = new ArrayList<>();
-        for (Y9PersonExt ext : y9PersonExtList) {
-            Y9Person y9Person = this.findById(ext.getPersonId());
-            if (y9Person != null) {
-                y9PersonList.add(y9Person);
-            }
-        }
-        return y9PersonList;
-    }
-
-    @Override
-    public List<Y9OrgBase> listParents(String personId) {
-        List<String> parentIds = this.listParentIdByPersonId(personId);
-        List<Y9OrgBase> parentList = new ArrayList<>();
-        for (String parentId : parentIds) {
-            Y9OrgBase parent = compositeOrgBaseManager.getOrgBase(parentId);
-            parentList.add(parent);
-        }
-        return parentList;
-    }
-
-    @Override
-    @Transactional(readOnly = false)
-    public Y9Person changeWeixinId(String personId, String weixinId) {
-        Y9Person y9Person = this.getById(personId);
-        y9Person.setWeixinId(weixinId);
-        y9Person = this.save(y9Person);
-        Y9Context.publishEvent(new Y9EntityUpdatedEvent<>(y9Person, y9Person));
-        return y9Person;
     }
 }
