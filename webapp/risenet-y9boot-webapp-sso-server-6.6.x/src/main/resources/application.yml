@@ -155,7 +155,7 @@ cas:
                 enabled: true
                 useSsl: false
                 host: "localhost"
-                port: 7379
+                port: 6379
                 database: 13
                 #username: default
                 password: "y9i-83204585"
