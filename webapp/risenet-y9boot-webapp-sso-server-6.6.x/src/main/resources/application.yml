@@ -40,6 +40,11 @@ cas:
             core:
                 userProfileViewType: FLAT
                 bypassApprovalPrompt: true
+            sessionReplication:
+                cookie:
+                    secure: false
+                    path: /sso/
+                    sameSitePolicy: Lax
         token:
             crypto:
                 encryption:
@@ -93,8 +98,8 @@ cas:
     slo:
         asynchronous: false
     server:
-        name: http://127.0.0.1:7055
-        prefix: http://127.0.0.1:7055/sso
+        name: http://localhost:7055
+        prefix: http://localhost:7055/sso
     serviceRegistry:
         cache:
             duration: PT8H
@@ -134,8 +139,8 @@ cas:
         path: /sso/
         pinToSession: true
         rememberMeMaxAge: P14D
-        secure: true
-        sameSitePolicy: None
+        secure: false
+        sameSitePolicy: Lax
     ticket:
         crypto:
             enabled: false
