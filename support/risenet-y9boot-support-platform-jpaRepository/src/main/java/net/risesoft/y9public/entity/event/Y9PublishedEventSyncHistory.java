@@ -25,7 +25,7 @@ import net.risesoft.base.BaseEntity;
  * @date 2022/2/10
  */
 @Entity
-@Table(name = "Y9_EVENT_SYNC_HISTORY")
+@Table(name = "Y9_PUBLISHED_EVENT_SYNC_HIST")
 @Comment("事件监听api获取记录表")
 @NoArgsConstructor
 @Data

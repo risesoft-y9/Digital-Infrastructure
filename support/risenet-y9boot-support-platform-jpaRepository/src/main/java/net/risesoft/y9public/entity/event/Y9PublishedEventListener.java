@@ -21,7 +21,7 @@ import net.risesoft.base.BaseEntity;
  * @date 2022/2/10
  */
 @Entity
-@Table(name = "Y9_EVENT_PUBLISHEDEVENTLISTENER")
+@Table(name = "Y9_PUBLISHED_EVENT_LISTENER")
 @Comment("事件监听信息表")
 @NoArgsConstructor
 @Data

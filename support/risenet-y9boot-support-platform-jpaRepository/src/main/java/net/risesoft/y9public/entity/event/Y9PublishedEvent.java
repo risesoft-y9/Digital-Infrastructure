@@ -22,7 +22,7 @@ import net.risesoft.base.BaseEntity;
  * @date 2022/2/10
  */
 @Entity
-@Table(name = "Y9_EVENT_PUBLISHEDEVENT")
+@Table(name = "Y9_PUBLISHED_EVENT")
 @Comment("事件信息表")
 @NoArgsConstructor
 @Data

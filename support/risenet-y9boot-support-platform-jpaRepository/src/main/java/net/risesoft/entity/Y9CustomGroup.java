@@ -21,7 +21,7 @@ import net.risesoft.base.BaseEntity;
  * @date 2022/2/10
  */
 @Entity
-@Table(name = "Y9_ORG_PERSON_CUSTOMGROUP")
+@Table(name = "Y9_ORG_CUSTOM_GROUP")
 @Comment("自定义群组")
 @NoArgsConstructor
 @Data
