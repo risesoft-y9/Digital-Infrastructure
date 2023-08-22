@@ -19,6 +19,7 @@ import lombok.extern.slf4j.Slf4j;
 
 import net.risesoft.y9.Y9Context;
 import net.risesoft.y9.json.Y9JsonUtil;
+import net.risesoft.y9.pubsub.constant.Y9CommonEventConst;
 import net.risesoft.y9.pubsub.event.Y9EventCommon;
 import net.risesoft.y9.pubsub.message.Y9MessageCommon;
 import net.risesoft.y9.tenant.datasource.Y9TenantDataSourceLookup;
@@ -40,7 +41,7 @@ public class Y9KafkaConfiguration {
         try {
             msg = Y9JsonUtil.readValue(value, Y9MessageCommon.class);
             String eventType = msg.getEventType();
-            if (Y9MessageCommon.REFRESH_REMOTE_APPLICATION_EVENT.equals(eventType)) {
+            if (Y9CommonEventConst.REFRESH_REMOTE_APPLICATION_EVENT.equals(eventType)) {
                 if (contextRefresher == null) {
                     try {
                         this.contextRefresher = Y9Context.getBean(ContextRefresher.class);
@@ -53,7 +54,7 @@ public class Y9KafkaConfiguration {
                     Set<String> keys = contextRefresher.refresh();
                     LOGGER.info("Received remote refresh request. Keys refreshed " + keys);
                 }
-            } else if (Y9MessageCommon.TENANT_DATASOURCE_SYNC.equals(eventType)) {
+            } else if (Y9CommonEventConst.TENANT_DATASOURCE_SYNC.equals(eventType)) {
                 if (this.y9TenantDataSourceLookup == null) {
                     try {
                         this.y9TenantDataSourceLookup = Y9Context.getBean(Y9TenantDataSourceLookup.class);

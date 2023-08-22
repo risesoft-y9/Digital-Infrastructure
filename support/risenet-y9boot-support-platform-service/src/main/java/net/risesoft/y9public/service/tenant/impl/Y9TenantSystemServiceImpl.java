@@ -20,6 +20,7 @@ import net.risesoft.id.IdType;
 import net.risesoft.id.Y9IdGenerator;
 import net.risesoft.y9.Y9LoginUserHolder;
 import net.risesoft.y9.pubsub.Y9PublishService;
+import net.risesoft.y9.pubsub.constant.Y9CommonEventConst;
 import net.risesoft.y9.pubsub.message.Y9MessageCommon;
 import net.risesoft.y9public.entity.resource.Y9System;
 import net.risesoft.y9public.entity.tenant.Y9DataSource;
@@ -286,7 +287,7 @@ public class Y9TenantSystemServiceImpl implements Y9TenantSystemService {
             this.saveTenantSystem(systemId, Y9LoginUserHolder.getTenantId());
 
             // 发送同步数据源的消息
-            Y9MessageCommon event = new Y9MessageCommon(Y9MessageCommon.TENANT_DATASOURCE_SYNC, "all");
+            Y9MessageCommon event = new Y9MessageCommon(Y9CommonEventConst.TENANT_DATASOURCE_SYNC, "all");
             y9PublishService.publishMessageCommon(event);
         }
     }

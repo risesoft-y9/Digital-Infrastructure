@@ -152,7 +152,6 @@ public class Y9RoleManagerImpl implements Y9RoleManager {
     public void delete(String id) {
         Y9Role y9Role = this.getById(id);
         if (Y9RoleTypeEnum.ROLE.getValue().equals(y9Role.getType())) {
-            // TODO 角色关联 Person 的 roles 字段
             y9OrgBasesToRolesRepository.deleteByRoleId(id);
 
             List<Y9Authorization> authorizationList = y9AuthorizationRepository.findByPrincipalIdAndPrincipalType(id,
