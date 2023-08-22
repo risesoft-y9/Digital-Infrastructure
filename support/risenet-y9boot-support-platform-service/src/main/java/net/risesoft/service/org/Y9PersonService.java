@@ -270,6 +270,15 @@ public interface Y9PersonService {
     List<Y9Person> listByGroupId(String groupId);
 
     /**
+     * 根据idType和idNum查询
+     *
+     * @param idType 证件类型
+     * @param idNum 证件号
+     * @return {@link List}<{@link Y9Person}>
+     */
+    List<Y9Person> listByIdTypeAndIdNum(String idType, String idNum);
+
+    /**
      * 根据名称查询
      *
      * @param name 姓名
@@ -310,6 +319,15 @@ public interface Y9PersonService {
      * @return {@link List}<{@link Y9Person}>
      */
     List<Y9Person> listByPositionId(String positionId);
+
+    /**
+     * 获取人员的所有父节点 <br/>
+     * 一般只会有一个，一人多账号的情况可能会有多个
+     *
+     * @param personId 人员id
+     * @return {@link List}<{@link Y9OrgBase}>
+     */
+    List<Y9OrgBase> listParents(String personId);
 
     /**
      * 修改人员密码
@@ -387,6 +405,15 @@ public interface Y9PersonService {
     Y9Person save(Y9Person person);
 
     /**
+     * 保存人员头像
+     *
+     * @param personId 人员id
+     * @param avatorUrl 头像路径
+     * @return
+     */
+    Y9Person saveAvator(String personId, String avatorUrl);
+
+    /**
      * 保存或更新
      *
      * @param person 人员对象
@@ -428,6 +455,14 @@ public interface Y9PersonService {
     Y9Person saveProperties(String personId, String properties);
 
     /**
+     * 修改微信 id
+     *
+     * @param personId 人员 id
+     * @param weixinId 微信 id
+     */
+    Y9Person saveWeixinId(String personId, String weixinId);
+
+    /**
      * 根据where子句查询
      *
      * @param whereClause 查询子句
@@ -443,30 +478,4 @@ public interface Y9PersonService {
      * @return {@link Y9Person}
      */
     Y9Person updateTabIndex(String id, int tabIndex);
-
-    /**
-     * 根据idType和idNum查询
-     *
-     * @param idType 证件类型
-     * @param idNum 证件号
-     * @return {@link List}<{@link Y9Person}>
-     */
-    List<Y9Person> listByIdTypeAndIdNum(String idType, String idNum);
-
-    /**
-     * 获取人员的所有父节点 <br/>
-     * 一般只会有一个，一人多账号的情况可能会有多个
-     *
-     * @param personId 人员id
-     * @return {@link List}<{@link Y9OrgBase}>
-     */
-    List<Y9OrgBase> listParents(String personId);
-
-    /**
-     * 修改微信 id
-     *
-     * @param personId 人员 id
-     * @param weixinId 微信 id
-     */
-    Y9Person changeWeixinId(String personId, String weixinId);
 }
