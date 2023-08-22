@@ -68,7 +68,7 @@ public class Y9PublishServiceUtil {
             String operator =
                 Y9LoginUserHolder.getUserInfo() == null ? "系统" : Y9LoginUserHolder.getUserInfo().getName();
             jdbcTemplate.update(
-                "insert into Y9_EVENT_PUBLISHEDEVENT(ID,TENANT_ID,EVENT_TYPE,EVENT_NAME,OBJ_ID,OPERATOR,CLIENT_IP,EVENT_DESCRIPTION, CREATE_TIME) values(?,?,?,?,?,?,?,?,?)",
+                "insert into Y9_PUBLISHED_EVENT(ID,TENANT_ID,EVENT_TYPE,EVENT_NAME,OBJ_ID,OPERATOR,CLIENT_IP,EVENT_DESCRIPTION, CREATE_TIME) values(?,?,?,?,?,?,?,?,?)",
                 Y9IdGenerator.genId(IdType.SNOWFLAKE), tenantId, msg.getEventType(), eventName, objId, operator,
                 clientIp, description, new Date());
         } catch (Exception e) {
@@ -97,7 +97,7 @@ public class Y9PublishServiceUtil {
             }
 
             jdbcTemplate.update(
-                "insert into Y9_EVENT_PUBLISHEDEVENT(ID,TENANT_ID,EVENT_TYPE,EVENT_NAME,OBJ_ID,OPERATOR,CLIENT_IP,EVENT_DESCRIPTION,ENTITY_JSON, CREATE_TIME) values(?,?,?,?,?,?,?,?,?,?)",
+                "insert into Y9_PUBLISHED_EVENT(ID,TENANT_ID,EVENT_TYPE,EVENT_NAME,OBJ_ID,OPERATOR,CLIENT_IP,EVENT_DESCRIPTION,ENTITY_JSON, CREATE_TIME) values(?,?,?,?,?,?,?,?,?,?)",
                 Y9IdGenerator.genId(IdType.SNOWFLAKE), msg.getTenantId(), msg.getEventType(), eventName, objId,
                 operator, clientIp, description, Y9JsonUtil.writeValueAsString(orgObj), new Date());
         } catch (Exception e) {

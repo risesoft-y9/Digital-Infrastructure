@@ -21,8 +21,8 @@ import net.risesoft.base.BaseEntity;
  * @date 2022/2/10
  */
 @Entity
-@Table(name = "Y9_EVENT_PUBLISHEDEVENTLISTENER")
-@org.hibernate.annotations.Table(comment = "事件监听信息表", appliesTo = "Y9_EVENT_PUBLISHEDEVENTLISTENER")
+@Table(name = "Y9_PUBLISHED_EVENT_LISTENER")
+@org.hibernate.annotations.Table(comment = "事件监听信息表", appliesTo = "Y9_PUBLISHED_EVENT_LISTENER")
 @NoArgsConstructor
 @Data
 public class Y9PublishedEventListener extends BaseEntity {

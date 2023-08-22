@@ -21,8 +21,8 @@ import net.risesoft.base.BaseEntity;
  * @date 2022/2/10
  */
 @Entity
-@Table(name = "Y9_ORG_PERSON_CUSTOMGROUP_MEMBER")
-@org.hibernate.annotations.Table(comment = "自定义群组成员表", appliesTo = "Y9_ORG_PERSON_CUSTOMGROUP_MEMBER")
+@Table(name = "Y9_ORG_CUSTOM_GROUP_MEMBER")
+@org.hibernate.annotations.Table(comment = "自定义群组成员表", appliesTo = "Y9_ORG_CUSTOM_GROUP_MEMBER")
 @NoArgsConstructor
 @Data
 public class Y9CustomGroupMember extends BaseEntity {
