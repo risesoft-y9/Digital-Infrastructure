@@ -11,7 +11,25 @@ import org.springframework.data.elasticsearch.repository.config.EnableElasticsea
     includeFilters = {
         @ComponentScan.Filter(classes = ElasticsearchRepository.class, type = FilterType.ASSIGNABLE_TYPE)})
 public class Y9ElasticsearchConfiguration {
-    public Y9ElasticsearchConfiguration() {
-        System.setProperty("es.set.netty.runtime.available.processors", "false");
-    }
+	@Autowired
+	private Environment env;
+	
+	public Y9ElasticsearchConfiguration() {
+		System.setProperty("es.set.netty.runtime.available.processors", "false");
+	}
+
+	@Override
+	@Bean
+	@Primary
+	public ClientConfiguration clientConfiguration() {
+		String uri = env.getProperty("spring.elasticsearch.rest.uris");
+		String username = env.getProperty("spring.elasticsearch.rest.username");
+        String password = env.getProperty("spring.elasticsearch.rest.password");
+		return ClientConfiguration.builder()
+			.connectedTo(uri)
+			.withConnectTimeout(Duration.ofMinutes(5))
+			.withSocketTimeout(Duration.ofMinutes(5))
+			.withBasicAuth(username, password)
+			.build();
+	}
 }

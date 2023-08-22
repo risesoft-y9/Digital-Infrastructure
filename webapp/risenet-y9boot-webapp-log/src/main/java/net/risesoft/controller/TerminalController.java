@@ -180,7 +180,7 @@ public class TerminalController {
         if (!personList.isEmpty()) {
             personList.forEach(person -> {
                 Map<String, Object> map = new HashMap<>();
-                Integer countNum = y9logUserLoginInfoService.countByPersonId(person.getId());
+                long countNum = y9logUserLoginInfoService.countByPersonId(person.getId());
                 if (countNum > 0) {
                     map.put("id", person.getId());
                     map.put("loginName", person.getName());
@@ -213,13 +213,13 @@ public class TerminalController {
             Y9JsonUtil.readList(Y9JsonUtil.writeValueAsString(personPage.getRows()), Person.class);
         if (!personList.isEmpty()) {
             for (Person orgPerson : personList) {
-                Integer countNum = y9logUserLoginInfoService.countByPersonId(orgPerson.getId());
+                long countNum = y9logUserLoginInfoService.countByPersonId(orgPerson.getId());
                 if (countNum > 0) {
                     Map<String, Object> map = new HashMap<>();
                     map.put("id", orgPerson.getId());
                     map.put("loginName", orgPerson.getName());
                     map.put("dn", orgPerson.getDn());
-                    map.put("loginNum", countNum.toString());
+                    map.put("loginNum", String.valueOf(countNum));
                     list.add(map);
                 }
             }
