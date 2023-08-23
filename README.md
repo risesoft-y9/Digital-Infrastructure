@@ -83,7 +83,6 @@ rest -- 对外提供接口模块
 starter -- 初始化模块
 	├── risenet-y9boot-starter-apisix -- 微服务api网关组件
 	├── risenet-y9boot-starter-cache-redis -- 缓存组件
-	├── risenet-y9boot-starter-dbComment -- 实体对应的数据库表自动添加注释组件
 	├── risenet-y9boot-starter-elasticsearch -- 全文检索基本依赖封装
 	├── risenet-y9boot-starter-idGenerator -- 唯一标示生成组件
 	├── risenet-y9boot-starter-jpa-public -- 公共库组件
@@ -104,7 +103,6 @@ support -- 业务支撑模块
 	├── risenet-y9boot-support-platform-jpaRepository -- 数字底座持久层
 	├── risenet-y9boot-support-platform-service -- 数字底座业务层
 	├── risenet-y9boot-support-platform-web -- 数字底座控制层
-	├── risenet-y9boot-support-sso-theme-y9-v3.0 -- OAuth2.0登录页面
 vue -- 前端工程
 	├── y9vue-kernel-standard -- 数字底座前端工程
 webapp -- 系统公共模块
