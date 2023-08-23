@@ -355,6 +355,11 @@
             <artifactId>core</artifactId>
         </dependency>
         <!-- 二维码-结束 -->
+
+        <dependency>
+            <groupId>org.springframework.kafka</groupId>
+            <artifactId>spring-kafka</artifactId>
+        </dependency>
     </dependencies>
 
     <build>

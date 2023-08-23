@@ -15,8 +15,11 @@ import org.apereo.cas.web.y9.service.Y9LoginUserService;
 import org.apereo.cas.web.y9.service.Y9UserService;
 import org.apereo.cas.web.y9.util.InetAddressUtil;
 import org.apereo.cas.web.y9.util.common.UserAgentUtil;
+import org.apereo.cas.web.y9.util.json.Y9JacksonUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.context.ConfigurableApplicationContext;
+import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.support.TransactionOperations;
 import org.springframework.util.StringUtils;
@@ -24,6 +27,8 @@ import org.springframework.util.StringUtils;
 import lombok.extern.slf4j.Slf4j;
 
 import cz.mallat.uasparser.UserAgentInfo;
+
+import org.springframework.kafka.core.KafkaTemplate;
 
 @Service
 @Slf4j
@@ -38,6 +43,12 @@ public class Y9LoginUserServiceImpl implements Y9LoginUserService {
 
     @PersistenceContext(unitName = "jpaServiceRegistryContext")
     private EntityManager entityManager;
+
+    @Autowired
+    private KafkaTemplate<Object, Object> kafkaTemplate;
+
+    @Autowired
+    private ConfigurableApplicationContext applicationContext;
 
     public static String SSO_SERVER_IP = InetAddressUtil.getLocalAddress().getHostAddress();
 
@@ -110,14 +121,21 @@ public class Y9LoginUserServiceImpl implements Y9LoginUserService {
                 user.setBrowserName(browser);
                 user.setBrowserVersion(uaInfo.getBrowserVersionInfo());
                 user.setScreenResolution(screenResolution);
-                user.setOSName(uaInfo.getOsName());
+                user.setOsName(uaInfo.getOsName());
                 user.setManagerLevel(managerLevel);
-
-                transactionTemplate.execute(status -> {
-                    entityManager.persist(user);
-                    LOGGER.info("保存登录日志成功");
-                    return null;
-                });
+                Environment environment = applicationContext.getEnvironment();
+                String loginInfoSaveTarget = environment.getProperty("y9.login.loginInfoSaveTarget", "jpa");
+                if ("jpa".equals(loginInfoSaveTarget)) {
+                    transactionTemplate.execute(status -> {
+                        entityManager.persist(user);
+                        LOGGER.info("保存登录日志成功");
+                        return null;
+                    });
+                } else {
+                    String jsonString = Y9JacksonUtil.writeValueAsString(user);
+                    kafkaTemplate.send("y9_userLoginInfo_message", jsonString);
+                    LOGGER.info("保存登录日志成功至Kafka成功");
+                }
             }
         } catch (Exception e) {
             e.printStackTrace();

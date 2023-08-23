@@ -224,6 +224,12 @@ spring:
     main:
         allow-bean-definition-overriding: true
         allow-circular-references: false
+    kafka:
+        bootstrap-servers: localhost:9092
+        consumer:
+            auto-commit-interval: 1000
+            enable-auto-commit: true
+            group-id: y9sso-server
     session:
         store-type: redis
         timeout: 3600
@@ -243,3 +249,5 @@ y9:
     login:
         casLoginView: "casLoginView-y9-v3.0"
         credentialPropsOptional: "screenDimension,userAgent,systemName,clientIp,clientMac,clientDiskId,clientHostName,deptId,positionId,pwdEcodeType"
+        #kafka , jpa
+        loginInfoSaveTarget: kafka

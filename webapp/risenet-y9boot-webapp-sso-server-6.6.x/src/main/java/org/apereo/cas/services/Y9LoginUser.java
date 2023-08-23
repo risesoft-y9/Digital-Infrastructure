@@ -98,7 +98,7 @@ public class Y9LoginUser implements Serializable {
 
     @Column(name = "OS_NAME", length = 255)
     @Comment("OS名称")
-    private String oSName;
+    private String osName;
 
     @Column(name = "SCREEN_RESOLUTION", length = 255)
     @Comment("用户主机屏幕分辨率")
