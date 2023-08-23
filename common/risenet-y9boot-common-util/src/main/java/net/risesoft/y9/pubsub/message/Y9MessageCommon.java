@@ -22,8 +22,15 @@ import lombok.NoArgsConstructor;
 public class Y9MessageCommon implements Serializable {
     private static final long serialVersionUID = -1107265840539410276L;
 
-    /** 解决 jackson 序列化丢失类型 */
+    /** 系统名 */
+    private String target;
+    /**
+     * 事件内容 <br>
+     * 
+     * @JsonTypeInfo 解决 jackson 序列化丢失类型
+     */
     @JsonTypeInfo(use = JsonTypeInfo.Id.CLASS)
     private Serializable eventObject;
+    /** 事件类型 */
     private String eventType;
 }

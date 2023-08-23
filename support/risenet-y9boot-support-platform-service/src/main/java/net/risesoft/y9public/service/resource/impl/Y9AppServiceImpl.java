@@ -17,14 +17,20 @@ import lombok.RequiredArgsConstructor;
 
 import net.risesoft.id.IdType;
 import net.risesoft.id.Y9IdGenerator;
+import net.risesoft.model.App;
 import net.risesoft.pojo.Y9PageQuery;
 import net.risesoft.y9.Y9Context;
+import net.risesoft.y9.pubsub.Y9PublishService;
+import net.risesoft.y9.pubsub.constant.Y9CommonEventConst;
 import net.risesoft.y9.pubsub.event.Y9EntityCreatedEvent;
 import net.risesoft.y9.pubsub.event.Y9EntityUpdatedEvent;
+import net.risesoft.y9.pubsub.message.Y9MessageCommon;
 import net.risesoft.y9.util.Y9BeanUtil;
+import net.risesoft.y9.util.Y9ModelConvertUtil;
 import net.risesoft.y9public.entity.resource.Y9App;
 import net.risesoft.y9public.entity.resource.Y9System;
 import net.risesoft.y9public.manager.resource.Y9AppManager;
+import net.risesoft.y9public.manager.resource.Y9SystemManager;
 import net.risesoft.y9public.repository.resource.Y9AppRepository;
 import net.risesoft.y9public.repository.resource.Y9SystemRepository;
 import net.risesoft.y9public.service.resource.Y9AppService;
@@ -45,6 +51,9 @@ public class Y9AppServiceImpl implements Y9AppService {
     private final Y9SystemRepository y9SystemRepository;
 
     private final Y9AppManager y9AppManager;
+    private final Y9SystemManager y9SystemManager;
+
+    private final Y9PublishService y9PublishService;
 
     @Override
     public long countBySystemId(String systemId) {
@@ -313,6 +322,13 @@ public class Y9AppServiceImpl implements Y9AppService {
         y9App = y9AppManager.save(y9App);
 
         Y9Context.publishEvent(new Y9EntityCreatedEvent<>(y9App));
+
+        Y9System y9System = y9SystemManager.getById(y9App.getSystemId());
+        Y9MessageCommon event = new Y9MessageCommon();
+        event.setEventObject(Y9ModelConvertUtil.convert(y9App, App.class));
+        event.setTarget(y9System.getName());
+        event.setEventType(Y9CommonEventConst.APP_CREATED);
+        y9PublishService.publishMessageCommon(event);
 
         return y9App;
     }

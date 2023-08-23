@@ -18,14 +18,16 @@ import lombok.extern.slf4j.Slf4j;
 
 import net.risesoft.id.IdType;
 import net.risesoft.id.Y9IdGenerator;
-import net.risesoft.y9.Y9LoginUserHolder;
+import net.risesoft.model.TenantSystem;
 import net.risesoft.y9.pubsub.Y9PublishService;
 import net.risesoft.y9.pubsub.constant.Y9CommonEventConst;
 import net.risesoft.y9.pubsub.message.Y9MessageCommon;
+import net.risesoft.y9.util.Y9ModelConvertUtil;
 import net.risesoft.y9public.entity.resource.Y9System;
 import net.risesoft.y9public.entity.tenant.Y9DataSource;
 import net.risesoft.y9public.entity.tenant.Y9Tenant;
 import net.risesoft.y9public.entity.tenant.Y9TenantSystem;
+import net.risesoft.y9public.manager.resource.Y9SystemManager;
 import net.risesoft.y9public.manager.tenant.Y9DataSourceManager;
 import net.risesoft.y9public.manager.tenant.Y9TenantManager;
 import net.risesoft.y9public.manager.tenant.Y9TenantSystemManager;
@@ -47,9 +49,11 @@ public class Y9TenantSystemServiceImpl implements Y9TenantSystemService {
     private final Y9TenantSystemRepository y9TenantSystemRepository;
     private final Y9SystemRepository y9SystemRepository;
 
+    private final Y9SystemManager y9SystemManager;
     private final Y9TenantManager y9TenantManager;
     private final Y9TenantSystemManager y9TenantSystemManager;
     private final Y9DataSourceManager y9DataSourceManager;
+
     private final Y9PublishService y9PublishService;
 
     @Override
@@ -167,38 +171,27 @@ public class Y9TenantSystemServiceImpl implements Y9TenantSystemService {
     public Map<String, Object> saveAndInitializedTenantSystem(Y9TenantSystem y9TenantSystem, Y9System y9System,
         String tenantId) {
         Map<String, Object> map = new HashMap<>(8);
-        if ("processAdmin".equals(y9System.getName())) {
-            y9TenantSystem.setInitialized(true);
-            this.save(y9TenantSystem);
-            map.put("success", true);
-            map.put("msg", "流程管理不需要初始化数据库表结构!");
-            Y9MessageCommon event = new Y9MessageCommon();// 租用流程系统发出监听事件，流程系统初始化表结构和办件应用数据
-            event.setEventObject(tenantId);
-            event.setEventType("TENANT_SYSTEM_PROCESSADMIN");
-            y9PublishService.publishMessageCommon(event);
-            return map;
-        }
         String systemId = y9TenantSystem.getSystemId();
-        String dataSourceId = y9TenantSystem.getTenantDataSource();
         long count = this.existByTenantIdAndSystemId(tenantId, systemId);
         if (count > 0) {
             map.put("success", true);
             map.put("msg", y9System.getCnName() + "已租用!");
             return map;
         }
-        y9TenantSystem.setInitialized(false);
         map.put("success", false);
         map.put("systemId", systemId);
-        map.put("dataSourceId", dataSourceId);
+        map.put("dataSourceId", y9TenantSystem.getTenantDataSource());
         map.put("msg", y9System.getCnName() + "初始化数据库失败!该系统不存在全量sql文件，初始化表结构失败，如果需要初始化表结构，请编辑该租户系统，手动触发租户库初始化表结构!");
+        y9TenantSystem.setInitialized(false);
         y9TenantSystem.setTenantId(tenantId);
         this.save(y9TenantSystem);
-        if ("itemAdmin".equals(y9System.getName())) {// 租用事项系统发出监听事件，事项系统初始化表结构和办件应用数据
-            Y9MessageCommon event = new Y9MessageCommon();
-            event.setEventObject(tenantId);
-            event.setEventType("TENANT_SYSTEM_ITEMADMIN");
-            y9PublishService.publishMessageCommon(event);
-        }
+
+        // 租户租用系统事件，应用可监听做对应租户的初始化的工作
+        Y9MessageCommon event = new Y9MessageCommon();
+        event.setEventObject(Y9ModelConvertUtil.convert(y9TenantSystem, TenantSystem.class));
+        event.setTarget(y9System.getName());
+        event.setEventType(Y9CommonEventConst.TENANT_SYSTEM_REGISTERED);
+        y9PublishService.publishMessageCommon(event);
         return map;
     }
 
@@ -222,11 +215,8 @@ public class Y9TenantSystemServiceImpl implements Y9TenantSystemService {
                 LOGGER.warn(e.getMessage(), e);
             }
             y9TenantSystem.setTenantDataSource(datasoureId);
-            map = this.saveAndInitializedTenantSystem(y9TenantSystem, y9System, tenantId);
-        } else {
-            map = this.saveAndInitializedTenantSystem(y9TenantSystem, y9System, tenantId);
         }
-        return map;
+        return this.saveAndInitializedTenantSystem(y9TenantSystem, y9System, tenantId);
     }
 
     @Override
@@ -282,12 +272,15 @@ public class Y9TenantSystemServiceImpl implements Y9TenantSystemService {
     @Override
     @Transactional(readOnly = false)
     public void registerTenantSystem(String tenantId, String systemId) {
-        Y9TenantSystem y9TenantSystem = this.getByTenantIdAndSystemId(Y9LoginUserHolder.getTenantId(), systemId);
+        Y9TenantSystem y9TenantSystem = this.getByTenantIdAndSystemId(tenantId, systemId);
         if (y9TenantSystem == null) {
-            this.saveTenantSystem(systemId, Y9LoginUserHolder.getTenantId());
+            this.saveTenantSystem(systemId, tenantId);
+
+            Y9System y9System = y9SystemManager.getById(systemId);
 
             // 发送同步数据源的消息
-            Y9MessageCommon event = new Y9MessageCommon(Y9CommonEventConst.TENANT_DATASOURCE_SYNC, "all");
+            Y9MessageCommon event =
+                new Y9MessageCommon(y9System.getName(), null, Y9CommonEventConst.TENANT_DATASOURCE_SYNC);
             y9PublishService.publishMessageCommon(event);
         }
     }

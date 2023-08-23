@@ -20,7 +20,11 @@ import lombok.Setter;
 public class Y9EventCommon extends ApplicationEvent {
     private static final long serialVersionUID = 6197864557550039984L;
 
+    /** 系统名，针对只需要特定系统接收消息的情况 */
+    private String target;
+    /** 事件内容 */
     private Object eventObject;
+    /** 事件类型 */
     private String eventType;
 
     public Y9EventCommon() {
