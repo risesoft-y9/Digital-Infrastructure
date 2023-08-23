@@ -14,13 +14,12 @@ import org.springframework.transaction.annotation.Transactional;
 
 import lombok.RequiredArgsConstructor;
 
-import net.risesoft.exception.SystemErrorCodeEnum;
 import net.risesoft.id.IdType;
 import net.risesoft.id.Y9IdGenerator;
-import net.risesoft.y9.exception.util.Y9ExceptionUtil;
 import net.risesoft.y9.util.Y9BeanUtil;
 import net.risesoft.y9public.entity.resource.Y9System;
 import net.risesoft.y9public.manager.resource.Y9AppManager;
+import net.risesoft.y9public.manager.resource.Y9SystemManager;
 import net.risesoft.y9public.manager.tenant.Y9TenantSystemManager;
 import net.risesoft.y9public.repository.resource.Y9SystemRepository;
 import net.risesoft.y9public.service.resource.Y9SystemService;
@@ -41,13 +40,14 @@ public class Y9SystemServiceImpl implements Y9SystemService {
 
     private final Y9AppManager y9AppManager;
     private final Y9TenantSystemManager y9TenantSystemManager;
+    private final Y9SystemManager y9SystemManager;
 
     @Override
     @Transactional(readOnly = false)
     public void delete(String id) {
         y9AppManager.deleteBySystemId(id);
         y9TenantSystemManager.deleteBySystemId(id);
-        y9SystemRepository.deleteById(id);
+        y9SystemManager.delete(id);
     }
 
     @Override
@@ -67,7 +67,7 @@ public class Y9SystemServiceImpl implements Y9SystemService {
         systemEntity.setEnabled(Boolean.TRUE);
         // TODO 启用系统同时启用应用？
         // appService.enableAppBySystemId(id);
-        return y9SystemRepository.save(systemEntity);
+        return y9SystemManager.save(systemEntity);
     }
 
     @Override
@@ -77,7 +77,7 @@ public class Y9SystemServiceImpl implements Y9SystemService {
 
     @Override
     public Y9System findById(String id) {
-        return y9SystemRepository.findById(id).orElse(null);
+        return y9SystemManager.findById(id);
     }
 
     @Override
@@ -92,8 +92,7 @@ public class Y9SystemServiceImpl implements Y9SystemService {
 
     @Override
     public Y9System getById(String id) {
-        return y9SystemRepository.findById(id)
-            .orElseThrow(() -> Y9ExceptionUtil.notFoundException(SystemErrorCodeEnum.SYSTEM_NOT_FOUND, id));
+        return y9SystemManager.getById(id);
     }
 
     @Override
@@ -127,7 +126,7 @@ public class Y9SystemServiceImpl implements Y9SystemService {
         List<String> systemNameList = new ArrayList<>();
         if (!ids.isEmpty()) {
             for (String id : ids) {
-                Y9System se = y9SystemRepository.findById(id).orElse(null);
+                Y9System se = y9SystemManager.findById(id);
                 String systemName = se != null ? se.getName() : "";
                 if (!"riseplatform".equals(systemName)) {
                     systemNameList.add(systemName);
@@ -137,9 +136,6 @@ public class Y9SystemServiceImpl implements Y9SystemService {
         return systemNameList;
     }
 
-    /* (non-Javadoc)
-     * @see net.risesoft.y9public.service.resource.Y9SystemService#pageByAll(int, int)
-     */
     @Override
     public Page<Y9System> page(int page, int rows) {
         Pageable pageable = PageRequest.of(page < 1 ? 0 : page - 1, rows, Sort.by(Sort.Direction.ASC, "tabIndex"));
@@ -160,7 +156,7 @@ public class Y9SystemServiceImpl implements Y9SystemService {
             for (int i = 0, len = systemIds.length; i < len; i++) {
                 Y9System system = getById(systemIds[i]);
                 system.setTabIndex(i + 1);
-                y9SystemRepository.save(system);
+                y9SystemManager.save(system);
             }
         }
     }
@@ -169,10 +165,10 @@ public class Y9SystemServiceImpl implements Y9SystemService {
     @Transactional(readOnly = false)
     public Y9System saveOrUpdate(Y9System y9System) {
         if (StringUtils.isNotBlank(y9System.getId())) {
-            Y9System oldY9System = y9SystemRepository.findById(y9System.getId()).orElse(null);
+            Y9System oldY9System = y9SystemManager.findById(y9System.getId());
             if (oldY9System != null) {
                 Y9BeanUtil.copyProperties(y9System, oldY9System);
-                return y9SystemRepository.save(oldY9System);
+                return y9SystemManager.save(oldY9System);
             }
         } else {
             y9System.setId(Y9IdGenerator.genId(IdType.SNOWFLAKE));
@@ -182,7 +178,7 @@ public class Y9SystemServiceImpl implements Y9SystemService {
                 y9System.setTabIndex(maxIndex);
             }
         }
-        return y9SystemRepository.save(y9System);
+        return y9SystemManager.save(y9System);
     }
 
 }

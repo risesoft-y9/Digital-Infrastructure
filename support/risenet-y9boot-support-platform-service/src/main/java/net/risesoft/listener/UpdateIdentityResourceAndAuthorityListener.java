@@ -1,11 +1,9 @@
 package net.risesoft.listener;
 
-import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.event.TransactionalEventListener;
@@ -28,15 +26,10 @@ import net.risesoft.service.org.CompositeOrgBaseService;
 import net.risesoft.service.relation.Y9OrgBasesToRolesService;
 import net.risesoft.util.Y9OrgUtil;
 import net.risesoft.util.Y9ResourceUtil;
-import net.risesoft.y9.json.Y9JsonUtil;
-import net.risesoft.y9.pubsub.constant.Y9TopicConst;
 import net.risesoft.y9.pubsub.event.Y9EntityCreatedEvent;
 import net.risesoft.y9.pubsub.event.Y9EntityDeletedEvent;
 import net.risesoft.y9.pubsub.event.Y9EntityUpdatedEvent;
-import net.risesoft.y9public.entity.resource.Y9App;
 import net.risesoft.y9public.entity.resource.Y9ResourceBase;
-import net.risesoft.y9public.entity.resource.Y9System;
-import net.risesoft.y9public.repository.resource.Y9SystemRepository;
 
 /**
  * 监听各种需要重新计算权限缓存的事件并执行相应操作
@@ -55,9 +48,6 @@ public class UpdateIdentityResourceAndAuthorityListener {
     private final Y9OrgBasesToRolesService y9OrgBasesToRolesService;
 
     private final CompositeOrgBaseService compositeOrgBaseService;
-    private final Y9SystemRepository y9SystemRepository;
-
-    private final KafkaTemplate<String, Object> y9KafkaTemplate;
 
     @TransactionalEventListener
     @Async
@@ -173,30 +163,6 @@ public class UpdateIdentityResourceAndAuthorityListener {
         }
         if (LOGGER.isDebugEnabled()) {
             LOGGER.debug("更新资源触发的重新计算权限缓存执行完成");
-        }
-    }
-
-    @TransactionalEventListener
-    @Async
-    public void onY9AppCreated(Y9EntityCreatedEvent<Y9App> event) {
-        Y9App y9App = event.getEntity();
-        Y9System system = y9SystemRepository.findByName("risecms7");
-        // 同步内容管理栏目
-        if (system != null && system.getId().equals(y9App.getSystemId())) {
-            HashMap<String, Object> map = new HashMap<>(8);
-            map.put("appId", y9App.getAppId());
-            map.put("url", y9App.getUrl());
-            map.put("appName", y9App.getName());
-            String jsonString = Y9JsonUtil.writeValueAsString(map);
-            if (y9KafkaTemplate != null) {
-                y9KafkaTemplate.send(Y9TopicConst.Y9_INSERT_PUBLIC_CHNL_MESSAGE, jsonString);
-                if (LOGGER.isDebugEnabled()) {
-                    LOGGER.debug("同步内容管理新建栏目完成");
-                }
-            }
-        }
-        if (LOGGER.isDebugEnabled()) {
-            LOGGER.debug("新增应用触发事件执行完成");
         }
     }
 

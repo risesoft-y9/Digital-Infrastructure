@@ -1,5 +1,6 @@
 package y9.autoconfiguration.producer.kafka;
 
+import java.util.Objects;
 import java.util.Set;
 
 import org.apache.kafka.clients.consumer.ConsumerRecord;
@@ -41,6 +42,7 @@ public class Y9KafkaConfiguration {
         try {
             msg = Y9JsonUtil.readValue(value, Y9MessageCommon.class);
             String eventType = msg.getEventType();
+
             if (Y9CommonEventConst.REFRESH_REMOTE_APPLICATION_EVENT.equals(eventType)) {
                 if (contextRefresher == null) {
                     try {
@@ -54,7 +56,10 @@ public class Y9KafkaConfiguration {
                     Set<String> keys = contextRefresher.refresh();
                     LOGGER.info("Received remote refresh request. Keys refreshed " + keys);
                 }
-            } else if (Y9CommonEventConst.TENANT_DATASOURCE_SYNC.equals(eventType)) {
+                return;
+            }
+
+            if (Y9CommonEventConst.TENANT_DATASOURCE_SYNC.equals(eventType)) {
                 if (this.y9TenantDataSourceLookup == null) {
                     try {
                         this.y9TenantDataSourceLookup = Y9Context.getBean(Y9TenantDataSourceLookup.class);
@@ -67,6 +72,13 @@ public class Y9KafkaConfiguration {
                     this.y9TenantDataSourceLookup.loadDataSources();
                     LOGGER.info(this.y9TenantDataSourceLookup.getSystemName() + ", 同步租户数据源信息, 成功！");
                 }
+                return;
+            }
+
+            if (Y9CommonEventConst.TENANT_SYSTEM_REGISTERED.equals(eventType)
+                && !Objects.equals(Y9Context.getSystemName(), msg.getTarget())) {
+                // 对于非当前引入的系统的消息不处理
+                return;
             }
         } catch (Exception e) {
             LOGGER.error(e.getMessage(), e);
