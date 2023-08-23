@@ -6,6 +6,7 @@ import java.util.UUID;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
+import javax.persistence.TypedQuery;
 
 import org.apereo.cas.authentication.credential.RememberMeUsernamePasswordCredential;
 import org.apereo.cas.services.Y9LoginUser;
@@ -20,9 +21,12 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.support.TransactionOperations;
 import org.springframework.util.StringUtils;
 
+import lombok.extern.slf4j.Slf4j;
+
 import cz.mallat.uasparser.UserAgentInfo;
 
 @Service
+@Slf4j
 public class Y9LoginUserServiceImpl implements Y9LoginUserService {
 
     @Autowired
@@ -31,12 +35,6 @@ public class Y9LoginUserServiceImpl implements Y9LoginUserService {
     @Autowired
     @Qualifier("jdbcServiceRegistryTransactionTemplate")
     private TransactionOperations transactionTemplate;
-
-    // @Autowired
-    // @Qualifier("serviceEntityManagerFactory")
-    // private EntityManagerFactory serviceEntityManagerFactory;
-    // private EntityManager entityManager =
-    // EntityManagerFactoryUtils.getTransactionalEntityManager(serviceEntityManagerFactory);
 
     @PersistenceContext(unitName = "jpaServiceRegistryContext")
     private EntityManager entityManager;
@@ -70,18 +68,18 @@ public class Y9LoginUserServiceImpl implements Y9LoginUserService {
                 if ("mobile".equals(loginType)) {
                     if (StringUtils.hasText(deptId)) {
                         users = y9UserService.findByTenantShortNameAndMobileAndParentId(tenantShortName, userLoginName,
-                            deptId);
+                                deptId);
                     } else {
                         users = y9UserService.findByTenantShortNameAndMobileAndOriginal(tenantShortName, userLoginName,
-                            Boolean.TRUE);
+                                Boolean.TRUE);
                     }
                 } else {
                     if (StringUtils.hasText(deptId)) {
                         users = y9UserService.findByTenantShortNameAndLoginNameAndParentId(tenantShortName,
-                            userLoginName, deptId);
+                                userLoginName, deptId);
                     } else {
                         users = y9UserService.findByTenantShortNameAndLoginNameAndOriginal(tenantShortName,
-                            userLoginName, Boolean.TRUE);
+                                userLoginName, Boolean.TRUE);
                     }
                 }
                 if (users != null && users.size() > 0) {
@@ -115,7 +113,11 @@ public class Y9LoginUserServiceImpl implements Y9LoginUserService {
                 user.setOSName(uaInfo.getOsName());
                 user.setManagerLevel(managerLevel);
 
-                entityManager.persist(user);
+                transactionTemplate.execute(status -> {
+                    entityManager.persist(user);
+                    LOGGER.info("保存登录日志成功");
+                    return null;
+                });
             }
         } catch (Exception e) {
             e.printStackTrace();
