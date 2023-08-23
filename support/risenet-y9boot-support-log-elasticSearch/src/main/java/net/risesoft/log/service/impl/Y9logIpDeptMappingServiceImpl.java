@@ -23,6 +23,7 @@ import org.springframework.stereotype.Service;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+
 import net.risesoft.id.IdType;
 import net.risesoft.id.Y9IdGenerator;
 import net.risesoft.log.entity.Y9logIpDeptMapping;
@@ -86,25 +87,23 @@ public class Y9logIpDeptMappingServiceImpl implements Y9logIpDeptMappingService 
         return clientIpSectionList;
     }
 
-	@Override
-	public Y9Page<Y9logIpDeptMapping> pageSearchList(int page, int rows, String clientIpSection, String deptName) {
-		Criteria criteria = new Criteria();
-		if (StringUtils.isNotBlank(deptName)) {
-			criteria.and("deptName").contains(deptName);
-		}
-		if (StringUtils.isNotBlank(clientIpSection)) {
-			criteria.and("clientIpSection").contains(clientIpSection);
-		}
-		Query query = new CriteriaQueryBuilder(criteria)
-				.withPageable(PageRequest.of((page < 1) ? 0 : page - 1, rows))
-				.withSort(Sort.by(Direction.ASC, "clientIpSection"))
-				.build();
-		SearchHits<Y9logIpDeptMapping> search = elasticsearchTemplate.search(query, Y9logIpDeptMapping.class);
-		List<Y9logIpDeptMapping> list = search.stream().map(SearchHit::getContent).collect(Collectors.toList());
+    @Override
+    public Y9Page<Y9logIpDeptMapping> pageSearchList(int page, int rows, String clientIpSection, String deptName) {
+        Criteria criteria = new Criteria();
+        if (StringUtils.isNotBlank(deptName)) {
+            criteria.and("deptName").contains(deptName);
+        }
+        if (StringUtils.isNotBlank(clientIpSection)) {
+            criteria.and("clientIpSection").contains(clientIpSection);
+        }
+        Query query = new CriteriaQueryBuilder(criteria).withPageable(PageRequest.of((page < 1) ? 0 : page - 1, rows))
+            .withSort(Sort.by(Direction.ASC, "clientIpSection")).build();
+        SearchHits<Y9logIpDeptMapping> search = elasticsearchTemplate.search(query, Y9logIpDeptMapping.class);
+        List<Y9logIpDeptMapping> list = search.stream().map(SearchHit::getContent).collect(Collectors.toList());
         long total = search.getTotalHits();
         int totalPages = (int)total / rows;
         return Y9Page.success(page, total % rows == 0 ? totalPages : totalPages + 1, total, list);
-	}
+    }
 
     @Override
     public void removeOrganWords(String[] ipDeptMappingIds) {

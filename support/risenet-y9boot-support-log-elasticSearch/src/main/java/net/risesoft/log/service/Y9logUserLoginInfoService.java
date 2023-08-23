@@ -19,7 +19,7 @@ import net.risesoft.pojo.Y9Page;
  *
  */
 public interface Y9logUserLoginInfoService {
-	long countByLoginTimeBetweenAndSuccess(Date startTime, Date endTime, String success);
+    long countByLoginTimeBetweenAndSuccess(Date startTime, Date endTime, String success);
 
     long countByPersonId(String personId);
 

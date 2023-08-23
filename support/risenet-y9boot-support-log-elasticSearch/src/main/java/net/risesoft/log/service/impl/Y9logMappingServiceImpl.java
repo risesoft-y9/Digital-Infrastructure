@@ -18,6 +18,7 @@ import org.springframework.data.elasticsearch.core.query.Query;
 import org.springframework.stereotype.Service;
 
 import lombok.RequiredArgsConstructor;
+
 import net.risesoft.log.entity.Y9logMapping;
 import net.risesoft.log.repository.Y9logMappingRepository;
 import net.risesoft.log.service.Y9logMappingService;
@@ -65,25 +66,24 @@ public class Y9logMappingServiceImpl implements Y9logMappingService {
         return y9logMappingRepository.findAll(pageable);
     }
 
-	@Override
-	public Page<Y9logMapping> pageSearchList(Integer page, Integer rows, String modularName, String modularCnName) {
-		Sort sort = Sort.by(Sort.Direction.DESC, "modularCnName");
+    @Override
+    public Page<Y9logMapping> pageSearchList(Integer page, Integer rows, String modularName, String modularCnName) {
+        Sort sort = Sort.by(Sort.Direction.DESC, "modularCnName");
         Pageable pageable = PageRequest.of((page < 1) ? 0 : page - 1, rows, sort);
-		Criteria criteria = new Criteria();
-		if (StringUtils.isNotBlank(modularCnName)) {
-			criteria.and("modularCnName").contains(modularCnName);
-		}
-		if (StringUtils.isNotBlank(modularName)) {
-			criteria.and("modularName").contains(modularName);
-		}
-		Query query = new CriteriaQuery(criteria)
-				.setPageable(pageable);
-		query.setTrackTotalHits(true);
-		SearchHits<Y9logMapping> search = elasticsearchTemplate.search(query, Y9logMapping.class);
-		List<Y9logMapping> list = search.stream().map(SearchHit::getContent).collect(Collectors.toList());
-		Page<Y9logMapping> pageResult = new PageImpl<>(list, pageable, search.getTotalHits());
-		return pageResult;
-	}
+        Criteria criteria = new Criteria();
+        if (StringUtils.isNotBlank(modularCnName)) {
+            criteria.and("modularCnName").contains(modularCnName);
+        }
+        if (StringUtils.isNotBlank(modularName)) {
+            criteria.and("modularName").contains(modularName);
+        }
+        Query query = new CriteriaQuery(criteria).setPageable(pageable);
+        query.setTrackTotalHits(true);
+        SearchHits<Y9logMapping> search = elasticsearchTemplate.search(query, Y9logMapping.class);
+        List<Y9logMapping> list = search.stream().map(SearchHit::getContent).collect(Collectors.toList());
+        Page<Y9logMapping> pageResult = new PageImpl<>(list, pageable, search.getTotalHits());
+        return pageResult;
+    }
 
     @Override
     public void save(Y9logMapping y9logMapping) {
