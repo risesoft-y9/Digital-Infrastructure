@@ -13,9 +13,5 @@ public class Y9CommonEventConst {
     public static final String TENANT_DATASOURCE_SYNC = "TENANT_DATASOURCE_SYNC";
     /** 租户租用系统事件，相应系统可监听做对应租户的初始化的工作 */
     public static final String TENANT_SYSTEM_REGISTERED = "TENANT_SYSTEM_REGISTERED";
-    /** 应用创建，相应系统可监听做一些初始化工作 */
-    public static final String APP_CREATED = "APP_CREATED";
-    /** 应用配置刷新事件 */
-    public static final String REFRESH_REMOTE_APPLICATION_EVENT = "RefreshRemoteApplicationEvent";
 
 }

@@ -1,14 +1,12 @@
 package y9.autoconfiguration.producer.kafka;
 
 import java.util.Objects;
-import java.util.Set;
 
 import org.apache.kafka.clients.consumer.ConsumerRecord;
 import org.springframework.boot.autoconfigure.AutoConfigureAfter;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.boot.autoconfigure.kafka.KafkaAutoConfiguration;
-import org.springframework.cloud.context.refresh.ContextRefresher;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Primary;
@@ -31,8 +29,6 @@ import net.risesoft.y9.tenant.datasource.Y9TenantDataSourceLookup;
 @Slf4j
 public class Y9KafkaConfiguration {
 
-    private ContextRefresher contextRefresher;
-
     private Y9TenantDataSourceLookup y9TenantDataSourceLookup;
 
     @KafkaListener(topics = {"y9_common_event"})
@@ -42,22 +38,6 @@ public class Y9KafkaConfiguration {
         try {
             msg = Y9JsonUtil.readValue(value, Y9MessageCommon.class);
             String eventType = msg.getEventType();
-
-            if (Y9CommonEventConst.REFRESH_REMOTE_APPLICATION_EVENT.equals(eventType)) {
-                if (contextRefresher == null) {
-                    try {
-                        this.contextRefresher = Y9Context.getBean(ContextRefresher.class);
-                    } catch (Exception e) {
-                        LOGGER.error("contextRefresher==null，刷新bean信息失败。", e);
-                    }
-                }
-
-                if (contextRefresher != null) {
-                    Set<String> keys = contextRefresher.refresh();
-                    LOGGER.info("Received remote refresh request. Keys refreshed " + keys);
-                }
-                return;
-            }
 
             if (Y9CommonEventConst.TENANT_DATASOURCE_SYNC.equals(eventType)) {
                 if (this.y9TenantDataSourceLookup == null) {
@@ -80,20 +60,15 @@ public class Y9KafkaConfiguration {
                 // 对于非当前引入的系统的消息不处理
                 return;
             }
-        } catch (Exception e) {
-            LOGGER.error(e.getMessage(), e);
-        }
 
-        try {
             Y9EventCommon event = new Y9EventCommon();
             event.setEventType(msg.getEventType());
             event.setEventObject(msg.getEventObject());
             Y9Context.publishEvent(event);
-            LOGGER.info("[common]将消息中间件发过来的消息转换成spring的事件后发送：" + event.toString());
+            LOGGER.info("[common]将消息中间件发过来的消息转换成spring的事件后发送：{}", event);
         } catch (Exception e) {
             LOGGER.error(e.getMessage(), e);
         }
-
     }
 
     @Bean
