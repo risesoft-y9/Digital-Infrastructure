@@ -5,7 +5,6 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Date;
-import java.util.HashMap;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -14,7 +13,6 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
-import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -25,16 +23,12 @@ import net.risesoft.id.IdType;
 import net.risesoft.id.Y9IdGenerator;
 import net.risesoft.model.user.UserInfo;
 import net.risesoft.y9.Y9LoginUserHolder;
-import net.risesoft.y9.json.Y9JsonUtil;
-import net.risesoft.y9.pubsub.constant.Y9TopicConst;
 import net.risesoft.y9public.entity.resource.Y9App;
-import net.risesoft.y9public.entity.resource.Y9System;
 import net.risesoft.y9public.entity.tenant.Y9TenantApp;
 import net.risesoft.y9public.manager.tenant.Y9TenantAppManager;
 import net.risesoft.y9public.manager.tenant.Y9TenantManager;
 import net.risesoft.y9public.manager.tenant.Y9TenantSystemManager;
 import net.risesoft.y9public.repository.resource.Y9AppRepository;
-import net.risesoft.y9public.repository.resource.Y9SystemRepository;
 import net.risesoft.y9public.repository.tenant.Y9TenantAppRepository;
 import net.risesoft.y9public.service.tenant.Y9TenantAppService;
 import net.risesoft.y9public.specification.Y9TenantAppSpecification;
@@ -50,74 +44,12 @@ import net.risesoft.y9public.specification.Y9TenantAppSpecification;
 @RequiredArgsConstructor
 public class Y9TenantAppServiceImpl implements Y9TenantAppService {
 
-    private final KafkaTemplate<String, Object> y9KafkaTemplate;
-
-    private final Y9SystemRepository y9SystemRepository;
     private final Y9TenantAppRepository y9TenantAppRepository;
     private final Y9AppRepository y9AppRepository;
 
     private final Y9TenantAppManager y9TenantAppManager;
     private final Y9TenantManager y9TenantManager;
     private final Y9TenantSystemManager y9TenantSystemManager;
-
-    private void copyItemData(String tenantId, Y9System system, Y9App y9App, String personId) {
-        String appId = y9App.getId();
-        List<Y9TenantApp> y9TenantAppList = y9TenantAppRepository.findByTenantIdAndAppIdAndVerifyTrue(tenantId, appId);
-        if (!y9TenantAppList.isEmpty()) {
-            return;
-        }
-        String isvTenantId = system.getIsvGuid();
-        String url = y9App.getUrl();
-        if (url.contains("itemId")) {
-            // 1、获取事项Id
-            String itemId = "";
-            String parameter = url.split("\\?")[1];
-            if (parameter.contains("&")) {
-                String[] parameterArray = parameter.split("&");
-                for (String pTemp : parameterArray) {
-                    if (pTemp.contains("itemId")) {
-                        itemId = pTemp.split("=")[1];
-                    }
-                }
-            } else {
-                itemId = parameter.split("=")[1];
-            }
-            if (StringUtils.isEmpty(itemId)) {
-                return;
-            }
-            // 2、租户租用流程管理、事项管理还有改应用对应的系统
-            try {
-                HashMap<String, Object> map = new HashMap<>(8);
-                map.put("sourceTenantId", isvTenantId);
-                map.put("targetTenantId", tenantId);
-                map.put("itemId", itemId);
-                map.put("personId", personId);
-                String jsonString = Y9JsonUtil.writeValueAsString(map);
-                if (y9KafkaTemplate != null) {
-                    y9KafkaTemplate.send(Y9TopicConst.Y9_DATACOPY_MESSAGE, jsonString);
-                    LOGGER.info(Y9TopicConst.Y9_DATACOPY_MESSAGE + "   ->" + jsonString);
-                }
-            } catch (Exception e) {
-                LOGGER.warn(e.getMessage(), e);
-            }
-        } else {
-            String systemName = system.getName();
-            try {
-                HashMap<String, Object> map = new HashMap<>(8);
-                map.put("sourceTenantId", isvTenantId);
-                map.put("targetTenantId", tenantId);
-                map.put("systemName", systemName);
-                map.put("personId", personId);
-                String jsonString = Y9JsonUtil.writeValueAsString(map);
-                if (y9KafkaTemplate != null) {
-                    y9KafkaTemplate.send(Y9TopicConst.Y9_DATACOPY4SYSTEM_MESSAGE, jsonString);
-                    LOGGER.info(Y9TopicConst.Y9_DATACOPY4SYSTEM_MESSAGE + "   ->" + jsonString);
-                }
-            } catch (Exception e) {
-                LOGGER.warn(e.getMessage(), e);
-            }
-        }
-    }
 
     @Override
     public long countByTenantIdAndSystemId(String tenantId, String systemId) {
@@ -150,10 +82,6 @@ public class Y9TenantAppServiceImpl implements Y9TenantAppService {
     @Override
     public Y9TenantApp findById(String id) {
         return y9TenantAppRepository.findById(id).orElse(null);
-    }
-
-    public Y9TenantApp findByTenantIdAndAppIdAndVerify(String tenantId, String appId, Boolean verify, Boolean tenancy) {
-        return y9TenantAppRepository.findByTenantIdAndAppIdAndVerifyAndTenancy(tenantId, appId, verify, tenancy);
     }
 
     @Override
@@ -275,7 +203,6 @@ public class Y9TenantAppServiceImpl implements Y9TenantAppService {
         }
         UserInfo userInfo = Y9LoginUserHolder.getUserInfo();
 
-        Y9System y9System = y9SystemRepository.findById(y9App.getSystemId()).orElse(null);
         String time = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date());
         Y9TenantApp ta = new Y9TenantApp();
         String guid = Y9IdGenerator.genId(IdType.SNOWFLAKE);
@@ -295,10 +222,6 @@ public class Y9TenantAppServiceImpl implements Y9TenantAppService {
             ta.setVerifyUserName(Y9LoginUserHolder.getUserInfo().getName());
             ta.setVerifyTime(time);
             ta.setReason("同意申请");
-            // 流程类应用从开发商对应的租户复制流程管理和事项管理的数据到租用的租户
-            if (y9App.getType() == 2) {
-                copyItemData(tenantId, y9System, y9App, ta.getApplyId());
-            }
         } else {
             ta.setVerify(Boolean.FALSE);
         }
