@@ -57,15 +57,6 @@ public interface Y9TenantAppService {
     Y9TenantApp getByTenantIdAndAppIdAndTenancy(String tenantId, String appId, Boolean tenancy);
 
     /**
-     * 根据租户id和审核状态，获取租户应用名称列表
-     *
-     * @param tenantId 租户id
-     * @param verify 是否已审核
-     * @return {@link List}<{@link String}>
-     */
-    List<String> listAddedAppName(String tenantId, Boolean verify);
-
-    /**
      * 根据租户id，获取已审核且还在租用的应用id列表
      *
      * @param tenantId 租户id
@@ -85,22 +76,6 @@ public interface Y9TenantAppService {
     List<String> listAppIdByTenantIdAndTenancy(String tenantId, Boolean tenancy);
 
     /**
-     * 根据租户名称，获取租户应用id列表
-     *
-     * @param tenantName 租户名
-     * @return {@link List}<{@link String}>
-     */
-    List<String> listAppIdByTenantName(String tenantName);
-
-    /**
-     * 根据租户id，获取租户应用名称列表
-     *
-     * @param tenantId 租户id
-     * @return {@link List}<{@link String}>
-     */
-    List<String> listAppNameByTenantId(String tenantId);
-
-    /**
      * 根据应用Id，查询租户应用列表
      *
      * @param appId 应用id
@@ -108,15 +83,6 @@ public interface Y9TenantAppService {
      * @return {@link List}<{@link Y9TenantApp}>
      */
     List<Y9TenantApp> listByAppIdAndTenancy(String appId, Boolean tenancy);
-
-    /**
-     * 根据应用id和租户id，获取应用租用列表
-     *
-     * @param tenantId 租户id
-     * @param appId 应用id
-     * @return {@link List}<{@link Y9TenantApp}>
-     */
-    List<Y9TenantApp> listByTenantIdAndAppId(String tenantId, String appId);
 
     /**
      * 根据租户id，审核状态和租用状态，获取租户应用列表
@@ -221,15 +187,6 @@ public interface Y9TenantAppService {
      */
     int updateByAppIdAndTenantId(Boolean tenancy, String deletedName, Date deletedTime, String appId, String tenantId,
         Boolean currentTenancy);
-
-    /**
-     * 根据id，租户应用的审核状态
-     *
-     * @param verify 审核状态
-     * @param id 唯一标识
-     * @return int
-     */
-    int updateStatus(Boolean verify, String id);
 
     /**
      * 审核租户应用

@@ -1,5 +1,6 @@
 package net.risesoft.y9public.service.tenant.impl;
 
+import java.util.Objects;
 import java.util.concurrent.ConcurrentMap;
 
 import javax.sql.DataSource;
@@ -16,6 +17,7 @@ import org.springframework.transaction.annotation.Transactional;
 import com.alibaba.druid.pool.DruidDataSource;
 import com.google.common.collect.Maps;
 
+import net.risesoft.enums.DataSourceTypeEnum;
 import net.risesoft.exception.DataSourceErrorCodeEnum;
 import net.risesoft.y9.exception.util.Y9ExceptionUtil;
 import net.risesoft.y9.util.base64.Y9Base64Util;
@@ -37,8 +39,9 @@ public class Y9DataSourceServiceImpl implements Y9DataSourceService {
     private final Y9DataSourceManager y9DataSourceManager;
 
     private final DataSourceLookup dataSourceLookup = new JndiDataSourceLookup();
+
     private final ConcurrentMap<String, DataSource> dataSourceMap = Maps.newConcurrentMap();
-    private final ConcurrentMap<String, Y9DataSource> dsMap = Maps.newConcurrentMap();
+    private final ConcurrentMap<String, Y9DataSource> y9DataSourceMap = Maps.newConcurrentMap();
 
     public Y9DataSourceServiceImpl(Y9DataSourceRepository datasourceRepository,
         Y9DataSourceManager y9DataSourceManager) {
@@ -99,80 +102,66 @@ public class Y9DataSourceServiceImpl implements Y9DataSourceService {
     @Override
     public DataSource getDataSource(String id) {
         DataSource dataSource = this.dataSourceMap.get(id);
-        Y9DataSource df = this.getById(id);
-        Y9DataSource df1 = dsMap.get(id);
-        boolean modified = false;
-        if (df1 == null) {
-            modified = true;
-        } else {
-            if (df != null) {
-                // jndi
-                if (df.getType() == 1) {
-                    if (df1.getType() != 1) {
-                        modified = true;
-                    }
-                    if (!df.getJndiName().equals(df1.getJndiName())) {
-                        modified = true;
-                    }
-                } else {
-                    // druid
-                    if (!df.getUrl().equals(df1.getUrl())) {
-                        modified = true;
-                    }
-                    if (!df.getInitialSize().equals(df1.getInitialSize())) {
-                        modified = true;
-                    }
-                    if (!df.getMaxActive().equals(df1.getMaxActive())) {
-                        modified = true;
-                    }
-                    if (!df.getMinIdle().equals(df1.getMinIdle())) {
-                        modified = true;
-                    }
-                    if (!df.getUsername().equals(df1.getUsername())) {
-                        modified = true;
-                    }
-                    if (!df.getPassword().equals(df1.getPassword())) {
-                        modified = true;
-                    }
-                    if (!df.getType().equals(df1.getType())) {
-                        modified = true;
-                    } else {
-                        if (df.getType() == 1 && !df.getJndiName().equals(df1.getJndiName())) {
-                            modified = true;
-                        }
-                    }
-                }
-            }
-        }
-        if (modified) {
-            Integer type = df.getType();
-            if (type == 1) { // jndi
-                dataSource = this.dataSourceLookup.getDataSource(df.getJndiName());
-            } else { // druid
+        Y9DataSource queriedY9DataSource = this.getById(id);
+        Y9DataSource cachedY9DataSource = y9DataSourceMap.get(id);
+
+        if (isY9DataSourceModified(cachedY9DataSource, queriedY9DataSource)) {
+            Integer type = queriedY9DataSource.getType();
+            if (Objects.equals(type, DataSourceTypeEnum.JNDI.getValue())) {
+                dataSource = this.dataSourceLookup.getDataSource(queriedY9DataSource.getJndiName());
+            } else {
+                // druid
                 @SuppressWarnings("resource")
                 DruidDataSource ds = new DruidDataSource();
-                if (StringUtils.isNotBlank(df.getDriver())) {
-                    ds.setDriverClassName(df.getDriver());
+                if (StringUtils.isNotBlank(queriedY9DataSource.getDriver())) {
+                    ds.setDriverClassName(queriedY9DataSource.getDriver());
                 }
                 ds.setTestOnBorrow(true);
                 ds.setTestOnReturn(true);
                 ds.setTestWhileIdle(true);
                 ds.setValidationQuery("SELECT 1 FROM DUAL");
-                ds.setInitialSize(df.getInitialSize());
-                ds.setMaxActive(df.getMaxActive());
-                ds.setMinIdle(df.getMinIdle());
-                ds.setUrl(df.getUrl());
-                ds.setUsername(df.getUsername());
-                String pwd = df.getPassword();
-                ds.setPassword(Y9Base64Util.decode(pwd));
+                ds.setInitialSize(queriedY9DataSource.getInitialSize());
+                ds.setMaxActive(queriedY9DataSource.getMaxActive());
+                ds.setMinIdle(queriedY9DataSource.getMinIdle());
+                ds.setUrl(queriedY9DataSource.getUrl());
+                ds.setUsername(queriedY9DataSource.getUsername());
+                ds.setPassword(Y9Base64Util.decode(queriedY9DataSource.getPassword()));
 
                 dataSource = ds;
             }
             this.dataSourceMap.put(id, dataSource);
-            this.dsMap.put(id, df);
+            this.y9DataSourceMap.put(id, queriedY9DataSource);
         }
 
         return dataSource;
+    }
+
+    private static boolean isY9DataSourceModified(Y9DataSource cachedY9DataSource, Y9DataSource queriedY9DataSource) {
+        boolean modified = false;
+        if (cachedY9DataSource == null) {
+            modified = true;
+        } else {
+            if (Objects.equals(queriedY9DataSource.getType(), DataSourceTypeEnum.DRUID.getValue())) {
+                if (!Objects.equals(cachedY9DataSource.getType(), DataSourceTypeEnum.DRUID.getValue())) {
+                    modified = true;
+                }
+                if (!queriedY9DataSource.getJndiName().equals(cachedY9DataSource.getJndiName())) {
+                    modified = true;
+                }
+            } else {
+                // druid
+                if (!queriedY9DataSource.getUrl().equals(cachedY9DataSource.getUrl())
+                    || !queriedY9DataSource.getInitialSize().equals(cachedY9DataSource.getInitialSize())
+                    || !queriedY9DataSource.getMaxActive().equals(cachedY9DataSource.getMaxActive())
+                    || !queriedY9DataSource.getMinIdle().equals(cachedY9DataSource.getMinIdle())
+                    || !queriedY9DataSource.getUsername().equals(cachedY9DataSource.getUsername())
+                    || !queriedY9DataSource.getPassword().equals(cachedY9DataSource.getPassword())
+                    || !queriedY9DataSource.getType().equals(cachedY9DataSource.getType())) {
+                    modified = true;
+                }
+            }
+        }
+        return modified;
     }
 
     @Override
