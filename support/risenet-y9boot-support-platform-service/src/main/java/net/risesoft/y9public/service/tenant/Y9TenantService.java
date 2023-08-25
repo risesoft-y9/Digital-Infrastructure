@@ -91,15 +91,6 @@ public interface Y9TenantService {
     Integer getMaxTableIndex();
 
     /**
-     * 获取租户树形列表
-     *
-     * @param name 租户名称
-     * @param tenantType 租户类型： 0=用户，2=开发商，1=运维团队，3=普通租户
-     * @return String
-     */
-    String getTenantTree(String name, Integer tenantType);
-
-    /**
      * 获取所有租户列表
      *
      * @return List&lt;Tenant&gt;

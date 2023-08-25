@@ -90,15 +90,6 @@ public class Y9TenantAppServiceImpl implements Y9TenantAppService {
     }
 
     @Override
-    public List<String> listAddedAppName(String tenantId, Boolean verify) {
-        List<Y9TenantApp> list = y9TenantAppRepository.findByTenantIdAndVerify(tenantId, verify);
-        if (list != null) {
-            return list.stream().map(Y9TenantApp::getAppName).collect(Collectors.toList());
-        }
-        return new ArrayList<>();
-    }
-
-    @Override
     public List<String> listAppIdByTenantId(String tenantId, Boolean verify, Boolean tenancy) {
         List<Y9TenantApp> tas =
             y9TenantAppRepository.findByTenantIdAndVerifyAndTenancyOrderByCreateTimeDesc(tenantId, verify, tenancy);
@@ -118,31 +109,8 @@ public class Y9TenantAppServiceImpl implements Y9TenantAppService {
     }
 
     @Override
-    public List<String> listAppIdByTenantName(String tenantName) {
-        List<Y9TenantApp> tas = y9TenantAppRepository.findByTenantName(tenantName);
-        if (tas != null) {
-            return tas.stream().map(Y9TenantApp::getAppId).collect(Collectors.toList());
-        }
-        return new ArrayList<>();
-    }
-
-    @Override
-    public List<String> listAppNameByTenantId(String tenantId) {
-        List<Y9TenantApp> list = y9TenantAppRepository.findByTenantId(tenantId);
-        if (list != null) {
-            return list.stream().map(Y9TenantApp::getAppName).collect(Collectors.toList());
-        }
-        return new ArrayList<>();
-    }
-
-    @Override
     public List<Y9TenantApp> listByAppIdAndTenancy(String appId, Boolean tenancy) {
         return y9TenantAppRepository.findByAppIdAndTenancy(appId, tenancy);
-    }
-
-    @Override
-    public List<Y9TenantApp> listByTenantIdAndAppId(String tenantId, String appId) {
-        return y9TenantAppRepository.findByTenantIdAndAppId(tenantId, appId);
     }
 
     @Override
@@ -201,7 +169,6 @@ public class Y9TenantAppServiceImpl implements Y9TenantAppService {
             }
             return y9TenantApp;
         }
-        UserInfo userInfo = Y9LoginUserHolder.getUserInfo();
 
         String time = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date());
         Y9TenantApp ta = new Y9TenantApp();
@@ -213,7 +180,7 @@ public class Y9TenantAppServiceImpl implements Y9TenantAppService {
         ta.setSystemId(y9App.getSystemId());
         ta.setAppName(y9App.getName());
         ta.setApplyName(applyName);
-        ta.setApplyId(userInfo.getPersonId());
+        ta.setApplyId(Y9LoginUserHolder.getPersonId());
         ta.setApplyReason(applyReason);
         ta.setTenancy(Boolean.TRUE);
         // 审核状态
@@ -259,21 +226,6 @@ public class Y9TenantAppServiceImpl implements Y9TenantAppService {
                 ta.setDeletedTime(deletedTime);
                 y9TenantAppRepository.save(ta);
             }
-            return 1;
-        } catch (Exception e) {
-            LOGGER.warn(e.getMessage(), e);
-            return 0;
-        }
-    }
-
-    @Override
-    @Transactional(readOnly = false)
-    public int updateStatus(Boolean verify, String id) {
-        try {
-            Y9TenantApp ta = this.findById(id);
-            ta.setVerify(verify);
-            ta.setVerifyTime(LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")));
-            y9TenantAppRepository.save(ta);
             return 1;
         } catch (Exception e) {
             LOGGER.warn(e.getMessage(), e);
