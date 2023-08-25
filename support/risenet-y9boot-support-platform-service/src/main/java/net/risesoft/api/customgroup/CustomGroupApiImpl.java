@@ -338,7 +338,7 @@ public class CustomGroupApiImpl implements CustomGroupApi {
     @Override
     public CustomGroup saveOrUpdateCustomGroup(@RequestParam("tenantId") @NotBlank String tenantId,
         @RequestParam("personId") @NotBlank String personId,
-        @RequestParam("personIds") @NotEmpty List<String> personIds, @RequestParam("groupId") @NotBlank String groupId,
+        @RequestParam("personIds") @NotEmpty List<String> personIds, @RequestParam("groupId") String groupId,
         @RequestParam("groupName") @NotBlank String groupName) {
         Y9LoginUserHolder.setTenantId(tenantId);
 
