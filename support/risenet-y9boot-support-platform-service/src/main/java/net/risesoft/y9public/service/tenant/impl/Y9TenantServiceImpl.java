@@ -1,9 +1,7 @@
 package net.risesoft.y9public.service.tenant.impl;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.data.domain.Page;
@@ -14,14 +12,10 @@ import org.springframework.data.domain.Sort.Direction;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
-
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
 import net.risesoft.consts.OrgLevelConsts;
-import net.risesoft.enums.TenantTypeEnum;
 import net.risesoft.id.IdType;
 import net.risesoft.id.Y9IdGenerator;
 import net.risesoft.y9.util.Y9BeanUtil;
@@ -121,47 +115,6 @@ public class Y9TenantServiceImpl implements Y9TenantService {
             return a.getTabIndex() != null ? a.getTabIndex() + 1 : 0;
         }
         return 0;
-    }
-
-    @Override
-    public String getTenantTree(String name, Integer tenantType) {
-        ObjectMapper mapper = new ObjectMapper();
-        String json = "[]";
-        List<Map<String, Object>> list = new ArrayList<>();
-        Y9TenantSpecification<Y9Tenant> spec = new Y9TenantSpecification<>(name, null, tenantType);
-        List<Y9Tenant> y9Tenants = y9TenantRepository.findAll(spec, Sort.by(Direction.ASC, "tabIndex"));
-        String tenantName = "";
-        if (TenantTypeEnum.SUPER.getValue().equals(tenantType)) {
-            tenantName = "超级用户管理";
-        } else if (TenantTypeEnum.OPERATION.getValue().equals(tenantType)) {
-            tenantName = "运维管理";
-        } else if (TenantTypeEnum.ISV.getValue().equals(tenantType)) {
-            tenantName = "开发商管理";
-        } else if (TenantTypeEnum.TENANT.getValue().equals(tenantType)) {
-            tenantName = "租户管理";
-        }
-        for (Y9Tenant y9Tenant : y9Tenants) {
-            HashMap<String, Object> map = new HashMap<>(16);
-            if (y9Tenant.getTenantType().equals(tenantType)) {
-                map.put("id", y9Tenant.getId());
-                map.put("text", y9Tenant.getName());
-                list.add(map);
-            }
-
-        }
-        HashMap<String, Object> pNode = new HashMap<>(16);
-        pNode.put("text", tenantName);
-        pNode.put("iconCls", "icon-folder");
-        pNode.put("children", list);
-
-        List<Map<String, Object>> tree = new ArrayList<>();
-        tree.add(pNode);
-        try {
-            json = mapper.writeValueAsString(tree);
-        } catch (JsonProcessingException e) {
-            LOGGER.warn(e.getMessage(), e);
-        }
-        return json;
     }
 
     @Override

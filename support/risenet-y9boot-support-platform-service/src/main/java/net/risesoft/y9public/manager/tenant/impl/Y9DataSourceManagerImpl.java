@@ -1,5 +1,6 @@
 package net.risesoft.y9public.manager.tenant.impl;
 
+import java.util.Objects;
 import java.util.Random;
 
 import org.apache.commons.lang3.StringUtils;
@@ -15,6 +16,7 @@ import com.alibaba.druid.pool.DruidDataSource;
 import lombok.extern.slf4j.Slf4j;
 
 import net.risesoft.enums.DataSourceTypeEnum;
+import net.risesoft.enums.TenantTypeEnum;
 import net.risesoft.id.IdType;
 import net.risesoft.id.Y9IdGenerator;
 import net.risesoft.y9.configuration.Y9Properties;
@@ -60,9 +62,9 @@ public class Y9DataSourceManagerImpl implements Y9DataSourceManager {
     @Override
     public String buildTenantDataSourceName(String shortName, Integer tenantType) {
         String dataSourceName = shortName;
-        if (tenantType == 2) {
+        if (Objects.equals(tenantType, TenantTypeEnum.ISV.getValue())) {
             dataSourceName = "isv_" + shortName;
-        } else if (tenantType == 3) {
+        } else if (Objects.equals(tenantType, TenantTypeEnum.TENANT.getValue())) {
             if (!"default".equals(shortName)) {
                 dataSourceName = "yt_" + generateRandomString() + "_" + shortName;
             }
@@ -95,7 +97,16 @@ public class Y9DataSourceManagerImpl implements Y9DataSourceManager {
     public Y9DataSource createTenantDefaultDataSource(String dbName) {
         DruidDataSource dds = (DruidDataSource)jdbcTemplate4Public.getDataSource();
         String dbType = dds.getDbType();
+
+        String url = null;
+        String username = null;
+        String password = null;
+
         if (DbType.mysql.name().equals(dbType)) {
+            url = replaceDatabaseNameInMysqlJdbcUrl(dds.getUrl(), dbName);
+            username = dds.getUsername();
+            password = dds.getPassword();
+
             String sql = "CREATE DATABASE IF NOT EXISTS " + dbName + " DEFAULT CHARACTER SET UTF8 COLLATE UTF8_BIN";
 
             try {
@@ -104,31 +115,13 @@ public class Y9DataSourceManagerImpl implements Y9DataSourceManager {
                 LOGGER.warn("创建数据源失败", e);
                 return null;
             }
+        }
 
-            String url = dds.getUrl();
-            String prefix = url.substring(0, url.indexOf("?"));
-            int index = prefix.lastIndexOf("/");
-            prefix = prefix.substring(0, index);
-            String suffix = url.substring(url.indexOf("?"), url.length());
-            String url2 = prefix + "/" + dbName + suffix;
-            Y9DataSource y9DataSource = datasourceRepository.findByJndiName(dbName);
-            if (y9DataSource == null) {
-                Y9DataSource ds = new Y9DataSource();
-                ds.setJndiName(dbName);
-                ds.setUrl(url2);
-                ds.setType(DataSourceTypeEnum.DRUID.getValue());
-                ds.setUsername(dds.getUsername());
-                ds.setPassword(dds.getPassword());
-                ds.setInitialSize(dds.getInitialSize());
-                ds.setMaxActive(dds.getMaxActive());
-                ds.setMinIdle(dds.getMinIdle());
-                ds.setId(Y9IdGenerator.genId(IdType.SNOWFLAKE));
-                return this.save(ds);
-            }
+        if (DbType.oracle.name().equals(dbType)) {
+            url = dds.getUrl();
+            username = dbName.toUpperCase();
+            password = dds.getPassword();
 
-        } else if (DbType.oracle.name().equals(dbType)) {
-            String username = dbName.toUpperCase();
-            String password = dds.getPassword();
             String newTableSpace = y9config.getApp().getY9DigitalBase().getOrclNewTableSpace() + username + "_DATA.DBF";
             // 创建临时表空间
             // String newTempSpace = y9config.getApp().getY9DigitalBase().getOrclNewTableSpace()+username+"_TEMP.DBF";
@@ -156,23 +149,12 @@ public class Y9DataSourceManagerImpl implements Y9DataSourceManager {
                 LOGGER.warn("创建数据源失败", e);
                 return null;
             }
-            Y9DataSource y9DataSource = datasourceRepository.findByJndiName(dbName);
-            if (y9DataSource == null) {
-                Y9DataSource ds = new Y9DataSource();
-                ds.setJndiName(dbName);
-                ds.setUrl(dds.getUrl());
-                ds.setType(DataSourceTypeEnum.DRUID.getValue());
-                ds.setUsername(username);
-                ds.setPassword(password);
-                ds.setInitialSize(dds.getInitialSize());
-                ds.setMaxActive(dds.getMaxActive());
-                ds.setMinIdle(dds.getMinIdle());
-                ds.setId(Y9IdGenerator.genId(IdType.SNOWFLAKE));
-                return this.save(ds);
-            }
-        } else if (DbType.kingbase.name().equals(dbType)) {
-            String username = dbName.toUpperCase();
-            String password = dds.getPassword();
+        }
+
+        if (DbType.kingbase.name().equals(dbType)) {
+            url = dds.getUrl().split("=")[0] + "=" + username;
+            username = dbName.toUpperCase();
+            password = dds.getPassword();
 
             // 创建用户
             String sql0 = " create user " + username + " with  password '" + password + "'";
@@ -187,25 +169,39 @@ public class Y9DataSourceManagerImpl implements Y9DataSourceManager {
                 LOGGER.warn("创建数据源失败", e);
                 return null;
             }
-
-            Y9DataSource y9DataSource = datasourceRepository.findByJndiName(dbName);
-            if (y9DataSource == null) {
-                Y9DataSource ds = new Y9DataSource();
-                ds.setJndiName(dbName);
-                String url = dds.getUrl().split("=")[0] + "=" + username;
-                ds.setUrl(url);
-                ds.setType(DataSourceTypeEnum.DRUID.getValue());
-                ds.setDriver(dds.getDriverClassName());
-                ds.setUsername(username);
-                ds.setPassword(password);
-                ds.setInitialSize(dds.getInitialSize());
-                ds.setMaxActive(dds.getMaxActive());
-                ds.setMinIdle(dds.getMinIdle());
-                ds.setId(Y9IdGenerator.genId(IdType.SNOWFLAKE));
-                return this.save(ds);
-            }
         }
+
+        Y9DataSource y9DataSource = datasourceRepository.findByJndiName(dbName);
+        if (y9DataSource == null) {
+            Y9DataSource ds = new Y9DataSource();
+            ds.setJndiName(dbName);
+            ds.setUrl(url);
+            ds.setType(DataSourceTypeEnum.DRUID.getValue());
+            ds.setUsername(username);
+            ds.setPassword(password);
+            ds.setInitialSize(dds.getInitialSize());
+            ds.setMaxActive(dds.getMaxActive());
+            ds.setMinIdle(dds.getMinIdle());
+            ds.setId(Y9IdGenerator.genId(IdType.SNOWFLAKE));
+            return this.save(ds);
+        }
+
         return null;
+    }
+
+    public String replaceDatabaseNameInMysqlJdbcUrl(String originalJdbcUrl, String newDatabaseName) {
+        // 假设原始的 JDBC URL 格式为：jdbc:mysql://localhost:3306/y9_public?allowPublicKeyRetrieval=true
+        int dbNameStart = originalJdbcUrl.lastIndexOf("/") + 1;
+        int dbNameEnd = originalJdbcUrl.indexOf("?");
+
+        if (dbNameStart >= 0 && dbNameEnd > dbNameStart) {
+            String oldDatabaseName = originalJdbcUrl.substring(dbNameStart, dbNameEnd);
+
+            return originalJdbcUrl.replace(oldDatabaseName, newDatabaseName);
+        } else {
+            // 如果无法提取数据库名称部分或者替换失败，返回原始的 JDBC URL
+            return originalJdbcUrl;
+        }
     }
 
     @Override
