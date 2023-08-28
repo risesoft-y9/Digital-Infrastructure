@@ -28,7 +28,7 @@ public interface AppApi {
      * 根据应用id，获取应用信息
      *
      * @param appId 应用id
-     * @return
+     * @return App
      */
     @GetMapping("/findById")
     App findById(@RequestParam("appId") @NotBlank String appId);
@@ -42,8 +42,7 @@ public interface AppApi {
      * @since 9.6.0
      */
     @GetMapping("/findBySystemIdAndCustomId")
-    App findBySystemIdAndCustomId(@RequestParam("systemId") @NotBlank String systemId,
-        @RequestParam("customId") @NotBlank String customId);
+    App findBySystemIdAndCustomId(@RequestParam("systemId") @NotBlank String systemId, @RequestParam("customId") @NotBlank String customId);
 
     /**
      * 根据系统名和自定义标识查找应用
@@ -54,8 +53,7 @@ public interface AppApi {
      * @since 9.6.0
      */
     @GetMapping("/findBySystemNameAndCustomId")
-    App findBySystemNameAndCustomId(@RequestParam("systemName") @NotBlank String systemName,
-        @RequestParam("customId") @NotBlank String customId);
+    App findBySystemNameAndCustomId(@RequestParam("systemName") @NotBlank String systemName, @RequestParam("customId") @NotBlank String customId);
 
     /**
      * 根据人员id和操作类型，获取有权限的应用列表
@@ -67,8 +65,7 @@ public interface AppApi {
      * @since 9.6.0
      */
     @GetMapping("/listAccessAppForPerson")
-    List<App> listAccessAppForPerson(@RequestParam("tenantId") @NotBlank String tenantId,
-        @RequestParam("personId") @NotBlank String personId, @RequestParam("authority") Integer authority);
+    List<App> listAccessAppForPerson(@RequestParam("tenantId") @NotBlank String tenantId, @RequestParam("personId") @NotBlank String personId, @RequestParam("authority") Integer authority);
 
     /**
      * 根据人员id和操作类型，获取有权限的应用列表
@@ -80,8 +77,7 @@ public interface AppApi {
      * @since 9.6.0
      */
     @GetMapping("/listAccessAppForPosition")
-    List<App> listAccessAppForPosition(@RequestParam("tenantId") @NotBlank String tenantId,
-        @RequestParam("positionId") @NotBlank String positionId, @RequestParam("authority") Integer authority);
+    List<App> listAccessAppForPosition(@RequestParam("tenantId") @NotBlank String tenantId, @RequestParam("positionId") @NotBlank String positionId, @RequestParam("authority") Integer authority);
 
     /**
      * 根据 customId ，获取应用列表
@@ -96,7 +92,7 @@ public interface AppApi {
     /**
      * 根据 systemId ，获取应用列表
      *
-     * @param systemId systemId
+     * @param systemId 系统Id
      * @return List&lt;App&gt;
      * @since 9.6.0
      */
@@ -106,8 +102,8 @@ public interface AppApi {
     /**
      * 根据 systemName 获取应用列表
      *
-     * @param systemName
-     * @return
+     * @param systemName 系统名称
+     * @return List&lt;App&gt;
      * @since 9.6.0
      */
     @GetMapping("/listBySystemName")

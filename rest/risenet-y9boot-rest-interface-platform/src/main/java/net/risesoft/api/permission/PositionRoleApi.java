@@ -22,11 +22,10 @@ public interface PositionRoleApi {
      * @param tenantId 租户id
      * @param positionId 岗位id
      * @param customId 自定义id
-     * @return
+     * @return Boolean
      * @since 9.6.0
      */
     @GetMapping("/hasRole")
-    Boolean hasRole(@RequestParam("tenantId") @NotBlank String tenantId,
-        @RequestParam("positionId") @NotBlank String positionId, @RequestParam("customId") @NotBlank String customId);
+    Boolean hasRole(@RequestParam("tenantId") @NotBlank String tenantId, @RequestParam("positionId") @NotBlank String positionId, @RequestParam("customId") @NotBlank String customId);
 
 }
