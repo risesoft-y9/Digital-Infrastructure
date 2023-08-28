@@ -39,8 +39,7 @@ public interface DepartmentApi {
      * @since 9.6.0
      */
     @PostMapping("/createDepartment")
-    Department createDepartment(@RequestParam("tenantId") @NotBlank String tenantId,
-        @RequestParam("departmentJson") @NotBlank String departmentJson);
+    Department createDepartment(@RequestParam("tenantId") @NotBlank String tenantId, @RequestParam("departmentJson") @NotBlank String departmentJson);
 
     /**
      * 删除部门
@@ -51,8 +50,7 @@ public interface DepartmentApi {
      * @since 9.6.0
      */
     @GetMapping("/deleteDepartment")
-    boolean deleteDepartment(@RequestParam("deptId") @NotBlank String deptId,
-        @RequestParam("tenantId") @NotBlank String tenantId);
+    boolean deleteDepartment(@RequestParam("deptId") @NotBlank String deptId, @RequestParam("tenantId") @NotBlank String tenantId);
 
     /**
      * 禁用部门
@@ -63,8 +61,7 @@ public interface DepartmentApi {
      * @since 9.6.0
      */
     @GetMapping("/disableDepartment")
-    boolean disableDepartment(@RequestParam("tenantId") @NotBlank String tenantId,
-        @RequestParam("departmentId") @NotBlank String departmentId);
+    boolean disableDepartment(@RequestParam("tenantId") @NotBlank String tenantId, @RequestParam("departmentId") @NotBlank String departmentId);
 
     /**
      * 根据租户id和部门id，获取委办局
@@ -75,8 +72,7 @@ public interface DepartmentApi {
      * @since 9.6.0
      */
     @GetMapping("/getBureau")
-    OrgUnit getBureau(@RequestParam("tenantId") @NotBlank String tenantId,
-        @RequestParam("departmentId") @NotBlank String departmentId);
+    OrgUnit getBureau(@RequestParam("tenantId") @NotBlank String tenantId, @RequestParam("departmentId") @NotBlank String departmentId);
 
     /**
      * 根据id获得部门对象
@@ -87,8 +83,7 @@ public interface DepartmentApi {
      * @since 9.6.0
      */
     @GetMapping("/getDepartment")
-    Department getDepartment(@RequestParam("tenantId") @NotBlank String tenantId,
-        @RequestParam("departmentId") @NotBlank String departmentId);
+    Department getDepartment(@RequestParam("tenantId") @NotBlank String tenantId, @RequestParam("departmentId") @NotBlank String departmentId);
 
     /**
      * 获取部门父节点
@@ -99,8 +94,7 @@ public interface DepartmentApi {
      * @since 9.6.0
      */
     @GetMapping("/getParent")
-    OrgUnit getParent(@RequestParam("tenantId") @NotBlank String tenantId,
-        @RequestParam("departmentId") @NotBlank String departmentId);
+    OrgUnit getParent(@RequestParam("tenantId") @NotBlank String tenantId, @RequestParam("departmentId") @NotBlank String departmentId);
 
     /**
      * 获取部门下的所有人员(递归，包含部门下对应的人员)
@@ -111,8 +105,7 @@ public interface DepartmentApi {
      * @since 9.6.0
      */
     @GetMapping("/listAllPersons")
-    List<Person> listAllPersons(@RequestParam("tenantId") @NotBlank String tenantId,
-        @RequestParam("departmentId") @NotBlank String departmentId);
+    List<Person> listAllPersons(@RequestParam("tenantId") @NotBlank String tenantId, @RequestParam("departmentId") @NotBlank String departmentId);
 
     /**
      * 获取部门下的所有没有禁用/禁用的人员(递归,对应的人员)
@@ -124,8 +117,7 @@ public interface DepartmentApi {
      * @since 9.6.0
      */
     @GetMapping("/listAllPersonsByDisabled")
-    List<Person> listAllPersonsByDisabled(@RequestParam("tenantId") @NotBlank String tenantId,
-        @RequestParam("departmentId") @NotBlank String departmentId, @RequestParam("disabled") Boolean disabled);
+    List<Person> listAllPersonsByDisabled(@RequestParam("tenantId") @NotBlank String tenantId, @RequestParam("departmentId") @NotBlank String departmentId, @RequestParam("disabled") Boolean disabled);
 
     /**
      * 根据是否禁用，人员姓名获取部门下所有人员
@@ -138,9 +130,7 @@ public interface DepartmentApi {
      * @since 9.6.0
      */
     @GetMapping("/listAllPersonsByDisabledAndName")
-    List<Person> listAllPersonsByDisabledAndName(@RequestParam("tenantId") @NotBlank String tenantId,
-        @RequestParam("departmentId") @NotBlank String departmentId, @RequestParam("disabled") Boolean disabled,
-        @RequestParam("name") @NotBlank String name);
+    List<Person> listAllPersonsByDisabledAndName(@RequestParam("tenantId") @NotBlank String tenantId, @RequestParam("departmentId") @NotBlank String departmentId, @RequestParam("disabled") Boolean disabled, @RequestParam("name") @NotBlank String name);
 
     /**
      * 根据租户id和路径获取所有部门对象
@@ -151,8 +141,7 @@ public interface DepartmentApi {
      * @since 9.6.0
      */
     @GetMapping("/listByDn")
-    List<Department> listByDn(@RequestParam("tenantId") @NotBlank String tenantId,
-        @RequestParam("dn") @NotBlank String dn);
+    List<Department> listByDn(@RequestParam("tenantId") @NotBlank String tenantId, @RequestParam("dn") @NotBlank String dn);
 
     /**
      * 根据组织节点id查找管理的部门部门属性配置
@@ -164,20 +153,18 @@ public interface DepartmentApi {
      * @since 9.6.0
      */
     @GetMapping("/listByOrgBaseIdAndCategory")
-    List<DepartmentProp> listByOrgBaseIdAndCategory(@RequestParam("tenantId") @NotBlank String tenantId,
-        @RequestParam("orgBaseId") @NotBlank String orgBaseId, @RequestParam("category") Integer category);
+    List<DepartmentProp> listByOrgBaseIdAndCategory(@RequestParam("tenantId") @NotBlank String tenantId, @RequestParam("orgBaseId") @NotBlank String orgBaseId, @RequestParam("category") Integer category);
 
     /**
      * 根据部门名称，模糊查询部门列表
      *
      * @param tenantId 租户id
      * @param deptName 部门名称
-     * @return
+     * @return List&lt;Department&gt;
      * @since 9.6.0
      */
     @GetMapping("/listByTenantIdAndDeptName")
-    List<Department> listByTenantIdAndDeptName(@RequestParam("tenantId") @NotBlank String tenantId,
-        @RequestParam("deptName") @NotBlank String deptName);
+    List<Department> listByTenantIdAndDeptName(@RequestParam("tenantId") @NotBlank String tenantId, @RequestParam("deptName") @NotBlank String deptName);
 
     /**
      * 获得一组部门对象
@@ -188,8 +175,7 @@ public interface DepartmentApi {
      * @since 9.6.0
      */
     @GetMapping("/listDepartments")
-    List<Department> listDepartments(@RequestParam("tenantId") @NotBlank String tenantId,
-        @RequestParam("ids") @NotEmpty List<String> ids);
+    List<Department> listDepartments(@RequestParam("tenantId") @NotBlank String tenantId, @RequestParam("ids") @NotEmpty List<String> ids);
 
     /**
      * 获取用户组(下一级)
@@ -200,8 +186,7 @@ public interface DepartmentApi {
      * @since 9.6.0
      */
     @GetMapping("/listGroups")
-    List<Group> listGroups(@RequestParam("tenantId") @NotBlank String tenantId,
-        @RequestParam("departmentId") @NotBlank String departmentId);
+    List<Group> listGroups(@RequestParam("tenantId") @NotBlank String tenantId, @RequestParam("departmentId") @NotBlank String departmentId);
 
     /**
      * 获取部门领导
@@ -212,8 +197,7 @@ public interface DepartmentApi {
      * @since 9.6.0
      */
     @GetMapping("/listLeaders")
-    List<OrgUnit> listLeaders(@RequestParam("tenantId") @NotBlank String tenantId,
-        @RequestParam("departmentId") @NotBlank String departmentId);
+    List<OrgUnit> listLeaders(@RequestParam("tenantId") @NotBlank String tenantId, @RequestParam("departmentId") @NotBlank String departmentId);
 
     /**
      * 获取部门主管领导
@@ -224,8 +208,7 @@ public interface DepartmentApi {
      * @since 9.6.0
      */
     @GetMapping("/listManagers")
-    List<OrgUnit> listManagers(@RequestParam("tenantId") @NotBlank String tenantId,
-        @RequestParam("departmentId") @NotBlank String departmentId);
+    List<OrgUnit> listManagers(@RequestParam("tenantId") @NotBlank String tenantId, @RequestParam("departmentId") @NotBlank String departmentId);
 
     /**
      * 获取部门下的人员(下一级，包含部门下对应的人员)
@@ -236,8 +219,7 @@ public interface DepartmentApi {
      * @since 9.6.0
      */
     @GetMapping("/listPersons")
-    List<Person> listPersons(@RequestParam("tenantId") @NotBlank String tenantId,
-        @RequestParam("departmentId") @NotBlank String departmentId);
+    List<Person> listPersons(@RequestParam("tenantId") @NotBlank String tenantId, @RequestParam("departmentId") @NotBlank String departmentId);
 
     /**
      * 获取部门下的没有禁用/禁用的人员(下一级，包含部门下对应的人员)
@@ -249,8 +231,7 @@ public interface DepartmentApi {
      * @since 9.6.0
      */
     @GetMapping("/listPersonsByDisabled")
-    List<Person> listPersonsByDisabled(@RequestParam("tenantId") @NotBlank String tenantId,
-        @RequestParam("departmentId") @NotBlank String departmentId, @RequestParam("disabled") Boolean disabled);
+    List<Person> listPersonsByDisabled(@RequestParam("tenantId") @NotBlank String tenantId, @RequestParam("departmentId") @NotBlank String departmentId, @RequestParam("disabled") Boolean disabled);
 
     /**
      * 获取岗位(下一级)
@@ -261,8 +242,7 @@ public interface DepartmentApi {
      * @since 9.6.0
      */
     @GetMapping("/listPositions")
-    List<Position> listPositions(@RequestParam("tenantId") @NotBlank String tenantId,
-        @RequestParam("departmentId") @NotBlank String departmentId);
+    List<Position> listPositions(@RequestParam("tenantId") @NotBlank String tenantId, @RequestParam("departmentId") @NotBlank String departmentId);
 
     /**
      * 获取子部门(下一级)
@@ -273,8 +253,7 @@ public interface DepartmentApi {
      * @since 9.6.0
      */
     @GetMapping("/listSubDepartments")
-    List<Department> listSubDepartments(@RequestParam("tenantId") @NotBlank String tenantId,
-        @RequestParam("departmentId") @NotBlank String departmentId);
+    List<Department> listSubDepartments(@RequestParam("tenantId") @NotBlank String tenantId, @RequestParam("departmentId") @NotBlank String departmentId);
 
     /**
      * 保存部门
@@ -285,8 +264,7 @@ public interface DepartmentApi {
      * @since 9.6.0
      */
     @PostMapping("/saveDepartment")
-    Department saveDepartment(@RequestParam("tenantId") @NotBlank String tenantId,
-        @RequestParam("departmentJson") @NotBlank String departmentJson);
+    Department saveDepartment(@RequestParam("tenantId") @NotBlank String tenantId, @RequestParam("departmentJson") @NotBlank String departmentJson);
 
     /**
      * 根据条件查询部门对象
@@ -297,7 +275,6 @@ public interface DepartmentApi {
      * @since 9.6.0
      */
     @GetMapping("/search")
-    List<Department> search(@RequestParam("tenantId") @NotBlank String tenantId,
-        @RequestParam("whereClause") @NotBlank String whereClause);
+    List<Department> search(@RequestParam("tenantId") @NotBlank String tenantId, @RequestParam("whereClause") @NotBlank String whereClause);
 
 }
