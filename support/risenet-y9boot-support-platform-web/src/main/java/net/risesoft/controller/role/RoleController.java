@@ -2,13 +2,10 @@ package net.risesoft.controller.role;
 
 import jakarta.servlet.http.HttpServletResponse;
 
-import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
-import java.io.InputStream;
 import java.io.OutputStream;
-import java.nio.charset.StandardCharsets;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -36,7 +33,6 @@ import net.risesoft.enums.Y9RoleTypeEnum;
 import net.risesoft.log.OperationTypeEnum;
 import net.risesoft.log.annotation.RiseLog;
 import net.risesoft.pojo.Y9Result;
-import net.risesoft.util.StringUtil;
 import net.risesoft.y9.Y9Context;
 import net.risesoft.y9.util.Y9FileUtil;
 import net.risesoft.y9.util.Y9ModelConvertUtil;
@@ -102,21 +98,16 @@ public class RoleController {
     @RiseLog(operationName = "导出角色树XML", operationType = OperationTypeEnum.ADD)
     @GetMapping(value = "/exportRoleXml")
     public void exportRoleXml(@RequestParam String resourceId, HttpServletResponse response) {
-        Y9App y9App = y9AppService.findById(resourceId);
-        String xmlString = y9RoleDataHandler.doExport(resourceId);
-        xmlString = StringUtil.strChangeToXml(xmlString.getBytes(StandardCharsets.UTF_8));
-        try (OutputStream outStream = response.getOutputStream();
-            InputStream in = new ByteArrayInputStream(xmlString.getBytes(StandardCharsets.UTF_8))) {
-            response.setContentType("application/octet-stream");
-            response.setHeader("Content-Disposition", ContentDispositionUtil.standardizeAttachment(
-                y9App.getName() + "-角色信息-" + new SimpleDateFormat("yyyyMMddHHmmss").format(new Date()) + ".xml"));
+        try (OutputStream outStream = response.getOutputStream()) {
 
-            int len;
-            byte[] buf = new byte[1024];
-            while ((len = in.read(buf, 0, 1024)) != -1) {
-                outStream.write(buf, 0, len);
-            }
-            outStream.flush();
+            Y9App y9App = y9AppService.findById(resourceId);
+            String fileName =
+                y9App.getName() + "-角色信息-" + new SimpleDateFormat("yyyyMMddHHmmss").format(new Date()) + ".xml";
+            response.setContentType("application/octet-stream");
+            response.setHeader("Content-Disposition", ContentDispositionUtil.standardizeAttachment(fileName));
+
+            y9RoleDataHandler.doExport(resourceId, outStream);
+
         } catch (IOException e) {
             LOGGER.warn(e.getMessage(), e);
         }

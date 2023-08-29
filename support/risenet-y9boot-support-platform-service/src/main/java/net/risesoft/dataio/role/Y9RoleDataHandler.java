@@ -1,11 +1,11 @@
 package net.risesoft.dataio.role;
 
-import java.io.FileNotFoundException;
 import java.io.InputStream;
+import java.io.OutputStream;
 
 public interface Y9RoleDataHandler {
 
-    String doExport(String resourceId);
+    void doExport(String resourceId, OutputStream outputStream);
 
-    void doImport(InputStream inputStream, String rootRoleId) throws FileNotFoundException;
+    void doImport(InputStream inputStream, String rootRoleId);
 }
