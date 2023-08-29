@@ -1,5 +1,5 @@
 <p align="center">
-	<img alt="logo" src="https://www.youshengyun.com/sso/y9static/y9new/img/qrCodeLogo.png">
+	<img alt="logo" src="https://vue.youshengyun.com/files/img/qrCodeLogo.png">
 </p>
 <h4 align="center">基于SpringBoot+Vue前后端分离的Java快速开发框架</h4>
 <p align="center">
