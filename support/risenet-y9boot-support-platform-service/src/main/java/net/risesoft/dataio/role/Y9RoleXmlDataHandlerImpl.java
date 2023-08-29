@@ -1,9 +1,12 @@
 package net.risesoft.dataio.role;
 
-import java.io.FileNotFoundException;
+import java.io.ByteArrayInputStream;
+import java.io.IOException;
 import java.io.InputStream;
+import java.io.OutputStream;
 import java.io.PrintWriter;
 import java.io.StringWriter;
+import java.nio.charset.StandardCharsets;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -36,6 +39,7 @@ import net.risesoft.service.authorization.Y9AuthorizationService;
 import net.risesoft.service.org.CompositeOrgBaseService;
 import net.risesoft.service.relation.Y9OrgBasesToRolesService;
 import net.risesoft.util.ModelConvertUtil;
+import net.risesoft.util.StringUtil;
 import net.risesoft.y9.Y9LoginUserHolder;
 import net.risesoft.y9.configuration.Y9Properties;
 import net.risesoft.y9.util.Y9BeanUtil;
@@ -216,18 +220,29 @@ public class Y9RoleXmlDataHandlerImpl implements Y9RoleDataHandler {
     }
 
     @Override
-    public String doExport(String resourceId) {
+    public void doExport(String resourceId, OutputStream outputStream) {
         Document document = DocumentHelper.createDocument();
         document.setXMLEncoding("utf-8");
         Element resources = document.addElement("roles");
         resources.addAttribute("y9", "true");
         document.setRootElement(buildSubElement(resources, resourceId));
         String xmlString = document.asXML();
-        return xmlString;
+        xmlString = StringUtil.strChangeToXml(xmlString.getBytes(StandardCharsets.UTF_8));
+
+        try (InputStream in = new ByteArrayInputStream(xmlString.getBytes(StandardCharsets.UTF_8))) {
+            int len;
+            byte[] buf = new byte[1024];
+            while ((len = in.read(buf, 0, 1024)) != -1) {
+                outputStream.write(buf, 0, len);
+            }
+            outputStream.flush();
+        } catch (IOException e) {
+            LOGGER.warn(e.getMessage(), e);
+        }
     }
 
     @Override
-    public void doImport(InputStream inputStream, String rootRoleId) throws FileNotFoundException {
+    public void doImport(InputStream inputStream, String rootRoleId) {
         y9Results.clear();
         DocumentFactory factory = DocumentFactory.getInstance();
         SAXReader saxReader = new SAXReader(factory);

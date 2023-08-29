@@ -1,9 +1,12 @@
 package net.risesoft.dataio.org;
 
+import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.OutputStream;
 import java.io.PrintWriter;
 import java.io.StringWriter;
+import java.nio.charset.StandardCharsets;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -49,6 +52,7 @@ import net.risesoft.service.org.Y9PositionService;
 import net.risesoft.service.relation.Y9PersonsToGroupsService;
 import net.risesoft.service.relation.Y9PersonsToPositionsService;
 import net.risesoft.service.relation.Y9PositionsToGroupsService;
+import net.risesoft.util.StringUtil;
 import net.risesoft.y9.json.Y9JsonUtil;
 import net.risesoft.y9.util.base64.Y9Base64Util;
 
@@ -418,8 +422,7 @@ public class Y9OrgTreeXmlDataHandlerImpl implements Y9OrgTreeDataHandler {
     /**
      * 构造Document xml数据
      */
-    @Override
-    public String doExport(String orgBaseId) {
+    private String xmlExport(String orgBaseId) {
         Document document = DocumentHelper.createDocument();
         document.setXMLEncoding("utf-8");
         Element rootElement = document.addElement("org");
@@ -448,7 +451,13 @@ public class Y9OrgTreeXmlDataHandlerImpl implements Y9OrgTreeDataHandler {
     }
 
     @Override
-    public Y9Result<Object> doImport(InputStream inputStream) {
+    public Y9Result<Object> importPerson(InputStream inputStream, String orgId) {
+        return null;
+    }
+
+    @Override
+    public Y9Result<Object> importOrgTree(InputStream inputStream, String orgId) {
+
         DocumentFactory factory = DocumentFactory.getInstance();
         SAXReader saxReader = new SAXReader(factory);
         Document document = null;
@@ -520,19 +529,13 @@ public class Y9OrgTreeXmlDataHandlerImpl implements Y9OrgTreeDataHandler {
         return sw.toString();
     }
 
-    @Override
-    public Y9Result<Object> impXlsData(InputStream dataInputStream, InputStream xmlInputStream, String orgId) {
-        return null;
-    }
-
     private void recursiveRun(Document document, String level, String uid, boolean y9Version) {
-        String deleted, description, customId, disabled, name, tabIndex;
+        String description, customId, disabled, name, tabIndex;
         SimpleDateFormat fmt2 = new SimpleDateFormat("yyyy-MM-dd");
         List<Element> nodes;
         Element currentNode = (Element)document.selectSingleNode("/org/*[@uid=\"" + uid + "\"]");
         String nodeName = currentNode.getName();
         name = currentNode.attributeValue("name");
-        deleted = currentNode.elementText("deleted");
         description = currentNode.elementText("description");
         customId = currentNode.elementText("customId");
         if (StringUtils.isBlank(customId)) {
@@ -938,13 +941,26 @@ public class Y9OrgTreeXmlDataHandlerImpl implements Y9OrgTreeDataHandler {
     }
 
     @Override
-    public Map<String, Object> xlsData(String organizationId) {
-        return null;
+    public void exportOrgTree(String orgBaseId, OutputStream outputStream) {
+        String xmlString = this.xmlExport(orgBaseId);
+        xmlString = StringUtil.strChangeToXml(xmlString.getBytes(StandardCharsets.UTF_8));
+
+        try (InputStream in = new ByteArrayInputStream(xmlString.getBytes(StandardCharsets.UTF_8))) {
+            int len;
+            byte[] buf = new byte[1024];
+            while ((len = in.read(buf, 0, 1024)) != -1) {
+                outputStream.write(buf, 0, len);
+            }
+            outputStream.flush();
+        } catch (IOException e) {
+            LOGGER.warn(e.getMessage(), e);
+        }
+
     }
 
     @Override
-    public Map<String, Object> xlsPersonData(String orgBaseId) {
-        return null;
+    public void exportPerson(String orgBaseId, OutputStream outputStream) {
+
     }
 
 }

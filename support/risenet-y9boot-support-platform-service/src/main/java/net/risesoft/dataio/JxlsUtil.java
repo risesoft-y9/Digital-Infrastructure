@@ -17,7 +17,8 @@ public class JxlsUtil {
         XlsCommentAreaBuilder.addCommandMapping("merge", MergeCommand.class);
     }
 
-    public void exportExcel(InputStream is, OutputStream os, Map<String, Object> beans) throws IOException {
+    public void exportExcel(InputStream templateInputstream, OutputStream os, Map<String, Object> beans)
+        throws IOException {
         Context context = new Context();
         if (beans != null) {
             for (String key : beans.keySet()) {
@@ -25,8 +26,8 @@ public class JxlsUtil {
             }
         }
         JxlsHelper jxlsHelper = JxlsHelper.getInstance();
-        Transformer transformer = jxlsHelper.createTransformer(is, os);
-        Map<String, Object> funcs = new HashMap<String, Object>();
+        Transformer transformer = jxlsHelper.createTransformer(templateInputstream, os);
+        Map<String, Object> funcs = new HashMap<>();
         funcs.put("jx", new JxlsUtil());
         // 添加自定义功能
         jxlsHelper.setUseFastFormulaProcessor(false).processTemplate(context, transformer);

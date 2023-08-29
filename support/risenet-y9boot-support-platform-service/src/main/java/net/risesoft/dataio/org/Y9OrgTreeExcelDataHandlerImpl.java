@@ -1,6 +1,8 @@
 package net.risesoft.dataio.org;
 
+import java.io.BufferedInputStream;
 import java.io.InputStream;
+import java.io.OutputStream;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -17,6 +19,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
 import net.risesoft.consts.OrgLevelConsts;
+import net.risesoft.dataio.JxlsUtil;
 import net.risesoft.entity.Y9Department;
 import net.risesoft.entity.Y9Group;
 import net.risesoft.entity.Y9OrgBase;
@@ -38,6 +41,8 @@ import net.risesoft.service.org.Y9PersonService;
 import net.risesoft.service.org.Y9PositionService;
 import net.risesoft.y9.Y9LoginUserHolder;
 
+import cn.hutool.core.io.resource.ClassPathResource;
+
 @Service(value = "y9OrgTreeExcelDataHandler")
 @Slf4j
 @RequiredArgsConstructor
@@ -49,16 +54,6 @@ public class Y9OrgTreeExcelDataHandlerImpl implements Y9OrgTreeDataHandler {
     private final Y9OrganizationService y9OrganizationService;
     private final Y9PositionService y9PositionService;
     private final Y9GroupService y9GroupService;
-
-    @Override
-    public String doExport(String orgBaseId) {
-        return null;
-    }
-
-    @Override
-    public Y9Result<Object> doImport(InputStream inputStream) {
-        return null;
-    }
 
     private void executeDepartment(String parentId, List<ObjectSheet> departmentList) {
         List<Y9Department> departments = y9DepartmentService.listByParentId(parentId);
@@ -160,7 +155,7 @@ public class Y9OrgTreeExcelDataHandlerImpl implements Y9OrgTreeDataHandler {
      *
      */
     @Override
-    public Y9Result<Object> impXlsData(InputStream dataInputStream, InputStream xmlInputStream, String orgId) {
+    public Y9Result<Object> importPerson(InputStream dataInputStream, String orgId) {
         List<PersonInformation> personList = new ArrayList<>();
         Map<String, Object> ret = new HashMap<>(16);
         ret.put("success", false);
@@ -171,6 +166,9 @@ public class Y9OrgTreeExcelDataHandlerImpl implements Y9OrgTreeDataHandler {
         String mobileNulls = "";
         String mobileErrors = "";
         try {
+
+            InputStream xmlInputStream =
+                new BufferedInputStream(this.getClass().getResourceAsStream("/template/xmlconfig.xml"));
             XLSReader xlsReader = ReaderBuilder.buildFromXML(xmlInputStream);
             XLSReadStatus readStatus = xlsReader.read(dataInputStream, map);
             if (readStatus.isStatusOK()) {
@@ -247,6 +245,11 @@ public class Y9OrgTreeExcelDataHandlerImpl implements Y9OrgTreeDataHandler {
             LOGGER.warn("导入XLS组织架构发生异常", e);
             return Y9Result.failure("上传失败:" + e.getMessage());
         }
+    }
+
+    @Override
+    public Y9Result<Object> importOrgTree(InputStream inputStream, String orgId) {
+        return null;
     }
 
     private Map<String, Object> impData2Db(PersonInformation pf, String orgId) {
@@ -336,8 +339,7 @@ public class Y9OrgTreeExcelDataHandlerImpl implements Y9OrgTreeDataHandler {
      * @param organizationId
      * @return
      */
-    @Override
-    public Map<String, Object> xlsData(String organizationId) {
+    private Map<String, Object> xlsOrgTreeData(String organizationId) {
         Map<String, Object> map = new HashMap<>();
 
         List<Y9Organization> organizationList = new ArrayList<>();
@@ -353,6 +355,17 @@ public class Y9OrgTreeExcelDataHandlerImpl implements Y9OrgTreeDataHandler {
         map.put("departmentList", departmentList);
         map.put("groupList", groupList);
         map.put("positionList", positionList);
+
+        List<String> listSheetNames = new ArrayList<>();
+        listSheetNames.add("组织机构");
+        listSheetNames.add("部门");
+        listSheetNames.add("人员");
+        listSheetNames.add("用户组");
+        listSheetNames.add("岗位");
+        listSheetNames.add("角色");
+
+        map.put("sheetNames", listSheetNames);
+        map.put("listSheetNames", listSheetNames);
         return map;
     }
 
@@ -362,34 +375,55 @@ public class Y9OrgTreeExcelDataHandlerImpl implements Y9OrgTreeDataHandler {
      * @param orgBaseId
      * @return
      */
-    @Override
-    public Map<String, Object> xlsPersonData(String orgBaseId) {
+    private Map<String, Object> xlsPersonData(String orgBaseId) {
         Map<String, Object> map = new HashMap<>();
 
         List<Y9Person> persons = compositeOrgBaseService.listAllPersonsRecursionDownward(orgBaseId);
         List<PersonInformation> personList = new ArrayList<>();
         for (Y9Person person : persons) {
-            PersonInformation pf = new PersonInformation();
+            PersonInformation personInformation = new PersonInformation();
             String fullPath = person.getDn().replaceAll("cn=", "").replaceAll(",ou=", ",").replaceAll(",o=", ",");
             String path = fullPath.substring(0, fullPath.lastIndexOf(","));
             if (path.contains(",") && fullPath.lastIndexOf(",") == fullPath.lastIndexOf(",")) {
                 path = path.substring(fullPath.indexOf(",") + 1);
-                pf.setFullPath(reverseSplit(path));
+                personInformation.setFullPath(reverseSplit(path));
             } else if (!path.contains(",")) {
-                pf.setFullPath(null);
+                personInformation.setFullPath(null);
             } else {
                 path = path.substring(fullPath.indexOf(",") + 1, fullPath.lastIndexOf(","));
-                pf.setFullPath(reverseSplit(path));
+                personInformation.setFullPath(reverseSplit(path));
             }
-            pf.setName(fullPath.substring(0, fullPath.indexOf(",")));
-            pf.setEmail(person.getEmail());
-            pf.setLoginName(person.getLoginName());
-            pf.setMobile(person.getMobile());
-            pf.setSex(person.getSex() == 0 ? "女" : "男");
-            personList.add(pf);
+            personInformation.setName(fullPath.substring(0, fullPath.indexOf(",")));
+            personInformation.setEmail(person.getEmail());
+            personInformation.setLoginName(person.getLoginName());
+            personInformation.setMobile(person.getMobile());
+            personInformation.setSex(person.getSex() == 0 ? "女" : "男");
+            personList.add(personInformation);
         }
         map.put("personList", personList);
         return map;
+    }
+
+    @Override
+    public void exportOrgTree(String orgId, OutputStream outputStream) {
+        try (InputStream in = new ClassPathResource("/template/exportTemplate.xlsx").getStream()) {
+            Map<String, Object> map = xlsOrgTreeData(orgId);
+            JxlsUtil jxlsUtil = new JxlsUtil();
+            jxlsUtil.exportExcel(in, outputStream, map);
+        } catch (Exception e) {
+            LOGGER.warn(e.getMessage(), e);
+        }
+    }
+
+    @Override
+    public void exportPerson(String orgBaseId, OutputStream outputStream) {
+        try (InputStream in = new ClassPathResource("/template/exportSimpleTemplate.xlsx").getStream()) {
+            Map<String, Object> map = this.xlsPersonData(orgBaseId);
+            JxlsUtil jxlsUtil = new JxlsUtil();
+            jxlsUtil.exportExcel(in, outputStream, map);
+        } catch (Exception e) {
+            LOGGER.warn(e.getMessage(), e);
+        }
     }
 
     private String reverseSplit(String path) {
