@@ -1,5 +1,5 @@
 <p align="center">
-	<img alt="logo" src="https://www.youshengyun.com/sso/y9static/y9new/img/qrCodeLogo.png">
+	<img alt="logo" src="https://vue.youshengyun.com/files/img/qrCodeLogo.png">
 </p>
 <h4 align="center">基于SpringBoot+Vue前后端分离的Java快速开发框架</h4>
 <p align="center">
@@ -237,24 +237,24 @@ webapp -- 系统公共模块
 #### 安全保密员界面截图
 <table>
     <tr>
-        <td><img src="https://www.youshengyun.com/sso/y9static/y9new/img/21.png"></td>
-        <td><img src="https://www.youshengyun.com/sso/y9static/y9new/img/22.png"></td>
+        <td><img src="https://vue.youshengyun.com/files/img/21.png"></td>
+        <td><img src="https://vue.youshengyun.com/files/img/22.png"></td>
     </tr>
     <tr>
-        <td><img src="https://www.youshengyun.com/sso/y9static/y9new/img/23.png"></td>
-        <td><img src="https://www.youshengyun.com/sso/y9static/y9new/img/24.png"></td>
+        <td><img src="https://vue.youshengyun.com/files/img/23.png"></td>
+        <td><img src="https://vue.youshengyun.com/files/img/24.png"></td>
     </tr>
 </table>
 
 #### 安全审计员界面截图
 <table>
     <tr>
-        <td><img src="https://www.youshengyun.com/sso/y9static/y9new/img/31.png"></td>
-        <td><img src="https://www.youshengyun.com/sso/y9static/y9new/img/32.png"></td>
+        <td><img src="https://vue.youshengyun.com/files/img/31.png"></td>
+        <td><img src="https://vue.youshengyun.com/files/img/32.png"></td>
     </tr>
     <tr>
-        <td><img src="https://www.youshengyun.com/sso/y9static/y9new/img/33.png"></td>
-        <td><img src="https://www.youshengyun.com/sso/y9static/y9new/img/34.png"></td>
+        <td><img src="https://vue.youshengyun.com/files/img/33.png"></td>
+        <td><img src="https://vue.youshengyun.com/files/img/34.png"></td>
     </tr>
 </table>
 
