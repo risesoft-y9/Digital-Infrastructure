@@ -240,7 +240,7 @@ webapp -- 系统公共模块
 <table>
     <tr>
         <td><img src="https://vue.youshengyun.com/files/img/21.png"></td>
-        <td><img src="https://vue.youshengyun.com/files/img/img/22.png"></td>
+        <td><img src="https://vue.youshengyun.com/files/img/22.png"></td>
     </tr>
     <tr>
         <td><img src="https://vue.youshengyun.com/files/img/23.png"></td>
