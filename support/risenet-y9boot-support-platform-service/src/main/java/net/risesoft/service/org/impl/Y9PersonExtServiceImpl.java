@@ -1,5 +1,7 @@
 package net.risesoft.service.org.impl;
 
+import java.util.Optional;
+
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -34,7 +36,7 @@ public class Y9PersonExtServiceImpl implements Y9PersonExtService {
     private final Y9PersonManager y9PersonManager;
 
     @Override
-    public Y9PersonExt findByPersonId(String personId) {
+    public Optional<Y9PersonExt> findByPersonId(String personId) {
         return y9PersonExtRepository.findByPersonId(personId);
     }
 
@@ -46,20 +48,13 @@ public class Y9PersonExtServiceImpl implements Y9PersonExtService {
 
     @Override
     public String getEncodePhotoByPersonId(String personId) {
-        Y9PersonExt ext = y9PersonExtRepository.findByPersonId(personId);
-        if (null != ext) {
-            return Base64.encodeToString(ext.getPhoto());
-        }
-        return "";
+        Optional<Y9PersonExt> ext = y9PersonExtRepository.findByPersonId(personId);
+        return ext.map(y9PersonExt -> Base64.encodeToString(y9PersonExt.getPhoto())).orElse("");
     }
 
     @Override
     public byte[] getPhotoByPersonId(String personId) {
-        Y9PersonExt ext = y9PersonExtRepository.findByPersonId(personId);
-        if (null != ext) {
-            return ext.getPhoto();
-        }
-        return new byte[0];
+        return y9PersonExtRepository.findByPersonId(personId).map(Y9PersonExt::getPhoto).orElse(new byte[0]);
     }
 
     @Override
@@ -71,8 +66,10 @@ public class Y9PersonExtServiceImpl implements Y9PersonExtService {
     @Override
     @Transactional(readOnly = false)
     public Y9PersonExt savePersonPhoto(Y9Person person, byte[] photo) {
-        Y9PersonExt ext = y9PersonExtRepository.findByPersonId(person.getId());
-        if (null != ext) {
+        Y9PersonExt ext;
+        Optional<Y9PersonExt> optionalY9PersonExt = y9PersonExtRepository.findByPersonId(person.getId());
+        if (optionalY9PersonExt.isPresent()) {
+            ext = optionalY9PersonExt.get();
             ext.setPhoto(photo);
             return y9PersonExtRepository.save(ext);
         }
@@ -91,8 +88,10 @@ public class Y9PersonExtServiceImpl implements Y9PersonExtService {
         if (StringUtils.isNotBlank(photo)) {
             p = Base64.decode(photo);
         }
-        Y9PersonExt ext = y9PersonExtRepository.findByPersonId(person.getId());
-        if (null != ext) {
+        Y9PersonExt ext;
+        Optional<Y9PersonExt> optionalY9PersonExt = y9PersonExtRepository.findByPersonId(person.getId());
+        if (optionalY9PersonExt.isPresent()) {
+            ext = optionalY9PersonExt.get();
             ext.setPhoto(p);
             return y9PersonExtRepository.save(ext);
         }
@@ -108,5 +107,11 @@ public class Y9PersonExtServiceImpl implements Y9PersonExtService {
     public Y9PersonExt savePersonPhoto(String personId, String photo) {
         Y9Person y9Person = y9PersonManager.getById(personId);
         return this.savePersonPhoto(y9Person, photo);
+    }
+
+    @Override
+    public Y9PersonExt getByPersonId(String personId) {
+        return y9PersonExtRepository.findByPersonId(personId)
+            .orElseThrow(() -> Y9ExceptionUtil.notFoundException(PersonErrorCodeEnum.PERSON_EXT_NOT_FOUND, personId));
     }
 }

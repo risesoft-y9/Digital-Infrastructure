@@ -78,13 +78,6 @@ public interface Y9PositionService {
     Y9Position getById(String id);
 
     /**
-     * 获取子节点最大的tabIndex
-     *
-     * @return {@link Integer}
-     */
-    Integer getMaxTabIndex();
-
-    /**
      * 查询某人是否有某岗位
      *
      * @param positionName 岗位名

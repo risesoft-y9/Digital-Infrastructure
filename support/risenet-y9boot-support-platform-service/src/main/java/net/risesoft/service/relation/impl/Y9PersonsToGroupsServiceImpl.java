@@ -2,6 +2,7 @@ package net.risesoft.service.relation.impl;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 import org.springframework.stereotype.Service;
@@ -119,26 +120,15 @@ public class Y9PersonsToGroupsServiceImpl implements Y9PersonsToGroupsService {
     }
 
     @Override
-    public Y9PersonsToGroups getByGroupIdAndPersonId(String groupId, String personId) {
-        return y9PersonsToGroupsRepository.findByGroupIdAndPersonId(groupId, personId);
-    }
-
-    @Override
     public Integer getMaxGroupOrderByPersonId(String personId) {
-        Y9PersonsToGroups gp = y9PersonsToGroupsRepository.findTopByPersonIdOrderByGroupOrderDesc(personId);
-        if (gp != null) {
-            return gp.getGroupOrder();
-        }
-        return 0;
+        return y9PersonsToGroupsRepository.findTopByPersonIdOrderByGroupOrderDesc(personId)
+            .map(Y9PersonsToGroups::getGroupOrder).orElse(0);
     }
 
     @Override
     public Integer getMaxPersonOrderByGroupId(String groupId) {
-        Y9PersonsToGroups gp = y9PersonsToGroupsRepository.findTopByGroupIdOrderByPersonOrderDesc(groupId);
-        if (gp != null) {
-            return gp.getPersonOrder();
-        }
-        return 0;
+        return y9PersonsToGroupsRepository.findTopByGroupIdOrderByPersonOrderDesc(groupId)
+            .map(Y9PersonsToGroups::getPersonOrder).orElse(0);
     }
 
     @Override
@@ -148,8 +138,8 @@ public class Y9PersonsToGroupsServiceImpl implements Y9PersonsToGroupsService {
 
     @Override
     public List<String> listGroupIdsByPersonId(String personId) {
-        List<Y9PersonsToGroups> pgList = y9PersonsToGroupsRepository.findByPersonIdOrderByGroupOrder(personId);
-        return pgList.stream().map(Y9PersonsToGroups::getGroupId).collect(Collectors.toList());
+        return y9PersonsToGroupsRepository.findByPersonIdOrderByGroupOrder(personId).stream()
+            .map(Y9PersonsToGroups::getGroupId).collect(Collectors.toList());
     }
 
     @Override
@@ -159,18 +149,23 @@ public class Y9PersonsToGroupsServiceImpl implements Y9PersonsToGroupsService {
 
         List<Y9PersonsToGroups> personsGroupsList = new ArrayList<>();
         for (int i = 0; i < groupIds.length; i++) {
-            Y9PersonsToGroups y9PersonsToGroups =
+
+            Optional<Y9PersonsToGroups> optionalY9PersonsToGroups =
                 y9PersonsToGroupsRepository.findByGroupIdAndPersonId(groupIds[i], personId);
-            y9PersonsToGroups.setGroupOrder(i);
-            Y9PersonsToGroups save = y9PersonsToGroupsRepository.save(y9PersonsToGroups);
 
-            Y9MessageOrg msg = new Y9MessageOrg(ModelConvertUtil.convert(y9PersonsToGroups, PersonsGroups.class),
-                Y9OrgEventConst.RISEORGEVENT_TYPE_GROUP_ORDER, Y9LoginUserHolder.getTenantId());
-            Y9Group group = y9GroupManager.getById(y9PersonsToGroups.getGroupId());
-            Y9PublishServiceUtil.persistAndPublishMessageOrg(msg, "人员用户组排序",
-                person.getName() + "的用户组：" + group.getName() + "排序更新为" + y9PersonsToGroups.getGroupOrder());
+            if (optionalY9PersonsToGroups.isPresent()) {
+                Y9PersonsToGroups y9PersonsToGroups = optionalY9PersonsToGroups.get();
+                y9PersonsToGroups.setGroupOrder(i);
+                Y9PersonsToGroups save = y9PersonsToGroupsRepository.save(y9PersonsToGroups);
 
-            personsGroupsList.add(save);
+                Y9MessageOrg msg = new Y9MessageOrg(ModelConvertUtil.convert(y9PersonsToGroups, PersonsGroups.class),
+                    Y9OrgEventConst.RISEORGEVENT_TYPE_GROUP_ORDER, Y9LoginUserHolder.getTenantId());
+                Y9Group group = y9GroupManager.getById(y9PersonsToGroups.getGroupId());
+                Y9PublishServiceUtil.persistAndPublishMessageOrg(msg, "人员用户组排序",
+                    person.getName() + "的用户组：" + group.getName() + "排序更新为" + y9PersonsToGroups.getGroupOrder());
+
+                personsGroupsList.add(save);
+            }
         }
         return personsGroupsList;
     }
@@ -182,18 +177,22 @@ public class Y9PersonsToGroupsServiceImpl implements Y9PersonsToGroupsService {
 
         List<Y9PersonsToGroups> personsGroupsList = new ArrayList<>();
         for (int i = 0; i < personIds.length; i++) {
-            Y9PersonsToGroups y9PersonsToGroups =
+
+            Optional<Y9PersonsToGroups> optionalY9PersonsToGroups =
                 y9PersonsToGroupsRepository.findByGroupIdAndPersonId(groupId, personIds[i]);
-            y9PersonsToGroups.setPersonOrder(i);
-            y9PersonsToGroups = y9PersonsToGroupsRepository.save(y9PersonsToGroups);
+            if (optionalY9PersonsToGroups.isPresent()) {
+                Y9PersonsToGroups y9PersonsToGroups = optionalY9PersonsToGroups.get();
+                y9PersonsToGroups.setPersonOrder(i);
+                y9PersonsToGroups = y9PersonsToGroupsRepository.save(y9PersonsToGroups);
 
-            Y9Person person = y9PersonManager.getById(y9PersonsToGroups.getPersonId());
-            Y9MessageOrg msg = new Y9MessageOrg(ModelConvertUtil.convert(y9PersonsToGroups, PersonsGroups.class),
-                Y9OrgEventConst.RISEORGEVENT_TYPE_GROUP_ORDER, Y9LoginUserHolder.getTenantId());
-            Y9PublishServiceUtil.persistAndPublishMessageOrg(msg, "用户组人员排序",
-                group.getName() + "的成员" + person.getName() + "排序更新为" + y9PersonsToGroups.getPersonOrder());
+                Y9Person person = y9PersonManager.getById(y9PersonsToGroups.getPersonId());
+                Y9MessageOrg msg = new Y9MessageOrg(ModelConvertUtil.convert(y9PersonsToGroups, PersonsGroups.class),
+                    Y9OrgEventConst.RISEORGEVENT_TYPE_GROUP_ORDER, Y9LoginUserHolder.getTenantId());
+                Y9PublishServiceUtil.persistAndPublishMessageOrg(msg, "用户组人员排序",
+                    group.getName() + "的成员" + person.getName() + "排序更新为" + y9PersonsToGroups.getPersonOrder());
 
-            personsGroupsList.add(y9PersonsToGroups);
+                personsGroupsList.add(y9PersonsToGroups);
+            }
         }
         return personsGroupsList;
     }
@@ -202,18 +201,22 @@ public class Y9PersonsToGroupsServiceImpl implements Y9PersonsToGroupsService {
     @Transactional(readOnly = false)
     public void removeGroups(String personId, String[] groupIds) {
         for (String groupId : groupIds) {
-            Y9PersonsToGroups y9PersonsToGroups = this.getByGroupIdAndPersonId(personId, groupId);
+            Optional<Y9PersonsToGroups> optionalY9PersonsToGroups =
+                y9PersonsToGroupsRepository.findByGroupIdAndPersonId(groupId, personId);
+            if (optionalY9PersonsToGroups.isPresent()) {
+                Y9PersonsToGroups y9PersonsToGroups = optionalY9PersonsToGroups.get();
 
-            Y9Context.publishEvent(new Y9EntityDeletedEvent<>(y9PersonsToGroups));
+                Y9Context.publishEvent(new Y9EntityDeletedEvent<>(y9PersonsToGroups));
 
-            Y9MessageOrg msg = new Y9MessageOrg(ModelConvertUtil.convert(y9PersonsToGroups, PersonsGroups.class),
-                Y9OrgEventConst.RISEORGEVENT_TYPE_GROUP_REMOVEPERSON, Y9LoginUserHolder.getTenantId());
-            Y9Group group = y9GroupManager.getById(y9PersonsToGroups.getGroupId());
-            Y9Person person = y9PersonManager.getById(personId);
-            Y9PublishServiceUtil.persistAndPublishMessageOrg(msg, "移除用户组人员",
-                group.getName() + "移除用户组成员" + person.getName());
+                Y9MessageOrg msg = new Y9MessageOrg(ModelConvertUtil.convert(y9PersonsToGroups, PersonsGroups.class),
+                    Y9OrgEventConst.RISEORGEVENT_TYPE_GROUP_REMOVEPERSON, Y9LoginUserHolder.getTenantId());
+                Y9Group group = y9GroupManager.getById(y9PersonsToGroups.getGroupId());
+                Y9Person person = y9PersonManager.getById(personId);
+                Y9PublishServiceUtil.persistAndPublishMessageOrg(msg, "移除用户组人员",
+                    group.getName() + "移除用户组成员" + person.getName());
 
-            y9PersonsToGroupsRepository.deleteByGroupIdAndPersonId(groupId, personId);
+                y9PersonsToGroupsRepository.deleteByGroupIdAndPersonId(groupId, personId);
+            }
         }
     }
 
@@ -221,18 +224,22 @@ public class Y9PersonsToGroupsServiceImpl implements Y9PersonsToGroupsService {
     @Transactional(readOnly = false)
     public void removePersons(String groupId, String[] personIds) {
         for (String personId : personIds) {
-            Y9PersonsToGroups y9PersonsToGroups = this.getByGroupIdAndPersonId(groupId, personId);
+            Optional<Y9PersonsToGroups> optionalY9PersonsToGroups =
+                y9PersonsToGroupsRepository.findByGroupIdAndPersonId(groupId, personId);
+            if (optionalY9PersonsToGroups.isPresent()) {
+                Y9PersonsToGroups y9PersonsToGroups = optionalY9PersonsToGroups.get();
 
-            Y9Context.publishEvent(new Y9EntityDeletedEvent<>(y9PersonsToGroups));
+                Y9Context.publishEvent(new Y9EntityDeletedEvent<>(y9PersonsToGroups));
 
-            Y9Person person = y9PersonManager.getById(y9PersonsToGroups.getPersonId());
-            Y9Group group = y9GroupManager.getById(groupId);
-            Y9MessageOrg msg = new Y9MessageOrg(ModelConvertUtil.convert(y9PersonsToGroups, PersonsGroups.class),
-                Y9OrgEventConst.RISEORGEVENT_TYPE_GROUP_REMOVEPERSON, Y9LoginUserHolder.getTenantId());
-            Y9PublishServiceUtil.persistAndPublishMessageOrg(msg, "移除用户组人员",
-                group.getName() + "移除用户组成员" + person.getName());
+                Y9Person person = y9PersonManager.getById(y9PersonsToGroups.getPersonId());
+                Y9Group group = y9GroupManager.getById(groupId);
+                Y9MessageOrg msg = new Y9MessageOrg(ModelConvertUtil.convert(y9PersonsToGroups, PersonsGroups.class),
+                    Y9OrgEventConst.RISEORGEVENT_TYPE_GROUP_REMOVEPERSON, Y9LoginUserHolder.getTenantId());
+                Y9PublishServiceUtil.persistAndPublishMessageOrg(msg, "移除用户组人员",
+                    group.getName() + "移除用户组成员" + person.getName());
 
-            y9PersonsToGroupsRepository.deleteByGroupIdAndPersonId(groupId, personId);
+                y9PersonsToGroupsRepository.deleteByGroupIdAndPersonId(groupId, personId);
+            }
         }
     }
 }

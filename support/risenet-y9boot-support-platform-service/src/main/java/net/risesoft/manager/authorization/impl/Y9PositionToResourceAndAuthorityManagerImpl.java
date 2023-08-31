@@ -44,16 +44,19 @@ public class Y9PositionToResourceAndAuthorityManagerImpl implements Y9PositionTo
     @Override
     public void saveOrUpdate(Y9ResourceBase y9ResourceBase, Y9Position y9Position, Y9Authorization y9Authorization,
         Boolean inherit) {
-        Y9PositionToResourceAndAuthority y9PositionToResourceAndAuthority =
+        Optional<Y9PositionToResourceAndAuthority> optionalY9PositionToResourceAndAuthority =
             y9PositionToResourceAndAuthorityRepository.findByPositionIdAndResourceIdAndAuthorizationIdAndAuthority(
                 y9Position.getId(), y9ResourceBase.getId(), y9Authorization.getId(), y9Authorization.getAuthority());
-        if (y9PositionToResourceAndAuthority == null) {
+        Y9PositionToResourceAndAuthority y9PositionToResourceAndAuthority;
+        if (optionalY9PositionToResourceAndAuthority.isEmpty()) {
             y9PositionToResourceAndAuthority = new Y9PositionToResourceAndAuthority();
             y9PositionToResourceAndAuthority.setTenantId(y9Position.getTenantId());
             y9PositionToResourceAndAuthority.setPositionId(y9Position.getId());
             y9PositionToResourceAndAuthority.setResourceId(y9ResourceBase.getId());
             y9PositionToResourceAndAuthority.setAuthority(y9Authorization.getAuthority());
             y9PositionToResourceAndAuthority.setAuthorizationId(y9Authorization.getId());
+        } else {
+            y9PositionToResourceAndAuthority = optionalY9PositionToResourceAndAuthority.get();
         }
         y9PositionToResourceAndAuthority.setResourceName(y9ResourceBase.getName());
         y9PositionToResourceAndAuthority.setResourceType(y9ResourceBase.getResourceType());

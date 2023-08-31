@@ -1,6 +1,7 @@
 package net.risesoft.repository;
 
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
@@ -23,5 +24,5 @@ public interface Y9PersonExtRepository
 
     List<Y9PersonExt> findByIdTypeAndIdNum(String idType, String idNum);
 
-    Y9PersonExt findByPersonId(String personId);
+    Optional<Y9PersonExt> findByPersonId(String personId);
 }

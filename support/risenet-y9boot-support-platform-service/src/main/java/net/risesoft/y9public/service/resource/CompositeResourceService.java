@@ -1,6 +1,7 @@
 package net.risesoft.y9public.service.resource;
 
 import java.util.List;
+import java.util.Optional;
 
 import net.risesoft.y9public.entity.resource.Y9ResourceBase;
 
@@ -21,7 +22,8 @@ public interface CompositeResourceService {
      * @param parentId
      * @return
      */
-    Y9ResourceBase findByCustomIdAndParentId(String customId, String parentId, Integer resourceType);
+    Optional<? extends Y9ResourceBase> findByCustomIdAndParentId(String customId, String parentId,
+        Integer resourceType);
 
     /**
      * 根据主键ID获取资源实例 get the instance of resource by id

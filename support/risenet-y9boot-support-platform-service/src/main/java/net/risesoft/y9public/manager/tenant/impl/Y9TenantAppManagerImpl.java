@@ -1,6 +1,7 @@
 package net.risesoft.y9public.manager.tenant.impl;
 
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -49,7 +50,7 @@ public class Y9TenantAppManagerImpl implements Y9TenantAppManager {
     }
 
     @Override
-    public Y9TenantApp getByTenantIdAndAppIdAndTenancy(String tenantId, String appId, Boolean tenancy) {
+    public Optional<Y9TenantApp> getByTenantIdAndAppIdAndTenancy(String tenantId, String appId, Boolean tenancy) {
         return y9TenantAppRepository.findByTenantIdAndAppIdAndTenancy(tenantId, appId, tenancy);
     }
 }

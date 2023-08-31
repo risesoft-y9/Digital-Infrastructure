@@ -1,6 +1,7 @@
 package net.risesoft.y9public.service.event.impl;
 
 import java.util.Date;
+import java.util.Optional;
 
 import org.springframework.stereotype.Service;
 
@@ -25,19 +26,20 @@ public class Y9PublishedEventSyncHistoryServiceImpl implements Y9PublishedEventS
     private final Y9PublishedEventSyncHistoryRepository y9PublishedEventSyncHistoryRepository;
 
     @Override
-    public Y9PublishedEventSyncHistory findByTenantIdAndAppName(String tenantId, String appName) {
+    public Optional<Y9PublishedEventSyncHistory> findByTenantIdAndAppName(String tenantId, String appName) {
         return y9PublishedEventSyncHistoryRepository.findByTenantIdAndAppName(tenantId, appName);
     }
 
     @Override
     public Y9PublishedEventSyncHistory saveOrUpdate(String tenantId, String appName, Date syncTime) {
-        Y9PublishedEventSyncHistory history =
+        Optional<Y9PublishedEventSyncHistory> y9PublishedEventSyncHistoryOptional =
             y9PublishedEventSyncHistoryRepository.findByTenantIdAndAppName(tenantId, appName);
-        if (history != null) {
+        if (y9PublishedEventSyncHistoryOptional.isPresent()) {
+            Y9PublishedEventSyncHistory history = y9PublishedEventSyncHistoryOptional.get();
             history.setLastSyncTime(syncTime);
             return y9PublishedEventSyncHistoryRepository.save(history);
         }
-        history = new Y9PublishedEventSyncHistory();
+        Y9PublishedEventSyncHistory history = new Y9PublishedEventSyncHistory();
         history.setId(Y9IdGenerator.genId(IdType.SNOWFLAKE));
         history.setAppName(appName);
         history.setTenantId(tenantId);

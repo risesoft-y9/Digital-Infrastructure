@@ -1,6 +1,7 @@
 package net.risesoft.manager.org;
 
 import java.util.List;
+import java.util.Optional;
 
 import net.risesoft.entity.Y9Person;
 import net.risesoft.entity.Y9PersonExt;
@@ -13,7 +14,7 @@ import net.risesoft.entity.Y9PersonExt;
  */
 public interface Y9PersonExtManager {
 
-    Y9PersonExt findByPersonId(String personId);
+    Optional<Y9PersonExt> findByPersonId(String personId);
 
     Y9PersonExt saveOrUpdate(Y9PersonExt personExt, Y9Person person);
 

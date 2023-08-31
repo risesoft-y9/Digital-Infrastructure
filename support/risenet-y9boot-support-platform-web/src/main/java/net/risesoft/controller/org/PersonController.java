@@ -171,25 +171,21 @@ public class PersonController {
     @RiseLog(operationName = "根据人员id，获取人员扩展信息")
     @RequestMapping(value = "/getPersonExtById")
     public Y9Result<Y9PersonExt> getPersonExtById(@RequestParam String personId) {
-        return Y9Result.success(y9PersonExtService.findByPersonId(personId), "根据人员id，获取人员扩展信息成功");
+        return Y9Result.success(y9PersonExtService.getByPersonId(personId), "根据人员id，获取人员扩展信息成功");
     }
 
     /**
-     * 根据人员id，获取人员敏感信息加密后的扩展信息
+     * 根据人员id，获取脱敏后的人员扩展信息
      *
      * @param personId 人员id
      * @return
      */
-    @RiseLog(operationName = "根据人员id，获取人员敏感信息加密后的扩展信息")
+    @RiseLog(operationName = "根据人员id，获取脱敏后的人员扩展信息")
     @RequestMapping(value = "/getPersonExtByIdWithEncry")
     public Y9Result<Y9PersonExt> getPersonExtByIdWithEncry(@RequestParam String personId) {
-        Y9PersonExt ext = y9PersonExtService.findByPersonId(personId);
-        if (ext != null && StringUtils.isNotBlank(ext.getIdNum()) && ext.getIdNum().length() > 0) {
-            String identifyNumber = ext.getIdNum();
-            if (identifyNumber.length() > 8) {
-                identifyNumber = DesensitizedUtil.idCardNum(ext.getIdNum(), 6, 3);
-            }
-            ext.setIdNum(identifyNumber);
+        Y9PersonExt ext = y9PersonExtService.findByPersonId(personId).orElse(null);
+        if (ext != null && StringUtils.isNotBlank(ext.getIdNum()) && ext.getIdNum().length() > 8) {
+            ext.setIdNum(DesensitizedUtil.idCardNum(ext.getIdNum(), 6, 3));
         }
         return Y9Result.success(ext, "根据人员id，获取人员敏感信息加密后的扩展信息成功");
     }
@@ -401,7 +397,7 @@ public class PersonController {
         Y9Person person = y9PersonService.getById(personId);
         try {
             response.setContentType("image/jpg");
-            Y9PersonExt ext = y9PersonExtService.findByPersonId(person.getId());
+            Y9PersonExt ext = y9PersonExtService.findByPersonId(person.getId()).orElse(null);
             if (ext != null && ext.getPhoto() != null) {
                 InputStream inputStream = new ByteArrayInputStream(ext.getPhoto());
                 ServletOutputStream sos = response.getOutputStream();

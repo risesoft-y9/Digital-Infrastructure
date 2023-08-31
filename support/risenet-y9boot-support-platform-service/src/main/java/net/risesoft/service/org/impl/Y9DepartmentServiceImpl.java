@@ -7,6 +7,7 @@ import jakarta.persistence.Query;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.Optional;
 
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.context.event.EventListener;
@@ -181,15 +182,6 @@ public class Y9DepartmentServiceImpl implements Y9DepartmentService {
     }
 
     @Override
-    public Integer getMaxTabIndex() {
-        Y9Department dept = y9DepartmentRepository.findTopByOrderByTabIndexDesc();
-        if (dept != null) {
-            return dept.getTabIndex();
-        }
-        return 0;
-    }
-
-    @Override
     public List<Y9Department> list() {
         return y9DepartmentRepository.findAll();
     }
@@ -316,40 +308,42 @@ public class Y9DepartmentServiceImpl implements Y9DepartmentService {
     @Override
     @Transactional(readOnly = false)
     public void removeLeader(String deptId, String orgBaseId) {
-        Y9DepartmentProp y9DepartmentProp = y9DepartmentPropRepository.findByDeptIdAndOrgBaseIdAndCategory(deptId,
-            orgBaseId, Y9DepartmentPropCategoryEnum.LEADER.getCategory());
-        if (null != y9DepartmentProp) {
-            y9DepartmentPropRepository.delete(y9DepartmentProp);
+        Optional<Y9DepartmentProp> optionalY9DepartmentProp = y9DepartmentPropRepository
+            .findByDeptIdAndOrgBaseIdAndCategory(deptId, orgBaseId, Y9DepartmentPropCategoryEnum.LEADER.getCategory());
+        if (optionalY9DepartmentProp.isPresent()) {
+            y9DepartmentPropRepository.delete(optionalY9DepartmentProp.get());
         }
     }
 
     @Override
     @Transactional(readOnly = false)
     public void removeManager(String deptId, String orgBaseId) {
-        Y9DepartmentProp y9DepartmentProp = y9DepartmentPropRepository.findByDeptIdAndOrgBaseIdAndCategory(deptId,
-            orgBaseId, Y9DepartmentPropCategoryEnum.MANAGER.getCategory());
-        if (null != y9DepartmentProp) {
-            y9DepartmentPropRepository.delete(y9DepartmentProp);
+        Optional<Y9DepartmentProp> optionalY9DepartmentProp = y9DepartmentPropRepository
+            .findByDeptIdAndOrgBaseIdAndCategory(deptId, orgBaseId, Y9DepartmentPropCategoryEnum.MANAGER.getCategory());
+        if (optionalY9DepartmentProp.isPresent()) {
+            y9DepartmentPropRepository.delete(optionalY9DepartmentProp.get());
         }
     }
 
     @Override
     @Transactional(readOnly = false)
     public void removeSecretary(String deptId, String personId) {
-        Y9DepartmentProp y9DepartmentProp = y9DepartmentPropRepository.findByDeptIdAndOrgBaseIdAndCategory(deptId,
-            personId, Y9DepartmentPropCategoryEnum.SECRETARY.getCategory());
-        if (null != y9DepartmentProp) {
-            y9DepartmentPropRepository.delete(y9DepartmentProp);
+        Optional<Y9DepartmentProp> optionalY9DepartmentProp =
+            y9DepartmentPropRepository.findByDeptIdAndOrgBaseIdAndCategory(deptId, personId,
+                Y9DepartmentPropCategoryEnum.SECRETARY.getCategory());
+        if (optionalY9DepartmentProp.isPresent()) {
+            y9DepartmentPropRepository.delete(optionalY9DepartmentProp.get());
         }
     }
 
     @Override
     @Transactional(readOnly = false)
     public void removeViceLeader(String deptId, String personId) {
-        Y9DepartmentProp y9DepartmentProp = y9DepartmentPropRepository.findByDeptIdAndOrgBaseIdAndCategory(deptId,
-            personId, Y9DepartmentPropCategoryEnum.VICE_LEADER.getCategory());
-        if (null != y9DepartmentProp) {
-            y9DepartmentPropRepository.delete(y9DepartmentProp);
+        Optional<Y9DepartmentProp> optionalY9DepartmentProp =
+            y9DepartmentPropRepository.findByDeptIdAndOrgBaseIdAndCategory(deptId, personId,
+                Y9DepartmentPropCategoryEnum.VICE_LEADER.getCategory());
+        if (optionalY9DepartmentProp.isPresent()) {
+            y9DepartmentPropRepository.delete(optionalY9DepartmentProp.get());
         }
     }
 
@@ -479,12 +473,12 @@ public class Y9DepartmentServiceImpl implements Y9DepartmentService {
     @Override
     @Transactional(readOnly = false)
     public void setDeptLeaders(String deptId, String[] orgBaseIds) {
-        Y9DepartmentProp y9DepartmentProp = null;
         for (String orgBaseId : orgBaseIds) {
-            y9DepartmentProp = y9DepartmentPropRepository.findByDeptIdAndOrgBaseIdAndCategory(deptId, orgBaseId,
-                Y9DepartmentPropCategoryEnum.LEADER.getCategory());
-            if (null == y9DepartmentProp) {
-                y9DepartmentProp = new Y9DepartmentProp();
+            Optional<Y9DepartmentProp> optionalY9DepartmentProp =
+                y9DepartmentPropRepository.findByDeptIdAndOrgBaseIdAndCategory(deptId, orgBaseId,
+                    Y9DepartmentPropCategoryEnum.LEADER.getCategory());
+            if (optionalY9DepartmentProp.isEmpty()) {
+                Y9DepartmentProp y9DepartmentProp = new Y9DepartmentProp();
                 y9DepartmentProp.setId(Y9IdGenerator.genId(IdType.SNOWFLAKE));
                 y9DepartmentProp.setDeptId(deptId);
                 y9DepartmentProp.setOrgBaseId(orgBaseId);
@@ -506,12 +500,12 @@ public class Y9DepartmentServiceImpl implements Y9DepartmentService {
     @Override
     @Transactional(readOnly = false)
     public void setDeptManagers(String deptId, String[] orgBaseIds) {
-        Y9DepartmentProp y9DepartmentProp = null;
         for (String orgBaseId : orgBaseIds) {
-            y9DepartmentProp = y9DepartmentPropRepository.findByDeptIdAndOrgBaseIdAndCategory(deptId, orgBaseId,
-                Y9DepartmentPropCategoryEnum.MANAGER.getCategory());
-            if (null == y9DepartmentProp) {
-                y9DepartmentProp = new Y9DepartmentProp();
+            Optional<Y9DepartmentProp> optionalY9DepartmentProp =
+                y9DepartmentPropRepository.findByDeptIdAndOrgBaseIdAndCategory(deptId, orgBaseId,
+                    Y9DepartmentPropCategoryEnum.MANAGER.getCategory());
+            if (optionalY9DepartmentProp.isEmpty()) {
+                Y9DepartmentProp y9DepartmentProp = new Y9DepartmentProp();
                 y9DepartmentProp.setId(Y9IdGenerator.genId(IdType.SNOWFLAKE));
                 y9DepartmentProp.setDeptId(deptId);
                 y9DepartmentProp.setOrgBaseId(orgBaseId);
@@ -533,12 +527,12 @@ public class Y9DepartmentServiceImpl implements Y9DepartmentService {
     @Override
     @Transactional(readOnly = false)
     public void setDeptSecretarys(String deptId, String[] orgBaseIds) {
-        Y9DepartmentProp y9DepartmentProp = null;
         for (String orgBaseId : orgBaseIds) {
-            y9DepartmentProp = y9DepartmentPropRepository.findByDeptIdAndOrgBaseIdAndCategory(deptId, orgBaseId,
-                Y9DepartmentPropCategoryEnum.SECRETARY.getCategory());
-            if (null == y9DepartmentProp) {
-                y9DepartmentProp = new Y9DepartmentProp();
+            Optional<Y9DepartmentProp> optionalY9DepartmentProp =
+                y9DepartmentPropRepository.findByDeptIdAndOrgBaseIdAndCategory(deptId, orgBaseId,
+                    Y9DepartmentPropCategoryEnum.SECRETARY.getCategory());
+            if (optionalY9DepartmentProp.isEmpty()) {
+                Y9DepartmentProp y9DepartmentProp = new Y9DepartmentProp();
                 y9DepartmentProp.setId(Y9IdGenerator.genId(IdType.SNOWFLAKE));
                 y9DepartmentProp.setDeptId(deptId);
                 y9DepartmentProp.setOrgBaseId(orgBaseId);
@@ -560,12 +554,12 @@ public class Y9DepartmentServiceImpl implements Y9DepartmentService {
     @Override
     @Transactional(readOnly = false)
     public void setDeptViceLeaders(String deptId, String[] orgBaseIds) {
-        Y9DepartmentProp y9DepartmentProp = null;
         for (String orgBaseId : orgBaseIds) {
-            y9DepartmentProp = y9DepartmentPropRepository.findByDeptIdAndOrgBaseIdAndCategory(deptId, orgBaseId,
-                Y9DepartmentPropCategoryEnum.VICE_LEADER.getCategory());
-            if (null == y9DepartmentProp) {
-                y9DepartmentProp = new Y9DepartmentProp();
+            Optional<Y9DepartmentProp> optionalY9DepartmentProp =
+                y9DepartmentPropRepository.findByDeptIdAndOrgBaseIdAndCategory(deptId, orgBaseId,
+                    Y9DepartmentPropCategoryEnum.VICE_LEADER.getCategory());
+            if (optionalY9DepartmentProp.isEmpty()) {
+                Y9DepartmentProp y9DepartmentProp = new Y9DepartmentProp();
                 y9DepartmentProp.setId(Y9IdGenerator.genId(IdType.SNOWFLAKE));
                 y9DepartmentProp.setDeptId(deptId);
                 y9DepartmentProp.setOrgBaseId(orgBaseId);

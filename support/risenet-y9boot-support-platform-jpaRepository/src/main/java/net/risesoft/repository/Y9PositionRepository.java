@@ -1,6 +1,7 @@
 package net.risesoft.repository;
 
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
@@ -34,11 +35,9 @@ public interface Y9PositionRepository extends JpaRepository<Y9Position, String> 
 
     List<Y9Position> findByParentIdOrderByTabIndexAsc(String parentId);
 
-    Y9Position findTopByParentIdOrderByTabIndexDesc(String parentId);
+    Optional<Y9Position> findTopByParentIdOrderByTabIndexDesc(String parentId);
 
     List<Y9Position> getByDn(String dn);
-
-    Y9Position getTopByOrderByTabIndexDesc();
 
     @Query("select id from Y9Position where guidPath like ?1")
     List<String> getPositionIdByGuidPathLike(String guidPath);

@@ -1,6 +1,7 @@
 package net.risesoft.manager.org.impl;
 
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -26,15 +27,16 @@ public class Y9PersonExtManagerImpl implements Y9PersonExtManager {
     private final Y9PersonExtRepository y9PersonExtRepository;
 
     @Override
-    public Y9PersonExt findByPersonId(String personId) {
+    public Optional<Y9PersonExt> findByPersonId(String personId) {
         return y9PersonExtRepository.findByPersonId(personId);
     }
 
     @Override
     @Transactional(readOnly = false)
     public Y9PersonExt saveOrUpdate(Y9PersonExt y9PersonExt, Y9Person person) {
-        Y9PersonExt oldext = y9PersonExtRepository.findByPersonId(person.getId());
-        if (null != oldext) {
+        Optional<Y9PersonExt> optionalY9PersonExt = y9PersonExtRepository.findByPersonId(person.getId());
+        if (optionalY9PersonExt.isPresent()) {
+            Y9PersonExt oldext = optionalY9PersonExt.get();
             Y9BeanUtil.copyProperties(y9PersonExt, oldext, "photo");
             return y9PersonExtRepository.save(oldext);
         }

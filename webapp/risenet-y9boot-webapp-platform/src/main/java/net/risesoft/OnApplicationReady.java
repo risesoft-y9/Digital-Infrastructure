@@ -2,6 +2,7 @@ package net.risesoft;
 
 import java.util.Date;
 import java.util.Map;
+import java.util.Optional;
 import java.util.Set;
 
 import org.hibernate.integrator.api.integrator.Y9TenantHibernateInfoHolder;
@@ -221,9 +222,10 @@ public class OnApplicationReady implements ApplicationListener<ApplicationReadyE
     }
 
     private void createTenantSystem(String tenantId, String systemId, String dataSourceId) {
-        Y9TenantSystem y9TenantSystem = y9TenantSystemService.getByTenantIdAndSystemId(tenantId, systemId);
-        if (null == y9TenantSystem) {
-            y9TenantSystem = new Y9TenantSystem();
+        Optional<Y9TenantSystem> y9TenantSystemOptional =
+            y9TenantSystemService.getByTenantIdAndSystemId(tenantId, systemId);
+        if (y9TenantSystemOptional.isEmpty()) {
+            Y9TenantSystem y9TenantSystem = new Y9TenantSystem();
             y9TenantSystem.setId(Y9IdGenerator.genId(IdType.SNOWFLAKE));
             y9TenantSystem.setTenantId(tenantId);
             y9TenantSystem.setTenantDataSource(dataSourceId);

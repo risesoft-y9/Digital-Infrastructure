@@ -191,37 +191,27 @@ public class CompositeOrgBaseManagerImpl implements CompositeOrgBaseManager {
 
     @Override
     public Integer getMaxSubTabIndex(String parentId, OrgTypeEnum orgType) {
-        Integer maxTabIndex = 0;
+        Integer maxTabIndex;
         switch (orgType) {
             case DEPARTMENT:
-                Y9Department y9Department = y9DepartmentRepository.findTopByParentIdOrderByTabIndexDesc(parentId);
-                if (null != y9Department && y9Department.getTabIndex() != null) {
-                    maxTabIndex = y9Department.getTabIndex();
-                }
+                maxTabIndex = y9DepartmentRepository.findTopByParentIdOrderByTabIndexDesc(parentId)
+                    .map(Y9OrgBase::getTabIndex).orElse(0);
                 break;
             case GROUP:
-                Y9Group y9Group = y9GroupRepository.findTopByParentIdOrderByTabIndexDesc(parentId);
-                if (null != y9Group && y9Group.getTabIndex() != null) {
-                    maxTabIndex = y9Group.getTabIndex();
-                }
+                maxTabIndex = y9GroupRepository.findTopByParentIdOrderByTabIndexDesc(parentId)
+                    .map(Y9OrgBase::getTabIndex).orElse(0);
                 break;
             case POSITION:
-                Y9Position y9Position = y9PositionRepository.findTopByParentIdOrderByTabIndexDesc(parentId);
-                if (null != y9Position && y9Position.getTabIndex() != null) {
-                    maxTabIndex = y9Position.getTabIndex();
-                }
+                maxTabIndex = y9PositionRepository.findTopByParentIdOrderByTabIndexDesc(parentId)
+                    .map(Y9OrgBase::getTabIndex).orElse(0);
                 break;
             case PERSON:
-                Y9Person y9Person = y9PersonRepository.findTopByParentIdOrderByTabIndexDesc(parentId);
-                if (null != y9Person && y9Person.getTabIndex() != null) {
-                    maxTabIndex = y9Person.getTabIndex();
-                }
+                maxTabIndex = y9PersonRepository.findTopByParentIdOrderByTabIndexDesc(parentId)
+                    .map(Y9OrgBase::getTabIndex).orElse(0);
                 break;
             case MANAGER:
-                Y9Manager y9Manager = y9ManagerRepository.findTopByParentIdOrderByTabIndexDesc(parentId);
-                if (null != y9Manager && y9Manager.getTabIndex() != null) {
-                    maxTabIndex = y9Manager.getTabIndex();
-                }
+                maxTabIndex = y9ManagerRepository.findTopByParentIdOrderByTabIndexDesc(parentId)
+                    .map(Y9OrgBase::getTabIndex).orElse(0);
                 break;
             default:
                 maxTabIndex = 0;

@@ -1,6 +1,7 @@
 package net.risesoft.service.org.impl;
 
 import java.util.List;
+import java.util.Optional;
 
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.data.domain.Page;
@@ -51,7 +52,7 @@ public class Y9CustomGroupServiceImpl implements Y9CustomGroupService {
     }
 
     @Override
-    public Y9CustomGroup findByCustomId(String customId) {
+    public Optional<Y9CustomGroup> findByCustomId(String customId) {
         return customGroupRepository.findByCustomId(customId);
     }
 

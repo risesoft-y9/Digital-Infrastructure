@@ -3,6 +3,7 @@ package net.risesoft.y9public.service.role.impl;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Optional;
 import java.util.Set;
 
 import org.apache.commons.lang3.StringUtils;
@@ -111,7 +112,7 @@ public class Y9RoleServiceImpl implements Y9RoleService {
     }
 
     @Override
-    public Y9Role findByCustomIdAndParentId(String customId, String parentId) {
+    public Optional<Y9Role> findByCustomIdAndParentId(String customId, String parentId) {
         return y9RoleRepository.findByCustomIdAndParentId(customId, parentId);
     }
 
@@ -132,11 +133,7 @@ public class Y9RoleServiceImpl implements Y9RoleService {
 
     @Override
     public Integer getMaxTabIndex() {
-        Y9Role roleNode = y9RoleRepository.findTopByOrderByTabIndexDesc();
-        if (roleNode != null) {
-            return roleNode.getTabIndex();
-        }
-        return 0;
+        return y9RoleRepository.findTopByOrderByTabIndexDesc().map(Y9Role::getTabIndex).orElse(0);
     }
 
     private void getRoleTrees(String roleId, List<Y9Role> roleNodeList) {

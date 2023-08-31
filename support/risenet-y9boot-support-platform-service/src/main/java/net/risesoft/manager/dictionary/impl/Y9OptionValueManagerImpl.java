@@ -1,5 +1,7 @@
 package net.risesoft.manager.dictionary.impl;
 
+import java.util.Optional;
+
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -27,9 +29,9 @@ public class Y9OptionValueManagerImpl implements Y9OptionValueManager {
     @Override
     @Transactional(readOnly = false)
     public Y9OptionValue create(String code, String name, String type) {
-        Y9OptionValue optionValue = orgOptionValueRepository.findByTypeAndName(type, name);
-        if (optionValue == null) {
-            optionValue = new Y9OptionValue();
+        Optional<Y9OptionValue> optionalY9OptionValue = orgOptionValueRepository.findByTypeAndName(type, name);
+        if (optionalY9OptionValue.isEmpty()) {
+            Y9OptionValue optionValue = new Y9OptionValue();
             Integer maxTabIndex = getMaxTabIndexByType(optionValue.getType());
             optionValue.setTabIndex(maxTabIndex == null ? 0 : maxTabIndex + 1);
             optionValue.setId(Y9IdGenerator.genId());
@@ -38,16 +40,12 @@ public class Y9OptionValueManagerImpl implements Y9OptionValueManager {
             optionValue.setCode(code);
             return orgOptionValueRepository.save(optionValue);
         }
-        return optionValue;
+        return optionalY9OptionValue.get();
     }
 
     @Override
     public Integer getMaxTabIndexByType(String type) {
-        Y9OptionValue ov = orgOptionValueRepository.findTopByType(type);
-        if (ov != null) {
-            return ov.getTabIndex();
-        }
-        return 0;
+        return orgOptionValueRepository.findTopByType(type).map(Y9OptionValue::getTabIndex).orElse(0);
     }
 
     @Override

@@ -1,6 +1,7 @@
 package net.risesoft.repository.relation;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.Set;
 
 import org.springframework.data.domain.Sort;
@@ -47,7 +48,7 @@ public interface Y9OrgBasesToRolesRepository extends JpaRepository<Y9OrgBasesToR
 
     List<Y9OrgBasesToRoles> findByRoleIdAndOrgId(String roleId, String orgId);
 
-    Y9OrgBasesToRoles findByRoleIdAndOrgIdAndNegative(String roleId, String orgId, Boolean negative);
+    Optional<Y9OrgBasesToRoles> findByRoleIdAndOrgIdAndNegative(String roleId, String orgId, Boolean negative);
 
     @Query("select distinct t.roleId from Y9OrgBasesToRoles t where t.orgId = ?1")
     List<String> findDistinctRoleIdByOrgId(String orgId);

@@ -1,6 +1,7 @@
 package net.risesoft.service.org;
 
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.data.domain.Page;
 
@@ -28,7 +29,7 @@ public interface Y9CustomGroupService {
      * @param customId 自定义id
      * @return {@link Y9CustomGroup}
      */
-    Y9CustomGroup findByCustomId(String customId);
+    Optional<Y9CustomGroup> findByCustomId(String customId);
 
     /**
      * 根据id查找自定义用户组

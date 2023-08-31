@@ -1,8 +1,8 @@
 package net.risesoft.y9public.service.user;
 
 import java.util.List;
+import java.util.Optional;
 
-import net.risesoft.entity.Y9Person;
 import net.risesoft.y9public.entity.user.Y9User;
 
 /**
@@ -21,24 +21,6 @@ public interface Y9UserService {
      * @return boolean
      */
     boolean checkCaidAvailability(String personId, String caid);
-
-    /**
-     * 验证登录名称
-     *
-     * @param y9Person 人员对象
-     * @param loginName 登录名
-     * @return boolean
-     */
-    boolean checkLoginName(Y9Person y9Person, String loginName);
-
-    /**
-     * 检查手机号
-     *
-     * @param y9Person 人员对象
-     * @param mobile 手机号
-     * @return boolean
-     */
-    boolean checkMobile(Y9Person y9Person, String mobile);
 
     /**
      * 根据id删除用户
@@ -61,25 +43,7 @@ public interface Y9UserService {
      * @param tenantId 租户id
      * @return {@link Y9User}
      */
-    Y9User findByLoginNameAndTenantIdWithoutPersonId(String loginName, String tenantId);
-
-    /**
-     * 根据电话号码和租户id查找用户
-     *
-     * @param personId 人员id
-     * @param mobile 手机号
-     * @param tenantId 租户id
-     * @return {@link Y9User}
-     */
-    Y9User findByMobileAndTenantId(String personId, String mobile, String tenantId);
-
-    /**
-     * 根据personId查找用户
-     *
-     * @param personId 人员id
-     * @return {@link Y9User}
-     */
-    Y9User findByPersonId(String personId);
+    Optional<Y9User> findByLoginNameAndTenantId(String loginName, String tenantId);
 
     /**
      * 根据 人员id 和 租户id 查找用户
@@ -88,7 +52,7 @@ public interface Y9UserService {
      * @param tenantId 租户id
      * @return {@link Y9User}
      */
-    Y9User findByPersonIdAndTenantId(String personId, String tenantId);
+    Optional<Y9User> findByPersonIdAndTenantId(String personId, String tenantId);
 
     /**
      * 查询所有用户信息

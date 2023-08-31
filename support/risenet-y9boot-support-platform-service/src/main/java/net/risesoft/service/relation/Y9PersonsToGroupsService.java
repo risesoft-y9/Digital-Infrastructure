@@ -47,15 +47,6 @@ public interface Y9PersonsToGroupsService {
     void deleteByPersonId(String personId);
 
     /**
-     * 根据用户组ID和人员ID,获取用户组人员的关系对象
-     *
-     * @param groupId
-     * @param personId
-     * @return
-     */
-    Y9PersonsToGroups getByGroupIdAndPersonId(String groupId, String personId);
-
-    /**
      * 根据人员id查询最大的用户组排序号
      *
      * @param personId

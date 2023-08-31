@@ -1,6 +1,7 @@
 package net.risesoft.repository.identity.position;
 
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -66,8 +67,8 @@ public interface Y9PositionToResourceAndAuthorityRepository
     List<Y9PositionToResourceAndAuthority> findByPositionIdAndResourceIdAndAuthority(String positionId,
         String resourceId, Integer authority);
 
-    Y9PositionToResourceAndAuthority findByPositionIdAndResourceIdAndAuthorizationIdAndAuthority(String positionId,
-        String resourceId, String authorizationId, Integer authority);
+    Optional<Y9PositionToResourceAndAuthority> findByPositionIdAndResourceIdAndAuthorizationIdAndAuthority(
+        String positionId, String resourceId, String authorizationId, Integer authority);
 
     List<Y9PositionToResourceAndAuthority> findByResourceId(String resourceId);
 }

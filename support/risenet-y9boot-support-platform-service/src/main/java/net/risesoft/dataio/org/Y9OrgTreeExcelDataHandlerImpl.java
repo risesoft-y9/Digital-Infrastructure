@@ -8,6 +8,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 import org.apache.commons.lang3.StringUtils;
 import org.jxls.reader.ReaderBuilder;
@@ -272,8 +273,8 @@ public class Y9OrgTreeExcelDataHandlerImpl implements Y9OrgTreeDataHandler {
             if (i == lenth - 1) {
                 dn = OrgLevelConsts.CN + paths[i] + "," + dn;
                 String personName = pf.getLoginName().replaceAll("\\s*", "");
-                Y9Person person = y9PersonService.getPersonByLoginName(personName);
-                if (person == null) {
+                Optional<Y9Person> y9PersonOptional = y9PersonService.getPersonByLoginName(personName);
+                if (y9PersonOptional.isEmpty()) {
                     if (StringUtils.isNotBlank(pf.getMobile())) {
                         // 数值类型号码
                         if (pf.getMobile().indexOf("E") > 0) {

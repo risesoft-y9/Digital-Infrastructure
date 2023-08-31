@@ -1,9 +1,9 @@
 package net.risesoft.repository;
 
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -31,14 +31,9 @@ public interface Y9DepartmentRepository extends JpaRepository<Y9Department, Stri
 
     List<Y9Department> findByParentIdOrderByTabIndexAsc(String parentId);
 
-    Y9Department findTopByOrderByTabIndexDesc();
-
-    Y9Department findTopByParentIdOrderByTabIndexDesc(String parentId);
+    Optional<Y9Department> findTopByParentIdOrderByTabIndexDesc(String parentId);
 
     List<Y9Department> getByDn(String dn);
-
-    @Query("select id from Y9Department where guidPath like ?1")
-    List<String> listByGuidPathLike(String guidPath);
 
     List<Y9Department> findByBureauAndGuidPathContainingOrderByTabIndexAsc(boolean isBureau, String guidPath);
 }

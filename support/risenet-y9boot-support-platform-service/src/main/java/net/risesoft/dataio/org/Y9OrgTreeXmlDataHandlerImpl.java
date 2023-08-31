@@ -13,6 +13,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 import org.apache.commons.lang3.StringUtils;
 import org.dom4j.Document;
@@ -311,8 +312,9 @@ public class Y9OrgTreeXmlDataHandlerImpl implements Y9OrgTreeDataHandler {
             personElement.addElement("originalId")
                 .addText(person.getOriginalId() == null ? "" : person.getOriginalId());
 
-            Y9PersonExt ext = y9PersonExtService.findByPersonId(person.getId());
-            if (null != ext) {
+            Optional<Y9PersonExt> optionalY9PersonExt = y9PersonExtService.findByPersonId(person.getId());
+            if (optionalY9PersonExt.isPresent()) {
+                Y9PersonExt ext = optionalY9PersonExt.get();
                 personElement.addElement("city").addText(ext.getCity() == null ? "" : ext.getCity());
                 personElement.addElement("country").addText(ext.getCountry() == null ? "" : ext.getCountry());
                 personElement.addElement("education").addText(ext.getEducation() == null ? "" : ext.getEducation());
@@ -727,11 +729,8 @@ public class Y9OrgTreeXmlDataHandlerImpl implements Y9OrgTreeDataHandler {
                     parent = y9DepartmentService.findById(pid);
                 }
 
-                group = y9GroupService.findById(uid);
-                if (group == null) {
-                    group = new Y9Group();
-                    group.setId(uid);
-                }
+                group = y9GroupService.findById(uid).orElse(new Y9Group());
+                group.setId(uid);
                 group.setType(type == null ? IdentityEnum.POSITION.getName() : type);
                 group.setName(name == null ? "" : name);
                 group.setDescription(description == null ? "" : description);
@@ -900,10 +899,8 @@ public class Y9OrgTreeXmlDataHandlerImpl implements Y9OrgTreeDataHandler {
                 person.setOriginal(Boolean.valueOf(original));
                 person.setOriginalId(originalId);
 
-                Y9PersonExt ext = y9PersonExtService.findByPersonId(uid);
-                if (ext == null) {
-                    ext = new Y9PersonExt();
-                }
+                Y9PersonExt ext = y9PersonExtService.findByPersonId(uid).orElse(new Y9PersonExt());
+
                 ext.setBirthday(birthday == null ? null : fmt2.parse(birthday));
                 ext.setMaritalStatus(maritalStatus == null ? 0 : Integer.valueOf(maritalStatus));
                 ext.setHomeAddress(homeAddress == null ? "" : homeAddress);

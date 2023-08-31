@@ -1,9 +1,8 @@
 package net.risesoft.y9public.repository.role;
 
 import java.util.List;
+import java.util.Optional;
 
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.stereotype.Repository;
@@ -29,25 +28,12 @@ public interface Y9RoleRepository extends JpaRepository<Y9Role, String>, JpaSpec
 
     List<Y9Role> findByCustomId(String customId);
 
-    Y9Role findByCustomIdAndParentId(String customId, String parentId);
-
-    Y9Role findByDnAndType(String dn, String type);
-
-    Page<Y9Role> findByNameAndSystemCnNameAndType(String name, String systemCnName, String type, Pageable pageable);
-
-    Page<Y9Role> findByNameAndSystemCnNameAndTypeAndParentIdNotIn(String name, String systemCnName, String type,
-        List<String> ids, Pageable pageable);
+    Optional<Y9Role> findByCustomIdAndParentId(String customId, String parentId);
 
     List<Y9Role> findByNameAndSystemNameAndPropertiesAndType(String name, String systemName, String properties,
         String type);
 
     List<Y9Role> findByNameAndSystemNameAndType(String name, String systemName, String type);
-
-    Page<Y9Role> findByNameAndType(String name, String type, Pageable pageable);
-
-    Page<Y9Role> findByNameAndTypeAndDnContaining(String roleName, String type, String dn, Pageable pageable);
-
-    Page<Y9Role> findByNameAndTypeAndParentIdNotIn(String name, String type, List<String> ids, Pageable pageable);
 
     List<Y9Role> findByNameContainingOrderByTabIndexAsc(String name);
 
@@ -64,26 +50,7 @@ public interface Y9RoleRepository extends JpaRepository<Y9Role, String>, JpaSpec
 
     List<Y9Role> findByParentIdOrderByTabIndexAsc(String parentId);
 
-    Page<Y9Role> findBySystemCnNameAndType(String systemCnName, String type, Pageable pageable);
-
-    Page<Y9Role> findBySystemCnNameAndTypeAndDnContaining(String systemCnName, String type, String dn,
-        Pageable pageable);
-
-    Page<Y9Role> findBySystemCnNameAndTypeAndParentId(String systemCnName, String type, String parentId,
-        Pageable pageable);
-
-    Page<Y9Role> findBySystemCnNameAndTypeAndParentIdNotIn(String systemCnName, String type, List<String> ids,
-        Pageable pageable);
-
     List<Y9Role> findBySystemNameAndNameContainingOrderByTabIndexAsc(String systemName, String name);
 
-    Page<Y9Role> findByType(String type, Pageable pageable);
-
-    Page<Y9Role> findByTypeAndDnContaining(String type, String dn, Pageable pageable);
-
-    Page<Y9Role> findByTypeAndParentId(String type, String parentId, Pageable pageable);
-
-    Page<Y9Role> findByTypeAndParentIdNotIn(String type, List<String> ids, Pageable pageable);
-
-    Y9Role findTopByOrderByTabIndexDesc();
+    Optional<Y9Role> findTopByOrderByTabIndexDesc();
 }

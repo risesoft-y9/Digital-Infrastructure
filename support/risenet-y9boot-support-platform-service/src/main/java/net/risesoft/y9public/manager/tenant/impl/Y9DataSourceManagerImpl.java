@@ -1,6 +1,7 @@
 package net.risesoft.y9public.manager.tenant.impl;
 
 import java.util.Objects;
+import java.util.Optional;
 import java.util.Random;
 
 import org.apache.commons.lang3.StringUtils;
@@ -171,8 +172,8 @@ public class Y9DataSourceManagerImpl implements Y9DataSourceManager {
             }
         }
 
-        Y9DataSource y9DataSource = datasourceRepository.findByJndiName(dbName);
-        if (y9DataSource == null) {
+        Optional<Y9DataSource> y9DataSourceOptional = datasourceRepository.findByJndiName(dbName);
+        if (y9DataSourceOptional.isEmpty()) {
             Y9DataSource ds = new Y9DataSource();
             ds.setJndiName(dbName);
             ds.setUrl(url);

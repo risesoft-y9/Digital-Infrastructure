@@ -71,13 +71,6 @@ public interface Y9DepartmentService {
     List<Y9Department> getDeptTrees(String orgBaseId);
 
     /**
-     * 获取子节点最大的TableIndex
-     *
-     * @return {@link Integer}
-     */
-    Integer getMaxTabIndex();
-
-    /**
      * 查询部门
      *
      * @return {@link List}<{@link Y9Department}>

@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Optional;
 import java.util.concurrent.CopyOnWriteArrayList;
 
 import org.springframework.stereotype.Service;
@@ -197,8 +198,9 @@ public class CompositeOrgBaseServiceImpl implements net.risesoft.service.org.Com
 
     @Override
     public Y9OrgBase getOrgBaseDeletedByOrgUnitId(String orgUnitId) {
-        Y9OrgBaseDeleted deleted = y9OrgBaseDeletedRepository.findByOrgId(orgUnitId);
-        if (deleted != null) {
+        Optional<Y9OrgBaseDeleted> optionalY9OrgBaseDeleted = y9OrgBaseDeletedRepository.findByOrgId(orgUnitId);
+        if (optionalY9OrgBaseDeleted.isPresent()) {
+            Y9OrgBaseDeleted deleted = optionalY9OrgBaseDeleted.get();
             String jsonContent = deleted.getJsonContent();
             if (deleted.getOrgType().equals(OrgTypeEnum.ORGANIZATION.getEnName())) {
                 return Y9JsonUtil.readValue(jsonContent, Y9Organization.class);
@@ -302,7 +304,7 @@ public class CompositeOrgBaseServiceImpl implements net.risesoft.service.org.Com
                 syncRecursion(y9Department.getId(), dataMap);
             }
         } else if (OrgTypeEnum.GROUP.getEnName().equals(orgType)) {
-            Y9Group y9Group = y9GroupManager.findById(syncId);
+            Y9Group y9Group = y9GroupManager.findById(syncId).orElse(null);
             dataMap.put(syncId, ModelConvertUtil.convert(y9Group, Group.class));
             if (needRecursion == 1) {
                 syncOrgGroupSub(y9Group, dataMap);

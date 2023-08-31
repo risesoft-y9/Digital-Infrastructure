@@ -1,5 +1,7 @@
 package net.risesoft.y9public.repository.tenant;
 
+import java.util.Optional;
+
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.stereotype.Repository;
@@ -13,5 +15,5 @@ import net.risesoft.y9public.entity.tenant.Y9DataSource;
 public interface Y9DataSourceRepository
     extends JpaRepository<Y9DataSource, String>, JpaSpecificationExecutor<Y9DataSource> {
 
-    Y9DataSource findByJndiName(String jndiName);
+    Optional<Y9DataSource> findByJndiName(String jndiName);
 }

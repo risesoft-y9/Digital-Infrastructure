@@ -39,15 +39,6 @@ public interface Y9OptionValueService {
     void deleteByType(String type);
 
     /**
-     * 根据类型和名称查找
-     *
-     * @param type 类型
-     * @param name 名字
-     * @return {@link Y9OptionValue}
-     */
-    Y9OptionValue findByTypeAndName(String type, String name);
-
-    /**
      * 根据字典类型，获取字典属性值列表
      *
      * @param type 字典类型

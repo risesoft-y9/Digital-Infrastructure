@@ -3,6 +3,7 @@ package net.risesoft.service.relation.impl;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -49,7 +50,7 @@ public class Y9OrgBasesToRolesServiceImpl implements Y9OrgBasesToRolesService {
     public List<Y9OrgBasesToRoles> addOrgBases(String roleId, String[] orgIds, Boolean negative) {
         List<Y9OrgBasesToRoles> mappingList = new ArrayList<>();
         for (String orgId : orgIds) {
-            if (y9OrgBasesToRolesRepository.findByRoleIdAndOrgIdAndNegative(roleId, orgId, negative) != null) {
+            if (y9OrgBasesToRolesRepository.findByRoleIdAndOrgIdAndNegative(roleId, orgId, negative).isPresent()) {
                 continue;
             }
             mappingList.add(saveOrUpdate(roleId, orgId, negative));
@@ -186,9 +187,9 @@ public class Y9OrgBasesToRolesServiceImpl implements Y9OrgBasesToRolesService {
 
     @Transactional(readOnly = false)
     public Y9OrgBasesToRoles saveOrUpdate(String roleId, String orgId, Boolean negative) {
-        Y9OrgBasesToRoles oldOrgBasesToRoles =
+        Optional<Y9OrgBasesToRoles> optionalY9OrgBasesToRoles =
             y9OrgBasesToRolesRepository.findByRoleIdAndOrgIdAndNegative(roleId, orgId, negative);
-        if (oldOrgBasesToRoles == null) {
+        if (optionalY9OrgBasesToRoles.isEmpty()) {
             Integer maxOrgUnitsOrder = y9OrgBasesToRolesRepository.getMaxOrgOrderByRoleId(roleId);
             Y9OrgBase orgBase = getOrgBaseById(orgId);
             Integer nextOrgUnitsOrder = maxOrgUnitsOrder == null ? 0 : maxOrgUnitsOrder + 1;
@@ -206,7 +207,7 @@ public class Y9OrgBasesToRolesServiceImpl implements Y9OrgBasesToRolesService {
 
             return savedOrgBasesToRoles;
         }
-        return oldOrgBasesToRoles;
+        return optionalY9OrgBasesToRoles.get();
     }
 
     @Override
@@ -214,7 +215,7 @@ public class Y9OrgBasesToRolesServiceImpl implements Y9OrgBasesToRolesService {
     public List<Y9OrgBasesToRoles> saveRoles(String orgId, String[] roleIds, Boolean negative) {
         List<Y9OrgBasesToRoles> mappingList = new ArrayList<>();
         for (String roleId : roleIds) {
-            if (y9OrgBasesToRolesRepository.findByRoleIdAndOrgIdAndNegative(roleId, orgId, negative) != null) {
+            if (y9OrgBasesToRolesRepository.findByRoleIdAndOrgIdAndNegative(roleId, orgId, negative).isPresent()) {
                 continue;
             }
             mappingList.add(saveOrUpdate(roleId, orgId, negative));

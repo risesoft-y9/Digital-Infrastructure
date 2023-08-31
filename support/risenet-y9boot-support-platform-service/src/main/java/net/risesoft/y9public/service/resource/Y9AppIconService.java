@@ -1,6 +1,7 @@
 package net.risesoft.y9public.service.resource;
 
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.data.domain.Page;
 import org.springframework.web.multipart.MultipartFile;
@@ -43,7 +44,7 @@ public interface Y9AppIconService {
      * @param name 图标名称
      * @return Y9AppIcon
      */
-    Y9AppIcon findByName(String name);
+    Optional<Y9AppIcon> findByName(String name);
 
     /**
      * 查询所有图标

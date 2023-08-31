@@ -1,6 +1,7 @@
 package net.risesoft.y9public.service.resource;
 
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.data.domain.Page;
 
@@ -61,7 +62,7 @@ public interface Y9AppService extends ResourceCommonService<Y9App> {
      * @param customId 自定义id
      * @return {@link Y9App}
      */
-    Y9App findBySystemIdAndCustomId(String systemId, String customId);
+    Optional<Y9App> findBySystemIdAndCustomId(String systemId, String customId);
 
     /**
      * 根据系统名称和自定义id查找应用
@@ -70,7 +71,7 @@ public interface Y9AppService extends ResourceCommonService<Y9App> {
      * @param customId 自定义id
      * @return {@link Y9App}
      */
-    Y9App findBySystemNameAndCustomId(String systemName, String customId);
+    Optional<Y9App> findBySystemNameAndCustomId(String systemName, String customId);
 
     /**
      * 用于工作流 str是资源Id,流程作为应用发不到系统时,url中包含流程在资源树上生成的Id,且包含str的数据是唯一的
@@ -78,7 +79,7 @@ public interface Y9AppService extends ResourceCommonService<Y9App> {
      * @param url 链接
      * @return {@link Y9App}
      */
-    Y9App findByUrlLike(String url);
+    List<Y9App> findByUrlLike(String url);
 
     /**
      * 查询所有App
@@ -137,14 +138,6 @@ public interface Y9AppService extends ResourceCommonService<Y9App> {
      * @return {@link List}<{@link Y9App}>
      */
     List<Y9App> listBySystemName(String systemName);
-
-    /**
-     * 根据appIds来查找系统id列表
-     *
-     * @param appIds 应用id数组
-     * @return {@link List}<{@link String}>
-     */
-    List<String> listSystemIdListByAppIds(String[] appIds);
 
     /**
      * 根据系统id和名称分页查询系统

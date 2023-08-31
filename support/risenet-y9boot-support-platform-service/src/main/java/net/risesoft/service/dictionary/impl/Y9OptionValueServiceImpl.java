@@ -51,11 +51,6 @@ public class Y9OptionValueServiceImpl implements Y9OptionValueService {
     }
 
     @Override
-    public Y9OptionValue findByTypeAndName(String type, String name) {
-        return orgOptionValueRepository.findByTypeAndName(type, name);
-    }
-
-    @Override
     public List<Y9OptionValue> listByType(String type) {
         return orgOptionValueRepository.findByType(type);
     }

@@ -1,6 +1,7 @@
 package net.risesoft.service.org;
 
 import java.util.List;
+import java.util.Optional;
 
 import net.risesoft.entity.Y9Department;
 import net.risesoft.entity.Y9Group;
@@ -52,7 +53,7 @@ public interface Y9GroupService {
      * @param id 唯一标识
      * @return 用户组对象 或 null
      */
-    Y9Group findById(String id);
+    Optional<Y9Group> findById(String id);
 
     /**
      * 根据主键id获取用户组实例
@@ -62,13 +63,6 @@ public interface Y9GroupService {
      * @throws Y9NotFoundException id 对应的记录不存在的情况
      */
     Y9Group getById(String id);
-
-    /**
-     * 获取子节点最大的tabIndex
-     *
-     * @return {@link Integer}
-     */
-    Integer getMaxTabIndex();
 
     /**
      * 获取所有用户组

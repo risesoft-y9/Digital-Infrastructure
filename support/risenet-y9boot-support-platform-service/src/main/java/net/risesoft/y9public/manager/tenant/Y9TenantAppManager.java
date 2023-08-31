@@ -1,5 +1,7 @@
 package net.risesoft.y9public.manager.tenant;
 
+import java.util.Optional;
+
 import net.risesoft.y9public.entity.tenant.Y9TenantApp;
 
 /**
@@ -12,5 +14,5 @@ import net.risesoft.y9public.entity.tenant.Y9TenantApp;
 public interface Y9TenantAppManager {
     void deleteByAppId(String appId);
 
-    Y9TenantApp getByTenantIdAndAppIdAndTenancy(String tenantId, String appId, Boolean tenancy);
+    Optional<Y9TenantApp> getByTenantIdAndAppIdAndTenancy(String tenantId, String appId, Boolean tenancy);
 }

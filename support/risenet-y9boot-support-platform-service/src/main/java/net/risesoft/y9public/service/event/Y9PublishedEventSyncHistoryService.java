@@ -1,6 +1,7 @@
 package net.risesoft.y9public.service.event;
 
 import java.util.Date;
+import java.util.Optional;
 
 import net.risesoft.y9public.entity.event.Y9PublishedEventSyncHistory;
 
@@ -19,7 +20,7 @@ public interface Y9PublishedEventSyncHistoryService {
      * @param appName 应用名
      * @return {@link Y9PublishedEventSyncHistory}
      */
-    Y9PublishedEventSyncHistory findByTenantIdAndAppName(String tenantId, String appName);
+    Optional<Y9PublishedEventSyncHistory> findByTenantIdAndAppName(String tenantId, String appName);
 
     /**
      * 保存

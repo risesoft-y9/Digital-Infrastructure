@@ -2,6 +2,7 @@ package net.risesoft.service.identity.impl;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 import org.springframework.stereotype.Service;
@@ -136,9 +137,9 @@ public class Y9PersonToResourceAndAuthorityServiceImpl implements Y9PersonToReso
         List<Y9App> appList = new ArrayList<>();
         if (null != resourceList) {
             for (Y9PersonToResourceAndAuthority r : resourceList) {
-                Y9TenantApp appId = y9TenantAppManager.getByTenantIdAndAppIdAndTenancy(Y9LoginUserHolder.getTenantId(),
-                    r.getAppId(), true);
-                if (appId != null) {
+                Optional<Y9TenantApp> y9TenantAppOptional = y9TenantAppManager
+                    .getByTenantIdAndAppIdAndTenancy(Y9LoginUserHolder.getTenantId(), r.getAppId(), true);
+                if (y9TenantAppOptional.isPresent()) {
                     Y9App y9App = y9AppManager.findById(r.getAppId());
                     if (null != y9App && !appList.contains(y9App)) {
                         appList.add(y9App);

@@ -1,5 +1,7 @@
 package net.risesoft.listener;
 
+import java.util.Optional;
+
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.event.TransactionalEventListener;
@@ -14,6 +16,7 @@ import net.risesoft.id.IdType;
 import net.risesoft.id.Y9IdGenerator;
 import net.risesoft.service.identity.Y9PersonToRoleService;
 import net.risesoft.service.relation.Y9PersonsToPositionsService;
+import net.risesoft.y9.Y9LoginUserHolder;
 import net.risesoft.y9.pubsub.event.Y9EntityCreatedEvent;
 import net.risesoft.y9.pubsub.event.Y9EntityDeletedEvent;
 import net.risesoft.y9.pubsub.event.Y9EntityUpdatedEvent;
@@ -50,8 +53,9 @@ public class UpdateY9UserListener {
         LOGGER.info("开始处理人员新增->{}", person.getId());
         String tenantId = person.getTenantId();
         Y9Tenant y9Tenant = y9TenantService.findById(tenantId);
-        Y9User y9User = y9UserService.findByPersonIdAndTenantId(personId, tenantId);
-        if (y9User == null) {
+        Optional<Y9User> y9UserOptional = y9UserService.findByPersonIdAndTenantId(personId, tenantId);
+        Y9User y9User;
+        if (y9UserOptional.isEmpty()) {
             if (person.getDisabled()) {
                 return;
             }
@@ -59,6 +63,7 @@ public class UpdateY9UserListener {
             y9User = new Y9User();
             y9User.setId(Y9IdGenerator.genId(IdType.SNOWFLAKE));
         } else {
+            y9User = y9UserOptional.get();
             if (person.getDisabled()) {
                 y9UserService.delete(y9User.getId());
                 return;
@@ -113,14 +118,16 @@ public class UpdateY9UserListener {
         String tenantId = y9Manager.getTenantId();
         LOGGER.info("开始处理管理员员新增->{}", y9Manager.getId());
         Y9Tenant y9Tenant = y9TenantService.findById(tenantId);
-        Y9User y9User = y9UserService.findByPersonIdAndTenantId(personId, tenantId);
-        if (y9User == null) {
+        Optional<Y9User> y9UserOptional = y9UserService.findByPersonIdAndTenantId(personId, tenantId);
+        Y9User y9User;
+        if (y9UserOptional.isEmpty()) {
             if (y9Manager.getDisabled()) {
                 return;
             }
             y9User = new Y9User();
             y9User.setId(Y9IdGenerator.genId(IdType.SNOWFLAKE));
         } else {
+            y9User = y9UserOptional.get();
             if (y9Manager.getDisabled()) {
                 y9UserService.delete(y9User.getId());
                 return;
@@ -170,8 +177,9 @@ public class UpdateY9UserListener {
         String tenantId = person.getTenantId();
         LOGGER.info("开始处理人员更新->{}", person.getId());
         Y9Tenant y9Tenant = y9TenantService.findById(tenantId);
-        Y9User y9User = y9UserService.findByPersonIdAndTenantId(person.getId(), tenantId);
-        if (y9User == null) {
+        Optional<Y9User> y9UserOptional = y9UserService.findByPersonIdAndTenantId(person.getId(), tenantId);
+        Y9User y9User;
+        if (y9UserOptional.isEmpty()) {
             if (person.getDisabled()) {
                 return;
             }
@@ -179,6 +187,7 @@ public class UpdateY9UserListener {
             y9User = new Y9User();
             y9User.setId(Y9IdGenerator.genId(IdType.SNOWFLAKE));
         } else {
+            y9User = y9UserOptional.get();
             if (person.getDisabled()) {
                 y9UserService.delete(y9User.getId());
                 if (LOGGER.isDebugEnabled()) {
@@ -235,14 +244,16 @@ public class UpdateY9UserListener {
         String tenantId = y9Manager.getTenantId();
         LOGGER.info("开始处理管理员员修改->{}", y9Manager.getId());
         Y9Tenant y9Tenant = y9TenantService.findById(tenantId);
-        Y9User y9User = y9UserService.findByPersonIdAndTenantId(y9Manager.getId(), tenantId);
-        if (y9User == null) {
+        Optional<Y9User> y9UserOptional = y9UserService.findByPersonIdAndTenantId(y9Manager.getId(), tenantId);
+        Y9User y9User;
+        if (y9UserOptional.isEmpty()) {
             if (y9Manager.getDisabled()) {
                 return;
             }
             y9User = new Y9User();
             y9User.setId(Y9IdGenerator.genId(IdType.SNOWFLAKE));
         } else {
+            y9User = y9UserOptional.get();
             if (y9Manager.getDisabled()) {
                 y9UserService.delete(y9User.getId());
                 if (LOGGER.isDebugEnabled()) {
@@ -293,9 +304,9 @@ public class UpdateY9UserListener {
     public void onY9PersonDeleted(Y9EntityDeletedEvent<Y9Person> event) {
         Y9Person person = event.getEntity();
         LOGGER.info("开始处理人员删除->{}", person.getId());
-        Y9User y9User = y9UserService.findByPersonIdAndTenantId(person.getId(), person.getTenantId());
-        if (y9User != null) {
-            y9UserService.delete(y9User.getId());
+        Optional<Y9User> y9UserOptional = y9UserService.findByPersonIdAndTenantId(person.getId(), person.getTenantId());
+        if (y9UserOptional.isPresent()) {
+            y9UserService.delete(y9UserOptional.get().getId());
         }
 
         if (LOGGER.isDebugEnabled()) {
@@ -313,9 +324,10 @@ public class UpdateY9UserListener {
     public void onY9ManagerDeleted(Y9EntityDeletedEvent<Y9Manager> event) {
         Y9Manager y9Manager = event.getEntity();
         LOGGER.info("开始处理管理员员删除->{}", y9Manager.getId());
-        Y9User y9User = y9UserService.findByPersonIdAndTenantId(y9Manager.getId(), y9Manager.getTenantId());
-        if (y9User != null) {
-            y9UserService.delete(y9User.getId());
+        Optional<Y9User> y9UserOptional =
+            y9UserService.findByPersonIdAndTenantId(y9Manager.getId(), y9Manager.getTenantId());
+        if (y9UserOptional.isPresent()) {
+            y9UserService.delete(y9UserOptional.get().getId());
         }
 
         if (LOGGER.isDebugEnabled()) {
@@ -333,8 +345,10 @@ public class UpdateY9UserListener {
     public void onY9PersonsToPositionsDeleted(Y9EntityDeletedEvent<Y9PersonsToPositions> event) {
         Y9PersonsToPositions y9PersonsToPositions = event.getEntity();
 
-        Y9User y9User = y9UserService.findByPersonId(y9PersonsToPositions.getPersonId());
-        if (y9User != null) {
+        Optional<Y9User> y9UserOptional = y9UserService.findByPersonIdAndTenantId(y9PersonsToPositions.getPersonId(),
+            Y9LoginUserHolder.getTenantId());
+        if (y9UserOptional.isPresent()) {
+            Y9User y9User = y9UserOptional.get();
             String positionIds =
                 y9PersonsToPositionsService.getPositionIdsByPersonId(y9PersonsToPositions.getPersonId());
             y9User.setPositions(positionIds);
@@ -356,8 +370,10 @@ public class UpdateY9UserListener {
     public void onY9PersonsToPositionsCreated(Y9EntityCreatedEvent<Y9PersonsToPositions> event) {
         Y9PersonsToPositions y9PersonsToPositions = event.getEntity();
 
-        Y9User y9User = y9UserService.findByPersonId(y9PersonsToPositions.getPersonId());
-        if (y9User != null) {
+        Optional<Y9User> y9UserOptional = y9UserService.findByPersonIdAndTenantId(y9PersonsToPositions.getPersonId(),
+            Y9LoginUserHolder.getTenantId());
+        if (y9UserOptional.isPresent()) {
+            Y9User y9User = y9UserOptional.get();
             String positionIds =
                 y9PersonsToPositionsService.getPositionIdsByPersonId(y9PersonsToPositions.getPersonId());
             y9User.setPositions(positionIds);

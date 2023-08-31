@@ -3,7 +3,7 @@ package net.risesoft.y9public.service.resource.impl;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-import java.util.stream.Collectors;
+import java.util.Optional;
 
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.data.domain.Page;
@@ -160,21 +160,21 @@ public class Y9AppServiceImpl implements Y9AppService {
     }
 
     @Override
-    public Y9App findBySystemIdAndCustomId(String systemId, String customId) {
+    public Optional<Y9App> findBySystemIdAndCustomId(String systemId, String customId) {
         return y9AppRepository.findBySystemIdAndCustomId(systemId, customId);
     }
 
     @Override
-    public Y9App findBySystemNameAndCustomId(String systemName, String customId) {
-        Y9System system = y9SystemRepository.findByName(systemName);
-        if (system != null) {
-            return y9AppRepository.findBySystemIdAndCustomId(system.getId(), customId);
+    public Optional<Y9App> findBySystemNameAndCustomId(String systemName, String customId) {
+        Optional<Y9System> y9SystemOptional = y9SystemRepository.findByName(systemName);
+        if (y9SystemOptional.isPresent()) {
+            return y9AppRepository.findBySystemIdAndCustomId(y9SystemOptional.get().getId(), customId);
         }
-        return null;
+        return Optional.empty();
     }
 
     @Override
-    public Y9App findByUrlLike(String url) {
+    public List<Y9App> findByUrlLike(String url) {
         return y9AppRepository.findByUrlContaining(url);
     }
 
@@ -223,18 +223,9 @@ public class Y9AppServiceImpl implements Y9AppService {
 
     @Override
     public List<Y9App> listBySystemName(String systemName) {
-        Y9System system = y9SystemRepository.findByName(systemName);
-        if (null != system) {
-            return y9AppRepository.findBySystemId(system.getId());
-        }
-        return new ArrayList<>();
-    }
-
-    @Override
-    public List<String> listSystemIdListByAppIds(String[] appIds) {
-        List<Y9App> y9Apps = y9AppRepository.findByIdIn(appIds);
-        if (y9Apps != null) {
-            return y9Apps.stream().map(Y9App::getSystemId).collect(Collectors.toList());
+        Optional<Y9System> y9SystemOptional = y9SystemRepository.findByName(systemName);
+        if (y9SystemOptional.isPresent()) {
+            return y9AppRepository.findBySystemId(y9SystemOptional.get().getId());
         }
         return new ArrayList<>();
     }
@@ -271,8 +262,9 @@ public class Y9AppServiceImpl implements Y9AppService {
     public Y9App saveIsvApp(Y9App app, String systemId) {
         app.setSystemId(systemId);
         if (app.getTabIndex() == null || app.getTabIndex() == 0) {
-            Y9App top = y9AppRepository.findTopByOrderByTabIndexDesc();
-            app.setTabIndex(top != null ? top.getTabIndex() + 1 : 1);
+            Integer tabIndex =
+                y9AppRepository.findTopByOrderByTabIndexDesc().map(y9App -> y9App.getTabIndex() + 1).orElse(1);
+            app.setTabIndex(tabIndex);
         }
 
         return saveOrUpdate(app);

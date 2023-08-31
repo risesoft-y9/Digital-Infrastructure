@@ -2,6 +2,7 @@ package net.risesoft.y9public.service.resource.impl;
 
 import java.io.IOException;
 import java.util.List;
+import java.util.Optional;
 
 import org.apache.commons.io.FilenameUtils;
 import org.springframework.data.domain.Page;
@@ -55,7 +56,7 @@ public class Y9AppIconServiceImpl implements Y9AppIconService {
     }
 
     @Override
-    public Y9AppIcon findByName(String name) {
+    public Optional<Y9AppIcon> findByName(String name) {
         return appIconRepository.findByName(name);
     }
 
@@ -106,12 +107,13 @@ public class Y9AppIconServiceImpl implements Y9AppIconService {
         String imgName = FilenameUtils.getName(originalFilename);
         // 文件类型
         String imgType = FilenameUtils.getExtension(imgName);
-        Y9AppIcon appIcon = appIconRepository.findByName(imgName);
-        if (appIcon == null) {
-            appIcon = new Y9AppIcon();
+        Optional<Y9AppIcon> y9AppIconOptional = appIconRepository.findByName(imgName);
+        if (y9AppIconOptional.isEmpty()) {
+            Y9AppIcon appIcon = new Y9AppIcon();
             appIcon.setId(Y9IdGenerator.genId(IdType.SNOWFLAKE));
             appIcon.setName(imgName);
         }
+        Y9AppIcon appIcon = y9AppIconOptional.get();
         appIcon.setRemark(remark);
         appIcon.setType(imgType);
         String fullPath = Y9FileStore.buildFullPath("riseplatform", "public", "appIcon");

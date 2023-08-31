@@ -1,6 +1,7 @@
 package net.risesoft.y9public.repository.resource;
 
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
@@ -22,10 +23,8 @@ public interface Y9MenuRepository extends JpaRepository<Y9Menu, String> {
 
     List<Y9Menu> findByNameContainingOrderByTabIndex(String name);
 
-    Y9Menu findByParentIdAndCustomId(String parentId, String customId);
+    Optional<Y9Menu> findByParentIdAndCustomId(String parentId, String customId);
 
     List<Y9Menu> findByParentIdOrderByTabIndex(String parentId);
-
-    Y9Menu findByUrl(String url);
 
 }
