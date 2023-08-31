@@ -1,6 +1,7 @@
 package net.risesoft.repository;
 
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -24,7 +25,7 @@ import net.risesoft.entity.Y9CustomGroup;
 public interface Y9CustomGroupRepository
     extends JpaRepository<Y9CustomGroup, String>, JpaSpecificationExecutor<Y9CustomGroup> {
 
-    Y9CustomGroup findByCustomId(String customId);
+    Optional<Y9CustomGroup> findByCustomId(String customId);
 
     Page<Y9CustomGroup> findByPersonId(String personId, Pageable pageable);
 

@@ -2,6 +2,7 @@ package net.risesoft.manager.relation.impl;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -59,7 +60,7 @@ public class Y9PersonsToPositionsManagerImpl implements Y9PersonsToPositionsMana
         List<Y9PersonsToPositions> personsToPositionsList = new ArrayList<>();
         for (int i = 0; i < positionIds.length; i++) {
             String positionId = positionIds[i];
-            if (y9PersonsToPositionsRepository.findByPositionIdAndPersonId(positionId, personId) != null) {
+            if (y9PersonsToPositionsRepository.findByPositionIdAndPersonId(positionId, personId).isPresent()) {
                 continue;
             }
             personsToPositionsList.add(save(personId, positionId));
@@ -102,13 +103,11 @@ public class Y9PersonsToPositionsManagerImpl implements Y9PersonsToPositionsMana
     @Override
     @Transactional(readOnly = false)
     public void delete(String positionId, String personId) {
-        Y9PersonsToPositions y9PersonsToPositions = this.getByPositionIdAndPersonId(positionId, personId);
-
-        delete(y9PersonsToPositions);
-    }
-
-    public Y9PersonsToPositions getByPositionIdAndPersonId(String positionId, String personId) {
-        return y9PersonsToPositionsRepository.findByPositionIdAndPersonId(positionId, personId);
+        Optional<Y9PersonsToPositions> optionalY9PersonsToPositions =
+            y9PersonsToPositionsRepository.findByPositionIdAndPersonId(positionId, personId);
+        if (optionalY9PersonsToPositions.isPresent()) {
+            delete(optionalY9PersonsToPositions.get());
+        }
     }
 
     @Override
@@ -128,18 +127,13 @@ public class Y9PersonsToPositionsManagerImpl implements Y9PersonsToPositionsMana
 
     @Override
     public Integer getMaxPositionOrderByPersonId(String personId) {
-        Y9PersonsToPositions y9PersonsToPositions =
-            y9PersonsToPositionsRepository.findTopByPersonIdOrderByPositionOrderDesc(personId);
-        return y9PersonsToPositions != null ? y9PersonsToPositions.getPositionOrder() : 0;
+        return y9PersonsToPositionsRepository.findTopByPersonIdOrderByPositionOrderDesc(personId)
+            .map(Y9PersonsToPositions::getPositionOrder).orElse(0);
     }
 
     @Override
     public Integer getMaxPersonOrderByPositionId(String positionId) {
-        Y9PersonsToPositions y9PersonsToPositions =
-            y9PersonsToPositionsRepository.findTopByPositionIdOrderByPersonOrderDesc(positionId);
-        if (y9PersonsToPositions != null) {
-            return y9PersonsToPositions.getPersonOrder();
-        }
-        return 0;
+        return y9PersonsToPositionsRepository.findTopByPositionIdOrderByPersonOrderDesc(positionId)
+            .map(Y9PersonsToPositions::getPersonOrder).orElse(0);
     }
 }

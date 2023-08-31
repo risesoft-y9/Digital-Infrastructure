@@ -1,6 +1,7 @@
 package net.risesoft.y9public.service.tenant.impl;
 
 import java.util.Objects;
+import java.util.Optional;
 import java.util.concurrent.ConcurrentMap;
 
 import javax.sql.DataSource;
@@ -89,7 +90,7 @@ public class Y9DataSourceServiceImpl implements Y9DataSourceService {
     }
 
     @Override
-    public Y9DataSource findByJndiName(String jndiName) {
+    public Optional<Y9DataSource> findByJndiName(String jndiName) {
         return datasourceRepository.findByJndiName(jndiName);
     }
 

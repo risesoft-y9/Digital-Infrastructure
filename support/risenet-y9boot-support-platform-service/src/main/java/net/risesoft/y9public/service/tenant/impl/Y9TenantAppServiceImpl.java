@@ -6,6 +6,7 @@ import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 import org.apache.commons.lang3.StringUtils;
@@ -85,7 +86,7 @@ public class Y9TenantAppServiceImpl implements Y9TenantAppService {
     }
 
     @Override
-    public Y9TenantApp getByTenantIdAndAppIdAndTenancy(String tenantId, String appId, Boolean tenancy) {
+    public Optional<Y9TenantApp> getByTenantIdAndAppIdAndTenancy(String tenantId, String appId, Boolean tenancy) {
         return y9TenantAppManager.getByTenantIdAndAppIdAndTenancy(tenantId, appId, tenancy);
     }
 
@@ -158,11 +159,13 @@ public class Y9TenantAppServiceImpl implements Y9TenantAppService {
     @Override
     @Transactional(readOnly = false)
     public Y9TenantApp save(String appId, String tenantId, String applyName, String applyReason) {
-        Y9TenantApp y9TenantApp = y9TenantAppRepository.findByTenantIdAndAppIdAndTenancy(tenantId, appId, Boolean.TRUE);
+        Optional<Y9TenantApp> y9TenantAppOptional =
+            y9TenantAppRepository.findByTenantIdAndAppIdAndTenancy(tenantId, appId, Boolean.TRUE);
         Y9App y9App = y9AppRepository.findById(appId).orElse(null);
         String tenantDataSource =
             y9TenantSystemManager.getDataSourceIdByTenantIdAndSystemId(tenantId, y9App.getSystemId());
-        if (null != y9TenantApp) {
+        if (y9TenantAppOptional.isPresent()) {
+            Y9TenantApp y9TenantApp = y9TenantAppOptional.get();
             if (tenantDataSource != null && !y9TenantApp.getVerify()) {
                 y9TenantApp.setVerify(true);
                 return save(y9TenantApp);
@@ -219,8 +222,10 @@ public class Y9TenantAppServiceImpl implements Y9TenantAppService {
     public int updateByAppIdAndTenantId(Boolean tenancy, String deletedName, Date deletedTime, String appId,
         String tenantId, Boolean currentTenancy) {
         try {
-            Y9TenantApp ta = y9TenantAppRepository.findByTenantIdAndAppIdAndTenancy(tenantId, appId, currentTenancy);
-            if (null != ta) {
+            Optional<Y9TenantApp> y9TenantAppOptional =
+                y9TenantAppRepository.findByTenantIdAndAppIdAndTenancy(tenantId, appId, currentTenancy);
+            if (y9TenantAppOptional.isPresent()) {
+                Y9TenantApp ta = y9TenantAppOptional.get();
                 ta.setTenancy(tenancy);
                 ta.setDeletedName(deletedName);
                 ta.setDeletedTime(deletedTime);

@@ -1,6 +1,7 @@
 package net.risesoft.repository;
 
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -28,11 +29,11 @@ public interface Y9OptionValueRepository extends JpaRepository<Y9OptionValue, St
 
     List<Y9OptionValue> findByType(String type);
 
-    Y9OptionValue findByTypeAndName(String type, String name);
+    Optional<Y9OptionValue> findByTypeAndName(String type, String name);
 
     Page<Y9OptionValue> findPageByType(String type, Pageable pageable);
 
     Page<Y9OptionValue> findPageByTypeAndNameContaining(String type, String name, Pageable pageable);
 
-    Y9OptionValue findTopByType(String type);
+    Optional<Y9OptionValue> findTopByType(String type);
 }

@@ -1,5 +1,7 @@
 package net.risesoft.y9public.repository.event;
 
+import java.util.Optional;
+
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.stereotype.Repository;
@@ -19,5 +21,5 @@ import net.risesoft.y9public.entity.event.Y9PublishedEventSyncHistory;
 public interface Y9PublishedEventSyncHistoryRepository
     extends JpaRepository<Y9PublishedEventSyncHistory, String>, JpaSpecificationExecutor<Y9PublishedEventSyncHistory> {
 
-    Y9PublishedEventSyncHistory findByTenantIdAndAppName(String tenantId, String appName);
+    Optional<Y9PublishedEventSyncHistory> findByTenantIdAndAppName(String tenantId, String appName);
 }

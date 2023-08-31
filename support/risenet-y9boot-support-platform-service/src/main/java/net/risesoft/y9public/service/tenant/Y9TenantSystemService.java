@@ -2,6 +2,7 @@ package net.risesoft.y9public.service.tenant;
 
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 import org.springframework.data.domain.Page;
 
@@ -79,7 +80,7 @@ public interface Y9TenantSystemService {
      * @param systemId 系统id
      * @return {@link Y9TenantSystem}
      */
-    Y9TenantSystem getByTenantIdAndSystemId(String tenantId, String systemId);
+    Optional<Y9TenantSystem> getByTenantIdAndSystemId(String tenantId, String systemId);
 
     /**
      * 根据tenantId与systemId查询dataSourceId

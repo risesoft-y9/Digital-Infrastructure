@@ -2,6 +2,7 @@ package net.risesoft.y9public.service.tenant;
 
 import java.util.Date;
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.data.domain.Page;
 
@@ -54,7 +55,7 @@ public interface Y9TenantAppService {
      * @param tenantId 租户id
      * @param appId 应用id
      */
-    Y9TenantApp getByTenantIdAndAppIdAndTenancy(String tenantId, String appId, Boolean tenancy);
+    Optional<Y9TenantApp> getByTenantIdAndAppIdAndTenancy(String tenantId, String appId, Boolean tenancy);
 
     /**
      * 根据租户id，获取已审核且还在租用的应用id列表

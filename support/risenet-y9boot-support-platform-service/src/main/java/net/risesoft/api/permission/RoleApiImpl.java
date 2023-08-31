@@ -5,6 +5,7 @@ import java.util.Collections;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -97,8 +98,9 @@ public class RoleApiImpl implements RoleApi {
         @RequestParam("roleName") String roleName, @RequestParam("parentId") String parentId,
         @RequestParam("customId") String customId, @RequestParam("type") String type,
         @RequestParam("systemName") String systemName, @RequestParam("systemCnName") String systemCnName) {
-        Y9Role roleNode = y9RoleService.findByCustomIdAndParentId(customId, parentId);
-        if (roleNode == null) {
+        Optional<Y9Role> y9RoleOptional = y9RoleService.findByCustomIdAndParentId(customId, parentId);
+        Y9Role roleNode;
+        if (y9RoleOptional.isEmpty()) {
             roleNode = new Y9Role();
             roleNode.setId(roleId);
             roleNode.setCustomId(customId);
@@ -106,6 +108,8 @@ public class RoleApiImpl implements RoleApi {
             roleNode.setType(type);
             roleNode.setSystemName(systemName);
             roleNode.setSystemCnName(systemCnName);
+        } else {
+            roleNode = y9RoleOptional.get();
         }
         roleNode.setName(roleName);
         roleNode = y9RoleService.saveOrUpdate(roleNode);
@@ -142,7 +146,7 @@ public class RoleApiImpl implements RoleApi {
     @Override
     public Role findByCustomIdAndParentId(@RequestParam("customId") @NotBlank String customId,
         @RequestParam("parentId") @NotBlank String parentId) {
-        Y9Role roleNode = y9RoleService.findByCustomIdAndParentId(customId, parentId);
+        Y9Role roleNode = y9RoleService.findByCustomIdAndParentId(customId, parentId).orElse(null);
         return ModelConvertUtil.y9RoleToRole(roleNode);
     }
 

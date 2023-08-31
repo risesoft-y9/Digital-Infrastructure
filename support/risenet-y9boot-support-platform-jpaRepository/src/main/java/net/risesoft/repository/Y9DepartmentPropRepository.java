@@ -1,6 +1,7 @@
 package net.risesoft.repository;
 
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
@@ -37,7 +38,7 @@ public interface Y9DepartmentPropRepository
 
     List<Y9DepartmentProp> findByDeptIdAndCategoryOrderByTabIndex(String deptId, Integer category);
 
-    Y9DepartmentProp findByDeptIdAndOrgBaseIdAndCategory(String deptId, String orgBaseId, Integer category);
+    Optional<Y9DepartmentProp> findByDeptIdAndOrgBaseIdAndCategory(String deptId, String orgBaseId, Integer category);
 
     List<Y9DepartmentProp> findByOrgBaseIdAndCategoryOrderByTabIndex(String orgBaseId, Integer category);
 

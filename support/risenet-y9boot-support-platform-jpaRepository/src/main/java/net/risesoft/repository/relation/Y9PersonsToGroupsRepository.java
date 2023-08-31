@@ -1,6 +1,7 @@
 package net.risesoft.repository.relation;
 
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
@@ -35,15 +36,15 @@ public interface Y9PersonsToGroupsRepository extends JpaRepository<Y9PersonsToGr
 
     List<Y9PersonsToGroups> findByGroupId(String groupId);
 
-    Y9PersonsToGroups findByGroupIdAndPersonId(String groupId, String personId);
+    Optional<Y9PersonsToGroups> findByGroupIdAndPersonId(String groupId, String personId);
 
     List<Y9PersonsToGroups> findByGroupIdOrderByPersonOrder(String groupId);
 
     List<Y9PersonsToGroups> findByPersonIdOrderByGroupOrder(String personId);
 
-    Y9PersonsToGroups findTopByGroupIdOrderByPersonOrderDesc(String groupId);
+    Optional<Y9PersonsToGroups> findTopByGroupIdOrderByPersonOrderDesc(String groupId);
 
-    Y9PersonsToGroups findTopByPersonIdOrderByGroupOrderDesc(String personId);
+    Optional<Y9PersonsToGroups> findTopByPersonIdOrderByGroupOrderDesc(String personId);
 
     @Query("select distinct t.groupId from Y9PersonsToGroups t where t.personId = ?1")
     List<String> listGroupIdsByPersonId(String personId);

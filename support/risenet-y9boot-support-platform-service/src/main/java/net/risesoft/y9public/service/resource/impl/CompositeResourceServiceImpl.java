@@ -2,6 +2,7 @@ package net.risesoft.y9public.service.resource.impl;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.cache.annotation.Cacheable;
@@ -63,7 +64,8 @@ public class CompositeResourceServiceImpl implements CompositeResourceService {
     }
 
     @Override
-    public Y9ResourceBase findByCustomIdAndParentId(String customId, String parentId, Integer resourceType) {
+    public Optional<? extends Y9ResourceBase> findByCustomIdAndParentId(String customId, String parentId,
+        Integer resourceType) {
         if (ResourceTypeEnum.APP.getValue().equals(resourceType)) {
             return y9AppRepository.findBySystemIdAndCustomId(parentId, customId);
         } else if (ResourceTypeEnum.MENU.getValue().equals(resourceType)) {

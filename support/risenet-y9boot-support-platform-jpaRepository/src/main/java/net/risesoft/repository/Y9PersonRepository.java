@@ -1,6 +1,7 @@
 package net.risesoft.repository;
 
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -33,17 +34,15 @@ public interface Y9PersonRepository extends JpaRepository<Y9Person, String> {
 
     List<Y9Person> findByDisabledAndParentIdOrderByTabIndex(boolean disabled, String parentId);
 
-    Y9Person findByDisabledFalseAndMobileAndOriginal(String mobile, Boolean original);
+    Optional<Y9Person> findByDisabledFalseAndMobileAndOriginal(String mobile, Boolean original);
 
     List<Y9Person> findByDisabledAndGuidPathContaining(boolean disabled, String guidPath);
 
     List<Y9Person> findByEmailAndOriginal(String email, Boolean original);
 
-    List<Y9Person> findByLoginName(String loginName);
+    Optional<Y9Person> findByLoginNameAndOriginalTrue(String loginName);
 
-    Y9Person findByLoginNameAndOriginalTrue(String loginName);
-
-    Y9Person findByLoginNameAndParentId(String loginName, String parentId);
+    Optional<Y9Person> findByLoginNameAndParentId(String loginName, String parentId);
 
     List<Y9Person> findByLoginNameAndTenantIdAndOriginal(String loginName, String tenantId, Boolean original);
 
@@ -59,7 +58,7 @@ public interface Y9PersonRepository extends JpaRepository<Y9Person, String> {
 
     List<Y9Person> findByOriginalIdAndDisabled(String originalId, boolean disable);
 
-    Y9Person findByOriginalIdAndParentId(String originalId, String parentId);
+    Optional<Y9Person> findByOriginalIdAndParentId(String originalId, String parentId);
 
     Page<Y9Person> findByParentIdAndDisabledAndNameContaining(String parentId, boolean disabled, String userName,
         Pageable pageable);
@@ -69,14 +68,9 @@ public interface Y9PersonRepository extends JpaRepository<Y9Person, String> {
 
     List<Y9Person> findByParentIdOrderByTabIndex(String parentId);
 
-    Y9Person findTopByOrderByTabIndexDesc();
-
-    Y9Person findTopByParentIdOrderByTabIndexDesc(String parentId);
+    Optional<Y9Person> findTopByParentIdOrderByTabIndexDesc(String parentId);
 
     @Query("select id from Y9Person where guidPath like ?1 and disabled = false")
     List<String> getPersonIdByGuidPathLike(String dn);
-
-    @Query("select id from Y9Person where parentId = ?1 and disabled = false")
-    List<String> getPersonIdByParentId(String parentId);
 
 }

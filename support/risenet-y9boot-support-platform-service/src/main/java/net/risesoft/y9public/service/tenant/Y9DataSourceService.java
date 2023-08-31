@@ -1,5 +1,7 @@
 package net.risesoft.y9public.service.tenant;
 
+import java.util.Optional;
+
 import javax.sql.DataSource;
 
 import org.springframework.data.domain.Page;
@@ -58,7 +60,7 @@ public interface Y9DataSourceService {
      * @param jndiName jndi数据源名称
      * @return {@link Y9DataSource}
      */
-    Y9DataSource findByJndiName(String jndiName);
+    Optional<Y9DataSource> findByJndiName(String jndiName);
 
     /**
      * 根据ID获取数据源

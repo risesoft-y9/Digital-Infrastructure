@@ -1,6 +1,7 @@
 package net.risesoft.service.org;
 
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.data.domain.Page;
 
@@ -197,14 +198,7 @@ public interface Y9PersonService {
      * @param parentId 父节点id
      * @return {@link Y9Person}
      */
-    Y9Person getByLoginNameAndParentId(String loginName, String parentId);
-
-    /**
-     * 获取子节点最大的tabIndex
-     *
-     * @return {@link Integer}
-     */
-    Integer getMaxTabIndex();
+    Optional<Y9Person> getByLoginNameAndParentId(String loginName, String parentId);
 
     /**
      * 根据登录名获取人员
@@ -212,7 +206,7 @@ public interface Y9PersonService {
      * @param loginName 登录名
      * @return {@link Y9Person}
      */
-    Y9Person getPersonByLoginName(String loginName);
+    Optional<Y9Person> getPersonByLoginName(String loginName);
 
     /**
      * 根据登录名、租户id获取人员

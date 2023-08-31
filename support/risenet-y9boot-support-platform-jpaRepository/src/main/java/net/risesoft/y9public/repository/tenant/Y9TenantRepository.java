@@ -1,6 +1,7 @@
 package net.risesoft.y9public.repository.tenant;
 
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
@@ -31,9 +32,7 @@ public interface Y9TenantRepository extends JpaRepository<Y9Tenant, String>, Jpa
 
     List<Y9Tenant> findByTenantTypeOrderByTabIndexAsc(Integer tenantType);
 
-    Y9Tenant findTopByOrderByTabIndexDesc();
-
-    List<Y9Tenant> getTenantByNameNotAndNameNot(String name1, String name2);
+    Optional<Y9Tenant> findTopByOrderByTabIndexDesc();
 
     long countByShortName(String shortName);
 
@@ -44,7 +43,5 @@ public interface Y9TenantRepository extends JpaRepository<Y9Tenant, String>, Jpa
     List<Y9Tenant> findByShortName(String shortName);
 
     List<Y9Tenant> findByParentIdIsNullOrderByTabIndexAsc();
-
-    List<Y9Tenant> getY9TenantByNameNotAndNameNot(String name1, String name2);
 
 }

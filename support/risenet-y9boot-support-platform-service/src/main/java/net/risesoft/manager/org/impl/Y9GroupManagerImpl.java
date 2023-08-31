@@ -1,5 +1,7 @@
 package net.risesoft.manager.org.impl;
 
+import java.util.Optional;
+
 import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
@@ -37,9 +39,9 @@ public class Y9GroupManagerImpl implements Y9GroupManager {
     }
 
     @Override
-    @Cacheable(key = "#id", condition = "#id!=null", unless = "#result==null")
-    public Y9Group findById(String id) {
-        return y9GroupRepository.findById(id).orElse(null);
+    @Cacheable(key = "#id", condition = "#id!=null")
+    public Optional<Y9Group> findById(String id) {
+        return y9GroupRepository.findById(id);
     }
 
     @Override

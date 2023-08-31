@@ -1,5 +1,7 @@
 package net.risesoft.service.org;
 
+import java.util.Optional;
+
 import net.risesoft.entity.Y9Person;
 import net.risesoft.entity.Y9PersonExt;
 
@@ -17,7 +19,7 @@ public interface Y9PersonExtService {
      * @param personId 人员id
      * @return {@link Y9PersonExt}
      */
-    Y9PersonExt findByPersonId(String personId);
+    Optional<Y9PersonExt> findByPersonId(String personId);
 
     /**
      * 根据主键id获取人员扩展实例
@@ -78,4 +80,6 @@ public interface Y9PersonExtService {
      * @return {@link Y9PersonExt}
      */
     Y9PersonExt savePersonPhoto(String personId, String photo);
+
+    Y9PersonExt getByPersonId(String personId);
 }

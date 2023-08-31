@@ -1,9 +1,9 @@
 package net.risesoft.repository;
 
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -31,11 +31,8 @@ public interface Y9OrganizationRepository extends JpaRepository<Y9Organization, 
 
     List<Y9Organization> findByVirtualOrderByTabIndexAsc(Boolean virtual);
 
-    Y9Organization findTopByOrderByTabIndexDesc();
+    Optional<Y9Organization> findTopByOrderByTabIndexDesc();
 
     List<Y9Organization> findByDn(String dn);
-
-    @Query("select id from Y9Organization where guidPath like ?1")
-    List<String> listByGuidPathLike(String guidPath);
 
 }

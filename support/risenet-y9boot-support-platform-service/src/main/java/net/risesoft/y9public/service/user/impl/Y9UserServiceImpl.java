@@ -3,14 +3,12 @@ package net.risesoft.y9public.service.user.impl;
 import java.util.List;
 import java.util.Optional;
 
-import org.apache.commons.lang3.StringUtils;
 import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import lombok.RequiredArgsConstructor;
 
-import net.risesoft.entity.Y9Person;
 import net.risesoft.y9.Y9LoginUserHolder;
 import net.risesoft.y9.json.Y9JsonUtil;
 import net.risesoft.y9.pubsub.constant.Y9OrgEventConst;
@@ -37,42 +35,12 @@ public class Y9UserServiceImpl implements Y9UserService {
     @Override
     public boolean checkCaidAvailability(String personId, String caid) {
         String tenantId = Y9LoginUserHolder.getTenantId();
-        if (StringUtils.isBlank(personId)) {
-            // 新增用户
-            Y9User y9User = y9UserRepository.findByTenantIdAndCaid(tenantId, caid);
-            return y9User == null;
-        } else {
-            Y9User y9User = y9UserRepository.findByTenantIdAndCaidAndPersonIdNot(tenantId, caid, personId);
-            return y9User == null;
-        }
-    }
-
-    @Override
-    public boolean checkLoginName(Y9Person y9Person, String loginName) {
-        String tenantId = y9Person.getTenantId();
-        if (tenantId == null) {
-            tenantId = Y9LoginUserHolder.getTenantId();
-        }
-        if (StringUtils.isNotBlank(loginName)) {
-            Y9User orgUser = this.findByMobileAndTenantId(y9Person.getId(), loginName, tenantId);
-            return orgUser == null;
-        } else {
+        Optional<Y9User> y9UserOptional = y9UserRepository.findByTenantIdAndCaid(tenantId, caid);
+        if (y9UserOptional.isEmpty()) {
             return true;
         }
-    }
 
-    @Override
-    public boolean checkMobile(Y9Person y9Person, String mobile) {
-        String tenantId = y9Person.getTenantId();
-        if (tenantId == null) {
-            tenantId = Y9LoginUserHolder.getTenantId();
-        }
-        if (StringUtils.isNotBlank(mobile)) {
-            Y9User orgUser = this.findByMobileAndTenantId(y9Person.getId(), mobile, tenantId);
-            return orgUser == null;
-        } else {
-            return true;
-        }
+        return y9UserOptional.get().getPersonId().equals(personId);
     }
 
     @Override
@@ -97,23 +65,13 @@ public class Y9UserServiceImpl implements Y9UserService {
     }
 
     @Override
-    public Y9User findByLoginNameAndTenantIdWithoutPersonId(String loginName, String tenantId) {
-        return y9UserRepository.findByLoginNameAndTenantId(loginName, tenantId);
+    public Optional<Y9User> findByLoginNameAndTenantId(String loginName, String tenantId) {
+        return y9UserRepository.findByTenantIdAndLoginNameAndOriginalTrue(tenantId, loginName);
     }
 
     @Override
-    public Y9User findByMobileAndTenantId(String personId, String mobile, String tenantId) {
-        return y9UserRepository.findByPersonIdIsNotAndMobileAndTenantId(personId, mobile, tenantId);
-    }
-
-    @Override
-    public Y9User findByPersonId(String personId) {
-        return y9UserRepository.findByPersonId(personId);
-    }
-
-    @Override
-    public Y9User findByPersonIdAndTenantId(String personId, String tenantId) {
-        return y9UserRepository.findByPersonIdAndTenantId(personId, tenantId);
+    public Optional<Y9User> findByPersonIdAndTenantId(String personId, String tenantId) {
+        return y9UserRepository.findByTenantIdAndPersonId(tenantId, personId);
     }
 
     @Override

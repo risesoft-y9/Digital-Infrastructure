@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 import org.apache.commons.lang3.StringUtils;
@@ -84,9 +85,10 @@ public class Y9TenantSystemServiceImpl implements Y9TenantSystemService {
     @Override
     @Transactional(readOnly = false)
     public void deleteByTenantIdAndSystemId(String tenantId, String systemId) {
-        Y9TenantSystem y9TenantSystem = y9TenantSystemRepository.findByTenantIdAndSystemId(tenantId, systemId);
-        if (y9TenantSystem != null) {
-            y9TenantSystemRepository.delete(y9TenantSystem);
+        Optional<Y9TenantSystem> systemOptional =
+            y9TenantSystemRepository.findByTenantIdAndSystemId(tenantId, systemId);
+        if (systemOptional.isPresent()) {
+            y9TenantSystemRepository.delete(systemOptional.get());
         }
     }
 
@@ -101,7 +103,7 @@ public class Y9TenantSystemServiceImpl implements Y9TenantSystemService {
     }
 
     @Override
-    public Y9TenantSystem getByTenantIdAndSystemId(String tenantId, String systemId) {
+    public Optional<Y9TenantSystem> getByTenantIdAndSystemId(String tenantId, String systemId) {
         return y9TenantSystemRepository.findByTenantIdAndSystemId(tenantId, systemId);
     }
 
@@ -112,11 +114,8 @@ public class Y9TenantSystemServiceImpl implements Y9TenantSystemService {
 
     @Override
     public String getIdByTenantIdAndSystemId(String tenantId, String systemId) {
-        Y9TenantSystem y9TenantSystem = y9TenantSystemRepository.findByTenantIdAndSystemId(tenantId, systemId);
-        if (null != y9TenantSystem) {
-            return y9TenantSystem.getId();
-        }
-        return null;
+        return y9TenantSystemRepository.findByTenantIdAndSystemId(tenantId, systemId).map(Y9TenantSystem::getId)
+            .orElse(null);
     }
 
     @Override
@@ -247,9 +246,9 @@ public class Y9TenantSystemServiceImpl implements Y9TenantSystemService {
 
     @Override
     public List<Y9Tenant> listTenantBySystemName(String systemName) {
-        Y9System y9System = y9SystemRepository.findByName(systemName);
-        if (y9System != null) {
-            return this.listTenantBySystemId(y9System.getId());
+        Optional<Y9System> y9SystemOptional = y9SystemRepository.findByName(systemName);
+        if (y9SystemOptional.isPresent()) {
+            return this.listTenantBySystemId(y9SystemOptional.get().getId());
         }
         return new ArrayList<>();
     }
@@ -272,8 +271,8 @@ public class Y9TenantSystemServiceImpl implements Y9TenantSystemService {
     @Override
     @Transactional(readOnly = false)
     public void registerTenantSystem(String tenantId, String systemId) {
-        Y9TenantSystem y9TenantSystem = this.getByTenantIdAndSystemId(tenantId, systemId);
-        if (y9TenantSystem == null) {
+        Optional<Y9TenantSystem> y9TenantSystemOptional = this.getByTenantIdAndSystemId(tenantId, systemId);
+        if (y9TenantSystemOptional.isEmpty()) {
             this.saveTenantSystem(systemId, tenantId);
 
             Y9System y9System = y9SystemManager.getById(systemId);

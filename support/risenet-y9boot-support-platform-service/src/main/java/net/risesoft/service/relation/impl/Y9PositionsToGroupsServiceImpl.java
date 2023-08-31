@@ -2,6 +2,7 @@ package net.risesoft.service.relation.impl;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -55,21 +56,14 @@ public class Y9PositionsToGroupsServiceImpl implements Y9PositionsToGroupsServic
 
     @Override
     public Integer getMaxGroupIdOrderByPositionId(String positionId) {
-        Y9PositionsToGroups position =
-            y9PositionsToGroupsRepository.findTopByPositionIdOrderByGroupOrderDesc(positionId);
-        if (position != null) {
-            return position.getGroupOrder();
-        }
-        return 0;
+        return y9PositionsToGroupsRepository.findTopByPositionIdOrderByGroupOrderDesc(positionId)
+            .map(Y9PositionsToGroups::getGroupOrder).orElse(0);
     }
 
     @Override
     public Integer getMaxPositionOrderByGroupId(String groupId) {
-        Y9PositionsToGroups position = y9PositionsToGroupsRepository.findTopByGroupIdOrderByPositionOrderDesc(groupId);
-        if (position != null) {
-            return position.getPositionOrder();
-        }
-        return 0;
+        return y9PositionsToGroupsRepository.findTopByGroupIdOrderByPositionOrderDesc(groupId)
+            .map(Y9PositionsToGroups::getPositionOrder).orElse(0);
     }
 
     @Override
@@ -93,10 +87,13 @@ public class Y9PositionsToGroupsServiceImpl implements Y9PositionsToGroupsServic
     public List<Y9PositionsToGroups> orderPositions(String groupId, String[] positionIds) {
         List<Y9PositionsToGroups> positionList = new ArrayList<>();
         for (int i = 0; i < positionIds.length; i++) {
-            Y9PositionsToGroups groupPosition =
+            Optional<Y9PositionsToGroups> optionalY9PositionsToGroups =
                 y9PositionsToGroupsRepository.findByGroupIdAndPositionId(groupId, positionIds[i]);
-            groupPosition.setPositionOrder(i);
-            positionList.add(y9PositionsToGroupsRepository.save(groupPosition));
+            if (optionalY9PositionsToGroups.isPresent()) {
+                Y9PositionsToGroups groupPosition = optionalY9PositionsToGroups.get();
+                groupPosition.setPositionOrder(i);
+                positionList.add(y9PositionsToGroupsRepository.save(groupPosition));
+            }
         }
         return positionList;
     }
@@ -105,9 +102,11 @@ public class Y9PositionsToGroupsServiceImpl implements Y9PositionsToGroupsServic
     @Transactional(readOnly = false)
     public void removePositions(String groupId, String[] positionIds) {
         for (int i = 0; i < positionIds.length; i++) {
-            Y9PositionsToGroups groupPosition =
+            Optional<Y9PositionsToGroups> optionalY9PositionsToGroups =
                 y9PositionsToGroupsRepository.findByGroupIdAndPositionId(groupId, positionIds[i]);
-            delete(groupPosition);
+            if (optionalY9PositionsToGroups.isPresent()) {
+                delete(optionalY9PositionsToGroups.get());
+            }
         }
     }
 
@@ -117,10 +116,10 @@ public class Y9PositionsToGroupsServiceImpl implements Y9PositionsToGroupsServic
         List<Y9Position> positionList = new ArrayList<>();
         Integer maxPositionOrder = getMaxPositionOrderByGroupId(groupId);
         for (int i = 0; i < positionIds.length; i++) {
-            Y9Position position = y9PositionRepository.findById(positionIds[i]).orElse(null);
-            if (y9PositionsToGroupsRepository.findByGroupIdAndPositionId(groupId, position.getId()) != null) {
+            if (y9PositionsToGroupsRepository.findByGroupIdAndPositionId(groupId, positionIds[i]).isPresent()) {
                 continue;
             }
+            Y9Position position = y9PositionRepository.findById(positionIds[i]).orElse(null);
             Integer maxGroupsOrder = getMaxGroupIdOrderByPositionId(positionIds[i]);
             Y9PositionsToGroups groupPosition = new Y9PositionsToGroups();
             groupPosition.setGroupId(groupId);

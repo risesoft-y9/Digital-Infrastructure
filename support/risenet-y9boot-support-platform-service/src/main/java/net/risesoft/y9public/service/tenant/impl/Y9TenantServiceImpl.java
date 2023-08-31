@@ -110,11 +110,7 @@ public class Y9TenantServiceImpl implements Y9TenantService {
 
     @Override
     public Integer getMaxTableIndex() {
-        Y9Tenant a = y9TenantRepository.findTopByOrderByTabIndexDesc();
-        if (a != null) {
-            return a.getTabIndex() != null ? a.getTabIndex() + 1 : 0;
-        }
-        return 0;
+        return y9TenantRepository.findTopByOrderByTabIndexDesc().map(y9Tenant -> y9Tenant.getTabIndex() + 1).orElse(0);
     }
 
     @Override

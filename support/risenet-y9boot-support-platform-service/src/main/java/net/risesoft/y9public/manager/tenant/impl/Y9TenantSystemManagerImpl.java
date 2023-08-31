@@ -42,10 +42,7 @@ public class Y9TenantSystemManagerImpl implements Y9TenantSystemManager {
 
     @Override
     public String getDataSourceIdByTenantIdAndSystemId(String tenantId, String systemId) {
-        Y9TenantSystem y9TenantSystem = y9TenantSystemRepository.findByTenantIdAndSystemId(tenantId, systemId);
-        if (null != y9TenantSystem) {
-            return y9TenantSystem.getTenantDataSource();
-        }
-        return null;
+        return y9TenantSystemRepository.findByTenantIdAndSystemId(tenantId, systemId)
+            .map(Y9TenantSystem::getTenantDataSource).orElse(null);
     }
 }

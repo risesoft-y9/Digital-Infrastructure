@@ -1,6 +1,7 @@
 package net.risesoft.y9public.service.role;
 
 import java.util.List;
+import java.util.Optional;
 
 import net.risesoft.entity.Y9Person;
 import net.risesoft.entity.Y9Position;
@@ -44,7 +45,7 @@ public interface Y9RoleService {
      * @param parentId 父节点id
      * @return {@link Y9Role}
      */
-    Y9Role findByCustomIdAndParentId(String customId, String parentId);
+    Optional<Y9Role> findByCustomIdAndParentId(String customId, String parentId);
 
     /**
      * 根据主键获取角色节点对象

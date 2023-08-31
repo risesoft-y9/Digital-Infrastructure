@@ -58,7 +58,7 @@ public class SystemApiImpl implements SystemApi {
      */
     @Override
     public System getByName(@RequestParam("name") @NotBlank String name) {
-        Y9System y9System = y9SystemService.findByName(name);
+        Y9System y9System = y9SystemService.findByName(name).orElse(null);
         return Y9ModelConvertUtil.convert(y9System, System.class);
     }
 

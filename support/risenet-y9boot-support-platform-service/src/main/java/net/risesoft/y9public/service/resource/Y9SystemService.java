@@ -1,6 +1,7 @@
 package net.risesoft.y9public.service.resource;
 
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.data.domain.Page;
 
@@ -39,14 +40,6 @@ public interface Y9SystemService {
     Y9System enable(String id);
 
     /**
-     * 根据系统中文名查询
-     *
-     * @param cnName 中文名
-     * @return {@link Y9System}
-     */
-    Y9System findByCnName(String cnName);
-
-    /**
      * 根据id获取系统对象
      *
      * @param id 唯一标识
@@ -60,15 +53,7 @@ public interface Y9SystemService {
      * @param name 系统名
      * @return {@link Y9System}
      */
-    Y9System findByName(String name);
-
-    /**
-     * 根据系统中文名查询
-     *
-     * @param cnName 中文名
-     * @return {@link Y9System}
-     */
-    Y9System findBySystemCnName(String cnName);
+    Optional<Y9System> findByName(String name);
 
     /**
      * 根据id查询System实体
@@ -160,4 +145,13 @@ public interface Y9SystemService {
      * @return {@link Y9System}
      */
     Y9System saveOrUpdate(Y9System y9System);
+
+    /**
+     * 检查系统名称可用性
+     *
+     * @param id id
+     * @param name 系统名
+     * @return boolean
+     */
+    boolean checkNameAvailability(String id, String name);
 }

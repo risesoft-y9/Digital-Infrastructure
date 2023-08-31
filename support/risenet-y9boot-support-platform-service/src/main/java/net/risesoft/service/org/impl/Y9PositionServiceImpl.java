@@ -170,15 +170,6 @@ public class Y9PositionServiceImpl implements Y9PositionService {
     }
 
     @Override
-    public Integer getMaxTabIndex() {
-        Y9Position position = y9PositionRepository.getTopByOrderByTabIndexDesc();
-        if (position != null) {
-            return position.getTabIndex();
-        }
-        return 0;
-    }
-
-    @Override
     @Transactional(readOnly = true)
     public Boolean hasPosition(String positionName, String personId) {
         List<Y9Position> list = listByPersonId(personId);

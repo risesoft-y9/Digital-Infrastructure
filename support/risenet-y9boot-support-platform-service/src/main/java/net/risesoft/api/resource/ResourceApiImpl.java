@@ -1,6 +1,7 @@
 package net.risesoft.api.resource;
 
 import java.util.List;
+import java.util.Optional;
 
 import javax.validation.constraints.NotBlank;
 
@@ -104,8 +105,9 @@ public class ResourceApiImpl implements ResourceApi {
     @Override
     public Resource findByCustomIdAndParentId(@RequestParam("customId") @NotBlank String customId,
         @RequestParam("parentId") @NotBlank String parentId, @RequestParam("resourceType") Integer resourceType) {
-        return ModelConvertUtil.resourceBaseToResource(
-            compositeResourceService.findByCustomIdAndParentId(customId, parentId, resourceType));
+        Y9ResourceBase y9ResourceBase =
+            compositeResourceService.findByCustomIdAndParentId(customId, parentId, resourceType).orElse(null);
+        return ModelConvertUtil.resourceBaseToResource(y9ResourceBase);
     }
 
     /**
@@ -147,12 +149,11 @@ public class ResourceApiImpl implements ResourceApi {
      */
     @Override
     public Resource getRootResourceBySystemName(@RequestParam("systemName") @NotBlank String systemName) {
-        Y9System system = y9SystemService.findByName(systemName);
-        if (system != null) {
-            Y9App app = y9AppRepository.findBySystemIdAndCustomId(system.getId(), systemName);
-            if (null != app) {
-                return ModelConvertUtil.resourceBaseToResource(app);
-            }
+        Optional<Y9System> y9SystemOptional = y9SystemService.findByName(systemName);
+        if (y9SystemOptional.isPresent()) {
+            Y9App app =
+                y9AppRepository.findBySystemIdAndCustomId(y9SystemOptional.get().getId(), systemName).orElse(null);
+            return ModelConvertUtil.resourceBaseToResource(app);
         }
         return null;
     }

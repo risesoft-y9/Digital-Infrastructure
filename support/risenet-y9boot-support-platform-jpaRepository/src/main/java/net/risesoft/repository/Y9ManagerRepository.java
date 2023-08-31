@@ -1,6 +1,7 @@
 package net.risesoft.repository;
 
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
@@ -25,11 +26,7 @@ public interface Y9ManagerRepository extends JpaRepository<Y9Manager, String> {
 
     List<Y9Manager> findByParentIdOrderByTabIndex(String parentId);
 
-    List<Y9Manager> findByParentIdAndGlobalManagerFalse(String id);
-
-    Y9Manager findTopByParentIdOrderByTabIndexDesc(String parentId);
-
-    List<Y9Manager> findByGuidPathLike(String guidPath);
+    Optional<Y9Manager> findTopByParentIdOrderByTabIndexDesc(String parentId);
 
     List<Y9Manager> findByGlobalManager(boolean globalManager);
 

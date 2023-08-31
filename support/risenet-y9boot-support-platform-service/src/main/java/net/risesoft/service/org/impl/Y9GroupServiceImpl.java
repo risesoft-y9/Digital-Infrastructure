@@ -2,6 +2,7 @@ package net.risesoft.service.org.impl;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.context.event.EventListener;
@@ -114,7 +115,7 @@ public class Y9GroupServiceImpl implements Y9GroupService {
     }
 
     @Override
-    public Y9Group findById(String id) {
+    public Optional<Y9Group> findById(String id) {
         return y9GroupManager.findById(id);
     }
 
@@ -122,15 +123,6 @@ public class Y9GroupServiceImpl implements Y9GroupService {
     @Transactional(readOnly = true)
     public Y9Group getById(String id) {
         return y9GroupManager.getById(id);
-    }
-
-    @Override
-    public Integer getMaxTabIndex() {
-        Y9Group group = y9GroupRepository.findTopByOrderByTabIndexDesc();
-        if (group != null) {
-            return group.getTabIndex();
-        }
-        return 0;
     }
 
     @Override
@@ -160,10 +152,12 @@ public class Y9GroupServiceImpl implements Y9GroupService {
 
     @Override
     public List<Y9Group> listByPersonId(String personId) {
-        List<Y9PersonsToGroups> gpList = y9PersonsToGroupsRepository.findByPersonIdOrderByGroupOrder(personId);
+        List<Y9PersonsToGroups> y9PersonsToGroupsList =
+            y9PersonsToGroupsRepository.findByPersonIdOrderByGroupOrder(personId);
         List<Y9Group> groupList = new ArrayList<>();
-        for (Y9PersonsToGroups perTogroup : gpList) {
-            groupList.add(y9GroupManager.findById(perTogroup.getGroupId()));
+        for (Y9PersonsToGroups y9PersonsToGroups : y9PersonsToGroupsList) {
+            Optional<Y9Group> optionalY9Group = y9GroupManager.findById(y9PersonsToGroups.getGroupId());
+            optionalY9Group.ifPresent(groupList::add);
         }
         return groupList;
     }
@@ -233,24 +227,25 @@ public class Y9GroupServiceImpl implements Y9GroupService {
     @Transactional(readOnly = false)
     public Y9Group saveOrUpdate(Y9Group group, Y9OrgBase parent) {
         if (StringUtils.isNotEmpty(group.getId())) {
-            Y9Group origGroup = y9GroupManager.findById(group.getId());
-            if (origGroup != null) {
-                origGroup.setName(group.getName());
-                origGroup.setDescription(group.getDescription());
-                origGroup.setParentId(parent.getId());
-                origGroup.setDn(OrgLevelConsts.getOrgLevel(OrgTypeEnum.GROUP) + group.getName()
-                    + OrgLevelConsts.SEPARATOR + parent.getDn());
-                origGroup.setGuidPath(parent.getGuidPath() + OrgLevelConsts.SEPARATOR + group.getId());
+            Optional<Y9Group> optionalY9Group = y9GroupManager.findById(group.getId());
+            if (optionalY9Group.isPresent()) {
+                Y9Group y9Group = optionalY9Group.get();
+                y9Group.setName(group.getName());
+                y9Group.setDescription(group.getDescription());
+                y9Group.setParentId(parent.getId());
+                y9Group.setDn(OrgLevelConsts.getOrgLevel(OrgTypeEnum.GROUP) + group.getName() + OrgLevelConsts.SEPARATOR
+                    + parent.getDn());
+                y9Group.setGuidPath(parent.getGuidPath() + OrgLevelConsts.SEPARATOR + group.getId());
                 if (group.getTabIndex() != null) {
-                    origGroup.setTabIndex(group.getTabIndex());
+                    y9Group.setTabIndex(group.getTabIndex());
                 }
-                origGroup = y9GroupManager.save(origGroup);
+                y9Group = y9GroupManager.save(y9Group);
 
-                Y9MessageOrg msg = new Y9MessageOrg(Y9ModelConvertUtil.convert(origGroup, Group.class),
+                Y9MessageOrg msg = new Y9MessageOrg(Y9ModelConvertUtil.convert(y9Group, Group.class),
                     Y9OrgEventConst.RISEORGEVENT_TYPE_UPDATE_GROUP, Y9LoginUserHolder.getTenantId());
                 Y9PublishServiceUtil.persistAndPublishMessageOrg(msg, "更新用户组信息", "更新" + group.getName());
 
-                return origGroup;
+                return y9Group;
             } else {
                 if (null == group.getTabIndex()) {
                     group.setTabIndex(Integer.MAX_VALUE);

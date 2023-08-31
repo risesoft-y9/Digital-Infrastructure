@@ -1,5 +1,7 @@
 package net.risesoft.repository;
 
+import java.util.Optional;
+
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.stereotype.Repository;
@@ -18,5 +20,5 @@ import net.risesoft.entity.Y9OrgBaseDeleted;
 public interface Y9OrgBaseDeletedRepository
     extends JpaRepository<Y9OrgBaseDeleted, String>, JpaSpecificationExecutor<Y9OrgBaseDeleted> {
 
-    Y9OrgBaseDeleted findByOrgId(String orgId);
+    Optional<Y9OrgBaseDeleted> findByOrgId(String orgId);
 }

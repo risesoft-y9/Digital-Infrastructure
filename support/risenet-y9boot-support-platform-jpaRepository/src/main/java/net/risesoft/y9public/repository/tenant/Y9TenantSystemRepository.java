@@ -1,6 +1,7 @@
 package net.risesoft.y9public.repository.tenant;
 
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -31,6 +32,6 @@ public interface Y9TenantSystemRepository
 
     Page<Y9TenantSystem> findByTenantId(String tenantId, Pageable pageable);
 
-    Y9TenantSystem findByTenantIdAndSystemId(String tenantId, String systemId);
+    Optional<Y9TenantSystem> findByTenantIdAndSystemId(String tenantId, String systemId);
 
 }

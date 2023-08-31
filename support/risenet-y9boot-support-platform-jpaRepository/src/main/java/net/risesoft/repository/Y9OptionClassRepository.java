@@ -17,5 +17,5 @@ import net.risesoft.entity.Y9OptionClass;
 @Transactional(value = "rsTenantTransactionManager", readOnly = true)
 public interface Y9OptionClassRepository extends JpaRepository<Y9OptionClass, String> {
 
-    public Y9OptionClass findByName(String name);
+    Y9OptionClass findByName(String name);
 }

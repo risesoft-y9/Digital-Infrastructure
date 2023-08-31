@@ -1,6 +1,7 @@
 package net.risesoft.controller.resource;
 
 import java.util.List;
+import java.util.Optional;
 
 import org.apache.commons.io.FilenameUtils;
 import org.springframework.data.domain.Page;
@@ -177,9 +178,9 @@ public class AppIconController {
             // 图片名称
             String imgName = FilenameUtils.getName(originalFilename);
             // 文件类型
-            Y9AppIcon appIcon = appIconService.findByName(imgName);
+            Optional<Y9AppIcon> y9AppIconOptional = appIconService.findByName(imgName);
             appIconService.save(iconFile, remark);
-            if (appIcon != null) {
+            if (y9AppIconOptional.isPresent()) {
                 return Y9Result.success("上传成功,文件重名，图标已被覆盖!");
             } else {
                 return Y9Result.success("上传成功");

@@ -1,6 +1,7 @@
 package net.risesoft.manager.authorization.impl;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 import org.springframework.stereotype.Service;
@@ -34,8 +35,9 @@ public class Y9PersonToRoleManagerImpl implements Y9PersonToRoleManager {
         removeInvalid(y9Person.getId(), personRelatedY9RoleList);
 
         for (Y9Role y9Role : personRelatedY9RoleList) {
-            Y9PersonToRole positionToRole = this.findByPersonIdAndRoleId(y9Person.getId(), y9Role.getId());
-            if (positionToRole == null) {
+            Optional<Y9PersonToRole> personToRoleOptional =
+                y9PersonToRoleRepository.findByPersonIdAndRoleId(y9Person.getId(), y9Role.getId());
+            if (personToRoleOptional.isEmpty()) {
                 this.save(y9Person, y9Role);
             }
         }
@@ -55,10 +57,6 @@ public class Y9PersonToRoleManagerImpl implements Y9PersonToRoleManager {
         matrix.setAppId(role.getAppId());
         matrix.setDescription(role.getDescription());
         return y9PersonToRoleRepository.save(matrix);
-    }
-
-    public Y9PersonToRole findByPersonIdAndRoleId(String personId, String roleId) {
-        return y9PersonToRoleRepository.findByPersonIdAndRoleId(personId, roleId);
     }
 
     /**
@@ -87,8 +85,11 @@ public class Y9PersonToRoleManagerImpl implements Y9PersonToRoleManager {
 
     @Transactional(readOnly = false)
     public void removeByPersonIdAndRoleId(String personId, String roleId) {
-        Y9PersonToRole personRoleMapping = y9PersonToRoleRepository.findByPersonIdAndRoleId(personId, roleId);
-        y9PersonToRoleRepository.deleteById(personRoleMapping.getId());
+        Optional<Y9PersonToRole> y9PersonToRoleOptional =
+            y9PersonToRoleRepository.findByPersonIdAndRoleId(personId, roleId);
+        if (y9PersonToRoleOptional.isPresent()) {
+            y9PersonToRoleRepository.deleteById(y9PersonToRoleOptional.get().getId());
+        }
     }
 
 }

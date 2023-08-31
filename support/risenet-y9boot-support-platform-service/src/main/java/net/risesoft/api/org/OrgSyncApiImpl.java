@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Optional;
 
 import javax.validation.constraints.NotBlank;
 
@@ -178,10 +179,10 @@ public class OrgSyncApiImpl implements OrgSyncApi {
 
         Date syncTime = new Date();
         Date startTime = null;
-        Y9PublishedEventSyncHistory history =
+        Optional<Y9PublishedEventSyncHistory> y9PublishedEventSyncHistoryOptional =
             y9PublishedEventSyncHistoryService.findByTenantIdAndAppName(tenantId, appName);
-        if (history != null) {
-            startTime = history.getLastSyncTime();
+        if (y9PublishedEventSyncHistoryOptional.isPresent()) {
+            startTime = y9PublishedEventSyncHistoryOptional.get().getLastSyncTime();
         }
 
         List<Y9PublishedEvent> list = y9PublishedEventService.listByTenantId(tenantId, startTime);

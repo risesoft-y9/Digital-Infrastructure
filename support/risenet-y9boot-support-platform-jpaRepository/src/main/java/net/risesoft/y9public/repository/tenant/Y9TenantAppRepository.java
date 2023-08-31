@@ -1,6 +1,7 @@
 package net.risesoft.y9public.repository.tenant;
 
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -30,36 +31,18 @@ public interface Y9TenantAppRepository
 
     Page<Y9TenantApp> findBySystemIdAndTenancy(String systemId, Boolean tenancy, Pageable pageable);
 
-    List<Y9TenantApp> findByTenantId(String tenantId);
-
     List<Y9TenantApp> findByTenantIdAndAppId(String tenantId, String appId);
 
-    Y9TenantApp findByTenantIdAndAppIdAndTenancy(String tenantId, String appId, Boolean tenancy);
-
-    Y9TenantApp findByTenantIdAndAppIdAndVerifyAndTenancy(String tenantId, String appId, Boolean verify,
-        Boolean tenancy);
-
-    List<Y9TenantApp> findByTenantIdAndAppIdAndVerifyTrue(String tenantId, String appId);
-
-    List<Y9TenantApp> findByTenantIdAndAppName(String tenantId, String appName);
+    Optional<Y9TenantApp> findByTenantIdAndAppIdAndTenancy(String tenantId, String appId, Boolean tenancy);
 
     List<Y9TenantApp> findByTenantIdAndSystemId(String tenantId, String systemId);
 
     List<Y9TenantApp> findByTenantIdAndTenancy(String tenantId, Boolean tenancy);
 
-    List<Y9TenantApp> findByTenantIdAndTenancyAndVerify(String tenantId, Boolean tenancy, Boolean verify);
-
-    List<Y9TenantApp> findByTenantIdAndVerify(String tenantId, Boolean verify);
-
     List<Y9TenantApp> findByTenantIdAndVerifyAndTenancyOrderByCreateTimeDesc(String tenantId, Boolean verify,
         Boolean tenancy);
-
-    List<Y9TenantApp> findByTenantName(String tenantName);
 
     // 租户应用审核信息列表，根据当前租户ID获取租户应用申请的审核信息列表
     Page<Y9TenantApp> findPageByTenantIdAndTenancyOrderByVerify(String tenantId, Boolean tenancy, Pageable pageable);
 
-    Page<Y9TenantApp> findPageByVerify(Boolean verify, Pageable pageable);
-
-    Page<Y9TenantApp> findPageByVerifyAndTenancy(Boolean verify, Boolean tenancy, Pageable pageable);
 }

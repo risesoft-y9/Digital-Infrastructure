@@ -1,7 +1,7 @@
 package net.risesoft.repository.permission;
 
 import java.util.List;
-import java.util.Set;
+import java.util.Optional;
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -41,7 +41,8 @@ public interface Y9AuthorizationRepository extends JpaRepository<Y9Authorization
 
     List<Y9Authorization> findByPrincipalIdAndResourceId(String roleId, String resourceId, Sort sort);
 
-    Y9Authorization findByPrincipalIdAndResourceIdAndAuthority(String roleId, String resourceId, Integer authority);
+    Optional<Y9Authorization> findByPrincipalIdAndResourceIdAndAuthority(String roleId, String resourceId,
+        Integer authority);
 
     List<Y9Authorization> findByPrincipalIdAndResourceIdAndAuthorityIsNot(String roleId, String resourceId,
         Integer value, Sort sort);
@@ -60,22 +61,10 @@ public interface Y9AuthorizationRepository extends JpaRepository<Y9Authorization
     List<Y9Authorization> findByResourceIdAndAuthorityAndPrincipalIdIn(String resourceId, Integer authority,
         List<String> principalIds);
 
-    @Query("select distinct t.authority from Y9Authorization t where t.resourceId = ?1 and t.principalId in ?2")
-    List<Integer> getAuthorityList(String resourceId, List<String> principalIds);
-
     List<Y9Authorization> getByPrincipalIdIn(List<String> principalIds);
 
     @Query("select distinct t.resourceId from Y9Authorization t where t.authority >= ?1 and t.principalId in ?2")
     List<String> getResourceIdList(Integer authority, List<String> principalIds);
-
-    @Query("select distinct t.resourceId from Y9Authorization t where t.authority >= ?1 and t.resourceId in ?2 and t.principalId in ?3")
-    List<String> getResourceIdList(Integer authority, Set<String> resourceIds, List<String> principalIds);
-
-    @Query("select distinct t.resourceId from Y9Authorization t where t.principalId in ?1")
-    List<String> getResourceIdList(List<String> principalIds);
-
-    @Query("select distinct t.resourceId from Y9Authorization t where t.resourceId in ?1 and t.principalId in ?2")
-    List<String> getResourceIdList(Set<String> resourceIds, List<String> principalIds);
 
     Page<Y9Authorization> findByResourceIdAndPrincipalType(String resourceId, Integer principalType,
         PageRequest pageRequest);

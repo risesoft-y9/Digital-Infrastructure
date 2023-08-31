@@ -82,11 +82,7 @@ public class Y9JobServiceImpl implements Y9JobService {
     }
 
     private Integer getMaxTabIndex() {
-        Y9Job job = y9JobRepository.findTopByOrderByTabIndexDesc();
-        if (job != null) {
-            return job.getTabIndex();
-        }
-        return 0;
+        return y9JobRepository.findTopByOrderByTabIndexDesc().map(Y9Job::getTabIndex).orElse(0);
     }
 
     @Override

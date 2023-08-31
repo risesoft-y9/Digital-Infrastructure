@@ -44,16 +44,19 @@ public class Y9PersonToResourceAndAuthorityManagerImpl implements Y9PersonToReso
     @Override
     public void saveOrUpdate(Y9ResourceBase y9ResourceBase, Y9Person person, Y9Authorization y9Authorization,
         Boolean inherit) {
-        Y9PersonToResourceAndAuthority y9PersonToResourceAndAuthority =
+        Optional<Y9PersonToResourceAndAuthority> optionalY9PersonToResourceAndAuthority =
             y9PersonToResourceAndAuthorityRepository.findByPersonIdAndResourceIdAndAuthorizationIdAndAuthority(
                 person.getId(), y9ResourceBase.getId(), y9Authorization.getId(), y9Authorization.getAuthority());
-        if (y9PersonToResourceAndAuthority == null) {
+        Y9PersonToResourceAndAuthority y9PersonToResourceAndAuthority;
+        if (optionalY9PersonToResourceAndAuthority.isEmpty()) {
             y9PersonToResourceAndAuthority = new Y9PersonToResourceAndAuthority();
             y9PersonToResourceAndAuthority.setTenantId(person.getTenantId());
             y9PersonToResourceAndAuthority.setPersonId(person.getId());
             y9PersonToResourceAndAuthority.setResourceId(y9ResourceBase.getId());
             y9PersonToResourceAndAuthority.setAuthority(y9Authorization.getAuthority());
             y9PersonToResourceAndAuthority.setAuthorizationId(y9Authorization.getId());
+        } else {
+            y9PersonToResourceAndAuthority = optionalY9PersonToResourceAndAuthority.get();
         }
         y9PersonToResourceAndAuthority.setResourceName(y9ResourceBase.getName());
         y9PersonToResourceAndAuthority.setResourceType(y9ResourceBase.getResourceType());

@@ -2,6 +2,7 @@ package net.risesoft.service.identity.impl;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 import org.apache.commons.lang3.StringUtils;
@@ -146,9 +147,9 @@ public class Y9PositionToResourceAndAuthorityServiceImpl implements Y9PositionTo
         List<Y9App> appList = new ArrayList<>();
         if (null != resourceList) {
             for (Y9PositionToResourceAndAuthority r : resourceList) {
-                Y9TenantApp y9TenantApp = y9TenantAppManager
+                Optional<Y9TenantApp> y9TenantAppOptional = y9TenantAppManager
                     .getByTenantIdAndAppIdAndTenancy(Y9LoginUserHolder.getTenantId(), r.getAppId(), true);
-                if (y9TenantApp != null) {
+                if (y9TenantAppOptional.isPresent()) {
                     Y9App y9App = y9AppManager.findById(r.getAppId());
                     if (null != y9App && !appList.contains(y9App)) {
                         appList.add(y9App);

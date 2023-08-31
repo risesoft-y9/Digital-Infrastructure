@@ -1,6 +1,7 @@
 package net.risesoft.manager.authorization.impl;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 import org.springframework.stereotype.Service;
@@ -33,10 +34,7 @@ public class Y9PositionToRoleManagerImpl implements Y9PositionToRoleManager {
     public void update(Y9Position y9Position, List<Y9Role> positionRelatedY9RoleList) {
         removeInvalid(y9Position.getId(), positionRelatedY9RoleList);
         for (Y9Role y9Role : positionRelatedY9RoleList) {
-            Y9PositionToRole y9PositionToRole = this.findByPositionIdAndRoleId(y9Position.getId(), y9Role.getId());
-            if (y9PositionToRole == null) {
-                this.save(y9Position, y9Role);
-            }
+            this.save(y9Position, y9Role);
         }
     }
 
@@ -52,7 +50,7 @@ public class Y9PositionToRoleManagerImpl implements Y9PositionToRoleManager {
             newCalculatedY9RoleList.stream().map(Y9Role::getId).collect(Collectors.toList());
         for (String roleId : originY9RoleIdList) {
             if (!newCalculatedY9RoleIdList.contains(roleId)) {
-                this.removeByPositionIdAndRoleId(positionId, roleId);
+                y9PositionToRoleRepository.deleteByPositionIdAndRoleId(positionId, roleId);
             }
         }
     }
@@ -61,29 +59,23 @@ public class Y9PositionToRoleManagerImpl implements Y9PositionToRoleManager {
         return y9PositionToRoleRepository.listRoleIdsByPositionId(positionId);
     }
 
-    public Y9PositionToRole findByPositionIdAndRoleId(String positionId, String roleId) {
-        return y9PositionToRoleRepository.findByPositionIdAndRoleId(positionId, roleId);
-    }
-
     @Transactional(readOnly = false)
-    public void removeByPositionIdAndRoleId(String positionId, String roleId) {
-        Y9PositionToRole y9PositionToRole = y9PositionToRoleRepository.findByPositionIdAndRoleId(positionId, roleId);
-        y9PositionToRoleRepository.delete(y9PositionToRole);
-    }
-
-    @Transactional(readOnly = false)
-    public Y9PositionToRole save(Y9Position y9Position, Y9Role role) {
-        Y9PositionToRole y9PositionToRole = new Y9PositionToRole();
-        y9PositionToRole.setTenantId(y9Position.getTenantId());
-        y9PositionToRole.setPositionId(y9Position.getId());
-        y9PositionToRole.setDepartmentId(y9Position.getParentId());
-        y9PositionToRole.setRoleId(role.getId());
-        y9PositionToRole.setRoleName(role.getName());
-        y9PositionToRole.setSystemCnName(role.getSystemCnName());
-        y9PositionToRole.setSystemName(role.getSystemName());
-        y9PositionToRole.setAppName(role.getAppCnName());
-        y9PositionToRole.setAppId(role.getAppId());
-        y9PositionToRole.setDescription(role.getDescription());
-        return y9PositionToRoleRepository.save(y9PositionToRole);
+    public void save(Y9Position y9Position, Y9Role role) {
+        Optional<Y9PositionToRole> optionalY9PositionToRole =
+            y9PositionToRoleRepository.findByPositionIdAndRoleId(y9Position.getId(), role.getId());
+        if (optionalY9PositionToRole.isEmpty()) {
+            Y9PositionToRole y9PositionToRole = new Y9PositionToRole();
+            y9PositionToRole.setTenantId(y9Position.getTenantId());
+            y9PositionToRole.setPositionId(y9Position.getId());
+            y9PositionToRole.setDepartmentId(y9Position.getParentId());
+            y9PositionToRole.setRoleId(role.getId());
+            y9PositionToRole.setRoleName(role.getName());
+            y9PositionToRole.setSystemCnName(role.getSystemCnName());
+            y9PositionToRole.setSystemName(role.getSystemName());
+            y9PositionToRole.setAppName(role.getAppCnName());
+            y9PositionToRole.setAppId(role.getAppId());
+            y9PositionToRole.setDescription(role.getDescription());
+            y9PositionToRoleRepository.save(y9PositionToRole);
+        }
     }
 }

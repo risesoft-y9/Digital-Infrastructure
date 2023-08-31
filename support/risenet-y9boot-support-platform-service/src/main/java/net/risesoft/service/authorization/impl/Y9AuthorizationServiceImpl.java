@@ -3,6 +3,7 @@ package net.risesoft.service.authorization.impl;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 import org.apache.commons.lang3.StringUtils;
@@ -300,11 +301,13 @@ public class Y9AuthorizationServiceImpl implements Y9AuthorizationService {
     @Transactional(readOnly = false)
     public Y9Authorization saveOrUpdate(Y9Authorization y9Authorization) {
         // 如已存在则修改
-        Y9Authorization old = y9AuthorizationRepository.findByPrincipalIdAndResourceIdAndAuthority(
-            y9Authorization.getPrincipalId(), y9Authorization.getResourceId(), y9Authorization.getAuthority());
-        if (old != null) {
-            Y9BeanUtil.copyProperties(y9Authorization, old, "id");
-            return y9AuthorizationRepository.save(old);
+        Optional<Y9Authorization> optionalY9Authorization =
+            y9AuthorizationRepository.findByPrincipalIdAndResourceIdAndAuthority(y9Authorization.getPrincipalId(),
+                y9Authorization.getResourceId(), y9Authorization.getAuthority());
+        if (optionalY9Authorization.isPresent()) {
+            Y9Authorization originY9Authorization = optionalY9Authorization.get();
+            Y9BeanUtil.copyProperties(y9Authorization, originY9Authorization, "id");
+            return y9AuthorizationRepository.save(originY9Authorization);
         }
 
         // 新增

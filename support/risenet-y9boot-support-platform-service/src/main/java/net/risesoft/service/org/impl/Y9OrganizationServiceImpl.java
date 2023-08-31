@@ -136,11 +136,7 @@ public class Y9OrganizationServiceImpl implements Y9OrganizationService {
 
     @Override
     public Integer getMaxTabIndex() {
-        Y9Organization org = y9OrganizationRepository.findTopByOrderByTabIndexDesc();
-        if (org != null) {
-            return org.getTabIndex();
-        }
-        return 0;
+        return y9OrganizationRepository.findTopByOrderByTabIndexDesc().map(Y9OrgBase::getTabIndex).orElse(0);
     }
 
     @Override

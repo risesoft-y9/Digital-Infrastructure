@@ -1,6 +1,7 @@
 package net.risesoft.repository;
 
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
@@ -23,6 +24,6 @@ public interface Y9JobRepository extends JpaRepository<Y9Job, String>, JpaSpecif
 
     List<Y9Job> findByNameContainingOrderByTabIndex(String name);
 
-    Y9Job findTopByOrderByTabIndexDesc();
+    Optional<Y9Job> findTopByOrderByTabIndexDesc();
 
 }

@@ -1,6 +1,7 @@
 package net.risesoft.manager.relation.impl;
 
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -43,10 +44,11 @@ public class Y9CustomGroupMembersManagerImpl implements Y9CustomGroupMembersMana
         for (String id : orgUnitList) {
             Y9OrgBase y9OrgBase = compositeOrgBaseManager.getOrgBase(id);
             if (y9OrgBase != null) {
-                Y9CustomGroupMember member = customGroupMembersRepository.findByGroupIdAndMemberId(groupId, id);
-                if (null == member) {
+                Optional<Y9CustomGroupMember> optionalY9CustomGroupMember =
+                    customGroupMembersRepository.findByGroupIdAndMemberId(groupId, id);
+                if (optionalY9CustomGroupMember.isEmpty()) {
                     Integer tabIndex = customGroupMembersRepository.getMaxTabIndex(groupId);
-                    member = new Y9CustomGroupMember();
+                    Y9CustomGroupMember member = new Y9CustomGroupMember();
                     member.setId(Y9IdGenerator.genId(IdType.SNOWFLAKE));
                     member.setMemberId(id);
                     member.setMemberName(y9OrgBase.getName());
@@ -79,10 +81,7 @@ public class Y9CustomGroupMembersManagerImpl implements Y9CustomGroupMembersMana
                     customGroupMembersRepository.save(member);
                 }
             } else {
-                Y9CustomGroupMember member = customGroupMembersRepository.findByGroupIdAndMemberId(groupId, id);
-                if (member != null) {
-                    customGroupMembersRepository.delete(member);
-                }
+                customGroupMembersRepository.deleteByGroupIdAndMemberId(groupId, id);
             }
         }
     }

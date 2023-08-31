@@ -2,6 +2,7 @@ package net.risesoft.y9public.service.resource.impl;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 import org.apache.commons.lang3.StringUtils;
@@ -71,23 +72,13 @@ public class Y9SystemServiceImpl implements Y9SystemService {
     }
 
     @Override
-    public Y9System findByCnName(String cnName) {
-        return y9SystemRepository.findByCnName(cnName);
-    }
-
-    @Override
     public Y9System findById(String id) {
         return y9SystemManager.findById(id);
     }
 
     @Override
-    public Y9System findByName(String name) {
+    public Optional<Y9System> findByName(String name) {
         return y9SystemRepository.findByName(name);
-    }
-
-    @Override
-    public Y9System findBySystemCnName(String cnName) {
-        return y9SystemRepository.findByCnName(cnName);
     }
 
     @Override
@@ -173,12 +164,22 @@ public class Y9SystemServiceImpl implements Y9SystemService {
         } else {
             y9System.setId(Y9IdGenerator.genId(IdType.SNOWFLAKE));
             if (y9System.getTabIndex() == null) {
-                Y9System system = y9SystemRepository.findTopByOrderByTabIndexDesc();
-                Integer maxIndex = system != null ? system.getTabIndex() + 1 : 0;
+                Optional<Y9System> y9SystemOptional = y9SystemRepository.findTopByOrderByTabIndexDesc();
+                Integer maxIndex = y9SystemOptional.map(system -> system.getTabIndex() + 1).orElse(0);
                 y9System.setTabIndex(maxIndex);
             }
         }
         return y9SystemManager.save(y9System);
+    }
+
+    @Override
+    public boolean checkNameAvailability(String id, String name) {
+        Optional<Y9System> y9SystemOptional = y9SystemRepository.findByName(name);
+        if (y9SystemOptional.isEmpty()) {
+            return true;
+        }
+        // 修改系统时的检查也为可用
+        return y9SystemOptional.get().getId().equals(id);
     }
 
 }

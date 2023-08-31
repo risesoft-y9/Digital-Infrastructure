@@ -64,7 +64,7 @@ public class AppApiImpl implements AppApi {
     @Override
     public App findBySystemIdAndCustomId(@RequestParam("systemId") @NotBlank String systemId,
         @RequestParam("customId") @NotBlank String customId) {
-        Y9App y9App = y9AppService.findBySystemIdAndCustomId(systemId, customId);
+        Y9App y9App = y9AppService.findBySystemIdAndCustomId(systemId, customId).orElse(null);
         return Y9ModelConvertUtil.convert(y9App, App.class);
     }
 
@@ -79,7 +79,7 @@ public class AppApiImpl implements AppApi {
     @Override
     public App findBySystemNameAndCustomId(@RequestParam("systemName") @NotBlank String systemName,
         @RequestParam("customId") @NotBlank String customId) {
-        Y9App y9App = y9AppService.findBySystemNameAndCustomId(systemName, customId);
+        Y9App y9App = y9AppService.findBySystemNameAndCustomId(systemName, customId).orElse(null);
         return Y9ModelConvertUtil.convert(y9App, App.class);
     }
 

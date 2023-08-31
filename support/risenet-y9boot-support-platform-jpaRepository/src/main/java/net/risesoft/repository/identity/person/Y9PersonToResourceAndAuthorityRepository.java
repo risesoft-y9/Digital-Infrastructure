@@ -1,6 +1,7 @@
 package net.risesoft.repository.identity.person;
 
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -63,7 +64,7 @@ public interface Y9PersonToResourceAndAuthorityRepository
     List<Y9PersonToResourceAndAuthority> findByPersonIdAndResourceIdAndAuthority(String personId, String resourceId,
         Integer authority);
 
-    Y9PersonToResourceAndAuthority findByPersonIdAndResourceIdAndAuthorizationIdAndAuthority(String personId,
+    Optional<Y9PersonToResourceAndAuthority> findByPersonIdAndResourceIdAndAuthorizationIdAndAuthority(String personId,
         String resourceId, String authorizationId, Integer authority);
 
     List<Y9PersonToResourceAndAuthority> findByResourceId(String resourceId);

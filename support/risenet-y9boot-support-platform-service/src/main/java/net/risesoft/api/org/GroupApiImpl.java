@@ -119,7 +119,7 @@ public class GroupApiImpl implements GroupApi {
     public Group getGroup(@RequestParam @NotBlank String tenantId, @RequestParam @NotBlank String groupId) {
         Y9LoginUserHolder.setTenantId(tenantId);
 
-        Y9Group y9Group = y9GroupService.findById(groupId);
+        Y9Group y9Group = y9GroupService.findById(groupId).orElse(null);
         return Y9ModelConvertUtil.convert(y9Group, Group.class);
     }
 
