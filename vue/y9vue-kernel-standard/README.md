@@ -1,8 +1,11 @@
 # 一、运行前提
+
 ```
 这个项目里的配置文件是对应这套开源代码的后端代码，需要先在本地环境中，将后端的代码运行起来，才能运行起来看到页面效果
 ```
+
 ## 为了不依赖后端的代码，本地不跑后端程序就能将前端项目运行起来并看到页面和效果，您可以这样做
+
 ```
 1、用编辑器打开 .env.development 文件
 
@@ -22,6 +25,7 @@
 ```
 
 # 二、路由即菜单
+
 ```
 开源内核框架中router与功能的中英文命名对应关系：
 权限分配界面：  authRouter（初始化的权限管控，不展示）
@@ -47,14 +51,11 @@
 ```
 
 # 三、统一框架说明
-理念：基于前后端分离
-架构：基于微服务
-管理：基于统一框架开发流程模型
-开发方法：基于统一过程方法、原型开发方法、螺旋上升开发方法
-开发语言：基于JavaScript、基于vue开发
-原则：基于业务、尽可能让代码简单，新手都能看懂和维护
+
+理念：基于前后端分离架构：基于微服务管理：基于统一框架开发流程模型开发方法：基于统一过程方法、原型开发方法、螺旋上升开发方法开发语言：基于 JavaScript、基于 vue 开发原则：基于业务、尽可能让代码简单，新手都能看懂和维护
 
 ## 目录结构
+
 ```
 src\api:                接口目录
 src\assets:             需打包编译的静态资源
@@ -81,16 +82,19 @@ vite.config.js:         vite脚手架各种环境编译配置文件
 ```
 
 ## 框架渲染过程
+
  <img src="https://vue.youshengyun.com/files/img/前端/框架渲染过程.png">
 
 # 四、单点登录
+
 ## 单点登录时序图
-<a href="https://vue.youshengyun.com/files/img/前端/单点登录原理时序图.pdf" target="_blank">【点我查看】高清单点登录原理时序图 PDF文档</a>
-<br>
-<img src="https://vue.youshengyun.com/files/img/前端/单点登录原理时序图.png">
+
+<a href="https://vue.youshengyun.com/files/img/前端/单点登录原理时序图.pdf" target="_blank">【点我查看】高清单点登录原理时序图 PDF 文档</a> <br> <img src="https://vue.youshengyun.com/files/img/前端/单点登录原理时序图.png">
 
 ## 依据单点登录时序图，我们单独封装了单点登录插件，适用基于当前数字底座开源项目搭建的各个前端工程（微服务）
+
 ```
+(已经发布到npm共有仓库，无需再从私有仓库下载，以下问题应该不会再出现了)
 下载地址（私有仓库）：npm --registry https://svn.youshengyun.com:9900/nexus/repository/y9npm-hosted install y9plugin-sso@3
 
 插件内部依赖说明：
@@ -100,7 +104,7 @@ vite.config.js:         vite脚手架各种环境编译配置文件
         "js-cookie": "^3.0.1",
         "md5": "^2.3.0",
         "qs": "^6.10.2"
-    }  
+    }
 
 可能遇到的问题说明：
 第一次添加单点登陆插件，可能会遇到一些常规错误提示。
@@ -120,11 +124,15 @@ vite.config.js:         vite脚手架各种环境编译配置文件
 ```
 
 # 五、路由
+
 ## 路由程序设计流程图
+
 <img src="https://vue.youshengyun.com/files/img/前端/路由程序流程图.png">
 
 # 六、组件
+
 ## <a href="vue.youshengyun.com/y9vue-components/" target="_blank">【点我查看】组件说明文档</a>
+
 ```
 组件插件化下载地址（私有仓库）：npm --registry https://svn.youshengyun.com:9900/nexus/repository/y9npm-hosted install y9plugin-components
 ```
@@ -137,6 +145,7 @@ vite.config.js:         vite脚手架各种环境编译配置文件
 ```
 
 # 七、开发规范
+
 ```
 必要说明：
     1、eslink\ts\scss
@@ -155,15 +164,11 @@ vite.config.js:         vite脚手架各种环境编译配置文件
     4、开发对应路由的页面级组件以及其子组件
     5、项目开发将要完成时，视项目需求，做整个项目字体的适配
 ```
-<a href="https://e.gitee.com/youshengyun/repos/youshengyun/y9-core/tree/master/vue/common/y9vue-empty" target="_blank">【git地址】干净的框架源码，持续更新...</a>
+
+<a href="https://e.gitee.com/youshengyun/repos/youshengyun/y9-core/tree/master/vue/common/y9vue-empty" target="_blank">【git 地址】干净的框架源码，持续更新...</a>
 
 # 八、感谢您的下载！
+
 # 九、持续更新升级文档
-<a href="https://vue.youshengyun.com/files/img/前端/【2023-2-13-更新】字体大小设置的说明文档.pdf" target="_blank">【2023-2-13-更新】字体大小设置的说明文档.pdf【点我查看】</a>
-<br>
-<a href="https://vue.youshengyun.com/files/img/前端/【2023-2-13-更新】国际化翻译的安装与使用.pdf" target="_blank">【2023-2-13-更新】国际化翻译的安装与使用.pdf【点我查看】</a>
-<br>
-<a href="https://vue.youshengyun.com/files/img/前端/【2023-2-13-更新】水印插件的使用文档.pdf" target="_blank">【2023-2-13-更新】水印插件的使用文档.pdf【点我查看】</a>
-<br>
-<a href="https://vue.youshengyun.com/files/img/前端/【2023-2-13-更新】项目组件替换成y9组件插件的替换修改笔记.pdf" target="_blank">【2023-2-13-更新】项目组件替换成y9组件插件的替换修改笔记.pdf【点我查看】</a>
-<br>
+
+<a href="https://vue.youshengyun.com/files/img/前端/【2023-2-13-更新】字体大小设置的说明文档.pdf" target="_blank">【2023-2-13-更新】字体大小设置的说明文档.pdf【点我查看】</a> <br> <a href="https://vue.youshengyun.com/files/img/前端/【2023-2-13-更新】国际化翻译的安装与使用.pdf" target="_blank">【2023-2-13-更新】国际化翻译的安装与使用.pdf【点我查看】</a> <br> <a href="https://vue.youshengyun.com/files/img/前端/【2023-2-13-更新】水印插件的使用文档.pdf" target="_blank">【2023-2-13-更新】水印插件的使用文档.pdf【点我查看】</a> <br> <a href="https://vue.youshengyun.com/files/img/前端/【2023-2-13-更新】项目组件替换成y9组件插件的替换修改笔记.pdf" target="_blank">【2023-2-13-更新】项目组件替换成 y9 组件插件的替换修改笔记.pdf【点我查看】</a> <a>【2023-8-31】前端项目已将 node 版本更新到当前最新稳定版（18.17.1），以及其它重要依赖的版本同步更新。比如：vite 脚手架，vue，elementPlus</a> <br>
