@@ -1,3 +1,10 @@
+<!--
+ * @Author: fuyu
+ * @Date: 2022-04-07 17:43:02
+ * @LastEditors: mengjuhua
+ * @LastEditTime: 2023-08-03 15:27:02
+ * @Description: 组织架构-基本信息
+-->
 <template>
     <y9Card :headerPadding="false">
         <template #header>
@@ -6,16 +13,22 @@
 
                 <div v-show="currInfo.haveEditAuth" class="expand-btns-div">
                     <div v-show="isExpandBtns" class="expand-btns">
-                        <el-button class="global-btn-second" :size="fontSizeObj.buttonSize"
-                        :style="{ fontSize: fontSizeObj.baseFontSize }"
-                         @click="onActions('extendAttr', '扩展属性')">
+                        <el-button
+                            class="global-btn-second"
+                            :size="fontSizeObj.buttonSize"
+                            :style="{ fontSize: fontSizeObj.baseFontSize }"
+                            @click="onActions('extendAttr', '扩展属性')"
+                        >
                             <i class="ri-external-link-line"></i>
                             <span>{{ $t('扩展') }}</span>
                         </el-button>
 
-                        <el-button class="global-btn-second" :size="fontSizeObj.buttonSize"
-                        :style="{ fontSize: fontSizeObj.baseFontSize }"
-                         @click="onActions('sync', '数据同步')">
+                        <el-button
+                            class="global-btn-second"
+                            :size="fontSizeObj.buttonSize"
+                            :style="{ fontSize: fontSizeObj.baseFontSize }"
+                            @click="onActions('sync', '数据同步')"
+                        >
                             <i class="ri-repeat-line"></i>
                             <span>{{ $t('同步') }}</span>
                         </el-button>
@@ -23,7 +36,7 @@
                         <el-button
                             v-show="showBtn('move')"
                             :size="fontSizeObj.buttonSize"
-                        :style="{ fontSize: fontSizeObj.baseFontSize }"
+                            :style="{ fontSize: fontSizeObj.baseFontSize }"
                             @click="onActions('move', '移动')"
                             class="global-btn-second"
                         >
@@ -34,7 +47,7 @@
                         <el-button
                             v-show="showBtn('sort')"
                             :size="fontSizeObj.buttonSize"
-                        :style="{ fontSize: fontSizeObj.baseFontSize }"
+                            :style="{ fontSize: fontSizeObj.baseFontSize }"
                             @click="onActions('sort', '综合排序')"
                             class="global-btn-second"
                         >
@@ -45,7 +58,7 @@
                         <el-button
                             class="global-btn-second"
                             :size="fontSizeObj.buttonSize"
-                        :style="{ fontSize: fontSizeObj.baseFontSize }"
+                            :style="{ fontSize: fontSizeObj.baseFontSize }"
                             v-show="showBtn('disabled')"
                             @click="onActions('disabled', currInfo.disabled ? '取消禁用人员' : '禁用人员')"
                         >
@@ -61,7 +74,7 @@
                         <el-button
                             class="global-btn-second"
                             :size="fontSizeObj.buttonSize"
-                        :style="{ fontSize: fontSizeObj.baseFontSize }"
+                            :style="{ fontSize: fontSizeObj.baseFontSize }"
                             v-show="showBtn('resetPassword')"
                             @click="onActions('resetPassword', '重置当前人员密码为默认密码')"
                         >
@@ -74,25 +87,33 @@
 							<span>更新图标</span>
 						</el-button> -->
 
-                        <el-button class="global-btn-second" :size="fontSizeObj.buttonSize"
-                        :style="{ fontSize: fontSizeObj.baseFontSize }"
-                        v-show="showBtn('exportXml')" @click="onActions('exportXml')">
-							<i class="ri-file-upload-line"></i>
-							<span>{{ $t('导出XML') }}</span>
-						</el-button>
+                        <el-button
+                            class="global-btn-second"
+                            :size="fontSizeObj.buttonSize"
+                            :style="{ fontSize: fontSizeObj.baseFontSize }"
+                            v-show="showBtn('exportXml')"
+                            @click="onActions('exportXml')"
+                        >
+                            <i class="ri-file-upload-line"></i>
+                            <span>{{ $t('导出XML') }}</span>
+                        </el-button>
 
-						<el-button class="global-btn-second" :size="fontSizeObj.buttonSize"
-                        :style="{ fontSize: fontSizeObj.baseFontSize }"
-                        v-show="showBtn('uploadOrgXLS')" @click="onActions('uploadOrgXLS','上传组织架构信息XLS')">
-							<i class="ri-file-upload-line"></i>
-							<span>{{ $t('上传XLS') }}</span>
-						</el-button>
+                        <el-button
+                            class="global-btn-second"
+                            :size="fontSizeObj.buttonSize"
+                            :style="{ fontSize: fontSizeObj.baseFontSize }"
+                            v-show="showBtn('uploadOrgXLS')"
+                            @click="onActions('uploadOrgXLS', '上传组织架构信息XLS')"
+                        >
+                            <i class="ri-file-upload-line"></i>
+                            <span>{{ $t('上传XLS') }}</span>
+                        </el-button>
 
                         <el-button
                             class="global-btn-second"
                             v-show="showBtn('exportXls')"
                             :size="fontSizeObj.buttonSize"
-                        :style="{ fontSize: fontSizeObj.baseFontSize }"
+                            :style="{ fontSize: fontSizeObj.baseFontSize }"
                             @click="onActions('exportXls')"
                         >
                             <i class="ri-file-upload-line"></i>
@@ -123,17 +144,25 @@
                     <span>{{ $t('保存') }}</span>
                 </el-button>
 
-                <el-button @click="isEditState = false" :size="fontSizeObj.buttonSize"
-                        :style="{ fontSize: fontSizeObj.baseFontSize }" class="global-btn-second">
+                <el-button
+                    @click="isEditState = false"
+                    :size="fontSizeObj.buttonSize"
+                    :style="{ fontSize: fontSizeObj.baseFontSize }"
+                    class="global-btn-second"
+                >
                     <i class="ri-close-line"></i>
                     <span> {{ $t('取消') }}</span>
                 </el-button>
             </div>
 
             <div v-else style="display: flex; justify-content: space-between; text-align: right">
-                <el-button type="primary" :size="fontSizeObj.buttonSize"
-                        :style="{ fontSize: fontSizeObj.baseFontSize }"
-                @click="onActions('edit')" class="global-btn-main">
+                <el-button
+                    type="primary"
+                    :size="fontSizeObj.buttonSize"
+                    :style="{ fontSize: fontSizeObj.baseFontSize }"
+                    @click="onActions('edit')"
+                    class="global-btn-main"
+                >
                     <i class="ri-edit-line"></i>
                     <span>{{ $t('编辑') }}</span>
                 </el-button>
@@ -157,9 +186,13 @@
                         <i class="ri-add-line"></i>
                         <span>{{ currInfo.orgType == 'Organization' ? $t('部门') : $t('子部门') }}</span>
                     </el-button>
-                    <el-button type="primary" :size="fontSizeObj.buttonSize"
+                    <el-button
+                        type="primary"
+                        :size="fontSizeObj.buttonSize"
                         :style="{ fontSize: fontSizeObj.baseFontSize }"
-                    class="global-btn-main" @click="onActions('addPerson', '新增人员')">
+                        class="global-btn-main"
+                        @click="onActions('addPerson', '新增人员')"
+                    >
                         <i class="ri-add-line"></i>
                         <span>{{ $t('人员') }}</span>
                     </el-button>
@@ -173,9 +206,13 @@
                         <i class="ri-add-line"></i>
                         <span>{{ $t('选择已有人员') }}</span>
                     </el-button> -->
-                    <el-button type="primary" :size="fontSizeObj.buttonSize"
+                    <el-button
+                        type="primary"
+                        :size="fontSizeObj.buttonSize"
                         :style="{ fontSize: fontSizeObj.baseFontSize }"
-                    class="global-btn-main" @click="onActions('addGroup', '新增用户组')">
+                        class="global-btn-main"
+                        @click="onActions('addGroup', '新增用户组')"
+                    >
                         <i class="ri-add-line"></i>
                         <span>{{ $t('用户组') }}</span>
                     </el-button>
@@ -237,11 +274,21 @@
             :isEditState="true"
             isAdd
         ></groupForm>
-        <extendAttr v-if="dialogConfig.type == 'extendAttr'" :currInfo="currInfo" :handAssginNode="handAssginNode"></extendAttr>
+        <extendAttr
+            v-if="dialogConfig.type == 'extendAttr'"
+            :currInfo="currInfo"
+            :handAssginNode="handAssginNode"
+        ></extendAttr>
         <Sync v-if="dialogConfig.type == 'sync'" ref="syncRef"></Sync>
-		<uploadOrgInfo v-if="dialogConfig.type == 'uploadOrgXLS'" type="xls" :refresh="refreshTree" @update="dialogConfig.show = false;" :id="currInfo.id"></uploadOrgInfo>
+        <uploadOrgInfo
+            v-if="dialogConfig.type == 'uploadOrgXLS'"
+            type="xls"
+            :refresh="refreshTree"
+            @update="dialogConfig.show = false"
+            :id="currInfo.id"
+        ></uploadOrgInfo>
         <selectTree
-			ref="selectPersonTreeRef"
+            ref="selectPersonTreeRef"
             v-if="dialogConfig.type == 'selectPerson'"
             :treeApiObj="treeApiObj"
             :selectField="[
@@ -253,20 +300,30 @@
             v-if="dialogConfig.type == 'move'"
             :treeApiObj="deptTreeApiObj"
             ref="moveSelectTreeRef"
-			checkStrictly
-			@onCheckChange="onCheckChange"
-			@onNodeExpand="onNodeExpand"
+            checkStrictly
+            @onCheckChange="onCheckChange"
+            @onNodeExpand="onNodeExpand"
         ></selectTree>
 
-        <treeSort v-if="dialogConfig.type == 'sort'" :currInfo="currInfo" :apiRequest="getOrderDepts" :apiParams="currInfo.id" ref="sortRef" type="Person" :columns="dialogConfig.columns"></treeSort>
+        <treeSort
+            v-if="dialogConfig.type == 'sort'"
+            :currInfo="currInfo"
+            :apiRequest="getOrderDepts"
+            :apiParams="currInfo.id"
+            ref="sortRef"
+            type="Person"
+            :columns="dialogConfig.columns"
+        ></treeSort>
     </y9Dialog>
 
     <el-button style="display: none" v-loading.fullscreen.lock="loading"></el-button>
 </template>
 
 <script lang="ts" setup>
-	import { getAllPersonsCount } from '@/api/org/index';
-	import { getOrderDepts } from '@/api/dept/index';
+    import { inject, watch, reactive, computed, toRefs } from 'vue';
+    import { ElMessage, ElMessageBox, ElNotification } from 'element-plus';
+    import { getAllPersonsCount } from '@/api/org/index';
+    import { getOrderDepts } from '@/api/dept/index';
     import { $dataType, $keyNameAssign, $deepAssignObject, $deeploneObject } from '@/utils/object';
     import y9_storage from '@/utils/storage';
     import settings from '@/settings';
@@ -275,33 +332,17 @@
     import personForm from '../comps/baseInfoForm/personForm.vue';
     import addPersonForm from '../comps/baseInfoForm/addPersonForm.vue';
     import groupForm from '../comps/baseInfoForm/groupForm.vue';
-    import {
-        orgSaveOrUpdate,
-        sync,
-        treeInterface,
-        getTreeItemById,
-        searchByName,
-        saveOrgExtendProperties,
-    } from '@/api/org/index';
+    import { orgSaveOrUpdate, sync, treeInterface, getTreeItemById, searchByName } from '@/api/org/index';
     import extendAttr from '../comps/dialogContent/extendAttr.vue';
     import Sync from '../comps/dialogContent/sync.vue';
     import uploadOrgInfo from '../comps/dialogContent/uploadOrgInfo.vue';
-    import { deptSaveOrUpdate, saveDeptExtendProperties, moveDept, saveOrder } from '@/api/dept/index';
-    import {
-        personSaveOrUpdate,
-        resetPassword,
-        changeDisabled,
-        savePersons,
-        movePerson,
-        savePersonExtendProperties,
-    } from '@/api/person/index';
+    import { deptSaveOrUpdate, moveDept, saveOrder } from '@/api/dept/index';
+    import { personSaveOrUpdate, resetPassword, changeDisabled, savePersons, movePerson } from '@/api/person/index';
     import { groupSaveOrUpdate } from '@/api/group/index';
     import { $dictionaryFunc } from '@/utils/data';
     import { ref } from '@vue/reactivity';
-    import { getOrgTypeList, listByType } from '@/api/dictionary/index';
+    import { listByType } from '@/api/dictionary/index';
     import { useI18n } from 'vue-i18n';
-    import { ElNotification, ElMessageBox, ElMessage } from 'element-plus';
-    import { inject, watch, reactive, toRefs, computed } from 'vue';
     // 注入 字体变量
     const fontSizeObj: any = inject('sizeObjInfo');
     const { t } = useI18n();
@@ -315,29 +356,41 @@
             },
         },
 
-		getTreeData: Function,//获取树数据
+        getTreeData: Function, //获取树数据
 
-		postNode: Function,//请求某个节点，返回格式化好的数据
+        postNode: Function, //请求某个节点，返回格式化好的数据
 
-		findNode: Function,//在树数据中根据id找到对应的节点并返回
+        findNode: Function, //在树数据中根据id找到对应的节点并返回
 
-		getTreeInstance: Object,//树的实例
+        getTreeInstance: Object, //树的实例
 
-        refreshTree: {//更新tree
+        refreshTree: {
+            //更新tree
             type: Function,
         },
 
-		handAssginNode: Function,//手动更新节点信息
+        handAssginNode: Function, //手动更新节点信息
 
-		updateTreePersonCount: Function,//手动更新tree的人员计数
+        updateTreePersonCount: Function, //手动更新tree的人员计数
     });
 
-	//移动-选择树节点展开时触发
-	const selectTreeExpandNode = ref()
-	function onNodeExpand(node){
-		selectTreeExpandNode.value = node;
-	}
+    //移动-选择树节点展开时触发
+    const selectTreeExpandNode = ref();
+    function onNodeExpand(node) {
+        selectTreeExpandNode.value = node;
+    }
 
+    let orgFormRef = ref(); //编辑机构表单实例
+    let deptFormRef = ref(); //编辑部门表单实例
+    let personFormRef = ref(); //编辑人员表单实例
+    let groupFormRef = ref(); //编辑用户组表单实例
+    let addDeptFormRef = ref(); //新增部门表单实例
+    let addPersonFormRef = ref(); //新增人员表单实例
+    let addGroupFormRef = ref(); //新增用户组表单实例
+    let syncRef = ref();
+    let sortRef = ref();
+    let moveSelectTreeRef = ref(); //移动选择tree实例
+    let selectPersonTreeRef = ref(); //人员选择tree实例
 
     const data = reactive({
         //当前节点信息
@@ -359,23 +412,24 @@
             show: false,
             title: '',
             onOkLoading: true,
+            type: '',
             onOk: (newConfig) => {
                 return new Promise(async (resolve, reject) => {
                     let result = { success: false, msg: '' };
                     if (newConfig.value.type == 'addDepartment') {
                         let formData = addDeptFormRef.value?.y9FormRef?.model;
-                        let valid = await addDeptFormRef.value?.y9FormRef?.elFormRef?.validate(valid => valid);//获取表单验证结果;
+                        let valid = await addDeptFormRef.value?.y9FormRef?.elFormRef?.validate((valid) => valid); //获取表单验证结果;
                         if (!valid) {
                             reject();
                             return;
                         }
-                        await deptSaveOrUpdate(formData).then(async res => {
-                            result = res;
-                            //更新当前节点的children信息到树数据当中
-						    await props.handAssginNode({},currInfo.value.id,currInfo.value.id)//手动更新节点到tree
-
-                        }).catch(() => {});
-
+                        await deptSaveOrUpdate(formData)
+                            .then(async (res) => {
+                                result = res;
+                                //更新当前节点的children信息到树数据当中
+                                await props.handAssginNode({}, currInfo.value.id, currInfo.value.id); //手动更新节点到tree
+                            })
+                            .catch(() => {});
                     } else if (newConfig.value.type == 'addPerson') {
                         let formData = addPersonFormRef.value.personForm;
                         if (formData.jobIds.length === 0 && formData.positionIds.length === 0) {
@@ -391,30 +445,31 @@
                         } else {
                             formData = personFormData(formData);
 
-                            await personSaveOrUpdate(formData).then(res => {
-                                result = res;
-                                //手动更新tree的人员计数并更新子节点
-							    props.updateTreePersonCount(currInfo.value,1,currInfo.value.id);
-                            }).catch(() => {});
-
+                            await personSaveOrUpdate(formData)
+                                .then((res) => {
+                                    result = res;
+                                    //手动更新tree的人员计数并更新子节点
+                                    props.updateTreePersonCount(currInfo.value, 1, currInfo.value.id);
+                                })
+                                .catch(() => {});
                         }
                     } else if (newConfig.value.type == 'addGroup') {
                         let formData = addGroupFormRef.value?.y9FormRef?.model;
-                        let valid = await addGroupFormRef.value?.y9FormRef?.elFormRef?.validate(valid => valid);//获取表单验证结果
+                        let valid = await addGroupFormRef.value?.y9FormRef?.elFormRef?.validate((valid) => valid); //获取表单验证结果
                         if (!valid) {
                             reject();
                             return;
                         }
 
-                        await groupSaveOrUpdate(formData).then(async res => {
-                            result = res;
-                            //更新当前节点的children信息到树数据当中
-						    await props.handAssginNode({},currInfo.value.id,currInfo.value.id)//手动更新节点到tree
-                        }).catch(() => {});
-
+                        await groupSaveOrUpdate(formData)
+                            .then(async (res) => {
+                                result = res;
+                                //更新当前节点的children信息到树数据当中
+                                await props.handAssginNode({}, currInfo.value.id, currInfo.value.id); //手动更新节点到tree
+                            })
+                            .catch(() => {});
                     } else if (newConfig.value.type == 'sync') {
-
-                        let valid = await syncRef.value?.y9FormRef?.elFormRef?.validate(valid => valid);//获取表单验证结果
+                        let valid = await syncRef.value?.y9FormRef?.elFormRef?.validate((valid) => valid); //获取表单验证结果
                         if (!valid) {
                             reject();
                             return;
@@ -422,48 +477,51 @@
 
                         let formData = syncRef.value?.y9FormRef?.model;
                         const params = {
-                        	syncId: currInfo.value.id,
-                        	orgType: currInfo.value.orgType,
-                        	targetSysName: formData.targetSysName,
-                        	needRecursion: formData.needRecursion,
-                        }
-                        await sync(params).then(res => result = res).catch(() => {});
-
+                            syncId: currInfo.value.id,
+                            orgType: currInfo.value.orgType,
+                            targetSysName: formData.targetSysName,
+                            needRecursion: formData.needRecursion,
+                        };
+                        await sync(params)
+                            .then((res) => (result = res))
+                            .catch(() => {});
                     } else if (newConfig.value.type == 'selectPerson') {
-
-
                         let orgBaseIds = selectPersonTreeRef.value?.y9TreeRef?.getCheckedKeys(true);
 
-						if (orgBaseIds.length == 0) {
-						    ElNotification({
-						        title: t('失败'),
-						        message: t('请选择人员'),
-						        type: 'error',
-						        duration: 2000,
-						        offset: 80,
-						    });
-						    reject();
-						    return;
-						}
-                        await savePersons(currInfo.value.id, orgBaseIds.toString()).then(async res => {
-                            result = res;
-                            //更新当前节点的人员计数信息
-						    if(props.getTreeData){
-                                //原本的人数
-                                const originCount = currInfo.value.personCount;
+                        if (orgBaseIds.length == 0) {
+                            ElNotification({
+                                title: t('失败'),
+                                message: t('请选择人员'),
+                                type: 'error',
+                                duration: 2000,
+                                offset: 80,
+                            });
+                            reject();
+                            return;
+                        }
+                        await savePersons(currInfo.value.id, orgBaseIds.toString())
+                            .then(async (res) => {
+                                result = res;
+                                //更新当前节点的人员计数信息
+                                if (props.getTreeData) {
+                                    //原本的人数
+                                    const originCount = currInfo.value.personCount;
 
-                                //获取最新的人数
-                                let res = await getAllPersonsCount(currInfo.value.id, currInfo.value.orgType);//获取人员数量
-                                const newCount =  res.data;//最新的人数
+                                    //获取最新的人数
+                                    let res = await getAllPersonsCount(currInfo.value.id, currInfo.value.orgType); //获取人员数量
+                                    const newCount = res.data; //最新的人数
 
-                                //手动更新tree的人员计数并更新子节点
-                                props.updateTreePersonCount(currInfo.value,(newCount - originCount),currInfo.value.id);//手动更新tree的人员计数
-
-                            }
-                        }).catch(() => {});
-
+                                    //手动更新tree的人员计数并更新子节点
+                                    props.updateTreePersonCount(
+                                        currInfo.value,
+                                        newCount - originCount,
+                                        currInfo.value.id
+                                    ); //手动更新tree的人员计数
+                                }
+                            })
+                            .catch(() => {});
                     } else if (newConfig.value.type == 'move') {
-						const selectIds  = moveSelectTreeRef.value?.y9TreeRef?.getCheckedKeys();
+                        const selectIds = moveSelectTreeRef.value?.y9TreeRef?.getCheckedKeys();
                         if (selectIds.length == 0) {
                             ElNotification({
                                 title: t('失败'),
@@ -475,35 +533,37 @@
                             reject();
                             return;
                         }
-						const  targetId  = selectIds[0];
+                        const targetId = selectIds[0];
 
                         if (currInfo.value.orgType == 'Department') {
-                            await moveDept(currInfo.value.id, targetId).then(res => result = res).catch(() => {});
+                            await moveDept(currInfo.value.id, targetId)
+                                .then((res) => (result = res))
+                                .catch(() => {});
                         } else if (currInfo.value.orgType == 'Person') {
-                            await movePerson(currInfo.value.id, targetId).then(res => result = res).catch(() => {});
+                            await movePerson(currInfo.value.id, targetId)
+                                .then((res) => (result = res))
+                                .catch(() => {});
                         }
 
-						//1.删除被移动的节点,
-						props.getTreeInstance().remove(currInfo.value);
-						//2.重新请求，移动的目标节点，获得最新的子节点信息，然后手动点击该节点
-						await props.handAssginNode({},targetId,targetId,true)
-
-
-
+                        //1.删除被移动的节点,
+                        props.getTreeInstance().remove(currInfo.value);
+                        //2.重新请求，移动的目标节点，获得最新的子节点信息，然后手动点击该节点
+                        await props.handAssginNode({}, targetId, targetId, true);
                     } else if (newConfig.value.type == 'sort') {
                         let tableData = sortRef.value.tableConfig.tableData;
                         const ids = [];
                         tableData.forEach((element) => {
                             ids.push(element.id);
                         });
-                        await saveOrder(currInfo.value.id, ids.toString()).then(async res => {
-                            result = res;
-                            if (result.success) {
-                                //更新当前节点的children信息到树数据当中
-                                await props.handAssginNode({},currInfo.value.id,currInfo.value.id)//手动更新节点到tree
-                            }
-                        }).catch(() => {});
-                       
+                        await saveOrder(currInfo.value.id, ids.toString())
+                            .then(async (res) => {
+                                result = res;
+                                if (result.success) {
+                                    //更新当前节点的children信息到树数据当中
+                                    await props.handAssginNode({}, currInfo.value.id, currInfo.value.id); //手动更新节点到tree
+                                }
+                            })
+                            .catch(() => {});
                     }
                     ElNotification({
                         title: result.success ? t('成功') : t('失败'),
@@ -512,18 +572,17 @@
                         duration: 2000,
                         offset: 80,
                     });
-                    if(result.success) {
-						resolve();
-					 }else {
-						reject();
-					 }
+                    if (result.success) {
+                        resolve();
+                    } else {
+                        reject();
+                    }
                 });
             },
             onReset: async (newConfig) => {
                 if (newConfig.value.type == 'sync') {
                     syncRef.value.y9FormRef.model.targetSysName = undefined;
                 } else if (newConfig.value.type == 'addGroup') {
-
                     addGroupFormRef.value.y9FormRef.model.name = '';
                     addGroupFormRef.value.y9FormRef.model.description = '';
                 } else if (newConfig.value.type == 'addPerson') {
@@ -532,26 +591,18 @@
                         let valid = await addPersonFormRef.value.validForm();
                         if (valid) {
                             addPersonStep.value = 2;
-                            newConfig.value.resetText = computed(() => t("上一步"));
-                            newConfig.value.okText = computed(() => t("保存"));
+                            newConfig.value.resetText = computed(() => t('上一步'));
+                            newConfig.value.okText = computed(() => t('保存'));
                         }
                     } else if (addPersonStep.value === 2) {
                         addPersonStep.value = 1;
-                        newConfig.value.resetText = computed(() => t("下一步"));
+                        newConfig.value.resetText = computed(() => t('下一步'));
                         newConfig.value.okText = '';
                     }
                 }
             },
         },
-        orgFormRef: '', //编辑机构表单实例
-        deptFormRef: '', //编辑部门表单实例
-        personFormRef: '', //编辑人员表单实例
-        groupFormRef: '', //编辑用户组表单实例
-        addDeptFormRef: '', //新增部门表单实例
-        addPersonFormRef: '', //新增人员表单实例
-        addGroupFormRef: '', //新增用户组表单实例
-        syncRef: '',
-        sortRef: '',
+
         treeApiObj: {
             //tree接口对象
             topLevel: treeInterface,
@@ -562,33 +613,33 @@
             search: {
                 api: searchByName,
                 params: {
-                    treeType: 'tree_type_deptAndPerson',
+                    treeType: 'tree_type_org_person',
                 },
             },
         },
         deptTreeApiObj: {
             //tree接口对象
             topLevel: treeInterface,
-			childLevel: {
-			    api: async () => {
-					const res = await getTreeItemById({
-						parentId:selectTreeExpandNode.value.id,
-						treeType: 'tree_type_dept',
-						disabled: false
-					})
+            childLevel: {
+                api: async () => {
+                    const res = await getTreeItemById({
+                        parentId: selectTreeExpandNode.value.id,
+                        treeType: 'tree_type_dept',
+                        disabled: false,
+                    });
 
-					const data = res.data || []
+                    const data = res.data || [];
 
-					data.forEach(item => {//禁止选择移动到自己本身,也禁止选择移动到自身的子节点
-						if(item.id === currInfo.value.id || selectTreeExpandNode.value.disabled){
-							item.disabled = true;
-						}
-					})
-					return data
-
-				},
-			    params: {},
-			},
+                    data.forEach((item) => {
+                        //禁止选择移动到自己本身,也禁止选择移动到自身的子节点
+                        if (item.id === currInfo.value.id || selectTreeExpandNode.value.disabled) {
+                            item.disabled = true;
+                        }
+                    });
+                    return data;
+                },
+                params: {},
+            },
             search: {
                 api: searchByName,
                 params: {
@@ -596,8 +647,6 @@
                 },
             },
         },
-        moveSelectTreeRef: '',//移动选择tree实例
-		selectPersonTreeRef:'',//人员选择tree实例
     });
 
     let {
@@ -611,18 +660,7 @@
         isEditState,
         saveFormBtnLoading,
         dialogConfig,
-        orgFormRef,
-        deptFormRef,
-        personFormRef,
-        groupFormRef,
-        addDeptFormRef,
-        addPersonFormRef,
-        addGroupFormRef,
-        syncRef,
         loading,
-        moveSelectTreeRef,
-		selectPersonTreeRef,
-        sortRef,
     } = toRefs(data);
 
     watch(
@@ -638,23 +676,19 @@
         }
     );
 
-
-
-
-	//移动tree点击选择框时触发
-	const onCheckChange = (node,isChecked) => {
-		//已经选择的节点
-		const alreadyCheckedNode = moveSelectTreeRef.value?.y9TreeRef?.getCheckedNodes();
-		//如果是选中并且存在已经选择的节点超过1个，则取消其他选择，做成单选效果
-		if(isChecked && alreadyCheckedNode.length>1){
-			alreadyCheckedNode.forEach(item => {
-				if(item.id !== node.id){
-					moveSelectTreeRef.value?.y9TreeRef?.setChecked(item,false,false);
-				}
-			})
-		}
-	}
-
+    //移动tree点击选择框时触发
+    const onCheckChange = (node, isChecked) => {
+        //已经选择的节点
+        const alreadyCheckedNode = moveSelectTreeRef.value?.y9TreeRef?.getCheckedNodes();
+        //如果是选中并且存在已经选择的节点超过1个，则取消其他选择，做成单选效果
+        if (isChecked && alreadyCheckedNode.length > 1) {
+            alreadyCheckedNode.forEach((item) => {
+                if (item.id !== node.id) {
+                    moveSelectTreeRef.value?.y9TreeRef?.setChecked(item, false, false);
+                }
+            });
+        }
+    };
 
     function personFormData(formData) {
         if (formData.sex == '男') {
@@ -677,14 +711,14 @@
 
         if (formData.jobIds || formData.positionIds) {
             //格式化职位数据
-            let jobIds = [];
+            let jobIds = [] as any;
             formData.jobIds.forEach((item) => {
                 jobIds.push(item.originalId);
             });
             formData.jobIds = jobIds;
 
             //格式化岗位数据
-            let positionIds = [];
+            let positionIds = [] as any;
             formData.positionIds.forEach((item) => {
                 positionIds.push(item.originalId);
             });
@@ -696,18 +730,18 @@
 
     const showBtn = computed(() => {
         return (btnType) => {
-            if (btnType == 'exportXml') { //导出XML
-
+            if (btnType == 'exportXml') {
+                //导出XML
 
                 if (currInfo.value.orgType == 'Organization') {
                     return true;
                 }
-            } else if (btnType == 'uploadOrgXLS') { //上传组织机构信息XLS
+            } else if (btnType == 'uploadOrgXLS') {
+                //上传组织机构信息XLS
                 if (currInfo.value.orgType == 'Organization') {
                     return true;
                 }
-            }
-			else if (btnType == 'move') {
+            } else if (btnType == 'move') {
                 if (currInfo.value.orgType == 'Department' || currInfo.value.orgType == 'Person') {
                     return true;
                 }
@@ -721,7 +755,7 @@
                 ) {
                     return true;
                 }
-            }else if (btnType == 'disabled' || btnType == 'unlock' || btnType == 'resetPassword') {
+            } else if (btnType == 'disabled' || btnType == 'unlock' || btnType == 'resetPassword') {
                 //设置禁用、账号解锁、重置密码
 
                 if (currInfo.value.orgType == 'Person') {
@@ -759,7 +793,7 @@
             loading.value = true;
             saveFormBtnLoading.value = true;
             if (currInfo.value.orgType == 'Organization') {
-                let valid = await orgFormRef.value?.y9FormRef?.elFormRef?.validate(valid => valid);//获取表单验证结果
+                let valid = await orgFormRef.value?.y9FormRef?.elFormRef?.validate((valid) => valid); //获取表单验证结果
                 if (valid) {
                     const result = await orgSaveOrUpdate(orgFormRef.value?.y9FormRef?.model);
                     ElNotification({
@@ -770,16 +804,15 @@
                         offset: 80,
                     });
                     if (result.success) {
+                        //修改后的数据更新到对应的树数据当中
+                        await props.handAssginNode(result.data, currInfo.value.id); //手动更新节点到tree
 
-						//修改后的数据更新到对应的树数据当中
-						await props.handAssginNode(result.data,currInfo.value.id)//手动更新节点到tree
-
-						//取消编辑状态
+                        //取消编辑状态
                         isEditState.value = false;
                     }
                 }
             } else if (currInfo.value.orgType == 'Group') {
-                let valid = await groupFormRef.value?.y9FormRef?.elFormRef?.validate(valid => valid);//获取表单验证结果
+                let valid = await groupFormRef.value?.y9FormRef?.elFormRef?.validate((valid) => valid); //获取表单验证结果
                 if (valid) {
                     const result = await groupSaveOrUpdate(groupFormRef.value?.y9FormRef?.model);
                     ElNotification({
@@ -790,10 +823,9 @@
                         offset: 80,
                     });
                     if (result.success) {
-
-						//修改后的数据更新到对应的树数据当中
-						await props.handAssginNode(result.data,currInfo.value.id);//手动更新节点到tree
-						//取消编辑状态
+                        //修改后的数据更新到对应的树数据当中
+                        await props.handAssginNode(result.data, currInfo.value.id); //手动更新节点到tree
+                        //取消编辑状态
                         isEditState.value = false;
                     }
                 }
@@ -811,19 +843,17 @@
                         offset: 80,
                     });
                     if (result.success) {
-
                         personFormRef.value.getPersonExt();
 
-						//修改后的数据更新到对应的树数据当中
-						await props.handAssginNode(result.data,currInfo.value.id);//手动更新节点到tree
+                        //修改后的数据更新到对应的树数据当中
+                        await props.handAssginNode(result.data, currInfo.value.id); //手动更新节点到tree
 
-
-						//取消编辑状态
+                        //取消编辑状态
                         isEditState.value = false;
                     }
                 }
             } else if (currInfo.value.orgType == 'Department') {
-                let valid = await deptFormRef.value?.y9FormRef?.elFormRef?.validate(valid => valid);//获取表单验证结果
+                let valid = await deptFormRef.value?.y9FormRef?.elFormRef?.validate((valid) => valid); //获取表单验证结果
                 if (valid) {
                     const result = await deptSaveOrUpdate(deptFormRef.value?.y9FormRef?.model);
                     ElNotification({
@@ -834,13 +864,11 @@
                         offset: 80,
                     });
                     if (result.success) {
+                        //修改后的数据更新到对应的树数据当中
+                        await props.handAssginNode(result.data, currInfo.value.id); //手动更新节点到tree
 
-						//修改后的数据更新到对应的树数据当中
-						await props.handAssginNode(result.data,currInfo.value.id);//手动更新节点到tree
-
-						//取消编辑状态
+                        //取消编辑状态
                         isEditState.value = false;
-
                     }
                 }
             }
@@ -855,7 +883,7 @@
             type == 'sync' ||
             type == 'extendAttr' ||
             type == 'sort' ||
-			type == 'uploadOrgXLS'
+            type == 'uploadOrgXLS'
         ) {
             //点击按钮显示弹窗
             addPersonStep.value = 1;
@@ -864,37 +892,45 @@
             Object.assign(configInfo, {
                 show: true,
                 title: computed(() => t(`${title}`)),
-                okText: type == 'extendAttr' || (type == 'addPerson' && addPersonStep.value === 1) ? false : computed(() => t("保存")),
+                okText:
+                    type == 'extendAttr' || (type == 'addPerson' && addPersonStep.value === 1)
+                        ? false
+                        : computed(() => t('保存')),
                 resetText:
                     type == 'addPosition' || type == 'sync'
-                        ? computed(() => t("重置"))
+                        ? computed(() => t('重置'))
                         : type == 'addPerson' && addPersonStep.value === 1
-                        ? computed(() => t("下一步"))
+                        ? computed(() => t('下一步'))
                         : false,
-                cancelText: type == 'sync' || type == 'extendAttr' ? false : computed(() => t("关闭")),
-                width: type == 'selectPerson' || type == 'move' || type == 'sync' || type == 'uploadOrgXLS' ? '30%' : '60%',
+                cancelText: type == 'sync' || type == 'extendAttr' ? false : computed(() => t('关闭')),
+                width:
+                    type == 'selectPerson' || type == 'move' || type == 'sync' || type == 'uploadOrgXLS'
+                        ? '30%'
+                        : '60%',
                 type: type,
                 showFooter: type == 'uploadOrgXLS' ? false : true,
-				columns: type == 'sort'?[
-							{
-								type:"radio",
-								title: computed(() => t("请选择")),
-								width:200,
-							},
-							{
-								title: computed(() => t("名称")),
-								key: "name",
-							},
-							{
-								title: computed(() => t("类别")),
-								key: "orgType",
-							},
-						]:[]
+                columns:
+                    type == 'sort'
+                        ? [
+                              {
+                                  type: 'radio',
+                                  title: computed(() => t('请选择')),
+                                  width: 200,
+                              },
+                              {
+                                  title: computed(() => t('名称')),
+                                  key: 'name',
+                              },
+                              {
+                                  title: computed(() => t('类别')),
+                                  key: 'orgType',
+                              },
+                          ]
+                        : [],
             });
 
             // 赋值
             dialogConfig.value = configInfo;
-
         } else if (type == 'disabled' || type == 'unlock' || type == 'resetPassword' || type == 'updateIcon') {
             ElMessageBox.confirm(`${t('确定要')}${title}`, t('提示'), {
                 confirmButtonText: t('确定'),
@@ -903,25 +939,25 @@
             })
                 .then(async () => {
                     loading.value = true;
-                    let res = { success: false, msg: '' };
+                    let res = { success: false, msg: '', data: {} as any };
                     if (type == 'resetPassword') {
                         res = await resetPassword(currInfo.value.id);
                     } else if (type == 'disabled') {
                         res = await changeDisabled(currInfo.value.id);
                         if (res.success) {
-							//更新当前节点的人员计数信息
-							if(props.getTreeData){
-								//1.更新当前节点显示的名称
-								const currNode = props.findNode(props.getTreeData(),currInfo.value.id);
-								currNode.disabled = res.data.disabled;
-								if(res.data.disabled){
-									 currNode.newName =  currNode.name + "[禁用]";//显示名称
-								}else{
-									currNode.newName =  currNode.name;//显示名称
-								}
-								//2.更新其父节点的人员数量
-								props.updateTreePersonCount(currNode,res.data.disabled?-1:1);//手动更新tree的人员计数
-							}
+                            //更新当前节点的人员计数信息
+                            if (props.getTreeData) {
+                                //1.更新当前节点显示的名称
+                                const currNode = props.findNode(props.getTreeData(), currInfo.value.id);
+                                currNode.disabled = res.data.disabled;
+                                if (res.data.disabled) {
+                                    currNode.newName = currNode.name + '[禁用]'; //显示名称
+                                } else {
+                                    currNode.newName = currNode.name; //显示名称
+                                }
+                                //2.更新其父节点的人员数量
+                                props.updateTreePersonCount(currNode, res.data.disabled ? -1 : 1); //手动更新tree的人员计数
+                            }
                         }
                     } else if (type == 'updateIcon') {
                         //更新图标
@@ -945,15 +981,16 @@
                     });
                 });
         } else if (type == 'exportXml') {
-          const aDom = document.createElement('a');
-          aDom.href =  import.meta.env.VUE_APP_CONTEXT +
+            const aDom = document.createElement('a');
+            aDom.href =
+                import.meta.env.VUE_APP_CONTEXT +
                 'api/rest/impExp/exportOrgTreeXml?orgBaseId=' +
                 currInfo.value.id +
                 '&resourceName=&access_token=' +
                 y9_storage.getObjectItem(settings.siteTokenKey, 'access_token');
-          aDom.target = "blank";
-          aDom.click()
-        }else if (type == 'exportXls') {
+            aDom.target = 'blank';
+            aDom.click();
+        } else if (type == 'exportXls') {
             const url = ref('');
 
             url.value =
@@ -995,14 +1032,12 @@
             default:
                 break;
         }
-
-
     }
 </script>
 
 <style lang="scss" scoped>
     .slot-header {
-		width: 100%;
+        width: 100%;
         display: flex;
         justify-content: space-between;
         padding: 16px 16px 0;

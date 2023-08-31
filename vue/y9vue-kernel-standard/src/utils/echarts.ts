@@ -19,19 +19,19 @@ import { CanvasRenderer } from 'echarts/renderers';
 import {
   TreeChart,
   TreeSeriesOption,
-  BarChart, 
-  LineChart, 
-  PieChart, 
-  GaugeChart 
+  BarChart,
+  LineChart,
+  PieChart,
+  GaugeChart
 } from 'echarts/charts';
 
 
 // 引入提示框，标题，直角坐标系，数据集，内置数据转换器组件，组件后缀都为 Component
 import {
-  TooltipComponent, 
+  TooltipComponent,
   TooltipComponentOption,
-  PolarComponent, 
-  LegendComponent, 
+  PolarComponent,
+  LegendComponent,
   GridComponent
 } from 'echarts/components';
 
@@ -40,14 +40,14 @@ import {
 
 // 注册必须的组件
 echarts.use([
-  TooltipComponent, 
-  TreeChart, 
+  TooltipComponent,
+  TreeChart,
   CanvasRenderer,
-  PolarComponent, 
-  LineChart, 
-  GridComponent, 
-  LegendComponent, 
-  BarChart, 
+  PolarComponent,
+  LineChart,
+  GridComponent,
+  LegendComponent,
+  BarChart,
   UniversalTransition,
   PieChart,
   LabelLayout,

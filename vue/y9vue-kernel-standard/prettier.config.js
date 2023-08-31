@@ -2,12 +2,12 @@ module.exports = {
     printWidth: 120,
     tabWidth: 4,
     useTabs: false,
-    semi: true, // 未尾逗号
+    semi: true, // 末尾分号
     vueIndentScriptAndStyle: true,
     singleQuote: true, // 单引号
     quoteProps: 'as-needed',
     bracketSpacing: true,
-    trailingComma: 'es5', // 未尾分号
+    trailingComma: 'none', // 数组末尾逗号
     jsxBracketSameLine: false,
     jsxSingleQuote: false,
     arrowParens: 'always',

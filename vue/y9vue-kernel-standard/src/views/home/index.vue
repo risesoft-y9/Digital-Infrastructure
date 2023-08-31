@@ -3,7 +3,7 @@
  * @Date: 2022-04-01 13:23:20
  * @LastEditors: hongzhew
  * @LastEditTime: 2022-04-13 22:15:18
- * @Description: 
+ * @Description:
 -->
 <!--  -->
 <template>
@@ -497,8 +497,8 @@ import { ref } from 'vue'
 import { MoreFilled, Right, Switch } from '@element-plus/icons'
 import { reactive } from 'vue'
 import { ElConfigProvider } from 'element-plus'
-import zhCn from 'element-plus/lib/locale/lang/zh-cn'
-import en from 'element-plus/lib/locale/lang/en'
+import zhCn from 'element-plus/dist/locale/zh-cn.mjs'
+import en from 'element-plus/dist/locale/en.mjs'
 import { useSettingStore } from "@/store/modules/settingStore";
 const settingStore = useSettingStore()
 const locale = settingStore.getWebLanguage == 'zh'? zhCn : en;

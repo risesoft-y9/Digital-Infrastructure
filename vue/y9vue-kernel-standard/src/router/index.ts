@@ -28,6 +28,7 @@ import subDomainRouter from './modules/subDomainRouter';
 import sysManagerLogRouter from './modules/sysManagerLogRouter';
 import userLogRouter from './modules/userLogRouter';
 import jobRouter from './modules/jobRouter';
+import permission from './modules/permission';
 
 
 //constantRoutes为不需要动态判断权限的路由，如登录、404、500等
@@ -69,6 +70,7 @@ export const asyncRoutes = [
     appRoleRouter,
     publicRoleRouter,
     appResourceRouter,
+    permission,
     dictionaryRouter,
     iconManagerRouter,
     userLogRouter,
