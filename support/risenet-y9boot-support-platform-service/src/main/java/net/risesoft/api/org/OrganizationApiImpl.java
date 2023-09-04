@@ -66,7 +66,7 @@ public class OrganizationApiImpl implements OrganizationApi {
         @RequestParam("organizationId") @NotBlank String organizationId) {
         Y9LoginUserHolder.setTenantId(tenantId);
 
-        Y9Organization y9Organization = orgOrganizationService.findById(organizationId);
+        Y9Organization y9Organization = orgOrganizationService.findById(organizationId).orElse(null);
         return Y9ModelConvertUtil.convert(y9Organization, Organization.class);
     }
 

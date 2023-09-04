@@ -2,6 +2,7 @@ package net.risesoft.service.org.impl;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
@@ -154,7 +155,7 @@ public class Y9PositionServiceImpl implements Y9PositionService {
     }
 
     @Override
-    public Y9Position findById(String id) {
+    public Optional<Y9Position> findById(String id) {
         return y9PositionManager.findById(id);
     }
 

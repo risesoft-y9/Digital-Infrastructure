@@ -1,6 +1,7 @@
 package net.risesoft.service.org;
 
 import java.util.List;
+import java.util.Optional;
 
 import net.risesoft.entity.Y9Manager;
 import net.risesoft.y9.exception.Y9NotFoundException;
@@ -85,7 +86,7 @@ public interface Y9ManagerService {
      * @param id 管理员id
      * @return 管理员对象 或 null
      */
-    Y9Manager findById(String id);
+    Optional<Y9Manager> findById(String id);
 
     /**
      * 根据id获取管理员信息

@@ -1,6 +1,7 @@
 package net.risesoft.service.org;
 
 import java.util.List;
+import java.util.Optional;
 
 import net.risesoft.entity.Y9Organization;
 import net.risesoft.y9.exception.Y9NotFoundException;
@@ -44,7 +45,7 @@ public interface Y9OrganizationService {
      * @param id 组织id
      * @return 组织机构对象 或 null
      */
-    Y9Organization findById(String id);
+    Optional<Y9Organization> findById(String id);
 
     /**
      * 根据主键id从缓存中获取组织机构实例

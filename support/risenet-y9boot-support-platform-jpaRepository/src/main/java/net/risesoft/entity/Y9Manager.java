@@ -25,7 +25,6 @@ import net.risesoft.enums.SexEnum;
  * @date 2022/2/10
  */
 @Entity
-// @EntityListeners({Y9ManagerListener.class})
 @Table(name = "Y9_ORG_MANAGER")
 @org.hibernate.annotations.Table(comment = "三员表", appliesTo = "Y9_ORG_MANAGER")
 @Data
@@ -147,8 +146,4 @@ public class Y9Manager extends Y9OrgBase {
     @Column(name = "MODIFY_PWD_TIME", length = 50)
     private String modifyPwdTime;
 
-    @Override
-    public int compareTo(Y9OrgBase o) {
-        return this.tabIndex.compareTo(o.getTabIndex());
-    }
 }

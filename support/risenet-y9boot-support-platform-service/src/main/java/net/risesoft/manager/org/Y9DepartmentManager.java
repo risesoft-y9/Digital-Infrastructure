@@ -1,5 +1,7 @@
 package net.risesoft.manager.org;
 
+import java.util.Optional;
+
 import net.risesoft.entity.Y9Department;
 
 /**
@@ -16,7 +18,7 @@ public interface Y9DepartmentManager {
 
     void delete(Y9Department y9Department);
 
-    Y9Department findById(String id);
+    Optional<Y9Department> findById(String id);
 
     Y9Department updateTabIndex(String id, int tabIndex);
 }

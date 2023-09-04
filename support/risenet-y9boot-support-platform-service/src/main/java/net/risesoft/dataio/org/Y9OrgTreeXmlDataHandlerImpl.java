@@ -567,10 +567,12 @@ public class Y9OrgTreeXmlDataHandlerImpl implements Y9OrgTreeDataHandler {
                 organizationType = currentNode.elementText("organizationType");
                 virtual = currentNode.elementText("virtual");
 
-                org = y9OrganizationService.findById(uid);
-                if (org == null) {
+                Optional<Y9Organization> y9OrganizationOptional = y9OrganizationService.findById(uid);
+                if (y9OrganizationOptional.isEmpty()) {
                     org = new Y9Organization();
                     org.setId(uid);
+                } else {
+                    org = y9OrganizationOptional.get();
                 }
                 org.setDescription(description == null ? "" : description);
                 org.setCustomId(customId == null ? "" : customId);
@@ -630,15 +632,17 @@ public class Y9OrgTreeXmlDataHandlerImpl implements Y9OrgTreeDataHandler {
                 Element parentNode = (Element)document.selectSingleNode("/org/*[include/Department=\"" + uid + "\"]");
                 String pid = parentNode.attributeValue("uid");
                 if (OrgTypeEnum.ORGANIZATION.getEnName().equals(parentNode.getName())) {
-                    parent = y9OrganizationService.findById(pid);
+                    parent = y9OrganizationService.findById(pid).orElse(null);
                 } else {
-                    parent = y9DepartmentService.findById(pid);
+                    parent = y9DepartmentService.findById(pid).orElse(null);
                 }
 
-                dept = y9DepartmentService.findById(uid);
-                if (dept == null) {
+                Optional<Y9Department> y9DepartmentOptional = y9DepartmentService.findById(uid);
+                if (y9DepartmentOptional.isEmpty()) {
                     dept = new Y9Department();
                     dept.setId(uid);
+                } else {
+                    dept = y9DepartmentOptional.get();
                 }
 
                 dept.setName(name == null ? "" : name);
@@ -694,10 +698,12 @@ public class Y9OrgTreeXmlDataHandlerImpl implements Y9OrgTreeDataHandler {
                 category = currentNode.elementText("category");
                 tabIndex = currentNode.elementText("tabIndex");
 
-                prop = y9DepartmentPropService.findById(uid);
+                Optional<Y9DepartmentProp> y9DepartmentPropOptional = y9DepartmentPropService.findById(uid);
                 if (prop == null) {
                     prop = new Y9DepartmentProp();
                     prop.setId(uid);
+                } else {
+                    prop = y9DepartmentPropOptional.get();
                 }
                 prop.setDeptId(deptId == null ? "" : deptId);
                 prop.setOrgBaseId(orgBaseId == null ? "" : orgBaseId);
@@ -724,9 +730,9 @@ public class Y9OrgTreeXmlDataHandlerImpl implements Y9OrgTreeDataHandler {
 
                 String pid = parentNode.attributeValue("uid");
                 if (OrgTypeEnum.ORGANIZATION.getEnName().equals(parentNode.getName())) {
-                    parent = y9OrganizationService.findById(pid);
+                    parent = y9OrganizationService.findById(pid).orElse(null);
                 } else {
-                    parent = y9DepartmentService.findById(pid);
+                    parent = y9DepartmentService.findById(pid).orElse(null);
                 }
 
                 group = y9GroupService.findById(uid).orElse(new Y9Group());
@@ -779,15 +785,17 @@ public class Y9OrgTreeXmlDataHandlerImpl implements Y9OrgTreeDataHandler {
                     + "\"] | /org/Department[include/Position=\"" + uid + "\"]");
                 String pid = parentNode.attributeValue("uid");
                 if (OrgTypeEnum.ORGANIZATION.getEnName().equals(parentNode.getName())) {
-                    parent = y9OrganizationService.findById(pid);
+                    parent = y9OrganizationService.findById(pid).orElse(null);
                 } else {
-                    parent = y9DepartmentService.findById(pid);
+                    parent = y9DepartmentService.findById(pid).orElse(null);
                 }
 
-                position = y9PositionService.findById(uid);
-                if (position == null) {
+                Optional<Y9Position> y9PositionOptional = y9PositionService.findById(uid);
+                if (y9PositionOptional.isEmpty()) {
                     position = new Y9Position();
                     position.setId(uid);
+                } else {
+                    position = y9PositionOptional.get();
                 }
                 position.setName(name == null ? "" : name);
                 position.setDescription(description == null ? "" : description);
@@ -867,15 +875,17 @@ public class Y9OrgTreeXmlDataHandlerImpl implements Y9OrgTreeDataHandler {
                     + "\"] | /org/Department[include/Person=\"" + uid + "\"]");
                 String pid = parentNode.attributeValue("uid");
                 if (OrgTypeEnum.ORGANIZATION.getEnName().equals(parentNode.getName())) {
-                    parent = y9OrganizationService.findById(pid);
+                    parent = y9OrganizationService.findById(pid).orElse(null);
                 } else {
-                    parent = y9DepartmentService.findById(pid);
+                    parent = y9DepartmentService.findById(pid).orElse(null);
                 }
 
-                person = y9PersonService.findById(uid);
-                if (person == null) {
+                Optional<Y9Person> y9PersonOptional = y9PersonService.findById(uid);
+                if (y9PersonOptional.isEmpty()) {
                     person = new Y9Person();
                     person.setId(uid);
+                } else {
+                    person = y9PersonOptional.get();
                 }
 
                 person.setName(name == null ? "" : name);

@@ -3,6 +3,7 @@ package net.risesoft.service.org.impl;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
+import java.util.Optional;
 
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.context.event.EventListener;
@@ -56,12 +57,9 @@ public class Y9ManagerImpl implements Y9ManagerService {
     @Override
     @Transactional(readOnly = false)
     public Y9Manager changeDisabled(String id) {
-        Y9Manager y9Manager = this.findById(id);
+        Y9Manager y9Manager = this.getById(id);
         y9Manager.setDisabled(!y9Manager.getDisabled());
         y9Manager = saveOrUpdate(y9Manager);
-
-        Y9Context.publishEvent(new Y9EntityUpdatedEvent<Y9Manager>(y9Manager, y9Manager));
-
         return y9Manager;
     }
 
@@ -214,8 +212,8 @@ public class Y9ManagerImpl implements Y9ManagerService {
     }
 
     @Override
-    public Y9Manager findById(String id) {
-        return y9ManagerRepository.findById(id).orElse(null);
+    public Optional<Y9Manager> findById(String id) {
+        return y9ManagerRepository.findById(id);
     }
 
     @Override
@@ -325,10 +323,9 @@ public class Y9ManagerImpl implements Y9ManagerService {
         y9Manager.setTabIndex(compositeOrgBaseManager.getMaxSubTabIndex(y9Manager.getParentId(), OrgTypeEnum.MANAGER));
         y9Manager.setDn(OrgLevelConsts.getOrgLevel(OrgTypeEnum.MANAGER) + y9Manager.getName() + OrgLevelConsts.SEPARATOR
             + y9OrgBase.getDn());
+        // 系统管理员新建的子域三员默认禁用 需安全管理员启用
         y9Manager.setDisabled(true);
-        if (mobile != null && mobile.length() == MOBILE_NUMBER_LENGTH) {
-            password = mobile.substring(mobile.length() - 6);
-        }
+
         y9Manager.setPassword(Y9MessageDigest.hashpw(password));
         StringBuilder sb = new StringBuilder();
         compositeOrgBaseManager.getGuidPathRecursiveUp(sb, y9Manager);

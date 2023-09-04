@@ -1,5 +1,7 @@
 package net.risesoft.manager.org;
 
+import java.util.Optional;
+
 import net.risesoft.entity.Y9Job;
 
 /**
@@ -11,7 +13,7 @@ import net.risesoft.entity.Y9Job;
  */
 public interface Y9JobManager {
 
-    Y9Job findById(String id);
+    Optional<Y9Job> findById(String id);
 
     Y9Job getById(String id);
 

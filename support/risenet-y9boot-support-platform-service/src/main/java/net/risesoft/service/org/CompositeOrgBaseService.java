@@ -114,14 +114,13 @@ public interface CompositeOrgBaseService {
     List<Y9OrgBase> getTree(String id, String treeType, boolean isPersonIncluded, boolean disabled);
 
     /**
-     * 获取部门树
+     * 子域三员获取部门树
      *
      * @param id
      * @param treeType
-     * @param personId
      * @return
      */
-    List<Y9OrgBase> getTree(String id, String treeType, String personId);
+    List<Y9OrgBase> getTree4DeptManager(String id, String treeType);
 
     /**
      * 根据组织节点id向下递归获取所有组织节点
@@ -220,4 +219,12 @@ public interface CompositeOrgBaseService {
      */
     Y9OrgBase getOrgUnitOrganization(String orgUnitId);
 
+    /**
+     * 根据name，和结构树类型查询机构主体
+     *
+     * @param name
+     * @param treeType
+     * @return
+     */
+    List<Y9OrgBase> treeSearch4DeptManager(String name, String treeType);
 }

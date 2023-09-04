@@ -1,6 +1,7 @@
 package net.risesoft.service.org;
 
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.data.domain.Page;
 
@@ -33,7 +34,7 @@ public interface Y9JobService {
      * @param id id
      * @return {@link Y9Job}
      */
-    Y9Job findById(String id);
+    Optional<Y9Job> findById(String id);
 
     /**
      * 根据id获取职位

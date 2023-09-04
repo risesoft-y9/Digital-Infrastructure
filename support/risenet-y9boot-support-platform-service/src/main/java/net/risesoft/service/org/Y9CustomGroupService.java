@@ -37,7 +37,7 @@ public interface Y9CustomGroupService {
      * @param id 唯一标识
      * @return 自定义用户组对象 或 null
      */
-    Y9CustomGroup findById(String id);
+    Optional<Y9CustomGroup> findById(String id);
 
     /**
      * 根据id获取自定义用户组

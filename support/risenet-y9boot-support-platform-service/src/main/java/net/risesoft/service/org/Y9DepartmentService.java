@@ -1,6 +1,7 @@
 package net.risesoft.service.org;
 
 import java.util.List;
+import java.util.Optional;
 
 import net.risesoft.entity.Y9Department;
 import net.risesoft.entity.Y9OrgBase;
@@ -43,7 +44,7 @@ public interface Y9DepartmentService {
      * @param id 部门id
      * @return 部门对象 或 null
      */
-    Y9Department findById(String id);
+    Optional<Y9Department> findById(String id);
 
     /**
      * 根据主键id获取部门实例

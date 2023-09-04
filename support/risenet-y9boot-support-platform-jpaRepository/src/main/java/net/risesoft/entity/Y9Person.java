@@ -165,9 +165,4 @@ public class Y9Person extends Y9OrgBase {
         super.setOrgType(OrgTypeEnum.PERSON.getEnName());
     }
 
-    @Override
-    public int compareTo(Y9OrgBase o) {
-        // 对于 Collections.sort(orgBaseList) 可能会有强制转型出错
-        return this.tabIndex.compareTo(o.getTabIndex());
-    }
 }

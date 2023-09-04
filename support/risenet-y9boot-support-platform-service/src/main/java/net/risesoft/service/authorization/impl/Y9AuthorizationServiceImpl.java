@@ -136,8 +136,8 @@ public class Y9AuthorizationServiceImpl implements Y9AuthorizationService {
     }
 
     @Override
-    public Y9Authorization findById(String id) {
-        return y9AuthorizationRepository.findById(id).orElse(null);
+    public Optional<Y9Authorization> findById(String id) {
+        return y9AuthorizationRepository.findById(id);
     }
 
     private List<Y9Authorization> getAuthorization(String principalId, String resourceId) {

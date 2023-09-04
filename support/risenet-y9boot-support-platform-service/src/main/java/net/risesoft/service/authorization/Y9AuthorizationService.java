@@ -1,6 +1,7 @@
 package net.risesoft.service.authorization;
 
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.data.domain.Page;
 
@@ -60,7 +61,7 @@ public interface Y9AuthorizationService {
      * @param id 唯一标识
      * @return Authorization
      */
-    Y9Authorization findById(String id);
+    Optional<Y9Authorization> findById(String id);
 
     /**
      * 根据授权主体id，获取所有与此授权主体相关的权限记录

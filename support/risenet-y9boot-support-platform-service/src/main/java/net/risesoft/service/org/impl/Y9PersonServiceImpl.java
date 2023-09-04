@@ -606,7 +606,7 @@ public class Y9PersonServiceImpl implements Y9PersonService {
     }
 
     @Override
-    public Y9Person findById(String id) {
+    public Optional<Y9Person> findById(String id) {
         return y9PersonManager.findById(id);
     }
 
@@ -723,9 +723,9 @@ public class Y9PersonServiceImpl implements Y9PersonService {
         List<Y9PersonExt> y9PersonExtList = y9PersonExtManager.listByIdTypeAndIdNum(idType, idNum);
         List<Y9Person> y9PersonList = new ArrayList<>();
         for (Y9PersonExt ext : y9PersonExtList) {
-            Y9Person y9Person = this.findById(ext.getPersonId());
-            if (y9Person != null) {
-                y9PersonList.add(y9Person);
+            Optional<Y9Person> y9PersonOptional = this.findById(ext.getPersonId());
+            if (y9PersonOptional.isPresent()) {
+                y9PersonList.add(y9PersonOptional.get());
             }
         }
         return y9PersonList;
@@ -984,11 +984,11 @@ public class Y9PersonServiceImpl implements Y9PersonService {
     @Override
     @Transactional(readOnly = false)
     public Y9Person saveOrUpdate(Y9Person person, Y9PersonExt personExt, Y9OrgBase parent) {
-        String password = y9config.getCommon().getDefaultPassword();
         if (StringUtils.isNotEmpty(person.getId())) {
-            Y9Person originPerson = y9PersonManager.findById(person.getId());
-            if (null != originPerson) {
+            Optional<Y9Person> y9PersonOptional = y9PersonManager.findById(person.getId());
+            if (y9PersonOptional.isPresent()) {
                 // 判断为更新信息
+                Y9Person originPerson = y9PersonOptional.get();
                 Y9Person updatedPerson = new Y9Person();
                 Y9BeanUtil.copyProperties(originPerson, updatedPerson);
                 Y9BeanUtil.copyProperties(person, updatedPerson);
@@ -1059,8 +1059,9 @@ public class Y9PersonServiceImpl implements Y9PersonService {
         person.setDisabled(false);
         person.setParentId(parent.getId());
 
-        // 新增人员时，递归获取父级节点的所有权限，并赋予给当前人员。
+        String password = y9config.getCommon().getDefaultPassword();
         person.setPassword(Y9MessageDigest.hashpw(password));
+
         person = save(person);
         if (null != personExt) {
             y9PersonExtManager.saveOrUpdate(personExt, person);
@@ -1078,9 +1079,10 @@ public class Y9PersonServiceImpl implements Y9PersonService {
     @Override
     @Transactional(readOnly = false)
     public Y9Person saveOrUpdate4ImpOrg(Y9Person person, Y9PersonExt personExt, Y9OrgBase parent) {
-        Y9Person oldperson = y9PersonManager.findById(person.getId());
-        if (null != oldperson) {
+        Optional<Y9Person> y9PersonOptional = y9PersonManager.findById(person.getId());
+        if (y9PersonOptional.isPresent()) {
             // 判断为更新信息
+            Y9Person oldperson = y9PersonOptional.get();
             person.setDn(OrgLevelConsts.getOrgLevel(OrgTypeEnum.PERSON) + person.getName() + OrgLevelConsts.SEPARATOR
                 + parent.getDn());
             Y9BeanUtil.copyProperties(person, oldperson);

@@ -2,6 +2,7 @@ package net.risesoft.manager.org.impl;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 import org.springframework.cache.annotation.CacheConfig;
@@ -47,8 +48,8 @@ public class Y9PersonManagerImpl implements Y9PersonManager {
 
     @Override
     @Cacheable(key = "#id", condition = "#id!=null", unless = "#result==null")
-    public Y9Person findById(String id) {
-        return y9PersonRepository.findById(id).orElse(null);
+    public Optional<Y9Person> findById(String id) {
+        return y9PersonRepository.findById(id);
     }
 
     @Override

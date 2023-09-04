@@ -1,5 +1,7 @@
 package net.risesoft.manager.org.impl;
 
+import java.util.Optional;
+
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.cache.annotation.CacheEvict;
@@ -55,8 +57,8 @@ public class Y9PositionManagerImpl implements Y9PositionManager {
 
     @Override
     @Cacheable(key = "#id", condition = "#id!=null", unless = "#result==null")
-    public Y9Position findById(String id) {
-        return y9PositionRepository.findById(id).orElse(null);
+    public Optional<Y9Position> findById(String id) {
+        return y9PositionRepository.findById(id);
     }
 
     private void checkHeadCountAvailability(Y9Position position) {

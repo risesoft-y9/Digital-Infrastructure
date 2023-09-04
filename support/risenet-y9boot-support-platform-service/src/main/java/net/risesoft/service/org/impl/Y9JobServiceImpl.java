@@ -2,6 +2,7 @@ package net.risesoft.service.org.impl;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.data.domain.Page;
@@ -72,7 +73,7 @@ public class Y9JobServiceImpl implements Y9JobService {
     }
 
     @Override
-    public Y9Job findById(String id) {
+    public Optional<Y9Job> findById(String id) {
         return y9JobManager.findById(id);
     }
 
@@ -123,8 +124,9 @@ public class Y9JobServiceImpl implements Y9JobService {
     public Y9Job saveOrUpdate(Y9Job job) {
         if (StringUtils.isNotBlank(job.getId())) {
             // 修改职位
-            Y9Job originY9Job = this.findById(job.getId());
-            if (originY9Job != null) {
+            Optional<Y9Job> y9JobOptional = this.findById(job.getId());
+            if (y9JobOptional.isPresent()) {
+                Y9Job originY9Job = y9JobOptional.get();
                 Y9Job updatedY9Job = new Y9Job();
                 Y9BeanUtil.copyProperties(originY9Job, updatedY9Job);
                 Y9BeanUtil.copyProperties(job, updatedY9Job);
