@@ -60,8 +60,6 @@ public class Y9ManagerImpl implements Y9ManagerService {
         Y9Manager y9Manager = this.getById(id);
         y9Manager.setDisabled(!y9Manager.getDisabled());
         y9Manager = saveOrUpdate(y9Manager);
-
-        Y9Context.publishEvent(new Y9EntityUpdatedEvent<>(y9Manager, y9Manager));
         return y9Manager;
     }
 
@@ -325,10 +323,9 @@ public class Y9ManagerImpl implements Y9ManagerService {
         y9Manager.setTabIndex(compositeOrgBaseManager.getMaxSubTabIndex(y9Manager.getParentId(), OrgTypeEnum.MANAGER));
         y9Manager.setDn(OrgLevelConsts.getOrgLevel(OrgTypeEnum.MANAGER) + y9Manager.getName() + OrgLevelConsts.SEPARATOR
             + y9OrgBase.getDn());
+        // 系统管理员新建的子域三员默认禁用 需安全管理员启用
         y9Manager.setDisabled(true);
-        if (mobile != null && mobile.length() == MOBILE_NUMBER_LENGTH) {
-            password = mobile.substring(mobile.length() - 6);
-        }
+
         y9Manager.setPassword(Y9MessageDigest.hashpw(password));
         StringBuilder sb = new StringBuilder();
         compositeOrgBaseManager.getGuidPathRecursiveUp(sb, y9Manager);

@@ -984,7 +984,6 @@ public class Y9PersonServiceImpl implements Y9PersonService {
     @Override
     @Transactional(readOnly = false)
     public Y9Person saveOrUpdate(Y9Person person, Y9PersonExt personExt, Y9OrgBase parent) {
-        String password = y9config.getCommon().getDefaultPassword();
         if (StringUtils.isNotEmpty(person.getId())) {
             Optional<Y9Person> y9PersonOptional = y9PersonManager.findById(person.getId());
             if (y9PersonOptional.isPresent()) {
@@ -1060,8 +1059,9 @@ public class Y9PersonServiceImpl implements Y9PersonService {
         person.setDisabled(false);
         person.setParentId(parent.getId());
 
-        // 新增人员时，递归获取父级节点的所有权限，并赋予给当前人员。
+        String password = y9config.getCommon().getDefaultPassword();
         person.setPassword(Y9MessageDigest.hashpw(password));
+
         person = save(person);
         if (null != personExt) {
             y9PersonExtManager.saveOrUpdate(personExt, person);

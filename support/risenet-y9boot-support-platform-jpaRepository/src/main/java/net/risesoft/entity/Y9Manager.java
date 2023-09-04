@@ -25,7 +25,6 @@ import net.risesoft.enums.SexEnum;
  * @date 2022/2/10
  */
 @Entity
-// @EntityListeners({Y9ManagerListener.class})
 @Table(name = "Y9_ORG_MANAGER")
 @org.hibernate.annotations.Table(comment = "三员表", appliesTo = "Y9_ORG_MANAGER")
 @Data
