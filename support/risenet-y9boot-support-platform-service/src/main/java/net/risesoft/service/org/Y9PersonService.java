@@ -172,7 +172,7 @@ public interface Y9PersonService {
      * @param id 唯一标识
      * @return 人员对象 或 null
      */
-    Y9Person findById(String id);
+    Optional<Y9Person> findById(String id);
 
     /**
      * 根据人员id获取委办局id

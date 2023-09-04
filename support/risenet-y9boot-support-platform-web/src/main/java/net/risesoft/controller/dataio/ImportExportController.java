@@ -268,7 +268,7 @@ public class ImportExportController {
     @RiseLog(operationName = "导入组织机构信息XML", operationType = OperationTypeEnum.ADD)
     @RequestMapping(value = "/importOrgXml")
     public Y9Result<Object> importOrgXml(@RequestParam MultipartFile upload) throws IOException {
-        return y9OrgTreeXmlDataHandler.importPerson(upload.getInputStream(), null);
+        return y9OrgTreeXmlDataHandler.importOrgTree(upload.getInputStream(), null);
     }
 
     /**

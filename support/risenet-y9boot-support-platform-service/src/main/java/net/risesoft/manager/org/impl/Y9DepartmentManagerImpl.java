@@ -1,5 +1,7 @@
 package net.risesoft.manager.org.impl;
 
+import java.util.Optional;
+
 import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
@@ -52,8 +54,8 @@ public class Y9DepartmentManagerImpl implements Y9DepartmentManager {
 
     @Override
     @Cacheable(key = "#id", condition = "#id!=null", unless = "#result==null")
-    public Y9Department findById(String id) {
-        return y9DepartmentRepository.findById(id).orElse(null);
+    public Optional<Y9Department> findById(String id) {
+        return y9DepartmentRepository.findById(id);
     }
 
     @Override

@@ -1,5 +1,7 @@
 package net.risesoft.manager.org.impl;
 
+import java.util.Optional;
+
 import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
@@ -39,8 +41,8 @@ public class Y9OrganizationManagerImpl implements Y9OrganizationManager {
 
     @Override
     @Cacheable(key = "#id", condition = "#id!=null", unless = "#result==null")
-    public Y9Organization findById(String id) {
-        return y9OrganizationRepository.findById(id).orElse(null);
+    public Optional<Y9Organization> findById(String id) {
+        return y9OrganizationRepository.findById(id);
     }
 
     @Override

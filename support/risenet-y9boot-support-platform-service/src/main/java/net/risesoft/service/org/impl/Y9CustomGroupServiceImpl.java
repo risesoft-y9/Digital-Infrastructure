@@ -57,8 +57,8 @@ public class Y9CustomGroupServiceImpl implements Y9CustomGroupService {
     }
 
     @Override
-    public Y9CustomGroup findById(String id) {
-        return customGroupRepository.findById(id).orElse(null);
+    public Optional<Y9CustomGroup> findById(String id) {
+        return customGroupRepository.findById(id);
     }
 
     @Override

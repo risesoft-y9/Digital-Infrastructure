@@ -1,6 +1,7 @@
 package net.risesoft.service.org;
 
 import java.util.List;
+import java.util.Optional;
 
 import net.risesoft.entity.Y9DepartmentProp;
 
@@ -32,7 +33,7 @@ public interface Y9DepartmentPropService {
      * @param id 唯一标识
      * @return 部门配置对象 或 null
      */
-    Y9DepartmentProp findById(String id);
+    Optional<Y9DepartmentProp> findById(String id);
 
     /**
      * 查找所有的部门管理员

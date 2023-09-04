@@ -140,7 +140,7 @@ public class Y9DepartmentServiceImpl implements Y9DepartmentService {
     }
 
     @Override
-    public Y9Department findById(String id) {
+    public Optional<Y9Department> findById(String id) {
         return y9DepartmentManager.findById(id);
     }
 
@@ -368,30 +368,31 @@ public class Y9DepartmentServiceImpl implements Y9DepartmentService {
     @Transactional(readOnly = false)
     public Y9Department saveOrUpdate(Y9Department dept, Y9OrgBase parent) {
         if (StringUtils.isNotEmpty(dept.getId())) {
-            Y9Department origDepartment = y9DepartmentManager.findById(dept.getId());
-            if (origDepartment != null) {
+            Optional<Y9Department> y9DepartmentOptional = y9DepartmentManager.findById(dept.getId());
+            if (y9DepartmentOptional.isPresent()) {
+                Y9Department originDepartment = y9DepartmentOptional.get();
                 // 是否需要递归DN
-                boolean recursionDn = dept.getName().equals(origDepartment.getName());
+                boolean recursionDn = dept.getName().equals(originDepartment.getName());
 
-                origDepartment.setDn(OrgLevelConsts.getOrgLevel(OrgTypeEnum.DEPARTMENT) + dept.getName()
+                originDepartment.setDn(OrgLevelConsts.getOrgLevel(OrgTypeEnum.DEPARTMENT) + dept.getName()
                     + OrgLevelConsts.SEPARATOR + parent.getDn());
 
-                Y9BeanUtil.copyProperties(dept, origDepartment);
-                origDepartment.setParentId(parent.getId());
-                origDepartment.setGuidPath(parent.getGuidPath() + OrgLevelConsts.SEPARATOR + dept.getId());
+                Y9BeanUtil.copyProperties(dept, originDepartment);
+                originDepartment.setParentId(parent.getId());
+                originDepartment.setGuidPath(parent.getGuidPath() + OrgLevelConsts.SEPARATOR + dept.getId());
 
-                origDepartment = y9DepartmentManager.save(origDepartment);
+                originDepartment = y9DepartmentManager.save(originDepartment);
 
                 if (recursionDn) {
                     // 更新下级节点的dn
-                    compositeOrgBaseManager.recursivelyUpdateProperties(origDepartment);
+                    compositeOrgBaseManager.recursivelyUpdateProperties(originDepartment);
                 }
 
-                Y9MessageOrg msg = new Y9MessageOrg(Y9ModelConvertUtil.convert(origDepartment, Department.class),
+                Y9MessageOrg msg = new Y9MessageOrg(Y9ModelConvertUtil.convert(originDepartment, Department.class),
                     Y9OrgEventConst.RISEORGEVENT_TYPE_UPDATE_DEPARTMENT, Y9LoginUserHolder.getTenantId());
                 Y9PublishServiceUtil.persistAndPublishMessageOrg(msg, "修改部门", "修改 " + dept.getName());
 
-                return origDepartment;
+                return originDepartment;
             } else {
                 if (null == dept.getTabIndex()) {
                     Integer maxTabIndex =
@@ -596,10 +597,8 @@ public class Y9DepartmentServiceImpl implements Y9DepartmentService {
     public List<Y9Department> list(List<String> ids) {
         List<Y9Department> y9DepartmentList = new ArrayList<>();
         for (String id : ids) {
-            Y9Department y9Department = findById(id);
-            if (y9Department != null) {
-                y9DepartmentList.add(y9Department);
-            }
+            Optional<Y9Department> y9DepartmentOptional = findById(id);
+            y9DepartmentOptional.ifPresent(y9DepartmentList::add);
         }
         return y9DepartmentList;
     }

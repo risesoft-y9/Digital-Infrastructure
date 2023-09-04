@@ -1,5 +1,7 @@
 package net.risesoft.manager.org;
 
+import java.util.Optional;
+
 import net.risesoft.entity.Y9Organization;
 
 /**
@@ -12,7 +14,7 @@ import net.risesoft.entity.Y9Organization;
 public interface Y9OrganizationManager {
     Y9Organization save(Y9Organization y9Organization);
 
-    Y9Organization findById(String id);
+    Optional<Y9Organization> findById(String id);
 
     Y9Organization getById(String id);
 

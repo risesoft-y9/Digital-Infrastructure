@@ -33,4 +33,37 @@ public class Y9OrgUtil {
     public static boolean isRenamed(Y9OrgBase originOrgBase, Y9OrgBase updateOrgBase) {
         return !Objects.equals(originOrgBase.getName(), updateOrgBase.getName());
     }
+
+    /**
+     * 组织节点a是否为组织节点b的祖先节点
+     *
+     * @param a 组织节点a
+     * @param b 组织节点b
+     * @return boolean
+     */
+    public static boolean isAncestorOf(Y9OrgBase a, Y9OrgBase b) {
+        return b.getGuidPath().contains(a.getGuidPath()) && !Objects.equals(a.getGuidPath(), b.getGuidPath());
+    }
+
+    /**
+     * 组织节点a是否为组织节点b的子孙节点
+     *
+     * @param a 组织节点a
+     * @param b 组织节点b
+     * @return boolean
+     */
+    public static boolean isSameOf(Y9OrgBase a, Y9OrgBase b) {
+        return Objects.equals(a.getId(), b.getId());
+    }
+
+    /**
+     * 组织节点a是否为组织节点b的子孙节点
+     *
+     * @param a 组织节点a
+     * @param b 组织节点b
+     * @return boolean
+     */
+    public static boolean isDescendantOf(Y9OrgBase a, Y9OrgBase b) {
+        return b.getGuidPath().contains(a.getGuidPath()) && !Objects.equals(a.getGuidPath(), b.getGuidPath());
+    }
 }

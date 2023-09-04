@@ -3,6 +3,7 @@ package net.risesoft.service.org.impl;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
+import java.util.Optional;
 
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.context.event.EventListener;
@@ -56,12 +57,11 @@ public class Y9ManagerImpl implements Y9ManagerService {
     @Override
     @Transactional(readOnly = false)
     public Y9Manager changeDisabled(String id) {
-        Y9Manager y9Manager = this.findById(id);
+        Y9Manager y9Manager = this.getById(id);
         y9Manager.setDisabled(!y9Manager.getDisabled());
         y9Manager = saveOrUpdate(y9Manager);
 
-        Y9Context.publishEvent(new Y9EntityUpdatedEvent<Y9Manager>(y9Manager, y9Manager));
-
+        Y9Context.publishEvent(new Y9EntityUpdatedEvent<>(y9Manager, y9Manager));
         return y9Manager;
     }
 
@@ -214,8 +214,8 @@ public class Y9ManagerImpl implements Y9ManagerService {
     }
 
     @Override
-    public Y9Manager findById(String id) {
-        return y9ManagerRepository.findById(id).orElse(null);
+    public Optional<Y9Manager> findById(String id) {
+        return y9ManagerRepository.findById(id);
     }
 
     @Override

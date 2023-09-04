@@ -1,5 +1,7 @@
 package net.risesoft.manager.org.impl;
 
+import java.util.Optional;
+
 import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
@@ -32,8 +34,8 @@ public class Y9JobManagerImpl implements Y9JobManager {
 
     @Override
     @Cacheable(key = "#id", condition = "#id!=null", unless = "#result==null")
-    public Y9Job findById(String id) {
-        return y9JobRepository.findById(id).orElse(null);
+    public Optional<Y9Job> findById(String id) {
+        return y9JobRepository.findById(id);
     }
 
     @Override

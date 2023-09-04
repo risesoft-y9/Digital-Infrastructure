@@ -115,12 +115,11 @@ public class OrgController {
     @RequestMapping(value = "/getTree")
     public Y9Result<List<Y9OrgBase>> getTree(@RequestParam String id, @RequestParam String treeType, boolean disabled) {
         UserInfo userInfo = Y9LoginUserHolder.getUserInfo();
-        String personId = userInfo.getPersonId();
         List<Y9OrgBase> treeList = new ArrayList<>();
         if (userInfo.isGlobalManager() && userInfo.getManagerLevel() > 0) {
             treeList = compositeOrgBaseService.getTree(id, treeType, disabled);
         } else if (userInfo.getManagerLevel() > 0) {
-            treeList = compositeOrgBaseService.getTree(id, treeType, personId);
+            treeList = compositeOrgBaseService.getTree4DeptManager(id, treeType);
         }
         return Y9Result.success(treeList, "获取机构树成功！");
     }

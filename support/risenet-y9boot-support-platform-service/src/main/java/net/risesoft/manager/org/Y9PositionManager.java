@@ -1,5 +1,7 @@
 package net.risesoft.manager.org;
 
+import java.util.Optional;
+
 import net.risesoft.entity.Y9OrgBase;
 import net.risesoft.entity.Y9Position;
 import net.risesoft.y9.exception.Y9NotFoundException;
@@ -15,7 +17,7 @@ public interface Y9PositionManager {
      */
     Y9Position getById(String id);
 
-    Y9Position findById(String id);
+    Optional<Y9Position> findById(String id);
 
     Y9Position saveOrUpdate(Y9Position position, Y9OrgBase parent);
 

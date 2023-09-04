@@ -4,6 +4,7 @@ import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 import org.springframework.scheduling.annotation.Async;
@@ -130,9 +131,9 @@ public class UpdatePositionNameListener {
     }
 
     public void updatePositionName(String positionId) {
-        Y9Position y9Position = y9PositionService.findById(positionId);
-        if (y9Position != null) {
-            this.updatePositionName(y9Position);
+        Optional<Y9Position> y9PositionOptional = y9PositionService.findById(positionId);
+        if (y9PositionOptional.isPresent()) {
+            this.updatePositionName(y9PositionOptional.get());
         }
     }
 

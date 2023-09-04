@@ -48,7 +48,7 @@ public class ManagerApiImpl implements ManagerApi {
         @RequestParam("userId") @NotBlank String userId) {
         Y9LoginUserHolder.setTenantId(tenantId);
 
-        Y9Manager y9Manager = y9ManagerService.findById(userId);
+        Y9Manager y9Manager = y9ManagerService.findById(userId).orElse(null);
         return Y9ModelConvertUtil.convert(y9Manager, Manager.class);
     }
 

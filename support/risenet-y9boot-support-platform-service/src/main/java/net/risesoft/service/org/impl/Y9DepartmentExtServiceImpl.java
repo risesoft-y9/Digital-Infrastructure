@@ -1,6 +1,7 @@
 package net.risesoft.service.org.impl;
 
 import java.util.List;
+import java.util.Optional;
 
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Service;
@@ -40,8 +41,8 @@ public class Y9DepartmentExtServiceImpl implements Y9DepartmentPropService {
     }
 
     @Override
-    public Y9DepartmentProp findById(String id) {
-        return y9DepartmentPropRepository.findById(id).orElse(null);
+    public Optional<Y9DepartmentProp> findById(String id) {
+        return y9DepartmentPropRepository.findById(id);
     }
 
     @Override
@@ -75,7 +76,7 @@ public class Y9DepartmentExtServiceImpl implements Y9DepartmentPropService {
         String id = y9DepartmentProp.getId();
         Y9DepartmentProp prop = null;
         if (StringUtils.isNotEmpty(id)) {
-            prop = this.findById(id);
+            prop = this.findById(id).orElse(null);
         } else {
             id = Y9IdGenerator.genId(IdType.SNOWFLAKE);
         }
