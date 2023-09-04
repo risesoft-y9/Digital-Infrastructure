@@ -218,4 +218,13 @@ public interface CompositeOrgBaseService {
      * @return {@link Y9OrgBase}
      */
     Y9OrgBase getOrgUnitOrganization(String orgUnitId);
+
+    /**
+     * 根据name，和结构树类型查询机构主体
+     *
+     * @param name
+     * @param treeType
+     * @return
+     */
+    List<Y9OrgBase> treeSearch4DeptManager(String name, String treeType);
 }
