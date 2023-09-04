@@ -1,6 +1,7 @@
 package net.risesoft.service.org;
 
 import java.util.List;
+import java.util.Optional;
 
 import net.risesoft.entity.Y9OrgBase;
 import net.risesoft.entity.Y9Position;
@@ -58,7 +59,7 @@ public interface Y9PositionService {
      * @param id 唯一标识
      * @return 岗位对象 或 null
      */
-    Y9Position findById(String id);
+    Optional<Y9Position> findById(String id);
 
     /**
      * 根据职位id查找岗位

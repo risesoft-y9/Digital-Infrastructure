@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -100,17 +101,21 @@ public class ResourcePermissionVOBuilder {
                 ResourcePermissionVO.PermissionDetail detail = new ResourcePermissionVO.PermissionDetail();
                 detail.setAuthority(permission.getAuthority());
                 detail.setInherit(permission.getInherit());
-                Y9Authorization y9Authorization = y9AuthorizationService.findById(permission.getAuthorizationId());
-                detail.setPrincipalType(y9Authorization.getPrincipalType());
-                if (AuthorizationPrincipalTypeEnum.ROLE.getValue().equals(y9Authorization.getPrincipalType())) {
-                    Y9Role y9Role = y9RoleService.findById(y9Authorization.getPrincipalId());
-                    if (y9Role != null) {
-                        detail.setPrincipalName(y9Role.getName());
-                    }
-                } else {
-                    Y9OrgBase orgBase = compositeOrgBaseService.getOrgBase(y9Authorization.getPrincipalId());
-                    if (orgBase != null) {
-                        detail.setPrincipalName(orgBase.getName());
+                Optional<Y9Authorization> y9AuthorizationOptional =
+                    y9AuthorizationService.findById(permission.getAuthorizationId());
+                if (y9AuthorizationOptional.isPresent()) {
+                    Y9Authorization y9Authorization = y9AuthorizationOptional.get();
+                    detail.setPrincipalType(y9Authorization.getPrincipalType());
+                    if (AuthorizationPrincipalTypeEnum.ROLE.getValue().equals(y9Authorization.getPrincipalType())) {
+                        Y9Role y9Role = y9RoleService.findById(y9Authorization.getPrincipalId());
+                        if (y9Role != null) {
+                            detail.setPrincipalName(y9Role.getName());
+                        }
+                    } else {
+                        Y9OrgBase orgBase = compositeOrgBaseService.getOrgBase(y9Authorization.getPrincipalId());
+                        if (orgBase != null) {
+                            detail.setPrincipalName(orgBase.getName());
+                        }
                     }
                 }
                 return detail;

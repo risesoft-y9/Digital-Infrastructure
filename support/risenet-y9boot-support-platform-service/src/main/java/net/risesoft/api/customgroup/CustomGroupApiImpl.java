@@ -114,7 +114,7 @@ public class CustomGroupApiImpl implements CustomGroupApi {
         @RequestParam("personId") @NotBlank String personId, @RequestParam("groupId") @NotBlank String groupId) {
         Y9LoginUserHolder.setTenantId(tenantId);
 
-        Y9CustomGroup customGroup = customGroupService.findById(groupId);
+        Y9CustomGroup customGroup = customGroupService.findById(groupId).orElse(null);
         return Y9ModelConvertUtil.convert(customGroup, CustomGroup.class);
     }
 

@@ -1,6 +1,7 @@
 package net.risesoft.manager.org;
 
 import java.util.List;
+import java.util.Optional;
 
 import net.risesoft.entity.Y9Person;
 import net.risesoft.y9.exception.Y9NotFoundException;
@@ -16,7 +17,7 @@ public interface Y9PersonManager {
      */
     Y9Person getById(String id);
 
-    Y9Person findById(String id);
+    Optional<Y9Person> findById(String id);
 
     List<Y9Person> listByPositionId(String positionId);
 

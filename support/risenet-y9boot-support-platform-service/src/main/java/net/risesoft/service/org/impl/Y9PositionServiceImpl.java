@@ -6,6 +6,7 @@ import jakarta.persistence.Query;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -154,7 +155,7 @@ public class Y9PositionServiceImpl implements Y9PositionService {
     }
 
     @Override
-    public Y9Position findById(String id) {
+    public Optional<Y9Position> findById(String id) {
         return y9PositionManager.findById(id);
     }
 

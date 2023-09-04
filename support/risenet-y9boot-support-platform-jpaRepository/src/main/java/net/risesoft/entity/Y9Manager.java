@@ -146,8 +146,4 @@ public class Y9Manager extends Y9OrgBase {
     @Column(name = "MODIFY_PWD_TIME", length = 50)
     private String modifyPwdTime;
 
-    @Override
-    public int compareTo(Y9OrgBase o) {
-        return this.tabIndex.compareTo(o.getTabIndex());
-    }
 }

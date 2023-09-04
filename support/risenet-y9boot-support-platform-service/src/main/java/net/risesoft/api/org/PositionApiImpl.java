@@ -142,7 +142,7 @@ public class PositionApiImpl implements PositionApi {
     public Position getPosition(@RequestParam String tenantId, @RequestParam String positionId) {
         Y9LoginUserHolder.setTenantId(tenantId);
 
-        Y9Position y9Position = y9PositionService.findById(positionId);
+        Y9Position y9Position = y9PositionService.findById(positionId).orElse(null);
         return Y9ModelConvertUtil.convert(y9Position, Position.class);
     }
 

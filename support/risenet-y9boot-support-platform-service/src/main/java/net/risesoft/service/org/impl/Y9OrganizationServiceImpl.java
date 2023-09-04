@@ -6,6 +6,7 @@ import jakarta.persistence.Query;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -112,7 +113,7 @@ public class Y9OrganizationServiceImpl implements Y9OrganizationService {
     }
 
     @Override
-    public Y9Organization findById(String id) {
+    public Optional<Y9Organization> findById(String id) {
         return y9OrganizationManager.findById(id);
     }
 
@@ -190,8 +191,9 @@ public class Y9OrganizationServiceImpl implements Y9OrganizationService {
     @Transactional(readOnly = false)
     public Y9Organization saveOrUpdate(Y9Organization org) {
         if (StringUtils.isNotEmpty(org.getId())) {
-            Y9Organization oldOrg = y9OrganizationManager.findById(org.getId());
-            if (oldOrg != null) {
+            Optional<Y9Organization> y9OrganizationOptional = y9OrganizationManager.findById(org.getId());
+            if (y9OrganizationOptional.isPresent()) {
+                Y9Organization oldOrg = y9OrganizationOptional.get();
                 // 是否需要递归DN
                 boolean recursionDn = !org.getName().equals(oldOrg.getName());
 
