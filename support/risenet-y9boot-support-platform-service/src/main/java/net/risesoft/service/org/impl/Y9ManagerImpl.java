@@ -200,7 +200,7 @@ public class Y9ManagerImpl implements Y9ManagerService {
 
     @Override
     @Transactional(readOnly = false)
-    public void delete(String[] ids) {
+    public void delete(List<String> ids) {
         for (String id : ids) {
             this.delete(id);
         }
@@ -284,7 +284,7 @@ public class Y9ManagerImpl implements Y9ManagerService {
     public Y9Manager saveOrUpdate(Y9Manager y9Manager) {
         String mobile = y9Manager.getMobile();
         String password = y9config.getCommon().getDefaultPassword();
-        Y9OrgBase y9OrgBase = compositeOrgBaseManager.getOrgBase(y9Manager.getParentId());
+        Y9OrgBase parent = compositeOrgBaseManager.getOrgUnitAsParent(y9Manager.getParentId());
         if (StringUtils.isNotBlank(y9Manager.getId())) {
             Y9Manager oldManager = y9ManagerRepository.findById(y9Manager.getId()).orElse(null);
             if (oldManager != null) {
@@ -297,8 +297,7 @@ public class Y9ManagerImpl implements Y9ManagerService {
                 y9Manager.setTenantId(Y9LoginUserHolder.getTenantId());
                 y9Manager.setTabIndex(
                     compositeOrgBaseManager.getMaxSubTabIndex(y9Manager.getParentId(), OrgTypeEnum.MANAGER));
-                y9Manager.setDn(OrgLevelConsts.getOrgLevel(OrgTypeEnum.MANAGER) + y9Manager.getName()
-                    + OrgLevelConsts.SEPARATOR + y9OrgBase.getDn());
+                y9Manager.setDn(OrgLevelConsts.getOrgLevel(OrgTypeEnum.MANAGER) + y9Manager.getName() + OrgLevelConsts.SEPARATOR + parent.getDn());
                 y9Manager.setDisabled(false);
                 y9Manager.setOrgType(OrgTypeEnum.MANAGER.getEnName());
                 if (mobile != null && mobile.length() == MOBILE_NUMBER_LENGTH) {
@@ -321,8 +320,7 @@ public class Y9ManagerImpl implements Y9ManagerService {
         y9Manager.setId(Y9IdGenerator.genId(IdType.SNOWFLAKE));
         y9Manager.setTenantId(Y9LoginUserHolder.getTenantId());
         y9Manager.setTabIndex(compositeOrgBaseManager.getMaxSubTabIndex(y9Manager.getParentId(), OrgTypeEnum.MANAGER));
-        y9Manager.setDn(OrgLevelConsts.getOrgLevel(OrgTypeEnum.MANAGER) + y9Manager.getName() + OrgLevelConsts.SEPARATOR
-            + y9OrgBase.getDn());
+        y9Manager.setDn(OrgLevelConsts.getOrgLevel(OrgTypeEnum.MANAGER) + y9Manager.getName() + OrgLevelConsts.SEPARATOR + parent.getDn());
         // 系统管理员新建的子域三员默认禁用 需安全管理员启用
         y9Manager.setDisabled(true);
 

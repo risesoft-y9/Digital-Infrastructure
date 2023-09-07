@@ -78,8 +78,7 @@ public class DepartmentApiImpl implements DepartmentApi {
         Y9LoginUserHolder.setTenantId(tenantId);
 
         Y9Department y9Department = Y9JsonUtil.readValue(departmentJson, Y9Department.class);
-        y9Department = y9DepartmentService.saveOrUpdate(y9Department,
-            compositeOrgBaseService.getOrgBase(y9Department.getParentId()));
+        y9Department = y9DepartmentService.saveOrUpdate(y9Department);
         return Y9ModelConvertUtil.convert(y9Department, Department.class);
     }
 
@@ -165,7 +164,7 @@ public class DepartmentApiImpl implements DepartmentApi {
         @RequestParam("departmentId") @NotBlank String departmentId) {
         Y9LoginUserHolder.setTenantId(tenantId);
 
-        Y9OrgBase parent = compositeOrgBaseService.getParent(departmentId);
+        Y9OrgBase parent = compositeOrgBaseService.getOrgUnitParent(departmentId);
         return ModelConvertUtil.orgBaseToOrgUnit(parent);
     }
 
@@ -429,8 +428,7 @@ public class DepartmentApiImpl implements DepartmentApi {
         Y9LoginUserHolder.setTenantId(tenantId);
 
         Y9Department y9Department = Y9JsonUtil.readValue(departmentJson, Y9Department.class);
-        y9Department = y9DepartmentService.saveOrUpdate(y9Department,
-            compositeOrgBaseService.getOrgBase(y9Department.getParentId()));
+        y9Department = y9DepartmentService.saveOrUpdate(y9Department);
         return Y9ModelConvertUtil.convert(y9Department, Department.class);
     }
 

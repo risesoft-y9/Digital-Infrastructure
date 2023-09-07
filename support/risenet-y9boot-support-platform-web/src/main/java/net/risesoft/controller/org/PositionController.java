@@ -1,7 +1,5 @@
 package net.risesoft.controller.org;
 
-import jakarta.validation.constraints.NotBlank;
-
 import java.util.List;
 
 import org.springframework.validation.annotation.Validated;
@@ -125,7 +123,7 @@ public class PositionController {
      */
     @RiseLog(operationName = "删除岗位", operationType = OperationTypeEnum.DELETE)
     @PostMapping(value = "/remove")
-    public Y9Result<String> remove(@RequestParam String[] ids) {
+    public Y9Result<String> remove(@RequestParam(value = "ids") List<String> ids) {
         y9PositionService.delete(ids);
         return Y9Result.successMsg("删除岗位成功");
     }
@@ -162,12 +160,11 @@ public class PositionController {
      * 保存新的序号
      *
      * @param positionIds 岗位ids
-     * @param tabindexs 排序ids
      */
     @RiseLog(operationName = "保存岗位排序", operationType = OperationTypeEnum.MODIFY)
     @PostMapping(value = "/saveOrder")
-    public Y9Result<String> saveOrder(@RequestParam String[] positionIds, @RequestParam String[] tabindexs) {
-        y9PositionService.saveOrder(positionIds, tabindexs);
+    public Y9Result<String> saveOrder(@RequestParam(value = "positionIds") List<String> positionIds) {
+        y9PositionService.saveOrder(positionIds);
         return Y9Result.successMsg("保存岗位排序成功");
     }
 
@@ -203,13 +200,12 @@ public class PositionController {
      * 新建或者更新岗位信息
      *
      * @param position 岗位实体
-     * @param parentId 父节点id
      * @return
      */
     @RiseLog(operationName = "新建或者更新岗位信息", operationType = OperationTypeEnum.ADD)
     @PostMapping(value = "/saveOrUpdate")
-    public Y9Result<Y9Position> saveOrUpdate(@Validated Y9Position position, @NotBlank @RequestParam String parentId) {
-        Y9Position returnPosition = y9PositionService.saveOrUpdate(position, parentId);
+    public Y9Result<Y9Position> saveOrUpdate(@Validated Y9Position position) {
+        Y9Position returnPosition = y9PositionService.saveOrUpdate(position);
         return Y9Result.success(returnPosition, "保存岗位信息成功");
     }
 }

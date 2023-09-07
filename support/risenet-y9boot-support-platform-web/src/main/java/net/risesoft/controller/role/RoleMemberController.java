@@ -67,7 +67,7 @@ public class RoleMemberController {
                 Y9LoginUserHolder.getPersonId(), Y9DepartmentPropCategoryEnum.ADMIN.getCategory());
             List<String> accessibleOrgUnitId = new ArrayList<>();
             for (String orgUnitId : orgUnitIds) {
-                Y9OrgBase y9OrgBase = compositeOrgBaseService.getOrgBase(orgUnitId);
+                Y9OrgBase y9OrgBase = compositeOrgBaseService.getOrgUnit(orgUnitId);
                 for (Y9DepartmentProp deptProp : deptProps) {
                     String dn = y9DepartmentService.getById(deptProp.getDeptId()).getDn();
                     if (y9OrgBase.getDn().contains(dn)) {
@@ -85,7 +85,7 @@ public class RoleMemberController {
         for (Y9OrgBasesToRoles roleMapping : roleMappingList) {
             RoleMember roleMember = new RoleMember();
             roleMember.setId(roleMember.getId());
-            Y9OrgBase y9OrgBase = compositeOrgBaseService.getOrgBase(roleMapping.getOrgId());
+            Y9OrgBase y9OrgBase = compositeOrgBaseService.getOrgUnit(roleMapping.getOrgId());
             roleMember.setOrgUnitId(roleMapping.getOrgId());
             roleMember.setUnitName(y9OrgBase.getName());
             roleMember.setUnitTypeName(OrgTypeEnum.ORG_TYPE_MAP.get(y9OrgBase.getOrgType()));
@@ -111,7 +111,7 @@ public class RoleMemberController {
         List<RoleMember> memberList = new ArrayList<>();
         if (Y9LoginUserHolder.getUserInfo().isGlobalManager()) {
             for (Y9OrgBasesToRoles roleMapping : roleMappingList) {
-                Y9OrgBase y9OrgBase = compositeOrgBaseService.getOrgBase(roleMapping.getOrgId());
+                Y9OrgBase y9OrgBase = compositeOrgBaseService.getOrgUnit(roleMapping.getOrgId());
                 if (y9OrgBase == null) {
                     continue;
                 }
@@ -128,7 +128,7 @@ public class RoleMemberController {
             List<Y9DepartmentProp> deptProps = y9DepartmentPropService.listByOrgBaseIdAndCategory(
                 Y9LoginUserHolder.getPersonId(), Y9DepartmentPropCategoryEnum.ADMIN.getCategory());
             for (Y9OrgBasesToRoles roleMapping : roleMappingList) {
-                Y9OrgBase y9OrgBase = compositeOrgBaseService.getOrgBase(roleMapping.getOrgId());
+                Y9OrgBase y9OrgBase = compositeOrgBaseService.getOrgUnit(roleMapping.getOrgId());
                 if (y9OrgBase == null) {
                     continue;
                 }
@@ -200,7 +200,7 @@ public class RoleMemberController {
         List<Y9OrgBasesToRoles> roleMappingList = y9OrgBasesToRolesService.listByRoleId(roleId);
         List<RoleMember> memberList = new ArrayList<>();
         for (Y9OrgBasesToRoles roleMapping : roleMappingList) {
-            Y9OrgBase y9OrgBase = compositeOrgBaseService.getOrgBase(roleMapping.getOrgId());
+            Y9OrgBase y9OrgBase = compositeOrgBaseService.getOrgUnit(roleMapping.getOrgId());
             if (y9OrgBase == null) {
                 continue;
             }

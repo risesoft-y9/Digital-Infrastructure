@@ -128,7 +128,7 @@ public class PersonApiImpl implements PersonApi {
         Y9LoginUserHolder.setTenantId(tenantId);
 
         Y9Person y9Person = Y9JsonUtil.readValue(personJson, Y9Person.class);
-        y9Person = y9PersonService.createPerson(y9Person, compositeOrgBaseService.getOrgBase(y9Person.getParentId()));
+        y9Person = y9PersonService.createPerson(y9Person, compositeOrgBaseService.getOrgUnit(y9Person.getParentId()));
         return Y9ModelConvertUtil.convert(y9Person, Person.class);
     }
 
@@ -197,7 +197,7 @@ public class PersonApiImpl implements PersonApi {
         @RequestParam("personId") @NotBlank String personId) {
         Y9LoginUserHolder.setTenantId(tenantId);
 
-        Y9OrgBase parent = compositeOrgBaseService.getParent(personId);
+        Y9OrgBase parent = compositeOrgBaseService.getOrgUnitParent(personId);
         return ModelConvertUtil.orgBaseToOrgUnit(parent);
     }
 
@@ -541,8 +541,7 @@ public class PersonApiImpl implements PersonApi {
 
         Y9Person y9Person = Y9JsonUtil.readValue(personJson, Y9Person.class);
         Y9PersonExt y9PersonExt = Y9JsonUtil.readValue(personJson, Y9PersonExt.class);
-        y9Person = y9PersonService.saveOrUpdate(y9Person, y9PersonExt,
-            compositeOrgBaseService.getOrgBase(y9Person.getParentId()));
+        y9Person = y9PersonService.saveOrUpdate(y9Person, y9PersonExt);
         return Y9ModelConvertUtil.convert(y9Person, Person.class);
     }
 
@@ -641,8 +640,7 @@ public class PersonApiImpl implements PersonApi {
 
         Y9Person y9Person = Y9JsonUtil.readValue(personJson, Y9Person.class);
         Y9PersonExt y9PersonExt = Y9JsonUtil.readValue(personextJson, Y9PersonExt.class);
-        y9Person = y9PersonService.saveOrUpdate(y9Person, y9PersonExt,
-            compositeOrgBaseService.getOrgBase(y9Person.getParentId()));
+        y9Person = y9PersonService.saveOrUpdate(y9Person, y9PersonExt);
         return Y9ModelConvertUtil.convert(y9Person, Person.class);
     }
 

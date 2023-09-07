@@ -57,14 +57,6 @@ public interface Y9OrganizationService {
     Y9Organization getById(String id);
 
     /**
-     * 根据orgBaseId查找所在组织机构
-     *
-     * @param orgBaseId 组织id
-     * @return {@link Y9Organization}
-     */
-    Y9Organization getByOrgBaseId(String orgBaseId);
-
-    /**
      * 获取子节点最大的tabIndex
      *
      * @return {@link Integer}
@@ -108,7 +100,7 @@ public interface Y9OrganizationService {
      * @param orgIds 机构id数组
      * @return {@link List}<{@link Y9Organization}>
      */
-    List<Y9Organization> saveOrder(String[] orgIds);
+    List<Y9Organization> saveOrder(List<String> orgIds);
 
     /**
      * 保存或者更新组织机构基本信息

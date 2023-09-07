@@ -42,7 +42,7 @@ public class Y9CustomGroupMembersManagerImpl implements Y9CustomGroupMembersMana
     @Transactional(readOnly = false)
     public void save(List<String> orgUnitList, String groupId) {
         for (String id : orgUnitList) {
-            Y9OrgBase y9OrgBase = compositeOrgBaseManager.getOrgBase(id);
+            Y9OrgBase y9OrgBase = compositeOrgBaseManager.getOrgUnit(id);
             if (y9OrgBase != null) {
                 Optional<Y9CustomGroupMember> optionalY9CustomGroupMember =
                     customGroupMembersRepository.findByGroupIdAndMemberId(groupId, id);

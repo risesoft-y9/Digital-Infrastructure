@@ -262,7 +262,7 @@ public class RoleApiImpl implements RoleApi {
         List<Y9OrgBasesToRoles> roleMappingList = y9OrgBasesToRolesService.listByRoleId(roleId);
         for (Y9OrgBasesToRoles roleMapping : roleMappingList) {
             if (Boolean.TRUE.equals(roleMapping.getNegative())) {
-                Y9OrgBase y9OrgBase = compositeOrgBaseService.getOrgBase(roleMapping.getOrgId());
+                Y9OrgBase y9OrgBase = compositeOrgBaseService.getOrgUnit(roleMapping.getOrgId());
                 if (OrgTypeEnum.PERSON.getEnName().equals(y9OrgBase.getOrgType())) {
                     Y9Person person = (Y9Person)y9OrgBase;
                     negativePersonSet.add(person);
@@ -278,7 +278,7 @@ public class RoleApiImpl implements RoleApi {
         }
         for (Y9OrgBasesToRoles roleMapping : roleMappingList) {
             if (!Boolean.TRUE.equals(roleMapping.getNegative())) {
-                Y9OrgBase y9OrgBase = compositeOrgBaseService.getOrgBase(roleMapping.getOrgId());
+                Y9OrgBase y9OrgBase = compositeOrgBaseService.getOrgUnit(roleMapping.getOrgId());
                 if (OrgTypeEnum.PERSON.getEnName().equals(y9OrgBase.getOrgType())) {
                     Y9Person person = (Y9Person)y9OrgBase;
                     personSet.add(person);
@@ -320,7 +320,7 @@ public class RoleApiImpl implements RoleApi {
         List<Y9OrgBase> y9OrgBaseList = new ArrayList<>();
         for (Y9OrgBasesToRoles roleMapping : roleMappingList) {
             if (!Boolean.TRUE.equals(roleMapping.getNegative())) {
-                Y9OrgBase y9OrgBase = compositeOrgBaseService.getOrgBase(roleMapping.getOrgId());
+                Y9OrgBase y9OrgBase = compositeOrgBaseService.getOrgUnit(roleMapping.getOrgId());
                 if (y9OrgBase == null || !orgType.equals(y9OrgBase.getOrgType())) {
                     continue;
                 }
@@ -348,7 +348,7 @@ public class RoleApiImpl implements RoleApi {
         List<Person> persons = new ArrayList<>();
         for (Y9OrgBasesToRoles roleMapping : roleMappingList) {
             if (!Boolean.TRUE.equals(roleMapping.getNegative())) {
-                Y9OrgBase y9OrgBase = compositeOrgBaseService.getOrgBase(roleMapping.getOrgId());
+                Y9OrgBase y9OrgBase = compositeOrgBaseService.getOrgUnit(roleMapping.getOrgId());
                 if (y9OrgBase == null || !("Person".equals(y9OrgBase.getOrgType()))) {
                     continue;
                 }

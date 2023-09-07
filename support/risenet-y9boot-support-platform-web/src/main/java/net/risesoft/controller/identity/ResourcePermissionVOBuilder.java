@@ -112,7 +112,7 @@ public class ResourcePermissionVOBuilder {
                             detail.setPrincipalName(y9Role.getName());
                         }
                     } else {
-                        Y9OrgBase orgBase = compositeOrgBaseService.getOrgBase(y9Authorization.getPrincipalId());
+                        Y9OrgBase orgBase = compositeOrgBaseService.getOrgUnit(y9Authorization.getPrincipalId());
                         if (orgBase != null) {
                             detail.setPrincipalName(orgBase.getName());
                         }

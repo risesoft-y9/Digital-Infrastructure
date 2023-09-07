@@ -114,7 +114,7 @@ public class ImportExportController {
     @GetMapping(value = "/exportOrgTreeXls")
     public void exportOrgTreeXls(@RequestParam String resourceId, HttpServletResponse response) {
         try (OutputStream outStream = response.getOutputStream()) {
-            Y9OrgBase base = compositeOrgBaseService.getOrgBase(resourceId);
+            Y9OrgBase base = compositeOrgBaseService.getOrgUnit(resourceId);
             String filename =
                 base.getName() + "-组织架构" + new SimpleDateFormat("yyyyMMddHHmmss").format(new Date()) + ".xlsx";
 
@@ -140,7 +140,7 @@ public class ImportExportController {
     public void exportOrgTreeXml(@RequestParam String orgBaseId, HttpServletResponse response) {
         try (OutputStream outStream = response.getOutputStream()) {
 
-            Y9OrgBase y9OrgBase = compositeOrgBaseService.getOrgBase(orgBaseId);
+            Y9OrgBase y9OrgBase = compositeOrgBaseService.getOrgUnit(orgBaseId);
             String filename =
                 y9OrgBase.getName() + "-组织架构-" + new SimpleDateFormat("yyyyMMddHHmmss").format(new Date()) + ".xml";
 
@@ -163,7 +163,7 @@ public class ImportExportController {
     @GetMapping(value = "/exportOrgXls")
     public void exportPersonXls(@RequestParam String orgBaseId, HttpServletResponse response) {
         try (OutputStream outStream = response.getOutputStream();) {
-            Y9OrgBase base = compositeOrgBaseService.getOrgBase(orgBaseId);
+            Y9OrgBase base = compositeOrgBaseService.getOrgUnit(orgBaseId);
             String filename =
                 base.getName() + "-组织架构" + new SimpleDateFormat("yyyyMMddHHmmss").format(new Date()) + ".xlsx";
             response.setContentType(MediaTypeUtils.getMediaTypeForFileName(servletContext, filename).toString());

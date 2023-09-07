@@ -84,8 +84,8 @@ public class JobController {
      */
     @RiseLog(operationName = "保存职位排序", operationType = OperationTypeEnum.MODIFY)
     @PostMapping(value = "/saveOrder")
-    public Y9Result<List<Y9Job>> saveOrder(@RequestParam String[] jobIds, @RequestParam String[] tabindexs) {
-        List<Y9Job> jobList = y9JobService.order(jobIds, tabindexs);
+    public Y9Result<List<Y9Job>> saveOrder(@RequestParam(value = "jobIds") List<String> jobIds) {
+        List<Y9Job> jobList = y9JobService.order(jobIds);
         return Y9Result.success(jobList, "保存职位排序成功");
     }
 

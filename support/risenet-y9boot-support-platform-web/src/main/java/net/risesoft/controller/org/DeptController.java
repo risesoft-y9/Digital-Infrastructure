@@ -215,7 +215,7 @@ public class DeptController {
      */
     @RiseLog(operationName = "保存部门排序", operationType = OperationTypeEnum.MODIFY)
     @PostMapping(value = "/saveOrder")
-    public Y9Result<String> saveOrder(@RequestParam String[] deptIds) {
+    public Y9Result<String> saveOrder(@RequestParam(value = "deptIds") List<String> deptIds) {
         compositeOrgBaseService.sort(deptIds);
         return Y9Result.successMsg("保存部门排序成功");
     }
@@ -224,13 +224,12 @@ public class DeptController {
      * 新建或者更新部门信息
      *
      * @param dept 部门实体
-     * @param parentId 部门父节点id
      * @return
      */
     @RiseLog(operationName = "保存部门信息", operationType = OperationTypeEnum.ADD)
     @PostMapping(value = "/saveOrUpdate")
-    public Y9Result<Y9Department> saveOrUpdate(@Validated Y9Department dept, @RequestParam String parentId) {
-        Y9Department returnDept = y9DepartmentService.saveOrUpdate(dept, compositeOrgBaseService.getOrgBase(parentId));
+    public Y9Result<Y9Department> saveOrUpdate(@Validated Y9Department dept) {
+        Y9Department returnDept = y9DepartmentService.saveOrUpdate(dept);
         return Y9Result.success(returnDept, "保存成功");
     }
 
@@ -242,7 +241,8 @@ public class DeptController {
      */
     @RiseLog(operationName = "设置部门领导", operationType = OperationTypeEnum.ADD)
     @PostMapping(value = "/setDeptLeaders")
-    public Y9Result<String> setDeptLeaders(@RequestParam String deptId, @RequestParam String[] orgBaseIds) {
+    public Y9Result<String> setDeptLeaders(@RequestParam String deptId,
+        @RequestParam(value = "orgBaseIds") List<String> orgBaseIds) {
         y9DepartmentService.setDeptLeaders(deptId, orgBaseIds);
         return Y9Result.successMsg("设置部门领导成功");
     }
@@ -255,7 +255,8 @@ public class DeptController {
      */
     @RiseLog(operationName = "设置部门主管领导", operationType = OperationTypeEnum.ADD)
     @PostMapping(value = "/setDeptManagers")
-    public Y9Result<String> setDeptManagers(@RequestParam String deptId, @RequestParam String[] orgBaseIds) {
+    public Y9Result<String> setDeptManagers(@RequestParam String deptId,
+        @RequestParam(value = "orgBaseIds") List<String> orgBaseIds) {
         y9DepartmentService.setDeptManagers(deptId, orgBaseIds);
         return Y9Result.successMsg("设置部门主管领导成功");
     }
@@ -268,7 +269,8 @@ public class DeptController {
      */
     @RiseLog(operationName = "设置部门秘书", operationType = OperationTypeEnum.ADD)
     @PostMapping(value = "/setDeptSecretarys")
-    public Y9Result<String> setDeptSecretarys(@RequestParam String deptId, @RequestParam String[] orgBaseIds) {
+    public Y9Result<String> setDeptSecretarys(@RequestParam String deptId,
+        @RequestParam(value = "orgBaseIds") List<String> orgBaseIds) {
         y9DepartmentService.setDeptSecretarys(deptId, orgBaseIds);
         return Y9Result.successMsg("设置部门秘书成功");
     }
@@ -281,7 +283,8 @@ public class DeptController {
      */
     @RiseLog(operationName = "设置部门副领导", operationType = OperationTypeEnum.ADD)
     @PostMapping(value = "/setDeptViceLeaders")
-    public Y9Result<String> setDeptViceLeaders(@RequestParam String deptId, @RequestParam String[] orgBaseIds) {
+    public Y9Result<String> setDeptViceLeaders(@RequestParam String deptId,
+        @RequestParam(value = "orgBaseIds") List<String> orgBaseIds) {
         y9DepartmentService.setDeptViceLeaders(deptId, orgBaseIds);
         return Y9Result.successMsg("设置部门副领导成功");
     }

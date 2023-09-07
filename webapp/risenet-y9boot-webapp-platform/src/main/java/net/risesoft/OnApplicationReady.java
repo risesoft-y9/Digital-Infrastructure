@@ -169,7 +169,7 @@ public class OnApplicationReady implements ApplicationListener<ApplicationReadyE
             ext.setName("业务用户");
             ext.setPersonId(personId);
             ext.setWorkTime(new Date());
-            y9PersonService.saveOrUpdate(y9Person, ext, y9OrganizationService.getById(organizationId));
+            y9PersonService.saveOrUpdate(y9Person, ext);
         }
     }
 

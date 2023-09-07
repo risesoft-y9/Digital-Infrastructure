@@ -118,7 +118,7 @@ public class Y9RoleManagerImpl implements Y9RoleManager {
     }
 
     private void getOrgUnitIdsByUpwardRecursion(List<String> orgUnitIds, String orgUnitId) {
-        Y9OrgBase y9OrgBase = compositeOrgBaseManager.getOrgBase(orgUnitId);
+        Y9OrgBase y9OrgBase = compositeOrgBaseManager.getOrgUnit(orgUnitId);
         if (y9OrgBase == null) {
             return;
         }
@@ -130,14 +130,14 @@ public class Y9RoleManagerImpl implements Y9RoleManager {
             List<String> groupList = y9PersonsToGroupsRepository.listGroupIdsByPersonId(y9OrgBase.getId());
             orgUnitIds.addAll(groupList);
             for (String groupId : groupList) {
-                Y9Group group = (Y9Group)compositeOrgBaseManager.getOrgBase(groupId);
+                Y9Group group = (Y9Group)compositeOrgBaseManager.getOrgUnit(groupId);
                 getOrgUnitIdsByUpwardRecursion(orgUnitIds, group.getParentId());
             }
 
             List<String> positionIds = y9PersonsToPositionsRepository.listPositionIdsByPersonId(y9OrgBase.getId());
             orgUnitIds.addAll(positionIds);
             for (String positionId : positionIds) {
-                Y9Position position = (Y9Position)compositeOrgBaseManager.getOrgBase(positionId);
+                Y9Position position = (Y9Position)compositeOrgBaseManager.getOrgUnit(positionId);
                 getOrgUnitIdsByUpwardRecursion(orgUnitIds, position.getParentId());
             }
         } else if (OrgTypeEnum.POSITION.getEnName().equals(y9OrgBase.getOrgType())) {

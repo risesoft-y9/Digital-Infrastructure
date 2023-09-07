@@ -78,6 +78,8 @@ public interface Y9DepartmentService {
      */
     List<Y9Department> list();
 
+    List<Y9Department> list(List<String> ids);
+
     /**
      * 获取组织机构下所有的委办局
      *
@@ -176,21 +178,20 @@ public interface Y9DepartmentService {
     void removeViceLeader(String deptId, String personId);
 
     /**
+     * 保存或更新 新增或修改此部门实例的信息
+     *
+     * @param dept 部门对象
+     * @return {@link Y9Department}
+     */
+    Y9Department saveOrUpdate(Y9Department dept);
+
+    /**
      * 保存新的部门排序
      *
      * @param deptIds 部门id数组
      * @return {@link List}<{@link Y9Department}>
      */
-    List<Y9Department> saveOrder(String[] deptIds);
-
-    /**
-     * 保存或更新 新增或修改此部门实例的信息
-     *
-     * @param dept 部门对象
-     * @param parent 父节点对象
-     * @return {@link Y9Department}
-     */
-    Y9Department saveOrUpdate(Y9Department dept, Y9OrgBase parent);
+    List<Y9Department> saveOrder(List<String> deptIds);
 
     /**
      * 保存或者更新部门扩展信息
@@ -215,7 +216,7 @@ public interface Y9DepartmentService {
      * @param deptId 部门id
      * @param personIds 人员id数组
      */
-    void setDeptLeaders(String deptId, String[] personIds);
+    void setDeptLeaders(String deptId, List<String> personIds);
 
     /**
      * 设置部门主管领导
@@ -223,7 +224,7 @@ public interface Y9DepartmentService {
      * @param deptId 部门id
      * @param orgBaseIds 组织节点id数组
      */
-    void setDeptManagers(String deptId, String[] orgBaseIds);
+    void setDeptManagers(String deptId, List<String> orgBaseIds);
 
     /**
      * 设置部门秘书
@@ -231,7 +232,7 @@ public interface Y9DepartmentService {
      * @param deptId 部门id
      * @param orgBaseIds 组织节点id数组
      */
-    void setDeptSecretarys(String deptId, String[] orgBaseIds);
+    void setDeptSecretarys(String deptId, List<String> orgBaseIds);
 
     /**
      * 设置部门副领导
@@ -239,7 +240,7 @@ public interface Y9DepartmentService {
      * @param deptId 部门id
      * @param orgBaseIds 组织节点id数组
      */
-    void setDeptViceLeaders(String deptId, String[] orgBaseIds);
+    void setDeptViceLeaders(String deptId, List<String> orgBaseIds);
 
     /**
      * 更新部门排列序号
@@ -249,6 +250,4 @@ public interface Y9DepartmentService {
      * @return {@link Y9Department}
      */
     Y9Department updateTabIndex(String id, int tabIndex);
-
-    List<Y9Department> list(List<String> ids);
 }

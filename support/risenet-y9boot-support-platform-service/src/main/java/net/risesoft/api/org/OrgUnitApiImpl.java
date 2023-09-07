@@ -106,7 +106,7 @@ public class OrgUnitApiImpl implements OrgUnitApi {
         @RequestParam("orgUnitId") @NotBlank String orgUnitId) {
         Y9LoginUserHolder.setTenantId(tenantId);
 
-        return ModelConvertUtil.orgBaseToOrgUnit(compositeOrgBaseService.getOrgBase(orgUnitId));
+        return ModelConvertUtil.orgBaseToOrgUnit(compositeOrgBaseService.getOrgUnit(orgUnitId));
     }
 
     /**
@@ -122,7 +122,7 @@ public class OrgUnitApiImpl implements OrgUnitApi {
         @RequestParam("orgUnitId") @NotBlank String orgUnitId) {
         Y9LoginUserHolder.setTenantId(tenantId);
 
-        return ModelConvertUtil.orgBaseToOrgUnit(compositeOrgBaseService.getOrgBaseDeletedByOrgUnitId(orgUnitId));
+        return ModelConvertUtil.orgBaseToOrgUnit(compositeOrgBaseService.getOrgUnitDeleted(orgUnitId));
     }
 
     /**
@@ -138,7 +138,7 @@ public class OrgUnitApiImpl implements OrgUnitApi {
         @RequestParam("orgUnitId") @NotBlank String orgUnitId) {
         Y9LoginUserHolder.setTenantId(tenantId);
 
-        Y9OrgBase parent = compositeOrgBaseService.getParent(orgUnitId);
+        Y9OrgBase parent = compositeOrgBaseService.getOrgUnitParent(orgUnitId);
         return ModelConvertUtil.orgBaseToOrgUnit(parent);
     }
 

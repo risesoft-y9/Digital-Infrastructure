@@ -63,10 +63,9 @@ public interface Y9JobService {
      * 按照tabindexs的顺序重新排序职位列表
      *
      * @param jobIds 岗位id
-     * @param tabIndexs 排序序列号
      * @return {@link List}<{@link Y9Job}>
      */
-    List<Y9Job> order(String[] jobIds, String[] tabIndexs);
+    List<Y9Job> order(List<String> jobIds);
 
     /**
      * 分页查询职位

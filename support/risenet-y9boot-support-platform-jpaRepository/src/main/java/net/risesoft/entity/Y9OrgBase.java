@@ -4,6 +4,7 @@ import jakarta.persistence.Column;
 import jakarta.persistence.Convert;
 import jakarta.persistence.Id;
 import jakarta.persistence.MappedSuperclass;
+import jakarta.persistence.Transient;
 import jakarta.persistence.Version;
 import jakarta.validation.constraints.NotBlank;
 
@@ -37,9 +38,8 @@ public class Y9OrgBase extends BaseEntity implements Comparable<Y9OrgBase> {
     @Comment("UUID字段")
     protected String id;
 
-    /** 父节点id */
-    @Column(name = "PARENT_ID", length = 38)
-    @Comment("父节点id")
+    /** 父节点id 组织机构中不需要这个字段，其他组织节点的实体表中加入该字段，为了操作方便此处保留 */
+    @Transient
     protected String parentId;
 
     /** 租户id */

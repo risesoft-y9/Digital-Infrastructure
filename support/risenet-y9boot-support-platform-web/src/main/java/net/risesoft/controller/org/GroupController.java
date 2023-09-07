@@ -15,7 +15,6 @@ import net.risesoft.entity.Y9Person;
 import net.risesoft.log.OperationTypeEnum;
 import net.risesoft.log.annotation.RiseLog;
 import net.risesoft.pojo.Y9Result;
-import net.risesoft.service.org.CompositeOrgBaseService;
 import net.risesoft.service.org.Y9GroupService;
 import net.risesoft.service.relation.Y9PersonsToGroupsService;
 
@@ -33,7 +32,6 @@ import net.risesoft.service.relation.Y9PersonsToGroupsService;
 @RequiredArgsConstructor
 public class GroupController {
 
-    private final CompositeOrgBaseService compositeOrgBaseService;
     private final Y9PersonsToGroupsService y9PersonsToGroupsService;
     private final Y9GroupService y9GroupService;
 
@@ -149,7 +147,7 @@ public class GroupController {
      */
     @RiseLog(operationName = "保存用户组排序", operationType = OperationTypeEnum.MODIFY)
     @PostMapping(value = "/saveOrder")
-    public Y9Result<String> saveOrder(@RequestParam String[] groupIds) {
+    public Y9Result<String> saveOrder(@RequestParam(value = "groupIds") List<String> groupIds) {
         y9GroupService.saveOrder(groupIds);
         return Y9Result.successMsg("保存用户组排序成功");
     }
@@ -186,13 +184,12 @@ public class GroupController {
      * 新建或者更新用户组信息
      *
      * @param group 用户组实体
-     * @param parentId 父节点id
      * @return
      */
     @RiseLog(operationName = "新建或者更新用户组信息", operationType = OperationTypeEnum.ADD)
     @PostMapping(value = "/saveOrUpdate")
-    public Y9Result<Y9Group> saveOrUpdate(@Validated Y9Group group, @RequestParam String parentId) {
-        Y9Group returnGroup = y9GroupService.saveOrUpdate(group, compositeOrgBaseService.getOrgBase(parentId));
+    public Y9Result<Y9Group> saveOrUpdate(@Validated Y9Group group) {
+        Y9Group returnGroup = y9GroupService.saveOrUpdate(group);
         return Y9Result.success(returnGroup, "新建或者更新用户组信息成功");
     }
 

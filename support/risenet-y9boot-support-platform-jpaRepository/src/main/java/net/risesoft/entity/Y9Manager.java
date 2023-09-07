@@ -38,6 +38,11 @@ public class Y9Manager extends Y9OrgBase {
         super.setOrgType(OrgTypeEnum.MANAGER.getEnName());
     }
 
+    /** 父节点id */
+    @Column(name = "PARENT_ID", length = 38, nullable = false)
+    @Comment("父节点id")
+    private String parentId;
+
     /**
      * 头像
      */

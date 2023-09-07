@@ -120,16 +120,15 @@ public interface Y9GroupService {
      * @param groupIds 用户组id数组
      * @return {@link List}<{@link Y9Group}>
      */
-    List<Y9Group> saveOrder(String[] groupIds);
+    List<Y9Group> saveOrder(List<String> groupIds);
 
     /**
      * 修改此用户组实例的信息
      *
      * @param group 用户组对象
-     * @param parent 父节点对象
      * @return ORGGroup
      */
-    Y9Group saveOrUpdate(Y9Group group, Y9OrgBase parent);
+    Y9Group saveOrUpdate(Y9Group group);
 
     /**
      * 保存或者更新用户组扩展信息

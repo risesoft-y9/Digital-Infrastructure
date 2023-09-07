@@ -26,7 +26,7 @@ public interface Y9PersonService {
      * @param personIds 人员id数组
      * @return {@link List}<{@link Y9Person}>
      */
-    List<Y9Person> addPersons(String parentId, String[] personIds);
+    List<Y9Person> addPersons(String parentId, List<String> personIds);
 
     /**
      * 用户认证
@@ -149,7 +149,7 @@ public interface Y9PersonService {
      *
      * @param ids id数组
      */
-    void delete(String[] ids);
+    void delete(List<String> ids);
 
     /**
      * 根据父节点id，删除人员
@@ -345,10 +345,9 @@ public interface Y9PersonService {
      * 按照tabindexs的顺序重新排序人员列表
      *
      * @param personIds 人员id数组
-     * @param tabIndexs 排列序号数组
      * @return {@link List}<{@link Y9OrgBase}>
      */
-    List<Y9OrgBase> order(String[] personIds, String[] tabIndexs);
+    List<Y9OrgBase> order(List<String> personIds);
 
     /**
      * 根据名称模糊查询人员
@@ -412,32 +411,29 @@ public interface Y9PersonService {
      *
      * @param person 人员对象
      * @param ext 人员扩展信息对象
-     * @param parentId 父节点id
      * @param positionIds 岗位id数组
      * @param jobIds 职位id数组
      * @return {@link Y9Person}
      */
-    Y9Person saveOrUpdate(Y9Person person, Y9PersonExt ext, String parentId, String[] positionIds, String[] jobIds);
+    Y9Person saveOrUpdate(Y9Person person, Y9PersonExt ext, List<String> positionIds, List<String> jobIds);
 
     /**
      * 保存或者修改此岗位的信息
      *
      * @param person 人员对象
      * @param personExt 人员扩展信息对象
-     * @param parent 父节点对象
      * @return ORGPerson
      */
-    Y9Person saveOrUpdate(Y9Person person, Y9PersonExt personExt, Y9OrgBase parent);
+    Y9Person saveOrUpdate(Y9Person person, Y9PersonExt personExt);
 
     /**
      * 保存或者修改此人员的信息(用于导入y9导出的组织机构：密码是什么就导入什么不做处理)
      *
      * @param person 人员对象
      * @param personExt 人员扩展信息
-     * @param parent 父节点对象
      * @return ORGPerson
      */
-    Y9Person saveOrUpdate4ImpOrg(Y9Person person, Y9PersonExt personExt, Y9OrgBase parent);
+    Y9Person saveOrUpdate4ImpOrg(Y9Person person, Y9PersonExt personExt);
 
     /**
      * 保存或者更新人员扩展信息

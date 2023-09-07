@@ -37,6 +37,11 @@ public class Y9Department extends Y9OrgBase {
         super.setOrgType(OrgTypeEnum.DEPARTMENT.getEnName());
     }
 
+    /** 父节点id */
+    @Column(name = "PARENT_ID", length = 38, nullable = false)
+    @Comment("父节点id")
+    private String parentId;
+
     /** 部门简称 */
     @Column(name = "ALIAS_NAME", length = 255)
     @Comment("部门简称")
