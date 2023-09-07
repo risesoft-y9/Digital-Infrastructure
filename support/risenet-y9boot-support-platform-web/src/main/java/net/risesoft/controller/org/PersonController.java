@@ -251,7 +251,7 @@ public class PersonController {
      */
     @RiseLog(operationName = "删除人员", operationType = OperationTypeEnum.DELETE)
     @PostMapping(value = "/remove")
-    public Y9Result<String> remove(@RequestParam String[] ids) {
+    public Y9Result<String> remove(@RequestParam(value = "ids") List<String> ids) {
         y9PersonService.delete(ids);
         return Y9Result.successMsg("删除人员成功");
     }
@@ -315,13 +315,12 @@ public class PersonController {
      * 保存排序结果
      *
      * @param personIds 人员id数组
-     * @param tabindexs 排序号数组
      * @return
      */
     @RiseLog(operationName = "保存人员排序", operationType = OperationTypeEnum.MODIFY)
     @PostMapping(value = "/saveOrder")
-    public Y9Result<String> saveOrder(@RequestParam String[] personIds, @RequestParam String[] tabindexs) {
-        y9PersonService.order(personIds, tabindexs);
+    public Y9Result<String> saveOrder(@RequestParam(value = "personIds") List<String> personIds) {
+        y9PersonService.order(personIds);
         return Y9Result.successMsg("保存人员排序成功");
     }
 
@@ -330,7 +329,6 @@ public class PersonController {
      *
      * @param person 人员实体
      * @param ext 人员扩展信息实体
-     * @param parentId 父节点id
      * @param jobIds 职位id数组
      * @param positionIds 岗位id数组
      * @return
@@ -338,9 +336,9 @@ public class PersonController {
     @RiseLog(operationName = "新建或者更新人员信息", operationType = OperationTypeEnum.ADD)
     @PostMapping(value = "/saveOrUpdate")
     public Y9Result<Y9Person> saveOrUpdate(@Validated Y9Person person, @Validated Y9PersonExt ext,
-        @RequestParam String parentId, @RequestParam(value = "positionIds", required = false) String[] positionIds,
-        @RequestParam(value = "jobIds", required = false) String[] jobIds) {
-        Y9Person y9Person = y9PersonService.saveOrUpdate(person, ext, parentId, positionIds, jobIds);
+        @RequestParam(value = "positionIds", required = false) List<String> positionIds,
+        @RequestParam(value = "jobIds", required = false) List<String> jobIds) {
+        Y9Person y9Person = y9PersonService.saveOrUpdate(person, ext, positionIds, jobIds);
         return Y9Result.success(y9Person, "保存人员信息成功");
     }
 
@@ -379,7 +377,8 @@ public class PersonController {
      */
     @RiseLog(operationName = "保存添加人员", operationType = OperationTypeEnum.ADD)
     @PostMapping(value = "/savePersons")
-    public Y9Result<List<Y9Person>> savePersons(@RequestParam String[] personIds, @RequestParam String parentId) {
+    public Y9Result<List<Y9Person>> savePersons(@RequestParam(value = "personIds") List<String> personIds,
+        @RequestParam String parentId) {
         List<Y9Person> persons = y9PersonService.addPersons(parentId, personIds);
         return Y9Result.success(persons, "保存添加人员成功");
     }

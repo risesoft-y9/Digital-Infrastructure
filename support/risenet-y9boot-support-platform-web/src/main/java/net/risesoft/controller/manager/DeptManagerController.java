@@ -111,7 +111,7 @@ public class DeptManagerController {
      */
     @RiseLog(operationName = "删除部门管理员", operationType = OperationTypeEnum.DELETE)
     @PostMapping(value = "/remove")
-    public Y9Result<String> remove(@RequestParam String[] ids) {
+    public Y9Result<String> remove(@RequestParam(value = "ids") List<String> ids) {
         y9ManagerService.delete(ids);
         return Y9Result.successMsg("删除人员成功");
     }

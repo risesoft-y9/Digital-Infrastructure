@@ -14,7 +14,7 @@ import net.risesoft.entity.relation.Y9PersonsToPositions;
 public interface Y9PersonsToPositionsManager {
     void deleteByPersonId(String personId);
 
-    List<Y9PersonsToPositions> addPositions(String personId, String[] positionIds);
+    List<Y9PersonsToPositions> addPositions(String personId, List<String> positionIds);
 
     Y9PersonsToPositions save(String personId, String positionId);
 

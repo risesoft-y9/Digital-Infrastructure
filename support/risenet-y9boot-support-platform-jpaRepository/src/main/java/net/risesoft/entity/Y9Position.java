@@ -31,6 +31,11 @@ public class Y9Position extends Y9OrgBase {
         super.setOrgType(OrgTypeEnum.POSITION.getEnName());
     }
 
+    /** 父节点id */
+    @Column(name = "PARENT_ID", length = 38, nullable = false)
+    @Comment("父节点id")
+    private String parentId;
+
     /** 职位id */
     @Column(name = "JOB_ID", length = 38, nullable = false)
     @Comment("职位id")

@@ -169,7 +169,7 @@ public class Y9GroupServiceImpl implements Y9GroupService {
         Y9Group updatedY9Group = new Y9Group();
         Y9BeanUtil.copyProperties(originY9Group, updatedY9Group);
 
-        Y9OrgBase parent = compositeOrgBaseManager.getOrgBase(parentId);
+        Y9OrgBase parent = compositeOrgBaseManager.getOrgUnit(parentId);
         updatedY9Group.setParentId(parent.getId());
         updatedY9Group.setDn(OrgLevelConsts.getOrgLevel(OrgTypeEnum.GROUP) + updatedY9Group.getName()
             + OrgLevelConsts.SEPARATOR + parent.getDn());
@@ -215,17 +215,23 @@ public class Y9GroupServiceImpl implements Y9GroupService {
 
     @Override
     @Transactional(readOnly = false)
-    public List<Y9Group> saveOrder(String[] groupIds) {
+    public List<Y9Group> saveOrder(List<String> groupIds) {
         List<Y9Group> groupList = new ArrayList<>();
-        for (int i = 0; i < groupIds.length; i++) {
-            groupList.add(saveOrder(groupIds[i], i));
+
+        int tabIndex = 0;
+        for (String groupId : groupIds) {
+            groupList.add(saveOrder(groupId, tabIndex++));
+
         }
+
         return groupList;
     }
 
     @Override
     @Transactional(readOnly = false)
-    public Y9Group saveOrUpdate(Y9Group group, Y9OrgBase parent) {
+    public Y9Group saveOrUpdate(Y9Group group) {
+        Y9OrgBase parent = compositeOrgBaseManager.getOrgUnitAsParent(group.getParentId());
+
         if (StringUtils.isNotEmpty(group.getId())) {
             Optional<Y9Group> optionalY9Group = y9GroupManager.findById(group.getId());
             if (optionalY9Group.isPresent()) {

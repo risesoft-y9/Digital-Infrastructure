@@ -29,7 +29,7 @@ public interface Y9PositionService {
      * 
      * @param ids id数组
      */
-    void delete(String[] ids);
+    void delete(List<String> ids);
 
     /**
      * 根据主键id删除岗位实例
@@ -147,28 +147,17 @@ public interface Y9PositionService {
      * 保存新的序号
      *
      * @param positionIds 岗位id数组
-     * @param tabIndexs 排列序号数组
      * @return {@link List}<{@link Y9Position}>
      */
-    List<Y9Position> saveOrder(String[] positionIds, String[] tabIndexs);
+    List<Y9Position> saveOrder(List<String> positionIds);
 
     /**
      * 保存或者修改此岗位的信息
      *
      * @param position 岗位对象
-     * @param parentId 父节点id
      * @return ORGRole
      */
-    Y9Position saveOrUpdate(Y9Position position, String parentId);
-
-    /**
-     * 保存或者修改此岗位的信息
-     *
-     * @param position 岗位对象
-     * @param parent 父节点对象
-     * @return ORGRole
-     */
-    Y9Position saveOrUpdate(Y9Position position, Y9OrgBase parent);
+    Y9Position saveOrUpdate(Y9Position position);
 
     /**
      * 保存或者更新岗位扩展信息

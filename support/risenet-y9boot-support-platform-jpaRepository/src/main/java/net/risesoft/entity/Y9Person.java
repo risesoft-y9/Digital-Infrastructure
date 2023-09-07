@@ -33,6 +33,11 @@ public class Y9Person extends Y9OrgBase {
 
     private static final long serialVersionUID = -6531424704457510017L;
 
+    /** 父节点id */
+    @Column(name = "PARENT_ID", length = 38, nullable = false)
+    @Comment("父节点id")
+    private String parentId;
+
     /**
      * 头像
      */

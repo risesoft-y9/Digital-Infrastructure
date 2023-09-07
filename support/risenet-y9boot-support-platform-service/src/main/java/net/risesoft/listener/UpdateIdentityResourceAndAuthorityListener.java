@@ -180,9 +180,9 @@ public class UpdateIdentityResourceAndAuthorityListener {
 
             for (Y9OrgBasesToRoles y9OrgBasesToRoles : y9OrgBasesToRolesList) {
                 if (OrgTypeEnum.PERSON.getEnName().equals(y9OrgBasesToRoles.getOrgType())) {
-                    y9PersonSet.add((Y9Person)compositeOrgBaseService.getOrgBase(y9OrgBasesToRoles.getOrgId()));
+                    y9PersonSet.add((Y9Person)compositeOrgBaseService.getOrgUnit(y9OrgBasesToRoles.getOrgId()));
                 } else if (OrgTypeEnum.POSITION.getEnName().equals(y9OrgBasesToRoles.getOrgType())) {
-                    y9PositionSet.add((Y9Position)compositeOrgBaseService.getOrgBase(y9OrgBasesToRoles.getOrgId()));
+                    y9PositionSet.add((Y9Position)compositeOrgBaseService.getOrgUnit(y9OrgBasesToRoles.getOrgId()));
                 } else {
                     y9PersonSet
                         .addAll(compositeOrgBaseService.listAllPersonsRecursionDownward(y9OrgBasesToRoles.getOrgId()));

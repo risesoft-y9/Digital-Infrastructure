@@ -197,7 +197,7 @@ public class OrgController {
      */
     @RiseLog(operationName = "对组织机构按id顺序排序", operationType = OperationTypeEnum.MODIFY)
     @PostMapping(value = "/saveOrder")
-    public Y9Result<String> saveOrder(@RequestParam String[] orgIds) {
+    public Y9Result<String> saveOrder(@RequestParam(value = "orgIds") List<String> orgIds) {
         y9OrganizationService.saveOrder(orgIds);
         return Y9Result.success(null, "保存机构排序成功！");
     }

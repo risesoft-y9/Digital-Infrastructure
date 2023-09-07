@@ -16,14 +16,6 @@ import net.risesoft.enums.OrgTypeEnum;
 public interface CompositeOrgBaseManager {
 
     /**
-     * 根据组织节点id获取所在委办局
-     *
-     * @param orgUnitId
-     * @return
-     */
-    Y9OrgBase getOrgUnitBureau(String orgUnitId);
-
-    /**
      * 递归得到 guid路径
      *
      * @param sb StringBuilder
@@ -51,10 +43,34 @@ public interface CompositeOrgBaseManager {
     /**
      * 根据指定id获取ORGBase对象(可以是org的任意类型)
      *
-     * @param id
+     * @param orgUnitId
      * @return
      */
-    Y9OrgBase getOrgBase(String id);
+    Y9OrgBase getOrgUnit(String orgUnitId);
+
+    /**
+     * 根据id获取作为父节点的组织节点（只可能是组织机构和部门）
+     *
+     * @param orgUnitId 组织节点id
+     * @return {@link Y9OrgBase}
+     */
+    Y9OrgBase getOrgUnitAsParent(String orgUnitId);
+
+    /**
+     * 根据组织节点id获取所在委办局
+     *
+     * @param orgUnitId
+     * @return
+     */
+    Y9OrgBase getOrgUnitBureau(String orgUnitId);
+
+    /**
+     * 根据组织节点id，获取父节点(parent只可能是组织机构和部门)
+     *
+     * @param orgUnitId 组织节点id
+     * @return ORGBase
+     */
+    Y9OrgBase getOrgUnitParent(String orgUnitId);
 
     /**
      * 根据父节点id,递归获取其下所有人员

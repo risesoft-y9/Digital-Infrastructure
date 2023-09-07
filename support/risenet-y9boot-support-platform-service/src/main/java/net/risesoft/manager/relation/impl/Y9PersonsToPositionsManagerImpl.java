@@ -56,10 +56,9 @@ public class Y9PersonsToPositionsManagerImpl implements Y9PersonsToPositionsMana
 
     @Override
     @Transactional(readOnly = false)
-    public List<Y9PersonsToPositions> addPositions(String personId, String[] positionIds) {
+    public List<Y9PersonsToPositions> addPositions(String personId, List<String> positionIds) {
         List<Y9PersonsToPositions> personsToPositionsList = new ArrayList<>();
-        for (int i = 0; i < positionIds.length; i++) {
-            String positionId = positionIds[i];
+        for (String positionId : positionIds) {
             if (y9PersonsToPositionsRepository.findByPositionIdAndPersonId(positionId, personId).isPresent()) {
                 continue;
             }

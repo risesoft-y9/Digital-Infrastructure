@@ -123,19 +123,6 @@ public class Y9OrganizationServiceImpl implements Y9OrganizationService {
     }
 
     @Override
-    public Y9Organization getByOrgBaseId(String orgBaseId) {
-        Y9OrgBase y9OrgBase = compositeOrgBaseManager.getOrgBase(orgBaseId);
-        if (y9OrgBase.getOrgType().equals(OrgTypeEnum.ORGANIZATION.getEnName())) {
-            return this.getById(orgBaseId);
-        } else {
-            do {
-                y9OrgBase = compositeOrgBaseManager.getOrgBase(y9OrgBase.getParentId());
-            } while (!y9OrgBase.getOrgType().equals(OrgTypeEnum.ORGANIZATION.getEnName()));
-            return this.getById(y9OrgBase.getId());
-        }
-    }
-
-    @Override
     public Integer getMaxTabIndex() {
         return y9OrganizationRepository.findTopByOrderByTabIndexDesc().map(Y9OrgBase::getTabIndex).orElse(0);
     }
@@ -178,12 +165,14 @@ public class Y9OrganizationServiceImpl implements Y9OrganizationService {
 
     @Override
     @Transactional(readOnly = false)
-    public List<Y9Organization> saveOrder(String[] orgIds) {
+    public List<Y9Organization> saveOrder(List<String> orgIds) {
         List<Y9Organization> orgList = new ArrayList<>();
-        for (int i = 0; i < orgIds.length; i++) {
-            Y9Organization newOrganization = saveOrder(orgIds[i], i);
-            orgList.add(newOrganization);
+
+        int tabIndex = 0;
+        for (String orgId : orgIds) {
+            orgList.add(saveOrder(orgId, tabIndex++));
         }
+
         return orgList;
     }
 

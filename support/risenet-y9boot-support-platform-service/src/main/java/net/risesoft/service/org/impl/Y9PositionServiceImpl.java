@@ -109,11 +109,9 @@ public class Y9PositionServiceImpl implements Y9PositionService {
 
     @Override
     @Transactional(readOnly = false)
-    public void delete(String[] ids) {
-        if (ids != null) {
-            for (String id : ids) {
-                this.deleteById(id);
-            }
+    public void delete(List<String> ids) {
+        for (String id : ids) {
+            this.deleteById(id);
         }
     }
 
@@ -231,7 +229,7 @@ public class Y9PositionServiceImpl implements Y9PositionService {
         Y9Position updatedPosition = new Y9Position();
         Y9BeanUtil.copyProperties(originPosition, updatedPosition);
 
-        Y9OrgBase parent = compositeOrgBaseManager.getOrgBase(parentId);
+        Y9OrgBase parent = compositeOrgBaseManager.getOrgUnit(parentId);
         updatedPosition.setParentId(parent.getId());
         updatedPosition.setGuidPath(parent.getGuidPath() + OrgLevelConsts.SEPARATOR + updatedPosition.getId());
         updatedPosition.setDn(OrgLevelConsts.getOrgLevel(OrgTypeEnum.POSITION) + updatedPosition.getName()
@@ -278,9 +276,9 @@ public class Y9PositionServiceImpl implements Y9PositionService {
     }
 
     @Transactional(readOnly = false)
-    public Y9Position saveOrder(String positionId, String tabIndex) {
+    public Y9Position saveOrder(String positionId, int tabIndex) {
         Y9Position position = this.getById(positionId);
-        position.setTabIndex(Integer.parseInt(tabIndex));
+        position.setTabIndex(tabIndex);
         position = save(position);
 
         Y9MessageOrg msg = new Y9MessageOrg(Y9ModelConvertUtil.convert(position, Position.class),
@@ -292,27 +290,21 @@ public class Y9PositionServiceImpl implements Y9PositionService {
 
     @Override
     @Transactional(readOnly = false)
-    public List<Y9Position> saveOrder(String[] positionIds, String[] tabIndexs) {
+    public List<Y9Position> saveOrder(List<String> positionIds) {
         List<Y9Position> orgPositionList = new ArrayList<>();
-        for (int i = 0; i < positionIds.length; i++) {
-            orgPositionList.add(saveOrder(positionIds[i], tabIndexs[i]));
+
+        int tabIndex = 0;
+        for (String positionId : positionIds) {
+            orgPositionList.add(saveOrder(positionId, tabIndex++));
         }
+
         return orgPositionList;
     }
 
     @Override
     @Transactional(readOnly = false)
-    public Y9Position saveOrUpdate(Y9Position position, String parentId) {
-        Y9OrgBase y9OrgBase = compositeOrgBaseManager.getOrgBase(parentId);
-        if (null == y9OrgBase) {
-            y9OrgBase = this.getById(parentId);
-        }
-        return this.saveOrUpdate(position, y9OrgBase);
-    }
-
-    @Override
-    @Transactional(readOnly = false)
-    public Y9Position saveOrUpdate(Y9Position position, Y9OrgBase parent) {
+    public Y9Position saveOrUpdate(Y9Position position) {
+        Y9OrgBase parent = compositeOrgBaseManager.getOrgUnitAsParent(position.getParentId());
         return y9PositionManager.saveOrUpdate(position, parent);
     }
 

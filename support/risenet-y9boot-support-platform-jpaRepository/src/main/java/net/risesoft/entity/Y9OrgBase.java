@@ -3,6 +3,7 @@ package net.risesoft.entity;
 import javax.persistence.Column;
 import javax.persistence.Id;
 import javax.persistence.MappedSuperclass;
+import javax.persistence.Transient;
 import javax.persistence.Version;
 import javax.validation.constraints.NotBlank;
 
@@ -37,9 +38,8 @@ public class Y9OrgBase extends BaseEntity implements Comparable<Y9OrgBase> {
     @Comment("UUID字段")
     protected String id;
 
-    /** 父节点id */
-    @Column(name = "PARENT_ID", length = 38)
-    @Comment("父节点id")
+    /** 父节点id 组织机构中不需要这个字段，其他组织节点的实体表中加入该字段，为了操作方便此处保留 */
+    @Transient
     protected String parentId;
 
     /** 租户id */

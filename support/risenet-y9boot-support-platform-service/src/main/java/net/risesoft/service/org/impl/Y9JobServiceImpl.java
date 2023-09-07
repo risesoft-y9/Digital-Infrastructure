@@ -47,7 +47,7 @@ public class Y9JobServiceImpl implements Y9JobService {
 
     private final Y9JobManager y9JobManager;
 
-    private void checkIfPositionExists(String name) {
+    private void checkIfJobNameExists(String name) {
         Y9Assert.lessThanOrEqualTo(y9JobRepository.countByName(name), 0, JobErrorCodeEnum.JOB_EXISTS, name);
     }
 
@@ -97,19 +97,22 @@ public class Y9JobServiceImpl implements Y9JobService {
     }
 
     @Transactional(readOnly = false)
-    public Y9Job order(String jobId, String tabIndexArray) {
+    public Y9Job order(String jobId, int tabIndex) {
         Y9Job y9Job = this.getById(jobId);
-        y9Job.setTabIndex(Integer.parseInt(tabIndexArray));
+        y9Job.setTabIndex(tabIndex);
         return saveOrUpdate(y9Job);
     }
 
     @Override
     @Transactional(readOnly = false)
-    public List<Y9Job> order(String[] jobIds, String[] tabIndexs) {
+    public List<Y9Job> order(List<String> jobIds) {
         List<Y9Job> jobList = new ArrayList<>();
-        for (int i = 0; i < jobIds.length; i++) {
-            jobList.add(order(jobIds[i], tabIndexs[i]));
+
+        int tabIndex = 0;
+        for (String jobId : jobIds) {
+            jobList.add(order(jobId, tabIndex++));
         }
+
         return jobList;
     }
 
@@ -143,7 +146,7 @@ public class Y9JobServiceImpl implements Y9JobService {
         }
 
         // 新增职位
-        checkIfPositionExists(job.getName());
+        checkIfJobNameExists(job.getName());
 
         Y9Job y9Job = new Y9Job();
         if (StringUtils.isNotBlank(job.getId())) {

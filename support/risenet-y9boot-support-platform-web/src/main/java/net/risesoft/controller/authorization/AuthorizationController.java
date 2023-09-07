@@ -74,7 +74,7 @@ public class AuthorizationController {
     private AuthorizationVO getAuthorizationVOForOrgBase(Y9Authorization y9Authorization) {
         AuthorizationVO authorizationVO = new AuthorizationVO();
         String orgId = y9Authorization.getPrincipalId();
-        Y9OrgBase y9OrgBase = compositeOrgBaseService.getOrgBase(orgId);
+        Y9OrgBase y9OrgBase = compositeOrgBaseService.getOrgUnit(orgId);
         String dn = y9OrgBase.getDn();
         authorizationVO.setId(y9Authorization.getId());
         authorizationVO.setOrgId(y9OrgBase.getId());

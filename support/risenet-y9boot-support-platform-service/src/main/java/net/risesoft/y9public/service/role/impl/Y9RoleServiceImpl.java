@@ -288,7 +288,7 @@ public class Y9RoleServiceImpl implements Y9RoleService {
 
         List<Y9OrgBasesToRoles> y9OrgBasesToRolesList = y9OrgBasesToRolesRepository.findByRoleId(id);
         for (Y9OrgBasesToRoles y9OrgBasesToRoles : y9OrgBasesToRolesList) {
-            Y9OrgBase y9OrgBase = compositeOrgBaseManager.getOrgBase(y9OrgBasesToRoles.getOrgId());
+            Y9OrgBase y9OrgBase = compositeOrgBaseManager.getOrgUnit(y9OrgBasesToRoles.getOrgId());
             if (OrgTypeEnum.PERSON.getEnName().equals(y9OrgBase.getOrgType())) {
                 Y9Person person = (Y9Person)y9OrgBase;
                 y9PersonList.add(person);
@@ -305,7 +305,7 @@ public class Y9RoleServiceImpl implements Y9RoleService {
         List<Y9Position> y9PositionList = new ArrayList<>();
         List<Y9OrgBasesToRoles> y9OrgBasesToRolesList = y9OrgBasesToRolesRepository.findByRoleId(id);
         for (Y9OrgBasesToRoles y9OrgBasesToRoles : y9OrgBasesToRolesList) {
-            Y9OrgBase y9OrgBase = compositeOrgBaseManager.getOrgBase(y9OrgBasesToRoles.getOrgId());
+            Y9OrgBase y9OrgBase = compositeOrgBaseManager.getOrgUnit(y9OrgBasesToRoles.getOrgId());
             if (OrgTypeEnum.POSITION.getEnName().equals(y9OrgBase.getOrgType())) {
                 Y9Position y9Position = (Y9Position)y9OrgBase;
                 y9PositionList.add(y9Position);

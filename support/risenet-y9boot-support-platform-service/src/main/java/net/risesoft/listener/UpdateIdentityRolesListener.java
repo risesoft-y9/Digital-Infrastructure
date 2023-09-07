@@ -184,7 +184,7 @@ public class UpdateIdentityRolesListener {
     }
 
     public void updateIdentityRolesByOrgId(final String orgId) {
-        Y9OrgBase y9OrgBase = compositeOrgBaseService.getOrgBase(orgId);
+        Y9OrgBase y9OrgBase = compositeOrgBaseService.getOrgUnit(orgId);
         if (y9OrgBase != null && y9OrgBase.getId() != null) {
             OrgTypeEnum orgType = OrgTypeEnum.getByEnName(y9OrgBase.getOrgType());
             switch (orgType) {

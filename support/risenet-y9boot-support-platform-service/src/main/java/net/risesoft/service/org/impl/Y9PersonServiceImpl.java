@@ -145,9 +145,9 @@ public class Y9PersonServiceImpl implements Y9PersonService {
 
     @Override
     @Transactional(readOnly = false)
-    public List<Y9Person> addPersons(String parentId, String[] personIds) {
+    public List<Y9Person> addPersons(String parentId, List<String> personIds) {
         List<Y9Person> personList = new ArrayList<>();
-        Y9OrgBase parent = compositeOrgBaseManager.getOrgBase(parentId);
+        Y9OrgBase parent = compositeOrgBaseManager.getOrgUnit(parentId);
         for (String originalId : personIds) {
             Y9Person originalPerson = getById(originalId);
             if (StringUtils.isNotBlank(originalPerson.getOriginalId())) {
@@ -585,7 +585,7 @@ public class Y9PersonServiceImpl implements Y9PersonService {
 
     @Override
     @Transactional(readOnly = false)
-    public void delete(String[] ids) {
+    public void delete(List<String> ids) {
         for (String id : ids) {
             delete(id);
         }
@@ -782,7 +782,7 @@ public class Y9PersonServiceImpl implements Y9PersonService {
         List<String> parentIds = this.listParentIdByPersonId(personId);
         List<Y9OrgBase> parentList = new ArrayList<>();
         for (String parentId : parentIds) {
-            Y9OrgBase parent = compositeOrgBaseManager.getOrgBase(parentId);
+            Y9OrgBase parent = compositeOrgBaseManager.getOrgUnit(parentId);
             parentList.add(parent);
         }
         return parentList;
@@ -818,7 +818,7 @@ public class Y9PersonServiceImpl implements Y9PersonService {
         updatedPerson.setParentId(parentId);
         updatedPerson = this.save(updatedPerson);
 
-        Y9OrgBase parent = compositeOrgBaseManager.getOrgBase(parentId);
+        Y9OrgBase parent = compositeOrgBaseManager.getOrgUnit(parentId);
         Y9MessageOrg msg = new Y9MessageOrg(ModelConvertUtil.orgPersonToPerson(updatedPerson),
             Y9OrgEventConst.RISEORGEVENT_TYPE_UPDATE_PERSON, Y9LoginUserHolder.getTenantId());
         Y9PublishServiceUtil.persistAndPublishMessageOrg(msg, "移动人员",
@@ -844,9 +844,9 @@ public class Y9PersonServiceImpl implements Y9PersonService {
     }
 
     @Transactional(readOnly = false)
-    public Y9Person order(String personId, String tabIndex) {
+    public Y9Person order(String personId, int tabIndex) {
         Y9Person person = this.getById(personId);
-        person.setTabIndex(Integer.parseInt(tabIndex));
+        person.setTabIndex(tabIndex);
         Y9Person y9Person = this.save(person);
 
         Y9MessageOrg msg = new Y9MessageOrg(ModelConvertUtil.orgPersonToPerson(y9Person),
@@ -858,11 +858,14 @@ public class Y9PersonServiceImpl implements Y9PersonService {
 
     @Override
     @Transactional(readOnly = false)
-    public List<Y9OrgBase> order(String[] personIds, String[] tabIndexs) {
+    public List<Y9OrgBase> order(List<String> personIds) {
         List<Y9OrgBase> personList = new ArrayList<>();
-        for (int i = 0; i < personIds.length; i++) {
-            personList.add(order(personIds[i], tabIndexs[i]));
+
+        int tabIndex = 0;
+        for (String personId : personIds) {
+            personList.add(order(personId, tabIndex++));
         }
+
         return personList;
     }
 
@@ -953,11 +956,10 @@ public class Y9PersonServiceImpl implements Y9PersonService {
 
     @Override
     @Transactional(readOnly = false)
-    public Y9Person saveOrUpdate(Y9Person person, Y9PersonExt ext, String parentId, String[] positionIds,
-        String[] jobIds) {
-        Y9OrgBase parent = compositeOrgBaseManager.getOrgBase(parentId);
+    public Y9Person saveOrUpdate(Y9Person person, Y9PersonExt ext, List<String> positionIds, List<String> jobIds) {
+        Y9OrgBase parent = compositeOrgBaseManager.getOrgUnit(person.getParentId());
 
-        person = this.saveOrUpdate(person, ext, parent);
+        person = this.saveOrUpdate(person, ext);
 
         if (positionIds != null) {
             // 关联已有岗位
@@ -966,24 +968,24 @@ public class Y9PersonServiceImpl implements Y9PersonService {
 
         if (jobIds != null) {
             // 根据职位初始化新岗位并关联
-            String[] newPositionIds = new String[jobIds.length];
-            for (int i = 0; i < jobIds.length; i++) {
-                String jobId = jobIds[i];
+            List<String> newPositionIdList = new ArrayList<>();
+            for (String jobId : jobIds) {
                 Y9Position y9Position = new Y9Position();
                 y9Position.setJobId(jobId);
                 y9Position.setName(jobId);
 
                 Y9Position newPosition = y9PositionManager.saveOrUpdate(y9Position, parent);
-                newPositionIds[i] = newPosition.getId();
+                newPositionIdList.add(newPosition.getId());
             }
-            y9PersonsToPositionsManager.addPositions(person.getId(), newPositionIds);
+            y9PersonsToPositionsManager.addPositions(person.getId(), newPositionIdList);
         }
         return person;
     }
 
     @Override
     @Transactional(readOnly = false)
-    public Y9Person saveOrUpdate(Y9Person person, Y9PersonExt personExt, Y9OrgBase parent) {
+    public Y9Person saveOrUpdate(Y9Person person, Y9PersonExt personExt) {
+        Y9OrgBase parent = compositeOrgBaseManager.getOrgUnitAsParent(person.getParentId());
         if (StringUtils.isNotEmpty(person.getId())) {
             Optional<Y9Person> y9PersonOptional = y9PersonManager.findById(person.getId());
             if (y9PersonOptional.isPresent()) {
@@ -1078,7 +1080,8 @@ public class Y9PersonServiceImpl implements Y9PersonService {
 
     @Override
     @Transactional(readOnly = false)
-    public Y9Person saveOrUpdate4ImpOrg(Y9Person person, Y9PersonExt personExt, Y9OrgBase parent) {
+    public Y9Person saveOrUpdate4ImpOrg(Y9Person person, Y9PersonExt personExt) {
+        Y9OrgBase parent = compositeOrgBaseManager.getOrgUnit(person.getParentId());
         Optional<Y9Person> y9PersonOptional = y9PersonManager.findById(person.getId());
         if (y9PersonOptional.isPresent()) {
             // 判断为更新信息
@@ -1163,7 +1166,7 @@ public class Y9PersonServiceImpl implements Y9PersonService {
             person.setMobile(originalPerson.getMobile());
             person.setPassword(originalPerson.getPassword());
 
-            Y9OrgBase parent = compositeOrgBaseManager.getOrgBase(person.getParentId());
+            Y9OrgBase parent = compositeOrgBaseManager.getOrgUnit(person.getParentId());
             person.setDn(OrgLevelConsts.getOrgLevel(OrgTypeEnum.PERSON) + person.getName() + OrgLevelConsts.SEPARATOR
                 + parent.getDn());
 

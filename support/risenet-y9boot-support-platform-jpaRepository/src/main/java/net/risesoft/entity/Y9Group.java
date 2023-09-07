@@ -32,6 +32,11 @@ public class Y9Group extends Y9OrgBase {
         super.setOrgType(OrgTypeEnum.GROUP.getEnName());
     }
 
+    /** 父节点id */
+    @Column(name = "PARENT_ID", length = 38, nullable = false)
+    @Comment("父节点id")
+    private String parentId;
+
     /**
      * 岗位组或者用户组
      * 

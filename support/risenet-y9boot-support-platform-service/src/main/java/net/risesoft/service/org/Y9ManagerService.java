@@ -70,7 +70,7 @@ public interface Y9ManagerService {
      *
      * @param ids 管理员id数组
      */
-    void delete(String[] ids);
+    void delete(List<String> ids);
 
     /**
      * 根据id判断管理员是否存在

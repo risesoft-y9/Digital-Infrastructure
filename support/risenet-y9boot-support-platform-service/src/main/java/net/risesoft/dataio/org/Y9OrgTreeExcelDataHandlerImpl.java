@@ -266,7 +266,7 @@ public class Y9OrgTreeExcelDataHandlerImpl implements Y9OrgTreeDataHandler {
             fullPath = pf.getFullPath() + "," + pf.getName();
         }
         String[] paths = fullPath.split(",");
-        Y9OrgBase orgbase = compositeOrgBaseService.getOrgBase(orgId);
+        Y9OrgBase orgbase = compositeOrgBaseService.getOrgUnit(orgId);
         String dn = orgbase.getDn();
         String parentId = orgbase.getId();
         for (int i = 0, lenth = paths.length; i < lenth; i++) {
@@ -296,8 +296,7 @@ public class Y9OrgTreeExcelDataHandlerImpl implements Y9OrgTreeDataHandler {
                                 orgperson.setMobile(new BigDecimal(personMobile).toString().replaceAll("\\s*", ""));
                                 orgperson.setLoginName(pf.getLoginName().replaceAll("\\s*", ""));
                                 orgperson.setSex("男".equals(pf.getSex()) ? 1 : 0);
-                                y9PersonService.saveOrUpdate(orgperson, null,
-                                    compositeOrgBaseService.getOrgBase(parentId));
+                                y9PersonService.saveOrUpdate(orgperson, null);
                             }
                         } else {
                             // 人员号码错误
@@ -325,8 +324,8 @@ public class Y9OrgTreeExcelDataHandlerImpl implements Y9OrgTreeDataHandler {
                     department.setTenantId(Y9LoginUserHolder.getTenantId());
                     department.setName(paths[i].replaceAll("\\s*", ""));
                     department.setOrgType(OrgTypeEnum.DEPARTMENT.getEnName());
-                    Y9Department dept =
-                        y9DepartmentService.saveOrUpdate(department, compositeOrgBaseService.getOrgBase(parentId));
+                    department.setParentId(parentId);
+                    Y9Department dept = y9DepartmentService.saveOrUpdate(department);
                     parentId = dept.getId();
                 }
             }

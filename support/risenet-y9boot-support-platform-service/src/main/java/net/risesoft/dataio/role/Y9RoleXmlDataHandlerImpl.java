@@ -380,7 +380,7 @@ public class Y9RoleXmlDataHandlerImpl implements Y9RoleDataHandler {
             String roleId = includeElement.attributeValue("roleId");
             String orgId = includeElement.attributeValue("orgId");
 
-            Y9OrgBase y9OrgBase = compositeOrgBaseService.getOrgBase(orgId);
+            Y9OrgBase y9OrgBase = compositeOrgBaseService.getOrgUnit(orgId);
             if (null == y9OrgBase) {
                 continue;
             }
@@ -427,22 +427,22 @@ public class Y9RoleXmlDataHandlerImpl implements Y9RoleDataHandler {
 
     private OrgUnit getParent(String tenantId, String orgUnitId) {
         Y9LoginUserHolder.setTenantId(tenantId);
-        Y9OrgBase y9OrgBase = compositeOrgBaseService.getOrgBase(orgUnitId);
+        Y9OrgBase y9OrgBase = compositeOrgBaseService.getOrgUnit(orgUnitId);
         Y9OrgBase parent = null;
         if (y9OrgBase.getOrgType().equals(OrgTypeEnum.ORGANIZATION.getEnName())) {
             return null;
         } else if (y9OrgBase.getOrgType().equals(OrgTypeEnum.DEPARTMENT.getEnName())) {
             Y9Department y9Department = (Y9Department)y9OrgBase;
-            parent = compositeOrgBaseService.getOrgBase(y9Department.getParentId());
+            parent = compositeOrgBaseService.getOrgUnit(y9Department.getParentId());
         } else if (y9OrgBase.getOrgType().equals(OrgTypeEnum.GROUP.getEnName())) {
             Y9Group y9Group = (Y9Group)y9OrgBase;
-            parent = compositeOrgBaseService.getOrgBase(y9Group.getParentId());
+            parent = compositeOrgBaseService.getOrgUnit(y9Group.getParentId());
         } else if (y9OrgBase.getOrgType().equals(OrgTypeEnum.POSITION.getEnName())) {
             Y9Position y9Position = (Y9Position)y9OrgBase;
-            parent = compositeOrgBaseService.getOrgBase(y9Position.getParentId());
+            parent = compositeOrgBaseService.getOrgUnit(y9Position.getParentId());
         } else if (y9OrgBase.getOrgType().equals(OrgTypeEnum.PERSON.getEnName())) {
             Y9Person y9Person = (Y9Person)y9OrgBase;
-            parent = compositeOrgBaseService.getOrgBase(y9Person.getParentId());
+            parent = compositeOrgBaseService.getOrgUnit(y9Person.getParentId());
         }
         return ModelConvertUtil.orgBaseToOrgUnit(parent);
     }

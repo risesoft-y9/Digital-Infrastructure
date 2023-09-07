@@ -330,7 +330,7 @@ public class Y9AuthorizationServiceImpl implements Y9AuthorizationService {
     @Override
     @Transactional(readOnly = false)
     public Y9Authorization saveOrUpdateOrg(Y9Authorization y9Authorization) {
-        Y9OrgBase y9OrgBase = compositeOrgBaseManager.getOrgBase(y9Authorization.getPrincipalId());
+        Y9OrgBase y9OrgBase = compositeOrgBaseManager.getOrgUnit(y9Authorization.getPrincipalId());
         y9Authorization.setPrincipalId(y9OrgBase.getId());
         y9Authorization.setPrincipalName(y9OrgBase.getName());
         y9Authorization.setPrincipalType(
@@ -462,7 +462,7 @@ public class Y9AuthorizationServiceImpl implements Y9AuthorizationService {
     @Override
     @Transactional(readOnly = false)
     public void syncToIdentityResourceAndAuthority(String orgUnitId) {
-        Y9OrgBase y9OrgBase = compositeOrgBaseManager.getOrgBase(orgUnitId);
+        Y9OrgBase y9OrgBase = compositeOrgBaseManager.getOrgUnit(orgUnitId);
         if (OrgTypeEnum.PERSON.getEnName().equals(y9OrgBase.getOrgType())) {
             syncToIdentityResourceAndAuthority((Y9Person)y9OrgBase);
             return;

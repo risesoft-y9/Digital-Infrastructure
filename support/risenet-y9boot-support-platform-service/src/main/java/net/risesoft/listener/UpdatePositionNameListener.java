@@ -120,7 +120,7 @@ public class UpdatePositionNameListener {
             name = MessageFormat.format(pattern, y9Job.getName(), personNames);
         }
 
-        Y9OrgBase parent = compositeOrgBaseService.getOrgBase(y9Position.getParentId());
+        Y9OrgBase parent = compositeOrgBaseService.getOrgUnit(y9Position.getParentId());
         y9Position.setName(name);
         y9Position.setHeadCount(headcount);
         y9Position.setGuidPath(parent.getGuidPath() + OrgLevelConsts.SEPARATOR + y9Position.getId());
