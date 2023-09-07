@@ -45,6 +45,11 @@ public class ActRuDetailModel implements Serializable {
     private String processDefinitionKey;
 
     /**
+     * 流程启动时间
+     */
+    private String startTime;
+
+    /**
      * 所属事项的系统英文名称
      */
     private String systemName;
