@@ -109,17 +109,17 @@
         <maven.build.timestamp.format>yyyy-MM-dd_HH_mm</maven.build.timestamp.format>
         <maven.javadoc.failOnError>false</maven.javadoc.failOnError>
 
-        <spring-boot.version>2.7.14</spring-boot.version>
+        <spring-boot.version>2.7.15</spring-boot.version>
         <spring-cloud.version>2021.0.8</spring-cloud.version>
 
-        <aspectj.version>1.9.19</aspectj.version>
+        <aspectj.version>1.9.20.1</aspectj.version>
 
-        <fastjson.version>2.0.38</fastjson.version>
+        <fastjson.version>2.0.40</fastjson.version>
         <rs-api.version>2.1.1</rs-api.version>
 
         <guava.version>31.1-jre</guava.version>
-        <druid.version>1.2.18</druid.version>
-        <druid-starter.version>1.2.18</druid-starter.version>
+        <druid.version>1.2.19</druid.version>
+        <druid-starter.version>1.2.19</druid-starter.version>
 
         <commons-fileupload.version>1.5</commons-fileupload.version>
         <commons-lang3.version>3.12.0</commons-lang3.version>
@@ -129,7 +129,7 @@
 
         <javers.version>6.14.0</javers.version>
         <org-dom4j.version>2.1.4</org-dom4j.version>
-        <oshi.version>6.4.4</oshi.version>
+        <oshi.version>6.4.5</oshi.version>
         <lombok.version>1.18.28</lombok.version>
     </properties>
 
@@ -511,45 +511,11 @@
                     </executions>
                 </plugin>
 
-                <!--This plugin's configuration is used to store Eclipse m2e settings 
-                    only. It has no influence on the Maven build itself. -->
-                <plugin>
-                    <groupId>org.eclipse.m2e</groupId>
-                    <artifactId>lifecycle-mapping</artifactId>
-                    <version>1.0.0</version>
-                    <configuration>
-                        <lifecycleMappingMetadata>
-                            <pluginExecutions>
-                                <pluginExecution>
-                                    <pluginExecutionFilter>
-                                        <groupId>
-                                            com.nickwongdev
-                                        </groupId>
-                                        <artifactId>
-                                            aspectj-maven-plugin
-                                        </artifactId>
-                                        <versionRange>
-                                            [1.12.1,)
-                                        </versionRange>
-                                        <goals>
-                                            <goal>test-compile</goal>
-                                            <goal>compile</goal>
-                                        </goals>
-                                    </pluginExecutionFilter>
-                                    <action>
-                                        <ignore></ignore>
-                                    </action>
-                                </pluginExecution>
-                            </pluginExecutions>
-                        </lifecycleMappingMetadata>
-                    </configuration>
-                </plugin>
-
                 <!-- https://github.com/smart-doc-group/smart-doc -->
                 <plugin>
                     <groupId>com.github.shalousun</groupId>
                     <artifactId>smart-doc-maven-plugin</artifactId>
-                    <version>2.7.2</version>
+                    <version>2.7.6</version>
                     <configuration>
                         <configFile>./src/main/resources/smart-doc.json</configFile>
                         <excludes>
