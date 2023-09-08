@@ -86,7 +86,7 @@ public class GroupApiImpl implements GroupApi {
         Y9LoginUserHolder.setTenantId(tenantId);
 
         Y9Group y9Group = Y9JsonUtil.readValue(groupJson, Y9Group.class);
-        y9Group = y9GroupService.createGroup(y9Group, compositeOrgBaseService.getOrgUnit(y9Group.getParentId()));
+        y9Group = y9GroupService.createGroup(y9Group);
         return Y9ModelConvertUtil.convert(y9Group, Group.class);
     }
 
@@ -136,7 +136,7 @@ public class GroupApiImpl implements GroupApi {
         @RequestParam("groupId") @NotBlank String groupId) {
         Y9LoginUserHolder.setTenantId(tenantId);
 
-        Y9OrgBase parent = compositeOrgBaseService.getOrgUnitParent(groupId);
+        Y9OrgBase parent = compositeOrgBaseService.findOrgUnitParent(groupId).orElse(null);
         return ModelConvertUtil.orgBaseToOrgUnit(parent);
     }
 

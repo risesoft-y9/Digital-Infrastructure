@@ -59,7 +59,7 @@ public class UpdateIdentityRolesListener {
         Y9Department updatedY9Department = event.getUpdatedEntity();
 
         if (Y9OrgUtil.isMoved(originY9Department, updatedY9Department)) {
-            updateIdentityRolesByOrgId(updatedY9Department.getId());
+            this.updateIdentityRolesByOrgId(updatedY9Department.getId());
             if (LOGGER.isDebugEnabled()) {
                 LOGGER.debug("部门移动触发的更新人员/岗位角色执行完成");
             }

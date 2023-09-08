@@ -136,17 +136,6 @@ public class Y9RoleServiceImpl implements Y9RoleService {
         return y9RoleRepository.findTopByOrderByTabIndexDesc().map(Y9Role::getTabIndex).orElse(0);
     }
 
-    private void getRoleTrees(String roleId, List<Y9Role> roleNodeList) {
-        List<Y9Role> childrenList = listByParentId(roleId);
-        if (childrenList.isEmpty()) {
-            return;
-        }
-        roleNodeList.addAll(childrenList);
-        for (Y9Role roleNode : childrenList) {
-            getRoleTrees(roleNode.getId(), roleNodeList);
-        }
-    }
-
     @Override
     public List<Y9Role> listAll() {
         return y9RoleRepository.findAll();
@@ -253,6 +242,11 @@ public class Y9RoleServiceImpl implements Y9RoleService {
     }
 
     @Override
+    public List<String> listOrgUnitIdRecursively(String orgUnitId) {
+        return y9RoleManager.listOrgUnitIdRecursively(orgUnitId);
+    }
+
+    @Override
     public List<Y9Role> listOrgUnitRelated(String orgId) {
         List<Y9Role> y9RoleList = new ArrayList<>();
 
@@ -270,11 +264,6 @@ public class Y9RoleServiceImpl implements Y9RoleService {
             }
         }
         return y9RoleList;
-    }
-
-    @Override
-    public List<String> listOrgUnitIdRecursively(String orgUnitId) {
-        return y9RoleManager.listOrgUnitIdRecursively(orgUnitId);
     }
 
     @Override
@@ -324,67 +313,6 @@ public class Y9RoleServiceImpl implements Y9RoleService {
         roleNode.setParentId(newParentId);
         saveOrUpdate(roleNode);
         recursiveUpdateByDn(roleNode);
-    }
-
-    private void recursionDown(List<Y9Role> lists, String parentId) {
-        List<Y9Role> list = this.listByParentId(parentId);
-        for (Y9Role role : list) {
-            String parentId2 = role.getId();
-            List<Y9Role> list2 = this.listByParentId(parentId2);
-            if (!list2.isEmpty()) {
-                recursionDown(lists, parentId2);
-            } else {
-                lists.add(role);
-            }
-        }
-    }
-
-    private void recursionUpToTop(String parentId, List<Y9Role> returnList) {
-        if (StringUtils.isEmpty(parentId)) {
-            return;
-        }
-        Y9Role parentNode = findById(parentId);
-        if (parentNode != null && !returnList.contains(parentNode)) {
-            returnList.add(parentNode);
-            if (StringUtils.isNotEmpty(parentNode.getParentId())) {
-                recursionUpToTop(parentNode.getParentId(), returnList);
-            }
-        }
-    }
-
-    @Transactional(readOnly = false)
-    public void recursiveUpdate(Y9Role y9Role) {
-        List<Y9Role> childrenList = listByParentId(y9Role.getId());
-        if (!childrenList.isEmpty()) {
-            for (Y9Role childrenRole : childrenList) {
-                Y9Role oldRole = this.findById(childrenRole.getId());
-                oldRole.setSystemName(y9Role.getSystemName());
-                saveOrUpdate(oldRole);
-                recursiveUpdate(oldRole);
-            }
-        }
-    }
-
-    @Transactional(readOnly = false)
-    public void recursiveUpdateByDn(Y9Role roleNode) {
-        // 调用向下递归改变DN的值
-        List<Y9Role> childrenList = listByParentId(roleNode.getId());
-        if (!childrenList.isEmpty()) {
-            for (Y9Role childrenRole : childrenList) {
-                saveOrUpdate(childrenRole);
-                recursiveUpdateByDn(childrenRole);
-            }
-        }
-    }
-
-    @Override
-    @Transactional(readOnly = false)
-    public void saveOrder(String[] ids) {
-        for (int i = 0; i < ids.length; i++) {
-            Y9Role roleNode = this.findById(ids[i]);
-            roleNode.setTabIndex(i);
-            y9RoleManager.save(roleNode);
-        }
     }
 
     @Override
@@ -448,6 +376,16 @@ public class Y9RoleServiceImpl implements Y9RoleService {
 
     @Override
     @Transactional(readOnly = false)
+    public void saveOrder(String[] ids) {
+        for (int i = 0; i < ids.length; i++) {
+            Y9Role roleNode = this.findById(ids[i]);
+            roleNode.setTabIndex(i);
+            y9RoleManager.save(roleNode);
+        }
+    }
+
+    @Override
+    @Transactional(readOnly = false)
     public Y9Role saveProperties(String id, String properties) {
         Y9Role roleNode = this.findById(id);
         roleNode.setProperties(properties);
@@ -495,5 +433,67 @@ public class Y9RoleServiceImpl implements Y9RoleService {
             recursionUpToTop(role.getParentId(), returnList);
         }
         return returnList;
+    }
+
+    private void getRoleTrees(String roleId, List<Y9Role> roleNodeList) {
+        List<Y9Role> childrenList = listByParentId(roleId);
+        if (childrenList.isEmpty()) {
+            return;
+        }
+        roleNodeList.addAll(childrenList);
+        for (Y9Role roleNode : childrenList) {
+            getRoleTrees(roleNode.getId(), roleNodeList);
+        }
+    }
+
+    private void recursionDown(List<Y9Role> lists, String parentId) {
+        List<Y9Role> list = this.listByParentId(parentId);
+        for (Y9Role role : list) {
+            String parentId2 = role.getId();
+            List<Y9Role> list2 = this.listByParentId(parentId2);
+            if (!list2.isEmpty()) {
+                recursionDown(lists, parentId2);
+            } else {
+                lists.add(role);
+            }
+        }
+    }
+
+    private void recursionUpToTop(String parentId, List<Y9Role> returnList) {
+        if (StringUtils.isEmpty(parentId)) {
+            return;
+        }
+        Y9Role parentNode = findById(parentId);
+        if (parentNode != null && !returnList.contains(parentNode)) {
+            returnList.add(parentNode);
+            if (StringUtils.isNotEmpty(parentNode.getParentId())) {
+                recursionUpToTop(parentNode.getParentId(), returnList);
+            }
+        }
+    }
+
+    @Transactional(readOnly = false)
+    public void recursiveUpdate(Y9Role y9Role) {
+        List<Y9Role> childrenList = listByParentId(y9Role.getId());
+        if (!childrenList.isEmpty()) {
+            for (Y9Role childrenRole : childrenList) {
+                Y9Role oldRole = this.findById(childrenRole.getId());
+                oldRole.setSystemName(y9Role.getSystemName());
+                saveOrUpdate(oldRole);
+                recursiveUpdate(oldRole);
+            }
+        }
+    }
+
+    @Transactional(readOnly = false)
+    public void recursiveUpdateByDn(Y9Role roleNode) {
+        // 调用向下递归改变DN的值
+        List<Y9Role> childrenList = listByParentId(roleNode.getId());
+        if (!childrenList.isEmpty()) {
+            for (Y9Role childrenRole : childrenList) {
+                saveOrUpdate(childrenRole);
+                recursiveUpdateByDn(childrenRole);
+            }
+        }
     }
 }

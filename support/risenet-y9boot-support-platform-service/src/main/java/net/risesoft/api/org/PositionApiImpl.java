@@ -90,8 +90,7 @@ public class PositionApiImpl implements PositionApi {
         Y9LoginUserHolder.setTenantId(tenantId);
 
         Y9Position y9Position = Y9JsonUtil.readValue(positionJson, Y9Position.class);
-        y9Position =
-            y9PositionService.createPosition(y9Position, compositeOrgBaseService.getOrgUnit(y9Position.getParentId()));
+        y9Position = y9PositionService.createPosition(y9Position);
         return Y9ModelConvertUtil.convert(y9Position, Position.class);
     }
 
@@ -126,7 +125,7 @@ public class PositionApiImpl implements PositionApi {
     public OrgUnit getParent(@RequestParam String tenantId, @RequestParam String positionId) {
         Y9LoginUserHolder.setTenantId(tenantId);
 
-        Y9OrgBase parent = compositeOrgBaseService.getOrgUnitParent(positionId);
+        Y9OrgBase parent = compositeOrgBaseService.findOrgUnitParent(positionId).orElse(null);
         return ModelConvertUtil.orgBaseToOrgUnit(parent);
     }
 

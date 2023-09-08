@@ -304,13 +304,8 @@ public class Y9ManagerImpl implements Y9ManagerService {
                     password = mobile.substring(mobile.length() - 6);
                 }
                 y9Manager.setPassword(Y9MessageDigest.hashpw(password));
-                StringBuilder sb = new StringBuilder();
-                compositeOrgBaseManager.getGuidPathRecursiveUp(sb, y9Manager);
-                y9Manager.setGuidPath(sb.toString());
-
-                sb = new StringBuilder();
-                compositeOrgBaseManager.getOrderedPathRecursiveUp(sb, y9Manager);
-                y9Manager.setOrderedPath(sb.toString());
+                y9Manager.setGuidPath(compositeOrgBaseManager.buildGuidPath(y9Manager));
+                y9Manager.setOrderedPath(compositeOrgBaseManager.buildOrderedPath(y9Manager));
                 y9Manager = y9ManagerRepository.save(y9Manager);
 
                 Y9Context.publishEvent(new Y9EntityCreatedEvent<Y9Manager>(y9Manager));
@@ -325,13 +320,8 @@ public class Y9ManagerImpl implements Y9ManagerService {
         y9Manager.setDisabled(true);
 
         y9Manager.setPassword(Y9MessageDigest.hashpw(password));
-        StringBuilder sb = new StringBuilder();
-        compositeOrgBaseManager.getGuidPathRecursiveUp(sb, y9Manager);
-        y9Manager.setGuidPath(sb.toString());
-
-        sb = new StringBuilder();
-        compositeOrgBaseManager.getOrderedPathRecursiveUp(sb, y9Manager);
-        y9Manager.setOrderedPath(sb.toString());
+        y9Manager.setGuidPath(compositeOrgBaseManager.buildGuidPath(y9Manager));
+        y9Manager.setOrderedPath(compositeOrgBaseManager.buildOrderedPath(y9Manager));
         y9Manager.setOrgType(OrgTypeEnum.MANAGER.getEnName());
         y9Manager = y9ManagerRepository.save(y9Manager);
 

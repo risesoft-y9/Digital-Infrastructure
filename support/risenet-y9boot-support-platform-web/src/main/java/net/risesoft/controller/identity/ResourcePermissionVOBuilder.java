@@ -112,10 +112,9 @@ public class ResourcePermissionVOBuilder {
                             detail.setPrincipalName(y9Role.getName());
                         }
                     } else {
-                        Y9OrgBase orgBase = compositeOrgBaseService.getOrgUnit(y9Authorization.getPrincipalId());
-                        if (orgBase != null) {
-                            detail.setPrincipalName(orgBase.getName());
-                        }
+                        Optional<Y9OrgBase> y9OrgBaseOptional =
+                            compositeOrgBaseService.findOrgUnit(y9Authorization.getPrincipalId());
+                        y9OrgBaseOptional.map(Y9OrgBase::getName).ifPresent(detail::setPrincipalName);
                     }
                 }
                 return detail;

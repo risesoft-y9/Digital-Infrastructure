@@ -2,6 +2,7 @@ package net.risesoft.controller.role;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -111,9 +112,12 @@ public class RoleMemberController {
         List<RoleMember> memberList = new ArrayList<>();
         if (Y9LoginUserHolder.getUserInfo().isGlobalManager()) {
             for (Y9OrgBasesToRoles roleMapping : roleMappingList) {
-                Y9OrgBase y9OrgBase = compositeOrgBaseService.getOrgUnit(roleMapping.getOrgId());
-                if (y9OrgBase == null) {
+                Optional<Y9OrgBase> y9OrgBaseOptional = compositeOrgBaseService.findOrgUnit(roleMapping.getOrgId());
+                Y9OrgBase y9OrgBase;
+                if (y9OrgBaseOptional.isEmpty()) {
                     continue;
+                } else {
+                    y9OrgBase = y9OrgBaseOptional.get();
                 }
                 RoleMember roleMember = new RoleMember();
                 roleMember.setId(roleMember.getId());
@@ -128,9 +132,12 @@ public class RoleMemberController {
             List<Y9DepartmentProp> deptProps = y9DepartmentPropService.listByOrgBaseIdAndCategory(
                 Y9LoginUserHolder.getPersonId(), Y9DepartmentPropCategoryEnum.ADMIN.getCategory());
             for (Y9OrgBasesToRoles roleMapping : roleMappingList) {
-                Y9OrgBase y9OrgBase = compositeOrgBaseService.getOrgUnit(roleMapping.getOrgId());
-                if (y9OrgBase == null) {
+                Optional<Y9OrgBase> y9OrgBaseOptional = compositeOrgBaseService.findOrgUnit(roleMapping.getOrgId());
+                Y9OrgBase y9OrgBase;
+                if (y9OrgBaseOptional.isEmpty()) {
                     continue;
+                } else {
+                    y9OrgBase = y9OrgBaseOptional.get();
                 }
                 for (Y9DepartmentProp deptProp : deptProps) {
                     String dn = y9DepartmentService.getById(deptProp.getDeptId()).getDn();
@@ -200,9 +207,12 @@ public class RoleMemberController {
         List<Y9OrgBasesToRoles> roleMappingList = y9OrgBasesToRolesService.listByRoleId(roleId);
         List<RoleMember> memberList = new ArrayList<>();
         for (Y9OrgBasesToRoles roleMapping : roleMappingList) {
-            Y9OrgBase y9OrgBase = compositeOrgBaseService.getOrgUnit(roleMapping.getOrgId());
-            if (y9OrgBase == null) {
+            Optional<Y9OrgBase> y9OrgBaseOptional = compositeOrgBaseService.findOrgUnit(roleMapping.getOrgId());
+            Y9OrgBase y9OrgBase;
+            if (y9OrgBaseOptional.isEmpty()) {
                 continue;
+            } else {
+                y9OrgBase = y9OrgBaseOptional.get();
             }
             boolean addEnable = false;
             if (StringUtils.isNotBlank(unitName) && StringUtils.isNotBlank(unitDn)) {

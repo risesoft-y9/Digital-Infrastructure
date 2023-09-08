@@ -56,7 +56,7 @@ public class OrgUnitApiImpl implements OrgUnitApi {
         @RequestParam("orgUnitId") @NotBlank String orgUnitId) {
         Y9LoginUserHolder.setTenantId(tenantId);
 
-        return ModelConvertUtil.orgBaseToOrgUnit(compositeOrgBaseService.getOrgUnitBureau(orgUnitId));
+        return ModelConvertUtil.orgBaseToOrgUnit(compositeOrgBaseService.findOrgUnitBureau(orgUnitId).orElse(null));
     }
 
     /**
@@ -106,7 +106,7 @@ public class OrgUnitApiImpl implements OrgUnitApi {
         @RequestParam("orgUnitId") @NotBlank String orgUnitId) {
         Y9LoginUserHolder.setTenantId(tenantId);
 
-        return ModelConvertUtil.orgBaseToOrgUnit(compositeOrgBaseService.getOrgUnit(orgUnitId));
+        return ModelConvertUtil.orgBaseToOrgUnit(compositeOrgBaseService.findOrgUnit(orgUnitId).orElse(null));
     }
 
     /**
@@ -122,7 +122,7 @@ public class OrgUnitApiImpl implements OrgUnitApi {
         @RequestParam("orgUnitId") @NotBlank String orgUnitId) {
         Y9LoginUserHolder.setTenantId(tenantId);
 
-        return ModelConvertUtil.orgBaseToOrgUnit(compositeOrgBaseService.getOrgUnitDeleted(orgUnitId));
+        return ModelConvertUtil.orgBaseToOrgUnit(compositeOrgBaseService.findOrgUnitDeleted(orgUnitId).orElse(null));
     }
 
     /**
@@ -138,7 +138,7 @@ public class OrgUnitApiImpl implements OrgUnitApi {
         @RequestParam("orgUnitId") @NotBlank String orgUnitId) {
         Y9LoginUserHolder.setTenantId(tenantId);
 
-        Y9OrgBase parent = compositeOrgBaseService.getOrgUnitParent(orgUnitId);
+        Y9OrgBase parent = compositeOrgBaseService.findOrgUnitParent(orgUnitId).orElse(null);
         return ModelConvertUtil.orgBaseToOrgUnit(parent);
     }
 
@@ -166,8 +166,8 @@ public class OrgUnitApiImpl implements OrgUnitApi {
      *
      * @param tenantId 租户id
      * @param name 组织架构节点名称
-     * @param treeType 树的类型:tree_type_org(组织机构)，tree_type_dept（部门） tree_type_group（用户组）, tree_type_position（岗位）
-     *            tree_type_person（人员）, tree_type_bureau（委办局）
+     * @param treeType 树的类型:tree_type_org(组织机构)，tree_type_dept（部门），tree_type_group（用户组），tree_type_position（岗位）
+     *            tree_type_person（人员），tree_type_bureau（委办局）
      * @return List<OrgUnit> 机构对象集合
      * @since 9.6.0
      */

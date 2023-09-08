@@ -203,6 +203,14 @@ public interface Y9RoleService {
     List<Y9Role> listByParentIdIsNull();
 
     /**
+     * 从给定节点开始，向上递归，返回递归链上所有的节点id(如果是人员，会包括所在组，岗位id)
+     *
+     * @param orgUnitId
+     * @return
+     */
+    List<String> listOrgUnitIdRecursively(String orgUnitId);
+
+    /**
      * 根据组织节点id获取所有关联的角色列表 对于组织机构到组织根节点及所有中间组织节点关联的角色也包含在内
      *
      * @param orgUnitId 组织节点id
@@ -243,19 +251,19 @@ public interface Y9RoleService {
     void move(String id, String newParentId);
 
     /**
-     * 保存新的角色节点排序
-     *
-     * @param ids id数组
-     */
-    void saveOrder(String[] ids);
-
-    /**
      * 新增或修改角色
      *
      * @param y9Role 角色对象
      * @return {@link Y9Role}
      */
     Y9Role saveOrUpdate(Y9Role y9Role);
+
+    /**
+     * 保存新的角色节点排序
+     *
+     * @param ids id数组
+     */
+    void saveOrder(String[] ids);
 
     /**
      * 保存或者更新角色节点扩展信息
@@ -298,12 +306,4 @@ public interface Y9RoleService {
      * @return {@link List}<{@link Y9Role}>
      */
     List<Y9Role> treeSearchBySystemName(String name, String systemName);
-
-    /**
-     * 从给定节点开始，向上递归，返回递归链上所有的节点id(如果是人员，会包括所在组，岗位id)
-     *
-     * @param orgUnitId
-     * @return
-     */
-    List<String> listOrgUnitIdRecursively(String orgUnitId);
 }

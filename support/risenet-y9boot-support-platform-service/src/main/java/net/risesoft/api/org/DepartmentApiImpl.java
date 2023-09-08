@@ -130,7 +130,7 @@ public class DepartmentApiImpl implements DepartmentApi {
         @RequestParam("departmentId") @NotBlank String departmentId) {
         Y9LoginUserHolder.setTenantId(tenantId);
 
-        Y9OrgBase bureau = compositeOrgBaseService.getOrgUnitBureau(departmentId);
+        Y9OrgBase bureau = compositeOrgBaseService.findOrgUnitBureau(departmentId).orElse(null);
         return ModelConvertUtil.orgBaseToOrgUnit(bureau);
     }
 
@@ -164,7 +164,7 @@ public class DepartmentApiImpl implements DepartmentApi {
         @RequestParam("departmentId") @NotBlank String departmentId) {
         Y9LoginUserHolder.setTenantId(tenantId);
 
-        Y9OrgBase parent = compositeOrgBaseService.getOrgUnitParent(departmentId);
+        Y9OrgBase parent = compositeOrgBaseService.findOrgUnitParent(departmentId).orElse(null);
         return ModelConvertUtil.orgBaseToOrgUnit(parent);
     }
 
