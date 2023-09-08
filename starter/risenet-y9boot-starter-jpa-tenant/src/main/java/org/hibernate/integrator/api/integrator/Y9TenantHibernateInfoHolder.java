@@ -1,11 +1,24 @@
 package org.hibernate.integrator.api.integrator;
 
+import java.io.File;
+import java.util.EnumSet;
+
 import org.hibernate.boot.Metadata;
+import org.hibernate.boot.MetadataSources;
+import org.hibernate.boot.registry.StandardServiceRegistry;
+import org.hibernate.boot.registry.StandardServiceRegistryBuilder;
 import org.hibernate.engine.spi.SessionFactoryImplementor;
 import org.hibernate.service.spi.SessionFactoryServiceRegistry;
+import org.hibernate.tool.hbm2ddl.SchemaExport;
+import org.hibernate.tool.hbm2ddl.SchemaExport.Action;
+import org.hibernate.tool.hbm2ddl.SchemaUpdate;
+import org.hibernate.tool.schema.TargetType;
+import org.reflections.Reflections;
 import org.springframework.core.env.Environment;
 
+import jakarta.persistence.Entity;
 import lombok.extern.slf4j.Slf4j;
+import net.risesoft.y9.Y9Context;
 
 @Slf4j
 public class Y9TenantHibernateInfoHolder {
@@ -29,7 +42,7 @@ public class Y9TenantHibernateInfoHolder {
     }
 
     public static void schemaUpdate(Environment env) {
-        /*
+        
         try {
             String systemName = env.getProperty("y9.systemName");
             String ddlAuto1 = env.getProperty("spring.jpa.hibernate.ddl-auto");
@@ -64,7 +77,7 @@ public class Y9TenantHibernateInfoHolder {
         } catch (Exception e) {
             LOGGER.warn(e.getMessage(), e);
         }
-        */
+        
     }
 
     public static void setMetadata(Metadata metadata) {

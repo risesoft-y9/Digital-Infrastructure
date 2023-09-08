@@ -90,20 +90,26 @@
             <artifactId>druid-spring-boot-3-starter</artifactId>
         </dependency>
 
-        <!--<dependency>
-            <groupId>org.reflections</groupId>
-            <artifactId>reflections</artifactId>
-            <version>0.10.2</version>
-        </dependency>-->
+		<dependency>
+			<groupId>jakarta.servlet</groupId>
+			<artifactId>jakarta.servlet-api</artifactId>
+			<scope>provided</scope>
+		</dependency>
+		
+		<dependency>
+  <groupId>io.github.bruce0203</groupId>
+  <artifactId>reflections</artifactId>
+  <version>0.10.3.4</version>
+</dependency>
 
-        <dependency>
-            <groupId>jakarta.servlet</groupId>
-            <artifactId>jakarta.servlet-api</artifactId>
-            <scope>provided</scope>
-        </dependency>
+		<dependency>
+			<groupId>org.hibernate.orm</groupId>
+			<artifactId>hibernate-ant</artifactId>
+			<!--<version>6.3.0.Final</version>-->
+		</dependency>
 
-        <!-- 人大金仓数据库 -->
-        <!-- <dependency>
+		<!-- 人大金仓数据库 -->
+		<!-- <dependency>
             <groupId>cn.com.kingbase</groupId>
             <artifactId>kingbase8</artifactId>
             <version>8.2.0</version>
