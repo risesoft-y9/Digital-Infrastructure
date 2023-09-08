@@ -5,7 +5,6 @@ import java.util.Optional;
 
 import net.risesoft.entity.Y9Department;
 import net.risesoft.entity.Y9Group;
-import net.risesoft.entity.Y9OrgBase;
 import net.risesoft.y9.exception.Y9NotFoundException;
 
 /**
@@ -20,10 +19,9 @@ public interface Y9GroupService {
      * 创建用户组
      *
      * @param y9Group 用户组对象
-     * @param parent 父组织节点
      * @return {@link Y9Group}
      */
-    Y9Group createGroup(Y9Group y9Group, Y9OrgBase parent);
+    Y9Group createGroup(Y9Group y9Group);
 
     /**
      * 根据主键id移除用户组实例(并且移除组内的人员)

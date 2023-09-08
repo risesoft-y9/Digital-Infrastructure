@@ -87,10 +87,12 @@ public class Y9PositionServiceImpl implements Y9PositionService {
 
     @Override
     @Transactional(readOnly = false)
-    public Y9Position createPosition(Y9Position y9Position, Y9OrgBase parent) {
-        if (y9Position == null || parent == null) {
+    public Y9Position createPosition(Y9Position y9Position) {
+        Optional<Y9OrgBase> y9OrgBaseOptional = compositeOrgBaseManager.findOrgUnitAsParent(y9Position.getParentId());
+        if (y9Position == null || y9OrgBaseOptional.isEmpty()) {
             return null;
         }
+        Y9OrgBase parent = y9OrgBaseOptional.get();
         if (StringUtils.isBlank(y9Position.getId())) {
             y9Position.setId(Y9IdGenerator.genId(IdType.SNOWFLAKE));
         }
@@ -229,7 +231,7 @@ public class Y9PositionServiceImpl implements Y9PositionService {
         Y9Position updatedPosition = new Y9Position();
         Y9BeanUtil.copyProperties(originPosition, updatedPosition);
 
-        Y9OrgBase parent = compositeOrgBaseManager.getOrgUnit(parentId);
+        Y9OrgBase parent = compositeOrgBaseManager.getOrgUnitAsParent(parentId);
         updatedPosition.setParentId(parent.getId());
         updatedPosition.setGuidPath(parent.getGuidPath() + OrgLevelConsts.SEPARATOR + updatedPosition.getId());
         updatedPosition.setDn(OrgLevelConsts.getOrgLevel(OrgTypeEnum.POSITION) + updatedPosition.getName()

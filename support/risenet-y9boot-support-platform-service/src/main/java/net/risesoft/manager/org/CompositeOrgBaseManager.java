@@ -1,6 +1,7 @@
 package net.risesoft.manager.org;
 
 import java.util.List;
+import java.util.Optional;
 
 import net.risesoft.entity.Y9OrgBase;
 import net.risesoft.entity.Y9Person;
@@ -18,27 +19,59 @@ public interface CompositeOrgBaseManager {
     /**
      * 递归得到 guid路径
      *
-     * @param sb StringBuilder
      * @param y9OrgBase 组织节点
+     * @return
      */
-    void getGuidPathRecursiveUp(StringBuilder sb, Y9OrgBase y9OrgBase);
+    String buildGuidPath(Y9OrgBase y9OrgBase);
+
+    /**
+     * 递归向上获取排序序列号
+     *
+     * @param y9OrgBase 组织节点
+     * @return
+     */
+    String buildOrderedPath(Y9OrgBase y9OrgBase);
+
+    /**
+     * 根据指定id获取ORGBase对象(可以是org的任意类型)
+     *
+     * @param orgUnitId 组织节点id
+     * @return {@link Y9OrgBase}
+     */
+    Optional<Y9OrgBase> findOrgUnit(String orgUnitId);
+
+    /**
+     * 根据id获取作为父节点的组织节点（只可能是组织机构和部门）
+     *
+     * @param orgUnitId 组织节点id
+     * @return {@link Y9OrgBase}
+     */
+    Optional<Y9OrgBase> findOrgUnitAsParent(String orgUnitId);
+
+    /**
+     * 根据组织节点id获取所在委办局（可能是组织机构或部门）
+     *
+     * @param orgUnitId 组织节点id
+     * @return {@link Y9OrgBase}
+     */
+    Optional<Y9OrgBase> findOrgUnitBureau(String orgUnitId);
+
+    /**
+     * 根据组织节点id，获取其父节点(只可能是组织机构和部门)
+     *
+     * @param orgUnitId 组织节点id
+     * @return ORGBase
+     */
+    Optional<Y9OrgBase> findOrgUnitParent(String orgUnitId);
 
     /**
      * 根据父节点id获取子节点最大的tabIndex
      *
      * @param parentId
      * @param orgType
-     * @return
+     * @return {@link Integer}
      */
     Integer getMaxSubTabIndex(String parentId, OrgTypeEnum orgType);
-
-    /**
-     * 递归向上获取排序序列号
-     *
-     * @param sb StringBuilder
-     * @param y9OrgBase 组织节点
-     */
-    void getOrderedPathRecursiveUp(StringBuilder sb, Y9OrgBase y9OrgBase);
 
     /**
      * 根据指定id获取ORGBase对象(可以是org的任意类型)

@@ -60,7 +60,8 @@ public class Y9GroupServiceImpl implements Y9GroupService {
 
     @Override
     @Transactional(readOnly = false)
-    public Y9Group createGroup(Y9Group y9Group, Y9OrgBase parent) {
+    public Y9Group createGroup(Y9Group y9Group) {
+        Y9OrgBase parent = compositeOrgBaseManager.getOrgUnitAsParent(y9Group.getParentId());
         if (y9Group == null || parent == null) {
             return null;
         }
@@ -169,7 +170,7 @@ public class Y9GroupServiceImpl implements Y9GroupService {
         Y9Group updatedY9Group = new Y9Group();
         Y9BeanUtil.copyProperties(originY9Group, updatedY9Group);
 
-        Y9OrgBase parent = compositeOrgBaseManager.getOrgUnit(parentId);
+        Y9OrgBase parent = compositeOrgBaseManager.getOrgUnitAsParent(parentId);
         updatedY9Group.setParentId(parent.getId());
         updatedY9Group.setDn(OrgLevelConsts.getOrgLevel(OrgTypeEnum.GROUP) + updatedY9Group.getName()
             + OrgLevelConsts.SEPARATOR + parent.getDn());

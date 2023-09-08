@@ -1,6 +1,5 @@
 package net.risesoft.entity;
 
-import javax.persistence.AttributeOverride;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Table;
@@ -27,7 +26,6 @@ import net.risesoft.enums.SexEnum;
  */
 @Entity
 @Table(name = "Y9_ORG_MANAGER")
-@AttributeOverride(name = "parentId", column = @Column(name = "PARENT_ID", length = 38, nullable = false))
 @org.hibernate.annotations.Table(comment = "三员表", appliesTo = "Y9_ORG_MANAGER")
 @Data
 public class Y9Manager extends Y9OrgBase {

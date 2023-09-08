@@ -48,6 +48,7 @@ import net.risesoft.repository.Y9PersonRepository;
 import net.risesoft.repository.Y9PositionRepository;
 import net.risesoft.repository.relation.Y9PersonsToGroupsRepository;
 import net.risesoft.repository.relation.Y9PersonsToPositionsRepository;
+import net.risesoft.service.org.CompositeOrgBaseService;
 import net.risesoft.util.ModelConvertUtil;
 import net.risesoft.util.Y9OrgUtil;
 import net.risesoft.util.Y9PublishServiceUtil;
@@ -65,7 +66,7 @@ import net.risesoft.y9.pubsub.message.Y9MessageOrg;
 @Transactional(value = "rsTenantTransactionManager", readOnly = true)
 @RequiredArgsConstructor
 @Slf4j
-public class CompositeOrgBaseServiceImpl implements net.risesoft.service.org.CompositeOrgBaseService {
+public class CompositeOrgBaseServiceImpl implements CompositeOrgBaseService {
 
     private final CompositeOrgBaseManager compositeOrgBaseManager;
     private final Y9DepartmentManager y9DepartmentManager;
@@ -116,76 +117,66 @@ public class CompositeOrgBaseServiceImpl implements net.risesoft.service.org.Com
         return y9ManagerRepository.findByNameContainingAndDnContaining(name, dnName);
     }
 
-    private List<Y9Organization> findOrganizationByNameLike(String name, String dnName) {
-        return y9OrganizationRepository.findByNameContainingAndDnContainingOrderByTabIndexAsc(name, dnName);
-    }
-
-    private List<Y9Organization> findOrganizationByNameLike(String name) {
-        return y9OrganizationRepository.findByNameContainingOrderByTabIndexAsc(name);
-    }
-
-    private List<Y9Person> findPersonByNameLike(String name) {
-        return y9PersonRepository.findByNameContaining(name);
-    }
-
-    private List<Y9Person> findPersonByNameLike(String name, String dnName) {
-        return y9PersonRepository.findByNameContainingAndDnContaining(name, dnName);
-    }
-
-    private List<Y9Person> findPersonByNameLikeAndDisabled(String name) {
-        return y9PersonRepository.findByNameContainingAndDisabled(name, false);
-    }
-
-    private List<Y9Person> findPersonByParentId(String parentId) {
-        return y9PersonRepository.findByParentIdOrderByTabIndex(parentId);
-    }
-
-    private List<Y9Person> findPersonByParentIdAndDisabled(String parentId, boolean disabled) {
-        return y9PersonRepository.findByDisabledAndParentIdOrderByTabIndex(disabled, parentId);
-    }
-
-    private List<Y9Person> findPersonByParentIdAndDisabledAndName(String parentId, boolean disabled, String name) {
-        return y9PersonRepository.findByParentIdAndDisabledAndNameContainingOrderByTabIndex(parentId, disabled, name);
-    }
-
-    private List<Y9Position> findPositionByNameLike(String name) {
-        return y9PositionRepository.findByNameContainingOrderByTabIndexAsc(name);
-    }
-
-    private List<Y9Position> findPositionByNameLike(String name, String dnName) {
-        return y9PositionRepository.findByNameContainingAndDnContainingOrderByTabIndexAsc(name, dnName);
-    }
-
-    private List<Y9Position> findPositionByParentId(String parentId) {
-        return y9PositionRepository.findByParentIdOrderByTabIndexAsc(parentId);
+    @Override
+    public Optional<Y9OrgBase> findOrgUnit(String orgUnitId) {
+        return compositeOrgBaseManager.findOrgUnit(orgUnitId);
     }
 
     @Override
-    public Y9OrgBase getOrgUnitDeleted(String orgUnitId) {
+    public Optional<Y9OrgBase> findOrgUnitAsParent(String orgUnitId) {
+        return compositeOrgBaseManager.findOrgUnitAsParent(orgUnitId);
+    }
+
+    @Override
+    public Optional<Y9OrgBase> findOrgUnitBureau(String orgUnitId) {
+        return compositeOrgBaseManager.findOrgUnitBureau(orgUnitId);
+    }
+
+    @Override
+    public Optional<Y9OrgBase> findOrgUnitDeleted(String orgUnitId) {
         Optional<Y9OrgBaseDeleted> optionalY9OrgBaseDeleted = y9OrgBaseDeletedRepository.findByOrgId(orgUnitId);
         if (optionalY9OrgBaseDeleted.isPresent()) {
-            Y9OrgBaseDeleted deleted = optionalY9OrgBaseDeleted.get();
-            String jsonContent = deleted.getJsonContent();
-            if (deleted.getOrgType().equals(OrgTypeEnum.ORGANIZATION.getEnName())) {
-                return Y9JsonUtil.readValue(jsonContent, Y9Organization.class);
+            Y9OrgBaseDeleted y9OrgBaseDeleted = optionalY9OrgBaseDeleted.get();
+            String jsonContent = y9OrgBaseDeleted.getJsonContent();
+            if (y9OrgBaseDeleted.getOrgType().equals(OrgTypeEnum.ORGANIZATION.getEnName())) {
+                return Optional.ofNullable(Y9JsonUtil.readValue(jsonContent, Y9Organization.class));
             }
-            if (deleted.getOrgType().equals(OrgTypeEnum.DEPARTMENT.getEnName())) {
-                return Y9JsonUtil.readValue(jsonContent, Y9Department.class);
+            if (y9OrgBaseDeleted.getOrgType().equals(OrgTypeEnum.DEPARTMENT.getEnName())) {
+                return Optional.ofNullable(Y9JsonUtil.readValue(jsonContent, Y9Department.class));
             }
-            if (deleted.getOrgType().equals(OrgTypeEnum.GROUP.getEnName())) {
-                return Y9JsonUtil.readValue(jsonContent, Y9Group.class);
+            if (y9OrgBaseDeleted.getOrgType().equals(OrgTypeEnum.GROUP.getEnName())) {
+                return Optional.ofNullable(Y9JsonUtil.readValue(jsonContent, Y9Group.class));
             }
-            if (deleted.getOrgType().equals(OrgTypeEnum.POSITION.getEnName())) {
-                return Y9JsonUtil.readValue(jsonContent, Y9Position.class);
+            if (y9OrgBaseDeleted.getOrgType().equals(OrgTypeEnum.POSITION.getEnName())) {
+                return Optional.ofNullable(Y9JsonUtil.readValue(jsonContent, Y9Position.class));
             }
-            if (deleted.getOrgType().equals(OrgTypeEnum.PERSON.getEnName())) {
-                return Y9JsonUtil.readValue(jsonContent, Y9Person.class);
+            if (y9OrgBaseDeleted.getOrgType().equals(OrgTypeEnum.PERSON.getEnName())) {
+                return Optional.ofNullable(Y9JsonUtil.readValue(jsonContent, Y9Person.class));
             }
-            if (deleted.getOrgType().equals(OrgTypeEnum.MANAGER.getEnName())) {
-                return Y9JsonUtil.readValue(jsonContent, Y9Manager.class);
+            if (y9OrgBaseDeleted.getOrgType().equals(OrgTypeEnum.MANAGER.getEnName())) {
+                return Optional.ofNullable(Y9JsonUtil.readValue(jsonContent, Y9Manager.class));
             }
         }
-        return null;
+        return Optional.empty();
+    }
+
+    @Override
+    public Optional<Y9Organization> findOrgUnitOrganization(String orgUnitId) {
+        Optional<Y9OrgBase> y9OrgBaseOptional = this.findOrgUnit(orgUnitId);
+        if (y9OrgBaseOptional.isPresent()) {
+            Y9OrgBase y9OrgBase = y9OrgBaseOptional.get();
+            if (OrgTypeEnum.ORGANIZATION.getEnName().equals(y9OrgBase.getOrgType())) {
+                return Optional.of((Y9Organization)y9OrgBase);
+            } else {
+                return findOrgUnitOrganization(y9OrgBase.getParentId());
+            }
+        }
+        return Optional.empty();
+    }
+
+    @Override
+    public Optional<Y9OrgBase> findOrgUnitParent(String orgUnitId) {
+        return compositeOrgBaseManager.findOrgUnitParent(orgUnitId);
     }
 
     @Override
@@ -195,21 +186,23 @@ public class CompositeOrgBaseServiceImpl implements net.risesoft.service.org.Com
     }
 
     @Override
+    public Y9OrgBase getOrgUnitAsParent(String orgUnitId) {
+        return compositeOrgBaseManager.getOrgUnitAsParent(orgUnitId);
+    }
+
+    @Override
     public Y9OrgBase getOrgUnitBureau(String orgUnitId) {
         return compositeOrgBaseManager.getOrgUnitBureau(orgUnitId);
     }
 
     @Override
+    public Y9OrgBase getOrgUnitDeleted(String orgUnitId) {
+        return this.findOrgUnitDeleted(orgUnitId).orElse(null);
+    }
+
+    @Override
     public Y9Organization getOrgUnitOrganization(String orgUnitId) {
-        Y9OrgBase y9OrgBase = this.getOrgUnit(orgUnitId);
-        if (y9OrgBase != null) {
-            if (OrgTypeEnum.ORGANIZATION.getEnName().equals(y9OrgBase.getOrgType())) {
-                return (Y9Organization)y9OrgBase;
-            } else {
-                return getOrgUnitOrganization(y9OrgBase.getParentId());
-            }
-        }
-        return null;
+        return this.findOrgUnitOrganization(orgUnitId).orElse(null);
     }
 
     @Override
@@ -590,6 +583,50 @@ public class CompositeOrgBaseServiceImpl implements net.risesoft.service.org.Com
     public List<Y9OrgBase> treeSearch4DeptManager(String name, String treeType) {
         Y9Department y9Department = y9DepartmentManager.getById(Y9LoginUserHolder.getDeptId());
         return this.treeSearch(name, treeType, y9Department.getDn());
+    }
+
+    private List<Y9Organization> findOrganizationByNameLike(String name, String dnName) {
+        return y9OrganizationRepository.findByNameContainingAndDnContainingOrderByTabIndexAsc(name, dnName);
+    }
+
+    private List<Y9Organization> findOrganizationByNameLike(String name) {
+        return y9OrganizationRepository.findByNameContainingOrderByTabIndexAsc(name);
+    }
+
+    private List<Y9Person> findPersonByNameLike(String name) {
+        return y9PersonRepository.findByNameContaining(name);
+    }
+
+    private List<Y9Person> findPersonByNameLike(String name, String dnName) {
+        return y9PersonRepository.findByNameContainingAndDnContaining(name, dnName);
+    }
+
+    private List<Y9Person> findPersonByNameLikeAndDisabled(String name) {
+        return y9PersonRepository.findByNameContainingAndDisabled(name, false);
+    }
+
+    private List<Y9Person> findPersonByParentId(String parentId) {
+        return y9PersonRepository.findByParentIdOrderByTabIndex(parentId);
+    }
+
+    private List<Y9Person> findPersonByParentIdAndDisabled(String parentId, boolean disabled) {
+        return y9PersonRepository.findByDisabledAndParentIdOrderByTabIndex(disabled, parentId);
+    }
+
+    private List<Y9Person> findPersonByParentIdAndDisabledAndName(String parentId, boolean disabled, String name) {
+        return y9PersonRepository.findByParentIdAndDisabledAndNameContainingOrderByTabIndex(parentId, disabled, name);
+    }
+
+    private List<Y9Position> findPositionByNameLike(String name) {
+        return y9PositionRepository.findByNameContainingOrderByTabIndexAsc(name);
+    }
+
+    private List<Y9Position> findPositionByNameLike(String name, String dnName) {
+        return y9PositionRepository.findByNameContainingAndDnContainingOrderByTabIndexAsc(name, dnName);
+    }
+
+    private List<Y9Position> findPositionByParentId(String parentId) {
+        return y9PositionRepository.findByParentIdOrderByTabIndexAsc(parentId);
     }
 
     private void getOrgUnitListByDownwardRecursion(List<Y9OrgBase> childrenList, String orgId) {

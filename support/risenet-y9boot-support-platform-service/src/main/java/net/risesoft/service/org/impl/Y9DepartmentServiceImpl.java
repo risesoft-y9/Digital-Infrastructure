@@ -231,7 +231,7 @@ public class Y9DepartmentServiceImpl implements Y9DepartmentService {
 
         checkMoveTarget(originDepartment, parentId);
 
-        Y9OrgBase parent = compositeOrgBaseManager.getOrgUnit(parentId);
+        Y9OrgBase parent = compositeOrgBaseManager.getOrgUnitAsParent(parentId);
         updatedDepartment.setParentId(parent.getId());
         updatedDepartment.setDn(OrgLevelConsts.getOrgLevel(OrgTypeEnum.DEPARTMENT) + updatedDepartment.getName()
             + OrgLevelConsts.SEPARATOR + parent.getDn());
@@ -600,7 +600,7 @@ public class Y9DepartmentServiceImpl implements Y9DepartmentService {
     }
 
     private void recursionParent(String parentId, List<Y9OrgBase> parentList) {
-        Y9OrgBase parent = compositeOrgBaseManager.getOrgUnit(parentId);
+        Y9OrgBase parent = compositeOrgBaseManager.getOrgUnitAsParent(parentId);
         parentList.add(parent);
         if (parent.getOrgType().equals(OrgTypeEnum.DEPARTMENT.getEnName())) {
             Y9Department dept = (Y9Department)parent;

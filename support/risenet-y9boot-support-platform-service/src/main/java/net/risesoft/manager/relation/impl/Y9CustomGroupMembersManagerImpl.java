@@ -43,45 +43,41 @@ public class Y9CustomGroupMembersManagerImpl implements Y9CustomGroupMembersMana
     public void save(List<String> orgUnitList, String groupId) {
         for (String id : orgUnitList) {
             Y9OrgBase y9OrgBase = compositeOrgBaseManager.getOrgUnit(id);
-            if (y9OrgBase != null) {
-                Optional<Y9CustomGroupMember> optionalY9CustomGroupMember =
-                    customGroupMembersRepository.findByGroupIdAndMemberId(groupId, id);
-                if (optionalY9CustomGroupMember.isEmpty()) {
-                    Integer tabIndex = customGroupMembersRepository.getMaxTabIndex(groupId);
-                    Y9CustomGroupMember member = new Y9CustomGroupMember();
-                    member.setId(Y9IdGenerator.genId(IdType.SNOWFLAKE));
-                    member.setMemberId(id);
-                    member.setMemberName(y9OrgBase.getName());
-                    member.setGroupId(groupId);
-                    member.setTabIndex(tabIndex == null ? 1 : tabIndex + 1);
-                    member.setMemberType(y9OrgBase.getOrgType());
-                    OrgTypeEnum orgType = OrgTypeEnum.getByEnName(y9OrgBase.getOrgType());
-                    switch (orgType) {
-                        case ORGANIZATION:
-                            break;
-                        case DEPARTMENT:
-                            Y9Department department = (Y9Department)y9OrgBase;
-                            member.setParentId(department.getParentId());
-                            break;
-                        case POSITION:
-                            Y9Position position = (Y9Position)y9OrgBase;
-                            member.setParentId(position.getParentId());
-                            break;
-                        case GROUP:
-                            Y9Group group = (Y9Group)y9OrgBase;
-                            member.setParentId(group.getParentId());
-                            break;
-                        case PERSON:
-                            Y9Person person = (Y9Person)y9OrgBase;
-                            member.setParentId(person.getParentId());
-                            member.setSex(person.getSex());
-                            break;
-                        default:
-                    }
-                    customGroupMembersRepository.save(member);
+            Optional<Y9CustomGroupMember> optionalY9CustomGroupMember =
+                customGroupMembersRepository.findByGroupIdAndMemberId(groupId, id);
+            if (optionalY9CustomGroupMember.isEmpty()) {
+                Integer tabIndex = customGroupMembersRepository.getMaxTabIndex(groupId);
+                Y9CustomGroupMember member = new Y9CustomGroupMember();
+                member.setId(Y9IdGenerator.genId(IdType.SNOWFLAKE));
+                member.setMemberId(id);
+                member.setMemberName(y9OrgBase.getName());
+                member.setGroupId(groupId);
+                member.setTabIndex(tabIndex == null ? 1 : tabIndex + 1);
+                member.setMemberType(y9OrgBase.getOrgType());
+                OrgTypeEnum orgType = OrgTypeEnum.getByEnName(y9OrgBase.getOrgType());
+                switch (orgType) {
+                    case ORGANIZATION:
+                        break;
+                    case DEPARTMENT:
+                        Y9Department department = (Y9Department)y9OrgBase;
+                        member.setParentId(department.getParentId());
+                        break;
+                    case POSITION:
+                        Y9Position position = (Y9Position)y9OrgBase;
+                        member.setParentId(position.getParentId());
+                        break;
+                    case GROUP:
+                        Y9Group group = (Y9Group)y9OrgBase;
+                        member.setParentId(group.getParentId());
+                        break;
+                    case PERSON:
+                        Y9Person person = (Y9Person)y9OrgBase;
+                        member.setParentId(person.getParentId());
+                        member.setSex(person.getSex());
+                        break;
+                    default:
                 }
-            } else {
-                customGroupMembersRepository.deleteByGroupIdAndMemberId(groupId, id);
+                customGroupMembersRepository.save(member);
             }
         }
     }

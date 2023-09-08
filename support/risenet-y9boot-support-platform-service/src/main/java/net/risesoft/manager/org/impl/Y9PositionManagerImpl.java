@@ -158,9 +158,7 @@ public class Y9PositionManagerImpl implements Y9PositionManager {
     @Transactional(readOnly = false)
     @CacheEvict(key = "#position.id")
     public Y9Position save(Y9Position position) {
-        StringBuilder sb = new StringBuilder();
-        compositeOrgBaseManager.getOrderedPathRecursiveUp(sb, position);
-        position.setOrderedPath(sb.toString());
+        position.setOrderedPath(compositeOrgBaseManager.buildOrderedPath(position));
         return y9PositionRepository.save(position);
     }
 

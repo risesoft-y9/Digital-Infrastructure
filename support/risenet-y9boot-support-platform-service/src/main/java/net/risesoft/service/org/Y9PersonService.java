@@ -132,10 +132,9 @@ public interface Y9PersonService {
      * 新建人员
      *
      * @param person 人员对象
-     * @param parent 父节点对象
      * @return {@link Y9Person}
      */
-    Y9Person createPerson(Y9Person person, Y9OrgBase parent);
+    Y9Person createPerson(Y9Person person);
 
     /**
      * 根据主键id删除人员实例(人员与组，与角色，与岗位的关联关系都删掉)
@@ -173,14 +172,6 @@ public interface Y9PersonService {
      * @return 人员对象 或 null
      */
     Optional<Y9Person> findById(String id);
-
-    /**
-     * 根据人员id获取委办局id
-     *
-     * @param id 唯一标识
-     * @return {@link Y9OrgBase}
-     */
-    Y9OrgBase getBureau(String id);
 
     /**
      * 根据主键id获取人员实例

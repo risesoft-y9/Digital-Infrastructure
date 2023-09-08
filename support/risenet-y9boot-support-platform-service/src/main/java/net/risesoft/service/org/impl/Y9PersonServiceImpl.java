@@ -147,7 +147,7 @@ public class Y9PersonServiceImpl implements Y9PersonService {
     @Transactional(readOnly = false)
     public List<Y9Person> addPersons(String parentId, List<String> personIds) {
         List<Y9Person> personList = new ArrayList<>();
-        Y9OrgBase parent = compositeOrgBaseManager.getOrgUnit(parentId);
+        Y9OrgBase parent = compositeOrgBaseManager.getOrgUnitAsParent(parentId);
         for (String originalId : personIds) {
             Y9Person originalPerson = getById(originalId);
             if (StringUtils.isNotBlank(originalPerson.getOriginalId())) {
@@ -322,7 +322,7 @@ public class Y9PersonServiceImpl implements Y9PersonService {
         map.put("person", person);
         map.put("tenantId", Y9LoginUserHolder.getTenantId());
         Y9Department y9Department = y9DepartmentRepository.findById(person.getParentId()).orElse(null);
-        Y9OrgBase y9OrgBase = this.getBureau(person.getId());
+        Y9OrgBase y9OrgBase = compositeOrgBaseManager.getOrgUnitBureau(person.getId());
         map.put("deptName", y9Department != null ? y9Department.getName() : "");
         map.put("bureauName", y9OrgBase != null ? y9OrgBase.getName() : "");
         message.setMsg(Y9JsonUtil.writeValueAsString(map));
@@ -392,7 +392,7 @@ public class Y9PersonServiceImpl implements Y9PersonService {
         map.put("person", person);
         map.put("tenantId", Y9LoginUserHolder.getTenantId());
         Y9Department y9Department = y9DepartmentRepository.findById(person.getParentId()).orElse(null);
-        Y9OrgBase y9OrgBase = this.getBureau(person.getId());
+        Y9OrgBase y9OrgBase = compositeOrgBaseManager.getOrgUnitBureau(person.getId());
         map.put("deptName", y9Department != null ? y9Department.getName() : "");
         map.put("bureauName", y9OrgBase != null ? y9OrgBase.getName() : "");
         message.setStatus(Message.STATUS_SUCCESS);
@@ -461,7 +461,7 @@ public class Y9PersonServiceImpl implements Y9PersonService {
         map.put("person", person);
         map.put("tenantId", Y9LoginUserHolder.getTenantId());
         Y9Department y9Department = y9DepartmentRepository.findById(person.getParentId()).orElse(null);
-        Y9OrgBase y9OrgBase = this.getBureau(person.getId());
+        Y9OrgBase y9OrgBase = compositeOrgBaseManager.getOrgUnitBureau(person.getId());
         map.put("deptName", y9Department != null ? y9Department.getName() : "");
         map.put("bureauName", y9OrgBase != null ? y9OrgBase.getName() : "");
         message.setMsg(Y9JsonUtil.writeValueAsString(map));
@@ -522,7 +522,8 @@ public class Y9PersonServiceImpl implements Y9PersonService {
 
     @Override
     @Transactional(readOnly = false)
-    public Y9Person createPerson(Y9Person person, Y9OrgBase parent) {
+    public Y9Person createPerson(Y9Person person) {
+        Y9OrgBase parent = compositeOrgBaseManager.getOrgUnitAsParent(person.getParentId());
         if (person == null || parent == null) {
             return null;
         }
@@ -611,11 +612,6 @@ public class Y9PersonServiceImpl implements Y9PersonService {
     }
 
     @Override
-    public Y9OrgBase getBureau(String id) {
-        return compositeOrgBaseManager.getOrgUnitBureau(id);
-    }
-
-    @Override
     @Transactional(readOnly = true)
     public Y9Person getById(String id) {
         return y9PersonManager.getById(id);
@@ -659,36 +655,6 @@ public class Y9PersonServiceImpl implements Y9PersonService {
             return null;
         }
         return personList.get(0);
-    }
-
-    /**
-     * 获取人员，不包括子部门里的人员，但包括用户组和岗位的人员
-     *
-     * @param parentId
-     * @return
-     */
-    private List<Y9Person> getPersonByParentId(String parentId) {
-        List<Y9Person> list = this.listByParentId(parentId);
-        // 查找部门下的所有岗位
-        List<Y9Position> positions = y9PositionRepository.findByParentIdOrderByTabIndexAsc(parentId);
-        for (Y9Position y9Position : positions) {
-            List<Y9PersonsToPositions> orgPositionPersons =
-                y9PersonsToPositionsRepository.findByPositionId(y9Position.getId());
-            for (Y9PersonsToPositions orgPositionsPerson : orgPositionPersons) {
-                List<Y9Person> positionPersons = this.listByPositionId(orgPositionsPerson.getPositionId());
-                list.addAll(positionPersons);
-            }
-        }
-        // 查找部门下的所有用户组
-        List<Y9Group> groups = y9GroupRepository.findByParentIdOrderByTabIndexAsc(parentId);
-        for (Y9Group y9Group : groups) {
-            List<Y9PersonsToGroups> y9PersonsToGroups = y9PersonsToGroupsRepository.findByGroupId(y9Group.getId());
-            for (Y9PersonsToGroups p : y9PersonsToGroups) {
-                List<Y9Person> groupPersons = this.listByGroupId(p.getGroupId());
-                list.addAll(groupPersons);
-            }
-        }
-        return list;
     }
 
     @Override
@@ -756,6 +722,17 @@ public class Y9PersonServiceImpl implements Y9PersonService {
         return y9PersonManager.listByPositionId(positionId);
     }
 
+    @Override
+    public List<Y9OrgBase> listParents(String personId) {
+        List<String> parentIds = this.listParentIdByPersonId(personId);
+        List<Y9OrgBase> parentList = new ArrayList<>();
+        for (String parentId : parentIds) {
+            Y9OrgBase parent = compositeOrgBaseManager.getOrgUnitAsParent(parentId);
+            parentList.add(parent);
+        }
+        return parentList;
+    }
+
     /**
      * 根据人员id，获取该人员所有的父节点id列表
      *
@@ -775,17 +752,6 @@ public class Y9PersonServiceImpl implements Y9PersonService {
         List<Y9Person> personList = y9PersonRepository.findByOriginalIdAndDisabled(personId, false);
         parentIdList.addAll(personList.stream().map(Y9Person::getParentId).collect(Collectors.toList()));
         return parentIdList;
-    }
-
-    @Override
-    public List<Y9OrgBase> listParents(String personId) {
-        List<String> parentIds = this.listParentIdByPersonId(personId);
-        List<Y9OrgBase> parentList = new ArrayList<>();
-        for (String parentId : parentIds) {
-            Y9OrgBase parent = compositeOrgBaseManager.getOrgUnit(parentId);
-            parentList.add(parent);
-        }
-        return parentList;
     }
 
     @Override
@@ -818,7 +784,7 @@ public class Y9PersonServiceImpl implements Y9PersonService {
         updatedPerson.setParentId(parentId);
         updatedPerson = this.save(updatedPerson);
 
-        Y9OrgBase parent = compositeOrgBaseManager.getOrgUnit(parentId);
+        Y9OrgBase parent = compositeOrgBaseManager.getOrgUnitAsParent(parentId);
         Y9MessageOrg msg = new Y9MessageOrg(ModelConvertUtil.orgPersonToPerson(updatedPerson),
             Y9OrgEventConst.RISEORGEVENT_TYPE_UPDATE_PERSON, Y9LoginUserHolder.getTenantId());
         Y9PublishServiceUtil.persistAndPublishMessageOrg(msg, "移动人员",
@@ -827,33 +793,6 @@ public class Y9PersonServiceImpl implements Y9PersonService {
         Y9Context.publishEvent(new Y9EntityUpdatedEvent<>(originPerson, updatedPerson));
 
         return updatedPerson;
-    }
-
-    @EventListener
-    public void onParentDepartmentDeleted(Y9EntityDeletedEvent<Y9Department> event) {
-        Y9Department parentDepartment = event.getEntity();
-        // 删除部门时其下人员也要删除
-        deleteByParentId(parentDepartment.getId());
-    }
-
-    @EventListener
-    public void onParentOrganizationDeleted(Y9EntityDeletedEvent<Y9Organization> event) {
-        Y9Organization y9Organization = event.getEntity();
-        // 删除组织时其下人员也要删除
-        deleteByParentId(y9Organization.getId());
-    }
-
-    @Transactional(readOnly = false)
-    public Y9Person order(String personId, int tabIndex) {
-        Y9Person person = this.getById(personId);
-        person.setTabIndex(tabIndex);
-        Y9Person y9Person = this.save(person);
-
-        Y9MessageOrg msg = new Y9MessageOrg(ModelConvertUtil.orgPersonToPerson(y9Person),
-            Y9OrgEventConst.RISEORGEVENT_TYPE_UPDATE_PERSON, Y9LoginUserHolder.getTenantId());
-        Y9PublishServiceUtil.publishMessageOrg(msg);
-
-        return y9Person;
     }
 
     @Override
@@ -867,6 +806,19 @@ public class Y9PersonServiceImpl implements Y9PersonService {
         }
 
         return personList;
+    }
+
+    @Transactional(readOnly = false)
+    public Y9Person order(String personId, int tabIndex) {
+        Y9Person person = this.getById(personId);
+        person.setTabIndex(tabIndex);
+        Y9Person y9Person = this.save(person);
+
+        Y9MessageOrg msg = new Y9MessageOrg(ModelConvertUtil.orgPersonToPerson(y9Person),
+            Y9OrgEventConst.RISEORGEVENT_TYPE_UPDATE_PERSON, Y9LoginUserHolder.getTenantId());
+        Y9PublishServiceUtil.publishMessageOrg(msg);
+
+        return y9Person;
     }
 
     @Override
@@ -888,23 +840,6 @@ public class Y9PersonServiceImpl implements Y9PersonService {
         page = (page < 0) ? 0 : page - 1;
         Pageable pageable = PageRequest.of(page, rows, Sort.by(Sort.Direction.DESC, "tabIndex"));
         return y9PersonRepository.findByParentIdAndDisabledAndNameContaining(parentId, disabled, userName, pageable);
-    }
-
-    /**
-     * 递归获取所有人员
-     *
-     * @param parentId
-     * @param personList
-     */
-    private void recursionAllPersons(String parentId, List<Y9Person> personList) {
-        List<Y9Person> lists = this.getPersonByParentId(parentId);
-        personList.addAll(lists);
-        List<Y9Department> deptList = y9DepartmentRepository.findByParentIdOrderByTabIndexAsc(parentId);
-        for (Y9Department dept : deptList) {
-            List<Y9Person> list = this.getPersonByParentId(dept.getId());
-            personList.addAll(list);
-            recursionAllPersons(dept.getId(), personList);
-        }
     }
 
     @Override
@@ -929,14 +864,8 @@ public class Y9PersonServiceImpl implements Y9PersonService {
     public Y9Person save(Y9Person person) {
         String tenantId = Y9LoginUserHolder.getTenantId();
         person.setTenantId(tenantId);
-
-        StringBuilder sb = new StringBuilder();
-        compositeOrgBaseManager.getGuidPathRecursiveUp(sb, person);
-        person.setGuidPath(sb.toString());
-
-        sb = new StringBuilder();
-        compositeOrgBaseManager.getOrderedPathRecursiveUp(sb, person);
-        person.setOrderedPath(sb.toString());
+        person.setGuidPath(compositeOrgBaseManager.buildGuidPath(person));
+        person.setOrderedPath(compositeOrgBaseManager.buildOrderedPath(person));
 
         if (person.getOriginal() == null) {
             person.setOriginal(Boolean.TRUE);
@@ -957,7 +886,7 @@ public class Y9PersonServiceImpl implements Y9PersonService {
     @Override
     @Transactional(readOnly = false)
     public Y9Person saveOrUpdate(Y9Person person, Y9PersonExt ext, List<String> positionIds, List<String> jobIds) {
-        Y9OrgBase parent = compositeOrgBaseManager.getOrgUnit(person.getParentId());
+        Y9OrgBase parent = compositeOrgBaseManager.getOrgUnitAsParent(person.getParentId());
 
         person = this.saveOrUpdate(person, ext);
 
@@ -1081,7 +1010,7 @@ public class Y9PersonServiceImpl implements Y9PersonService {
     @Override
     @Transactional(readOnly = false)
     public Y9Person saveOrUpdate4ImpOrg(Y9Person person, Y9PersonExt personExt) {
-        Y9OrgBase parent = compositeOrgBaseManager.getOrgUnit(person.getParentId());
+        Y9OrgBase parent = compositeOrgBaseManager.getOrgUnitAsParent(person.getParentId());
         Optional<Y9Person> y9PersonOptional = y9PersonManager.findById(person.getId());
         if (y9PersonOptional.isPresent()) {
             // 判断为更新信息
@@ -1156,6 +1085,20 @@ public class Y9PersonServiceImpl implements Y9PersonService {
         return query.getResultList();
     }
 
+    @Override
+    @Transactional(readOnly = false)
+    public Y9Person updateTabIndex(String id, int tabIndex) {
+        Y9Person person = this.getById(id);
+        person.setTabIndex(tabIndex);
+        person = this.save(person);
+
+        Y9MessageOrg msg = new Y9MessageOrg(ModelConvertUtil.orgPersonToPerson(person),
+            Y9OrgEventConst.RISEORGEVENT_TYPE_UPDATE_PERSON_TABINDEX, Y9LoginUserHolder.getTenantId());
+        Y9PublishServiceUtil.persistAndPublishMessageOrg(msg, "更新人员排序号", person.getName() + "的排序号更新为" + tabIndex);
+
+        return person;
+    }
+
     @Transactional(readOnly = false)
     public void updatePersonByOriginalId(Y9Person originalPerson, Y9PersonExt originalExt) {
         List<Y9Person> persons = y9PersonRepository.findByOriginalId(originalPerson.getId());
@@ -1166,7 +1109,7 @@ public class Y9PersonServiceImpl implements Y9PersonService {
             person.setMobile(originalPerson.getMobile());
             person.setPassword(originalPerson.getPassword());
 
-            Y9OrgBase parent = compositeOrgBaseManager.getOrgUnit(person.getParentId());
+            Y9OrgBase parent = compositeOrgBaseManager.getOrgUnitAsParent(person.getParentId());
             person.setDn(OrgLevelConsts.getOrgLevel(OrgTypeEnum.PERSON) + person.getName() + OrgLevelConsts.SEPARATOR
                 + parent.getDn());
 
@@ -1184,17 +1127,64 @@ public class Y9PersonServiceImpl implements Y9PersonService {
         }
     }
 
-    @Override
-    @Transactional(readOnly = false)
-    public Y9Person updateTabIndex(String id, int tabIndex) {
-        Y9Person person = this.getById(id);
-        person.setTabIndex(tabIndex);
-        person = this.save(person);
+    /**
+     * 获取人员，不包括子部门里的人员，但包括用户组和岗位的人员
+     *
+     * @param parentId
+     * @return
+     */
+    private List<Y9Person> getPersonByParentId(String parentId) {
+        List<Y9Person> list = this.listByParentId(parentId);
+        // 查找部门下的所有岗位
+        List<Y9Position> positions = y9PositionRepository.findByParentIdOrderByTabIndexAsc(parentId);
+        for (Y9Position y9Position : positions) {
+            List<Y9PersonsToPositions> orgPositionPersons =
+                y9PersonsToPositionsRepository.findByPositionId(y9Position.getId());
+            for (Y9PersonsToPositions orgPositionsPerson : orgPositionPersons) {
+                List<Y9Person> positionPersons = this.listByPositionId(orgPositionsPerson.getPositionId());
+                list.addAll(positionPersons);
+            }
+        }
+        // 查找部门下的所有用户组
+        List<Y9Group> groups = y9GroupRepository.findByParentIdOrderByTabIndexAsc(parentId);
+        for (Y9Group y9Group : groups) {
+            List<Y9PersonsToGroups> y9PersonsToGroups = y9PersonsToGroupsRepository.findByGroupId(y9Group.getId());
+            for (Y9PersonsToGroups p : y9PersonsToGroups) {
+                List<Y9Person> groupPersons = this.listByGroupId(p.getGroupId());
+                list.addAll(groupPersons);
+            }
+        }
+        return list;
+    }
 
-        Y9MessageOrg msg = new Y9MessageOrg(ModelConvertUtil.orgPersonToPerson(person),
-            Y9OrgEventConst.RISEORGEVENT_TYPE_UPDATE_PERSON_TABINDEX, Y9LoginUserHolder.getTenantId());
-        Y9PublishServiceUtil.persistAndPublishMessageOrg(msg, "更新人员排序号", person.getName() + "的排序号更新为" + tabIndex);
+    @EventListener
+    public void onParentDepartmentDeleted(Y9EntityDeletedEvent<Y9Department> event) {
+        Y9Department parentDepartment = event.getEntity();
+        // 删除部门时其下人员也要删除
+        deleteByParentId(parentDepartment.getId());
+    }
 
-        return person;
+    @EventListener
+    public void onParentOrganizationDeleted(Y9EntityDeletedEvent<Y9Organization> event) {
+        Y9Organization y9Organization = event.getEntity();
+        // 删除组织时其下人员也要删除
+        deleteByParentId(y9Organization.getId());
+    }
+
+    /**
+     * 递归获取所有人员
+     *
+     * @param parentId
+     * @param personList
+     */
+    private void recursionAllPersons(String parentId, List<Y9Person> personList) {
+        List<Y9Person> lists = this.getPersonByParentId(parentId);
+        personList.addAll(lists);
+        List<Y9Department> deptList = y9DepartmentRepository.findByParentIdOrderByTabIndexAsc(parentId);
+        for (Y9Department dept : deptList) {
+            List<Y9Person> list = this.getPersonByParentId(dept.getId());
+            personList.addAll(list);
+            recursionAllPersons(dept.getId(), personList);
+        }
     }
 }

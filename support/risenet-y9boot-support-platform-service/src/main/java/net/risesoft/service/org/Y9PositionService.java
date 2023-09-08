@@ -3,7 +3,6 @@ package net.risesoft.service.org;
 import java.util.List;
 import java.util.Optional;
 
-import net.risesoft.entity.Y9OrgBase;
 import net.risesoft.entity.Y9Position;
 import net.risesoft.y9.exception.Y9NotFoundException;
 
@@ -19,10 +18,9 @@ public interface Y9PositionService {
      * 创建岗位
      *
      * @param y9Position 岗位对象
-     * @param parent 父节点对象
      * @return {@link Y9Position}
      */
-    Y9Position createPosition(Y9Position y9Position, Y9OrgBase parent);
+    Y9Position createPosition(Y9Position y9Position);
 
     /**
      * 根据id数组删除岗位

@@ -23,6 +23,8 @@ import net.risesoft.service.authorization.Y9AuthorizationService;
 import net.risesoft.service.identity.Y9PersonToResourceAndAuthorityService;
 import net.risesoft.service.identity.Y9PositionToResourceAndAuthorityService;
 import net.risesoft.service.org.CompositeOrgBaseService;
+import net.risesoft.service.org.Y9PersonService;
+import net.risesoft.service.org.Y9PositionService;
 import net.risesoft.service.relation.Y9OrgBasesToRolesService;
 import net.risesoft.util.Y9OrgUtil;
 import net.risesoft.util.Y9ResourceUtil;
@@ -46,6 +48,8 @@ public class UpdateIdentityResourceAndAuthorityListener {
     private final Y9PositionToResourceAndAuthorityService y9PositionToResourceAndAuthorityService;
     private final Y9AuthorizationService y9AuthorizationService;
     private final Y9OrgBasesToRolesService y9OrgBasesToRolesService;
+    private final Y9PersonService y9PersonService;
+    private final Y9PositionService y9PositionService;
 
     private final CompositeOrgBaseService compositeOrgBaseService;
 
@@ -180,9 +184,9 @@ public class UpdateIdentityResourceAndAuthorityListener {
 
             for (Y9OrgBasesToRoles y9OrgBasesToRoles : y9OrgBasesToRolesList) {
                 if (OrgTypeEnum.PERSON.getEnName().equals(y9OrgBasesToRoles.getOrgType())) {
-                    y9PersonSet.add((Y9Person)compositeOrgBaseService.getOrgUnit(y9OrgBasesToRoles.getOrgId()));
+                    y9PersonSet.add(y9PersonService.getById(y9OrgBasesToRoles.getOrgId()));
                 } else if (OrgTypeEnum.POSITION.getEnName().equals(y9OrgBasesToRoles.getOrgType())) {
-                    y9PositionSet.add((Y9Position)compositeOrgBaseService.getOrgUnit(y9OrgBasesToRoles.getOrgId()));
+                    y9PositionSet.add(y9PositionService.getById(y9OrgBasesToRoles.getOrgId()));
                 } else {
                     y9PersonSet
                         .addAll(compositeOrgBaseService.listAllPersonsRecursionDownward(y9OrgBasesToRoles.getOrgId()));

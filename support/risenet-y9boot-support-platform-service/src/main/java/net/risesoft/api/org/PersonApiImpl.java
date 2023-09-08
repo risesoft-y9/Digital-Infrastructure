@@ -128,7 +128,7 @@ public class PersonApiImpl implements PersonApi {
         Y9LoginUserHolder.setTenantId(tenantId);
 
         Y9Person y9Person = Y9JsonUtil.readValue(personJson, Y9Person.class);
-        y9Person = y9PersonService.createPerson(y9Person, compositeOrgBaseService.getOrgUnit(y9Person.getParentId()));
+        y9Person = y9PersonService.createPerson(y9Person);
         return Y9ModelConvertUtil.convert(y9Person, Person.class);
     }
 
@@ -162,7 +162,7 @@ public class PersonApiImpl implements PersonApi {
         @RequestParam("personId") @NotBlank String personId) {
         Y9LoginUserHolder.setTenantId(tenantId);
 
-        Y9OrgBase bureau = y9PersonService.getBureau(personId);
+        Y9OrgBase bureau = compositeOrgBaseService.findOrgUnitBureau(personId).orElse(null);
         return ModelConvertUtil.orgBaseToOrgUnit(bureau);
     }
 
@@ -197,7 +197,7 @@ public class PersonApiImpl implements PersonApi {
         @RequestParam("personId") @NotBlank String personId) {
         Y9LoginUserHolder.setTenantId(tenantId);
 
-        Y9OrgBase parent = compositeOrgBaseService.getOrgUnitParent(personId);
+        Y9OrgBase parent = compositeOrgBaseService.findOrgUnitParent(personId).orElse(null);
         return ModelConvertUtil.orgBaseToOrgUnit(parent);
     }
 

@@ -3,6 +3,7 @@ package net.risesoft.service.org;
 import java.io.Serializable;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Optional;
 
 import net.risesoft.entity.Y9OrgBase;
 import net.risesoft.entity.Y9Organization;
@@ -19,12 +20,52 @@ import net.risesoft.entity.Y9Position;
 public interface CompositeOrgBaseService {
 
     /**
+     * 根据指定id获取ORGBase对象(可以是org的任意类型)
+     *
+     * @param orgUnitId 组织节点id
+     * @return {@link Y9OrgBase}
+     */
+    Optional<Y9OrgBase> findOrgUnit(String orgUnitId);
+
+    /**
+     * 根据id获取作为父节点的组织节点（只可能是组织机构和部门）
+     *
+     * @param orgUnitId 组织节点id
+     * @return {@link Y9OrgBase}
+     */
+    Optional<Y9OrgBase> findOrgUnitAsParent(String orgUnitId);
+
+    /**
+     * 根据组织节点id获取所在委办局（可能是组织机构或部门）
+     *
+     * @param orgUnitId 组织节点id
+     * @return {@link Y9OrgBase}
+     */
+    Optional<Y9OrgBase> findOrgUnitBureau(String orgUnitId);
+
+    /**
      * 根据指定id获取已删除的组织节点对象(可以是org的任意类型)
      *
      * @param orgUnitId 组织节点id
      * @return {@link Y9OrgBase}
      */
-    Y9OrgBase getOrgUnitDeleted(String orgUnitId);
+    Optional<Y9OrgBase> findOrgUnitDeleted(String orgUnitId);
+
+    /**
+     * 获取组织节点所在组织机构
+     *
+     * @param orgUnitId 组织节点id
+     * @return {@link Y9OrgBase}
+     */
+    Optional<Y9Organization> findOrgUnitOrganization(String orgUnitId);
+
+    /**
+     * 根据组织节点id，获取其父节点(只可能是组织机构和部门)
+     *
+     * @param orgUnitId 组织节点id
+     * @return ORGBase
+     */
+    Optional<Y9OrgBase> findOrgUnitParent(String orgUnitId);
 
     /**
      * 根据指定id获取ORGBase对象(可以是org的任意类型)
@@ -35,12 +76,28 @@ public interface CompositeOrgBaseService {
     Y9OrgBase getOrgUnit(String orgUnitId);
 
     /**
+     * 根据id获取作为父节点的组织节点（只可能是组织机构和部门）
+     *
+     * @param orgUnitId 组织节点id
+     * @return {@link Y9OrgBase}
+     */
+    Y9OrgBase getOrgUnitAsParent(String orgUnitId);
+
+    /**
      * 根据组织节点id获取所在委办局（可能是组织机构或部门）
      *
      * @param orgUnitId 组织节点id
      * @return {@link Y9OrgBase}
      */
     Y9OrgBase getOrgUnitBureau(String orgUnitId);
+
+    /**
+     * 根据指定id获取已删除的组织节点对象(可以是org的任意类型)
+     *
+     * @param orgUnitId 组织节点id
+     * @return {@link Y9OrgBase}
+     */
+    Y9OrgBase getOrgUnitDeleted(String orgUnitId);
 
     /**
      * 获取组织节点所在组织机构

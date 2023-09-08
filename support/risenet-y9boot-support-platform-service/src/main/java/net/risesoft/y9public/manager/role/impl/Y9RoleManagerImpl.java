@@ -61,6 +61,71 @@ public class Y9RoleManagerImpl implements Y9RoleManager {
     private final Y9PersonToResourceAndAuthorityRepository y9PersonToResourceAndAuthorityRepository;
     private final Y9PositionToResourceAndAuthorityRepository y9PositionToResourceAndAuthorityRepository;
 
+    @Transactional(readOnly = false)
+    @Override
+    public void delete(String id) {
+        Y9Role y9Role = this.getById(id);
+        if (Y9RoleTypeEnum.ROLE.getValue().equals(y9Role.getType())) {
+            y9OrgBasesToRolesRepository.deleteByRoleId(id);
+
+            List<Y9Authorization> authorizationList = y9AuthorizationRepository.findByPrincipalIdAndPrincipalType(id,
+                AuthorizationPrincipalTypeEnum.ROLE.getValue());
+            for (Y9Authorization y9Authorization : authorizationList) {
+                y9PersonToResourceAndAuthorityRepository.deleteByAuthorizationId(y9Authorization.getId());
+                y9PositionToResourceAndAuthorityRepository.deleteByAuthorizationId(y9Authorization.getId());
+            }
+            y9AuthorizationRepository.deleteAll(authorizationList);
+
+            y9PersonToRoleRepository.deleteByRoleId(id);
+            y9PositionToRoleRepository.deleteByRoleId(id);
+        } else if (Y9RoleTypeEnum.FOLDER.getValue().equals(y9Role.getType())) {
+            List<Y9Role> roleNodeList = y9RoleRepository.findByParentIdOrderByTabIndexAsc(id);
+            for (Y9Role role : roleNodeList) {
+                delete(role.getId());
+            }
+        }
+        y9RoleRepository.deleteById(id);
+    }
+
+    @Override
+    public void deleteByApp(String appId) {
+        List<Y9Role> y9Roles = listByAppIdAndParentId(appId, appId);
+        if (y9Roles != null && !y9Roles.isEmpty()) {
+            for (Y9Role role : y9Roles) {
+                this.delete(role.getId());
+            }
+        }
+    }
+
+    @Override
+    @Cacheable(key = "#id", condition = "#id!=null", unless = "#result==null")
+    public Y9Role findById(String id) {
+        return y9RoleRepository.findById(id).orElse(null);
+    }
+
+    @Override
+    @Cacheable(key = "#id", condition = "#id!=null", unless = "#result==null")
+    public Y9Role getById(String id) {
+        return y9RoleRepository.findById(id)
+            .orElseThrow(() -> Y9ExceptionUtil.notFoundException(RoleErrorCodeEnum.ROLE_NOT_FOUND, id));
+    }
+
+    @Override
+    public List<Y9Role> listByAppIdAndParentId(String appId, String parentId) {
+        if (StringUtils.isNotBlank(parentId)) {
+            return y9RoleRepository.findByAppIdAndParentId(appId, parentId);
+        } else {
+            return y9RoleRepository.findByAppIdAndParentIdIsNull(appId);
+        }
+    }
+
+    @Override
+    public List<String> listOrgUnitIdRecursively(String orgUnitId) {
+        List<String> orgUnitIdList = new ArrayList<>();
+        this.getOrgUnitIdsByUpwardRecursion(orgUnitIdList, orgUnitId);
+        return orgUnitIdList;
+    }
+
     @Override
     public List<Y9Role> listOrgUnitRelatedWithoutNegative(String orgUnitId) {
         List<String> positiveRoleIdList = new ArrayList<>();
@@ -91,26 +156,6 @@ public class Y9RoleManagerImpl implements Y9RoleManager {
     }
 
     @Override
-    public List<String> listOrgUnitIdRecursively(String orgUnitId) {
-        List<String> orgUnitIdList = new ArrayList<>();
-        this.getOrgUnitIdsByUpwardRecursion(orgUnitIdList, orgUnitId);
-        return orgUnitIdList;
-    }
-
-    @Override
-    @Cacheable(key = "#id", condition = "#id!=null", unless = "#result==null")
-    public Y9Role getById(String id) {
-        return y9RoleRepository.findById(id)
-            .orElseThrow(() -> Y9ExceptionUtil.notFoundException(RoleErrorCodeEnum.ROLE_NOT_FOUND, id));
-    }
-
-    @Override
-    @Cacheable(key = "#id", condition = "#id!=null", unless = "#result==null")
-    public Y9Role findById(String id) {
-        return y9RoleRepository.findById(id).orElse(null);
-    }
-
-    @Override
     @CacheEvict(key = "#y9Role.id", condition = "#y9Role.id!=null")
     @Transactional(readOnly = false)
     public Y9Role save(Y9Role y9Role) {
@@ -119,9 +164,6 @@ public class Y9RoleManagerImpl implements Y9RoleManager {
 
     private void getOrgUnitIdsByUpwardRecursion(List<String> orgUnitIds, String orgUnitId) {
         Y9OrgBase y9OrgBase = compositeOrgBaseManager.getOrgUnit(orgUnitId);
-        if (y9OrgBase == null) {
-            return;
-        }
 
         orgUnitIds.add(orgUnitId);
         if (OrgTypeEnum.PERSON.getEnName().equals(y9OrgBase.getOrgType())) {
@@ -144,51 +186,6 @@ public class Y9RoleManagerImpl implements Y9RoleManager {
             getOrgUnitIdsByUpwardRecursion(orgUnitIds, y9OrgBase.getParentId());
         } else {
             getOrgUnitIdsByUpwardRecursion(orgUnitIds, y9OrgBase.getParentId());
-        }
-    }
-
-    @Transactional(readOnly = false)
-    @Override
-    public void delete(String id) {
-        Y9Role y9Role = this.getById(id);
-        if (Y9RoleTypeEnum.ROLE.getValue().equals(y9Role.getType())) {
-            y9OrgBasesToRolesRepository.deleteByRoleId(id);
-
-            List<Y9Authorization> authorizationList = y9AuthorizationRepository.findByPrincipalIdAndPrincipalType(id,
-                AuthorizationPrincipalTypeEnum.ROLE.getValue());
-            for (Y9Authorization y9Authorization : authorizationList) {
-                y9PersonToResourceAndAuthorityRepository.deleteByAuthorizationId(y9Authorization.getId());
-                y9PositionToResourceAndAuthorityRepository.deleteByAuthorizationId(y9Authorization.getId());
-            }
-            y9AuthorizationRepository.deleteAll(authorizationList);
-
-            y9PersonToRoleRepository.deleteByRoleId(id);
-            y9PositionToRoleRepository.deleteByRoleId(id);
-        } else if (Y9RoleTypeEnum.FOLDER.getValue().equals(y9Role.getType())) {
-            List<Y9Role> roleNodeList = y9RoleRepository.findByParentIdOrderByTabIndexAsc(id);
-            for (Y9Role role : roleNodeList) {
-                delete(role.getId());
-            }
-        }
-        y9RoleRepository.deleteById(id);
-    }
-
-    @Override
-    public List<Y9Role> listByAppIdAndParentId(String appId, String parentId) {
-        if (StringUtils.isNotBlank(parentId)) {
-            return y9RoleRepository.findByAppIdAndParentId(appId, parentId);
-        } else {
-            return y9RoleRepository.findByAppIdAndParentIdIsNull(appId);
-        }
-    }
-
-    @Override
-    public void deleteByApp(String appId) {
-        List<Y9Role> y9Roles = listByAppIdAndParentId(appId, appId);
-        if (y9Roles != null && !y9Roles.isEmpty()) {
-            for (Y9Role role : y9Roles) {
-                this.delete(role.getId());
-            }
         }
     }
 }
