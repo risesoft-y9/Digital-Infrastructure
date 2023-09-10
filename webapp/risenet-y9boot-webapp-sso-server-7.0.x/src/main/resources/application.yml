@@ -273,14 +273,14 @@ spring:
             port: 7379
             username: default
             password: y9i-83204585
+            ssl: 
+                enabled: false
             lettuce:
                 pool:
                     max-active: 8
                     max-idle: 8
                     max-wait: -1
-                    min-idle: 0
-            ssl: 
-                enabled: false
+                    min-idle: 1
     jmx:
         enabled: false
     session:

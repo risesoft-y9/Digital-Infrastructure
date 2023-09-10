@@ -19,8 +19,6 @@ server:
             force: true
             force-request: true
             force-response: true
-javers:
-    newObjectSnapshot: true
 spring:
     application:
         name: platform
@@ -53,6 +51,19 @@ spring:
                 bootstrap-mode: default
                 enabled: false
         redis:
+            database: 8
+            host: localhost
+            port: 7379
+            username: default
+            password: y9i-83204585
+            ssl:
+                enabled: false
+            lettuce:
+                pool:
+                    max-active: 8
+                    max-idle: 8
+                    max-wait: -1
+                    min-idle: 1
             repositories:
                 enabled: false
     datasource:
@@ -121,22 +132,8 @@ spring:
             enable-auto-commit: true
             group-id: y9platform-server
     main:
-        allow-bean-definition-overriding: false
+        allow-bean-definition-overriding: true
         allow-circular-references: false
-    redis:
-        database: 8
-        host: localhost
-        lettuce:
-            pool:
-                max-active: 8
-                max-idle: 8
-                max-wait: -1
-                min-idle: 0
-            shutdown-timeout: 100ms
-        password: Redis-83204585
-        port: 6379
-        ssl: false
-        timeout: 10000
     servlet:
         multipart:
             max-file-size: 200MB
@@ -147,9 +144,6 @@ y9:
         log:
             kafkaEnabled: true
         platform:
-            checkPermission: false
-            enableIpAddressWhiteList: false
-            strictRoleBasedAccessControll: false
             systemName: riseplatform
             position-name-pattern: "{0}（{1}）"
     common:

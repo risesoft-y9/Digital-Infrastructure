@@ -1,0 +1,59 @@
+version: '3.8'
+name: y9-dev-environments
+services:
+  db:
+    image: mysql:latest
+    container_name: mysql01
+    restart: always
+    ports:
+      - "3309:3306"
+    command: --default-authentication-plugin=mysql_native_password
+    environment:
+      MYSQL_ROOT_PASSWORD: 'Y9i-83204585'
+      MYSQL_DATABASE: 'demo01'
+    volumes:
+      - d:/docker-data/mysql:/var/lib/mysql
+      
+  redis:
+    image: redis:latest
+    container_name: redis01
+    restart: always
+    ports:
+      - "7379:6379"
+    command: redis-server --requirepass "y9i-83204585"
+    volumes:
+      - d:/docker-data/redis:/data
+   
+  elasticsearch:
+    image: elasticsearch:8.9.2
+    container_name: elastic01
+    restart: always
+    ports:
+      - '9200:9200'
+      - '9300:9300'
+    volumes:
+      - d:/docker-data/es:/usr/share/elasticsearch/data
+    environment:
+      - discovery.type=single-node
+      - xpack.security.enabled=false
+    labels:
+      org.springframework.boot.service-connection: elasticsearch
+      
+  kafka:
+    image: bitnami/kafka:latest
+    container_name: kafka01
+    restart: always
+    ports:
+      - "9092:9092"
+      - "9094:9094"
+    environment:
+      - ALLOW_PLAINTEXT_LISTENER=yes
+      - KAFKA_ENABLE_KRAFT=yes
+      - KAFKA_CFG_LISTENERS=PLAINTEXT://:9092,CONTROLLER://:9093,EXTERNAL://:9094
+      - KAFKA_CFG_ADVERTISED_LISTENERS=PLAINTEXT://kafka:9092,EXTERNAL://localhost:9094
+      - KAFKA_CFG_LISTENER_SECURITY_PROTOCOL_MAP=CONTROLLER:PLAINTEXT,EXTERNAL:PLAINTEXT,PLAINTEXT:PLAINTEXT
+      - KAFKA_CFG_INTER_BROKER_LISTENER_NAME=PLAINTEXT
+    volumes:
+      - d:/docker-data/kafka:/bitnami/kafka
+    
+      

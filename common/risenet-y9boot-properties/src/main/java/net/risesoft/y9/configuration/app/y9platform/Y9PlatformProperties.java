@@ -11,18 +11,7 @@ public class Y9PlatformProperties {
      * 系统名称
      */
     private String systemName = "riseplatform";
-    /**
-     * 是否检查权限
-     */
-    private boolean checkPermission = false;
-    /**
-     * 是否启用ip地址白名单
-     */
-    private boolean enableIpAddressWhiteList = false;
-    /**
-     * 基于角色访问控制
-     */
-    private boolean strictRoleBasedAccessControll = true;
+    
     /**
      * 岗位名称格式，默认格式为 职位名称（人员名称），例 总经理（张三） {0} 职位名称 {1} 人员名称
      */
