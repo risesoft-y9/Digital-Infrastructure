@@ -53,9 +53,9 @@ spring:
         redis:
             database: 8
             host: localhost
-            port: 7379
+            port: 6379
             username: default
-            password: y9i-83204585
+            password: '12345678'
             ssl:
                 enabled: false
             lettuce:
@@ -96,7 +96,7 @@ spring:
                 driver-class-name: com.mysql.cj.jdbc.Driver
                 url: jdbc:mysql://localhost:3306/y9_public?serverTimezone=GMT%2B8&nullCatalogMeansCurrent=true&useUnicode=true&characterEncoding=utf-8&rewriteBatchedStatements=true&useCompression=true&useSSL=false&allowPublicKeyRetrieval=true
                 username: root
-                password: 'Mysql-83204585'
+                password: '12345678'
                 initialSize: 1
                 maxActive: 20
                 maxPoolPreparedStatementPerConnectionSize: 100
@@ -130,7 +130,7 @@ spring:
         consumer:
             auto-commit-interval: 1000
             enable-auto-commit: true
-            group-id: y9platform-server
+            group-id: 'y9platform-server'
     main:
         allow-bean-definition-overriding: true
         allow-circular-references: false
