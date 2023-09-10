@@ -10,7 +10,7 @@ services:
     command: --default-authentication-plugin=mysql_native_password
     environment:
       MYSQL_ROOT_PASSWORD: '12345678'
-      MYSQL_DATABASE: 'demo01'
+      MYSQL_DATABASE: 'y9_public'
     volumes:
       - d:/docker-data/mysql:/var/lib/mysql
       
