@@ -5,7 +5,7 @@ import lombok.RequiredArgsConstructor;
 import net.risesoft.consts.ErrorCodeConsts;
 
 /**
- * 角色错误码 10-15-xx
+ * 角色错误码 10-02-xx
  *
  * @author shidaobang
  * @date 2023/06/13
@@ -13,6 +13,7 @@ import net.risesoft.consts.ErrorCodeConsts;
  */
 @RequiredArgsConstructor
 public enum RoleErrorCodeEnum implements ErrorCode {
+    /** role not found */
     ROLE_NOT_FOUND(0, "角色[{}]不存在");
 
     private final int moduleErrorCode;

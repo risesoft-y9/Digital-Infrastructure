@@ -17,7 +17,7 @@ import net.risesoft.consts.CacheNameConsts;
 import net.risesoft.entity.Y9Person;
 import net.risesoft.entity.relation.Y9PersonsToGroups;
 import net.risesoft.entity.relation.Y9PersonsToPositions;
-import net.risesoft.exception.PersonErrorCodeEnum;
+import net.risesoft.exception.OrgUnitErrorCodeEnum;
 import net.risesoft.manager.org.Y9PersonManager;
 import net.risesoft.repository.Y9PersonRepository;
 import net.risesoft.repository.relation.Y9PersonsToGroupsRepository;
@@ -43,7 +43,7 @@ public class Y9PersonManagerImpl implements Y9PersonManager {
     @Cacheable(key = "#id", condition = "#id!=null", unless = "#result==null")
     public Y9Person getById(String id) {
         return y9PersonRepository.findById(id)
-            .orElseThrow(() -> Y9ExceptionUtil.notFoundException(PersonErrorCodeEnum.PERSON_NOT_FOUND, id));
+            .orElseThrow(() -> Y9ExceptionUtil.notFoundException(OrgUnitErrorCodeEnum.PERSON_NOT_FOUND, id));
     }
 
     @Override

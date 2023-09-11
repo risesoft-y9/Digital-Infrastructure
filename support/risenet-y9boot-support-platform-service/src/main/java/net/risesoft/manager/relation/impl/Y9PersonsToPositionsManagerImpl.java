@@ -12,7 +12,7 @@ import lombok.RequiredArgsConstructor;
 import net.risesoft.entity.Y9Person;
 import net.risesoft.entity.Y9Position;
 import net.risesoft.entity.relation.Y9PersonsToPositions;
-import net.risesoft.exception.PositionErrorCodeEnum;
+import net.risesoft.exception.OrgUnitErrorCodeEnum;
 import net.risesoft.manager.org.Y9PersonManager;
 import net.risesoft.manager.org.Y9PositionManager;
 import net.risesoft.manager.relation.Y9PersonsToPositionsManager;
@@ -73,7 +73,7 @@ public class Y9PersonsToPositionsManagerImpl implements Y9PersonsToPositionsMana
         // 校验岗位容量是否已满
         Y9Position y9Position = y9PositionManager.getById(positionId);
         Y9Assert.lessThanOrEqualTo(countByPositionId(positionId) + 1, y9Position.getCapacity(),
-            PositionErrorCodeEnum.POSITION_IS_FULL);
+            OrgUnitErrorCodeEnum.POSITION_IS_FULL);
 
         Integer maxPositionsOrder = getMaxPositionOrderByPersonId(personId);
         Integer maxPersonsOrder = getMaxPersonOrderByPositionId(positionId);

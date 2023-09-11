@@ -12,7 +12,7 @@ import lombok.RequiredArgsConstructor;
 
 import net.risesoft.consts.CacheNameConsts;
 import net.risesoft.entity.Y9Job;
-import net.risesoft.exception.JobErrorCodeEnum;
+import net.risesoft.exception.OrgUnitErrorCodeEnum;
 import net.risesoft.manager.org.Y9JobManager;
 import net.risesoft.repository.Y9JobRepository;
 import net.risesoft.y9.exception.util.Y9ExceptionUtil;
@@ -42,7 +42,7 @@ public class Y9JobManagerImpl implements Y9JobManager {
     @Cacheable(key = "#id", condition = "#id!=null", unless = "#result==null")
     public Y9Job getById(String id) {
         return y9JobRepository.findById(id)
-            .orElseThrow(() -> Y9ExceptionUtil.notFoundException(JobErrorCodeEnum.JOB_NOT_FOUND, id));
+            .orElseThrow(() -> Y9ExceptionUtil.notFoundException(OrgUnitErrorCodeEnum.JOB_NOT_FOUND, id));
     }
 
     @Override

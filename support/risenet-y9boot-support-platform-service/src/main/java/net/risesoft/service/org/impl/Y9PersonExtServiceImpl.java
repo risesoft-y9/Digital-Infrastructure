@@ -10,7 +10,7 @@ import lombok.RequiredArgsConstructor;
 
 import net.risesoft.entity.Y9Person;
 import net.risesoft.entity.Y9PersonExt;
-import net.risesoft.exception.PersonErrorCodeEnum;
+import net.risesoft.exception.OrgUnitErrorCodeEnum;
 import net.risesoft.manager.org.Y9PersonExtManager;
 import net.risesoft.manager.org.Y9PersonManager;
 import net.risesoft.repository.Y9PersonExtRepository;
@@ -43,7 +43,7 @@ public class Y9PersonExtServiceImpl implements Y9PersonExtService {
     @Override
     public Y9PersonExt getById(String id) {
         return y9PersonExtRepository.findById(id)
-            .orElseThrow(() -> Y9ExceptionUtil.notFoundException(PersonErrorCodeEnum.PERSON_EXT_NOT_FOUND, id));
+            .orElseThrow(() -> Y9ExceptionUtil.notFoundException(OrgUnitErrorCodeEnum.PERSON_EXT_NOT_FOUND, id));
     }
 
     @Override
@@ -112,6 +112,6 @@ public class Y9PersonExtServiceImpl implements Y9PersonExtService {
     @Override
     public Y9PersonExt getByPersonId(String personId) {
         return y9PersonExtRepository.findByPersonId(personId)
-            .orElseThrow(() -> Y9ExceptionUtil.notFoundException(PersonErrorCodeEnum.PERSON_EXT_NOT_FOUND, personId));
+            .orElseThrow(() -> Y9ExceptionUtil.notFoundException(OrgUnitErrorCodeEnum.PERSON_EXT_NOT_FOUND, personId));
     }
 }

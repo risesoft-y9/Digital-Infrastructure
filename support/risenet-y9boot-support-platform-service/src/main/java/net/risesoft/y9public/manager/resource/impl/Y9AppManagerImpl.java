@@ -11,7 +11,7 @@ import org.springframework.transaction.annotation.Transactional;
 import lombok.RequiredArgsConstructor;
 
 import net.risesoft.consts.CacheNameConsts;
-import net.risesoft.exception.AppErrorCodeEnum;
+import net.risesoft.exception.ResourceErrorCodeEnum;
 import net.risesoft.y9.Y9Context;
 import net.risesoft.y9.exception.util.Y9ExceptionUtil;
 import net.risesoft.y9.pubsub.event.Y9EntityDeletedEvent;
@@ -66,7 +66,7 @@ public class Y9AppManagerImpl implements Y9AppManager {
     @Cacheable(key = "#id", condition = "#id!=null", unless = "#result==null")
     public Y9App getById(String id) {
         return y9AppRepository.findById(id)
-            .orElseThrow(() -> Y9ExceptionUtil.notFoundException(AppErrorCodeEnum.APP_NOT_FOUND, id));
+            .orElseThrow(() -> Y9ExceptionUtil.notFoundException(ResourceErrorCodeEnum.APP_NOT_FOUND, id));
     }
 
     @Override

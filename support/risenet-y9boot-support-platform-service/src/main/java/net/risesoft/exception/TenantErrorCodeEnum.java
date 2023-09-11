@@ -5,7 +5,7 @@ import lombok.RequiredArgsConstructor;
 import net.risesoft.consts.ErrorCodeConsts;
 
 /**
- * 租户错误码 10-14-xx
+ * 租户错误码 10-06-xx
  *
  * @author shidaobang
  * @date 2023/06/07
@@ -13,7 +13,10 @@ import net.risesoft.consts.ErrorCodeConsts;
  */
 @RequiredArgsConstructor
 public enum TenantErrorCodeEnum implements ErrorCode {
-    TENANT_NOT_FOUND(0, "租户[{}]不存在"), TENANT_SYSTEM_EXISTS(1, "租户[{}]已租用系统[{}]");
+    /** tenant not found */
+    TENANT_NOT_FOUND(0, "租户[{}]不存在"),
+    /** tenant system exists */
+    TENANT_SYSTEM_EXISTS(1, "租户[{}]已租用系统[{}]");
 
     private final int moduleErrorCode;
     private final String description;

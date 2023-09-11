@@ -9,7 +9,7 @@ import org.springframework.transaction.annotation.Transactional;
 import lombok.RequiredArgsConstructor;
 
 import net.risesoft.consts.CacheNameConsts;
-import net.risesoft.exception.OperationErrorCodeEnum;
+import net.risesoft.exception.ResourceErrorCodeEnum;
 import net.risesoft.y9.exception.util.Y9ExceptionUtil;
 import net.risesoft.y9public.entity.resource.Y9Operation;
 import net.risesoft.y9public.manager.resource.Y9OperationManager;
@@ -40,7 +40,7 @@ public class Y9OperationManagerImpl implements Y9OperationManager {
     @Cacheable(key = "#id", condition = "#id!=null", unless = "#result==null")
     public Y9Operation getById(String id) {
         return y9OperationRepository.findById(id)
-            .orElseThrow(() -> Y9ExceptionUtil.notFoundException(OperationErrorCodeEnum.OPERATION_NOT_FOUND, id));
+            .orElseThrow(() -> Y9ExceptionUtil.notFoundException(ResourceErrorCodeEnum.OPERATION_NOT_FOUND, id));
     }
 
     @Override

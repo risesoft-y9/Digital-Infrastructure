@@ -15,7 +15,7 @@ import org.springframework.transaction.annotation.Transactional;
 import lombok.RequiredArgsConstructor;
 
 import net.risesoft.entity.Y9Job;
-import net.risesoft.exception.JobErrorCodeEnum;
+import net.risesoft.exception.OrgUnitErrorCodeEnum;
 import net.risesoft.id.Y9IdGenerator;
 import net.risesoft.manager.org.Y9JobManager;
 import net.risesoft.model.Job;
@@ -48,11 +48,12 @@ public class Y9JobServiceImpl implements Y9JobService {
     private final Y9JobManager y9JobManager;
 
     private void checkIfJobNameExists(String name) {
-        Y9Assert.lessThanOrEqualTo(y9JobRepository.countByName(name), 0, JobErrorCodeEnum.JOB_EXISTS, name);
+        Y9Assert.lessThanOrEqualTo(y9JobRepository.countByName(name), 0, OrgUnitErrorCodeEnum.JOB_EXISTS, name);
     }
 
     private void checkIfRelatedPositionExists(String id) {
-        Y9Assert.lessThanOrEqualTo(y9PositionRepository.countByJobId(id), 0, JobErrorCodeEnum.RELATED_POSITION_EXISTS);
+        Y9Assert.lessThanOrEqualTo(y9PositionRepository.countByJobId(id), 0,
+            OrgUnitErrorCodeEnum.RELATED_POSITION_EXISTS);
     }
 
     @Override

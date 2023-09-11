@@ -5,7 +5,7 @@ import lombok.RequiredArgsConstructor;
 import net.risesoft.consts.ErrorCodeConsts;
 
 /**
- * 数据源错误码 10-13-xx
+ * 数据源错误码 10-5-xx
  *
  * @author shidaobang
  * @date 2023/06/07
@@ -13,6 +13,7 @@ import net.risesoft.consts.ErrorCodeConsts;
  */
 @RequiredArgsConstructor
 public enum DataSourceErrorCodeEnum implements ErrorCode {
+    /** data source not found */
     DATA_SOURCE_NOT_FOUND(0, "数据源[{}]不存在");
 
     private final int moduleErrorCode;
