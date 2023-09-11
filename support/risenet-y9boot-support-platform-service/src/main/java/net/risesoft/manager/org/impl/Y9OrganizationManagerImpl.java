@@ -12,7 +12,7 @@ import lombok.RequiredArgsConstructor;
 
 import net.risesoft.consts.CacheNameConsts;
 import net.risesoft.entity.Y9Organization;
-import net.risesoft.exception.OrganizationErrorCodeEnum;
+import net.risesoft.exception.OrgUnitErrorCodeEnum;
 import net.risesoft.manager.org.Y9OrganizationManager;
 import net.risesoft.repository.Y9OrganizationRepository;
 import net.risesoft.y9.exception.util.Y9ExceptionUtil;
@@ -49,7 +49,7 @@ public class Y9OrganizationManagerImpl implements Y9OrganizationManager {
     @Cacheable(key = "#id", condition = "#id!=null", unless = "#result==null")
     public Y9Organization getById(String id) {
         return y9OrganizationRepository.findById(id)
-            .orElseThrow(() -> Y9ExceptionUtil.notFoundException(OrganizationErrorCodeEnum.ORGANIZATION_NOT_FOUND, id));
+            .orElseThrow(() -> Y9ExceptionUtil.notFoundException(OrgUnitErrorCodeEnum.ORGANIZATION_NOT_FOUND, id));
     }
 
     @Override

@@ -19,7 +19,7 @@ import net.risesoft.entity.Y9OrgBase;
 import net.risesoft.enums.ManagerLevelEnum;
 import net.risesoft.enums.OrgTypeEnum;
 import net.risesoft.enums.SexEnum;
-import net.risesoft.exception.ManagerErrorCodeEnum;
+import net.risesoft.exception.OrgUnitErrorCodeEnum;
 import net.risesoft.id.IdType;
 import net.risesoft.id.Y9IdGenerator;
 import net.risesoft.manager.org.CompositeOrgBaseManager;
@@ -219,7 +219,7 @@ public class Y9ManagerImpl implements Y9ManagerService {
     @Override
     public Y9Manager getById(String id) {
         return y9ManagerRepository.findById(id)
-            .orElseThrow(() -> Y9ExceptionUtil.notFoundException(ManagerErrorCodeEnum.MANAGER_NOT_FOUND, id));
+            .orElseThrow(() -> Y9ExceptionUtil.notFoundException(OrgUnitErrorCodeEnum.MANAGER_NOT_FOUND, id));
     }
 
     @Override

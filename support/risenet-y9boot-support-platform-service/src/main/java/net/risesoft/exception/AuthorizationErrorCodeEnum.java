@@ -5,7 +5,7 @@ import lombok.RequiredArgsConstructor;
 import net.risesoft.consts.ErrorCodeConsts;
 
 /**
- * 授权错误码 10-08-xx
+ * 授权错误码 10-03-xx
  *
  * @author shidaobang
  * @date 2023/06/07
@@ -13,6 +13,7 @@ import net.risesoft.consts.ErrorCodeConsts;
  */
 @RequiredArgsConstructor
 public enum AuthorizationErrorCodeEnum implements ErrorCode {
+    /** authorization not found */
     AUTHORIZATION_NOT_FOUND(0, "授权[{}]不存在");
 
     private final int moduleErrorCode;

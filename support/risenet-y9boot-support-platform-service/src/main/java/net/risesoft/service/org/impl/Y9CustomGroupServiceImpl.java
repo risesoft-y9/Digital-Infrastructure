@@ -14,7 +14,7 @@ import lombok.RequiredArgsConstructor;
 
 import net.risesoft.entity.Y9CustomGroup;
 import net.risesoft.entity.Y9Person;
-import net.risesoft.exception.CustomGroupErrorCodeEnum;
+import net.risesoft.exception.OrgUnitErrorCodeEnum;
 import net.risesoft.id.IdType;
 import net.risesoft.id.Y9IdGenerator;
 import net.risesoft.manager.relation.Y9CustomGroupMembersManager;
@@ -64,7 +64,7 @@ public class Y9CustomGroupServiceImpl implements Y9CustomGroupService {
     @Override
     public Y9CustomGroup getById(String id) {
         return customGroupRepository.findById(id)
-            .orElseThrow(() -> Y9ExceptionUtil.notFoundException(CustomGroupErrorCodeEnum.CUSTOM_GROUP_NOT_FOUND, id));
+            .orElseThrow(() -> Y9ExceptionUtil.notFoundException(OrgUnitErrorCodeEnum.CUSTOM_GROUP_NOT_FOUND, id));
     }
 
     @Override

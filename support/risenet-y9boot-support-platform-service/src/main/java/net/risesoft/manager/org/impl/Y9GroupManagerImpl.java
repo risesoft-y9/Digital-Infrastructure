@@ -12,7 +12,7 @@ import lombok.RequiredArgsConstructor;
 
 import net.risesoft.consts.CacheNameConsts;
 import net.risesoft.entity.Y9Group;
-import net.risesoft.exception.GroupErrorCodeEnum;
+import net.risesoft.exception.OrgUnitErrorCodeEnum;
 import net.risesoft.manager.org.Y9GroupManager;
 import net.risesoft.model.Group;
 import net.risesoft.repository.Y9GroupRepository;
@@ -35,7 +35,7 @@ public class Y9GroupManagerImpl implements Y9GroupManager {
     @Cacheable(key = "#id", condition = "#id!=null", unless = "#result==null")
     public Y9Group getById(String id) {
         return y9GroupRepository.findById(id)
-            .orElseThrow(() -> Y9ExceptionUtil.notFoundException(GroupErrorCodeEnum.GROUP_NOT_FOUND, id));
+            .orElseThrow(() -> Y9ExceptionUtil.notFoundException(OrgUnitErrorCodeEnum.GROUP_NOT_FOUND, id));
     }
 
     @Override

@@ -12,7 +12,7 @@ import lombok.RequiredArgsConstructor;
 
 import net.risesoft.consts.CacheNameConsts;
 import net.risesoft.entity.Y9Department;
-import net.risesoft.exception.DepartmentErrorCodeEnum;
+import net.risesoft.exception.OrgUnitErrorCodeEnum;
 import net.risesoft.manager.org.Y9DepartmentManager;
 import net.risesoft.model.Department;
 import net.risesoft.repository.Y9DepartmentRepository;
@@ -35,7 +35,7 @@ public class Y9DepartmentManagerImpl implements Y9DepartmentManager {
     @Cacheable(key = "#id", condition = "#id != null", unless = "#result == null")
     public Y9Department getById(String id) {
         return y9DepartmentRepository.findById(id)
-            .orElseThrow(() -> Y9ExceptionUtil.notFoundException(DepartmentErrorCodeEnum.DEPARTMENT_NOT_FOUND, id));
+            .orElseThrow(() -> Y9ExceptionUtil.notFoundException(OrgUnitErrorCodeEnum.DEPARTMENT_NOT_FOUND, id));
     }
 
     @Override

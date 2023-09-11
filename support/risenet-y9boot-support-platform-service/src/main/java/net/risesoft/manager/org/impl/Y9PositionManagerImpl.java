@@ -16,7 +16,7 @@ import net.risesoft.consts.OrgLevelConsts;
 import net.risesoft.entity.Y9OrgBase;
 import net.risesoft.entity.Y9Position;
 import net.risesoft.enums.OrgTypeEnum;
-import net.risesoft.exception.PositionErrorCodeEnum;
+import net.risesoft.exception.OrgUnitErrorCodeEnum;
 import net.risesoft.id.IdType;
 import net.risesoft.id.Y9IdGenerator;
 import net.risesoft.manager.org.CompositeOrgBaseManager;
@@ -52,7 +52,7 @@ public class Y9PositionManagerImpl implements Y9PositionManager {
     @Cacheable(key = "#id", condition = "#id!=null", unless = "#result==null")
     public Y9Position getById(String id) {
         return y9PositionRepository.findById(id)
-            .orElseThrow(() -> Y9ExceptionUtil.notFoundException(PositionErrorCodeEnum.POSITION_NOT_FOUND, id));
+            .orElseThrow(() -> Y9ExceptionUtil.notFoundException(OrgUnitErrorCodeEnum.POSITION_NOT_FOUND, id));
     }
 
     @Override
@@ -63,7 +63,7 @@ public class Y9PositionManagerImpl implements Y9PositionManager {
 
     private void checkHeadCountAvailability(Y9Position position) {
         Integer personCount = y9PersonsToPositionsRepository.countByPositionId(position.getId());
-        Y9Assert.lessThanOrEqualTo(personCount, position.getCapacity(), PositionErrorCodeEnum.POSITION_IS_FULL,
+        Y9Assert.lessThanOrEqualTo(personCount, position.getCapacity(), OrgUnitErrorCodeEnum.POSITION_IS_FULL,
             position.getName());
     }
 

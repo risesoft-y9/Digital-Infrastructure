@@ -25,7 +25,7 @@ import net.risesoft.entity.Y9Organization;
 import net.risesoft.enums.AuthorizationPrincipalTypeEnum;
 import net.risesoft.enums.OrgTypeEnum;
 import net.risesoft.enums.Y9DepartmentPropCategoryEnum;
-import net.risesoft.exception.DepartmentErrorCodeEnum;
+import net.risesoft.exception.OrgUnitErrorCodeEnum;
 import net.risesoft.id.IdType;
 import net.risesoft.id.Y9IdGenerator;
 import net.risesoft.manager.org.CompositeOrgBaseManager;
@@ -561,8 +561,8 @@ public class Y9DepartmentServiceImpl implements Y9DepartmentService {
         List<Y9OrgBase> parentList = new ArrayList<>();
         recursionParent(parentId, parentList);
         if (parentList.contains(dept)) {
-            throw new Y9BusinessException(DepartmentErrorCodeEnum.MOVE_TO_SUB_DEPARTMENT_NOT_PERMITTED.getCode(),
-                DepartmentErrorCodeEnum.MOVE_TO_SUB_DEPARTMENT_NOT_PERMITTED.getDescription());
+            throw new Y9BusinessException(OrgUnitErrorCodeEnum.MOVE_TO_SUB_DEPARTMENT_NOT_PERMITTED.getCode(),
+                OrgUnitErrorCodeEnum.MOVE_TO_SUB_DEPARTMENT_NOT_PERMITTED.getDescription());
         }
     }
 

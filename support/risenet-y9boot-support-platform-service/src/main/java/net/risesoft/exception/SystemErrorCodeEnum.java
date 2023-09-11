@@ -5,7 +5,7 @@ import lombok.RequiredArgsConstructor;
 import net.risesoft.consts.ErrorCodeConsts;
 
 /**
- * 系统错误码 10-12-xx
+ * 系统错误码 10-04-xx
  *
  * @author shidaobang
  * @date 2023/06/07
@@ -13,6 +13,7 @@ import net.risesoft.consts.ErrorCodeConsts;
  */
 @RequiredArgsConstructor
 public enum SystemErrorCodeEnum implements ErrorCode {
+    /** system not found */
     SYSTEM_NOT_FOUND(0, "系统[{}]不存在");
 
     private final int moduleErrorCode;
