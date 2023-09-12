@@ -16,7 +16,6 @@ import java.util.stream.Collectors;
 
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -62,19 +61,6 @@ public class RoleController {
     private final Y9AppService y9AppService;
     private final Y9SystemService y9SystemService;
     private final Y9RoleDataHandler y9RoleDataHandler;
-
-    /**
-     * 展开应用角色树
-     *
-     * @param appId 应用id
-     * @return
-     */
-    @RiseLog(operationName = "展开应用角色树")
-    @RequestMapping(value = "/treeRoot/{appId}")
-    public Y9Result<List<RoleVO>> appRoleTreeRoot(@PathVariable String appId) {
-        List<Y9Role> y9RoleList = y9RoleService.listByAppIdAndParentId(appId, null);
-        return Y9Result.success(Y9ModelConvertUtil.convert(y9RoleList, RoleVO.class), "展开应用角色树成功");
-    }
 
     /**
      * 删除角色节点
@@ -180,30 +166,6 @@ public class RoleController {
     }
 
     /**
-     * 根据组织机构id获取角色列表
-     *
-     * @param orgUnitId 机构id
-     * @return
-     */
-    @RiseLog(operationName = "根据组织机构id获取角色列表 ")
-    @RequestMapping(value = "/listAllRolesByOrgUnitId")
-    public Y9Result<List<Y9Role>> listAllRolesByOrgUnitId(@RequestParam String orgUnitId) {
-        return Y9Result.success(y9RoleService.listOrgUnitRelated(orgUnitId), "获取角色列表成功");
-    }
-
-    /**
-     * 根据组织机构节点id（机构，部门，用户组，岗位，人员）,返回关联的角色节点
-     *
-     * @param orgUnitId 组织机构节点id
-     * @return
-     */
-    @RiseLog(operationName = "根据组织机构节点id（机构，部门，用户组，岗位，人员）,返回关联的角色节点 ")
-    @RequestMapping(value = "/listByOrgUnitId2")
-    public Y9Result<List<Y9Role>> listByOrgUnitId2(@RequestParam String orgUnitId) {
-        return Y9Result.success(y9RoleService.listByOrgUnitId(orgUnitId.replace("Y9OHM", "")), "获取角色列表成功");
-    }
-
-    /**
      * 根据父节点id，获取角色节点列表
      *
      * @param parentId 父节点id
@@ -215,31 +177,6 @@ public class RoleController {
     public Y9Result<List<Y9Role>> listByParentId(@RequestParam String parentId) {
         List<Y9Role> roleList = y9RoleService.listByParentId(parentId);
         return Y9Result.success(roleList, "获取角色列表成功");
-    }
-
-    /**
-     * 根据组织机构节点id（机构，部门，用户组，岗位，人员）,返回关联的角色节点
-     *
-     * @param orgUnitId 组织机构节点id
-     * @return
-     */
-    @RiseLog(operationName = "根据组织机构节点id（机构，部门，用户组，岗位，人员）,返回关联的角色节点 ")
-    @RequestMapping(value = "/listRolesByOrgUnitId")
-    public Y9Result<List<Y9Role>> listRolesByOrgUnitId(@RequestParam String orgUnitId) {
-        return Y9Result.success(y9RoleService.listByOrgUnitId(orgUnitId), "获取角色列表成功");
-    }
-
-    /**
-     * 获取角色树
-     *
-     * @param parentId 角色id
-     * @return
-     */
-    @RiseLog(operationName = "获取角色树")
-    @RequestMapping(value = "/tree")
-    public Y9Result<List<RoleVO>> roleTree(@RequestParam String parentId) {
-        List<Y9Role> y9RoleList = y9RoleService.listByParentId(parentId);
-        return Y9Result.success(Y9ModelConvertUtil.convert(y9RoleList, RoleVO.class), "获取应用角色树成功");
     }
 
     /**
@@ -277,7 +214,7 @@ public class RoleController {
      */
     @RiseLog(operationName = "保存角色节点排序 ", operationType = OperationTypeEnum.MODIFY)
     @PostMapping(value = "/saveOrder")
-    public Y9Result<String> saveOrder(@RequestParam String[] ids) {
+    public Y9Result<String> saveOrder(@RequestParam List<String> ids) {
         y9RoleService.saveOrder(ids);
         return Y9Result.successMsg("保存角色节点排序成功");
     }
@@ -322,11 +259,7 @@ public class RoleController {
                     appList.add(y9App);
                 }
             }
-            try {
-                Collections.sort(appList);
-            } catch (Exception e) {
-                LOGGER.warn(e.getMessage(), e);
-            }
+            Collections.sort(appList);
             for (Y9App y9App : appList) {
                 Y9System y9System = y9SystemService.getById(y9App.getSystemId());
                 RoleVO appVO = new RoleVO();
@@ -347,59 +280,6 @@ public class RoleController {
                         roleVO.setHasChild(!y9RoleService.listByParentId(roleNode.getId()).isEmpty());
                     }
                     roleVO.setGuidPath(roleNode.getAppId() + "," + roleNode.getGuidPath());
-                    roleVOList.add(roleVO);
-                }
-            }
-        }
-        return Y9Result.success(roleVOList, "根据角色名称查询角色节点成功");
-    }
-
-    /**
-     * 根据角色名称和系统名称，查询角色节点
-     *
-     * @param name 角色名
-     * @param systemName 系统名称
-     * @return
-     */
-    @RiseLog(operationName = "查询角色")
-    @RequestMapping(value = "/treeSearchByName")
-    public Y9Result<List<RoleVO>> treeSearchByName(@RequestParam String name, @RequestParam String systemName) {
-        List<Y9Role> y9RoleList = y9RoleService.treeSearchBySystemName(name, systemName);
-        List<RoleVO> roleVOList = new ArrayList<>();
-        if (y9RoleList != null && !y9RoleList.isEmpty()) {
-            Set<String> appIdList = y9RoleList.stream().map(Y9Role::getAppId).collect(Collectors.toSet());
-            List<Y9App> appList = new ArrayList<>();
-            for (String appId : appIdList) {
-                if (!DefaultIdConsts.TOP_PUBLIC_ROLE_ID.equals(appId)) {
-                    Y9App y9App = y9AppService.getById(appId);
-                    appList.add(y9App);
-                }
-            }
-            try {
-                Collections.sort(appList);
-            } catch (Exception e) {
-                LOGGER.warn(e.getMessage(), e);
-            }
-            for (Y9App y9App : appList) {
-                Y9System y9System = y9SystemService.getById(y9App.getSystemId());
-                RoleVO appVO = new RoleVO();
-                appVO.setId(y9App.getId());
-                appVO.setName(y9App.getName());
-                appVO.setSystemName(y9System.getName());
-                appVO.setSystemCnName(y9System.getCnName());
-                appVO.setType("App");
-                appVO.setHasChild(true);
-                appVO.setParentId(y9App.getId());
-                appVO.setGuidPath(y9App.getId());
-                roleVOList.add(appVO);
-            }
-            for (Y9Role roleNode : y9RoleList) {
-                if (systemName.equals(roleNode.getSystemName())) {
-                    RoleVO roleVO = Y9ModelConvertUtil.convert(roleNode, RoleVO.class);
-                    roleVO.setGuidPath(roleNode.getAppId() + "," + roleNode.getGuidPath());
-                    if (Y9RoleTypeEnum.FOLDER.getValue().equals(roleNode.getType())) {
-                        roleVO.setHasChild(!y9RoleService.listByParentId(roleNode.getId()).isEmpty());
-                    }
                     roleVOList.add(roleVO);
                 }
             }

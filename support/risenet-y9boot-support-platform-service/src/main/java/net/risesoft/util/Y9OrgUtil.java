@@ -64,6 +64,6 @@ public class Y9OrgUtil {
      * @return boolean
      */
     public static boolean isDescendantOf(Y9OrgBase a, Y9OrgBase b) {
-        return b.getGuidPath().contains(a.getGuidPath()) && !Objects.equals(a.getGuidPath(), b.getGuidPath());
+        return a.getGuidPath().contains(b.getGuidPath()) && !Objects.equals(a.getGuidPath(), b.getGuidPath());
     }
 }

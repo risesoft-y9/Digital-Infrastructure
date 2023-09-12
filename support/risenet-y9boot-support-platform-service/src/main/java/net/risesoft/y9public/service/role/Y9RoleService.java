@@ -3,8 +3,6 @@ package net.risesoft.y9public.service.role;
 import java.util.List;
 import java.util.Optional;
 
-import net.risesoft.entity.Y9Person;
-import net.risesoft.entity.Y9Position;
 import net.risesoft.y9public.entity.role.Y9Role;
 
 /**
@@ -29,14 +27,6 @@ public interface Y9RoleService {
      * @param id 唯一标识
      */
     void delete(String id);
-
-    /**
-     * 根据角色树的父节点id，向下查找所有的角色（不包括节点）
-     *
-     * @param y9RoleList 角色列表
-     * @param parentId 父节点id
-     */
-    void findAllByParentId(List<Y9Role> y9RoleList, String parentId);
 
     /**
      * 对于流程角色节点下面的角色customId为taskDefineKey 同一个流程角色下customId是唯一的， 但是不同的流程角色下，customId可能会有多个
@@ -76,31 +66,6 @@ public interface Y9RoleService {
      * @return {@link List}<{@link Y9Role}>
      */
     List<Y9Role> listAll();
-
-    /**
-     * 根据应用id及其父节点id查找角色
-     *
-     * @param appId 应用id
-     * @param parentId 父节点id
-     * @return {@link List}<{@link Y9Role}>
-     */
-    List<Y9Role> listByAppIdAndParentId(String appId, String parentId);
-
-    /**
-     * 根据customId查询角色列表
-     *
-     * @param customId 自定义id
-     * @return {@link List}<{@link Y9Role}>
-     */
-    List<Y9Role> listByCustomId(String customId);
-
-    /**
-     * 根据角色id数组进行搜索
-     *
-     * @param ids id数组
-     * @return {@link List}<{@link Y9Role}>
-     */
-    List<Y9Role> listById(List<String> ids);
 
     /**
      * 根据角色名称查找
@@ -157,18 +122,6 @@ public interface Y9RoleService {
     List<Y9Role> listByParentId(String parentId);
 
     /**
-     * 根据parentId, customId, systemName, type查询角色
-     *
-     * @param parentId 父节点id
-     * @param customId 自定义id
-     * @param systemName 系统名
-     * @param type 类型
-     * @return {@link List}<{@link Y9Role}>
-     */
-    List<Y9Role> listByParentIdAndCustomIdAndSystemNameAndType(String parentId, String customId, String systemName,
-        String type);
-
-    /**
      * 根据父节点id和角色名称，获取角色列表
      *
      * @param parentId 父节点id
@@ -176,24 +129,6 @@ public interface Y9RoleService {
      * @return {@link List}<{@link Y9Role}>
      */
     List<Y9Role> listByParentIdAndName(String parentId, String roleName);
-
-    /**
-     * 根据parentId，systemNames查询角色
-     *
-     * @param parentId 父节点id
-     * @param systemNames 系统名列表
-     * @return {@link List}<{@link Y9Role}>
-     */
-    List<Y9Role> listByParentIdAndSystemNameIn(String parentId, List<String> systemNames);
-
-    /**
-     * 根据parentId、type查找所有角色
-     *
-     * @param parentId 父节点id
-     * @param type 类型
-     * @return {@link List}<{@link Y9Role}>
-     */
-    List<Y9Role> listByParentIdAndType(String parentId, String type);
 
     /**
      * 查询parentId为null的角色集合
@@ -211,36 +146,12 @@ public interface Y9RoleService {
     List<String> listOrgUnitIdRecursively(String orgUnitId);
 
     /**
-     * 根据组织节点id获取所有关联的角色列表 对于组织机构到组织根节点及所有中间组织节点关联的角色也包含在内
-     *
-     * @param orgUnitId 组织节点id
-     * @return {@link List}<{@link Y9Role}>
-     */
-    List<Y9Role> listOrgUnitRelated(String orgUnitId);
-
-    /**
      * 根据组织节点id获取所有关联的角色列表（已排除掉负关联） 对于组织机构到组织根节点及所有中间组织节点关联的角色也包含在内
      *
      * @param orgUnitId 组织节点id
      * @return {@link List}<{@link Y9Role}>
      */
     List<Y9Role> listOrgUnitRelatedWithoutNegative(String orgUnitId);
-
-    /**
-     * 获取跟角色相关的人员列表（关联的组织节点已最终解析到人）
-     *
-     * @param id 唯一标识
-     * @return {@link List}<{@link Y9Person}>
-     */
-    List<Y9Person> listRelatedPersonByRoleId(String id);
-
-    /**
-     * 获取跟角色相关的岗位列表（关联的组织节点已最终解析到岗位）
-     *
-     * @param id 唯一标识
-     * @return {@link List}<{@link Y9Position}>
-     */
-    List<Y9Position> listRelatedPositionByRoleId(String id);
 
     /**
      * 保存移动后的角色信息
@@ -263,7 +174,7 @@ public interface Y9RoleService {
      *
      * @param ids id数组
      */
-    void saveOrder(String[] ids);
+    void saveOrder(List<String> ids);
 
     /**
      * 保存或者更新角色节点扩展信息
@@ -283,14 +194,6 @@ public interface Y9RoleService {
     List<Y9Role> searchRole(String whereClause);
 
     /**
-     * 获得角色树
-     *
-     * @param id 唯一标识
-     * @return {@link List}<{@link Y9Role}>
-     */
-    List<Y9Role> treeSearchById(String id);
-
-    /**
      * 根据name查询角色节点
      *
      * @param name 角色名
@@ -298,12 +201,4 @@ public interface Y9RoleService {
      */
     List<Y9Role> treeSearchByName(String name);
 
-    /**
-     * 根据name,systemName进行搜索
-     *
-     * @param name 角色名
-     * @param systemName 系统名
-     * @return {@link List}<{@link Y9Role}>
-     */
-    List<Y9Role> treeSearchBySystemName(String name, String systemName);
 }

@@ -28,6 +28,8 @@ public interface Y9PersonToRoleRepository extends JpaRepository<Y9PersonToRole, 
 
     int countByPersonIdAndRoleCustomId(String personId, String customId);
 
+    int countByPersonIdAndRoleId(String personId, String roleId);
+
     long countByPersonIdAndSystemName(String personId, String systemName);
 
     @Modifying

@@ -11,7 +11,7 @@ import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-import org.apache.commons.lang3.StringUtils;
+
 import org.springframework.context.annotation.Primary;
 import org.springframework.http.MediaType;
 import org.springframework.validation.annotation.Validated;
@@ -22,12 +22,10 @@ import org.springframework.web.bind.annotation.RestController;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
-import net.risesoft.consts.DefaultIdConsts;
 import net.risesoft.entity.Y9OrgBase;
 import net.risesoft.entity.Y9Person;
 import net.risesoft.entity.relation.Y9OrgBasesToRoles;
 import net.risesoft.enums.OrgTypeEnum;
-import net.risesoft.enums.Y9RoleTypeEnum;
 import net.risesoft.model.OrgUnit;
 import net.risesoft.model.Person;
 import net.risesoft.model.Role;
@@ -76,7 +74,7 @@ public class RoleApiImpl implements RoleApi {
         @RequestParam("roleId") @NotBlank String roleId, @RequestParam("tenantId") @NotBlank String tenantId) {
         Y9LoginUserHolder.setTenantId(tenantId);
 
-        y9OrgBasesToRolesService.addOrgBases(roleId, new String[] {personId}, Boolean.TRUE);
+        y9OrgBasesToRolesService.addOrgUnitsForRole(roleId, Collections.singletonList(personId), Boolean.TRUE);
         return true;
     }
 
@@ -86,18 +84,18 @@ public class RoleApiImpl implements RoleApi {
      * @param roleId 角色id
      * @param roleName 角色名称
      * @param parentId 父节点id
-     * @param customId customId对应工作流的processDefineKey
-     * @param type 角色类型，systemNode、tenantNode、node或者role
+     * @param customId customId 自定义id
+     * @param type 角色类型，node或者role
      * @param systemName 系统标识
      * @param systemCnName 系统中文名称
      * @return Role 角色对象
      * @since 9.6.0
      */
     @Override
-    public Role createRoleNodeAddCustomId(@RequestParam("roleId") String roleId,
-        @RequestParam("roleName") String roleName, @RequestParam("parentId") String parentId,
-        @RequestParam("customId") String customId, @RequestParam("type") String type,
-        @RequestParam("systemName") String systemName, @RequestParam("systemCnName") String systemCnName) {
+    public Role createRole(@RequestParam("roleId") String roleId, @RequestParam("roleName") String roleName,
+        @RequestParam("parentId") String parentId, @RequestParam("customId") String customId,
+        @RequestParam("type") String type, @RequestParam("systemName") String systemName,
+        @RequestParam("systemCnName") String systemCnName) {
         Optional<Y9Role> y9RoleOptional = y9RoleService.findByCustomIdAndParentId(customId, parentId);
         Y9Role roleNode;
         if (y9RoleOptional.isEmpty()) {
@@ -125,14 +123,8 @@ public class RoleApiImpl implements RoleApi {
      */
     @Override
     public Boolean deleteRole(@RequestParam("roleId") @NotBlank String roleId) {
-        boolean flag = false;
-        try {
-            y9RoleService.delete(roleId);
-            return true;
-        } catch (Exception e) {
-            flag = false;
-        }
-        return flag;
+        y9RoleService.delete(roleId);
+        return true;
     }
 
     /**
@@ -159,87 +151,8 @@ public class RoleApiImpl implements RoleApi {
      */
     @Override
     public Role getRole(@RequestParam("roleId") @NotBlank String roleId) {
-        Y9Role acRoleNode = y9RoleService.findById(roleId);
-        return ModelConvertUtil.y9RoleToRole(acRoleNode);
-    }
-
-    /**
-     * 根据人员id判断该人员是否拥有roleName这个公共角色
-     *
-     * @param tenantId 租户id
-     * @param roleName 角色名称
-     * @param personId 人员id
-     * @return boolean
-     * @since 9.6.0
-     */
-    @Override
-    public boolean hasPublicRole(@RequestParam("tenantId") @NotBlank String tenantId,
-        @RequestParam("roleName") @NotBlank String roleName, @RequestParam("personId") @NotBlank String personId) {
-        List<Y9Role> list = y9RoleService.listByParentIdAndName(DefaultIdConsts.TOP_PUBLIC_ROLE_ID, roleName);
-        if (!list.isEmpty()) {
-            Y9Role node = list.get(0);
-            Y9LoginUserHolder.setTenantId(tenantId);
-            List<String> orgUnitIds = y9RoleService.listOrgUnitIdRecursively(personId);
-            long count = y9OrgBasesToRolesService.countByRoleIdAndOrgIdsWithoutNegative(node.getId(), orgUnitIds);
-            if (count > 0) {
-                return true;
-            }
-        }
-        return false;
-    }
-
-    /**
-     * 根据人员id判断改人员是否拥有 roleName 这个角色
-     *
-     * @param tenantId 租户id
-     * @param systemName 系统标识
-     * @param properties 角色扩展属性
-     * @param roleName 角色名称
-     * @param personId 人员id
-     * @return Boolean 是否拥有
-     * @since 9.6.0
-     */
-    @Override
-    public Boolean hasRole(@RequestParam("tenantId") @NotBlank String tenantId,
-        @RequestParam("systemName") @NotBlank String systemName,
-        @RequestParam(value = "properties", required = false) String properties,
-        @RequestParam("roleName") @NotBlank String roleName, @RequestParam("personId") @NotBlank String personId) {
-        List<Y9Role> list = null;
-        if (StringUtils.isBlank(properties)) {
-            list = y9RoleService.listByNameAndSystemNameAndType(roleName, systemName, Y9RoleTypeEnum.ROLE.getValue());
-        } else {
-            list = y9RoleService.listByNameAndSystemNameAndPropertiesAndType(roleName, systemName, properties,
-                Y9RoleTypeEnum.ROLE.getValue());
-        }
-
-        if (null != list && !list.isEmpty()) {
-            Y9Role node = list.get(0);
-            Y9LoginUserHolder.setTenantId(tenantId);
-            List<String> orgUnitIds = y9RoleService.listOrgUnitIdRecursively(personId);
-            long count = y9OrgBasesToRolesService.countByRoleIdAndOrgIdsWithoutNegative(node.getId(), orgUnitIds);
-            if (count > 0) {
-                return true;
-            }
-        }
-        return false;
-    }
-
-    /**
-     * 判断orgUnitId是否有角色roleId
-     *
-     * @param tenantId 租户id
-     * @param roleId 角色id
-     * @param orgUnitId 组织架构节点id
-     * @return Boolean 是否有
-     * @since 9.6.0
-     */
-    @Override
-    public Boolean hasRoleByTenantIdAndRoleIdAndOrgUnitId(@RequestParam("tenantId") @NotBlank String tenantId,
-        @RequestParam("roleId") @NotBlank String roleId, @RequestParam("orgUnitId") @NotBlank String orgUnitId) {
-        Y9LoginUserHolder.setTenantId(tenantId);
-        List<String> orgUnitIds = y9RoleService.listOrgUnitIdRecursively(orgUnitId);
-        long count = y9OrgBasesToRolesService.countByRoleIdAndOrgIdsWithoutNegative(roleId, orgUnitIds);
-        return count > 0;
+        Y9Role y9Role = y9RoleService.findById(roleId);
+        return ModelConvertUtil.y9RoleToRole(y9Role);
     }
 
     /**
@@ -376,8 +289,8 @@ public class RoleApiImpl implements RoleApi {
         List<Role> roleList = null;
         if (null != roleNodeList && !roleNodeList.isEmpty()) {
             roleList = new ArrayList<>();
-            for (Y9Role acRoleNode : roleNodeList) {
-                roleList.add(ModelConvertUtil.y9RoleToRole(acRoleNode));
+            for (Y9Role y9Role : roleNodeList) {
+                roleList.add(ModelConvertUtil.y9RoleToRole(y9Role));
             }
         }
         return roleList;
@@ -400,8 +313,8 @@ public class RoleApiImpl implements RoleApi {
         List<Role> roleList = null;
         if (null != roleNodeList && !roleNodeList.isEmpty()) {
             roleList = new ArrayList<>();
-            for (Y9Role acRoleNode : roleNodeList) {
-                roleList.add(ModelConvertUtil.y9RoleToRole(acRoleNode));
+            for (Y9Role y9Role : roleNodeList) {
+                roleList.add(ModelConvertUtil.y9RoleToRole(y9Role));
             }
         }
         return roleList;
@@ -420,8 +333,8 @@ public class RoleApiImpl implements RoleApi {
         List<Role> roleList = null;
         if (null != roleNodeList && !roleNodeList.isEmpty()) {
             roleList = new ArrayList<>();
-            for (Y9Role acRoleNode : roleNodeList) {
-                roleList.add(ModelConvertUtil.y9RoleToRole(acRoleNode));
+            for (Y9Role y9Role : roleNodeList) {
+                roleList.add(ModelConvertUtil.y9RoleToRole(y9Role));
             }
         }
         return roleList;
@@ -442,7 +355,7 @@ public class RoleApiImpl implements RoleApi {
         Y9LoginUserHolder.setTenantId(tenantId);
 
         try {
-            y9OrgBasesToRolesService.removeOrgBases(roleId, new String[] {personId});
+            y9OrgBasesToRolesService.removeOrgBases(roleId, Collections.singletonList(personId));
             return true;
         } catch (Exception e) {
             LOGGER.warn(e.getMessage(), e);

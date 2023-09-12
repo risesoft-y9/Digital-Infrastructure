@@ -564,9 +564,8 @@ public class Y9PersonServiceImpl implements Y9PersonService {
     public void delete(String id) {
         Y9Person y9Person = this.getById(id);
 
-        y9PersonsToPositionsManager.deleteByPersonId(id);
-
         // 删除人员关联数据
+        y9PersonsToPositionsManager.deleteByPersonId(id);
         y9OrgBasesToRolesRepository.deleteByOrgId(id);
         y9PersonsToGroupsRepository.deleteByPersonId(id);
         y9DepartmentPropRepository.deleteByOrgBaseId(id);

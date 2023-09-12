@@ -10,14 +10,17 @@ import org.springframework.transaction.annotation.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
+import net.risesoft.consts.DefaultIdConsts;
 import net.risesoft.entity.Y9Person;
 import net.risesoft.entity.identity.person.Y9PersonToRole;
+import net.risesoft.enums.Y9RoleTypeEnum;
 import net.risesoft.manager.authorization.Y9PersonToRoleManager;
 import net.risesoft.manager.org.Y9PersonManager;
 import net.risesoft.repository.identity.person.Y9PersonToRoleRepository;
 import net.risesoft.service.identity.Y9PersonToRoleService;
 import net.risesoft.y9public.entity.role.Y9Role;
 import net.risesoft.y9public.manager.role.Y9RoleManager;
+import net.risesoft.y9public.repository.role.Y9RoleRepository;
 
 /**
  * @author dingzhaojun
@@ -32,17 +35,11 @@ import net.risesoft.y9public.manager.role.Y9RoleManager;
 public class Y9PersonToRoleServiceImpl implements Y9PersonToRoleService {
 
     private final Y9PersonToRoleRepository y9PersonToRoleRepository;
+    private final Y9RoleRepository y9RoleRepository;
+
     private final Y9PersonToRoleManager y9PersonToRoleManager;
     private final Y9RoleManager y9RoleManager;
     private final Y9PersonManager y9PersonManager;
-
-    @Override
-    @Transactional(readOnly = false)
-    public void recalculate(String personId) {
-        Y9Person y9Person = y9PersonManager.getById(personId);
-        List<Y9Role> personRelatedY9RoleList = y9RoleManager.listOrgUnitRelatedWithoutNegative(y9Person.getId());
-        y9PersonToRoleManager.update(y9Person, personRelatedY9RoleList);
-    }
 
     @Override
     public long countByPersonId(String personId) {
@@ -55,7 +52,38 @@ public class Y9PersonToRoleServiceImpl implements Y9PersonToRoleService {
     }
 
     @Override
-    public Boolean hasRole(String personId, String customId) {
+    public String getRoleIdsByPersonId(String personId) {
+        List<String> roleIdList = y9PersonToRoleRepository.findRoleIdByPersonId(personId);
+        return StringUtils.join(roleIdList, ",");
+    }
+
+    @Override
+    public boolean hasPublicRole(String personId, String roleName) {
+        List<Y9Role> y9RoleList = y9RoleRepository.findByParentIdAndName(DefaultIdConsts.TOP_PUBLIC_ROLE_ID, roleName);
+        return y9RoleList.stream().anyMatch(y9Role -> hasRole(personId, y9Role.getId()));
+    }
+
+    @Override
+    public Boolean hasRole(String personId, String systemName, String roleName, String properties) {
+        List<Y9Role> y9RoleList;
+        if (StringUtils.isBlank(properties)) {
+            y9RoleList =
+                y9RoleRepository.findByNameAndSystemNameAndType(roleName, systemName, Y9RoleTypeEnum.ROLE.getValue());
+        } else {
+            y9RoleList = y9RoleRepository.findByNameAndSystemNameAndPropertiesAndType(roleName, systemName, properties,
+                Y9RoleTypeEnum.ROLE.getValue());
+        }
+
+        return y9RoleList.stream().anyMatch(y9Role -> hasRole(personId, y9Role.getId()));
+    }
+
+    @Override
+    public boolean hasRole(String personId, String roleId) {
+        return y9PersonToRoleRepository.countByPersonIdAndRoleId(personId, roleId) > 0;
+    }
+
+    @Override
+    public Boolean hasRoleByCustomId(String personId, String customId) {
         int count = y9PersonToRoleRepository.countByPersonIdAndRoleCustomId(personId, customId);
         return count > 0;
     }
@@ -63,6 +91,14 @@ public class Y9PersonToRoleServiceImpl implements Y9PersonToRoleService {
     @Override
     public List<Y9PersonToRole> listByPersonId(String personId) {
         return y9PersonToRoleRepository.findByPersonId(personId);
+    }
+
+    @Override
+    @Transactional(readOnly = false)
+    public void recalculate(String personId) {
+        Y9Person y9Person = y9PersonManager.getById(personId);
+        List<Y9Role> personRelatedY9RoleList = y9RoleManager.listOrgUnitRelatedWithoutNegative(y9Person.getId());
+        y9PersonToRoleManager.update(y9Person, personRelatedY9RoleList);
     }
 
     @Override
@@ -105,11 +141,5 @@ public class Y9PersonToRoleServiceImpl implements Y9PersonToRoleService {
             positionToRole.setDescription(y9Role.getDescription());
             y9PersonToRoleRepository.save(positionToRole);
         }
-    }
-
-    @Override
-    public String getRoleIdsByPersonId(String personId) {
-        List<String> roleIdList = y9PersonToRoleRepository.findRoleIdByPersonId(personId);
-        return StringUtils.join(roleIdList, ",");
     }
 }

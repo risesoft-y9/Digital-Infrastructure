@@ -58,11 +58,66 @@ public class PersonRoleApiImpl implements PersonRoleApi {
      * @since 9.6.0
      */
     @Override
-    public Boolean hasRole(@RequestParam("tenantId") @NotBlank String tenantId,
+    public Boolean hasRoleByCustomId(@RequestParam("tenantId") @NotBlank String tenantId,
         @RequestParam("positionId") @NotBlank String personId, @RequestParam("customId") @NotBlank String customId) {
         Y9LoginUserHolder.setTenantId(tenantId);
 
-        return y9PersonToRoleService.hasRole(personId, customId);
+        return y9PersonToRoleService.hasRoleByCustomId(personId, customId);
+    }
+
+    /**
+     * 根据人员id判断该人员是否拥有roleName这个公共角色
+     *
+     * @param tenantId 租户id
+     * @param roleName 角色名称
+     * @param personId 人员id
+     * @return boolean
+     * @since 9.6.0
+     */
+    @Override
+    public Boolean hasPublicRole(@RequestParam("tenantId") @NotBlank String tenantId,
+        @RequestParam("roleName") @NotBlank String roleName, @RequestParam("personId") @NotBlank String personId) {
+        Y9LoginUserHolder.setTenantId(tenantId);
+
+        return y9PersonToRoleService.hasPublicRole(personId, roleName);
+    }
+
+    /**
+     * 判断人员是否拥有角色
+     *
+     * @param tenantId 租户id
+     * @param roleId 角色id
+     * @param personId 人员id
+     * @return {@link Boolean}
+     * @since 9.6.0
+     */
+    @Override
+    public Boolean hasRole(@RequestParam("tenantId") @NotBlank String tenantId,
+        @RequestParam("roleId") @NotBlank String roleId, @RequestParam("personId") @NotBlank String personId) {
+        Y9LoginUserHolder.setTenantId(tenantId);
+
+        return y9PersonToRoleService.hasRole(personId, roleId);
+    }
+
+    /**
+     * 根据人员id判断改人员是否拥有 roleName 这个角色
+     *
+     * @param tenantId 租户id
+     * @param systemName 系统标识
+     * @param properties 角色扩展属性
+     * @param roleName 角色名称
+     * @param personId 人员id
+     * @return Boolean 是否拥有
+     * @since 9.6.0
+     */
+    @Override
+    public Boolean hasRole(@RequestParam("tenantId") @NotBlank String tenantId,
+        @RequestParam("systemName") @NotBlank String systemName,
+        @RequestParam(value = "properties", required = false) String properties,
+        @RequestParam("roleName") @NotBlank String roleName, @RequestParam("personId") @NotBlank String personId) {
+        Y9LoginUserHolder.setTenantId(tenantId);
+
+        return y9PersonToRoleService.hasRole(personId, systemName, roleName, properties);
     }
 
 }

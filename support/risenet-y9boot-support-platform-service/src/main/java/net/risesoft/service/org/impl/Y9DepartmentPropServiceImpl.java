@@ -24,7 +24,7 @@ import net.risesoft.service.org.Y9DepartmentPropService;
 @Transactional(value = "rsTenantTransactionManager", readOnly = true)
 @Service
 @RequiredArgsConstructor
-public class Y9DepartmentExtServiceImpl implements Y9DepartmentPropService {
+public class Y9DepartmentPropServiceImpl implements Y9DepartmentPropService {
 
     private final Y9DepartmentPropRepository y9DepartmentPropRepository;
 

@@ -90,10 +90,8 @@ public class Y9RoleManagerImpl implements Y9RoleManager {
     @Override
     public void deleteByApp(String appId) {
         List<Y9Role> y9Roles = listByAppIdAndParentId(appId, appId);
-        if (y9Roles != null && !y9Roles.isEmpty()) {
-            for (Y9Role role : y9Roles) {
-                this.delete(role.getId());
-            }
+        for (Y9Role role : y9Roles) {
+            this.delete(role.getId());
         }
     }
 

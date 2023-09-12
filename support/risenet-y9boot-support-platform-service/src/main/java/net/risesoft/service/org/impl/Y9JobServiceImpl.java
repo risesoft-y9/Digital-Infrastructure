@@ -158,8 +158,7 @@ public class Y9JobServiceImpl implements Y9JobService {
         }
         y9Job.setCode(job.getCode());
         y9Job.setName(job.getName());
-        Integer maxTabIndex = getMaxTabIndex();
-        y9Job.setTabIndex(maxTabIndex != null ? maxTabIndex + 1 : 0);
+        y9Job.setTabIndex(getMaxTabIndex() + 1);
         y9Job = y9JobManager.save(y9Job);
 
         Y9MessageOrg msg = new Y9MessageOrg(Y9ModelConvertUtil.convert(y9Job, Job.class),

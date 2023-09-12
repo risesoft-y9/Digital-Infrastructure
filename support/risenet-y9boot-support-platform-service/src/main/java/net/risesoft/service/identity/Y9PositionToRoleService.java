@@ -14,12 +14,11 @@ import net.risesoft.entity.identity.position.Y9PositionToRole;
  */
 public interface Y9PositionToRoleService {
 
-    /**
-     * 重新计算岗位角色
-     *
-     * @param positionId 岗位id
-     */
-    void recalculate(String positionId);
+    Boolean hasPublicRole(String positionId, String roleName);
+
+    boolean hasRole(String positionId, String roleId);
+
+    Boolean hasRole(String positionId, String systemName, String roleName, String properties);
 
     /**
      * 查看岗位是否拥有 customId 对应的角色
@@ -28,7 +27,7 @@ public interface Y9PositionToRoleService {
      * @param customId 自定义id
      * @return {@link Boolean}
      */
-    Boolean hasRole(String positionId, String customId);
+    Boolean hasRoleByCustomId(String positionId, String customId);
 
     /**
      * 根据人员id，查询个人授权列表
@@ -57,6 +56,13 @@ public interface Y9PositionToRoleService {
      * @return
      */
     Page<Y9PositionToRole> pageByPositionId(String positionId, int page, int rows, String sort);
+
+    /**
+     * 重新计算岗位角色
+     *
+     * @param positionId 岗位id
+     */
+    void recalculate(String positionId);
 
     /**
      * 根据岗位id移除

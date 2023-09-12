@@ -13,14 +13,14 @@ import net.risesoft.entity.relation.Y9OrgBasesToRoles;
 public interface Y9OrgBasesToRolesService {
 
     /**
-     * 添加组织机构节点,对此角色的映射 add the orgUnits to the role
+     * 添加组织机构节点,对此角色的映射
      *
      * @param roleId
      * @param orgIds
      * @param negative
      * @return List<OrgBasesToRoles>
      */
-    List<Y9OrgBasesToRoles> addOrgBases(String roleId, String[] orgIds, Boolean negative);
+    List<Y9OrgBasesToRoles> addOrgUnitsForRole(String roleId, List<String> orgIds, Boolean negative);
 
     /**
      * 根据角色id算出传入的组织id列表的关联数量
@@ -110,15 +110,15 @@ public interface Y9OrgBasesToRolesService {
      *
      * @param ids id数组
      */
-    void remove(Integer[] ids);
+    void remove(List<Integer> ids);
 
     /**
-     * 对此角色中移除组织机构节点 remove the orgBases from the role
+     * 对此角色中移除组织机构节点
      *
      * @param roleId
      * @param orgIds
      */
-    void removeOrgBases(String roleId, String[] orgIds);
+    void removeOrgBases(String roleId, List<String> orgIds);
 
     /**
      * 保存
@@ -129,13 +129,13 @@ public interface Y9OrgBasesToRolesService {
     Y9OrgBasesToRoles save(Y9OrgBasesToRoles y9OrgBasesToRoles);
 
     /**
-     * 对此组织机构节点添加角色关联 add the roles to the orgBase
+     * 对此组织机构节点添加角色关联
      *
      * @param orgId
      * @param roleIds
      * @param negative
      * @return
      */
-    List<Y9OrgBasesToRoles> saveRoles(String orgId, String[] roleIds, Boolean negative);
+    List<Y9OrgBasesToRoles> addRolesForOrgUnit(String orgId, List<String> roleIds, Boolean negative);
 
 }

@@ -196,11 +196,11 @@ public class Y9PersonToResourceAndAuthorityServiceImpl implements Y9PersonToReso
         List<Y9PersonToResourceAndAuthority> y9PersonToResourceAndAuthorityList =
             this.list(personId, resourceId, ResourceTypeEnum.MENU.getValue(), authority);
         List<String> menuIdList = y9PersonToResourceAndAuthorityList.stream()
-            .map(Y9IdentityToResourceAndAuthorityBase::getResourceId).collect(Collectors.toList());
+            .map(Y9IdentityToResourceAndAuthorityBase::getResourceId).distinct().collect(Collectors.toList());
         List<Y9Menu> y9MenuList = new ArrayList<>();
         for (String menuId : menuIdList) {
             Y9Menu y9Menu = y9MenuManager.findById(menuId);
-            if (y9Menu != null && !y9MenuList.contains(y9Menu)) {
+            if (y9Menu != null) {
                 y9MenuList.add(y9Menu);
             }
         }

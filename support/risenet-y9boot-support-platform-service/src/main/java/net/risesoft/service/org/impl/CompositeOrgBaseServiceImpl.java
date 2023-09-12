@@ -334,7 +334,7 @@ public class CompositeOrgBaseServiceImpl implements CompositeOrgBaseService {
             } else {
                 List<Y9Department> deptList = findDepartmentByParentId(id);
                 for (Y9Department dept : deptList) {
-                    if (Y9OrgUtil.isAncestorOf(dept, managerDept)) {
+                    if (Y9OrgUtil.isSameOf(dept, managerDept) || Y9OrgUtil.isAncestorOf(dept, managerDept)) {
                         // 筛选当前管理员所在部门及祖先部门
                         childrenList.add(dept);
                         break;

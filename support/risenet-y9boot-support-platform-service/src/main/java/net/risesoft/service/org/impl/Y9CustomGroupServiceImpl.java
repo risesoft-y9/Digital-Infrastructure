@@ -69,8 +69,7 @@ public class Y9CustomGroupServiceImpl implements Y9CustomGroupService {
 
     @Override
     public List<Y9CustomGroup> listByPersonId(String personId) {
-        return StringUtils.isNotEmpty(personId) ? customGroupRepository.findByPersonIdOrderByTabIndexAsc(personId)
-            : null;
+        return customGroupRepository.findByPersonIdOrderByTabIndexAsc(personId);
     }
 
     @Override
