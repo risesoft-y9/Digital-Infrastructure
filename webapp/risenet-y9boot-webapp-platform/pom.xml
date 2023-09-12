@@ -75,6 +75,11 @@
             <artifactId>risenet-y9boot-starter-apisix</artifactId>
             <version>${project.version}</version>
         </dependency>-->
+        
+        <dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-docker-compose</artifactId>
+		</dependency>
 
         <dependency>
             <groupId>net.risesoft</groupId>
