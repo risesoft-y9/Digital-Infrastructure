@@ -14,13 +14,6 @@ import net.risesoft.y9public.entity.role.Y9Role;
 public interface Y9PersonToRoleService {
 
     /**
-     * 重新计算人员的角色
-     *
-     * @param personId 人员id
-     */
-    void recalculate(String personId);
-
-    /**
      * 根据人员id对个人授权计数
      *
      * @param personId
@@ -38,13 +31,27 @@ public interface Y9PersonToRoleService {
     long countByPersonIdAndSystemName(String personId, String systemName);
 
     /**
+     * 根据人员id获取拥有的角色id（,分隔）
+     *
+     * @param personId id
+     * @return {@link String}
+     */
+    String getRoleIdsByPersonId(String personId);
+
+    boolean hasPublicRole(String personId, String roleName);
+
+    Boolean hasRole(String personId, String systemName, String roleName, String properties);
+
+    boolean hasRole(String personId, String roleId);
+
+    /**
      * 人员是否拥有customId对应的角色
      * 
      * @param personId
      * @param customId
      * @return
      */
-    Boolean hasRole(String personId, String customId);
+    Boolean hasRoleByCustomId(String personId, String customId);
 
     /**
      * 根据人员id，查询个人授权列表
@@ -53,6 +60,13 @@ public interface Y9PersonToRoleService {
      * @return
      */
     List<Y9PersonToRole> listByPersonId(String personId);
+
+    /**
+     * 重新计算人员的角色
+     *
+     * @param personId 人员id
+     */
+    void recalculate(String personId);
 
     /**
      * 根据人员id删除
@@ -86,12 +100,4 @@ public interface Y9PersonToRoleService {
      * @return
      */
     void updateByRole(Y9Role y9Role);
-
-    /**
-     * 根据人员id获取拥有的角色id（,分隔）
-     *
-     * @param personId id
-     * @return {@link String}
-     */
-    String getRoleIdsByPersonId(String personId);
 }

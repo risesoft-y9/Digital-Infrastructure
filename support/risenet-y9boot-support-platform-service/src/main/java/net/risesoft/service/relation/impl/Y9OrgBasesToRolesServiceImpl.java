@@ -47,7 +47,7 @@ public class Y9OrgBasesToRolesServiceImpl implements Y9OrgBasesToRolesService {
 
     @Override
     @Transactional(readOnly = false)
-    public List<Y9OrgBasesToRoles> addOrgBases(String roleId, String[] orgIds, Boolean negative) {
+    public List<Y9OrgBasesToRoles> addOrgUnitsForRole(String roleId, List<String> orgIds, Boolean negative) {
         List<Y9OrgBasesToRoles> mappingList = new ArrayList<>();
         for (String orgId : orgIds) {
             if (y9OrgBasesToRolesRepository.findByRoleIdAndOrgIdAndNegative(roleId, orgId, negative).isPresent()) {
@@ -150,7 +150,7 @@ public class Y9OrgBasesToRolesServiceImpl implements Y9OrgBasesToRolesService {
 
     @Transactional(readOnly = false)
     @Override
-    public void remove(Integer[] ids) {
+    public void remove(List<Integer> ids) {
         for (Integer id : ids) {
             this.remove(id);
         }
@@ -173,7 +173,7 @@ public class Y9OrgBasesToRolesServiceImpl implements Y9OrgBasesToRolesService {
 
     @Override
     @Transactional(readOnly = false)
-    public void removeOrgBases(String roleId, String[] orgIds) {
+    public void removeOrgBases(String roleId, List<String> orgIds) {
         for (String orgId : orgIds) {
             remove(roleId, orgId);
         }
@@ -212,7 +212,7 @@ public class Y9OrgBasesToRolesServiceImpl implements Y9OrgBasesToRolesService {
 
     @Override
     @Transactional(readOnly = false)
-    public List<Y9OrgBasesToRoles> saveRoles(String orgId, String[] roleIds, Boolean negative) {
+    public List<Y9OrgBasesToRoles> addRolesForOrgUnit(String orgId, List<String> roleIds, Boolean negative) {
         List<Y9OrgBasesToRoles> mappingList = new ArrayList<>();
         for (String roleId : roleIds) {
             if (y9OrgBasesToRolesRepository.findByRoleIdAndOrgIdAndNegative(roleId, orgId, negative).isPresent()) {

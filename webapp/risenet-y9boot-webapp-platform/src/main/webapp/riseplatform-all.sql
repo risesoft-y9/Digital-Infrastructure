@@ -14,6 +14,35 @@ create table Y9_ORG_AUTHORIZATION
     TENANT_ID      varchar(38) comment '租户id',
     primary key (ID)
 ) comment='权限配置表' engine=InnoDB;
+create table Y9_ORG_CUSTOM_GROUP
+(
+    ID          varchar(38) not null comment '主键',
+    CREATE_TIME datetime(6) comment '创建时间',
+    UPDATE_TIME datetime(6) comment '更新时间',
+    CUSTOM_ID   varchar(255) comment '自定义id',
+    GROUP_NAME  varchar(50) not null comment '群组名称',
+    USER_ID     varchar(38) comment '用户id',
+    USER_NAME   varchar(255) comment '用户名称',
+    SHARE_ID    varchar(38) comment '分享人Id',
+    SHARE_NAME  varchar(255) comment '分享人',
+    TAB_INDEX   integer     not null comment '排序字段',
+    TENANT_ID   varchar(38) comment '租户id',
+    primary key (ID)
+) comment='自定义群组' engine=InnoDB;
+create table Y9_ORG_CUSTOM_GROUP_MEMBER
+(
+    ID          varchar(38)  not null comment '主键',
+    CREATE_TIME datetime(6) comment '创建时间',
+    UPDATE_TIME datetime(6) comment '更新时间',
+    GROUP_ID    varchar(38) comment '所在群组id',
+    MEMBER_ID   varchar(38)  not null comment '成员id',
+    MEMBER_NAME varchar(255) not null comment '成员名称',
+    MEMBER_TYPE varchar(255) comment '成员类型',
+    PARENT_ID   varchar(38) comment '所在组织架构父节点id',
+    SEX         integer comment '性别',
+    TAB_INDEX   integer      not null comment '排序',
+    primary key (ID)
+) comment='自定义群组成员表' engine=InnoDB;
 create table Y9_ORG_DEPARTMENT
 (
     ID              varchar(38)       not null comment 'UUID字段',
@@ -26,7 +55,6 @@ create table Y9_ORG_DEPARTMENT
     GUID_PATH       varchar(400) comment '由ID组成的父子关系列表(正序)，之间用逗号分隔',
     NAME            varchar(255)      not null comment '名称',
     ORG_TYPE        varchar(255)      not null comment '组织类型',
-    PARENT_ID       varchar(38) comment '父节点id',
     PROPERTIES      varchar(500) comment '扩展属性',
     TAB_INDEX       integer           not null comment '排序号',
     TENANT_ID       varchar(38) comment '租户id',
@@ -45,6 +73,7 @@ create table Y9_ORG_DEPARTMENT
     ESTABLISH_DATE  date comment '成立时间',
     GRADE_CODE      varchar(255) comment '等级编码',
     GRADE_CODE_NAME varchar(255) comment '等级名称',
+    PARENT_ID       varchar(38)       not null comment '父节点id',
     ZIP_CODE        varchar(255) comment '邮政编码',
     primary key (ID)
 ) comment='部门实体表' engine=InnoDB;
@@ -71,11 +100,11 @@ create table Y9_ORG_GROUP
     GUID_PATH   varchar(400) comment '由ID组成的父子关系列表(正序)，之间用逗号分隔',
     NAME        varchar(255)                 not null comment '名称',
     ORG_TYPE    varchar(255)                 not null comment '组织类型',
-    PARENT_ID   varchar(38) comment '父节点id',
     PROPERTIES  varchar(500) comment '扩展属性',
     TAB_INDEX   integer                      not null comment '排序号',
     TENANT_ID   varchar(38) comment '租户id',
     VERSION     integer comment '版本号,乐观锁',
+    PARENT_ID   varchar(38)                  not null comment '父节点id',
     TYPE        varchar(10) default 'person' not null comment '类型：position、person',
     primary key (ID)
 ) comment='用户组表' engine=InnoDB;
@@ -101,7 +130,6 @@ create table Y9_ORG_MANAGER
     GUID_PATH       varchar(400) comment '由ID组成的父子关系列表(正序)，之间用逗号分隔',
     NAME            varchar(255)      not null comment '名称',
     ORG_TYPE        varchar(255)      not null comment '组织类型',
-    PARENT_ID       varchar(38) comment '父节点id',
     PROPERTIES      varchar(500) comment '扩展属性',
     TAB_INDEX       integer           not null comment '排序号',
     TENANT_ID       varchar(38) comment '租户id',
@@ -116,6 +144,7 @@ create table Y9_ORG_MANAGER
     MOBILE          varchar(255) comment '手机号码',
     MODIFY_PWD_TIME varchar(50) comment '修改密码时间',
     ORDERED_PATH    varchar(500) comment '排序序列号',
+    PARENT_ID       varchar(38)       not null comment '父节点id',
     PASSWORD        varchar(255) comment '登录密码',
     PWD_CYCLE       integer comment '修改密码周期（天）',
     SEX             integer default 1 not null comment '性别',
@@ -153,7 +182,6 @@ create table Y9_ORG_ORGANIZATION
     GUID_PATH         varchar(400) comment '由ID组成的父子关系列表(正序)，之间用逗号分隔',
     NAME              varchar(255)      not null comment '名称',
     ORG_TYPE          varchar(255)      not null comment '组织类型',
-    PARENT_ID         varchar(38) comment '父节点id',
     PROPERTIES        varchar(500) comment '扩展属性',
     TAB_INDEX         integer           not null comment '排序号',
     TENANT_ID         varchar(38) comment '租户id',
@@ -214,7 +242,6 @@ create table Y9_ORG_PERSON
     GUID_PATH      varchar(400) comment '由ID组成的父子关系列表(正序)，之间用逗号分隔',
     NAME           varchar(255)                      not null comment '名称',
     ORG_TYPE       varchar(255)                      not null comment '组织类型',
-    PARENT_ID      varchar(38) comment '父节点id',
     PROPERTIES     varchar(500) comment '扩展属性',
     TAB_INDEX      integer                           not null comment '排序号',
     TENANT_ID      varchar(38) comment '租户id',
@@ -232,41 +259,13 @@ create table Y9_ORG_PERSON
     ORDERED_PATH   varchar(500) comment '排序序列号',
     ORIGINAL       integer      default 1            not null comment '0:添加的人员，1：新增的人员',
     ORIGINAL_ID    varchar(255) comment '原始人员id',
+    PARENT_ID      varchar(38)                       not null comment '父节点id',
     PASSWORD       varchar(255) comment '登录密码',
     PERSON_TYPE    varchar(255) default 'deptPerson' not null comment '人员类型',
     SEX            integer      default 1            not null comment '性别',
     WEIXIN_ID      varchar(255) comment '人员绑定微信的唯一标识',
     primary key (ID)
 ) comment='人员表' engine=InnoDB;
-create table Y9_ORG_PERSON_CUSTOMGROUP
-(
-    ID          varchar(38) not null comment '主键',
-    CREATE_TIME datetime(6) comment '创建时间',
-    UPDATE_TIME datetime(6) comment '更新时间',
-    CUSTOM_ID   varchar(255) comment '自定义id',
-    GROUP_NAME  varchar(50) not null comment '群组名称',
-    USER_ID     varchar(38) comment '用户id',
-    USER_NAME   varchar(255) comment '用户名称',
-    SHARE_ID    varchar(38) comment '分享人Id',
-    SHARE_NAME  varchar(255) comment '分享人',
-    TAB_INDEX   integer     not null comment '排序字段',
-    TENANT_ID   varchar(38) comment '租户id',
-    primary key (ID)
-) comment='自定义群组' engine=InnoDB;
-create table Y9_ORG_PERSON_CUSTOMGROUP_MEMBER
-(
-    ID          varchar(38)  not null comment '主键',
-    CREATE_TIME datetime(6) comment '创建时间',
-    UPDATE_TIME datetime(6) comment '更新时间',
-    GROUP_ID    varchar(38) comment '所在群组id',
-    MEMBER_ID   varchar(38)  not null comment '成员id',
-    MEMBER_NAME varchar(255) not null comment '成员名称',
-    MEMBER_TYPE varchar(255) comment '成员类型',
-    PARENT_ID   varchar(38) comment '所在组织架构父节点id',
-    SEX         integer comment '性别',
-    TAB_INDEX   integer      not null comment '排序',
-    primary key (ID)
-) comment='自定义群组成员表' engine=InnoDB;
 create table Y9_ORG_PERSON_EXT
 (
     PERSON_ID        varchar(38)       not null comment '人员ID',
@@ -368,7 +367,6 @@ create table Y9_ORG_POSITION
     GUID_PATH       varchar(400) comment '由ID组成的父子关系列表(正序)，之间用逗号分隔',
     NAME            varchar(255)      not null comment '名称',
     ORG_TYPE        varchar(255)      not null comment '组织类型',
-    PARENT_ID       varchar(38) comment '父节点id',
     PROPERTIES      varchar(500) comment '扩展属性',
     TAB_INDEX       integer           not null comment '排序号',
     TENANT_ID       varchar(38) comment '租户id',
@@ -382,6 +380,7 @@ create table Y9_ORG_POSITION
     HEAD_COUNT      integer default 0 not null comment '岗位当前人数，小于或等于岗位容量',
     JOB_ID          varchar(38)       not null comment '职位id',
     ORDERED_PATH    varchar(500) comment '排序序列号',
+    PARENT_ID       varchar(38)       not null comment '父节点id',
     primary key (ID)
 ) comment='岗位表' engine=InnoDB;
 create table Y9_ORG_POSITIONS_GROUPS

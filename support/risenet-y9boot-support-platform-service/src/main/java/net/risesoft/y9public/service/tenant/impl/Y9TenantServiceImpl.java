@@ -90,7 +90,6 @@ public class Y9TenantServiceImpl implements Y9TenantService {
     @Override
     @Transactional(readOnly = false)
     public void delete(String id) {
-        // TODO 内置的禁止删除
         if (StringUtils.isNotBlank(id)) {
             // TODO 删除关联数据 deleteToResourceAndRoleNode(id);
             y9UserService.deleteByTenantId(id);

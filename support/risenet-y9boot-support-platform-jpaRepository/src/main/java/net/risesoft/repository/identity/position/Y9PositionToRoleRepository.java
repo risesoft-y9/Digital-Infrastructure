@@ -26,6 +26,8 @@ public interface Y9PositionToRoleRepository extends JpaRepository<Y9PositionToRo
 
     long countByPositionIdAndRoleCustomId(String positionId, String customId);
 
+    int countByPositionIdAndRoleId(String positionId, String roleId);
+
     @Modifying
     @Transactional(readOnly = false)
     void deleteByPositionId(String positionId);

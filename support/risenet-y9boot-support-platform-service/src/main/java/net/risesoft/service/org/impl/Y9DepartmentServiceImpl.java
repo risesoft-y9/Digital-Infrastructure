@@ -36,6 +36,7 @@ import net.risesoft.repository.Y9DepartmentRepository;
 import net.risesoft.repository.permission.Y9AuthorizationRepository;
 import net.risesoft.repository.relation.Y9OrgBasesToRolesRepository;
 import net.risesoft.service.org.Y9DepartmentService;
+import net.risesoft.util.Y9OrgUtil;
 import net.risesoft.util.Y9PublishServiceUtil;
 import net.risesoft.y9.Y9Context;
 import net.risesoft.y9.Y9LoginUserHolder;
@@ -319,8 +320,6 @@ public class Y9DepartmentServiceImpl implements Y9DepartmentService {
             Optional<Y9Department> y9DepartmentOptional = y9DepartmentManager.findById(dept.getId());
             if (y9DepartmentOptional.isPresent()) {
                 Y9Department originDepartment = y9DepartmentOptional.get();
-                // 是否需要递归DN
-                boolean recursionDn = dept.getName().equals(originDepartment.getName());
 
                 originDepartment.setDn(OrgLevelConsts.getOrgLevel(OrgTypeEnum.DEPARTMENT) + dept.getName()
                     + OrgLevelConsts.SEPARATOR + parent.getDn());
@@ -331,7 +330,7 @@ public class Y9DepartmentServiceImpl implements Y9DepartmentService {
 
                 originDepartment = y9DepartmentManager.save(originDepartment);
 
-                if (recursionDn) {
+                if (Y9OrgUtil.isRenamed(dept, originDepartment)) {
                     // 更新下级节点的dn
                     compositeOrgBaseManager.recursivelyUpdateProperties(originDepartment);
                 }

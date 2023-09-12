@@ -50,7 +50,7 @@ public interface RoleApi {
      * @since 9.6.0
      */
     @PostMapping("/createRoleNodeAddCustomId")
-    Role createRoleNodeAddCustomId(@RequestParam("roleId") String roleId, @RequestParam("roleName") String roleName,
+    Role createRole(@RequestParam("roleId") String roleId, @RequestParam("roleName") String roleName,
         @RequestParam("parentId") String parentId, @RequestParam("customId") String customId,
         @RequestParam("type") String type, @RequestParam("systemName") String systemName,
         @RequestParam("systemCnName") String systemCnName);
@@ -87,51 +87,6 @@ public interface RoleApi {
      */
     @GetMapping("/getRole")
     Role getRole(@RequestParam("roleId") @NotBlank String roleId);
-
-    /**
-     * 根据人员id判断该人员是否拥有roleName这个公共角色
-     *
-     * @param tenantId 租户id
-     * @param roleName 角色名称
-     * @param personId 人员id
-     * @return boolean
-     * @since 9.6.0
-     */
-    @GetMapping("/hasPublicRole")
-    boolean hasPublicRole(@RequestParam("tenantId") @NotBlank String tenantId,
-        @RequestParam("roleName") @NotBlank String roleName, @RequestParam("personId") @NotBlank String personId);
-
-    /**
-     * 根据人员id判断该人员是否拥有 roleName 这个角色
-     *
-     * @param tenantId 租户id
-     * @param systemName 系统标识
-     * @param properties 角色扩展属性
-     * @param roleName 角色名称
-     * @param personId 人员id
-     * @return Boolean 是否拥有
-     * @since 9.6.0
-     */
-
-    @GetMapping("/hasRole")
-    Boolean hasRole(@RequestParam("tenantId") @NotBlank String tenantId,
-        @RequestParam("systemName") @NotBlank String systemName,
-        @RequestParam(value = "properties", required = false) String properties,
-        @RequestParam("roleName") @NotBlank String roleName, @RequestParam("personId") @NotBlank String personId);
-
-    /**
-     * 判断orgUnitId是否有角色roleId
-     *
-     * @param tenantId 租户id
-     * @param roleId 角色id
-     * @param orgUnitId 组织架构节点id
-     * @return Boolean 是否有
-     * @since 9.6.0
-     */
-
-    @GetMapping("/hasRoleByTenantIdAndRoleIdAndOrgUnitId")
-    Boolean hasRoleByTenantIdAndRoleIdAndOrgUnitId(@RequestParam("tenantId") @NotBlank String tenantId,
-        @RequestParam("roleId") @NotBlank String roleId, @RequestParam("orgUnitId") @NotBlank String orgUnitId);
 
     /**
      * 根据角色Id获取角色下所有人员（递归）

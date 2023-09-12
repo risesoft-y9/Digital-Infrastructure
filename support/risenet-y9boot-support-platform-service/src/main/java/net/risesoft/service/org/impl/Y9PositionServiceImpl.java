@@ -35,6 +35,7 @@ import net.risesoft.repository.identity.position.Y9PositionToRoleRepository;
 import net.risesoft.repository.permission.Y9AuthorizationRepository;
 import net.risesoft.repository.relation.Y9OrgBasesToRolesRepository;
 import net.risesoft.repository.relation.Y9PersonsToPositionsRepository;
+import net.risesoft.repository.relation.Y9PositionsToGroupsRepository;
 import net.risesoft.service.org.Y9PositionService;
 import net.risesoft.util.Y9PublishServiceUtil;
 import net.risesoft.y9.Y9Context;
@@ -60,6 +61,7 @@ public class Y9PositionServiceImpl implements Y9PositionService {
 
     private final Y9PositionRepository y9PositionRepository;
     private final Y9PersonsToPositionsRepository y9PersonsToPositionsRepository;
+    private final Y9PositionsToGroupsRepository y9PositionsToGroupsRepository;
     private final Y9OrgBasesToRolesRepository y9OrgBasesToRolesRepository;
     private final Y9PositionToResourceAndAuthorityRepository y9PositionToResourceAndAuthorityRepository;
     private final Y9PositionToRoleRepository y9PositionToRoleRepository;
@@ -70,18 +72,20 @@ public class Y9PositionServiceImpl implements Y9PositionService {
 
     public Y9PositionServiceImpl(@Qualifier("rsTenantEntityManagerFactory") EntityManagerFactory entityManagerFactory,
         Y9PositionRepository y9PositionRepository, Y9PersonsToPositionsRepository y9PersonsToPositionsRepository,
-        CompositeOrgBaseManager compositeOrgBaseManager, Y9OrgBasesToRolesRepository y9OrgBasesToRolesRepository,
+        Y9PositionsToGroupsRepository y9PositionsToGroupsRepository,
+        Y9OrgBasesToRolesRepository y9OrgBasesToRolesRepository,
         Y9PositionToResourceAndAuthorityRepository y9PositionToResourceAndAuthorityRepository,
         Y9PositionToRoleRepository y9PositionToRoleRepository, Y9AuthorizationRepository y9AuthorizationRepository,
-        Y9PositionManager y9PositionManager) {
+        CompositeOrgBaseManager compositeOrgBaseManager, Y9PositionManager y9PositionManager) {
         this.entityManagerFactory = entityManagerFactory;
         this.y9PositionRepository = y9PositionRepository;
         this.y9PersonsToPositionsRepository = y9PersonsToPositionsRepository;
-        this.compositeOrgBaseManager = compositeOrgBaseManager;
+        this.y9PositionsToGroupsRepository = y9PositionsToGroupsRepository;
         this.y9OrgBasesToRolesRepository = y9OrgBasesToRolesRepository;
         this.y9PositionToResourceAndAuthorityRepository = y9PositionToResourceAndAuthorityRepository;
         this.y9PositionToRoleRepository = y9PositionToRoleRepository;
         this.y9AuthorizationRepository = y9AuthorizationRepository;
+        this.compositeOrgBaseManager = compositeOrgBaseManager;
         this.y9PositionManager = y9PositionManager;
     }
 
@@ -124,10 +128,10 @@ public class Y9PositionServiceImpl implements Y9PositionService {
 
         // 删除岗位关联数据
         y9OrgBasesToRolesRepository.deleteByOrgId(positionId);
-        y9PersonsToPositionsRepository.deleteByPositionId(positionId);
-
-        y9PositionToResourceAndAuthorityRepository.deleteByPositionId(positionId);
         y9PositionToRoleRepository.deleteByPositionId(positionId);
+        y9PositionToResourceAndAuthorityRepository.deleteByPositionId(positionId);
+        y9PersonsToPositionsRepository.deleteByPositionId(positionId);
+        y9PositionsToGroupsRepository.deleteByPositionId(positionId);
         y9AuthorizationRepository.deleteByPrincipalIdAndPrincipalType(positionId,
             AuthorizationPrincipalTypeEnum.POSITION.getValue());
 

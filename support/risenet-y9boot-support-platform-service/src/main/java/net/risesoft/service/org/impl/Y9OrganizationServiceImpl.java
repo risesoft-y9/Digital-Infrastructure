@@ -29,6 +29,7 @@ import net.risesoft.repository.Y9OrganizationRepository;
 import net.risesoft.repository.permission.Y9AuthorizationRepository;
 import net.risesoft.repository.relation.Y9OrgBasesToRolesRepository;
 import net.risesoft.service.org.Y9OrganizationService;
+import net.risesoft.util.Y9OrgUtil;
 import net.risesoft.util.Y9PublishServiceUtil;
 import net.risesoft.y9.Y9Context;
 import net.risesoft.y9.Y9LoginUserHolder;
@@ -183,15 +184,15 @@ public class Y9OrganizationServiceImpl implements Y9OrganizationService {
             Optional<Y9Organization> y9OrganizationOptional = y9OrganizationManager.findById(org.getId());
             if (y9OrganizationOptional.isPresent()) {
                 Y9Organization oldOrg = y9OrganizationOptional.get();
-                // 是否需要递归DN
-                boolean recursionDn = !org.getName().equals(oldOrg.getName());
 
                 Y9BeanUtil.copyProperties(org, oldOrg);
                 oldOrg.setDn(OrgLevelConsts.getOrgLevel(OrgTypeEnum.ORGANIZATION) + org.getName());
                 oldOrg.setGuidPath(org.getId());
                 oldOrg.setTenantId(Y9LoginUserHolder.getTenantId());
                 oldOrg = y9OrganizationManager.save(oldOrg);
-                if (recursionDn) {
+
+                if (Y9OrgUtil.isRenamed(org, oldOrg)) {
+                    // 是否需要递归DN
                     compositeOrgBaseManager.recursivelyUpdateProperties(oldOrg);
                 }
 
