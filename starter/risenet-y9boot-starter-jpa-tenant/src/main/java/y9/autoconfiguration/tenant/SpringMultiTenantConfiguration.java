@@ -58,45 +58,11 @@ public class SpringMultiTenantConfiguration {
         String prefix = tenantDefault + ".";
 
         String driverClassName = environment.getProperty(prefix + "driverClassName", String.class);
-        String jdbcUrl = environment.getProperty(prefix + "url", String.class);
+        String jdbcUrl = environment.getProperty(prefix + "jdbcUrl", String.class);
         String username = environment.getProperty(prefix + "username", String.class);
         String password = environment.getProperty(prefix + "password", String.class);
-        Integer minIdle = environment.getProperty(prefix + "minIdle", Integer.class);
-        Integer maxActive = environment.getProperty(prefix + "maxActive", Integer.class);
-        
-        /*
-        Boolean testWhileIdle = environment.getProperty(prefix + "testWhileIdle", Boolean.class);
-        Boolean testOnBorrow = environment.getProperty(prefix + "testOnBorrow", Boolean.class);
-        Boolean testOnReturn = environment.getProperty(prefix + "testOnReturn", Boolean.class);
-        String validationQuery = environment.getProperty(prefix + "validationQuery", String.class);
-        Boolean useGlobalDataSourceStat = environment.getProperty(prefix + "useGlobalDataSourceStat", Boolean.class);
-        String filters = environment.getProperty(prefix + "filters", String.class);
-        Boolean clearFiltersEnable = environment.getProperty(prefix + "clearFiltersEnable", Boolean.class);
-        Boolean resetStatEnable = environment.getProperty(prefix + "resetStatEnable", Boolean.class);
-        Integer notFullTimeoutRetryCount = environment.getProperty(prefix + "notFullTimeoutRetryCount", Integer.class);
-        Long timeBetweenEvictionRunsMillis =
-            environment.getProperty(prefix + "timeBetweenEvictionRunsMillis", Long.class);
-        Integer maxWaithThreadCount = environment.getProperty(prefix + "maxWaithThreadCount", Integer.class);
-        Long maxWaitMillis = environment.getProperty(prefix + "maxWaitMillis", Long.class);
-        Boolean failFast = environment.getProperty(prefix + "failFast", Boolean.class);
-        Long phyTimeoutMillis = environment.getProperty(prefix + "phyTimeoutMillis", Long.class);
-        Long phyMaxUseCount = environment.getProperty(prefix + "phyMaxUseCount", Long.class);
-        Long minEvictableIdleTimeMillis = environment.getProperty(prefix + "minEvictableIdleTimeMillis", Long.class);
-        Long maxEvictableIdleTimeMillis = environment.getProperty(prefix + "maxEvictableIdleTimeMillis", Long.class);
-        Boolean keepAlive = environment.getProperty(prefix + "keepAlive", Boolean.class);
-        Long keepAliveBetweenTimeMillis = environment.getProperty(prefix + "keepAliveBetweenTimeMillis", Long.class);
-        Boolean poolPreparedStatements = environment.getProperty(prefix + "poolPreparedStatements", Boolean.class);
-        Boolean initVariants = environment.getProperty(prefix + "initVariants", Boolean.class);
-        Boolean initGlobalVariants = environment.getProperty(prefix + "initGlobalVariants", Boolean.class);
-        Boolean useUnfairLock = environment.getProperty(prefix + "useUnfairLock", Boolean.class);        
-        Integer initialSize = environment.getProperty(prefix + "initialSize", Integer.class);        
-        Boolean killWhenSocketReadTimeout =
-            environment.getProperty(prefix + "killWhenSocketReadTimeout", Boolean.class);
-        String connectionProperties = environment.getProperty(prefix + "connectionProperties", String.class);
-        Integer maxPoolPreparedStatementPerConnectionSize =
-            environment.getProperty(prefix + "maxPoolPreparedStatementPerConnectionSize", Integer.class);
-        String initConnectionSqls = environment.getProperty(prefix + "initConnectionSqls", String.class);
-        */
+        Integer maxActive = environment.getProperty(prefix + "maximumPoolSize", Integer.class);
+        Integer minIdle = environment.getProperty(prefix + "minimumIdle", Integer.class);
         
         if (jdbcUrl != null) {
             dataSource.setJdbcUrl(jdbcUrl);

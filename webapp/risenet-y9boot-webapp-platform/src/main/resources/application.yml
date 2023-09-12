@@ -46,10 +46,6 @@ spring:
             time-to-live: PT2H
         type: redis
     data:
-        jpa:
-            repositories:
-                bootstrap-mode: default
-                enabled: false
         redis:
             database: 8
             host: localhost
@@ -69,14 +65,22 @@ spring:
     datasource:
         hikari:
             y9-public:
-                driver-class-name: com.mysql.cj.jdbc.Driver
+                driverClassName: com.mysql.cj.jdbc.Driver
                 jdbcUrl: jdbc:mysql://localhost:3306/y9_public?serverTimezone=GMT%2B8&nullCatalogMeansCurrent=true&useUnicode=true&characterEncoding=utf-8&rewriteBatchedStatements=true&useCompression=true&useSSL=false&allowPublicKeyRetrieval=true
                 username: root
                 password: '12345678'
                 maximumPoolSize: 20
                 minimumIdle: 1
     jpa:
-        database-platform: org.hibernate.dialect.MySQL8Dialect
+        #databasePlatform: org.hibernate.dialect.MySQL8Dialect
+        properties:
+            hibernate:
+                dialect: org.hibernate.dialect.MySQL8Dialect
+                hbm2ddl:
+                    auto: update
+                jdbc:
+                    batchSize: 100
+                showSql: true
         hibernate:
             ddl-auto: update
             naming:
