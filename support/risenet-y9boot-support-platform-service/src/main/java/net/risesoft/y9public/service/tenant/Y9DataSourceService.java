@@ -6,6 +6,8 @@ import javax.sql.DataSource;
 
 import org.springframework.data.domain.Page;
 
+import com.zaxxer.hikari.HikariDataSource;
+
 import net.risesoft.y9.exception.Y9NotFoundException;
 import net.risesoft.y9public.entity.tenant.Y9DataSource;
 
@@ -77,7 +79,7 @@ public interface Y9DataSourceService {
      * @return {@link DataSource}
      * @throws Exception 异常
      */
-    DataSource getDataSource(String id);
+    HikariDataSource getDataSource(String id);
 
     /**
      * 查询租户数据源分页列表

@@ -38,12 +38,12 @@ public class Y9DataSource extends BaseEntity {
     private String id;
 
     /**
-     * 数据源类型1=jndi; 2=druid
+     * 数据源类型1=jndi; 2=hikari
      *
      * {@link DataSourceTypeEnum}
      */
     @Column(name = "TYPE")
-    @Comment("数据源类型1=jndi; 2=druid")
+    @Comment("数据源类型1=jndi; 2=hikari")
     private Integer type;
 
     /** 数据源名称 */
@@ -72,19 +72,19 @@ public class Y9DataSource extends BaseEntity {
     @Comment("密码")
     private String password;
 
-    /** 数据库初始化大小 */
+    /** 连接池初始化大小 */
     @Column(name = "INITIAL_SIZE")
-    @Comment("数据库初始化大小")
+    @Comment("连接池初始化大小")
     private Integer initialSize;
 
-    /** 参数maxActive */
+    /** 连接池最大值 */
     @Column(name = "MAX_ACTIVE")
-    @Comment("参数maxActive")
+    @Comment("连接池最大值")
     private Integer maxActive;
 
-    /** 参数minIdle */
+    /** 连接池最小值 */
     @Column(name = "MIN_IDLE")
-    @Comment("参数minIdle")
+    @Comment("连接池最小值")
     private Integer minIdle;
 
 }

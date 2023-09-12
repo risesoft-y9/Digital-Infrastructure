@@ -8,10 +8,9 @@ import org.springframework.boot.context.event.ApplicationReadyEvent;
 import org.springframework.context.ApplicationListener;
 import org.springframework.context.ConfigurableApplicationContext;
 
-import com.alibaba.druid.pool.DruidDataSource;
+import com.zaxxer.hikari.HikariDataSource;
 
 import lombok.extern.slf4j.Slf4j;
-
 import net.risesoft.y9.Y9LoginUserHolder;
 import net.risesoft.y9.tenant.datasource.Y9TenantDataSourceLookup;
 
@@ -25,7 +24,7 @@ public class OnY9MultiTenantApplicationReady implements ApplicationListener<Appl
         ConfigurableApplicationContext ctx = event.getApplicationContext();
         Y9TenantDataSourceLookup y9TenantDataSourceLookup = ctx.getBean(Y9TenantDataSourceLookup.class);
         if (y9TenantDataSourceLookup != null) {
-            Map<String, DruidDataSource> map = y9TenantDataSourceLookup.getDataSources();
+            Map<String, HikariDataSource> map = y9TenantDataSourceLookup.getDataSources();
             Set<String> list = map.keySet();
             for (String tenantId : list) {
                 Y9LoginUserHolder.setTenantId(tenantId);

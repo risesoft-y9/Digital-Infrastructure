@@ -1,10 +1,11 @@
 package y9.autoconfiguration.jpa;
 
-import jakarta.persistence.EntityManagerFactory;
+import javax.sql.DataSource;
 
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.autoconfigure.AutoConfigureBefore;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
+import org.springframework.boot.autoconfigure.jdbc.DataSourceAutoConfiguration;
 import org.springframework.boot.autoconfigure.orm.jpa.JpaProperties;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
@@ -24,14 +25,13 @@ import org.springframework.orm.jpa.vendor.HibernateJpaVendorAdapter;
 import org.springframework.transaction.PlatformTransactionManager;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
 
-import com.alibaba.druid.pool.DruidDataSource;
-import com.alibaba.druid.spring.boot3.autoconfigure.DruidDataSourceAutoConfigure;
-import com.alibaba.druid.spring.boot3.autoconfigure.DruidDataSourceBuilder;
+import com.zaxxer.hikari.HikariDataSource;
 
+import jakarta.persistence.EntityManagerFactory;
 import net.risesoft.y9.Y9Context;
 
 @Configuration
-@AutoConfigureBefore(DruidDataSourceAutoConfigure.class)
+@AutoConfigureBefore(DataSourceAutoConfiguration.class)
 @EnableConfigurationProperties(JpaProperties.class)
 @EnableTransactionManagement(proxyTargetClass = true, mode = AdviceMode.ASPECTJ)
 @EnableJpaRepositories(basePackages = {"${y9.feature.jpa.packagesToScanRepositoryPublic}"},
@@ -41,7 +41,7 @@ public class JpaPublicConfiguration {
 
     @Bean(name = {"jdbcTemplate4Public"})
     @ConditionalOnMissingBean(name = "jdbcTemplate4Public")
-    public JdbcTemplate jdbcTemplate4Public(@Qualifier("y9PublicDS") DruidDataSource y9PublicDS) {
+    public JdbcTemplate jdbcTemplate4Public(@Qualifier("y9PublicDS") HikariDataSource y9PublicDS) {
         return new JdbcTemplate(y9PublicDS);
     }
 
@@ -53,7 +53,7 @@ public class JpaPublicConfiguration {
 
     @Bean
     public LocalContainerEntityManagerFactoryBean rsPublicEntityManagerFactory(
-        @Qualifier("y9PublicDS") DruidDataSource y9PublicDS, JpaProperties jpaProperties, Environment environment) {
+        @Qualifier("y9PublicDS") HikariDataSource y9PublicDS, JpaProperties jpaProperties, Environment environment) {
         LocalContainerEntityManagerFactoryBean em = new LocalContainerEntityManagerFactoryBean();
         em.setPersistenceUnitName("y9Public");
         em.setDataSource(y9PublicDS);
@@ -79,11 +79,11 @@ public class JpaPublicConfiguration {
         return new Y9Context();
     }
 
-    @ConfigurationProperties("spring.datasource.druid.y9-public")
+    @ConfigurationProperties("spring.datasource.hikari.y9-public")
     @Bean(name = {"y9PublicDS"})
     @ConditionalOnMissingBean(name = "y9PublicDS")
-    public DruidDataSource y9PublicDS() {
-        DruidDataSource dataSource = DruidDataSourceBuilder.create().build();
+    public HikariDataSource y9PublicDS() {
+    	HikariDataSource dataSource = new HikariDataSource();
         return dataSource;
     }
 }

@@ -46,10 +46,10 @@
             <artifactId>spring-boot-starter-data-jpa</artifactId>
         </dependency>
 
-        <dependency>
-            <groupId>com.alibaba</groupId>
+        <!--<dependency>
+            <groupId>com.alibaba.y9</groupId>
             <artifactId>druid-spring-boot-3-starter</artifactId>
-        </dependency>
+        </dependency>-->
 
         <dependency>
             <groupId>com.mysql</groupId>

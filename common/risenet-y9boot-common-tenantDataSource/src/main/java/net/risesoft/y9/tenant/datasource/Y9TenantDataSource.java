@@ -6,7 +6,7 @@ import java.sql.SQLException;
 import org.springframework.jdbc.datasource.AbstractDataSource;
 import org.springframework.util.StringUtils;
 
-import com.alibaba.druid.pool.DruidDataSource;
+import com.zaxxer.hikari.HikariDataSource;
 
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
@@ -26,15 +26,15 @@ import net.risesoft.y9.Y9LoginUserHolder;
 @Getter
 public class Y9TenantDataSource extends AbstractDataSource {
 
-    private final DruidDataSource defaultDataSource;
+    private final HikariDataSource defaultDataSource;
     private final Y9TenantDataSourceLookup dataSourceLookup;
 
-    public DruidDataSource determineTargetDataSource() {
-        DruidDataSource dataSource = defaultDataSource;
+    public HikariDataSource determineTargetDataSource() {
+    	HikariDataSource dataSource = defaultDataSource;
 
         String lookupKey = Y9LoginUserHolder.getTenantId();
         if (StringUtils.hasText(lookupKey)) {
-            DruidDataSource tenantDataSource = (DruidDataSource)this.dataSourceLookup.getDataSource(lookupKey);
+        	HikariDataSource tenantDataSource = (HikariDataSource)this.dataSourceLookup.getDataSource(lookupKey);
             if (tenantDataSource == null) {
                 LOGGER.error("租户[{}]未租用系统[{}]，将使用默认数据源", lookupKey, this.dataSourceLookup.getSystemName());
             } else {
@@ -49,13 +49,13 @@ public class Y9TenantDataSource extends AbstractDataSource {
 
     @Override
     public Connection getConnection() throws SQLException {
-        DruidDataSource ds = determineTargetDataSource();
+    	HikariDataSource ds = determineTargetDataSource();
         return ds.getConnection();
     }
 
     @Override
     public Connection getConnection(String username, String password) throws SQLException {
-        DruidDataSource ds = determineTargetDataSource();
+    	HikariDataSource ds = determineTargetDataSource();
         return ds.getConnection(username, password);
     }
 

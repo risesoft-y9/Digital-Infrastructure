@@ -11,16 +11,16 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.alibaba.druid.DbType;
-import com.alibaba.druid.pool.DruidDataSource;
+import com.zaxxer.hikari.HikariDataSource;
 
 import lombok.extern.slf4j.Slf4j;
-
 import net.risesoft.enums.DataSourceTypeEnum;
 import net.risesoft.enums.TenantTypeEnum;
 import net.risesoft.id.IdType;
 import net.risesoft.id.Y9IdGenerator;
 import net.risesoft.y9.configuration.Y9Properties;
+import net.risesoft.y9.db.DbType;
+import net.risesoft.y9.db.DbUtil;
 import net.risesoft.y9.util.base64.Y9Base64Util;
 import net.risesoft.y9public.entity.tenant.Y9DataSource;
 import net.risesoft.y9public.manager.tenant.Y9DataSourceManager;
@@ -96,15 +96,15 @@ public class Y9DataSourceManagerImpl implements Y9DataSourceManager {
     @Override
     @Transactional(readOnly = false)
     public Y9DataSource createTenantDefaultDataSource(String dbName) {
-        DruidDataSource dds = (DruidDataSource)jdbcTemplate4Public.getDataSource();
-        String dbType = dds.getDbType();
+        HikariDataSource dds = (HikariDataSource)jdbcTemplate4Public.getDataSource();
+        String dbType = DbUtil.getDbTypeString(dds);
 
         String url = null;
         String username = null;
         String password = null;
 
         if (DbType.mysql.name().equals(dbType)) {
-            url = replaceDatabaseNameInMysqlJdbcUrl(dds.getUrl(), dbName);
+            url = replaceDatabaseNameInMysqlJdbcUrl(dds.getJdbcUrl(), dbName);
             username = dds.getUsername();
             password = dds.getPassword();
 
@@ -119,7 +119,7 @@ public class Y9DataSourceManagerImpl implements Y9DataSourceManager {
         }
 
         if (DbType.oracle.name().equals(dbType)) {
-            url = dds.getUrl();
+            url = dds.getJdbcUrl();
             username = dbName.toUpperCase();
             password = dds.getPassword();
 
@@ -153,7 +153,7 @@ public class Y9DataSourceManagerImpl implements Y9DataSourceManager {
         }
 
         if (DbType.kingbase.name().equals(dbType)) {
-            url = dds.getUrl().split("=")[0] + "=" + username;
+            url = dds.getJdbcUrl().split("=")[0] + "=" + username;
             username = dbName.toUpperCase();
             password = dds.getPassword();
 
@@ -180,9 +180,9 @@ public class Y9DataSourceManagerImpl implements Y9DataSourceManager {
             ds.setType(DataSourceTypeEnum.DRUID.getValue());
             ds.setUsername(username);
             ds.setPassword(password);
-            ds.setInitialSize(dds.getInitialSize());
-            ds.setMaxActive(dds.getMaxActive());
-            ds.setMinIdle(dds.getMinIdle());
+            ds.setInitialSize(1);
+            ds.setMaxActive(dds.getMaximumPoolSize());
+            ds.setMinIdle(dds.getMinimumIdle());
             ds.setId(Y9IdGenerator.genId(IdType.SNOWFLAKE));
             return this.save(ds);
         }
@@ -228,18 +228,19 @@ public class Y9DataSourceManagerImpl implements Y9DataSourceManager {
             this.delete(dataSourceId);
         }
         if (StringUtils.isNotBlank(dbName)) {
-            DruidDataSource dds = (DruidDataSource)jdbcTemplate4Public.getDataSource();
+            HikariDataSource dds = (HikariDataSource)jdbcTemplate4Public.getDataSource();
             if (dds != null) {
-                if (DbType.mysql.name().equals(dds.getDbType())) {
+            	String dbType = DbUtil.getDbTypeString(dds);
+                if (DbType.mysql.name().equals(dbType)) {
                     String sql = "DROP DATABASE IF EXISTS " + dbName;
                     jdbcTemplate4Public.execute(sql);
-                } else if (DbType.oracle.name().equals(dds.getDbType())) {
+                } else if (DbType.oracle.name().equals(dbType)) {
                     String username = dbName.toUpperCase();
                     String sql1 = "DROP USER " + username + " CASCADE";
                     String sql2 = "DROP TABLESPACE " + username + "_DATA INCLUDING CONTENTS AND DATAFILES";
                     jdbcTemplate4Public.execute(sql1);
                     jdbcTemplate4Public.execute(sql2);
-                } else if (DbType.kingbase.name().equals(dds.getDbType())) {
+                } else if (DbType.kingbase.name().equals(dbType)) {
                     String username = dbName.toUpperCase();
                     String sql1 = "DROP SCHEMA " + username + " CASCADE;";
                     String sql2 = "DROP USER " + username;

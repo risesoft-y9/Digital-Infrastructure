@@ -44,12 +44,6 @@
             <groupId>net.risesoft</groupId>
             <artifactId>risenet-y9boot-support-platform-jpaRepository</artifactId>
             <version>${project.version}</version>
-            <exclusions>
-                <exclusion>
-                    <groupId>dom4j</groupId>
-                    <artifactId>dom4j</artifactId>
-                </exclusion>
-            </exclusions>
         </dependency>
 
         <dependency>

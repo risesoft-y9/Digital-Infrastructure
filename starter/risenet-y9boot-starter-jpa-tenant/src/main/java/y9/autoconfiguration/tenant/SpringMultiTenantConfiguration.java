@@ -1,17 +1,12 @@
 
 package y9.autoconfiguration.tenant;
 
-import jakarta.persistence.EntityManagerFactory;
-
-import java.sql.SQLException;
-import java.util.Collections;
-import java.util.StringTokenizer;
-
 import javax.sql.DataSource;
 
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.autoconfigure.AutoConfigureBefore;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
+import org.springframework.boot.autoconfigure.jdbc.DataSourceAutoConfiguration;
 import org.springframework.boot.autoconfigure.orm.jpa.JpaProperties;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
@@ -33,42 +28,43 @@ import org.springframework.transaction.PlatformTransactionManager;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
 import org.springframework.util.StringUtils;
 
-import com.alibaba.druid.pool.DruidDataSource;
-import com.alibaba.druid.spring.boot3.autoconfigure.DruidDataSourceAutoConfigure;
-import com.alibaba.druid.spring.boot3.autoconfigure.DruidDataSourceBuilder;
+import com.zaxxer.hikari.HikariDataSource;
 
-import lombok.extern.slf4j.Slf4j;
-
+import jakarta.persistence.EntityManagerFactory;
 import net.risesoft.y9.Y9Context;
 import net.risesoft.y9.tenant.datasource.Y9TenantDataSource;
 import net.risesoft.y9.tenant.datasource.Y9TenantDataSourceLookup;
 
 @Configuration
-@AutoConfigureBefore(DruidDataSourceAutoConfigure.class)
+@AutoConfigureBefore(DataSourceAutoConfiguration.class)
 @EnableConfigurationProperties(JpaProperties.class)
 @EnableTransactionManagement(proxyTargetClass = true, mode = AdviceMode.ASPECTJ)
 @EnableJpaRepositories(basePackages = {"${y9.feature.jpa.packagesToScanRepositoryTenant}"},
     includeFilters = {@ComponentScan.Filter(classes = JpaRepository.class, type = FilterType.ASSIGNABLE_TYPE)},
     entityManagerFactoryRef = "rsTenantEntityManagerFactory", transactionManagerRef = "rsTenantTransactionManager")
-@Slf4j
 public class SpringMultiTenantConfiguration {
 
-    // @ConfigurationProperties("spring.datasource.druid.tenantDefault")
+    // @ConfigurationProperties("spring.datasource.hikari.tenantDefault")
     @Bean("defaultDataSource")
     @ConditionalOnMissingBean(name = "defaultDataSource")
-    public DruidDataSource defaultDataSource(Environment environment) {
-        DruidDataSource dataSource = DruidDataSourceBuilder.create().build();
+    public HikariDataSource defaultDataSource(Environment environment) {
+    	HikariDataSource dataSource = new HikariDataSource();
 
-        // 比如：spring.datasource.druid.tenantDefault=spring.datasource.druid.y9-public
-        String tenantDefault = environment.getProperty("spring.datasource.druid.tenantDefault", String.class);
+        // 比如：spring.datasource.druid.tenantDefault=spring.datasource.hikari.y9-public
+        String tenantDefault = environment.getProperty("spring.datasource.hikari.tenantDefault", String.class);
         if (!StringUtils.hasText(tenantDefault)) {
-            tenantDefault = "spring.datasource.druid.y9-public";
+            tenantDefault = "spring.datasource.hikari.y9-public";
         }
         String prefix = tenantDefault + ".";
 
+        String driverClassName = environment.getProperty(prefix + "driverClassName", String.class);
         String jdbcUrl = environment.getProperty(prefix + "url", String.class);
         String username = environment.getProperty(prefix + "username", String.class);
         String password = environment.getProperty(prefix + "password", String.class);
+        Integer minIdle = environment.getProperty(prefix + "minIdle", Integer.class);
+        Integer maxActive = environment.getProperty(prefix + "maxActive", Integer.class);
+        
+        /*
         Boolean testWhileIdle = environment.getProperty(prefix + "testWhileIdle", Boolean.class);
         Boolean testOnBorrow = environment.getProperty(prefix + "testOnBorrow", Boolean.class);
         Boolean testOnReturn = environment.getProperty(prefix + "testOnReturn", Boolean.class);
@@ -92,20 +88,18 @@ public class SpringMultiTenantConfiguration {
         Boolean poolPreparedStatements = environment.getProperty(prefix + "poolPreparedStatements", Boolean.class);
         Boolean initVariants = environment.getProperty(prefix + "initVariants", Boolean.class);
         Boolean initGlobalVariants = environment.getProperty(prefix + "initGlobalVariants", Boolean.class);
-        Boolean useUnfairLock = environment.getProperty(prefix + "useUnfairLock", Boolean.class);
-        String driverClassName = environment.getProperty(prefix + "driverClassName", String.class);
-        Integer initialSize = environment.getProperty(prefix + "initialSize", Integer.class);
-        Integer minIdle = environment.getProperty(prefix + "minIdle", Integer.class);
-        Integer maxActive = environment.getProperty(prefix + "maxActive", Integer.class);
+        Boolean useUnfairLock = environment.getProperty(prefix + "useUnfairLock", Boolean.class);        
+        Integer initialSize = environment.getProperty(prefix + "initialSize", Integer.class);        
         Boolean killWhenSocketReadTimeout =
             environment.getProperty(prefix + "killWhenSocketReadTimeout", Boolean.class);
         String connectionProperties = environment.getProperty(prefix + "connectionProperties", String.class);
         Integer maxPoolPreparedStatementPerConnectionSize =
             environment.getProperty(prefix + "maxPoolPreparedStatementPerConnectionSize", Integer.class);
         String initConnectionSqls = environment.getProperty(prefix + "initConnectionSqls", String.class);
-
+        */
+        
         if (jdbcUrl != null) {
-            dataSource.setUrl(jdbcUrl);
+            dataSource.setJdbcUrl(jdbcUrl);
         }
         if (username != null) {
             dataSource.setUsername(username);
@@ -113,103 +107,14 @@ public class SpringMultiTenantConfiguration {
         if (password != null) {
             dataSource.setPassword(password);
         }
-        if (testWhileIdle != null) {
-            dataSource.setTestWhileIdle(testWhileIdle);
-        }
-        if (testOnBorrow != null) {
-            dataSource.setTestOnBorrow(testOnBorrow);
-        }
-        if (testOnReturn != null) {
-            dataSource.setTestOnReturn(testOnReturn);
-        }
-        if (validationQuery != null) {
-            dataSource.setValidationQuery(validationQuery);
-        }
-        if (useGlobalDataSourceStat != null) {
-            dataSource.setUseGlobalDataSourceStat(useGlobalDataSourceStat);
-        }
-        if (filters != null) {
-            try {
-                dataSource.setFilters(filters);
-            } catch (SQLException e) {
-                LOGGER.warn(e.getMessage(), e);
-            }
-        }
-        if (clearFiltersEnable != null) {
-            dataSource.setClearFiltersEnable(clearFiltersEnable);
-        }
-        if (resetStatEnable != null) {
-            dataSource.setResetStatEnable(resetStatEnable);
-        }
-        if (notFullTimeoutRetryCount != null) {
-            dataSource.setNotFullTimeoutRetryCount(notFullTimeoutRetryCount);
-        }
-        if (timeBetweenEvictionRunsMillis != null) {
-            dataSource.setTimeBetweenEvictionRunsMillis(timeBetweenEvictionRunsMillis);
-        }
-        if (maxWaithThreadCount != null) {
-            dataSource.setMaxWaitThreadCount(maxWaithThreadCount);
-        }
-        if (maxWaitMillis != null) {
-            dataSource.setMaxWait(maxWaitMillis);
-        }
-        if (failFast != null) {
-            dataSource.setFailFast(failFast);
-        }
-        if (phyTimeoutMillis != null) {
-            dataSource.setPhyTimeoutMillis(phyTimeoutMillis);
-        }
-        if (phyMaxUseCount != null) {
-            dataSource.setPhyMaxUseCount(phyMaxUseCount);
-        }
-        if (minEvictableIdleTimeMillis != null) {
-            dataSource.setMinEvictableIdleTimeMillis(minEvictableIdleTimeMillis);
-        }
-        if (maxEvictableIdleTimeMillis != null) {
-            dataSource.setMaxEvictableIdleTimeMillis(maxEvictableIdleTimeMillis);
-        }
-        if (keepAlive != null) {
-            dataSource.setKeepAlive(keepAlive);
-        }
-        if (keepAliveBetweenTimeMillis != null) {
-            dataSource.setKeepAliveBetweenTimeMillis(keepAliveBetweenTimeMillis);
-        }
-        if (poolPreparedStatements != null) {
-            dataSource.setPoolPreparedStatements(poolPreparedStatements);
-        }
-        if (initVariants != null) {
-            dataSource.setInitVariants(initVariants);
-        }
-        if (initGlobalVariants != null) {
-            dataSource.setInitGlobalVariants(initGlobalVariants);
-        }
-        if (useUnfairLock != null) {
-            dataSource.setUseUnfairLock(useUnfairLock);
-        }
         if (driverClassName != null) {
             dataSource.setDriverClassName(driverClassName);
         }
-        if (initialSize != null) {
-            dataSource.setInitialSize(initialSize);
-        }
         if (minIdle != null) {
-            dataSource.setMinIdle(minIdle);
+            dataSource.setMinimumIdle(minIdle);
         }
         if (maxActive != null) {
-            dataSource.setMaxActive(maxActive);
-        }
-        if (killWhenSocketReadTimeout != null) {
-            dataSource.setKillWhenSocketReadTimeout(killWhenSocketReadTimeout);
-        }
-        if (connectionProperties != null) {
-            dataSource.setConnectionProperties(connectionProperties);
-        }
-        if (maxPoolPreparedStatementPerConnectionSize != null) {
-            dataSource.setMaxPoolPreparedStatementPerConnectionSize(maxPoolPreparedStatementPerConnectionSize);
-        }
-        if (initConnectionSqls != null) {
-            StringTokenizer tokenizer = new StringTokenizer(initConnectionSqls, ";");
-            dataSource.setConnectionInitSqls(Collections.list(tokenizer));
+            dataSource.setMaximumPoolSize(maxActive);
         }
 
         return dataSource;
@@ -226,11 +131,6 @@ public class SpringMultiTenantConfiguration {
     public JpaVendorAdapter jpaVendorAdapter() {
         return new HibernateJpaVendorAdapter();
     }
-
-    /*@Bean
-    public OnY9MultiTenantApplicationReady onY9MultiTenantApplicationReady() {
-        return new OnY9MultiTenantApplicationReady();
-    }*/
 
     @Primary
     @Bean({"rsTenantEntityManagerFactory", "entityManagerFactory"})
@@ -262,24 +162,25 @@ public class SpringMultiTenantConfiguration {
         return new Y9Context();
     }
 
-    @ConfigurationProperties("spring.datasource.druid.y9-public")
+    @ConfigurationProperties("spring.datasource.hikari.y9-public")
     @Bean(name = {"y9PublicDS"})
     @ConditionalOnMissingBean(name = "y9PublicDS")
-    public DruidDataSource y9PublicDS() {
-        return DruidDataSourceBuilder.create().build();
+    public HikariDataSource y9PublicDS() {
+    	HikariDataSource dataSource = new HikariDataSource();
+        return dataSource;
     }
 
     @Primary
     @Bean("y9TenantDataSource")
-    public DataSource y9TenantDataSource(@Qualifier("defaultDataSource") DruidDataSource defaultDataSource,
+    public DataSource y9TenantDataSource(@Qualifier("defaultDataSource") HikariDataSource defaultDataSource,
         @Qualifier("y9TenantDataSourceLookup") Y9TenantDataSourceLookup y9TenantDataSourceLookup) {
         return new Y9TenantDataSource(defaultDataSource, y9TenantDataSourceLookup);
     }
 
     @Bean("y9TenantDataSourceLookup")
-    public Y9TenantDataSourceLookup y9TenantDataSourceLookup(@Qualifier("y9PublicDS") DruidDataSource ds,
+    public Y9TenantDataSourceLookup y9TenantDataSourceLookup(@Qualifier("y9PublicDS") HikariDataSource ds,
         Environment environment) {
-        return new Y9TenantDataSourceLookup(ds, environment.getProperty("y9.systemName"));
+        return new Y9TenantDataSourceLookup((HikariDataSource)ds, environment.getProperty("y9.systemName"));
     }
 
     @Bean

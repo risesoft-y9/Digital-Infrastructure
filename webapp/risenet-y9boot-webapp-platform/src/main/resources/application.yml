@@ -67,45 +67,14 @@ spring:
             repositories:
                 enabled: false
     datasource:
-        druid:
-            filter:
-                stat:
-                    log-slow-sql: true
-                    mergeSql: true
-                    slow-sql-millis: 3000
-                wall:
-                    config:
-                        drop-table-allow: false
-                    enabled: true
-            stat-view-servlet:
-                enabled: false
-                url-pattern: /druid/*
-                login-username: admin
-                login-password: admin
-                reset-enable: false
-                allow: 127.0.0.1
-            web-stat-filter:
-                enabled: false
-                url-pattern: /*
-                exclusions: '*.js,*.gif,*.jpg,*.png,*.css,*.ico,/druid/*,/static/*'
+        hikari:
             y9-public:
                 driver-class-name: com.mysql.cj.jdbc.Driver
-                url: jdbc:mysql://localhost:3306/y9_public?serverTimezone=GMT%2B8&nullCatalogMeansCurrent=true&useUnicode=true&characterEncoding=utf-8&rewriteBatchedStatements=true&useCompression=true&useSSL=false&allowPublicKeyRetrieval=true
+                jdbcUrl: jdbc:mysql://localhost:3306/y9_public?serverTimezone=GMT%2B8&nullCatalogMeansCurrent=true&useUnicode=true&characterEncoding=utf-8&rewriteBatchedStatements=true&useCompression=true&useSSL=false&allowPublicKeyRetrieval=true
                 username: root
                 password: '12345678'
-                initialSize: 1
-                maxActive: 20
-                maxPoolPreparedStatementPerConnectionSize: 100
-                maxWait: 60000
-                minEvictableIdleTimeMillis: 300000
-                minIdle: 1
-                poolPreparedStatements: true
-                testOnBorrow: false
-                testOnReturn: false
-                testWhileIdle: true
-                timeBetweenEvictionRunsMillis: 60000
-                useGlobalDataSourceStat: true
-                validationQuery: SELECT 1 FROM DUAL
+                maximumPoolSize: 20
+                minimumIdle: 1
     jpa:
         database-platform: org.hibernate.dialect.MySQL8Dialect
         hibernate:
@@ -114,13 +83,6 @@ spring:
                 implicit-strategy: org.hibernate.boot.model.naming.ImplicitNamingStrategyLegacyHbmImpl
                 physical-strategy: org.hibernate.boot.model.naming.PhysicalNamingStrategyStandardImpl
         open-in-view: false
-        properties:
-            hibernate:
-                hbm2ddl:
-                    auto: update
-                jdbc:
-                    batch_size: 100
-                show_sql: true
     kafka:
         bootstrap-servers: localhost:9092
         consumer:

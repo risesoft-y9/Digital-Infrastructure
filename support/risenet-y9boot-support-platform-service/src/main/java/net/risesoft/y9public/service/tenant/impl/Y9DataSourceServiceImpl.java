@@ -15,8 +15,8 @@ import org.springframework.jdbc.datasource.lookup.JndiDataSourceLookup;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.alibaba.druid.pool.DruidDataSource;
 import com.google.common.collect.Maps;
+import com.zaxxer.hikari.HikariDataSource;
 
 import net.risesoft.enums.DataSourceTypeEnum;
 import net.risesoft.exception.DataSourceErrorCodeEnum;
@@ -41,7 +41,8 @@ public class Y9DataSourceServiceImpl implements Y9DataSourceService {
 
     private final DataSourceLookup dataSourceLookup = new JndiDataSourceLookup();
 
-    private final ConcurrentMap<String, DataSource> dataSourceMap = Maps.newConcurrentMap();
+    //数据库连接是宝贵资源，dataSourceMap中的HikariDataSource在什么地方关闭？资源内存泄露？
+    private final ConcurrentMap<String, HikariDataSource> dataSourceMap = Maps.newConcurrentMap();
     private final ConcurrentMap<String, Y9DataSource> y9DataSourceMap = Maps.newConcurrentMap();
 
     public Y9DataSourceServiceImpl(Y9DataSourceRepository datasourceRepository,
@@ -101,33 +102,25 @@ public class Y9DataSourceServiceImpl implements Y9DataSourceService {
     }
 
     @Override
-    public DataSource getDataSource(String id) {
-        DataSource dataSource = this.dataSourceMap.get(id);
+    public HikariDataSource getDataSource(String id) {
+        HikariDataSource dataSource = this.dataSourceMap.get(id);
         Y9DataSource queriedY9DataSource = this.getById(id);
         Y9DataSource cachedY9DataSource = y9DataSourceMap.get(id);
 
         if (isY9DataSourceModified(cachedY9DataSource, queriedY9DataSource)) {
             Integer type = queriedY9DataSource.getType();
             if (Objects.equals(type, DataSourceTypeEnum.JNDI.getValue())) {
-                dataSource = this.dataSourceLookup.getDataSource(queriedY9DataSource.getJndiName());
+                dataSource = (HikariDataSource)this.dataSourceLookup.getDataSource(queriedY9DataSource.getJndiName());
             } else {
-                // druid
-                @SuppressWarnings("resource")
-                DruidDataSource ds = new DruidDataSource();
+                HikariDataSource ds = new HikariDataSource();
                 if (StringUtils.isNotBlank(queriedY9DataSource.getDriver())) {
                     ds.setDriverClassName(queriedY9DataSource.getDriver());
                 }
-                ds.setTestOnBorrow(true);
-                ds.setTestOnReturn(true);
-                ds.setTestWhileIdle(true);
-                ds.setValidationQuery("SELECT 1 FROM DUAL");
-                ds.setInitialSize(queriedY9DataSource.getInitialSize());
-                ds.setMaxActive(queriedY9DataSource.getMaxActive());
-                ds.setMinIdle(queriedY9DataSource.getMinIdle());
-                ds.setUrl(queriedY9DataSource.getUrl());
+                ds.setMaximumPoolSize(queriedY9DataSource.getMaxActive());
+                ds.setMinimumIdle(queriedY9DataSource.getMinIdle());
+                ds.setJdbcUrl(queriedY9DataSource.getUrl());
                 ds.setUsername(queriedY9DataSource.getUsername());
                 ds.setPassword(Y9Base64Util.decode(queriedY9DataSource.getPassword()));
-
                 dataSource = ds;
             }
             this.dataSourceMap.put(id, dataSource);

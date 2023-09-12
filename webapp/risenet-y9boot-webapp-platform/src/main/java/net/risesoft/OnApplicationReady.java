@@ -12,7 +12,7 @@ import org.springframework.context.ApplicationListener;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Component;
 
-import com.alibaba.druid.pool.DruidDataSource;
+import com.zaxxer.hikari.HikariDataSource;
 
 import lombok.extern.slf4j.Slf4j;
 
@@ -122,19 +122,19 @@ public class OnApplicationReady implements ApplicationListener<ApplicationReadyE
     private void createDataSource(String dataSourceId) {
         Y9DataSource y9DataSource = y9DataSourceService.findById(dataSourceId);
         if (y9DataSource == null) {
-            DruidDataSource dataSource = (DruidDataSource)jdbcTemplate4Public.getDataSource();
+        	HikariDataSource dataSource = (HikariDataSource)jdbcTemplate4Public.getDataSource();
             y9DataSource = new Y9DataSource();
             y9DataSource.setId(dataSourceId);
             y9DataSource.setType(DataSourceTypeEnum.DRUID.getValue());
             y9DataSource.setJndiName("y9DefaultDs");
             y9DataSource.setDriver(dataSource.getDriverClassName());
-            String url = dataSource.getUrl();
+            String url = dataSource.getJdbcUrl();
             y9DataSource.setUrl(url.replace("/y9_public?", "/y9_default?"));
             y9DataSource.setUsername(dataSource.getUsername());
             y9DataSource.setPassword(dataSource.getPassword());
-            y9DataSource.setInitialSize(dataSource.getInitialSize());
-            y9DataSource.setMaxActive(dataSource.getMaxActive());
-            y9DataSource.setMinIdle(dataSource.getMinIdle());
+            y9DataSource.setInitialSize(1);
+            y9DataSource.setMaxActive(dataSource.getMaximumPoolSize());
+            y9DataSource.setMinIdle(dataSource.getMinimumIdle());
             y9DataSourceService.save(y9DataSource);
 
             try {
@@ -275,7 +275,7 @@ public class OnApplicationReady implements ApplicationListener<ApplicationReadyE
     }
 
     private void updateTenantSchema() {
-        Map<String, DruidDataSource> map = y9TenantDataSourceLookup.getDataSources();
+        Map<String, HikariDataSource> map = y9TenantDataSourceLookup.getDataSources();
         Set<String> list = map.keySet();
         for (String tenantId : list) {
             Y9LoginUserHolder.setTenantId(tenantId);
