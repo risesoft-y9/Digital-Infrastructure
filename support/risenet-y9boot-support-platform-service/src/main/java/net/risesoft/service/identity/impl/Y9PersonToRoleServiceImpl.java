@@ -94,6 +94,18 @@ public class Y9PersonToRoleServiceImpl implements Y9PersonToRoleService {
     }
 
     @Override
+    public List<Y9Person> listPersonsByRoleId(String roleId) {
+        List<String> personIdList = y9PersonToRoleRepository.findPersonIdByRoleId(roleId);
+        return personIdList.stream().map(y9PersonManager::getById).collect(Collectors.toList());
+    }
+
+    @Override
+    public List<Y9Role> listRolesByPersonId(String personId) {
+        List<String> roleIdList = y9PersonToRoleRepository.findRoleIdByPersonId(personId);
+        return roleIdList.stream().map(y9RoleManager::getById).collect(Collectors.toList());
+    }
+
+    @Override
     @Transactional(readOnly = false)
     public void recalculate(String personId) {
         Y9Person y9Person = y9PersonManager.getById(personId);

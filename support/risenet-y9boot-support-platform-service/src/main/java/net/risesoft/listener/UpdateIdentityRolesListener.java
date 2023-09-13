@@ -190,24 +190,23 @@ public class UpdateIdentityRolesListener {
             switch (orgType) {
                 case ORGANIZATION:
                     List<String> personIdList =
-                        y9PersonRepository.getPersonIdByGuidPathLike("%" + y9OrgBase.getGuidPath());
+                        y9PersonRepository.findIdByGuidPathStartingWith(y9OrgBase.getGuidPath());
                     for (String personId : personIdList) {
                         y9PersonToRoleService.recalculate(personId);
                     }
                     List<String> positionIdList =
-                        y9PositionRepository.getPositionIdByGuidPathLike("%" + y9OrgBase.getGuidPath());
+                        y9PositionRepository.findIdByGuidPathStartingWith(y9OrgBase.getGuidPath());
                     for (String positionId : positionIdList) {
                         y9PositionToRoleService.recalculate(positionId);
                     }
                     break;
                 case DEPARTMENT:
-                    List<String> personIds =
-                        y9PersonRepository.getPersonIdByGuidPathLike("%" + y9OrgBase.getGuidPath());
+                    List<String> personIds = y9PersonRepository.findIdByGuidPathStartingWith(y9OrgBase.getGuidPath());
                     for (String personId : personIds) {
                         y9PersonToRoleService.recalculate(personId);
                     }
                     List<String> positionIds =
-                        y9PositionRepository.getPositionIdByGuidPathLike("%" + y9OrgBase.getGuidPath());
+                        y9PositionRepository.findIdByGuidPathStartingWith(y9OrgBase.getGuidPath());
                     for (String positionId : positionIds) {
                         y9PositionToRoleService.recalculate(positionId);
                     }

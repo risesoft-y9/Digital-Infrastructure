@@ -2,12 +2,8 @@ package net.risesoft.api.permission;
 
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.HashSet;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Optional;
-import java.util.Set;
-import java.util.stream.Collectors;
 
 import javax.validation.constraints.NotBlank;
 
@@ -24,7 +20,6 @@ import lombok.extern.slf4j.Slf4j;
 import net.risesoft.entity.Y9OrgBase;
 import net.risesoft.entity.Y9Person;
 import net.risesoft.entity.relation.Y9OrgBasesToRoles;
-import net.risesoft.enums.OrgTypeEnum;
 import net.risesoft.model.OrgUnit;
 import net.risesoft.model.Person;
 import net.risesoft.model.Role;
@@ -155,66 +150,6 @@ public class RoleApiImpl implements RoleApi {
     }
 
     /**
-     * 根据角色Id获取角色下所有人员（递归）
-     *
-     * @param tenantId 租户id
-     * @param roleId 角色唯一标识
-     * @return List&lt;Person&gt; 人员对象集合
-     * @since 9.6.0
-     */
-    @Override
-    public List<Person> listAllPersonsById(@RequestParam("tenantId") @NotBlank String tenantId,
-        @RequestParam("roleId") @NotBlank String roleId) {
-        Y9LoginUserHolder.setTenantId(tenantId);
-
-        Set<Y9Person> personSet = new HashSet<>();
-        List<Person> personList = new ArrayList<>();
-        Set<Y9Person> negativePersonSet = new HashSet<>();
-
-        List<Y9OrgBasesToRoles> roleMappingList = y9OrgBasesToRolesService.listByRoleId(roleId);
-        for (Y9OrgBasesToRoles roleMapping : roleMappingList) {
-            if (Boolean.TRUE.equals(roleMapping.getNegative())) {
-                Y9OrgBase y9OrgBase = compositeOrgBaseService.getOrgUnit(roleMapping.getOrgId());
-                if (OrgTypeEnum.PERSON.getEnName().equals(y9OrgBase.getOrgType())) {
-                    Y9Person person = (Y9Person)y9OrgBase;
-                    negativePersonSet.add(person);
-                } else if (OrgTypeEnum.DEPARTMENT.getEnName().equals(y9OrgBase.getOrgType())) {
-                    negativePersonSet
-                        .addAll(compositeOrgBaseService.listAllPersonsRecursionDownward(y9OrgBase.getId()));
-                } else if (OrgTypeEnum.GROUP.getEnName().equals(y9OrgBase.getOrgType())) {
-                    negativePersonSet.addAll(y9PersonService.listByGroupId(y9OrgBase.getId()));
-                } else if (OrgTypeEnum.POSITION.getEnName().equals(y9OrgBase.getOrgType())) {
-                    negativePersonSet.addAll(y9PersonService.listByPositionId(y9OrgBase.getId()));
-                }
-            }
-        }
-        for (Y9OrgBasesToRoles roleMapping : roleMappingList) {
-            if (!Boolean.TRUE.equals(roleMapping.getNegative())) {
-                Y9OrgBase y9OrgBase = compositeOrgBaseService.getOrgUnit(roleMapping.getOrgId());
-                if (OrgTypeEnum.PERSON.getEnName().equals(y9OrgBase.getOrgType())) {
-                    Y9Person person = (Y9Person)y9OrgBase;
-                    personSet.add(person);
-                } else if (OrgTypeEnum.DEPARTMENT.getEnName().equals(y9OrgBase.getOrgType())) {
-                    personSet.addAll(compositeOrgBaseService.listAllPersonsRecursionDownward(y9OrgBase.getId()));
-                } else if (OrgTypeEnum.GROUP.getEnName().equals(y9OrgBase.getOrgType())) {
-                    personSet.addAll(y9PersonService.listByGroupId(y9OrgBase.getId()));
-                } else if (OrgTypeEnum.POSITION.getEnName().equals(y9OrgBase.getOrgType())) {
-                    personSet.addAll(y9PersonService.listByPositionId(y9OrgBase.getId()));
-                }
-            }
-        }
-        Set<String> negativePersonIdList = negativePersonSet.stream().map(Y9Person::getId).collect(Collectors.toSet());
-        Iterator<Y9Person> is = personSet.iterator();
-        while (is.hasNext()) {
-            Y9Person y9Person = is.next();
-            if (negativePersonIdList.isEmpty() || !negativePersonIdList.contains(y9Person.getId())) {
-                personList.add(Y9ModelConvertUtil.convert(y9Person, Person.class));
-            }
-        }
-        return personList;
-    }
-
-    /**
      * 根据角色Id获取相应OrgUnits
      *
      * @param tenantId 租户id
@@ -272,54 +207,6 @@ public class RoleApiImpl implements RoleApi {
     }
 
     /**
-     * 根据人员id获取所有关联的角色
-     *
-     * @param tenantId 租户id
-     * @param personId 人员id
-     * @return List<Role> 角色对象集合
-     * @since 9.6.0
-     */
-    @Override
-    public List<Role> listRelateRoleByPersonId(@RequestParam("tenantId") @NotBlank String tenantId,
-        @RequestParam("personId") @NotBlank String personId) {
-        Y9LoginUserHolder.setTenantId(tenantId);
-
-        List<Y9Role> roleNodeList = y9RoleService.listOrgUnitRelatedWithoutNegative(personId);
-        List<Role> roleList = null;
-        if (null != roleNodeList && !roleNodeList.isEmpty()) {
-            roleList = new ArrayList<>();
-            for (Y9Role y9Role : roleNodeList) {
-                roleList.add(ModelConvertUtil.y9RoleToRole(y9Role));
-            }
-        }
-        return roleList;
-    }
-
-    /**
-     * 根据orgUnitId获取角色节点
-     *
-     * @param tenantId 租户id
-     * @param orgUnitId 组织架构节点id
-     * @return List<Role> 角色对象集合
-     * @since 9.6.0
-     */
-    @Override
-    public List<Role> listRoleByOrgUnitId(@RequestParam("tenantId") @NotBlank String tenantId,
-        @RequestParam("orgUnitId") @NotBlank String orgUnitId) {
-        Y9LoginUserHolder.setTenantId(tenantId);
-
-        List<Y9Role> roleNodeList = y9RoleService.listByOrgUnitIdWithoutNegative(orgUnitId);
-        List<Role> roleList = null;
-        if (null != roleNodeList && !roleNodeList.isEmpty()) {
-            roleList = new ArrayList<>();
-            for (Y9Role y9Role : roleNodeList) {
-                roleList.add(ModelConvertUtil.y9RoleToRole(y9Role));
-            }
-        }
-        return roleList;
-    }
-
-    /**
      * 根据父节点Id获取相应子级角色节点
      *
      * @param roleId 角色唯一标识
@@ -328,13 +215,10 @@ public class RoleApiImpl implements RoleApi {
      */
     @Override
     public List<Role> listRoleByParentId(@RequestParam("roleId") @NotBlank String roleId) {
-        List<Y9Role> roleNodeList = y9RoleService.listByParentId(roleId);
-        List<Role> roleList = null;
-        if (null != roleNodeList && !roleNodeList.isEmpty()) {
-            roleList = new ArrayList<>();
-            for (Y9Role y9Role : roleNodeList) {
-                roleList.add(ModelConvertUtil.y9RoleToRole(y9Role));
-            }
+        List<Y9Role> y9RoleList = y9RoleService.listByParentId(roleId);
+        List<Role> roleList = new ArrayList<>();
+        for (Y9Role y9Role : y9RoleList) {
+            roleList.add(ModelConvertUtil.y9RoleToRole(y9Role));
         }
         return roleList;
     }
