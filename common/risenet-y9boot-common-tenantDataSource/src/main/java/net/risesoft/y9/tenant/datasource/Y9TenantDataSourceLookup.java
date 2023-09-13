@@ -64,7 +64,7 @@ public class Y9TenantDataSourceLookup implements DataSourceLookup {
                     this.loadedTenantIdDataSourceMap.put(tenantId, ds);
                 } else {
                     // 用旧的还是新的？
-                    // ds = (DruidDataSource) this.jndiDataSourceLookup.getDataSource(jndiName);
+                    // ds = (HikariDataSource) this.jndiDataSourceLookup.getDataSource(jndiName);
                     // this.dataSources.put(tenantId, ds);
                 }
             } catch (DataSourceLookupFailureException e) {
@@ -85,7 +85,7 @@ public class Y9TenantDataSourceLookup implements DataSourceLookup {
                 ds = new HikariDataSource();
                 ds.setMaximumPoolSize(maxActive);
                 ds.setMinimumIdle(minIdle);
-                if (!"".equals(driver)) {
+                if (driver.length()>0) {
                     ds.setDriverClassName(driver);
                 }
                 
@@ -95,7 +95,7 @@ public class Y9TenantDataSourceLookup implements DataSourceLookup {
                 this.loadedTenantIdDataSourceMap.put(tenantId, ds);
             } else {
                 // 可能连接池的参数调整了
-                // url,username,password等属性在DruidDataSource初始化完成后不允许更改，否则抛出异常
+                // url,username,password等属性在HikariDataSource初始化完成后不允许更改，否则抛出异常?
                 boolean needCreate = false;
                 if (!ds.getJdbcUrl().equals(url)) {
                     needCreate = true;
@@ -219,7 +219,7 @@ public class Y9TenantDataSourceLookup implements DataSourceLookup {
                         continue;
                     }
                 
-                    DruidDataSource ds = this.dataSources.get(tenantId);
+                    HikariDataSource ds = this.dataSources.get(tenantId);
                     String defaultDataSourceId = (String)tenant.get("DEFAULT_DATA_SOURCE_ID");
                     if (StringUtils.isEmpty(defaultDataSourceId)) {
                         Assert.notNull(defaultDataSourceId, "tenant defaultDataSourceId must not be null");
@@ -241,9 +241,9 @@ public class Y9TenantDataSourceLookup implements DataSourceLookup {
         }
 
         // 3 初始化租户的数据库连接池
-        Collection<HikariDataSource> druidDataSources = loadedTenantIdDataSourceMap.values();
-        if (!druidDataSources.isEmpty()) {
-            for (HikariDataSource ds : druidDataSources) {
+        Collection<HikariDataSource> hikariDataSources = loadedTenantIdDataSourceMap.values();
+        if (!hikariDataSources.isEmpty()) {
+            for (HikariDataSource ds : hikariDataSources) {
                 try {
                     //ds.init();
                 } catch (Exception e) {

@@ -135,15 +135,15 @@ public class Y9DataSourceServiceImpl implements Y9DataSourceService {
         if (cachedY9DataSource == null) {
             modified = true;
         } else {
-            if (Objects.equals(queriedY9DataSource.getType(), DataSourceTypeEnum.DRUID.getValue())) {
-                if (!Objects.equals(cachedY9DataSource.getType(), DataSourceTypeEnum.DRUID.getValue())) {
+            if (Objects.equals(queriedY9DataSource.getType(), DataSourceTypeEnum.HIKARI.getValue())) {
+                if (!Objects.equals(cachedY9DataSource.getType(), DataSourceTypeEnum.HIKARI.getValue())) {
                     modified = true;
                 }
                 if (!queriedY9DataSource.getJndiName().equals(cachedY9DataSource.getJndiName())) {
                     modified = true;
                 }
             } else {
-                // druid
+                // HIKARI
                 if (!queriedY9DataSource.getUrl().equals(cachedY9DataSource.getUrl())
                     || !queriedY9DataSource.getInitialSize().equals(cachedY9DataSource.getInitialSize())
                     || !queriedY9DataSource.getMaxActive().equals(cachedY9DataSource.getMaxActive())

@@ -50,7 +50,7 @@ public class SpringMultiTenantConfiguration {
     public HikariDataSource defaultDataSource(Environment environment) {
     	HikariDataSource dataSource = new HikariDataSource();
 
-        // 比如：spring.datasource.druid.tenantDefault=spring.datasource.hikari.y9-public
+        // 比如：spring.datasource.hikari.tenantDefault=spring.datasource.hikari.flowable
         String tenantDefault = environment.getProperty("spring.datasource.hikari.tenantDefault", String.class);
         if (!StringUtils.hasText(tenantDefault)) {
             tenantDefault = "spring.datasource.hikari.y9-public";

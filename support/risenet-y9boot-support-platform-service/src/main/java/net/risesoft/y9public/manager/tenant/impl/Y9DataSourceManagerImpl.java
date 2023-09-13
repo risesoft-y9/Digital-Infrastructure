@@ -177,7 +177,7 @@ public class Y9DataSourceManagerImpl implements Y9DataSourceManager {
             Y9DataSource ds = new Y9DataSource();
             ds.setJndiName(dbName);
             ds.setUrl(url);
-            ds.setType(DataSourceTypeEnum.DRUID.getValue());
+            ds.setType(DataSourceTypeEnum.HIKARI.getValue());
             ds.setUsername(username);
             ds.setPassword(password);
             ds.setInitialSize(1);

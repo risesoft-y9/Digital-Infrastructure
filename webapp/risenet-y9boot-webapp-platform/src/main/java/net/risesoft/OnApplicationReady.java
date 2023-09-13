@@ -125,7 +125,7 @@ public class OnApplicationReady implements ApplicationListener<ApplicationReadyE
         	HikariDataSource dataSource = (HikariDataSource)jdbcTemplate4Public.getDataSource();
             y9DataSource = new Y9DataSource();
             y9DataSource.setId(dataSourceId);
-            y9DataSource.setType(DataSourceTypeEnum.DRUID.getValue());
+            y9DataSource.setType(DataSourceTypeEnum.HIKARI.getValue());
             y9DataSource.setJndiName("y9DefaultDs");
             y9DataSource.setDriver(dataSource.getDriverClassName());
             String url = dataSource.getJdbcUrl();
