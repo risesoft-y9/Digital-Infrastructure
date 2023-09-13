@@ -198,7 +198,7 @@ public class Y9PositionServiceImpl implements Y9PositionService {
 
     @Override
     public List<Y9Position> listByDn(String dn) {
-        return y9PositionRepository.getByDn(dn);
+        return y9PositionRepository.findByDn(dn);
     }
 
     @Override

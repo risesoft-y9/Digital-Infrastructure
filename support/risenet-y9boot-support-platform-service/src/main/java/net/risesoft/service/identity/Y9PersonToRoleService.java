@@ -2,6 +2,7 @@ package net.risesoft.service.identity;
 
 import java.util.List;
 
+import net.risesoft.entity.Y9Person;
 import net.risesoft.entity.identity.person.Y9PersonToRole;
 import net.risesoft.y9public.entity.role.Y9Role;
 
@@ -60,6 +61,22 @@ public interface Y9PersonToRoleService {
      * @return
      */
     List<Y9PersonToRole> listByPersonId(String personId);
+
+    /**
+     * 根据角色id查询拥有角色的所有人
+     *
+     * @param roleId 角色id
+     * @return {@link List}<{@link Y9Person}>
+     */
+    List<Y9Person> listPersonsByRoleId(String roleId);
+
+    /**
+     * 根据人员id查询其拥有的所有角色
+     *
+     * @param personId 人员id
+     * @return {@link List}<{@link Y9Role}>
+     */
+    List<Y9Role> listRolesByPersonId(String personId);
 
     /**
      * 重新计算人员的角色

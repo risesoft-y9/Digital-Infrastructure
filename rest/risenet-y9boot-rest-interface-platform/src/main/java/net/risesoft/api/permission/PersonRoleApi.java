@@ -1,10 +1,15 @@
 package net.risesoft.api.permission;
 
+import java.util.List;
+
 import jakarta.validation.constraints.NotBlank;
 
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+
+import net.risesoft.model.Person;
+import net.risesoft.model.Role;
 
 /**
  * 人员角色接口
@@ -85,4 +90,28 @@ public interface PersonRoleApi {
         @RequestParam("systemName") @NotBlank String systemName,
         @RequestParam(value = "properties", required = false) String properties,
         @RequestParam("roleName") @NotBlank String roleName, @RequestParam("personId") @NotBlank String personId);
+
+    /**
+     * 根据角色Id获取角色下所有人员
+     *
+     * @param tenantId 租户id
+     * @param roleId 角色唯一标识
+     * @return List&lt;Person&gt; 人员对象集合
+     * @since 9.6.0
+     */
+    @GetMapping("/listPersonsByRoleId")
+    List<Person> listPersonsByRoleId(@RequestParam("tenantId") @NotBlank String tenantId,
+        @RequestParam("roleId") @NotBlank String roleId);
+
+    /**
+     * 根据人员id获取所有关联的角色
+     *
+     * @param tenantId 租户id
+     * @param personId 人员id
+     * @return List&lt;Role&gt; 角色对象集合
+     * @since 9.6.0
+     */
+    @GetMapping("/listRolesByPersonId")
+    List<Role> listRolesByPersonId(@RequestParam("tenantId") @NotBlank String tenantId,
+        @RequestParam("personId") @NotBlank String personId);
 }

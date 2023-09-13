@@ -89,18 +89,6 @@ public interface RoleApi {
     Role getRole(@RequestParam("roleId") @NotBlank String roleId);
 
     /**
-     * 根据角色Id获取角色下所有人员（递归）
-     *
-     * @param tenantId 租户id
-     * @param roleId 角色唯一标识
-     * @return List&lt;Person&gt; 人员对象集合
-     * @since 9.6.0
-     */
-    @GetMapping("/listAllPersonsById")
-    List<Person> listAllPersonsById(@RequestParam("tenantId") @NotBlank String tenantId,
-        @RequestParam("roleId") @NotBlank String roleId);
-
-    /**
      * 根据角色Id获取相应OrgUnits
      *
      * @param tenantId 租户id
@@ -124,30 +112,6 @@ public interface RoleApi {
     @GetMapping("/listPersonsById")
     List<Person> listPersonsById(@RequestParam("tenantId") @NotBlank String tenantId,
         @RequestParam("roleId") @NotBlank String roleId);
-
-    /**
-     * 根据人员id获取所有关联的角色
-     *
-     * @param tenantId 租户id
-     * @param personId 人员id
-     * @return List&lt;Role&gt; 角色对象集合
-     * @since 9.6.0
-     */
-    @GetMapping("/listRelateRoleByPersonId")
-    List<Role> listRelateRoleByPersonId(@RequestParam("tenantId") @NotBlank String tenantId,
-        @RequestParam("personId") @NotBlank String personId);
-
-    /**
-     * 根据orgUnitId获取角色节点
-     *
-     * @param tenantId 租户id
-     * @param orgUnitId 组织架构节点id
-     * @return List&lt;Role&gt; 角色对象集合
-     * @since 9.6.0
-     */
-    @GetMapping("/listRoleByOrgUnitId")
-    List<Role> listRoleByOrgUnitId(@RequestParam("tenantId") @NotBlank String tenantId,
-        @RequestParam("orgUnitId") @NotBlank String orgUnitId);
 
     /**
      * 根据父节点Id获取相应子级角色节点

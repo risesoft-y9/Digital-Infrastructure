@@ -15,7 +15,7 @@ import net.risesoft.service.identity.Y9PositionToRoleService;
 import net.risesoft.y9.Y9LoginUserHolder;
 
 /**
- * 岗位角色接口实现类
+ * 岗位角色组件
  *
  * @author shidaobang
  * @date 2022/11/11

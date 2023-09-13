@@ -1,5 +1,8 @@
 package net.risesoft.api.permission;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import jakarta.validation.constraints.NotBlank;
 
 import org.springframework.context.annotation.Primary;
@@ -11,11 +14,17 @@ import org.springframework.web.bind.annotation.RestController;
 
 import lombok.RequiredArgsConstructor;
 
+import net.risesoft.entity.Y9Person;
+import net.risesoft.model.Person;
+import net.risesoft.model.Role;
 import net.risesoft.service.identity.Y9PersonToRoleService;
+import net.risesoft.util.ModelConvertUtil;
 import net.risesoft.y9.Y9LoginUserHolder;
+import net.risesoft.y9.util.Y9ModelConvertUtil;
+import net.risesoft.y9public.entity.role.Y9Role;
 
 /**
- * 权限查看组件
+ * 人员角色组件
  *
  * @author dingzhaojun
  * @author qinman
@@ -120,4 +129,41 @@ public class PersonRoleApiImpl implements PersonRoleApi {
         return y9PersonToRoleService.hasRole(personId, systemName, roleName, properties);
     }
 
+    /**
+     * 根据角色Id获取角色下所有人员
+     *
+     * @param tenantId 租户id
+     * @param roleId 角色唯一标识
+     * @return List&lt;Person&gt; 人员对象集合
+     * @since 9.6.0
+     */
+    @Override
+    public List<Person> listPersonsByRoleId(@RequestParam("tenantId") @NotBlank String tenantId,
+        @RequestParam("roleId") @NotBlank String roleId) {
+        Y9LoginUserHolder.setTenantId(tenantId);
+
+        List<Y9Person> y9PersonList = y9PersonToRoleService.listPersonsByRoleId(roleId);
+        return Y9ModelConvertUtil.convert(y9PersonList, Person.class);
+    }
+
+    /**
+     * 根据人员id获取所有关联的角色
+     *
+     * @param tenantId 租户id
+     * @param personId 人员id
+     * @return List<Role> 角色对象集合
+     * @since 9.6.0
+     */
+    @Override
+    public List<Role> listRolesByPersonId(@RequestParam("tenantId") @NotBlank String tenantId,
+        @RequestParam("personId") @NotBlank String personId) {
+        Y9LoginUserHolder.setTenantId(tenantId);
+
+        List<Y9Role> y9RoleList = y9PersonToRoleService.listRolesByPersonId(personId);
+        List<Role> roleList = new ArrayList<>();
+        for (Y9Role y9Role : y9RoleList) {
+            roleList.add(ModelConvertUtil.y9RoleToRole(y9Role));
+        }
+        return roleList;
+    }
 }

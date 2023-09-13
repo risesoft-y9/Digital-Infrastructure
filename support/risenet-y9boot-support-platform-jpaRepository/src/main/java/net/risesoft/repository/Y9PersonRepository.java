@@ -70,7 +70,7 @@ public interface Y9PersonRepository extends JpaRepository<Y9Person, String> {
 
     Optional<Y9Person> findTopByParentIdOrderByTabIndexDesc(String parentId);
 
-    @Query("select id from Y9Person where guidPath like ?1 and disabled = false")
-    List<String> getPersonIdByGuidPathLike(String guidPath);
+    @Query("select id from Y9Person where guidPath like ?1% and disabled = false")
+    List<String> findIdByGuidPathStartingWith(String guidPath);
 
 }
