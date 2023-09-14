@@ -125,6 +125,11 @@ public class Y9logUserLoginInfoServiceImpl implements Y9logUserLoginInfoService 
     }
 
     @Override
+    public Y9logUserLoginInfo getTopByTenantIdAndUserId(String tenantId, String userId) {
+        return y9logUserLoginInfoRepository.findTopByTenantIdAndUserIdOrderByLoginTimeDesc(tenantId, userId);
+    }
+
+    @Override
     public Iterable<Y9logUserLoginInfo> listAll() {
         return y9logUserLoginInfoRepository.findAll();
     }
@@ -186,8 +191,8 @@ public class Y9logUserLoginInfoServiceImpl implements Y9logUserLoginInfoService 
     }
 
     @Override
-    public Y9Page<Y9logUserLoginInfo> page(String userHostIp, String userId, String success, String startTime,
-        String endTime, int page, int rows) {
+    public Y9Page<Y9logUserLoginInfo> page(String tenantId, String userHostIp, String userId, String success,
+        String startTime, String endTime, int page, int rows) {
         Criteria criteria = new Criteria();
 
         if (StringUtils.isNotBlank(userHostIp)) {
@@ -197,6 +202,9 @@ public class Y9logUserLoginInfoServiceImpl implements Y9logUserLoginInfoService 
         if (StringUtils.isNotBlank(userId)) {
             String parseUserId = Y9Util.escape(userId);
             criteria.and(Y9LogSearchConsts.USER_ID).is(parseUserId);
+        }
+        if (StringUtils.isNotBlank(tenantId)) {
+            criteria.and(Y9LogSearchConsts.TENANT_ID).is(tenantId);
         }
         if (StringUtils.isNotBlank(success)) {
             criteria.and(Y9LogSearchConsts.SUCCESS).is(success);
@@ -319,45 +327,6 @@ public class Y9logUserLoginInfoServiceImpl implements Y9logUserLoginInfoService 
             LOGGER.error(e.getMessage(), e);
         }
         return null;
-    }
-
-    @Override
-    public Y9Page<Y9logUserLoginInfo> pageByUserHostIpAndUserIdAndTenantIdAndLoginTime(String hostIp, String personId,
-        String tenantId, String success, String startTime, String endTime, int page, int rows) {
-        Pageable pageable =
-            PageRequest.of((page < 1) ? 0 : page - 1, rows, Sort.by(Direction.ASC, Y9LogSearchConsts.LOGIN_TIME));
-        Criteria criteria = new Criteria();
-
-        if (StringUtils.isNotBlank(hostIp)) {
-            criteria.and(Y9LogSearchConsts.USER_HOST_IP).is(hostIp);
-        }
-        if (StringUtils.isNotBlank(personId)) {
-            criteria.and(Y9LogSearchConsts.USER_ID).is(personId);
-        }
-        if (StringUtils.isNotBlank(tenantId)) {
-            criteria.and(Y9LogSearchConsts.TENANT_ID).is(tenantId);
-        }
-        if (StringUtils.isNotBlank(success)) {
-            criteria.and(Y9LogSearchConsts.SUCCESS).is(success);
-        }
-        if (StringUtils.isNotBlank(startTime) && StringUtils.isNotBlank(endTime)) {
-            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-            try {
-                criteria.and(Y9LogSearchConsts.LOGIN_TIME).between(sdf.parse(startTime).getTime(),
-                    sdf.parse(endTime).getTime());
-            } catch (ParseException e) {
-                LOGGER.warn(e.getMessage(), e);
-            }
-        }
-        Query query = new CriteriaQueryBuilder(criteria).withPageable(pageable).build();
-
-        SearchHits<Y9logUserLoginInfo> searchHits =
-            elasticsearchTemplate.search(query, Y9logUserLoginInfo.class, INDEX);
-        List<Y9logUserLoginInfo> list = searchHits.stream()
-            .map(org.springframework.data.elasticsearch.core.SearchHit::getContent).collect(Collectors.toList());
-        int totalPages = (int)searchHits.getTotalHits() / rows;
-        return Y9Page.success(page, searchHits.getTotalHits() % rows == 0 ? totalPages : totalPages + 1,
-            searchHits.getTotalHits(), list);
     }
 
     @Override

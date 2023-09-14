@@ -23,6 +23,16 @@ import net.risesoft.pojo.Y9Page;
 @Validated
 public interface UserLoginInfoApi {
     /**
+     * 根据租户id和人员id，获取最新登录信息
+     *
+     * @param tenantId 租户id
+     * @param personId 人员id
+     * @return
+     */
+    @GetMapping("/getTopByTenantIdAndUserId")
+    LoginInfo getTopByTenantIdAndUserId(@RequestParam("tenantId") @NotBlank String tenantId, @RequestParam("personId") @NotBlank String personId);
+
+    /**
      * 获取个人使用的ip和登录次数列表
      *
      * @param personId 用户id
@@ -33,24 +43,6 @@ public interface UserLoginInfoApi {
      */
     @GetMapping("/listDistinctUserHostIpByUserIdAndLoginTime")
     List<Object[]> listDistinctUserHostIpByUserIdAndLoginTime(@RequestParam("personId") @NotBlank String personId, @RequestParam("startTime") Date startTime, @RequestParam("endTime") Date endTime);
-
-    /**
-     * 获取个人日志列表
-     *
-     * @param userHostIp 用户IP
-     * @param personId 用户id
-     * @param tenantId 租户id
-     * @param success 是否成功
-     * @param startTime 开始时间
-     * @param endTime 结束时间
-     * @param page 当前页数
-     * @param rows 显示条数
-     * @return Y9Page&lt;LoginInfo&gt; 返回值包含：currpage、total、totalpages、rows（LoginInfo列表）
-     * @since 9.6.0
-     */
-    @GetMapping("/pageByUserIdAndLoginTime")
-    Y9Page<LoginInfo> pageByUserIdAndLoginTime(@RequestParam(value = "userHostIp", required = false) String userHostIp, @RequestParam("personId") String personId, @RequestParam("tenantId") String tenantId, @RequestParam(value = "success", required = false) String success,
-        @RequestParam(value = "startTime", required = false) String startTime, @RequestParam(value = "endTime", required = false) String endTime, @RequestParam("page") int page, @RequestParam("rows") int rows);
 
     /**
      * 获取个人日志列表

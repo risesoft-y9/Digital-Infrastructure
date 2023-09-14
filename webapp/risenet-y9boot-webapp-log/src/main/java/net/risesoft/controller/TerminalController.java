@@ -29,7 +29,6 @@ import net.risesoft.pojo.Y9Page;
 import net.risesoft.pojo.Y9PageQuery;
 import net.risesoft.pojo.Y9Result;
 import net.risesoft.y9.Y9LoginUserHolder;
-import net.risesoft.y9.json.Y9JsonUtil;
 import net.risesoft.y9.util.Y9Day;
 
 import y9.client.platform.org.PersonApiClient;
@@ -175,8 +174,7 @@ public class TerminalController {
         List<Map<String, Object>> list = new ArrayList<>();
         Y9Page<Person> personPage =
             personManager.pageByParentId(tenantId, parentId, false, pageQuery.getPage(), pageQuery.getSize());
-        List<Person> personList =
-            Y9JsonUtil.readList(Y9JsonUtil.writeValueAsString(personPage.getRows()), Person.class);
+        List<Person> personList = personPage.getRows();
         if (!personList.isEmpty()) {
             personList.forEach(person -> {
                 Map<String, Object> map = new HashMap<>();
@@ -209,8 +207,7 @@ public class TerminalController {
         List<Map<String, Object>> list = new ArrayList<>();
         Y9Page<Person> personPage = personManager.pageByParentIdAndUserName(tenantId, parentId, false, userName,
             pageQuery.getPage(), pageQuery.getSize());
-        List<Person> personList =
-            Y9JsonUtil.readList(Y9JsonUtil.writeValueAsString(personPage.getRows()), Person.class);
+        List<Person> personList = personPage.getRows();
         if (!personList.isEmpty()) {
             for (Person orgPerson : personList) {
                 long countNum = y9logUserLoginInfoService.countByPersonId(orgPerson.getId());
@@ -283,7 +280,7 @@ public class TerminalController {
     @GetMapping(value = "/pageSearchList")
     public Y9Page<Y9logUserLoginInfo> pageSearchList(String userHostIp, String userId, String startTime, String endTime,
         Y9PageQuery pageQuery) {
-        return y9logUserLoginInfoService.page(userHostIp, userId, "true", startTime, endTime, pageQuery.getPage(),
+        return y9logUserLoginInfoService.page(null, userHostIp, userId, "true", startTime, endTime, pageQuery.getPage(),
             pageQuery.getSize());
     }
 

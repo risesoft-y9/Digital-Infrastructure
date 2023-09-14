@@ -14,15 +14,16 @@ public interface Y9logUserLoginInfoRepository extends ElasticsearchRepository<Y9
 
     public long countByUserHostIpAndSuccessAndUserName(String userHostIp, String success, String userName);
 
-    public Page<Y9logUserLoginInfo> findBySuccessAndUserHostIpAndUserId(String success, String userHostIp,
-        String userId, Pageable pageable);
+    public Page<Y9logUserLoginInfo> findBySuccessAndUserHostIpAndUserId(String success, String userHostIp, String userId, Pageable pageable);
 
-    public Page<Y9logUserLoginInfo> findByTenantIdAndManagerLevel(String tenantId, String managerLevel,
-        Pageable pageable);
+    public Page<Y9logUserLoginInfo> findByTenantIdAndManagerLevel(String tenantId, String managerLevel, Pageable pageable);
 
     public List<Y9logUserLoginInfo> findByUserId(String userId);
 
     public long countByUserId(String userId);
 
     public Set<Y9logUserLoginInfo> findByUserIdAndSuccess(String userId, String success);
+
+    Y9logUserLoginInfo findTopByTenantIdAndUserIdOrderByLoginTimeDesc(String tenantId, String userId);
+
 }

@@ -70,24 +70,8 @@ public class Y9ManagerImpl implements Y9ManagerService {
         Y9Manager manager = this.getById(id);
         manager.setPassword(newPassword);
         manager.setModifyPwdTime(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date()));
-
         Y9Manager y9Manager = y9ManagerRepository.save(manager);
         Y9Context.publishEvent(new Y9EntityUpdatedEvent<>(manager, y9Manager));
-    }
-
-    @Override
-    public boolean isDeptManager(String managerId, String deptId) {
-        Y9Manager y9Manager = this.getById(managerId);
-        if (Boolean.TRUE.equals(y9Manager.getGlobalManager())) {
-            return true;
-        } else {
-            // 验证是否为某个部门的三员（小三员）
-            Y9Department targetDepartment = y9DepartmentManager.getById(deptId);
-            Y9Department managerDept = y9DepartmentManager.getById(y9Manager.getParentId());
-            String targetDepartmentGuidPath = targetDepartment.getGuidPath();
-            String managerDepartmentGuidPath = managerDept.getGuidPath();
-            return targetDepartmentGuidPath.contains(managerDepartmentGuidPath);
-        }
     }
 
     @Override
@@ -192,18 +176,18 @@ public class Y9ManagerImpl implements Y9ManagerService {
 
     @Override
     @Transactional(readOnly = false)
-    public void delete(String id) {
-        Y9Manager y9Manager = this.getById(id);
-        Y9Context.publishEvent(new Y9EntityDeletedEvent<>(y9Manager));
-        y9ManagerRepository.delete(y9Manager);
-    }
-
-    @Override
-    @Transactional(readOnly = false)
     public void delete(List<String> ids) {
         for (String id : ids) {
             this.delete(id);
         }
+    }
+
+    @Override
+    @Transactional(readOnly = false)
+    public void delete(String id) {
+        Y9Manager y9Manager = this.getById(id);
+        Y9Context.publishEvent(new Y9EntityDeletedEvent<>(y9Manager));
+        y9ManagerRepository.delete(y9Manager);
     }
 
     @Override
@@ -218,8 +202,22 @@ public class Y9ManagerImpl implements Y9ManagerService {
 
     @Override
     public Y9Manager getById(String id) {
-        return y9ManagerRepository.findById(id)
-            .orElseThrow(() -> Y9ExceptionUtil.notFoundException(OrgUnitErrorCodeEnum.MANAGER_NOT_FOUND, id));
+        return y9ManagerRepository.findById(id).orElseThrow(() -> Y9ExceptionUtil.notFoundException(OrgUnitErrorCodeEnum.MANAGER_NOT_FOUND, id));
+    }
+
+    @Override
+    public boolean isDeptManager(String managerId, String deptId) {
+        Y9Manager y9Manager = this.getById(managerId);
+        if (Boolean.TRUE.equals(y9Manager.getGlobalManager())) {
+            return true;
+        } else {
+            // 验证是否为某个部门的三员（小三员）
+            Y9Department targetDepartment = y9DepartmentManager.getById(deptId);
+            Y9Department managerDept = y9DepartmentManager.getById(y9Manager.getParentId());
+            String targetDepartmentGuidPath = targetDepartment.getGuidPath();
+            String managerDepartmentGuidPath = managerDept.getGuidPath();
+            return targetDepartmentGuidPath.contains(managerDepartmentGuidPath);
+        }
     }
 
     @Override
@@ -295,8 +293,7 @@ public class Y9ManagerImpl implements Y9ManagerService {
                 return oldManager;
             } else {
                 y9Manager.setTenantId(Y9LoginUserHolder.getTenantId());
-                y9Manager.setTabIndex(
-                    compositeOrgBaseManager.getMaxSubTabIndex(y9Manager.getParentId(), OrgTypeEnum.MANAGER));
+                y9Manager.setTabIndex(compositeOrgBaseManager.getMaxSubTabIndex(y9Manager.getParentId(), OrgTypeEnum.MANAGER));
                 y9Manager.setDn(OrgLevelConsts.getOrgLevel(OrgTypeEnum.MANAGER) + y9Manager.getName() + OrgLevelConsts.SEPARATOR + parent.getDn());
                 y9Manager.setDisabled(false);
                 y9Manager.setOrgType(OrgTypeEnum.MANAGER.getEnName());
@@ -327,5 +324,13 @@ public class Y9ManagerImpl implements Y9ManagerService {
 
         Y9Context.publishEvent(new Y9EntityCreatedEvent<>(y9Manager));
         return y9Manager;
+    }
+
+    @Override
+    @Transactional(readOnly = false)
+    public void updateCheckTime(String managerId, Date checkTime) {
+        Y9Manager y9Manager = this.getById(managerId);
+        y9Manager.setCheckTime(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(checkTime));
+        y9ManagerRepository.save(y9Manager);
     }
 }
