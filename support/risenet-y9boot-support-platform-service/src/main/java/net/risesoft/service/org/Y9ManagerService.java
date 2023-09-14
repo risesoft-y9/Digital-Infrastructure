@@ -1,5 +1,6 @@
 package net.risesoft.service.org;
 
+import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
@@ -21,6 +22,14 @@ public interface Y9ManagerService {
      * @return {@link Y9Manager}
      */
     Y9Manager changeDisabled(String id);
+
+    /**
+     * 更改密码
+     *
+     * @param id id
+     * @param newPassword 新密码
+     */
+    void changePassword(String id, String newPassword);
 
     /**
      * 判断管理员登录名
@@ -59,18 +68,18 @@ public interface Y9ManagerService {
     void createSystemManager(String managerId, String tenantId, String organizationId);
 
     /**
-     * 根据管理员id删除管理员信息
-     *
-     * @param id 管理员id
-     */
-    void delete(String id);
-
-    /**
      * 根据管理员id数组删除管理员信息
      *
      * @param ids 管理员id数组
      */
     void delete(List<String> ids);
+
+    /**
+     * 根据管理员id删除管理员信息
+     *
+     * @param id 管理员id
+     */
+    void delete(String id);
 
     /**
      * 根据id判断管理员是否存在
@@ -96,6 +105,15 @@ public interface Y9ManagerService {
      * @throws Y9NotFoundException id 对应的记录不存在的情况
      */
     Y9Manager getById(String id);
+
+    /**
+     * 是否为子域三员
+     *
+     * @param managerId 经理id
+     * @param deptId 部门id
+     * @return boolean
+     */
+    boolean isDeptManager(String managerId, String deptId);
 
     /**
      * 查询所有管理员
@@ -144,19 +162,10 @@ public interface Y9ManagerService {
     Y9Manager saveOrUpdate(Y9Manager y9Manager);
 
     /**
-     * 更改密码
+     * 更新检查时间
      *
-     * @param id id
-     * @param newPassword 新密码
+     * @param managerId 管理员id
+     * @param checkTime 审查时间
      */
-    void changePassword(String id, String newPassword);
-
-    /**
-     * 是否为子域三员
-     *
-     * @param managerId 经理id
-     * @param deptId 部门id
-     * @return boolean
-     */
-    boolean isDeptManager(String managerId, String deptId);
+    void updateCheckTime(String managerId, Date checkTime);
 }

@@ -50,6 +50,12 @@ public class UserLoginInfoApiController implements UserLoginInfoApi {
     private final Y9logUserHostIpInfoService userHostIpInfoService;
     private final Y9logUserLoginInfoService userLoginInfoService;
 
+    @Override
+    public LoginInfo getTopByTenantIdAndUserId(@RequestParam("tenantId") @NotBlank String tenantId, @RequestParam("personId") @NotBlank String personId) {
+        Y9logUserLoginInfo login = userLoginInfoService.getTopByTenantIdAndUserId(tenantId, personId);
+        return AccessLogModelConvertUtil.userLoginInfoESToModel(login);
+    }
+
     /**
      * 获取个人使用的ip和登录次数列表
      *
@@ -61,9 +67,7 @@ public class UserLoginInfoApiController implements UserLoginInfoApi {
      */
     @Override
     @GetMapping("/listDistinctUserHostIpByUserIdAndLoginTime")
-    public List<Object[]> listDistinctUserHostIpByUserIdAndLoginTime(
-        @RequestParam("personId") @NotBlank String personId, @RequestParam("startTime") Date startTime,
-        @RequestParam("endTime") Date endTime) {
+    public List<Object[]> listDistinctUserHostIpByUserIdAndLoginTime(@RequestParam("personId") @NotBlank String personId, @RequestParam("startTime") Date startTime, @RequestParam("endTime") Date endTime) {
         return userLoginInfoService.listDistinctUserHostIpByUserIdAndLoginTime(personId, startTime, endTime);
     }
 
@@ -81,46 +85,14 @@ public class UserLoginInfoApiController implements UserLoginInfoApi {
      * @return Y9Page&lt;LoginInfo&gt; LoginInfo分页列表
      * @since 9.6.0
      */
-    @Override
-    @GetMapping("/pageByUserIdAndLoginTime")
-    public Y9Page<LoginInfo> pageByUserIdAndLoginTime(
-        @RequestParam(value = "userHostIp", required = false) String userHostIp,
-        @RequestParam("personId") String personId, @RequestParam("tenantId") String tenantId,
-        @RequestParam(value = "success", required = false) String success,
-        @RequestParam(value = "startTime", required = false) String startTime,
-        @RequestParam(value = "endTime", required = false) String endTime, @RequestParam("page") int page,
-        @RequestParam("rows") int rows) {
-        Y9Page<Y9logUserLoginInfo> loginList = userLoginInfoService.pageByUserHostIpAndUserIdAndTenantIdAndLoginTime(
-            userHostIp, personId, tenantId, success, startTime, endTime, page, rows);
-        List<Y9logUserLoginInfo> list = loginList.getRows();
-        List<LoginInfo> infoList = AccessLogModelConvertUtil.userLoginInfoESListToModels(list);
-        return Y9Page.success(loginList.getCurrPage(), loginList.getTotalPages(), loginList.getTotal(), infoList);
-    }
-
     /**
-     * 获取个人日志列表
      *
-     * @param userHostIp 用户IP
-     * @param personId 用户id
-     * @param tenantId 租户id
-     * @param success 是否成功
-     * @param startTime 开始时间
-     * @param endTime 结束时间
-     * @param page 当前页数
-     * @param rows 显示条数
-     * @return Y9Page&lt;LoginInfo&gt; LoginInfo分页列表
-     * @since 9.6.0
      */
     @Override
     @GetMapping("/pageSearch")
-    public Y9Page<LoginInfo> pageSearch(@RequestParam(value = "userHostIp", required = false) String userHostIp,
-        @RequestParam("personId") String personId, @RequestParam("tenantId") String tenantId,
-        @RequestParam(value = "success", required = false) String success,
-        @RequestParam(value = "startTime", required = false) String startTime,
-        @RequestParam(value = "endTime", required = false) String endTime, @RequestParam("page") int page,
-        @RequestParam("rows") int rows) {
-        Y9Page<Y9logUserLoginInfo> loginList =
-            userLoginInfoService.page(userHostIp, userHostIp, success, startTime, endTime, page, rows);
+    public Y9Page<LoginInfo> pageSearch(@RequestParam(value = "userHostIp", required = false) String userHostIp, @RequestParam("personId") String personId, @RequestParam("tenantId") String tenantId, @RequestParam(value = "success", required = false) String success,
+        @RequestParam(value = "startTime", required = false) String startTime, @RequestParam(value = "endTime", required = false) String endTime, @RequestParam("page") int page, @RequestParam("rows") int rows) {
+        Y9Page<Y9logUserLoginInfo> loginList = userLoginInfoService.page(tenantId, userHostIp, userHostIp, success, startTime, endTime, page, rows);
         List<Y9logUserLoginInfo> list = loginList.getRows();
         List<LoginInfo> infoList = AccessLogModelConvertUtil.userLoginInfoESListToModels(list);
         return Y9Page.success(loginList.getCurrPage(), loginList.getTotalPages(), loginList.getTotal(), infoList);
@@ -216,8 +188,7 @@ public class UserLoginInfoApiController implements UserLoginInfoApi {
     @PostMapping("/saveLoginInfoAsync")
     public void saveLoginInfoAsync(LoginInfo info) {
         ThreadFactory myThread = new ThreadFactoryBuilder().setNamePrefix("y9-saveLoginInfoAsync").build();
-        ThreadPoolExecutor threadPool =
-            new ThreadPoolExecutor(2, 2, 100, TimeUnit.SECONDS, new LinkedBlockingDeque<>(5), myThread);
+        ThreadPoolExecutor threadPool = new ThreadPoolExecutor(2, 2, 100, TimeUnit.SECONDS, new LinkedBlockingDeque<>(5), myThread);
         threadPool.execute(() -> saveLoginInfo(info));
         threadPool.shutdown();
     }
