@@ -359,6 +359,7 @@ public class Y9PositionServiceImpl implements Y9PositionService {
     public Y9Position updateTabIndex(String id, int tabIndex) {
         Y9Position position = this.getById(id);
         position.setTabIndex(tabIndex);
+        position.setOrderedPath(compositeOrgBaseManager.buildOrderedPath(position));
         position = y9PositionManager.save(position);
 
         Y9MessageOrg msg = new Y9MessageOrg(Y9ModelConvertUtil.convert(position, Position.class),

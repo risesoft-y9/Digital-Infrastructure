@@ -14,6 +14,4 @@ import net.risesoft.y9public.entity.role.Y9Role;
  */
 public interface Y9PersonToRoleManager {
     void update(Y9Person y9Person, List<Y9Role> personRelatedY9RoleList);
-
-    List<String> listRoleIdsByPersonId(String personId);
 }

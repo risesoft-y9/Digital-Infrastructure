@@ -106,6 +106,9 @@ public class Y9App extends Y9ResourceBase {
     @Transient
     private String tenancyStatus;
 
+    @Transient
+    private String appId;
+
     public Y9App() {
         super.setResourceType(ResourceTypeEnum.APP.getValue());
     }

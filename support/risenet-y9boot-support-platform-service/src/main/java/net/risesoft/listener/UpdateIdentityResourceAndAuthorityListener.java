@@ -65,6 +65,7 @@ public class UpdateIdentityResourceAndAuthorityListener {
             if (LOGGER.isDebugEnabled()) {
                 LOGGER.debug("新增人员触发的重新计算权限缓存执行完成");
             }
+            return;
         }
 
         if (OrgTypeEnum.POSITION.getEnName().equals(orgType)) {
@@ -73,6 +74,7 @@ public class UpdateIdentityResourceAndAuthorityListener {
             if (LOGGER.isDebugEnabled()) {
                 LOGGER.debug("新增岗位触发的重新计算权限缓存执行完成");
             }
+            return;
         }
     }
 
@@ -95,6 +97,7 @@ public class UpdateIdentityResourceAndAuthorityListener {
                     LOGGER.debug("修改部门触发的重新计算权限缓存执行完成");
                 }
             }
+            return;
         }
 
         if (OrgTypeEnum.PERSON.getEnName().equals(orgType)) {
@@ -108,6 +111,7 @@ public class UpdateIdentityResourceAndAuthorityListener {
                     LOGGER.debug("修改人员触发的重新计算权限缓存执行完成");
                 }
             }
+            return;
         }
 
         if (OrgTypeEnum.POSITION.getEnName().equals(orgType)) {
@@ -121,6 +125,7 @@ public class UpdateIdentityResourceAndAuthorityListener {
                     LOGGER.debug("修改岗位触发的重新计算权限缓存执行完成");
                 }
             }
+            return;
         }
     }
 
@@ -203,11 +208,12 @@ public class UpdateIdentityResourceAndAuthorityListener {
             if (LOGGER.isDebugEnabled()) {
                 LOGGER.debug("新增对角色的授权配置触发的重新计算权限缓存执行完成");
             }
-        } else {
-            y9AuthorizationService.syncToIdentityResourceAndAuthority(y9Authorization.getPrincipalId());
-            if (LOGGER.isDebugEnabled()) {
-                LOGGER.debug("新增或更新对组织的直接授权配置触发的重新计算权限缓存执行完成");
-            }
+            return;
+        }
+
+        y9AuthorizationService.syncToIdentityResourceAndAuthority(y9Authorization.getPrincipalId());
+        if (LOGGER.isDebugEnabled()) {
+            LOGGER.debug("新增或更新对组织的直接授权配置触发的重新计算权限缓存执行完成");
         }
     }
 
@@ -232,6 +238,7 @@ public class UpdateIdentityResourceAndAuthorityListener {
                         y9OrgBasesToRoles.getOrgId());
                 }
             }
+            return;
         } else {
             y9AuthorizationService.syncToIdentityResourceAndAuthority(y9OrgBasesToRoles.getOrgId());
         }

@@ -2,8 +2,6 @@ package net.risesoft.service.relation;
 
 import java.util.List;
 
-import net.risesoft.entity.Y9Group;
-import net.risesoft.entity.Y9Person;
 import net.risesoft.entity.relation.Y9PersonsToGroups;
 
 /**
@@ -19,18 +17,16 @@ public interface Y9PersonsToGroupsService {
      *
      * @param personId
      * @param groupIds
-     * @return List<ORGGroup>
      */
-    List<Y9Group> addGroups(String personId, String[] groupIds);
+    void addGroups(String personId, String[] groupIds);
 
     /**
      * add persons to the group 为用户组添加人员
      *
      * @param groupId
      * @param personIds
-     * @return List<ORGPerson>
      */
-    List<Y9Person> addPersons(String groupId, String[] personIds);
+    void addPersons(String groupId, String[] personIds);
 
     /**
      * 根据用户组ID,删除用户组和人员的映射关系 delete the group-person mapping relationship by groupID

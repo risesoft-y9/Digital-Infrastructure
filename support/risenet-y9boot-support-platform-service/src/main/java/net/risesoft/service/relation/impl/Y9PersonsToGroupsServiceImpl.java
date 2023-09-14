@@ -45,66 +45,51 @@ public class Y9PersonsToGroupsServiceImpl implements Y9PersonsToGroupsService {
 
     @Override
     @Transactional(readOnly = false)
-    public List<Y9Group> addGroups(String personId, String[] groupIds) {
-        List<Y9Group> groupList = new ArrayList<>();
-        Integer maxGroupsOrder = getMaxGroupOrderByPersonId(personId);
+    public void addGroups(String personId, String[] groupIds) {
         for (int i = 0; i < groupIds.length; i++) {
-            if (y9PersonsToGroupsRepository.findByGroupIdAndPersonId(groupIds[i], personId) != null) {
+            String groupId = groupIds[i];
+            if (y9PersonsToGroupsRepository.findByGroupIdAndPersonId(groupId, personId).isPresent()) {
                 continue;
             }
-
-            Integer maxPersonsOrder = getMaxPersonOrderByGroupId(groupIds[i]);
-            Y9PersonsToGroups y9PersonsToGroups = new Y9PersonsToGroups();
-            y9PersonsToGroups.setGroupId(groupIds[i]);
-            y9PersonsToGroups.setPersonId(personId);
-            y9PersonsToGroups.setGroupOrder(maxGroupsOrder != null ? maxGroupsOrder + i + 1 : i);
-            y9PersonsToGroups.setPersonOrder(maxPersonsOrder != null ? maxPersonsOrder + 1 : 0);
-            y9PersonsToGroups = y9PersonsToGroupsRepository.save(y9PersonsToGroups);
-
-            Y9Context.publishEvent(new Y9EntityCreatedEvent<>(y9PersonsToGroups));
-
-            Y9Person person = y9PersonManager.getById(personId);
-            Y9Group group = y9GroupManager.getById(groupIds[i]);
-            Y9MessageOrg msg = new Y9MessageOrg(ModelConvertUtil.convert(y9PersonsToGroups, PersonsGroups.class),
-                Y9OrgEventConst.RISEORGEVENT_TYPE_GROUP_ADDPERSON, Y9LoginUserHolder.getTenantId());
-            Y9PublishServiceUtil.persistAndPublishMessageOrg(msg, "添加用户组人员",
-                group.getName() + "添加用户组成员" + person.getName());
-
-            groupList.add(group);
+            Integer maxGroupsOrder = getMaxGroupOrderByPersonId(personId);
+            Integer maxPersonsOrder = getMaxPersonOrderByGroupId(groupId);
+            addY9PersonsToGroups(personId, groupId, maxGroupsOrder + i + 1, maxPersonsOrder + 1);
         }
-        return groupList;
+    }
+
+    @Transactional(readOnly = false)
+    public Y9PersonsToGroups addY9PersonsToGroups(String personId, String groupId, Integer maxGroupsOrder,
+        Integer maxPersonsOrder) {
+        Y9PersonsToGroups y9PersonsToGroups = new Y9PersonsToGroups();
+        y9PersonsToGroups.setGroupId(groupId);
+        y9PersonsToGroups.setPersonId(personId);
+        y9PersonsToGroups.setGroupOrder(maxGroupsOrder);
+        y9PersonsToGroups.setPersonOrder(maxPersonsOrder);
+        y9PersonsToGroups = y9PersonsToGroupsRepository.save(y9PersonsToGroups);
+
+        Y9Context.publishEvent(new Y9EntityCreatedEvent<>(y9PersonsToGroups));
+
+        Y9Person person = y9PersonManager.getById(personId);
+        Y9Group group = y9GroupManager.getById(groupId);
+        Y9MessageOrg msg = new Y9MessageOrg(ModelConvertUtil.convert(y9PersonsToGroups, PersonsGroups.class),
+            Y9OrgEventConst.RISEORGEVENT_TYPE_GROUP_ADDPERSON, Y9LoginUserHolder.getTenantId());
+        Y9PublishServiceUtil.persistAndPublishMessageOrg(msg, "添加用户组人员",
+            group.getName() + "添加用户组成员" + person.getName());
+        return y9PersonsToGroups;
     }
 
     @Override
     @Transactional(readOnly = false)
-    public List<Y9Person> addPersons(String groupId, String[] personIds) {
-        List<Y9Person> personList = new ArrayList<>();
-        Integer maxPersonsOrder = getMaxPersonOrderByGroupId(groupId);
+    public void addPersons(String groupId, String[] personIds) {
         for (int i = 0; i < personIds.length; i++) {
-            Y9Person person = y9PersonManager.getById(personIds[i]);
-            if ((null == person)
-                || (y9PersonsToGroupsRepository.findByGroupIdAndPersonId(groupId, person.getId()) != null)) {
+            String personId = personIds[i];
+            if (y9PersonsToGroupsRepository.findByGroupIdAndPersonId(groupId, personId).isPresent()) {
                 continue;
             }
-            Integer maxGroupsOrder = getMaxGroupOrderByPersonId(personIds[i]);
-            Y9PersonsToGroups y9PersonsToGroups = new Y9PersonsToGroups();
-            y9PersonsToGroups.setGroupId(groupId);
-            y9PersonsToGroups.setPersonId(person.getId());
-            y9PersonsToGroups.setPersonOrder(maxPersonsOrder != null ? maxPersonsOrder + i + 1 : i);
-            y9PersonsToGroups.setGroupOrder(maxGroupsOrder != null ? maxGroupsOrder + 1 : 0);
-            y9PersonsToGroups = y9PersonsToGroupsRepository.save(y9PersonsToGroups);
-
-            Y9Context.publishEvent(new Y9EntityCreatedEvent<>(y9PersonsToGroups));
-
-            Y9Group group = y9GroupManager.getById(groupId);
-            Y9MessageOrg msg = new Y9MessageOrg(ModelConvertUtil.convert(y9PersonsToGroups, PersonsGroups.class),
-                Y9OrgEventConst.RISEORGEVENT_TYPE_GROUP_ADDPERSON, Y9LoginUserHolder.getTenantId());
-            Y9PublishServiceUtil.persistAndPublishMessageOrg(msg, "添加用户组人员",
-                group.getName() + "添加用户组成员" + person.getName());
-
-            personList.add(person);
+            Integer maxPersonsOrder = getMaxPersonOrderByGroupId(groupId);
+            Integer maxGroupsOrder = getMaxGroupOrderByPersonId(personId);
+            addY9PersonsToGroups(personId, groupId, maxGroupsOrder + 1, maxPersonsOrder + i + 1);
         }
-        return personList;
     }
 
     @Override
@@ -201,22 +186,27 @@ public class Y9PersonsToGroupsServiceImpl implements Y9PersonsToGroupsService {
     @Transactional(readOnly = false)
     public void removeGroups(String personId, String[] groupIds) {
         for (String groupId : groupIds) {
-            Optional<Y9PersonsToGroups> optionalY9PersonsToGroups =
-                y9PersonsToGroupsRepository.findByGroupIdAndPersonId(groupId, personId);
-            if (optionalY9PersonsToGroups.isPresent()) {
-                Y9PersonsToGroups y9PersonsToGroups = optionalY9PersonsToGroups.get();
+            removeY9PersonsToGroups(personId, groupId);
+        }
+    }
 
-                Y9Context.publishEvent(new Y9EntityDeletedEvent<>(y9PersonsToGroups));
+    @Transactional(readOnly = false)
+    public void removeY9PersonsToGroups(String personId, String groupId) {
+        Optional<Y9PersonsToGroups> optionalY9PersonsToGroups =
+            y9PersonsToGroupsRepository.findByGroupIdAndPersonId(groupId, personId);
+        if (optionalY9PersonsToGroups.isPresent()) {
+            Y9PersonsToGroups y9PersonsToGroups = optionalY9PersonsToGroups.get();
 
-                Y9MessageOrg msg = new Y9MessageOrg(ModelConvertUtil.convert(y9PersonsToGroups, PersonsGroups.class),
-                    Y9OrgEventConst.RISEORGEVENT_TYPE_GROUP_REMOVEPERSON, Y9LoginUserHolder.getTenantId());
-                Y9Group group = y9GroupManager.getById(y9PersonsToGroups.getGroupId());
-                Y9Person person = y9PersonManager.getById(personId);
-                Y9PublishServiceUtil.persistAndPublishMessageOrg(msg, "移除用户组人员",
-                    group.getName() + "移除用户组成员" + person.getName());
+            Y9Context.publishEvent(new Y9EntityDeletedEvent<>(y9PersonsToGroups));
 
-                y9PersonsToGroupsRepository.deleteByGroupIdAndPersonId(groupId, personId);
-            }
+            Y9Person person = y9PersonManager.getById(personId);
+            Y9Group group = y9GroupManager.getById(y9PersonsToGroups.getGroupId());
+            Y9MessageOrg msg = new Y9MessageOrg(ModelConvertUtil.convert(y9PersonsToGroups, PersonsGroups.class),
+                Y9OrgEventConst.RISEORGEVENT_TYPE_GROUP_REMOVEPERSON, Y9LoginUserHolder.getTenantId());
+            Y9PublishServiceUtil.persistAndPublishMessageOrg(msg, "移除用户组人员",
+                group.getName() + "移除用户组成员" + person.getName());
+
+            y9PersonsToGroupsRepository.deleteByGroupIdAndPersonId(groupId, personId);
         }
     }
 
@@ -224,22 +214,7 @@ public class Y9PersonsToGroupsServiceImpl implements Y9PersonsToGroupsService {
     @Transactional(readOnly = false)
     public void removePersons(String groupId, String[] personIds) {
         for (String personId : personIds) {
-            Optional<Y9PersonsToGroups> optionalY9PersonsToGroups =
-                y9PersonsToGroupsRepository.findByGroupIdAndPersonId(groupId, personId);
-            if (optionalY9PersonsToGroups.isPresent()) {
-                Y9PersonsToGroups y9PersonsToGroups = optionalY9PersonsToGroups.get();
-
-                Y9Context.publishEvent(new Y9EntityDeletedEvent<>(y9PersonsToGroups));
-
-                Y9Person person = y9PersonManager.getById(y9PersonsToGroups.getPersonId());
-                Y9Group group = y9GroupManager.getById(groupId);
-                Y9MessageOrg msg = new Y9MessageOrg(ModelConvertUtil.convert(y9PersonsToGroups, PersonsGroups.class),
-                    Y9OrgEventConst.RISEORGEVENT_TYPE_GROUP_REMOVEPERSON, Y9LoginUserHolder.getTenantId());
-                Y9PublishServiceUtil.persistAndPublishMessageOrg(msg, "移除用户组人员",
-                    group.getName() + "移除用户组成员" + person.getName());
-
-                y9PersonsToGroupsRepository.deleteByGroupIdAndPersonId(groupId, personId);
-            }
+            removeY9PersonsToGroups(personId, groupId);
         }
     }
 }

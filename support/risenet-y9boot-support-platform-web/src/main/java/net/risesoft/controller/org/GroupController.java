@@ -11,7 +11,6 @@ import org.springframework.web.bind.annotation.RestController;
 import lombok.RequiredArgsConstructor;
 
 import net.risesoft.entity.Y9Group;
-import net.risesoft.entity.Y9Person;
 import net.risesoft.log.OperationTypeEnum;
 import net.risesoft.log.annotation.RiseLog;
 import net.risesoft.pojo.Y9Result;
@@ -44,9 +43,9 @@ public class GroupController {
      */
     @RiseLog(operationName = "用户组添加人员", operationType = OperationTypeEnum.ADD)
     @PostMapping(value = "/addPersons")
-    public Y9Result<List<Y9Person>> addPersons(@RequestParam String groupId, @RequestParam String[] personIds) {
-        List<Y9Person> orgPersonList = y9PersonsToGroupsService.addPersons(groupId, personIds);
-        return Y9Result.success(orgPersonList, "用户组添加人员成功");
+    public Y9Result<Object> addPersons(@RequestParam String groupId, @RequestParam String[] personIds) {
+        y9PersonsToGroupsService.addPersons(groupId, personIds);
+        return Y9Result.successMsg("用户组添加人员成功");
     }
 
     /**
