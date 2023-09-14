@@ -9,11 +9,7 @@ import org.springframework.transaction.event.TransactionalEventListener;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
-import net.risesoft.entity.Y9Department;
-import net.risesoft.entity.Y9Group;
 import net.risesoft.entity.Y9OrgBase;
-import net.risesoft.entity.Y9Person;
-import net.risesoft.entity.Y9Position;
 import net.risesoft.entity.relation.Y9OrgBasesToRoles;
 import net.risesoft.entity.relation.Y9PersonsToGroups;
 import net.risesoft.entity.relation.Y9PersonsToPositions;
@@ -52,43 +48,55 @@ public class UpdateIdentityRolesListener {
     private final Y9PersonsToGroupsRepository y9PersonsToGroupsRepository;
     private final Y9PersonsToPositionsRepository y9PersonsToPositionsRepository;
 
+    // TODO 岗位删除 和 用户组删除 需更新关联的人员角色
+
     @TransactionalEventListener
     @Async
-    public void onY9DepartmentUpdated(Y9EntityUpdatedEvent<Y9Department> event) {
-        Y9Department originY9Department = event.getOriginEntity();
-        Y9Department updatedY9Department = event.getUpdatedEntity();
+    public void onOrgUnitCreated(Y9EntityCreatedEvent<? extends Y9OrgBase> event) {
+        Y9OrgBase y9OrgBase = event.getEntity();
+        String orgType = y9OrgBase.getOrgType();
 
-        if (Y9OrgUtil.isMoved(originY9Department, updatedY9Department)) {
-            this.updateIdentityRolesByOrgId(updatedY9Department.getId());
+        if (OrgTypeEnum.PERSON.getEnName().equals(orgType)) {
+            this.updateIdentityRolesByOrgId(y9OrgBase.getId());
+
             if (LOGGER.isDebugEnabled()) {
-                LOGGER.debug("部门移动触发的更新人员/岗位角色执行完成");
+                LOGGER.debug("新增人员触发的重新计算角色执行完成");
+            }
+        }
+
+        if (OrgTypeEnum.POSITION.getEnName().equals(orgType)) {
+            this.updateIdentityRolesByOrgId(y9OrgBase.getId());
+
+            if (LOGGER.isDebugEnabled()) {
+                LOGGER.debug("新增岗位触发的重新计算角色执行完成");
             }
         }
     }
 
     @TransactionalEventListener
     @Async
-    public void onY9GroupDeleted(Y9EntityDeletedEvent<Y9Group> event) {
-        Y9Group y9Group = event.getEntity();
+    public void onOrgUnitUpdated(Y9EntityUpdatedEvent<? extends Y9OrgBase> event) {
+        Y9OrgBase originY9OrgBase = event.getOriginEntity();
+        Y9OrgBase updatedY9OrgBase = event.getUpdatedEntity();
+        String orgType = originY9OrgBase.getOrgType();
 
-        this.updateIdentityRolesByOrgId(y9Group.getId());
+        if (Y9OrgUtil.isMoved(originY9OrgBase, updatedY9OrgBase)) {
+            if (OrgTypeEnum.POSITION.getEnName().equals(orgType)) {
+                // 岗位移动需特殊处理：人员的角色还包括关联岗位的角色
+                List<Y9PersonsToPositions> y9PersonsToPositionsList =
+                    y9PersonsToPositionsRepository.findByPositionId(updatedY9OrgBase.getId());
+                for (Y9PersonsToPositions y9PersonsToPositions : y9PersonsToPositionsList) {
+                    y9PersonToRoleService.recalculate(y9PersonsToPositions.getPersonId());
+                }
+            }
 
-        if (LOGGER.isDebugEnabled()) {
-            LOGGER.debug("用户组删除触发的更新人员角色执行完成");
-        }
-    }
-
-    @TransactionalEventListener
-    @Async
-    public void onY9GroupUpdated(Y9EntityUpdatedEvent<Y9Group> event) {
-        Y9Group updatedY9Group = event.getUpdatedEntity();
-        Y9Group originY9Group = event.getOriginEntity();
-
-        if (Y9OrgUtil.isMoved(originY9Group, updatedY9Group)) {
-            this.updateIdentityRolesByOrgId(updatedY9Group.getId());
+            if (OrgTypeEnum.DEPARTMENT.getEnName().equals(orgType) || OrgTypeEnum.GROUP.getEnName().equals(orgType)
+                || OrgTypeEnum.PERSON.getEnName().equals(orgType) || OrgTypeEnum.POSITION.getEnName().equals(orgType)) {
+                this.updateIdentityRolesByOrgId(updatedY9OrgBase.getId());
+            }
 
             if (LOGGER.isDebugEnabled()) {
-                LOGGER.debug("用户组移动触发的更新人员角色执行完成");
+                LOGGER.debug("组织节点移动触发的更新人员/岗位角色执行完成");
             }
         }
     }
@@ -101,7 +109,7 @@ public class UpdateIdentityRolesListener {
         this.updateIdentityRolesByOrgId(y9OrgBasesToRoles.getOrgId());
 
         if (LOGGER.isDebugEnabled()) {
-            LOGGER.debug("新建组织和角色的映射触发的重新计算权限缓存执行完成");
+            LOGGER.debug("新建组织和角色的映射触发的重新计算角色执行完成");
         }
     }
 
@@ -113,26 +121,11 @@ public class UpdateIdentityRolesListener {
         this.updateIdentityRolesByOrgId(y9OrgBasesToRoles.getOrgId());
 
         if (LOGGER.isDebugEnabled()) {
-            LOGGER.debug("删除组织和角色的映射触发的重新计算权限缓存执行完成");
+            LOGGER.debug("删除组织和角色的映射触发的重新计算角色执行完成");
         }
     }
 
-    @TransactionalEventListener
-    @Async
-    public void onY9PersonUpdated(Y9EntityUpdatedEvent<Y9Person> event) {
-        Y9Person originY9Person = event.getOriginEntity();
-        Y9Person updatedY9Person = event.getUpdatedEntity();
-
-        if (Y9OrgUtil.isMoved(originY9Person, updatedY9Person)) {
-            y9PersonToRoleService.recalculate(updatedY9Person.getId());
-
-            if (LOGGER.isDebugEnabled()) {
-                LOGGER.debug("修改人员触发的更新人员/岗位角色执行完成");
-            }
-        }
-    }
-
-    @TransactionalEventListener
+    @TransactionalEventListener()
     @Async
     public void onY9PersonsToPositionsCreated(Y9EntityCreatedEvent<Y9PersonsToPositions> event) {
         Y9PersonsToPositions y9PersonsToPositions = event.getEntity();
@@ -140,7 +133,7 @@ public class UpdateIdentityRolesListener {
         y9PersonToRoleService.recalculate(y9PersonsToPositions.getPersonId());
 
         if (LOGGER.isDebugEnabled()) {
-            LOGGER.debug("新建人员和岗位的映射触发的重新计算权限缓存执行完成");
+            LOGGER.debug("新建人员和岗位的映射触发的重新计算角色执行完成");
         }
     }
 
@@ -156,34 +149,7 @@ public class UpdateIdentityRolesListener {
         }
     }
 
-    @TransactionalEventListener
-    @Async
-    public void onY9PositionDeleted(Y9EntityDeletedEvent<Y9Position> event) {
-        Y9Position y9Position = event.getEntity();
-
-        this.updateIdentityRolesByOrgId(y9Position.getId());
-
-        if (LOGGER.isDebugEnabled()) {
-            LOGGER.debug("删除岗位触发的重新计算权限缓存执行完成");
-        }
-    }
-
-    @TransactionalEventListener
-    @Async
-    public void onY9PositionUpdated(Y9EntityUpdatedEvent<Y9Position> event) {
-        Y9Position originY9Position = event.getOriginEntity();
-        Y9Position updatedY9Position = event.getUpdatedEntity();
-
-        if (Y9OrgUtil.isMoved(originY9Position, updatedY9Position)) {
-            this.updateIdentityRolesByOrgId(updatedY9Position.getId());
-
-            if (LOGGER.isDebugEnabled()) {
-                LOGGER.debug("修改岗位触发的更新岗位角色执行完成");
-            }
-        }
-    }
-
-    public void updateIdentityRolesByOrgId(final String orgId) {
+    private void updateIdentityRolesByOrgId(final String orgId) {
         Y9OrgBase y9OrgBase = compositeOrgBaseService.getOrgUnit(orgId);
         if (y9OrgBase != null && y9OrgBase.getId() != null) {
             OrgTypeEnum orgType = OrgTypeEnum.getByEnName(y9OrgBase.getOrgType());
@@ -211,21 +177,15 @@ public class UpdateIdentityRolesListener {
                         y9PositionToRoleService.recalculate(positionId);
                     }
                     break;
-                case POSITION:
-                    List<Y9PersonsToPositions> orgPositionPersons =
-                        y9PersonsToPositionsRepository.findByPositionId(orgId);
-                    for (Y9PersonsToPositions orgPositionsPerson : orgPositionPersons) {
-                        String orgPersonId = orgPositionsPerson.getPersonId();
-                        y9PersonToRoleService.recalculate(orgPersonId);
-                    }
-                    y9PositionToRoleService.recalculate(orgId);
-                    break;
                 case GROUP:
                     List<Y9PersonsToGroups> y9PersonsToGroups = y9PersonsToGroupsRepository.findByGroupId(orgId);
                     for (Y9PersonsToGroups orgPersonsGroup : y9PersonsToGroups) {
                         String orgPersonId = orgPersonsGroup.getPersonId();
                         y9PersonToRoleService.recalculate(orgPersonId);
                     }
+                    break;
+                case POSITION:
+                    y9PositionToRoleService.recalculate(orgId);
                     break;
                 case PERSON:
                     y9PersonToRoleService.recalculate(orgId);

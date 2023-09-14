@@ -20,7 +20,6 @@ import org.springframework.web.multipart.MultipartFile;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
-import net.risesoft.entity.Y9Group;
 import net.risesoft.entity.Y9Person;
 import net.risesoft.entity.Y9PersonExt;
 import net.risesoft.entity.relation.Y9PersonsToPositions;
@@ -65,9 +64,9 @@ public class PersonController {
      */
     @RiseLog(operationName = "为人员添加用户组", operationType = OperationTypeEnum.ADD)
     @PostMapping(value = "/addGroups")
-    public Y9Result<List<Y9Group>> addGroups(@RequestParam String personId, @RequestParam String[] groupIds) {
-        List<Y9Group> orgGroupList = y9PersonsToGroupsService.addGroups(personId, groupIds);
-        return Y9Result.success(orgGroupList, "为人员添加用户组成功");
+    public Y9Result<Object> addGroups(@RequestParam String personId, @RequestParam String[] groupIds) {
+        y9PersonsToGroupsService.addGroups(personId, groupIds);
+        return Y9Result.successMsg("为人员添加用户组成功");
     }
 
     /**

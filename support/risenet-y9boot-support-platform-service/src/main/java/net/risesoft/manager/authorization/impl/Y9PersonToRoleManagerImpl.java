@@ -35,28 +35,30 @@ public class Y9PersonToRoleManagerImpl implements Y9PersonToRoleManager {
         removeInvalid(y9Person.getId(), personRelatedY9RoleList);
 
         for (Y9Role y9Role : personRelatedY9RoleList) {
-            Optional<Y9PersonToRole> personToRoleOptional =
-                y9PersonToRoleRepository.findByPersonIdAndRoleId(y9Person.getId(), y9Role.getId());
-            if (personToRoleOptional.isEmpty()) {
-                this.save(y9Person, y9Role);
-            }
+            this.save(y9Person, y9Role);
         }
     }
 
+    // @Transactional(readOnly = false, noRollbackFor = DataIntegrityViolationException.class)
     @Transactional(readOnly = false)
-    public Y9PersonToRole save(Y9Person person, Y9Role role) {
-        Y9PersonToRole matrix = new Y9PersonToRole();
-        matrix.setTenantId(person.getTenantId());
-        matrix.setPersonId(person.getId());
-        matrix.setDepartmentId(person.getParentId());
-        matrix.setRoleId(role.getId());
-        matrix.setRoleName(role.getName());
-        matrix.setSystemCnName(role.getSystemCnName());
-        matrix.setSystemName(role.getSystemName());
-        matrix.setAppName(role.getAppCnName());
-        matrix.setAppId(role.getAppId());
-        matrix.setDescription(role.getDescription());
-        return y9PersonToRoleRepository.save(matrix);
+    public void save(Y9Person person, Y9Role role) {
+        Optional<Y9PersonToRole> personToRoleOptional =
+            y9PersonToRoleRepository.findByPersonIdAndRoleId(person.getId(), role.getId());
+        if (personToRoleOptional.isEmpty()) {
+            Y9PersonToRole matrix = new Y9PersonToRole();
+            matrix.setTenantId(person.getTenantId());
+            matrix.setPersonId(person.getId());
+            matrix.setDepartmentId(person.getParentId());
+            matrix.setRoleId(role.getId());
+            matrix.setRoleName(role.getName());
+            matrix.setSystemCnName(role.getSystemCnName());
+            matrix.setSystemName(role.getSystemName());
+            matrix.setAppName(role.getAppCnName());
+            matrix.setAppId(role.getAppId());
+            matrix.setDescription(role.getDescription());
+
+            y9PersonToRoleRepository.save(matrix);
+        }
     }
 
     /**
@@ -67,7 +69,7 @@ public class Y9PersonToRoleManagerImpl implements Y9PersonToRoleManager {
      */
     @Transactional(readOnly = false)
     public void removeInvalid(String personId, List<Y9Role> newCalculatedY9RoleList) {
-        List<String> originY9RoleIdList = this.listRoleIdsByPersonId(personId);
+        List<String> originY9RoleIdList = y9PersonToRoleRepository.findRoleIdByPersonId(personId);
         List<String> newCalculatedY9RoleIdList =
             newCalculatedY9RoleList.stream().map(Y9Role::getId).collect(Collectors.toList());
         for (String roleId : originY9RoleIdList) {
@@ -75,12 +77,6 @@ public class Y9PersonToRoleManagerImpl implements Y9PersonToRoleManager {
                 this.removeByPersonIdAndRoleId(personId, roleId);
             }
         }
-    }
-
-    @Override
-    public List<String> listRoleIdsByPersonId(String personId) {
-        List<Y9PersonToRole> personRoleMappings = y9PersonToRoleRepository.findByPersonId(personId);
-        return personRoleMappings.stream().map(Y9PersonToRole::getRoleId).collect(Collectors.toList());
     }
 
     @Transactional(readOnly = false)
