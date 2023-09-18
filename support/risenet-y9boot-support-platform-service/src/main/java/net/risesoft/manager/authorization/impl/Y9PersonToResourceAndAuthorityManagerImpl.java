@@ -1,5 +1,6 @@
 package net.risesoft.manager.authorization.impl;
 
+import java.util.List;
 import java.util.Optional;
 
 import org.springframework.stereotype.Service;
@@ -38,6 +39,18 @@ public class Y9PersonToResourceAndAuthorityManagerImpl implements Y9PersonToReso
     @Override
     public void deleteByAuthorizationId(String authorizationId) {
         y9PersonToResourceAndAuthorityRepository.deleteByAuthorizationId(authorizationId);
+    }
+
+    @Transactional(readOnly = false)
+    @Override
+    public void deleteByPersonIdAndAuthorizationIdNotIn(String personId, List<String> authorizationIdList) {
+        y9PersonToResourceAndAuthorityRepository.deleteByPersonIdAndAuthorizationIdNotIn(personId, authorizationIdList);
+    }
+
+    @Transactional(readOnly = false)
+    @Override
+    public void deleteByPersonIdAndResourceId(String personId, String resourceId) {
+        y9PersonToResourceAndAuthorityRepository.deleteByPersonIdAndResourceId(personId, resourceId);
     }
 
     @Transactional(readOnly = false)

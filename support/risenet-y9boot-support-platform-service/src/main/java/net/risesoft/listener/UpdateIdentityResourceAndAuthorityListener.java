@@ -16,6 +16,9 @@ import net.risesoft.entity.Y9Person;
 import net.risesoft.entity.Y9Position;
 import net.risesoft.entity.permission.Y9Authorization;
 import net.risesoft.entity.relation.Y9OrgBasesToRoles;
+import net.risesoft.entity.relation.Y9PersonsToGroups;
+import net.risesoft.entity.relation.Y9PersonsToPositions;
+import net.risesoft.enums.AuthorityEnum;
 import net.risesoft.enums.AuthorizationPrincipalTypeEnum;
 import net.risesoft.enums.OrgTypeEnum;
 import net.risesoft.enums.ResourceTypeEnum;
@@ -181,30 +184,9 @@ public class UpdateIdentityResourceAndAuthorityListener {
         Y9Authorization y9Authorization = event.getEntity();
 
         if (AuthorizationPrincipalTypeEnum.ROLE.getValue().equals(y9Authorization.getPrincipalType())) {
-            Set<Y9Person> y9PersonSet = new HashSet<>();
-            Set<Y9Position> y9PositionSet = new HashSet<>();
 
-            List<Y9OrgBasesToRoles> y9OrgBasesToRolesList =
-                y9OrgBasesToRolesService.listByRoleId(y9Authorization.getPrincipalId());
+            recalculateByRoleId(y9Authorization.getPrincipalId());
 
-            for (Y9OrgBasesToRoles y9OrgBasesToRoles : y9OrgBasesToRolesList) {
-                if (OrgTypeEnum.PERSON.getEnName().equals(y9OrgBasesToRoles.getOrgType())) {
-                    y9PersonSet.add(y9PersonService.getById(y9OrgBasesToRoles.getOrgId()));
-                } else if (OrgTypeEnum.POSITION.getEnName().equals(y9OrgBasesToRoles.getOrgType())) {
-                    y9PositionSet.add(y9PositionService.getById(y9OrgBasesToRoles.getOrgId()));
-                } else {
-                    y9PersonSet
-                        .addAll(compositeOrgBaseService.listAllPersonsRecursionDownward(y9OrgBasesToRoles.getOrgId()));
-                    y9PositionSet.addAll(
-                        compositeOrgBaseService.listAllPositionsRecursionDownward(y9OrgBasesToRoles.getOrgId()));
-                }
-            }
-            for (Y9Person y9Person : y9PersonSet) {
-                y9AuthorizationService.syncToIdentityResourceAndAuthority(y9Person);
-            }
-            for (Y9Position y9Position : y9PositionSet) {
-                y9AuthorizationService.syncToIdentityResourceAndAuthority(y9Position);
-            }
             if (LOGGER.isDebugEnabled()) {
                 LOGGER.debug("新增对角色的授权配置触发的重新计算权限缓存执行完成");
             }
@@ -214,6 +196,28 @@ public class UpdateIdentityResourceAndAuthorityListener {
         y9AuthorizationService.syncToIdentityResourceAndAuthority(y9Authorization.getPrincipalId());
         if (LOGGER.isDebugEnabled()) {
             LOGGER.debug("新增或更新对组织的直接授权配置触发的重新计算权限缓存执行完成");
+        }
+    }
+
+    @TransactionalEventListener
+    @Async
+    public void onY9AuthorizationDeleted(Y9EntityDeletedEvent<Y9Authorization> event) {
+        Y9Authorization y9Authorization = event.getEntity();
+        if (AuthorityEnum.HIDDEN.getValue().equals(y9Authorization.getAuthority())) {
+            if (AuthorizationPrincipalTypeEnum.ROLE.getValue().equals(y9Authorization.getPrincipalType())) {
+
+                recalculateByRoleId(y9Authorization.getPrincipalId());
+
+                if (LOGGER.isDebugEnabled()) {
+                    LOGGER.debug("删除对组织的直接隐藏授权配置触发的重新计算权限缓存执行完成");
+                }
+                return;
+            }
+
+            y9AuthorizationService.syncToIdentityResourceAndAuthority(y9Authorization.getPrincipalId());
+            if (LOGGER.isDebugEnabled()) {
+                LOGGER.debug("删除对角色的隐藏授权配置触发的重新计算权限缓存执行完成");
+            }
         }
     }
 
@@ -231,6 +235,12 @@ public class UpdateIdentityResourceAndAuthorityListener {
                 } else if (OrgTypeEnum.POSITION.getEnName().equals(y9OrgBasesToRoles.getOrgType())) {
                     y9PositionToResourceAndAuthorityService
                         .deleteByAuthorizationIdAndPositionId(y9Authorization.getId(), y9OrgBasesToRoles.getOrgId());
+
+                    List<Y9Person> y9PersonList = y9PersonService.listByPositionId(y9OrgBasesToRoles.getOrgId());
+                    for (Y9Person y9Person : y9PersonList) {
+                        y9PersonToResourceAndAuthorityService
+                            .deleteByAuthorizationIdAndPersonId(y9Authorization.getId(), y9Person.getId());
+                    }
                 } else {
                     y9PersonToResourceAndAuthorityService.deleteByAuthorizationIdAndOrgUnitId(y9Authorization.getId(),
                         y9OrgBasesToRoles.getOrgId());
@@ -263,6 +273,12 @@ public class UpdateIdentityResourceAndAuthorityListener {
                 } else if (OrgTypeEnum.POSITION.getEnName().equals(orgBasesToRoles.getOrgType())) {
                     y9PositionToResourceAndAuthorityService
                         .deleteByAuthorizationIdAndPositionId(y9Authorization.getId(), orgBasesToRoles.getOrgId());
+
+                    List<Y9Person> y9PersonList = y9PersonService.listByPositionId(orgBasesToRoles.getOrgId());
+                    for (Y9Person y9Person : y9PersonList) {
+                        y9PersonToResourceAndAuthorityService
+                            .deleteByAuthorizationIdAndPersonId(y9Authorization.getId(), y9Person.getId());
+                    }
                 } else {
                     y9PersonToResourceAndAuthorityService.deleteByAuthorizationIdAndOrgUnitId(y9Authorization.getId(),
                         orgBasesToRoles.getOrgId());
@@ -274,6 +290,57 @@ public class UpdateIdentityResourceAndAuthorityListener {
         }
         if (LOGGER.isDebugEnabled()) {
             LOGGER.debug("删除组织和角色的映射触发的重新计算权限缓存执行完成");
+        }
+    }
+
+    @TransactionalEventListener
+    @Async
+    public void onY9PersonsToGroupsDeleted(Y9EntityDeletedEvent<Y9PersonsToGroups> event) {
+        Y9PersonsToGroups y9PersonsToGroups = event.getEntity();
+
+        y9AuthorizationService.syncToIdentityResourceAndAuthority(y9PersonsToGroups.getPersonId());
+
+        if (LOGGER.isDebugEnabled()) {
+            LOGGER.debug("用户组删人触发的重新计算权限缓存执行完成");
+        }
+    }
+
+    @TransactionalEventListener
+    @Async
+    public void onY9PersonsToPositionsDeleted(Y9EntityDeletedEvent<Y9PersonsToPositions> event) {
+        Y9PersonsToPositions y9PersonsToPositions = event.getEntity();
+
+        y9AuthorizationService.syncToIdentityResourceAndAuthority(y9PersonsToPositions.getPersonId());
+
+        if (LOGGER.isDebugEnabled()) {
+            LOGGER.debug("岗位删人触发的重新计算权限缓存执行完成");
+        }
+    }
+
+    private void recalculateByRoleId(String roleId) {
+        Set<Y9Person> y9PersonSet = new HashSet<>();
+        Set<Y9Position> y9PositionSet = new HashSet<>();
+
+        List<Y9OrgBasesToRoles> y9OrgBasesToRolesList = y9OrgBasesToRolesService.listByRoleId(roleId);
+
+        for (Y9OrgBasesToRoles y9OrgBasesToRoles : y9OrgBasesToRolesList) {
+            if (OrgTypeEnum.PERSON.getEnName().equals(y9OrgBasesToRoles.getOrgType())) {
+                y9PersonSet.add(y9PersonService.getById(y9OrgBasesToRoles.getOrgId()));
+            } else if (OrgTypeEnum.POSITION.getEnName().equals(y9OrgBasesToRoles.getOrgType())) {
+                y9PositionSet.add(y9PositionService.getById(y9OrgBasesToRoles.getOrgId()));
+                y9PersonSet.addAll(y9PersonService.listByPositionId(y9OrgBasesToRoles.getOrgId()));
+            } else {
+                y9PersonSet
+                    .addAll(compositeOrgBaseService.listAllPersonsRecursionDownward(y9OrgBasesToRoles.getOrgId()));
+                y9PositionSet
+                    .addAll(compositeOrgBaseService.listAllPositionsRecursionDownward(y9OrgBasesToRoles.getOrgId()));
+            }
+        }
+        for (Y9Person y9Person : y9PersonSet) {
+            y9AuthorizationService.syncToIdentityResourceAndAuthority(y9Person);
+        }
+        for (Y9Position y9Position : y9PositionSet) {
+            y9AuthorizationService.syncToIdentityResourceAndAuthority(y9Position);
         }
     }
 }

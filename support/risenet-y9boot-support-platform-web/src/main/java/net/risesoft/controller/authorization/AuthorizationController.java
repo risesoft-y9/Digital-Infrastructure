@@ -149,11 +149,6 @@ public class AuthorizationController {
             String resourceId = y9Authorization.getResourceId();
             Y9ResourceBase acResource = compositeResourceService.findById(resourceId);
             if (acResource == null) {
-                try {
-                    y9AuthorizationService.delete(y9Authorization);
-                } catch (Exception e) {
-                    LOGGER.warn(e.getMessage(), e);
-                }
                 continue;
             }
             authorizationVOList.add(getAuthorizationVOForResourceBase(y9Authorization, acResource));
@@ -258,42 +253,6 @@ public class AuthorizationController {
         @RequestParam("roleIds") String[] roleIds) {
         y9AuthorizationService.saveByRoles(authority, resourceId, roleIds);
         return Y9Result.successMsg("授权成功！");
-    }
-
-    /**
-     * 根据资源ID，角色,和code模糊查询
-     *
-     * @param roleId 角色ID
-     * @param resourceName 资源名
-     * @param operationType 操作权限
-     * @return
-     */
-    @RiseLog(operationName = "根据角色ID，资源名,和code模糊查询 ")
-    @RequestMapping(value = "/searchOperations")
-    public Y9Result<List<AuthorizationVO>> searchResourceOperations(@RequestParam("roleId") String roleId,
-        String resourceName, @RequestParam("operationType") Integer operationType) {
-        List<Y9ResourceBase> list = compositeResourceService.searchByName(resourceName);
-        List<String> resourceIds = list.stream().map(Y9ResourceBase::getId).collect(Collectors.toList());
-        List<Y9Authorization> y9AuthorizationList = new ArrayList<>();
-        if (!resourceIds.isEmpty()) {
-            y9AuthorizationList = y9AuthorizationService.listByResourceIds(resourceIds, roleId, operationType);
-        }
-        List<AuthorizationVO> authorizationVOList = new ArrayList<>();
-
-        for (Y9Authorization authorization : y9AuthorizationList) {
-            String resourceId = authorization.getResourceId();
-            Y9ResourceBase acResource = compositeResourceService.findById(resourceId);
-            if (acResource == null) {
-                try {
-                    y9AuthorizationService.delete(authorization);
-                } catch (Exception e) {
-                    LOGGER.warn(e.getMessage(), e);
-                }
-                continue;
-            }
-            authorizationVOList.add(getAuthorizationVOForResourceBase(authorization, acResource));
-        }
-        return Y9Result.success(authorizationVOList, "获取数据成功");
     }
 
 }

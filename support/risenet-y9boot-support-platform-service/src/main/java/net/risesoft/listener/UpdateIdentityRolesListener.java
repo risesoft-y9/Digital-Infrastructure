@@ -14,13 +14,13 @@ import net.risesoft.entity.relation.Y9OrgBasesToRoles;
 import net.risesoft.entity.relation.Y9PersonsToGroups;
 import net.risesoft.entity.relation.Y9PersonsToPositions;
 import net.risesoft.enums.OrgTypeEnum;
-import net.risesoft.repository.Y9PersonRepository;
-import net.risesoft.repository.Y9PositionRepository;
-import net.risesoft.repository.relation.Y9PersonsToGroupsRepository;
-import net.risesoft.repository.relation.Y9PersonsToPositionsRepository;
 import net.risesoft.service.identity.Y9PersonToRoleService;
 import net.risesoft.service.identity.Y9PositionToRoleService;
 import net.risesoft.service.org.CompositeOrgBaseService;
+import net.risesoft.service.org.Y9PersonService;
+import net.risesoft.service.org.Y9PositionService;
+import net.risesoft.service.relation.Y9PersonsToGroupsService;
+import net.risesoft.service.relation.Y9PersonsToPositionsService;
 import net.risesoft.util.Y9OrgUtil;
 import net.risesoft.y9.pubsub.event.Y9EntityCreatedEvent;
 import net.risesoft.y9.pubsub.event.Y9EntityDeletedEvent;
@@ -43,12 +43,10 @@ public class UpdateIdentityRolesListener {
     private final Y9PersonToRoleService y9PersonToRoleService;
     private final Y9PositionToRoleService y9PositionToRoleService;
 
-    private final Y9PersonRepository y9PersonRepository;
-    private final Y9PositionRepository y9PositionRepository;
-    private final Y9PersonsToGroupsRepository y9PersonsToGroupsRepository;
-    private final Y9PersonsToPositionsRepository y9PersonsToPositionsRepository;
-
-    // TODO 岗位删除 和 用户组删除 需更新关联的人员角色
+    private final Y9PersonService y9PersonService;
+    private final Y9PositionService y9PositionService;
+    private final Y9PersonsToGroupsService y9PersonsToGroupsService;
+    private final Y9PersonsToPositionsService y9PersonsToPositionsService;
 
     @TransactionalEventListener
     @Async
@@ -57,7 +55,7 @@ public class UpdateIdentityRolesListener {
         String orgType = y9OrgBase.getOrgType();
 
         if (OrgTypeEnum.PERSON.getEnName().equals(orgType)) {
-            this.updateIdentityRolesByOrgId(y9OrgBase.getId());
+            y9PersonToRoleService.recalculate(y9OrgBase.getId());
 
             if (LOGGER.isDebugEnabled()) {
                 LOGGER.debug("新增人员触发的重新计算角色执行完成");
@@ -65,7 +63,7 @@ public class UpdateIdentityRolesListener {
         }
 
         if (OrgTypeEnum.POSITION.getEnName().equals(orgType)) {
-            this.updateIdentityRolesByOrgId(y9OrgBase.getId());
+            y9PositionToRoleService.recalculate(y9OrgBase.getId());
 
             if (LOGGER.isDebugEnabled()) {
                 LOGGER.debug("新增岗位触发的重新计算角色执行完成");
@@ -81,14 +79,6 @@ public class UpdateIdentityRolesListener {
         String orgType = originY9OrgBase.getOrgType();
 
         if (Y9OrgUtil.isMoved(originY9OrgBase, updatedY9OrgBase)) {
-            if (OrgTypeEnum.POSITION.getEnName().equals(orgType)) {
-                // 岗位移动需特殊处理：人员的角色还包括关联岗位的角色
-                List<Y9PersonsToPositions> y9PersonsToPositionsList =
-                    y9PersonsToPositionsRepository.findByPositionId(updatedY9OrgBase.getId());
-                for (Y9PersonsToPositions y9PersonsToPositions : y9PersonsToPositionsList) {
-                    y9PersonToRoleService.recalculate(y9PersonsToPositions.getPersonId());
-                }
-            }
 
             if (OrgTypeEnum.DEPARTMENT.getEnName().equals(orgType) || OrgTypeEnum.GROUP.getEnName().equals(orgType)
                 || OrgTypeEnum.PERSON.getEnName().equals(orgType) || OrgTypeEnum.POSITION.getEnName().equals(orgType)) {
@@ -125,6 +115,18 @@ public class UpdateIdentityRolesListener {
         }
     }
 
+    @TransactionalEventListener
+    @Async
+    public void onY9PersonsToGroupsDeleted(Y9EntityDeletedEvent<Y9PersonsToGroups> event) {
+        Y9PersonsToGroups y9PersonsToGroups = event.getEntity();
+
+        y9PersonToRoleService.recalculate(y9PersonsToGroups.getPersonId());
+
+        if (LOGGER.isDebugEnabled()) {
+            LOGGER.debug("用户组删人触发的更新人员角色执行完成");
+        }
+    }
+
     @TransactionalEventListener()
     @Async
     public void onY9PersonsToPositionsCreated(Y9EntityCreatedEvent<Y9PersonsToPositions> event) {
@@ -155,30 +157,28 @@ public class UpdateIdentityRolesListener {
             OrgTypeEnum orgType = OrgTypeEnum.getByEnName(y9OrgBase.getOrgType());
             switch (orgType) {
                 case ORGANIZATION:
-                    List<String> personIdList =
-                        y9PersonRepository.findIdByGuidPathStartingWith(y9OrgBase.getGuidPath());
+                    List<String> personIdList = y9PersonService.findIdByGuidPathStartingWith(y9OrgBase.getGuidPath());
                     for (String personId : personIdList) {
                         y9PersonToRoleService.recalculate(personId);
                     }
                     List<String> positionIdList =
-                        y9PositionRepository.findIdByGuidPathStartingWith(y9OrgBase.getGuidPath());
+                        y9PositionService.findIdByGuidPathStartingWith(y9OrgBase.getGuidPath());
                     for (String positionId : positionIdList) {
                         y9PositionToRoleService.recalculate(positionId);
                     }
                     break;
                 case DEPARTMENT:
-                    List<String> personIds = y9PersonRepository.findIdByGuidPathStartingWith(y9OrgBase.getGuidPath());
+                    List<String> personIds = y9PersonService.findIdByGuidPathStartingWith(y9OrgBase.getGuidPath());
                     for (String personId : personIds) {
                         y9PersonToRoleService.recalculate(personId);
                     }
-                    List<String> positionIds =
-                        y9PositionRepository.findIdByGuidPathStartingWith(y9OrgBase.getGuidPath());
+                    List<String> positionIds = y9PositionService.findIdByGuidPathStartingWith(y9OrgBase.getGuidPath());
                     for (String positionId : positionIds) {
                         y9PositionToRoleService.recalculate(positionId);
                     }
                     break;
                 case GROUP:
-                    List<Y9PersonsToGroups> y9PersonsToGroups = y9PersonsToGroupsRepository.findByGroupId(orgId);
+                    List<Y9PersonsToGroups> y9PersonsToGroups = y9PersonsToGroupsService.findByGroupId(orgId);
                     for (Y9PersonsToGroups orgPersonsGroup : y9PersonsToGroups) {
                         String orgPersonId = orgPersonsGroup.getPersonId();
                         y9PersonToRoleService.recalculate(orgPersonId);
@@ -186,6 +186,12 @@ public class UpdateIdentityRolesListener {
                     break;
                 case POSITION:
                     y9PositionToRoleService.recalculate(orgId);
+                    // 人员的角色还包括关联岗位的角色
+                    List<Y9PersonsToPositions> y9PersonsToPositionsList =
+                        y9PersonsToPositionsService.findByPositionId(orgId);
+                    for (Y9PersonsToPositions y9PersonsToPositions : y9PersonsToPositionsList) {
+                        y9PersonToRoleService.recalculate(y9PersonsToPositions.getPersonId());
+                    }
                     break;
                 case PERSON:
                     y9PersonToRoleService.recalculate(orgId);

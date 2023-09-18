@@ -28,6 +28,7 @@ import net.risesoft.id.IdType;
 import net.risesoft.id.Y9IdGenerator;
 import net.risesoft.manager.org.CompositeOrgBaseManager;
 import net.risesoft.manager.org.Y9PositionManager;
+import net.risesoft.manager.relation.Y9PersonsToPositionsManager;
 import net.risesoft.model.Position;
 import net.risesoft.repository.Y9PositionRepository;
 import net.risesoft.repository.identity.position.Y9PositionToResourceAndAuthorityRepository;
@@ -69,6 +70,7 @@ public class Y9PositionServiceImpl implements Y9PositionService {
 
     private final CompositeOrgBaseManager compositeOrgBaseManager;
     private final Y9PositionManager y9PositionManager;
+    private final Y9PersonsToPositionsManager y9PersonsToPositionsManager;
 
     public Y9PositionServiceImpl(@Qualifier("rsTenantEntityManagerFactory") EntityManagerFactory entityManagerFactory,
         Y9PositionRepository y9PositionRepository, Y9PersonsToPositionsRepository y9PersonsToPositionsRepository,
@@ -76,7 +78,8 @@ public class Y9PositionServiceImpl implements Y9PositionService {
         Y9OrgBasesToRolesRepository y9OrgBasesToRolesRepository,
         Y9PositionToResourceAndAuthorityRepository y9PositionToResourceAndAuthorityRepository,
         Y9PositionToRoleRepository y9PositionToRoleRepository, Y9AuthorizationRepository y9AuthorizationRepository,
-        CompositeOrgBaseManager compositeOrgBaseManager, Y9PositionManager y9PositionManager) {
+        CompositeOrgBaseManager compositeOrgBaseManager, Y9PositionManager y9PositionManager,
+        Y9PersonsToPositionsManager y9PersonsToPositionsManager) {
         this.entityManagerFactory = entityManagerFactory;
         this.y9PositionRepository = y9PositionRepository;
         this.y9PersonsToPositionsRepository = y9PersonsToPositionsRepository;
@@ -87,6 +90,7 @@ public class Y9PositionServiceImpl implements Y9PositionService {
         this.y9AuthorizationRepository = y9AuthorizationRepository;
         this.compositeOrgBaseManager = compositeOrgBaseManager;
         this.y9PositionManager = y9PositionManager;
+        this.y9PersonsToPositionsManager = y9PersonsToPositionsManager;
     }
 
     @Override
@@ -130,7 +134,7 @@ public class Y9PositionServiceImpl implements Y9PositionService {
         y9OrgBasesToRolesRepository.deleteByOrgId(positionId);
         y9PositionToRoleRepository.deleteByPositionId(positionId);
         y9PositionToResourceAndAuthorityRepository.deleteByPositionId(positionId);
-        y9PersonsToPositionsRepository.deleteByPositionId(positionId);
+        y9PersonsToPositionsManager.deleteByPositionId(positionId);
         y9PositionsToGroupsRepository.deleteByPositionId(positionId);
         y9AuthorizationRepository.deleteByPrincipalIdAndPrincipalType(positionId,
             AuthorizationPrincipalTypeEnum.POSITION.getValue());
@@ -166,6 +170,11 @@ public class Y9PositionServiceImpl implements Y9PositionService {
     @Override
     public List<Y9Position> findByJobId(String jobId) {
         return y9PositionRepository.findByJobId(jobId);
+    }
+
+    @Override
+    public List<String> findIdByGuidPathStartingWith(String guidPath) {
+        return y9PositionRepository.findIdByGuidPathStartingWith(guidPath);
     }
 
     @Override

@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.cache.annotation.CacheConfig;
@@ -121,7 +122,7 @@ public class Y9RoleManagerImpl implements Y9RoleManager {
     public List<String> listOrgUnitIdRecursively(String orgUnitId) {
         List<String> orgUnitIdList = new ArrayList<>();
         this.getOrgUnitIdsByUpwardRecursion(orgUnitIdList, orgUnitId);
-        return orgUnitIdList;
+        return orgUnitIdList.stream().distinct().collect(Collectors.toList());
     }
 
     @Override
@@ -131,8 +132,7 @@ public class Y9RoleManagerImpl implements Y9RoleManager {
         Set<String> calculatedRoleIdList = new HashSet<>();
 
         List<String> orgUnitIds = this.listOrgUnitIdRecursively(orgUnitId);
-        Set<String> orgUnitIdSet = new HashSet<>(orgUnitIds);
-        for (String id : orgUnitIdSet) {
+        for (String id : orgUnitIds) {
             positiveRoleIdList.addAll(y9OrgBasesToRolesRepository.findRoleIdsByOrgIdAndNegative(id, Boolean.FALSE));
             negativeRoleIdList.addAll(y9OrgBasesToRolesRepository.findRoleIdsByOrgIdAndNegative(id, Boolean.TRUE));
         }

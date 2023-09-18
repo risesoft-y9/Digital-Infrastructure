@@ -47,15 +47,6 @@ public class Y9PersonsToPositionsManagerImpl implements Y9PersonsToPositionsMana
 
     @Override
     @Transactional(readOnly = false)
-    public void deleteByPersonId(String personId) {
-        List<Y9PersonsToPositions> y9PersonsToPositionsList = y9PersonsToPositionsRepository.findByPersonId(personId);
-        for (Y9PersonsToPositions y9PersonsToPositions : y9PersonsToPositionsList) {
-            this.delete(y9PersonsToPositions);
-        }
-    }
-
-    @Override
-    @Transactional(readOnly = false)
     public List<Y9PersonsToPositions> addPositions(String personId, List<String> positionIds) {
         List<Y9PersonsToPositions> personsToPositionsList = new ArrayList<>();
         for (String positionId : positionIds) {
@@ -65,6 +56,61 @@ public class Y9PersonsToPositionsManagerImpl implements Y9PersonsToPositionsMana
             personsToPositionsList.add(save(personId, positionId));
         }
         return personsToPositionsList;
+    }
+
+    @Override
+    @Transactional(readOnly = false)
+    public void delete(String positionId, String personId) {
+        Optional<Y9PersonsToPositions> optionalY9PersonsToPositions =
+            y9PersonsToPositionsRepository.findByPositionIdAndPersonId(positionId, personId);
+        if (optionalY9PersonsToPositions.isPresent()) {
+            delete(optionalY9PersonsToPositions.get());
+        }
+    }
+
+    @Override
+    @Transactional(readOnly = false)
+    public void delete(Y9PersonsToPositions y9PersonsToPositions) {
+        Y9Context.publishEvent(new Y9EntityDeletedEvent<>(y9PersonsToPositions));
+
+        Y9Person person = y9PersonManager.getById(y9PersonsToPositions.getPersonId());
+        Y9MessageOrg msg = new Y9MessageOrg(ModelConvertUtil.convert(y9PersonsToPositions, PersonsPositions.class),
+            Y9OrgEventConst.RISEORGEVENT_TYPE_POSITION_REMOVEPERSON, Y9LoginUserHolder.getTenantId());
+        Y9Position y9Position = y9PositionManager.getById(y9PersonsToPositions.getPositionId());
+        Y9PublishServiceUtil.persistAndPublishMessageOrg(msg, "移除岗位人员",
+            y9Position.getName() + "移除成员" + person.getName());
+
+        y9PersonsToPositionsRepository.delete(y9PersonsToPositions);
+    }
+
+    @Override
+    @Transactional(readOnly = false)
+    public void deleteByPersonId(String personId) {
+        List<Y9PersonsToPositions> y9PersonsToPositionsList = y9PersonsToPositionsRepository.findByPersonId(personId);
+        for (Y9PersonsToPositions y9PersonsToPositions : y9PersonsToPositionsList) {
+            this.delete(y9PersonsToPositions);
+        }
+    }
+
+    @Override
+    public void deleteByPositionId(String positionId) {
+        List<Y9PersonsToPositions> y9PersonsToPositionsList =
+            y9PersonsToPositionsRepository.findByPositionId(positionId);
+        for (Y9PersonsToPositions y9PersonsToPositions : y9PersonsToPositionsList) {
+            this.delete(y9PersonsToPositions);
+        }
+    }
+
+    @Override
+    public Integer getMaxPersonOrderByPositionId(String positionId) {
+        return y9PersonsToPositionsRepository.findTopByPositionIdOrderByPersonOrderDesc(positionId)
+            .map(Y9PersonsToPositions::getPersonOrder).orElse(0);
+    }
+
+    @Override
+    public Integer getMaxPositionOrderByPersonId(String personId) {
+        return y9PersonsToPositionsRepository.findTopByPersonIdOrderByPositionOrderDesc(personId)
+            .map(Y9PersonsToPositions::getPositionOrder).orElse(0);
     }
 
     @Override
@@ -97,42 +143,5 @@ public class Y9PersonsToPositionsManagerImpl implements Y9PersonsToPositionsMana
 
     public Integer countByPositionId(String positionId) {
         return y9PersonsToPositionsRepository.countByPositionId(positionId);
-    }
-
-    @Override
-    @Transactional(readOnly = false)
-    public void delete(String positionId, String personId) {
-        Optional<Y9PersonsToPositions> optionalY9PersonsToPositions =
-            y9PersonsToPositionsRepository.findByPositionIdAndPersonId(positionId, personId);
-        if (optionalY9PersonsToPositions.isPresent()) {
-            delete(optionalY9PersonsToPositions.get());
-        }
-    }
-
-    @Override
-    @Transactional(readOnly = false)
-    public void delete(Y9PersonsToPositions y9PersonsToPositions) {
-        Y9Context.publishEvent(new Y9EntityDeletedEvent<>(y9PersonsToPositions));
-
-        Y9Person person = y9PersonManager.getById(y9PersonsToPositions.getPersonId());
-        Y9MessageOrg msg = new Y9MessageOrg(ModelConvertUtil.convert(y9PersonsToPositions, PersonsPositions.class),
-            Y9OrgEventConst.RISEORGEVENT_TYPE_POSITION_REMOVEPERSON, Y9LoginUserHolder.getTenantId());
-        Y9Position y9Position = y9PositionManager.getById(y9PersonsToPositions.getPositionId());
-        Y9PublishServiceUtil.persistAndPublishMessageOrg(msg, "移除岗位人员",
-            y9Position.getName() + "移除成员" + person.getName());
-
-        y9PersonsToPositionsRepository.delete(y9PersonsToPositions);
-    }
-
-    @Override
-    public Integer getMaxPositionOrderByPersonId(String personId) {
-        return y9PersonsToPositionsRepository.findTopByPersonIdOrderByPositionOrderDesc(personId)
-            .map(Y9PersonsToPositions::getPositionOrder).orElse(0);
-    }
-
-    @Override
-    public Integer getMaxPersonOrderByPositionId(String positionId) {
-        return y9PersonsToPositionsRepository.findTopByPositionIdOrderByPersonOrderDesc(positionId)
-            .map(Y9PersonsToPositions::getPersonOrder).orElse(0);
     }
 }

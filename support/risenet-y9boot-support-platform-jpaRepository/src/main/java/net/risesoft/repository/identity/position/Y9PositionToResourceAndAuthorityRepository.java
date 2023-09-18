@@ -42,6 +42,14 @@ public interface Y9PositionToResourceAndAuthorityRepository
 
     @Modifying
     @Transactional(readOnly = false)
+    void deleteByPositionIdAndAuthorizationIdNotIn(String positionId, List<String> authorizationIdList);
+
+    @Modifying
+    @Transactional(readOnly = false)
+    void deleteByPositionIdAndResourceId(String positionId, String resourceId);
+
+    @Modifying
+    @Transactional(readOnly = false)
     void deleteByResourceId(String resourceId);
 
     List<Y9PositionToResourceAndAuthority> findByPositionId(String positionId);

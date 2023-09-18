@@ -1,5 +1,7 @@
 package net.risesoft.manager.authorization;
 
+import java.util.List;
+
 import net.risesoft.entity.Y9Position;
 import net.risesoft.entity.permission.Y9Authorization;
 import net.risesoft.y9public.entity.resource.Y9ResourceBase;
@@ -13,6 +15,10 @@ import net.risesoft.y9public.entity.resource.Y9ResourceBase;
  */
 public interface Y9PositionToResourceAndAuthorityManager {
     void deleteByAuthorizationId(String authorizationId);
+
+    void deleteByPositionIdAndAuthorizationIdNotIn(String positionId, List<String> authorizationIdList);
+
+    void deleteByPositionIdAndResourceId(String positionId, String resourceId);
 
     void saveOrUpdate(Y9ResourceBase y9ResourceBase, Y9Position y9Position, Y9Authorization y9Authorization,
         Boolean inherit);

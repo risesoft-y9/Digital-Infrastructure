@@ -611,6 +611,11 @@ public class Y9PersonServiceImpl implements Y9PersonService {
     }
 
     @Override
+    public List<String> findIdByGuidPathStartingWith(String guidPath) {
+        return y9PersonRepository.findIdByGuidPathStartingWith(guidPath);
+    }
+
+    @Override
     @Transactional(readOnly = true)
     public Y9Person getById(String id) {
         return y9PersonManager.getById(id);

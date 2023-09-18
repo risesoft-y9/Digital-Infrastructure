@@ -107,8 +107,13 @@ public class Y9PersonsToPositionsServiceImpl implements Y9PersonsToPositionsServ
     }
 
     @Override
+    public List<Y9PersonsToPositions> findByPositionId(String positionId) {
+        return y9PersonsToPositionsRepository.findByPositionId(positionId);
+    }
+
+    @Override
     public List<Y9PersonsToPositions> listByPersonId(String personId) {
-        return y9PersonsToPositionsRepository.getByPersonId(personId);
+        return y9PersonsToPositionsRepository.findByPersonId(personId);
     }
 
     @Override
