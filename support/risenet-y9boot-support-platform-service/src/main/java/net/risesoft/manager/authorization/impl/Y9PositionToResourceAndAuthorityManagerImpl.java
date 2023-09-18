@@ -1,5 +1,6 @@
 package net.risesoft.manager.authorization.impl;
 
+import java.util.List;
 import java.util.Optional;
 
 import org.springframework.stereotype.Service;
@@ -38,6 +39,19 @@ public class Y9PositionToResourceAndAuthorityManagerImpl implements Y9PositionTo
     @Override
     public void deleteByAuthorizationId(String authorizationId) {
         y9PositionToResourceAndAuthorityRepository.deleteByAuthorizationId(authorizationId);
+    }
+
+    @Transactional(readOnly = false)
+    @Override
+    public void deleteByPositionIdAndAuthorizationIdNotIn(String positionId, List<String> authorizationIdList) {
+        y9PositionToResourceAndAuthorityRepository.deleteByPositionIdAndAuthorizationIdNotIn(positionId,
+            authorizationIdList);
+    }
+
+    @Transactional(readOnly = false)
+    @Override
+    public void deleteByPositionIdAndResourceId(String positionId, String resourceId) {
+        y9PositionToResourceAndAuthorityRepository.deleteByPositionIdAndResourceId(positionId, resourceId);
     }
 
     @Transactional(readOnly = false)

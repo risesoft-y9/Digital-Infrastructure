@@ -68,6 +68,14 @@ public interface Y9PositionService {
     List<Y9Position> findByJobId(String jobId);
 
     /**
+     * 查找 guidPath 包含传入参数的对应岗的 id
+     *
+     * @param guidPath guid path
+     * @return {@link List}<{@link String}>
+     */
+    List<String> findIdByGuidPathStartingWith(String guidPath);
+
+    /**
      * 根据主键id获取岗位实例
      *
      * @param id 唯一标识

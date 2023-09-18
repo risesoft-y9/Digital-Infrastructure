@@ -174,6 +174,14 @@ public interface Y9PersonService {
     Optional<Y9Person> findById(String id);
 
     /**
+     * 查找 guidPath 包含传入参数的对应人的 id
+     *
+     * @param guidPath guid path
+     * @return {@link List}<{@link String}>
+     */
+    List<String> findIdByGuidPathStartingWith(String guidPath);
+
+    /**
      * 根据主键id获取人员实例
      *
      * @param id 唯一标识

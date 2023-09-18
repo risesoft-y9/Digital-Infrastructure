@@ -30,7 +30,7 @@ public interface Y9RoleManager {
     List<Y9Role> listByAppIdAndParentId(String appId, String parentId);
 
     /**
-     * 从给定节点开始，向上递归，返回递归链上所有的节点id(如果是人员，会包括所在组，岗位id)
+     * 从给定节点开始，向上递归，返回递归链上所有的节点id（已去重）(如果是人员，会包括所在组，岗位id)
      *
      * @param orgUnitId
      * @return

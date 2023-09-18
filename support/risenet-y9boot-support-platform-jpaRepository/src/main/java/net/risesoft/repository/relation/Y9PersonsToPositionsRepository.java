@@ -48,7 +48,4 @@ public interface Y9PersonsToPositionsRepository extends JpaRepository<Y9PersonsT
 
     @Query("select t.positionId from Y9PersonsToPositions t where t.personId = ?1 order by t.positionOrder")
     List<String> listPositionIdsByPersonId(String personId);
-
-    @Query("from Y9PersonsToPositions persontoposition where persontoposition.personId=?1")
-    List<Y9PersonsToPositions> getByPersonId(String personId);
 }

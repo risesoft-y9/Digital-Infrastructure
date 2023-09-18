@@ -28,6 +28,7 @@ import net.risesoft.id.Y9IdGenerator;
 import net.risesoft.manager.authorization.Y9PersonToResourceAndAuthorityManager;
 import net.risesoft.manager.authorization.Y9PositionToResourceAndAuthorityManager;
 import net.risesoft.manager.org.CompositeOrgBaseManager;
+import net.risesoft.manager.org.Y9PersonManager;
 import net.risesoft.pojo.Y9PageQuery;
 import net.risesoft.repository.permission.Y9AuthorizationRepository;
 import net.risesoft.repository.relation.Y9OrgBasesToRolesRepository;
@@ -36,6 +37,7 @@ import net.risesoft.y9.Y9Context;
 import net.risesoft.y9.Y9LoginUserHolder;
 import net.risesoft.y9.exception.util.Y9ExceptionUtil;
 import net.risesoft.y9.pubsub.event.Y9EntityCreatedEvent;
+import net.risesoft.y9.pubsub.event.Y9EntityDeletedEvent;
 import net.risesoft.y9.util.Y9BeanUtil;
 import net.risesoft.y9public.entity.resource.Y9ResourceBase;
 import net.risesoft.y9public.entity.role.Y9Role;
@@ -58,6 +60,7 @@ public class Y9AuthorizationServiceImpl implements Y9AuthorizationService {
 
     private final CompositeOrgBaseManager compositeOrgBaseManager;
     private final CompositeResourceService compositeResourceService;
+    private final Y9PersonManager y9PersonManager;
     private final Y9RoleManager y9RoleManager;
     private final Y9PersonToResourceAndAuthorityManager y9PersonToResourceAndAuthorityManager;
     private final Y9PositionToResourceAndAuthorityManager y9PositionToResourceAndAuthorityManager;
@@ -90,19 +93,12 @@ public class Y9AuthorizationServiceImpl implements Y9AuthorizationService {
     @Transactional(readOnly = false)
     public void delete(String id) {
         Y9Authorization y9Authorization = this.getById(id);
+        Y9Context.publishEvent(new Y9EntityDeletedEvent<>(y9Authorization));
+
         y9AuthorizationRepository.delete(y9Authorization);
 
         y9PersonToResourceAndAuthorityManager.deleteByAuthorizationId(id);
         y9PositionToResourceAndAuthorityManager.deleteByAuthorizationId(id);
-    }
-
-    @Override
-    @Transactional(readOnly = false)
-    public void delete(String principalId, String[] resourceIds) {
-        for (String resourceId : resourceIds) {
-            List<Y9Authorization> permissionList = getAuthorization(principalId, resourceId);
-            y9AuthorizationRepository.deleteAll(permissionList);
-        }
     }
 
     @Override
@@ -116,56 +112,8 @@ public class Y9AuthorizationServiceImpl implements Y9AuthorizationService {
     }
 
     @Override
-    @Transactional(readOnly = false)
-    public void delete(Y9Authorization acRolePermission) {
-        y9AuthorizationRepository.delete(acRolePermission);
-    }
-
-    @Override
-    @Transactional(readOnly = false)
-    public void deleteByResourceId(String resourceId) {
-        y9AuthorizationRepository.deleteByResourceId(resourceId);
-    }
-
-    private List<Y9Authorization> filter(List<Y9Authorization> resourceRelatedY9AuthorizationList,
-        AuthorizationPrincipalTypeEnum authorizationPrincipalTypeFilter) {
-        return resourceRelatedY9AuthorizationList.stream()
-            .filter(
-                authorization -> authorizationPrincipalTypeFilter.getValue().equals(authorization.getPrincipalType()))
-            .collect(Collectors.toList());
-    }
-
-    @Override
     public Optional<Y9Authorization> findById(String id) {
         return y9AuthorizationRepository.findById(id);
-    }
-
-    private List<Y9Authorization> getAuthorization(String principalId, String resourceId) {
-        return y9AuthorizationRepository.findByPrincipalIdAndResourceIdAndAuthorityIsNot(principalId, resourceId,
-            AuthorityEnum.HIDDEN.getValue(), Sort.by(Sort.Direction.ASC, "createTime"));
-    }
-
-    private Y9Authorization getById(String id) {
-        return y9AuthorizationRepository.findById(id).orElseThrow(
-            () -> Y9ExceptionUtil.notFoundException(AuthorizationErrorCodeEnum.AUTHORIZATION_NOT_FOUND, id));
-    }
-
-    /**
-     * 拿到人员或岗位所有关联的组织和角色id
-     *
-     * @param identityId
-     * @return
-     */
-    private List<String> getIdentityRelatedPrincipalId(String identityId) {
-        List<String> principalIdList = new ArrayList<>();
-
-        List<Y9Role> y9RoleList = y9RoleManager.listOrgUnitRelatedWithoutNegative(identityId);
-        principalIdList.addAll(y9RoleList.stream().map(Y9Role::getId).collect(Collectors.toList()));
-
-        List<String> orgUnitIdList = y9RoleManager.listOrgUnitIdRecursively(identityId);
-        principalIdList.addAll(orgUnitIdList);
-
-        return principalIdList.stream().distinct().collect(Collectors.toList());
     }
 
     @Override
@@ -198,13 +146,6 @@ public class Y9AuthorizationServiceImpl implements Y9AuthorizationService {
     @Override
     public List<Y9Authorization> listByResourceId(String resourceId) {
         return y9AuthorizationRepository.findByResourceId(resourceId);
-    }
-
-    private void listByResourceIdRelated(List<Y9Authorization> authorizationList, String resourceId) {
-        if (StringUtils.isNotBlank(resourceId)) {
-            authorizationList.addAll(y9AuthorizationRepository.findByResourceId(resourceId));
-            listByResourceIdRelated(authorizationList, compositeResourceService.findById(resourceId).getParentId());
-        }
     }
 
     @Override
@@ -348,6 +289,139 @@ public class Y9AuthorizationServiceImpl implements Y9AuthorizationService {
         return this.saveOrUpdate(y9Authorization);
     }
 
+    @Override
+    @Transactional(readOnly = false)
+    public void syncToIdentityResourceAndAuthority(String orgUnitId) {
+        Y9OrgBase y9OrgBase = compositeOrgBaseManager.getOrgUnit(orgUnitId);
+        if (OrgTypeEnum.PERSON.getEnName().equals(y9OrgBase.getOrgType())) {
+            this.syncToIdentityResourceAndAuthority((Y9Person)y9OrgBase);
+            return;
+        }
+
+        if (OrgTypeEnum.POSITION.getEnName().equals(y9OrgBase.getOrgType())) {
+            this.syncToIdentityResourceAndAuthority((Y9Position)y9OrgBase);
+            // 人员权限包含包含岗位的权限，所以岗位关联的人员也需要计算
+            List<Y9Person> y9PersonList = y9PersonManager.listByPositionId(y9OrgBase.getId());
+            for (Y9Person y9Person : y9PersonList) {
+                this.syncToIdentityResourceAndAuthority(y9Person);
+            }
+            return;
+        }
+
+        List<Y9Person> personList = compositeOrgBaseManager.listAllPersonsRecursionDownward(orgUnitId);
+        for (Y9Person person : personList) {
+            this.syncToIdentityResourceAndAuthority(person);
+        }
+        List<Y9Position> positionList = compositeOrgBaseManager.listAllPositionsRecursionDownward(orgUnitId);
+        for (Y9Position position : positionList) {
+            this.syncToIdentityResourceAndAuthority(position);
+        }
+    }
+
+    @Override
+    @Transactional(readOnly = false)
+    public void syncToIdentityResourceAndAuthority(Y9Person person) {
+        List<String> principalIdList = getIdentityRelatedPrincipalId(person.getId());
+        List<Y9Authorization> principalRelatedY9AuthorizationList =
+            y9AuthorizationRepository.getByPrincipalIdIn(principalIdList);
+
+        // 清除已去掉的权限
+        List<String> authorizationIdList =
+            principalRelatedY9AuthorizationList.stream().map(Y9Authorization::getId).collect(Collectors.toList());
+        y9PersonToResourceAndAuthorityManager.deleteByPersonIdAndAuthorizationIdNotIn(person.getId(),
+            authorizationIdList);
+
+        Map<String, List<Y9Authorization>> resourceIdAuthorizationListMap =
+            principalRelatedY9AuthorizationList.stream().collect(Collectors.groupingBy(Y9Authorization::getResourceId));
+        for (String resourceId : resourceIdAuthorizationListMap.keySet()) {
+            Y9ResourceBase y9ResourceBase = compositeResourceService.findById(resourceId);
+            this.syncToIdentityResourceAndAuthority(resourceIdAuthorizationListMap, new ArrayList<>(), y9ResourceBase,
+                person, new Y9Authorization());
+        }
+    }
+
+    @Override
+    @Transactional(readOnly = false)
+    public void syncToIdentityResourceAndAuthority(Y9Position position) {
+        List<String> principalIdList = getIdentityRelatedPrincipalId(position.getId());
+        List<Y9Authorization> principalRelatedY9AuthorizationList =
+            y9AuthorizationRepository.getByPrincipalIdIn(principalIdList);
+
+        // 清除已去掉的权限
+        List<String> authorizationIdList =
+            principalRelatedY9AuthorizationList.stream().map(Y9Authorization::getId).collect(Collectors.toList());
+        y9PositionToResourceAndAuthorityManager.deleteByPositionIdAndAuthorizationIdNotIn(position.getId(),
+            authorizationIdList);
+
+        Map<String, List<Y9Authorization>> resourceIdAuthorizationListMap =
+            principalRelatedY9AuthorizationList.stream().collect(Collectors.groupingBy(Y9Authorization::getResourceId));
+        for (String resourceId : resourceIdAuthorizationListMap.keySet()) {
+            Y9ResourceBase y9ResourceBase = compositeResourceService.findById(resourceId);
+            this.syncToIdentityResourceAndAuthority(resourceIdAuthorizationListMap, new ArrayList<>(), y9ResourceBase,
+                position, new Y9Authorization());
+        }
+    }
+
+    @Override
+    @Transactional(readOnly = false)
+    public void syncToIdentityResourceAndAuthorityByResourceId(String resourceId) {
+        List<Y9Authorization> authorizationList = listByResourceIdRelated(resourceId);
+        for (Y9Authorization y9Authorization : authorizationList) {
+            if (AuthorizationPrincipalTypeEnum.ROLE.getValue().equals(y9Authorization.getPrincipalType())) {
+                List<String> orgUnitIdList =
+                    y9OrgBasesToRolesRepository.listOrgIdsByRoleId(y9Authorization.getPrincipalId());
+                for (String orgUnitId : orgUnitIdList) {
+                    this.syncToIdentityResourceAndAuthority(orgUnitId);
+                }
+            } else {
+                this.syncToIdentityResourceAndAuthority(y9Authorization.getPrincipalId());
+            }
+        }
+    }
+
+    private List<Y9Authorization> filter(List<Y9Authorization> resourceRelatedY9AuthorizationList,
+        AuthorizationPrincipalTypeEnum authorizationPrincipalTypeFilter) {
+        return resourceRelatedY9AuthorizationList.stream()
+            .filter(
+                authorization -> authorizationPrincipalTypeFilter.getValue().equals(authorization.getPrincipalType()))
+            .collect(Collectors.toList());
+    }
+
+    private List<Y9Authorization> getAuthorization(String principalId, String resourceId) {
+        return y9AuthorizationRepository.findByPrincipalIdAndResourceIdAndAuthorityIsNot(principalId, resourceId,
+            AuthorityEnum.HIDDEN.getValue(), Sort.by(Sort.Direction.ASC, "createTime"));
+    }
+
+    private Y9Authorization getById(String id) {
+        return y9AuthorizationRepository.findById(id).orElseThrow(
+            () -> Y9ExceptionUtil.notFoundException(AuthorizationErrorCodeEnum.AUTHORIZATION_NOT_FOUND, id));
+    }
+
+    /**
+     * 拿到人员或岗位所有关联的组织和角色id
+     *
+     * @param identityId
+     * @return
+     */
+    private List<String> getIdentityRelatedPrincipalId(String identityId) {
+        List<String> principalIdList = new ArrayList<>();
+
+        List<Y9Role> y9RoleList = y9RoleManager.listOrgUnitRelatedWithoutNegative(identityId);
+        principalIdList.addAll(y9RoleList.stream().map(Y9Role::getId).collect(Collectors.toList()));
+
+        List<String> orgUnitIdList = y9RoleManager.listOrgUnitIdRecursively(identityId);
+        principalIdList.addAll(orgUnitIdList);
+
+        return principalIdList.stream().distinct().collect(Collectors.toList());
+    }
+
+    private void listByResourceIdRelated(List<Y9Authorization> authorizationList, String resourceId) {
+        if (StringUtils.isNotBlank(resourceId)) {
+            authorizationList.addAll(y9AuthorizationRepository.findByResourceId(resourceId));
+            listByResourceIdRelated(authorizationList, compositeResourceService.findById(resourceId).getParentId());
+        }
+    }
+
     @Transactional(readOnly = false)
     public void syncToIdentityResourceAndAuthority(Map<String, List<Y9Authorization>> resourceIdAuthorizationListMap,
         final List<String> solvedResourceIdList, Y9ResourceBase y9ResourceBase, Y9Person person,
@@ -361,18 +435,18 @@ public class Y9AuthorizationServiceImpl implements Y9AuthorizationService {
             if (resourceRelatedY9AuthorizationList != null && !resourceRelatedY9AuthorizationList.isEmpty()) {
                 // 存在对资源的直接授权 不继承权限
 
-                List<Y9Authorization> y9AuthorizationList = resourceRelatedY9AuthorizationList;
-
-                if (anyPrincipleType(resourceRelatedY9AuthorizationList, AuthorizationPrincipalTypeEnum.PERSON)) {
-                    // 对人直接授权 优先计算
-                    y9AuthorizationList =
-                        filter(resourceRelatedY9AuthorizationList, AuthorizationPrincipalTypeEnum.PERSON);
-                }
-                if (anyHidden(y9AuthorizationList)) {
+                if (anyHidden(resourceRelatedY9AuthorizationList)) {
+                    // 隐藏权限类型优先级最高
+                    y9PersonToResourceAndAuthorityManager.deleteByPersonIdAndResourceId(person.getId(), resourceId);
                     return;
                 }
+                // if (anyPrincipleType(resourceRelatedY9AuthorizationList, AuthorizationPrincipalTypeEnum.PERSON)) {
+                // // 对人直接授权 优先计算
+                // y9AuthorizationList =
+                // filter(resourceRelatedY9AuthorizationList, AuthorizationPrincipalTypeEnum.PERSON);
+                // }
 
-                for (Y9Authorization y9Authorization : y9AuthorizationList) {
+                for (Y9Authorization y9Authorization : resourceRelatedY9AuthorizationList) {
                     y9PersonToResourceAndAuthorityManager.saveOrUpdate(y9ResourceBase, person, y9Authorization,
                         Boolean.FALSE);
 
@@ -380,7 +454,7 @@ public class Y9AuthorizationServiceImpl implements Y9AuthorizationService {
                     List<Y9ResourceBase> subResourceList =
                         compositeResourceService.listChildrenById(y9ResourceBase.getId());
                     for (Y9ResourceBase resource : subResourceList) {
-                        syncToIdentityResourceAndAuthority(resourceIdAuthorizationListMap, solvedResourceIdList,
+                        this.syncToIdentityResourceAndAuthority(resourceIdAuthorizationListMap, solvedResourceIdList,
                             resource, person, y9Authorization);
                     }
                 }
@@ -395,8 +469,8 @@ public class Y9AuthorizationServiceImpl implements Y9AuthorizationService {
                 List<Y9ResourceBase> subResourceList =
                     compositeResourceService.listChildrenById(y9ResourceBase.getId());
                 for (Y9ResourceBase resource : subResourceList) {
-                    syncToIdentityResourceAndAuthority(resourceIdAuthorizationListMap, solvedResourceIdList, resource,
-                        person, inheritY9Authorization);
+                    this.syncToIdentityResourceAndAuthority(resourceIdAuthorizationListMap, solvedResourceIdList,
+                        resource, person, inheritY9Authorization);
                 }
             }
         }
@@ -417,26 +491,27 @@ public class Y9AuthorizationServiceImpl implements Y9AuthorizationService {
             if (resourceRelatedY9AuthorizationList != null && !resourceRelatedY9AuthorizationList.isEmpty()) {
                 // 存在对资源的直接授权 不继承权限
 
-                List<Y9Authorization> y9AuthorizationList = resourceRelatedY9AuthorizationList;
-
-                if (anyPrincipleType(resourceRelatedY9AuthorizationList, AuthorizationPrincipalTypeEnum.POSITION)) {
-                    // 对岗直接授权 优先计算
-                    y9AuthorizationList =
-                        filter(resourceRelatedY9AuthorizationList, AuthorizationPrincipalTypeEnum.POSITION);
-                }
-
-                if (anyHidden(y9AuthorizationList)) {
+                if (anyHidden(resourceRelatedY9AuthorizationList)) {
+                    // 隐藏权限类型优先级最高
+                    y9PositionToResourceAndAuthorityManager.deleteByPositionIdAndResourceId(position.getId(),
+                        resourceId);
                     return;
                 }
 
-                for (Y9Authorization y9Authorization : y9AuthorizationList) {
+                // if (anyPrincipleType(resourceRelatedY9AuthorizationList, AuthorizationPrincipalTypeEnum.POSITION)) {
+                // // 对岗直接授权 优先计算
+                // y9AuthorizationList =
+                // filter(resourceRelatedY9AuthorizationList, AuthorizationPrincipalTypeEnum.POSITION);
+                // }
+
+                for (Y9Authorization y9Authorization : resourceRelatedY9AuthorizationList) {
                     y9PositionToResourceAndAuthorityManager.saveOrUpdate(y9ResourceBase, position, y9Authorization,
                         Boolean.FALSE);
                     // 递归处理子资源
                     List<Y9ResourceBase> subResourceList =
                         compositeResourceService.listChildrenById(y9ResourceBase.getId());
                     for (Y9ResourceBase resource : subResourceList) {
-                        syncToIdentityResourceAndAuthority(resourceIdAuthorizationListMap, solvedResourceIdList,
+                        this.syncToIdentityResourceAndAuthority(resourceIdAuthorizationListMap, solvedResourceIdList,
                             resource, position, y9Authorization);
                     }
                 }
@@ -452,80 +527,9 @@ public class Y9AuthorizationServiceImpl implements Y9AuthorizationService {
                 List<Y9ResourceBase> subResourceList =
                     compositeResourceService.listChildrenById(y9ResourceBase.getId());
                 for (Y9ResourceBase resource : subResourceList) {
-                    syncToIdentityResourceAndAuthority(resourceIdAuthorizationListMap, solvedResourceIdList, resource,
-                        position, inheritY9Authorization);
+                    this.syncToIdentityResourceAndAuthority(resourceIdAuthorizationListMap, solvedResourceIdList,
+                        resource, position, inheritY9Authorization);
                 }
-            }
-        }
-    }
-
-    @Override
-    @Transactional(readOnly = false)
-    public void syncToIdentityResourceAndAuthority(String orgUnitId) {
-        Y9OrgBase y9OrgBase = compositeOrgBaseManager.getOrgUnit(orgUnitId);
-        if (OrgTypeEnum.PERSON.getEnName().equals(y9OrgBase.getOrgType())) {
-            syncToIdentityResourceAndAuthority((Y9Person)y9OrgBase);
-            return;
-        }
-
-        if (OrgTypeEnum.POSITION.getEnName().equals(y9OrgBase.getOrgType())) {
-            syncToIdentityResourceAndAuthority((Y9Position)y9OrgBase);
-            return;
-        }
-
-        List<Y9Person> personList = compositeOrgBaseManager.listAllPersonsRecursionDownward(orgUnitId);
-        for (Y9Person person : personList) {
-            syncToIdentityResourceAndAuthority(person);
-        }
-        List<Y9Position> positionList = compositeOrgBaseManager.listAllPositionsRecursionDownward(orgUnitId);
-        for (Y9Position position : positionList) {
-            syncToIdentityResourceAndAuthority(position);
-        }
-    }
-
-    @Override
-    @Transactional(readOnly = false)
-    public void syncToIdentityResourceAndAuthority(Y9Person person) {
-        List<String> principalIdList = getIdentityRelatedPrincipalId(person.getId());
-        List<Y9Authorization> principalRelatedY9AuthorizationList =
-            y9AuthorizationRepository.getByPrincipalIdIn(principalIdList);
-        Map<String, List<Y9Authorization>> resourceIdAuthorizationListMap =
-            principalRelatedY9AuthorizationList.stream().collect(Collectors.groupingBy(Y9Authorization::getResourceId));
-        for (String resourceId : resourceIdAuthorizationListMap.keySet()) {
-            Y9ResourceBase y9ResourceBase = compositeResourceService.findById(resourceId);
-            syncToIdentityResourceAndAuthority(resourceIdAuthorizationListMap, new ArrayList<>(), y9ResourceBase,
-                person, new Y9Authorization());
-        }
-    }
-
-    @Override
-    @Transactional(readOnly = false)
-    public void syncToIdentityResourceAndAuthority(Y9Position position) {
-        List<String> principalIdList = getIdentityRelatedPrincipalId(position.getId());
-        List<Y9Authorization> principalRelatedY9AuthorizationList =
-            y9AuthorizationRepository.getByPrincipalIdIn(principalIdList);
-        Map<String, List<Y9Authorization>> resourceIdAuthorizationListMap =
-            principalRelatedY9AuthorizationList.stream().collect(Collectors.groupingBy(Y9Authorization::getResourceId));
-        for (String resourceId : resourceIdAuthorizationListMap.keySet()) {
-            Y9ResourceBase y9ResourceBase = compositeResourceService.findById(resourceId);
-            syncToIdentityResourceAndAuthority(resourceIdAuthorizationListMap, new ArrayList<>(), y9ResourceBase,
-                position, new Y9Authorization());
-        }
-    }
-
-    @Override
-    @Transactional(readOnly = false)
-    public void syncToIdentityResourceAndAuthorityByResourceId(String resourceId) {
-        List<Y9Authorization> authorizationList = listByResourceIdRelated(resourceId);
-        for (Y9Authorization y9Authorization : authorizationList) {
-            if (AuthorizationPrincipalTypeEnum.ROLE.getValue().equals(y9Authorization.getPrincipalType())) {
-                List<String> orgUnitIdList =
-                    y9OrgBasesToRolesRepository.listOrgIdsByRoleId(y9Authorization.getPrincipalId());
-                for (String orgUnitId : orgUnitIdList) {
-                    syncToIdentityResourceAndAuthority(orgUnitId);
-                }
-            } else {
-                syncToIdentityResourceAndAuthority(y9Authorization.getPrincipalId());
             }
         }
     }

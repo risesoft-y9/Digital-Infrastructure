@@ -23,6 +23,7 @@ import net.risesoft.id.IdType;
 import net.risesoft.id.Y9IdGenerator;
 import net.risesoft.manager.org.CompositeOrgBaseManager;
 import net.risesoft.manager.org.Y9GroupManager;
+import net.risesoft.manager.relation.Y9PersonsToGroupsManager;
 import net.risesoft.model.Group;
 import net.risesoft.repository.Y9GroupRepository;
 import net.risesoft.repository.permission.Y9AuthorizationRepository;
@@ -57,6 +58,7 @@ public class Y9GroupServiceImpl implements Y9GroupService {
 
     private final CompositeOrgBaseManager compositeOrgBaseManager;
     private final Y9GroupManager y9GroupManager;
+    private final Y9PersonsToGroupsManager y9PersonsToGroupsManager;
 
     @Override
     @Transactional(readOnly = false)
@@ -89,7 +91,7 @@ public class Y9GroupServiceImpl implements Y9GroupService {
 
         // 删除用户组关联数据
         y9OrgBasesToRolesRepository.deleteByOrgId(groupId);
-        y9PersonsToGroupsRepository.deleteByGroupId(groupId);
+        y9PersonsToGroupsManager.deleteByGroupId(groupId);
         y9AuthorizationRepository.deleteByPrincipalIdAndPrincipalType(groupId,
             AuthorizationPrincipalTypeEnum.GROUP.getValue());
 

@@ -42,6 +42,8 @@ public interface Y9PersonsToGroupsService {
      */
     void deleteByPersonId(String personId);
 
+    List<Y9PersonsToGroups> findByGroupId(String groupId);
+
     /**
      * 根据人员id查询最大的用户组排序号
      *

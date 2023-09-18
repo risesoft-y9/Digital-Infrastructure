@@ -42,6 +42,14 @@ public interface Y9PersonToResourceAndAuthorityRepository
 
     @Modifying
     @Transactional(readOnly = false)
+    void deleteByPersonIdAndAuthorizationIdNotIn(String personId, List<String> authorizationIdList);
+
+    @Modifying
+    @Transactional(readOnly = false)
+    void deleteByPersonIdAndResourceId(String personId, String resourceId);
+
+    @Modifying
+    @Transactional(readOnly = false)
     void deleteByResourceId(String resourceId);
 
     List<Y9PersonToResourceAndAuthority> findByPersonId(String personId);

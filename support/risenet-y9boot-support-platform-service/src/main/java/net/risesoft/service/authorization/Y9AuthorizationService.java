@@ -27,33 +27,11 @@ public interface Y9AuthorizationService {
     void delete(String id);
 
     /**
-     * 移除权限配置记录
-     *
-     * @param principalId 授权主体的唯一标识
-     * @param resourceIds 资源id数组
-     */
-    void delete(String principalId, String[] resourceIds);
-
-    /**
      * 根据多个权限id删除权限
      *
      * @param ids 资源id数组
      */
     void delete(String[] ids);
-
-    /**
-     * 根据authorization删除
-     *
-     * @param y9Authorization 授权配置
-     */
-    void delete(Y9Authorization y9Authorization);
-
-    /**
-     * 按资源id删除
-     *
-     * @param resourceId id
-     */
-    void deleteByResourceId(String resourceId);
 
     /**
      * 根据主键，获取权限配置对象

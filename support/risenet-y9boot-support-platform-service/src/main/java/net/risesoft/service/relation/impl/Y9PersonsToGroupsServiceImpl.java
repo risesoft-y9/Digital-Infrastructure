@@ -15,6 +15,7 @@ import net.risesoft.entity.Y9Person;
 import net.risesoft.entity.relation.Y9PersonsToGroups;
 import net.risesoft.manager.org.Y9GroupManager;
 import net.risesoft.manager.org.Y9PersonManager;
+import net.risesoft.manager.relation.Y9PersonsToGroupsManager;
 import net.risesoft.model.PersonsGroups;
 import net.risesoft.repository.relation.Y9PersonsToGroupsRepository;
 import net.risesoft.service.relation.Y9PersonsToGroupsService;
@@ -24,7 +25,6 @@ import net.risesoft.y9.Y9Context;
 import net.risesoft.y9.Y9LoginUserHolder;
 import net.risesoft.y9.pubsub.constant.Y9OrgEventConst;
 import net.risesoft.y9.pubsub.event.Y9EntityCreatedEvent;
-import net.risesoft.y9.pubsub.event.Y9EntityDeletedEvent;
 import net.risesoft.y9.pubsub.message.Y9MessageOrg;
 
 /**
@@ -40,6 +40,7 @@ public class Y9PersonsToGroupsServiceImpl implements Y9PersonsToGroupsService {
 
     private final Y9PersonManager y9PersonManager;
     private final Y9GroupManager y9GroupManager;
+    private final Y9PersonsToGroupsManager y9PersonsToGroupsManager;
 
     private final Y9PersonsToGroupsRepository y9PersonsToGroupsRepository;
 
@@ -102,6 +103,11 @@ public class Y9PersonsToGroupsServiceImpl implements Y9PersonsToGroupsService {
     @Transactional(readOnly = false)
     public void deleteByPersonId(String personId) {
         y9PersonsToGroupsRepository.deleteByPersonId(personId);
+    }
+
+    @Override
+    public List<Y9PersonsToGroups> findByGroupId(String groupId) {
+        return y9PersonsToGroupsRepository.findByGroupId(groupId);
     }
 
     @Override
@@ -186,27 +192,18 @@ public class Y9PersonsToGroupsServiceImpl implements Y9PersonsToGroupsService {
     @Transactional(readOnly = false)
     public void removeGroups(String personId, String[] groupIds) {
         for (String groupId : groupIds) {
-            removeY9PersonsToGroups(personId, groupId);
+            remove(personId, groupId);
         }
     }
 
     @Transactional(readOnly = false)
-    public void removeY9PersonsToGroups(String personId, String groupId) {
+    public void remove(String personId, String groupId) {
         Optional<Y9PersonsToGroups> optionalY9PersonsToGroups =
             y9PersonsToGroupsRepository.findByGroupIdAndPersonId(groupId, personId);
         if (optionalY9PersonsToGroups.isPresent()) {
             Y9PersonsToGroups y9PersonsToGroups = optionalY9PersonsToGroups.get();
 
-            Y9Context.publishEvent(new Y9EntityDeletedEvent<>(y9PersonsToGroups));
-
-            Y9Person person = y9PersonManager.getById(personId);
-            Y9Group group = y9GroupManager.getById(y9PersonsToGroups.getGroupId());
-            Y9MessageOrg msg = new Y9MessageOrg(ModelConvertUtil.convert(y9PersonsToGroups, PersonsGroups.class),
-                Y9OrgEventConst.RISEORGEVENT_TYPE_GROUP_REMOVEPERSON, Y9LoginUserHolder.getTenantId());
-            Y9PublishServiceUtil.persistAndPublishMessageOrg(msg, "移除用户组人员",
-                group.getName() + "移除用户组成员" + person.getName());
-
-            y9PersonsToGroupsRepository.deleteByGroupIdAndPersonId(groupId, personId);
+            y9PersonsToGroupsManager.delete(y9PersonsToGroups);
         }
     }
 
@@ -214,7 +211,7 @@ public class Y9PersonsToGroupsServiceImpl implements Y9PersonsToGroupsService {
     @Transactional(readOnly = false)
     public void removePersons(String groupId, String[] personIds) {
         for (String personId : personIds) {
-            removeY9PersonsToGroups(personId, groupId);
+            remove(personId, groupId);
         }
     }
 }

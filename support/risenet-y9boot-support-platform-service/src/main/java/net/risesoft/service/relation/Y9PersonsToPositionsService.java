@@ -13,7 +13,7 @@ import net.risesoft.entity.relation.Y9PersonsToPositions;
 public interface Y9PersonsToPositionsService {
 
     /**
-     * add persons to the position 为岗位添加人员
+     * 为岗位添加人员
      *
      * @param positionId
      * @param personIds
@@ -59,6 +59,14 @@ public interface Y9PersonsToPositionsService {
      * @param positionIds
      */
     void deletePositions(String personId, String[] positionIds);
+
+    /**
+     * 根据岗位id查找 人员和岗位的关联关系
+     *
+     * @param positionId 岗位id
+     * @return {@link List}<{@link Y9PersonsToPositions}>
+     */
+    List<Y9PersonsToPositions> findByPositionId(String positionId);
 
     List<Y9PersonsToPositions> listByPersonId(String personId);
 
