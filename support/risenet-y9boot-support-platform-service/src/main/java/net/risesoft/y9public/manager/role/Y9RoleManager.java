@@ -1,7 +1,9 @@
 package net.risesoft.y9public.manager.role;
 
 import java.util.List;
+import java.util.Optional;
 
+import net.risesoft.y9.exception.Y9NotFoundException;
 import net.risesoft.y9public.entity.role.Y9Role;
 
 /**
@@ -17,13 +19,14 @@ public interface Y9RoleManager {
 
     void deleteByApp(String appId);
 
-    Y9Role findById(String id);
+    Optional<Y9Role> findById(String id);
 
     /**
      * 根据主键获取角色节点对象
      *
      * @param id 唯一标识
-     * @return 角色对象 或 null
+     * @return 角色对象
+     * @throws Y9NotFoundException id 对应的记录不存在的情况
      */
     Y9Role getById(String id);
 

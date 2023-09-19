@@ -3,6 +3,7 @@ package net.risesoft.y9public.service.role;
 import java.util.List;
 import java.util.Optional;
 
+import net.risesoft.y9.exception.Y9NotFoundException;
 import net.risesoft.y9public.entity.role.Y9Role;
 
 /**
@@ -43,7 +44,7 @@ public interface Y9RoleService {
      * @param id 唯一标识
      * @return 角色对象 或 null
      */
-    Y9Role findById(String id);
+    Optional<Y9Role> findById(String id);
 
     /**
      * 根据给定节点id，查找顶级节点
@@ -52,6 +53,15 @@ public interface Y9RoleService {
      * @return {@link Y9Role}
      */
     Y9Role findTopByRoleId(String id);
+
+    /**
+     * 根据id获取角色
+     *
+     * @param roleId role id
+     * @return {@link Y9Role}
+     * @throws Y9NotFoundException id 对应的记录不存在的情况
+     */
+    Y9Role getById(String roleId);
 
     /**
      * 获取子节点的最大TableIndex

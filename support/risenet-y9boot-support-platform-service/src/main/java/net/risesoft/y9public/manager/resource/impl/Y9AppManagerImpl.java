@@ -1,6 +1,7 @@
 package net.risesoft.y9public.manager.resource.impl;
 
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.cache.annotation.CacheEvict;
@@ -71,8 +72,8 @@ public class Y9AppManagerImpl implements Y9AppManager {
 
     @Override
     @Cacheable(key = "#id", condition = "#id!=null", unless = "#result==null")
-    public Y9App findById(String id) {
-        return y9AppRepository.findById(id).orElse(null);
+    public Optional<Y9App> findById(String id) {
+        return y9AppRepository.findById(id);
     }
 
     @Override

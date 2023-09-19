@@ -1,6 +1,7 @@
 package net.risesoft.y9public.service.resource;
 
 import java.util.List;
+import java.util.Optional;
 
 import net.risesoft.y9.exception.Y9NotFoundException;
 import net.risesoft.y9public.entity.resource.Y9ResourceBase;
@@ -73,7 +74,7 @@ public interface ResourceCommonService<T extends Y9ResourceBase> {
      * @param id
      * @return 资源对象
      */
-    T findById(String id);
+    Optional<T> findById(String id);
 
     /**
      * 根据资源名称查找资源列表

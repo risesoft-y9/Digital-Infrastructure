@@ -16,8 +16,10 @@ import org.springframework.web.multipart.MultipartFile;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
+import net.risesoft.exception.ResourceErrorCodeEnum;
 import net.risesoft.id.IdType;
 import net.risesoft.id.Y9IdGenerator;
+import net.risesoft.y9.exception.util.Y9ExceptionUtil;
 import net.risesoft.y9public.entity.Y9FileStore;
 import net.risesoft.y9public.entity.resource.Y9AppIcon;
 import net.risesoft.y9public.repository.resource.Y9AppIconRepository;
@@ -38,10 +40,7 @@ public class Y9AppIconServiceImpl implements Y9AppIconService {
     @Override
     @Transactional(readOnly = false)
     public void delete(String id) {
-        Y9AppIcon appIcon = this.findById(id);
-        if (appIcon != null) {
-            appIconRepository.deleteById(id);
-        }
+        appIconRepository.deleteById(id);
     }
 
     @Override
@@ -51,13 +50,19 @@ public class Y9AppIconServiceImpl implements Y9AppIconService {
     }
 
     @Override
-    public Y9AppIcon findById(String id) {
-        return appIconRepository.findById(id).orElse(null);
+    public Optional<Y9AppIcon> findById(String id) {
+        return appIconRepository.findById(id);
     }
 
     @Override
     public Optional<Y9AppIcon> findByName(String name) {
         return appIconRepository.findByName(name);
+    }
+
+    @Override
+    public Y9AppIcon getById(String id) {
+        return appIconRepository.findById(id)
+            .orElseThrow(() -> Y9ExceptionUtil.notFoundException(ResourceErrorCodeEnum.APP_ICON_NOT_FOUND, id));
     }
 
     @Override

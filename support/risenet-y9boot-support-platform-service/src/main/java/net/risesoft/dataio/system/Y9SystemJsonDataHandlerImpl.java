@@ -42,7 +42,7 @@ public class Y9SystemJsonDataHandlerImpl implements Y9SystemDataHandler {
     private final Y9RoleService y9RoleService;
 
     private Y9AppExportModel buildApp(String appId) {
-        Y9App y9App = y9AppService.findById(appId);
+        Y9App y9App = y9AppService.getById(appId);
         Y9AppExportModel y9AppExportModel = Y9ModelConvertUtil.convert(y9App, Y9AppExportModel.class);
         y9AppExportModel.setSubMenuList(buildMenuList(y9AppExportModel.getId()));
         y9AppExportModel.setSubOperationList(buildOperationList(y9AppExportModel.getId()));

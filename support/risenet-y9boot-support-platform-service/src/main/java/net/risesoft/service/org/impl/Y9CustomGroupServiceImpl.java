@@ -17,6 +17,7 @@ import net.risesoft.entity.Y9Person;
 import net.risesoft.exception.OrgUnitErrorCodeEnum;
 import net.risesoft.id.IdType;
 import net.risesoft.id.Y9IdGenerator;
+import net.risesoft.manager.org.Y9PersonManager;
 import net.risesoft.manager.relation.Y9CustomGroupMembersManager;
 import net.risesoft.repository.Y9CustomGroupRepository;
 import net.risesoft.repository.Y9PersonRepository;
@@ -41,6 +42,7 @@ public class Y9CustomGroupServiceImpl implements Y9CustomGroupService {
     private final Y9PersonRepository y9PersonRepository;
 
     private final Y9CustomGroupMembersManager y9CustomGroupMembersManager;
+    private final Y9PersonManager y9PersonManager;
 
     @Override
     @Transactional(readOnly = false)
@@ -109,8 +111,9 @@ public class Y9CustomGroupServiceImpl implements Y9CustomGroupService {
             group.setId(guid);
             group.setTenantId(tenantId);
             group.setGroupName(groupName);
-            Y9Person person = y9PersonRepository.findById(personId).orElse(null);
-            if (null != person) {
+            Optional<Y9Person> y9PersonOptional = y9PersonManager.findById(personId);
+            if (y9PersonOptional.isPresent()) {
+                Y9Person person = y9PersonOptional.get();
                 Integer tabIndex = customGroupRepository.getMaxTabIndex(person.getId());
                 group.setPersonName(person.getName());
                 group.setTabIndex(tabIndex == null ? 1 : tabIndex + 1);
@@ -142,7 +145,6 @@ public class Y9CustomGroupServiceImpl implements Y9CustomGroupService {
     public Y9CustomGroup share(String personId, String groupId) {
         Y9CustomGroup customGroup = this.getById(groupId);
         Integer tabIndex = customGroupRepository.getMaxTabIndex(personId);
-        Y9Person person = y9PersonRepository.findById(personId).orElse(null);
         Y9CustomGroup group = new Y9CustomGroup();
         String id = Y9IdGenerator.genId(IdType.SNOWFLAKE);
         group.setId(id);
@@ -151,7 +153,9 @@ public class Y9CustomGroupServiceImpl implements Y9CustomGroupService {
         group.setTenantId(customGroup.getTenantId());
         group.setShareId(customGroup.getPersonId());
         group.setShareName(customGroup.getPersonName());
-        if (null != person) {
+        Optional<Y9Person> y9PersonOptional = y9PersonManager.findById(personId);
+        if (y9PersonOptional.isPresent()) {
+            Y9Person person = y9PersonOptional.get();
             group.setPersonName(person.getName());
             group.setPersonId(person.getId());
         }

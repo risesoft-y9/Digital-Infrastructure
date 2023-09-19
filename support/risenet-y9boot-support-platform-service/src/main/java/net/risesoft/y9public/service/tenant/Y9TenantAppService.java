@@ -6,6 +6,7 @@ import java.util.Optional;
 
 import org.springframework.data.domain.Page;
 
+import net.risesoft.y9.exception.Y9NotFoundException;
 import net.risesoft.y9public.entity.tenant.Y9TenantApp;
 
 /**
@@ -47,7 +48,16 @@ public interface Y9TenantAppService {
      * @param id 租户应用id
      * @return 租户应用对象 或 null
      */
-    Y9TenantApp findById(String id);
+    Optional<Y9TenantApp> findById(String id);
+
+    /**
+     * 根据id，获取租户应用
+     *
+     * @param id id
+     * @return {@link Y9TenantApp}
+     * @throws Y9NotFoundException id 对应的记录不存在的情况
+     */
+    Y9TenantApp getById(String id);
 
     /**
      * 根据appId和tenantId，获取租户应用

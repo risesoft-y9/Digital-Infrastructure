@@ -49,7 +49,7 @@ public class AppApiImpl implements AppApi {
      */
     @Override
     public App findById(@RequestParam("appId") @NotBlank String appId) {
-        Y9App y9App = y9AppService.findById(appId);
+        Y9App y9App = y9AppService.findById(appId).orElse(null);
         return Y9ModelConvertUtil.convert(y9App, App.class);
     }
 

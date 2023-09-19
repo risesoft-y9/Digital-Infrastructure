@@ -140,8 +140,8 @@ public class Y9PersonToResourceAndAuthorityServiceImpl implements Y9PersonToReso
                 Optional<Y9TenantApp> y9TenantAppOptional = y9TenantAppManager
                     .getByTenantIdAndAppIdAndTenancy(Y9LoginUserHolder.getTenantId(), r.getAppId(), true);
                 if (y9TenantAppOptional.isPresent()) {
-                    Y9App y9App = y9AppManager.findById(r.getAppId());
-                    if (null != y9App && !appList.contains(y9App)) {
+                    Y9App y9App = y9AppManager.getById(r.getAppId());
+                    if (!appList.contains(y9App)) {
                         appList.add(y9App);
                     }
                 }
@@ -165,13 +165,16 @@ public class Y9PersonToResourceAndAuthorityServiceImpl implements Y9PersonToReso
             y9PersonToResourceAndAuthorityRepository.findByResourceId(resourceId);
         List<Integer> ids = list.stream().map(Y9PersonToResourceAndAuthority::getId).collect(Collectors.toList());
         for (Integer id : ids) {
-            Y9PersonToResourceAndAuthority personResourceMapping =
-                y9PersonToResourceAndAuthorityRepository.findById(id).orElse(null);
-            personResourceMapping.setResourceName(resourceName);
-            personResourceMapping.setSystemCnName(systemCnName);
-            personResourceMapping.setSystemName(systemName);
-            personResourceMapping.setResourceDescription(description);
-            y9PersonToResourceAndAuthorityRepository.save(personResourceMapping);
+            Optional<Y9PersonToResourceAndAuthority> y9PersonToResourceAndAuthorityOptional =
+                y9PersonToResourceAndAuthorityRepository.findById(id);
+            if (y9PersonToResourceAndAuthorityOptional.isPresent()) {
+                Y9PersonToResourceAndAuthority personResourceMapping = y9PersonToResourceAndAuthorityOptional.get();
+                personResourceMapping.setResourceName(resourceName);
+                personResourceMapping.setSystemCnName(systemCnName);
+                personResourceMapping.setSystemName(systemName);
+                personResourceMapping.setResourceDescription(description);
+                y9PersonToResourceAndAuthorityRepository.save(personResourceMapping);
+            }
         }
     }
 
@@ -199,10 +202,8 @@ public class Y9PersonToResourceAndAuthorityServiceImpl implements Y9PersonToReso
             .map(Y9IdentityToResourceAndAuthorityBase::getResourceId).distinct().collect(Collectors.toList());
         List<Y9Menu> y9MenuList = new ArrayList<>();
         for (String menuId : menuIdList) {
-            Y9Menu y9Menu = y9MenuManager.findById(menuId);
-            if (y9Menu != null) {
-                y9MenuList.add(y9Menu);
-            }
+            Y9Menu y9Menu = y9MenuManager.getById(menuId);
+            y9MenuList.add(y9Menu);
         }
         return y9MenuList;
     }

@@ -104,7 +104,7 @@ public class ResourceController {
     @RiseLog(operationName = "根据应用id查询资源（App资源）")
     @GetMapping(value = "/appTreeRoot/{appId}")
     public Y9Result<List<ResourceBaseVO>> getTreeRootByAppId(@PathVariable String appId) {
-        Y9App y9App = y9AppService.findById(appId);
+        Y9App y9App = y9AppService.getById(appId);
         return Y9Result.success(Y9ModelConvertUtil.convert(Arrays.asList(y9App), ResourceBaseVO.class), "根据应用id查询资源成功");
     }
 

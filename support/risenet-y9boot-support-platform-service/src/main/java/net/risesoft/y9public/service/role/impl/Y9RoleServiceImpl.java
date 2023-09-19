@@ -54,10 +54,6 @@ public class Y9RoleServiceImpl implements Y9RoleService {
     @Override
     @Transactional(readOnly = false)
     public Y9Role createRole(Y9Role y9Role) {
-        Y9Role parent = null;
-        if (y9Role.getParentId() != null && StringUtils.isNotEmpty(y9Role.getParentId())) {
-            parent = this.findById(y9Role.getParentId());
-        }
         if (StringUtils.isBlank(y9Role.getId())) {
             y9Role.setId(Y9IdGenerator.genId(IdType.SNOWFLAKE));
         }
@@ -71,7 +67,12 @@ public class Y9RoleServiceImpl implements Y9RoleService {
             Integer maxTabIndex = getMaxTabIndex();
             y9Role.setTabIndex(maxTabIndex != null ? maxTabIndex + 1 : 0);
         }
-        if (parent != null) {
+        Optional<Y9Role> parentRoleOptional = Optional.empty();
+        if (StringUtils.isNotEmpty(y9Role.getParentId())) {
+            parentRoleOptional = this.findById(y9Role.getParentId());
+        }
+        if (parentRoleOptional.isPresent()) {
+            Y9Role parent = parentRoleOptional.get();
             y9Role.setParentId(parent.getId());
             y9Role.setDn(RoleLevelConsts.CN + y9Role.getName() + RoleLevelConsts.SEPARATOR + parent.getDn());
             y9Role.setGuidPath(parent.getGuidPath() + "," + y9Role.getId());
@@ -95,18 +96,23 @@ public class Y9RoleServiceImpl implements Y9RoleService {
     }
 
     @Override
-    public Y9Role findById(String id) {
+    public Optional<Y9Role> findById(String id) {
         return y9RoleManager.findById(id);
     }
 
     @Override
     public Y9Role findTopByRoleId(String id) {
-        Y9Role role = this.findById(id);
+        Y9Role role = y9RoleManager.getById(id);
         String parentId = role.getParentId();
         if (parentId != null) {
             role = findTopByRoleId(parentId);
         }
         return role;
+    }
+
+    @Override
+    public Y9Role getById(String roleId) {
+        return y9RoleManager.getById(roleId);
     }
 
     @Override
@@ -140,10 +146,8 @@ public class Y9RoleServiceImpl implements Y9RoleService {
         List<String> roleIdList = y9OrgBasesToRolesRepository.findDistinctRoleIdByOrgId(orgUnitId);
         List<Y9Role> roleList = new ArrayList<>();
         for (String roleId : roleIdList) {
-            Y9Role role = findById(roleId);
-            if (role != null) {
-                roleList.add(role);
-            }
+            Y9Role role = y9RoleManager.getById(roleId);
+            roleList.add(role);
         }
         return roleList;
     }
@@ -153,10 +157,8 @@ public class Y9RoleServiceImpl implements Y9RoleService {
         List<String> roleIdList = y9OrgBasesToRolesRepository.findRoleIdsByOrgIdAndNegative(orgUnitId, Boolean.FALSE);
         List<Y9Role> roleList = new ArrayList<>();
         for (String roleId : roleIdList) {
-            Y9Role role = findById(roleId);
-            if (role != null) {
-                roleList.add(role);
-            }
+            Y9Role role = y9RoleManager.getById(roleId);
+            roleList.add(role);
         }
         return roleList;
     }
@@ -189,7 +191,7 @@ public class Y9RoleServiceImpl implements Y9RoleService {
     @Override
     @Transactional(readOnly = false)
     public void move(String id, String newParentId) {
-        Y9Role roleNode = this.findById(id);
+        Y9Role roleNode = y9RoleManager.getById(id);
         roleNode.setParentId(newParentId);
         saveOrUpdate(roleNode);
         recursiveUpdateByDn(roleNode);
@@ -199,12 +201,13 @@ public class Y9RoleServiceImpl implements Y9RoleService {
     @Transactional(readOnly = false)
     public Y9Role saveOrUpdate(Y9Role y9Role) {
         Y9Role parent = null;
-        if (y9Role.getParentId() != null && StringUtils.isNotEmpty(y9Role.getParentId())) {
-            parent = this.findById(y9Role.getParentId());
+        if (StringUtils.isNotEmpty(y9Role.getParentId())) {
+            parent = this.findById(y9Role.getParentId()).orElse(null);
         }
         if (StringUtils.isNotEmpty(y9Role.getId())) {
-            Y9Role origRole = this.findById(y9Role.getId());
-            if (origRole != null) {
+            Optional<Y9Role> y9RoleOptional = this.findById(y9Role.getId());
+            if (y9RoleOptional.isPresent()) {
+                Y9Role origRole = y9RoleOptional.get();
                 boolean update = false;
                 String systemName = y9Role.getSystemName();
                 String oldSystemName = origRole.getSystemName();
@@ -259,7 +262,7 @@ public class Y9RoleServiceImpl implements Y9RoleService {
     public void saveOrder(List<String> ids) {
         int index = 0;
         for (String id : ids) {
-            Y9Role roleNode = this.findById(id);
+            Y9Role roleNode = y9RoleManager.getById(id);
             roleNode.setTabIndex(index++);
             y9RoleManager.save(roleNode);
         }
@@ -268,7 +271,7 @@ public class Y9RoleServiceImpl implements Y9RoleService {
     @Override
     @Transactional(readOnly = false)
     public Y9Role saveProperties(String id, String properties) {
-        Y9Role roleNode = this.findById(id);
+        Y9Role roleNode = y9RoleManager.getById(id);
         roleNode.setProperties(properties);
         return y9RoleManager.save(roleNode);
     }
@@ -325,12 +328,10 @@ public class Y9RoleServiceImpl implements Y9RoleService {
         if (StringUtils.isEmpty(parentId)) {
             return;
         }
-        Y9Role parentNode = findById(parentId);
+        Y9Role parentNode = this.findById(parentId).orElse(null);
         if (parentNode != null && !returnList.contains(parentNode)) {
             returnList.add(parentNode);
-            if (StringUtils.isNotEmpty(parentNode.getParentId())) {
-                recursionUpToTop(parentNode.getParentId(), returnList);
-            }
+            recursionUpToTop(parentNode.getParentId(), returnList);
         }
     }
 
@@ -339,7 +340,7 @@ public class Y9RoleServiceImpl implements Y9RoleService {
         List<Y9Role> childrenList = listByParentId(y9Role.getId());
         if (!childrenList.isEmpty()) {
             for (Y9Role childrenRole : childrenList) {
-                Y9Role oldRole = this.findById(childrenRole.getId());
+                Y9Role oldRole = y9RoleManager.getById(childrenRole.getId());
                 oldRole.setSystemName(y9Role.getSystemName());
                 saveOrUpdate(oldRole);
                 recursiveUpdate(oldRole);

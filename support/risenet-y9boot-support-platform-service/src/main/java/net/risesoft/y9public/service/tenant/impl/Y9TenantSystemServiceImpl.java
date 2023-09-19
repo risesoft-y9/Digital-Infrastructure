@@ -32,7 +32,6 @@ import net.risesoft.y9public.manager.resource.Y9SystemManager;
 import net.risesoft.y9public.manager.tenant.Y9DataSourceManager;
 import net.risesoft.y9public.manager.tenant.Y9TenantManager;
 import net.risesoft.y9public.manager.tenant.Y9TenantSystemManager;
-import net.risesoft.y9public.repository.resource.Y9SystemRepository;
 import net.risesoft.y9public.repository.tenant.Y9TenantSystemRepository;
 import net.risesoft.y9public.service.tenant.Y9TenantSystemService;
 
@@ -48,7 +47,6 @@ import net.risesoft.y9public.service.tenant.Y9TenantSystemService;
 public class Y9TenantSystemServiceImpl implements Y9TenantSystemService {
 
     private final Y9TenantSystemRepository y9TenantSystemRepository;
-    private final Y9SystemRepository y9SystemRepository;
 
     private final Y9SystemManager y9SystemManager;
     private final Y9TenantManager y9TenantManager;
@@ -98,8 +96,8 @@ public class Y9TenantSystemServiceImpl implements Y9TenantSystemService {
     }
 
     @Override
-    public Y9TenantSystem findById(String id) {
-        return y9TenantSystemRepository.findById(id).orElse(null);
+    public Optional<Y9TenantSystem> findById(String id) {
+        return y9TenantSystemRepository.findById(id);
     }
 
     @Override
@@ -198,13 +196,12 @@ public class Y9TenantSystemServiceImpl implements Y9TenantSystemService {
     @Transactional(readOnly = false)
     public Map<String, Object> saveTenantSystem(String systemId, String tenantId) {
         Y9Tenant tenant = y9TenantManager.getById(tenantId);
-        Map<String, Object> map;
-        Y9System y9System = y9SystemRepository.findById(systemId).orElse(null);
+        Y9System y9System = y9SystemManager.getById(systemId);
         Y9TenantSystem y9TenantSystem = new Y9TenantSystem();
         y9TenantSystem.setTenantId(tenantId);
         y9TenantSystem.setTenantDataSource(tenant.getDefaultDataSourceId());
         y9TenantSystem.setSystemId(systemId);
-        if (y9System != null && Boolean.TRUE.equals(y9System.getSingleDatasource())) {
+        if (Boolean.TRUE.equals(y9System.getSingleDatasource())) {
             String datasoureId = tenant.getDefaultDataSourceId();
             try {
                 Y9DataSource y9DataSource = y9DataSourceManager.createTenantDefaultDataSource(tenant.getShortName(),
@@ -220,7 +217,7 @@ public class Y9TenantSystemServiceImpl implements Y9TenantSystemService {
 
     @Override
     @Transactional(readOnly = false)
-    public List<Map<String, Object>> saveTenantSystems(String[] systemIds, String tenantId) throws Exception {
+    public List<Map<String, Object>> saveTenantSystems(String[] systemIds, String tenantId) {
         List<Map<String, Object>> msgList = new ArrayList<>();
         for (String systemId : systemIds) {
             Map<String, Object> map = saveTenantSystem(systemId, tenantId);
@@ -246,7 +243,7 @@ public class Y9TenantSystemServiceImpl implements Y9TenantSystemService {
 
     @Override
     public List<Y9Tenant> listTenantBySystemName(String systemName) {
-        Optional<Y9System> y9SystemOptional = y9SystemRepository.findByName(systemName);
+        Optional<Y9System> y9SystemOptional = y9SystemManager.findByName(systemName);
         if (y9SystemOptional.isPresent()) {
             return this.listTenantBySystemId(y9SystemOptional.get().getId());
         }
@@ -259,10 +256,7 @@ public class Y9TenantSystemServiceImpl implements Y9TenantSystemService {
         List<Y9System> y9SystemList = new ArrayList<>();
         if (!systemIdList.isEmpty()) {
             for (String systemId : systemIdList) {
-                Y9System y9System = y9SystemRepository.findById(systemId).orElse(null);
-                if (y9System != null) {
-                    y9SystemList.add(y9System);
-                }
+                y9SystemManager.findById(systemId).ifPresent(y9SystemList::add);
             }
         }
         return y9SystemList;

@@ -150,8 +150,8 @@ public class Y9PositionToResourceAndAuthorityServiceImpl implements Y9PositionTo
                 Optional<Y9TenantApp> y9TenantAppOptional = y9TenantAppManager
                     .getByTenantIdAndAppIdAndTenancy(Y9LoginUserHolder.getTenantId(), r.getAppId(), true);
                 if (y9TenantAppOptional.isPresent()) {
-                    Y9App y9App = y9AppManager.findById(r.getAppId());
-                    if (null != y9App && !appList.contains(y9App)) {
+                    Y9App y9App = y9AppManager.getById(r.getAppId());
+                    if (!appList.contains(y9App)) {
                         appList.add(y9App);
                     }
                 }
@@ -210,8 +210,8 @@ public class Y9PositionToResourceAndAuthorityServiceImpl implements Y9PositionTo
             .map(Y9IdentityToResourceAndAuthorityBase::getResourceId).distinct().collect(Collectors.toList());
         List<Y9Menu> y9MenuList = new ArrayList<>();
         for (String menuId : menuIdList) {
-            Y9Menu y9Menu = y9MenuManager.findById(menuId);
-            if (y9Menu != null && !y9MenuList.contains(y9Menu)) {
+            Y9Menu y9Menu = y9MenuManager.getById(menuId);
+            if (!y9MenuList.contains(y9Menu)) {
                 y9MenuList.add(y9Menu);
             }
         }

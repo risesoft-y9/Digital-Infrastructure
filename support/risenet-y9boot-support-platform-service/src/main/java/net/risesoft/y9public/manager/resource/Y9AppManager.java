@@ -1,5 +1,7 @@
 package net.risesoft.y9public.manager.resource;
 
+import java.util.Optional;
+
 import org.springframework.transaction.annotation.Transactional;
 
 import net.risesoft.y9public.entity.resource.Y9App;
@@ -18,7 +20,7 @@ public interface Y9AppManager {
 
     Y9App getById(String id);
 
-    Y9App findById(String id);
+    Optional<Y9App> findById(String id);
 
     Y9App save(Y9App y9App);
 

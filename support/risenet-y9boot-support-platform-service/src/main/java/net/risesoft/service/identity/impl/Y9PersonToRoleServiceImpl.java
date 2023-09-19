@@ -1,6 +1,7 @@
 package net.risesoft.service.identity.impl;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 import org.apache.commons.lang3.StringUtils;
@@ -133,12 +134,15 @@ public class Y9PersonToRoleServiceImpl implements Y9PersonToRoleService {
         List<Y9PersonToRole> list = y9PersonToRoleRepository.findByRoleId(roleId);
         List<Integer> ids = list.stream().map(Y9PersonToRole::getId).collect(Collectors.toList());
         for (Integer id : ids) {
-            Y9PersonToRole personRoleMapping = y9PersonToRoleRepository.findById(id).orElse(null);
-            personRoleMapping.setRoleName(roleName);
-            personRoleMapping.setSystemCnName(systemCnName);
-            personRoleMapping.setSystemName(systemName);
-            personRoleMapping.setDescription(description);
-            y9PersonToRoleRepository.save(personRoleMapping);
+            Optional<Y9PersonToRole> y9PersonToRoleOptional = y9PersonToRoleRepository.findById(id);
+            if (y9PersonToRoleOptional.isPresent()) {
+                Y9PersonToRole y9PersonToRole = y9PersonToRoleOptional.get();
+                y9PersonToRole.setRoleName(roleName);
+                y9PersonToRole.setSystemCnName(systemCnName);
+                y9PersonToRole.setSystemName(systemName);
+                y9PersonToRole.setDescription(description);
+                y9PersonToRoleRepository.save(y9PersonToRole);
+            }
         }
     }
 

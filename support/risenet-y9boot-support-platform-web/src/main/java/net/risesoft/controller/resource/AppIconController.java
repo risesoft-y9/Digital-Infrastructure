@@ -62,7 +62,7 @@ public class AppIconController {
     @RiseLog(operationName = "获取应用图标")
     @RequestMapping("/getAppIconById")
     public Y9Result<Y9AppIcon> getAppIconById(@RequestParam String id) {
-        Y9AppIcon entity = appIconService.findById(id);
+        Y9AppIcon entity = appIconService.getById(id);
         return Y9Result.success(entity, "获取成功！");
     }
 
@@ -117,7 +117,7 @@ public class AppIconController {
     @RiseLog(operationType = OperationTypeEnum.MODIFY, operationName = "修改图标")
     @PostMapping(value = "/saveIcon")
     public Y9Result<String> saveIcon(@RequestParam String name, @RequestParam String remark, @RequestParam String id) {
-        Y9AppIcon appIcon = appIconService.findById(id);
+        Y9AppIcon appIcon = appIconService.getById(id);
         appIcon.setRemark(remark);
         appIcon.setName(name);
         if (appIcon.getIconData() == null) {

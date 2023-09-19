@@ -7,7 +7,6 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
-
 import org.springframework.context.annotation.Primary;
 import org.springframework.http.MediaType;
 import org.springframework.validation.annotation.Validated;
@@ -146,7 +145,7 @@ public class RoleApiImpl implements RoleApi {
      */
     @Override
     public Role getRole(@RequestParam("roleId") @NotBlank String roleId) {
-        Y9Role y9Role = y9RoleService.findById(roleId);
+        Y9Role y9Role = y9RoleService.findById(roleId).orElse(null);
         return ModelConvertUtil.y9RoleToRole(y9Role);
     }
 

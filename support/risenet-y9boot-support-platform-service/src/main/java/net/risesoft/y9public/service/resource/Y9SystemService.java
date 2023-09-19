@@ -45,7 +45,7 @@ public interface Y9SystemService {
      * @param id 唯一标识
      * @return 系统对象 或 null
      */
-    Y9System findById(String id);
+    Optional<Y9System> findById(String id);
 
     /**
      * 根据系统名称获取系统实体
@@ -102,14 +102,6 @@ public interface Y9SystemService {
      * @return {@link List}<{@link Y9System}>
      */
     List<Y9System> listByIsvGuid(String isvGuid);
-
-    /**
-     * 根据Id集合获取系统名称,riseplatform除外
-     *
-     * @param ids 唯一标识数组
-     * @return {@link List}<{@link String}>
-     */
-    List<String> listSystemNameByIds(List<String> ids);
 
     /**
      * 根据开发商id及系统名分页查询系统

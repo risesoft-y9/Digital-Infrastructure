@@ -107,10 +107,8 @@ public class ResourcePermissionVOBuilder {
                     Y9Authorization y9Authorization = y9AuthorizationOptional.get();
                     detail.setPrincipalType(y9Authorization.getPrincipalType());
                     if (AuthorizationPrincipalTypeEnum.ROLE.getValue().equals(y9Authorization.getPrincipalType())) {
-                        Y9Role y9Role = y9RoleService.findById(y9Authorization.getPrincipalId());
-                        if (y9Role != null) {
-                            detail.setPrincipalName(y9Role.getName());
-                        }
+                        y9RoleService.findById(y9Authorization.getPrincipalId()).map(Y9Role::getName)
+                            .ifPresent(detail::setPrincipalName);
                     } else {
                         Optional<Y9OrgBase> y9OrgBaseOptional =
                             compositeOrgBaseService.findOrgUnit(y9Authorization.getPrincipalId());

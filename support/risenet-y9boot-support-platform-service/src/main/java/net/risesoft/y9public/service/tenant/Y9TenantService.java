@@ -1,6 +1,7 @@
 package net.risesoft.y9public.service.tenant;
 
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.data.domain.Page;
 
@@ -72,7 +73,7 @@ public interface Y9TenantService {
      * @param id 唯一标识
      * @return 租户对象 或 null
      */
-    Y9Tenant findById(String id);
+    Optional<Y9Tenant> findById(String id);
 
     /**
      * 根据id查找租户

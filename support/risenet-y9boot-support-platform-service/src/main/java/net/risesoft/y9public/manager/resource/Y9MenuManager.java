@@ -1,5 +1,7 @@
 package net.risesoft.y9public.manager.resource;
 
+import java.util.Optional;
+
 import org.springframework.transaction.annotation.Transactional;
 
 import net.risesoft.y9public.entity.resource.Y9Menu;
@@ -12,7 +14,7 @@ import net.risesoft.y9public.entity.resource.Y9Menu;
  * @since 9.6.2
  */
 public interface Y9MenuManager {
-    Y9Menu findById(String id);
+    Optional<Y9Menu> findById(String id);
 
     Y9Menu save(Y9Menu y9Menu);
 

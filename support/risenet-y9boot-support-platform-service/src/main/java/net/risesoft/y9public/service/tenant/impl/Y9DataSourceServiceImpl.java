@@ -4,8 +4,6 @@ import java.util.Objects;
 import java.util.Optional;
 import java.util.concurrent.ConcurrentMap;
 
-import javax.sql.DataSource;
-
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -41,7 +39,7 @@ public class Y9DataSourceServiceImpl implements Y9DataSourceService {
 
     private final DataSourceLookup dataSourceLookup = new JndiDataSourceLookup();
 
-    //数据库连接是宝贵资源，dataSourceMap中的HikariDataSource在什么地方关闭？资源内存泄露？
+    // 数据库连接是宝贵资源，dataSourceMap中的HikariDataSource在什么地方关闭？资源内存泄露？
     private final ConcurrentMap<String, HikariDataSource> dataSourceMap = Maps.newConcurrentMap();
     private final ConcurrentMap<String, Y9DataSource> y9DataSourceMap = Maps.newConcurrentMap();
 
@@ -86,8 +84,8 @@ public class Y9DataSourceServiceImpl implements Y9DataSourceService {
     }
 
     @Override
-    public Y9DataSource findById(String id) {
-        return datasourceRepository.findById(id).orElse(null);
+    public Optional<Y9DataSource> findById(String id) {
+        return datasourceRepository.findById(id);
     }
 
     @Override

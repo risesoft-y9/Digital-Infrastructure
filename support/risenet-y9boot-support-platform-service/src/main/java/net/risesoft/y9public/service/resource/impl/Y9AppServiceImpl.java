@@ -145,7 +145,7 @@ public class Y9AppServiceImpl implements Y9AppService {
     }
 
     @Override
-    public Y9App findById(String id) {
+    public Optional<Y9App> findById(String id) {
         return y9AppManager.findById(id);
     }
 
@@ -288,8 +288,9 @@ public class Y9AppServiceImpl implements Y9AppService {
         // 每次保存都更改审核状态为未审核
         y9App.setChecked(false);
         if (StringUtils.isNotBlank(y9App.getId())) {
-            Y9App originY9AppResource = y9AppManager.findById(y9App.getId());
-            if (originY9AppResource != null) {
+            Optional<Y9App> y9AppOptional = y9AppManager.findById(y9App.getId());
+            if (y9AppOptional.isPresent()) {
+                Y9App originY9AppResource = y9AppOptional.get();
                 Y9App updatedY9AppResource = new Y9App();
                 Y9BeanUtil.copyProperties(originY9AppResource, updatedY9AppResource);
                 Y9BeanUtil.copyProperties(y9App, updatedY9AppResource);

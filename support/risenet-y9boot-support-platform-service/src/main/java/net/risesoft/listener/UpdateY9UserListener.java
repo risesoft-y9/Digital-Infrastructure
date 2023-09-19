@@ -52,7 +52,7 @@ public class UpdateY9UserListener {
         String personId = person.getId();
         LOGGER.info("开始处理人员新增->{}", person.getId());
         String tenantId = person.getTenantId();
-        Y9Tenant y9Tenant = y9TenantService.findById(tenantId);
+        Y9Tenant y9Tenant = y9TenantService.getById(tenantId);
         Optional<Y9User> y9UserOptional = y9UserService.findByPersonIdAndTenantId(personId, tenantId);
         Y9User y9User;
         if (y9UserOptional.isEmpty()) {
@@ -71,10 +71,8 @@ public class UpdateY9UserListener {
         }
 
         y9User.setTenantId(tenantId);
-        if (null != y9Tenant) {
-            y9User.setTenantName(y9Tenant.getName());
-            y9User.setTenantShortName(y9Tenant.getShortName());
-        }
+        y9User.setTenantName(y9Tenant.getName());
+        y9User.setTenantShortName(y9Tenant.getShortName());
         y9User.setLoginName(person.getLoginName());
         y9User.setPassword(person.getPassword());
         y9User.setPersonId(person.getId());
@@ -117,7 +115,7 @@ public class UpdateY9UserListener {
         String personId = y9Manager.getId();
         String tenantId = y9Manager.getTenantId();
         LOGGER.info("开始处理管理员员新增->{}", y9Manager.getId());
-        Y9Tenant y9Tenant = y9TenantService.findById(tenantId);
+        Y9Tenant y9Tenant = y9TenantService.getById(tenantId);
         Optional<Y9User> y9UserOptional = y9UserService.findByPersonIdAndTenantId(personId, tenantId);
         Y9User y9User;
         if (y9UserOptional.isEmpty()) {
@@ -134,10 +132,8 @@ public class UpdateY9UserListener {
             }
         }
         y9User.setTenantId(tenantId);
-        if (null != y9Tenant) {
-            y9User.setTenantName(y9Tenant.getName());
-            y9User.setTenantShortName(y9Tenant.getShortName());
-        }
+        y9User.setTenantName(y9Tenant.getName());
+        y9User.setTenantShortName(y9Tenant.getShortName());
         y9User.setLoginName(y9Manager.getLoginName());
         y9User.setPassword(y9Manager.getPassword());
         y9User.setPersonId(y9Manager.getId());
@@ -176,7 +172,7 @@ public class UpdateY9UserListener {
         Y9Person person = event.getUpdatedEntity();
         String tenantId = person.getTenantId();
         LOGGER.info("开始处理人员更新->{}", person.getId());
-        Y9Tenant y9Tenant = y9TenantService.findById(tenantId);
+        Y9Tenant y9Tenant = y9TenantService.getById(tenantId);
         Optional<Y9User> y9UserOptional = y9UserService.findByPersonIdAndTenantId(person.getId(), tenantId);
         Y9User y9User;
         if (y9UserOptional.isEmpty()) {
@@ -198,10 +194,8 @@ public class UpdateY9UserListener {
         }
 
         y9User.setTenantId(tenantId);
-        if (null != y9Tenant) {
-            y9User.setTenantName(y9Tenant.getName());
-            y9User.setTenantShortName(y9Tenant.getShortName());
-        }
+        y9User.setTenantName(y9Tenant.getName());
+        y9User.setTenantShortName(y9Tenant.getShortName());
         y9User.setLoginName(person.getLoginName());
         y9User.setPassword(person.getPassword());
         y9User.setPersonId(person.getId());
@@ -243,7 +237,7 @@ public class UpdateY9UserListener {
         Y9Manager y9Manager = event.getUpdatedEntity();
         String tenantId = y9Manager.getTenantId();
         LOGGER.info("开始处理管理员员修改->{}", y9Manager.getId());
-        Y9Tenant y9Tenant = y9TenantService.findById(tenantId);
+        Y9Tenant y9Tenant = y9TenantService.getById(tenantId);
         Optional<Y9User> y9UserOptional = y9UserService.findByPersonIdAndTenantId(y9Manager.getId(), tenantId);
         Y9User y9User;
         if (y9UserOptional.isEmpty()) {
@@ -263,10 +257,8 @@ public class UpdateY9UserListener {
             }
         }
         y9User.setTenantId(tenantId);
-        if (null != y9Tenant) {
-            y9User.setTenantName(y9Tenant.getName());
-            y9User.setTenantShortName(y9Tenant.getShortName());
-        }
+        y9User.setTenantName(y9Tenant.getName());
+        y9User.setTenantShortName(y9Tenant.getShortName());
         y9User.setLoginName(y9Manager.getLoginName());
         y9User.setPassword(y9Manager.getPassword());
         y9User.setPersonId(y9Manager.getId());
