@@ -64,10 +64,13 @@ public class ResourceApiImpl implements ResourceApi {
         @RequestParam("parentResourceId") @NotBlank String parentResourceId,
         @RequestParam("customId") @NotBlank String customId) {
         Y9ResourceBase parentResource = compositeResourceService.findById(parentResourceId);
-        Y9Menu y9Menu = y9MenuService.findById(resourceId);
-        if (y9Menu == null) {
+        Y9Menu y9Menu;
+        Optional<Y9Menu> y9MenuOptional = y9MenuService.findById(resourceId);
+        if (y9MenuOptional.isEmpty()) {
             y9Menu = new Y9Menu();
             y9Menu.setId(resourceId);
+        } else {
+            y9Menu = y9MenuOptional.get();
         }
         if (parentResource != null) {
             y9Menu.setAppId(parentResource.getAppId());

@@ -11,7 +11,7 @@ import lombok.RequiredArgsConstructor;
 
 import net.risesoft.entity.Y9Position;
 import net.risesoft.entity.relation.Y9PositionsToGroups;
-import net.risesoft.repository.Y9PositionRepository;
+import net.risesoft.manager.org.Y9PositionManager;
 import net.risesoft.repository.relation.Y9PositionsToGroupsRepository;
 import net.risesoft.service.relation.Y9PositionsToGroupsService;
 
@@ -28,7 +28,7 @@ import net.risesoft.service.relation.Y9PositionsToGroupsService;
 public class Y9PositionsToGroupsServiceImpl implements Y9PositionsToGroupsService {
 
     private final Y9PositionsToGroupsRepository y9PositionsToGroupsRepository;
-    private final Y9PositionRepository y9PositionRepository;
+    private final Y9PositionManager y9PositionManager;
 
     @Transactional(readOnly = false)
     public void delete(Y9PositionsToGroups groupPosition) {
@@ -77,7 +77,7 @@ public class Y9PositionsToGroupsServiceImpl implements Y9PositionsToGroupsServic
             y9PositionsToGroupsRepository.findByGroupIdOrderByPositionOrder(groupId);
         List<Y9Position> orgPositions = new ArrayList<>();
         for (Y9PositionsToGroups group : orgGroupPositions) {
-            orgPositions.add(y9PositionRepository.findById(group.getPositionId()).orElse(null));
+            orgPositions.add(y9PositionManager.getById(group.getPositionId()));
         }
         return orgPositions;
     }
@@ -112,24 +112,20 @@ public class Y9PositionsToGroupsServiceImpl implements Y9PositionsToGroupsServic
 
     @Override
     @Transactional(readOnly = false)
-    public List<Y9Position> saveGroupPosition(String groupId, String[] positionIds) {
-        List<Y9Position> positionList = new ArrayList<>();
+    public void saveGroupPosition(String groupId, String[] positionIds) {
         Integer maxPositionOrder = getMaxPositionOrderByGroupId(groupId);
         for (int i = 0; i < positionIds.length; i++) {
             if (y9PositionsToGroupsRepository.findByGroupIdAndPositionId(groupId, positionIds[i]).isPresent()) {
                 continue;
             }
-            Y9Position position = y9PositionRepository.findById(positionIds[i]).orElse(null);
             Integer maxGroupsOrder = getMaxGroupIdOrderByPositionId(positionIds[i]);
             Y9PositionsToGroups groupPosition = new Y9PositionsToGroups();
             groupPosition.setGroupId(groupId);
-            groupPosition.setPositionId(position.getId());
+            groupPosition.setPositionId(positionIds[i]);
             groupPosition.setPositionOrder(maxPositionOrder != null ? maxPositionOrder + i + 1 : i);
             groupPosition.setGroupOrder(maxGroupsOrder != null ? maxGroupsOrder + 1 : 0);
             y9PositionsToGroupsRepository.save(groupPosition);
-            positionList.add(position);
         }
-        return positionList;
     }
 
 }

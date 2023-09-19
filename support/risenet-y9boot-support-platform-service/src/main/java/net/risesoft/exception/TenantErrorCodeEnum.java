@@ -16,7 +16,9 @@ public enum TenantErrorCodeEnum implements ErrorCode {
     /** tenant not found */
     TENANT_NOT_FOUND(0, "租户[{}]不存在"),
     /** tenant system exists */
-    TENANT_SYSTEM_EXISTS(1, "租户[{}]已租用系统[{}]");
+    TENANT_SYSTEM_EXISTS(1, "租户[{}]已租用系统[{}]"),
+    /** tenant app not found */
+    TENANT_APP_NOT_FOUND(2, "租户应用[{}]不存在");
 
     private final int moduleErrorCode;
     private final String description;

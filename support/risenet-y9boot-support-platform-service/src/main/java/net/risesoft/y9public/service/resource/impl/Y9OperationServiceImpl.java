@@ -2,6 +2,7 @@ package net.risesoft.y9public.service.resource.impl;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.context.event.EventListener;
@@ -127,7 +128,7 @@ public class Y9OperationServiceImpl implements Y9OperationService {
     }
 
     @Override
-    public Y9Operation findById(String id) {
+    public Optional<Y9Operation> findById(String id) {
         return y9OperationManager.findById(id);
     }
 
@@ -170,8 +171,9 @@ public class Y9OperationServiceImpl implements Y9OperationService {
     @Transactional(readOnly = false)
     public Y9Operation saveOrUpdate(Y9Operation y9Operation) {
         if (StringUtils.isNotBlank(y9Operation.getId())) {
-            Y9Operation originOperationResource = y9OperationManager.findById(y9Operation.getId());
-            if (originOperationResource != null) {
+            Optional<Y9Operation> y9OperationOptional = y9OperationManager.findById(y9Operation.getId());
+            if (y9OperationOptional.isPresent()) {
+                Y9Operation originOperationResource = y9OperationOptional.get();
                 Y9Operation updatedOperationResource = new Y9Operation();
                 Y9BeanUtil.copyProperties(originOperationResource, updatedOperationResource);
                 Y9BeanUtil.copyProperties(y9Operation, updatedOperationResource);

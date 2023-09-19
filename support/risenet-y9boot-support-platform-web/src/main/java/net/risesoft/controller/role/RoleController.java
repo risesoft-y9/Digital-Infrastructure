@@ -86,7 +86,7 @@ public class RoleController {
     public void exportRoleXml(@RequestParam String resourceId, HttpServletResponse response) {
         try (OutputStream outStream = response.getOutputStream()) {
 
-            Y9App y9App = y9AppService.findById(resourceId);
+            Y9App y9App = y9AppService.getById(resourceId);
             String fileName =
                 y9App.getName() + "-角色信息-" + new SimpleDateFormat("yyyyMMddHHmmss").format(new Date()) + ".xml";
             response.setContentType("application/octet-stream");
@@ -108,7 +108,7 @@ public class RoleController {
     @RiseLog(operationName = "获取扩展属性")
     @RequestMapping(value = "/getExtendProperties")
     public Y9Result<String> getExtendProperties(@RequestParam String roleId) {
-        String properties = y9RoleService.findById(roleId).getProperties();
+        String properties = y9RoleService.getById(roleId).getProperties();
         return Y9Result.success(properties, "获取扩展属性成功");
     }
 
@@ -121,7 +121,7 @@ public class RoleController {
     @RiseLog(operationName = "获取角色对象")
     @RequestMapping(value = "/getRoleById")
     public Y9Result<Y9Role> getRoleById(@RequestParam String id) {
-        return Y9Result.success(y9RoleService.findById(id), "获取角色对象成功");
+        return Y9Result.success(y9RoleService.getById(id), "获取角色对象成功");
     }
 
     /**

@@ -1,5 +1,7 @@
 package net.risesoft.y9public.manager.resource.impl;
 
+import java.util.Optional;
+
 import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
@@ -24,6 +26,11 @@ public class Y9SystemManagerImpl implements Y9SystemManager {
     private final Y9SystemRepository y9SystemRepository;
 
     @Override
+    public Optional<Y9System> findByName(String systemName) {
+        return y9SystemRepository.findByName(systemName);
+    }
+
+    @Override
     @Transactional(readOnly = false)
     @CacheEvict(key = "#y9System.id", condition = "#y9System.id!=null")
     public Y9System save(Y9System y9System) {
@@ -39,8 +46,8 @@ public class Y9SystemManagerImpl implements Y9SystemManager {
 
     @Override
     @Cacheable(key = "#id", condition = "#id!=null", unless = "#result==null")
-    public Y9System findById(String id) {
-        return y9SystemRepository.findById(id).orElse(null);
+    public Optional<Y9System> findById(String id) {
+        return y9SystemRepository.findById(id);
     }
 
     @Override

@@ -11,6 +11,7 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Optional;
 
 import org.apache.commons.lang3.StringUtils;
 import org.dom4j.Document;
@@ -119,7 +120,7 @@ public class Y9RoleXmlDataHandlerImpl implements Y9RoleDataHandler {
     }
 
     public Element buildSubElement(Element resources, String roleId) {
-        Y9App y9App = y9AppService.findById(roleId);
+        Y9App y9App = y9AppService.getById(roleId);
         Y9System y9System = y9SystemService.getById(y9App.getSystemId());
         Element oneElement = null;
         if (null != y9System) {
@@ -282,8 +283,6 @@ public class Y9RoleXmlDataHandlerImpl implements Y9RoleDataHandler {
         String systemName = element.elementText("systemName");
         String systemCnName = element.elementText("systemCnName");
 
-        Y9Role role = y9RoleService.findById(id);
-
         Y9Role roleNode = new Y9Role();
         roleNode.setId(id);
         roleNode.setDescription(description);
@@ -298,15 +297,14 @@ public class Y9RoleXmlDataHandlerImpl implements Y9RoleDataHandler {
         roleNode.setAppCnName(appCnName);
         roleNode.setSystemName(systemName);
         roleNode.setSystemCnName(systemCnName);
-        try {
-            if (null != role && StringUtils.isNotBlank(role.getId())) {
-                Y9BeanUtil.copyProperties(roleNode, role);
-                y9RoleService.saveOrUpdate(role);
-            } else {
-                y9RoleService.saveOrUpdate(roleNode);
-            }
-        } catch (Exception e1) {
-            LOGGER.warn(e1.getMessage(), e1);
+
+        Optional<Y9Role> y9RoleOptional = y9RoleService.findById(id);
+        if (y9RoleOptional.isPresent()) {
+            Y9Role role = y9RoleOptional.get();
+            Y9BeanUtil.copyProperties(roleNode, role);
+            y9RoleService.saveOrUpdate(role);
+        } else {
+            y9RoleService.saveOrUpdate(roleNode);
         }
 
         if (type.equals(Y9RoleTypeEnum.FOLDER.getValue())) {
@@ -314,51 +312,6 @@ public class Y9RoleXmlDataHandlerImpl implements Y9RoleDataHandler {
             for (Element e : childNodes) {
                 recursiveRoleNode(e);
             }
-        }
-    }
-
-    void recursiveRun(Element element, String level, String uid, String pid, String systemName, String systemCnName) {
-        String dn, description, type, properties, name, tabIndex, customId;
-        List<Element> nodes;
-        name = element.elementText("name");
-        description = element.elementText("description");
-        customId = element.elementText("customId");
-        dn = element.elementText("dn");
-        type = element.elementText("type");
-        tabIndex = element.elementText("tabIndex");
-        properties = element.elementText("properties");
-
-        Y9Role roleNode = null;
-
-        if (pid != null) {
-            roleNode = y9RoleService.findById(uid);
-        }
-
-        if (roleNode == null) {
-            roleNode = new Y9Role();
-            roleNode.setId(uid);
-        }
-        roleNode.setDescription(description);
-        roleNode.setCustomId(customId);
-        roleNode.setProperties(properties);
-        roleNode.setTabIndex(Integer.valueOf(tabIndex));
-        roleNode.setParentId(pid);
-        roleNode.setDn(dn);
-        roleNode.setName(name);
-        roleNode.setType(type);
-        roleNode.setSystemName(systemName != null ? systemName : "");
-        roleNode.setSystemCnName(systemCnName != null ? systemCnName : "");
-        try {
-            y9RoleService.saveOrUpdate(roleNode);
-            // roleWith(element);
-        } catch (Exception e1) {
-            LOGGER.warn(e1.getMessage(), e1);
-        }
-
-        nodes = element.elements("role");
-        for (Element e : nodes) {
-            String id = e.attributeValue("id");
-            recursiveRun(e, level + "--", id, uid, systemName, systemCnName);
         }
     }
 

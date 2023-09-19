@@ -15,6 +15,8 @@ import lombok.RequiredArgsConstructor;
 
 import net.risesoft.entity.Y9OrgBase;
 import net.risesoft.entity.relation.Y9OrgBasesToRoles;
+import net.risesoft.exception.RoleErrorCodeEnum;
+import net.risesoft.manager.org.CompositeOrgBaseManager;
 import net.risesoft.repository.Y9DepartmentRepository;
 import net.risesoft.repository.Y9GroupRepository;
 import net.risesoft.repository.Y9OrganizationRepository;
@@ -23,6 +25,7 @@ import net.risesoft.repository.Y9PositionRepository;
 import net.risesoft.repository.relation.Y9OrgBasesToRolesRepository;
 import net.risesoft.service.relation.Y9OrgBasesToRolesService;
 import net.risesoft.y9.Y9Context;
+import net.risesoft.y9.exception.util.Y9ExceptionUtil;
 import net.risesoft.y9.pubsub.event.Y9EntityCreatedEvent;
 import net.risesoft.y9.pubsub.event.Y9EntityDeletedEvent;
 
@@ -37,6 +40,8 @@ import net.risesoft.y9.pubsub.event.Y9EntityDeletedEvent;
 @Service
 @RequiredArgsConstructor
 public class Y9OrgBasesToRolesServiceImpl implements Y9OrgBasesToRolesService {
+
+    private final CompositeOrgBaseManager compositeOrgBaseManager;
 
     private final Y9DepartmentRepository departmentRepository;
     private final Y9GroupRepository groupRepository;
@@ -76,36 +81,8 @@ public class Y9OrgBasesToRolesServiceImpl implements Y9OrgBasesToRolesService {
 
     @Override
     public Y9OrgBasesToRoles getById(Integer id) {
-        return y9OrgBasesToRolesRepository.findById(id).orElse(null);
-    }
-
-    private Y9OrgBase getOrgBaseById(String id) {
-        Y9OrgBase y9OrgBase = organizationRepository.findById(id).orElse(null);
-        if (y9OrgBase != null) {
-            return y9OrgBase;
-        }
-
-        y9OrgBase = departmentRepository.findById(id).orElse(null);
-        if (y9OrgBase != null) {
-            return y9OrgBase;
-        }
-
-        y9OrgBase = personRepository.findById(id).orElse(null);
-        if (y9OrgBase != null) {
-            return y9OrgBase;
-        }
-
-        y9OrgBase = positionRepository.findById(id).orElse(null);
-        if (y9OrgBase != null) {
-            return y9OrgBase;
-        }
-
-        y9OrgBase = groupRepository.findById(id).orElse(null);
-        if (y9OrgBase != null) {
-            return y9OrgBase;
-        }
-
-        return y9OrgBase;
+        return y9OrgBasesToRolesRepository.findById(id)
+            .orElseThrow(() -> Y9ExceptionUtil.notFoundException(RoleErrorCodeEnum.ORGUNIT_ROLE_NOT_FOUND, id));
     }
 
     @Override
@@ -191,7 +168,7 @@ public class Y9OrgBasesToRolesServiceImpl implements Y9OrgBasesToRolesService {
             y9OrgBasesToRolesRepository.findByRoleIdAndOrgIdAndNegative(roleId, orgId, negative);
         if (optionalY9OrgBasesToRoles.isEmpty()) {
             Integer maxOrgUnitsOrder = y9OrgBasesToRolesRepository.getMaxOrgOrderByRoleId(roleId);
-            Y9OrgBase orgBase = getOrgBaseById(orgId);
+            Y9OrgBase orgBase = compositeOrgBaseManager.getOrgUnit(orgId);
             Integer nextOrgUnitsOrder = maxOrgUnitsOrder == null ? 0 : maxOrgUnitsOrder + 1;
             Y9OrgBasesToRoles y9OrgBasesToRoles = new Y9OrgBasesToRoles();
             y9OrgBasesToRoles.setRoleId(roleId);

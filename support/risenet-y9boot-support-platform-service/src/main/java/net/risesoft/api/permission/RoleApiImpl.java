@@ -145,7 +145,7 @@ public class RoleApiImpl implements RoleApi {
      */
     @Override
     public Role getRole(@RequestParam("roleId") @NotBlank String roleId) {
-        Y9Role y9Role = y9RoleService.findById(roleId);
+        Y9Role y9Role = y9RoleService.findById(roleId).orElse(null);
         return ModelConvertUtil.y9RoleToRole(y9Role);
     }
 

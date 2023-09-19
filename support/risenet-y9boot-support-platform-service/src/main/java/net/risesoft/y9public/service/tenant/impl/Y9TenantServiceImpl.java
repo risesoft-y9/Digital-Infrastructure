@@ -2,6 +2,7 @@ package net.risesoft.y9public.service.tenant.impl;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.data.domain.Page;
@@ -98,8 +99,8 @@ public class Y9TenantServiceImpl implements Y9TenantService {
     }
 
     @Override
-    public Y9Tenant findById(String id) {
-        return y9TenantRepository.findById(id).orElse(null);
+    public Optional<Y9Tenant> findById(String id) {
+        return y9TenantRepository.findById(id);
     }
 
     @Override

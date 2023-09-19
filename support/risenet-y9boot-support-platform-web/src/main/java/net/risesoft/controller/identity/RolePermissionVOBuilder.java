@@ -3,6 +3,7 @@ package net.risesoft.controller.identity;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 import org.springframework.stereotype.Component;
@@ -61,9 +62,9 @@ public class RolePermissionVOBuilder {
     private RolePermissionVO.App buildApp(String appId, List<Y9IdentityToRoleBase> y9IdentityToRoleBaseList) {
         RolePermissionVO.App app = new RolePermissionVO.App();
 
-        Y9App y9App = y9AppService.findById(appId);
-        if (y9App != null) {
-            app.setAppName(y9App.getName());
+        Optional<Y9App> y9AppOptional = y9AppService.findById(appId);
+        if (y9AppOptional.isPresent()) {
+            app.setAppName(y9AppOptional.get().getName());
         } else if (DefaultIdConsts.TOP_PUBLIC_ROLE_ID.equals(appId)) {
             app.setAppName("公共角色");
         }
@@ -76,8 +77,9 @@ public class RolePermissionVOBuilder {
         List<RolePermissionVO.PermissionDetail> permissionDetailList = new ArrayList<>();
         for (Y9IdentityToRoleBase y9IdentityToRoleBase : y9IdentityToRoleBaseList) {
             RolePermissionVO.PermissionDetail permissionDetail = new RolePermissionVO.PermissionDetail();
-            Y9Role y9Role = y9RoleService.findById(y9IdentityToRoleBase.getRoleId());
-            if (y9Role != null) {
+            Optional<Y9Role> y9RoleOptional = y9RoleService.findById(y9IdentityToRoleBase.getRoleId());
+            if (y9RoleOptional.isPresent()) {
+                Y9Role y9Role = y9RoleOptional.get();
                 permissionDetail.setRoleName(y9Role.getName());
                 permissionDetail.setRoleDescription(y9Role.getDescription());
                 permissionDetailList.add(permissionDetail);

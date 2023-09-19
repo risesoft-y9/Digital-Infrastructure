@@ -188,7 +188,7 @@ public class ImportExportController {
 
             y9RoleDataHandler.doExport(resourceId, outStream);
 
-            Y9Role y9Role = y9RoleService.findById(resourceId);
+            Y9Role y9Role = y9RoleService.getById(resourceId);
             String filename =
                 y9Role.getName() + "-角色信息-" + new SimpleDateFormat("yyyyMMddHHmmss").format(new Date()) + ".xml";
 

@@ -81,8 +81,7 @@ public interface Y9PositionsToGroupsService {
      *
      * @param groupId 用户组id
      * @param positionIds 岗位id数组
-     * @return
      */
-    List<Y9Position> saveGroupPosition(String groupId, String[] positionIds);
+    void saveGroupPosition(String groupId, String[] positionIds);
 
 }

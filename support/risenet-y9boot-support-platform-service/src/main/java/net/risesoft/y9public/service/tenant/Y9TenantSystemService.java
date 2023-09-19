@@ -71,7 +71,7 @@ public interface Y9TenantSystemService {
      * @param id 租户应用主键id
      * @return {@link Y9TenantSystem}
      */
-    Y9TenantSystem findById(String id);
+    Optional<Y9TenantSystem> findById(String id);
 
     /**
      * 通过租户id和系统id
@@ -177,7 +177,7 @@ public interface Y9TenantSystemService {
      * @return {@link List}<{@link Map}<{@link String}, {@link Object}>>
      * @throws Exception 异常
      */
-    List<Map<String, Object>> saveTenantSystems(String systemIds[], String tenantId) throws Exception;
+    List<Map<String, Object>> saveTenantSystems(String[] systemIds, String tenantId);
 
     List<Y9Tenant> listTenantBySystemId(String systemId);
 

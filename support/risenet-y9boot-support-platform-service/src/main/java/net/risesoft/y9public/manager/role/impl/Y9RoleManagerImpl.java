@@ -3,6 +3,7 @@ package net.risesoft.y9public.manager.role.impl;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -98,8 +99,8 @@ public class Y9RoleManagerImpl implements Y9RoleManager {
 
     @Override
     @Cacheable(key = "#id", condition = "#id!=null", unless = "#result==null")
-    public Y9Role findById(String id) {
-        return y9RoleRepository.findById(id).orElse(null);
+    public Optional<Y9Role> findById(String id) {
+        return y9RoleRepository.findById(id);
     }
 
     @Override

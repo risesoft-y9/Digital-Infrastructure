@@ -104,7 +104,7 @@ public class AuthorizationController {
     private AuthorizationVO getAuthorizationVOForRole(Y9Authorization y9Authorization) {
         AuthorizationVO authorizationVO = new AuthorizationVO();
         String roleId = y9Authorization.getPrincipalId();
-        String dn = y9RoleService.findById(roleId).getDn();
+        String dn = y9RoleService.getById(roleId).getDn();
         authorizationVO.setId(y9Authorization.getId());
         authorizationVO.setRoleId(y9Authorization.getPrincipalId());
         authorizationVO.setRoleName(dn.replace(",cn=", " >> ").replace("cn=", ""));

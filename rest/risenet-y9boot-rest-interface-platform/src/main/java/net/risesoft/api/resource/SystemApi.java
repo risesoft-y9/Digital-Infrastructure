@@ -1,9 +1,6 @@
 package net.risesoft.api.resource;
 
-import java.util.List;
-
 import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.NotEmpty;
 
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -42,12 +39,4 @@ public interface SystemApi {
     @GetMapping("/getByName")
     System getByName(@RequestParam("name") @NotBlank String name);
 
-    /**
-     * 根据系统id，获取系统名称列表
-     *
-     * @param systemIds 系统id集合（List&lt;String&lt;）
-     * @return List&lt;String&gt; 系统名称列表
-     */
-    @GetMapping("/listSystemNameByIds")
-    List<String> listSystemNameByIds(@RequestParam("systemIds") @NotEmpty List<String> systemIds);
 }

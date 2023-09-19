@@ -16,9 +16,11 @@ public enum ResourceErrorCodeEnum implements ErrorCode {
     /** menu not found */
     MENU_NOT_FOUND(0, "菜单[{}]不存在"),
     /** operation not found */
-    OPERATION_NOT_FOUND(0, "按钮[{}]不存在"),
+    OPERATION_NOT_FOUND(1, "按钮[{}]不存在"),
     /** app not found */
-    APP_NOT_FOUND(0, "应用[{}]不存在");
+    APP_NOT_FOUND(2, "应用[{}]不存在"),
+    /** app icon not found */
+    APP_ICON_NOT_FOUND(3, "应用图标[{}]不存在"),;
 
     private final int moduleErrorCode;
     private final String description;

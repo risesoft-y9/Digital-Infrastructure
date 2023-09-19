@@ -50,10 +50,7 @@ public class Y9CustomGroupMembersServiceImpl implements Y9CustomGroupMembersServ
     @Override
     @Transactional(readOnly = false)
     public void delete(String id) {
-        Y9CustomGroupMember member = customGroupMembersRepository.findById(id).orElse(null);
-        if (null != member) {
-            customGroupMembersRepository.deleteById(id);
-        }
+        customGroupMembersRepository.deleteById(id);
     }
 
     @Override

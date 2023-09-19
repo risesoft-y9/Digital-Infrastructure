@@ -1,6 +1,5 @@
 package net.risesoft.y9public.service.resource.impl;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -72,7 +71,7 @@ public class Y9SystemServiceImpl implements Y9SystemService {
     }
 
     @Override
-    public Y9System findById(String id) {
+    public Optional<Y9System> findById(String id) {
         return y9SystemManager.findById(id);
     }
 
@@ -113,21 +112,6 @@ public class Y9SystemServiceImpl implements Y9SystemService {
     }
 
     @Override
-    public List<String> listSystemNameByIds(List<String> ids) {
-        List<String> systemNameList = new ArrayList<>();
-        if (!ids.isEmpty()) {
-            for (String id : ids) {
-                Y9System se = y9SystemManager.findById(id);
-                String systemName = se != null ? se.getName() : "";
-                if (!"riseplatform".equals(systemName)) {
-                    systemNameList.add(systemName);
-                }
-            }
-        }
-        return systemNameList;
-    }
-
-    @Override
     public Page<Y9System> page(int page, int rows) {
         Pageable pageable = PageRequest.of(page < 1 ? 0 : page - 1, rows, Sort.by(Sort.Direction.ASC, "tabIndex"));
         return y9SystemRepository.findAll(pageable);
@@ -156,8 +140,9 @@ public class Y9SystemServiceImpl implements Y9SystemService {
     @Transactional(readOnly = false)
     public Y9System saveOrUpdate(Y9System y9System) {
         if (StringUtils.isNotBlank(y9System.getId())) {
-            Y9System oldY9System = y9SystemManager.findById(y9System.getId());
-            if (oldY9System != null) {
+            Optional<Y9System> y9SystemOptional = y9SystemManager.findById(y9System.getId());
+            if (y9SystemOptional.isPresent()) {
+                Y9System oldY9System = y9SystemOptional.get();
                 Y9BeanUtil.copyProperties(y9System, oldY9System);
                 return y9SystemManager.save(oldY9System);
             }

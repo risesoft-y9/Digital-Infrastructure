@@ -120,10 +120,10 @@ public class OnApplicationReady implements ApplicationListener<ApplicationReadyE
     }
 
     private void createDataSource(String dataSourceId) {
-        Y9DataSource y9DataSource = y9DataSourceService.findById(dataSourceId);
-        if (y9DataSource == null) {
+        Optional<Y9DataSource> y9DataSourceOptional = y9DataSourceService.findById(dataSourceId);
+        if (y9DataSourceOptional.isEmpty()) {
             DruidDataSource dataSource = (DruidDataSource)jdbcTemplate4Public.getDataSource();
-            y9DataSource = new Y9DataSource();
+            Y9DataSource y9DataSource = new Y9DataSource();
             y9DataSource.setId(dataSourceId);
             y9DataSource.setType(DataSourceTypeEnum.DRUID.getValue());
             y9DataSource.setJndiName("y9DefaultDs");
@@ -174,9 +174,9 @@ public class OnApplicationReady implements ApplicationListener<ApplicationReadyE
     }
 
     private void createSystem(String systemId) {
-        Y9System y9System = y9SystemService.findById(systemId);
-        if (null == y9System) {
-            y9System = new Y9System();
+        Optional<Y9System> y9SystemOptional = y9SystemService.findById(systemId);
+        if (y9SystemOptional.isEmpty()) {
+            Y9System y9System = new Y9System();
             y9System.setId(systemId);
             y9System.setContextPath("platform");
             y9System.setName("riseplatform");
@@ -189,9 +189,9 @@ public class OnApplicationReady implements ApplicationListener<ApplicationReadyE
     }
 
     private void createPublicRoleTopNode() {
-        Y9Role publicRole = y9RoleService.findById(DefaultIdConsts.TOP_PUBLIC_ROLE_ID);
-        if (null == publicRole) {
-            publicRole = new Y9Role();
+        Optional<Y9Role> y9RoleOptional = y9RoleService.findById(DefaultIdConsts.TOP_PUBLIC_ROLE_ID);
+        if (y9RoleOptional.isEmpty()) {
+            Y9Role publicRole = new Y9Role();
             publicRole.setId(DefaultIdConsts.TOP_PUBLIC_ROLE_ID);
             publicRole.setName("公共角色列表");
             publicRole.setAppId(DefaultIdConsts.TOP_PUBLIC_ROLE_ID);
@@ -207,9 +207,9 @@ public class OnApplicationReady implements ApplicationListener<ApplicationReadyE
     }
 
     private void createTenant(String tenantId, String dataSourceId) {
-        Y9Tenant y9Tenant = y9TenantService.findById(tenantId);
-        if (null == y9Tenant) {
-            y9Tenant = new Y9Tenant();
+        Optional<Y9Tenant> y9TenantOptional = y9TenantService.findById(tenantId);
+        if (y9TenantOptional.isEmpty()) {
+            Y9Tenant y9Tenant = new Y9Tenant();
             y9Tenant.setId(tenantId);
             y9Tenant.setDefaultDataSourceId(dataSourceId);
             y9Tenant.setShortName("default");

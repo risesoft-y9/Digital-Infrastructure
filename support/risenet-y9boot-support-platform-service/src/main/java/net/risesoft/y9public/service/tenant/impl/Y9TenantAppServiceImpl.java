@@ -20,16 +20,18 @@ import org.springframework.transaction.annotation.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
+import net.risesoft.exception.TenantErrorCodeEnum;
 import net.risesoft.id.IdType;
 import net.risesoft.id.Y9IdGenerator;
 import net.risesoft.model.user.UserInfo;
 import net.risesoft.y9.Y9LoginUserHolder;
+import net.risesoft.y9.exception.util.Y9ExceptionUtil;
 import net.risesoft.y9public.entity.resource.Y9App;
 import net.risesoft.y9public.entity.tenant.Y9TenantApp;
+import net.risesoft.y9public.manager.resource.Y9AppManager;
 import net.risesoft.y9public.manager.tenant.Y9TenantAppManager;
 import net.risesoft.y9public.manager.tenant.Y9TenantManager;
 import net.risesoft.y9public.manager.tenant.Y9TenantSystemManager;
-import net.risesoft.y9public.repository.resource.Y9AppRepository;
 import net.risesoft.y9public.repository.tenant.Y9TenantAppRepository;
 import net.risesoft.y9public.service.tenant.Y9TenantAppService;
 import net.risesoft.y9public.specification.Y9TenantAppSpecification;
@@ -46,8 +48,8 @@ import net.risesoft.y9public.specification.Y9TenantAppSpecification;
 public class Y9TenantAppServiceImpl implements Y9TenantAppService {
 
     private final Y9TenantAppRepository y9TenantAppRepository;
-    private final Y9AppRepository y9AppRepository;
 
+    private final Y9AppManager y9AppManager;
     private final Y9TenantAppManager y9TenantAppManager;
     private final Y9TenantManager y9TenantManager;
     private final Y9TenantSystemManager y9TenantSystemManager;
@@ -81,8 +83,14 @@ public class Y9TenantAppServiceImpl implements Y9TenantAppService {
     }
 
     @Override
-    public Y9TenantApp findById(String id) {
-        return y9TenantAppRepository.findById(id).orElse(null);
+    public Optional<Y9TenantApp> findById(String id) {
+        return y9TenantAppRepository.findById(id);
+    }
+
+    @Override
+    public Y9TenantApp getById(String id) {
+        return y9TenantAppRepository.findById(id)
+            .orElseThrow(() -> Y9ExceptionUtil.notFoundException(TenantErrorCodeEnum.TENANT_APP_NOT_FOUND, id));
     }
 
     @Override
@@ -161,7 +169,7 @@ public class Y9TenantAppServiceImpl implements Y9TenantAppService {
     public Y9TenantApp save(String appId, String tenantId, String applyName, String applyReason) {
         Optional<Y9TenantApp> y9TenantAppOptional =
             y9TenantAppRepository.findByTenantIdAndAppIdAndTenancy(tenantId, appId, Boolean.TRUE);
-        Y9App y9App = y9AppRepository.findById(appId).orElse(null);
+        Y9App y9App = y9AppManager.getById(appId);
         String tenantDataSource =
             y9TenantSystemManager.getDataSourceIdByTenantIdAndSystemId(tenantId, y9App.getSystemId());
         if (y9TenantAppOptional.isPresent()) {

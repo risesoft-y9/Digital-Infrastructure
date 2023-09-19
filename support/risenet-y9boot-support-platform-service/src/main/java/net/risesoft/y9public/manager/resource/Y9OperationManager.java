@@ -1,5 +1,7 @@
 package net.risesoft.y9public.manager.resource;
 
+import java.util.Optional;
+
 import org.springframework.transaction.annotation.Transactional;
 
 import net.risesoft.y9public.entity.resource.Y9Operation;
@@ -12,7 +14,7 @@ import net.risesoft.y9public.entity.resource.Y9Operation;
  * @since 9.6.3
  */
 public interface Y9OperationManager {
-    Y9Operation findById(String id);
+    Optional<Y9Operation> findById(String id);
 
     Y9Operation getById(String id);
 

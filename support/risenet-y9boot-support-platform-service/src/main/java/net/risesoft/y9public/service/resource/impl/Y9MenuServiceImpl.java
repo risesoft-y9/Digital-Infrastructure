@@ -2,6 +2,7 @@ package net.risesoft.y9public.service.resource.impl;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.context.event.EventListener;
@@ -126,7 +127,7 @@ public class Y9MenuServiceImpl implements Y9MenuService {
     }
 
     @Override
-    public Y9Menu findById(String id) {
+    public Optional<Y9Menu> findById(String id) {
         return y9MenuManager.findById(id);
     }
 
@@ -169,8 +170,9 @@ public class Y9MenuServiceImpl implements Y9MenuService {
     @Transactional(readOnly = false)
     public Y9Menu saveOrUpdate(Y9Menu y9Menu) {
         if (StringUtils.isNotBlank(y9Menu.getId())) {
-            Y9Menu originMenuResource = y9MenuManager.findById(y9Menu.getId());
-            if (originMenuResource != null) {
+            Optional<Y9Menu> y9MenuOptional = y9MenuManager.findById(y9Menu.getId());
+            if (y9MenuOptional.isPresent()) {
+                Y9Menu originMenuResource = y9MenuOptional.get();
                 Y9Menu updatedMenuResource = new Y9Menu();
                 Y9BeanUtil.copyProperties(originMenuResource, updatedMenuResource);
                 Y9BeanUtil.copyProperties(y9Menu, updatedMenuResource);

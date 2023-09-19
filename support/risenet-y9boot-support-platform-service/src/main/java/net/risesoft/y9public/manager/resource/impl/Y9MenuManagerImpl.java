@@ -1,5 +1,7 @@
 package net.risesoft.y9public.manager.resource.impl;
 
+import java.util.Optional;
+
 import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
@@ -32,8 +34,8 @@ public class Y9MenuManagerImpl implements Y9MenuManager {
 
     @Override
     @Cacheable(key = "#id", condition = "#id!=null", unless = "#result==null")
-    public Y9Menu findById(String id) {
-        return y9MenuRepository.findById(id).orElse(null);
+    public Optional<Y9Menu> findById(String id) {
+        return y9MenuRepository.findById(id);
     }
 
     @Override

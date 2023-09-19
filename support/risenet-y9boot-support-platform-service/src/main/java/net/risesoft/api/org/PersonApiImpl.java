@@ -433,7 +433,7 @@ public class PersonApiImpl implements PersonApi {
         List<Role> roleList = new ArrayList<>();
         List<Y9PersonToRole> y9PersonToRoleList = y9PersonToRoleService.listByPersonId(personId);
         for (Y9PersonToRole y9PersonToRole : y9PersonToRoleList) {
-            Y9Role y9Role = y9RoleService.findById(y9PersonToRole.getRoleId());
+            Y9Role y9Role = y9RoleService.getById(y9PersonToRole.getRoleId());
             roleList.add(ModelConvertUtil.y9RoleToRole(y9Role));
         }
         return roleList;

@@ -52,7 +52,7 @@ public interface Y9DataSourceService {
      * @param id 数据源主键id
      * @return 数据源对象 或 null
      */
-    Y9DataSource findById(String id);
+    Optional<Y9DataSource> findById(String id);
 
     /**
      * 根据 jndi数据源名称 查找

@@ -43,9 +43,9 @@ public class PositionsToGroupsController {
      */
     @RiseLog(operationName = "批量添加用户组的岗位", operationType = OperationTypeEnum.ADD)
     @PostMapping(value = "/addPositions")
-    public Y9Result<List<Y9Position>> addPositions(@RequestParam String groupId, @RequestParam String[] positionIds) {
-        List<Y9Position> list = y9PositionsToGroupsService.saveGroupPosition(groupId, positionIds);
-        return Y9Result.success(list, "添加岗位成功");
+    public Y9Result<Object> addPositions(@RequestParam String groupId, @RequestParam String[] positionIds) {
+        y9PositionsToGroupsService.saveGroupPosition(groupId, positionIds);
+        return Y9Result.successMsg("添加岗位成功");
     }
 
     /**

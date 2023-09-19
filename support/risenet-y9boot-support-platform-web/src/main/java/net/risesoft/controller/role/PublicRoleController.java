@@ -38,7 +38,7 @@ public class PublicRoleController {
     @RiseLog(operationName = "获取系统公共角色顶节点")
     @RequestMapping(value = "/treeRoot")
     public Y9Result<List<RoleVO>> publicRoleRoot() {
-        Y9Role y9Role = y9RoleService.findById(DefaultIdConsts.TOP_PUBLIC_ROLE_ID);
+        Y9Role y9Role = y9RoleService.getById(DefaultIdConsts.TOP_PUBLIC_ROLE_ID);
         List<RoleVO> y9RoleList = new ArrayList<>();
         RoleVO role = Y9ModelConvertUtil.convert(y9Role, RoleVO.class);
         role.setHasChild(Boolean.TRUE);

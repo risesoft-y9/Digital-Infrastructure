@@ -6,6 +6,7 @@ import java.util.Optional;
 import org.springframework.data.domain.Page;
 import org.springframework.web.multipart.MultipartFile;
 
+import net.risesoft.y9.exception.Y9NotFoundException;
 import net.risesoft.y9public.entity.resource.Y9AppIcon;
 
 /**
@@ -36,7 +37,7 @@ public interface Y9AppIconService {
      * @param id 唯一标识
      * @return 应用图标对象 或 null
      */
-    Y9AppIcon findById(String id);
+    Optional<Y9AppIcon> findById(String id);
 
     /**
      * 根据名字获取应用图标
@@ -45,6 +46,15 @@ public interface Y9AppIconService {
      * @return Y9AppIcon
      */
     Optional<Y9AppIcon> findByName(String name);
+
+    /**
+     * 根据 id 获取应用图标
+     *
+     * @param id id
+     * @return {@link Y9AppIcon}
+     * @throws Y9NotFoundException id 对应的记录不存在的情况
+     */
+    Y9AppIcon getById(String id);
 
     /**
      * 查询所有图标

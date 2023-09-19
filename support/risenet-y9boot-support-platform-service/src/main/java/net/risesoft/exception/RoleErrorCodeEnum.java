@@ -14,7 +14,9 @@ import net.risesoft.consts.ErrorCodeConsts;
 @RequiredArgsConstructor
 public enum RoleErrorCodeEnum implements ErrorCode {
     /** role not found */
-    ROLE_NOT_FOUND(0, "角色[{}]不存在");
+    ROLE_NOT_FOUND(0, "角色[{}]不存在"),
+    /** orgunit role not found */
+    ORGUNIT_ROLE_NOT_FOUND(1, "组织节点和角色的关联[{}]不存在"),;
 
     private final int moduleErrorCode;
     private final String description;

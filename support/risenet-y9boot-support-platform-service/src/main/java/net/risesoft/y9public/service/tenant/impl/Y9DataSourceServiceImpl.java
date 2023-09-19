@@ -85,8 +85,8 @@ public class Y9DataSourceServiceImpl implements Y9DataSourceService {
     }
 
     @Override
-    public Y9DataSource findById(String id) {
-        return datasourceRepository.findById(id).orElse(null);
+    public Optional<Y9DataSource> findById(String id) {
+        return datasourceRepository.findById(id);
     }
 
     @Override
