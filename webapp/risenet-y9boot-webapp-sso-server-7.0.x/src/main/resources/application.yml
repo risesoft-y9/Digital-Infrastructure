@@ -302,6 +302,9 @@ spring:
         #suffix: .html
         template-resolver-order: 100
 y9:
+    common:
+        kafkaEnabled: true
+        logBaseUrl: http://localhost:7055/log
     login:
         casLoginView: "casLoginView-y9-v3.0"
         credentialPropsOptional: "isValidateIE,screenDimension,userAgent,systemName,clientIp,clientMac,clientDiskId,clientHostName,deptId,positionId"
