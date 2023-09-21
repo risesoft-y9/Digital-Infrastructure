@@ -340,10 +340,13 @@ $('#mpanel6').pointsVerify({
 		
 		var username = $("#username1").val();
 		var password = $("#password").val();
+		var pwdEcodeType=$('#pwdEcodeType').val();
+		
 		var encodeUserName = encode64(username);
 		var encodePassword = encode64(password);
+		var rsapwd=encrypt(pwdEcodeType,encodePassword);
 		$("#username1").val(encodeUserName);
-		$("#password1").val(encodePassword);
+		$("#password1").val(rsapwd);
 		$("#fm1").submit();
 	},
 	error : function() {
@@ -365,3 +368,10 @@ $('#mpanel6').pointsVerify({
 		$(".verify-refresh").click();
 	}
 });
+//加密
+function encrypt(publicKey,pwd){
+     var encrypt = new JSEncrypt();
+     encrypt.setPublicKey(publicKey);
+     var encrypted = encrypt.encrypt(pwd);
+     return encrypted;
+}

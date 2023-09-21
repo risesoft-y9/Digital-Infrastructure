@@ -115,7 +115,7 @@ public class Y9LoginUserServiceImpl implements Y9LoginUserService {
                 user.setOSName(uaInfo.getOsName());
                 user.setManagerLevel(managerLevel);
 
-                entityManager.persist(user);
+                transactionTemplate.execute(status -> entityManager.merge(user));
             }
         } catch (Exception e) {
             e.printStackTrace();

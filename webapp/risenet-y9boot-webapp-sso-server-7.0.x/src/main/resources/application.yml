@@ -104,7 +104,6 @@ cas:
         defaultRedirectUrl: http://localhost:7070/home
         #当defaultRedirectUrl为空、并且service参数为空时，自动计算service
         authorizedServicesOnSuccessfulLogin: true
-        
     webflow:
         crypto:
             enabled: true
@@ -167,7 +166,7 @@ cas:
         sameSitePolicy: None
     ticket:
         crypto:
-            enabled: true
+            enabled: false
             encryption:
                 key: "p9PWTU6aGGD_NI8dznomSLEcRu2XIjSSgnSWaxwzCvI"
                 keySize: 256
@@ -204,7 +203,6 @@ cas:
                     signing:
                         key: "CzPeT3D2l7C-dwR2LfV9DFHrwmPGXCSsEReZeTn76xiWNU45De8s1CAdPNXovoBpEilbeTY1PkwPQuMxZdN4mQ"
                         keySize: 512
-                    
         st:
             maxLength: 50
             numberOfUses: 10
@@ -214,7 +212,7 @@ cas:
                 maxTimeToLiveInSeconds: 28800
                 timeToKillInSeconds: 7200
             core:
-                maxLength: 50            
+                maxLength: 50
             rememberMe:
                 enabled: true
                 timeToKillInSeconds: 28800
@@ -223,7 +221,7 @@ cas:
 
 management:
     metrics:
-        enable: 
+        enable:
             all: false
 server:
     port: 7055
@@ -273,7 +271,7 @@ spring:
             port: 7379
             username: default
             password: y9i-83204585
-            ssl: 
+            ssl:
                 enabled: false
             lettuce:
                 pool:
@@ -307,4 +305,4 @@ y9:
         logBaseUrl: http://localhost:7055/log
     login:
         casLoginView: "casLoginView-y9-v3.0"
-        credentialPropsOptional: "isValidateIE,screenDimension,userAgent,systemName,clientIp,clientMac,clientDiskId,clientHostName,deptId,positionId"
+        credentialPropsOptional: "isValidateIE,screenDimension,userAgent,systemName,clientIp,clientMac,clientDiskId,clientHostName,deptId,positionId,pwdEcodeType"
