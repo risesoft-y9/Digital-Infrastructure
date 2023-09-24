@@ -1,0 +1,18 @@
+version: '3.9'
+name: portainer
+services:
+  portainer:
+    image: 6053537/portainer-ce:latest
+    container_name: portainer
+    restart: always
+    networks:
+      - y9-share_net
+    ports:
+      - "9000:9000"
+    volumes:
+      - d:/docker-data/portainer:/data
+      - /var/run/docker.sock:/var/run/docker.sock
+
+networks:
+  y9-share_net:
+    external: true

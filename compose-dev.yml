@@ -1,10 +1,12 @@
-version: '3.8'
+version: '3.9'
 name: y9-dev-environments
 services:
   db:
     image: mysql:latest
     container_name: mysql01
     restart: always
+    networks:
+      - y9-share_net
     ports:
       - "3306:3306"
     command: --default-authentication-plugin=mysql_native_password
@@ -24,6 +26,8 @@ services:
     image: redis:latest
     container_name: redis01
     restart: always
+    networks:
+      - y9-share_net
     ports:
       - "6379:6379"
     command: redis-server --requirepass "12345678"
@@ -34,6 +38,8 @@ services:
     image: elasticsearch:8.9.2
     container_name: elastic01
     restart: always
+    networks:
+      - y9-share_net
     ports:
       - '9200:9200'
       - '9300:9300'
@@ -49,6 +55,8 @@ services:
     image: bitnami/kafka:latest
     container_name: kafka01
     restart: always
+    networks:
+      - y9-share_net
     ports:
       - "9092:9092"
       - "9094:9094"
@@ -67,6 +75,8 @@ services:
     image: nacos/nacos-server:v2.2.3
     container_name: nacos-standalone-derby
     restart: always
+    networks:
+      - y9-share_net
     ports:
       - "8848:8848"
       - "9848:9848"
@@ -89,8 +99,8 @@ services:
       - NACOS_AUTH_TOKEN=VGhpc0lzTXlDdXN0b21TZWNyZXRLZXkwMTIzNDU2Nzg=
     volumes:
       - d:/docker-data/nacos-logs:/home/nacos/logs
-    
-    
-    
-    
       
+networks:
+  y9-share_net:
+    external: true
+        
