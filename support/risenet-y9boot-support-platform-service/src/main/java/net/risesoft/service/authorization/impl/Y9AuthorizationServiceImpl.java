@@ -191,11 +191,7 @@ public class Y9AuthorizationServiceImpl implements Y9AuthorizationService {
             page = 1;
         }
         PageRequest pageable = PageRequest.of(page - 1, rows);
-        if (principalId != null) {
-            return y9AuthorizationRepository.findByPrincipalId(principalId, pageable);
-        } else {
-            return y9AuthorizationRepository.findAll(pageable);
-        }
+        return y9AuthorizationRepository.findByPrincipalId(principalId, pageable);
     }
 
     @Override

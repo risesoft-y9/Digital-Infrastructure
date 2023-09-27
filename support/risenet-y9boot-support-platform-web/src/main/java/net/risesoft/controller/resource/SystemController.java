@@ -1,5 +1,7 @@
 package net.risesoft.controller.resource;
 
+import jakarta.validation.constraints.NotBlank;
+
 import java.util.List;
 
 import org.springframework.validation.annotation.Validated;
@@ -46,7 +48,7 @@ public class SystemController {
      */
     @RiseLog(operationName = "删除系统")
     @PostMapping(value = "/delete")
-    public Y9Result<Object> delete(@RequestParam String id) {
+    public Y9Result<Object> delete(@RequestParam @NotBlank String id) {
         y9SystemService.delete(id);
 
         // 删除租用系统以兼容数字底座
@@ -63,7 +65,7 @@ public class SystemController {
      */
     @RiseLog(operationName = "禁用系统")
     @PostMapping(value = "/disable")
-    public Y9Result<Y9System> disable(@RequestParam String id) {
+    public Y9Result<Y9System> disable(@RequestParam @NotBlank String id) {
         return Y9Result.success(y9SystemService.disable(id), "禁用系统成功");
     }
 
@@ -75,7 +77,7 @@ public class SystemController {
      */
     @RiseLog(operationName = "启用系统")
     @PostMapping(value = "/enable")
-    public Y9Result<Y9System> enable(@RequestParam String id) {
+    public Y9Result<Y9System> enable(@RequestParam @NotBlank String id) {
         return Y9Result.success(y9SystemService.enable(id), "启用系统成功");
     }
 
@@ -87,7 +89,7 @@ public class SystemController {
      */
     @RiseLog(operationName = "根据系统id获取系统详情")
     @GetMapping(value = "/{id}")
-    public Y9Result<Y9System> getById(@PathVariable String id) {
+    public Y9Result<Y9System> getById(@PathVariable @NotBlank String id) {
         return Y9Result.success(y9SystemService.getById(id), "根据系统id获取系统详情成功");
     }
 
@@ -126,7 +128,7 @@ public class SystemController {
         Y9System savedSystem = y9SystemService.saveOrUpdate(y9System);
         // TODO move to Service?
         // 新增系统时租户直接租用以兼容数字底座
-        y9TenantSystemService.registerTenantSystem(Y9LoginUserHolder.getTenantId(), savedSystem.getId());
+        y9TenantSystemService.registerSystemForTenant(Y9LoginUserHolder.getTenantId(), savedSystem.getId());
         return Y9Result.success(savedSystem, "保存系统成功");
     }
 

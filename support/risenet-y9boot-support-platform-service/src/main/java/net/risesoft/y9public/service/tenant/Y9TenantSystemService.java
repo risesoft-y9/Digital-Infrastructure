@@ -191,5 +191,5 @@ public interface Y9TenantSystemService {
      * @param tenantId 租户id
      * @param systemId 系统id
      */
-    void registerTenantSystem(String tenantId, String systemId);
+    void registerSystemForTenant(String tenantId, String systemId);
 }

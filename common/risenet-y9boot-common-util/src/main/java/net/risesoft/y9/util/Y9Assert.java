@@ -1,5 +1,9 @@
 package net.risesoft.y9.util;
 
+import java.util.Collection;
+
+import org.apache.commons.collections4.CollectionUtils;
+
 import net.risesoft.exception.ErrorCode;
 import net.risesoft.y9.exception.Y9BusinessException;
 import net.risesoft.y9.exception.Y9NotFoundException;
@@ -50,6 +54,19 @@ public class Y9Assert {
      */
     public static void isNull(Object object, ErrorCode errorCode, Object... arguments) {
         if (object != null) {
+            throw Y9ExceptionUtil.businessException(errorCode, arguments);
+        }
+    }
+
+    /**
+     * 当 list 不为空时抛出异常 {@link Y9BusinessException}
+     *
+     * @param list 列表
+     * @param errorCode 错误代码
+     * @param arguments 参数
+     */
+    public static void isEmpty(Collection<?> list, ErrorCode errorCode, Object... arguments) {
+        if (CollectionUtils.isNotEmpty(list)) {
             throw Y9ExceptionUtil.businessException(errorCode, arguments);
         }
     }

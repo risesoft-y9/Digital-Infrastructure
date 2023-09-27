@@ -1,5 +1,7 @@
 package net.risesoft.controller.identity;
 
+import jakarta.validation.constraints.NotBlank;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -34,7 +36,7 @@ public class PersonRolesController {
     private final Y9PersonToRoleService y9PersonToRoleService;
 
     @GetMapping
-    public Y9Result<List<RolePermissionVO>> getByPersonId(@RequestParam String personId) {
+    public Y9Result<List<RolePermissionVO>> getByPersonId(@RequestParam @NotBlank String personId) {
         List<Y9PersonToRole> rolePermissionVOList = y9PersonToRoleService.listByPersonId(personId);
         return Y9Result
             .success(rolePermissionVOBuilder.buildRolePermissionVOList(new ArrayList<>(rolePermissionVOList)));

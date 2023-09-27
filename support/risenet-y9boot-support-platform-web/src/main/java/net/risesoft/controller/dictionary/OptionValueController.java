@@ -1,5 +1,8 @@
 package net.risesoft.controller.dictionary;
 
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotEmpty;
+
 import java.util.List;
 
 import org.springframework.validation.annotation.Validated;
@@ -42,7 +45,7 @@ public class OptionValueController {
      */
     @RiseLog(operationName = "获取字典属性值列表")
     @RequestMapping(value = "/listByType")
-    public Y9Result<List<Y9OptionValue>> listByType(@RequestParam("type") String type) {
+    public Y9Result<List<Y9OptionValue>> listByType(@RequestParam("type") @NotBlank String type) {
         return Y9Result.success(y9OptionValueService.listByType(type), "获取字典属性值列表成功");
     }
 
@@ -125,7 +128,7 @@ public class OptionValueController {
      */
     @RiseLog(operationName = "删除字典数据", operationType = OperationTypeEnum.DELETE)
     @PostMapping(value = "/removeByIds")
-    public Y9Result<String> removeByIds(@RequestParam("ids") String[] ids) {
+    public Y9Result<String> removeByIds(@RequestParam("ids") @NotEmpty String[] ids) {
         y9OptionValueService.delete(ids);
         return Y9Result.successMsg("删除字典数据成功");
     }

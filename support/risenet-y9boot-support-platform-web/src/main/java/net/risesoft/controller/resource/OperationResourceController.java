@@ -1,5 +1,7 @@
 package net.risesoft.controller.resource;
 
+import jakarta.validation.constraints.NotBlank;
+
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -39,7 +41,7 @@ public class OperationResourceController {
      */
     @RiseLog(operationName = "删除操作按钮资源")
     @PostMapping(value = "/delete")
-    public Y9Result<Object> delete(@RequestParam String id) {
+    public Y9Result<Object> delete(@RequestParam @NotBlank String id) {
         y9OperationService.delete(id);
         return Y9Result.successMsg("删除操作按钮资源成功");
     }
@@ -52,7 +54,7 @@ public class OperationResourceController {
      */
     @RiseLog(operationName = "禁用操作按钮资源")
     @PostMapping(value = "/disable")
-    public Y9Result<Y9Operation> disable(@RequestParam String id) {
+    public Y9Result<Y9Operation> disable(@RequestParam @NotBlank String id) {
         return Y9Result.success(y9OperationService.disable(id), "禁用操作按钮资源成功");
     }
 
@@ -64,7 +66,7 @@ public class OperationResourceController {
      */
     @RiseLog(operationName = "启用操作按钮资源")
     @PostMapping(value = "/enable")
-    public Y9Result<Y9Operation> enable(@RequestParam String id) {
+    public Y9Result<Y9Operation> enable(@RequestParam @NotBlank String id) {
         return Y9Result.success(y9OperationService.enable(id), "启用操作按钮资源成功");
     }
 
@@ -76,7 +78,7 @@ public class OperationResourceController {
      */
     @RiseLog(operationName = "根据id获取操作按钮资源详情")
     @GetMapping(value = "/{id}")
-    public Y9Result<Y9Operation> getById(@PathVariable String id) {
+    public Y9Result<Y9Operation> getById(@PathVariable @NotBlank String id) {
         return Y9Result.success(y9OperationService.getById(id), "根据id获取操作按钮资源详情成功");
     }
 
@@ -102,7 +104,7 @@ public class OperationResourceController {
      */
     @RiseLog(operationName = "移动按钮资源", operationType = OperationTypeEnum.MODIFY)
     @PostMapping(value = "/move")
-    public Y9Result<Y9Operation> saveMove(@RequestParam String id, @RequestParam String parentId) {
+    public Y9Result<Y9Operation> saveMove(@RequestParam @NotBlank String id, @RequestParam @NotBlank String parentId) {
         return Y9Result.success(y9OperationService.move(id, parentId), "移动按钮资源成功");
     }
 }

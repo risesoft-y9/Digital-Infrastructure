@@ -1,5 +1,7 @@
 package net.risesoft.controller.manager;
 
+import jakarta.validation.constraints.NotBlank;
+
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
@@ -7,6 +9,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -19,7 +22,6 @@ import net.risesoft.log.OperationTypeEnum;
 import net.risesoft.log.annotation.RiseLog;
 import net.risesoft.pojo.Y9Result;
 import net.risesoft.service.org.Y9ManagerService;
-import net.risesoft.y9.util.signing.Y9MessageDigest;
 
 /**
  * 个人中心
@@ -31,6 +33,7 @@ import net.risesoft.y9.util.signing.Y9MessageDigest;
 @RestController
 @RequestMapping(value = "/api/rest/personalCenter", produces = "application/json")
 @RequiredArgsConstructor
+@Validated
 public class PersonalCenterController {
 
     private final Y9ManagerService y9ManagerService;
@@ -44,10 +47,9 @@ public class PersonalCenterController {
      */
     @RiseLog(operationName = "校验密码")
     @RequestMapping("/checkPassword")
-    public Y9Result<Boolean> checkPassword(@RequestParam(required = true) String personId,
-        @RequestParam(required = true) String password) {
-        Y9Manager manager = y9ManagerService.getById(personId);
-        return Y9Result.success(Y9MessageDigest.checkpw(password, manager.getPassword()), "校验密码操作成功");
+    public Y9Result<Boolean> checkPassword(@RequestParam @NotBlank String personId,
+        @RequestParam @NotBlank String password) {
+        return Y9Result.success(y9ManagerService.checkPassword(personId, password), "校验密码操作成功");
     }
 
     /**
@@ -58,7 +60,8 @@ public class PersonalCenterController {
      */
     @RiseLog(operationName = "根据人员id，获取人员信息")
     @RequestMapping(value = "/getManagerById")
-    public Y9Result<Map<String, Object>> getManagerById(@RequestParam String managerId) throws ParseException {
+    public Y9Result<Map<String, Object>> getManagerById(@RequestParam @NotBlank String managerId)
+        throws ParseException {
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         Map<String, Object> map = new HashMap<>(8);
 
@@ -86,7 +89,8 @@ public class PersonalCenterController {
      */
     @RiseLog(operationType = OperationTypeEnum.MODIFY, operationName = "修改密码")
     @PostMapping(value = "/modifyPassword")
-    public Y9Result<String> modifyPassword(@RequestParam String personId, @RequestParam String newPassword) {
+    public Y9Result<String> modifyPassword(@RequestParam @NotBlank String personId,
+        @RequestParam @NotBlank String newPassword) {
         y9ManagerService.changePassword(personId, newPassword);
         return Y9Result.successMsg("修改成功");
     }

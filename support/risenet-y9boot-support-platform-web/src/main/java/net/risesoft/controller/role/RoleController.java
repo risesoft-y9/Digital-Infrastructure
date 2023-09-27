@@ -1,6 +1,8 @@
 package net.risesoft.controller.role;
 
 import jakarta.servlet.http.HttpServletResponse;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotEmpty;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -15,6 +17,7 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 import org.apache.commons.lang3.StringUtils;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -55,6 +58,7 @@ import net.risesoft.y9public.service.role.Y9RoleService;
 @RequestMapping(value = "/api/rest/role", produces = "application/json")
 @Slf4j
 @RequiredArgsConstructor
+@Validated
 public class RoleController {
 
     private final Y9RoleService y9RoleService;
@@ -70,7 +74,7 @@ public class RoleController {
      */
     @RiseLog(operationName = "删除角色", operationType = OperationTypeEnum.DELETE)
     @PostMapping(value = "/deleteById")
-    public Y9Result<String> deleteById(@RequestParam String id) {
+    public Y9Result<String> deleteById(@RequestParam @NotBlank String id) {
         y9RoleService.delete(id);
         return Y9Result.successMsg("删除成功");
     }
@@ -83,7 +87,7 @@ public class RoleController {
      */
     @RiseLog(operationName = "导出角色树XML", operationType = OperationTypeEnum.ADD)
     @GetMapping(value = "/exportRoleXml")
-    public void exportRoleXml(@RequestParam String resourceId, HttpServletResponse response) {
+    public void exportRoleXml(@RequestParam @NotBlank String resourceId, HttpServletResponse response) {
         try (OutputStream outStream = response.getOutputStream()) {
 
             Y9App y9App = y9AppService.getById(resourceId);
@@ -107,7 +111,7 @@ public class RoleController {
      */
     @RiseLog(operationName = "获取扩展属性")
     @RequestMapping(value = "/getExtendProperties")
-    public Y9Result<String> getExtendProperties(@RequestParam String roleId) {
+    public Y9Result<String> getExtendProperties(@RequestParam @NotBlank String roleId) {
         String properties = y9RoleService.getById(roleId).getProperties();
         return Y9Result.success(properties, "获取扩展属性成功");
     }
@@ -120,7 +124,7 @@ public class RoleController {
      */
     @RiseLog(operationName = "获取角色对象")
     @RequestMapping(value = "/getRoleById")
-    public Y9Result<Y9Role> getRoleById(@RequestParam String id) {
+    public Y9Result<Y9Role> getRoleById(@RequestParam @NotBlank String id) {
         return Y9Result.success(y9RoleService.getById(id), "获取角色对象成功");
     }
 
@@ -156,7 +160,7 @@ public class RoleController {
      */
     @RiseLog(operationName = "导入角色", operationType = OperationTypeEnum.ADD)
     @RequestMapping(value = "/impRoleXml")
-    public Y9Result<String> impRoleXml(@RequestParam MultipartFile file, @RequestParam String roleId)
+    public Y9Result<String> impRoleXml(@RequestParam MultipartFile file, @RequestParam @NotBlank String roleId)
         throws IOException {
         String uploadDir = Y9Context.getRealPath("/file/temp/");
         File f = Y9FileUtil.writeFile(file.getInputStream(), ".xml", uploadDir);
@@ -174,7 +178,7 @@ public class RoleController {
      */
     @RiseLog(operationName = "根据父节点id，获取角色节点列表 ")
     @RequestMapping(value = "/listByParentId")
-    public Y9Result<List<Y9Role>> listByParentId(@RequestParam String parentId) {
+    public Y9Result<List<Y9Role>> listByParentId(@RequestParam @NotBlank String parentId) {
         List<Y9Role> roleList = y9RoleService.listByParentId(parentId);
         return Y9Result.success(roleList, "获取角色列表成功");
     }
@@ -187,7 +191,7 @@ public class RoleController {
      */
     @RiseLog(operationName = "保存角色节点扩展属性(直接覆盖)", operationType = OperationTypeEnum.MODIFY)
     @PostMapping(value = "/saveExtendProperties")
-    public Y9Result<String> saveExtendProperties(@RequestParam String id, @RequestParam String properties) {
+    public Y9Result<String> saveExtendProperties(@RequestParam @NotBlank String id, @RequestParam String properties) {
         Y9Role role = y9RoleService.saveProperties(id, properties);
         return Y9Result.success(role.getProperties(), "保存角色或节点扩展属性成功");
     }
@@ -201,7 +205,7 @@ public class RoleController {
      */
     @RiseLog(operationName = "保存角色节点移动信息 ", operationType = OperationTypeEnum.MODIFY)
     @PostMapping(value = "/saveMove")
-    public Y9Result<String> saveMove(@RequestParam String id, @RequestParam String parentId) {
+    public Y9Result<String> saveMove(@RequestParam @NotBlank String id, @RequestParam @NotBlank String parentId) {
         y9RoleService.move(id, parentId);
         return Y9Result.successMsg("保存角色节点移动信息成功");
     }
@@ -214,7 +218,7 @@ public class RoleController {
      */
     @RiseLog(operationName = "保存角色节点排序 ", operationType = OperationTypeEnum.MODIFY)
     @PostMapping(value = "/saveOrder")
-    public Y9Result<String> saveOrder(@RequestParam List<String> ids) {
+    public Y9Result<String> saveOrder(@RequestParam @NotEmpty List<String> ids) {
         y9RoleService.saveOrder(ids);
         return Y9Result.successMsg("保存角色节点排序成功");
     }

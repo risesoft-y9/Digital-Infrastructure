@@ -1,6 +1,7 @@
 package net.risesoft.controller.org;
 
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotEmpty;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -59,7 +60,7 @@ public class OrgController {
      */
     @RiseLog(operationName = "获取扩展属性")
     @RequestMapping(value = "/getExtendProperties")
-    public Y9Result<String> getExtendProperties(@RequestParam String orgId) {
+    public Y9Result<String> getExtendProperties(@RequestParam @NotBlank String orgId) {
         String properties = y9OrganizationService.getById(orgId).getProperties();
         return Y9Result.success(properties, "获取扩展属性成功！");
     }
@@ -86,7 +87,8 @@ public class OrgController {
      */
     @RiseLog(operationName = "根据guidPath和禁用/未禁用状态查找部门下人员总数")
     @RequestMapping(value = "/getAllPersonsCount")
-    public Y9Result<Long> getPersonsCountByDisabled(@RequestParam String id, @RequestParam String orgType) {
+    public Y9Result<Long> getPersonsCountByDisabled(@RequestParam @NotBlank String id,
+        @RequestParam @NotBlank String orgType) {
         long count = 0;
         if (orgType.equals(OrgTypeEnum.ORGANIZATION.getEnName())) {
             Y9Organization org = y9OrganizationService.getById(id);
@@ -113,7 +115,8 @@ public class OrgController {
      */
     @RiseLog(operationName = "获取机构树子节点")
     @RequestMapping(value = "/getTree")
-    public Y9Result<List<Y9OrgBase>> getTree(@RequestParam String id, @RequestParam String treeType, boolean disabled) {
+    public Y9Result<List<Y9OrgBase>> getTree(@RequestParam @NotBlank String id, @RequestParam @NotBlank String treeType,
+        boolean disabled) {
         UserInfo userInfo = Y9LoginUserHolder.getUserInfo();
         List<Y9OrgBase> treeList = new ArrayList<>();
         if (userInfo.isGlobalManager() && userInfo.getManagerLevel() > 0) {
@@ -135,8 +138,8 @@ public class OrgController {
      */
     @RiseLog(operationName = "获取组织机构树")
     @RequestMapping(value = "/getTreeNoPerson")
-    public Y9Result<List<Y9OrgBase>> getTreeNoPerson(@RequestParam String id, @RequestParam String treeType,
-        @RequestParam boolean disabled) {
+    public Y9Result<List<Y9OrgBase>> getTreeNoPerson(@RequestParam @NotBlank String id,
+        @RequestParam @NotBlank String treeType, @RequestParam boolean disabled) {
         List<Y9OrgBase> treeList = compositeOrgBaseService.getTree(id, treeType, false, disabled);
         return Y9Result.success(treeList, "获取机构树成功！");
     }
@@ -171,7 +174,7 @@ public class OrgController {
      */
     @RiseLog(operationName = "删除机构", operationType = OperationTypeEnum.DELETE)
     @PostMapping(value = "/remove")
-    public Y9Result<String> remove(@RequestParam String orgId) {
+    public Y9Result<String> remove(@RequestParam @NotBlank String orgId) {
         y9OrganizationService.delete(orgId);
         return Y9Result.success(null, "删除组织机构成功！");
     }
@@ -184,7 +187,8 @@ public class OrgController {
      */
     @RiseLog(operationName = "新增扩展属性", operationType = OperationTypeEnum.ADD)
     @PostMapping(value = "/saveExtendProperties")
-    public Y9Result<String> saveExtendProperties(@RequestParam String orgId, @RequestParam String properties) {
+    public Y9Result<String> saveExtendProperties(@RequestParam @NotBlank String orgId,
+        @RequestParam String properties) {
         Y9Organization orgOrg = y9OrganizationService.saveProperties(orgId, properties);
         return Y9Result.success(orgOrg.getProperties(), "保存扩展属性成成功！");
     }
@@ -197,7 +201,7 @@ public class OrgController {
      */
     @RiseLog(operationName = "对组织机构按id顺序排序", operationType = OperationTypeEnum.MODIFY)
     @PostMapping(value = "/saveOrder")
-    public Y9Result<String> saveOrder(@RequestParam(value = "orgIds") List<String> orgIds) {
+    public Y9Result<String> saveOrder(@RequestParam(value = "orgIds") @NotEmpty List<String> orgIds) {
         y9OrganizationService.saveOrder(orgIds);
         return Y9Result.success(null, "保存机构排序成功！");
     }
@@ -225,7 +229,7 @@ public class OrgController {
      */
     @RiseLog(operationName = "同步数据", operationType = OperationTypeEnum.ADD)
     @PostMapping(value = "/sync")
-    public Y9Result<String> sync(@RequestParam String syncId, @RequestParam String orgType,
+    public Y9Result<String> sync(@RequestParam @NotBlank String syncId, @RequestParam @NotBlank String orgType,
         @RequestParam Integer needRecursion) {
         compositeOrgBaseService.sync(syncId, orgType, needRecursion);
         return Y9Result.success(null, "发送同步数据事件完成");
@@ -241,7 +245,7 @@ public class OrgController {
      */
     @RiseLog(operationName = "查询机构主体")
     @RequestMapping(value = "/treeSearch")
-    public Y9Result<List<Y9OrgBase>> treeSearch(@RequestParam String name, @RequestParam String treeType) {
+    public Y9Result<List<Y9OrgBase>> treeSearch(@RequestParam String name, @RequestParam @NotBlank String treeType) {
         UserInfo userInfo = Y9LoginUserHolder.getUserInfo();
         List<Y9OrgBase> treeList = new ArrayList<>();
         if (userInfo.isGlobalManager()) {

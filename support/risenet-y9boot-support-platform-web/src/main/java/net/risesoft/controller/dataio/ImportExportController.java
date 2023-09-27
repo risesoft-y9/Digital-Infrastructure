@@ -2,6 +2,7 @@ package net.risesoft.controller.dataio;
 
 import jakarta.servlet.ServletContext;
 import jakarta.servlet.http.HttpServletResponse;
+import jakarta.validation.constraints.NotBlank;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -11,6 +12,7 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -50,6 +52,7 @@ import net.risesoft.y9public.service.role.Y9RoleService;
 @RestController
 @RequestMapping(value = "/api/rest/impExp", produces = "application/json")
 @Slf4j
+@Validated
 public class ImportExportController {
 
     private final Y9OrgTreeDataHandler y9OrgTreeExcelDataHandler;
@@ -87,7 +90,7 @@ public class ImportExportController {
      */
     @RiseLog(operationName = "导出应用JSON", operationType = OperationTypeEnum.ADD)
     @GetMapping(value = "/exportAppJSON")
-    public void exportAppJson(@RequestParam String appId, HttpServletResponse response) {
+    public void exportAppJson(@RequestParam @NotBlank String appId, HttpServletResponse response) {
         try (OutputStream outStream = response.getOutputStream()) {
 
             Y9App y9App = y9AppService.getById(appId);
@@ -112,7 +115,7 @@ public class ImportExportController {
      */
     @RiseLog(operationName = "导出组织架构XLS", operationType = OperationTypeEnum.ADD)
     @GetMapping(value = "/exportOrgTreeXls")
-    public void exportOrgTreeXls(@RequestParam String resourceId, HttpServletResponse response) {
+    public void exportOrgTreeXls(@RequestParam @NotBlank String resourceId, HttpServletResponse response) {
         try (OutputStream outStream = response.getOutputStream()) {
             Y9OrgBase base = compositeOrgBaseService.getOrgUnit(resourceId);
             String filename =
@@ -125,7 +128,6 @@ public class ImportExportController {
         } catch (Exception e) {
             LOGGER.warn(e.getMessage(), e);
         }
-
     }
 
     /**
@@ -137,7 +139,7 @@ public class ImportExportController {
      */
     @RiseLog(operationName = "导出组织架构树XML", operationType = OperationTypeEnum.ADD)
     @GetMapping(value = "/exportOrgTreeXml")
-    public void exportOrgTreeXml(@RequestParam String orgBaseId, HttpServletResponse response) {
+    public void exportOrgTreeXml(@RequestParam @NotBlank String orgBaseId, HttpServletResponse response) {
         try (OutputStream outStream = response.getOutputStream()) {
 
             Y9OrgBase y9OrgBase = compositeOrgBaseService.getOrgUnit(orgBaseId);
@@ -161,7 +163,7 @@ public class ImportExportController {
      */
     @RiseLog(operationName = "导出人员XLS", operationType = OperationTypeEnum.ADD)
     @GetMapping(value = "/exportOrgXls")
-    public void exportPersonXls(@RequestParam String orgBaseId, HttpServletResponse response) {
+    public void exportPersonXls(@RequestParam @NotBlank String orgBaseId, HttpServletResponse response) {
         try (OutputStream outStream = response.getOutputStream();) {
             Y9OrgBase base = compositeOrgBaseService.getOrgUnit(orgBaseId);
             String filename =
@@ -182,7 +184,7 @@ public class ImportExportController {
      */
     @RiseLog(operationName = "导出角色树XML", operationType = OperationTypeEnum.ADD)
     @GetMapping(value = "/exportRoleXml")
-    public void exportRoleXml(@RequestParam String resourceId, HttpServletResponse response) {
+    public void exportRoleXml(@RequestParam @NotBlank String resourceId, HttpServletResponse response) {
 
         try (OutputStream outStream = response.getOutputStream()) {
 
@@ -208,7 +210,7 @@ public class ImportExportController {
      */
     @RiseLog(operationName = "导出系统JSON", operationType = OperationTypeEnum.ADD)
     @GetMapping(value = "/exportSystemJSON")
-    public void exportSystemJson(@RequestParam String systemId, HttpServletResponse response) {
+    public void exportSystemJson(@RequestParam @NotBlank String systemId, HttpServletResponse response) {
         try (OutputStream outStream = response.getOutputStream()) {
 
             Y9System y9System = y9SystemService.getById(systemId);
