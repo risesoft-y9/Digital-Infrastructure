@@ -41,6 +41,15 @@ public interface Y9ManagerService {
     boolean checkLoginName(String id, String loginName);
 
     /**
+     * 检查密码是否正确
+     *
+     * @param personId 人员ID
+     * @param password 密码
+     * @return
+     */
+    boolean checkPassword(String personId, String password);
+
+    /**
      * 初始化安全审计员
      *
      * @param id 管理员id

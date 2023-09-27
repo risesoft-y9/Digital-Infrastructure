@@ -53,4 +53,9 @@ public class Y9TenantAppManagerImpl implements Y9TenantAppManager {
     public Optional<Y9TenantApp> getByTenantIdAndAppIdAndTenancy(String tenantId, String appId, Boolean tenancy) {
         return y9TenantAppRepository.findByTenantIdAndAppIdAndTenancy(tenantId, appId, tenancy);
     }
+
+    @Override
+    public List<Y9TenantApp> listByAppIdAndTenancy(String appId, Boolean tenancy) {
+        return y9TenantAppRepository.findByAppIdAndTenancy(appId, tenancy);
+    }
 }

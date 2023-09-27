@@ -3,6 +3,7 @@ package net.risesoft.controller.org;
 import java.util.List;
 
 import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotEmpty;
 
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -44,7 +45,7 @@ public class JobController {
      */
     @RiseLog(operationName = "根据id列表删除职位", operationType = OperationTypeEnum.DELETE)
     @GetMapping("/deleteByIds")
-    public Y9Result<Void> deleteById(@RequestParam("ids") List<String> ids) {
+    public Y9Result<Void> deleteById(@RequestParam("ids") @NotEmpty List<String> ids) {
         y9JobService.delete(ids);
         return Y9Result.successMsg("删除成功");
     }
@@ -57,7 +58,7 @@ public class JobController {
      */
     @RiseLog(operationName = "根据id查找职位", operationType = OperationTypeEnum.BROWSE)
     @GetMapping("/getJobById/{id}")
-    public Y9Result<Y9Job> getJobById(@PathVariable("id") String id) {
+    public Y9Result<Y9Job> getJobById(@PathVariable("id") @NotBlank String id) {
         Y9Job y9Job = y9JobService.getById(id);
         return Y9Result.success(y9Job, "操作成功");
     }
@@ -78,8 +79,7 @@ public class JobController {
     /**
      * 保存职位排序结果
      *
-     * @param jobIds 职位id数组
-     * @param tabindexs 排序号数组
+     * @param jobIds 职位id列表
      * @return
      */
     @RiseLog(operationName = "保存职位排序", operationType = OperationTypeEnum.MODIFY)
@@ -111,7 +111,7 @@ public class JobController {
      */
     @RiseLog(operationName = "根据名称获取职位", operationType = OperationTypeEnum.BROWSE)
     @GetMapping("/searchByName")
-    public Y9Result<List<Y9Job>> searchByName(@NotBlank @RequestParam String name) {
+    public Y9Result<List<Y9Job>> searchByName(@RequestParam String name) {
         List<Y9Job> y9Jobs = y9JobService.listByName(name);
         return Y9Result.success(y9Jobs, "操作成功");
     }

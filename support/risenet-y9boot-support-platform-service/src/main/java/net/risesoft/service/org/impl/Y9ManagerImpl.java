@@ -85,6 +85,12 @@ public class Y9ManagerImpl implements Y9ManagerService {
     }
 
     @Override
+    public boolean checkPassword(String personId, String password) {
+        Y9Manager manager = this.getById(personId);
+        return Y9MessageDigest.checkpw(password, manager.getPassword());
+    }
+
+    @Override
     @Transactional(readOnly = false)
     public void createAuditManager(String id, String tenantId, String organizationId) {
         Y9LoginUserHolder.setTenantId(tenantId);
@@ -202,7 +208,8 @@ public class Y9ManagerImpl implements Y9ManagerService {
 
     @Override
     public Y9Manager getById(String id) {
-        return y9ManagerRepository.findById(id).orElseThrow(() -> Y9ExceptionUtil.notFoundException(OrgUnitErrorCodeEnum.MANAGER_NOT_FOUND, id));
+        return y9ManagerRepository.findById(id)
+            .orElseThrow(() -> Y9ExceptionUtil.notFoundException(OrgUnitErrorCodeEnum.MANAGER_NOT_FOUND, id));
     }
 
     @Override
@@ -293,8 +300,10 @@ public class Y9ManagerImpl implements Y9ManagerService {
                 return oldManager;
             } else {
                 y9Manager.setTenantId(Y9LoginUserHolder.getTenantId());
-                y9Manager.setTabIndex(compositeOrgBaseManager.getMaxSubTabIndex(y9Manager.getParentId(), OrgTypeEnum.MANAGER));
-                y9Manager.setDn(OrgLevelConsts.getOrgLevel(OrgTypeEnum.MANAGER) + y9Manager.getName() + OrgLevelConsts.SEPARATOR + parent.getDn());
+                y9Manager.setTabIndex(
+                    compositeOrgBaseManager.getMaxSubTabIndex(y9Manager.getParentId(), OrgTypeEnum.MANAGER));
+                y9Manager.setDn(OrgLevelConsts.getOrgLevel(OrgTypeEnum.MANAGER) + y9Manager.getName()
+                    + OrgLevelConsts.SEPARATOR + parent.getDn());
                 y9Manager.setDisabled(false);
                 y9Manager.setOrgType(OrgTypeEnum.MANAGER.getEnName());
                 if (mobile != null && mobile.length() == MOBILE_NUMBER_LENGTH) {
@@ -312,7 +321,8 @@ public class Y9ManagerImpl implements Y9ManagerService {
         y9Manager.setId(Y9IdGenerator.genId(IdType.SNOWFLAKE));
         y9Manager.setTenantId(Y9LoginUserHolder.getTenantId());
         y9Manager.setTabIndex(compositeOrgBaseManager.getMaxSubTabIndex(y9Manager.getParentId(), OrgTypeEnum.MANAGER));
-        y9Manager.setDn(OrgLevelConsts.getOrgLevel(OrgTypeEnum.MANAGER) + y9Manager.getName() + OrgLevelConsts.SEPARATOR + parent.getDn());
+        y9Manager.setDn(OrgLevelConsts.getOrgLevel(OrgTypeEnum.MANAGER) + y9Manager.getName() + OrgLevelConsts.SEPARATOR
+            + parent.getDn());
         // 系统管理员新建的子域三员默认禁用 需安全管理员启用
         y9Manager.setDisabled(true);
 

@@ -8,6 +8,7 @@ import java.util.List;
 import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotEmpty;
 
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.validation.annotation.Validated;
@@ -64,7 +65,8 @@ public class PersonController {
      */
     @RiseLog(operationName = "为人员添加用户组", operationType = OperationTypeEnum.ADD)
     @PostMapping(value = "/addGroups")
-    public Y9Result<Object> addGroups(@RequestParam String personId, @RequestParam String[] groupIds) {
+    public Y9Result<Object> addGroups(@RequestParam @NotBlank String personId,
+        @RequestParam @NotEmpty String[] groupIds) {
         y9PersonsToGroupsService.addGroups(personId, groupIds);
         return Y9Result.successMsg("为人员添加用户组成功");
     }
@@ -78,8 +80,8 @@ public class PersonController {
      */
     @RiseLog(operationName = "为人员添加岗位", operationType = OperationTypeEnum.ADD)
     @PostMapping(value = "/addPositions")
-    public Y9Result<List<Y9PersonsToPositions>> addPositions(@RequestParam String personId,
-        @RequestParam String[] positionIds) {
+    public Y9Result<List<Y9PersonsToPositions>> addPositions(@RequestParam @NotBlank String personId,
+        @RequestParam @NotEmpty String[] positionIds) {
         List<Y9PersonsToPositions> personsToPositionsList =
             y9PersonsToPositionsService.addPositions(personId, positionIds);
         return Y9Result.success(personsToPositionsList, "为人员添加岗位成功");
@@ -144,7 +146,7 @@ public class PersonController {
      */
     @RiseLog(operationName = "获取扩展属性")
     @RequestMapping(value = "/getExtendProperties")
-    public Y9Result<String> getExtendProperties(@RequestParam String personId) {
+    public Y9Result<String> getExtendProperties(@RequestParam @NotBlank String personId) {
         String properties = y9PersonService.getById(personId).getProperties();
         return Y9Result.success(properties, "获取扩展属性成功");
     }
@@ -169,7 +171,7 @@ public class PersonController {
      */
     @RiseLog(operationName = "根据人员id，获取人员扩展信息")
     @RequestMapping(value = "/getPersonExtById")
-    public Y9Result<Y9PersonExt> getPersonExtById(@RequestParam String personId) {
+    public Y9Result<Y9PersonExt> getPersonExtById(@RequestParam @NotBlank String personId) {
         return Y9Result.success(y9PersonExtService.getByPersonId(personId), "根据人员id，获取人员扩展信息成功");
     }
 
@@ -181,7 +183,7 @@ public class PersonController {
      */
     @RiseLog(operationName = "根据人员id，获取脱敏后的人员扩展信息")
     @RequestMapping(value = "/getPersonExtByIdWithEncry")
-    public Y9Result<Y9PersonExt> getPersonExtByIdWithEncry(@RequestParam String personId) {
+    public Y9Result<Y9PersonExt> getPersonExtByIdWithEncry(@RequestParam @NotBlank String personId) {
         Y9PersonExt ext = y9PersonExtService.findByPersonId(personId).orElse(null);
         if (ext != null && StringUtils.isNotBlank(ext.getIdNum()) && ext.getIdNum().length() > 8) {
             ext.setIdNum(DesensitizedUtil.idCardNum(ext.getIdNum(), 6, 3));
@@ -198,7 +200,7 @@ public class PersonController {
      */
     @RiseLog(operationName = "获取用户组人员列表")
     @RequestMapping(value = "/listPersonsByGroupId")
-    public Y9Result<List<Y9Person>> listPersonsByGroupId(@RequestParam String groupId) {
+    public Y9Result<List<Y9Person>> listPersonsByGroupId(@RequestParam @NotBlank String groupId) {
         return Y9Result.success(y9PersonService.listByGroupId(groupId), "获取用户组人员列表成功");
     }
 
@@ -211,7 +213,7 @@ public class PersonController {
      */
     @RiseLog(operationName = "获取人员列表")
     @RequestMapping(value = "/listPersonsByParentId")
-    public Y9Result<List<Y9Person>> listPersonsByParentId(@RequestParam String parentId) {
+    public Y9Result<List<Y9Person>> listPersonsByParentId(@RequestParam @NotBlank String parentId) {
         return Y9Result.success(y9PersonService.listByParentId(parentId), "获取人员列表成功");
     }
 
@@ -224,7 +226,7 @@ public class PersonController {
      */
     @RiseLog(operationName = "获取岗位人员列表")
     @RequestMapping(value = "/listPersonsByPositionId")
-    public Y9Result<List<Y9Person>> listPersonsByPositionId(@RequestParam String positionId) {
+    public Y9Result<List<Y9Person>> listPersonsByPositionId(@RequestParam @NotBlank String positionId) {
         return Y9Result.success(y9PersonService.listByPositionId(positionId), "获取岗位人员列表成功");
     }
 
@@ -237,7 +239,7 @@ public class PersonController {
      */
     @RiseLog(operationName = "移动人员到新的节点", operationType = OperationTypeEnum.MODIFY)
     @PostMapping(value = "/move")
-    public Y9Result<Y9Person> move(@RequestParam String personId, @RequestParam String parentId) {
+    public Y9Result<Y9Person> move(@RequestParam @NotBlank String personId, @NotBlank @RequestParam String parentId) {
         Y9Person y9Person = y9PersonService.move(personId, parentId);
         return Y9Result.success(y9Person, "移动人员成功");
     }
@@ -250,7 +252,7 @@ public class PersonController {
      */
     @RiseLog(operationName = "删除人员", operationType = OperationTypeEnum.DELETE)
     @PostMapping(value = "/remove")
-    public Y9Result<String> remove(@RequestParam(value = "ids") List<String> ids) {
+    public Y9Result<String> remove(@RequestParam(value = "ids") @NotEmpty List<String> ids) {
         y9PersonService.delete(ids);
         return Y9Result.successMsg("删除人员成功");
     }
@@ -264,7 +266,8 @@ public class PersonController {
      */
     @RiseLog(operationName = "移除人员关联的用户组", operationType = OperationTypeEnum.DELETE)
     @PostMapping(value = "/removeGroups")
-    public Y9Result<String> removeGroups(@RequestParam String personId, @RequestParam String[] groupIds) {
+    public Y9Result<String> removeGroups(@RequestParam @NotBlank String personId,
+        @RequestParam("groupIds") @NotEmpty String[] groupIds) {
         y9PersonsToGroupsService.removeGroups(personId, groupIds);
         return Y9Result.successMsg("移除人员关联的用户组成功");
     }
@@ -278,7 +281,8 @@ public class PersonController {
      */
     @RiseLog(operationName = "移除人员的岗位", operationType = OperationTypeEnum.DELETE)
     @PostMapping(value = "/removePositions")
-    public Y9Result<String> removePositions(@RequestParam String personId, @RequestParam String[] positionIds) {
+    public Y9Result<String> removePositions(@RequestParam @NotBlank String personId,
+        @RequestParam("positionIds") @NotEmpty String[] positionIds) {
         y9PersonsToPositionsService.deletePositions(personId, positionIds);
         return Y9Result.successMsg("移除人员的岗位成功");
     }
@@ -291,7 +295,7 @@ public class PersonController {
      */
     @RiseLog(operationName = "重置密码", operationType = OperationTypeEnum.MODIFY)
     @PostMapping(value = "/resetPassword")
-    public Y9Result<String> resetPassword(@RequestParam String personId) {
+    public Y9Result<String> resetPassword(@RequestParam @NotBlank String personId) {
         y9PersonService.resetPassword(personId);
         return Y9Result.successMsg("重置密码成功");
     }
@@ -305,7 +309,8 @@ public class PersonController {
      */
     @RiseLog(operationName = "保存扩展属性", operationType = OperationTypeEnum.ADD)
     @PostMapping(value = "/saveExtendProperties")
-    public Y9Result<String> saveExtendProperties(@RequestParam String personId, @RequestParam String properties) {
+    public Y9Result<String> saveExtendProperties(@RequestParam @NotBlank String personId,
+        @RequestParam String properties) {
         Y9Person y9Person = y9PersonService.saveProperties(personId, properties);
         return Y9Result.success(y9Person.getProperties(), "保存扩展属性成成功");
     }
@@ -318,7 +323,7 @@ public class PersonController {
      */
     @RiseLog(operationName = "保存人员排序", operationType = OperationTypeEnum.MODIFY)
     @PostMapping(value = "/saveOrder")
-    public Y9Result<String> saveOrder(@RequestParam(value = "personIds") List<String> personIds) {
+    public Y9Result<String> saveOrder(@RequestParam(value = "personIds") @NotEmpty List<String> personIds) {
         y9PersonService.order(personIds);
         return Y9Result.successMsg("保存人员排序成功");
     }
@@ -350,7 +355,8 @@ public class PersonController {
      */
     @RiseLog(operationType = OperationTypeEnum.ADD, operationName = "上传个人照证件照图片")
     @PostMapping(value = "/savePersonPhoto")
-    public Y9Result<String> savePersonPhoto(@RequestParam MultipartFile iconFile, @RequestParam String personId) {
+    public Y9Result<String> savePersonPhoto(@RequestParam MultipartFile iconFile,
+        @RequestParam @NotBlank String personId) {
         if (iconFile != null && iconFile.getSize() != 0) {
             byte[] photo = null;
             try {
@@ -376,7 +382,7 @@ public class PersonController {
      */
     @RiseLog(operationName = "保存添加人员", operationType = OperationTypeEnum.ADD)
     @PostMapping(value = "/savePersons")
-    public Y9Result<List<Y9Person>> savePersons(@RequestParam(value = "personIds") List<String> personIds,
+    public Y9Result<List<Y9Person>> savePersons(@RequestParam(value = "personIds") @NotEmpty List<String> personIds,
         @RequestParam String parentId) {
         List<Y9Person> persons = y9PersonService.addPersons(parentId, personIds);
         return Y9Result.success(persons, "保存添加人员成功");
@@ -391,7 +397,7 @@ public class PersonController {
      */
     @RiseLog(operationName = "查看人员照片")
     @RequestMapping("/showPersonPhoto")
-    public void showPersonPhoto(@RequestParam String personId, HttpServletResponse response) {
+    public void showPersonPhoto(@RequestParam @NotBlank String personId, HttpServletResponse response) {
         Y9Person person = y9PersonService.getById(personId);
         try {
             response.setContentType("image/jpg");

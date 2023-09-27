@@ -3,6 +3,8 @@ package net.risesoft.controller.identity;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.validation.constraints.NotBlank;
+
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -34,7 +36,7 @@ public class PersonRolesController {
     private final Y9PersonToRoleService y9PersonToRoleService;
 
     @GetMapping
-    public Y9Result<List<RolePermissionVO>> getByPersonId(@RequestParam String personId) {
+    public Y9Result<List<RolePermissionVO>> getByPersonId(@RequestParam @NotBlank String personId) {
         List<Y9PersonToRole> rolePermissionVOList = y9PersonToRoleService.listByPersonId(personId);
         return Y9Result
             .success(rolePermissionVOBuilder.buildRolePermissionVOList(new ArrayList<>(rolePermissionVOList)));

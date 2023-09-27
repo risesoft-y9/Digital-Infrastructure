@@ -2,6 +2,9 @@ package net.risesoft.controller.resource;
 
 import java.util.List;
 
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotEmpty;
+
 import org.springframework.data.domain.Page;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -54,7 +57,7 @@ public class AppResourceController {
      */
     @RiseLog(operationName = "删除应用")
     @PostMapping(value = "/delete")
-    public Y9Result<Object> delete(@RequestParam(name = "ids") List<String> ids) {
+    public Y9Result<Object> delete(@RequestParam(name = "ids") @NotEmpty List<String> ids) {
         y9AppService.delete(ids);
         return Y9Result.successMsg("成功删除应用");
     }
@@ -67,7 +70,7 @@ public class AppResourceController {
      */
     @RiseLog(operationName = "禁用应用")
     @PostMapping(value = "/disable")
-    public Y9Result<List<Y9App>> disable(@RequestParam(name = "ids") List<String> ids) {
+    public Y9Result<List<Y9App>> disable(@RequestParam(name = "ids") @NotEmpty List<String> ids) {
         return Y9Result.success(y9AppService.disable(ids), "成功禁用应用");
     }
 
@@ -79,7 +82,7 @@ public class AppResourceController {
      */
     @RiseLog(operationName = "启用应用")
     @PostMapping(value = "/enable")
-    public Y9Result<List<Y9App>> enable(@RequestParam(name = "ids") List<String> ids) {
+    public Y9Result<List<Y9App>> enable(@RequestParam(name = "ids") @NotEmpty List<String> ids) {
         return Y9Result.success(y9AppService.enable(ids), "成功启用应用");
     }
 
@@ -91,7 +94,7 @@ public class AppResourceController {
      */
     @RiseLog(operationName = "根据应用id获取应用详情")
     @GetMapping(value = "/{id}")
-    public Y9Result<Y9App> getById(@PathVariable String id) {
+    public Y9Result<Y9App> getById(@PathVariable @NotBlank String id) {
         return Y9Result.success(y9AppService.getById(id), "成功获取应用详情");
     }
 
@@ -103,7 +106,7 @@ public class AppResourceController {
      */
     @RiseLog(operationName = "根据系统id，获取应用列表")
     @GetMapping(value = "/listBySystemId")
-    public Y9Result<List<Y9App>> listBySystemId(@RequestParam String systemId) {
+    public Y9Result<List<Y9App>> listBySystemId(@RequestParam @NotBlank String systemId) {
         List<Y9App> apps = y9AppService.listBySystemId(systemId);
         return Y9Result.success(apps, "成功获取应用列表成功");
     }
@@ -137,7 +140,7 @@ public class AppResourceController {
 
         // TODO move to Service?
         y9AppService.verifyApp(y9App.getId(), true, Y9LoginUserHolder.getUserInfo().getName());
-        y9TenantSystemService.registerTenantSystem(Y9LoginUserHolder.getTenantId(), savedApp.getSystemId());
+        y9TenantSystemService.registerSystemForTenant(Y9LoginUserHolder.getTenantId(), savedApp.getSystemId());
         y9TenantAppService.save(savedApp.getId(), Y9LoginUserHolder.getTenantId(),
             Y9LoginUserHolder.getUserInfo().getName(), "微内核默认租用");
         return Y9Result.success(savedApp, "成功保存应用");
@@ -151,7 +154,7 @@ public class AppResourceController {
      */
     @RiseLog(operationName = "保存应用排序", operationType = OperationTypeEnum.MODIFY)
     @PostMapping(value = "/saveOrder")
-    public Y9Result<String> saveOrder(@RequestParam String[] appIds) {
+    public Y9Result<String> saveOrder(@RequestParam @NotEmpty String[] appIds) {
         y9AppService.saveOrder(appIds);
         return Y9Result.success(null, "系统应用成功！");
     }

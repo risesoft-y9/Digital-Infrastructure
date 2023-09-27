@@ -3,6 +3,10 @@ package net.risesoft.controller.org;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotEmpty;
+
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -29,6 +33,7 @@ import net.risesoft.service.relation.Y9PositionsToGroupsService;
 @RestController
 @RequestMapping(value = "/api/rest/groupPosition", produces = "application/json")
 @RequiredArgsConstructor
+@Validated
 public class PositionsToGroupsController {
 
     private final Y9PositionService y9PositionService;
@@ -43,7 +48,8 @@ public class PositionsToGroupsController {
      */
     @RiseLog(operationName = "批量添加用户组的岗位", operationType = OperationTypeEnum.ADD)
     @PostMapping(value = "/addPositions")
-    public Y9Result<Object> addPositions(@RequestParam String groupId, @RequestParam String[] positionIds) {
+    public Y9Result<Object> addPositions(@RequestParam @NotBlank String groupId,
+        @RequestParam @NotEmpty String[] positionIds) {
         y9PositionsToGroupsService.saveGroupPosition(groupId, positionIds);
         return Y9Result.successMsg("添加岗位成功");
     }
@@ -57,7 +63,7 @@ public class PositionsToGroupsController {
      */
     @RiseLog(operationName = "获取组岗位列表")
     @RequestMapping(value = "/listPositionsByGroupId")
-    public Y9Result<List<Y9Position>> listPositionsByGroupId(@RequestParam String groupId) {
+    public Y9Result<List<Y9Position>> listPositionsByGroupId(@RequestParam @NotBlank String groupId) {
         List<Y9PositionsToGroups> list = y9PositionsToGroupsService.listByGroupId(groupId);
         List<Y9Position> positionList = new ArrayList<>();
         if (null != list && !list.isEmpty()) {
@@ -78,7 +84,8 @@ public class PositionsToGroupsController {
      */
     @RiseLog(operationName = "批量移除用户组的岗位", operationType = OperationTypeEnum.DELETE)
     @PostMapping(value = "/removePositions")
-    public Y9Result<String> removePositions(@RequestParam String groupId, @RequestParam String[] positionIds) {
+    public Y9Result<String> removePositions(@RequestParam @NotBlank String groupId,
+        @RequestParam @NotEmpty String[] positionIds) {
         y9PositionsToGroupsService.removePositions(groupId, positionIds);
         return Y9Result.successMsg("移除岗位关联成功");
     }

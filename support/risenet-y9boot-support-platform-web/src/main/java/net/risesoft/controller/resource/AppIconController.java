@@ -3,8 +3,11 @@ package net.risesoft.controller.resource;
 import java.util.List;
 import java.util.Optional;
 
+import javax.validation.constraints.NotBlank;
+
 import org.apache.commons.io.FilenameUtils;
 import org.springframework.data.domain.Page;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -35,6 +38,7 @@ import jodd.util.Base64;
 @RequestMapping(value = "/api/rest/appIcon", produces = "application/json")
 @Slf4j
 @RequiredArgsConstructor
+@Validated
 public class AppIconController {
 
     private final Y9AppIconService appIconService;
@@ -48,7 +52,7 @@ public class AppIconController {
      */
     @RiseLog(operationType = OperationTypeEnum.DELETE, operationName = "删除图标")
     @PostMapping(value = "/deleteIcon")
-    public Y9Result<String> deleteIcon(@RequestParam String id) {
+    public Y9Result<String> deleteIcon(@RequestParam @NotBlank String id) {
         appIconService.delete(id);
         return Y9Result.successMsg("删除成功！");
     }
@@ -61,7 +65,7 @@ public class AppIconController {
      */
     @RiseLog(operationName = "获取应用图标")
     @RequestMapping("/getAppIconById")
-    public Y9Result<Y9AppIcon> getAppIconById(@RequestParam String id) {
+    public Y9Result<Y9AppIcon> getAppIconById(@RequestParam @NotBlank String id) {
         Y9AppIcon entity = appIconService.getById(id);
         return Y9Result.success(entity, "获取成功！");
     }
@@ -116,7 +120,8 @@ public class AppIconController {
      */
     @RiseLog(operationType = OperationTypeEnum.MODIFY, operationName = "修改图标")
     @PostMapping(value = "/saveIcon")
-    public Y9Result<String> saveIcon(@RequestParam String name, @RequestParam String remark, @RequestParam String id) {
+    public Y9Result<String> saveIcon(@RequestParam @NotBlank String name, @RequestParam String remark,
+        @RequestParam @NotBlank String id) {
         Y9AppIcon appIcon = appIconService.getById(id);
         appIcon.setRemark(remark);
         appIcon.setName(name);

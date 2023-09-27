@@ -264,7 +264,7 @@ public class Y9TenantSystemServiceImpl implements Y9TenantSystemService {
 
     @Override
     @Transactional(readOnly = false)
-    public void registerTenantSystem(String tenantId, String systemId) {
+    public void registerSystemForTenant(String tenantId, String systemId) {
         Optional<Y9TenantSystem> y9TenantSystemOptional = this.getByTenantIdAndSystemId(tenantId, systemId);
         if (y9TenantSystemOptional.isEmpty()) {
             this.saveTenantSystem(systemId, tenantId);

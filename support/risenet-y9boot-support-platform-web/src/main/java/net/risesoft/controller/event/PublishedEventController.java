@@ -4,6 +4,7 @@ import java.util.Date;
 
 import org.springframework.data.domain.Page;
 import org.springframework.format.annotation.DateTimeFormat;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
@@ -27,6 +28,7 @@ import net.risesoft.y9public.service.event.Y9PublishedEventService;
 @RestController
 @RequestMapping(value = "/api/rest/publishedEvent", produces = "application/json")
 @RequiredArgsConstructor
+@Validated
 public class PublishedEventController {
 
     private final Y9PublishedEventService y9PublishedEventService;

@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotEmpty;
 
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.data.domain.Page;
@@ -141,7 +142,7 @@ public class AuthorizationController {
      */
     @RiseLog(operationName = "根据角色ID获取权限列表 ")
     @RequestMapping(value = "/listRelateResource")
-    public Y9Page<AuthorizationVO> listRelateResource(@RequestParam("roleId") String roleId,
+    public Y9Page<AuthorizationVO> listRelateResource(@RequestParam("roleId") @NotBlank String roleId,
         @RequestParam("page") Integer page, @RequestParam("rows") Integer rows) {
         Page<Y9Authorization> y9AuthorizationPage = y9AuthorizationService.pageByPrincipalId(roleId, rows, page);
         List<AuthorizationVO> authorizationVOList = new ArrayList<>();
@@ -168,12 +169,12 @@ public class AuthorizationController {
      */
     @RiseLog(operationName = "根据资源id获取关联的角色列表 ")
     @RequestMapping(value = "/listRelateRole")
-    public Y9Result<List<AuthorizationVO>> listRelateRole(@RequestParam("resourceId") String resourceId,
-        String roleName, @RequestParam("authority") Integer authority) {
+    public Y9Result<List<AuthorizationVO>> listRelateRole(@RequestParam("resourceId") @NotBlank String resourceId,
+        @RequestParam(required = false) String roleName, @RequestParam("authority") Integer authority) {
         List<AuthorizationVO> authorizationVOList = new ArrayList<>();
         List<Y9Authorization> y9AuthorizationList;
 
-        if (StringUtils.isNotBlank(roleName) && authority != null) {
+        if (StringUtils.isNotBlank(roleName)) {
             List<Y9Role> list = y9RoleService.listByName(roleName);
             List<String> roleIds = list.stream().map(Y9Role::getId).collect(Collectors.toList());
             if (!roleIds.isEmpty()) {
@@ -201,7 +202,7 @@ public class AuthorizationController {
      */
     @RiseLog(operationName = "移除角色授权许可记录", operationType = OperationTypeEnum.DELETE)
     @PostMapping(value = "/remove")
-    public Y9Result<String> remove(@RequestParam("ids") String[] ids) {
+    public Y9Result<String> remove(@RequestParam("ids") @NotEmpty String[] ids) {
         y9AuthorizationService.delete(ids);
         return Y9Result.successMsg("移除角色授权许可记录成功");
     }
@@ -217,8 +218,8 @@ public class AuthorizationController {
      */
     @RiseLog(operationName = "保存管理资源权限许可对象 ", operationType = OperationTypeEnum.MODIFY)
     @PostMapping(value = "/saveOrUpdate")
-    public Y9Result<String> saveOrUpdate(Integer authority, String principalId, Integer principalType,
-        @RequestParam("resourceIds") String[] resourceIds) {
+    public Y9Result<String> saveOrUpdate(Integer authority, @NotBlank String principalId, Integer principalType,
+        @RequestParam("resourceIds") @NotEmpty String[] resourceIds) {
         y9AuthorizationService.save(authority, principalId, principalType, resourceIds);
         return Y9Result.successMsg("授权成功！");
     }
@@ -233,8 +234,8 @@ public class AuthorizationController {
      */
     @RiseLog(operationName = "保存资源授权管理关联组织信息", operationType = OperationTypeEnum.MODIFY)
     @PostMapping(value = "/saveOrUpdateOrg")
-    public Y9Result<String> saveOrUpdateOrg(Integer authority, String resourceId,
-        @RequestParam("orgIds") String[] orgIds) {
+    public Y9Result<String> saveOrUpdateOrg(Integer authority, @NotBlank String resourceId,
+        @RequestParam("orgIds") @NotEmpty String[] orgIds) {
         y9AuthorizationService.saveByOrg(authority, resourceId, orgIds);
         return Y9Result.successMsg("授权成功！");
     }
@@ -249,8 +250,8 @@ public class AuthorizationController {
      */
     @RiseLog(operationName = "保存关联角色权限许可对象 ", operationType = OperationTypeEnum.MODIFY)
     @PostMapping(value = "/saveOrUpdateRole")
-    public Y9Result<String> saveOrUpdateRole(Integer authority, String resourceId,
-        @RequestParam("roleIds") String[] roleIds) {
+    public Y9Result<String> saveOrUpdateRole(Integer authority, @NotBlank String resourceId,
+        @RequestParam("roleIds") @NotEmpty String[] roleIds) {
         y9AuthorizationService.saveByRoles(authority, resourceId, roleIds);
         return Y9Result.successMsg("授权成功！");
     }

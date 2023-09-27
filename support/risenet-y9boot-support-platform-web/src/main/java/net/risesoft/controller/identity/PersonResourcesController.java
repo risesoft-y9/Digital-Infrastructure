@@ -3,8 +3,12 @@ package net.risesoft.controller.identity;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.validation.constraints.NotBlank;
+
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import lombok.RequiredArgsConstructor;
@@ -25,13 +29,14 @@ import net.risesoft.service.identity.Y9PersonToResourceAndAuthorityService;
 @RestController
 @RequestMapping(value = "/api/rest/personResources", produces = "application/json")
 @RequiredArgsConstructor
+@Validated
 public class PersonResourcesController {
 
     private final Y9PersonToResourceAndAuthorityService y9PersonToResourceAndAuthorityService;
     private final ResourcePermissionVOBuilder resourcePermissionVOBuilder;
 
     @GetMapping
-    public Y9Result<List<ResourcePermissionVO>> getByPersonId(String personId) {
+    public Y9Result<List<ResourcePermissionVO>> getByPersonId(@RequestParam @NotBlank String personId) {
         List<Y9PersonToResourceAndAuthority> y9PersonToResourceAndAuthorityList =
             y9PersonToResourceAndAuthorityService.list(personId);
         return Y9Result.success(resourcePermissionVOBuilder

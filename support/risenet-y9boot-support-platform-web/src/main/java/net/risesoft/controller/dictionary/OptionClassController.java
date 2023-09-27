@@ -2,6 +2,8 @@ package net.risesoft.controller.dictionary;
 
 import java.util.List;
 
+import javax.validation.constraints.NotBlank;
+
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -53,7 +55,7 @@ public class OptionClassController {
      */
     @RiseLog(operationName = "删除字典类型", operationType = OperationTypeEnum.DELETE)
     @PostMapping(value = "/remove")
-    public Y9Result<String> remove(@RequestParam("type") String type) {
+    public Y9Result<String> remove(@RequestParam("type") @NotBlank String type) {
         y9OptionClassService.deleteByType(type);
         return Y9Result.successMsg("删除字典类型成功");
     }

@@ -1,5 +1,7 @@
 package net.risesoft.controller.resource;
 
+import javax.validation.constraints.NotBlank;
+
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -39,7 +41,7 @@ public class MenuResourceController {
      */
     @RiseLog(operationName = "删除菜单资源")
     @PostMapping(value = "/delete")
-    public Y9Result<Object> delete(@RequestParam String id) {
+    public Y9Result<Object> delete(@RequestParam @NotBlank String id) {
         y9MenuService.delete(id);
         return Y9Result.successMsg("删除菜单资源成功");
     }
@@ -52,7 +54,7 @@ public class MenuResourceController {
      */
     @RiseLog(operationName = "禁用菜单资源")
     @PostMapping(value = "/disable")
-    public Y9Result<Y9Menu> disable(@RequestParam String id) {
+    public Y9Result<Y9Menu> disable(@RequestParam @NotBlank String id) {
         return Y9Result.success(y9MenuService.disable(id), "禁用菜单资源成功");
     }
 
@@ -64,7 +66,7 @@ public class MenuResourceController {
      */
     @RiseLog(operationName = "启用菜单资源")
     @PostMapping(value = "/enable")
-    public Y9Result<Y9Menu> enable(@RequestParam String id) {
+    public Y9Result<Y9Menu> enable(@RequestParam @NotBlank String id) {
         return Y9Result.success(y9MenuService.enable(id), "启用菜单资源成功");
     }
 
@@ -76,7 +78,7 @@ public class MenuResourceController {
      */
     @RiseLog(operationName = "根据id获取菜单资源详情")
     @GetMapping(value = "/{id}")
-    public Y9Result<Y9Menu> getById(@PathVariable String id) {
+    public Y9Result<Y9Menu> getById(@PathVariable @NotBlank String id) {
         return Y9Result.success(y9MenuService.getById(id), "根据id获取菜单资源详情成功");
     }
 
@@ -102,7 +104,7 @@ public class MenuResourceController {
      */
     @RiseLog(operationName = "移动资源", operationType = OperationTypeEnum.MODIFY)
     @PostMapping(value = "/move")
-    public Y9Result<Y9Menu> saveMove(@RequestParam String id, @RequestParam String parentId) {
+    public Y9Result<Y9Menu> saveMove(@RequestParam @NotBlank String id, @RequestParam @NotBlank String parentId) {
         return Y9Result.success(y9MenuService.move(id, parentId), "移动资源成功");
     }
 }

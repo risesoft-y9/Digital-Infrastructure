@@ -3,7 +3,11 @@ package net.risesoft.controller.role;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotEmpty;
+
 import org.apache.commons.lang3.StringUtils;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -36,6 +40,7 @@ import net.risesoft.y9public.entity.role.Y9Role;
 @RestController
 @RequestMapping(value = "/api/rest/orgBasesToRoles", produces = "application/json")
 @RequiredArgsConstructor
+@Validated
 public class RoleMemberController {
 
     private final CompositeOrgBaseService compositeOrgBaseService;
@@ -52,8 +57,8 @@ public class RoleMemberController {
      */
     @RiseLog(operationName = "对角色，添加组织节点的映射", operationType = OperationTypeEnum.ADD)
     @PostMapping(value = "/addOrgUnits")
-    public Y9Result<Object> addOrgUnitsForRole(@RequestParam String roleId,
-        @RequestParam(value = "orgUnitIds") List<String> orgUnitIds, @RequestParam Boolean negative) {
+    public Y9Result<Object> addOrgUnitsForRole(@RequestParam @NotBlank String roleId,
+        @RequestParam(value = "orgUnitIds") @NotEmpty List<String> orgUnitIds, @RequestParam Boolean negative) {
 
         List<String> accessibleOrgUnitIdList;
 
@@ -85,8 +90,8 @@ public class RoleMemberController {
      */
     @RiseLog(operationName = "对组织节点，添加角色的映射", operationType = OperationTypeEnum.ADD)
     @PostMapping(value = "/saveRoles")
-    public Y9Result<List<Y9Role>> addRolesForOrgUnit(@RequestParam String orgUnitId,
-        @RequestParam(value = "roleIds") List<String> roleIds, @RequestParam Boolean negative) {
+    public Y9Result<List<Y9Role>> addRolesForOrgUnit(@RequestParam @NotBlank String orgUnitId,
+        @RequestParam(value = "roleIds") @NotEmpty List<String> roleIds, @RequestParam Boolean negative) {
 
         y9OrgBasesToRolesService.addRolesForOrgUnit(orgUnitId, roleIds, negative);
 
@@ -102,7 +107,7 @@ public class RoleMemberController {
      */
     @RiseLog(operationName = "根据角色id，返回角色关联的机构节点（机构，部门，用户组，岗位，人员）")
     @RequestMapping(value = "/listByRoleId")
-    public Y9Result<List<RoleMemberVO>> listByRoleId(@RequestParam String roleId) {
+    public Y9Result<List<RoleMemberVO>> listByRoleId(@RequestParam @NotBlank String roleId) {
         List<Y9OrgBasesToRoles> y9OrgBasesToRolesList = y9OrgBasesToRolesService.listByRoleId(roleId);
         List<RoleMemberVO> memberList = new ArrayList<>();
         if (Y9LoginUserHolder.getUserInfo().isGlobalManager()) {
@@ -130,7 +135,7 @@ public class RoleMemberController {
      */
     @RiseLog(operationName = "角色-组织节点关联移除", operationType = OperationTypeEnum.DELETE)
     @PostMapping(value = "/remove")
-    public Y9Result<String> remove(@RequestParam(value = "ids") List<Integer> ids) {
+    public Y9Result<String> remove(@RequestParam(value = "ids") @NotEmpty List<Integer> ids) {
         y9OrgBasesToRolesService.remove(ids);
         return Y9Result.successMsg("角色-组织节点关联移除成功");
     }
@@ -145,8 +150,8 @@ public class RoleMemberController {
      */
     @RiseLog(operationName = "根据名称和所属部门查找角色成员")
     @RequestMapping(value = "/searchByUnitNameAndUnitDN")
-    public Y9Result<List<RoleMemberVO>> searchByUnitNameAndUnitDn(@RequestParam String roleId, String unitName,
-        String unitDn) {
+    public Y9Result<List<RoleMemberVO>> searchByUnitNameAndUnitDn(@RequestParam @NotBlank String roleId,
+        String unitName, String unitDn) {
         List<Y9OrgBasesToRoles> y9OrgBasesToRolesList = y9OrgBasesToRolesService.listByRoleId(roleId);
 
         List<RoleMemberVO> memberList = new ArrayList<>();

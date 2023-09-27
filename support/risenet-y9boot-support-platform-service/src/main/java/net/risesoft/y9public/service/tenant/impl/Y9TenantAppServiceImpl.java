@@ -119,7 +119,7 @@ public class Y9TenantAppServiceImpl implements Y9TenantAppService {
 
     @Override
     public List<Y9TenantApp> listByAppIdAndTenancy(String appId, Boolean tenancy) {
-        return y9TenantAppRepository.findByAppIdAndTenancy(appId, tenancy);
+        return y9TenantAppManager.listByAppIdAndTenancy(appId, tenancy);
     }
 
     @Override

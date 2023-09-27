@@ -8,7 +8,11 @@ import java.util.function.Function;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotEmpty;
+
 import org.apache.commons.lang3.StringUtils;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -27,8 +31,6 @@ import net.risesoft.y9public.entity.resource.Y9App;
 import net.risesoft.y9public.entity.resource.Y9ResourceBase;
 import net.risesoft.y9public.service.resource.CompositeResourceService;
 import net.risesoft.y9public.service.resource.Y9AppService;
-import net.risesoft.y9public.service.resource.Y9MenuService;
-import net.risesoft.y9public.service.resource.Y9OperationService;
 import net.risesoft.y9public.service.tenant.Y9TenantAppService;
 
 /**
@@ -40,12 +42,11 @@ import net.risesoft.y9public.service.tenant.Y9TenantAppService;
 @RestController
 @RequestMapping(value = "/api/rest/resource", produces = "application/json")
 @RequiredArgsConstructor
+@Validated
 public class ResourceController {
 
     private final CompositeResourceService compositeResourceService;
     private final Y9AppService y9AppService;
-    private final Y9MenuService y9MenuService;
-    private final Y9OperationService y9OperationService;
     private final Y9TenantAppService y9TenantAppService;
 
     private static <T> Predicate<T> distinctByKey(Function<? super T, ?> keyExtractor) {
@@ -73,7 +74,7 @@ public class ResourceController {
      */
     @RiseLog(operationName = "根据父资源id获取子资源列表")
     @GetMapping(value = "/listByParentId")
-    public Y9Result<List<ResourceBaseVO>> getListByParentId(@RequestParam String parentId) {
+    public Y9Result<List<ResourceBaseVO>> getListByParentId(@RequestParam @NotBlank String parentId) {
         List<Y9ResourceBase> y9ResourceBaseList = compositeResourceService.listByParentId(parentId);
         return Y9Result.success(Y9ModelConvertUtil.convert(y9ResourceBaseList, ResourceBaseVO.class),
             "根据父资源id获取子资源列表成功");
@@ -103,7 +104,7 @@ public class ResourceController {
      */
     @RiseLog(operationName = "根据应用id查询资源（App资源）")
     @GetMapping(value = "/appTreeRoot/{appId}")
-    public Y9Result<List<ResourceBaseVO>> getTreeRootByAppId(@PathVariable String appId) {
+    public Y9Result<List<ResourceBaseVO>> getTreeRootByAppId(@PathVariable @NotBlank String appId) {
         Y9App y9App = y9AppService.getById(appId);
         return Y9Result.success(Y9ModelConvertUtil.convert(Arrays.asList(y9App), ResourceBaseVO.class), "根据应用id查询资源成功");
     }
@@ -116,7 +117,7 @@ public class ResourceController {
      */
     @RiseLog(operationName = "根据系统id查询所有的根资源（有权限的App资源）")
     @GetMapping(value = "/treeRoot/{systemId}")
-    public Y9Result<List<ResourceBaseVO>> getTreeRootBySystemId(@PathVariable String systemId) {
+    public Y9Result<List<ResourceBaseVO>> getTreeRootBySystemId(@PathVariable @NotBlank String systemId) {
         List<Y9ResourceBase> appResourceList = compositeResourceService.listRootResourceBySystemId(systemId);
         List<String> appIds =
             y9TenantAppService.listAppIdByTenantId(Y9LoginUserHolder.getTenantId(), Boolean.TRUE, Boolean.TRUE);
@@ -134,7 +135,7 @@ public class ResourceController {
      */
     @RiseLog(operationName = "对同一级的资源进行排序", operationType = OperationTypeEnum.MODIFY)
     @GetMapping(value = "/sort")
-    public Y9Result<Object> sort(@RequestParam String[] ids) {
+    public Y9Result<Object> sort(@RequestParam @NotEmpty String[] ids) {
         compositeResourceService.sort(ids);
         return Y9Result.successMsg("对同一级的资源进行排序成功");
     }
