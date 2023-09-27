@@ -36,12 +36,12 @@ public class Y9TenantDataSource extends AbstractDataSource {
         if (StringUtils.hasText(lookupKey)) {
             DruidDataSource tenantDataSource = (DruidDataSource)this.dataSourceLookup.getDataSource(lookupKey);
             if (tenantDataSource == null) {
-                LOGGER.error("租户[{}]未租用系统[{}]，将使用默认数据源", lookupKey, this.dataSourceLookup.getSystemName());
+                LOGGER.warn("租户[{}]未租用系统[{}]，将使用默认数据源", lookupKey, this.dataSourceLookup.getSystemName());
             } else {
                 dataSource = tenantDataSource;
             }
         } else {
-            LOGGER.error("当前线程中租户ID为空，将使用默认数据源");
+            LOGGER.warn("当前线程中租户ID为空，将使用默认数据源");
         }
 
         return dataSource;
