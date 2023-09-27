@@ -6,7 +6,7 @@ services:
     container_name: mysql01
     restart: always
     networks:
-      - y9-share_net
+      - y9-share-net
     ports:
       - "3306:3306"
     command: --default-authentication-plugin=caching_sha2_password
@@ -28,7 +28,7 @@ services:
     container_name: redis01
     restart: always
     networks:
-      - y9-share_net
+      - y9-share-net
     ports:
       - "6379:6379"
     command: redis-server --requirepass "12345678"
@@ -40,7 +40,7 @@ services:
     container_name: elastic01
     restart: always
     networks:
-      - y9-share_net
+      - y9-share-net
     ports:
       - '9200:9200'
       - '9300:9300'
@@ -57,7 +57,7 @@ services:
     container_name: kafka01
     restart: always
     networks:
-      - y9-share_net
+      - y9-share-net
     ports:
       - "9092:9092"
       - "9094:9094"
@@ -77,7 +77,7 @@ services:
     container_name: nacos01
     restart: always
     networks:
-      - y9-share_net
+      - y9-share-net
     ports:
       - "8848:8848"
       - "9848:9848"
@@ -102,6 +102,6 @@ services:
       - d:/docker-data/nacos-logs:/home/nacos/logs
       
 networks:
-  y9-share_net:
+  y9-share-net:
     external: true
         

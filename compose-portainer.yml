@@ -6,7 +6,7 @@ services:
     container_name: portainer
     restart: always
     networks:
-      - y9-share_net
+      - y9-share-net
     ports:
       - "9000:9000"
     volumes:
@@ -14,5 +14,5 @@ services:
       - /var/run/docker.sock:/var/run/docker.sock
 
 networks:
-  y9-share_net:
+  y9-share-net:
     external: true
