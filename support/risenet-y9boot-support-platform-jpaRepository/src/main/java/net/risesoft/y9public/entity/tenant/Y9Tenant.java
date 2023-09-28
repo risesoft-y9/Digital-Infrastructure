@@ -53,12 +53,12 @@ public class Y9Tenant extends BaseEntity {
     private Integer serial;
 
     /** 租户英文名称 */
-    @Column(name = "SHORT_NAME", length = 200, nullable = false)
+    @Column(name = "SHORT_NAME", length = 200, nullable = false, unique = true)
     @Comment("租户英文名称")
     private String shortName;
 
     /** 租户中文名称 */
-    @Column(name = "NAME", length = 200, nullable = false)
+    @Column(name = "NAME", length = 200, nullable = false, unique = true)
     @Comment("租户中文名称")
     private String name;
 

@@ -217,7 +217,7 @@ public class OnApplicationReady implements ApplicationListener<ApplicationReadyE
             y9Tenant.setEnabled(true);
             y9Tenant.setTenantType(TenantTypeEnum.TENANT.getValue());
             y9Tenant.setTabIndex(10000);
-            y9TenantService.save(y9Tenant, null);
+            y9TenantService.save(y9Tenant);
         }
     }
 

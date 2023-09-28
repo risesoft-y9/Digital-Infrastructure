@@ -70,4 +70,28 @@ public class Y9Assert {
             throw Y9ExceptionUtil.businessException(errorCode, arguments);
         }
     }
+
+    /**
+     * 当 isTrue 为假时抛出异常 {@link Y9BusinessException}
+     *
+     * @param isTrue 是否为真
+     * @param errorCode 错误代码
+     * @param arguments 参数
+     */
+    public static void isTrue(boolean isTrue, ErrorCode errorCode, Object... arguments) {
+        if (!isTrue) {
+            throw Y9ExceptionUtil.businessException(errorCode, arguments);
+        }
+    }
+
+    /**
+     * 当 isTrue 为真时抛出异常 {@link Y9BusinessException}
+     *
+     * @param isTrue 是否为真
+     * @param errorCode 错误代码
+     * @param arguments 参数
+     */
+    public static void isNotTrue(boolean isTrue, ErrorCode errorCode, Object... arguments) {
+        isTrue(!isTrue, errorCode, arguments);
+    }
 }

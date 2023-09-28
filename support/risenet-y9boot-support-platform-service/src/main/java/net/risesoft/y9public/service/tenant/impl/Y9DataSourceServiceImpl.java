@@ -19,6 +19,7 @@ import com.zaxxer.hikari.HikariDataSource;
 import net.risesoft.enums.DataSourceTypeEnum;
 import net.risesoft.exception.DataSourceErrorCodeEnum;
 import net.risesoft.y9.exception.util.Y9ExceptionUtil;
+import net.risesoft.y9.util.Y9Assert;
 import net.risesoft.y9.util.base64.Y9Base64Util;
 import net.risesoft.y9public.entity.tenant.Y9DataSource;
 import net.risesoft.y9public.manager.tenant.Y9DataSourceManager;
@@ -33,6 +34,8 @@ import net.risesoft.y9public.service.tenant.Y9DataSourceService;
  */
 @Service(value = "dataSourceService")
 public class Y9DataSourceServiceImpl implements Y9DataSourceService {
+
+    private static final String DEFAULT_PASSWORD = "111111";
 
     private final Y9DataSourceRepository datasourceRepository;
     private final Y9DataSourceManager y9DataSourceManager;
@@ -52,6 +55,18 @@ public class Y9DataSourceServiceImpl implements Y9DataSourceService {
     @Override
     public String buildTenantDataSourceName(String shortName, Integer tenantType) {
         return y9DataSourceManager.buildTenantDataSourceName(shortName, tenantType);
+    }
+
+    @Override
+    @Transactional(readOnly = false)
+    public void changePassword(String id, String oldPassword, String newPassword) {
+        Y9DataSource y9DataSource = this.getById(id);
+        // 校验旧密码是否正确
+        Y9Assert.isTrue(Objects.equals(Y9Base64Util.encode(oldPassword), y9DataSource.getPassword()),
+            DataSourceErrorCodeEnum.DATA_SOURCE_OLD_PASSWORD_IS_WRONG);
+
+        y9DataSource.setPassword(Y9Base64Util.encode(newPassword));
+        this.save(y9DataSource);
     }
 
     @Override
@@ -160,6 +175,18 @@ public class Y9DataSourceServiceImpl implements Y9DataSourceService {
     public Page<Y9DataSource> page(int page, int rows) {
         Pageable pageable = PageRequest.of(page > 0 ? page - 1 : 0, rows);
         return datasourceRepository.findAll(pageable);
+    }
+
+    @Override
+    @Transactional(readOnly = false)
+    public void resetDefaultPassword(String id) {
+        Y9DataSource y9DataSource = this.getById(id);
+        // 数据源类型不能为 jndi 才能修改密码
+        Y9Assert.isNotTrue(Objects.equals(y9DataSource.getType(), DataSourceTypeEnum.JNDI.getValue()),
+            DataSourceErrorCodeEnum.JNDI_DATA_SOURCE_RESET_PASSWORD_NOT_ALLOWED);
+
+        y9DataSource.setPassword(DEFAULT_PASSWORD);
+        this.save(y9DataSource);
     }
 
     @Override
