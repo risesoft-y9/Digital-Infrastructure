@@ -14,8 +14,10 @@ import org.springframework.transaction.annotation.Transactional;
 
 import lombok.RequiredArgsConstructor;
 
+import net.risesoft.exception.SystemErrorCodeEnum;
 import net.risesoft.id.IdType;
 import net.risesoft.id.Y9IdGenerator;
+import net.risesoft.y9.util.Y9Assert;
 import net.risesoft.y9.util.Y9BeanUtil;
 import net.risesoft.y9public.entity.resource.Y9System;
 import net.risesoft.y9public.manager.resource.Y9AppManager;
@@ -139,6 +141,9 @@ public class Y9SystemServiceImpl implements Y9SystemService {
     @Override
     @Transactional(readOnly = false)
     public Y9System saveOrUpdate(Y9System y9System) {
+        Y9Assert.isTrue(checkNameAvailability(y9System.getId(), y9System.getName()),
+            SystemErrorCodeEnum.SYSTEM_WITH_SPECIFIC_NAME_EXISTS, y9System.getName());
+
         if (StringUtils.isNotBlank(y9System.getId())) {
             Optional<Y9System> y9SystemOptional = y9SystemManager.findById(y9System.getId());
             if (y9SystemOptional.isPresent()) {
@@ -149,8 +154,8 @@ public class Y9SystemServiceImpl implements Y9SystemService {
         } else {
             y9System.setId(Y9IdGenerator.genId(IdType.SNOWFLAKE));
             if (y9System.getTabIndex() == null) {
-                Optional<Y9System> y9SystemOptional = y9SystemRepository.findTopByOrderByTabIndexDesc();
-                Integer maxIndex = y9SystemOptional.map(system -> system.getTabIndex() + 1).orElse(0);
+                Integer maxIndex =
+                    y9SystemRepository.findTopByOrderByTabIndexDesc().map(system -> system.getTabIndex() + 1).orElse(0);
                 y9System.setTabIndex(maxIndex);
             }
         }

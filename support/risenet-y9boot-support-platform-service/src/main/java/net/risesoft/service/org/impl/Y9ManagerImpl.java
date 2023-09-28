@@ -275,7 +275,7 @@ public class Y9ManagerImpl implements Y9ManagerService {
 
     @Override
     @Transactional(readOnly = false)
-    public Y9Manager resetPasswordToDefault(String id) {
+    public Y9Manager resetDefaultPassword(String id) {
         Y9Manager y9Manager = this.getById(id);
         y9Manager.setPassword(Y9MessageDigest.hashpw(y9config.getCommon().getDefaultPassword()));
         y9Manager = y9ManagerRepository.save(y9Manager);

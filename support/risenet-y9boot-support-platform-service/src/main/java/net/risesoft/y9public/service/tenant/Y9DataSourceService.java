@@ -19,6 +19,15 @@ public interface Y9DataSourceService {
 
     String buildTenantDataSourceName(String shortName, Integer tenantType);
 
+    /**
+     * 修改密码
+     *
+     * @param id ID
+     * @param oldPassword 旧密码
+     * @param newPassword 新密码
+     */
+    void changePassword(String id, String oldPassword, String newPassword);
+
     Y9DataSource createTenantDefaultDataSource(String dbName);
 
     /**
@@ -87,6 +96,13 @@ public interface Y9DataSourceService {
      * @return {@link Page}<{@link Y9DataSource}>
      */
     Page<Y9DataSource> page(int page, int rows);
+
+    /**
+     * 重置默认密码
+     *
+     * @param id ID
+     */
+    void resetDefaultPassword(String id);
 
     /**
      * 保存租户数据源

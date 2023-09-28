@@ -3,6 +3,7 @@ package net.risesoft.y9public.service.tenant.impl;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.data.domain.Page;
@@ -17,8 +18,10 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
 import net.risesoft.consts.OrgLevelConsts;
+import net.risesoft.exception.TenantErrorCodeEnum;
 import net.risesoft.id.IdType;
 import net.risesoft.id.Y9IdGenerator;
+import net.risesoft.y9.util.Y9Assert;
 import net.risesoft.y9.util.Y9BeanUtil;
 import net.risesoft.y9public.entity.tenant.Y9DataSource;
 import net.risesoft.y9public.entity.tenant.Y9Tenant;
@@ -85,17 +88,15 @@ public class Y9TenantServiceImpl implements Y9TenantService {
         y9Tenant.setDefaultDataSourceId(dataSourceId);
         Integer maxTabIndex = getMaxTableIndex();
         y9Tenant.setTabIndex(maxTabIndex);
-        return save(y9Tenant, y9Tenant.getParentId());
+        return save(y9Tenant);
     }
 
     @Override
     @Transactional(readOnly = false)
     public void delete(String id) {
-        if (StringUtils.isNotBlank(id)) {
-            // TODO 删除关联数据 deleteToResourceAndRoleNode(id);
-            y9UserService.deleteByTenantId(id);
-            y9TenantRepository.deleteById(id);
-        }
+        // TODO 删除关联数据 deleteToResourceAndRoleNode(id);
+        y9UserService.deleteByTenantId(id);
+        y9TenantRepository.deleteById(id);
     }
 
     @Override
@@ -165,6 +166,23 @@ public class Y9TenantServiceImpl implements Y9TenantService {
     }
 
     @Override
+    @Transactional(readOnly = false)
+    public void move(String id, String parentId) {
+        Y9Tenant y9Tenant = this.getById(id);
+
+        if (StringUtils.isNotBlank(parentId)) {
+            List<Y9Tenant> tenants = this.listByGuidPathLike(y9Tenant.getGuidPath());
+            List<String> tenantIds = tenants.stream().map(Y9Tenant::getId).collect(Collectors.toList());
+
+            // 不能将租户移动到本身或子租户中
+            Y9Assert.notNull(tenantIds.contains(parentId), TenantErrorCodeEnum.MOVE_TO_SUB_TENANT_NOT_PERMITTED);
+        }
+
+        y9Tenant.setParentId(parentId);
+        this.save(y9Tenant);
+    }
+
+    @Override
     public Page<Y9Tenant> page(int page, int rows) {
         Pageable pageable = PageRequest.of((page < 1) ? 0 : page - 1, rows, Sort.by(Direction.DESC, "createTime"));
         return y9TenantRepository.findAll(pageable);
@@ -179,12 +197,12 @@ public class Y9TenantServiceImpl implements Y9TenantService {
 
     @Override
     @Transactional(readOnly = false)
-    public Y9Tenant save(Y9Tenant y9Tenant, String parentId) {
+    public Y9Tenant save(Y9Tenant y9Tenant) {
         if (StringUtils.isBlank(y9Tenant.getId())) {
             y9Tenant.setId(Y9IdGenerator.genId(IdType.SNOWFLAKE));
             y9Tenant.setTabIndex(getMaxTableIndex());
         }
-
+        String parentId = y9Tenant.getParentId();
         if (StringUtils.isNotBlank(parentId)) {
             Y9Tenant parent = this.getById(parentId);
             if (parent != null) {
@@ -203,15 +221,15 @@ public class Y9TenantServiceImpl implements Y9TenantService {
     @Override
     @Transactional(readOnly = false)
     public Y9Tenant saveOrUpdate(Y9Tenant y9Tenant, Integer tenantType) {
-        Y9DataSource y9DataSource = null;
         if (StringUtils.isNotBlank(y9Tenant.getId())) {
             Y9Tenant oldTenant = y9TenantRepository.findById(y9Tenant.getId()).orElse(null);
             if (oldTenant != null) {
                 Y9BeanUtil.copyProperties(y9Tenant, oldTenant);
-                return save(oldTenant, y9Tenant.getParentId());
+                return save(oldTenant);
             }
         }
         y9Tenant.setTenantType(tenantType);
+        Y9DataSource y9DataSource = null;
         try {
             y9DataSource = y9DataSourceManager.createTenantDefaultDataSource(y9Tenant.getShortName(), tenantType, null);
             y9Tenant.setDefaultDataSourceId(y9DataSource.getId());
@@ -221,7 +239,7 @@ public class Y9TenantServiceImpl implements Y9TenantService {
                 y9DataSourceManager.dropTenantDefaultDataSource(y9DataSource.getId(), y9Tenant.getShortName());
             }
         }
-        return save(y9Tenant, y9Tenant.getParentId());
+        return save(y9Tenant);
     }
 
     @Override

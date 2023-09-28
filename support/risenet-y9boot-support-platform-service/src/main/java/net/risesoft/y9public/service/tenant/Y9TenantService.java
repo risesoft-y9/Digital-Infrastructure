@@ -158,6 +158,14 @@ public interface Y9TenantService {
     List<Y9Tenant> listByTenantTypeIn(Integer tenantType, Integer tenantType2);
 
     /**
+     * 移动租户
+     *
+     * @param id ID
+     * @param parentId 父ID
+     */
+    void move(String id, String parentId);
+
+    /**
      * 分页查询租户列表
      *
      * @param page 页数
@@ -181,10 +189,9 @@ public interface Y9TenantService {
      * 保存租户实体类
      *
      * @param entity 租户实体
-     * @param parentId 父节点id
      * @return {@link Y9Tenant}
      */
-    Y9Tenant save(Y9Tenant entity, String parentId);
+    Y9Tenant save(Y9Tenant entity);
 
     /**
      * 保存租户信息

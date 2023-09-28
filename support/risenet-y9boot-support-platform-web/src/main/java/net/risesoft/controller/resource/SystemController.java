@@ -50,10 +50,7 @@ public class SystemController {
     @PostMapping(value = "/delete")
     public Y9Result<Object> delete(@RequestParam @NotBlank String id) {
         y9SystemService.delete(id);
-
-        // 删除租用系统以兼容数字底座
         y9TenantSystemService.deleteByTenantIdAndSystemId(Y9LoginUserHolder.getTenantId(), id);
-
         return Y9Result.successMsg("删除系统成功");
     }
 
@@ -127,7 +124,6 @@ public class SystemController {
     public Y9Result<Y9System> save(@Validated Y9System y9System) {
         Y9System savedSystem = y9SystemService.saveOrUpdate(y9System);
         // TODO move to Service?
-        // 新增系统时租户直接租用以兼容数字底座
         y9TenantSystemService.registerSystemForTenant(Y9LoginUserHolder.getTenantId(), savedSystem.getId());
         return Y9Result.success(savedSystem, "保存系统成功");
     }

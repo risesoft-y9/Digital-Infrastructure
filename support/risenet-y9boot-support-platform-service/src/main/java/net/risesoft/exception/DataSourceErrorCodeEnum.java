@@ -13,8 +13,12 @@ import net.risesoft.consts.ErrorCodeConsts;
  */
 @RequiredArgsConstructor
 public enum DataSourceErrorCodeEnum implements ErrorCode {
-    /** data source not found */
-    DATA_SOURCE_NOT_FOUND(0, "数据源[{}]不存在");
+    /** 数据源不存在 */
+    DATA_SOURCE_NOT_FOUND(0, "数据源[{}]不存在"),
+    /** 数据源原密码错误 */
+    DATA_SOURCE_OLD_PASSWORD_IS_WRONG(1, "数据源原密码错误"),
+    /** JNDI数据源不允许重置密码 */
+    JNDI_DATA_SOURCE_RESET_PASSWORD_NOT_ALLOWED(1, "JNDI数据源不允许重置密码"),;
 
     private final int moduleErrorCode;
     private final String description;

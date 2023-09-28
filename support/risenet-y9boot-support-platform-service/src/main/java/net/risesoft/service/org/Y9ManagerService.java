@@ -160,7 +160,7 @@ public interface Y9ManagerService {
      *
      * @param id 管理员id
      */
-    Y9Manager resetPasswordToDefault(String id);
+    Y9Manager resetDefaultPassword(String id);
 
     /**
      * 保存管理员信息
