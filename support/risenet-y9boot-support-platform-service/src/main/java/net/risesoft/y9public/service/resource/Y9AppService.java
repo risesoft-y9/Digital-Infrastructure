@@ -183,10 +183,9 @@ public interface Y9AppService extends ResourceCommonService<Y9App> {
      * 保存isv应用
      *
      * @param app 应用程序
-     * @param systemId 系统id
      * @return {@link Y9App}
      */
-    Y9App saveIsvApp(Y9App app, String systemId);
+    Y9App saveIsvApp(Y9App app);
 
     /**
      * 保存应用排序

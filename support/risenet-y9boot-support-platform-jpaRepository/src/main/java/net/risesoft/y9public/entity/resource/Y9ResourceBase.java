@@ -42,6 +42,7 @@ public abstract class Y9ResourceBase extends BaseEntity implements Comparable<Y9
     private String customId;
 
     /** 系统id */
+    @NotBlank
     @Column(name = "SYSTEM_ID", length = 38, nullable = false)
     @Comment("系统id")
     private String systemId;
