@@ -170,7 +170,7 @@ public class AppApiImpl implements AppApi {
     public App saveIsvApp(App app, @RequestParam("systemId") @NotBlank String systemId) {
         Y9App y9App = new Y9App();
         Y9BeanUtil.copyProperties(app, y9App);
-        y9App = y9AppService.saveIsvApp(y9App, systemId);
+        y9App = y9AppService.saveIsvApp(y9App);
         return Y9ModelConvertUtil.convert(y9App, App.class);
     }
 

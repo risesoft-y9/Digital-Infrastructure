@@ -259,8 +259,7 @@ public class Y9AppServiceImpl implements Y9AppService {
 
     @Override
     @Transactional(readOnly = false)
-    public Y9App saveIsvApp(Y9App app, String systemId) {
-        app.setSystemId(systemId);
+    public Y9App saveIsvApp(Y9App app) {
         if (app.getTabIndex() == null || app.getTabIndex() == 0) {
             Integer tabIndex =
                 y9AppRepository.findTopByOrderByTabIndexDesc().map(y9App -> y9App.getTabIndex() + 1).orElse(1);
