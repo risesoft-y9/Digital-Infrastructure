@@ -1,0 +1,23 @@
+version: '3.9'
+name: prometheus
+services:
+  prometheus:
+    image: prom/prometheus:latest
+    container_name: prometheus01
+    restart: always
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+    networks:
+      - y9-share-net
+    ports:
+      - "9090:9090"
+    volumes:
+      - d:/docker-config/prometheus/prometheus.yml:/etc/prometheus/prometheus.yml
+      - d:/docker-data/prometheus:/prometheus
+    command:
+      - '--web.enable-lifecycle'
+      - '--config.file=/etc/prometheus/prometheus.yml'
+
+networks:
+  y9-share-net:
+    external: true

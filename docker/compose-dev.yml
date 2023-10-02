@@ -5,6 +5,8 @@ services:
     image: mysql:latest
     container_name: mysql01
     restart: always
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
     networks:
       - y9-share-net
     ports:
@@ -15,7 +17,7 @@ services:
       MYSQL_DATABASE: 'y9_public'
     volumes:
       - d:/docker-data/mysql:/var/lib/mysql
-      - d:/docker-data/mysql-init:/docker-entrypoint-initdb.d
+      - d:/docker-config/mysql-init:/docker-entrypoint-initdb.d
     healthcheck:
       #test: [ "CMD", "mysqladmin" ,"ping", "-h", "localhost" ]
       test: "mysql --user=root --password=12345678 --execute='show databases;'"
@@ -27,6 +29,8 @@ services:
     image: redis:latest
     container_name: redis01
     restart: always
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
     networks:
       - y9-share-net
     ports:
@@ -39,6 +43,8 @@ services:
     image: elasticsearch:8.10.2
     container_name: elastic01
     restart: always
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
     networks:
       - y9-share-net
     ports:
@@ -56,6 +62,8 @@ services:
     image: bitnami/kafka:latest
     container_name: kafka01
     restart: always
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
     networks:
       - y9-share-net
     ports:
@@ -76,6 +84,8 @@ services:
     image: nacos/nacos-server:v2.2.3
     container_name: nacos01
     restart: always
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
     networks:
       - y9-share-net
     ports:

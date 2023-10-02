@@ -1,0 +1,19 @@
+version: '3.9'
+name: grafana
+services:
+  grafana:
+    image: grafana/grafana:latest
+    container_name: grafana01
+    restart: unless-stopped
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+    networks:
+      - y9-share-net
+    ports:
+      - "3000:3000"
+    volumes:
+      - d:/docker-data/grafana:/var/lib/grafana
+
+networks:
+  y9-share-net:
+    external: true

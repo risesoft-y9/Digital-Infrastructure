@@ -5,6 +5,8 @@ services:
     image: 6053537/portainer-ce:latest
     container_name: portainer
     restart: always
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
     networks:
       - y9-share-net
     ports:
