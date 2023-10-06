@@ -1,0 +1,26 @@
+version: '3.9'
+name: prometheus-exporter
+services:
+  mysqld-exporter:
+    image: prom/mysqld-exporter:latest
+    container_name: mysqld-exporter01
+    restart: always
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+    networks:
+      - y9-share-net
+    ports:
+      - "9104:9104"
+    external_links:
+      - mysql01
+    environment:
+      #最新版本已经不支持单一的DATA_SOURCE_NAME
+      #- DATA_SOURCE_NAME=root:password@(mysql:3306)/database
+      - MYSQLD_EXPORTER_PASSWORD=12345678
+    command:
+      - '--mysqld.address=mysql01:3306'
+      - '--mysqld.username=root'
+
+networks:
+  y9-share-net:
+    external: true
