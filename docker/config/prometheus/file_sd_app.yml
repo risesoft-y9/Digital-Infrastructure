@@ -1,0 +1,2 @@
+- targets: ['host.docker.internal:7055']
+- targets: ['host.docker.internal:8080']

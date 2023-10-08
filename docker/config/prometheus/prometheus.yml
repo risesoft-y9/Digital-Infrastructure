@@ -27,6 +27,15 @@ scrape_configs:
 
     static_configs:
       - targets: ["localhost:9090"]
+  # - job_name: "consul_sd_app"
+  #   consul_sd_configs:
+  #     - refresh_interval: 1m
+  #       server: localhost:8500
+  #       services: ['myapp']
   - job_name: "mysqld"
     static_configs:
       - targets: ["mysqld-exporter:9104"]
+  - job_name: "file_sd_app"
+    file_sd_configs:
+      - refresh_interval: 1m
+        files: [file_sd_app.yml]

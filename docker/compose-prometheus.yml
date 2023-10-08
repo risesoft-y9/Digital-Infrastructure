@@ -12,7 +12,7 @@ services:
     ports:
       - "9090:9090"
     volumes:
-      - d:/docker-config/prometheus/prometheus.yml:/etc/prometheus/prometheus.yml
+      - d:/docker-config/prometheus:/etc/prometheus
       - d:/docker-data/prometheus:/prometheus
     command:
       - '--web.enable-lifecycle'
