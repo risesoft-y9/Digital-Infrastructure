@@ -273,7 +273,7 @@ public class Y9OrgTreeExcelDataHandlerImpl implements Y9OrgTreeDataHandler {
             if (i == lenth - 1) {
                 dn = OrgLevelConsts.CN + paths[i] + "," + dn;
                 String personName = pf.getLoginName().replaceAll("\\s*", "");
-                Optional<Y9Person> y9PersonOptional = y9PersonService.getPersonByLoginName(personName);
+                Optional<Y9Person> y9PersonOptional = y9PersonService.findByLoginName(personName);
                 if (y9PersonOptional.isEmpty()) {
                     if (StringUtils.isNotBlank(pf.getMobile())) {
                         // 数值类型号码

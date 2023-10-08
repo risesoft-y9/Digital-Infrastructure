@@ -53,28 +53,25 @@ public interface Y9ManagerService {
      * 初始化安全审计员
      *
      * @param id 管理员id
-     * @param tenantId 租户id
-     * @param organizationId 组织id
+     * @param parentId 组织id
      */
-    void createAuditManager(String id, String tenantId, String organizationId);
+    void createAuditManager(String id, String parentId);
 
     /**
      * 初始化安全保密员
      *
      * @param id 管理员id
-     * @param tenantId 租户id
-     * @param organizationId 组织id
+     * @param parentId 组织id
      */
-    void createSecurityManager(String id, String tenantId, String organizationId);
+    void createSecurityManager(String id, String parentId);
 
     /**
      * 初始化系统管理员
      *
      * @param managerId 管理员id
-     * @param tenantId 租户id
      * @param organizationId 组织id
      */
-    void createSystemManager(String managerId, String tenantId, String organizationId);
+    void createSystemManager(String managerId, String organizationId);
 
     /**
      * 根据管理员id数组删除管理员信息

@@ -66,12 +66,11 @@ public class SyncController {
                     y9OrganizationList.stream().map(Y9Organization::getId).collect(Collectors.toList());
                 organizationId = DefaultIdConsts.ORGANIZATION_VIRTUAL_ID;
                 if (!y9OrganizationIdList.contains(organizationId)) {
-                    y9OrganizationService.createOrganization(tenantId, DefaultIdConsts.ORGANIZATION_VIRTUAL_ID, "组织",
-                        Boolean.TRUE);
+                    y9OrganizationService.create(DefaultIdConsts.ORGANIZATION_VIRTUAL_ID, "组织", Boolean.TRUE);
                 }
-                y9ManagerService.createSystemManager(DefaultIdConsts.SYSTEM_MANAGER_ID, tenantId, organizationId);
-                y9ManagerService.createSecurityManager(DefaultIdConsts.SECURITY_MANAGER_ID, tenantId, organizationId);
-                y9ManagerService.createAuditManager(DefaultIdConsts.AUDIT_MANAGER_ID, tenantId, organizationId);
+                y9ManagerService.createSystemManager(DefaultIdConsts.SYSTEM_MANAGER_ID, organizationId);
+                y9ManagerService.createSecurityManager(DefaultIdConsts.SECURITY_MANAGER_ID, organizationId);
+                y9ManagerService.createAuditManager(DefaultIdConsts.AUDIT_MANAGER_ID, organizationId);
             }
         }
         return Y9Result.successMsg("初始化租户三员完成");

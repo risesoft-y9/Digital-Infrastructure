@@ -22,6 +22,10 @@ public interface Y9JobRepository extends JpaRepository<Y9Job, String>, JpaSpecif
 
     int countByName(String name);
 
+    boolean existsByName(String name);
+
+    Optional<Y9Job> findByName(String name);
+
     List<Y9Job> findByNameContainingOrderByTabIndex(String name);
 
     Optional<Y9Job> findTopByOrderByTabIndexDesc();

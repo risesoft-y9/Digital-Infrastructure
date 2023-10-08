@@ -28,6 +28,8 @@ public interface Y9PersonRepository extends JpaRepository<Y9Person, String> {
 
     long countByParentId(String parentId);
 
+    boolean existsByLoginName(String loginName);
+
     Page<Y9Person> findByDisabledAndNameContaining(boolean disabled, String userName, Pageable pageable);
 
     Page<Y9Person> findByDisabledAndParentId(boolean disabled, String parentId, Pageable pageable);

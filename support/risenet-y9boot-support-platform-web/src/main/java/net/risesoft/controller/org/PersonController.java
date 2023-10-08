@@ -110,7 +110,7 @@ public class PersonController {
     @RequestMapping(value = "/checkCaid")
     public Y9Result<Boolean> checkCaid(@RequestParam(required = false) String personId,
         @NotBlank @RequestParam String caid) {
-        return Y9Result.success(y9UserService.checkCaidAvailability(personId, caid), "判断同一个租户CA认证码是否重复操作成功");
+        return Y9Result.success(y9UserService.isCaidAvailable(personId, caid), "判断同一个租户CA认证码是否重复操作成功");
     }
 
     /**
@@ -122,7 +122,7 @@ public class PersonController {
     @RiseLog(operationName = "判断邮箱是否可用")
     @RequestMapping(value = "/checkEmail")
     public Y9Result<Boolean> checkEmail(@NotBlank @RequestParam String email) {
-        return Y9Result.success(y9PersonService.checkEmailAvailability(email), "判断邮箱是否可用成功");
+        return Y9Result.success(y9PersonService.isEmailAvailable(email), "判断邮箱是否可用成功");
     }
 
     /**
@@ -135,7 +135,7 @@ public class PersonController {
     @RequestMapping(value = "/checkLoginName")
     public Y9Result<Boolean> checkLoginName(@RequestParam(required = false) String personId,
         @NotBlank @RequestParam String loginName) {
-        return Y9Result.success(y9PersonService.checkLoginNameAvailability(personId, loginName), "判断登录名是否可用成功");
+        return Y9Result.success(y9PersonService.isLoginNameAvailable(personId, loginName), "判断登录名是否可用成功");
     }
 
     /**

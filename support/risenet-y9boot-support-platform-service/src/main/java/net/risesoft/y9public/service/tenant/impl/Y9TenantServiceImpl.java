@@ -221,9 +221,9 @@ public class Y9TenantServiceImpl implements Y9TenantService {
     @Override
     @Transactional(readOnly = false)
     public Y9Tenant saveOrUpdate(Y9Tenant y9Tenant, Integer tenantType) {
-        Y9Assert.isTrue(checkNameAvailability(y9Tenant.getName(), y9Tenant.getId()),
-            TenantErrorCodeEnum.NAME_HAS_BEEN_USED, y9Tenant.getName());
-        Y9Assert.isTrue(checkShortNameAvailability(y9Tenant.getShortName(), y9Tenant.getId()),
+        Y9Assert.isTrue(isNameAvailable(y9Tenant.getName(), y9Tenant.getId()), TenantErrorCodeEnum.NAME_HAS_BEEN_USED,
+            y9Tenant.getName());
+        Y9Assert.isTrue(isShortNameAvailable(y9Tenant.getShortName(), y9Tenant.getId()),
             TenantErrorCodeEnum.SHORT_NAME_HAS_BEEN_USED, y9Tenant.getShortName());
 
         if (StringUtils.isNotBlank(y9Tenant.getId())) {
@@ -247,7 +247,7 @@ public class Y9TenantServiceImpl implements Y9TenantService {
         return save(y9Tenant);
     }
 
-    private boolean checkShortNameAvailability(String shortName, String id) {
+    private boolean isShortNameAvailable(String shortName, String id) {
         Optional<Y9Tenant> y9TenantOptional = y9TenantRepository.findByShortName(shortName);
 
         if (y9TenantOptional.isEmpty()) {
@@ -259,7 +259,7 @@ public class Y9TenantServiceImpl implements Y9TenantService {
         return y9TenantOptional.get().getId().equals(id);
     }
 
-    private boolean checkNameAvailability(String name, String id) {
+    private boolean isNameAvailable(String name, String id) {
         Optional<Y9Tenant> y9TenantOptional = y9TenantRepository.findByName(name);
 
         if (y9TenantOptional.isEmpty()) {

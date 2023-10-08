@@ -26,7 +26,7 @@ public class DefaultIdConsts {
     /** 虚拟组织id */
     public static final String ORGANIZATION_VIRTUAL_ID = "11111111-1111-1111-1111-111111111115";
     /** 组织id */
-    public static final String ORGANIZATION_TENANT_ID = "11111111-1111-1111-1111-111111111123";
+    public static final String ORGANIZATION_ID = "11111111-1111-1111-1111-111111111123";
     /** 人员id */
     public static final String PERSON_ID = "11111111-1111-1111-1111-111111111116";
 

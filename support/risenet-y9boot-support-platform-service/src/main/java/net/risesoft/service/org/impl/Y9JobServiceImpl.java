@@ -47,13 +47,21 @@ public class Y9JobServiceImpl implements Y9JobService {
 
     private final Y9JobManager y9JobManager;
 
-    private void checkIfJobNameExists(String name) {
-        Y9Assert.lessThanOrEqualTo(y9JobRepository.countByName(name), 0, OrgUnitErrorCodeEnum.JOB_EXISTS, name);
-    }
-
     private void checkIfRelatedPositionExists(String id) {
         Y9Assert.lessThanOrEqualTo(y9PositionRepository.countByJobId(id), 0,
             OrgUnitErrorCodeEnum.RELATED_POSITION_EXISTS);
+    }
+
+    private boolean isNameAvailable(String name, String id) {
+        Optional<Y9Job> y9JobOptional = y9JobRepository.findByName(name);
+
+        if (y9JobOptional.isEmpty()) {
+            // 不存在同名的职位肯定可用
+            return true;
+        }
+
+        // 编辑职位时没修改名称同样认为可用
+        return y9JobOptional.get().getId().equals(id);
     }
 
     @Override
@@ -126,6 +134,9 @@ public class Y9JobServiceImpl implements Y9JobService {
     @Override
     @Transactional(readOnly = false)
     public Y9Job saveOrUpdate(Y9Job job) {
+        // 检查名称是否可用
+        Y9Assert.isTrue(isNameAvailable(job.getName(), job.getId()), OrgUnitErrorCodeEnum.JOB_EXISTS, job.getName());
+
         if (StringUtils.isNotBlank(job.getId())) {
             // 修改职位
             Optional<Y9Job> y9JobOptional = this.findById(job.getId());
@@ -147,8 +158,6 @@ public class Y9JobServiceImpl implements Y9JobService {
         }
 
         // 新增职位
-        checkIfJobNameExists(job.getName());
-
         Y9Job y9Job = new Y9Job();
         if (StringUtils.isNotBlank(job.getId())) {
             // 使用指定的id
@@ -170,10 +179,9 @@ public class Y9JobServiceImpl implements Y9JobService {
 
     @Override
     @Transactional(readOnly = false)
-    public void create(String jobId, String name, String code) {
-        if (!y9JobRepository.existsById(jobId)) {
+    public void create(String name, String code) {
+        if (!y9JobRepository.existsByName(name)) {
             Y9Job y9Job = new Y9Job();
-            y9Job.setId(jobId);
             y9Job.setName(name);
             y9Job.setCode(code);
             this.saveOrUpdate(y9Job);

@@ -14,13 +14,13 @@ import net.risesoft.y9public.entity.user.Y9User;
 public interface Y9UserService {
 
     /**
-     * 验证caid
+     * 检查caid是否可用
      *
      * @param personId
      * @param caid ca唯一标识
      * @return boolean
      */
-    boolean checkCaidAvailability(String personId, String caid);
+    boolean isCaidAvailable(String personId, String caid);
 
     /**
      * 根据id删除用户

@@ -492,25 +492,6 @@ public class Y9PersonServiceImpl implements Y9PersonService {
     }
 
     @Override
-    public boolean checkEmailAvailability(final String email) {
-        List<Y9Person> personList = y9PersonRepository.findByEmailAndOriginal(email, Boolean.TRUE);
-        return personList.isEmpty();
-    }
-
-    @Override
-    public boolean checkLoginNameAvailability(String personId, final String loginName) {
-        Optional<Y9Person> y9PersonOptional = y9PersonRepository.findByLoginNameAndOriginalTrue(loginName);
-
-        if (y9PersonOptional.isEmpty()) {
-            // 不存在同登录名的人员肯定可用
-            return true;
-        }
-
-        // 编辑人员时没修改登录名同样认为可用
-        return y9PersonOptional.get().getId().equals(personId);
-    }
-
-    @Override
     public long countByGuidPathLikeAndDisabledAndDeletedFalse(String guidPath) {
         return y9PersonRepository.countByDisabledAndGuidPathContaining(false, guidPath);
     }
@@ -518,6 +499,19 @@ public class Y9PersonServiceImpl implements Y9PersonService {
     @Override
     public long countByParentId(String parentId) {
         return y9PersonRepository.countByParentId(parentId);
+    }
+
+    @Override
+    public void create(String parentId, String name, String loginName, String mobile) {
+        if (!y9PersonRepository.existsByLoginName(loginName)) {
+            Y9Person y9Person = new Y9Person();
+            y9Person.setParentId(parentId);
+            y9Person.setName(name);
+            y9Person.setLoginName(loginName);
+            y9Person.setMobile(mobile);
+
+            this.saveOrUpdate(y9Person, new Y9PersonExt());
+        }
     }
 
     @Override
@@ -611,6 +605,11 @@ public class Y9PersonServiceImpl implements Y9PersonService {
     }
 
     @Override
+    public Optional<Y9Person> findByLoginName(final String loginName) {
+        return y9PersonRepository.findByLoginNameAndOriginalTrue(loginName);
+    }
+
+    @Override
     public List<String> findIdByGuidPathStartingWith(String guidPath) {
         return y9PersonRepository.findIdByGuidPathStartingWith(guidPath);
     }
@@ -624,11 +623,6 @@ public class Y9PersonServiceImpl implements Y9PersonService {
     @Override
     public Optional<Y9Person> getByLoginNameAndParentId(String loginName, String parentId) {
         return y9PersonRepository.findByLoginNameAndParentId(loginName, parentId);
-    }
-
-    @Override
-    public Optional<Y9Person> getPersonByLoginName(final String loginName) {
-        return y9PersonRepository.findByLoginNameAndOriginalTrue(loginName);
     }
 
     @Override
@@ -659,6 +653,25 @@ public class Y9PersonServiceImpl implements Y9PersonService {
             return null;
         }
         return personList.get(0);
+    }
+
+    @Override
+    public boolean isEmailAvailable(final String email) {
+        List<Y9Person> personList = y9PersonRepository.findByEmailAndOriginal(email, Boolean.TRUE);
+        return personList.isEmpty();
+    }
+
+    @Override
+    public boolean isLoginNameAvailable(String personId, final String loginName) {
+        Optional<Y9Person> y9PersonOptional = y9PersonRepository.findByLoginNameAndOriginalTrue(loginName);
+
+        if (y9PersonOptional.isEmpty()) {
+            // 不存在同登录名的人员肯定可用
+            return true;
+        }
+
+        // 编辑人员时没修改登录名同样认为可用
+        return y9PersonOptional.get().getId().equals(personId);
     }
 
     @Override
@@ -737,27 +750,6 @@ public class Y9PersonServiceImpl implements Y9PersonService {
         return parentList;
     }
 
-    /**
-     * 根据人员id，获取该人员所有的父节点id列表
-     *
-     * @param personId 人员id
-     * @return {@link List}<{@link String}>
-     */
-    private List<String> listParentIdByPersonId(String personId) {
-        List<String> parentIdList = new ArrayList<>();
-        Y9Person person = getById(personId);
-        String parentId = person.getParentId();
-        if (!Boolean.TRUE.equals(person.getOriginal())) {
-            Y9Person originalPerson = getById(person.getOriginalId());
-            parentId = originalPerson.getParentId();
-            personId = originalPerson.getId();
-        }
-        parentIdList.add(parentId);
-        List<Y9Person> personList = y9PersonRepository.findByOriginalIdAndDisabled(personId, false);
-        parentIdList.addAll(personList.stream().map(Y9Person::getParentId).collect(Collectors.toList()));
-        return parentIdList;
-    }
-
     @Override
     @Transactional(readOnly = false)
     public Y9Person modifyPassword(String personId, String newPassword) {
@@ -810,19 +802,6 @@ public class Y9PersonServiceImpl implements Y9PersonService {
         }
 
         return personList;
-    }
-
-    @Transactional(readOnly = false)
-    public Y9Person order(String personId, int tabIndex) {
-        Y9Person person = this.getById(personId);
-        person.setTabIndex(tabIndex);
-        Y9Person y9Person = this.save(person);
-
-        Y9MessageOrg msg = new Y9MessageOrg(ModelConvertUtil.orgPersonToPerson(y9Person),
-            Y9OrgEventConst.RISEORGEVENT_TYPE_UPDATE_PERSON, Y9LoginUserHolder.getTenantId());
-        Y9PublishServiceUtil.publishMessageOrg(msg);
-
-        return y9Person;
     }
 
     @Override
@@ -1104,34 +1083,6 @@ public class Y9PersonServiceImpl implements Y9PersonService {
         return person;
     }
 
-    @Transactional(readOnly = false)
-    public void updatePersonByOriginalId(Y9Person originalPerson, Y9PersonExt originalExt) {
-        List<Y9Person> persons = y9PersonRepository.findByOriginalId(originalPerson.getId());
-        for (Y9Person person : persons) {
-            person.setName(originalPerson.getName());
-            person.setLoginName(originalPerson.getLoginName());
-            person.setEmail(originalPerson.getEmail());
-            person.setMobile(originalPerson.getMobile());
-            person.setPassword(originalPerson.getPassword());
-
-            Y9OrgBase parent = compositeOrgBaseManager.getOrgUnitAsParent(person.getParentId());
-            person.setDn(OrgLevelConsts.getOrgLevel(OrgTypeEnum.PERSON) + person.getName() + OrgLevelConsts.SEPARATOR
-                + parent.getDn());
-
-            y9PersonManager.save(person);
-
-            Y9PersonExt ext = y9PersonExtManager.findByPersonId(person.getId()).orElse(new Y9PersonExt());
-            if (originalExt != null) {
-                ext.setIdType(originalExt.getIdType());
-                ext.setIdNum(originalExt.getIdNum());
-                Y9BeanUtil.copyProperties(originalExt, ext);
-            }
-            ext.setName(originalPerson.getName());
-            ext.setPersonId(person.getId());
-            y9PersonExtManager.saveOrUpdate(ext, person);
-        }
-    }
-
     /**
      * 获取人员，不包括子部门里的人员，但包括用户组和岗位的人员
      *
@@ -1162,6 +1113,27 @@ public class Y9PersonServiceImpl implements Y9PersonService {
         return list;
     }
 
+    /**
+     * 根据人员id，获取该人员所有的父节点id列表
+     *
+     * @param personId 人员id
+     * @return {@link List}<{@link String}>
+     */
+    private List<String> listParentIdByPersonId(String personId) {
+        List<String> parentIdList = new ArrayList<>();
+        Y9Person person = getById(personId);
+        String parentId = person.getParentId();
+        if (!Boolean.TRUE.equals(person.getOriginal())) {
+            Y9Person originalPerson = getById(person.getOriginalId());
+            parentId = originalPerson.getParentId();
+            personId = originalPerson.getId();
+        }
+        parentIdList.add(parentId);
+        List<Y9Person> personList = y9PersonRepository.findByOriginalIdAndDisabled(personId, false);
+        parentIdList.addAll(personList.stream().map(Y9Person::getParentId).collect(Collectors.toList()));
+        return parentIdList;
+    }
+
     @EventListener
     public void onParentDepartmentDeleted(Y9EntityDeletedEvent<Y9Department> event) {
         Y9Department parentDepartment = event.getEntity();
@@ -1174,6 +1146,19 @@ public class Y9PersonServiceImpl implements Y9PersonService {
         Y9Organization y9Organization = event.getEntity();
         // 删除组织时其下人员也要删除
         deleteByParentId(y9Organization.getId());
+    }
+
+    @Transactional(readOnly = false)
+    public Y9Person order(String personId, int tabIndex) {
+        Y9Person person = this.getById(personId);
+        person.setTabIndex(tabIndex);
+        Y9Person y9Person = this.save(person);
+
+        Y9MessageOrg msg = new Y9MessageOrg(ModelConvertUtil.orgPersonToPerson(y9Person),
+            Y9OrgEventConst.RISEORGEVENT_TYPE_UPDATE_PERSON, Y9LoginUserHolder.getTenantId());
+        Y9PublishServiceUtil.publishMessageOrg(msg);
+
+        return y9Person;
     }
 
     /**
@@ -1190,6 +1175,34 @@ public class Y9PersonServiceImpl implements Y9PersonService {
             List<Y9Person> list = this.getPersonByParentId(dept.getId());
             personList.addAll(list);
             recursionAllPersons(dept.getId(), personList);
+        }
+    }
+
+    @Transactional(readOnly = false)
+    public void updatePersonByOriginalId(Y9Person originalPerson, Y9PersonExt originalExt) {
+        List<Y9Person> persons = y9PersonRepository.findByOriginalId(originalPerson.getId());
+        for (Y9Person person : persons) {
+            person.setName(originalPerson.getName());
+            person.setLoginName(originalPerson.getLoginName());
+            person.setEmail(originalPerson.getEmail());
+            person.setMobile(originalPerson.getMobile());
+            person.setPassword(originalPerson.getPassword());
+
+            Y9OrgBase parent = compositeOrgBaseManager.getOrgUnitAsParent(person.getParentId());
+            person.setDn(OrgLevelConsts.getOrgLevel(OrgTypeEnum.PERSON) + person.getName() + OrgLevelConsts.SEPARATOR
+                + parent.getDn());
+
+            y9PersonManager.save(person);
+
+            Y9PersonExt ext = y9PersonExtManager.findByPersonId(person.getId()).orElse(new Y9PersonExt());
+            if (originalExt != null) {
+                ext.setIdType(originalExt.getIdType());
+                ext.setIdNum(originalExt.getIdNum());
+                Y9BeanUtil.copyProperties(originalExt, ext);
+            }
+            ext.setName(originalPerson.getName());
+            ext.setPersonId(person.getId());
+            y9PersonExtManager.saveOrUpdate(ext, person);
         }
     }
 }

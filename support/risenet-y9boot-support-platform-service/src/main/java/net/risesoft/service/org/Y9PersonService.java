@@ -96,23 +96,6 @@ public interface Y9PersonService {
     Y9Person changeDisabled(String id);
 
     /**
-     * 判断邮箱是否可用
-     *
-     * @param email 电子邮箱
-     * @return boolean
-     */
-    boolean checkEmailAvailability(String email);
-
-    /**
-     * 判断用户名是否可用
-     *
-     * @param personId
-     * @param loginName 登录名
-     * @return boolean
-     */
-    boolean checkLoginNameAvailability(String personId, String loginName);
-
-    /**
      * 根据guidPath和Boolean值查询
      *
      * @param guidPath guid路径
@@ -127,6 +110,16 @@ public interface Y9PersonService {
      * @return long
      */
     long countByParentId(String parentId);
+
+    /**
+     * 根据必须字段创建人员
+     *
+     * @param parentId 父ID
+     * @param name 名字
+     * @param loginName 登录名
+     * @param mobile 手机号
+     */
+    void create(String parentId, String name, String loginName, String mobile);
 
     /**
      * 新建人员
@@ -174,6 +167,14 @@ public interface Y9PersonService {
     Optional<Y9Person> findById(String id);
 
     /**
+     * 根据登录名获取人员
+     *
+     * @param loginName 登录名
+     * @return {@link Y9Person}
+     */
+    Optional<Y9Person> findByLoginName(String loginName);
+
+    /**
      * 查找 guidPath 包含传入参数的对应人的 id
      *
      * @param guidPath guid path
@@ -200,14 +201,6 @@ public interface Y9PersonService {
     Optional<Y9Person> getByLoginNameAndParentId(String loginName, String parentId);
 
     /**
-     * 根据登录名获取人员
-     *
-     * @param loginName 登录名
-     * @return {@link Y9Person}
-     */
-    Optional<Y9Person> getPersonByLoginName(String loginName);
-
-    /**
      * 根据登录名、租户id获取人员
      *
      * @param tenantId 租户id
@@ -223,6 +216,23 @@ public interface Y9PersonService {
      * @return {@link Y9Person}
      */
     Y9Person getPersonByMobile(String mobile);
+
+    /**
+     * 判断邮箱是否可用
+     *
+     * @param email 电子邮箱
+     * @return boolean
+     */
+    boolean isEmailAvailable(String email);
+
+    /**
+     * 判断用户名是否可用
+     *
+     * @param personId
+     * @param loginName 登录名
+     * @return boolean
+     */
+    boolean isLoginNameAvailable(String personId, String loginName);
 
     /**
      * 查找所有人员

@@ -33,9 +33,8 @@ public class Y9UserServiceImpl implements Y9UserService {
     private final Y9UserRepository y9UserRepository;
 
     @Override
-    public boolean checkCaidAvailability(String personId, String caid) {
-        String tenantId = Y9LoginUserHolder.getTenantId();
-        Optional<Y9User> y9UserOptional = y9UserRepository.findByTenantIdAndCaid(tenantId, caid);
+    public boolean isCaidAvailable(String personId, String caid) {
+        Optional<Y9User> y9UserOptional = y9UserRepository.findByTenantIdAndCaid(Y9LoginUserHolder.getTenantId(), caid);
         if (y9UserOptional.isEmpty()) {
             return true;
         }
