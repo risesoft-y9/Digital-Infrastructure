@@ -84,5 +84,5 @@ public interface Y9JobService {
      */
     Y9Job saveOrUpdate(Y9Job job);
 
-    void create(String jobId, String name, String code);
+    void create(String name, String code);
 }

@@ -145,5 +145,5 @@ public interface Y9SystemService {
      * @param name 系统名
      * @return boolean
      */
-    boolean checkNameAvailability(String id, String name);
+    boolean isNameAvailable(String id, String name);
 }

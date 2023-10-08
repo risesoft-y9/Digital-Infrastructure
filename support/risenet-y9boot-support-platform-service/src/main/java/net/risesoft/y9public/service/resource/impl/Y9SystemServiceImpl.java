@@ -141,7 +141,7 @@ public class Y9SystemServiceImpl implements Y9SystemService {
     @Override
     @Transactional(readOnly = false)
     public Y9System saveOrUpdate(Y9System y9System) {
-        Y9Assert.isTrue(checkNameAvailability(y9System.getId(), y9System.getName()),
+        Y9Assert.isTrue(isNameAvailable(y9System.getId(), y9System.getName()),
             SystemErrorCodeEnum.SYSTEM_WITH_SPECIFIC_NAME_EXISTS, y9System.getName());
 
         if (StringUtils.isNotBlank(y9System.getId())) {
@@ -163,7 +163,7 @@ public class Y9SystemServiceImpl implements Y9SystemService {
     }
 
     @Override
-    public boolean checkNameAvailability(String id, String name) {
+    public boolean isNameAvailable(String id, String name) {
         Optional<Y9System> y9SystemOptional = y9SystemRepository.findByName(name);
         if (y9SystemOptional.isEmpty()) {
             return true;

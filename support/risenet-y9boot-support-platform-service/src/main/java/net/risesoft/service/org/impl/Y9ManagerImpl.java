@@ -97,13 +97,12 @@ public class Y9ManagerImpl implements Y9ManagerService {
 
     @Override
     @Transactional(readOnly = false)
-    public void createAuditManager(String id, String tenantId, String organizationId) {
-        Y9LoginUserHolder.setTenantId(tenantId);
+    public void createAuditManager(String id, String parentId) {
         if (!existsById(id)) {
             Y9Manager auditManager = new Y9Manager();
             auditManager.setId(id);
-            auditManager.setTenantId(tenantId);
-            auditManager.setParentId(organizationId);
+            auditManager.setTenantId(Y9LoginUserHolder.getTenantId());
+            auditManager.setParentId(parentId);
             auditManager.setDisabled(false);
             auditManager.setName(ManagerLevelEnum.AUDIT_MANAGER.getName());
             auditManager.setLoginName(DEFAULT_AUDIT_MANAGER);
@@ -111,7 +110,7 @@ public class Y9ManagerImpl implements Y9ManagerService {
             auditManager.setPassword(Y9MessageDigest.hashpw(y9config.getCommon().getDefaultPassword()));
             auditManager.setDn("cn=" + ManagerLevelEnum.AUDIT_MANAGER.getName() + ",o=组织");
             auditManager.setOrgType(OrgTypeEnum.MANAGER.getEnName());
-            auditManager.setGuidPath(organizationId + "," + id);
+            auditManager.setGuidPath(parentId + "," + id);
             auditManager.setTabIndex(10002);
             auditManager.setGlobalManager(true);
             auditManager.setManagerLevel(ManagerLevelEnum.AUDIT_MANAGER.getValue());
@@ -126,13 +125,12 @@ public class Y9ManagerImpl implements Y9ManagerService {
 
     @Override
     @Transactional(readOnly = false)
-    public void createSecurityManager(String id, String tenantId, String organizationId) {
-        Y9LoginUserHolder.setTenantId(tenantId);
+    public void createSecurityManager(String id, String parentId) {
         if (!this.existsById(id)) {
             Y9Manager securityManager = new Y9Manager();
             securityManager.setId(id);
-            securityManager.setTenantId(tenantId);
-            securityManager.setParentId(organizationId);
+            securityManager.setTenantId(Y9LoginUserHolder.getTenantId());
+            securityManager.setParentId(parentId);
             securityManager.setDisabled(false);
             securityManager.setName(ManagerLevelEnum.SECURITY_MANAGER.getName());
             securityManager.setLoginName(DEFAULT_SECURITY_MANAGER);
@@ -140,7 +138,7 @@ public class Y9ManagerImpl implements Y9ManagerService {
             securityManager.setPassword(Y9MessageDigest.hashpw(y9config.getCommon().getDefaultPassword()));
             securityManager.setDn("cn=" + ManagerLevelEnum.SECURITY_MANAGER.getName() + ",o=组织");
             securityManager.setOrgType(OrgTypeEnum.MANAGER.getEnName());
-            securityManager.setGuidPath(organizationId + "," + id);
+            securityManager.setGuidPath(parentId + "," + id);
             securityManager.setTabIndex(10001);
             securityManager.setGlobalManager(true);
             securityManager.setManagerLevel(ManagerLevelEnum.SECURITY_MANAGER.getValue());
@@ -155,13 +153,12 @@ public class Y9ManagerImpl implements Y9ManagerService {
 
     @Override
     @Transactional(readOnly = false)
-    public void createSystemManager(String managerId, String tenantId, String organizationId) {
-        Y9LoginUserHolder.setTenantId(tenantId);
+    public void createSystemManager(String managerId, String parentId) {
         if (!this.existsById(managerId)) {
             Y9Manager systemManager = new Y9Manager();
             systemManager.setId(managerId);
-            systemManager.setTenantId(tenantId);
-            systemManager.setParentId(organizationId);
+            systemManager.setTenantId(Y9LoginUserHolder.getTenantId());
+            systemManager.setParentId(parentId);
             systemManager.setDisabled(false);
             systemManager.setName(ManagerLevelEnum.SYSTEM_MANAGER.getName());
             systemManager.setLoginName(DEFAULT_SYSTEM_MANAGER);
@@ -169,7 +166,7 @@ public class Y9ManagerImpl implements Y9ManagerService {
             systemManager.setPassword(Y9MessageDigest.hashpw(y9config.getCommon().getDefaultPassword()));
             systemManager.setDn("cn=" + ManagerLevelEnum.SYSTEM_MANAGER.getName() + ",o=组织");
             systemManager.setOrgType(OrgTypeEnum.MANAGER.getEnName());
-            systemManager.setGuidPath(organizationId + "," + managerId);
+            systemManager.setGuidPath(parentId + "," + managerId);
             systemManager.setTabIndex(10000);
             systemManager.setGlobalManager(true);
             systemManager.setManagerLevel(ManagerLevelEnum.SYSTEM_MANAGER.getValue());

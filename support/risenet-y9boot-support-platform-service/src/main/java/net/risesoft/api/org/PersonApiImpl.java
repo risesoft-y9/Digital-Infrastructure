@@ -111,7 +111,7 @@ public class PersonApiImpl implements PersonApi {
         @RequestParam("personId") @NotBlank String personId, @RequestParam("loginName") @NotBlank String loginName) {
         Y9LoginUserHolder.setTenantId(tenantId);
 
-        return y9PersonService.checkLoginNameAvailability(personId, loginName);
+        return y9PersonService.isLoginNameAvailable(personId, loginName);
     }
 
     /**
@@ -231,7 +231,7 @@ public class PersonApiImpl implements PersonApi {
         @RequestParam("tenantId") @NotBlank String tenantId) {
         Y9LoginUserHolder.setTenantId(tenantId);
 
-        Y9Person y9Person = y9PersonService.getPersonByLoginName(loginName).orElse(null);
+        Y9Person y9Person = y9PersonService.findByLoginName(loginName).orElse(null);
         return Y9ModelConvertUtil.convert(y9Person, Person.class);
     }
 

@@ -45,7 +45,7 @@ public class Y9Job extends BaseEntity {
 
     /** 名称 */
     @NotBlank
-    @Column(name = "NAME", length = 255, nullable = false)
+    @Column(name = "NAME", length = 255, nullable = false, unique = true)
     @Comment("名称")
     private String name;
 

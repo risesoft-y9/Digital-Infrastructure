@@ -1,6 +1,5 @@
 package net.risesoft;
 
-import java.util.Date;
 import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
@@ -17,26 +16,17 @@ import com.alibaba.druid.pool.DruidDataSource;
 import lombok.extern.slf4j.Slf4j;
 
 import net.risesoft.consts.DefaultIdConsts;
-import net.risesoft.entity.Y9Person;
-import net.risesoft.entity.Y9PersonExt;
 import net.risesoft.enums.DataSourceTypeEnum;
-import net.risesoft.enums.OrgTypeEnum;
 import net.risesoft.enums.ResourceTypeEnum;
-import net.risesoft.enums.SexEnum;
 import net.risesoft.enums.TenantTypeEnum;
 import net.risesoft.enums.Y9RoleTypeEnum;
 import net.risesoft.id.IdType;
 import net.risesoft.id.Y9IdGenerator;
-import net.risesoft.service.dictionary.Y9OptionClassService;
-import net.risesoft.service.org.Y9JobService;
-import net.risesoft.service.org.Y9ManagerService;
-import net.risesoft.service.org.Y9OrganizationService;
-import net.risesoft.service.org.Y9PersonService;
+import net.risesoft.service.init.InitTenantDataService;
 import net.risesoft.y9.Y9Context;
 import net.risesoft.y9.Y9LoginUserHolder;
 import net.risesoft.y9.configuration.Y9Properties;
 import net.risesoft.y9.tenant.datasource.Y9TenantDataSourceLookup;
-import net.risesoft.y9.util.signing.Y9MessageDigest;
 import net.risesoft.y9public.entity.resource.Y9App;
 import net.risesoft.y9public.entity.resource.Y9System;
 import net.risesoft.y9public.entity.role.Y9Role;
@@ -68,37 +58,28 @@ public class OnApplicationReady implements ApplicationListener<ApplicationReadyE
     private final Y9SystemService y9SystemService;
     private final Y9AppService y9AppService;
     private final Y9DataSourceService y9DataSourceService;
-    private final Y9OrganizationService y9OrganizationService;
-    private final Y9PersonService y9PersonService;
-    private final Y9ManagerService y9ManagerService;
     private final Y9TenantDataSourceLookup y9TenantDataSourceLookup;
     private final Y9TenantSystemService y9TenantSystemService;
     private final Y9Properties y9Config;
     private final Y9RoleService y9RoleService;
-    private final Y9OptionClassService y9OptionClassService;
-    private final Y9JobService y9JobService;
+
+    private final InitTenantDataService initTenantDataService;
 
     public OnApplicationReady(@Qualifier("jdbcTemplate4Public") JdbcTemplate jdbcTemplate4Public,
         Y9TenantService y9TenantService, Y9SystemService y9SystemService, Y9AppService y9AppService,
-        Y9DataSourceService y9DataSourceService, Y9OrganizationService y9OrganizationService,
-        Y9PersonService y9PersonService, Y9ManagerService y9ManagerService,
-        Y9TenantDataSourceLookup y9TenantDataSourceLookup, Y9TenantSystemService y9TenantSystemService,
-        Y9Properties y9Config, Y9RoleService y9RoleService, Y9OptionClassService y9OptionClassService,
-        Y9JobService y9JobService) {
+        Y9DataSourceService y9DataSourceService, Y9TenantDataSourceLookup y9TenantDataSourceLookup,
+        Y9TenantSystemService y9TenantSystemService, Y9Properties y9Config, Y9RoleService y9RoleService,
+        InitTenantDataService initTenantDataService) {
         this.jdbcTemplate4Public = jdbcTemplate4Public;
         this.y9TenantService = y9TenantService;
         this.y9SystemService = y9SystemService;
         this.y9AppService = y9AppService;
         this.y9DataSourceService = y9DataSourceService;
-        this.y9OrganizationService = y9OrganizationService;
-        this.y9PersonService = y9PersonService;
-        this.y9ManagerService = y9ManagerService;
         this.y9TenantDataSourceLookup = y9TenantDataSourceLookup;
         this.y9TenantSystemService = y9TenantSystemService;
         this.y9Config = y9Config;
         this.y9RoleService = y9RoleService;
-        this.y9OptionClassService = y9OptionClassService;
-        this.y9JobService = y9JobService;
+        this.initTenantDataService = initTenantDataService;
     }
 
     private void createApp(String appId, String systemId) {
@@ -143,33 +124,6 @@ public class OnApplicationReady implements ApplicationListener<ApplicationReadyE
             } catch (Exception e) {
                 LOGGER.warn(e.getMessage(), e);
             }
-        }
-    }
-
-    private void createPerson(String personId, String tenantId, String organizationId) {
-        Y9LoginUserHolder.setTenantId(tenantId);
-        if (!y9PersonService.existsById(personId)) {
-            Y9Person y9Person = new Y9Person();
-            y9Person.setId(personId);
-            y9Person.setTenantId(tenantId);
-            y9Person.setParentId(organizationId);
-            y9Person.setDisabled(false);
-            y9Person.setName("业务用户");
-            y9Person.setLoginName("user");
-            y9Person.setSex(SexEnum.MALE.getValue());
-            y9Person.setPassword(Y9MessageDigest.hashpw(y9Config.getCommon().getDefaultPassword()));
-            y9Person.setDn("cn=user,o=业务组织");
-            y9Person.setOrgType(OrgTypeEnum.PERSON.getEnName());
-            y9Person.setGuidPath(organizationId + "," + personId);
-            y9Person.setOriginal(true);
-            y9Person.setTabIndex(10003);
-            y9Person.setMobile("13551111111");
-
-            Y9PersonExt ext = new Y9PersonExt();
-            ext.setName("业务用户");
-            ext.setPersonId(personId);
-            ext.setWorkTime(new Date());
-            y9PersonService.saveOrUpdate(y9Person, ext);
         }
     }
 
@@ -258,20 +212,8 @@ public class OnApplicationReady implements ApplicationListener<ApplicationReadyE
         } catch (Exception e) {
             LOGGER.warn(e.getMessage(), e);
         }
-        Y9LoginUserHolder.setTenantId(DefaultIdConsts.TENANT_ID);
-        y9OrganizationService.createOrganization(DefaultIdConsts.TENANT_ID, DefaultIdConsts.ORGANIZATION_VIRTUAL_ID,
-            "组织", Boolean.TRUE);
-        y9OrganizationService.createOrganization(DefaultIdConsts.TENANT_ID, DefaultIdConsts.ORGANIZATION_TENANT_ID,
-            "业务组织", Boolean.FALSE);
-        y9JobService.create(DefaultIdConsts.JOB_ID, "普通职位", "001");
-        createPerson(DefaultIdConsts.PERSON_ID, DefaultIdConsts.TENANT_ID, DefaultIdConsts.ORGANIZATION_TENANT_ID);
-        y9ManagerService.createSystemManager(DefaultIdConsts.SYSTEM_MANAGER_ID, DefaultIdConsts.TENANT_ID,
-            DefaultIdConsts.ORGANIZATION_VIRTUAL_ID);
-        y9ManagerService.createSecurityManager(DefaultIdConsts.SECURITY_MANAGER_ID, DefaultIdConsts.TENANT_ID,
-            DefaultIdConsts.ORGANIZATION_VIRTUAL_ID);
-        y9ManagerService.createAuditManager(DefaultIdConsts.AUDIT_MANAGER_ID, DefaultIdConsts.TENANT_ID,
-            DefaultIdConsts.ORGANIZATION_VIRTUAL_ID);
-        y9OptionClassService.initOptionClass();
+
+        initTenantDataService.init(DefaultIdConsts.TENANT_ID);
     }
 
     private void updateTenantSchema() {

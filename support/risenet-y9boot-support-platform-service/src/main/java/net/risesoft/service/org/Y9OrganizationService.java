@@ -17,12 +17,11 @@ public interface Y9OrganizationService {
     /**
      * 创建组织机构
      *
-     * @param tenantId 租户id
-     * @param organizationId 组织id
+     * @param id 组织id
      * @param organizationName 组织名称
      * @param virtual 是否虚拟组织
      */
-    void createOrganization(String tenantId, String organizationId, String organizationName, Boolean virtual);
+    void create(String id, String organizationName, Boolean virtual);
 
     /**
      * 根据主键id删除机构实例
