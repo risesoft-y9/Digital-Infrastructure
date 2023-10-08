@@ -2,7 +2,7 @@ version: '3.9'
 name: prometheus
 services:
   prometheus:
-    image: prom/prometheus:latest
+    image: prom/prometheus:main
     container_name: prometheus01
     restart: always
     extra_hosts:

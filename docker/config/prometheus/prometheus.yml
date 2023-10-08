@@ -36,6 +36,8 @@ scrape_configs:
     static_configs:
       - targets: ["mysqld-exporter:9104"]
   - job_name: "file_sd_app"
+    metrics_path: '/demo01/actuator/prometheus'
     file_sd_configs:
       - refresh_interval: 1m
         files: [file_sd_app.yml]
+        
