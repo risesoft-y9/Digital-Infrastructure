@@ -1,2 +1,6 @@
 - targets: ['host.docker.internal:7055']
-- targets: ['host.docker.internal:8080']
+  labels:
+    module: 'demo01'
+- targets: ['host.docker.internal:7056']
+  labels:
+    module: 'demo02'
