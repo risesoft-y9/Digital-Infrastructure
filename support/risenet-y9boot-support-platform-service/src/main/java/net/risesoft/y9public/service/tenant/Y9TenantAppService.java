@@ -38,9 +38,8 @@ public interface Y9TenantAppService {
      *
      * @param tenantId 租户id
      * @param appId 应用id
-     * @return int
      */
-    int deleteByTenantIdAndAppId(String tenantId, String appId);
+    void deleteByTenantIdAndAppId(String tenantId, String appId);
 
     /**
      * 根据id，获取租户应用

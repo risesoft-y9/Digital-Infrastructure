@@ -23,6 +23,16 @@ import net.risesoft.model.Tenant;
 public interface TenantApi {
 
     /**
+     * 根据租户登录名称（租户英文名称），获取租户列表
+     *
+     * @param shortName 租户登录名称（租户英文名称）
+     * @return List&lt;Tenant&gt; 租户对象集合
+     * @since 9.6.0
+     */
+    @GetMapping("/listByShortName")
+    Tenant findByShortName(@RequestParam("shortName") @NotBlank String shortName);
+
+    /**
      * 根据租户id获取一个租户对象
      *
      * @param tenantId 租户id
@@ -49,17 +59,7 @@ public interface TenantApi {
      * @since 9.6.0
      */
     @GetMapping("/listByName")
-    List<Tenant> listByName(@RequestParam("tenantName") @NotBlank String tenantName);
-
-    /**
-     * 根据租户登录名称（租户英文名称），获取租户列表
-     *
-     * @param shortName 租户登录名称（租户英文名称）
-     * @return List&lt;Tenant&gt; 租户对象集合
-     * @since 9.6.0
-     */
-    @GetMapping("/listByShortName")
-    List<Tenant> listByShortName(@RequestParam("shortName") @NotBlank String shortName);
+    Tenant findByName(@RequestParam("tenantName") @NotBlank String tenantName);
 
     /**
      * 获取指定租户类型的所有租户对象

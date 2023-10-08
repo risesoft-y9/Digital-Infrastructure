@@ -124,7 +124,7 @@ public class SystemController {
     public Y9Result<Y9System> save(@Validated Y9System y9System) {
         Y9System savedSystem = y9SystemService.saveOrUpdate(y9System);
         // TODO move to Service?
-        y9TenantSystemService.registerSystemForTenant(Y9LoginUserHolder.getTenantId(), savedSystem.getId());
+        y9TenantSystemService.saveTenantSystem(savedSystem.getId(), Y9LoginUserHolder.getTenantId());
         return Y9Result.success(savedSystem, "保存系统成功");
     }
 

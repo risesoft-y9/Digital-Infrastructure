@@ -22,9 +22,19 @@ import net.risesoft.y9public.entity.tenant.Y9Tenant;
 // @JaversSpringDataAuditable
 public interface Y9TenantRepository extends JpaRepository<Y9Tenant, String>, JpaSpecificationExecutor<Y9Tenant> {
 
-    List<Y9Tenant> findByName(String name);
+    long countByShortName(String shortName);
+
+    long countByShortNameAndIdIsNot(String shortName, String tenantId);
+
+    List<Y9Tenant> findByGuidPathContaining(String guidPath);
+
+    Optional<Y9Tenant> findByName(String name);
+
+    List<Y9Tenant> findByParentIdIsNullOrderByTabIndexAsc();
 
     List<Y9Tenant> findByParentIdOrderByTabIndexAsc(String parentId);
+
+    Optional<Y9Tenant> findByShortName(String shortName);
 
     List<Y9Tenant> findByTenantTypeAndParentIdIsNullOrderByTabIndexAsc(Integer tenantType);
 
@@ -33,15 +43,5 @@ public interface Y9TenantRepository extends JpaRepository<Y9Tenant, String>, Jpa
     List<Y9Tenant> findByTenantTypeOrderByTabIndexAsc(Integer tenantType);
 
     Optional<Y9Tenant> findTopByOrderByTabIndexDesc();
-
-    long countByShortName(String shortName);
-
-    long countByShortNameAndIdIsNot(String shortName, String tenantId);
-
-    List<Y9Tenant> findByGuidPathContaining(String guidPath);
-
-    List<Y9Tenant> findByShortName(String shortName);
-
-    List<Y9Tenant> findByParentIdIsNullOrderByTabIndexAsc();
 
 }

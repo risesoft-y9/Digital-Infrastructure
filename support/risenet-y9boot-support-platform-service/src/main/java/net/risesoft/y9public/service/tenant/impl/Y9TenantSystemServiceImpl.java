@@ -1,9 +1,7 @@
 package net.risesoft.y9public.service.tenant.impl;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
@@ -56,16 +54,6 @@ public class Y9TenantSystemServiceImpl implements Y9TenantSystemService {
     private final Y9PublishService y9PublishService;
 
     @Override
-    public long countBySystemId(String systemId) {
-        return y9TenantSystemRepository.countBySystemId(systemId);
-    }
-
-    @Override
-    public long countByTenantId(String tenantId) {
-        return y9TenantSystemRepository.countByTenantId(tenantId);
-    }
-
-    @Override
     @Transactional(readOnly = false)
     public void delete(String id) {
         y9TenantSystemManager.delete(id);
@@ -91,11 +79,6 @@ public class Y9TenantSystemServiceImpl implements Y9TenantSystemService {
     }
 
     @Override
-    public long existByTenantIdAndSystemId(String tenantId, String systemId) {
-        return y9TenantSystemRepository.countByTenantIdAndSystemId(tenantId, systemId);
-    }
-
-    @Override
     public Optional<Y9TenantSystem> findById(String id) {
         return y9TenantSystemRepository.findById(id);
     }
@@ -106,24 +89,8 @@ public class Y9TenantSystemServiceImpl implements Y9TenantSystemService {
     }
 
     @Override
-    public String getDataSourceIdByTenantIdAndSystemId(String tenantId, String systemId) {
-        return y9TenantSystemManager.getDataSourceIdByTenantIdAndSystemId(tenantId, systemId);
-    }
-
-    @Override
-    public String getIdByTenantIdAndSystemId(String tenantId, String systemId) {
-        return y9TenantSystemRepository.findByTenantIdAndSystemId(tenantId, systemId).map(Y9TenantSystem::getId)
-            .orElse(null);
-    }
-
-    @Override
     public List<Y9TenantSystem> listBySystemId(String systemId) {
         return y9TenantSystemRepository.findBySystemId(systemId);
-    }
-
-    @Override
-    public List<Y9TenantSystem> listByTenantDataSource(String tenantDataSource) {
-        return y9TenantSystemRepository.findByTenantDataSource(tenantDataSource);
     }
 
     @Override
@@ -152,55 +119,30 @@ public class Y9TenantSystemServiceImpl implements Y9TenantSystemService {
 
     @Override
     @Transactional(readOnly = false)
-    public void save(Y9TenantSystem entity) {
-        if (entity != null) {
-            // 当moduleTree.getGuid()为空或者null时，为新增
-            if (StringUtils.isBlank(entity.getId())) {
-                // 设置guid
-                entity.setId(Y9IdGenerator.genId(IdType.SNOWFLAKE));
-            }
-            y9TenantSystemRepository.save(entity);
+    public Y9TenantSystem save(Y9TenantSystem y9TenantSystem) {
+        if (StringUtils.isBlank(y9TenantSystem.getId())) {
+            y9TenantSystem.setId(Y9IdGenerator.genId(IdType.SNOWFLAKE));
         }
+        return y9TenantSystemRepository.save(y9TenantSystem);
     }
 
     @Override
     @Transactional(readOnly = false)
-    public Map<String, Object> saveAndInitializedTenantSystem(Y9TenantSystem y9TenantSystem, Y9System y9System,
-        String tenantId) {
-        Map<String, Object> map = new HashMap<>(8);
-        String systemId = y9TenantSystem.getSystemId();
-        long count = this.existByTenantIdAndSystemId(tenantId, systemId);
-        if (count > 0) {
-            map.put("success", true);
-            map.put("msg", y9System.getCnName() + "已租用!");
-            return map;
-        }
-        map.put("success", false);
-        map.put("systemId", systemId);
-        map.put("dataSourceId", y9TenantSystem.getTenantDataSource());
-        map.put("msg", y9System.getCnName() + "初始化数据库失败!该系统不存在全量sql文件，初始化表结构失败，如果需要初始化表结构，请编辑该租户系统，手动触发租户库初始化表结构!");
-        y9TenantSystem.setInitialized(false);
-        y9TenantSystem.setTenantId(tenantId);
-        this.save(y9TenantSystem);
-
-        // 租户租用系统事件，应用可监听做对应租户的初始化的工作
-        Y9MessageCommon event = new Y9MessageCommon();
-        event.setEventObject(Y9ModelConvertUtil.convert(y9TenantSystem, TenantSystem.class));
-        event.setTarget(y9System.getName());
-        event.setEventType(Y9CommonEventConst.TENANT_SYSTEM_REGISTERED);
-        y9PublishService.publishMessageCommon(event);
-        return map;
-    }
-
-    @Override
-    @Transactional(readOnly = false)
-    public Map<String, Object> saveTenantSystem(String systemId, String tenantId) {
+    public Y9TenantSystem saveTenantSystem(String systemId, String tenantId) {
         Y9Tenant tenant = y9TenantManager.getById(tenantId);
         Y9System y9System = y9SystemManager.getById(systemId);
+
+        Optional<Y9TenantSystem> y9TenantSystemOptional =
+            y9TenantSystemRepository.findByTenantIdAndSystemId(tenantId, systemId);
+        if (y9TenantSystemOptional.isPresent()) {
+            return y9TenantSystemOptional.get();
+        }
+
         Y9TenantSystem y9TenantSystem = new Y9TenantSystem();
         y9TenantSystem.setTenantId(tenantId);
         y9TenantSystem.setTenantDataSource(tenant.getDefaultDataSourceId());
         y9TenantSystem.setSystemId(systemId);
+        y9TenantSystem.setInitialized(false);
         if (Boolean.TRUE.equals(y9System.getSingleDatasource())) {
             String datasoureId = tenant.getDefaultDataSourceId();
             try {
@@ -212,18 +154,33 @@ public class Y9TenantSystemServiceImpl implements Y9TenantSystemService {
             }
             y9TenantSystem.setTenantDataSource(datasoureId);
         }
-        return this.saveAndInitializedTenantSystem(y9TenantSystem, y9System, tenantId);
+        y9TenantSystem = this.save(y9TenantSystem);
+
+        // 租户租用系统事件，应用可监听做对应租户的初始化的工作
+        Y9MessageCommon tenantSystemRegisteredEvent = new Y9MessageCommon();
+        tenantSystemRegisteredEvent.setEventObject(Y9ModelConvertUtil.convert(y9TenantSystem, TenantSystem.class));
+        tenantSystemRegisteredEvent.setTarget(y9System.getName());
+        tenantSystemRegisteredEvent.setEventType(Y9CommonEventConst.TENANT_SYSTEM_REGISTERED);
+        y9PublishService.publishMessageCommon(tenantSystemRegisteredEvent);
+
+        // 对应系统重新加载数据源
+        Y9MessageCommon syncDataSourceEvent = new Y9MessageCommon();
+        syncDataSourceEvent.setTarget(y9System.getName());
+        syncDataSourceEvent.setEventObject(Y9CommonEventConst.TENANT_DATASOURCE_SYNC);
+        syncDataSourceEvent.setEventType(Y9CommonEventConst.TENANT_DATASOURCE_SYNC);
+        y9PublishService.publishMessageCommon(syncDataSourceEvent);
+
+        return y9TenantSystem;
     }
 
     @Override
     @Transactional(readOnly = false)
-    public List<Map<String, Object>> saveTenantSystems(String[] systemIds, String tenantId) {
-        List<Map<String, Object>> msgList = new ArrayList<>();
+    public List<Y9TenantSystem> saveTenantSystems(String[] systemIds, String tenantId) {
+        List<Y9TenantSystem> y9TenantSystemList = new ArrayList<>();
         for (String systemId : systemIds) {
-            Map<String, Object> map = saveTenantSystem(systemId, tenantId);
-            msgList.add(map);
+            y9TenantSystemList.add(saveTenantSystem(systemId, tenantId));
         }
-        return msgList;
+        return y9TenantSystemList;
     }
 
     @Override
@@ -260,21 +217,5 @@ public class Y9TenantSystemServiceImpl implements Y9TenantSystemService {
             }
         }
         return y9SystemList;
-    }
-
-    @Override
-    @Transactional(readOnly = false)
-    public void registerSystemForTenant(String tenantId, String systemId) {
-        Optional<Y9TenantSystem> y9TenantSystemOptional = this.getByTenantIdAndSystemId(tenantId, systemId);
-        if (y9TenantSystemOptional.isEmpty()) {
-            this.saveTenantSystem(systemId, tenantId);
-
-            Y9System y9System = y9SystemManager.getById(systemId);
-
-            // 发送同步数据源的消息
-            Y9MessageCommon event =
-                new Y9MessageCommon(y9System.getName(), null, Y9CommonEventConst.TENANT_DATASOURCE_SYNC);
-            y9PublishService.publishMessageCommon(event);
-        }
     }
 }

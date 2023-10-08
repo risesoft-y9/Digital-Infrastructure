@@ -22,8 +22,6 @@ public interface Y9TenantSystemRepository
 
     long countByTenantId(String tenantId);
 
-    long countByTenantIdAndSystemId(String tenantId, String systemId);
-
     List<Y9TenantSystem> findBySystemId(String systemId);
 
     List<Y9TenantSystem> findByTenantDataSource(String tenantDataSource);

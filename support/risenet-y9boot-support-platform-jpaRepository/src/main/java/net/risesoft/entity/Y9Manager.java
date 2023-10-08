@@ -32,7 +32,7 @@ public class Y9Manager extends Y9OrgBase {
 
     private static final long serialVersionUID = -6531424704457510017L;
 
-    private static final int DEFAULT_PWD_CYCLE = 7;
+    public static final int DEFAULT_PWD_CYCLE = 7;
 
     public Y9Manager() {
         super.setOrgType(OrgTypeEnum.MANAGER.getEnName());
