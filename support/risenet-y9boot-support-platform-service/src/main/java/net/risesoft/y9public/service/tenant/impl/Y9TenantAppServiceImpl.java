@@ -67,9 +67,8 @@ public class Y9TenantAppServiceImpl implements Y9TenantAppService {
 
     @Override
     @Transactional(readOnly = false)
-    public int deleteByTenantIdAndAppId(String tenantId, String appId) {
+    public void deleteByTenantIdAndAppId(String tenantId, String appId) {
         List<Y9TenantApp> y9TenantAppList = y9TenantAppRepository.findByTenantIdAndAppId(tenantId, appId);
-        int deleted = 0;
         for (Y9TenantApp ta : y9TenantAppList) {
             ta.setTenancy(false);
             if (StringUtils.isBlank(ta.getDeletedName())) {
@@ -77,9 +76,7 @@ public class Y9TenantAppServiceImpl implements Y9TenantAppService {
                 ta.setDeletedTime(new Date());
             }
             y9TenantAppRepository.save(ta);
-            deleted++;
         }
-        return deleted;
     }
 
     @Override

@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.Optional;
 
 import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang3.time.FastDateFormat;
 import org.springframework.context.event.EventListener;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -46,8 +47,12 @@ import net.risesoft.y9.util.signing.Y9MessageDigest;
 @Service
 @RequiredArgsConstructor
 public class Y9ManagerImpl implements Y9ManagerService {
+    private static final FastDateFormat DATE_FORMAT = FastDateFormat.getInstance("yyyy-MM-dd HH:mm:ss");
 
     private static final int MOBILE_NUMBER_LENGTH = 11;
+    private static final String DEFAULT_SYSTEM_MANAGER = "systemManager";
+    private static final String DEFAULT_SECURITY_MANAGER = "securityManager";
+    private static final String DEFAULT_AUDIT_MANAGER = "auditManager";
 
     private final Y9ManagerRepository y9ManagerRepository;
     private final CompositeOrgBaseManager compositeOrgBaseManager;
@@ -95,14 +100,13 @@ public class Y9ManagerImpl implements Y9ManagerService {
     public void createAuditManager(String id, String tenantId, String organizationId) {
         Y9LoginUserHolder.setTenantId(tenantId);
         if (!existsById(id)) {
-            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
             Y9Manager auditManager = new Y9Manager();
             auditManager.setId(id);
             auditManager.setTenantId(tenantId);
             auditManager.setParentId(organizationId);
             auditManager.setDisabled(false);
             auditManager.setName(ManagerLevelEnum.AUDIT_MANAGER.getName());
-            auditManager.setLoginName("auditManager");
+            auditManager.setLoginName(DEFAULT_AUDIT_MANAGER);
             auditManager.setSex(SexEnum.MALE.getValue());
             auditManager.setPassword(Y9MessageDigest.hashpw(y9config.getCommon().getDefaultPassword()));
             auditManager.setDn("cn=" + ManagerLevelEnum.AUDIT_MANAGER.getName() + ",o=组织");
@@ -111,11 +115,11 @@ public class Y9ManagerImpl implements Y9ManagerService {
             auditManager.setTabIndex(10002);
             auditManager.setGlobalManager(true);
             auditManager.setManagerLevel(ManagerLevelEnum.AUDIT_MANAGER.getValue());
-            auditManager.setPwdCycle(7);
+            auditManager.setPwdCycle(Y9Manager.DEFAULT_PWD_CYCLE);
             auditManager.setUserHostIp("");
-            auditManager.setCheckTime(sdf.format(new Date()));
-            auditManager.setModifyPwdTime(sdf.format(new Date()));
-            auditManager.setCheckCycle(7);
+            auditManager.setCheckTime(DATE_FORMAT.format(new Date()));
+            auditManager.setModifyPwdTime(DATE_FORMAT.format(new Date()));
+            auditManager.setCheckCycle(Y9Manager.DEFAULT_PWD_CYCLE);
             this.saveOrUpdate(auditManager);
         }
     }
@@ -125,14 +129,13 @@ public class Y9ManagerImpl implements Y9ManagerService {
     public void createSecurityManager(String id, String tenantId, String organizationId) {
         Y9LoginUserHolder.setTenantId(tenantId);
         if (!this.existsById(id)) {
-            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
             Y9Manager securityManager = new Y9Manager();
             securityManager.setId(id);
             securityManager.setTenantId(tenantId);
             securityManager.setParentId(organizationId);
             securityManager.setDisabled(false);
             securityManager.setName(ManagerLevelEnum.SECURITY_MANAGER.getName());
-            securityManager.setLoginName("securityManager");
+            securityManager.setLoginName(DEFAULT_SECURITY_MANAGER);
             securityManager.setSex(SexEnum.MALE.getValue());
             securityManager.setPassword(Y9MessageDigest.hashpw(y9config.getCommon().getDefaultPassword()));
             securityManager.setDn("cn=" + ManagerLevelEnum.SECURITY_MANAGER.getName() + ",o=组织");
@@ -141,11 +144,11 @@ public class Y9ManagerImpl implements Y9ManagerService {
             securityManager.setTabIndex(10001);
             securityManager.setGlobalManager(true);
             securityManager.setManagerLevel(ManagerLevelEnum.SECURITY_MANAGER.getValue());
-            securityManager.setPwdCycle(7);
+            securityManager.setPwdCycle(Y9Manager.DEFAULT_PWD_CYCLE);
             securityManager.setUserHostIp("");
-            securityManager.setCheckTime(sdf.format(new Date()));
-            securityManager.setModifyPwdTime(sdf.format(new Date()));
-            securityManager.setCheckCycle(7);
+            securityManager.setCheckTime(DATE_FORMAT.format(new Date()));
+            securityManager.setModifyPwdTime(DATE_FORMAT.format(new Date()));
+            securityManager.setCheckCycle(Y9Manager.DEFAULT_PWD_CYCLE);
             this.saveOrUpdate(securityManager);
         }
     }
@@ -155,14 +158,13 @@ public class Y9ManagerImpl implements Y9ManagerService {
     public void createSystemManager(String managerId, String tenantId, String organizationId) {
         Y9LoginUserHolder.setTenantId(tenantId);
         if (!this.existsById(managerId)) {
-            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
             Y9Manager systemManager = new Y9Manager();
             systemManager.setId(managerId);
             systemManager.setTenantId(tenantId);
             systemManager.setParentId(organizationId);
             systemManager.setDisabled(false);
             systemManager.setName(ManagerLevelEnum.SYSTEM_MANAGER.getName());
-            systemManager.setLoginName("systemManager");
+            systemManager.setLoginName(DEFAULT_SYSTEM_MANAGER);
             systemManager.setSex(SexEnum.MALE.getValue());
             systemManager.setPassword(Y9MessageDigest.hashpw(y9config.getCommon().getDefaultPassword()));
             systemManager.setDn("cn=" + ManagerLevelEnum.SYSTEM_MANAGER.getName() + ",o=组织");
@@ -171,10 +173,10 @@ public class Y9ManagerImpl implements Y9ManagerService {
             systemManager.setTabIndex(10000);
             systemManager.setGlobalManager(true);
             systemManager.setManagerLevel(ManagerLevelEnum.SYSTEM_MANAGER.getValue());
-            systemManager.setPwdCycle(7);
+            systemManager.setPwdCycle(Y9Manager.DEFAULT_PWD_CYCLE);
             systemManager.setUserHostIp("");
-            systemManager.setCheckTime(sdf.format(new Date()));
-            systemManager.setModifyPwdTime(sdf.format(new Date()));
+            systemManager.setCheckTime(DATE_FORMAT.format(new Date()));
+            systemManager.setModifyPwdTime(DATE_FORMAT.format(new Date()));
             systemManager.setCheckCycle(0);
             this.saveOrUpdate(systemManager);
         }

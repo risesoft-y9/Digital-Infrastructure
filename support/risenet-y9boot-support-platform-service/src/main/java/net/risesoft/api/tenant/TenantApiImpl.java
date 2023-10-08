@@ -69,9 +69,9 @@ public class TenantApiImpl implements TenantApi {
      * @since 9.6.0
      */
     @Override
-    public List<Tenant> listByName(@RequestParam("tenantName") @NotBlank String tenantName) {
-        List<Y9Tenant> y9TenantList = y9TenantService.listByTenantName(tenantName);
-        return Y9ModelConvertUtil.convert(y9TenantList, Tenant.class);
+    public Tenant findByName(@RequestParam("tenantName") @NotBlank String tenantName) {
+        Y9Tenant y9Tenant = y9TenantService.findByTenantName(tenantName).orElse(null);
+        return Y9ModelConvertUtil.convert(y9Tenant, Tenant.class);
     }
 
     /**
@@ -82,9 +82,9 @@ public class TenantApiImpl implements TenantApi {
      * @since 9.6.0
      */
     @Override
-    public List<Tenant> listByShortName(@RequestParam("shortName") @NotBlank String shortName) {
-        List<Y9Tenant> y9TenantList = y9TenantService.listByShortName(shortName);
-        return Y9ModelConvertUtil.convert(y9TenantList, Tenant.class);
+    public Tenant findByShortName(@RequestParam("shortName") @NotBlank String shortName) {
+        Y9Tenant y9Tenant = y9TenantService.findByShortName(shortName).orElse(null);
+        return Y9ModelConvertUtil.convert(y9Tenant, Tenant.class);
     }
 
     /**

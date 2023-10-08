@@ -176,36 +176,18 @@ public class Y9FileUtil {
 
     /**
      * 读取 SQL 文件，获取 SQL 语句
-     * 
+     *
      * @param sqlFile SQL 脚本文件
      * @return List<sql> 返回所有 SQL 语句的 List
      * @throws Exception
      */
     public static List<String> loadSql(String sqlFile) throws Exception {
-        List<String> sqlList = new ArrayList<String>();
+        List<String> sqlList = new ArrayList<>();
         // Windows 下换行是 \r\n, Linux 下是 \n
-        String[] sqlArry = sqlFile.split(";");
-        for (int i = 0; i < sqlArry.length; i++) {
-            String sql = sqlArry[i].replaceAll("--.*", "").replaceAll("/\\*(\\s|.|\\r|\\n)*?\\*/", "").trim();
+        String[] sqlArray = sqlFile.split(";");
+        for (int i = 0; i < sqlArray.length; i++) {
+            String sql = sqlArray[i].replaceAll("--.*", "").replaceAll("/\\*(\\s|.|\\r|\\n)*?\\*/", "").trim();
             if (!"".equals(sql)) {
-                sqlList.add(sql + ";");
-                LOGGER.info(sql);
-            }
-        }
-
-        return sqlList;
-    }
-
-    public static List<String> loadSql(String sqlFile, String dialectName) throws Exception {
-        List<String> sqlList = new ArrayList<String>();
-        // Windows 下换行是 \r\n, Linux 下是 \n
-        String[] sqlArry = sqlFile.split(";");
-        for (int i = 0; i < sqlArry.length; i++) {
-            String sql = sqlArry[i].replaceAll("--.*", "").replaceAll("/\\*(\\s|.|\\r|\\n)*?\\*/", "").trim();
-            if (!"".equals(sql)) {
-                /*
-                 * if("oracle".equals(dialectName)) { sqlList.add(sql); }else { sqlList.add(sql); }
-                 */
                 sqlList.add(sql);
                 LOGGER.info("清理之后的sql：{}", sql);
             }
