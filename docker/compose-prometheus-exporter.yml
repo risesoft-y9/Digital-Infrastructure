@@ -2,7 +2,7 @@ version: '3.9'
 name: prometheus-exporter
 services:
   mysqld-exporter:
-    image: prom/mysqld-exporter:latest
+    image: prom/mysqld-exporter:main
     container_name: mysqld-exporter01
     restart: always
     extra_hosts:
