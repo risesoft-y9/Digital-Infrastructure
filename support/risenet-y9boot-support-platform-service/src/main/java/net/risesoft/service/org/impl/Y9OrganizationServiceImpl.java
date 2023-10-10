@@ -72,14 +72,13 @@ public class Y9OrganizationServiceImpl implements Y9OrganizationService {
 
     @Override
     @Transactional(readOnly = false)
-    public void create(String id, String organizationName, Boolean virtual) {
-        if (!this.existsById(id)) {
-            Y9Organization y9Organization = new Y9Organization();
-            y9Organization.setId(id);
-            y9Organization.setName(organizationName);
-            y9Organization.setVirtual(virtual);
-            this.saveOrUpdate(y9Organization);
-        }
+    public Y9Organization create(String id, String organizationName, Boolean virtual) {
+        Optional<Y9Organization> y9OrganizationOptional = this.findById(id);
+        Y9Organization y9Organization = y9OrganizationOptional.orElse(new Y9Organization());
+        y9Organization.setId(id);
+        y9Organization.setName(organizationName);
+        y9Organization.setVirtual(virtual);
+        return this.saveOrUpdate(y9Organization);
     }
 
     @Override

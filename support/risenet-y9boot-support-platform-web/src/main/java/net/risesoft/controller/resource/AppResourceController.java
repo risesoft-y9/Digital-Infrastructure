@@ -141,8 +141,7 @@ public class AppResourceController {
         // TODO move to Service?
         y9AppService.verifyApp(y9App.getId(), true, Y9LoginUserHolder.getUserInfo().getName());
         y9TenantSystemService.saveTenantSystem(savedApp.getSystemId(), Y9LoginUserHolder.getTenantId());
-        y9TenantAppService.save(savedApp.getId(), Y9LoginUserHolder.getTenantId(),
-            Y9LoginUserHolder.getUserInfo().getName(), "微内核默认租用");
+        y9TenantAppService.save(savedApp.getId(), Y9LoginUserHolder.getTenantId(), "微内核默认租用");
         return Y9Result.success(savedApp, "成功保存应用");
     }
 

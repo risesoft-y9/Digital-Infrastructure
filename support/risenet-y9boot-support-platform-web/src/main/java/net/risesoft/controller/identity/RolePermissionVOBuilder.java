@@ -10,7 +10,7 @@ import org.springframework.stereotype.Component;
 
 import lombok.RequiredArgsConstructor;
 
-import net.risesoft.consts.DefaultIdConsts;
+import net.risesoft.consts.InitDataConsts;
 import net.risesoft.controller.identity.vo.RolePermissionVO;
 import net.risesoft.entity.identity.Y9IdentityToRoleBase;
 import net.risesoft.y9public.entity.resource.Y9App;
@@ -65,7 +65,7 @@ public class RolePermissionVOBuilder {
         Optional<Y9App> y9AppOptional = y9AppService.findById(appId);
         if (y9AppOptional.isPresent()) {
             app.setAppName(y9AppOptional.get().getName());
-        } else if (DefaultIdConsts.TOP_PUBLIC_ROLE_ID.equals(appId)) {
+        } else if (InitDataConsts.TOP_PUBLIC_ROLE_ID.equals(appId)) {
             app.setAppName("公共角色");
         }
         app.setPermissionDetailList(buildPermissionDetailList(y9IdentityToRoleBaseList));

@@ -9,7 +9,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import lombok.RequiredArgsConstructor;
 
-import net.risesoft.consts.DefaultIdConsts;
+import net.risesoft.consts.InitDataConsts;
 import net.risesoft.entity.Y9Position;
 import net.risesoft.entity.identity.position.Y9PositionToRole;
 import net.risesoft.enums.Y9RoleTypeEnum;
@@ -41,7 +41,7 @@ public class Y9PositionToRoleServiceImpl implements Y9PositionToRoleService {
 
     @Override
     public Boolean hasPublicRole(String positionId, String roleName) {
-        List<Y9Role> y9RoleList = y9RoleRepository.findByParentIdAndName(DefaultIdConsts.TOP_PUBLIC_ROLE_ID, roleName);
+        List<Y9Role> y9RoleList = y9RoleRepository.findByParentIdAndName(InitDataConsts.TOP_PUBLIC_ROLE_ID, roleName);
         return y9RoleList.stream().anyMatch(y9Role -> hasRole(positionId, y9Role.getId()));
     }
 

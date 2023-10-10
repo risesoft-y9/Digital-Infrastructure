@@ -17,7 +17,7 @@ import net.risesoft.y9public.entity.tenant.Y9DataSource;
  */
 public interface Y9DataSourceService {
 
-    String buildTenantDataSourceName(String shortName, Integer tenantType);
+    String buildDataSourceName(String shortName, Integer tenantType, String systemName);
 
     /**
      * 修改密码
@@ -39,6 +39,8 @@ public interface Y9DataSourceService {
      * @return String 数据源id
      */
     Y9DataSource createTenantDefaultDataSource(String shortName, Integer tenantType, String systemName);
+
+    Y9DataSource createTenantDefaultDataSource(String dbName, String id);
 
     /**
      * 根据id删除数据源

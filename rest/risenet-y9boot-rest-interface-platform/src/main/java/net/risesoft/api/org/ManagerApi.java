@@ -29,8 +29,20 @@ public interface ManagerApi {
      * @since 9.6.0
      */
     @GetMapping("/getManager")
-    Manager getManager(@RequestParam("tenantId") @NotBlank String tenantId,
+    Manager getManagerById(@RequestParam("tenantId") @NotBlank String tenantId,
         @RequestParam("userId") @NotBlank String userId);
+
+    /**
+     * 根据登录名获得人员对象
+     *
+     * @param tenantId 租户id
+     * @param loginName 登录名
+     * @return Manager 人员对象
+     * @since 9.6.0
+     */
+    @GetMapping("/getManagerByLoginName")
+    Manager getManagerByLoginName(@RequestParam("tenantId") @NotBlank String tenantId,
+        @RequestParam("loginName") @NotBlank String loginName);
 
     /**
      * 判断是否为该部门的三员

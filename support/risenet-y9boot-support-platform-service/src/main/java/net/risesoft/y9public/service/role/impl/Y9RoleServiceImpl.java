@@ -11,7 +11,7 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import net.risesoft.consts.DefaultIdConsts;
+import net.risesoft.consts.InitDataConsts;
 import net.risesoft.consts.RoleLevelConsts;
 import net.risesoft.id.IdType;
 import net.risesoft.id.Y9IdGenerator;
@@ -251,7 +251,7 @@ public class Y9RoleServiceImpl implements Y9RoleService {
             y9Role.setDn(RoleLevelConsts.CN + y9Role.getName());
             y9Role.setGuidPath(y9Role.getId());
         }
-        if (!DefaultIdConsts.TOP_PUBLIC_ROLE_ID.equals(y9Role.getParentId())) {
+        if (!InitDataConsts.TOP_PUBLIC_ROLE_ID.equals(y9Role.getParentId())) {
             y9Role.setTenantId(Y9LoginUserHolder.getTenantId());
         }
         return y9RoleManager.save(y9Role);

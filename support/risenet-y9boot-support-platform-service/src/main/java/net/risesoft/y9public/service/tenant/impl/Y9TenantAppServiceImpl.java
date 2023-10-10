@@ -20,6 +20,7 @@ import org.springframework.transaction.annotation.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
+import net.risesoft.enums.ManagerLevelEnum;
 import net.risesoft.exception.TenantErrorCodeEnum;
 import net.risesoft.id.IdType;
 import net.risesoft.id.Y9IdGenerator;
@@ -163,7 +164,7 @@ public class Y9TenantAppServiceImpl implements Y9TenantAppService {
 
     @Override
     @Transactional(readOnly = false)
-    public Y9TenantApp save(String appId, String tenantId, String applyName, String applyReason) {
+    public Y9TenantApp save(String appId, String tenantId, String applyReason) {
         Optional<Y9TenantApp> y9TenantAppOptional =
             y9TenantAppRepository.findByTenantIdAndAppIdAndTenancy(tenantId, appId, Boolean.TRUE);
         Y9App y9App = y9AppManager.getById(appId);
@@ -187,14 +188,16 @@ public class Y9TenantAppServiceImpl implements Y9TenantAppService {
         ta.setAppId(appId);
         ta.setSystemId(y9App.getSystemId());
         ta.setAppName(y9App.getName());
-        ta.setApplyName(applyName);
+        ta.setApplyName(Optional.ofNullable(Y9LoginUserHolder.getUserInfo()).map(UserInfo::getName)
+            .orElse(ManagerLevelEnum.SYSTEM_MANAGER.getName()));
         ta.setApplyId(Y9LoginUserHolder.getPersonId());
         ta.setApplyReason(applyReason);
         ta.setTenancy(Boolean.TRUE);
         // 审核状态
         if (StringUtils.isNotBlank(tenantDataSource)) {
             ta.setVerify(Boolean.TRUE);
-            ta.setVerifyUserName(Y9LoginUserHolder.getUserInfo().getName());
+            ta.setVerifyUserName(Optional.ofNullable(Y9LoginUserHolder.getUserInfo()).map(UserInfo::getName)
+                .orElse(ManagerLevelEnum.SYSTEM_MANAGER.getName()));
             ta.setVerifyTime(time);
             ta.setReason("同意申请");
         } else {

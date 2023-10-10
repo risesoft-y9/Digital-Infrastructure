@@ -6,7 +6,6 @@ import java.util.List;
 import java.util.Optional;
 
 import org.apache.commons.lang3.StringUtils;
-import org.apache.commons.lang3.time.FastDateFormat;
 import org.springframework.context.event.EventListener;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -17,9 +16,7 @@ import net.risesoft.consts.OrgLevelConsts;
 import net.risesoft.entity.Y9Department;
 import net.risesoft.entity.Y9Manager;
 import net.risesoft.entity.Y9OrgBase;
-import net.risesoft.enums.ManagerLevelEnum;
 import net.risesoft.enums.OrgTypeEnum;
-import net.risesoft.enums.SexEnum;
 import net.risesoft.exception.OrgUnitErrorCodeEnum;
 import net.risesoft.id.IdType;
 import net.risesoft.id.Y9IdGenerator;
@@ -46,13 +43,9 @@ import net.risesoft.y9.util.signing.Y9MessageDigest;
 @Transactional(value = "rsTenantTransactionManager", readOnly = true)
 @Service
 @RequiredArgsConstructor
-public class Y9ManagerImpl implements Y9ManagerService {
-    private static final FastDateFormat DATE_FORMAT = FastDateFormat.getInstance("yyyy-MM-dd HH:mm:ss");
+public class Y9ManagerServiceImpl implements Y9ManagerService {
 
     private static final int MOBILE_NUMBER_LENGTH = 11;
-    private static final String DEFAULT_SYSTEM_MANAGER = "systemManager";
-    private static final String DEFAULT_SECURITY_MANAGER = "securityManager";
-    private static final String DEFAULT_AUDIT_MANAGER = "auditManager";
 
     private final Y9ManagerRepository y9ManagerRepository;
     private final CompositeOrgBaseManager compositeOrgBaseManager;
@@ -80,103 +73,19 @@ public class Y9ManagerImpl implements Y9ManagerService {
     }
 
     @Override
-    public boolean checkLoginName(final String id, final String loginName) {
+    public boolean isLoginNameAvailable(final String id, final String loginName) {
         if (StringUtils.isNotEmpty(id)) {
             return y9ManagerRepository.existsById(id);
         }
 
-        List<Y9Manager> managerList = y9ManagerRepository.findByLoginName(loginName);
-        return managerList.isEmpty();
+        Optional<Y9Manager> y9ManagerOptional = y9ManagerRepository.findByLoginName(loginName);
+        return y9ManagerOptional.isEmpty();
     }
 
     @Override
     public boolean checkPassword(String personId, String password) {
         Y9Manager manager = this.getById(personId);
         return Y9MessageDigest.checkpw(password, manager.getPassword());
-    }
-
-    @Override
-    @Transactional(readOnly = false)
-    public void createAuditManager(String id, String parentId) {
-        if (!existsById(id)) {
-            Y9Manager auditManager = new Y9Manager();
-            auditManager.setId(id);
-            auditManager.setTenantId(Y9LoginUserHolder.getTenantId());
-            auditManager.setParentId(parentId);
-            auditManager.setDisabled(false);
-            auditManager.setName(ManagerLevelEnum.AUDIT_MANAGER.getName());
-            auditManager.setLoginName(DEFAULT_AUDIT_MANAGER);
-            auditManager.setSex(SexEnum.MALE.getValue());
-            auditManager.setPassword(Y9MessageDigest.hashpw(y9config.getCommon().getDefaultPassword()));
-            auditManager.setDn("cn=" + ManagerLevelEnum.AUDIT_MANAGER.getName() + ",o=组织");
-            auditManager.setOrgType(OrgTypeEnum.MANAGER.getEnName());
-            auditManager.setGuidPath(parentId + "," + id);
-            auditManager.setTabIndex(10002);
-            auditManager.setGlobalManager(true);
-            auditManager.setManagerLevel(ManagerLevelEnum.AUDIT_MANAGER.getValue());
-            auditManager.setPwdCycle(Y9Manager.DEFAULT_PWD_CYCLE);
-            auditManager.setUserHostIp("");
-            auditManager.setCheckTime(DATE_FORMAT.format(new Date()));
-            auditManager.setModifyPwdTime(DATE_FORMAT.format(new Date()));
-            auditManager.setCheckCycle(Y9Manager.DEFAULT_PWD_CYCLE);
-            this.saveOrUpdate(auditManager);
-        }
-    }
-
-    @Override
-    @Transactional(readOnly = false)
-    public void createSecurityManager(String id, String parentId) {
-        if (!this.existsById(id)) {
-            Y9Manager securityManager = new Y9Manager();
-            securityManager.setId(id);
-            securityManager.setTenantId(Y9LoginUserHolder.getTenantId());
-            securityManager.setParentId(parentId);
-            securityManager.setDisabled(false);
-            securityManager.setName(ManagerLevelEnum.SECURITY_MANAGER.getName());
-            securityManager.setLoginName(DEFAULT_SECURITY_MANAGER);
-            securityManager.setSex(SexEnum.MALE.getValue());
-            securityManager.setPassword(Y9MessageDigest.hashpw(y9config.getCommon().getDefaultPassword()));
-            securityManager.setDn("cn=" + ManagerLevelEnum.SECURITY_MANAGER.getName() + ",o=组织");
-            securityManager.setOrgType(OrgTypeEnum.MANAGER.getEnName());
-            securityManager.setGuidPath(parentId + "," + id);
-            securityManager.setTabIndex(10001);
-            securityManager.setGlobalManager(true);
-            securityManager.setManagerLevel(ManagerLevelEnum.SECURITY_MANAGER.getValue());
-            securityManager.setPwdCycle(Y9Manager.DEFAULT_PWD_CYCLE);
-            securityManager.setUserHostIp("");
-            securityManager.setCheckTime(DATE_FORMAT.format(new Date()));
-            securityManager.setModifyPwdTime(DATE_FORMAT.format(new Date()));
-            securityManager.setCheckCycle(Y9Manager.DEFAULT_PWD_CYCLE);
-            this.saveOrUpdate(securityManager);
-        }
-    }
-
-    @Override
-    @Transactional(readOnly = false)
-    public void createSystemManager(String managerId, String parentId) {
-        if (!this.existsById(managerId)) {
-            Y9Manager systemManager = new Y9Manager();
-            systemManager.setId(managerId);
-            systemManager.setTenantId(Y9LoginUserHolder.getTenantId());
-            systemManager.setParentId(parentId);
-            systemManager.setDisabled(false);
-            systemManager.setName(ManagerLevelEnum.SYSTEM_MANAGER.getName());
-            systemManager.setLoginName(DEFAULT_SYSTEM_MANAGER);
-            systemManager.setSex(SexEnum.MALE.getValue());
-            systemManager.setPassword(Y9MessageDigest.hashpw(y9config.getCommon().getDefaultPassword()));
-            systemManager.setDn("cn=" + ManagerLevelEnum.SYSTEM_MANAGER.getName() + ",o=组织");
-            systemManager.setOrgType(OrgTypeEnum.MANAGER.getEnName());
-            systemManager.setGuidPath(parentId + "," + managerId);
-            systemManager.setTabIndex(10000);
-            systemManager.setGlobalManager(true);
-            systemManager.setManagerLevel(ManagerLevelEnum.SYSTEM_MANAGER.getValue());
-            systemManager.setPwdCycle(Y9Manager.DEFAULT_PWD_CYCLE);
-            systemManager.setUserHostIp("");
-            systemManager.setCheckTime(DATE_FORMAT.format(new Date()));
-            systemManager.setModifyPwdTime(DATE_FORMAT.format(new Date()));
-            systemManager.setCheckCycle(0);
-            this.saveOrUpdate(systemManager);
-        }
     }
 
     @Override
@@ -201,8 +110,18 @@ public class Y9ManagerImpl implements Y9ManagerService {
     }
 
     @Override
+    public boolean existsByLoginName(String loginName) {
+        return y9ManagerRepository.existsByLoginName(loginName);
+    }
+
+    @Override
     public Optional<Y9Manager> findById(String id) {
         return y9ManagerRepository.findById(id);
+    }
+
+    @Override
+    public Optional<Y9Manager> findByLoginName(String loginName) {
+        return y9ManagerRepository.findByLoginName(loginName);
     }
 
     @Override
@@ -260,11 +179,7 @@ public class Y9ManagerImpl implements Y9ManagerService {
     @Transactional(readOnly = false)
     public Y9Manager resetPassword(String id) {
         Y9Manager y9Manager = this.getById(id);
-        String mobile = y9Manager.getMobile();
         String password = y9config.getCommon().getDefaultPassword();
-        if (mobile != null && mobile.length() == MOBILE_NUMBER_LENGTH) {
-            password = mobile.substring(mobile.length() - 6);
-        }
         y9Manager.setPassword(Y9MessageDigest.hashpw(password));
         y9Manager = y9ManagerRepository.save(y9Manager);
 
@@ -286,7 +201,6 @@ public class Y9ManagerImpl implements Y9ManagerService {
     @Override
     @Transactional(readOnly = false)
     public Y9Manager saveOrUpdate(Y9Manager y9Manager) {
-        String mobile = y9Manager.getMobile();
         String password = y9config.getCommon().getDefaultPassword();
         Y9OrgBase parent = compositeOrgBaseManager.getOrgUnitAsParent(y9Manager.getParentId());
         if (StringUtils.isNotBlank(y9Manager.getId())) {
@@ -295,35 +209,19 @@ public class Y9ManagerImpl implements Y9ManagerService {
                 Y9BeanUtil.copyProperties(y9Manager, oldManager);
                 oldManager = y9ManagerRepository.save(oldManager);
 
-                Y9Context.publishEvent(new Y9EntityUpdatedEvent<Y9Manager>(y9Manager, oldManager));
+                Y9Context.publishEvent(new Y9EntityUpdatedEvent<>(y9Manager, oldManager));
                 return oldManager;
-            } else {
-                y9Manager.setTenantId(Y9LoginUserHolder.getTenantId());
-                y9Manager.setTabIndex(
-                    compositeOrgBaseManager.getMaxSubTabIndex(y9Manager.getParentId(), OrgTypeEnum.MANAGER));
-                y9Manager.setDn(OrgLevelConsts.getOrgLevel(OrgTypeEnum.MANAGER) + y9Manager.getName()
-                    + OrgLevelConsts.SEPARATOR + parent.getDn());
-                y9Manager.setDisabled(false);
-                y9Manager.setOrgType(OrgTypeEnum.MANAGER.getEnName());
-                if (mobile != null && mobile.length() == MOBILE_NUMBER_LENGTH) {
-                    password = mobile.substring(mobile.length() - 6);
-                }
-                y9Manager.setPassword(Y9MessageDigest.hashpw(password));
-                y9Manager.setGuidPath(compositeOrgBaseManager.buildGuidPath(y9Manager));
-                y9Manager.setOrderedPath(compositeOrgBaseManager.buildOrderedPath(y9Manager));
-                y9Manager = y9ManagerRepository.save(y9Manager);
-
-                Y9Context.publishEvent(new Y9EntityCreatedEvent<Y9Manager>(y9Manager));
-                return y9Manager;
             }
+        } else {
+            y9Manager.setId(Y9IdGenerator.genId(IdType.SNOWFLAKE));
         }
-        y9Manager.setId(Y9IdGenerator.genId(IdType.SNOWFLAKE));
+
         y9Manager.setTenantId(Y9LoginUserHolder.getTenantId());
         y9Manager.setTabIndex(compositeOrgBaseManager.getMaxSubTabIndex(y9Manager.getParentId(), OrgTypeEnum.MANAGER));
         y9Manager.setDn(OrgLevelConsts.getOrgLevel(OrgTypeEnum.MANAGER) + y9Manager.getName() + OrgLevelConsts.SEPARATOR
             + parent.getDn());
         // 系统管理员新建的子域三员默认禁用 需安全管理员启用
-        y9Manager.setDisabled(true);
+        y9Manager.setDisabled(y9Manager.getGlobalManager() ? false : true);
 
         y9Manager.setPassword(Y9MessageDigest.hashpw(password));
         y9Manager.setGuidPath(compositeOrgBaseManager.buildGuidPath(y9Manager));

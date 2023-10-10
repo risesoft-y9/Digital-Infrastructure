@@ -162,11 +162,10 @@ public interface Y9TenantAppService {
      *
      * @param appId 应用id
      * @param tenantId 租户id
-     * @param applyName 申请人
      * @param applyReason 申请原因
      * @return {@link Y9TenantApp}
      */
-    Y9TenantApp save(String appId, String tenantId, String applyName, String applyReason);
+    Y9TenantApp save(String appId, String tenantId, String applyReason);
 
     /**
      * 保存租户应用

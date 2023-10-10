@@ -502,16 +502,15 @@ public class Y9PersonServiceImpl implements Y9PersonService {
     }
 
     @Override
-    public void create(String parentId, String name, String loginName, String mobile) {
-        if (!y9PersonRepository.existsByLoginName(loginName)) {
-            Y9Person y9Person = new Y9Person();
-            y9Person.setParentId(parentId);
-            y9Person.setName(name);
-            y9Person.setLoginName(loginName);
-            y9Person.setMobile(mobile);
-
-            this.saveOrUpdate(y9Person, new Y9PersonExt());
-        }
+    @Transactional(readOnly = false)
+    public Y9Person create(String parentId, String name, String loginName, String mobile, String jobId) {
+        Optional<Y9Person> y9PersonOptional = y9PersonRepository.findByLoginNameAndOriginalTrue(loginName);
+        Y9Person y9Person = y9PersonOptional.orElse(new Y9Person());
+        y9Person.setParentId(parentId);
+        y9Person.setName(name);
+        y9Person.setLoginName(loginName);
+        y9Person.setMobile(mobile);
+        return this.saveOrUpdate(y9Person, new Y9PersonExt());
     }
 
     @Override
@@ -653,12 +652,6 @@ public class Y9PersonServiceImpl implements Y9PersonService {
             return null;
         }
         return personList.get(0);
-    }
-
-    @Override
-    public boolean isEmailAvailable(final String email) {
-        List<Y9Person> personList = y9PersonRepository.findByEmailAndOriginal(email, Boolean.TRUE);
-        return personList.isEmpty();
     }
 
     @Override
@@ -929,38 +922,11 @@ public class Y9PersonServiceImpl implements Y9PersonService {
                 }
 
                 return updatedPerson;
-            } else {
-                // 判断为从xml导入的代码并且数据库中没有相应信息,把密码统一设置为defaultPassword
-                Integer maxTabIndex = compositeOrgBaseManager.getMaxSubTabIndex(parent.getId(), OrgTypeEnum.PERSON);
-                person.setTabIndex(maxTabIndex != null ? maxTabIndex + 1 : 0);
-                person.setDn(OrgLevelConsts.getOrgLevel(OrgTypeEnum.PERSON) + person.getName()
-                    + OrgLevelConsts.SEPARATOR + parent.getDn());
-                person.setOrgType(OrgTypeEnum.PERSON.getEnName());
-                person.setVersion(OrgTypeEnum.Y9_VERSION);
-                person.setParentId(parent.getId());
-
-                if (StringUtils.isBlank(person.getPassword())) {
-                    person.setPassword(Y9MessageDigest.hashpw(y9config.getCommon().getDefaultPassword()));
-                }
-                person = save(person);
-                if (null != personExt) {
-                    y9PersonExtManager.saveOrUpdate(personExt, person);
-                }
-
-                Y9Context.publishEvent(new Y9EntityCreatedEvent<>(person));
-
-                Y9MessageOrg msg = new Y9MessageOrg(ModelConvertUtil.orgPersonToPerson(person),
-                    Y9OrgEventConst.RISEORGEVENT_TYPE_ADD_PERSON, Y9LoginUserHolder.getTenantId());
-                Y9PublishServiceUtil.persistAndPublishMessageOrg(msg, "新增人员信息", "新增" + person.getName());
-
-                return person;
             }
-        }
-
-        // personId为空则新建
-        if (StringUtils.isEmpty(person.getId())) {
+        } else {
             person.setId(Y9IdGenerator.genId(IdType.SNOWFLAKE));
         }
+
         if (StringUtils.isBlank(person.getEmail())) {
             person.setEmail(null);
         }

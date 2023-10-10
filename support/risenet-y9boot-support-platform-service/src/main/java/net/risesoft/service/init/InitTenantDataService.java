@@ -14,6 +14,19 @@ public interface InitTenantDataService {
      *
      * @param tenantId 租户id
      */
-    void init(String tenantId);
+    void initAll(String tenantId);
 
+    /**
+     * 初始化三员
+     *
+     * @param tenantId 租户id
+     */
+    void initManagers(String tenantId);
+
+    /**
+     * 初始化数据字典
+     *
+     * @param tenantId 租户id
+     */
+    void initOptionClass(String tenantId);
 }

@@ -8,9 +8,15 @@ import org.apereo.cas.web.y9.util.Y9MessageDigest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.context.event.ApplicationReadyEvent;
 import org.springframework.context.ApplicationListener;
-import org.springframework.stereotype.Component;
 
-@Component
+/**
+ * 用于生成测试的用户 需要使用时再取消 @Component 注释
+ * 
+ * @author dingzhaojun
+ * @date 2023/8/13
+ * @since 9.6.3
+ */
+// @Component
 public class OnApplicationReady implements ApplicationListener<ApplicationReadyEvent> {
     @Autowired
     private Y9UserService y9UserService;
