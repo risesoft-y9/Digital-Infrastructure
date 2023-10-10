@@ -69,7 +69,8 @@ public class Y9System extends BaseEntity {
     @Convert(converter = org.hibernate.type.NumericBooleanConverter.class)
     @Column(name = "ENABLED")
     @Comment("是否启用")
-    private Boolean enabled;
+    @ColumnDefault("1")
+    private Boolean enabled = Boolean.TRUE;
 
     /** 排序 */
     @Column(name = "TAB_INDEX", nullable = false)

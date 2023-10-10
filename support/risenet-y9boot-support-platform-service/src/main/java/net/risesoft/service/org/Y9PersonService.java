@@ -118,8 +118,10 @@ public interface Y9PersonService {
      * @param name 名字
      * @param loginName 登录名
      * @param mobile 手机号
+     * @param jobId
+     * @return
      */
-    void create(String parentId, String name, String loginName, String mobile);
+    Y9Person create(String parentId, String name, String loginName, String mobile, String jobId);
 
     /**
      * 新建人员
@@ -216,14 +218,6 @@ public interface Y9PersonService {
      * @return {@link Y9Person}
      */
     Y9Person getPersonByMobile(String mobile);
-
-    /**
-     * 判断邮箱是否可用
-     *
-     * @param email 电子邮箱
-     * @return boolean
-     */
-    boolean isEmailAvailable(String email);
 
     /**
      * 判断用户名是否可用
@@ -420,8 +414,8 @@ public interface Y9PersonService {
      *
      * @param person 人员对象
      * @param ext 人员扩展信息对象
-     * @param positionIds 岗位id数组
-     * @param jobIds 职位id数组
+     * @param positionIds 岗位id列表 用于关联已有岗位
+     * @param jobIds 职位id列表 通过职位新增岗位关联
      * @return {@link Y9Person}
      */
     Y9Person saveOrUpdate(Y9Person person, Y9PersonExt ext, List<String> positionIds, List<String> jobIds);

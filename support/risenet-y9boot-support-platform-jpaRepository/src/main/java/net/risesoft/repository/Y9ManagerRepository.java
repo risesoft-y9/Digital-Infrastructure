@@ -20,7 +20,9 @@ import net.risesoft.entity.Y9Manager;
 @Transactional(value = "rsTenantTransactionManager", readOnly = true)
 public interface Y9ManagerRepository extends JpaRepository<Y9Manager, String> {
 
-    List<Y9Manager> findByLoginName(String loginName);
+    boolean existsByLoginName(String loginName);
+
+    Optional<Y9Manager> findByLoginName(String loginName);
 
     List<Y9Manager> findByNameContainingAndGlobalManagerFalse(String name);
 

@@ -38,7 +38,7 @@ public interface Y9ManagerService {
      * @param loginName 登录名称
      * @return boolean
      */
-    boolean checkLoginName(String id, String loginName);
+    boolean isLoginNameAvailable(String id, String loginName);
 
     /**
      * 检查密码是否正确
@@ -48,30 +48,6 @@ public interface Y9ManagerService {
      * @return
      */
     boolean checkPassword(String personId, String password);
-
-    /**
-     * 初始化安全审计员
-     *
-     * @param id 管理员id
-     * @param parentId 组织id
-     */
-    void createAuditManager(String id, String parentId);
-
-    /**
-     * 初始化安全保密员
-     *
-     * @param id 管理员id
-     * @param parentId 组织id
-     */
-    void createSecurityManager(String id, String parentId);
-
-    /**
-     * 初始化系统管理员
-     *
-     * @param managerId 管理员id
-     * @param organizationId 组织id
-     */
-    void createSystemManager(String managerId, String organizationId);
 
     /**
      * 根据管理员id数组删除管理员信息
@@ -96,12 +72,22 @@ public interface Y9ManagerService {
     boolean existsById(String id);
 
     /**
+     * 根据登录名判断管理员是否存在
+     *
+     * @param loginName 管理员id
+     * @return boolean
+     */
+    boolean existsByLoginName(String loginName);
+
+    /**
      * 根据id查找管理员
      *
      * @param id 管理员id
      * @return 管理员对象 或 null
      */
     Optional<Y9Manager> findById(String id);
+
+    Optional<Y9Manager> findByLoginName(String loginName);
 
     /**
      * 根据id获取管理员信息

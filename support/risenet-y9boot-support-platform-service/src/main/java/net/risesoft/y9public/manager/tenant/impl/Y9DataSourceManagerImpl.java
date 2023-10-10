@@ -14,6 +14,7 @@ import org.springframework.transaction.annotation.Transactional;
 import com.zaxxer.hikari.HikariDataSource;
 
 import lombok.extern.slf4j.Slf4j;
+
 import net.risesoft.enums.DataSourceTypeEnum;
 import net.risesoft.enums.TenantTypeEnum;
 import net.risesoft.id.IdType;
@@ -49,30 +50,6 @@ public class Y9DataSourceManagerImpl implements Y9DataSourceManager {
         this.datasourceRepository = datasourceRepository;
     }
 
-    @Override
-    @Transactional(readOnly = false)
-    public Y9DataSource createTenantDefaultDataSource(String shortName, Integer tenantType, String systemName) {
-        String dataSourceName = buildTenantDataSourceName(shortName, tenantType);
-        String dbName = dataSourceName;
-        if (StringUtils.isNotBlank(systemName)) {
-            dbName = dataSourceName + "_" + systemName;
-        }
-        return createTenantDefaultDataSource(dbName);
-    }
-
-    @Override
-    public String buildTenantDataSourceName(String shortName, Integer tenantType) {
-        String dataSourceName = shortName;
-        if (Objects.equals(tenantType, TenantTypeEnum.ISV.getValue())) {
-            dataSourceName = "isv_" + shortName;
-        } else if (Objects.equals(tenantType, TenantTypeEnum.TENANT.getValue())) {
-            if (!"default".equals(shortName)) {
-                dataSourceName = "yt_" + generateRandomString() + "_" + shortName;
-            }
-        }
-        return dataSourceName;
-    }
-
     /**
      * 生成四位随机字符串
      *
@@ -94,8 +71,50 @@ public class Y9DataSourceManagerImpl implements Y9DataSourceManager {
     }
 
     @Override
+    public String buildDataSourceName(String shortName, Integer tenantType, String systemName) {
+        String dataSourceName = shortName;
+        if (Objects.equals(tenantType, TenantTypeEnum.ISV.getValue())) {
+            dataSourceName = "isv_" + shortName;
+        }
+        if (Objects.equals(tenantType, TenantTypeEnum.TENANT.getValue())) {
+            if (!"default".equals(shortName)) {
+                dataSourceName = "yt_" + generateRandomString() + "_" + shortName;
+            }
+        }
+        if (StringUtils.isNotBlank(systemName)) {
+            dataSourceName = dataSourceName + "_" + systemName;
+        }
+        return dataSourceName;
+    }
+
+    @Override
+    @Transactional(readOnly = false)
+    public Y9DataSource createTenantDefaultDataSource(String shortName, Integer tenantType, String systemName) {
+        String dataSourceName = this.buildDataSourceName(shortName, tenantType, systemName);
+        return this.createTenantDefaultDataSource(dataSourceName, null);
+    }
+
+    @Override
     @Transactional(readOnly = false)
     public Y9DataSource createTenantDefaultDataSource(String dbName) {
+        return this.createTenantDefaultDataSource(dbName, null);
+    }
+
+    @Override
+    @Transactional(readOnly = false)
+    public Y9DataSource createTenantDefaultDataSource(String dbName, String specifyId) {
+        if (StringUtils.isNotBlank(specifyId)) {
+            Optional<Y9DataSource> y9DataSourceOptional = datasourceRepository.findById(specifyId);
+            if (y9DataSourceOptional.isPresent()) {
+                return y9DataSourceOptional.get();
+            }
+        }
+
+        Optional<Y9DataSource> y9DataSourceOptional = datasourceRepository.findByJndiName(dbName);
+        if (y9DataSourceOptional.isPresent()) {
+            return y9DataSourceOptional.get();
+        }
+
         HikariDataSource dds = (HikariDataSource)jdbcTemplate4Public.getDataSource();
         String dbType = DbUtil.getDbTypeString(dds);
 
@@ -172,53 +191,23 @@ public class Y9DataSourceManagerImpl implements Y9DataSourceManager {
             }
         }
 
-        Optional<Y9DataSource> y9DataSourceOptional = datasourceRepository.findByJndiName(dbName);
-        if (y9DataSourceOptional.isEmpty()) {
-            Y9DataSource ds = new Y9DataSource();
-            ds.setJndiName(dbName);
-            ds.setUrl(url);
-            ds.setType(DataSourceTypeEnum.HIKARI.getValue());
-            ds.setUsername(username);
-            ds.setPassword(password);
-            ds.setInitialSize(1);
-            ds.setMaxActive(dds.getMaximumPoolSize());
-            ds.setMinIdle(dds.getMinimumIdle());
-            ds.setId(Y9IdGenerator.genId(IdType.SNOWFLAKE));
-            return this.save(ds);
-        }
-
-        return null;
-    }
-
-    public String replaceDatabaseNameInMysqlJdbcUrl(String originalJdbcUrl, String newDatabaseName) {
-        // 假设原始的 JDBC URL 格式为：jdbc:mysql://localhost:3306/y9_public?allowPublicKeyRetrieval=true
-        int dbNameStart = originalJdbcUrl.lastIndexOf("/") + 1;
-        int dbNameEnd = originalJdbcUrl.indexOf("?");
-
-        if (dbNameStart >= 0 && dbNameEnd > dbNameStart) {
-            String oldDatabaseName = originalJdbcUrl.substring(dbNameStart, dbNameEnd);
-
-            return originalJdbcUrl.replace(oldDatabaseName, newDatabaseName);
-        } else {
-            // 如果无法提取数据库名称部分或者替换失败，返回原始的 JDBC URL
-            return originalJdbcUrl;
-        }
+        Y9DataSource y9DataSource = new Y9DataSource();
+        y9DataSource.setJndiName(dbName);
+        y9DataSource.setUrl(url);
+        y9DataSource.setType(DataSourceTypeEnum.HIKARI.getValue());
+        y9DataSource.setUsername(username);
+        y9DataSource.setPassword(password);
+        y9DataSource.setInitialSize(1);
+        y9DataSource.setMaxActive(dds.getMaximumPoolSize());
+        y9DataSource.setMinIdle(dds.getMinimumIdle());
+        y9DataSource.setId(Optional.ofNullable(specifyId).orElse(Y9IdGenerator.genId(IdType.SNOWFLAKE)));
+        return this.save(y9DataSource);
     }
 
     @Override
     @Transactional(readOnly = false)
-    public Y9DataSource save(Y9DataSource y9DataSource) {
-        Y9DataSource dataSource = null;
-        if (y9DataSource != null) {
-            if (StringUtils.isBlank(y9DataSource.getId())) {
-                y9DataSource.setId(Y9IdGenerator.genId(IdType.SNOWFLAKE));
-            }
-            if (y9DataSource.getPassword() != null) {
-                y9DataSource.setPassword(Y9Base64Util.encode(y9DataSource.getPassword()));
-            }
-            dataSource = datasourceRepository.save(y9DataSource);
-        }
-        return dataSource;
+    public void delete(String id) {
+        datasourceRepository.deleteById(id);
     }
 
     @Override
@@ -230,7 +219,7 @@ public class Y9DataSourceManagerImpl implements Y9DataSourceManager {
         if (StringUtils.isNotBlank(dbName)) {
             HikariDataSource dds = (HikariDataSource)jdbcTemplate4Public.getDataSource();
             if (dds != null) {
-            	String dbType = DbUtil.getDbTypeString(dds);
+                String dbType = DbUtil.getDbTypeString(dds);
                 if (DbType.mysql.name().equals(dbType)) {
                     String sql = "DROP DATABASE IF EXISTS " + dbName;
                     jdbcTemplate4Public.execute(sql);
@@ -253,8 +242,29 @@ public class Y9DataSourceManagerImpl implements Y9DataSourceManager {
 
     @Override
     @Transactional(readOnly = false)
-    public void delete(String id) {
-        datasourceRepository.deleteById(id);
+    public Y9DataSource save(Y9DataSource y9DataSource) {
+        if (StringUtils.isBlank(y9DataSource.getId())) {
+            y9DataSource.setId(Y9IdGenerator.genId(IdType.SNOWFLAKE));
+        }
+        if (y9DataSource.getPassword() != null) {
+            y9DataSource.setPassword(Y9Base64Util.encode(y9DataSource.getPassword()));
+        }
+        return datasourceRepository.save(y9DataSource);
+    }
+
+    public String replaceDatabaseNameInMysqlJdbcUrl(String originalJdbcUrl, String newDatabaseName) {
+        // 假设原始的 JDBC URL 格式为：jdbc:mysql://localhost:3306/y9_public?allowPublicKeyRetrieval=true
+        int dbNameStart = originalJdbcUrl.lastIndexOf("/") + 1;
+        int dbNameEnd = originalJdbcUrl.indexOf("?");
+
+        if (dbNameStart >= 0 && dbNameEnd > dbNameStart) {
+            String oldDatabaseName = originalJdbcUrl.substring(dbNameStart, dbNameEnd);
+
+            return originalJdbcUrl.replace(oldDatabaseName, newDatabaseName);
+        } else {
+            // 如果无法提取数据库名称部分或者替换失败，返回原始的 JDBC URL
+            return originalJdbcUrl;
+        }
     }
 
 }

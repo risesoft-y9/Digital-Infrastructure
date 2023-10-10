@@ -74,7 +74,7 @@ public class DeptManagerController {
     @RiseLog(operationName = "判断登录名是否可用")
     @RequestMapping(value = "/checkLoginName")
     public Y9Result<Boolean> checkLoginName(@RequestParam String personId, @RequestParam @NotBlank String loginName) {
-        return Y9Result.success(y9ManagerService.checkLoginName(personId, loginName), "判断登录名是否可用成功");
+        return Y9Result.success(y9ManagerService.isLoginNameAvailable(personId, loginName), "判断登录名是否可用成功");
     }
 
     /**

@@ -10,15 +10,17 @@ import net.risesoft.y9public.entity.tenant.Y9DataSource;
  * @since 9.6.2
  */
 public interface Y9DataSourceManager {
-    Y9DataSource createTenantDefaultDataSource(String shortName, Integer tenantType, String systemName);
+    String buildDataSourceName(String shortName, Integer tenantType, String systemName);
 
-    String buildTenantDataSourceName(String shortName, Integer tenantType);
+    Y9DataSource createTenantDefaultDataSource(String shortName, Integer tenantType, String systemName);
 
     Y9DataSource createTenantDefaultDataSource(String dbName);
 
-    Y9DataSource save(Y9DataSource y9DataSource);
+    Y9DataSource createTenantDefaultDataSource(String dbName, String specifyId);
+
+    void delete(String id);
 
     void dropTenantDefaultDataSource(String dataSourceId, String dbName);
 
-    void delete(String id);
+    Y9DataSource save(Y9DataSource y9DataSource);
 }

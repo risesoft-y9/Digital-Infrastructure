@@ -20,7 +20,8 @@ import com.zaxxer.hikari.HikariDataSource;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import net.risesoft.consts.DefaultIdConsts;
+
+import net.risesoft.consts.InitDataConsts;
 import net.risesoft.y9.util.base64.Y9Base64Util;
 
 /**
@@ -45,11 +46,11 @@ public class Y9TenantDataSourceLookup implements DataSourceLookup {
 
     private void createDefaultTenantDataSource(JdbcTemplate publicJdbcTemplate) {
         List<Map<String, Object>> defaultTenant = publicJdbcTemplate.queryForList(
-            "SELECT ID, DEFAULT_DATA_SOURCE_ID FROM Y9_COMMON_TENANT WHERE ID=?", DefaultIdConsts.TENANT_ID);
+            "SELECT ID, DEFAULT_DATA_SOURCE_ID FROM Y9_COMMON_TENANT WHERE ID=?", InitDataConsts.TENANT_ID);
         List<Map<String, Object>> defaultDataSource = publicJdbcTemplate
-            .queryForList("SELECT * FROM Y9_COMMON_DATASOURCE T WHERE T.ID = ?", DefaultIdConsts.DATASOURCE_ID);
+            .queryForList("SELECT * FROM Y9_COMMON_DATASOURCE T WHERE T.ID = ?", InitDataConsts.DATASOURCE_ID);
         if (!defaultTenant.isEmpty() && !defaultDataSource.isEmpty()) {
-            createOrUpdateDataSource(defaultDataSource.get(0), null, DefaultIdConsts.TENANT_ID);
+            createOrUpdateDataSource(defaultDataSource.get(0), null, InitDataConsts.TENANT_ID);
         }
     }
 
@@ -85,10 +86,10 @@ public class Y9TenantDataSourceLookup implements DataSourceLookup {
                 ds = new HikariDataSource();
                 ds.setMaximumPoolSize(maxActive);
                 ds.setMinimumIdle(minIdle);
-                if (driver.length()>0) {
+                if (driver.length() > 0) {
                     ds.setDriverClassName(driver);
                 }
-                
+
                 ds.setJdbcUrl(url);
                 ds.setUsername(username);
                 ds.setPassword(password);
@@ -113,12 +114,12 @@ public class Y9TenantDataSourceLookup implements DataSourceLookup {
                     ds.setMinimumIdle(minIdle);
                     if (!"".equals(driver)) {
                         ds.setDriverClassName(driver);
-                    }                    
+                    }
                     ds.setJdbcUrl(url);
                     ds.setUsername(username);
                     ds.setPassword(password);
                 } else {
-                	ds.setMaximumPoolSize(maxActive);
+                    ds.setMaximumPoolSize(maxActive);
                     ds.setMinimumIdle(minIdle);
                 }
                 this.loadedTenantIdDataSourceMap.put(tenantId, ds);
@@ -178,7 +179,7 @@ public class Y9TenantDataSourceLookup implements DataSourceLookup {
                 }
             }
             if (removed) {
-            	HikariDataSource ds = this.loadedTenantIdDataSourceMap.get(loadedTenantId);
+                HikariDataSource ds = this.loadedTenantIdDataSourceMap.get(loadedTenantId);
                 this.loadedTenantIdDataSourceMap.remove(loadedTenantId);
                 ds.close();
             }
@@ -245,7 +246,7 @@ public class Y9TenantDataSourceLookup implements DataSourceLookup {
         if (!hikariDataSources.isEmpty()) {
             for (HikariDataSource ds : hikariDataSources) {
                 try {
-                    //ds.init();
+                    // ds.init();
                 } catch (Exception e) {
                     LOGGER.warn(e.getMessage(), e);
                 }

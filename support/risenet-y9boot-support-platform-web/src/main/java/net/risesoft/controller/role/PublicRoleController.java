@@ -8,7 +8,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import lombok.RequiredArgsConstructor;
 
-import net.risesoft.consts.DefaultIdConsts;
+import net.risesoft.consts.InitDataConsts;
 import net.risesoft.controller.role.vo.RoleVO;
 import net.risesoft.log.annotation.RiseLog;
 import net.risesoft.pojo.Y9Result;
@@ -38,7 +38,7 @@ public class PublicRoleController {
     @RiseLog(operationName = "获取系统公共角色顶节点")
     @RequestMapping(value = "/treeRoot")
     public Y9Result<List<RoleVO>> publicRoleRoot() {
-        Y9Role y9Role = y9RoleService.getById(DefaultIdConsts.TOP_PUBLIC_ROLE_ID);
+        Y9Role y9Role = y9RoleService.getById(InitDataConsts.TOP_PUBLIC_ROLE_ID);
         List<RoleVO> y9RoleList = new ArrayList<>();
         RoleVO role = Y9ModelConvertUtil.convert(y9Role, RoleVO.class);
         role.setHasChild(Boolean.TRUE);

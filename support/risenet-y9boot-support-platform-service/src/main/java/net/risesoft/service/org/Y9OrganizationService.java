@@ -20,8 +20,9 @@ public interface Y9OrganizationService {
      * @param id 组织id
      * @param organizationName 组织名称
      * @param virtual 是否虚拟组织
+     * @return
      */
-    void create(String id, String organizationName, Boolean virtual);
+    Y9Organization create(String id, String organizationName, Boolean virtual);
 
     /**
      * 根据主键id删除机构实例

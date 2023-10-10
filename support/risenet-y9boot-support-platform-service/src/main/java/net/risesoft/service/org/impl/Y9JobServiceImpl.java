@@ -179,13 +179,12 @@ public class Y9JobServiceImpl implements Y9JobService {
 
     @Override
     @Transactional(readOnly = false)
-    public void create(String name, String code) {
-        if (!y9JobRepository.existsByName(name)) {
-            Y9Job y9Job = new Y9Job();
-            y9Job.setName(name);
-            y9Job.setCode(code);
-            this.saveOrUpdate(y9Job);
-        }
+    public Y9Job create(String name, String code) {
+        Optional<Y9Job> y9JobOptional = y9JobRepository.findByName(name);
+        Y9Job y9Job = y9JobOptional.orElse(new Y9Job());
+        y9Job.setName(name);
+        y9Job.setCode(code);
+        return this.saveOrUpdate(y9Job);
     }
 
 }

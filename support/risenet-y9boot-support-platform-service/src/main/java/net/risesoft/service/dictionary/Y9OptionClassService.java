@@ -20,9 +20,11 @@ public interface Y9OptionClassService {
     void deleteByType(String type);
 
     /**
-     * 初始化数据字典
+     * 字典类型表中是否有数据
+     *
+     * @return boolean
      */
-    void initOptionClass();
+    boolean hasData();
 
     /**
      * 字曲典类型列表

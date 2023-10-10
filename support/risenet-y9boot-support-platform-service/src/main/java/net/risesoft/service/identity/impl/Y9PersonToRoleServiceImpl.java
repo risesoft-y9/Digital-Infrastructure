@@ -11,7 +11,7 @@ import org.springframework.transaction.annotation.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
-import net.risesoft.consts.DefaultIdConsts;
+import net.risesoft.consts.InitDataConsts;
 import net.risesoft.entity.Y9Person;
 import net.risesoft.entity.identity.person.Y9PersonToRole;
 import net.risesoft.enums.Y9RoleTypeEnum;
@@ -60,7 +60,7 @@ public class Y9PersonToRoleServiceImpl implements Y9PersonToRoleService {
 
     @Override
     public boolean hasPublicRole(String personId, String roleName) {
-        List<Y9Role> y9RoleList = y9RoleRepository.findByParentIdAndName(DefaultIdConsts.TOP_PUBLIC_ROLE_ID, roleName);
+        List<Y9Role> y9RoleList = y9RoleRepository.findByParentIdAndName(InitDataConsts.TOP_PUBLIC_ROLE_ID, roleName);
         return y9RoleList.stream().anyMatch(y9Role -> hasRole(personId, y9Role.getId()));
     }
 

@@ -1,7 +1,6 @@
 package net.risesoft.controller.sync;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -9,7 +8,6 @@ import org.springframework.web.bind.annotation.RestController;
 
 import lombok.RequiredArgsConstructor;
 
-import net.risesoft.consts.DefaultIdConsts;
 import net.risesoft.entity.Y9Manager;
 import net.risesoft.entity.Y9Organization;
 import net.risesoft.entity.Y9Person;
@@ -18,6 +16,7 @@ import net.risesoft.log.OperationTypeEnum;
 import net.risesoft.log.annotation.RiseLog;
 import net.risesoft.pojo.Y9Result;
 import net.risesoft.service.dictionary.Y9OptionClassService;
+import net.risesoft.service.init.InitTenantDataService;
 import net.risesoft.service.org.CompositeOrgBaseService;
 import net.risesoft.service.org.Y9ManagerService;
 import net.risesoft.service.org.Y9OrganizationService;
@@ -46,6 +45,7 @@ public class SyncController {
     private final Y9PositionService y9PositionService;
     private final Y9ManagerService y9ManagerService;
     private final Y9OptionClassService y9OptionClassService;
+    private final InitTenantDataService initTenantDataService;
 
     /**
      * 初始化租户三员
@@ -60,17 +60,7 @@ public class SyncController {
             Y9Tenant tenant = Y9PlatformUtil.getTenantById(tenantId);
             if (tenant.getTenantType() == 3) {
                 Y9LoginUserHolder.setTenantId(tenantId);
-                List<Y9Organization> y9OrganizationList = y9OrganizationService.list();
-                String organizationId = "";
-                List<String> y9OrganizationIdList =
-                    y9OrganizationList.stream().map(Y9Organization::getId).collect(Collectors.toList());
-                organizationId = DefaultIdConsts.ORGANIZATION_VIRTUAL_ID;
-                if (!y9OrganizationIdList.contains(organizationId)) {
-                    y9OrganizationService.create(DefaultIdConsts.ORGANIZATION_VIRTUAL_ID, "组织", Boolean.TRUE);
-                }
-                y9ManagerService.createSystemManager(DefaultIdConsts.SYSTEM_MANAGER_ID, organizationId);
-                y9ManagerService.createSecurityManager(DefaultIdConsts.SECURITY_MANAGER_ID, organizationId);
-                y9ManagerService.createAuditManager(DefaultIdConsts.AUDIT_MANAGER_ID, organizationId);
+                initTenantDataService.initManagers(tenantId);
             }
         }
         return Y9Result.successMsg("初始化租户三员完成");
@@ -86,8 +76,11 @@ public class SyncController {
     public Y9Result<String> initOptionClass() {
         List<String> tenantIdList = Y9PlatformUtil.getTenantIds();
         for (String tenantId : tenantIdList) {
-            Y9LoginUserHolder.setTenantId(tenantId);
-            y9OptionClassService.initOptionClass();
+            Y9Tenant tenant = Y9PlatformUtil.getTenantById(tenantId);
+            if (tenant.getTenantType() == 3) {
+                Y9LoginUserHolder.setTenantId(tenantId);
+                initTenantDataService.initOptionClass(tenantId);
+            }
         }
         return Y9Result.successMsg("初始化数据字典成功");
     }

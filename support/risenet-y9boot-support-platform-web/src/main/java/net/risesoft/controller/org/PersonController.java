@@ -114,18 +114,6 @@ public class PersonController {
     }
 
     /**
-     * 判断邮箱是否可用
-     *
-     * @param email 电子邮箱
-     * @return
-     */
-    @RiseLog(operationName = "判断邮箱是否可用")
-    @RequestMapping(value = "/checkEmail")
-    public Y9Result<Boolean> checkEmail(@NotBlank @RequestParam String email) {
-        return Y9Result.success(y9PersonService.isEmailAvailable(email), "判断邮箱是否可用成功");
-    }
-
-    /**
      * 判断登录名是否可用（同一个租户）
      *
      * @param loginName 登录名称

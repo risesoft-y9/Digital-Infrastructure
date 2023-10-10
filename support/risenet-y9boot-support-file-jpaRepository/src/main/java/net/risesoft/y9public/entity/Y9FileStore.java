@@ -16,8 +16,11 @@ import org.hibernate.annotations.Comment;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.util.StringUtils;
 
-import lombok.Data;
+import lombok.EqualsAndHashCode;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
+import lombok.ToString;
 
 import net.risesoft.y9.util.Y9FileUtil;
 import net.risesoft.y9public.support.FileNameConverter;
@@ -26,7 +29,10 @@ import net.risesoft.y9public.support.FileNameConverter;
 @Table(name = "Y9_COMMON_FILE_STORE")
 @Comment("文件仓库表")
 @NoArgsConstructor
-@Data
+@ToString
+@EqualsAndHashCode
+@Getter
+@Setter
 public class Y9FileStore implements Serializable {
 
     private static final long serialVersionUID = 5215025303846508704L;

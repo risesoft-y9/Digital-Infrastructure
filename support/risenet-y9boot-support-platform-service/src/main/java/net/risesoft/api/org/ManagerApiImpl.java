@@ -44,11 +44,20 @@ public class ManagerApiImpl implements ManagerApi {
      * @since 9.6.0
      */
     @Override
-    public Manager getManager(@RequestParam("tenantId") @NotBlank String tenantId,
+    public Manager getManagerById(@RequestParam("tenantId") @NotBlank String tenantId,
         @RequestParam("userId") @NotBlank String userId) {
         Y9LoginUserHolder.setTenantId(tenantId);
 
         Y9Manager y9Manager = y9ManagerService.findById(userId).orElse(null);
+        return Y9ModelConvertUtil.convert(y9Manager, Manager.class);
+    }
+
+    @Override
+    public Manager getManagerByLoginName(@RequestParam("tenantId") @NotBlank String tenantId,
+        @RequestParam("loginName") @NotBlank String loginName) {
+        Y9LoginUserHolder.setTenantId(tenantId);
+
+        Y9Manager y9Manager = y9ManagerService.findByLoginName(loginName).orElse(null);
         return Y9ModelConvertUtil.convert(y9Manager, Manager.class);
     }
 

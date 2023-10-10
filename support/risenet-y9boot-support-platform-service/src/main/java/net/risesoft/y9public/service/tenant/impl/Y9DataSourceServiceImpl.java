@@ -53,8 +53,8 @@ public class Y9DataSourceServiceImpl implements Y9DataSourceService {
     }
 
     @Override
-    public String buildTenantDataSourceName(String shortName, Integer tenantType) {
-        return y9DataSourceManager.buildTenantDataSourceName(shortName, tenantType);
+    public String buildDataSourceName(String shortName, Integer tenantType, String systemName) {
+        return y9DataSourceManager.buildDataSourceName(shortName, tenantType, systemName);
     }
 
     @Override
@@ -78,12 +78,12 @@ public class Y9DataSourceServiceImpl implements Y9DataSourceService {
     @Override
     @Transactional(readOnly = false)
     public Y9DataSource createTenantDefaultDataSource(String shortName, Integer tenantType, String systemName) {
-        String dataSourceName = buildTenantDataSourceName(shortName, tenantType);
-        String dbName = dataSourceName;
-        if (StringUtils.isNotBlank(systemName)) {
-            dbName = dataSourceName + "_" + systemName;
-        }
-        return createTenantDefaultDataSource(dbName);
+        return y9DataSourceManager.createTenantDefaultDataSource(shortName, tenantType, systemName);
+    }
+
+    @Override
+    public Y9DataSource createTenantDefaultDataSource(String dbName, String id) {
+        return y9DataSourceManager.createTenantDefaultDataSource(dbName, id);
     }
 
     @Override

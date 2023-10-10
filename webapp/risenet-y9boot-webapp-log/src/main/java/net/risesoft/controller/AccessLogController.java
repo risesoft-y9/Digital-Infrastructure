@@ -14,7 +14,7 @@ import org.springframework.web.bind.annotation.RestController;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
-import net.risesoft.consts.DefaultIdConsts;
+import net.risesoft.consts.InitDataConsts;
 import net.risesoft.enums.ManagerLevelEnum;
 import net.risesoft.log.annotation.RiseLog;
 import net.risesoft.log.entity.Y9logAccessLog;
@@ -118,7 +118,7 @@ public class AccessLogController {
     public Y9Page<Y9logAccessLog> pageByAuditManagers(String userId, Y9PageQuery pageQuery, String sort) {
         String tenantId = Y9LoginUserHolder.getTenantId();
         Integer managerLevel = ManagerLevelEnum.AUDIT_MANAGER.getValue();
-        if (DefaultIdConsts.OPERATION_TENANT_ID.equals(Y9LoginUserHolder.getTenantId())) {
+        if (InitDataConsts.OPERATION_TENANT_ID.equals(Y9LoginUserHolder.getTenantId())) {
             managerLevel = ManagerLevelEnum.OPERATION_AUDIT_MANAGER.getValue();
         }
         Page<Y9logAccessLog> pageList = logService.pageByTenantIdAndManagerLevelAndUserId(tenantId,
@@ -186,7 +186,7 @@ public class AccessLogController {
     public Y9Page<Y9logAccessLog> pageBySecurityManagers(String userId, Y9PageQuery pageQuery, String sort) {
         String tenantId = Y9LoginUserHolder.getTenantId();
         Integer managerLevel = ManagerLevelEnum.SECURITY_MANAGER.getValue();
-        if (DefaultIdConsts.OPERATION_TENANT_ID.equals(Y9LoginUserHolder.getTenantId())) {
+        if (InitDataConsts.OPERATION_TENANT_ID.equals(Y9LoginUserHolder.getTenantId())) {
             managerLevel = ManagerLevelEnum.OPERATION_SECURITY_MANAGER.getValue();
         }
         Page<Y9logAccessLog> pageList = logService.pageByTenantIdAndManagerLevelAndUserId(tenantId,
@@ -208,7 +208,7 @@ public class AccessLogController {
     public Y9Page<Y9logAccessLog> pageBySystemManagers(String userId, Y9PageQuery pageQuery, String sort) {
         String tenantId = Y9LoginUserHolder.getTenantId();
         Integer managerLevel = ManagerLevelEnum.SYSTEM_MANAGER.getValue();
-        if (DefaultIdConsts.OPERATION_TENANT_ID.equals(Y9LoginUserHolder.getTenantId())) {
+        if (InitDataConsts.OPERATION_TENANT_ID.equals(Y9LoginUserHolder.getTenantId())) {
             managerLevel = ManagerLevelEnum.OPERATION_SYSTEM_MANAGER.getValue();
         }
         Page<Y9logAccessLog> pageList = logService.pageByTenantIdAndManagerLevelAndUserId(tenantId,
@@ -279,7 +279,7 @@ public class AccessLogController {
     public Y9Page<Y9logAccessLog> searchAuditManagers(LogInfoModel loginInfoModel, Y9PageQuery pageQuery) {
         String tenantId = Y9LoginUserHolder.getTenantId();
         Integer managerLevel = ManagerLevelEnum.AUDIT_MANAGER.getValue();
-        if (DefaultIdConsts.OPERATION_TENANT_ID.equals(Y9LoginUserHolder.getTenantId())) {
+        if (InitDataConsts.OPERATION_TENANT_ID.equals(Y9LoginUserHolder.getTenantId())) {
             managerLevel = ManagerLevelEnum.OPERATION_AUDIT_MANAGER.getValue();
         }
         Page<Y9logAccessLog> pageList = logService.searchQuery(tenantId, String.valueOf(managerLevel), loginInfoModel,
@@ -300,7 +300,7 @@ public class AccessLogController {
     public Y9Page<Y9logAccessLog> searchSecurityManagers(LogInfoModel loginInfoModel, Y9PageQuery pageQuery) {
         String tenantId = Y9LoginUserHolder.getTenantId();
         Integer managerLevel = ManagerLevelEnum.SECURITY_MANAGER.getValue();
-        if (DefaultIdConsts.OPERATION_TENANT_ID.equals(Y9LoginUserHolder.getTenantId())) {
+        if (InitDataConsts.OPERATION_TENANT_ID.equals(Y9LoginUserHolder.getTenantId())) {
             managerLevel = ManagerLevelEnum.OPERATION_SECURITY_MANAGER.getValue();
         }
         Page<Y9logAccessLog> pageList = logService.searchQuery(tenantId, String.valueOf(managerLevel), loginInfoModel,
@@ -321,7 +321,7 @@ public class AccessLogController {
     public Y9Page<Y9logAccessLog> searchSystemManagers(LogInfoModel loginInfoModel, Y9PageQuery pageQuery) {
         String tenantId = Y9LoginUserHolder.getTenantId();
         Integer managerLevel = ManagerLevelEnum.SYSTEM_MANAGER.getValue();
-        if (DefaultIdConsts.OPERATION_TENANT_ID.equals(Y9LoginUserHolder.getTenantId())) {
+        if (InitDataConsts.OPERATION_TENANT_ID.equals(Y9LoginUserHolder.getTenantId())) {
             managerLevel = ManagerLevelEnum.OPERATION_SYSTEM_MANAGER.getValue();
         }
         Page<Y9logAccessLog> pageList = logService.searchQuery(tenantId, String.valueOf(managerLevel), loginInfoModel,

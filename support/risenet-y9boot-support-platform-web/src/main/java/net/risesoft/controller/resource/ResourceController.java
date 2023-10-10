@@ -91,9 +91,10 @@ public class ResourceController {
         List<Y9ResourceBase> appResourceList = compositeResourceService.listRootResourceList();
         List<String> appIds =
             y9TenantAppService.listAppIdByTenantId(Y9LoginUserHolder.getTenantId(), Boolean.TRUE, Boolean.TRUE);
-        List<Y9ResourceBase> asscAppResourceList =
+        List<Y9ResourceBase> accessibleAppResourceList =
             appResourceList.stream().filter(resource -> appIds.contains(resource.getId())).collect(Collectors.toList());
-        return Y9Result.success(Y9ModelConvertUtil.convert(asscAppResourceList, ResourceBaseVO.class), "查询所有的根资源成功");
+        return Y9Result.success(Y9ModelConvertUtil.convert(accessibleAppResourceList, ResourceBaseVO.class),
+            "查询所有的根资源成功");
     }
 
     /**

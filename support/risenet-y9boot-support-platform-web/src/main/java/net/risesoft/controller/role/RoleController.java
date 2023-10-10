@@ -28,7 +28,7 @@ import org.springframework.web.multipart.MultipartFile;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
-import net.risesoft.consts.DefaultIdConsts;
+import net.risesoft.consts.InitDataConsts;
 import net.risesoft.controller.role.vo.RoleVO;
 import net.risesoft.dataio.role.Y9RoleDataHandler;
 import net.risesoft.enums.Y9RoleTypeEnum;
@@ -258,7 +258,7 @@ public class RoleController {
             Set<String> appIdList = y9RoleList.stream().map(Y9Role::getAppId).collect(Collectors.toSet());
             List<Y9App> appList = new ArrayList<>();
             for (String appId : appIdList) {
-                if (!DefaultIdConsts.TOP_PUBLIC_ROLE_ID.equals(appId)) {
+                if (!InitDataConsts.TOP_PUBLIC_ROLE_ID.equals(appId)) {
                     Y9App y9App = y9AppService.getById(appId);
                     appList.add(y9App);
                 }
@@ -278,7 +278,7 @@ public class RoleController {
                 roleVOList.add(appVO);
             }
             for (Y9Role roleNode : y9RoleList) {
-                if (!DefaultIdConsts.TOP_PUBLIC_ROLE_ID.equals(roleNode.getAppId())) {
+                if (!InitDataConsts.TOP_PUBLIC_ROLE_ID.equals(roleNode.getAppId())) {
                     RoleVO roleVO = Y9ModelConvertUtil.convert(roleNode, RoleVO.class);
                     if (Y9RoleTypeEnum.FOLDER.getValue().equals(roleNode.getType())) {
                         roleVO.setHasChild(!y9RoleService.listByParentId(roleNode.getId()).isEmpty());
