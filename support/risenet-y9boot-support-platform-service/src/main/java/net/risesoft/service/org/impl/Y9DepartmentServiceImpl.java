@@ -321,16 +321,16 @@ public class Y9DepartmentServiceImpl implements Y9DepartmentService {
             if (y9DepartmentOptional.isPresent()) {
                 Y9Department originDepartment = y9DepartmentOptional.get();
 
+                boolean renamed = Y9OrgUtil.isRenamed(dept, originDepartment);
+                Y9BeanUtil.copyProperties(dept, originDepartment);
                 originDepartment.setDn(OrgLevelConsts.getOrgLevel(OrgTypeEnum.DEPARTMENT) + dept.getName()
                     + OrgLevelConsts.SEPARATOR + parent.getDn());
-
-                Y9BeanUtil.copyProperties(dept, originDepartment);
                 originDepartment.setParentId(parent.getId());
                 originDepartment.setGuidPath(parent.getGuidPath() + OrgLevelConsts.SEPARATOR + dept.getId());
 
                 originDepartment = y9DepartmentManager.save(originDepartment);
 
-                if (Y9OrgUtil.isRenamed(dept, originDepartment)) {
+                if (renamed) {
                     // 更新下级节点的dn
                     compositeOrgBaseManager.recursivelyUpdateProperties(originDepartment);
                 }

@@ -87,9 +87,9 @@ public class OnApplicationReady implements ApplicationListener<ApplicationReadyE
         if (y9SystemOptional.isEmpty()) {
             Y9System y9System = new Y9System();
             y9System.setId(systemId);
-            y9System.setContextPath("platform");
-            y9System.setName("riseplatform");
-            y9System.setCnName("开源内核");
+            y9System.setContextPath(y9Config.getContextPath());
+            y9System.setName(y9Config.getSystemName());
+            y9System.setCnName(y9Config.getSystemCnName());
             y9System.setEnabled(true);
             y9System.setAutoInit(true);
             y9System.setTabIndex(10000);

@@ -9,9 +9,9 @@ import org.springframework.transaction.annotation.Transactional;
 import lombok.RequiredArgsConstructor;
 
 import net.risesoft.consts.InitDataConsts;
-import net.risesoft.entity.Y9Job;
 import net.risesoft.entity.Y9Manager;
 import net.risesoft.entity.Y9OptionClass;
+import net.risesoft.entity.Y9Organization;
 import net.risesoft.enums.ManagerLevelEnum;
 import net.risesoft.service.dictionary.Y9OptionClassService;
 import net.risesoft.service.dictionary.Y9OptionValueService;
@@ -45,30 +45,47 @@ public class InitTenantDataServiceImpl implements InitTenantDataService {
     public void initAll(String tenantId) {
         // 租户的示例数据
         // FIXME 是否需要？
-        y9OrganizationService.create(tenantId, "组织", Boolean.FALSE);
-        Y9Job y9Job = y9JobService.create("普通职位", "001");
-        y9PersonService.create(tenantId, "业务用户", "user", "13511111111", y9Job.getId());
-        this.initOptionClass(tenantId);
+        this.initJob();
+        this.initOrgUnit();
 
         // 租户必要的数据
-        this.initManagers(tenantId);
+        this.initOptionClass();
+        this.initManagers();
+    }
+
+    private void initOrgUnit() {
+        boolean organizationNotExists = y9OrganizationService.list(false).isEmpty();
+        if (organizationNotExists) {
+            Y9Organization y9Organization = y9OrganizationService.create("组织", Boolean.FALSE);
+            y9PersonService.create(y9Organization.getId(), "业务用户", "user", "13511111111");
+        }
+    }
+
+    private void initJob() {
+        boolean jobNotExists = y9JobService.count() == 0;
+        if (jobNotExists) {
+            y9JobService.create("普通职位", "001");
+        }
     }
 
     @Override
     @Transactional(readOnly = false)
-    public void initManagers(String tenantId) {
+    public void initManagers() {
         // 新建租户三员及他们所在的虚拟组织
-        y9OrganizationService.create(InitDataConsts.ORGANIZATION_VIRTUAL_ID, "虚拟组织", Boolean.TRUE);
-        createSystemManager(InitDataConsts.ORGANIZATION_VIRTUAL_ID);
-        createSecurityManager(InitDataConsts.ORGANIZATION_VIRTUAL_ID);
-        createAuditManager(InitDataConsts.ORGANIZATION_VIRTUAL_ID);
+        boolean virtualOrganizationNotExists = y9OrganizationService.list(true).isEmpty();
+        if (virtualOrganizationNotExists) {
+            Y9Organization y9Organization = y9OrganizationService.create("虚拟组织", Boolean.TRUE);
+            createSystemManager(y9Organization.getId());
+            createSecurityManager(y9Organization.getId());
+            createAuditManager(y9Organization.getId());
+        }
     }
 
     @Override
     @Transactional(readOnly = false)
-    public void initOptionClass(String tenantId) {
+    public void initOptionClass() {
         if (!y9OptionClassService.hasData()) {
-            // 有数据不再进行初始化 否则可能出现之前已删除的字典数据
+            // 有数据不再进行初始化
             createOptionClass("职务", "duty");
             createOptionClass("职级", "dutyLevel");
             createOptionClass("编制类型", "officialType");

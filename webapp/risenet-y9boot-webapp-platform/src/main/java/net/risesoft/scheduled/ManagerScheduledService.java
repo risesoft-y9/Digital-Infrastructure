@@ -67,7 +67,8 @@ public class ManagerScheduledService {
                 Date checkTime = null;
                 systemName = Y9Context.getSystemName();
 
-                String url = y9Config.getCommon().getLogBaseUrl() + "/services/rest/userLoginInfo/getTopByTenantIdAndUserId";
+                String url =
+                    y9Config.getCommon().getLogBaseUrl() + "/services/rest/userLoginInfo/getTopByTenantIdAndUserId";
                 List<NameValuePair> params = new ArrayList<>();
                 params.add(new NameValuePair("personId", logPerson.getId()));
                 params.add(new NameValuePair("tenantId", logPerson.getTenantId()));
@@ -114,7 +115,7 @@ public class ManagerScheduledService {
                             }
                         }
 
-                        log.setModularName("开源内核");
+                        log.setModularName("数字底座");
                         log.setOperateName("安全保密员审查检查");
                         log.setOperateType("审查");
 
@@ -206,7 +207,7 @@ public class ManagerScheduledService {
                             }
                         }
 
-                        log.setModularName("开源内核");
+                        log.setModularName("数字底座");
                         log.setOperateName("审查密码修改");
                         log.setOperateType("审查");
 

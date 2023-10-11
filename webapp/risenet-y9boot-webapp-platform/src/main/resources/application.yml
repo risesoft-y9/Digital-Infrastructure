@@ -143,6 +143,7 @@ spring:
             max-request-size: 1000MB
 y9:
     systemName: riseplatform
+    systemCnName: '数字底座'
     app:
         platform:
             checkPermission: false

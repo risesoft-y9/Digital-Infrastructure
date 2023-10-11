@@ -60,7 +60,7 @@ public class SyncController {
             Y9Tenant tenant = Y9PlatformUtil.getTenantById(tenantId);
             if (tenant.getTenantType() == 3) {
                 Y9LoginUserHolder.setTenantId(tenantId);
-                initTenantDataService.initManagers(tenantId);
+                initTenantDataService.initManagers();
             }
         }
         return Y9Result.successMsg("初始化租户三员完成");
@@ -79,7 +79,7 @@ public class SyncController {
             Y9Tenant tenant = Y9PlatformUtil.getTenantById(tenantId);
             if (tenant.getTenantType() == 3) {
                 Y9LoginUserHolder.setTenantId(tenantId);
-                initTenantDataService.initOptionClass(tenantId);
+                initTenantDataService.initOptionClass();
             }
         }
         return Y9Result.successMsg("初始化数据字典成功");

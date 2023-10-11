@@ -15,6 +15,13 @@ import net.risesoft.entity.Y9Job;
 public interface Y9JobService {
 
     /**
+     * 计数
+     *
+     * @return long
+     */
+    long count();
+
+    /**
      * 根据id数组删除
      *
      * @param ids id数组

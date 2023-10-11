@@ -118,10 +118,9 @@ public interface Y9PersonService {
      * @param name 名字
      * @param loginName 登录名
      * @param mobile 手机号
-     * @param jobId
      * @return
      */
-    Y9Person create(String parentId, String name, String loginName, String mobile, String jobId);
+    Y9Person create(String parentId, String name, String loginName, String mobile);
 
     /**
      * 新建人员

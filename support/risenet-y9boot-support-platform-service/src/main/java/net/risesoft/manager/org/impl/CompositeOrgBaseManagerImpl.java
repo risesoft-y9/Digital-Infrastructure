@@ -176,7 +176,6 @@ public class CompositeOrgBaseManagerImpl implements CompositeOrgBaseManager {
     }
 
     @Override
-    @Transactional(readOnly = true)
     public Y9OrgBase getOrgUnit(String orgUnitId) {
         return this.findOrgUnit(orgUnitId)
             .orElseThrow(() -> Y9ExceptionUtil.notFoundException(OrgUnitErrorCodeEnum.ORG_UNIT_NOT_FOUND, orgUnitId));
@@ -250,6 +249,7 @@ public class CompositeOrgBaseManagerImpl implements CompositeOrgBaseManager {
     }
 
     @Override
+    @Transactional(readOnly = false)
     public void recursivelyUpdateProperties(Y9OrgBase parent) {
         // 部门
         List<Y9Department> deptList = findDepartmentByParentId(parent.getId());

@@ -18,15 +18,11 @@ public interface InitTenantDataService {
 
     /**
      * 初始化三员
-     *
-     * @param tenantId 租户id
      */
-    void initManagers(String tenantId);
+    void initManagers();
 
     /**
      * 初始化数据字典
-     *
-     * @param tenantId 租户id
      */
-    void initOptionClass(String tenantId);
+    void initOptionClass();
 }

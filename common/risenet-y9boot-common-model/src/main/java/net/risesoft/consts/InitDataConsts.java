@@ -23,9 +23,6 @@ public class InitDataConsts {
     /** 数据源id */
     public static final String DATASOURCE_ID = "11111111-1111-1111-1111-111111111114";
 
-    /** 虚拟组织id */
-    public static final String ORGANIZATION_VIRTUAL_ID = "11111111-1111-1111-1111-111111111115";
-
     /** 运维系统管理员id */
     public static final String OPERATION_SYSTEM_MANAGER_ID = "11111111-1111-1111-1111-111111111117";
     /** 运维安全保密员id */
