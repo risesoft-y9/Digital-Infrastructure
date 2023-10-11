@@ -106,6 +106,7 @@ spring:
             file: docker-compose.yaml
 y9:
     systemName: riseplatform
+    systemCnName: '数字底座'
     app:
         log:
             kafkaEnabled: true

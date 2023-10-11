@@ -127,7 +127,7 @@ public class RiseLogAdvice implements MethodInterceptor {
                         }
                     }
 
-                    log.setModularName("开源内核");
+                    log.setModularName("数字底座");
                     log.setOperateName(method.getName());
                     log.setOperateType("查看");
                     if (riseLog != null) {

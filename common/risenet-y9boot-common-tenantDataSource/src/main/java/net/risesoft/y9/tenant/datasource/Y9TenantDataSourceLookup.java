@@ -189,7 +189,7 @@ public class Y9TenantDataSourceLookup implements DataSourceLookup {
         List<Map<String, Object>> systems =
             publicJdbcTemplate.queryForList("SELECT ID FROM Y9_COMMON_SYSTEM WHERE NAME=?", this.systemName);
 
-        // 2.1 系统存在(已在开源内核的应用系统管理添加系统),重新设置租户的连接池
+        // 2.1 系统存在(已在数字底座的应用系统管理添加系统),重新设置租户的连接池
         if (systems.size() > 0) {
             Map<String, Object> systemMap = systems.get(0);
             String systemId = (String)systemMap.get("ID");
@@ -237,7 +237,7 @@ public class Y9TenantDataSourceLookup implements DataSourceLookup {
                 createDefaultTenantDataSource(publicJdbcTemplate);
             }
         } else {
-            // 2.2 系统不存在(未在开源内核的应用系统管理添加系统),设置默认租户的连接池
+            // 2.2 系统不存在(未在数字底座的应用系统管理添加系统),设置默认租户的连接池
             createDefaultTenantDataSource(publicJdbcTemplate);
         }
 

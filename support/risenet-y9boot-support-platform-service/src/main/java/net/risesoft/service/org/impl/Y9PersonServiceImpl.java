@@ -503,7 +503,7 @@ public class Y9PersonServiceImpl implements Y9PersonService {
 
     @Override
     @Transactional(readOnly = false)
-    public Y9Person create(String parentId, String name, String loginName, String mobile, String jobId) {
+    public Y9Person create(String parentId, String name, String loginName, String mobile) {
         Optional<Y9Person> y9PersonOptional = y9PersonRepository.findByLoginNameAndOriginalTrue(loginName);
         Y9Person y9Person = y9PersonOptional.orElse(new Y9Person());
         y9Person.setParentId(parentId);

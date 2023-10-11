@@ -65,6 +65,11 @@ public class Y9JobServiceImpl implements Y9JobService {
     }
 
     @Override
+    public long count() {
+        return y9JobRepository.count();
+    }
+
+    @Override
     @Transactional(readOnly = false)
     public void delete(List<String> ids) {
         for (String id : ids) {

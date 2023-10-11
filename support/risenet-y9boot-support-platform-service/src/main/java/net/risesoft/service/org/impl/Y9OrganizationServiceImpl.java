@@ -72,10 +72,8 @@ public class Y9OrganizationServiceImpl implements Y9OrganizationService {
 
     @Override
     @Transactional(readOnly = false)
-    public Y9Organization create(String id, String organizationName, Boolean virtual) {
-        Optional<Y9Organization> y9OrganizationOptional = this.findById(id);
-        Y9Organization y9Organization = y9OrganizationOptional.orElse(new Y9Organization());
-        y9Organization.setId(id);
+    public Y9Organization create(String organizationName, Boolean virtual) {
+        Y9Organization y9Organization = new Y9Organization();
         y9Organization.setName(organizationName);
         y9Organization.setVirtual(virtual);
         return this.saveOrUpdate(y9Organization);
@@ -178,13 +176,14 @@ public class Y9OrganizationServiceImpl implements Y9OrganizationService {
             if (y9OrganizationOptional.isPresent()) {
                 Y9Organization oldOrg = y9OrganizationOptional.get();
 
+                boolean renamed = Y9OrgUtil.isRenamed(org, oldOrg);
                 Y9BeanUtil.copyProperties(org, oldOrg);
                 oldOrg.setDn(OrgLevelConsts.getOrgLevel(OrgTypeEnum.ORGANIZATION) + org.getName());
                 oldOrg.setGuidPath(org.getId());
                 oldOrg.setTenantId(Y9LoginUserHolder.getTenantId());
                 oldOrg = y9OrganizationManager.save(oldOrg);
 
-                if (Y9OrgUtil.isRenamed(org, oldOrg)) {
+                if (renamed) {
                     // 是否需要递归DN
                     compositeOrgBaseManager.recursivelyUpdateProperties(oldOrg);
                 }

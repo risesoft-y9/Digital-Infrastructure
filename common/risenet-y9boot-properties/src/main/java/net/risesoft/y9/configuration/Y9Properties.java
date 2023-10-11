@@ -27,6 +27,9 @@ public class Y9Properties {
     /** 系统中文名称 */
     private String systemCnName;
 
+    /** 上下文路径 */
+    private String contextPath = "/";
+
     /**
      * 通用配置
      */
