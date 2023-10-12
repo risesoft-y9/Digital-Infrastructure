@@ -7,8 +7,8 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
+import org.springframework.context.event.EventListener;
 import org.springframework.stereotype.Component;
-import org.springframework.transaction.event.TransactionalEventListener;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -48,7 +48,7 @@ public class UpdatePositionNameListener {
     private final Y9PersonsToPositionsService y9PersonsToPositionsService;
     private final CompositeOrgBaseService compositeOrgBaseService;
 
-    @TransactionalEventListener
+    @EventListener
     public void onY9PositionUpdated(Y9EntityUpdatedEvent<Y9Position> event) {
         Y9Position updatedY9Position = event.getUpdatedEntity();
 
@@ -59,7 +59,7 @@ public class UpdatePositionNameListener {
         }
     }
 
-    @TransactionalEventListener
+    @EventListener
     public void onY9JobUpdated(Y9EntityUpdatedEvent<Y9Job> event) {
         Y9Job y9Job = event.getUpdatedEntity();
 
@@ -70,18 +70,18 @@ public class UpdatePositionNameListener {
         }
     }
 
-    @TransactionalEventListener
+    @EventListener
     public void onY9PersonsToPositionsCreated(Y9EntityCreatedEvent<Y9PersonsToPositions> event) {
         Y9PersonsToPositions y9PersonsToPositions = event.getEntity();
 
         this.updatePositionName(y9PersonsToPositions.getPositionId());
 
         if (LOGGER.isDebugEnabled()) {
-            LOGGER.debug("新建人员和岗位的映射触发的重新计算权限缓存执行完成");
+            LOGGER.debug("新建人员和岗位的映射触发的更新岗位名称执行完成");
         }
     }
 
-    @TransactionalEventListener
+    @EventListener
     public void onY9PersonsToPositionsDeleted(Y9EntityDeletedEvent<Y9PersonsToPositions> event) {
         Y9PersonsToPositions y9PersonsToPositions = event.getEntity();
 
