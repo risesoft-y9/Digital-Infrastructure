@@ -62,7 +62,7 @@ public class Y9AppIconServiceImpl implements Y9AppIconService {
     @Override
     public Y9AppIcon getById(String id) {
         return appIconRepository.findById(id)
-            .orElseThrow(() -> Y9ExceptionUtil.notFoundException(ResourceErrorCodeEnum.APP_ICON_NOT_FOUND, id));
+                .orElseThrow(() -> Y9ExceptionUtil.notFoundException(ResourceErrorCodeEnum.APP_ICON_NOT_FOUND, id));
     }
 
     @Override
@@ -113,12 +113,14 @@ public class Y9AppIconServiceImpl implements Y9AppIconService {
         // 文件类型
         String imgType = FilenameUtils.getExtension(imgName);
         Optional<Y9AppIcon> y9AppIconOptional = appIconRepository.findByName(imgName);
+        Y9AppIcon appIcon = null;
         if (y9AppIconOptional.isEmpty()) {
-            Y9AppIcon appIcon = new Y9AppIcon();
+            appIcon = new Y9AppIcon();
             appIcon.setId(Y9IdGenerator.genId(IdType.SNOWFLAKE));
             appIcon.setName(imgName);
+        } else {
+            appIcon = y9AppIconOptional.get();
         }
-        Y9AppIcon appIcon = y9AppIconOptional.get();
         appIcon.setRemark(remark);
         appIcon.setType(imgType);
         String fullPath = Y9FileStore.buildFullPath("riseplatform", "public", "appIcon");
