@@ -7,9 +7,9 @@ spring:
         nacos:
             config:
                 enabled: true
-                namespace: test
+                namespace: is
                 group: DEFAULT_GROUP
-                server-addr: https://dev.youshengyun.com:443
+                server-addr: https://vue.youshengyun.com:443
                 username: nacos
                 password: Risesoft@2022
     config:
