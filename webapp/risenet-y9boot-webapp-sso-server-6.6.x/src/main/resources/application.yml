@@ -106,6 +106,7 @@ cas:
             cacheSize: 10000
             initialCapacity: 1000
         core:
+            # 建议仅用于测试（集群部署时需考虑 service.json 的同步，使用 jpa-service-registry 即可）
             initFromJson: true
         json:
             location: classpath:/services
