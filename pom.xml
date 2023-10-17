@@ -1,5 +1,5 @@
-<project xmlns="http://maven.apache.org/POM/4.0.0"
-         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+<project xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xmlns="http://maven.apache.org/POM/4.0.0"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
 
     <modelVersion>4.0.0</modelVersion>
@@ -46,16 +46,18 @@
         <module>support/risenet-y9boot-support-log-elasticSearch</module>
         <module>support/risenet-y9boot-support-history</module>
 
-        <module>webapp/risenet-y9boot-webapp-sso-server-7.0.x</module>
+        <!--<module>webapp/risenet-y9boot-webapp-sso-server-7.0.x</module>-->
         <module>webapp/risenet-y9boot-webapp-platform</module>
         <module>webapp/risenet-y9boot-webapp-log</module>
     </modules>
 
     <repositories>
-		<repository>
+        <repository>
             <id>spring-snapshots</id>
             <url>https://repo.spring.io/snapshot</url>
-            <snapshots><enabled>true</enabled></snapshots>
+            <snapshots>
+                <enabled>true</enabled>
+            </snapshots>
         </repository>
         <repository>
             <id>spring-milestones</id>
@@ -88,7 +90,7 @@
     </repositories>
 
     <pluginRepositories>
-		<pluginRepository>
+        <pluginRepository>
             <id>spring-snapshots</id>
             <url>https://repo.spring.io/snapshot</url>
         </pluginRepository>
