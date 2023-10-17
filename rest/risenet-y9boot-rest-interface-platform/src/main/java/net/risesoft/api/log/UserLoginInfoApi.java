@@ -27,7 +27,7 @@ public interface UserLoginInfoApi {
      *
      * @param tenantId 租户id
      * @param personId 人员id
-     * @return
+     * @return LoginInfo 登录信息
      */
     @GetMapping("/getTopByTenantIdAndUserId")
     LoginInfo getTopByTenantIdAndUserId(@RequestParam("tenantId") @NotBlank String tenantId, @RequestParam("personId") @NotBlank String personId);
