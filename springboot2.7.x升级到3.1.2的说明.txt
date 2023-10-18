@@ -52,7 +52,7 @@
   
   2.3、javax.validation. 全部替换为： jakarta.validation.
   
-  2.4、javax.servlet. 全部替换为： jakarta.servlet. 
+  2.4、javax.servlet. 全部替换为： jakarta.servlet.
 
   2.5、javax.annotation.PostConstruct 全部替换为： jakarta.annotation.PostConstruct
    
