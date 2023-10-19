@@ -14,6 +14,7 @@ import net.risesoft.y9.configuration.feature.idgenerator.Y9IdGeneratorProperties
 import net.risesoft.y9.configuration.feature.jpa.Y9JpaProperties;
 import net.risesoft.y9.configuration.feature.jwt.Y9JwtProperties;
 import net.risesoft.y9.configuration.feature.license.Y9LicenseProperties;
+import net.risesoft.y9.configuration.feature.liquibase.Y9LiquibaseProperties;
 import net.risesoft.y9.configuration.feature.listener.Y9ListenerProperties;
 import net.risesoft.y9.configuration.feature.log.Y9LogProperties;
 import net.risesoft.y9.configuration.feature.mongo.Y9MongoProperties;
@@ -137,6 +138,12 @@ public class Y9FeatureProperties {
      */
     @NestedConfigurationProperty
     private Y9LicenseProperties license = new Y9LicenseProperties();
+
+    /**
+     * liquibase
+     */
+    @NestedConfigurationProperty
+    private Y9LiquibaseProperties liquibase = new Y9LiquibaseProperties();
 
     /**
      * 安全配置

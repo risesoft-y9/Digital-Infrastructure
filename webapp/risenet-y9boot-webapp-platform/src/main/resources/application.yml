@@ -165,6 +165,9 @@ y9:
             packagesToScanRepositoryPublic: net.risesoft.y9public.repository
             packagesToScanEntityTenant: net.risesoft.entity
             packagesToScanRepositoryTenant: net.risesoft.repository
+        liquibase:
+            tenant-enabled: false
+            public-enabled: false
         listener:
             kafka:
                 enabled: false
