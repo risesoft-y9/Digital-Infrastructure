@@ -1,0 +1,1005 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+                      http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.9.xsd"
+        objectQuotingStrategy="QUOTE_ONLY_RESERVED_WORDS">
+    <changeSet id="1697701085071-1" author="shidaobang">
+        <preConditions onFail="MARK_RAN">
+            <not>
+                <tableExists tableName="Y9_ORGBASE_DELETED"/>
+            </not>
+        </preConditions>
+        <createTable remarks="删除的组织表" tableName="Y9_ORGBASE_DELETED">
+            <column name="ID" remarks="主键" type="VARCHAR(38)">
+                <constraints nullable="false" primaryKey="true"/>
+            </column>
+            <column name="CREATE_TIME" remarks="创建时间" type="datetime"/>
+            <column name="UPDATE_TIME" remarks="更新时间" type="datetime"/>
+            <column name="DN" remarks="名称组成的父子关系，之间以逗号分割" type="VARCHAR(2000)"/>
+            <column name="JSON_CONTENT" remarks="内容" type="LONGTEXT"/>
+            <column name="OPERATOR" remarks="操作者" type="VARCHAR(30)"/>
+            <column name="ORG_ID" remarks="组织id" type="VARCHAR(38)"/>
+            <column name="ORG_TYPE" remarks="组织类型" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="PARENT_ID" remarks="父节点的Id" type="VARCHAR(38)"/>
+        </createTable>
+    </changeSet>
+    <changeSet id="1697701085071-2" author="shidaobang">
+        <preConditions onFail="MARK_RAN">
+            <not>
+                <tableExists tableName="Y9_ORGBASE_MOVED"/>
+            </not>
+        </preConditions>
+        <createTable remarks="移动的组织表" tableName="Y9_ORGBASE_MOVED">
+            <column name="ID" remarks="主键" type="VARCHAR(38)">
+                <constraints nullable="false" primaryKey="true"/>
+            </column>
+            <column name="CREATE_TIME" remarks="创建时间" type="datetime"/>
+            <column name="UPDATE_TIME" remarks="更新时间" type="datetime"/>
+            <column defaultValueNumeric="0" name="FINISHED" remarks="工作交接是否完成" type="INT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="OPERATOR" remarks="操作者" type="VARCHAR(30)"/>
+            <column name="ORG_ID" remarks="组织id" type="VARCHAR(38)"/>
+            <column name="ORG_TYPE" remarks="组织类型" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="PARENT_ID_FROM" remarks="原来的父节点Id" type="VARCHAR(38)"/>
+            <column name="PARENT_ID_TO" remarks="目标父节点Id" type="VARCHAR(38)"/>
+        </createTable>
+    </changeSet>
+    <changeSet id="1697701085071-3" author="shidaobang">
+        <preConditions onFail="MARK_RAN">
+            <not>
+                <tableExists tableName="Y9_ORG_AUTHORIZATION"/>
+            </not>
+        </preConditions>
+        <createTable remarks="权限配置表" tableName="Y9_ORG_AUTHORIZATION">
+            <column name="ID" remarks="主键" type="VARCHAR(38)">
+                <constraints nullable="false" primaryKey="true"/>
+            </column>
+            <column name="CREATE_TIME" remarks="创建时间" type="datetime"/>
+            <column name="UPDATE_TIME" remarks="更新时间" type="datetime"/>
+            <column name="AUTHORITY" remarks="权限类型" type="INT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="AUTHORIZER" remarks="授权人" type="VARCHAR(30)"/>
+            <column name="PRINCIPAL_ID" remarks="授权主体的唯一标识" type="VARCHAR(38)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="PRINCIPAL_NAME" remarks="授权主体的名称。冗余字段，纯显示用" type="VARCHAR(255)"/>
+            <column defaultValueNumeric="0" name="PRINCIPAL_TYPE"
+                    remarks="授权主体类型:0=角色；1=岗位；2=人员,3=组，4=部门，5=组织" type="INT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="RESOURCE_ID" remarks="资源唯一标识符" type="VARCHAR(38)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="RESOURCE_NAME" remarks="资源名称。冗余字段，纯显示用" type="VARCHAR(255)"/>
+            <column name="RESOURCE_TYPE" remarks="资源类型。冗余字段，纯显示用" type="INT"/>
+            <column name="TENANT_ID" remarks="租户id" type="VARCHAR(38)"/>
+        </createTable>
+    </changeSet>
+    <changeSet id="1697701085071-4" author="shidaobang">
+        <preConditions onFail="MARK_RAN">
+            <not>
+                <tableExists tableName="Y9_ORG_CUSTOM_GROUP"/>
+            </not>
+        </preConditions>
+        <createTable remarks="自定义群组" tableName="Y9_ORG_CUSTOM_GROUP">
+            <column name="ID" remarks="主键" type="VARCHAR(38)">
+                <constraints nullable="false" primaryKey="true"/>
+            </column>
+            <column name="CREATE_TIME" remarks="创建时间" type="datetime"/>
+            <column name="UPDATE_TIME" remarks="更新时间" type="datetime"/>
+            <column name="CUSTOM_ID" remarks="自定义id" type="VARCHAR(255)"/>
+            <column name="GROUP_NAME" remarks="群组名称" type="VARCHAR(50)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="USER_ID" remarks="用户id" type="VARCHAR(38)"/>
+            <column name="USER_NAME" remarks="用户名称" type="VARCHAR(255)"/>
+            <column name="SHARE_ID" remarks="分享人Id" type="VARCHAR(38)"/>
+            <column name="SHARE_NAME" remarks="分享人" type="VARCHAR(255)"/>
+            <column name="TAB_INDEX" remarks="排序字段" type="INT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="TENANT_ID" remarks="租户id" type="VARCHAR(38)"/>
+        </createTable>
+    </changeSet>
+    <changeSet id="1697701085071-5" author="shidaobang">
+        <preConditions onFail="MARK_RAN">
+            <not>
+                <tableExists tableName="Y9_ORG_CUSTOM_GROUP_MEMBER"/>
+            </not>
+        </preConditions>
+        <createTable remarks="自定义群组成员表" tableName="Y9_ORG_CUSTOM_GROUP_MEMBER">
+            <column name="ID" remarks="主键" type="VARCHAR(38)">
+                <constraints nullable="false" primaryKey="true"/>
+            </column>
+            <column name="CREATE_TIME" remarks="创建时间" type="datetime"/>
+            <column name="UPDATE_TIME" remarks="更新时间" type="datetime"/>
+            <column name="GROUP_ID" remarks="所在群组id" type="VARCHAR(38)"/>
+            <column name="MEMBER_ID" remarks="成员id" type="VARCHAR(38)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="MEMBER_NAME" remarks="成员名称" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="MEMBER_TYPE" remarks="成员类型" type="VARCHAR(255)"/>
+            <column name="PARENT_ID" remarks="所在组织架构父节点id" type="VARCHAR(38)"/>
+            <column name="SEX" remarks="性别" type="INT"/>
+            <column name="TAB_INDEX" remarks="排序" type="INT">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+    <changeSet id="1697701085071-6" author="shidaobang">
+        <preConditions onFail="MARK_RAN">
+            <not>
+                <tableExists tableName="Y9_ORG_DEPARTMENT"/>
+            </not>
+        </preConditions>
+        <createTable remarks="部门实体表" tableName="Y9_ORG_DEPARTMENT">
+            <column name="ID" remarks="UUID字段" type="VARCHAR(38)">
+                <constraints nullable="false" primaryKey="true"/>
+            </column>
+            <column name="CREATE_TIME" remarks="创建时间" type="datetime"/>
+            <column name="UPDATE_TIME" remarks="更新时间" type="datetime"/>
+            <column name="CUSTOM_ID" remarks="自定义id" type="VARCHAR(255)"/>
+            <column name="DESCRIPTION" remarks="描述" type="VARCHAR(255)"/>
+            <column defaultValueNumeric="0" name="DISABLED" remarks="是否可用" type="INT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="DN" remarks="由name组成的父子关系列表(倒序)，之间用逗号分隔" type="VARCHAR(2000)"/>
+            <column name="GUID_PATH" remarks="由ID组成的父子关系列表(正序)，之间用逗号分隔" type="VARCHAR(400)">
+                <constraints unique="true"/>
+            </column>
+            <column name="NAME" remarks="名称" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="ORG_TYPE" remarks="组织类型" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="PROPERTIES" remarks="扩展属性" type="VARCHAR(500)"/>
+            <column name="TAB_INDEX" remarks="排序号" type="INT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="TENANT_ID" remarks="租户id" type="VARCHAR(38)"/>
+            <column name="VERSION" remarks="版本号,乐观锁" type="INT"/>
+            <column name="ALIAS_NAME" remarks="部门简称" type="VARCHAR(255)"/>
+            <column defaultValueNumeric="0" name="BUREAU" remarks="是否委办局" type="INT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="DEPT_ADDRESS" remarks="部门地址" type="VARCHAR(255)"/>
+            <column name="DEPT_FAX" remarks="传真号码" type="VARCHAR(255)"/>
+            <column name="DEPT_GIVEN_NAME" remarks="特定名称" type="VARCHAR(255)"/>
+            <column name="DEPT_OFFICE" remarks="办公室" type="VARCHAR(255)"/>
+            <column name="DEPT_PHONE" remarks="电话号码" type="VARCHAR(255)"/>
+            <column name="DEPT_TYPE" remarks="部门类型" type="VARCHAR(255)"/>
+            <column name="DEPT_TYPE_NAME" remarks="部门类型名称" type="VARCHAR(255)"/>
+            <column name="DIVISION_SCODE" remarks="区域代码" type="VARCHAR(255)"/>
+            <column name="EN_NAME" remarks="英文名称" type="VARCHAR(255)"/>
+            <column name="ESTABLISH_DATE" remarks="成立时间" type="date"/>
+            <column name="GRADE_CODE" remarks="等级编码" type="VARCHAR(255)"/>
+            <column name="GRADE_CODE_NAME" remarks="等级名称" type="VARCHAR(255)"/>
+            <column name="PARENT_ID" remarks="父节点id" type="VARCHAR(38)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="ZIP_CODE" remarks="邮政编码" type="VARCHAR(255)"/>
+        </createTable>
+    </changeSet>
+    <changeSet id="1697701085071-7" author="shidaobang">
+        <preConditions onFail="MARK_RAN">
+            <not>
+                <tableExists tableName="Y9_ORG_DEPARTMENT_PROP"/>
+            </not>
+        </preConditions>
+        <createTable remarks="部门信息配置表" tableName="Y9_ORG_DEPARTMENT_PROP">
+            <column name="ID" remarks="唯一标示" type="VARCHAR(38)">
+                <constraints nullable="false" primaryKey="true"/>
+            </column>
+            <column name="CREATE_TIME" remarks="创建时间" type="datetime"/>
+            <column name="UPDATE_TIME" remarks="更新时间" type="datetime"/>
+            <column name="CATEGORY" remarks="类别" type="INT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="DEPT_ID" remarks="部门唯一标示" type="VARCHAR(50)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="ORG_BASE_ID" remarks="组织唯一标示" type="VARCHAR(50)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="TAB_INDEX" remarks="排序号" type="INT">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+    <changeSet id="1697701085071-8" author="shidaobang">
+        <preConditions onFail="MARK_RAN">
+            <not>
+                <tableExists tableName="Y9_ORG_GROUP"/>
+            </not>
+        </preConditions>
+        <createTable remarks="用户组表" tableName="Y9_ORG_GROUP">
+            <column name="ID" remarks="UUID字段" type="VARCHAR(38)">
+                <constraints nullable="false" primaryKey="true"/>
+            </column>
+            <column name="CREATE_TIME" remarks="创建时间" type="datetime"/>
+            <column name="UPDATE_TIME" remarks="更新时间" type="datetime"/>
+            <column name="CUSTOM_ID" remarks="自定义id" type="VARCHAR(255)"/>
+            <column name="DESCRIPTION" remarks="描述" type="VARCHAR(255)"/>
+            <column defaultValueNumeric="0" name="DISABLED" remarks="是否可用" type="INT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="DN" remarks="由name组成的父子关系列表(倒序)，之间用逗号分隔" type="VARCHAR(2000)"/>
+            <column name="GUID_PATH" remarks="由ID组成的父子关系列表(正序)，之间用逗号分隔" type="VARCHAR(400)">
+                <constraints unique="true"/>
+            </column>
+            <column name="NAME" remarks="名称" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="ORG_TYPE" remarks="组织类型" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="PROPERTIES" remarks="扩展属性" type="VARCHAR(500)"/>
+            <column name="TAB_INDEX" remarks="排序号" type="INT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="TENANT_ID" remarks="租户id" type="VARCHAR(38)"/>
+            <column name="VERSION" remarks="版本号,乐观锁" type="INT"/>
+            <column name="PARENT_ID" remarks="父节点id" type="VARCHAR(38)">
+                <constraints nullable="false"/>
+            </column>
+            <column defaultValue="person" name="TYPE" remarks="类型：position、person" type="VARCHAR(10)">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+    <changeSet id="1697701085071-9" author="shidaobang">
+        <preConditions onFail="MARK_RAN">
+            <not>
+                <tableExists tableName="Y9_ORG_JOB"/>
+            </not>
+        </preConditions>
+        <createTable remarks="职位表" tableName="Y9_ORG_JOB">
+            <column name="ID" remarks="主键id" type="VARCHAR(38)">
+                <constraints nullable="false" primaryKey="true"/>
+            </column>
+            <column name="CREATE_TIME" remarks="创建时间" type="datetime"/>
+            <column name="UPDATE_TIME" remarks="更新时间" type="datetime"/>
+            <column name="CODE" remarks="数据代码" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="NAME" remarks="名称" type="VARCHAR(255)">
+                <constraints nullable="false" unique="true"/>
+            </column>
+            <column name="TAB_INDEX" remarks="排序号" type="INT">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+    <changeSet id="1697701085071-10" author="shidaobang">
+        <preConditions onFail="MARK_RAN">
+            <not>
+                <tableExists tableName="Y9_ORG_MANAGER"/>
+            </not>
+        </preConditions>
+        <createTable remarks="三员表" tableName="Y9_ORG_MANAGER">
+            <column name="ID" remarks="UUID字段" type="VARCHAR(38)">
+                <constraints nullable="false" primaryKey="true"/>
+            </column>
+            <column name="CREATE_TIME" remarks="创建时间" type="datetime"/>
+            <column name="UPDATE_TIME" remarks="更新时间" type="datetime"/>
+            <column name="CUSTOM_ID" remarks="自定义id" type="VARCHAR(255)"/>
+            <column name="DESCRIPTION" remarks="描述" type="VARCHAR(255)"/>
+            <column defaultValueNumeric="0" name="DISABLED" remarks="是否可用" type="INT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="DN" remarks="由name组成的父子关系列表(倒序)，之间用逗号分隔" type="VARCHAR(2000)"/>
+            <column name="GUID_PATH" remarks="由ID组成的父子关系列表(正序)，之间用逗号分隔" type="VARCHAR(400)">
+                <constraints unique="true"/>
+            </column>
+            <column name="NAME" remarks="名称" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="ORG_TYPE" remarks="组织类型" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="PROPERTIES" remarks="扩展属性" type="VARCHAR(500)"/>
+            <column name="TAB_INDEX" remarks="排序号" type="INT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="TENANT_ID" remarks="租户id" type="VARCHAR(38)"/>
+            <column name="VERSION" remarks="版本号,乐观锁" type="INT"/>
+            <column name="AVATOR" remarks="头像" type="VARCHAR(100)"/>
+            <column name="CHECK_CYCLE" remarks="审查周期" type="INT"/>
+            <column name="CHECK_TIME" remarks="审查时间" type="VARCHAR(50)"/>
+            <column name="EMAIL" remarks="电子邮箱" type="VARCHAR(255)"/>
+            <column defaultValueNumeric="0" name="GLOBAL_MANAGER" remarks="是否全局管理员" type="INT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="LOGIN_NAME" remarks="登录名" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column defaultValueNumeric="0" name="MANAGER_LEVEL" remarks="管理员类型" type="INT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="MOBILE" remarks="手机号码" type="VARCHAR(255)"/>
+            <column name="MODIFY_PWD_TIME" remarks="修改密码时间" type="VARCHAR(50)"/>
+            <column name="ORDERED_PATH" remarks="排序序列号" type="VARCHAR(500)"/>
+            <column name="PARENT_ID" remarks="父节点id" type="VARCHAR(38)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="PASSWORD" remarks="登录密码" type="VARCHAR(255)"/>
+            <column name="PWD_CYCLE" remarks="修改密码周期（天）" type="INT"/>
+            <column defaultValueNumeric="1" name="SEX" remarks="性别" type="INT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="USER_HOST_IP" remarks="允许访问的客户端IP" type="VARCHAR(150)"/>
+        </createTable>
+    </changeSet>
+    <changeSet id="1697701085071-11" author="shidaobang">
+        <preConditions onFail="MARK_RAN">
+            <not>
+                <tableExists tableName="Y9_ORG_OPTIONCLASS"/>
+            </not>
+        </preConditions>
+        <createTable remarks="字典类型表" tableName="Y9_ORG_OPTIONCLASS">
+            <column name="TYPE" remarks="主键，类型名称" type="VARCHAR(255)">
+                <constraints nullable="false" primaryKey="true"/>
+            </column>
+            <column name="CREATE_TIME" remarks="创建时间" type="datetime"/>
+            <column name="UPDATE_TIME" remarks="更新时间" type="datetime"/>
+            <column name="NAME" remarks="中文名称" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+    <changeSet id="1697701085071-12" author="shidaobang">
+        <preConditions onFail="MARK_RAN">
+            <not>
+                <tableExists tableName="Y9_ORG_OPTIONVALUE"/>
+            </not>
+        </preConditions>
+        <createTable remarks="字典数据表" tableName="Y9_ORG_OPTIONVALUE">
+            <column name="ID" remarks="主键id" type="VARCHAR(38)">
+                <constraints nullable="false" primaryKey="true"/>
+            </column>
+            <column name="CREATE_TIME" remarks="创建时间" type="datetime"/>
+            <column name="UPDATE_TIME" remarks="更新时间" type="datetime"/>
+            <column name="CODE" remarks="数据代码" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="NAME" remarks="主键名称" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="TAB_INDEX" remarks="排序号" type="INT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="TYPE" remarks="字典类型" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+    <changeSet id="1697701085071-13" author="shidaobang">
+        <preConditions onFail="MARK_RAN">
+            <not>
+                <tableExists tableName="Y9_ORG_ORGANIZATION"/>
+            </not>
+        </preConditions>
+        <createTable remarks="组织机构实体表" tableName="Y9_ORG_ORGANIZATION">
+            <column name="ID" remarks="UUID字段" type="VARCHAR(38)">
+                <constraints nullable="false" primaryKey="true"/>
+            </column>
+            <column name="CREATE_TIME" remarks="创建时间" type="datetime"/>
+            <column name="UPDATE_TIME" remarks="更新时间" type="datetime"/>
+            <column name="CUSTOM_ID" remarks="自定义id" type="VARCHAR(255)"/>
+            <column name="DESCRIPTION" remarks="描述" type="VARCHAR(255)"/>
+            <column defaultValueNumeric="0" name="DISABLED" remarks="是否可用" type="INT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="DN" remarks="由name组成的父子关系列表(倒序)，之间用逗号分隔" type="VARCHAR(2000)"/>
+            <column name="GUID_PATH" remarks="由ID组成的父子关系列表(正序)，之间用逗号分隔" type="VARCHAR(400)">
+                <constraints unique="true"/>
+            </column>
+            <column name="NAME" remarks="名称" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="ORG_TYPE" remarks="组织类型" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="PROPERTIES" remarks="扩展属性" type="VARCHAR(500)"/>
+            <column name="TAB_INDEX" remarks="排序号" type="INT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="TENANT_ID" remarks="租户id" type="VARCHAR(38)"/>
+            <column name="VERSION" remarks="版本号,乐观锁" type="INT"/>
+            <column name="EN_NAME" remarks="英文名称" type="VARCHAR(255)"/>
+            <column name="ORGANIZATION_CODE" remarks="组织机构代码" type="VARCHAR(255)"/>
+            <column name="ORGANIZATION_TYPE" remarks="组织机构类型" type="VARCHAR(255)"/>
+            <column defaultValueNumeric="0" name="VIRTUALIZED" remarks="类型:0=实体组织，1=虚拟组织" type="INT">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+    <changeSet id="1697701085071-14" author="shidaobang">
+        <preConditions onFail="MARK_RAN">
+            <not>
+                <tableExists tableName="Y9_ORG_ORGBASES_ROLES"/>
+            </not>
+        </preConditions>
+        <createTable remarks="组织节点与角色关联表" tableName="Y9_ORG_ORGBASES_ROLES">
+            <column autoIncrement="true" name="ID" remarks="主键" type="INT">
+                <constraints nullable="false" primaryKey="true"/>
+            </column>
+            <column name="CREATE_TIME" remarks="创建时间" type="datetime"/>
+            <column name="UPDATE_TIME" remarks="更新时间" type="datetime"/>
+            <column defaultValueNumeric="0" name="NEGATIVE" remarks="是否为负角色关联" type="INT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="ORG_ID" remarks="人员或部门组织机构等唯一标识" type="VARCHAR(38)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="ORG_ORDER" remarks="关联排序号" type="INT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="ORG_TYPE" remarks="组织类型" type="VARCHAR(255)"/>
+            <column name="ORG_PARENT_ID" remarks="父节点唯一标识" type="VARCHAR(255)"/>
+            <column name="ROLE_ID" remarks="角色id" type="VARCHAR(38)">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+    <changeSet id="1697701085071-15" author="shidaobang">
+        <preConditions onFail="MARK_RAN">
+            <not>
+                <tableExists tableName="Y9_ORG_PERMISSION_DATAFIELD"/>
+            </not>
+        </preConditions>
+        <createTable remarks="数据列权限表" tableName="Y9_ORG_PERMISSION_DATAFIELD">
+            <column name="ID" remarks="主键" type="VARCHAR(38)">
+                <constraints nullable="false" primaryKey="true"/>
+            </column>
+            <column name="CREATE_TIME" remarks="创建时间" type="datetime"/>
+            <column name="UPDATE_TIME" remarks="更新时间" type="datetime"/>
+            <column name="APP_ID" remarks="应用id" type="VARCHAR(38)"/>
+            <column name="DESCRIPTION" remarks="描述" type="VARCHAR(255)"/>
+            <column name="HIDDEN_FIELDS" remarks="不可见字段列表（之间用逗号隔开）" type="VARCHAR(1000)"/>
+            <column name="NAME" remarks="名称" type="VARCHAR(255)"/>
+            <column name="READONLY_FIELDS" remarks="只读字段列表（之间用逗号隔开）" type="VARCHAR(1000)"/>
+            <column name="TAB_INDEX" remarks="排序号" type="INT">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+    <changeSet id="1697701085071-16" author="shidaobang">
+        <preConditions onFail="MARK_RAN">
+            <not>
+                <tableExists tableName="Y9_ORG_PERMISSION_DATAROW"/>
+            </not>
+        </preConditions>
+        <createTable remarks="数据行权限表" tableName="Y9_ORG_PERMISSION_DATAROW">
+            <column name="ID" remarks="主键" type="VARCHAR(38)">
+                <constraints nullable="false" primaryKey="true"/>
+            </column>
+            <column name="CREATE_TIME" remarks="创建时间" type="datetime"/>
+            <column name="UPDATE_TIME" remarks="更新时间" type="datetime"/>
+            <column name="APP_ID" remarks="应用id" type="VARCHAR(38)"/>
+            <column name="DESCRIPTION" remarks="描述" type="VARCHAR(255)"/>
+            <column name="LIMIT_CLAUSE" remarks="数据范围" type="VARCHAR(2000)"/>
+            <column name="NAME" remarks="名称" type="VARCHAR(255)"/>
+            <column name="TAB_INDEX" remarks="排序号" type="INT">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+    <changeSet id="1697701085071-17" author="shidaobang">
+        <preConditions onFail="MARK_RAN">
+            <not>
+                <tableExists tableName="Y9_ORG_PERSON"/>
+            </not>
+        </preConditions>
+        <createTable remarks="人员表" tableName="Y9_ORG_PERSON">
+            <column name="ID" remarks="UUID字段" type="VARCHAR(38)">
+                <constraints nullable="false" primaryKey="true"/>
+            </column>
+            <column name="CREATE_TIME" remarks="创建时间" type="datetime"/>
+            <column name="UPDATE_TIME" remarks="更新时间" type="datetime"/>
+            <column name="CUSTOM_ID" remarks="自定义id" type="VARCHAR(255)"/>
+            <column name="DESCRIPTION" remarks="描述" type="VARCHAR(255)"/>
+            <column defaultValueNumeric="0" name="DISABLED" remarks="是否可用" type="INT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="DN" remarks="由name组成的父子关系列表(倒序)，之间用逗号分隔" type="VARCHAR(2000)"/>
+            <column name="GUID_PATH" remarks="由ID组成的父子关系列表(正序)，之间用逗号分隔" type="VARCHAR(400)">
+                <constraints unique="true"/>
+            </column>
+            <column name="NAME" remarks="名称" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="ORG_TYPE" remarks="组织类型" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="PROPERTIES" remarks="扩展属性" type="VARCHAR(500)"/>
+            <column name="TAB_INDEX" remarks="排序号" type="INT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="TENANT_ID" remarks="租户id" type="VARCHAR(38)"/>
+            <column name="VERSION" remarks="版本号,乐观锁" type="INT"/>
+            <column name="AVATOR" remarks="头像" type="VARCHAR(100)"/>
+            <column name="CAID" remarks="CA认证码" type="VARCHAR(255)"/>
+            <column name="EMAIL" remarks="电子邮箱" type="VARCHAR(255)"/>
+            <column name="LOGIN_NAME" remarks="登录名" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="MOBILE" remarks="手机号码" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="OFFICE_ADDRESS" remarks="办公地址" type="VARCHAR(255)"/>
+            <column name="OFFICE_FAX" remarks="办公传真" type="VARCHAR(255)"/>
+            <column name="OFFICE_PHONE" remarks="办公电话" type="VARCHAR(255)"/>
+            <column name="OFFICIAL" remarks="是否在编" type="INT"/>
+            <column name="OFFICIAL_TYPE" remarks="编制类型" type="VARCHAR(255)"/>
+            <column name="ORDERED_PATH" remarks="排序序列号" type="VARCHAR(500)"/>
+            <column defaultValueNumeric="1" name="ORIGINAL" remarks="0:添加的人员，1：新增的人员" type="INT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="ORIGINAL_ID" remarks="原始人员id" type="VARCHAR(255)"/>
+            <column name="PARENT_ID" remarks="父节点id" type="VARCHAR(38)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="PASSWORD" remarks="登录密码" type="VARCHAR(255)"/>
+            <column defaultValue="deptPerson" name="PERSON_TYPE" remarks="人员类型" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column defaultValueNumeric="1" name="SEX" remarks="性别" type="INT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="WEIXIN_ID" remarks="人员绑定微信的唯一标识" type="VARCHAR(255)"/>
+        </createTable>
+    </changeSet>
+    <changeSet id="1697701085071-18" author="shidaobang">
+        <preConditions onFail="MARK_RAN">
+            <not>
+                <tableExists tableName="Y9_ORG_PERSONS_GROUPS"/>
+            </not>
+        </preConditions>
+        <createTable remarks="人员用户组关联表" tableName="Y9_ORG_PERSONS_GROUPS">
+            <column autoIncrement="true" name="ID" remarks="主键" type="INT">
+                <constraints nullable="false" primaryKey="true"/>
+            </column>
+            <column name="CREATE_TIME" remarks="创建时间" type="datetime"/>
+            <column name="UPDATE_TIME" remarks="更新时间" type="datetime"/>
+            <column name="GROUP_ID" remarks="用户组id" type="VARCHAR(38)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="GROUP_ORDER" remarks="用户组排序号" type="INT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="PERSON_ID" remarks="人员ID" type="VARCHAR(38)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="PERSON_ORDER" remarks="人员排序号" type="INT">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+    <changeSet id="1697701085071-19" author="shidaobang">
+        <preConditions onFail="MARK_RAN">
+            <not>
+                <tableExists tableName="Y9_ORG_PERSONS_POSITIONS"/>
+            </not>
+        </preConditions>
+        <createTable remarks="人员岗位关联表" tableName="Y9_ORG_PERSONS_POSITIONS">
+            <column autoIncrement="true" name="ID" remarks="主键" type="INT">
+                <constraints nullable="false" primaryKey="true"/>
+            </column>
+            <column name="CREATE_TIME" remarks="创建时间" type="datetime"/>
+            <column name="UPDATE_TIME" remarks="更新时间" type="datetime"/>
+            <column name="PERSON_ID" remarks="人员ID" type="VARCHAR(38)">
+                <constraints nullable="false"/>
+            </column>
+            <column defaultValueNumeric="0" name="PERSON_ORDER" remarks="人员排序号" type="INT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="POSITION_ID" remarks="岗位ID" type="VARCHAR(38)">
+                <constraints nullable="false"/>
+            </column>
+            <column defaultValueNumeric="0" name="POSITION_ORDER" remarks="岗位排序号" type="INT">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+    <changeSet id="1697701085071-20" author="shidaobang">
+        <preConditions onFail="MARK_RAN">
+            <not>
+                <tableExists tableName="Y9_ORG_PERSONS_RESOURCES"/>
+            </not>
+        </preConditions>
+        <createTable remarks="人员与（资源、权限）关系表" tableName="Y9_ORG_PERSONS_RESOURCES">
+            <column autoIncrement="true" name="ID" remarks="主键id" type="INT">
+                <constraints nullable="false" primaryKey="true"/>
+            </column>
+            <column name="CREATE_TIME" remarks="创建时间" type="datetime"/>
+            <column name="UPDATE_TIME" remarks="更新时间" type="datetime"/>
+            <column name="APP_ID" remarks="应用id" type="VARCHAR(38)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="APP_NAME" remarks="应用名称" type="VARCHAR(255)"/>
+            <column name="AUTHORITY" remarks="权限类型" type="INT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="AUTHORIZATION_ID" remarks="权限配置id" type="VARCHAR(38)"/>
+            <column name="INHERIT" remarks="资源是否为继承上级节点的权限。冗余字段，纯显示用" type="INT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="PARENT_RESOURCE_ID" remarks="父资源id" type="VARCHAR(38)"/>
+            <column name="RESOURCE_CUSTOM_ID" remarks="资源自定义id" type="VARCHAR(38)"/>
+            <column name="RESOURCE_DESCRIPTION" remarks="描述" type="VARCHAR(255)"/>
+            <column name="RESOURCE_ID" remarks="资源id" type="VARCHAR(38)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="RESOURCE_NAME" remarks="资源名称" type="VARCHAR(255)"/>
+            <column name="RESOURCE_TAB_INDEX" remarks="排序" type="INT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="RESOURCE_TYPE" remarks="资源类型：0=应用，1=菜单，2=操作" type="INT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="RESOURCE_URL" remarks="资源URL" type="VARCHAR(255)"/>
+            <column name="SYSTEM_CN_NAME" remarks="系统中文名称" type="VARCHAR(255)"/>
+            <column name="SYSTEM_ID" remarks="系统id" type="VARCHAR(38)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="SYSTEM_NAME" remarks="系统英文名称" type="VARCHAR(255)"/>
+            <column name="TENANT_ID" remarks="租户id" type="VARCHAR(38)"/>
+            <column name="PERSON_ID" remarks="身份(人员)唯一标识" type="VARCHAR(38)">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+    <changeSet id="1697701085071-21" author="shidaobang">
+        <preConditions onFail="MARK_RAN">
+            <not>
+                <tableExists tableName="Y9_ORG_PERSONS_ROLES"/>
+            </not>
+        </preConditions>
+        <createTable remarks="人员与角色关系表" tableName="Y9_ORG_PERSONS_ROLES">
+            <column autoIncrement="true" name="ID" remarks="主键id" type="INT">
+                <constraints nullable="false" primaryKey="true"/>
+            </column>
+            <column name="CREATE_TIME" remarks="创建时间" type="datetime"/>
+            <column name="UPDATE_TIME" remarks="更新时间" type="datetime"/>
+            <column name="APP_ID" remarks="应用id" type="VARCHAR(38)"/>
+            <column name="APP_NAME" remarks="应用名称" type="VARCHAR(255)"/>
+            <column name="DEPARTMENT_ID" remarks="部门id" type="VARCHAR(38)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="DESCRIPTION" remarks="描述" type="VARCHAR(255)"/>
+            <column name="ROLE_CUSTOM_ID" remarks="角色自定义id" type="VARCHAR(38)"/>
+            <column name="ROLE_ID" remarks="角色id" type="VARCHAR(38)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="ROLE_NAME" remarks="角色名称" type="VARCHAR(255)"/>
+            <column name="SYSTEM_CN_NAME" remarks="系统中文名称" type="VARCHAR(255)"/>
+            <column name="SYSTEM_ID" remarks="系统id" type="VARCHAR(38)"/>
+            <column name="SYSTEM_NAME" remarks="系统英文名称" type="VARCHAR(255)"/>
+            <column name="TENANT_ID" remarks="租户id" type="VARCHAR(38)"/>
+            <column name="PERSON_ID" remarks="身份(人员)唯一标识" type="VARCHAR(38)">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+    <changeSet id="1697701085071-22" author="shidaobang">
+        <preConditions onFail="MARK_RAN">
+            <not>
+                <tableExists tableName="Y9_ORG_PERSON_EXT"/>
+            </not>
+        </preConditions>
+        <createTable remarks="人员信息扩展表" tableName="Y9_ORG_PERSON_EXT">
+            <column name="PERSON_ID" remarks="人员ID" type="VARCHAR(38)">
+                <constraints nullable="false" primaryKey="true"/>
+            </column>
+            <column name="CREATE_TIME" remarks="创建时间" type="datetime"/>
+            <column name="UPDATE_TIME" remarks="更新时间" type="datetime"/>
+            <column name="BIRTHDAY" remarks="出生年月" type="date"/>
+            <column name="CITY" remarks="居住城市" type="VARCHAR(255)"/>
+            <column name="COUNTRY" remarks="居住国家" type="VARCHAR(255)"/>
+            <column name="EDUCATION" remarks="学历" type="VARCHAR(255)"/>
+            <column name="HOME_ADDRESS" remarks="家庭地址" type="VARCHAR(255)"/>
+            <column name="HOME_PHONE" remarks="家庭电话" type="VARCHAR(255)"/>
+            <column name="ID_NUM" remarks="证件号码" type="VARCHAR(255)"/>
+            <column name="ID_TYPE" remarks="证件类型" type="VARCHAR(255)"/>
+            <column defaultValueNumeric="0" name="MARITAL_STATUS" remarks="婚姻状况" type="INT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="NAME" remarks="登录名，拥于查找" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="PHOTO" remarks="照片" type="LONGBLOB"/>
+            <column name="POLITICAL_STATUS" remarks="政治面貌" type="VARCHAR(255)"/>
+            <column name="PROFESSIONAL" remarks="专业" type="VARCHAR(255)"/>
+            <column name="PROVINCE" remarks="人员籍贯" type="VARCHAR(255)"/>
+            <column name="SIGN" remarks="签名" type="LONGBLOB"/>
+            <column name="WORK_TIME" remarks="入职时间" type="date"/>
+        </createTable>
+    </changeSet>
+    <changeSet id="1697701085071-23" author="shidaobang">
+        <preConditions onFail="MARK_RAN">
+            <not>
+                <tableExists tableName="Y9_ORG_POSITION"/>
+            </not>
+        </preConditions>
+        <createTable remarks="岗位表" tableName="Y9_ORG_POSITION">
+            <column name="ID" remarks="UUID字段" type="VARCHAR(38)">
+                <constraints nullable="false" primaryKey="true"/>
+            </column>
+            <column name="CREATE_TIME" remarks="创建时间" type="datetime"/>
+            <column name="UPDATE_TIME" remarks="更新时间" type="datetime"/>
+            <column name="CUSTOM_ID" remarks="自定义id" type="VARCHAR(255)"/>
+            <column name="DESCRIPTION" remarks="描述" type="VARCHAR(255)"/>
+            <column defaultValueNumeric="0" name="DISABLED" remarks="是否可用" type="INT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="DN" remarks="由name组成的父子关系列表(倒序)，之间用逗号分隔" type="VARCHAR(2000)"/>
+            <column name="GUID_PATH" remarks="由ID组成的父子关系列表(正序)，之间用逗号分隔" type="VARCHAR(400)">
+                <constraints unique="true"/>
+            </column>
+            <column name="NAME" remarks="名称" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="ORG_TYPE" remarks="组织类型" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="PROPERTIES" remarks="扩展属性" type="VARCHAR(500)"/>
+            <column name="TAB_INDEX" remarks="排序号" type="INT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="TENANT_ID" remarks="租户id" type="VARCHAR(38)"/>
+            <column name="VERSION" remarks="版本号,乐观锁" type="INT"/>
+            <column defaultValueNumeric="1" name="CAPACITY" remarks="岗位容量，默认容量为1，即一人一岗" type="INT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="DUTY" remarks="职务" type="VARCHAR(255)"/>
+            <column defaultValueNumeric="0" name="DUTY_LEVEL" remarks="职务级别" type="INT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="DUTY_LEVEL_NAME" remarks="职级名称" type="VARCHAR(255)"/>
+            <column name="DUTY_TYPE" remarks="职务类型" type="VARCHAR(255)"/>
+            <column name="EXCLUSIVE_IDS" remarks="互斥的岗位Id列表，之间用逗号分割" type="VARCHAR(500)"/>
+            <column defaultValueNumeric="0" name="HEAD_COUNT" remarks="岗位当前人数，小于或等于岗位容量" type="INT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="JOB_ID" remarks="职位id" type="VARCHAR(38)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="ORDERED_PATH" remarks="排序序列号" type="VARCHAR(500)"/>
+            <column name="PARENT_ID" remarks="父节点id" type="VARCHAR(38)">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+    <changeSet id="1697701085071-24" author="shidaobang">
+        <preConditions onFail="MARK_RAN">
+            <not>
+                <tableExists tableName="Y9_ORG_POSITIONS_GROUPS"/>
+            </not>
+        </preConditions>
+        <createTable remarks="岗位与岗位组关联表" tableName="Y9_ORG_POSITIONS_GROUPS">
+            <column autoIncrement="true" name="ID" remarks="主键" type="INT">
+                <constraints nullable="false" primaryKey="true"/>
+            </column>
+            <column name="CREATE_TIME" remarks="创建时间" type="datetime"/>
+            <column name="UPDATE_TIME" remarks="更新时间" type="datetime"/>
+            <column name="GROUP_ID" remarks="用户组id" type="VARCHAR(38)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="GROUP_ORDER" remarks="用户组排序号" type="INT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="POSITION_ID" remarks="岗位ID" type="VARCHAR(38)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="POSITION_ORDER" remarks="人员排序号" type="INT">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+    <changeSet id="1697701085071-25" author="shidaobang">
+        <preConditions onFail="MARK_RAN">
+            <not>
+                <tableExists tableName="Y9_ORG_POSITIONS_RESOURCES"/>
+            </not>
+        </preConditions>
+        <createTable remarks="岗位与（资源、权限）关系表" tableName="Y9_ORG_POSITIONS_RESOURCES">
+            <column autoIncrement="true" name="ID" remarks="主键id" type="INT">
+                <constraints nullable="false" primaryKey="true"/>
+            </column>
+            <column name="CREATE_TIME" remarks="创建时间" type="datetime"/>
+            <column name="UPDATE_TIME" remarks="更新时间" type="datetime"/>
+            <column name="APP_ID" remarks="应用id" type="VARCHAR(38)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="APP_NAME" remarks="应用名称" type="VARCHAR(255)"/>
+            <column name="AUTHORITY" remarks="权限类型" type="INT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="AUTHORIZATION_ID" remarks="权限配置id" type="VARCHAR(38)"/>
+            <column name="INHERIT" remarks="资源是否为继承上级节点的权限。冗余字段，纯显示用" type="INT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="PARENT_RESOURCE_ID" remarks="父资源id" type="VARCHAR(38)"/>
+            <column name="RESOURCE_CUSTOM_ID" remarks="资源自定义id" type="VARCHAR(38)"/>
+            <column name="RESOURCE_DESCRIPTION" remarks="描述" type="VARCHAR(255)"/>
+            <column name="RESOURCE_ID" remarks="资源id" type="VARCHAR(38)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="RESOURCE_NAME" remarks="资源名称" type="VARCHAR(255)"/>
+            <column name="RESOURCE_TAB_INDEX" remarks="排序" type="INT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="RESOURCE_TYPE" remarks="资源类型：0=应用，1=菜单，2=操作" type="INT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="RESOURCE_URL" remarks="资源URL" type="VARCHAR(255)"/>
+            <column name="SYSTEM_CN_NAME" remarks="系统中文名称" type="VARCHAR(255)"/>
+            <column name="SYSTEM_ID" remarks="系统id" type="VARCHAR(38)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="SYSTEM_NAME" remarks="系统英文名称" type="VARCHAR(255)"/>
+            <column name="TENANT_ID" remarks="租户id" type="VARCHAR(38)"/>
+            <column name="POSITION_ID" remarks="身份(岗位)唯一标识" type="VARCHAR(38)">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+    <changeSet id="1697701085071-26" author="shidaobang">
+        <preConditions onFail="MARK_RAN">
+            <not>
+                <tableExists tableName="Y9_ORG_POSITIONS_ROLES"/>
+            </not>
+        </preConditions>
+        <createTable remarks="岗位与角色关系表" tableName="Y9_ORG_POSITIONS_ROLES">
+            <column autoIncrement="true" name="ID" remarks="主键id" type="INT">
+                <constraints nullable="false" primaryKey="true"/>
+            </column>
+            <column name="CREATE_TIME" remarks="创建时间" type="datetime"/>
+            <column name="UPDATE_TIME" remarks="更新时间" type="datetime"/>
+            <column name="APP_ID" remarks="应用id" type="VARCHAR(38)"/>
+            <column name="APP_NAME" remarks="应用名称" type="VARCHAR(255)"/>
+            <column name="DEPARTMENT_ID" remarks="部门id" type="VARCHAR(38)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="DESCRIPTION" remarks="描述" type="VARCHAR(255)"/>
+            <column name="ROLE_CUSTOM_ID" remarks="角色自定义id" type="VARCHAR(38)"/>
+            <column name="ROLE_ID" remarks="角色id" type="VARCHAR(38)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="ROLE_NAME" remarks="角色名称" type="VARCHAR(255)"/>
+            <column name="SYSTEM_CN_NAME" remarks="系统中文名称" type="VARCHAR(255)"/>
+            <column name="SYSTEM_ID" remarks="系统id" type="VARCHAR(38)"/>
+            <column name="SYSTEM_NAME" remarks="系统英文名称" type="VARCHAR(255)"/>
+            <column name="TENANT_ID" remarks="租户id" type="VARCHAR(38)"/>
+            <column name="POSITION_ID" remarks="身份(岗位)唯一标识" type="VARCHAR(38)">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+    <changeSet id="1697701085071-27" author="shidaobang">
+        <preConditions onFail="MARK_RAN">
+            <not>
+                <uniqueConstraintExists tableName="Y9_ORG_POSITIONS_RESOURCES"
+                                        columnNames="POSITION_ID, RESOURCE_ID, AUTHORIZATION_ID, AUTHORITY"/>
+            </not>
+        </preConditions>
+        <addUniqueConstraint columnNames="POSITION_ID, RESOURCE_ID, AUTHORIZATION_ID, AUTHORITY"
+                             constraintName="UK5cps1b1fq199989ni2hcrlwmd" tableName="Y9_ORG_POSITIONS_RESOURCES"/>
+    </changeSet>
+    <changeSet id="1697701085071-28" author="shidaobang">
+        <preConditions onFail="MARK_RAN">
+            <not>
+                <uniqueConstraintExists tableName="Y9_ORG_POSITIONS_ROLES"
+                                        columnNames="POSITION_ID, ROLE_ID"/>
+            </not>
+        </preConditions>
+        <addUniqueConstraint columnNames="POSITION_ID, ROLE_ID" constraintName="UK8w7r8ookrjq6rcgiy98k56aba"
+                             tableName="Y9_ORG_POSITIONS_ROLES"/>
+    </changeSet>
+    <changeSet id="1697701085071-29" author="shidaobang">
+        <preConditions onFail="MARK_RAN">
+            <not>
+                <uniqueConstraintExists tableName="Y9_ORG_PERSONS_ROLES"
+                                        columnNames="PERSON_ID, ROLE_ID"/>
+            </not>
+        </preConditions>
+        <addUniqueConstraint columnNames="PERSON_ID, ROLE_ID" constraintName="UKa1ns3b527lyr0sn45sk036ts9"
+                             tableName="Y9_ORG_PERSONS_ROLES"/>
+    </changeSet>
+    <changeSet id="1697701085071-30" author="shidaobang">
+        <preConditions onFail="MARK_RAN">
+            <not>
+                <uniqueConstraintExists tableName="Y9_ORG_PERSONS_GROUPS"
+                                        columnNames="GROUP_ID, PERSON_ID"/>
+            </not>
+        </preConditions>
+        <addUniqueConstraint columnNames="GROUP_ID, PERSON_ID" constraintName="UKbk6jbj6n5gui7fd6e2ljak95k"
+                             tableName="Y9_ORG_PERSONS_GROUPS"/>
+    </changeSet>
+    <changeSet id="1697701085071-31" author="shidaobang">
+        <preConditions onFail="MARK_RAN">
+            <not>
+                <uniqueConstraintExists tableName="Y9_ORG_PERSONS_RESOURCES"
+                                        columnNames="PERSON_ID, RESOURCE_ID, AUTHORIZATION_ID, AUTHORITY"/>
+            </not>
+        </preConditions>
+        <addUniqueConstraint columnNames="PERSON_ID, RESOURCE_ID, AUTHORIZATION_ID, AUTHORITY"
+                             constraintName="UKn2p2pe8jbhlmtlxv8ixn8cw7d" tableName="Y9_ORG_PERSONS_RESOURCES"/>
+    </changeSet>
+    <changeSet id="1697701085071-32" author="shidaobang">
+        <preConditions onFail="MARK_RAN">
+            <not>
+                <uniqueConstraintExists tableName="Y9_ORG_AUTHORIZATION"
+                                        columnNames="PRINCIPAL_ID, RESOURCE_ID, AUTHORITY"/>
+            </not>
+        </preConditions>
+        <addUniqueConstraint columnNames="PRINCIPAL_ID, RESOURCE_ID, AUTHORITY"
+                             constraintName="UKpv5gy69bjyoflhhexyix9d8gt" tableName="Y9_ORG_AUTHORIZATION"/>
+    </changeSet>
+    <changeSet id="1697701085071-33" author="shidaobang">
+        <preConditions onFail="MARK_RAN">
+            <not>
+                <uniqueConstraintExists tableName="Y9_ORG_PERSONS_POSITIONS"
+                                        columnNames="POSITION_ID, PERSON_ID"/>
+            </not>
+        </preConditions>
+        <addUniqueConstraint columnNames="POSITION_ID, PERSON_ID" constraintName="UKrty6axgf79bgsw4vxtki54i3c"
+                             tableName="Y9_ORG_PERSONS_POSITIONS"/>
+    </changeSet>
+    <changeSet id="1697701085071-34" author="shidaobang">
+        <preConditions onFail="MARK_RAN">
+            <not>
+                <uniqueConstraintExists tableName="Y9_ORG_POSITIONS_GROUPS"
+                                        columnNames="GROUP_ID, POSITION_ID"/>
+            </not>
+        </preConditions>
+        <addUniqueConstraint columnNames="GROUP_ID, POSITION_ID" constraintName="UKtjxh3p9qk2s8we8mtrg2mxc9y"
+                             tableName="Y9_ORG_POSITIONS_GROUPS"/>
+    </changeSet>
+    <changeSet id="1697701085071-35" author="shidaobang">
+        <preConditions onFail="MARK_RAN">
+            <not>
+                <indexExists tableName="Y9_PUBLISHED_EVENT_SYNC_HIST" columnNames="LOGIN_NAME"/>
+            </not>
+        </preConditions>
+        <createIndex indexName="IDX1q0y1dxaypjqxoal65vshj214" tableName="Y9_ORG_ORGBASES_ROLES">
+            <column name="ROLE_ID"/>
+            <column name="ORG_ID"/>
+        </createIndex>
+    </changeSet>
+    <changeSet id="1697701085071-36" author="shidaobang">
+        <preConditions onFail="MARK_RAN">
+            <not>
+                <indexExists tableName="Y9_PUBLISHED_EVENT_SYNC_HIST" columnNames="LOGIN_NAME"/>
+            </not>
+        </preConditions>
+        <createIndex indexName="IDX53q7nmihwr3yfeu8ribdd6sb" tableName="Y9_ORG_AUTHORIZATION">
+            <column name="TENANT_ID"/>
+            <column name="PRINCIPAL_ID"/>
+        </createIndex>
+    </changeSet>
+    <changeSet id="1697701085071-37" author="shidaobang">
+        <preConditions onFail="MARK_RAN">
+            <not>
+                <indexExists tableName="Y9_ORG_AUTHORIZATION" columnNames="TENANT_ID, RESOURCE_ID"/>
+            </not>
+        </preConditions>
+        <createIndex indexName="IDXrgw1eknlb0a7kg5xonypd52ag" tableName="Y9_ORG_AUTHORIZATION">
+            <column name="TENANT_ID"/>
+            <column name="RESOURCE_ID"/>
+        </createIndex>
+    </changeSet>
+
+</databaseChangeLog>

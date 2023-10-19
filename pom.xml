@@ -29,6 +29,7 @@
         <module>starter/risenet-y9boot-starter-jpa-public</module>
         <module>starter/risenet-y9boot-starter-jpa-tenant</module>
         <module>starter/risenet-y9boot-starter-kafka</module>
+        <module>starter/risenet-y9boot-starter-liquibase</module>
         <module>starter/risenet-y9boot-starter-publish-kafka</module>
         <module>starter/risenet-y9boot-starter-listener-kafka</module>
         <module>starter/risenet-y9boot-starter-log</module>

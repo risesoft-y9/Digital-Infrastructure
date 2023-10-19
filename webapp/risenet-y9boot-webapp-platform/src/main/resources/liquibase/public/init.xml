@@ -1,0 +1,562 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+                      http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.9.xsd"
+        objectQuotingStrategy="QUOTE_ONLY_RESERVED_WORDS">
+    <changeSet id="1697708034037-1" author="shidaobang">
+        <preConditions onFail="MARK_RAN">
+            <not>
+                <tableExists tableName="Y9_COMMON_ACCOUNT"/>
+            </not>
+        </preConditions>
+        <createTable remarks="人员信息表" tableName="Y9_COMMON_ACCOUNT">
+            <column name="ID" remarks="主键" type="VARCHAR(38)">
+                <constraints nullable="false" primaryKey="true"/>
+            </column>
+            <column name="CREATE_TIME" remarks="创建时间" type="datetime"/>
+            <column name="UPDATE_TIME" remarks="更新时间" type="datetime"/>
+            <column name="AVATOR" remarks="头像" type="VARCHAR(255)"/>
+            <column name="CAID" remarks="ca认证号" type="VARCHAR(255)"/>
+            <column name="DN" remarks="承继关系" type="VARCHAR(2000)"/>
+            <column name="EMAIL" remarks="邮箱" type="VARCHAR(255)"/>
+            <column defaultValueNumeric="0" name="GLOBAL_MANAGER" remarks="是否全局管理员" type="INT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="GUID_PATH" remarks="由ID组成的父子关系列表，之间用逗号分隔,40*20" type="VARCHAR(800)"/>
+            <column name="ID_NUM" remarks="证件号码" type="VARCHAR(255)"/>
+            <column name="JSON_STR" remarks="jsonStr" type="LONGTEXT"/>
+            <column name="LOGIN_NAME" remarks="登录名" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column defaultValueNumeric="0" name="MANAGER_LEVEL" remarks="是否三员管理员" type="INT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="MOBILE" remarks="移动电话" type="VARCHAR(255)"/>
+            <column name="NAME" remarks="名称" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="ORDERED_PATH" remarks="排序" type="VARCHAR(500)"/>
+            <column defaultValueNumeric="1" name="ORIGINAL" remarks="原始人员" type="INT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="ORIGINAL_ID" remarks="原始人员id" type="VARCHAR(38)"/>
+            <column name="PARENT_ID" remarks="父节点id" type="VARCHAR(255)"/>
+            <column name="PASSWORD" remarks="密码" type="VARCHAR(255)"/>
+            <column name="PERSON_ID" remarks="人员id" type="VARCHAR(38)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="PERSON_TYPE" remarks="人员类型" type="VARCHAR(255)"/>
+            <column name="POSITIONS" remarks="拥有的岗位列表" type="LONGTEXT"/>
+            <column name="ROLES" remarks="拥有的角色列表" type="LONGTEXT"/>
+            <column name="SEX" remarks="性别：1为男，0为女" type="INT"/>
+            <column name="TENANT_ID" remarks="租户id" type="VARCHAR(38)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="TENANT_NAME" remarks="租户名称，冗余字段，为了显示用" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="TENANT_SHORT_NAME" remarks="租户英文名称，冗余字段，为了显示用" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="VERSION" remarks="乐观锁" type="INT"/>
+            <column name="WEIXIN_ID" remarks="用户绑定的微信id" type="VARCHAR(255)"/>
+        </createTable>
+    </changeSet>
+    <changeSet id="1697708034037-2" author="shidaobang">
+        <preConditions onFail="MARK_RAN">
+            <not>
+                <tableExists tableName="Y9_COMMON_APP_ICON"/>
+            </not>
+        </preConditions>
+        <createTable remarks="图标实体表" tableName="Y9_COMMON_APP_ICON">
+            <column name="ID" remarks="主键" type="VARCHAR(38)">
+                <constraints nullable="false" primaryKey="true"/>
+            </column>
+            <column name="CREATE_TIME" remarks="创建时间" type="datetime"/>
+            <column name="UPDATE_TIME" remarks="更新时间" type="datetime"/>
+            <column name="ICON_DATA" remarks="图标图片的base64" type="LONGTEXT"/>
+            <column name="NAME" remarks="名称" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="PATH" remarks="地址：Y9FileStore 的 id" type="VARCHAR(20)"/>
+            <column name="REMARK" remarks="备注" type="VARCHAR(200)"/>
+            <column name="ICON_TYPE" remarks="类型" type="VARCHAR(38)"/>
+        </createTable>
+    </changeSet>
+    <changeSet id="1697708034037-3" author="shidaobang">
+        <preConditions onFail="MARK_RAN">
+            <not>
+                <tableExists tableName="Y9_COMMON_APP_STORE"/>
+            </not>
+        </preConditions>
+        <createTable remarks="应用市场表" tableName="Y9_COMMON_APP_STORE">
+            <column name="ID" remarks="主键" type="VARCHAR(38)">
+                <constraints nullable="false" primaryKey="true"/>
+            </column>
+            <column name="CREATE_TIME" remarks="创建时间" type="datetime"/>
+            <column name="UPDATE_TIME" remarks="更新时间" type="datetime"/>
+            <column name="CUSTOM_ID" remarks="自定义id" type="VARCHAR(500)"/>
+            <column name="DESCRIPTION" remarks="描述" type="VARCHAR(255)"/>
+            <column defaultValueNumeric="1" name="ENABLED" remarks="启用状态:1=启用,0=禁用" type="INT">
+                <constraints nullable="false"/>
+            </column>
+            <column defaultValueNumeric="0" name="HIDDEN" remarks="是否隐藏:1=隐藏,0=显示" type="INT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="ICON_URL" remarks="图标地址" type="VARCHAR(400)"/>
+            <column defaultValueNumeric="0" name="INHERIT" remarks="是否为继承上级节点的权限:1=继承,0=不继承"
+                    type="INT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="NAME" remarks="名称" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="PARENT_ID" remarks="父节点ID" type="VARCHAR(38)"/>
+            <column defaultValueNumeric="0" name="RESOURCE_TYPE" remarks="资源类型：0=应用，1=菜单，2=操作" type="INT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="SYSTEM_ID" remarks="系统id" type="VARCHAR(38)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="TAB_INDEX" remarks="排序" type="INT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="URL" remarks="链接地址" type="VARCHAR(400)"/>
+            <column name="URL2" remarks="链接地址2" type="VARCHAR(400)"/>
+            <column name="ALIAS_NAME" remarks="资源别名" type="VARCHAR(255)"/>
+            <column defaultValueNumeric="0" name="AUTO_INIT" remarks="是否自动租用应用" type="INT">
+                <constraints nullable="false"/>
+            </column>
+            <column defaultValueNumeric="0" name="CHECKED" remarks="是否审核通过" type="INT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="ICON_DATA" remarks="图标图片的base64" type="LONGTEXT"/>
+            <column name="NUMBER_URL" remarks="获取数字的URL" type="VARCHAR(255)"/>
+            <column name="OPEN_TYPE" remarks="应用打开方式:0在桌面窗口打开；1在新浏览器窗口打开" type="INT"/>
+            <column name="RESOURCE_ADMIN_URL" remarks="资源管理的URL" type="VARCHAR(255)"/>
+            <column name="ROLE_ADMIN_URL" remarks="角色管理的URL" type="VARCHAR(255)"/>
+            <column defaultValueNumeric="0" name="SHOW_NUMBER" remarks="是否显示右上角数字，0=不显示，1=显示" type="INT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="TYPE" remarks="分类" type="INT"/>
+            <column name="VERIFY_USER_NAME" remarks="审核人" type="VARCHAR(30)"/>
+        </createTable>
+    </changeSet>
+    <changeSet id="1697708034037-4" author="shidaobang">
+        <preConditions onFail="MARK_RAN">
+            <not>
+                <tableExists tableName="Y9_COMMON_DATASOURCE"/>
+            </not>
+        </preConditions>
+        <createTable remarks="数据源基本信息表" tableName="Y9_COMMON_DATASOURCE">
+            <column name="ID" remarks="主键" type="VARCHAR(38)">
+                <constraints nullable="false" primaryKey="true"/>
+            </column>
+            <column name="CREATE_TIME" remarks="创建时间" type="datetime"/>
+            <column name="UPDATE_TIME" remarks="更新时间" type="datetime"/>
+            <column name="DRIVER" remarks="驱动" type="VARCHAR(100)"/>
+            <column name="INITIAL_SIZE" remarks="数据库初始化大小" type="INT"/>
+            <column name="JNDI_NAME" remarks="数据源名称" type="VARCHAR(100)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="MAX_ACTIVE" remarks="参数maxActive" type="INT"/>
+            <column name="MIN_IDLE" remarks="参数minIdle" type="INT"/>
+            <column name="PASSWORD" remarks="密码" type="VARCHAR(20)"/>
+            <column name="TYPE" remarks="数据源类型1=jndi; 2=druid" type="INT"/>
+            <column name="URL" remarks="路径" type="VARCHAR(300)"/>
+            <column name="USERNAME" remarks="用户名" type="VARCHAR(50)"/>
+        </createTable>
+    </changeSet>
+    <changeSet id="1697708034037-5" author="shidaobang">
+        <preConditions onFail="MARK_RAN">
+            <not>
+                <tableExists tableName="Y9_COMMON_FILE_STORE"/>
+            </not>
+        </preConditions>
+        <createTable remarks="文件仓库表" tableName="Y9_COMMON_FILE_STORE">
+            <column name="STOREID" remarks="主键" type="VARCHAR(38)">
+                <constraints nullable="false" primaryKey="true"/>
+            </column>
+            <column name="FILEENVELOPE" remarks="文件数字信封: 即AES的随机密钥，然后进行RSA加密后的结果"
+                    type="VARCHAR(200)"/>
+            <column name="FILEEXT" remarks="文件扩展名称" type="VARCHAR(50)"/>
+            <column name="FILENAME" remarks="上传的文件名称" type="VARCHAR(600)"/>
+            <column name="FILESHA" remarks="文件SHA值" type="VARCHAR(200)"/>
+            <column defaultValueNumeric="0" name="FILESIZE" remarks="文件长度" type="BIGINT"/>
+            <column name="FULLPATH" remarks="绝对路径" type="VARCHAR(300)"/>
+            <column name="PREFIX" remarks="根目录前缀" type="VARCHAR(50)"/>
+            <column name="REALFILENAME" remarks="存放的文件名称" type="VARCHAR(100)"/>
+            <column name="STORETYPE" remarks="仓库类型" type="INT"/>
+            <column name="SYSTEMNAME" remarks="系统名称" type="VARCHAR(50)"/>
+            <column name="TENANTID" remarks="租户Id" type="VARCHAR(38)"/>
+            <column name="UPLOADTIME" remarks="上传时间" type="datetime"/>
+            <column name="UPLOADER" remarks="上传人" type="VARCHAR(100)"/>
+            <column name="FILEURL" remarks="完整的文件地址" type="VARCHAR(500)"/>
+        </createTable>
+    </changeSet>
+    <changeSet id="1697708034037-6" author="shidaobang">
+        <preConditions onFail="MARK_RAN">
+            <not>
+                <tableExists tableName="Y9_COMMON_MENU"/>
+            </not>
+        </preConditions>
+        <createTable remarks="应用的菜单表" tableName="Y9_COMMON_MENU">
+            <column name="ID" remarks="主键" type="VARCHAR(38)">
+                <constraints nullable="false" primaryKey="true"/>
+            </column>
+            <column name="CREATE_TIME" remarks="创建时间" type="datetime"/>
+            <column name="UPDATE_TIME" remarks="更新时间" type="datetime"/>
+            <column name="CUSTOM_ID" remarks="自定义id" type="VARCHAR(500)"/>
+            <column name="DESCRIPTION" remarks="描述" type="VARCHAR(255)"/>
+            <column defaultValueNumeric="1" name="ENABLED" remarks="启用状态:1=启用,0=禁用" type="INT">
+                <constraints nullable="false"/>
+            </column>
+            <column defaultValueNumeric="0" name="HIDDEN" remarks="是否隐藏:1=隐藏,0=显示" type="INT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="ICON_URL" remarks="图标地址" type="VARCHAR(400)"/>
+            <column defaultValueNumeric="0" name="INHERIT" remarks="是否为继承上级节点的权限:1=继承,0=不继承"
+                    type="INT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="NAME" remarks="名称" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="PARENT_ID" remarks="父节点ID" type="VARCHAR(38)"/>
+            <column defaultValueNumeric="0" name="RESOURCE_TYPE" remarks="资源类型：0=应用，1=菜单，2=操作" type="INT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="SYSTEM_ID" remarks="系统id" type="VARCHAR(38)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="TAB_INDEX" remarks="排序" type="INT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="URL" remarks="链接地址" type="VARCHAR(400)"/>
+            <column name="URL2" remarks="链接地址2" type="VARCHAR(400)"/>
+            <column name="APP_ID" remarks="应用id" type="VARCHAR(38)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="COMPONENT" remarks="菜单部件" type="VARCHAR(50)"/>
+            <column name="META" remarks="元信息" type="VARCHAR(500)"/>
+            <column name="REDIRECT" remarks="重定向" type="VARCHAR(50)"/>
+            <column name="TARGET" remarks="打开模式" type="VARCHAR(255)"/>
+        </createTable>
+    </changeSet>
+    <changeSet id="1697708034037-7" author="shidaobang">
+        <preConditions onFail="MARK_RAN">
+            <not>
+                <tableExists tableName="Y9_COMMON_OPERATION"/>
+            </not>
+        </preConditions>
+        <createTable remarks="页面按钮操作表" tableName="Y9_COMMON_OPERATION">
+            <column name="ID" remarks="主键" type="VARCHAR(38)">
+                <constraints nullable="false" primaryKey="true"/>
+            </column>
+            <column name="CREATE_TIME" remarks="创建时间" type="datetime"/>
+            <column name="UPDATE_TIME" remarks="更新时间" type="datetime"/>
+            <column name="CUSTOM_ID" remarks="自定义id" type="VARCHAR(500)"/>
+            <column name="DESCRIPTION" remarks="描述" type="VARCHAR(255)"/>
+            <column defaultValueNumeric="1" name="ENABLED" remarks="启用状态:1=启用,0=禁用" type="INT">
+                <constraints nullable="false"/>
+            </column>
+            <column defaultValueNumeric="0" name="HIDDEN" remarks="是否隐藏:1=隐藏,0=显示" type="INT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="ICON_URL" remarks="图标地址" type="VARCHAR(400)"/>
+            <column defaultValueNumeric="0" name="INHERIT" remarks="是否为继承上级节点的权限:1=继承,0=不继承"
+                    type="INT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="NAME" remarks="名称" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="PARENT_ID" remarks="父节点ID" type="VARCHAR(38)"/>
+            <column defaultValueNumeric="0" name="RESOURCE_TYPE" remarks="资源类型：0=应用，1=菜单，2=操作" type="INT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="SYSTEM_ID" remarks="系统id" type="VARCHAR(38)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="TAB_INDEX" remarks="排序" type="INT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="URL" remarks="链接地址" type="VARCHAR(400)"/>
+            <column name="URL2" remarks="链接地址2" type="VARCHAR(400)"/>
+            <column name="APP_ID" remarks="应用id" type="VARCHAR(38)">
+                <constraints nullable="false"/>
+            </column>
+            <column defaultValueNumeric="0" name="DISPLAY_TYPE" remarks="按钮展示方式" type="INT"/>
+            <column name="EVENT_NAME" remarks="按钮事件" type="VARCHAR(50)"/>
+        </createTable>
+    </changeSet>
+    <changeSet id="1697708034037-8" author="shidaobang">
+        <preConditions onFail="MARK_RAN">
+            <not>
+                <tableExists tableName="Y9_COMMON_SYSTEM"/>
+            </not>
+        </preConditions>
+        <createTable remarks="系统信息表" tableName="Y9_COMMON_SYSTEM">
+            <column name="ID" remarks="主键" type="VARCHAR(38)">
+                <constraints nullable="false" primaryKey="true"/>
+            </column>
+            <column name="CREATE_TIME" remarks="创建时间" type="datetime"/>
+            <column name="UPDATE_TIME" remarks="更新时间" type="datetime"/>
+            <column defaultValueNumeric="0" name="AUTO_INIT" remarks="是否自动租用系统" type="INT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="CN_NAME" remarks="系统中文名称" type="VARCHAR(50)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="CONTEXT_PATH" remarks="系统程序上下文" type="VARCHAR(50)"/>
+            <column name="DESCRIPTION" remarks="描述" type="VARCHAR(255)"/>
+            <column defaultValueNumeric="1" name="ENABLED" remarks="是否启用" type="INT"/>
+            <column name="ISV_GUID" remarks="开发商GUID" type="VARCHAR(38)"/>
+            <column name="NAME" remarks="系统名称" type="VARCHAR(50)">
+                <constraints nullable="false" unique="true"/>
+            </column>
+            <column defaultValueNumeric="0" name="SINGE_DATASOURCE" remarks="是否启用独立数据源" type="INT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="TAB_INDEX" remarks="排序" type="INT">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+    <changeSet id="1697708034037-9" author="shidaobang">
+        <preConditions onFail="MARK_RAN">
+            <not>
+                <tableExists tableName="Y9_COMMON_TENANT"/>
+            </not>
+        </preConditions>
+        <createTable remarks="租户信息表" tableName="Y9_COMMON_TENANT">
+            <column name="ID" remarks="主键id" type="VARCHAR(38)">
+                <constraints nullable="false" primaryKey="true"/>
+            </column>
+            <column name="CREATE_TIME" remarks="创建时间" type="datetime"/>
+            <column name="UPDATE_TIME" remarks="更新时间" type="datetime"/>
+            <column name="DEFAULT_DATA_SOURCE_ID" remarks="默认的租户数据源id，对应Y9_COMMON_DATASOURCE表的id字段"
+                    type="VARCHAR(38)"/>
+            <column name="DESCRIPTION" remarks="描述" type="VARCHAR(255)"/>
+            <column defaultValueNumeric="1" name="ENABLED" remarks="是否启用" type="INT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="FOOTER" remarks="门户页尾显示信息" type="VARCHAR(150)"/>
+            <column name="GUID_PATH" remarks="由ID组成的父子关系列表，之间用逗号分隔" type="VARCHAR(800)"/>
+            <column name="LOGO_ICON" remarks="租户logo" type="VARCHAR(255)"/>
+            <column name="NAME" remarks="租户中文名称" type="VARCHAR(200)">
+                <constraints nullable="false" unique="true"/>
+            </column>
+            <column name="NAME_PATH" remarks="由shortName组成的父子关系列表，之间用逗号分隔" type="VARCHAR(800)"/>
+            <column name="PARENT_ID" remarks="父节点id" type="VARCHAR(38)"/>
+            <column name="SERIAL" remarks="租户顺序号，自增字段" type="INT"/>
+            <column name="SHORT_NAME" remarks="租户英文名称" type="VARCHAR(200)">
+                <constraints nullable="false" unique="true"/>
+            </column>
+            <column name="TAB_INDEX" remarks="排序号" type="INT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="TENANT_TYPE" remarks="租户类型： 0=超级用户，1=运维团队，2=开发商，3=普通租户" type="INT"/>
+        </createTable>
+    </changeSet>
+    <changeSet id="1697708034037-10" author="shidaobang">
+        <preConditions onFail="MARK_RAN">
+            <not>
+                <tableExists tableName="Y9_COMMON_TENANT_APP"/>
+            </not>
+        </preConditions>
+        <createTable remarks="租户应用信息表" tableName="Y9_COMMON_TENANT_APP">
+            <column name="ID" remarks="主键id" type="VARCHAR(38)">
+                <constraints nullable="false" primaryKey="true"/>
+            </column>
+            <column name="CREATE_TIME" remarks="创建时间" type="datetime"/>
+            <column name="UPDATE_TIME" remarks="更新时间" type="datetime"/>
+            <column name="APP_ID" remarks="应用id" type="VARCHAR(38)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="APP_NAME" remarks="应用名称" type="VARCHAR(200)"/>
+            <column name="APPLY_ID" remarks="申请人Id" type="VARCHAR(38)"/>
+            <column name="APPLY_NAME" remarks="申请人" type="VARCHAR(200)"/>
+            <column name="APPLY_REASON" remarks="申请理由" type="VARCHAR(355)"/>
+            <column name="DELETED_NAME" remarks="删除人" type="VARCHAR(255)"/>
+            <column name="DELETED_TIME" remarks="删除时间" type="datetime"/>
+            <column name="REASON" remarks="未通过缘由" type="VARCHAR(255)"/>
+            <column name="SYSTEM_ID" remarks="系统Id" type="VARCHAR(38)">
+                <constraints nullable="false"/>
+            </column>
+            <column defaultValueNumeric="0" name="TENANCY" remarks="租户是否租用状态。用于判断有效或失效的状态"
+                    type="INT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="TENANT_ID" remarks="租户id" type="VARCHAR(38)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="TENANT_NAME" remarks="租户名称" type="VARCHAR(200)"/>
+            <column name="VERIFY_STATUS" remarks="审核状态，0：未审核；1：通过" type="BIT(1)"/>
+            <column name="VERIFY_TIME" remarks="审核时间" type="VARCHAR(50)"/>
+            <column name="VERIFY_USER_NAME" remarks="审核人" type="VARCHAR(200)"/>
+        </createTable>
+    </changeSet>
+    <changeSet id="1697708034037-11" author="shidaobang">
+        <preConditions onFail="MARK_RAN">
+            <not>
+                <tableExists tableName="Y9_COMMON_TENANT_SYSTEM"/>
+            </not>
+        </preConditions>
+        <createTable remarks="租户系统表" tableName="Y9_COMMON_TENANT_SYSTEM">
+            <column name="ID" remarks="主键id" type="VARCHAR(38)">
+                <constraints nullable="false" primaryKey="true"/>
+            </column>
+            <column name="CREATE_TIME" remarks="创建时间" type="datetime"/>
+            <column name="UPDATE_TIME" remarks="更新时间" type="datetime"/>
+            <column defaultValueNumeric="0" name="INITIALIZED" remarks="租户数据已经初始化" type="INT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="SYSTEM_ID" remarks="系统id" type="VARCHAR(38)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="TENANT_DATA_SOURCE" remarks="数据源id" type="VARCHAR(38)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="TENANT_ID" remarks="租户id" type="VARCHAR(38)">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+    <changeSet id="1697708034037-12" author="shidaobang">
+        <preConditions onFail="MARK_RAN">
+            <not>
+                <tableExists tableName="Y9_ORG_ROLE"/>
+            </not>
+        </preConditions>
+        <createTable remarks="角色表" tableName="Y9_ORG_ROLE">
+            <column name="ID" remarks="主键" type="VARCHAR(38)">
+                <constraints nullable="false" primaryKey="true"/>
+            </column>
+            <column name="CREATE_TIME" remarks="创建时间" type="datetime"/>
+            <column name="UPDATE_TIME" remarks="更新时间" type="datetime"/>
+            <column name="APP_CN_NAME" remarks="应用中文名称，冗余字段，仅用于显示" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="APP_ID" remarks="应用id" type="VARCHAR(38)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="CUSTOM_ID" remarks="customId" type="VARCHAR(255)"/>
+            <column name="DESCRIPTION" remarks="描述" type="VARCHAR(255)"/>
+            <column name="DN" remarks="名称组成的父子关系列表，之间用逗号分隔" type="VARCHAR(2000)"/>
+            <column defaultValueNumeric="0" name="DYNAMIC" remarks="动态角色" type="INT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="GUID_PATH" remarks="由ID组成的父子关系列表，之间用逗号分隔" type="VARCHAR(1200)"/>
+            <column name="NAME" remarks="角色名称" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="PARENT_ID" remarks="父节点ID" type="VARCHAR(38)"/>
+            <column name="PROPERTIES" remarks="扩展属性" type="VARCHAR(500)"/>
+            <column name="SYSTEM_CN_NAME" remarks="系统中文名称，冗余字段，仅用于显示" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="SYSTEM_NAME" remarks="系统名称，冗余字段，仅用于显示" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="TAB_INDEX" remarks="序列号" type="INT">
+                <constraints nullable="false"/>
+            </column>
+            <column defaultValueNumeric="0" name="TENANT_CUSTOM" remarks="租户自定义" type="INT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="TENANT_ID" remarks="tenantCustom=true时的租户id" type="VARCHAR(255)"/>
+            <column defaultValue="role" name="TYPE" remarks="类型：role、folder" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+    <changeSet id="1697708034037-13" author="shidaobang">
+        <preConditions onFail="MARK_RAN">
+            <not>
+                <tableExists tableName="Y9_PUBLISHED_EVENT"/>
+            </not>
+        </preConditions>
+        <createTable remarks="事件信息表" tableName="Y9_PUBLISHED_EVENT">
+            <column name="ID" remarks="主键" type="VARCHAR(38)">
+                <constraints nullable="false" primaryKey="true"/>
+            </column>
+            <column name="CREATE_TIME" remarks="创建时间" type="datetime"/>
+            <column name="UPDATE_TIME" remarks="更新时间" type="datetime"/>
+            <column name="CLIENT_IP" remarks="操作者的客户端ip" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="ENTITY_JSON" remarks="事件处理对象实体类信息" type="LONGTEXT"/>
+            <column name="EVENT_DESCRIPTION" remarks="具体事件描述" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="EVENT_NAME" remarks="事件类型名称" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="EVENT_TYPE" remarks="事件类型" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="OBJ_ID" remarks="事件处理对象id" type="VARCHAR(255)"/>
+            <column name="OPERATOR" remarks="事件操作者" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="TENANT_ID" remarks="租户id" type="VARCHAR(38)"/>
+        </createTable>
+    </changeSet>
+    <changeSet id="1697708034037-14" author="shidaobang">
+        <preConditions onFail="MARK_RAN">
+            <not>
+                <tableExists tableName="Y9_PUBLISHED_EVENT_LISTENER"/>
+            </not>
+        </preConditions>
+        <createTable remarks="事件监听信息表" tableName="Y9_PUBLISHED_EVENT_LISTENER">
+            <column name="ID" remarks="主键" type="VARCHAR(38)">
+                <constraints nullable="false" primaryKey="true"/>
+            </column>
+            <column name="CREATE_TIME" remarks="创建时间" type="datetime"/>
+            <column name="UPDATE_TIME" remarks="更新时间" type="datetime"/>
+            <column name="CLIENT_IP" remarks="事件消费者ip" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="EVENT_TYPE" remarks="事件类型" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="SYSTEM_NAME" remarks="应用名称" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="TENANT_ID" remarks="租户id" type="VARCHAR(38)"/>
+        </createTable>
+    </changeSet>
+    <changeSet id="1697708034037-15" author="shidaobang">
+        <preConditions onFail="MARK_RAN">
+            <not>
+                <tableExists tableName="Y9_PUBLISHED_EVENT_SYNC_HIST"/>
+            </not>
+        </preConditions>
+        <createTable remarks="事件监听api获取记录表" tableName="Y9_PUBLISHED_EVENT_SYNC_HIST">
+            <column name="ID" remarks="主键" type="VARCHAR(38)">
+                <constraints nullable="false" primaryKey="true"/>
+            </column>
+            <column name="CREATE_TIME" remarks="创建时间" type="datetime"/>
+            <column name="UPDATE_TIME" remarks="更新时间" type="datetime"/>
+            <column name="APP_NAME" remarks="应用名称事件操作者" type="VARCHAR(255)"/>
+            <column name="LAST_SYNC_TIME" remarks="上一次同步时间" type="datetime"/>
+            <column name="TENANT_ID" remarks="租户id" type="VARCHAR(38)">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+    <changeSet id="1697708034037-16" author="shidaobang">
+        <preConditions onFail="MARK_RAN">
+            <not>
+                <indexExists tableName="Y9_PUBLISHED_EVENT_SYNC_HIST" columnNames="LOGIN_NAME"/>
+            </not>
+        </preConditions>
+        <createIndex indexName="IDX7d3kas0oqvn2o3sv6m7wjecr2" tableName="Y9_COMMON_ACCOUNT">
+            <column name="LOGIN_NAME"/>
+        </createIndex>
+    </changeSet>
+
+</databaseChangeLog>

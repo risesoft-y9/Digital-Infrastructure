@@ -2,6 +2,7 @@ package net.risesoft.y9public.service.tenant.impl;
 
 import java.util.Objects;
 import java.util.Optional;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
 
 import javax.sql.DataSource;
@@ -16,7 +17,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.alibaba.druid.pool.DruidDataSource;
-import com.google.common.collect.Maps;
 
 import net.risesoft.enums.DataSourceTypeEnum;
 import net.risesoft.exception.DataSourceErrorCodeEnum;
@@ -44,8 +44,8 @@ public class Y9DataSourceServiceImpl implements Y9DataSourceService {
 
     private final DataSourceLookup dataSourceLookup = new JndiDataSourceLookup();
 
-    private final ConcurrentMap<String, DataSource> dataSourceMap = Maps.newConcurrentMap();
-    private final ConcurrentMap<String, Y9DataSource> y9DataSourceMap = Maps.newConcurrentMap();
+    private final ConcurrentMap<String, DataSource> dataSourceMap = new ConcurrentHashMap<>();
+    private final ConcurrentMap<String, Y9DataSource> y9DataSourceMap = new ConcurrentHashMap<>();
 
     public Y9DataSourceServiceImpl(Y9DataSourceRepository datasourceRepository,
         Y9DataSourceManager y9DataSourceManager) {
