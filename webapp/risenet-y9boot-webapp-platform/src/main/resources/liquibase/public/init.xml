@@ -551,7 +551,7 @@
     <changeSet id="1697708034037-16" author="shidaobang">
         <preConditions onFail="MARK_RAN">
             <not>
-                <indexExists tableName="Y9_PUBLISHED_EVENT_SYNC_HIST" columnNames="LOGIN_NAME"/>
+                <indexExists tableName="Y9_COMMON_ACCOUNT" columnNames="LOGIN_NAME"/>
             </not>
         </preConditions>
         <createIndex indexName="IDX7d3kas0oqvn2o3sv6m7wjecr2" tableName="Y9_COMMON_ACCOUNT">
