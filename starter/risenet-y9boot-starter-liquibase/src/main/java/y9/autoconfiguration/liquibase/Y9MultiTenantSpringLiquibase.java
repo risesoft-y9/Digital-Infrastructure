@@ -5,6 +5,7 @@ import java.util.Map;
 import javax.sql.DataSource;
 
 import org.springframework.beans.factory.InitializingBean;
+import org.springframework.core.io.ResourceLoader;
 
 import com.alibaba.druid.pool.DruidDataSource;
 
@@ -26,6 +27,7 @@ public class Y9MultiTenantSpringLiquibase implements InitializingBean {
 
     private final Y9TenantDataSourceLookup y9TenantDataSourceLookup;
     private final Y9LiquibaseProperties properties;
+    private final ResourceLoader resourceLoader;
 
     @Override
     public void afterPropertiesSet() throws Exception {
@@ -49,6 +51,7 @@ public class Y9MultiTenantSpringLiquibase implements InitializingBean {
 
     private SpringLiquibase getSpringLiquibase(DataSource dataSource) {
         SpringLiquibase liquibase = new SpringLiquibase();
+        liquibase.setResourceLoader(this.resourceLoader);
         liquibase.setDataSource(dataSource);
         liquibase.setChangeLog(this.properties.getTenantChangeLog());
         liquibase.setClearCheckSums(this.properties.isClearChecksums());
