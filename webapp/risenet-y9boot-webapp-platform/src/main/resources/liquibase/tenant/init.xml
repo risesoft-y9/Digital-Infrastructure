@@ -971,7 +971,7 @@
     <changeSet id="1697701085071-35" author="shidaobang">
         <preConditions onFail="MARK_RAN">
             <not>
-                <indexExists tableName="Y9_PUBLISHED_EVENT_SYNC_HIST" columnNames="LOGIN_NAME"/>
+                <indexExists tableName="Y9_ORG_ORGBASES_ROLES" columnNames="ROLE_ID, ORG_ID"/>
             </not>
         </preConditions>
         <createIndex indexName="IDX1q0y1dxaypjqxoal65vshj214" tableName="Y9_ORG_ORGBASES_ROLES">
@@ -982,7 +982,7 @@
     <changeSet id="1697701085071-36" author="shidaobang">
         <preConditions onFail="MARK_RAN">
             <not>
-                <indexExists tableName="Y9_PUBLISHED_EVENT_SYNC_HIST" columnNames="LOGIN_NAME"/>
+                <indexExists tableName="Y9_ORG_AUTHORIZATION" columnNames="TENANT_ID, PRINCIPAL_ID"/>
             </not>
         </preConditions>
         <createIndex indexName="IDX53q7nmihwr3yfeu8ribdd6sb" tableName="Y9_ORG_AUTHORIZATION">

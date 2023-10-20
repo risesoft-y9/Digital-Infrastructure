@@ -6,6 +6,6 @@
                       http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.9.xsd">
 
     <include file="liquibase/tenant/init.xml"/>
-    <includeAll path="liquibase/tenant/release"/>
+    <includeAll path="liquibase/tenant/release/"/>
 
 </databaseChangeLog>
