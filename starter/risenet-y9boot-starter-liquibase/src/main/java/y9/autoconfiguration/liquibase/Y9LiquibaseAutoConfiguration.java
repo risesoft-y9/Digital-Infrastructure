@@ -9,6 +9,7 @@ import org.springframework.boot.autoconfigure.liquibase.LiquibaseAutoConfigurati
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.core.io.ResourceLoader;
 
 import net.risesoft.y9.configuration.Y9Properties;
 import net.risesoft.y9.configuration.feature.liquibase.Y9LiquibaseProperties;
@@ -33,8 +34,9 @@ public class Y9LiquibaseAutoConfiguration {
     @Bean
     @ConditionalOnProperty(name = "y9.feature.liquibase.tenant-enabled", havingValue = "true")
     public Y9MultiTenantSpringLiquibase y9MultiTenantSpringLiquibase(Y9TenantDataSourceLookup y9TenantDataSourceLookup,
-        Y9Properties properties) {
-        return new Y9MultiTenantSpringLiquibase(y9TenantDataSourceLookup, properties.getFeature().getLiquibase());
+        Y9Properties properties, ResourceLoader resourceLoader) {
+        return new Y9MultiTenantSpringLiquibase(y9TenantDataSourceLookup, properties.getFeature().getLiquibase(),
+            resourceLoader);
     }
 
     @Bean
