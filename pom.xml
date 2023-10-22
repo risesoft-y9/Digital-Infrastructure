@@ -108,8 +108,8 @@
         <maven.build.timestamp.format>yyyy-MM-dd_HH_mm</maven.build.timestamp.format>
         <maven.javadoc.failOnError>false</maven.javadoc.failOnError>
 
-        <spring-boot.version>3.1.3</spring-boot.version>
-        <spring-cloud.version>2022.0.3</spring-cloud.version>
+        <spring-boot.version>3.1.4</spring-boot.version>
+        <spring-cloud.version>2022.0.4</spring-cloud.version>
 
         <aspectj.version>1.9.20.1</aspectj.version>
         <guava.version>32.1.2-jre</guava.version>
@@ -125,8 +125,8 @@
 
         <javers.version>7.3.1</javers.version>
         <org-dom4j.version>2.1.4</org-dom4j.version>
-        <oshi.version>6.4.5</oshi.version>
-        <lombok.version>1.18.28</lombok.version>
+        <oshi.version>6.4.6</oshi.version>
+        <lombok.version>1.18.30</lombok.version>
     </properties>
 
     <dependencyManagement>
@@ -153,18 +153,6 @@
                 <version>${fastjson.version}</version>
             </dependency>
             
-            <!--<dependency>
-                <groupId>com.alibaba</groupId>
-                <artifactId>druid</artifactId>
-                <version>${druid.version}</version>
-            </dependency>
-
-            <dependency>
-                <groupId>com.alibaba.y9</groupId>
-                <artifactId>druid-spring-boot-3-starter</artifactId>
-                <version>${druid-starter.version}</version>
-            </dependency>-->
-
             <dependency>
                 <groupId>com.github.oshi</groupId>
                 <artifactId>oshi-core-java11</artifactId>
