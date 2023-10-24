@@ -51,6 +51,6 @@ public interface SystemApi {
      * @return
      */
     @PostMapping("/registrySystem")
-    Y9Result<System> registrySystem(String name, String cnName, String contextPath, @RequestParam("isvGuid") String isvGuid);
+    Y9Result<System> registrySystem(@RequestParam("name") String name, @RequestParam("cnName") String cnName, @RequestParam("contextPath") String contextPath, @RequestParam("isvGuid") String isvGuid);
 
 }
