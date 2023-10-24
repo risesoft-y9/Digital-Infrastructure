@@ -266,12 +266,11 @@ public class Y9OrgTreeExcelDataHandlerImpl implements Y9OrgTreeDataHandler {
             fullPath = pf.getFullPath() + "," + pf.getName();
         }
         String[] paths = fullPath.split(",");
-        Y9OrgBase orgbase = compositeOrgBaseService.getOrgUnit(orgId);
-        String dn = orgbase.getDn();
-        String parentId = orgbase.getId();
-        for (int i = 0, lenth = paths.length; i < lenth; i++) {
-            if (i == lenth - 1) {
-                dn = OrgLevelConsts.CN + paths[i] + "," + dn;
+        Y9OrgBase y9OrgBase = compositeOrgBaseService.getOrgUnit(orgId);
+        String dn = y9OrgBase.getDn();
+        String parentId = y9OrgBase.getId();
+        for (int i = 0, length = paths.length; i < length; i++) {
+            if (i == length - 1) {
                 String personName = pf.getLoginName().replaceAll("\\s*", "");
                 Optional<Y9Person> y9PersonOptional = y9PersonService.findByLoginName(personName);
                 if (y9PersonOptional.isEmpty()) {
@@ -290,13 +289,14 @@ public class Y9OrgTreeExcelDataHandlerImpl implements Y9OrgTreeDataHandler {
                                 retMap.put("mobileNames", pf.getLoginName().replaceAll("\\s*", ""));
                                 retMap.put("mobiles", new BigDecimal(pf.getMobile()).toString());
                             } else {
-                                Y9Person orgperson = new Y9Person();
-                                orgperson.setName(paths[i].replaceAll("\\s*", ""));
-                                orgperson.setEmail(pf.getEmail());
-                                orgperson.setMobile(new BigDecimal(personMobile).toString().replaceAll("\\s*", ""));
-                                orgperson.setLoginName(pf.getLoginName().replaceAll("\\s*", ""));
-                                orgperson.setSex("男".equals(pf.getSex()) ? 1 : 0);
-                                y9PersonService.saveOrUpdate(orgperson, null);
+                                Y9Person y9Person = new Y9Person();
+                                y9Person.setName(paths[i].replaceAll("\\s*", ""));
+                                y9Person.setEmail(pf.getEmail());
+                                y9Person.setMobile(new BigDecimal(personMobile).toString().replaceAll("\\s*", ""));
+                                y9Person.setLoginName(pf.getLoginName().replaceAll("\\s*", ""));
+                                y9Person.setSex("男".equals(pf.getSex()) ? 1 : 0);
+                                y9Person.setParentId(parentId);
+                                y9PersonService.saveOrUpdate(y9Person, null);
                             }
                         } else {
                             // 人员号码错误
