@@ -4,9 +4,11 @@ import jakarta.validation.constraints.NotBlank;
 
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import net.risesoft.model.System;
+import net.risesoft.pojo.Y9Result;
 
 /**
  * 系统管理组件
@@ -38,5 +40,17 @@ public interface SystemApi {
      */
     @GetMapping("/getByName")
     System getByName(@RequestParam("name") @NotBlank String name);
+
+    /**
+     * 注册系统
+     *
+     * @param name        系统英文名称
+     * @param cnName      系统名称
+     * @param contextPath 系统上下文
+     * @param isvGuid     租户id
+     * @return
+     */
+    @PostMapping("/registrySystem")
+    Y9Result<System> registrySystem(String name, String cnName, String contextPath, @RequestParam("isvGuid") String isvGuid);
 
 }
