@@ -61,7 +61,7 @@
             <id>spring-milestones</id>
             <url>https://repo.spring.io/milestone</url>
         </repository>
-        
+
         <repository>
             <id>aliyun-repo</id>
             <url>https://maven.aliyun.com/repository/public</url>
@@ -86,7 +86,7 @@
             </snapshots>
         </repository>
     </repositories>
-    
+
     <pluginRepositories>
 		<pluginRepository>
             <id>spring-snapshots</id>
@@ -172,7 +172,7 @@
                 <artifactId>fastjson</artifactId>
                 <version>${fastjson.version}</version>
             </dependency>
-            
+
             <dependency>
                 <groupId>com.github.oshi</groupId>
                 <artifactId>oshi-core-java11</artifactId>
@@ -523,7 +523,7 @@
                     </executions>
                 </plugin>
 
-                <!--This plugin's configuration is used to store Eclipse m2e settings 
+                <!--This plugin's configuration is used to store Eclipse m2e settings
                     only. It has no influence on the Maven build itself. -->
                 <plugin>
                     <groupId>org.eclipse.m2e</groupId>
@@ -559,9 +559,9 @@
 
                 <!-- https://github.com/smart-doc-group/smart-doc -->
                 <plugin>
-                    <groupId>com.github.shalousun</groupId>
+                    <groupId>com.ly.smart-doc</groupId>
                     <artifactId>smart-doc-maven-plugin</artifactId>
-                    <version>2.7.2</version>
+                    <version>3.0.0</version>
                     <configuration>
                         <configFile>./src/main/resources/smart-doc.json</configFile>
                         <excludes>

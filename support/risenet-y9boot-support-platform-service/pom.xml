@@ -139,6 +139,8 @@
 
             <!--<plugin>
                 <groupId>com.github.shalousun</groupId>
+            <plugin>
+                <groupId>com.ly.smart-doc</groupId>
                 <artifactId>smart-doc-maven-plugin</artifactId>
                 <executions>
                     <execution>
@@ -167,10 +169,10 @@
                                 <pluginExecution>
                                     <pluginExecutionFilter>
                                         <groupId>
-                                            com.github.shalousun
+                                            com.ly.smart-doc
                                         </groupId>
                                         <artifactId>
-                                            risenet-smart-doc-maven-plugin
+                                            smart-doc-maven-plugin
                                         </artifactId>
                                         <versionRange>
                                             [2.4.3,)
