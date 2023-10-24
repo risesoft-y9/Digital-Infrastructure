@@ -27,4 +27,5 @@ public interface Y9PersonsToPositionsManager {
     Integer getMaxPositionOrderByPersonId(String personId);
 
     Y9PersonsToPositions save(String personId, String positionId);
+
 }

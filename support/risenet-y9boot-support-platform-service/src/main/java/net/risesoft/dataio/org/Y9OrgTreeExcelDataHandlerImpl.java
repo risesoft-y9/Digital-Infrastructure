@@ -9,6 +9,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 import org.apache.commons.lang3.StringUtils;
 import org.jxls.reader.ReaderBuilder;
@@ -23,6 +24,7 @@ import net.risesoft.consts.OrgLevelConsts;
 import net.risesoft.dataio.JxlsUtil;
 import net.risesoft.entity.Y9Department;
 import net.risesoft.entity.Y9Group;
+import net.risesoft.entity.Y9Job;
 import net.risesoft.entity.Y9OrgBase;
 import net.risesoft.entity.Y9Organization;
 import net.risesoft.entity.Y9Person;
@@ -37,6 +39,7 @@ import net.risesoft.pojo.Y9Result;
 import net.risesoft.service.org.CompositeOrgBaseService;
 import net.risesoft.service.org.Y9DepartmentService;
 import net.risesoft.service.org.Y9GroupService;
+import net.risesoft.service.org.Y9JobService;
 import net.risesoft.service.org.Y9OrganizationService;
 import net.risesoft.service.org.Y9PersonService;
 import net.risesoft.service.org.Y9PositionService;
@@ -55,6 +58,7 @@ public class Y9OrgTreeExcelDataHandlerImpl implements Y9OrgTreeDataHandler {
     private final Y9OrganizationService y9OrganizationService;
     private final Y9PositionService y9PositionService;
     private final Y9GroupService y9GroupService;
+    private final Y9JobService y9JobService;
 
     private void executeDepartment(String parentId, List<ObjectSheet> departmentList) {
         List<Y9Department> departments = y9DepartmentService.listByParentId(parentId);
@@ -289,6 +293,7 @@ public class Y9OrgTreeExcelDataHandlerImpl implements Y9OrgTreeDataHandler {
                                 retMap.put("mobileNames", pf.getLoginName().replaceAll("\\s*", ""));
                                 retMap.put("mobiles", new BigDecimal(pf.getMobile()).toString());
                             } else {
+
                                 Y9Person y9Person = new Y9Person();
                                 y9Person.setName(paths[i].replaceAll("\\s*", ""));
                                 y9Person.setEmail(pf.getEmail());
@@ -296,7 +301,18 @@ public class Y9OrgTreeExcelDataHandlerImpl implements Y9OrgTreeDataHandler {
                                 y9Person.setLoginName(pf.getLoginName().replaceAll("\\s*", ""));
                                 y9Person.setSex("男".equals(pf.getSex()) ? 1 : 0);
                                 y9Person.setParentId(parentId);
-                                y9PersonService.saveOrUpdate(y9Person, null);
+
+                                String jobs = pf.getJobs();
+                                if (StringUtils.isNotBlank(jobs)) {
+                                    String[] jobArray = jobs.split(",");
+                                    List<String> y9JobIdList = new ArrayList<>();
+                                    for (String job : jobArray) {
+                                        y9JobIdList.add(y9JobService.create(job, job).getId());
+                                    }
+                                    y9PersonService.saveOrUpdate(y9Person, null, null, y9JobIdList);
+                                } else {
+                                    y9PersonService.saveOrUpdate(y9Person, null);
+                                }
                             }
                         } else {
                             // 人员号码错误
@@ -398,6 +414,8 @@ public class Y9OrgTreeExcelDataHandlerImpl implements Y9OrgTreeDataHandler {
             personInformation.setLoginName(person.getLoginName());
             personInformation.setMobile(person.getMobile());
             personInformation.setSex(person.getSex() == 0 ? "女" : "男");
+            List<Y9Job> y9JobList = y9JobService.findByPersonId(person.getId());
+            personInformation.setJobs(y9JobList.stream().map(Y9Job::getName).collect(Collectors.joining(",")));
             personList.add(personInformation);
         }
         map.put("personList", personList);

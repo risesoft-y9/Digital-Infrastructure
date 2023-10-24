@@ -21,5 +21,6 @@ public class PersonInformation implements Serializable {
     private String mobile;
     private String name;
     private String sex;
+    private String jobs;
 
 }
