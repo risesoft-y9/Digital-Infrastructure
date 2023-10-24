@@ -10,6 +10,7 @@
                 <mapping row="1" col="3">person.sex</mapping>
                 <mapping row="1" col="4">person.mobile</mapping>
                 <mapping row="1" col="5">person.email</mapping>
+                <mapping row="1" col="6">person.jobs</mapping>
             </section>
             <loopbreakcondition>
                 <rowcheck offset="0">

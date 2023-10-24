@@ -3,6 +3,7 @@ package net.risesoft.service.org.impl;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.data.domain.Page;
@@ -15,12 +16,16 @@ import org.springframework.transaction.annotation.Transactional;
 import lombok.RequiredArgsConstructor;
 
 import net.risesoft.entity.Y9Job;
+import net.risesoft.entity.Y9Position;
+import net.risesoft.entity.relation.Y9PersonsToPositions;
 import net.risesoft.exception.OrgUnitErrorCodeEnum;
 import net.risesoft.id.Y9IdGenerator;
 import net.risesoft.manager.org.Y9JobManager;
+import net.risesoft.manager.org.Y9PositionManager;
 import net.risesoft.model.Job;
 import net.risesoft.repository.Y9JobRepository;
 import net.risesoft.repository.Y9PositionRepository;
+import net.risesoft.repository.relation.Y9PersonsToPositionsRepository;
 import net.risesoft.service.org.Y9JobService;
 import net.risesoft.util.Y9PublishServiceUtil;
 import net.risesoft.y9.Y9Context;
@@ -44,8 +49,10 @@ public class Y9JobServiceImpl implements Y9JobService {
 
     private final Y9JobRepository y9JobRepository;
     private final Y9PositionRepository y9PositionRepository;
+    private final Y9PersonsToPositionsRepository y9PersonsToPositionsRepository;
 
     private final Y9JobManager y9JobManager;
+    private final Y9PositionManager y9PositionManager;
 
     private void checkIfRelatedPositionExists(String id) {
         Y9Assert.lessThanOrEqualTo(y9PositionRepository.countByJobId(id), 0,
@@ -89,6 +96,20 @@ public class Y9JobServiceImpl implements Y9JobService {
     @Override
     public Optional<Y9Job> findById(String id) {
         return y9JobManager.findById(id);
+    }
+
+    @Override
+    public List<Y9Job> findByPersonId(String personId) {
+        List<Y9PersonsToPositions> y9PersonsToPositionsList =
+            y9PersonsToPositionsRepository.findByPersonIdOrderByPositionOrderAsc(personId);
+        List<String> positionIdList =
+            y9PersonsToPositionsList.stream().map(Y9PersonsToPositions::getPositionId).collect(Collectors.toList());
+        List<Y9Job> y9JobList = new ArrayList<>();
+        for (String positionId : positionIdList) {
+            Y9Position y9Position = y9PositionManager.getById(positionId);
+            y9JobList.add(this.getById(y9Position.getJobId()));
+        }
+        return y9JobList;
     }
 
     @Override
@@ -186,7 +207,10 @@ public class Y9JobServiceImpl implements Y9JobService {
     @Transactional(readOnly = false)
     public Y9Job create(String name, String code) {
         Optional<Y9Job> y9JobOptional = y9JobRepository.findByName(name);
-        Y9Job y9Job = y9JobOptional.orElse(new Y9Job());
+        if (y9JobOptional.isPresent()) {
+            return y9JobOptional.get();
+        }
+        Y9Job y9Job = new Y9Job();
         y9Job.setName(name);
         y9Job.setCode(code);
         return this.saveOrUpdate(y9Job);

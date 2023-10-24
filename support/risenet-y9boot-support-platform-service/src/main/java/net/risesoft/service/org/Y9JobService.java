@@ -44,6 +44,14 @@ public interface Y9JobService {
     Optional<Y9Job> findById(String id);
 
     /**
+     * 根据人员id查找其拥有的职位
+     *
+     * @param personId 人员ID
+     * @return {@link List}<{@link Y9Job}>
+     */
+    List<Y9Job> findByPersonId(String personId);
+
+    /**
      * 根据id获取职位
      *
      * @param id id
