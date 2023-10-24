@@ -2,7 +2,6 @@ package org.apereo.cas.authentication;
 
 import jakarta.servlet.http.HttpServletRequest;
 
-import java.security.GeneralSecurityException;
 import java.util.List;
 
 import javax.security.auth.login.FailedLoginException;
@@ -39,7 +38,7 @@ public class RiseAuthenticationHandler extends AbstractAuthenticationHandler {
 
     @Override
     public AuthenticationHandlerExecutionResult authenticate(Credential credential, Service service)
-        throws GeneralSecurityException, PreventedException {
+        throws Throwable {
         if (y9UserService == null) {
             y9UserService = Y9Context.getBean(Y9UserService.class);
             y9LoginUserService = Y9Context.getBean(Y9LoginUserService.class);

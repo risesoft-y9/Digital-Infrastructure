@@ -99,7 +99,7 @@ public class RisePersonDirectoryPrincipalResolver implements PrincipalResolver {
 
     @Override
     public Principal resolve(Credential credential, Optional<Principal> principal,
-        Optional<AuthenticationHandler> handler, Optional<Service> service) {
+        Optional<AuthenticationHandler> handler, Optional<Service> service) throws Throwable {
         RememberMeUsernamePasswordCredential c = (RememberMeUsernamePasswordCredential)credential;
         String tenantShortName = c.getTenantShortName();
         String deptId = c.getDeptId();

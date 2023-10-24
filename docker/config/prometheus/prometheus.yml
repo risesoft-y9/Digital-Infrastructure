@@ -27,22 +27,40 @@ scrape_configs:
 
     static_configs:
       - targets: ["localhost:9090"]
-  # - job_name: "consul_sd_app"
-  #   consul_sd_configs:
-  #     - refresh_interval: 1m
-  #       server: localhost:8500
-  #       services: ['myapp']
   - job_name: "mysqld"
     static_configs:
       - targets: ["mysqld-exporter:9104"]
+      
   - job_name: "file_sd_app"
     #metrics_path: '/demo01/actuator/prometheus'
+    file_sd_configs:
+      - refresh_interval: 1m
+        files: [file_sd_app.yml]
     relabel_configs:
       - source_labels: [module]
         target_label: __metrics_path__
         replacement: /$1/actuator/prometheus
-    file_sd_configs:
-      - refresh_interval: 1m
-        files: [file_sd_app.yml]
-        
+                
+  - job_name: "consul_sd_app"
+    consul_sd_configs:
+      - server: 'consul:8500'
+        services: []
+    relabel_configs:
+      - source_labels: [__meta_consul_tags]
+        regex: .*y9.*
+        action: keep
+      - source_labels: ['__meta_consul_service']
+        regex: '(.*)'
+        target_label: 'job'
+        replacement: '$1'
+      - source_labels: ['__meta_consul_service_address']
+        regex: '(.*)'
+        target_label: 'instance'
+        replacement: '$1'
+      - regex: __meta_consul_service_metadata_(.+)
+        action: labelmap
+      - source_labels: ['__meta_consul_service_metadata_metrics']
+        regex: '(.*)'
+        target_label: '__metrics_path__'
+        replacement: '$1'
         

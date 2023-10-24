@@ -38,6 +38,29 @@ services:
     command: redis-server --requirepass "12345678"
     volumes:
       - d:/docker-data/redis:/data
+  
+  consul:
+    image: docker.io/bitnami/consul:latest
+    container_name: consul01
+    restart: always
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+    networks:
+      - y9-share-net
+    environment:
+      - CONSUL_AGENT_MODE=server
+      - CONSUL_BOOTSTRAP_EXPECT=1
+      - CONSUL_ENABLE_UI=true
+      - CONSUL_HTTP_PORT_NUMBER=8500
+    ports:
+      - '8300:8300'
+      - '8301:8301'
+      - '8301:8301/udp'
+      - '8500:8500'
+      - '8600:8600'
+      - '8600:8600/udp'
+    volumes:
+      - d:/docker-data/consul:/bitnami/consul
    
   elasticsearch:
     image: elasticsearch:8.10.2
