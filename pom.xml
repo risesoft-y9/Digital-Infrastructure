@@ -514,9 +514,9 @@
 
                 <!-- https://github.com/smart-doc-group/smart-doc -->
                 <plugin>
-                    <groupId>com.github.shalousun</groupId>
+                    <groupId>com.ly.smart-doc</groupId>
                     <artifactId>smart-doc-maven-plugin</artifactId>
-                    <version>2.7.6</version>
+                    <version>3.0.0</version>
                     <configuration>
                         <configFile>./src/main/resources/smart-doc.json</configFile>
                         <excludes>
