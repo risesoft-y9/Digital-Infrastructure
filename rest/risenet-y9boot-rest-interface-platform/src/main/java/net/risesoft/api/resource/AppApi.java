@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 import net.risesoft.enums.AuthorityEnum;
 import net.risesoft.model.App;
+import net.risesoft.pojo.Y9Result;
 
 /**
  * 应用管理组件
@@ -108,6 +109,35 @@ public interface AppApi {
      */
     @GetMapping("/listBySystemName")
     List<App> listBySystemName(@RequestParam("systemName") @NotBlank String systemName);
+
+    /**
+     * 注册应用
+     *
+     * @param systemName 系统名称
+     * @param name 应用名称
+     * @param url 链接地址
+     * @param customId customId
+     * @param tenantGuid 租户id
+     * @return Y9Result&lt;App&gt;
+     */
+    @PostMapping("/registryApp")
+    Y9Result<App> registryApp(@RequestParam("systemName") @NotBlank String systemName, @RequestParam("name") @NotBlank String name, @RequestParam("url") @NotBlank String url, @RequestParam("customId") String customId, @RequestParam("tenantGuid") String tenantGuid);
+
+    /**
+     * 注册系统和应用信息
+     *
+     * @param systemName 系统名称
+     * @param systemCnName 系统中文名称
+     * @param isvGuid 租户id
+     * @param contextPath 系统上下文
+     * @param appName 应用名称
+     * @param url 链接地址
+     * @param customId customId
+     * @return Y9Result&lt;App&gt;
+     */
+    @PostMapping("/registrySystemAndApp")
+    Y9Result<App> registrySystemAndApp(@RequestParam("systemName") @NotBlank String systemName, @RequestParam("systemCnName") @NotBlank String systemCnName, @RequestParam("isvGuid") String isvGuid, @RequestParam("contextPath") String contextPath, @RequestParam("appName") @NotBlank String appName,
+        @RequestParam("url") @NotBlank String url, @RequestParam("customId") String customId);
 
     /**
      * 保存应用

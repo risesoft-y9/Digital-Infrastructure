@@ -71,10 +71,16 @@ public class Y9TenantSystemServiceImpl implements Y9TenantSystemService {
     @Override
     @Transactional(readOnly = false)
     public void deleteByTenantIdAndSystemId(String tenantId, String systemId) {
-        Optional<Y9TenantSystem> systemOptional =
-            y9TenantSystemRepository.findByTenantIdAndSystemId(tenantId, systemId);
+        Optional<Y9TenantSystem> systemOptional = y9TenantSystemRepository.findByTenantIdAndSystemId(tenantId, systemId);
         if (systemOptional.isPresent()) {
             y9TenantSystemRepository.delete(systemOptional.get());
+
+            // 移除系统租用后，对应系统重新加载数据源
+            Y9MessageCommon syncDataSourceEvent = new Y9MessageCommon();
+            syncDataSourceEvent.setTarget(y9SystemManager.getById(systemId).getName());
+            syncDataSourceEvent.setEventObject(Y9CommonEventConst.TENANT_DATASOURCE_SYNC);
+            syncDataSourceEvent.setEventType(Y9CommonEventConst.TENANT_DATASOURCE_SYNC);
+            y9PublishService.publishMessageCommon(syncDataSourceEvent);
         }
     }
 
@@ -94,10 +100,46 @@ public class Y9TenantSystemServiceImpl implements Y9TenantSystemService {
     }
 
     @Override
+    public List<Y9System> listSystemByTenantId(String tenantId) {
+        List<String> systemIdList = this.listSystemIdByTenantId(tenantId);
+        List<Y9System> y9SystemList = new ArrayList<>();
+        if (!systemIdList.isEmpty()) {
+            for (String systemId : systemIdList) {
+                y9SystemManager.findById(systemId).ifPresent(y9SystemList::add);
+            }
+        }
+        return y9SystemList;
+    }
+
+    @Override
     public List<String> listSystemIdByTenantId(String tenantId) {
         List<Y9TenantSystem> ts = y9TenantSystemRepository.findByTenantId(tenantId);
         if (ts != null) {
             return ts.stream().map(Y9TenantSystem::getSystemId).collect(Collectors.toList());
+        }
+        return new ArrayList<>();
+    }
+
+    @Override
+    public List<Y9Tenant> listTenantBySystemId(String systemId) {
+        List<String> tenantIdList = this.listTenantIdBySystemId(systemId);
+        List<Y9Tenant> y9TenantList = new ArrayList<>();
+        if (!tenantIdList.isEmpty()) {
+            for (String tenantId : tenantIdList) {
+                Y9Tenant tenant = y9TenantManager.getById(tenantId);
+                if (tenant != null) {
+                    y9TenantList.add(tenant);
+                }
+            }
+        }
+        return y9TenantList;
+    }
+
+    @Override
+    public List<Y9Tenant> listTenantBySystemName(String systemName) {
+        Optional<Y9System> y9SystemOptional = y9SystemManager.findByName(systemName);
+        if (y9SystemOptional.isPresent()) {
+            return this.listTenantBySystemId(y9SystemOptional.get().getId());
         }
         return new ArrayList<>();
     }
@@ -132,8 +174,7 @@ public class Y9TenantSystemServiceImpl implements Y9TenantSystemService {
         Y9Tenant tenant = y9TenantManager.getById(tenantId);
         Y9System y9System = y9SystemManager.getById(systemId);
 
-        Optional<Y9TenantSystem> y9TenantSystemOptional =
-            y9TenantSystemRepository.findByTenantIdAndSystemId(tenantId, systemId);
+        Optional<Y9TenantSystem> y9TenantSystemOptional = y9TenantSystemRepository.findByTenantIdAndSystemId(tenantId, systemId);
         if (y9TenantSystemOptional.isPresent()) {
             return y9TenantSystemOptional.get();
         }
@@ -146,8 +187,7 @@ public class Y9TenantSystemServiceImpl implements Y9TenantSystemService {
         if (Boolean.TRUE.equals(y9System.getSingleDatasource())) {
             String datasoureId = tenant.getDefaultDataSourceId();
             try {
-                Y9DataSource y9DataSource = y9DataSourceManager.createTenantDefaultDataSource(tenant.getShortName(),
-                    tenant.getTenantType(), y9System.getName());
+                Y9DataSource y9DataSource = y9DataSourceManager.createTenantDefaultDataSource(tenant.getShortName(), tenant.getTenantType(), y9System.getName());
                 datasoureId = y9DataSource.getId();
             } catch (Exception e) {
                 LOGGER.warn(e.getMessage(), e);
@@ -181,41 +221,5 @@ public class Y9TenantSystemServiceImpl implements Y9TenantSystemService {
             y9TenantSystemList.add(saveTenantSystem(systemId, tenantId));
         }
         return y9TenantSystemList;
-    }
-
-    @Override
-    public List<Y9Tenant> listTenantBySystemId(String systemId) {
-        List<String> tenantIdList = this.listTenantIdBySystemId(systemId);
-        List<Y9Tenant> y9TenantList = new ArrayList<>();
-        if (!tenantIdList.isEmpty()) {
-            for (String tenantId : tenantIdList) {
-                Y9Tenant tenant = y9TenantManager.getById(tenantId);
-                if (tenant != null) {
-                    y9TenantList.add(tenant);
-                }
-            }
-        }
-        return y9TenantList;
-    }
-
-    @Override
-    public List<Y9Tenant> listTenantBySystemName(String systemName) {
-        Optional<Y9System> y9SystemOptional = y9SystemManager.findByName(systemName);
-        if (y9SystemOptional.isPresent()) {
-            return this.listTenantBySystemId(y9SystemOptional.get().getId());
-        }
-        return new ArrayList<>();
-    }
-
-    @Override
-    public List<Y9System> listSystemByTenantId(String tenantId) {
-        List<String> systemIdList = this.listSystemIdByTenantId(tenantId);
-        List<Y9System> y9SystemList = new ArrayList<>();
-        if (!systemIdList.isEmpty()) {
-            for (String systemId : systemIdList) {
-                y9SystemManager.findById(systemId).ifPresent(y9SystemList::add);
-            }
-        }
-        return y9SystemList;
     }
 }
