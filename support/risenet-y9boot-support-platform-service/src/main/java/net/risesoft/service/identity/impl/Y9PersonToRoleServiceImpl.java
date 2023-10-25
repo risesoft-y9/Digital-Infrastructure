@@ -9,7 +9,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 
 import net.risesoft.consts.InitDataConsts;
 import net.risesoft.entity.Y9Person;
@@ -31,7 +30,6 @@ import net.risesoft.y9public.repository.role.Y9RoleRepository;
  */
 @Transactional(value = "rsTenantTransactionManager", readOnly = true)
 @Service
-@Slf4j
 @RequiredArgsConstructor
 public class Y9PersonToRoleServiceImpl implements Y9PersonToRoleService {
 
@@ -65,6 +63,11 @@ public class Y9PersonToRoleServiceImpl implements Y9PersonToRoleService {
     }
 
     @Override
+    public boolean hasRole(String personId, String roleId) {
+        return y9PersonToRoleRepository.countByPersonIdAndRoleId(personId, roleId) > 0;
+    }
+
+    @Override
     public Boolean hasRole(String personId, String systemName, String roleName, String properties) {
         List<Y9Role> y9RoleList;
         if (StringUtils.isBlank(properties)) {
@@ -76,11 +79,6 @@ public class Y9PersonToRoleServiceImpl implements Y9PersonToRoleService {
         }
 
         return y9RoleList.stream().anyMatch(y9Role -> hasRole(personId, y9Role.getId()));
-    }
-
-    @Override
-    public boolean hasRole(String personId, String roleId) {
-        return y9PersonToRoleRepository.countByPersonIdAndRoleId(personId, roleId) > 0;
     }
 
     @Override

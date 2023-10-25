@@ -17,11 +17,6 @@ import net.risesoft.entity.Y9OrgBase;
 import net.risesoft.entity.relation.Y9OrgBasesToRoles;
 import net.risesoft.exception.RoleErrorCodeEnum;
 import net.risesoft.manager.org.CompositeOrgBaseManager;
-import net.risesoft.repository.Y9DepartmentRepository;
-import net.risesoft.repository.Y9GroupRepository;
-import net.risesoft.repository.Y9OrganizationRepository;
-import net.risesoft.repository.Y9PersonRepository;
-import net.risesoft.repository.Y9PositionRepository;
 import net.risesoft.repository.relation.Y9OrgBasesToRolesRepository;
 import net.risesoft.service.relation.Y9OrgBasesToRolesService;
 import net.risesoft.y9.Y9Context;
@@ -43,18 +38,26 @@ public class Y9OrgBasesToRolesServiceImpl implements Y9OrgBasesToRolesService {
 
     private final CompositeOrgBaseManager compositeOrgBaseManager;
 
-    private final Y9DepartmentRepository departmentRepository;
-    private final Y9GroupRepository groupRepository;
     private final Y9OrgBasesToRolesRepository y9OrgBasesToRolesRepository;
-    private final Y9OrganizationRepository organizationRepository;
-    private final Y9PersonRepository personRepository;
-    private final Y9PositionRepository positionRepository;
 
     @Override
     @Transactional(readOnly = false)
     public List<Y9OrgBasesToRoles> addOrgUnitsForRole(String roleId, List<String> orgIds, Boolean negative) {
         List<Y9OrgBasesToRoles> mappingList = new ArrayList<>();
         for (String orgId : orgIds) {
+            if (y9OrgBasesToRolesRepository.findByRoleIdAndOrgIdAndNegative(roleId, orgId, negative).isPresent()) {
+                continue;
+            }
+            mappingList.add(saveOrUpdate(roleId, orgId, negative));
+        }
+        return mappingList;
+    }
+
+    @Override
+    @Transactional(readOnly = false)
+    public List<Y9OrgBasesToRoles> addRolesForOrgUnit(String orgId, List<String> roleIds, Boolean negative) {
+        List<Y9OrgBasesToRoles> mappingList = new ArrayList<>();
+        for (String roleId : roleIds) {
             if (y9OrgBasesToRolesRepository.findByRoleIdAndOrgIdAndNegative(roleId, orgId, negative).isPresent()) {
                 continue;
             }
@@ -185,18 +188,5 @@ public class Y9OrgBasesToRolesServiceImpl implements Y9OrgBasesToRolesService {
             return savedOrgBasesToRoles;
         }
         return optionalY9OrgBasesToRoles.get();
-    }
-
-    @Override
-    @Transactional(readOnly = false)
-    public List<Y9OrgBasesToRoles> addRolesForOrgUnit(String orgId, List<String> roleIds, Boolean negative) {
-        List<Y9OrgBasesToRoles> mappingList = new ArrayList<>();
-        for (String roleId : roleIds) {
-            if (y9OrgBasesToRolesRepository.findByRoleIdAndOrgIdAndNegative(roleId, orgId, negative).isPresent()) {
-                continue;
-            }
-            mappingList.add(saveOrUpdate(roleId, orgId, negative));
-        }
-        return mappingList;
     }
 }

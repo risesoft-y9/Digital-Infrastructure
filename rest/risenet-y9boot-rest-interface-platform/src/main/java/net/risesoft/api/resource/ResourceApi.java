@@ -41,16 +41,6 @@ public interface ResourceApi {
         @RequestParam("customId") @NotBlank String customId);
 
     /**
-     * 根据customId获取资源，用于工作流，customId保存的是processDefinitionKey
-     *
-     * @param customId customId
-     * @return Resource 资源对象
-     * @since 9.6.0
-     */
-    @GetMapping("/findByCustomId")
-    Resource findByCustomId(@RequestParam("customId") @NotBlank String customId);
-
-    /**
      * 根据customId和parentId获取资源
      *
      * @param customId customId
