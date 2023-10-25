@@ -5,6 +5,7 @@ import jakarta.validation.constraints.NotBlank;
 import java.util.List;
 import java.util.Optional;
 
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.context.annotation.Primary;
 import org.springframework.http.MediaType;
 import org.springframework.validation.annotation.Validated;
@@ -51,18 +52,15 @@ public class ResourceApiImpl implements ResourceApi {
     /**
      * 创建菜单资源
      *
-     * @param resourceId 资源id
-     * @param resourceName 资源名称
+     * @param resourceId       资源id
+     * @param resourceName     资源名称
      * @param parentResourceId 父资源id
-     * @param customId 是否是菜单节点
+     * @param customId         自定义id
      * @return Resource 新创建的资源对象
      * @since 9.6.0
      */
     @Override
-    public Resource createMenuResource(@RequestParam("resourceId") @NotBlank String resourceId,
-        @RequestParam("resourceName") @NotBlank String resourceName,
-        @RequestParam("parentResourceId") @NotBlank String parentResourceId,
-        @RequestParam("customId") @NotBlank String customId) {
+    public Resource createMenuResource(@RequestParam("resourceId") @NotBlank String resourceId, @RequestParam("resourceName") @NotBlank String resourceName, @RequestParam("parentResourceId") @NotBlank String parentResourceId, @RequestParam("customId") @NotBlank String customId) {
         Y9ResourceBase parentResource = compositeResourceService.findById(parentResourceId);
         Y9Menu y9Menu;
         Optional<Y9Menu> y9MenuOptional = y9MenuService.findById(resourceId);
@@ -75,12 +73,16 @@ public class ResourceApiImpl implements ResourceApi {
         if (parentResource != null) {
             y9Menu.setAppId(parentResource.getAppId());
             y9Menu.setSystemId(parentResource.getSystemId());
+            y9Menu.setParentId(parentResourceId);
         }
         y9Menu.setName(resourceName);
         y9Menu.setResourceType(ResourceTypeEnum.MENU.getValue());
         y9Menu.setInherit(Boolean.FALSE);
         y9Menu.setHidden(Boolean.FALSE);
         y9Menu.setEnabled(Boolean.TRUE);
+        if (StringUtils.isNotBlank(customId)) {
+            y9Menu.setCustomId(customId);
+        }
         y9Menu = y9MenuService.saveOrUpdate(y9Menu);
         return ModelConvertUtil.resourceBaseToResource(y9Menu);
     }
@@ -106,10 +108,8 @@ public class ResourceApiImpl implements ResourceApi {
      * @since 9.6.0
      */
     @Override
-    public Resource findByCustomIdAndParentId(@RequestParam("customId") @NotBlank String customId,
-        @RequestParam("parentId") @NotBlank String parentId, @RequestParam("resourceType") Integer resourceType) {
-        Y9ResourceBase y9ResourceBase =
-            compositeResourceService.findByCustomIdAndParentId(customId, parentId, resourceType).orElse(null);
+    public Resource findByCustomIdAndParentId(@RequestParam("customId") @NotBlank String customId, @RequestParam("parentId") @NotBlank String parentId, @RequestParam("resourceType") Integer resourceType) {
+        Y9ResourceBase y9ResourceBase = compositeResourceService.findByCustomIdAndParentId(customId, parentId, resourceType).orElse(null);
         return ModelConvertUtil.resourceBaseToResource(y9ResourceBase);
     }
 
@@ -154,8 +154,7 @@ public class ResourceApiImpl implements ResourceApi {
     public Resource getRootResourceBySystemName(@RequestParam("systemName") @NotBlank String systemName) {
         Optional<Y9System> y9SystemOptional = y9SystemService.findByName(systemName);
         if (y9SystemOptional.isPresent()) {
-            Y9App app =
-                y9AppRepository.findBySystemIdAndCustomId(y9SystemOptional.get().getId(), systemName).orElse(null);
+            Y9App app = y9AppRepository.findBySystemIdAndCustomId(y9SystemOptional.get().getId(), systemName).orElse(null);
             return ModelConvertUtil.resourceBaseToResource(app);
         }
         return null;
