@@ -126,7 +126,7 @@ public class GroupApiImpl implements GroupApi {
      *
      * @param tenantId 租户id
      * @param groupId 用户组唯一标识
-     * @return OrgUnit 组织架构节点对象
+     * @return OrgUnit 组织节点对象（部门或组织机构）
      * @since 9.6.0
      */
     @Override

@@ -120,7 +120,7 @@ public class DepartmentApiImpl implements DepartmentApi {
      *
      * @param tenantId 租户id
      * @param departmentId 部门id
-     * @return OrgUnit 组织机构节点对象
+     * @return OrgUnit 组织节点对象（部门或组织机构）
      * @since 9.6.0
      */
     @Override
@@ -154,7 +154,7 @@ public class DepartmentApiImpl implements DepartmentApi {
      *
      * @param tenantId 租户id
      * @param departmentId 部门唯一标识
-     * @return OrgUnit 组织机构节点对象
+     * @return OrgUnit 组织节点对象（部门或组织机构）
      * @since 9.6.0
      */
     @Override
@@ -243,18 +243,18 @@ public class DepartmentApiImpl implements DepartmentApi {
      * 根据组织节点id查找管理的部门部门属性配置
      *
      * @param tenantId 租户id
-     * @param orgBaseId 组织节点id
+     * @param orgUnitId 组织节点id
      * @param category 配置类型 {@link Y9DepartmentPropCategoryEnum}
      * @return
      * @since 9.6.0
      */
     @Override
     public List<DepartmentProp> listByOrgBaseIdAndCategory(@RequestParam("tenantId") @NotBlank String tenantId,
-        @RequestParam("orgBaseId") @NotBlank String orgBaseId, @RequestParam("category") Integer category) {
+        @RequestParam("orgUnitId") @NotBlank String orgUnitId, @RequestParam("category") Integer category) {
         Y9LoginUserHolder.setTenantId(tenantId);
 
         List<Y9DepartmentProp> y9DepartmentPropList =
-            y9DepartmentPropService.listByOrgBaseIdAndCategory(orgBaseId, category);
+            y9DepartmentPropService.listByOrgBaseIdAndCategory(orgUnitId, category);
         return Y9ModelConvertUtil.convert(y9DepartmentPropList, DepartmentProp.class);
     }
 
