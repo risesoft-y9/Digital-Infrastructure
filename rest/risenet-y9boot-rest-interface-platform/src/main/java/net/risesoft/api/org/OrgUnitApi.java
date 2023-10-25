@@ -28,8 +28,8 @@ public interface OrgUnitApi {
      * 根据租户id和节点id获取委办局
      *
      * @param tenantId 租户id
-     * @param orgUnitId 机构节点唯一标识
-     * @return OrgUnit 机构对象
+     * @param orgUnitId 组织节点唯一标识
+     * @return OrgUnit 组织节点对象（部门或组织机构）
      * @since 9.6.0
      */
     @GetMapping("/getBureau")
@@ -40,8 +40,8 @@ public interface OrgUnitApi {
      * 获得部门树
      *
      * @param tenantId 租户id
-     * @param orgUnitId 机构节点唯一标识(可能是机构ID,也可能是部门ID)
-     * @return List&lt;Department&gt; 部门对象集合
+     * @param orgUnitId 组织节点唯一标识(可能是机构ID,也可能是部门ID)
+     * @return List<Department> 部门对象集合
      * @since 9.6.0
      */
     @GetMapping("/getDeptTrees")
@@ -52,8 +52,8 @@ public interface OrgUnitApi {
      * 获取组织节点所在的组织机构
      *
      * @param tenantId 租户id
-     * @param orgUnitId 机构节点唯一标识
-     * @return Organization 机构对象
+     * @param orgUnitId 组织节点唯一标识
+     * @return Organization 组织机构对象
      * @since 9.6.0
      */
     @GetMapping("/getOrganization")
@@ -61,11 +61,11 @@ public interface OrgUnitApi {
         @RequestParam("orgUnitId") @NotBlank String orgUnitId);
 
     /**
-     * 根据id获得机构对象
+     * 根据id获得组织节点对象
      *
      * @param tenantId 租户id
-     * @param orgUnitId 机构唯一标识
-     * @return OrgUnit 机构对象
+     * @param orgUnitId 组织节点唯一标识
+     * @return OrgUnit 组织节点对象
      * @since 9.6.0
      */
     @GetMapping("/get")
@@ -73,11 +73,11 @@ public interface OrgUnitApi {
         @RequestParam("orgUnitId") @NotBlank String orgUnitId);
 
     /**
-     * 根据id，获取已删除的机构主体
+     * 根据id，获取已删除的组织节点
      *
      * @param tenantId 租户id
-     * @param orgUnitId 机构节点唯一标识
-     * @return OrgUnit 机构对象
+     * @param orgUnitId 组织节点唯一标识
+     * @return OrgUnit 组织节点对象
      * @since 9.6.2
      */
     @GetMapping("/getOrgUnitDeletedById")
@@ -88,8 +88,8 @@ public interface OrgUnitApi {
      * 根据id获得父对象
      *
      * @param tenantId 租户id
-     * @param orgUnitId 机构唯一标识
-     * @return OrgUnit 机构对象
+     * @param orgUnitId 组织节点唯一标识
+     * @return OrgUnit 组织节点对象（部门或组织机构）
      * @since 9.6.0
      */
     @GetMapping("/getParent")
@@ -100,10 +100,10 @@ public interface OrgUnitApi {
      * 获得子节点
      *
      * @param tenantId 租户id
-     * @param orgUnitId 机构节点唯一标识
+     * @param orgUnitId 组织节点唯一标识
      * @param treeType 树的类型:tree_type_org(组织机构)，tree_type_dept（部门） tree_type_group（用户组）, tree_type_position（岗位）
      *            tree_type_person（人员）, tree_type_bureau（委办局）
-     * @return List&lt;OrgUnit&gt; 机构对象集合
+     * @return List<OrgUnit> 组织节点对象集合
      * @since 9.6.0
      */
     @GetMapping("/getSubTree")
@@ -111,13 +111,13 @@ public interface OrgUnitApi {
         @RequestParam("orgUnitId") @NotBlank String orgUnitId, @RequestParam("treeType") @NotBlank String treeType);
 
     /**
-     * query the org node by name and treeType 根据节点名称，和树类型查询机构节点
+     * 根据节点名称，和树类型查询组织节点
      *
      * @param tenantId 租户id
-     * @param name 组织架构节点名称
-     * @param treeType 树的类型:tree_type_org(组织机构)，tree_type_dept（部门） tree_type_group（用户组）, tree_type_position（岗位）
-     *            tree_type_person（人员）, tree_type_bureau（委办局）
-     * @return List&lt;OrgUnit&gt; 机构对象集合
+     * @param name 组织节点名称
+     * @param treeType 树的类型:tree_type_org(组织机构)，tree_type_dept（部门），tree_type_group（用户组），tree_type_position（岗位）
+     *            tree_type_person（人员），tree_type_bureau（委办局）
+     * @return List<OrgUnit> 组织节点对象集合
      * @since 9.6.0
      */
     @GetMapping("/treeSearch")
@@ -125,14 +125,14 @@ public interface OrgUnitApi {
         @RequestParam("name") @NotBlank String name, @RequestParam("treeType") @NotBlank String treeType);
 
     /**
-     * query the org node by name and treeType 根据name，和结构树类型查询机构主体
+     * 根据name，和结构树类型查询组织节点
      *
      * @param tenantId 租户id
-     * @param name 组织架构节点名称
+     * @param name 组织节点名称
      * @param dnName 路径名称
      * @param treeType 节点树的类型:tree_type_org(组织机构)，tree_type_dept（部门） tree_type_group（用户组）, tree_type_position（岗位）
      *            tree_type_person（人员）, tree_type_bureau（委办局）
-     * @return List&lt;OrgUnit&gt; 机构对象集合
+     * @return List<OrgUnit> 组织节点对象集合
      * @since 9.6.0
      */
     @GetMapping("/treeSearchByDn")

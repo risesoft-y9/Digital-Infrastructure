@@ -154,7 +154,7 @@ public class PersonApiImpl implements PersonApi {
      *
      * @param tenantId 租户id
      * @param personId 人员id
-     * @return OrgUnit 机构对象
+     * @return OrgUnit 组织节点对象（部门或组织机构）
      * @since 9.6.0
      */
     @Override
@@ -189,7 +189,7 @@ public class PersonApiImpl implements PersonApi {
      *
      * @param tenantId 租户id
      * @param personId 人员唯一标识
-     * @return OrgUnit 机构对象
+     * @return OrgUnit 组织节点对象（部门或组织机构）
      * @since 9.6.0
      */
     @Override
@@ -341,8 +341,7 @@ public class PersonApiImpl implements PersonApi {
      *
      * @param tenantId 租户id
      * @param personId 人员id
-     * @return List&lt;OrgUnit&gt; 父节点对象集合
-     * @since 9.6.0
+     * @return {@link List}<{@link OrgUnit}> 父节点对象集合
      */
     @Override
     public List<OrgUnit> listParents(@RequestParam("tenantId") @NotBlank String tenantId,

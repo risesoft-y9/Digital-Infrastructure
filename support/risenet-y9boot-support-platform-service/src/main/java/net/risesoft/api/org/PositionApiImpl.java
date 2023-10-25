@@ -118,7 +118,7 @@ public class PositionApiImpl implements PositionApi {
      *
      * @param tenantId 租户id
      * @param positionId 岗位唯一标识
-     * @return OrgUnit 机构对象
+     * @return OrgUnit 组织节点对象（部门或组织机构）
      * @since 9.6.0
      */
     @Override
