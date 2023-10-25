@@ -27,10 +27,10 @@ import net.risesoft.model.Position;
 public interface OrganizationApi {
 
     /**
-     * 根据id获得机构对象
+     * 根据id获得组织机构对象
      *
      * @param tenantId 租户id
-     * @param organizationId 机构唯一标识
+     * @param organizationId 组织机构唯一标识
      * @return Organization 对象
      * @since 9.6.0
      */
@@ -39,11 +39,11 @@ public interface OrganizationApi {
         @RequestParam("organizationId") @NotBlank String organizationId);
 
     /**
-     * 返回所有委办局
+     * 获取所有委办局
      *
      * @param tenantId 租户id
-     * @param organizationId 机构id
-     * @return List&lt;Department&gt; 部门对象集合
+     * @param organizationId 组织机构id
+     * @return List<Department> 部门对象集合
      * @since 9.6.0
      */
     @GetMapping("/listAllBureaus")
@@ -51,21 +51,21 @@ public interface OrganizationApi {
         @RequestParam("organizationId") @NotBlank String organizationId);
 
     /**
-     * 根据租户id获取所有机构
+     * 根据租户id获取所有组织机构
      *
      * @param tenantId 租户id
-     * @return List&lt;Organization&gt; 机构对象集合
+     * @return List<Organization> 组织机构对象集合
      * @since 9.6.0
      */
     @GetMapping("/listAllOrganizations")
     List<Organization> listAllOrganizations(@RequestParam("tenantId") @NotBlank String tenantId);
 
     /**
-     * 通过类型，获取组织架构列表
+     * 通过类型，获取组织机构列表
      *
      * @param tenantId 租户id
-     * @param virtual 是否为虚拟组织
-     * @return List&lt;Organization&gt; 组织架构对象集合
+     * @param virtual 是否虚拟组织
+     * @return List<Organization> 组织机构对象集合
      * @since 9.6.0
      */
     @GetMapping("/listByType")
@@ -73,11 +73,11 @@ public interface OrganizationApi {
         @RequestParam("virtual") Boolean virtual);
 
     /**
-     * 获取机构下的部门（下一级）
+     * 获取组织机构下的部门（下一级）
      *
      * @param tenantId 租户id
-     * @param organizationId 机构唯一标识
-     * @return List&lt;Department&gt; 部门对象集合
+     * @param organizationId 组织机构唯一标识
+     * @return List<Department> 部门对象集合
      * @since 9.6.0
      */
     @GetMapping("/listDepartments")
@@ -88,8 +88,8 @@ public interface OrganizationApi {
      * 获取用户组（下一级）
      *
      * @param tenantId 租户id
-     * @param organizationId 机构唯一标识
-     * @return List&lt;Group&gt; 用户组对象集合
+     * @param organizationId 组织机构唯一标识
+     * @return List<Group> 用户组对象集合
      * @since 9.6.0
      */
     @GetMapping("/listGroups")
@@ -100,8 +100,8 @@ public interface OrganizationApi {
      * 获取人员（下一级）
      *
      * @param tenantId 租户id
-     * @param organizationId 机构唯一标识
-     * @return List&lt;Person&gt; 人员对象集合
+     * @param organizationId 组织机构唯一标识
+     * @return List<Person> 人员对象集合
      * @since 9.6.0
      */
     @GetMapping("/listPersons")
@@ -112,7 +112,7 @@ public interface OrganizationApi {
      * 获取岗位（下一级）
      *
      * @param tenantId 租户id
-     * @param organizationId 机构唯一标识
+     * @param organizationId 组织机构唯一标识
      * @return List&lt;Position&gt; 岗位对象集合
      * @since 9.6.0
      */
