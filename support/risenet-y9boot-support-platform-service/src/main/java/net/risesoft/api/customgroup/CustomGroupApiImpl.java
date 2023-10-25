@@ -14,7 +14,6 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 
 import net.risesoft.entity.Y9CustomGroup;
 import net.risesoft.entity.Y9Person;
@@ -42,7 +41,6 @@ import net.risesoft.y9.util.Y9ModelConvertUtil;
 @Validated
 @RestController
 @RequestMapping(value = "/services/rest/customGroup", produces = MediaType.APPLICATION_JSON_VALUE)
-@Slf4j
 @RequiredArgsConstructor
 public class CustomGroupApiImpl implements CustomGroupApi {
 

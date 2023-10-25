@@ -20,7 +20,6 @@ import net.risesoft.id.Y9IdGenerator;
 import net.risesoft.manager.org.Y9PersonManager;
 import net.risesoft.manager.relation.Y9CustomGroupMembersManager;
 import net.risesoft.repository.Y9CustomGroupRepository;
-import net.risesoft.repository.Y9PersonRepository;
 import net.risesoft.repository.relation.Y9CustomGroupMembersRepository;
 import net.risesoft.service.org.Y9CustomGroupService;
 import net.risesoft.y9.Y9LoginUserHolder;
@@ -39,7 +38,6 @@ public class Y9CustomGroupServiceImpl implements Y9CustomGroupService {
 
     private final Y9CustomGroupRepository customGroupRepository;
     private final Y9CustomGroupMembersRepository customGroupMembersRepository;
-    private final Y9PersonRepository y9PersonRepository;
 
     private final Y9CustomGroupMembersManager y9CustomGroupMembersManager;
     private final Y9PersonManager y9PersonManager;

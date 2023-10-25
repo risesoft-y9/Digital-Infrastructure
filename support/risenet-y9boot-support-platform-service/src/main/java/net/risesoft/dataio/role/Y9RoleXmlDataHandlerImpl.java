@@ -169,7 +169,7 @@ public class Y9RoleXmlDataHandlerImpl implements Y9RoleDataHandler {
 
     void checkData(String id, Element element) {
         Y9System y9System = y9SystemService.getById(id);
-        if (null == y9System && StringUtils.isNotBlank(y9System.getId())) {
+        if (null == y9System && StringUtils.isNotBlank(id)) {
             String systemName = element.elementText("name");
             String systemCnName = element.elementText("systemCnName");
             String tabIndex = element.elementText("tabIndex");
@@ -186,7 +186,7 @@ public class Y9RoleXmlDataHandlerImpl implements Y9RoleDataHandler {
         List<Element> appNodes = element.elements("app");
         String appId = appNodes.get(0).attributeValue("id");
         Y9App y9App = y9AppService.getById(appId);
-        if (null == y9App && StringUtils.isNotBlank(y9App.getId())) {
+        if (null == y9App && StringUtils.isNotBlank(appId)) {
             String name = appNodes.get(0).elementText("");
             String parentId = appNodes.get(0).elementText("parentId");
             y9App = new Y9App();

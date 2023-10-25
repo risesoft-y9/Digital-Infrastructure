@@ -52,15 +52,18 @@ public class ResourceApiImpl implements ResourceApi {
     /**
      * 创建菜单资源
      *
-     * @param resourceId       资源id
-     * @param resourceName     资源名称
+     * @param resourceId 资源id
+     * @param resourceName 资源名称
      * @param parentResourceId 父资源id
-     * @param customId         自定义id
+     * @param customId 自定义id
      * @return Resource 新创建的资源对象
      * @since 9.6.0
      */
     @Override
-    public Resource createMenuResource(@RequestParam("resourceId") @NotBlank String resourceId, @RequestParam("resourceName") @NotBlank String resourceName, @RequestParam("parentResourceId") @NotBlank String parentResourceId, @RequestParam("customId") @NotBlank String customId) {
+    public Resource createMenuResource(@RequestParam("resourceId") @NotBlank String resourceId,
+        @RequestParam("resourceName") @NotBlank String resourceName,
+        @RequestParam("parentResourceId") @NotBlank String parentResourceId,
+        @RequestParam("customId") @NotBlank String customId) {
         Y9ResourceBase parentResource = compositeResourceService.findById(parentResourceId);
         Y9Menu y9Menu;
         Optional<Y9Menu> y9MenuOptional = y9MenuService.findById(resourceId);
@@ -88,18 +91,6 @@ public class ResourceApiImpl implements ResourceApi {
     }
 
     /**
-     * 根据 customId 获取资源
-     *
-     * @param customId 自定义标识
-     * @return Resource 资源对象
-     * @since 9.6.0
-     */
-    @Override
-    public Resource findByCustomId(@RequestParam("customId") @NotBlank String customId) {
-        return null;
-    }
-
-    /**
      * 根据 customId 和 parentId 获取资源
      *
      * @param customId 自定义标识
@@ -108,8 +99,10 @@ public class ResourceApiImpl implements ResourceApi {
      * @since 9.6.0
      */
     @Override
-    public Resource findByCustomIdAndParentId(@RequestParam("customId") @NotBlank String customId, @RequestParam("parentId") @NotBlank String parentId, @RequestParam("resourceType") Integer resourceType) {
-        Y9ResourceBase y9ResourceBase = compositeResourceService.findByCustomIdAndParentId(customId, parentId, resourceType).orElse(null);
+    public Resource findByCustomIdAndParentId(@RequestParam("customId") @NotBlank String customId,
+        @RequestParam("parentId") @NotBlank String parentId, @RequestParam("resourceType") Integer resourceType) {
+        Y9ResourceBase y9ResourceBase =
+            compositeResourceService.findByCustomIdAndParentId(customId, parentId, resourceType).orElse(null);
         return ModelConvertUtil.resourceBaseToResource(y9ResourceBase);
     }
 
@@ -154,7 +147,8 @@ public class ResourceApiImpl implements ResourceApi {
     public Resource getRootResourceBySystemName(@RequestParam("systemName") @NotBlank String systemName) {
         Optional<Y9System> y9SystemOptional = y9SystemService.findByName(systemName);
         if (y9SystemOptional.isPresent()) {
-            Y9App app = y9AppRepository.findBySystemIdAndCustomId(y9SystemOptional.get().getId(), systemName).orElse(null);
+            Y9App app =
+                y9AppRepository.findBySystemIdAndCustomId(y9SystemOptional.get().getId(), systemName).orElse(null);
             return ModelConvertUtil.resourceBaseToResource(app);
         }
         return null;
