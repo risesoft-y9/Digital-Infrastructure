@@ -54,10 +54,10 @@ public class OrganizationApiImpl implements OrganizationApi {
     private final Y9PositionService orgPositionService;
 
     /**
-     * 根据id获得机构对象
+     * 根据id获得组织机构对象
      *
      * @param tenantId 租户id
-     * @param organizationId 机构唯一标识
+     * @param organizationId 组织机构唯一标识
      * @return Organization 对象
      * @since 9.6.0
      */
@@ -74,7 +74,7 @@ public class OrganizationApiImpl implements OrganizationApi {
      * 获取所有委办局
      *
      * @param tenantId 租户id
-     * @param organizationId 机构id
+     * @param organizationId 组织机构id
      * @return List<Department> 部门对象集合
      * @since 9.6.0
      */
@@ -88,10 +88,10 @@ public class OrganizationApiImpl implements OrganizationApi {
     }
 
     /**
-     * 根据租户id获取机构
+     * 根据租户id获取所有组织机构
      *
      * @param tenantId 租户id
-     * @return List<Organization> 机构对象集合
+     * @return List<Organization> 组织机构对象集合
      * @since 9.6.0
      */
     @Override
@@ -103,11 +103,11 @@ public class OrganizationApiImpl implements OrganizationApi {
     }
 
     /**
-     * 通过类型，获取组织架构列表
+     * 通过类型，获取组织机构列表
      *
      * @param tenantId 租户id
      * @param virtual 是否虚拟组织
-     * @return List<Organization> 组织架构对象集合
+     * @return List<Organization> 组织机构对象集合
      * @since 9.6.0
      */
     @Override
@@ -120,10 +120,10 @@ public class OrganizationApiImpl implements OrganizationApi {
     }
 
     /**
-     * 获取机构下的部门（下一级）
+     * 获取组织机构下的部门（下一级）
      *
      * @param tenantId 租户id
-     * @param organizationId 机构唯一标识
+     * @param organizationId 组织机构唯一标识
      * @return List<Department> 部门对象集合
      * @since 9.6.0
      */
@@ -140,7 +140,7 @@ public class OrganizationApiImpl implements OrganizationApi {
      * 获取用户组（下一级）
      *
      * @param tenantId 租户id
-     * @param organizationId 机构唯一标识
+     * @param organizationId 组织机构唯一标识
      * @return List<Group> 用户组对象集合
      * @since 9.6.0
      */
@@ -157,7 +157,7 @@ public class OrganizationApiImpl implements OrganizationApi {
      * 获取人员（下一级）
      *
      * @param tenantId 租户id
-     * @param organizationId 机构唯一标识
+     * @param organizationId 组织机构唯一标识
      * @return List<Person> 人员对象集合
      * @since 9.6.0
      */
@@ -174,7 +174,7 @@ public class OrganizationApiImpl implements OrganizationApi {
      * 获取岗位（下一级）
      *
      * @param tenantId 租户id
-     * @param organizationId 机构唯一标识
+     * @param organizationId 组织机构唯一标识
      * @return List&lt;Position&gt; 岗位对象集合
      * @since 9.6.0
      */
