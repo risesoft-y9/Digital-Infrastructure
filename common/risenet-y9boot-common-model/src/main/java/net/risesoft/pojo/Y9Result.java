@@ -82,8 +82,7 @@ public class Y9Result<T> implements Serializable {
     private T data;
 
     /**
-     * @deprecated 对于大多数不需要关注 code 的情况下，推荐直接静态方法创建对象，而不是通过新建对象然后设值 直接静态方法创建对象可以统一 code ，方便 code 的维护
+     * 对于大多数不需要关注 code 的情况下，推荐直接静态方法创建对象，而不是通过新建对象然后设值 直接静态方法创建对象可以统一 code ，方便 code 的维护
      */
-    @Deprecated
-    public Y9Result() {}
+    private Y9Result() {}
 }
