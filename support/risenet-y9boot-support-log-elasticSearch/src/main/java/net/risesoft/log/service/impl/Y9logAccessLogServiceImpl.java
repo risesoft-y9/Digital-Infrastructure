@@ -484,7 +484,7 @@ public class Y9logAccessLogServiceImpl implements Y9logAccessLogService {
 
     @Override
     public Page<Y9logAccessLog> pageByTenantIdAndManagerLevelAndUserId(String tenantId, String managerLevel,
-        String userId, int page, int rows, String sort) {
+        String userId, Integer page, Integer rows, String sort) {
         IndexCoordinates index = IndexCoordinates.of(getCurrentYearIndexName());
         Pageable pageable = null;
         Criteria criteria = new Criteria();
@@ -516,7 +516,7 @@ public class Y9logAccessLogServiceImpl implements Y9logAccessLogService {
 
     @Override
     public Page<Y9logAccessLog> pageElapsedTimeByCondition(LogInfoModel search, String startDay, String endDay,
-        String startTime, String endTime, int rows, int page) throws ParseException {
+        String startTime, String endTime, Integer page, Integer rows) throws ParseException {
         String tenantId = Y9LoginUserHolder.getTenantId();
         Criteria criteria = new Criteria();
 
@@ -673,8 +673,8 @@ public class Y9logAccessLogServiceImpl implements Y9logAccessLogService {
     }
 
     @Override
-    public Page<Y9logAccessLog> searchQuery(String tenantId, String managerLevel, LogInfoModel loginInfoModel, int page,
-        int rows) {
+    public Page<Y9logAccessLog> searchQuery(String tenantId, String managerLevel, LogInfoModel loginInfoModel,
+        Integer page, Integer rows) {
         Criteria criteria = new Criteria();
         Pageable pageable;
 
@@ -752,7 +752,7 @@ public class Y9logAccessLogServiceImpl implements Y9logAccessLogService {
             int minYearInt = Integer.parseInt(startDate.split("-")[0]);
             int maxYearInt = Integer.parseInt(endDate.split("-")[0]);
             while (minYearInt <= maxYearInt) {
-                indexNameList.add(Y9ESIndexConst.ACCESS_LOG_INDEX + "-" + String.valueOf(minYearInt));
+                indexNameList.add(Y9ESIndexConst.ACCESS_LOG_INDEX + "-" + minYearInt);
                 minYearInt++;
             }
         }
