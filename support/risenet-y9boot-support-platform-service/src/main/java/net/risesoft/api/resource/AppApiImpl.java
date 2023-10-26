@@ -6,7 +6,6 @@ import java.util.List;
 import java.util.Optional;
 
 import org.apache.commons.lang3.StringUtils;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -52,13 +51,8 @@ public class AppApiImpl implements AppApi {
     private final Y9AppService y9AppService;
     private final Y9PersonToResourceAndAuthorityService y9PersonToResourceAndAuthorityService;
     private final Y9PositionToResourceAndAuthorityService y9PositionToResourceAndAuthorityService;
-
     private final Y9SystemService y9SystemService;
-
-    @Autowired
     private final Y9TenantSystemService y9TenantSystemService;
-
-    @Autowired
     private final Y9TenantAppService y9TenantAppService;
 
     /**
@@ -82,7 +76,8 @@ public class AppApiImpl implements AppApi {
      * @since 9.6.0
      */
     @Override
-    public App findBySystemIdAndCustomId(@RequestParam("systemId") @NotBlank String systemId, @RequestParam("customId") @NotBlank String customId) {
+    public App findBySystemIdAndCustomId(@RequestParam("systemId") @NotBlank String systemId,
+        @RequestParam("customId") @NotBlank String customId) {
         Y9App y9App = y9AppService.findBySystemIdAndCustomId(systemId, customId).orElse(null);
         return Y9ModelConvertUtil.convert(y9App, App.class);
     }
@@ -91,12 +86,13 @@ public class AppApiImpl implements AppApi {
      * 根据系统名和自定义标识查找应用
      *
      * @param systemName 系统名
-     * @param customId   customId
+     * @param customId customId
      * @return App 应用
      * @since 9.6.0
      */
     @Override
-    public App findBySystemNameAndCustomId(@RequestParam("systemName") @NotBlank String systemName, @RequestParam("customId") @NotBlank String customId) {
+    public App findBySystemNameAndCustomId(@RequestParam("systemName") @NotBlank String systemName,
+        @RequestParam("customId") @NotBlank String customId) {
         Y9App y9App = y9AppService.findBySystemNameAndCustomId(systemName, customId).orElse(null);
         return Y9ModelConvertUtil.convert(y9App, App.class);
     }
@@ -104,14 +100,15 @@ public class AppApiImpl implements AppApi {
     /**
      * 根据人员id和操作类型，获取有权限的应用列表
      *
-     * @param tenantId  租户id
-     * @param personId  人员id
+     * @param tenantId 租户id
+     * @param personId 人员id
      * @param authority 操作类型 {@link AuthorityEnum}
      * @return List&lt;App&gt; 应用列表
      * @since 9.6.0
      */
     @Override
-    public List<App> listAccessAppForPerson(@RequestParam("tenantId") @NotBlank String tenantId, @RequestParam("personId") @NotBlank String personId, @RequestParam("authority") Integer authority) {
+    public List<App> listAccessAppForPerson(@RequestParam("tenantId") @NotBlank String tenantId,
+        @RequestParam("personId") @NotBlank String personId, @RequestParam("authority") Integer authority) {
         Y9LoginUserHolder.setTenantId(tenantId);
 
         List<Y9App> appList = y9PersonToResourceAndAuthorityService.listAppsByAuthority(personId, authority);
@@ -121,14 +118,15 @@ public class AppApiImpl implements AppApi {
     /**
      * 根据人员id和操作类型，获取有权限的应用列表
      *
-     * @param tenantId   租户id
+     * @param tenantId 租户id
      * @param positionId 人员id
-     * @param authority  操作类型 {@link AuthorityEnum}
+     * @param authority 操作类型 {@link AuthorityEnum}
      * @return List&lt;App&gt; 应用列表
      * @since 9.6.0
      */
     @Override
-    public List<App> listAccessAppForPosition(@RequestParam("tenantId") @NotBlank String tenantId, @RequestParam("positionId") @NotBlank String positionId, @RequestParam("authority") Integer authority) {
+    public List<App> listAccessAppForPosition(@RequestParam("tenantId") @NotBlank String tenantId,
+        @RequestParam("positionId") @NotBlank String positionId, @RequestParam("authority") Integer authority) {
         Y9LoginUserHolder.setTenantId(tenantId);
 
         List<Y9App> appList = y9PositionToResourceAndAuthorityService.listAppsByAuthority(positionId, authority);
@@ -178,15 +176,16 @@ public class AppApiImpl implements AppApi {
      * 注册应用
      *
      * @param systemName 系统名称
-     * @param name       应用名称
-     * @param url        url
-     * @param customId   customId
+     * @param name 应用名称
+     * @param url url
+     * @param customId customId
      * @param tenantGuid 租户id
      * @return App
      * @since 9.6.3
      */
     @Override
-    public Y9Result<App> registryApp(@NotBlank String systemName, @NotBlank String name, @NotBlank String url, String customId, String tenantGuid) {
+    public Y9Result<App> registryApp(@NotBlank String systemName, @NotBlank String name, @NotBlank String url,
+        String customId, String tenantGuid) {
         Optional<Y9System> y9SystemOptional = y9SystemService.findByName(systemName);
         if (y9SystemOptional.isEmpty()) {
             return Y9Result.failure("该系统不存在，请重新输入！");
@@ -237,7 +236,8 @@ public class AppApiImpl implements AppApi {
     }
 
     @Override
-    public Y9Result<App> registrySystemAndApp(@NotBlank String systemName, @NotBlank String systemCnName, String isvGuid, String contextPath, @NotBlank String appName, @NotBlank String url, String customId) {
+    public Y9Result<App> registrySystemAndApp(@NotBlank String systemName, @NotBlank String systemCnName,
+        String isvGuid, String contextPath, @NotBlank String appName, @NotBlank String url, String customId) {
 
         List<Y9System> y9Systems = y9SystemService.listByContextPath(contextPath);
         if (!y9Systems.isEmpty()) {
