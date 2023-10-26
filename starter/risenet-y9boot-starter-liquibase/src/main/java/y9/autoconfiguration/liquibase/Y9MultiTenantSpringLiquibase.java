@@ -7,7 +7,7 @@ import javax.sql.DataSource;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.core.io.ResourceLoader;
 
-import com.alibaba.druid.pool.DruidDataSource;
+import com.zaxxer.hikari.HikariDataSource;
 
 import lombok.RequiredArgsConstructor;
 
@@ -31,9 +31,9 @@ public class Y9MultiTenantSpringLiquibase implements InitializingBean {
 
     @Override
     public void afterPropertiesSet() throws Exception {
-        Map<String, DruidDataSource> dataSources = y9TenantDataSourceLookup.getDataSources();
-        for (Map.Entry<String, DruidDataSource> stringDruidDataSourceEntry : dataSources.entrySet()) {
-            DruidDataSource dataSource = stringDruidDataSourceEntry.getValue();
+        Map<String, HikariDataSource> dataSources = y9TenantDataSourceLookup.getDataSources();
+        for (Map.Entry<String, HikariDataSource> stringDruidDataSourceEntry : dataSources.entrySet()) {
+            HikariDataSource dataSource = stringDruidDataSourceEntry.getValue();
             update(dataSource);
         }
     }

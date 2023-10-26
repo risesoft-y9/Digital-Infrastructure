@@ -1,7 +1,5 @@
 package y9.autoconfiguration.liquibase;
 
-import javax.sql.DataSource;
-
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.autoconfigure.AutoConfiguration;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
@@ -10,6 +8,8 @@ import org.springframework.boot.context.properties.EnableConfigurationProperties
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.io.ResourceLoader;
+
+import com.zaxxer.hikari.HikariDataSource;
 
 import net.risesoft.y9.configuration.Y9Properties;
 import net.risesoft.y9.configuration.feature.liquibase.Y9LiquibaseProperties;
@@ -40,7 +40,7 @@ public class Y9LiquibaseAutoConfiguration {
     }
 
     @Bean
-    public SpringLiquibase liquibase(Y9Properties properties, @Qualifier("y9PublicDS") DataSource dataSource) {
+    public SpringLiquibase liquibase(Y9Properties properties, @Qualifier("y9PublicDS") HikariDataSource dataSource) {
         SpringLiquibase liquibase = new SpringLiquibase();
         Y9LiquibaseProperties liquibaseProperties = properties.getFeature().getLiquibase();
         liquibase.setDataSource(dataSource);
