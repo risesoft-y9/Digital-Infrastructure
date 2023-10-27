@@ -52,6 +52,8 @@ import cn.hutool.core.io.resource.ClassPathResource;
 @RequiredArgsConstructor
 public class Y9OrgTreeExcelDataHandlerImpl implements Y9OrgTreeDataHandler {
 
+    private static final String SPLITTER = ",";
+
     private final CompositeOrgBaseService compositeOrgBaseService;
     private final Y9DepartmentService y9DepartmentService;
     private final Y9PersonService y9PersonService;
@@ -267,70 +269,75 @@ public class Y9OrgTreeExcelDataHandlerImpl implements Y9OrgTreeDataHandler {
         if (StringUtils.isBlank(pf.getFullPath())) {
             fullPath = pf.getName();
         } else {
-            fullPath = pf.getFullPath() + "," + pf.getName();
+            fullPath = pf.getFullPath() + SPLITTER + pf.getName();
         }
-        String[] paths = fullPath.split(",");
+        String[] paths = fullPath.split(SPLITTER);
         Y9OrgBase y9OrgBase = compositeOrgBaseService.getOrgUnit(orgId);
         String dn = y9OrgBase.getDn();
         String parentId = y9OrgBase.getId();
         for (int i = 0, length = paths.length; i < length; i++) {
             if (i == length - 1) {
+
                 String personName = pf.getLoginName().replaceAll("\\s*", "");
                 Optional<Y9Person> y9PersonOptional = y9PersonService.findByLoginName(personName);
-                if (y9PersonOptional.isEmpty()) {
-                    if (StringUtils.isNotBlank(pf.getMobile())) {
-                        // 数值类型号码
-                        if (pf.getMobile().indexOf("E") > 0) {
-                            BigDecimal mobileValue = new BigDecimal(pf.getMobile());
-                            String mobile = mobileValue.toPlainString();
-                            pf.setMobile(mobile);
-                        }
-                        String personMobile = pf.getMobile().replaceAll("\\s*", "");
-                        if (personMobile.length() == 11) {
-                            if (y9PersonService.getPersonByMobile(new BigDecimal(personMobile).toString()) != null) {
-                                // 人员号码重复
-                                retMap.put("isMobileRepeat", "true");
-                                retMap.put("mobileNames", pf.getLoginName().replaceAll("\\s*", ""));
-                                retMap.put("mobiles", new BigDecimal(pf.getMobile()).toString());
-                            } else {
-
-                                Y9Person y9Person = new Y9Person();
-                                y9Person.setName(paths[i].replaceAll("\\s*", ""));
-                                y9Person.setEmail(pf.getEmail());
-                                y9Person.setMobile(new BigDecimal(personMobile).toString().replaceAll("\\s*", ""));
-                                y9Person.setLoginName(pf.getLoginName().replaceAll("\\s*", ""));
-                                y9Person.setSex("男".equals(pf.getSex()) ? 1 : 0);
-                                y9Person.setParentId(parentId);
-
-                                String jobs = pf.getJobs();
-                                if (StringUtils.isNotBlank(jobs)) {
-                                    String[] jobArray = jobs.split(",");
-                                    List<String> y9JobIdList = new ArrayList<>();
-                                    for (String job : jobArray) {
-                                        y9JobIdList.add(y9JobService.create(job, job).getId());
-                                    }
-                                    y9PersonService.saveOrUpdate(y9Person, null, null, y9JobIdList);
-                                } else {
-                                    y9PersonService.saveOrUpdate(y9Person, null);
-                                }
-                            }
-                        } else {
-                            // 人员号码错误
-                            retMap.put("isMobileError", "true");
-                            retMap.put("mobileErrorNames", pf.getLoginName().replaceAll("\\s*", ""));
-                        }
-                    } else {
-                        // 人员号码为空
-                        retMap.put("isMobileNull", "true");
-                        retMap.put("mobileNullNames", pf.getLoginName().replaceAll("\\s*", ""));
-                    }
-                } else {
+                if (y9PersonOptional.isPresent()) {
                     // 人员重复
                     retMap.put("isRepeat", "true");
                     retMap.put("name", pf.getLoginName().replaceAll("\\s*", ""));
+                    continue;
                 }
+
+                if (StringUtils.isBlank(pf.getMobile())) {
+                    // 人员号码为空
+                    retMap.put("isMobileNull", "true");
+                    retMap.put("mobileNullNames", pf.getLoginName().replaceAll("\\s*", ""));
+                    continue;
+                }
+
+                // 数值类型号码
+                if (pf.getMobile().indexOf("E") > 0) {
+                    BigDecimal mobileValue = new BigDecimal(pf.getMobile());
+                    String mobile = mobileValue.toPlainString();
+                    pf.setMobile(mobile);
+                }
+                String personMobile = pf.getMobile().replaceAll("\\s*", "");
+                if (personMobile.length() == 11) {
+                    // 手机号可重复 此处暂时移除手机号重复校验
+                    // if (y9PersonService.getPersonByMobile(new BigDecimal(personMobile).toString()) != null) {
+                    // // 人员号码重复
+                    // retMap.put("isMobileRepeat", "true");
+                    // retMap.put("mobileNames", pf.getLoginName().replaceAll("\\s*", ""));
+                    // retMap.put("mobiles", new BigDecimal(pf.getMobile()).toString());
+                    // }
+                } else {
+                    // 人员号码错误
+                    retMap.put("isMobileError", "true");
+                    retMap.put("mobileErrorNames", pf.getLoginName().replaceAll("\\s*", ""));
+                    continue;
+                }
+
+                Y9Person y9Person = new Y9Person();
+                y9Person.setName(paths[i].replaceAll("\\s*", ""));
+                y9Person.setEmail(pf.getEmail());
+                y9Person.setMobile(pf.getMobile().replaceAll("\\s*", ""));
+                y9Person.setLoginName(pf.getLoginName().replaceAll("\\s*", ""));
+                y9Person.setSex("男".equals(pf.getSex()) ? 1 : 0);
+                y9Person.setParentId(parentId);
+
+                String jobs = pf.getJobs();
+                if (StringUtils.isNotBlank(jobs)) {
+                    String[] jobArray = jobs.split(SPLITTER);
+                    List<String> y9JobIdList = new ArrayList<>();
+                    for (String job : jobArray) {
+                        y9JobIdList.add(y9JobService.create(job, job).getId());
+                    }
+                    y9PersonService.saveOrUpdate(y9Person, null, null, y9JobIdList);
+                } else {
+                    y9PersonService.saveOrUpdate(y9Person, null);
+                }
+
             } else {
-                dn = OrgLevelConsts.UNIT + paths[i] + "," + dn;
+                dn = OrgLevelConsts.UNIT + paths[i] + SPLITTER + dn;
                 List<Y9Department> departmentList = y9DepartmentService.listByDn(dn);
                 if (!departmentList.isEmpty()) {
                     parentId = departmentList.get(0).getId();
@@ -398,24 +405,25 @@ public class Y9OrgTreeExcelDataHandlerImpl implements Y9OrgTreeDataHandler {
         List<PersonInformation> personList = new ArrayList<>();
         for (Y9Person person : persons) {
             PersonInformation personInformation = new PersonInformation();
-            String fullPath = person.getDn().replaceAll("cn=", "").replaceAll(",ou=", ",").replaceAll(",o=", ",");
-            String path = fullPath.substring(0, fullPath.lastIndexOf(","));
-            if (path.contains(",") && fullPath.lastIndexOf(",") == fullPath.lastIndexOf(",")) {
-                path = path.substring(fullPath.indexOf(",") + 1);
+            String fullPath =
+                person.getDn().replaceAll("cn=", "").replaceAll(",ou=", SPLITTER).replaceAll(",o=", SPLITTER);
+            String path = fullPath.substring(0, fullPath.lastIndexOf(SPLITTER));
+            if (path.contains(SPLITTER) && fullPath.lastIndexOf(SPLITTER) == fullPath.lastIndexOf(SPLITTER)) {
+                path = path.substring(fullPath.indexOf(SPLITTER) + 1);
                 personInformation.setFullPath(reverseSplit(path));
-            } else if (!path.contains(",")) {
+            } else if (!path.contains(SPLITTER)) {
                 personInformation.setFullPath(null);
             } else {
-                path = path.substring(fullPath.indexOf(",") + 1, fullPath.lastIndexOf(","));
+                path = path.substring(fullPath.indexOf(SPLITTER) + 1, fullPath.lastIndexOf(SPLITTER));
                 personInformation.setFullPath(reverseSplit(path));
             }
-            personInformation.setName(fullPath.substring(0, fullPath.indexOf(",")));
+            personInformation.setName(fullPath.substring(0, fullPath.indexOf(SPLITTER)));
             personInformation.setEmail(person.getEmail());
             personInformation.setLoginName(person.getLoginName());
             personInformation.setMobile(person.getMobile());
             personInformation.setSex(person.getSex() == 0 ? "女" : "男");
             List<Y9Job> y9JobList = y9JobService.findByPersonId(person.getId());
-            personInformation.setJobs(y9JobList.stream().map(Y9Job::getName).collect(Collectors.joining(",")));
+            personInformation.setJobs(y9JobList.stream().map(Y9Job::getName).collect(Collectors.joining(SPLITTER)));
             personList.add(personInformation);
         }
         map.put("personList", personList);
@@ -445,16 +453,16 @@ public class Y9OrgTreeExcelDataHandlerImpl implements Y9OrgTreeDataHandler {
     }
 
     private String reverseSplit(String path) {
-        if (!path.contains(",")) {
+        if (!path.contains(SPLITTER)) {
             return path;
         }
-        String[] oldString = path.split(",");
+        String[] oldString = path.split(SPLITTER);
         StringBuilder strBuffer = new StringBuilder();
-        for (int lenth = oldString.length; lenth > 0; lenth--) {
-            strBuffer.append(oldString[lenth - 1]);
-            strBuffer.append(",");
+        for (int length = oldString.length; length > 0; length--) {
+            strBuffer.append(oldString[length - 1]);
+            strBuffer.append(SPLITTER);
         }
         String newString = strBuffer.toString();
-        return newString.substring(0, newString.lastIndexOf(","));
+        return newString.substring(0, newString.lastIndexOf(SPLITTER));
     }
 }
