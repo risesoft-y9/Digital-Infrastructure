@@ -1,7 +1,5 @@
 package org.apereo.cas.web.support.mgmr;
 
-import jakarta.servlet.http.HttpServletRequest;
-
 import java.io.Serial;
 import java.io.Serializable;
 import java.util.Objects;
@@ -10,9 +8,9 @@ import java.util.stream.Stream;
 import org.apache.commons.lang3.StringUtils;
 import org.apereo.cas.authentication.adaptive.geo.GeoLocationService;
 import org.apereo.cas.configuration.model.support.cookie.PinnableCookieProperties;
-import org.apereo.cas.util.HttpRequestUtils;
 import org.apereo.cas.util.RegexUtils;
 import org.apereo.cas.util.crypto.CipherExecutor;
+import org.apereo.cas.util.http.HttpRequestUtils;
 import org.apereo.cas.web.cookie.CookieSameSitePolicy;
 import org.apereo.cas.web.support.InvalidCookieException;
 import org.apereo.inspektr.common.web.ClientInfo;
@@ -23,6 +21,8 @@ import com.google.common.base.Splitter;
 
 import lombok.val;
 import lombok.extern.slf4j.Slf4j;
+
+import jakarta.servlet.http.HttpServletRequest;
 
 /**
  * The {@link DefaultCasCookieValueManager} is responsible for creating the CAS SSO cookie and encrypting and signing
@@ -94,7 +94,7 @@ public class DefaultCasCookieValueManager extends EncryptedCookieValueManager {
     protected String obtainValueFromCompoundCookie(final String value, final HttpServletRequest request) {
         val cookieParts = Splitter.on(String.valueOf(COOKIE_FIELD_SEPARATOR)).splitToList(value);
 
-        val cookieValue = cookieParts.get(0);
+        val cookieValue = cookieParts.getFirst();
         if (!cookieProperties.isPinToSession()) {
             LOGGER.trace("Cookie session-pinning is disabled. Returning cookie value as it was provided");
             return cookieValue;
@@ -143,16 +143,13 @@ public class DefaultCasCookieValueManager extends EncryptedCookieValueManager {
         }
 
         val agent = HttpRequestUtils.getHttpServletRequestUserAgent(request);
-        if (!cookieUserAgent.equals(agent)) {
-            if (cookieUserAgent.contains("Chrome") && agent.contains("Chrome") && !cookieUserAgent
-                .substring(0, cookieUserAgent.indexOf("Chrome")).equals(agent.substring(0, agent.indexOf("Chrome")))) { // y9
-                                                                                                                        // edit
-                val message =
-                    "Invalid cookie. Required user-agent %s does not match %s".formatted(cookieUserAgent, agent);
-                LOGGER.warn(message);
-                throw new InvalidCookieException(message);
-            } // y9 edit
-        }
+        // y9edit
+        if (cookieUserAgent.contains("Chrome") && agent.contains("Chrome") && !cookieUserAgent
+            .substring(0, cookieUserAgent.indexOf("Chrome")).equals(agent.substring(0, agent.indexOf("Chrome")))) {
+            val message = "Invalid cookie. Required user-agent %s does not match %s".formatted(cookieUserAgent, agent);
+            LOGGER.warn(message);
+            throw new InvalidCookieException(message);
+        } // y9 edit
         return cookieValue;
     }
 }

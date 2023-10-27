@@ -46,7 +46,7 @@ public class OAuth20AuthorizationCodeAuthorizationResponseBuilder
         actionResolverName = AuditActionResolvers.OAUTH2_AUTHORIZATION_RESPONSE_ACTION_RESOLVER,
         resourceResolverName = AuditResourceResolvers.OAUTH2_AUTHORIZATION_RESPONSE_RESOURCE_RESOLVER)
     @Override
-    public ModelAndView build(final AccessTokenRequestContext holder) throws Exception {
+    public ModelAndView build(final AccessTokenRequestContext holder) throws Throwable {
         val authentication = holder.getAuthentication();
         val factory = (OAuth20CodeFactory)configurationContext.getTicketFactory().get(OAuth20Code.class);
         val code = factory.create(holder.getService(), authentication, holder.getTicketGrantingTicket(),
@@ -64,11 +64,6 @@ public class OAuth20AuthorizationCodeAuthorizationResponseBuilder
         return buildCallbackViewViaRedirectUri(holder, code);
     }
 
-    @Override
-    public boolean supports(final OAuth20AuthorizationRequest context) {
-        return StringUtils.equalsIgnoreCase(context.getResponseType(), OAuth20ResponseTypes.CODE.getType());
-    }
-
     /**
      * Build callback view via redirect uri model and view.
      *
@@ -79,12 +74,11 @@ public class OAuth20AuthorizationCodeAuthorizationResponseBuilder
     protected ModelAndView buildCallbackViewViaRedirectUri(final AccessTokenRequestContext holder,
         final OAuth20Code code) throws Exception {
         val attributes = holder.getAuthentication().getAttributes();
-        val state = attributes.get(OAuth20Constants.STATE).get(0).toString();
-        val nonce = attributes.get(OAuth20Constants.NONCE).get(0).toString();
+        val state = attributes.get(OAuth20Constants.STATE).getFirst().toString();
+        val nonce = attributes.get(OAuth20Constants.NONCE).getFirst().toString();
 
         LOGGER.debug("Authorize request successful for client [{}] with redirect uri [{}]", holder.getClientId(),
             holder.getRedirectUri());
-
         // y9 add
         String redirectUri = holder.getRedirectUri();
         String serviceTicketId = "";
@@ -100,7 +94,6 @@ public class OAuth20AuthorizationCodeAuthorizationResponseBuilder
             }
         }
         // y9 add
-
         val params = new LinkedHashMap<String, String>();
         params.put(OAuth20Constants.CODE, code.getId());
         if (StringUtils.isNotBlank(state)) {
@@ -109,6 +102,7 @@ public class OAuth20AuthorizationCodeAuthorizationResponseBuilder
         if (StringUtils.isNotBlank(nonce)) {
             params.put(OAuth20Constants.NONCE, nonce);
         }
+
         if (StringUtils.isNotBlank(serviceTicketId)) {
             params.put("serviceTicketId", serviceTicketId);// y9 add
         }
@@ -117,5 +111,10 @@ public class OAuth20AuthorizationCodeAuthorizationResponseBuilder
         val registeredService = OAuth20Utils
             .getRegisteredOAuthServiceByClientId(configurationContext.getServicesManager(), holder.getClientId());
         return build(registeredService, holder.getResponseMode(), holder.getRedirectUri(), params);
+    }
+
+    @Override
+    public boolean supports(final OAuth20AuthorizationRequest context) {
+        return StringUtils.equalsIgnoreCase(context.getResponseType(), OAuth20ResponseTypes.CODE.getType());
     }
 }

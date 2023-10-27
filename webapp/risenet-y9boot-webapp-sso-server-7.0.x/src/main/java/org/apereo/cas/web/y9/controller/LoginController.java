@@ -1,8 +1,5 @@
 package org.apereo.cas.web.y9.controller;
 
-import jakarta.servlet.http.HttpServletRequest;
-import jakarta.servlet.http.HttpServletResponse;
-
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -37,6 +34,9 @@ import org.springframework.web.bind.annotation.RestController;
 
 import lombok.val;
 import lombok.extern.slf4j.Slf4j;
+
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 
 /**
  *
@@ -132,7 +132,7 @@ public class LoginController {
     @PostMapping(value = "/logon", consumes = MediaType.ALL_VALUE)
     public final ResponseEntity<Map<String, Object>> logon(RememberMeUsernamePasswordCredential credential,
         @RequestBody(required = false) final MultiValueMap<String, String> requestBody,
-        final HttpServletRequest request, final HttpServletResponse response) {
+        final HttpServletRequest request, final HttpServletResponse response) throws Throwable {
         Map<String, Object> ret_map = new HashMap<String, Object>();
         ret_map.put("success", false);
 
