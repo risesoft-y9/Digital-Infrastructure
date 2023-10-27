@@ -1,0 +1,22 @@
+version: '3.9'
+name: traefik
+services:
+  traefik:
+    image: traefik:latest
+    container_name: traefik01
+    hostname: traefik
+    restart: unless-stopped
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+    networks:
+      - y9-share-net    
+    ports:
+      - "8081:8081"
+      - "8080:8080"
+    volumes:
+      - "/var/run/docker.sock:/var/run/docker.sock"
+      - "d:/docker-config/traefik/traefik.yml:/etc/traefik/traefik.yml"
+
+networks:
+  y9-share-net:
+    external: true
