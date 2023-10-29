@@ -15,8 +15,36 @@ services:
       - "8080:8080"
     volumes:
       - "/var/run/docker.sock:/var/run/docker.sock"
-      - "d:/docker-config/traefik/traefik.yml:/etc/traefik/traefik.yml"
-
+      #- "d:/docker-config/traefik/traefik.yml:/etc/traefik/traefik.yml"
+      #有了traefik.yml，可以不用配置command属性。
+    command:
+      - "--global.sendanonymoususage=false"
+      - "--global.checknewversion=false"
+      - "--api=true"
+      - "--api.dashboard=true"
+      - "--api.insecure=true"
+      - "--api.debug=false"
+      - "--ping=true"
+      - "--log.level=INFO"
+      - "--log.format=common"
+      - "--accesslog=false"
+      - "--entrypoints.web.address=:8081"
+      - "--entrypoints.traefik.address=:8080"
+      - "--providers.docker=true"
+      - "--providers.docker.watch=true"
+      - "--providers.docker.exposedbydefault=false"
+      - "--providers.docker.endpoint=unix:///var/run/docker.sock"
+      - "--providers.docker.useBindPortIP=false"
+      - "--providers.docker.network=y9-share-net"
+    healthcheck:
+      test: ["CMD-SHELL", "wget -q --spider --proxy off localhost:8080/ping || exit 1"]
+      interval: 5s
+      retries: 10
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "1m"
+        
 networks:
   y9-share-net:
     external: true
