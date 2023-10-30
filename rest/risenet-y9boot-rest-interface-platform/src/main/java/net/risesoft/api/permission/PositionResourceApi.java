@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 import net.risesoft.enums.AuthorityEnum;
 import net.risesoft.model.Resource;
+import net.risesoft.pojo.Y9Result;
 
 /**
  * 岗位资源权限组件
@@ -34,7 +35,7 @@ public interface PositionResourceApi {
      * @since 9.6.0
      */
     @GetMapping("/hasPermission")
-    boolean hasPermission(@RequestParam("tenantId") @NotBlank String tenantId,
+    Y9Result<Boolean> hasPermission(@RequestParam("tenantId") @NotBlank String tenantId,
         @RequestParam("positionId") @NotBlank String positionId,
         @RequestParam("resourceId") @NotBlank String resourceId, @RequestParam("authority") Integer authority);
 
@@ -49,7 +50,7 @@ public interface PositionResourceApi {
      * @since 9.6.0
      */
     @GetMapping("/hasPermissionByCustomId")
-    boolean hasPermissionByCustomId(@RequestParam("tenantId") @NotBlank String tenantId,
+    Y9Result<Boolean> hasPermissionByCustomId(@RequestParam("tenantId") @NotBlank String tenantId,
         @RequestParam("positionId") @NotBlank String positionId, @RequestParam("customId") @NotBlank String customId,
         @RequestParam("authority") Integer authority);
 
@@ -64,7 +65,7 @@ public interface PositionResourceApi {
      * @since 9.6.0
      */
     @GetMapping("/listSubMenus")
-    List<Resource> listSubMenus(@RequestParam("tenantId") @NotBlank String tenantId,
+    Y9Result<List<Resource>> listSubMenus(@RequestParam("tenantId") @NotBlank String tenantId,
         @RequestParam("positionId") @NotBlank String positionId, @RequestParam("authority") Integer authority,
         @RequestParam("resourceId") @NotBlank String resourceId);
 
@@ -79,7 +80,7 @@ public interface PositionResourceApi {
      * @since 9.6.0
      */
     @GetMapping("/listSubResources")
-    List<Resource> listSubResources(@RequestParam("tenantId") @NotBlank String tenantId,
+    Y9Result<List<Resource>> listSubResources(@RequestParam("tenantId") @NotBlank String tenantId,
         @RequestParam("positionId") @NotBlank String positionId, @RequestParam("authority") Integer authority,
         @RequestParam(name = "resourceId", required = false) String resourceId);
 }

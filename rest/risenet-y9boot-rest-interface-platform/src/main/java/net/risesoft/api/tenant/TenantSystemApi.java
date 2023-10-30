@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 import net.risesoft.model.System;
 import net.risesoft.model.Tenant;
+import net.risesoft.pojo.Y9Result;
 
 /**
  * 租户系统组件
@@ -31,7 +32,7 @@ public interface TenantSystemApi {
      * @since 9.6.0
      */
     @GetMapping("/listSystemByTenantId")
-    List<System> listSystemByTenantId(@RequestParam("tenantId") @NotBlank String tenantId);
+    Y9Result<List<System>> listSystemByTenantId(@RequestParam("tenantId") @NotBlank String tenantId);
 
     /**
      * 根据租户id，获取租用的系统ID列表
@@ -41,7 +42,7 @@ public interface TenantSystemApi {
      * @since 9.6.0
      */
     @GetMapping("/listSystemIdByTenantId")
-    List<String> listSystemIdByTenantId(@RequestParam("tenantId") @NotBlank String tenantId);
+    Y9Result<List<String>> listSystemIdByTenantId(@RequestParam("tenantId") @NotBlank String tenantId);
 
     /**
      * 根据系统查询该系统被哪儿些租户租用了
@@ -51,7 +52,7 @@ public interface TenantSystemApi {
      * @since 9.6.0
      */
     @GetMapping("/listTenantBySystemId")
-    List<Tenant> listTenantBySystemId(@RequestParam("systemId") @NotBlank String systemId);
+    Y9Result<List<Tenant>> listTenantBySystemId(@RequestParam("systemId") @NotBlank String systemId);
 
     /**
      * 根据系统名该系统被哪些租户租用了
@@ -61,5 +62,5 @@ public interface TenantSystemApi {
      * @since 9.6.0
      */
     @GetMapping("/listTenantBySystemName")
-    List<Tenant> listTenantBySystemName(@RequestParam("systemName") @NotBlank String systemName);
+    Y9Result<List<Tenant>> listTenantBySystemName(@RequestParam("systemName") @NotBlank String systemName);
 }

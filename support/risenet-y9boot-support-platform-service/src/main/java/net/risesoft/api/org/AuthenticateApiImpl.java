@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.RestController;
 import lombok.RequiredArgsConstructor;
 
 import net.risesoft.model.Message;
+import net.risesoft.pojo.Y9Result;
 import net.risesoft.service.org.Y9PersonService;
 import net.risesoft.util.Y9PlatformUtil;
 import net.risesoft.y9.Y9LoginUserHolder;
@@ -30,7 +31,7 @@ import net.risesoft.y9.Y9LoginUserHolder;
 @Primary
 @Validated
 @RestController
-@RequestMapping(value = "/services/rest/auth", produces = MediaType.APPLICATION_JSON_VALUE)
+@RequestMapping(value = "/services/rest/v1/auth", produces = MediaType.APPLICATION_JSON_VALUE)
 @RequiredArgsConstructor
 public class AuthenticateApiImpl implements AuthenticateApi {
 
@@ -46,14 +47,14 @@ public class AuthenticateApiImpl implements AuthenticateApi {
      * @since 9.6.0
      */
     @Override
-    public Message authenticate3(@RequestParam("tenantShortName") @NotBlank String tenantShortName,
+    public Y9Result<Message> authenticate3(@RequestParam("tenantShortName") @NotBlank String tenantShortName,
         @RequestParam("loginName") @NotBlank String loginName, @RequestParam("password") @NotBlank String password) {
         List<String> tenantIds = Y9PlatformUtil.getTenantByLoginName(tenantShortName);
         if (!tenantIds.isEmpty()) {
             String tenantId = tenantIds.get(0);
             Y9LoginUserHolder.setTenantId(tenantId);
         }
-        return y9PersonService.authenticate3(tenantShortName, loginName, password);
+        return Y9Result.success(y9PersonService.authenticate3(tenantShortName, loginName, password));
     }
 
     /**
@@ -66,13 +67,13 @@ public class AuthenticateApiImpl implements AuthenticateApi {
      * @since 9.6.0
      */
     @Override
-    public Message authenticate5(@RequestParam("tenantShortName") @NotBlank String tenantShortName,
+    public Y9Result<Message> authenticate5(@RequestParam("tenantShortName") @NotBlank String tenantShortName,
         @RequestParam("mobile") @NotBlank String mobile, @RequestParam("password") @NotBlank String password) {
         List<String> tenantIds = Y9PlatformUtil.getTenantByLoginName(tenantShortName);
         if (!tenantIds.isEmpty()) {
             String tenantId = tenantIds.get(0);
             Y9LoginUserHolder.setTenantId(tenantId);
         }
-        return y9PersonService.authenticate5(tenantShortName, mobile, password);
+        return Y9Result.success(y9PersonService.authenticate5(tenantShortName, mobile, password));
     }
 }

@@ -28,6 +28,7 @@ import net.risesoft.model.Group;
 import net.risesoft.model.OrgUnit;
 import net.risesoft.model.Person;
 import net.risesoft.model.Position;
+import net.risesoft.pojo.Y9Result;
 import net.risesoft.service.org.CompositeOrgBaseService;
 import net.risesoft.service.org.Y9DepartmentPropService;
 import net.risesoft.service.org.Y9DepartmentService;
@@ -51,7 +52,7 @@ import net.risesoft.y9.util.Y9ModelConvertUtil;
 @Primary
 @Validated
 @RestController
-@RequestMapping(value = "/services/rest/department", produces = MediaType.APPLICATION_JSON_VALUE)
+@RequestMapping(value = "/services/rest/v1/department", produces = MediaType.APPLICATION_JSON_VALUE)
 @RequiredArgsConstructor
 public class DepartmentApiImpl implements DepartmentApi {
 
@@ -71,13 +72,13 @@ public class DepartmentApiImpl implements DepartmentApi {
      * @since 9.6.0
      */
     @Override
-    public Department createDepartment(@RequestParam("tenantId") @NotBlank String tenantId,
+    public Y9Result<Department> createDepartment(@RequestParam("tenantId") @NotBlank String tenantId,
         @RequestParam("departmentJson") @NotBlank String departmentJson) {
         Y9LoginUserHolder.setTenantId(tenantId);
 
         Y9Department y9Department = Y9JsonUtil.readValue(departmentJson, Y9Department.class);
         y9Department = y9DepartmentService.saveOrUpdate(y9Department);
-        return Y9ModelConvertUtil.convert(y9Department, Department.class);
+        return Y9Result.success(Y9ModelConvertUtil.convert(y9Department, Department.class));
     }
 
     /**
@@ -89,12 +90,12 @@ public class DepartmentApiImpl implements DepartmentApi {
      * @since 9.6.0
      */
     @Override
-    public boolean deleteDepartment(@RequestParam("deptId") @NotBlank String deptId,
+    public Y9Result<Object> deleteDepartment(@RequestParam("deptId") @NotBlank String deptId,
         @RequestParam("tenantId") @NotBlank String tenantId) {
         Y9LoginUserHolder.setTenantId(tenantId);
 
         y9DepartmentService.delete(deptId);
-        return true;
+        return Y9Result.success();
     }
 
     /**
@@ -106,13 +107,13 @@ public class DepartmentApiImpl implements DepartmentApi {
      * @since 9.6.0
      */
     @Override
-    public boolean disableDepartment(@RequestParam("tenantId") @NotBlank String tenantId,
+    public Y9Result<Object> disableDepartment(@RequestParam("tenantId") @NotBlank String tenantId,
         @RequestParam("departmentId") @NotBlank String departmentId) {
         Y9LoginUserHolder.setTenantId(tenantId);
 
         y9DepartmentService.changeDisable(departmentId);
 
-        return true;
+        return Y9Result.success();
     }
 
     /**
@@ -124,12 +125,12 @@ public class DepartmentApiImpl implements DepartmentApi {
      * @since 9.6.0
      */
     @Override
-    public OrgUnit getBureau(@RequestParam("tenantId") @NotBlank String tenantId,
+    public Y9Result<OrgUnit> getBureau(@RequestParam("tenantId") @NotBlank String tenantId,
         @RequestParam("departmentId") @NotBlank String departmentId) {
         Y9LoginUserHolder.setTenantId(tenantId);
 
         Y9OrgBase bureau = compositeOrgBaseService.findOrgUnitBureau(departmentId).orElse(null);
-        return ModelConvertUtil.orgBaseToOrgUnit(bureau);
+        return Y9Result.success(ModelConvertUtil.orgBaseToOrgUnit(bureau));
     }
 
     /**
@@ -141,12 +142,12 @@ public class DepartmentApiImpl implements DepartmentApi {
      * @since 9.6.0
      */
     @Override
-    public Department getDepartment(@RequestParam("tenantId") @NotBlank String tenantId,
+    public Y9Result<Department> getDepartment(@RequestParam("tenantId") @NotBlank String tenantId,
         @RequestParam("departmentId") @NotBlank String departmentId) {
         Y9LoginUserHolder.setTenantId(tenantId);
 
         Y9Department y9Department = y9DepartmentService.findById(departmentId).orElse(null);
-        return Y9ModelConvertUtil.convert(y9Department, Department.class);
+        return Y9Result.success(Y9ModelConvertUtil.convert(y9Department, Department.class));
     }
 
     /**
@@ -158,12 +159,12 @@ public class DepartmentApiImpl implements DepartmentApi {
      * @since 9.6.0
      */
     @Override
-    public OrgUnit getParent(@RequestParam("tenantId") @NotBlank String tenantId,
+    public Y9Result<OrgUnit> getParent(@RequestParam("tenantId") @NotBlank String tenantId,
         @RequestParam("departmentId") @NotBlank String departmentId) {
         Y9LoginUserHolder.setTenantId(tenantId);
 
         Y9OrgBase parent = compositeOrgBaseService.findOrgUnitParent(departmentId).orElse(null);
-        return ModelConvertUtil.orgBaseToOrgUnit(parent);
+        return Y9Result.success(ModelConvertUtil.orgBaseToOrgUnit(parent));
     }
 
     /**
@@ -175,12 +176,12 @@ public class DepartmentApiImpl implements DepartmentApi {
      * @since 9.6.0
      */
     @Override
-    public List<Person> listAllPersons(@RequestParam("tenantId") @NotBlank String tenantId,
+    public Y9Result<List<Person>> listAllPersons(@RequestParam("tenantId") @NotBlank String tenantId,
         @RequestParam("departmentId") @NotBlank String departmentId) {
         Y9LoginUserHolder.setTenantId(tenantId);
 
         List<Y9Person> y9PersonList = compositeOrgBaseService.listAllPersonsRecursionDownward(departmentId);
-        return Y9ModelConvertUtil.convert(y9PersonList, Person.class);
+        return Y9Result.success(Y9ModelConvertUtil.convert(y9PersonList, Person.class));
     }
 
     /**
@@ -193,12 +194,12 @@ public class DepartmentApiImpl implements DepartmentApi {
      * @since 9.6.0
      */
     @Override
-    public List<Person> listAllPersonsByDisabled(@RequestParam("tenantId") @NotBlank String tenantId,
+    public Y9Result<List<Person>> listAllPersonsByDisabled(@RequestParam("tenantId") @NotBlank String tenantId,
         @RequestParam("departmentId") @NotBlank String departmentId, @RequestParam("disabled") Boolean disabled) {
         Y9LoginUserHolder.setTenantId(tenantId);
 
         List<Y9Person> y9PersonList = compositeOrgBaseService.listAllPersonsRecursionDownward(departmentId, disabled);
-        return Y9ModelConvertUtil.convert(y9PersonList, Person.class);
+        return Y9Result.success(Y9ModelConvertUtil.convert(y9PersonList, Person.class));
     }
 
     /**
@@ -212,14 +213,14 @@ public class DepartmentApiImpl implements DepartmentApi {
      * @since 9.6.0
      */
     @Override
-    public List<Person> listAllPersonsByDisabledAndName(@RequestParam("tenantId") @NotBlank String tenantId,
+    public Y9Result<List<Person>> listAllPersonsByDisabledAndName(@RequestParam("tenantId") @NotBlank String tenantId,
         @RequestParam("departmentId") @NotBlank String departmentId, @RequestParam("disabled") Boolean disabled,
         @RequestParam("name") @NotBlank String name) {
         Y9LoginUserHolder.setTenantId(tenantId);
 
         List<Y9Person> y9PersonList =
             compositeOrgBaseService.searchAllPersonsRecursionDownward(departmentId, disabled, name);
-        return Y9ModelConvertUtil.convert(y9PersonList, Person.class);
+        return Y9Result.success(Y9ModelConvertUtil.convert(y9PersonList, Person.class));
     }
 
     /**
@@ -231,12 +232,12 @@ public class DepartmentApiImpl implements DepartmentApi {
      * @since 9.6.0
      */
     @Override
-    public List<Department> listByDn(@RequestParam("tenantId") @NotBlank String tenantId,
+    public Y9Result<List<Department>> listByDn(@RequestParam("tenantId") @NotBlank String tenantId,
         @RequestParam("dn") @NotBlank String dn) {
         Y9LoginUserHolder.setTenantId(tenantId);
 
         List<Y9Department> y9DepartmentList = y9DepartmentService.listByDn(dn);
-        return Y9ModelConvertUtil.convert(y9DepartmentList, Department.class);
+        return Y9Result.success(Y9ModelConvertUtil.convert(y9DepartmentList, Department.class));
     }
 
     /**
@@ -249,13 +250,14 @@ public class DepartmentApiImpl implements DepartmentApi {
      * @since 9.6.0
      */
     @Override
-    public List<DepartmentProp> listByOrgBaseIdAndCategory(@RequestParam("tenantId") @NotBlank String tenantId,
-        @RequestParam("orgUnitId") @NotBlank String orgUnitId, @RequestParam("category") Integer category) {
+    public Y9Result<List<DepartmentProp>> listByOrgBaseIdAndCategory(
+        @RequestParam("tenantId") @NotBlank String tenantId, @RequestParam("orgUnitId") @NotBlank String orgUnitId,
+        @RequestParam("category") Integer category) {
         Y9LoginUserHolder.setTenantId(tenantId);
 
         List<Y9DepartmentProp> y9DepartmentPropList =
             y9DepartmentPropService.listByOrgBaseIdAndCategory(orgUnitId, category);
-        return Y9ModelConvertUtil.convert(y9DepartmentPropList, DepartmentProp.class);
+        return Y9Result.success(Y9ModelConvertUtil.convert(y9DepartmentPropList, DepartmentProp.class));
     }
 
     /**
@@ -267,12 +269,12 @@ public class DepartmentApiImpl implements DepartmentApi {
      * @since 9.6.0
      */
     @Override
-    public List<Department> listByTenantIdAndDeptName(@RequestParam("tenantId") @NotBlank String tenantId,
+    public Y9Result<List<Department>> listByTenantIdAndDeptName(@RequestParam("tenantId") @NotBlank String tenantId,
         @RequestParam("deptName") @NotBlank String deptName) {
         Y9LoginUserHolder.setTenantId(tenantId);
 
         List<Y9Department> y9DepartmentList = y9DepartmentService.listByNameLike(deptName);
-        return Y9ModelConvertUtil.convert(y9DepartmentList, Department.class);
+        return Y9Result.success(Y9ModelConvertUtil.convert(y9DepartmentList, Department.class));
     }
 
     /**
@@ -284,12 +286,12 @@ public class DepartmentApiImpl implements DepartmentApi {
      * @since 9.6.0
      */
     @Override
-    public List<Department> listDepartments(@RequestParam("tenantId") @NotBlank String tenantId,
+    public Y9Result<List<Department>> listDepartments(@RequestParam("tenantId") @NotBlank String tenantId,
         @RequestParam("ids") @NotEmpty List<String> ids) {
         Y9LoginUserHolder.setTenantId(tenantId);
 
         List<Y9Department> y9DepartmentList = y9DepartmentService.list(ids);
-        return Y9ModelConvertUtil.convert(y9DepartmentList, Department.class);
+        return Y9Result.success(Y9ModelConvertUtil.convert(y9DepartmentList, Department.class));
     }
 
     /**
@@ -301,12 +303,12 @@ public class DepartmentApiImpl implements DepartmentApi {
      * @since 9.6.0
      */
     @Override
-    public List<Group> listGroups(@RequestParam("tenantId") @NotBlank String tenantId,
+    public Y9Result<List<Group>> listGroups(@RequestParam("tenantId") @NotBlank String tenantId,
         @RequestParam("departmentId") @NotBlank String departmentId) {
         Y9LoginUserHolder.setTenantId(tenantId);
 
         List<Y9Group> y9GroupList = y9GroupService.listByParentId(departmentId);
-        return Y9ModelConvertUtil.convert(y9GroupList, Group.class);
+        return Y9Result.success(Y9ModelConvertUtil.convert(y9GroupList, Group.class));
     }
 
     /**
@@ -318,12 +320,12 @@ public class DepartmentApiImpl implements DepartmentApi {
      * @since 9.6.0
      */
     @Override
-    public List<OrgUnit> listLeaders(@RequestParam("tenantId") @NotBlank String tenantId,
+    public Y9Result<List<OrgUnit>> listLeaders(@RequestParam("tenantId") @NotBlank String tenantId,
         @RequestParam("departmentId") @NotBlank String departmentId) {
         Y9LoginUserHolder.setTenantId(tenantId);
 
         List<Y9OrgBase> y9OrgBaseList = y9DepartmentService.listLeaders(departmentId);
-        return ModelConvertUtil.orgBaseToOrgUnit(y9OrgBaseList);
+        return Y9Result.success(ModelConvertUtil.orgBaseToOrgUnit(y9OrgBaseList));
     }
 
     /**
@@ -335,12 +337,12 @@ public class DepartmentApiImpl implements DepartmentApi {
      * @since 9.6.0
      */
     @Override
-    public List<OrgUnit> listManagers(@RequestParam("tenantId") @NotBlank String tenantId,
+    public Y9Result<List<OrgUnit>> listManagers(@RequestParam("tenantId") @NotBlank String tenantId,
         @RequestParam("departmentId") @NotBlank String departmentId) {
         Y9LoginUserHolder.setTenantId(tenantId);
 
         List<Y9OrgBase> y9OrgBaseList = y9DepartmentService.listManagers(departmentId);
-        return ModelConvertUtil.orgBaseToOrgUnit(y9OrgBaseList);
+        return Y9Result.success(ModelConvertUtil.orgBaseToOrgUnit(y9OrgBaseList));
     }
 
     /**
@@ -352,12 +354,12 @@ public class DepartmentApiImpl implements DepartmentApi {
      * @since 9.6.0
      */
     @Override
-    public List<Person> listPersons(@RequestParam("tenantId") @NotBlank String tenantId,
+    public Y9Result<List<Person>> listPersons(@RequestParam("tenantId") @NotBlank String tenantId,
         @RequestParam("departmentId") @NotBlank String departmentId) {
         Y9LoginUserHolder.setTenantId(tenantId);
 
         List<Y9Person> y9PersonList = y9PersonService.listByParentId(departmentId);
-        return Y9ModelConvertUtil.convert(y9PersonList, Person.class);
+        return Y9Result.success(Y9ModelConvertUtil.convert(y9PersonList, Person.class));
     }
 
     /**
@@ -370,12 +372,12 @@ public class DepartmentApiImpl implements DepartmentApi {
      * @since 9.6.0
      */
     @Override
-    public List<Person> listPersonsByDisabled(@RequestParam("tenantId") @NotBlank String tenantId,
+    public Y9Result<List<Person>> listPersonsByDisabled(@RequestParam("tenantId") @NotBlank String tenantId,
         @RequestParam("departmentId") @NotBlank String departmentId, @RequestParam("disabled") Boolean disabled) {
         Y9LoginUserHolder.setTenantId(tenantId);
 
         List<Y9Person> y9PersonList = y9PersonService.listByParentIdAndDisabled(departmentId, disabled);
-        return Y9ModelConvertUtil.convert(y9PersonList, Person.class);
+        return Y9Result.success(Y9ModelConvertUtil.convert(y9PersonList, Person.class));
     }
 
     /**
@@ -387,12 +389,12 @@ public class DepartmentApiImpl implements DepartmentApi {
      * @since 9.6.0
      */
     @Override
-    public List<Position> listPositions(@RequestParam("tenantId") @NotBlank String tenantId,
+    public Y9Result<List<Position>> listPositions(@RequestParam("tenantId") @NotBlank String tenantId,
         @RequestParam("departmentId") @NotBlank String departmentId) {
         Y9LoginUserHolder.setTenantId(tenantId);
 
         List<Y9Position> y9PositionList = y9PositionService.listByParentId(departmentId);
-        return Y9ModelConvertUtil.convert(y9PositionList, Position.class);
+        return Y9Result.success(Y9ModelConvertUtil.convert(y9PositionList, Position.class));
     }
 
     /**
@@ -404,12 +406,12 @@ public class DepartmentApiImpl implements DepartmentApi {
      * @since 9.6.0
      */
     @Override
-    public List<Department> listSubDepartments(@RequestParam("tenantId") @NotBlank String tenantId,
+    public Y9Result<List<Department>> listSubDepartments(@RequestParam("tenantId") @NotBlank String tenantId,
         @RequestParam("departmentId") @NotBlank String departmentId) {
         Y9LoginUserHolder.setTenantId(tenantId);
 
         List<Y9Department> y9DepartmentList = y9DepartmentService.listByParentId(departmentId);
-        return Y9ModelConvertUtil.convert(y9DepartmentList, Department.class);
+        return Y9Result.success(Y9ModelConvertUtil.convert(y9DepartmentList, Department.class));
     }
 
     /**
@@ -421,13 +423,13 @@ public class DepartmentApiImpl implements DepartmentApi {
      * @since 9.6.0
      */
     @Override
-    public Department saveDepartment(@RequestParam("tenantId") @NotBlank String tenantId,
+    public Y9Result<Department> saveDepartment(@RequestParam("tenantId") @NotBlank String tenantId,
         @RequestParam("departmentJson") @NotBlank String departmentJson) {
         Y9LoginUserHolder.setTenantId(tenantId);
 
         Y9Department y9Department = Y9JsonUtil.readValue(departmentJson, Y9Department.class);
         y9Department = y9DepartmentService.saveOrUpdate(y9Department);
-        return Y9ModelConvertUtil.convert(y9Department, Department.class);
+        return Y9Result.success(Y9ModelConvertUtil.convert(y9Department, Department.class));
     }
 
     /**
@@ -439,12 +441,12 @@ public class DepartmentApiImpl implements DepartmentApi {
      * @since 9.6.0
      */
     @Override
-    public List<Department> search(@RequestParam("tenantId") @NotBlank String tenantId,
+    public Y9Result<List<Department>> search(@RequestParam("tenantId") @NotBlank String tenantId,
         @RequestParam("whereClause") @NotBlank String whereClause) {
         Y9LoginUserHolder.setTenantId(tenantId);
 
         List<Y9Department> y9DepartmentList = y9DepartmentService.search(whereClause);
         Collections.sort(y9DepartmentList);
-        return Y9ModelConvertUtil.convert(y9DepartmentList, Department.class);
+        return Y9Result.success(Y9ModelConvertUtil.convert(y9DepartmentList, Department.class));
     }
 }

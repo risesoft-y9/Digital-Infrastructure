@@ -36,7 +36,7 @@ import net.risesoft.y9public.service.tenant.Y9TenantSystemService;
 @Primary
 @Validated
 @RestController
-@RequestMapping(value = "/services/rest/system", produces = MediaType.APPLICATION_JSON_VALUE)
+@RequestMapping(value = "/services/rest/v1/system", produces = MediaType.APPLICATION_JSON_VALUE)
 @RequiredArgsConstructor
 public class SystemApiImpl implements SystemApi {
 
@@ -52,9 +52,9 @@ public class SystemApiImpl implements SystemApi {
      * @since 9.6.2
      */
     @Override
-    public System getById(@RequestParam("id") @NotBlank String id) {
+    public Y9Result<System> getById(@RequestParam("id") @NotBlank String id) {
         Y9System y9System = y9SystemService.getById(id);
-        return Y9ModelConvertUtil.convert(y9System, System.class);
+        return Y9Result.success(Y9ModelConvertUtil.convert(y9System, System.class));
     }
 
     /**
@@ -64,9 +64,9 @@ public class SystemApiImpl implements SystemApi {
      * @return System 系统
      */
     @Override
-    public System getByName(@RequestParam("name") @NotBlank String name) {
+    public Y9Result<System> getByName(@RequestParam("name") @NotBlank String name) {
         Y9System y9System = y9SystemService.findByName(name).orElse(null);
-        return Y9ModelConvertUtil.convert(y9System, System.class);
+        return Y9Result.success(Y9ModelConvertUtil.convert(y9System, System.class));
     }
 
     /**

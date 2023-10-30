@@ -17,6 +17,7 @@ import net.risesoft.model.Group;
 import net.risesoft.model.OrgUnit;
 import net.risesoft.model.Person;
 import net.risesoft.model.Position;
+import net.risesoft.pojo.Y9Result;
 
 /**
  * 部门服务组件
@@ -39,7 +40,7 @@ public interface DepartmentApi {
      * @since 9.6.0
      */
     @PostMapping("/createDepartment")
-    Department createDepartment(@RequestParam("tenantId") @NotBlank String tenantId,
+    Y9Result<Department> createDepartment(@RequestParam("tenantId") @NotBlank String tenantId,
         @RequestParam("departmentJson") @NotBlank String departmentJson);
 
     /**
@@ -51,7 +52,7 @@ public interface DepartmentApi {
      * @since 9.6.0
      */
     @GetMapping("/deleteDepartment")
-    boolean deleteDepartment(@RequestParam("deptId") @NotBlank String deptId,
+    Y9Result<Object> deleteDepartment(@RequestParam("deptId") @NotBlank String deptId,
         @RequestParam("tenantId") @NotBlank String tenantId);
 
     /**
@@ -63,7 +64,7 @@ public interface DepartmentApi {
      * @since 9.6.0
      */
     @GetMapping("/disableDepartment")
-    boolean disableDepartment(@RequestParam("tenantId") @NotBlank String tenantId,
+    Y9Result<Object> disableDepartment(@RequestParam("tenantId") @NotBlank String tenantId,
         @RequestParam("departmentId") @NotBlank String departmentId);
 
     /**
@@ -75,7 +76,7 @@ public interface DepartmentApi {
      * @since 9.6.0
      */
     @GetMapping("/getBureau")
-    OrgUnit getBureau(@RequestParam("tenantId") @NotBlank String tenantId,
+    Y9Result<OrgUnit> getBureau(@RequestParam("tenantId") @NotBlank String tenantId,
         @RequestParam("departmentId") @NotBlank String departmentId);
 
     /**
@@ -87,7 +88,7 @@ public interface DepartmentApi {
      * @since 9.6.0
      */
     @GetMapping("/getDepartment")
-    Department getDepartment(@RequestParam("tenantId") @NotBlank String tenantId,
+    Y9Result<Department> getDepartment(@RequestParam("tenantId") @NotBlank String tenantId,
         @RequestParam("departmentId") @NotBlank String departmentId);
 
     /**
@@ -99,7 +100,7 @@ public interface DepartmentApi {
      * @since 9.6.0
      */
     @GetMapping("/getParent")
-    OrgUnit getParent(@RequestParam("tenantId") @NotBlank String tenantId,
+    Y9Result<OrgUnit> getParent(@RequestParam("tenantId") @NotBlank String tenantId,
         @RequestParam("departmentId") @NotBlank String departmentId);
 
     /**
@@ -111,7 +112,7 @@ public interface DepartmentApi {
      * @since 9.6.0
      */
     @GetMapping("/listAllPersons")
-    List<Person> listAllPersons(@RequestParam("tenantId") @NotBlank String tenantId,
+    Y9Result<List<Person>> listAllPersons(@RequestParam("tenantId") @NotBlank String tenantId,
         @RequestParam("departmentId") @NotBlank String departmentId);
 
     /**
@@ -124,7 +125,7 @@ public interface DepartmentApi {
      * @since 9.6.0
      */
     @GetMapping("/listAllPersonsByDisabled")
-    List<Person> listAllPersonsByDisabled(@RequestParam("tenantId") @NotBlank String tenantId,
+    Y9Result<List<Person>> listAllPersonsByDisabled(@RequestParam("tenantId") @NotBlank String tenantId,
         @RequestParam("departmentId") @NotBlank String departmentId, @RequestParam("disabled") Boolean disabled);
 
     /**
@@ -138,7 +139,7 @@ public interface DepartmentApi {
      * @since 9.6.0
      */
     @GetMapping("/listAllPersonsByDisabledAndName")
-    List<Person> listAllPersonsByDisabledAndName(@RequestParam("tenantId") @NotBlank String tenantId,
+    Y9Result<List<Person>> listAllPersonsByDisabledAndName(@RequestParam("tenantId") @NotBlank String tenantId,
         @RequestParam("departmentId") @NotBlank String departmentId, @RequestParam("disabled") Boolean disabled,
         @RequestParam("name") @NotBlank String name);
 
@@ -151,7 +152,7 @@ public interface DepartmentApi {
      * @since 9.6.0
      */
     @GetMapping("/listByDn")
-    List<Department> listByDn(@RequestParam("tenantId") @NotBlank String tenantId,
+    Y9Result<List<Department>> listByDn(@RequestParam("tenantId") @NotBlank String tenantId,
         @RequestParam("dn") @NotBlank String dn);
 
     /**
@@ -164,7 +165,7 @@ public interface DepartmentApi {
      * @since 9.6.0
      */
     @GetMapping("/listByOrgBaseIdAndCategory")
-    List<DepartmentProp> listByOrgBaseIdAndCategory(@RequestParam("tenantId") @NotBlank String tenantId,
+    Y9Result<List<DepartmentProp>> listByOrgBaseIdAndCategory(@RequestParam("tenantId") @NotBlank String tenantId,
         @RequestParam("orgUnitId") @NotBlank String orgUnitId, @RequestParam("category") Integer category);
 
     /**
@@ -176,7 +177,7 @@ public interface DepartmentApi {
      * @since 9.6.0
      */
     @GetMapping("/listByTenantIdAndDeptName")
-    List<Department> listByTenantIdAndDeptName(@RequestParam("tenantId") @NotBlank String tenantId,
+    Y9Result<List<Department>> listByTenantIdAndDeptName(@RequestParam("tenantId") @NotBlank String tenantId,
         @RequestParam("deptName") @NotBlank String deptName);
 
     /**
@@ -188,7 +189,7 @@ public interface DepartmentApi {
      * @since 9.6.0
      */
     @GetMapping("/listDepartments")
-    List<Department> listDepartments(@RequestParam("tenantId") @NotBlank String tenantId,
+    Y9Result<List<Department>> listDepartments(@RequestParam("tenantId") @NotBlank String tenantId,
         @RequestParam("ids") @NotEmpty List<String> ids);
 
     /**
@@ -200,7 +201,7 @@ public interface DepartmentApi {
      * @since 9.6.0
      */
     @GetMapping("/listGroups")
-    List<Group> listGroups(@RequestParam("tenantId") @NotBlank String tenantId,
+    Y9Result<List<Group>> listGroups(@RequestParam("tenantId") @NotBlank String tenantId,
         @RequestParam("departmentId") @NotBlank String departmentId);
 
     /**
@@ -212,7 +213,7 @@ public interface DepartmentApi {
      * @since 9.6.0
      */
     @GetMapping("/listLeaders")
-    List<OrgUnit> listLeaders(@RequestParam("tenantId") @NotBlank String tenantId,
+    Y9Result<List<OrgUnit>> listLeaders(@RequestParam("tenantId") @NotBlank String tenantId,
         @RequestParam("departmentId") @NotBlank String departmentId);
 
     /**
@@ -224,7 +225,7 @@ public interface DepartmentApi {
      * @since 9.6.0
      */
     @GetMapping("/listManagers")
-    List<OrgUnit> listManagers(@RequestParam("tenantId") @NotBlank String tenantId,
+    Y9Result<List<OrgUnit>> listManagers(@RequestParam("tenantId") @NotBlank String tenantId,
         @RequestParam("departmentId") @NotBlank String departmentId);
 
     /**
@@ -236,7 +237,7 @@ public interface DepartmentApi {
      * @since 9.6.0
      */
     @GetMapping("/listPersons")
-    List<Person> listPersons(@RequestParam("tenantId") @NotBlank String tenantId,
+    Y9Result<List<Person>> listPersons(@RequestParam("tenantId") @NotBlank String tenantId,
         @RequestParam("departmentId") @NotBlank String departmentId);
 
     /**
@@ -249,7 +250,7 @@ public interface DepartmentApi {
      * @since 9.6.0
      */
     @GetMapping("/listPersonsByDisabled")
-    List<Person> listPersonsByDisabled(@RequestParam("tenantId") @NotBlank String tenantId,
+    Y9Result<List<Person>> listPersonsByDisabled(@RequestParam("tenantId") @NotBlank String tenantId,
         @RequestParam("departmentId") @NotBlank String departmentId, @RequestParam("disabled") Boolean disabled);
 
     /**
@@ -261,7 +262,7 @@ public interface DepartmentApi {
      * @since 9.6.0
      */
     @GetMapping("/listPositions")
-    List<Position> listPositions(@RequestParam("tenantId") @NotBlank String tenantId,
+    Y9Result<List<Position>> listPositions(@RequestParam("tenantId") @NotBlank String tenantId,
         @RequestParam("departmentId") @NotBlank String departmentId);
 
     /**
@@ -273,7 +274,7 @@ public interface DepartmentApi {
      * @since 9.6.0
      */
     @GetMapping("/listSubDepartments")
-    List<Department> listSubDepartments(@RequestParam("tenantId") @NotBlank String tenantId,
+    Y9Result<List<Department>> listSubDepartments(@RequestParam("tenantId") @NotBlank String tenantId,
         @RequestParam("departmentId") @NotBlank String departmentId);
 
     /**
@@ -285,7 +286,7 @@ public interface DepartmentApi {
      * @since 9.6.0
      */
     @PostMapping("/saveDepartment")
-    Department saveDepartment(@RequestParam("tenantId") @NotBlank String tenantId,
+    Y9Result<Department> saveDepartment(@RequestParam("tenantId") @NotBlank String tenantId,
         @RequestParam("departmentJson") @NotBlank String departmentJson);
 
     /**
@@ -297,7 +298,7 @@ public interface DepartmentApi {
      * @since 9.6.0
      */
     @GetMapping("/search")
-    List<Department> search(@RequestParam("tenantId") @NotBlank String tenantId,
+    Y9Result<List<Department>> search(@RequestParam("tenantId") @NotBlank String tenantId,
         @RequestParam("whereClause") @NotBlank String whereClause);
 
 }

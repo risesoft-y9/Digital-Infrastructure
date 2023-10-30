@@ -13,6 +13,7 @@ import net.risesoft.model.Group;
 import net.risesoft.model.Organization;
 import net.risesoft.model.Person;
 import net.risesoft.model.Position;
+import net.risesoft.pojo.Y9Result;
 
 /**
  * 机构服务组件
@@ -35,7 +36,7 @@ public interface OrganizationApi {
      * @since 9.6.0
      */
     @GetMapping("/get")
-    Organization getOrganization(@RequestParam("tenantId") @NotBlank String tenantId,
+    Y9Result<Organization> getOrganization(@RequestParam("tenantId") @NotBlank String tenantId,
         @RequestParam("organizationId") @NotBlank String organizationId);
 
     /**
@@ -47,7 +48,7 @@ public interface OrganizationApi {
      * @since 9.6.0
      */
     @GetMapping("/listAllBureaus")
-    List<Department> listAllBureaus(@RequestParam("tenantId") @NotBlank String tenantId,
+    Y9Result<List<Department>> listAllBureaus(@RequestParam("tenantId") @NotBlank String tenantId,
         @RequestParam("organizationId") @NotBlank String organizationId);
 
     /**
@@ -58,7 +59,7 @@ public interface OrganizationApi {
      * @since 9.6.0
      */
     @GetMapping("/listAllOrganizations")
-    List<Organization> listAllOrganizations(@RequestParam("tenantId") @NotBlank String tenantId);
+    Y9Result<List<Organization>> listAllOrganizations(@RequestParam("tenantId") @NotBlank String tenantId);
 
     /**
      * 通过类型，获取组织机构列表
@@ -69,7 +70,7 @@ public interface OrganizationApi {
      * @since 9.6.0
      */
     @GetMapping("/listByType")
-    List<Organization> listByType(@RequestParam("tenantId") @NotBlank String tenantId,
+    Y9Result<List<Organization>> listByType(@RequestParam("tenantId") @NotBlank String tenantId,
         @RequestParam("virtual") Boolean virtual);
 
     /**
@@ -81,7 +82,7 @@ public interface OrganizationApi {
      * @since 9.6.0
      */
     @GetMapping("/listDepartments")
-    List<Department> listDepartments(@RequestParam("tenantId") @NotBlank String tenantId,
+    Y9Result<List<Department>> listDepartments(@RequestParam("tenantId") @NotBlank String tenantId,
         @RequestParam("organizationId") @NotBlank String organizationId);
 
     /**
@@ -93,7 +94,7 @@ public interface OrganizationApi {
      * @since 9.6.0
      */
     @GetMapping("/listGroups")
-    List<Group> listGroups(@RequestParam("tenantId") @NotBlank String tenantId,
+    Y9Result<List<Group>> listGroups(@RequestParam("tenantId") @NotBlank String tenantId,
         @RequestParam("organizationId") @NotBlank String organizationId);
 
     /**
@@ -105,7 +106,7 @@ public interface OrganizationApi {
      * @since 9.6.0
      */
     @GetMapping("/listPersons")
-    List<Person> listPersons(@RequestParam("tenantId") @NotBlank String tenantId,
+    Y9Result<List<Person>> listPersons(@RequestParam("tenantId") @NotBlank String tenantId,
         @RequestParam("organizationId") @NotBlank String organizationId);
 
     /**
@@ -117,7 +118,7 @@ public interface OrganizationApi {
      * @since 9.6.0
      */
     @GetMapping("/listPositions")
-    List<Position> listPositions(@RequestParam("tenantId") @NotBlank String tenantId,
+    Y9Result<List<Position>> listPositions(@RequestParam("tenantId") @NotBlank String tenantId,
         @RequestParam("organizationId") @NotBlank String organizationId);
 
 }

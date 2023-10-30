@@ -1,4 +1,4 @@
-package net.risesoft.api.log.impl;
+package net.risesoft.api.impl;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -42,7 +42,7 @@ import cn.hutool.core.thread.ThreadFactoryBuilder;
  * @since 9.6.0
  */
 @RestController
-@RequestMapping("/services/rest/userLoginInfo")
+@RequestMapping("/services/rest/v1/userLoginInfo")
 @Slf4j
 @RequiredArgsConstructor
 public class UserLoginInfoApiController implements UserLoginInfoApi {

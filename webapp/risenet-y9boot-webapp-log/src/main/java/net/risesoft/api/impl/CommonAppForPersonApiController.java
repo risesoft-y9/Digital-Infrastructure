@@ -1,4 +1,4 @@
-package net.risesoft.api.log.impl;
+package net.risesoft.api.impl;
 
 import javax.validation.constraints.NotBlank;
 
@@ -22,7 +22,7 @@ import net.risesoft.y9.Y9LoginUserHolder;
  * @since 9.6.0
  */
 @RestController
-@RequestMapping(value = "/services/rest/commonapp")
+@RequestMapping(value = "/services/rest/v1/commonapp")
 @RequiredArgsConstructor
 public class CommonAppForPersonApiController implements CommonAppForPersonApi {
 

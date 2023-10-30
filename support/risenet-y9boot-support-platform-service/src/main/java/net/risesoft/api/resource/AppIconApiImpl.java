@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.RestController;
 import lombok.RequiredArgsConstructor;
 
 import net.risesoft.model.AppIcon;
+import net.risesoft.pojo.Y9Result;
 import net.risesoft.y9.util.Y9ModelConvertUtil;
 import net.risesoft.y9public.entity.resource.Y9AppIcon;
 import net.risesoft.y9public.service.resource.Y9AppIconService;
@@ -28,7 +29,7 @@ import net.risesoft.y9public.service.resource.Y9AppIconService;
  */
 @RestController
 @Validated
-@RequestMapping(value = "/services/rest/appIcon", produces = MediaType.APPLICATION_JSON_VALUE)
+@RequestMapping(value = "/services/rest/v1/appIcon", produces = MediaType.APPLICATION_JSON_VALUE)
 @RequiredArgsConstructor
 public class AppIconApiImpl implements AppIconApi {
 
@@ -41,9 +42,9 @@ public class AppIconApiImpl implements AppIconApi {
      * @since 9.6.0
      */
     @Override
-    public List<AppIcon> listAllIcon() {
+    public Y9Result<List<AppIcon>> listAllIcon() {
         List<Y9AppIcon> appIconList = appIconService.listAll();
-        return Y9ModelConvertUtil.convert(appIconList, AppIcon.class);
+        return Y9Result.success(Y9ModelConvertUtil.convert(appIconList, AppIcon.class));
     }
 
     /**
@@ -54,9 +55,9 @@ public class AppIconApiImpl implements AppIconApi {
      * @since 9.6.0
      */
     @Override
-    public List<AppIcon> searchAppIcon(@RequestParam("name") @NotBlank String name) {
+    public Y9Result<List<AppIcon>> searchAppIcon(@RequestParam("name") @NotBlank String name) {
         List<Y9AppIcon> appIconList = appIconService.listByName(name);
-        return Y9ModelConvertUtil.convert(appIconList, AppIcon.class);
+        return Y9Result.success(Y9ModelConvertUtil.convert(appIconList, AppIcon.class));
     }
 
 }

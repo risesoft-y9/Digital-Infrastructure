@@ -7,6 +7,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import net.risesoft.model.Manager;
+import net.risesoft.pojo.Y9Result;
 
 /**
  * 三员服务组件
@@ -29,7 +30,7 @@ public interface ManagerApi {
      * @since 9.6.0
      */
     @GetMapping("/getManager")
-    Manager getManagerById(@RequestParam("tenantId") @NotBlank String tenantId,
+    Y9Result<Manager> getManagerById(@RequestParam("tenantId") @NotBlank String tenantId,
         @RequestParam("userId") @NotBlank String userId);
 
     /**
@@ -41,7 +42,7 @@ public interface ManagerApi {
      * @since 9.6.0
      */
     @GetMapping("/getManagerByLoginName")
-    Manager getManagerByLoginName(@RequestParam("tenantId") @NotBlank String tenantId,
+    Y9Result<Manager> getManagerByLoginName(@RequestParam("tenantId") @NotBlank String tenantId,
         @RequestParam("loginName") @NotBlank String loginName);
 
     /**
@@ -54,6 +55,6 @@ public interface ManagerApi {
      * @since 9.6.0
      */
     @GetMapping("/isDeptManager")
-    boolean isDeptManager(@RequestParam("tenantId") @NotBlank String tenantId,
+    Y9Result<Boolean> isDeptManager(@RequestParam("tenantId") @NotBlank String tenantId,
         @RequestParam("managerId") @NotBlank String managerId, @RequestParam("deptId") @NotBlank String deptId);
 }

@@ -15,6 +15,7 @@ import lombok.RequiredArgsConstructor;
 
 import net.risesoft.model.System;
 import net.risesoft.model.Tenant;
+import net.risesoft.pojo.Y9Result;
 import net.risesoft.y9.util.Y9ModelConvertUtil;
 import net.risesoft.y9public.entity.resource.Y9System;
 import net.risesoft.y9public.entity.tenant.Y9Tenant;
@@ -32,7 +33,7 @@ import net.risesoft.y9public.service.tenant.Y9TenantSystemService;
 @Primary
 @Validated
 @RestController
-@RequestMapping(value = "/services/rest/tenantSystem", produces = MediaType.APPLICATION_JSON_VALUE)
+@RequestMapping(value = "/services/rest/v1/tenantSystem", produces = MediaType.APPLICATION_JSON_VALUE)
 @RequiredArgsConstructor
 public class TenantSystemApiImpl implements TenantSystemApi {
 
@@ -46,9 +47,9 @@ public class TenantSystemApiImpl implements TenantSystemApi {
      * @since 9.6.0
      */
     @Override
-    public List<System> listSystemByTenantId(@RequestParam("tenantId") @NotBlank String tenantId) {
+    public Y9Result<List<System>> listSystemByTenantId(@RequestParam("tenantId") @NotBlank String tenantId) {
         List<Y9System> y9SystemList = y9TenantSystemService.listSystemByTenantId(tenantId);
-        return Y9ModelConvertUtil.convert(y9SystemList, System.class);
+        return Y9Result.success(Y9ModelConvertUtil.convert(y9SystemList, System.class));
     }
 
     /**
@@ -59,8 +60,8 @@ public class TenantSystemApiImpl implements TenantSystemApi {
      * @since 9.6.0
      */
     @Override
-    public List<String> listSystemIdByTenantId(@RequestParam("tenantId") @NotBlank String tenantId) {
-        return y9TenantSystemService.listSystemIdByTenantId(tenantId);
+    public Y9Result<List<String>> listSystemIdByTenantId(@RequestParam("tenantId") @NotBlank String tenantId) {
+        return Y9Result.success(y9TenantSystemService.listSystemIdByTenantId(tenantId));
     }
 
     /**
@@ -71,9 +72,9 @@ public class TenantSystemApiImpl implements TenantSystemApi {
      * @since 9.6.0
      */
     @Override
-    public List<Tenant> listTenantBySystemId(@RequestParam("systemId") @NotBlank String systemId) {
+    public Y9Result<List<Tenant>> listTenantBySystemId(@RequestParam("systemId") @NotBlank String systemId) {
         List<Y9Tenant> y9TenantList = y9TenantSystemService.listTenantBySystemId(systemId);
-        return Y9ModelConvertUtil.convert(y9TenantList, Tenant.class);
+        return Y9Result.success(Y9ModelConvertUtil.convert(y9TenantList, Tenant.class));
     }
 
     /**
@@ -84,9 +85,9 @@ public class TenantSystemApiImpl implements TenantSystemApi {
      * @since 9.6.0
      */
     @Override
-    public List<Tenant> listTenantBySystemName(@RequestParam("systemName") @NotBlank String systemName) {
+    public Y9Result<List<Tenant>> listTenantBySystemName(@RequestParam("systemName") @NotBlank String systemName) {
         List<Y9Tenant> y9TenantList = y9TenantSystemService.listTenantBySystemName(systemName);
-        return Y9ModelConvertUtil.convert(y9TenantList, Tenant.class);
+        return Y9Result.success(Y9ModelConvertUtil.convert(y9TenantList, Tenant.class));
     }
 
 }

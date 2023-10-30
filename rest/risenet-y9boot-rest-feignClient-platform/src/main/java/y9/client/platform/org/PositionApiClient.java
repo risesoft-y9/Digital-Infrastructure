@@ -14,7 +14,7 @@ import net.risesoft.api.org.PositionApi;
  * @since 9.6.0
  */
 @FeignClient(contextId = "PositionApiClient", name = "y9platform", url = "${y9.common.orgBaseUrl}",
-    path = "/services/rest/position")
+    path = "/services/rest/v1/position")
 public interface PositionApiClient extends PositionApi {
 
 }

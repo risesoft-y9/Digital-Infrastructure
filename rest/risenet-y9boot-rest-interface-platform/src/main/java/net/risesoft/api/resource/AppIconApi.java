@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import net.risesoft.model.AppIcon;
+import net.risesoft.pojo.Y9Result;
 
 /**
  * 应用图标管理组件
@@ -29,7 +30,7 @@ public interface AppIconApi {
      * @since 9.6.0
      */
     @GetMapping("/listAllIcon")
-    List<AppIcon> listAllIcon();
+    Y9Result<List<AppIcon>> listAllIcon();
 
     /**
      * 根据名称查询应用图标列表
@@ -39,5 +40,5 @@ public interface AppIconApi {
      * @since 9.6.0
      */
     @GetMapping("/searchAppIcon")
-    List<AppIcon> searchAppIcon(@RequestParam("name") @NotBlank String name);
+    Y9Result<List<AppIcon>> searchAppIcon(@RequestParam("name") @NotBlank String name);
 }

@@ -65,6 +65,15 @@ public interface Y9SystemService {
     Y9System getById(String id);
 
     /**
+     * 根据名字查询System实体
+     *
+     * @param systemName 系统名称
+     * @return {@link Y9System}
+     * @throws Y9NotFoundException systemName 对应的记录不存在的情况
+     */
+    Y9System getByName(String systemName);
+
+    /**
      * 查询所有Y9System
      *
      * @return List<Y9System>

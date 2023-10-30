@@ -7,6 +7,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import net.risesoft.id.Y9IdGenerator;
+import net.risesoft.pojo.Y9Result;
 
 /**
  * 系统管理组件
@@ -19,7 +20,7 @@ import net.risesoft.id.Y9IdGenerator;
  */
 @Primary
 @RestController
-@RequestMapping(value = "/services/rest/id", produces = MediaType.APPLICATION_JSON_VALUE)
+@RequestMapping(value = "/services/rest/v1/id", produces = MediaType.APPLICATION_JSON_VALUE)
 public class IdApiImpl implements IdApi {
 
     private final Y9IdGenerator y9IdGenerator;
@@ -35,8 +36,8 @@ public class IdApiImpl implements IdApi {
      * @since 9.6.0
      */
     @Override
-    public String getNextId() {
-        return y9IdGenerator.getNextId();
+    public Y9Result<String> getNextId() {
+        return Y9Result.success(y9IdGenerator.getNextId());
     }
 
 }

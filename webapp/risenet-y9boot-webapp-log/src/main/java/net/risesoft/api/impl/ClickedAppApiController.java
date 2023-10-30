@@ -1,4 +1,4 @@
-package net.risesoft.api.log.impl;
+package net.risesoft.api.impl;
 
 import javax.validation.constraints.NotBlank;
 
@@ -23,7 +23,7 @@ import net.risesoft.y9.json.Y9JsonUtil;
  * @date 2022/10/19
  */
 @RestController
-@RequestMapping(value = "/services/rest/clickedApp")
+@RequestMapping(value = "/services/rest/v1/clickedApp")
 @Slf4j
 @RequiredArgsConstructor
 public class ClickedAppApiController implements ClickedAppApi {

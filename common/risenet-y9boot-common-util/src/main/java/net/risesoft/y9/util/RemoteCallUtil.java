@@ -11,6 +11,7 @@ import java.util.List;
 
 import org.apache.commons.httpclient.HttpClient;
 import org.apache.commons.httpclient.HttpException;
+import org.apache.commons.httpclient.HttpMethod;
 import org.apache.commons.httpclient.HttpStatus;
 import org.apache.commons.httpclient.NameValuePair;
 import org.apache.commons.httpclient.SimpleHttpConnectionManager;
@@ -19,10 +20,14 @@ import org.apache.commons.httpclient.methods.PostMethod;
 import org.apache.commons.httpclient.params.HttpMethodParams;
 
 import com.fasterxml.jackson.databind.DeserializationFeature;
+import com.fasterxml.jackson.databind.JavaType;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.type.CollectionType;
 
 import lombok.extern.slf4j.Slf4j;
 
+import net.risesoft.pojo.Y9Page;
+import net.risesoft.pojo.Y9Result;
 import net.risesoft.y9.json.Y9DateFormat;
 
 /**
@@ -120,7 +125,7 @@ public class RemoteCallUtil {
         return null;
     }
 
-    public static <T> T getCallRemoteServiceWhithHeader(String url, List<NameValuePair> headerParams,
+    public static <T> T getCallRemoteServiceWithHeader(String url, List<NameValuePair> headerParams,
         List<NameValuePair> params, Class<T> clz) {
         HttpClient client = new HttpClient();
         client.getParams().setParameter(HttpMethodParams.BUFFER_WARN_TRIGGER_LIMIT, 1024 * 1024 * 10);
@@ -287,7 +292,7 @@ public class RemoteCallUtil {
         return null;
     }
 
-    public static <T> T postCallRemoteServiceWhithHeader(String url, List<NameValuePair> headerParams,
+    public static <T> T postCallRemoteServiceWithHeader(String url, List<NameValuePair> headerParams,
         List<NameValuePair> params, Class<T> clz) {
         HttpClient client = new HttpClient();
         client.getParams().setParameter(HttpMethodParams.BUFFER_WARN_TRIGGER_LIMIT, 1024 * 1024 * 10);
@@ -330,7 +335,7 @@ public class RemoteCallUtil {
         return null;
     }
 
-    public static <T> List<T> postCallRemoteServiceWhithHeaderToList(String url, List<NameValuePair> headerParams,
+    public static <T> List<T> postCallRemoteServiceWithHeaderToList(String url, List<NameValuePair> headerParams,
         List<NameValuePair> params, Class<T> clz) {
         HttpClient client = new HttpClient();
         client.getParams().setParameter(HttpMethodParams.BUFFER_WARN_TRIGGER_LIMIT, 1024 * 1024 * 10);
@@ -372,5 +377,78 @@ public class RemoteCallUtil {
             ((SimpleHttpConnectionManager)client.getHttpConnectionManager()).shutdown();
         }
         return null;
+    }
+
+    public static <T> Y9Result<T> get(String url, List<NameValuePair> params, Class<T> clz) {
+        JavaType javaType = objectMapper.getTypeFactory().constructParametricType(Y9Result.class, clz);
+        return sendRequest(MethodType.GET, url, params, null, javaType);
+    }
+
+    public static <T> Y9Page<T> getPage(String url, List<NameValuePair> params, Class<T> clz) {
+        JavaType javaType = objectMapper.getTypeFactory().constructParametricType(Y9Page.class, clz);
+        return sendRequest(MethodType.GET, url, params, null, javaType);
+    }
+
+    private static <T> T sendRequest(MethodType methodType, String url, List<NameValuePair> params,
+        List<NameValuePair> requestBody, JavaType javaType) {
+        HttpClient client = new HttpClient();
+        client.getParams().setParameter(HttpMethodParams.BUFFER_WARN_TRIGGER_LIMIT, 1024 * 1024 * 10);
+        client.getParams().setParameter(HttpMethodParams.HTTP_CONTENT_CHARSET, StandardCharsets.UTF_8);
+        HttpMethod method = null;
+        try {
+            if (MethodType.GET.equals(methodType)) {
+                method = new GetMethod(url);
+            }
+            if (MethodType.POST.equals(methodType) || requestBody != null) {
+                method = new PostMethod(url);
+                ((PostMethod)method).setRequestBody(requestBody.toArray(new NameValuePair[requestBody.size()]));
+            }
+            if (params != null && !params.isEmpty()) {
+                method.setQueryString(params.toArray(new NameValuePair[params.size()]));
+            }
+
+            client.executeMethod(method);
+            InputStream inputStream = method.getResponseBodyAsStream();
+            if (null != inputStream) {
+                BufferedReader br = new BufferedReader(new InputStreamReader(inputStream, StandardCharsets.UTF_8));
+                StringBuffer stringBuffer = new StringBuffer();
+                String b = "";
+                while ((b = br.readLine()) != null) {
+                    stringBuffer.append(b);
+                }
+                String response = stringBuffer.toString();
+                return objectMapper.readValue(response, javaType);
+            }
+        } catch (UnsupportedEncodingException e) {
+            LOGGER.warn(e.getMessage(), e);
+        } catch (HttpException e1) {
+            LOGGER.warn(e1.getMessage(), e1);
+        } catch (IOException ioe) {
+            LOGGER.warn(ioe.getMessage(), ioe);
+        } finally {
+            method.releaseConnection();
+            ((SimpleHttpConnectionManager)client.getHttpConnectionManager()).shutdown();
+        }
+        return null;
+    }
+
+    public static <T> Y9Result<List<T>> getList(String url, List<NameValuePair> params, Class<T> clz) {
+        CollectionType collectionType = objectMapper.getTypeFactory().constructCollectionType(ArrayList.class, clz);
+        JavaType javaType = objectMapper.getTypeFactory().constructParametricType(Y9Result.class, collectionType);
+        return sendRequest(MethodType.GET, url, params, null, javaType);
+    }
+
+    public static <T> Y9Result<T> post(String url, List<NameValuePair> params, Class<T> clz) {
+        return post(url, params, null, clz);
+    }
+
+    public static <T> Y9Result<T> post(String url, List<NameValuePair> params, List<NameValuePair> requestBody,
+        Class<T> clz) {
+        JavaType javaType = objectMapper.getTypeFactory().constructParametricType(Y9Result.class, clz);
+        return sendRequest(MethodType.POST, url, params, requestBody, javaType);
+    }
+
+    enum MethodType {
+        GET, POST;
     }
 }

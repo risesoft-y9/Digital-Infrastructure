@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 import net.risesoft.enums.ResourceTypeEnum;
 import net.risesoft.model.Resource;
+import net.risesoft.pojo.Y9Result;
 
 /**
  * 资源管理组件
@@ -35,7 +36,7 @@ public interface ResourceApi {
      * @since 9.6.0
      */
     @PostMapping("/createMenuResource")
-    Resource createMenuResource(@RequestParam("resourceId") @NotBlank String resourceId,
+    Y9Result<Resource> createMenuResource(@RequestParam("resourceId") @NotBlank String resourceId,
         @RequestParam("resourceName") @NotBlank String resourceName,
         @RequestParam("parentResourceId") @NotBlank String parentResourceId,
         @RequestParam("customId") @NotBlank String customId);
@@ -50,7 +51,7 @@ public interface ResourceApi {
      * @since 9.6.0
      */
     @GetMapping("/findByCustomIdAndParentId")
-    Resource findByCustomIdAndParentId(@RequestParam("customId") @NotBlank String customId,
+    Y9Result<Resource> findByCustomIdAndParentId(@RequestParam("customId") @NotBlank String customId,
         @RequestParam("parentId") @NotBlank String parentId, @RequestParam("resourceType") Integer resourceType);
 
     /**
@@ -61,7 +62,7 @@ public interface ResourceApi {
      * @since 9.6.0
      */
     @GetMapping("/getParentResource")
-    Resource getParentResource(@RequestParam("resourceId") @NotBlank String resourceId);
+    Y9Result<Resource> getParentResource(@RequestParam("resourceId") @NotBlank String resourceId);
 
     /**
      * 获得指定资源对象
@@ -71,7 +72,7 @@ public interface ResourceApi {
      * @since 9.6.0
      */
     @GetMapping("/getResource")
-    Resource getResource(@RequestParam("resourceId") @NotBlank String resourceId);
+    Y9Result<Resource> getResource(@RequestParam("resourceId") @NotBlank String resourceId);
 
     /**
      * 根据系统标识获取该系统的资源树的顶级节点
@@ -81,7 +82,7 @@ public interface ResourceApi {
      * @since 9.6.0
      */
     @GetMapping("/getRootResourceBySystemName")
-    Resource getRootResourceBySystemName(@RequestParam("systemName") @NotBlank String systemName);
+    Y9Result<Resource> getRootResourceBySystemName(@RequestParam("systemName") @NotBlank String systemName);
 
     /**
      * 获取指定资源的菜单子资源
@@ -91,7 +92,7 @@ public interface ResourceApi {
      * @since 9.6.0
      */
     @GetMapping("/listSubMenus")
-    List<Resource> listSubMenus(@RequestParam("resourceId") @NotBlank String resourceId);
+    Y9Result<List<Resource>> listSubMenus(@RequestParam("resourceId") @NotBlank String resourceId);
 
     /**
      * 获得指定资源的子资源
@@ -101,6 +102,6 @@ public interface ResourceApi {
      * @since 9.6.0
      */
     @GetMapping("/listSubResources")
-    List<Resource> listSubResources(@RequestParam("resourceId") @NotBlank String resourceId);
+    Y9Result<List<Resource>> listSubResources(@RequestParam("resourceId") @NotBlank String resourceId);
 
 }

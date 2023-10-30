@@ -15,7 +15,7 @@ import net.risesoft.model.AccessLog;
  * @since 9.6.0
  */
 @FeignClient(contextId = "AccessLogApiClient", name = "log", url = "${y9.common.logBaseUrl}",
-    path = "/services/rest/accessLog")
+    path = "/services/rest/v1/accessLog")
 public interface AccessLogApiClient extends AccessLogApi {
 
     /**

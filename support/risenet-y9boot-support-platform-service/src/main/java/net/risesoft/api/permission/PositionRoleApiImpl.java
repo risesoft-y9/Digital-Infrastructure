@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import lombok.RequiredArgsConstructor;
 
+import net.risesoft.pojo.Y9Result;
 import net.risesoft.service.identity.Y9PositionToRoleService;
 import net.risesoft.y9.Y9LoginUserHolder;
 
@@ -24,7 +25,7 @@ import net.risesoft.y9.Y9LoginUserHolder;
 @Primary
 @Validated
 @RestController
-@RequestMapping(value = "/services/rest/positionRole", produces = MediaType.APPLICATION_JSON_VALUE)
+@RequestMapping(value = "/services/rest/v1/positionRole", produces = MediaType.APPLICATION_JSON_VALUE)
 @RequiredArgsConstructor
 public class PositionRoleApiImpl implements PositionRoleApi {
 
@@ -40,11 +41,11 @@ public class PositionRoleApiImpl implements PositionRoleApi {
      * @since 9.6.0
      */
     @Override
-    public Boolean hasPublicRole(@RequestParam("tenantId") @NotBlank String tenantId,
+    public Y9Result<Boolean> hasPublicRole(@RequestParam("tenantId") @NotBlank String tenantId,
         @RequestParam("roleName") @NotBlank String roleName, @RequestParam("positionId") @NotBlank String positionId) {
         Y9LoginUserHolder.setTenantId(tenantId);
 
-        return y9PositionToRoleService.hasPublicRole(positionId, roleName);
+        return Y9Result.success(y9PositionToRoleService.hasPublicRole(positionId, roleName));
     }
 
     /**
@@ -57,11 +58,11 @@ public class PositionRoleApiImpl implements PositionRoleApi {
      * @since 9.6.0
      */
     @Override
-    public Boolean hasRole(@RequestParam("tenantId") @NotBlank String tenantId,
+    public Y9Result<Boolean> hasRole(@RequestParam("tenantId") @NotBlank String tenantId,
         @RequestParam("roleId") @NotBlank String roleId, @RequestParam("positionId") @NotBlank String positionId) {
         Y9LoginUserHolder.setTenantId(tenantId);
 
-        return y9PositionToRoleService.hasRole(positionId, roleId);
+        return Y9Result.success(y9PositionToRoleService.hasRole(positionId, roleId));
     }
 
     /**
@@ -74,11 +75,11 @@ public class PositionRoleApiImpl implements PositionRoleApi {
      * @since 9.6.0
      */
     @Override
-    public Boolean hasRoleByCustomId(@RequestParam("tenantId") @NotBlank String tenantId,
+    public Y9Result<Boolean> hasRoleByCustomId(@RequestParam("tenantId") @NotBlank String tenantId,
         @RequestParam("positionId") @NotBlank String positionId, @RequestParam("customId") @NotBlank String customId) {
         Y9LoginUserHolder.setTenantId(tenantId);
 
-        return y9PositionToRoleService.hasRoleByCustomId(positionId, customId);
+        return Y9Result.success(y9PositionToRoleService.hasRoleByCustomId(positionId, customId));
     }
 
     /**
@@ -93,12 +94,12 @@ public class PositionRoleApiImpl implements PositionRoleApi {
      * @since 9.6.0
      */
     @Override
-    public Boolean hasRole(@RequestParam("tenantId") @NotBlank String tenantId,
+    public Y9Result<Boolean> hasRole(@RequestParam("tenantId") @NotBlank String tenantId,
         @RequestParam("systemName") @NotBlank String systemName,
         @RequestParam(value = "properties", required = false) String properties,
         @RequestParam("roleName") @NotBlank String roleName, @RequestParam("positionId") @NotBlank String positionId) {
         Y9LoginUserHolder.setTenantId(tenantId);
 
-        return y9PositionToRoleService.hasRole(positionId, systemName, roleName, properties);
+        return Y9Result.success(y9PositionToRoleService.hasRole(positionId, systemName, roleName, properties));
     }
 }

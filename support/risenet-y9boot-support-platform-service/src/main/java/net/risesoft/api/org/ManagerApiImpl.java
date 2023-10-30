@@ -13,6 +13,7 @@ import lombok.RequiredArgsConstructor;
 
 import net.risesoft.entity.Y9Manager;
 import net.risesoft.model.Manager;
+import net.risesoft.pojo.Y9Result;
 import net.risesoft.service.org.Y9ManagerService;
 import net.risesoft.y9.Y9LoginUserHolder;
 import net.risesoft.y9.util.Y9ModelConvertUtil;
@@ -29,7 +30,7 @@ import net.risesoft.y9.util.Y9ModelConvertUtil;
 @Primary
 @Validated
 @RestController
-@RequestMapping(value = "/services/rest/manager", produces = MediaType.APPLICATION_JSON_VALUE)
+@RequestMapping(value = "/services/rest/v1/manager", produces = MediaType.APPLICATION_JSON_VALUE)
 @RequiredArgsConstructor
 public class ManagerApiImpl implements ManagerApi {
 
@@ -44,21 +45,21 @@ public class ManagerApiImpl implements ManagerApi {
      * @since 9.6.0
      */
     @Override
-    public Manager getManagerById(@RequestParam("tenantId") @NotBlank String tenantId,
+    public Y9Result<Manager> getManagerById(@RequestParam("tenantId") @NotBlank String tenantId,
         @RequestParam("userId") @NotBlank String userId) {
         Y9LoginUserHolder.setTenantId(tenantId);
 
         Y9Manager y9Manager = y9ManagerService.findById(userId).orElse(null);
-        return Y9ModelConvertUtil.convert(y9Manager, Manager.class);
+        return Y9Result.success(Y9ModelConvertUtil.convert(y9Manager, Manager.class));
     }
 
     @Override
-    public Manager getManagerByLoginName(@RequestParam("tenantId") @NotBlank String tenantId,
+    public Y9Result<Manager> getManagerByLoginName(@RequestParam("tenantId") @NotBlank String tenantId,
         @RequestParam("loginName") @NotBlank String loginName) {
         Y9LoginUserHolder.setTenantId(tenantId);
 
         Y9Manager y9Manager = y9ManagerService.findByLoginName(loginName).orElse(null);
-        return Y9ModelConvertUtil.convert(y9Manager, Manager.class);
+        return Y9Result.success(Y9ModelConvertUtil.convert(y9Manager, Manager.class));
     }
 
     /**
@@ -71,11 +72,11 @@ public class ManagerApiImpl implements ManagerApi {
      * @since 9.6.0
      */
     @Override
-    public boolean isDeptManager(@RequestParam("tenantId") @NotBlank String tenantId,
+    public Y9Result<Boolean> isDeptManager(@RequestParam("tenantId") @NotBlank String tenantId,
         @RequestParam("managerId") @NotBlank String managerId, @RequestParam("deptId") @NotBlank String deptId) {
         Y9LoginUserHolder.setTenantId(tenantId);
 
-        return y9ManagerService.isDeptManager(managerId, deptId);
+        return Y9Result.success(y9ManagerService.isDeptManager(managerId, deptId));
     }
 
 }

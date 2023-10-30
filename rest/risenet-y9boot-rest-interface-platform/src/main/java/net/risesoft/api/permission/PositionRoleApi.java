@@ -6,6 +6,8 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import net.risesoft.pojo.Y9Result;
+
 /**
  * 岗位角色接口
  *
@@ -25,7 +27,7 @@ public interface PositionRoleApi {
      * @since 9.6.0
      */
     @GetMapping("/hasPublicRole")
-    Boolean hasPublicRole(@RequestParam("tenantId") @NotBlank String tenantId,
+    Y9Result<Boolean> hasPublicRole(@RequestParam("tenantId") @NotBlank String tenantId,
         @RequestParam("roleName") @NotBlank String roleName, @RequestParam("positionId") @NotBlank String positionId);
 
     /**
@@ -38,7 +40,7 @@ public interface PositionRoleApi {
      * @since 9.6.0
      */
     @GetMapping("/hasRole")
-    Boolean hasRole(@RequestParam("tenantId") @NotBlank String tenantId,
+    Y9Result<Boolean> hasRole(@RequestParam("tenantId") @NotBlank String tenantId,
         @RequestParam("roleId") @NotBlank String roleId, @RequestParam("positionId") @NotBlank String positionId);
 
     /**
@@ -51,7 +53,7 @@ public interface PositionRoleApi {
      * @since 9.6.0
      */
     @GetMapping("/hasRole2")
-    Boolean hasRoleByCustomId(@RequestParam("tenantId") @NotBlank String tenantId,
+    Y9Result<Boolean> hasRoleByCustomId(@RequestParam("tenantId") @NotBlank String tenantId,
         @RequestParam("positionId") @NotBlank String positionId, @RequestParam("customId") @NotBlank String customId);
 
     /**
@@ -66,7 +68,7 @@ public interface PositionRoleApi {
      * @since 9.6.0
      */
     @GetMapping("/hasRole3")
-    Boolean hasRole(@RequestParam("tenantId") @NotBlank String tenantId,
+    Y9Result<Boolean> hasRole(@RequestParam("tenantId") @NotBlank String tenantId,
         @RequestParam("systemName") @NotBlank String systemName,
         @RequestParam(value = "properties", required = false) String properties,
         @RequestParam("roleName") @NotBlank String roleName, @RequestParam("positionId") @NotBlank String positionId);

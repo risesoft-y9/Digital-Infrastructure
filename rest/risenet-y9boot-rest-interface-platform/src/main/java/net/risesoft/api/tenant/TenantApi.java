@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import net.risesoft.model.Tenant;
+import net.risesoft.pojo.Y9Result;
 
 /**
  * 租户管理组件
@@ -30,7 +31,7 @@ public interface TenantApi {
      * @since 9.6.0
      */
     @GetMapping("/listByShortName")
-    Tenant findByShortName(@RequestParam("shortName") @NotBlank String shortName);
+    Y9Result<Tenant> findByShortName(@RequestParam("shortName") @NotBlank String shortName);
 
     /**
      * 根据租户id获取一个租户对象
@@ -40,7 +41,7 @@ public interface TenantApi {
      * @since 9.6.0
      */
     @GetMapping("/getById")
-    Tenant getById(@RequestParam("tenantId") @NotBlank String tenantId);
+    Y9Result<Tenant> getById(@RequestParam("tenantId") @NotBlank String tenantId);
 
     /**
      * 获取所有租户对象
@@ -49,7 +50,7 @@ public interface TenantApi {
      * @since 9.6.0
      */
     @GetMapping("/listAllTenants")
-    List<Tenant> listAllTenants();
+    Y9Result<List<Tenant>> listAllTenants();
 
     /**
      * 根据租户名，获取租户列表
@@ -59,7 +60,7 @@ public interface TenantApi {
      * @since 9.6.0
      */
     @GetMapping("/listByName")
-    Tenant findByName(@RequestParam("tenantName") @NotBlank String tenantName);
+    Y9Result<Tenant> findByName(@RequestParam("tenantName") @NotBlank String tenantName);
 
     /**
      * 获取指定租户类型的所有租户对象
@@ -69,6 +70,6 @@ public interface TenantApi {
      * @since 9.6.0
      */
     @GetMapping("/listByTenantType")
-    List<Tenant> listByTenantType(@RequestParam("tenantType") Integer tenantType);
+    Y9Result<List<Tenant>> listByTenantType(@RequestParam("tenantType") Integer tenantType);
 
 }

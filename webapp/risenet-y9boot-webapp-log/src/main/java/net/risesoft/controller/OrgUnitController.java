@@ -48,7 +48,7 @@ public class OrgUnitController {
         if (StringUtils.isBlank(tenantId)) {
             tenantId = Y9LoginUserHolder.getTenantId();
         }
-        List<Organization> org = organizationManager.listAllOrganizations(tenantId);
+        List<Organization> org = organizationManager.listAllOrganizations(tenantId).getData();
         return Y9Result.success(org);
     }
 
@@ -61,18 +61,18 @@ public class OrgUnitController {
     @RiseLog(operationName = "根据租户类型获取所有租户信息")
     @RequestMapping(value = "/getTenantTreeByTenantType")
     public List<Organization> getTenantTreeByTenantType(@RequestParam Integer tenantType) {
-        List<Tenant> tenants = tenantApiClient.listByTenantType(tenantType);
-        List<Organization> orgs = new ArrayList<>();
+        List<Tenant> tenants = tenantApiClient.listByTenantType(tenantType).getData();
+        List<Organization> organizationList = new ArrayList<>();
         if (!tenants.isEmpty()) {
             for (Tenant tenant : tenants) {
                 if (tenant.getTenantType().equals(tenantType)) {
                     Y9LoginUserHolder.setTenantId(tenant.getId());
-                    List<Organization> list = organizationManager.listAllOrganizations(tenant.getId());
-                    orgs.addAll(list);
+                    List<Organization> list = organizationManager.listAllOrganizations(tenant.getId()).getData();
+                    organizationList.addAll(list);
                 }
             }
         }
-        return orgs;
+        return organizationList;
     }
 
     /**
@@ -89,7 +89,7 @@ public class OrgUnitController {
         if (StringUtils.isBlank(tenantId)) {
             tenantId = Y9LoginUserHolder.getTenantId();
         }
-        List<OrgUnit> orgUnitList = orgUnitManager.getSubTree(tenantId, id, treeType);
+        List<OrgUnit> orgUnitList = orgUnitManager.getSubTree(tenantId, id, treeType).getData();
         return Y9Result.success(orgUnitList);
     }
 }

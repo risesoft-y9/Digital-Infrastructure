@@ -7,6 +7,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import net.risesoft.model.Message;
+import net.risesoft.pojo.Y9Result;
 
 /**
  * 用户身份验证服务组件
@@ -30,7 +31,7 @@ public interface AuthenticateApi {
      * @since 9.6.0
      */
     @RequestMapping("/authenticate3")
-    Message authenticate3(@RequestParam("tenantShortName") @NotBlank String tenantShortName,
+    Y9Result<Message> authenticate3(@RequestParam("tenantShortName") @NotBlank String tenantShortName,
         @RequestParam("loginName") @NotBlank String loginName, @RequestParam("password") @NotBlank String password);
 
     /**
@@ -43,7 +44,7 @@ public interface AuthenticateApi {
      * @since 9.6.0
      */
     @RequestMapping("/authenticate5")
-    Message authenticate5(@RequestParam("tenantShortName") @NotBlank String tenantShortName,
+    Y9Result<Message> authenticate5(@RequestParam("tenantShortName") @NotBlank String tenantShortName,
         @RequestParam("mobile") @NotBlank String mobile, @RequestParam("password") @NotBlank String password);
 
 }

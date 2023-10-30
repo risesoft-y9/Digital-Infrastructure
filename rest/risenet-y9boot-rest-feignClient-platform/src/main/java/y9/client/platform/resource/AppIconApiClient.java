@@ -14,7 +14,7 @@ import net.risesoft.api.resource.AppIconApi;
  * @since 9.6.0
  */
 @FeignClient(contextId = "AppIconApiClient", name = "y9platform", url = "${y9.common.orgBaseUrl}",
-    path = "/services/rest/appIcon")
+    path = "/services/rest/v1/appIcon")
 public interface AppIconApiClient extends AppIconApi {
 
 }

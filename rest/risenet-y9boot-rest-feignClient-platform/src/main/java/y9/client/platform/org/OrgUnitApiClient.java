@@ -14,7 +14,7 @@ import net.risesoft.api.org.OrgUnitApi;
  * @since 9.6.0
  */
 @FeignClient(contextId = "OrgUnitApiClient", name = "y9platform", url = "${y9.common.orgBaseUrl}",
-    path = "/services/rest/orgUnit")
+    path = "/services/rest/v1/orgUnit")
 public interface OrgUnitApiClient extends OrgUnitApi {
 
 }

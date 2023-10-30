@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.RestController;
 import lombok.RequiredArgsConstructor;
 
 import net.risesoft.model.Tenant;
+import net.risesoft.pojo.Y9Result;
 import net.risesoft.y9.util.Y9ModelConvertUtil;
 import net.risesoft.y9public.entity.tenant.Y9Tenant;
 import net.risesoft.y9public.service.tenant.Y9TenantService;
@@ -30,7 +31,7 @@ import net.risesoft.y9public.service.tenant.Y9TenantService;
 @Primary
 @Validated
 @RestController
-@RequestMapping(value = "/services/rest/tenant", produces = MediaType.APPLICATION_JSON_VALUE)
+@RequestMapping(value = "/services/rest/v1/tenant", produces = MediaType.APPLICATION_JSON_VALUE)
 @RequiredArgsConstructor
 public class TenantApiImpl implements TenantApi {
 
@@ -44,9 +45,9 @@ public class TenantApiImpl implements TenantApi {
      * @since 9.6.0
      */
     @Override
-    public Tenant getById(@RequestParam("tenantId") @NotBlank String tenantId) {
+    public Y9Result<Tenant> getById(@RequestParam("tenantId") @NotBlank String tenantId) {
         Y9Tenant y9Tenant = y9TenantService.getById(tenantId);
-        return Y9ModelConvertUtil.convert(y9Tenant, Tenant.class);
+        return Y9Result.success(Y9ModelConvertUtil.convert(y9Tenant, Tenant.class));
     }
 
     /**
@@ -56,9 +57,9 @@ public class TenantApiImpl implements TenantApi {
      * @since 9.6.0
      */
     @Override
-    public List<Tenant> listAllTenants() {
+    public Y9Result<List<Tenant>> listAllTenants() {
         List<Y9Tenant> tenantEntityList = y9TenantService.listAll();
-        return Y9ModelConvertUtil.convert(tenantEntityList, Tenant.class);
+        return Y9Result.success(Y9ModelConvertUtil.convert(tenantEntityList, Tenant.class));
     }
 
     /**
@@ -69,9 +70,9 @@ public class TenantApiImpl implements TenantApi {
      * @since 9.6.0
      */
     @Override
-    public Tenant findByName(@RequestParam("tenantName") @NotBlank String tenantName) {
+    public Y9Result<Tenant> findByName(@RequestParam("tenantName") @NotBlank String tenantName) {
         Y9Tenant y9Tenant = y9TenantService.findByTenantName(tenantName).orElse(null);
-        return Y9ModelConvertUtil.convert(y9Tenant, Tenant.class);
+        return Y9Result.success(Y9ModelConvertUtil.convert(y9Tenant, Tenant.class));
     }
 
     /**
@@ -82,9 +83,9 @@ public class TenantApiImpl implements TenantApi {
      * @since 9.6.0
      */
     @Override
-    public Tenant findByShortName(@RequestParam("shortName") @NotBlank String shortName) {
+    public Y9Result<Tenant> findByShortName(@RequestParam("shortName") @NotBlank String shortName) {
         Y9Tenant y9Tenant = y9TenantService.findByShortName(shortName).orElse(null);
-        return Y9ModelConvertUtil.convert(y9Tenant, Tenant.class);
+        return Y9Result.success(Y9ModelConvertUtil.convert(y9Tenant, Tenant.class));
     }
 
     /**
@@ -95,9 +96,9 @@ public class TenantApiImpl implements TenantApi {
      * @since 9.6.0
      */
     @Override
-    public List<Tenant> listByTenantType(@RequestParam("tenantType") Integer tenantType) {
+    public Y9Result<List<Tenant>> listByTenantType(@RequestParam("tenantType") Integer tenantType) {
         List<Y9Tenant> y9TenantList = y9TenantService.listByTenantType(tenantType);
-        return Y9ModelConvertUtil.convert(y9TenantList, Tenant.class);
+        return Y9Result.success(Y9ModelConvertUtil.convert(y9TenantList, Tenant.class));
     }
 
 }

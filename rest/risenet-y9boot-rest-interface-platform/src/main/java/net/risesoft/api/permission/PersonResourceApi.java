@@ -12,6 +12,7 @@ import net.risesoft.enums.AuthorityEnum;
 import net.risesoft.model.Menu;
 import net.risesoft.model.Resource;
 import net.risesoft.model.VueMenu;
+import net.risesoft.pojo.Y9Result;
 
 /**
  * 人员资源权限组件
@@ -36,7 +37,7 @@ public interface PersonResourceApi {
      * @since 9.6.0
      */
     @GetMapping("/hasPermission")
-    boolean hasPermission(@RequestParam("tenantId") @NotBlank String tenantId,
+    Y9Result<Boolean> hasPermission(@RequestParam("tenantId") @NotBlank String tenantId,
         @RequestParam("personId") @NotBlank String personId, @RequestParam("resourceId") @NotBlank String resourceId,
         @RequestParam("authority") Integer authority);
 
@@ -51,7 +52,7 @@ public interface PersonResourceApi {
      * @since 9.6.0
      */
     @GetMapping("/hasPermissionByCustomId")
-    boolean hasPermissionByCustomId(@RequestParam("tenantId") @NotBlank String tenantId,
+    Y9Result<Boolean> hasPermissionByCustomId(@RequestParam("tenantId") @NotBlank String tenantId,
         @RequestParam("personId") @NotBlank String personId, @RequestParam("customId") @NotBlank String customId,
         @RequestParam("authority") Integer authority);
 
@@ -66,7 +67,7 @@ public interface PersonResourceApi {
      * @since 9.6.0
      */
     @GetMapping("/listMenusRecursively")
-    List<VueMenu> listMenusRecursively(@RequestParam("tenantId") @NotBlank String tenantId,
+    Y9Result<List<VueMenu>> listMenusRecursively(@RequestParam("tenantId") @NotBlank String tenantId,
         @RequestParam("personId") @NotBlank String personId, @RequestParam("authority") Integer authority,
         @RequestParam("resourceId") @NotBlank String resourceId);
 
@@ -81,7 +82,7 @@ public interface PersonResourceApi {
      * @since 9.6.0
      */
     @GetMapping("/listSubMenus")
-    List<Menu> listSubMenus(@RequestParam("tenantId") @NotBlank String tenantId,
+    Y9Result<List<Menu>> listSubMenus(@RequestParam("tenantId") @NotBlank String tenantId,
         @RequestParam("personId") @NotBlank String personId, @RequestParam("authority") Integer authority,
         @RequestParam("resourceId") @NotBlank String resourceId);
 
@@ -96,7 +97,7 @@ public interface PersonResourceApi {
      * @since 9.6.0
      */
     @GetMapping("/listSubResources")
-    List<Resource> listSubResources(@RequestParam("tenantId") @NotBlank String tenantId,
+    Y9Result<List<Resource>> listSubResources(@RequestParam("tenantId") @NotBlank String tenantId,
         @RequestParam("personId") @NotBlank String personId, @RequestParam("authority") Integer authority,
         @RequestParam("resourceId") @NotBlank String resourceId);
 }

@@ -14,7 +14,7 @@ import net.risesoft.api.org.PersonApi;
  * @since 9.6.0
  */
 @FeignClient(contextId = "PersonApiClient", name = "y9platform", url = "${y9.common.orgBaseUrl}",
-    path = "/services/rest/person")
+    path = "/services/rest/v1/person")
 public interface PersonApiClient extends PersonApi {
 
 }
