@@ -21,8 +21,10 @@ public class JxlsUtil {
         throws IOException {
         Context context = new Context();
         if (beans != null) {
-            for (String key : beans.keySet()) {
-                context.putVar(key, beans.get(key));
+            for (Map.Entry<String, Object> entry : beans.entrySet()) {
+                String key = entry.getKey();
+                Object value = entry.getValue();
+                context.putVar(key, value);
             }
         }
         JxlsHelper jxlsHelper = JxlsHelper.getInstance();

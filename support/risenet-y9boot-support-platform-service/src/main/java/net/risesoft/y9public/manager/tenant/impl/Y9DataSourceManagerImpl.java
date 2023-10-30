@@ -76,10 +76,8 @@ public class Y9DataSourceManagerImpl implements Y9DataSourceManager {
         if (Objects.equals(tenantType, TenantTypeEnum.ISV.getValue())) {
             dataSourceName = "isv_" + shortName;
         }
-        if (Objects.equals(tenantType, TenantTypeEnum.TENANT.getValue())) {
-            if (!"default".equals(shortName)) {
-                dataSourceName = "yt_" + generateRandomString() + "_" + shortName;
-            }
+        if (Objects.equals(tenantType, TenantTypeEnum.TENANT.getValue()) && !"default".equals(shortName)) {
+            dataSourceName = "yt_" + generateRandomString() + "_" + shortName;
         }
         if (StringUtils.isNotBlank(systemName)) {
             dataSourceName = dataSourceName + "_" + systemName;
@@ -89,15 +87,15 @@ public class Y9DataSourceManagerImpl implements Y9DataSourceManager {
 
     @Override
     @Transactional(readOnly = false)
-    public Y9DataSource createTenantDefaultDataSource(String shortName, Integer tenantType, String systemName) {
-        String dataSourceName = this.buildDataSourceName(shortName, tenantType, systemName);
-        return this.createTenantDefaultDataSource(dataSourceName, null);
+    public Y9DataSource createTenantDefaultDataSource(String dbName) {
+        return this.createTenantDefaultDataSource(dbName, null);
     }
 
     @Override
     @Transactional(readOnly = false)
-    public Y9DataSource createTenantDefaultDataSource(String dbName) {
-        return this.createTenantDefaultDataSource(dbName, null);
+    public Y9DataSource createTenantDefaultDataSource(String shortName, Integer tenantType, String systemName) {
+        String dataSourceName = this.buildDataSourceName(shortName, tenantType, systemName);
+        return this.createTenantDefaultDataSource(dataSourceName, null);
     }
 
     @Override
@@ -240,18 +238,6 @@ public class Y9DataSourceManagerImpl implements Y9DataSourceManager {
         }
     }
 
-    @Override
-    @Transactional(readOnly = false)
-    public Y9DataSource save(Y9DataSource y9DataSource) {
-        if (StringUtils.isBlank(y9DataSource.getId())) {
-            y9DataSource.setId(Y9IdGenerator.genId(IdType.SNOWFLAKE));
-        }
-        if (y9DataSource.getPassword() != null) {
-            y9DataSource.setPassword(Y9Base64Util.encode(y9DataSource.getPassword()));
-        }
-        return datasourceRepository.save(y9DataSource);
-    }
-
     public String replaceDatabaseNameInMysqlJdbcUrl(String originalJdbcUrl, String newDatabaseName) {
         // 假设原始的 JDBC URL 格式为：jdbc:mysql://localhost:3306/y9_public?allowPublicKeyRetrieval=true
         int dbNameStart = originalJdbcUrl.lastIndexOf("/") + 1;
@@ -265,6 +251,18 @@ public class Y9DataSourceManagerImpl implements Y9DataSourceManager {
             // 如果无法提取数据库名称部分或者替换失败，返回原始的 JDBC URL
             return originalJdbcUrl;
         }
+    }
+
+    @Override
+    @Transactional(readOnly = false)
+    public Y9DataSource save(Y9DataSource y9DataSource) {
+        if (StringUtils.isBlank(y9DataSource.getId())) {
+            y9DataSource.setId(Y9IdGenerator.genId(IdType.SNOWFLAKE));
+        }
+        if (y9DataSource.getPassword() != null) {
+            y9DataSource.setPassword(Y9Base64Util.encode(y9DataSource.getPassword()));
+        }
+        return datasourceRepository.save(y9DataSource);
     }
 
 }
