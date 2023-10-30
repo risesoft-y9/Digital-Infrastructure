@@ -162,14 +162,10 @@ public class RoleMemberController {
                 if (y9OrgBase.getName().contains(unitName) && y9OrgBase.getDn().contains(unitDn)) {
                     addEnable = true;
                 }
-            } else if (StringUtils.isNotBlank(unitName)) {
-                if (y9OrgBase.getName().contains(unitName)) {
-                    addEnable = true;
-                }
-            } else if (StringUtils.isNotBlank(unitDn)) {
-                if (y9OrgBase.getDn().contains(unitDn)) {
-                    addEnable = true;
-                }
+            } else if (StringUtils.isNotBlank(unitName) && y9OrgBase.getName().contains(unitName)) {
+                addEnable = true;
+            } else if (StringUtils.isNotBlank(unitDn) && y9OrgBase.getDn().contains(unitDn)) {
+                addEnable = true;
             }
 
             if (StringUtils.isBlank(unitDn) && StringUtils.isBlank(unitName)) {

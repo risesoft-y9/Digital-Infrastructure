@@ -11,7 +11,7 @@ import net.risesoft.enums.OrgTypeEnum;
 
 /**
  * 角色关联组织节点
- * 
+ *
  * @author dingzhaojun
  * @author qinman
  * @author mengjuhua
@@ -48,7 +48,7 @@ public class RoleMemberVO implements Serializable {
         roleMemberVO.setUnitName(y9OrgBase.getName());
         roleMemberVO.setUnitTypeName(OrgTypeEnum.ORG_TYPE_MAP.get(y9OrgBase.getOrgType()));
         roleMemberVO.setUnitDn(y9OrgBase.getDn());
-        roleMemberVO.setNegative(y9OrgBasesToRoles.getNegative() ? "是" : "否");
+        roleMemberVO.setNegative(Boolean.TRUE.equals(y9OrgBasesToRoles.getNegative()) ? "是" : "否");
         return roleMemberVO;
     }
 
