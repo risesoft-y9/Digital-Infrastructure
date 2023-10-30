@@ -96,8 +96,11 @@ public class Y9PositionServiceImpl implements Y9PositionService {
     @Override
     @Transactional(readOnly = false)
     public Y9Position createPosition(Y9Position y9Position) {
+        if (y9Position == null) {
+            return null;
+        }
         Optional<Y9OrgBase> y9OrgBaseOptional = compositeOrgBaseManager.findOrgUnitAsParent(y9Position.getParentId());
-        if (y9Position == null || y9OrgBaseOptional.isEmpty()) {
+        if (y9OrgBaseOptional.isEmpty()) {
             return null;
         }
         Y9OrgBase parent = y9OrgBaseOptional.get();
@@ -290,19 +293,6 @@ public class Y9PositionServiceImpl implements Y9PositionService {
         return y9PositionManager.save(position);
     }
 
-    @Transactional(readOnly = false)
-    public Y9Position saveOrder(String positionId, int tabIndex) {
-        Y9Position position = this.getById(positionId);
-        position.setTabIndex(tabIndex);
-        position = save(position);
-
-        Y9MessageOrg msg = new Y9MessageOrg(Y9ModelConvertUtil.convert(position, Position.class),
-            Y9OrgEventConst.RISEORGEVENT_TYPE_UPDATE_POSITION, Y9LoginUserHolder.getTenantId());
-        Y9PublishServiceUtil.publishMessageOrg(msg);
-
-        return position;
-    }
-
     @Override
     @Transactional(readOnly = false)
     public List<Y9Position> saveOrder(List<String> positionIds) {
@@ -314,6 +304,19 @@ public class Y9PositionServiceImpl implements Y9PositionService {
         }
 
         return orgPositionList;
+    }
+
+    @Transactional(readOnly = false)
+    public Y9Position saveOrder(String positionId, int tabIndex) {
+        Y9Position position = this.getById(positionId);
+        position.setTabIndex(tabIndex);
+        position = save(position);
+
+        Y9MessageOrg msg = new Y9MessageOrg(Y9ModelConvertUtil.convert(position, Position.class),
+            Y9OrgEventConst.RISEORGEVENT_TYPE_UPDATE_POSITION, Y9LoginUserHolder.getTenantId());
+        Y9PublishServiceUtil.publishMessageOrg(msg);
+
+        return position;
     }
 
     @Override

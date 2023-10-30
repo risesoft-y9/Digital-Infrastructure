@@ -63,8 +63,11 @@ public class Y9GroupServiceImpl implements Y9GroupService {
     @Override
     @Transactional(readOnly = false)
     public Y9Group createGroup(Y9Group y9Group) {
+        if (y9Group == null) {
+            return null;
+        }
         Y9OrgBase parent = compositeOrgBaseManager.getOrgUnitAsParent(y9Group.getParentId());
-        if (y9Group == null || parent == null) {
+        if (parent == null) {
             return null;
         }
         if (StringUtils.isBlank(y9Group.getId())) {
@@ -203,19 +206,6 @@ public class Y9GroupServiceImpl implements Y9GroupService {
         deleteByParentId(y9Organization.getId());
     }
 
-    @Transactional(readOnly = false)
-    public Y9Group saveOrder(String groupId, int tabIndex) {
-        Y9Group group = this.getById(groupId);
-        group.setTabIndex(tabIndex);
-        group = y9GroupManager.save(group);
-
-        Y9MessageOrg msg = new Y9MessageOrg(Y9ModelConvertUtil.convert(group, Group.class),
-            Y9OrgEventConst.RISEORGEVENT_TYPE_UPDATE_GROUP, Y9LoginUserHolder.getTenantId());
-        Y9PublishServiceUtil.publishMessageOrg(msg);
-
-        return group;
-    }
-
     @Override
     @Transactional(readOnly = false)
     public List<Y9Group> saveOrder(List<String> groupIds) {
@@ -228,6 +218,19 @@ public class Y9GroupServiceImpl implements Y9GroupService {
         }
 
         return groupList;
+    }
+
+    @Transactional(readOnly = false)
+    public Y9Group saveOrder(String groupId, int tabIndex) {
+        Y9Group group = this.getById(groupId);
+        group.setTabIndex(tabIndex);
+        group = y9GroupManager.save(group);
+
+        Y9MessageOrg msg = new Y9MessageOrg(Y9ModelConvertUtil.convert(group, Group.class),
+            Y9OrgEventConst.RISEORGEVENT_TYPE_UPDATE_GROUP, Y9LoginUserHolder.getTenantId());
+        Y9PublishServiceUtil.publishMessageOrg(msg);
+
+        return group;
     }
 
     @Override
