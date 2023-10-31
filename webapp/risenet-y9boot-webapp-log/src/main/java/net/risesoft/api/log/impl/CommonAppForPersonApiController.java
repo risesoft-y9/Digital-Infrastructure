@@ -12,6 +12,7 @@ import lombok.RequiredArgsConstructor;
 
 import net.risesoft.api.log.CommonAppForPersonApi;
 import net.risesoft.log.service.Y9CommonAppForPersonService;
+import net.risesoft.y9.Y9LoginUserHolder;
 
 /**
  * 个人常用应用组件
@@ -39,6 +40,7 @@ public class CommonAppForPersonApiController implements CommonAppForPersonApi {
     @GetMapping(value = "/getAppNames")
     public String getAppNamesByPersonId(@RequestParam("tenantId") String tenantId,
         @RequestParam("personId") @NotBlank String personId) {
+        Y9LoginUserHolder.setTenantId(tenantId);
         return commonAppForPersonService.getAppNamesByPersonId(personId);
     }
 
@@ -54,6 +56,7 @@ public class CommonAppForPersonApiController implements CommonAppForPersonApi {
     @GetMapping(value = "/getAppNamesFromLog")
     public String getAppNamesByPersonIdFromLog(@RequestParam("tenantId") String tenantId,
         @RequestParam("personId") @NotBlank String personId) {
+        Y9LoginUserHolder.setTenantId(tenantId);
         return commonAppForPersonService.getAppNamesFromLog(personId);
     }
 

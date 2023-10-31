@@ -30,7 +30,7 @@ public class PersonIconItem implements Serializable {
     /** 应用名称 */
     private String appName;
 
-    /** 图标类别 1:普通的 2:常用图标,3:个人排序后的图标 */
+    /** 图标类别 1:普通的 2:常用图标 */
     private Integer iconType = 1;
 
     /** 是否显示，0代表不显示，1代表显示 */
