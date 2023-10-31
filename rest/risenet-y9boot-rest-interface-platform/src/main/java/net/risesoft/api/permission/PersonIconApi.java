@@ -67,7 +67,7 @@ public interface PersonIconApi {
      *
      * @param tenantId 租户ID
      * @param orgUnitId 人员/岗位id
-     * @param iconType 图标类别 1:普通的 2:常用图标,3:个人排序后的图标
+     * @param iconType 图标类别 1:普通的 2:常用图标
      * @return List&lt;PersonIconItem&gt; 应用图标列表
      * @since 9.6.2
      */
@@ -77,7 +77,7 @@ public interface PersonIconApi {
 
     /**
      * 获取人员/岗位图标分页列表
-     *
+     * 
      * @param tenantId 租户ID
      * @param orgUnitId 人员/岗位id
      * @param page 页数
@@ -89,6 +89,36 @@ public interface PersonIconApi {
     Y9Page<PersonIconItem> pageByOrgUnitId(@RequestParam("tenantId") @NotBlank String tenantId,
         @RequestParam("orgUnitId") @NotBlank String orgUnitId, @RequestParam("page") int page,
         @RequestParam("rows") int rows);
+
+    /**
+     * 根据图标类别，获取人员/岗位图标分页列表
+     *
+     * @param tenantId 租户ID
+     * @param orgUnitId 人员/岗位id
+     * @param iconType 图标类别 1:普通的 2:常用图标
+     * @param page 页数
+     * @param rows 条数
+     * @return
+     */
+    @GetMapping("/pageByOrgUnitIdAndIconType")
+    Y9Page<PersonIconItem> pageByOrgUnitIdAndIconType(@RequestParam("tenantId") @NotBlank String tenantId,
+        @RequestParam("orgUnitId") @NotBlank String orgUnitId, @RequestParam("iconType") Integer iconType,
+        @RequestParam("page") int page, @RequestParam("rows") int rows);
+
+    /**
+     * 根据分类类别id，获取人员/岗位图标分页列表
+     *
+     * @param tenantId 租户ID
+     * @param orgUnitId 人员/岗位id
+     * @param systemId 系统id(设置排序时为分类类别id)
+     * @param page 页数
+     * @param rows 条数
+     * @return
+     */
+    @GetMapping("/pageByOrgUnitIdAndSystemId")
+    Y9Page<PersonIconItem> pageByOrgUnitIdAndSystemId(@RequestParam("tenantId") @NotBlank String tenantId,
+        @RequestParam("orgUnitId") @NotBlank String orgUnitId, @RequestParam("systemId") String systemId,
+        @RequestParam("page") int page, @RequestParam("rows") int rows);
 
     /**
      * 设置常用应用
