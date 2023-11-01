@@ -1,0 +1,5 @@
+## DYNAMIC SSL CONFIGURATION
+tls:
+  certificates:
+    - certFile: /etc/certs/www.dingzhaojun.top.pem
+      keyFile: /etc/certs/www.dingzhaojun.top.key

@@ -13,10 +13,14 @@ services:
     ports:
       - "8081:8081"
       - "8080:8080"
+      - "443:443"
     volumes:
+      # Allows Traefik can listen to the Docker events
       - "/var/run/docker.sock:/var/run/docker.sock"
-      #- "d:/docker-config/traefik/traefik.yml:/etc/traefik/traefik.yml"
-      #有了traefik.yml，可以不用配置command属性。
+      # Mount the directory containing the certs
+      - "d:/docker-config/traefik/certs:/etc/certs/"
+      # Mount the dynamic configuration
+      - "d:/docker-config/traefik/dynamic/certs-traefik.yaml:/etc/traefik/dynamic/certs-traefik.yaml"
     command:
       - "--global.sendanonymoususage=false"
       - "--global.checknewversion=false"
@@ -29,6 +33,7 @@ services:
       - "--log.format=common"
       - "--accesslog=false"
       - "--entrypoints.web.address=:8081"
+      - "--entrypoints.web-ssl.address=:443"
       - "--entrypoints.traefik.address=:8080"
       - "--providers.docker=true"
       - "--providers.docker.watch=true"
@@ -36,6 +41,10 @@ services:
       - "--providers.docker.endpoint=unix:///var/run/docker.sock"
       - "--providers.docker.useBindPortIP=false"
       - "--providers.docker.network=y9-share-net"
+      - "--providers.file=true"
+      - "--providers.file.watch=true"
+      - "--providers.file.directory=/etc/traefik/dynamic"
+      - "--providers.file.debugloggeneratedtemplate=true"
     healthcheck:
       test: ["CMD-SHELL", "wget -q --spider --proxy off localhost:8080/ping || exit 1"]
       interval: 5s
