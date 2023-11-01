@@ -29,6 +29,7 @@ import net.risesoft.log.service.Y9logAccessLogService;
 import net.risesoft.model.AccessLog;
 import net.risesoft.model.log.LogInfoModel;
 import net.risesoft.pojo.Y9Page;
+import net.risesoft.y9.Y9LoginUserHolder;
 import net.risesoft.y9.json.Y9JsonUtil;
 
 import y9.client.platform.org.DepartmentApiClient;
@@ -121,6 +122,7 @@ public class AccessLogApiController implements AccessLogApi {
     @GetMapping("/getModuleCount")
     public Map<String, Object> getModuleCount(String orgId, String orgType, String tenantId, String startDay,
         String endDay) {
+        Y9LoginUserHolder.setTenantId(tenantId);
         Map<String, Object> map = accessLogService.getModuleNameCount(orgId, orgType, tenantId, startDay, endDay);
         return map;
     }
@@ -158,6 +160,7 @@ public class AccessLogApiController implements AccessLogApi {
         @RequestParam("orgId") @NotBlank String orgId, @RequestParam("orgType") @NotBlank String orgType,
         @RequestParam("operateType") @NotBlank String operateType, @RequestParam("page") Integer page,
         @RequestParam("rows") Integer rows) {
+        Y9LoginUserHolder.setTenantId(tenantId);
         Y9Page<AccessLog> map = accessLogService.pageByOrgType(tenantId, orgId, orgType, operateType, page, rows);
         return map;
     }
@@ -257,6 +260,7 @@ public class AccessLogApiController implements AccessLogApi {
     public List<String> searchLog(@RequestParam("loginName") @NotBlank String loginName,
         @RequestParam("startTime") Long startTime, @RequestParam("endTime") Long endTime,
         @RequestParam("tenantId") String tenantId) {
+        Y9LoginUserHolder.setTenantId(tenantId);
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         String sTime = "";
         String eTime = "";

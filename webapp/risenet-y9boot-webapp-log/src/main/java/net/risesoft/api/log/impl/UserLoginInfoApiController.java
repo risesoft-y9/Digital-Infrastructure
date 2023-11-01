@@ -30,6 +30,7 @@ import net.risesoft.log.service.Y9logUserLoginInfoService;
 import net.risesoft.model.userlogininfo.LoginInfo;
 import net.risesoft.pojo.Y9Page;
 import net.risesoft.util.AccessLogModelConvertUtil;
+import net.risesoft.y9.Y9LoginUserHolder;
 
 import cn.hutool.core.thread.ThreadFactoryBuilder;
 
@@ -51,8 +52,10 @@ public class UserLoginInfoApiController implements UserLoginInfoApi {
     private final Y9logUserLoginInfoService userLoginInfoService;
 
     @Override
-    public LoginInfo getTopByTenantIdAndUserId(@RequestParam("tenantId") @NotBlank String tenantId, @RequestParam("personId") @NotBlank String personId) {
+    public LoginInfo getTopByTenantIdAndUserId(@RequestParam("tenantId") @NotBlank String tenantId,
+        @RequestParam("personId") @NotBlank String personId) {
         Y9logUserLoginInfo login = userLoginInfoService.getTopByTenantIdAndUserId(tenantId, personId);
+        Y9LoginUserHolder.setTenantId(tenantId);
         return AccessLogModelConvertUtil.userLoginInfoESToModel(login);
     }
 
@@ -67,7 +70,9 @@ public class UserLoginInfoApiController implements UserLoginInfoApi {
      */
     @Override
     @GetMapping("/listDistinctUserHostIpByUserIdAndLoginTime")
-    public List<Object[]> listDistinctUserHostIpByUserIdAndLoginTime(@RequestParam("personId") @NotBlank String personId, @RequestParam("startTime") Date startTime, @RequestParam("endTime") Date endTime) {
+    public List<Object[]> listDistinctUserHostIpByUserIdAndLoginTime(
+        @RequestParam("personId") @NotBlank String personId, @RequestParam("startTime") Date startTime,
+        @RequestParam("endTime") Date endTime) {
         return userLoginInfoService.listDistinctUserHostIpByUserIdAndLoginTime(personId, startTime, endTime);
     }
 
@@ -90,9 +95,15 @@ public class UserLoginInfoApiController implements UserLoginInfoApi {
      */
     @Override
     @GetMapping("/pageSearch")
-    public Y9Page<LoginInfo> pageSearch(@RequestParam(value = "userHostIp", required = false) String userHostIp, @RequestParam("personId") String personId, @RequestParam("tenantId") String tenantId, @RequestParam(value = "success", required = false) String success,
-        @RequestParam(value = "startTime", required = false) String startTime, @RequestParam(value = "endTime", required = false) String endTime, @RequestParam("page") int page, @RequestParam("rows") int rows) {
-        Y9Page<Y9logUserLoginInfo> loginList = userLoginInfoService.page(tenantId, userHostIp, userHostIp, success, startTime, endTime, page, rows);
+    public Y9Page<LoginInfo> pageSearch(@RequestParam(value = "userHostIp", required = false) String userHostIp,
+        @RequestParam("personId") String personId, @RequestParam("tenantId") String tenantId,
+        @RequestParam(value = "success", required = false) String success,
+        @RequestParam(value = "startTime", required = false) String startTime,
+        @RequestParam(value = "endTime", required = false) String endTime, @RequestParam("page") int page,
+        @RequestParam("rows") int rows) {
+        Y9LoginUserHolder.setTenantId(tenantId);
+        Y9Page<Y9logUserLoginInfo> loginList =
+            userLoginInfoService.page(tenantId, userHostIp, userHostIp, success, startTime, endTime, page, rows);
         List<Y9logUserLoginInfo> list = loginList.getRows();
         List<LoginInfo> infoList = AccessLogModelConvertUtil.userLoginInfoESListToModels(list);
         return Y9Page.success(loginList.getCurrPage(), loginList.getTotalPages(), loginList.getTotal(), infoList);
@@ -188,7 +199,8 @@ public class UserLoginInfoApiController implements UserLoginInfoApi {
     @PostMapping("/saveLoginInfoAsync")
     public void saveLoginInfoAsync(LoginInfo info) {
         ThreadFactory myThread = new ThreadFactoryBuilder().setNamePrefix("y9-saveLoginInfoAsync").build();
-        ThreadPoolExecutor threadPool = new ThreadPoolExecutor(2, 2, 100, TimeUnit.SECONDS, new LinkedBlockingDeque<>(5), myThread);
+        ThreadPoolExecutor threadPool =
+            new ThreadPoolExecutor(2, 2, 100, TimeUnit.SECONDS, new LinkedBlockingDeque<>(5), myThread);
         threadPool.execute(() -> saveLoginInfo(info));
         threadPool.shutdown();
     }
