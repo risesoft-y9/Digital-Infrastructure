@@ -305,6 +305,18 @@ public class UpdateIdentityResourceAndAuthorityListener {
         }
     }
 
+    @TransactionalEventListener()
+    @Async
+    public void onY9PersonsToPositionsCreated(Y9EntityCreatedEvent<Y9PersonsToPositions> event) {
+        Y9PersonsToPositions y9PersonsToPositions = event.getEntity();
+
+        y9AuthorizationService.syncToIdentityResourceAndAuthority(y9PersonsToPositions.getPersonId());
+
+        if (LOGGER.isDebugEnabled()) {
+            LOGGER.debug("新建人员和岗位的映射触发的重新计算角色执行完成");
+        }
+    }
+
     @TransactionalEventListener
     @Async
     public void onY9PersonsToPositionsDeleted(Y9EntityDeletedEvent<Y9PersonsToPositions> event) {
