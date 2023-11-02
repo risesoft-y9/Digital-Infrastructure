@@ -69,6 +69,7 @@ public class Y9ManagerServiceImpl implements Y9ManagerService {
         manager.setPassword(newPassword);
         manager.setModifyPwdTime(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date()));
         Y9Manager y9Manager = y9ManagerRepository.save(manager);
+
         Y9Context.publishEvent(new Y9EntityUpdatedEvent<>(manager, y9Manager));
     }
 
@@ -100,8 +101,9 @@ public class Y9ManagerServiceImpl implements Y9ManagerService {
     @Transactional(readOnly = false)
     public void delete(String id) {
         Y9Manager y9Manager = this.getById(id);
-        Y9Context.publishEvent(new Y9EntityDeletedEvent<>(y9Manager));
         y9ManagerRepository.delete(y9Manager);
+
+        Y9Context.publishEvent(new Y9EntityDeletedEvent<>(y9Manager));
     }
 
     @Override

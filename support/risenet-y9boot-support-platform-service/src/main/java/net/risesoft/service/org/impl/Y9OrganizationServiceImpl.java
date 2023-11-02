@@ -84,8 +84,6 @@ public class Y9OrganizationServiceImpl implements Y9OrganizationService {
     public void delete(String id) {
 
         Y9Organization org = this.getById(id);
-        // 发布事件，程序内部监听处理相关业务
-        Y9Context.publishEvent(new Y9EntityDeletedEvent<>(org));
 
         Y9MessageOrg msg = new Y9MessageOrg(Y9ModelConvertUtil.convert(org, Organization.class),
             Y9OrgEventConst.RISEORGEVENT_TYPE_DELETE_ORGANIZATION, Y9LoginUserHolder.getTenantId());
@@ -97,6 +95,9 @@ public class Y9OrganizationServiceImpl implements Y9OrganizationService {
         y9OrgBasesToRolesRepository.deleteByOrgId(org.getId());
         y9AuthorizationRepository.deleteByPrincipalIdAndPrincipalType(org.getId(),
             AuthorizationPrincipalTypeEnum.DEPARTMENT.getValue());
+
+        // 发布事件，程序内部监听处理相关业务
+        Y9Context.publishEvent(new Y9EntityDeletedEvent<>(org));
     }
 
     @Override

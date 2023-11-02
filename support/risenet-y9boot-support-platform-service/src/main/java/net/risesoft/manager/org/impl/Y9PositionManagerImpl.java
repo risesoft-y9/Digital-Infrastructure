@@ -95,11 +95,11 @@ public class Y9PositionManagerImpl implements Y9PositionManager {
 
                 updatedY9Position = save(updatedY9Position);
 
-                Y9Context.publishEvent(new Y9EntityUpdatedEvent<>(originalPosition, updatedY9Position));
-
                 Y9MessageOrg msg = new Y9MessageOrg(ModelConvertUtil.convert(updatedY9Position, Position.class),
                     Y9OrgEventConst.RISEORGEVENT_TYPE_UPDATE_POSITION, Y9LoginUserHolder.getTenantId());
                 Y9PublishServiceUtil.persistAndPublishMessageOrg(msg, "更新岗位信息", "更新" + position.getName());
+
+                Y9Context.publishEvent(new Y9EntityUpdatedEvent<>(originalPosition, updatedY9Position));
 
                 return updatedY9Position;
             } else {
@@ -123,11 +123,11 @@ public class Y9PositionManagerImpl implements Y9PositionManager {
 
                 Y9Position returnPosition = save(position);
 
-                Y9Context.publishEvent(new Y9EntityCreatedEvent<>(returnPosition));
-
                 Y9MessageOrg msg = new Y9MessageOrg(ModelConvertUtil.convert(returnPosition, Position.class),
                     Y9OrgEventConst.RISEORGEVENT_TYPE_ADD_POSITION, Y9LoginUserHolder.getTenantId());
                 Y9PublishServiceUtil.persistAndPublishMessageOrg(msg, "新增岗位信息", "新增" + position.getName());
+
+                Y9Context.publishEvent(new Y9EntityCreatedEvent<>(returnPosition));
 
                 return returnPosition;
             }
@@ -145,11 +145,11 @@ public class Y9PositionManagerImpl implements Y9PositionManager {
             + parent.getDn());
         Y9Position returnPosition = save(position);
 
-        Y9Context.publishEvent(new Y9EntityCreatedEvent<>(returnPosition));
-
         Y9MessageOrg msg = new Y9MessageOrg(ModelConvertUtil.convert(returnPosition, Position.class),
             Y9OrgEventConst.RISEORGEVENT_TYPE_ADD_POSITION, Y9LoginUserHolder.getTenantId());
         Y9PublishServiceUtil.persistAndPublishMessageOrg(msg, "新增岗位信息", "新增" + position.getName());
+
+        Y9Context.publishEvent(new Y9EntityCreatedEvent<>(returnPosition));
 
         return returnPosition;
     }

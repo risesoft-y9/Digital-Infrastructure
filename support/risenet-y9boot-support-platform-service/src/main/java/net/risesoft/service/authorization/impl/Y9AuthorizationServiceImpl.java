@@ -93,12 +93,12 @@ public class Y9AuthorizationServiceImpl implements Y9AuthorizationService {
     @Transactional(readOnly = false)
     public void delete(String id) {
         Y9Authorization y9Authorization = this.getById(id);
-        Y9Context.publishEvent(new Y9EntityDeletedEvent<>(y9Authorization));
 
         y9AuthorizationRepository.delete(y9Authorization);
-
         y9PersonToResourceAndAuthorityManager.deleteByAuthorizationId(id);
         y9PositionToResourceAndAuthorityManager.deleteByAuthorizationId(id);
+
+        Y9Context.publishEvent(new Y9EntityDeletedEvent<>(y9Authorization));
     }
 
     @Override

@@ -143,12 +143,13 @@ public class Y9PositionServiceImpl implements Y9PositionService {
             AuthorizationPrincipalTypeEnum.POSITION.getValue());
 
         y9PositionManager.delete(y9Position);
-        // 发布事件，程序内部监听处理相关业务
-        Y9Context.publishEvent(new Y9EntityDeletedEvent<>(y9Position));
 
         Y9MessageOrg msg = new Y9MessageOrg(Y9ModelConvertUtil.convert(y9Position, Position.class),
             Y9OrgEventConst.RISEORGEVENT_TYPE_DELETE_POSITION, Y9LoginUserHolder.getTenantId());
         Y9PublishServiceUtil.persistAndPublishMessageOrg(msg, "删除岗位", "删除" + y9Position.getName());
+
+        // 发布事件，程序内部监听处理相关业务
+        Y9Context.publishEvent(new Y9EntityDeletedEvent<>(y9Position));
     }
 
     @Override
@@ -254,12 +255,12 @@ public class Y9PositionServiceImpl implements Y9PositionService {
             + OrgLevelConsts.SEPARATOR + parent.getDn());
         updatedPosition = this.save(updatedPosition);
 
-        Y9Context.publishEvent(new Y9EntityUpdatedEvent<>(originPosition, updatedPosition));
-
         Y9MessageOrg msg = new Y9MessageOrg(Y9ModelConvertUtil.convert(updatedPosition, Position.class),
             Y9OrgEventConst.RISEORGEVENT_TYPE_UPDATE_POSITION, Y9LoginUserHolder.getTenantId());
         Y9PublishServiceUtil.persistAndPublishMessageOrg(msg, "移动岗位",
             updatedPosition.getName() + "移动到" + parent.getName());
+
+        Y9Context.publishEvent(new Y9EntityUpdatedEvent<>(originPosition, updatedPosition));
 
         return updatedPosition;
     }

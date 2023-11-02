@@ -68,14 +68,15 @@ public class Y9PersonsToGroupsServiceImpl implements Y9PersonsToGroupsService {
         y9PersonsToGroups.setPersonOrder(maxPersonsOrder);
         y9PersonsToGroups = y9PersonsToGroupsRepository.save(y9PersonsToGroups);
 
-        Y9Context.publishEvent(new Y9EntityCreatedEvent<>(y9PersonsToGroups));
-
         Y9Person person = y9PersonManager.getById(personId);
         Y9Group group = y9GroupManager.getById(groupId);
         Y9MessageOrg msg = new Y9MessageOrg(ModelConvertUtil.convert(y9PersonsToGroups, PersonsGroups.class),
             Y9OrgEventConst.RISEORGEVENT_TYPE_GROUP_ADDPERSON, Y9LoginUserHolder.getTenantId());
         Y9PublishServiceUtil.persistAndPublishMessageOrg(msg, "添加用户组人员",
             group.getName() + "添加用户组成员" + person.getName());
+
+        Y9Context.publishEvent(new Y9EntityCreatedEvent<>(y9PersonsToGroups));
+
         return y9PersonsToGroups;
     }
 
