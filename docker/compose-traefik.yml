@@ -8,19 +8,25 @@ services:
     restart: unless-stopped
     extra_hosts:
       - "host.docker.internal:host-gateway"
+      - "www.dingzhaojun.top:127.0.0.1"
     networks:
-      - y9-share-net    
+      y9-share-net: {}
+      mynet:
+        ipv4_address: '192.168.31.250'
     ports:
+      # Expose 8081 
       - "8081:8081"
+      # Expose 7443 for TLS
+      - "7443:7443"
+      # The Web UI (enabled by --api.insecure=true)
       - "8080:8080"
-      - "443:443"
     volumes:
       # Allows Traefik can listen to the Docker events
       - "/var/run/docker.sock:/var/run/docker.sock"
       # Mount the directory containing the certs
       - "d:/docker-config/traefik/certs:/etc/certs/"
       # Mount the dynamic configuration
-      - "d:/docker-config/traefik/dynamic/certs-traefik.yaml:/etc/traefik/dynamic/certs-traefik.yaml"
+      - "d:/docker-config/traefik/dynamic:/etc/traefik/dynamic"
     command:
       - "--global.sendanonymoususage=false"
       - "--global.checknewversion=false"
@@ -33,7 +39,7 @@ services:
       - "--log.format=common"
       - "--accesslog=false"
       - "--entrypoints.web.address=:8081"
-      - "--entrypoints.web-ssl.address=:443"
+      - "--entrypoints.web-ssl.address=:7443"
       - "--entrypoints.traefik.address=:8080"
       - "--providers.docker=true"
       - "--providers.docker.watch=true"
@@ -56,4 +62,6 @@ services:
         
 networks:
   y9-share-net:
+    external: true
+  mynet:
     external: true
