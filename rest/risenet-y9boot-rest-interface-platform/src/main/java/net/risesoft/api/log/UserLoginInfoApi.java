@@ -30,7 +30,8 @@ public interface UserLoginInfoApi {
      * @return LoginInfo 登录信息
      */
     @GetMapping("/getTopByTenantIdAndUserId")
-    LoginInfo getTopByTenantIdAndUserId(@RequestParam("tenantId") @NotBlank String tenantId, @RequestParam("personId") @NotBlank String personId);
+    LoginInfo getTopByTenantIdAndUserId(@RequestParam("tenantId") @NotBlank String tenantId,
+        @RequestParam("personId") @NotBlank String personId);
 
     /**
      * 获取个人使用的ip和登录次数列表
@@ -42,7 +43,8 @@ public interface UserLoginInfoApi {
      * @since 9.6.0
      */
     @GetMapping("/listDistinctUserHostIpByUserIdAndLoginTime")
-    List<Object[]> listDistinctUserHostIpByUserIdAndLoginTime(@RequestParam("personId") @NotBlank String personId, @RequestParam("startTime") Date startTime, @RequestParam("endTime") Date endTime);
+    List<Object[]> listDistinctUserHostIpByUserIdAndLoginTime(@RequestParam("personId") @NotBlank String personId,
+        @RequestParam("startTime") Date startTime, @RequestParam("endTime") Date endTime);
 
     /**
      * 获取个人日志列表
@@ -59,8 +61,12 @@ public interface UserLoginInfoApi {
      * @since 9.6.0
      */
     @GetMapping("/pageSearch")
-    Y9Page<LoginInfo> pageSearch(@RequestParam(value = "userHostIp", required = false) String userHostIp, @RequestParam("personId") String personId, @RequestParam("tenantId") String tenantId, @RequestParam(value = "success", required = false) String success,
-        @RequestParam(value = "startTime", required = false) String startTime, @RequestParam(value = "endTime", required = false) String endTime, @RequestParam("page") int page, @RequestParam("rows") int rows);
+    Y9Page<LoginInfo> pageSearch(@RequestParam(value = "userHostIp", required = false) String userHostIp,
+        @RequestParam("personId") String personId, @RequestParam("tenantId") String tenantId,
+        @RequestParam(value = "success", required = false) String success,
+        @RequestParam(value = "startTime", required = false) String startTime,
+        @RequestParam(value = "endTime", required = false) String endTime, @RequestParam("page") int page,
+        @RequestParam("rows") int rows);
 
     /**
      * 保存登录信息

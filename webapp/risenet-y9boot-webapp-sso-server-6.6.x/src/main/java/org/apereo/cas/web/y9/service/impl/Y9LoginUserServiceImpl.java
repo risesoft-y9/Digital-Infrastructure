@@ -6,7 +6,6 @@ import java.util.UUID;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
-import javax.persistence.TypedQuery;
 
 import org.apereo.cas.authentication.credential.RememberMeUsernamePasswordCredential;
 import org.apereo.cas.services.Y9LoginUser;
@@ -20,6 +19,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.core.env.Environment;
+import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.support.TransactionOperations;
 import org.springframework.util.StringUtils;
@@ -27,8 +27,6 @@ import org.springframework.util.StringUtils;
 import lombok.extern.slf4j.Slf4j;
 
 import cz.mallat.uasparser.UserAgentInfo;
-
-import org.springframework.kafka.core.KafkaTemplate;
 
 @Service
 @Slf4j
@@ -79,18 +77,18 @@ public class Y9LoginUserServiceImpl implements Y9LoginUserService {
                 if ("mobile".equals(loginType)) {
                     if (StringUtils.hasText(deptId)) {
                         users = y9UserService.findByTenantShortNameAndMobileAndParentId(tenantShortName, userLoginName,
-                                deptId);
+                            deptId);
                     } else {
                         users = y9UserService.findByTenantShortNameAndMobileAndOriginal(tenantShortName, userLoginName,
-                                Boolean.TRUE);
+                            Boolean.TRUE);
                     }
                 } else {
                     if (StringUtils.hasText(deptId)) {
                         users = y9UserService.findByTenantShortNameAndLoginNameAndParentId(tenantShortName,
-                                userLoginName, deptId);
+                            userLoginName, deptId);
                     } else {
                         users = y9UserService.findByTenantShortNameAndLoginNameAndOriginal(tenantShortName,
-                                userLoginName, Boolean.TRUE);
+                            userLoginName, Boolean.TRUE);
                     }
                 }
                 if (users != null && users.size() > 0) {

@@ -30,7 +30,8 @@ public interface Y9logUserLoginInfoService {
 
     long countByUserHostIpAndSuccessAndUserName(String userHostIp, String success, String userName);
 
-    long countByUserHostIpLikeAndLoginTimeBetweenAndSuccess(String userHostIp, Date startTime, Date endTime, String success);
+    long countByUserHostIpLikeAndLoginTimeBetweenAndSuccess(String userHostIp, Date startTime, Date endTime,
+        String success);
 
     /**
      * 根据租户id和人员id，获取最新登录信息
@@ -49,21 +50,26 @@ public interface Y9logUserLoginInfoService {
 
     List<String> listUserHostIpByUserId(String userId, String success);
 
-    Y9Page<Y9logUserLoginInfo> page(String tenantId, String userHostIp, String userId, String success, String startTime, String endTime, int page, int rows);
+    Y9Page<Y9logUserLoginInfo> page(String tenantId, String userHostIp, String userId, String success, String startTime,
+        String endTime, int page, int rows);
 
-    Page<Y9logUserLoginInfo> pageBySuccessAndServerIpAndUserName(String success, String userHostIp, String userId, int page, int rows);
+    Page<Y9logUserLoginInfo> pageBySuccessAndServerIpAndUserName(String success, String userHostIp, String userId,
+        int page, int rows);
 
     Page<Y9logUserLoginInfo> pageByTenantIdAndManagerLevel(String tenantId, String managerLevel, int page, int rows);
 
     Y9Page<Map<String, Object>> pageByUserHostIpAndSuccess(String userHostIp, String success, int page, int rows);
 
-    Y9Page<Map<String, Object>> pageByUserHostIpAndSuccessAndUserNameLike(String userHostIp, String success, String userName, int page, int rows);
+    Y9Page<Map<String, Object>> pageByUserHostIpAndSuccessAndUserNameLike(String userHostIp, String success,
+        String userName, int page, int rows);
 
     void save(Y9logUserLoginInfo y9logUserLoginInfo);
 
     Y9Page<Y9logUserLoginInfo> search(Date startTime, Date endTime, String success, int page, int rows);
 
-    Y9Page<Y9logUserLoginInfo> search(String userHostIp, Date startTime, Date endTime, String success, int page, int rows);
+    Y9Page<Y9logUserLoginInfo> search(String userHostIp, Date startTime, Date endTime, String success, int page,
+        int rows);
 
-    Y9Page<Y9logUserLoginInfo> searchQuery(String tenantId, String managerLevel, LogInfoModel loginInfoModel, int page, int rows);
+    Y9Page<Y9logUserLoginInfo> searchQuery(String tenantId, String managerLevel, LogInfoModel loginInfoModel, int page,
+        int rows);
 }
