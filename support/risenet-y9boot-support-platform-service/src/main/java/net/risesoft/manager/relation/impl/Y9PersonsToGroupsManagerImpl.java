@@ -52,7 +52,7 @@ public class Y9PersonsToGroupsManagerImpl implements Y9PersonsToGroupsManager {
     @Override
     @Transactional(readOnly = false)
     public void delete(Y9PersonsToGroups y9PersonsToGroups) {
-        Y9Context.publishEvent(new Y9EntityDeletedEvent<>(y9PersonsToGroups));
+        y9PersonsToGroupsRepository.delete(y9PersonsToGroups);
 
         Y9Person person = y9PersonManager.getById(y9PersonsToGroups.getPersonId());
         Y9Group group = y9GroupManager.getById(y9PersonsToGroups.getGroupId());
@@ -61,6 +61,6 @@ public class Y9PersonsToGroupsManagerImpl implements Y9PersonsToGroupsManager {
         Y9PublishServiceUtil.persistAndPublishMessageOrg(msg, "移除用户组人员",
             group.getName() + "移除用户组成员" + person.getName());
 
-        y9PersonsToGroupsRepository.delete(y9PersonsToGroups);
+        Y9Context.publishEvent(new Y9EntityDeletedEvent<>(y9PersonsToGroups));
     }
 }

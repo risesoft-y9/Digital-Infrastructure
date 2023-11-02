@@ -173,11 +173,11 @@ public class Y9JobServiceImpl implements Y9JobService {
                 Y9BeanUtil.copyProperties(job, updatedY9Job);
                 updatedY9Job = y9JobManager.save(updatedY9Job);
 
-                Y9Context.publishEvent(new Y9EntityUpdatedEvent<>(originY9Job, updatedY9Job));
-
                 Y9MessageOrg msg = new Y9MessageOrg(Y9ModelConvertUtil.convert(updatedY9Job, Job.class),
                     Y9OrgEventConst.RISEORGEVENT_TYPE_UPDATE_JOB, Y9LoginUserHolder.getTenantId());
                 Y9PublishServiceUtil.persistAndPublishMessageOrg(msg, "更新职位信息", "更新职位" + updatedY9Job.getName());
+
+                Y9Context.publishEvent(new Y9EntityUpdatedEvent<>(originY9Job, updatedY9Job));
 
                 return updatedY9Job;
             }

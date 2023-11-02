@@ -44,6 +44,10 @@ public class Y9PositionToResourceAndAuthorityManagerImpl implements Y9PositionTo
     @Transactional(readOnly = false)
     @Override
     public void deleteByPositionIdAndAuthorizationIdNotIn(String positionId, List<String> authorizationIdList) {
+        if (authorizationIdList.isEmpty()) {
+            y9PositionToResourceAndAuthorityRepository.deleteByPositionId(positionId);
+            return;
+        }
         y9PositionToResourceAndAuthorityRepository.deleteByPositionIdAndAuthorizationIdNotIn(positionId,
             authorizationIdList);
     }

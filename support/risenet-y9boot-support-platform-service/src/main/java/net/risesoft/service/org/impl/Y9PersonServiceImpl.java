@@ -182,11 +182,11 @@ public class Y9PersonServiceImpl implements Y9PersonService {
             person.setOrgType(OrgTypeEnum.PERSON.getEnName());
             person = save(person);
 
-            Y9Context.publishEvent(new Y9EntityCreatedEvent<>(person));
-
             Y9MessageOrg msg = new Y9MessageOrg(ModelConvertUtil.orgPersonToPerson(person),
                 Y9OrgEventConst.RISEORGEVENT_TYPE_ADD_PERSON, Y9LoginUserHolder.getTenantId());
             Y9PublishServiceUtil.persistAndPublishMessageOrg(msg, "添加人员", "添加" + person.getName());
+
+            Y9Context.publishEvent(new Y9EntityCreatedEvent<>(person));
 
             personList.add(person);
         }
@@ -485,8 +485,10 @@ public class Y9PersonServiceImpl implements Y9PersonService {
             // 禁用人员的时候，将人员岗位移除
             y9PersonsToPositionsManager.deleteByPersonId(id);
         }
-        Y9Context.publishEvent(new Y9EntityUpdatedEvent<>(y9Person, y9Person));
+
         Y9PublishServiceUtil.persistAndPublishMessageOrg(msg, event + "人员", event + y9Person.getName());
+
+        Y9Context.publishEvent(new Y9EntityUpdatedEvent<>(y9Person, y9Person));
 
         return y9Person;
     }
@@ -580,11 +582,13 @@ public class Y9PersonServiceImpl implements Y9PersonService {
             AuthorizationPrincipalTypeEnum.PERSON.getValue());
 
         y9PersonManager.delete(y9Person);
-        // 发布事件，程序内部监听处理相关业务
-        Y9Context.publishEvent(new Y9EntityDeletedEvent<>(y9Person));
+
         Y9MessageOrg msg = new Y9MessageOrg(ModelConvertUtil.orgPersonToPerson(y9Person),
             Y9OrgEventConst.RISEORGEVENT_TYPE_DELETE_PERSON, Y9LoginUserHolder.getTenantId());
         Y9PublishServiceUtil.persistAndPublishMessageOrg(msg, "删除人员", "删除" + y9Person.getName());
+
+        // 发布事件，程序内部监听处理相关业务
+        Y9Context.publishEvent(new Y9EntityDeletedEvent<>(y9Person));
     }
 
     @Override
@@ -806,11 +810,12 @@ public class Y9PersonServiceImpl implements Y9PersonService {
             if (StringUtils.isNotBlank(newPassword)) {
                 y9Person.setPassword(Y9MessageDigest.hashpw(newPassword));
                 y9Person = y9PersonManager.save(y9Person);
-                Y9Context.publishEvent(new Y9EntityUpdatedEvent<>(y9Person, y9Person));
+
                 Y9MessageOrg msg = new Y9MessageOrg(ModelConvertUtil.orgPersonToPerson(y9Person),
                     Y9OrgEventConst.RISEORGEVENT_TYPE_UPDATE_PERSON, Y9LoginUserHolder.getTenantId());
                 Y9PublishServiceUtil.persistAndPublishMessageOrg(msg, "修改密码", "修改" + y9Person.getName() + "的密码");
 
+                Y9Context.publishEvent(new Y9EntityUpdatedEvent<>(y9Person, y9Person));
             }
         }
         return y9Person;
@@ -925,10 +930,11 @@ public class Y9PersonServiceImpl implements Y9PersonService {
             origPerson.setPassword(Y9MessageDigest.hashpw(password));
             Y9Person y9Person = y9PersonManager.save(origPerson);
 
-            Y9Context.publishEvent(new Y9EntityUpdatedEvent<>(origPerson, y9Person));
             Y9MessageOrg msg = new Y9MessageOrg(ModelConvertUtil.orgPersonToPerson(y9Person),
                 Y9OrgEventConst.RISEORGEVENT_TYPE_UPDATE_PERSON, Y9LoginUserHolder.getTenantId());
             Y9PublishServiceUtil.persistAndPublishMessageOrg(msg, "重置密码", "重置" + y9Person.getName() + "的密码");
+
+            Y9Context.publishEvent(new Y9EntityUpdatedEvent<>(origPerson, y9Person));
 
         }
     }
@@ -953,6 +959,7 @@ public class Y9PersonServiceImpl implements Y9PersonService {
         Y9Person y9Person = this.getById(personId);
         y9Person.setAvator(avatorUrl);
         y9Person = this.save(y9Person);
+
         Y9Context.publishEvent(new Y9EntityUpdatedEvent<>(y9Person, y9Person));
         return y9Person;
     }
@@ -981,11 +988,11 @@ public class Y9PersonServiceImpl implements Y9PersonService {
                 }
                 updatedPerson = save(updatedPerson);
 
-                Y9Context.publishEvent(new Y9EntityUpdatedEvent<>(originPerson, updatedPerson));
-
                 Y9MessageOrg msg = new Y9MessageOrg(ModelConvertUtil.orgPersonToPerson(person),
                     Y9OrgEventConst.RISEORGEVENT_TYPE_UPDATE_PERSON, Y9LoginUserHolder.getTenantId());
                 Y9PublishServiceUtil.persistAndPublishMessageOrg(msg, "更新人员信息", "更新" + person.getName());
+
+                Y9Context.publishEvent(new Y9EntityUpdatedEvent<>(originPerson, updatedPerson));
 
                 if (personExt != null) {
                     y9PersonExtManager.saveOrUpdate(personExt, updatedPerson);
@@ -1017,11 +1024,11 @@ public class Y9PersonServiceImpl implements Y9PersonService {
             y9PersonExtManager.saveOrUpdate(personExt, person);
         }
 
-        Y9Context.publishEvent(new Y9EntityCreatedEvent<>(person));
-
         Y9MessageOrg msg = new Y9MessageOrg(ModelConvertUtil.orgPersonToPerson(person),
             Y9OrgEventConst.RISEORGEVENT_TYPE_ADD_PERSON, Y9LoginUserHolder.getTenantId());
         Y9PublishServiceUtil.persistAndPublishMessageOrg(msg, "新增人员信息", "新增" + person.getName());
+
+        Y9Context.publishEvent(new Y9EntityCreatedEvent<>(person));
 
         return person;
     }
@@ -1113,6 +1120,7 @@ public class Y9PersonServiceImpl implements Y9PersonService {
         Y9Person y9Person = this.getById(personId);
         y9Person.setWeixinId(weixinId);
         y9Person = this.save(y9Person);
+
         Y9Context.publishEvent(new Y9EntityUpdatedEvent<>(y9Person, y9Person));
         return y9Person;
     }

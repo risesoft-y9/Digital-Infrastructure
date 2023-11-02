@@ -98,12 +98,11 @@ public class Y9GroupServiceImpl implements Y9GroupService {
         y9AuthorizationRepository.deleteByPrincipalIdAndPrincipalType(groupId,
             AuthorizationPrincipalTypeEnum.GROUP.getValue());
 
-        Y9Context.publishEvent(new Y9EntityDeletedEvent<>(y9Group));
-
         Y9MessageOrg msg = new Y9MessageOrg(Y9ModelConvertUtil.convert(y9Group, Group.class),
             Y9OrgEventConst.RISEORGEVENT_TYPE_DELETE_GROUP, Y9LoginUserHolder.getTenantId());
         Y9PublishServiceUtil.persistAndPublishMessageOrg(msg, "删除用户组", "删除" + y9Group.getName());
 
+        Y9Context.publishEvent(new Y9EntityDeletedEvent<>(y9Group));
     }
 
     @Override
@@ -182,12 +181,12 @@ public class Y9GroupServiceImpl implements Y9GroupService {
         updatedY9Group.setGuidPath(parent.getGuidPath() + OrgLevelConsts.SEPARATOR + updatedY9Group.getId());
         updatedY9Group = y9GroupManager.save(updatedY9Group);
 
-        Y9Context.publishEvent(new Y9EntityUpdatedEvent<>(originY9Group, updatedY9Group));
-
         Y9MessageOrg msg = new Y9MessageOrg(Y9ModelConvertUtil.convert(updatedY9Group, Group.class),
             Y9OrgEventConst.RISEORGEVENT_TYPE_UPDATE_GROUP, Y9LoginUserHolder.getTenantId());
         Y9PublishServiceUtil.persistAndPublishMessageOrg(msg, "移动用户组",
             updatedY9Group.getName() + "移动到" + parent.getName());
+
+        Y9Context.publishEvent(new Y9EntityUpdatedEvent<>(originY9Group, updatedY9Group));
 
         return updatedY9Group;
     }

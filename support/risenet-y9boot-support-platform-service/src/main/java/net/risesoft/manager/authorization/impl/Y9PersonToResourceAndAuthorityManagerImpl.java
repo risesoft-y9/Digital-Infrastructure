@@ -44,6 +44,10 @@ public class Y9PersonToResourceAndAuthorityManagerImpl implements Y9PersonToReso
     @Transactional(readOnly = false)
     @Override
     public void deleteByPersonIdAndAuthorizationIdNotIn(String personId, List<String> authorizationIdList) {
+        if (authorizationIdList.isEmpty()) {
+            y9PersonToResourceAndAuthorityRepository.deleteByPersonId(personId);
+            return;
+        }
         y9PersonToResourceAndAuthorityRepository.deleteByPersonIdAndAuthorizationIdNotIn(personId, authorizationIdList);
     }
 

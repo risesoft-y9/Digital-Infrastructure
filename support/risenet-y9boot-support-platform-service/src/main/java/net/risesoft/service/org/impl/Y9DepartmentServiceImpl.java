@@ -112,12 +112,12 @@ public class Y9DepartmentServiceImpl implements Y9DepartmentService {
         y9AuthorizationRepository.deleteByPrincipalIdAndPrincipalType(id,
             AuthorizationPrincipalTypeEnum.DEPARTMENT.getValue());
 
-        // 发布事件，程序内部监听处理相关业务
-        Y9Context.publishEvent(new Y9EntityDeletedEvent<>(y9Department));
-
         Y9MessageOrg msg = new Y9MessageOrg(Y9ModelConvertUtil.convert(y9Department, Department.class),
             Y9OrgEventConst.RISEORGEVENT_TYPE_DELETE_DEPARTMENT, Y9LoginUserHolder.getTenantId());
         Y9PublishServiceUtil.persistAndPublishMessageOrg(msg, "删除部门", "删除 " + y9Department.getName());
+
+        // 发布事件，程序内部监听处理相关业务
+        Y9Context.publishEvent(new Y9EntityDeletedEvent<>(y9Department));
     }
 
     @Override
@@ -239,13 +239,14 @@ public class Y9DepartmentServiceImpl implements Y9DepartmentService {
         updatedDepartment.setGuidPath(parent.getGuidPath() + OrgLevelConsts.SEPARATOR + updatedDepartment.getId());
         updatedDepartment = y9DepartmentManager.save(updatedDepartment);
 
-        Y9Context.publishEvent(new Y9EntityUpdatedEvent<>(originDepartment, updatedDepartment));
+        compositeOrgBaseManager.recursivelyUpdateProperties(updatedDepartment);
 
         Y9MessageOrg msg = new Y9MessageOrg(Y9ModelConvertUtil.convert(updatedDepartment, Department.class),
             Y9OrgEventConst.RISEORGEVENT_TYPE_UPDATE_DEPARTMENT, Y9LoginUserHolder.getTenantId());
         Y9PublishServiceUtil.persistAndPublishMessageOrg(msg, "移动部门", "移动" + updatedDepartment.getName());
 
-        compositeOrgBaseManager.recursivelyUpdateProperties(updatedDepartment);
+        Y9Context.publishEvent(new Y9EntityUpdatedEvent<>(originDepartment, updatedDepartment));
+
         return originDepartment;
     }
 

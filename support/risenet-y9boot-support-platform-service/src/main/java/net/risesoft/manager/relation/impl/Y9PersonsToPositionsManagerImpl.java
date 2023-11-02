@@ -71,7 +71,7 @@ public class Y9PersonsToPositionsManagerImpl implements Y9PersonsToPositionsMana
     @Override
     @Transactional(readOnly = false)
     public void delete(Y9PersonsToPositions y9PersonsToPositions) {
-        Y9Context.publishEvent(new Y9EntityDeletedEvent<>(y9PersonsToPositions));
+        y9PersonsToPositionsRepository.delete(y9PersonsToPositions);
 
         Y9Person person = y9PersonManager.getById(y9PersonsToPositions.getPersonId());
         Y9MessageOrg msg = new Y9MessageOrg(ModelConvertUtil.convert(y9PersonsToPositions, PersonsPositions.class),
@@ -80,7 +80,7 @@ public class Y9PersonsToPositionsManagerImpl implements Y9PersonsToPositionsMana
         Y9PublishServiceUtil.persistAndPublishMessageOrg(msg, "移除岗位人员",
             y9Position.getName() + "移除成员" + person.getName());
 
-        y9PersonsToPositionsRepository.delete(y9PersonsToPositions);
+        Y9Context.publishEvent(new Y9EntityDeletedEvent<>(y9PersonsToPositions));
     }
 
     @Override
@@ -130,13 +130,13 @@ public class Y9PersonsToPositionsManagerImpl implements Y9PersonsToPositionsMana
         y9PersonsToPositions.setPersonOrder(maxPersonsOrder != null ? maxPersonsOrder + 1 : 0);
         Y9PersonsToPositions savedPersonToPositions = y9PersonsToPositionsRepository.save(y9PersonsToPositions);
 
-        Y9Context.publishEvent(new Y9EntityCreatedEvent<>(savedPersonToPositions));
-
         Y9Person person = y9PersonManager.getById(personId);
         Y9MessageOrg msg = new Y9MessageOrg(ModelConvertUtil.convert(y9PersonsToPositions, PersonsPositions.class),
             Y9OrgEventConst.RISEORGEVENT_TYPE_POSITION_ADDPERSON, Y9LoginUserHolder.getTenantId());
         Y9PublishServiceUtil.persistAndPublishMessageOrg(msg, "添加岗位人员",
             y9Position.getName() + "添加成员" + person.getName());
+
+        Y9Context.publishEvent(new Y9EntityCreatedEvent<>(savedPersonToPositions));
 
         return savedPersonToPositions;
     }
