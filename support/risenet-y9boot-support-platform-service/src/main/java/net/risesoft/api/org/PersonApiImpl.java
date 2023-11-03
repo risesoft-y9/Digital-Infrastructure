@@ -5,10 +5,7 @@ import jakarta.validation.constraints.NotBlank;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.Date;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import org.apache.commons.codec.binary.Base64;
 import org.apache.commons.lang3.StringUtils;
@@ -16,6 +13,7 @@ import org.springframework.context.annotation.Primary;
 import org.springframework.data.domain.Page;
 import org.springframework.http.MediaType;
 import org.springframework.validation.annotation.Validated;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
@@ -23,6 +21,8 @@ import org.springframework.web.bind.annotation.RestController;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
+import net.risesoft.api.org.dto.CreatePersonDTO;
+import net.risesoft.api.org.dto.PersonInfoDTO;
 import net.risesoft.entity.Y9Group;
 import net.risesoft.entity.Y9OrgBase;
 import net.risesoft.entity.Y9Person;
@@ -44,14 +44,9 @@ import net.risesoft.service.org.Y9PersonExtService;
 import net.risesoft.service.org.Y9PersonService;
 import net.risesoft.service.org.Y9PositionService;
 import net.risesoft.util.ModelConvertUtil;
-import net.risesoft.y9.Y9Context;
 import net.risesoft.y9.Y9LoginUserHolder;
-import net.risesoft.y9.configuration.Y9Properties;
-import net.risesoft.y9.json.Y9JsonUtil;
 import net.risesoft.y9.util.Y9ModelConvertUtil;
-import net.risesoft.y9public.entity.Y9FileStore;
 import net.risesoft.y9public.entity.role.Y9Role;
-import net.risesoft.y9public.service.Y9FileStoreService;
 import net.risesoft.y9public.service.role.Y9RoleService;
 
 /**
@@ -77,8 +72,6 @@ public class PersonApiImpl implements PersonApi {
     private final Y9PersonService y9PersonService;
     private final Y9PositionService y9PositionService;
     private final Y9RoleService y9RoleService;
-    private final Y9FileStoreService y9FileStoreService;
-    private final Y9Properties y9conf;
     private final Y9PersonToRoleService y9PersonToRoleService;
 
     /**
@@ -86,7 +79,7 @@ public class PersonApiImpl implements PersonApi {
      *
      * @param tenantId 租户id
      * @param personId 人员id
-     * @return true:禁用成功，false:禁用失败
+     * @return {@code Y9Result<Object>} 通用请求返回对象 - success 属性判断操作是否成功
      * @since 9.6.0
      */
     @Override
@@ -104,7 +97,7 @@ public class PersonApiImpl implements PersonApi {
      * @param tenantId 租户id
      * @param personId 人员id
      * @param loginName 登录名
-     * @return boolean 用户名是否存在
+     * @return {@code Y9Result<Boolean>} 通用请求返回对象 - data 属性判断登录名是否存在
      * @since 9.6.0
      */
     @Override
@@ -116,29 +109,11 @@ public class PersonApiImpl implements PersonApi {
     }
 
     /**
-     * 新增人员
-     *
-     * @param tenantId 租户id
-     * @param personJson 人员对象
-     * @return Person 人员对象
-     * @since 9.6.0
-     */
-    @Override
-    public Y9Result<Person> createPerson(@RequestParam("tenantId") @NotBlank String tenantId,
-        @RequestParam("personJson") @NotBlank String personJson) {
-        Y9LoginUserHolder.setTenantId(tenantId);
-
-        Y9Person y9Person = Y9JsonUtil.readValue(personJson, Y9Person.class);
-        y9Person = y9PersonService.createPerson(y9Person);
-        return Y9Result.success(Y9ModelConvertUtil.convert(y9Person, Person.class));
-    }
-
-    /**
      * 删除人员
      *
      * @param tenantId 租户id
      * @param personId 人员id
-     * @return true:删除成功，false:删除失败
+     * @return {@code Y9Result<Object>} 通用请求返回对象 - success 属性判断操作是否成功
      * @since 9.6.0
      */
     @Override
@@ -155,7 +130,7 @@ public class PersonApiImpl implements PersonApi {
      *
      * @param tenantId 租户id
      * @param personId 人员id
-     * @return OrgUnit 组织节点对象（部门或组织机构）
+     * @return {@code Y9Result<OrgUnit>} 通用请求返回对象 - data 是组织节点对象（部门或组织机构）
      * @since 9.6.0
      */
     @Override
@@ -173,7 +148,7 @@ public class PersonApiImpl implements PersonApi {
      * @param tenantId 租户id
      * @param loginName 登录名称
      * @param parentId 父节点id
-     * @return Person 人员对象
+     * @return {@code Y9Result<Person>} 通用请求返回对象 - data 是人员对象
      * @since 9.6.0
      */
     @Override
@@ -190,7 +165,7 @@ public class PersonApiImpl implements PersonApi {
      *
      * @param tenantId 租户id
      * @param personId 人员唯一标识
-     * @return OrgUnit 组织节点对象（部门或组织机构）
+     * @return {@code Y9Result<OrgUnit>} 通用请求返回对象 - data 是组织节点对象（部门或组织机构）
      * @since 9.6.0
      */
     @Override
@@ -207,7 +182,7 @@ public class PersonApiImpl implements PersonApi {
      *
      * @param tenantId 租户id
      * @param personId 人员唯一标识
-     * @return Person 人员对象
+     * @return {@code Y9Result<Person>} 通用请求返回对象 - data 是人员对象
      * @since 9.6.0
      */
     @Override
@@ -224,7 +199,7 @@ public class PersonApiImpl implements PersonApi {
      *
      * @param loginName 人员登录名
      * @param tenantId 租户id
-     * @return Person 人员对象
+     * @return {@code Y9Result<Person>} 通用请求返回对象 - data 是人员对象
      * @since 9.6.0
      */
     @Override
@@ -241,7 +216,7 @@ public class PersonApiImpl implements PersonApi {
      *
      * @param tenantId 租户id
      * @param personId 人员id
-     * @return PersonExt
+     * @return {@code Y9Result<PersonExt>} 通用请求返回对象 - data 是人员扩展信息
      * @since 9.6.0
      */
     @Override
@@ -254,11 +229,11 @@ public class PersonApiImpl implements PersonApi {
     }
 
     /**
-     * 获取 Base64加密之后的照片字符串
+     * 获取Base64加密之后的照片字符串
      *
      * @param tenantId 租户id
      * @param personId 人员id
-     * @return String Base64加密之后的照片字符串
+     * @return {@code Y9Result<String>} 通用请求返回对象 - data 是Base64加密之后的照片字符串
      * @since 9.6.0
      */
     @Override
@@ -273,7 +248,7 @@ public class PersonApiImpl implements PersonApi {
      * 获取全部人员
      *
      * @param tenantId 租户id
-     * @return List&lt;Person&gt; 人员对象集合
+     * @return {@code Y9Result<List<Person>>} 通用请求返回对象 - data 是人员对象集合
      * @since 9.6.0
      */
     @Override
@@ -291,7 +266,7 @@ public class PersonApiImpl implements PersonApi {
      * @param tenantId 租户id
      * @param idType 证件类型
      * @param idNum 证件号码
-     * @return
+     * @return {@code Y9Result<List<Person>>} 通用请求返回对象 - data 是人员对象集合
      * @since 9.6.0
      */
     @Override
@@ -304,11 +279,11 @@ public class PersonApiImpl implements PersonApi {
     }
 
     /**
-     * 根据人员名称 名称、租户id获取人员基本信息
+     * 根据人员名称、租户id获取人员对象集合
      *
      * @param tenantId 租户id
      * @param name 人员名称
-     * @return List&lt;Person&gt;
+     * @return {@code Y9Result<List<Person>>} 通用请求返回对象 - data 是人员对象集合
      * @since 9.6.2
      */
     @Override
@@ -325,7 +300,7 @@ public class PersonApiImpl implements PersonApi {
      *
      * @param tenantId 租户id
      * @param personId 人员唯一标识
-     * @return List<Group> 用户组对象集合
+     * @return {@code Y9Result<List<Group>>} 通用请求返回对象 - data 是用户组对象集合
      * @since 9.6.0
      */
     @Override
@@ -342,7 +317,8 @@ public class PersonApiImpl implements PersonApi {
      *
      * @param tenantId 租户id
      * @param personId 人员id
-     * @return {@link List}<{@link OrgUnit}> 父节点对象集合
+     * @return {@code Y9Result<List<OrgUnit>>} 通用请求返回对象 - data 是父节点对象集合
+     * @since 9.6.0
      */
     @Override
     public Y9Result<List<OrgUnit>> listParents(@RequestParam("tenantId") @NotBlank String tenantId,
@@ -354,7 +330,7 @@ public class PersonApiImpl implements PersonApi {
     }
 
     /**
-     * 根据人员名称 名称、租户id获取人员基本信息，图像，岗位等
+     * 根据人员名称、租户id获取人员基本信息，图像，岗位等
      *
      * @param tenantId 租户id
      * @param name 人员名称
@@ -362,40 +338,24 @@ public class PersonApiImpl implements PersonApi {
      * @since 9.6.2
      */
     @Override
-    public List<Map<String, Object>> listPersonInfoByNameLike(@RequestParam("tenantId") @NotBlank String tenantId,
+    public Y9Result<List<PersonInfoDTO>> listPersonInfoByNameLike(@RequestParam("tenantId") @NotBlank String tenantId,
         @RequestParam(name = "name", required = false) String name) {
         Y9LoginUserHolder.setTenantId(tenantId);
 
         List<Y9Person> y9PersonList = y9PersonService.listByNameLike(name);
-        List<Map<String, Object>> infoList = new ArrayList<>();
+        List<PersonInfoDTO> personInfoDTOList = new ArrayList<>();
         if (!y9PersonList.isEmpty()) {
             for (Y9Person person : y9PersonList) {
-                Map<String, Object> returnMap = new HashMap<>();
-                person.setPassword(null);
-                returnMap.put("person", person);
-                returnMap.put("personExt", y9PersonExtService.findByPersonId(person.getId()));
+                PersonInfoDTO personInfoDTO = new PersonInfoDTO();
+                personInfoDTO.setPerson(Y9ModelConvertUtil.convert(person, Person.class, "password"));
                 if (!Boolean.TRUE.equals(person.getDisabled())) {
                     List<Y9Position> positions = y9PositionService.listByPersonId(person.getId());
-                    if (!positions.isEmpty()) {
-
-                        StringBuilder ids = new StringBuilder();
-                        StringBuilder names = new StringBuilder();
-                        for (Y9Position position : positions) {
-                            ids.append(position.getId() + ",");
-                            names.append(position.getName() + ",");
-                        }
-                        String nameString = names.toString();
-                        String idsString = ids.toString();
-                        returnMap.put("positionNames", nameString.substring(0, nameString.lastIndexOf(",")));
-                        returnMap.put("positionIds", idsString.substring(0, idsString.lastIndexOf(",")));
-                    } else {
-                        returnMap.put("positionNames", "暂未设置");
-                    }
+                    personInfoDTO.setPositionList(Y9ModelConvertUtil.convert(positions, Position.class));
                 }
-                infoList.add(returnMap);
+                personInfoDTOList.add(personInfoDTO);
             }
         }
-        return infoList;
+        return Y9Result.success(personInfoDTOList);
     }
 
     /**
@@ -403,7 +363,7 @@ public class PersonApiImpl implements PersonApi {
      *
      * @param tenantId 租户id
      * @param personId 人员唯一标识
-     * @return List<Position> 岗位对象集合
+     * @return {@code Y9Result<List<Position>>} 通用请求返回对象 - data 是岗位对象集合
      * @since 9.6.0
      */
     @Override
@@ -420,7 +380,7 @@ public class PersonApiImpl implements PersonApi {
      *
      * @param tenantId 租户id
      * @param personId 人员唯一标识
-     * @return List<Role> 角色对象集合
+     * @return {@code Y9Result<List<Role>>} 通用请求返回对象 - data 是获取角色
      * @since 9.6.0
      */
     @Override
@@ -443,7 +403,7 @@ public class PersonApiImpl implements PersonApi {
      * @param tenantId 租户id
      * @param personId 人员id
      * @param newPassword 新明文密码
-     * @return Person 人员对象
+     * @return {@code Y9Result<Person>} 通用请求返回对象 - data 是人员对象
      * @since 9.6.0
      */
     @Override
@@ -463,7 +423,7 @@ public class PersonApiImpl implements PersonApi {
      * @param name 人员名称
      * @param page 页数
      * @param rows 条数
-     * @return
+     * @return {@code Y9Page<Person>} 通用请求返回对象 - data 是人员对象
      */
     @Override
     public Y9Page<Person> pageByNameLike(@RequestParam("tenantId") @NotBlank String tenantId,
@@ -484,7 +444,7 @@ public class PersonApiImpl implements PersonApi {
      * @param disabled 是否禁用
      * @param page 页号
      * @param rows 条数
-     * @return Y9Page<Person> 人员对象集合
+     * @return {@code Y9Page<Person>} 通用请求返回对象 - data 是人员对象集合
      * @since 9.6.0
      */
     @Override
@@ -505,42 +465,22 @@ public class PersonApiImpl implements PersonApi {
      * @param tenantId 租户ID
      * @param parentId 部门ID
      * @param disabled 是否禁用
-     * @param userName 用户名称
+     * @param name 用户名称
      * @param page 页号
      * @param rows 条数
-     * @return Y9Page<Person> 人员对象集合
+     * @return {@code Y9Page<Person>} 通用请求返回对象 - data 是人员对象集合
      * @since 9.6.0
      */
     @Override
-    public Y9Page<Person> pageByParentIdAndUserName(@RequestParam("tenantId") @NotBlank String tenantId,
+    public Y9Page<Person> pageByParentIdAndName(@RequestParam("tenantId") @NotBlank String tenantId,
         @RequestParam("parentId") @NotBlank String parentId, @RequestParam("disabled") boolean disabled,
-        @RequestParam("userName") @NotBlank String userName, @RequestParam("page") int page,
-        @RequestParam("rows") int rows) {
+        @RequestParam("name") @NotBlank String name, @RequestParam("page") int page, @RequestParam("rows") int rows) {
         Y9LoginUserHolder.setTenantId(tenantId);
 
-        Page<Y9Person> persons = y9PersonService.pageByParentId(page, rows, parentId, disabled, userName);
+        Page<Y9Person> persons = y9PersonService.pageByParentId(page, rows, parentId, disabled, name);
         List<Person> personList = Y9ModelConvertUtil.convert(persons.getContent(), Person.class);
         return Y9Page.success(persons.getNumber(), persons.getTotalPages(), persons.getTotalElements(), personList,
             "操作成功");
-    }
-
-    /**
-     * 保存人员
-     *
-     * @param tenantId 租户id
-     * @param personJson 人员对象json
-     * @return Person 人员对象
-     * @since 9.6.0
-     */
-    @Override
-    public Y9Result<Person> savePerson(@RequestParam("tenantId") @NotBlank String tenantId,
-        @RequestParam("personJson") @NotBlank String personJson) {
-        Y9LoginUserHolder.setTenantId(tenantId);
-
-        Y9Person y9Person = Y9JsonUtil.readValue(personJson, Y9Person.class);
-        Y9PersonExt y9PersonExt = Y9JsonUtil.readValue(personJson, Y9PersonExt.class);
-        y9Person = y9PersonService.saveOrUpdate(y9Person, y9PersonExt);
-        return Y9Result.success(Y9ModelConvertUtil.convert(y9Person, Person.class));
     }
 
     /**
@@ -549,7 +489,7 @@ public class PersonApiImpl implements PersonApi {
      * @param tenantId 租户id
      * @param personId 人员id
      * @param avator 人员头像路径
-     * @return Person 人员对象
+     * @return {@code Y9Result<Person>} 通用请求返回对象 - data 是人员对象
      * @since 9.6.0
      */
     @Override
@@ -561,55 +501,12 @@ public class PersonApiImpl implements PersonApi {
     }
 
     /**
-     * 保存人员头像(Base64)
-     *
-     * @param tenantId 租户id
-     * @param personId 人员id
-     * @param picnote 人员头像
-     * @param fileExt 文件类型(png,jpg...)
-     * @return Person 人员对象
-     * @since 9.6.0
-     */
-    @Override
-    public Y9Result<Person> savePersonAvatorByBase64(@RequestParam("tenantId") @NotBlank String tenantId,
-        @RequestParam("personId") @NotBlank String personId, @RequestParam("picnote") @NotBlank String picnote,
-        @RequestParam("fileExt") String fileExt) {
-        Y9LoginUserHolder.setTenantId(tenantId);
-
-        Y9Person y9Person = y9PersonService.getById(personId);
-        try {
-            if (StringUtils.isNotBlank(picnote)) {
-                Base64 base64 = new Base64();
-                if (picnote.contains("base64,")) {
-                    picnote = picnote.split("base64,")[1];
-                }
-                byte[] data = base64.decode(picnote);
-                SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMddHHmmss");
-                String fullPath = Y9FileStore.buildFullPath(Y9Context.getSystemName(), "avator");
-                String fileNewName = y9Person.getLoginName() + "_" + sdf.format(new Date()) + "."
-                    + (StringUtils.isBlank(fileExt) ? "png" : fileExt);
-
-                LOGGER.debug("******savePersonAvatorByBase64:{}", fileNewName);
-
-                Y9FileStore y9FileStore = y9FileStoreService.uploadFile(data, fullPath, fileNewName);
-                String url =
-                    y9conf.getCommon().getOrgBaseUrl() + "/s/" + y9FileStore.getId() + "." + y9FileStore.getFileExt();
-                y9Person = y9PersonService.saveAvator(personId, url);
-                return Y9Result.success(Y9ModelConvertUtil.convert(y9Person, Person.class));
-            }
-        } catch (Exception e) {
-            LOGGER.warn(e.getMessage(), e);
-        }
-        return null;
-    }
-
-    /**
      * 保存用户照片接口
      *
      * @param tenantId 租户id
      * @param personId 人员id
      * @param photo Base64加密之后的照片字符串
-     * @return Boolean 是否保存成功
+     * @return {@code Y9Result<Object>} 通用请求返回对象 - success 属性判断操作是否成功
      * @since 9.6.0
      */
     @Override
@@ -622,22 +519,20 @@ public class PersonApiImpl implements PersonApi {
     }
 
     /**
-     * 保存人员
+     * 新增或修改人员
      *
      * @param tenantId 租户id
-     * @param personJson 人员对象
-     * @param personextJson 人员扩展信息对象
-     * @return Person
+     * @param personDTO 人员对象
+     * @return {@code Y9Result<Person>} 通用请求返回对象 - data 是保存的人员对象
      * @since 9.6.0
      */
     @Override
-    public Y9Result<Person> savePersonWithExt(@RequestParam("tenantId") @NotBlank String tenantId,
-        @RequestParam("personJson") @NotBlank String personJson,
-        @RequestParam("personextJson") @NotBlank String personextJson) {
+    public Y9Result<Person> savePerson(@RequestParam("tenantId") @NotBlank String tenantId,
+        @RequestBody @Validated CreatePersonDTO personDTO) {
         Y9LoginUserHolder.setTenantId(tenantId);
 
-        Y9Person y9Person = Y9JsonUtil.readValue(personJson, Y9Person.class);
-        Y9PersonExt y9PersonExt = Y9JsonUtil.readValue(personextJson, Y9PersonExt.class);
+        Y9Person y9Person = Y9ModelConvertUtil.convert(personDTO, Y9Person.class);
+        Y9PersonExt y9PersonExt = Y9ModelConvertUtil.convert(personDTO, Y9PersonExt.class);
         y9Person = y9PersonService.saveOrUpdate(y9Person, y9PersonExt);
         return Y9Result.success(Y9ModelConvertUtil.convert(y9Person, Person.class));
     }
@@ -648,7 +543,7 @@ public class PersonApiImpl implements PersonApi {
      * @param tenantId 租户id
      * @param personId 人员id
      * @param weixinId 微信id
-     * @return Person 人员对象
+     * @return {@code Y9Result<Person>} 通用请求返回对象 - data 是保存的人员对象
      * @since 9.6.0
      */
     @Override

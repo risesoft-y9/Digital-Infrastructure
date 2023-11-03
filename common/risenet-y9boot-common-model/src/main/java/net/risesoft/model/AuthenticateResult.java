@@ -2,8 +2,10 @@ package net.risesoft.model;
 
 import java.io.Serializable;
 
+import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 /**
  * 认证结果
@@ -14,7 +16,10 @@ import lombok.Data;
  */
 @Data
 @Builder
+@NoArgsConstructor
+@AllArgsConstructor
 public class AuthenticateResult implements Serializable {
+
     private static final long serialVersionUID = 798527854696823939L;
 
     /** 租户id */
@@ -28,4 +33,5 @@ public class AuthenticateResult implements Serializable {
 
     /** 委办局名称 */
     private String bureauName;
+
 }

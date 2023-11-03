@@ -24,11 +24,11 @@ import net.risesoft.pojo.Y9Result;
 public interface OptionValueApi {
 
     /**
-     * 根据类型查找
+     * 根据字典类型查找字典数据列表
      *
      * @param tenantId 租户id
      * @param type 类型
-     * @return List&lt;OptionValue&gt;
+     * @return {@code Y9Result<List<OptionValue>>} 通用请求返回对象 - data 是查找的字典数据列表
      * @since 9.6.0
      */
     @GetMapping("/listByType")

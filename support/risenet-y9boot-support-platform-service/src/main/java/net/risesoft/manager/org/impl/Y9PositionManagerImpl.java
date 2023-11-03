@@ -102,34 +102,6 @@ public class Y9PositionManagerImpl implements Y9PositionManager {
                 Y9Context.publishEvent(new Y9EntityUpdatedEvent<>(originalPosition, updatedY9Position));
 
                 return updatedY9Position;
-            } else {
-                if (null == position.getTabIndex()) {
-                    position.setTabIndex(Integer.MAX_VALUE);
-                }
-                position.setOrgType(OrgTypeEnum.POSITION.getEnName());
-                if (null == position.getDutyLevel()) {
-                    position.setDutyLevel(0);
-                }
-
-                if (null != parent) {
-                    position.setParentId(parent.getId());
-                    position.setGuidPath(parent.getGuidPath() + OrgLevelConsts.SEPARATOR + position.getId());
-                    position.setDn(OrgLevelConsts.getOrgLevel(OrgTypeEnum.POSITION) + position.getName()
-                        + OrgLevelConsts.SEPARATOR + parent.getDn());
-                } else {
-                    position.setGuidPath(position.getId());
-                    position.setDn(OrgLevelConsts.getOrgLevel(OrgTypeEnum.POSITION) + position.getName());
-                }
-
-                Y9Position returnPosition = save(position);
-
-                Y9MessageOrg msg = new Y9MessageOrg(ModelConvertUtil.convert(returnPosition, Position.class),
-                    Y9OrgEventConst.RISEORGEVENT_TYPE_ADD_POSITION, Y9LoginUserHolder.getTenantId());
-                Y9PublishServiceUtil.persistAndPublishMessageOrg(msg, "新增岗位信息", "新增" + position.getName());
-
-                Y9Context.publishEvent(new Y9EntityCreatedEvent<>(returnPosition));
-
-                return returnPosition;
             }
         }
         if (StringUtils.isEmpty(position.getId())) {

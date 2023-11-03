@@ -110,8 +110,8 @@ public class Y9CustomGroupMembersServiceImpl implements Y9CustomGroupMembersServ
 
     @Override
     public Page<Y9CustomGroupMember> pageByGroupIdAndMemberType(String groupId, String memberType, int page, int rows) {
-        int currpage = page > 0 ? page - 1 : 0;
-        Pageable pageable = PageRequest.of(currpage, rows, Sort.by(Sort.Direction.ASC, "tabIndex"));
+        int currentPage = page > 0 ? page - 1 : 0;
+        Pageable pageable = PageRequest.of(currentPage, rows, Sort.by(Sort.Direction.ASC, "tabIndex"));
         return customGroupMembersRepository.findByGroupIdAndMemberType(groupId, memberType, pageable);
     }
 

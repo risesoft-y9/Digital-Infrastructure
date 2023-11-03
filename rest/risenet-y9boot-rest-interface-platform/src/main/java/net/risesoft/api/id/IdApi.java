@@ -18,9 +18,9 @@ import net.risesoft.pojo.Y9Result;
 public interface IdApi {
 
     /**
-     * 获取snowflake id
+     * 生成一个 id
      *
-     * @return String id
+     * @return {@code Y9Result<String>} 通用请求返回对象 - data 是生成的id
      * @since 9.6.0
      */
     @GetMapping("/getNextId")

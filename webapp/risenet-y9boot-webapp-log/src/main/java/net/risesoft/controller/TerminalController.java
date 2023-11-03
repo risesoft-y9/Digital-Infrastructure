@@ -205,7 +205,7 @@ public class TerminalController {
         Y9PageQuery pageQuery) {
         String tenantId = Y9LoginUserHolder.getTenantId();
         List<Map<String, Object>> list = new ArrayList<>();
-        Y9Page<Person> personPage = personManager.pageByParentIdAndUserName(tenantId, parentId, false, userName,
+        Y9Page<Person> personPage = personManager.pageByParentIdAndName(tenantId, parentId, false, userName,
             pageQuery.getPage(), pageQuery.getSize());
         List<Person> personList = personPage.getRows();
         if (!personList.isEmpty()) {

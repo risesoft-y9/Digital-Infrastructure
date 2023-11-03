@@ -8,6 +8,7 @@ import java.io.UnsupportedEncodingException;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 import org.apache.commons.httpclient.HttpClient;
 import org.apache.commons.httpclient.HttpException;
@@ -19,6 +20,7 @@ import org.apache.commons.httpclient.methods.GetMethod;
 import org.apache.commons.httpclient.methods.PostMethod;
 import org.apache.commons.httpclient.params.HttpMethodParams;
 
+import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.JavaType;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -29,6 +31,7 @@ import lombok.extern.slf4j.Slf4j;
 import net.risesoft.pojo.Y9Page;
 import net.risesoft.pojo.Y9Result;
 import net.risesoft.y9.json.Y9DateFormat;
+import net.risesoft.y9.json.Y9JsonUtil;
 
 /**
  * 远程调用工具类
@@ -446,6 +449,16 @@ public class RemoteCallUtil {
         Class<T> clz) {
         JavaType javaType = objectMapper.getTypeFactory().constructParametricType(Y9Result.class, clz);
         return sendRequest(MethodType.POST, url, params, requestBody, javaType);
+    }
+
+    public static List<NameValuePair> objectToNameValuePairList(Object object) {
+        List<NameValuePair> requestBody = new ArrayList<>();
+        Map<String, String> keyValueMap =
+            Y9JsonUtil.readValue(Y9JsonUtil.writeValueAsString(object), new TypeReference<Map<String, String>>() {});
+        for (Map.Entry<String, String> entry : keyValueMap.entrySet()) {
+            requestBody.add(new NameValuePair(entry.getKey(), entry.getValue()));
+        }
+        return requestBody;
     }
 
     enum MethodType {

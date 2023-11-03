@@ -30,9 +30,9 @@ public class IdApiImpl implements IdApi {
     }
 
     /**
-     * 获取 snowflake id
+     * 生成一个 id
      *
-     * @return String id
+     * @return {@code Y9Result<String>} 通用请求返回对象 - data 是生成的id
      * @since 9.6.0
      */
     @Override

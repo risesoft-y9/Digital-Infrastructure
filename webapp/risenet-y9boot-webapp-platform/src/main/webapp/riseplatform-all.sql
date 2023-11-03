@@ -29,6 +29,7 @@ create index IDXrgw1eknlb0a7kg5xonypd52ag on Y9_ORG_AUTHORIZATION (TENANT_ID, RE
 alter table Y9_ORG_AUTHORIZATION add constraint UKpv5gy69bjyoflhhexyix9d8gt unique (PRINCIPAL_ID, RESOURCE_ID, AUTHORITY);
 alter table Y9_ORG_DEPARTMENT add constraint UK_3rame1rxiq6j18b20rqfj8eyn unique (GUID_PATH);
 alter table Y9_ORG_GROUP add constraint UK_j3g3vc1ffuwb0l25xiwc0gue3 unique (GUID_PATH);
+alter table Y9_ORG_JOB add constraint UK_epnejdotl6enguf97vfxitm7g unique (NAME);
 alter table Y9_ORG_MANAGER add constraint UK_cmcf8n9689uc3cxmj0ji2xdqf unique (GUID_PATH);
 alter table Y9_ORG_ORGANIZATION add constraint UK_jlnficawh29fkypg7dj2cf4bg unique (GUID_PATH);
 create index IDX1q0y1dxaypjqxoal65vshj214 on Y9_ORG_ORGBASES_ROLES (ROLE_ID, ORG_ID);

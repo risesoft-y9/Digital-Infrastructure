@@ -5,12 +5,14 @@ import java.util.List;
 import org.springframework.context.annotation.Primary;
 import org.springframework.http.MediaType;
 import org.springframework.validation.annotation.Validated;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import lombok.RequiredArgsConstructor;
 
+import net.risesoft.api.org.dto.CreatePositionDTO;
 import net.risesoft.entity.Y9OrgBase;
 import net.risesoft.entity.Y9Person;
 import net.risesoft.entity.Y9Position;
@@ -24,7 +26,6 @@ import net.risesoft.service.org.Y9PositionService;
 import net.risesoft.service.relation.Y9PersonsToPositionsService;
 import net.risesoft.util.ModelConvertUtil;
 import net.risesoft.y9.Y9LoginUserHolder;
-import net.risesoft.y9.json.Y9JsonUtil;
 import net.risesoft.y9.util.Y9ModelConvertUtil;
 
 /**
@@ -49,12 +50,12 @@ public class PositionApiImpl implements PositionApi {
     private final Y9PersonsToPositionsService orgPositionsPersonsService;
 
     /**
-     * 岗位增加人员
+     * 向岗位增加人员
      *
      * @param tenantId 租户id
      * @param positionId 岗位id
      * @param personId 人员id
-     * @return boolean true 移除成功，false 移除失败
+     * @return {@code Y9Result<Object>} 通用请求返回对象 - success 属性判断操作是否成功
      * @since 9.6.0
      */
     @Override
@@ -70,16 +71,17 @@ public class PositionApiImpl implements PositionApi {
      * 创建岗位
      *
      * @param tenantId 租户id
-     * @param positionJson 岗位对象
-     * @return Position 岗位对象
+     * @param position 岗位对象
+     * @return {@code Y9Result<Position>} 通用请求返回对象 - data 是保存的岗位对象
      * @since 9.6.0
      */
     @Override
-    public Y9Result<Position> createPosition(@RequestParam String tenantId, @RequestParam String positionJson) {
+    public Y9Result<Position> createPosition(@RequestParam String tenantId,
+        @RequestBody @Validated CreatePositionDTO position) {
         Y9LoginUserHolder.setTenantId(tenantId);
 
-        Y9Position y9Position = Y9JsonUtil.readValue(positionJson, Y9Position.class);
-        y9Position = y9PositionService.createPosition(y9Position);
+        Y9Position y9Position = Y9ModelConvertUtil.convert(position, Y9Position.class);
+        y9Position = y9PositionService.saveOrUpdate(y9Position);
         return Y9Result.success(Y9ModelConvertUtil.convert(y9Position, Position.class));
     }
 
@@ -88,7 +90,7 @@ public class PositionApiImpl implements PositionApi {
      *
      * @param tenantId 租户id
      * @param positionId 岗位id
-     * @return boolean 是否删除成功
+     * @return {@code Y9Result<Object>} 通用请求返回对象 - success 属性判断操作是否成功
      * @since 9.6.0
      */
     @Override
@@ -104,7 +106,7 @@ public class PositionApiImpl implements PositionApi {
      *
      * @param tenantId 租户id
      * @param positionId 岗位唯一标识
-     * @return OrgUnit 组织节点对象（部门或组织机构）
+     * @return {@code Y9Result<OrgUnit>} 通用请求返回对象 - data 是组织节点对象（部门或组织机构）
      * @since 9.6.0
      */
     @Override
@@ -120,7 +122,7 @@ public class PositionApiImpl implements PositionApi {
      *
      * @param tenantId 租户id
      * @param positionId 岗位唯一标识
-     * @return Position 岗位对象
+     * @return {@code Y9Result<Position>} 通用请求返回对象 - data 是岗位对象
      * @since 9.6.0
      */
     @Override
@@ -137,7 +139,7 @@ public class PositionApiImpl implements PositionApi {
      * @param tenantId 租户id
      * @param positionName 岗位名称
      * @param personId 岗位唯一标识
-     * @return boolean 是否拥有该岗位
+     * @return {@code Y9Result<Boolean>} 通用请求返回对象 - data 可判断否拥有该岗位
      * @since 9.6.0
      */
     @Override
@@ -153,7 +155,7 @@ public class PositionApiImpl implements PositionApi {
      *
      * @param tenantId 租户唯一标识
      * @param parentId 父节点ID
-     * @return List<Position> 岗位对象集合
+     * @return {@code Y9Result<List<Position>>} 通用请求返回对象 - data 是岗位对象集合
      * @since 9.6.0
      */
     @Override
@@ -169,7 +171,7 @@ public class PositionApiImpl implements PositionApi {
      *
      * @param tenantId 租户唯一标识
      * @param personId 人员ID
-     * @return List<Position> 岗位对象集合
+     * @return {@code Y9Result<List<Position>>} 通用请求返回对象 - data 是岗位对象集合
      * @since 9.6.0
      */
     @Override
@@ -181,11 +183,11 @@ public class PositionApiImpl implements PositionApi {
     }
 
     /**
-     * 获取岗位的人员列表
+     * 获取所在岗位的人员列表
      *
      * @param tenantId 租户id
      * @param positionId 岗位唯一标识
-     * @return List<Person> 人员对象集合
+     * @return {@code Y9Result<List<Person>>} 通用请求返回对象 - data 是人员对象集合
      * @since 9.6.0
      */
     @Override
@@ -202,7 +204,7 @@ public class PositionApiImpl implements PositionApi {
      * @param tenantId 租户id
      * @param positionId 岗位id
      * @param personId 人员id
-     * @return boolean true 移除成功，false 移除失败
+     * @return {@code Y9Result<Object>} 通用请求返回对象 - success 属性判断操作是否成功
      * @since 9.6.0
      */
     @Override
@@ -218,15 +220,16 @@ public class PositionApiImpl implements PositionApi {
      * 更新岗位
      *
      * @param tenantId 租户id
-     * @param positionJson 岗位对象
-     * @return Position 岗位对象
+     * @param createPositionDTO 岗位对象
+     * @return {@code Y9Result<Position>} 通用请求返回对象 - data 是岗位对象
      * @since 9.6.0
      */
     @Override
-    public Y9Result<Position> updatePosition(@RequestParam String tenantId, @RequestParam String positionJson) {
+    public Y9Result<Position> updatePosition(@RequestParam String tenantId,
+        @RequestBody @Validated CreatePositionDTO createPositionDTO) {
         Y9LoginUserHolder.setTenantId(tenantId);
 
-        Y9Position y9Position = Y9JsonUtil.readValue(positionJson, Y9Position.class);
+        Y9Position y9Position = Y9ModelConvertUtil.convert(createPositionDTO, Y9Position.class);
         y9Position = y9PositionService.saveOrUpdate(y9Position);
         return Y9Result.success(Y9ModelConvertUtil.convert(y9Position, Position.class));
     }

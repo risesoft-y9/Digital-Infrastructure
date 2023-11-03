@@ -22,23 +22,23 @@ import net.risesoft.pojo.Y9Result;
 public interface ManagerApi {
 
     /**
-     * 根据id获得人员对象
+     * 根据id获得管理员对象
      *
      * @param tenantId 租户id
-     * @param userId 人员唯一标识
-     * @return Manager 人员对象
+     * @param id 管理员唯一标识
+     * @return {@code Y9Result<Manager>} 通用请求返回对象 - data 是管理员对象
      * @since 9.6.0
      */
     @GetMapping("/getManager")
     Y9Result<Manager> getManagerById(@RequestParam("tenantId") @NotBlank String tenantId,
-        @RequestParam("userId") @NotBlank String userId);
+        @RequestParam("id") @NotBlank String id);
 
     /**
-     * 根据登录名获得人员对象
+     * 根据登录名获得管理员对象
      *
      * @param tenantId 租户id
      * @param loginName 登录名
-     * @return Manager 人员对象
+     * @return {@code Y9Result<Manager>} 通用请求返回对象 - data 是管理员对象
      * @since 9.6.0
      */
     @GetMapping("/getManagerByLoginName")
@@ -46,12 +46,12 @@ public interface ManagerApi {
         @RequestParam("loginName") @NotBlank String loginName);
 
     /**
-     * 判断是否为该部门的三员
+     * 判断是否为部门的三员
      *
      * @param tenantId 租户id
-     * @param managerId 人员唯一标识
-     * @param deptId 三员唯一标识
-     * @return boolean 是否为该部门的三员
+     * @param managerId 管理员唯一标识
+     * @param deptId 部门id
+     * @return {@code Y9Result<Boolean>} 通用请求返回对象 - data 属性判断是否为该部门的三员
      * @since 9.6.0
      */
     @GetMapping("/isDeptManager")

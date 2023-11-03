@@ -23,8 +23,6 @@ public enum GlobalErrorCodeEnum implements ErrorCode {
     FAILURE(NONE_MODULE_CODE, 1, "服务器内部错误，请联系开发人员"),
     /** 参数校验失败 */
     INVALID_ARGUMENT(NONE_MODULE_CODE, 2, "参数校验失败"),
-    /** 查找的实体不存在 */
-    ENTITY_NOT_FOUND(NONE_MODULE_CODE, 3, "查找的实体不存在"),
 
     /** 令牌未传入 */
     ACCESS_TOKEN_NOT_FOUND(AUTH_MODULE_CODE, 0, "令牌未传入"),

@@ -32,7 +32,8 @@ public interface AuthenticateApi {
      */
     @RequestMapping("/authenticate3")
     Message authenticate3(@RequestParam("tenantShortName") @NotBlank String tenantShortName,
-        @RequestParam("loginName") @NotBlank String loginName, @RequestParam("password") @NotBlank String password);
+        @RequestParam("loginName") @NotBlank String loginName,
+        @RequestParam("base64EncodedPassword") @NotBlank String password);
 
     /**
      * 用户手机号码密码认证
@@ -45,6 +46,7 @@ public interface AuthenticateApi {
      */
     @RequestMapping("/authenticate5")
     Message authenticate5(@RequestParam("tenantShortName") @NotBlank String tenantShortName,
-        @RequestParam("mobile") @NotBlank String mobile, @RequestParam("password") @NotBlank String password);
+        @RequestParam("mobile") @NotBlank String mobile,
+        @RequestParam("base64EncodedPassword") @NotBlank String password);
 
 }

@@ -8,7 +8,6 @@ import org.apache.commons.lang3.StringUtils;
 import org.springframework.http.HttpStatus;
 import org.springframework.validation.BindException;
 import org.springframework.validation.FieldError;
-import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.MissingPathVariableException;
 import org.springframework.web.bind.MissingServletRequestParameterException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
@@ -112,7 +111,7 @@ public class Y9ControllerAdvice {
         FieldError fieldError = e.getBindingResult().getFieldError();
         if (fieldError != null && StringUtils.isNotBlank(fieldError.getDefaultMessage())) {
             return Y9Result.failure(GlobalErrorCodeEnum.INVALID_ARGUMENT,
-                fieldError.getObjectName() + "." + fieldError.getField() + fieldError.getDefaultMessage());
+                fieldError.getField() + fieldError.getDefaultMessage());
         }
 
         // 参数类型不匹配检验
@@ -121,22 +120,6 @@ public class Y9ControllerAdvice {
         fieldErrors.forEach((oe) -> msg.append(oe.getObjectName()).append(".").append(oe.getField()).append("=")
             .append(oe.getRejectedValue()).append("，与预期的字段类型不匹配"));
         return Y9Result.failure(GlobalErrorCodeEnum.INVALID_ARGUMENT, msg.toString());
-    }
-
-    /**
-     * @Valid 校验失败异常
-     *
-     * @param e e
-     * @return {@link Y9Result}<{@link Object}>
-     */
-    @ExceptionHandler(MethodArgumentNotValidException.class)
-    @ResponseBody
-    @ResponseStatus(HttpStatus.BAD_REQUEST)
-    public Y9Result<Object> processException(MethodArgumentNotValidException e) {
-        LOGGER.warn(e.getMessage(), e);
-        FieldError fieldError = e.getBindingResult().getFieldError();
-        return Y9Result.failure(GlobalErrorCodeEnum.INVALID_ARGUMENT, fieldError != null
-            ? fieldError.getDefaultMessage() : GlobalErrorCodeEnum.INVALID_ARGUMENT.getDescription());
     }
 
     /**

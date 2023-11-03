@@ -317,7 +317,7 @@ public interface PersonApi {
     @GetMapping("/pageByParentIdAndUserName")
     Y9Page<Person> pageByParentIdAndUserName(@RequestParam("tenantId") @NotBlank String tenantId,
         @RequestParam("parentId") @NotBlank String parentId, @RequestParam("disabled") boolean disabled,
-        @RequestParam("userName") @NotBlank String userName, @RequestParam("page") int page,
+        @RequestParam("name") @NotBlank String userName, @RequestParam("page") int page,
         @RequestParam("rows") int rows);
 
     /**

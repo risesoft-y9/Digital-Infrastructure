@@ -31,7 +31,7 @@ public interface ManagerApi {
      */
     @GetMapping("/getManager")
     Manager getManagerById(@RequestParam("tenantId") @NotBlank String tenantId,
-        @RequestParam("userId") @NotBlank String userId);
+        @RequestParam("id") @NotBlank String userId);
 
     /**
      * 根据登录名获得人员对象

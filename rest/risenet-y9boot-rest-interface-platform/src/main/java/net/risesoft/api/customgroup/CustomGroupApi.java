@@ -34,7 +34,7 @@ public interface CustomGroupApi {
      * @param tenantId 租户id
      * @param customGroupId 用户组id
      * @param orgUnitList 组织id列表
-     * @return
+     * @return {@code Y9Result<Object>} 通用请求返回对象 - success 属性判断操作是否成功
      * @since 9.6.0
      */
     @GetMapping("/addMember")
@@ -46,8 +46,8 @@ public interface CustomGroupApi {
      * 删除用户组
      *
      * @param tenantId 租户id
-     * @param groupIds 用户组Ids,多个“,”隔开
-     * @return boolean 删除是否成功
+     * @param groupIds 用户组id，多个用英文逗号,隔开
+     * @return {@code Y9Result<Object>} 通用请求返回对象 - success 属性判断操作是否成功
      * @since 9.6.0
      */
     @PostMapping("/deleteAllGroup")
@@ -59,7 +59,7 @@ public interface CustomGroupApi {
      *
      * @param tenantId 租户id
      * @param customId 自定义id
-     * @return CustomGroup 自定义用户组对象
+     * @return {@code Y9Result<CustomGroup>} 通用请求返回对象 - data 是查找的自定义用户组
      * @since 9.6.0
      */
     @GetMapping("/findCustomGroupByCustomId")
@@ -72,7 +72,7 @@ public interface CustomGroupApi {
      * @param tenantId 租户id
      * @param personId 人员Id
      * @param groupId 用户组id
-     * @return CustomGroup 用户组对象
+     * @return {@code Y9Result<CustomGroup>} 通用请求返回对象 - data 是查找的自定义用户组
      * @since 9.6.0
      */
     @GetMapping("/findCustomGroupById")
@@ -80,11 +80,11 @@ public interface CustomGroupApi {
         @RequestParam("personId") @NotBlank String personId, @RequestParam("groupId") @NotBlank String groupId);
 
     /**
-     * 根据用户组id 解析该用户组下所有人员
+     * 根据id解析该自定义用户组下的人员列表
      *
      * @param tenantId 租户id
      * @param groupId 用户组id
-     * @return List&lt;Person&gt; 人员列表
+     * @return {@code Y9Result<List<Person>>} 通用请求返回对象 - data 是查找的人员列表
      * @since 9.6.0
      */
     @GetMapping("/listAllPersonByGroupId")
@@ -96,11 +96,11 @@ public interface CustomGroupApi {
      *
      * @param tenantId 租户id
      * @param personId 人员Id
-     * @return List&lt;CustomGroup&gt;
+     * @return {@code Y9Result<List<CustomGroup>>} 通用请求返回对象 - data 是查找的用户组列表
      * @since 9.6.0
      */
     @GetMapping("/listCustomGroupByUserId")
-    Y9Result<List<CustomGroup>> listCustomGroupByUserId(@RequestParam("tenantId") @NotBlank String tenantId,
+    Y9Result<List<CustomGroup>> listCustomGroupByPersonId(@RequestParam("tenantId") @NotBlank String tenantId,
         @RequestParam("personId") @NotBlank String personId);
 
     /**
@@ -109,7 +109,7 @@ public interface CustomGroupApi {
      * @param tenantId 租户id
      * @param personId 人员Id
      * @param groupId 用户组id
-     * @return List&lt;CustomGroupMember&gt; 用户组成员列表
+     * @return {@code Y9Result<List<CustomGroupMember>>} 通用请求返回对象 - data 是查找的用户组成员列表
      * @since 9.6.0
      */
     @GetMapping("/listCustomGroupMemberByGroupId")
@@ -118,13 +118,13 @@ public interface CustomGroupApi {
         @RequestParam("groupId") @NotBlank String groupId);
 
     /**
-     * 根据用户组id和成员类型，获取用户组员列表
+     * 根据用户组id和成员类型，获取用户组成员列表
      *
      * @param tenantId 租户id
      * @param personId 人员id
      * @param groupId 用户组id
-     * @param memberType 成员类型，如：Person、Position
-     * @return List&lt;CustomGroupMember&gt; 用户组员列表
+     * @param memberType 成员类型 {@link net.risesoft.enums.OrgTypeEnum#enName}
+     * @return {@code Y9Result<List<CustomGroupMember>>} 通用请求返回对象 - data 是查找的用户组成员列表
      * @since 9.6.0
      */
     @GetMapping("/listCustomGroupMemberByGroupIdAndMemberType")
@@ -133,13 +133,13 @@ public interface CustomGroupApi {
         @RequestParam("groupId") @NotBlank String groupId, @RequestParam("memberType") @NotBlank String memberType);
 
     /**
-     * 分页获取自定义用户组
+     * 根据人员id分页获取其自定义用户组列表
      *
      * @param tenantId 租户id
      * @param personId 人员id
      * @param page 第几页
      * @param rows 返回多少条数据
-     * @return Y9Page&lt;Map&lt;String, Object&gt;&gt;
+     * @return {@code Y9Page<CustomGroup>} 通用分页请求返回对象 - rows 是返回的用户组列表
      * @since 9.6.0
      */
     @GetMapping("/pageCustomGroupByPersonId")
@@ -148,13 +148,13 @@ public interface CustomGroupApi {
         @RequestParam("rows") int rows);
 
     /**
-     * 获取人员分页列表
+     * 根据自定义用户组id分页获取其自定义用户组成员列表
      *
      * @param tenantId 租户id
      * @param groupId 用户组Id
      * @param page 第几页
      * @param rows 返回多少条数据
-     * @return Y9Page&lt;Map&lt;String, Object&gt;&gt; 人员分页列表
+     * @return {@code Y9Page<CustomGroupMember>} 通用分页请求返回对象 - rows 是返回的用户组成员列表
      * @since 9.6.0
      */
     @GetMapping("/pageCustomGroupMemberByGroupId")
@@ -163,14 +163,14 @@ public interface CustomGroupApi {
         @RequestParam("rows") int rows);
 
     /**
-     * 根据用户组id和成员类型，获取人员分页列表
+     * 根据自定义用户组id和成员类型分页获取其自定义用户组成员列表
      *
      * @param tenantId 租户id
      * @param groupId 用户组Id
-     * @param memberType 成员类型，如：Person、Position
+     * @param memberType 成员类型 {@link net.risesoft.enums.OrgTypeEnum#enName}
      * @param page 第几页
      * @param rows 返回多少条数据
-     * @return Map&lt;String, Object&gt; 人员分页列表
+     * @return {@code Y9Page<CustomGroupMember>}
      * @since 9.6.0
      */
     @GetMapping("/pageCustomGroupMemberByGroupIdAndMemberType")
@@ -183,8 +183,8 @@ public interface CustomGroupApi {
      * 删除组成员
      *
      * @param tenantId 租户id
-     * @param memberIds ids,多个“,”隔开
-     * @return boolean 是否删除成功
+     * @param memberIds 用户组成员id，多个用英文逗号,隔开
+     * @return {@code Y9Result<Object>} 通用请求返回对象 - success 属性判断操作是否成功
      * @since 9.6.0
      */
     @PostMapping("/removeMembers")
@@ -192,22 +192,22 @@ public interface CustomGroupApi {
         @RequestParam("memberIds") @NotEmpty List<String> memberIds);
 
     /**
-     * 保存用户组
+     * 保存自定义用户组
      *
      * @param tenantId 租户id
      * @param customGroup 自定义用户组
-     * @return CustomGroup 用户组对象
+     * @return {@code Y9Result<CustomGroup>} 通用请求返回对象 - data 是保存的自定义用户组
      * @since 9.6.0
      */
     @PostMapping("/saveCustomGroup")
     Y9Result<CustomGroup> saveCustomGroup(@RequestParam("tenantId") @NotBlank String tenantId, CustomGroup customGroup);
 
     /**
-     * 保存用户组排序
+     * 保存自定义用户组排序
      *
      * @param tenantId 租户id
-     * @param sortIds 排序后的用户组Ids,多个“,”隔开
-     * @return boolean 是否保存排序成功
+     * @param sortIds 排序后的用户组id，多个用英文逗号,隔开
+     * @return {@code Y9Result<Object>} 通用请求返回对象 - success 属性判断操作是否成功
      * @since 9.6.0
      */
     @PostMapping("/saveCustomGroupOrder")
@@ -215,11 +215,11 @@ public interface CustomGroupApi {
         @RequestParam("sortIds") @NotEmpty List<String> sortIds);
 
     /**
-     * 保存成员排序
+     * 保存自定义用户组成员排序
      *
      * @param tenantId 租户id
-     * @param memberIds 排序后的Ids,多个“,”隔开
-     * @return boolean 是否保存排序成功
+     * @param memberIds 排序的用户组成员id，多个用英文逗号,隔开
+     * @return {@code Y9Result<Object>} 通用请求返回对象 - success 属性判断操作是否成功
      * @since 9.6.0
      */
     @PostMapping("/saveMemberOrder")
@@ -230,11 +230,11 @@ public interface CustomGroupApi {
      * 保存用户组
      *
      * @param tenantId 租户id
-     * @param personId 人员Id
-     * @param personIds 人员Ids,多个“,”隔开
+     * @param personId 人员id
+     * @param personIds 人员id，多个用英文逗号,隔开
      * @param groupId 用户组Id
      * @param groupName 用户组名称
-     * @return CustomGroup 用户组对象
+     * @return {@code Y9Result<CustomGroup>} 通用请求返回对象 - data 是保存的自定义用户组
      * @since 9.6.0
      */
     @PostMapping("/saveOrUpdateCustomGroup")
@@ -244,12 +244,12 @@ public interface CustomGroupApi {
         @RequestParam("groupName") @NotBlank String groupName);
 
     /**
-     * 共享用户组
+     * 分享用户组给其他人使用
      *
      * @param tenantId 租户id
-     * @param personIds 人员Ids,多个“,”隔开
-     * @param groupIds 用户组Ids,多个“,”隔开
-     * @return boolean 分享是否成功
+     * @param personIds 人员id，多个用英文逗号,隔开
+     * @param groupIds 用户组id，多个用英文逗号,隔开
+     * @return {@code Y9Result<Object>} 通用请求返回对象 - success 属性判断操作是否成功
      * @since 9.6.0
      */
     @PostMapping("/shareCustomGroup")

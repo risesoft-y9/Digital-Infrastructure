@@ -3,13 +3,15 @@ package net.risesoft.api.org;
 import jakarta.validation.constraints.NotBlank;
 
 import java.util.List;
-import java.util.Map;
 
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import net.risesoft.api.org.dto.CreatePersonDTO;
+import net.risesoft.api.org.dto.PersonInfoDTO;
 import net.risesoft.model.Group;
 import net.risesoft.model.OrgUnit;
 import net.risesoft.model.Person;
@@ -36,7 +38,7 @@ public interface PersonApi {
      *
      * @param tenantId 租户id
      * @param personId 人员id
-     * @return true:禁用成功，false:禁用失败
+     * @return {@code Y9Result<Object>} 通用请求返回对象 - success 属性判断操作是否成功
      * @since 9.6.0
      */
     @GetMapping("/changeDisabled")
@@ -44,12 +46,12 @@ public interface PersonApi {
         @RequestParam("personId") @NotBlank String personId);
 
     /**
-     * 检查用户名
+     * 检查登录名是否存在
      *
      * @param tenantId 租户id
      * @param personId 人员id
      * @param loginName 登录名
-     * @return boolean 用户名是否存在
+     * @return {@code Y9Result<Boolean>} 通用请求返回对象 - data 属性判断登录名是否存在
      * @since 9.6.0
      */
     @GetMapping("/checkLoginName")
@@ -57,23 +59,11 @@ public interface PersonApi {
         @RequestParam("personId") @NotBlank String personId, @RequestParam("loginName") @NotBlank String loginName);
 
     /**
-     * 新增人员
-     *
-     * @param tenantId 租户id
-     * @param personJson 人员对象
-     * @return Person 人员对象
-     * @since 9.6.0
-     */
-    @PostMapping("/createPerson")
-    Y9Result<Person> createPerson(@RequestParam("tenantId") @NotBlank String tenantId,
-        @RequestParam("personJson") @NotBlank String personJson);
-
-    /**
      * 删除人员
      *
      * @param tenantId 租户id
      * @param personId 人员id
-     * @return true:删除成功，false:删除失败
+     * @return {@code Y9Result<Object>} 通用请求返回对象 - success 属性判断操作是否成功
      * @since 9.6.0
      */
     @PostMapping("/deleteById")
@@ -85,7 +75,7 @@ public interface PersonApi {
      *
      * @param tenantId 租户id
      * @param personId 人员id
-     * @return OrgUnit 组织节点对象（部门或组织机构）
+     * @return {@code Y9Result<OrgUnit>} 通用请求返回对象 - data 是组织节点对象（部门或组织机构）
      * @since 9.6.0
      */
     @GetMapping("/getBureau")
@@ -98,7 +88,7 @@ public interface PersonApi {
      * @param tenantId 租户id
      * @param loginName 登录名称
      * @param parentId 父节点id
-     * @return Person 人员对象
+     * @return {@code Y9Result<Person>} 通用请求返回对象 - data 是人员对象
      * @since 9.6.0
      */
     @GetMapping("/getByLoginNameAndParentId")
@@ -110,7 +100,7 @@ public interface PersonApi {
      *
      * @param tenantId 租户id
      * @param personId 人员唯一标识
-     * @return OrgUnit 组织节点对象（部门或组织机构）
+     * @return {@code Y9Result<OrgUnit>} 通用请求返回对象 - data 是组织节点对象（部门或组织机构）
      * @since 9.6.0
      */
     @GetMapping("/getParent")
@@ -122,7 +112,7 @@ public interface PersonApi {
      *
      * @param tenantId 租户id
      * @param personId 人员唯一标识
-     * @return Person 人员对象
+     * @return {@code Y9Result<Person>} 通用请求返回对象 - data 是人员对象
      * @since 9.6.0
      */
     @GetMapping("/getPerson")
@@ -134,7 +124,7 @@ public interface PersonApi {
      *
      * @param loginName 人员登录名
      * @param tenantId 租户id
-     * @return Person 人员对象
+     * @return {@code Y9Result<Person>} 通用请求返回对象 - data 是人员对象
      * @since 9.6.0
      */
     @GetMapping("/getPersonByLoginNameAndTenantId")
@@ -146,7 +136,7 @@ public interface PersonApi {
      *
      * @param tenantId 租户id
      * @param personId 人员id
-     * @return PersonExt
+     * @return {@code Y9Result<PersonExt>} 通用请求返回对象 - data 是人员扩展信息
      * @since 9.6.0
      */
     @GetMapping("/getPersonExtByPersonId")
@@ -154,11 +144,11 @@ public interface PersonApi {
         @RequestParam("personId") @NotBlank String personId);
 
     /**
-     * 获取 Base64加密之后的照片字符串
+     * 获取Base64加密之后的照片字符串
      *
      * @param tenantId 租户id
      * @param personId 人员id
-     * @return String Base64加密之后的照片字符串
+     * @return {@code Y9Result<String>} 通用请求返回对象 - data 是Base64加密之后的照片字符串
      * @since 9.6.0
      */
     @GetMapping("/getPersonPhoto")
@@ -169,7 +159,7 @@ public interface PersonApi {
      * 获取全部人员
      *
      * @param tenantId 租户id
-     * @return List&lt;Person&gt; 人员对象集合
+     * @return {@code Y9Result<List<Person>>} 通用请求返回对象 - data 是人员对象集合
      * @since 9.6.0
      */
     @GetMapping("/listAllPersons")
@@ -181,7 +171,7 @@ public interface PersonApi {
      * @param tenantId 租户id
      * @param idType 证件类型
      * @param idNum 证件号码
-     * @return List&lt;Person&gt;
+     * @return {@code Y9Result<List<Person>>} 通用请求返回对象 - data 是人员对象集合
      * @since 9.6.0
      */
     @GetMapping("/listByIdTypeAndIdNum")
@@ -189,11 +179,11 @@ public interface PersonApi {
         @RequestParam("idType") @NotBlank String idType, @RequestParam("idNum") @NotBlank String idNum);
 
     /**
-     * 根据人员名称、租户id获取人员基本信息
+     * 根据人员名称、租户id获取人员对象集合
      *
      * @param tenantId 租户id
      * @param name 人员名称
-     * @return List&lt;Person&gt;
+     * @return {@code Y9Result<List<Person>>} 通用请求返回对象 - data 是人员对象集合
      * @since 9.6.2
      */
     @GetMapping("/listByNameLike")
@@ -205,7 +195,7 @@ public interface PersonApi {
      *
      * @param tenantId 租户id
      * @param personId 人员唯一标识
-     * @return List&lt;Group&gt; 用户组对象集合
+     * @return {@code Y9Result<List<Group>>} 通用请求返回对象 - data 是用户组对象集合
      * @since 9.6.0
      */
     @GetMapping("/listGroups")
@@ -217,7 +207,7 @@ public interface PersonApi {
      *
      * @param tenantId 租户id
      * @param personId 人员id
-     * @return List&lt;OrgUnit&gt; 父节点对象集合
+     * @return {@code Y9Result<List<OrgUnit>>} 通用请求返回对象 - data 是父节点对象集合
      * @since 9.6.0
      */
     @GetMapping("/listParents")
@@ -225,7 +215,7 @@ public interface PersonApi {
         @RequestParam("personId") @NotBlank String personId);
 
     /**
-     * 根据人员名称 名称、租户id获取人员基本信息，图像，岗位等
+     * 根据人员名称、租户id获取人员基本信息，图像，岗位等
      *
      * @param tenantId 租户id
      * @param name 人员名称
@@ -233,7 +223,7 @@ public interface PersonApi {
      * @since 9.6.2
      */
     @GetMapping("/listPersonInfoByNameLike")
-    List<Map<String, Object>> listPersonInfoByNameLike(@RequestParam("tenantId") @NotBlank String tenantId,
+    Y9Result<List<PersonInfoDTO>> listPersonInfoByNameLike(@RequestParam("tenantId") @NotBlank String tenantId,
         @RequestParam(name = "name", required = false) String name);
 
     /**
@@ -241,7 +231,7 @@ public interface PersonApi {
      *
      * @param tenantId 租户id
      * @param personId 人员唯一标识
-     * @return List&lt;Position&gt; 岗位对象集合
+     * @return {@code Y9Result<List<Position>>} 通用请求返回对象 - data 是岗位对象集合
      * @since 9.6.0
      */
     @GetMapping("/listPositions")
@@ -253,7 +243,7 @@ public interface PersonApi {
      *
      * @param tenantId 租户id
      * @param personId 人员唯一标识
-     * @return List 角色对象集合
+     * @return {@code Y9Result<List<Role>>} 通用请求返回对象 - data 是获取角色
      * @since 9.6.0
      */
     @GetMapping("/listRoles")
@@ -266,7 +256,7 @@ public interface PersonApi {
      * @param tenantId 租户id
      * @param personId 人员id
      * @param newPassword 新明文密码
-     * @return Person 人员对象
+     * @return {@code Y9Result<Person>} 通用请求返回对象 - data 是人员对象
      * @since 9.6.0
      */
     @PostMapping("/modifyPassword")
@@ -280,7 +270,7 @@ public interface PersonApi {
      * @param name 人员名称
      * @param page 页数
      * @param rows 条数
-     * @return Y9Page&lt;Person&gt;
+     * @return {@code Y9Page<Person>} 通用请求返回对象 - data 是人员对象
      */
     @GetMapping("/pageByNameLike")
     Y9Page<Person> pageByNameLike(@RequestParam("tenantId") @NotBlank String tenantId,
@@ -294,7 +284,7 @@ public interface PersonApi {
      * @param disabled 是否禁用
      * @param page 页号
      * @param rows 条数
-     * @return Y9Page&lt;Person&gt; 人员对象集合
+     * @return {@code Y9Page<Person>} 通用请求返回对象 - data 是人员对象集合
      * @since 9.6.0
      */
     @GetMapping("/pageByParentId")
@@ -308,29 +298,16 @@ public interface PersonApi {
      * @param tenantId 租户ID
      * @param parentId 部门ID
      * @param disabled 是否禁用
-     * @param userName 用户名称
+     * @param name 用户名称
      * @param page 页号
      * @param rows 条数
-     * @return Y9Page&lt;Person&gt; 人员对象集合
+     * @return {@code Y9Page<Person>} 通用请求返回对象 - data 是人员对象集合
      * @since 9.6.0
      */
-    @GetMapping("/pageByParentIdAndUserName")
-    Y9Page<Person> pageByParentIdAndUserName(@RequestParam("tenantId") @NotBlank String tenantId,
+    @GetMapping("/pageByParentIdAndName")
+    Y9Page<Person> pageByParentIdAndName(@RequestParam("tenantId") @NotBlank String tenantId,
         @RequestParam("parentId") @NotBlank String parentId, @RequestParam("disabled") boolean disabled,
-        @RequestParam("userName") @NotBlank String userName, @RequestParam("page") int page,
-        @RequestParam("rows") int rows);
-
-    /**
-     * 保存人员
-     *
-     * @param tenantId 租户id
-     * @param personJson 人员对象
-     * @return Person 人员对象
-     * @since 9.6.0
-     */
-    @PostMapping("/savePerson")
-    Y9Result<Person> savePerson(@RequestParam("tenantId") @NotBlank String tenantId,
-        @RequestParam("personJson") @NotBlank String personJson);
+        @RequestParam("name") @NotBlank String name, @RequestParam("page") int page, @RequestParam("rows") int rows);
 
     /**
      * 保存人员头像
@@ -338,7 +315,7 @@ public interface PersonApi {
      * @param tenantId 租户id
      * @param personId 人员id
      * @param avator 人员头像路径
-     * @return Person 人员对象
+     * @return {@code Y9Result<Person>} 通用请求返回对象 - data 是人员对象
      * @since 9.6.0
      */
     @PostMapping("/savePersonAvator")
@@ -346,27 +323,12 @@ public interface PersonApi {
         @RequestParam("personId") @NotBlank String personId, @RequestParam("avator") @NotBlank String avator);
 
     /**
-     * 保存人员头像(Base64)
-     *
-     * @param tenantId 租户id
-     * @param personId 人员id
-     * @param picnote 人员头像
-     * @param fileExt 文件类型(png,jpg...)
-     * @return Person 人员对象
-     * @since 9.6.0
-     */
-    @PostMapping("/savePersonAvatorByBase64")
-    Y9Result<Person> savePersonAvatorByBase64(@RequestParam("tenantId") @NotBlank String tenantId,
-        @RequestParam("personId") @NotBlank String personId, @RequestParam("picnote") @NotBlank String picnote,
-        @RequestParam("fileExt") String fileExt);
-
-    /**
      * 保存用户照片接口
      *
      * @param tenantId 租户id
      * @param personId 人员id
      * @param photo Base64加密之后的照片字符串
-     * @return Boolean 是否保存成功
+     * @return {@code Y9Result<Object>} 通用请求返回对象 - success 属性判断操作是否成功
      * @since 9.6.0
      */
     @PostMapping("/savePersonPhoto")
@@ -374,18 +336,16 @@ public interface PersonApi {
         @RequestParam("personId") @NotBlank String personId, @RequestParam("photo") @NotBlank String photo);
 
     /**
-     * 保存人员
+     * 新增或修改人员
      *
      * @param tenantId 租户id
-     * @param personJson 人员对象
-     * @param personextJson 人员扩展信息对象
-     * @return Person
+     * @param personDTO 人员对象
+     * @return {@code Y9Result<Person>} 通用请求返回对象 - data 是保存的人员对象
      * @since 9.6.0
      */
     @PostMapping("/savePersonWithExt")
-    Y9Result<Person> savePersonWithExt(@RequestParam("tenantId") @NotBlank String tenantId,
-        @RequestParam("personJson") @NotBlank String personJson,
-        @RequestParam("personextJson") @NotBlank String personextJson);
+    Y9Result<Person> savePerson(@RequestParam("tenantId") @NotBlank String tenantId,
+        @RequestBody @Validated CreatePersonDTO personDTO);
 
     /**
      * 保存人员的微信id
@@ -393,7 +353,7 @@ public interface PersonApi {
      * @param tenantId 租户id
      * @param personId 人员id
      * @param weixinId 微信id
-     * @return Person 人员对象
+     * @return {@code Y9Result<Person>} 通用请求返回对象 - data 是保存的人员对象
      * @since 9.6.0
      */
     @PostMapping("/saveWeixinId")

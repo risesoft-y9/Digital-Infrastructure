@@ -8,6 +8,7 @@ import org.springframework.data.domain.Page;
 import net.risesoft.entity.Y9OrgBase;
 import net.risesoft.entity.Y9Person;
 import net.risesoft.entity.Y9PersonExt;
+import net.risesoft.model.AuthenticateResult;
 import net.risesoft.model.Message;
 import net.risesoft.y9.exception.Y9NotFoundException;
 
@@ -60,6 +61,15 @@ public interface Y9PersonService {
     /**
      * 用户认证
      *
+     * @param loginName 登录名
+     * @param base64EncodedPassword base编码过的密码
+     * @return {@link Message}
+     */
+    AuthenticateResult authenticate3(String loginName, String base64EncodedPassword);
+
+    /**
+     * 用户认证
+     *
      * @param tenantShortName 租户英文名
      * @param loginName 登录名
      * @return {@link Message}
@@ -75,6 +85,15 @@ public interface Y9PersonService {
      * @return {@link Message}
      */
     Message authenticate5(String tenantShortName, String mobile, String password);
+
+    /**
+     * 用户认证
+     *
+     * @param mobile 手机号
+     * @param base64EncodedPassword base编码过的密码
+     * @return {@link Message}
+     */
+    AuthenticateResult authenticate5(String mobile, String base64EncodedPassword);
 
     /**
      * 用户认证
@@ -121,14 +140,6 @@ public interface Y9PersonService {
      * @return
      */
     Y9Person create(String parentId, String name, String loginName, String mobile);
-
-    /**
-     * 新建人员
-     *
-     * @param person 人员对象
-     * @return {@link Y9Person}
-     */
-    Y9Person createPerson(Y9Person person);
 
     /**
      * 根据主键id删除人员实例(人员与组，与角色，与岗位的关联关系都删掉)
@@ -379,10 +390,10 @@ public interface Y9PersonService {
      * @param rows 每页行数
      * @param parentId 父节点id
      * @param disabled 是否已禁用
-     * @param userName 人员姓名
+     * @param name 人员姓名
      * @return {@link Page}<{@link Y9Person}>
      */
-    Page<Y9Person> pageByParentId(int page, int rows, String parentId, boolean disabled, String userName);
+    Page<Y9Person> pageByParentId(int page, int rows, String parentId, boolean disabled, String name);
 
     /**
      * 重置密码
