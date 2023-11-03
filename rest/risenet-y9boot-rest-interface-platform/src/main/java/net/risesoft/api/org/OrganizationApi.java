@@ -32,7 +32,7 @@ public interface OrganizationApi {
      *
      * @param tenantId 租户id
      * @param organizationId 组织机构唯一标识
-     * @return Organization 对象
+     * @return {@code Y9Result<Organization>} 通用请求返回对象 - data 是组织机构对象
      * @since 9.6.0
      */
     @GetMapping("/get")
@@ -44,7 +44,7 @@ public interface OrganizationApi {
      *
      * @param tenantId 租户id
      * @param organizationId 组织机构id
-     * @return List<Department> 部门对象集合
+     * @return {@code Y9Result<List<Department>>} 通用请求返回对象 - data 是部门对象集合
      * @since 9.6.0
      */
     @GetMapping("/listAllBureaus")
@@ -55,7 +55,7 @@ public interface OrganizationApi {
      * 根据租户id获取所有组织机构
      *
      * @param tenantId 租户id
-     * @return List<Organization> 组织机构对象集合
+     * @return {@code Y9Result<List<Organization>>} 通用请求返回对象 - data 是组织机构对象集合
      * @since 9.6.0
      */
     @GetMapping("/listAllOrganizations")
@@ -66,7 +66,7 @@ public interface OrganizationApi {
      *
      * @param tenantId 租户id
      * @param virtual 是否虚拟组织
-     * @return List<Organization> 组织机构对象集合
+     * @return {@code Y9Result<List<Organization>>} 通用请求返回对象 - data 是组织机构对象集合
      * @since 9.6.0
      */
     @GetMapping("/listByType")
@@ -78,7 +78,7 @@ public interface OrganizationApi {
      *
      * @param tenantId 租户id
      * @param organizationId 组织机构唯一标识
-     * @return List<Department> 部门对象集合
+     * @return {@code Y9Result<List<Department>>} 通用请求返回对象 - data 是部门对象集合
      * @since 9.6.0
      */
     @GetMapping("/listDepartments")
@@ -90,7 +90,7 @@ public interface OrganizationApi {
      *
      * @param tenantId 租户id
      * @param organizationId 组织机构唯一标识
-     * @return List<Group> 用户组对象集合
+     * @return {@code Y9Result<List<Group>>} 通用请求返回对象 - data 是用户组对象集合
      * @since 9.6.0
      */
     @GetMapping("/listGroups")
@@ -102,7 +102,7 @@ public interface OrganizationApi {
      *
      * @param tenantId 租户id
      * @param organizationId 组织机构唯一标识
-     * @return List<Person> 人员对象集合
+     * @return {@code Y9Result<List<Person>>} 通用请求返回对象 - data 是人员对象集合
      * @since 9.6.0
      */
     @GetMapping("/listPersons")
@@ -114,7 +114,7 @@ public interface OrganizationApi {
      *
      * @param tenantId 租户id
      * @param organizationId 组织机构唯一标识
-     * @return List&lt;Position&gt; 岗位对象集合
+     * @return {@code Y9Result<List<Position>>} 通用请求返回对象 - data 是岗位对象集合
      * @since 9.6.0
      */
     @GetMapping("/listPositions")

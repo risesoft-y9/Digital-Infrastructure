@@ -96,14 +96,8 @@ public class Y9PositionServiceImpl implements Y9PositionService {
     @Override
     @Transactional(readOnly = false)
     public Y9Position createPosition(Y9Position y9Position) {
-        if (y9Position == null) {
-            return null;
-        }
-        Optional<Y9OrgBase> y9OrgBaseOptional = compositeOrgBaseManager.findOrgUnitAsParent(y9Position.getParentId());
-        if (y9OrgBaseOptional.isEmpty()) {
-            return null;
-        }
-        Y9OrgBase parent = y9OrgBaseOptional.get();
+        Y9OrgBase parent = compositeOrgBaseManager.getOrgUnitAsParent(y9Position.getParentId());
+
         if (StringUtils.isBlank(y9Position.getId())) {
             y9Position.setId(Y9IdGenerator.genId(IdType.SNOWFLAKE));
         }

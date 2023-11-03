@@ -7,8 +7,10 @@ import javax.validation.constraints.NotBlank;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import net.risesoft.api.org.dto.CreatePositionDTO;
 import net.risesoft.model.OrgUnit;
 import net.risesoft.model.Person;
 import net.risesoft.model.Position;
@@ -32,7 +34,7 @@ public interface PositionApi {
      * @param tenantId 租户id
      * @param positionId 岗位id
      * @param personId 人员id
-     * @return boolean true 移除成功，false 移除失败
+     * @return {@code Y9Result<Object>} 通用请求返回对象 - success 属性判断操作是否成功
      * @since 9.6.0
      */
     @PostMapping("/addPerson")
@@ -43,20 +45,20 @@ public interface PositionApi {
      * 创建岗位
      *
      * @param tenantId 租户id
-     * @param positionJson 岗位对象
-     * @return Position 岗位对象
+     * @param position 岗位对象
+     * @return {@code Y9Result<Position>} 通用请求返回对象 - data 是保存的岗位对象
      * @since 9.6.0
      */
     @PostMapping("/createPosition")
     Y9Result<Position> createPosition(@RequestParam("tenantId") @NotBlank String tenantId,
-        @RequestParam("positionJson") @NotBlank String positionJson);
+        @RequestBody @Validated CreatePositionDTO position);
 
     /**
      * 根据岗位id删除岗位
      *
      * @param tenantId 租户id
      * @param positionId 岗位id
-     * @return boolean s是否删除成功
+     * @return {@code Y9Result<Object>} 通用请求返回对象 - success 属性判断操作是否成功
      * @since 9.6.0
      */
     @PostMapping("/deletePosition")
@@ -68,7 +70,7 @@ public interface PositionApi {
      *
      * @param tenantId 租户id
      * @param positionId 岗位唯一标识
-     * @return OrgUnit 组织节点对象（部门或组织机构）
+     * @return {@code Y9Result<OrgUnit>} 通用请求返回对象 - data 是组织节点对象（部门或组织机构）
      * @since 9.6.0
      */
     @GetMapping("/getParent")
@@ -80,7 +82,7 @@ public interface PositionApi {
      *
      * @param tenantId 租户id
      * @param positionId 岗位唯一标识
-     * @return Position 岗位对象
+     * @return {@code Y9Result<Position>} 通用请求返回对象 - data 是岗位对象
      * @since 9.6.0
      */
     @GetMapping("/getPosition")
@@ -93,7 +95,7 @@ public interface PositionApi {
      * @param tenantId 租户id
      * @param positionName 岗位名称
      * @param personId 岗位唯一标识
-     * @return boolean 是否拥有该岗位
+     * @return {@code Y9Result<Boolean>} 通用请求返回对象 - data 可判断否拥有该岗位
      * @since 9.6.0
      */
     @GetMapping("/hasPosition")
@@ -106,7 +108,7 @@ public interface PositionApi {
      *
      * @param tenantId 租户唯一标识
      * @param parentId 父节点ID
-     * @return List&lt;Position&gt; 岗位对象集合
+     * @return {@code Y9Result<List<Position>>} 通用请求返回对象 - data 是岗位对象集合
      * @since 9.6.0
      */
     @GetMapping("/listByParentId")
@@ -118,7 +120,7 @@ public interface PositionApi {
      *
      * @param tenantId 租户唯一标识
      * @param personId 人员ID
-     * @return List&lt;Position&gt; 岗位对象集合
+     * @return {@code Y9Result<List<Position>>} 通用请求返回对象 - data 是岗位对象集合
      * @since 9.6.0
      */
     @GetMapping("/listByPersonId")
@@ -130,7 +132,7 @@ public interface PositionApi {
      *
      * @param tenantId 租户id
      * @param positionId 岗位唯一标识
-     * @return List&lt;Person&gt; 人员对象集合
+     * @return {@code Y9Result<List<Person>>} 通用请求返回对象 - data 是人员对象集合
      * @since 9.6.0
      */
     @GetMapping("/listPersons")
@@ -143,7 +145,7 @@ public interface PositionApi {
      * @param tenantId 租户id
      * @param positionId 岗位id
      * @param personId 人员id
-     * @return boolean true 移除成功，false 移除失败
+     * @return {@code Y9Result<Object>} 通用请求返回对象 - success 属性判断操作是否成功
      * @since 9.6.0
      */
     @PostMapping("/removePerson")
@@ -154,12 +156,12 @@ public interface PositionApi {
      * 更新岗位
      *
      * @param tenantId 租户id
-     * @param positionJson 岗位对象
-     * @return Position 岗位对象
+     * @param createPositionDTO 岗位对象
+     * @return {@code Y9Result<Position>} 通用请求返回对象 - data 是岗位对象
      * @since 9.6.0
      */
     @PostMapping("/updatePosition")
     Y9Result<Position> updatePosition(@RequestParam("tenantId") @NotBlank String tenantId,
-        @RequestParam("positionJson") @NotBlank String positionJson);
+        @RequestBody @Validated CreatePositionDTO createPositionDTO);
 
 }

@@ -31,11 +31,11 @@ public interface PersonIconApi {
      *
      * @param tenantId 租户ID
      * @param personId 人员id
-     * @return Y9Result&lt;Boolean&gt; 操作结果
+     * @return {@code Y9Result<Object>} 通用请求返回对象 - success 属性判断操作是否成功
      * @since 9.6.2
      */
     @PostMapping("/buildPersonalAppIconForPerson")
-    Y9Result<Boolean> buildPersonalAppIconForPerson(@RequestParam("tenantId") @NotBlank String tenantId,
+    Y9Result<Object> buildPersonalAppIconForPerson(@RequestParam("tenantId") @NotBlank String tenantId,
         @RequestParam("personId") @NotBlank String personId);
 
     /**
@@ -43,11 +43,11 @@ public interface PersonIconApi {
      *
      * @param tenantId 租户ID
      * @param positionId 岗位id
-     * @return Y9Result&lt;Boolean&gt; 操作结果
+     * @return {@code Y9Result<Object>} 通用请求返回对象 - success 属性判断操作是否成功
      * @since 9.6.2
      */
     @PostMapping("/buildPersonalAppIconForPosition")
-    Y9Result<Boolean> buildPersonalAppIconForPosition(@RequestParam("tenantId") @NotBlank String tenantId,
+    Y9Result<Object> buildPersonalAppIconForPosition(@RequestParam("tenantId") @NotBlank String tenantId,
         @RequestParam("positionId") @NotBlank String positionId);
 
     /**
@@ -55,7 +55,7 @@ public interface PersonIconApi {
      *
      * @param tenantId 租户ID
      * @param orgUnitId 人员/岗位id
-     * @return List&lt;PersonIconItem&gt; 应用图标列表
+     * @return {@code Y9Result<List<PersonIconItem>>} 通用请求返回对象 - data 是个人图标列表
      * @since 9.6.2
      */
     @GetMapping("/listByOrgUnitId")
@@ -68,7 +68,7 @@ public interface PersonIconApi {
      * @param tenantId 租户ID
      * @param orgUnitId 人员/岗位id
      * @param iconType 图标类别 1:普通的 2:常用图标
-     * @return List&lt;PersonIconItem&gt; 应用图标列表
+     * @return {@code Y9Result<List<PersonIconItem>>} 通用请求返回对象 - data 是个人图标列表
      * @since 9.6.2
      */
     @GetMapping("/listByOrgUnitIdAndIconType")
@@ -76,13 +76,13 @@ public interface PersonIconApi {
         @RequestParam("orgUnitId") @NotBlank String orgUnitId, @RequestParam("iconType") Integer iconType);
 
     /**
-     * 获取人员/岗位图标分页列表
-     * 
+     * 获取人员/岗位分页获取图标列表
+     *
      * @param tenantId 租户ID
      * @param orgUnitId 人员/岗位id
      * @param page 页数
      * @param rows 条数
-     * @return Y9Page&lt;PersonIconItem&gt; 应用图标分页列表
+     * @return {@code Y9Page<PersonIconItem>} 通用请求返回对象 - data 是应用图标列表
      * @since 9.6.2
      */
     @GetMapping("/pageByOrgUnitId")
@@ -91,14 +91,14 @@ public interface PersonIconApi {
         @RequestParam("rows") int rows);
 
     /**
-     * 根据图标类别，获取人员/岗位图标分页列表
+     * 根据图标类别，分页获取人员/岗位图标列表
      *
      * @param tenantId 租户ID
      * @param orgUnitId 人员/岗位id
      * @param iconType 图标类别 1:普通的 2:常用图标
      * @param page 页数
      * @param rows 条数
-     * @return
+     * @return {@code Y9Page<PersonIconItem>} 通用请求返回对象 - data 是个人图标列表
      */
     @GetMapping("/pageByOrgUnitIdAndIconType")
     Y9Page<PersonIconItem> pageByOrgUnitIdAndIconType(@RequestParam("tenantId") @NotBlank String tenantId,
@@ -106,14 +106,14 @@ public interface PersonIconApi {
         @RequestParam("page") int page, @RequestParam("rows") int rows);
 
     /**
-     * 根据分类类别id，获取人员/岗位图标分页列表
+     * 根据分类类别id，分页获取人员/岗位图标列表
      *
      * @param tenantId 租户ID
      * @param orgUnitId 人员/岗位id
      * @param systemId 系统id(设置排序时为分类类别id)
      * @param page 页数
      * @param rows 条数
-     * @return
+     * @return {@code Y9Page<PersonIconItem>} 通用请求返回对象 - data 是个人图标列表
      */
     @GetMapping("/pageByOrgUnitIdAndSystemId")
     Y9Page<PersonIconItem> pageByOrgUnitIdAndSystemId(@RequestParam("tenantId") @NotBlank String tenantId,
@@ -126,11 +126,11 @@ public interface PersonIconApi {
      * @param tenantId 租户ID
      * @param orgUnitId 人员/岗位id
      * @param appIds 应用ids
-     * @return Y9Result&lt;Boolean&gt; 操作结果
+     * @return {@code Y9Result<Object>} 通用请求返回对象 - success 属性判断操作是否成功
      * @since 9.6.2
      */
     @PostMapping("/setCommApps")
-    Y9Result<Boolean> setCommApps(@RequestParam("tenantId") @NotBlank String tenantId,
+    Y9Result<Object> setCommApps(@RequestParam("tenantId") @NotBlank String tenantId,
         @RequestParam("orgUnitId") @NotBlank String orgUnitId, @RequestParam("appIds") @NotEmpty String[] appIds);
 
 }

@@ -129,7 +129,7 @@ public class PersonApiImpl implements PersonApi {
         Y9LoginUserHolder.setTenantId(tenantId);
 
         Y9Person y9Person = Y9JsonUtil.readValue(personJson, Y9Person.class);
-        y9Person = y9PersonService.createPerson(y9Person);
+        y9Person = y9PersonService.saveOrUpdate(y9Person, null);
         return Y9ModelConvertUtil.convert(y9Person, Person.class);
     }
 

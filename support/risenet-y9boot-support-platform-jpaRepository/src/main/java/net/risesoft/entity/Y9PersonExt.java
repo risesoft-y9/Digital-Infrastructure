@@ -63,11 +63,11 @@ public class Y9PersonExt extends BaseEntity {
     @Comment("签名")
     private byte[] sign;
 
-    /** 出生年月 */
+    /** 出生年月日 */
     @DateTimeFormat(pattern = "yyyy-MM-dd")
     @Temporal(TemporalType.DATE)
     @Column(name = "BIRTHDAY")
-    @Comment("出生年月")
+    @Comment("出生年月日")
     private Date birthday;
 
     /** 居住城市 */
@@ -102,7 +102,9 @@ public class Y9PersonExt extends BaseEntity {
     @Comment("证件号码")
     private String idNum;
 
-    /** 证件类型 */
+    /**
+     * 证件类型 在数据字典中
+     */
     @Column(name = "ID_TYPE", length = 255)
     @Comment("证件类型")
     private String idType;

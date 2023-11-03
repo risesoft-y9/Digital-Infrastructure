@@ -25,12 +25,12 @@ import net.risesoft.pojo.Y9Result;
 public interface OrgSyncApi {
 
     /**
-     * 根据机构id，全量获取整个组织机构数据
+     * 根据机构id，全量获取整个组织机构所有组织节点数据
      *
      * @param appName 应用名称
      * @param tenantId 租户id
      * @param organizationId 机构id
-     * @return Y9Result&lt;MessageOrg&gt; 整个组织机构对象集合
+     * @return {@code Y9Result<MessageOrg>} 通用请求返回对象 - data 是整个组织机构所有组织节点集合
      * @since 9.6.0
      */
     @GetMapping("/fullSync")
@@ -43,7 +43,7 @@ public interface OrgSyncApi {
      *
      * @param appName 应用名称
      * @param tenantId 租户id
-     * @return Y9Result&lt;List&lt;MessageOrg&gt;&gt; 事件列表
+     * @return {@code Y9Result<List<MessageOrg>>} 通用请求返回对象 - data 是事件列表
      * @since 9.6.0
      */
     @RequestMapping("/incrSync")

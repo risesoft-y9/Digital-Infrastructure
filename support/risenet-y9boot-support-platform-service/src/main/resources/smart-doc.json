@@ -69,9 +69,6 @@
   "responseBodyAdvice": {
     "className": "net.risesoft.pojo.Y9Result"
   },
-  "requestBodyAdvice": {
-    "className": "net.risesoft.pojo.Y9Result"
-  },
   "groups": [
     {
       "name": "用户组",

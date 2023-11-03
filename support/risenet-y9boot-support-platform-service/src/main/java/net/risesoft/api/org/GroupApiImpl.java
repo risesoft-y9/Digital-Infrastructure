@@ -7,12 +7,14 @@ import javax.validation.constraints.NotBlank;
 import org.springframework.context.annotation.Primary;
 import org.springframework.http.MediaType;
 import org.springframework.validation.annotation.Validated;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import lombok.RequiredArgsConstructor;
 
+import net.risesoft.api.org.dto.CreateGroupDTO;
 import net.risesoft.entity.Y9Group;
 import net.risesoft.entity.Y9OrgBase;
 import net.risesoft.entity.Y9Person;
@@ -26,7 +28,6 @@ import net.risesoft.service.org.Y9PersonService;
 import net.risesoft.service.relation.Y9PersonsToGroupsService;
 import net.risesoft.util.ModelConvertUtil;
 import net.risesoft.y9.Y9LoginUserHolder;
-import net.risesoft.y9.json.Y9JsonUtil;
 import net.risesoft.y9.util.Y9ModelConvertUtil;
 
 /**
@@ -51,12 +52,12 @@ public class GroupApiImpl implements GroupApi {
     private final Y9PersonService y9PersonService;
 
     /**
-     * 用户组添加人员
+     * 向用户组添加人员
      *
      * @param tenantId 租户ID
      * @param groupId 用户组ID
      * @param personId 人员ID
-     * @return boolean 是否添加成功
+     * @return {@code Y9Result<Object>} 通用请求返回对象 - success 属性判断操作是否成功
      * @since 9.6.0
      */
     @Override
@@ -72,16 +73,16 @@ public class GroupApiImpl implements GroupApi {
      * 创建用户组
      *
      * @param tenantId 租户id
-     * @param groupJson 用户组对象
-     * @return Group 用户组对象
+     * @param createGroupDTO 用户组对象
+     * @return {@code Y9Result<Group>} 通用请求返回对象 - data 是保存的用户组
      * @since 9.6.0
      */
     @Override
     public Y9Result<Group> createGroup(@RequestParam("tenantId") @NotBlank String tenantId,
-        @RequestParam("groupJson") @NotBlank String groupJson) {
+        @RequestBody @Validated CreateGroupDTO createGroupDTO) {
         Y9LoginUserHolder.setTenantId(tenantId);
 
-        Y9Group y9Group = Y9JsonUtil.readValue(groupJson, Y9Group.class);
+        Y9Group y9Group = Y9ModelConvertUtil.convert(createGroupDTO, Y9Group.class);
         y9Group = y9GroupService.createGroup(y9Group);
         return Y9Result.success(Y9ModelConvertUtil.convert(y9Group, Group.class));
     }
@@ -91,7 +92,7 @@ public class GroupApiImpl implements GroupApi {
      *
      * @param tenantId 租户ID
      * @param groupId 用户组ID
-     * @return true 删除成功，false 删除失败
+     * @return {@code Y9Result<Object>} 通用请求返回对象 - success 属性判断操作是否成功
      * @since 9.6.0
      */
     @Override
@@ -104,11 +105,11 @@ public class GroupApiImpl implements GroupApi {
     }
 
     /**
-     * 根据id获取用户组对象
+     * 根据id获得用户组对象
      *
      * @param tenantId 租户id
      * @param groupId 用户组唯一标识
-     * @return Group 用户组对象
+     * @return {@code Y9Result<Group>} 通用请求返回对象 - data 是用户组对象
      * @since 9.6.0
      */
     @Override
@@ -124,7 +125,7 @@ public class GroupApiImpl implements GroupApi {
      *
      * @param tenantId 租户id
      * @param groupId 用户组唯一标识
-     * @return OrgUnit 组织节点对象（部门或组织机构）
+     * @return {@code Y9Result<OrgUnit>} 通用请求返回对象 - data 是组织节点对象（部门或组织机构）
      * @since 9.6.0
      */
     @Override
@@ -141,7 +142,7 @@ public class GroupApiImpl implements GroupApi {
      *
      * @param tenantId 租户id
      * @param dn 路径
-     * @return List<Group> 用户组对象集合
+     * @return {@code Y9Result<List<Group>>} 通用请求返回对象 - data 是用户组对象集合
      * @since 9.6.0
      */
     @Override
@@ -158,7 +159,7 @@ public class GroupApiImpl implements GroupApi {
      *
      * @param tenantId 租户id
      * @param groupId 用户组唯一标识
-     * @return List<Person> 人员对象集合
+     * @return {@code Y9Result<List<Person>>} 通用请求返回对象 - data 是人员对象集合
      * @since 9.6.0
      */
     @Override
@@ -176,7 +177,7 @@ public class GroupApiImpl implements GroupApi {
      * @param tenantId 租户ID
      * @param groupId 用户组ID
      * @param personId 人员ID
-     * @return boolean 是否移除成功
+     * @return {@code Y9Result<Object>} 通用请求返回对象 - success 属性判断操作是否成功
      * @since 9.6.0
      */
     @Override
@@ -186,24 +187,6 @@ public class GroupApiImpl implements GroupApi {
 
         y9PersonsToGroupsService.removePersons(groupId, new String[] {personId});
         return Y9Result.success();
-    }
-
-    /**
-     * 更新用户组
-     *
-     * @param tenantId 租户id
-     * @param groupJson 用户组对象JSON字符串
-     * @return Group 用户组对象
-     * @since 9.6.0
-     */
-    @Override
-    public Y9Result<Group> updateGroup(@RequestParam("tenantId") @NotBlank String tenantId,
-        @RequestParam("groupJson") @NotBlank String groupJson) {
-        Y9LoginUserHolder.setTenantId(tenantId);
-
-        Y9Group y9Group = Y9JsonUtil.readValue(groupJson, Y9Group.class);
-        y9Group = y9GroupService.saveOrUpdate(y9Group);
-        return Y9Result.success(Y9ModelConvertUtil.convert(y9Group, Group.class));
     }
 
 }

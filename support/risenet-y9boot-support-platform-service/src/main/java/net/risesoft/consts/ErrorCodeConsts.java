@@ -17,4 +17,5 @@ public class ErrorCodeConsts {
     public static final int SYSTEM_MODULE_CODE = 4;
     public static final int DATA_SOURCE_MODULE_CODE = 5;
     public static final int TENANT_MODULE_CODE = 6;
+    public static final int AUTHENTICATION_MODULE_CODE = 7;
 }

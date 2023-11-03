@@ -49,7 +49,7 @@ public class OrgUnitApiImpl implements OrgUnitApi {
      *
      * @param tenantId 租户id
      * @param orgUnitId 组织节点唯一标识
-     * @return OrgUnit 组织节点对象（部门或组织机构）
+     * @return {@code Y9Result<OrgUnit>} 通用请求返回对象 - data 是组织节点对象（部门或组织机构）
      * @since 9.6.0
      */
     @Override
@@ -65,7 +65,7 @@ public class OrgUnitApiImpl implements OrgUnitApi {
      *
      * @param tenantId 租户id
      * @param orgUnitId 组织节点唯一标识(可能是机构ID,也可能是部门ID)
-     * @return List<Department> 部门对象集合
+     * @return {@code Y9Result<List<Department>>} 通用请求返回对象 - data 是部门对象集合
      * @since 9.6.0
      */
     @Override
@@ -82,7 +82,7 @@ public class OrgUnitApiImpl implements OrgUnitApi {
      *
      * @param tenantId 租户id
      * @param orgUnitId 组织节点唯一标识
-     * @return Organization 组织机构对象
+     * @return {@code Y9Result<Organization>} 通用请求返回对象 - data 是组织机构对象
      * @since 9.6.0
      */
     @Override
@@ -99,7 +99,7 @@ public class OrgUnitApiImpl implements OrgUnitApi {
      *
      * @param tenantId 租户id
      * @param orgUnitId 组织节点唯一标识
-     * @return OrgUnit 组织节点对象
+     * @return {@code Y9Result<OrgUnit>} 通用请求返回对象 - data 是组织节点对象
      * @since 9.6.0
      */
     @Override
@@ -115,7 +115,7 @@ public class OrgUnitApiImpl implements OrgUnitApi {
      *
      * @param tenantId 租户id
      * @param orgUnitId 组织节点唯一标识
-     * @return OrgUnit 组织节点对象
+     * @return {@code Y9Result<OrgUnit>} 通用请求返回对象 - data 是组织节点对象
      * @since 9.6.2
      */
     @Override
@@ -131,7 +131,7 @@ public class OrgUnitApiImpl implements OrgUnitApi {
      *
      * @param tenantId 租户id
      * @param orgUnitId 组织节点唯一标识
-     * @return OrgUnit 组织节点对象（部门或组织机构）
+     * @return {@code Y9Result<OrgUnit>} 通用请求返回对象 - data 是组织节点对象（部门或组织机构）
      * @since 9.6.0
      */
     @Override
@@ -150,7 +150,7 @@ public class OrgUnitApiImpl implements OrgUnitApi {
      * @param orgUnitId 组织节点唯一标识
      * @param treeType 树的类型:tree_type_org(组织机构)，tree_type_dept（部门） tree_type_group（用户组）, tree_type_position（岗位）
      *            tree_type_person（人员）, tree_type_bureau（委办局）
-     * @return List<OrgUnit> 组织节点对象集合
+     * @return {@code Y9Result<List<OrgUnit>>} 通用请求返回对象 - data 是组织节点对象集合
      * @since 9.6.0
      */
     @Override
@@ -169,7 +169,7 @@ public class OrgUnitApiImpl implements OrgUnitApi {
      * @param name 组织节点名称
      * @param treeType 树的类型:tree_type_org(组织机构)，tree_type_dept（部门），tree_type_group（用户组），tree_type_position（岗位）
      *            tree_type_person（人员），tree_type_bureau（委办局）
-     * @return List<OrgUnit> 组织节点对象集合
+     * @return {@code Y9Result<List<OrgUnit>>} 通用请求返回对象 - data 是组织节点对象集合
      * @since 9.6.0
      */
     @Override
@@ -189,7 +189,7 @@ public class OrgUnitApiImpl implements OrgUnitApi {
      * @param dnName 路径名称
      * @param treeType 节点树的类型:tree_type_org(组织机构)，tree_type_dept（部门） tree_type_group（用户组）, tree_type_position（岗位）
      *            tree_type_person（人员）, tree_type_bureau（委办局）
-     * @return List<OrgUnit> 组织节点对象集合
+     * @return {@code Y9Result<List<OrgUnit>>} 通用请求返回对象 - data 是组织节点对象集合
      * @since 9.6.0
      */
     @Override
