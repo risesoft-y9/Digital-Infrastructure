@@ -130,7 +130,7 @@
         <maven.build.timestamp.format>yyyy-MM-dd_HH_mm</maven.build.timestamp.format>
         <maven.javadoc.failOnError>false</maven.javadoc.failOnError>
 
-        <spring-boot.version>3.2.0-RC1</spring-boot.version>
+        <spring-boot.version>3.2.0-RC2</spring-boot.version>
         <spring-cloud.version>2023.0.0-RC1</spring-cloud.version>
 
         <aspectj.version>1.9.20.1</aspectj.version>
