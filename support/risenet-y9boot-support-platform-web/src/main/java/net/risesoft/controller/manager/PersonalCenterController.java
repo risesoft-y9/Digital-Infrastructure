@@ -67,16 +67,24 @@ public class PersonalCenterController {
 
         Y9Manager manager = y9ManagerService.getById(managerId);
         map.put("manager", manager);
-        Date modifyPwdTime = sdf.parse(manager.getModifyPwdTime());
-        Calendar calendar = Calendar.getInstance();
-        calendar.setTime(modifyPwdTime);
-        calendar.add(Calendar.DAY_OF_MONTH, manager.getPwdCycle());
-        Date checkTime = sdf.parse(manager.getCheckTime());
-        Calendar checkCalendar = Calendar.getInstance();
-        checkCalendar.setTime(checkTime);
-        checkCalendar.add(Calendar.DAY_OF_MONTH, manager.getCheckCycle());
-        map.put("nextModifyPwdTime", sdf.format(calendar.getTime()));
-        map.put("nextCheckTime", sdf.format(checkCalendar.getTime()));
+        try {
+            if (manager.getModifyPwdTime() != null) {
+                Date modifyPwdTime = sdf.parse(manager.getModifyPwdTime());
+                Calendar calendar = Calendar.getInstance();
+                calendar.setTime(modifyPwdTime);
+                calendar.add(Calendar.DAY_OF_MONTH, manager.getPwdCycle());
+                map.put("nextModifyPwdTime", sdf.format(calendar.getTime()));
+            }
+            if (manager.getCheckTime() != null) {
+                Date checkTime = sdf.parse(manager.getCheckTime());
+                Calendar checkCalendar = Calendar.getInstance();
+                checkCalendar.setTime(checkTime);
+                checkCalendar.add(Calendar.DAY_OF_MONTH, manager.getCheckCycle());
+                map.put("nextCheckTime", sdf.format(checkCalendar.getTime()));
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
         return Y9Result.success(map, "根据人员id，获取人员信息成功");
     }
 
