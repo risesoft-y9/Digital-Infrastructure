@@ -254,38 +254,39 @@ public class RoleController {
     public Y9Result<List<RoleVO>> treeSearch(@RequestParam String name) {
         List<Y9Role> y9RoleList = y9RoleService.treeSearchByName(name);
         List<RoleVO> roleVOList = new ArrayList<>();
-        if (y9RoleList != null && !y9RoleList.isEmpty()) {
-            Set<String> appIdList = y9RoleList.stream().map(Y9Role::getAppId).collect(Collectors.toSet());
-            List<Y9App> appList = new ArrayList<>();
-            for (String appId : appIdList) {
-                if (!InitDataConsts.TOP_PUBLIC_ROLE_ID.equals(appId)) {
-                    Y9App y9App = y9AppService.getById(appId);
-                    appList.add(y9App);
-                }
+        if (y9RoleList == null || y9RoleList.isEmpty()) {
+            return Y9Result.success(roleVOList, "根据角色名称查询角色节点成功");
+        }
+        Set<String> appIdList = y9RoleList.stream().map(Y9Role::getAppId).collect(Collectors.toSet());
+        List<Y9App> appList = new ArrayList<>();
+        for (String appId : appIdList) {
+            if (!InitDataConsts.TOP_PUBLIC_ROLE_ID.equals(appId)) {
+                Y9App y9App = y9AppService.getById(appId);
+                appList.add(y9App);
             }
-            Collections.sort(appList);
-            for (Y9App y9App : appList) {
-                Y9System y9System = y9SystemService.getById(y9App.getSystemId());
-                RoleVO appVO = new RoleVO();
-                appVO.setId(y9App.getId());
-                appVO.setName(y9App.getName());
-                appVO.setSystemName(y9System.getName());
-                appVO.setSystemCnName(y9System.getCnName());
-                appVO.setType("App");
-                appVO.setHasChild(true);
-                appVO.setParentId(y9App.getId());
-                appVO.setGuidPath(y9App.getId());
-                roleVOList.add(appVO);
-            }
-            for (Y9Role roleNode : y9RoleList) {
-                if (!InitDataConsts.TOP_PUBLIC_ROLE_ID.equals(roleNode.getAppId())) {
-                    RoleVO roleVO = Y9ModelConvertUtil.convert(roleNode, RoleVO.class);
-                    if (Y9RoleTypeEnum.FOLDER.getValue().equals(roleNode.getType())) {
-                        roleVO.setHasChild(!y9RoleService.listByParentId(roleNode.getId()).isEmpty());
-                    }
-                    roleVO.setGuidPath(roleNode.getAppId() + "," + roleNode.getGuidPath());
-                    roleVOList.add(roleVO);
+        }
+        Collections.sort(appList);
+        for (Y9App y9App : appList) {
+            Y9System y9System = y9SystemService.getById(y9App.getSystemId());
+            RoleVO appVO = new RoleVO();
+            appVO.setId(y9App.getId());
+            appVO.setName(y9App.getName());
+            appVO.setSystemName(y9System.getName());
+            appVO.setSystemCnName(y9System.getCnName());
+            appVO.setType("App");
+            appVO.setHasChild(true);
+            appVO.setParentId(y9App.getId());
+            appVO.setGuidPath(y9App.getId());
+            roleVOList.add(appVO);
+        }
+        for (Y9Role roleNode : y9RoleList) {
+            if (!InitDataConsts.TOP_PUBLIC_ROLE_ID.equals(roleNode.getAppId())) {
+                RoleVO roleVO = Y9ModelConvertUtil.convert(roleNode, RoleVO.class);
+                if (Y9RoleTypeEnum.FOLDER.getValue().equals(roleNode.getType())) {
+                    roleVO.setHasChild(!y9RoleService.listByParentId(roleNode.getId()).isEmpty());
                 }
+                roleVO.setGuidPath(roleNode.getAppId() + "," + roleNode.getGuidPath());
+                roleVOList.add(roleVO);
             }
         }
         return Y9Result.success(roleVOList, "根据角色名称查询角色节点成功");

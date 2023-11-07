@@ -22,6 +22,7 @@ import net.risesoft.log.annotation.RiseLog;
 import net.risesoft.pojo.Y9Page;
 import net.risesoft.pojo.Y9PageQuery;
 import net.risesoft.pojo.Y9Result;
+import net.risesoft.y9.exception.Y9BusinessException;
 import net.risesoft.y9public.entity.resource.Y9AppIcon;
 import net.risesoft.y9public.service.Y9FileStoreService;
 import net.risesoft.y9public.service.resource.Y9AppIconService;
@@ -176,8 +177,8 @@ public class AppIconController {
     @RiseLog(operationType = OperationTypeEnum.ADD, operationName = "上传图标")
     @RequestMapping("/uploadIcon")
     public Y9Result<String> uploadIcon(@RequestParam MultipartFile iconFile, @RequestParam String remark)
-        throws Exception {
-        if (iconFile != null && iconFile.getSize() != 0) {
+        throws Y9BusinessException {
+        if (iconFile != null && !iconFile.isEmpty()) {
             // 文件名称
             String originalFilename = iconFile.getOriginalFilename();
             // 图片名称
