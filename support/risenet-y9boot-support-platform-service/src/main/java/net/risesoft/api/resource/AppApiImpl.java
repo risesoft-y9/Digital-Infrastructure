@@ -60,7 +60,8 @@ public class AppApiImpl implements AppApi {
      * 根据应用id，获取应用信息
      *
      * @param appId 应用id
-     * @return
+     * @return {@code Y9Result<App>} 通用请求返回对象 - data 是应用对象
+     * @since 9.6.0
      */
     @Override
     public Y9Result<App> findById(@RequestParam("appId") @NotBlank String appId) {
@@ -73,7 +74,7 @@ public class AppApiImpl implements AppApi {
      *
      * @param systemId 系统唯一标识
      * @param customId customId
-     * @return App 应用
+     * @return {@code Y9Result<App>} 通用请求返回对象 - data 是应用对象
      * @since 9.6.0
      */
     @Override
@@ -88,7 +89,7 @@ public class AppApiImpl implements AppApi {
      *
      * @param systemName 系统名
      * @param customId customId
-     * @return App 应用
+     * @return {@code Y9Result<App>} 通用请求返回对象 - data 是应用对象
      * @since 9.6.0
      */
     @Override
@@ -103,8 +104,8 @@ public class AppApiImpl implements AppApi {
      *
      * @param tenantId 租户id
      * @param personId 人员id
-     * @param authority 操作类型 {@link AuthorityEnum}
-     * @return List&lt;App&gt; 应用列表
+     * @param authority 操作类型(如：BROWSE、ADMIN)
+     * @return {@code Y9Result<List<App>>} 通用请求返回对象 - data 是有权限的应用列表
      * @since 9.6.0
      */
     @Override
@@ -120,9 +121,9 @@ public class AppApiImpl implements AppApi {
      * 根据人员id和操作类型，获取有权限的应用列表
      *
      * @param tenantId 租户id
-     * @param positionId 人员id
+     * @param positionId 岗位id
      * @param authority 操作类型 {@link AuthorityEnum}
-     * @return List&lt;App&gt; 应用列表
+     * @return {@code Y9Result<List<App>>} 通用请求返回对象 - data 是应用列表
      * @since 9.6.0
      */
     @Override
@@ -138,7 +139,7 @@ public class AppApiImpl implements AppApi {
      * 根据 customId ，获取应用列表
      *
      * @param customId customId
-     * @return List&lt;App&gt; 应用列表
+     * @return {@code Y9Result<List<App>>} 通用请求返回对象 - data 是应用列表
      * @since 9.6.0
      */
     @Override
@@ -150,8 +151,8 @@ public class AppApiImpl implements AppApi {
     /**
      * 根据 systemId ，获取应用列表
      *
-     * @param systemId systemId
-     * @return List&lt;App&gt; 应用列表
+     * @param systemId 系统Id
+     * @return {@code Y9Result<List<App>>} 通用请求返回对象 - data 是应用列表
      * @since 9.6.0
      */
     @Override
@@ -163,8 +164,8 @@ public class AppApiImpl implements AppApi {
     /**
      * 根据 systemName 获取应用列表
      *
-     * @param systemName
-     * @return
+     * @param systemName 系统名称
+     * @return {@code Y9Result<List<App>>} 通用请求返回对象 - data 是应用列表
      * @since 9.6.0
      */
     @Override
@@ -178,14 +179,14 @@ public class AppApiImpl implements AppApi {
      *
      * @param systemName 系统名称
      * @param name 应用名称
-     * @param url url
+     * @param url 链接地址
      * @param customId customId
      * @param tenantGuid 租户id
-     * @return App
+     * @return {@code Y9Result<App>} 通用请求返回对象 - data 是注册的应用
      * @since 9.6.3
      */
     @Override
-    public Y9Result<App> registryApp(@NotBlank String systemName, @NotBlank String name, @NotBlank String url,
+    public Y9Result<App> registerApp(@NotBlank String systemName, @NotBlank String name, @NotBlank String url,
         String customId, String tenantGuid) {
         Optional<Y9System> y9SystemOptional = y9SystemService.findByName(systemName);
         if (y9SystemOptional.isEmpty()) {
@@ -236,8 +237,21 @@ public class AppApiImpl implements AppApi {
         return Y9Result.success(Y9ModelConvertUtil.convert(saveIsvApp, App.class), msg);
     }
 
+    /**
+     * 注册系统和应用信息
+     *
+     * @param systemName 系统名称
+     * @param systemCnName 系统中文名称
+     * @param isvGuid 租户id
+     * @param contextPath 系统上下文
+     * @param appName 应用名称
+     * @param url 链接地址
+     * @param customId customId
+     * @return {@code Y9Result<App>} 通用请求返回对象 - data 是注册的应用
+     * @since 9.6.3
+     */
     @Override
-    public Y9Result<App> registrySystemAndApp(@NotBlank String systemName, @NotBlank String systemCnName,
+    public Y9Result<App> registerSystemAndApp(@NotBlank String systemName, @NotBlank String systemCnName,
         String isvGuid, String contextPath, @NotBlank String appName, @NotBlank String url, String customId) {
 
         List<Y9System> y9Systems = y9SystemService.listByContextPath(contextPath);
@@ -315,7 +329,7 @@ public class AppApiImpl implements AppApi {
      *
      * @param app 应用实体类
      * @param systemId 系统id
-     * @return App 应用
+     * @return {@code Y9Result<App>} 通用请求返回对象 - data 是保存的应用
      * @since 9.6.0
      */
     @Override

@@ -23,7 +23,7 @@ public interface PositionRoleApi {
      * @param tenantId 租户id
      * @param roleName 角色名称
      * @param positionId 岗位id
-     * @return boolean
+     * @return {@code Y9Result<Boolean>} 通用请求返回对象 - data 属性判断是否拥有角色
      * @since 9.6.0
      */
     @GetMapping("/hasPublicRole")
@@ -36,7 +36,7 @@ public interface PositionRoleApi {
      * @param tenantId 租户id
      * @param roleId 角色id
      * @param positionId 岗位id
-     * @return {@link Boolean}
+     * @return {@code Y9Result<Boolean>} 通用请求返回对象 - data 属性判断是否拥有角色
      * @since 9.6.0
      */
     @GetMapping("/hasRole")
@@ -49,7 +49,7 @@ public interface PositionRoleApi {
      * @param tenantId 租户id
      * @param positionId 岗位id
      * @param customId 自定义id
-     * @return Boolean
+     * @return {@code Y9Result<Boolean>} 通用请求返回对象 - data 属性判断是否拥有角色
      * @since 9.6.0
      */
     @GetMapping("/hasRole2")
@@ -64,7 +64,7 @@ public interface PositionRoleApi {
      * @param properties 角色扩展属性
      * @param roleName 角色名称
      * @param positionId 岗位id
-     * @return Boolean 是否拥有
+     * @return {@code Y9Result<Boolean>} 通用请求返回对象 - data 属性判断是否拥有角色
      * @since 9.6.0
      */
     @GetMapping("/hasRole3")

@@ -6,6 +6,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 
 import net.risesoft.api.log.ClickedAppApi;
 import net.risesoft.model.ClickedApp;
+import net.risesoft.pojo.Y9Result;
 
 /**
  * 应用点击组件
@@ -27,5 +28,5 @@ public interface ClickedAppApiClient extends ClickedAppApi {
      */
     @Override
     @PostMapping("/saveClickedAppLog")
-    boolean saveClickedAppLog(@SpringQueryMap ClickedApp clickedApp);
+    Y9Result<Object> saveClickedAppLog(@SpringQueryMap ClickedApp clickedApp);
 }

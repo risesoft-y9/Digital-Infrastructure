@@ -62,8 +62,7 @@ public class Y9CommonAppForPersonServiceImpl implements Y9CommonAppForPersonServ
     private final RestHighLevelClient restHighLevelClient;
 
     @Override
-    public String getAppNamesByPersonId(String personId) {
-        String appNameStr = "";
+    public List<String> getAppNamesByPersonId(String personId) {
         BoolQueryBuilder query = QueryBuilders.boolQuery();
         if (StringUtils.isNotBlank(personId)) {
             query.must(QueryBuilders.queryStringQuery(Y9Util.escape(personId)).field("personId"));
@@ -85,8 +84,7 @@ public class Y9CommonAppForPersonServiceImpl implements Y9CommonAppForPersonServ
                 String appName = bucket.getKeyAsString();
                 list.add(appName);
             }
-            appNameStr = StringUtils.join(list, ",");
-            return appNameStr;
+            return list;
         } catch (IOException e) {
             LOGGER.error(e.getMessage());
             return null;

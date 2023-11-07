@@ -1,9 +1,6 @@
 package net.risesoft.api.impl;
 
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.Date;
-import java.util.List;
 import java.util.concurrent.LinkedBlockingDeque;
 import java.util.concurrent.ThreadFactory;
 import java.util.concurrent.ThreadPoolExecutor;
@@ -13,6 +10,7 @@ import javax.validation.constraints.NotBlank;
 
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
@@ -26,6 +24,7 @@ import net.risesoft.log.service.Y9logAccessLogService;
 import net.risesoft.model.AccessLog;
 import net.risesoft.model.log.LogInfoModel;
 import net.risesoft.pojo.Y9Page;
+import net.risesoft.pojo.Y9Result;
 import net.risesoft.y9.Y9LoginUserHolder;
 import net.risesoft.y9.json.Y9JsonUtil;
 
@@ -50,50 +49,38 @@ public class AccessLogApiController implements AccessLogApi {
      * 异步保存访问日志
      *
      * @param accessLog 访问日志实体对象
+     * @return {@code Y9Result<Object>} 通用请求返回对象 - success 属性判断操作是否成功
+     * @since 9.6.0
      */
     @PostMapping("/asyncSaveLog")
     @Override
-    public void asyncSaveLog(AccessLog accessLog) {
+    public Y9Result<Object> asyncSaveLog(@RequestBody AccessLog accessLog) {
         ThreadFactory myThread = new ThreadFactoryBuilder().setNamePrefix("y9-asyncSaveLog").build();
         ThreadPoolExecutor threadPool =
             new ThreadPoolExecutor(2, 2, 100, TimeUnit.SECONDS, new LinkedBlockingDeque<>(5), myThread);
         threadPool.execute(() -> saveLog(accessLog));
         threadPool.shutdown();
+        return Y9Result.success();
     }
 
     /**
-     * 异步保存访问日志
-     *
-     * @param accessLogJson 访问日志实体Json字符串
-     */
-    @PostMapping("/asyncSaveLogByJson")
-    @Override
-    public void asyncSaveLogByJson(@RequestParam("accessLogJson") @NotBlank String accessLogJson) {
-        ThreadFactory myThread = new ThreadFactoryBuilder().setNamePrefix("y9-asyncSaveLogByJson").build();
-        ThreadPoolExecutor threadPool =
-            new ThreadPoolExecutor(2, 2, 100, TimeUnit.SECONDS, new LinkedBlockingDeque<>(5), myThread);
-        threadPool.execute(() -> saveLogByJson(accessLogJson));
-        threadPool.shutdown();
-    }
-
-    /**
-     * 根据操作类型分页查找日志
+     * 根据操作类型分页查找访问日志
      *
      * @param operateType 操作类型
      * @param page 页码数
      * @param rows 每页条数
-     * @return
+     * @return {@code Y9Page<AccessLog>} 通用分页请求返回对象 - data 是访问日志集合
+     * @since 9.6.0
      */
     @GetMapping("/pageByOperateType")
     @Override
     public Y9Page<AccessLog> pageByOperateType(@RequestParam("operateType") @NotBlank String operateType,
         @RequestParam("page") Integer page, @RequestParam("rows") Integer rows) {
-        Y9Page<AccessLog> map = accessLogService.pageByOperateType(operateType, page, rows);
-        return map;
+        return accessLogService.pageByOperateType(operateType, page, rows);
     }
 
     /**
-     * 根据组织架构类型分页查找日志
+     * 根据组织架构类型分页查找访问日志
      *
      * @param tenantId 组织id
      * @param orgId 组织id
@@ -101,7 +88,8 @@ public class AccessLogApiController implements AccessLogApi {
      * @param operateType 操作类型
      * @param page 页码树
      * @param rows 每页条数
-     * @return
+     * @return {@code Y9Page<AccessLog>} 通用分页请求返回对象 - data 是访问日志集合
+     * @since 9.6.0
      */
     @Override
     @GetMapping("/pageByOrgType")
@@ -110,55 +98,28 @@ public class AccessLogApiController implements AccessLogApi {
         @RequestParam("operateType") @NotBlank String operateType, @RequestParam("page") Integer page,
         @RequestParam("rows") Integer rows) {
         Y9LoginUserHolder.setTenantId(tenantId);
-        Y9Page<AccessLog> map = accessLogService.pageByOrgType(tenantId, orgId, orgType, operateType, page, rows);
-        return map;
+        return accessLogService.pageByOrgType(tenantId, orgId, orgType, operateType, page, rows);
     }
 
     /**
-     * 保存访问日志
+     * 保存日志 保存访问日志
      *
      * @param accessLog 访问日志实体对象
-     * @return boolean 是否保存成功
+     * @return {@code Y9Result<Object>} 通用请求返回对象 - success 属性判断操作是否成功
+     * @since 9.6.0
      */
     @Override
     @PostMapping("/saveLog")
-    public boolean saveLog(AccessLog accessLog) {
-        boolean ret = true;
-        try {
-            String accessLogJson = Y9JsonUtil.writeValueAsString(accessLog);
-            Y9logAccessLog y9AccessLog = Y9JsonUtil.readValue(accessLogJson, Y9logAccessLog.class);
-            accessLog.setLogTime(new Date());
-            accessLogService.save(y9AccessLog);
-        } catch (Exception e) {
-            LOGGER.error(e.getMessage());
-            ret = false;
-        }
-        return ret;
+    public Y9Result<Object> saveLog(@RequestBody AccessLog accessLog) {
+        String accessLogJson = Y9JsonUtil.writeValueAsString(accessLog);
+        Y9logAccessLog y9AccessLog = Y9JsonUtil.readValue(accessLogJson, Y9logAccessLog.class);
+        accessLog.setLogTime(new Date());
+        accessLogService.save(y9AccessLog);
+        return Y9Result.success();
     }
 
     /**
-     * 保存访问日志
-     *
-     * @param accessLogJson 访问日志实体Json字符串
-     * @return boolean 是否保存成功
-     */
-    @Override
-    @PostMapping("/saveLogByJson")
-    public boolean saveLogByJson(@RequestParam("accessLogJson") @NotBlank String accessLogJson) {
-        boolean ret = true;
-        try {
-            Y9logAccessLog accessLog = Y9JsonUtil.readValue(accessLogJson, Y9logAccessLog.class);
-            accessLog.setLogTime(new Date());
-            accessLogService.save(accessLog);
-        } catch (Exception e) {
-            LOGGER.error(e.getMessage());
-            ret = false;
-        }
-        return ret;
-    }
-
-    /**
-     * 多条件分页查询
+     * 多条件分页查询访问日志
      *
      * @param logLevel 日志级别
      * @param success 是否成功
@@ -170,8 +131,8 @@ public class AccessLogApiController implements AccessLogApi {
      * @param endTime 结束时间
      * @param page 页码数
      * @param rows 每页条数
-     * @return
-     * @throws ParseException
+     * @return {@code Y9Page<AccessLog>} 通用分页请求返回对象 - data 是访问日志集合
+     * @since 9.6.0
      */
     @Override
     @GetMapping("/search")
@@ -183,7 +144,7 @@ public class AccessLogApiController implements AccessLogApi {
         @RequestParam(value = "userHostIp", required = false) String userHostIp,
         @RequestParam(value = "startTime", required = false) String startTime,
         @RequestParam(value = "endTime", required = false) String endTime, @RequestParam("page") Integer page,
-        @RequestParam("rows") Integer rows) throws ParseException {
+        @RequestParam("rows") Integer rows) {
         LogInfoModel search = new LogInfoModel();
         search.setLogLevel(logLevel);
         search.setOperateName(operateName);
@@ -191,37 +152,7 @@ public class AccessLogApiController implements AccessLogApi {
         search.setOperateType(operateType);
         search.setUserName(userName);
         search.setUserHostIp(userHostIp);
-        Y9Page<AccessLog> map = accessLogService.pageByCondition(search, startTime, endTime, page, rows);
-        return map;
-    }
-
-    /**
-     * 获取日志
-     *
-     * @param loginName 登录名
-     * @param startTime 开始时间
-     * @param endTime 结束时间
-     * @param tenantId 租户id
-     * @return List&lt;String&gt; 返回日志数据
-     */
-    @Override
-    @GetMapping("/searchLog")
-    public List<String> searchLog(@RequestParam("loginName") @NotBlank String loginName,
-        @RequestParam("startTime") Long startTime, @RequestParam("endTime") Long endTime,
-        @RequestParam("tenantId") String tenantId) {
-        Y9LoginUserHolder.setTenantId(tenantId);
-        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-        String sTime = "";
-        String eTime = "";
-        if (startTime != null) {
-            Date start = new Date(startTime);
-            sTime = sdf.format(start);
-        }
-        if (endTime != null) {
-            Date end = new Date(endTime);
-            eTime = sdf.format(end);
-        }
-        return accessLogService.listAccessLog(sTime, eTime, loginName, tenantId);
+        return accessLogService.pageByCondition(search, startTime, endTime, page, rows);
     }
 
 }

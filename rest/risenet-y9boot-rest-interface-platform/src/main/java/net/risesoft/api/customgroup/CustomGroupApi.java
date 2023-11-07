@@ -37,7 +37,7 @@ public interface CustomGroupApi {
      * @return {@code Y9Result<Object>} 通用请求返回对象 - success 属性判断操作是否成功
      * @since 9.6.0
      */
-    @GetMapping("/addMember")
+    @PostMapping("/addMember")
     Y9Result<Object> addMember(@RequestParam("tenantId") @NotBlank String tenantId,
         @RequestParam("customGroupId") @NotBlank String customGroupId,
         @RequestParam("orgUnitList") @NotEmpty List<String> orgUnitList);

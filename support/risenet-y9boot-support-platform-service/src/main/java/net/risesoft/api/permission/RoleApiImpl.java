@@ -20,6 +20,7 @@ import lombok.extern.slf4j.Slf4j;
 import net.risesoft.entity.Y9OrgBase;
 import net.risesoft.entity.Y9Person;
 import net.risesoft.entity.relation.Y9OrgBasesToRoles;
+import net.risesoft.enums.OrgTypeEnum;
 import net.risesoft.model.OrgUnit;
 import net.risesoft.model.Person;
 import net.risesoft.model.Role;
@@ -56,12 +57,12 @@ public class RoleApiImpl implements RoleApi {
     private final Y9RoleService y9RoleService;
 
     /**
-     * 新增人员到角色
+     * 添加人员到角色
      *
      * @param personId 人员id
      * @param roleId 角色id
      * @param tenantId 人员所在的租户id
-     * @return boolean 是否增加成功
+     * @return {@code Y9Result<Object>} 通用请求返回对象 - success 属性判断操作是否成功
      * @since 9.6.0
      */
     @Override
@@ -74,16 +75,16 @@ public class RoleApiImpl implements RoleApi {
     }
 
     /**
-     * 新增角色节点（带自定义标示customId）
+     * 新增角色节点
      *
      * @param roleId 角色id
      * @param roleName 角色名称
      * @param parentId 父节点id
-     * @param customId customId 自定义id
+     * @param customId 自定义id
      * @param type 角色类型，node或者role
      * @param systemName 系统标识
      * @param systemCnName 系统中文名称
-     * @return Role 角色对象
+     * @return {@code Y9Result<Role>} 通用请求返回对象 - data 是保存的角色对象
      * @since 9.6.0
      */
     @Override
@@ -110,10 +111,10 @@ public class RoleApiImpl implements RoleApi {
     }
 
     /**
-     * 删除角色（同时删除该角色的授权关系）
+     * 删除角色
      *
      * @param roleId 角色id
-     * @return Boolean 是否删除成功
+     * @return {@code Y9Result<Object>} 通用请求返回对象 - success 属性判断操作是否成功
      * @since 9.6.0
      */
     @Override
@@ -123,11 +124,11 @@ public class RoleApiImpl implements RoleApi {
     }
 
     /**
-     * 根据customId和parentId获取角色
+     * 根据customId和parentId查找角色对象
      *
      * @param customId customId
      * @param parentId 角色的父节点id
-     * @return Role 角色对象
+     * @return {@code Y9Result<Role>} 通用请求返回对象 - data 是角色对象
      * @since 9.6.0
      */
     @Override
@@ -141,7 +142,7 @@ public class RoleApiImpl implements RoleApi {
      * 根据id获取相应角色节点
      *
      * @param roleId 角色唯一标识
-     * @return Role 角色对象
+     * @return {@code Y9Result<Role>} 通用请求返回对象 - data 是角色对象
      * @since 9.6.0
      */
     @Override
@@ -151,12 +152,12 @@ public class RoleApiImpl implements RoleApi {
     }
 
     /**
-     * 根据角色Id获取相应OrgUnits
+     * 根据角色Id获取关联的组织节点集合
      *
      * @param tenantId 租户id
      * @param roleId 角色唯一标识
-     * @param orgType 组织类型
-     * @return List<OrgUnit> 机构对象集合
+     * @param orgType 数据类型
+     * @return {@code Y9Result<List<OrgUnit>>} 通用请求返回对象 - data 是组织节点集合
      * @since 9.6.0
      */
     @Override
@@ -180,11 +181,11 @@ public class RoleApiImpl implements RoleApi {
     }
 
     /**
-     * 根据角色Id获取相应人员
+     * 根据角色Id获取直接关联的人员对象集合
      *
      * @param tenantId 租户id
      * @param roleId 角色唯一标识
-     * @return List<Person> 人员对象集合
+     * @return {@code Y9Result<List<Person>>} 通用请求返回对象 - data 是人员对象集合
      * @since 9.6.0
      */
     @Override
@@ -197,7 +198,7 @@ public class RoleApiImpl implements RoleApi {
         for (Y9OrgBasesToRoles roleMapping : roleMappingList) {
             if (!Boolean.TRUE.equals(roleMapping.getNegative())) {
                 Y9OrgBase y9OrgBase = compositeOrgBaseService.getOrgUnit(roleMapping.getOrgId());
-                if (y9OrgBase == null || !("Person".equals(y9OrgBase.getOrgType()))) {
+                if (y9OrgBase == null || !(OrgTypeEnum.PERSON.getEnName().equals(y9OrgBase.getOrgType()))) {
                     continue;
                 }
                 Y9Person y9Person = y9PersonService.getById(roleMapping.getOrgId());
@@ -211,7 +212,7 @@ public class RoleApiImpl implements RoleApi {
      * 根据父节点Id获取相应子级角色节点
      *
      * @param roleId 角色唯一标识
-     * @return List&lt;Role&gt; 角色对象集合
+     * @return {@code Y9Result<List<Role>>} 通用请求返回对象 - data 是角色对象集合
      * @since 9.6.0
      */
     @Override
@@ -225,12 +226,12 @@ public class RoleApiImpl implements RoleApi {
     }
 
     /**
-     * 删除角色中的人员
+     * 删除角色关联的人员
      *
      * @param personId 人员id
      * @param roleId 角色id
      * @param tenantId 人员所在的租户id
-     * @return boolean 是否删除成功
+     * @return {@code Y9Result<Object>} 通用请求返回对象 - success 属性判断操作是否成功
      * @since 9.6.0
      */
     @Override

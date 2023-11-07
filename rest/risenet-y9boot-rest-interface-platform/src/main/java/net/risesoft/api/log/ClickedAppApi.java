@@ -1,12 +1,11 @@
 package net.risesoft.api.log;
 
-import javax.validation.constraints.NotBlank;
-
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RequestBody;
 
 import net.risesoft.model.ClickedApp;
+import net.risesoft.pojo.Y9Result;
 
 /**
  * 应用点击组件
@@ -17,23 +16,15 @@ import net.risesoft.model.ClickedApp;
  */
 @Validated
 public interface ClickedAppApi {
-    /**
-     * 保存点击的图标的人员Id和应用名称等信息
-     *
-     * @param clickedApp 应用点击详情
-     * @return boolean 是否保存成功
-     * @since 9.6.0
-     */
-    @PostMapping("/saveClickedAppLog")
-    boolean saveClickedAppLog(ClickedApp clickedApp);
 
     /**
      * 保存点击的图标的人员Id和应用名称等信息
      *
-     * @param clickedAppJson 应用点击Json字符串
-     * @return boolean 是否保存成功
+     * @param clickedApp 应用点击详情
+     * @return {@code Y9Result<Object>} 通用请求返回对象 - success 属性判断操作是否成功
      * @since 9.6.0
      */
-    @PostMapping("/saveClickedAppLogByJson")
-    boolean saveClickedAppLogByJson(@RequestParam("clickedAppJson") @NotBlank String clickedAppJson);
+    @PostMapping("/saveClickedAppLog")
+    Y9Result<Object> saveClickedAppLog(@RequestBody ClickedApp clickedApp);
+
 }
