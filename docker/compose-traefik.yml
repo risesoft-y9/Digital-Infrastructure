@@ -8,11 +8,11 @@ services:
     restart: unless-stopped
     extra_hosts:
       - "host.docker.internal:host-gateway"
-      - "www.dingzhaojun.top:127.0.0.1"
+      #- "www.dingzhaojun.top:127.0.0.1"
     networks:
       y9-share-net: {}
-      mynet:
-        ipv4_address: '192.168.31.250'
+      #mynet:
+      #  ipv4_address: '192.168.31.250'
     ports:
       # Expose 8081 
       - "8081:8081"
@@ -43,7 +43,6 @@ services:
       - "--entrypoints.traefik.address=:8080"
       - "--entrypoints.web.http.redirections.entrypoint.to=web-ssl"
       - "--entrypoints.web.http.redirections.entrypoint.scheme=https"
-      - "--entrypoints.web.http.redirections.entrypoint.port=7443"
       - "--providers.docker=true"
       - "--providers.docker.watch=true"
       - "--providers.docker.exposedbydefault=false"
