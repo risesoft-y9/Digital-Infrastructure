@@ -29,7 +29,8 @@ public interface AppApi {
      * 根据应用id，获取应用信息
      *
      * @param appId 应用id
-     * @return App
+     * @return {@code Y9Result<App>} 通用请求返回对象 - data 是应用对象
+     * @since 9.6.0
      */
     @GetMapping("/findById")
     Y9Result<App> findById(@RequestParam("appId") @NotBlank String appId);
@@ -39,7 +40,7 @@ public interface AppApi {
      *
      * @param systemId 系统唯一标识
      * @param customId customId
-     * @return App
+     * @return {@code Y9Result<App>} 通用请求返回对象 - data 是应用对象
      * @since 9.6.0
      */
     @GetMapping("/findBySystemIdAndCustomId")
@@ -51,7 +52,7 @@ public interface AppApi {
      *
      * @param systemName 系统名
      * @param customId customId
-     * @return App 应用
+     * @return {@code Y9Result<App>} 通用请求返回对象 - data 是应用对象
      * @since 9.6.0
      */
     @GetMapping("/findBySystemNameAndCustomId")
@@ -64,7 +65,7 @@ public interface AppApi {
      * @param tenantId 租户id
      * @param personId 人员id
      * @param authority 操作类型(如：BROWSE、ADMIN)
-     * @return List&lt;App&gt;
+     * @return {@code Y9Result<List<App>>} 通用请求返回对象 - data 是有权限的应用列表
      * @since 9.6.0
      */
     @GetMapping("/listAccessAppForPerson")
@@ -77,7 +78,7 @@ public interface AppApi {
      * @param tenantId 租户id
      * @param positionId 岗位id
      * @param authority 操作类型 {@link AuthorityEnum}
-     * @return List&lt;App&gt; 应用列表
+     * @return {@code Y9Result<List<App>>} 通用请求返回对象 - data 是应用列表
      * @since 9.6.0
      */
     @GetMapping("/listAccessAppForPosition")
@@ -88,7 +89,7 @@ public interface AppApi {
      * 根据 customId ，获取应用列表
      *
      * @param customId customId
-     * @return List&lt;App&gt;
+     * @return {@code Y9Result<List<App>>} 通用请求返回对象 - data 是应用列表
      * @since 9.6.0
      */
     @GetMapping("/listByCustomId")
@@ -98,7 +99,7 @@ public interface AppApi {
      * 根据 systemId ，获取应用列表
      *
      * @param systemId 系统Id
-     * @return List&lt;App&gt;
+     * @return {@code Y9Result<List<App>>} 通用请求返回对象 - data 是应用列表
      * @since 9.6.0
      */
     @GetMapping("/listBySystemId")
@@ -108,7 +109,7 @@ public interface AppApi {
      * 根据 systemName 获取应用列表
      *
      * @param systemName 系统名称
-     * @return List&lt;App&gt;
+     * @return {@code Y9Result<List<App>>} 通用请求返回对象 - data 是应用列表
      * @since 9.6.0
      */
     @GetMapping("/listBySystemName")
@@ -122,10 +123,11 @@ public interface AppApi {
      * @param url 链接地址
      * @param customId customId
      * @param tenantGuid 租户id
-     * @return Y9Result&lt;App&gt;
+     * @return {@code Y9Result<App>} 通用请求返回对象 - data 是注册的应用
+     * @since 9.6.3
      */
-    @PostMapping("/registryApp")
-    Y9Result<App> registryApp(@RequestParam("systemName") @NotBlank String systemName,
+    @PostMapping("/registerApp")
+    Y9Result<App> registerApp(@RequestParam("systemName") @NotBlank String systemName,
         @RequestParam("name") @NotBlank String name, @RequestParam("url") @NotBlank String url,
         @RequestParam("customId") String customId, @RequestParam("tenantGuid") String tenantGuid);
 
@@ -139,10 +141,11 @@ public interface AppApi {
      * @param appName 应用名称
      * @param url 链接地址
      * @param customId customId
-     * @return Y9Result&lt;App&gt;
+     * @return {@code Y9Result<App>} 通用请求返回对象 - data 是注册的应用
+     * @since 9.6.3
      */
-    @PostMapping("/registrySystemAndApp")
-    Y9Result<App> registrySystemAndApp(@RequestParam("systemName") @NotBlank String systemName,
+    @PostMapping("/registerSystemAndApp")
+    Y9Result<App> registerSystemAndApp(@RequestParam("systemName") @NotBlank String systemName,
         @RequestParam("systemCnName") @NotBlank String systemCnName, @RequestParam("isvGuid") String isvGuid,
         @RequestParam("contextPath") String contextPath, @RequestParam("appName") @NotBlank String appName,
         @RequestParam("url") @NotBlank String url, @RequestParam("customId") String customId);
@@ -152,7 +155,7 @@ public interface AppApi {
      *
      * @param app 应用实体类
      * @param systemId 系统id
-     * @return App
+     * @return {@code Y9Result<App>} 通用请求返回对象 - data 是保存的应用
      * @since 9.6.0
      */
     @PostMapping("/saveIsvApp")

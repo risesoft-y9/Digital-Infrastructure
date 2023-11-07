@@ -43,45 +43,12 @@ public class PersonRoleApiImpl implements PersonRoleApi {
     private final Y9PersonToRoleService y9PersonToRoleService;
 
     /**
-     * 根据人员id获取该人员拥有的角色个数
-     *
-     * @param tenantId 租户id
-     * @param personId 人员唯一标识
-     * @return long 角色数
-     * @since 9.6.0
-     */
-    @Override
-    public Y9Result<Long> countByPersonId(@RequestParam("tenantId") @NotBlank String tenantId,
-        @RequestParam("personId") @NotBlank String personId) {
-        Y9LoginUserHolder.setTenantId(tenantId);
-
-        return Y9Result.success(y9PersonToRoleService.countByPersonId(personId));
-    }
-
-    /**
-     * 判断人员是否拥有 customId 对应的角色
-     *
-     * @param tenantId 租户id
-     * @param personId 人员id
-     * @param customId 自定义id
-     * @return {@link Boolean}
-     * @since 9.6.0
-     */
-    @Override
-    public Y9Result<Boolean> hasRoleByCustomId(@RequestParam("tenantId") @NotBlank String tenantId,
-        @RequestParam("positionId") @NotBlank String personId, @RequestParam("customId") @NotBlank String customId) {
-        Y9LoginUserHolder.setTenantId(tenantId);
-
-        return Y9Result.success(y9PersonToRoleService.hasRoleByCustomId(personId, customId));
-    }
-
-    /**
      * 根据人员id判断该人员是否拥有roleName这个公共角色
      *
      * @param tenantId 租户id
      * @param roleName 角色名称
      * @param personId 人员id
-     * @return boolean
+     * @return {@code Y9Result<Boolean>} 通用请求返回对象 - data 属性判断是否拥有角色
      * @since 9.6.0
      */
     @Override
@@ -98,7 +65,7 @@ public class PersonRoleApiImpl implements PersonRoleApi {
      * @param tenantId 租户id
      * @param roleId 角色id
      * @param personId 人员id
-     * @return {@link Boolean}
+     * @return {@code Y9Result<Boolean>} 通用请求返回对象 - data 属性判断是否拥有角色
      * @since 9.6.0
      */
     @Override
@@ -110,14 +77,14 @@ public class PersonRoleApiImpl implements PersonRoleApi {
     }
 
     /**
-     * 根据人员id判断改人员是否拥有 roleName 这个角色
+     * 根据人员id判断该人员是否拥有 roleName 这个角色
      *
      * @param tenantId 租户id
      * @param systemName 系统标识
      * @param properties 角色扩展属性
      * @param roleName 角色名称
      * @param personId 人员id
-     * @return Boolean 是否拥有
+     * @return {@code Y9Result<Boolean>} 通用请求返回对象 - data 属性判断是否拥有角色
      * @since 9.6.0
      */
     @Override
@@ -131,11 +98,28 @@ public class PersonRoleApiImpl implements PersonRoleApi {
     }
 
     /**
-     * 根据角色Id获取角色下所有人员
+     * 判断人员是否拥有 customId 对应的角色
+     *
+     * @param tenantId 租户id
+     * @param personId 人员id
+     * @param customId 自定义id
+     * @return {@code Y9Result<Boolean>} 通用请求返回对象 - data 属性判断是否拥有角色
+     * @since 9.6.0
+     */
+    @Override
+    public Y9Result<Boolean> hasRoleByCustomId(@RequestParam("tenantId") @NotBlank String tenantId,
+        @RequestParam("positionId") @NotBlank String personId, @RequestParam("customId") @NotBlank String customId) {
+        Y9LoginUserHolder.setTenantId(tenantId);
+
+        return Y9Result.success(y9PersonToRoleService.hasRoleByCustomId(personId, customId));
+    }
+
+    /**
+     * 获取拥有角色的所有人员
      *
      * @param tenantId 租户id
      * @param roleId 角色唯一标识
-     * @return List&lt;Person&gt; 人员对象集合
+     * @return {@code Y9Result<List<Person>>} 通用请求返回对象 - data 是人员对象集合
      * @since 9.6.0
      */
     @Override
@@ -148,11 +132,11 @@ public class PersonRoleApiImpl implements PersonRoleApi {
     }
 
     /**
-     * 根据人员id获取所有关联的角色
+     * 获取人员所拥有的角色集合
      *
      * @param tenantId 租户id
      * @param personId 人员id
-     * @return List<Role> 角色对象集合
+     * @return {@code Y9Result<List<Role>>} 通用请求返回对象 - data 是角色集合
      * @since 9.6.0
      */
     @Override

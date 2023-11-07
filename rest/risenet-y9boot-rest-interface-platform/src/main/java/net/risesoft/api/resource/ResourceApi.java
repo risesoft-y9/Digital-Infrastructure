@@ -26,13 +26,13 @@ import net.risesoft.pojo.Y9Result;
 public interface ResourceApi {
 
     /**
-     * 创建资源
+     * 创建菜单资源
      *
      * @param resourceId 资源id
      * @param resourceName 资源名称
      * @param parentResourceId 父资源id
      * @param customId 自定义标识
-     * @return Resource 新创建的资源对象
+     * @return {@code Y9Result<Resource>} 通用请求返回对象 - data 是新创建的菜单资源对象
      * @since 9.6.0
      */
     @PostMapping("/createMenuResource")
@@ -44,10 +44,10 @@ public interface ResourceApi {
     /**
      * 根据customId和parentId获取资源
      *
-     * @param customId customId
+     * @param customId 自定义id
      * @param parentId 资源id
      * @param resourceType 资源类型 {@link ResourceTypeEnum}
-     * @return Resource 资源对象
+     * @return {@code Y9Result<Resource>} 通用请求返回对象 - data 是资源对象
      * @since 9.6.0
      */
     @GetMapping("/findByCustomIdAndParentId")
@@ -58,17 +58,17 @@ public interface ResourceApi {
      * 获得指定资源的父资源
      *
      * @param resourceId：资源的唯一标识
-     * @return Resource 父资源
+     * @return {@code Y9Result<Resource>} 通用请求返回对象 - data 是父资源对象
      * @since 9.6.0
      */
     @GetMapping("/getParentResource")
     Y9Result<Resource> getParentResource(@RequestParam("resourceId") @NotBlank String resourceId);
 
     /**
-     * 获得指定资源对象
+     * 根据id获取资源对象
      *
      * @param resourceId 资源唯一标示
-     * @return Resource 资源对象
+     * @return {@code Y9Result<Resource>} 通用请求返回对象 - data 是资源对象
      * @since 9.6.0
      */
     @GetMapping("/getResource")
@@ -78,17 +78,17 @@ public interface ResourceApi {
      * 根据系统标识获取该系统的资源树的顶级节点
      *
      * @param systemName 系统标识
-     * @return Resource 资源节点
+     * @return {@code Y9Result<Resource>} 通用请求返回对象 - data 是顶级资源对象
      * @since 9.6.0
      */
     @GetMapping("/getRootResourceBySystemName")
     Y9Result<Resource> getRootResourceBySystemName(@RequestParam("systemName") @NotBlank String systemName);
 
     /**
-     * 获取指定资源的菜单子资源
+     * 获取指定资源的子菜单资源
      *
      * @param resourceId 资源id
-     * @return List&lt;Resource&gt; 资源对象集合
+     * @return {@code Y9Result<List<Resource>>} 通用请求返回对象 - data 是资源对象集合
      * @since 9.6.0
      */
     @GetMapping("/listSubMenus")
@@ -98,7 +98,7 @@ public interface ResourceApi {
      * 获得指定资源的子资源
      *
      * @param resourceId 资源唯一标识
-     * @return List&lt;Resource&gt; 资源对象集合
+     * @return {@code Y9Result<List<Resource>>} 通用请求返回对象 - data 是资源对象集合
      * @since 9.6.0
      */
     @GetMapping("/listSubResources")

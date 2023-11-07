@@ -6,7 +6,6 @@ import java.util.List;
 
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import net.risesoft.model.MessageOrg;
@@ -46,7 +45,7 @@ public interface OrgSyncApi {
      * @return {@code Y9Result<List<MessageOrg>>} 通用请求返回对象 - data 是事件列表
      * @since 9.6.0
      */
-    @RequestMapping("/incrSync")
+    @GetMapping("/incrSync")
     Y9Result<List<MessageOrg>> incrSync(@RequestParam("appName") @NotBlank String appName,
         @RequestParam("tenantId") @NotBlank String tenantId);
 

@@ -6,6 +6,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 
 import net.risesoft.api.log.UserLoginInfoApi;
 import net.risesoft.model.userlogininfo.LoginInfo;
+import net.risesoft.pojo.Y9Result;
 
 /**
  * 个人登陆日志组件
@@ -27,7 +28,7 @@ public interface UserLoginInfoApiClient extends UserLoginInfoApi {
      */
     @Override
     @PostMapping("/saveLoginInfo")
-    boolean saveLoginInfo(@SpringQueryMap LoginInfo info);
+    Y9Result<Object> saveLoginInfo(@SpringQueryMap LoginInfo info);
 
     /**
      * 异步保存登录信息
@@ -38,6 +39,6 @@ public interface UserLoginInfoApiClient extends UserLoginInfoApi {
      */
     @Override
     @PostMapping("/saveLoginInfoAsync")
-    void saveLoginInfoAsync(@SpringQueryMap LoginInfo info);
+    Y9Result<Object> saveLoginInfoAsync(@SpringQueryMap LoginInfo info);
 
 }

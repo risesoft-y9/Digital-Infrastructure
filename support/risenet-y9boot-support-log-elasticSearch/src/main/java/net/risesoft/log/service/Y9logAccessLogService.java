@@ -33,7 +33,7 @@ public interface Y9logAccessLogService {
 
     Page<Y9logAccessLog> page(int page, int rows, String sort);
 
-    Y9Page<AccessLog> pageByCondition(LogInfoModel search, String startTime, String endTime, Integer page, Integer rows) throws ParseException;
+    Y9Page<AccessLog> pageByCondition(LogInfoModel search, String startTime, String endTime, Integer page, Integer rows) ;
 
     Y9Page<AccessLog> pageByOperateType(String operateType, Integer page, Integer rows);
 

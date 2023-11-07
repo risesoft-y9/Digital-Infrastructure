@@ -45,7 +45,7 @@ public class Y9CommonAppForPersonServiceImpl implements Y9CommonAppForPersonServ
     private final ElasticsearchClient elasticsearchClient;
 
     @Override
-    public String getAppNamesByPersonId(String personId) {
+    public List<String> getAppNamesByPersonId(String personId) {
         SearchRequest searchRequest = SearchRequest.of(s -> s.index(Y9ESIndexConst.CLICKED_APP_INDEX)
             .query(
                 q -> q.bool(b -> b.must(m -> m.queryString(qs -> qs.fields("personId").query(Y9Util.escape(personId))))
@@ -61,7 +61,7 @@ public class Y9CommonAppForPersonServiceImpl implements Y9CommonAppForPersonServ
                     String appName = bucket.key().toString();
                     list.add(appName);
                 });
-            return StringUtils.join(list, ",");
+            return list;
         } catch (ElasticsearchException | IOException e) {
             LOGGER.error(e.getMessage());
             return null;

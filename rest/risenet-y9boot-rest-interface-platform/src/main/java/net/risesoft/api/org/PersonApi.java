@@ -41,7 +41,7 @@ public interface PersonApi {
      * @return {@code Y9Result<Object>} 通用请求返回对象 - success 属性判断操作是否成功
      * @since 9.6.0
      */
-    @GetMapping("/changeDisabled")
+    @PostMapping("/changeDisabled")
     Y9Result<Object> changeDisabled(@RequestParam("tenantId") @NotBlank String tenantId,
         @RequestParam("personId") @NotBlank String personId);
 

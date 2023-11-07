@@ -53,7 +53,7 @@ public interface DepartmentApi {
      * @return {@code Y9Result<Object>} 通用请求返回对象 - success 属性判断操作是否成功
      * @since 9.6.0
      */
-    @GetMapping("/deleteDepartment")
+    @PostMapping("/deleteDepartment")
     Y9Result<Object> deleteDepartment(@RequestParam("tenantId") @NotBlank String tenantId,
         @RequestParam("deptId") @NotBlank String deptId);
 
@@ -65,7 +65,7 @@ public interface DepartmentApi {
      * @return {@code Y9Result<Object>} 通用请求返回对象 - success 属性判断操作是否成功
      * @since 9.6.0
      */
-    @GetMapping("/disableDepartment")
+    @PostMapping("/disableDepartment")
     Y9Result<Object> disableDepartment(@RequestParam("tenantId") @NotBlank String tenantId,
         @RequestParam("departmentId") @NotBlank String departmentId);
 

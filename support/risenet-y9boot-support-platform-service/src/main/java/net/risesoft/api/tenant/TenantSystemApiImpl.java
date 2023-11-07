@@ -43,7 +43,7 @@ public class TenantSystemApiImpl implements TenantSystemApi {
      * 根据租户id获取该租户租用的系统
      *
      * @param tenantId 租户id
-     * @return List&lt;AdminSystem&gt; 系统对象集合
+     * @return {@code Y9Result<List<System>>} 通用请求返回对象 - data是系统对象集合
      * @since 9.6.0
      */
     @Override
@@ -53,10 +53,10 @@ public class TenantSystemApiImpl implements TenantSystemApi {
     }
 
     /**
-     * 根据租户id，获取租用的系统id列表
+     * 根据租户id，获取租用的系统ID列表
      *
      * @param tenantId 租户ID
-     * @return List&lt;String&gt; 系统id列表
+     * @return {@code Y9Result<List<String>>} 通用请求返回对象 - data是系统id集合
      * @since 9.6.0
      */
     @Override
@@ -65,10 +65,10 @@ public class TenantSystemApiImpl implements TenantSystemApi {
     }
 
     /**
-     * 根据系统id,获取租用该系统的租户列表
+     * 根据系统id查询租用了系统的租户
      *
      * @param systemId 系统id
-     * @return List&lt;Tenant&gt; 租户对象集合
+     * @return {@code Y9Result<List<Tenant>>} 通用请求返回对象 - data是租户对象集合
      * @since 9.6.0
      */
     @Override
@@ -78,10 +78,10 @@ public class TenantSystemApiImpl implements TenantSystemApi {
     }
 
     /**
-     * 根据系统名,获取租用该系统的租户列表
+     * 根据系统名查询租用了系统的租户
      *
      * @param systemName 系统名
-     * @return List&lt;Tenant&gt; 租户对象集合
+     * @return {@code Y9Result<List<Tenant>>} 通用请求返回对象 - data是租户对象集合
      * @since 9.6.0
      */
     @Override

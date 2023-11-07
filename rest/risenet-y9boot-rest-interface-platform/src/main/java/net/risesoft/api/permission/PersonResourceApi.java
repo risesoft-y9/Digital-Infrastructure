@@ -27,13 +27,13 @@ import net.risesoft.pojo.Y9Result;
 public interface PersonResourceApi {
 
     /**
-     * 判断actor对resource是否有指定的操作权限
+     * 判断人员对资源是否有指定的操作权限
      *
      * @param tenantId 租户id
-     * @param personId 操作者唯一标识
-     * @param resourceId 资源唯一标识
-     * @param authority 操作类型 {@link AuthorityEnum}
-     * @return Boolean 是否有权限
+     * @param personId 人员id
+     * @param resourceId 资源id
+     * @param authority 权限类型 {@link AuthorityEnum}
+     * @return {@code Y9Result<Boolean>} 通用请求返回对象 - data 属性判断是否有权限
      * @since 9.6.0
      */
     @GetMapping("/hasPermission")
@@ -42,13 +42,13 @@ public interface PersonResourceApi {
         @RequestParam("authority") Integer authority);
 
     /**
-     * 判断 person 对 customId 对应的 resource 是否有指定的操作权限
+     * 判断人员对 customId 对应的资源是否有指定的操作权限
      *
      * @param tenantId 租户id
      * @param personId 人员id
      * @param customId 自定义id
-     * @param authority 操作类型 {@link AuthorityEnum}
-     * @return boolean
+     * @param authority 权限类型 {@link AuthorityEnum}
+     * @return {@code Y9Result<Boolean>} 通用请求返回对象 - data 属性判断是否有权限
      * @since 9.6.0
      */
     @GetMapping("/hasPermissionByCustomId")
@@ -57,13 +57,13 @@ public interface PersonResourceApi {
         @RequestParam("authority") Integer authority);
 
     /**
-     * 递归获得某一资源下,主体对象有相应权限的菜单
+     * 递归获得某一资源下，人员有相应权限的菜单和按钮（树形）
      *
      * @param tenantId 租户id
-     * @param personId 操作者唯一标识
-     * @param authority 操作类型 {@link AuthorityEnum}
-     * @param resourceId 资源唯一标识
-     * @return List&lt;Resource&gt; 有权限的子菜单
+     * @param personId 人员id
+     * @param authority 权限类型 {@link AuthorityEnum}
+     * @param resourceId 资源id
+     * @return {@code Y9Result<List<VueMenu>>} 通用请求返回对象 - data 是有权限的菜单和按钮（树形）
      * @since 9.6.0
      */
     @GetMapping("/listMenusRecursively")
@@ -72,13 +72,13 @@ public interface PersonResourceApi {
         @RequestParam("resourceId") @NotBlank String resourceId);
 
     /**
-     * 获得某一资源下,主体对象有相应操作权限的子节点(子节点必须为菜单)
+     * 获得某一资源下，人员有相应操作权限的菜单资源集合
      *
      * @param tenantId 租户id
-     * @param personId 操作者唯一标识
-     * @param authority 操作类型 {@link AuthorityEnum}
-     * @param resourceId 资源唯一标识
-     * @return List&lt;Resource&gt; 有操作权限的子菜单
+     * @param personId 人员id
+     * @param authority 权限类型 {@link AuthorityEnum}
+     * @param resourceId 资源id
+     * @return {@code Y9Result<List<Menu>>} 通用请求返回对象 - data 是有权限的菜单资源集合
      * @since 9.6.0
      */
     @GetMapping("/listSubMenus")
@@ -87,13 +87,13 @@ public interface PersonResourceApi {
         @RequestParam("resourceId") @NotBlank String resourceId);
 
     /**
-     * 获得某一资源下,主体对象有相应操作权限的子节点
+     * 获得某一资源下，人员有相应操作权限的子资源集合
      *
      * @param tenantId 租户id
-     * @param personId 操作者唯一标识
-     * @param authority 操作类型 {@link AuthorityEnum}
-     * @param resourceId 资源唯一标识
-     * @return List&lt;Resource&gt; 有操作权限的子节点
+     * @param personId 人员id
+     * @param authority 权限类型 {@link AuthorityEnum}
+     * @param resourceId 资源id
+     * @return {@code Y9Result<List<Resource>>} 有权限的子资源集合
      * @since 9.6.0
      */
     @GetMapping("/listSubResources")

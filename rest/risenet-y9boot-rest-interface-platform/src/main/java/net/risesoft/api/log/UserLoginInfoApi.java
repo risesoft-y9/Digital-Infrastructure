@@ -2,16 +2,15 @@ package net.risesoft.api.log;
 
 import jakarta.validation.constraints.NotBlank;
 
-import java.util.Date;
-import java.util.List;
-
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import net.risesoft.model.userlogininfo.LoginInfo;
 import net.risesoft.pojo.Y9Page;
+import net.risesoft.pojo.Y9Result;
 
 /**
  * 个人登录日志组件
@@ -22,30 +21,20 @@ import net.risesoft.pojo.Y9Page;
  */
 @Validated
 public interface UserLoginInfoApi {
+
     /**
      * 根据租户id和人员id，获取最新登录信息
      *
      * @param tenantId 租户id
      * @param personId 人员id
-     * @return LoginInfo 登录信息
+     * @return {@code LoginInfo} 通用请求返回对象 - data 是登录信息
+     * @since 9.6.0
      */
     @GetMapping("/getTopByTenantIdAndUserId")
     LoginInfo getTopByTenantIdAndUserId(@RequestParam("tenantId") @NotBlank String tenantId, @RequestParam("personId") @NotBlank String personId);
 
     /**
-     * 获取个人使用的ip和登录次数列表
-     *
-     * @param personId 用户id
-     * @param startTime 开始时间
-     * @param endTime 结束时间
-     * @return List&lt;Object[]&gt; ip和登录次数列表
-     * @since 9.6.0
-     */
-    @GetMapping("/listDistinctUserHostIpByUserIdAndLoginTime")
-    List<Object[]> listDistinctUserHostIpByUserIdAndLoginTime(@RequestParam("personId") @NotBlank String personId, @RequestParam("startTime") Date startTime, @RequestParam("endTime") Date endTime);
-
-    /**
-     * 获取个人日志列表
+     * 获取登录日志列表
      *
      * @param userHostIp 用户IP
      * @param personId 用户id
@@ -55,7 +44,7 @@ public interface UserLoginInfoApi {
      * @param endTime 结束时间
      * @param page 当前页数
      * @param rows 显示条数
-     * @return Y9Page&lt;LoginInfo&gt; 返回值包含：currpage、total、totalpages、rows（LoginInfo列表）
+     * @return {@code Y9Page<LoginInfo>} 通用分页请求返回对象 - data 是登录日志集合
      * @since 9.6.0
      */
     @GetMapping("/pageSearch")
@@ -66,19 +55,20 @@ public interface UserLoginInfoApi {
      * 保存登录信息
      *
      * @param info 用户登录信息
-     * @return boolean 是否保存成功
+     * @return {@code Y9Result<Object>} 通用请求返回对象 - success 属性判断操作是否成功
      * @since 9.6.0
      */
     @PostMapping("/saveLoginInfo")
-    boolean saveLoginInfo(LoginInfo info);
+    Y9Result<Object> saveLoginInfo(@RequestBody LoginInfo info);
 
     /**
      * 异步保存登录信息
      *
      * @param info 用户登录信息
+     * @return {@code Y9Result<Object>} 通用请求返回对象 - success 属性判断操作是否成功
      * @since 9.6.0
      */
     @PostMapping("/saveLoginInfoAsync")
-    void saveLoginInfoAsync(LoginInfo info);
+    Y9Result<Object> saveLoginInfoAsync(@RequestBody LoginInfo info);
 
 }
