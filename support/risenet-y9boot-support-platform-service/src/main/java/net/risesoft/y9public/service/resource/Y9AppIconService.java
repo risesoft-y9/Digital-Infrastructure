@@ -6,6 +6,7 @@ import java.util.Optional;
 import org.springframework.data.domain.Page;
 import org.springframework.web.multipart.MultipartFile;
 
+import net.risesoft.y9.exception.Y9BusinessException;
 import net.risesoft.y9.exception.Y9NotFoundException;
 import net.risesoft.y9public.entity.resource.Y9AppIcon;
 
@@ -93,7 +94,7 @@ public interface Y9AppIconService {
      * @return {@link Y9AppIcon}
      * @throws Exception 异常
      */
-    Y9AppIcon save(MultipartFile iconFile, String remark) throws Exception;
+    Y9AppIcon save(MultipartFile iconFile, String remark) throws Y9BusinessException;
 
     /**
      * 保存图标

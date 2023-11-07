@@ -19,6 +19,7 @@ import lombok.extern.slf4j.Slf4j;
 import net.risesoft.exception.ResourceErrorCodeEnum;
 import net.risesoft.id.IdType;
 import net.risesoft.id.Y9IdGenerator;
+import net.risesoft.y9.exception.Y9BusinessException;
 import net.risesoft.y9.exception.util.Y9ExceptionUtil;
 import net.risesoft.y9public.entity.Y9FileStore;
 import net.risesoft.y9public.entity.resource.Y9AppIcon;
@@ -99,12 +100,15 @@ public class Y9AppIconServiceImpl implements Y9AppIconService {
 
     @Override
     @Transactional(readOnly = false)
-    public Y9AppIcon save(MultipartFile iconFile, String remark) throws Exception {
+    public Y9AppIcon save(MultipartFile iconFile, String remark) throws Y9BusinessException {
         byte[] iconData = null;
         try {
-            iconData = iconFile.getBytes();
+            if (!iconFile.isEmpty()) {
+                iconData = iconFile.getBytes();
+            }
         } catch (IOException e1) {
             LOGGER.warn(e1.getMessage(), e1);
+            throw new Y9BusinessException(500, "上传文件异常,错误信息为：" + e1.getMessage());
         }
         // 文件名称
         String originalFilename = iconFile.getOriginalFilename();
@@ -124,9 +128,15 @@ public class Y9AppIconServiceImpl implements Y9AppIconService {
         appIcon.setRemark(remark);
         appIcon.setType(imgType);
         String fullPath = Y9FileStore.buildFullPath("riseplatform", "public", "appIcon");
-        appIcon.setPath(y9FileStoreService.uploadFile(iconFile, fullPath, imgName).getId());
-        appIcon.setIconData(Base64.encodeToString(iconData));
-        return appIconRepository.save(appIcon);
+        try {
+            appIcon.setPath(y9FileStoreService.uploadFile(iconFile, fullPath, imgName).getId());
+            appIcon.setIconData(Base64.encodeToString(iconData));
+            return appIconRepository.save(appIcon);
+        } catch (Exception e) {
+            e.printStackTrace();
+            throw new Y9BusinessException(500, "上传文件异常,错误信息为：" + e.getMessage());
+        }
+
     }
 
     @Override

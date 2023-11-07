@@ -155,10 +155,12 @@ public class RoleMemberController {
         List<Y9OrgBasesToRoles> y9OrgBasesToRolesList = y9OrgBasesToRolesService.listByRoleId(roleId);
 
         List<RoleMemberVO> memberList = new ArrayList<>();
-        for (Y9OrgBasesToRoles y9OrgBasesToRoles : y9OrgBasesToRolesList) {
+        y9OrgBasesToRolesList.stream().forEach(y9OrgBasesToRoles -> {
             Y9OrgBase y9OrgBase = compositeOrgBaseService.getOrgUnit(y9OrgBasesToRoles.getOrgId());
             boolean addEnable = false;
-            if (StringUtils.isNotBlank(unitName) && StringUtils.isNotBlank(unitDn)) {
+            if (StringUtils.isBlank(unitDn) && StringUtils.isBlank(unitName)) {
+                addEnable = true;
+            } else if (StringUtils.isNotBlank(unitName) && StringUtils.isNotBlank(unitDn)) {
                 if (y9OrgBase.getName().contains(unitName) && y9OrgBase.getDn().contains(unitDn)) {
                     addEnable = true;
                 }
@@ -168,14 +170,10 @@ public class RoleMemberController {
                 addEnable = true;
             }
 
-            if (StringUtils.isBlank(unitDn) && StringUtils.isBlank(unitName)) {
-                addEnable = true;
-            }
-
             if (addEnable) {
                 memberList.add(RoleMemberVO.of(y9OrgBasesToRoles, y9OrgBase));
             }
-        }
+        });
 
         return Y9Result.success(memberList, "获取数据成功");
     }
