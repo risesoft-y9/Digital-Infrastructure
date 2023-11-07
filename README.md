@@ -15,7 +15,8 @@
 
 ## 简介
 
-<p style="text-indent:2em">数字底座是一款面向大型政府、企业数字化转型，基于身份认证、组织架构、岗位职务、应用系统、资源角色等功能构建的统一且安全的管理支撑平台。数字底座基于三员管理模式，具备微服务、多租户、容器化和国产化，支持用户利用代码生成器快速构建自己的业务应用，同时可关联诸多成熟且好用的内部生态应用。</p>
+数字底座是一款面向大型政府、企业数字化转型，基于身份认证、组织架构、岗位职务、应用系统、资源角色等功能构建的统一且安全的管理支撑平台。数字底座基于三员管理模式，具备微服务、多租户、容器化和国产化，支持用户利用代码生成器快速构建自己的业务应用，同时可关联诸多成熟且好用的内部生态应用。
+
 ## 源码目录
 
 ```
@@ -142,60 +143,60 @@ webapp -- 系统公共模块
 
 ## 后端技术选型
 
-| 序号 | 依赖            | 版本    | 官网 |
-| ---- | --------------- | ------- | ---- |
-| 1    | Spring Boot     | 2.7.10  |      |
-| 2    | SpringDataJPA   | 2.7.10  |      |
-| 3    | SpringDataRedis | 2.7.10  |      |
-| 4    | SpringKafka     | 2.8.11  |      |
-| 5    | nacos           | 2.2.1   |      |
-| 6    | druid           | 1.2.16  |      |
-| 7    | Jackson         | 2.13.5  |      |
-| 8    | javers          | 6.13.0  |      |
-| 9    | lombok          | 1.18.26 |      |
-| 10   | logback         | 1.2.11  |      |
+| 序号 | 依赖            | 版本    | 官网                                                         |
+| ---- | --------------- | ------- | ------------------------------------------------------------ |
+| 1    | Spring Boot     | 2.7.10  | <a href="https://spring.io/projects/spring-boot" target="_blank">官网</a> |
+| 2    | SpringDataJPA   | 2.7.10  | <a href="https://spring.io/projects/spring-data-jpa" target="_blank">官网</a> |
+| 3    | SpringDataRedis | 2.7.10  | <a href="https://spring.io/projects/spring-data-redis" target="_blank">官网</a> |
+| 4    | SpringKafka     | 2.8.11  | <a href="https://spring.io/projects/spring-kafka" target="_blank">官网</a> |
+| 5    | nacos           | 2.2.1   | <a href="https://nacos.io/zh-cn/docs/v2/quickstart/quick-start.html" target="_blank">官网</a> |
+| 6    | druid           | 1.2.16  | <a href="https://github.com/alibaba/druid/wiki/%E9%A6%96%E9%A1%B5" target="_blank">官网</a> |
+| 7    | Jackson         | 2.13.5  | <a href="https://github.com/FasterXML/jackson-core" target="_blank">官网</a> |
+| 8    | javers          | 6.13.0  | <a href="https://github.com/javers/javers" target="_blank">官网</a> |
+| 9    | lombok          | 1.18.26 | <a href="https://projectlombok.org/" target="_blank">官网</a> |
+| 10   | logback         | 1.2.11  | <a href="https://www.docs4dev.com/docs/zh/logback/1.3.0-alpha4/reference/introduction.html" target="_blank">官网</a> |
 
 ## 前端技术选型
 
-| 序号 | 依赖         | 版本    | 官网 |
-| ---- | ------------ | ------- | ---- |
-| 1    | vue          | 3.3.2   |      |
-| 2    | vite2        | 2.9.13  |      |
-| 3    | vue-router   | 4.0.13  |      |
-| 4    | pinia        | 2.0.11  |      |
-| 5    | axios        | 0.24.0  |      |
-| 6    | typescript   | 4.5.4   |      |
-| 7    | core-js      | 3.20.1  |      |
-| 8    | element-plus | 2.2.29  |      |
-| 9    | sass         | 1.58.0  |      |
-| 10   | animate.css  | 4.1.1   |      |
-| 11   | vxe-table    | 4.3.5   |      |
-| 12   | echarts      | 5.3.2   |      |
-| 13   | svgo         | 1.3.2   |      |
-| 14   | lodash       | 4.17.21 |      |
+| 序号 | 依赖         | 版本    | 官网                                                         |
+| ---- | ------------ | ------- | ------------------------------------------------------------ |
+| 1    | vue          | 3.3.2   | <a href="https://cn.vuejs.org/" target="_blank">官网</a>     |
+| 2    | vite2        | 2.9.13  | <a href="https://vitejs.cn/" target="_blank">官网</a>        |
+| 3    | vue-router   | 4.0.13  | <a href="https://router.vuejs.org/zh/" target="_blank">官网</a> |
+| 4    | pinia        | 2.0.11  | <a href="https://pinia.vuejs.org/zh/" target="_blank">官网</a> |
+| 5    | axios        | 0.24.0  | <a href="https://www.axios-http.cn/" target="_blank">官网</a> |
+| 6    | typescript   | 4.5.4   | <a href="https://www.typescriptlang.org/" target="_blank">官网</a> |
+| 7    | core-js      | 3.20.1  | <a href="https://www.npmjs.com/package/core-js" target="_blank">官网</a> |
+| 8    | element-plus | 2.2.29  | <a href="https://element-plus.org/zh-CN/" target="_blank">官网</a> |
+| 9    | sass         | 1.58.0  | <a href="https://www.sass.hk/" target="_blank">官网</a>      |
+| 10   | animate.css  | 4.1.1   | <a href="https://animate.style/" target="_blank">官网</a>    |
+| 11   | vxe-table    | 4.3.5   | <a href="https://vxetable.cn" target="_blank">官网</a>       |
+| 12   | echarts      | 5.3.2   | <a href="https://echarts.apache.org/zh/" target="_blank">官网</a> |
+| 13   | svgo         | 1.3.2   | <a href="https://github.com/svg/svgo" target="_blank">官网</a> |
+| 14   | lodash       | 4.17.21 | <a href="https://lodash.com/" target="_blank">官网</a>       |
 
-## 中间件
+## 中间件选型
 
-| 序号 | 工具             | 版本 | 官网 |
-| ---- | ---------------- | ---- | ---- |
-| 1    | JDK              | 11   |      |
-| 2    | Tomcat           | 9.0+ |      |
-| 3    | Kafka            | 2.6+ |      |
-| 4    | filezilla server | 1.7+ |      |
+| 序号 | 工具             | 版本 | 官网                                                         |
+| ---- | ---------------- | ---- | ------------------------------------------------------------ |
+| 1    | JDK              | 11   | <a href="https://openjdk.org/" target="_blank">官网</a>      |
+| 2    | Tomcat           | 9.0+ | <a href="https://tomcat.apache.org/" target="_blank">官网</a> |
+| 3    | Kafka            | 2.6+ | <a href="https://kafka.apache.org/" target="_blank">官网</a> |
+| 4    | filezilla server | 1.7+ | <a href="https://www.filezilla.cn/download/server" target="_blank">官网</a> |
 
-## 数据库
+## 数据库选型
 
-| 序号 | 工具          | 版本       | 官网 |
-| ---- | ------------- | ---------- | ---- |
-| 1    | Mysql         | 5.7 / 8.0+ |      |
-| 2    | Redis         | 6.2+       |      |
-| 3    | elasticsearch | 7.9+       |      |
+| 序号 | 工具          | 版本       | 官网                                                         |
+| ---- | ------------- | ---------- | ------------------------------------------------------------ |
+| 1    | Mysql         | 5.7 / 8.0+ | <a href="https://www.mysql.com/cn/" target="_blank">官网</a> |
+| 2    | Redis         | 6.2+       | <a href="https://redis.io/" target="_blank">官网</a>         |
+| 3    | elasticsearch | 7.9+       | <a href="https://www.elastic.co/cn/elasticsearch/" target="_blank">官网</a> |
 
 
 
 ## 数字底座专利
 
-|      | 专利号              | 专利名称                                           |
+| 序号 | 专利号              | 专利名称                                           |
 | ---- | ------------------- | -------------------------------------------------- |
 | 1    | ZL 2021 1 1207338.0 | 《基于集合运算的资源授权方法及资源授权系统》       |
 | 2    | ZL 2022 1 0702228.X | 《一种静默化数据处理方法及处理系统》               |
@@ -203,9 +204,7 @@ webapp -- 系统公共模块
 | 4    | ZL 2023 1 0238451.8 | 《一种基于前后端分离架构的前端双随机多态混淆方法》 |
 | 5    | ZL 2023 1 0238534.7 | 《多租户模式下数字底座子域三员架构模型的实现方法》 |
 
-
-
-## 数字底座信创适配
+## 数字底座信创
 
 | 序号 | 类型     | 对象                       |
 | :--- | -------- | -------------------------- |
@@ -306,7 +305,7 @@ webapp -- 系统公共模块
 
 ##### 简介
 
-<p style="text-indent:2em">工作桌面内置首页、内容管理、日程管理、统一待办、通讯录五大模块，支持拖拉拽和点选配置定制个性化的界面，方便集成各个应用、消息。</p>
+工作桌面内置首页、内容管理、日程管理、统一待办、通讯录五大模块，支持拖拉拽和点选配置定制个性化的界面，方便集成各个应用、消息。
 
 ##### 截图
 
@@ -318,7 +317,7 @@ webapp -- 系统公共模块
 
 ##### 简介
 
-<p style="text-indent:2em">工作流程内置流程设计器、表单设计器、事项管理器三大工具，支持中国式流程的自由定义，具备细颗粒度的事项分类。</p>
+工作流程内置流程设计器、表单设计器、事项管理器三大工具，支持中国式流程的自由定义，具备细颗粒度的事项分类。
 
 ##### 截图
 
@@ -330,7 +329,7 @@ webapp -- 系统公共模块
 
 ##### 简介
 
-<p style="text-indent:2em">即时通讯仿照微信的体验和界面，支持私有化部署，支持多端同步，支持组织架构，易于接入或者关联各类应用消息。</p>
+即时通讯仿照微信的体验和界面，支持私有化部署，支持多端同步，支持组织架构，易于接入或者关联各类应用消息。
 
 ##### 截图
 
@@ -341,7 +340,7 @@ webapp -- 系统公共模块
 
 ##### 简介
 
-<p style="text-indent:2em">网络硬盘是一个私密安全的机关单位内部的知识共享和任务收发工具，支持分级权限管控和文件加密分享。</p>
+网络硬盘是一个私密安全的机关单位内部的知识共享和任务收发工具，支持分级权限管控和文件加密分享。
 
 ##### 截图
 
@@ -353,8 +352,7 @@ webapp -- 系统公共模块
 
 ##### 简介
 
-<p style="text-indent:2em">电子邮件支持内网高效模式和互联网协议模式，具备精简、安全和高效的功能模块。</p>
-
+电子邮件支持内网高效模式和互联网协议模式，具备精简、安全和高效的功能模块。
 ##### 截图
 
 <div><img src="https://vue.youshengyun.com/files/img/dianziyoujian.png"><div/>

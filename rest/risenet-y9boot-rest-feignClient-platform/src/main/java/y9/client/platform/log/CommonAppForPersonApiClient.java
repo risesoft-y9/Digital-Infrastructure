@@ -12,7 +12,7 @@ import net.risesoft.api.log.CommonAppForPersonApi;
  * @since 9.6.0
  */
 @FeignClient(contextId = "CommonAppForPersonApiClient", name = "commonAppForPersonApi", url = "${y9.common.logBaseUrl}",
-    path = "/services/rest/v1/commonapp")
+    path = "/services/rest/v1/commonApp")
 public interface CommonAppForPersonApiClient extends CommonAppForPersonApi {
 
 }

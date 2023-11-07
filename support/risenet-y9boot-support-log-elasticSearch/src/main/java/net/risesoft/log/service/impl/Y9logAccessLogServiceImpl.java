@@ -483,7 +483,7 @@ public class Y9logAccessLogServiceImpl implements Y9logAccessLogService {
 
     @Override
     public Y9Page<AccessLog> pageByCondition(LogInfoModel searchDto, String startTime, String endTime, Integer page,
-        Integer rows) throws ParseException {
+        Integer rows) {
         IndexCoordinates index = IndexCoordinates.of(createIndexNames(startTime, endTime));
         BoolQueryBuilder query = QueryBuilders.boolQuery();
         if (StringUtils.isNotBlank(searchDto.getLogLevel())) {
@@ -510,8 +510,18 @@ public class Y9logAccessLogServiceImpl implements Y9logAccessLogService {
             startTime = startTime + " 00:00:00";
             endTime = endTime + " 23:59:59";
             SimpleDateFormat logDate = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-            long startDate = logDate.parse(startTime).getTime();
-            long endDate = logDate.parse(endTime).getTime();
+            long startDate = 0;
+            try {
+                startDate = logDate.parse(startTime).getTime();
+            } catch (ParseException e) {
+                throw new RuntimeException(e);
+            }
+            long endDate = 0;
+            try {
+                endDate = logDate.parse(endTime).getTime();
+            } catch (ParseException e) {
+                throw new RuntimeException(e);
+            }
             query.must(QueryBuilders.rangeQuery(Y9LogSearchConsts.LOG_TIME).from(startDate).to(endDate));
         }
         query.must(QueryBuilders.queryStringQuery("*").field(Y9LogSearchConsts.USER_NAME));

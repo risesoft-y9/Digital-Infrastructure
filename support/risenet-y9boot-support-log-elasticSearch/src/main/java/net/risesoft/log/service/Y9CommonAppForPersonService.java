@@ -1,5 +1,7 @@
 package net.risesoft.log.service;
 
+import java.util.List;
+
 import net.risesoft.log.entity.Y9CommonAppForPerson;
 
 /**
@@ -11,7 +13,7 @@ import net.risesoft.log.entity.Y9CommonAppForPerson;
  */
 public interface Y9CommonAppForPersonService {
 
-    public String getAppNamesByPersonId(String personId);
+    public List<String> getAppNamesByPersonId(String personId);
 
     public String getAppNamesFromLog(String personId);
 

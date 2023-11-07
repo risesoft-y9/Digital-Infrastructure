@@ -3,7 +3,7 @@ package net.risesoft.api.org;
 import javax.validation.constraints.NotBlank;
 
 import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import net.risesoft.model.AuthenticateResult;
@@ -30,7 +30,7 @@ public interface AuthenticateApi {
      * @return {@code Y9Result<AuthenticateResult>} 通用请求返回对象 - data 是认证通过返回的用户信息
      * @since 9.6.0
      */
-    @RequestMapping("/authenticate3")
+    @PostMapping("/authenticate3")
     Y9Result<AuthenticateResult> authenticate3(@RequestParam("tenantShortName") @NotBlank String tenantShortName,
         @RequestParam("loginName") @NotBlank String loginName,
         @RequestParam("base64EncodedPassword") @NotBlank String base64EncodedPassword);
@@ -44,7 +44,7 @@ public interface AuthenticateApi {
      * @return {@code Y9Result<AuthenticateResult>} 通用请求返回对象 - data 是认证通过返回的用户信息
      * @since 9.6.0
      */
-    @RequestMapping("/authenticate5")
+    @PostMapping("/authenticate5")
     Y9Result<AuthenticateResult> authenticate5(@RequestParam("tenantShortName") @NotBlank String tenantShortName,
         @RequestParam("mobile") @NotBlank String mobile,
         @RequestParam("base64EncodedPassword") @NotBlank String base64EncodedPassword);

@@ -6,6 +6,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 
 import net.risesoft.api.log.AccessLogApi;
 import net.risesoft.model.AccessLog;
+import net.risesoft.pojo.Y9Result;
 
 /**
  * 访问日志组件
@@ -22,11 +23,12 @@ public interface AccessLogApiClient extends AccessLogApi {
      * 异步保存访问日志
      *
      * @param accessLog 访问日志实体对象
+     * @return
      * @since 9.6.0
      */
     @PostMapping("/asyncSaveLog")
     @Override
-    void asyncSaveLog(@SpringQueryMap AccessLog accessLog);
+    Y9Result<Object> asyncSaveLog(@SpringQueryMap AccessLog accessLog);
 
     /**
      * 保存访问日志
@@ -37,5 +39,5 @@ public interface AccessLogApiClient extends AccessLogApi {
      */
     @Override
     @PostMapping("/saveLog")
-    boolean saveLog(@SpringQueryMap AccessLog accessLog);
+    Y9Result<Object> saveLog(@SpringQueryMap AccessLog accessLog);
 }

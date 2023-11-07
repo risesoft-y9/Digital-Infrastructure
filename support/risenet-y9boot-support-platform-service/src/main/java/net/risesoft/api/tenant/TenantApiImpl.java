@@ -38,10 +38,36 @@ public class TenantApiImpl implements TenantApi {
     private final Y9TenantService y9TenantService;
 
     /**
-     * 根据租户id获取租户对象
+     * 根据租户名，获取租户
+     *
+     * @param tenantName 租户名
+     * @return {@code Y9Result<Tenant>} 通用请求返回对象 - data是租户对象
+     * @since 9.6.0
+     */
+    @Override
+    public Y9Result<Tenant> findByName(@RequestParam("tenantName") @NotBlank String tenantName) {
+        Y9Tenant y9Tenant = y9TenantService.findByTenantName(tenantName).orElse(null);
+        return Y9Result.success(Y9ModelConvertUtil.convert(y9Tenant, Tenant.class));
+    }
+
+    /**
+     * 根据租户登录名称（租户英文名称），获取租户
+     *
+     * @param shortName 租户登录名称（租户英文名称）
+     * @return {@code Y9Result<Tenant>} 通用请求返回对象 - data 是租户对象
+     * @since 9.6.0
+     */
+    @Override
+    public Y9Result<Tenant> findByShortName(@RequestParam("shortName") @NotBlank String shortName) {
+        Y9Tenant y9Tenant = y9TenantService.findByShortName(shortName).orElse(null);
+        return Y9Result.success(Y9ModelConvertUtil.convert(y9Tenant, Tenant.class));
+    }
+
+    /**
+     * 根据租户id获取一个租户对象
      *
      * @param tenantId 租户id
-     * @return Tenant 租户对象
+     * @return {@code Y9Result<Tenant>} 通用请求返回对象 - data 是租户对象
      * @since 9.6.0
      */
     @Override
@@ -53,7 +79,7 @@ public class TenantApiImpl implements TenantApi {
     /**
      * 获取所有租户对象
      *
-     * @return List&lt;Tenant&gt; 所有租户对象的集合
+     * @return {@code Y9Result<List<Tenant>>} 通用请求返回对象 - data是租户对象集合
      * @since 9.6.0
      */
     @Override
@@ -63,36 +89,10 @@ public class TenantApiImpl implements TenantApi {
     }
 
     /**
-     * 根据租户名，获取租户列表
-     *
-     * @param tenantName 租户名
-     * @return List&lt;Tenant&gt; 租户对象集合
-     * @since 9.6.0
-     */
-    @Override
-    public Y9Result<Tenant> findByName(@RequestParam("tenantName") @NotBlank String tenantName) {
-        Y9Tenant y9Tenant = y9TenantService.findByTenantName(tenantName).orElse(null);
-        return Y9Result.success(Y9ModelConvertUtil.convert(y9Tenant, Tenant.class));
-    }
-
-    /**
-     * 根据租户登录名称（租户英文名称），获取租户列表
-     *
-     * @param shortName 租户登录名称（租户英文名称）
-     * @return List&lt;Tenant&gt; 租户对象集合
-     * @since 9.6.0
-     */
-    @Override
-    public Y9Result<Tenant> findByShortName(@RequestParam("shortName") @NotBlank String shortName) {
-        Y9Tenant y9Tenant = y9TenantService.findByShortName(shortName).orElse(null);
-        return Y9Result.success(Y9ModelConvertUtil.convert(y9Tenant, Tenant.class));
-    }
-
-    /**
      * 获取指定租户类型的所有租户对象
      *
-     * @param tenantType 租户类型 {@link net.risesoft.enums.TenantTypeEnum}
-     * @return List&lt;Tenant&gt; 所有租户对象的集合
+     * @param tenantType 租户类型： 0=用户，2=开发商，1=运维团队，3=普通租户
+     * @return {@code Y9Result<List<Tenant>>} 通用请求返回对象 - data是租户对象集合
      * @since 9.6.0
      */
     @Override

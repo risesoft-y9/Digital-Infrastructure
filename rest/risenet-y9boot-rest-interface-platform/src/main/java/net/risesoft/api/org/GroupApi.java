@@ -37,7 +37,7 @@ public interface GroupApi {
      * @return {@code Y9Result<Object>} 通用请求返回对象 - success 属性判断操作是否成功
      * @since 9.6.0
      */
-    @GetMapping("/addPerson2Group")
+    @PostMapping("/addPerson2Group")
     Y9Result<Object> addPerson2Group(@RequestParam("tenantId") @NotBlank String tenantId,
         @RequestParam("groupId") @NotBlank String groupId, @RequestParam("personId") @NotBlank String personId);
 
@@ -61,7 +61,7 @@ public interface GroupApi {
      * @return {@code Y9Result<Object>} 通用请求返回对象 - success 属性判断操作是否成功
      * @since 9.6.0
      */
-    @GetMapping("/deleteGroup")
+    @PostMapping("/deleteGroup")
     Y9Result<Object> deleteGroup(@RequestParam("tenantId") @NotBlank String tenantId,
         @RequestParam("groupId") @NotBlank String groupId);
 
@@ -121,7 +121,7 @@ public interface GroupApi {
      * @return {@code Y9Result<Object>} 通用请求返回对象 - success 属性判断操作是否成功
      * @since 9.6.0
      */
-    @GetMapping("/removePerson")
+    @PostMapping("/removePerson")
     Y9Result<Object> removePerson(@RequestParam("tenantId") @NotBlank String tenantId,
         @RequestParam("groupId") @NotBlank String groupId, @RequestParam("personId") @NotBlank String personId);
 

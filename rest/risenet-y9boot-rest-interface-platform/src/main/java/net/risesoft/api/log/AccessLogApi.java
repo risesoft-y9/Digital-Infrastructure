@@ -1,17 +1,16 @@
 package net.risesoft.api.log;
 
-import java.text.ParseException;
-import java.util.List;
-
 import javax.validation.constraints.NotBlank;
 
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import net.risesoft.model.AccessLog;
 import net.risesoft.pojo.Y9Page;
+import net.risesoft.pojo.Y9Result;
 
 /**
  * 访问日志组件
@@ -22,31 +21,24 @@ import net.risesoft.pojo.Y9Page;
  */
 @Validated
 public interface AccessLogApi {
+
     /**
      * 异步保存访问日志
      *
      * @param accessLog 访问日志实体对象
+     * @return {@code Y9Result<Object>} 通用请求返回对象 - success 属性判断操作是否成功
      * @since 9.6.0
      */
     @PostMapping("/asyncSaveLog")
-    void asyncSaveLog(AccessLog accessLog);
+    Y9Result<Object> asyncSaveLog(@RequestBody AccessLog accessLog);
 
     /**
-     * 异步保存访问日志
-     *
-     * @param accessLogJson 访问日志实体Json字符串
-     * @since 9.6.0
-     */
-    @PostMapping("/asyncSaveLogByJson")
-    void asyncSaveLogByJson(@RequestParam("accessLogJson") @NotBlank String accessLogJson);
-
-    /**
-     * 根据操作类型分页查找日志
+     * 根据操作类型分页查找访问日志
      *
      * @param operateType 操作类型
      * @param page 页码数
      * @param rows 每页条数
-     * @return Y9Page&lt;AccessLog&gt;
+     * @return {@code Y9Page<AccessLog>} 通用分页请求返回对象 - data 是访问日志集合
      * @since 9.6.0
      */
     @GetMapping("/pageByOperateType")
@@ -54,7 +46,7 @@ public interface AccessLogApi {
         @RequestParam("page") Integer page, @RequestParam("rows") Integer rows);
 
     /**
-     * 根据组织架构类型分页查找日志
+     * 根据组织架构类型分页查找访问日志
      *
      * @param tenantId 组织id
      * @param orgId 组织id
@@ -62,7 +54,7 @@ public interface AccessLogApi {
      * @param operateType 操作类型
      * @param page 页码树
      * @param rows 每页条数
-     * @return Y9Page&lt;AccessLog&gt;
+     * @return {@code Y9Page<AccessLog>} 通用分页请求返回对象 - data 是访问日志集合
      * @since 9.6.0
      */
     @GetMapping("/pageByOrgType")
@@ -72,27 +64,17 @@ public interface AccessLogApi {
         @RequestParam("rows") Integer rows);
 
     /**
-     * 保存访问日志
+     * 保存日志 保存访问日志
      *
      * @param accessLog 访问日志实体对象
-     * @return boolean 是否保存成功
+     * @return {@code Y9Result<Object>} 通用请求返回对象 - success 属性判断操作是否成功
      * @since 9.6.0
      */
     @PostMapping("/saveLog")
-    boolean saveLog(AccessLog accessLog);
+    Y9Result<Object> saveLog(@RequestBody AccessLog accessLog);
 
     /**
-     * 保存访问日志
-     *
-     * @param accessLogJson 访问日志实体Json字符串
-     * @return boolean 是否保存成功
-     * @since 9.6.0
-     */
-    @PostMapping("/saveLogByJson")
-    boolean saveLogByJson(@RequestParam("accessLogJson") @NotBlank String accessLogJson);
-
-    /**
-     * 多条件分页查询
+     * 多条件分页查询访问日志
      *
      * @param logLevel 日志级别
      * @param success 是否成功
@@ -104,8 +86,7 @@ public interface AccessLogApi {
      * @param endTime 结束时间
      * @param page 页码数
      * @param rows 每页条数
-     * @return Y9Page&lt;AccessLog&gt;
-     * @throws ParseException 转换异常
+     * @return {@code Y9Page<AccessLog>} 通用分页请求返回对象 - data 是访问日志集合
      * @since 9.6.0
      */
     @GetMapping("/search")
@@ -117,21 +98,6 @@ public interface AccessLogApi {
         @RequestParam(value = "userHostIp", required = false) String userHostIp,
         @RequestParam(value = "startTime", required = false) String startTime,
         @RequestParam(value = "endTime", required = false) String endTime, @RequestParam("page") Integer page,
-        @RequestParam("rows") Integer rows) throws ParseException;
-
-    /**
-     * 获取日志
-     *
-     * @param loginName 登录名
-     * @param startTime 开始时间
-     * @param endTime 结束时间
-     * @param tenantId 租户id
-     * @return List&lt;String&gt; 返回日志数据
-     * @since 9.6.0
-     */
-    @GetMapping("/searchLog")
-    List<String> searchLog(@RequestParam("loginName") @NotBlank String loginName,
-        @RequestParam("startTime") Long startTime, @RequestParam("endTime") Long endTime,
-        @RequestParam("tenantId") String tenantId);
+        @RequestParam("rows") Integer rows);
 
 }

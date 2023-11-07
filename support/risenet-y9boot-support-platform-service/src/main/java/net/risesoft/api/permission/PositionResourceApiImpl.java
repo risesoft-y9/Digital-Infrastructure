@@ -45,10 +45,10 @@ public class PositionResourceApiImpl implements PositionResourceApi {
      * 判断岗位对资源是否有指定的操作权限
      *
      * @param tenantId 租户id
-     * @param positionId 操作者唯一标识
-     * @param resourceId 资源唯一标识
-     * @param authority 操作类型 {@link AuthorityEnum}
-     * @return Boolean 是否有权限
+     * @param positionId 岗位id
+     * @param resourceId 资源id
+     * @param authority 权限类型 {@link AuthorityEnum}
+     * @return {@code Y9Result<Boolean>} 通用请求返回对象 - data 属性判断是否有权限
      * @since 9.6.0
      */
     @Override
@@ -67,8 +67,8 @@ public class PositionResourceApiImpl implements PositionResourceApi {
      * @param tenantId 租户id
      * @param positionId 岗位id
      * @param customId 自定义id
-     * @param authority 操作类型 {@link AuthorityEnum}
-     * @return boolean
+     * @param authority 权限类型 {@link AuthorityEnum}
+     * @return {@code Y9Result<Boolean>} 通用请求返回对象 - data 属性判断是否有权限
      * @since 9.6.0
      */
     @Override
@@ -82,13 +82,13 @@ public class PositionResourceApiImpl implements PositionResourceApi {
     }
 
     /**
-     * 获得某一资源下,主体对象有相应操作权限的子菜单
+     * 获得某一资源下，岗位有相应操作权限的菜单资源集合
      *
      * @param tenantId 租户id
-     * @param positionId 操作者唯一标识
-     * @param authority 操作类型 {@link AuthorityEnum}
-     * @param resourceId 资源唯一标识
-     * @return List&lt;Resource&gt; 有操作权限的子菜单
+     * @param positionId 岗位id
+     * @param authority 权限类型 {@link AuthorityEnum}
+     * @param resourceId 资源id
+     * @return {@code Y9Result<List<Menu>>} 通用请求返回对象 - data 是有权限的菜单资源集合
      * @since 9.6.0
      */
     @Override
@@ -103,13 +103,13 @@ public class PositionResourceApiImpl implements PositionResourceApi {
     }
 
     /**
-     * 获得某一资源下,主体对象有相应操作权限的子节点
+     * 获得某一资源下，岗位有相应操作权限的子资源集合
      *
      * @param tenantId 租户id
-     * @param positionId 操作者唯一标识
-     * @param authority 操作类型 {@link AuthorityEnum}
-     * @param resourceId 资源唯一标识
-     * @return List&lt;Resource&gt; 有操作权限的子节点
+     * @param positionId 岗位id
+     * @param authority 权限类型 {@link AuthorityEnum}
+     * @param resourceId 资源id
+     * @return {@code Y9Result<List<Resource>>} 有权限的子资源集合
      * @since 9.6.0
      */
     @Override

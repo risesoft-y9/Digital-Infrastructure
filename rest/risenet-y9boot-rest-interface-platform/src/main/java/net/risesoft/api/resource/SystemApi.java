@@ -26,7 +26,7 @@ public interface SystemApi {
      * 根据系统唯一标识获取系统
      *
      * @param id 系统名称
-     * @return System 系统信息
+     * @return {@code Y9Result<System>} 通用请求返回对象 - data 是系统对象
      * @since 9.6.2
      */
     @GetMapping("/getById")
@@ -36,7 +36,8 @@ public interface SystemApi {
      * 根据系统名称获取系统
      *
      * @param name 系统名称
-     * @return System 系统信息
+     * @return {@code Y9Result<System>} 通用请求返回对象 - data 是系统对象
+     * @since 9.6.0
      */
     @GetMapping("/getByName")
     Y9Result<System> getByName(@RequestParam("name") @NotBlank String name);
@@ -48,7 +49,8 @@ public interface SystemApi {
      * @param cnName 系统名称
      * @param contextPath 系统上下文
      * @param isvGuid 租户id
-     * @return
+     * @return {@code Y9Result<System>} 通用请求返回对象 - data 是注册的系统对象
+     * @since 9.6.3
      */
     @PostMapping("/registrySystem")
     Y9Result<System> registrySystem(@RequestParam("name") String name, @RequestParam("cnName") String cnName,

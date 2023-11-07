@@ -45,10 +45,10 @@ public class SystemApiImpl implements SystemApi {
     private final Y9TenantSystemService y9TenantSystemService;
 
     /**
-     * 根据系统id,获取系统
+     * 根据系统唯一标识获取系统
      *
-     * @param id 系统唯一标识
-     * @return AdminSystem 系统管理员
+     * @param id 系统名称
+     * @return {@code Y9Result<System>} 通用请求返回对象 - data 是系统对象
      * @since 9.6.2
      */
     @Override
@@ -58,10 +58,11 @@ public class SystemApiImpl implements SystemApi {
     }
 
     /**
-     * 根据系统名获取系统
+     * 根据系统名称获取系统
      *
      * @param name 系统名称
-     * @return System 系统
+     * @return {@code Y9Result<System>} 通用请求返回对象 - data 是系统对象
+     * @since 9.6.0
      */
     @Override
     public Y9Result<System> getByName(@RequestParam("name") @NotBlank String name) {
@@ -76,7 +77,8 @@ public class SystemApiImpl implements SystemApi {
      * @param cnName 系统名称
      * @param contextPath 系统上下文
      * @param isvGuid 租户id
-     * @return
+     * @return {@code Y9Result<System>} 通用请求返回对象 - data 是注册的系统对象
+     * @since 9.6.3
      */
     @Override
     public Y9Result<System> registrySystem(String name, String cnName, String contextPath, String isvGuid) {
