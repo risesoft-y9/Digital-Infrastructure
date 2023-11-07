@@ -1,7 +1,7 @@
 <p align="center">
 	<img alt="logo" src="https://vue.youshengyun.com/files/img/qrCodeLogo.png">
 </p>
-<h4 align="center">基于SpringBoot+Vue前后端分离的Java快速开发框架</h4>
+<p align="center">基于SpringBoot+Vue前后端分离的Java快速开发框架</p>
 <p align="center">
 	<a href='https://gitee.com/risesoft-y9/y9-core/stargazers'><img src='https://gitee.com/risesoft-y9/y9-core/badge/star.svg?theme=dark' alt='star'></img></a>
     <img src="https://img.shields.io/badge/version-v9.6.3-yellow.svg">
@@ -16,78 +16,6 @@
 ## 简介
 
 <p style="text-indent:2em">数字底座是一款面向大型政府、企业数字化转型，基于身份认证、组织架构、岗位职务、应用系统、资源角色等功能构建的统一且安全的管理支撑平台。数字底座基于三员管理模式，具备微服务、多租户、容器化和国产化，支持用户利用代码生成器快速构建自己的业务应用，同时可关联诸多成熟且好用的内部生态应用。</p>
-
-## 数字底座专利
-
-| 专利号              | 专利名称                                           |
-| ------------------- | -------------------------------------------------- |
-| ZL 2021 1 1207338.0 | 《基于集合运算的资源授权方法及资源授权系统》       |
-| ZL 2022 1 0702228.X | 《一种静默化数据处理方法及处理系统》               |
-| ZL 2023 1 0030893.3 | 《基于多租户模式下的权限调度方法及调度系统》       |
-| ZL 2023 1 0238451.8 | 《一种基于前后端分离架构的前端双随机多态混淆方法》 |
-| ZL 2023 1 0238534.7 | 《多租户模式下数字底座子域三员架构模型的实现方法》 |
-
-
-
-## 数字底座信创适配
-
-| 类型     | 对象                       |
-| -------- | -------------------------- |
-| 浏览器   | 奇安信、火狐、谷歌、360等  |
-| 插件     | 金山、永中、数科、福昕等   |
-| 中间件   | 东方通、金蝶、宝兰德等     |
-| 数据库   | 人大金仓、达梦、高斯等     |
-| 操作系统 | 统信、麒麟、中科方德等     |
-| 芯片     | ARM体系、MIPS体系、X86体系 |
-
-
-
-## 后端技术选型
-
-| 依赖            | 版本    |
-| --------------- | ------- |
-| Spring Boot     | 2.7.10  |
-| SpringDataJPA   | 2.7.10  |
-| SpringDataRedis | 2.7.10  |
-| SpringKafka     | 2.8.11  |
-| nacos           | 2.2.1   |
-| druid           | 1.2.16  |
-| Jackson         | 2.13.5  |
-| javers          | 6.13.0  |
-| lombok          | 1.18.26 |
-| logback         | 1.2.11  |
-
-## 前端技术选型
-
-|   依赖        |   版本   |
-| -------      | ------   |
-|   vue        | 3.3.2    |
-|  vite2       | 2.9.13   |
-|  vue-router  | 4.0.13   |
-|  pinia       | 2.0.11   |
-|  axios       | 0.24.0   |
-|  typescript  | 4.5.4    |
-|  core-js     | 3.20.1   |
-|  element-plus| 2.2.29   |
-|  sass        | 1.58.0   |
-|  animate.css | 4.1.1    |
-|  vxe-table   | 4.3.5    |
-|  echarts     | 5.3.2    |
-|  svgo        | 1.3.2    |
-|  lodash      | 4.17.21  |
-
-## 中间件
-
-| 工具              | 版本       |
-| ---------------- | ---------- |
-| JDK              | 11         |
-| Tomcat           | 9.0+       |
-| Mysql            | 5.7 / 8.0+ |
-| Redis            | 6.2+       |
-| Kafka            | 2.6+       |
-| elasticsearch    | 7.9+       |
-| filezilla server | 1.7+       |
-
 ## 源码目录
 
 ```
@@ -135,8 +63,6 @@ webapp -- 系统公共模块
 	├── risenet-y9boot-webapp-platform -- 数字底座后端工程
 	├── risenet-y9boot-webapp-sso-server-6.6.x -- OAuth2.0认证服务端
 ```
-
-
 
 ## 内置功能
 
@@ -210,11 +136,89 @@ webapp -- 系统公共模块
 
   可以审查安全保密员的登录日志以及操作日志。
 
+## 逻辑架构图
+
+<div><img src="https://vue.youshengyun.com/files/img/ljjgt.png"><div/>
+
+## 后端技术选型
+
+| 序号 | 依赖            | 版本    | 官网 |
+| ---- | --------------- | ------- | ---- |
+| 1    | Spring Boot     | 2.7.10  |      |
+| 2    | SpringDataJPA   | 2.7.10  |      |
+| 3    | SpringDataRedis | 2.7.10  |      |
+| 4    | SpringKafka     | 2.8.11  |      |
+| 5    | nacos           | 2.2.1   |      |
+| 6    | druid           | 1.2.16  |      |
+| 7    | Jackson         | 2.13.5  |      |
+| 8    | javers          | 6.13.0  |      |
+| 9    | lombok          | 1.18.26 |      |
+| 10   | logback         | 1.2.11  |      |
+
+## 前端技术选型
+
+| 序号 | 依赖         | 版本    | 官网 |
+| ---- | ------------ | ------- | ---- |
+| 1    | vue          | 3.3.2   |      |
+| 2    | vite2        | 2.9.13  |      |
+| 3    | vue-router   | 4.0.13  |      |
+| 4    | pinia        | 2.0.11  |      |
+| 5    | axios        | 0.24.0  |      |
+| 6    | typescript   | 4.5.4   |      |
+| 7    | core-js      | 3.20.1  |      |
+| 8    | element-plus | 2.2.29  |      |
+| 9    | sass         | 1.58.0  |      |
+| 10   | animate.css  | 4.1.1   |      |
+| 11   | vxe-table    | 4.3.5   |      |
+| 12   | echarts      | 5.3.2   |      |
+| 13   | svgo         | 1.3.2   |      |
+| 14   | lodash       | 4.17.21 |      |
+
+## 中间件
+
+| 序号 | 工具             | 版本 | 官网 |
+| ---- | ---------------- | ---- | ---- |
+| 1    | JDK              | 11   |      |
+| 2    | Tomcat           | 9.0+ |      |
+| 3    | Kafka            | 2.6+ |      |
+| 4    | filezilla server | 1.7+ |      |
+
+## 数据库
+
+| 序号 | 工具          | 版本       | 官网 |
+| ---- | ------------- | ---------- | ---- |
+| 1    | Mysql         | 5.7 / 8.0+ |      |
+| 2    | Redis         | 6.2+       |      |
+| 3    | elasticsearch | 7.9+       |      |
+
+
+
+## 数字底座专利
+
+|      | 专利号              | 专利名称                                           |
+| ---- | ------------------- | -------------------------------------------------- |
+| 1    | ZL 2021 1 1207338.0 | 《基于集合运算的资源授权方法及资源授权系统》       |
+| 2    | ZL 2022 1 0702228.X | 《一种静默化数据处理方法及处理系统》               |
+| 3    | ZL 2023 1 0030893.3 | 《基于多租户模式下的权限调度方法及调度系统》       |
+| 4    | ZL 2023 1 0238451.8 | 《一种基于前后端分离架构的前端双随机多态混淆方法》 |
+| 5    | ZL 2023 1 0238534.7 | 《多租户模式下数字底座子域三员架构模型的实现方法》 |
+
+
+
+## 数字底座信创适配
+
+| 序号 | 类型     | 对象                       |
+| :--- | -------- | -------------------------- |
+| 1    | 浏览器   | 奇安信、火狐、谷歌、360等  |
+| 2    | 插件     | 金山、永中、数科、福昕等   |
+| 3    | 中间件   | 东方通、金蝶、宝兰德等     |
+| 4    | 数据库   | 人大金仓、达梦、高斯等     |
+| 5    | 操作系统 | 统信、麒麟、中科方德等     |
+| 6    | 芯片     | ARM体系、MIPS体系、X86体系 |
+
 ##  在线体验
 
 官网地址：<a href="https://www.risesoft.net/" target="_blank">https://www.risesoft.net/</a>
-
-白皮书：<a href="https://vue.youshengyun.com/files/Y9-DI-V5.0.pdf" target="_blank">有生云-数字底座软件（标准版）白皮书下载</a>
 
 演示地址：<a href="https://dev.youshengyun.com/kernel-standard/" target="_blank">https://dev.youshengyun.com/kernel-standard/</a>
 
@@ -234,7 +238,18 @@ webapp -- 系统公共模块
 
 > 包含数字底座使用中间件的安装教程、数字底座重要配置讲解，进行本地化部署务必要浏览该网站，会少走弯路。
 
-## 演示图
+## 文档专区
+
+| 序号 | 名称                                                         |
+| :--- | ------------------------------------------------------------ |
+| 1    | <a href="https://vue.youshengyun.com/files/sso_OAuth2.0.pdf" target="_blank">单点登录对接文档</a> |
+| 2    | <a href="https://vue.youshengyun.com/files/apiv2.0.pdf" target="_blank">数字底座接口文档</a> |
+| 3    | <a href="https://vue.youshengyun.com/files/siyouhuabushu.pdf" target="_blank">安装部署文档</a> |
+| 4    | <a href="https://vue.youshengyun.com/files/Y9-DI-V5.0.pdf" target="_blank">操作使用文档（白皮书）</a> |
+
+
+
+## 数字底座截图
 
 #### 系统管理员界面截图
 <table>
@@ -282,6 +297,81 @@ webapp -- 系统公共模块
         <td><img src="https://vue.youshengyun.com/files/img/34.png"></td>
     </tr>
 </table>
+
+## 数字底座生态
+
+<div><img src="https://vue.youshengyun.com/files/img/shengtai.png"><div/>
+
+#### 工作桌面
+
+##### 简介
+
+<p style="text-indent:2em">工作桌面内置首页、内容管理、日程管理、统一待办、通讯录五大模块，支持拖拉拽和点选配置定制个性化的界面，方便集成各个应用、消息。</p>
+
+##### 截图
+
+<div><img src="https://vue.youshengyun.com/files/img/gongzuozhuomian.png"><div/>
+<div><img src="https://vue.youshengyun.com/files/img/neirongguanli.png"><div/>
+<div><img src="https://vue.youshengyun.com/files/img/bianjiwendang.png"><div/>
+
+#### 工作流程
+
+##### 简介
+
+<p style="text-indent:2em">工作流程内置流程设计器、表单设计器、事项管理器三大工具，支持中国式流程的自由定义，具备细颗粒度的事项分类。</p>
+
+##### 截图
+
+<div><img src="https://vue.youshengyun.com/files/img/gongzuoliucheng.png"><div/>
+<div><img src="https://vue.youshengyun.com/files/img/liuchengsheji.png"><div/>
+<div><img src="https://vue.youshengyun.com/files/img/biaodansheji.png"><div/>
+
+#### 即时通讯
+
+##### 简介
+
+<p style="text-indent:2em">即时通讯仿照微信的体验和界面，支持私有化部署，支持多端同步，支持组织架构，易于接入或者关联各类应用消息。</p>
+
+##### 截图
+
+<div><img src="https://vue.youshengyun.com/files/img/jishitongxun.png"><div/>
+<div><img src="https://vue.youshengyun.com/files/img/qunliao.png"><div/>
+
+#### 网络硬盘
+
+##### 简介
+
+<p style="text-indent:2em">网络硬盘是一个私密安全的机关单位内部的知识共享和任务收发工具，支持分级权限管控和文件加密分享。</p>
+
+##### 截图
+
+<div><img src="https://vue.youshengyun.com/files/img/wangluoyingpan.png"><div/>
+<div><img src="https://vue.youshengyun.com/files/img/wenjianyidong.png"><div/>
+<div><img src="https://vue.youshengyun.com/files/img/wenjiangongxiang.png"><div/>
+
+#### 电子邮件
+
+##### 简介
+
+<p style="text-indent:2em">电子邮件支持内网高效模式和互联网协议模式，具备精简、安全和高效的功能模块。</p>
+
+##### 截图
+
+<div><img src="https://vue.youshengyun.com/files/img/dianziyoujian.png"><div/>
+<div><img src="https://vue.youshengyun.com/files/img/youjianxiangqing.png"><div/>
+<div><img src="https://vue.youshengyun.com/files/img/tongxunlu.png"><div/>
+
+## 助力政企数字化转型
+
+#### 三座大山
+
+<div><img src="https://vue.youshengyun.com/files/img/sanzuodashan.png"><div/>
+
+#### 七步走
+
+<div><img src="https://vue.youshengyun.com/files/img/qibuzou.png"><div/>
+
+
 
 
 
