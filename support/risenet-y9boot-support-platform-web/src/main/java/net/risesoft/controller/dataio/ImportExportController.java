@@ -235,10 +235,10 @@ public class ImportExportController {
      */
     @RiseLog(operationName = "导入应用JSON", operationType = OperationTypeEnum.ADD)
     @RequestMapping(value = "/importAppJSON")
-    public Y9Result<Object> importAppJson(@RequestParam MultipartFile file) throws IOException {
+    public Y9Result<Object> importAppJson(@RequestParam MultipartFile file, String systemId) throws IOException {
         String content = new String(file.getBytes(), StandardCharsets.UTF_8);
         Y9AppExportModel y9AppExportModel = Y9JsonUtil.readValue(content, Y9AppExportModel.class);
-        y9SystemDataHandler.importApp(y9AppExportModel);
+        y9SystemDataHandler.importApp(y9AppExportModel, systemId);
         return Y9Result.success(null, "导入成功");
     }
 

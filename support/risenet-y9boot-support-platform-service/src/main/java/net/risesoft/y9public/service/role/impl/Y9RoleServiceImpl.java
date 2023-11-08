@@ -20,7 +20,11 @@ import net.risesoft.service.identity.Y9PersonToRoleService;
 import net.risesoft.y9.Y9Context;
 import net.risesoft.y9.Y9LoginUserHolder;
 import net.risesoft.y9.util.Y9BeanUtil;
+import net.risesoft.y9public.entity.resource.Y9App;
+import net.risesoft.y9public.entity.resource.Y9System;
 import net.risesoft.y9public.entity.role.Y9Role;
+import net.risesoft.y9public.manager.resource.Y9AppManager;
+import net.risesoft.y9public.manager.resource.Y9SystemManager;
 import net.risesoft.y9public.manager.role.Y9RoleManager;
 import net.risesoft.y9public.repository.role.Y9RoleRepository;
 import net.risesoft.y9public.service.role.Y9RoleService;
@@ -41,14 +45,18 @@ public class Y9RoleServiceImpl implements Y9RoleService {
     private final Y9OrgBasesToRolesRepository y9OrgBasesToRolesRepository;
 
     private final Y9RoleManager y9RoleManager;
+    private final Y9AppManager y9AppManager;
+    private final Y9SystemManager y9SystemManager;
 
     public Y9RoleServiceImpl(@Qualifier("jdbcTemplate4Public") JdbcTemplate jdbcTemplate4Public,
         Y9RoleRepository y9RoleRepository, Y9OrgBasesToRolesRepository y9OrgBasesToRolesRepository,
-        Y9RoleManager y9RoleManager) {
+        Y9RoleManager y9RoleManager, Y9AppManager y9AppManager, Y9SystemManager y9SystemManager) {
         this.jdbcTemplate4Public = jdbcTemplate4Public;
         this.y9RoleRepository = y9RoleRepository;
         this.y9OrgBasesToRolesRepository = y9OrgBasesToRolesRepository;
         this.y9RoleManager = y9RoleManager;
+        this.y9AppManager = y9AppManager;
+        this.y9SystemManager = y9SystemManager;
     }
 
     @Override
@@ -225,6 +233,12 @@ public class Y9RoleServiceImpl implements Y9RoleService {
                     origRole.setDn(RoleLevelConsts.CN + y9Role.getName());
                     origRole.setGuidPath(y9Role.getId());
                 }
+                Y9App y9App = y9AppManager.getById(origRole.getAppId());
+                origRole.setAppCnName(y9App.getName());
+                Y9System y9System = y9SystemManager.getById(y9App.getSystemId());
+                origRole.setSystemName(y9System.getName());
+                origRole.setSystemCnName(y9System.getCnName());
+
                 Y9Role role = y9RoleManager.save(origRole);
 
                 Y9PersonToRoleService y9PersonToRoleService = Y9Context.getBean(Y9PersonToRoleService.class);
@@ -251,6 +265,11 @@ public class Y9RoleServiceImpl implements Y9RoleService {
             y9Role.setDn(RoleLevelConsts.CN + y9Role.getName());
             y9Role.setGuidPath(y9Role.getId());
         }
+        Y9App y9App = y9AppManager.getById(y9Role.getAppId());
+        y9Role.setAppCnName(y9App.getName());
+        Y9System y9System = y9SystemManager.getById(y9App.getSystemId());
+        y9Role.setSystemName(y9System.getName());
+        y9Role.setSystemCnName(y9System.getCnName());
         if (!InitDataConsts.TOP_PUBLIC_ROLE_ID.equals(y9Role.getParentId())) {
             y9Role.setTenantId(Y9LoginUserHolder.getTenantId());
         }

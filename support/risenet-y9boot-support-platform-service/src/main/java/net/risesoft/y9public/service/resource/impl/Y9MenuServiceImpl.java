@@ -17,14 +17,12 @@ import net.risesoft.repository.identity.person.Y9PersonToResourceAndAuthorityRep
 import net.risesoft.repository.identity.position.Y9PositionToResourceAndAuthorityRepository;
 import net.risesoft.repository.permission.Y9AuthorizationRepository;
 import net.risesoft.y9.Y9Context;
-import net.risesoft.y9.Y9LoginUserHolder;
 import net.risesoft.y9.pubsub.event.Y9EntityCreatedEvent;
 import net.risesoft.y9.pubsub.event.Y9EntityDeletedEvent;
 import net.risesoft.y9.pubsub.event.Y9EntityUpdatedEvent;
 import net.risesoft.y9.util.Y9BeanUtil;
 import net.risesoft.y9public.entity.resource.Y9App;
 import net.risesoft.y9public.entity.resource.Y9Menu;
-import net.risesoft.y9public.entity.tenant.Y9TenantApp;
 import net.risesoft.y9public.manager.resource.Y9MenuManager;
 import net.risesoft.y9public.repository.resource.Y9MenuRepository;
 import net.risesoft.y9public.repository.tenant.Y9TenantAppRepository;
@@ -64,15 +62,15 @@ public class Y9MenuServiceImpl implements Y9MenuService {
         // 删除关联数据
         Y9Context.publishEvent(new Y9EntityDeletedEvent<>(y9Menu));
 
-        List<Y9TenantApp> y9TenantAppList =
-            y9TenantAppRepository.findByAppIdAndTenancy(y9Menu.getAppId(), Boolean.TRUE);
-        for (Y9TenantApp y9TenantApp : y9TenantAppList) {
-            Y9LoginUserHolder.setTenantId(y9TenantApp.getTenantId());
-
-            y9AuthorizationRepository.deleteByResourceId(y9Menu.getId());
-            y9PersonToResourceAndAuthorityRepository.deleteByResourceId(y9Menu.getId());
-            y9PositionToResourceAndAuthorityRepository.deleteByResourceId(y9Menu.getId());
-        }
+        // List<Y9TenantApp> y9TenantAppList =
+        // y9TenantAppRepository.findByAppIdAndTenancy(y9Menu.getAppId(), Boolean.TRUE);
+        // for (Y9TenantApp y9TenantApp : y9TenantAppList) {
+        // Y9LoginUserHolder.setTenantId(y9TenantApp.getTenantId());
+        //
+        // y9AuthorizationRepository.deleteByResourceId(y9Menu.getId());
+        // y9PersonToResourceAndAuthorityRepository.deleteByResourceId(y9Menu.getId());
+        // y9PositionToResourceAndAuthorityRepository.deleteByResourceId(y9Menu.getId());
+        // }
 
         y9MenuManager.delete(y9Menu);
     }
@@ -155,15 +153,17 @@ public class Y9MenuServiceImpl implements Y9MenuService {
     }
 
     @EventListener
+    @Transactional(readOnly = false)
     public void onAppDeleted(Y9EntityDeletedEvent<Y9App> event) {
         Y9App entity = event.getEntity();
-        deleteByParentId(entity.getId());
+        this.deleteByParentId(entity.getId());
     }
 
     @EventListener
+    @Transactional(readOnly = false)
     public void onMenuDeleted(Y9EntityDeletedEvent<Y9Menu> event) {
         Y9Menu entity = event.getEntity();
-        deleteByParentId(entity.getId());
+        this.deleteByParentId(entity.getId());
     }
 
     @Override

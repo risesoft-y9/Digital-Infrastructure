@@ -260,6 +260,7 @@ public class Y9PositionServiceImpl implements Y9PositionService {
     }
 
     @EventListener
+    @Transactional(readOnly = false)
     public void onParentDepartmentDeleted(Y9EntityDeletedEvent<Y9Department> event) {
         Y9Department parentDepartment = event.getEntity();
         // 删除部门时其下岗位也要删除
@@ -267,6 +268,7 @@ public class Y9PositionServiceImpl implements Y9PositionService {
     }
 
     @EventListener
+    @Transactional(readOnly = false)
     public void onParentOrganizationDeleted(Y9EntityDeletedEvent<Y9Organization> event) {
         Y9Organization y9Organization = event.getEntity();
         // 删除组织时其下岗位也要删除
