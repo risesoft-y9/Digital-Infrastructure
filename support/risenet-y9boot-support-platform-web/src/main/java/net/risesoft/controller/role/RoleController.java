@@ -16,7 +16,6 @@ import javax.servlet.http.HttpServletResponse;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotEmpty;
 
-import org.apache.commons.lang3.StringUtils;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -232,13 +231,6 @@ public class RoleController {
     @RiseLog(operationName = "新建或者更新角色节点信息", operationType = OperationTypeEnum.MODIFY)
     @PostMapping(value = "/saveOrUpdate")
     public Y9Result<Y9Role> saveOrUpdate(Y9Role roleNode) {
-        if (StringUtils.isBlank(roleNode.getAppCnName())) {
-            Y9App y9App = y9AppService.getById(roleNode.getAppId());
-            roleNode.setAppCnName(y9App.getName());
-            Y9System y9System = y9SystemService.getById(y9App.getSystemId());
-            roleNode.setSystemName(y9System.getName());
-            roleNode.setSystemCnName(y9System.getCnName());
-        }
         Y9Role role = y9RoleService.saveOrUpdate(roleNode);
         return Y9Result.success(role, "保存角色节点成功");
     }
