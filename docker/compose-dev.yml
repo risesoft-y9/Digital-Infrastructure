@@ -102,37 +102,6 @@ services:
       - KAFKA_CFG_CONTROLLER_QUORUM_VOTERS=0@kafka:9093
     volumes:
       - d:/docker-data/kafka:/bitnami/kafka
-  
-  nacos:
-    image: nacos/nacos-server:v2.2.3
-    container_name: nacos01
-    restart: always
-    extra_hosts:
-      - "host.docker.internal:host-gateway"
-    networks:
-      - y9-share-net
-    ports:
-      - "8848:8848"
-      - "9848:9848"
-    depends_on:
-      db:
-        condition: service_healthy
-    environment:
-      - PREFER_HOST_MODE=hostname
-      - MODE=standalone
-      - SPRING_DATASOURCE_PLATFORM=mysql
-      - MYSQL_SERVICE_HOST=db
-      - MYSQL_SERVICE_DB_NAME=nacos
-      - MYSQL_SERVICE_PORT=3306
-      - MYSQL_SERVICE_USER=root
-      - MYSQL_SERVICE_PASSWORD=12345678
-      - MYSQL_SERVICE_DB_PARAM=characterEncoding=utf8&connectTimeout=1000&socketTimeout=3000&autoReconnect=true&useSSL=false&allowPublicKeyRetrieval=true
-      - NACOS_AUTH_ENABLE=true
-      - NACOS_AUTH_IDENTITY_KEY=nacos
-      - NACOS_AUTH_IDENTITY_VALUE=nacos
-      - NACOS_AUTH_TOKEN=VGhpc0lzTXlDdXN0b21TZWNyZXRLZXkwMTIzNDU2Nzg=
-    volumes:
-      - d:/docker-data/nacos-logs:/home/nacos/logs
       
 networks:
   y9-share-net:
