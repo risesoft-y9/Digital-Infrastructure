@@ -21,6 +21,8 @@ import net.risesoft.y9public.entity.resource.Y9Menu;
 // @JaversSpringDataAuditable
 public interface Y9MenuRepository extends JpaRepository<Y9Menu, String> {
 
+    List<Y9Menu> findByAppId(String appId);
+
     List<Y9Menu> findByNameContainingOrderByTabIndex(String name);
 
     Optional<Y9Menu> findByParentIdAndCustomId(String parentId, String customId);

@@ -7,6 +7,7 @@ import java.util.Optional;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.context.event.EventListener;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 import lombok.RequiredArgsConstructor;
@@ -62,20 +63,30 @@ public class Y9OperationServiceImpl implements Y9OperationService {
     @Transactional(readOnly = false)
     public void delete(String id) {
         Y9Operation y9Operation = this.getById(id);
-        // 删除关联数据
-        Y9Context.publishEvent(new Y9EntityDeletedEvent<>(y9Operation));
+        y9OperationManager.delete(y9Operation);
 
+        // 删除租户关联数据
         List<Y9TenantApp> y9TenantAppList =
             y9TenantAppRepository.findByAppIdAndTenancy(y9Operation.getAppId(), Boolean.TRUE);
         for (Y9TenantApp y9TenantApp : y9TenantAppList) {
             Y9LoginUserHolder.setTenantId(y9TenantApp.getTenantId());
-
-            y9AuthorizationRepository.deleteByResourceId(y9Operation.getId());
-            y9PersonToResourceAndAuthorityRepository.deleteByResourceId(y9Operation.getId());
-            y9PositionToResourceAndAuthorityRepository.deleteByResourceId(y9Operation.getId());
+            this.deleteTenantRelatedByOperationId(id);
         }
 
-        y9OperationManager.delete(y9Operation);
+        Y9Context.publishEvent(new Y9EntityDeletedEvent<>(y9Operation));
+    }
+
+    /**
+     * 删除相关租户数据 <br/>
+     * 切换不同的数据源 需开启新事务
+     *
+     * @param operationId 应用id
+     */
+    @Transactional(readOnly = false, propagation = Propagation.REQUIRES_NEW)
+    public void deleteTenantRelatedByOperationId(String operationId) {
+        y9AuthorizationRepository.deleteByResourceId(operationId);
+        y9PersonToResourceAndAuthorityRepository.deleteByResourceId(operationId);
+        y9PositionToResourceAndAuthorityRepository.deleteByResourceId(operationId);
     }
 
     @Transactional(readOnly = false)
@@ -199,4 +210,14 @@ public class Y9OperationServiceImpl implements Y9OperationService {
         return y9OperationManager.updateTabIndex(id, index);
     }
 
+    @EventListener
+    @Transactional(readOnly = false)
+    public void onTenantAppDeleted(Y9EntityDeletedEvent<Y9TenantApp> event) {
+        Y9TenantApp entity = event.getEntity();
+        Y9LoginUserHolder.setTenantId(entity.getTenantId());
+        List<Y9Operation> y9OperationList = y9OperationRepository.findByAppId(entity.getAppId());
+        for (Y9Operation y9Operation : y9OperationList) {
+            this.deleteTenantRelatedByOperationId(y9Operation.getId());
+        }
+    }
 }

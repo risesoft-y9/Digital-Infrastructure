@@ -21,6 +21,8 @@ import net.risesoft.y9public.entity.resource.Y9Operation;
 // @JaversSpringDataAuditable
 public interface Y9OperationRepository extends JpaRepository<Y9Operation, String> {
 
+    List<Y9Operation> findByAppId(String appId);
+
     List<Y9Operation> findByNameContainingOrderByTabIndex(String name);
 
     Optional<Y9Operation> findByParentIdAndCustomId(String parentId, String customId);

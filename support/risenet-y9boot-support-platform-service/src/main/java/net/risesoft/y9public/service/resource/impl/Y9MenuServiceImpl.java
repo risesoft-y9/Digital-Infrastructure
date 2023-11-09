@@ -7,6 +7,7 @@ import java.util.Optional;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.context.event.EventListener;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 import lombok.RequiredArgsConstructor;
@@ -17,12 +18,14 @@ import net.risesoft.repository.identity.person.Y9PersonToResourceAndAuthorityRep
 import net.risesoft.repository.identity.position.Y9PositionToResourceAndAuthorityRepository;
 import net.risesoft.repository.permission.Y9AuthorizationRepository;
 import net.risesoft.y9.Y9Context;
+import net.risesoft.y9.Y9LoginUserHolder;
 import net.risesoft.y9.pubsub.event.Y9EntityCreatedEvent;
 import net.risesoft.y9.pubsub.event.Y9EntityDeletedEvent;
 import net.risesoft.y9.pubsub.event.Y9EntityUpdatedEvent;
 import net.risesoft.y9.util.Y9BeanUtil;
 import net.risesoft.y9public.entity.resource.Y9App;
 import net.risesoft.y9public.entity.resource.Y9Menu;
+import net.risesoft.y9public.entity.tenant.Y9TenantApp;
 import net.risesoft.y9public.manager.resource.Y9MenuManager;
 import net.risesoft.y9public.repository.resource.Y9MenuRepository;
 import net.risesoft.y9public.repository.tenant.Y9TenantAppRepository;
@@ -59,20 +62,30 @@ public class Y9MenuServiceImpl implements Y9MenuService {
     @Transactional(readOnly = false)
     public void delete(String id) {
         Y9Menu y9Menu = this.getById(id);
-        // 删除关联数据
-        Y9Context.publishEvent(new Y9EntityDeletedEvent<>(y9Menu));
-
-        // List<Y9TenantApp> y9TenantAppList =
-        // y9TenantAppRepository.findByAppIdAndTenancy(y9Menu.getAppId(), Boolean.TRUE);
-        // for (Y9TenantApp y9TenantApp : y9TenantAppList) {
-        // Y9LoginUserHolder.setTenantId(y9TenantApp.getTenantId());
-        //
-        // y9AuthorizationRepository.deleteByResourceId(y9Menu.getId());
-        // y9PersonToResourceAndAuthorityRepository.deleteByResourceId(y9Menu.getId());
-        // y9PositionToResourceAndAuthorityRepository.deleteByResourceId(y9Menu.getId());
-        // }
-
         y9MenuManager.delete(y9Menu);
+
+        // 删除租户关联数据
+        List<Y9TenantApp> y9TenantAppList =
+            y9TenantAppRepository.findByAppIdAndTenancy(y9Menu.getAppId(), Boolean.TRUE);
+        for (Y9TenantApp y9TenantApp : y9TenantAppList) {
+            Y9LoginUserHolder.setTenantId(y9TenantApp.getTenantId());
+            this.deleteTenantRelatedByMenuId(id);
+        }
+
+        Y9Context.publishEvent(new Y9EntityDeletedEvent<>(y9Menu));
+    }
+
+    /**
+     * 删除相关租户数据 <br/>
+     * 切换不同的数据源 需开启新事务
+     *
+     * @param menuId 菜单id
+     */
+    @Transactional(readOnly = false, propagation = Propagation.REQUIRES_NEW)
+    public void deleteTenantRelatedByMenuId(String menuId) {
+        y9AuthorizationRepository.deleteByResourceId(menuId);
+        y9PersonToResourceAndAuthorityRepository.deleteByResourceId(menuId);
+        y9PositionToResourceAndAuthorityRepository.deleteByResourceId(menuId);
     }
 
     @Transactional(readOnly = false)
@@ -164,6 +177,17 @@ public class Y9MenuServiceImpl implements Y9MenuService {
     public void onMenuDeleted(Y9EntityDeletedEvent<Y9Menu> event) {
         Y9Menu entity = event.getEntity();
         this.deleteByParentId(entity.getId());
+    }
+
+    @EventListener
+    @Transactional(readOnly = false)
+    public void onTenantAppDeleted(Y9EntityDeletedEvent<Y9TenantApp> event) {
+        Y9TenantApp entity = event.getEntity();
+        Y9LoginUserHolder.setTenantId(entity.getTenantId());
+        List<Y9Menu> y9MenuList = y9MenuRepository.findByAppId(entity.getAppId());
+        for (Y9Menu y9Menu : y9MenuList) {
+            this.deleteTenantRelatedByMenuId(y9Menu.getId());
+        }
     }
 
     @Override

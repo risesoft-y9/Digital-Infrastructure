@@ -12,6 +12,7 @@ import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 import lombok.RequiredArgsConstructor;
@@ -34,10 +35,13 @@ import net.risesoft.repository.permission.Y9AuthorizationRepository;
 import net.risesoft.repository.relation.Y9OrgBasesToRolesRepository;
 import net.risesoft.repository.relation.Y9PersonsToGroupsRepository;
 import net.risesoft.repository.relation.Y9PersonsToPositionsRepository;
+import net.risesoft.y9.Y9LoginUserHolder;
 import net.risesoft.y9.exception.util.Y9ExceptionUtil;
 import net.risesoft.y9public.entity.role.Y9Role;
+import net.risesoft.y9public.entity.tenant.Y9TenantApp;
 import net.risesoft.y9public.manager.role.Y9RoleManager;
 import net.risesoft.y9public.repository.role.Y9RoleRepository;
+import net.risesoft.y9public.repository.tenant.Y9TenantAppRepository;
 
 /**
  * 角色管理 Y9RoleManager 实现类
@@ -62,31 +66,48 @@ public class Y9RoleManagerImpl implements Y9RoleManager {
     private final Y9PositionToRoleRepository y9PositionToRoleRepository;
     private final Y9PersonToResourceAndAuthorityRepository y9PersonToResourceAndAuthorityRepository;
     private final Y9PositionToResourceAndAuthorityRepository y9PositionToResourceAndAuthorityRepository;
+    private final Y9TenantAppRepository y9TenantAppRepository;
 
     @Transactional(readOnly = false)
     @Override
     public void delete(String id) {
         Y9Role y9Role = this.getById(id);
         if (Y9RoleTypeEnum.ROLE.getValue().equals(y9Role.getType())) {
-            y9OrgBasesToRolesRepository.deleteByRoleId(id);
-
-            List<Y9Authorization> authorizationList = y9AuthorizationRepository.findByPrincipalIdAndPrincipalType(id,
-                AuthorizationPrincipalTypeEnum.ROLE.getValue());
-            for (Y9Authorization y9Authorization : authorizationList) {
-                y9PersonToResourceAndAuthorityRepository.deleteByAuthorizationId(y9Authorization.getId());
-                y9PositionToResourceAndAuthorityRepository.deleteByAuthorizationId(y9Authorization.getId());
+            // 删除租户关联数据
+            List<Y9TenantApp> y9TenantAppList = y9TenantAppRepository.findByTenantIdAndTenancy(id, true);
+            for (Y9TenantApp y9TenantApp : y9TenantAppList) {
+                Y9LoginUserHolder.setTenantId(y9TenantApp.getTenantId());
+                this.deleteTenantRelatedByAppId(id);
             }
-            y9AuthorizationRepository.deleteAll(authorizationList);
-
-            y9PersonToRoleRepository.deleteByRoleId(id);
-            y9PositionToRoleRepository.deleteByRoleId(id);
         } else if (Y9RoleTypeEnum.FOLDER.getValue().equals(y9Role.getType())) {
             List<Y9Role> roleNodeList = y9RoleRepository.findByParentIdOrderByTabIndexAsc(id);
             for (Y9Role role : roleNodeList) {
                 delete(role.getId());
             }
         }
-        y9RoleRepository.deleteById(id);
+        y9RoleRepository.delete(y9Role);
+    }
+
+    /**
+     * 删除相关租户数据 <br/>
+     * 切换不同的数据源 需开启新事务
+     *
+     * @param roleId 角色id
+     */
+    @Transactional(readOnly = false, propagation = Propagation.REQUIRES_NEW)
+    public void deleteTenantRelatedByAppId(String roleId) {
+        y9OrgBasesToRolesRepository.deleteByRoleId(roleId);
+
+        List<Y9Authorization> authorizationList = y9AuthorizationRepository.findByPrincipalIdAndPrincipalType(roleId,
+            AuthorizationPrincipalTypeEnum.ROLE.getValue());
+        for (Y9Authorization y9Authorization : authorizationList) {
+            y9PersonToResourceAndAuthorityRepository.deleteByAuthorizationId(y9Authorization.getId());
+            y9PositionToResourceAndAuthorityRepository.deleteByAuthorizationId(y9Authorization.getId());
+        }
+        y9AuthorizationRepository.deleteAll(authorizationList);
+
+        y9PersonToRoleRepository.deleteByRoleId(roleId);
+        y9PositionToRoleRepository.deleteByRoleId(roleId);
     }
 
     @Override

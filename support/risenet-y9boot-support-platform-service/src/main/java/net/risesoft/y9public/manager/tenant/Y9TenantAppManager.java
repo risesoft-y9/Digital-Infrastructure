@@ -15,6 +15,8 @@ import net.risesoft.y9public.entity.tenant.Y9TenantApp;
 public interface Y9TenantAppManager {
     void deleteByAppId(String appId);
 
+    void delete(Y9TenantApp y9TenantApp);
+
     Optional<Y9TenantApp> getByTenantIdAndAppIdAndTenancy(String tenantId, String appId, Boolean tenancy);
 
     List<Y9TenantApp> listByAppIdAndTenancy(String appId, Boolean tenancy);
