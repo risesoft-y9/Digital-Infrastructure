@@ -878,6 +878,7 @@ public class Y9PersonServiceImpl implements Y9PersonService {
     }
 
     @EventListener
+    @Transactional(readOnly = false)
     public void onParentDepartmentDeleted(Y9EntityDeletedEvent<Y9Department> event) {
         Y9Department parentDepartment = event.getEntity();
         // 删除部门时其下人员也要删除
@@ -885,6 +886,7 @@ public class Y9PersonServiceImpl implements Y9PersonService {
     }
 
     @EventListener
+    @Transactional(readOnly = false)
     public void onParentOrganizationDeleted(Y9EntityDeletedEvent<Y9Organization> event) {
         Y9Organization y9Organization = event.getEntity();
         // 删除组织时其下人员也要删除

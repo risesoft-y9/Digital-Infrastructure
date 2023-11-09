@@ -156,15 +156,17 @@ public class Y9OperationServiceImpl implements Y9OperationService {
     }
 
     @EventListener
+    @Transactional(readOnly = false)
     public void onAppDeleted(Y9EntityDeletedEvent<Y9App> event) {
         Y9App entity = event.getEntity();
-        deleteByParentId(entity.getId());
+        this.deleteByParentId(entity.getId());
     }
 
     @EventListener
+    @Transactional(readOnly = false)
     public void onMenuDeleted(Y9EntityDeletedEvent<Y9Menu> event) {
         Y9Menu entity = event.getEntity();
-        deleteByParentId(entity.getId());
+        this.deleteByParentId(entity.getId());
     }
 
     @Override

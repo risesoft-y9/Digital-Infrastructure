@@ -58,19 +58,20 @@ public class Y9SystemJsonDataHandlerImpl implements Y9SystemDataHandler {
     }
 
     @Override
-    public void importApp(Y9AppExportModel y9AppExportModel) {
+    public void importApp(Y9AppExportModel y9AppExportModel, String systemId) {
         Y9App y9App = Y9ModelConvertUtil.convert(y9AppExportModel, Y9App.class);
+        y9App.setSystemId(systemId);
         y9AppService.saveOrUpdate(y9App);
-        importMenuList(y9AppExportModel.getSubMenuList());
-        importOperationList(y9AppExportModel.getSubOperationList());
-        importRoleList(y9AppExportModel.getSubRoleList());
+        importMenuList(y9AppExportModel.getSubMenuList(), systemId);
+        importOperationList(y9AppExportModel.getSubOperationList(), systemId);
+        importRoleList(y9AppExportModel.getSubRoleList(), systemId);
     }
 
     @Override
     public void importSystem(Y9SystemExportModel y9SystemExportModel) {
         Y9System y9System = Y9ModelConvertUtil.convert(y9SystemExportModel, Y9System.class);
-        y9SystemService.saveOrUpdate(y9System);
-        importAppList(y9SystemExportModel.getAppList());
+        y9System = y9SystemService.saveOrUpdate(y9System);
+        importAppList(y9SystemExportModel.getAppList(), y9System.getId());
     }
 
     @Override
@@ -147,47 +148,49 @@ public class Y9SystemJsonDataHandlerImpl implements Y9SystemDataHandler {
         return y9RoleExportModelList;
     }
 
-    private void importAppList(List<Y9AppExportModel> y9AppExportModelList) {
+    private void importAppList(List<Y9AppExportModel> y9AppExportModelList, String systemId) {
         for (Y9AppExportModel y9AppExportModel : y9AppExportModelList) {
-            importApp(y9AppExportModel);
+            importApp(y9AppExportModel, systemId);
         }
     }
 
-    private void importMenu(Y9MenuExportModel y9MenuExportModel) {
+    private void importMenu(Y9MenuExportModel y9MenuExportModel, String systemId) {
         Y9Menu y9Menu = Y9ModelConvertUtil.convert(y9MenuExportModel, Y9Menu.class);
+        y9Menu.setSystemId(systemId);
         y9MenuService.saveOrUpdate(y9Menu);
-        importOperationList(y9MenuExportModel.getSubOperationList());
-        importMenuList(y9MenuExportModel.getSubMenuList());
+        importOperationList(y9MenuExportModel.getSubOperationList(), systemId);
+        importMenuList(y9MenuExportModel.getSubMenuList(), systemId);
     }
 
-    private void importMenuList(List<Y9MenuExportModel> y9MenuList) {
+    private void importMenuList(List<Y9MenuExportModel> y9MenuList, String systemId) {
         for (Y9MenuExportModel y9MenuExportModel : y9MenuList) {
-            importMenu(y9MenuExportModel);
+            importMenu(y9MenuExportModel, systemId);
         }
     }
 
-    private void importOperation(Y9OperationExportModel y9OperationExportModel) {
+    private void importOperation(Y9OperationExportModel y9OperationExportModel, String systemId) {
         Y9Operation y9Operation = Y9ModelConvertUtil.convert(y9OperationExportModel, Y9Operation.class);
+        y9Operation.setSystemId(systemId);
         y9OperationService.saveOrUpdate(y9Operation);
-        importOperationList(y9OperationExportModel.getSubOperationList());
-        importMenuList(y9OperationExportModel.getSubMenuList());
+        importOperationList(y9OperationExportModel.getSubOperationList(), systemId);
+        importMenuList(y9OperationExportModel.getSubMenuList(), systemId);
     }
 
-    private void importOperationList(List<Y9OperationExportModel> y9OperationExportModelList) {
+    private void importOperationList(List<Y9OperationExportModel> y9OperationExportModelList, String systemId) {
         for (Y9OperationExportModel y9OperationExportModel : y9OperationExportModelList) {
-            importOperation(y9OperationExportModel);
+            importOperation(y9OperationExportModel, systemId);
         }
     }
 
-    private void importRole(Y9RoleExportModel y9RoleExportModel) {
+    private void importRole(Y9RoleExportModel y9RoleExportModel, String systemId) {
         Y9Role y9Role = Y9ModelConvertUtil.convert(y9RoleExportModel, Y9Role.class);
         y9RoleService.saveOrUpdate(y9Role);
-        importRoleList(y9RoleExportModel.getSubRoleList());
+        importRoleList(y9RoleExportModel.getSubRoleList(), systemId);
     }
 
-    private void importRoleList(List<Y9RoleExportModel> y9RoleExportModelList) {
+    private void importRoleList(List<Y9RoleExportModel> y9RoleExportModelList, String systemId) {
         for (Y9RoleExportModel y9RoleExportModel : y9RoleExportModelList) {
-            importRole(y9RoleExportModel);
+            importRole(y9RoleExportModel, systemId);
         }
     }
 }
