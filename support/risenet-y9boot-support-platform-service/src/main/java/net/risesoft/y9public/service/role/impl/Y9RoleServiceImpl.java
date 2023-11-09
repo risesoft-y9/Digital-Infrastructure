@@ -6,6 +6,7 @@ import java.util.Optional;
 
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.context.event.EventListener;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Service;
@@ -19,6 +20,7 @@ import net.risesoft.repository.relation.Y9OrgBasesToRolesRepository;
 import net.risesoft.service.identity.Y9PersonToRoleService;
 import net.risesoft.y9.Y9Context;
 import net.risesoft.y9.Y9LoginUserHolder;
+import net.risesoft.y9.pubsub.event.Y9EntityDeletedEvent;
 import net.risesoft.y9.util.Y9BeanUtil;
 import net.risesoft.y9public.entity.resource.Y9App;
 import net.risesoft.y9public.entity.resource.Y9System;
@@ -215,31 +217,35 @@ public class Y9RoleServiceImpl implements Y9RoleService {
         if (StringUtils.isNotEmpty(y9Role.getId())) {
             Optional<Y9Role> y9RoleOptional = this.findById(y9Role.getId());
             if (y9RoleOptional.isPresent()) {
-                Y9Role origRole = y9RoleOptional.get();
+                Y9Role originRole = y9RoleOptional.get();
                 boolean update = false;
                 String systemName = y9Role.getSystemName();
-                String oldSystemName = origRole.getSystemName();
+                String oldSystemName = originRole.getSystemName();
                 if (StringUtils.isNotBlank(oldSystemName) && !systemName.equals(oldSystemName)) {
                     update = true;
                 }
 
-                Y9BeanUtil.copyProperties(y9Role, origRole);
+                Y9BeanUtil.copyProperties(y9Role, originRole);
                 if (parent != null) {
-                    origRole.setParentId(parent.getId());
-                    origRole.setDn(RoleLevelConsts.CN + y9Role.getName() + RoleLevelConsts.SEPARATOR + parent.getDn());
-                    origRole.setGuidPath(parent.getGuidPath() + "," + y9Role.getId());
+                    originRole.setParentId(parent.getId());
+                    originRole
+                        .setDn(RoleLevelConsts.CN + y9Role.getName() + RoleLevelConsts.SEPARATOR + parent.getDn());
+                    originRole.setGuidPath(parent.getGuidPath() + "," + y9Role.getId());
                 } else {
-                    origRole.setParentId(y9Role.getParentId());
-                    origRole.setDn(RoleLevelConsts.CN + y9Role.getName());
-                    origRole.setGuidPath(y9Role.getId());
+                    originRole.setParentId(y9Role.getParentId());
+                    originRole.setDn(RoleLevelConsts.CN + y9Role.getName());
+                    originRole.setGuidPath(y9Role.getId());
                 }
-                Y9App y9App = y9AppManager.getById(origRole.getAppId());
-                origRole.setAppCnName(y9App.getName());
-                Y9System y9System = y9SystemManager.getById(y9App.getSystemId());
-                origRole.setSystemName(y9System.getName());
-                origRole.setSystemCnName(y9System.getCnName());
+                if (!InitDataConsts.TOP_PUBLIC_ROLE_ID.equals(originRole.getAppId())) {
+                    // 公共角色顶级节点特殊处理
+                    Y9App y9App = y9AppManager.getById(originRole.getAppId());
+                    originRole.setAppCnName(y9App.getName());
+                    Y9System y9System = y9SystemManager.getById(y9App.getSystemId());
+                    originRole.setSystemName(y9System.getName());
+                    originRole.setSystemCnName(y9System.getCnName());
+                }
 
-                Y9Role role = y9RoleManager.save(origRole);
+                Y9Role role = y9RoleManager.save(originRole);
 
                 Y9PersonToRoleService y9PersonToRoleService = Y9Context.getBean(Y9PersonToRoleService.class);
                 y9PersonToRoleService.updateByRole(role);
@@ -265,11 +271,14 @@ public class Y9RoleServiceImpl implements Y9RoleService {
             y9Role.setDn(RoleLevelConsts.CN + y9Role.getName());
             y9Role.setGuidPath(y9Role.getId());
         }
-        Y9App y9App = y9AppManager.getById(y9Role.getAppId());
-        y9Role.setAppCnName(y9App.getName());
-        Y9System y9System = y9SystemManager.getById(y9App.getSystemId());
-        y9Role.setSystemName(y9System.getName());
-        y9Role.setSystemCnName(y9System.getCnName());
+        if (!InitDataConsts.TOP_PUBLIC_ROLE_ID.equals(y9Role.getAppId())) {
+            // 公共角色顶级节点特殊处理
+            Y9App y9App = y9AppManager.getById(y9Role.getAppId());
+            y9Role.setAppCnName(y9App.getName());
+            Y9System y9System = y9SystemManager.getById(y9App.getSystemId());
+            y9Role.setSystemName(y9System.getName());
+            y9Role.setSystemCnName(y9System.getCnName());
+        }
         if (!InitDataConsts.TOP_PUBLIC_ROLE_ID.equals(y9Role.getParentId())) {
             y9Role.setTenantId(Y9LoginUserHolder.getTenantId());
         }
@@ -319,27 +328,13 @@ public class Y9RoleServiceImpl implements Y9RoleService {
         return returnList;
     }
 
-    private void getRoleTrees(String roleId, List<Y9Role> roleNodeList) {
-        List<Y9Role> childrenList = listByParentId(roleId);
-        if (childrenList.isEmpty()) {
-            return;
-        }
-        roleNodeList.addAll(childrenList);
-        for (Y9Role roleNode : childrenList) {
-            getRoleTrees(roleNode.getId(), roleNodeList);
-        }
-    }
-
-    private void recursionDown(List<Y9Role> lists, String parentId) {
-        List<Y9Role> list = this.listByParentId(parentId);
-        for (Y9Role role : list) {
-            String parentId2 = role.getId();
-            List<Y9Role> list2 = this.listByParentId(parentId2);
-            if (!list2.isEmpty()) {
-                recursionDown(lists, parentId2);
-            } else {
-                lists.add(role);
-            }
+    @EventListener
+    @Transactional(readOnly = false)
+    public void onAppDeleted(Y9EntityDeletedEvent<Y9App> event) {
+        Y9App y9App = event.getEntity();
+        List<Y9Role> y9RoleList = y9RoleRepository.findByAppIdAndParentId(y9App.getId(), y9App.getId());
+        for (Y9Role y9Role : y9RoleList) {
+            delete(y9Role.getId());
         }
     }
 

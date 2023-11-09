@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.Optional;
 
 import org.apache.commons.lang3.StringUtils;
+import org.springframework.context.event.EventListener;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -19,11 +20,14 @@ import net.risesoft.id.IdType;
 import net.risesoft.id.Y9IdGenerator;
 import net.risesoft.pojo.Y9PageQuery;
 import net.risesoft.y9.Y9Context;
+import net.risesoft.y9.Y9LoginUserHolder;
 import net.risesoft.y9.pubsub.event.Y9EntityCreatedEvent;
+import net.risesoft.y9.pubsub.event.Y9EntityDeletedEvent;
 import net.risesoft.y9.pubsub.event.Y9EntityUpdatedEvent;
 import net.risesoft.y9.util.Y9BeanUtil;
 import net.risesoft.y9public.entity.resource.Y9App;
 import net.risesoft.y9public.entity.resource.Y9System;
+import net.risesoft.y9public.entity.tenant.Y9TenantApp;
 import net.risesoft.y9public.manager.resource.Y9AppManager;
 import net.risesoft.y9public.repository.resource.Y9AppRepository;
 import net.risesoft.y9public.repository.resource.Y9SystemRepository;
@@ -321,6 +325,14 @@ public class Y9AppServiceImpl implements Y9AppService {
         y9App.setChecked(checked);
         y9App.setVerifyUserName(verifyUserName);
         return y9AppManager.save(y9App);
+    }
+
+    @EventListener
+    @Transactional(readOnly = false)
+    public void onTenantAppDeleted(Y9EntityDeletedEvent<Y9TenantApp> event) {
+        Y9TenantApp entity = event.getEntity();
+        Y9LoginUserHolder.setTenantId(entity.getTenantId());
+        y9AppManager.deleteTenantRelatedByAppId(entity.getAppId());
     }
 
 }

@@ -10,6 +10,7 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 
 import org.apache.commons.lang3.StringUtils;
+import org.springframework.context.event.EventListener;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -27,6 +28,7 @@ import net.risesoft.id.Y9IdGenerator;
 import net.risesoft.model.user.UserInfo;
 import net.risesoft.y9.Y9LoginUserHolder;
 import net.risesoft.y9.exception.util.Y9ExceptionUtil;
+import net.risesoft.y9.pubsub.event.Y9EntityDeletedEvent;
 import net.risesoft.y9public.entity.resource.Y9App;
 import net.risesoft.y9public.entity.tenant.Y9TenantApp;
 import net.risesoft.y9public.manager.resource.Y9AppManager;
@@ -71,12 +73,7 @@ public class Y9TenantAppServiceImpl implements Y9TenantAppService {
     public void deleteByTenantIdAndAppId(String tenantId, String appId) {
         List<Y9TenantApp> y9TenantAppList = y9TenantAppRepository.findByTenantIdAndAppId(tenantId, appId);
         for (Y9TenantApp ta : y9TenantAppList) {
-            ta.setTenancy(false);
-            if (StringUtils.isBlank(ta.getDeletedName())) {
-                ta.setDeletedName(Y9LoginUserHolder.getUserInfo().getName());
-                ta.setDeletedTime(new Date());
-            }
-            y9TenantAppRepository.save(ta);
+            y9TenantAppManager.delete(ta);
         }
     }
 
@@ -259,5 +256,12 @@ public class Y9TenantAppServiceImpl implements Y9TenantAppService {
         y9TenantApp.setVerifyTime(LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")));
         y9TenantApp.setReason(reason);
         return save(y9TenantApp);
+    }
+
+    @EventListener
+    @Transactional(readOnly = false)
+    public void onAppDeleted(Y9EntityDeletedEvent<Y9App> event) {
+        Y9App y9App = event.getEntity();
+        this.deleteByAppId(y9App.getAppId());
     }
 }

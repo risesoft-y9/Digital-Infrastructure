@@ -18,6 +18,8 @@ public interface Y9AppManager {
 
     void delete(String id);
 
+    void deleteTenantRelatedByAppId(String appId);
+
     Y9App getById(String id);
 
     Optional<Y9App> findById(String id);

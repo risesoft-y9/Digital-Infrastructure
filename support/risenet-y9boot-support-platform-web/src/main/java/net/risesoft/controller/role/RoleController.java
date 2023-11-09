@@ -138,10 +138,10 @@ public class RoleController {
         List<Y9Role> y9RoleList = y9RoleService.listByParentIdIsNull();
         List<RoleVO> roleVOList = new ArrayList<>();
         if (y9RoleList != null && !y9RoleList.isEmpty()) {
-            for (Y9Role roleNode : y9RoleList) {
-                RoleVO roleVO = Y9ModelConvertUtil.convert(roleNode, RoleVO.class);
-                if (Y9RoleTypeEnum.FOLDER.getValue().equals(roleNode.getType())) {
-                    roleVO.setHasChild(!y9RoleService.listByParentId(roleNode.getId()).isEmpty());
+            for (Y9Role y9Role : y9RoleList) {
+                RoleVO roleVO = Y9ModelConvertUtil.convert(y9Role, RoleVO.class);
+                if (Y9RoleTypeEnum.FOLDER.getValue().equals(y9Role.getType())) {
+                    roleVO.setHasChild(!y9RoleService.listByParentId(y9Role.getId()).isEmpty());
                 }
                 roleVOList.add(roleVO);
             }
@@ -225,13 +225,13 @@ public class RoleController {
     /**
      * 新建或者更新角色节点信息
      *
-     * @param roleNode 角色实体
+     * @param y9Role 角色实体
      * @return
      */
     @RiseLog(operationName = "新建或者更新角色节点信息", operationType = OperationTypeEnum.MODIFY)
     @PostMapping(value = "/saveOrUpdate")
-    public Y9Result<Y9Role> saveOrUpdate(Y9Role roleNode) {
-        Y9Role role = y9RoleService.saveOrUpdate(roleNode);
+    public Y9Result<Y9Role> saveOrUpdate(Y9Role y9Role) {
+        Y9Role role = y9RoleService.saveOrUpdate(y9Role);
         return Y9Result.success(role, "保存角色节点成功");
     }
 
@@ -271,13 +271,13 @@ public class RoleController {
             appVO.setGuidPath(y9App.getId());
             roleVOList.add(appVO);
         }
-        for (Y9Role roleNode : y9RoleList) {
-            if (!InitDataConsts.TOP_PUBLIC_ROLE_ID.equals(roleNode.getAppId())) {
-                RoleVO roleVO = Y9ModelConvertUtil.convert(roleNode, RoleVO.class);
-                if (Y9RoleTypeEnum.FOLDER.getValue().equals(roleNode.getType())) {
-                    roleVO.setHasChild(!y9RoleService.listByParentId(roleNode.getId()).isEmpty());
+        for (Y9Role y9Role : y9RoleList) {
+            if (!InitDataConsts.TOP_PUBLIC_ROLE_ID.equals(y9Role.getAppId())) {
+                RoleVO roleVO = Y9ModelConvertUtil.convert(y9Role, RoleVO.class);
+                if (Y9RoleTypeEnum.FOLDER.getValue().equals(y9Role.getType())) {
+                    roleVO.setHasChild(!y9RoleService.listByParentId(y9Role.getId()).isEmpty());
                 }
-                roleVO.setGuidPath(roleNode.getAppId() + "," + roleNode.getGuidPath());
+                roleVO.setGuidPath(y9Role.getAppId() + "," + y9Role.getGuidPath());
                 roleVOList.add(roleVO);
             }
         }
