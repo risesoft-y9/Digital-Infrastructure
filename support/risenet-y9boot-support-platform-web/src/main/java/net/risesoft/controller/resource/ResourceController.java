@@ -22,8 +22,10 @@ import org.springframework.web.bind.annotation.RestController;
 import lombok.RequiredArgsConstructor;
 
 import net.risesoft.controller.resource.vo.ResourceBaseVO;
+import net.risesoft.enums.ManagerLevelEnum;
 import net.risesoft.log.OperationTypeEnum;
 import net.risesoft.log.annotation.RiseLog;
+import net.risesoft.model.user.UserInfo;
 import net.risesoft.pojo.Y9Result;
 import net.risesoft.y9.Y9LoginUserHolder;
 import net.risesoft.y9.util.Y9ModelConvertUtil;
@@ -89,10 +91,17 @@ public class ResourceController {
     @GetMapping(value = "/treeRoot")
     public Y9Result<List<ResourceBaseVO>> getTreeRoot() {
         List<Y9ResourceBase> appResourceList = compositeResourceService.listRootResourceList();
-        List<String> appIds =
-            y9TenantAppService.listAppIdByTenantId(Y9LoginUserHolder.getTenantId(), Boolean.TRUE, Boolean.TRUE);
-        List<Y9ResourceBase> accessibleAppResourceList =
-            appResourceList.stream().filter(resource -> appIds.contains(resource.getId())).collect(Collectors.toList());
+        List<Y9ResourceBase> accessibleAppResourceList;
+
+        UserInfo userInfo = Y9LoginUserHolder.getUserInfo();
+        if (ManagerLevelEnum.OPERATION_SYSTEM_MANAGER.getValue().equals(userInfo.getManagerLevel())) {
+            accessibleAppResourceList = appResourceList;
+        } else {
+            List<String> appIds =
+                y9TenantAppService.listAppIdByTenantId(Y9LoginUserHolder.getTenantId(), Boolean.TRUE, Boolean.TRUE);
+            accessibleAppResourceList = appResourceList.stream().filter(resource -> appIds.contains(resource.getId()))
+                .collect(Collectors.toList());
+        }
         return Y9Result.success(Y9ModelConvertUtil.convert(accessibleAppResourceList, ResourceBaseVO.class),
             "查询所有的根资源成功");
     }

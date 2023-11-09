@@ -163,6 +163,7 @@ public class Y9ManagerServiceImpl implements Y9ManagerService {
     }
 
     @EventListener
+    @Transactional(readOnly = false)
     public void onParentDepartmentDeleted(Y9EntityDeletedEvent<Y9Department> event) {
         Y9Department parentDepartment = event.getEntity();
         // 删除部门时其下管理员也要删除
