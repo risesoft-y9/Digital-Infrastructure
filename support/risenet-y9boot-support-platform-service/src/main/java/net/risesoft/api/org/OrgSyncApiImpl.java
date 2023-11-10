@@ -60,7 +60,7 @@ import net.risesoft.y9public.service.event.Y9PublishedEventSyncHistoryService;
 @Primary
 @Validated
 @RestController
-@RequestMapping(value = "/services/rest/orgSync", produces = MediaType.APPLICATION_JSON_VALUE)
+@RequestMapping(value = "/services/rest/v1/orgSync", produces = MediaType.APPLICATION_JSON_VALUE)
 @RequiredArgsConstructor
 public class OrgSyncApiImpl implements OrgSyncApi {
 

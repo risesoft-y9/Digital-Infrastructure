@@ -30,7 +30,7 @@ public interface SystemApi {
      * @since 9.6.2
      */
     @GetMapping("/getById")
-    System getById(@RequestParam("id") @NotBlank String id);
+    Y9Result<System> getById(@RequestParam("id") @NotBlank String id);
 
     /**
      * 根据系统名称获取系统
@@ -39,18 +39,19 @@ public interface SystemApi {
      * @return System 系统信息
      */
     @GetMapping("/getByName")
-    System getByName(@RequestParam("name") @NotBlank String name);
+    Y9Result<System> getByName(@RequestParam("name") @NotBlank String name);
 
     /**
      * 注册系统
      *
-     * @param name        系统英文名称
-     * @param cnName      系统名称
+     * @param name 系统英文名称
+     * @param cnName 系统名称
      * @param contextPath 系统上下文
-     * @param isvGuid     租户id
+     * @param isvGuid 租户id
      * @return
      */
     @PostMapping("/registrySystem")
-    Y9Result<System> registrySystem(@RequestParam("name") String name, @RequestParam("cnName") String cnName, @RequestParam("contextPath") String contextPath, @RequestParam("isvGuid") String isvGuid);
+    Y9Result<System> registrySystem(@RequestParam("name") String name, @RequestParam("cnName") String cnName,
+        @RequestParam("contextPath") String contextPath, @RequestParam("isvGuid") String isvGuid);
 
 }

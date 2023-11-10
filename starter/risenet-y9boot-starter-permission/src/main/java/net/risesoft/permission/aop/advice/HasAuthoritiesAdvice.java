@@ -101,12 +101,12 @@ public class HasAuthoritiesAdvice implements MethodBeforeAdvice {
 
     private boolean hasPersonPermission(String customId, Integer authority) {
         return personResourceApi.hasPermissionByCustomId(Y9LoginUserHolder.getTenantId(),
-            Y9LoginUserHolder.getPersonId(), customId, authority);
+            Y9LoginUserHolder.getPersonId(), customId, authority).getData();
     }
 
     private boolean hasPositionPermission(String customId, Integer authority) {
         return positionResourceApi.hasPermissionByCustomId(Y9LoginUserHolder.getTenantId(),
-            Y9LoginUserHolder.getPositionId(), customId, authority);
+            Y9LoginUserHolder.getPositionId(), customId, authority).getData();
     }
 
 }

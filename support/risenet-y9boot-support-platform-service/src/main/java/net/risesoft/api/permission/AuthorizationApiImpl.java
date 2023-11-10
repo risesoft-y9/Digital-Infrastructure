@@ -16,6 +16,7 @@ import net.risesoft.entity.permission.Y9Authorization;
 import net.risesoft.enums.AuthorityEnum;
 import net.risesoft.id.IdType;
 import net.risesoft.id.Y9IdGenerator;
+import net.risesoft.pojo.Y9Result;
 import net.risesoft.service.authorization.Y9AuthorizationService;
 import net.risesoft.service.org.Y9PersonService;
 import net.risesoft.y9.Y9LoginUserHolder;
@@ -32,7 +33,7 @@ import net.risesoft.y9.Y9LoginUserHolder;
 @Primary
 @Validated
 @RestController
-@RequestMapping(value = "/services/rest/authorization", produces = MediaType.APPLICATION_JSON_VALUE)
+@RequestMapping(value = "/services/rest/v1/authorization", produces = MediaType.APPLICATION_JSON_VALUE)
 @RequiredArgsConstructor
 public class AuthorizationApiImpl implements AuthorizationApi {
 
@@ -47,10 +48,11 @@ public class AuthorizationApiImpl implements AuthorizationApi {
      * @param resourceId 资源id
      * @param roleId 角色id
      * @param authority 操作类型 {@link AuthorityEnum}
+     * @return
      * @since 9.6.0
      */
     @Override
-    public void save(@RequestParam("tenantId") @NotBlank String tenantId,
+    public Y9Result<Object> save(@RequestParam("tenantId") @NotBlank String tenantId,
         @RequestParam("personId") @NotBlank String personId, @RequestParam("resourceId") @NotBlank String resourceId,
         @RequestParam("roleId") @NotBlank String roleId, @RequestParam("authority") Integer authority) {
         Y9LoginUserHolder.setTenantId(tenantId);
@@ -65,6 +67,7 @@ public class AuthorizationApiImpl implements AuthorizationApi {
         y9Authorization.setTenantId(tenantId);
 
         y9AuthorizationService.saveOrUpdate(y9Authorization);
+        return Y9Result.success();
     }
 
 }

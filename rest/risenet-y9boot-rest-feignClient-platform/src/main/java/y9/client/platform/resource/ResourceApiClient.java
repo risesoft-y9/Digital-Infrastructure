@@ -14,7 +14,7 @@ import net.risesoft.api.resource.ResourceApi;
  * @since 9.6.0
  */
 @FeignClient(contextId = "ResourceApiClient", name = "y9platform", url = "${y9.common.orgBaseUrl}",
-    path = "/services/rest/resource")
+    path = "/services/rest/v1/resource")
 public interface ResourceApiClient extends ResourceApi {
 
 }

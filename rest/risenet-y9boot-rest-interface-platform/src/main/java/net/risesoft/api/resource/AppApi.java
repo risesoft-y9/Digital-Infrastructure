@@ -32,7 +32,7 @@ public interface AppApi {
      * @return App
      */
     @GetMapping("/findById")
-    App findById(@RequestParam("appId") @NotBlank String appId);
+    Y9Result<App> findById(@RequestParam("appId") @NotBlank String appId);
 
     /**
      * 根据系统唯一标示和自定义标识查找应用
@@ -43,7 +43,8 @@ public interface AppApi {
      * @since 9.6.0
      */
     @GetMapping("/findBySystemIdAndCustomId")
-    App findBySystemIdAndCustomId(@RequestParam("systemId") @NotBlank String systemId, @RequestParam("customId") @NotBlank String customId);
+    Y9Result<App> findBySystemIdAndCustomId(@RequestParam("systemId") @NotBlank String systemId,
+        @RequestParam("customId") @NotBlank String customId);
 
     /**
      * 根据系统名和自定义标识查找应用
@@ -54,7 +55,8 @@ public interface AppApi {
      * @since 9.6.0
      */
     @GetMapping("/findBySystemNameAndCustomId")
-    App findBySystemNameAndCustomId(@RequestParam("systemName") @NotBlank String systemName, @RequestParam("customId") @NotBlank String customId);
+    Y9Result<App> findBySystemNameAndCustomId(@RequestParam("systemName") @NotBlank String systemName,
+        @RequestParam("customId") @NotBlank String customId);
 
     /**
      * 根据人员id和操作类型，获取有权限的应用列表
@@ -66,7 +68,8 @@ public interface AppApi {
      * @since 9.6.0
      */
     @GetMapping("/listAccessAppForPerson")
-    List<App> listAccessAppForPerson(@RequestParam("tenantId") @NotBlank String tenantId, @RequestParam("personId") @NotBlank String personId, @RequestParam("authority") Integer authority);
+    Y9Result<List<App>> listAccessAppForPerson(@RequestParam("tenantId") @NotBlank String tenantId,
+        @RequestParam("personId") @NotBlank String personId, @RequestParam("authority") Integer authority);
 
     /**
      * 根据人员id和操作类型，获取有权限的应用列表
@@ -78,7 +81,8 @@ public interface AppApi {
      * @since 9.6.0
      */
     @GetMapping("/listAccessAppForPosition")
-    List<App> listAccessAppForPosition(@RequestParam("tenantId") @NotBlank String tenantId, @RequestParam("positionId") @NotBlank String positionId, @RequestParam("authority") Integer authority);
+    Y9Result<List<App>> listAccessAppForPosition(@RequestParam("tenantId") @NotBlank String tenantId,
+        @RequestParam("positionId") @NotBlank String positionId, @RequestParam("authority") Integer authority);
 
     /**
      * 根据 customId ，获取应用列表
@@ -88,7 +92,7 @@ public interface AppApi {
      * @since 9.6.0
      */
     @GetMapping("/listByCustomId")
-    List<App> listByCustomId(@RequestParam("customId") @NotBlank String customId);
+    Y9Result<List<App>> listByCustomId(@RequestParam("customId") @NotBlank String customId);
 
     /**
      * 根据 systemId ，获取应用列表
@@ -98,7 +102,7 @@ public interface AppApi {
      * @since 9.6.0
      */
     @GetMapping("/listBySystemId")
-    List<App> listBySystemId(@RequestParam("systemId") @NotBlank String systemId);
+    Y9Result<List<App>> listBySystemId(@RequestParam("systemId") @NotBlank String systemId);
 
     /**
      * 根据 systemName 获取应用列表
@@ -108,7 +112,7 @@ public interface AppApi {
      * @since 9.6.0
      */
     @GetMapping("/listBySystemName")
-    List<App> listBySystemName(@RequestParam("systemName") @NotBlank String systemName);
+    Y9Result<List<App>> listBySystemName(@RequestParam("systemName") @NotBlank String systemName);
 
     /**
      * 注册应用
@@ -121,7 +125,9 @@ public interface AppApi {
      * @return Y9Result&lt;App&gt;
      */
     @PostMapping("/registryApp")
-    Y9Result<App> registryApp(@RequestParam("systemName") @NotBlank String systemName, @RequestParam("name") @NotBlank String name, @RequestParam("url") @NotBlank String url, @RequestParam("customId") String customId, @RequestParam("tenantGuid") String tenantGuid);
+    Y9Result<App> registryApp(@RequestParam("systemName") @NotBlank String systemName,
+        @RequestParam("name") @NotBlank String name, @RequestParam("url") @NotBlank String url,
+        @RequestParam("customId") String customId, @RequestParam("tenantGuid") String tenantGuid);
 
     /**
      * 注册系统和应用信息
@@ -136,7 +142,9 @@ public interface AppApi {
      * @return Y9Result&lt;App&gt;
      */
     @PostMapping("/registrySystemAndApp")
-    Y9Result<App> registrySystemAndApp(@RequestParam("systemName") @NotBlank String systemName, @RequestParam("systemCnName") @NotBlank String systemCnName, @RequestParam("isvGuid") String isvGuid, @RequestParam("contextPath") String contextPath, @RequestParam("appName") @NotBlank String appName,
+    Y9Result<App> registrySystemAndApp(@RequestParam("systemName") @NotBlank String systemName,
+        @RequestParam("systemCnName") @NotBlank String systemCnName, @RequestParam("isvGuid") String isvGuid,
+        @RequestParam("contextPath") String contextPath, @RequestParam("appName") @NotBlank String appName,
         @RequestParam("url") @NotBlank String url, @RequestParam("customId") String customId);
 
     /**
@@ -148,5 +156,5 @@ public interface AppApi {
      * @since 9.6.0
      */
     @PostMapping("/saveIsvApp")
-    App saveIsvApp(App app, @RequestParam("systemId") @NotBlank String systemId);
+    Y9Result<App> saveIsvApp(App app, @RequestParam("systemId") @NotBlank String systemId);
 }

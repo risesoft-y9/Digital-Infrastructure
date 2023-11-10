@@ -43,14 +43,15 @@ import net.risesoft.y9public.service.tenant.Y9TenantSystemService;
  */
 @Validated
 @RestController
-@RequestMapping(value = "/services/rest/app", produces = MediaType.APPLICATION_JSON_VALUE)
+@RequestMapping(value = "/services/rest/v1/app", produces = MediaType.APPLICATION_JSON_VALUE)
 @RequiredArgsConstructor
 @Slf4j
 public class AppApiImpl implements AppApi {
 
-    private final Y9AppService y9AppService;
     private final Y9PersonToResourceAndAuthorityService y9PersonToResourceAndAuthorityService;
     private final Y9PositionToResourceAndAuthorityService y9PositionToResourceAndAuthorityService;
+
+    private final Y9AppService y9AppService;
     private final Y9SystemService y9SystemService;
     private final Y9TenantSystemService y9TenantSystemService;
     private final Y9TenantAppService y9TenantAppService;
@@ -62,9 +63,9 @@ public class AppApiImpl implements AppApi {
      * @return
      */
     @Override
-    public App findById(@RequestParam("appId") @NotBlank String appId) {
+    public Y9Result<App> findById(@RequestParam("appId") @NotBlank String appId) {
         Y9App y9App = y9AppService.findById(appId).orElse(null);
-        return Y9ModelConvertUtil.convert(y9App, App.class);
+        return Y9Result.success(Y9ModelConvertUtil.convert(y9App, App.class));
     }
 
     /**
@@ -76,10 +77,10 @@ public class AppApiImpl implements AppApi {
      * @since 9.6.0
      */
     @Override
-    public App findBySystemIdAndCustomId(@RequestParam("systemId") @NotBlank String systemId,
+    public Y9Result<App> findBySystemIdAndCustomId(@RequestParam("systemId") @NotBlank String systemId,
         @RequestParam("customId") @NotBlank String customId) {
         Y9App y9App = y9AppService.findBySystemIdAndCustomId(systemId, customId).orElse(null);
-        return Y9ModelConvertUtil.convert(y9App, App.class);
+        return Y9Result.success(Y9ModelConvertUtil.convert(y9App, App.class));
     }
 
     /**
@@ -91,10 +92,10 @@ public class AppApiImpl implements AppApi {
      * @since 9.6.0
      */
     @Override
-    public App findBySystemNameAndCustomId(@RequestParam("systemName") @NotBlank String systemName,
+    public Y9Result<App> findBySystemNameAndCustomId(@RequestParam("systemName") @NotBlank String systemName,
         @RequestParam("customId") @NotBlank String customId) {
         Y9App y9App = y9AppService.findBySystemNameAndCustomId(systemName, customId).orElse(null);
-        return Y9ModelConvertUtil.convert(y9App, App.class);
+        return Y9Result.success(Y9ModelConvertUtil.convert(y9App, App.class));
     }
 
     /**
@@ -107,12 +108,12 @@ public class AppApiImpl implements AppApi {
      * @since 9.6.0
      */
     @Override
-    public List<App> listAccessAppForPerson(@RequestParam("tenantId") @NotBlank String tenantId,
+    public Y9Result<List<App>> listAccessAppForPerson(@RequestParam("tenantId") @NotBlank String tenantId,
         @RequestParam("personId") @NotBlank String personId, @RequestParam("authority") Integer authority) {
         Y9LoginUserHolder.setTenantId(tenantId);
 
         List<Y9App> appList = y9PersonToResourceAndAuthorityService.listAppsByAuthority(personId, authority);
-        return Y9ModelConvertUtil.convert(appList, App.class);
+        return Y9Result.success(Y9ModelConvertUtil.convert(appList, App.class));
     }
 
     /**
@@ -125,12 +126,12 @@ public class AppApiImpl implements AppApi {
      * @since 9.6.0
      */
     @Override
-    public List<App> listAccessAppForPosition(@RequestParam("tenantId") @NotBlank String tenantId,
+    public Y9Result<List<App>> listAccessAppForPosition(@RequestParam("tenantId") @NotBlank String tenantId,
         @RequestParam("positionId") @NotBlank String positionId, @RequestParam("authority") Integer authority) {
         Y9LoginUserHolder.setTenantId(tenantId);
 
         List<Y9App> appList = y9PositionToResourceAndAuthorityService.listAppsByAuthority(positionId, authority);
-        return Y9ModelConvertUtil.convert(appList, App.class);
+        return Y9Result.success(Y9ModelConvertUtil.convert(appList, App.class));
     }
 
     /**
@@ -141,9 +142,9 @@ public class AppApiImpl implements AppApi {
      * @since 9.6.0
      */
     @Override
-    public List<App> listByCustomId(@RequestParam("customId") @NotBlank String customId) {
+    public Y9Result<List<App>> listByCustomId(@RequestParam("customId") @NotBlank String customId) {
         List<Y9App> y9AppList = y9AppService.listByCustomId(customId);
-        return Y9ModelConvertUtil.convert(y9AppList, App.class);
+        return Y9Result.success(Y9ModelConvertUtil.convert(y9AppList, App.class));
     }
 
     /**
@@ -154,9 +155,9 @@ public class AppApiImpl implements AppApi {
      * @since 9.6.0
      */
     @Override
-    public List<App> listBySystemId(@RequestParam("systemId") @NotBlank String systemId) {
+    public Y9Result<List<App>> listBySystemId(@RequestParam("systemId") @NotBlank String systemId) {
         List<Y9App> y9AppList = y9AppService.listBySystemId(systemId);
-        return Y9ModelConvertUtil.convert(y9AppList, App.class);
+        return Y9Result.success(Y9ModelConvertUtil.convert(y9AppList, App.class));
     }
 
     /**
@@ -167,9 +168,9 @@ public class AppApiImpl implements AppApi {
      * @since 9.6.0
      */
     @Override
-    public List<App> listBySystemName(@RequestParam("systemName") @NotBlank String systemName) {
+    public Y9Result<List<App>> listBySystemName(@RequestParam("systemName") @NotBlank String systemName) {
         List<Y9App> y9AppList = y9AppService.listBySystemName(systemName);
-        return Y9ModelConvertUtil.convert(y9AppList, App.class);
+        return Y9Result.success(Y9ModelConvertUtil.convert(y9AppList, App.class));
     }
 
     /**
@@ -318,11 +319,11 @@ public class AppApiImpl implements AppApi {
      * @since 9.6.0
      */
     @Override
-    public App saveIsvApp(App app, @RequestParam("systemId") @NotBlank String systemId) {
+    public Y9Result<App> saveIsvApp(App app, @RequestParam("systemId") @NotBlank String systemId) {
         Y9App y9App = new Y9App();
         Y9BeanUtil.copyProperties(app, y9App);
         y9App = y9AppService.saveIsvApp(y9App);
-        return Y9ModelConvertUtil.convert(y9App, App.class);
+        return Y9Result.success(Y9ModelConvertUtil.convert(y9App, App.class));
     }
 
 }

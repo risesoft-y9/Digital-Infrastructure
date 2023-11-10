@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 import net.risesoft.model.Person;
 import net.risesoft.model.Role;
+import net.risesoft.pojo.Y9Result;
 
 /**
  * 人员角色接口
@@ -32,7 +33,7 @@ public interface PersonRoleApi {
      * @since 9.6.0
      */
     @GetMapping("/countByPersonId")
-    long countByPersonId(@RequestParam("tenantId") @NotBlank String tenantId,
+    Y9Result<Long> countByPersonId(@RequestParam("tenantId") @NotBlank String tenantId,
         @RequestParam("personId") @NotBlank String personId);
 
     /**
@@ -45,7 +46,7 @@ public interface PersonRoleApi {
      * @since 9.6.0
      */
     @GetMapping("/hasPublicRole")
-    Boolean hasPublicRole(@RequestParam("tenantId") @NotBlank String tenantId,
+    Y9Result<Boolean> hasPublicRole(@RequestParam("tenantId") @NotBlank String tenantId,
         @RequestParam("roleName") @NotBlank String roleName, @RequestParam("personId") @NotBlank String personId);
 
     /**
@@ -58,7 +59,7 @@ public interface PersonRoleApi {
      * @since 9.6.0
      */
     @GetMapping("/hasRole")
-    Boolean hasRole(@RequestParam("tenantId") @NotBlank String tenantId,
+    Y9Result<Boolean> hasRole(@RequestParam("tenantId") @NotBlank String tenantId,
         @RequestParam("roleId") @NotBlank String roleId, @RequestParam("personId") @NotBlank String personId);
 
     /**
@@ -71,7 +72,7 @@ public interface PersonRoleApi {
      * @since 9.6.0
      */
     @GetMapping("/hasRole2")
-    Boolean hasRoleByCustomId(@RequestParam("tenantId") @NotBlank String tenantId,
+    Y9Result<Boolean> hasRoleByCustomId(@RequestParam("tenantId") @NotBlank String tenantId,
         @RequestParam("personId") @NotBlank String personId, @RequestParam("customId") @NotBlank String customId);
 
     /**
@@ -86,7 +87,7 @@ public interface PersonRoleApi {
      * @since 9.6.0
      */
     @GetMapping("/hasRole3")
-    Boolean hasRole(@RequestParam("tenantId") @NotBlank String tenantId,
+    Y9Result<Boolean> hasRole(@RequestParam("tenantId") @NotBlank String tenantId,
         @RequestParam("systemName") @NotBlank String systemName,
         @RequestParam(value = "properties", required = false) String properties,
         @RequestParam("roleName") @NotBlank String roleName, @RequestParam("personId") @NotBlank String personId);
@@ -100,7 +101,7 @@ public interface PersonRoleApi {
      * @since 9.6.0
      */
     @GetMapping("/listPersonsByRoleId")
-    List<Person> listPersonsByRoleId(@RequestParam("tenantId") @NotBlank String tenantId,
+    Y9Result<List<Person>> listPersonsByRoleId(@RequestParam("tenantId") @NotBlank String tenantId,
         @RequestParam("roleId") @NotBlank String roleId);
 
     /**
@@ -112,6 +113,6 @@ public interface PersonRoleApi {
      * @since 9.6.0
      */
     @GetMapping("/listRolesByPersonId")
-    List<Role> listRolesByPersonId(@RequestParam("tenantId") @NotBlank String tenantId,
+    Y9Result<List<Role>> listRolesByPersonId(@RequestParam("tenantId") @NotBlank String tenantId,
         @RequestParam("personId") @NotBlank String personId);
 }

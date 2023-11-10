@@ -7,6 +7,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import net.risesoft.enums.AuthorityEnum;
+import net.risesoft.pojo.Y9Result;
 
 /**
  * 权限管理组件
@@ -28,11 +29,12 @@ public interface AuthorizationApi {
      * @param resourceId 资源id
      * @param roleId 角色id
      * @param authority 操作类型 {@link AuthorityEnum}
+     * @return
      * @since 9.6.0
      */
     @PostMapping("/save")
-    void save(@RequestParam("tenantId") @NotBlank String tenantId, @RequestParam("personId") @NotBlank String personId,
-        @RequestParam("resourceId") @NotBlank String resourceId, @RequestParam("roleId") @NotBlank String roleId,
-        @RequestParam("authority") Integer authority);
+    Y9Result<Object> save(@RequestParam("tenantId") @NotBlank String tenantId,
+        @RequestParam("personId") @NotBlank String personId, @RequestParam("resourceId") @NotBlank String resourceId,
+        @RequestParam("roleId") @NotBlank String roleId, @RequestParam("authority") Integer authority);
 
 }

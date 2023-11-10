@@ -59,7 +59,7 @@ public interface PersonIconApi {
      * @since 9.6.2
      */
     @GetMapping("/listByOrgUnitId")
-    List<PersonIconItem> listByOrgUnitId(@RequestParam("tenantId") @NotBlank String tenantId,
+    Y9Result<List<PersonIconItem>> listByOrgUnitId(@RequestParam("tenantId") @NotBlank String tenantId,
         @RequestParam("orgUnitId") @NotBlank String orgUnitId);
 
     /**
@@ -72,7 +72,7 @@ public interface PersonIconApi {
      * @since 9.6.2
      */
     @GetMapping("/listByOrgUnitIdAndIconType")
-    List<PersonIconItem> listByOrgUnitIdAndIconType(@RequestParam("tenantId") @NotBlank String tenantId,
+    Y9Result<List<PersonIconItem>> listByOrgUnitIdAndIconType(@RequestParam("tenantId") @NotBlank String tenantId,
         @RequestParam("orgUnitId") @NotBlank String orgUnitId, @RequestParam("iconType") Integer iconType);
 
     /**

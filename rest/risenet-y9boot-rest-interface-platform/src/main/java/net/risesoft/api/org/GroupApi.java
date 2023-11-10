@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import net.risesoft.model.Group;
 import net.risesoft.model.OrgUnit;
 import net.risesoft.model.Person;
+import net.risesoft.pojo.Y9Result;
 
 /**
  * 用户组服务组件
@@ -35,7 +36,7 @@ public interface GroupApi {
      * @since 9.6.0
      */
     @GetMapping("/addPerson2Group")
-    boolean addPerson2Group(@RequestParam("tenantId") @NotBlank String tenantId,
+    Y9Result<Object> addPerson2Group(@RequestParam("tenantId") @NotBlank String tenantId,
         @RequestParam("groupId") @NotBlank String groupId, @RequestParam("personId") @NotBlank String personId);
 
     /**
@@ -47,7 +48,7 @@ public interface GroupApi {
      * @since 9.6.0
      */
     @PostMapping("/createGroup")
-    Group createGroup(@RequestParam("tenantId") @NotBlank String tenantId,
+    Y9Result<Group> createGroup(@RequestParam("tenantId") @NotBlank String tenantId,
         @RequestParam("groupJson") @NotBlank String groupJson);
 
     /**
@@ -59,7 +60,7 @@ public interface GroupApi {
      * @since 9.6.0
      */
     @GetMapping("/deleteGroup")
-    boolean deleteGroup(@RequestParam("tenantId") @NotBlank String tenantId,
+    Y9Result<Object> deleteGroup(@RequestParam("tenantId") @NotBlank String tenantId,
         @RequestParam("groupId") @NotBlank String groupId);
 
     /**
@@ -71,7 +72,7 @@ public interface GroupApi {
      * @since 9.6.0
      */
     @GetMapping("/get")
-    Group getGroup(@RequestParam @NotBlank String tenantId, @RequestParam @NotBlank String groupId);
+    Y9Result<Group> getGroup(@RequestParam @NotBlank String tenantId, @RequestParam @NotBlank String groupId);
 
     /**
      * 获取用户组父节点
@@ -82,7 +83,7 @@ public interface GroupApi {
      * @since 9.6.0
      */
     @GetMapping("/getParent")
-    OrgUnit getParent(@RequestParam("tenantId") @NotBlank String tenantId,
+    Y9Result<OrgUnit> getParent(@RequestParam("tenantId") @NotBlank String tenantId,
         @RequestParam("groupId") @NotBlank String groupId);
 
     /**
@@ -94,7 +95,8 @@ public interface GroupApi {
      * @since 9.6.0
      */
     @GetMapping("/listByDn")
-    List<Group> listByDn(@RequestParam("tenantId") @NotBlank String tenantId, @RequestParam("dn") @NotBlank String dn);
+    Y9Result<List<Group>> listByDn(@RequestParam("tenantId") @NotBlank String tenantId,
+        @RequestParam("dn") @NotBlank String dn);
 
     /**
      * 获取组内的人员列表
@@ -105,7 +107,7 @@ public interface GroupApi {
      * @since 9.6.0
      */
     @GetMapping("/listPersons")
-    List<Person> listPersons(@RequestParam("tenantId") @NotBlank String tenantId,
+    Y9Result<List<Person>> listPersons(@RequestParam("tenantId") @NotBlank String tenantId,
         @RequestParam("groupId") @NotBlank String groupId);
 
     /**
@@ -118,7 +120,7 @@ public interface GroupApi {
      * @since 9.6.0
      */
     @GetMapping("/removePerson")
-    boolean removePerson(@RequestParam("tenantId") @NotBlank String tenantId,
+    Y9Result<Object> removePerson(@RequestParam("tenantId") @NotBlank String tenantId,
         @RequestParam("groupId") @NotBlank String groupId, @RequestParam("personId") @NotBlank String personId);
 
     /**
@@ -130,6 +132,6 @@ public interface GroupApi {
      * @since 9.6.0
      */
     @PostMapping("/updateGroup")
-    Group updateGroup(@RequestParam("tenantId") @NotBlank String tenantId,
+    Y9Result<Group> updateGroup(@RequestParam("tenantId") @NotBlank String tenantId,
         @RequestParam("groupJson") @NotBlank String groupJson);
 }

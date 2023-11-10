@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import net.risesoft.model.Department;
 import net.risesoft.model.OrgUnit;
 import net.risesoft.model.Organization;
+import net.risesoft.pojo.Y9Result;
 
 /**
  * 组织节点组件
@@ -33,7 +34,7 @@ public interface OrgUnitApi {
      * @since 9.6.0
      */
     @GetMapping("/getBureau")
-    OrgUnit getBureau(@RequestParam("tenantId") @NotBlank String tenantId,
+    Y9Result<OrgUnit> getBureau(@RequestParam("tenantId") @NotBlank String tenantId,
         @RequestParam("orgUnitId") @NotBlank String orgUnitId);
 
     /**
@@ -45,7 +46,7 @@ public interface OrgUnitApi {
      * @since 9.6.0
      */
     @GetMapping("/getDeptTrees")
-    List<Department> getDeptTrees(@RequestParam("tenantId") @NotBlank String tenantId,
+    Y9Result<List<Department>> getDeptTrees(@RequestParam("tenantId") @NotBlank String tenantId,
         @RequestParam("orgUnitId") @NotBlank String orgUnitId);
 
     /**
@@ -57,7 +58,7 @@ public interface OrgUnitApi {
      * @since 9.6.0
      */
     @GetMapping("/getOrganization")
-    Organization getOrganization(@RequestParam("tenantId") @NotBlank String tenantId,
+    Y9Result<Organization> getOrganization(@RequestParam("tenantId") @NotBlank String tenantId,
         @RequestParam("orgUnitId") @NotBlank String orgUnitId);
 
     /**
@@ -69,7 +70,7 @@ public interface OrgUnitApi {
      * @since 9.6.0
      */
     @GetMapping("/get")
-    OrgUnit getOrgUnit(@RequestParam("tenantId") @NotBlank String tenantId,
+    Y9Result<OrgUnit> getOrgUnit(@RequestParam("tenantId") @NotBlank String tenantId,
         @RequestParam("orgUnitId") @NotBlank String orgUnitId);
 
     /**
@@ -81,7 +82,7 @@ public interface OrgUnitApi {
      * @since 9.6.2
      */
     @GetMapping("/getOrgUnitDeletedById")
-    OrgUnit getOrgUnitDeletedById(@RequestParam("tenantId") @NotBlank String tenantId,
+    Y9Result<OrgUnit> getOrgUnitDeletedById(@RequestParam("tenantId") @NotBlank String tenantId,
         @RequestParam("orgUnitId") @NotBlank String orgUnitId);
 
     /**
@@ -93,7 +94,7 @@ public interface OrgUnitApi {
      * @since 9.6.0
      */
     @GetMapping("/getParent")
-    OrgUnit getParent(@RequestParam("tenantId") @NotBlank String tenantId,
+    Y9Result<OrgUnit> getParent(@RequestParam("tenantId") @NotBlank String tenantId,
         @RequestParam("orgUnitId") @NotBlank String orgUnitId);
 
     /**
@@ -107,7 +108,7 @@ public interface OrgUnitApi {
      * @since 9.6.0
      */
     @GetMapping("/getSubTree")
-    List<OrgUnit> getSubTree(@RequestParam("tenantId") @NotBlank String tenantId,
+    Y9Result<List<OrgUnit>> getSubTree(@RequestParam("tenantId") @NotBlank String tenantId,
         @RequestParam("orgUnitId") @NotBlank String orgUnitId, @RequestParam("treeType") @NotBlank String treeType);
 
     /**
@@ -121,7 +122,7 @@ public interface OrgUnitApi {
      * @since 9.6.0
      */
     @GetMapping("/treeSearch")
-    List<OrgUnit> treeSearch(@RequestParam("tenantId") @NotBlank String tenantId,
+    Y9Result<List<OrgUnit>> treeSearch(@RequestParam("tenantId") @NotBlank String tenantId,
         @RequestParam("name") @NotBlank String name, @RequestParam("treeType") @NotBlank String treeType);
 
     /**
@@ -136,7 +137,7 @@ public interface OrgUnitApi {
      * @since 9.6.0
      */
     @GetMapping("/treeSearchByDn")
-    List<OrgUnit> treeSearchByDn(@RequestParam("tenantId") @NotBlank String tenantId,
+    Y9Result<List<OrgUnit>> treeSearchByDn(@RequestParam("tenantId") @NotBlank String tenantId,
         @RequestParam("name") @NotBlank String name, @RequestParam("treeType") @NotBlank String treeType,
         @RequestParam("dnName") @NotBlank String dnName);
 

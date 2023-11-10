@@ -7,6 +7,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 import net.risesoft.api.resource.AppApi;
 import net.risesoft.model.App;
+import net.risesoft.pojo.Y9Result;
 
 /**
  * @author dingzhaojun
@@ -16,7 +17,7 @@ import net.risesoft.model.App;
  * @since 9.6.0
  */
 @FeignClient(contextId = "AppApiClient", name = "y9platform", url = "${y9.common.orgBaseUrl}",
-    path = "/services/rest/app")
+    path = "/services/rest/v1/app")
 public interface AppApiClient extends AppApi {
 
     /**
@@ -29,5 +30,5 @@ public interface AppApiClient extends AppApi {
      */
     @Override
     @PostMapping("/saveIsvApp")
-    App saveIsvApp(@SpringQueryMap App app, @RequestParam("systemId") String systemEntityId);
+    Y9Result<App> saveIsvApp(@SpringQueryMap App app, @RequestParam("systemId") String systemEntityId);
 }

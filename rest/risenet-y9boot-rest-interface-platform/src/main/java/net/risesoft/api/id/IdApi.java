@@ -3,6 +3,8 @@ package net.risesoft.api.id;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
 
+import net.risesoft.pojo.Y9Result;
+
 /**
  * 唯一标识组件
  * 
@@ -22,5 +24,5 @@ public interface IdApi {
      * @since 9.6.0
      */
     @GetMapping("/getNextId")
-    String getNextId();
+    Y9Result<String> getNextId();
 }

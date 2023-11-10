@@ -40,14 +40,17 @@ public class TestController {
 
     public void demo() {
         // 获取所有组织机构 组织机构树第一层
-        List<Organization> organizationList = organizationApi.listByType(Y9LoginUserHolder.getTenantId(), false);
+        List<Organization> organizationList =
+            organizationApi.listByType(Y9LoginUserHolder.getTenantId(), false).getData();
         for (Organization organization : organizationList) {
             // 组织机构树第二层
-            List<OrgUnit> orgUnitList1 = orgUnitApi.getSubTree(Y9LoginUserHolder.getTenantId(), organization.getId(),
-                TreeTypeConsts.TREE_TYPE_ORG);
+            List<OrgUnit> orgUnitList1 = orgUnitApi
+                .getSubTree(Y9LoginUserHolder.getTenantId(), organization.getId(), TreeTypeConsts.TREE_TYPE_ORG)
+                .getData();
             // 组织岗位树第二层
-            List<OrgUnit> orgUnitList2 = orgUnitApi.getSubTree(Y9LoginUserHolder.getTenantId(), organization.getId(),
-                TreeTypeConsts.TREE_TYPE_POSITION);
+            List<OrgUnit> orgUnitList2 = orgUnitApi
+                .getSubTree(Y9LoginUserHolder.getTenantId(), organization.getId(), TreeTypeConsts.TREE_TYPE_POSITION)
+                .getData();
         }
 
     }
@@ -65,12 +68,12 @@ public class TestController {
         // 用户id
         String personId = Y9LoginUserHolder.getPersonId();
         // 当前系统所有应用
-        List<App> appList = appApi.listBySystemName(Y9Context.getSystemName());
+        List<App> appList = appApi.listBySystemName(Y9Context.getSystemName()).getData();
         // 获取当前系统第一个应用，当前用户有权限的菜单
         List<Menu> menuList = new ArrayList<>();
         if (!appList.isEmpty()) {
-            menuList = personResourceApi.listSubMenus(tenantId, personId, AuthorityEnum.BROWSE.getValue(),
-                appList.get(0).getId());
+            menuList = personResourceApi
+                .listSubMenus(tenantId, personId, AuthorityEnum.BROWSE.getValue(), appList.get(0).getId()).getData();
         }
         return Y9Result.success(menuList);
     }
@@ -87,7 +90,7 @@ public class TestController {
         String tenantId = Y9LoginUserHolder.getTenantId();
         // 父节点id
         String deptId = Y9LoginUserHolder.getDeptId();
-        return Y9Result.success(orgUnitApi.getOrgUnit(tenantId, deptId));
+        return Y9Result.success(orgUnitApi.getOrgUnit(tenantId, deptId).getData());
     }
 
     /**

@@ -15,7 +15,7 @@ import net.risesoft.model.userlogininfo.LoginInfo;
  * @since 9.6.0
  */
 @FeignClient(contextId = "UserLoginInfoApiClient", name = "UserLoginInfo", url = "${y9.common.logBaseUrl}",
-    path = "/services/rest/log")
+    path = "/services/rest/v1/log")
 public interface UserLoginInfoApiClient extends UserLoginInfoApi {
 
     /**

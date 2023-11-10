@@ -74,8 +74,8 @@ public class HasRolesAdvice implements MethodBeforeAdvice {
     }
 
     private boolean hasPositionRole(String customId) {
-        return positionRoleApi.hasRoleByCustomId(Y9LoginUserHolder.getTenantId(), Y9LoginUserHolder.getPositionId(),
-            customId);
+        return positionRoleApi
+            .hasRoleByCustomId(Y9LoginUserHolder.getTenantId(), Y9LoginUserHolder.getPositionId(), customId).getData();
     }
 
     private void checkAllPositionRoles(String[] customIds) {
@@ -108,8 +108,8 @@ public class HasRolesAdvice implements MethodBeforeAdvice {
     }
 
     private boolean hasPersonRole(String customId) {
-        return personRoleApi.hasRoleByCustomId(Y9LoginUserHolder.getTenantId(), Y9LoginUserHolder.getPersonId(),
-            customId);
+        return personRoleApi
+            .hasRoleByCustomId(Y9LoginUserHolder.getTenantId(), Y9LoginUserHolder.getPersonId(), customId).getData();
     }
 
 }

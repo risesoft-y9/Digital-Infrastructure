@@ -12,7 +12,7 @@ import net.risesoft.api.resource.SystemApi;
  * @since 9.6.0
  */
 @FeignClient(contextId = "SystemApiClient", name = "y9platform", url = "${y9.common.orgBaseUrl}",
-    path = "/services/rest/system")
+    path = "/services/rest/v1/system")
 public interface SystemApiClient extends SystemApi {
 
 }

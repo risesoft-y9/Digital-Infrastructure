@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import net.risesoft.model.OptionValue;
+import net.risesoft.pojo.Y9Result;
 
 /**
  * 字典表管理组件
@@ -31,6 +32,6 @@ public interface OptionValueApi {
      * @since 9.6.0
      */
     @GetMapping("/listByType")
-    List<OptionValue> listByType(@RequestParam("tenantId") @NotBlank String tenantId,
+    Y9Result<List<OptionValue>> listByType(@RequestParam("tenantId") @NotBlank String tenantId,
         @RequestParam("type") @NotBlank String type);
 }

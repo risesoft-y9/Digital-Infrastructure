@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import net.risesoft.model.OrgUnit;
 import net.risesoft.model.Person;
 import net.risesoft.model.Position;
+import net.risesoft.pojo.Y9Result;
 
 /**
  * 岗位服务组件
@@ -35,7 +36,7 @@ public interface PositionApi {
      * @since 9.6.0
      */
     @PostMapping("/addPerson")
-    boolean addPerson(@RequestParam("tenantId") @NotBlank String tenantId,
+    Y9Result<Object> addPerson(@RequestParam("tenantId") @NotBlank String tenantId,
         @RequestParam("positionId") @NotBlank String positionId, @RequestParam("personId") @NotBlank String personId);
 
     /**
@@ -47,7 +48,7 @@ public interface PositionApi {
      * @since 9.6.0
      */
     @PostMapping("/createPosition")
-    Position createPosition(@RequestParam("tenantId") @NotBlank String tenantId,
+    Y9Result<Position> createPosition(@RequestParam("tenantId") @NotBlank String tenantId,
         @RequestParam("positionJson") @NotBlank String positionJson);
 
     /**
@@ -59,7 +60,7 @@ public interface PositionApi {
      * @since 9.6.0
      */
     @PostMapping("/deletePosition")
-    boolean deletePosition(@RequestParam("tenantId") @NotBlank String tenantId,
+    Y9Result<Object> deletePosition(@RequestParam("tenantId") @NotBlank String tenantId,
         @RequestParam("positionId") @NotBlank String positionId);
 
     /**
@@ -71,7 +72,7 @@ public interface PositionApi {
      * @since 9.6.0
      */
     @GetMapping("/getParent")
-    OrgUnit getParent(@RequestParam("tenantId") @NotBlank String tenantId,
+    Y9Result<OrgUnit> getParent(@RequestParam("tenantId") @NotBlank String tenantId,
         @RequestParam("positionId") @NotBlank String positionId);
 
     /**
@@ -83,7 +84,7 @@ public interface PositionApi {
      * @since 9.6.0
      */
     @GetMapping("/getPosition")
-    Position getPosition(@RequestParam("tenantId") @NotBlank String tenantId,
+    Y9Result<Position> getPosition(@RequestParam("tenantId") @NotBlank String tenantId,
         @RequestParam("positionId") @NotBlank String positionId);
 
     /**
@@ -96,7 +97,7 @@ public interface PositionApi {
      * @since 9.6.0
      */
     @GetMapping("/hasPosition")
-    boolean hasPosition(@RequestParam("tenantId") @NotBlank String tenantId,
+    Y9Result<Boolean> hasPosition(@RequestParam("tenantId") @NotBlank String tenantId,
         @RequestParam("positionName") @NotBlank String positionName,
         @RequestParam("personId") @NotBlank String personId);
 
@@ -109,7 +110,7 @@ public interface PositionApi {
      * @since 9.6.0
      */
     @GetMapping("/listByParentId")
-    List<Position> listByParentId(@RequestParam("tenantId") @NotBlank String tenantId,
+    Y9Result<List<Position>> listByParentId(@RequestParam("tenantId") @NotBlank String tenantId,
         @RequestParam("parentId") @NotBlank String parentId);
 
     /**
@@ -121,7 +122,7 @@ public interface PositionApi {
      * @since 9.6.0
      */
     @GetMapping("/listByPersonId")
-    List<Position> listByPersonId(@RequestParam("tenantId") @NotBlank String tenantId,
+    Y9Result<List<Position>> listByPersonId(@RequestParam("tenantId") @NotBlank String tenantId,
         @RequestParam("personId") @NotBlank String personId);
 
     /**
@@ -133,7 +134,7 @@ public interface PositionApi {
      * @since 9.6.0
      */
     @GetMapping("/listPersons")
-    List<Person> listPersons(@RequestParam("tenantId") @NotBlank String tenantId,
+    Y9Result<List<Person>> listPersons(@RequestParam("tenantId") @NotBlank String tenantId,
         @RequestParam("positionId") @NotBlank String positionId);
 
     /**
@@ -146,7 +147,7 @@ public interface PositionApi {
      * @since 9.6.0
      */
     @PostMapping("/removePerson")
-    boolean removePerson(@RequestParam("tenantId") @NotBlank String tenantId,
+    Y9Result<Object> removePerson(@RequestParam("tenantId") @NotBlank String tenantId,
         @RequestParam("positionId") @NotBlank String positionId, @RequestParam("personId") @NotBlank String personId);
 
     /**
@@ -158,7 +159,7 @@ public interface PositionApi {
      * @since 9.6.0
      */
     @PostMapping("/updatePosition")
-    Position updatePosition(@RequestParam("tenantId") @NotBlank String tenantId,
+    Y9Result<Position> updatePosition(@RequestParam("tenantId") @NotBlank String tenantId,
         @RequestParam("positionJson") @NotBlank String positionJson);
 
 }

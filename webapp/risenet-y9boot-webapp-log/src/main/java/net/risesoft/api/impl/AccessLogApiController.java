@@ -1,4 +1,4 @@
-package net.risesoft.api.log.impl;
+package net.risesoft.api.impl;
 
 import jakarta.validation.constraints.NotBlank;
 
@@ -6,13 +6,11 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
-import java.util.Map;
 import java.util.concurrent.LinkedBlockingDeque;
 import java.util.concurrent.ThreadFactory;
 import java.util.concurrent.ThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
 
-import org.apache.commons.lang3.StringUtils;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -23,7 +21,6 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
 import net.risesoft.api.log.AccessLogApi;
-import net.risesoft.enums.OrgTypeEnum;
 import net.risesoft.log.entity.Y9logAccessLog;
 import net.risesoft.log.service.Y9logAccessLogService;
 import net.risesoft.model.AccessLog;
@@ -31,12 +28,6 @@ import net.risesoft.model.log.LogInfoModel;
 import net.risesoft.pojo.Y9Page;
 import net.risesoft.y9.Y9LoginUserHolder;
 import net.risesoft.y9.json.Y9JsonUtil;
-
-import y9.client.platform.org.DepartmentApiClient;
-import y9.client.platform.org.GroupApiClient;
-import y9.client.platform.org.OrganizationApiClient;
-import y9.client.platform.org.PersonApiClient;
-import y9.client.platform.org.PositionApiClient;
 
 import cn.hutool.core.thread.ThreadFactoryBuilder;
 
@@ -48,17 +39,12 @@ import cn.hutool.core.thread.ThreadFactoryBuilder;
  * @since 9.6.0
  */
 @RestController
-@RequestMapping("/services/rest/accessLog")
+@RequestMapping("/services/rest/v1/accessLog")
 @Slf4j
 @RequiredArgsConstructor
 public class AccessLogApiController implements AccessLogApi {
 
     private final Y9logAccessLogService accessLogService;
-    private final OrganizationApiClient organizationManager;
-    private final DepartmentApiClient departmentManager;
-    private final GroupApiClient groupManager;
-    private final PositionApiClient positionManager;
-    private final PersonApiClient personManager;
 
     /**
      * 异步保存访问日志
@@ -88,43 +74,6 @@ public class AccessLogApiController implements AccessLogApi {
             new ThreadPoolExecutor(2, 2, 100, TimeUnit.SECONDS, new LinkedBlockingDeque<>(5), myThread);
         threadPool.execute(() -> saveLogByJson(accessLogJson));
         threadPool.shutdown();
-    }
-
-    public String getGuidPath(String orgId, String orgType, String tenantId) {
-        String guidPath = null;
-        if (StringUtils.isNotBlank(orgId) && StringUtils.isNotBlank(orgType)) {
-            if (orgType.equals(OrgTypeEnum.ORGANIZATION.getEnName())) {
-                guidPath = organizationManager.getOrganization(tenantId, orgId).getGuidPath();
-            } else if (orgType.equals(OrgTypeEnum.DEPARTMENT.getEnName())) {
-                guidPath = departmentManager.getDepartment(tenantId, orgId).getGuidPath();
-            } else if (orgType.equals(OrgTypeEnum.GROUP.getEnName())) {
-                guidPath = groupManager.getGroup(tenantId, orgId).getGuidPath();
-            } else if (orgType.equals(OrgTypeEnum.POSITION.getEnName())) {
-                guidPath = positionManager.getPosition(tenantId, orgId).getGuidPath();
-            } else if (orgType.equals(OrgTypeEnum.PERSON.getEnName())) {
-                guidPath = personManager.getPerson(tenantId, orgId).getGuidPath();
-            }
-        }
-        return guidPath;
-    }
-
-    /**
-     * 获取模块访问次数
-     *
-     * @param orgId 机构id
-     * @param orgType 机构类型
-     * @param tenantId 租户id
-     * @param startDay 开始时间
-     * @param endDay 结束时间
-     * @return
-     */
-    @Override
-    @GetMapping("/getModuleCount")
-    public Map<String, Object> getModuleCount(String orgId, String orgType, String tenantId, String startDay,
-        String endDay) {
-        Y9LoginUserHolder.setTenantId(tenantId);
-        Map<String, Object> map = accessLogService.getModuleNameCount(orgId, orgType, tenantId, startDay, endDay);
-        return map;
     }
 
     /**
@@ -272,8 +221,7 @@ public class AccessLogApiController implements AccessLogApi {
             Date end = new Date(endTime);
             eTime = sdf.format(end);
         }
-        List<String> strList = accessLogService.listAccessLog(sTime, eTime, loginName, tenantId);
-        return strList;
+        return accessLogService.listAccessLog(sTime, eTime, loginName, tenantId);
     }
 
 }

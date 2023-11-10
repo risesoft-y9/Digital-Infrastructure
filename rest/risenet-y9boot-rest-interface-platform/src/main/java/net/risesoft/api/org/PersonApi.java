@@ -17,6 +17,7 @@ import net.risesoft.model.PersonExt;
 import net.risesoft.model.Position;
 import net.risesoft.model.Role;
 import net.risesoft.pojo.Y9Page;
+import net.risesoft.pojo.Y9Result;
 
 /**
  * 人员服务组件
@@ -39,7 +40,7 @@ public interface PersonApi {
      * @since 9.6.0
      */
     @GetMapping("/changeDisabled")
-    boolean changeDisabled(@RequestParam("tenantId") @NotBlank String tenantId,
+    Y9Result<Object> changeDisabled(@RequestParam("tenantId") @NotBlank String tenantId,
         @RequestParam("personId") @NotBlank String personId);
 
     /**
@@ -52,7 +53,7 @@ public interface PersonApi {
      * @since 9.6.0
      */
     @GetMapping("/checkLoginName")
-    boolean checkLoginName(@RequestParam("tenantId") @NotBlank String tenantId,
+    Y9Result<Boolean> checkLoginName(@RequestParam("tenantId") @NotBlank String tenantId,
         @RequestParam("personId") @NotBlank String personId, @RequestParam("loginName") @NotBlank String loginName);
 
     /**
@@ -64,7 +65,7 @@ public interface PersonApi {
      * @since 9.6.0
      */
     @PostMapping("/createPerson")
-    Person createPerson(@RequestParam("tenantId") @NotBlank String tenantId,
+    Y9Result<Person> createPerson(@RequestParam("tenantId") @NotBlank String tenantId,
         @RequestParam("personJson") @NotBlank String personJson);
 
     /**
@@ -76,7 +77,7 @@ public interface PersonApi {
      * @since 9.6.0
      */
     @PostMapping("/deleteById")
-    boolean deleteById(@RequestParam("tenantId") @NotBlank String tenantId,
+    Y9Result<Object> deleteById(@RequestParam("tenantId") @NotBlank String tenantId,
         @RequestParam("personId") @NotBlank String personId);
 
     /**
@@ -88,7 +89,7 @@ public interface PersonApi {
      * @since 9.6.0
      */
     @GetMapping("/getBureau")
-    OrgUnit getBureau(@RequestParam("tenantId") @NotBlank String tenantId,
+    Y9Result<OrgUnit> getBureau(@RequestParam("tenantId") @NotBlank String tenantId,
         @RequestParam("personId") @NotBlank String personId);
 
     /**
@@ -101,7 +102,7 @@ public interface PersonApi {
      * @since 9.6.0
      */
     @GetMapping("/getByLoginNameAndParentId")
-    Person getByLoginNameAndParentId(@RequestParam("tenantId") @NotBlank String tenantId,
+    Y9Result<Person> getByLoginNameAndParentId(@RequestParam("tenantId") @NotBlank String tenantId,
         @RequestParam("loginName") @NotBlank String loginName, @RequestParam("parentId") @NotBlank String parentId);
 
     /**
@@ -113,7 +114,7 @@ public interface PersonApi {
      * @since 9.6.0
      */
     @GetMapping("/getParent")
-    OrgUnit getParent(@RequestParam("tenantId") @NotBlank String tenantId,
+    Y9Result<OrgUnit> getParent(@RequestParam("tenantId") @NotBlank String tenantId,
         @RequestParam("personId") @NotBlank String personId);
 
     /**
@@ -125,7 +126,7 @@ public interface PersonApi {
      * @since 9.6.0
      */
     @GetMapping("/getPerson")
-    Person getPerson(@RequestParam("tenantId") @NotBlank String tenantId,
+    Y9Result<Person> getPerson(@RequestParam("tenantId") @NotBlank String tenantId,
         @RequestParam("personId") @NotBlank String personId);
 
     /**
@@ -137,7 +138,7 @@ public interface PersonApi {
      * @since 9.6.0
      */
     @GetMapping("/getPersonByLoginNameAndTenantId")
-    Person getPersonByLoginNameAndTenantId(@RequestParam("loginName") @NotBlank String loginName,
+    Y9Result<Person> getPersonByLoginNameAndTenantId(@RequestParam("loginName") @NotBlank String loginName,
         @RequestParam("tenantId") @NotBlank String tenantId);
 
     /**
@@ -149,7 +150,7 @@ public interface PersonApi {
      * @since 9.6.0
      */
     @GetMapping("/getPersonExtByPersonId")
-    PersonExt getPersonExtByPersonId(@RequestParam("tenantId") @NotBlank String tenantId,
+    Y9Result<PersonExt> getPersonExtByPersonId(@RequestParam("tenantId") @NotBlank String tenantId,
         @RequestParam("personId") @NotBlank String personId);
 
     /**
@@ -161,7 +162,7 @@ public interface PersonApi {
      * @since 9.6.0
      */
     @GetMapping("/getPersonPhoto")
-    String getPersonPhoto(@RequestParam("tenantId") @NotBlank String tenantId,
+    Y9Result<String> getPersonPhoto(@RequestParam("tenantId") @NotBlank String tenantId,
         @RequestParam("personId") @NotBlank String personId);
 
     /**
@@ -172,7 +173,7 @@ public interface PersonApi {
      * @since 9.6.0
      */
     @GetMapping("/listAllPersons")
-    List<Person> listAllPersons(@RequestParam("tenantId") @NotBlank String tenantId);
+    Y9Result<List<Person>> listAllPersons(@RequestParam("tenantId") @NotBlank String tenantId);
 
     /**
      * 根据证件类型和证件号码，获取人员列表
@@ -184,7 +185,7 @@ public interface PersonApi {
      * @since 9.6.0
      */
     @GetMapping("/listByIdTypeAndIdNum")
-    List<Person> listByIdTypeAndIdNum(@RequestParam("tenantId") @NotBlank String tenantId,
+    Y9Result<List<Person>> listByIdTypeAndIdNum(@RequestParam("tenantId") @NotBlank String tenantId,
         @RequestParam("idType") @NotBlank String idType, @RequestParam("idNum") @NotBlank String idNum);
 
     /**
@@ -196,7 +197,7 @@ public interface PersonApi {
      * @since 9.6.2
      */
     @GetMapping("/listByNameLike")
-    List<Person> listByNameLike(@RequestParam("tenantId") @NotBlank String tenantId,
+    Y9Result<List<Person>> listByNameLike(@RequestParam("tenantId") @NotBlank String tenantId,
         @RequestParam(name = "name", required = false) String name);
 
     /**
@@ -208,7 +209,7 @@ public interface PersonApi {
      * @since 9.6.0
      */
     @GetMapping("/listGroups")
-    List<Group> listGroups(@RequestParam("tenantId") @NotBlank String tenantId,
+    Y9Result<List<Group>> listGroups(@RequestParam("tenantId") @NotBlank String tenantId,
         @RequestParam("personId") @NotBlank String personId);
 
     /**
@@ -220,7 +221,7 @@ public interface PersonApi {
      * @since 9.6.0
      */
     @GetMapping("/listParents")
-    List<OrgUnit> listParents(@RequestParam("tenantId") @NotBlank String tenantId,
+    Y9Result<List<OrgUnit>> listParents(@RequestParam("tenantId") @NotBlank String tenantId,
         @RequestParam("personId") @NotBlank String personId);
 
     /**
@@ -244,7 +245,7 @@ public interface PersonApi {
      * @since 9.6.0
      */
     @GetMapping("/listPositions")
-    List<Position> listPositions(@RequestParam("tenantId") @NotBlank String tenantId,
+    Y9Result<List<Position>> listPositions(@RequestParam("tenantId") @NotBlank String tenantId,
         @RequestParam("personId") @NotBlank String personId);
 
     /**
@@ -256,7 +257,7 @@ public interface PersonApi {
      * @since 9.6.0
      */
     @GetMapping("/listRoles")
-    List<Role> listRoles(@RequestParam("tenantId") @NotBlank String tenantId,
+    Y9Result<List<Role>> listRoles(@RequestParam("tenantId") @NotBlank String tenantId,
         @RequestParam("personId") @NotBlank String personId);
 
     /**
@@ -269,7 +270,7 @@ public interface PersonApi {
      * @since 9.6.0
      */
     @PostMapping("/modifyPassword")
-    Person modifyPassword(@RequestParam("tenantId") @NotBlank String tenantId,
+    Y9Result<Person> modifyPassword(@RequestParam("tenantId") @NotBlank String tenantId,
         @RequestParam("personId") @NotBlank String personId, @RequestParam("newPassword") @NotBlank String newPassword);
 
     /**
@@ -328,7 +329,7 @@ public interface PersonApi {
      * @since 9.6.0
      */
     @PostMapping("/savePerson")
-    Person savePerson(@RequestParam("tenantId") @NotBlank String tenantId,
+    Y9Result<Person> savePerson(@RequestParam("tenantId") @NotBlank String tenantId,
         @RequestParam("personJson") @NotBlank String personJson);
 
     /**
@@ -341,7 +342,7 @@ public interface PersonApi {
      * @since 9.6.0
      */
     @PostMapping("/savePersonAvator")
-    Person savePersonAvator(@RequestParam("tenantId") @NotBlank String tenantId,
+    Y9Result<Person> savePersonAvator(@RequestParam("tenantId") @NotBlank String tenantId,
         @RequestParam("personId") @NotBlank String personId, @RequestParam("avator") @NotBlank String avator);
 
     /**
@@ -355,7 +356,7 @@ public interface PersonApi {
      * @since 9.6.0
      */
     @PostMapping("/savePersonAvatorByBase64")
-    Person savePersonAvatorByBase64(@RequestParam("tenantId") @NotBlank String tenantId,
+    Y9Result<Person> savePersonAvatorByBase64(@RequestParam("tenantId") @NotBlank String tenantId,
         @RequestParam("personId") @NotBlank String personId, @RequestParam("picnote") @NotBlank String picnote,
         @RequestParam("fileExt") String fileExt);
 
@@ -369,7 +370,7 @@ public interface PersonApi {
      * @since 9.6.0
      */
     @PostMapping("/savePersonPhoto")
-    Boolean savePersonPhoto(@RequestParam("tenantId") @NotBlank String tenantId,
+    Y9Result<Object> savePersonPhoto(@RequestParam("tenantId") @NotBlank String tenantId,
         @RequestParam("personId") @NotBlank String personId, @RequestParam("photo") @NotBlank String photo);
 
     /**
@@ -382,7 +383,7 @@ public interface PersonApi {
      * @since 9.6.0
      */
     @PostMapping("/savePersonWithExt")
-    Person savePersonWithExt(@RequestParam("tenantId") @NotBlank String tenantId,
+    Y9Result<Person> savePersonWithExt(@RequestParam("tenantId") @NotBlank String tenantId,
         @RequestParam("personJson") @NotBlank String personJson,
         @RequestParam("personextJson") @NotBlank String personextJson);
 
@@ -396,7 +397,7 @@ public interface PersonApi {
      * @since 9.6.0
      */
     @PostMapping("/saveWeixinId")
-    Person saveWeixinId(@RequestParam("tenantId") @NotBlank String tenantId,
+    Y9Result<Person> saveWeixinId(@RequestParam("tenantId") @NotBlank String tenantId,
         @RequestParam("personId") @NotBlank String personId, @RequestParam("weixinId") @NotBlank String weixinId);
 
 }

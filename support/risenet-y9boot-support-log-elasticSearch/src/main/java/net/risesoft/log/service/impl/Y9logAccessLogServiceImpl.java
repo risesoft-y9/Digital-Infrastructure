@@ -446,13 +446,13 @@ public class Y9logAccessLogServiceImpl implements Y9logAccessLogService {
         List<String> ids = new ArrayList<>();
         List<Person> allPersons = new ArrayList<>();
         if (orgType.equals(OrgTypeEnum.DEPARTMENT.getEnName())) {
-            allPersons = departmentManager.listAllPersons(tenantId, orgId);
+            allPersons = departmentManager.listAllPersons(tenantId, orgId).getData();
         } else if (orgType.equals(OrgTypeEnum.GROUP.getEnName())) {
-            allPersons = groupManager.listPersons(tenantId, orgId);
+            allPersons = groupManager.listPersons(tenantId, orgId).getData();
         } else if (orgType.equals(OrgTypeEnum.POSITION.getEnName())) {
-            allPersons = positionManager.listPersons(tenantId, orgId);
+            allPersons = positionManager.listPersons(tenantId, orgId).getData();
         } else if (orgType.equals(OrgTypeEnum.PERSON.getEnName())) {
-            allPersons.add(personManager.getPerson(tenantId, orgId));
+            allPersons.add(personManager.getPerson(tenantId, orgId).getData());
         }
         for (Person p : allPersons) {
             ids.add(p.getId());
@@ -783,15 +783,15 @@ public class Y9logAccessLogServiceImpl implements Y9logAccessLogService {
         String guidPath = null;
         if (StringUtils.isNotBlank(orgId) && StringUtils.isNotBlank(orgType)) {
             if (orgType.equals(OrgTypeEnum.ORGANIZATION.getEnName())) {
-                guidPath = organizationManager.getOrganization(tenantId, orgId).getGuidPath();
+                guidPath = organizationManager.getOrganization(tenantId, orgId).getData().getGuidPath();
             } else if (orgType.equals(OrgTypeEnum.DEPARTMENT.getEnName())) {
-                guidPath = departmentManager.getDepartment(tenantId, orgId).getGuidPath();
+                guidPath = departmentManager.getDepartment(tenantId, orgId).getData().getGuidPath();
             } else if (orgType.equals(OrgTypeEnum.GROUP.getEnName())) {
-                guidPath = groupManager.getGroup(tenantId, orgId).getGuidPath();
+                guidPath = groupManager.getGroup(tenantId, orgId).getData().getGuidPath();
             } else if (orgType.equals(OrgTypeEnum.POSITION.getEnName())) {
-                guidPath = positionManager.getPosition(tenantId, orgId).getGuidPath();
+                guidPath = positionManager.getPosition(tenantId, orgId).getData().getGuidPath();
             } else if (orgType.equals(OrgTypeEnum.PERSON.getEnName())) {
-                guidPath = personManager.getPerson(tenantId, orgId).getGuidPath();
+                guidPath = personManager.getPerson(tenantId, orgId).getData().getGuidPath();
             }
         }
         return guidPath;
@@ -799,7 +799,7 @@ public class Y9logAccessLogServiceImpl implements Y9logAccessLogService {
 
     private Integer getTenantType(String tenantId) {
         Integer num = 0;
-        Tenant tenant = tenantManager.getById(tenantId);
+        Tenant tenant = tenantManager.getById(tenantId).getData();
         if (null != tenant) {
             num = tenant.getTenantType();
         }
@@ -933,19 +933,19 @@ public class Y9logAccessLogServiceImpl implements Y9logAccessLogService {
         String guidPath = null;
         if (StringUtils.isNotBlank(orgId) && StringUtils.isNotBlank(orgType)) {
             if (orgType.equals(OrgTypeEnum.ORGANIZATION.getEnName())) {
-                guidPath = organizationManager.getOrganization(tenantId, orgId).getGuidPath();
+                guidPath = organizationManager.getOrganization(tenantId, orgId).getData().getGuidPath();
             } else if (orgType.equals(OrgTypeEnum.DEPARTMENT.getEnName())) {
                 // orgDepartmentService.getDNById(orgId);
-                guidPath = departmentManager.getDepartment(tenantId, orgId).getGuidPath();
+                guidPath = departmentManager.getDepartment(tenantId, orgId).getData().getGuidPath();
             } else if (orgType.equals(OrgTypeEnum.GROUP.getEnName())) {
                 // orgGroupService.getDNById(orgId);
-                guidPath = groupManager.getGroup(tenantId, orgId).getGuidPath();
+                guidPath = groupManager.getGroup(tenantId, orgId).getData().getGuidPath();
             } else if (orgType.equals(OrgTypeEnum.POSITION.getEnName())) {
                 // orgPositionService.getDNById(orgId);
-                guidPath = positionManager.getPosition(tenantId, orgId).getGuidPath();
+                guidPath = positionManager.getPosition(tenantId, orgId).getData().getGuidPath();
             } else if (orgType.equals(OrgTypeEnum.PERSON.getEnName())) {
                 // orgPersonService.getDNById(orgId);
-                guidPath = personManager.getPerson(tenantId, orgId).getGuidPath();
+                guidPath = personManager.getPerson(tenantId, orgId).getData().getGuidPath();
             }
         }
         return guidPath;
@@ -1077,13 +1077,13 @@ public class Y9logAccessLogServiceImpl implements Y9logAccessLogService {
     }
     
     private List<String> getTenantIds() {
-        List<Tenant> tenantList = tenantManager.listAllTenants();
+        List<Tenant> tenantList = tenantManager.listAllTenants().getData();
         return tenantList.stream().map(Tenant::getId).collect(Collectors.toList());
     }
     
     private Integer getTenantType(String tenantId) {
         Integer num = 0;
-        Tenant tenant = tenantManager.getById(tenantId);
+        Tenant tenant = tenantManager.getById(tenantId).getData();
         if (null != tenant) {
             num = tenant.getTenantType();
         }
@@ -1272,13 +1272,13 @@ public class Y9logAccessLogServiceImpl implements Y9logAccessLogService {
         List<String> ids = new ArrayList<>();
         List<Person> allPersons = new ArrayList<>();
         if (orgType.equals(OrgTypeEnum.DEPARTMENT.getEnName())) {
-            allPersons = departmentManager.listAllPersons(tenantId, orgId);
+            allPersons = departmentManager.listAllPersons(tenantId, orgId).getData();
         } else if (orgType.equals(OrgTypeEnum.GROUP.getEnName())) {
-            allPersons = groupManager.listPersons(tenantId, orgId);
+            allPersons = groupManager.listPersons(tenantId, orgId).getData();
         } else if (orgType.equals(OrgTypeEnum.POSITION.getEnName())) {
-            allPersons = positionManager.listPersons(tenantId, orgId);
+            allPersons = positionManager.listPersons(tenantId, orgId).getData();
         } else if (orgType.equals(OrgTypeEnum.PERSON.getEnName())) {
-            allPersons.add(personManager.getPerson(tenantId, orgId));
+            allPersons.add(personManager.getPerson(tenantId, orgId).getData());
         }
         for (Person p : allPersons) {
             ids.add(p.getId());
@@ -1477,7 +1477,8 @@ public class Y9logAccessLogServiceImpl implements Y9logAccessLogService {
     }
     
     @Override
-    public Page<Y9logAccessLog> searchQuery(String tenantId, String managerLevel, LogInfoModel loginInfoModel, int page,
+    public Page<Y9logAccessLog> searchQuery(String tenantId, String managerLevel, LogInfoModel loginInfoModel,
+        int page,
         int rows) {
         IndexCoordinates index = IndexCoordinates.of(getCurrentYearIndexName());
         NativeSearchQueryBuilder searchQueryBuilder = new NativeSearchQueryBuilder();

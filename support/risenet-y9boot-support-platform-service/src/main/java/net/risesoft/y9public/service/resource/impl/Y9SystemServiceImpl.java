@@ -17,6 +17,7 @@ import lombok.RequiredArgsConstructor;
 import net.risesoft.exception.SystemErrorCodeEnum;
 import net.risesoft.id.IdType;
 import net.risesoft.id.Y9IdGenerator;
+import net.risesoft.y9.exception.util.Y9ExceptionUtil;
 import net.risesoft.y9.util.Y9Assert;
 import net.risesoft.y9.util.Y9BeanUtil;
 import net.risesoft.y9public.entity.resource.Y9System;
@@ -85,6 +86,12 @@ public class Y9SystemServiceImpl implements Y9SystemService {
     @Override
     public Y9System getById(String id) {
         return y9SystemManager.getById(id);
+    }
+
+    @Override
+    public Y9System getByName(String systemName) {
+        return y9SystemRepository.findByName(systemName)
+            .orElseThrow(() -> Y9ExceptionUtil.notFoundException(SystemErrorCodeEnum.SYSTEM_NOT_FOUND, systemName));
     }
 
     @Override

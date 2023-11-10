@@ -2,7 +2,6 @@ package net.risesoft.api.org;
 
 import java.util.List;
 
-import org.apache.commons.lang3.StringUtils;
 import org.springframework.context.annotation.Primary;
 import org.springframework.http.MediaType;
 import org.springframework.validation.annotation.Validated;
@@ -18,6 +17,7 @@ import net.risesoft.entity.Y9Position;
 import net.risesoft.model.OrgUnit;
 import net.risesoft.model.Person;
 import net.risesoft.model.Position;
+import net.risesoft.pojo.Y9Result;
 import net.risesoft.service.org.CompositeOrgBaseService;
 import net.risesoft.service.org.Y9PersonService;
 import net.risesoft.service.org.Y9PositionService;
@@ -39,7 +39,7 @@ import net.risesoft.y9.util.Y9ModelConvertUtil;
 @Primary
 @Validated
 @RestController
-@RequestMapping(value = "/services/rest/position", produces = MediaType.APPLICATION_JSON_VALUE)
+@RequestMapping(value = "/services/rest/v1/position", produces = MediaType.APPLICATION_JSON_VALUE)
 @RequiredArgsConstructor
 public class PositionApiImpl implements PositionApi {
 
@@ -58,18 +58,12 @@ public class PositionApiImpl implements PositionApi {
      * @since 9.6.0
      */
     @Override
-    public boolean addPerson(@RequestParam String tenantId, @RequestParam String positionId,
+    public Y9Result<Object> addPerson(@RequestParam String tenantId, @RequestParam String positionId,
         @RequestParam String personId) {
-        if (StringUtils.isBlank(tenantId) || StringUtils.isBlank(positionId) || StringUtils.isBlank(personId)) {
-            return false;
-        }
         Y9LoginUserHolder.setTenantId(tenantId);
 
-        if (y9PositionService.existsById(positionId) && orgPersonService.existsById(personId)) {
-            orgPositionsPersonsService.addPersons(positionId, new String[] {personId});
-            return true;
-        }
-        return false;
+        orgPositionsPersonsService.addPersons(positionId, new String[] {personId});
+        return Y9Result.success();
     }
 
     /**
@@ -81,15 +75,12 @@ public class PositionApiImpl implements PositionApi {
      * @since 9.6.0
      */
     @Override
-    public Position createPosition(@RequestParam String tenantId, @RequestParam String positionJson) {
-        if (StringUtils.isBlank(tenantId) || StringUtils.isBlank(positionJson)) {
-            return null;
-        }
+    public Y9Result<Position> createPosition(@RequestParam String tenantId, @RequestParam String positionJson) {
         Y9LoginUserHolder.setTenantId(tenantId);
 
         Y9Position y9Position = Y9JsonUtil.readValue(positionJson, Y9Position.class);
         y9Position = y9PositionService.createPosition(y9Position);
-        return Y9ModelConvertUtil.convert(y9Position, Position.class);
+        return Y9Result.success(Y9ModelConvertUtil.convert(y9Position, Position.class));
     }
 
     /**
@@ -101,14 +92,11 @@ public class PositionApiImpl implements PositionApi {
      * @since 9.6.0
      */
     @Override
-    public boolean deletePosition(@RequestParam String tenantId, @RequestParam String positionId) {
-        if (StringUtils.isBlank(positionId)) {
-            return false;
-        }
+    public Y9Result<Object> deletePosition(@RequestParam String tenantId, @RequestParam String positionId) {
         Y9LoginUserHolder.setTenantId(tenantId);
 
         y9PositionService.deleteById(positionId);
-        return true;
+        return Y9Result.success();
     }
 
     /**
@@ -120,11 +108,11 @@ public class PositionApiImpl implements PositionApi {
      * @since 9.6.0
      */
     @Override
-    public OrgUnit getParent(@RequestParam String tenantId, @RequestParam String positionId) {
+    public Y9Result<OrgUnit> getParent(@RequestParam String tenantId, @RequestParam String positionId) {
         Y9LoginUserHolder.setTenantId(tenantId);
 
         Y9OrgBase parent = compositeOrgBaseService.findOrgUnitParent(positionId).orElse(null);
-        return ModelConvertUtil.orgBaseToOrgUnit(parent);
+        return Y9Result.success(ModelConvertUtil.orgBaseToOrgUnit(parent));
     }
 
     /**
@@ -136,11 +124,11 @@ public class PositionApiImpl implements PositionApi {
      * @since 9.6.0
      */
     @Override
-    public Position getPosition(@RequestParam String tenantId, @RequestParam String positionId) {
+    public Y9Result<Position> getPosition(@RequestParam String tenantId, @RequestParam String positionId) {
         Y9LoginUserHolder.setTenantId(tenantId);
 
         Y9Position y9Position = y9PositionService.findById(positionId).orElse(null);
-        return Y9ModelConvertUtil.convert(y9Position, Position.class);
+        return Y9Result.success(Y9ModelConvertUtil.convert(y9Position, Position.class));
     }
 
     /**
@@ -153,11 +141,11 @@ public class PositionApiImpl implements PositionApi {
      * @since 9.6.0
      */
     @Override
-    public boolean hasPosition(@RequestParam String tenantId, @RequestParam String positionName,
+    public Y9Result<Boolean> hasPosition(@RequestParam String tenantId, @RequestParam String positionName,
         @RequestParam String personId) {
         Y9LoginUserHolder.setTenantId(tenantId);
 
-        return y9PositionService.hasPosition(positionName, personId);
+        return Y9Result.success(y9PositionService.hasPosition(positionName, personId));
     }
 
     /**
@@ -169,11 +157,11 @@ public class PositionApiImpl implements PositionApi {
      * @since 9.6.0
      */
     @Override
-    public List<Position> listByParentId(@RequestParam String tenantId, @RequestParam String parentId) {
+    public Y9Result<List<Position>> listByParentId(@RequestParam String tenantId, @RequestParam String parentId) {
         Y9LoginUserHolder.setTenantId(tenantId);
 
         List<Y9Position> y9PositionList = y9PositionService.listByParentId(parentId);
-        return Y9ModelConvertUtil.convert(y9PositionList, Position.class);
+        return Y9Result.success(Y9ModelConvertUtil.convert(y9PositionList, Position.class));
     }
 
     /**
@@ -185,11 +173,11 @@ public class PositionApiImpl implements PositionApi {
      * @since 9.6.0
      */
     @Override
-    public List<Position> listByPersonId(@RequestParam String tenantId, @RequestParam String personId) {
+    public Y9Result<List<Position>> listByPersonId(@RequestParam String tenantId, @RequestParam String personId) {
         Y9LoginUserHolder.setTenantId(tenantId);
 
         List<Y9Position> y9PositionList = y9PositionService.listByPersonId(personId);
-        return Y9ModelConvertUtil.convert(y9PositionList, Position.class);
+        return Y9Result.success(Y9ModelConvertUtil.convert(y9PositionList, Position.class));
     }
 
     /**
@@ -201,11 +189,11 @@ public class PositionApiImpl implements PositionApi {
      * @since 9.6.0
      */
     @Override
-    public List<Person> listPersons(@RequestParam String tenantId, @RequestParam String positionId) {
+    public Y9Result<List<Person>> listPersons(@RequestParam String tenantId, @RequestParam String positionId) {
         Y9LoginUserHolder.setTenantId(tenantId);
 
         List<Y9Person> y9PersonList = orgPersonService.listByPositionId(positionId);
-        return Y9ModelConvertUtil.convert(y9PersonList, Person.class);
+        return Y9Result.success(Y9ModelConvertUtil.convert(y9PersonList, Person.class));
     }
 
     /**
@@ -218,16 +206,12 @@ public class PositionApiImpl implements PositionApi {
      * @since 9.6.0
      */
     @Override
-    public boolean removePerson(@RequestParam String tenantId, @RequestParam String positionId,
+    public Y9Result<Object> removePerson(@RequestParam String tenantId, @RequestParam String positionId,
         @RequestParam String personId) {
         Y9LoginUserHolder.setTenantId(tenantId);
 
-        if (y9PositionService.existsById(positionId) && orgPersonService.existsById(personId)) {
-            orgPositionsPersonsService.deletePersons(positionId, new String[] {personId});
-            return true;
-        }
-
-        return false;
+        orgPositionsPersonsService.deletePersons(positionId, new String[] {personId});
+        return Y9Result.success();
     }
 
     /**
@@ -239,11 +223,11 @@ public class PositionApiImpl implements PositionApi {
      * @since 9.6.0
      */
     @Override
-    public Position updatePosition(@RequestParam String tenantId, @RequestParam String positionJson) {
+    public Y9Result<Position> updatePosition(@RequestParam String tenantId, @RequestParam String positionJson) {
         Y9LoginUserHolder.setTenantId(tenantId);
 
         Y9Position y9Position = Y9JsonUtil.readValue(positionJson, Y9Position.class);
         y9Position = y9PositionService.saveOrUpdate(y9Position);
-        return Y9ModelConvertUtil.convert(y9Position, Position.class);
+        return Y9Result.success(Y9ModelConvertUtil.convert(y9Position, Position.class));
     }
 }

@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import net.risesoft.model.OrgUnit;
 import net.risesoft.model.Person;
 import net.risesoft.model.Role;
+import net.risesoft.pojo.Y9Result;
 
 /**
  * @author dingzhaojun
@@ -33,7 +34,7 @@ public interface RoleApi {
      * @since 9.6.0
      */
     @PostMapping("/addPerson")
-    boolean addPerson(@RequestParam("personId") @NotBlank String personId,
+    Y9Result<Object> addPerson(@RequestParam("personId") @NotBlank String personId,
         @RequestParam("roleId") @NotBlank String roleId, @RequestParam("tenantId") @NotBlank String tenantId);
 
     /**
@@ -50,13 +51,13 @@ public interface RoleApi {
      * @since 9.6.0
      */
     @PostMapping("/createRoleNodeAddCustomId")
-    Role createRole(@RequestParam("roleId") String roleId, @RequestParam("roleName") String roleName,
+    Y9Result<Role> createRole(@RequestParam("roleId") String roleId, @RequestParam("roleName") String roleName,
         @RequestParam("parentId") String parentId, @RequestParam("customId") String customId,
         @RequestParam("type") String type, @RequestParam("systemName") String systemName,
         @RequestParam("systemCnName") String systemCnName);
 
     /**
-     * 删除权限节点
+     * 删除角色
      *
      * @param roleId 角色id
      * @return Boolean 是否删除成功
@@ -64,7 +65,7 @@ public interface RoleApi {
      */
 
     @PostMapping("/deleteRole")
-    Boolean deleteRole(@RequestParam("roleId") @NotBlank String roleId);
+    Y9Result<Object> deleteRole(@RequestParam("roleId") @NotBlank String roleId);
 
     /**
      * 根据customId(对应taskdefineKey或者processDefineKey)和parentId
@@ -75,7 +76,7 @@ public interface RoleApi {
      * @since 9.6.0
      */
     @GetMapping("/findByCustomIdAndParentId")
-    Role findByCustomIdAndParentId(@RequestParam("customId") @NotBlank String customId,
+    Y9Result<Role> findByCustomIdAndParentId(@RequestParam("customId") @NotBlank String customId,
         @RequestParam("parentId") @NotBlank String parentId);
 
     /**
@@ -86,7 +87,7 @@ public interface RoleApi {
      * @since 9.6.0
      */
     @GetMapping("/getRole")
-    Role getRole(@RequestParam("roleId") @NotBlank String roleId);
+    Y9Result<Role> getRole(@RequestParam("roleId") @NotBlank String roleId);
 
     /**
      * 根据角色Id获取相应OrgUnits
@@ -98,7 +99,7 @@ public interface RoleApi {
      * @since 9.6.0
      */
     @GetMapping("/listOrgUnitsById")
-    List<OrgUnit> listOrgUnitsById(@RequestParam("tenantId") @NotBlank String tenantId,
+    Y9Result<List<OrgUnit>> listOrgUnitsById(@RequestParam("tenantId") @NotBlank String tenantId,
         @RequestParam("roleId") @NotBlank String roleId, @RequestParam("orgType") @NotBlank String orgType);
 
     /**
@@ -110,7 +111,7 @@ public interface RoleApi {
      * @since 9.6.0
      */
     @GetMapping("/listPersonsById")
-    List<Person> listPersonsById(@RequestParam("tenantId") @NotBlank String tenantId,
+    Y9Result<List<Person>> listPersonsById(@RequestParam("tenantId") @NotBlank String tenantId,
         @RequestParam("roleId") @NotBlank String roleId);
 
     /**
@@ -121,7 +122,7 @@ public interface RoleApi {
      * @since 9.6.0
      */
     @GetMapping("/listRoleByParentId")
-    List<Role> listRoleByParentId(@RequestParam("roleId") @NotBlank String roleId);
+    Y9Result<List<Role>> listRoleByParentId(@RequestParam("roleId") @NotBlank String roleId);
 
     /**
      * 删除角色中的人员
@@ -134,6 +135,6 @@ public interface RoleApi {
      */
 
     @PostMapping("/removePerson")
-    boolean removePerson(@RequestParam("personId") @NotBlank String personId,
+    Y9Result<Object> removePerson(@RequestParam("personId") @NotBlank String personId,
         @RequestParam("roleId") @NotBlank String roleId, @RequestParam("tenantId") @NotBlank String tenantId);
 }

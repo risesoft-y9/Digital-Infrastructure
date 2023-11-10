@@ -7,6 +7,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 import net.risesoft.api.customgroup.CustomGroupApi;
 import net.risesoft.model.CustomGroup;
+import net.risesoft.pojo.Y9Result;
 
 /**
  * 自定义用户组
@@ -18,7 +19,7 @@ import net.risesoft.model.CustomGroup;
  * @since 9.6.0
  */
 @FeignClient(contextId = "CustomGroupApiClient", name = "y9platform", url = "${y9.common.orgBaseUrl}",
-    path = "/services/rest/customGroup")
+    path = "/services/rest/v1/customGroup")
 public interface CustomGroupApiClient extends CustomGroupApi {
 
     /**
@@ -31,5 +32,6 @@ public interface CustomGroupApiClient extends CustomGroupApi {
      */
     @Override
     @PostMapping("/saveCustomGroup")
-    CustomGroup saveCustomGroup(@RequestParam("tenantId") String tenantId, @SpringQueryMap CustomGroup customGroup);
+    Y9Result<CustomGroup> saveCustomGroup(@RequestParam("tenantId") String tenantId,
+        @SpringQueryMap CustomGroup customGroup);
 }
