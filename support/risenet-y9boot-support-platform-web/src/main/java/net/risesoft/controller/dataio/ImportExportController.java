@@ -22,7 +22,6 @@ import org.springframework.web.multipart.MultipartFile;
 import lombok.extern.slf4j.Slf4j;
 
 import net.risesoft.dataio.org.Y9OrgTreeDataHandler;
-import net.risesoft.dataio.role.Y9RoleDataHandler;
 import net.risesoft.dataio.system.Y9SystemDataHandler;
 import net.risesoft.dataio.system.model.Y9AppExportModel;
 import net.risesoft.dataio.system.model.Y9SystemExportModel;
@@ -36,10 +35,8 @@ import net.risesoft.y9.util.mime.ContentDispositionUtil;
 import net.risesoft.y9.util.mime.MediaTypeUtils;
 import net.risesoft.y9public.entity.resource.Y9App;
 import net.risesoft.y9public.entity.resource.Y9System;
-import net.risesoft.y9public.entity.role.Y9Role;
 import net.risesoft.y9public.service.resource.Y9AppService;
 import net.risesoft.y9public.service.resource.Y9SystemService;
-import net.risesoft.y9public.service.role.Y9RoleService;
 
 /**
  * 导入导出管理
@@ -57,26 +54,21 @@ public class ImportExportController {
 
     private final Y9OrgTreeDataHandler y9OrgTreeExcelDataHandler;
     private final Y9OrgTreeDataHandler y9OrgTreeXmlDataHandler;
-    private final Y9RoleService y9RoleService;
     private final Y9SystemService y9SystemService;
     private final Y9AppService y9AppService;
-    private final Y9RoleDataHandler y9RoleDataHandler;
     private final Y9SystemDataHandler y9SystemDataHandler;
     private final ServletContext servletContext;
     private final CompositeOrgBaseService compositeOrgBaseService;
 
     public ImportExportController(
         @Qualifier("y9OrgTreeExcelDataHandler") Y9OrgTreeDataHandler y9OrgTreeExcelDataHandler,
-        @Qualifier("y9OrgTreeXmlDataHandler") Y9OrgTreeDataHandler y9OrgTreeXmlDataHandler, Y9RoleService y9RoleService,
-        Y9SystemService y9SystemService, Y9AppService y9AppService, Y9RoleDataHandler y9RoleDataHandler,
-        Y9SystemDataHandler y9SystemDataHandler, ServletContext servletContext,
-        CompositeOrgBaseService compositeOrgBaseService) {
+        @Qualifier("y9OrgTreeXmlDataHandler") Y9OrgTreeDataHandler y9OrgTreeXmlDataHandler,
+        Y9SystemService y9SystemService, Y9AppService y9AppService, Y9SystemDataHandler y9SystemDataHandler,
+        ServletContext servletContext, CompositeOrgBaseService compositeOrgBaseService) {
         this.y9OrgTreeExcelDataHandler = y9OrgTreeExcelDataHandler;
         this.y9OrgTreeXmlDataHandler = y9OrgTreeXmlDataHandler;
-        this.y9RoleService = y9RoleService;
         this.y9SystemService = y9SystemService;
         this.y9AppService = y9AppService;
-        this.y9RoleDataHandler = y9RoleDataHandler;
         this.y9SystemDataHandler = y9SystemDataHandler;
         this.servletContext = servletContext;
         this.compositeOrgBaseService = compositeOrgBaseService;
@@ -173,31 +165,6 @@ public class ImportExportController {
 
             y9OrgTreeExcelDataHandler.exportPerson(orgBaseId, outStream);
         } catch (Exception e) {
-            LOGGER.warn(e.getMessage(), e);
-        }
-    }
-
-    /**
-     * 导出角色树XML
-     *
-     * @param resourceId 资源id
-     */
-    @RiseLog(operationName = "导出角色树XML", operationType = OperationTypeEnum.ADD)
-    @GetMapping(value = "/exportRoleXml")
-    public void exportRoleXml(@RequestParam @NotBlank String resourceId, HttpServletResponse response) {
-
-        try (OutputStream outStream = response.getOutputStream()) {
-
-            y9RoleDataHandler.doExport(resourceId, outStream);
-
-            Y9Role y9Role = y9RoleService.getById(resourceId);
-            String filename =
-                y9Role.getName() + "-角色信息-" + new SimpleDateFormat("yyyyMMddHHmmss").format(new Date()) + ".xml";
-
-            response.setHeader("Content-Disposition", ContentDispositionUtil.standardizeAttachment(filename));
-            response.setContentType(MediaTypeUtils.getMediaTypeForFileName(servletContext, filename).toString());
-
-        } catch (IOException e) {
             LOGGER.warn(e.getMessage(), e);
         }
     }

@@ -1,43 +1,30 @@
 package net.risesoft.controller.role;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.IOException;
-import java.io.OutputStream;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.Date;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-import javax.servlet.http.HttpServletResponse;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotEmpty;
 
 import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.multipart.MultipartFile;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
 import net.risesoft.consts.InitDataConsts;
 import net.risesoft.controller.role.vo.RoleVO;
-import net.risesoft.dataio.role.Y9RoleDataHandler;
 import net.risesoft.enums.Y9RoleTypeEnum;
 import net.risesoft.log.OperationTypeEnum;
 import net.risesoft.log.annotation.RiseLog;
 import net.risesoft.pojo.Y9Result;
-import net.risesoft.y9.Y9Context;
-import net.risesoft.y9.util.Y9FileUtil;
 import net.risesoft.y9.util.Y9ModelConvertUtil;
-import net.risesoft.y9.util.mime.ContentDispositionUtil;
 import net.risesoft.y9public.entity.resource.Y9App;
 import net.risesoft.y9public.entity.resource.Y9System;
 import net.risesoft.y9public.entity.role.Y9Role;
@@ -63,7 +50,6 @@ public class RoleController {
     private final Y9RoleService y9RoleService;
     private final Y9AppService y9AppService;
     private final Y9SystemService y9SystemService;
-    private final Y9RoleDataHandler y9RoleDataHandler;
 
     /**
      * 删除角色节点
@@ -76,30 +62,6 @@ public class RoleController {
     public Y9Result<String> deleteById(@RequestParam @NotBlank String id) {
         y9RoleService.delete(id);
         return Y9Result.successMsg("删除成功");
-    }
-
-    /**
-     * 导出角色树
-     *
-     * @param resourceId 角色id
-     * @param response 请求
-     */
-    @RiseLog(operationName = "导出角色树XML", operationType = OperationTypeEnum.ADD)
-    @GetMapping(value = "/exportRoleXml")
-    public void exportRoleXml(@RequestParam @NotBlank String resourceId, HttpServletResponse response) {
-        try (OutputStream outStream = response.getOutputStream()) {
-
-            Y9App y9App = y9AppService.getById(resourceId);
-            String fileName =
-                y9App.getName() + "-角色信息-" + new SimpleDateFormat("yyyyMMddHHmmss").format(new Date()) + ".xml";
-            response.setContentType("application/octet-stream");
-            response.setHeader("Content-Disposition", ContentDispositionUtil.standardizeAttachment(fileName));
-
-            y9RoleDataHandler.doExport(resourceId, outStream);
-
-        } catch (IOException e) {
-            LOGGER.warn(e.getMessage(), e);
-        }
     }
 
     /**
@@ -147,25 +109,6 @@ public class RoleController {
             }
         }
         return Y9Result.success(roleVOList, "获取主角色树成功");
-    }
-
-    /**
-     * 导入角色
-     *
-     * @param file 上传文件
-     * @param roleId 角色id
-     * @return
-     * @throws IOException
-     */
-    @RiseLog(operationName = "导入角色", operationType = OperationTypeEnum.ADD)
-    @RequestMapping(value = "/impRoleXml")
-    public Y9Result<String> impRoleXml(@RequestParam MultipartFile file, @RequestParam @NotBlank String roleId)
-        throws IOException {
-        String uploadDir = Y9Context.getRealPath("/file/temp/");
-        File f = Y9FileUtil.writeFile(file.getInputStream(), ".xml", uploadDir);
-        FileInputStream fileInputStream = new FileInputStream(f);
-        y9RoleDataHandler.doImport(fileInputStream, roleId);
-        return Y9Result.successMsg("导入角色成功");
     }
 
     /**
