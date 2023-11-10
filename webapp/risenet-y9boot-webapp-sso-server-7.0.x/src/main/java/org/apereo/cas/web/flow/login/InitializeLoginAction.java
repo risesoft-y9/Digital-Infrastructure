@@ -1,5 +1,8 @@
 package org.apereo.cas.web.flow.login;
 
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
+
 import java.util.Optional;
 
 import org.apache.commons.lang3.StringUtils;
@@ -22,9 +25,6 @@ import org.springframework.webflow.execution.repository.NoSuchFlowExecutionExcep
 import lombok.RequiredArgsConstructor;
 import lombok.val;
 import lombok.extern.slf4j.Slf4j;
-
-import jakarta.servlet.http.HttpServletRequest;
-import jakarta.servlet.http.HttpServletResponse;
 
 /**
  * This is {@link InitializeLoginAction}.
@@ -64,8 +64,11 @@ public class InitializeLoginAction extends BaseCasWebflowAction {
 
         if (service == null && !casProperties.getSso().getServices().isAllowMissingServiceParameter()) {
             val request = WebUtils.getHttpServletRequestFromExternalWebflowContext(requestContext);
-            LOGGER.warn("No service authentication request is available at [{}]. CAS is configured to disable the flow.", request.getRequestURL());
-            throw new NoSuchFlowExecutionException(requestContext.getFlowExecutionContext().getKey(), UnauthorizedServiceException.required());
+            LOGGER.warn(
+                "No service authentication request is available at [{}]. CAS is configured to disable the flow.",
+                request.getRequestURL());
+            throw new NoSuchFlowExecutionException(requestContext.getFlowExecutionContext().getKey(),
+                UnauthorizedServiceException.required());
         }
 
         // y9 add
@@ -78,7 +81,8 @@ public class InitializeLoginAction extends BaseCasWebflowAction {
             }
             if (StringUtils.isNotBlank(tgtId)) {
                 TicketGrantingTicket ticket = ticketRegistry.getTicket(tgtId, TicketGrantingTicket.class);
-                logoutManager.performLogout(SingleLogoutExecutionRequest.builder().ticketGrantingTicket(ticket).httpServletRequest(Optional.of(request)).httpServletResponse(Optional.of(response)).build());
+                logoutManager.performLogout(SingleLogoutExecutionRequest.builder().ticketGrantingTicket(ticket)
+                    .httpServletRequest(Optional.of(request)).httpServletResponse(Optional.of(response)).build());
             }
         } catch (Exception e) {
             LOGGER.error(e.getMessage(), e);

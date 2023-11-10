@@ -1,5 +1,7 @@
 package org.apereo.cas.web.support.mgmr;
 
+import jakarta.servlet.http.HttpServletRequest;
+
 import java.io.Serial;
 import java.io.Serializable;
 import java.util.Objects;
@@ -21,8 +23,6 @@ import com.google.common.base.Splitter;
 
 import lombok.val;
 import lombok.extern.slf4j.Slf4j;
-
-import jakarta.servlet.http.HttpServletRequest;
 
 /**
  * The {@link DefaultCasCookieValueManager} is responsible for creating the CAS SSO cookie and encrypting and signing

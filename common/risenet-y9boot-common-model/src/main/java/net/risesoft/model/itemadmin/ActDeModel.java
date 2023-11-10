@@ -15,43 +15,43 @@ import lombok.Data;
 @Data
 public class ActDeModel implements Serializable {
 
-	/**
-	 *
-	 */
-	private static final long serialVersionUID = 1019751762452808352L;
+    /**
+     *
+     */
+    private static final long serialVersionUID = 1019751762452808352L;
 
-	private String id;
+    private String id;
 
-	// 模型名称
-	private String name;
+    // 模型名称
+    private String name;
 
-	// 模型key
-	private String modelKey;
+    // 模型key
+    private String modelKey;
 
-	// 描述
-	private String description;
+    // 描述
+    private String description;
 
-	// 创建时间
-	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss")
-	private Date created;
+    // 创建时间
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss")
+    private Date created;
 
-	// 创建人
-	private String createdBy;
+    // 创建人
+    private String createdBy;
 
-	// 最后修改时间
-	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss")
-	private Date lastUpdated;
+    // 最后修改时间
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss")
+    private Date lastUpdated;
 
-	// 最后修改人
-	private String lastUpdatedBy;
+    // 最后修改人
+    private String lastUpdatedBy;
 
-	// 版本
-	private Integer version;
+    // 版本
+    private Integer version;
 
-	// 流程图数据
-	private byte[] modelByte;
+    // 流程图数据
+    private byte[] modelByte;
 
-	// 租户id
-	private String tenantId;
+    // 租户id
+    private String tenantId;
 
 }

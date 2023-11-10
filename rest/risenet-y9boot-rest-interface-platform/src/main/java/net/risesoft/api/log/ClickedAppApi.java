@@ -1,7 +1,5 @@
 package net.risesoft.api.log;
 
-import jakarta.validation.constraints.NotBlank;
-
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;

@@ -1,28 +1,26 @@
 /*
  * Copyright 1999-2018 Alibaba Group Holding Ltd.
  *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except in compliance with
+ * the License. You may obtain a copy of the License at
  *
- *      http://www.apache.org/licenses/LICENSE-2.0
+ * http://www.apache.org/licenses/LICENSE-2.0
  *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
+ * Unless required by applicable law or agreed to in writing, software distributed under the License is distributed on
+ * an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the License for the
+ * specific language governing permissions and limitations under the License.
  */
 package com.alibaba.druid.spring.boot3.autoconfigure;
 
-import com.alibaba.druid.filter.Filter;
-import com.alibaba.druid.pool.DruidDataSource;
+import java.util.List;
+
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.jdbc.DataSourceProperties;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 
-import java.util.List;
+import com.alibaba.druid.filter.Filter;
+import com.alibaba.druid.pool.DruidDataSource;
 
 /**
  * @author lihengming [89921218@qq.com]
@@ -34,7 +32,8 @@ public class DruidDataSourceWrapper extends DruidDataSource implements Initializ
 
     @Override
     public void afterPropertiesSet() throws Exception {
-        //if not found prefix 'spring.datasource.druid' jdbc properties ,'spring.datasource' prefix jdbc properties will be used.
+        // if not found prefix 'spring.datasource.druid' jdbc properties ,'spring.datasource' prefix jdbc properties
+        // will be used.
         if (super.getUsername() == null) {
             super.setUsername(basicProperties.determineUsername());
         }
@@ -55,8 +54,8 @@ public class DruidDataSourceWrapper extends DruidDataSource implements Initializ
     }
 
     /**
-     * Ignore the 'maxEvictableIdleTimeMillis &lt; minEvictableIdleTimeMillis' validate,
-     * it will be validated again in {@link DruidDataSource#init()}.
+     * Ignore the 'maxEvictableIdleTimeMillis &lt; minEvictableIdleTimeMillis' validate, it will be validated again in
+     * {@link DruidDataSource#init()}.
      * <p>
      * for fix issue #3084, #2763
      *

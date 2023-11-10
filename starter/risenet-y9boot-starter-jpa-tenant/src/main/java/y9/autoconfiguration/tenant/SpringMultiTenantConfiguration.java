@@ -1,6 +1,8 @@
 
 package y9.autoconfiguration.tenant;
 
+import jakarta.persistence.EntityManagerFactory;
+
 import javax.sql.DataSource;
 
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -30,7 +32,6 @@ import org.springframework.util.StringUtils;
 
 import com.zaxxer.hikari.HikariDataSource;
 
-import jakarta.persistence.EntityManagerFactory;
 import net.risesoft.y9.Y9Context;
 import net.risesoft.y9.tenant.datasource.Y9TenantDataSource;
 import net.risesoft.y9.tenant.datasource.Y9TenantDataSourceLookup;
@@ -48,7 +49,7 @@ public class SpringMultiTenantConfiguration {
     @Bean("defaultDataSource")
     @ConditionalOnMissingBean(name = "defaultDataSource")
     public HikariDataSource defaultDataSource(Environment environment) {
-    	HikariDataSource dataSource = new HikariDataSource();
+        HikariDataSource dataSource = new HikariDataSource();
 
         // 比如：spring.datasource.hikari.tenantDefault=spring.datasource.hikari.flowable
         String tenantDefault = environment.getProperty("spring.datasource.hikari.tenantDefault", String.class);
@@ -63,7 +64,7 @@ public class SpringMultiTenantConfiguration {
         String password = environment.getProperty(prefix + "password", String.class);
         Integer maxActive = environment.getProperty(prefix + "maximumPoolSize", Integer.class);
         Integer minIdle = environment.getProperty(prefix + "minimumIdle", Integer.class);
-        
+
         if (jdbcUrl != null) {
             dataSource.setJdbcUrl(jdbcUrl);
         }
@@ -132,7 +133,7 @@ public class SpringMultiTenantConfiguration {
     @Bean(name = {"y9PublicDS"})
     @ConditionalOnMissingBean(name = "y9PublicDS")
     public HikariDataSource y9PublicDS() {
-    	HikariDataSource dataSource = new HikariDataSource();
+        HikariDataSource dataSource = new HikariDataSource();
         return dataSource;
     }
 

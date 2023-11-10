@@ -32,7 +32,10 @@ import lombok.val;
  * @since 5.0.0
  */
 @EnableDiscoveryClient
-@SpringBootApplication(proxyBeanMethods = false, exclude = {DataSourceAutoConfiguration.class, HibernateJpaAutoConfiguration.class, KafkaMetricsAutoConfiguration.class, MessageSourceAutoConfiguration.class, MongoAutoConfiguration.class, MongoDataAutoConfiguration.class})
+@SpringBootApplication(proxyBeanMethods = false,
+    exclude = {DataSourceAutoConfiguration.class, HibernateJpaAutoConfiguration.class,
+        KafkaMetricsAutoConfiguration.class, MessageSourceAutoConfiguration.class, MongoAutoConfiguration.class,
+        MongoDataAutoConfiguration.class})
 @EnableConfigurationProperties(CasConfigurationProperties.class)
 @EnableAspectJAutoProxy(proxyTargetClass = false)
 @EnableTransactionManagement(proxyTargetClass = false)
@@ -57,7 +60,9 @@ public class CasWebApplication {
      */
     public static void main(final String[] args) {
         val applicationClasses = getApplicationSources(args);
-        new SpringApplicationBuilder().sources(applicationClasses.toArray(ArrayUtils.EMPTY_CLASS_ARRAY)).banner(CasBanner.getInstance()).web(WebApplicationType.SERVLET).logStartupInfo(true).applicationStartup(ApplicationUtils.getApplicationStartup())
+        new SpringApplicationBuilder().sources(applicationClasses.toArray(ArrayUtils.EMPTY_CLASS_ARRAY))
+            .banner(CasBanner.getInstance()).web(WebApplicationType.SERVLET).logStartupInfo(true)
+            .applicationStartup(ApplicationUtils.getApplicationStartup())
             .properties("spring.main.allow-bean-definition-overriding=true").run(args);
     }
 }

@@ -63,7 +63,7 @@ public class Y9AppIconServiceImpl implements Y9AppIconService {
     @Override
     public Y9AppIcon getById(String id) {
         return appIconRepository.findById(id)
-                .orElseThrow(() -> Y9ExceptionUtil.notFoundException(ResourceErrorCodeEnum.APP_ICON_NOT_FOUND, id));
+            .orElseThrow(() -> Y9ExceptionUtil.notFoundException(ResourceErrorCodeEnum.APP_ICON_NOT_FOUND, id));
     }
 
     @Override

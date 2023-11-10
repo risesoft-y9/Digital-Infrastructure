@@ -71,7 +71,8 @@ public class Y9TenantSystemServiceImpl implements Y9TenantSystemService {
     @Override
     @Transactional(readOnly = false)
     public void deleteByTenantIdAndSystemId(String tenantId, String systemId) {
-        Optional<Y9TenantSystem> systemOptional = y9TenantSystemRepository.findByTenantIdAndSystemId(tenantId, systemId);
+        Optional<Y9TenantSystem> systemOptional =
+            y9TenantSystemRepository.findByTenantIdAndSystemId(tenantId, systemId);
         if (systemOptional.isPresent()) {
             y9TenantSystemRepository.delete(systemOptional.get());
 
@@ -174,7 +175,8 @@ public class Y9TenantSystemServiceImpl implements Y9TenantSystemService {
         Y9Tenant tenant = y9TenantManager.getById(tenantId);
         Y9System y9System = y9SystemManager.getById(systemId);
 
-        Optional<Y9TenantSystem> y9TenantSystemOptional = y9TenantSystemRepository.findByTenantIdAndSystemId(tenantId, systemId);
+        Optional<Y9TenantSystem> y9TenantSystemOptional =
+            y9TenantSystemRepository.findByTenantIdAndSystemId(tenantId, systemId);
         if (y9TenantSystemOptional.isPresent()) {
             return y9TenantSystemOptional.get();
         }
@@ -187,7 +189,8 @@ public class Y9TenantSystemServiceImpl implements Y9TenantSystemService {
         if (Boolean.TRUE.equals(y9System.getSingleDatasource())) {
             String datasoureId = tenant.getDefaultDataSourceId();
             try {
-                Y9DataSource y9DataSource = y9DataSourceManager.createTenantDefaultDataSource(tenant.getShortName(), tenant.getTenantType(), y9System.getName());
+                Y9DataSource y9DataSource = y9DataSourceManager.createTenantDefaultDataSource(tenant.getShortName(),
+                    tenant.getTenantType(), y9System.getName());
                 datasoureId = y9DataSource.getId();
             } catch (Exception e) {
                 LOGGER.warn(e.getMessage(), e);

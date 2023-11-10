@@ -1,13 +1,13 @@
 package net.risesoft.api.v0.org;
 
+import jakarta.validation.constraints.NotBlank;
+
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Optional;
-
-import jakarta.validation.constraints.NotBlank;
 
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.context.annotation.Primary;

@@ -1,5 +1,8 @@
 package org.apereo.cas.web.y9.controller;
 
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
+
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -34,9 +37,6 @@ import org.springframework.web.bind.annotation.RestController;
 
 import lombok.val;
 import lombok.extern.slf4j.Slf4j;
-
-import jakarta.servlet.http.HttpServletRequest;
-import jakarta.servlet.http.HttpServletResponse;
 
 /**
  *

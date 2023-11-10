@@ -1,5 +1,7 @@
 package y9.autoconfiguration.jpa;
 
+import jakarta.persistence.EntityManagerFactory;
+
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.autoconfigure.AutoConfigureBefore;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
@@ -25,7 +27,6 @@ import org.springframework.transaction.annotation.EnableTransactionManagement;
 
 import com.zaxxer.hikari.HikariDataSource;
 
-import jakarta.persistence.EntityManagerFactory;
 import net.risesoft.y9.Y9Context;
 
 @Configuration
@@ -81,7 +82,7 @@ public class JpaPublicConfiguration {
     @Bean(name = {"y9PublicDS"})
     @ConditionalOnMissingBean(name = "y9PublicDS")
     public HikariDataSource y9PublicDS() {
-    	HikariDataSource dataSource = new HikariDataSource();
+        HikariDataSource dataSource = new HikariDataSource();
         return dataSource;
     }
 }

@@ -18,7 +18,8 @@ import lombok.Setter;
 @Setter
 public class OAuth20IntrospectionAccessTokenSuccessResponse extends BaseOAuth20IntrospectionAccessTokenResponse {
 
-    public record DPopConfirmation(String jkt) {}
+    public record DPopConfirmation(String jkt) {
+    }
 
     @Serial
     private static final long serialVersionUID = -7917281748569741345L;

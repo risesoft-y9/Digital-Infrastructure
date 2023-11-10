@@ -15,10 +15,10 @@ import lombok.Getter;
 @Getter
 @AllArgsConstructor
 public enum DataSourceTypeEnum {
-	
+
     /** JNDI */
     JNDI(1),
-    
+
     /** Hikari */
     HIKARI(2);
 
