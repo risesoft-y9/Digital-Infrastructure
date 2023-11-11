@@ -46,7 +46,8 @@
         <module>support/risenet-y9boot-support-log-elasticSearch</module>
         <module>support/risenet-y9boot-support-history</module>
 
-        <module>webapp/risenet-y9boot-webapp-sso-server-7.0.x</module>
+        <module>webapp/risenet-y9boot-webapp-sso-server-jdk17</module>
+		<module>webapp/risenet-y9boot-webapp-sso-server-jdk21</module>
         <module>webapp/risenet-y9boot-webapp-platform</module>
         <module>webapp/risenet-y9boot-webapp-log</module>
     </modules>
@@ -136,18 +137,18 @@
         <aspectj.version>1.9.20.1</aspectj.version>
         <guava.version>32.1.3-jre</guava.version>
 
-        <fastjson.version>2.0.40</fastjson.version>
-        <druid.version>1.2.19</druid.version>
-        <druid-starter.version>1.2.19</druid-starter.version>
+        <fastjson.version>2.0.42</fastjson.version>
+        <druid.version>1.2.20</druid.version>
+        <druid-starter.version>1.2.20</druid-starter.version>
 
         <commons-lang3.version>3.13.0</commons-lang3.version>
         <commons-io.version>2.13.0</commons-io.version>
-        <commons-net.version>3.9.0</commons-net.version>
-        <commons-pool2.version>2.11.1</commons-pool2.version>
+        <commons-net.version>3.10.0</commons-net.version>
+        <commons-pool2.version>2.12.0</commons-pool2.version>
 
-        <javers.version>7.3.1</javers.version>
+        <javers.version>7.3.4</javers.version>
         <org-dom4j.version>2.1.4</org-dom4j.version>
-        <oshi.version>6.4.6</oshi.version>
+        <oshi.version>6.4.7</oshi.version>
         <lombok.version>1.18.30</lombok.version>
     </properties>
 
@@ -211,7 +212,7 @@
             <dependency>
                 <groupId>org.jodd</groupId>
                 <artifactId>jodd-mail</artifactId>
-                <version>7.0.0</version>
+                <version>7.0.1</version>
             </dependency>
             <dependency>
                 <groupId>org.jodd</groupId>
@@ -523,40 +524,6 @@
                             </goals>
                         </execution>
                     </executions>
-                </plugin>
-
-                <!--This plugin's configuration is used to store Eclipse m2e settings
-                    only. It has no influence on the Maven build itself. -->
-                <plugin>
-                    <groupId>org.eclipse.m2e</groupId>
-                    <artifactId>lifecycle-mapping</artifactId>
-                    <version>1.0.0</version>
-                    <configuration>
-                        <lifecycleMappingMetadata>
-                            <pluginExecutions>
-                                <pluginExecution>
-                                    <pluginExecutionFilter>
-                                        <groupId>
-                                            dev.aspectj
-                                        </groupId>
-                                        <artifactId>
-                                            aspectj-maven-plugin
-                                        </artifactId>
-                                        <versionRange>
-                                            [1.12.1,)
-                                        </versionRange>
-                                        <goals>
-                                            <goal>test-compile</goal>
-                                            <goal>compile</goal>
-                                        </goals>
-                                    </pluginExecutionFilter>
-                                    <action>
-                                        <ignore></ignore>
-                                    </action>
-                                </pluginExecution>
-                            </pluginExecutions>
-                        </lifecycleMappingMetadata>
-                    </configuration>
                 </plugin>
 
                 <!-- https://github.com/smart-doc-group/smart-doc -->

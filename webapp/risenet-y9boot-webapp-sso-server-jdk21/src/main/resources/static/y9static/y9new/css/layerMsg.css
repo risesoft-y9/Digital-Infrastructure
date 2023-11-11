@@ -1,0 +1,128 @@
+.wfmsgbox {
+	width: 335px;
+	position: fixed;
+	z-index: 99999;
+}
+
+.wfmsgbox.top-right {
+	right: 12px;
+	top: 20px;
+}
+.wfmsgbox.top-left {
+	left: 12px;
+	top: 20px;
+}
+.wfmsgbox.top-center {
+	left: 50%;
+	top: 20px;
+	transform: translate(-50%,0);
+}
+.wfmsgbox.center-left{
+	left: 12px;
+	top: 50%;
+	transform: translate(0,-50%);
+}
+.wfmsgbox.center-center{
+	left: 50%;
+	top: 50%;
+	transform: translate(-50%,-50%);
+}
+.wfmsgbox.center-right{
+	right: 12px;
+	top: 50%;
+	transform: translate(0,-50%);
+}
+.wfmsgbox.bottom-left{
+	left: 12px;
+	bottom: 12px;
+	transform: translate(0,0);
+}
+.wfmsgbox.bottom-center{
+	left: 50%;
+	bottom: 12px;
+	transform: translate(-50%,0);
+}
+.wfmsgbox.bottom-right{
+	right: 12px;
+	bottom: 12px;
+	transform: translate(0,0);
+}
+.wfmsg {
+	margin-bottom: 10px;
+	padding: 16px;
+	border-radius: 4px;
+	box-shadow: 0 1px 6px rgb(0 0 0 / 20%);
+	background: #fff;
+	line-height: 1;
+	position: relative;
+	overflow: hidden;
+}
+.wfmsg.info{
+	background:#f4f4f5;
+	color: #909399;
+}
+.wfmsg.warn{
+	background-color: #fdf6ec;
+	color: #e6a23c;
+}
+.wfmsg.success{
+	background-color: #f0f9eb;
+	color: #67c23a;
+}
+.wfmsg.err{
+	background-color: #fef0f0;
+	color: #f56c6c;
+}
+
+.wftitle {
+	font-size: 16px;
+	line-height: 19px;
+	/* color: #17233d; */
+	padding-right: 10px;
+	overflow: hidden;
+	text-overflow: ellipsis;
+	white-space: nowrap;
+	display:flex;
+	align-items:center
+	
+}
+.wftitle .icon{
+	display:block;
+	width:16px;
+	height:16px;
+	background-size:cover;
+	margin-right:8px
+}
+
+.wfcontent {
+	font-size: 14px;
+	/* color: #515a6e; */
+	text-align: justify;
+	line-height: 1.5;
+}
+.wftitle + .wfcontent{
+	margin-top: 10px;
+	margin-left: 24px;
+}
+.noicon + .wfcontent{
+	margin-left: 0
+}
+.wfmsgshadow {
+	position: fixed;
+	width: 100vw;
+	height: 100vh;
+	left: 0;
+	top: 0;
+	background: rgba(0, 0, 0, 0.3);
+	z-index: 88888;
+}
+
+.m-wfmsgbox{
+	width:auto;
+	max-width: 60vw;
+}
+.m-wfmsgbox .wfmsg{
+	margin-bottom: 0;
+	min-width: 80px;
+	min-height: 20px;
+}
