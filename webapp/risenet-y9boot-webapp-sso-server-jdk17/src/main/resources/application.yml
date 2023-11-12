@@ -7,7 +7,7 @@ cas:
             enabled: false
             useSsl: false
             host: "localhost"
-            port: 7379
+            port: 6379
             database: 12
             username: default
             password: "12345678"
@@ -120,8 +120,8 @@ cas:
     slo:
         asynchronous: false
     server:
-        name: http://localhost:12345
-        prefix: http://localhost:12345/sso
+        name: http://localhost:8081
+        prefix: http://localhost:8081/sso
     service-registry:
         cache:
             duration: PT8H
@@ -138,7 +138,7 @@ cas:
             dialect: org.hibernate.dialect.MySQLDialect
             driver-class: com.mysql.cj.jdbc.Driver
             ddl-auto: update
-            url: jdbc:mysql://localhost:3309/y9_public?serverTimezone=GMT%2B8&nullCatalogMeansCurrent=true&useUnicode=true&characterEncoding=utf-8&rewriteBatchedStatements=true&useCompression=true&useSSL=false
+            url: jdbc:mysql://localhost:3306/y9_public?serverTimezone=GMT%2B8&nullCatalogMeansCurrent=true&useUnicode=true&characterEncoding=utf-8&rewriteBatchedStatements=true&useCompression=true&useSSL=false&allowPublicKeyRetrieval=true
             user: root
             password: '12345678'
             idleTimeout: PT10M
@@ -184,7 +184,7 @@ cas:
                 enabled: true
                 useSsl: false
                 host: "localhost"
-                port: 7379
+                port: 6379
                 database: 13
                 username: default
                 password: "12345678"
@@ -229,7 +229,7 @@ management:
             exposure:
                 include: '*'
 server:
-    port: 12345
+    port: 8081
     servlet:
         context-parameters:
             isLog4jAutoInitializationDisabled: true
@@ -273,7 +273,7 @@ spring:
         redis:
             database: 8
             host: localhost
-            port: 7379
+            port: 6379
             username: default
             password: '12345678'
             ssl:
@@ -306,7 +306,7 @@ spring:
 y9:
     common:
         kafkaEnabled: true
-        logBaseUrl: http://localhost:7055/log
+        logBaseUrl: http://localhost:8081/log
     login:
         casLoginView: "casLoginView-y9-v3.0"
         credentialPropsOptional: "isValidateIE,screenDimension,userAgent,systemName,clientIp,clientMac,clientDiskId,clientHostName,deptId,positionId,pwdEcodeType"
