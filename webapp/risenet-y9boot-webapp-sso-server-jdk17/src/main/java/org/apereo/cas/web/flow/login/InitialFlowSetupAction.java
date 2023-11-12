@@ -142,7 +142,8 @@ public class InitialFlowSetupAction extends BaseCasWebflowAction {
     protected void configureWebflowForServices(final RequestContext context) {
         val response = WebUtils.getHttpServletResponseFromExternalWebflowContext(context);
         if (HttpStatus.valueOf(response.getStatus()).isError()) {
-            throw UnauthorizedServiceException.denied("Denied");
+            throw new UnauthorizedServiceException(UnauthorizedServiceException.CODE_UNAUTHZ_SERVICE,
+                StringUtils.EMPTY);
         }
 
         val service = WebUtils.getService(argumentExtractors, context);
@@ -153,7 +154,7 @@ public class InitialFlowSetupAction extends BaseCasWebflowAction {
             val registeredService = servicesManager.findServiceBy(selectedService);
             RegisteredServiceAccessStrategyUtils.ensureServiceAccessIsAllowed(service.getId(), registeredService);
             if (registeredService != null
-                && registeredService.getAccessStrategy().isServiceAccessAllowed(registeredService, selectedService)) {
+                && registeredService.getAccessStrategy().isServiceAccessAllowed()) {
                 LOGGER.debug("Placing registered service [{}] with id [{}] in context scope",
                     registeredService.getServiceId(), registeredService.getId());
                 WebUtils.putRegisteredService(context, registeredService);
@@ -214,7 +215,7 @@ public class InitialFlowSetupAction extends BaseCasWebflowAction {
     }
 
     @Override
-    protected Event doExecuteInternal(final RequestContext context) {
+    protected Event doExecute(RequestContext context) {
         configureCookieGenerators(context);
         configureWebflowContext(context);
 
@@ -228,4 +229,5 @@ public class InitialFlowSetupAction extends BaseCasWebflowAction {
             return success();
         });
     }
+
 }

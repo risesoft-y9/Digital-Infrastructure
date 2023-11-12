@@ -37,7 +37,7 @@ public class RiseAuthenticationHandler extends AbstractAuthenticationHandler {
     }
 
     @Override
-    public AuthenticationHandlerExecutionResult authenticate(Credential credential, Service service) throws Throwable {
+    public AuthenticationHandlerExecutionResult authenticate(Credential credential, Service service) throws Exception {
         if (y9UserService == null) {
             y9UserService = Y9Context.getBean(Y9UserService.class);
             y9LoginUserService = Y9Context.getBean(Y9LoginUserService.class);

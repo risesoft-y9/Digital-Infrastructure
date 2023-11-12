@@ -58,7 +58,7 @@ public class InitializeLoginAction extends BaseCasWebflowAction {
     private TicketRegistry ticketRegistry; // y9 add
 
     @Override
-    protected Event doExecuteInternal(final RequestContext requestContext) throws Exception {
+    protected Event doExecute(RequestContext requestContext) throws Exception {
         LOGGER.trace("Initialized login sequence");
         val service = WebUtils.getService(requestContext);
 
@@ -68,7 +68,7 @@ public class InitializeLoginAction extends BaseCasWebflowAction {
                 "No service authentication request is available at [{}]. CAS is configured to disable the flow.",
                 request.getRequestURL());
             throw new NoSuchFlowExecutionException(requestContext.getFlowExecutionContext().getKey(),
-                UnauthorizedServiceException.required());
+                new UnauthorizedServiceException("screen.service.required.message", "Service is required"));
         }
 
         // y9 add

@@ -23,8 +23,8 @@ import org.apereo.cas.support.oauth.web.response.introspection.OAuth20Introspect
 import org.apereo.cas.ticket.InvalidTicketException;
 import org.apereo.cas.ticket.OAuth20Token;
 import org.apereo.cas.util.CollectionUtils;
+import org.apereo.cas.util.HttpRequestUtils;
 import org.apereo.cas.util.LoggingUtils;
-import org.apereo.cas.util.http.HttpRequestUtils;
 import org.apereo.cas.web.y9.util.json.Y9JacksonUtil;
 import org.pac4j.core.context.CallContext;
 import org.pac4j.core.context.WebContext;

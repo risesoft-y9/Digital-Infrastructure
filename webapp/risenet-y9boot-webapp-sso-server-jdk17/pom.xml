@@ -89,7 +89,7 @@
 
     <properties>
         <java.version>17</java.version>
-        <lombok.version>1.18.28</lombok.version>
+        <lombok.version>1.18.30</lombok.version>
 
         <cas.version>7.0.0-RC7</cas.version>
         <spring-boot.version>3.1.2</spring-boot.version>
@@ -183,7 +183,7 @@
         <dependency>
             <groupId>org.antlr</groupId>
             <artifactId>antlr4-runtime</artifactId>
-            <version>4.10.1</version>
+            <version>4.13.1</version>
         </dependency>
 
         <dependency>
@@ -382,11 +382,138 @@
         <dependency>
             <groupId>org.apereo.cas</groupId>
             <artifactId>cas-server-support-webconfig</artifactId>
+            <exclusions>
+            	<exclusion>
+            		<groupId>org.opensaml</groupId>
+            		<artifactId>*</artifactId>
+            	</exclusion>
+            </exclusions>
         </dependency>
-        <dependency>
-            <groupId>org.apereo.cas</groupId>
-            <artifactId>cas-server-webapp-init-tomcat</artifactId>
-        </dependency>
+		<dependency>
+			<groupId>net.shibboleth</groupId>
+			<artifactId>shib-support</artifactId>
+			<version>9.0.0</version>
+			<scope>runtime</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.opensaml</groupId>
+			<artifactId>opensaml-core-api</artifactId>
+			<version>5.0.0</version>
+			<scope>runtime</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.opensaml</groupId>
+			<artifactId>opensaml-core-impl</artifactId>
+			<version>5.0.0</version>
+			<scope>runtime</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.opensaml</groupId>
+			<artifactId>opensaml-messaging-api</artifactId>
+			<version>5.0.0</version>
+			<scope>runtime</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.opensaml</groupId>
+			<artifactId>opensaml-messaging-impl</artifactId>
+			<version>5.0.0</version>
+			<scope>runtime</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.opensaml</groupId>
+			<artifactId>opensaml-profile-api</artifactId>
+			<version>5.0.0</version>
+			<scope>runtime</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.opensaml</groupId>
+			<artifactId>opensaml-profile-impl</artifactId>
+			<version>5.0.0</version>
+			<scope>runtime</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.opensaml</groupId>
+			<artifactId>opensaml-saml-api</artifactId>
+			<version>5.0.0</version>
+			<scope>runtime</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.opensaml</groupId>
+			<artifactId>opensaml-saml-impl</artifactId>
+			<version>5.0.0</version>
+			<scope>runtime</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.opensaml</groupId>
+			<artifactId>opensaml-security-api</artifactId>
+			<version>5.0.0</version>
+			<scope>runtime</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.opensaml</groupId>
+			<artifactId>opensaml-security-impl</artifactId>
+			<version>5.0.0</version>
+			<scope>runtime</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.opensaml</groupId>
+			<artifactId>opensaml-soap-api</artifactId>
+			<version>5.0.0</version>
+			<scope>runtime</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.opensaml</groupId>
+			<artifactId>opensaml-soap-impl</artifactId>
+			<version>5.0.0</version>
+			<scope>runtime</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.opensaml</groupId>
+			<artifactId>opensaml-storage-api</artifactId>
+			<version>5.0.0</version>
+			<scope>runtime</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.opensaml</groupId>
+			<artifactId>opensaml-storage-impl</artifactId>
+			<version>5.0.0</version>
+			<scope>runtime</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.opensaml</groupId>
+			<artifactId>opensaml-xacml-api</artifactId>
+			<version>5.0.0</version>
+			<scope>runtime</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.opensaml</groupId>
+			<artifactId>opensaml-xacml-saml-api</artifactId>
+			<version>5.0.0</version>
+			<scope>runtime</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.opensaml</groupId>
+			<artifactId>opensaml-xacml-saml-impl</artifactId>
+			<version>5.0.0</version>
+			<scope>runtime</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.opensaml</groupId>
+			<artifactId>opensaml-xmlsec-api</artifactId>
+			<version>5.0.0</version>
+			<scope>runtime</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.opensaml</groupId>
+			<artifactId>opensaml-xmlsec-impl</artifactId>
+			<version>5.0.0</version>
+			<scope>runtime</scope>
+		</dependency>
+
+		<dependency>
+			<groupId>org.apereo.cas</groupId>
+			<artifactId>cas-server-webapp-init-tomcat</artifactId>
+		</dependency>
         <dependency>
             <groupId>org.apereo.cas</groupId>
             <artifactId>cas-server-webapp-starter-tomcat</artifactId>
@@ -398,7 +525,7 @@
             </exclusions>
         </dependency>
 
-        <!--<dependency>
+		<!--<dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-docker-compose</artifactId>
             <version>${spring-boot.version}</version>
