@@ -47,6 +47,7 @@ public class Y9DataSource extends BaseEntity {
     @Column(name = "TYPE")
     @Comment("数据源类型1=jndi; 2=hikari")
     @Convert(converter = EnumConverter.DataSourceTypeEnumConverter.class)
+    @Convert(converter = EnumConverter.DataSourceTypeEnumConverter.class)
     private DataSourceTypeEnum type;
 
     /** 数据源名称 */

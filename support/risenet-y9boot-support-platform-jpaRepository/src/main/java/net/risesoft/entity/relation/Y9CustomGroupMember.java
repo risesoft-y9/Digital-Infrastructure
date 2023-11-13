@@ -6,6 +6,7 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
 
+import net.risesoft.enums.platform.SexEnum;
 import org.hibernate.annotations.Comment;
 
 import lombok.Data;
