@@ -15,7 +15,8 @@ import net.risesoft.entity.Y9Position;
 import net.risesoft.entity.identity.Y9IdentityToResourceAndAuthorityBase;
 import net.risesoft.entity.identity.position.Y9PositionToResourceAndAuthority;
 import net.risesoft.entity.permission.Y9Authorization;
-import net.risesoft.enums.ResourceTypeEnum;
+import net.risesoft.enums.platform.AuthorityEnum;
+import net.risesoft.enums.platform.ResourceTypeEnum;
 import net.risesoft.manager.authorization.Y9PositionToResourceAndAuthorityManager;
 import net.risesoft.manager.org.CompositeOrgBaseManager;
 import net.risesoft.repository.identity.position.Y9PositionToResourceAndAuthorityRepository;
@@ -100,13 +101,13 @@ public class Y9PositionToResourceAndAuthorityServiceImpl implements Y9PositionTo
     }
 
     @Override
-    public boolean hasPermission(String positionId, String resourceId, Integer authority) {
+    public boolean hasPermission(String positionId, String resourceId, AuthorityEnum authority) {
         return !y9PositionToResourceAndAuthorityRepository
             .findByPositionIdAndResourceIdAndAuthority(positionId, resourceId, authority).isEmpty();
     }
 
     @Override
-    public boolean hasPermissionByCustomId(String positionId, String customId, Integer authority) {
+    public boolean hasPermissionByCustomId(String positionId, String customId, AuthorityEnum authority) {
         return !y9PositionToResourceAndAuthorityRepository
             .findByPositionIdAndResourceCustomIdAndAuthority(positionId, customId, authority).isEmpty();
     }
@@ -117,7 +118,8 @@ public class Y9PositionToResourceAndAuthorityServiceImpl implements Y9PositionTo
     }
 
     @Override
-    public List<Y9PositionToResourceAndAuthority> list(String positionId, String parentResourceId, Integer authority) {
+    public List<Y9PositionToResourceAndAuthority> list(String positionId, String parentResourceId,
+        AuthorityEnum authority) {
         if (StringUtils.isBlank(parentResourceId)) {
             List<Y9PositionToResourceAndAuthority> list = new ArrayList<>();
             list.addAll(y9PositionToResourceAndAuthorityRepository
@@ -132,28 +134,26 @@ public class Y9PositionToResourceAndAuthorityServiceImpl implements Y9PositionTo
     }
 
     @Override
-    public List<Y9PositionToResourceAndAuthority> list(String positionId, String parentResourceId, Integer resourceType,
-        Integer authority) {
+    public List<Y9PositionToResourceAndAuthority> list(String positionId, String parentResourceId,
+        ResourceTypeEnum resourceType, AuthorityEnum authority) {
         return y9PositionToResourceAndAuthorityRepository
             .findByPositionIdAndParentResourceIdAndAuthorityAndResourceTypeOrderByResourceTabIndex(positionId,
                 parentResourceId, authority, resourceType);
     }
 
     @Override
-    public List<Y9App> listAppsByAuthority(String positionId, Integer authority) {
+    public List<Y9App> listAppsByAuthority(String positionId, AuthorityEnum authority) {
         List<Y9PositionToResourceAndAuthority> resourceList = y9PositionToResourceAndAuthorityRepository
             .findByPositionIdAndAuthorityAndResourceTypeOrderByResourceTabIndex(positionId, authority,
-                ResourceTypeEnum.APP.getValue());
+                ResourceTypeEnum.APP);
         List<Y9App> appList = new ArrayList<>();
-        if (null != resourceList) {
-            for (Y9PositionToResourceAndAuthority r : resourceList) {
-                Optional<Y9TenantApp> y9TenantAppOptional = y9TenantAppManager
-                    .getByTenantIdAndAppIdAndTenancy(Y9LoginUserHolder.getTenantId(), r.getAppId(), true);
-                if (y9TenantAppOptional.isPresent()) {
-                    Y9App y9App = y9AppManager.getById(r.getAppId());
-                    if (!appList.contains(y9App)) {
-                        appList.add(y9App);
-                    }
+        for (Y9PositionToResourceAndAuthority r : resourceList) {
+            Optional<Y9TenantApp> y9TenantAppOptional =
+                y9TenantAppManager.getByTenantIdAndAppIdAndTenancy(Y9LoginUserHolder.getTenantId(), r.getAppId(), true);
+            if (y9TenantAppOptional.isPresent()) {
+                Y9App y9App = y9AppManager.getById(r.getAppId());
+                if (!appList.contains(y9App)) {
+                    appList.add(y9App);
                 }
             }
         }
@@ -188,13 +188,13 @@ public class Y9PositionToResourceAndAuthorityServiceImpl implements Y9PositionTo
     }
 
     @Override
-    public List<Y9ResourceBase> listSubResources(String positionId, String resourceId, Integer authority) {
+    public List<Y9ResourceBase> listSubResources(String positionId, String resourceId, AuthorityEnum authority) {
         List<Y9ResourceBase> returnResourceList = new ArrayList<>();
         List<Y9PositionToResourceAndAuthority> personToResourceAndAuthorityList =
             this.list(positionId, resourceId, authority);
-        for (Y9PositionToResourceAndAuthority personResource : personToResourceAndAuthorityList) {
+        for (Y9PositionToResourceAndAuthority positionResource : personToResourceAndAuthorityList) {
             Y9ResourceBase y9ResourceBase = compositeResourceService
-                .findByIdAndResourceType(personResource.getResourceId(), personResource.getResourceType());
+                .findByIdAndResourceType(positionResource.getResourceId(), positionResource.getResourceType());
             if (y9ResourceBase != null && !returnResourceList.contains(y9ResourceBase)) {
                 returnResourceList.add(y9ResourceBase);
             }
@@ -203,7 +203,8 @@ public class Y9PositionToResourceAndAuthorityServiceImpl implements Y9PositionTo
     }
 
     @Override
-    public List<Y9Menu> listSubMenus(String positionId, String resourceId, Integer resourceType, Integer authority) {
+    public List<Y9Menu> listSubMenus(String positionId, String resourceId, ResourceTypeEnum resourceType,
+        AuthorityEnum authority) {
         List<Y9PositionToResourceAndAuthority> personToResourceAndAuthorityList =
             this.list(positionId, resourceId, resourceType, authority);
         List<String> menuIdList = personToResourceAndAuthorityList.stream()

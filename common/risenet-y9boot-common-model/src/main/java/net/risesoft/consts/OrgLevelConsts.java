@@ -1,6 +1,6 @@
 package net.risesoft.consts;
 
-import net.risesoft.enums.OrgTypeEnum;
+import net.risesoft.enums.platform.OrgTypeEnum;
 
 /**
  * 组织层次常量

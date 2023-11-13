@@ -141,17 +141,6 @@ public class Y9RoleServiceImpl implements Y9RoleService {
     }
 
     @Override
-    public List<Y9Role> listByNameAndSystemNameAndPropertiesAndType(String name, String systemName, String properties,
-        String type) {
-        return y9RoleRepository.findByNameAndSystemNameAndPropertiesAndType(name, systemName, properties, type);
-    }
-
-    @Override
-    public List<Y9Role> listByNameAndSystemNameAndType(String name, String systemName, String type) {
-        return y9RoleRepository.findByNameAndSystemNameAndType(name, systemName, type);
-    }
-
-    @Override
     public List<Y9Role> listByOrgUnitId(String orgUnitId) {
         List<String> roleIdList = y9OrgBasesToRolesRepository.findDistinctRoleIdByOrgId(orgUnitId);
         List<Y9Role> roleList = new ArrayList<>();
@@ -236,8 +225,8 @@ public class Y9RoleServiceImpl implements Y9RoleService {
                     originRole.setDn(RoleLevelConsts.CN + y9Role.getName());
                     originRole.setGuidPath(y9Role.getId());
                 }
-                if (!InitDataConsts.TOP_PUBLIC_ROLE_ID.equals(originRole.getAppId())) {
-                    // 公共角色顶级节点特殊处理
+                if (StringUtils.isBlank(y9Role.getAppCnName())) {
+                    // 公共角色特殊处理
                     Y9App y9App = y9AppManager.getById(originRole.getAppId());
                     originRole.setAppCnName(y9App.getName());
                     Y9System y9System = y9SystemManager.getById(y9App.getSystemId());
@@ -271,8 +260,8 @@ public class Y9RoleServiceImpl implements Y9RoleService {
             y9Role.setDn(RoleLevelConsts.CN + y9Role.getName());
             y9Role.setGuidPath(y9Role.getId());
         }
-        if (!InitDataConsts.TOP_PUBLIC_ROLE_ID.equals(y9Role.getAppId())) {
-            // 公共角色顶级节点特殊处理
+        if (StringUtils.isBlank(y9Role.getAppCnName())) {
+            // 公共角色特殊处理
             Y9App y9App = y9AppManager.getById(y9Role.getAppId());
             y9Role.setAppCnName(y9App.getName());
             Y9System y9System = y9SystemManager.getById(y9App.getSystemId());

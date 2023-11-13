@@ -35,9 +35,10 @@ import org.springframework.web.context.support.WebApplicationContextUtils;
 
 import lombok.extern.slf4j.Slf4j;
 
+import net.risesoft.enums.platform.SexEnum;
 import net.risesoft.exception.ErrorCode;
 import net.risesoft.exception.GlobalErrorCodeEnum;
-import net.risesoft.model.AccessLog;
+import net.risesoft.model.log.AccessLog;
 import net.risesoft.model.user.UserInfo;
 import net.risesoft.model.user.UserProfile;
 import net.risesoft.pojo.Y9Result;
@@ -45,6 +46,7 @@ import net.risesoft.y9.Y9LoginUserHolder;
 import net.risesoft.y9.json.Y9JsonUtil;
 import net.risesoft.y9.pubsub.constant.Y9TopicConst;
 import net.risesoft.y9.util.InetAddressUtil;
+import net.risesoft.y9.util.Y9EnumUtil;
 
 /**
  *
@@ -376,7 +378,7 @@ public class Y9Oauth2ResourceFilter implements Filter {
         userInfo.setOriginalId((String)map.get("originalId"));
         userInfo.setParentId((String)map.get("parentId"));
         userInfo.setPersonId((String)map.get("personId"));
-        userInfo.setSex(Integer.parseInt(String.valueOf(map.get("sex"))));
+        userInfo.setSex(Y9EnumUtil.valueOf(SexEnum.class, Integer.valueOf(String.valueOf(map.get("sex")))));
         userInfo.setTenantId((String)map.get("tenantId"));
         userInfo.setTenantShortName((String)map.get("tenantShortName"));
         userInfo.setTenantName((String)map.get("tenantName"));

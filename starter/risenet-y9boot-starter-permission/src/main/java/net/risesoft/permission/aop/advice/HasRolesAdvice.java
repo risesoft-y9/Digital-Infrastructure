@@ -8,8 +8,8 @@ import org.springframework.core.annotation.AnnotationUtils;
 
 import net.risesoft.api.permission.PersonRoleApi;
 import net.risesoft.api.permission.PositionRoleApi;
-import net.risesoft.enums.IdentityEnum;
 import net.risesoft.enums.LogicalEnum;
+import net.risesoft.enums.platform.IdentityEnum;
 import net.risesoft.exception.GlobalErrorCodeEnum;
 import net.risesoft.permission.annotation.HasRoles;
 import net.risesoft.y9.Y9LoginUserHolder;

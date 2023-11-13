@@ -24,7 +24,7 @@ import net.risesoft.log.entity.Y9logUserLoginInfo;
 import net.risesoft.log.service.Y9logIpDeptMappingService;
 import net.risesoft.log.service.Y9logUserHostIpInfoService;
 import net.risesoft.log.service.Y9logUserLoginInfoService;
-import net.risesoft.model.Person;
+import net.risesoft.model.platform.Person;
 import net.risesoft.pojo.Y9Page;
 import net.risesoft.pojo.Y9PageQuery;
 import net.risesoft.pojo.Y9Result;

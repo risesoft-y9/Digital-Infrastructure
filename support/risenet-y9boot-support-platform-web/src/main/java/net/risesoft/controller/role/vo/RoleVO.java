@@ -2,7 +2,7 @@ package net.risesoft.controller.role.vo;
 
 import lombok.Data;
 
-import net.risesoft.enums.Y9RoleTypeEnum;
+import net.risesoft.enums.platform.RoleTypeEnum;
 
 /**
  * 角色
@@ -25,9 +25,9 @@ public class RoleVO {
     /**
      * 节点类型
      *
-     * {@link Y9RoleTypeEnum}
+     * {@link RoleTypeEnum}
      */
-    private String type;
+    private RoleTypeEnum type;
 
     /** 父节点ID */
     private String parentId;

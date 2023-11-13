@@ -4,6 +4,10 @@ import java.util.List;
 
 import lombok.Data;
 
+import net.risesoft.enums.platform.AuthorityEnum;
+import net.risesoft.enums.platform.AuthorizationPrincipalTypeEnum;
+import net.risesoft.enums.platform.ResourceTypeEnum;
+
 /**
  * 主体的拥有的某个系统所有资源权限详情
  * 
@@ -29,7 +33,7 @@ public class ResourcePermissionVO {
         private int level = 0;
 
         /** 资源类型 */
-        private Integer resourceType;
+        private ResourceTypeEnum resourceType;
 
         /** 权限详细列表 */
         private List<PermissionDetail> permissionDetailList;
@@ -38,10 +42,10 @@ public class ResourcePermissionVO {
     @Data
     public static class PermissionDetail {
         /** 权限类型 */
-        private Integer authority;
+        private AuthorityEnum authority;
 
         /** 授权主体类型 */
-        private Integer principalType;
+        private AuthorizationPrincipalTypeEnum principalType;
 
         /** 资源是否为继承上级节点的权限 */
         private Boolean inherit;

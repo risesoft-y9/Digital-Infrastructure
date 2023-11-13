@@ -10,7 +10,7 @@ import org.hibernate.annotations.Type;
 
 import lombok.Data;
 
-import net.risesoft.enums.OrgTypeEnum;
+import net.risesoft.enums.platform.OrgTypeEnum;
 
 /**
  * 组织机构实体
@@ -29,7 +29,7 @@ public class Y9Organization extends Y9OrgBase {
     private static final long serialVersionUID = -5379834937852013780L;
 
     public Y9Organization() {
-        super.setOrgType(OrgTypeEnum.ORGANIZATION.getEnName());
+        super.setOrgType(OrgTypeEnum.ORGANIZATION);
     }
 
     /** 英文名称 */

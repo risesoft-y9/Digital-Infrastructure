@@ -11,7 +11,7 @@ import lombok.extern.slf4j.Slf4j;
 import net.risesoft.api.log.ClickedAppApi;
 import net.risesoft.log.entity.Y9ClickedApp;
 import net.risesoft.log.service.Y9ClickedAppService;
-import net.risesoft.model.ClickedApp;
+import net.risesoft.model.log.ClickedApp;
 import net.risesoft.pojo.Y9Result;
 import net.risesoft.y9.json.Y9JsonUtil;
 

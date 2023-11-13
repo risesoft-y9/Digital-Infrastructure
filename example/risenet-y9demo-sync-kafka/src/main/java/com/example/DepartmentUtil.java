@@ -4,8 +4,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-import net.risesoft.model.Department;
-import net.risesoft.model.Person;
+import net.risesoft.model.platform.Department;
+import net.risesoft.model.platform.Person;
 import net.risesoft.y9.pubsub.constant.Y9OrgEventConst;
 
 /**

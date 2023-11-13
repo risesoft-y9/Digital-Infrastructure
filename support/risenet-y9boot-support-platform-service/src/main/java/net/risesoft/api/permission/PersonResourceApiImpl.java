@@ -14,11 +14,11 @@ import org.springframework.web.bind.annotation.RestController;
 
 import lombok.RequiredArgsConstructor;
 
-import net.risesoft.enums.AuthorityEnum;
-import net.risesoft.enums.ResourceTypeEnum;
-import net.risesoft.model.Menu;
-import net.risesoft.model.Resource;
-import net.risesoft.model.VueMenu;
+import net.risesoft.enums.platform.AuthorityEnum;
+import net.risesoft.enums.platform.ResourceTypeEnum;
+import net.risesoft.model.platform.Menu;
+import net.risesoft.model.platform.Resource;
+import net.risesoft.model.platform.VueMenu;
 import net.risesoft.pojo.Y9Result;
 import net.risesoft.service.identity.Y9PersonToResourceAndAuthorityService;
 import net.risesoft.y9.Y9LoginUserHolder;
@@ -58,7 +58,7 @@ public class PersonResourceApiImpl implements PersonResourceApi {
     @Override
     public Y9Result<Boolean> hasPermission(@RequestParam("tenantId") @NotBlank String tenantId,
         @RequestParam("personId") @NotBlank String personId, @RequestParam("resourceId") @NotBlank String resourceId,
-        @RequestParam("authority") Integer authority) {
+        @RequestParam("authority") AuthorityEnum authority) {
         Y9LoginUserHolder.setTenantId(tenantId);
 
         return Y9Result.success(y9PersonToResourceAndAuthorityService.hasPermission(personId, resourceId, authority));
@@ -77,7 +77,7 @@ public class PersonResourceApiImpl implements PersonResourceApi {
     @Override
     public Y9Result<Boolean> hasPermissionByCustomId(@RequestParam("tenantId") @NotBlank String tenantId,
         @RequestParam("personId") @NotBlank String personId, @RequestParam("customId") @NotBlank String customId,
-        @RequestParam("authority") Integer authority) {
+        @RequestParam("authority") AuthorityEnum authority) {
         Y9LoginUserHolder.setTenantId(tenantId);
 
         return Y9Result
@@ -96,7 +96,7 @@ public class PersonResourceApiImpl implements PersonResourceApi {
      */
     @Override
     public Y9Result<List<VueMenu>> listMenusRecursively(@RequestParam("tenantId") @NotBlank String tenantId,
-        @RequestParam("personId") @NotBlank String personId, @RequestParam("authority") Integer authority,
+        @RequestParam("personId") @NotBlank String personId, @RequestParam("authority") AuthorityEnum authority,
         @RequestParam("resourceId") @NotBlank String resourceId) {
         Y9LoginUserHolder.setTenantId(tenantId);
 
@@ -118,7 +118,7 @@ public class PersonResourceApiImpl implements PersonResourceApi {
      */
     @Override
     public Y9Result<List<Menu>> listSubMenus(@RequestParam("tenantId") @NotBlank String tenantId,
-        @RequestParam("personId") @NotBlank String personId, @RequestParam("authority") Integer authority,
+        @RequestParam("personId") @NotBlank String personId, @RequestParam("authority") AuthorityEnum authority,
         @RequestParam("resourceId") @NotBlank String resourceId) {
         Y9LoginUserHolder.setTenantId(tenantId);
 
@@ -139,7 +139,7 @@ public class PersonResourceApiImpl implements PersonResourceApi {
      */
     @Override
     public Y9Result<List<Resource>> listSubResources(@RequestParam("tenantId") @NotBlank String tenantId,
-        @RequestParam("personId") @NotBlank String personId, @RequestParam("authority") Integer authority,
+        @RequestParam("personId") @NotBlank String personId, @RequestParam("authority") AuthorityEnum authority,
         @RequestParam("resourceId") @NotBlank String resourceId) {
         Y9LoginUserHolder.setTenantId(tenantId);
 

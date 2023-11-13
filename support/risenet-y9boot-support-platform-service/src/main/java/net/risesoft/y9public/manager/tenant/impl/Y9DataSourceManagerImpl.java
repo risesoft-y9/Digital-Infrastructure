@@ -16,8 +16,8 @@ import com.alibaba.druid.pool.DruidDataSource;
 
 import lombok.extern.slf4j.Slf4j;
 
-import net.risesoft.enums.DataSourceTypeEnum;
-import net.risesoft.enums.TenantTypeEnum;
+import net.risesoft.enums.platform.DataSourceTypeEnum;
+import net.risesoft.enums.platform.TenantTypeEnum;
 import net.risesoft.id.IdType;
 import net.risesoft.id.Y9IdGenerator;
 import net.risesoft.y9.configuration.Y9Properties;
@@ -191,7 +191,7 @@ public class Y9DataSourceManagerImpl implements Y9DataSourceManager {
         Y9DataSource y9DataSource = new Y9DataSource();
         y9DataSource.setJndiName(dbName);
         y9DataSource.setUrl(url);
-        y9DataSource.setType(DataSourceTypeEnum.DRUID.getValue());
+        y9DataSource.setType(DataSourceTypeEnum.DRUID);
         y9DataSource.setUsername(username);
         y9DataSource.setPassword(password);
         y9DataSource.setInitialSize(dds.getInitialSize());

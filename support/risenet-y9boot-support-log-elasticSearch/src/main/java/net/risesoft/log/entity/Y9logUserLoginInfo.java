@@ -11,7 +11,7 @@ import org.springframework.data.elasticsearch.annotations.FieldType;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import net.risesoft.enums.ManagerLevelEnum;
+import net.risesoft.enums.platform.ManagerLevelEnum;
 
 @NoArgsConstructor
 @Data

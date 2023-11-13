@@ -8,8 +8,9 @@ import org.springframework.core.annotation.AnnotationUtils;
 
 import net.risesoft.api.permission.PersonResourceApi;
 import net.risesoft.api.permission.PositionResourceApi;
-import net.risesoft.enums.IdentityEnum;
 import net.risesoft.enums.LogicalEnum;
+import net.risesoft.enums.platform.AuthorityEnum;
+import net.risesoft.enums.platform.IdentityEnum;
 import net.risesoft.exception.GlobalErrorCodeEnum;
 import net.risesoft.permission.annotation.HasAuthorities;
 import net.risesoft.y9.Y9LoginUserHolder;
@@ -36,7 +37,7 @@ public class HasAuthoritiesAdvice implements MethodBeforeAdvice {
         HasAuthorities hasAuthorities = AnnotationUtils.findAnnotation(method, HasAuthorities.class);
         if (hasAuthorities != null && hasAuthorities.value() != null) {
             String[] customIds = hasAuthorities.value();
-            Integer authority = hasAuthorities.authority().getValue();
+            AuthorityEnum authority = hasAuthorities.authority();
             LogicalEnum logical = hasAuthorities.logical();
             IdentityEnum identity = hasAuthorities.identity();
 
@@ -63,7 +64,7 @@ public class HasAuthoritiesAdvice implements MethodBeforeAdvice {
         }
     }
 
-    private void checkAllPersonPermission(String[] customIds, Integer authority) {
+    private void checkAllPersonPermission(String[] customIds, AuthorityEnum authority) {
         for (String customId : customIds) {
             if (!hasPersonPermission(customId, authority)) {
                 throw Y9ExceptionUtil.permissionException(GlobalErrorCodeEnum.PERSON_UNAUTHORIZED_RESOURCE, customId);
@@ -71,7 +72,7 @@ public class HasAuthoritiesAdvice implements MethodBeforeAdvice {
         }
     }
 
-    private void checkAnyPersonPermission(String[] customIds, Integer authority) {
+    private void checkAnyPersonPermission(String[] customIds, AuthorityEnum authority) {
         for (String customId : customIds) {
             if (hasPersonPermission(customId, authority)) {
                 return;
@@ -81,7 +82,7 @@ public class HasAuthoritiesAdvice implements MethodBeforeAdvice {
             Arrays.toString(customIds));
     }
 
-    private void checkAllPositionPermission(String[] customIds, Integer authority) {
+    private void checkAllPositionPermission(String[] customIds, AuthorityEnum authority) {
         for (String customId : customIds) {
             if (!hasPersonPermission(customId, authority)) {
                 throw Y9ExceptionUtil.permissionException(GlobalErrorCodeEnum.POSITION_UNAUTHORIZED_RESOURCE, customId);
@@ -89,7 +90,7 @@ public class HasAuthoritiesAdvice implements MethodBeforeAdvice {
         }
     }
 
-    private void checkAnyPositionPermission(String[] customIds, Integer authority) {
+    private void checkAnyPositionPermission(String[] customIds, AuthorityEnum authority) {
         for (String customId : customIds) {
             if (hasPositionPermission(customId, authority)) {
                 return;
@@ -99,12 +100,12 @@ public class HasAuthoritiesAdvice implements MethodBeforeAdvice {
             Arrays.toString(customIds));
     }
 
-    private boolean hasPersonPermission(String customId, Integer authority) {
+    private boolean hasPersonPermission(String customId, AuthorityEnum authority) {
         return personResourceApi.hasPermissionByCustomId(Y9LoginUserHolder.getTenantId(),
             Y9LoginUserHolder.getPersonId(), customId, authority).getData();
     }
 
-    private boolean hasPositionPermission(String customId, Integer authority) {
+    private boolean hasPositionPermission(String customId, AuthorityEnum authority) {
         return positionResourceApi.hasPermissionByCustomId(Y9LoginUserHolder.getTenantId(),
             Y9LoginUserHolder.getPositionId(), customId, authority).getData();
     }

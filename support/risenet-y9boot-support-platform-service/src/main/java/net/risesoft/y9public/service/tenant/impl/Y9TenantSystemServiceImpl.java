@@ -17,7 +17,7 @@ import lombok.extern.slf4j.Slf4j;
 
 import net.risesoft.id.IdType;
 import net.risesoft.id.Y9IdGenerator;
-import net.risesoft.model.TenantSystem;
+import net.risesoft.model.platform.TenantSystem;
 import net.risesoft.y9.pubsub.Y9PublishService;
 import net.risesoft.y9.pubsub.constant.Y9CommonEventConst;
 import net.risesoft.y9.pubsub.message.Y9MessageCommon;
@@ -190,7 +190,7 @@ public class Y9TenantSystemServiceImpl implements Y9TenantSystemService {
             String datasoureId = tenant.getDefaultDataSourceId();
             try {
                 Y9DataSource y9DataSource = y9DataSourceManager.createTenantDefaultDataSource(tenant.getShortName(),
-                    tenant.getTenantType(), y9System.getName());
+                    tenant.getTenantType().getValue(), y9System.getName());
                 datasoureId = y9DataSource.getId();
             } catch (Exception e) {
                 LOGGER.warn(e.getMessage(), e);

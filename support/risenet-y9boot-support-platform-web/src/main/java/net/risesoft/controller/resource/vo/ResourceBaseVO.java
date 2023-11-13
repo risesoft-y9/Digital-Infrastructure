@@ -3,7 +3,7 @@ package net.risesoft.controller.resource.vo;
 import lombok.Getter;
 import lombok.Setter;
 
-import net.risesoft.enums.ResourceTypeEnum;
+import net.risesoft.enums.platform.ResourceTypeEnum;
 
 /**
  * 资源
@@ -26,7 +26,7 @@ public class ResourceBaseVO {
      *
      * {@link ResourceTypeEnum}
      */
-    private Integer resourceType;
+    private ResourceTypeEnum resourceType;
 
     /** 父节点ID */
     private String parentId;
@@ -41,14 +41,14 @@ public class ResourceBaseVO {
     private Boolean inherit;
 
     public String getParentId() {
-        if (resourceType.equals(ResourceTypeEnum.APP.getValue())) {
+        if (resourceType.equals(ResourceTypeEnum.APP)) {
             return systemId;
         }
         return parentId;
     }
 
     public String getAppId() {
-        if (resourceType.equals(ResourceTypeEnum.APP.getValue())) {
+        if (resourceType.equals(ResourceTypeEnum.APP)) {
             return id;
         }
         return appId;

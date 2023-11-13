@@ -23,13 +23,13 @@ import net.risesoft.entity.Y9Group;
 import net.risesoft.entity.Y9OrgBase;
 import net.risesoft.entity.Y9Person;
 import net.risesoft.entity.Y9Position;
-import net.risesoft.enums.Y9DepartmentPropCategoryEnum;
-import net.risesoft.model.Department;
-import net.risesoft.model.DepartmentProp;
-import net.risesoft.model.Group;
-import net.risesoft.model.OrgUnit;
-import net.risesoft.model.Person;
-import net.risesoft.model.Position;
+import net.risesoft.enums.platform.DepartmentPropCategoryEnum;
+import net.risesoft.model.platform.Department;
+import net.risesoft.model.platform.DepartmentProp;
+import net.risesoft.model.platform.Group;
+import net.risesoft.model.platform.OrgUnit;
+import net.risesoft.model.platform.Person;
+import net.risesoft.model.platform.Position;
 import net.risesoft.pojo.Y9Result;
 import net.risesoft.service.org.CompositeOrgBaseService;
 import net.risesoft.service.org.Y9DepartmentPropService;
@@ -246,14 +246,14 @@ public class DepartmentApiImpl implements DepartmentApi {
      *
      * @param tenantId 租户id
      * @param orgUnitId 组织节点id
-     * @param category 配置类型 {@link Y9DepartmentPropCategoryEnum}
+     * @param category 配置类型 {@link DepartmentPropCategoryEnum}
      * @return {@code Y9Result<List<DepartmentProp>>} 通用请求返回对象 - data 是部门属性配置集合
      * @since 9.6.0
      */
     @Override
     public Y9Result<List<DepartmentProp>> listByOrgBaseIdAndCategory(
         @RequestParam("tenantId") @NotBlank String tenantId, @RequestParam("orgUnitId") @NotBlank String orgUnitId,
-        @RequestParam("category") Integer category) {
+        @RequestParam("category") DepartmentPropCategoryEnum category) {
         Y9LoginUserHolder.setTenantId(tenantId);
 
         List<Y9DepartmentProp> y9DepartmentPropList =

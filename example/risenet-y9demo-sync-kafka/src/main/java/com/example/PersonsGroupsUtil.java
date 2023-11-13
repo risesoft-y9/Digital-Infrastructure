@@ -1,6 +1,6 @@
 package com.example;
 
-import net.risesoft.model.PersonsGroups;
+import net.risesoft.model.platform.PersonsGroups;
 
 /**
  * 用户组人员同步

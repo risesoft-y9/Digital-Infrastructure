@@ -1,6 +1,7 @@
 package net.risesoft.entity;
 
 import javax.persistence.Column;
+import javax.persistence.Convert;
 import javax.persistence.Entity;
 import javax.persistence.Table;
 
@@ -9,8 +10,9 @@ import org.hibernate.annotations.Comment;
 
 import lombok.Data;
 
-import net.risesoft.enums.GroupTypeEnum;
-import net.risesoft.enums.OrgTypeEnum;
+import net.risesoft.enums.platform.GroupTypeEnum;
+import net.risesoft.enums.platform.OrgTypeEnum;
+import net.risesoft.persistence.EnumConverter;
 
 /**
  * 用户组
@@ -29,7 +31,7 @@ public class Y9Group extends Y9OrgBase {
     private static final long serialVersionUID = -8480745083494990707L;
 
     public Y9Group() {
-        super.setOrgType(OrgTypeEnum.GROUP.getEnName());
+        super.setOrgType(OrgTypeEnum.GROUP);
     }
 
     /** 父节点id */
@@ -40,11 +42,12 @@ public class Y9Group extends Y9OrgBase {
     /**
      * 岗位组或者用户组
      * 
-     * {@link net.risesoft.enums.GroupTypeEnum}
+     * {@link GroupTypeEnum}
      */
     @ColumnDefault("'person'")
     @Column(name = "TYPE", length = 10, nullable = false)
     @Comment("类型：position、person")
-    private String type = GroupTypeEnum.PERSON.getName();
+    @Convert(converter = EnumConverter.GroupTypeEnumConverter.class)
+    private GroupTypeEnum type = GroupTypeEnum.PERSON;
 
 }

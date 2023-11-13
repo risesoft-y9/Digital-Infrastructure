@@ -5,7 +5,7 @@ import org.springframework.cloud.openfeign.SpringQueryMap;
 import org.springframework.web.bind.annotation.PostMapping;
 
 import net.risesoft.api.log.AccessLogApi;
-import net.risesoft.model.AccessLog;
+import net.risesoft.model.log.AccessLog;
 import net.risesoft.pojo.Y9Result;
 
 /**

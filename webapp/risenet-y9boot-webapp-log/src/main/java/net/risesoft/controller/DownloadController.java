@@ -24,7 +24,7 @@ import lombok.extern.slf4j.Slf4j;
 
 import net.risesoft.log.entity.Y9logUserLoginInfo;
 import net.risesoft.log.service.Y9logUserLoginInfoService;
-import net.risesoft.model.Person;
+import net.risesoft.model.platform.Person;
 import net.risesoft.pojo.LoginInformation;
 import net.risesoft.pojo.PersonInformation;
 import net.risesoft.util.JxlsUtil;
@@ -137,7 +137,7 @@ public class DownloadController {
                 pf.setEmail(person.getEmail());
                 pf.setLoginName(person.getLoginName());
                 pf.setMobile(person.getMobile());
-                pf.setSex(person.getSex() == 0 ? "女" : "男");
+                pf.setSex(person.getSex().getDescription());
                 personInformationList.add(pf);
             }
 
@@ -185,7 +185,7 @@ public class DownloadController {
             pf.setEmail(person.getEmail());
             pf.setLoginName(person.getLoginName());
             pf.setMobile(person.getMobile());
-            pf.setSex(person.getSex() == 0 ? "女" : "男");
+            pf.setSex(person.getSex().getDescription());
             personInformationList.add(pf);
         }
         map.put("personList", personInformationList);

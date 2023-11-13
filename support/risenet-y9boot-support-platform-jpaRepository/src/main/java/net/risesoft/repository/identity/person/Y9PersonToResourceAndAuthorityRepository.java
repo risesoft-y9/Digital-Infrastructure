@@ -11,6 +11,8 @@ import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
 import net.risesoft.entity.identity.person.Y9PersonToResourceAndAuthority;
+import net.risesoft.enums.platform.AuthorityEnum;
+import net.risesoft.enums.platform.ResourceTypeEnum;
 
 /**
  * @author dingzhaojun
@@ -57,23 +59,23 @@ public interface Y9PersonToResourceAndAuthorityRepository
     Page<Y9PersonToResourceAndAuthority> findByPersonId(String personId, Pageable pageable);
 
     List<Y9PersonToResourceAndAuthority> findByPersonIdAndAuthorityAndResourceTypeOrderByResourceTabIndex(
-        String personId, Integer authority, Integer resourceType);
+        String personId, AuthorityEnum authority, ResourceTypeEnum resourceType);
 
     List<Y9PersonToResourceAndAuthority>
         findByPersonIdAndParentResourceIdAndAuthorityAndResourceTypeOrderByResourceTabIndex(String personId,
-            String parentResourceId, Integer authority, Integer resourceType);
+            String parentResourceId, AuthorityEnum authority, ResourceTypeEnum resourceType);
 
     List<Y9PersonToResourceAndAuthority> findByPersonIdAndParentResourceIdAndAuthorityOrderByResourceTabIndex(
-        String personId, String parentResourceId, Integer authority);
+        String personId, String parentResourceId, AuthorityEnum authority);
 
     List<Y9PersonToResourceAndAuthority> findByPersonIdAndResourceCustomIdAndAuthority(String personId,
-        String resourceCustomId, Integer authority);
+        String resourceCustomId, AuthorityEnum authority);
 
     List<Y9PersonToResourceAndAuthority> findByPersonIdAndResourceIdAndAuthority(String personId, String resourceId,
-        Integer authority);
+        AuthorityEnum authority);
 
     Optional<Y9PersonToResourceAndAuthority> findByPersonIdAndResourceIdAndAuthorizationIdAndAuthority(String personId,
-        String resourceId, String authorizationId, Integer authority);
+        String resourceId, String authorizationId, AuthorityEnum authority);
 
     List<Y9PersonToResourceAndAuthority> findByResourceId(String resourceId);
 

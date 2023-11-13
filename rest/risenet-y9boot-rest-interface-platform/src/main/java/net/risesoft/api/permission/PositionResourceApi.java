@@ -8,8 +8,8 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
-import net.risesoft.enums.AuthorityEnum;
-import net.risesoft.model.Resource;
+import net.risesoft.enums.platform.AuthorityEnum;
+import net.risesoft.model.platform.Resource;
 import net.risesoft.pojo.Y9Result;
 
 /**
@@ -37,7 +37,7 @@ public interface PositionResourceApi {
     @GetMapping("/hasPermission")
     Y9Result<Boolean> hasPermission(@RequestParam("tenantId") @NotBlank String tenantId,
         @RequestParam("positionId") @NotBlank String positionId,
-        @RequestParam("resourceId") @NotBlank String resourceId, @RequestParam("authority") Integer authority);
+        @RequestParam("resourceId") @NotBlank String resourceId, @RequestParam("authority") AuthorityEnum authority);
 
     /**
      * 判断岗位对 customId 对应的资源是否有指定的操作权限
@@ -52,7 +52,7 @@ public interface PositionResourceApi {
     @GetMapping("/hasPermissionByCustomId")
     Y9Result<Boolean> hasPermissionByCustomId(@RequestParam("tenantId") @NotBlank String tenantId,
         @RequestParam("positionId") @NotBlank String positionId, @RequestParam("customId") @NotBlank String customId,
-        @RequestParam("authority") Integer authority);
+        @RequestParam("authority") AuthorityEnum authority);
 
     /**
      * 获得某一资源下，岗位有相应操作权限的菜单资源集合
@@ -66,7 +66,7 @@ public interface PositionResourceApi {
      */
     @GetMapping("/listSubMenus")
     Y9Result<List<Resource>> listSubMenus(@RequestParam("tenantId") @NotBlank String tenantId,
-        @RequestParam("positionId") @NotBlank String positionId, @RequestParam("authority") Integer authority,
+        @RequestParam("positionId") @NotBlank String positionId, @RequestParam("authority") AuthorityEnum authority,
         @RequestParam("resourceId") @NotBlank String resourceId);
 
     /**
@@ -81,6 +81,6 @@ public interface PositionResourceApi {
      */
     @GetMapping("/listSubResources")
     Y9Result<List<Resource>> listSubResources(@RequestParam("tenantId") @NotBlank String tenantId,
-        @RequestParam("positionId") @NotBlank String positionId, @RequestParam("authority") Integer authority,
+        @RequestParam("positionId") @NotBlank String positionId, @RequestParam("authority") AuthorityEnum authority,
         @RequestParam(name = "resourceId", required = false) String resourceId);
 }

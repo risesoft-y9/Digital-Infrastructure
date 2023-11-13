@@ -14,13 +14,14 @@ import org.springframework.web.bind.annotation.RestController;
 
 import lombok.RequiredArgsConstructor;
 
-import net.risesoft.enums.AuthorityEnum;
-import net.risesoft.enums.ResourceTypeEnum;
-import net.risesoft.model.Menu;
-import net.risesoft.model.Resource;
-import net.risesoft.model.VueMenu;
+import net.risesoft.enums.platform.AuthorityEnum;
+import net.risesoft.enums.platform.ResourceTypeEnum;
+import net.risesoft.model.platform.Menu;
+import net.risesoft.model.platform.Resource;
+import net.risesoft.model.platform.VueMenu;
 import net.risesoft.service.identity.Y9PersonToResourceAndAuthorityService;
 import net.risesoft.y9.Y9LoginUserHolder;
+import net.risesoft.y9.util.Y9EnumUtil;
 import net.risesoft.y9.util.Y9ModelConvertUtil;
 import net.risesoft.y9public.entity.resource.Y9Menu;
 import net.risesoft.y9public.entity.resource.Y9ResourceBase;
@@ -61,7 +62,8 @@ public class PersonResourceApiImpl implements PersonResourceApi {
         @RequestParam("authority") Integer authority) {
         Y9LoginUserHolder.setTenantId(tenantId);
 
-        return y9PersonToResourceAndAuthorityService.hasPermission(personId, resourceId, authority);
+        return y9PersonToResourceAndAuthorityService.hasPermission(personId, resourceId,
+            Y9EnumUtil.valueOf(AuthorityEnum.class, authority));
     }
 
     /**
@@ -80,7 +82,8 @@ public class PersonResourceApiImpl implements PersonResourceApi {
         @RequestParam("authority") Integer authority) {
         Y9LoginUserHolder.setTenantId(tenantId);
 
-        return y9PersonToResourceAndAuthorityService.hasPermissionByCustomId(personId, customId, authority);
+        return y9PersonToResourceAndAuthorityService.hasPermissionByCustomId(personId, customId,
+            Y9EnumUtil.valueOf(AuthorityEnum.class, authority));
     }
 
     /**
@@ -100,7 +103,8 @@ public class PersonResourceApiImpl implements PersonResourceApi {
         Y9LoginUserHolder.setTenantId(tenantId);
 
         List<VueMenu> vueMenuList = new ArrayList<>();
-        vueMenuBuilder.buildVueMenus(personId, authority, resourceId, vueMenuList);
+        vueMenuBuilder.buildVueMenus(personId, Y9EnumUtil.valueOf(AuthorityEnum.class, authority), resourceId,
+            vueMenuList);
 
         return vueMenuList;
     }
@@ -122,7 +126,7 @@ public class PersonResourceApiImpl implements PersonResourceApi {
         Y9LoginUserHolder.setTenantId(tenantId);
 
         List<Y9Menu> y9MenuList = y9PersonToResourceAndAuthorityService.listSubMenus(personId, resourceId,
-            ResourceTypeEnum.MENU.getValue(), authority);
+            ResourceTypeEnum.MENU.getValue(), Y9EnumUtil.valueOf(AuthorityEnum.class, authority));
         return Y9ModelConvertUtil.convert(y9MenuList, Menu.class);
     }
 
@@ -142,8 +146,8 @@ public class PersonResourceApiImpl implements PersonResourceApi {
         @RequestParam("resourceId") @NotBlank String resourceId) {
         Y9LoginUserHolder.setTenantId(tenantId);
 
-        List<Y9ResourceBase> y9ResourceBaseList =
-            y9PersonToResourceAndAuthorityService.listSubResources(personId, resourceId, authority);
+        List<Y9ResourceBase> y9ResourceBaseList = y9PersonToResourceAndAuthorityService.listSubResources(personId,
+            resourceId, Y9EnumUtil.valueOf(AuthorityEnum.class, authority));
         return Y9ModelConvertUtil.convert(y9ResourceBaseList, Resource.class);
     }
 }

@@ -3,7 +3,7 @@ package net.risesoft.api.org.dto;
 import lombok.Getter;
 import lombok.Setter;
 
-import net.risesoft.enums.GroupTypeEnum;
+import net.risesoft.enums.platform.GroupTypeEnum;
 
 /**
  * @author shidaobang
@@ -22,8 +22,8 @@ public class CreateGroupDTO extends CreateOrgUnitBaseDTO {
     /**
      * 岗位组或者用户组
      *
-     * {@link net.risesoft.enums.GroupTypeEnum}
+     * {@link GroupTypeEnum}
      */
-    private String type = GroupTypeEnum.PERSON.getName();
+    private String type = GroupTypeEnum.PERSON.getValue();
 
 }

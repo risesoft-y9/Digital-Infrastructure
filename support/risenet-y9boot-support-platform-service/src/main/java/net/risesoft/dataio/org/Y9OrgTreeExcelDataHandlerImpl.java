@@ -29,7 +29,8 @@ import net.risesoft.entity.Y9OrgBase;
 import net.risesoft.entity.Y9Organization;
 import net.risesoft.entity.Y9Person;
 import net.risesoft.entity.Y9Position;
-import net.risesoft.enums.OrgTypeEnum;
+import net.risesoft.enums.platform.OrgTypeEnum;
+import net.risesoft.enums.platform.SexEnum;
 import net.risesoft.id.IdType;
 import net.risesoft.id.Y9IdGenerator;
 import net.risesoft.pojo.ObjectSheet;
@@ -321,7 +322,7 @@ public class Y9OrgTreeExcelDataHandlerImpl implements Y9OrgTreeDataHandler {
                 y9Person.setEmail(pf.getEmail());
                 y9Person.setMobile(pf.getMobile().replaceAll("\\s*", ""));
                 y9Person.setLoginName(pf.getLoginName().replaceAll("\\s*", ""));
-                y9Person.setSex("男".equals(pf.getSex()) ? 1 : 0);
+                y9Person.setSex("男".equals(pf.getSex()) ? SexEnum.MALE : SexEnum.FEMALE);
                 y9Person.setParentId(parentId);
 
                 String jobs = pf.getJobs();
@@ -346,7 +347,7 @@ public class Y9OrgTreeExcelDataHandlerImpl implements Y9OrgTreeDataHandler {
                     department.setId(Y9IdGenerator.genId(IdType.SNOWFLAKE));
                     department.setTenantId(Y9LoginUserHolder.getTenantId());
                     department.setName(paths[i].replaceAll("\\s*", ""));
-                    department.setOrgType(OrgTypeEnum.DEPARTMENT.getEnName());
+                    department.setOrgType(OrgTypeEnum.DEPARTMENT);
                     department.setParentId(parentId);
                     Y9Department dept = y9DepartmentService.saveOrUpdate(department);
                     parentId = dept.getId();
@@ -421,7 +422,7 @@ public class Y9OrgTreeExcelDataHandlerImpl implements Y9OrgTreeDataHandler {
             personInformation.setEmail(person.getEmail());
             personInformation.setLoginName(person.getLoginName());
             personInformation.setMobile(person.getMobile());
-            personInformation.setSex(person.getSex() == 0 ? "女" : "男");
+            personInformation.setSex(SexEnum.FEMALE.equals(person.getSex()) ? "女" : "男");
             List<Y9Job> y9JobList = y9JobService.findByPersonId(person.getId());
             personInformation.setJobs(y9JobList.stream().map(Y9Job::getName).collect(Collectors.joining(SPLITTER)));
             personList.add(personInformation);

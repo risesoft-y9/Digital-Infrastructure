@@ -8,7 +8,8 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
-import net.risesoft.model.Tenant;
+import net.risesoft.enums.platform.TenantTypeEnum;
+import net.risesoft.model.platform.Tenant;
 import net.risesoft.pojo.Y9Result;
 
 /**
@@ -70,6 +71,6 @@ public interface TenantApi {
      * @since 9.6.0
      */
     @GetMapping("/listByTenantType")
-    Y9Result<List<Tenant>> listByTenantType(@RequestParam("tenantType") Integer tenantType);
+    Y9Result<List<Tenant>> listByTenantType(@RequestParam("tenantType") TenantTypeEnum tenantType);
 
 }

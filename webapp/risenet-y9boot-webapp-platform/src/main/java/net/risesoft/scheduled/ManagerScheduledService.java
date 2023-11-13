@@ -19,7 +19,7 @@ import lombok.extern.slf4j.Slf4j;
 
 import net.risesoft.entity.Y9Manager;
 import net.risesoft.log.service.SaveLogInfo4Kafka;
-import net.risesoft.model.AccessLog;
+import net.risesoft.model.log.AccessLog;
 import net.risesoft.model.user.UserInfo;
 import net.risesoft.model.userlogininfo.LoginInfo;
 import net.risesoft.service.org.Y9ManagerService;

@@ -22,7 +22,7 @@ import net.risesoft.exception.OrgUnitErrorCodeEnum;
 import net.risesoft.id.Y9IdGenerator;
 import net.risesoft.manager.org.Y9JobManager;
 import net.risesoft.manager.org.Y9PositionManager;
-import net.risesoft.model.Job;
+import net.risesoft.model.platform.Job;
 import net.risesoft.repository.Y9JobRepository;
 import net.risesoft.repository.Y9PositionRepository;
 import net.risesoft.repository.relation.Y9PersonsToPositionsRepository;

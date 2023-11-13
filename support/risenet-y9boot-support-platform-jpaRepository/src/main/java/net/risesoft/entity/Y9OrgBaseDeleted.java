@@ -1,6 +1,7 @@
 package net.risesoft.entity;
 
 import javax.persistence.Column;
+import javax.persistence.Convert;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.Lob;
@@ -12,7 +13,8 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import net.risesoft.base.BaseEntity;
-import net.risesoft.enums.OrgTypeEnum;
+import net.risesoft.enums.platform.OrgTypeEnum;
+import net.risesoft.persistence.EnumConverter;
 
 /**
  * 删除的组织表
@@ -54,7 +56,8 @@ public class Y9OrgBaseDeleted extends BaseEntity {
      */
     @Column(name = "ORG_TYPE", length = 255, nullable = false)
     @Comment("组织类型")
-    protected String orgType;
+    @Convert(converter = EnumConverter.OrgTypeEnumConverter.class)
+    protected OrgTypeEnum orgType;
 
     /** 名称组成的父子关系，之间以逗号分割 */
     @Column(name = "DN", length = 2000)

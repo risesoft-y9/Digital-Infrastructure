@@ -13,7 +13,7 @@ import net.risesoft.entity.Y9OrgBase;
 import net.risesoft.entity.relation.Y9OrgBasesToRoles;
 import net.risesoft.entity.relation.Y9PersonsToGroups;
 import net.risesoft.entity.relation.Y9PersonsToPositions;
-import net.risesoft.enums.OrgTypeEnum;
+import net.risesoft.enums.platform.OrgTypeEnum;
 import net.risesoft.service.identity.Y9PersonToRoleService;
 import net.risesoft.service.identity.Y9PositionToRoleService;
 import net.risesoft.service.org.CompositeOrgBaseService;
@@ -52,9 +52,9 @@ public class UpdateIdentityRolesListener {
     @Async
     public void onOrgUnitCreated(Y9EntityCreatedEvent<? extends Y9OrgBase> event) {
         Y9OrgBase y9OrgBase = event.getEntity();
-        String orgType = y9OrgBase.getOrgType();
+        OrgTypeEnum orgType = y9OrgBase.getOrgType();
 
-        if (OrgTypeEnum.PERSON.getEnName().equals(orgType)) {
+        if (OrgTypeEnum.PERSON.equals(orgType)) {
             y9PersonToRoleService.recalculate(y9OrgBase.getId());
 
             if (LOGGER.isDebugEnabled()) {
@@ -62,7 +62,7 @@ public class UpdateIdentityRolesListener {
             }
         }
 
-        if (OrgTypeEnum.POSITION.getEnName().equals(orgType)) {
+        if (OrgTypeEnum.POSITION.equals(orgType)) {
             y9PositionToRoleService.recalculate(y9OrgBase.getId());
 
             if (LOGGER.isDebugEnabled()) {
@@ -76,12 +76,12 @@ public class UpdateIdentityRolesListener {
     public void onOrgUnitUpdated(Y9EntityUpdatedEvent<? extends Y9OrgBase> event) {
         Y9OrgBase originY9OrgBase = event.getOriginEntity();
         Y9OrgBase updatedY9OrgBase = event.getUpdatedEntity();
-        String orgType = originY9OrgBase.getOrgType();
+        OrgTypeEnum orgType = originY9OrgBase.getOrgType();
 
         if (Y9OrgUtil.isMoved(originY9OrgBase, updatedY9OrgBase)) {
 
-            if (OrgTypeEnum.DEPARTMENT.getEnName().equals(orgType) || OrgTypeEnum.GROUP.getEnName().equals(orgType)
-                || OrgTypeEnum.PERSON.getEnName().equals(orgType) || OrgTypeEnum.POSITION.getEnName().equals(orgType)) {
+            if (OrgTypeEnum.DEPARTMENT.equals(orgType) || OrgTypeEnum.GROUP.equals(orgType)
+                || OrgTypeEnum.PERSON.equals(orgType) || OrgTypeEnum.POSITION.equals(orgType)) {
                 this.updateIdentityRolesByOrgId(updatedY9OrgBase.getId());
             }
 
@@ -154,7 +154,7 @@ public class UpdateIdentityRolesListener {
     private void updateIdentityRolesByOrgId(final String orgId) {
         Y9OrgBase y9OrgBase = compositeOrgBaseService.getOrgUnit(orgId);
         if (y9OrgBase != null && y9OrgBase.getId() != null) {
-            OrgTypeEnum orgType = OrgTypeEnum.getByEnName(y9OrgBase.getOrgType());
+            OrgTypeEnum orgType = y9OrgBase.getOrgType();
             switch (orgType) {
                 case ORGANIZATION:
                     List<String> personIdList = y9PersonService.findIdByGuidPathStartingWith(y9OrgBase.getGuidPath());

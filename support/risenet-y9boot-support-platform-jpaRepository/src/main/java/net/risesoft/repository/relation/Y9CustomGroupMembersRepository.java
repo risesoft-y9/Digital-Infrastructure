@@ -13,6 +13,7 @@ import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
 import net.risesoft.entity.relation.Y9CustomGroupMember;
+import net.risesoft.enums.platform.OrgTypeEnum;
 
 /**
  * @author dingzhaojun
@@ -38,9 +39,9 @@ public interface Y9CustomGroupMembersRepository
 
     Optional<Y9CustomGroupMember> findByGroupIdAndMemberId(String groupId, String memberId);
 
-    Page<Y9CustomGroupMember> findByGroupIdAndMemberType(String groupId, String memberType, Pageable pageable);
+    Page<Y9CustomGroupMember> findByGroupIdAndMemberType(String groupId, OrgTypeEnum memberType, Pageable pageable);
 
-    List<Y9CustomGroupMember> findByGroupIdAndMemberTypeOrderByTabIndexAsc(String groupId, String memberType);
+    List<Y9CustomGroupMember> findByGroupIdAndMemberTypeOrderByTabIndexAsc(String groupId, OrgTypeEnum memberType);
 
     List<Y9CustomGroupMember> findByGroupIdOrderByTabIndexAsc(String groupId);
 

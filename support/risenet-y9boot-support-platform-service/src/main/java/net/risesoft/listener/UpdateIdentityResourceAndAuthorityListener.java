@@ -18,10 +18,10 @@ import net.risesoft.entity.permission.Y9Authorization;
 import net.risesoft.entity.relation.Y9OrgBasesToRoles;
 import net.risesoft.entity.relation.Y9PersonsToGroups;
 import net.risesoft.entity.relation.Y9PersonsToPositions;
-import net.risesoft.enums.AuthorityEnum;
-import net.risesoft.enums.AuthorizationPrincipalTypeEnum;
-import net.risesoft.enums.OrgTypeEnum;
-import net.risesoft.enums.ResourceTypeEnum;
+import net.risesoft.enums.platform.AuthorityEnum;
+import net.risesoft.enums.platform.AuthorizationPrincipalTypeEnum;
+import net.risesoft.enums.platform.OrgTypeEnum;
+import net.risesoft.enums.platform.ResourceTypeEnum;
 import net.risesoft.service.authorization.Y9AuthorizationService;
 import net.risesoft.service.identity.Y9PersonToResourceAndAuthorityService;
 import net.risesoft.service.identity.Y9PositionToResourceAndAuthorityService;
@@ -60,9 +60,9 @@ public class UpdateIdentityResourceAndAuthorityListener {
     @Async
     public void onOrgUnitCreated(Y9EntityCreatedEvent<? extends Y9OrgBase> event) {
         Y9OrgBase y9OrgBase = event.getEntity();
-        String orgType = y9OrgBase.getOrgType();
+        OrgTypeEnum orgType = y9OrgBase.getOrgType();
 
-        if (OrgTypeEnum.PERSON.getEnName().equals(orgType)) {
+        if (OrgTypeEnum.PERSON.equals(orgType)) {
             y9AuthorizationService.syncToIdentityResourceAndAuthority(y9OrgBase.getId());
 
             if (LOGGER.isDebugEnabled()) {
@@ -71,7 +71,7 @@ public class UpdateIdentityResourceAndAuthorityListener {
             return;
         }
 
-        if (OrgTypeEnum.POSITION.getEnName().equals(orgType)) {
+        if (OrgTypeEnum.POSITION.equals(orgType)) {
             y9AuthorizationService.syncToIdentityResourceAndAuthority(y9OrgBase.getId());
 
             if (LOGGER.isDebugEnabled()) {
@@ -86,9 +86,9 @@ public class UpdateIdentityResourceAndAuthorityListener {
     public void onOrgUnitUpdated(Y9EntityUpdatedEvent<? extends Y9OrgBase> event) {
         Y9OrgBase originOrgUnit = event.getOriginEntity();
         Y9OrgBase updatedOrgUnit = event.getUpdatedEntity();
-        String orgType = updatedOrgUnit.getOrgType();
+        OrgTypeEnum orgType = updatedOrgUnit.getOrgType();
 
-        if (OrgTypeEnum.DEPARTMENT.getEnName().equals(orgType)) {
+        if (OrgTypeEnum.DEPARTMENT.equals(orgType)) {
             if (Y9OrgUtil.isMoved(originOrgUnit, updatedOrgUnit)) {
                 // 只需要针对移动部门的情况需要删除重新计算
                 String departmentId = updatedOrgUnit.getId();
@@ -103,7 +103,7 @@ public class UpdateIdentityResourceAndAuthorityListener {
             return;
         }
 
-        if (OrgTypeEnum.PERSON.getEnName().equals(orgType)) {
+        if (OrgTypeEnum.PERSON.equals(orgType)) {
             if (Y9OrgUtil.isMoved(originOrgUnit, updatedOrgUnit)) {
                 // 只需要针对移动人员的情况需要删除重新计算
                 String personId = updatedOrgUnit.getId();
@@ -117,7 +117,7 @@ public class UpdateIdentityResourceAndAuthorityListener {
             return;
         }
 
-        if (OrgTypeEnum.POSITION.getEnName().equals(orgType)) {
+        if (OrgTypeEnum.POSITION.equals(orgType)) {
             if (Y9OrgUtil.isMoved(originOrgUnit, updatedOrgUnit)) {
                 // 只需要针对移动岗位的情况需要删除重新计算
                 String positionId = updatedOrgUnit.getId();
@@ -136,9 +136,9 @@ public class UpdateIdentityResourceAndAuthorityListener {
     @Async
     public void onResourceCreated(Y9EntityCreatedEvent<? extends Y9ResourceBase> event) {
         Y9ResourceBase resource = event.getEntity();
-        Integer resourceType = resource.getResourceType();
+        ResourceTypeEnum resourceType = resource.getResourceType();
 
-        if (ResourceTypeEnum.APP.getValue().equals(resourceType)) {
+        if (ResourceTypeEnum.APP.equals(resourceType)) {
             // 新建的 APP 肯定没有对该资源授权，不用计算权限
             if (LOGGER.isDebugEnabled()) {
                 LOGGER.debug("新建的 APP 肯定没有对该资源授权，不用计算权限");
@@ -160,9 +160,9 @@ public class UpdateIdentityResourceAndAuthorityListener {
     public void onResourceUpdated(Y9EntityUpdatedEvent<? extends Y9ResourceBase> event) {
         Y9ResourceBase originResource = event.getOriginEntity();
         Y9ResourceBase updatedResource = event.getUpdatedEntity();
-        Integer resourceType = updatedResource.getResourceType();
+        ResourceTypeEnum resourceType = updatedResource.getResourceType();
 
-        if (ResourceTypeEnum.APP.getValue().equals(resourceType)) {
+        if (ResourceTypeEnum.APP.equals(resourceType)) {
             if (LOGGER.isDebugEnabled()) {
                 LOGGER.debug("应用修改不用重新计算权限缓存");
             }
@@ -183,7 +183,7 @@ public class UpdateIdentityResourceAndAuthorityListener {
     public void onY9AuthorizationCreated(Y9EntityCreatedEvent<Y9Authorization> event) {
         Y9Authorization y9Authorization = event.getEntity();
 
-        if (AuthorizationPrincipalTypeEnum.ROLE.getValue().equals(y9Authorization.getPrincipalType())) {
+        if (AuthorizationPrincipalTypeEnum.ROLE.equals(y9Authorization.getPrincipalType())) {
 
             recalculateByRoleId(y9Authorization.getPrincipalId());
 
@@ -203,8 +203,8 @@ public class UpdateIdentityResourceAndAuthorityListener {
     @Async
     public void onY9AuthorizationDeleted(Y9EntityDeletedEvent<Y9Authorization> event) {
         Y9Authorization y9Authorization = event.getEntity();
-        if (AuthorityEnum.HIDDEN.getValue().equals(y9Authorization.getAuthority())) {
-            if (AuthorizationPrincipalTypeEnum.ROLE.getValue().equals(y9Authorization.getPrincipalType())) {
+        if (AuthorityEnum.HIDDEN.equals(y9Authorization.getAuthority())) {
+            if (AuthorizationPrincipalTypeEnum.ROLE.equals(y9Authorization.getPrincipalType())) {
 
                 recalculateByRoleId(y9Authorization.getPrincipalId());
 
@@ -229,10 +229,10 @@ public class UpdateIdentityResourceAndAuthorityListener {
             List<Y9Authorization> authorizationList = y9AuthorizationService
                 .listByPrincipalIdAndPrincipalType(y9OrgBasesToRoles.getRoleId(), AuthorizationPrincipalTypeEnum.ROLE);
             for (Y9Authorization y9Authorization : authorizationList) {
-                if (OrgTypeEnum.PERSON.getEnName().equals(y9OrgBasesToRoles.getOrgType())) {
+                if (OrgTypeEnum.PERSON.equals(y9OrgBasesToRoles.getOrgType())) {
                     y9PersonToResourceAndAuthorityService.deleteByAuthorizationIdAndPersonId(y9Authorization.getId(),
                         y9OrgBasesToRoles.getOrgId());
-                } else if (OrgTypeEnum.POSITION.getEnName().equals(y9OrgBasesToRoles.getOrgType())) {
+                } else if (OrgTypeEnum.POSITION.equals(y9OrgBasesToRoles.getOrgType())) {
                     y9PositionToResourceAndAuthorityService
                         .deleteByAuthorizationIdAndPositionId(y9Authorization.getId(), y9OrgBasesToRoles.getOrgId());
 
@@ -267,10 +267,10 @@ public class UpdateIdentityResourceAndAuthorityListener {
             List<Y9Authorization> authorizationList = y9AuthorizationService
                 .listByPrincipalIdAndPrincipalType(orgBasesToRoles.getRoleId(), AuthorizationPrincipalTypeEnum.ROLE);
             for (Y9Authorization y9Authorization : authorizationList) {
-                if (OrgTypeEnum.PERSON.getEnName().equals(orgBasesToRoles.getOrgType())) {
+                if (OrgTypeEnum.PERSON.equals(orgBasesToRoles.getOrgType())) {
                     y9PersonToResourceAndAuthorityService.deleteByAuthorizationIdAndPersonId(y9Authorization.getId(),
                         orgBasesToRoles.getOrgId());
-                } else if (OrgTypeEnum.POSITION.getEnName().equals(orgBasesToRoles.getOrgType())) {
+                } else if (OrgTypeEnum.POSITION.equals(orgBasesToRoles.getOrgType())) {
                     y9PositionToResourceAndAuthorityService
                         .deleteByAuthorizationIdAndPositionId(y9Authorization.getId(), orgBasesToRoles.getOrgId());
 
@@ -336,9 +336,9 @@ public class UpdateIdentityResourceAndAuthorityListener {
         List<Y9OrgBasesToRoles> y9OrgBasesToRolesList = y9OrgBasesToRolesService.listByRoleId(roleId);
 
         for (Y9OrgBasesToRoles y9OrgBasesToRoles : y9OrgBasesToRolesList) {
-            if (OrgTypeEnum.PERSON.getEnName().equals(y9OrgBasesToRoles.getOrgType())) {
+            if (OrgTypeEnum.PERSON.equals(y9OrgBasesToRoles.getOrgType())) {
                 y9PersonSet.add(y9PersonService.getById(y9OrgBasesToRoles.getOrgId()));
-            } else if (OrgTypeEnum.POSITION.getEnName().equals(y9OrgBasesToRoles.getOrgType())) {
+            } else if (OrgTypeEnum.POSITION.equals(y9OrgBasesToRoles.getOrgType())) {
                 y9PositionSet.add(y9PositionService.getById(y9OrgBasesToRoles.getOrgId()));
                 y9PersonSet.addAll(y9PersonService.listByPositionId(y9OrgBasesToRoles.getOrgId()));
             } else {

@@ -40,7 +40,7 @@ public class Y9PersonExtManagerImpl implements Y9PersonExtManager {
             Y9BeanUtil.copyProperties(y9PersonExt, oldext, "photo");
             return y9PersonExtRepository.save(oldext);
         }
-        y9PersonExt.setMaritalStatus(y9PersonExt.getMaritalStatus() == null ? 0 : y9PersonExt.getMaritalStatus());
+        y9PersonExt.setMaritalStatus(y9PersonExt.getMaritalStatus());
         y9PersonExt.setName(person.getName());
         y9PersonExt.setPersonId(person.getId());
 

@@ -40,8 +40,6 @@ public interface Y9OrgBasesToRolesRepository extends JpaRepository<Y9OrgBasesToR
 
     List<Y9OrgBasesToRoles> findByParentId(String parentId);
 
-    List<Y9OrgBasesToRoles> findByRoleId(String roleId);
-
     List<Y9OrgBasesToRoles> findByRoleId(String roleId, Sort sort);
 
     List<Y9OrgBasesToRoles> findByRoleIdAndNegativeOrderByOrgOrderDesc(String roleId, Boolean negative);

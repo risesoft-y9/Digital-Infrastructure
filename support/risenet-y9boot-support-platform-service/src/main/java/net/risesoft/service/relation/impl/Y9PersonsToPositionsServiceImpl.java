@@ -17,7 +17,7 @@ import net.risesoft.entity.relation.Y9PersonsToPositions;
 import net.risesoft.manager.org.Y9PersonManager;
 import net.risesoft.manager.org.Y9PositionManager;
 import net.risesoft.manager.relation.Y9PersonsToPositionsManager;
-import net.risesoft.model.PersonsPositions;
+import net.risesoft.model.platform.PersonsPositions;
 import net.risesoft.repository.relation.Y9PersonsToPositionsRepository;
 import net.risesoft.service.relation.Y9PersonsToPositionsService;
 import net.risesoft.util.ModelConvertUtil;

@@ -6,7 +6,7 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
-import net.risesoft.model.ClickedApp;
+import net.risesoft.model.log.ClickedApp;
 
 /**
  * 应用点击组件

@@ -14,7 +14,7 @@ import lombok.Getter;
  */
 @Getter
 @AllArgsConstructor
-public enum FileStoreTypeEnum {
+public enum FileStoreTypeEnum implements ValuedEnum<Integer> {
     /** ftp */
     FTP("ftp", 1),
     /** wps */

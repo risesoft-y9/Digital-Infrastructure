@@ -9,8 +9,8 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
-import net.risesoft.enums.ResourceTypeEnum;
-import net.risesoft.model.Resource;
+import net.risesoft.enums.platform.ResourceTypeEnum;
+import net.risesoft.model.platform.Resource;
 import net.risesoft.pojo.Y9Result;
 
 /**
@@ -52,7 +52,8 @@ public interface ResourceApi {
      */
     @GetMapping("/findByCustomIdAndParentId")
     Y9Result<Resource> findByCustomIdAndParentId(@RequestParam("customId") @NotBlank String customId,
-        @RequestParam("parentId") @NotBlank String parentId, @RequestParam("resourceType") Integer resourceType);
+        @RequestParam("parentId") @NotBlank String parentId,
+        @RequestParam("resourceType") ResourceTypeEnum resourceType);
 
     /**
      * 获得指定资源的父资源

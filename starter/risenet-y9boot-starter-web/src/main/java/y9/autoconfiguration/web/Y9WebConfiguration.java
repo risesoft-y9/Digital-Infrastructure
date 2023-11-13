@@ -3,7 +3,10 @@ package y9.autoconfiguration.web;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.format.FormatterRegistry;
+import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
+import net.risesoft.web.Y9LaxStringToEnumConverterFactory;
 import net.risesoft.web.handler.Y9ControllerAdvice;
 
 /**
@@ -13,7 +16,7 @@ import net.risesoft.web.handler.Y9ControllerAdvice;
  * @date 2022/09/27
  */
 @Configuration
-public class Y9WebConfiguration {
+public class Y9WebConfiguration implements WebMvcConfigurer {
 
     @Bean
     @ConditionalOnMissingBean
@@ -21,4 +24,8 @@ public class Y9WebConfiguration {
         return new Y9ControllerAdvice();
     }
 
+    @Override
+    public void addFormatters(FormatterRegistry registry) {
+        registry.addConverterFactory(new Y9LaxStringToEnumConverterFactory());
+    }
 }

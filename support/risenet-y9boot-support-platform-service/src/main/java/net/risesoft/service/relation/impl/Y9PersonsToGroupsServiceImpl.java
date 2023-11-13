@@ -16,7 +16,7 @@ import net.risesoft.entity.relation.Y9PersonsToGroups;
 import net.risesoft.manager.org.Y9GroupManager;
 import net.risesoft.manager.org.Y9PersonManager;
 import net.risesoft.manager.relation.Y9PersonsToGroupsManager;
-import net.risesoft.model.PersonsGroups;
+import net.risesoft.model.platform.PersonsGroups;
 import net.risesoft.repository.relation.Y9PersonsToGroupsRepository;
 import net.risesoft.service.relation.Y9PersonsToGroupsService;
 import net.risesoft.util.ModelConvertUtil;
