@@ -12,7 +12,7 @@ import net.risesoft.consts.InitDataConsts;
 import net.risesoft.entity.Y9Manager;
 import net.risesoft.entity.Y9OptionClass;
 import net.risesoft.entity.Y9Organization;
-import net.risesoft.enums.ManagerLevelEnum;
+import net.risesoft.enums.platform.ManagerLevelEnum;
 import net.risesoft.service.dictionary.Y9OptionClassService;
 import net.risesoft.service.dictionary.Y9OptionValueService;
 import net.risesoft.service.init.InitTenantDataService;
@@ -265,7 +265,7 @@ public class InitTenantDataServiceImpl implements InitTenantDataService {
             auditManager.setName(ManagerLevelEnum.AUDIT_MANAGER.getName());
             auditManager.setLoginName(InitDataConsts.DEFAULT_AUDIT_MANAGER);
             auditManager.setGlobalManager(true);
-            auditManager.setManagerLevel(ManagerLevelEnum.AUDIT_MANAGER.getValue());
+            auditManager.setManagerLevel(ManagerLevelEnum.AUDIT_MANAGER);
             auditManager.setPwdCycle(Y9Manager.DEFAULT_PWD_CYCLE);
             auditManager.setUserHostIp("");
             auditManager.setCheckTime(DATE_FORMAT.format(new Date()));
@@ -282,7 +282,7 @@ public class InitTenantDataServiceImpl implements InitTenantDataService {
             securityManager.setName(ManagerLevelEnum.SECURITY_MANAGER.getName());
             securityManager.setLoginName(InitDataConsts.DEFAULT_SECURITY_MANAGER);
             securityManager.setGlobalManager(true);
-            securityManager.setManagerLevel(ManagerLevelEnum.SECURITY_MANAGER.getValue());
+            securityManager.setManagerLevel(ManagerLevelEnum.SECURITY_MANAGER);
             securityManager.setPwdCycle(Y9Manager.DEFAULT_PWD_CYCLE);
             securityManager.setUserHostIp("");
             securityManager.setCheckTime(DATE_FORMAT.format(new Date()));
@@ -299,7 +299,7 @@ public class InitTenantDataServiceImpl implements InitTenantDataService {
             systemManager.setName(ManagerLevelEnum.SYSTEM_MANAGER.getName());
             systemManager.setLoginName(InitDataConsts.DEFAULT_SYSTEM_MANAGER);
             systemManager.setGlobalManager(true);
-            systemManager.setManagerLevel(ManagerLevelEnum.SYSTEM_MANAGER.getValue());
+            systemManager.setManagerLevel(ManagerLevelEnum.SYSTEM_MANAGER);
             systemManager.setPwdCycle(Y9Manager.DEFAULT_PWD_CYCLE);
             systemManager.setUserHostIp("");
             systemManager.setCheckTime(DATE_FORMAT.format(new Date()));

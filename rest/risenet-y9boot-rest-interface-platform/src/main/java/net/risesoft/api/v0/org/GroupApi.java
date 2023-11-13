@@ -9,9 +9,9 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
-import net.risesoft.model.Group;
-import net.risesoft.model.OrgUnit;
-import net.risesoft.model.Person;
+import net.risesoft.model.platform.Group;
+import net.risesoft.model.platform.OrgUnit;
+import net.risesoft.model.platform.Person;
 
 /**
  * 用户组服务组件

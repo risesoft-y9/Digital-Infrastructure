@@ -3,6 +3,7 @@ package net.risesoft.y9public.service.resource;
 import java.util.List;
 import java.util.Optional;
 
+import net.risesoft.enums.platform.ResourceTypeEnum;
 import net.risesoft.y9public.entity.resource.Y9ResourceBase;
 
 /**
@@ -23,7 +24,7 @@ public interface CompositeResourceService {
      * @return
      */
     Optional<? extends Y9ResourceBase> findByCustomIdAndParentId(String customId, String parentId,
-        Integer resourceType);
+        ResourceTypeEnum resourceType);
 
     /**
      * 根据主键ID获取资源实例 get the instance of resource by id
@@ -40,7 +41,7 @@ public interface CompositeResourceService {
      * @param resourceType
      * @return
      */
-    Y9ResourceBase findByIdAndResourceType(String resourceId, Integer resourceType);
+    Y9ResourceBase findByIdAndResourceType(String resourceId, ResourceTypeEnum resourceType);
 
     /**
      * 根据父资源id查找

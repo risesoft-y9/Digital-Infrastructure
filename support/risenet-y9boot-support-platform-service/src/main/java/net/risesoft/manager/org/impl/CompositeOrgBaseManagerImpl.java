@@ -20,7 +20,7 @@ import net.risesoft.entity.Y9OrgBase;
 import net.risesoft.entity.Y9Organization;
 import net.risesoft.entity.Y9Person;
 import net.risesoft.entity.Y9Position;
-import net.risesoft.enums.OrgTypeEnum;
+import net.risesoft.enums.platform.OrgTypeEnum;
 import net.risesoft.exception.OrgUnitErrorCodeEnum;
 import net.risesoft.manager.org.CompositeOrgBaseManager;
 import net.risesoft.repository.Y9DepartmentRepository;
@@ -50,34 +50,34 @@ public class CompositeOrgBaseManagerImpl implements CompositeOrgBaseManager {
     private final Y9ManagerRepository y9ManagerRepository;
 
     private void buildGuidPath(StringBuilder sb, Y9OrgBase y9OrgBase) {
-        if (OrgTypeEnum.PERSON.getEnName().equals(y9OrgBase.getOrgType())) {
+        if (OrgTypeEnum.PERSON.equals(y9OrgBase.getOrgType())) {
             // 遍历开始是person，尾部的逗号不用加
             sb.insert(0, y9OrgBase.getId());
 
             Y9Person person = (Y9Person)y9OrgBase;
             Y9OrgBase parent = this.getOrgUnitAsParent(person.getParentId());
             buildGuidPath(sb, parent);
-        } else if (OrgTypeEnum.POSITION.getEnName().equals(y9OrgBase.getOrgType())) {
+        } else if (OrgTypeEnum.POSITION.equals(y9OrgBase.getOrgType())) {
             // 遍历开始时，一定是position，尾部的逗号不用加
             sb.insert(0, String.format("%05d", y9OrgBase.getTabIndex()));
 
             Y9Position position = (Y9Position)y9OrgBase;
             Y9OrgBase parent = this.getOrgUnitAsParent(position.getParentId());
             buildGuidPath(sb, parent);
-        } else if (OrgTypeEnum.MANAGER.getEnName().equals(y9OrgBase.getOrgType())) {
+        } else if (OrgTypeEnum.MANAGER.equals(y9OrgBase.getOrgType())) {
             // 遍历开始是person，尾部的逗号不用加
             sb.insert(0, y9OrgBase.getId());
 
             Y9Manager person = (Y9Manager)y9OrgBase;
             Y9OrgBase parent = this.getOrgUnitAsParent(person.getParentId());
             buildGuidPath(sb, parent);
-        } else if (OrgTypeEnum.DEPARTMENT.getEnName().equals(y9OrgBase.getOrgType())) {
+        } else if (OrgTypeEnum.DEPARTMENT.equals(y9OrgBase.getOrgType())) {
             sb.insert(0, y9OrgBase.getId() + ",");
 
             Y9Department dept = (Y9Department)y9OrgBase;
             Y9OrgBase parent = this.getOrgUnitAsParent(dept.getParentId());
             buildGuidPath(sb, parent);
-        } else if (OrgTypeEnum.ORGANIZATION.getEnName().equals(y9OrgBase.getOrgType())) {
+        } else if (OrgTypeEnum.ORGANIZATION.equals(y9OrgBase.getOrgType())) {
             Y9Organization org = (Y9Organization)y9OrgBase;
             // 遍历结束时，一定是org
             sb.insert(0, org.getId() + ",");
@@ -92,34 +92,34 @@ public class CompositeOrgBaseManagerImpl implements CompositeOrgBaseManager {
     }
 
     private void buildOrderedPath(StringBuilder sb, Y9OrgBase y9OrgBase) {
-        if (OrgTypeEnum.PERSON.getEnName().equals(y9OrgBase.getOrgType())) {
+        if (OrgTypeEnum.PERSON.equals(y9OrgBase.getOrgType())) {
             // 遍历开始时，一定是person，尾部的逗号不用加
             sb.insert(0, String.format("%05d", y9OrgBase.getTabIndex()));
 
             Y9Person person = (Y9Person)y9OrgBase;
             Y9OrgBase parent = this.getOrgUnitAsParent(person.getParentId());
             buildOrderedPath(sb, parent);
-        } else if (OrgTypeEnum.POSITION.getEnName().equals(y9OrgBase.getOrgType())) {
+        } else if (OrgTypeEnum.POSITION.equals(y9OrgBase.getOrgType())) {
             // 遍历开始时，一定是manager，尾部的逗号不用加
             sb.insert(0, String.format("%05d", y9OrgBase.getTabIndex()));
 
             Y9Position y9Position = (Y9Position)y9OrgBase;
             Y9OrgBase parent = this.getOrgUnitAsParent(y9Position.getParentId());
             buildOrderedPath(sb, parent);
-        } else if (OrgTypeEnum.MANAGER.getEnName().equals(y9OrgBase.getOrgType())) {
+        } else if (OrgTypeEnum.MANAGER.equals(y9OrgBase.getOrgType())) {
             // 遍历开始时，一定是manager，尾部的逗号不用加
             sb.insert(0, String.format("%05d", y9OrgBase.getTabIndex()));
 
             Y9Manager person = (Y9Manager)y9OrgBase;
             Y9OrgBase parent = this.getOrgUnitAsParent(person.getParentId());
             buildOrderedPath(sb, parent);
-        } else if (OrgTypeEnum.DEPARTMENT.getEnName().equals(y9OrgBase.getOrgType())) {
+        } else if (OrgTypeEnum.DEPARTMENT.equals(y9OrgBase.getOrgType())) {
             sb.insert(0, String.format("%05d", y9OrgBase.getTabIndex()) + ",");
 
             Y9Department dept = (Y9Department)y9OrgBase;
             Y9OrgBase parent = this.getOrgUnitAsParent(dept.getParentId());
             buildOrderedPath(sb, parent);
-        } else if (OrgTypeEnum.ORGANIZATION.getEnName().equals(y9OrgBase.getOrgType())) {
+        } else if (OrgTypeEnum.ORGANIZATION.equals(y9OrgBase.getOrgType())) {
             // 遍历结束时，一定是org
             sb.insert(0, String.format("%05d", y9OrgBase.getTabIndex()) + ",");
         }
@@ -204,12 +204,12 @@ public class CompositeOrgBaseManagerImpl implements CompositeOrgBaseManager {
         if (y9OrgBaseOptional.isPresent()) {
             Y9OrgBase y9OrgBase = y9OrgBaseOptional.get();
 
-            if (OrgTypeEnum.ORGANIZATION.getEnName().equals(y9OrgBase.getOrgType())) {
+            if (OrgTypeEnum.ORGANIZATION.equals(y9OrgBase.getOrgType())) {
                 // 往上找不到作为委办局的部门，最终返回组织机构
                 return Optional.of(y9OrgBase);
             }
 
-            if (OrgTypeEnum.DEPARTMENT.getEnName().equals(y9OrgBase.getOrgType())) {
+            if (OrgTypeEnum.DEPARTMENT.equals(y9OrgBase.getOrgType())) {
                 Y9Department dept = (Y9Department)y9OrgBase;
                 if (Boolean.TRUE.equals(dept.getBureau())) {
                     return Optional.of(dept);
@@ -227,7 +227,7 @@ public class CompositeOrgBaseManagerImpl implements CompositeOrgBaseManager {
         if (y9OrgBaseOptional.isPresent()) {
             Y9OrgBase orgBase = y9OrgBaseOptional.get();
 
-            if (OrgTypeEnum.ORGANIZATION.getEnName().equals(orgBase.getOrgType())) {
+            if (OrgTypeEnum.ORGANIZATION.equals(orgBase.getOrgType())) {
                 // orgUnitId 对应的组织节点为组织机构时直接返回 null，因为组织机构已无父节点
                 return Optional.empty();
             }

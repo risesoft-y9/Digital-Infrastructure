@@ -14,7 +14,7 @@ import net.risesoft.consts.CacheNameConsts;
 import net.risesoft.entity.Y9Group;
 import net.risesoft.exception.OrgUnitErrorCodeEnum;
 import net.risesoft.manager.org.Y9GroupManager;
-import net.risesoft.model.Group;
+import net.risesoft.model.platform.Group;
 import net.risesoft.repository.Y9GroupRepository;
 import net.risesoft.util.Y9PublishServiceUtil;
 import net.risesoft.y9.Y9LoginUserHolder;

@@ -15,8 +15,8 @@ import org.springframework.web.bind.annotation.RestController;
 import lombok.RequiredArgsConstructor;
 
 import net.risesoft.entity.Y9Person;
-import net.risesoft.model.Person;
-import net.risesoft.model.Role;
+import net.risesoft.model.platform.Person;
+import net.risesoft.model.platform.Role;
 import net.risesoft.pojo.Y9Result;
 import net.risesoft.service.identity.Y9PersonToRoleService;
 import net.risesoft.util.ModelConvertUtil;

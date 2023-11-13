@@ -27,8 +27,8 @@ public class StoreServiceImpl implements StoreService {
     }
 
     @Override
-    public Integer getStoreType() {
-        return FileStoreTypeEnum.FTP.getValue();
+    public FileStoreTypeEnum getStoreType() {
+        return FileStoreTypeEnum.FTP;
     }
 
     @Override

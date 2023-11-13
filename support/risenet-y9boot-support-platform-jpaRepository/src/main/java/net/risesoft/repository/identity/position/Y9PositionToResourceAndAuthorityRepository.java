@@ -11,6 +11,8 @@ import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
 import net.risesoft.entity.identity.position.Y9PositionToResourceAndAuthority;
+import net.risesoft.enums.platform.AuthorityEnum;
+import net.risesoft.enums.platform.ResourceTypeEnum;
 
 /**
  * @author dingzhaojun
@@ -57,26 +59,26 @@ public interface Y9PositionToResourceAndAuthorityRepository
     Page<Y9PositionToResourceAndAuthority> findByPositionId(String positionId, Pageable pageable);
 
     List<Y9PositionToResourceAndAuthority> findByPositionIdAndAuthorityAndResourceTypeOrderByResourceTabIndex(
-        String positionId, Integer authority, Integer resourceType);
+        String positionId, AuthorityEnum authority, ResourceTypeEnum resourceType);
 
     List<Y9PositionToResourceAndAuthority>
         findByPositionIdAndParentResourceIdAndAuthorityAndResourceTypeOrderByResourceTabIndex(String positionId,
-            String parentResourceId, Integer authority, Integer resourceType);
+            String parentResourceId, AuthorityEnum authority, ResourceTypeEnum resourceType);
 
     List<Y9PositionToResourceAndAuthority> findByPositionIdAndParentResourceIdAndAuthorityOrderByResourceTabIndex(
-        String positionId, String parentResourceId, Integer authority);
+        String positionId, String parentResourceId, AuthorityEnum authority);
 
     List<Y9PositionToResourceAndAuthority> findByPositionIdAndParentResourceIdIsNullAndAuthorityOrderByResourceTabIndex(
-        String positionId, Integer authority);
+        String positionId, AuthorityEnum authority);
 
     List<Y9PositionToResourceAndAuthority> findByPositionIdAndResourceCustomIdAndAuthority(String positionId,
-        String customId, Integer authority);
+        String customId, AuthorityEnum authority);
 
     List<Y9PositionToResourceAndAuthority> findByPositionIdAndResourceIdAndAuthority(String positionId,
-        String resourceId, Integer authority);
+        String resourceId, AuthorityEnum authority);
 
     Optional<Y9PositionToResourceAndAuthority> findByPositionIdAndResourceIdAndAuthorizationIdAndAuthority(
-        String positionId, String resourceId, String authorizationId, Integer authority);
+        String positionId, String resourceId, String authorizationId, AuthorityEnum authority);
 
     List<Y9PositionToResourceAndAuthority> findByResourceId(String resourceId);
 }

@@ -10,13 +10,13 @@ import net.risesoft.api.org.OrgUnitApi;
 import net.risesoft.api.org.OrganizationApi;
 import net.risesoft.api.permission.PersonResourceApi;
 import net.risesoft.api.resource.AppApi;
-import net.risesoft.consts.TreeTypeConsts;
-import net.risesoft.enums.AuthorityEnum;
+import net.risesoft.enums.platform.AuthorityEnum;
+import net.risesoft.enums.platform.TreeTypeEnum;
 import net.risesoft.log.annotation.RiseLog;
-import net.risesoft.model.App;
-import net.risesoft.model.Menu;
-import net.risesoft.model.OrgUnit;
-import net.risesoft.model.Organization;
+import net.risesoft.model.platform.App;
+import net.risesoft.model.platform.Menu;
+import net.risesoft.model.platform.OrgUnit;
+import net.risesoft.model.platform.Organization;
 import net.risesoft.model.user.UserInfo;
 import net.risesoft.pojo.Y9Result;
 import net.risesoft.y9.Y9Context;
@@ -44,12 +44,12 @@ public class TestController {
             organizationApi.listByType(Y9LoginUserHolder.getTenantId(), false).getData();
         for (Organization organization : organizationList) {
             // 组织机构树第二层
-            List<OrgUnit> orgUnitList1 = orgUnitApi
-                .getSubTree(Y9LoginUserHolder.getTenantId(), organization.getId(), TreeTypeConsts.TREE_TYPE_ORG)
-                .getData();
+            List<OrgUnit> orgUnitList1 =
+                orgUnitApi.getSubTree(Y9LoginUserHolder.getTenantId(), organization.getId(), TreeTypeEnum.TREE_TYPE_ORG)
+                    .getData();
             // 组织岗位树第二层
             List<OrgUnit> orgUnitList2 = orgUnitApi
-                .getSubTree(Y9LoginUserHolder.getTenantId(), organization.getId(), TreeTypeConsts.TREE_TYPE_POSITION)
+                .getSubTree(Y9LoginUserHolder.getTenantId(), organization.getId(), TreeTypeEnum.TREE_TYPE_POSITION)
                 .getData();
         }
 
@@ -72,8 +72,8 @@ public class TestController {
         // 获取当前系统第一个应用，当前用户有权限的菜单
         List<Menu> menuList = new ArrayList<>();
         if (!appList.isEmpty()) {
-            menuList = personResourceApi
-                .listSubMenus(tenantId, personId, AuthorityEnum.BROWSE.getValue(), appList.get(0).getId()).getData();
+            menuList = personResourceApi.listSubMenus(tenantId, personId, AuthorityEnum.BROWSE, appList.get(0).getId())
+                .getData();
         }
         return Y9Result.success(menuList);
     }

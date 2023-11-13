@@ -1,6 +1,7 @@
 package net.risesoft.y9public.entity.user;
 
 import javax.persistence.Column;
+import javax.persistence.Convert;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.Index;
@@ -15,7 +16,9 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import net.risesoft.base.BaseEntity;
-import net.risesoft.enums.ManagerLevelEnum;
+import net.risesoft.enums.platform.ManagerLevelEnum;
+import net.risesoft.enums.platform.SexEnum;
+import net.risesoft.persistence.EnumConverter;
 
 /**
  * 人员信息表
@@ -83,11 +86,12 @@ public class Y9User extends BaseEntity {
     /**
      * 性别：1为男，0为女
      *
-     * {@link net.risesoft.enums.SexEnum}
+     * {@link SexEnum}
      */
     @Column(name = "SEX")
     @Comment("性别：1为男，0为女")
-    private int sex;
+    @Convert(converter = EnumConverter.SexEnumConverter.class)
+    private SexEnum sex;
 
     /** 移动电话 */
     @Column(name = "MOBILE", length = 255)
@@ -177,7 +181,8 @@ public class Y9User extends BaseEntity {
     @Column(name = "MANAGER_LEVEL", nullable = false)
     @Comment("是否三员管理员")
     @ColumnDefault("0")
-    private Integer managerLevel = 0;
+    @Convert(converter = EnumConverter.ManagerLevelEnumConverter.class)
+    private ManagerLevelEnum managerLevel = ManagerLevelEnum.GENERAL_USER;
 
     /** 拥有的角色列表 */
     @Lob

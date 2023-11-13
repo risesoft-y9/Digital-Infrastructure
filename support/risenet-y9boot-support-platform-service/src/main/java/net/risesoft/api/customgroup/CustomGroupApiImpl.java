@@ -18,9 +18,10 @@ import lombok.RequiredArgsConstructor;
 import net.risesoft.entity.Y9CustomGroup;
 import net.risesoft.entity.Y9Person;
 import net.risesoft.entity.relation.Y9CustomGroupMember;
-import net.risesoft.model.CustomGroup;
-import net.risesoft.model.CustomGroupMember;
-import net.risesoft.model.Person;
+import net.risesoft.enums.platform.OrgTypeEnum;
+import net.risesoft.model.platform.CustomGroup;
+import net.risesoft.model.platform.CustomGroupMember;
+import net.risesoft.model.platform.Person;
 import net.risesoft.pojo.Y9Page;
 import net.risesoft.pojo.Y9Result;
 import net.risesoft.service.org.Y9CustomGroupService;
@@ -178,14 +179,14 @@ public class CustomGroupApiImpl implements CustomGroupApi {
      * @param tenantId 租户id
      * @param personId 人员id
      * @param groupId 用户组id
-     * @param memberType 成员类型 {@link net.risesoft.enums.OrgTypeEnum}
+     * @param memberType 成员类型 {@link OrgTypeEnum}
      * @return {@code Y9Result<List<CustomGroupMember>>} 通用请求返回对象 - data 是查找的用户组成员列表
      * @since 9.6.0
      */
     @Override
     public Y9Result<List<CustomGroupMember>> listCustomGroupMemberByGroupIdAndMemberType(
         @RequestParam("tenantId") @NotBlank String tenantId, @RequestParam("personId") String personId,
-        @RequestParam("groupId") @NotBlank String groupId, @RequestParam("memberType") @NotBlank String memberType) {
+        @RequestParam("groupId") @NotBlank String groupId, @RequestParam("memberType") OrgTypeEnum memberType) {
         Y9LoginUserHolder.setTenantId(tenantId);
 
         List<Y9CustomGroupMember> y9CustomGroupMemberList =
@@ -241,7 +242,7 @@ public class CustomGroupApiImpl implements CustomGroupApi {
      *
      * @param tenantId 租户id
      * @param groupId 用户组Id
-     * @param memberType 成员类型 {@link net.risesoft.enums.OrgTypeEnum}
+     * @param memberType 成员类型 {@link OrgTypeEnum}
      * @param page 第几页
      * @param rows 返回多少条数据
      * @return {@code Y9Page<CustomGroupMember>}
@@ -250,7 +251,7 @@ public class CustomGroupApiImpl implements CustomGroupApi {
     @Override
     public Y9Page<CustomGroupMember> pageCustomGroupMemberByGroupIdAndMemberType(
         @RequestParam("tenantId") @NotBlank String tenantId, @RequestParam("groupId") @NotBlank String groupId,
-        @RequestParam("memberType") @NotBlank String memberType, @RequestParam("page") int page,
+        @RequestParam("memberType") OrgTypeEnum memberType, @RequestParam("page") int page,
         @RequestParam("rows") int rows) {
         Y9LoginUserHolder.setTenantId(tenantId);
 

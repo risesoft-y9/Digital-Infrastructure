@@ -5,7 +5,7 @@ import java.util.Date;
 
 import lombok.Data;
 
-import net.risesoft.enums.OrgTypeEnum;
+import net.risesoft.enums.platform.OrgTypeEnum;
 
 @Data
 public class ContactModel implements Serializable {

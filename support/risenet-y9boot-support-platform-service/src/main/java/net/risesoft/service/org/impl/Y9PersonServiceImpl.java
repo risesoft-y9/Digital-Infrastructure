@@ -34,8 +34,8 @@ import net.risesoft.entity.Y9PersonExt;
 import net.risesoft.entity.Y9Position;
 import net.risesoft.entity.relation.Y9PersonsToGroups;
 import net.risesoft.entity.relation.Y9PersonsToPositions;
-import net.risesoft.enums.AuthorizationPrincipalTypeEnum;
-import net.risesoft.enums.OrgTypeEnum;
+import net.risesoft.enums.platform.AuthorizationPrincipalTypeEnum;
+import net.risesoft.enums.platform.OrgTypeEnum;
 import net.risesoft.exception.AuthenticationErrorCodeEnum;
 import net.risesoft.id.IdType;
 import net.risesoft.id.Y9IdGenerator;
@@ -44,9 +44,9 @@ import net.risesoft.manager.org.Y9PersonExtManager;
 import net.risesoft.manager.org.Y9PersonManager;
 import net.risesoft.manager.org.Y9PositionManager;
 import net.risesoft.manager.relation.Y9PersonsToPositionsManager;
-import net.risesoft.model.AuthenticateResult;
-import net.risesoft.model.Message;
-import net.risesoft.model.Person;
+import net.risesoft.model.platform.AuthenticateResult;
+import net.risesoft.model.platform.Message;
+import net.risesoft.model.platform.Person;
 import net.risesoft.repository.Y9DepartmentPropRepository;
 import net.risesoft.repository.Y9DepartmentRepository;
 import net.risesoft.repository.Y9GroupRepository;
@@ -184,7 +184,6 @@ public class Y9PersonServiceImpl implements Y9PersonService {
             person.setTabIndex(maxIndex);
             person.setDn(OrgLevelConsts.getOrgLevel(OrgTypeEnum.PERSON) + person.getName() + OrgLevelConsts.SEPARATOR
                 + parent.getDn());
-            person.setOrgType(OrgTypeEnum.PERSON.getEnName());
             person = save(person);
 
             Y9MessageOrg msg = new Y9MessageOrg(ModelConvertUtil.orgPersonToPerson(person),
@@ -612,8 +611,7 @@ public class Y9PersonServiceImpl implements Y9PersonService {
 
         y9PersonToResourceAndAuthorityRepository.deleteByPersonId(id);
         y9PersonToRoleRepository.deleteByPersonId(id);
-        y9AuthorizationRepository.deleteByPrincipalIdAndPrincipalType(id,
-            AuthorizationPrincipalTypeEnum.PERSON.getValue());
+        y9AuthorizationRepository.deleteByPrincipalIdAndPrincipalType(id, AuthorizationPrincipalTypeEnum.PERSON);
 
         y9PersonManager.delete(y9Person);
 
@@ -1046,7 +1044,6 @@ public class Y9PersonServiceImpl implements Y9PersonService {
         person.setTabIndex(compositeOrgBaseManager.getMaxSubTabIndex(parent.getId(), OrgTypeEnum.PERSON));
         person.setOfficial(1);
         person.setVersion(OrgTypeEnum.Y9_VERSION);
-        person.setOrgType(OrgTypeEnum.PERSON.getEnName());
         person.setDn(OrgLevelConsts.getOrgLevel(OrgTypeEnum.PERSON) + person.getName() + OrgLevelConsts.SEPARATOR
             + parent.getDn());
         person.setDisabled(false);
@@ -1122,7 +1119,6 @@ public class Y9PersonServiceImpl implements Y9PersonService {
             }
             person.setDn(OrgLevelConsts.getOrgLevel(OrgTypeEnum.PERSON) + person.getName() + OrgLevelConsts.SEPARATOR
                 + parent.getDn());
-            person.setOrgType(OrgTypeEnum.PERSON.getEnName());
             person.setVersion(OrgTypeEnum.Y9_VERSION);
             person.setParentId(parent.getId());
 

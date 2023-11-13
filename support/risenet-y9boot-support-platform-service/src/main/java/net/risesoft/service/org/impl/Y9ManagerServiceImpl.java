@@ -16,7 +16,7 @@ import net.risesoft.consts.OrgLevelConsts;
 import net.risesoft.entity.Y9Department;
 import net.risesoft.entity.Y9Manager;
 import net.risesoft.entity.Y9OrgBase;
-import net.risesoft.enums.OrgTypeEnum;
+import net.risesoft.enums.platform.OrgTypeEnum;
 import net.risesoft.exception.OrgUnitErrorCodeEnum;
 import net.risesoft.id.IdType;
 import net.risesoft.id.Y9IdGenerator;
@@ -44,8 +44,6 @@ import net.risesoft.y9.util.signing.Y9MessageDigest;
 @Service
 @RequiredArgsConstructor
 public class Y9ManagerServiceImpl implements Y9ManagerService {
-
-    private static final int MOBILE_NUMBER_LENGTH = 11;
 
     private final Y9ManagerRepository y9ManagerRepository;
     private final CompositeOrgBaseManager compositeOrgBaseManager;
@@ -229,7 +227,6 @@ public class Y9ManagerServiceImpl implements Y9ManagerService {
         y9Manager.setPassword(Y9MessageDigest.hashpw(password));
         y9Manager.setGuidPath(compositeOrgBaseManager.buildGuidPath(y9Manager));
         y9Manager.setOrderedPath(compositeOrgBaseManager.buildOrderedPath(y9Manager));
-        y9Manager.setOrgType(OrgTypeEnum.MANAGER.getEnName());
         y9Manager = y9ManagerRepository.save(y9Manager);
 
         Y9Context.publishEvent(new Y9EntityCreatedEvent<>(y9Manager));

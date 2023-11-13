@@ -8,7 +8,7 @@ import java.util.Map;
 import org.springframework.data.domain.Page;
 
 import net.risesoft.log.entity.Y9logAccessLog;
-import net.risesoft.model.AccessLog;
+import net.risesoft.model.log.AccessLog;
 import net.risesoft.model.log.LogInfoModel;
 import net.risesoft.pojo.Y9Page;
 

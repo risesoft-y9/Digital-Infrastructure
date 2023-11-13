@@ -28,10 +28,6 @@ public interface Y9PersonsToGroupsRepository extends JpaRepository<Y9PersonsToGr
 
     @Modifying
     @Transactional(readOnly = false)
-    void deleteByGroupIdAndPersonId(String groupId, String personId);
-
-    @Modifying
-    @Transactional(readOnly = false)
     void deleteByPersonId(String personId);
 
     List<Y9PersonsToGroups> findByGroupId(String groupId);

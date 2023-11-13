@@ -12,7 +12,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
 import net.risesoft.entity.Y9Person;
-import net.risesoft.model.Person;
+import net.risesoft.model.platform.Person;
 import net.risesoft.service.org.Y9PersonService;
 import net.risesoft.util.ModelConvertUtil;
 import net.risesoft.y9.Y9Context;

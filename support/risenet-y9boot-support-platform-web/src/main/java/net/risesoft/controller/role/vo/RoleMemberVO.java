@@ -7,7 +7,7 @@ import lombok.Setter;
 
 import net.risesoft.entity.Y9OrgBase;
 import net.risesoft.entity.relation.Y9OrgBasesToRoles;
-import net.risesoft.enums.OrgTypeEnum;
+import net.risesoft.enums.platform.OrgTypeEnum;
 
 /**
  * 角色关联组织节点

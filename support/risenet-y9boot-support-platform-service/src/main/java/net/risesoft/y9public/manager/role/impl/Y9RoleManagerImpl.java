@@ -22,9 +22,9 @@ import net.risesoft.entity.Y9Group;
 import net.risesoft.entity.Y9OrgBase;
 import net.risesoft.entity.Y9Position;
 import net.risesoft.entity.permission.Y9Authorization;
-import net.risesoft.enums.AuthorizationPrincipalTypeEnum;
-import net.risesoft.enums.OrgTypeEnum;
-import net.risesoft.enums.Y9RoleTypeEnum;
+import net.risesoft.enums.platform.AuthorizationPrincipalTypeEnum;
+import net.risesoft.enums.platform.OrgTypeEnum;
+import net.risesoft.enums.platform.RoleTypeEnum;
 import net.risesoft.exception.RoleErrorCodeEnum;
 import net.risesoft.manager.org.CompositeOrgBaseManager;
 import net.risesoft.repository.identity.person.Y9PersonToResourceAndAuthorityRepository;
@@ -72,14 +72,14 @@ public class Y9RoleManagerImpl implements Y9RoleManager {
     @Override
     public void delete(String id) {
         Y9Role y9Role = this.getById(id);
-        if (Y9RoleTypeEnum.ROLE.getValue().equals(y9Role.getType())) {
+        if (RoleTypeEnum.ROLE.equals(y9Role.getType())) {
             // 删除租户关联数据
             List<Y9TenantApp> y9TenantAppList = y9TenantAppRepository.findByTenantIdAndTenancy(id, true);
             for (Y9TenantApp y9TenantApp : y9TenantAppList) {
                 Y9LoginUserHolder.setTenantId(y9TenantApp.getTenantId());
                 this.deleteTenantRelatedByAppId(id);
             }
-        } else if (Y9RoleTypeEnum.FOLDER.getValue().equals(y9Role.getType())) {
+        } else if (RoleTypeEnum.FOLDER.equals(y9Role.getType())) {
             List<Y9Role> roleNodeList = y9RoleRepository.findByParentIdOrderByTabIndexAsc(id);
             for (Y9Role role : roleNodeList) {
                 delete(role.getId());
@@ -98,8 +98,8 @@ public class Y9RoleManagerImpl implements Y9RoleManager {
     public void deleteTenantRelatedByAppId(String roleId) {
         y9OrgBasesToRolesRepository.deleteByRoleId(roleId);
 
-        List<Y9Authorization> authorizationList = y9AuthorizationRepository.findByPrincipalIdAndPrincipalType(roleId,
-            AuthorizationPrincipalTypeEnum.ROLE.getValue());
+        List<Y9Authorization> authorizationList =
+            y9AuthorizationRepository.findByPrincipalIdAndPrincipalType(roleId, AuthorizationPrincipalTypeEnum.ROLE);
         for (Y9Authorization y9Authorization : authorizationList) {
             y9PersonToResourceAndAuthorityRepository.deleteByAuthorizationId(y9Authorization.getId());
             y9PositionToResourceAndAuthorityRepository.deleteByAuthorizationId(y9Authorization.getId());
@@ -187,7 +187,7 @@ public class Y9RoleManagerImpl implements Y9RoleManager {
             Y9OrgBase y9OrgBase = compositeOrgBaseManager.getOrgUnit(orgUnitId);
 
             orgUnitIds.add(orgUnitId);
-            if (OrgTypeEnum.PERSON.getEnName().equals(y9OrgBase.getOrgType())) {
+            if (OrgTypeEnum.PERSON.equals(y9OrgBase.getOrgType())) {
                 getOrgUnitIdsByUpwardRecursion(orgUnitIds, y9OrgBase.getParentId());
 
                 List<String> groupList = y9PersonsToGroupsRepository.listGroupIdsByPersonId(y9OrgBase.getId());
@@ -203,7 +203,7 @@ public class Y9RoleManagerImpl implements Y9RoleManager {
                     Y9Position position = (Y9Position)compositeOrgBaseManager.getOrgUnit(positionId);
                     getOrgUnitIdsByUpwardRecursion(orgUnitIds, position.getParentId());
                 }
-            } else if (OrgTypeEnum.POSITION.getEnName().equals(y9OrgBase.getOrgType())) {
+            } else if (OrgTypeEnum.POSITION.equals(y9OrgBase.getOrgType())) {
                 getOrgUnitIdsByUpwardRecursion(orgUnitIds, y9OrgBase.getParentId());
             } else {
                 getOrgUnitIdsByUpwardRecursion(orgUnitIds, y9OrgBase.getParentId());

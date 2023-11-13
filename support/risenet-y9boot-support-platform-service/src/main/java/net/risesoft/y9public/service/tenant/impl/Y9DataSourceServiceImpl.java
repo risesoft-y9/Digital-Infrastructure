@@ -18,7 +18,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.alibaba.druid.pool.DruidDataSource;
 
-import net.risesoft.enums.DataSourceTypeEnum;
+import net.risesoft.enums.platform.DataSourceTypeEnum;
 import net.risesoft.exception.DataSourceErrorCodeEnum;
 import net.risesoft.y9.exception.util.Y9ExceptionUtil;
 import net.risesoft.y9.util.Y9Assert;
@@ -122,8 +122,8 @@ public class Y9DataSourceServiceImpl implements Y9DataSourceService {
         Y9DataSource cachedY9DataSource = y9DataSourceMap.get(id);
 
         if (isY9DataSourceModified(cachedY9DataSource, queriedY9DataSource)) {
-            Integer type = queriedY9DataSource.getType();
-            if (Objects.equals(type, DataSourceTypeEnum.JNDI.getValue())) {
+            DataSourceTypeEnum type = queriedY9DataSource.getType();
+            if (Objects.equals(type, DataSourceTypeEnum.JNDI)) {
                 dataSource = this.dataSourceLookup.getDataSource(queriedY9DataSource.getJndiName());
             } else {
                 // druid
@@ -157,8 +157,8 @@ public class Y9DataSourceServiceImpl implements Y9DataSourceService {
         if (cachedY9DataSource == null) {
             modified = true;
         } else {
-            if (Objects.equals(queriedY9DataSource.getType(), DataSourceTypeEnum.DRUID.getValue())) {
-                if (!Objects.equals(cachedY9DataSource.getType(), DataSourceTypeEnum.DRUID.getValue())) {
+            if (Objects.equals(queriedY9DataSource.getType(), DataSourceTypeEnum.DRUID)) {
+                if (!Objects.equals(cachedY9DataSource.getType(), DataSourceTypeEnum.DRUID)) {
                     modified = true;
                 }
                 if (!queriedY9DataSource.getJndiName().equals(cachedY9DataSource.getJndiName())) {
@@ -191,7 +191,7 @@ public class Y9DataSourceServiceImpl implements Y9DataSourceService {
     public void resetDefaultPassword(String id) {
         Y9DataSource y9DataSource = this.getById(id);
         // 数据源类型不能为 jndi 才能修改密码
-        Y9Assert.isNotTrue(Objects.equals(y9DataSource.getType(), DataSourceTypeEnum.JNDI.getValue()),
+        Y9Assert.isNotTrue(Objects.equals(y9DataSource.getType(), DataSourceTypeEnum.JNDI),
             DataSourceErrorCodeEnum.JNDI_DATA_SOURCE_RESET_PASSWORD_NOT_ALLOWED);
 
         y9DataSource.setPassword(DEFAULT_PASSWORD);

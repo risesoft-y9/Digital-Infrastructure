@@ -10,6 +10,7 @@ import org.springframework.transaction.annotation.Transactional;
 import lombok.RequiredArgsConstructor;
 
 import net.risesoft.entity.Y9DepartmentProp;
+import net.risesoft.enums.platform.DepartmentPropCategoryEnum;
 import net.risesoft.id.IdType;
 import net.risesoft.id.Y9IdGenerator;
 import net.risesoft.repository.Y9DepartmentPropRepository;
@@ -51,7 +52,7 @@ public class Y9DepartmentPropServiceImpl implements Y9DepartmentPropService {
     }
 
     @Override
-    public List<Y9DepartmentProp> listByCategory(Integer category) {
+    public List<Y9DepartmentProp> listByCategory(DepartmentPropCategoryEnum category) {
         return y9DepartmentPropRepository.findByCategoryOrderByTabIndex(category);
     }
 
@@ -61,12 +62,12 @@ public class Y9DepartmentPropServiceImpl implements Y9DepartmentPropService {
     }
 
     @Override
-    public List<Y9DepartmentProp> listByDeptIdAndCategory(String deptId, Integer category) {
+    public List<Y9DepartmentProp> listByDeptIdAndCategory(String deptId, DepartmentPropCategoryEnum category) {
         return y9DepartmentPropRepository.findByDeptIdAndCategoryOrderByTabIndex(deptId, category);
     }
 
     @Override
-    public List<Y9DepartmentProp> listByOrgBaseIdAndCategory(String orgBaseId, Integer category) {
+    public List<Y9DepartmentProp> listByOrgBaseIdAndCategory(String orgBaseId, DepartmentPropCategoryEnum category) {
         return y9DepartmentPropRepository.findByOrgBaseIdAndCategoryOrderByTabIndex(orgBaseId, category);
     }
 

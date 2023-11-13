@@ -14,6 +14,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
 import net.risesoft.entity.Y9Manager;
+import net.risesoft.enums.platform.ManagerLevelEnum;
 import net.risesoft.log.annotation.RiseLog;
 import net.risesoft.pojo.Y9Result;
 import net.risesoft.service.org.Y9ManagerService;
@@ -49,7 +50,7 @@ public class InfoController {
         returnMap.put("person", Y9LoginUserHolder.getUserInfo());
         returnMap.put("tenantName", Y9LoginUserHolder.getTenantName());
         returnMap.put("tipsMsg", "");
-        if (Y9LoginUserHolder.getUserInfo().getManagerLevel() != 0) {
+        if (!ManagerLevelEnum.GENERAL_USER.equals(Y9LoginUserHolder.getUserInfo().getManagerLevel())) {
             try {
                 Y9Manager y9Manager = y9ManagerService.getById(Y9LoginUserHolder.getUserInfo().getPersonId());
                 y9Manager.setCheckTime(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date()));

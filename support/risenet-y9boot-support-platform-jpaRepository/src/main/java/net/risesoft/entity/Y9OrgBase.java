@@ -1,6 +1,7 @@
 package net.risesoft.entity;
 
 import javax.persistence.Column;
+import javax.persistence.Convert;
 import javax.persistence.Id;
 import javax.persistence.MappedSuperclass;
 import javax.persistence.Transient;
@@ -15,7 +16,8 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import net.risesoft.base.BaseEntity;
-import net.risesoft.enums.OrgTypeEnum;
+import net.risesoft.enums.platform.OrgTypeEnum;
+import net.risesoft.persistence.EnumConverter;
 
 /**
  * 组织基类
@@ -88,7 +90,8 @@ public class Y9OrgBase extends BaseEntity implements Comparable<Y9OrgBase> {
      */
     @Column(name = "ORG_TYPE", length = 255, nullable = false)
     @Comment("组织类型")
-    protected String orgType;
+    @Convert(converter = EnumConverter.OrgTypeEnumConverter.class)
+    protected OrgTypeEnum orgType;
 
     /** 扩展属性 */
     @Column(name = "PROPERTIES", length = 500)

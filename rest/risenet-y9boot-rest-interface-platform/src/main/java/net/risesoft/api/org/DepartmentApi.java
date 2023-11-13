@@ -12,13 +12,13 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import net.risesoft.api.org.dto.CreateDepartmentDTO;
-import net.risesoft.enums.Y9DepartmentPropCategoryEnum;
-import net.risesoft.model.Department;
-import net.risesoft.model.DepartmentProp;
-import net.risesoft.model.Group;
-import net.risesoft.model.OrgUnit;
-import net.risesoft.model.Person;
-import net.risesoft.model.Position;
+import net.risesoft.enums.platform.DepartmentPropCategoryEnum;
+import net.risesoft.model.platform.Department;
+import net.risesoft.model.platform.DepartmentProp;
+import net.risesoft.model.platform.Group;
+import net.risesoft.model.platform.OrgUnit;
+import net.risesoft.model.platform.Person;
+import net.risesoft.model.platform.Position;
 import net.risesoft.pojo.Y9Result;
 
 /**
@@ -162,13 +162,14 @@ public interface DepartmentApi {
      *
      * @param tenantId 租户id
      * @param orgUnitId 组织节点id
-     * @param category 配置类型 {@link Y9DepartmentPropCategoryEnum}
+     * @param category 配置类型 {@link DepartmentPropCategoryEnum}
      * @return {@code Y9Result<List<DepartmentProp>>} 通用请求返回对象 - data 是部门属性配置集合
      * @since 9.6.0
      */
     @GetMapping("/listByOrgBaseIdAndCategory")
     Y9Result<List<DepartmentProp>> listByOrgBaseIdAndCategory(@RequestParam("tenantId") @NotBlank String tenantId,
-        @RequestParam("orgUnitId") @NotBlank String orgUnitId, @RequestParam("category") Integer category);
+        @RequestParam("orgUnitId") @NotBlank String orgUnitId,
+        @RequestParam("category") DepartmentPropCategoryEnum category);
 
     /**
      * 根据部门名称，模糊查询部门列表

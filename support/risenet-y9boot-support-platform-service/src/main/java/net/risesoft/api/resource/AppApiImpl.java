@@ -17,9 +17,11 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
 import net.risesoft.consts.InitDataConsts;
-import net.risesoft.enums.AuthorityEnum;
-import net.risesoft.enums.ManagerLevelEnum;
-import net.risesoft.model.App;
+import net.risesoft.enums.platform.AppOpenTypeEnum;
+import net.risesoft.enums.platform.AppTypeEnum;
+import net.risesoft.enums.platform.AuthorityEnum;
+import net.risesoft.enums.platform.ManagerLevelEnum;
+import net.risesoft.model.platform.App;
 import net.risesoft.pojo.Y9Result;
 import net.risesoft.service.identity.Y9PersonToResourceAndAuthorityService;
 import net.risesoft.service.identity.Y9PositionToResourceAndAuthorityService;
@@ -111,7 +113,7 @@ public class AppApiImpl implements AppApi {
      */
     @Override
     public Y9Result<List<App>> listAccessAppForPerson(@RequestParam("tenantId") @NotBlank String tenantId,
-        @RequestParam("personId") @NotBlank String personId, @RequestParam("authority") Integer authority) {
+        @RequestParam("personId") @NotBlank String personId, @RequestParam("authority") AuthorityEnum authority) {
         Y9LoginUserHolder.setTenantId(tenantId);
 
         List<Y9App> appList = y9PersonToResourceAndAuthorityService.listAppsByAuthority(personId, authority);
@@ -129,7 +131,7 @@ public class AppApiImpl implements AppApi {
      */
     @Override
     public Y9Result<List<App>> listAccessAppForPosition(@RequestParam("tenantId") @NotBlank String tenantId,
-        @RequestParam("positionId") @NotBlank String positionId, @RequestParam("authority") Integer authority) {
+        @RequestParam("positionId") @NotBlank String positionId, @RequestParam("authority") AuthorityEnum authority) {
         Y9LoginUserHolder.setTenantId(tenantId);
 
         List<Y9App> appList = y9PositionToResourceAndAuthorityService.listAppsByAuthority(positionId, authority);
@@ -212,9 +214,8 @@ public class AppApiImpl implements AppApi {
                 y9App.setCustomId(customId);
             }
             y9App.setShowNumber(false);
-            y9App.setOpentype(0);
-            y9App.setResourceType(0);
-            y9App.setType(1);
+            y9App.setOpentype(AppOpenTypeEnum.DESKTOP);
+            y9App.setType(AppTypeEnum.BUSINESS_COLLABORATION);
             saveIsvApp = y9AppService.saveIsvApp(y9App);
             appId = saveIsvApp.getId();
             y9AppService.verifyApp(appId, true, ManagerLevelEnum.SYSTEM_MANAGER.getName());
@@ -300,9 +301,7 @@ public class AppApiImpl implements AppApi {
                 y9App.setCustomId(customId);
             }
             y9App.setShowNumber(false);
-            y9App.setOpentype(0);
-            y9App.setResourceType(0);
-            y9App.setType(1);
+            y9App.setType(AppTypeEnum.BUSINESS_COLLABORATION);
 
             saveIsvApp = y9AppService.saveIsvApp(y9App);
             appId = saveIsvApp.getId();

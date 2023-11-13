@@ -12,6 +12,8 @@ import lombok.extern.slf4j.Slf4j;
 import net.risesoft.entity.Y9Manager;
 import net.risesoft.entity.Y9Person;
 import net.risesoft.entity.relation.Y9PersonsToPositions;
+import net.risesoft.enums.platform.ManagerLevelEnum;
+import net.risesoft.enums.platform.PersonTypeEnum;
 import net.risesoft.id.IdType;
 import net.risesoft.id.Y9IdGenerator;
 import net.risesoft.service.identity.Y9PersonToRoleService;
@@ -87,7 +89,7 @@ public class UpdateY9UserListener {
         y9User.setName(y9Manager.getName());
         y9User.setParentId(y9Manager.getParentId());
         y9User.setAvator(y9Manager.getAvator());
-        y9User.setPersonType("deptPerson");
+        y9User.setPersonType(PersonTypeEnum.DEPARTMENT.getValue());
         y9User.setOriginal(true);
         y9User.setOriginalId(null);
         y9User.setRoles(null);
@@ -168,7 +170,7 @@ public class UpdateY9UserListener {
         y9User.setName(y9Manager.getName());
         y9User.setParentId(y9Manager.getParentId());
         y9User.setAvator(y9Manager.getAvator());
-        y9User.setPersonType("deptPerson");
+        y9User.setPersonType(PersonTypeEnum.DEPARTMENT.getValue());
         y9User.setOriginal(true);
         y9User.setOriginalId(null);
         y9User.setRoles(null);
@@ -223,7 +225,7 @@ public class UpdateY9UserListener {
         y9User.setGuidPath(person.getGuidPath());
         y9User.setOrderedPath(person.getOrderedPath());
         y9User.setDn(person.getDn());
-        y9User.setManagerLevel(0);
+        y9User.setManagerLevel(ManagerLevelEnum.GENERAL_USER);
 
         y9User.setName(person.getName());
         y9User.setParentId(person.getParentId());
@@ -358,7 +360,7 @@ public class UpdateY9UserListener {
         y9User.setGuidPath(person.getGuidPath());
         y9User.setOrderedPath(person.getOrderedPath());
         y9User.setDn(person.getDn());
-        y9User.setManagerLevel(0);
+        y9User.setManagerLevel(ManagerLevelEnum.GENERAL_USER);
 
         y9User.setName(person.getName());
         y9User.setParentId(person.getParentId());

@@ -8,6 +8,7 @@ import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
+import net.risesoft.enums.platform.TenantTypeEnum;
 import net.risesoft.y9public.entity.tenant.Y9Tenant;
 
 /**
@@ -36,11 +37,9 @@ public interface Y9TenantRepository extends JpaRepository<Y9Tenant, String>, Jpa
 
     Optional<Y9Tenant> findByShortName(String shortName);
 
-    List<Y9Tenant> findByTenantTypeAndParentIdIsNullOrderByTabIndexAsc(Integer tenantType);
+    List<Y9Tenant> findByTenantTypeAndParentIdIsNullOrderByTabIndexAsc(TenantTypeEnum tenantType);
 
-    List<Y9Tenant> findByTenantTypeIn(List<Integer> tenantType);
-
-    List<Y9Tenant> findByTenantTypeOrderByTabIndexAsc(Integer tenantType);
+    List<Y9Tenant> findByTenantTypeOrderByTabIndexAsc(TenantTypeEnum tenantType);
 
     Optional<Y9Tenant> findTopByOrderByTabIndexDesc();
 

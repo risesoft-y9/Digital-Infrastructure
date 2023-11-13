@@ -22,7 +22,7 @@ import org.springframework.web.bind.annotation.RestController;
 import lombok.RequiredArgsConstructor;
 
 import net.risesoft.controller.resource.vo.ResourceBaseVO;
-import net.risesoft.enums.ManagerLevelEnum;
+import net.risesoft.enums.platform.ManagerLevelEnum;
 import net.risesoft.log.OperationTypeEnum;
 import net.risesoft.log.annotation.RiseLog;
 import net.risesoft.model.user.UserInfo;

@@ -21,9 +21,9 @@ import lombok.extern.slf4j.Slf4j;
 import net.risesoft.controller.authorization.vo.AuthorizationVO;
 import net.risesoft.entity.Y9OrgBase;
 import net.risesoft.entity.permission.Y9Authorization;
-import net.risesoft.enums.AuthorityEnum;
-import net.risesoft.enums.AuthorizationPrincipalTypeEnum;
-import net.risesoft.enums.OrgTypeEnum;
+import net.risesoft.enums.platform.AuthorityEnum;
+import net.risesoft.enums.platform.AuthorizationPrincipalTypeEnum;
+import net.risesoft.enums.platform.OrgTypeEnum;
 import net.risesoft.log.OperationTypeEnum;
 import net.risesoft.log.annotation.RiseLog;
 import net.risesoft.pojo.Y9Page;
@@ -84,7 +84,7 @@ public class AuthorizationController {
         authorizationVO.setAuthorizer(y9Authorization.getAuthorizer() == null ? "" : y9Authorization.getAuthorizer());
         authorizationVO.setAuthorizeTime(y9Authorization.getCreateTime());
         authorizationVO.setAuthority(y9Authorization.getAuthority());
-        authorizationVO.setAuthorityStr(AuthorityEnum.getByValue(y9Authorization.getAuthority()).getName());
+        authorizationVO.setAuthorityStr(y9Authorization.getAuthority().getName());
         return authorizationVO;
     }
 
@@ -94,7 +94,7 @@ public class AuthorizationController {
         authorizationVO.setId(y9Authorization.getId());
         authorizationVO.setResourceId(acResource.getId());
         authorizationVO.setAuthority(y9Authorization.getAuthority());
-        authorizationVO.setAuthorityStr(AuthorityEnum.getByValue(y9Authorization.getAuthority()).getName());
+        authorizationVO.setAuthorityStr(y9Authorization.getAuthority().getName());
         authorizationVO.setResourceName(acResource.getName());
         authorizationVO.setAuthorizer(y9Authorization.getAuthorizer() == null ? "" : y9Authorization.getAuthorizer());
         authorizationVO.setAuthorizeTime(y9Authorization.getCreateTime());
@@ -112,7 +112,7 @@ public class AuthorizationController {
         authorizationVO.setAuthorizer(y9Authorization.getAuthorizer() == null ? "" : y9Authorization.getAuthorizer());
         authorizationVO.setAuthorizeTime(y9Authorization.getCreateTime());
         authorizationVO.setAuthority(y9Authorization.getAuthority());
-        authorizationVO.setAuthorityStr(AuthorityEnum.getByValue(y9Authorization.getAuthority()).getName());
+        authorizationVO.setAuthorityStr(y9Authorization.getAuthority().getName());
         return authorizationVO;
     }
 
@@ -125,8 +125,8 @@ public class AuthorizationController {
     @RiseLog(operationName = "根据资源id获取关联的组织列表 ")
     @RequestMapping(value = "/listRelateOrgList")
     public Y9Result<List<AuthorizationVO>> listRelateOrgList(@NotBlank @RequestParam("resourceId") String resourceId) {
-        List<Y9Authorization> y9AuthorizationList = y9AuthorizationService
-            .listByPrincipalTypeNotAndResourceId(AuthorizationPrincipalTypeEnum.ROLE.getValue(), resourceId);
+        List<Y9Authorization> y9AuthorizationList =
+            y9AuthorizationService.listByPrincipalTypeNotAndResourceId(AuthorizationPrincipalTypeEnum.ROLE, resourceId);
         List<AuthorizationVO> authorizationVOList =
             y9AuthorizationList.stream().map(this::getAuthorizationVOForOrgBase).collect(Collectors.toList());
         return Y9Result.success(authorizationVOList, "获取数据成功！");
@@ -170,7 +170,7 @@ public class AuthorizationController {
     @RiseLog(operationName = "根据资源id获取关联的角色列表 ")
     @RequestMapping(value = "/listRelateRole")
     public Y9Result<List<AuthorizationVO>> listRelateRole(@RequestParam("resourceId") @NotBlank String resourceId,
-        @RequestParam(required = false) String roleName, @RequestParam("authority") Integer authority) {
+        @RequestParam(required = false) String roleName, @RequestParam("authority") AuthorityEnum authority) {
         List<AuthorizationVO> authorizationVOList = new ArrayList<>();
         List<Y9Authorization> y9AuthorizationList;
 
@@ -184,10 +184,10 @@ public class AuthorizationController {
             }
         } else {
             y9AuthorizationList = y9AuthorizationService
-                .listByPrincipalTypeAndResourceId(AuthorizationPrincipalTypeEnum.ROLE.getValue(), resourceId);
+                .listByPrincipalTypeAndResourceId(AuthorizationPrincipalTypeEnum.ROLE, resourceId);
         }
         for (Y9Authorization y9Authorization : y9AuthorizationList) {
-            if (AuthorizationPrincipalTypeEnum.ROLE.getValue().equals(y9Authorization.getPrincipalType())) {
+            if (AuthorizationPrincipalTypeEnum.ROLE.equals(y9Authorization.getPrincipalType())) {
                 authorizationVOList.add(getAuthorizationVOForRole(y9Authorization));
             }
         }
@@ -218,8 +218,8 @@ public class AuthorizationController {
      */
     @RiseLog(operationName = "保存管理资源权限许可对象 ", operationType = OperationTypeEnum.MODIFY)
     @PostMapping(value = "/saveOrUpdate")
-    public Y9Result<String> saveOrUpdate(Integer authority, @NotBlank String principalId, Integer principalType,
-        @RequestParam("resourceIds") @NotEmpty String[] resourceIds) {
+    public Y9Result<String> saveOrUpdate(AuthorityEnum authority, @NotBlank String principalId,
+        AuthorizationPrincipalTypeEnum principalType, @RequestParam("resourceIds") @NotEmpty String[] resourceIds) {
         y9AuthorizationService.save(authority, principalId, principalType, resourceIds);
         return Y9Result.successMsg("授权成功！");
     }
@@ -234,7 +234,7 @@ public class AuthorizationController {
      */
     @RiseLog(operationName = "保存资源授权管理关联组织信息", operationType = OperationTypeEnum.MODIFY)
     @PostMapping(value = "/saveOrUpdateOrg")
-    public Y9Result<String> saveOrUpdateOrg(Integer authority, @NotBlank String resourceId,
+    public Y9Result<String> saveOrUpdateOrg(AuthorityEnum authority, @NotBlank String resourceId,
         @RequestParam("orgIds") @NotEmpty String[] orgIds) {
         y9AuthorizationService.saveByOrg(authority, resourceId, orgIds);
         return Y9Result.successMsg("授权成功！");
@@ -250,7 +250,7 @@ public class AuthorizationController {
      */
     @RiseLog(operationName = "保存关联角色权限许可对象 ", operationType = OperationTypeEnum.MODIFY)
     @PostMapping(value = "/saveOrUpdateRole")
-    public Y9Result<String> saveOrUpdateRole(Integer authority, @NotBlank String resourceId,
+    public Y9Result<String> saveOrUpdateRole(AuthorityEnum authority, @NotBlank String resourceId,
         @RequestParam("roleIds") @NotEmpty String[] roleIds) {
         y9AuthorizationService.saveByRoles(authority, resourceId, roleIds);
         return Y9Result.successMsg("授权成功！");

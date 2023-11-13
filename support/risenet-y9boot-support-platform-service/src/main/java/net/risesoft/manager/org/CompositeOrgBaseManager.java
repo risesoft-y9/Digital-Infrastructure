@@ -6,7 +6,7 @@ import java.util.Optional;
 import net.risesoft.entity.Y9OrgBase;
 import net.risesoft.entity.Y9Person;
 import net.risesoft.entity.Y9Position;
-import net.risesoft.enums.OrgTypeEnum;
+import net.risesoft.enums.platform.OrgTypeEnum;
 
 /**
  * @author dingzhaojun

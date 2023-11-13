@@ -22,7 +22,7 @@ import lombok.extern.slf4j.Slf4j;
 
 import net.risesoft.log.annotation.RiseLog;
 import net.risesoft.log.service.SaveLogInfo4Kafka;
-import net.risesoft.model.AccessLog;
+import net.risesoft.model.log.AccessLog;
 import net.risesoft.model.user.UserInfo;
 import net.risesoft.y9.Y9Context;
 import net.risesoft.y9.Y9LoginUserHolder;

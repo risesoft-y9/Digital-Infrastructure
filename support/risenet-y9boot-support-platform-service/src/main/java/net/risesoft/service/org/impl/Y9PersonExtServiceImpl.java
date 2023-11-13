@@ -77,7 +77,6 @@ public class Y9PersonExtServiceImpl implements Y9PersonExtService {
         ext.setName(person.getName());
         ext.setPersonId(person.getId());
         ext.setPhoto(photo);
-        ext.setMaritalStatus(ext.getMaritalStatus() == null ? 0 : ext.getMaritalStatus());
         return y9PersonExtRepository.save(ext);
     }
 
@@ -99,7 +98,6 @@ public class Y9PersonExtServiceImpl implements Y9PersonExtService {
         ext.setName(person.getName());
         ext.setPersonId(person.getId());
         ext.setPhoto(p);
-        ext.setMaritalStatus(ext.getMaritalStatus() == null ? 0 : ext.getMaritalStatus());
         return y9PersonExtRepository.save(ext);
     }
 

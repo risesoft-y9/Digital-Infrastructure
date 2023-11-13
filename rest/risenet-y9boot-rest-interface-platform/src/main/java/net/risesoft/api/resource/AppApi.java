@@ -10,8 +10,8 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 
-import net.risesoft.enums.AuthorityEnum;
-import net.risesoft.model.App;
+import net.risesoft.enums.platform.AuthorityEnum;
+import net.risesoft.model.platform.App;
 import net.risesoft.pojo.Y9Result;
 
 /**
@@ -71,7 +71,7 @@ public interface AppApi {
      */
     @GetMapping("/listAccessAppForPerson")
     Y9Result<List<App>> listAccessAppForPerson(@RequestParam("tenantId") @NotBlank String tenantId,
-        @RequestParam("personId") @NotBlank String personId, @RequestParam("authority") Integer authority);
+        @RequestParam("personId") @NotBlank String personId, @RequestParam("authority") AuthorityEnum authority);
 
     /**
      * 根据人员id和操作类型，获取有权限的应用列表
@@ -84,7 +84,7 @@ public interface AppApi {
      */
     @GetMapping("/listAccessAppForPosition")
     Y9Result<List<App>> listAccessAppForPosition(@RequestParam("tenantId") @NotBlank String tenantId,
-        @RequestParam("positionId") @NotBlank String positionId, @RequestParam("authority") Integer authority);
+        @RequestParam("positionId") @NotBlank String positionId, @RequestParam("authority") AuthorityEnum authority);
 
     /**
      * 根据 customId ，获取应用列表

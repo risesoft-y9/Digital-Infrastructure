@@ -9,9 +9,11 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
-import net.risesoft.model.OrgUnit;
-import net.risesoft.model.Person;
-import net.risesoft.model.Role;
+import net.risesoft.enums.platform.OrgTypeEnum;
+import net.risesoft.enums.platform.RoleTypeEnum;
+import net.risesoft.model.platform.OrgUnit;
+import net.risesoft.model.platform.Person;
+import net.risesoft.model.platform.Role;
 import net.risesoft.pojo.Y9Result;
 
 /**
@@ -53,7 +55,7 @@ public interface RoleApi {
     @PostMapping("/createRole")
     Y9Result<Role> createRole(@RequestParam("roleId") String roleId, @RequestParam("roleName") String roleName,
         @RequestParam("parentId") String parentId, @RequestParam("customId") String customId,
-        @RequestParam("type") String type, @RequestParam("systemName") String systemName,
+        @RequestParam("type") RoleTypeEnum type, @RequestParam("systemName") String systemName,
         @RequestParam("systemCnName") String systemCnName);
 
     /**
@@ -99,7 +101,7 @@ public interface RoleApi {
      */
     @GetMapping("/listOrgUnitsById")
     Y9Result<List<OrgUnit>> listOrgUnitsById(@RequestParam("tenantId") @NotBlank String tenantId,
-        @RequestParam("roleId") @NotBlank String roleId, @RequestParam("orgType") @NotBlank String orgType);
+        @RequestParam("roleId") @NotBlank String roleId, @RequestParam("orgType") OrgTypeEnum orgType);
 
     /**
      * 根据角色Id获取直接关联的人员对象集合

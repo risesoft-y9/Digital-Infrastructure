@@ -1,6 +1,7 @@
 package net.risesoft.y9public.entity.resource;
 
 import javax.persistence.Column;
+import javax.persistence.Convert;
 import javax.persistence.Entity;
 import javax.persistence.Table;
 
@@ -10,7 +11,8 @@ import org.hibernate.annotations.Comment;
 import lombok.Data;
 
 import net.risesoft.enums.OperationDisplayTypeEnum;
-import net.risesoft.enums.ResourceTypeEnum;
+import net.risesoft.enums.platform.ResourceTypeEnum;
+import net.risesoft.persistence.EnumConverter;
 
 /**
  * 页面按钮操作表
@@ -41,14 +43,15 @@ public class Y9Operation extends Y9ResourceBase {
     @ColumnDefault("0")
     @Column(name = "DISPLAY_TYPE")
     @Comment("按钮展示方式")
-    private Integer displayType = OperationDisplayTypeEnum.ICON_TEXT.getValue();
+    @Convert(converter = EnumConverter.OperationDisplayTypeEnumConverter.class)
+    private OperationDisplayTypeEnum displayType = OperationDisplayTypeEnum.ICON_TEXT;
 
     @Column(name = "EVENT_NAME", length = 50)
     @Comment("按钮事件")
     private String eventName;
 
     public Y9Operation() {
-        super.setResourceType(ResourceTypeEnum.OPERATION.getValue());
+        super.setResourceType(ResourceTypeEnum.OPERATION);
     }
 
     @Override

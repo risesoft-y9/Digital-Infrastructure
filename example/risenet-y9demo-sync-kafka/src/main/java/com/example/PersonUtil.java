@@ -1,6 +1,6 @@
 package com.example;
 
-import net.risesoft.model.Person;
+import net.risesoft.model.platform.Person;
 
 /**
  * 人员同步

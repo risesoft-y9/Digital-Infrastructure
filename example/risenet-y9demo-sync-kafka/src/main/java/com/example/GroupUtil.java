@@ -3,8 +3,8 @@ package com.example;
 import java.util.List;
 import java.util.Map;
 
-import net.risesoft.model.Group;
-import net.risesoft.model.PersonsGroups;
+import net.risesoft.model.platform.Group;
+import net.risesoft.model.platform.PersonsGroups;
 import net.risesoft.y9.pubsub.constant.Y9OrgEventConst;
 
 /**

@@ -6,7 +6,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import net.risesoft.api.customgroup.CustomGroupApi;
-import net.risesoft.model.CustomGroup;
+import net.risesoft.model.platform.CustomGroup;
 import net.risesoft.pojo.Y9Result;
 
 /**

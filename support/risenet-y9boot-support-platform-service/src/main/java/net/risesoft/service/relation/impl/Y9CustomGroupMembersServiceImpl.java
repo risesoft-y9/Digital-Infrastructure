@@ -15,7 +15,7 @@ import lombok.RequiredArgsConstructor;
 
 import net.risesoft.entity.Y9Person;
 import net.risesoft.entity.relation.Y9CustomGroupMember;
-import net.risesoft.enums.OrgTypeEnum;
+import net.risesoft.enums.platform.OrgTypeEnum;
 import net.risesoft.manager.org.CompositeOrgBaseManager;
 import net.risesoft.manager.org.Y9PersonManager;
 import net.risesoft.manager.relation.Y9CustomGroupMembersManager;
@@ -64,7 +64,7 @@ public class Y9CustomGroupMembersServiceImpl implements Y9CustomGroupMembersServ
         List<Y9CustomGroupMember> orgCustomGroupMemberList =
             customGroupMembersRepository.findByGroupIdOrderByTabIndexAsc(groupId);
         for (Y9CustomGroupMember y9CustomGroupMember : orgCustomGroupMemberList) {
-            OrgTypeEnum orgType = OrgTypeEnum.getByEnName(y9CustomGroupMember.getMemberType());
+            OrgTypeEnum orgType = y9CustomGroupMember.getMemberType();
             switch (orgType) {
                 case ORGANIZATION:
                     orgPersonList.addAll(compositeOrgBaseManager
@@ -96,7 +96,7 @@ public class Y9CustomGroupMembersServiceImpl implements Y9CustomGroupMembersServ
     }
 
     @Override
-    public List<Y9CustomGroupMember> listByGroupIdAndMemberType(String groupId, String memberType) {
+    public List<Y9CustomGroupMember> listByGroupIdAndMemberType(String groupId, OrgTypeEnum memberType) {
         return customGroupMembersRepository.findByGroupIdAndMemberTypeOrderByTabIndexAsc(groupId, memberType);
     }
 
@@ -109,7 +109,8 @@ public class Y9CustomGroupMembersServiceImpl implements Y9CustomGroupMembersServ
     }
 
     @Override
-    public Page<Y9CustomGroupMember> pageByGroupIdAndMemberType(String groupId, String memberType, int page, int rows) {
+    public Page<Y9CustomGroupMember> pageByGroupIdAndMemberType(String groupId, OrgTypeEnum memberType, int page,
+        int rows) {
         int currentPage = page > 0 ? page - 1 : 0;
         Pageable pageable = PageRequest.of(currentPage, rows, Sort.by(Sort.Direction.ASC, "tabIndex"));
         return customGroupMembersRepository.findByGroupIdAndMemberType(groupId, memberType, pageable);

@@ -5,6 +5,7 @@ import java.util.Optional;
 
 import org.springframework.data.domain.Page;
 
+import net.risesoft.enums.platform.TenantTypeEnum;
 import net.risesoft.y9.exception.Y9NotFoundException;
 import net.risesoft.y9public.entity.tenant.Y9Tenant;
 
@@ -118,10 +119,10 @@ public interface Y9TenantService {
      * 根据父节点id和租户类型，获取租户列表
      *
      * @param parentId 父节点id
-     * @param tenantType 租户类型 {@link net.risesoft.enums.TenantTypeEnum}
+     * @param tenantType 租户类型 {@link TenantTypeEnum}
      * @return {@link List}<{@link Y9Tenant}>
      */
-    List<Y9Tenant> listByParentIdAndTenantType(String parentId, Integer tenantType);
+    List<Y9Tenant> listByParentIdAndTenantType(String parentId, TenantTypeEnum tenantType);
 
     /**
      * 根据租户名称查找租户列表
@@ -137,7 +138,7 @@ public interface Y9TenantService {
      * @param tenantType 租户类型： 0=用户，2=开发商，1=运维团队，3=普通租户
      * @return List&lt;Tenant&gt;
      */
-    List<Y9Tenant> listByTenantType(Integer tenantType);
+    List<Y9Tenant> listByTenantType(TenantTypeEnum tenantType);
 
     /**
      * 根据租户名称和类型获取租户数
@@ -147,15 +148,6 @@ public interface Y9TenantService {
      * @return List&lt;Tenant&gt;
      */
     List<Y9Tenant> listByTenantType(String name, Integer tenantType);
-
-    /**
-     * 根据租户类型，查找租户列表
-     *
-     * @param tenantType 租户类型： 0=用户，2=开发商，1=运维团队，3=普通租户
-     * @param tenantType2 租户类型： 0=用户，2=开发商，1=运维团队，3=普通租户
-     * @return List&lt;Tenant&gt;
-     */
-    List<Y9Tenant> listByTenantTypeIn(Integer tenantType, Integer tenantType2);
 
     /**
      * 移动租户

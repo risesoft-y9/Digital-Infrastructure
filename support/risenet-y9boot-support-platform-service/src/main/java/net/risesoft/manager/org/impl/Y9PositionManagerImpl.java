@@ -15,13 +15,13 @@ import net.risesoft.consts.CacheNameConsts;
 import net.risesoft.consts.OrgLevelConsts;
 import net.risesoft.entity.Y9OrgBase;
 import net.risesoft.entity.Y9Position;
-import net.risesoft.enums.OrgTypeEnum;
+import net.risesoft.enums.platform.OrgTypeEnum;
 import net.risesoft.exception.OrgUnitErrorCodeEnum;
 import net.risesoft.id.IdType;
 import net.risesoft.id.Y9IdGenerator;
 import net.risesoft.manager.org.CompositeOrgBaseManager;
 import net.risesoft.manager.org.Y9PositionManager;
-import net.risesoft.model.Position;
+import net.risesoft.model.platform.Position;
 import net.risesoft.repository.Y9PositionRepository;
 import net.risesoft.repository.relation.Y9PersonsToPositionsRepository;
 import net.risesoft.util.ModelConvertUtil;
@@ -108,7 +108,6 @@ public class Y9PositionManagerImpl implements Y9PositionManager {
             position.setId(Y9IdGenerator.genId(IdType.SNOWFLAKE));
         }
         position.setTabIndex(compositeOrgBaseManager.getMaxSubTabIndex(parent.getId(), OrgTypeEnum.POSITION));
-        position.setOrgType(OrgTypeEnum.POSITION.getEnName());
         position.setDutyLevel(0);
         position.setDisabled(false);
         position.setParentId(parent.getId());
