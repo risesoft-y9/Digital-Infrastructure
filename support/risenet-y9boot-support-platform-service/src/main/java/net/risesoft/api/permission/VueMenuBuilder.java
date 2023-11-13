@@ -10,9 +10,10 @@ import lombok.RequiredArgsConstructor;
 
 import net.risesoft.entity.identity.Y9IdentityToResourceAndAuthorityBase;
 import net.risesoft.entity.identity.person.Y9PersonToResourceAndAuthority;
-import net.risesoft.enums.ResourceTypeEnum;
-import net.risesoft.model.VueButton;
-import net.risesoft.model.VueMenu;
+import net.risesoft.enums.platform.AuthorityEnum;
+import net.risesoft.enums.platform.ResourceTypeEnum;
+import net.risesoft.model.platform.VueButton;
+import net.risesoft.model.platform.VueMenu;
 import net.risesoft.service.identity.Y9PersonToResourceAndAuthorityService;
 import net.risesoft.y9public.entity.resource.Y9Menu;
 import net.risesoft.y9public.entity.resource.Y9Operation;
@@ -34,9 +35,9 @@ public class VueMenuBuilder {
     private final Y9OperationService y9OperationService;
     private final Y9PersonToResourceAndAuthorityService y9PersonToResourceAndAuthorityService;
 
-    public void buildVueMenus(String personId, Integer authority, String resourceId, List<VueMenu> vueMenuList) {
-        List<Y9PersonToResourceAndAuthority> authorizedMenuList = y9PersonToResourceAndAuthorityService.list(personId,
-            resourceId, ResourceTypeEnum.MENU.getValue(), authority);
+    public void buildVueMenus(String personId, AuthorityEnum authority, String resourceId, List<VueMenu> vueMenuList) {
+        List<Y9PersonToResourceAndAuthority> authorizedMenuList =
+            y9PersonToResourceAndAuthorityService.list(personId, resourceId, ResourceTypeEnum.MENU, authority);
         List<String> menuIdList = authorizedMenuList.stream().map(Y9IdentityToResourceAndAuthorityBase::getResourceId)
             .distinct().collect(Collectors.toList());
         for (String menuId : menuIdList) {
@@ -46,7 +47,7 @@ public class VueMenuBuilder {
         }
     }
 
-    private VueMenu buildVueMenu(String personId, Integer authority, String menuId, Y9Menu y9Menu) {
+    private VueMenu buildVueMenu(String personId, AuthorityEnum authority, String menuId, Y9Menu y9Menu) {
         VueMenu vueMenu = new VueMenu();
         vueMenu.setName(y9Menu.getName());
         vueMenu.setPath(y9Menu.getUrl());
@@ -64,10 +65,10 @@ public class VueMenuBuilder {
         return vueMenu;
     }
 
-    private List<VueButton> buildVueButtons(String personId, Integer authority, String menuId) {
+    private List<VueButton> buildVueButtons(String personId, AuthorityEnum authority, String menuId) {
         List<VueButton> buttonList = new ArrayList<>();
-        List<Y9PersonToResourceAndAuthority> authorizedButtonList = y9PersonToResourceAndAuthorityService.list(personId,
-            menuId, ResourceTypeEnum.OPERATION.getValue(), authority);
+        List<Y9PersonToResourceAndAuthority> authorizedButtonList =
+            y9PersonToResourceAndAuthorityService.list(personId, menuId, ResourceTypeEnum.OPERATION, authority);
         List<String> buttonIdList = authorizedButtonList.stream()
             .map(Y9IdentityToResourceAndAuthorityBase::getResourceId).distinct().collect(Collectors.toList());
         for (String buttonId : buttonIdList) {

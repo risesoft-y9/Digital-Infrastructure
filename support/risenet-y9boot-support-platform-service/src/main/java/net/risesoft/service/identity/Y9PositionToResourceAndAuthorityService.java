@@ -5,7 +5,8 @@ import java.util.List;
 import net.risesoft.entity.Y9Position;
 import net.risesoft.entity.identity.position.Y9PositionToResourceAndAuthority;
 import net.risesoft.entity.permission.Y9Authorization;
-import net.risesoft.enums.AuthorityEnum;
+import net.risesoft.enums.platform.AuthorityEnum;
+import net.risesoft.enums.platform.ResourceTypeEnum;
 import net.risesoft.y9public.entity.resource.Y9App;
 import net.risesoft.y9public.entity.resource.Y9Menu;
 import net.risesoft.y9public.entity.resource.Y9ResourceBase;
@@ -77,7 +78,7 @@ public interface Y9PositionToResourceAndAuthorityService {
      * @param authority
      * @return
      */
-    boolean hasPermission(String positionId, String resourceId, Integer authority);
+    boolean hasPermission(String positionId, String resourceId, AuthorityEnum authority);
 
     /**
      * 判断岗对资源是否有相应的权限
@@ -87,7 +88,7 @@ public interface Y9PositionToResourceAndAuthorityService {
      * @param authority
      * @return
      */
-    boolean hasPermissionByCustomId(String positionId, String customId, Integer authority);
+    boolean hasPermissionByCustomId(String positionId, String customId, AuthorityEnum authority);
 
     List<Y9PositionToResourceAndAuthority> list(String positionId);
 
@@ -99,7 +100,7 @@ public interface Y9PositionToResourceAndAuthorityService {
      * @param authority
      * @return
      */
-    List<Y9PositionToResourceAndAuthority> list(String positionId, String parentResourceId, Integer authority);
+    List<Y9PositionToResourceAndAuthority> list(String positionId, String parentResourceId, AuthorityEnum authority);
 
     /**
      * 根据岗位id、父资源id、资源类型及授权类型查找
@@ -110,8 +111,8 @@ public interface Y9PositionToResourceAndAuthorityService {
      * @param authority
      * @return
      */
-    List<Y9PositionToResourceAndAuthority> list(String positionId, String parentResourceId, Integer resourceType,
-        Integer authority);
+    List<Y9PositionToResourceAndAuthority> list(String positionId, String parentResourceId,
+        ResourceTypeEnum resourceType, AuthorityEnum authority);
 
     /**
      * 根据岗位id 及授权类型查找应用列表
@@ -120,7 +121,7 @@ public interface Y9PositionToResourceAndAuthorityService {
      * @param authority {@link AuthorityEnum}
      * @return
      */
-    List<Y9App> listAppsByAuthority(String positionId, Integer authority);
+    List<Y9App> listAppsByAuthority(String positionId, AuthorityEnum authority);
 
     /**
      * 根据人员查找
@@ -154,7 +155,7 @@ public interface Y9PositionToResourceAndAuthorityService {
      * @param authority 权限类型
      * @return {@link List}<{@link Y9ResourceBase}>
      */
-    List<Y9ResourceBase> listSubResources(String positionId, String resourceId, Integer authority);
+    List<Y9ResourceBase> listSubResources(String positionId, String resourceId, AuthorityEnum authority);
 
     /**
      * 获得某一资源下,主体对象有相应操作权限的子菜单
@@ -165,5 +166,6 @@ public interface Y9PositionToResourceAndAuthorityService {
      * @param authority 权限类型
      * @return {@link List}<{@link Y9Menu}>
      */
-    List<Y9Menu> listSubMenus(String positionId, String resourceId, Integer resourceType, Integer authority);
+    List<Y9Menu> listSubMenus(String positionId, String resourceId, ResourceTypeEnum resourceType,
+        AuthorityEnum authority);
 }

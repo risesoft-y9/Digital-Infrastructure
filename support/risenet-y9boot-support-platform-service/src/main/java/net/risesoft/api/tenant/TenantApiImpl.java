@@ -13,7 +13,8 @@ import org.springframework.web.bind.annotation.RestController;
 
 import lombok.RequiredArgsConstructor;
 
-import net.risesoft.model.Tenant;
+import net.risesoft.enums.platform.TenantTypeEnum;
+import net.risesoft.model.platform.Tenant;
 import net.risesoft.pojo.Y9Result;
 import net.risesoft.y9.util.Y9ModelConvertUtil;
 import net.risesoft.y9public.entity.tenant.Y9Tenant;
@@ -96,7 +97,7 @@ public class TenantApiImpl implements TenantApi {
      * @since 9.6.0
      */
     @Override
-    public Y9Result<List<Tenant>> listByTenantType(@RequestParam("tenantType") Integer tenantType) {
+    public Y9Result<List<Tenant>> listByTenantType(@RequestParam("tenantType") TenantTypeEnum tenantType) {
         List<Y9Tenant> y9TenantList = y9TenantService.listByTenantType(tenantType);
         return Y9Result.success(Y9ModelConvertUtil.convert(y9TenantList, Tenant.class));
     }

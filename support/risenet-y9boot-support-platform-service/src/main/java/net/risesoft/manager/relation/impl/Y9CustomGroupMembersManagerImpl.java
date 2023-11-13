@@ -14,7 +14,7 @@ import net.risesoft.entity.Y9OrgBase;
 import net.risesoft.entity.Y9Person;
 import net.risesoft.entity.Y9Position;
 import net.risesoft.entity.relation.Y9CustomGroupMember;
-import net.risesoft.enums.OrgTypeEnum;
+import net.risesoft.enums.platform.OrgTypeEnum;
 import net.risesoft.id.IdType;
 import net.risesoft.id.Y9IdGenerator;
 import net.risesoft.manager.org.CompositeOrgBaseManager;
@@ -54,7 +54,7 @@ public class Y9CustomGroupMembersManagerImpl implements Y9CustomGroupMembersMana
                 member.setGroupId(groupId);
                 member.setTabIndex(tabIndex == null ? 1 : tabIndex + 1);
                 member.setMemberType(y9OrgBase.getOrgType());
-                OrgTypeEnum orgType = OrgTypeEnum.getByEnName(y9OrgBase.getOrgType());
+                OrgTypeEnum orgType = y9OrgBase.getOrgType();
                 switch (orgType) {
                     case ORGANIZATION:
                         break;
@@ -73,7 +73,7 @@ public class Y9CustomGroupMembersManagerImpl implements Y9CustomGroupMembersMana
                     case PERSON:
                         Y9Person person = (Y9Person)y9OrgBase;
                         member.setParentId(person.getParentId());
-                        member.setSex(person.getSex());
+                        member.setSex(person.getSex().getValue());
                         break;
                     default:
                 }

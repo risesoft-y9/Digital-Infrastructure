@@ -18,14 +18,16 @@ import lombok.RequiredArgsConstructor;
 import net.risesoft.entity.Y9CustomGroup;
 import net.risesoft.entity.Y9Person;
 import net.risesoft.entity.relation.Y9CustomGroupMember;
-import net.risesoft.model.CustomGroup;
-import net.risesoft.model.CustomGroupMember;
-import net.risesoft.model.Person;
+import net.risesoft.enums.platform.OrgTypeEnum;
+import net.risesoft.model.platform.CustomGroup;
+import net.risesoft.model.platform.CustomGroupMember;
+import net.risesoft.model.platform.Person;
 import net.risesoft.pojo.Y9Page;
 import net.risesoft.service.org.Y9CustomGroupService;
 import net.risesoft.service.relation.Y9CustomGroupMembersService;
 import net.risesoft.y9.Y9LoginUserHolder;
 import net.risesoft.y9.util.Y9BeanUtil;
+import net.risesoft.y9.util.Y9EnumUtil;
 import net.risesoft.y9.util.Y9ModelConvertUtil;
 
 /**
@@ -185,8 +187,8 @@ public class CustomGroupApiImpl implements CustomGroupApi {
         @RequestParam("groupId") @NotBlank String groupId, @RequestParam("memberType") @NotBlank String memberType) {
         Y9LoginUserHolder.setTenantId(tenantId);
 
-        List<Y9CustomGroupMember> y9CustomGroupMemberList =
-            customGroupMembersService.listByGroupIdAndMemberType(groupId, memberType);
+        List<Y9CustomGroupMember> y9CustomGroupMemberList = customGroupMembersService
+            .listByGroupIdAndMemberType(groupId, Y9EnumUtil.valueOf(OrgTypeEnum.class, memberType));
         return Y9ModelConvertUtil.convert(y9CustomGroupMemberList, CustomGroupMember.class);
     }
 
@@ -251,8 +253,8 @@ public class CustomGroupApiImpl implements CustomGroupApi {
         @RequestParam("rows") int rows) {
         Y9LoginUserHolder.setTenantId(tenantId);
 
-        Page<Y9CustomGroupMember> y9CustomGroupMemberPage =
-            customGroupMembersService.pageByGroupIdAndMemberType(groupId, memberType, page, rows);
+        Page<Y9CustomGroupMember> y9CustomGroupMemberPage = customGroupMembersService
+            .pageByGroupIdAndMemberType(groupId, Y9EnumUtil.valueOf(OrgTypeEnum.class, memberType), page, rows);
         return Y9Page.success(page, y9CustomGroupMemberPage.getTotalPages(), y9CustomGroupMemberPage.getTotalElements(),
             Y9ModelConvertUtil.convert(y9CustomGroupMemberPage.getContent(), CustomGroupMember.class));
     }

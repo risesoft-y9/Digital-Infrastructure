@@ -1,6 +1,5 @@
 package net.risesoft.y9public.service.tenant.impl;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -18,11 +17,13 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
 import net.risesoft.consts.OrgLevelConsts;
+import net.risesoft.enums.platform.TenantTypeEnum;
 import net.risesoft.exception.TenantErrorCodeEnum;
 import net.risesoft.id.IdType;
 import net.risesoft.id.Y9IdGenerator;
 import net.risesoft.y9.util.Y9Assert;
 import net.risesoft.y9.util.Y9BeanUtil;
+import net.risesoft.y9.util.Y9EnumUtil;
 import net.risesoft.y9public.entity.tenant.Y9DataSource;
 import net.risesoft.y9public.entity.tenant.Y9Tenant;
 import net.risesoft.y9public.manager.tenant.Y9DataSourceManager;
@@ -83,7 +84,7 @@ public class Y9TenantServiceImpl implements Y9TenantService {
         y9Tenant.setId(Y9IdGenerator.genId(IdType.SNOWFLAKE));
         y9Tenant.setName(tenantName);
         y9Tenant.setShortName(tenantShortName);
-        y9Tenant.setTenantType(3);
+        y9Tenant.setTenantType(TenantTypeEnum.TENANT);
         y9Tenant.setEnabled(Boolean.TRUE);
         y9Tenant.setDefaultDataSourceId(dataSourceId);
         Integer maxTabIndex = getMaxTableIndex();
@@ -125,7 +126,7 @@ public class Y9TenantServiceImpl implements Y9TenantService {
     }
 
     @Override
-    public List<Y9Tenant> listByParentIdAndTenantType(String parentId, Integer tenantType) {
+    public List<Y9Tenant> listByParentIdAndTenantType(String parentId, TenantTypeEnum tenantType) {
         if (StringUtils.isBlank(parentId)) {
             return y9TenantRepository.findByTenantTypeAndParentIdIsNullOrderByTabIndexAsc(tenantType);
         }
@@ -143,7 +144,7 @@ public class Y9TenantServiceImpl implements Y9TenantService {
     }
 
     @Override
-    public List<Y9Tenant> listByTenantType(Integer tenantType) {
+    public List<Y9Tenant> listByTenantType(TenantTypeEnum tenantType) {
         return y9TenantRepository.findByTenantTypeOrderByTabIndexAsc(tenantType);
     }
 
@@ -151,18 +152,6 @@ public class Y9TenantServiceImpl implements Y9TenantService {
     public List<Y9Tenant> listByTenantType(String name, Integer tenantType) {
         Y9TenantSpecification<Y9Tenant> spec = new Y9TenantSpecification<>(name, null, tenantType);
         return y9TenantRepository.findAll(spec, Sort.by(Direction.ASC, "tabIndex"));
-    }
-
-    @Override
-    public List<Y9Tenant> listByTenantTypeIn(Integer tenantType, Integer tenantType2) {
-        List<Integer> types = new ArrayList<>();
-        if (null != tenantType) {
-            types.add(tenantType);
-        }
-        if (null != tenantType2) {
-            types.add(tenantType2);
-        }
-        return y9TenantRepository.findByTenantTypeIn(types);
     }
 
     @Override
@@ -233,7 +222,7 @@ public class Y9TenantServiceImpl implements Y9TenantService {
                 return save(oldTenant);
             }
         }
-        y9Tenant.setTenantType(tenantType);
+        y9Tenant.setTenantType(Y9EnumUtil.valueOf(TenantTypeEnum.class, tenantType));
         Y9DataSource y9DataSource = null;
         try {
             y9DataSource = y9DataSourceManager.createTenantDefaultDataSource(y9Tenant.getShortName(), tenantType, null);

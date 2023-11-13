@@ -8,6 +8,7 @@ import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
+import net.risesoft.enums.platform.RoleTypeEnum;
 import net.risesoft.y9public.entity.role.Y9Role;
 
 /**
@@ -31,9 +32,9 @@ public interface Y9RoleRepository extends JpaRepository<Y9Role, String>, JpaSpec
     Optional<Y9Role> findByCustomIdAndParentId(String customId, String parentId);
 
     List<Y9Role> findByNameAndSystemNameAndPropertiesAndType(String name, String systemName, String properties,
-        String type);
+        RoleTypeEnum type);
 
-    List<Y9Role> findByNameAndSystemNameAndType(String name, String systemName, String type);
+    List<Y9Role> findByNameAndSystemNameAndType(String name, String systemName, RoleTypeEnum type);
 
     List<Y9Role> findByNameContainingOrderByTabIndexAsc(String name);
 

@@ -13,7 +13,7 @@ import org.springframework.transaction.annotation.Transactional;
 import lombok.RequiredArgsConstructor;
 
 import net.risesoft.consts.CacheNameConsts;
-import net.risesoft.enums.ResourceTypeEnum;
+import net.risesoft.enums.platform.ResourceTypeEnum;
 import net.risesoft.y9public.entity.resource.Y9App;
 import net.risesoft.y9public.entity.resource.Y9Menu;
 import net.risesoft.y9public.entity.resource.Y9Operation;
@@ -65,10 +65,10 @@ public class CompositeResourceServiceImpl implements CompositeResourceService {
 
     @Override
     public Optional<? extends Y9ResourceBase> findByCustomIdAndParentId(String customId, String parentId,
-        Integer resourceType) {
-        if (ResourceTypeEnum.APP.getValue().equals(resourceType)) {
+        ResourceTypeEnum resourceType) {
+        if (ResourceTypeEnum.APP.equals(resourceType)) {
             return y9AppRepository.findBySystemIdAndCustomId(parentId, customId);
-        } else if (ResourceTypeEnum.MENU.getValue().equals(resourceType)) {
+        } else if (ResourceTypeEnum.MENU.equals(resourceType)) {
             return y9MenuRepository.findByParentIdAndCustomId(parentId, customId);
         } else {
             return y9OperationRepository.findByParentIdAndCustomId(parentId, customId);
@@ -94,10 +94,10 @@ public class CompositeResourceServiceImpl implements CompositeResourceService {
     }
 
     @Override
-    public Y9ResourceBase findByIdAndResourceType(String resourceId, Integer resourceType) {
-        if (ResourceTypeEnum.APP.getValue().equals(resourceType)) {
+    public Y9ResourceBase findByIdAndResourceType(String resourceId, ResourceTypeEnum resourceType) {
+        if (ResourceTypeEnum.APP.equals(resourceType)) {
             return this.findAppById(resourceId);
-        } else if (ResourceTypeEnum.MENU.getValue().equals(resourceType)) {
+        } else if (ResourceTypeEnum.MENU.equals(resourceType)) {
             return this.findMenuById(resourceId);
         } else {
             return this.findOperationById(resourceId);
@@ -168,11 +168,11 @@ public class CompositeResourceServiceImpl implements CompositeResourceService {
             for (int i = 0; i < ids.length; i++) {
                 String id = ids[i];
                 Y9ResourceBase y9ResourceBase = this.findById(id);
-                if (ResourceTypeEnum.APP.getValue().equals(y9ResourceBase.getResourceType())) {
+                if (ResourceTypeEnum.APP.equals(y9ResourceBase.getResourceType())) {
                     y9AppManager.updateTabIndex(id, i);
-                } else if (ResourceTypeEnum.MENU.getValue().equals(y9ResourceBase.getResourceType())) {
+                } else if (ResourceTypeEnum.MENU.equals(y9ResourceBase.getResourceType())) {
                     y9MenuManager.updateTabIndex(id, i);
-                } else if (ResourceTypeEnum.OPERATION.getValue().equals(y9ResourceBase.getResourceType())) {
+                } else if (ResourceTypeEnum.OPERATION.equals(y9ResourceBase.getResourceType())) {
                     y9OperationManager.updateTabIndex(id, i);
                 }
             }

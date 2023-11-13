@@ -6,7 +6,7 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
-import net.risesoft.model.Message;
+import net.risesoft.model.platform.Message;
 
 /**
  * 用户身份验证服务组件

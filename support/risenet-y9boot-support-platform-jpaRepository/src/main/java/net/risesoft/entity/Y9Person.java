@@ -12,9 +12,10 @@ import org.hibernate.annotations.Comment;
 
 import lombok.Data;
 
-import net.risesoft.enums.OrgTypeEnum;
-import net.risesoft.enums.PersonTypeEnum;
-import net.risesoft.enums.SexEnum;
+import net.risesoft.enums.platform.OrgTypeEnum;
+import net.risesoft.enums.platform.PersonTypeEnum;
+import net.risesoft.enums.platform.SexEnum;
+import net.risesoft.persistence.EnumConverter;
 import net.risesoft.y9.validation.Mobile;
 
 /**
@@ -121,12 +122,13 @@ public class Y9Person extends Y9OrgBase {
     /**
      * 性别
      * <p>
-     * {@link net.risesoft.enums.SexEnum}
+     * {@link SexEnum}
      */
     @ColumnDefault("1")
     @Column(name = "SEX", nullable = false)
     @Comment("性别")
-    private Integer sex = SexEnum.MALE.getValue();
+    @Convert(converter = EnumConverter.SexEnumConverter.class)
+    private SexEnum sex = SexEnum.MALE;
 
     /**
      * 人员类型
@@ -134,7 +136,7 @@ public class Y9Person extends Y9OrgBase {
     @ColumnDefault("'deptPerson'")
     @Column(name = "PERSON_TYPE", length = 255, nullable = false)
     @Comment("人员类型")
-    private String personType = PersonTypeEnum.DEPARTMENT.getEnName();
+    private String personType = PersonTypeEnum.DEPARTMENT.getValue();
 
     /**
      * 人员绑定微信的唯一标识
@@ -167,7 +169,7 @@ public class Y9Person extends Y9OrgBase {
     private String originalId;
 
     public Y9Person() {
-        super.setOrgType(OrgTypeEnum.PERSON.getEnName());
+        super.setOrgType(OrgTypeEnum.PERSON);
     }
 
 }

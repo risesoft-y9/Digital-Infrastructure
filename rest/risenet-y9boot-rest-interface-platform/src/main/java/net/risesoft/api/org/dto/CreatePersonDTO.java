@@ -10,9 +10,9 @@ import org.springframework.format.annotation.DateTimeFormat;
 import lombok.Getter;
 import lombok.Setter;
 
-import net.risesoft.enums.MaritalStatusEnum;
-import net.risesoft.enums.PersonTypeEnum;
-import net.risesoft.enums.SexEnum;
+import net.risesoft.enums.platform.MaritalStatusEnum;
+import net.risesoft.enums.platform.PersonTypeEnum;
+import net.risesoft.enums.platform.SexEnum;
 
 /**
  * @author shidaobang
@@ -90,14 +90,14 @@ public class CreatePersonDTO extends CreateOrgUnitBaseDTO {
     /**
      * 性别
      * <p>
-     * {@link net.risesoft.enums.SexEnum}
+     * {@link SexEnum}
      */
     private Integer sex = SexEnum.MALE.getValue();
 
     /**
      * 人员类型
      */
-    private String personType = PersonTypeEnum.DEPARTMENT.getEnName();
+    private String personType = PersonTypeEnum.DEPARTMENT.getValue();
 
     /**
      * 人员绑定微信的唯一标识
@@ -138,7 +138,7 @@ public class CreatePersonDTO extends CreateOrgUnitBaseDTO {
     /**
      * 婚姻状况
      *
-     * {@link net.risesoft.enums.MaritalStatusEnum}
+     * {@link MaritalStatusEnum}
      */
     private Integer maritalStatus = MaritalStatusEnum.SECRET.getValue();
 

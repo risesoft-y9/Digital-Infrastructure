@@ -1,6 +1,7 @@
 package net.risesoft.persistence;
 
 import jakarta.persistence.AttributeConverter;
+import jakarta.persistence.Converter;
 
 import org.apache.commons.lang3.StringUtils;
 
@@ -12,6 +13,7 @@ import net.risesoft.y9.util.base64.Y9Base64Util;
  * @author shidaobang
  * @date 2022/08/04
  */
+@Converter
 public class FieldBase64Converter implements AttributeConverter<String, String> {
 
     @Override

@@ -21,7 +21,7 @@ import lombok.extern.slf4j.Slf4j;
 import net.risesoft.api.log.AccessLogApi;
 import net.risesoft.log.entity.Y9logAccessLog;
 import net.risesoft.log.service.Y9logAccessLogService;
-import net.risesoft.model.AccessLog;
+import net.risesoft.model.log.AccessLog;
 import net.risesoft.model.log.LogInfoModel;
 import net.risesoft.pojo.Y9Page;
 import net.risesoft.pojo.Y9Result;

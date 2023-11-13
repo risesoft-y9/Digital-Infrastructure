@@ -21,13 +21,13 @@ import net.risesoft.entity.Y9Group;
 import net.risesoft.entity.Y9OrgBase;
 import net.risesoft.entity.Y9Person;
 import net.risesoft.entity.Y9Position;
-import net.risesoft.enums.Y9DepartmentPropCategoryEnum;
-import net.risesoft.model.Department;
-import net.risesoft.model.DepartmentProp;
-import net.risesoft.model.Group;
-import net.risesoft.model.OrgUnit;
-import net.risesoft.model.Person;
-import net.risesoft.model.Position;
+import net.risesoft.enums.platform.DepartmentPropCategoryEnum;
+import net.risesoft.model.platform.Department;
+import net.risesoft.model.platform.DepartmentProp;
+import net.risesoft.model.platform.Group;
+import net.risesoft.model.platform.OrgUnit;
+import net.risesoft.model.platform.Person;
+import net.risesoft.model.platform.Position;
 import net.risesoft.service.org.CompositeOrgBaseService;
 import net.risesoft.service.org.Y9DepartmentPropService;
 import net.risesoft.service.org.Y9DepartmentService;
@@ -37,6 +37,7 @@ import net.risesoft.service.org.Y9PositionService;
 import net.risesoft.util.ModelConvertUtil;
 import net.risesoft.y9.Y9LoginUserHolder;
 import net.risesoft.y9.json.Y9JsonUtil;
+import net.risesoft.y9.util.Y9EnumUtil;
 import net.risesoft.y9.util.Y9ModelConvertUtil;
 
 /**
@@ -245,7 +246,7 @@ public class DepartmentApiImpl implements DepartmentApi {
      *
      * @param tenantId 租户id
      * @param orgUnitId 组织节点id
-     * @param category 配置类型 {@link Y9DepartmentPropCategoryEnum}
+     * @param category 配置类型 {@link DepartmentPropCategoryEnum}
      * @return
      * @since 9.6.0
      */
@@ -254,8 +255,8 @@ public class DepartmentApiImpl implements DepartmentApi {
         @RequestParam("orgUnitId") @NotBlank String orgUnitId, @RequestParam("category") Integer category) {
         Y9LoginUserHolder.setTenantId(tenantId);
 
-        List<Y9DepartmentProp> y9DepartmentPropList =
-            y9DepartmentPropService.listByOrgBaseIdAndCategory(orgUnitId, category);
+        List<Y9DepartmentProp> y9DepartmentPropList = y9DepartmentPropService.listByOrgBaseIdAndCategory(orgUnitId,
+            Y9EnumUtil.valueOf(DepartmentPropCategoryEnum.class, category));
         return Y9ModelConvertUtil.convert(y9DepartmentPropList, DepartmentProp.class);
     }
 

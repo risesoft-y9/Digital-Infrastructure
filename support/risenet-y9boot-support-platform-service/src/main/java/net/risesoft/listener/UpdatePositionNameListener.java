@@ -19,7 +19,7 @@ import net.risesoft.entity.Y9OrgBase;
 import net.risesoft.entity.Y9Person;
 import net.risesoft.entity.Y9Position;
 import net.risesoft.entity.relation.Y9PersonsToPositions;
-import net.risesoft.enums.OrgTypeEnum;
+import net.risesoft.enums.platform.OrgTypeEnum;
 import net.risesoft.service.org.CompositeOrgBaseService;
 import net.risesoft.service.org.Y9JobService;
 import net.risesoft.service.org.Y9PersonService;

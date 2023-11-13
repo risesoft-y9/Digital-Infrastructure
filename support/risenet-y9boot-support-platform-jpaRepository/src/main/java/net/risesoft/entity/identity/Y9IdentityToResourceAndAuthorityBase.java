@@ -13,8 +13,9 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import net.risesoft.base.BaseEntity;
-import net.risesoft.enums.AuthorityEnum;
-import net.risesoft.enums.ResourceTypeEnum;
+import net.risesoft.enums.platform.AuthorityEnum;
+import net.risesoft.enums.platform.ResourceTypeEnum;
+import net.risesoft.persistence.EnumConverter;
 
 /**
  * 人或岗位与（资源、权限）关系表基类
@@ -58,7 +59,8 @@ public abstract class Y9IdentityToResourceAndAuthorityBase extends BaseEntity
      */
     @Column(name = "AUTHORITY", nullable = false)
     @Comment("权限类型")
-    protected Integer authority;
+    @Convert(converter = EnumConverter.AuthorityEnumConverter.class)
+    protected AuthorityEnum authority;
 
     /** 资源id */
     @Column(name = "RESOURCE_ID", length = 38, nullable = false)
@@ -88,7 +90,8 @@ public abstract class Y9IdentityToResourceAndAuthorityBase extends BaseEntity
      */
     @Column(name = "RESOURCE_TYPE", nullable = false)
     @Comment("资源类型：0=应用，1=菜单，2=操作")
-    protected Integer resourceType;
+    @Convert(converter = EnumConverter.ResourceTypeEnumConverter.class)
+    protected ResourceTypeEnum resourceType;
 
     /** 父资源id */
     @Comment("父资源id")

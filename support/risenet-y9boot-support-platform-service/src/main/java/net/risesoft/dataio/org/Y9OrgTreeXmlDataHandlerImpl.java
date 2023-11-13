@@ -39,8 +39,11 @@ import net.risesoft.entity.Y9Position;
 import net.risesoft.entity.relation.Y9PersonsToGroups;
 import net.risesoft.entity.relation.Y9PersonsToPositions;
 import net.risesoft.entity.relation.Y9PositionsToGroups;
-import net.risesoft.enums.IdentityEnum;
-import net.risesoft.enums.OrgTypeEnum;
+import net.risesoft.enums.platform.DepartmentPropCategoryEnum;
+import net.risesoft.enums.platform.GroupTypeEnum;
+import net.risesoft.enums.platform.MaritalStatusEnum;
+import net.risesoft.enums.platform.OrgTypeEnum;
+import net.risesoft.enums.platform.SexEnum;
 import net.risesoft.pojo.Y9Result;
 import net.risesoft.service.org.CompositeOrgBaseService;
 import net.risesoft.service.org.Y9DepartmentPropService;
@@ -55,6 +58,7 @@ import net.risesoft.service.relation.Y9PersonsToPositionsService;
 import net.risesoft.service.relation.Y9PositionsToGroupsService;
 import net.risesoft.util.StringUtil;
 import net.risesoft.y9.json.Y9JsonUtil;
+import net.risesoft.y9.util.Y9EnumUtil;
 import net.risesoft.y9.util.base64.Y9Base64Util;
 
 @Service(value = "y9OrgTreeXmlDataHandler")
@@ -98,7 +102,7 @@ public class Y9OrgTreeXmlDataHandlerImpl implements Y9OrgTreeDataHandler {
         orgDepartment.addElement("disabled").addText(Boolean.toString(orgdepartment.getDisabled()));
         orgDepartment.addElement("dn").addText(orgdepartment.getDn() == null ? "" : orgdepartment.getDn());
         orgDepartment.addElement("orgType")
-            .addText(orgdepartment.getOrgType() == null ? "" : orgdepartment.getOrgType());
+            .addText(orgdepartment.getOrgType() == null ? "" : orgdepartment.getOrgType().getEnName());
         orgDepartment.addElement("tabIndex")
             .addText(orgdepartment.getTabIndex() == null ? "" : orgdepartment.getTabIndex() + "");
 
@@ -169,7 +173,7 @@ public class Y9OrgTreeXmlDataHandlerImpl implements Y9OrgTreeDataHandler {
             propElement.addElement("UID").addText(prop.getId());
             propElement.addElement("deptId").addText(prop.getDeptId() == null ? "" : prop.getDeptId());
             propElement.addElement("orgBaseId").addText(prop.getOrgBaseId() == null ? "" : prop.getOrgBaseId());
-            propElement.addElement("category").addText(Integer.toString(prop.getCategory()));
+            propElement.addElement("category").addText(Integer.toString(prop.getCategory().getCategory()));
             propElement.addElement("tabIndex").addText(prop.getTabIndex() == null ? "" : prop.getTabIndex() + "");
         }
 
@@ -192,8 +196,9 @@ public class Y9OrgTreeXmlDataHandlerImpl implements Y9OrgTreeDataHandler {
             groupElement.addElement("customId").addText(y9Group.getCustomId() == null ? "" : y9Group.getCustomId());
             groupElement.addElement("disabled").addText(Boolean.toString(y9Group.getDisabled()));
             groupElement.addElement("dn").addText(y9Group.getDn() == null ? "" : y9Group.getDn());
-            groupElement.addElement("orgType").addText(y9Group.getOrgType() == null ? "" : y9Group.getOrgType());
-            groupElement.addElement("type").addText(y9Group.getType() == null ? "" : y9Group.getType());
+            groupElement.addElement("orgType")
+                .addText(y9Group.getOrgType() == null ? "" : y9Group.getOrgType().getEnName());
+            groupElement.addElement("type").addText(y9Group.getType() == null ? "" : y9Group.getType().getValue());
             groupElement.addElement("tabIndex")
                 .addText(y9Group.getTabIndex() == null ? "" : y9Group.getTabIndex() + "");
 
@@ -238,7 +243,7 @@ public class Y9OrgTreeXmlDataHandlerImpl implements Y9OrgTreeDataHandler {
             positionElement.addElement("disabled").addText(Boolean.toString(y9Position.getDisabled()));
             positionElement.addElement("dn").addText(y9Position.getDn() == null ? "" : y9Position.getDn());
             positionElement.addElement("orgType")
-                .addText(y9Position.getOrgType() == null ? "" : y9Position.getOrgType());
+                .addText(y9Position.getOrgType() == null ? "" : y9Position.getOrgType().getEnName());
             positionElement.addElement("tabIndex")
                 .addText(y9Position.getTabIndex() == null ? "" : y9Position.getTabIndex() + "");
 
@@ -284,7 +289,8 @@ public class Y9OrgTreeXmlDataHandlerImpl implements Y9OrgTreeDataHandler {
             personElement.addElement("customId").addText(person.getCustomId() == null ? "" : person.getCustomId());
             personElement.addElement("disabled").addText(Boolean.toString(person.getDisabled()));
             personElement.addElement("dn").addText(person.getDn() == null ? "" : person.getDn());
-            personElement.addElement("orgType").addText(person.getOrgType() == null ? "" : person.getOrgType());
+            personElement.addElement("orgType")
+                .addText(person.getOrgType() == null ? "" : person.getOrgType().getEnName());
             personElement.addElement("tabIndex").addText(person.getTabIndex() == null ? "" : person.getTabIndex() + "");
             personElement.addElement("avator").addText(person.getAvator() == null ? "" : person.getAvator());
             personElement.addElement("caid").addText(person.getCaid() == null ? "" : person.getCaid());
@@ -369,7 +375,7 @@ public class Y9OrgTreeXmlDataHandlerImpl implements Y9OrgTreeDataHandler {
         orgElement.addElement("disabled").addText(Boolean.toString(y9Organization.getDisabled()));
         orgElement.addElement("dn").addText(y9Organization.getDn() != null ? y9Organization.getDn() : "");
         orgElement.addElement("orgType")
-            .addText(y9Organization.getOrgType() != null ? y9Organization.getOrgType() : "");
+            .addText(y9Organization.getOrgType() != null ? y9Organization.getOrgType().getEnName() : "");
         orgElement.addElement("tabIndex")
             .addText(y9Organization.getTabIndex() != null ? y9Organization.getTabIndex() + "" : "");
 
@@ -693,7 +699,8 @@ public class Y9OrgTreeXmlDataHandlerImpl implements Y9OrgTreeDataHandler {
                 }
                 prop.setDeptId(deptId == null ? "" : deptId);
                 prop.setOrgBaseId(orgBaseId == null ? "" : orgBaseId);
-                prop.setCategory(category != null ? Integer.parseInt(category) : null);
+                prop.setCategory(category != null
+                    ? Y9EnumUtil.valueOf(DepartmentPropCategoryEnum.class, Integer.parseInt(category)) : null);
                 prop.setTabIndex(tabIndex != null ? Integer.parseInt(tabIndex) : null);
                 y9DepartmentPropService.saveOrUpdate(prop);
             } catch (Exception e) {
@@ -718,7 +725,7 @@ public class Y9OrgTreeXmlDataHandlerImpl implements Y9OrgTreeDataHandler {
                 group = y9GroupService.findById(uid).orElse(new Y9Group());
                 group.setId(uid);
                 group.setParentId(pid);
-                group.setType(type == null ? IdentityEnum.POSITION.getName() : type);
+                group.setType(type == null ? GroupTypeEnum.PERSON : Y9EnumUtil.valueOf(GroupTypeEnum.class, type));
                 group.setName(name == null ? "" : name);
                 group.setDescription(description == null ? "" : description);
                 group.setCustomId(customId == null ? "" : customId);
@@ -874,7 +881,7 @@ public class Y9OrgTreeXmlDataHandlerImpl implements Y9OrgTreeDataHandler {
                 person.setOfficial(official == null ? 0 : Integer.valueOf(official));
                 person.setOfficialType(officialType == null ? "" : officialType);
                 person.setPassword(password == null ? "" : password);
-                person.setSex(sex == null ? 0 : Integer.valueOf(sex));
+                person.setSex(sex == null ? SexEnum.FEMALE : Y9EnumUtil.valueOf(SexEnum.class, Integer.valueOf(sex)));
                 person.setProperties(properties);
                 person.setTabIndex(tabIndex != null ? Integer.parseInt(tabIndex) : null);
                 if (StringUtils.isBlank(original) || "1".equals(original)) {
@@ -888,7 +895,8 @@ public class Y9OrgTreeXmlDataHandlerImpl implements Y9OrgTreeDataHandler {
                 Y9PersonExt ext = y9PersonExtService.findByPersonId(uid).orElse(new Y9PersonExt());
 
                 ext.setBirthday(birthday == null ? null : fmt2.parse(birthday));
-                ext.setMaritalStatus(maritalStatus == null ? 0 : Integer.valueOf(maritalStatus));
+                ext.setMaritalStatus(maritalStatus == null ? MaritalStatusEnum.SECRET
+                    : Y9EnumUtil.valueOf(MaritalStatusEnum.class, Integer.valueOf(maritalStatus)));
                 ext.setHomeAddress(homeAddress == null ? "" : homeAddress);
                 ext.setHomePhone(homePhone == null ? "" : homePhone);
                 ext.setIdNum(idNum == null ? "" : idNum);

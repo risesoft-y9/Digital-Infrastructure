@@ -10,9 +10,10 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
-import net.risesoft.model.CustomGroup;
-import net.risesoft.model.CustomGroupMember;
-import net.risesoft.model.Person;
+import net.risesoft.enums.platform.OrgTypeEnum;
+import net.risesoft.model.platform.CustomGroup;
+import net.risesoft.model.platform.CustomGroupMember;
+import net.risesoft.model.platform.Person;
 import net.risesoft.pojo.Y9Page;
 import net.risesoft.pojo.Y9Result;
 
@@ -123,14 +124,14 @@ public interface CustomGroupApi {
      * @param tenantId 租户id
      * @param personId 人员id
      * @param groupId 用户组id
-     * @param memberType 成员类型 {@link net.risesoft.enums.OrgTypeEnum#enName}
+     * @param memberType 成员类型 {@link OrgTypeEnum#enName}
      * @return {@code Y9Result<List<CustomGroupMember>>} 通用请求返回对象 - data 是查找的用户组成员列表
      * @since 9.6.0
      */
     @GetMapping("/listCustomGroupMemberByGroupIdAndMemberType")
     Y9Result<List<CustomGroupMember>> listCustomGroupMemberByGroupIdAndMemberType(
         @RequestParam("tenantId") @NotBlank String tenantId, @RequestParam("personId") String personId,
-        @RequestParam("groupId") @NotBlank String groupId, @RequestParam("memberType") @NotBlank String memberType);
+        @RequestParam("groupId") @NotBlank String groupId, @RequestParam("memberType") OrgTypeEnum memberType);
 
     /**
      * 根据人员id分页获取其自定义用户组列表
@@ -167,7 +168,7 @@ public interface CustomGroupApi {
      *
      * @param tenantId 租户id
      * @param groupId 用户组Id
-     * @param memberType 成员类型 {@link net.risesoft.enums.OrgTypeEnum#enName}
+     * @param memberType 成员类型 {@link OrgTypeEnum#enName}
      * @param page 第几页
      * @param rows 返回多少条数据
      * @return {@code Y9Page<CustomGroupMember>}
@@ -176,7 +177,7 @@ public interface CustomGroupApi {
     @GetMapping("/pageCustomGroupMemberByGroupIdAndMemberType")
     Y9Page<CustomGroupMember> pageCustomGroupMemberByGroupIdAndMemberType(
         @RequestParam("tenantId") @NotBlank String tenantId, @RequestParam("groupId") @NotBlank String groupId,
-        @RequestParam("memberType") @NotBlank String memberType, @RequestParam("page") int page,
+        @RequestParam("memberType") OrgTypeEnum memberType, @RequestParam("page") int page,
         @RequestParam("rows") int rows);
 
     /**

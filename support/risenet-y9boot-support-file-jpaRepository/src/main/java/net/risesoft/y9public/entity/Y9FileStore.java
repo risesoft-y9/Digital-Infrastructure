@@ -22,6 +22,8 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
 
+import net.risesoft.enums.FileStoreTypeEnum;
+import net.risesoft.persistence.EnumConverter;
 import net.risesoft.y9.util.Y9FileUtil;
 import net.risesoft.y9public.support.FileNameConverter;
 
@@ -44,7 +46,8 @@ public class Y9FileStore implements Serializable {
 
     @Column(name = "STORETYPE")
     @Comment("仓库类型")
-    private Integer storeType = 1; // 1=ftp、2=wps云存储、3=rest、4=nfs、5=samba
+    @Convert(converter = EnumConverter.FileStoreTypeEnumConverter.class)
+    private FileStoreTypeEnum storeType = FileStoreTypeEnum.FTP;
 
     @Column(name = "FULLPATH", length = 300)
     @Comment("绝对路径")

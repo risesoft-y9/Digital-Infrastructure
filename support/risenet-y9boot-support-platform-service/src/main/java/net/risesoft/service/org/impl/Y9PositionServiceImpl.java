@@ -22,14 +22,14 @@ import net.risesoft.entity.Y9OrgBase;
 import net.risesoft.entity.Y9Organization;
 import net.risesoft.entity.Y9Position;
 import net.risesoft.entity.relation.Y9PersonsToPositions;
-import net.risesoft.enums.AuthorizationPrincipalTypeEnum;
-import net.risesoft.enums.OrgTypeEnum;
+import net.risesoft.enums.platform.AuthorizationPrincipalTypeEnum;
+import net.risesoft.enums.platform.OrgTypeEnum;
 import net.risesoft.id.IdType;
 import net.risesoft.id.Y9IdGenerator;
 import net.risesoft.manager.org.CompositeOrgBaseManager;
 import net.risesoft.manager.org.Y9PositionManager;
 import net.risesoft.manager.relation.Y9PersonsToPositionsManager;
-import net.risesoft.model.Position;
+import net.risesoft.model.platform.Position;
 import net.risesoft.repository.Y9PositionRepository;
 import net.risesoft.repository.identity.position.Y9PositionToResourceAndAuthorityRepository;
 import net.risesoft.repository.identity.position.Y9PositionToRoleRepository;
@@ -106,7 +106,6 @@ public class Y9PositionServiceImpl implements Y9PositionService {
         y9Position.setDn(OrgLevelConsts.getOrgLevel(OrgTypeEnum.POSITION) + y9Position.getName()
             + OrgLevelConsts.SEPARATOR + parent.getDn());
         y9Position.setDisabled(false);
-        y9Position.setOrgType(OrgTypeEnum.POSITION.getEnName());
         if (y9Position.getDutyLevel() == null) {
             y9Position.setDutyLevel(0);
         }
@@ -134,7 +133,7 @@ public class Y9PositionServiceImpl implements Y9PositionService {
         y9PersonsToPositionsManager.deleteByPositionId(positionId);
         y9PositionsToGroupsRepository.deleteByPositionId(positionId);
         y9AuthorizationRepository.deleteByPrincipalIdAndPrincipalType(positionId,
-            AuthorizationPrincipalTypeEnum.POSITION.getValue());
+            AuthorizationPrincipalTypeEnum.POSITION);
 
         y9PositionManager.delete(y9Position);
 

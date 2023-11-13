@@ -7,6 +7,8 @@ import com.fasterxml.jackson.annotation.JsonFormat;
 
 import lombok.Data;
 
+import net.risesoft.enums.platform.AuthorityEnum;
+
 /**
  * 权限
  *
@@ -53,7 +55,7 @@ public class AuthorizationVO implements Serializable {
     private Date authorizeTime;
 
     /** 操作 */
-    private Integer authority;
+    private AuthorityEnum authority;
 
     /** 操作（中文） */
     private String authorityStr;

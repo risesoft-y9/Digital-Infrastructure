@@ -4,6 +4,9 @@ import java.io.Serializable;
 
 import lombok.Data;
 
+import net.risesoft.enums.platform.ManagerLevelEnum;
+import net.risesoft.enums.platform.SexEnum;
+
 /***
  * 登录人员信息
  *
@@ -35,7 +38,7 @@ public class UserInfo implements Serializable {
     private String password;
 
     /** 性别 */
-    private Integer sex;
+    private SexEnum sex;
 
     /** CA认证码 */
     private String caid;
@@ -66,7 +69,7 @@ public class UserInfo implements Serializable {
     private boolean globalManager;
 
     /** 三员类别 */
-    private Integer managerLevel;
+    private ManagerLevelEnum managerLevel;
 
     /** 人员头像 */
     private String avator;

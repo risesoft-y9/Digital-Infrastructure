@@ -8,7 +8,7 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
-import net.risesoft.model.AppIcon;
+import net.risesoft.model.platform.AppIcon;
 
 /**
  * 应用图标管理组件

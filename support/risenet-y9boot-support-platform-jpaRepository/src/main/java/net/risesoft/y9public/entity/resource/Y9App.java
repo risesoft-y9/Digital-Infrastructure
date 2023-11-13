@@ -12,9 +12,10 @@ import org.hibernate.annotations.Comment;
 
 import lombok.Data;
 
-import net.risesoft.enums.AppOpenTypeEnum;
-import net.risesoft.enums.AppTypeEnum;
-import net.risesoft.enums.ResourceTypeEnum;
+import net.risesoft.enums.platform.AppOpenTypeEnum;
+import net.risesoft.enums.platform.AppTypeEnum;
+import net.risesoft.enums.platform.ResourceTypeEnum;
+import net.risesoft.persistence.EnumConverter;
 
 /**
  * 应用市场表
@@ -78,7 +79,8 @@ public class Y9App extends Y9ResourceBase {
      */
     @Column(name = "TYPE")
     @Comment("分类")
-    private Integer type = AppTypeEnum.WORKFLOW.getValue();
+    @Convert(converter = EnumConverter.AppTypeEnumConverter.class)
+    private AppTypeEnum type = AppTypeEnum.WORKFLOW;
 
     /**
      * 应用打开方式:0在桌面窗口打开；1在新浏览器窗口打开
@@ -87,7 +89,8 @@ public class Y9App extends Y9ResourceBase {
      */
     @Column(name = "OPEN_TYPE")
     @Comment(value = "应用打开方式:0在桌面窗口打开；1在新浏览器窗口打开")
-    private Integer opentype = AppOpenTypeEnum.BROWSE.getValue();
+    @Convert(converter = EnumConverter.AppOpenTypeEnumConverter.class)
+    private AppOpenTypeEnum opentype = AppOpenTypeEnum.BROWSE;
 
     /** 图标图片的base64 */
     @Lob
@@ -110,7 +113,7 @@ public class Y9App extends Y9ResourceBase {
     private String appId;
 
     public Y9App() {
-        super.setResourceType(ResourceTypeEnum.APP.getValue());
+        super.setResourceType(ResourceTypeEnum.APP);
     }
 
     @Override

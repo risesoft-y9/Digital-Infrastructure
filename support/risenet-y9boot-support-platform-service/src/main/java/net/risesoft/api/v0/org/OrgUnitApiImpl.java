@@ -15,13 +15,15 @@ import lombok.RequiredArgsConstructor;
 
 import net.risesoft.entity.Y9Department;
 import net.risesoft.entity.Y9OrgBase;
-import net.risesoft.model.Department;
-import net.risesoft.model.OrgUnit;
-import net.risesoft.model.Organization;
+import net.risesoft.enums.platform.TreeTypeEnum;
+import net.risesoft.model.platform.Department;
+import net.risesoft.model.platform.OrgUnit;
+import net.risesoft.model.platform.Organization;
 import net.risesoft.service.org.CompositeOrgBaseService;
 import net.risesoft.service.org.Y9DepartmentService;
 import net.risesoft.util.ModelConvertUtil;
 import net.risesoft.y9.Y9LoginUserHolder;
+import net.risesoft.y9.util.Y9EnumUtil;
 import net.risesoft.y9.util.Y9ModelConvertUtil;
 
 /**
@@ -158,7 +160,8 @@ public class OrgUnitApiImpl implements OrgUnitApi {
         @RequestParam("orgUnitId") @NotBlank String orgUnitId, @RequestParam("treeType") @NotBlank String treeType) {
         Y9LoginUserHolder.setTenantId(tenantId);
 
-        List<Y9OrgBase> y9OrgBaseList = compositeOrgBaseService.getTree(orgUnitId, treeType, false);
+        List<Y9OrgBase> y9OrgBaseList =
+            compositeOrgBaseService.getTree(orgUnitId, Y9EnumUtil.valueOf(TreeTypeEnum.class, treeType), false);
         return ModelConvertUtil.orgBaseToOrgUnit(y9OrgBaseList);
     }
 
@@ -177,7 +180,8 @@ public class OrgUnitApiImpl implements OrgUnitApi {
         @RequestParam("name") @NotBlank String name, @RequestParam("treeType") @NotBlank String treeType) {
         Y9LoginUserHolder.setTenantId(tenantId);
 
-        List<Y9OrgBase> y9OrgBaseList = compositeOrgBaseService.treeSearch(name, treeType, false);
+        List<Y9OrgBase> y9OrgBaseList =
+            compositeOrgBaseService.treeSearch(name, Y9EnumUtil.valueOf(TreeTypeEnum.class, treeType), false);
         return ModelConvertUtil.orgBaseToOrgUnit(y9OrgBaseList);
     }
 
@@ -198,7 +202,8 @@ public class OrgUnitApiImpl implements OrgUnitApi {
         @RequestParam("dnName") @NotBlank String dnName) {
         Y9LoginUserHolder.setTenantId(tenantId);
 
-        List<Y9OrgBase> y9OrgBaseList = compositeOrgBaseService.treeSearch(name, treeType, dnName);
+        List<Y9OrgBase> y9OrgBaseList =
+            compositeOrgBaseService.treeSearch(name, Y9EnumUtil.valueOf(TreeTypeEnum.class, treeType), dnName);
         return ModelConvertUtil.orgBaseToOrgUnit(y9OrgBaseList);
     }
 

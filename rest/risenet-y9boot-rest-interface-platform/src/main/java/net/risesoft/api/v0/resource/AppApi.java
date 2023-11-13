@@ -10,8 +10,8 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 
-import net.risesoft.enums.AuthorityEnum;
-import net.risesoft.model.App;
+import net.risesoft.enums.platform.AuthorityEnum;
+import net.risesoft.model.platform.App;
 import net.risesoft.pojo.Y9Result;
 
 /**

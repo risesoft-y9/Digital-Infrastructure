@@ -12,7 +12,7 @@ import lombok.RequiredArgsConstructor;
 import net.risesoft.consts.InitDataConsts;
 import net.risesoft.entity.Y9Position;
 import net.risesoft.entity.identity.position.Y9PositionToRole;
-import net.risesoft.enums.Y9RoleTypeEnum;
+import net.risesoft.enums.platform.RoleTypeEnum;
 import net.risesoft.manager.authorization.Y9PositionToRoleManager;
 import net.risesoft.manager.org.Y9PositionManager;
 import net.risesoft.repository.identity.position.Y9PositionToRoleRepository;
@@ -54,11 +54,10 @@ public class Y9PositionToRoleServiceImpl implements Y9PositionToRoleService {
     public Boolean hasRole(String positionId, String systemName, String roleName, String properties) {
         List<Y9Role> y9RoleList;
         if (StringUtils.isBlank(properties)) {
-            y9RoleList =
-                y9RoleRepository.findByNameAndSystemNameAndType(roleName, systemName, Y9RoleTypeEnum.ROLE.getValue());
+            y9RoleList = y9RoleRepository.findByNameAndSystemNameAndType(roleName, systemName, RoleTypeEnum.ROLE);
         } else {
             y9RoleList = y9RoleRepository.findByNameAndSystemNameAndPropertiesAndType(roleName, systemName, properties,
-                Y9RoleTypeEnum.ROLE.getValue());
+                RoleTypeEnum.ROLE);
         }
 
         return y9RoleList.stream().anyMatch(y9Role -> hasRole(positionId, y9Role.getId()));

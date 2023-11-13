@@ -15,9 +15,10 @@ import lombok.RequiredArgsConstructor;
 
 import net.risesoft.entity.Y9Department;
 import net.risesoft.entity.Y9OrgBase;
-import net.risesoft.model.Department;
-import net.risesoft.model.OrgUnit;
-import net.risesoft.model.Organization;
+import net.risesoft.enums.platform.TreeTypeEnum;
+import net.risesoft.model.platform.Department;
+import net.risesoft.model.platform.OrgUnit;
+import net.risesoft.model.platform.Organization;
 import net.risesoft.pojo.Y9Result;
 import net.risesoft.service.org.CompositeOrgBaseService;
 import net.risesoft.service.org.Y9DepartmentService;
@@ -155,7 +156,7 @@ public class OrgUnitApiImpl implements OrgUnitApi {
      */
     @Override
     public Y9Result<List<OrgUnit>> getSubTree(@RequestParam("tenantId") @NotBlank String tenantId,
-        @RequestParam("orgUnitId") @NotBlank String orgUnitId, @RequestParam("treeType") @NotBlank String treeType) {
+        @RequestParam("orgUnitId") @NotBlank String orgUnitId, @RequestParam("treeType") TreeTypeEnum treeType) {
         Y9LoginUserHolder.setTenantId(tenantId);
 
         List<Y9OrgBase> y9OrgBaseList = compositeOrgBaseService.getTree(orgUnitId, treeType, false);
@@ -167,14 +168,13 @@ public class OrgUnitApiImpl implements OrgUnitApi {
      *
      * @param tenantId 租户id
      * @param name 组织节点名称
-     * @param treeType 树的类型:tree_type_org(组织机构)，tree_type_dept（部门），tree_type_group（用户组），tree_type_position（岗位）
-     *            tree_type_person（人员），tree_type_bureau（委办局）
+     * @param treeType 树的类型
      * @return {@code Y9Result<List<OrgUnit>>} 通用请求返回对象 - data 是组织节点对象集合
      * @since 9.6.0
      */
     @Override
     public Y9Result<List<OrgUnit>> treeSearch(@RequestParam("tenantId") @NotBlank String tenantId,
-        @RequestParam("name") @NotBlank String name, @RequestParam("treeType") @NotBlank String treeType) {
+        @RequestParam("name") @NotBlank String name, @RequestParam("treeType") TreeTypeEnum treeType) {
         Y9LoginUserHolder.setTenantId(tenantId);
 
         List<Y9OrgBase> y9OrgBaseList = compositeOrgBaseService.treeSearch(name, treeType, false);
@@ -194,7 +194,7 @@ public class OrgUnitApiImpl implements OrgUnitApi {
      */
     @Override
     public Y9Result<List<OrgUnit>> treeSearchByDn(@RequestParam("tenantId") @NotBlank String tenantId,
-        @RequestParam("name") @NotBlank String name, @RequestParam("treeType") @NotBlank String treeType,
+        @RequestParam("name") @NotBlank String name, @RequestParam("treeType") TreeTypeEnum treeType,
         @RequestParam("dnName") @NotBlank String dnName) {
         Y9LoginUserHolder.setTenantId(tenantId);
 

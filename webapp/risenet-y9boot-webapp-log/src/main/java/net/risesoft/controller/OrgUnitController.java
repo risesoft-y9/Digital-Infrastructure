@@ -10,12 +10,15 @@ import org.springframework.web.bind.annotation.RestController;
 
 import lombok.RequiredArgsConstructor;
 
+import net.risesoft.enums.platform.TenantTypeEnum;
+import net.risesoft.enums.platform.TreeTypeEnum;
 import net.risesoft.log.annotation.RiseLog;
-import net.risesoft.model.OrgUnit;
-import net.risesoft.model.Organization;
-import net.risesoft.model.Tenant;
+import net.risesoft.model.platform.OrgUnit;
+import net.risesoft.model.platform.Organization;
+import net.risesoft.model.platform.Tenant;
 import net.risesoft.pojo.Y9Result;
 import net.risesoft.y9.Y9LoginUserHolder;
+import net.risesoft.y9.util.Y9EnumUtil;
 
 import y9.client.platform.org.OrgUnitApiClient;
 import y9.client.platform.org.OrganizationApiClient;
@@ -61,7 +64,8 @@ public class OrgUnitController {
     @RiseLog(operationName = "根据租户类型获取所有租户信息")
     @RequestMapping(value = "/getTenantTreeByTenantType")
     public List<Organization> getTenantTreeByTenantType(@RequestParam Integer tenantType) {
-        List<Tenant> tenants = tenantApiClient.listByTenantType(tenantType).getData();
+        List<Tenant> tenants =
+            tenantApiClient.listByTenantType(Y9EnumUtil.valueOf(TenantTypeEnum.class, tenantType)).getData();
         List<Organization> organizationList = new ArrayList<>();
         if (!tenants.isEmpty()) {
             for (Tenant tenant : tenants) {
@@ -85,7 +89,8 @@ public class OrgUnitController {
      */
     @RiseLog(operationName = "获取组织架构树")
     @RequestMapping(value = "/getTree")
-    public Y9Result<List<OrgUnit>> getTree(String tenantId, @RequestParam String id, @RequestParam String treeType) {
+    public Y9Result<List<OrgUnit>> getTree(String tenantId, @RequestParam String id,
+        @RequestParam TreeTypeEnum treeType) {
         if (StringUtils.isBlank(tenantId)) {
             tenantId = Y9LoginUserHolder.getTenantId();
         }

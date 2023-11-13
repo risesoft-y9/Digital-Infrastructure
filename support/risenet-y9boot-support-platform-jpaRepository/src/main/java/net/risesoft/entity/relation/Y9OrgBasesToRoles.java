@@ -16,7 +16,8 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import net.risesoft.base.BaseEntity;
-import net.risesoft.enums.OrgTypeEnum;
+import net.risesoft.enums.platform.OrgTypeEnum;
+import net.risesoft.persistence.EnumConverter;
 
 /**
  * 组织节点与角色关联表
@@ -60,7 +61,8 @@ public class Y9OrgBasesToRoles extends BaseEntity {
      */
     @Column(name = "ORG_TYPE", length = 255)
     @Comment("组织类型")
-    protected String orgType;
+    @Convert(converter = EnumConverter.OrgTypeEnumConverter.class)
+    protected OrgTypeEnum orgType;
 
     /** 父节点唯一标识 */
     @Column(name = "ORG_PARENT_ID")

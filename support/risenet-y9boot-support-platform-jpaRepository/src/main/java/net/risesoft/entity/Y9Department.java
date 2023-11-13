@@ -15,7 +15,7 @@ import org.springframework.format.annotation.DateTimeFormat;
 
 import lombok.Data;
 
-import net.risesoft.enums.OrgTypeEnum;
+import net.risesoft.enums.platform.OrgTypeEnum;
 
 /**
  * 部门实体
@@ -34,7 +34,7 @@ public class Y9Department extends Y9OrgBase {
     private static final long serialVersionUID = 231356577350213851L;
 
     public Y9Department() {
-        super.setOrgType(OrgTypeEnum.DEPARTMENT.getEnName());
+        super.setOrgType(OrgTypeEnum.DEPARTMENT);
     }
 
     /** 父节点id */

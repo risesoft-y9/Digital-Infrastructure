@@ -17,8 +17,8 @@ import net.risesoft.controller.identity.vo.ResourcePermissionVO;
 import net.risesoft.entity.Y9OrgBase;
 import net.risesoft.entity.identity.Y9IdentityToResourceAndAuthorityBase;
 import net.risesoft.entity.permission.Y9Authorization;
-import net.risesoft.enums.AuthorizationPrincipalTypeEnum;
-import net.risesoft.enums.ResourceTypeEnum;
+import net.risesoft.enums.platform.AuthorizationPrincipalTypeEnum;
+import net.risesoft.enums.platform.ResourceTypeEnum;
 import net.risesoft.service.authorization.Y9AuthorizationService;
 import net.risesoft.service.org.CompositeOrgBaseService;
 import net.risesoft.y9public.entity.resource.Y9ResourceBase;
@@ -68,9 +68,8 @@ public class ResourcePermissionVOBuilder {
         buildResourceList(List<Y9IdentityToResourceAndAuthorityBase> permissionList) {
         // 根据人员权限记录递归获取所有相关的资源
         Set<Y9ResourceBase> y9ResourceBaseList = getResourcesWithHierarchy(permissionList);
-        List<Y9ResourceBase> appList =
-            y9ResourceBaseList.stream().filter(r -> ResourceTypeEnum.APP.getValue().equals(r.getResourceType()))
-                .sorted().collect(Collectors.toList());
+        List<Y9ResourceBase> appList = y9ResourceBaseList.stream()
+            .filter(r -> ResourceTypeEnum.APP.equals(r.getResourceType())).sorted().collect(Collectors.toList());
 
         List<ResourcePermissionVO.Resource> resourceList = new ArrayList<>();
         buildResourceList(appList, -1, permissionList, y9ResourceBaseList, resourceList);
@@ -106,7 +105,7 @@ public class ResourcePermissionVOBuilder {
                 if (y9AuthorizationOptional.isPresent()) {
                     Y9Authorization y9Authorization = y9AuthorizationOptional.get();
                     detail.setPrincipalType(y9Authorization.getPrincipalType());
-                    if (AuthorizationPrincipalTypeEnum.ROLE.getValue().equals(y9Authorization.getPrincipalType())) {
+                    if (AuthorizationPrincipalTypeEnum.ROLE.equals(y9Authorization.getPrincipalType())) {
                         y9RoleService.findById(y9Authorization.getPrincipalId()).map(Y9Role::getName)
                             .ifPresent(detail::setPrincipalName);
                     } else {

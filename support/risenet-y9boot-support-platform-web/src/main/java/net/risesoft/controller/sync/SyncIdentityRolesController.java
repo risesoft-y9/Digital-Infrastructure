@@ -13,7 +13,7 @@ import lombok.extern.slf4j.Slf4j;
 
 import net.risesoft.entity.Y9Person;
 import net.risesoft.entity.Y9Position;
-import net.risesoft.enums.TenantTypeEnum;
+import net.risesoft.enums.platform.TenantTypeEnum;
 import net.risesoft.log.annotation.RiseLog;
 import net.risesoft.service.identity.Y9PersonToRoleService;
 import net.risesoft.service.identity.Y9PositionToRoleService;
@@ -53,7 +53,7 @@ public class SyncIdentityRolesController {
         double start = System.currentTimeMillis();
         LOGGER.info("更新个人权限开始时间--------------->>{}", fdf.format(new Date()));
 
-        List<Y9Tenant> y9TenantList = y9TenantService.listByTenantType(TenantTypeEnum.TENANT.getValue());
+        List<Y9Tenant> y9TenantList = y9TenantService.listByTenantType(TenantTypeEnum.TENANT);
         for (Y9Tenant y9Tenant : y9TenantList) {
             Y9LoginUserHolder.setTenantId(y9Tenant.getId());
             List<Y9Person> y9PersonList = y9PersonService.listAll();

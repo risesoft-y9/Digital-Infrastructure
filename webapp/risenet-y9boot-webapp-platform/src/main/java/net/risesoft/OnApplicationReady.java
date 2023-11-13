@@ -15,9 +15,8 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
 import net.risesoft.consts.InitDataConsts;
-import net.risesoft.enums.ResourceTypeEnum;
-import net.risesoft.enums.TenantTypeEnum;
-import net.risesoft.enums.Y9RoleTypeEnum;
+import net.risesoft.enums.platform.RoleTypeEnum;
+import net.risesoft.enums.platform.TenantTypeEnum;
 import net.risesoft.id.IdType;
 import net.risesoft.id.Y9IdGenerator;
 import net.risesoft.service.init.InitTenantDataService;
@@ -79,7 +78,6 @@ public class OnApplicationReady implements ApplicationListener<ApplicationReadyE
             y9App.setEnabled(true);
             y9App.setHidden(false);
             y9App.setUrl(y9Config.getCommon().getOrgBaseUrl());
-            y9App.setResourceType(ResourceTypeEnum.APP.getValue());
             y9App.setInherit(false);
             y9App.setChecked(false);
             y9App.setShowNumber(false);
@@ -112,7 +110,7 @@ public class OnApplicationReady implements ApplicationListener<ApplicationReadyE
             publicRole.setAppCnName("公共角色");
             publicRole.setSystemCnName("公共角色顶节点");
             publicRole.setSystemName("Y9OrgHierarchyManagement");
-            publicRole.setType(Y9RoleTypeEnum.FOLDER.getValue());
+            publicRole.setType(RoleTypeEnum.FOLDER);
             publicRole.setTenantCustom(false);
             publicRole.setDynamic(false);
             publicRole.setTabIndex(0);
@@ -129,7 +127,7 @@ public class OnApplicationReady implements ApplicationListener<ApplicationReadyE
             y9Tenant.setShortName("default");
             y9Tenant.setName("default");
             y9Tenant.setEnabled(true);
-            y9Tenant.setTenantType(TenantTypeEnum.TENANT.getValue());
+            y9Tenant.setTenantType(TenantTypeEnum.TENANT);
             y9Tenant.setTabIndex(10000);
             y9TenantService.save(y9Tenant);
         }

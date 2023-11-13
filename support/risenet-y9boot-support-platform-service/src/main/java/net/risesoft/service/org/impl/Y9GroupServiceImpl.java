@@ -17,14 +17,14 @@ import net.risesoft.entity.Y9Group;
 import net.risesoft.entity.Y9OrgBase;
 import net.risesoft.entity.Y9Organization;
 import net.risesoft.entity.relation.Y9PersonsToGroups;
-import net.risesoft.enums.AuthorizationPrincipalTypeEnum;
-import net.risesoft.enums.OrgTypeEnum;
+import net.risesoft.enums.platform.AuthorizationPrincipalTypeEnum;
+import net.risesoft.enums.platform.OrgTypeEnum;
 import net.risesoft.id.IdType;
 import net.risesoft.id.Y9IdGenerator;
 import net.risesoft.manager.org.CompositeOrgBaseManager;
 import net.risesoft.manager.org.Y9GroupManager;
 import net.risesoft.manager.relation.Y9PersonsToGroupsManager;
-import net.risesoft.model.Group;
+import net.risesoft.model.platform.Group;
 import net.risesoft.repository.Y9GroupRepository;
 import net.risesoft.repository.permission.Y9AuthorizationRepository;
 import net.risesoft.repository.relation.Y9OrgBasesToRolesRepository;
@@ -76,7 +76,6 @@ public class Y9GroupServiceImpl implements Y9GroupService {
         if (null == y9Group.getTabIndex()) {
             y9Group.setTabIndex(Integer.MAX_VALUE);
         }
-        y9Group.setOrgType(OrgTypeEnum.GROUP.getEnName());
         y9Group.setDn(OrgLevelConsts.getOrgLevel(OrgTypeEnum.GROUP) + y9Group.getName() + OrgLevelConsts.SEPARATOR
             + parent.getDn());
         y9Group.setDisabled(false);
@@ -95,8 +94,7 @@ public class Y9GroupServiceImpl implements Y9GroupService {
         // 删除用户组关联数据
         y9OrgBasesToRolesRepository.deleteByOrgId(groupId);
         y9PersonsToGroupsManager.deleteByGroupId(groupId);
-        y9AuthorizationRepository.deleteByPrincipalIdAndPrincipalType(groupId,
-            AuthorizationPrincipalTypeEnum.GROUP.getValue());
+        y9AuthorizationRepository.deleteByPrincipalIdAndPrincipalType(groupId, AuthorizationPrincipalTypeEnum.GROUP);
 
         Y9MessageOrg msg = new Y9MessageOrg(Y9ModelConvertUtil.convert(y9Group, Group.class),
             Y9OrgEventConst.RISEORGEVENT_TYPE_DELETE_GROUP, Y9LoginUserHolder.getTenantId());
@@ -259,28 +257,12 @@ public class Y9GroupServiceImpl implements Y9GroupService {
                 Y9PublishServiceUtil.persistAndPublishMessageOrg(msg, "更新用户组信息", "更新" + group.getName());
 
                 return y9Group;
-            } else {
-                if (null == group.getTabIndex()) {
-                    group.setTabIndex(Integer.MAX_VALUE);
-                }
-                group.setOrgType(OrgTypeEnum.GROUP.getEnName());
-                group.setParentId(parent.getId());
-                group.setDn(OrgLevelConsts.getOrgLevel(OrgTypeEnum.GROUP) + group.getName() + OrgLevelConsts.SEPARATOR
-                    + parent.getDn());
-                group.setGuidPath(parent.getGuidPath() + OrgLevelConsts.SEPARATOR + group.getId());
-                group = y9GroupManager.save(group);
-
-                Y9MessageOrg msg = new Y9MessageOrg(Y9ModelConvertUtil.convert(group, Group.class),
-                    Y9OrgEventConst.RISEORGEVENT_TYPE_ADD_GROUP, Y9LoginUserHolder.getTenantId());
-                Y9PublishServiceUtil.persistAndPublishMessageOrg(msg, "新增用户组信息", "新增" + group.getName());
-
-                return group;
             }
+        } else {
+            group.setId(Y9IdGenerator.genId(IdType.SNOWFLAKE));
         }
 
-        group.setId(Y9IdGenerator.genId(IdType.SNOWFLAKE));
         group.setTenantId(Y9LoginUserHolder.getTenantId());
-        group.setOrgType(OrgTypeEnum.GROUP.getEnName());
         group.setDn(OrgLevelConsts.getOrgLevel(OrgTypeEnum.GROUP) + group.getName() + OrgLevelConsts.SEPARATOR
             + parent.getDn());
         group.setDisabled(false);

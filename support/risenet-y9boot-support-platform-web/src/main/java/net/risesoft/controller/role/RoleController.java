@@ -20,7 +20,7 @@ import lombok.extern.slf4j.Slf4j;
 
 import net.risesoft.consts.InitDataConsts;
 import net.risesoft.controller.role.vo.RoleVO;
-import net.risesoft.enums.Y9RoleTypeEnum;
+import net.risesoft.enums.platform.RoleTypeEnum;
 import net.risesoft.log.OperationTypeEnum;
 import net.risesoft.log.annotation.RiseLog;
 import net.risesoft.pojo.Y9Result;
@@ -102,7 +102,7 @@ public class RoleController {
         if (y9RoleList != null && !y9RoleList.isEmpty()) {
             for (Y9Role y9Role : y9RoleList) {
                 RoleVO roleVO = Y9ModelConvertUtil.convert(y9Role, RoleVO.class);
-                if (Y9RoleTypeEnum.FOLDER.getValue().equals(y9Role.getType())) {
+                if (RoleTypeEnum.FOLDER.equals(y9Role.getType())) {
                     roleVO.setHasChild(!y9RoleService.listByParentId(y9Role.getId()).isEmpty());
                 }
                 roleVOList.add(roleVO);
@@ -208,7 +208,7 @@ public class RoleController {
             appVO.setName(y9App.getName());
             appVO.setSystemName(y9System.getName());
             appVO.setSystemCnName(y9System.getCnName());
-            appVO.setType("App");
+            appVO.setType(RoleTypeEnum.FOLDER);
             appVO.setHasChild(true);
             appVO.setParentId(y9App.getId());
             appVO.setGuidPath(y9App.getId());
@@ -217,7 +217,7 @@ public class RoleController {
         for (Y9Role y9Role : y9RoleList) {
             if (!InitDataConsts.TOP_PUBLIC_ROLE_ID.equals(y9Role.getAppId())) {
                 RoleVO roleVO = Y9ModelConvertUtil.convert(y9Role, RoleVO.class);
-                if (Y9RoleTypeEnum.FOLDER.getValue().equals(y9Role.getType())) {
+                if (RoleTypeEnum.FOLDER.equals(y9Role.getType())) {
                     roleVO.setHasChild(!y9RoleService.listByParentId(y9Role.getId()).isEmpty());
                 }
                 roleVO.setGuidPath(y9Role.getAppId() + "," + y9Role.getGuidPath());

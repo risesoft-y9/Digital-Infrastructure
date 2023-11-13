@@ -4,7 +4,7 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 
-import net.risesoft.model.ClickedApp;
+import net.risesoft.model.log.ClickedApp;
 import net.risesoft.pojo.Y9Result;
 
 /**

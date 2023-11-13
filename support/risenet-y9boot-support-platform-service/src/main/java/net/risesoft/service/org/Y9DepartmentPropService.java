@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.Optional;
 
 import net.risesoft.entity.Y9DepartmentProp;
+import net.risesoft.enums.platform.DepartmentPropCategoryEnum;
 
 /**
  * @author dingzhaojun
@@ -48,7 +49,7 @@ public interface Y9DepartmentPropService {
      * @param category 类别
      * @return {@link List}<{@link Y9DepartmentProp}>
      */
-    List<Y9DepartmentProp> listByCategory(Integer category);
+    List<Y9DepartmentProp> listByCategory(DepartmentPropCategoryEnum category);
 
     /**
      * 根据部门唯一标识查找部门配置信息
@@ -65,7 +66,7 @@ public interface Y9DepartmentPropService {
      * @param category 类别
      * @return {@link List}<{@link Y9DepartmentProp}>
      */
-    List<Y9DepartmentProp> listByDeptIdAndCategory(String deptId, Integer category);
+    List<Y9DepartmentProp> listByDeptIdAndCategory(String deptId, DepartmentPropCategoryEnum category);
 
     /**
      * 根据人员唯一标识查找管理的部门
@@ -74,7 +75,7 @@ public interface Y9DepartmentPropService {
      * @param category 类别
      * @return {@link List}<{@link Y9DepartmentProp}>
      */
-    List<Y9DepartmentProp> listByOrgBaseIdAndCategory(String orgBaseId, Integer category);
+    List<Y9DepartmentProp> listByOrgBaseIdAndCategory(String orgBaseId, DepartmentPropCategoryEnum category);
 
     /**
      * 保存或者更新

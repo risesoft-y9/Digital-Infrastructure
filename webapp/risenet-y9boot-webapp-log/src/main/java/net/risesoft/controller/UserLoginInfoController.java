@@ -7,7 +7,7 @@ import org.springframework.web.bind.annotation.RestController;
 import lombok.RequiredArgsConstructor;
 
 import net.risesoft.consts.InitDataConsts;
-import net.risesoft.enums.ManagerLevelEnum;
+import net.risesoft.enums.platform.ManagerLevelEnum;
 import net.risesoft.log.annotation.RiseLog;
 import net.risesoft.log.entity.Y9logUserLoginInfo;
 import net.risesoft.log.service.Y9logUserLoginInfoService;

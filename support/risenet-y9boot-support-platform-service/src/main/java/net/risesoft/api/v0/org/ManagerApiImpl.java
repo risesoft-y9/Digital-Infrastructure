@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.RestController;
 import lombok.RequiredArgsConstructor;
 
 import net.risesoft.entity.Y9Manager;
-import net.risesoft.model.Manager;
+import net.risesoft.model.platform.Manager;
 import net.risesoft.service.org.Y9ManagerService;
 import net.risesoft.y9.Y9LoginUserHolder;
 import net.risesoft.y9.util.Y9ModelConvertUtil;

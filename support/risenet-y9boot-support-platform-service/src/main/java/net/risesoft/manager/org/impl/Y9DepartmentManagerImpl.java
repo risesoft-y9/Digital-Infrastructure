@@ -14,7 +14,7 @@ import net.risesoft.consts.CacheNameConsts;
 import net.risesoft.entity.Y9Department;
 import net.risesoft.exception.OrgUnitErrorCodeEnum;
 import net.risesoft.manager.org.Y9DepartmentManager;
-import net.risesoft.model.Department;
+import net.risesoft.model.platform.Department;
 import net.risesoft.repository.Y9DepartmentRepository;
 import net.risesoft.util.Y9PublishServiceUtil;
 import net.risesoft.y9.Y9LoginUserHolder;

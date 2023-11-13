@@ -18,14 +18,17 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
 import net.risesoft.consts.InitDataConsts;
-import net.risesoft.enums.AuthorityEnum;
-import net.risesoft.enums.ManagerLevelEnum;
-import net.risesoft.model.App;
+import net.risesoft.enums.platform.AppOpenTypeEnum;
+import net.risesoft.enums.platform.AppTypeEnum;
+import net.risesoft.enums.platform.AuthorityEnum;
+import net.risesoft.enums.platform.ManagerLevelEnum;
+import net.risesoft.model.platform.App;
 import net.risesoft.pojo.Y9Result;
 import net.risesoft.service.identity.Y9PersonToResourceAndAuthorityService;
 import net.risesoft.service.identity.Y9PositionToResourceAndAuthorityService;
 import net.risesoft.y9.Y9LoginUserHolder;
 import net.risesoft.y9.util.Y9BeanUtil;
+import net.risesoft.y9.util.Y9EnumUtil;
 import net.risesoft.y9.util.Y9ModelConvertUtil;
 import net.risesoft.y9public.entity.resource.Y9App;
 import net.risesoft.y9public.entity.resource.Y9System;
@@ -119,7 +122,8 @@ public class AppApiImpl implements AppApi {
         @RequestParam("personId") @NotBlank String personId, @RequestParam("authority") Integer authority) {
         Y9LoginUserHolder.setTenantId(tenantId);
 
-        List<Y9App> appList = y9PersonToResourceAndAuthorityService.listAppsByAuthority(personId, authority);
+        List<Y9App> appList = y9PersonToResourceAndAuthorityService.listAppsByAuthority(personId,
+            Y9EnumUtil.valueOf(AuthorityEnum.class, authority));
         return Y9ModelConvertUtil.convert(appList, App.class);
     }
 
@@ -137,7 +141,8 @@ public class AppApiImpl implements AppApi {
         @RequestParam("positionId") @NotBlank String positionId, @RequestParam("authority") Integer authority) {
         Y9LoginUserHolder.setTenantId(tenantId);
 
-        List<Y9App> appList = y9PositionToResourceAndAuthorityService.listAppsByAuthority(positionId, authority);
+        List<Y9App> appList = y9PositionToResourceAndAuthorityService.listAppsByAuthority(positionId,
+            Y9EnumUtil.valueOf(AuthorityEnum.class, authority));
         return Y9ModelConvertUtil.convert(appList, App.class);
     }
 
@@ -217,9 +222,8 @@ public class AppApiImpl implements AppApi {
                 y9App.setCustomId(customId);
             }
             y9App.setShowNumber(false);
-            y9App.setOpentype(0);
-            y9App.setResourceType(0);
-            y9App.setType(1);
+            y9App.setOpentype(AppOpenTypeEnum.DESKTOP);
+            y9App.setType(AppTypeEnum.BUSINESS_COLLABORATION);
             saveIsvApp = y9AppService.saveIsvApp(y9App);
             appId = saveIsvApp.getId();
             y9AppService.verifyApp(appId, true, ManagerLevelEnum.SYSTEM_MANAGER.getName());
@@ -292,9 +296,8 @@ public class AppApiImpl implements AppApi {
                 y9App.setCustomId(customId);
             }
             y9App.setShowNumber(false);
-            y9App.setOpentype(0);
-            y9App.setResourceType(0);
-            y9App.setType(1);
+            y9App.setOpentype(AppOpenTypeEnum.DESKTOP);
+            y9App.setType(AppTypeEnum.BUSINESS_COLLABORATION);
 
             saveIsvApp = y9AppService.saveIsvApp(y9App);
             appId = saveIsvApp.getId();

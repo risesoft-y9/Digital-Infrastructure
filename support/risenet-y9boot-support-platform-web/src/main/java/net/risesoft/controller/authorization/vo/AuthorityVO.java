@@ -2,7 +2,7 @@ package net.risesoft.controller.authorization.vo;
 
 import lombok.Data;
 
-import net.risesoft.enums.AuthorityEnum;
+import net.risesoft.enums.platform.AuthorityEnum;
 
 /**
  * 权限类型

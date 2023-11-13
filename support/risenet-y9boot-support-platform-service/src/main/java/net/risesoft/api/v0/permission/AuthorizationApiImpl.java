@@ -13,12 +13,13 @@ import lombok.RequiredArgsConstructor;
 
 import net.risesoft.entity.Y9Person;
 import net.risesoft.entity.permission.Y9Authorization;
-import net.risesoft.enums.AuthorityEnum;
+import net.risesoft.enums.platform.AuthorityEnum;
 import net.risesoft.id.IdType;
 import net.risesoft.id.Y9IdGenerator;
 import net.risesoft.service.authorization.Y9AuthorizationService;
 import net.risesoft.service.org.Y9PersonService;
 import net.risesoft.y9.Y9LoginUserHolder;
+import net.risesoft.y9.util.Y9EnumUtil;
 
 /**
  * 权限管理组件
@@ -59,7 +60,7 @@ public class AuthorizationApiImpl implements AuthorizationApi {
         Y9Person y9Person = y9PersonService.getById(personId);
         Y9Authorization y9Authorization = new Y9Authorization();
         y9Authorization.setAuthorizer(y9Person.getName());
-        y9Authorization.setAuthority(authority);
+        y9Authorization.setAuthority(Y9EnumUtil.valueOf(AuthorityEnum.class, authority));
         y9Authorization.setId(Y9IdGenerator.genId(IdType.SNOWFLAKE));
         y9Authorization.setResourceId(resourceId);
         y9Authorization.setPrincipalId(roleId);

@@ -8,7 +8,7 @@ import org.hibernate.annotations.Comment;
 
 import lombok.Data;
 
-import net.risesoft.enums.ResourceTypeEnum;
+import net.risesoft.enums.platform.ResourceTypeEnum;
 
 /**
  * 应用的菜单表
@@ -52,7 +52,7 @@ public class Y9Menu extends Y9ResourceBase {
     private String meta;
 
     public Y9Menu() {
-        super.setResourceType(ResourceTypeEnum.MENU.getValue());
+        super.setResourceType(ResourceTypeEnum.MENU);
     }
 
     @Override

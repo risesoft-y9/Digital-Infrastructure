@@ -13,7 +13,8 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import net.risesoft.base.BaseEntity;
-import net.risesoft.enums.ResourceTypeEnum;
+import net.risesoft.enums.platform.ResourceTypeEnum;
+import net.risesoft.persistence.EnumConverter;
 
 /**
  * 资源基类
@@ -100,7 +101,8 @@ public abstract class Y9ResourceBase extends BaseEntity implements Comparable<Y9
     @ColumnDefault("0")
     @Column(name = "RESOURCE_TYPE", nullable = false)
     @Comment("资源类型：0=应用，1=菜单，2=操作")
-    protected Integer resourceType = ResourceTypeEnum.APP.getValue();
+    @Convert(converter = EnumConverter.ResourceTypeEnumConverter.class)
+    protected ResourceTypeEnum resourceType = ResourceTypeEnum.APP;
 
     /** 是否为继承上级节点的权限:1=继承,0=不继承 */
     @Convert(converter = org.hibernate.type.NumericBooleanConverter.class)

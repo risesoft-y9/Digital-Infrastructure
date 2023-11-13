@@ -5,7 +5,7 @@ import org.springframework.cloud.openfeign.SpringQueryMap;
 import org.springframework.web.bind.annotation.PostMapping;
 
 import net.risesoft.api.log.ClickedAppApi;
-import net.risesoft.model.ClickedApp;
+import net.risesoft.model.log.ClickedApp;
 import net.risesoft.pojo.Y9Result;
 
 /**

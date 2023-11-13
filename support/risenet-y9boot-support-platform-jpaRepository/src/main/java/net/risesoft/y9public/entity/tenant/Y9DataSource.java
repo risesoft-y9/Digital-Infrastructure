@@ -1,6 +1,7 @@
 package net.risesoft.y9public.entity.tenant;
 
 import jakarta.persistence.Column;
+import jakarta.persistence.Convert;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
@@ -12,7 +13,8 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import net.risesoft.base.BaseEntity;
-import net.risesoft.enums.DataSourceTypeEnum;
+import net.risesoft.enums.platform.DataSourceTypeEnum;
+import net.risesoft.persistence.EnumConverter;
 
 /**
  * 数据源基本信息表
@@ -44,7 +46,8 @@ public class Y9DataSource extends BaseEntity {
      */
     @Column(name = "TYPE")
     @Comment("数据源类型1=jndi; 2=hikari")
-    private Integer type;
+    @Convert(converter = EnumConverter.DataSourceTypeEnumConverter.class)
+    private DataSourceTypeEnum type;
 
     /** 数据源名称 */
     @NotBlank

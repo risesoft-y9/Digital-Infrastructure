@@ -7,7 +7,7 @@ import org.springframework.beans.BeanUtils;
 
 import net.risesoft.log.entity.Y9logAccessLog;
 import net.risesoft.log.entity.Y9logUserLoginInfo;
-import net.risesoft.model.AccessLog;
+import net.risesoft.model.log.AccessLog;
 import net.risesoft.model.userlogininfo.LoginInfo;
 
 public class AccessLogModelConvertUtil {

@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
-import net.risesoft.model.PersonIconItem;
+import net.risesoft.model.platform.PersonIconItem;
 import net.risesoft.pojo.Y9Page;
 import net.risesoft.pojo.Y9Result;
 

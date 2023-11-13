@@ -13,16 +13,16 @@ import net.risesoft.entity.Y9OrgBase;
 import net.risesoft.entity.Y9Organization;
 import net.risesoft.entity.Y9Person;
 import net.risesoft.entity.Y9Position;
-import net.risesoft.enums.OrgTypeEnum;
-import net.risesoft.model.Department;
-import net.risesoft.model.Group;
-import net.risesoft.model.Manager;
-import net.risesoft.model.OrgUnit;
-import net.risesoft.model.Organization;
-import net.risesoft.model.Person;
-import net.risesoft.model.Position;
-import net.risesoft.model.Resource;
-import net.risesoft.model.Role;
+import net.risesoft.enums.platform.OrgTypeEnum;
+import net.risesoft.model.platform.Department;
+import net.risesoft.model.platform.Group;
+import net.risesoft.model.platform.Manager;
+import net.risesoft.model.platform.OrgUnit;
+import net.risesoft.model.platform.Organization;
+import net.risesoft.model.platform.Person;
+import net.risesoft.model.platform.Position;
+import net.risesoft.model.platform.Resource;
+import net.risesoft.model.platform.Role;
 import net.risesoft.y9.json.Y9JsonUtil;
 import net.risesoft.y9.util.Y9BeanUtil;
 import net.risesoft.y9.util.Y9ModelConvertUtil;
@@ -50,19 +50,19 @@ public class ModelConvertUtil extends Y9ModelConvertUtil {
             return null;
         }
         OrgUnit orgUnit;
-        if (OrgTypeEnum.PERSON.getEnName().equals(base.getOrgType())) {
+        if (OrgTypeEnum.PERSON.equals(base.getOrgType())) {
             Y9Person person = (Y9Person)base;
             orgUnit = convert(person, Person.class);
-        } else if (OrgTypeEnum.MANAGER.getEnName().equals(base.getOrgType())) {
+        } else if (OrgTypeEnum.MANAGER.equals(base.getOrgType())) {
             Y9Manager manager = (Y9Manager)base;
             orgUnit = convert(manager, Manager.class);
-        } else if (OrgTypeEnum.DEPARTMENT.getEnName().equals(base.getOrgType())) {
+        } else if (OrgTypeEnum.DEPARTMENT.equals(base.getOrgType())) {
             Y9Department dept = (Y9Department)base;
             orgUnit = convert(dept, Department.class);
-        } else if (OrgTypeEnum.GROUP.getEnName().equals(base.getOrgType())) {
+        } else if (OrgTypeEnum.GROUP.equals(base.getOrgType())) {
             Y9Group group = (Y9Group)base;
             orgUnit = convert(group, Group.class);
-        } else if (OrgTypeEnum.POSITION.getEnName().equals(base.getOrgType())) {
+        } else if (OrgTypeEnum.POSITION.equals(base.getOrgType())) {
             Y9Position position = (Y9Position)base;
             orgUnit = convert(position, Position.class);
         } else {

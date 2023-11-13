@@ -18,13 +18,13 @@ import org.springframework.util.Assert;
 import net.risesoft.consts.OrgLevelConsts;
 import net.risesoft.entity.Y9OrgBase;
 import net.risesoft.entity.Y9Organization;
-import net.risesoft.enums.AuthorizationPrincipalTypeEnum;
-import net.risesoft.enums.OrgTypeEnum;
+import net.risesoft.enums.platform.AuthorizationPrincipalTypeEnum;
+import net.risesoft.enums.platform.OrgTypeEnum;
 import net.risesoft.id.IdType;
 import net.risesoft.id.Y9IdGenerator;
 import net.risesoft.manager.org.CompositeOrgBaseManager;
 import net.risesoft.manager.org.Y9OrganizationManager;
-import net.risesoft.model.Organization;
+import net.risesoft.model.platform.Organization;
 import net.risesoft.repository.Y9OrganizationRepository;
 import net.risesoft.repository.permission.Y9AuthorizationRepository;
 import net.risesoft.repository.relation.Y9OrgBasesToRolesRepository;
@@ -94,7 +94,7 @@ public class Y9OrganizationServiceImpl implements Y9OrganizationService {
         // 删除组织关联数据
         y9OrgBasesToRolesRepository.deleteByOrgId(org.getId());
         y9AuthorizationRepository.deleteByPrincipalIdAndPrincipalType(org.getId(),
-            AuthorizationPrincipalTypeEnum.DEPARTMENT.getValue());
+            AuthorizationPrincipalTypeEnum.DEPARTMENT);
 
         // 发布事件，程序内部监听处理相关业务
         Y9Context.publishEvent(new Y9EntityDeletedEvent<>(org));
@@ -194,28 +194,13 @@ public class Y9OrganizationServiceImpl implements Y9OrganizationService {
                 Y9PublishServiceUtil.persistAndPublishMessageOrg(msg, "更新组织机构", "更新" + org.getName());
 
                 return oldOrg;
-            } else {
-                Integer maxTabIndex = getMaxTabIndex();
-                org.setTabIndex(maxTabIndex != null ? maxTabIndex + 1 : 0);
-                org.setOrgType(OrgTypeEnum.ORGANIZATION.getEnName());
-                org.setVersion(OrgTypeEnum.Y9_VERSION);
-                org.setDn(OrgLevelConsts.getOrgLevel(OrgTypeEnum.ORGANIZATION) + org.getName());
-                org.setGuidPath(org.getId());
-                org.setTenantId(Y9LoginUserHolder.getTenantId());
-                org = y9OrganizationManager.save(org);
-
-                Y9MessageOrg msg = new Y9MessageOrg(Y9ModelConvertUtil.convert(org, Organization.class),
-                    Y9OrgEventConst.RISEORGEVENT_TYPE_ADD_ORGANIZATION, Y9LoginUserHolder.getTenantId());
-                Y9PublishServiceUtil.persistAndPublishMessageOrg(msg, "新增组织机构", "新增" + org.getName());
-
-                return org;
             }
+        } else {
+            org.setId(Y9IdGenerator.genId(IdType.SNOWFLAKE));
         }
 
-        org.setId(Y9IdGenerator.genId(IdType.SNOWFLAKE));
         Integer maxTabIndex = getMaxTabIndex();
         org.setTabIndex(maxTabIndex != null ? maxTabIndex + 1 : 0);
-        org.setOrgType(OrgTypeEnum.ORGANIZATION.getEnName());
         org.setVersion(OrgTypeEnum.Y9_VERSION);
         org.setDn(OrgLevelConsts.getOrgLevel(OrgTypeEnum.ORGANIZATION) + org.getName());
         org.setGuidPath(org.getId());

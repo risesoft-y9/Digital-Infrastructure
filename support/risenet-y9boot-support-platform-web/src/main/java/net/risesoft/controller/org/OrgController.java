@@ -19,11 +19,12 @@ import lombok.RequiredArgsConstructor;
 import net.risesoft.entity.Y9Department;
 import net.risesoft.entity.Y9OrgBase;
 import net.risesoft.entity.Y9Organization;
-import net.risesoft.enums.ManagerLevelEnum;
-import net.risesoft.enums.OrgTypeEnum;
+import net.risesoft.enums.platform.ManagerLevelEnum;
+import net.risesoft.enums.platform.OrgTypeEnum;
+import net.risesoft.enums.platform.TreeTypeEnum;
 import net.risesoft.log.OperationTypeEnum;
 import net.risesoft.log.annotation.RiseLog;
-import net.risesoft.model.Organization;
+import net.risesoft.model.platform.Organization;
 import net.risesoft.model.user.UserInfo;
 import net.risesoft.pojo.Y9Result;
 import net.risesoft.service.org.CompositeOrgBaseService;
@@ -88,12 +89,12 @@ public class OrgController {
     @RiseLog(operationName = "根据guidPath和禁用/未禁用状态查找部门下人员总数")
     @RequestMapping(value = "/getAllPersonsCount")
     public Y9Result<Long> getPersonsCountByDisabled(@RequestParam @NotBlank String id,
-        @RequestParam @NotBlank String orgType) {
+        @RequestParam OrgTypeEnum orgType) {
         long count = 0;
-        if (orgType.equals(OrgTypeEnum.ORGANIZATION.getEnName())) {
+        if (orgType.equals(OrgTypeEnum.ORGANIZATION)) {
             Y9Organization org = y9OrganizationService.getById(id);
             count = y9PersonService.countByGuidPathLikeAndDisabledAndDeletedFalse(org.getId());
-        } else if (orgType.equals(OrgTypeEnum.DEPARTMENT.getEnName())) {
+        } else if (orgType.equals(OrgTypeEnum.DEPARTMENT)) {
             Y9Department dept = y9DepartmentService.getById(id);
             if (StringUtils.isNotBlank(dept.getGuidPath())) {
                 count = y9PersonService.countByGuidPathLikeAndDisabledAndDeletedFalse(dept.getGuidPath());
@@ -115,13 +116,13 @@ public class OrgController {
      */
     @RiseLog(operationName = "获取机构树子节点")
     @RequestMapping(value = "/getTree")
-    public Y9Result<List<Y9OrgBase>> getTree(@RequestParam @NotBlank String id, @RequestParam @NotBlank String treeType,
+    public Y9Result<List<Y9OrgBase>> getTree(@RequestParam @NotBlank String id, @RequestParam TreeTypeEnum treeType,
         boolean disabled) {
         UserInfo userInfo = Y9LoginUserHolder.getUserInfo();
         List<Y9OrgBase> treeList = new ArrayList<>();
-        if (userInfo.isGlobalManager() && userInfo.getManagerLevel() > 0) {
+        if (userInfo.isGlobalManager() && !ManagerLevelEnum.GENERAL_USER.equals(userInfo.getManagerLevel())) {
             treeList = compositeOrgBaseService.getTree(id, treeType, disabled);
-        } else if (userInfo.getManagerLevel() > 0) {
+        } else if (!ManagerLevelEnum.GENERAL_USER.equals(userInfo.getManagerLevel())) {
             treeList = compositeOrgBaseService.getTree4DeptManager(id, treeType);
         }
         return Y9Result.success(treeList, "获取机构树成功！");
@@ -139,7 +140,7 @@ public class OrgController {
     @RiseLog(operationName = "获取组织机构树")
     @RequestMapping(value = "/getTreeNoPerson")
     public Y9Result<List<Y9OrgBase>> getTreeNoPerson(@RequestParam @NotBlank String id,
-        @RequestParam @NotBlank String treeType, @RequestParam boolean disabled) {
+        @RequestParam TreeTypeEnum treeType, @RequestParam boolean disabled) {
         List<Y9OrgBase> treeList = compositeOrgBaseService.getTree(id, treeType, false, disabled);
         return Y9Result.success(treeList, "获取机构树成功！");
     }
@@ -229,7 +230,7 @@ public class OrgController {
      */
     @RiseLog(operationName = "同步数据", operationType = OperationTypeEnum.ADD)
     @PostMapping(value = "/sync")
-    public Y9Result<String> sync(@RequestParam @NotBlank String syncId, @RequestParam @NotBlank String orgType,
+    public Y9Result<String> sync(@RequestParam @NotBlank String syncId, @RequestParam OrgTypeEnum orgType,
         @RequestParam Integer needRecursion) {
         compositeOrgBaseService.sync(syncId, orgType, needRecursion);
         return Y9Result.success(null, "发送同步数据事件完成");
@@ -245,7 +246,7 @@ public class OrgController {
      */
     @RiseLog(operationName = "查询机构主体")
     @RequestMapping(value = "/treeSearch")
-    public Y9Result<List<Y9OrgBase>> treeSearch(@RequestParam String name, @RequestParam @NotBlank String treeType) {
+    public Y9Result<List<Y9OrgBase>> treeSearch(@RequestParam String name, @RequestParam TreeTypeEnum treeType) {
         UserInfo userInfo = Y9LoginUserHolder.getUserInfo();
         List<Y9OrgBase> treeList = new ArrayList<>();
         if (userInfo.isGlobalManager()) {

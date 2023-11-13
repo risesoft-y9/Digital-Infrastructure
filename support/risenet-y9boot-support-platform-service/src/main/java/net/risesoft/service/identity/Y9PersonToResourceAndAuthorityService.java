@@ -5,8 +5,8 @@ import java.util.List;
 import net.risesoft.entity.Y9Person;
 import net.risesoft.entity.identity.person.Y9PersonToResourceAndAuthority;
 import net.risesoft.entity.permission.Y9Authorization;
-import net.risesoft.enums.AuthorityEnum;
-import net.risesoft.enums.ResourceTypeEnum;
+import net.risesoft.enums.platform.AuthorityEnum;
+import net.risesoft.enums.platform.ResourceTypeEnum;
 import net.risesoft.y9public.entity.resource.Y9App;
 import net.risesoft.y9public.entity.resource.Y9Menu;
 import net.risesoft.y9public.entity.resource.Y9ResourceBase;
@@ -78,7 +78,7 @@ public interface Y9PersonToResourceAndAuthorityService {
      * @param authority
      * @return
      */
-    boolean hasPermission(String personId, String resourceId, Integer authority);
+    boolean hasPermission(String personId, String resourceId, AuthorityEnum authority);
 
     /**
      * 判断人对资源是否有相应权限
@@ -88,7 +88,7 @@ public interface Y9PersonToResourceAndAuthorityService {
      * @param authority
      * @return
      */
-    boolean hasPermissionByCustomId(String personId, String resourceCustomId, Integer authority);
+    boolean hasPermissionByCustomId(String personId, String resourceCustomId, AuthorityEnum authority);
 
     List<Y9PersonToResourceAndAuthority> list(String personId);
 
@@ -100,7 +100,7 @@ public interface Y9PersonToResourceAndAuthorityService {
      * @param authority
      * @return
      */
-    List<Y9PersonToResourceAndAuthority> list(String personId, String parentResourceId, Integer authority);
+    List<Y9PersonToResourceAndAuthority> list(String personId, String parentResourceId, AuthorityEnum authority);
 
     /**
      * 根据人员id、父资源id、资源类型及授权类型查找
@@ -110,10 +110,10 @@ public interface Y9PersonToResourceAndAuthorityService {
      * @param resourceType 资源类型{@link ResourceTypeEnum}
      * @param authority 授权类型{@link AuthorityEnum}
      * @return
-     * @see net.risesoft.enums.AuthorityEnum
+     * @see AuthorityEnum
      */
-    List<Y9PersonToResourceAndAuthority> list(String personId, String parentResourceId, Integer resourceType,
-        Integer authority);
+    List<Y9PersonToResourceAndAuthority> list(String personId, String parentResourceId, ResourceTypeEnum resourceType,
+        AuthorityEnum authority);
 
     /**
      * 根据人员id 及授权类型查找应用列表
@@ -122,7 +122,7 @@ public interface Y9PersonToResourceAndAuthorityService {
      * @param authority {@link AuthorityEnum}
      * @return
      */
-    List<Y9App> listAppsByAuthority(String personId, Integer authority);
+    List<Y9App> listAppsByAuthority(String personId, AuthorityEnum authority);
 
     /**
      * 更新或保存
@@ -153,7 +153,7 @@ public interface Y9PersonToResourceAndAuthorityService {
      * @param authority 权限类型
      * @return {@link List}<{@link Y9ResourceBase}>
      */
-    List<Y9ResourceBase> listSubResources(String personId, String resourceId, Integer authority);
+    List<Y9ResourceBase> listSubResources(String personId, String resourceId, AuthorityEnum authority);
 
     /**
      * 子菜单列表
@@ -164,5 +164,5 @@ public interface Y9PersonToResourceAndAuthorityService {
      * @param authority 权限类型
      * @return {@link List}<{@link Y9Menu}>
      */
-    List<Y9Menu> listSubMenus(String personId, String resourceId, Integer resourceType, Integer authority);
+    List<Y9Menu> listSubMenus(String personId, String resourceId, Integer resourceType, AuthorityEnum authority);
 }

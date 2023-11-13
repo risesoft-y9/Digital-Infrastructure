@@ -36,7 +36,7 @@ import org.springframework.stereotype.Service;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
-import net.risesoft.enums.OrgTypeEnum;
+import net.risesoft.enums.platform.OrgTypeEnum;
 import net.risesoft.log.AccessLogModelConvertUtil;
 import net.risesoft.log.constant.Y9ESIndexConst;
 import net.risesoft.log.constant.Y9LogSearchConsts;
@@ -44,9 +44,9 @@ import net.risesoft.log.entity.Y9logAccessLog;
 import net.risesoft.log.repository.Y9logAccessLogRepository;
 import net.risesoft.log.service.Y9logAccessLogService;
 import net.risesoft.log.service.Y9logMappingService;
-import net.risesoft.model.AccessLog;
-import net.risesoft.model.Person;
-import net.risesoft.model.Tenant;
+import net.risesoft.model.log.AccessLog;
+import net.risesoft.model.platform.Person;
+import net.risesoft.model.platform.Tenant;
 import net.risesoft.model.log.LogInfoModel;
 import net.risesoft.pojo.Y9Page;
 import net.risesoft.y9.Y9LoginUserHolder;
@@ -811,7 +811,7 @@ public class Y9logAccessLogServiceImpl implements Y9logAccessLogService {
         Integer num = 0;
         Tenant tenant = tenantManager.getById(tenantId).getData();
         if (null != tenant) {
-            num = tenant.getTenantType();
+            num = tenant.getTenantType().getValue();
         }
         return num;
     }
@@ -1095,7 +1095,7 @@ public class Y9logAccessLogServiceImpl implements Y9logAccessLogService {
         Integer num = 0;
         Tenant tenant = tenantManager.getById(tenantId).getData();
         if (null != tenant) {
-            num = tenant.getTenantType();
+            num = tenant.getTenantType().getValue();
         }
         return num;
     }

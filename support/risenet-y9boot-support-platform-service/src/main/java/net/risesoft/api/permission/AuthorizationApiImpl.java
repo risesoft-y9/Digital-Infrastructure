@@ -13,7 +13,7 @@ import lombok.RequiredArgsConstructor;
 
 import net.risesoft.entity.Y9Person;
 import net.risesoft.entity.permission.Y9Authorization;
-import net.risesoft.enums.AuthorityEnum;
+import net.risesoft.enums.platform.AuthorityEnum;
 import net.risesoft.id.IdType;
 import net.risesoft.id.Y9IdGenerator;
 import net.risesoft.pojo.Y9Result;
@@ -54,7 +54,7 @@ public class AuthorizationApiImpl implements AuthorizationApi {
     @Override
     public Y9Result<Object> save(@RequestParam("tenantId") @NotBlank String tenantId,
         @RequestParam("personId") @NotBlank String personId, @RequestParam("resourceId") @NotBlank String resourceId,
-        @RequestParam("roleId") @NotBlank String roleId, @RequestParam("authority") Integer authority) {
+        @RequestParam("roleId") @NotBlank String roleId, @RequestParam("authority") AuthorityEnum authority) {
         Y9LoginUserHolder.setTenantId(tenantId);
 
         Y9Person y9Person = y9PersonService.getById(personId);

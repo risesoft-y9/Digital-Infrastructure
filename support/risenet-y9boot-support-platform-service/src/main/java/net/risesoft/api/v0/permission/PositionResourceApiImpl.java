@@ -13,11 +13,12 @@ import org.springframework.web.bind.annotation.RestController;
 
 import lombok.RequiredArgsConstructor;
 
-import net.risesoft.enums.AuthorityEnum;
-import net.risesoft.enums.ResourceTypeEnum;
-import net.risesoft.model.Resource;
+import net.risesoft.enums.platform.AuthorityEnum;
+import net.risesoft.enums.platform.ResourceTypeEnum;
+import net.risesoft.model.platform.Resource;
 import net.risesoft.service.identity.Y9PositionToResourceAndAuthorityService;
 import net.risesoft.y9.Y9LoginUserHolder;
+import net.risesoft.y9.util.Y9EnumUtil;
 import net.risesoft.y9.util.Y9ModelConvertUtil;
 import net.risesoft.y9public.entity.resource.Y9Menu;
 import net.risesoft.y9public.entity.resource.Y9ResourceBase;
@@ -57,7 +58,8 @@ public class PositionResourceApiImpl implements PositionResourceApi {
         @RequestParam("resourceId") @NotBlank String resourceId, @RequestParam("authority") Integer authority) {
         Y9LoginUserHolder.setTenantId(tenantId);
 
-        return y9PositionToResourceAndAuthorityService.hasPermission(positionId, resourceId, authority);
+        return y9PositionToResourceAndAuthorityService.hasPermission(positionId, resourceId,
+            Y9EnumUtil.valueOf(AuthorityEnum.class, authority));
     }
 
     /**
@@ -76,7 +78,8 @@ public class PositionResourceApiImpl implements PositionResourceApi {
         @RequestParam("authority") Integer authority) {
         Y9LoginUserHolder.setTenantId(tenantId);
 
-        return y9PositionToResourceAndAuthorityService.hasPermissionByCustomId(positionId, customId, authority);
+        return y9PositionToResourceAndAuthorityService.hasPermissionByCustomId(positionId, customId,
+            Y9EnumUtil.valueOf(AuthorityEnum.class, authority));
     }
 
     /**
@@ -96,7 +99,7 @@ public class PositionResourceApiImpl implements PositionResourceApi {
         Y9LoginUserHolder.setTenantId(tenantId);
 
         List<Y9Menu> y9MenuList = y9PositionToResourceAndAuthorityService.listSubMenus(positionId, resourceId,
-            ResourceTypeEnum.MENU.getValue(), authority);
+            ResourceTypeEnum.MENU, Y9EnumUtil.valueOf(AuthorityEnum.class, authority));
         return Y9ModelConvertUtil.convert(y9MenuList, Resource.class);
     }
 
@@ -116,8 +119,8 @@ public class PositionResourceApiImpl implements PositionResourceApi {
         @RequestParam(name = "resourceId", required = false) String resourceId) {
         Y9LoginUserHolder.setTenantId(tenantId);
 
-        List<Y9ResourceBase> returnResourceList =
-            y9PositionToResourceAndAuthorityService.listSubResources(positionId, resourceId, authority);
+        List<Y9ResourceBase> returnResourceList = y9PositionToResourceAndAuthorityService.listSubResources(positionId,
+            resourceId, Y9EnumUtil.valueOf(AuthorityEnum.class, authority));
         return Y9ModelConvertUtil.convert(returnResourceList, Resource.class);
     }
 }

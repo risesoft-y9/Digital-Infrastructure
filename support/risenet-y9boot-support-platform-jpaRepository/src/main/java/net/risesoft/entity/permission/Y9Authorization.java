@@ -1,6 +1,7 @@
 package net.risesoft.entity.permission;
 
 import jakarta.persistence.Column;
+import jakarta.persistence.Convert;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
 import jakarta.persistence.Index;
@@ -13,8 +14,10 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import net.risesoft.base.BaseEntity;
-import net.risesoft.enums.AuthorityEnum;
-import net.risesoft.enums.AuthorizationPrincipalTypeEnum;
+import net.risesoft.enums.platform.AuthorityEnum;
+import net.risesoft.enums.platform.AuthorizationPrincipalTypeEnum;
+import net.risesoft.enums.platform.ResourceTypeEnum;
+import net.risesoft.persistence.EnumConverter;
 
 /**
  * 权限配置表：授权主体对Resource上执行的操作的配置。
@@ -61,7 +64,8 @@ public class Y9Authorization extends BaseEntity {
     @ColumnDefault("0")
     @Column(name = "PRINCIPAL_TYPE", nullable = false)
     @Comment("授权主体类型:0=角色；1=岗位；2=人员,3=组，4=部门，5=组织")
-    private Integer principalType = AuthorizationPrincipalTypeEnum.ROLE.getValue();
+    @Convert(converter = EnumConverter.AuthorizationPrincipalTypeEnumConverter.class)
+    private AuthorizationPrincipalTypeEnum principalType = AuthorizationPrincipalTypeEnum.ROLE;
 
     /** 授权主体的名称。冗余字段，纯显示用 */
     @Column(name = "PRINCIPAL_NAME", length = 255)
@@ -76,11 +80,12 @@ public class Y9Authorization extends BaseEntity {
     /**
      * 资源类型。冗余字段，纯显示用
      * 
-     * {@link net.risesoft.enums.ResourceTypeEnum}
+     * {@link ResourceTypeEnum}
      */
     @Column(name = "RESOURCE_TYPE")
     @Comment("资源类型。冗余字段，纯显示用")
-    private Integer resourceType;
+    @Convert(converter = EnumConverter.ResourceTypeEnumConverter.class)
+    private ResourceTypeEnum resourceType;
 
     /** 资源名称。冗余字段，纯显示用 */
     @Column(name = "RESOURCE_NAME", length = 255)
@@ -99,7 +104,8 @@ public class Y9Authorization extends BaseEntity {
      */
     @Column(name = "AUTHORITY", nullable = false)
     @Comment("权限类型")
-    private Integer authority;
+    @Convert(converter = EnumConverter.AuthorityEnumConverter.class)
+    private AuthorityEnum authority;
 
     /** 授权人 */
     @Column(name = "AUTHORIZER", length = 30)

@@ -6,7 +6,7 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
-import net.risesoft.enums.AuthorityEnum;
+import net.risesoft.enums.platform.AuthorityEnum;
 import net.risesoft.pojo.Y9Result;
 
 /**
@@ -35,6 +35,6 @@ public interface AuthorizationApi {
     @PostMapping("/save")
     Y9Result<Object> save(@RequestParam("tenantId") @NotBlank String tenantId,
         @RequestParam("personId") @NotBlank String personId, @RequestParam("resourceId") @NotBlank String resourceId,
-        @RequestParam("roleId") @NotBlank String roleId, @RequestParam("authority") Integer authority);
+        @RequestParam("roleId") @NotBlank String roleId, @RequestParam("authority") AuthorityEnum authority);
 
 }

@@ -24,14 +24,14 @@ import net.risesoft.entity.Y9Group;
 import net.risesoft.entity.Y9Organization;
 import net.risesoft.entity.Y9Person;
 import net.risesoft.entity.Y9Position;
-import net.risesoft.enums.OrgTypeEnum;
-import net.risesoft.model.Department;
-import net.risesoft.model.Group;
-import net.risesoft.model.MessageOrg;
-import net.risesoft.model.OrgUnit;
-import net.risesoft.model.Organization;
-import net.risesoft.model.Person;
-import net.risesoft.model.Position;
+import net.risesoft.enums.platform.OrgTypeEnum;
+import net.risesoft.model.platform.Department;
+import net.risesoft.model.platform.Group;
+import net.risesoft.model.platform.MessageOrg;
+import net.risesoft.model.platform.OrgUnit;
+import net.risesoft.model.platform.Organization;
+import net.risesoft.model.platform.Person;
+import net.risesoft.model.platform.Position;
 import net.risesoft.pojo.Y9Result;
 import net.risesoft.service.org.CompositeOrgBaseService;
 import net.risesoft.service.org.Y9DepartmentService;
@@ -158,7 +158,7 @@ public class OrgSyncApiImpl implements OrgSyncApi {
 
         Date syncTime = new Date();
         HashMap<String, Serializable> dateMap =
-            compositeOrgBaseService.getSyncMap(organizationId, OrgTypeEnum.ORGANIZATION.getEnName(), 1);
+            compositeOrgBaseService.getSyncMap(organizationId, OrgTypeEnum.ORGANIZATION, 1);
         MessageOrg event =
             new MessageOrg(dateMap, Y9OrgEventConst.RISEORGEVENT_TYPE_SYNC, Y9LoginUserHolder.getTenantId());
         y9PublishedEventSyncHistoryService.saveOrUpdate(tenantId, appName, syncTime);

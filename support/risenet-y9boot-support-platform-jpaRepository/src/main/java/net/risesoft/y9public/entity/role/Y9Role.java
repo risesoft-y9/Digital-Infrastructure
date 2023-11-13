@@ -14,7 +14,8 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import net.risesoft.base.BaseEntity;
-import net.risesoft.enums.Y9RoleTypeEnum;
+import net.risesoft.enums.platform.RoleTypeEnum;
+import net.risesoft.persistence.EnumConverter;
 
 /**
  * 角色表
@@ -79,13 +80,13 @@ public class Y9Role extends BaseEntity implements Comparable<Y9Role> {
     /**
      * 节点类型
      * 
-     * {@link Y9RoleTypeEnum}
+     * {@link RoleTypeEnum}
      */
-    @NotBlank
     @ColumnDefault("'role'")
     @Column(name = "TYPE", length = 255, nullable = false)
     @Comment("类型：role、folder")
-    private String type = Y9RoleTypeEnum.ROLE.getValue();
+    @Convert(converter = EnumConverter.RoleTypeEnumConverter.class)
+    private RoleTypeEnum type = RoleTypeEnum.ROLE;
 
     /** 应用中文名称，冗余字段，仅用于显示 */
     @Column(name = "APP_CN_NAME", length = 255, nullable = false)

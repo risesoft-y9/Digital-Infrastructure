@@ -13,7 +13,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import lombok.RequiredArgsConstructor;
 
-import net.risesoft.model.AuthenticateResult;
+import net.risesoft.model.platform.AuthenticateResult;
 import net.risesoft.pojo.Y9Result;
 import net.risesoft.service.org.Y9PersonService;
 import net.risesoft.util.Y9PlatformUtil;

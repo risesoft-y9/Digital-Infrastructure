@@ -12,9 +12,10 @@ import org.hibernate.annotations.Comment;
 
 import lombok.Data;
 
-import net.risesoft.enums.ManagerLevelEnum;
-import net.risesoft.enums.OrgTypeEnum;
-import net.risesoft.enums.SexEnum;
+import net.risesoft.enums.platform.ManagerLevelEnum;
+import net.risesoft.enums.platform.OrgTypeEnum;
+import net.risesoft.enums.platform.SexEnum;
+import net.risesoft.persistence.EnumConverter;
 
 /**
  * 三员 不在组织架构树中展示
@@ -35,7 +36,7 @@ public class Y9Manager extends Y9OrgBase {
     public static final int DEFAULT_PWD_CYCLE = 7;
 
     public Y9Manager() {
-        super.setOrgType(OrgTypeEnum.MANAGER.getEnName());
+        super.setOrgType(OrgTypeEnum.MANAGER);
     }
 
     /** 父节点id */
@@ -90,12 +91,13 @@ public class Y9Manager extends Y9OrgBase {
     /**
      * 性别
      * <p>
-     * {@link net.risesoft.enums.SexEnum}
+     * {@link SexEnum}
      */
     @ColumnDefault("1")
     @Column(name = "SEX", nullable = false)
     @Comment("性别")
-    private Integer sex = SexEnum.MALE.getValue();
+    @Convert(converter = EnumConverter.SexEnumConverter.class)
+    private SexEnum sex = SexEnum.MALE;
 
     /**
      * 管理员类型
@@ -105,7 +107,8 @@ public class Y9Manager extends Y9OrgBase {
     @Column(name = "MANAGER_LEVEL", nullable = false)
     @Comment("管理员类型")
     @ColumnDefault("0")
-    private Integer managerLevel = ManagerLevelEnum.GENERAL_USER.getValue();
+    @Convert(converter = EnumConverter.ManagerLevelEnumConverter.class)
+    private ManagerLevelEnum managerLevel = ManagerLevelEnum.GENERAL_USER;
 
     /**
      * 区分大三员（true），小三员（false）

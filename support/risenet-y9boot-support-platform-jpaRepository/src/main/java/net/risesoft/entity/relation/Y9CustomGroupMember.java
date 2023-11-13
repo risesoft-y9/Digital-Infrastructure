@@ -1,6 +1,7 @@
 package net.risesoft.entity.relation;
 
 import jakarta.persistence.Column;
+import jakarta.persistence.Convert;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
@@ -11,6 +12,9 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import net.risesoft.base.BaseEntity;
+import net.risesoft.enums.platform.OrgTypeEnum;
+import net.risesoft.enums.platform.SexEnum;
+import net.risesoft.persistence.EnumConverter;
 
 /**
  * 自定义群组成员表
@@ -48,7 +52,7 @@ public class Y9CustomGroupMember extends BaseEntity {
     /**
      * 性别
      * 
-     * {@link net.risesoft.enums.SexEnum}
+     * {@link SexEnum}
      */
     @Comment("性别")
     @Column(name = "SEX")
@@ -67,7 +71,8 @@ public class Y9CustomGroupMember extends BaseEntity {
     /** 成员类型 */
     @Column(name = "MEMBER_TYPE", length = 255)
     @Comment("成员类型")
-    private String memberType;
+    @Convert(converter = EnumConverter.OrgTypeEnumConverter.class)
+    private OrgTypeEnum memberType;
 
     /** 排序 */
     @Comment("排序")

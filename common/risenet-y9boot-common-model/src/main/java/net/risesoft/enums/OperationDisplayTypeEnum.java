@@ -11,7 +11,7 @@ import lombok.Getter;
  */
 @Getter
 @AllArgsConstructor
-public enum OperationDisplayTypeEnum {
+public enum OperationDisplayTypeEnum implements ValuedEnum<Integer> {
     /** 图标文本都展示 */
     ICON_TEXT(0),
     /** 只展示图标 */

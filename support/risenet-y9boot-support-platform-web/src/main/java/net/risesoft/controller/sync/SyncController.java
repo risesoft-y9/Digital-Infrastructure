@@ -12,6 +12,7 @@ import net.risesoft.entity.Y9Manager;
 import net.risesoft.entity.Y9Organization;
 import net.risesoft.entity.Y9Person;
 import net.risesoft.entity.Y9Position;
+import net.risesoft.enums.platform.TenantTypeEnum;
 import net.risesoft.log.OperationTypeEnum;
 import net.risesoft.log.annotation.RiseLog;
 import net.risesoft.pojo.Y9Result;
@@ -58,7 +59,7 @@ public class SyncController {
         List<String> tenantIdList = Y9PlatformUtil.getTenantIds();
         for (String tenantId : tenantIdList) {
             Y9Tenant tenant = Y9PlatformUtil.getTenantById(tenantId);
-            if (tenant.getTenantType() == 3) {
+            if (tenant.getTenantType().equals(TenantTypeEnum.TENANT)) {
                 Y9LoginUserHolder.setTenantId(tenantId);
                 initTenantDataService.initManagers();
             }
@@ -77,7 +78,7 @@ public class SyncController {
         List<String> tenantIdList = Y9PlatformUtil.getTenantIds();
         for (String tenantId : tenantIdList) {
             Y9Tenant tenant = Y9PlatformUtil.getTenantById(tenantId);
-            if (tenant.getTenantType() == 3) {
+            if (TenantTypeEnum.TENANT.equals(tenant.getTenantType())) {
                 Y9LoginUserHolder.setTenantId(tenantId);
                 initTenantDataService.initOptionClass();
             }

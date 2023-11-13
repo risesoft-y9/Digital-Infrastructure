@@ -5,7 +5,7 @@ import jakarta.servlet.http.HttpServletResponse;
 
 import org.aopalliance.intercept.MethodInvocation;
 
-import net.risesoft.model.AccessLog;
+import net.risesoft.model.log.AccessLog;
 
 /**
  * @author DZJ
@@ -13,5 +13,5 @@ import net.risesoft.model.AccessLog;
  */
 public interface Y9LogService {
     public void process(MethodInvocation invocation, AccessLog log, HttpServletRequest request,
-        HttpServletResponse response);
+                        HttpServletResponse response);
 }

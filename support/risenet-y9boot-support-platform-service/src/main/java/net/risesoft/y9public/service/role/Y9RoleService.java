@@ -86,28 +86,6 @@ public interface Y9RoleService {
     List<Y9Role> listByName(String name);
 
     /**
-     * 根据name,systemName,properties,type查询角色
-     *
-     * @param name 角色名
-     * @param systemName 系统名
-     * @param properties 属性
-     * @param type 类型
-     * @return {@link List}<{@link Y9Role}>
-     */
-    List<Y9Role> listByNameAndSystemNameAndPropertiesAndType(String name, String systemName, String properties,
-        String type);
-
-    /**
-     * 根据name,systemName,type查询角色
-     *
-     * @param name 角色名
-     * @param systemName 系统名
-     * @param type 类型
-     * @return {@link List}<{@link Y9Role}>
-     */
-    List<Y9Role> listByNameAndSystemNameAndType(String name, String systemName, String type);
-
-    /**
      * 根据orgUnitId获取角色列表
      *
      * @param orgUnitId 组织节点id

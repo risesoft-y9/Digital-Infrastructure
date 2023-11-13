@@ -9,7 +9,7 @@ import org.hibernate.annotations.Comment;
 
 import lombok.Data;
 
-import net.risesoft.enums.OrgTypeEnum;
+import net.risesoft.enums.platform.OrgTypeEnum;
 
 /**
  * 岗位实体
@@ -28,7 +28,7 @@ public class Y9Position extends Y9OrgBase {
     private static final long serialVersionUID = -5753173583033676828L;
 
     public Y9Position() {
-        super.setOrgType(OrgTypeEnum.POSITION.getEnName());
+        super.setOrgType(OrgTypeEnum.POSITION);
     }
 
     /** 父节点id */

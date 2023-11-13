@@ -20,14 +20,17 @@ import lombok.extern.slf4j.Slf4j;
 import net.risesoft.entity.Y9OrgBase;
 import net.risesoft.entity.Y9Person;
 import net.risesoft.entity.relation.Y9OrgBasesToRoles;
-import net.risesoft.model.OrgUnit;
-import net.risesoft.model.Person;
-import net.risesoft.model.Role;
+import net.risesoft.enums.platform.OrgTypeEnum;
+import net.risesoft.enums.platform.RoleTypeEnum;
+import net.risesoft.model.platform.OrgUnit;
+import net.risesoft.model.platform.Person;
+import net.risesoft.model.platform.Role;
 import net.risesoft.service.org.CompositeOrgBaseService;
 import net.risesoft.service.org.Y9PersonService;
 import net.risesoft.service.relation.Y9OrgBasesToRolesService;
 import net.risesoft.util.ModelConvertUtil;
 import net.risesoft.y9.Y9LoginUserHolder;
+import net.risesoft.y9.util.Y9EnumUtil;
 import net.risesoft.y9.util.Y9ModelConvertUtil;
 import net.risesoft.y9public.entity.role.Y9Role;
 import net.risesoft.y9public.service.role.Y9RoleService;
@@ -98,7 +101,7 @@ public class RoleApiImpl implements RoleApi {
             roleNode.setId(roleId);
             roleNode.setCustomId(customId);
             roleNode.setParentId(parentId);
-            roleNode.setType(type);
+            roleNode.setType(Y9EnumUtil.valueOf(RoleTypeEnum.class, type));
             roleNode.setSystemName(systemName);
             roleNode.setSystemCnName(systemCnName);
         } else {
@@ -169,7 +172,7 @@ public class RoleApiImpl implements RoleApi {
         for (Y9OrgBasesToRoles roleMapping : roleMappingList) {
             if (!Boolean.TRUE.equals(roleMapping.getNegative())) {
                 Y9OrgBase y9OrgBase = compositeOrgBaseService.getOrgUnit(roleMapping.getOrgId());
-                if (y9OrgBase == null || !orgType.equals(y9OrgBase.getOrgType())) {
+                if (y9OrgBase == null || !orgType.equals(y9OrgBase.getOrgType().getEnName())) {
                     continue;
                 }
                 y9OrgBaseList.add(y9OrgBase);
@@ -197,7 +200,7 @@ public class RoleApiImpl implements RoleApi {
         for (Y9OrgBasesToRoles roleMapping : roleMappingList) {
             if (!Boolean.TRUE.equals(roleMapping.getNegative())) {
                 Y9OrgBase y9OrgBase = compositeOrgBaseService.getOrgUnit(roleMapping.getOrgId());
-                if (y9OrgBase == null || !("Person".equals(y9OrgBase.getOrgType()))) {
+                if (y9OrgBase == null || !(OrgTypeEnum.PERSON.equals(y9OrgBase.getOrgType()))) {
                     continue;
                 }
                 Y9Person y9Person = y9PersonService.getById(roleMapping.getOrgId());

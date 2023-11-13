@@ -15,8 +15,8 @@ import org.springframework.web.bind.annotation.RestController;
 
 import lombok.RequiredArgsConstructor;
 
-import net.risesoft.enums.ResourceTypeEnum;
-import net.risesoft.model.Resource;
+import net.risesoft.enums.platform.ResourceTypeEnum;
+import net.risesoft.model.platform.Resource;
 import net.risesoft.pojo.Y9Result;
 import net.risesoft.util.ModelConvertUtil;
 import net.risesoft.y9.util.Y9ModelConvertUtil;
@@ -80,7 +80,6 @@ public class ResourceApiImpl implements ResourceApi {
             y9Menu.setParentId(parentResourceId);
         }
         y9Menu.setName(resourceName);
-        y9Menu.setResourceType(ResourceTypeEnum.MENU.getValue());
         y9Menu.setInherit(Boolean.FALSE);
         y9Menu.setHidden(Boolean.FALSE);
         y9Menu.setEnabled(Boolean.TRUE);
@@ -102,7 +101,8 @@ public class ResourceApiImpl implements ResourceApi {
      */
     @Override
     public Y9Result<Resource> findByCustomIdAndParentId(@RequestParam("customId") @NotBlank String customId,
-        @RequestParam("parentId") @NotBlank String parentId, @RequestParam("resourceType") Integer resourceType) {
+        @RequestParam("parentId") @NotBlank String parentId,
+        @RequestParam("resourceType") ResourceTypeEnum resourceType) {
         Y9ResourceBase y9ResourceBase =
             compositeResourceService.findByCustomIdAndParentId(customId, parentId, resourceType).orElse(null);
         return Y9Result.success(ModelConvertUtil.resourceBaseToResource(y9ResourceBase));

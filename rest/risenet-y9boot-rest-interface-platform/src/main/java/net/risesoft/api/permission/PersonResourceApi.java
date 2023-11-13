@@ -8,10 +8,10 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
-import net.risesoft.enums.AuthorityEnum;
-import net.risesoft.model.Menu;
-import net.risesoft.model.Resource;
-import net.risesoft.model.VueMenu;
+import net.risesoft.enums.platform.AuthorityEnum;
+import net.risesoft.model.platform.Menu;
+import net.risesoft.model.platform.Resource;
+import net.risesoft.model.platform.VueMenu;
 import net.risesoft.pojo.Y9Result;
 
 /**
@@ -39,7 +39,7 @@ public interface PersonResourceApi {
     @GetMapping("/hasPermission")
     Y9Result<Boolean> hasPermission(@RequestParam("tenantId") @NotBlank String tenantId,
         @RequestParam("personId") @NotBlank String personId, @RequestParam("resourceId") @NotBlank String resourceId,
-        @RequestParam("authority") Integer authority);
+        @RequestParam("authority") AuthorityEnum authority);
 
     /**
      * 判断人员对 customId 对应的资源是否有指定的操作权限
@@ -54,7 +54,7 @@ public interface PersonResourceApi {
     @GetMapping("/hasPermissionByCustomId")
     Y9Result<Boolean> hasPermissionByCustomId(@RequestParam("tenantId") @NotBlank String tenantId,
         @RequestParam("personId") @NotBlank String personId, @RequestParam("customId") @NotBlank String customId,
-        @RequestParam("authority") Integer authority);
+        @RequestParam("authority") AuthorityEnum authority);
 
     /**
      * 递归获得某一资源下，人员有相应权限的菜单和按钮（树形）
@@ -68,7 +68,7 @@ public interface PersonResourceApi {
      */
     @GetMapping("/listMenusRecursively")
     Y9Result<List<VueMenu>> listMenusRecursively(@RequestParam("tenantId") @NotBlank String tenantId,
-        @RequestParam("personId") @NotBlank String personId, @RequestParam("authority") Integer authority,
+        @RequestParam("personId") @NotBlank String personId, @RequestParam("authority") AuthorityEnum authority,
         @RequestParam("resourceId") @NotBlank String resourceId);
 
     /**
@@ -83,7 +83,7 @@ public interface PersonResourceApi {
      */
     @GetMapping("/listSubMenus")
     Y9Result<List<Menu>> listSubMenus(@RequestParam("tenantId") @NotBlank String tenantId,
-        @RequestParam("personId") @NotBlank String personId, @RequestParam("authority") Integer authority,
+        @RequestParam("personId") @NotBlank String personId, @RequestParam("authority") AuthorityEnum authority,
         @RequestParam("resourceId") @NotBlank String resourceId);
 
     /**
@@ -98,6 +98,6 @@ public interface PersonResourceApi {
      */
     @GetMapping("/listSubResources")
     Y9Result<List<Resource>> listSubResources(@RequestParam("tenantId") @NotBlank String tenantId,
-        @RequestParam("personId") @NotBlank String personId, @RequestParam("authority") Integer authority,
+        @RequestParam("personId") @NotBlank String personId, @RequestParam("authority") AuthorityEnum authority,
         @RequestParam("resourceId") @NotBlank String resourceId);
 }

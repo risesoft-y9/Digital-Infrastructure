@@ -19,7 +19,8 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import net.risesoft.base.BaseEntity;
-import net.risesoft.enums.MaritalStatusEnum;
+import net.risesoft.enums.platform.MaritalStatusEnum;
+import net.risesoft.persistence.EnumConverter;
 import net.risesoft.persistence.FieldBase64Converter;
 import net.risesoft.y9.validation.IdNumber;
 
@@ -112,12 +113,13 @@ public class Y9PersonExt extends BaseEntity {
     /**
      * 婚姻状况
      *
-     * {@link net.risesoft.enums.MaritalStatusEnum}
+     * {@link MaritalStatusEnum}
      */
     @Column(name = "MARITAL_STATUS", nullable = false)
     @Comment("婚姻状况")
     @ColumnDefault("0")
-    private Integer maritalStatus = MaritalStatusEnum.SECRET.getValue();
+    @Convert(converter = EnumConverter.MaritalStatusEnumConverter.class)
+    private MaritalStatusEnum maritalStatus = MaritalStatusEnum.SECRET;
 
     /** 政治面貌 */
     @Column(name = "POLITICAL_STATUS", length = 255)
