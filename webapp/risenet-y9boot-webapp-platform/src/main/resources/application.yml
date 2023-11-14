@@ -1,11 +1,12 @@
 management:
+    endpoint:
+        health:
+            show-details: always
     endpoints:
         web:
             exposure:
                 include: '*'
 server:
-    intranet:
-        ip: 192.168.x.x,10.1.x.x,172.20.x.x
     port: 7055
     servlet:
         session:
@@ -107,6 +108,7 @@ spring:
 y9:
     systemName: riseplatform
     systemCnName: '数字底座'
+    internalIp: 192.168.x.x,10.161.x.x,10.1.x.x,172.20.x.x
     app:
         log:
             kafkaEnabled: true
@@ -160,11 +162,6 @@ y9:
             packagesToScanEntityTenant: net.risesoft.entity
             packagesToScanRepositoryPublic: net.risesoft.y9public.repository
             packagesToScanRepositoryTenant: net.risesoft.repository
-        mongo:
-            packagesToScanEntityPublic: net.risesoft.y9public.entity
-            packagesToScanRepositoryPublic: net.risesoft.y9public.repository
-            packagesToScanEntityTenant: net.risesoft.entity
-            packagesToScanRepositoryTenant: net.risesoft.repository
         liquibase:
             tenant-enabled: false
             public-enabled: false
@@ -172,7 +169,7 @@ y9:
             kafka:
                 enabled: false
         log:
-            enabled: true
+            enabled: false
         publish:
             kafka:
                 enabled: true
@@ -219,5 +216,5 @@ y9:
                 opaque:
                     client-id: clientid
                     client-secret: secret
-                    introspection-uri: http://localhost:7055/sso/oauth2.0/introspect
-                    profile-uri: http://localhost:7055/sso/oauth2.0/profile
+                    introspection-uri: http://localhost:7099/sso/oauth2.0/introspect
+                    profile-uri: http://localhost:7099/sso/oauth2.0/profile

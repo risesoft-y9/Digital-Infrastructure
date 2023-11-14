@@ -12,16 +12,15 @@ import java.util.Map;
 import java.util.Properties;
 import java.util.regex.Pattern;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.config.YamlPropertiesFactoryBean;
 import org.springframework.core.env.Environment;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.util.StringUtils;
 
-public class InetAddressUtil {
+import lombok.extern.slf4j.Slf4j;
 
-    private static final Logger logger = LoggerFactory.getLogger(InetAddressUtil.class);
+@Slf4j
+public class InetAddressUtil {
 
     public static final String LOCALHOST = "127.0.0.1";
 
@@ -37,7 +36,13 @@ public class InetAddressUtil {
 
     public static Properties properties = new Properties();
 
-    public static String ips = "";
+    public static String ips = "192.168.x.x,10.161.x.x,10.1.x.x,172.20.x.x";
+    
+    /*
+     * A类网络 ip地址范围:10.0.0.0~10.255.255.255     ip地址数量:16777216    网络数:1个A类网络
+     * B类网络 ip地址范围:172.16.0.0~172.31.255.255   ip地址数量:1048576     网络数:16个B类网络
+     * C类网络 ip地址范围:192.168.0.0~192.168.255.255 ip地址数量:65536       网络数:256个C类网络
+     */
 
     static {
         Environment environment = Y9Context.getEnvironment();
@@ -48,32 +53,29 @@ public class InetAddressUtil {
             if (properties.isEmpty()) {
                 getApplicationProperties();
             }
-            ips = properties.getProperty("server.intranet.ip");
+            ips = properties.getProperty("y9.internalIp");
         } else {
-            ips = environment.getProperty("server.intranet.ip");
+            ips = environment.getProperty("y9.internalIp");
         }
     }
 
     public static void getApplicationProperties() {
-        InputStream inputStream = InetAddressUtil.class.getClassLoader().getResourceAsStream("application.properties");
-        try {
+        try (InputStream inputStream =
+            InetAddressUtil.class.getClassLoader().getResourceAsStream("application.properties")) {
             properties.load(inputStream);
-            inputStream.close();
-        } catch (IOException e) {
+        } catch (IOException ignored) {
         }
 
         if (properties.isEmpty()) {
-            inputStream =
-                InetAddressUtil.class.getClassLoader().getResourceAsStream("properties/application.properties");
-            try {
-                properties.load(inputStream);
-                inputStream.close();
-            } catch (IOException e) {
+            try (InputStream inputStream2 =
+                InetAddressUtil.class.getClassLoader().getResourceAsStream("properties/application.properties");) {
+                properties.load(inputStream2);
+            } catch (IOException ignored) {
             }
         }
 
         if (properties.isEmpty()) {
-            System.out.println("not found application.properties!");
+            LOGGER.error("application.properties not found!");
             System.exit(0);
         }
     }
@@ -138,7 +140,7 @@ public class InetAddressUtil {
                 return localAddress;
             }
         } catch (Throwable e) {
-            logger.warn("Failed to retriving local address by hostname:" + e);
+            LOGGER.warn("Failed to retrieve local address by hostname:" + e);
         }
         return null;
     }
@@ -158,16 +160,16 @@ public class InetAddressUtil {
                                     return address;
                                 }
                             } catch (Throwable e) {
-                                logger.warn("Failed to retriving ip address, " + e.getMessage(), e);
+                                LOGGER.warn("Failed to retrieve ip address", e);
                             }
                         }
                     } catch (Throwable e) {
-                        logger.warn("Failed to retriving ip address, " + e.getMessage(), e);
+                        LOGGER.warn("Failed to retrieve ip address", e);
                     }
                 }
             }
         } catch (Throwable e) {
-            logger.warn("Failed to retriving ip address, " + e.getMessage(), e);
+            LOGGER.warn("Failed to retrieve ip address", e);
         }
         return null;
     }
@@ -180,29 +182,20 @@ public class InetAddressUtil {
         for (Map.Entry<String, Integer> entry : destHostPorts.entrySet()) {
             String host = entry.getKey();
             int port = entry.getValue();
-            try {
-                Socket socket = new Socket();
-                try {
-                    SocketAddress addr = new InetSocketAddress(host, port);
-                    socket.connect(addr, 1000);
-                    return socket.getLocalAddress();
-                } finally {
-                    try {
-                        socket.close();
-                    } catch (Throwable e) {
-                    }
-                }
+            try (Socket socket = new Socket()) {
+                SocketAddress addr = new InetSocketAddress(host, port);
+                socket.connect(addr, 1000);
+                return socket.getLocalAddress();
             } catch (Exception e) {
-                logger.warn(String.format(
-                    "Failed to retriving local address by connecting to dest host:port(%s:%s) false, e=%s", host, port,
-                    e));
+                LOGGER.warn(String.format(
+                    "Failed to retrieve local address by connecting to dest host:port(%s:%s) false", host, port), e);
             }
         }
         return null;
     }
 
     public static boolean isInvalidLocalHost(String host) {
-        return host == null || host.length() == 0 || host.equalsIgnoreCase("localhost") || host.equals("0.0.0.0")
+        return host == null || host.length() == 0 || "localhost".equalsIgnoreCase(host) || "0.0.0.0".equals(host)
             || (LOCAL_IP_PATTERN.matcher(host).matches());
     }
 
@@ -210,6 +203,7 @@ public class InetAddressUtil {
         if (address == null || address.isLoopbackAddress()) {
             return false;
         }
+
         String ipAddress = address.getHostAddress();
         boolean valid = ipAddress != null && !ANYHOST.equals(ipAddress) && !LOCALHOST.equals(ipAddress)
             && IP_PATTERN.matcher(ipAddress).matches();

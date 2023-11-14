@@ -46,7 +46,13 @@ public class InetAddressUtil {
 
     public static Properties properties = new Properties();
 
-    public static String ips = null;
+    public static String ips = "192.168.x.x,10.161.x.x,10.1.x.x,172.20.x.x";
+    
+    /*
+     * A类网络 ip地址范围:10.0.0.0~10.255.255.255     ip地址数量:16777216    网络数:1个A类网络
+     * B类网络 ip地址范围:172.16.0.0~172.31.255.255   ip地址数量:1048576     网络数:16个B类网络
+     * C类网络 ip地址范围:192.168.0.0~192.168.255.255 ip地址数量:65536       网络数:256个C类网络
+     */
 
     static {
         Environment environment = Y9Context.getEnvironment();
@@ -57,9 +63,9 @@ public class InetAddressUtil {
             if (properties.isEmpty()) {
                 getApplicationProperties();
             }
-            ips = properties.getProperty("server.intranet.ip");
+            ips = properties.getProperty("y9.internalIp");
         } else {
-            ips = environment.getProperty("server.intranet.ip");
+            ips = environment.getProperty("y9.internalIp");
         }
     }
 
@@ -215,8 +221,6 @@ public class InetAddressUtil {
             return false;
         }
 
-        // application.propters中server.intranet.ip=192.168.1.x,10.0.x.x
-        // String ips = Y9Context.getProperty("server.intranet.ip");
         if (StringUtils.hasText(ips)) {
             valid = false;
             String[] arry = ips.toLowerCase().split(",");

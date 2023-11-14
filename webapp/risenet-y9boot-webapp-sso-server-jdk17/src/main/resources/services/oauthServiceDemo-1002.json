@@ -2,14 +2,14 @@
     "@class" : "org.apereo.cas.support.oauth.services.OAuthRegisteredService",
     "clientId": "clientid_0",
     "clientSecret": "secret_0",
-    "serviceId" : "^(https?)://localhost:7055/oauth.*",
+    "serviceId" : "^(https?)://localhost:7099/oauth.*",
     "name" : "oauthServiceDemo",
     "description" : "oauth Authentication app demo",
     "theme": "y9-apereo",
     "id" : 1002,
     "evaluationOrder": 1002,
     "logoutType" : "BACK_CHANNEL",
-    "logoutUrl" : "http://localhost:7055/oauth/public/oauth/callback",
+    "logoutUrl" : "http://localhost:7099/oauth/public/oauth/callback",
     "proxyPolicy" : {
         "@class" : "org.apereo.cas.services.RefuseRegisteredServiceProxyPolicy"
     },
