@@ -35,8 +35,6 @@ public class ItemModel implements Serializable {
 
     private String dockingItemId;// 对接事项id
 
-    private Integer formType; // 1为使用电子表单，2为使用y9表单
-
     private String systemName;
 
     private String todoTaskUrlPrefix;
