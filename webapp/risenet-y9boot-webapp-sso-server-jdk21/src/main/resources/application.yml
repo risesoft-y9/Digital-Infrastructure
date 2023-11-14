@@ -120,8 +120,8 @@ cas:
     slo:
         asynchronous: false
     server:
-        name: http://localhost:17055
-        prefix: http://localhost:17055/sso
+        name: http://localhost:7099
+        prefix: http://localhost:7099/sso
     service-registry:
         cache:
             duration: PT8H
@@ -229,7 +229,7 @@ management:
             exposure:
                 include: '*'
 server:
-    port: 17055
+    port: 7099
     servlet:
         context-parameters:
             isLog4jAutoInitializationDisabled: true
@@ -306,7 +306,7 @@ spring:
 y9:
     common:
         kafkaEnabled: true
-        logBaseUrl: http://localhost:17055/log
+        logBaseUrl: http://localhost:7099/log
     login:
         casLoginView: "casLoginView-y9-v3.0"
         credentialPropsOptional: "isValidateIE,screenDimension,userAgent,systemName,clientIp,clientMac,clientDiskId,clientHostName,deptId,positionId,pwdEcodeType"

@@ -153,7 +153,7 @@ public class OAuth20IntrospectionEndpointController<T extends OAuth20Configurati
      * @return the response entity
      * @throws Throwable the throwable
      */
-    @PostMapping('/' + OAuth20Constants.BASE_OAUTH20_URL + '/' + OAuth20Constants.INTROSPECTION_URL)
+    @PostMapping(OAuth20Constants.BASE_OAUTH20_URL + '/' + OAuth20Constants.INTROSPECTION_URL)
     public ResponseEntity handlePostRequest(final HttpServletRequest request, final HttpServletResponse response)
         throws Throwable {
         try {

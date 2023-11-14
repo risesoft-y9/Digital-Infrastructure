@@ -63,7 +63,7 @@ services:
       - d:/docker-data/consul:/bitnami/consul
    
   elasticsearch:
-    image: elasticsearch:8.10.2
+    image: elasticsearch:8.11.0
     container_name: elastic01
     restart: always
     extra_hosts:
