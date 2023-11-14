@@ -17,11 +17,7 @@ public class ItemModel implements Serializable {
 
     private String accountability; // 事项责任制
 
-    private String nature; // 事项性质
-
-    private String starterId; // 首办角色id
-
-    private String starter; // 首办角色名称
+    private String nature; // 事项管理员
 
     private String sysLevel; // 系统级别
 
