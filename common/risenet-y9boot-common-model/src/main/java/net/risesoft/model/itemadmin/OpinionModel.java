@@ -64,16 +64,6 @@ public class OpinionModel implements Serializable {
      */
     private String deptName;
 
-    private String agentUserId; // 意见代录人Guid
-
-    private String agentUserName;// 意见代录人姓名
-
-    private String agentUserDeptId;// 代录人的部门Id
-
-    private String agentUserDeptName;// 代录人的部门Name
-
-    private Integer isAgent = 0; // 是否是代录意见， 0=不是；1=是
-
     /**
      * 意见生成时间
      */
