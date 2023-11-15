@@ -72,7 +72,7 @@ public class UserInfo implements Serializable {
     private String avator;
 
     /** 拥有的角色列表 */
-    private String roles;
+    private String y9Roles;
 
     /** 拥有的岗位列表 */
     private String positions;

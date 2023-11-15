@@ -1,12 +1,27 @@
 package y9.oauth2.resource.filter;
 
+import java.io.Serial;
+import java.io.Serializable;
+
+import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
-public class OAuth20IntrospectionAccessTokenResponse {
+import lombok.Getter;
+import lombok.Setter;
 
+@Getter
+@Setter
+public class OAuth20IntrospectionAccessTokenResponse implements Serializable {
+	public record DPopConfirmation(String jkt) {
+    }
+
+    @Serial
+    private static final long serialVersionUID = -7917281748569741345L;
+
+    private String token;
+
+    @JsonInclude(JsonInclude.Include.ALWAYS)
     private boolean active;
-
-    private String attr;
 
     private String sub;
 
@@ -32,118 +47,9 @@ public class OAuth20IntrospectionAccessTokenResponse {
     @JsonProperty("grant_type")
     private String grantType;
 
-    public OAuth20IntrospectionAccessTokenResponse() {}
+    private String attr; // y9 add
 
-    public String getAttr() {
-        return attr;
-    }
-
-    public String getAud() {
-        return aud;
-    }
-
-    public String getClientId() {
-        return clientId;
-    }
-
-    public long getExp() {
-        return exp;
-    }
-
-    public String getGrantType() {
-        return grantType;
-    }
-
-    public long getIat() {
-        return iat;
-    }
-
-    public String getIss() {
-        return iss;
-    }
-
-    public String getRealmName() {
-        return realmName;
-    }
-
-    public String getScope() {
-        return scope;
-    }
-
-    public String getSub() {
-        return sub;
-    }
-
-    public String getTokenType() {
-        return tokenType;
-    }
-
-    public String getUniqueSecurityName() {
-        return uniqueSecurityName;
-    }
-
-    public boolean isActive() {
-        return active;
-    }
-
-    public void setActive(boolean active) {
-        this.active = active;
-    }
-
-    public void setAttr(String attr) {
-        this.attr = attr;
-    }
-
-    public void setAud(String aud) {
-        this.aud = aud;
-    }
-
-    public void setClientId(String clientId) {
-        this.clientId = clientId;
-    }
-
-    public void setExp(long exp) {
-        this.exp = exp;
-    }
-
-    public void setGrantType(String grantType) {
-        this.grantType = grantType;
-    }
-
-    public void setIat(long iat) {
-        this.iat = iat;
-    }
-
-    public void setIss(String iss) {
-        this.iss = iss;
-    }
-
-    public void setRealmName(String realmName) {
-        this.realmName = realmName;
-    }
-
-    public void setScope(String scope) {
-        this.scope = scope;
-    }
-
-    public void setSub(String sub) {
-        this.sub = sub;
-    }
-
-    public void setTokenType(String tokenType) {
-        this.tokenType = tokenType;
-    }
-
-    public void setUniqueSecurityName(String uniqueSecurityName) {
-        this.uniqueSecurityName = uniqueSecurityName;
-    }
-
-    @Override
-    public String toString() {
-        return "OAuth20IntrospectionAccessTokenResponse [active=" + active + ", attr=" + attr + ", sub=" + sub
-            + ", scope=" + scope + ", iat=" + iat + ", exp=" + exp + ", realmName=" + realmName
-            + ", uniqueSecurityName=" + uniqueSecurityName + ", tokenType=" + tokenType + ", aud=" + aud + ", iss="
-            + iss + ", clientId=" + clientId + ", grantType=" + grantType + "]";
-    }
+    @JsonProperty("cnf")
+    private DPopConfirmation dPopConfirmation;
 
 }

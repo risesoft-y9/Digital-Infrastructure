@@ -81,7 +81,7 @@ public class Manager extends OrgUnit implements Serializable {
         userInfo.setPersonId(id);
         userInfo.setPositionId(null);
         userInfo.setPositions(null);
-        userInfo.setRoles(null);
+        userInfo.setY9Roles(null);
         userInfo.setSex(sex);
         userInfo.setTenantId(tenantId);
         userInfo.setGlobalManager(globalManager);

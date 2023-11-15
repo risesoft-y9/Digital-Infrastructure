@@ -158,7 +158,7 @@ public class Person extends OrgUnit implements Serializable {
         userInfo.setPersonType(personType);
         userInfo.setPositionId(positionId);
         userInfo.setPositions(positions);
-        userInfo.setRoles(roles);
+        userInfo.setY9Roles(roles);
         userInfo.setSex(sex);
         userInfo.setTenantId(tenantId);
         userInfo.setGlobalManager(false);

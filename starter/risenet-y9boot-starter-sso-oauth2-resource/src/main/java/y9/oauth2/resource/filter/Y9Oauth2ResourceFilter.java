@@ -151,7 +151,7 @@ public class Y9Oauth2ResourceFilter implements Filter {
                         return;
                     }
 
-                    if (introspectEntity.getStatusCodeValue() == HttpStatus.OK.value()) {
+                    if (introspectEntity.getStatusCode().is2xxSuccessful()) {
                         OAuth20IntrospectionAccessTokenResponse introspectionResponse = introspectEntity.getBody();
                         if (!introspectionResponse.isActive()) {
                             setResponse(response, HttpStatus.UNAUTHORIZED, GlobalErrorCodeEnum.ACCESS_TOKEN_EXPIRED);
@@ -376,7 +376,7 @@ public class Y9Oauth2ResourceFilter implements Filter {
         userInfo.setTenantName((String)map.get("tenantName"));
         userInfo.setGlobalManager(Boolean.valueOf(String.valueOf(map.get("globalManager"))));
         userInfo.setAvator((String)map.get("avator"));
-        userInfo.setRoles((String)map.get("roles"));
+        userInfo.setY9Roles((String)map.get("y9Roles"));
         userInfo.setPositions((String)map.get("positions"));
         userInfo.setPositionId((String)map.get("positionId"));
         return userInfo;
