@@ -6,7 +6,7 @@ cas:
         redis:
             enabled: false
             useSsl: false
-            host: "localhost"
+            host: "redis"
             port: 6379
             database: 12
             username: default
@@ -138,7 +138,7 @@ cas:
             dialect: org.hibernate.dialect.MySQLDialect
             driver-class: com.mysql.cj.jdbc.Driver
             ddl-auto: update
-            url: jdbc:mysql://localhost:3306/y9_public?serverTimezone=GMT%2B8&nullCatalogMeansCurrent=true&useUnicode=true&characterEncoding=utf-8&rewriteBatchedStatements=true&useCompression=true&useSSL=false&allowPublicKeyRetrieval=true
+            url: jdbc:mysql://db:3306/y9_public?serverTimezone=GMT%2B8&nullCatalogMeansCurrent=true&useUnicode=true&characterEncoding=utf-8&rewriteBatchedStatements=true&useCompression=true&useSSL=false&allowPublicKeyRetrieval=true
             user: root
             password: '12345678'
             idleTimeout: PT8M
@@ -183,7 +183,7 @@ cas:
             redis:
                 enabled: true
                 useSsl: false
-                host: "localhost"
+                host: "redis"
                 port: 6379
                 database: 13
                 username: default
@@ -272,7 +272,7 @@ spring:
     data:
         redis:
             database: 8
-            host: localhost
+            host: "redis"
             port: 6379
             username: default
             password: '12345678'

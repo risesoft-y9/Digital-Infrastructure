@@ -6,8 +6,8 @@
     "name" : "oauthServiceDemo2",
     "description" : "oauth Authentication app demo",
     "theme": "y9-apereo",
-    "id" : 1002,
-    "evaluationOrder": 1002,
+    "id" : 1003,
+    "evaluationOrder": 1003,
     "logoutType" : "BACK_CHANNEL",
     "logoutUrl" : "http://sso:7099/oauth/public/oauth/callback",
     "proxyPolicy" : {
