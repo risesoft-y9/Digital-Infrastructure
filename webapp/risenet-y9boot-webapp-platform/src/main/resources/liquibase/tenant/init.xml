@@ -891,7 +891,7 @@
     <changeSet id="1697701085071-27" author="shidaobang">
         <preConditions onFail="MARK_RAN">
             <not>
-                <uniqueConstraintExists tableName="Y9_ORG_POSITIONS_RESOURCES"
+                <indexExists tableName="Y9_ORG_POSITIONS_RESOURCES"
                                         columnNames="POSITION_ID, RESOURCE_ID, AUTHORIZATION_ID, AUTHORITY"/>
             </not>
         </preConditions>
@@ -901,7 +901,7 @@
     <changeSet id="1697701085071-28" author="shidaobang">
         <preConditions onFail="MARK_RAN">
             <not>
-                <uniqueConstraintExists tableName="Y9_ORG_POSITIONS_ROLES"
+                <indexExists tableName="Y9_ORG_POSITIONS_ROLES"
                                         columnNames="POSITION_ID, ROLE_ID"/>
             </not>
         </preConditions>
@@ -911,7 +911,7 @@
     <changeSet id="1697701085071-29" author="shidaobang">
         <preConditions onFail="MARK_RAN">
             <not>
-                <uniqueConstraintExists tableName="Y9_ORG_PERSONS_ROLES"
+                <indexExists tableName="Y9_ORG_PERSONS_ROLES"
                                         columnNames="PERSON_ID, ROLE_ID"/>
             </not>
         </preConditions>
@@ -921,7 +921,7 @@
     <changeSet id="1697701085071-30" author="shidaobang">
         <preConditions onFail="MARK_RAN">
             <not>
-                <uniqueConstraintExists tableName="Y9_ORG_PERSONS_GROUPS"
+                <indexExists tableName="Y9_ORG_PERSONS_GROUPS"
                                         columnNames="GROUP_ID, PERSON_ID"/>
             </not>
         </preConditions>
@@ -931,7 +931,7 @@
     <changeSet id="1697701085071-31" author="shidaobang">
         <preConditions onFail="MARK_RAN">
             <not>
-                <uniqueConstraintExists tableName="Y9_ORG_PERSONS_RESOURCES"
+                <indexExists tableName="Y9_ORG_PERSONS_RESOURCES"
                                         columnNames="PERSON_ID, RESOURCE_ID, AUTHORIZATION_ID, AUTHORITY"/>
             </not>
         </preConditions>
@@ -941,7 +941,7 @@
     <changeSet id="1697701085071-32" author="shidaobang">
         <preConditions onFail="MARK_RAN">
             <not>
-                <uniqueConstraintExists tableName="Y9_ORG_AUTHORIZATION"
+                <indexExists tableName="Y9_ORG_AUTHORIZATION"
                                         columnNames="PRINCIPAL_ID, RESOURCE_ID, AUTHORITY"/>
             </not>
         </preConditions>
@@ -951,7 +951,7 @@
     <changeSet id="1697701085071-33" author="shidaobang">
         <preConditions onFail="MARK_RAN">
             <not>
-                <uniqueConstraintExists tableName="Y9_ORG_PERSONS_POSITIONS"
+                <indexExists tableName="Y9_ORG_PERSONS_POSITIONS"
                                         columnNames="POSITION_ID, PERSON_ID"/>
             </not>
         </preConditions>
@@ -961,7 +961,7 @@
     <changeSet id="1697701085071-34" author="shidaobang">
         <preConditions onFail="MARK_RAN">
             <not>
-                <uniqueConstraintExists tableName="Y9_ORG_POSITIONS_GROUPS"
+                <indexExists tableName="Y9_ORG_POSITIONS_GROUPS"
                                         columnNames="GROUP_ID, POSITION_ID"/>
             </not>
         </preConditions>

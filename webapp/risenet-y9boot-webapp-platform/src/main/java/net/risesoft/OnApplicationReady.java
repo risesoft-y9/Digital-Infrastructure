@@ -39,6 +39,10 @@ import net.risesoft.y9public.service.tenant.Y9TenantAppService;
 import net.risesoft.y9public.service.tenant.Y9TenantService;
 import net.risesoft.y9public.service.tenant.Y9TenantSystemService;
 
+import y9.autoconfiguration.liquibase.Y9MultiTenantSpringLiquibase;
+
+import liquibase.exception.LiquibaseException;
+
 /**
  * 应用启动监听器 <br/>
  * 执行一系列的数据初始化
@@ -63,6 +67,7 @@ public class OnApplicationReady implements ApplicationListener<ApplicationReadyE
     private final Y9RoleService y9RoleService;
     private final InitTenantDataService initTenantDataService;
     private final Y9TenantAppService y9TenantAppService;
+    private final Y9MultiTenantSpringLiquibase y9MultiTenantSpringLiquibase;
 
     private void createApp(String appId, String systemId) {
         if (!y9AppService.existsById(appId)) {
@@ -164,9 +169,9 @@ public class OnApplicationReady implements ApplicationListener<ApplicationReadyE
         }
 
         try {
-            // 更新租户数据库里的表结构
-            updateTenantSchema();
-        } catch (Exception e) {
+            // 同步各个租户库的表结构
+            y9MultiTenantSpringLiquibase.update(InitDataConsts.TENANT_ID);
+        } catch (LiquibaseException e) {
             LOGGER.warn(e.getMessage(), e);
         }
 

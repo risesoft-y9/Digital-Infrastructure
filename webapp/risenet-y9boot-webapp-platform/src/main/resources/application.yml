@@ -83,7 +83,7 @@ spring:
                     batchSize: 100
                 showSql: true
         hibernate:
-            ddl-auto: update
+            ddl-auto: none
             naming:
                 implicit-strategy: org.hibernate.boot.model.naming.ImplicitNamingStrategyLegacyHbmImpl
                 physical-strategy: org.hibernate.boot.model.naming.PhysicalNamingStrategyStandardImpl
@@ -163,8 +163,8 @@ y9:
             packagesToScanRepositoryPublic: net.risesoft.y9public.repository
             packagesToScanRepositoryTenant: net.risesoft.repository
         liquibase:
-            tenant-enabled: false
-            public-enabled: false
+            tenant-enabled: true
+            public-enabled: true
         listener:
             kafka:
                 enabled: false
