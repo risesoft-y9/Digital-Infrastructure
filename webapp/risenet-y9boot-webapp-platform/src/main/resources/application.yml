@@ -102,7 +102,7 @@ spring:
     jpa:
         database-platform: org.hibernate.dialect.MySQL8Dialect
         hibernate:
-            ddl-auto: update
+            ddl-auto: none
             naming:
                 implicit-strategy: org.hibernate.boot.model.naming.ImplicitNamingStrategyLegacyHbmImpl
                 physical-strategy: org.hibernate.boot.model.naming.PhysicalNamingStrategyStandardImpl
@@ -110,7 +110,7 @@ spring:
         properties:
             hibernate:
                 hbm2ddl:
-                    auto: update
+                    auto: none
                 jdbc:
                     batch_size: 100
                 show_sql: true
@@ -204,8 +204,8 @@ y9:
             packagesToScanEntityTenant: net.risesoft.entity
             packagesToScanRepositoryTenant: net.risesoft.repository
         liquibase:
-            tenant-enabled: false
-            public-enabled: false
+            tenant-enabled: true
+            public-enabled: true
         listener:
             kafka:
                 enabled: false
