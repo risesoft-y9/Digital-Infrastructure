@@ -7,6 +7,7 @@ import java.util.List;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import net.risesoft.enums.AuthorityEnum;
@@ -152,10 +153,9 @@ public interface AppApi {
      * 保存应用
      *
      * @param app 应用实体类
-     * @param systemId 系统id
      * @return App
      * @since 9.6.0
      */
     @PostMapping("/saveIsvApp")
-    App saveIsvApp(App app, @RequestParam("systemId") @NotBlank String systemId);
+    App saveIsvApp(@RequestBody App app);
 }

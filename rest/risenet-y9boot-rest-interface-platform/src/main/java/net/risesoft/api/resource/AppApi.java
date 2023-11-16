@@ -7,6 +7,7 @@ import java.util.List;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import net.risesoft.enums.AuthorityEnum;
@@ -152,12 +153,11 @@ public interface AppApi {
 
     /**
      * 保存应用
-     *
+     * 
      * @param app 应用实体类
-     * @param systemId 系统id
      * @return {@code Y9Result<App>} 通用请求返回对象 - data 是保存的应用
      * @since 9.6.0
      */
     @PostMapping("/saveIsvApp")
-    Y9Result<App> saveIsvApp(App app, @RequestParam("systemId") @NotBlank String systemId);
+    Y9Result<App> saveIsvApp(@RequestBody App app);
 }
