@@ -9,6 +9,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.validation.annotation.Validated;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
@@ -320,12 +321,11 @@ public class AppApiImpl implements AppApi {
      * 保存应用
      *
      * @param app 应用实体类
-     * @param systemId 系统id
      * @return App 应用
      * @since 9.6.0
      */
     @Override
-    public App saveIsvApp(App app, @RequestParam("systemId") @NotBlank String systemId) {
+    public App saveIsvApp(@RequestBody App app) {
         Y9App y9App = new Y9App();
         Y9BeanUtil.copyProperties(app, y9App);
         y9App = y9AppService.saveIsvApp(y9App);
