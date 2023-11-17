@@ -214,8 +214,6 @@ webapp -- 系统公共模块
 
 ##  在线体验
 
-官网地址：<a href="https://www.risesoft.net/" target="_blank">https://www.risesoft.net/</a>
-
 演示地址：<a href="https://dev.youshengyun.com/kernel-standard/" target="_blank">https://dev.youshengyun.com/kernel-standard/</a>
 
 > 演示账号：
@@ -370,15 +368,18 @@ webapp -- 系统公共模块
 
 
 
-## 数字底座交流群
+## 需求定制开发
 
-QQ群
+联系人：谢晨芸
 
-<a href="https://jq.qq.com/?_wv=1027&k=9ozxloLD" target="_blank" title="点我申请入群"><img src="https://vue.youshengyun.com/files/img/qq.png"></a>
+微信号：A914700467
 
-QQ群二维码
+## 赞助与支持
 
-<div><img src="https://vue.youshengyun.com/files/img/qqQRCode.png" width="200" height="200"><div/>
-微信群二维码
+中关村软件和信息服务产业创新联盟
 
-<div><img src="https://vue.youshengyun.com/files/img/wxQRCode.png" width="200" height="200"><div/>
+官网：https://www.zgcsa.net/
+
+北京有生博大软件股份有限公司
+
+官网：[https://www.risesoft.net/](https://gitee.com/link?target=https://www.risesoft.net/)
