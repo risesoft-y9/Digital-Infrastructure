@@ -667,6 +667,40 @@
 			<activation>
 				<activeByDefault>false</activeByDefault>
 			</activation>
+			<build>
+				<plugins>
+					<plugin>
+						<groupId>com.google.cloud.tools</groupId>
+						<artifactId>jib-maven-plugin</artifactId>
+						<version>3.4.0</version>
+						<configuration>
+							<skip>false</skip>
+							<from>
+								<image>eclipse-temurin:21-jre</image>
+							</from>
+							<to>
+								<image>
+									svn.youshengyun.com:9923/${project.artifactId}-jib</image>
+								<tags>
+									<tag>${project.version}</tag>
+								</tags>
+								<auth>
+									<username>publisher</username>
+									<password>83204585</password>
+								</auth>
+							</to>
+						</configuration>
+						<executions>
+							<execution>
+								<phase>install</phase>
+								<goals>
+									<goal>build</goal>
+								</goals>
+							</execution>
+						</executions>
+					</plugin>
+				</plugins>
+			</build>
 		</profile>
 		<profile>
 			<id>native</id>

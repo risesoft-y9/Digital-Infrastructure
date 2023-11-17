@@ -10,7 +10,7 @@ services:
     networks:
       - y9-share-net
     ports:
-      - "7099:7099"
+      - "7799:7099"
     environment:
       - y9.login.casLoginView=casLoginView-y9-v3.0
         
