@@ -6,7 +6,7 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>net.risesoft</groupId>
     <artifactId>risenet-y9boot-webapp-sso-server-jdk21</artifactId>
-    <packaging>jar</packaging>
+    <packaging>war</packaging>
     <version>v9.7.0-SNAPSHOT</version>
     
     <parent>
@@ -101,12 +101,9 @@
 
     <properties>
         <java.version>21</java.version>
-        <lombok.version>1.18.30</lombok.version>
 
         <cas.version>7.0.0-RC8</cas.version>
         <spring-boot.version>3.2.0-RC1</spring-boot.version>
-        <hibernate.version>6.3.1.Final</hibernate.version>
-        <jodd-http.version>6.3.0</jodd-http.version>
 
         <start-class>org.apereo.cas.web.CasWebApplication</start-class>
 
@@ -300,13 +297,11 @@
         <dependency>
             <groupId>org.jodd</groupId>
             <artifactId>jodd-http</artifactId>
-            <version>${jodd-http.version}</version>
         </dependency>
 
         <dependency>
             <groupId>com.mysql</groupId>
             <artifactId>mysql-connector-j</artifactId>
-            <version>8.2.0</version>
         </dependency>
 
         <dependency>
@@ -323,7 +318,6 @@
         <dependency>
             <groupId>org.projectlombok</groupId>
             <artifactId>lombok</artifactId>
-            <version>${lombok.version}</version>
             <scope>provided</scope>
         </dependency>
 
@@ -392,12 +386,12 @@
         <dependency>
             <groupId>org.apereo.cas</groupId>
             <artifactId>cas-server-webapp-init-tomcat</artifactId>
-            <!--<exclusions>
+            <exclusions>
 				<exclusion>
 					<groupId>org.springframework.boot</groupId>
 					<artifactId>spring-boot-starter-tomcat</artifactId>
 				</exclusion>
-			</exclusions>-->
+			</exclusions>
         </dependency>
         <dependency>
             <groupId>org.apereo.cas</groupId>
@@ -420,112 +414,6 @@
 
     <build>
         <finalName>sso</finalName>
-
-        <plugins>
-            <plugin>
-                <groupId>org.springframework.boot</groupId>
-                <artifactId>spring-boot-maven-plugin</artifactId>
-                <version>${spring-boot.version}</version>
-                <configuration>
-                    <mainClass>${start-class}</mainClass>
-                    <excludes>
-                        <exclude>
-                            <groupId>org.projectlombok</groupId>
-                            <artifactId>lombok</artifactId>
-                        </exclude>
-                    </excludes>
-                    <image>
-						<env>
-							<BP_NATIVE_IMAGE>false</BP_NATIVE_IMAGE>
-							<BP_JVM_VERSION>21</BP_JVM_VERSION>
-						</env>
-						<name>svn.youshengyun.com:9923/${project.artifactId}-jvm:${project.version}</name>
-						<publish>true</publish>
-					</image>
-					<docker>
-						<publishRegistry>
-							<username>publisher</username>
-							<password>83204585</password>
-						</publishRegistry>
-					</docker>
-                </configuration>                
-                <executions>
-                    <execution>
-                        <id>package</id>
-                        <goals>
-                            <goal>repackage</goal>
-                        </goals>
-                    </execution>
-                    <execution>
-                        <id>generate-resources</id>
-                        <goals>
-                            <goal>build-info</goal>
-                        </goals>
-                    </execution>
-                </executions>
-            </plugin>
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-compiler-plugin</artifactId>
-                <version>3.11.0</version>
-                <configuration>
-                    <source>${java.version}</source>
-                    <target>${java.version}</target>
-                    <parameters>true</parameters>
-                    <compilerArgument>-Xlint:all</compilerArgument>
-                    <showWarnings>true</showWarnings>
-                    <showDeprecation>true</showDeprecation>
-                </configuration>
-            </plugin>
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-jar-plugin</artifactId>
-                <version>3.3.0</version>
-                <configuration>
-                    <archive>
-                        <manifest>
-                            <mainClass>${start-class}</mainClass>
-                            <addDefaultImplementationEntries>true</addDefaultImplementationEntries>
-                        </manifest>
-                    </archive>
-                </configuration>
-            </plugin>
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-war-plugin</artifactId>
-                <version>3.4.0</version>
-                <configuration>
-                    <archive>
-                        <manifest>
-                            <mainClass>${start-class}</mainClass>
-                            <addDefaultImplementationEntries>true</addDefaultImplementationEntries>
-                        </manifest>
-                    </archive>
-                    <failOnMissingWebXml>false</failOnMissingWebXml>
-                </configuration>
-            </plugin>
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-deploy-plugin</artifactId>
-                <version>3.1.1</version>
-                <configuration>
-                    <skip>true</skip>
-                </configuration>
-            </plugin>
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-source-plugin</artifactId>
-                <version>3.3.0</version>
-                <executions>
-                    <execution>
-                        <id>attach-sources</id>
-                        <goals>
-                            <goal>jar-no-fork</goal>
-                        </goals>
-                    </execution>
-                </executions>
-            </plugin>
-        </plugins>
     </build>
 
 </project>
