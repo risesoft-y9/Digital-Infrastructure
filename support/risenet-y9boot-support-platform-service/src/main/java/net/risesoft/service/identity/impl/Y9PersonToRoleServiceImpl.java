@@ -106,9 +106,12 @@ public class Y9PersonToRoleServiceImpl implements Y9PersonToRoleService {
     @Override
     @Transactional(readOnly = false)
     public void recalculate(String personId) {
-        Y9Person y9Person = y9PersonManager.getById(personId);
-        List<Y9Role> personRelatedY9RoleList = y9RoleManager.listOrgUnitRelatedWithoutNegative(y9Person.getId());
-        y9PersonToRoleManager.update(y9Person, personRelatedY9RoleList);
+        Optional<Y9Person> y9PersonOptional = y9PersonManager.findById(personId);
+        if (y9PersonOptional.isPresent()) {
+            Y9Person y9Person = y9PersonOptional.get();
+            List<Y9Role> personRelatedY9RoleList = y9RoleManager.listOrgUnitRelatedWithoutNegative(y9Person.getId());
+            y9PersonToRoleManager.update(y9Person, personRelatedY9RoleList);
+        }
     }
 
     @Override
