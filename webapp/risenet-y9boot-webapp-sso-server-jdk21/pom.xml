@@ -18,29 +18,6 @@
 
     <repositories>
         <repository>
-            <id>y9-repo</id>
-            <name>local private nexus</name>
-            <url>https://svn.youshengyun.com:9900/nexus/repository/maven-public/</url>
-            <releases>
-                <enabled>true</enabled>
-            </releases>
-            <snapshots>
-                <enabled>true</enabled>
-                <updatePolicy>always</updatePolicy>
-            </snapshots>
-        </repository>
-        
-        <repository>
-            <id>spring-snapshots</id>
-            <url>https://repo.spring.io/snapshot</url>
-            <snapshots><enabled>true</enabled></snapshots>
-        </repository>
-        <repository>
-            <id>spring-milestones</id>
-            <url>https://repo.spring.io/milestone</url>
-        </repository>
-
-        <repository>
             <id>shibboleth-releases</id>
             <name>Shibboleth Releases Repository</name>
             <url>https://build.shibboleth.net/maven/releases/</url>
@@ -66,38 +43,6 @@
             </snapshots>
         </repository>
     </repositories>
-
-    <pluginRepositories>
-        <pluginRepository>
-            <id>y9-repo-plugin</id>
-            <name>local private plugin nexus</name>
-            <url>https://svn.youshengyun.com:9900/nexus/repository/maven-public/</url>
-        </pluginRepository>
-        
-        <pluginRepository>
-            <id>spring-snapshots</id>
-            <url>https://repo.spring.io/snapshot</url>
-        </pluginRepository>
-        <pluginRepository>
-            <id>spring-milestones</id>
-            <url>https://repo.spring.io/milestone</url>
-        </pluginRepository>
-    </pluginRepositories>
-
-    <distributionManagement>
-        <repository>
-            <id>releases</id>
-            <url>
-                https://svn.youshengyun.com:9900/nexus/repository/maven-releases/
-            </url>
-        </repository>
-        <snapshotRepository>
-            <id>snapshots</id>
-            <url>
-                https://svn.youshengyun.com:9900/nexus/repository/maven-snapshots/
-            </url>
-        </snapshotRepository>
-    </distributionManagement>
 
     <properties>
         <java.version>21</java.version>
@@ -386,12 +331,12 @@
         <dependency>
             <groupId>org.apereo.cas</groupId>
             <artifactId>cas-server-webapp-init-tomcat</artifactId>
-            <exclusions>
+            <!--<exclusions>
 				<exclusion>
 					<groupId>org.springframework.boot</groupId>
 					<artifactId>spring-boot-starter-tomcat</artifactId>
 				</exclusion>
-			</exclusions>
+			</exclusions>-->
         </dependency>
         <dependency>
             <groupId>org.apereo.cas</groupId>

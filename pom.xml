@@ -84,8 +84,6 @@
 			</releases>
 			<snapshots>
 				<enabled>true</enabled>
-				<!-- <updatePolicy>always</updatePolicy> -->
-				<!-- always,daily(default),interval:XXX,never -->
 			</snapshots>
 		</repository>
 	</repositories>
@@ -769,12 +767,19 @@
 						<groupId>org.springframework.boot</groupId>
 						<artifactId>spring-boot-maven-plugin</artifactId>
 						<configuration>
+							<mainClass>${start-class}</mainClass>
+							<excludes>
+								<exclude>
+									<groupId>org.projectlombok</groupId>
+									<artifactId>lombok</artifactId>
+								</exclude>
+							</excludes>
 							<image>
-								<builder>paketobuildpacks/builder-jammy-tiny</builder>
+								<!--<builder>paketobuildpacks/builder-jammy-tiny</builder>
 								<buildpacks>
 									<buildpack>gcr.io/paketo-buildpacks/graalvm</buildpack>
 									<buildpack>gcr.io/paketo-buildpacks/java-native-image</buildpack>
-								</buildpacks>
+								</buildpacks>-->
 								<env>
 									<BP_NATIVE_IMAGE>true</BP_NATIVE_IMAGE>
 									<BP_JVM_VERSION>21</BP_JVM_VERSION>

@@ -2,9 +2,6 @@
 ./mvnw.cmd clean install -P docker-jib -D maven.test.skip=true
 或者
 ./mvnw.cmd clean install -P docker-jvm -D maven.test.skip=true
-或者
-./mvnw.cmd clean install -P docker-native -D maven.test.skip=true
-
 
 #启动docker
 docker compose -f compose-sso.yml up -d
