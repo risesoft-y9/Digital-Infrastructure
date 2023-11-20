@@ -78,6 +78,15 @@ public class Y9TenantAppServiceImpl implements Y9TenantAppService {
     }
 
     @Override
+    @Transactional(readOnly = false)
+    public void deleteByTenantIdAndSystemId(String tenantId, String systemId) {
+        List<Y9TenantApp> list = y9TenantAppRepository.findByTenantIdAndSystemId(tenantId, systemId);
+        for (Y9TenantApp y9TenantApp : list) {
+            y9TenantAppManager.delete(y9TenantApp);
+        }
+    }
+
+    @Override
     public Optional<Y9TenantApp> findById(String id) {
         return y9TenantAppRepository.findById(id);
     }

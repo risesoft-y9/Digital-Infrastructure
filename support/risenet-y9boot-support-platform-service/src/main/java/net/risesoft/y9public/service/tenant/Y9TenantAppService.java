@@ -42,6 +42,14 @@ public interface Y9TenantAppService {
     void deleteByTenantIdAndAppId(String tenantId, String appId);
 
     /**
+     * 按租户id和系统id取消租用系统下的所有应用
+     *
+     * @param tenantId 租户id
+     * @param systemId 系统id
+     */
+    void deleteByTenantIdAndSystemId(String tenantId, String systemId);
+
+    /**
      * 根据id，获取租户应用
      *
      * @param id 租户应用id
