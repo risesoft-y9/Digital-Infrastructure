@@ -24,7 +24,9 @@ public enum TenantErrorCodeEnum implements ErrorCode {
     /** 名称已被使用 */
     NAME_HAS_BEEN_USED(4, "租户名[{}]已经被使用"),
     /** 英文名称已被使用 */
-    SHORT_NAME_HAS_BEEN_USED(4, "租户英文名[{}]已被使用");
+    SHORT_NAME_HAS_BEEN_USED(5, "租户英文名[{}]已被使用"),
+    /** 租户系统不存在 */
+    TENANT_SYSTEM_NOT_EXISTS(6, "租户系统[{}]不存在"),;
 
     private final int moduleErrorCode;
     private final String description;
