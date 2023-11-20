@@ -89,12 +89,12 @@ public class Y9OrganizationServiceImpl implements Y9OrganizationService {
             Y9OrgEventConst.RISEORGEVENT_TYPE_DELETE_ORGANIZATION, Y9LoginUserHolder.getTenantId());
         Y9PublishServiceUtil.persistAndPublishMessageOrg(msg, "删除组织机构", "删除 " + org.getName());
 
-        y9OrganizationManager.delete(org);
-
         // 删除组织关联数据
         y9OrgBasesToRolesRepository.deleteByOrgId(org.getId());
         y9AuthorizationRepository.deleteByPrincipalIdAndPrincipalType(org.getId(),
             AuthorizationPrincipalTypeEnum.DEPARTMENT);
+
+        y9OrganizationManager.delete(org);
 
         // 发布事件，程序内部监听处理相关业务
         Y9Context.publishEvent(new Y9EntityDeletedEvent<>(org));

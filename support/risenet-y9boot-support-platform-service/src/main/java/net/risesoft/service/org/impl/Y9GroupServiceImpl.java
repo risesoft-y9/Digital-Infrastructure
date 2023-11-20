@@ -89,12 +89,12 @@ public class Y9GroupServiceImpl implements Y9GroupService {
     public void delete(String groupId) {
         Y9Group y9Group = this.getById(groupId);
 
-        y9GroupManager.delete(y9Group);
-
         // 删除用户组关联数据
-        y9OrgBasesToRolesRepository.deleteByOrgId(groupId);
         y9PersonsToGroupsManager.deleteByGroupId(groupId);
+        y9OrgBasesToRolesRepository.deleteByOrgId(groupId);
         y9AuthorizationRepository.deleteByPrincipalIdAndPrincipalType(groupId, AuthorizationPrincipalTypeEnum.GROUP);
+
+        y9GroupManager.delete(y9Group);
 
         Y9MessageOrg msg = new Y9MessageOrg(Y9ModelConvertUtil.convert(y9Group, Group.class),
             Y9OrgEventConst.RISEORGEVENT_TYPE_DELETE_GROUP, Y9LoginUserHolder.getTenantId());

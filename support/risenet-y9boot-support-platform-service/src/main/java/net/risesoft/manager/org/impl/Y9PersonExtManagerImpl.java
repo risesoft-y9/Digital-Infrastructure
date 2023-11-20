@@ -10,6 +10,7 @@ import lombok.RequiredArgsConstructor;
 
 import net.risesoft.entity.Y9Person;
 import net.risesoft.entity.Y9PersonExt;
+import net.risesoft.enums.platform.MaritalStatusEnum;
 import net.risesoft.manager.org.Y9PersonExtManager;
 import net.risesoft.repository.Y9PersonExtRepository;
 import net.risesoft.y9.util.Y9BeanUtil;
@@ -40,7 +41,9 @@ public class Y9PersonExtManagerImpl implements Y9PersonExtManager {
             Y9BeanUtil.copyProperties(y9PersonExt, oldext, "photo");
             return y9PersonExtRepository.save(oldext);
         }
-        y9PersonExt.setMaritalStatus(y9PersonExt.getMaritalStatus());
+        if (y9PersonExt.getMaritalStatus() == null) {
+            y9PersonExt.setMaritalStatus(MaritalStatusEnum.SECRET);
+        }
         y9PersonExt.setName(person.getName());
         y9PersonExt.setPersonId(person.getId());
 

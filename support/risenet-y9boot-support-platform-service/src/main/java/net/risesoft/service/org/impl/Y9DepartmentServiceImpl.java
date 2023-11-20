@@ -104,12 +104,12 @@ public class Y9DepartmentServiceImpl implements Y9DepartmentService {
     public void delete(String id) {
         Y9Department y9Department = this.getById(id);
 
-        y9DepartmentManager.delete(y9Department);
-
         // 删除部门关联数据
         y9OrgBasesToRolesRepository.deleteByOrgId(id);
         y9DepartmentPropRepository.deleteByDeptId(id);
         y9AuthorizationRepository.deleteByPrincipalIdAndPrincipalType(id, AuthorizationPrincipalTypeEnum.DEPARTMENT);
+
+        y9DepartmentManager.delete(y9Department);
 
         Y9MessageOrg msg = new Y9MessageOrg(Y9ModelConvertUtil.convert(y9Department, Department.class),
             Y9OrgEventConst.RISEORGEVENT_TYPE_DELETE_DEPARTMENT, Y9LoginUserHolder.getTenantId());

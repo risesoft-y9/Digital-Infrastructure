@@ -260,29 +260,32 @@ public class Y9AuthorizationServiceImpl implements Y9AuthorizationService {
     @Override
     @Transactional(readOnly = false)
     public void syncToIdentityResourceAndAuthority(String orgUnitId) {
-        Y9OrgBase y9OrgBase = compositeOrgBaseManager.getOrgUnit(orgUnitId);
-        if (OrgTypeEnum.PERSON.equals(y9OrgBase.getOrgType())) {
-            this.syncToIdentityResourceAndAuthority((Y9Person)y9OrgBase);
-            return;
-        }
-
-        if (OrgTypeEnum.POSITION.equals(y9OrgBase.getOrgType())) {
-            this.syncToIdentityResourceAndAuthority((Y9Position)y9OrgBase);
-            // 人员权限包含包含岗位的权限，所以岗位关联的人员也需要计算
-            List<Y9Person> y9PersonList = y9PersonManager.listByPositionId(y9OrgBase.getId());
-            for (Y9Person y9Person : y9PersonList) {
-                this.syncToIdentityResourceAndAuthority(y9Person);
+        Optional<Y9OrgBase> y9OrgBaseOptional = compositeOrgBaseManager.findOrgUnit(orgUnitId);
+        if (y9OrgBaseOptional.isPresent()) {
+            Y9OrgBase y9OrgBase = y9OrgBaseOptional.get();
+            if (OrgTypeEnum.PERSON.equals(y9OrgBase.getOrgType())) {
+                this.syncToIdentityResourceAndAuthority((Y9Person)y9OrgBase);
+                return;
             }
-            return;
-        }
 
-        List<Y9Person> personList = compositeOrgBaseManager.listAllPersonsRecursionDownward(orgUnitId);
-        for (Y9Person person : personList) {
-            this.syncToIdentityResourceAndAuthority(person);
-        }
-        List<Y9Position> positionList = compositeOrgBaseManager.listAllPositionsRecursionDownward(orgUnitId);
-        for (Y9Position position : positionList) {
-            this.syncToIdentityResourceAndAuthority(position);
+            if (OrgTypeEnum.POSITION.equals(y9OrgBase.getOrgType())) {
+                this.syncToIdentityResourceAndAuthority((Y9Position)y9OrgBase);
+                // 人员权限包含包含岗位的权限，所以岗位关联的人员也需要计算
+                List<Y9Person> y9PersonList = y9PersonManager.listByPositionId(y9OrgBase.getId());
+                for (Y9Person y9Person : y9PersonList) {
+                    this.syncToIdentityResourceAndAuthority(y9Person);
+                }
+                return;
+            }
+
+            List<Y9Person> personList = compositeOrgBaseManager.listAllPersonsRecursionDownward(orgUnitId);
+            for (Y9Person person : personList) {
+                this.syncToIdentityResourceAndAuthority(person);
+            }
+            List<Y9Position> positionList = compositeOrgBaseManager.listAllPositionsRecursionDownward(orgUnitId);
+            for (Y9Position position : positionList) {
+                this.syncToIdentityResourceAndAuthority(position);
+            }
         }
     }
 

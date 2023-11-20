@@ -2,9 +2,9 @@ package net.risesoft.listener;
 
 import java.util.Optional;
 
-import org.springframework.scheduling.annotation.Async;
+import org.springframework.context.event.EventListener;
 import org.springframework.stereotype.Component;
-import org.springframework.transaction.event.TransactionalEventListener;
+import org.springframework.transaction.annotation.Transactional;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -47,8 +47,8 @@ public class UpdateY9UserListener {
      * 
      * @param event
      */
-    @TransactionalEventListener
-    @Async
+    @EventListener
+    @Transactional(readOnly = false)
     public void onY9ManagerCreated(Y9EntityCreatedEvent<Y9Manager> event) {
         Y9Manager y9Manager = event.getEntity();
         String personId = y9Manager.getId();
@@ -105,8 +105,8 @@ public class UpdateY9UserListener {
      *
      * @param event
      */
-    @TransactionalEventListener
-    @Async
+    @EventListener
+    @Transactional(readOnly = false)
     public void onY9ManagerDeleted(Y9EntityDeletedEvent<Y9Manager> event) {
         Y9Manager y9Manager = event.getEntity();
         LOGGER.info("开始处理管理员员删除->{}", y9Manager.getId());
@@ -126,8 +126,8 @@ public class UpdateY9UserListener {
      *
      * @param event
      */
-    @TransactionalEventListener
-    @Async
+    @EventListener
+    @Transactional(readOnly = false)
     public void onY9ManagerUpdated(Y9EntityUpdatedEvent<Y9Manager> event) {
         Y9Manager y9Manager = event.getUpdatedEntity();
         String tenantId = y9Manager.getTenantId();
@@ -186,8 +186,8 @@ public class UpdateY9UserListener {
      *
      * @param event
      */
-    @TransactionalEventListener
-    @Async
+    @EventListener
+    @Transactional(readOnly = false)
     public void onY9PersonCreated(Y9EntityCreatedEvent<Y9Person> event) {
         Y9Person person = event.getEntity();
         String personId = person.getId();
@@ -249,8 +249,8 @@ public class UpdateY9UserListener {
      *
      * @param event
      */
-    @TransactionalEventListener
-    @Async
+    @EventListener
+    @Transactional(readOnly = false)
     public void onY9PersonDeleted(Y9EntityDeletedEvent<Y9Person> event) {
         Y9Person person = event.getEntity();
         LOGGER.info("开始处理人员删除->{}", person.getId());
@@ -269,8 +269,8 @@ public class UpdateY9UserListener {
      *
      * @param event
      */
-    @TransactionalEventListener
-    @Async
+    @EventListener
+    @Transactional(readOnly = false)
     public void onY9PersonsToPositionsCreated(Y9EntityCreatedEvent<Y9PersonsToPositions> event) {
         Y9PersonsToPositions y9PersonsToPositions = event.getEntity();
 
@@ -294,8 +294,8 @@ public class UpdateY9UserListener {
      *
      * @param event
      */
-    @TransactionalEventListener
-    @Async
+    @EventListener
+    @Transactional(readOnly = false)
     public void onY9PersonsToPositionsDeleted(Y9EntityDeletedEvent<Y9PersonsToPositions> event) {
         Y9PersonsToPositions y9PersonsToPositions = event.getEntity();
 
@@ -319,8 +319,8 @@ public class UpdateY9UserListener {
      *
      * @param event
      */
-    @TransactionalEventListener
-    @Async
+    @EventListener
+    @Transactional(readOnly = false)
     public void onY9PersonUpdated(Y9EntityUpdatedEvent<Y9Person> event) {
         Y9Person person = event.getUpdatedEntity();
         String tenantId = person.getTenantId();
