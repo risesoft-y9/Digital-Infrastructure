@@ -2,8 +2,11 @@ package y9.autoconfiguration.liquibase;
 
 import javax.sql.DataSource;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.autoconfigure.AutoConfiguration;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnBean;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.boot.autoconfigure.liquibase.LiquibaseAutoConfiguration;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
@@ -60,6 +63,21 @@ public class Y9LiquibaseAutoConfiguration {
         liquibase.setTestRollbackOnUpdate(liquibaseProperties.isTestRollbackOnUpdate());
         liquibase.setTag(liquibaseProperties.getTag());
         return liquibase;
+    }
+
+    @Bean
+    @ConditionalOnBean(name = "y9MultiTenantSpringLiquibase")
+    public DbUpdater liquibaseDbUpdater(Y9TenantDataSourceLookup y9TenantDataSourceLookup,
+        Y9MultiTenantSpringLiquibase y9MultiTenantSpringLiquibase,
+        @Autowired(required = false) TenantDataInitializer tenantDataInitializer) {
+        return new LiquibaseDbUpdater(y9TenantDataSourceLookup, y9MultiTenantSpringLiquibase, tenantDataInitializer);
+    }
+
+    @Bean
+    @ConditionalOnMissingBean(name = "liquibaseDbUpdater")
+    public DbUpdater jpaDbUpdater(Y9TenantDataSourceLookup y9TenantDataSourceLookup,
+        @Autowired(required = false) TenantDataInitializer tenantDataInitializer) {
+        return new JpaDbUpdater(y9TenantDataSourceLookup, tenantDataInitializer);
     }
 
 }
