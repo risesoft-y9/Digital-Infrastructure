@@ -76,8 +76,8 @@ public class Y9ControllerAdvice {
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     public Y9Result<Object> processException(MethodArgumentTypeMismatchException e) {
         LOGGER.warn(e.getMessage(), e);
-        String message = String.format("参数[%s]类型应为[%s]，当前参数值为[%s]", e.getParameter().getParameterName(),
-            e.getRequiredType().getSimpleName(), e.getValue());
+        String message =
+            String.format("请求参数错误，错误参数[%s]值为[%s]，请检查其类型或输入限制", e.getParameter().getParameterName(), e.getValue());
         return Y9Result.failure(GlobalErrorCodeEnum.INVALID_ARGUMENT, message);
     }
 
