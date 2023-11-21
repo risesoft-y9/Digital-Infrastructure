@@ -269,6 +269,16 @@ server:
             min-spare: 10
         uri-encoding: UTF-8
 spring:
+    cloud:
+        config:
+            enabled: false
+    config:
+        import:
+            - optional:nacos:sso.yml
+    docker:
+        compose:
+            enabled: false
+            file: docker-dev.yml
     data:
         redis:
             database: 8
