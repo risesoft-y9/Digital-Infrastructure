@@ -284,7 +284,7 @@ public class PersonController {
     @RiseLog(operationName = "重置密码", operationType = OperationTypeEnum.MODIFY)
     @PostMapping(value = "/resetPassword")
     public Y9Result<String> resetPassword(@RequestParam @NotBlank String personId) {
-        y9PersonService.resetPassword(personId);
+        y9PersonService.resetDefaultPassword(personId);
         return Y9Result.successMsg("重置密码成功");
     }
 
