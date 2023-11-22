@@ -340,10 +340,11 @@ public interface Y9PersonService {
      * 修改人员密码
      *
      * @param personId 人员id
+     * @param oldPassword 旧密码
      * @param newPassword 新密码
      * @return {@link Y9Person}
      */
-    Y9Person modifyPassword(String personId, String newPassword);
+    Y9Person modifyPassword(String personId, String oldPassword, String newPassword);
 
     /**
      * 移动
@@ -396,11 +397,11 @@ public interface Y9PersonService {
     Page<Y9Person> pageByParentId(int page, int rows, String parentId, boolean disabled, String name);
 
     /**
-     * 重置密码
+     * 重置默认密码
      *
      * @param personId 人员id
      */
-    void resetPassword(String personId);
+    void resetDefaultPassword(String personId);
 
     /**
      * 保存人员

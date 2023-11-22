@@ -255,13 +255,15 @@ public interface PersonApi {
      *
      * @param tenantId 租户id
      * @param personId 人员id
+     * @param oldPassword 旧明文密码
      * @param newPassword 新明文密码
      * @return {@code Y9Result<Person>} 通用请求返回对象 - data 是人员对象
      * @since 9.6.0
      */
     @PostMapping("/modifyPassword")
     Y9Result<Person> modifyPassword(@RequestParam("tenantId") @NotBlank String tenantId,
-        @RequestParam("personId") @NotBlank String personId, @RequestParam("newPassword") @NotBlank String newPassword);
+        @RequestParam("personId") @NotBlank String personId, @RequestParam("oldPassword") @NotBlank String oldPassword,
+        @RequestParam("newPassword") @NotBlank String newPassword);
 
     /**
      * 模糊搜索人员分页列表（不含禁用和删除）

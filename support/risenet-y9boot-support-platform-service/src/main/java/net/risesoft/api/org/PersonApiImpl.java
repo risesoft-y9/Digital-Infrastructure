@@ -399,17 +399,18 @@ public class PersonApiImpl implements PersonApi {
      *
      * @param tenantId 租户id
      * @param personId 人员id
+     * @param oldPassword 旧明文密码
      * @param newPassword 新明文密码
      * @return {@code Y9Result<Person>} 通用请求返回对象 - data 是人员对象
      * @since 9.6.0
      */
     @Override
     public Y9Result<Person> modifyPassword(@RequestParam("tenantId") @NotBlank String tenantId,
-        @RequestParam("personId") @NotBlank String personId,
+        @RequestParam("personId") @NotBlank String personId, @RequestParam("oldPassword") @NotBlank String oldPassword,
         @RequestParam("newPassword") @NotBlank String newPassword) {
         Y9LoginUserHolder.setTenantId(tenantId);
 
-        Y9Person y9Person = y9PersonService.modifyPassword(personId, newPassword);
+        Y9Person y9Person = y9PersonService.modifyPassword(personId, oldPassword, newPassword);
         return Y9Result.success(Y9ModelConvertUtil.convert(y9Person, Person.class));
     }
 
