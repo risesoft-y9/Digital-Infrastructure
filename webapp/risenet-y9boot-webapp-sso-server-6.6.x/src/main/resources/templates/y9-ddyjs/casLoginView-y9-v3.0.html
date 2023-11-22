@@ -8,8 +8,8 @@
     <meta content="no-cache" http-equiv="cache-control"/>
     <meta content="0" http-equiv="expires"/>
     <!-- 管局要求保持备案名称和网站使用名称一致 -->
-    <title>当代中国研究所</title>
-    <link rel="shortcut icon" th:href="@{/y9static/y9-ddyjs/img/favicon.ico}" type="image/x-icon"/>
+    <title>当代中国研究所OA系统</title>
+    <link rel="shortcut icon" th:href="@{/y9static/y9-ddyjs/img/logo-1.svg}" type="image/x-icon"/>
     <link rel="stylesheet" th:href="@{/y9static/y9-ddyjs/layui/css/layui.css}" type="text/css"/>
     <link rel="stylesheet" th:href="@{/y9static/y9-ddyjs/css/default.css}" type="text/css"/>
     <link rel="stylesheet" th:href="@{/y9static/y9-ddyjs/css/styles.css}" type="text/css"/>
@@ -42,21 +42,20 @@
                     <div class="login_fields__user">
                         <div class="icon"><img alt="" th:src="@{/y9static/y9-ddyjs/img/user.svg}"/></div>
                         <span class="icon-1">|</span>>
-                        <input autocomplete="off" id="username" onblur="getTenant();" oninput="inputEvent()"
-                               placeholder="用户名"
-                               type="text" value=""/>
+                        <input autocomplete="off" id="username" onBlur="inputOnBlur();" placeholder="用户名" type="text"
+                               value=""/>
                         <input autocomplete="false" htmlescape="true" id="username1" name="username"
                                style="width: 150px;"
                                tabindex="1" type="hidden"/>
                         <input autocomplete="false" htmlescape="true" id="tenantShortName" name="tenantShortName"
-                               style="width: 150px;" type="hidden"/>
-                        <div class="validation"><img alt="" th:src="@{/y9static/y9-ddyjs/img/tick.png}"/></div>
+                               style="width: 150px;" type="hidden" value="default"/>
+                        <div class="validation"><img alt="" th:src="@{/y9static/y9new/img/tick.png}"/></div>
                     </div>
                     <div class="login_fields__password">
                         <div class="icon"><img alt="" th:src="@{/y9static/y9-ddyjs/img/pwd.svg}"/></div>
                         <span class="icon-1">|</span>>
                         <input autocomplete="off" htmlescape="true" id="password" onfocus="this.type='password'"
-                               placeholder="请输入您的密码"
+                               placeholder="请输入密码"
                                tabindex="2" type="text"/>
                         <input autocomplete="off" htmlescape="true" id="password1" name="password" type="hidden"/>
 
@@ -96,7 +95,7 @@
         </div>
     </div>
 </div>
-<div class="bg_top_right"></div>
+<!--<div class="bg_top_right"></div>-->
 <script type="text/javascript">
     var ctx = "[(${#request.getContextPath()})]";
     var canGetCookie = 1; //是否支持存储Cookie 0 不支持 1 支持
@@ -113,64 +112,8 @@
         }
     }
 
-    function inputEvent() {
-        if (inputTimer) {
-            clearTimeout(inputTimer);
-        }
-        let params = {loginName: $("#username").val()};
-        if (!$("#username").val()) {
-            $(".toolTips").attr({style: "display: none;"});
-            return null;
-        }
-        inputTimer = setTimeout(() => {
-            fetch(ctx + "/api/loginNameAndTenants", {
-                method: "POST",
-                credentials: "include",
-                headers: {
-                    "Content-Type":
-                        "application/x-www-form-urlencoded;charset=UTF-8",
-                },
-                body: Object.keys(params).map((key) => {
-                    return (encodeURIComponent(key) + "=" + encodeURIComponent(params[key]));
-                }).join("&"),
-            }).then((response) => {
-                return response.json();
-            }).then((data) => {
-                $("#toolTipsUl").empty();
-                $(".toolTips").attr({style: "display: flex;"});
-                data.length && data.map((item) => {
-                    $("<li></li>", {
-                        text: item.loginName,
-                        id: item.tenantShortName
-                    }).appendTo("#toolTipsUl").on("click", mouseClickEvent);
-                });
-            });
-        }, 250);
-    }
-
-    function getTenant() {
-        var userName = $('#username').val();
-        if ($.trim(userName).length > 0 && userName.indexOf("@") != -1) {
-            var tenantName = userName.split("@");
-            userName = tenantName[0].split("&");
-            $("#username1").val(tenantName[0]);
-            $.ajax({
-                type: 'POST',
-                dataType: 'json',
-                data: {
-                    loginName: userName[0],
-                    tenantName: tenantName[1]
-                },
-                url: ctx + '/api/getTenants',
-                success: function (res) {
-                    if (res.length <= 0) {
-                        layer.msg("当前用户不存在或者已禁用!");
-                        return;
-                    }
-                    $('#tenantShortName').val(res[0].tenantShortName);
-                }
-            });
-        }
+    function inputOnBlur() {
+        $("#username1").val($("#username").val());
     }
 
     function mouseClickEvent() {
