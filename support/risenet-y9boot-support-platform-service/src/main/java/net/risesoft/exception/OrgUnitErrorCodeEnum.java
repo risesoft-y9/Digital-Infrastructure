@@ -46,7 +46,9 @@ public enum OrgUnitErrorCodeEnum implements ErrorCode {
     /** organization not found */
     ORGANIZATION_NOT_FOUND(15, "组织[{}]不存在"),
     /** custom group not found */
-    CUSTOM_GROUP_NOT_FOUND(16, "自定义用户组[{}]不存在");
+    CUSTOM_GROUP_NOT_FOUND(16, "自定义用户组[{}]不存在"),
+    /** 旧密码不正确 */
+    OLD_PASSWORD_IS_INCORRECT(17, "旧密码不正确");
 
     private final int moduleErrorCode;
     private final String description;

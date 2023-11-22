@@ -37,6 +37,7 @@ import net.risesoft.entity.relation.Y9PersonsToPositions;
 import net.risesoft.enums.platform.AuthorizationPrincipalTypeEnum;
 import net.risesoft.enums.platform.OrgTypeEnum;
 import net.risesoft.exception.AuthenticationErrorCodeEnum;
+import net.risesoft.exception.OrgUnitErrorCodeEnum;
 import net.risesoft.id.IdType;
 import net.risesoft.id.Y9IdGenerator;
 import net.risesoft.manager.org.CompositeOrgBaseManager;
@@ -72,6 +73,7 @@ import net.risesoft.y9.pubsub.event.Y9EntityCreatedEvent;
 import net.risesoft.y9.pubsub.event.Y9EntityDeletedEvent;
 import net.risesoft.y9.pubsub.event.Y9EntityUpdatedEvent;
 import net.risesoft.y9.pubsub.message.Y9MessageOrg;
+import net.risesoft.y9.util.Y9Assert;
 import net.risesoft.y9.util.Y9BeanUtil;
 import net.risesoft.y9.util.Y9ModelConvertUtil;
 import net.risesoft.y9.util.base64.Y9Base64Util;
@@ -835,21 +837,23 @@ public class Y9PersonServiceImpl implements Y9PersonService {
 
     @Override
     @Transactional(readOnly = false)
-    public Y9Person modifyPassword(String personId, String newPassword) {
-        Y9Person y9Person = null;
-        if (StringUtils.isNotEmpty(personId)) {
-            y9Person = this.getById(personId);
-            if (StringUtils.isNotBlank(newPassword)) {
-                y9Person.setPassword(Y9MessageDigest.hashpw(newPassword));
-                y9Person = y9PersonManager.save(y9Person);
+    public Y9Person modifyPassword(String personId, String oldPassword, String newPassword) {
+        Y9Person y9Person = this.getById(personId);
 
-                Y9MessageOrg msg = new Y9MessageOrg(ModelConvertUtil.orgPersonToPerson(y9Person),
-                    Y9OrgEventConst.RISEORGEVENT_TYPE_UPDATE_PERSON, Y9LoginUserHolder.getTenantId());
-                Y9PublishServiceUtil.persistAndPublishMessageOrg(msg, "修改密码", "修改" + y9Person.getName() + "的密码");
-
-                Y9Context.publishEvent(new Y9EntityUpdatedEvent<>(y9Person, y9Person));
-            }
+        if (StringUtils.isNotBlank(oldPassword)) {
+            // 兼容旧接口，无 oldPassword
+            Y9Assert.isTrue(Y9MessageDigest.checkpw(oldPassword, y9Person.getPassword()),
+                OrgUnitErrorCodeEnum.OLD_PASSWORD_IS_INCORRECT);
         }
+
+        y9Person.setPassword(Y9MessageDigest.hashpw(newPassword));
+        y9Person = y9PersonManager.save(y9Person);
+
+        Y9MessageOrg msg = new Y9MessageOrg(ModelConvertUtil.orgPersonToPerson(y9Person),
+            Y9OrgEventConst.RISEORGEVENT_TYPE_UPDATE_PERSON, Y9LoginUserHolder.getTenantId());
+        Y9PublishServiceUtil.persistAndPublishMessageOrg(msg, "修改密码", "修改" + y9Person.getName() + "的密码");
+
+        Y9Context.publishEvent(new Y9EntityUpdatedEvent<>(y9Person, y9Person));
         return y9Person;
     }
 
@@ -957,7 +961,7 @@ public class Y9PersonServiceImpl implements Y9PersonService {
 
     @Override
     @Transactional(readOnly = false)
-    public void resetPassword(String personId) {
+    public void resetDefaultPassword(String personId) {
         if (StringUtils.isNotEmpty(personId)) {
             Y9Person origPerson = this.getById(personId);
             String password = y9config.getCommon().getDefaultPassword();

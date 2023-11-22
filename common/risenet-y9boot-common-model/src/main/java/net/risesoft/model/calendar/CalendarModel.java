@@ -103,16 +103,6 @@ public class CalendarModel implements Serializable {
      */
     private boolean repeat;
 
-    /**
-     * 日程颜色
-     */
-    private String color;
-
-    /**
-     * 日程标题
-     */
-    private String windowTitle;
-
     public String getColor() {
         CalendarType calendartype = getType();
         if (calendartype == null) {
@@ -120,10 +110,6 @@ public class CalendarModel implements Serializable {
         }
         if (calendartype.equals(CalendarType.SHARED)) {
             return CalendarType.SHARED.getColor();
-        } else if (calendartype.equals(CalendarType.WAIT_FOR_CONFIRM)) {
-            return CalendarType.WAIT_FOR_CONFIRM.getColor();
-        } else if (calendartype.equals(CalendarType.LEAVE)) {
-            return CalendarType.LEAVE.getColor();
         } else {
             return CalendarType.OWN.getColor();
         }
@@ -136,10 +122,6 @@ public class CalendarModel implements Serializable {
         }
         if (calendartype.equals(CalendarType.SHARED)) {
             return "来自分享的日程";
-        } else if (calendartype.equals(CalendarType.WAIT_FOR_CONFIRM)) {
-            return "待确认的日程";
-        } else if (calendartype.equals(CalendarType.LEAVE)) {
-            return "已请假的日程";
         } else {
             return "我的日程";
         }

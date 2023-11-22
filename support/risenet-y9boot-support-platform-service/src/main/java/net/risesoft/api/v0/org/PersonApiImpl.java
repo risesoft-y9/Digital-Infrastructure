@@ -454,7 +454,7 @@ public class PersonApiImpl implements PersonApi {
         @RequestParam("newPassword") @NotBlank String newPassword) {
         Y9LoginUserHolder.setTenantId(tenantId);
 
-        Y9Person y9Person = y9PersonService.modifyPassword(personId, newPassword);
+        Y9Person y9Person = y9PersonService.modifyPassword(personId, null, newPassword);
         return Y9ModelConvertUtil.convert(y9Person, Person.class);
     }
 

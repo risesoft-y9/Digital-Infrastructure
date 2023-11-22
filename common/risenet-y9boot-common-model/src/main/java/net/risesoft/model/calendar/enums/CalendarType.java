@@ -14,11 +14,7 @@ public enum CalendarType {
     /** 自己创建 */
     OWN(0, "自己创建", "#177cb0"),
     /** 他人分享 */
-    SHARED(1, "他人分享", "GREEN"),
-    /** 待确认 */
-    WAIT_FOR_CONFIRM(2, "待确认", "DARKRED"),
-    /** 请假 */
-    LEAVE(3, "请假", "ORANGE");
+    SHARED(1, "他人分享", "GREEN"),;
 
     public static CalendarType getByValue(Integer value) {
         for (CalendarType type : CalendarType.values()) {
