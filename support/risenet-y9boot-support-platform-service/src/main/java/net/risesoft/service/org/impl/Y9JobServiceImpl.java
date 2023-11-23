@@ -12,6 +12,8 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.transaction.support.TransactionSynchronization;
+import org.springframework.transaction.support.TransactionSynchronizationManager;
 
 import lombok.RequiredArgsConstructor;
 
@@ -171,36 +173,42 @@ public class Y9JobServiceImpl implements Y9JobService {
                 Y9Job updatedY9Job = new Y9Job();
                 Y9BeanUtil.copyProperties(originY9Job, updatedY9Job);
                 Y9BeanUtil.copyProperties(job, updatedY9Job);
-                updatedY9Job = y9JobManager.save(updatedY9Job);
+                final Y9Job savedJob = y9JobManager.save(updatedY9Job);
 
-                Y9MessageOrg msg = new Y9MessageOrg(Y9ModelConvertUtil.convert(updatedY9Job, Job.class),
-                    Y9OrgEventConst.RISEORGEVENT_TYPE_UPDATE_JOB, Y9LoginUserHolder.getTenantId());
-                Y9PublishServiceUtil.persistAndPublishMessageOrg(msg, "更新职位信息", "更新职位" + updatedY9Job.getName());
+                Y9Context.publishEvent(new Y9EntityUpdatedEvent<>(originY9Job, savedJob));
 
-                Y9Context.publishEvent(new Y9EntityUpdatedEvent<>(originY9Job, updatedY9Job));
+                TransactionSynchronizationManager.registerSynchronization(new TransactionSynchronization() {
+                    @Override
+                    public void afterCommit() {
+                        Y9MessageOrg msg = new Y9MessageOrg(Y9ModelConvertUtil.convert(savedJob, Job.class),
+                            Y9OrgEventConst.RISEORGEVENT_TYPE_UPDATE_JOB, Y9LoginUserHolder.getTenantId());
+                        Y9PublishServiceUtil.persistAndPublishMessageOrg(msg, "更新职位信息", "更新职位" + savedJob.getName());
+                    }
+                });
 
-                return updatedY9Job;
+                return savedJob;
             }
         }
 
         // 新增职位
-        Y9Job y9Job = new Y9Job();
-        if (StringUtils.isNotBlank(job.getId())) {
-            // 使用指定的id
-            y9Job.setId(job.getId());
-        } else {
-            y9Job.setId(Y9IdGenerator.genId());
+        if (StringUtils.isBlank(job.getId())) {
+            job.setId(Y9IdGenerator.genId());
         }
-        y9Job.setCode(job.getCode());
-        y9Job.setName(job.getName());
-        y9Job.setTabIndex(getMaxTabIndex() + 1);
-        y9Job = y9JobManager.save(y9Job);
+        job.setCode(job.getCode());
+        job.setName(job.getName());
+        job.setTabIndex(getMaxTabIndex() + 1);
+        final Y9Job savedJob = y9JobManager.save(job);
 
-        Y9MessageOrg msg = new Y9MessageOrg(Y9ModelConvertUtil.convert(y9Job, Job.class),
-            Y9OrgEventConst.RISEORGEVENT_TYPE_ADD_JOB, Y9LoginUserHolder.getTenantId());
-        Y9PublishServiceUtil.persistAndPublishMessageOrg(msg, "新增职位信息", "新增职位" + job.getName());
+        TransactionSynchronizationManager.registerSynchronization(new TransactionSynchronization() {
+            @Override
+            public void afterCommit() {
+                Y9MessageOrg msg = new Y9MessageOrg(Y9ModelConvertUtil.convert(savedJob, Job.class),
+                    Y9OrgEventConst.RISEORGEVENT_TYPE_ADD_JOB, Y9LoginUserHolder.getTenantId());
+                Y9PublishServiceUtil.persistAndPublishMessageOrg(msg, "新增职位信息", "新增职位" + savedJob.getName());
+            }
+        });
 
-        return y9Job;
+        return savedJob;
     }
 
     @Override

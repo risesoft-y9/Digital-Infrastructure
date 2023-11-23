@@ -14,6 +14,8 @@ import org.springframework.context.event.EventListener;
 import org.springframework.orm.jpa.EntityManagerFactoryUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.transaction.support.TransactionSynchronization;
+import org.springframework.transaction.support.TransactionSynchronizationManager;
 import org.springframework.util.Assert;
 
 import net.risesoft.consts.OrgLevelConsts;
@@ -124,7 +126,7 @@ public class Y9PositionServiceImpl implements Y9PositionService {
     @Override
     @Transactional(readOnly = false)
     public void deleteById(String positionId) {
-        Y9Position y9Position = this.getById(positionId);
+        final Y9Position y9Position = this.getById(positionId);
 
         // 删除岗位关联数据
         y9OrgBasesToRolesRepository.deleteByOrgId(positionId);
@@ -137,12 +139,17 @@ public class Y9PositionServiceImpl implements Y9PositionService {
 
         y9PositionManager.delete(y9Position);
 
-        Y9MessageOrg msg = new Y9MessageOrg(Y9ModelConvertUtil.convert(y9Position, Position.class),
-            Y9OrgEventConst.RISEORGEVENT_TYPE_DELETE_POSITION, Y9LoginUserHolder.getTenantId());
-        Y9PublishServiceUtil.persistAndPublishMessageOrg(msg, "删除岗位", "删除" + y9Position.getName());
-
         // 发布事件，程序内部监听处理相关业务
         Y9Context.publishEvent(new Y9EntityDeletedEvent<>(y9Position));
+
+        TransactionSynchronizationManager.registerSynchronization(new TransactionSynchronization() {
+            @Override
+            public void afterCommit() {
+                Y9MessageOrg msg = new Y9MessageOrg(Y9ModelConvertUtil.convert(y9Position, Position.class),
+                    Y9OrgEventConst.RISEORGEVENT_TYPE_DELETE_POSITION, Y9LoginUserHolder.getTenantId());
+                Y9PublishServiceUtil.persistAndPublishMessageOrg(msg, "删除岗位", "删除" + y9Position.getName());
+            }
+        });
     }
 
     @Override
@@ -246,16 +253,21 @@ public class Y9PositionServiceImpl implements Y9PositionService {
         updatedPosition.setGuidPath(parent.getGuidPath() + OrgLevelConsts.SEPARATOR + updatedPosition.getId());
         updatedPosition.setDn(OrgLevelConsts.getOrgLevel(OrgTypeEnum.POSITION) + updatedPosition.getName()
             + OrgLevelConsts.SEPARATOR + parent.getDn());
-        updatedPosition = this.save(updatedPosition);
+        final Y9Position savedPosition = this.save(updatedPosition);
 
-        Y9MessageOrg msg = new Y9MessageOrg(Y9ModelConvertUtil.convert(updatedPosition, Position.class),
-            Y9OrgEventConst.RISEORGEVENT_TYPE_UPDATE_POSITION, Y9LoginUserHolder.getTenantId());
-        Y9PublishServiceUtil.persistAndPublishMessageOrg(msg, "移动岗位",
-            updatedPosition.getName() + "移动到" + parent.getName());
+        Y9Context.publishEvent(new Y9EntityUpdatedEvent<>(originPosition, savedPosition));
 
-        Y9Context.publishEvent(new Y9EntityUpdatedEvent<>(originPosition, updatedPosition));
+        TransactionSynchronizationManager.registerSynchronization(new TransactionSynchronization() {
+            @Override
+            public void afterCommit() {
+                Y9MessageOrg msg = new Y9MessageOrg(Y9ModelConvertUtil.convert(savedPosition, Position.class),
+                    Y9OrgEventConst.RISEORGEVENT_TYPE_UPDATE_POSITION, Y9LoginUserHolder.getTenantId());
+                Y9PublishServiceUtil.persistAndPublishMessageOrg(msg, "移动岗位",
+                    savedPosition.getName() + "移动到" + parent.getName());
+            }
+        });
 
-        return updatedPosition;
+        return savedPosition;
     }
 
     @EventListener
@@ -306,13 +318,18 @@ public class Y9PositionServiceImpl implements Y9PositionService {
     public Y9Position saveOrder(String positionId, int tabIndex) {
         Y9Position position = this.getById(positionId);
         position.setTabIndex(tabIndex);
-        position = save(position);
+        final Y9Position savedPosition = save(position);
 
-        Y9MessageOrg msg = new Y9MessageOrg(Y9ModelConvertUtil.convert(position, Position.class),
-            Y9OrgEventConst.RISEORGEVENT_TYPE_UPDATE_POSITION, Y9LoginUserHolder.getTenantId());
-        Y9PublishServiceUtil.publishMessageOrg(msg);
+        TransactionSynchronizationManager.registerSynchronization(new TransactionSynchronization() {
+            @Override
+            public void afterCommit() {
+                Y9MessageOrg msg = new Y9MessageOrg(Y9ModelConvertUtil.convert(savedPosition, Position.class),
+                    Y9OrgEventConst.RISEORGEVENT_TYPE_UPDATE_POSITION, Y9LoginUserHolder.getTenantId());
+                Y9PublishServiceUtil.publishMessageOrg(msg);
+            }
+        });
 
-        return position;
+        return savedPosition;
     }
 
     @Override
@@ -327,13 +344,18 @@ public class Y9PositionServiceImpl implements Y9PositionService {
     public Y9Position saveProperties(String positionId, String properties) {
         Y9Position position = this.getById(positionId);
         position.setProperties(properties);
-        position = y9PositionManager.save(position);
+        final Y9Position savedPosition = y9PositionManager.save(position);
 
-        Y9MessageOrg msg = new Y9MessageOrg(Y9ModelConvertUtil.convert(position, Position.class),
-            Y9OrgEventConst.RISEORGEVENT_TYPE_UPDATE_POSITION, Y9LoginUserHolder.getTenantId());
-        Y9PublishServiceUtil.publishMessageOrg(msg);
+        TransactionSynchronizationManager.registerSynchronization(new TransactionSynchronization() {
+            @Override
+            public void afterCommit() {
+                Y9MessageOrg msg = new Y9MessageOrg(Y9ModelConvertUtil.convert(savedPosition, Position.class),
+                    Y9OrgEventConst.RISEORGEVENT_TYPE_UPDATE_POSITION, Y9LoginUserHolder.getTenantId());
+                Y9PublishServiceUtil.publishMessageOrg(msg);
+            }
+        });
 
-        return position;
+        return savedPosition;
     }
 
     @Override
@@ -368,13 +390,19 @@ public class Y9PositionServiceImpl implements Y9PositionService {
         Y9Position position = this.getById(id);
         position.setTabIndex(tabIndex);
         position.setOrderedPath(compositeOrgBaseManager.buildOrderedPath(position));
-        position = y9PositionManager.save(position);
+        final Y9Position savedPosition = y9PositionManager.save(position);
 
-        Y9MessageOrg msg = new Y9MessageOrg(Y9ModelConvertUtil.convert(position, Position.class),
-            Y9OrgEventConst.RISEORGEVENT_TYPE_UPDATE_POSITION_TABINDEX, Y9LoginUserHolder.getTenantId());
-        Y9PublishServiceUtil.persistAndPublishMessageOrg(msg, "更新岗位排序号", position.getName() + "的排序号更新为" + tabIndex);
+        TransactionSynchronizationManager.registerSynchronization(new TransactionSynchronization() {
+            @Override
+            public void afterCommit() {
+                Y9MessageOrg msg = new Y9MessageOrg(Y9ModelConvertUtil.convert(savedPosition, Position.class),
+                    Y9OrgEventConst.RISEORGEVENT_TYPE_UPDATE_POSITION_TABINDEX, Y9LoginUserHolder.getTenantId());
+                Y9PublishServiceUtil.persistAndPublishMessageOrg(msg, "更新岗位排序号",
+                    savedPosition.getName() + "的排序号更新为" + tabIndex);
+            }
+        });
 
-        return position;
+        return savedPosition;
     }
 
 }
