@@ -11,7 +11,7 @@
         	defaultNum : 4,	//默认的文字数量
 		    checkNum : 3,	//校对的文字数量
 		    vSpace : 5,	//间隔
-		    imgUrl : '/sso/y9static/y9new/images/',
+		    imgUrl : '/sso/js/y9static/y9new/images/',
         	imgName :  ['3.jpg', '2.jpg', '1.jpg', '4.jpg'],
         	imgSize : {
 	        	width: '400px',
@@ -284,7 +284,7 @@
         	
         	this.img_rand = Math.floor(Math.random() * this.options.imgName.length);			//随机的背景图片
         	var img = new Image();
-		    img.src = this.options.imgUrl +this.options.imgName[this.img_rand];
+		    img.src = this.options.imgUrl + this.options.imgName[this.img_rand];
 		 	
 		 	
 		 	// 加载完成开始绘制

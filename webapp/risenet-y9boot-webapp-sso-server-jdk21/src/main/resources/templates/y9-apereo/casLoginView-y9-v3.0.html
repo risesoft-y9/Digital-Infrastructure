@@ -11,20 +11,20 @@
     <meta http-equiv="expires" content="0" />
     <!-- 管局要求保持备案名称和网站使用名称一致 -->
     <title>北京有生博大软件股份有限公司</title>
-    <link rel="stylesheet" type="text/css" th:href="@{/y9static/y9new/css/default.css}" />
-    <link rel="stylesheet" type="text/css" th:href="@{/y9static/y9new/css/styles.css}" />
-    <link rel="stylesheet" type="text/css" th:href="@{/y9static/y9new/css/demo.css}" />
-    <link rel="stylesheet" type="text/css" th:href="@{/y9static/y9new/css/loaders.css}" />
-    <link rel="stylesheet" type="text/css" th:href="@{/y9static/y9new/css/layerMsg.css}" />
-    <link rel="stylesheet" type="text/css" th:href="@{/y9static/y9new/css/verify.css}" />
-    <script type="text/javascript" th:src="@{/y9static/js/base64.js}"></script>
-    <script type="text/javascript" th:src="@{/y9static/y9new/js/jquery-2.1.1.min.js}"></script>
-    <script type="text/javascript" th:src="@{/y9static/js/jquery/jquery.cookie.js}"></script>
-    <script type="text/javascript" th:src="@{/y9static/y9new/js/jsencrypt.min.js}"></script>
+    <link rel="stylesheet" type="text/css" th:href="@{/js/y9static/y9new/css/default.css}" />
+    <link rel="stylesheet" type="text/css" th:href="@{/js/y9static/y9new/css/styles.css}" />
+    <link rel="stylesheet" type="text/css" th:href="@{/js/y9static/y9new/css/demo.css}" />
+    <link rel="stylesheet" type="text/css" th:href="@{/js/y9static/y9new/css/loaders.css}" />
+    <link rel="stylesheet" type="text/css" th:href="@{/js/y9static/y9new/css/layerMsg.css}" />
+    <link rel="stylesheet" type="text/css" th:href="@{/js/y9static/y9new/css/verify.css}" />
+    <script type="text/javascript" th:src="@{/js/y9static/js/base64.js}"></script>
+    <script type="text/javascript" th:src="@{/js/y9static/y9new/js/jquery-2.1.1.min.js}"></script>
+    <script type="text/javascript" th:src="@{/js/y9static/js/jquery/jquery.cookie.js}"></script>
+    <script type="text/javascript" th:src="@{/js/y9static/y9new/js/jsencrypt.min.js}"></script>
 </head>
 
 <body>
-<div class="logo"><img th:src="@{/y9static/y9new/img/cloud.png}"></div>
+<div class="logo"><img th:src="@{/js/y9static/y9new/img/cloud.png}"></div>
 <div class="login" id="tunnel">
     <div class="login_title">
         <span onclick="changeLoginType(0)">用户登录</span>
@@ -33,7 +33,7 @@
     </div>
     <div class="qvcode">
         <a href="javascript:getQRCode();" id="img_container">
-            <img th:src="@{/y9static/y9new/img/qrCodeTemp.jpg}" />
+            <img th:src="@{/js/y9static/y9new/img/qrCodeTemp.jpg}" />
         </a>
         <span id="error_msg"></span>
     </div>
@@ -43,22 +43,22 @@
                 登录失败：<span th:each="err : ${#fields.errors('*')}" th:utext="${err}" />
             </div>
             <div class="login_fields__user">
-                <div class="icon"><img alt="" th:src="@{/y9static/y9new/img/user_icon_copy.png}" /></div>
+                <div class="icon"><img alt="" th:src="@{/js/y9static/y9new/img/user_icon_copy.png}" /></div>
                 <input id="username" placeholder="用户名" type="text" autocomplete="off" value=""
                        oninput="inputEvent()" onblur="getTenant();" />
                 <input id="username1" name="username" style="width: 150px;" tabindex="1" autocomplete="false"
                        htmlescape="true" type="hidden" />
                 <input id="tenantShortName" name="tenantShortName" style="width: 150px;" autocomplete="false"
                        htmlescape="true" type="hidden" />
-                <div class="validation"><img alt="" th:src="@{/y9static/y9new/img/tick.png}" /></div>
+                <div class="validation"><img alt="" th:src="@{/js/y9static/y9new/img/tick.png}" /></div>
             </div>
             <div class="login_fields__password">
-                <div class="icon"><img alt="" th:src="@{/y9static/y9new/img/lock_icon_copy.png}" /></div>
+                <div class="icon"><img alt="" th:src="@{/js/y9static/y9new/img/lock_icon_copy.png}" /></div>
                 <input id="password" tabindex="2" type="text" htmlescape="true" autocomplete="off"
                        placeholder="请输入您的密码" onfocus="this.type='password'" />
                 <input id="password1" name="password" htmlescape="true" autocomplete="off" type="hidden" />
 
-                <div class="validation"><img alt="" th:src="@{/y9static/y9new/img/tick.png}" /></div>
+                <div class="validation"><img alt="" th:src="@{/js/y9static/y9new/img/tick.png}" /></div>
             </div>
             <!-- 表单隐藏数据块开始 -->
             <input type="hidden" id="loginType" name="loginType" value="loginName" />
@@ -103,17 +103,17 @@
         <span>北京有生博大软件股份有限公司 版权所有</span>
         <a href="https://beian.miit.gov.cn/" target="_blank">京ICP备16060306号-4</a>
         <a href="http://www.beian.gov.cn/portal/registerSystemInfo?recordcode=11010802026965" target="_blank"><img
-                th:src="@{/y9static/y9new/img/police.png}" />京公网安备11010802026965号</a>
+                th:src="@{/js/y9static/y9new/img/police.png}" />京公网安备11010802026965号</a>
     </div>
     <span>建议您使用1920x1080分辨率，IE9.0或以上版本浏览器访问本站，以获得最佳用户体验。 技术支持：0755-821072292</span>
 </div>
 
-<link rel="stylesheet" type="text/css" th:href="@{/y9static/y9new/layui/css/layui.css}" />
-<script type="text/javascript" th:src="@{/y9static/y9new/js/verify.js}"></script>
-<script type="text/javascript" th:src="@{/y9static/y9new/layui/layui.js}"></script>
-<script type="text/javascript" th:src="@{/y9static/y9new/js/layerMsg.js}" charset="utf-8"></script>
+<link rel="stylesheet" type="text/css" th:href="@{/js/y9static/y9new/layui/css/layui.css}" />
+<script type="text/javascript" th:src="@{/js/y9static/y9new/js/verify.js}"></script>
+<script type="text/javascript" th:src="@{/js/y9static/y9new/layui/layui.js}"></script>
+<script type="text/javascript" th:src="@{/js/y9static/y9new/js/layerMsg.js}" charset="utf-8"></script>
 <script th:inline="javascript" type="text/javascript">
-    var ctx = /*[[@{/}]]*/'';
+    var ctx = '/sso/';
     var canGetCookie = 1; //是否支持存储Cookie 0 不支持 1 支持
     var ajaxmockjax = 1; //是否启用虚拟Ajax的请求响 0 不启用  1 启用
     var inputTimer = null;
@@ -368,9 +368,9 @@
         }
     };
 </script>
-<script type="text/javascript" th:src="@{/y9static/y9new/img/ThreeWebGL.js}"></script>
-<script type="text/javascript" th:src="@{/y9static/y9new/img/ThreeExtras.js}"></script>
-<script type="text/javascript" th:src="@{/y9static/y9new/img/Detector.js}"></script>
+<script type="text/javascript" th:src="@{/js/y9static/y9new/img/ThreeWebGL.js}"></script>
+<script type="text/javascript" th:src="@{/js/y9static/y9new/img/ThreeExtras.js}"></script>
+<script type="text/javascript" th:src="@{/js/y9static/y9new/img/Detector.js}"></script>
 <script id="vs" type="x-shader/x-vertex">
     varying vec2 vUv; void main() { vUv = uv; gl_Position = projectionMatrix * modelViewMatrix * vec4( position, 1.0 ); }
 </script>
