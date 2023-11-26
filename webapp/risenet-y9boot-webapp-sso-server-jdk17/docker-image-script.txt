@@ -1,3 +1,0 @@
-#生成docker image
-./mvnw.cmd clean spring-boot:build-image -Pdocker -Dmaven.test.skip=true
-
