@@ -173,13 +173,13 @@ public class Y9TenantSystemServiceImpl implements Y9TenantSystemService {
                 // 租户租用系统事件，应用可监听做对应租户的初始化的工作
                 Y9MessageCommon tenantSystemRegisteredEvent = new Y9MessageCommon();
                 tenantSystemRegisteredEvent.setEventObject(tenantSystem);
-                tenantSystemRegisteredEvent.setTarget(y9System.getName());
+                tenantSystemRegisteredEvent.setEventTarget(y9System.getName());
                 tenantSystemRegisteredEvent.setEventType(Y9CommonEventConst.TENANT_SYSTEM_REGISTERED);
                 y9PublishService.publishMessageCommon(tenantSystemRegisteredEvent);
 
                 // 对应系统重新加载数据源
                 Y9MessageCommon syncDataSourceEvent = new Y9MessageCommon();
-                syncDataSourceEvent.setTarget(y9System.getName());
+                syncDataSourceEvent.setEventTarget(y9System.getName());
                 syncDataSourceEvent.setEventObject(Y9CommonEventConst.TENANT_DATASOURCE_SYNC);
                 syncDataSourceEvent.setEventType(Y9CommonEventConst.TENANT_DATASOURCE_SYNC);
                 y9PublishService.publishMessageCommon(syncDataSourceEvent);

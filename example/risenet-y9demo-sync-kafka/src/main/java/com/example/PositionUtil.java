@@ -1,11 +1,11 @@
 package com.example;
 
 import java.util.List;
-import java.util.Map;
+import java.util.stream.Collectors;
 
 import net.risesoft.model.platform.PersonsPositions;
 import net.risesoft.model.platform.Position;
-import net.risesoft.y9.pubsub.constant.Y9OrgEventConst;
+import net.risesoft.model.platform.SyncOrgUnits;
 
 /**
  * 岗位同步
@@ -28,27 +28,38 @@ public class PositionUtil {
     /**
      * 同步岗位
      *
-     * @param dataMap
+     * @param syncOrgUnits
      */
-    @SuppressWarnings("unchecked")
-    public static void syncPosition(Map<String, Object> dataMap) {
-        String syncId = (String)dataMap.get(Y9OrgEventConst.SYNC_ID);
-        Integer syncRecursion = (Integer)dataMap.get(Y9OrgEventConst.SYNC_RECURSION);
-        Position p = (Position)dataMap.get(syncId);
-        boolean exist = checkPositionExist(p);
-        if (exist) {
+    public static void syncPosition(SyncOrgUnits syncOrgUnits) {
+        String syncId = syncOrgUnits.getOrgUnitId();
+        boolean needRecursion = syncOrgUnits.isNeedRecursion();
+        Position p = syncOrgUnits.getPositions().get(0);
+
+        if (needRecursion) {
+            recursion(syncOrgUnits, p, syncId);
+        } else {
+
+            if (checkPositionExist(p)) {
+                // updatePosition(p);
+            } else {
+                // addPosition(p);
+            }
+        }
+    }
+
+    public static void recursion(SyncOrgUnits syncOrgUnits, Position p, String syncId) {
+
+        if (checkPositionExist(p)) {
             // updatePosition(p);
         } else {
             // addPosition(p);
         }
-        /**
-         * 递归，获取岗位中的人员，保存岗位人员绑定关系
-         */
-        if (syncRecursion == 1) {
-            List<PersonsPositions> ppList = (List<PersonsPositions>)dataMap.get(syncId + "PersonsPositions");
-            for (PersonsPositions pp : ppList) {
-                PersonsPositionsUtil.addPersonsPositions(pp);
-            }
+
+        // 递归，获取岗位中的人员，保存岗位人员绑定关系
+        List<PersonsPositions> ppList = syncOrgUnits.getPersonsPositions().stream()
+            .filter(pp -> pp.getPositionId().equals(syncId)).collect(Collectors.toList());
+        for (PersonsPositions pp : ppList) {
+            PersonsPositionsUtil.addPersonsPositions(pp);
         }
     }
 }

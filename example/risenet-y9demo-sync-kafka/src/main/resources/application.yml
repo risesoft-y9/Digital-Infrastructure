@@ -5,3 +5,5 @@ spring:
         consumer:
             bootstrap-servers: localhost:9092
             group-id: y9demo-sync
+y9:
+    systemName: y9demo-sync

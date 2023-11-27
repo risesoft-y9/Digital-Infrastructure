@@ -142,8 +142,8 @@ public class Y9PersonsToPositionsServiceImpl implements Y9PersonsToPositionsServ
                 y9PersonsToPositions = y9PersonsToPositionsRepository.save(y9PersonsToPositions);
 
                 Y9Position y9Position = y9PositionManager.getById(positionId);
-                Y9MessageOrg msg =
-                    new Y9MessageOrg(ModelConvertUtil.convert(y9PersonsToPositions, PersonsPositions.class),
+                Y9MessageOrg<PersonsPositions> msg =
+                    new Y9MessageOrg<>(ModelConvertUtil.convert(y9PersonsToPositions, PersonsPositions.class),
                         Y9OrgEventConst.RISEORGEVENT_TYPE_POSITION_ORDER, Y9LoginUserHolder.getTenantId());
 
                 Y9Person person = y9PersonManager.getById(y9PersonsToPositions.getPersonId());
@@ -170,8 +170,8 @@ public class Y9PersonsToPositionsServiceImpl implements Y9PersonsToPositionsServ
                 y9PersonsToPositions = y9PersonsToPositionsRepository.save(y9PersonsToPositions);
 
                 Y9Person person = y9PersonManager.getById(personId);
-                Y9MessageOrg msg =
-                    new Y9MessageOrg(ModelConvertUtil.convert(y9PersonsToPositions, PersonsPositions.class),
+                Y9MessageOrg<PersonsPositions> msg =
+                    new Y9MessageOrg<>(ModelConvertUtil.convert(y9PersonsToPositions, PersonsPositions.class),
                         Y9OrgEventConst.RISEORGEVENT_TYPE_POSITION_ORDER, Y9LoginUserHolder.getTenantId());
                 Y9Position y9Position = y9PositionManager.getById(y9PersonsToPositions.getPositionId());
                 Y9PublishServiceUtil.persistAndPublishMessageOrg(msg, "更新人员的岗位排序", person.getName() + "的岗位："

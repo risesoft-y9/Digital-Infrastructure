@@ -97,8 +97,9 @@ public class Y9DepartmentServiceImpl implements Y9DepartmentService {
         TransactionSynchronizationManager.registerSynchronization(new TransactionSynchronization() {
             @Override
             public void afterCommit() {
-                Y9MessageOrg msg = new Y9MessageOrg(Y9ModelConvertUtil.convert(savedDepartment, Department.class),
-                    Y9OrgEventConst.RISEORGEVENT_TYPE_UPDATE_DEPARTMENT, Y9LoginUserHolder.getTenantId());
+                Y9MessageOrg<Department> msg =
+                    new Y9MessageOrg<>(Y9ModelConvertUtil.convert(savedDepartment, Department.class),
+                        Y9OrgEventConst.RISEORGEVENT_TYPE_UPDATE_DEPARTMENT, Y9LoginUserHolder.getTenantId());
                 Y9PublishServiceUtil.persistAndPublishMessageOrg(msg, event + "部门", event + savedDepartment.getName());
             }
         });
@@ -124,8 +125,9 @@ public class Y9DepartmentServiceImpl implements Y9DepartmentService {
         TransactionSynchronizationManager.registerSynchronization(new TransactionSynchronization() {
             @Override
             public void afterCommit() {
-                Y9MessageOrg msg = new Y9MessageOrg(Y9ModelConvertUtil.convert(y9Department, Department.class),
-                    Y9OrgEventConst.RISEORGEVENT_TYPE_DELETE_DEPARTMENT, Y9LoginUserHolder.getTenantId());
+                Y9MessageOrg<Department> msg =
+                    new Y9MessageOrg<>(Y9ModelConvertUtil.convert(y9Department, Department.class),
+                        Y9OrgEventConst.RISEORGEVENT_TYPE_DELETE_DEPARTMENT, Y9LoginUserHolder.getTenantId());
                 Y9PublishServiceUtil.persistAndPublishMessageOrg(msg, "删除部门", "删除 " + y9Department.getName());
             }
         });
@@ -257,8 +259,9 @@ public class Y9DepartmentServiceImpl implements Y9DepartmentService {
         TransactionSynchronizationManager.registerSynchronization(new TransactionSynchronization() {
             @Override
             public void afterCommit() {
-                Y9MessageOrg msg = new Y9MessageOrg(Y9ModelConvertUtil.convert(savedDepartment, Department.class),
-                    Y9OrgEventConst.RISEORGEVENT_TYPE_UPDATE_DEPARTMENT, Y9LoginUserHolder.getTenantId());
+                Y9MessageOrg<Department> msg =
+                    new Y9MessageOrg<>(Y9ModelConvertUtil.convert(savedDepartment, Department.class),
+                        Y9OrgEventConst.RISEORGEVENT_TYPE_UPDATE_DEPARTMENT, Y9LoginUserHolder.getTenantId());
                 Y9PublishServiceUtil.persistAndPublishMessageOrg(msg, "移动部门", "移动" + savedDepartment.getName());
             }
         });
@@ -353,8 +356,8 @@ public class Y9DepartmentServiceImpl implements Y9DepartmentService {
                 TransactionSynchronizationManager.registerSynchronization(new TransactionSynchronization() {
                     @Override
                     public void afterCommit() {
-                        Y9MessageOrg msg =
-                            new Y9MessageOrg(Y9ModelConvertUtil.convert(savedDepartment, Department.class),
+                        Y9MessageOrg<Department> msg =
+                            new Y9MessageOrg<>(Y9ModelConvertUtil.convert(savedDepartment, Department.class),
                                 Y9OrgEventConst.RISEORGEVENT_TYPE_UPDATE_DEPARTMENT, Y9LoginUserHolder.getTenantId());
                         Y9PublishServiceUtil.persistAndPublishMessageOrg(msg, "修改部门",
                             "修改 " + savedDepartment.getName());
@@ -381,8 +384,9 @@ public class Y9DepartmentServiceImpl implements Y9DepartmentService {
         TransactionSynchronizationManager.registerSynchronization(new TransactionSynchronization() {
             @Override
             public void afterCommit() {
-                Y9MessageOrg msg = new Y9MessageOrg(Y9ModelConvertUtil.convert(savedDepartment, Department.class),
-                    Y9OrgEventConst.RISEORGEVENT_TYPE_ADD_DEPARTMENT, Y9LoginUserHolder.getTenantId());
+                Y9MessageOrg<Department> msg =
+                    new Y9MessageOrg<>(Y9ModelConvertUtil.convert(savedDepartment, Department.class),
+                        Y9OrgEventConst.RISEORGEVENT_TYPE_ADD_DEPARTMENT, Y9LoginUserHolder.getTenantId());
                 Y9PublishServiceUtil.persistAndPublishMessageOrg(msg, "新增部门", "新增" + savedDepartment.getName());
             }
         });
@@ -400,8 +404,9 @@ public class Y9DepartmentServiceImpl implements Y9DepartmentService {
         TransactionSynchronizationManager.registerSynchronization(new TransactionSynchronization() {
             @Override
             public void afterCommit() {
-                Y9MessageOrg msg = new Y9MessageOrg(Y9ModelConvertUtil.convert(savedDepartment, Department.class),
-                    Y9OrgEventConst.RISEORGEVENT_TYPE_UPDATE_DEPARTMENT, Y9LoginUserHolder.getTenantId());
+                Y9MessageOrg<Department> msg =
+                    new Y9MessageOrg<>(Y9ModelConvertUtil.convert(savedDepartment, Department.class),
+                        Y9OrgEventConst.RISEORGEVENT_TYPE_UPDATE_DEPARTMENT, Y9LoginUserHolder.getTenantId());
                 Y9PublishServiceUtil.publishMessageOrg(msg);
             }
         });
@@ -540,8 +545,9 @@ public class Y9DepartmentServiceImpl implements Y9DepartmentService {
         TransactionSynchronizationManager.registerSynchronization(new TransactionSynchronization() {
             @Override
             public void afterCommit() {
-                Y9MessageOrg msg = new Y9MessageOrg(Y9ModelConvertUtil.convert(savedDepartment, Department.class),
-                    Y9OrgEventConst.RISEORGEVENT_TYPE_UPDATE_DEPARTMENT_TABINDEX, Y9LoginUserHolder.getTenantId());
+                Y9MessageOrg<Department> msg =
+                    new Y9MessageOrg<>(Y9ModelConvertUtil.convert(savedDepartment, Department.class),
+                        Y9OrgEventConst.RISEORGEVENT_TYPE_UPDATE_DEPARTMENT_TABINDEX, Y9LoginUserHolder.getTenantId());
                 Y9PublishServiceUtil.persistAndPublishMessageOrg(msg, "更新部门排序号",
                     savedDepartment.getName() + "的排序号更新为" + tabIndex);
             }

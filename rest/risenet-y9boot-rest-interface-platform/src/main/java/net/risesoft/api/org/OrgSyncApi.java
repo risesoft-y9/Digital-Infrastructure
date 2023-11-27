@@ -9,6 +9,8 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import net.risesoft.model.platform.MessageOrg;
+import net.risesoft.model.platform.OrgUnit;
+import net.risesoft.model.platform.SyncOrgUnits;
 import net.risesoft.pojo.Y9Result;
 
 /**
@@ -33,7 +35,7 @@ public interface OrgSyncApi {
      * @since 9.6.0
      */
     @GetMapping("/fullSync")
-    Y9Result<MessageOrg> fullSync(@RequestParam("appName") @NotBlank String appName,
+    Y9Result<MessageOrg<SyncOrgUnits>> fullSync(@RequestParam("appName") @NotBlank String appName,
         @RequestParam("tenantId") @NotBlank String tenantId,
         @RequestParam("organizationId") @NotBlank String organizationId);
 
@@ -46,7 +48,7 @@ public interface OrgSyncApi {
      * @since 9.6.0
      */
     @GetMapping("/incrSync")
-    Y9Result<List<MessageOrg>> incrSync(@RequestParam("appName") @NotBlank String appName,
+    Y9Result<List<MessageOrg<OrgUnit>>> incrSync(@RequestParam("appName") @NotBlank String appName,
         @RequestParam("tenantId") @NotBlank String tenantId);
 
 }

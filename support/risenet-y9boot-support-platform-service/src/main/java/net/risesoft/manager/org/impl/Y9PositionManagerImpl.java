@@ -95,8 +95,9 @@ public class Y9PositionManagerImpl implements Y9PositionManager {
 
                 updatedY9Position = save(updatedY9Position);
 
-                Y9MessageOrg msg = new Y9MessageOrg(ModelConvertUtil.convert(updatedY9Position, Position.class),
-                    Y9OrgEventConst.RISEORGEVENT_TYPE_UPDATE_POSITION, Y9LoginUserHolder.getTenantId());
+                Y9MessageOrg<Position> msg =
+                    new Y9MessageOrg<>(ModelConvertUtil.convert(updatedY9Position, Position.class),
+                        Y9OrgEventConst.RISEORGEVENT_TYPE_UPDATE_POSITION, Y9LoginUserHolder.getTenantId());
                 Y9PublishServiceUtil.persistAndPublishMessageOrg(msg, "更新岗位信息", "更新" + position.getName());
 
                 Y9Context.publishEvent(new Y9EntityUpdatedEvent<>(originalPosition, updatedY9Position));
@@ -116,7 +117,7 @@ public class Y9PositionManagerImpl implements Y9PositionManager {
             + parent.getDn());
         Y9Position returnPosition = save(position);
 
-        Y9MessageOrg msg = new Y9MessageOrg(ModelConvertUtil.convert(returnPosition, Position.class),
+        Y9MessageOrg<Position> msg = new Y9MessageOrg<>(ModelConvertUtil.convert(returnPosition, Position.class),
             Y9OrgEventConst.RISEORGEVENT_TYPE_ADD_POSITION, Y9LoginUserHolder.getTenantId());
         Y9PublishServiceUtil.persistAndPublishMessageOrg(msg, "新增岗位信息", "新增" + position.getName());
 
@@ -146,7 +147,7 @@ public class Y9PositionManagerImpl implements Y9PositionManager {
         position.setTabIndex(tabIndex);
         position = this.save(position);
 
-        Y9MessageOrg msg = new Y9MessageOrg(Y9ModelConvertUtil.convert(position, Position.class),
+        Y9MessageOrg<Position> msg = new Y9MessageOrg<>(Y9ModelConvertUtil.convert(position, Position.class),
             Y9OrgEventConst.RISEORGEVENT_TYPE_UPDATE_POSITION_TABINDEX, Y9LoginUserHolder.getTenantId());
         Y9PublishServiceUtil.persistAndPublishMessageOrg(msg, "更新岗位排序号", position.getName() + "的排序号更新为" + tabIndex);
 

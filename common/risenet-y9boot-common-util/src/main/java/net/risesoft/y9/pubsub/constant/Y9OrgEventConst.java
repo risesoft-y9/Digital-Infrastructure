@@ -61,6 +61,8 @@ public class Y9OrgEventConst {
 
     public static final String RISEORGEVENT_TYPE_SYNC = "RISEORGEVENT_TYPE_SYNC";
     public static final String RISEORGEVENT_TYPE_USER_SYNC = "RISEORGEVENT_TYPE_USER_SYNC";
+
+    // 事件接收系统默认为所有系统
     public static final String EVENT_TARGET_ALL = "ALL";
 
     public static final String ORG_TYPE = "ORG_TYPE";

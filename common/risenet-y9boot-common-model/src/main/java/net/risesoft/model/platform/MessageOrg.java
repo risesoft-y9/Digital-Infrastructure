@@ -15,14 +15,14 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class MessageOrg implements Serializable {
+public class MessageOrg<T extends Serializable> implements Serializable {
 
     private static final long serialVersionUID = -5015205405901752553L;
 
     /**
      * 事件对象信息
      */
-    private Serializable orgObj;
+    private T orgObj;
 
     /** 事件类型 */
     private String eventType;

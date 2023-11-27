@@ -1,5 +1,7 @@
 package y9.autoconfiguration.listener.kafka;
 
+import java.util.Objects;
+
 import org.apache.kafka.clients.consumer.ConsumerRecord;
 import org.springframework.boot.autoconfigure.AutoConfigureAfter;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
@@ -15,6 +17,7 @@ import lombok.extern.slf4j.Slf4j;
 
 import net.risesoft.y9.Y9Context;
 import net.risesoft.y9.json.Y9JsonUtil;
+import net.risesoft.y9.pubsub.constant.Y9OrgEventConst;
 import net.risesoft.y9.pubsub.constant.Y9TopicConst;
 import net.risesoft.y9.pubsub.event.Y9EventOrg;
 import net.risesoft.y9.pubsub.message.Y9MessageOrg;
@@ -52,17 +55,22 @@ public class Y9ListenerKafkaConfiguration {
             LOGGER.error(e.getMessage(), e);
         }
 
-        try {
-            Y9EventOrg event = new Y9EventOrg();
-            event.setEventType(msg.getEventType());
-            event.setOrgObj(msg.getOrgObj());
-            event.setTenantId(msg.getTenantId());
+        if (Y9OrgEventConst.EVENT_TARGET_ALL.equals(msg.getEventTarget())
+            || Objects.equals(Y9Context.getSystemName(), msg.getEventTarget())) {
+            // 只有消息目标是 所有系统 或 当前引入系统 时才处理
+            try {
+                Y9EventOrg event = new Y9EventOrg();
+                event.setEventType(msg.getEventType());
+                event.setOrgObj(msg.getOrgObj());
+                event.setTenantId(msg.getTenantId());
 
-            Y9Context.publishEvent(event);
-            LOGGER.info("[org]将消息中间件发过来的消息转换成spring的事件后发送：" + event.toString());
-        } catch (Exception e) {
-            LOGGER.error(e.getMessage(), e);
+                Y9Context.publishEvent(event);
+                LOGGER.info("[org]将消息中间件发过来的消息转换成spring的事件后发送：" + event.toString());
+            } catch (Exception e) {
+                LOGGER.error(e.getMessage(), e);
+            }
         }
+
     }
 
     @Bean

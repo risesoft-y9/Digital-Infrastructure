@@ -1,8 +1,5 @@
 package com.example;
 
-import java.util.HashMap;
-import java.util.Map;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.ApplicationListener;
@@ -16,6 +13,7 @@ import net.risesoft.model.platform.Person;
 import net.risesoft.model.platform.PersonsGroups;
 import net.risesoft.model.platform.PersonsPositions;
 import net.risesoft.model.platform.Position;
+import net.risesoft.model.platform.SyncOrgUnits;
 import net.risesoft.y9.pubsub.constant.Y9OrgEventConst;
 import net.risesoft.y9.pubsub.event.Y9EventOrg;
 
@@ -118,36 +116,28 @@ public class Y9OrgListener implements ApplicationListener<Y9EventOrg> {
             log.info("--------------------" + personsPositions.getPositionOrder() + "---------------------");
             log.info("--------------------" + personsPositions.getPersonOrder() + "---------------------");
         } else if (Y9OrgEventConst.RISEORGEVENT_TYPE_SYNC.equals(event.getEventType())) {
-            @SuppressWarnings("unchecked")
-            Map<String, Object> dataMap = (HashMap<String, Object>)event.getOrgObj();
-            String ORG_TYPE = (String)dataMap.get(Y9OrgEventConst.ORG_TYPE);
-            String SYNC_ID = (String)dataMap.get(Y9OrgEventConst.SYNC_ID);
-            OrgTypeEnum orgTypeEnum = OrgTypeEnum.getByEnName(ORG_TYPE);
-            switch (orgTypeEnum) {
+            SyncOrgUnits syncOrgUnits = (SyncOrgUnits)event.getOrgObj();
+            OrgTypeEnum orgType = syncOrgUnits.getOrgTypeEnum();
+            switch (orgType) {
                 case ORGANIZATION:
                     log.info("--------------------------同步-组织机构-------------------------------");
-                    OrganizationUtil.syncOrganization(dataMap);
+                    OrganizationUtil.syncOrganization(syncOrgUnits);
                     break;
                 case DEPARTMENT:
                     log.info("--------------------------同步-部门-------------------------------");
-                    DepartmentUtil.syncDepartment(dataMap);
+                    DepartmentUtil.syncDepartment(syncOrgUnits);
                     break;
                 case PERSON:
                     log.info("--------------------------同步-人员-------------------------------");
-                    Person person = (Person)dataMap.get(SYNC_ID);
-                    try {
-                        PersonUtil.syncPerson(person);
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                    }
+                    PersonUtil.syncPerson(syncOrgUnits.getPersons().get(0));
                     break;
                 case GROUP:
                     log.info("--------------------------同步-用户组-------------------------------");
-                    GroupUtil.syncGroup(dataMap);
+                    GroupUtil.syncGroup(syncOrgUnits);
                     break;
                 case POSITION:
                     log.info("--------------------------同步-岗位-------------------------------");
-                    PositionUtil.syncPosition(dataMap);
+                    PositionUtil.syncPosition(syncOrgUnits);
                     break;
                 default:
                     break;

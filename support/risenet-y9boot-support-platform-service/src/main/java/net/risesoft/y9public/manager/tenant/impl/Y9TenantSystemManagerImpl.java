@@ -59,7 +59,7 @@ public class Y9TenantSystemManagerImpl implements Y9TenantSystemManager {
             public void afterCommit() {
                 // 移除系统租用后，对应系统重新加载数据源
                 Y9MessageCommon syncDataSourceEvent = new Y9MessageCommon();
-                syncDataSourceEvent.setTarget(y9SystemManager.getById(y9TenantSystem.getSystemId()).getName());
+                syncDataSourceEvent.setEventTarget(y9SystemManager.getById(y9TenantSystem.getSystemId()).getName());
                 syncDataSourceEvent.setEventObject(Y9CommonEventConst.TENANT_DATASOURCE_SYNC);
                 syncDataSourceEvent.setEventType(Y9CommonEventConst.TENANT_DATASOURCE_SYNC);
                 y9PublishService.publishMessageCommon(syncDataSourceEvent);

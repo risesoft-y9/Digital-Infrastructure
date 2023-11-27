@@ -26,11 +26,9 @@ public class PersonUtil {
      * 同步人员
      *
      * @param p
-     * @throws Exception
      */
-    public static void syncPerson(Person p) throws Exception {
-        boolean exist = checkPersonExist(p);
-        if (exist) {
+    public static void syncPerson(Person p) {
+        if (checkPersonExist(p)) {
             // updatePerson(p);写自己的更新代码
         } else {
             // addPerson(p);写自己的新增代码

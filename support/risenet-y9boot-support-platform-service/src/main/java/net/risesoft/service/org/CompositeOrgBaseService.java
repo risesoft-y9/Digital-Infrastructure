@@ -11,6 +11,7 @@ import net.risesoft.entity.Y9Person;
 import net.risesoft.entity.Y9Position;
 import net.risesoft.enums.platform.OrgTypeEnum;
 import net.risesoft.enums.platform.TreeTypeEnum;
+import net.risesoft.model.platform.SyncOrgUnits;
 
 /**
  * 组合的组织节点 service
@@ -127,6 +128,8 @@ public interface CompositeOrgBaseService {
      */
     HashMap<String, Serializable> getSyncMap(String syncId, OrgTypeEnum orgType, Integer needRecursion);
 
+    SyncOrgUnits getSyncOrgUnits(String organizationId, OrgTypeEnum orgTypeEnum, boolean recursionRequired);
+
     /**
      * 获取机构树子节点
      *
@@ -213,8 +216,9 @@ public interface CompositeOrgBaseService {
      * @param syncId 同步的组织机构id
      * @param orgType 组织节点类型
      * @param needRecursion 是否递归获取
+     * @param targetSystemName 目标系统名
      */
-    void sync(String syncId, OrgTypeEnum orgType, Integer needRecursion);
+    void sync(String syncId, OrgTypeEnum orgType, boolean needRecursion, String targetSystemName);
 
     /**
      * 根据name，和结构树类型查询机构主体
