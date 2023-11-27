@@ -5,6 +5,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.List;
 
+import javax.imageio.ImageIO;
 import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.constraints.NotBlank;
@@ -414,12 +415,11 @@ public class PersonController {
     @RequestMapping("/showPersonPhoto")
     public void showPersonPhoto(@RequestParam @NotBlank String personId, HttpServletResponse response) {
         Y9Person person = y9PersonService.getById(personId);
-        try {
+        try (ServletOutputStream sos = response.getOutputStream()) {
             response.setContentType("image/jpg");
             Y9PersonExt ext = y9PersonExtService.findByPersonId(person.getId()).orElse(null);
             if (ext != null && ext.getPhoto() != null) {
                 InputStream inputStream = new ByteArrayInputStream(ext.getPhoto());
-                ServletOutputStream sos = response.getOutputStream();
                 byte[] b = new byte[1024];
                 int l;
                 while ((l = inputStream.read(b)) > -1) {
@@ -442,17 +442,17 @@ public class PersonController {
     @RequestMapping("/showPersonSign")
     public void showPersonSign(@RequestParam @NotBlank String personId, HttpServletResponse response) {
         Y9Person person = y9PersonService.getById(personId);
-        try {
-            response.setContentType("image/jpg");
+        try (ServletOutputStream out = response.getOutputStream()) {
             Y9PersonExt ext = y9PersonExtService.findByPersonId(person.getId()).orElse(null);
-            if (ext != null && ext.getPhoto() != null) {
+            if (ext != null && ext.getSign() != null) {
                 InputStream inputStream = new ByteArrayInputStream(ext.getSign());
-                ServletOutputStream sos = response.getOutputStream();
                 byte[] b = new byte[1024];
                 int l;
                 while ((l = inputStream.read(b)) > -1) {
-                    sos.write(b, 0, l);
+                    out.write(b, 0, l);
                 }
+                ImageIO.createImageOutputStream(out);
+                out.flush();
             }
         } catch (Exception e) {
             LOGGER.warn(e.getMessage(), e);
