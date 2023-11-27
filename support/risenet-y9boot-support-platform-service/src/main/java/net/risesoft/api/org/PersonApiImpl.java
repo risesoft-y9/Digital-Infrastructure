@@ -16,7 +16,6 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 
 import net.risesoft.api.org.dto.CreatePersonDTO;
 import net.risesoft.api.org.dto.PersonInfoDTO;
@@ -59,7 +58,6 @@ import net.risesoft.y9public.service.role.Y9RoleService;
 @Validated
 @RestController
 @RequestMapping(value = "/services/rest/v1/person", produces = MediaType.APPLICATION_JSON_VALUE)
-@Slf4j
 @RequiredArgsConstructor
 public class PersonApiImpl implements PersonApi {
 
@@ -482,6 +480,25 @@ public class PersonApiImpl implements PersonApi {
     }
 
     /**
+     * 新增或修改人员
+     *
+     * @param tenantId 租户id
+     * @param personDTO 人员对象
+     * @return {@code Y9Result<Person>} 通用请求返回对象 - data 是保存的人员对象
+     * @since 9.6.0
+     */
+    @Override
+    public Y9Result<Person> savePerson(@RequestParam("tenantId") @NotBlank String tenantId,
+        @RequestBody @Validated CreatePersonDTO personDTO) {
+        Y9LoginUserHolder.setTenantId(tenantId);
+
+        Y9Person y9Person = Y9ModelConvertUtil.convert(personDTO, Y9Person.class);
+        Y9PersonExt y9PersonExt = Y9ModelConvertUtil.convert(personDTO, Y9PersonExt.class);
+        y9Person = y9PersonService.saveOrUpdate(y9Person, y9PersonExt);
+        return Y9Result.success(Y9ModelConvertUtil.convert(y9Person, Person.class));
+    }
+
+    /**
      * 保存人员头像
      *
      * @param tenantId 租户id
@@ -517,22 +534,23 @@ public class PersonApiImpl implements PersonApi {
     }
 
     /**
-     * 新增或修改人员
+     * 保存用户签名照片接口
      *
      * @param tenantId 租户id
-     * @param personDTO 人员对象
-     * @return {@code Y9Result<Person>} 通用请求返回对象 - data 是保存的人员对象
-     * @since 9.6.0
+     * @param personId 人员id
+     * @param sign Base64加密之后的签名字符串
+     * @return {@code Y9Result<Object>} 通用请求返回对象 - success 属性判断操作是否成功
+     * @since 9.6.3
      */
     @Override
-    public Y9Result<Person> savePerson(@RequestParam("tenantId") @NotBlank String tenantId,
-        @RequestBody @Validated CreatePersonDTO personDTO) {
+    public Y9Result<Object> savePersonSign(@RequestParam("tenantId") @NotBlank String tenantId,
+        @RequestParam("personId") @NotBlank String personId, @RequestParam("sign") @NotBlank String sign) {
         Y9LoginUserHolder.setTenantId(tenantId);
-
-        Y9Person y9Person = Y9ModelConvertUtil.convert(personDTO, Y9Person.class);
-        Y9PersonExt y9PersonExt = Y9ModelConvertUtil.convert(personDTO, Y9PersonExt.class);
-        y9Person = y9PersonService.saveOrUpdate(y9Person, y9PersonExt);
-        return Y9Result.success(Y9ModelConvertUtil.convert(y9Person, Person.class));
+        Y9Person y9Person = y9PersonService.findById(personId).orElse(null);
+        if (y9Person != null) {
+            y9PersonExtService.savePersonSign(y9Person, sign);
+        }
+        return Y9Result.success();
     }
 
     /**
