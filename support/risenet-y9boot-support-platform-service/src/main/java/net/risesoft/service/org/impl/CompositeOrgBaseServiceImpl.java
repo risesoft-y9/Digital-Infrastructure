@@ -39,6 +39,7 @@ import net.risesoft.model.platform.Person;
 import net.risesoft.model.platform.PersonsGroups;
 import net.risesoft.model.platform.PersonsPositions;
 import net.risesoft.model.platform.Position;
+import net.risesoft.model.platform.SyncOrgUnits;
 import net.risesoft.repository.Y9DepartmentRepository;
 import net.risesoft.repository.Y9GroupRepository;
 import net.risesoft.repository.Y9ManagerRepository;
@@ -263,6 +264,130 @@ public class CompositeOrgBaseServiceImpl implements CompositeOrgBaseService {
         return dataMap;
     }
 
+    @Override
+    public SyncOrgUnits getSyncOrgUnits(String syncId, OrgTypeEnum orgType, boolean recursionRequired) {
+        SyncOrgUnits syncOrgUnits = new SyncOrgUnits();
+        syncOrgUnits.setOrgUnitId(syncId);
+        syncOrgUnits.setOrgTypeEnum(orgType);
+        syncOrgUnits.setNeedRecursion(recursionRequired);
+
+        if (OrgTypeEnum.ORGANIZATION.equals(orgType)) {
+            Optional<Y9Organization> y9OrganizationOptional = y9OrganizationManager.findById(syncId);
+            if (y9OrganizationOptional.isPresent()) {
+                Y9Organization y9Organization = y9OrganizationOptional.get();
+                Organization organization = ModelConvertUtil.convert(y9Organization, Organization.class);
+                syncOrgUnits.setOrganization(organization);
+                if (recursionRequired) {
+                    getSyncOrgUnitsRecursion(syncOrgUnits, organization);
+                }
+            }
+        } else if (OrgTypeEnum.DEPARTMENT.equals(orgType)) {
+            Optional<Y9Department> y9DepartmentOptional = y9DepartmentManager.findById(syncId);
+            if (y9DepartmentOptional.isPresent()) {
+                Y9Department y9Department = y9DepartmentOptional.get();
+                Department department = ModelConvertUtil.convert(y9Department, Department.class);
+                syncOrgUnits.getDepartments().add(department);
+                if (recursionRequired) {
+                    getSyncOrgUnitsRecursion(syncOrgUnits, department);
+                }
+            }
+        } else if (OrgTypeEnum.GROUP.equals(orgType)) {
+            Optional<Y9Group> y9GroupOptional = y9GroupManager.findById(syncId);
+            if (y9GroupOptional.isPresent()) {
+                Y9Group y9Group = y9GroupOptional.get();
+                Group group = ModelConvertUtil.convert(y9Group, Group.class);
+                syncOrgUnits.getGroups().add(group);
+                if (recursionRequired) {
+                    getSyncOrgUnitsRecursion(syncOrgUnits, group);
+                }
+            }
+        } else if (OrgTypeEnum.POSITION.equals(orgType)) {
+            Optional<Y9Position> y9PositionOptional = y9PositionManager.findById(syncId);
+            if (y9PositionOptional.isPresent()) {
+                Y9Position y9Position = y9PositionOptional.get();
+                Position position = ModelConvertUtil.convert(y9Position, Position.class);
+                syncOrgUnits.getPositions().add(position);
+                if (recursionRequired) {
+                    getSyncOrgUnitsRecursion(syncOrgUnits, position);
+                }
+            }
+        } else if (OrgTypeEnum.PERSON.equals(orgType)) {
+            Optional<Y9Person> y9PersonOptional = y9PersonManager.findById(syncId);
+            if (y9PersonOptional.isPresent()) {
+                Y9Person y9Person = y9PersonOptional.get();
+                y9Person.setPassword(null);
+                Person person = ModelConvertUtil.convert(y9Person, Person.class);
+                syncOrgUnits.getPersons().add(person);
+            }
+        }
+        return syncOrgUnits;
+    }
+
+    private void getSyncOrgUnitsRecursion(SyncOrgUnits syncOrgUnits, Position position) {
+        List<Y9Person> orgPersonList = y9PersonManager.listByPositionId(position.getId());
+        for (Y9Person y9Person : orgPersonList) {
+            syncOrgUnits.getPersons().add(ModelConvertUtil.convert(y9Person, Person.class));
+        }
+
+        List<Y9PersonsToPositions> orgPositionsPersonsList =
+            y9PersonsToPositionsRepository.findByPositionId(position.getId());
+        for (Y9PersonsToPositions y9PersonsToPositions : orgPositionsPersonsList) {
+            syncOrgUnits.getPersonsPositions()
+                .add(ModelConvertUtil.convert(y9PersonsToPositions, PersonsPositions.class));
+        }
+    }
+
+    private void getSyncOrgUnitsRecursion(SyncOrgUnits syncOrgUnits, Group group) {
+        List<Y9Person> orgPersonList = y9PersonManager.listByGroupId(group.getId());
+        for (Y9Person y9Person : orgPersonList) {
+            syncOrgUnits.getPersons().add(ModelConvertUtil.convert(y9Person, Person.class));
+        }
+        List<Y9PersonsToGroups> orgPersonsGroupsList =
+            y9PersonsToGroupsRepository.findByGroupIdOrderByPersonOrder(group.getId());
+        for (Y9PersonsToGroups y9PersonsToGroups : orgPersonsGroupsList) {
+            syncOrgUnits.getPersonsGroups().add(ModelConvertUtil.convert(y9PersonsToGroups, PersonsGroups.class));
+        }
+    }
+
+    private void getSyncOrgUnitsRecursion(SyncOrgUnits syncOrgUnits, Department parentDepartment) {
+        String parentId = parentDepartment.getId();
+        getSyncOrgUnitsRecursion(syncOrgUnits, parentId);
+    }
+
+    private void getSyncOrgUnitsRecursion(SyncOrgUnits syncOrgUnits, String parentId) {
+        List<Y9Department> orgDeptList = findDepartmentByParentId(parentId);
+        for (Y9Department orgDept : orgDeptList) {
+            Department department = ModelConvertUtil.convert(orgDept, Department.class);
+            syncOrgUnits.getDepartments().add(department);
+            getSyncOrgUnitsRecursion(syncOrgUnits, department);
+        }
+
+        List<Y9Group> orgGroupList = findGroupByParentId(parentId);
+        for (Y9Group y9Group : orgGroupList) {
+            Group group = ModelConvertUtil.convert(y9Group, Group.class);
+            syncOrgUnits.getGroups().add(group);
+            getSyncOrgUnitsRecursion(syncOrgUnits, group);
+        }
+
+        List<Y9Position> orgPositionList = findPositionByParentId(parentId);
+        for (Y9Position y9Position : orgPositionList) {
+            Position position = ModelConvertUtil.convert(y9Position, Position.class);
+            syncOrgUnits.getPositions().add(position);
+            getSyncOrgUnitsRecursion(syncOrgUnits, position);
+        }
+
+        List<Y9Person> orgPersonList = findPersonByParentId(parentId);
+        for (Y9Person y9Person : orgPersonList) {
+            Person person = ModelConvertUtil.convert(y9Person, Person.class);
+            syncOrgUnits.getPersons().add(person);
+        }
+    }
+
+    private void getSyncOrgUnitsRecursion(SyncOrgUnits syncOrgUnits, Organization organization) {
+        String parentId = organization.getId();
+        getSyncOrgUnitsRecursion(syncOrgUnits, parentId);
+    }
+
     /**
      * 默认类型排序：部门->用户组->角色->岗位->人员
      */
@@ -448,11 +573,10 @@ public class CompositeOrgBaseServiceImpl implements CompositeOrgBaseService {
     }
 
     @Override
-    public void sync(String syncId, OrgTypeEnum orgType, Integer needRecursion) {
-        HashMap<String, Serializable> dataMap = this.getSyncMap(syncId, orgType, needRecursion);
-
-        Y9MessageOrg event =
-            new Y9MessageOrg(dataMap, Y9OrgEventConst.RISEORGEVENT_TYPE_SYNC, Y9LoginUserHolder.getTenantId());
+    public void sync(String syncId, OrgTypeEnum orgType, boolean needRecursion, String targetSystemName) {
+        SyncOrgUnits syncOrgUnits = this.getSyncOrgUnits(syncId, orgType, needRecursion);
+        Y9MessageOrg<SyncOrgUnits> event = new Y9MessageOrg<>(syncOrgUnits, Y9OrgEventConst.RISEORGEVENT_TYPE_SYNC,
+            targetSystemName, Y9LoginUserHolder.getTenantId());
         Y9PublishServiceUtil.publishMessageOrg(event);
     }
 

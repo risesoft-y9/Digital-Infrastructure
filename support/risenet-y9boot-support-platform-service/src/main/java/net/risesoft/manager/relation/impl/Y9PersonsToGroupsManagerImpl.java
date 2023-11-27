@@ -56,8 +56,9 @@ public class Y9PersonsToGroupsManagerImpl implements Y9PersonsToGroupsManager {
 
         Y9Person person = y9PersonManager.getById(y9PersonsToGroups.getPersonId());
         Y9Group group = y9GroupManager.getById(y9PersonsToGroups.getGroupId());
-        Y9MessageOrg msg = new Y9MessageOrg(ModelConvertUtil.convert(y9PersonsToGroups, PersonsGroups.class),
-            Y9OrgEventConst.RISEORGEVENT_TYPE_GROUP_REMOVEPERSON, Y9LoginUserHolder.getTenantId());
+        Y9MessageOrg<PersonsGroups> msg =
+            new Y9MessageOrg<>(ModelConvertUtil.convert(y9PersonsToGroups, PersonsGroups.class),
+                Y9OrgEventConst.RISEORGEVENT_TYPE_GROUP_REMOVEPERSON, Y9LoginUserHolder.getTenantId());
         Y9PublishServiceUtil.persistAndPublishMessageOrg(msg, "移除用户组人员",
             group.getName() + "移除用户组成员" + person.getName());
 

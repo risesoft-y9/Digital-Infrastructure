@@ -18,7 +18,6 @@ import net.risesoft.log.OperationTypeEnum;
 import net.risesoft.log.annotation.RiseLog;
 import net.risesoft.pojo.Y9Result;
 import net.risesoft.y9.Y9LoginUserHolder;
-import net.risesoft.y9.pubsub.Y9PublishService;
 import net.risesoft.y9public.entity.resource.Y9System;
 import net.risesoft.y9public.service.resource.Y9SystemService;
 import net.risesoft.y9public.service.tenant.Y9TenantSystemService;
@@ -38,7 +37,6 @@ public class SystemController {
 
     private final Y9SystemService y9SystemService;
     private final Y9TenantSystemService y9TenantSystemService;
-    private final Y9PublishService y9PublishService;
 
     /**
      * 删除系统

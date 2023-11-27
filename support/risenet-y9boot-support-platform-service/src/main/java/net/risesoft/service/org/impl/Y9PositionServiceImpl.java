@@ -145,7 +145,7 @@ public class Y9PositionServiceImpl implements Y9PositionService {
         TransactionSynchronizationManager.registerSynchronization(new TransactionSynchronization() {
             @Override
             public void afterCommit() {
-                Y9MessageOrg msg = new Y9MessageOrg(Y9ModelConvertUtil.convert(y9Position, Position.class),
+                Y9MessageOrg<Position> msg = new Y9MessageOrg<>(Y9ModelConvertUtil.convert(y9Position, Position.class),
                     Y9OrgEventConst.RISEORGEVENT_TYPE_DELETE_POSITION, Y9LoginUserHolder.getTenantId());
                 Y9PublishServiceUtil.persistAndPublishMessageOrg(msg, "删除岗位", "删除" + y9Position.getName());
             }
@@ -260,8 +260,9 @@ public class Y9PositionServiceImpl implements Y9PositionService {
         TransactionSynchronizationManager.registerSynchronization(new TransactionSynchronization() {
             @Override
             public void afterCommit() {
-                Y9MessageOrg msg = new Y9MessageOrg(Y9ModelConvertUtil.convert(savedPosition, Position.class),
-                    Y9OrgEventConst.RISEORGEVENT_TYPE_UPDATE_POSITION, Y9LoginUserHolder.getTenantId());
+                Y9MessageOrg<Position> msg =
+                    new Y9MessageOrg<>(Y9ModelConvertUtil.convert(savedPosition, Position.class),
+                        Y9OrgEventConst.RISEORGEVENT_TYPE_UPDATE_POSITION, Y9LoginUserHolder.getTenantId());
                 Y9PublishServiceUtil.persistAndPublishMessageOrg(msg, "移动岗位",
                     savedPosition.getName() + "移动到" + parent.getName());
             }
@@ -323,8 +324,9 @@ public class Y9PositionServiceImpl implements Y9PositionService {
         TransactionSynchronizationManager.registerSynchronization(new TransactionSynchronization() {
             @Override
             public void afterCommit() {
-                Y9MessageOrg msg = new Y9MessageOrg(Y9ModelConvertUtil.convert(savedPosition, Position.class),
-                    Y9OrgEventConst.RISEORGEVENT_TYPE_UPDATE_POSITION, Y9LoginUserHolder.getTenantId());
+                Y9MessageOrg<Position> msg =
+                    new Y9MessageOrg<>(Y9ModelConvertUtil.convert(savedPosition, Position.class),
+                        Y9OrgEventConst.RISEORGEVENT_TYPE_UPDATE_POSITION, Y9LoginUserHolder.getTenantId());
                 Y9PublishServiceUtil.publishMessageOrg(msg);
             }
         });
@@ -349,8 +351,9 @@ public class Y9PositionServiceImpl implements Y9PositionService {
         TransactionSynchronizationManager.registerSynchronization(new TransactionSynchronization() {
             @Override
             public void afterCommit() {
-                Y9MessageOrg msg = new Y9MessageOrg(Y9ModelConvertUtil.convert(savedPosition, Position.class),
-                    Y9OrgEventConst.RISEORGEVENT_TYPE_UPDATE_POSITION, Y9LoginUserHolder.getTenantId());
+                Y9MessageOrg<Position> msg =
+                    new Y9MessageOrg<>(Y9ModelConvertUtil.convert(savedPosition, Position.class),
+                        Y9OrgEventConst.RISEORGEVENT_TYPE_UPDATE_POSITION, Y9LoginUserHolder.getTenantId());
                 Y9PublishServiceUtil.publishMessageOrg(msg);
             }
         });
@@ -395,8 +398,9 @@ public class Y9PositionServiceImpl implements Y9PositionService {
         TransactionSynchronizationManager.registerSynchronization(new TransactionSynchronization() {
             @Override
             public void afterCommit() {
-                Y9MessageOrg msg = new Y9MessageOrg(Y9ModelConvertUtil.convert(savedPosition, Position.class),
-                    Y9OrgEventConst.RISEORGEVENT_TYPE_UPDATE_POSITION_TABINDEX, Y9LoginUserHolder.getTenantId());
+                Y9MessageOrg<Position> msg =
+                    new Y9MessageOrg<>(Y9ModelConvertUtil.convert(savedPosition, Position.class),
+                        Y9OrgEventConst.RISEORGEVENT_TYPE_UPDATE_POSITION_TABINDEX, Y9LoginUserHolder.getTenantId());
                 Y9PublishServiceUtil.persistAndPublishMessageOrg(msg, "更新岗位排序号",
                     savedPosition.getName() + "的排序号更新为" + tabIndex);
             }

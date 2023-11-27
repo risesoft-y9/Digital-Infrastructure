@@ -10,10 +10,6 @@ import org.springframework.transaction.annotation.Transactional;
 import lombok.RequiredArgsConstructor;
 
 import net.risesoft.y9.Y9LoginUserHolder;
-import net.risesoft.y9.json.Y9JsonUtil;
-import net.risesoft.y9.pubsub.constant.Y9OrgEventConst;
-import net.risesoft.y9.pubsub.constant.Y9TopicConst;
-import net.risesoft.y9.pubsub.message.Y9MessageOrg;
 import net.risesoft.y9public.entity.user.Y9User;
 import net.risesoft.y9public.repository.user.Y9UserRepository;
 import net.risesoft.y9public.service.user.Y9UserService;
@@ -48,11 +44,6 @@ public class Y9UserServiceImpl implements Y9UserService {
         Optional<Y9User> orgUser = y9UserRepository.findById(id);
         if (orgUser.isPresent()) {
             y9UserRepository.deleteById(id);
-
-            String json = Y9JsonUtil.writeValueAsString(orgUser.get());
-            Y9MessageOrg riseEvent =
-                new Y9MessageOrg(json, Y9OrgEventConst.RISEORGEVENT_TYPE_DELETE_USER, Y9LoginUserHolder.getTenantId());
-            y9KafkaTemplate.send(Y9TopicConst.Y9_USER_EVENT, Y9JsonUtil.writeValueAsString(riseEvent));
         }
     }
 
@@ -96,24 +87,7 @@ public class Y9UserServiceImpl implements Y9UserService {
     @Override
     @Transactional(readOnly = false)
     public Y9User save(Y9User orgUser) {
-        Y9User saved = y9UserRepository.save(orgUser);
-
-        String json = Y9JsonUtil.writeValueAsString(saved);
-        Y9MessageOrg riseEvent =
-            new Y9MessageOrg(json, Y9OrgEventConst.RISEORGEVENT_TYPE_UPDATE_USER, Y9LoginUserHolder.getTenantId());
-        y9KafkaTemplate.send(Y9TopicConst.Y9_USER_EVENT, Y9JsonUtil.writeValueAsString(riseEvent));
-        return saved;
-    }
-
-    @Override
-    public void sync() {
-        List<Y9User> orgUsers = y9UserRepository.findAll();
-        if (!orgUsers.isEmpty()) {
-            String json = Y9JsonUtil.writeValueAsString(orgUsers);
-            Y9MessageOrg riseEvent =
-                new Y9MessageOrg(json, Y9OrgEventConst.RISEORGEVENT_TYPE_USER_SYNC, Y9LoginUserHolder.getTenantId());
-            y9KafkaTemplate.send(Y9TopicConst.Y9_USER_EVENT, Y9JsonUtil.writeValueAsString(riseEvent));
-        }
+        return y9UserRepository.save(orgUser);
     }
 
     @Override

@@ -1,12 +1,14 @@
 package com.example;
 
-import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
+import java.util.stream.Collectors;
 
 import net.risesoft.model.platform.Department;
+import net.risesoft.model.platform.Group;
 import net.risesoft.model.platform.Organization;
-import net.risesoft.y9.pubsub.constant.Y9OrgEventConst;
+import net.risesoft.model.platform.Person;
+import net.risesoft.model.platform.Position;
+import net.risesoft.model.platform.SyncOrgUnits;
 
 /**
  * 组织机构同步
@@ -31,24 +33,46 @@ public class OrganizationUtil {
     /**
      * 组织架构同步
      *
-     * @param dataMap
-     * @throws Exception
+     * @param syncOrgUnits
      */
-    @SuppressWarnings("unchecked")
-    public static void syncOrganization(Map<String, Object> dataMap) {
-        String syncId = (String)dataMap.get(Y9OrgEventConst.SYNC_ID);
-        Integer syncRecursion = (Integer)dataMap.get(Y9OrgEventConst.SYNC_RECURSION);
-        Organization org = (Organization)dataMap.get(syncId);
-        boolean exist = checkOrgExist(org);
-        if (exist) {// 执行相应操作
+    public static void syncOrganization(SyncOrgUnits syncOrgUnits) {
+        String syncId = syncOrgUnits.getOrgUnitId();
+        boolean needRecursion = syncOrgUnits.isNeedRecursion();
+        Organization org = syncOrgUnits.getOrganization();
+
+        if (checkOrgExist(org)) {
             // updateOrgznization(org);更新
         } else {
             // addOrgznization(org);新增
         }
-        if (syncRecursion == 1) {// 递归同步,机构下的部门、人员
-            List<Department> childDeptList = (ArrayList<Department>)dataMap.get(syncId + "Department");
+
+        if (needRecursion) {
+            // 机构下的人员
+            List<Person> personList = syncOrgUnits.getPersons().stream().filter(p -> p.getParentId().equals(syncId))
+                .collect(Collectors.toList());
+            for (Person p : personList) {
+                PersonUtil.syncPerson(p);
+            }
+
+            // 机构下岗位
+            List<Position> positionList = syncOrgUnits.getPositions().stream()
+                .filter(p -> p.getParentId().equals(syncId)).collect(Collectors.toList());
+            for (Position position : positionList) {
+                PositionUtil.recursion(syncOrgUnits, position, position.getId());
+            }
+
+            // 机构下用户组
+            List<Group> groupList = syncOrgUnits.getGroups().stream().filter(g -> g.getParentId().equals(syncId))
+                .collect(Collectors.toList());
+            for (Group group : groupList) {
+                GroupUtil.recursion(syncOrgUnits, group, group.getId());
+            }
+
+            // 机构下的部门
+            List<Department> childDeptList = syncOrgUnits.getDepartments().stream()
+                .filter(d -> d.getParentId().equals(syncId)).collect(Collectors.toList());
             for (Department d : childDeptList) {
-                DepartmentUtil.recursionDeptAndPersn(dataMap, d, d.getId());
+                DepartmentUtil.recursion(syncOrgUnits, d, d.getId());
             }
 
         }

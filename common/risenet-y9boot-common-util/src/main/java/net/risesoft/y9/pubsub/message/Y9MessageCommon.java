@@ -8,6 +8,8 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import net.risesoft.y9.pubsub.constant.Y9OrgEventConst;
+
 /**
  * 通用消息
  *
@@ -22,8 +24,9 @@ import lombok.NoArgsConstructor;
 public class Y9MessageCommon implements Serializable {
     private static final long serialVersionUID = -1107265840539410276L;
 
-    /** 系统名 */
-    private String target;
+    /** 处理消息的系统名 */
+    private String eventTarget = Y9OrgEventConst.EVENT_TARGET_ALL;
+
     /**
      * 事件内容 <br>
      * 
@@ -31,6 +34,7 @@ public class Y9MessageCommon implements Serializable {
      */
     @JsonTypeInfo(use = JsonTypeInfo.Id.CLASS)
     private Serializable eventObject;
+
     /** 事件类型 */
     private String eventType;
 }

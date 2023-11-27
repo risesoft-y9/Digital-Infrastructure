@@ -1,11 +1,11 @@
 package com.example;
 
 import java.util.List;
-import java.util.Map;
+import java.util.stream.Collectors;
 
 import net.risesoft.model.platform.Group;
 import net.risesoft.model.platform.PersonsGroups;
-import net.risesoft.y9.pubsub.constant.Y9OrgEventConst;
+import net.risesoft.model.platform.SyncOrgUnits;
 
 /**
  * 用户组同步
@@ -29,27 +29,38 @@ public class GroupUtil {
     /**
      * 同步用户组信息
      *
-     * @param dataMap
+     * @param syncOrgUnits
      */
-    @SuppressWarnings("unchecked")
-    public static void syncGroup(Map<String, Object> dataMap) {
-        String syncId = (String)dataMap.get(Y9OrgEventConst.SYNC_ID);
-        Integer syncRecursion = (Integer)dataMap.get(Y9OrgEventConst.SYNC_RECURSION);
-        Group g = (Group)dataMap.get(syncId);
-        boolean exist = checkGroupExist(g);
-        if (exist) {
+    public static void syncGroup(SyncOrgUnits syncOrgUnits) {
+        String syncId = syncOrgUnits.getOrgUnitId();
+        boolean needRecursion = syncOrgUnits.isNeedRecursion();
+        Group g = syncOrgUnits.getGroups().get(0);
+
+        if (needRecursion) {
+            recursion(syncOrgUnits, g, syncId);
+        } else {
+
+            if (checkGroupExist(g)) {
+                // updateGroup(g);
+            } else {
+                // addGroup(g);
+            }
+
+        }
+    }
+
+    public static void recursion(SyncOrgUnits syncOrgUnits, Group g, String syncId) {
+        if (checkGroupExist(g)) {
             // updateGroup(g);
         } else {
             // addGroup(g);
         }
-        /**
-         * 递归，获取用户组中的人员，保存用户组人员绑定关系
-         */
-        if (syncRecursion == 1) {
-            List<PersonsGroups> pgList = (List<PersonsGroups>)dataMap.get(syncId + "PersonsGroups");
-            for (PersonsGroups pg : pgList) {
-                PersonsGroupsUtil.addPersonsGroup(pg);
-            }
+
+        // 递归，获取用户组中的人员，保存用户组人员绑定关系
+        List<PersonsGroups> pgList = syncOrgUnits.getPersonsGroups().stream()
+            .filter(pg -> pg.getGroupId().equals(syncId)).collect(Collectors.toList());
+        for (PersonsGroups pg : pgList) {
+            PersonsGroupsUtil.addPersonsGroup(pg);
         }
     }
 }

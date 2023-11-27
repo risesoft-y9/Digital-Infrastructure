@@ -180,7 +180,7 @@ public class Y9JobServiceImpl implements Y9JobService {
                 TransactionSynchronizationManager.registerSynchronization(new TransactionSynchronization() {
                     @Override
                     public void afterCommit() {
-                        Y9MessageOrg msg = new Y9MessageOrg(Y9ModelConvertUtil.convert(savedJob, Job.class),
+                        Y9MessageOrg<Job> msg = new Y9MessageOrg<>(Y9ModelConvertUtil.convert(savedJob, Job.class),
                             Y9OrgEventConst.RISEORGEVENT_TYPE_UPDATE_JOB, Y9LoginUserHolder.getTenantId());
                         Y9PublishServiceUtil.persistAndPublishMessageOrg(msg, "更新职位信息", "更新职位" + savedJob.getName());
                     }
@@ -202,7 +202,7 @@ public class Y9JobServiceImpl implements Y9JobService {
         TransactionSynchronizationManager.registerSynchronization(new TransactionSynchronization() {
             @Override
             public void afterCommit() {
-                Y9MessageOrg msg = new Y9MessageOrg(Y9ModelConvertUtil.convert(savedJob, Job.class),
+                Y9MessageOrg<Job> msg = new Y9MessageOrg<>(Y9ModelConvertUtil.convert(savedJob, Job.class),
                     Y9OrgEventConst.RISEORGEVENT_TYPE_ADD_JOB, Y9LoginUserHolder.getTenantId());
                 Y9PublishServiceUtil.persistAndPublishMessageOrg(msg, "新增职位信息", "新增职位" + savedJob.getName());
             }

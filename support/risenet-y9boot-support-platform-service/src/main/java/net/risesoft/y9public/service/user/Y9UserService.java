@@ -94,11 +94,6 @@ public interface Y9UserService {
     Y9User save(Y9User orgUser);
 
     /**
-     * 同步
-     */
-    void sync();
-
-    /**
      * 根据tenantId,tenantName，tenantLoginName进行更新
      *
      * @param tenantId 租户id

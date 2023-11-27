@@ -113,6 +113,8 @@ public class Y9PublishServiceUtil {
     }
 
     public static void publishMessageOrg(Y9MessageOrg msg) {
+        checkBeans();
+
         for (Y9PublishService s : y9PublishServices) {
             s.publishMessageOrg(msg);
         }

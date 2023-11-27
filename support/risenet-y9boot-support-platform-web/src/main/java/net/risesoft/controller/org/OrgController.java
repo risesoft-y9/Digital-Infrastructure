@@ -226,13 +226,14 @@ public class OrgController {
      * @param syncId 同步节点id
      * @param orgType 组织类型
      * @param needRecursion 是否递归
-     * @return
+     * @param targetSystemName 目标系统名称
+     * @return {@code Y9Result<String>}
      */
     @RiseLog(operationName = "同步数据", operationType = OperationTypeEnum.ADD)
     @PostMapping(value = "/sync")
     public Y9Result<String> sync(@RequestParam @NotBlank String syncId, @RequestParam OrgTypeEnum orgType,
-        @RequestParam Integer needRecursion) {
-        compositeOrgBaseService.sync(syncId, orgType, needRecursion);
+        @RequestParam boolean needRecursion, String targetSystemName) {
+        compositeOrgBaseService.sync(syncId, orgType, needRecursion, targetSystemName);
         return Y9Result.success(null, "发送同步数据事件完成");
     }
 

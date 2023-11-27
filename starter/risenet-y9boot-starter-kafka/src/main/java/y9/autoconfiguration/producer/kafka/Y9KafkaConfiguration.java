@@ -56,7 +56,7 @@ public class Y9KafkaConfiguration {
             }
 
             if (Y9CommonEventConst.TENANT_SYSTEM_REGISTERED.equals(eventType)
-                && !Objects.equals(Y9Context.getSystemName(), msg.getTarget())) {
+                && !Objects.equals(Y9Context.getSystemName(), msg.getEventTarget())) {
                 // 对于非当前引入的系统的消息不处理
                 return;
             }

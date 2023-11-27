@@ -19,6 +19,7 @@ import net.risesoft.entity.relation.Y9PersonsToGroups;
 import net.risesoft.entity.relation.Y9PersonsToPositions;
 import net.risesoft.exception.OrgUnitErrorCodeEnum;
 import net.risesoft.manager.org.Y9PersonManager;
+import net.risesoft.model.platform.Person;
 import net.risesoft.repository.Y9PersonRepository;
 import net.risesoft.repository.relation.Y9PersonsToGroupsRepository;
 import net.risesoft.repository.relation.Y9PersonsToPositionsRepository;
@@ -96,7 +97,7 @@ public class Y9PersonManagerImpl implements Y9PersonManager {
         person.setTabIndex(tabIndex);
         person = this.save(person);
 
-        Y9MessageOrg msg = new Y9MessageOrg(ModelConvertUtil.orgPersonToPerson(person),
+        Y9MessageOrg<Person> msg = new Y9MessageOrg<>(ModelConvertUtil.orgPersonToPerson(person),
             Y9OrgEventConst.RISEORGEVENT_TYPE_UPDATE_PERSON_TABINDEX, Y9LoginUserHolder.getTenantId());
         Y9PublishServiceUtil.persistAndPublishMessageOrg(msg, "更新人员排序号", person.getName() + "的排序号更新为" + tabIndex);
 
