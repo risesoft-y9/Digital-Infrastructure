@@ -312,6 +312,18 @@ public interface PersonApi {
         @RequestParam("name") @NotBlank String name, @RequestParam("page") int page, @RequestParam("rows") int rows);
 
     /**
+     * 新增或修改人员
+     *
+     * @param tenantId 租户id
+     * @param personDTO 人员对象
+     * @return {@code Y9Result<Person>} 通用请求返回对象 - data 是保存的人员对象
+     * @since 9.6.0
+     */
+    @PostMapping("/savePersonWithExt")
+    Y9Result<Person> savePerson(@RequestParam("tenantId") @NotBlank String tenantId,
+        @RequestBody @Validated CreatePersonDTO personDTO);
+
+    /**
      * 保存人员头像
      *
      * @param tenantId 租户id
@@ -338,16 +350,17 @@ public interface PersonApi {
         @RequestParam("personId") @NotBlank String personId, @RequestParam("photo") @NotBlank String photo);
 
     /**
-     * 新增或修改人员
+     * 保存用户签名照片接口
      *
      * @param tenantId 租户id
-     * @param personDTO 人员对象
-     * @return {@code Y9Result<Person>} 通用请求返回对象 - data 是保存的人员对象
-     * @since 9.6.0
+     * @param personId 人员id
+     * @param sign Base64加密之后的签名字符串
+     * @return {@code Y9Result<Object>} 通用请求返回对象 - success 属性判断操作是否成功
+     * @since 9.6.3
      */
-    @PostMapping("/savePersonWithExt")
-    Y9Result<Person> savePerson(@RequestParam("tenantId") @NotBlank String tenantId,
-        @RequestBody @Validated CreatePersonDTO personDTO);
+    @PostMapping("/savePersonSign")
+    Y9Result<Object> savePersonSign(@RequestParam("tenantId") @NotBlank String tenantId,
+        @RequestParam("personId") @NotBlank String personId, @RequestParam("sign") @NotBlank String sign);
 
     /**
      * 保存人员的微信id
