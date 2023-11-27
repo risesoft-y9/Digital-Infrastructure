@@ -335,13 +335,13 @@ public class PersonController {
     }
 
     /**
-     * 上传个人照证件照图片
+     * 上传个人证件照图片
      *
      * @param iconFile 头像文件
      * @param personId 人员id
      * @return
      */
-    @RiseLog(operationType = OperationTypeEnum.ADD, operationName = "上传个人照证件照图片")
+    @RiseLog(operationType = OperationTypeEnum.ADD, operationName = "上传个人证件照图片")
     @PostMapping(value = "/savePersonPhoto")
     public Y9Result<String> savePersonPhoto(@RequestParam MultipartFile iconFile,
         @RequestParam @NotBlank String personId) {
@@ -355,9 +355,9 @@ public class PersonController {
             Y9Person person = y9PersonService.getById(personId);
             y9PersonExtService.savePersonPhoto(person, photo);
 
-            return Y9Result.successMsg("上传个人照证件照图片成功");
+            return Y9Result.successMsg("上传个人证件照图片成功");
         } else {
-            return Y9Result.failure("上传个人照证件照图片失败，图片为空");
+            return Y9Result.failure("上传个人证件照图片失败，图片为空");
         }
     }
 
@@ -377,13 +377,40 @@ public class PersonController {
     }
 
     /**
-     * 查看人员照片
+     * 上传个人签名图片
+     *
+     * @param iconFile 签名文件
+     * @param personId 人员id
+     * @return
+     */
+    @RiseLog(operationType = OperationTypeEnum.ADD, operationName = "上传个人签名照图片")
+    @PostMapping(value = "/savePersonSign")
+    public Y9Result<String> savePersonSign(@RequestParam MultipartFile iconFile,
+        @RequestParam @NotBlank String personId) {
+        if (iconFile != null && iconFile.getSize() != 0) {
+            byte[] photo = null;
+            try {
+                photo = iconFile.getBytes();
+            } catch (IOException e1) {
+                LOGGER.warn(e1.getMessage(), e1);
+            }
+            Y9Person person = y9PersonService.getById(personId);
+            y9PersonExtService.savePersonSign(person, photo);
+
+            return Y9Result.successMsg("上传个人签名图片成功");
+        } else {
+            return Y9Result.failure("上传个人签名图片失败，图片为空");
+        }
+    }
+
+    /**
+     * 查看人员证件照片
      *
      * @param personId 人员id
      * @param response
      *
      */
-    @RiseLog(operationName = "查看人员照片")
+    @RiseLog(operationName = "查看人员证件照片")
     @RequestMapping("/showPersonPhoto")
     public void showPersonPhoto(@RequestParam @NotBlank String personId, HttpServletResponse response) {
         Y9Person person = y9PersonService.getById(personId);
@@ -392,6 +419,34 @@ public class PersonController {
             Y9PersonExt ext = y9PersonExtService.findByPersonId(person.getId()).orElse(null);
             if (ext != null && ext.getPhoto() != null) {
                 InputStream inputStream = new ByteArrayInputStream(ext.getPhoto());
+                ServletOutputStream sos = response.getOutputStream();
+                byte[] b = new byte[1024];
+                int l;
+                while ((l = inputStream.read(b)) > -1) {
+                    sos.write(b, 0, l);
+                }
+            }
+        } catch (Exception e) {
+            LOGGER.warn(e.getMessage(), e);
+        }
+    }
+
+    /**
+     * 查看人员签名照片
+     *
+     * @param personId 人员id
+     * @param response
+     *
+     */
+    @RiseLog(operationName = "查看人员签名照片")
+    @RequestMapping("/showPersonSign")
+    public void showPersonSign(@RequestParam @NotBlank String personId, HttpServletResponse response) {
+        Y9Person person = y9PersonService.getById(personId);
+        try {
+            response.setContentType("image/jpg");
+            Y9PersonExt ext = y9PersonExtService.findByPersonId(person.getId()).orElse(null);
+            if (ext != null && ext.getPhoto() != null) {
+                InputStream inputStream = new ByteArrayInputStream(ext.getSign());
                 ServletOutputStream sos = response.getOutputStream();
                 byte[] b = new byte[1024];
                 int l;

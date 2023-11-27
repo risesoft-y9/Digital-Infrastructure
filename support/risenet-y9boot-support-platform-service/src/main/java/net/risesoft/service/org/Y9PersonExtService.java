@@ -30,6 +30,14 @@ public interface Y9PersonExtService {
     Y9PersonExt getById(String id);
 
     /**
+     * 根据人员主键id获取人员扩展实例
+     *
+     * @param personId 人员唯一标识
+     * @return ORGPerson
+     */
+    Y9PersonExt getByPersonId(String personId);
+
+    /**
      * 根据personId查询
      *
      * @param personId 人员id
@@ -57,6 +65,15 @@ public interface Y9PersonExtService {
     /**
      * 保存个人头像信息
      *
+     * @param personId 人员id
+     * @param photo 照片的base64
+     * @return {@link Y9PersonExt}
+     */
+    Y9PersonExt savePersonPhoto(String personId, String photo);
+
+    /**
+     * 保存个人头像信息
+     *
      * @param person 人员对象
      * @param photo 照片字节数组
      * @return {@link Y9PersonExt}
@@ -73,13 +90,20 @@ public interface Y9PersonExtService {
     Y9PersonExt savePersonPhoto(Y9Person person, String photo);
 
     /**
-     * 保存个人头像信息
+     * 保存个人签名信息
      *
-     * @param personId 人员id
-     * @param photo 照片的base64
+     * @param person 人员对象
+     * @param sign 签名字节数组
      * @return {@link Y9PersonExt}
      */
-    Y9PersonExt savePersonPhoto(String personId, String photo);
+    Y9PersonExt savePersonSign(Y9Person person, byte[] sign);
 
-    Y9PersonExt getByPersonId(String personId);
+    /**
+     * 保存个人签名信息
+     *
+     * @param person 人员对象
+     * @param sign 签名的base64
+     * @return {@link Y9PersonExt}
+     */
+    Y9PersonExt savePersonSign(Y9Person person, String sign);
 }
