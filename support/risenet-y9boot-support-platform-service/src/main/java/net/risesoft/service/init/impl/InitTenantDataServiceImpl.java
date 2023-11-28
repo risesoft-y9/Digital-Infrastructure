@@ -7,7 +7,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import lombok.RequiredArgsConstructor;
-
 import net.risesoft.consts.InitDataConsts;
 import net.risesoft.entity.Y9Manager;
 import net.risesoft.entity.Y9OptionClass;
@@ -20,6 +19,7 @@ import net.risesoft.service.org.Y9JobService;
 import net.risesoft.service.org.Y9ManagerService;
 import net.risesoft.service.org.Y9OrganizationService;
 import net.risesoft.service.org.Y9PersonService;
+import net.risesoft.y9.Y9LoginUserHolder;
 
 /**
  * @author shidaobang
@@ -43,6 +43,7 @@ public class InitTenantDataServiceImpl implements InitTenantDataService {
     @Override
     @Transactional(readOnly = false)
     public void initAll(String tenantId) {
+        Y9LoginUserHolder.setTenantId(tenantId);
         // 租户的示例数据
         // FIXME 是否需要？
         this.initJob();
