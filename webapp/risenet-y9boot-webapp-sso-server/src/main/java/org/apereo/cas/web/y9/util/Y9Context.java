@@ -64,7 +64,7 @@ public class Y9Context implements ApplicationContextAware, EnvironmentAware, Ser
      * @throws org.springframework.beans.BeansException
      */
     public static <T> T getBean(Class<T> clz) throws BeansException {
-        T result = (T)applicationContext.getBean(clz);
+        T result = applicationContext.getBean(clz);
         return result;
     }
 

@@ -1,10 +1,5 @@
 package org.apereo.cas.support.oauth.web.response.callback;
 
-import java.util.LinkedHashMap;
-import java.util.Map;
-import java.util.Optional;
-
-import org.apache.commons.lang3.StringUtils;
 import org.apereo.cas.audit.AuditActionResolvers;
 import org.apereo.cas.audit.AuditResourceResolvers;
 import org.apereo.cas.audit.AuditableActions;
@@ -20,12 +15,17 @@ import org.apereo.cas.ticket.TicketGrantingTicket;
 import org.apereo.cas.ticket.code.OAuth20Code;
 import org.apereo.cas.ticket.code.OAuth20CodeFactory;
 import org.apereo.cas.util.function.FunctionUtils;
+
+import lombok.extern.slf4j.Slf4j;
+import lombok.val;
+import org.apache.commons.lang3.StringUtils;
 import org.apereo.inspektr.audit.annotation.Audit;
 import org.jooq.lambda.fi.util.function.CheckedFunction;
 import org.springframework.web.servlet.ModelAndView;
 
-import lombok.val;
-import lombok.extern.slf4j.Slf4j;
+import java.util.LinkedHashMap;
+import java.util.Map;
+import java.util.Optional;
 
 /**
  * This is {@link OAuth20AuthorizationCodeAuthorizationResponseBuilder}.
@@ -85,7 +85,7 @@ public class OAuth20AuthorizationCodeAuthorizationResponseBuilder extends BaseOA
 
         LOGGER.debug("Authorize request successful for client [{}] with redirect uri [{}]", holder.getClientId(), holder.getRedirectUri());
         
-        // y9 add
+        // y9 add start
         String redirectUri = holder.getRedirectUri();
         String serviceTicketId = "";
         TicketGrantingTicket ticket = code.getTicketGrantingTicket();
@@ -98,7 +98,7 @@ public class OAuth20AuthorizationCodeAuthorizationResponseBuilder extends BaseOA
                 break;
             }
         }
-        // y9 add
+        // y9 add end
 
         val params = new LinkedHashMap<String, String>();
         params.put(OAuth20Constants.CODE, code.getId());

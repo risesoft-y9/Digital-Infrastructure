@@ -28,7 +28,7 @@ public class Y9CasWebSecurityConfigurer {
         };
     }
     
-    @Bean
+    /*@Bean
     @RefreshScope(proxyMode = ScopedProxyMode.DEFAULT)
     public CasWebSecurityConfigurer<Void> oauth20ProtocolEndpointConfigurer() {
         return new CasWebSecurityConfigurer<>() {
@@ -37,5 +37,5 @@ public class Y9CasWebSecurityConfigurer {
                 return List.of(StringUtils.prependIfMissing(OAuth20Constants.BASE_OAUTH20_URL, "/"), "/y9static", "/api");
             }
         };
-    }
+    }*/
 }

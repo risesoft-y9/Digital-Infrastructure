@@ -9,12 +9,12 @@
 	<packaging>war</packaging>
 	<version>v9.7.0-SNAPSHOT</version>
 
-	<parent>
+	<!--<parent>
 		<groupId>net.risesoft</groupId>
 		<artifactId>y9-digitalbase</artifactId>
 		<version>v9.7.0-SNAPSHOT</version>
 		<relativePath>../../pom.xml</relativePath>
-	</parent>
+	</parent>-->
 
 	<repositories>
 		<repository>
@@ -49,6 +49,10 @@
 
 		<cas.version>7.0.0-RC9</cas.version>
 		<spring-boot.version>3.2.0</spring-boot.version>
+		<lombok.version>1.18.30</lombok.version>
+		<jodd-http.version>6.3.0</jodd-http.version>
+		<mysql.version>8.2.0</mysql.version>
+		<config.version>4.1.0-RC1</config.version>
 
 		<start-class>org.apereo.cas.web.CasWebApplication</start-class>
 
@@ -242,11 +246,13 @@
 		<dependency>
 			<groupId>org.jodd</groupId>
 			<artifactId>jodd-http</artifactId>
+			<version>${jodd-http.version}</version>
 		</dependency>
 
 		<dependency>
 			<groupId>com.mysql</groupId>
 			<artifactId>mysql-connector-j</artifactId>
+			<version>${mysql.version}</version>
 		</dependency>
 
 		<dependency>
@@ -255,14 +261,16 @@
 			<optional>true</optional>
 		</dependency>
 
-		<dependency>
+		<!--<dependency>
 			<groupId>org.springframework.cloud</groupId>
 			<artifactId>spring-cloud-config-client</artifactId>
-		</dependency>
+			<version>${config.version}</version>
+		</dependency>-->
 
 		<dependency>
 			<groupId>org.projectlombok</groupId>
 			<artifactId>lombok</artifactId>
+			<version>${lombok.version}</version>
 			<scope>provided</scope>
 		</dependency>
 
@@ -298,6 +306,14 @@
 		</dependency>
 		<dependency>
 			<groupId>org.apereo.cas</groupId>
+			<artifactId>cas-server-support-oauth-api</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.apereo.cas</groupId>
+			<artifactId>cas-server-support-oauth-core-api</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.apereo.cas</groupId>
 			<artifactId>cas-server-support-oauth-core</artifactId>
 		</dependency>
 		<dependency>
@@ -307,18 +323,8 @@
 
 		<dependency>
 			<groupId>org.apereo.cas</groupId>
-			<artifactId>cas-server-support-oauth-core-api</artifactId>
-		</dependency>
-
-		<dependency>
-			<groupId>org.apereo.cas</groupId>
 			<artifactId>cas-server-support-pac4j-api</artifactId>
-		</dependency>
-		
-		<dependency>
-			<groupId>org.apereo.cas</groupId>
-			<artifactId>cas-server-support-oauth-api</artifactId>
-		</dependency>
+		</dependency>		
 
 		<dependency>
 			<groupId>org.apereo.cas</groupId>
@@ -356,6 +362,7 @@
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-docker-compose</artifactId>
+			<version>${spring-boot.version}</version>
 		</dependency>
 
 	</dependencies>

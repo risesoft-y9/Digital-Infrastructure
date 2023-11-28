@@ -115,7 +115,6 @@ cas:
                 keySize: 512
     logout:
         followServiceRedirects: true
-        removeDescendantTickets: true
         confirmLogout: false
     slo:
         asynchronous: false
@@ -166,6 +165,7 @@ cas:
         secure: true
         sameSitePolicy: None
     ticket:
+        trackDescendantTickets: true
         crypto:
             enabled: false
             encryption:
