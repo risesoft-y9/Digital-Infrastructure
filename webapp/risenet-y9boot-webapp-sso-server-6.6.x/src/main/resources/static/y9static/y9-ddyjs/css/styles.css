@@ -47,7 +47,7 @@ body ::-webkit-input-placeholder {
 }
 
 body .login {
-    width: 900px;
+    width: 880px;
     height: 470px;
     position: absolute;
     left: 0;
@@ -84,8 +84,8 @@ body .login_form {
 
 body .login_form .login_title {
     padding-top: 80px;
-    padding-right: 65px;
-    padding-left: 64px;
+    padding-right: 53px;
+    padding-left: 52px;
 }
 
 body .login_title span {
@@ -100,8 +100,8 @@ body .login_title span {
 body .login_fields {
     /*height: 61px;*/
     margin: 0;
-    padding-right: 65px;
-    padding-left: 64px;
+    padding-right: 53px;
+    padding-left: 52px;
 }
 
 body .login_fields__user, body .login_fields__password {
@@ -118,6 +118,7 @@ body .login_fields__user:hover, body .login_fields__password:hover, body .login_
     border-radius: 2px;
     border: 1px solid #C92606;
     background: #FFFBFA;
+    color: #333;
 }
 
 
@@ -152,7 +153,7 @@ body .login_fields input[type='text'], body .login_fields input[type='password']
     padding-left: 10px;
     border-radius: 2px;
     background: #FFFBFA;
-    color: #D7988C !important;
+    color: #333 !important;
     font-size: 16px;
     font-style: normal;
     font-weight: 400;
@@ -253,9 +254,9 @@ body .noticeInfo .info span {
     font-size: 14px;
     font-style: normal;
     font-weight: 400;
-    line-height: 30px;
+    line-height: 22px;
     display: block;
-    margin-bottom: 15px;
+    margin-bottom: 10px;
 }
 
 body p {
