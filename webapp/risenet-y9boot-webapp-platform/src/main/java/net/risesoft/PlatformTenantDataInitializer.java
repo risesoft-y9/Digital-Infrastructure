@@ -4,10 +4,9 @@ import org.springframework.stereotype.Component;
 
 import lombok.RequiredArgsConstructor;
 
+import net.risesoft.init.TenantDataInitializer;
 import net.risesoft.service.init.InitTenantDataService;
 import net.risesoft.y9.Y9LoginUserHolder;
-
-import y9.autoconfiguration.liquibase.TenantDataInitializer;
 
 /**
  * 租户数据初始化器
