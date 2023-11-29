@@ -132,6 +132,8 @@
         <org-dom4j.version>2.1.4</org-dom4j.version>
         <oshi.version>6.4.5</oshi.version>
         <lombok.version>1.18.28</lombok.version>
+
+        <liquibase.version>4.24.0</liquibase.version>
     </properties>
 
     <dependencyManagement>
@@ -269,6 +271,12 @@
                 <groupId>org.aspectj</groupId>
                 <artifactId>aspectjweaver</artifactId>
                 <version>${aspectj.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>org.liquibase</groupId>
+                <artifactId>liquibase-core</artifactId>
+                <version>${liquibase.version}</version>
             </dependency>
         </dependencies>
     </dependencyManagement>
