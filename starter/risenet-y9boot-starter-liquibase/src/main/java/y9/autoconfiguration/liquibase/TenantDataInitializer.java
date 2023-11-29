@@ -1,7 +1,5 @@
 package y9.autoconfiguration.liquibase;
 
-import net.risesoft.model.platform.TenantSystem;
-
 /**
  * 租户租用系统数据结构初始化后需要进行的数据初始化 <br/>
  * 系统可根据自己的需求实现接口做数据初始化
@@ -12,6 +10,6 @@ import net.risesoft.model.platform.TenantSystem;
  */
 public interface TenantDataInitializer {
 
-    void init(TenantSystem tenantSystem);
+    void init(String tenantId);
 
 }

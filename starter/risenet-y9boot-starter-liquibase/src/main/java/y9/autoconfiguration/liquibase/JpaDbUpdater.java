@@ -2,7 +2,6 @@ package y9.autoconfiguration.liquibase;
 
 import org.hibernate.integrator.api.integrator.Y9TenantHibernateInfoHolder;
 
-import net.risesoft.model.platform.TenantSystem;
 import net.risesoft.y9.Y9Context;
 import net.risesoft.y9.Y9LoginUserHolder;
 import net.risesoft.y9.tenant.datasource.Y9TenantDataSourceLookup;
@@ -21,8 +20,8 @@ public class JpaDbUpdater extends DbUpdater {
     }
 
     @Override
-    protected void doUpdate(TenantSystem tenantSystem) {
-        Y9LoginUserHolder.setTenantId(tenantSystem.getTenantId());
+    protected void doUpdate(String tenantId) {
+        Y9LoginUserHolder.setTenantId(tenantId);
         Y9TenantHibernateInfoHolder.schemaUpdate(Y9Context.getEnvironment());
     }
 }

@@ -1,15 +1,10 @@
 package net.risesoft;
 
-import java.util.Map;
 import java.util.Optional;
-import java.util.Set;
 
-import org.hibernate.integrator.api.integrator.Y9TenantHibernateInfoHolder;
 import org.springframework.boot.context.event.ApplicationReadyEvent;
 import org.springframework.context.ApplicationListener;
 import org.springframework.stereotype.Component;
-
-import com.zaxxer.hikari.HikariDataSource;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -19,11 +14,7 @@ import net.risesoft.enums.platform.RoleTypeEnum;
 import net.risesoft.enums.platform.TenantTypeEnum;
 import net.risesoft.id.IdType;
 import net.risesoft.id.Y9IdGenerator;
-import net.risesoft.service.init.InitTenantDataService;
-import net.risesoft.y9.Y9Context;
-import net.risesoft.y9.Y9LoginUserHolder;
 import net.risesoft.y9.configuration.Y9Properties;
-import net.risesoft.y9.tenant.datasource.Y9TenantDataSourceLookup;
 import net.risesoft.y9public.entity.resource.Y9App;
 import net.risesoft.y9public.entity.resource.Y9System;
 import net.risesoft.y9public.entity.role.Y9Role;
@@ -37,10 +28,6 @@ import net.risesoft.y9public.service.tenant.Y9DataSourceService;
 import net.risesoft.y9public.service.tenant.Y9TenantAppService;
 import net.risesoft.y9public.service.tenant.Y9TenantService;
 import net.risesoft.y9public.service.tenant.Y9TenantSystemService;
-
-import y9.autoconfiguration.liquibase.Y9MultiTenantSpringLiquibase;
-
-import liquibase.exception.LiquibaseException;
 
 /**
  * 应用启动监听器 <br/>
@@ -60,13 +47,10 @@ public class OnApplicationReady implements ApplicationListener<ApplicationReadyE
     private final Y9SystemService y9SystemService;
     private final Y9AppService y9AppService;
     private final Y9DataSourceService y9DataSourceService;
-    private final Y9TenantDataSourceLookup y9TenantDataSourceLookup;
     private final Y9TenantSystemService y9TenantSystemService;
     private final Y9Properties y9Config;
     private final Y9RoleService y9RoleService;
-    private final InitTenantDataService initTenantDataService;
     private final Y9TenantAppService y9TenantAppService;
-    private final Y9MultiTenantSpringLiquibase y9MultiTenantSpringLiquibase;
 
     private void createApp(String appId, String systemId) {
         if (!y9AppService.existsById(appId)) {
@@ -154,27 +138,11 @@ public class OnApplicationReady implements ApplicationListener<ApplicationReadyE
         createDataSource(InitDataConsts.DATASOURCE_ID, "y9_default");
         createTenant(InitDataConsts.TENANT_ID, InitDataConsts.DATASOURCE_ID);
         createSystem(InitDataConsts.SYSTEM_ID);
+        // 租用系统会发送 租户租用系统事件 到消息中间件，系统做监听做数据初始化
         createTenantSystem(InitDataConsts.TENANT_ID, InitDataConsts.SYSTEM_ID, InitDataConsts.DATASOURCE_ID);
         createApp(InitDataConsts.APP_ID, InitDataConsts.SYSTEM_ID);
         createTenantApp(InitDataConsts.APP_ID, InitDataConsts.TENANT_ID);
         createPublicRoleTopNode();
-
-        try {
-            // 重新加载数据源
-            y9TenantDataSourceLookup.loadDataSources();
-        } catch (Exception e) {
-            LOGGER.warn(e.getMessage(), e);
-        }
-
-        try {
-            // 同步各个租户库的表结构
-            y9MultiTenantSpringLiquibase.update(InitDataConsts.TENANT_ID);
-        } catch (LiquibaseException e) {
-            LOGGER.warn(e.getMessage(), e);
-        }
-
-        Y9LoginUserHolder.setTenantId(InitDataConsts.TENANT_ID);
-        initTenantDataService.initAll(InitDataConsts.TENANT_ID);
     }
 
     private void createTenantApp(String appId, String tenantId) {

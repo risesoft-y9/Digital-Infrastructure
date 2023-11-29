@@ -32,12 +32,12 @@ public abstract class DbUpdater {
 
             y9TenantDataSourceLookup.loadDataSources();
 
-            doUpdate(tenantSystem);
+            doUpdate(tenantSystem.getTenantId());
             LOGGER.info("租户数据结构更新完成");
 
             if (tenantDataInitializer != null) {
                 try {
-                    tenantDataInitializer.init(tenantSystem);
+                    tenantDataInitializer.init(tenantSystem.getTenantId());
                 } catch (Exception e) {
                     LOGGER.warn("租户数据初始化发生异常", e);
                 }
@@ -46,6 +46,6 @@ public abstract class DbUpdater {
         }
     }
 
-    protected abstract void doUpdate(TenantSystem tenantSystem);
+    protected abstract void doUpdate(String tenantId);
 
 }

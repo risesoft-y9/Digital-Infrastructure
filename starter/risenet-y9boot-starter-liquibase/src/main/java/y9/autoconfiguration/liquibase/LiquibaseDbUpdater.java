@@ -2,7 +2,6 @@ package y9.autoconfiguration.liquibase;
 
 import lombok.extern.slf4j.Slf4j;
 
-import net.risesoft.model.platform.TenantSystem;
 import net.risesoft.y9.tenant.datasource.Y9TenantDataSourceLookup;
 
 import liquibase.exception.LiquibaseException;
@@ -26,9 +25,9 @@ public class LiquibaseDbUpdater extends DbUpdater {
     }
 
     @Override
-    protected void doUpdate(TenantSystem tenantSystem) {
+    protected void doUpdate(String tenantId) {
         try {
-            y9MultiTenantSpringLiquibase.update(tenantSystem.getTenantId());
+            y9MultiTenantSpringLiquibase.update(tenantId);
         } catch (LiquibaseException e) {
             LOGGER.warn("更新租户数据结构时发生异常", e);
         }
