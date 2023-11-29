@@ -121,14 +121,6 @@ public interface Y9OrgBasesToRolesService {
     void removeOrgBases(String roleId, List<String> orgIds);
 
     /**
-     * 保存
-     *
-     * @param y9OrgBasesToRoles
-     * @return
-     */
-    Y9OrgBasesToRoles save(Y9OrgBasesToRoles y9OrgBasesToRoles);
-
-    /**
      * 对此组织机构节点添加角色关联
      *
      * @param orgId

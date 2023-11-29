@@ -173,6 +173,7 @@ public class OnApplicationReady implements ApplicationListener<ApplicationReadyE
             LOGGER.warn(e.getMessage(), e);
         }
 
+        Y9LoginUserHolder.setTenantId(InitDataConsts.TENANT_ID);
         initTenantDataService.initAll(InitDataConsts.TENANT_ID);
     }
 
@@ -183,13 +184,5 @@ public class OnApplicationReady implements ApplicationListener<ApplicationReadyE
     private Y9DataSource createDataSource(String datasourceId, String dbName) {
         return y9DataSourceService.createTenantDefaultDataSource(dbName, datasourceId);
     }
-
-    private void updateTenantSchema() {
-        Map<String, HikariDataSource> map = y9TenantDataSourceLookup.getDataSources();
-        Set<String> list = map.keySet();
-        for (String tenantId : list) {
-            Y9LoginUserHolder.setTenantId(tenantId);
-            Y9TenantHibernateInfoHolder.schemaUpdate(Y9Context.getEnvironment());
-        }
-    }
+    
 }
