@@ -2,7 +2,6 @@ package net.risesoft;
 
 import java.util.Optional;
 
-import liquibase.exception.LiquibaseException;
 import org.springframework.boot.context.event.ApplicationReadyEvent;
 import org.springframework.context.ApplicationListener;
 import org.springframework.stereotype.Component;
@@ -16,6 +15,7 @@ import net.risesoft.enums.platform.TenantTypeEnum;
 import net.risesoft.id.IdType;
 import net.risesoft.id.Y9IdGenerator;
 import net.risesoft.service.init.InitTenantDataService;
+import net.risesoft.y9.Y9LoginUserHolder;
 import net.risesoft.y9.configuration.Y9Properties;
 import net.risesoft.y9.tenant.datasource.Y9TenantDataSourceLookup;
 import net.risesoft.y9public.entity.resource.Y9App;
@@ -31,7 +31,10 @@ import net.risesoft.y9public.service.tenant.Y9DataSourceService;
 import net.risesoft.y9public.service.tenant.Y9TenantAppService;
 import net.risesoft.y9public.service.tenant.Y9TenantService;
 import net.risesoft.y9public.service.tenant.Y9TenantSystemService;
+
 import y9.autoconfiguration.liquibase.Y9MultiTenantSpringLiquibase;
+
+import liquibase.exception.LiquibaseException;
 
 /**
  * 应用启动监听器 <br/>
@@ -164,6 +167,7 @@ public class OnApplicationReady implements ApplicationListener<ApplicationReadyE
             LOGGER.warn(e.getMessage(), e);
         }
 
+        Y9LoginUserHolder.setTenantId(InitDataConsts.TENANT_ID);
         initTenantDataService.initAll(InitDataConsts.TENANT_ID);
     }
 

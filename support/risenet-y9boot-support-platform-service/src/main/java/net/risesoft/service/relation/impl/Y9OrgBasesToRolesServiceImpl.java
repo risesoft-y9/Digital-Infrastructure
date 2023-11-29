@@ -160,12 +160,6 @@ public class Y9OrgBasesToRolesServiceImpl implements Y9OrgBasesToRolesService {
     }
 
     @Transactional(readOnly = false)
-    @Override
-    public Y9OrgBasesToRoles save(Y9OrgBasesToRoles y9OrgBasesToRoles) {
-        return y9OrgBasesToRolesRepository.save(y9OrgBasesToRoles);
-    }
-
-    @Transactional(readOnly = false)
     public Y9OrgBasesToRoles saveOrUpdate(String roleId, String orgId, Boolean negative) {
         Optional<Y9OrgBasesToRoles> optionalY9OrgBasesToRoles =
             y9OrgBasesToRolesRepository.findByRoleIdAndOrgIdAndNegative(roleId, orgId, negative);
