@@ -110,11 +110,7 @@ public class Y9PersonExt extends BaseEntity {
     @Comment("证件类型")
     private String idType;
 
-    /**
-     * 婚姻状况
-     *
-     * {@link MaritalStatusEnum}
-     */
+    /** 婚姻状况 */
     @Column(name = "MARITAL_STATUS", nullable = false)
     @Comment("婚姻状况")
     @ColumnDefault("0")

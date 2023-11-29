@@ -35,13 +35,8 @@ public class Y9Operation extends Y9ResourceBase {
     @Comment("应用id")
     private String appId;
 
-    /**
-     * 展示方式
-     * 
-     * {@link net.risesoft.enums.OperationDisplayTypeEnum}
-     */
     @ColumnDefault("0")
-    @Column(name = "DISPLAY_TYPE")
+    @Column(name = "DISPLAY_TYPE", nullable = false)
     @Comment("按钮展示方式")
     @Convert(converter = EnumConverter.OperationDisplayTypeEnumConverter.class)
     private OperationDisplayTypeEnum displayType = OperationDisplayTypeEnum.ICON_TEXT;

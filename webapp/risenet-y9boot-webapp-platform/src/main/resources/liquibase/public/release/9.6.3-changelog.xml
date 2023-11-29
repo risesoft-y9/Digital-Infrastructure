@@ -5,4 +5,23 @@
         xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
                       http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.9.xsd">
 
+    <changeSet id="1701224818020-1" author="shidaobang">
+        <addNotNullConstraint columnDataType="INT" columnName="DISPLAY_TYPE" tableName="Y9_COMMON_OPERATION"
+                              validate="true"/>
+    </changeSet>
+    <changeSet id="1701224818020-3" author="shidaobang">
+        <addNotNullConstraint columnDataType="INT" columnName="OPEN_TYPE" tableName="Y9_COMMON_APP_STORE"
+                              validate="true"/>
+    </changeSet>
+    <changeSet id="1701224818020-5" author="shidaobang">
+        <addNotNullConstraint columnDataType="INT" columnName="TENANT_TYPE" tableName="Y9_COMMON_TENANT"
+                              validate="true"/>
+    </changeSet>
+    <changeSet id="1701224818020-7" author="shidaobang">
+        <addNotNullConstraint columnDataType="INT" columnName="TYPE" tableName="Y9_COMMON_APP_STORE" validate="true"/>
+    </changeSet>
+    <changeSet id="1701224818020-8" author="shidaobang">
+        <addNotNullConstraint columnDataType="INT" columnName="TYPE" tableName="Y9_COMMON_DATASOURCE" validate="true"/>
+    </changeSet>
+
 </databaseChangeLog>

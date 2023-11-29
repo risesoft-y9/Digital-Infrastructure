@@ -39,14 +39,9 @@ public class Y9DataSource extends BaseEntity {
     @Comment("主键")
     private String id;
 
-    /**
-     * 数据源类型1=jndi; 2=hikari
-     *
-     * {@link DataSourceTypeEnum}
-     */
-    @Column(name = "TYPE")
+    /** 数据源类型1=jndi; 2=hikari */
+    @Column(name = "TYPE", nullable = false)
     @Comment("数据源类型1=jndi; 2=hikari")
-    @Convert(converter = EnumConverter.DataSourceTypeEnumConverter.class)
     @Convert(converter = EnumConverter.DataSourceTypeEnumConverter.class)
     private DataSourceTypeEnum type;
 

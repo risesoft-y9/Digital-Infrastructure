@@ -44,11 +44,7 @@ public class Y9OrgBaseMoved extends BaseEntity {
     @Comment("组织id")
     protected String orgId;
 
-    /**
-     * 组织类型
-     *
-     * {@link OrgTypeEnum}
-     */
+    /** 组织类型 */
     @Column(name = "ORG_TYPE", length = 255, nullable = false)
     @Comment("组织类型")
     @Convert(converter = EnumConverter.OrgTypeEnumConverter.class)

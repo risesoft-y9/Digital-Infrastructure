@@ -6,7 +6,6 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
 
-import net.risesoft.enums.platform.SexEnum;
 import org.hibernate.annotations.Comment;
 
 import lombok.Data;
@@ -70,7 +69,7 @@ public class Y9CustomGroupMember extends BaseEntity {
     private String parentId;
 
     /** 成员类型 */
-    @Column(name = "MEMBER_TYPE", length = 255)
+    @Column(name = "MEMBER_TYPE", length = 255, nullable = false)
     @Comment("成员类型")
     @Convert(converter = EnumConverter.OrgTypeEnumConverter.class)
     private OrgTypeEnum memberType;

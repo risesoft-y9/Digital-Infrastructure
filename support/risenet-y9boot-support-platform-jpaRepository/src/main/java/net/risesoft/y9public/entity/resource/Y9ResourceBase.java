@@ -93,11 +93,7 @@ public abstract class Y9ResourceBase extends BaseEntity implements Comparable<Y9
     @Column(name = "PARENT_ID", length = 38)
     protected String parentId;
 
-    /**
-     * 资源类型：0=应用，1=菜单，2=操作
-     * 
-     * {@link ResourceTypeEnum}
-     */
+    /** 资源类型：0=应用，1=菜单，2=操作 */
     @ColumnDefault("0")
     @Column(name = "RESOURCE_TYPE", nullable = false)
     @Comment("资源类型：0=应用，1=菜单，2=操作")

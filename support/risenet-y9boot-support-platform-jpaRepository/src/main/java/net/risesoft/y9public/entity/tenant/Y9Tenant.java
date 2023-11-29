@@ -75,12 +75,8 @@ public class Y9Tenant extends BaseEntity {
     @Comment("是否启用")
     private Boolean enabled = Boolean.TRUE;
 
-    /**
-     * 租户类型： 0=超级用户，1=运维团队，2=开发商，3=普通租户
-     * 
-     * {@link TenantTypeEnum}
-     */
-    @Column(name = "TENANT_TYPE")
+    /** 租户类型： 0=超级用户，1=运维团队，2=开发商，3=普通租户 */
+    @Column(name = "TENANT_TYPE", nullable = false)
     @Convert(converter = EnumConverter.TenantTypeConverter.class)
     @Comment("租户类型： 0=超级用户，1=运维团队，2=开发商，3=普通租户")
     private TenantTypeEnum tenantType;

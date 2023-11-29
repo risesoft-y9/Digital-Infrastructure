@@ -52,11 +52,7 @@ public abstract class Y9IdentityToResourceAndAuthorityBase extends BaseEntity
     @Comment("权限配置id")
     protected String authorizationId;
 
-    /**
-     * 权限类型
-     *
-     * {@link AuthorityEnum}
-     */
+    /** 权限类型 */
     @Column(name = "AUTHORITY", nullable = false)
     @Comment("权限类型")
     @Convert(converter = EnumConverter.AuthorityEnumConverter.class)
@@ -83,11 +79,7 @@ public abstract class Y9IdentityToResourceAndAuthorityBase extends BaseEntity
     @Comment("资源是否为继承上级节点的权限。冗余字段，纯显示用")
     private Boolean inherit;
 
-    /**
-     * 资源类型：0=应用，1=菜单，2=操作
-     *
-     * {@link ResourceTypeEnum}
-     */
+    /** 资源类型：0=应用，1=菜单，2=操作 */
     @Column(name = "RESOURCE_TYPE", nullable = false)
     @Comment("资源类型：0=应用，1=菜单，2=操作")
     @Convert(converter = EnumConverter.ResourceTypeEnumConverter.class)
