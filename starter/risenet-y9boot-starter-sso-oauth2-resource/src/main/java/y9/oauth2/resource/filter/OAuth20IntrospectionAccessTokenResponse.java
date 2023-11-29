@@ -6,15 +6,13 @@ import java.io.Serializable;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
+import lombok.Data;
 import lombok.Getter;
 import lombok.Setter;
 
 @Getter
 @Setter
 public class OAuth20IntrospectionAccessTokenResponse implements Serializable {
-	public record DPopConfirmation(String jkt) {
-    }
-
     @Serial
     private static final long serialVersionUID = -7917281748569741345L;
 
@@ -46,10 +44,21 @@ public class OAuth20IntrospectionAccessTokenResponse implements Serializable {
 
     @JsonProperty("grant_type")
     private String grantType;
-
+    
     private String attr; // y9 add
 
     @JsonProperty("cnf")
-    private DPopConfirmation dPopConfirmation;
+    private Confirmation confirmation = new Confirmation();
+
+    @Data
+    public static class Confirmation implements Serializable {
+        @Serial
+        private static final long serialVersionUID = 5434898952283549630L;
+
+        private String jkt;
+
+        @JsonProperty("x5t#S256")
+        private String x5t;
+    }
 
 }

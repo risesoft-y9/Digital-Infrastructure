@@ -24,7 +24,9 @@ services:
       interval: 5s
       timeout: 10s
       retries: 8
-      
+    labels:
+      org.springframework.boot.readiness-check.tcp.disable: true
+        
   redis:
     image: redis:latest
     container_name: redis01
@@ -38,6 +40,8 @@ services:
     command: redis-server --requirepass "12345678"
     volumes:
       - d:/docker-data/redis:/data
+    labels:
+      org.springframework.boot.readiness-check.tcp.disable: true
   
   consul:
     image: docker.io/bitnami/consul:latest
@@ -53,19 +57,24 @@ services:
       - CONSUL_ENABLE_UI=true
       - CONSUL_HTTP_PORT_NUMBER=8500
     ports:
-      - '8300:8300'
-      - '8301:8301'
-      - '8301:8301/udp'
       - '8500:8500'
-      - '8600:8600'
-      - '8600:8600/udp'
     volumes:
       - d:/docker-data/consul:/bitnami/consul
+    labels:
+      org.springframework.boot.readiness-check.tcp.disable: true
    
   elasticsearch:
     image: elasticsearch:8.11.0
     container_name: elastic01
     restart: always
+    #deploy:
+    #  resources:
+    #    limits:
+    #      cpus: '0.50'
+    #      memory: 50M
+    #    reservations:
+    #      cpus: '0.25'
+    #      memory: 20M
     extra_hosts:
       - "host.docker.internal:host-gateway"
     networks:
@@ -80,6 +89,7 @@ services:
       - xpack.security.enabled=false
     labels:
       org.springframework.boot.service-connection: elasticsearch
+      org.springframework.boot.readiness-check.tcp.disable: true
       
   kafka:
     image: bitnami/kafka:latest
@@ -90,7 +100,7 @@ services:
     networks:
       - y9-share-net
     ports:
-      - "9092:9092"
+      #- "9092:9092"
       - "9094:9094"
     environment:
       - KAFKA_CFG_NODE_ID=0
@@ -102,8 +112,9 @@ services:
       - KAFKA_CFG_CONTROLLER_QUORUM_VOTERS=0@kafka:9093
     volumes:
       - d:/docker-data/kafka:/bitnami/kafka
-      
+    labels:
+      org.springframework.boot.readiness-check.tcp.disable: true
+  
 networks:
   y9-share-net:
     external: true
-        
