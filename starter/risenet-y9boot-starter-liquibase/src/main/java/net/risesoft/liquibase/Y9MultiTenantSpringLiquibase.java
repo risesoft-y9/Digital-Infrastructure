@@ -1,4 +1,4 @@
-package y9.autoconfiguration.liquibase;
+package net.risesoft.liquibase;
 
 import java.util.Map;
 
