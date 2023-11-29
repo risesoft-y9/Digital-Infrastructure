@@ -73,22 +73,14 @@ public class Y9App extends Y9ResourceBase {
     @Comment("资源管理的URL")
     private String resourceAdminUrl;
 
-    /**
-     * app类型：1业务协同,2事项办理,3数据服务
-     * 
-     * {@link AppTypeEnum}
-     */
-    @Column(name = "TYPE")
+    /** app类型：1业务协同,2事项办理,3数据服务 */
+    @Column(name = "TYPE", nullable = false)
     @Comment("分类")
     @Convert(converter = EnumConverter.AppTypeEnumConverter.class)
     private AppTypeEnum type = AppTypeEnum.WORKFLOW;
 
-    /**
-     * 应用打开方式:0在桌面窗口打开；1在新浏览器窗口打开
-     * 
-     * {@link AppOpenTypeEnum}
-     */
-    @Column(name = "OPEN_TYPE")
+    /** 应用打开方式:0在桌面窗口打开；1在新浏览器窗口打开 */
+    @Column(name = "OPEN_TYPE", nullable = false)
     @Comment(value = "应用打开方式:0在桌面窗口打开；1在新浏览器窗口打开")
     @Convert(converter = EnumConverter.AppOpenTypeEnumConverter.class)
     private AppOpenTypeEnum opentype = AppOpenTypeEnum.BROWSE;

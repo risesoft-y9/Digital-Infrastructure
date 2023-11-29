@@ -49,11 +49,7 @@ public class Y9OrgBaseDeleted extends BaseEntity {
     @Comment("父节点的Id")
     protected String parentId;
 
-    /**
-     * 组织类型
-     *
-     * {@link OrgTypeEnum}
-     */
+    /** 组织类型 */
     @Column(name = "ORG_TYPE", length = 255, nullable = false)
     @Comment("组织类型")
     @Convert(converter = EnumConverter.OrgTypeEnumConverter.class)

@@ -89,22 +89,14 @@ public class Y9Manager extends Y9OrgBase {
     @Comment("排序序列号")
     private String orderedPath;
 
-    /**
-     * 性别
-     * <p>
-     * {@link SexEnum}
-     */
+    /** 性别 */
     @ColumnDefault("1")
     @Column(name = "SEX", nullable = false)
     @Comment("性别")
     @Convert(converter = EnumConverter.SexEnumConverter.class)
     private SexEnum sex = SexEnum.MALE;
 
-    /**
-     * 管理员类型
-     * <p>
-     * {@link ManagerLevelEnum}
-     */
+    /** 管理员类型 */
     @Column(name = "MANAGER_LEVEL", nullable = false)
     @Comment("管理员类型")
     @ColumnDefault("0")

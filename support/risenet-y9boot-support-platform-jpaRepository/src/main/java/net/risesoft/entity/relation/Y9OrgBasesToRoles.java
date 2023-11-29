@@ -55,12 +55,8 @@ public class Y9OrgBasesToRoles extends BaseEntity {
     @Comment("人员或部门组织机构等唯一标识")
     private String orgId;
 
-    /**
-     * 组织类型
-     * 
-     * {@link OrgTypeEnum}
-     */
-    @Column(name = "ORG_TYPE", length = 255)
+    /** 组织类型 */
+    @Column(name = "ORG_TYPE", length = 255, nullable = false)
     @Comment("组织类型")
     @Convert(converter = EnumConverter.OrgTypeEnumConverter.class)
     protected OrgTypeEnum orgType;

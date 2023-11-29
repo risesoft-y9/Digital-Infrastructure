@@ -78,11 +78,7 @@ public class Y9Role extends BaseEntity implements Comparable<Y9Role> {
     @Comment("扩展属性")
     private String properties;
 
-    /**
-     * 节点类型
-     * 
-     * {@link RoleTypeEnum}
-     */
+    /** 节点类型 */
     @ColumnDefault("'role'")
     @Column(name = "TYPE", length = 255, nullable = false)
     @Comment("类型：role、folder")

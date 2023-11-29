@@ -48,11 +48,7 @@ public class Y9DepartmentProp extends BaseEntity {
     @Comment("组织唯一标示")
     private String orgBaseId;
 
-    /**
-     * 类别
-     * 
-     * {@link DepartmentPropCategoryEnum}
-     */
+    /** 类别 */
     @Column(name = "CATEGORY", length = 10, nullable = false)
     @Comment("类别")
     @Convert(converter = EnumConverter.DepartmentPropCategoryEnumConverter.class)

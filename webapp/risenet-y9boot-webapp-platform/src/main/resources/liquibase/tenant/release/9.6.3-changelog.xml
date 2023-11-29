@@ -5,4 +5,17 @@
         xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
                       http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.9.xsd">
 
+    <changeSet id="1701225906276-1" author="shidaobang">
+        <addNotNullConstraint columnDataType="VARCHAR(255)" columnName="MEMBER_TYPE"
+                              tableName="Y9_ORG_CUSTOM_GROUP_MEMBER" validate="true"/>
+    </changeSet>
+    <changeSet id="1701225906276-2" author="shidaobang">
+        <addNotNullConstraint columnDataType="VARCHAR(255)" columnName="ORG_TYPE" tableName="Y9_ORG_ORGBASES_ROLES"
+                              validate="true"/>
+    </changeSet>
+    <changeSet id="1701225906276-3" author="shidaobang">
+        <addNotNullConstraint columnDataType="INT" columnName="RESOURCE_TYPE" tableName="Y9_ORG_AUTHORIZATION"
+                              validate="true"/>
+    </changeSet>
+
 </databaseChangeLog>

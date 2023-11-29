@@ -83,11 +83,7 @@ public class Y9User extends BaseEntity {
     @Comment("邮箱")
     private String email;
 
-    /**
-     * 性别：1为男，0为女
-     *
-     * {@link SexEnum}
-     */
+    /** 性别 */
     @Column(name = "SEX")
     @Comment("性别：1为男，0为女")
     @Convert(converter = EnumConverter.SexEnumConverter.class)
@@ -173,11 +169,7 @@ public class Y9User extends BaseEntity {
     @ColumnDefault("0")
     private Boolean globalManager = false;
 
-    /**
-     * 三员类型
-     *
-     * {@link ManagerLevelEnum}
-     **/
+    /** 三员类型 **/
     @Column(name = "MANAGER_LEVEL", nullable = false)
     @Comment("是否三员管理员")
     @ColumnDefault("0")

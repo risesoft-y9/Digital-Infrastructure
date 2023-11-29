@@ -39,11 +39,7 @@ public class Y9Group extends Y9OrgBase {
     @Comment("父节点id")
     private String parentId;
 
-    /**
-     * 岗位组或者用户组
-     * 
-     * {@link GroupTypeEnum}
-     */
+    /** 岗位组或者用户组 */
     @ColumnDefault("'person'")
     @Column(name = "TYPE", length = 10, nullable = false)
     @Comment("类型：position、person")

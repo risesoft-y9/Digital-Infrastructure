@@ -56,11 +56,6 @@ public class Y9Authorization extends BaseEntity {
     @Comment("授权主体的唯一标识")
     private String principalId;
 
-    /**
-     * 授权主体类型:0=角色；1=岗位；2=人员,3=组，4=部门，5=组织
-     * 
-     * {@link AuthorizationPrincipalTypeEnum}
-     */
     @ColumnDefault("0")
     @Column(name = "PRINCIPAL_TYPE", nullable = false)
     @Comment("授权主体类型:0=角色；1=岗位；2=人员,3=组，4=部门，5=组织")
@@ -77,12 +72,7 @@ public class Y9Authorization extends BaseEntity {
     @Comment("资源唯一标识符")
     private String resourceId;
 
-    /**
-     * 资源类型。冗余字段，纯显示用
-     * 
-     * {@link ResourceTypeEnum}
-     */
-    @Column(name = "RESOURCE_TYPE")
+    @Column(name = "RESOURCE_TYPE", nullable = false)
     @Comment("资源类型。冗余字段，纯显示用")
     @Convert(converter = EnumConverter.ResourceTypeEnumConverter.class)
     private ResourceTypeEnum resourceType;
@@ -97,11 +87,6 @@ public class Y9Authorization extends BaseEntity {
     @Comment("资源是否为继承上级节点的权限。冗余字段，纯显示用")
     private Boolean inherit;*/
 
-    /**
-     * 权限类型
-     * 
-     * {@link AuthorityEnum}
-     */
     @Column(name = "AUTHORITY", nullable = false)
     @Comment("权限类型")
     @Convert(converter = EnumConverter.AuthorityEnumConverter.class)

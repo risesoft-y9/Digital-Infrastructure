@@ -120,11 +120,7 @@ public class Y9Person extends Y9OrgBase {
     @Comment("登录密码")
     private String password;
 
-    /**
-     * 性别
-     * <p>
-     * {@link SexEnum}
-     */
+    /** 性别 */
     @ColumnDefault("1")
     @Column(name = "SEX", nullable = false)
     @Comment("性别")

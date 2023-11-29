@@ -83,11 +83,7 @@ public class Y9OrgBase extends BaseEntity implements Comparable<Y9OrgBase> {
     @Comment("名称")
     protected String name;
 
-    /**
-     * 组织类型
-     *
-     * {@link OrgTypeEnum}
-     */
+    /** 组织类型 */
     @Column(name = "ORG_TYPE", length = 255, nullable = false)
     @Comment("组织类型")
     @Convert(converter = EnumConverter.OrgTypeEnumConverter.class)
