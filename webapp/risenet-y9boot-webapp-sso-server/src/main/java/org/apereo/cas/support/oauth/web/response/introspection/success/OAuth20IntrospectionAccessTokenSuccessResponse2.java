@@ -18,7 +18,7 @@ import java.io.Serializable;
  */
 @Getter
 @Setter
-public class OAuth20IntrospectionAccessTokenSuccessResponse extends BaseOAuth20IntrospectionAccessTokenResponse {
+public class OAuth20IntrospectionAccessTokenSuccessResponse2 extends BaseOAuth20IntrospectionAccessTokenResponse {
     @Serial
     private static final long serialVersionUID = -7917281748569741345L;
 

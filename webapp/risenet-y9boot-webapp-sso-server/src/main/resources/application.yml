@@ -270,6 +270,8 @@ server:
         uri-encoding: UTF-8
 spring:
     cloud:
+        compatibility-verifier:
+            enabled: false
         config:
             enabled: false
     config:

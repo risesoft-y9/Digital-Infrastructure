@@ -3,7 +3,10 @@ package org.apereo.cas.support.oauth.web.endpoints;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 
+import java.util.HashMap;
 import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
@@ -16,6 +19,7 @@ import org.apereo.cas.support.oauth.util.OAuth20Utils;
 import org.apereo.cas.support.oauth.web.response.introspection.BaseOAuth20IntrospectionAccessTokenResponse;
 import org.apereo.cas.support.oauth.web.response.introspection.OAuth20IntrospectionAccessTokenFailureResponse;
 import org.apereo.cas.support.oauth.web.response.introspection.success.OAuth20IntrospectionAccessTokenSuccessResponse;
+import org.apereo.cas.support.oauth.web.response.introspection.success.OAuth20IntrospectionAccessTokenSuccessResponse2;
 import org.apereo.cas.ticket.InvalidTicketException;
 import org.apereo.cas.ticket.OAuth20Token;
 import org.apereo.cas.util.CollectionUtils;
@@ -28,6 +32,7 @@ import org.pac4j.core.credentials.Credentials;
 import org.pac4j.core.credentials.UsernamePasswordCredentials;
 import org.pac4j.core.credentials.extractor.BasicAuthExtractor;
 import org.pac4j.jee.context.JEEContext;
+import org.springframework.beans.BeanUtils;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -152,7 +157,7 @@ public class OAuth20IntrospectionEndpointController<T extends OAuth20Configurati
     
     protected OAuth20IntrospectionAccessTokenSuccessResponse createIntrospectionValidResponse(
         final String accessTokenId, final OAuth20Token ticket) {
-        val introspect = new OAuth20IntrospectionAccessTokenSuccessResponse();
+        val introspect = new OAuth20IntrospectionAccessTokenSuccessResponse2();
         introspect.setScope("CAS");
         introspect.setActive(ticket != null && !ticket.isExpired());
         
@@ -189,10 +194,24 @@ public class OAuth20IntrospectionEndpointController<T extends OAuth20Configurati
                 .ifPresent(digest -> introspect.getConfirmation().setX5t(digest.toString()));
             
             // y9 add
-            //introspect.setAttr(Y9JacksonUtil.writeValueAsString(attributes));
+            Map<String, List<Object>> attrs = authentication.getPrincipal().getAttributes();
+            Map<String, Object> map = new HashMap<String, Object>();
+            for (String key : attrs.keySet()) {
+                List<Object> values = attrs.get(key);
+                if (values == null || values.isEmpty()) {
+                    //map.put(key, "");
+                } else {
+                    map.put(key, attrs.get(key).get(0));
+                }
+            }
+            introspect.setAttr(Y9JacksonUtil.writeValueAsString(map));
             // y9 end
         }
-        return introspect;
+        // y9 add
+        OAuth20IntrospectionAccessTokenSuccessResponse introspect2 = new OAuth20IntrospectionAccessTokenSuccessResponse();
+        BeanUtils.copyProperties(introspect,introspect2);
+        return introspect2;
+        // y9 end
     }
 
     private Optional<ResponseEntity<? extends BaseOAuth20IntrospectionAccessTokenResponse>> validateIntrospectionRequest(

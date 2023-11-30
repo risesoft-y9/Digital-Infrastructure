@@ -110,13 +110,11 @@
 	<distributionManagement>
 		<repository>
 			<id>releases</id>
-			<url>
-				https://svn.youshengyun.com:9900/nexus/repository/maven-releases/</url>
+			<url>https://svn.youshengyun.com:9900/nexus/repository/maven-releases/</url>
 		</repository>
 		<snapshotRepository>
 			<id>snapshots</id>
-			<url>
-				https://svn.youshengyun.com:9900/nexus/repository/maven-snapshots/</url>
+			<url>https://svn.youshengyun.com:9900/nexus/repository/maven-snapshots/</url>
 		</snapshotRepository>
 	</distributionManagement>
 
