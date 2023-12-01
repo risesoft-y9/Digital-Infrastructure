@@ -1,7 +1,9 @@
-package y9.autoconfiguration.liquibase;
+package net.risesoft.schema;
 
 import lombok.extern.slf4j.Slf4j;
 
+import net.risesoft.init.TenantDataInitializer;
+import net.risesoft.liquibase.Y9MultiTenantSpringLiquibase;
 import net.risesoft.y9.tenant.datasource.Y9TenantDataSourceLookup;
 
 import liquibase.exception.LiquibaseException;
@@ -14,11 +16,11 @@ import liquibase.exception.LiquibaseException;
  * @since 9.6.3
  */
 @Slf4j
-public class LiquibaseDbUpdater extends DbUpdater {
+public class LiquibaseSchemaUpdater extends SchemaUpdater {
 
     private final Y9MultiTenantSpringLiquibase y9MultiTenantSpringLiquibase;
 
-    public LiquibaseDbUpdater(Y9TenantDataSourceLookup y9TenantDataSourceLookup,
+    public LiquibaseSchemaUpdater(Y9TenantDataSourceLookup y9TenantDataSourceLookup,
         Y9MultiTenantSpringLiquibase y9MultiTenantSpringLiquibase, TenantDataInitializer tenantDataInitializer) {
         super(y9TenantDataSourceLookup, tenantDataInitializer);
         this.y9MultiTenantSpringLiquibase = y9MultiTenantSpringLiquibase;

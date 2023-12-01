@@ -1,7 +1,8 @@
-package y9.autoconfiguration.liquibase;
+package net.risesoft.schema;
 
 import org.hibernate.integrator.api.integrator.Y9TenantHibernateInfoHolder;
 
+import net.risesoft.init.TenantDataInitializer;
 import net.risesoft.y9.Y9Context;
 import net.risesoft.y9.Y9LoginUserHolder;
 import net.risesoft.y9.tenant.datasource.Y9TenantDataSourceLookup;
@@ -13,8 +14,8 @@ import net.risesoft.y9.tenant.datasource.Y9TenantDataSourceLookup;
  * @date 2023/11/20
  * @since 9.6.3
  */
-public class JpaDbUpdater extends DbUpdater {
-    public JpaDbUpdater(Y9TenantDataSourceLookup y9TenantDataSourceLookup,
+public class JpaSchemaUpdater extends SchemaUpdater {
+    public JpaSchemaUpdater(Y9TenantDataSourceLookup y9TenantDataSourceLookup,
         TenantDataInitializer tenantDataInitializer) {
         super(y9TenantDataSourceLookup, tenantDataInitializer);
     }

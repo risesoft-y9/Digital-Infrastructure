@@ -14,6 +14,11 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.io.ResourceLoader;
 
+import net.risesoft.init.TenantDataInitializer;
+import net.risesoft.liquibase.Y9MultiTenantSpringLiquibase;
+import net.risesoft.schema.JpaSchemaUpdater;
+import net.risesoft.schema.LiquibaseSchemaUpdater;
+import net.risesoft.schema.SchemaUpdater;
 import net.risesoft.y9.configuration.Y9Properties;
 import net.risesoft.y9.configuration.feature.liquibase.Y9LiquibaseProperties;
 import net.risesoft.y9.tenant.datasource.Y9TenantDataSourceLookup;
@@ -67,17 +72,18 @@ public class Y9LiquibaseAutoConfiguration {
 
     @Bean
     @ConditionalOnBean(name = "y9MultiTenantSpringLiquibase")
-    public DbUpdater liquibaseDbUpdater(Y9TenantDataSourceLookup y9TenantDataSourceLookup,
+    public SchemaUpdater liquibaseDbUpdater(Y9TenantDataSourceLookup y9TenantDataSourceLookup,
         Y9MultiTenantSpringLiquibase y9MultiTenantSpringLiquibase,
         @Autowired(required = false) TenantDataInitializer tenantDataInitializer) {
-        return new LiquibaseDbUpdater(y9TenantDataSourceLookup, y9MultiTenantSpringLiquibase, tenantDataInitializer);
+        return new LiquibaseSchemaUpdater(y9TenantDataSourceLookup, y9MultiTenantSpringLiquibase,
+            tenantDataInitializer);
     }
 
     @Bean
     @ConditionalOnMissingBean(name = "liquibaseDbUpdater")
-    public DbUpdater jpaDbUpdater(Y9TenantDataSourceLookup y9TenantDataSourceLookup,
+    public SchemaUpdater jpaDbUpdater(Y9TenantDataSourceLookup y9TenantDataSourceLookup,
         @Autowired(required = false) TenantDataInitializer tenantDataInitializer) {
-        return new JpaDbUpdater(y9TenantDataSourceLookup, tenantDataInitializer);
+        return new JpaSchemaUpdater(y9TenantDataSourceLookup, tenantDataInitializer);
     }
 
 }

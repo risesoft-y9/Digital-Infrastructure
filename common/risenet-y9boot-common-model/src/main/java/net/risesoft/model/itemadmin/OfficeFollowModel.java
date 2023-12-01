@@ -7,7 +7,7 @@ import lombok.Data;
 @Data
 public class OfficeFollowModel implements Serializable {
     /**
-     * 
+     *
      */
     private static final long serialVersionUID = 4812604593843826041L;
 
@@ -50,6 +50,11 @@ public class OfficeFollowModel implements Serializable {
      * 文件类型
      */
     private String fileType;
+
+    /**
+     * 系统名称
+     */
+    private String systemName;
 
     /**
      * 标题

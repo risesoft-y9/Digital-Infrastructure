@@ -1,10 +1,11 @@
-package y9.autoconfiguration.liquibase;
+package net.risesoft.schema;
 
 import org.springframework.context.event.EventListener;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
+import net.risesoft.init.TenantDataInitializer;
 import net.risesoft.model.platform.TenantSystem;
 import net.risesoft.y9.pubsub.constant.Y9CommonEventConst;
 import net.risesoft.y9.pubsub.event.Y9EventCommon;
@@ -19,7 +20,7 @@ import net.risesoft.y9.tenant.datasource.Y9TenantDataSourceLookup;
  */
 @RequiredArgsConstructor
 @Slf4j
-public abstract class DbUpdater {
+public abstract class SchemaUpdater {
 
     private final Y9TenantDataSourceLookup y9TenantDataSourceLookup;
     private final TenantDataInitializer tenantDataInitializer;
