@@ -210,7 +210,7 @@ public class Y9TenantSystemServiceImpl implements Y9TenantSystemService {
             String datasoureId = tenant.getDefaultDataSourceId();
             try {
                 Y9DataSource y9DataSource = y9DataSourceManager.createTenantDefaultDataSource(tenant.getShortName(),
-                    tenant.getTenantType().getValue(), y9System.getName());
+                    tenant.getTenantType(), y9System.getName());
                 datasoureId = y9DataSource.getId();
             } catch (Exception e) {
                 LOGGER.warn(e.getMessage(), e);

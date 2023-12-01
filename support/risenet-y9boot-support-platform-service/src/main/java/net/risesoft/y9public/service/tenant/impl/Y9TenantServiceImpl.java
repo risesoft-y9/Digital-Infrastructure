@@ -23,7 +23,6 @@ import net.risesoft.id.IdType;
 import net.risesoft.id.Y9IdGenerator;
 import net.risesoft.y9.util.Y9Assert;
 import net.risesoft.y9.util.Y9BeanUtil;
-import net.risesoft.y9.util.Y9EnumUtil;
 import net.risesoft.y9public.entity.tenant.Y9DataSource;
 import net.risesoft.y9public.entity.tenant.Y9Tenant;
 import net.risesoft.y9public.manager.tenant.Y9DataSourceManager;
@@ -209,7 +208,7 @@ public class Y9TenantServiceImpl implements Y9TenantService {
 
     @Override
     @Transactional(readOnly = false)
-    public Y9Tenant saveOrUpdate(Y9Tenant y9Tenant, Integer tenantType) {
+    public Y9Tenant saveOrUpdate(Y9Tenant y9Tenant, TenantTypeEnum tenantType) {
         Y9Assert.isTrue(isNameAvailable(y9Tenant.getName(), y9Tenant.getId()), TenantErrorCodeEnum.NAME_HAS_BEEN_USED,
             y9Tenant.getName());
         Y9Assert.isTrue(isShortNameAvailable(y9Tenant.getShortName(), y9Tenant.getId()),
@@ -222,7 +221,7 @@ public class Y9TenantServiceImpl implements Y9TenantService {
                 return save(oldTenant);
             }
         }
-        y9Tenant.setTenantType(Y9EnumUtil.valueOf(TenantTypeEnum.class, tenantType));
+        y9Tenant.setTenantType(tenantType);
         Y9DataSource y9DataSource = null;
         try {
             y9DataSource = y9DataSourceManager.createTenantDefaultDataSource(y9Tenant.getShortName(), tenantType, null);

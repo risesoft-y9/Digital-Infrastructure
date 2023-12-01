@@ -94,7 +94,7 @@ public class ResourceController {
         List<Y9ResourceBase> accessibleAppResourceList;
 
         UserInfo userInfo = Y9LoginUserHolder.getUserInfo();
-        if (ManagerLevelEnum.OPERATION_SYSTEM_MANAGER.getValue().equals(userInfo.getManagerLevel())) {
+        if (ManagerLevelEnum.OPERATION_SYSTEM_MANAGER.equals(userInfo.getManagerLevel())) {
             accessibleAppResourceList = appResourceList;
         } else {
             List<String> appIds =

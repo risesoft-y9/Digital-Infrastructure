@@ -71,12 +71,12 @@ public class Y9DataSourceManagerImpl implements Y9DataSourceManager {
     }
 
     @Override
-    public String buildDataSourceName(String shortName, Integer tenantType, String systemName) {
+    public String buildDataSourceName(String shortName, TenantTypeEnum tenantType, String systemName) {
         String dataSourceName = shortName;
-        if (Objects.equals(tenantType, TenantTypeEnum.ISV.getValue())) {
+        if (Objects.equals(tenantType, TenantTypeEnum.ISV)) {
             dataSourceName = "isv_" + shortName;
         }
-        if (Objects.equals(tenantType, TenantTypeEnum.TENANT.getValue()) && !"default".equals(shortName)) {
+        if (Objects.equals(tenantType, TenantTypeEnum.TENANT) && !"default".equals(shortName)) {
             dataSourceName = "yt_" + generateRandomString() + "_" + shortName;
         }
         if (StringUtils.isNotBlank(systemName)) {
@@ -93,7 +93,7 @@ public class Y9DataSourceManagerImpl implements Y9DataSourceManager {
 
     @Override
     @Transactional(readOnly = false)
-    public Y9DataSource createTenantDefaultDataSource(String shortName, Integer tenantType, String systemName) {
+    public Y9DataSource createTenantDefaultDataSource(String shortName, TenantTypeEnum tenantType, String systemName) {
         String dataSourceName = this.buildDataSourceName(shortName, tenantType, systemName);
         return this.createTenantDefaultDataSource(dataSourceName, null);
     }

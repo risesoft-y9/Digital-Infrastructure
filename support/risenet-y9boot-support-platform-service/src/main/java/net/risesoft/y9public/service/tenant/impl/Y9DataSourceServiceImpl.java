@@ -17,6 +17,7 @@ import com.google.common.collect.Maps;
 import com.zaxxer.hikari.HikariDataSource;
 
 import net.risesoft.enums.platform.DataSourceTypeEnum;
+import net.risesoft.enums.platform.TenantTypeEnum;
 import net.risesoft.exception.DataSourceErrorCodeEnum;
 import net.risesoft.y9.exception.util.Y9ExceptionUtil;
 import net.risesoft.y9.util.Y9Assert;
@@ -53,7 +54,7 @@ public class Y9DataSourceServiceImpl implements Y9DataSourceService {
     }
 
     @Override
-    public String buildDataSourceName(String shortName, Integer tenantType, String systemName) {
+    public String buildDataSourceName(String shortName, TenantTypeEnum tenantType, String systemName) {
         return y9DataSourceManager.buildDataSourceName(shortName, tenantType, systemName);
     }
 
@@ -77,7 +78,7 @@ public class Y9DataSourceServiceImpl implements Y9DataSourceService {
 
     @Override
     @Transactional(readOnly = false)
-    public Y9DataSource createTenantDefaultDataSource(String shortName, Integer tenantType, String systemName) {
+    public Y9DataSource createTenantDefaultDataSource(String shortName, TenantTypeEnum tenantType, String systemName) {
         return y9DataSourceManager.createTenantDefaultDataSource(shortName, tenantType, systemName);
     }
 

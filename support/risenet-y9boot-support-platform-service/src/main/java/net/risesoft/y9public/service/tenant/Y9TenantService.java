@@ -192,7 +192,7 @@ public interface Y9TenantService {
      * @param tenantType 租户类型： 0=用户，2=开发商，1=运维团队，3=普通租户
      * @return Tenant
      */
-    Y9Tenant saveOrUpdate(Y9Tenant y9Tenant, Integer tenantType);
+    Y9Tenant saveOrUpdate(Y9Tenant y9Tenant, TenantTypeEnum tenantType);
 
     /**
      * 保存租户排序信息

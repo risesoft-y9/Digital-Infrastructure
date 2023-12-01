@@ -15,7 +15,6 @@ import org.springframework.web.bind.annotation.RestController;
 import lombok.RequiredArgsConstructor;
 
 import net.risesoft.enums.platform.AuthorityEnum;
-import net.risesoft.enums.platform.ResourceTypeEnum;
 import net.risesoft.model.platform.Menu;
 import net.risesoft.model.platform.Resource;
 import net.risesoft.model.platform.VueMenu;
@@ -122,8 +121,7 @@ public class PersonResourceApiImpl implements PersonResourceApi {
         @RequestParam("resourceId") @NotBlank String resourceId) {
         Y9LoginUserHolder.setTenantId(tenantId);
 
-        List<Y9Menu> y9MenuList = y9PersonToResourceAndAuthorityService.listSubMenus(personId, resourceId,
-            ResourceTypeEnum.MENU.getValue(), authority);
+        List<Y9Menu> y9MenuList = y9PersonToResourceAndAuthorityService.listSubMenus(personId, resourceId, authority);
         return Y9Result.success(Y9ModelConvertUtil.convert(y9MenuList, Menu.class));
     }
 
