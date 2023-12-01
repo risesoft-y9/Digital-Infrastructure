@@ -15,52 +15,52 @@ public class OpinionModel implements Serializable {
     private String id;
 
     /**
-     * 租户Id
+     * 租户Id,必填
      */
     private String tenantId;
 
     /**
-     * 意见框Id
+     * 意见框Id,必填
      */
     private String opinionFrameMark;
 
     /**
-     * 流程系列号
+     * 流程系列号,必填
      */
     private String processSerialNumber;
 
     /**
-     * 流程实例Id
+     * 流程实例Id,新建为空，不是新建传值
      */
     private String processInstanceId;
 
     /**
-     * 任务实例Id
+     * 任务实例Id,新建为空，不是新建传值
      */
     private String taskId;
 
     /**
-     * 意见内容
+     * 意见内容,必填
      */
     private String content;
 
     /**
-     * 填写意见人员id
+     * 填写意见人员id,必填
      */
     private String userId;
 
     /**
-     * 填写意见的人员名称
+     * 填写意见的人员名称,必填
      */
     private String userName;
 
     /**
-     * 填写意见部门id
+     * 填写意见部门id,必填
      */
     private String deptId;
 
     /**
-     * 填写意见的部门名称
+     * 填写意见的部门名称,必填
      */
     private String deptName;
 
@@ -80,7 +80,7 @@ public class OpinionModel implements Serializable {
     private String processTrackId;
 
     /**
-     * 岗位id
+     * 岗位id,必填
      */
     private String positionId;
 
@@ -88,4 +88,9 @@ public class OpinionModel implements Serializable {
      * 岗位名称
      */
     private String positionName;
+
+    /**
+     * 个人签名图片
+     */
+    private byte[] sign;
 }
