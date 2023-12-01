@@ -54,6 +54,7 @@ import net.risesoft.y9.util.Y9EnumUtil;
  */
 @Slf4j
 public class Y9Oauth2ResourceFilter implements Filter {
+    private final RestTemplate restTemplate = new RestTemplate();
     private WebApplicationContext ctx = null;
     private Environment env = null;
     private String serverIp = "";
@@ -65,7 +66,6 @@ public class Y9Oauth2ResourceFilter implements Filter {
     private String clientSecret = "";
     private boolean saveLogMessage = false;
     private boolean saveOnlineMessage = false;
-    private RestTemplate restTemplate = new RestTemplate();
     private KafkaTemplate<String, Object> y9KafkaTemplate;
 
     private String buildExceptionMessage(Exception ex) {
@@ -138,7 +138,7 @@ public class Y9Oauth2ResourceFilter implements Filter {
             String accessToken = getAccessTokenFromRequest(request);
             if (accessToken != null) {
                 boolean needVerifyToken = !tokenCachedInSession;
-                if (needVerifyToken == false) {
+                if (!needVerifyToken) {
                     if (!accessToken.equals(accessTokenInSession)) {
                         needVerifyToken = true;
                     }
@@ -317,7 +317,7 @@ public class Y9Oauth2ResourceFilter implements Filter {
                     log.setTenantId(userInfo.getTenantId());
                     log.setTenantName(userInfo.getTenantName());
                     log.setGuidPath(userInfo.getGuidPath());
-                    log.setManagerLevel(String.valueOf(userInfo.getManagerLevel()));
+                    log.setManagerLevel(String.valueOf(userInfo.getManagerLevel().getValue()));
 
                     String jsonString = Y9JsonUtil.writeValueAsString(log);
                     this.y9KafkaTemplate.send(Y9TopicConst.Y9_ACCESSLOG_MESSAGE, jsonString);
