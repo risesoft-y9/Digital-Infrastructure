@@ -151,7 +151,7 @@ public class RiseLogAdvice implements MethodInterceptor {
                         log.setTenantName(Y9LoginUserHolder.getTenantName());
                         log.setDn(userInfo.getDn());
                         log.setGuidPath(userInfo.getGuidPath());
-                        log.setManagerLevel(String.valueOf(userInfo.getManagerLevel()));
+                        log.setManagerLevel(String.valueOf(userInfo.getManagerLevel().getValue()));
                     }
 
                     if (saveLogInfo4Kafka == null) {

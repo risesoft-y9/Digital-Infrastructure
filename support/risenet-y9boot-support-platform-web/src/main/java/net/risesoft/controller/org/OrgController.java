@@ -252,8 +252,8 @@ public class OrgController {
         List<Y9OrgBase> treeList = new ArrayList<>();
         if (userInfo.isGlobalManager()) {
             treeList = compositeOrgBaseService.treeSearch(name, treeType);
-        } else if (userInfo.getManagerLevel().equals(ManagerLevelEnum.SYSTEM_MANAGER)
-            || userInfo.getManagerLevel().equals(ManagerLevelEnum.SECURITY_MANAGER)) {
+        } else if (ManagerLevelEnum.SYSTEM_MANAGER.equals(userInfo.getManagerLevel())
+            || ManagerLevelEnum.SECURITY_MANAGER.equals(userInfo.getManagerLevel())) {
             treeList = compositeOrgBaseService.treeSearch4DeptManager(name, treeType);
         }
         return Y9Result.success(treeList, "获取机构树成功！");
