@@ -19,6 +19,22 @@ import net.risesoft.y9.exception.Y9PermissionException;
  */
 public class IsSystemManagerAdvice implements MethodBeforeAdvice {
 
+    private static void checkGlobalSystemManager() {
+        if (!(Y9LoginUserHolder.getUserInfo().isGlobalManager() && ManagerLevelEnum.SYSTEM_MANAGER.getValue()
+            .equals(Y9LoginUserHolder.getUserInfo().getManagerLevel().getValue()))) {
+            throw new Y9PermissionException(GlobalErrorCodeEnum.NOT_GLOBAL_SYSTEM_MANAGER.getCode(),
+                GlobalErrorCodeEnum.NOT_GLOBAL_SYSTEM_MANAGER.getDescription());
+        }
+    }
+
+    private static void checkDepartmentSystemManager() {
+        if (!(!Y9LoginUserHolder.getUserInfo().isGlobalManager() && ManagerLevelEnum.SYSTEM_MANAGER.getValue()
+            .equals(Y9LoginUserHolder.getUserInfo().getManagerLevel().getValue()))) {
+            throw new Y9PermissionException(GlobalErrorCodeEnum.NOT_DEPT_SYSTEM_MANAGER.getCode(),
+                GlobalErrorCodeEnum.NOT_DEPT_SYSTEM_MANAGER.getDescription());
+        }
+    }
+
     @Override
     public void before(Method method, Object[] args, Object target) throws Throwable {
         IsSystemManager isSystemManager = AnnotationUtils.findAnnotation(method, IsSystemManager.class);
@@ -28,22 +44,6 @@ public class IsSystemManagerAdvice implements MethodBeforeAdvice {
             } else {
                 checkGlobalSystemManager();
             }
-        }
-    }
-
-    private static void checkGlobalSystemManager() {
-        if (!(Y9LoginUserHolder.getUserInfo().isGlobalManager()
-            && ManagerLevelEnum.SYSTEM_MANAGER.getValue().equals(Y9LoginUserHolder.getUserInfo().getManagerLevel()))) {
-            throw new Y9PermissionException(GlobalErrorCodeEnum.NOT_GLOBAL_SYSTEM_MANAGER.getCode(),
-                GlobalErrorCodeEnum.NOT_GLOBAL_SYSTEM_MANAGER.getDescription());
-        }
-    }
-
-    private static void checkDepartmentSystemManager() {
-        if (!(!Y9LoginUserHolder.getUserInfo().isGlobalManager()
-            && ManagerLevelEnum.SYSTEM_MANAGER.getValue().equals(Y9LoginUserHolder.getUserInfo().getManagerLevel()))) {
-            throw new Y9PermissionException(GlobalErrorCodeEnum.NOT_DEPT_SYSTEM_MANAGER.getCode(),
-                GlobalErrorCodeEnum.NOT_DEPT_SYSTEM_MANAGER.getDescription());
         }
     }
 

@@ -19,6 +19,22 @@ import net.risesoft.y9.exception.Y9PermissionException;
  */
 public class IsAuditManagerAdvice implements MethodBeforeAdvice {
 
+    private static void checkGlobalAuditManager() {
+        if (!(Y9LoginUserHolder.getUserInfo().isGlobalManager() && ManagerLevelEnum.AUDIT_MANAGER.getValue()
+            .equals(Y9LoginUserHolder.getUserInfo().getManagerLevel().getValue()))) {
+            throw new Y9PermissionException(GlobalErrorCodeEnum.NOT_GLOBAL_AUDIT_MANAGER.getCode(),
+                GlobalErrorCodeEnum.NOT_GLOBAL_AUDIT_MANAGER.getDescription());
+        }
+    }
+
+    private static void checkDeptAuditManager() {
+        if (!(!Y9LoginUserHolder.getUserInfo().isGlobalManager() && ManagerLevelEnum.AUDIT_MANAGER.getValue()
+            .equals(Y9LoginUserHolder.getUserInfo().getManagerLevel().getValue()))) {
+            throw new Y9PermissionException(GlobalErrorCodeEnum.NOT_DEPT_AUDIT_MANAGER.getCode(),
+                GlobalErrorCodeEnum.NOT_DEPT_AUDIT_MANAGER.getDescription());
+        }
+    }
+
     @Override
     public void before(Method method, Object[] args, Object target) throws Throwable {
         IsAuditManager isAuditManager = AnnotationUtils.findAnnotation(method, IsAuditManager.class);
@@ -28,22 +44,6 @@ public class IsAuditManagerAdvice implements MethodBeforeAdvice {
             } else {
                 checkGlobalAuditManager();
             }
-        }
-    }
-
-    private static void checkGlobalAuditManager() {
-        if (!(Y9LoginUserHolder.getUserInfo().isGlobalManager()
-            && ManagerLevelEnum.AUDIT_MANAGER.getValue().equals(Y9LoginUserHolder.getUserInfo().getManagerLevel()))) {
-            throw new Y9PermissionException(GlobalErrorCodeEnum.NOT_GLOBAL_AUDIT_MANAGER.getCode(),
-                GlobalErrorCodeEnum.NOT_GLOBAL_AUDIT_MANAGER.getDescription());
-        }
-    }
-
-    private static void checkDeptAuditManager() {
-        if (!(!Y9LoginUserHolder.getUserInfo().isGlobalManager()
-            && ManagerLevelEnum.AUDIT_MANAGER.getValue().equals(Y9LoginUserHolder.getUserInfo().getManagerLevel()))) {
-            throw new Y9PermissionException(GlobalErrorCodeEnum.NOT_DEPT_AUDIT_MANAGER.getCode(),
-                GlobalErrorCodeEnum.NOT_DEPT_AUDIT_MANAGER.getDescription());
         }
     }
 
