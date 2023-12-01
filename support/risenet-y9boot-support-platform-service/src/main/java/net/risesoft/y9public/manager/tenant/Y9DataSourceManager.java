@@ -1,5 +1,6 @@
 package net.risesoft.y9public.manager.tenant;
 
+import net.risesoft.enums.platform.TenantTypeEnum;
 import net.risesoft.y9public.entity.tenant.Y9DataSource;
 
 /**
@@ -10,9 +11,9 @@ import net.risesoft.y9public.entity.tenant.Y9DataSource;
  * @since 9.6.2
  */
 public interface Y9DataSourceManager {
-    String buildDataSourceName(String shortName, Integer tenantType, String systemName);
+    String buildDataSourceName(String shortName, TenantTypeEnum tenantType, String systemName);
 
-    Y9DataSource createTenantDefaultDataSource(String shortName, Integer tenantType, String systemName);
+    Y9DataSource createTenantDefaultDataSource(String shortName, TenantTypeEnum tenantType, String systemName);
 
     Y9DataSource createTenantDefaultDataSource(String dbName);
 

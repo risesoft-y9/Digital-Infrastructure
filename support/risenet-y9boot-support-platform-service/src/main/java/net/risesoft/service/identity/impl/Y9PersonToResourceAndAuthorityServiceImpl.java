@@ -195,8 +195,7 @@ public class Y9PersonToResourceAndAuthorityServiceImpl implements Y9PersonToReso
     }
 
     @Override
-    public List<Y9Menu> listSubMenus(String personId, String resourceId, Integer resourceType,
-        AuthorityEnum authority) {
+    public List<Y9Menu> listSubMenus(String personId, String resourceId, AuthorityEnum authority) {
         List<Y9PersonToResourceAndAuthority> y9PersonToResourceAndAuthorityList =
             this.list(personId, resourceId, ResourceTypeEnum.MENU, authority);
         List<String> menuIdList = y9PersonToResourceAndAuthorityList.stream()

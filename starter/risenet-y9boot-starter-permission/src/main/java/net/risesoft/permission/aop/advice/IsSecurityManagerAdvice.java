@@ -20,8 +20,8 @@ import net.risesoft.y9.exception.Y9PermissionException;
 public class IsSecurityManagerAdvice implements MethodBeforeAdvice {
 
     private static void checkGlobalSecurityManager() {
-        if (!(Y9LoginUserHolder.getUserInfo().isGlobalManager() && ManagerLevelEnum.SECURITY_MANAGER.getValue()
-            .equals(Y9LoginUserHolder.getUserInfo().getManagerLevel().getValue()))) {
+        if (!(Y9LoginUserHolder.getUserInfo().isGlobalManager()
+            && ManagerLevelEnum.SECURITY_MANAGER.equals(Y9LoginUserHolder.getUserInfo().getManagerLevel()))) {
             // 如果不是全局的安全管理员则抛出异常
             throw new Y9PermissionException(GlobalErrorCodeEnum.NOT_GLOBAL_SECURITY_MANAGER.getCode(),
                 GlobalErrorCodeEnum.NOT_GLOBAL_SECURITY_MANAGER.getDescription());
@@ -29,8 +29,8 @@ public class IsSecurityManagerAdvice implements MethodBeforeAdvice {
     }
 
     private static void checkDeptSecurityManager() {
-        if (!(!Y9LoginUserHolder.getUserInfo().isGlobalManager() && ManagerLevelEnum.SECURITY_MANAGER.getValue()
-            .equals(Y9LoginUserHolder.getUserInfo().getManagerLevel().getValue()))) {
+        if (!(!Y9LoginUserHolder.getUserInfo().isGlobalManager()
+            && ManagerLevelEnum.SECURITY_MANAGER.equals(Y9LoginUserHolder.getUserInfo().getManagerLevel()))) {
             // 如果不是部门的安全管理员则抛出异常
             throw new Y9PermissionException(GlobalErrorCodeEnum.NOT_DEPT_SECURITY_MANAGER.getCode(),
                 GlobalErrorCodeEnum.NOT_DEPT_SECURITY_MANAGER.getDescription());

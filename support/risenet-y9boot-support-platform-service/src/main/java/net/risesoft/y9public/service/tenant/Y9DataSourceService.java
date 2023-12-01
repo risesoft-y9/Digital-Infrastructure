@@ -6,6 +6,7 @@ import javax.sql.DataSource;
 
 import org.springframework.data.domain.Page;
 
+import net.risesoft.enums.platform.TenantTypeEnum;
 import net.risesoft.y9.exception.Y9NotFoundException;
 import net.risesoft.y9public.entity.tenant.Y9DataSource;
 
@@ -17,7 +18,7 @@ import net.risesoft.y9public.entity.tenant.Y9DataSource;
  */
 public interface Y9DataSourceService {
 
-    String buildDataSourceName(String shortName, Integer tenantType, String systemName);
+    String buildDataSourceName(String shortName, TenantTypeEnum tenantType, String systemName);
 
     /**
      * 修改密码
@@ -38,7 +39,7 @@ public interface Y9DataSourceService {
      * @param systemName 系统名称
      * @return String 数据源id
      */
-    Y9DataSource createTenantDefaultDataSource(String shortName, Integer tenantType, String systemName);
+    Y9DataSource createTenantDefaultDataSource(String shortName, TenantTypeEnum tenantType, String systemName);
 
     Y9DataSource createTenantDefaultDataSource(String dbName, String id);
 

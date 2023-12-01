@@ -160,9 +160,8 @@ public interface Y9PersonToResourceAndAuthorityService {
      *
      * @param personId 人员id
      * @param resourceId 资源id
-     * @param resourceType 资源类型
      * @param authority 权限类型
      * @return {@link List}<{@link Y9Menu}>
      */
-    List<Y9Menu> listSubMenus(String personId, String resourceId, Integer resourceType, AuthorityEnum authority);
+    List<Y9Menu> listSubMenus(String personId, String resourceId, AuthorityEnum authority);
 }
