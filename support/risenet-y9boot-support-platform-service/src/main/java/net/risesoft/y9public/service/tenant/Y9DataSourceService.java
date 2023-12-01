@@ -90,7 +90,7 @@ public interface Y9DataSourceService {
      * @return {@link DataSource}
      * @throws Exception 异常
      */
-    HikariDataSource getDataSource(String id);
+    DataSource getDataSource(String id);
 
     /**
      * 查询租户数据源分页列表

@@ -218,7 +218,10 @@ public class Y9logUserLoginInfoServiceImpl implements Y9logUserLoginInfoService 
                 LOGGER.warn(e.getMessage(), e);
             }
         }
-        Query query = new CriteriaQuery(criteria).setPageable(PageRequest.of(pageQuery.getPage4Db(), pageQuery.getSize()))
+
+        int page = pageQuery.getPage4Db();
+        int size = pageQuery.getSize();
+        Query query = new CriteriaQuery(criteria).setPageable(PageRequest.of(page, size))
             .addSort(Sort.by(Direction.DESC, Y9LogSearchConsts.LOGIN_TIME));
         SearchHits<Y9logUserLoginInfo> searchHits =
             elasticsearchTemplate.search(query, Y9logUserLoginInfo.class, INDEX);
