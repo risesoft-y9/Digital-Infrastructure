@@ -15,10 +15,6 @@
 		<module>common/risenet-y9boot-common-util</module>
 		<module>common/risenet-y9boot-common-tenantDataSource</module>
 
-		<module>example/risenet-y9demo-kernel-api/backend-demo</module>
-		<module>example/risenet-y9demo-sso-oauth2/backend-demo</module>
-		<module>example/risenet-y9demo-sync-kafka</module>
-
 		<module>rest/risenet-y9boot-rest-interface-platform</module>
 		<module>rest/risenet-y9boot-rest-feignClient-platform</module>
 
@@ -49,6 +45,11 @@
 		<module>webapp/risenet-y9boot-webapp-sso-server</module>
 		<module>webapp/risenet-y9boot-webapp-platform</module>
 		<module>webapp/risenet-y9boot-webapp-log</module>
+		
+		<module>example/risenet-y9demo-kernel-api/backend-demo</module>
+		<module>example/risenet-y9demo-sso-oauth2/backend-demo</module>
+		<module>example/risenet-y9demo-sync-kafka</module>
+
 	</modules>
 
 	<repositories>
