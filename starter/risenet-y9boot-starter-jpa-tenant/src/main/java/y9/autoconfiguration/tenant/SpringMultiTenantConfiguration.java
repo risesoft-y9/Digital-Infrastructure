@@ -139,6 +139,7 @@ public class SpringMultiTenantConfiguration {
 
     @Primary
     @Bean("y9TenantDataSource")
+    @ConditionalOnMissingBean(name = "y9TenantDataSource")
     public DataSource y9TenantDataSource(@Qualifier("defaultDataSource") HikariDataSource defaultDataSource,
         @Qualifier("y9TenantDataSourceLookup") Y9TenantDataSourceLookup y9TenantDataSourceLookup) {
         return new Y9TenantDataSource(defaultDataSource, y9TenantDataSourceLookup);
