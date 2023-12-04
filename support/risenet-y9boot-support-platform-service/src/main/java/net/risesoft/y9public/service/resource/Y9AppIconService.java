@@ -6,6 +6,7 @@ import java.util.Optional;
 import org.springframework.data.domain.Page;
 import org.springframework.web.multipart.MultipartFile;
 
+import net.risesoft.pojo.Y9PageQuery;
 import net.risesoft.y9.exception.Y9BusinessException;
 import net.risesoft.y9.exception.Y9NotFoundException;
 import net.risesoft.y9public.entity.resource.Y9AppIcon;
@@ -75,11 +76,10 @@ public interface Y9AppIconService {
     /**
      * 分页获取图标列表
      *
-     * @param page 页数
-     * @param rows 条数
+     * @param pageQuery 分页查询参数
      * @return {@link Page}<{@link Y9AppIcon}>
      */
-    Page<Y9AppIcon> pageAll(int page, int rows);
+    Page<Y9AppIcon> pageAll(Y9PageQuery pageQuery);
 
     /**
      * 刷新图标数据
@@ -106,10 +106,9 @@ public interface Y9AppIconService {
     /**
      * 根据名字分页查询图标
      *
-     * @param page 页数
-     * @param rows 条数
      * @param name 图标名称
+     * @param pageQuery 分页查询参数
      * @return {@link Page}<{@link Y9AppIcon}>
      */
-    Page<Y9AppIcon> searchByName(int page, int rows, String name);
+    Page<Y9AppIcon> searchByName(String name, Y9PageQuery pageQuery);
 }

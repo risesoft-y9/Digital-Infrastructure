@@ -146,26 +146,6 @@ public interface Y9TenantAppService {
         String verifyTime, Boolean tenancy, String appName, String systemIds);
 
     /**
-     * 根据系统id，获取应用租户详情
-     *
-     * @param page 页数
-     * @param rows 每页的行数
-     * @param systemId 系统id
-     * @return {@link Page}<{@link Y9TenantApp}>
-     */
-    Page<Y9TenantApp> pageBySystemId(int page, int rows, String systemId);
-
-    /**
-     * 根据tenantId获取租户应用分页列表
-     *
-     * @param page 页数
-     * @param rows 每页的行数
-     * @param tenantId 租户id
-     * @return {@link Page}<{@link Y9TenantApp}>
-     */
-    Page<Y9TenantApp> pageByTenantId(int page, int rows, String tenantId);
-
-    /**
      * 租户租用应用，已租用系统的应用自动审核通过
      *
      * @param appId 应用id

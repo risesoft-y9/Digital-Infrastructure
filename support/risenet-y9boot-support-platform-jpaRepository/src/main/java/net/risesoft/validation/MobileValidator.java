@@ -1,4 +1,4 @@
-package net.risesoft.y9.validation;
+package net.risesoft.validation;
 
 import jakarta.validation.ConstraintValidator;
 import jakarta.validation.ConstraintValidatorContext;

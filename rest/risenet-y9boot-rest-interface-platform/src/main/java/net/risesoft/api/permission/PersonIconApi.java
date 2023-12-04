@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 import net.risesoft.model.platform.PersonIconItem;
 import net.risesoft.pojo.Y9Page;
+import net.risesoft.pojo.Y9PageQuery;
 import net.risesoft.pojo.Y9Result;
 
 /**
@@ -80,15 +81,13 @@ public interface PersonIconApi {
      *
      * @param tenantId 租户ID
      * @param orgUnitId 人员/岗位id
-     * @param page 页数
-     * @param rows 条数
+     * @param pageQuery 分页查询参数
      * @return {@code Y9Page<PersonIconItem>} 通用请求返回对象 - data 是应用图标列表
      * @since 9.6.2
      */
     @GetMapping("/pageByOrgUnitId")
     Y9Page<PersonIconItem> pageByOrgUnitId(@RequestParam("tenantId") @NotBlank String tenantId,
-        @RequestParam("orgUnitId") @NotBlank String orgUnitId, @RequestParam("page") int page,
-        @RequestParam("rows") int rows);
+        @RequestParam("orgUnitId") @NotBlank String orgUnitId, @Validated Y9PageQuery pageQuery);
 
     /**
      * 根据图标类别，分页获取人员/岗位图标列表
@@ -96,14 +95,13 @@ public interface PersonIconApi {
      * @param tenantId 租户ID
      * @param orgUnitId 人员/岗位id
      * @param iconType 图标类别 1:普通的 2:常用图标
-     * @param page 页数
-     * @param rows 条数
+     * @param pageQuery 分页查询参数
      * @return {@code Y9Page<PersonIconItem>} 通用请求返回对象 - data 是个人图标列表
      */
     @GetMapping("/pageByOrgUnitIdAndIconType")
     Y9Page<PersonIconItem> pageByOrgUnitIdAndIconType(@RequestParam("tenantId") @NotBlank String tenantId,
         @RequestParam("orgUnitId") @NotBlank String orgUnitId, @RequestParam("iconType") Integer iconType,
-        @RequestParam("page") int page, @RequestParam("rows") int rows);
+        @Validated Y9PageQuery pageQuery);
 
     /**
      * 根据分类类别id，分页获取人员/岗位图标列表
@@ -111,14 +109,13 @@ public interface PersonIconApi {
      * @param tenantId 租户ID
      * @param orgUnitId 人员/岗位id
      * @param systemId 系统id(设置排序时为分类类别id)
-     * @param page 页数
-     * @param rows 条数
+     * @param pageQuery 分页查询参数
      * @return {@code Y9Page<PersonIconItem>} 通用请求返回对象 - data 是个人图标列表
      */
     @GetMapping("/pageByOrgUnitIdAndSystemId")
     Y9Page<PersonIconItem> pageByOrgUnitIdAndSystemId(@RequestParam("tenantId") @NotBlank String tenantId,
         @RequestParam("orgUnitId") @NotBlank String orgUnitId, @RequestParam("systemId") String systemId,
-        @RequestParam("page") int page, @RequestParam("rows") int rows);
+        @Validated Y9PageQuery pageQuery);
 
     /**
      * 设置常用应用

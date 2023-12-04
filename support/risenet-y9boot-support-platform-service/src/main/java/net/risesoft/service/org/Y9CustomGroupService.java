@@ -6,6 +6,7 @@ import java.util.Optional;
 import org.springframework.data.domain.Page;
 
 import net.risesoft.entity.Y9CustomGroup;
+import net.risesoft.pojo.Y9PageQuery;
 import net.risesoft.y9.exception.Y9NotFoundException;
 
 /**
@@ -59,12 +60,11 @@ public interface Y9CustomGroupService {
     /**
      * 获取自定用户组列表
      *
-     * @param page 页数
-     * @param rows 每页行数
      * @param personId 人员id
+     * @param pageQuery
      * @return {@link Page}<{@link Y9CustomGroup}>
      */
-    Page<Y9CustomGroup> pageByPersonId(int page, int rows, String personId);
+    Page<Y9CustomGroup> pageByPersonId(String personId, Y9PageQuery pageQuery);
 
     /**
      * 保存用户组

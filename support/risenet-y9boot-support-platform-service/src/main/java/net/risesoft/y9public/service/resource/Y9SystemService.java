@@ -5,6 +5,7 @@ import java.util.Optional;
 
 import org.springframework.data.domain.Page;
 
+import net.risesoft.pojo.Y9PageQuery;
 import net.risesoft.y9.exception.Y9NotFoundException;
 import net.risesoft.y9public.entity.resource.Y9System;
 
@@ -105,32 +106,12 @@ public interface Y9SystemService {
     List<Y9System> listByContextPath(String contextPath);
 
     /**
-     * 根据开发商id查找系统列表
+     * 分页查询系统列表
      *
-     * @param isvGuid 开发商id
-     * @return {@link List}<{@link Y9System}>
-     */
-    List<Y9System> listByIsvGuid(String isvGuid);
-
-    /**
-     * 根据开发商id及系统名分页查询系统
-     *
-     * @param page 页数
-     * @param rows 每页行数
-     * @param isvGuid 开发商id
-     * @param name 系统名
+     * @param pageQuery 分页查询参数
      * @return {@link Page}<{@link Y9System}>
      */
-    Page<Y9System> page(int page, int rows, String isvGuid, String name);
-
-    /**
-     * Y9System分页列表
-     *
-     * @param page 页数
-     * @param rows 每页行数
-     * @return {@link Page}<{@link Y9System}>
-     */
-    Page<Y9System> page(int page, int rows);
+    Page<Y9System> page(Y9PageQuery pageQuery);
 
     /**
      * 保存系统排序

@@ -9,6 +9,7 @@ import org.springframework.data.domain.Page;
 import net.risesoft.log.entity.Y9logUserLoginInfo;
 import net.risesoft.model.log.LogInfoModel;
 import net.risesoft.pojo.Y9Page;
+import net.risesoft.pojo.Y9PageQuery;
 
 /**
  * 登录日志管理
@@ -50,7 +51,7 @@ public interface Y9logUserLoginInfoService {
     List<String> listUserHostIpByUserId(String userId, String success);
 
     Y9Page<Y9logUserLoginInfo> page(String tenantId, String userHostIp, String userId, String success, String startTime,
-        String endTime, int page, int rows);
+        String endTime, Y9PageQuery pageQuery);
 
     Page<Y9logUserLoginInfo> pageBySuccessAndServerIpAndUserName(String success, String userHostIp, String userId,
         int page, int rows);

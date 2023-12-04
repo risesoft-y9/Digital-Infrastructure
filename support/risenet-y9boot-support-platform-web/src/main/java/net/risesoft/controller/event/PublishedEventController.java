@@ -50,8 +50,8 @@ public class PublishedEventController {
     public Y9Page<Y9PublishedEvent> pagePublishedEventList(String eventName, String eventDescription,
         @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss") Date startTime,
         @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss") Date endTime, Y9PageQuery pageQuery) {
-        Page<Y9PublishedEvent> pageList = y9PublishedEventService.page(pageQuery.getPage(), pageQuery.getSize(),
-            Y9LoginUserHolder.getTenantId(), eventName, eventDescription, startTime, endTime);
+        Page<Y9PublishedEvent> pageList = y9PublishedEventService.page(pageQuery, Y9LoginUserHolder.getTenantId(),
+            eventName, eventDescription, startTime, endTime);
         return Y9Page.success(pageQuery.getPage(), pageList.getTotalPages(), pageList.getTotalElements(),
             pageList.getContent(), "获取数据成功");
     }

@@ -18,6 +18,7 @@ import org.springframework.stereotype.Service;
 
 import lombok.RequiredArgsConstructor;
 
+import net.risesoft.pojo.Y9PageQuery;
 import net.risesoft.y9public.entity.event.Y9PublishedEvent;
 import net.risesoft.y9public.repository.event.Y9PublishedEventRepository;
 import net.risesoft.y9public.service.event.Y9PublishedEventService;
@@ -64,18 +65,10 @@ public class Y9PublishedEventServiceImpl implements Y9PublishedEventService {
     }
 
     @Override
-    public Page<Y9PublishedEvent> page(int page, int rows, String eventName, String eventDescription, Date startTime,
-        Date endTime) {
-        Pageable pageable = PageRequest.of(page > 0 ? page - 1 : 0, rows, Sort.by(Sort.Direction.DESC, "createTime"));
-        Y9PublishedEventSpecification spec =
-            new Y9PublishedEventSpecification(eventName, eventDescription, startTime, endTime);
-        return y9PublishedEventRepository.findAll(spec, pageable);
-    }
-
-    @Override
-    public Page<Y9PublishedEvent> page(int page, int rows, String tenantId, String eventName, String eventDescription,
-        Date startTime, Date endTime) {
-        Pageable pageable = PageRequest.of(page > 0 ? page - 1 : 0, rows, Sort.by(Sort.Direction.DESC, "createTime"));
+    public Page<Y9PublishedEvent> page(Y9PageQuery pageQuery, String tenantId, String eventName,
+        String eventDescription, Date startTime, Date endTime) {
+        Pageable pageable =
+            PageRequest.of(pageQuery.getPage4Db(), pageQuery.getSize(), Sort.by(Sort.Direction.DESC, "createTime"));
         Y9PublishedEventSpecification spec =
             new Y9PublishedEventSpecification(tenantId, eventName, eventDescription, startTime, endTime);
         return y9PublishedEventRepository.findAll(spec, pageable);

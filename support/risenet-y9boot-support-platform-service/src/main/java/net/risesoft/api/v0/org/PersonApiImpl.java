@@ -36,6 +36,7 @@ import net.risesoft.model.platform.PersonExt;
 import net.risesoft.model.platform.Position;
 import net.risesoft.model.platform.Role;
 import net.risesoft.pojo.Y9Page;
+import net.risesoft.pojo.Y9PageQuery;
 import net.risesoft.service.identity.Y9PersonToRoleService;
 import net.risesoft.service.org.CompositeOrgBaseService;
 import net.risesoft.service.org.Y9GroupService;
@@ -472,7 +473,7 @@ public class PersonApiImpl implements PersonApi {
         @RequestParam(required = false) String name, @RequestParam("page") int page, @RequestParam("rows") int rows) {
         Y9LoginUserHolder.setTenantId(tenantId);
 
-        Page<Y9Person> persons = y9PersonService.pageByNameLike(page, rows, name);
+        Page<Y9Person> persons = y9PersonService.pageByNameLike(name, new Y9PageQuery(page, rows));
         List<Person> personList = Y9ModelConvertUtil.convert(persons.getContent(), Person.class);
         return Y9Page.success(persons.getNumber(), persons.getTotalPages(), persons.getTotalElements(), personList,
             "操作成功");
@@ -495,7 +496,7 @@ public class PersonApiImpl implements PersonApi {
         @RequestParam("page") int page, @RequestParam("rows") int rows) {
         Y9LoginUserHolder.setTenantId(tenantId);
 
-        Page<Y9Person> persons = y9PersonService.pageByParentId(page, rows, parentId, disabled);
+        Page<Y9Person> persons = y9PersonService.pageByParentId(parentId, disabled, new Y9PageQuery(page, rows));
         List<Person> personList = Y9ModelConvertUtil.convert(persons.getContent(), Person.class);
         return Y9Page.success(persons.getNumber(), persons.getTotalPages(), persons.getTotalElements(), personList,
             "操作成功");
@@ -520,7 +521,8 @@ public class PersonApiImpl implements PersonApi {
         @RequestParam("rows") int rows) {
         Y9LoginUserHolder.setTenantId(tenantId);
 
-        Page<Y9Person> persons = y9PersonService.pageByParentId(page, rows, parentId, disabled, userName);
+        Page<Y9Person> persons =
+            y9PersonService.pageByParentId(parentId, disabled, userName, new Y9PageQuery(page, rows));
         List<Person> personList = Y9ModelConvertUtil.convert(persons.getContent(), Person.class);
         return Y9Page.success(persons.getNumber(), persons.getTotalPages(), persons.getTotalElements(), personList,
             "操作成功");

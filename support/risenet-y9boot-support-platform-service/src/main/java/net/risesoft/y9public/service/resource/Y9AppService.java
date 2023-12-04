@@ -150,36 +150,6 @@ public interface Y9AppService extends ResourceCommonService<Y9App> {
     Page<Y9App> page(Y9PageQuery pageQuery, String systemId, String name);
 
     /**
-     * 分页查询应用列表
-     *
-     * @param page 页数
-     * @param rows 每页行数
-     * @return Page<App>
-     */
-    Page<Y9App> page(int page, int rows);
-
-    /**
-     * 根据systemId ，分页查询应用入口（按createDateTime DESC排序）
-     *
-     * @param page 页数
-     * @param rows 每页行数
-     * @param systemId 系统id
-     * @return Page<App>
-     */
-    Page<Y9App> pageBySystemId(int page, int rows, String systemId);
-
-    /**
-     * 根据systemId ，应用名称，模糊分页查询应用入口（按createDateTime DESC排序）
-     *
-     * @param page 页数
-     * @param rows 每页行数
-     * @param systemId 系统id
-     * @param appName 应用名
-     * @return {@link Page}<{@link Y9App}>
-     */
-    Page<Y9App> pageBySystemIdAndName(int page, int rows, String systemId, String appName);
-
-    /**
      * 保存isv应用
      *
      * @param app 应用程序

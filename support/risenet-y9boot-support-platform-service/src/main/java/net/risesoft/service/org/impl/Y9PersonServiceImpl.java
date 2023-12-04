@@ -50,6 +50,7 @@ import net.risesoft.manager.relation.Y9PersonsToPositionsManager;
 import net.risesoft.model.platform.AuthenticateResult;
 import net.risesoft.model.platform.Message;
 import net.risesoft.model.platform.Person;
+import net.risesoft.pojo.Y9PageQuery;
 import net.risesoft.repository.Y9DepartmentPropRepository;
 import net.risesoft.repository.Y9DepartmentRepository;
 import net.risesoft.repository.Y9GroupRepository;
@@ -953,23 +954,23 @@ public class Y9PersonServiceImpl implements Y9PersonService {
     }
 
     @Override
-    public Page<Y9Person> pageByNameLike(int page, int rows, String userName) {
-        page = (page < 0) ? 0 : page - 1;
-        Pageable pageable = PageRequest.of(page, rows, Sort.by(Sort.Direction.DESC, "guidPath"));
-        return y9PersonRepository.findByDisabledAndNameContaining(false, userName, pageable);
+    public Page<Y9Person> pageByNameLike(String name, Y9PageQuery pageQuery) {
+        Pageable pageable =
+            PageRequest.of(pageQuery.getPage4Db(), pageQuery.getSize(), Sort.by(Sort.Direction.DESC, "guidPath"));
+        return y9PersonRepository.findByDisabledAndNameContaining(false, name, pageable);
     }
 
     @Override
-    public Page<Y9Person> pageByParentId(int page, int rows, String parentId, boolean disabled) {
-        page = (page < 0) ? 0 : page - 1;
-        Pageable pageable = PageRequest.of(page, rows, Sort.by(Sort.Direction.DESC, "tabIndex"));
+    public Page<Y9Person> pageByParentId(String parentId, boolean disabled, Y9PageQuery pageQuery) {
+        Pageable pageable =
+            PageRequest.of(pageQuery.getPage4Db(), pageQuery.getSize(), Sort.by(Sort.Direction.DESC, "tabIndex"));
         return y9PersonRepository.findByDisabledAndParentId(disabled, parentId, pageable);
     }
 
     @Override
-    public Page<Y9Person> pageByParentId(int page, int rows, String parentId, boolean disabled, String name) {
-        page = (page < 0) ? 0 : page - 1;
-        Pageable pageable = PageRequest.of(page, rows, Sort.by(Sort.Direction.DESC, "tabIndex"));
+    public Page<Y9Person> pageByParentId(String parentId, boolean disabled, String name, Y9PageQuery pageQuery) {
+        Pageable pageable =
+            PageRequest.of(pageQuery.getPage4Db(), pageQuery.getSize(), Sort.by(Sort.Direction.DESC, "tabIndex"));
         return y9PersonRepository.findByParentIdAndDisabledAndNameContaining(parentId, disabled, name, pageable);
     }
 

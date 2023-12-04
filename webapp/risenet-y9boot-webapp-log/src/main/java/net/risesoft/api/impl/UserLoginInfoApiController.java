@@ -11,6 +11,7 @@ import java.util.concurrent.ThreadFactory;
 import java.util.concurrent.ThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
 
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -30,6 +31,7 @@ import net.risesoft.log.service.Y9logUserHostIpInfoService;
 import net.risesoft.log.service.Y9logUserLoginInfoService;
 import net.risesoft.model.userlogininfo.LoginInfo;
 import net.risesoft.pojo.Y9Page;
+import net.risesoft.pojo.Y9PageQuery;
 import net.risesoft.pojo.Y9Result;
 import net.risesoft.util.AccessLogModelConvertUtil;
 import net.risesoft.y9.Y9LoginUserHolder;
@@ -78,8 +80,7 @@ public class UserLoginInfoApiController implements UserLoginInfoApi {
      * @param success 是否成功
      * @param startTime 开始时间
      * @param endTime 结束时间
-     * @param page 当前页数
-     * @param rows 显示条数
+     * @param pageQuery
      * @return {@code Y9Page<LoginInfo>} 通用分页请求返回对象 - data 是登录日志集合
      * @since 9.6.0
      */
@@ -89,11 +90,10 @@ public class UserLoginInfoApiController implements UserLoginInfoApi {
         @RequestParam("personId") String personId, @RequestParam("tenantId") String tenantId,
         @RequestParam(value = "success", required = false) String success,
         @RequestParam(value = "startTime", required = false) String startTime,
-        @RequestParam(value = "endTime", required = false) String endTime, @RequestParam("page") int page,
-        @RequestParam("rows") int rows) {
+        @RequestParam(value = "endTime", required = false) String endTime, @Validated Y9PageQuery pageQuery) {
         Y9LoginUserHolder.setTenantId(tenantId);
         Y9Page<Y9logUserLoginInfo> loginList =
-            userLoginInfoService.page(tenantId, userHostIp, userHostIp, success, startTime, endTime, page, rows);
+            userLoginInfoService.page(tenantId, userHostIp, userHostIp, success, startTime, endTime, pageQuery);
         List<Y9logUserLoginInfo> list = loginList.getRows();
         List<LoginInfo> infoList = AccessLogModelConvertUtil.userLoginInfoESListToModels(list);
         return Y9Page.success(loginList.getCurrPage(), loginList.getTotalPages(), loginList.getTotal(), infoList);

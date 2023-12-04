@@ -37,6 +37,7 @@ import net.risesoft.log.repository.Y9logUserLoginInfoRepository;
 import net.risesoft.log.service.Y9logUserLoginInfoService;
 import net.risesoft.model.log.LogInfoModel;
 import net.risesoft.pojo.Y9Page;
+import net.risesoft.pojo.Y9PageQuery;
 import net.risesoft.y9.util.Y9Util;
 
 import co.elastic.clients.elasticsearch.ElasticsearchClient;
@@ -192,9 +193,8 @@ public class Y9logUserLoginInfoServiceImpl implements Y9logUserLoginInfoService 
 
     @Override
     public Y9Page<Y9logUserLoginInfo> page(String tenantId, String userHostIp, String userId, String success,
-        String startTime, String endTime, int page, int rows) {
+        String startTime, String endTime, Y9PageQuery pageQuery) {
         Criteria criteria = new Criteria();
-
         if (StringUtils.isNotBlank(userHostIp)) {
             String parserUserHostIp = Y9Util.escape(userHostIp);
             criteria.and(Y9LogSearchConsts.USER_HOST_IP).is(parserUserHostIp);
@@ -218,15 +218,15 @@ public class Y9logUserLoginInfoServiceImpl implements Y9logUserLoginInfoService 
                 LOGGER.warn(e.getMessage(), e);
             }
         }
-        Query query = new CriteriaQuery(criteria).setPageable(PageRequest.of((page < 1) ? 0 : page - 1, rows))
+        Query query = new CriteriaQuery(criteria).setPageable(PageRequest.of(pageQuery.getPage4Db(), pageQuery.getSize()))
             .addSort(Sort.by(Direction.DESC, Y9LogSearchConsts.LOGIN_TIME));
         SearchHits<Y9logUserLoginInfo> searchHits =
             elasticsearchTemplate.search(query, Y9logUserLoginInfo.class, INDEX);
 
         List<Y9logUserLoginInfo> list = searchHits.stream()
             .map(org.springframework.data.elasticsearch.core.SearchHit::getContent).collect(Collectors.toList());
-        int totalPages = (int)searchHits.getTotalHits() / rows;
-        return Y9Page.success(page, searchHits.getTotalHits() % rows == 0 ? totalPages : totalPages + 1,
+        int totalPages = (int)searchHits.getTotalHits() / size;
+        return Y9Page.success(page, searchHits.getTotalHits() % size == 0 ? totalPages : totalPages + 1,
             searchHits.getTotalHits(), list);
     }
 

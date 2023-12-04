@@ -68,6 +68,13 @@
             <version>${project.version}</version>
         </dependency>
 
+
+        <dependency>
+            <groupId>net.risesoft</groupId>
+            <artifactId>risenet-y9boot-starter-web</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+
         <dependency>
             <groupId>jakarta.servlet</groupId>
             <artifactId>jakarta.servlet-api</artifactId>

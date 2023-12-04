@@ -172,8 +172,7 @@ public class TerminalController {
     public Y9Page<Map<String, Object>> pagePersonByDeptId(String parentId, Y9PageQuery pageQuery) {
         String tenantId = Y9LoginUserHolder.getTenantId();
         List<Map<String, Object>> list = new ArrayList<>();
-        Y9Page<Person> personPage =
-            personManager.pageByParentId(tenantId, parentId, false, pageQuery.getPage(), pageQuery.getSize());
+        Y9Page<Person> personPage = personManager.pageByParentId(tenantId, parentId, false, pageQuery);
         List<Person> personList = personPage.getRows();
         if (!personList.isEmpty()) {
             personList.forEach(person -> {
@@ -205,8 +204,7 @@ public class TerminalController {
         Y9PageQuery pageQuery) {
         String tenantId = Y9LoginUserHolder.getTenantId();
         List<Map<String, Object>> list = new ArrayList<>();
-        Y9Page<Person> personPage = personManager.pageByParentIdAndName(tenantId, parentId, false, userName,
-            pageQuery.getPage(), pageQuery.getSize());
+        Y9Page<Person> personPage = personManager.pageByParentIdAndName(tenantId, parentId, false, userName, pageQuery);
         List<Person> personList = personPage.getRows();
         if (!personList.isEmpty()) {
             for (Person orgPerson : personList) {
@@ -280,8 +278,7 @@ public class TerminalController {
     @GetMapping(value = "/pageSearchList")
     public Y9Page<Y9logUserLoginInfo> pageSearchList(String userHostIp, String userId, String startTime, String endTime,
         Y9PageQuery pageQuery) {
-        return y9logUserLoginInfoService.page(null, userHostIp, userId, "true", startTime, endTime, pageQuery.getPage(),
-            pageQuery.getSize());
+        return y9logUserLoginInfoService.page(null, userHostIp, userId, "true", startTime, endTime, pageQuery);
     }
 
     /**

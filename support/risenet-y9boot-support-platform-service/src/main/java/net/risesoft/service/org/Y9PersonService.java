@@ -10,6 +10,7 @@ import net.risesoft.entity.Y9Person;
 import net.risesoft.entity.Y9PersonExt;
 import net.risesoft.model.platform.AuthenticateResult;
 import net.risesoft.model.platform.Message;
+import net.risesoft.pojo.Y9PageQuery;
 import net.risesoft.y9.exception.Y9NotFoundException;
 
 /**
@@ -364,37 +365,34 @@ public interface Y9PersonService {
     List<Y9OrgBase> order(List<String> personIds);
 
     /**
-     * 根据名称模糊查询人员
+     * 按名称分页，如 根据名称模糊查询人员
      *
-     * @param page 页数
-     * @param rows 每页行数
-     * @param userName 人员姓名
-     * @return {@link Page}<{@link Y9Person}>
+     * @param name 人员姓名
+     * @param pageQuery 分页查询参数
+     * @return {@code Page<Y9Person>}
      */
-    Page<Y9Person> pageByNameLike(int page, int rows, String userName);
+    Page<Y9Person> pageByNameLike(String name, Y9PageQuery pageQuery);
 
     /**
      * 根据父节点查询，本部门下的人员
      *
-     * @param page 页数
-     * @param rows 每页行数
      * @param parentId 父节点id
      * @param disabled 是否已禁用
+     * @param pageQuery
      * @return {@link Page}<{@link Y9Person}>
      */
-    Page<Y9Person> pageByParentId(int page, int rows, String parentId, boolean disabled);
+    Page<Y9Person> pageByParentId(String parentId, boolean disabled, Y9PageQuery pageQuery);
 
     /**
      * 根据父节点id、人员禁用状态及名称模糊查询本部门下人员
      *
-     * @param page 页数
-     * @param rows 每页行数
      * @param parentId 父节点id
      * @param disabled 是否已禁用
      * @param name 人员姓名
+     * @param pageQuery 分页查询参数
      * @return {@link Page}<{@link Y9Person}>
      */
-    Page<Y9Person> pageByParentId(int page, int rows, String parentId, boolean disabled, String name);
+    Page<Y9Person> pageByParentId(String parentId, boolean disabled, String name, Y9PageQuery pageQuery);
 
     /**
      * 重置默认密码
