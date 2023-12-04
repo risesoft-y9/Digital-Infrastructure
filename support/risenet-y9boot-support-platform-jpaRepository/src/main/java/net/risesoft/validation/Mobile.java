@@ -1,4 +1,4 @@
-package net.risesoft.y9.validation;
+package net.risesoft.validation;
 
 import java.lang.annotation.Documented;
 import java.lang.annotation.ElementType;
@@ -10,7 +10,7 @@ import javax.validation.Constraint;
 import javax.validation.Payload;
 
 /**
- * 校验证件号是否合法
+ * 校验手机号是否合法
  *
  * @author shidaobang
  * @date 2022/08/04
@@ -18,11 +18,10 @@ import javax.validation.Payload;
 @Documented
 @Retention(RetentionPolicy.RUNTIME)
 @Target({ElementType.FIELD})
-@Constraint(validatedBy = IdNumberValidator.class)
-public @interface IdNumber {
-
+@Constraint(validatedBy = MobileValidator.class)
+public @interface Mobile {
     // 默认校验错误提示
-    String message() default "证件号不合法";
+    String message() default "手机号不合法";
 
     // 分组
     Class<?>[] groups() default {};

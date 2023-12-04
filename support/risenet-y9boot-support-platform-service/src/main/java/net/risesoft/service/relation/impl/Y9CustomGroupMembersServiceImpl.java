@@ -19,6 +19,7 @@ import net.risesoft.enums.platform.OrgTypeEnum;
 import net.risesoft.manager.org.CompositeOrgBaseManager;
 import net.risesoft.manager.org.Y9PersonManager;
 import net.risesoft.manager.relation.Y9CustomGroupMembersManager;
+import net.risesoft.pojo.Y9PageQuery;
 import net.risesoft.repository.relation.Y9CustomGroupMembersRepository;
 import net.risesoft.service.relation.Y9CustomGroupMembersService;
 
@@ -101,18 +102,17 @@ public class Y9CustomGroupMembersServiceImpl implements Y9CustomGroupMembersServ
     }
 
     @Override
-    public Page<Y9CustomGroupMember> pageByGroupId(String groupId, int page, int rows) {
+    public Page<Y9CustomGroupMember> pageByGroupId(String groupId, Y9PageQuery pageQuery) {
         Sort sort = Sort.by(Sort.Direction.ASC, "tabIndex");
-        int currpage = page > 0 ? page - 1 : 0;
-        Pageable pageable = PageRequest.of(currpage, rows, sort);
+        Pageable pageable = PageRequest.of(pageQuery.getPage4Db(), pageQuery.getSize(), sort);
         return customGroupMembersRepository.findByGroupId(groupId, pageable);
     }
 
     @Override
-    public Page<Y9CustomGroupMember> pageByGroupIdAndMemberType(String groupId, OrgTypeEnum memberType, int page,
-        int rows) {
-        int currentPage = page > 0 ? page - 1 : 0;
-        Pageable pageable = PageRequest.of(currentPage, rows, Sort.by(Sort.Direction.ASC, "tabIndex"));
+    public Page<Y9CustomGroupMember> pageByGroupIdAndMemberType(String groupId, OrgTypeEnum memberType,
+        Y9PageQuery pageQuery) {
+        Pageable pageable =
+            PageRequest.of(pageQuery.getPage4Db(), pageQuery.getSize(), Sort.by(Sort.Direction.ASC, "tabIndex"));
         return customGroupMembersRepository.findByGroupIdAndMemberType(groupId, memberType, pageable);
     }
 

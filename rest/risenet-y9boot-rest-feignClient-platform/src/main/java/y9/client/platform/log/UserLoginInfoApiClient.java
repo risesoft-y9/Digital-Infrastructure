@@ -2,11 +2,13 @@ package y9.client.platform.log;
 
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.cloud.openfeign.SpringQueryMap;
-import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import net.risesoft.api.log.UserLoginInfoApi;
 import net.risesoft.model.userlogininfo.LoginInfo;
-import net.risesoft.pojo.Y9Result;
+import net.risesoft.pojo.Y9Page;
+import net.risesoft.pojo.Y9PageQuery;
 
 /**
  * 个人登陆日志组件
@@ -19,26 +21,11 @@ import net.risesoft.pojo.Y9Result;
     path = "/services/rest/v1/log")
 public interface UserLoginInfoApiClient extends UserLoginInfoApi {
 
-    /**
-     * 保存登录信息
-     *
-     * @param info 用户登录信息
-     * @return boolean 是否保存成功
-     * @since 9.6.0
-     */
     @Override
-    @PostMapping("/saveLoginInfo")
-    Y9Result<Object> saveLoginInfo(@SpringQueryMap LoginInfo info);
-
-    /**
-     * 异步保存登录信息
-     *
-     * @param info 用户登录信息
-     * @return boolean 是否保存成功
-     * @since 9.6.0
-     */
-    @Override
-    @PostMapping("/saveLoginInfoAsync")
-    Y9Result<Object> saveLoginInfoAsync(@SpringQueryMap LoginInfo info);
-
+    @GetMapping("/pageSearch")
+    Y9Page<LoginInfo> pageSearch(@RequestParam(value = "userHostIp", required = false) String userHostIp,
+        @RequestParam("personId") String personId, @RequestParam("tenantId") String tenantId,
+        @RequestParam(value = "success", required = false) String success,
+        @RequestParam(value = "startTime", required = false) String startTime,
+        @RequestParam(value = "endTime", required = false) String endTime, @SpringQueryMap Y9PageQuery pageQuery);
 }

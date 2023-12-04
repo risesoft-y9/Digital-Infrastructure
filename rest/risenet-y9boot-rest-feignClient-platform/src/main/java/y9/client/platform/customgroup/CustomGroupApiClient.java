@@ -2,12 +2,15 @@ package y9.client.platform.customgroup;
 
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.cloud.openfeign.SpringQueryMap;
-import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import net.risesoft.api.customgroup.CustomGroupApi;
+import net.risesoft.enums.platform.OrgTypeEnum;
 import net.risesoft.model.platform.CustomGroup;
-import net.risesoft.pojo.Y9Result;
+import net.risesoft.model.platform.CustomGroupMember;
+import net.risesoft.pojo.Y9Page;
+import net.risesoft.pojo.Y9PageQuery;
 
 /**
  * 自定义用户组
@@ -22,16 +25,19 @@ import net.risesoft.pojo.Y9Result;
     path = "/services/rest/v1/customGroup")
 public interface CustomGroupApiClient extends CustomGroupApi {
 
-    /**
-     * 保存用户组
-     *
-     * @param tenantId 租户id
-     * @param customGroup 自定义用户组
-     * @return CustomGroup 用户组对象
-     * @since 9.6.0
-     */
     @Override
-    @PostMapping("/saveCustomGroup")
-    Y9Result<CustomGroup> saveCustomGroup(@RequestParam("tenantId") String tenantId,
-        @SpringQueryMap CustomGroup customGroup);
+    @GetMapping("/pageCustomGroupByPersonId")
+    Y9Page<CustomGroup> pageCustomGroupByPersonId(@RequestParam("tenantId") String tenantId,
+        @RequestParam("personId") String personId, @SpringQueryMap Y9PageQuery pageQuery);
+
+    @Override
+    @GetMapping("/pageCustomGroupMemberByGroupId")
+    Y9Page<CustomGroupMember> pageCustomGroupMemberByGroupId(@RequestParam("tenantId") String tenantId,
+        @RequestParam("groupId") String groupId, @SpringQueryMap Y9PageQuery pageQuery);
+
+    @Override
+    @GetMapping("/pageCustomGroupMemberByGroupIdAndMemberType")
+    Y9Page<CustomGroupMember> pageCustomGroupMemberByGroupIdAndMemberType(@RequestParam("tenantId") String tenantId,
+        @RequestParam("groupId") String groupId, @RequestParam("memberType") OrgTypeEnum memberType,
+        @SpringQueryMap Y9PageQuery pageQuery);
 }

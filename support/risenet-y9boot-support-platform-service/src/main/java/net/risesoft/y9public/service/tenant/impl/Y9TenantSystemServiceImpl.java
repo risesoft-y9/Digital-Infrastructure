@@ -20,6 +20,7 @@ import lombok.extern.slf4j.Slf4j;
 import net.risesoft.id.IdType;
 import net.risesoft.id.Y9IdGenerator;
 import net.risesoft.model.platform.TenantSystem;
+import net.risesoft.pojo.Y9PageQuery;
 import net.risesoft.y9.pubsub.Y9PublishService;
 import net.risesoft.y9.pubsub.constant.Y9CommonEventConst;
 import net.risesoft.y9.pubsub.message.Y9MessageCommon;
@@ -150,8 +151,8 @@ public class Y9TenantSystemServiceImpl implements Y9TenantSystemService {
     }
 
     @Override
-    public Page<Y9TenantSystem> pageByTenantId(int page, int rows, String tenantId) {
-        Pageable pageable = PageRequest.of(page > 0 ? page - 1 : 0, rows);
+    public Page<Y9TenantSystem> pageByTenantId(String tenantId, Y9PageQuery pageQuery) {
+        Pageable pageable = PageRequest.of(pageQuery.getPage4Db(), pageQuery.getSize());
         return y9TenantSystemRepository.findByTenantId(tenantId, pageable);
     }
 

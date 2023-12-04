@@ -32,6 +32,7 @@ import net.risesoft.model.platform.PersonExt;
 import net.risesoft.model.platform.Position;
 import net.risesoft.model.platform.Role;
 import net.risesoft.pojo.Y9Page;
+import net.risesoft.pojo.Y9PageQuery;
 import net.risesoft.pojo.Y9Result;
 import net.risesoft.service.identity.Y9PersonToRoleService;
 import net.risesoft.service.org.CompositeOrgBaseService;
@@ -417,16 +418,15 @@ public class PersonApiImpl implements PersonApi {
      *
      * @param tenantId 租户id
      * @param name 人员名称
-     * @param page 页数
-     * @param rows 条数
+     * @param pageQuery 分页查询参数
      * @return {@code Y9Page<Person>} 通用请求返回对象 - data 是人员对象
      */
     @Override
     public Y9Page<Person> pageByNameLike(@RequestParam("tenantId") @NotBlank String tenantId,
-        @RequestParam(required = false) String name, @RequestParam("page") int page, @RequestParam("rows") int rows) {
+        @RequestParam(required = false) String name, @Validated Y9PageQuery pageQuery) {
         Y9LoginUserHolder.setTenantId(tenantId);
 
-        Page<Y9Person> persons = y9PersonService.pageByNameLike(page, rows, name);
+        Page<Y9Person> persons = y9PersonService.pageByNameLike(name, pageQuery);
         List<Person> personList = Y9ModelConvertUtil.convert(persons.getContent(), Person.class);
         return Y9Page.success(persons.getNumber(), persons.getTotalPages(), persons.getTotalElements(), personList,
             "操作成功");
@@ -438,18 +438,17 @@ public class PersonApiImpl implements PersonApi {
      * @param tenantId 租户ID
      * @param parentId 部门ID
      * @param disabled 是否禁用
-     * @param page 页号
-     * @param rows 条数
+     * @param pageQuery 分页查询参数
      * @return {@code Y9Page<Person>} 通用请求返回对象 - data 是人员对象集合
      * @since 9.6.0
      */
     @Override
     public Y9Page<Person> pageByParentId(@RequestParam("tenantId") @NotBlank String tenantId,
         @RequestParam("parentId") @NotBlank String parentId, @RequestParam("disabled") boolean disabled,
-        @RequestParam("page") int page, @RequestParam("rows") int rows) {
+        @Validated Y9PageQuery pageQuery) {
         Y9LoginUserHolder.setTenantId(tenantId);
 
-        Page<Y9Person> persons = y9PersonService.pageByParentId(page, rows, parentId, disabled);
+        Page<Y9Person> persons = y9PersonService.pageByParentId(parentId, disabled, pageQuery);
         List<Person> personList = Y9ModelConvertUtil.convert(persons.getContent(), Person.class);
         return Y9Page.success(persons.getNumber(), persons.getTotalPages(), persons.getTotalElements(), personList,
             "操作成功");
@@ -462,18 +461,17 @@ public class PersonApiImpl implements PersonApi {
      * @param parentId 部门ID
      * @param disabled 是否禁用
      * @param name 用户名称
-     * @param page 页号
-     * @param rows 条数
+     * @param pageQuery 分页查询参数
      * @return {@code Y9Page<Person>} 通用请求返回对象 - data 是人员对象集合
      * @since 9.6.0
      */
     @Override
     public Y9Page<Person> pageByParentIdAndName(@RequestParam("tenantId") @NotBlank String tenantId,
         @RequestParam("parentId") @NotBlank String parentId, @RequestParam("disabled") boolean disabled,
-        @RequestParam("name") @NotBlank String name, @RequestParam("page") int page, @RequestParam("rows") int rows) {
+        @RequestParam("name") @NotBlank String name, Y9PageQuery pageQuery) {
         Y9LoginUserHolder.setTenantId(tenantId);
 
-        Page<Y9Person> persons = y9PersonService.pageByParentId(page, rows, parentId, disabled, name);
+        Page<Y9Person> persons = y9PersonService.pageByParentId(parentId, disabled, name, pageQuery);
         List<Person> personList = Y9ModelConvertUtil.convert(persons.getContent(), Person.class);
         return Y9Page.success(persons.getNumber(), persons.getTotalPages(), persons.getTotalElements(), personList,
             "操作成功");

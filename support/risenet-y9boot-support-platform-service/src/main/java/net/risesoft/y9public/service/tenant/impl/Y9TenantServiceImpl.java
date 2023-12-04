@@ -5,9 +5,6 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 
 import org.apache.commons.lang3.StringUtils;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.domain.Sort.Direction;
 import org.springframework.stereotype.Service;
@@ -168,19 +165,6 @@ public class Y9TenantServiceImpl implements Y9TenantService {
 
         y9Tenant.setParentId(parentId);
         this.save(y9Tenant);
-    }
-
-    @Override
-    public Page<Y9Tenant> page(int page, int rows) {
-        Pageable pageable = PageRequest.of((page < 1) ? 0 : page - 1, rows, Sort.by(Direction.DESC, "createTime"));
-        return y9TenantRepository.findAll(pageable);
-    }
-
-    @Override
-    public Page<Y9Tenant> pageByNameAndEnabled(int page, int rows, String name, Integer enabled) {
-        Pageable pageable = PageRequest.of((page < 1) ? 0 : page - 1, rows, Sort.by(Direction.ASC, "tabIndex"));
-        Y9TenantSpecification<Y9Tenant> spec = new Y9TenantSpecification<>(name, enabled, null);
-        return y9TenantRepository.findAll(spec, pageable);
     }
 
     @Override

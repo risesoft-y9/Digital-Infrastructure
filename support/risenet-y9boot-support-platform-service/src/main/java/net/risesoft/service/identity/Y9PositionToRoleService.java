@@ -2,8 +2,6 @@ package net.risesoft.service.identity;
 
 import java.util.List;
 
-import org.springframework.data.domain.Page;
-
 import net.risesoft.entity.identity.position.Y9PositionToRole;
 
 /**
@@ -45,17 +43,6 @@ public interface Y9PositionToRoleService {
      * @return
      */
     List<Y9PositionToRole> listByPositionIdAndSystemName(String positionId, String systemName);
-
-    /**
-     * 根据人员id，分页查询个人授权
-     *
-     * @param positionId
-     * @param page
-     * @param rows
-     * @param sort
-     * @return
-     */
-    Page<Y9PositionToRole> pageByPositionId(String positionId, int page, int rows, String sort);
 
     /**
      * 重新计算岗位角色

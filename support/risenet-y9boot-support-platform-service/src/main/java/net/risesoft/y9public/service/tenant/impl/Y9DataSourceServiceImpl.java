@@ -21,6 +21,7 @@ import com.alibaba.druid.pool.DruidDataSource;
 import net.risesoft.enums.platform.DataSourceTypeEnum;
 import net.risesoft.enums.platform.TenantTypeEnum;
 import net.risesoft.exception.DataSourceErrorCodeEnum;
+import net.risesoft.pojo.Y9PageQuery;
 import net.risesoft.y9.exception.util.Y9ExceptionUtil;
 import net.risesoft.y9.util.Y9Assert;
 import net.risesoft.y9.util.base64.Y9Base64Util;
@@ -182,8 +183,8 @@ public class Y9DataSourceServiceImpl implements Y9DataSourceService {
     }
 
     @Override
-    public Page<Y9DataSource> page(int page, int rows) {
-        Pageable pageable = PageRequest.of(page > 0 ? page - 1 : 0, rows);
+    public Page<Y9DataSource> page(Y9PageQuery pageQuery) {
+        Pageable pageable = PageRequest.of(pageQuery.getPage4Db(), pageQuery.getSize());
         return datasourceRepository.findAll(pageable);
     }
 

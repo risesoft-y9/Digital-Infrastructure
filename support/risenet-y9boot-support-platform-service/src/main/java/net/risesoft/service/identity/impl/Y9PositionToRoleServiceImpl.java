@@ -3,7 +3,6 @@ package net.risesoft.service.identity.impl;
 import java.util.List;
 
 import org.apache.commons.lang3.StringUtils;
-import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -77,11 +76,6 @@ public class Y9PositionToRoleServiceImpl implements Y9PositionToRoleService {
     @Override
     public List<Y9PositionToRole> listByPositionIdAndSystemName(String positionId, String systemName) {
         return y9PositionToRoleRepository.findByPositionIdAndSystemNameOrderByAppName(positionId, systemName);
-    }
-
-    @Override
-    public Page<Y9PositionToRole> pageByPositionId(String positionId, int page, int rows, String sort) {
-        return null;
     }
 
     @Override

@@ -3,8 +3,6 @@ package net.risesoft.y9public.service.tenant;
 import java.util.List;
 import java.util.Optional;
 
-import org.springframework.data.domain.Page;
-
 import net.risesoft.enums.platform.TenantTypeEnum;
 import net.risesoft.y9.exception.Y9NotFoundException;
 import net.risesoft.y9public.entity.tenant.Y9Tenant;
@@ -156,26 +154,6 @@ public interface Y9TenantService {
      * @param parentId 父ID
      */
     void move(String id, String parentId);
-
-    /**
-     * 分页查询租户列表
-     *
-     * @param page 页数
-     * @param rows 每页行数
-     * @return Page&lt;Tenant&gt;
-     */
-    Page<Y9Tenant> page(int page, int rows);
-
-    /**
-     * 分页查询租户列表
-     *
-     * @param page 页数
-     * @param rows 每页行数
-     * @param name 租户名称
-     * @param enabled 是否禁用
-     * @return Page&lt;Tenant&gt;
-     */
-    Page<Y9Tenant> pageByNameAndEnabled(int page, int rows, String name, Integer enabled);
 
     /**
      * 保存租户实体类

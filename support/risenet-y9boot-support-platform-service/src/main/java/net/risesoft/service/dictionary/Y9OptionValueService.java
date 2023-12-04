@@ -2,8 +2,6 @@ package net.risesoft.service.dictionary;
 
 import java.util.List;
 
-import org.springframework.data.domain.Page;
-
 import net.risesoft.entity.Y9OptionValue;
 
 /**
@@ -45,27 +43,6 @@ public interface Y9OptionValueService {
      * @return {@link List}<{@link Y9OptionValue}>
      */
     List<Y9OptionValue> listByType(String type);
-
-    /**
-     * 根据type进行分页查询
-     *
-     * @param page 页数
-     * @param rows 条数
-     * @param type 字典类型
-     * @return {@link Page}<{@link Y9OptionValue}>
-     */
-    Page<Y9OptionValue> pageByType(int page, int rows, String type);
-
-    /**
-     * 根据type和name分页查询
-     *
-     * @param page 页数
-     * @param rows 条数
-     * @param type 字典类型
-     * @param name 名称
-     * @return {@link Page}<{@link Y9OptionValue}>
-     */
-    Page<Y9OptionValue> pageByTypeAndNameLike(int page, int rows, String type, String name);
 
     /**
      * 保存新增字典数据

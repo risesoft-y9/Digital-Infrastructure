@@ -13,7 +13,6 @@ import org.apache.commons.lang3.StringUtils;
 import org.springframework.context.event.EventListener;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -149,23 +148,6 @@ public class Y9TenantAppServiceImpl implements Y9TenantAppService {
         Y9TenantAppSpecification<Y9TenantApp> spec =
             new Y9TenantAppSpecification<>(verify, tenantName, createTime, verifyTime, tenancy, systemIds, appName);
         return y9TenantAppRepository.findAll(spec, pageable);
-    }
-
-    @Override
-    public Page<Y9TenantApp> pageBySystemId(int page, int rows, String systemId) {
-        Sort sort = Sort.by(Sort.Direction.ASC, "appId").and(Sort.by(Sort.Direction.DESC, "createTime"));
-        Pageable pageable = PageRequest.of(page > 0 ? page - 1 : 0, rows, sort);
-        return y9TenantAppRepository.findBySystemIdAndTenancy(systemId, Boolean.TRUE, pageable);
-    }
-
-    @Override
-    public Page<Y9TenantApp> pageByTenantId(int page, int rows, String tenantId) {
-        if (page < 1) {
-            page = 1;
-        }
-        Sort sort = Sort.by(Sort.Direction.ASC, "verify").and(Sort.by(Sort.Direction.DESC, "createTime"));
-        Pageable pageable = PageRequest.of(page > 0 ? page - 1 : 0, rows, sort);
-        return y9TenantAppRepository.findPageByTenantIdAndTenancyOrderByVerify(tenantId, Boolean.TRUE, pageable);
     }
 
     @Override

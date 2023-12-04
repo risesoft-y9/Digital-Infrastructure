@@ -8,6 +8,7 @@ import javax.validation.constraints.NotEmpty;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import net.risesoft.enums.platform.OrgTypeEnum;
@@ -15,6 +16,7 @@ import net.risesoft.model.platform.CustomGroup;
 import net.risesoft.model.platform.CustomGroupMember;
 import net.risesoft.model.platform.Person;
 import net.risesoft.pojo.Y9Page;
+import net.risesoft.pojo.Y9PageQuery;
 import net.risesoft.pojo.Y9Result;
 
 /**
@@ -124,7 +126,7 @@ public interface CustomGroupApi {
      * @param tenantId 租户id
      * @param personId 人员id
      * @param groupId 用户组id
-     * @param memberType 成员类型 {@link OrgTypeEnum#enName}
+     * @param memberType 成员类型
      * @return {@code Y9Result<List<CustomGroupMember>>} 通用请求返回对象 - data 是查找的用户组成员列表
      * @since 9.6.0
      */
@@ -138,47 +140,41 @@ public interface CustomGroupApi {
      *
      * @param tenantId 租户id
      * @param personId 人员id
-     * @param page 第几页
-     * @param rows 返回多少条数据
+     * @param pageQuery 分页查询参数
      * @return {@code Y9Page<CustomGroup>} 通用分页请求返回对象 - rows 是返回的用户组列表
      * @since 9.6.0
      */
     @GetMapping("/pageCustomGroupByPersonId")
     Y9Page<CustomGroup> pageCustomGroupByPersonId(@RequestParam("tenantId") @NotBlank String tenantId,
-        @RequestParam("personId") @NotBlank String personId, @RequestParam("page") int page,
-        @RequestParam("rows") int rows);
+        @RequestParam("personId") @NotBlank String personId, @Validated Y9PageQuery pageQuery);
 
     /**
      * 根据自定义用户组id分页获取其自定义用户组成员列表
      *
      * @param tenantId 租户id
      * @param groupId 用户组Id
-     * @param page 第几页
-     * @param rows 返回多少条数据
+     * @param pageQuery 分页查询参数
      * @return {@code Y9Page<CustomGroupMember>} 通用分页请求返回对象 - rows 是返回的用户组成员列表
      * @since 9.6.0
      */
     @GetMapping("/pageCustomGroupMemberByGroupId")
     Y9Page<CustomGroupMember> pageCustomGroupMemberByGroupId(@RequestParam("tenantId") @NotBlank String tenantId,
-        @RequestParam("groupId") @NotBlank String groupId, @RequestParam("page") int page,
-        @RequestParam("rows") int rows);
+        @RequestParam("groupId") @NotBlank String groupId, @Validated Y9PageQuery pageQuery);
 
     /**
      * 根据自定义用户组id和成员类型分页获取其自定义用户组成员列表
      *
      * @param tenantId 租户id
      * @param groupId 用户组Id
-     * @param memberType 成员类型 {@link OrgTypeEnum#enName}
-     * @param page 第几页
-     * @param rows 返回多少条数据
+     * @param memberType 成员类型
+     * @param pageQuery 分页查询参数
      * @return {@code Y9Page<CustomGroupMember>}
      * @since 9.6.0
      */
     @GetMapping("/pageCustomGroupMemberByGroupIdAndMemberType")
     Y9Page<CustomGroupMember> pageCustomGroupMemberByGroupIdAndMemberType(
         @RequestParam("tenantId") @NotBlank String tenantId, @RequestParam("groupId") @NotBlank String groupId,
-        @RequestParam("memberType") OrgTypeEnum memberType, @RequestParam("page") int page,
-        @RequestParam("rows") int rows);
+        @RequestParam("memberType") OrgTypeEnum memberType, @Validated Y9PageQuery pageQuery);
 
     /**
      * 删除组成员
@@ -201,7 +197,8 @@ public interface CustomGroupApi {
      * @since 9.6.0
      */
     @PostMapping("/saveCustomGroup")
-    Y9Result<CustomGroup> saveCustomGroup(@RequestParam("tenantId") @NotBlank String tenantId, CustomGroup customGroup);
+    Y9Result<CustomGroup> saveCustomGroup(@RequestParam("tenantId") @NotBlank String tenantId,
+        @RequestBody CustomGroup customGroup);
 
     /**
      * 保存自定义用户组排序

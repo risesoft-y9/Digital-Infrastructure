@@ -22,7 +22,7 @@ import net.risesoft.base.BaseEntity;
 import net.risesoft.enums.platform.MaritalStatusEnum;
 import net.risesoft.persistence.EnumConverter;
 import net.risesoft.persistence.FieldBase64Converter;
-import net.risesoft.y9.validation.IdNumber;
+import net.risesoft.validation.IdNumber;
 
 /**
  * 人员实体扩展信息表

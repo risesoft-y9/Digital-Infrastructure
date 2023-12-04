@@ -19,6 +19,7 @@ import net.risesoft.id.IdType;
 import net.risesoft.id.Y9IdGenerator;
 import net.risesoft.manager.org.Y9PersonManager;
 import net.risesoft.manager.relation.Y9CustomGroupMembersManager;
+import net.risesoft.pojo.Y9PageQuery;
 import net.risesoft.repository.Y9CustomGroupRepository;
 import net.risesoft.repository.relation.Y9CustomGroupMembersRepository;
 import net.risesoft.service.org.Y9CustomGroupService;
@@ -73,8 +74,9 @@ public class Y9CustomGroupServiceImpl implements Y9CustomGroupService {
     }
 
     @Override
-    public Page<Y9CustomGroup> pageByPersonId(int page, int rows, String personId) {
-        PageRequest pageable = PageRequest.of(page > 0 ? page - 1 : 0, rows, Sort.by(Sort.Direction.ASC, "tabIndex"));
+    public Page<Y9CustomGroup> pageByPersonId(String personId, Y9PageQuery pageQuery) {
+        PageRequest pageable =
+            PageRequest.of(pageQuery.getPage4Db(), pageQuery.getSize(), Sort.by(Sort.Direction.ASC, "tabIndex"));
         return customGroupRepository.findByPersonId(personId, pageable);
     }
 

@@ -7,6 +7,7 @@ import org.springframework.data.domain.Page;
 import net.risesoft.entity.Y9Person;
 import net.risesoft.entity.relation.Y9CustomGroupMember;
 import net.risesoft.enums.platform.OrgTypeEnum;
+import net.risesoft.pojo.Y9PageQuery;
 
 /**
  * @author dingzhaojun
@@ -66,23 +67,21 @@ public interface Y9CustomGroupMembersService {
     /**
      * 根据自定义用户组id获取用户组成员
      *
-     * @param groupId
-     * @param page
-     * @param rows
+     * @param groupId 自定义用户组id
+     * @param pageQuery 分页查询参数
      * @return
      */
-    Page<Y9CustomGroupMember> pageByGroupId(String groupId, int page, int rows);
+    Page<Y9CustomGroupMember> pageByGroupId(String groupId, Y9PageQuery pageQuery);
 
     /**
      * 根据自定义用户组id和自定义用户组成员类型分页查询成员
      *
      * @param groupId
      * @param memberType
-     * @param page
-     * @param rows
+     * @param pageQuery
      * @return
      */
-    Page<Y9CustomGroupMember> pageByGroupIdAndMemberType(String groupId, OrgTypeEnum memberType, int page, int rows);
+    Page<Y9CustomGroupMember> pageByGroupIdAndMemberType(String groupId, OrgTypeEnum memberType, Y9PageQuery pageQuery);
 
     /**
      * 保存自定义用户组成员

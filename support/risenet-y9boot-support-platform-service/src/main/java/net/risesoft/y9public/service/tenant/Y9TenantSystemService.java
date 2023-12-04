@@ -5,6 +5,7 @@ import java.util.Optional;
 
 import org.springframework.data.domain.Page;
 
+import net.risesoft.pojo.Y9PageQuery;
 import net.risesoft.y9public.entity.resource.Y9System;
 import net.risesoft.y9public.entity.tenant.Y9Tenant;
 import net.risesoft.y9public.entity.tenant.Y9TenantSystem;
@@ -83,12 +84,11 @@ public interface Y9TenantSystemService {
     /**
      * 分页查询租户应用列表
      *
-     * @param page 页数
-     * @param rows 每页的行数
      * @param tenantId 租户id
+     * @param pageQuery 分页查询参数
      * @return {@link Page}<{@link Y9TenantSystem}>
      */
-    Page<Y9TenantSystem> pageByTenantId(int page, int rows, String tenantId);
+    Page<Y9TenantSystem> pageByTenantId(String tenantId, Y9PageQuery pageQuery);
 
     /**
      * 保存租户应用实体类

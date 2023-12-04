@@ -9,7 +9,6 @@ import org.apache.commons.lang3.StringUtils;
 import org.springframework.context.event.EventListener;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -235,30 +234,11 @@ public class Y9AppServiceImpl implements Y9AppService {
     }
 
     @Override
-    public Page<Y9App> page(int page, int rows) {
-        Sort sort = Sort.by(Sort.Direction.DESC, "createTime").and(Sort.by(Sort.Direction.ASC, "checked"));
-        Pageable pageable = PageRequest.of(page < 1 ? 0 : page - 1, rows, sort);
-        return y9AppRepository.findAll(pageable);
-    }
-
-    @Override
     public Page<Y9App> page(Y9PageQuery pageQuery, String systemId, String name) {
         Y9AppSpecification<Y9App> specification = new Y9AppSpecification<>(systemId, name);
         PageRequest pageRequest = PageRequest.of(pageQuery.getPage4Db(), pageQuery.getSize(),
             Sort.by(Sort.Direction.ASC, "tabIndex").and(Sort.by(Sort.Direction.DESC, "createTime")));
         return y9AppRepository.findAll(specification, pageRequest);
-    }
-
-    @Override
-    public Page<Y9App> pageBySystemId(int page, int rows, String systemId) {
-        Pageable pageable = PageRequest.of(page < 1 ? 0 : page - 1, rows);
-        return y9AppRepository.findPageBySystemId(systemId, pageable);
-    }
-
-    @Override
-    public Page<Y9App> pageBySystemIdAndName(int page, int rows, String systemId, String appName) {
-        Pageable pageable = PageRequest.of(page < 1 ? 0 : page - 1, rows, Sort.by(Sort.Direction.DESC, "createTime"));
-        return y9AppRepository.findPageBySystemIdAndNameContaining(systemId, appName, pageable);
     }
 
     @Override

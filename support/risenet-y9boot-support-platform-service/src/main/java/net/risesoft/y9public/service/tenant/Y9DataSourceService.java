@@ -7,6 +7,7 @@ import javax.sql.DataSource;
 import org.springframework.data.domain.Page;
 
 import net.risesoft.enums.platform.TenantTypeEnum;
+import net.risesoft.pojo.Y9PageQuery;
 import net.risesoft.y9.exception.Y9NotFoundException;
 import net.risesoft.y9public.entity.tenant.Y9DataSource;
 
@@ -94,11 +95,9 @@ public interface Y9DataSourceService {
     /**
      * 查询租户数据源分页列表
      *
-     * @param page 页数
-     * @param rows 每页的行数
-     * @return {@link Page}<{@link Y9DataSource}>
+     * @param pageQuery@return {@link Page}<{@link Y9DataSource}>
      */
-    Page<Y9DataSource> page(int page, int rows);
+    Page<Y9DataSource> page(Y9PageQuery pageQuery);
 
     /**
      * 重置默认密码

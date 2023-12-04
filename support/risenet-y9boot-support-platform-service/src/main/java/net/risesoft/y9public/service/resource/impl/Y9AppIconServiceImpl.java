@@ -19,6 +19,7 @@ import lombok.extern.slf4j.Slf4j;
 import net.risesoft.exception.ResourceErrorCodeEnum;
 import net.risesoft.id.IdType;
 import net.risesoft.id.Y9IdGenerator;
+import net.risesoft.pojo.Y9PageQuery;
 import net.risesoft.y9.exception.Y9BusinessException;
 import net.risesoft.y9.exception.util.Y9ExceptionUtil;
 import net.risesoft.y9public.entity.Y9FileStore;
@@ -77,8 +78,9 @@ public class Y9AppIconServiceImpl implements Y9AppIconService {
     }
 
     @Override
-    public Page<Y9AppIcon> pageAll(int page, int rows) {
-        Pageable pageable = PageRequest.of(page > 0 ? page - 1 : 0, rows, Sort.by(Sort.Direction.DESC, "createTime"));
+    public Page<Y9AppIcon> pageAll(Y9PageQuery pageQuery) {
+        Pageable pageable =
+            PageRequest.of(pageQuery.getPage4Db(), pageQuery.getSize(), Sort.by(Sort.Direction.DESC, "createTime"));
         return appIconRepository.findAll(pageable);
     }
 
@@ -146,8 +148,9 @@ public class Y9AppIconServiceImpl implements Y9AppIconService {
     }
 
     @Override
-    public Page<Y9AppIcon> searchByName(int page, int rows, String name) {
-        Pageable pageable = PageRequest.of(page > 0 ? page - 1 : 0, rows, Sort.by(Sort.Direction.DESC, "createTime"));
+    public Page<Y9AppIcon> searchByName(String name, Y9PageQuery pageQuery) {
+        Pageable pageable =
+            PageRequest.of(pageQuery.getPage4Db(), pageQuery.getSize(), Sort.by(Sort.Direction.DESC, "createTime"));
         return appIconRepository.findByNameContaining(name, pageable);
     }
 }

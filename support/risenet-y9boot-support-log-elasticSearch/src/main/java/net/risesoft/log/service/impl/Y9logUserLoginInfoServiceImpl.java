@@ -49,6 +49,7 @@ import net.risesoft.log.repository.Y9logUserLoginInfoRepository;
 import net.risesoft.log.service.Y9logUserLoginInfoService;
 import net.risesoft.model.log.LogInfoModel;
 import net.risesoft.pojo.Y9Page;
+import net.risesoft.pojo.Y9PageQuery;
 import net.risesoft.y9.util.Y9Util;
 
 /**
@@ -254,7 +255,7 @@ public class Y9logUserLoginInfoServiceImpl implements Y9logUserLoginInfoService 
 
     @Override
     public Y9Page<Y9logUserLoginInfo> page(String tenantId, String userHostIp, String userId, String success,
-        String startTime, String endTime, int page, int rows) {
+        String startTime, String endTime, Y9PageQuery pageQuery) {
         IndexCoordinates index = IndexCoordinates.of(Y9ESIndexConst.LOGIN_INFO_INDEX);
         String parserUserId = Y9Util.escape(userId);
         BoolQueryBuilder builder = QueryBuilders.boolQuery();
@@ -280,9 +281,9 @@ public class Y9logUserLoginInfoServiceImpl implements Y9logUserLoginInfoService 
                 LOGGER.warn(e.getMessage(), e);
             }
         }
-
-        Pageable pageable =
-            PageRequest.of((page < 1) ? 0 : page - 1, rows, Sort.by(Sort.Direction.DESC, Y9LogSearchConsts.LOGIN_TIME));
+        int page = pageQuery.getPage4Db();
+        int size = pageQuery.getSize();
+        Pageable pageable = PageRequest.of(page, size, Sort.by(Sort.Direction.DESC, Y9LogSearchConsts.LOGIN_TIME));
         NativeSearchQuery nativeSearchQuery =
             new NativeSearchQueryBuilder().withQuery(builder).withPageable(pageable).build();
         SearchHits<Y9logUserLoginInfo> searchHits =
@@ -290,8 +291,8 @@ public class Y9logUserLoginInfoServiceImpl implements Y9logUserLoginInfoService 
 
         List<Y9logUserLoginInfo> list = searchHits.stream()
             .map(org.springframework.data.elasticsearch.core.SearchHit::getContent).collect(Collectors.toList());
-        int totalPages = (int)searchHits.getTotalHits() / rows;
-        return Y9Page.success(page, searchHits.getTotalHits() % rows == 0 ? totalPages : totalPages + 1,
+        int totalPages = (int)searchHits.getTotalHits() / size;
+        return Y9Page.success(page, searchHits.getTotalHits() % size == 0 ? totalPages : totalPages + 1,
             searchHits.getTotalHits(), list);
     }
 

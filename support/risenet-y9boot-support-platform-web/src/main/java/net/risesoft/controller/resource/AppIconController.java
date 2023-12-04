@@ -94,7 +94,7 @@ public class AppIconController {
     @RiseLog(operationName = "查看图标")
     @RequestMapping("/pageAppIcons")
     public Y9Page<Y9AppIcon> pageAppIcons(Y9PageQuery pageQuery) {
-        Page<Y9AppIcon> pageList = appIconService.pageAll(pageQuery.getPage(), pageQuery.getSize());
+        Page<Y9AppIcon> pageList = appIconService.pageAll(pageQuery);
         return Y9Page.success(pageQuery.getPage(), pageList.getTotalPages(), pageList.getTotalElements(),
             pageList.getContent(), "获取数据成功");
     }
@@ -163,7 +163,7 @@ public class AppIconController {
     @RiseLog(operationType = OperationTypeEnum.BROWSE, operationName = "搜索图标")
     @RequestMapping("/searchIconPageByName")
     public Y9Page<Y9AppIcon> searchIconPageByName(Y9PageQuery pageQuery, String name) {
-        Page<Y9AppIcon> pageList = appIconService.searchByName(pageQuery.getPage(), pageQuery.getSize(), name);
+        Page<Y9AppIcon> pageList = appIconService.searchByName(name, pageQuery);
         return Y9Page.success(pageQuery.getPage(), pageList.getTotalPages(), pageList.getTotalElements(),
             pageList.getContent(), "获取数据成功");
     }

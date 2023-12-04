@@ -5,6 +5,7 @@ import java.util.List;
 
 import org.springframework.data.domain.Page;
 
+import net.risesoft.pojo.Y9PageQuery;
 import net.risesoft.y9public.entity.event.Y9PublishedEvent;
 
 /**
@@ -34,22 +35,7 @@ public interface Y9PublishedEventService {
     /**
      * 分页查询
      *
-     * @param page 页数
-     * @param rows 每页行数
-     * @param eventName 事件名
-     * @param eventDescription 事件描述
-     * @param startTime 开始事件
-     * @param endTime 结束事件
-     * @return {@link Page}<{@link Y9PublishedEvent}>
-     */
-    Page<Y9PublishedEvent> page(int page, int rows, String eventName, String eventDescription, Date startTime,
-        Date endTime);
-
-    /**
-     * 分页查询
-     *
-     * @param page 页数
-     * @param rows 每页的行数
+     * @param pageQuery
      * @param tenantId 租户id
      * @param eventName 事件名
      * @param eventDescription 事件描述
@@ -57,6 +43,6 @@ public interface Y9PublishedEventService {
      * @param endTime 结束事件
      * @return {@link Page}<{@link Y9PublishedEvent}>
      */
-    Page<Y9PublishedEvent> page(int page, int rows, String tenantId, String eventName, String eventDescription,
+    Page<Y9PublishedEvent> page(Y9PageQuery pageQuery, String tenantId, String eventName, String eventDescription,
         Date startTime, Date endTime);
 }

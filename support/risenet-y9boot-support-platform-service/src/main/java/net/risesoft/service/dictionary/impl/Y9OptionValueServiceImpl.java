@@ -4,10 +4,6 @@ import java.util.List;
 import java.util.Optional;
 
 import org.apache.commons.lang3.StringUtils;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -57,18 +53,6 @@ public class Y9OptionValueServiceImpl implements Y9OptionValueService {
     @Override
     public List<Y9OptionValue> listByType(String type) {
         return y9OptionValueRepository.findByType(type);
-    }
-
-    @Override
-    public Page<Y9OptionValue> pageByType(int page, int rows, String type) {
-        Pageable pageable = PageRequest.of(page > 0 ? page - 1 : 0, rows, Sort.by(Sort.Direction.ASC, "tabIndex"));
-        return y9OptionValueRepository.findPageByType(type, pageable);
-    }
-
-    @Override
-    public Page<Y9OptionValue> pageByTypeAndNameLike(int page, int rows, String type, String name) {
-        Pageable pageable = PageRequest.of(page > 0 ? page - 1 : 0, rows, Sort.by(Sort.Direction.ASC, "tabIndex"));
-        return y9OptionValueRepository.findPageByTypeAndNameContaining(type, name, pageable);
     }
 
     @Override

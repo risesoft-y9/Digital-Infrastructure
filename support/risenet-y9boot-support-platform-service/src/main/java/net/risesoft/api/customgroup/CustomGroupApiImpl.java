@@ -9,6 +9,7 @@ import org.springframework.context.annotation.Primary;
 import org.springframework.data.domain.Page;
 import org.springframework.http.MediaType;
 import org.springframework.validation.annotation.Validated;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
@@ -23,6 +24,7 @@ import net.risesoft.model.platform.CustomGroup;
 import net.risesoft.model.platform.CustomGroupMember;
 import net.risesoft.model.platform.Person;
 import net.risesoft.pojo.Y9Page;
+import net.risesoft.pojo.Y9PageQuery;
 import net.risesoft.pojo.Y9Result;
 import net.risesoft.service.org.Y9CustomGroupService;
 import net.risesoft.service.relation.Y9CustomGroupMembersService;
@@ -199,19 +201,18 @@ public class CustomGroupApiImpl implements CustomGroupApi {
      *
      * @param tenantId 租户id
      * @param personId 人员id
-     * @param page 第几页
-     * @param rows 返回多少条数据
+     * @param pageQuery 分页查询参数
      * @return {@code Y9Page<CustomGroup>} 通用分页请求返回对象 - rows 是返回的用户组列表
      * @since 9.6.0
      */
     @Override
     public Y9Page<CustomGroup> pageCustomGroupByPersonId(@RequestParam("tenantId") @NotBlank String tenantId,
-        @RequestParam("personId") @NotBlank String personId, @RequestParam("page") int page,
-        @RequestParam("rows") int rows) {
+        @RequestParam("personId") @NotBlank String personId, @Validated Y9PageQuery pageQuery) {
         Y9LoginUserHolder.setTenantId(tenantId);
 
-        Page<Y9CustomGroup> y9CustomGroupPage = customGroupService.pageByPersonId(page, rows, personId);
-        return Y9Page.success(page, y9CustomGroupPage.getTotalPages(), y9CustomGroupPage.getTotalElements(),
+        Page<Y9CustomGroup> y9CustomGroupPage = customGroupService.pageByPersonId(personId, pageQuery);
+        return Y9Page.success(pageQuery.getPage(), y9CustomGroupPage.getTotalPages(),
+            y9CustomGroupPage.getTotalElements(),
             Y9ModelConvertUtil.convert(y9CustomGroupPage.getContent(), CustomGroup.class));
     }
 
@@ -220,20 +221,18 @@ public class CustomGroupApiImpl implements CustomGroupApi {
      *
      * @param tenantId 租户id
      * @param groupId 用户组Id
-     * @param page 第几页
-     * @param rows 返回多少条数据
+     * @param pageQuery 分页查询参数
      * @return {@code Y9Page<CustomGroupMember>} 通用分页请求返回对象 - rows 是返回的用户组成员列表
      * @since 9.6.0
      */
     @Override
     public Y9Page<CustomGroupMember> pageCustomGroupMemberByGroupId(@RequestParam("tenantId") @NotBlank String tenantId,
-        @RequestParam("groupId") @NotBlank String groupId, @RequestParam("page") int page,
-        @RequestParam("rows") int rows) {
+        @RequestParam("groupId") @NotBlank String groupId, @Validated Y9PageQuery pageQuery) {
         Y9LoginUserHolder.setTenantId(tenantId);
 
-        Page<Y9CustomGroupMember> y9CustomGroupMemberPage =
-            customGroupMembersService.pageByGroupId(groupId, page, rows);
-        return Y9Page.success(page, y9CustomGroupMemberPage.getTotalPages(), y9CustomGroupMemberPage.getTotalElements(),
+        Page<Y9CustomGroupMember> y9CustomGroupMemberPage = customGroupMembersService.pageByGroupId(groupId, pageQuery);
+        return Y9Page.success(pageQuery.getPage(), y9CustomGroupMemberPage.getTotalPages(),
+            y9CustomGroupMemberPage.getTotalElements(),
             Y9ModelConvertUtil.convert(y9CustomGroupMemberPage.getContent(), CustomGroupMember.class));
     }
 
@@ -242,22 +241,21 @@ public class CustomGroupApiImpl implements CustomGroupApi {
      *
      * @param tenantId 租户id
      * @param groupId 用户组Id
-     * @param memberType 成员类型 {@link OrgTypeEnum}
-     * @param page 第几页
-     * @param rows 返回多少条数据
+     * @param memberType 成员类型
+     * @param pageQuery 分页查询参数
      * @return {@code Y9Page<CustomGroupMember>}
      * @since 9.6.0
      */
     @Override
     public Y9Page<CustomGroupMember> pageCustomGroupMemberByGroupIdAndMemberType(
         @RequestParam("tenantId") @NotBlank String tenantId, @RequestParam("groupId") @NotBlank String groupId,
-        @RequestParam("memberType") OrgTypeEnum memberType, @RequestParam("page") int page,
-        @RequestParam("rows") int rows) {
+        @RequestParam("memberType") OrgTypeEnum memberType, @Validated Y9PageQuery pageQuery) {
         Y9LoginUserHolder.setTenantId(tenantId);
 
         Page<Y9CustomGroupMember> y9CustomGroupMemberPage =
-            customGroupMembersService.pageByGroupIdAndMemberType(groupId, memberType, page, rows);
-        return Y9Page.success(page, y9CustomGroupMemberPage.getTotalPages(), y9CustomGroupMemberPage.getTotalElements(),
+            customGroupMembersService.pageByGroupIdAndMemberType(groupId, memberType, pageQuery);
+        return Y9Page.success(pageQuery.getPage(), y9CustomGroupMemberPage.getTotalPages(),
+            y9CustomGroupMemberPage.getTotalElements(),
             Y9ModelConvertUtil.convert(y9CustomGroupMemberPage.getContent(), CustomGroupMember.class));
     }
 
@@ -288,7 +286,7 @@ public class CustomGroupApiImpl implements CustomGroupApi {
      */
     @Override
     public Y9Result<CustomGroup> saveCustomGroup(@RequestParam("tenantId") @NotBlank String tenantId,
-        CustomGroup customGroup) {
+        @RequestBody CustomGroup customGroup) {
         Y9LoginUserHolder.setTenantId(tenantId);
 
         Y9CustomGroup y9CustomGroup = new Y9CustomGroup();

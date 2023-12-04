@@ -17,6 +17,7 @@ import lombok.RequiredArgsConstructor;
 import net.risesoft.exception.SystemErrorCodeEnum;
 import net.risesoft.id.IdType;
 import net.risesoft.id.Y9IdGenerator;
+import net.risesoft.pojo.Y9PageQuery;
 import net.risesoft.y9.exception.util.Y9ExceptionUtil;
 import net.risesoft.y9.util.Y9Assert;
 import net.risesoft.y9.util.Y9BeanUtil;
@@ -26,7 +27,6 @@ import net.risesoft.y9public.manager.resource.Y9SystemManager;
 import net.risesoft.y9public.manager.tenant.Y9TenantSystemManager;
 import net.risesoft.y9public.repository.resource.Y9SystemRepository;
 import net.risesoft.y9public.service.resource.Y9SystemService;
-import net.risesoft.y9public.specification.Y9SystemSpecification;
 
 /**
  * SystemServiceImpl
@@ -116,21 +116,10 @@ public class Y9SystemServiceImpl implements Y9SystemService {
     }
 
     @Override
-    public List<Y9System> listByIsvGuid(String isvGuid) {
-        return y9SystemRepository.findByIsvGuidOrderByTabIndexAsc(isvGuid);
-    }
-
-    @Override
-    public Page<Y9System> page(int page, int rows) {
-        Pageable pageable = PageRequest.of(page < 1 ? 0 : page - 1, rows, Sort.by(Sort.Direction.ASC, "tabIndex"));
+    public Page<Y9System> page(Y9PageQuery pageQuery) {
+        Pageable pageable =
+            PageRequest.of(pageQuery.getPage4Db(), pageQuery.getSize(), Sort.by(Sort.Direction.ASC, "tabIndex"));
         return y9SystemRepository.findAll(pageable);
-    }
-
-    @Override
-    public Page<Y9System> page(int page, int rows, String isvGuid, String name) {
-        Pageable pageable = PageRequest.of(page < 1 ? 0 : page - 1, rows, Sort.by(Sort.Direction.ASC, "tabIndex"));
-        Y9SystemSpecification<Y9System> spec = new Y9SystemSpecification<>(isvGuid, name);
-        return y9SystemRepository.findAll(spec, pageable);
     }
 
     @Override
