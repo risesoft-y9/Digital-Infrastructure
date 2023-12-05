@@ -13,5 +13,7 @@ public class Y9CommonEventConst {
     public static final String TENANT_DATASOURCE_SYNC = "TENANT_DATASOURCE_SYNC";
     /** 租户租用系统事件，相应系统可监听做对应租户的初始化的工作 */
     public static final String TENANT_SYSTEM_REGISTERED = "TENANT_SYSTEM_REGISTERED";
+    /** 租户系统已初始化 */
+    public static final String TENANT_SYSTEM_INITIALIZED = "TENANT_SYSTEM_INITIALIZED";
 
 }
