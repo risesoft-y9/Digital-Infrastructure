@@ -195,7 +195,7 @@
                                             smart-doc-maven-plugin
                                         </artifactId>
                                         <versionRange>
-                                            [2.4.3,)
+                                            [2.4.8,)
                                         </versionRange>
                                         <goals>
                                             <goal>html</goal>
