@@ -1,5 +1,7 @@
 package net.risesoft.schema;
 
+import org.springframework.kafka.core.KafkaTemplate;
+
 import lombok.extern.slf4j.Slf4j;
 
 import net.risesoft.init.TenantDataInitializer;
@@ -21,17 +23,14 @@ public class LiquibaseSchemaUpdater extends SchemaUpdater {
     private final Y9MultiTenantSpringLiquibase y9MultiTenantSpringLiquibase;
 
     public LiquibaseSchemaUpdater(Y9TenantDataSourceLookup y9TenantDataSourceLookup,
-        Y9MultiTenantSpringLiquibase y9MultiTenantSpringLiquibase, TenantDataInitializer tenantDataInitializer) {
-        super(y9TenantDataSourceLookup, tenantDataInitializer);
+        KafkaTemplate<String, String> y9KafkaTemplate, Y9MultiTenantSpringLiquibase y9MultiTenantSpringLiquibase,
+        TenantDataInitializer tenantDataInitializer) {
+        super(y9TenantDataSourceLookup, tenantDataInitializer, y9KafkaTemplate);
         this.y9MultiTenantSpringLiquibase = y9MultiTenantSpringLiquibase;
     }
 
     @Override
-    protected void doUpdate(String tenantId) {
-        try {
-            y9MultiTenantSpringLiquibase.update(tenantId);
-        } catch (LiquibaseException e) {
-            LOGGER.warn("更新租户数据结构时发生异常", e);
-        }
+    protected void doUpdate(String tenantId) throws LiquibaseException {
+        y9MultiTenantSpringLiquibase.update(tenantId);
     }
 }

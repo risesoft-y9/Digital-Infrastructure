@@ -1,6 +1,7 @@
 package net.risesoft.schema;
 
 import org.hibernate.integrator.api.integrator.Y9TenantHibernateInfoHolder;
+import org.springframework.kafka.core.KafkaTemplate;
 
 import net.risesoft.init.TenantDataInitializer;
 import net.risesoft.y9.Y9Context;
@@ -15,9 +16,10 @@ import net.risesoft.y9.tenant.datasource.Y9TenantDataSourceLookup;
  * @since 9.6.3
  */
 public class JpaSchemaUpdater extends SchemaUpdater {
+
     public JpaSchemaUpdater(Y9TenantDataSourceLookup y9TenantDataSourceLookup,
-        TenantDataInitializer tenantDataInitializer) {
-        super(y9TenantDataSourceLookup, tenantDataInitializer);
+        KafkaTemplate<String, String> y9KafkaTemplate, TenantDataInitializer tenantDataInitializer) {
+        super(y9TenantDataSourceLookup, tenantDataInitializer, y9KafkaTemplate);
     }
 
     @Override
