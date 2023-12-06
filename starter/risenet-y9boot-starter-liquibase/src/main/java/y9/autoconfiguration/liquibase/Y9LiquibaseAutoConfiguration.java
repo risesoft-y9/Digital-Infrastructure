@@ -2,16 +2,8 @@ package y9.autoconfiguration.liquibase;
 
 import javax.sql.DataSource;
 
-import net.risesoft.init.TenantDataInitializer;
-import net.risesoft.liquibase.Y9MultiTenantSpringLiquibase;
-import net.risesoft.schema.JpaSchemaUpdater;
-import net.risesoft.schema.LiquibaseSchemaUpdater;
-import net.risesoft.schema.SchemaUpdater;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.autoconfigure.AutoConfiguration;
-import org.springframework.boot.autoconfigure.condition.ConditionalOnBean;
-import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.boot.autoconfigure.liquibase.LiquibaseAutoConfiguration;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
@@ -19,6 +11,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.io.ResourceLoader;
 
+import net.risesoft.liquibase.Y9MultiTenantSpringLiquibase;
 import net.risesoft.y9.configuration.Y9Properties;
 import net.risesoft.y9.configuration.feature.liquibase.Y9LiquibaseProperties;
 import net.risesoft.y9.tenant.datasource.Y9TenantDataSourceLookup;
@@ -68,22 +61,6 @@ public class Y9LiquibaseAutoConfiguration {
         liquibase.setTestRollbackOnUpdate(liquibaseProperties.isTestRollbackOnUpdate());
         liquibase.setTag(liquibaseProperties.getTag());
         return liquibase;
-    }
-
-    @Bean
-    @ConditionalOnBean(name = "y9MultiTenantSpringLiquibase")
-    public SchemaUpdater liquibaseDbUpdater(Y9TenantDataSourceLookup y9TenantDataSourceLookup,
-                                            Y9MultiTenantSpringLiquibase y9MultiTenantSpringLiquibase,
-                                            @Autowired(required = false) TenantDataInitializer tenantDataInitializer) {
-        return new LiquibaseSchemaUpdater(y9TenantDataSourceLookup, y9MultiTenantSpringLiquibase,
-            tenantDataInitializer);
-    }
-
-    @Bean
-    @ConditionalOnMissingBean(name = "liquibaseDbUpdater")
-    public SchemaUpdater jpaDbUpdater(Y9TenantDataSourceLookup y9TenantDataSourceLookup,
-        @Autowired(required = false) TenantDataInitializer tenantDataInitializer) {
-        return new JpaSchemaUpdater(y9TenantDataSourceLookup, tenantDataInitializer);
     }
 
 }
