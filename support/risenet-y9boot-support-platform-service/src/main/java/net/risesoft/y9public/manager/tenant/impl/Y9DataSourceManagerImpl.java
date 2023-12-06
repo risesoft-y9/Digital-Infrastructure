@@ -93,13 +93,6 @@ public class Y9DataSourceManagerImpl implements Y9DataSourceManager {
 
     @Override
     @Transactional(readOnly = false)
-    public Y9DataSource createTenantDefaultDataSource(String shortName, TenantTypeEnum tenantType, String systemName) {
-        String dataSourceName = this.buildDataSourceName(shortName, tenantType, systemName);
-        return this.createTenantDefaultDataSource(dataSourceName, null);
-    }
-
-    @Override
-    @Transactional(readOnly = false)
     public Y9DataSource createTenantDefaultDataSource(String dbName, String specifyId) {
         if (StringUtils.isNotBlank(specifyId)) {
             Optional<Y9DataSource> y9DataSourceOptional = datasourceRepository.findById(specifyId);
@@ -170,23 +163,17 @@ public class Y9DataSourceManagerImpl implements Y9DataSourceManager {
         }
 
         if (DbType.kingbase.name().equals(dbType)) {
-            url = dds.getJdbcUrl().split("=")[0] + "=" + username;
-            username = dbName.toUpperCase();
-            password = dds.getPassword();
-
-            // 创建用户
-            String sql0 = " create user " + username + " with  password '" + password + "'";
-
             // 创建模式并授权
-            String sql1 = "CREATE SCHEMA " + username + " AUTHORIZATION " + username;
-
+            String sql1 = "CREATE SCHEMA " + dbName;
             try {
-                jdbcTemplate4Public.update(sql0);
                 jdbcTemplate4Public.update(sql1);
             } catch (DataAccessException e) {
                 LOGGER.warn("创建数据源失败", e);
                 return null;
             }
+            username = dds.getUsername();
+            url = dds.getJdbcUrl().split("=")[0] + "=" + dbName.toUpperCase();
+            password = dds.getPassword();
         }
 
         Y9DataSource y9DataSource = new Y9DataSource();
@@ -200,6 +187,13 @@ public class Y9DataSourceManagerImpl implements Y9DataSourceManager {
         y9DataSource.setMinIdle(dds.getMinimumIdle());
         y9DataSource.setId(Optional.ofNullable(specifyId).orElse(Y9IdGenerator.genId(IdType.SNOWFLAKE)));
         return this.save(y9DataSource);
+    }
+
+    @Override
+    @Transactional(readOnly = false)
+    public Y9DataSource createTenantDefaultDataSource(String shortName, TenantTypeEnum tenantType, String systemName) {
+        String dataSourceName = this.buildDataSourceName(shortName, tenantType, systemName);
+        return this.createTenantDefaultDataSource(dataSourceName, null);
     }
 
     @Override
@@ -230,9 +224,7 @@ public class Y9DataSourceManagerImpl implements Y9DataSourceManager {
                 } else if (DbType.kingbase.name().equals(dbType)) {
                     String username = dbName.toUpperCase();
                     String sql1 = "DROP SCHEMA " + username + " CASCADE;";
-                    String sql2 = "DROP USER " + username;
                     jdbcTemplate4Public.execute(sql1);
-                    jdbcTemplate4Public.execute(sql2);
                 }
             }
         }
