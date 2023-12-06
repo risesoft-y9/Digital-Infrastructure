@@ -57,16 +57,19 @@
             <artifactId>risenet-y9boot-starter-sso-oauth2-resource</artifactId>
             <version>${project.version}</version>
         </dependency>
+
         <dependency>
             <groupId>net.risesoft</groupId>
             <artifactId>risenet-y9boot-starter-security</artifactId>
             <version>${project.version}</version>
         </dependency>
+
         <dependency>
             <groupId>net.risesoft</groupId>
             <artifactId>risenet-y9boot-starter-log</artifactId>
             <version>${project.version}</version>
         </dependency>
+
         <dependency>
             <groupId>net.risesoft</groupId>
             <artifactId>risenet-y9boot-starter-apisix</artifactId>
@@ -87,7 +90,7 @@
 
         <dependency>
             <groupId>net.risesoft</groupId>
-            <artifactId>risenet-y9boot-starter-liquibase</artifactId>
+            <artifactId>risenet-y9boot-starter-multi-tenant</artifactId>
             <version>${project.version}</version>
         </dependency>
 
