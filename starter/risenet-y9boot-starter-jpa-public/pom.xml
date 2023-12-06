@@ -1,5 +1,5 @@
-<project xmlns="http://maven.apache.org/POM/4.0.0"
-         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+<project xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xmlns="http://maven.apache.org/POM/4.0.0"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
     <modelVersion>4.0.0</modelVersion>
     <!-- <groupId>net.risesoft</groupId> -->
@@ -69,11 +69,31 @@
         </dependency>-->
 
         <!-- 人大金仓数据库 -->
-        <!-- <dependency> <groupId>cn.com.kingbase</groupId> <artifactId>kingbase8</artifactId> 
-            <version>8.2.0</version> </dependency> <dependency> <groupId>cn.com.kingbase</groupId> 
-            <artifactId>hibernate-dialect</artifactId> <version>5.4.6.Finaldialect</version> 
-            </dependency> <dependency> <groupId>cn.com.kingbase</groupId> <artifactId>hibernate-jpa-api</artifactId> 
-            <version>2.1.0.Final</version> </dependency> -->
+        <dependency>
+            <groupId>cn.com.kingbase</groupId>
+            <artifactId>kingbase8</artifactId>
+            <version>8.6.0</version>
+        </dependency>
+
+       <!-- <dependency>
+            <groupId>cn.com.kingbase</groupId>
+            <artifactId>KesDialect-for-hibernate4</artifactId>
+            <version>1.0.0</version>
+        </dependency>-->
+
+
+        <!-- 人大金仓数据库 -->
+        <dependency>
+            <groupId>cn.com.kingbase</groupId>
+            <artifactId>hibernate-dialect</artifactId>
+            <version>5.4.6.Finaldialect</version>
+        </dependency>
+
+        <dependency>
+            <groupId>cn.com.kingbase</groupId>
+            <artifactId>hibernate-jpa-api</artifactId>
+            <version>2.1.0.Final</version>
+        </dependency>
     </dependencies>
 
     <build>
