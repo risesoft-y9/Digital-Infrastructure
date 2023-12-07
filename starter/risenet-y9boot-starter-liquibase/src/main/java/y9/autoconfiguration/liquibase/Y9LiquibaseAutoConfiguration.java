@@ -4,6 +4,7 @@ import javax.sql.DataSource;
 
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.autoconfigure.AutoConfiguration;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnBean;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.boot.autoconfigure.liquibase.LiquibaseAutoConfiguration;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
@@ -16,9 +17,6 @@ import net.risesoft.y9.configuration.Y9Properties;
 import net.risesoft.y9.configuration.feature.liquibase.Y9LiquibaseProperties;
 import net.risesoft.y9.tenant.datasource.Y9TenantDataSourceLookup;
 
-import y9.autoconfiguration.jpa.JpaPublicConfiguration;
-import y9.autoconfiguration.tenant.SpringMultiTenantConfiguration;
-
 import liquibase.integration.spring.SpringLiquibase;
 
 /**
@@ -27,12 +25,12 @@ import liquibase.integration.spring.SpringLiquibase;
  * @since 9.6.3
  */
 @Configuration
-@AutoConfiguration(after = {SpringMultiTenantConfiguration.class, JpaPublicConfiguration.class},
-    before = {LiquibaseAutoConfiguration.class})
+@AutoConfiguration(before = {LiquibaseAutoConfiguration.class})
 @EnableConfigurationProperties(Y9Properties.class)
 public class Y9LiquibaseAutoConfiguration {
 
     @Bean
+    @ConditionalOnBean(name = "y9TenantDataSourceLookup")
     @ConditionalOnProperty(name = "y9.feature.liquibase.tenant-enabled", havingValue = "true")
     public Y9MultiTenantSpringLiquibase y9MultiTenantSpringLiquibase(Y9TenantDataSourceLookup y9TenantDataSourceLookup,
                                                                      Y9Properties properties, ResourceLoader resourceLoader) {
@@ -41,6 +39,7 @@ public class Y9LiquibaseAutoConfiguration {
     }
 
     @Bean
+    @ConditionalOnBean(name = "y9PublicDS")
     public SpringLiquibase liquibase(Y9Properties properties, @Qualifier("y9PublicDS") DataSource dataSource) {
         SpringLiquibase liquibase = new SpringLiquibase();
         Y9LiquibaseProperties liquibaseProperties = properties.getFeature().getLiquibase();
