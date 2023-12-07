@@ -306,7 +306,7 @@ public class Y9OrgTreeXmlDataHandlerImpl implements Y9OrgTreeDataHandler {
             personElement.addElement("officialType")
                 .addText(person.getOfficialType() == null ? "" : person.getOfficialType());
             personElement.addElement("password").addText(person.getPassword() == null ? "" : person.getPassword());
-            personElement.addElement("sex").addText(person.getSex() == null ? "" : person.getSex() + "");
+            personElement.addElement("sex").addText(person.getSex() == null ? "" : person.getSex().getValue() + "");
             personElement.addElement("tenantId").addText(person.getTenantId() == null ? "" : person.getTenantId());
             personElement.addElement("version").addText(person.getVersion() == null ? "" : person.getVersion() + "");
             personElement.addElement("parentId").addText(person.getParentId() == null ? "" : person.getParentId());
@@ -508,10 +508,7 @@ public class Y9OrgTreeXmlDataHandlerImpl implements Y9OrgTreeDataHandler {
             Element root = document.getRootElement();
             String uid = root.attributeValue("uid");
             String y9 = root.attributeValue("y9");
-            boolean y9Version = false;
-            if ("true".equals(y9)) {
-                y9Version = true;
-            }
+            boolean y9Version = "true".equals(y9);
             String[] uids = uid.split(",");
             for (String id : uids) {
                 recursiveRun(document, level, id, y9Version);
@@ -579,7 +576,7 @@ public class Y9OrgTreeXmlDataHandlerImpl implements Y9OrgTreeDataHandler {
                 org.setOrganizationCode(organizationCode == null ? "" : organizationCode);
                 org.setOrganizationType(organizationType == null ? "" : organizationType);
                 org.setProperties(properties);
-                org.setVirtual(virtual == null ? false : Boolean.parseBoolean(virtual));
+                org.setVirtual(virtual != null && Boolean.parseBoolean(virtual));
 
                 y9OrganizationService.saveOrUpdate(org);
 
@@ -658,7 +655,7 @@ public class Y9OrgTreeXmlDataHandlerImpl implements Y9OrgTreeDataHandler {
                 dept.setProperties(properties);
                 dept.setTabIndex(tabIndex != null ? Integer.parseInt(tabIndex) : null);
                 if (y9Version) {
-                    dept.setBureau(bureau == null ? false : Boolean.valueOf(bureau));
+                    dept.setBureau(bureau != null && Boolean.valueOf(bureau));
                 }
                 y9DepartmentService.saveOrUpdate(dept);
 
@@ -872,7 +869,7 @@ public class Y9OrgTreeXmlDataHandlerImpl implements Y9OrgTreeDataHandler {
                 person.setDisabled(Boolean.valueOf(disabled == null ? "false" : disabled));
                 person.setAvator(avator == null ? "" : avator);
                 person.setCaid(caid == null ? "" : caid);
-                person.setEmail(email == null ? null : email);
+                person.setEmail(email);
                 person.setLoginName(loginName == null ? "" : loginName);
                 person.setMobile(mobile == null ? "" : mobile);
                 person.setOfficeAddress(officeAddress == null ? "" : officeAddress);
