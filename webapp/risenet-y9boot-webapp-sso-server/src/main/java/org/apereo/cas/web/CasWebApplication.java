@@ -1,11 +1,12 @@
 package org.apereo.cas.web;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import org.apache.commons.lang3.ArrayUtils;
 import org.apereo.cas.configuration.CasConfigurationProperties;
 import org.apereo.cas.util.app.ApplicationUtils;
 import org.apereo.cas.util.spring.boot.CasBanner;
-import lombok.NoArgsConstructor;
-import lombok.val;
-import org.apache.commons.lang3.ArrayUtils;
 import org.springframework.boot.WebApplicationType;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.autoconfigure.data.mongo.MongoDataAutoConfiguration;
@@ -18,8 +19,9 @@ import org.springframework.cloud.client.discovery.EnableDiscoveryClient;
 import org.springframework.context.annotation.EnableAspectJAutoProxy;
 import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
-import java.util.ArrayList;
-import java.util.List;
+
+import lombok.NoArgsConstructor;
+import lombok.val;
 
 /**
  * This is {@link CasWebApplication} that houses the main method.

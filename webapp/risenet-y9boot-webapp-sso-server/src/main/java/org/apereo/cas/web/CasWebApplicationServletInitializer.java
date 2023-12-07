@@ -1,27 +1,38 @@
 package org.apereo.cas.web;
 
-import org.apereo.cas.util.app.ApplicationUtils;
-import org.apereo.cas.util.spring.boot.AbstractCasSpringBootServletInitializer;
-import org.apereo.cas.util.spring.boot.CasBanner;
-import org.apereo.cas.web.y9.config.Y9AuthenticationConfiguration;
-import org.apereo.cas.web.y9.config.Y9CasWebSecurityConfigurer;
-import org.apereo.cas.web.y9.config.Y9JpaConfig;
-import org.apereo.cas.web.y9.config.Y9RedisConfig;
+import jakarta.servlet.ServletContext;
+import jakarta.servlet.ServletException;
+import jakarta.servlet.SessionCookieConfig;
+import jakarta.servlet.SessionTrackingMode;
 
-import java.util.List;
+import java.util.Collections;
 
-/**
- * This is {@link CasWebApplicationServletInitializer}.
- *
- * @author Misagh Moayyed
- * @since 5.0.0
- */
-public class CasWebApplicationServletInitializer extends AbstractCasSpringBootServletInitializer {
+import org.apereo.cas.web.y9.util.Y9Context;
+import org.springframework.boot.builder.SpringApplicationBuilder;
+import org.springframework.boot.web.servlet.support.SpringBootServletInitializer;
+import org.springframework.core.env.Environment;
+import org.springframework.web.WebApplicationInitializer;
 
-    public CasWebApplicationServletInitializer() {
-        super(List.of(CasWebApplication.class,Y9AuthenticationConfiguration.class,Y9CasWebSecurityConfigurer.class,Y9JpaConfig.class,Y9RedisConfig.class),
-            CasBanner.getInstance(),
-            ApplicationUtils.getApplicationStartup());
-    }
+ public class CasWebApplicationServletInitializer extends SpringBootServletInitializer implements WebApplicationInitializer {
+     
+     @Override
+     protected SpringApplicationBuilder configure(final SpringApplicationBuilder builder) {
+         setRegisterErrorPageFilter(false);
+         builder.sources(CasWebApplication.class);
+         return builder;
+     }
+
+     /*@Override
+     public void onStartup(ServletContext servletContext) throws ServletException {
+         Environment env = Y9Context.getEnvironment();
+         String sessionTimeout = env.getProperty("server.servlet.session.timeout", "300");
+         String cookieSecure = env.getProperty("server.servlet.session.cookie.secure", "false");
+         servletContext.setSessionTrackingModes(Collections.singleton(SessionTrackingMode.COOKIE));
+         servletContext.setSessionTimeout(Integer.valueOf(sessionTimeout));
+         SessionCookieConfig sessionCookieConfig = servletContext.getSessionCookieConfig();
+         sessionCookieConfig.setHttpOnly(true);
+         sessionCookieConfig.setSecure(Boolean.valueOf(cookieSecure));
+         super.onStartup(servletContext);
+     }*/
+
 }
-
