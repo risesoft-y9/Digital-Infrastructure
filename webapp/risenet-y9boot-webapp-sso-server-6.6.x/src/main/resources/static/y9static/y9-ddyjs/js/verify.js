@@ -386,11 +386,3 @@ $('#mpanel6').pointsVerify({
         $(".verify-refresh").click();
     }
 });
-
-//加密
-function encrypt(publicKey, pwd) {
-    var encrypt = new JSEncrypt();
-    encrypt.setPublicKey(publicKey);
-    var encrypted = encrypt.encrypt(pwd);
-    return encrypted;
-}

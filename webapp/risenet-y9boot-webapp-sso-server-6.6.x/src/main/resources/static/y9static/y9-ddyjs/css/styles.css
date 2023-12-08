@@ -121,6 +121,10 @@ body .login_fields__user:hover, body .login_fields__password:hover, body .login_
     color: #333;
 }
 
+body .login_fields_remember_password {
+    color: black;
+    padding: 10px 0;
+}
 
 body .login_fields .icon {
     display: inline-block;
