@@ -1,4 +1,4 @@
-<!DOCTYPE html  >
+<!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8"/>
@@ -26,7 +26,7 @@
 </head>
 <body>
 <div class="logo">
-    <img th:src="@{/y9static/y9-ddyjs/img/logo.svg}">
+    <img th:src="@{/y9static/y9-ddyjs/img/logo.svg}"/>
 </div>
 <div class="login">
     <div class="layui-row">
@@ -40,27 +40,31 @@
                         登录失败：<span th:each="err : ${#fields.errors('*')}" th:utext="${err}"/>
                     </div>
                     <div class="login_fields__user">
-                        <div class="icon"><img alt="" th:src="@{/y9static/y9-ddyjs/img/user.svg}"/></div>
+                        <div class="icon">
+                            <img alt="" th:src="@{/y9static/y9-ddyjs/img/user.svg}"/>
+                        </div>
                         <span class="icon-1">|</span>
                         <input autocomplete="off" id="username" onBlur="inputOnBlur();" placeholder="请输入账号"
-                               type="text"
-                               value=""/>
+                               type="text" value=""/>
                         <input autocomplete="false" htmlescape="true" id="username1" name="username"
-                               style="width: 150px;"
-                               tabindex="1" type="hidden"/>
+                               style="width: 150px" type="hidden"/>
                         <input autocomplete="false" htmlescape="true" id="tenantShortName" name="tenantShortName"
-                               style="width: 150px;" type="hidden" value="default"/>
-                        <div class="validation"><img alt="" th:src="@{/y9static/y9new/img/tick.png}"/></div>
+                               style="width: 150px" type="hidden" value="default"/>
+                        <div class="validation">
+                            <img alt="" th:src="@{/y9static/y9new/img/tick.png}"/>
+                        </div>
                     </div>
                     <div class="login_fields__password">
-                        <div class="icon"><img alt="" th:src="@{/y9static/y9-ddyjs/img/pwd.svg}"/></div>
+                        <div class="icon">
+                            <img alt="" th:src="@{/y9static/y9-ddyjs/img/pwd.svg}"/>
+                        </div>
                         <span class="icon-1">|</span>
                         <input autocomplete="off" htmlescape="true" id="password" onfocus="this.type='password'"
-                               placeholder="请输入密码"
-                               tabindex="2" type="text"/>
+                               placeholder="请输入密码" type="text"/>
                         <input autocomplete="off" htmlescape="true" id="password1" name="password" type="hidden"/>
-
-                        <div class="validation"><img alt="" th:src="@{/y9static/y9-ddyjs/img/tick.png}"/></div>
+                        <div class="validation">
+                            <img alt="" th:src="@{/y9static/y9-ddyjs/img/tick.png}"/>
+                        </div>
                     </div>
                     <!-- 表单隐藏数据块开始 -->
                     <input id="loginType" name="loginType" type="hidden" value="loginName"/>
@@ -69,7 +73,8 @@
                     <input id="screenDimension" name="screenDimension" type="hidden" value=""/>
                     <input id="pwdEcodeType" name="pwdEcodeType" type="hidden" value=""/>
                     <input name="execution" th:value="${flowExecutionKey}" type="hidden"/>
-                    <input name="_eventId" type="hidden" value="submit"/> <input name="geolocation" type="hidden"/>
+                    <input name="_eventId" type="hidden" value="submit"/>
+                    <input name="geolocation" type="hidden"/>
                     <!-- 表单隐藏数据块结束 -->
                 </form>
                 <!--点选验证码  -->
@@ -102,13 +107,33 @@
     var canGetCookie = 1; //是否支持存储Cookie 0 不支持 1 支持
     var ajaxmockjax = 1; //是否启用虚拟Ajax的请求响 0 不启用  1 启用
     var inputTimer = null;
+
+    document.addEventListener("keydown", function (event) {
+        console.log(11111);
+        if (event.keyCode === "9") {
+            // 在Tab键按下后执行的代码
+            let usernameInput = document.getElementById("username");
+            let passwordInput = document.getElementById("password");
+            console.log(2222);
+            if (!usernameInput.value) {
+                event.preventDefault();
+                usernameInput.focus();
+            } else if (!passwordInput.value) {
+                event.preventDefault();
+                passwordInput.focus();
+            } else {
+            }
+        }
+    });
+
     $(function () {
         validateIE();
     });
 
     function validateIE() {
         try {
-            $("#screenDimension").val(window.screen.width + '*' + window.screen.height);
+            $("#screenDimension").val(
+                window.screen.width + "*" + window.screen.height);
         } catch (e) {
         }
     }
@@ -118,140 +143,197 @@
     }
 
     function mouseClickEvent() {
-        $('#tenantShortName').val(this.id);
+        $("#tenantShortName").val(this.id);
         var userName = this.innerText;
-        $('#username').val(userName);
+        $("#username").val(userName);
         if ($.trim(userName).length > 0 && userName.indexOf("@") != -1) {
-            $('#username1').val(userName.split("@")[0]);
+            $("#username1").val(userName.split("@")[0]);
         }
         $("#toolTipsUl").empty();
-        $(".toolTips").attr({style: "display: none;"});
-        $('#password').focus();
+        $(".toolTips").attr({
+            style: "display: none;"
+        });
+        $("#password").focus();
     }
 
     $(document).keydown(function (e) {
         // 回车键事件
-        if (e.which == 13) {// 如（ev.ctrlKey && ev.keyCode==13）为ctrl+Center 触发
-            var userName = $('#username').val();
+        if (e.which == 13) {
+            // 如（ev.ctrlKey && ev.keyCode==13）为ctrl+Center 触发
+            var userName = $("#username").val();
             var password = $("#password").val();
             if (userName.length == 0) {
-                console.log("用户名不能为空!")
+                console.log("用户名不能为空!");
                 layui.layer("warn", "用户名不能为空!");
                 $("#username").focus();
-
             } else if (password.length == 0) {
-                console.log("回车键后为空!")
-                $("#password").blur();//防止回车键后，密码框获取焦点从而使密码输入框变空
+                console.log("回车键后为空!");
+                $("#password").blur(); //防止回车键后，密码框获取焦点从而使密码输入框变空
                 $("#password").focus();
-
             } else {
                 $('input[type="button"]').click();
             }
-
         }
 
+        if (e.which == 9) {
+            // 如（ev.ctrlKey && ev.keyCode==13）为ctrl+Center 触发
+            var userName = $("#username").val();
+            var password = $("#password").val();
+            if (userName.length == 0) {
+                console.log("用户名不能为空!");
+                layui.layer("warn", "用户名不能为空!");
+                $("#username").focus();
+            } else if (password.length == 0) {
+                console.log("回车键后为空!");
+                $("#password").blur(); //防止回车键后，密码框获取焦点从而使密码输入框变空
+                $("#password").focus();
+            } else {
+                $('input[type="button"]').click();
+            }
+        }
     });
 
     function enterEvent() {
         let shoseEvent = false;
-        $("#toolTipsUl").children().length && $("#toolTipsUl li").each(function (index, element) {
-            if (this.className.includes("active")) {
-                shoseEvent = true;
-                $('#tenantShortName').val(this.id);
-                var userName = this.innerText;
-                $('#username').val(userName);
-                if ($.trim(userName).length > 0 && userName.indexOf("@") != -1) {
-                    $('#username1').val(userName.split("@")[0]);
+        $("#toolTipsUl").children().length
+        && $("#toolTipsUl li").each(
+            function (index, element) {
+                if (this.className.includes("active")) {
+                    shoseEvent = true;
+                    $("#tenantShortName").val(this.id);
+                    var userName = this.innerText;
+                    $("#username").val(userName);
+                    if ($.trim(userName).length > 0
+                        && userName.indexOf("@") != -1) {
+                        $("#username1").val(
+                            userName.split("@")[0]);
+                    }
+                    $("#toolTipsUl").empty();
+                    $(".toolTips").attr({
+                        style: "display: none;"
+                    });
+                    $("#password").focus();
+                    return true;
                 }
-                $("#toolTipsUl").empty();
-                $(".toolTips").attr({style: "display: none;"});
-                $('#password').focus();
-                return true;
-            }
-        });
+            });
         if (!shoseEvent) {
             $('input[type="button"]').click();
         }
     }
 
     var open = 0;
-    layui.use("layer", function () {
-        var option = {
-            type: "success",
-            position: "top-center",
-            showicon: true,
-            time: 3000,
-            title: "登录提示",
-            content: "提示",
-            shadow: false,
-            shadowclickclose: true,
-            autoclose: true,
-            callback: function (data, obj) {
-                obj.ele.close(0);
-            },
-        };
-        //非空验证
-        $('input[type="button"]').click(function () {
-            var username = $('#username').val();
-            var username1 = $('#username1').val();
-            var password = $('#password').val();
-            var tenantShortName = $("#tenantShortName").val();
-            if (username == "") {
-                option.type = "warn";
-                option.content = "请输入您的账号";
-                WfMsg(option);
-            } else if (password == "") {
-                option.type = "warn";
-                option.content = "请输入密码";
-                WfMsg(option);
-            } else {
-                $.when(
-                    $.ajax({
-                        async: false,
-                        cache: false,
-                        type: "GET",
-                        url: ctx + '/api/getRandom',
-                        dataType: "json",
-                        success: function (y9Result) {
-                            if (y9Result.success) {
-                                $('#pwdEcodeType').val(y9Result.data);
-                            }
-                        }
-                    })
-                ).done(function () {
-                    $.ajax({
-                        async: false,
-                        cache: false,
-                        type: "POST",
-                        url: ctx + '/api/checkSsoLoginInfo',
-                        data: {
-                            username: encode64(username1),
-                            password: encrypt($('#pwdEcodeType').val(), encode64(password)),
-                            tenantShortName: tenantShortName,
-                            pwdEcodeType: $('#pwdEcodeType').val()
-                        },
-                        dataType: "json",
-                        success: function (data) {
-                            if (data.success) {
-                                $("#mpanel6").attr({style: "display: block;"});
+    layui
+        .use(
+            "layer",
+            function () {
+                var option = {
+                    type: "success",
+                    position: "top-center",
+                    showicon: true,
+                    time: 3000,
+                    title: "登录提示",
+                    content: "提示",
+                    shadow: false,
+                    shadowclickclose: true,
+                    autoclose: true,
+                    callback: function (data, obj) {
+                        obj.ele.close(0);
+                    },
+                };
+                //非空验证
+                $('input[type="button"]')
+                    .click(
+                        function () {
+                            var username = $("#username")
+                                .val();
+                            var username1 = $("#username1")
+                                .val();
+                            var password = $("#password")
+                                .val();
+                            var tenantShortName = $(
+                                "#tenantShortName")
+                                .val();
+                            if (username == "") {
+                                option.type = "warn";
+                                option.content = "请输入您的账号";
+                                WfMsg(option);
+                            } else if (password == "") {
+                                option.type = "warn";
+                                option.content = "请输入密码";
+                                WfMsg(option);
                             } else {
-                                var msg = data.msg;
-                                if (msg != null && msg.length > 0) {
-                                    option.type = "warn";
-                                    option.content = msg;
-                                    WfMsg(option);
-                                }
+                                $
+                                    .when(
+                                        $
+                                            .ajax({
+                                                async: false,
+                                                cache: false,
+                                                type: "GET",
+                                                url: ctx
+                                                    + "/api/getRandom",
+                                                dataType: "json",
+                                                success: function (
+                                                    y9Result) {
+                                                    if (y9Result.success) {
+                                                        $(
+                                                            "#pwdEcodeType")
+                                                            .val(
+                                                                y9Result.data);
+                                                    }
+                                                },
+                                            }))
+                                    .done(
+                                        function () {
+                                            $
+                                                .ajax({
+                                                    async: false,
+                                                    cache: false,
+                                                    type: "POST",
+                                                    url: ctx
+                                                        + "/api/checkSsoLoginInfo",
+                                                    data: {
+                                                        username: encode64(username1),
+                                                        password: encrypt(
+                                                            $(
+                                                                "#pwdEcodeType")
+                                                                .val(),
+                                                            encode64(password)),
+                                                        tenantShortName: tenantShortName,
+                                                        pwdEcodeType: $(
+                                                            "#pwdEcodeType")
+                                                            .val(),
+                                                    },
+                                                    dataType: "json",
+                                                    success: function (
+                                                        data) {
+                                                        if (data.success) {
+                                                            $(
+                                                                "#mpanel6")
+                                                                .attr(
+                                                                    {
+                                                                        style: "display: block;",
+                                                                    });
+                                                        } else {
+                                                            var msg = data.msg;
+                                                            if (msg != null
+                                                                && msg.length > 0) {
+                                                                option.type = "warn";
+                                                                option.content = msg;
+                                                                WfMsg(option);
+                                                            }
+                                                        }
+                                                    },
+                                                });
+                                        })
+                                    .fail(
+                                        function () {
+                                            option.type = "warn";
+                                            option.content = "获取随机数失败。";
+                                            WfMsg(option);
+                                        });
                             }
-                        }
-                    })
-                }).fail(function () {
-                    option.type = "warn";
-                    option.content = "获取随机数失败。";
-                    WfMsg(option);
-                });
-            }
-        });
-    });
+                        });
+            });
     //全屏
     var fullscreen = function () {
         elem = document.body;
@@ -266,6 +348,7 @@
         }
     };
 </script>
-<script charset="utf-8" th:src="@{/y9static/y9-ddyjs/js/verify.js}" type="text/javascript"></script>
+<script charset="utf-8" th:src="@{/y9static/y9-ddyjs/js/verify.js}"
+        type="text/javascript"></script>
 </body>
 </html>
