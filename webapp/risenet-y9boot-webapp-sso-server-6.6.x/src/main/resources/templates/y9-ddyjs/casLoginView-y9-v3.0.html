@@ -47,8 +47,7 @@
                         <input autocomplete="off" id="username" onBlur="inputOnBlur();" placeholder="请输入账号"
                                tabindex="1" type="text" value=""/>
                         <input autocomplete="false" htmlescape="true" id="username1" name="username"
-                               style="width: 150px;"
-                               tabindex="2" type="hidden"/>
+                               style="width: 150px;" type="hidden"/>
                         <input autocomplete="false" htmlescape="true" id="tenantShortName" name="tenantShortName"
                                style="width: 150px" type="hidden" value="default"/>
                         <div class="validation">
@@ -61,9 +60,8 @@
                         </div>
                         <span class="icon-1">|</span>
                         <input autocomplete="off" htmlescape="true" id="password" onfocus="this.type='password'"
-                               placeholder="请输入密码" type="password"/>
+                               placeholder="请输入密码" tabindex="2" type="password"/>
                         <input autocomplete="off" htmlescape="true" id="password1" name="password" type="hidden"/>
-
 
                         <div class="validation"><img alt="" th:src="@{/y9static/y9-ddyjs/img/tick.png}"/></div>
                     </div>
@@ -193,7 +191,7 @@
                 $("#password").blur(); //防止回车键后，密码框获取焦点从而使密码输入框变空
                 $("#password").focus();
             } else {
-                $('input[type="button"]').click();
+                // $('input[type="button"]').click();
             }
         }
     });
