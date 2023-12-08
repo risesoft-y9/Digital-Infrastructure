@@ -1117,8 +1117,6 @@ public class Y9PersonServiceImpl implements Y9PersonService {
     @Override
     @Transactional(readOnly = false)
     public Y9Person saveOrUpdate(Y9Person person, Y9PersonExt ext, List<String> positionIds, List<String> jobIds) {
-        Y9OrgBase parent = compositeOrgBaseManager.getOrgUnitAsParent(person.getParentId());
-
         person = this.saveOrUpdate(person, ext);
 
         if (positionIds != null) {
@@ -1132,9 +1130,9 @@ public class Y9PersonServiceImpl implements Y9PersonService {
             for (String jobId : jobIds) {
                 Y9Position y9Position = new Y9Position();
                 y9Position.setJobId(jobId);
-                y9Position.setName(jobId);
+                y9Position.setParentId(person.getParentId());
 
-                Y9Position newPosition = y9PositionManager.saveOrUpdate(y9Position, parent);
+                Y9Position newPosition = y9PositionManager.saveOrUpdate(y9Position);
                 newPositionIdList.add(newPosition.getId());
             }
             y9PersonsToPositionsManager.addPositions(person.getId(), newPositionIdList);

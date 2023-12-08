@@ -20,6 +20,7 @@ import org.springframework.util.Assert;
 
 import net.risesoft.consts.OrgLevelConsts;
 import net.risesoft.entity.Y9Department;
+import net.risesoft.entity.Y9Job;
 import net.risesoft.entity.Y9OrgBase;
 import net.risesoft.entity.Y9Organization;
 import net.risesoft.entity.Y9Position;
@@ -96,6 +97,11 @@ public class Y9PositionServiceImpl implements Y9PositionService {
     }
 
     @Override
+    public String buildName(Y9Job y9Job, List<Y9PersonsToPositions> personsToPositionsList) {
+        return y9PositionManager.buildName(y9Job, personsToPositionsList);
+    }
+
+    @Override
     @Transactional(readOnly = false)
     public Y9Position createPosition(Y9Position y9Position) {
         Y9OrgBase parent = compositeOrgBaseManager.getOrgUnitAsParent(y9Position.getParentId());
@@ -108,9 +114,6 @@ public class Y9PositionServiceImpl implements Y9PositionService {
         y9Position.setDn(OrgLevelConsts.getOrgLevel(OrgTypeEnum.POSITION) + y9Position.getName()
             + OrgLevelConsts.SEPARATOR + parent.getDn());
         y9Position.setDisabled(false);
-        if (y9Position.getDutyLevel() == null) {
-            y9Position.setDutyLevel(0);
-        }
 
         return save(y9Position);
     }
@@ -337,8 +340,7 @@ public class Y9PositionServiceImpl implements Y9PositionService {
     @Override
     @Transactional(readOnly = false)
     public Y9Position saveOrUpdate(Y9Position position) {
-        Y9OrgBase parent = compositeOrgBaseManager.getOrgUnitAsParent(position.getParentId());
-        return y9PositionManager.saveOrUpdate(position, parent);
+        return y9PositionManager.saveOrUpdate(position);
     }
 
     @Override

@@ -1,6 +1,12 @@
 package net.risesoft.manager.org.impl;
 
+import java.text.MessageFormat;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.cache.annotation.CacheConfig;
@@ -13,13 +19,18 @@ import lombok.RequiredArgsConstructor;
 
 import net.risesoft.consts.CacheNameConsts;
 import net.risesoft.consts.OrgLevelConsts;
+import net.risesoft.entity.Y9Job;
 import net.risesoft.entity.Y9OrgBase;
+import net.risesoft.entity.Y9Person;
 import net.risesoft.entity.Y9Position;
+import net.risesoft.entity.relation.Y9PersonsToPositions;
 import net.risesoft.enums.platform.OrgTypeEnum;
 import net.risesoft.exception.OrgUnitErrorCodeEnum;
 import net.risesoft.id.IdType;
 import net.risesoft.id.Y9IdGenerator;
 import net.risesoft.manager.org.CompositeOrgBaseManager;
+import net.risesoft.manager.org.Y9JobManager;
+import net.risesoft.manager.org.Y9PersonManager;
 import net.risesoft.manager.org.Y9PositionManager;
 import net.risesoft.model.platform.Position;
 import net.risesoft.repository.Y9PositionRepository;
@@ -28,6 +39,7 @@ import net.risesoft.util.ModelConvertUtil;
 import net.risesoft.util.Y9PublishServiceUtil;
 import net.risesoft.y9.Y9Context;
 import net.risesoft.y9.Y9LoginUserHolder;
+import net.risesoft.y9.configuration.Y9Properties;
 import net.risesoft.y9.exception.util.Y9ExceptionUtil;
 import net.risesoft.y9.pubsub.constant.Y9OrgEventConst;
 import net.risesoft.y9.pubsub.event.Y9EntityCreatedEvent;
@@ -46,7 +58,31 @@ public class Y9PositionManagerImpl implements Y9PositionManager {
     private final Y9PersonsToPositionsRepository y9PersonsToPositionsRepository;
     private final Y9PositionRepository y9PositionRepository;
 
+    private final Y9JobManager y9JobManager;
+    private final Y9PersonManager y9PersonManager;
     private final CompositeOrgBaseManager compositeOrgBaseManager;
+
+    private final Y9Properties y9Properties;
+
+    @Override
+    public String buildName(Y9Job y9Job, List<Y9PersonsToPositions> personsToPositionsList) {
+        String name;
+        String pattern = y9Properties.getApp().getPlatform().getPositionNamePattern();
+
+        if (personsToPositionsList.isEmpty()) {
+            name = MessageFormat.format(pattern, y9Job.getName(), "空缺");
+        } else {
+            List<Y9Person> personList = new ArrayList<>();
+            for (Y9PersonsToPositions y9PersonsToPositions : personsToPositionsList) {
+                Y9Person person = y9PersonManager.getById(y9PersonsToPositions.getPersonId());
+                personList.add(person);
+            }
+            String personNames = personList.stream().sorted((Comparator.comparing(Y9Person::getOrderedPath)))
+                .map(Y9OrgBase::getName).collect(Collectors.joining("，"));
+            name = MessageFormat.format(pattern, y9Job.getName(), personNames);
+        }
+        return name;
+    }
 
     @Override
     @Cacheable(key = "#id", condition = "#id!=null", unless = "#result==null")
@@ -70,7 +106,10 @@ public class Y9PositionManagerImpl implements Y9PositionManager {
     @Override
     @Transactional(readOnly = false)
     @CacheEvict(key = "#position.id")
-    public Y9Position saveOrUpdate(Y9Position position, Y9OrgBase parent) {
+    public Y9Position saveOrUpdate(Y9Position position) {
+        Y9OrgBase parent = compositeOrgBaseManager.getOrgUnitAsParent(position.getParentId());
+        Y9Job y9Job = y9JobManager.getById(position.getJobId());
+
         if (StringUtils.isNotEmpty(position.getId())) {
             Y9Position originalPosition = y9PositionRepository.findById(position.getId()).orElse(null);
             if (originalPosition != null) {
@@ -108,8 +147,10 @@ public class Y9PositionManagerImpl implements Y9PositionManager {
         if (StringUtils.isEmpty(position.getId())) {
             position.setId(Y9IdGenerator.genId(IdType.SNOWFLAKE));
         }
+        position.setTenantId(Y9LoginUserHolder.getTenantId());
+        position.setName(this.buildName(y9Job, Collections.emptyList()));
+        position.setJobName(y9Job.getName());
         position.setTabIndex(compositeOrgBaseManager.getMaxSubTabIndex(parent.getId(), OrgTypeEnum.POSITION));
-        position.setDutyLevel(0);
         position.setDisabled(false);
         position.setParentId(parent.getId());
         position.setGuidPath(parent.getGuidPath() + OrgLevelConsts.SEPARATOR + position.getId());
