@@ -246,14 +246,6 @@ public class Y9OrgTreeXmlDataHandlerImpl implements Y9OrgTreeDataHandler {
                 .addText(y9Position.getOrgType() == null ? "" : y9Position.getOrgType().getEnName());
             positionElement.addElement("tabIndex")
                 .addText(y9Position.getTabIndex() == null ? "" : y9Position.getTabIndex() + "");
-
-            positionElement.addElement("duty").addText(y9Position.getDuty() == null ? "" : y9Position.getDuty());
-            positionElement.addElement("dutyLevel")
-                .addText(y9Position.getDutyLevel() == null ? "" : y9Position.getDutyLevel() + "");
-            positionElement.addElement("dutyLevelName")
-                .addText(y9Position.getDutyLevelName() == null ? "" : y9Position.getDutyLevelName());
-            positionElement.addElement("dutyType")
-                .addText(y9Position.getDutyType() == null ? "" : y9Position.getDutyType());
             positionElement.addElement("parentId")
                 .addText(y9Position.getParentId() == null ? "" : y9Position.getParentId());
 
@@ -780,11 +772,6 @@ public class Y9OrgTreeXmlDataHandlerImpl implements Y9OrgTreeDataHandler {
                 position.setDescription(description == null ? "" : description);
                 position.setCustomId(customId == null ? "" : customId);
                 position.setTabIndex(tabIndex != null ? Integer.parseInt(tabIndex) : null);
-
-                position.setDuty(duty == null ? "" : duty);
-                position.setDutyLevel(dutyLevel == null ? 0 : Integer.valueOf(dutyLevel));
-                position.setDutyLevelName(dutyLevelName == null ? "" : dutyLevelName);
-                position.setDutyType(dutyType == null ? "" : dutyType);
                 position.setProperties(properties);
                 position.setParentId(pid);
 

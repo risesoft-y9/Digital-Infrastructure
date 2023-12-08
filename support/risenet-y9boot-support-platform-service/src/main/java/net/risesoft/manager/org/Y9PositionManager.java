@@ -1,12 +1,16 @@
 package net.risesoft.manager.org;
 
+import java.util.List;
 import java.util.Optional;
 
-import net.risesoft.entity.Y9OrgBase;
+import net.risesoft.entity.Y9Job;
 import net.risesoft.entity.Y9Position;
+import net.risesoft.entity.relation.Y9PersonsToPositions;
 import net.risesoft.y9.exception.Y9NotFoundException;
 
 public interface Y9PositionManager {
+
+    String buildName(Y9Job y9Job, List<Y9PersonsToPositions> personsToPositionsList);
 
     /**
      * 根据主键id获取岗位实例
@@ -19,7 +23,7 @@ public interface Y9PositionManager {
 
     Optional<Y9Position> findById(String id);
 
-    Y9Position saveOrUpdate(Y9Position position, Y9OrgBase parent);
+    Y9Position saveOrUpdate(Y9Position position);
 
     Y9Position save(Y9Position position);
 

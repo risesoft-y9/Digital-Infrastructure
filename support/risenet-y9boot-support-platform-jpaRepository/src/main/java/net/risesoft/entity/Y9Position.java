@@ -41,26 +41,10 @@ public class Y9Position extends Y9OrgBase {
     @Comment("职位id")
     private String jobId;
 
-    /** 职务 */
-    @Column(name = "DUTY", length = 255)
-    @Comment("职务")
-    private String duty;
-
-    /** 职务级别 */
-    @ColumnDefault("0")
-    @Column(name = "DUTY_LEVEL", nullable = false)
-    @Comment("职务级别")
-    private Integer dutyLevel = 0;
-
-    /** 职级名称 */
-    @Column(name = "DUTY_LEVEL_NAME", length = 255)
-    @Comment("职级名称")
-    private String dutyLevelName;
-
-    /** 职务类型 */
-    @Column(name = "DUTY_TYPE", length = 255)
-    @Comment("职务类型")
-    private String dutyType;
+    /** 职位名称 */
+    @Column(name = "JOB_NAME", length = 255, nullable = false)
+    @Comment("职位名称")
+    private String JobName;
 
     /** 排序序列号 */
     @Column(name = "ORDERED_PATH", length = 500)
