@@ -6,7 +6,7 @@ import lombok.Data;
 
 /**
  * 办结信息
- * 
+ *
  * @author Think
  *
  */
@@ -14,7 +14,7 @@ import lombok.Data;
 public class OfficeDoneInfoModel implements Serializable {
 
     /**
-     * 
+     *
      */
     private static final long serialVersionUID = -4796601122130990872L;
 
@@ -109,6 +109,11 @@ public class OfficeDoneInfoModel implements Serializable {
     private String deptId;
 
     /**
+     * 部门名称
+     */
+    private String deptName;
+
+    /**
      * 委办局id
      */
     private String bureauId;
@@ -128,4 +133,13 @@ public class OfficeDoneInfoModel implements Serializable {
      */
     private String userComplete;
 
+    /**
+     * 是否上会，1为上会,当代研究所使用
+     */
+    private String meeting = "0";
+
+    /**
+     * 会议类型，党组会，办公会，专题会,当代研究所使用
+     */
+    private String meetingType;
 }
