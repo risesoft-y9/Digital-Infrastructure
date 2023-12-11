@@ -52,7 +52,6 @@ body .login {
     position: absolute;
     left: 0;
     right: 0;
-    margin: auto;
     top: 0;
     bottom: 0;
     border-radius: 16px;
@@ -68,6 +67,7 @@ body .login {
     -webkit-transform: rotateX(0deg);
     transform: rotateX(0deg);
     background-color: #ffffff;
+    margin: auto 10% auto auto;
 }
 
 body .layui-row {
@@ -122,8 +122,12 @@ body .login_fields__user:hover, body .login_fields__password:hover, body .login_
 }
 
 body .login_fields_remember_password {
-    color: black;
+    color: #50302A;
     padding: 10px 0;
+}
+
+body .login_fields_remember_password .left {
+    color: #50302A !important;
 }
 
 body .login_fields .icon {
@@ -175,7 +179,7 @@ body .login_fields__submit {
     justify-content: center;
     align-items: center;
     gap: 10px;
-    margin-top: 32px;
+    margin-top: 12px;
     -webkit-transition-property: background, color;
     transition-property: background, color;
     -webkit-transition-duration: .2s;
