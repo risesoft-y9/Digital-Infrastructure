@@ -15,7 +15,7 @@ import org.springframework.core.env.Environment;
 import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.kafka.core.ProducerFactory;
 
-import com.alibaba.druid.pool.DruidDataSource;
+import com.zaxxer.hikari.HikariDataSource;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -50,7 +50,7 @@ public class Y9MultiTenantAutoConfiguration {
 
     @ConditionalOnMissingBean(name = "y9TenantDataSourceLookup")
     @Bean("y9TenantDataSourceLookup")
-    public Y9TenantDataSourceLookup y9TenantDataSourceLookup(@Qualifier("y9PublicDS") DruidDataSource ds,
+    public Y9TenantDataSourceLookup y9TenantDataSourceLookup(@Qualifier("y9PublicDS") HikariDataSource ds,
         Environment environment) {
         return new Y9TenantDataSourceLookup(ds, environment.getProperty("y9.systemName"));
     }
