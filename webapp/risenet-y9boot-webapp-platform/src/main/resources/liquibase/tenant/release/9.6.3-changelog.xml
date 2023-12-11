@@ -18,4 +18,26 @@
                               validate="true"/>
     </changeSet>
 
+    <changeSet id="1702001405827-1" author="shidaobang">
+        <dropColumn columnName="DUTY" tableName="Y9_ORG_POSITION"/>
+
+        <dropColumn columnName="DUTY_LEVEL" tableName="Y9_ORG_POSITION"/>
+
+        <dropColumn columnName="DUTY_LEVEL_NAME" tableName="Y9_ORG_POSITION"/>
+
+        <dropColumn columnName="DUTY_TYPE" tableName="Y9_ORG_POSITION"/>
+
+        <addColumn tableName="Y9_ORG_POSITION">
+            <column name="JOB_NAME" remarks="职位名称" type="VARCHAR(255 BYTE)">
+                <constraints nullable="false"/>
+            </column>
+        </addColumn>
+
+        <sql>
+            UPDATE Y9_ORG_POSITION
+            SET JOB_NAME = (SELECT NAME
+                            FROM Y9_ORG_JOB
+                            WHERE Y9_ORG_JOB.ID = Y9_ORG_POSITION.JOB_ID);
+        </sql>
+    </changeSet>
 </databaseChangeLog>

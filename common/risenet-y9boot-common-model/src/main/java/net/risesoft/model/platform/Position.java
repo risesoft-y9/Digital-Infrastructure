@@ -18,34 +18,13 @@ public class Position extends OrgUnit implements Serializable {
 
     private static final long serialVersionUID = 1095290600488048828L;
 
-    /**
-     * 职务类型
-     */
-    private String dutyType;
+    /** 职位id */
+    private String jobId;
 
-    /**
-     * 职级名称
-     */
-    private String dutyLevelName;
+    /** 职位名称 */
+    private String JobName;
 
-    /**
-     * 职级
-     */
-    private Integer dutyLevel;
-
-    /**
-     * 职务
-     */
-    private String duty;
-
-    /**
-     * 类型
-     */
-    private String type;
-
-    /**
-     * 
-     */
+    /** 排序序列号 */
     private String orderedPath;
 
 }

@@ -3,7 +3,9 @@ package net.risesoft.service.org;
 import java.util.List;
 import java.util.Optional;
 
+import net.risesoft.entity.Y9Job;
 import net.risesoft.entity.Y9Position;
+import net.risesoft.entity.relation.Y9PersonsToPositions;
 import net.risesoft.y9.exception.Y9NotFoundException;
 
 /**
@@ -13,6 +15,15 @@ import net.risesoft.y9.exception.Y9NotFoundException;
  * @date 2022/2/10
  */
 public interface Y9PositionService {
+
+    /**
+     * 生成岗位名
+     *
+     * @param y9Job 职位
+     * @param personsToPositionsList 人员和岗位对应列表
+     * @return {@code String}
+     */
+    String buildName(Y9Job y9Job, List<Y9PersonsToPositions> personsToPositionsList);
 
     /**
      * 创建岗位

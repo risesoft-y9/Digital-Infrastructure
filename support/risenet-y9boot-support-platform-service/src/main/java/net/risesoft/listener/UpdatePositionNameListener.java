@@ -1,11 +1,7 @@
 package net.risesoft.listener;
 
-import java.text.MessageFormat;
-import java.util.ArrayList;
-import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 import org.springframework.context.event.EventListener;
 import org.springframework.stereotype.Component;
@@ -17,16 +13,13 @@ import lombok.extern.slf4j.Slf4j;
 import net.risesoft.consts.OrgLevelConsts;
 import net.risesoft.entity.Y9Job;
 import net.risesoft.entity.Y9OrgBase;
-import net.risesoft.entity.Y9Person;
 import net.risesoft.entity.Y9Position;
 import net.risesoft.entity.relation.Y9PersonsToPositions;
 import net.risesoft.enums.platform.OrgTypeEnum;
 import net.risesoft.service.org.CompositeOrgBaseService;
 import net.risesoft.service.org.Y9JobService;
-import net.risesoft.service.org.Y9PersonService;
 import net.risesoft.service.org.Y9PositionService;
 import net.risesoft.service.relation.Y9PersonsToPositionsService;
-import net.risesoft.y9.configuration.Y9Properties;
 import net.risesoft.y9.pubsub.event.Y9EntityCreatedEvent;
 import net.risesoft.y9.pubsub.event.Y9EntityDeletedEvent;
 import net.risesoft.y9.pubsub.event.Y9EntityUpdatedEvent;
@@ -42,10 +35,8 @@ import net.risesoft.y9.pubsub.event.Y9EntityUpdatedEvent;
 @Slf4j
 public class UpdatePositionNameListener {
 
-    private final Y9Properties y9Properties;
     private final Y9JobService y9JobService;
     private final Y9PositionService y9PositionService;
-    private final Y9PersonService y9PersonService;
     private final Y9PersonsToPositionsService y9PersonsToPositionsService;
     private final CompositeOrgBaseService compositeOrgBaseService;
 
@@ -101,32 +92,19 @@ public class UpdatePositionNameListener {
     public void updatePositionName(Y9Position y9Position) {
         Y9Job y9Job = y9JobService.getById(y9Position.getJobId());
 
-        String name;
         List<Y9PersonsToPositions> personsToPositionsList =
             y9PersonsToPositionsService.listByPositionId(y9Position.getId());
-        int headcount = personsToPositionsList.size();
 
-        String pattern = y9Properties.getApp().getPlatform().getPositionNamePattern();
-
-        if (headcount == 0) {
-            name = MessageFormat.format(pattern, y9Job.getName(), "空缺");
-        } else {
-            List<Y9Person> personList = new ArrayList<>();
-            for (Y9PersonsToPositions y9PersonsToPositions : personsToPositionsList) {
-                Y9Person person = y9PersonService.getById(y9PersonsToPositions.getPersonId());
-                personList.add(person);
-            }
-            String personNames = personList.stream().sorted((Comparator.comparing(Y9Person::getOrderedPath)))
-                .map(Y9OrgBase::getName).collect(Collectors.joining("，"));
-            name = MessageFormat.format(pattern, y9Job.getName(), personNames);
-        }
+        String name = y9PositionService.buildName(y9Job, personsToPositionsList);
 
         Optional<Y9OrgBase> parentOptional = compositeOrgBaseService.findOrgUnitAsParent(y9Position.getParentId());
         if (parentOptional.isPresent()) {
             Y9OrgBase parent = parentOptional.get();
 
             y9Position.setName(name);
-            y9Position.setHeadCount(headcount);
+            y9Position.setJobId(y9Job.getId());
+            y9Position.setJobName(y9Job.getName());
+            y9Position.setHeadCount(personsToPositionsList.size());
             y9Position.setGuidPath(parent.getGuidPath() + OrgLevelConsts.SEPARATOR + y9Position.getId());
             y9Position.setDn(OrgLevelConsts.getOrgLevel(OrgTypeEnum.POSITION) + y9Position.getName()
                 + OrgLevelConsts.SEPARATOR + parent.getDn());
