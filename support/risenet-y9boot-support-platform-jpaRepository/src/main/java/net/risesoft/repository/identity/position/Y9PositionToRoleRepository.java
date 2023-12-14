@@ -22,7 +22,7 @@ import net.risesoft.entity.identity.position.Y9PositionToRole;
 @SuppressWarnings("AlibabaAbstractMethodOrInterfaceMethodMustUseJavadoc")
 @Repository
 @Transactional(value = "rsTenantTransactionManager", readOnly = true)
-public interface Y9PositionToRoleRepository extends JpaRepository<Y9PositionToRole, Integer> {
+public interface Y9PositionToRoleRepository extends JpaRepository<Y9PositionToRole, String> {
 
     long countByPositionIdAndRoleCustomId(String positionId, String customId);
 

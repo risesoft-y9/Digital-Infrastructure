@@ -3,7 +3,6 @@ package net.risesoft.y9public.entity.tenant;
 import jakarta.persistence.Column;
 import jakarta.persistence.Convert;
 import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
 import jakarta.persistence.Temporal;
@@ -13,7 +12,6 @@ import java.util.Date;
 
 import org.hibernate.annotations.ColumnDefault;
 import org.hibernate.annotations.Comment;
-import org.hibernate.annotations.GenericGenerator;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 
@@ -42,8 +40,6 @@ public class Y9TenantApp extends BaseEntity {
     /** 主键id */
     @Id
     @Column(name = "ID", length = 38)
-    @GeneratedValue(generator = "uuid")
-    @GenericGenerator(name = "uuid", strategy = "assigned")
     @Comment("主键id")
     private String id;
 

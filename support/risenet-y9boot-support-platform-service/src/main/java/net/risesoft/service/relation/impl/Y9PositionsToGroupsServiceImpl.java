@@ -11,6 +11,7 @@ import lombok.RequiredArgsConstructor;
 
 import net.risesoft.entity.Y9Position;
 import net.risesoft.entity.relation.Y9PositionsToGroups;
+import net.risesoft.id.Y9IdGenerator;
 import net.risesoft.manager.org.Y9PositionManager;
 import net.risesoft.repository.relation.Y9PositionsToGroupsRepository;
 import net.risesoft.service.relation.Y9PositionsToGroupsService;
@@ -120,6 +121,7 @@ public class Y9PositionsToGroupsServiceImpl implements Y9PositionsToGroupsServic
             }
             Integer maxGroupsOrder = getMaxGroupIdOrderByPositionId(positionIds[i]);
             Y9PositionsToGroups groupPosition = new Y9PositionsToGroups();
+            groupPosition.setId(Y9IdGenerator.genId());
             groupPosition.setGroupId(groupId);
             groupPosition.setPositionId(positionIds[i]);
             groupPosition.setPositionOrder(maxPositionOrder != null ? maxPositionOrder + i + 1 : i);

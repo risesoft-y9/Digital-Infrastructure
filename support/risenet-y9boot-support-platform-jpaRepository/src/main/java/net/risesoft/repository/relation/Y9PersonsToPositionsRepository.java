@@ -20,7 +20,7 @@ import net.risesoft.entity.relation.Y9PersonsToPositions;
 @SuppressWarnings("AlibabaAbstractMethodOrInterfaceMethodMustUseJavadoc")
 @Repository
 @Transactional(value = "rsTenantTransactionManager", readOnly = true)
-public interface Y9PersonsToPositionsRepository extends JpaRepository<Y9PersonsToPositions, Integer> {
+public interface Y9PersonsToPositionsRepository extends JpaRepository<Y9PersonsToPositions, String> {
 
     Integer countByPositionId(String positionId);
 

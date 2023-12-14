@@ -40,4 +40,53 @@
                             WHERE Y9_ORG_JOB.ID = Y9_ORG_POSITION.JOB_ID);
         </sql>
     </changeSet>
+
+    <changeSet id="1702520031601-1" author="shidaobang">
+        <modifyDataType
+                columnName="ID"
+                newDataType="varchar(38)"
+                tableName="Y9_ORG_ORGBASES_ROLES"/>
+    </changeSet>
+    <changeSet id="1702520031601-2" author="shidaobang">
+        <modifyDataType
+                columnName="ID"
+                newDataType="VARCHAR(38)"
+                tableName="Y9_ORG_PERSONS_GROUPS"/>
+    </changeSet>
+    <changeSet id="1702520031601-3" author="shidaobang">
+        <modifyDataType
+                columnName="ID"
+                newDataType="VARCHAR(38)"
+                tableName="Y9_ORG_PERSONS_POSITIONS"/>
+    </changeSet>
+    <changeSet id="1702520031601-4" author="shidaobang">
+        <modifyDataType
+                columnName="ID"
+                newDataType="VARCHAR(38)"
+                tableName="Y9_ORG_POSITIONS_GROUPS"/>
+    </changeSet>
+    <changeSet id="1702520031601-5" author="shidaobang">
+        <modifyDataType
+                columnName="ID"
+                newDataType="VARCHAR(38)"
+                tableName="Y9_ORG_PERSONS_RESOURCES"/>
+    </changeSet>
+    <changeSet id="1702520031601-6" author="shidaobang">
+        <modifyDataType
+                columnName="ID"
+                newDataType="VARCHAR(38)"
+                tableName="Y9_ORG_PERSONS_ROLES"/>
+    </changeSet>
+    <changeSet id="1702520031601-7" author="shidaobang">
+        <modifyDataType
+                columnName="ID"
+                newDataType="VARCHAR(38)"
+                tableName="Y9_ORG_POSITIONS_RESOURCES"/>
+    </changeSet>
+    <changeSet id="1702520031601-8" author="shidaobang">
+        <modifyDataType
+                columnName="ID"
+                newDataType="VARCHAR(38)"
+                tableName="Y9_ORG_POSITIONS_ROLES"/>
+    </changeSet>
 </databaseChangeLog>

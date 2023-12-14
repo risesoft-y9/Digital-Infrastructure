@@ -2,13 +2,11 @@ package net.risesoft.entity.relation;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.Id;
 import jakarta.persistence.Index;
 import jakarta.persistence.Table;
 
 import org.hibernate.annotations.Comment;
-import org.hibernate.annotations.GenericGenerator;
 
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -36,11 +34,9 @@ public class Y9PersonsToGroups extends BaseEntity {
 
     /** 主键 */
     @Id
-    @GenericGenerator(name = "PersonsToGroups", strategy = "native")
-    @GeneratedValue(generator = "PersonsToGroups")
     @Column(name = "ID")
     @Comment("主键")
-    private Integer id;
+    private String id;
 
     /** 用户组id */
     @Column(name = "GROUP_ID", length = 38, nullable = false)

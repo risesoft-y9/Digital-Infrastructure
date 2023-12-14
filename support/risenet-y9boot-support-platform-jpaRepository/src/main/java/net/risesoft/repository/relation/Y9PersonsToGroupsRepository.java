@@ -20,7 +20,7 @@ import net.risesoft.entity.relation.Y9PersonsToGroups;
 @SuppressWarnings("AlibabaAbstractMethodOrInterfaceMethodMustUseJavadoc")
 @Repository
 @Transactional(value = "rsTenantTransactionManager", readOnly = true)
-public interface Y9PersonsToGroupsRepository extends JpaRepository<Y9PersonsToGroups, Integer> {
+public interface Y9PersonsToGroupsRepository extends JpaRepository<Y9PersonsToGroups, String> {
 
     @Modifying
     @Transactional(readOnly = false)

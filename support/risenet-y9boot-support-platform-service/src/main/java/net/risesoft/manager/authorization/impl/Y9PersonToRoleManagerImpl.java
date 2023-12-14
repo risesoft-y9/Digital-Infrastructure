@@ -11,6 +11,7 @@ import lombok.RequiredArgsConstructor;
 
 import net.risesoft.entity.Y9Person;
 import net.risesoft.entity.identity.person.Y9PersonToRole;
+import net.risesoft.id.Y9IdGenerator;
 import net.risesoft.manager.authorization.Y9PersonToRoleManager;
 import net.risesoft.repository.identity.person.Y9PersonToRoleRepository;
 import net.risesoft.y9public.entity.role.Y9Role;
@@ -46,6 +47,7 @@ public class Y9PersonToRoleManagerImpl implements Y9PersonToRoleManager {
             y9PersonToRoleRepository.findByPersonIdAndRoleId(person.getId(), role.getId());
         if (personToRoleOptional.isEmpty()) {
             Y9PersonToRole matrix = new Y9PersonToRole();
+            matrix.setId(Y9IdGenerator.genId());
             matrix.setTenantId(person.getTenantId());
             matrix.setPersonId(person.getId());
             matrix.setDepartmentId(person.getParentId());

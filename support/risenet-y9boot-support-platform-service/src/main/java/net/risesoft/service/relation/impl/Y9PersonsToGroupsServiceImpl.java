@@ -13,6 +13,7 @@ import lombok.RequiredArgsConstructor;
 import net.risesoft.entity.Y9Group;
 import net.risesoft.entity.Y9Person;
 import net.risesoft.entity.relation.Y9PersonsToGroups;
+import net.risesoft.id.Y9IdGenerator;
 import net.risesoft.manager.org.Y9GroupManager;
 import net.risesoft.manager.org.Y9PersonManager;
 import net.risesoft.manager.relation.Y9PersonsToGroupsManager;
@@ -62,6 +63,7 @@ public class Y9PersonsToGroupsServiceImpl implements Y9PersonsToGroupsService {
     public Y9PersonsToGroups addY9PersonsToGroups(String personId, String groupId, Integer maxGroupsOrder,
         Integer maxPersonsOrder) {
         Y9PersonsToGroups y9PersonsToGroups = new Y9PersonsToGroups();
+        y9PersonsToGroups.setId(Y9IdGenerator.genId());
         y9PersonsToGroups.setGroupId(groupId);
         y9PersonsToGroups.setPersonId(personId);
         y9PersonsToGroups.setGroupOrder(maxGroupsOrder);

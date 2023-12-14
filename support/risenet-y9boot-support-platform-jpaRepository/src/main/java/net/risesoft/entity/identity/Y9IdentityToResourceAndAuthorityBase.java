@@ -2,12 +2,10 @@ package net.risesoft.entity.identity;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Convert;
-import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.Id;
 import jakarta.persistence.MappedSuperclass;
 
 import org.hibernate.annotations.Comment;
-import org.hibernate.annotations.GenericGenerator;
 
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -36,11 +34,9 @@ public abstract class Y9IdentityToResourceAndAuthorityBase extends BaseEntity
 
     /** 主键id */
     @Id
-    @GenericGenerator(name = "PersonsToResources", strategy = "native")
-    @GeneratedValue(generator = "PersonsToResources")
     @Column(name = "ID")
     @Comment("主键id")
-    protected Integer id;
+    protected String id;
 
     /** 租户id */
     @Column(name = "TENANT_ID", length = 38)

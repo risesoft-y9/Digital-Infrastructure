@@ -24,7 +24,7 @@ import net.risesoft.enums.platform.ResourceTypeEnum;
 @Repository
 @Transactional(value = "rsTenantTransactionManager", readOnly = true)
 public interface Y9PositionToResourceAndAuthorityRepository
-    extends JpaRepository<Y9PositionToResourceAndAuthority, Integer> {
+    extends JpaRepository<Y9PositionToResourceAndAuthority, String> {
 
     @Modifying
     @Transactional(readOnly = false)

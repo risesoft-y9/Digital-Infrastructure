@@ -1,12 +1,10 @@
 package net.risesoft.entity.identity;
 
 import jakarta.persistence.Column;
-import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.Id;
 import jakarta.persistence.MappedSuperclass;
 
 import org.hibernate.annotations.Comment;
-import org.hibernate.annotations.GenericGenerator;
 
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -30,11 +28,9 @@ public class Y9IdentityToRoleBase extends BaseEntity {
 
     /** id */
     @Id
-    @GenericGenerator(name = "PersonsToRoles", strategy = "native")
-    @GeneratedValue(generator = "PersonsToRoles")
     @Column(name = "ID")
     @Comment("主键id")
-    protected Integer id;
+    protected String id;
 
     /** 租户id */
     @Column(name = "TENANT_ID", length = 38)

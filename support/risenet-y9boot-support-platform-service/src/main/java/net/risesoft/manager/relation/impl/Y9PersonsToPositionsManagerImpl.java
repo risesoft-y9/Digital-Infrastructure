@@ -13,6 +13,7 @@ import net.risesoft.entity.Y9Person;
 import net.risesoft.entity.Y9Position;
 import net.risesoft.entity.relation.Y9PersonsToPositions;
 import net.risesoft.exception.OrgUnitErrorCodeEnum;
+import net.risesoft.id.Y9IdGenerator;
 import net.risesoft.manager.org.Y9PersonManager;
 import net.risesoft.manager.org.Y9PositionManager;
 import net.risesoft.manager.relation.Y9PersonsToPositionsManager;
@@ -125,6 +126,7 @@ public class Y9PersonsToPositionsManagerImpl implements Y9PersonsToPositionsMana
         Integer maxPositionsOrder = getMaxPositionOrderByPersonId(personId);
         Integer maxPersonsOrder = getMaxPersonOrderByPositionId(positionId);
         Y9PersonsToPositions y9PersonsToPositions = new Y9PersonsToPositions();
+        y9PersonsToPositions.setId(Y9IdGenerator.genId());
         y9PersonsToPositions.setPositionId(positionId);
         y9PersonsToPositions.setPersonId(personId);
         y9PersonsToPositions.setPositionOrder(maxPositionsOrder != null ? maxPositionsOrder + 1 : 0);

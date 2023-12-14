@@ -22,7 +22,7 @@ import net.risesoft.entity.relation.Y9OrgBasesToRoles;
 @SuppressWarnings("AlibabaAbstractMethodOrInterfaceMethodMustUseJavadoc")
 @Transactional(value = "rsTenantTransactionManager", readOnly = true)
 @Repository
-public interface Y9OrgBasesToRolesRepository extends JpaRepository<Y9OrgBasesToRoles, Integer> {
+public interface Y9OrgBasesToRolesRepository extends JpaRepository<Y9OrgBasesToRoles, String> {
 
     long countByRoleIdAndOrgIdIn(String roleId, List<String> orgIds);
 
