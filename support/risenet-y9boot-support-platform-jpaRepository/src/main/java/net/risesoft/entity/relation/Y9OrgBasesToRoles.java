@@ -3,14 +3,12 @@ package net.risesoft.entity.relation;
 import javax.persistence.Column;
 import javax.persistence.Convert;
 import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.Index;
 import javax.persistence.Table;
 
 import org.hibernate.annotations.ColumnDefault;
 import org.hibernate.annotations.Comment;
-import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.annotations.Type;
 
 import lombok.Data;
@@ -39,11 +37,9 @@ public class Y9OrgBasesToRoles extends BaseEntity {
 
     /** 主键 */
     @Id
-    @GenericGenerator(name = "OrgBasesToRoles", strategy = "native")
-    @GeneratedValue(generator = "OrgBasesToRoles")
     @Column(name = "ID")
     @Comment("主键")
-    private Integer id;
+    private String id;
 
     /** 角色id */
     @Column(name = "ROLE_ID", length = 38, nullable = false)

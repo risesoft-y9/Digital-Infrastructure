@@ -135,7 +135,7 @@ public class RoleMemberController {
      */
     @RiseLog(operationName = "角色-组织节点关联移除", operationType = OperationTypeEnum.DELETE)
     @PostMapping(value = "/remove")
-    public Y9Result<String> remove(@RequestParam(value = "ids") @NotEmpty List<Integer> ids) {
+    public Y9Result<String> remove(@RequestParam(value = "ids") @NotEmpty List<String> ids) {
         y9OrgBasesToRolesService.remove(ids);
         return Y9Result.successMsg("角色-组织节点关联移除成功");
     }

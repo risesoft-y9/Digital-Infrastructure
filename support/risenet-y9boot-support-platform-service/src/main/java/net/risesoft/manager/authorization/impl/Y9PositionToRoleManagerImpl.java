@@ -11,6 +11,7 @@ import lombok.RequiredArgsConstructor;
 
 import net.risesoft.entity.Y9Position;
 import net.risesoft.entity.identity.position.Y9PositionToRole;
+import net.risesoft.id.Y9IdGenerator;
 import net.risesoft.manager.authorization.Y9PositionToRoleManager;
 import net.risesoft.repository.identity.position.Y9PositionToRoleRepository;
 import net.risesoft.y9public.entity.role.Y9Role;
@@ -65,6 +66,7 @@ public class Y9PositionToRoleManagerImpl implements Y9PositionToRoleManager {
             y9PositionToRoleRepository.findByPositionIdAndRoleId(y9Position.getId(), role.getId());
         if (optionalY9PositionToRole.isEmpty()) {
             Y9PositionToRole y9PositionToRole = new Y9PositionToRole();
+            y9PositionToRole.setId(Y9IdGenerator.genId());
             y9PositionToRole.setTenantId(y9Position.getTenantId());
             y9PositionToRole.setPositionId(y9Position.getId());
             y9PositionToRole.setDepartmentId(y9Position.getParentId());

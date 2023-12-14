@@ -46,7 +46,7 @@ public interface Y9OrgBasesToRolesService {
      * @param id
      * @return
      */
-    Y9OrgBasesToRoles getById(Integer id);
+    Y9OrgBasesToRoles getById(String id);
 
     /**
      * 根据roleId获取映射节点
@@ -103,14 +103,14 @@ public interface Y9OrgBasesToRolesService {
      *
      * @param id
      */
-    void remove(Integer id);
+    void remove(String id);
 
     /**
      * 根据id数组移除
      *
      * @param ids id数组
      */
-    void remove(List<Integer> ids);
+    void remove(List<String> ids);
 
     /**
      * 对此角色中移除组织机构节点

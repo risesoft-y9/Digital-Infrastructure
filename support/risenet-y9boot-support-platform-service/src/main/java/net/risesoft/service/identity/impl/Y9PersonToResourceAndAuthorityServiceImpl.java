@@ -163,8 +163,8 @@ public class Y9PersonToResourceAndAuthorityServiceImpl implements Y9PersonToReso
         String description) {
         List<Y9PersonToResourceAndAuthority> list =
             y9PersonToResourceAndAuthorityRepository.findByResourceId(resourceId);
-        List<Integer> ids = list.stream().map(Y9PersonToResourceAndAuthority::getId).collect(Collectors.toList());
-        for (Integer id : ids) {
+        List<String> ids = list.stream().map(Y9PersonToResourceAndAuthority::getId).collect(Collectors.toList());
+        for (String id : ids) {
             Optional<Y9PersonToResourceAndAuthority> y9PersonToResourceAndAuthorityOptional =
                 y9PersonToResourceAndAuthorityRepository.findById(id);
             if (y9PersonToResourceAndAuthorityOptional.isPresent()) {

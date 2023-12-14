@@ -132,8 +132,8 @@ public class Y9PersonToRoleServiceImpl implements Y9PersonToRoleService {
     @Transactional(readOnly = false)
     public void update(String roleId, String roleName, String systemName, String systemCnName, String description) {
         List<Y9PersonToRole> list = y9PersonToRoleRepository.findByRoleId(roleId);
-        List<Integer> ids = list.stream().map(Y9PersonToRole::getId).collect(Collectors.toList());
-        for (Integer id : ids) {
+        List<String> ids = list.stream().map(Y9PersonToRole::getId).collect(Collectors.toList());
+        for (String id : ids) {
             Optional<Y9PersonToRole> y9PersonToRoleOptional = y9PersonToRoleRepository.findById(id);
             if (y9PersonToRoleOptional.isPresent()) {
                 Y9PersonToRole y9PersonToRole = y9PersonToRoleOptional.get();

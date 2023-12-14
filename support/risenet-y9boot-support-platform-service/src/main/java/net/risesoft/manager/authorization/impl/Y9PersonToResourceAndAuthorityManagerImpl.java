@@ -11,6 +11,7 @@ import lombok.RequiredArgsConstructor;
 import net.risesoft.entity.Y9Person;
 import net.risesoft.entity.identity.person.Y9PersonToResourceAndAuthority;
 import net.risesoft.entity.permission.Y9Authorization;
+import net.risesoft.id.Y9IdGenerator;
 import net.risesoft.manager.authorization.Y9PersonToResourceAndAuthorityManager;
 import net.risesoft.repository.identity.person.Y9PersonToResourceAndAuthorityRepository;
 import net.risesoft.y9public.entity.resource.Y9App;
@@ -67,6 +68,7 @@ public class Y9PersonToResourceAndAuthorityManagerImpl implements Y9PersonToReso
         Y9PersonToResourceAndAuthority y9PersonToResourceAndAuthority;
         if (optionalY9PersonToResourceAndAuthority.isEmpty()) {
             y9PersonToResourceAndAuthority = new Y9PersonToResourceAndAuthority();
+            y9PersonToResourceAndAuthority.setId(Y9IdGenerator.genId());
             y9PersonToResourceAndAuthority.setTenantId(person.getTenantId());
             y9PersonToResourceAndAuthority.setPersonId(person.getId());
             y9PersonToResourceAndAuthority.setResourceId(y9ResourceBase.getId());

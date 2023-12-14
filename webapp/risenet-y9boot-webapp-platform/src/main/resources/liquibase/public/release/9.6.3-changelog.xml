@@ -24,4 +24,11 @@
         <addNotNullConstraint columnDataType="INT" columnName="TYPE" tableName="Y9_COMMON_DATASOURCE" validate="true"/>
     </changeSet>
 
+    <changeSet id="1702520031601-9" author="shidaobang">
+        <dropColumn
+                columnName="SERIAL"
+                tableName="Y9_COMMON_TENANT">
+        </dropColumn>
+    </changeSet>
+
 </databaseChangeLog>

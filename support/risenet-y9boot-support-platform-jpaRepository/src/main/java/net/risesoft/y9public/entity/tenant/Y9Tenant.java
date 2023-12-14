@@ -3,13 +3,11 @@ package net.risesoft.y9public.entity.tenant;
 import javax.persistence.Column;
 import javax.persistence.Convert;
 import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.Table;
 
 import org.hibernate.annotations.ColumnDefault;
 import org.hibernate.annotations.Comment;
-import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.annotations.Type;
 
 import lombok.Data;
@@ -46,13 +44,6 @@ public class Y9Tenant extends BaseEntity {
     @Column(name = "PARENT_ID", length = 38)
     @Comment("父节点id")
     private String parentId;
-
-    /** 租户顺序号，自增字段 */
-    @GenericGenerator(name = "TenantSerial", strategy = "native")
-    @GeneratedValue(generator = "TenantSerial")
-    @Column(name = "SERIAL")
-    @Comment("租户顺序号，自增字段")
-    private Integer serial;
 
     /** 租户英文名称 */
     @Column(name = "SHORT_NAME", length = 200, nullable = false, unique = true)

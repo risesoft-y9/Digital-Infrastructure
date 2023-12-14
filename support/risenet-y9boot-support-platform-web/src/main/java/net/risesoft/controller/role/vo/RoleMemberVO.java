@@ -24,7 +24,7 @@ public class RoleMemberVO implements Serializable {
     private static final long serialVersionUID = -6419413051796171825L;
 
     /** id */
-    private Integer id;
+    private String id;
 
     /** 是否为负角色关联 */
     private String negative;

@@ -169,8 +169,7 @@ public class Y9TenantAppServiceImpl implements Y9TenantAppService {
 
         String time = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date());
         Y9TenantApp ta = new Y9TenantApp();
-        String guid = Y9IdGenerator.genId(IdType.SNOWFLAKE);
-        ta.setId(guid);
+        ta.setId(Y9IdGenerator.genId());
         ta.setTenantId(tenantId);
         ta.setTenantName(y9TenantManager.getById(tenantId).getName());
         ta.setAppId(appId);
