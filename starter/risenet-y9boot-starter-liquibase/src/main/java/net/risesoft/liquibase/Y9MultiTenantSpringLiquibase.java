@@ -2,8 +2,6 @@ package net.risesoft.liquibase;
 
 import java.util.Map;
 
-import javax.sql.DataSource;
-
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.core.io.ResourceLoader;
 
@@ -47,8 +45,9 @@ public class Y9MultiTenantSpringLiquibase implements InitializingBean {
         }
     }
 
-    private void update(DataSource dataSource) throws LiquibaseException {
-        SpringLiquibase liquibase = getSpringLiquibase(dataSource);
+    private void update(DruidDataSource dataSource) throws LiquibaseException {
+        SpringLiquibase liquibase =
+            LiquibaseUtil.getSpringLiquibase(dataSource, this.properties, this.resourceLoader, true);
         liquibase.afterPropertiesSet();
     }
 
@@ -60,29 +59,8 @@ public class Y9MultiTenantSpringLiquibase implements InitializingBean {
      */
     public void update(String tenantId) throws LiquibaseException {
         // 方法暴露出去 工程中可调用执行
-        DataSource dataSource = y9TenantDataSourceLookup.getDataSource(tenantId);
+        DruidDataSource dataSource = (DruidDataSource)y9TenantDataSourceLookup.getDataSource(tenantId);
         update(dataSource);
     }
 
-    private SpringLiquibase getSpringLiquibase(DataSource dataSource) {
-        SpringLiquibase liquibase = new SpringLiquibase();
-        liquibase.setResourceLoader(this.resourceLoader);
-        liquibase.setDataSource(dataSource);
-        liquibase.setChangeLog(this.properties.getTenantChangeLog());
-        liquibase.setClearCheckSums(this.properties.isClearChecksums());
-        liquibase.setContexts(this.properties.getContexts());
-        liquibase.setDefaultSchema(this.properties.getDefaultSchema());
-        liquibase.setLiquibaseSchema(this.properties.getLiquibaseSchema());
-        liquibase.setLiquibaseTablespace(this.properties.getLiquibaseTablespace());
-        liquibase.setDatabaseChangeLogTable(this.properties.getDatabaseChangeLogTable());
-        liquibase.setDatabaseChangeLogLockTable(this.properties.getDatabaseChangeLogLockTable());
-        liquibase.setDropFirst(this.properties.isDropFirst());
-        liquibase.setShouldRun(this.properties.isTenantEnabled());
-        liquibase.setLabels(this.properties.getLabels());
-        liquibase.setChangeLogParameters(this.properties.getParameters());
-        liquibase.setRollbackFile(this.properties.getRollbackFile());
-        liquibase.setTestRollbackOnUpdate(this.properties.isTestRollbackOnUpdate());
-        liquibase.setTag(this.properties.getTag());
-        return liquibase;
-    }
 }

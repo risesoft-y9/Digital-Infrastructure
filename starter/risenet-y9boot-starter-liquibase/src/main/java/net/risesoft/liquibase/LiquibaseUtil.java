@@ -1,0 +1,55 @@
+package net.risesoft.liquibase;
+
+import javax.sql.DataSource;
+
+import org.springframework.boot.autoconfigure.liquibase.DataSourceClosingSpringLiquibase;
+import org.springframework.boot.jdbc.DataSourceBuilder;
+import org.springframework.core.io.ResourceLoader;
+import org.springframework.jdbc.datasource.SimpleDriverDataSource;
+
+import com.alibaba.druid.pool.DruidDataSource;
+
+import net.risesoft.y9.configuration.feature.liquibase.Y9LiquibaseProperties;
+
+import liquibase.integration.spring.SpringLiquibase;
+
+public class LiquibaseUtil {
+
+    public static SpringLiquibase getSpringLiquibase(DruidDataSource dataSource, Y9LiquibaseProperties properties,
+        ResourceLoader resourceLoader, boolean isTenant) {
+        DataSource migrateDataSource = getMigrateDataSource(dataSource);
+        SpringLiquibase liquibase =
+            dataSource == migrateDataSource ? new SpringLiquibase() : new DataSourceClosingSpringLiquibase();
+        liquibase.setDataSource(migrateDataSource);
+        liquibase.setResourceLoader(resourceLoader);
+        liquibase.setChangeLog(isTenant ? properties.getTenantChangeLog() : properties.getPublicChangeLog());
+        liquibase.setClearCheckSums(properties.isClearChecksums());
+        liquibase.setContexts(properties.getContexts());
+        liquibase.setDefaultSchema(properties.getDefaultSchema());
+        liquibase.setLiquibaseSchema(properties.getLiquibaseSchema());
+        liquibase.setLiquibaseTablespace(properties.getLiquibaseTablespace());
+        liquibase.setDatabaseChangeLogTable(properties.getDatabaseChangeLogTable());
+        liquibase.setDatabaseChangeLogLockTable(properties.getDatabaseChangeLogLockTable());
+        liquibase.setDropFirst(properties.isDropFirst());
+        liquibase.setShouldRun(properties.isTenantEnabled());
+        liquibase.setLabels(properties.getLabels());
+        liquibase.setChangeLogParameters(properties.getParameters());
+        liquibase.setRollbackFile(properties.getRollbackFile());
+        liquibase.setTestRollbackOnUpdate(properties.isTestRollbackOnUpdate());
+        liquibase.setTag(properties.getTag());
+        return liquibase;
+    }
+
+    public static DataSource getMigrateDataSource(DruidDataSource dataSource) {
+        String url = dataSource.getUrl();
+        if (url.contains("jdbc:kingbase8")) {
+            // 人大金仓数据库需特殊处理
+            DataSourceBuilder<?> builder = DataSourceBuilder.derivedFrom(dataSource).type(SimpleDriverDataSource.class);
+            url = url.replace("jdbc:kingbase8", "jdbc:postgresql");
+            builder.url(url);
+            builder.driverClassName("org.postgresql.Driver");
+            return builder.build();
+        }
+        return dataSource;
+    }
+}
