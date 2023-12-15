@@ -42,51 +42,139 @@
     </changeSet>
 
     <changeSet id="1702520031601-1" author="shidaobang">
-        <modifyDataType
-                columnName="ID"
-                newDataType="varchar(38)"
-                tableName="Y9_ORG_ORGBASES_ROLES"/>
+        <addColumn tableName="Y9_ORG_ORGBASES_ROLES">
+            <column name="NEW_ID" type="VARCHAR(38)"/>
+        </addColumn>
+        <sql dbms="mysql">
+            UPDATE Y9_ORG_ORGBASES_ROLES
+            SET NEW_ID = CAST(ID AS CHAR);
+        </sql>
+        <sql dbms="postgresql">
+            UPDATE Y9_ORG_ORGBASES_ROLES
+            SET NEW_ID = CAST(ID AS VARCHAR);
+        </sql>
+        <dropColumn tableName="Y9_ORG_ORGBASES_ROLES" columnName="ID"/>
+        <renameColumn tableName="Y9_ORG_ORGBASES_ROLES" oldColumnName="NEW_ID" newColumnName="ID"
+                      columnDataType="VARCHAR(38)"/>
+        <addPrimaryKey tableName="Y9_ORG_ORGBASES_ROLES" columnNames="ID"/>
     </changeSet>
     <changeSet id="1702520031601-2" author="shidaobang">
-        <modifyDataType
-                columnName="ID"
-                newDataType="VARCHAR(38)"
-                tableName="Y9_ORG_PERSONS_GROUPS"/>
+        <addColumn tableName="Y9_ORG_PERSONS_GROUPS">
+            <column name="NEW_ID" type="VARCHAR(38)"/>
+        </addColumn>
+        <sql dbms="mysql">
+            UPDATE Y9_ORG_PERSONS_GROUPS
+            SET NEW_ID = CAST(ID AS CHAR);
+        </sql>
+        <sql dbms="postgresql">
+            UPDATE Y9_ORG_PERSONS_GROUPS
+            SET NEW_ID = CAST(ID AS VARCHAR);
+        </sql>
+        <dropColumn tableName="Y9_ORG_PERSONS_GROUPS" columnName="ID"/>
+        <renameColumn tableName="Y9_ORG_PERSONS_GROUPS" oldColumnName="NEW_ID" newColumnName="ID"
+                      columnDataType="VARCHAR(38)"/>
+        <addPrimaryKey tableName="Y9_ORG_PERSONS_GROUPS" columnNames="ID"/>
     </changeSet>
     <changeSet id="1702520031601-3" author="shidaobang">
-        <modifyDataType
-                columnName="ID"
-                newDataType="VARCHAR(38)"
-                tableName="Y9_ORG_PERSONS_POSITIONS"/>
+        <addColumn tableName="Y9_ORG_PERSONS_POSITIONS">
+            <column name="NEW_ID" type="VARCHAR(38)"/>
+        </addColumn>
+        <sql dbms="mysql">
+            UPDATE Y9_ORG_PERSONS_POSITIONS
+            SET NEW_ID = CAST(ID AS CHAR);
+        </sql>
+        <sql dbms="postgresql">
+            UPDATE Y9_ORG_PERSONS_POSITIONS
+            SET NEW_ID = CAST(ID AS VARCHAR);
+        </sql>
+        <dropColumn tableName="Y9_ORG_PERSONS_POSITIONS" columnName="ID"/>
+        <renameColumn tableName="Y9_ORG_PERSONS_POSITIONS" oldColumnName="NEW_ID" newColumnName="ID"
+                      columnDataType="VARCHAR(38)"/>
+        <addPrimaryKey tableName="Y9_ORG_PERSONS_POSITIONS" columnNames="ID"/>
     </changeSet>
     <changeSet id="1702520031601-4" author="shidaobang">
-        <modifyDataType
-                columnName="ID"
-                newDataType="VARCHAR(38)"
-                tableName="Y9_ORG_POSITIONS_GROUPS"/>
+        <addColumn tableName="Y9_ORG_POSITIONS_GROUPS">
+            <column name="NEW_ID" type="VARCHAR(38)"/>
+        </addColumn>
+        <sql dbms="mysql">
+            UPDATE Y9_ORG_POSITIONS_GROUPS
+            SET NEW_ID = CAST(ID AS CHAR);
+        </sql>
+        <sql dbms="postgresql">
+            UPDATE Y9_ORG_POSITIONS_GROUPS
+            SET NEW_ID = CAST(ID AS VARCHAR);
+        </sql>
+        <dropColumn tableName="Y9_ORG_POSITIONS_GROUPS" columnName="ID"/>
+        <renameColumn tableName="Y9_ORG_POSITIONS_GROUPS" oldColumnName="NEW_ID" newColumnName="ID"
+                      columnDataType="VARCHAR(38)"/>
+        <addPrimaryKey tableName="Y9_ORG_POSITIONS_GROUPS" columnNames="ID"/>
     </changeSet>
     <changeSet id="1702520031601-5" author="shidaobang">
-        <modifyDataType
-                columnName="ID"
-                newDataType="VARCHAR(38)"
-                tableName="Y9_ORG_PERSONS_RESOURCES"/>
+        <addColumn tableName="Y9_ORG_PERSONS_RESOURCES">
+            <column name="NEW_ID" type="VARCHAR(38)"/>
+        </addColumn>
+        <sql dbms="mysql">
+            UPDATE Y9_ORG_PERSONS_RESOURCES
+            SET NEW_ID = CAST(ID AS CHAR);
+        </sql>
+        <sql dbms="postgresql">
+            UPDATE Y9_ORG_PERSONS_RESOURCES
+            SET NEW_ID = CAST(ID AS VARCHAR);
+        </sql>
+        <dropColumn tableName="Y9_ORG_PERSONS_RESOURCES" columnName="ID"/>
+        <renameColumn tableName="Y9_ORG_PERSONS_RESOURCES" oldColumnName="NEW_ID" newColumnName="ID"
+                      columnDataType="VARCHAR(38)"/>
+        <addPrimaryKey tableName="Y9_ORG_PERSONS_RESOURCES" columnNames="ID"/>
     </changeSet>
     <changeSet id="1702520031601-6" author="shidaobang">
-        <modifyDataType
-                columnName="ID"
-                newDataType="VARCHAR(38)"
-                tableName="Y9_ORG_PERSONS_ROLES"/>
+        <addColumn tableName="Y9_ORG_PERSONS_ROLES">
+            <column name="NEW_ID" type="VARCHAR(38)"/>
+        </addColumn>
+        <sql dbms="mysql">
+            UPDATE Y9_ORG_PERSONS_ROLES
+            SET NEW_ID = CAST(ID AS CHAR);
+        </sql>
+        <sql dbms="postgresql">
+            UPDATE Y9_ORG_PERSONS_ROLES
+            SET NEW_ID = CAST(ID AS VARCHAR);
+        </sql>
+        <dropColumn tableName="Y9_ORG_PERSONS_ROLES" columnName="ID"/>
+        <renameColumn tableName="Y9_ORG_PERSONS_ROLES" oldColumnName="NEW_ID" newColumnName="ID"
+                      columnDataType="VARCHAR(38)"/>
+        <addPrimaryKey tableName="Y9_ORG_PERSONS_ROLES" columnNames="ID"/>
     </changeSet>
     <changeSet id="1702520031601-7" author="shidaobang">
-        <modifyDataType
-                columnName="ID"
-                newDataType="VARCHAR(38)"
-                tableName="Y9_ORG_POSITIONS_RESOURCES"/>
+        <addColumn tableName="Y9_ORG_POSITIONS_RESOURCES">
+            <column name="NEW_ID" type="VARCHAR(38)"/>
+        </addColumn>
+        <sql dbms="mysql">
+            UPDATE Y9_ORG_POSITIONS_RESOURCES
+            SET NEW_ID = CAST(ID AS CHAR);
+        </sql>
+        <sql dbms="postgresql">
+            UPDATE Y9_ORG_POSITIONS_RESOURCES
+            SET NEW_ID = CAST(ID AS VARCHAR);
+        </sql>
+        <dropColumn tableName="Y9_ORG_POSITIONS_RESOURCES" columnName="ID"/>
+        <renameColumn tableName="Y9_ORG_POSITIONS_RESOURCES" oldColumnName="NEW_ID" newColumnName="ID"
+                      columnDataType="VARCHAR(38)"/>
+        <addPrimaryKey tableName="Y9_ORG_POSITIONS_RESOURCES" columnNames="ID"/>
     </changeSet>
     <changeSet id="1702520031601-8" author="shidaobang">
-        <modifyDataType
-                columnName="ID"
-                newDataType="VARCHAR(38)"
-                tableName="Y9_ORG_POSITIONS_ROLES"/>
+        <addColumn tableName="Y9_ORG_POSITIONS_ROLES">
+            <column name="NEW_ID" type="VARCHAR(38)"/>
+        </addColumn>
+        <sql dbms="mysql">
+            UPDATE Y9_ORG_POSITIONS_ROLES
+            SET NEW_ID = CAST(ID AS CHAR);
+        </sql>
+        <sql dbms="postgresql">
+            UPDATE Y9_ORG_POSITIONS_ROLES
+            SET NEW_ID = CAST(ID AS VARCHAR);
+        </sql>
+        <dropColumn tableName="Y9_ORG_POSITIONS_ROLES" columnName="ID"/>
+        <renameColumn tableName="Y9_ORG_POSITIONS_ROLES" oldColumnName="NEW_ID" newColumnName="ID"
+                      columnDataType="VARCHAR(38)"/>
+        <addPrimaryKey tableName="Y9_ORG_POSITIONS_ROLES" columnNames="ID"/>
     </changeSet>
 </databaseChangeLog>
