@@ -18,7 +18,7 @@ public class PersonsGroups implements Serializable {
 
     private static final long serialVersionUID = 2899191697188889119L;
     /** 主键 */
-    private Integer id;
+    private String id;
     /** 用户组id */
     private String groupId;
     /** 人员ID */

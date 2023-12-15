@@ -19,7 +19,7 @@ public class PersonsPositions implements Serializable {
     private static final long serialVersionUID = 8926134052486805025L;
 
     /** 主键 */
-    private Integer id;
+    private String id;
     /** 岗位ID */
     private String positionId;
     /** 人员ID */

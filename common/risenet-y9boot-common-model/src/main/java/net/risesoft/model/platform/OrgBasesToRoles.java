@@ -16,7 +16,7 @@ import net.risesoft.enums.platform.OrgTypeEnum;
 public class OrgBasesToRoles implements Serializable {
     private static final long serialVersionUID = -6536266072250897376L;
 
-    private Integer id;
+    private String id;
 
     /** 角色id */
     private String roleId;
