@@ -1,7 +1,5 @@
 package y9.autoconfiguration.liquibase;
 
-import javax.sql.DataSource;
-
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.autoconfigure.AutoConfiguration;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnBean;
@@ -12,9 +10,11 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.io.ResourceLoader;
 
+import com.alibaba.druid.pool.DruidDataSource;
+
+import net.risesoft.liquibase.LiquibaseUtil;
 import net.risesoft.liquibase.Y9MultiTenantSpringLiquibase;
 import net.risesoft.y9.configuration.Y9Properties;
-import net.risesoft.y9.configuration.feature.liquibase.Y9LiquibaseProperties;
 import net.risesoft.y9.tenant.datasource.Y9TenantDataSourceLookup;
 
 import liquibase.integration.spring.SpringLiquibase;
@@ -40,26 +40,10 @@ public class Y9LiquibaseAutoConfiguration {
 
     @Bean
     @ConditionalOnBean(name = "y9PublicDS")
-    public SpringLiquibase liquibase(Y9Properties properties, @Qualifier("y9PublicDS") DataSource dataSource) {
-        SpringLiquibase liquibase = new SpringLiquibase();
-        Y9LiquibaseProperties liquibaseProperties = properties.getFeature().getLiquibase();
-        liquibase.setDataSource(dataSource);
-        liquibase.setChangeLog(liquibaseProperties.getPublicChangeLog());
-        liquibase.setClearCheckSums(liquibaseProperties.isClearChecksums());
-        liquibase.setContexts(liquibaseProperties.getContexts());
-        liquibase.setDefaultSchema(liquibaseProperties.getDefaultSchema());
-        liquibase.setLiquibaseSchema(liquibaseProperties.getLiquibaseSchema());
-        liquibase.setLiquibaseTablespace(liquibaseProperties.getLiquibaseTablespace());
-        liquibase.setDatabaseChangeLogTable(liquibaseProperties.getDatabaseChangeLogTable());
-        liquibase.setDatabaseChangeLogLockTable(liquibaseProperties.getDatabaseChangeLogLockTable());
-        liquibase.setDropFirst(liquibaseProperties.isDropFirst());
-        liquibase.setShouldRun(liquibaseProperties.isPublicEnabled());
-        liquibase.setLabels(liquibaseProperties.getLabels());
-        liquibase.setChangeLogParameters(liquibaseProperties.getParameters());
-        liquibase.setRollbackFile(liquibaseProperties.getRollbackFile());
-        liquibase.setTestRollbackOnUpdate(liquibaseProperties.isTestRollbackOnUpdate());
-        liquibase.setTag(liquibaseProperties.getTag());
-        return liquibase;
+    public SpringLiquibase liquibase(Y9Properties properties, @Qualifier("y9PublicDS") DruidDataSource dataSource,
+        ResourceLoader resourceLoader) {
+        return LiquibaseUtil.getSpringLiquibase(dataSource, properties.getFeature().getLiquibase(), resourceLoader,
+            false);
     }
 
 }
