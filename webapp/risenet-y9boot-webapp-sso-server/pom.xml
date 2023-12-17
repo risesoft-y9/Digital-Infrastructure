@@ -394,20 +394,15 @@
 			<groupId>org.apereo.cas</groupId>
 			<artifactId>cas-server-support-webconfig</artifactId>
 		</dependency>
-		<dependency>
-			<groupId>org.apereo.cas</groupId>
-			<artifactId>cas-server-webapp-init-tomcat</artifactId>
-			<exclusions>
-				<exclusion>
-					<groupId>org.springframework.boot</groupId>
-					<artifactId>spring-boot-starter-tomcat</artifactId>
-				</exclusion>
-			</exclusions>
-		</dependency>
+		
 		<dependency>
 			<groupId>org.apereo.cas</groupId>
 			<artifactId>cas-server-webapp-starter-tomcat</artifactId>
 			<exclusions>
+				<exclusion>
+					<groupId>org.apereo.cas</groupId>
+					<artifactId>cas-server-webapp-init-tomcat</artifactId>
+				</exclusion>
 				<exclusion>
 					<groupId>org.apereo.cas</groupId>
 					<artifactId>cas-server-webapp-resources</artifactId>
@@ -542,8 +537,7 @@
 					</delimiters>
 					<useDefaultDelimiters>false</useDefaultDelimiters>
 				</configuration>
-				<executions>
-					<!-- 动态编译环境配置 -->
+				<!--<executions>
 					<execution>
 						<phase>process-resources</phase>
 						<goals>
@@ -560,12 +554,12 @@
 							<overwrite>true</overwrite>
 						</configuration>
 					</execution>
-				</executions>
+				</executions>-->
 			</plugin>
 		</plugins>
 
 		<!-- 动态编译环境配置 -->
-		<resources>
+		<!--<resources>
 			<resource>
 				<directory>src/main/resources</directory>
 				<excludes>
@@ -575,7 +569,7 @@
 			<resource>
 				<directory>src/main/resources/profiles/${dir}</directory>
 			</resource>
-		</resources>
+		</resources>-->
 	</build>
 	
 	<profiles>

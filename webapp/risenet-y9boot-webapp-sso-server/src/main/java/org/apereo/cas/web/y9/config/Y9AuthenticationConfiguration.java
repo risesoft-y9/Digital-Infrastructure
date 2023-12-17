@@ -11,6 +11,10 @@ import org.apereo.cas.services.ServicesManager;
 import org.apereo.cas.web.flow.actions.RiseCredentialNonInteractiveCredentialsAction;
 import org.apereo.cas.web.flow.resolver.CasDelegatingWebflowEventResolver;
 import org.apereo.cas.web.flow.resolver.CasWebflowEventResolver;
+import org.apereo.cas.web.y9.service.Y9LoginUserService;
+import org.apereo.cas.web.y9.service.Y9UserService;
+import org.apereo.cas.web.y9.service.impl.Y9LoginUserServiceImpl;
+import org.apereo.cas.web.y9.service.impl.Y9UserServiceImpl;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -18,6 +22,16 @@ import org.springframework.webflow.execution.Action;
 
 @Configuration(proxyBeanMethods = false)
 public class Y9AuthenticationConfiguration {
+    
+    @Bean
+    public Y9UserService y9UserService() {
+        return new Y9UserServiceImpl();
+    }
+    
+    @Bean
+    public Y9LoginUserService y9LoginUserService() {
+        return new Y9LoginUserServiceImpl();
+    }
 
     @Bean
     public AuthenticationEventExecutionPlanConfigurer riseAuthenticationEventExecutionPlanConfigurer(

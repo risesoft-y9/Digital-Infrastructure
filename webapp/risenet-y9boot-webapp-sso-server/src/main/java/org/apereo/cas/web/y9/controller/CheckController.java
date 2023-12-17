@@ -42,6 +42,7 @@ public class CheckController {
         @Qualifier("y9RedisTemplate") CasRedisTemplate<Object, Object> redisTemplate) {
         this.y9UserService = y9UserService;
         this.redisTemplate = redisTemplate;
+        LOGGER.info("CheckController created...");
     }
 
     private void changeSessionId(HttpServletRequest request) {

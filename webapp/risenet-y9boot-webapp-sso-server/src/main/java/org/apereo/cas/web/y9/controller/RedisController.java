@@ -23,6 +23,7 @@ public class RedisController {
 
     public RedisController(@Qualifier("y9RedisTemplate") CasRedisTemplate<Object, Object> redisTemplate) {
         this.redisTemplate = redisTemplate;
+        LOGGER.info("RedisController created...");
     }
 
     @PostMapping(value = "/delete")

@@ -36,6 +36,7 @@ public class QRCodeController {
 
     public QRCodeController(@Qualifier("y9RedisTemplate") CasRedisTemplate<Object, Object> redisTemplate) {
         this.redisTemplate = redisTemplate;
+        LOGGER.info("QRCodeController created...");
     }
 
     @ResponseBody

@@ -22,7 +22,7 @@ import org.springframework.util.StringUtils;
 
 import cz.mallat.uasparser.UserAgentInfo;
 
-@Service
+@Service("y9LoginUserService")
 public class Y9LoginUserServiceImpl implements Y9LoginUserService {
 
     @Autowired

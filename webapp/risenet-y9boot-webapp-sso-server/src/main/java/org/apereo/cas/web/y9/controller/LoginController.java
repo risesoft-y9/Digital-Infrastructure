@@ -67,6 +67,7 @@ public class LoginController {
         this.authenticationSystemSupport = authenticationSystemSupport;
         this.webApplicationServiceFactory = webApplicationServiceFactory;
         this.y9UserService = y9UserService;
+        LOGGER.info("LoginController created...");
     }
 
     public Map<String, Object> checkSsoLoginInfo(String tenantShortName, String username, String password,
