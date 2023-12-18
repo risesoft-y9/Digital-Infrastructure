@@ -7,7 +7,7 @@ import org.springframework.boot.jdbc.DataSourceBuilder;
 import org.springframework.core.io.ResourceLoader;
 import org.springframework.jdbc.datasource.SimpleDriverDataSource;
 
-import com.alibaba.druid.pool.DruidDataSource;
+import com.zaxxer.hikari.HikariDataSource;
 
 import net.risesoft.y9.configuration.feature.liquibase.Y9LiquibaseProperties;
 
@@ -15,7 +15,7 @@ import liquibase.integration.spring.SpringLiquibase;
 
 public class LiquibaseUtil {
 
-    public static SpringLiquibase getSpringLiquibase(DruidDataSource dataSource, Y9LiquibaseProperties properties,
+    public static SpringLiquibase getSpringLiquibase(HikariDataSource dataSource, Y9LiquibaseProperties properties,
         ResourceLoader resourceLoader, boolean isTenant) {
         DataSource migrateDataSource = getMigrateDataSource(dataSource);
         SpringLiquibase liquibase =
@@ -40,8 +40,8 @@ public class LiquibaseUtil {
         return liquibase;
     }
 
-    public static DataSource getMigrateDataSource(DruidDataSource dataSource) {
-        String url = dataSource.getUrl();
+    public static DataSource getMigrateDataSource(HikariDataSource dataSource) {
+        String url = dataSource.getJdbcUrl();
         if (url.contains("jdbc:kingbase8")) {
             // 人大金仓数据库需特殊处理
             DataSourceBuilder<?> builder = DataSourceBuilder.derivedFrom(dataSource).type(SimpleDriverDataSource.class);

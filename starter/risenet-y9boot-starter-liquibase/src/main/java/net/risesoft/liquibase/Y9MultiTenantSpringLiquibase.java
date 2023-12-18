@@ -45,7 +45,7 @@ public class Y9MultiTenantSpringLiquibase implements InitializingBean {
         }
     }
 
-    private void update(DruidDataSource dataSource) throws LiquibaseException {
+    private void update(HikariDataSource dataSource) throws LiquibaseException {
         SpringLiquibase liquibase =
             LiquibaseUtil.getSpringLiquibase(dataSource, this.properties, this.resourceLoader, true);
         liquibase.afterPropertiesSet();
@@ -59,7 +59,7 @@ public class Y9MultiTenantSpringLiquibase implements InitializingBean {
      */
     public void update(String tenantId) throws LiquibaseException {
         // 方法暴露出去 工程中可调用执行
-        DruidDataSource dataSource = (DruidDataSource)y9TenantDataSourceLookup.getDataSource(tenantId);
+        HikariDataSource dataSource = (HikariDataSource)y9TenantDataSourceLookup.getDataSource(tenantId);
         update(dataSource);
     }
 

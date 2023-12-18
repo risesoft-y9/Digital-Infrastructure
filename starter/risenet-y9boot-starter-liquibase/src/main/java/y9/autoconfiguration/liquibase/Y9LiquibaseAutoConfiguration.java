@@ -10,7 +10,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.io.ResourceLoader;
 
-import com.alibaba.druid.pool.DruidDataSource;
+import com.zaxxer.hikari.HikariDataSource;
 
 import net.risesoft.liquibase.LiquibaseUtil;
 import net.risesoft.liquibase.Y9MultiTenantSpringLiquibase;
@@ -40,7 +40,7 @@ public class Y9LiquibaseAutoConfiguration {
 
     @Bean
     @ConditionalOnBean(name = "y9PublicDS")
-    public SpringLiquibase liquibase(Y9Properties properties, @Qualifier("y9PublicDS") DruidDataSource dataSource,
+    public SpringLiquibase liquibase(Y9Properties properties, @Qualifier("y9PublicDS") HikariDataSource dataSource,
         ResourceLoader resourceLoader) {
         return LiquibaseUtil.getSpringLiquibase(dataSource, properties.getFeature().getLiquibase(), resourceLoader,
             false);
