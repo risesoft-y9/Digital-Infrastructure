@@ -17,6 +17,8 @@
 
 		<module>rest/risenet-y9boot-rest-interface-platform</module>
 		<module>rest/risenet-y9boot-rest-feignClient-platform</module>
+        <module>rest/risenet-y9boot-rest-interface-log</module>
+        <module>rest/risenet-y9boot-rest-feignClient-log</module>
 
 		<module>starter/risenet-y9boot-starter-apisix</module>
 		<module>starter/risenet-y9boot-starter-cache-redis</module>
