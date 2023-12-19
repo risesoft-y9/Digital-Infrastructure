@@ -1,4 +1,4 @@
-package y9.client.platform.log;
+package y9.client.log;
 
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.cloud.openfeign.SpringQueryMap;
