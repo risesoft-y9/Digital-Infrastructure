@@ -61,7 +61,7 @@ public class CmsArticle implements Serializable {
     /**
      * 审核状态，-1：退回中，1：审核中,2：已审核，3：回收站，4：已删除
      */
-    private Byte status;
+    private Integer status;
 
     /**
      * 风格

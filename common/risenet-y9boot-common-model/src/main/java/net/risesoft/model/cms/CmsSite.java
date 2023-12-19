@@ -72,12 +72,12 @@ public class CmsSite implements Serializable {
     /**
      * 是否栏目静态页
      */
-    private Byte staticChannel;
+    private Integer staticChannel;
 
     /**
      * 是否文档静态页
      */
-    private Byte staticDoc;
+    private Integer staticDoc;
 
     /**
      * 是否有静态页后缀
