@@ -85,11 +85,12 @@ vite.config.js:         vite脚手架各种环境编译配置文件
 
 # 四、单点登录
 ## 单点登录时序图
-<a href="https://vue.youshengyun.com/files/img/前端/单点登录原理时序图.pdf" target="_blank">【点我查看】高清单点登录原理时序图 PDF文档</a>
-<br>
-<img src="https://vue.youshengyun.com/files/img/前端/单点登录原理时序图.png">
+```
+<a href="https://vue.youshengyun.com/files/img/前端/单点登录原理时序图.pdf" target="_blank">高清单点登录原理时序图 PDF文档</a>
+```
+<img src="https://vue.youshengyun.com/files/img/前端/单点登录时序图.png">
 
-## 依据单点登录时序图，我们单独封装了单点登录插件，适用基于当前数字底座开源项目搭建的各个前端工程（微服务）
+## 依据单点登录时序图，我们单独封装了单点登录插件，适用基于当前开源项目构建的各个前端工程（微服务）
 ```
 下载地址（私有仓库）：npm --registry https://svn.youshengyun.com:9900/nexus/repository/y9npm-hosted install y9plugin-sso@3
 
@@ -121,17 +122,16 @@ vite.config.js:         vite脚手架各种环境编译配置文件
 
 # 五、路由
 ## 路由程序设计流程图
-<img src="https://vue.youshengyun.com/files/img/前端/路由程序流程图.png">
+<img src="https://vue.youshengyun.com/files/img/前端/路由程序设计流程图.png">
 
 # 六、组件
-## <a href="vue.youshengyun.com/y9vue-components/" target="_blank">【点我查看】组件说明文档</a>
+## <a href="vue.youshengyun.com/y9vue-components/" target="_blank">组件说明文档</a>
 ```
 组件插件化下载地址（私有仓库）：npm --registry https://svn.youshengyun.com:9900/nexus/repository/y9npm-hosted install y9plugin-components
-```
 
-<a href="https://vue.youshengyun.com/y9vue-components/used" target="_blank">【点我查看】组件详细安装使用步骤</a>
 
-```
+<a href="https://vue.youshengyun.com/y9vue-components/used" target="_blank">组件详细安装使用步骤</a>
+
 注意：
 在下载的过程中，您可能遇到同单点登录插件类似的问题，参考解决即可，如遇到问题，期待您的主动联系反馈，我们将乐意为您解答！
 ```
@@ -140,7 +140,7 @@ vite.config.js:         vite脚手架各种环境编译配置文件
 ```
 必要说明：
     1、eslink\ts\scss
-    2、全局字体大小统一设置规范
+    （<a href="https://vue.youshengyun.com/files/img/前端/字体大小设置的说明文档.pdf" target="_blank">2、全局字体大小统一设置规范，详细说明文档</a>）
     3、组件统一使用自己插件化开发的组件
     4、局部组件的css全部使用 scoped关键字作用域，lang=“scss” 不要求
     5、vite、vue、element-plus统一开发版本，版本问题统一升级维护
@@ -155,15 +155,6 @@ vite.config.js:         vite脚手架各种环境编译配置文件
     4、开发对应路由的页面级组件以及其子组件
     5、项目开发将要完成时，视项目需求，做整个项目字体的适配
 ```
-<a href="https://e.gitee.com/youshengyun/repos/youshengyun/y9-core/tree/master/vue/common/y9vue-empty" target="_blank">【git地址】干净的框架源码，持续更新...</a>
 
-# 八、感谢您的下载！
-# 九、持续更新升级文档
-<a href="https://vue.youshengyun.com/files/img/前端/【2023-2-13-更新】字体大小设置的说明文档.pdf" target="_blank">【2023-2-13-更新】字体大小设置的说明文档.pdf【点我查看】</a>
-<br>
-<a href="https://vue.youshengyun.com/files/img/前端/【2023-2-13-更新】国际化翻译的安装与使用.pdf" target="_blank">【2023-2-13-更新】国际化翻译的安装与使用.pdf【点我查看】</a>
-<br>
-<a href="https://vue.youshengyun.com/files/img/前端/【2023-2-13-更新】水印插件的使用文档.pdf" target="_blank">【2023-2-13-更新】水印插件的使用文档.pdf【点我查看】</a>
-<br>
-<a href="https://vue.youshengyun.com/files/img/前端/【2023-2-13-更新】项目组件替换成y9组件插件的替换修改笔记.pdf" target="_blank">【2023-2-13-更新】项目组件替换成y9组件插件的替换修改笔记.pdf【点我查看】</a>
-<br>
+# 八、更新记录！
+> 2023-12-19 优化个人中心页面，只需替换src/view/personal文件夹即可
