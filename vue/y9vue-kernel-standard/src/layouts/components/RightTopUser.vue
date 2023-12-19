@@ -11,7 +11,7 @@
                 :style="{
                     'font-size': fontSizeObj.baseFontSize,
                     'background-color': 'var(--el-color-primary)',
-                    'margin-top': '8px',
+                    'margin-top': '8px'
                 }"
                 :src="userInfo.avator ? userInfo.avator : ''"
             >
@@ -115,14 +115,14 @@
                         __y9delete__: () => {
                             // 删除前执行的函数
                             console.log('删除前执行的函数');
-                        },
+                        }
                     };
                     $y9_SSO.ssoLogout(params);
                 } catch (error) {
                     ElMessage({
                         message: error.message || 'Has Error',
                         type: 'error',
-                        duration: 5 * 1000,
+                        duration: 5 * 1000
                     });
                 }
                 break;
@@ -137,6 +137,8 @@
     .user-el-dropdown {
         z-index: 9999;
         height: $headerHeight;
+        outline: none;
+
         :deep(.el-dropdown--default) {
             display: flex;
             align-items: center;
