@@ -16,7 +16,6 @@ import org.apereo.cas.authentication.Credential;
 import org.apereo.cas.authentication.credential.RememberMeUsernamePasswordCredential;
 import org.apereo.cas.services.Y9User;
 import org.apereo.cas.util.CollectionUtils;
-import org.apereo.cas.web.y9.service.Y9UserService;
 import org.apereo.services.persondir.IPersonAttributeDao;
 import org.apereo.services.persondir.IPersonAttributes;
 import org.apereo.services.persondir.support.AttributeNamedPersonImpl;
@@ -29,6 +28,7 @@ import com.google.common.collect.Lists;
 
 import lombok.val;
 import lombok.extern.slf4j.Slf4j;
+import y9.service.Y9UserService;
 
 @Slf4j
 public class RisePersonDirectoryPrincipalResolver implements PrincipalResolver {

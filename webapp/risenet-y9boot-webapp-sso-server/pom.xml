@@ -6,7 +6,7 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>net.risesoft</groupId>
 	<artifactId>risenet-y9boot-webapp-sso-server</artifactId>
-	<packaging>war</packaging>
+	<packaging>jar</packaging>
 	<version>v9.7.0-SNAPSHOT</version>
 
 	<!--<parent>
@@ -101,10 +101,9 @@
 
 		<cas.version>7.0.0-RC9</cas.version>
 		<spring-boot.version>3.2.0</spring-boot.version>
-		<spring-cloud.version>2023.0.0-RC1</spring-cloud.version>
+		<spring-cloud.version>2023.0.0</spring-cloud.version>
 
 		<lombok.version>1.18.30</lombok.version>
-		<jodd-http.version>6.3.0</jodd-http.version>
 		<mysql.version>8.2.0</mysql.version>
 
 		<start-class>org.apereo.cas.web.CasWebApplication</start-class>
@@ -312,11 +311,6 @@
 			<artifactId>cas-server-core-logging</artifactId>
 		</dependency>
 
-		<!--<dependency>
-			<groupId>org.jodd</groupId>
-			<artifactId>jodd-http</artifactId>
-		</dependency>-->
-
 		<dependency>
 			<groupId>com.mysql</groupId>
 			<artifactId>mysql-connector-j</artifactId>
@@ -399,10 +393,10 @@
 			<groupId>org.apereo.cas</groupId>
 			<artifactId>cas-server-webapp-starter-tomcat</artifactId>
 			<exclusions>
-				<exclusion>
+				<!--<exclusion>
 					<groupId>org.apereo.cas</groupId>
 					<artifactId>cas-server-webapp-init-tomcat</artifactId>
-				</exclusion>
+				</exclusion>-->
 				<exclusion>
 					<groupId>org.apereo.cas</groupId>
 					<artifactId>cas-server-webapp-resources</artifactId>
