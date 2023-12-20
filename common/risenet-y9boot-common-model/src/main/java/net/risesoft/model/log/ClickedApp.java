@@ -3,8 +3,14 @@ package net.risesoft.model.log;
 import java.io.Serializable;
 import java.util.Date;
 
+import org.springframework.format.annotation.DateTimeFormat;
+
+import com.fasterxml.jackson.annotation.JsonFormat;
+
+import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 /**
  * 应用点击详情
@@ -17,6 +23,8 @@ import lombok.Data;
  */
 @Data
 @Builder
+@AllArgsConstructor
+@NoArgsConstructor
 public class ClickedApp implements Serializable {
 
     private static final long serialVersionUID = 7190005083758488330L;
@@ -43,6 +51,9 @@ public class ClickedApp implements Serializable {
     /**
      * 保存时间
      */
+
+    @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss", timezone = "GMT+8")
     private Date saveDate;
 
 }
