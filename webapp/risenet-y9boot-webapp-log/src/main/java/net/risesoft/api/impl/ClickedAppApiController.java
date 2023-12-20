@@ -6,7 +6,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 
 import net.risesoft.api.log.ClickedAppApi;
 import net.risesoft.log.entity.Y9ClickedApp;
@@ -17,13 +16,12 @@ import net.risesoft.y9.json.Y9JsonUtil;
 
 /**
  * 应用点击详情
- *
+ * 
  * @author mengjuhua
  * @date 2022/10/19
  */
 @RestController
 @RequestMapping(value = "/services/rest/v1/clickedApp")
-@Slf4j
 @RequiredArgsConstructor
 public class ClickedAppApiController implements ClickedAppApi {
 

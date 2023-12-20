@@ -1,13 +1,16 @@
 package net.risesoft.config;
 
-import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
+import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.boot.web.servlet.filter.OrderedRequestContextFilter;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.MediaType;
 import org.springframework.http.converter.HttpMessageConverter;
 import org.springframework.http.converter.StringHttpMessageConverter;
+import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
 import org.springframework.kafka.annotation.EnableKafka;
 import org.springframework.web.filter.RequestContextFilter;
 import org.springframework.web.servlet.config.annotation.DefaultServletHandlerConfigurer;
@@ -40,7 +43,24 @@ public class WebMvcConfig implements WebMvcConfigurer {
 
     @Bean
     public HttpMessageConverter<String> responseBodyConverter() {
-        StringHttpMessageConverter converter = new StringHttpMessageConverter(Charset.forName("UTF-8"));
+        StringHttpMessageConverter converter = new StringHttpMessageConverter(StandardCharsets.UTF_8);
+        // List<MediaType> supportedMediaTypes = new ArrayList<>();
+        // supportedMediaTypes.add(MediaType.TEXT_HTML);
+        // supportedMediaTypes.add(MediaType.parseMediaType("text/html;charset=UTF-8"));
+        // supportedMediaTypes.add(MediaType.APPLICATION_JSON_UTF8);
+        // converter.setSupportedMediaTypes(supportedMediaTypes);
+        return converter;
+    }
+
+    @Bean
+    public MappingJackson2HttpMessageConverter mappingJackson2HttpMessageConverter() {
+        MappingJackson2HttpMessageConverter converter = new MappingJackson2HttpMessageConverter();
+        List<MediaType> supportedMediaTypes = new ArrayList<>();
+        supportedMediaTypes.add(MediaType.parseMediaType("text/html;charset=UTF-8"));
+        supportedMediaTypes.add(MediaType.APPLICATION_JSON_UTF8);
+        supportedMediaTypes.add(MediaType.APPLICATION_JSON);
+        supportedMediaTypes.add(new MediaType("application", "*+json"));
+        converter.setSupportedMediaTypes(supportedMediaTypes);
         return converter;
     }
 
