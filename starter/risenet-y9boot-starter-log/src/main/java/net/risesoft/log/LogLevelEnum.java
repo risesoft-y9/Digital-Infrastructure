@@ -10,7 +10,17 @@ public enum LogLevelEnum {
     /** 普通日志 */
     RSLOG("普通日志"),
     /** 管理日志 */
-    MANAGERLOG("管理日志");
+    MANAGERLOG("管理日志"),
+    /** 错误 */
+    ERROR("错误日志"),
+    /** 警告 */
+    WARN("警告日志"),
+    /** 信息 */
+    INFO("信息日志"),
+    /** 调试 */
+    DEBUG("调试日志"),
+    /** 微量 */
+    TRACE("跟踪日志");
 
     private final String value;
 

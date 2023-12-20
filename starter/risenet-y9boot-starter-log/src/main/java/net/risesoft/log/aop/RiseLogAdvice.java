@@ -21,6 +21,7 @@ import org.springframework.web.context.request.ServletRequestAttributes;
 
 import lombok.extern.slf4j.Slf4j;
 
+import net.risesoft.log.LogLevelEnum;
 import net.risesoft.log.annotation.RiseLog;
 import net.risesoft.log.service.SaveLogInfo4Kafka;
 import net.risesoft.log.service.Y9LogService;
@@ -80,12 +81,11 @@ public class RiseLogAdvice implements MethodInterceptor {
         } finally {
             Method method = invocation.getMethod();
             RiseLog riseLog = method.getAnnotation(RiseLog.class);
-            HttpServletRequest request = null;
             HttpServletResponse response = null;
             try {
                 ServletRequestAttributes sra = (ServletRequestAttributes)RequestContextHolder.getRequestAttributes();
                 if (sra != null) {
-                    request = sra.getRequest();
+                    HttpServletRequest request = sra.getRequest();
                     response = sra.getResponse();
                     userAgent = request.getHeader("User-Agent");
                     hostIp = Y9Context.getIpAddr(request);
@@ -95,14 +95,13 @@ public class RiseLogAdvice implements MethodInterceptor {
                 LOGGER.warn(e.getMessage(), e);
             }
 
-            if (riseLog != null && !riseLog.enable()) {
-            } else {
+            if (riseLog != null && riseLog.enable()) {
                 long end = System.nanoTime();
                 long elapsedTime = end - start;
 
                 AccessLog log = new AccessLog();
                 try {
-                    log.setLogLevel("RSLOG");
+                    log.setLogLevel(LogLevelEnum.RSLOG.toString());
                     log.setLogTime(new Date());
                     log.setMethodName(method.getDeclaringClass().getName() + "." + method.getName());
                     log.setElapsedTime(String.valueOf(elapsedTime));
@@ -127,22 +126,21 @@ public class RiseLogAdvice implements MethodInterceptor {
                         }
                     }
 
-                    log.setModularName("数字底座");
-                    log.setOperateName(method.getName());
-                    log.setOperateType("查看");
-                    if (riseLog != null) {
-                        if (StringUtils.hasText(riseLog.moduleName())) {
-                            log.setModularName(riseLog.moduleName());
-                        }
-                        if (StringUtils.hasText(riseLog.operationName())) {
-                            log.setOperateName(riseLog.operationName());
-                        }
-                        if (null != riseLog.logLevel()) {
-                            log.setLogLevel(riseLog.logLevel().toString());
-                        }
-
-                        log.setOperateType(riseLog.operationType().getValue());
+                    if (StringUtils.hasText(riseLog.moduleName())) {
+                        log.setModularName(riseLog.moduleName());
+                    } else {
+                        log.setModularName("数字底座");
                     }
+                    if (StringUtils.hasText(riseLog.operationName())) {
+                        log.setOperateName(riseLog.operationName());
+                    } else {
+                        log.setOperateName(method.getName());
+                    }
+                    if (null != riseLog.logLevel()) {
+                        log.setLogLevel(riseLog.logLevel().toString());
+                    }
+
+                    log.setOperateType(riseLog.operationType().getValue());
 
                     UserInfo userInfo = Y9LoginUserHolder.getUserInfo();
                     if (null != userInfo) {

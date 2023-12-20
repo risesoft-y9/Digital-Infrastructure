@@ -1,5 +1,7 @@
 package net.risesoft.entity;
 
+import java.util.Date;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Convert;
 import jakarta.persistence.Entity;
@@ -9,6 +11,8 @@ import jakarta.validation.constraints.NotBlank;
 
 import org.hibernate.annotations.ColumnDefault;
 import org.hibernate.annotations.Comment;
+
+import com.fasterxml.jackson.annotation.JsonFormat;
 
 import lombok.Data;
 
@@ -32,8 +36,6 @@ import net.risesoft.persistence.EnumConverter;
 public class Y9Manager extends Y9OrgBase {
 
     private static final long serialVersionUID = -6531424704457510017L;
-
-    public static final int DEFAULT_PWD_CYCLE = 7;
 
     public Y9Manager() {
         super.setOrgType(OrgTypeEnum.MANAGER);
@@ -119,31 +121,18 @@ public class Y9Manager extends Y9OrgBase {
     private String userHostIp;
 
     /**
-     * 修改密码周期（天）
+     * 上一次审查时间
      */
-    @Comment(value = "修改密码周期（天）")
-    @Column(name = "PWD_CYCLE")
-    private Integer pwdCycle = DEFAULT_PWD_CYCLE;
-
-    /**
-     * 审查周期
-     */
-    @Comment(value = "审查周期")
-    @Column(name = "CHECK_CYCLE")
-    private Integer checkCycle;
-
-    /**
-     * 审查时间
-     */
-    @Comment(value = "审查时间")
-    @Column(name = "CHECK_TIME", length = 50)
-    private String checkTime;
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss", timezone = "GMT+8")
+    @Comment(value = "上一次审查时间")
+    @Column(name = "LAST_REVIEW_LOG_TIME")
+    private Date lastReviewLogTime;
 
     /**
      * 修改密码时间
      */
-    @Comment(value = "修改密码时间")
-    @Column(name = "MODIFY_PWD_TIME", length = 50)
-    private String modifyPwdTime;
-
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss", timezone = "GMT+8")
+    @Comment("上一次密码修改时间")
+    @Column(name = "LAST_MODIFY_PASSWORD_TIME")
+    protected Date lastModifyPasswordTime;
 }

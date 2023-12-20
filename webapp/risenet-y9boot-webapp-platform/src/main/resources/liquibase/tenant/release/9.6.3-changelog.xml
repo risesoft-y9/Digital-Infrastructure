@@ -177,4 +177,17 @@
                       columnDataType="VARCHAR(38)"/>
         <addPrimaryKey tableName="Y9_ORG_POSITIONS_ROLES" columnNames="ID"/>
     </changeSet>
+    
+    <changeSet id="1702981170000-1" author="shidaobang">
+        <dropColumn tableName="Y9_ORG_MANAGER" columnName="PWD_CYCLE"/>
+        <dropColumn tableName="Y9_ORG_MANAGER" columnName="CHECK_CYCLE"/>
+        <dropColumn tableName="Y9_ORG_MANAGER" columnName="CHECK_TIME"/>
+        <dropColumn tableName="Y9_ORG_MANAGER" columnName="MODIFY_PWD_TIME"/>
+        <addColumn tableName="Y9_ORG_MANAGER">
+            <column name="LAST_REVIEW_LOG_TIME" remarks="上一次审查时间" type="datetime"/>
+        </addColumn>
+        <addColumn tableName="Y9_ORG_MANAGER">
+            <column name="LAST_MODIFY_PASSWORD_TIME" remarks="上一次密码修改时间" type="datetime"/>
+        </addColumn>
+    </changeSet>
 </databaseChangeLog>

@@ -2,7 +2,6 @@ package net.risesoft.controller.manager;
 
 import jakarta.validation.constraints.NotBlank;
 
-import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
@@ -60,30 +59,25 @@ public class PersonalCenterController {
      */
     @RiseLog(operationName = "根据人员id，获取人员信息")
     @RequestMapping(value = "/getManagerById")
-    public Y9Result<Map<String, Object>> getManagerById(@RequestParam @NotBlank String managerId)
-        throws ParseException {
+    public Y9Result<Map<String, Object>> getManagerById(@RequestParam @NotBlank String managerId) {
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         Map<String, Object> map = new HashMap<>(8);
 
         Y9Manager manager = y9ManagerService.getById(managerId);
         map.put("manager", manager);
-        try {
-            if (manager.getModifyPwdTime() != null) {
-                Date modifyPwdTime = sdf.parse(manager.getModifyPwdTime());
-                Calendar calendar = Calendar.getInstance();
-                calendar.setTime(modifyPwdTime);
-                calendar.add(Calendar.DAY_OF_MONTH, manager.getPwdCycle());
-                map.put("nextModifyPwdTime", sdf.format(calendar.getTime()));
-            }
-            if (manager.getCheckTime() != null) {
-                Date checkTime = sdf.parse(manager.getCheckTime());
-                Calendar checkCalendar = Calendar.getInstance();
-                checkCalendar.setTime(checkTime);
-                checkCalendar.add(Calendar.DAY_OF_MONTH, manager.getCheckCycle());
-                map.put("nextCheckTime", sdf.format(checkCalendar.getTime()));
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
+        if (manager.getLastModifyPasswordTime() != null) {
+            Date modifyPwdTime = manager.getLastModifyPasswordTime();
+            Calendar calendar = Calendar.getInstance();
+            calendar.setTime(modifyPwdTime);
+            calendar.add(Calendar.DAY_OF_MONTH, y9ManagerService.getPasswordModifiedCycle(manager.getManagerLevel()));
+            map.put("nextModifyPwdTime", sdf.format(calendar.getTime()));
+        }
+        if (manager.getLastReviewLogTime() != null) {
+            Date checkTime = manager.getLastReviewLogTime();
+            Calendar checkCalendar = Calendar.getInstance();
+            checkCalendar.setTime(checkTime);
+            checkCalendar.add(Calendar.DAY_OF_MONTH, y9ManagerService.getReviewLogCycle(manager.getManagerLevel()));
+            map.put("nextCheckTime", sdf.format(checkCalendar.getTime()));
         }
         return Y9Result.success(map, "根据人员id，获取人员信息成功");
     }

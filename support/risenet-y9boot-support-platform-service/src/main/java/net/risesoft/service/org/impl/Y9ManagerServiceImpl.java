@@ -1,6 +1,5 @@
 package net.risesoft.service.org.impl;
 
-import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
 import java.util.Optional;
@@ -16,6 +15,7 @@ import net.risesoft.consts.OrgLevelConsts;
 import net.risesoft.entity.Y9Department;
 import net.risesoft.entity.Y9Manager;
 import net.risesoft.entity.Y9OrgBase;
+import net.risesoft.enums.platform.ManagerLevelEnum;
 import net.risesoft.enums.platform.OrgTypeEnum;
 import net.risesoft.exception.OrgUnitErrorCodeEnum;
 import net.risesoft.id.IdType;
@@ -27,6 +27,7 @@ import net.risesoft.service.org.Y9ManagerService;
 import net.risesoft.y9.Y9Context;
 import net.risesoft.y9.Y9LoginUserHolder;
 import net.risesoft.y9.configuration.Y9Properties;
+import net.risesoft.y9.configuration.app.y9platform.Y9PlatformProperties;
 import net.risesoft.y9.exception.util.Y9ExceptionUtil;
 import net.risesoft.y9.pubsub.event.Y9EntityCreatedEvent;
 import net.risesoft.y9.pubsub.event.Y9EntityDeletedEvent;
@@ -62,13 +63,33 @@ public class Y9ManagerServiceImpl implements Y9ManagerService {
     @Override
     @Transactional(readOnly = false)
     public void changePassword(String id, String newPassword) {
-        newPassword = Y9MessageDigest.hashpw(newPassword);
         Y9Manager manager = this.getById(id);
-        manager.setPassword(newPassword);
-        manager.setModifyPwdTime(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date()));
+        manager.setPassword(Y9MessageDigest.hashpw(newPassword));
+        manager.setLastModifyPasswordTime(new Date());
         Y9Manager y9Manager = y9ManagerRepository.save(manager);
 
         Y9Context.publishEvent(new Y9EntityUpdatedEvent<>(manager, y9Manager));
+    }
+
+    @Override
+    public int getPasswordModifiedCycle(ManagerLevelEnum managerLevel) {
+        return y9config.getApp().getPlatform().getManagerModifyPasswordCycle().getDays();
+    }
+
+    @Override
+    public int getReviewLogCycle(ManagerLevelEnum managerLevel) {
+        int checkCycle = 0;
+        Y9PlatformProperties platformProperties = y9config.getApp().getPlatform();
+        if (ManagerLevelEnum.SYSTEM_MANAGER.equals(managerLevel)) {
+            checkCycle = platformProperties.getSystemManagerReviewLogCycle().getDays();
+        }
+        if (ManagerLevelEnum.SECURITY_MANAGER.equals(managerLevel)) {
+            checkCycle = platformProperties.getSecurityManagerReviewLogCycle().getDays();
+        }
+        if (ManagerLevelEnum.AUDIT_MANAGER.equals(managerLevel)) {
+            checkCycle = platformProperties.getAuditManagerReviewLogCycle().getDays();
+        }
+        return checkCycle;
     }
 
     @Override
@@ -237,7 +258,7 @@ public class Y9ManagerServiceImpl implements Y9ManagerService {
     @Transactional(readOnly = false)
     public void updateCheckTime(String managerId, Date checkTime) {
         Y9Manager y9Manager = this.getById(managerId);
-        y9Manager.setCheckTime(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(checkTime));
+        y9Manager.setLastReviewLogTime(checkTime);
         y9ManagerRepository.save(y9Manager);
     }
 }

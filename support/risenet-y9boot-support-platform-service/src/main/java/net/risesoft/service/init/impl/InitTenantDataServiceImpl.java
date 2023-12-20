@@ -2,7 +2,6 @@ package net.risesoft.service.init.impl;
 
 import java.util.Date;
 
-import org.apache.commons.lang3.time.FastDateFormat;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -30,8 +29,6 @@ import net.risesoft.service.org.Y9PersonService;
 @Service
 @RequiredArgsConstructor
 public class InitTenantDataServiceImpl implements InitTenantDataService {
-
-    private static final FastDateFormat DATE_FORMAT = FastDateFormat.getInstance("yyyy-MM-dd HH:mm:ss");
 
     private final Y9OrganizationService y9OrganizationService;
     private final Y9ManagerService y9ManagerService;
@@ -266,11 +263,9 @@ public class InitTenantDataServiceImpl implements InitTenantDataService {
             auditManager.setLoginName(InitDataConsts.DEFAULT_AUDIT_MANAGER);
             auditManager.setGlobalManager(true);
             auditManager.setManagerLevel(ManagerLevelEnum.AUDIT_MANAGER);
-            auditManager.setPwdCycle(Y9Manager.DEFAULT_PWD_CYCLE);
             auditManager.setUserHostIp("");
-            auditManager.setCheckTime(DATE_FORMAT.format(new Date()));
-            auditManager.setModifyPwdTime(DATE_FORMAT.format(new Date()));
-            auditManager.setCheckCycle(Y9Manager.DEFAULT_PWD_CYCLE);
+            auditManager.setLastReviewLogTime(new Date());
+            auditManager.setLastModifyPasswordTime(new Date());
             y9ManagerService.saveOrUpdate(auditManager);
         }
     }
@@ -283,11 +278,9 @@ public class InitTenantDataServiceImpl implements InitTenantDataService {
             securityManager.setLoginName(InitDataConsts.DEFAULT_SECURITY_MANAGER);
             securityManager.setGlobalManager(true);
             securityManager.setManagerLevel(ManagerLevelEnum.SECURITY_MANAGER);
-            securityManager.setPwdCycle(Y9Manager.DEFAULT_PWD_CYCLE);
             securityManager.setUserHostIp("");
-            securityManager.setCheckTime(DATE_FORMAT.format(new Date()));
-            securityManager.setModifyPwdTime(DATE_FORMAT.format(new Date()));
-            securityManager.setCheckCycle(Y9Manager.DEFAULT_PWD_CYCLE);
+            securityManager.setLastReviewLogTime(new Date());
+            securityManager.setLastModifyPasswordTime(new Date());
             y9ManagerService.saveOrUpdate(securityManager);
         }
     }
@@ -300,11 +293,9 @@ public class InitTenantDataServiceImpl implements InitTenantDataService {
             systemManager.setLoginName(InitDataConsts.DEFAULT_SYSTEM_MANAGER);
             systemManager.setGlobalManager(true);
             systemManager.setManagerLevel(ManagerLevelEnum.SYSTEM_MANAGER);
-            systemManager.setPwdCycle(Y9Manager.DEFAULT_PWD_CYCLE);
             systemManager.setUserHostIp("");
-            systemManager.setCheckTime(DATE_FORMAT.format(new Date()));
-            systemManager.setModifyPwdTime(DATE_FORMAT.format(new Date()));
-            systemManager.setCheckCycle(0);
+            systemManager.setLastReviewLogTime(new Date());
+            systemManager.setLastModifyPasswordTime(new Date());
             y9ManagerService.saveOrUpdate(systemManager);
         }
     }
