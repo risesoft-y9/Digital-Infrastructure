@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <databaseChangeLog
-        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
         xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
                       http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.9.xsd">
 
@@ -41,7 +41,7 @@
         </sql>
     </changeSet>
 
-    <changeSet id="1702520031601-1" author="shidaobang">
+    <changeSet id="1702520031601-1" author="shidaobang" runOnChange="true">
         <addColumn tableName="Y9_ORG_ORGBASES_ROLES">
             <column name="NEW_ID" type="VARCHAR(38)"/>
         </addColumn>
@@ -58,7 +58,7 @@
                       columnDataType="VARCHAR(38)"/>
         <addPrimaryKey tableName="Y9_ORG_ORGBASES_ROLES" columnNames="ID"/>
     </changeSet>
-    <changeSet id="1702520031601-2" author="shidaobang">
+    <changeSet id="1702520031601-2" author="shidaobang" runOnChange="true">
         <addColumn tableName="Y9_ORG_PERSONS_GROUPS">
             <column name="NEW_ID" type="VARCHAR(38)"/>
         </addColumn>
@@ -75,7 +75,7 @@
                       columnDataType="VARCHAR(38)"/>
         <addPrimaryKey tableName="Y9_ORG_PERSONS_GROUPS" columnNames="ID"/>
     </changeSet>
-    <changeSet id="1702520031601-3" author="shidaobang">
+    <changeSet id="1702520031601-3" author="shidaobang" runOnChange="true">
         <addColumn tableName="Y9_ORG_PERSONS_POSITIONS">
             <column name="NEW_ID" type="VARCHAR(38)"/>
         </addColumn>
@@ -92,7 +92,7 @@
                       columnDataType="VARCHAR(38)"/>
         <addPrimaryKey tableName="Y9_ORG_PERSONS_POSITIONS" columnNames="ID"/>
     </changeSet>
-    <changeSet id="1702520031601-4" author="shidaobang">
+    <changeSet id="1702520031601-4" author="shidaobang" runOnChange="true">
         <addColumn tableName="Y9_ORG_POSITIONS_GROUPS">
             <column name="NEW_ID" type="VARCHAR(38)"/>
         </addColumn>
@@ -109,7 +109,7 @@
                       columnDataType="VARCHAR(38)"/>
         <addPrimaryKey tableName="Y9_ORG_POSITIONS_GROUPS" columnNames="ID"/>
     </changeSet>
-    <changeSet id="1702520031601-5" author="shidaobang">
+    <changeSet id="1702520031601-5" author="shidaobang" runOnChange="true">
         <addColumn tableName="Y9_ORG_PERSONS_RESOURCES">
             <column name="NEW_ID" type="VARCHAR(38)"/>
         </addColumn>
@@ -126,7 +126,7 @@
                       columnDataType="VARCHAR(38)"/>
         <addPrimaryKey tableName="Y9_ORG_PERSONS_RESOURCES" columnNames="ID"/>
     </changeSet>
-    <changeSet id="1702520031601-6" author="shidaobang">
+    <changeSet id="1702520031601-6" author="shidaobang" runOnChange="true">
         <addColumn tableName="Y9_ORG_PERSONS_ROLES">
             <column name="NEW_ID" type="VARCHAR(38)"/>
         </addColumn>
@@ -143,7 +143,7 @@
                       columnDataType="VARCHAR(38)"/>
         <addPrimaryKey tableName="Y9_ORG_PERSONS_ROLES" columnNames="ID"/>
     </changeSet>
-    <changeSet id="1702520031601-7" author="shidaobang">
+    <changeSet id="1702520031601-7" author="shidaobang" runOnChange="true">
         <addColumn tableName="Y9_ORG_POSITIONS_RESOURCES">
             <column name="NEW_ID" type="VARCHAR(38)"/>
         </addColumn>
@@ -160,7 +160,7 @@
                       columnDataType="VARCHAR(38)"/>
         <addPrimaryKey tableName="Y9_ORG_POSITIONS_RESOURCES" columnNames="ID"/>
     </changeSet>
-    <changeSet id="1702520031601-8" author="shidaobang">
+    <changeSet id="1702520031601-8" author="shidaobang" runOnChange="true">
         <addColumn tableName="Y9_ORG_POSITIONS_ROLES">
             <column name="NEW_ID" type="VARCHAR(38)"/>
         </addColumn>
