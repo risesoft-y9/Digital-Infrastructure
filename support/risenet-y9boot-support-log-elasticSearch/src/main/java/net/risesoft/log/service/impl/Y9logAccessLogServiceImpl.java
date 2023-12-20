@@ -774,12 +774,8 @@ public class Y9logAccessLogServiceImpl implements Y9logAccessLogService {
     @Override
     public Page<Y9logAccessLog> searchQuery(String tenantId, String managerLevel, LogInfoModel loginInfoModel,
         Integer page, Integer rows) {
-        IndexCoordinates index = IndexCoordinates.of(getCurrentYearIndexName());
-        NativeSearchQueryBuilder searchQueryBuilder = new NativeSearchQueryBuilder();
-        Pageable pageable;
 
         BoolQueryBuilder queryBuilder = QueryBuilders.boolQuery();
-        // queryBuilder.must(QueryBuilders.existsQuery(USER_NAME));
         if (StringUtils.isNotBlank(tenantId)) {
             queryBuilder.must(QueryBuilders.queryStringQuery(tenantId).field(Y9LogSearchConsts.TENANT_ID));
         }
@@ -803,8 +799,10 @@ public class Y9logAccessLogServiceImpl implements Y9logAccessLogService {
                 .wildcardQuery(Y9LogSearchConsts.OPERATE_NAME, "*" + loginInfoModel.getOperateName() + "*")));
         }
         if (StringUtils.isNotBlank(loginInfoModel.getOperateType())) {
+            // queryBuilder.must(
+            //     QueryBuilders.queryStringQuery(loginInfoModel.getOperateType()).field(Y9LogSearchConsts.OPERATE_TYPE));
             queryBuilder.must(
-                QueryBuilders.queryStringQuery(loginInfoModel.getOperateType()).field(Y9LogSearchConsts.OPERATE_TYPE));
+                QueryBuilders.termQuery(Y9LogSearchConsts.OPERATE_TYPE, loginInfoModel.getOperateType()));
         }
         if (StringUtils.isNotBlank(loginInfoModel.getSuccess())) {
             queryBuilder
@@ -834,12 +832,15 @@ public class Y9logAccessLogServiceImpl implements Y9logAccessLogService {
             }
         }
 
+        Pageable pageable = null;
         if (StringUtils.isNotBlank(loginInfoModel.getSortName())) {
             pageable = PageRequest.of((page < 1) ? 0 : page - 1, rows, Direction.DESC, loginInfoModel.getSortName());
         } else {
             pageable = PageRequest.of((page < 1) ? 0 : page - 1, rows, Direction.DESC, Y9LogSearchConsts.LOG_TIME);
         }
 
+        IndexCoordinates index = IndexCoordinates.of(getCurrentYearIndexName());
+        NativeSearchQueryBuilder searchQueryBuilder = new NativeSearchQueryBuilder();
         NativeSearchQuery searchQuery = searchQueryBuilder.withQuery(queryBuilder).withPageable(pageable).build();
         // https://www.elastic.co/guide/en/elasticsearch/reference/7.0/search-request-track-total-hits.html
         searchQuery.setTrackTotalHits(true);

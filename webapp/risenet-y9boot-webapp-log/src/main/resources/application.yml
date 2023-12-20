@@ -101,6 +101,7 @@ y9:
                     - http://*.youshengyun.com
                     - http://localhost:8080
                     - http://localhost:8081
+                    - http://localhost:7070
             xss:
                 ignoreParam:
                     - ID

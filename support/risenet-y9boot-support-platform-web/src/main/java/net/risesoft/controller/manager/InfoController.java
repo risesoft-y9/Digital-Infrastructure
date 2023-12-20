@@ -44,7 +44,6 @@ public class InfoController {
     @RiseLog(operationName = "获取登录用户信息")
     @GetMapping(value = "/getLoginInfo")
     public Y9Result<Map<String, Object>> getLoginInfo() {
-        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         Map<String, Object> returnMap = new HashMap<>(16);
         returnMap.put("tenantManager", Y9LoginUserHolder.getUserInfo().isGlobalManager());
         returnMap.put("person", Y9LoginUserHolder.getUserInfo());
@@ -53,16 +52,17 @@ public class InfoController {
         if (!ManagerLevelEnum.GENERAL_USER.equals(Y9LoginUserHolder.getUserInfo().getManagerLevel())) {
             try {
                 Y9Manager y9Manager = y9ManagerService.getById(Y9LoginUserHolder.getUserInfo().getPersonId());
-                y9Manager.setCheckTime(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date()));
+                y9Manager.setLastReviewLogTime(new Date());
                 y9ManagerService.saveOrUpdate(y9Manager);
 
-                Date modifyPwdTime = sdf.parse(y9Manager.getModifyPwdTime());
+                Date modifyPwdTime = y9Manager.getLastModifyPasswordTime();
+                int passwordModifiedCycle = y9ManagerService.getPasswordModifiedCycle(y9Manager.getManagerLevel());
                 Calendar calendar = Calendar.getInstance();
                 calendar.setTime(modifyPwdTime);
-                calendar.add(Calendar.DAY_OF_MONTH, y9Manager.getPwdCycle());
+                calendar.add(Calendar.DAY_OF_MONTH, passwordModifiedCycle);
                 long now = System.currentTimeMillis();
                 if (calendar.getTimeInMillis() < now) {
-                    returnMap.put("tipsMsg", "您已经超过" + y9Manager.getPwdCycle() + "天未修改密码，请您尽快修改密码？");
+                    returnMap.put("tipsMsg", "您已经超过" + passwordModifiedCycle + "天未修改密码，请您尽快修改密码？");
                 }
             } catch (Exception e) {
                 LOGGER.warn(e.getMessage(), e);

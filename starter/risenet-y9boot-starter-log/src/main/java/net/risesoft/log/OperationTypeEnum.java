@@ -22,7 +22,9 @@ public enum OperationTypeEnum {
     /** 登录 */
     LOGIN("登录"),
     /** 退出 */
-    LOGOUT("退出");
+    LOGOUT("退出"),
+    /** 检查 */
+    CHECK("检查");
 
     private final String value;
 

@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.Optional;
 
 import net.risesoft.entity.Y9Manager;
+import net.risesoft.enums.platform.ManagerLevelEnum;
 import net.risesoft.y9.exception.Y9NotFoundException;
 
 /**
@@ -30,6 +31,10 @@ public interface Y9ManagerService {
      * @param newPassword 新密码
      */
     void changePassword(String id, String newPassword);
+
+    int getPasswordModifiedCycle(ManagerLevelEnum managerLevel);
+
+    int getReviewLogCycle(ManagerLevelEnum managerLevel);
 
     /**
      * 判断管理员登录名

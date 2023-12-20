@@ -33,8 +33,8 @@ import net.risesoft.model.userlogininfo.LoginInfo;
 import net.risesoft.pojo.Y9Page;
 import net.risesoft.pojo.Y9PageQuery;
 import net.risesoft.pojo.Y9Result;
-import net.risesoft.util.AccessLogModelConvertUtil;
 import net.risesoft.y9.Y9LoginUserHolder;
+import net.risesoft.y9.util.Y9ModelConvertUtil;
 
 import cn.hutool.core.thread.ThreadFactoryBuilder;
 
@@ -67,8 +67,7 @@ public class UserLoginInfoApiController implements UserLoginInfoApi {
     public LoginInfo getTopByTenantIdAndUserId(@RequestParam("tenantId") @NotBlank String tenantId,
         @RequestParam("personId") @NotBlank String personId) {
         Y9logUserLoginInfo login = userLoginInfoService.getTopByTenantIdAndUserId(tenantId, personId);
-        Y9LoginUserHolder.setTenantId(tenantId);
-        return AccessLogModelConvertUtil.userLoginInfoESToModel(login);
+        return Y9ModelConvertUtil.convert(login, LoginInfo.class);
     }
 
     /**
@@ -95,7 +94,7 @@ public class UserLoginInfoApiController implements UserLoginInfoApi {
         Y9Page<Y9logUserLoginInfo> loginList =
             userLoginInfoService.page(tenantId, userHostIp, userHostIp, success, startTime, endTime, pageQuery);
         List<Y9logUserLoginInfo> list = loginList.getRows();
-        List<LoginInfo> infoList = AccessLogModelConvertUtil.userLoginInfoESListToModels(list);
+        List<LoginInfo> infoList = Y9ModelConvertUtil.convert(list, LoginInfo.class);
         return Y9Page.success(loginList.getCurrPage(), loginList.getTotalPages(), loginList.getTotal(), infoList);
     }
 
