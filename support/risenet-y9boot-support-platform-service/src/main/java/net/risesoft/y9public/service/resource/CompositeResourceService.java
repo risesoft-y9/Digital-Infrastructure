@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.Optional;
 
 import net.risesoft.enums.platform.ResourceTypeEnum;
+import net.risesoft.y9public.entity.resource.Y9App;
 import net.risesoft.y9public.entity.resource.Y9ResourceBase;
 
 /**
@@ -72,7 +73,7 @@ public interface CompositeResourceService {
      *
      * @return
      */
-    List<Y9ResourceBase> listRootResourceList();
+    List<Y9App> listRootResourceList();
 
     /**
      * 根据名称查找

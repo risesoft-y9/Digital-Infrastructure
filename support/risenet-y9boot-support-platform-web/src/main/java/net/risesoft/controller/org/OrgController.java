@@ -9,6 +9,7 @@ import java.util.stream.Collectors;
 
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.validation.annotation.Validated;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -16,6 +17,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import lombok.RequiredArgsConstructor;
 
+import net.risesoft.controller.org.vo.OrgTreeNodeVO;
 import net.risesoft.entity.Y9Department;
 import net.risesoft.entity.Y9OrgBase;
 import net.risesoft.entity.Y9Organization;
@@ -116,6 +118,7 @@ public class OrgController {
      */
     @RiseLog(operationName = "获取机构树子节点")
     @RequestMapping(value = "/getTree")
+    @Deprecated
     public Y9Result<List<Y9OrgBase>> getTree(@RequestParam @NotBlank String id, @RequestParam TreeTypeEnum treeType,
         boolean disabled) {
         UserInfo userInfo = Y9LoginUserHolder.getUserInfo();
@@ -129,23 +132,6 @@ public class OrgController {
     }
 
     /**
-     * 获取组织机构树（不包含人员）
-     *
-     * @param id 父节点id
-     * @param treeType
-     *            树类型：tree_type_org，tree_type_bureau，tree_type_dept，tree_type_group，tree_type_position，tree_type_person
-     * @param disabled 遍历人员的时候，false为不显示禁用人员，true为显示禁用人员
-     * @return
-     */
-    @RiseLog(operationName = "获取组织机构树")
-    @RequestMapping(value = "/getTreeNoPerson")
-    public Y9Result<List<Y9OrgBase>> getTreeNoPerson(@RequestParam @NotBlank String id,
-        @RequestParam TreeTypeEnum treeType, @RequestParam boolean disabled) {
-        List<Y9OrgBase> treeList = compositeOrgBaseService.getTree(id, treeType, false, disabled);
-        return Y9Result.success(treeList, "获取机构树成功！");
-    }
-
-    /**
      * 获取组织架构列表
      *
      * @param virtual 是否为虚拟组织
@@ -153,6 +139,7 @@ public class OrgController {
      */
     @RiseLog(operationName = "获取组织架构列表")
     @RequestMapping(value = "/list")
+    @Deprecated
     public Y9Result<List<Organization>> list(@RequestParam(required = false) boolean virtual) {
         if (Y9LoginUserHolder.getUserInfo().isGlobalManager()) {
             return Y9Result.success(Y9ModelConvertUtil.convert(y9OrganizationService.list(virtual), Organization.class),
@@ -247,6 +234,7 @@ public class OrgController {
      */
     @RiseLog(operationName = "查询机构主体")
     @RequestMapping(value = "/treeSearch")
+    @Deprecated
     public Y9Result<List<Y9OrgBase>> treeSearch(@RequestParam String name, @RequestParam TreeTypeEnum treeType) {
         UserInfo userInfo = Y9LoginUserHolder.getUserInfo();
         List<Y9OrgBase> treeList = new ArrayList<>();
@@ -257,6 +245,72 @@ public class OrgController {
             treeList = compositeOrgBaseService.treeSearch4DeptManager(name, treeType);
         }
         return Y9Result.success(treeList, "获取机构树成功！");
+    }
+
+    /**
+     * 获取组织架构列表
+     *
+     * @param virtual 是否为虚拟组织
+     * @return
+     */
+    @RiseLog(operationName = "获取组织架构列表")
+    @GetMapping(value = "/list2")
+    public Y9Result<List<OrgTreeNodeVO>> list2(@RequestParam(required = false) boolean virtual) {
+        List<Y9Organization> organizationList;
+        if (Y9LoginUserHolder.getUserInfo().isGlobalManager()) {
+            organizationList = y9OrganizationService.list(virtual);
+        } else {
+            List<Y9Organization> orgList = y9OrganizationService.list(false);
+            Y9Department managerDept = y9DepartmentService.getById(Y9LoginUserHolder.getUserInfo().getParentId());
+            String mapping = managerDept.getGuidPath();
+            organizationList =
+                orgList.stream().filter(org -> mapping.contains(org.getGuidPath())).collect(Collectors.toList());
+        }
+
+        return Y9Result.success(OrgTreeNodeVO.convertY9OrgBaseList(organizationList), "获取组织架构列表成功！");
+    }
+
+    /**
+     * 获取机构树子节点
+     *
+     * @param id       父节点id
+     * @param treeType 树类型
+     * @param disabled false为不显示禁用人员，true为显示禁用人员
+     * @return
+     */
+    @RiseLog(operationName = "获取机构树子节点")
+    @GetMapping(value = "/getTree2")
+    public Y9Result<List<OrgTreeNodeVO>> getTree2(@RequestParam @NotBlank String id,
+        @RequestParam TreeTypeEnum treeType, boolean disabled) {
+        UserInfo userInfo = Y9LoginUserHolder.getUserInfo();
+        List<Y9OrgBase> treeList = new ArrayList<>();
+        if (userInfo.isGlobalManager() && !ManagerLevelEnum.GENERAL_USER.equals(userInfo.getManagerLevel())) {
+            treeList = compositeOrgBaseService.getTree(id, treeType, disabled);
+        } else if (!ManagerLevelEnum.GENERAL_USER.equals(userInfo.getManagerLevel())) {
+            treeList = compositeOrgBaseService.getTree4DeptManager(id, treeType);
+        }
+        return Y9Result.success(OrgTreeNodeVO.convertY9OrgBaseList(treeList), "获取机构树成功！");
+    }
+
+    /**
+     * 根据name，和结构树类型查询机构主体
+     *
+     * @param name     名称
+     * @param treeType 树类型
+     * @return
+     */
+    @RiseLog(operationName = "查询机构主体")
+    @GetMapping(value = "/treeSearch2")
+    public Y9Result<List<OrgTreeNodeVO>> treeSearch2(@RequestParam String name, @RequestParam TreeTypeEnum treeType) {
+        UserInfo userInfo = Y9LoginUserHolder.getUserInfo();
+        List<Y9OrgBase> treeList = new ArrayList<>();
+        if (userInfo.isGlobalManager()) {
+            treeList = compositeOrgBaseService.treeSearch(name, treeType);
+        } else if (ManagerLevelEnum.SYSTEM_MANAGER.equals(userInfo.getManagerLevel())
+            || ManagerLevelEnum.SECURITY_MANAGER.equals(userInfo.getManagerLevel())) {
+            treeList = compositeOrgBaseService.treeSearch4DeptManager(name, treeType);
+        }
+        return Y9Result.success(OrgTreeNodeVO.convertY9OrgBaseList(treeList), "获取机构树成功！");
     }
 
 }

@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import lombok.RequiredArgsConstructor;
 
+import net.risesoft.controller.resource.vo.SystemTreeNodeVO;
 import net.risesoft.log.OperationTypeEnum;
 import net.risesoft.log.annotation.RiseLog;
 import net.risesoft.pojo.Y9Result;
@@ -95,7 +96,8 @@ public class SystemController {
      */
     @RiseLog(operationName = "获取系统列表")
     @GetMapping(value = "/list")
-    public Y9Result<List<Y9System>> listAll() {
+    @Deprecated
+    public Y9Result<List<Y9System>> list() {
         return Y9Result.success(y9SystemService.listAll(), "获取系统列表成功");
     }
 
@@ -137,5 +139,16 @@ public class SystemController {
     public Y9Result<String> saveOrder(@RequestParam String[] systemIds) {
         y9SystemService.saveOrder(systemIds);
         return Y9Result.success(null, "系统排序成功！");
+    }
+
+    /**
+     * 获取系统列表
+     *
+     * @return
+     */
+    @RiseLog(operationName = "获取系统列表")
+    @GetMapping(value = "/list2")
+    public Y9Result<List<SystemTreeNodeVO>> list2() {
+        return Y9Result.success(SystemTreeNodeVO.convertY9SystemList(y9SystemService.listAll()), "获取系统列表成功");
     }
 }
