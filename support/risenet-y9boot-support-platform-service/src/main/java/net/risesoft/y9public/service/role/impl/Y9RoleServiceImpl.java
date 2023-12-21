@@ -307,6 +307,17 @@ public class Y9RoleServiceImpl implements Y9RoleService {
     }
 
     @Override
+    public List<Y9Role> treeSearch(String name, String parentId) {
+        List<Y9Role> roleNodeList = y9RoleRepository.findByParentIdAndNameContainingOrderByTabIndexAsc(parentId, name);
+        List<Y9Role> returnList = new ArrayList<>();
+        returnList.addAll(roleNodeList);
+        for (Y9Role role : roleNodeList) {
+            recursionUpToTop(role.getParentId(), returnList);
+        }
+        return returnList;
+    }
+
+    @Override
     public List<Y9Role> treeSearchByName(String name) {
         List<Y9Role> roleNodeList = y9RoleRepository.findByNameContainingOrderByTabIndexAsc(name);
         List<Y9Role> returnList = new ArrayList<>();

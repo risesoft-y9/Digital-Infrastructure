@@ -181,6 +181,8 @@ public interface Y9RoleService {
      */
     List<Y9Role> searchRole(String whereClause);
 
+    List<Y9Role> treeSearch(String name, String parentId);
+
     /**
      * 根据name查询角色节点
      *
