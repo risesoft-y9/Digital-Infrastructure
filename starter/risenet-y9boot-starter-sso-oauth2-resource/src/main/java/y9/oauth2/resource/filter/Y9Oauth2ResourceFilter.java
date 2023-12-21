@@ -223,7 +223,7 @@ public class Y9Oauth2ResourceFilter implements Filter {
             end = System.nanoTime();
             elapsedTime = end - start;
             String y9aoplog = response.getHeader("y9aoplog");
-            if (!"true".equals(y9aoplog)) {
+            if (!"true".equals(y9aoplog) && saveLogMessage) {
                 remoteSaveLog(url, userInfo, hostIp, elapsedTime, success, errorMessage, throwable, userAgent);
             }
         }
@@ -318,13 +318,14 @@ public class Y9Oauth2ResourceFilter implements Filter {
                     // log.setOperateType("url");
                     log.setUserAgent(userAgent);
                     log.setSystemName(this.systemName);
-                    log.setUserId(userInfo.getParentId());
-                    log.setUserName(userInfo.getLoginName());
-                    log.setTenantId(userInfo.getTenantId());
-                    log.setTenantName(userInfo.getTenantName());
-                    log.setGuidPath(userInfo.getGuidPath());
-                    log.setManagerLevel(String.valueOf(userInfo.getManagerLevel().getValue()));
-
+                    if (userInfo != null) {
+                        log.setUserId(userInfo.getParentId());
+                        log.setUserName(userInfo.getLoginName());
+                        log.setTenantId(userInfo.getTenantId());
+                        log.setTenantName(userInfo.getTenantName());
+                        log.setGuidPath(userInfo.getGuidPath());
+                        log.setManagerLevel(String.valueOf(userInfo.getManagerLevel().getValue()));
+                    }
                     String jsonString = Y9JsonUtil.writeValueAsString(log);
                     this.y9KafkaTemplate.send(Y9TopicConst.Y9_ACCESSLOG_MESSAGE, jsonString);
                 }
