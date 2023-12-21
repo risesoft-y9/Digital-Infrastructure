@@ -3,6 +3,7 @@ package y9.autoconfiguration;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
 
+import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.cloud.openfeign.EnableFeignClients;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -30,6 +31,7 @@ import feign.codec.ErrorDecoder;
 public class Y9PlatformFeignConfiguration implements RequestInterceptor {
 
     @Bean
+    @ConditionalOnMissingBean(name = "errorDecoder")
     public ErrorDecoder errorDecoder(ObjectMapper objectMapper) {
         return new Y9ErrorDecoder(objectMapper);
     }
