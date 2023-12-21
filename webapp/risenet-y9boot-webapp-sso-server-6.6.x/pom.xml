@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0"
-         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+<project xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xmlns="http://maven.apache.org/POM/4.0.0"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd ">
 
     <modelVersion>4.0.0</modelVersion>
@@ -359,6 +359,19 @@
         <dependency>
             <groupId>org.springframework.kafka</groupId>
             <artifactId>spring-kafka</artifactId>
+        </dependency>
+
+        <!-- 人大金仓数据库 -->
+        <dependency>
+            <groupId>cn.com.kingbase</groupId>
+            <artifactId>kingbase8</artifactId>
+            <version>8.6.0</version>
+        </dependency>
+
+        <dependency>
+            <groupId>cn.com.kingbase</groupId>
+            <artifactId>KesDialect-for-hibernate4</artifactId>
+            <version>1.0.0</version>
         </dependency>
     </dependencies>
 
