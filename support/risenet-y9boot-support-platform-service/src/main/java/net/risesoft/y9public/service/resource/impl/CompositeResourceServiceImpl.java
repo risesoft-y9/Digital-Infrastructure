@@ -126,8 +126,8 @@ public class CompositeResourceServiceImpl implements CompositeResourceService {
     }
 
     @Override
-    public List<Y9ResourceBase> listRootResourceList() {
-        return new ArrayList<>(y9AppRepository.findAll(Sort.by("systemId", "tabIndex")));
+    public List<Y9App> listRootResourceList() {
+        return y9AppRepository.findAll(Sort.by("systemId", "tabIndex"));
     }
 
     private void recursionUpToRoot(Y9ResourceBase y9ResourceBase, List<Y9ResourceBase> returnList) {

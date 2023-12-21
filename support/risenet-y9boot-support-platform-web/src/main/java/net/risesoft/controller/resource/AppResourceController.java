@@ -47,7 +47,6 @@ public class AppResourceController {
     private final Y9AppService y9AppService;
     private final Y9TenantAppService y9TenantAppService;
     private final Y9TenantSystemService y9TenantSystemService;
-    private final Y9PublishService y9PublishService;
 
     /**
      * 批量删除应用
