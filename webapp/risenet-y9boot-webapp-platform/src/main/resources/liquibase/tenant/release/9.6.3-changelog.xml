@@ -18,7 +18,10 @@
                               validate="true"/>
     </changeSet>
 
-    <changeSet id="1702001405827-1" author="shidaobang">
+    <changeSet id="1702001405827-1" author="shidaobang" runOnChange="true">
+        <preConditions onFail="MARK_RAN">
+            <columnExists tableName="Y9_ORG_POSITION" columnName="DUTY"/>
+        </preConditions>
         <dropColumn columnName="DUTY" tableName="Y9_ORG_POSITION"/>
 
         <dropColumn columnName="DUTY_LEVEL" tableName="Y9_ORG_POSITION"/>
@@ -26,6 +29,13 @@
         <dropColumn columnName="DUTY_LEVEL_NAME" tableName="Y9_ORG_POSITION"/>
 
         <dropColumn columnName="DUTY_TYPE" tableName="Y9_ORG_POSITION"/>
+    </changeSet>
+    <changeSet id="1702001405827-1-1" author="shidaobang" runOnChange="true">
+        <preConditions onFail="MARK_RAN">
+            <not>
+                <columnExists tableName="Y9_ORG_POSITION" columnName="JOB_NAME"/>
+            </not>
+        </preConditions>
 
         <addColumn tableName="Y9_ORG_POSITION">
             <column name="JOB_NAME" remarks="职位名称" type="VARCHAR(255 BYTE)">
@@ -177,8 +187,11 @@
                       columnDataType="VARCHAR(38)"/>
         <addPrimaryKey tableName="Y9_ORG_POSITIONS_ROLES" columnNames="ID"/>
     </changeSet>
-    
-    <changeSet id="1702981170000-1" author="shidaobang">
+
+    <changeSet id="1702981170000-1" author="shidaobang" runOnChange="true">
+        <preConditions onFail="MARK_RAN">
+            <columnExists tableName="Y9_ORG_MANAGER" columnName="PWD_CYCLE"/>
+        </preConditions>
         <dropColumn tableName="Y9_ORG_MANAGER" columnName="PWD_CYCLE"/>
         <dropColumn tableName="Y9_ORG_MANAGER" columnName="CHECK_CYCLE"/>
         <dropColumn tableName="Y9_ORG_MANAGER" columnName="CHECK_TIME"/>
