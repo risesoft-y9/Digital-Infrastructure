@@ -6,6 +6,7 @@ import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotEmpty;
 
 import org.springframework.data.domain.Page;
+import org.springframework.http.MediaType;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -17,13 +18,14 @@ import org.springframework.web.bind.annotation.RestController;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
+import net.risesoft.enums.platform.ManagerLevelEnum;
 import net.risesoft.log.OperationTypeEnum;
 import net.risesoft.log.annotation.RiseLog;
+import net.risesoft.permission.annotation.IsManager;
 import net.risesoft.pojo.Y9Page;
 import net.risesoft.pojo.Y9PageQuery;
 import net.risesoft.pojo.Y9Result;
 import net.risesoft.y9.Y9LoginUserHolder;
-import net.risesoft.y9.pubsub.Y9PublishService;
 import net.risesoft.y9public.entity.resource.Y9App;
 import net.risesoft.y9public.service.resource.Y9AppService;
 import net.risesoft.y9public.service.tenant.Y9TenantAppService;
@@ -39,9 +41,10 @@ import net.risesoft.y9public.service.tenant.Y9TenantSystemService;
  */
 @Validated
 @RestController
-@RequestMapping(value = "/api/rest/resource/app", produces = "application/json")
+@RequestMapping(value = "/api/rest/resource/app", produces = MediaType.APPLICATION_JSON_VALUE)
 @Slf4j
 @RequiredArgsConstructor
+@IsManager({ManagerLevelEnum.SYSTEM_MANAGER, ManagerLevelEnum.OPERATION_SYSTEM_MANAGER})
 public class AppResourceController {
 
     private final Y9AppService y9AppService;
@@ -93,6 +96,7 @@ public class AppResourceController {
      */
     @RiseLog(operationName = "根据应用id获取应用详情")
     @GetMapping(value = "/{id}")
+    @IsManager({ManagerLevelEnum.SYSTEM_MANAGER, ManagerLevelEnum.SECURITY_MANAGER, ManagerLevelEnum.OPERATION_SYSTEM_MANAGER})
     public Y9Result<Y9App> getById(@PathVariable @NotBlank String id) {
         return Y9Result.success(y9AppService.getById(id), "成功获取应用详情");
     }

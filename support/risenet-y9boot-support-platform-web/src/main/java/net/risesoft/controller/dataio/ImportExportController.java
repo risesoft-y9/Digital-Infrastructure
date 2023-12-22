@@ -12,6 +12,7 @@ import javax.servlet.http.HttpServletResponse;
 import javax.validation.constraints.NotBlank;
 
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.http.MediaType;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -26,8 +27,10 @@ import net.risesoft.dataio.system.Y9SystemDataHandler;
 import net.risesoft.dataio.system.model.Y9AppExportModel;
 import net.risesoft.dataio.system.model.Y9SystemExportModel;
 import net.risesoft.entity.Y9OrgBase;
+import net.risesoft.enums.platform.ManagerLevelEnum;
 import net.risesoft.log.OperationTypeEnum;
 import net.risesoft.log.annotation.RiseLog;
+import net.risesoft.permission.annotation.IsManager;
 import net.risesoft.pojo.Y9Result;
 import net.risesoft.service.org.CompositeOrgBaseService;
 import net.risesoft.y9.json.Y9JsonUtil;
@@ -47,9 +50,10 @@ import net.risesoft.y9public.service.resource.Y9SystemService;
  * @date 2022/2/14
  */
 @RestController
-@RequestMapping(value = "/api/rest/impExp", produces = "application/json")
+@RequestMapping(value = "/api/rest/impExp", produces = MediaType.APPLICATION_JSON_VALUE)
 @Slf4j
 @Validated
+@IsManager({ManagerLevelEnum.SYSTEM_MANAGER, ManagerLevelEnum.OPERATION_SYSTEM_MANAGER})
 public class ImportExportController {
 
     private final Y9OrgTreeDataHandler y9OrgTreeExcelDataHandler;

@@ -1,11 +1,11 @@
 package net.risesoft.controller.manager;
 
-import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -29,7 +29,7 @@ import net.risesoft.y9.Y9LoginUserHolder;
  * @date 2022/2/14
  */
 @RestController
-@RequestMapping(value = "/api/rest/info", produces = "application/json")
+@RequestMapping(value = "/api/rest/info", produces = MediaType.APPLICATION_JSON_VALUE)
 @Slf4j
 @RequiredArgsConstructor
 public class InfoController {

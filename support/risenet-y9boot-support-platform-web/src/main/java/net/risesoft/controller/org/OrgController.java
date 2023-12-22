@@ -8,6 +8,7 @@ import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotEmpty;
 
 import org.apache.commons.lang3.StringUtils;
+import org.springframework.http.MediaType;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -28,6 +29,7 @@ import net.risesoft.log.OperationTypeEnum;
 import net.risesoft.log.annotation.RiseLog;
 import net.risesoft.model.platform.Organization;
 import net.risesoft.model.user.UserInfo;
+import net.risesoft.permission.annotation.IsManager;
 import net.risesoft.pojo.Y9Result;
 import net.risesoft.service.org.CompositeOrgBaseService;
 import net.risesoft.service.org.Y9DepartmentService;
@@ -46,8 +48,9 @@ import net.risesoft.y9.util.Y9ModelConvertUtil;
  */
 @Validated
 @RestController
-@RequestMapping(value = "/api/rest/org", produces = "application/json")
+@RequestMapping(value = "/api/rest/org", produces = MediaType.APPLICATION_JSON_VALUE)
 @RequiredArgsConstructor
+@IsManager(ManagerLevelEnum.SYSTEM_MANAGER)
 public class OrgController {
 
     private final Y9DepartmentService y9DepartmentService;
@@ -119,6 +122,7 @@ public class OrgController {
     @RiseLog(operationName = "获取机构树子节点")
     @RequestMapping(value = "/getTree")
     @Deprecated
+    @IsManager({ManagerLevelEnum.SYSTEM_MANAGER, ManagerLevelEnum.SECURITY_MANAGER})
     public Y9Result<List<Y9OrgBase>> getTree(@RequestParam @NotBlank String id, @RequestParam TreeTypeEnum treeType,
         boolean disabled) {
         UserInfo userInfo = Y9LoginUserHolder.getUserInfo();
@@ -140,6 +144,7 @@ public class OrgController {
     @RiseLog(operationName = "获取组织架构列表")
     @RequestMapping(value = "/list")
     @Deprecated
+    @IsManager({ManagerLevelEnum.SYSTEM_MANAGER, ManagerLevelEnum.SECURITY_MANAGER})
     public Y9Result<List<Organization>> list(@RequestParam(required = false) boolean virtual) {
         if (Y9LoginUserHolder.getUserInfo().isGlobalManager()) {
             return Y9Result.success(Y9ModelConvertUtil.convert(y9OrganizationService.list(virtual), Organization.class),
@@ -160,6 +165,7 @@ public class OrgController {
      * @param orgId 组织机构id
      * @return
      */
+    @IsManager({ManagerLevelEnum.SYSTEM_MANAGER, ManagerLevelEnum.SECURITY_MANAGER})
     @RiseLog(operationName = "删除机构", operationType = OperationTypeEnum.DELETE)
     @PostMapping(value = "/remove")
     public Y9Result<String> remove(@RequestParam @NotBlank String orgId) {
@@ -235,6 +241,7 @@ public class OrgController {
     @RiseLog(operationName = "查询机构主体")
     @RequestMapping(value = "/treeSearch")
     @Deprecated
+    @IsManager({ManagerLevelEnum.SYSTEM_MANAGER, ManagerLevelEnum.SECURITY_MANAGER})
     public Y9Result<List<Y9OrgBase>> treeSearch(@RequestParam String name, @RequestParam TreeTypeEnum treeType) {
         UserInfo userInfo = Y9LoginUserHolder.getUserInfo();
         List<Y9OrgBase> treeList = new ArrayList<>();
@@ -255,6 +262,7 @@ public class OrgController {
      */
     @RiseLog(operationName = "获取组织架构列表")
     @GetMapping(value = "/list2")
+    @IsManager({ManagerLevelEnum.SYSTEM_MANAGER, ManagerLevelEnum.SECURITY_MANAGER})
     public Y9Result<List<OrgTreeNodeVO>> list2(@RequestParam(required = false) boolean virtual) {
         List<Y9Organization> organizationList;
         if (Y9LoginUserHolder.getUserInfo().isGlobalManager()) {
@@ -280,6 +288,7 @@ public class OrgController {
      */
     @RiseLog(operationName = "获取机构树子节点")
     @GetMapping(value = "/getTree2")
+    @IsManager({ManagerLevelEnum.SYSTEM_MANAGER, ManagerLevelEnum.SECURITY_MANAGER})
     public Y9Result<List<OrgTreeNodeVO>> getTree2(@RequestParam @NotBlank String id,
         @RequestParam TreeTypeEnum treeType, boolean disabled) {
         UserInfo userInfo = Y9LoginUserHolder.getUserInfo();
@@ -301,6 +310,7 @@ public class OrgController {
      */
     @RiseLog(operationName = "查询机构主体")
     @GetMapping(value = "/treeSearch2")
+    @IsManager({ManagerLevelEnum.SYSTEM_MANAGER, ManagerLevelEnum.SECURITY_MANAGER})
     public Y9Result<List<OrgTreeNodeVO>> treeSearch2(@RequestParam String name, @RequestParam TreeTypeEnum treeType) {
         UserInfo userInfo = Y9LoginUserHolder.getUserInfo();
         List<Y9OrgBase> treeList = new ArrayList<>();

@@ -2,6 +2,7 @@ package net.risesoft.controller.sync;
 
 import java.util.List;
 
+import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -16,7 +17,6 @@ import net.risesoft.enums.platform.TenantTypeEnum;
 import net.risesoft.log.OperationTypeEnum;
 import net.risesoft.log.annotation.RiseLog;
 import net.risesoft.pojo.Y9Result;
-import net.risesoft.service.dictionary.Y9OptionClassService;
 import net.risesoft.service.init.InitTenantDataService;
 import net.risesoft.service.org.CompositeOrgBaseService;
 import net.risesoft.service.org.Y9ManagerService;
@@ -36,7 +36,7 @@ import net.risesoft.y9public.entity.tenant.Y9Tenant;
  * @date 2022/2/14
  */
 @RestController
-@RequestMapping(value = "/sync", produces = "application/json")
+@RequestMapping(value = "/sync", produces = MediaType.APPLICATION_JSON_VALUE)
 @RequiredArgsConstructor
 public class SyncController {
 
@@ -45,7 +45,6 @@ public class SyncController {
     private final Y9PersonService y9PersonService;
     private final Y9PositionService y9PositionService;
     private final Y9ManagerService y9ManagerService;
-    private final Y9OptionClassService y9OptionClassService;
     private final InitTenantDataService initTenantDataService;
 
     /**

@@ -12,6 +12,7 @@ import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotEmpty;
 
 import org.apache.commons.lang3.StringUtils;
+import org.springframework.http.MediaType;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -25,8 +26,10 @@ import lombok.extern.slf4j.Slf4j;
 import net.risesoft.entity.Y9Person;
 import net.risesoft.entity.Y9PersonExt;
 import net.risesoft.entity.relation.Y9PersonsToPositions;
+import net.risesoft.enums.platform.ManagerLevelEnum;
 import net.risesoft.log.OperationTypeEnum;
 import net.risesoft.log.annotation.RiseLog;
+import net.risesoft.permission.annotation.IsManager;
 import net.risesoft.pojo.Y9Result;
 import net.risesoft.service.org.Y9PersonExtService;
 import net.risesoft.service.org.Y9PersonService;
@@ -46,9 +49,10 @@ import cn.hutool.core.util.DesensitizedUtil;
  */
 @Validated
 @RestController
-@RequestMapping(value = "/api/rest/person", produces = "application/json")
+@RequestMapping(value = "/api/rest/person", produces = MediaType.APPLICATION_JSON_VALUE)
 @Slf4j
 @RequiredArgsConstructor
+@IsManager({ManagerLevelEnum.SYSTEM_MANAGER})
 public class PersonController {
 
     private final Y9PersonsToGroupsService y9PersonsToGroupsService;

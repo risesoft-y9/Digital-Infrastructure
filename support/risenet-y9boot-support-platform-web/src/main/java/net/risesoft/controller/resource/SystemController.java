@@ -4,6 +4,7 @@ import java.util.List;
 
 import javax.validation.constraints.NotBlank;
 
+import org.springframework.http.MediaType;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -15,8 +16,10 @@ import org.springframework.web.bind.annotation.RestController;
 import lombok.RequiredArgsConstructor;
 
 import net.risesoft.controller.resource.vo.SystemTreeNodeVO;
+import net.risesoft.enums.platform.ManagerLevelEnum;
 import net.risesoft.log.OperationTypeEnum;
 import net.risesoft.log.annotation.RiseLog;
+import net.risesoft.permission.annotation.IsManager;
 import net.risesoft.pojo.Y9Result;
 import net.risesoft.y9.Y9LoginUserHolder;
 import net.risesoft.y9public.entity.resource.Y9System;
@@ -32,8 +35,9 @@ import net.risesoft.y9public.service.tenant.Y9TenantSystemService;
  */
 @Validated
 @RestController
-@RequestMapping(value = "/api/rest/system", produces = "application/json")
+@RequestMapping(value = "/api/rest/system", produces = MediaType.APPLICATION_JSON_VALUE)
 @RequiredArgsConstructor
+@IsManager({ManagerLevelEnum.SYSTEM_MANAGER, ManagerLevelEnum.OPERATION_SYSTEM_MANAGER})
 public class SystemController {
 
     private final Y9SystemService y9SystemService;

@@ -3,6 +3,7 @@ package net.risesoft.config;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.boot.web.servlet.FilterRegistrationBean;
 import org.springframework.boot.web.servlet.filter.OrderedRequestContextFilter;
@@ -72,6 +73,7 @@ public class WebMvcConfig implements WebMvcConfigurer {
     }
 
     @Bean
+    @ConditionalOnMissingBean
     public Y9Context y9Context() {
         return new Y9Context();
     }

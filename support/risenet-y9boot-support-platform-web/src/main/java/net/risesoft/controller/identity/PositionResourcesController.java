@@ -5,6 +5,7 @@ import java.util.List;
 
 import javax.validation.constraints.NotBlank;
 
+import org.springframework.http.MediaType;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -15,6 +16,8 @@ import lombok.RequiredArgsConstructor;
 
 import net.risesoft.controller.identity.vo.ResourcePermissionVO;
 import net.risesoft.entity.identity.position.Y9PositionToResourceAndAuthority;
+import net.risesoft.enums.platform.ManagerLevelEnum;
+import net.risesoft.permission.annotation.IsManager;
 import net.risesoft.pojo.Y9Result;
 import net.risesoft.service.identity.Y9PositionToResourceAndAuthorityService;
 
@@ -27,9 +30,10 @@ import net.risesoft.service.identity.Y9PositionToResourceAndAuthorityService;
  * @date 2022/2/14
  */
 @RestController
-@RequestMapping(value = "/api/rest/positionResources", produces = "application/json")
+@RequestMapping(value = "/api/rest/positionResources", produces = MediaType.APPLICATION_JSON_VALUE)
 @RequiredArgsConstructor
 @Validated
+@IsManager(ManagerLevelEnum.SYSTEM_MANAGER)
 public class PositionResourcesController {
 
     private final Y9PositionToResourceAndAuthorityService y9PositionToResourceAndAuthorityService;

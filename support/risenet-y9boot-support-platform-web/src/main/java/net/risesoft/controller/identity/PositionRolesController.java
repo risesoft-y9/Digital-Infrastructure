@@ -5,6 +5,7 @@ import java.util.List;
 
 import javax.validation.constraints.NotBlank;
 
+import org.springframework.http.MediaType;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -15,6 +16,8 @@ import lombok.RequiredArgsConstructor;
 
 import net.risesoft.controller.identity.vo.RolePermissionVO;
 import net.risesoft.entity.identity.position.Y9PositionToRole;
+import net.risesoft.enums.platform.ManagerLevelEnum;
+import net.risesoft.permission.annotation.IsManager;
 import net.risesoft.pojo.Y9Result;
 import net.risesoft.service.identity.Y9PositionToRoleService;
 
@@ -27,9 +30,10 @@ import net.risesoft.service.identity.Y9PositionToRoleService;
  * @date 2022/2/14
  */
 @RestController
-@RequestMapping(value = "/api/rest/positionRoles", produces = "application/json")
+@RequestMapping(value = "/api/rest/positionRoles", produces = MediaType.APPLICATION_JSON_VALUE)
 @RequiredArgsConstructor
 @Validated
+@IsManager(ManagerLevelEnum.SYSTEM_MANAGER)
 public class PositionRolesController {
 
     private final RolePermissionVOBuilder rolePermissionVOBuilder;
