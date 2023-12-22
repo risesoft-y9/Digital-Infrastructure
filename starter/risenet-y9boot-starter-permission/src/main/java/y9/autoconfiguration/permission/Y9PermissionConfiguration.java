@@ -14,15 +14,11 @@ import net.risesoft.api.permission.PositionRoleApi;
 import net.risesoft.permission.aop.advice.HasAuthoritiesAdvice;
 import net.risesoft.permission.aop.advice.HasPositionsAdvice;
 import net.risesoft.permission.aop.advice.HasRolesAdvice;
-import net.risesoft.permission.aop.advice.IsAuditManagerAdvice;
-import net.risesoft.permission.aop.advice.IsSecurityManagerAdvice;
-import net.risesoft.permission.aop.advice.IsSystemManagerAdvice;
+import net.risesoft.permission.aop.advice.IsManagerAdvice;
 import net.risesoft.permission.aop.advisor.HasAuthoritiesAdvisor;
 import net.risesoft.permission.aop.advisor.HasPositionsAdvisor;
 import net.risesoft.permission.aop.advisor.HasRolesAdvisor;
-import net.risesoft.permission.aop.advisor.IsAuditManagerAdvisor;
-import net.risesoft.permission.aop.advisor.IsSecurityManagerAdvisor;
-import net.risesoft.permission.aop.advisor.IsSystemManagerAdvisor;
+import net.risesoft.permission.aop.advisor.IsManagerAdvisor;
 import net.risesoft.y9.Y9Context;
 
 @Configuration
@@ -88,47 +84,16 @@ public class Y9PermissionConfiguration {
     }
 
     @Bean
-    @ConditionalOnMissingBean(IsAuditManagerAdvice.class)
-    public IsAuditManagerAdvice isAuditManagerAdvice() {
-        IsAuditManagerAdvice bean = new IsAuditManagerAdvice();
-        return bean;
+    @ConditionalOnMissingBean(IsManagerAdvice.class)
+    public IsManagerAdvice isManagerAdvice() {
+        return new IsManagerAdvice();
     }
 
     @Bean
-    @ConditionalOnMissingBean(IsAuditManagerAdvisor.class)
-    public IsAuditManagerAdvisor isAuditManagerAdvisor(IsAuditManagerAdvice isAuditManagerAdvice) {
-        IsAuditManagerAdvisor bean = new IsAuditManagerAdvisor();
-        bean.setAdvice(isAuditManagerAdvice);
-        return bean;
-    }
-
-    @Bean
-    @ConditionalOnMissingBean(IsSecurityManagerAdvice.class)
-    public IsSecurityManagerAdvice isSecurityManagerAdvice() {
-        IsSecurityManagerAdvice bean = new IsSecurityManagerAdvice();
-        return bean;
-    }
-
-    @Bean
-    @ConditionalOnMissingBean(IsSecurityManagerAdvisor.class)
-    public IsSecurityManagerAdvisor isSecurityManagerAdvisor(IsSecurityManagerAdvice isSecurityManagerAdvice) {
-        IsSecurityManagerAdvisor bean = new IsSecurityManagerAdvisor();
-        bean.setAdvice(isSecurityManagerAdvice);
-        return bean;
-    }
-
-    @Bean
-    @ConditionalOnMissingBean(IsSystemManagerAdvice.class)
-    public IsSystemManagerAdvice isSystemManagerAdvice() {
-        IsSystemManagerAdvice bean = new IsSystemManagerAdvice();
-        return bean;
-    }
-
-    @Bean
-    @ConditionalOnMissingBean(IsSystemManagerAdvisor.class)
-    public IsSystemManagerAdvisor isSystemManagerAdvisor(IsSystemManagerAdvice isSystemManagerAdvice) {
-        IsSystemManagerAdvisor bean = new IsSystemManagerAdvisor();
-        bean.setAdvice(isSystemManagerAdvice);
+    @ConditionalOnMissingBean(IsManagerAdvisor.class)
+    public IsManagerAdvisor isManagerAdvisor(IsManagerAdvice isManagerAdvice) {
+        IsManagerAdvisor bean = new IsManagerAdvisor();
+        bean.setAdvice(isManagerAdvice);
         return bean;
     }
 

@@ -11,6 +11,11 @@ import lombok.extern.slf4j.Slf4j;
 
 import net.risesoft.permission.annotation.HasAuthorities;
 
+/**
+ *
+ * @author shidaobang
+ * @date 2022/11/11
+ */
 @Slf4j
 public class HasAuthoritiesAdvisor extends StaticMethodMatcherPointcutAdvisor {
     private static final long serialVersionUID = 1790605582584464487L;

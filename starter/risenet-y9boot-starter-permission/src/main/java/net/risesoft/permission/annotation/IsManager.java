@@ -1,5 +1,7 @@
 package net.risesoft.permission.annotation;
 
+import net.risesoft.enums.platform.ManagerLevelEnum;
+
 import java.lang.annotation.Documented;
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
@@ -7,19 +9,25 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 /**
- * 是否为审计管理员 只有当前登录用户为审计管理员，方法才能继续调用
- * 
+ * 是否为管理员 <br/>
+ * 可用在方法及类上，方法上的注解优先于类上的
+ *
  * @author shidaobang
- * @date 2022/11/11
+ * @date 2023/12/21
  */
 @Documented
 @Target({ElementType.TYPE, ElementType.METHOD})
 @Retention(RetentionPolicy.RUNTIME)
-public @interface IsAuditManager {
+public @interface IsManager {
 
     /**
-     * 部门级三员中的审计管理员
+     * 管理员类型
      */
-    boolean departmental() default false;
+    ManagerLevelEnum[] value() default {};
+
+    /**
+     * 必须为全局的管理员
+     */
+    boolean globalOnly() default false;
 
 }
