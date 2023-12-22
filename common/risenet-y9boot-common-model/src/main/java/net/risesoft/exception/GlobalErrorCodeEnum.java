@@ -49,6 +49,8 @@ public enum GlobalErrorCodeEnum implements ErrorCode {
     PERSON_NOT_HAS_ROLE(PERMISSION_MODULE_CODE, 20, "当前用户没有拥有角色[{}]"),
     /** 当前岗位没有拥有角色[{}] */
     POSITION_NOT_HAS_ROLE(PERMISSION_MODULE_CODE, 21, "当前岗位没有拥有角色[{}]"),
+    /** 当前岗位没有拥有角色[{}] */
+    NOT_MANAGER(PERMISSION_MODULE_CODE, 22, "当前用户不是[{}]"),
     /** 当前用户没有被授权资源[{}] */
     PERSON_UNAUTHORIZED_RESOURCE(PERMISSION_MODULE_CODE, 30, "当前用户没有被授权资源[{}]"),
     /** 当前岗位没有被授权资源[{}] */
