@@ -9,12 +9,7 @@ import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-import net.risesoft.controller.role.vo.RoleTreeNodeVO;
-import net.risesoft.enums.platform.ManagerLevelEnum;
-import net.risesoft.model.user.UserInfo;
-import net.risesoft.y9.Y9LoginUserHolder;
-import net.risesoft.y9public.service.resource.CompositeResourceService;
-import net.risesoft.y9public.service.tenant.Y9TenantAppService;
+import org.springframework.http.MediaType;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -26,18 +21,25 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
 import net.risesoft.consts.InitDataConsts;
+import net.risesoft.controller.role.vo.RoleTreeNodeVO;
 import net.risesoft.controller.role.vo.RoleVO;
+import net.risesoft.enums.platform.ManagerLevelEnum;
 import net.risesoft.enums.platform.RoleTypeEnum;
 import net.risesoft.log.OperationTypeEnum;
 import net.risesoft.log.annotation.RiseLog;
+import net.risesoft.model.user.UserInfo;
+import net.risesoft.permission.annotation.IsManager;
 import net.risesoft.pojo.Y9Result;
+import net.risesoft.y9.Y9LoginUserHolder;
 import net.risesoft.y9.util.Y9ModelConvertUtil;
 import net.risesoft.y9public.entity.resource.Y9App;
 import net.risesoft.y9public.entity.resource.Y9System;
 import net.risesoft.y9public.entity.role.Y9Role;
+import net.risesoft.y9public.service.resource.CompositeResourceService;
 import net.risesoft.y9public.service.resource.Y9AppService;
 import net.risesoft.y9public.service.resource.Y9SystemService;
 import net.risesoft.y9public.service.role.Y9RoleService;
+import net.risesoft.y9public.service.tenant.Y9TenantAppService;
 
 /**
  * 角色管理
@@ -48,10 +50,12 @@ import net.risesoft.y9public.service.role.Y9RoleService;
  * @date 2022/2/14
  */
 @RestController
-@RequestMapping(value = "/api/rest/role", produces = "application/json")
+@RequestMapping(value = "/api/rest/role", produces = MediaType.APPLICATION_JSON_VALUE)
 @Slf4j
 @RequiredArgsConstructor
 @Validated
+@IsManager({ManagerLevelEnum.SYSTEM_MANAGER, ManagerLevelEnum.SECURITY_MANAGER,
+    ManagerLevelEnum.OPERATION_SYSTEM_MANAGER})
 public class RoleController {
 
     private final Y9RoleService y9RoleService;

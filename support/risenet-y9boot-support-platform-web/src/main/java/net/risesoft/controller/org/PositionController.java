@@ -5,6 +5,7 @@ import jakarta.validation.constraints.NotEmpty;
 
 import java.util.List;
 
+import org.springframework.http.MediaType;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -15,8 +16,10 @@ import lombok.RequiredArgsConstructor;
 
 import net.risesoft.entity.Y9Position;
 import net.risesoft.entity.relation.Y9PersonsToPositions;
+import net.risesoft.enums.platform.ManagerLevelEnum;
 import net.risesoft.log.OperationTypeEnum;
 import net.risesoft.log.annotation.RiseLog;
+import net.risesoft.permission.annotation.IsManager;
 import net.risesoft.pojo.Y9Result;
 import net.risesoft.service.org.Y9PositionService;
 import net.risesoft.service.relation.Y9PersonsToPositionsService;
@@ -31,8 +34,9 @@ import net.risesoft.service.relation.Y9PersonsToPositionsService;
  */
 @Validated
 @RestController
-@RequestMapping(value = "/api/rest/position", produces = "application/json")
+@RequestMapping(value = "/api/rest/position", produces = MediaType.APPLICATION_JSON_VALUE)
 @RequiredArgsConstructor
+@IsManager({ManagerLevelEnum.SYSTEM_MANAGER})
 public class PositionController {
 
     private final Y9PersonsToPositionsService y9PersonsToPositionsService;

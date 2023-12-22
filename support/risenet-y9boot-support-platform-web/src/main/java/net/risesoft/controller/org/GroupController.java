@@ -5,6 +5,7 @@ import jakarta.validation.constraints.NotEmpty;
 
 import java.util.List;
 
+import org.springframework.http.MediaType;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -14,8 +15,10 @@ import org.springframework.web.bind.annotation.RestController;
 import lombok.RequiredArgsConstructor;
 
 import net.risesoft.entity.Y9Group;
+import net.risesoft.enums.platform.ManagerLevelEnum;
 import net.risesoft.log.OperationTypeEnum;
 import net.risesoft.log.annotation.RiseLog;
+import net.risesoft.permission.annotation.IsManager;
 import net.risesoft.pojo.Y9Result;
 import net.risesoft.service.org.Y9GroupService;
 import net.risesoft.service.relation.Y9PersonsToGroupsService;
@@ -30,8 +33,9 @@ import net.risesoft.service.relation.Y9PersonsToGroupsService;
  */
 @Validated
 @RestController
-@RequestMapping(value = "/api/rest/group", produces = "application/json")
+@RequestMapping(value = "/api/rest/group", produces = MediaType.APPLICATION_JSON_VALUE)
 @RequiredArgsConstructor
+@IsManager(ManagerLevelEnum.SYSTEM_MANAGER)
 public class GroupController {
 
     private final Y9PersonsToGroupsService y9PersonsToGroupsService;

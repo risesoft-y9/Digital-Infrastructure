@@ -12,7 +12,7 @@ import net.risesoft.api.resource.AppApi;
  * @since 9.6.0
  */
 @FeignClient(contextId = "AppApiClient", name = "y9platform", url = "${y9.common.orgBaseUrl}",
-    path = "/services/rest/v1/app")
+    path = "/services/rest/v1/app", primary = false)
 public interface AppApiClient extends AppApi {
 
 }

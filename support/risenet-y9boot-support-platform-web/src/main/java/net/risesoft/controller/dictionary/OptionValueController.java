@@ -5,6 +5,7 @@ import jakarta.validation.constraints.NotEmpty;
 
 import java.util.List;
 
+import org.springframework.http.MediaType;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -15,8 +16,10 @@ import lombok.RequiredArgsConstructor;
 
 import net.risesoft.consts.OptionClassConsts;
 import net.risesoft.entity.Y9OptionValue;
+import net.risesoft.enums.platform.ManagerLevelEnum;
 import net.risesoft.log.OperationTypeEnum;
 import net.risesoft.log.annotation.RiseLog;
+import net.risesoft.permission.annotation.IsManager;
 import net.risesoft.pojo.Y9Result;
 import net.risesoft.service.dictionary.Y9OptionValueService;
 
@@ -30,8 +33,9 @@ import net.risesoft.service.dictionary.Y9OptionValueService;
  */
 @Validated
 @RestController
-@RequestMapping(value = "/api/rest/optionValue", produces = "application/json")
+@RequestMapping(value = "/api/rest/optionValue", produces = MediaType.APPLICATION_JSON_VALUE)
 @RequiredArgsConstructor
+@IsManager(ManagerLevelEnum.SYSTEM_MANAGER)
 public class OptionValueController {
 
     private final Y9OptionValueService y9OptionValueService;

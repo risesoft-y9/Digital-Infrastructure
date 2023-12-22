@@ -5,6 +5,7 @@ import jakarta.validation.constraints.NotEmpty;
 
 import java.util.List;
 
+import org.springframework.http.MediaType;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -15,9 +16,11 @@ import lombok.RequiredArgsConstructor;
 
 import net.risesoft.entity.Y9Department;
 import net.risesoft.entity.Y9OrgBase;
+import net.risesoft.enums.platform.ManagerLevelEnum;
 import net.risesoft.enums.platform.TreeTypeEnum;
 import net.risesoft.log.OperationTypeEnum;
 import net.risesoft.log.annotation.RiseLog;
+import net.risesoft.permission.annotation.IsManager;
 import net.risesoft.pojo.Y9Result;
 import net.risesoft.service.org.CompositeOrgBaseService;
 import net.risesoft.service.org.Y9DepartmentService;
@@ -32,8 +35,9 @@ import net.risesoft.service.org.Y9DepartmentService;
  */
 @Validated
 @RestController
-@RequestMapping(value = "/api/rest/dept", produces = "application/json")
+@RequestMapping(value = "/api/rest/dept", produces = MediaType.APPLICATION_JSON_VALUE)
 @RequiredArgsConstructor
+@IsManager(ManagerLevelEnum.SYSTEM_MANAGER)
 public class DeptController {
 
     private final CompositeOrgBaseService compositeOrgBaseService;

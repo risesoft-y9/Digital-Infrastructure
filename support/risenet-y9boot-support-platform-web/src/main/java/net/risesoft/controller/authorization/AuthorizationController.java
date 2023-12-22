@@ -9,6 +9,7 @@ import java.util.stream.Collectors;
 
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.data.domain.Page;
+import org.springframework.http.MediaType;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -23,9 +24,11 @@ import net.risesoft.entity.Y9OrgBase;
 import net.risesoft.entity.permission.Y9Authorization;
 import net.risesoft.enums.platform.AuthorityEnum;
 import net.risesoft.enums.platform.AuthorizationPrincipalTypeEnum;
+import net.risesoft.enums.platform.ManagerLevelEnum;
 import net.risesoft.enums.platform.OrgTypeEnum;
 import net.risesoft.log.OperationTypeEnum;
 import net.risesoft.log.annotation.RiseLog;
+import net.risesoft.permission.annotation.IsManager;
 import net.risesoft.pojo.Y9Page;
 import net.risesoft.pojo.Y9Result;
 import net.risesoft.service.authorization.Y9AuthorizationService;
@@ -46,31 +49,16 @@ import net.risesoft.y9public.service.role.Y9RoleService;
  */
 @Validated
 @RestController
-@RequestMapping(value = "/api/rest/authorization", produces = "application/json")
+@RequestMapping(value = "/api/rest/authorization", produces = MediaType.APPLICATION_JSON_VALUE)
 @Slf4j
 @RequiredArgsConstructor
+@IsManager(ManagerLevelEnum.SECURITY_MANAGER)
 public class AuthorizationController {
 
     private final Y9AuthorizationService y9AuthorizationService;
     private final CompositeResourceService compositeResourceService;
     private final CompositeOrgBaseService compositeOrgBaseService;
     private final Y9RoleService y9RoleService;
-
-    /**
-     * 获取角色权限许可对象
-     *
-     * @param roleId 角色id
-     * @param resourceId 资源id
-     * @return
-     */
-    @RiseLog(operationName = "获取角色权限许可对象")
-    @RequestMapping(value = "/get")
-    public Y9Result<Y9Authorization> get(@NotBlank @RequestParam("roleId") String roleId,
-        @NotBlank @RequestParam("resourceId") String resourceId) {
-        Y9Authorization y9Authorization =
-            y9AuthorizationService.listByPrincipalIdAndResourceId(roleId, resourceId).get(0);
-        return Y9Result.success(y9Authorization, "获取角色权限许可对象成功！");
-    }
 
     private AuthorizationVO getAuthorizationVOForOrgBase(Y9Authorization y9Authorization) {
         AuthorizationVO authorizationVO = new AuthorizationVO();

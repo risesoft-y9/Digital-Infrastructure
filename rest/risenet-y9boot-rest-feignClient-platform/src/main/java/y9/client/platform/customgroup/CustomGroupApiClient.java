@@ -22,7 +22,7 @@ import net.risesoft.pojo.Y9PageQuery;
  * @since 9.6.0
  */
 @FeignClient(contextId = "CustomGroupApiClient", name = "y9platform", url = "${y9.common.orgBaseUrl}",
-    path = "/services/rest/v1/customGroup")
+    path = "/services/rest/v1/customGroup", primary = false)
 public interface CustomGroupApiClient extends CustomGroupApi {
 
     @Override

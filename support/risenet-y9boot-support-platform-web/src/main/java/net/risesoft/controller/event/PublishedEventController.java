@@ -4,13 +4,16 @@ import java.util.Date;
 
 import org.springframework.data.domain.Page;
 import org.springframework.format.annotation.DateTimeFormat;
+import org.springframework.http.MediaType;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import lombok.RequiredArgsConstructor;
 
+import net.risesoft.enums.platform.ManagerLevelEnum;
 import net.risesoft.log.annotation.RiseLog;
+import net.risesoft.permission.annotation.IsManager;
 import net.risesoft.pojo.Y9Page;
 import net.risesoft.pojo.Y9PageQuery;
 import net.risesoft.y9.Y9LoginUserHolder;
@@ -26,9 +29,10 @@ import net.risesoft.y9public.service.event.Y9PublishedEventService;
  * @date 2022/2/14
  */
 @RestController
-@RequestMapping(value = "/api/rest/publishedEvent", produces = "application/json")
+@RequestMapping(value = "/api/rest/publishedEvent", produces = MediaType.APPLICATION_JSON_VALUE)
 @RequiredArgsConstructor
 @Validated
+@IsManager(ManagerLevelEnum.OPERATION_SECURITY_MANAGER)
 public class PublishedEventController {
 
     private final Y9PublishedEventService y9PublishedEventService;

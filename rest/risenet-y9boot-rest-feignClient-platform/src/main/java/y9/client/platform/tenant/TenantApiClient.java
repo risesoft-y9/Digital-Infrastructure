@@ -14,7 +14,7 @@ import net.risesoft.api.tenant.TenantApi;
  * @since 9.6.0
  */
 @FeignClient(contextId = "TenantApiClient", name = "y9platform", url = "${y9.common.orgBaseUrl}",
-    path = "/services/rest/v1/tenant")
+    path = "/services/rest/v1/tenant", primary = false)
 public interface TenantApiClient extends TenantApi {
 
 }

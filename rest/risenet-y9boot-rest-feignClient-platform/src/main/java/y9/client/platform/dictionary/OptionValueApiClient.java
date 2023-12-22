@@ -14,7 +14,7 @@ import net.risesoft.api.dictionary.OptionValueApi;
  * @since 9.6.0
  */
 @FeignClient(contextId = "OptionValueApiClient", name = "y9platform", url = "${y9.common.orgBaseUrl}",
-    path = "/services/rest/v1/optionValue")
+    path = "/services/rest/v1/optionValue", primary = false)
 public interface OptionValueApiClient extends OptionValueApi {
 
 }

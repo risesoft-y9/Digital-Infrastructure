@@ -2,6 +2,7 @@ package net.risesoft.controller.sync;
 
 import java.util.List;
 
+import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -32,7 +33,7 @@ import net.risesoft.y9.util.signing.Y9MessageDigest;
  * @date 2022/2/14
  */
 @RestController
-@RequestMapping(value = "/sync", produces = "application/json")
+@RequestMapping(value = "/sync", produces = MediaType.APPLICATION_JSON_VALUE)
 @RequiredArgsConstructor
 public class SyncPassWordController {
 
