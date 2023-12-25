@@ -154,17 +154,6 @@ public class RiseLogAdvice implements MethodInterceptor {
                         log.setManagerLevel(String.valueOf(userInfo.getManagerLevel().getValue()));
                     }
 
-                    try {
-                        Map<String, Y9LogService> beans = Y9Context.getAc().getBeansOfType(Y9LogService.class);
-                        Collection<Y9LogService> logServices = beans.values();
-                        if (!logServices.isEmpty()) {
-                            for (Y9LogService logService : logServices) {
-                                logService.process(invocation, log, request, response);
-                            }
-                        }
-                    } catch (Exception e) {
-                        LOGGER.warn(e.getMessage(), e);
-                    }
                     if (saveLogInfo4Kafka == null) {
                         this.saveLogInfo4Kafka = Y9Context.getBean(SaveLogInfo4Kafka.class);
                     }
