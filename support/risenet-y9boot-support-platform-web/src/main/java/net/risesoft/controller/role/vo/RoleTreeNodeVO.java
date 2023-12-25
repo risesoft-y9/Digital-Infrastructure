@@ -23,6 +23,8 @@ import net.risesoft.y9public.entity.role.Y9Role;
 public class RoleTreeNodeVO extends TreeNodeVO {
     
     private static final long serialVersionUID = -447737996123909425L;
+    
+    private String appId;
 
     @Override
     public TreeTypeEnum getTreeType() {
@@ -34,6 +36,7 @@ public class RoleTreeNodeVO extends TreeNodeVO {
     public static RoleTreeNodeVO convertY9Role(Y9Role y9Role) {
         RoleTreeNodeVO roleTreeNodeVO = new RoleTreeNodeVO();
         roleTreeNodeVO.setId(y9Role.getId());
+        roleTreeNodeVO.setAppId(y9Role.getAppId());
         roleTreeNodeVO.setName(y9Role.getName());
         roleTreeNodeVO.setParentId(y9Role.getParentId());
         roleTreeNodeVO.setTabIndex(y9Role.getTabIndex());
@@ -53,6 +56,7 @@ public class RoleTreeNodeVO extends TreeNodeVO {
     public static RoleTreeNodeVO convertY9App(Y9App y9App) {
         RoleTreeNodeVO roleTreeNodeVO = new RoleTreeNodeVO();
         roleTreeNodeVO.setId(y9App.getId());
+        roleTreeNodeVO.setAppId(y9App.getId());
         roleTreeNodeVO.setName(y9App.getName());
         roleTreeNodeVO.setParentId(null);
         roleTreeNodeVO.setTabIndex(y9App.getTabIndex());
