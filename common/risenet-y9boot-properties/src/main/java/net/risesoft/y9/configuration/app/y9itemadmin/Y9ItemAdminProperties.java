@@ -23,6 +23,8 @@ public class Y9ItemAdminProperties {
 
     private Boolean smsSwitch = false;
 
+    private Boolean msgSwitch = false;// 消息提醒开关
+
     private String formType = "2";
 
     private String tenantId;
