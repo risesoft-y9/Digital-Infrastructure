@@ -3,6 +3,8 @@ package net.risesoft.controller.resource.vo;
 import java.util.ArrayList;
 import java.util.List;
 
+import lombok.Getter;
+import lombok.Setter;
 import net.risesoft.controller.TreeNodeVO;
 import net.risesoft.controller.TreeTypeEnum;
 import net.risesoft.y9public.entity.resource.Y9ResourceBase;
@@ -13,10 +15,14 @@ import net.risesoft.y9public.entity.resource.Y9ResourceBase;
  * @author shidaobang
  * @date 2023/12/21
  */
+@Getter
+@Setter
 public class ResourceTreeNodeVO extends TreeNodeVO {
     
     private static final long serialVersionUID = 6086483154815612739L;
 
+    private String appId;
+    
     @Override
     public TreeTypeEnum getTreeType() {
         return TreeTypeEnum.RESOURCE;
@@ -25,6 +31,7 @@ public class ResourceTreeNodeVO extends TreeNodeVO {
     public static ResourceTreeNodeVO convertY9ResourceBase(Y9ResourceBase y9ResourceBase) {
         ResourceTreeNodeVO resourceTreeNodeVO = new ResourceTreeNodeVO();
         resourceTreeNodeVO.setId(y9ResourceBase.getId());
+        resourceTreeNodeVO.setAppId(y9ResourceBase.getAppId());
         resourceTreeNodeVO.setName(y9ResourceBase.getName());
         resourceTreeNodeVO.setParentId(y9ResourceBase.getParentId());
         resourceTreeNodeVO.setTabIndex(y9ResourceBase.getTabIndex());
