@@ -35,6 +35,9 @@ import net.risesoft.y9.pubsub.event.Y9EntityUpdatedEvent;
 import net.risesoft.y9.util.Y9BeanUtil;
 import net.risesoft.y9.util.signing.Y9MessageDigest;
 
+import cn.hutool.core.date.DateUnit;
+import cn.hutool.core.date.DateUtil;
+
 /**
  * @author dingzhaojun
  * @author qinman
@@ -164,6 +167,14 @@ public class Y9ManagerServiceImpl implements Y9ManagerService {
             String managerDepartmentGuidPath = managerDept.getGuidPath();
             return targetDepartmentGuidPath.contains(managerDepartmentGuidPath);
         }
+    }
+
+    @Override
+    public Boolean isPasswordExpired(String id) {
+        Y9Manager y9Manager = this.getById(id);
+        Date lastModifyPasswordTime = y9Manager.getLastModifyPasswordTime();
+        long daysBetween = DateUtil.between(lastModifyPasswordTime, new Date(), DateUnit.DAY);
+        return daysBetween >= this.getPasswordModifiedCycle(y9Manager.getManagerLevel());
     }
 
     @Override
