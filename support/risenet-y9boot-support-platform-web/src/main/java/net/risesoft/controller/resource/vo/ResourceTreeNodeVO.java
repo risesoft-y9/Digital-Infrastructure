@@ -5,6 +5,7 @@ import java.util.List;
 
 import lombok.Getter;
 import lombok.Setter;
+
 import net.risesoft.controller.TreeNodeVO;
 import net.risesoft.controller.TreeTypeEnum;
 import net.risesoft.y9public.entity.resource.Y9ResourceBase;
@@ -18,15 +19,11 @@ import net.risesoft.y9public.entity.resource.Y9ResourceBase;
 @Getter
 @Setter
 public class ResourceTreeNodeVO extends TreeNodeVO {
-    
-    private static final long serialVersionUID = 6086483154815612739L;
 
+    private static final long serialVersionUID = 6086483154815612739L;
     private String appId;
-    
-    @Override
-    public TreeTypeEnum getTreeType() {
-        return TreeTypeEnum.RESOURCE;
-    }
+    /** 系统id */
+    private String systemId;
 
     public static ResourceTreeNodeVO convertY9ResourceBase(Y9ResourceBase y9ResourceBase) {
         ResourceTreeNodeVO resourceTreeNodeVO = new ResourceTreeNodeVO();
@@ -37,14 +34,21 @@ public class ResourceTreeNodeVO extends TreeNodeVO {
         resourceTreeNodeVO.setTabIndex(y9ResourceBase.getTabIndex());
         resourceTreeNodeVO.setHasChild(true);
         resourceTreeNodeVO.setNodeType(y9ResourceBase.getResourceType().toString());
+        resourceTreeNodeVO.setSystemId(y9ResourceBase.getSystemId());
         return resourceTreeNodeVO;
     }
 
-    public static List<ResourceTreeNodeVO> convertY9ResourceBaseList(List<? extends Y9ResourceBase> y9ResourceBaseList) {
+    public static List<ResourceTreeNodeVO>
+        convertY9ResourceBaseList(List<? extends Y9ResourceBase> y9ResourceBaseList) {
         List<ResourceTreeNodeVO> roleTreeNodeVOList = new ArrayList<>();
         for (Y9ResourceBase y9ResourceBase : y9ResourceBaseList) {
             roleTreeNodeVOList.add(convertY9ResourceBase(y9ResourceBase));
         }
         return roleTreeNodeVOList;
+    }
+
+    @Override
+    public TreeTypeEnum getTreeType() {
+        return TreeTypeEnum.RESOURCE;
     }
 }
