@@ -71,28 +71,6 @@ public class CheckController {
     }
 
     @ResponseBody
-    @GetMapping(value = "/getRandom")
-    public Y9Result<Object> get() {
-        Y9Result<Object> y9result = new Y9Result<>();
-        y9result.setCode(200);
-        y9result.setMsg("获取失败");
-        y9result.setSuccess(false);
-        y9result.setData("");
-        try {
-            String[] rsaArr = RSAUtil.genKeyPair();
-            redisTemplate.opsForValue().set(rsaArr[0], rsaArr[1], 120, TimeUnit.SECONDS);
-            y9result.setCode(200);
-            y9result.setMsg("获取成功：随机字符串有效期为两分钟。");
-            y9result.setSuccess(true);
-            y9result.setData(rsaArr[0]);
-        } catch (Exception e) {
-            y9result.setCode(500);
-            e.printStackTrace();
-        }
-        return y9result;
-    }
-
-    @ResponseBody
     @RequestMapping(value = "/checkSsoLoginInfo", method = RequestMethod.POST)
     public Map<String, Object> checkSsoLoginInfo(final RememberMeUsernamePasswordCredential riseCredential,
         final HttpServletRequest request, final HttpServletResponse response) {
@@ -118,7 +96,7 @@ public class CheckController {
             }
             password = Base64Util.decode(password, "Unicode");
             if (username.contains("&")) {
-                username = username.substring(username.indexOf("&") + 1, username.length());
+                username = username.substring(username.indexOf("&") + 1);
                 tenantShortName = "operation";
             }
             riseCredential.setUsername(username);
@@ -165,6 +143,19 @@ public class CheckController {
             attributesToMigrate.put(key, session.getAttribute(key));
         }
         return attributesToMigrate;
+    }
+
+    @ResponseBody
+    @GetMapping(value = "/getRandom")
+    public Y9Result<Object> getRandom() {
+        try {
+            String[] rsaArr = RSAUtil.genKeyPair();
+            redisTemplate.opsForValue().set(rsaArr[0], rsaArr[1], 120, TimeUnit.SECONDS);
+            return Y9Result.success(rsaArr[0], "获取成功：随机字符串有效期为两分钟。");
+        } catch (Exception e) {
+            e.printStackTrace();
+            return Y9Result.failure("获取失败");
+        }
     }
 
 }

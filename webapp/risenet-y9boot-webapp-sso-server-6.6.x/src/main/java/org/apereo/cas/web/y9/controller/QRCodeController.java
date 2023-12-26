@@ -29,10 +29,9 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 public class QRCodeController {
 
+    private final CasRedisTemplate<Object, Object> redisTemplate;
     @Value("${cas.server.name}")
     private String name;
-
-    private final CasRedisTemplate<Object, Object> redisTemplate;
 
     public QRCodeController(@Qualifier("y9RedisTemplate") CasRedisTemplate<Object, Object> redisTemplate) {
         this.redisTemplate = redisTemplate;
@@ -74,7 +73,7 @@ public class QRCodeController {
             if (null != value) {
                 String val = String.valueOf(value);
                 if (val.contains("$")) {
-                    String valArr[] = val.split("\\$");
+                    String[] valArr = val.split("\\$");
                     map.put("scanResult", valArr[0]);
                     map.put("userId", valArr[1]);
                     map.put("success", true);
@@ -96,14 +95,10 @@ public class QRCodeController {
     @ResponseBody
     @RequestMapping(value = "/saveScanResult")
     public void saveScanResult(String uuid, String userId, HttpServletResponse response) {
-        Y9Result<String> y9result = new Y9Result<String>();
-        y9result.setCode(400);
-        y9result.setMsg("扫码失败");
-        y9result.setSuccess(false);
         try {
             if (StringUtils.isEmpty(uuid) || StringUtils.isEmpty(userId)) {
-                y9result.setMsg("请求参数有问题：uuid或userId不能为空");
-                Y9Util.renderJson(response, Y9JacksonUtil.writeValueAsString(y9result));
+                Y9Util.renderJson(response,
+                    Y9JacksonUtil.writeValueAsString(Y9Result.failure(400, "请求参数有问题：uuid或userId不能为空")));
                 return;
             }
             userId = Y9Base64.decode(userId);
@@ -111,25 +106,19 @@ public class QRCodeController {
             if (null != obj) {
                 String val = String.valueOf(obj);
                 if (val.contains("1$")) {
-                    y9result.setCode(419);
-                    y9result.setMsg("二维码已过期：已被扫描。");
-                    Y9Util.renderJson(response, Y9JacksonUtil.writeValueAsString(y9result));
-                    return;
+                    Y9Util.renderJson(response,
+                        Y9JacksonUtil.writeValueAsString(Y9Result.failure(419, "二维码已过期：已被扫描。")));
                 } else {
                     redisTemplate.opsForValue().set("QRCode:" + uuid, 1 + "$" + userId, 300, TimeUnit.SECONDS);
-                    y9result.setCode(200);
-                    y9result.setMsg("扫码成功");
-                    y9result.setSuccess(true);
+                    Y9Util.renderJson(response, Y9JacksonUtil.writeValueAsString(Y9Result.successMsg("扫码成功")));
                 }
             } else {
-                y9result.setCode(419);
-                y9result.setMsg("二维码已过期：uuid已过期自动清除。");
-                Y9Util.renderJson(response, Y9JacksonUtil.writeValueAsString(y9result));
-                return;
+                Y9Util.renderJson(response,
+                    Y9JacksonUtil.writeValueAsString(Y9Result.failure(419, "二维码已过期：uuid已过期自动清除。")));
             }
         } catch (Exception e) {
             LOGGER.warn(e.getMessage(), e);
         }
-        Y9Util.renderJson(response, Y9JacksonUtil.writeValueAsString(y9result));
+
     }
 }

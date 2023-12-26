@@ -26,53 +26,37 @@ public class RedisController {
     }
 
     @PostMapping(value = "/delete")
-    public Y9Result<String> delete(String key, HttpServletRequest request) {
-        Y9Result<String> y9result = new Y9Result<String>();
-        y9result.setCode(200);
-        y9result.setMsg("删除失败");
-        y9result.setSuccess(false);
+    public Y9Result<Boolean> delete(String key, HttpServletRequest request) {
         try {
             if (StringUtils.isEmpty(key)) {
-                y9result.setMsg("删除失败：key不能为空。");
-                return y9result;
+                return Y9Result.failure("删除失败：key不能为空。");
             }
             key = "y9vue_client_session:" + getIpAddr(request) + ":" + request.getHeader("User-Agent") + key;
             boolean b = redisTemplate.delete(key);
-            y9result.setCode(200);
-            y9result.setMsg("删除成功");
-            y9result.setSuccess(b);
+            return Y9Result.success(b, "删除成功");
         } catch (Exception e) {
-            y9result.setCode(500);
             LOGGER.warn(e.getMessage(), e);
+            return Y9Result.failure("删除失败");
         }
-        return y9result;
     }
 
     @PostMapping(value = "/get")
     public Y9Result<Object> get(String key, HttpServletRequest request) {
-        Y9Result<Object> y9result = new Y9Result<>();
-        y9result.setCode(200);
-        y9result.setMsg("获取失败");
-        y9result.setSuccess(false);
-        y9result.setData("");
         try {
             if (StringUtils.isEmpty(key)) {
-                y9result.setMsg("获取失败：key不能为空。");
-                return y9result;
+                return Y9Result.failure("获取失败：key不能为空。");
             }
             key = "y9vue_client_session:" + getIpAddr(request) + ":" + request.getHeader("User-Agent") + key;
             Object value = redisTemplate.opsForValue().get(key);
             if (null != value) {
-                y9result.setCode(200);
-                y9result.setMsg("获取成功");
-                y9result.setSuccess(true);
-                y9result.setData(value);
+                return Y9Result.success(value, "获取成功");
+            } else {
+                return Y9Result.failure("获取失败,未找到值");
             }
         } catch (Exception e) {
-            y9result.setCode(500);
             LOGGER.warn(e.getMessage(), e);
+            return Y9Result.failure("获取失败," + e.getMessage());
         }
-        return y9result;
     }
 
     private String getIpAddr(HttpServletRequest request) {
@@ -98,14 +82,9 @@ public class RedisController {
 
     @PostMapping(value = "/refresh")
     public Y9Result<String> refresh(String key, Long timeout, HttpServletRequest request) {
-        Y9Result<String> y9result = new Y9Result<String>();
-        y9result.setCode(200);
-        y9result.setMsg("刷新失败");
-        y9result.setSuccess(false);
         try {
             if (StringUtils.isEmpty(key)) {
-                y9result.setMsg("刷新失败：key不能为空");
-                return y9result;
+                return Y9Result.failure("刷新失败：key不能为空。");
             }
             key = "y9vue_client_session:" + getIpAddr(request) + ":" + request.getHeader("User-Agent") + key;
             Object obj = redisTemplate.opsForValue().get(key);
@@ -116,45 +95,32 @@ public class RedisController {
                 redisTemplate.opsForValue().set(
                     "y9vue_client_session:" + getIpAddr(request) + ":" + request.getHeader("User-Agent") + key, obj,
                     timeout, TimeUnit.SECONDS);
-                y9result.setCode(200);
-                y9result.setMsg("刷新成功");
-                y9result.setSuccess(true);
+                return Y9Result.successMsg("获取成功");
             } else {
-                y9result.setCode(200);
-                y9result.setMsg("刷新失败：session已过期自动清除。");
-                y9result.setSuccess(false);
-                return y9result;
+                return Y9Result.failure("刷新失败：session已过期自动清除。");
             }
         } catch (Exception e) {
-            y9result.setCode(500);
             LOGGER.warn(e.getMessage(), e);
+            return Y9Result.failure("刷新失败," + e.getMessage());
         }
-        return y9result;
     }
 
     @PostMapping(value = "/save")
     public Y9Result<String> save(String key, String value, Long timeout, HttpServletRequest request) {
-        Y9Result<String> y9result = new Y9Result<String>();
-        y9result.setCode(200);
-        y9result.setMsg("保存失败");
-        y9result.setSuccess(false);
         try {
             if (StringUtils.isEmpty(key) || StringUtils.isEmpty(value)) {
-                y9result.setMsg("保存失败：key或者value不能为空。");
+                return Y9Result.failure("保存失败：key或者value不能为空。");
             } else {
                 if (null == timeout) {
                     timeout = Long.valueOf(3600);
                 }
                 key = "y9vue_client_session:" + getIpAddr(request) + ":" + request.getHeader("User-Agent") + key;
                 redisTemplate.opsForValue().set(key, value, timeout, TimeUnit.SECONDS);
-                y9result.setCode(200);
-                y9result.setMsg("保存成功");
-                y9result.setSuccess(true);
+                return Y9Result.successMsg("保存成功");
             }
         } catch (Exception e) {
-            y9result.setCode(500);
             LOGGER.warn(e.getMessage(), e);
+            return Y9Result.failure("保存失败," + e.getMessage());
         }
-        return y9result;
     }
 }

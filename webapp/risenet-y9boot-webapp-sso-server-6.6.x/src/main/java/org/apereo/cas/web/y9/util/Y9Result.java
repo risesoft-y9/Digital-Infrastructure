@@ -2,29 +2,60 @@ package org.apereo.cas.web.y9.util;
 
 import java.io.Serializable;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import org.apereo.cas.web.y9.util.exception.ErrorCode;
+import org.apereo.cas.web.y9.util.exception.GlobalErrorCodeEnum;
 
-@NoArgsConstructor
-@AllArgsConstructor
-@Data
-@Builder
+import lombok.AccessLevel;
+import lombok.AllArgsConstructor;
+import lombok.EqualsAndHashCode;
+import lombok.Getter;
+import lombok.Setter;
+import lombok.ToString;
+
+@Getter
+@Setter
+@ToString
+@EqualsAndHashCode
+@AllArgsConstructor(access = AccessLevel.PRIVATE)
 public class Y9Result<T> implements Serializable {
 
     private static final long serialVersionUID = -852918533474167060L;
+    /**
+     * 操作是否成功
+     */
+    private boolean success;
+    /**
+     * 错误代码
+     */
+    private int code;
+    /**
+     * 操作描述
+     */
+    private String msg;
+    /**
+     * 操作成功返回的数据
+     */
+    private T data;
 
-    public static Y9Result<Object> failure(CodeEnum codeEnum, String msg) {
-        Y9Result<Object> y9Result = new Y9Result<>();
-        y9Result.setCode(codeEnum.getCode());
-        y9Result.setSuccess(Boolean.FALSE);
-        y9Result.setMsg(msg);
-        return y9Result;
+    /**
+     * 对于大多数不需要关注 code 的情况下，推荐直接静态方法创建对象，而不是通过新建对象然后设值 直接静态方法创建对象可以统一 code ，方便 code 的维护
+     */
+    private Y9Result() {}
+
+    public static <T> Y9Result<T> failure(ErrorCode errorCode) {
+        return failure(errorCode, errorCode.getDescription());
     }
 
-    public static Y9Result<Object> failure(String msg) {
-        return failure(CodeEnum.FAILURE, msg);
+    public static <T> Y9Result<T> failure(ErrorCode errorCode, String msg) {
+        return new Y9Result<>(Boolean.FALSE, errorCode.getCode(), msg, null);
+    }
+
+    public static <T> Y9Result<T> failure(int code, String msg) {
+        return new Y9Result<>(Boolean.FALSE, code, msg, null);
+    }
+
+    public static <T> Y9Result<T> failure(String msg) {
+        return failure(GlobalErrorCodeEnum.FAILURE, msg);
     }
 
     public static <T> Y9Result<T> success() {
@@ -32,35 +63,14 @@ public class Y9Result<T> implements Serializable {
     }
 
     public static <T> Y9Result<T> success(T data) {
-        return success(data, CodeEnum.SUCCESS.getMsg());
+        return success(data, GlobalErrorCodeEnum.SUCCESS.getDescription());
     }
 
     public static <T> Y9Result<T> success(T data, String msg) {
-        Y9Result<T> y9Result = new Y9Result<>();
-        y9Result.setCode(CodeEnum.SUCCESS.getCode());
-        y9Result.setSuccess(Boolean.TRUE);
-        y9Result.setData(data);
-        y9Result.setMsg(msg);
-        return y9Result;
+        return new Y9Result<>(Boolean.TRUE, GlobalErrorCodeEnum.SUCCESS.getCode(), msg, data);
     }
 
-    /**
-     * 操作是否成功
-     */
-    private boolean success;
-
-    /**
-     * 错误代码
-     */
-    private int code;
-
-    /**
-     * 错误信息
-     */
-    private String msg;
-
-    /**
-     * 返回的数据
-     */
-    private T data;
+    public static <T> Y9Result<T> successMsg(String msg) {
+        return success(null, msg);
+    }
 }

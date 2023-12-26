@@ -75,10 +75,6 @@ public class ServiceController {
     public Y9Result<String> oAuthService(@RequestParam(required = false) Long id, String clientId, String clientSecret,
         String serviceId, String name, @RequestParam(required = false) String description,
         @RequestParam(required = false) String systemId, @RequestParam(required = false) String logoutUrl) {
-        Y9Result<String> y9result = new Y9Result<>();
-        y9result.setCode(200);
-        y9result.setMsg("刷新失败");
-        y9result.setSuccess(false);
         try {
             OAuthRegisteredService oAuthRegisteredService = new OAuthRegisteredService();
             if (id != null) {
@@ -116,22 +112,15 @@ public class ServiceController {
             servicesManager.save(oAuthRegisteredService);
 
             servicesManager.load();
-            y9result.setCode(200);
-            y9result.setMsg("刷新成功,总共：" + servicesManager.count() + " 条记录");
-            y9result.setSuccess(true);
+            return Y9Result.successMsg("刷新成功,总共：" + servicesManager.count() + " 条记录");
         } catch (Exception e) {
-            y9result.setCode(500);
             LOGGER.warn(e.getMessage(), e);
+            return Y9Result.failure("刷新失败");
         }
-        return y9result;
     }
 
     @PostMapping(value = "/regexService")
     public Y9Result<String> regexRegisteredService(String serviceId, String name, String description) {
-        Y9Result<String> y9result = new Y9Result<>();
-        y9result.setCode(200);
-        y9result.setMsg("刷新失败");
-        y9result.setSuccess(false);
         try {
             CasRegisteredService regexRegisteredService = new CasRegisteredService();
             regexRegisteredService.setServiceId(serviceId);
@@ -156,31 +145,21 @@ public class ServiceController {
             servicesManager.save(regexRegisteredService);
 
             servicesManager.load();
-            y9result.setCode(200);
-            y9result.setMsg("刷新成功,总共：" + servicesManager.count() + " 条记录");
-            y9result.setSuccess(true);
+            return Y9Result.successMsg("刷新成功,总共：" + servicesManager.count() + " 条记录");
         } catch (Exception e) {
-            y9result.setCode(500);
             LOGGER.warn(e.getMessage(), e);
+            return Y9Result.failure("刷新失败");
         }
-        return y9result;
     }
 
     @GetMapping(value = "/reload")
     public Y9Result<String> reload() {
-        Y9Result<String> y9result = new Y9Result<>();
-        y9result.setCode(200);
-        y9result.setMsg("刷新失败");
-        y9result.setSuccess(false);
         try {
             servicesManager.load();
-            y9result.setCode(200);
-            y9result.setMsg("刷新成功,总共：" + servicesManager.count() + " 条记录");
-            y9result.setSuccess(true);
+            return Y9Result.successMsg("刷新成功,总共：" + servicesManager.count() + " 条记录");
         } catch (Exception e) {
-            y9result.setCode(500);
             LOGGER.warn(e.getMessage(), e);
+            return Y9Result.failure("刷新失败");
         }
-        return y9result;
     }
 }
