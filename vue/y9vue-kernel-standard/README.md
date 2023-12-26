@@ -1,8 +1,11 @@
 # 一、运行前提
+
 ```
 这个项目里的配置文件是对应这套开源代码的后端代码，需要先在本地环境中，将后端的代码运行起来，才能运行起来看到页面效果
 ```
+
 ## 为了不依赖后端的代码，本地不跑后端程序就能将前端项目运行起来并看到页面和效果，您可以这样做
+
 ```
 1、用编辑器打开 .env.development 文件
 
@@ -22,6 +25,7 @@
 ```
 
 # 二、路由即菜单
+
 ```
 开源内核框架中router与功能的中英文命名对应关系：
 权限分配界面：  authRouter（初始化的权限管控，不展示）
@@ -47,14 +51,11 @@
 ```
 
 # 三、统一框架说明
-理念：基于前后端分离
-架构：基于微服务
-管理：基于统一框架开发流程模型
-开发方法：基于统一过程方法、原型开发方法、螺旋上升开发方法
-开发语言：基于JavaScript、基于vue开发
-原则：基于业务、尽可能让代码简单，新手都能看懂和维护
+
+理念：基于前后端分离架构：基于微服务管理：基于统一框架开发流程模型开发方法：基于统一过程方法、原型开发方法、螺旋上升开发方法开发语言：基于 JavaScript、基于 vue 开发原则：基于业务、尽可能让代码简单，新手都能看懂和维护
 
 ## 目录结构
+
 ```
 src\api:                接口目录
 src\assets:             需打包编译的静态资源
@@ -81,16 +82,21 @@ vite.config.js:         vite脚手架各种环境编译配置文件
 ```
 
 ## 框架渲染过程
+
  <img src="https://vue.youshengyun.com/files/img/前端/框架渲染过程.png">
 
 # 四、单点登录
+
 ## 单点登录时序图
+
 ```
 <a href="https://vue.youshengyun.com/files/img/前端/单点登录原理时序图.pdf" target="_blank">高清单点登录原理时序图 PDF文档</a>
 ```
-<img src="https://vue.youshengyun.com/files/img/前端/单点登录时序图.png">
+
+<img src="https://vue.youshengyun.com/files/img/前端/单点登录原理时序图.png">
 
 ## 依据单点登录时序图，我们单独封装了单点登录插件，适用基于当前开源项目构建的各个前端工程（微服务）
+
 ```
 下载地址（私有仓库）：npm --registry https://svn.youshengyun.com:9900/nexus/repository/y9npm-hosted install y9plugin-sso@3
 
@@ -101,7 +107,7 @@ vite.config.js:         vite脚手架各种环境编译配置文件
         "js-cookie": "^3.0.1",
         "md5": "^2.3.0",
         "qs": "^6.10.2"
-    }  
+    }
 
 可能遇到的问题说明：
 第一次添加单点登陆插件，可能会遇到一些常规错误提示。
@@ -121,11 +127,15 @@ vite.config.js:         vite脚手架各种环境编译配置文件
 ```
 
 # 五、路由
+
 ## 路由程序设计流程图
-<img src="https://vue.youshengyun.com/files/img/前端/路由程序设计流程图.png">
+
+<img src="https://vue.youshengyun.com/files/img/前端/路由程序流程图.png">
 
 # 六、组件
+
 ## <a href="vue.youshengyun.com/y9vue-components/" target="_blank">组件说明文档</a>
+
 ```
 组件插件化下载地址（私有仓库）：npm --registry https://svn.youshengyun.com:9900/nexus/repository/y9npm-hosted install y9plugin-components
 
@@ -137,6 +147,7 @@ vite.config.js:         vite脚手架各种环境编译配置文件
 ```
 
 # 七、开发规范
+
 ```
 必要说明：
     1、eslink\ts\scss
@@ -156,5 +167,6 @@ vite.config.js:         vite脚手架各种环境编译配置文件
     5、项目开发将要完成时，视项目需求，做整个项目字体的适配
 ```
 
-# 八、更新记录！
-> 2023-12-19 优化个人中心页面，只需替换src/view/personal文件夹即可
+# 八、更新记录
+
+> 2023-12-19 优化个人中心页面，只需替换 src/view/personal 文件夹即可
