@@ -8,6 +8,7 @@ import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.Query;
 
+import net.risesoft.repository.Y9DepartmentPropRepository;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.event.EventListener;
@@ -70,6 +71,7 @@ public class Y9PositionServiceImpl implements Y9PositionService {
     private final Y9PositionToResourceAndAuthorityRepository y9PositionToResourceAndAuthorityRepository;
     private final Y9PositionToRoleRepository y9PositionToRoleRepository;
     private final Y9AuthorizationRepository y9AuthorizationRepository;
+    private final Y9DepartmentPropRepository y9DepartmentPropRepository;
 
     private final CompositeOrgBaseManager compositeOrgBaseManager;
     private final Y9PositionManager y9PositionManager;
@@ -81,6 +83,7 @@ public class Y9PositionServiceImpl implements Y9PositionService {
         Y9OrgBasesToRolesRepository y9OrgBasesToRolesRepository,
         Y9PositionToResourceAndAuthorityRepository y9PositionToResourceAndAuthorityRepository,
         Y9PositionToRoleRepository y9PositionToRoleRepository, Y9AuthorizationRepository y9AuthorizationRepository,
+        Y9DepartmentPropRepository y9DepartmentPropRepository,
         CompositeOrgBaseManager compositeOrgBaseManager, Y9PositionManager y9PositionManager,
         Y9PersonsToPositionsManager y9PersonsToPositionsManager) {
         this.entityManagerFactory = entityManagerFactory;
@@ -91,6 +94,7 @@ public class Y9PositionServiceImpl implements Y9PositionService {
         this.y9PositionToResourceAndAuthorityRepository = y9PositionToResourceAndAuthorityRepository;
         this.y9PositionToRoleRepository = y9PositionToRoleRepository;
         this.y9AuthorizationRepository = y9AuthorizationRepository;
+        this.y9DepartmentPropRepository = y9DepartmentPropRepository;
         this.compositeOrgBaseManager = compositeOrgBaseManager;
         this.y9PositionManager = y9PositionManager;
         this.y9PersonsToPositionsManager = y9PersonsToPositionsManager;
@@ -136,6 +140,7 @@ public class Y9PositionServiceImpl implements Y9PositionService {
         y9PositionToRoleRepository.deleteByPositionId(positionId);
         y9PositionToResourceAndAuthorityRepository.deleteByPositionId(positionId);
         y9PersonsToPositionsManager.deleteByPositionId(positionId);
+        y9DepartmentPropRepository.deleteByOrgBaseId(positionId);
         y9PositionsToGroupsRepository.deleteByPositionId(positionId);
         y9AuthorizationRepository.deleteByPrincipalIdAndPrincipalType(positionId,
             AuthorizationPrincipalTypeEnum.POSITION);
