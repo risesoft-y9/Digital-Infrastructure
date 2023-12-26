@@ -13,6 +13,8 @@ import org.hibernate.annotations.ColumnDefault;
 import org.hibernate.annotations.Comment;
 import org.springframework.format.annotation.DateTimeFormat;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
+
 import lombok.Data;
 
 import net.risesoft.enums.platform.OrgTypeEnum;
@@ -32,11 +34,6 @@ import net.risesoft.enums.platform.OrgTypeEnum;
 public class Y9Department extends Y9OrgBase {
 
     private static final long serialVersionUID = 231356577350213851L;
-
-    public Y9Department() {
-        super.setOrgType(OrgTypeEnum.DEPARTMENT);
-    }
-
     /** 父节点id */
     @Column(name = "PARENT_ID", length = 38, nullable = false)
     @Comment("父节点id")
@@ -89,6 +86,7 @@ public class Y9Department extends Y9OrgBase {
 
     /** 成立时间 */
     @DateTimeFormat(pattern = "yyyy-MM-dd")
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd", timezone = "GMT+8")
     @Temporal(TemporalType.DATE)
     @Column(name = "ESTABLISH_DATE")
     @Comment("成立时间")
@@ -120,5 +118,9 @@ public class Y9Department extends Y9OrgBase {
     @Comment("是否委办局")
     @ColumnDefault("0")
     private Boolean bureau = false;
+
+    public Y9Department() {
+        super.setOrgType(OrgTypeEnum.DEPARTMENT);
+    }
 
 }
