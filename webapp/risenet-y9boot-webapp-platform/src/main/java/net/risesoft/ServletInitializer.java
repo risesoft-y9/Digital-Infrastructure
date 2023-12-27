@@ -17,7 +17,7 @@ import org.springframework.web.context.WebApplicationContext;
  * https://docs.spring.io/spring-boot/docs/2.1.0.RELEASE/reference/htmlsingle/ 92.3 Deploying a WAR to WebLogic To
  * deploy a Spring Boot application to WebLogic, you must ensure that your servlet initializer directly implements
  * WebApplicationInitializer (even if you extend from a base class that already implements it).
- * 
+ *
  * @author dingzhaojun
  * @author qinman
  * @author mengjuhua
@@ -28,7 +28,6 @@ public class ServletInitializer extends SpringBootServletInitializer implements 
     @Override
     protected SpringApplicationBuilder configure(final SpringApplicationBuilder builder) {
         setRegisterErrorPageFilter(false);
-        // builder.listeners(new OnApplicationContextInitialized());
         builder.sources(Platform.class);
         return builder;
     }
@@ -37,12 +36,10 @@ public class ServletInitializer extends SpringBootServletInitializer implements 
     protected WebApplicationContext run(SpringApplication application) {
         WebApplicationContext ctx = super.run(application);
         Environment env = ctx.getEnvironment();
-        String sessionTimeout = env.getProperty("server.servlet.session.timeout", "300");
         String cookieSecure = env.getProperty("server.servlet.session.cookie.secure", "false");
 
         ServletContext servletContext = ctx.getServletContext();
         servletContext.setSessionTrackingModes(Collections.singleton(SessionTrackingMode.COOKIE));
-        servletContext.setSessionTimeout(Integer.valueOf(sessionTimeout));
         SessionCookieConfig sessionCookieConfig = servletContext.getSessionCookieConfig();
         sessionCookieConfig.setHttpOnly(true);
         sessionCookieConfig.setSecure(Boolean.valueOf(cookieSecure));
