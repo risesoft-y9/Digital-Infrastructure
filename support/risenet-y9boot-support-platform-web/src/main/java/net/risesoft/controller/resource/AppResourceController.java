@@ -139,12 +139,7 @@ public class AppResourceController {
     @RiseLog(operationName = "保存应用")
     @PostMapping(value = "/save")
     public Y9Result<Y9App> save(@Validated Y9App y9App) {
-        Y9App savedApp = y9AppService.saveOrUpdate(y9App);
-
-        // TODO move to Service?
-        y9AppService.verifyApp(y9App.getId(), true, Y9LoginUserHolder.getUserInfo().getName());
-        y9TenantSystemService.saveTenantSystem(savedApp.getSystemId(), Y9LoginUserHolder.getTenantId());
-        y9TenantAppService.save(savedApp.getId(), Y9LoginUserHolder.getTenantId(), "微内核默认租用");
+        Y9App savedApp = y9AppService.saveAndRegister4Tenant(y9App);
         return Y9Result.success(savedApp, "成功保存应用");
     }
 

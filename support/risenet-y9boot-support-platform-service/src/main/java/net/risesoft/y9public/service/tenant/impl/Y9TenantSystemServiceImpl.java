@@ -54,9 +54,6 @@ public class Y9TenantSystemServiceImpl implements Y9TenantSystemService {
     private final Y9SystemManager y9SystemManager;
     private final Y9TenantManager y9TenantManager;
     private final Y9TenantSystemManager y9TenantSystemManager;
-    private final Y9DataSourceManager y9DataSourceManager;
-
-    private final Y9PublishService y9PublishService;
 
     @Override
     @Transactional(readOnly = false)
@@ -161,66 +158,13 @@ public class Y9TenantSystemServiceImpl implements Y9TenantSystemService {
     @Override
     @Transactional(readOnly = false)
     public Y9TenantSystem save(Y9TenantSystem y9TenantSystem) {
-        if (StringUtils.isBlank(y9TenantSystem.getId())) {
-            y9TenantSystem.setId(Y9IdGenerator.genId(IdType.SNOWFLAKE));
-        }
-
-        y9TenantSystem = y9TenantSystemRepository.save(y9TenantSystem);
-
-        Y9System y9System = y9SystemManager.getById(y9TenantSystem.getSystemId());
-        TenantSystem tenantSystem = Y9ModelConvertUtil.convert(y9TenantSystem, TenantSystem.class);
-        // 注册事务同步器，在事务提交后做某些操作
-        TransactionSynchronizationManager.registerSynchronization(new TransactionSynchronization() {
-            @Override
-            public void afterCommit() {
-                // 租户租用系统事件，应用可监听做对应租户的初始化的工作
-                Y9MessageCommon tenantSystemRegisteredEvent = new Y9MessageCommon();
-                tenantSystemRegisteredEvent.setEventObject(tenantSystem);
-                tenantSystemRegisteredEvent.setEventTarget(y9System.getName());
-                tenantSystemRegisteredEvent.setEventType(Y9CommonEventConst.TENANT_SYSTEM_REGISTERED);
-                y9PublishService.publishMessageCommon(tenantSystemRegisteredEvent);
-
-                // 对应系统重新加载数据源
-                Y9MessageCommon syncDataSourceEvent = new Y9MessageCommon();
-                syncDataSourceEvent.setEventTarget(y9System.getName());
-                syncDataSourceEvent.setEventObject(Y9CommonEventConst.TENANT_DATASOURCE_SYNC);
-                syncDataSourceEvent.setEventType(Y9CommonEventConst.TENANT_DATASOURCE_SYNC);
-                y9PublishService.publishMessageCommon(syncDataSourceEvent);
-            }
-        });
-
-        return y9TenantSystem;
+        return y9TenantSystemManager.save(y9TenantSystem);
     }
 
     @Override
     @Transactional(readOnly = false)
     public Y9TenantSystem saveTenantSystem(String systemId, String tenantId) {
-        Y9Tenant tenant = y9TenantManager.getById(tenantId);
-        Y9System y9System = y9SystemManager.getById(systemId);
-
-        Optional<Y9TenantSystem> y9TenantSystemOptional =
-            y9TenantSystemRepository.findByTenantIdAndSystemId(tenantId, systemId);
-        if (y9TenantSystemOptional.isPresent()) {
-            return y9TenantSystemOptional.get();
-        }
-
-        Y9TenantSystem y9TenantSystem = new Y9TenantSystem();
-        y9TenantSystem.setTenantId(tenantId);
-        y9TenantSystem.setTenantDataSource(tenant.getDefaultDataSourceId());
-        y9TenantSystem.setSystemId(systemId);
-        y9TenantSystem.setInitialized(false);
-        if (Boolean.TRUE.equals(y9System.getSingleDatasource())) {
-            String datasoureId = tenant.getDefaultDataSourceId();
-            try {
-                Y9DataSource y9DataSource = y9DataSourceManager.createTenantDefaultDataSource(tenant.getShortName(),
-                    tenant.getTenantType(), y9System.getName());
-                datasoureId = y9DataSource.getId();
-            } catch (Exception e) {
-                LOGGER.warn(e.getMessage(), e);
-            }
-            y9TenantSystem.setTenantDataSource(datasoureId);
-        }
-        return this.save(y9TenantSystem);
+        return y9TenantSystemManager.saveTenantSystem(systemId, tenantId);
     }
 
     @Override

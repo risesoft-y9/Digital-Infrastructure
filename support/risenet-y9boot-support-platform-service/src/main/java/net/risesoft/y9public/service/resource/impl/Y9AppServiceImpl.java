@@ -28,6 +28,8 @@ import net.risesoft.y9public.entity.resource.Y9App;
 import net.risesoft.y9public.entity.resource.Y9System;
 import net.risesoft.y9public.entity.tenant.Y9TenantApp;
 import net.risesoft.y9public.manager.resource.Y9AppManager;
+import net.risesoft.y9public.manager.tenant.Y9TenantAppManager;
+import net.risesoft.y9public.manager.tenant.Y9TenantSystemManager;
 import net.risesoft.y9public.repository.resource.Y9AppRepository;
 import net.risesoft.y9public.repository.resource.Y9SystemRepository;
 import net.risesoft.y9public.service.resource.Y9AppService;
@@ -48,6 +50,8 @@ public class Y9AppServiceImpl implements Y9AppService {
     private final Y9SystemRepository y9SystemRepository;
 
     private final Y9AppManager y9AppManager;
+    private final Y9TenantSystemManager y9TenantSystemManager;
+    protected final Y9TenantAppManager y9TenantAppManager;
 
     @Override
     public long countBySystemId(String systemId) {
@@ -239,6 +243,19 @@ public class Y9AppServiceImpl implements Y9AppService {
         PageRequest pageRequest = PageRequest.of(pageQuery.getPage4Db(), pageQuery.getSize(),
             Sort.by(Sort.Direction.ASC, "tabIndex").and(Sort.by(Sort.Direction.DESC, "createTime")));
         return y9AppRepository.findAll(specification, pageRequest);
+    }
+
+    @Override
+    @Transactional(readOnly = false)
+    public Y9App saveAndRegister4Tenant(Y9App y9App) {
+        Y9App savedApp = this.saveOrUpdate(y9App);
+        // 审核应用
+        this.verifyApp(y9App.getId(), true, Y9LoginUserHolder.getUserInfo().getName());
+        // 租用系统
+        y9TenantSystemManager.saveTenantSystem(savedApp.getSystemId(), Y9LoginUserHolder.getTenantId());
+        // 租用应用
+        y9TenantAppManager.save(savedApp.getId(), Y9LoginUserHolder.getTenantId(), "微内核默认租用");
+        return savedApp;
     }
 
     @Override
