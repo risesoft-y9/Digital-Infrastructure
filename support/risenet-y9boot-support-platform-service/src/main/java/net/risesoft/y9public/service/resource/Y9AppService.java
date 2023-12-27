@@ -149,6 +149,8 @@ public interface Y9AppService extends ResourceCommonService<Y9App> {
      */
     Page<Y9App> page(Y9PageQuery pageQuery, String systemId, String name);
 
+    Y9App saveAndRegister4Tenant(Y9App y9App);
+
     /**
      * 保存isv应用
      *

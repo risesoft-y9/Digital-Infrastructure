@@ -113,6 +113,8 @@ public interface Y9SystemService {
      */
     Page<Y9System> page(Y9PageQuery pageQuery);
 
+    Y9System saveAndRegister4Tenant(Y9System y9System);
+
     /**
      * 保存系统排序
      *

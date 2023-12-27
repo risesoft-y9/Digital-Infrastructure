@@ -153,53 +153,13 @@ public class Y9TenantAppServiceImpl implements Y9TenantAppService {
     @Override
     @Transactional(readOnly = false)
     public Y9TenantApp save(String appId, String tenantId, String applyReason) {
-        Optional<Y9TenantApp> y9TenantAppOptional =
-            y9TenantAppRepository.findByTenantIdAndAppIdAndTenancy(tenantId, appId, Boolean.TRUE);
-        Y9App y9App = y9AppManager.getById(appId);
-        String tenantDataSource =
-            y9TenantSystemManager.getDataSourceIdByTenantIdAndSystemId(tenantId, y9App.getSystemId());
-        if (y9TenantAppOptional.isPresent()) {
-            Y9TenantApp y9TenantApp = y9TenantAppOptional.get();
-            if (tenantDataSource != null && !y9TenantApp.getVerify()) {
-                y9TenantApp.setVerify(true);
-                return save(y9TenantApp);
-            }
-            return y9TenantApp;
-        }
-
-        String time = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date());
-        Y9TenantApp ta = new Y9TenantApp();
-        ta.setId(Y9IdGenerator.genId());
-        ta.setTenantId(tenantId);
-        ta.setTenantName(y9TenantManager.getById(tenantId).getName());
-        ta.setAppId(appId);
-        ta.setSystemId(y9App.getSystemId());
-        ta.setAppName(y9App.getName());
-        ta.setApplyName(Optional.ofNullable(Y9LoginUserHolder.getUserInfo()).map(UserInfo::getName)
-            .orElse(ManagerLevelEnum.SYSTEM_MANAGER.getName()));
-        ta.setApplyId(Y9LoginUserHolder.getPersonId());
-        ta.setApplyReason(applyReason);
-        ta.setTenancy(Boolean.TRUE);
-        // 审核状态
-        if (StringUtils.isNotBlank(tenantDataSource)) {
-            ta.setVerify(Boolean.TRUE);
-            ta.setVerifyUserName(Optional.ofNullable(Y9LoginUserHolder.getUserInfo()).map(UserInfo::getName)
-                .orElse(ManagerLevelEnum.SYSTEM_MANAGER.getName()));
-            ta.setVerifyTime(time);
-            ta.setReason("同意申请");
-        } else {
-            ta.setVerify(Boolean.FALSE);
-        }
-        return save(ta);
+        return y9TenantAppManager.save(appId, tenantId, applyReason);
     }
 
     @Override
     @Transactional(readOnly = false)
     public Y9TenantApp save(Y9TenantApp y9TenantApp) {
-        if (StringUtils.isBlank(y9TenantApp.getId())) {
-            y9TenantApp.setId(Y9IdGenerator.genId(IdType.SNOWFLAKE));
-        }
-        return y9TenantAppRepository.save(y9TenantApp);
+        return y9TenantAppManager.save(y9TenantApp);
     }
 
     @Override
