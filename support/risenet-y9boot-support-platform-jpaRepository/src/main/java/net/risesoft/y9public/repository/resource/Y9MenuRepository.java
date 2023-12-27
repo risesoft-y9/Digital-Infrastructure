@@ -29,4 +29,6 @@ public interface Y9MenuRepository extends JpaRepository<Y9Menu, String> {
 
     List<Y9Menu> findByParentIdOrderByTabIndex(String parentId);
 
+    Optional<Y9Menu> findTopByParentIdOrderByTabIndexDesc(String parentId);
+
 }

@@ -75,6 +75,14 @@ public class Y9MenuServiceImpl implements Y9MenuService {
         Y9Context.publishEvent(new Y9EntityDeletedEvent<>(y9Menu));
     }
 
+    @Transactional(readOnly = false)
+    public void deleteByParentId(String parentId) {
+        List<Y9Menu> y9MenuList = this.findByParentId(parentId);
+        for (Y9Menu y9Menu : y9MenuList) {
+            this.delete(y9Menu.getId());
+        }
+    }
+
     /**
      * 删除相关租户数据 <br/>
      * 切换不同的数据源 需开启新事务
@@ -86,14 +94,6 @@ public class Y9MenuServiceImpl implements Y9MenuService {
         y9AuthorizationRepository.deleteByResourceId(menuId);
         y9PersonToResourceAndAuthorityRepository.deleteByResourceId(menuId);
         y9PositionToResourceAndAuthorityRepository.deleteByResourceId(menuId);
-    }
-
-    @Transactional(readOnly = false)
-    public void deleteByParentId(String parentId) {
-        List<Y9Menu> y9MenuList = this.findByParentId(parentId);
-        for (Y9Menu y9Menu : y9MenuList) {
-            this.delete(y9Menu.getId());
-        }
     }
 
     @Override
@@ -158,6 +158,11 @@ public class Y9MenuServiceImpl implements Y9MenuService {
     }
 
     @Override
+    public Integer getMaxIndexByParentId(String parentId) {
+        return y9MenuRepository.findTopByParentIdOrderByTabIndexDesc(parentId).map(Y9Menu::getTabIndex).orElse(0);
+    }
+
+    @Override
     @Transactional(readOnly = false)
     public Y9Menu move(String id, String parentId) {
         Y9Menu y9Menu = this.getById(id);
@@ -208,6 +213,9 @@ public class Y9MenuServiceImpl implements Y9MenuService {
             }
         } else {
             y9Menu.setId(Y9IdGenerator.genId(IdType.SNOWFLAKE));
+
+            Integer maxTabIndex = getMaxIndexByParentId(y9Menu.getParentId());
+            y9Menu.setTabIndex(maxTabIndex != null ? maxTabIndex + 1 : 0);
         }
         y9Menu = y9MenuManager.save(y9Menu);
 

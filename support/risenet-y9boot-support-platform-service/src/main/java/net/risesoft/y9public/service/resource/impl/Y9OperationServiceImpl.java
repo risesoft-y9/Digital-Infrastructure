@@ -76,6 +76,14 @@ public class Y9OperationServiceImpl implements Y9OperationService {
         Y9Context.publishEvent(new Y9EntityDeletedEvent<>(y9Operation));
     }
 
+    @Transactional(readOnly = false)
+    public void deleteByParentId(String parentId) {
+        List<Y9Operation> y9OperationList = this.findByParentId(parentId);
+        for (Y9Operation y9Operation : y9OperationList) {
+            this.delete(y9Operation.getId());
+        }
+    }
+
     /**
      * 删除相关租户数据 <br/>
      * 切换不同的数据源 需开启新事务
@@ -87,14 +95,6 @@ public class Y9OperationServiceImpl implements Y9OperationService {
         y9AuthorizationRepository.deleteByResourceId(operationId);
         y9PersonToResourceAndAuthorityRepository.deleteByResourceId(operationId);
         y9PositionToResourceAndAuthorityRepository.deleteByResourceId(operationId);
-    }
-
-    @Transactional(readOnly = false)
-    public void deleteByParentId(String parentId) {
-        List<Y9Operation> y9OperationList = this.findByParentId(parentId);
-        for (Y9Operation y9Operation : y9OperationList) {
-            this.delete(y9Operation.getId());
-        }
     }
 
     @Override
@@ -159,6 +159,12 @@ public class Y9OperationServiceImpl implements Y9OperationService {
     }
 
     @Override
+    public Integer getMaxIndexByParentId(String parentId) {
+        return y9OperationRepository.findTopByParentIdOrderByTabIndexDesc(parentId).map(Y9Operation::getTabIndex)
+            .orElse(0);
+    }
+
+    @Override
     @Transactional(readOnly = false)
     public Y9Operation move(String id, String parentId) {
         Y9Operation y9Operation = this.getById(id);
@@ -180,6 +186,17 @@ public class Y9OperationServiceImpl implements Y9OperationService {
         this.deleteByParentId(entity.getId());
     }
 
+    @EventListener
+    @Transactional(readOnly = false)
+    public void onTenantAppDeleted(Y9EntityDeletedEvent<Y9TenantApp> event) {
+        Y9TenantApp entity = event.getEntity();
+        Y9LoginUserHolder.setTenantId(entity.getTenantId());
+        List<Y9Operation> y9OperationList = y9OperationRepository.findByAppId(entity.getAppId());
+        for (Y9Operation y9Operation : y9OperationList) {
+            this.deleteTenantRelatedByOperationId(y9Operation.getId());
+        }
+    }
+
     @Override
     @Transactional(readOnly = false)
     public Y9Operation saveOrUpdate(Y9Operation y9Operation) {
@@ -198,6 +215,8 @@ public class Y9OperationServiceImpl implements Y9OperationService {
             }
         } else {
             y9Operation.setId(Y9IdGenerator.genId(IdType.SNOWFLAKE));
+            Integer maxTabIndex = getMaxIndexByParentId(y9Operation.getParentId());
+            y9Operation.setTabIndex(maxTabIndex != null ? maxTabIndex + 1 : 0);
         }
 
         Y9Context.publishEvent(new Y9EntityCreatedEvent<>(y9Operation));
@@ -208,16 +227,5 @@ public class Y9OperationServiceImpl implements Y9OperationService {
     @Override
     public Y9Operation updateTabIndex(String id, int index) {
         return y9OperationManager.updateTabIndex(id, index);
-    }
-
-    @EventListener
-    @Transactional(readOnly = false)
-    public void onTenantAppDeleted(Y9EntityDeletedEvent<Y9TenantApp> event) {
-        Y9TenantApp entity = event.getEntity();
-        Y9LoginUserHolder.setTenantId(entity.getTenantId());
-        List<Y9Operation> y9OperationList = y9OperationRepository.findByAppId(entity.getAppId());
-        for (Y9Operation y9Operation : y9OperationList) {
-            this.deleteTenantRelatedByOperationId(y9Operation.getId());
-        }
     }
 }
