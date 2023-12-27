@@ -11,6 +11,14 @@ import net.risesoft.y9public.entity.resource.Y9Operation;
 public interface Y9OperationService extends ResourceCommonService<Y9Operation> {
 
     /**
+     * 根据父节点id，获取最大排序
+     *
+     * @param parentId
+     * @return
+     */
+    Integer getMaxIndexByParentId(String parentId);
+
+    /**
      * 移动
      *
      * @param id 按钮资源id
