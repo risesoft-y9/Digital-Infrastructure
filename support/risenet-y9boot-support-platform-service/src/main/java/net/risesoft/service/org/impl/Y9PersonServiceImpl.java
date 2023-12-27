@@ -179,7 +179,7 @@ public class Y9PersonServiceImpl implements Y9PersonService {
                 personList.add(oldperson);
                 continue;
             }
-            Integer maxIndex = compositeOrgBaseManager.getMaxSubTabIndex(parentId, OrgTypeEnum.PERSON);
+            Integer maxIndex = compositeOrgBaseManager.getMaxSubTabIndex(parentId);
             Y9Person person = new Y9Person();
             Y9BeanUtil.copyProperties(originalPerson, person);
             person.setId(Y9IdGenerator.genId(IdType.SNOWFLAKE));
@@ -886,7 +886,7 @@ public class Y9PersonServiceImpl implements Y9PersonService {
         Y9Person updatedPerson = new Y9Person();
 
         Y9BeanUtil.copyProperties(originPerson, updatedPerson);
-        updatedPerson.setTabIndex(compositeOrgBaseManager.getMaxSubTabIndex(parentId, OrgTypeEnum.PERSON));
+        updatedPerson.setTabIndex(compositeOrgBaseManager.getMaxSubTabIndex(parentId));
         updatedPerson.setParentId(parentId);
         final Y9Person savedPerson = this.save(updatedPerson);
 
@@ -1084,7 +1084,7 @@ public class Y9PersonServiceImpl implements Y9PersonService {
         if (StringUtils.isBlank(person.getEmail())) {
             person.setEmail(null);
         }
-        person.setTabIndex(compositeOrgBaseManager.getMaxSubTabIndex(parent.getId(), OrgTypeEnum.PERSON));
+        person.setTabIndex(compositeOrgBaseManager.getMaxSubTabIndex(parent.getId()));
         person.setOfficial(1);
         person.setVersion(OrgTypeEnum.Y9_VERSION);
         person.setDn(OrgLevelConsts.getOrgLevel(OrgTypeEnum.PERSON) + person.getName() + OrgLevelConsts.SEPARATOR
@@ -1161,7 +1161,7 @@ public class Y9PersonServiceImpl implements Y9PersonService {
         } else {
             // 判断为从xml导入的代码并且数据库中没有相应信息,把密码统一设置为defaultPassword
             if (null == person.getTabIndex()) {
-                person.setTabIndex(compositeOrgBaseManager.getMaxSubTabIndex(parent.getId(), OrgTypeEnum.PERSON));
+                person.setTabIndex(compositeOrgBaseManager.getMaxSubTabIndex(parent.getId()));
             }
             person.setDn(OrgLevelConsts.getOrgLevel(OrgTypeEnum.PERSON) + person.getName() + OrgLevelConsts.SEPARATOR
                 + parent.getDn());

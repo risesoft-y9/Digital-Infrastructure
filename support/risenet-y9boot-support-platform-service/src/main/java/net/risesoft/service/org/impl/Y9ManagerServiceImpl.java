@@ -250,7 +250,7 @@ public class Y9ManagerServiceImpl implements Y9ManagerService {
         }
 
         y9Manager.setTenantId(Y9LoginUserHolder.getTenantId());
-        y9Manager.setTabIndex(compositeOrgBaseManager.getMaxSubTabIndex(y9Manager.getParentId(), OrgTypeEnum.MANAGER));
+        y9Manager.setTabIndex(compositeOrgBaseManager.getMaxSubTabIndex(y9Manager.getParentId()));
         y9Manager.setDn(OrgLevelConsts.getOrgLevel(OrgTypeEnum.MANAGER) + y9Manager.getName() + OrgLevelConsts.SEPARATOR
             + parent.getDn());
         // 系统管理员新建的子域三员默认禁用 需安全管理员启用

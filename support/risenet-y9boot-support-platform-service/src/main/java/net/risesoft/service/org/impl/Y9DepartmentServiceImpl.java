@@ -369,7 +369,7 @@ public class Y9DepartmentServiceImpl implements Y9DepartmentService {
         } else {
             dept.setId(Y9IdGenerator.genId(IdType.SNOWFLAKE));
         }
-        Integer maxTabIndex = compositeOrgBaseManager.getMaxSubTabIndex(parent.getId(), OrgTypeEnum.DEPARTMENT);
+        Integer maxTabIndex = compositeOrgBaseManager.getMaxSubTabIndex(parent.getId());
         dept.setTabIndex(maxTabIndex);
         dept.setVersion(OrgTypeEnum.Y9_VERSION);
         dept.setDn(OrgLevelConsts.getOrgLevel(OrgTypeEnum.DEPARTMENT) + dept.getName() + OrgLevelConsts.SEPARATOR

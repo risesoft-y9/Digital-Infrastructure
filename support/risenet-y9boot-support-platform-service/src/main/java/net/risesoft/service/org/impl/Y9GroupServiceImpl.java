@@ -290,7 +290,7 @@ public class Y9GroupServiceImpl implements Y9GroupService {
             + parent.getDn());
         group.setDisabled(false);
         group.setParentId(parent.getId());
-        group.setTabIndex(compositeOrgBaseManager.getMaxSubTabIndex(parent.getId(), OrgTypeEnum.GROUP));
+        group.setTabIndex(compositeOrgBaseManager.getMaxSubTabIndex(parent.getId()));
         group.setGuidPath(parent.getGuidPath() + OrgLevelConsts.SEPARATOR + group.getId());
         final Y9Group savedGroup = y9GroupManager.save(group);
 
