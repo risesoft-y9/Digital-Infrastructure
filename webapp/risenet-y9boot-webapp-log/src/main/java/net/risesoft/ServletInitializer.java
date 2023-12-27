@@ -26,12 +26,10 @@ public class ServletInitializer extends SpringBootServletInitializer {
     protected WebApplicationContext run(SpringApplication application) {
         WebApplicationContext ctx = super.run(application);
         Environment env = ctx.getEnvironment();
-        String sessionTimeout = env.getProperty("server.servlet.session.timeout", "300");
         String cookieSecure = env.getProperty("server.servlet.session.cookie.secure", "false");
 
         ServletContext servletContext = ctx.getServletContext();
         servletContext.setSessionTrackingModes(Collections.singleton(SessionTrackingMode.COOKIE));
-        servletContext.setSessionTimeout(Integer.valueOf(sessionTimeout));
         SessionCookieConfig sessionCookieConfig = servletContext.getSessionCookieConfig();
         sessionCookieConfig.setHttpOnly(true);
         sessionCookieConfig.setSecure(Boolean.valueOf(cookieSecure));
