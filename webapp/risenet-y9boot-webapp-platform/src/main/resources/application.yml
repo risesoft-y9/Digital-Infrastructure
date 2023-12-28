@@ -5,7 +5,7 @@ management:
                 include: '*'
 server:
     intranet:
-        ip: 192.168.x.x,10.1.x.x,172.20.x.x
+        ip: 192.168.x.x,10.x.x.x,172.20.x.x
     port: 7055
     servlet:
         session:
@@ -21,6 +21,7 @@ server:
             force-response: true
 javers:
     newObjectSnapshot: true
+    sqlSchemaManagementEnabled: false
 spring:
     application:
         name: platform
@@ -100,6 +101,7 @@ spring:
                 useGlobalDataSourceStat: true
                 validationQuery: SELECT 1 FROM DUAL
     jpa:
+        generate-ddl: true
         database-platform: org.hibernate.dialect.MySQL8Dialect
         hibernate:
             ddl-auto: none
@@ -220,6 +222,11 @@ y9:
                 maxInactiveIntervalInSeconds: 3600
         security:
             enabled: true
+            csrf:
+                accepted-referer:
+                    - youshengyun.com
+                    - localhost
+                    - 127.0.0.1
             cors:
                 allowCredentials: true
                 allowedOriginPatterns:
@@ -245,11 +252,14 @@ y9:
                     - personJson
                     - groupJson
                     - positionJson
+                    - password
+                    - name
+                    - whereClause
         oauth2:
             resource:
                 enabled: true
                 saveLogMessage: false
-                saveOnlineMessage: true
+                saveOnlineMessage: false
                 allowBasicAuthentication: true
                 allowFormEncodedBodyParameter: true
                 allowUriQueryParameter: true
