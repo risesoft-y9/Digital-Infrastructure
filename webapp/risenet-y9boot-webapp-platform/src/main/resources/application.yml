@@ -179,6 +179,11 @@ y9:
                 maxInactiveIntervalInSeconds: 3600
         security:
             enabled: true
+            csrf:
+                accepted-referer:
+                    - youshengyun.com
+                    - localhost
+                    - 127.0.0.1
             cors:
                 allowCredentials: true
                 allowedOriginPatterns:
@@ -204,11 +209,14 @@ y9:
                     - personJson
                     - groupJson
                     - positionJson
+                    - password
+                    - name
+                    - whereClause
         oauth2:
             resource:
                 enabled: true
                 saveLogMessage: false
-                saveOnlineMessage: true
+                saveOnlineMessage: false
                 allowBasicAuthentication: true
                 allowFormEncodedBodyParameter: true
                 allowUriQueryParameter: true
