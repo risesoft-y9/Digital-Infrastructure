@@ -6,7 +6,7 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>net.risesoft</groupId>
 	<artifactId>risenet-y9boot-webapp-sso-server</artifactId>
-	<packaging>jar</packaging>
+	<packaging>war</packaging>
 	<version>v9.7.0-SNAPSHOT</version>
 
 	<!--<parent>
@@ -99,7 +99,7 @@
 	<properties>
 		<java.version>21</java.version>
 
-		<cas.version>7.0.0-RC9</cas.version>
+		<cas.version>7.0.0</cas.version>
 		<spring-boot.version>3.2.0</spring-boot.version>
 		<spring-cloud.version>2023.0.0</spring-cloud.version>
 
@@ -393,10 +393,10 @@
 			<groupId>org.apereo.cas</groupId>
 			<artifactId>cas-server-webapp-starter-tomcat</artifactId>
 			<exclusions>
-				<!--<exclusion>
+				<exclusion>
 					<groupId>org.apereo.cas</groupId>
 					<artifactId>cas-server-webapp-init-tomcat</artifactId>
-				</exclusion>-->
+				</exclusion>
 				<exclusion>
 					<groupId>org.apereo.cas</groupId>
 					<artifactId>cas-server-webapp-resources</artifactId>
