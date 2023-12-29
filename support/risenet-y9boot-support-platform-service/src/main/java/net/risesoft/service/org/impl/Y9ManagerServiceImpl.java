@@ -173,6 +173,9 @@ public class Y9ManagerServiceImpl implements Y9ManagerService {
     public Boolean isPasswordExpired(String id) {
         Y9Manager y9Manager = this.getById(id);
         Date lastModifyPasswordTime = y9Manager.getLastModifyPasswordTime();
+        if (lastModifyPasswordTime == null) {
+            return true;
+        }
         long daysBetween = DateUtil.between(lastModifyPasswordTime, new Date(), DateUnit.DAY);
         return daysBetween >= this.getPasswordModifiedCycle(y9Manager.getManagerLevel());
     }
