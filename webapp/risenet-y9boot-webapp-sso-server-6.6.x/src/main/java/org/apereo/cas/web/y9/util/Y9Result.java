@@ -5,6 +5,8 @@ import java.io.Serializable;
 import org.apereo.cas.web.y9.util.exception.ErrorCode;
 import org.apereo.cas.web.y9.util.exception.GlobalErrorCodeEnum;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
+
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.EqualsAndHashCode;
@@ -20,18 +22,24 @@ import lombok.ToString;
 public class Y9Result<T> implements Serializable {
 
     private static final long serialVersionUID = -852918533474167060L;
+    
     /**
      * 操作是否成功
      */
     private boolean success;
+    
     /**
      * 错误代码
      */
+    // 由于 ObjectMapper 默认配置为 @JsonInclude(JsonInclude.Include.DEFAULT)，所以需要这个注解才能在 code 为 0 时正常返回
+    @JsonInclude
     private int code;
+    
     /**
      * 操作描述
      */
     private String msg;
+    
     /**
      * 操作成功返回的数据
      */

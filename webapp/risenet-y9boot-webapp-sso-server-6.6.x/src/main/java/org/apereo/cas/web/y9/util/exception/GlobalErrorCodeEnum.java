@@ -18,7 +18,7 @@ import lombok.AllArgsConstructor;
 public enum GlobalErrorCodeEnum implements ErrorCode {
 
     /** 操作成功 */
-    SUCCESS(NONE_MODULE_CODE, 200, "操作成功"),
+    SUCCESS(NONE_MODULE_CODE, 0, "操作成功"),
     /** 服务器内部错误 */
     FAILURE(NONE_MODULE_CODE, 1, "服务器内部错误，请联系开发人员"),
     /** 参数校验失败 */
