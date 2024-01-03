@@ -3,6 +3,9 @@ package net.risesoft.controller.resource.vo;
 import java.util.ArrayList;
 import java.util.List;
 
+import lombok.Getter;
+import lombok.Setter;
+
 import net.risesoft.controller.TreeNodeVO;
 import net.risesoft.controller.TreeTypeEnum;
 import net.risesoft.y9public.entity.resource.Y9System;
@@ -13,23 +16,25 @@ import net.risesoft.y9public.entity.resource.Y9System;
  * @author shidaobang
  * @date 2023/12/21
  */
+@Getter
+@Setter
 public class SystemTreeNodeVO extends TreeNodeVO {
-    
+
     private static final long serialVersionUID = -7329269439077778947L;
+    private String cnName;
+    /** 系统id */
+    private String systemId;
 
-    @Override
-    public TreeTypeEnum getTreeType() {
-        return TreeTypeEnum.SYSTEM;
-    }
-
-    public static SystemTreeNodeVO convertY9System(Y9System y9ResourceBase) {
+    public static SystemTreeNodeVO convertY9System(Y9System y9System) {
         SystemTreeNodeVO systemTreeNodeVO = new SystemTreeNodeVO();
-        systemTreeNodeVO.setId(y9ResourceBase.getId());
-        systemTreeNodeVO.setName(y9ResourceBase.getName());
+        systemTreeNodeVO.setId(y9System.getId());
+        systemTreeNodeVO.setName(y9System.getName());
+        systemTreeNodeVO.setCnName(y9System.getCnName());
         systemTreeNodeVO.setParentId(null);
-        systemTreeNodeVO.setTabIndex(y9ResourceBase.getTabIndex());
+        systemTreeNodeVO.setTabIndex(y9System.getTabIndex());
         systemTreeNodeVO.setHasChild(true);
         systemTreeNodeVO.setNodeType("SYSTEM");
+        systemTreeNodeVO.setSystemId(y9System.getId());
         return systemTreeNodeVO;
     }
 
@@ -39,5 +44,10 @@ public class SystemTreeNodeVO extends TreeNodeVO {
             roleTreeNodeVOList.add(convertY9System(y9System));
         }
         return roleTreeNodeVOList;
+    }
+
+    @Override
+    public TreeTypeEnum getTreeType() {
+        return TreeTypeEnum.SYSTEM;
     }
 }

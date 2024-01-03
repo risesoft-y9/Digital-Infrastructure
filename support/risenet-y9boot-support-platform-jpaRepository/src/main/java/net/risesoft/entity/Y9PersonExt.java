@@ -15,6 +15,8 @@ import org.hibernate.annotations.ColumnDefault;
 import org.hibernate.annotations.Comment;
 import org.springframework.format.annotation.DateTimeFormat;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
+
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
@@ -66,6 +68,7 @@ public class Y9PersonExt extends BaseEntity {
 
     /** 出生年月日 */
     @DateTimeFormat(pattern = "yyyy-MM-dd")
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd", timezone = "GMT+8")
     @Temporal(TemporalType.DATE)
     @Column(name = "BIRTHDAY")
     @Comment("出生年月日")
@@ -134,6 +137,7 @@ public class Y9PersonExt extends BaseEntity {
 
     /** 入职时间 */
     @DateTimeFormat(pattern = "yyyy-MM-dd")
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd", timezone = "GMT+8")
     @Temporal(TemporalType.DATE)
     @Column(name = "WORK_TIME")
     @Comment("入职时间")

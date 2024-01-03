@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
+import net.risesoft.y9.Y9LoginUserHolder;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -120,6 +121,14 @@ public class Y9SystemServiceImpl implements Y9SystemService {
         Pageable pageable =
             PageRequest.of(pageQuery.getPage4Db(), pageQuery.getSize(), Sort.by(Sort.Direction.ASC, "tabIndex"));
         return y9SystemRepository.findAll(pageable);
+    }
+
+    @Override
+    @Transactional(readOnly = false)
+    public Y9System saveAndRegister4Tenant(Y9System y9System) {
+        Y9System savedSystem = this.saveOrUpdate(y9System);
+        y9TenantSystemManager.saveTenantSystem(savedSystem.getId(), Y9LoginUserHolder.getTenantId());
+        return savedSystem;
     }
 
     @Override

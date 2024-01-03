@@ -54,6 +54,18 @@ public class PersonalCenterController {
         @RequestParam @NotBlank String password) {
         return Y9Result.success(y9ManagerService.checkPassword(personId, password), "校验密码操作成功");
     }
+    
+    /**
+     * 检查三员密码是否过期（三员密码需定期修改）
+     *
+     * @param id 管理员id
+     * @return true 为密码已过期 false 为密码未过期
+     */
+    @RiseLog(operationName = "检查密码是否过期")
+    @RequestMapping("/isPasswordExpired")
+    public Y9Result<Boolean> isPasswordExpired(@RequestParam @NotBlank String id) {
+        return Y9Result.success(y9ManagerService.isPasswordExpired(id), "检查密码是否过期操作成功");
+    }
 
     /**
      * 获取管理员信息

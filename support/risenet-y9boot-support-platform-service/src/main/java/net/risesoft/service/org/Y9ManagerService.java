@@ -112,6 +112,8 @@ public interface Y9ManagerService {
      */
     boolean isDeptManager(String managerId, String deptId);
 
+    Boolean isPasswordExpired(String id);
+
     /**
      * 查询所有管理员
      *

@@ -20,4 +20,8 @@ public interface Y9TenantAppManager {
     Optional<Y9TenantApp> getByTenantIdAndAppIdAndTenancy(String tenantId, String appId, Boolean tenancy);
 
     List<Y9TenantApp> listByAppIdAndTenancy(String appId, Boolean tenancy);
+
+    Y9TenantApp save(String appId, String tenantId, String applyReason);
+
+    Y9TenantApp save(Y9TenantApp y9TenantApp);
 }

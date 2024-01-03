@@ -61,7 +61,7 @@ public class Y9SystemJsonDataHandlerImpl implements Y9SystemDataHandler {
     public void importApp(Y9AppExportModel y9AppExportModel, String systemId) {
         Y9App y9App = Y9ModelConvertUtil.convert(y9AppExportModel, Y9App.class);
         y9App.setSystemId(systemId);
-        y9AppService.saveOrUpdate(y9App);
+        y9AppService.saveAndRegister4Tenant(y9App);
         importMenuList(y9AppExportModel.getSubMenuList(), systemId);
         importOperationList(y9AppExportModel.getSubOperationList(), systemId);
         importRoleList(y9AppExportModel.getSubRoleList(), systemId);
@@ -70,7 +70,7 @@ public class Y9SystemJsonDataHandlerImpl implements Y9SystemDataHandler {
     @Override
     public void importSystem(Y9SystemExportModel y9SystemExportModel) {
         Y9System y9System = Y9ModelConvertUtil.convert(y9SystemExportModel, Y9System.class);
-        y9System = y9SystemService.saveOrUpdate(y9System);
+        y9System = y9SystemService.saveAndRegister4Tenant(y9System);
         importAppList(y9SystemExportModel.getAppList(), y9System.getId());
     }
 

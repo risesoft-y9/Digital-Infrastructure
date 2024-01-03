@@ -29,4 +29,6 @@ public interface Y9OperationRepository extends JpaRepository<Y9Operation, String
 
     List<Y9Operation> findByParentIdOrderByTabIndex(String parentId);
 
+    Optional<Y9Operation> findTopByParentIdOrderByTabIndexDesc(String parentId);
+
 }

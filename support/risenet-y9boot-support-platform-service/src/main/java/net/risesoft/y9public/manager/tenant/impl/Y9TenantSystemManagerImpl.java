@@ -1,21 +1,33 @@
 package net.risesoft.y9public.manager.tenant.impl;
 
 import java.util.List;
+import java.util.Optional;
 
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.transaction.support.TransactionSynchronization;
 import org.springframework.transaction.support.TransactionSynchronizationManager;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 
 import net.risesoft.exception.TenantErrorCodeEnum;
+import net.risesoft.id.IdType;
+import net.risesoft.id.Y9IdGenerator;
+import net.risesoft.model.platform.TenantSystem;
 import net.risesoft.y9.exception.util.Y9ExceptionUtil;
 import net.risesoft.y9.pubsub.Y9PublishService;
 import net.risesoft.y9.pubsub.constant.Y9CommonEventConst;
 import net.risesoft.y9.pubsub.message.Y9MessageCommon;
+import net.risesoft.y9.util.Y9ModelConvertUtil;
+import net.risesoft.y9public.entity.resource.Y9System;
+import net.risesoft.y9public.entity.tenant.Y9DataSource;
+import net.risesoft.y9public.entity.tenant.Y9Tenant;
 import net.risesoft.y9public.entity.tenant.Y9TenantSystem;
 import net.risesoft.y9public.manager.resource.Y9SystemManager;
+import net.risesoft.y9public.manager.tenant.Y9DataSourceManager;
+import net.risesoft.y9public.manager.tenant.Y9TenantManager;
 import net.risesoft.y9public.manager.tenant.Y9TenantSystemManager;
 import net.risesoft.y9public.repository.tenant.Y9TenantSystemRepository;
 
@@ -29,11 +41,14 @@ import net.risesoft.y9public.repository.tenant.Y9TenantSystemRepository;
 @Service
 @Transactional(value = "rsPublicTransactionManager", readOnly = true)
 @RequiredArgsConstructor
+@Slf4j
 public class Y9TenantSystemManagerImpl implements Y9TenantSystemManager {
 
     private final Y9TenantSystemRepository y9TenantSystemRepository;
 
     private final Y9SystemManager y9SystemManager;
+    private final Y9TenantManager y9TenantManager;
+    private final Y9DataSourceManager y9DataSourceManager;
 
     private final Y9PublishService y9PublishService;
 
@@ -59,7 +74,8 @@ public class Y9TenantSystemManagerImpl implements Y9TenantSystemManager {
             public void afterCommit() {
                 // 移除系统租用后，对应系统重新加载数据源
                 Y9MessageCommon syncDataSourceEvent = new Y9MessageCommon();
-                syncDataSourceEvent.setEventTarget(y9SystemManager.getById(y9TenantSystem.getSystemId()).getName());
+                syncDataSourceEvent.setEventTarget(
+                    y9SystemManager.findById(y9TenantSystem.getSystemId()).map(Y9System::getName).orElse(null));
                 syncDataSourceEvent.setEventObject(Y9CommonEventConst.TENANT_DATASOURCE_SYNC);
                 syncDataSourceEvent.setEventType(Y9CommonEventConst.TENANT_DATASOURCE_SYNC);
                 y9PublishService.publishMessageCommon(syncDataSourceEvent);
@@ -71,5 +87,70 @@ public class Y9TenantSystemManagerImpl implements Y9TenantSystemManager {
     public String getDataSourceIdByTenantIdAndSystemId(String tenantId, String systemId) {
         return y9TenantSystemRepository.findByTenantIdAndSystemId(tenantId, systemId)
             .map(Y9TenantSystem::getTenantDataSource).orElse(null);
+    }
+
+    @Override
+    @Transactional(readOnly = false)
+    public Y9TenantSystem saveTenantSystem(String systemId, String tenantId) {
+        Y9Tenant tenant = y9TenantManager.getById(tenantId);
+        Y9System y9System = y9SystemManager.getById(systemId);
+
+        Optional<Y9TenantSystem> y9TenantSystemOptional =
+            y9TenantSystemRepository.findByTenantIdAndSystemId(tenantId, systemId);
+        if (y9TenantSystemOptional.isPresent()) {
+            return y9TenantSystemOptional.get();
+        }
+
+        Y9TenantSystem y9TenantSystem = new Y9TenantSystem();
+        y9TenantSystem.setTenantId(tenantId);
+        y9TenantSystem.setTenantDataSource(tenant.getDefaultDataSourceId());
+        y9TenantSystem.setSystemId(systemId);
+        y9TenantSystem.setInitialized(false);
+        if (Boolean.TRUE.equals(y9System.getSingleDatasource())) {
+            String datasoureId = tenant.getDefaultDataSourceId();
+            try {
+                Y9DataSource y9DataSource = y9DataSourceManager.createTenantDefaultDataSource(tenant.getShortName(),
+                    tenant.getTenantType(), y9System.getName());
+                datasoureId = y9DataSource.getId();
+            } catch (Exception e) {
+                LOGGER.warn(e.getMessage(), e);
+            }
+            y9TenantSystem.setTenantDataSource(datasoureId);
+        }
+        return this.save(y9TenantSystem);
+    }
+
+    @Override
+    @Transactional(readOnly = false)
+    public Y9TenantSystem save(Y9TenantSystem y9TenantSystem) {
+        if (StringUtils.isBlank(y9TenantSystem.getId())) {
+            y9TenantSystem.setId(Y9IdGenerator.genId(IdType.SNOWFLAKE));
+        }
+
+        y9TenantSystem = y9TenantSystemRepository.save(y9TenantSystem);
+
+        Y9System y9System = y9SystemManager.getById(y9TenantSystem.getSystemId());
+        TenantSystem tenantSystem = Y9ModelConvertUtil.convert(y9TenantSystem, TenantSystem.class);
+        // 注册事务同步器，在事务提交后做某些操作
+        TransactionSynchronizationManager.registerSynchronization(new TransactionSynchronization() {
+            @Override
+            public void afterCommit() {
+                // 租户租用系统事件，应用可监听做对应租户的初始化的工作
+                Y9MessageCommon tenantSystemRegisteredEvent = new Y9MessageCommon();
+                tenantSystemRegisteredEvent.setEventObject(tenantSystem);
+                tenantSystemRegisteredEvent.setEventTarget(y9System.getName());
+                tenantSystemRegisteredEvent.setEventType(Y9CommonEventConst.TENANT_SYSTEM_REGISTERED);
+                y9PublishService.publishMessageCommon(tenantSystemRegisteredEvent);
+
+                // 对应系统重新加载数据源
+                Y9MessageCommon syncDataSourceEvent = new Y9MessageCommon();
+                syncDataSourceEvent.setEventTarget(y9System.getName());
+                syncDataSourceEvent.setEventObject(Y9CommonEventConst.TENANT_DATASOURCE_SYNC);
+                syncDataSourceEvent.setEventType(Y9CommonEventConst.TENANT_DATASOURCE_SYNC);
+                y9PublishService.publishMessageCommon(syncDataSourceEvent);
+            }
+        });
+
+        return y9TenantSystem;
     }
 }

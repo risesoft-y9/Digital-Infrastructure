@@ -270,32 +270,29 @@ public class CompositeOrgBaseManagerImpl implements CompositeOrgBaseManager {
     }
 
     @Override
-    public Integer getMaxSubTabIndex(String parentId, OrgTypeEnum orgType) {
-        Integer maxTabIndex;
-        switch (orgType) {
-            case DEPARTMENT:
-                maxTabIndex = y9DepartmentRepository.findTopByParentIdOrderByTabIndexDesc(parentId)
-                    .map(Y9OrgBase::getTabIndex).orElse(0);
-                break;
-            case GROUP:
-                maxTabIndex = y9GroupRepository.findTopByParentIdOrderByTabIndexDesc(parentId)
-                    .map(Y9OrgBase::getTabIndex).orElse(0);
-                break;
-            case POSITION:
-                maxTabIndex = y9PositionRepository.findTopByParentIdOrderByTabIndexDesc(parentId)
-                    .map(Y9OrgBase::getTabIndex).orElse(0);
-                break;
-            case PERSON:
-                maxTabIndex = y9PersonRepository.findTopByParentIdOrderByTabIndexDesc(parentId)
-                    .map(Y9OrgBase::getTabIndex).orElse(0);
-                break;
-            case MANAGER:
-                maxTabIndex = y9ManagerRepository.findTopByParentIdOrderByTabIndexDesc(parentId)
-                    .map(Y9OrgBase::getTabIndex).orElse(0);
-                break;
-            default:
-                maxTabIndex = 0;
-        }
+    public Integer getMaxSubTabIndex(String parentId) {
+        Integer maxTabIndex = -1;
+        
+        Integer maxDepartmentTabIndex =
+            y9DepartmentRepository.findTopByParentIdOrderByTabIndexDesc(parentId).map(Y9OrgBase::getTabIndex).orElse(0);
+        maxTabIndex = Math.max(maxDepartmentTabIndex, maxTabIndex);
+
+        Integer maxGroupTabIndex =
+            y9GroupRepository.findTopByParentIdOrderByTabIndexDesc(parentId).map(Y9OrgBase::getTabIndex).orElse(0);
+        maxTabIndex = Math.max(maxGroupTabIndex, maxTabIndex);
+
+        Integer maxPositionTabIndex =
+            y9PositionRepository.findTopByParentIdOrderByTabIndexDesc(parentId).map(Y9OrgBase::getTabIndex).orElse(0);
+        maxTabIndex = Math.max(maxPositionTabIndex, maxTabIndex);
+
+        Integer maxPersonTabIndex =
+            y9PersonRepository.findTopByParentIdOrderByTabIndexDesc(parentId).map(Y9OrgBase::getTabIndex).orElse(0);
+        maxTabIndex = Math.max(maxPersonTabIndex, maxTabIndex);
+
+        Integer maxManagerTabIndex =
+            y9ManagerRepository.findTopByParentIdOrderByTabIndexDesc(parentId).map(Y9OrgBase::getTabIndex).orElse(0);
+        maxTabIndex = Math.max(maxManagerTabIndex, maxTabIndex);
+
         return maxTabIndex + 1;
     }
 

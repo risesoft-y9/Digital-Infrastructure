@@ -6,7 +6,6 @@ import java.util.Optional;
 import net.risesoft.entity.Y9OrgBase;
 import net.risesoft.entity.Y9Person;
 import net.risesoft.entity.Y9Position;
-import net.risesoft.enums.platform.OrgTypeEnum;
 
 /**
  * @author dingzhaojun
@@ -68,10 +67,9 @@ public interface CompositeOrgBaseManager {
      * 根据父节点id获取子节点最大的tabIndex
      *
      * @param parentId
-     * @param orgType
      * @return {@link Integer}
      */
-    Integer getMaxSubTabIndex(String parentId, OrgTypeEnum orgType);
+    Integer getMaxSubTabIndex(String parentId);
 
     /**
      * 根据指定id获取ORGBase对象(可以是org的任意类型)
