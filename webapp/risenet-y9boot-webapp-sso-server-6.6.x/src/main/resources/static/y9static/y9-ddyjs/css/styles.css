@@ -80,10 +80,11 @@ body .login_form {
     height: 100%;
     width: 50%;
     float: left;
+    box-shadow: 30px 30px 0px 0px rgba(0, 0, 0, 0.2);
 }
 
 body .login_form .login_title {
-    padding-top: 80px;
+    padding-top: 60px;
     padding-right: 53px;
     padding-left: 52px;
 }
@@ -241,6 +242,9 @@ body .noticeInfo {
     background-color: #fdf3f3;
     border-radius: 0px 10px 10px 0px;
     float: right;
+    background: linear-gradient(91deg, #FFE9DC 4.02%, rgba(255, 249, 245, 0.00) 50.6%);
+    backdrop-filter: blur(2px);
+    box-shadow: 30px 30px 0px 0px rgba(0, 0, 0, 0.2);
 }
 
 body .noticeInfo .title {
@@ -251,6 +255,7 @@ body .noticeInfo .title {
     line-height: normal;
     margin: 60px 46px 0 46px;
 }
+
 
 body .noticeInfo .info {
     margin: 40px 46px 0 52px;
@@ -266,6 +271,16 @@ body .noticeInfo .info span {
     display: block;
     margin-bottom: 10px;
 }
+
+body .noticeInfo img {
+    display: flex;
+    justify-content: center;
+    bottom: 0;
+    position: absolute;
+    padding-left: 40px;
+    padding-right: 40px;
+}
+ 
 
 body p {
     color: #DFDFDF;
