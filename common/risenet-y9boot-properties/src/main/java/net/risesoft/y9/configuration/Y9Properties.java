@@ -33,6 +33,12 @@ public class Y9Properties {
     /** 服务器的内部IP，服务器之间通过内部IP访问，速度比较快 */
     private String internalIp = "/";
 
+    /** 客户端ID */
+    private String clientId = "clientid";
+
+    /** 客户端密码 */
+    private String clientSecret = "secret";
+
     /**
      * 通用配置
      */

@@ -1,3 +1,0 @@
-# Auto Configure
-org.springframework.boot.autoconfigure.EnableAutoConfiguration=\
-y9.autoconfiguration.Y9LogFeignConfiguration

@@ -36,6 +36,7 @@
 		<module>starter/risenet-y9boot-starter-sso-oauth2-resource</module>
 		<module>starter/risenet-y9boot-starter-elasticsearch</module>
 		<module>starter/risenet-y9boot-starter-web</module>
+        <module>starter/risenet-y9boot-starter-openfeign</module>
 
 		<module>support/risenet-y9boot-support-file-jpaRepository</module>
 		<module>support/risenet-y9boot-support-fileService-FTP</module>

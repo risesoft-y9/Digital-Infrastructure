@@ -5,6 +5,7 @@ import org.springframework.boot.context.properties.NestedConfigurationProperty;
 import lombok.Getter;
 import lombok.Setter;
 
+import net.risesoft.y9.configuration.feature.api.Y9ApiProperties;
 import net.risesoft.y9.configuration.feature.apisix.Y9ApisixProperties;
 import net.risesoft.y9.configuration.feature.cache.Y9CacheProperties;
 import net.risesoft.y9.configuration.feature.cxf.Y9CxfProperties;
@@ -162,5 +163,9 @@ public class Y9FeatureProperties {
      */
     @NestedConfigurationProperty
     private Y9JwtProperties jwt = new Y9JwtProperties();
+
+    /** 接口调用 */
+    @NestedConfigurationProperty
+    private Y9ApiProperties api = new Y9ApiProperties();
 
 }
