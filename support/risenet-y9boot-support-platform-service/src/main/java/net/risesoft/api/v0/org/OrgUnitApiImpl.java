@@ -15,7 +15,7 @@ import lombok.RequiredArgsConstructor;
 
 import net.risesoft.entity.Y9Department;
 import net.risesoft.entity.Y9OrgBase;
-import net.risesoft.enums.platform.TreeTypeEnum;
+import net.risesoft.enums.platform.OrgTreeTypeEnum;
 import net.risesoft.model.platform.Department;
 import net.risesoft.model.platform.OrgUnit;
 import net.risesoft.model.platform.Organization;
@@ -161,7 +161,7 @@ public class OrgUnitApiImpl implements OrgUnitApi {
         Y9LoginUserHolder.setTenantId(tenantId);
 
         List<Y9OrgBase> y9OrgBaseList =
-            compositeOrgBaseService.getTree(orgUnitId, Y9EnumUtil.valueOf(TreeTypeEnum.class, treeType), false);
+            compositeOrgBaseService.getTree(orgUnitId, Y9EnumUtil.valueOf(OrgTreeTypeEnum.class, treeType), false);
         return ModelConvertUtil.orgBaseToOrgUnit(y9OrgBaseList);
     }
 
@@ -181,7 +181,7 @@ public class OrgUnitApiImpl implements OrgUnitApi {
         Y9LoginUserHolder.setTenantId(tenantId);
 
         List<Y9OrgBase> y9OrgBaseList =
-            compositeOrgBaseService.treeSearch(name, Y9EnumUtil.valueOf(TreeTypeEnum.class, treeType), false);
+            compositeOrgBaseService.treeSearch(name, Y9EnumUtil.valueOf(OrgTreeTypeEnum.class, treeType), false);
         return ModelConvertUtil.orgBaseToOrgUnit(y9OrgBaseList);
     }
 
@@ -203,7 +203,7 @@ public class OrgUnitApiImpl implements OrgUnitApi {
         Y9LoginUserHolder.setTenantId(tenantId);
 
         List<Y9OrgBase> y9OrgBaseList =
-            compositeOrgBaseService.treeSearch(name, Y9EnumUtil.valueOf(TreeTypeEnum.class, treeType), dnName);
+            compositeOrgBaseService.treeSearch(name, Y9EnumUtil.valueOf(OrgTreeTypeEnum.class, treeType), dnName);
         return ModelConvertUtil.orgBaseToOrgUnit(y9OrgBaseList);
     }
 

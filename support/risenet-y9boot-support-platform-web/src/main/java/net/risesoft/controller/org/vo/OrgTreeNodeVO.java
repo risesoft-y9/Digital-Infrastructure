@@ -12,7 +12,10 @@ import net.risesoft.controller.TreeNodeVO;
 import net.risesoft.controller.TreeTypeEnum;
 import net.risesoft.entity.Y9OrgBase;
 import net.risesoft.entity.Y9Person;
+import net.risesoft.enums.platform.OrgTreeTypeEnum;
+import net.risesoft.enums.platform.OrgTypeEnum;
 import net.risesoft.enums.platform.SexEnum;
+import net.risesoft.service.org.CompositeOrgBaseService;
 
 /**
  * 组织树节点vo
@@ -23,25 +26,34 @@ import net.risesoft.enums.platform.SexEnum;
 @Getter
 @Setter
 public class OrgTreeNodeVO extends TreeNodeVO {
-    
+
     private static final long serialVersionUID = 3542372289025268472L;
 
+    /** 是否禁用 */
     private Boolean disabled;
-    
+
+    /** id路径 */
     private String guidPath;
 
+    /** 成员计数 可以是岗位和人员计数 */
+    @JsonInclude(JsonInclude.Include.NON_NULL)
+    private Long memberCount;
+
+    /** 人员性别 */
     @JsonInclude(JsonInclude.Include.NON_NULL)
     private SexEnum sex;
 
+    /** 人员是否为新增的账号 */
     @JsonInclude(JsonInclude.Include.NON_NULL)
     private Boolean original;
-    
+
     @Override
     public TreeTypeEnum getTreeType() {
         return TreeTypeEnum.ORG;
     }
 
-    public static OrgTreeNodeVO convertY9OrgBase(Y9OrgBase y9OrgBase) {
+    public static OrgTreeNodeVO convertY9OrgBase(Y9OrgBase y9OrgBase, OrgTreeTypeEnum treeType, boolean countMember,
+        CompositeOrgBaseService compositeOrgBaseService) {
         OrgTreeNodeVO orgTreeNodeVO = new OrgTreeNodeVO();
         orgTreeNodeVO.setId(y9OrgBase.getId());
         orgTreeNodeVO.setGuidPath(y9OrgBase.getGuidPath());
@@ -53,16 +65,21 @@ public class OrgTreeNodeVO extends TreeNodeVO {
         orgTreeNodeVO.setNodeType(y9OrgBase.getOrgType().getValue());
 
         if (y9OrgBase instanceof Y9Person) {
-            orgTreeNodeVO.setSex(((Y9Person) y9OrgBase).getSex());
-            orgTreeNodeVO.setOriginal(((Y9Person) y9OrgBase).getOriginal());
+            orgTreeNodeVO.setSex(((Y9Person)y9OrgBase).getSex());
+            orgTreeNodeVO.setOriginal(((Y9Person)y9OrgBase).getOriginal());
+        }
+        if (countMember && (OrgTypeEnum.DEPARTMENT.equals(y9OrgBase.getOrgType())
+            || OrgTypeEnum.ORGANIZATION.equals(y9OrgBase.getOrgType()))) {
+            orgTreeNodeVO.setMemberCount(compositeOrgBaseService.countByGuidPath(y9OrgBase.getGuidPath(), treeType));
         }
         return orgTreeNodeVO;
     }
 
-    public static List<OrgTreeNodeVO> convertY9OrgBaseList(List<? extends Y9OrgBase> y9ResourceBaseList) {
+    public static List<OrgTreeNodeVO> convertY9OrgBaseList(List<? extends Y9OrgBase> y9ResourceBaseList,
+        OrgTreeTypeEnum treeType, boolean countMember, CompositeOrgBaseService compositeOrgBaseService) {
         List<OrgTreeNodeVO> roleTreeNodeVOList = new ArrayList<>();
-        for (Y9OrgBase y9ResourceBase : y9ResourceBaseList) {
-            roleTreeNodeVOList.add(convertY9OrgBase(y9ResourceBase));
+        for (Y9OrgBase y9OrgBase : y9ResourceBaseList) {
+            roleTreeNodeVOList.add(convertY9OrgBase(y9OrgBase, treeType, countMember, compositeOrgBaseService));
         }
         return roleTreeNodeVOList;
     }

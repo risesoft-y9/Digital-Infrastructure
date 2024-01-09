@@ -8,7 +8,7 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
-import net.risesoft.enums.platform.TreeTypeEnum;
+import net.risesoft.enums.platform.OrgTreeTypeEnum;
 import net.risesoft.model.platform.Department;
 import net.risesoft.model.platform.OrgUnit;
 import net.risesoft.model.platform.Organization;
@@ -109,7 +109,7 @@ public interface OrgUnitApi {
      */
     @GetMapping("/getSubTree")
     Y9Result<List<OrgUnit>> getSubTree(@RequestParam("tenantId") @NotBlank String tenantId,
-        @RequestParam("orgUnitId") @NotBlank String orgUnitId, @RequestParam("treeType") TreeTypeEnum treeType);
+        @RequestParam("orgUnitId") @NotBlank String orgUnitId, @RequestParam("treeType") OrgTreeTypeEnum treeType);
 
     /**
      * 根据节点名称，和树类型查询组织节点
@@ -122,7 +122,7 @@ public interface OrgUnitApi {
      */
     @GetMapping("/treeSearch")
     Y9Result<List<OrgUnit>> treeSearch(@RequestParam("tenantId") @NotBlank String tenantId,
-        @RequestParam("name") @NotBlank String name, @RequestParam("treeType") TreeTypeEnum treeType);
+        @RequestParam("name") @NotBlank String name, @RequestParam("treeType") OrgTreeTypeEnum treeType);
 
     /**
      * 根据name，和结构树类型查询组织节点
@@ -136,7 +136,7 @@ public interface OrgUnitApi {
      */
     @GetMapping("/treeSearchByDn")
     Y9Result<List<OrgUnit>> treeSearchByDn(@RequestParam("tenantId") @NotBlank String tenantId,
-        @RequestParam("name") @NotBlank String name, @RequestParam("treeType") TreeTypeEnum treeType,
+        @RequestParam("name") @NotBlank String name, @RequestParam("treeType") OrgTreeTypeEnum treeType,
         @RequestParam("dnName") @NotBlank String dnName);
 
 }

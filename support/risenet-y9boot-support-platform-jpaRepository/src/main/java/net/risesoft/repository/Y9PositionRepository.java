@@ -22,6 +22,8 @@ import net.risesoft.entity.Y9Position;
 // @JaversSpringDataAuditable
 public interface Y9PositionRepository extends JpaRepository<Y9Position, String> {
 
+    long countByDisabledAndGuidPathContaining(boolean disabled, String guidPath);
+
     int countByJobId(String jobId);
 
     List<Y9Position> findByJobId(String jobId);

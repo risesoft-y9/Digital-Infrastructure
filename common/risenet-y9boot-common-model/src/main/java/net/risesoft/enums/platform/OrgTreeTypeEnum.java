@@ -15,7 +15,7 @@ import net.risesoft.enums.ValuedEnum;
  */
 @RequiredArgsConstructor
 @Getter
-public enum TreeTypeEnum implements ValuedEnum<String> {
+public enum OrgTreeTypeEnum implements ValuedEnum<String> {
 
     /** 组织机构树，包含机构、部门、用户组、岗位、人员 */
     TREE_TYPE_ORG("tree_type_org", "组织机构树，包含机构、部门、用户组、岗位、人员"),

@@ -10,7 +10,7 @@ import net.risesoft.entity.Y9Organization;
 import net.risesoft.entity.Y9Person;
 import net.risesoft.entity.Y9Position;
 import net.risesoft.enums.platform.OrgTypeEnum;
-import net.risesoft.enums.platform.TreeTypeEnum;
+import net.risesoft.enums.platform.OrgTreeTypeEnum;
 import net.risesoft.model.platform.SyncOrgUnits;
 
 /**
@@ -21,6 +21,15 @@ import net.risesoft.model.platform.SyncOrgUnits;
  * @since 9.6.3
  */
 public interface CompositeOrgBaseService {
+
+    /**
+     * 根据组织树类型和ID路径计数成员（可能是岗位和人员计数）
+     *
+     * @param guidPath GUID路径
+     * @param orgTreeTypeEnum 树型
+     * @return long
+     */
+    long countByGuidPath(String guidPath, OrgTreeTypeEnum orgTreeTypeEnum);
 
     /**
      * 根据指定id获取ORGBase对象(可以是org的任意类型)
@@ -138,7 +147,7 @@ public interface CompositeOrgBaseService {
      * @param disabled 是否已禁用
      * @return {@link List}<{@link Y9OrgBase}>
      */
-    List<Y9OrgBase> getTree(String id, TreeTypeEnum treeType, boolean disabled);
+    List<Y9OrgBase> getTree(String id, OrgTreeTypeEnum treeType, boolean disabled);
 
     /**
      * 获取组织机构树
@@ -149,7 +158,7 @@ public interface CompositeOrgBaseService {
      * @param disabled 人员是否禁用
      * @return {@link List}<{@link Y9OrgBase}>
      */
-    List<Y9OrgBase> getTree(String id, TreeTypeEnum treeType, boolean isPersonIncluded, boolean disabled);
+    List<Y9OrgBase> getTree(String id, OrgTreeTypeEnum treeType, boolean isPersonIncluded, boolean disabled);
 
     /**
      * 子域三员获取部门树
@@ -158,7 +167,7 @@ public interface CompositeOrgBaseService {
      * @param treeType 树类型
      * @return {@link List}<{@link Y9OrgBase}>
      */
-    List<Y9OrgBase> getTree4DeptManager(String id, TreeTypeEnum treeType);
+    List<Y9OrgBase> getTree4DeptManager(String id, OrgTreeTypeEnum treeType);
 
     /**
      * 根据组织节点id向下递归获取所有组织节点
@@ -227,7 +236,7 @@ public interface CompositeOrgBaseService {
      * @param treeType 树类型
      * @return {@link List}<{@link Y9OrgBase}>
      */
-    List<Y9OrgBase> treeSearch(String name, TreeTypeEnum treeType);
+    List<Y9OrgBase> treeSearch(String name, OrgTreeTypeEnum treeType);
 
     /**
      * 根据name，和结构树类型查询机构主体
@@ -237,7 +246,7 @@ public interface CompositeOrgBaseService {
      * @param dnName dn
      * @return {@link List}<{@link Y9OrgBase}>
      */
-    List<Y9OrgBase> treeSearch(String name, TreeTypeEnum treeType, String dnName);
+    List<Y9OrgBase> treeSearch(String name, OrgTreeTypeEnum treeType, String dnName);
 
     /**
      * 根据name，和结构树类型查询机构主体(不含禁用人员)
@@ -247,7 +256,7 @@ public interface CompositeOrgBaseService {
      * @param isDisabledIncluded 是否包含禁用的组织节点
      * @return {@link List}<{@link Y9OrgBase}>
      */
-    List<Y9OrgBase> treeSearch(String name, TreeTypeEnum treeType, boolean isDisabledIncluded);
+    List<Y9OrgBase> treeSearch(String name, OrgTreeTypeEnum treeType, boolean isDisabledIncluded);
 
     /**
      * 根据name，和结构树类型查询机构主体
@@ -256,5 +265,5 @@ public interface CompositeOrgBaseService {
      * @param treeType 树类型
      * @return {@link List}<{@link Y9OrgBase}>
      */
-    List<Y9OrgBase> treeSearch4DeptManager(String name, TreeTypeEnum treeType);
+    List<Y9OrgBase> treeSearch4DeptManager(String name, OrgTreeTypeEnum treeType);
 }
