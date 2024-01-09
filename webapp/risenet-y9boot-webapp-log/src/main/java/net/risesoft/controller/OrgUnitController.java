@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.RestController;
 import lombok.RequiredArgsConstructor;
 
 import net.risesoft.enums.platform.TenantTypeEnum;
-import net.risesoft.enums.platform.TreeTypeEnum;
+import net.risesoft.enums.platform.OrgTreeTypeEnum;
 import net.risesoft.log.annotation.RiseLog;
 import net.risesoft.model.platform.OrgUnit;
 import net.risesoft.model.platform.Organization;
@@ -90,7 +90,7 @@ public class OrgUnitController {
     @RiseLog(operationName = "获取组织架构树")
     @RequestMapping(value = "/getTree")
     public Y9Result<List<OrgUnit>> getTree(String tenantId, @RequestParam String id,
-        @RequestParam TreeTypeEnum treeType) {
+        @RequestParam OrgTreeTypeEnum treeType) {
         if (StringUtils.isBlank(tenantId)) {
             tenantId = Y9LoginUserHolder.getTenantId();
         }

@@ -11,7 +11,7 @@ import net.risesoft.api.org.OrganizationApi;
 import net.risesoft.api.permission.PersonResourceApi;
 import net.risesoft.api.resource.AppApi;
 import net.risesoft.enums.platform.AuthorityEnum;
-import net.risesoft.enums.platform.TreeTypeEnum;
+import net.risesoft.enums.platform.OrgTreeTypeEnum;
 import net.risesoft.log.annotation.RiseLog;
 import net.risesoft.model.platform.App;
 import net.risesoft.model.platform.Menu;
@@ -45,11 +45,11 @@ public class TestController {
         for (Organization organization : organizationList) {
             // 组织机构树第二层
             List<OrgUnit> orgUnitList1 =
-                orgUnitApi.getSubTree(Y9LoginUserHolder.getTenantId(), organization.getId(), TreeTypeEnum.TREE_TYPE_ORG)
+                orgUnitApi.getSubTree(Y9LoginUserHolder.getTenantId(), organization.getId(), OrgTreeTypeEnum.TREE_TYPE_ORG)
                     .getData();
             // 组织岗位树第二层
             List<OrgUnit> orgUnitList2 = orgUnitApi
-                .getSubTree(Y9LoginUserHolder.getTenantId(), organization.getId(), TreeTypeEnum.TREE_TYPE_POSITION)
+                .getSubTree(Y9LoginUserHolder.getTenantId(), organization.getId(), OrgTreeTypeEnum.TREE_TYPE_POSITION)
                 .getData();
         }
 

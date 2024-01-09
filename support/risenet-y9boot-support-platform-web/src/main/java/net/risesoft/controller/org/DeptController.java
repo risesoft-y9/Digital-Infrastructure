@@ -17,7 +17,7 @@ import lombok.RequiredArgsConstructor;
 import net.risesoft.entity.Y9Department;
 import net.risesoft.entity.Y9OrgBase;
 import net.risesoft.enums.platform.ManagerLevelEnum;
-import net.risesoft.enums.platform.TreeTypeEnum;
+import net.risesoft.enums.platform.OrgTreeTypeEnum;
 import net.risesoft.log.OperationTypeEnum;
 import net.risesoft.log.annotation.RiseLog;
 import net.risesoft.permission.annotation.IsManager;
@@ -118,7 +118,7 @@ public class DeptController {
     @RiseLog(operationName = "获取部门排序列表")
     @RequestMapping(value = "/listOrderDepts")
     public Y9Result<List<Y9OrgBase>> listOrderDepts(@RequestParam @NotBlank String parentId) {
-        List<Y9OrgBase> deptList = compositeOrgBaseService.getTree(parentId, TreeTypeEnum.TREE_TYPE_ORG, false);
+        List<Y9OrgBase> deptList = compositeOrgBaseService.getTree(parentId, OrgTreeTypeEnum.TREE_TYPE_ORG, false);
         return Y9Result.success(deptList, "获取数据成功");
     }
 
