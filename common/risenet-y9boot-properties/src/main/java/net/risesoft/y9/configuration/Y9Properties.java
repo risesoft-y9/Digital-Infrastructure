@@ -30,6 +30,12 @@ public class Y9Properties {
     /** 上下文路径 */
     private String contextPath = "/";
 
+    /** 客户端ID */
+    private String clientId = "clientid";
+
+    /** 客户端密码 */
+    private String clientSecret = "secret";
+
     /**
      * 通用配置
      */
