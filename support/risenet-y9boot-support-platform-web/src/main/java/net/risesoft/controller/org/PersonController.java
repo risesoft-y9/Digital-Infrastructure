@@ -8,10 +8,13 @@ import jakarta.validation.constraints.NotEmpty;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
 
 import javax.imageio.ImageIO;
 
+import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.http.MediaType;
 import org.springframework.validation.annotation.Validated;
@@ -36,6 +39,9 @@ import net.risesoft.service.org.Y9PersonExtService;
 import net.risesoft.service.org.Y9PersonService;
 import net.risesoft.service.relation.Y9PersonsToGroupsService;
 import net.risesoft.service.relation.Y9PersonsToPositionsService;
+import net.risesoft.y9.Y9Context;
+import net.risesoft.y9public.entity.Y9FileStore;
+import net.risesoft.y9public.service.Y9FileStoreService;
 import net.risesoft.y9public.service.user.Y9UserService;
 
 import cn.hutool.core.util.DesensitizedUtil;
@@ -61,6 +67,7 @@ public class PersonController {
     private final Y9PersonExtService y9PersonExtService;
     private final Y9PersonService y9PersonService;
     private final Y9UserService y9UserService;
+    private final Y9FileStoreService y9FileStoreService;
 
     /**
      * 为人员添加用户组
@@ -407,6 +414,33 @@ public class PersonController {
         } else {
             return Y9Result.failure("上传个人签名图片失败，图片为空");
         }
+    }
+
+    /**
+     * 上传个人头像
+     * 
+     * @param iconFile 头像
+     * @return
+     */
+    @PostMapping(value = "/saveAvator")
+    public Y9Result<String> saveAvator(@RequestParam(required = false) MultipartFile iconFile,
+        @RequestParam @NotBlank String personId) {
+        try {
+            SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMddHHmmss");
+            if (iconFile != null) {
+                String fileType = FilenameUtils.getExtension(iconFile.getOriginalFilename());
+                String fileNewName = personId + "_" + sdf.format(new Date()) + "." + fileType;
+                String fullPath = Y9FileStore.buildFullPath(Y9Context.getSystemName(), "avator");
+                Y9FileStore y9FileStore = y9FileStoreService.uploadFile(iconFile, fullPath, fileNewName);
+                String url = y9FileStore.getUrl();
+                y9PersonService.saveAvator(personId, url);
+                return Y9Result.success(url, "保存个人头像成功！");
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            return Y9Result.failure("保存个人头像失败！");
+        }
+        return Y9Result.failure("保存个人头像失败！未上传图片！");
     }
 
     /**
