@@ -261,6 +261,7 @@ public class Y9PositionServiceImpl implements Y9PositionService {
         updatedPosition.setGuidPath(parent.getGuidPath() + OrgLevelConsts.SEPARATOR + updatedPosition.getId());
         updatedPosition.setDn(OrgLevelConsts.getOrgLevel(OrgTypeEnum.POSITION) + updatedPosition.getName()
             + OrgLevelConsts.SEPARATOR + parent.getDn());
+        updatedPosition.setTabIndex(compositeOrgBaseManager.getMaxSubTabIndex(parentId));
         final Y9Position savedPosition = this.save(updatedPosition);
 
         Y9Context.publishEvent(new Y9EntityUpdatedEvent<>(originPosition, savedPosition));

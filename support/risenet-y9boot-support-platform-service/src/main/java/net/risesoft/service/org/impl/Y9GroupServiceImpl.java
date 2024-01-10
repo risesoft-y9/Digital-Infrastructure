@@ -184,6 +184,7 @@ public class Y9GroupServiceImpl implements Y9GroupService {
         updatedY9Group.setDn(OrgLevelConsts.getOrgLevel(OrgTypeEnum.GROUP) + updatedY9Group.getName()
             + OrgLevelConsts.SEPARATOR + parent.getDn());
         updatedY9Group.setGuidPath(parent.getGuidPath() + OrgLevelConsts.SEPARATOR + updatedY9Group.getId());
+        updatedY9Group.setTabIndex(compositeOrgBaseManager.getMaxSubTabIndex(parentId));
         final Y9Group savedY9Group = y9GroupManager.save(updatedY9Group);
 
         Y9Context.publishEvent(new Y9EntityUpdatedEvent<>(originY9Group, savedY9Group));
