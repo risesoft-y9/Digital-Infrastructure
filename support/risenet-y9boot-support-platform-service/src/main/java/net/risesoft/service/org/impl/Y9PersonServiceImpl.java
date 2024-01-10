@@ -888,6 +888,7 @@ public class Y9PersonServiceImpl implements Y9PersonService {
         Y9BeanUtil.copyProperties(originPerson, updatedPerson);
         updatedPerson.setTabIndex(compositeOrgBaseManager.getMaxSubTabIndex(parentId));
         updatedPerson.setParentId(parentId);
+        updatedPerson.setTabIndex(compositeOrgBaseManager.getMaxSubTabIndex(parentId));
         final Y9Person savedPerson = this.save(updatedPerson);
 
         Y9Context.publishEvent(new Y9EntityUpdatedEvent<>(originPerson, savedPerson));

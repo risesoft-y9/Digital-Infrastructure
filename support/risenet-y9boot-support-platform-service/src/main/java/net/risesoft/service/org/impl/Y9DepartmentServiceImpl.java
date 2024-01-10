@@ -250,6 +250,7 @@ public class Y9DepartmentServiceImpl implements Y9DepartmentService {
         updatedDepartment.setDn(OrgLevelConsts.getOrgLevel(OrgTypeEnum.DEPARTMENT) + updatedDepartment.getName()
             + OrgLevelConsts.SEPARATOR + parent.getDn());
         updatedDepartment.setGuidPath(parent.getGuidPath() + OrgLevelConsts.SEPARATOR + updatedDepartment.getId());
+        updatedDepartment.setTabIndex(compositeOrgBaseManager.getMaxSubTabIndex(parentId));
         final Y9Department savedDepartment = y9DepartmentManager.save(updatedDepartment);
 
         compositeOrgBaseManager.recursivelyUpdateProperties(savedDepartment);
