@@ -51,10 +51,6 @@ public class RiseAuthenticationHandler extends AbstractAuthenticationHandler {
         String username = riseCredential.getUsername();
         String password = riseCredential.toPassword();
         String pwdEcodeType = riseCredential.getPwdEcodeType();
-
-        String oldTenantname = tenantShortName;
-        String oldUsername = username;
-
         try {
             username = Base64Util.decode(username, "Unicode");
             if (StringUtils.isNotBlank(pwdEcodeType)) {
@@ -66,26 +62,6 @@ public class RiseAuthenticationHandler extends AbstractAuthenticationHandler {
                 }
             }
             password = Base64Util.decode(password, "Unicode");
-            // 特殊登录处理
-            if (username.contains("&")) {
-                oldUsername = username;
-                String agentTenantShortName = "operation";
-                String agentUserName = username.substring(username.indexOf("&") + 1, username.length());
-                username = agentUserName;
-                tenantShortName = agentTenantShortName;
-
-                List<Y9User> agentUsers = null;
-                if (StringUtils.isNotBlank(deptId)) {
-                    agentUsers = y9UserService.findByTenantShortNameAndMobileAndParentId(agentTenantShortName,
-                        agentUserName, deptId);
-                } else {
-                    agentUsers = y9UserService.findByTenantShortNameAndLoginNameAndOriginal(agentTenantShortName,
-                        agentUserName, Boolean.TRUE);
-                }
-                if (agentUsers == null || agentUsers.isEmpty()) {
-                    throw new FailedLoginException("没有找到这个【代理】用户。");
-                }
-            }
             riseCredential.setUsername(username);
             riseCredential.assignPassword(password);
 
@@ -140,12 +116,6 @@ public class RiseAuthenticationHandler extends AbstractAuthenticationHandler {
                     String hashed = y9User.getPassword();
                     if (!Y9MessageDigest.checkpw(password, hashed)) {
                         throw new FailedLoginException("密码错误。");
-                    }
-                    // 特殊处理登录成功后还原登录账号
-                    if (oldUsername.contains("&")) {
-                        username = oldUsername.substring(0, oldUsername.indexOf("&"));
-                        riseCredential.setUsername(username);
-                        riseCredential.setTenantShortName(oldTenantname);
                     }
                     try {
                         y9LoginUserService.save(riseCredential, "true", "登录成功");
