@@ -66,26 +66,6 @@ public class RiseAuthenticationHandler extends AbstractAuthenticationHandler {
                 }
             }
             password = Base64Util.decode(password, "Unicode");
-            // 特殊登录处理
-            if (username.contains("&")) {
-                oldUsername = username;
-                String agentTenantShortName = "operation";
-                String agentUserName = username.substring(username.indexOf("&") + 1, username.length());
-                username = agentUserName;
-                tenantShortName = agentTenantShortName;
-
-                List<Y9User> agentUsers = null;
-                if (StringUtils.isNotBlank(deptId)) {
-                    agentUsers = y9UserService.findByTenantShortNameAndMobileAndParentId(agentTenantShortName,
-                        agentUserName, deptId);
-                } else {
-                    agentUsers = y9UserService.findByTenantShortNameAndLoginNameAndOriginal(agentTenantShortName,
-                        agentUserName, Boolean.TRUE);
-                }
-                if (agentUsers == null || agentUsers.isEmpty()) {
-                    throw new FailedLoginException("没有找到这个【代理】用户。");
-                }
-            }
             riseCredential.setUsername(username);
             riseCredential.assignPassword(password);
 
