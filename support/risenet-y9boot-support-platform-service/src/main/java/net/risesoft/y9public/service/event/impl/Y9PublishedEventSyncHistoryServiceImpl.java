@@ -4,6 +4,7 @@ import java.util.Date;
 import java.util.Optional;
 
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import lombok.RequiredArgsConstructor;
 
@@ -31,6 +32,7 @@ public class Y9PublishedEventSyncHistoryServiceImpl implements Y9PublishedEventS
     }
 
     @Override
+    @Transactional(readOnly = false)
     public Y9PublishedEventSyncHistory saveOrUpdate(String tenantId, String appName, Date syncTime) {
         Optional<Y9PublishedEventSyncHistory> y9PublishedEventSyncHistoryOptional =
             y9PublishedEventSyncHistoryRepository.findByTenantIdAndAppName(tenantId, appName);

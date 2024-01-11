@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.Optional;
 
 import org.apache.commons.lang3.StringUtils;
+import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -272,7 +273,7 @@ public class CompositeOrgBaseManagerImpl implements CompositeOrgBaseManager {
     @Override
     public Integer getMaxSubTabIndex(String parentId) {
         Integer maxTabIndex = -1;
-        
+
         Integer maxDepartmentTabIndex =
             y9DepartmentRepository.findTopByParentIdOrderByTabIndexDesc(parentId).map(Y9OrgBase::getTabIndex).orElse(0);
         maxTabIndex = Math.max(maxDepartmentTabIndex, maxTabIndex);
@@ -368,7 +369,7 @@ public class CompositeOrgBaseManagerImpl implements CompositeOrgBaseManager {
             dept.setDn(OrgLevelConsts.getOrgLevel(OrgTypeEnum.DEPARTMENT) + dept.getName() + OrgLevelConsts.SEPARATOR
                 + parent.getDn());
             dept.setGuidPath(parent.getGuidPath() + OrgLevelConsts.SEPARATOR + dept.getId());
-            y9DepartmentRepository.save(dept);
+            dept = saveDepartment(dept);
             recursivelyUpdateProperties(dept);
         }
 
@@ -378,7 +379,7 @@ public class CompositeOrgBaseManagerImpl implements CompositeOrgBaseManager {
             group.setDn(OrgLevelConsts.getOrgLevel(OrgTypeEnum.GROUP) + group.getName() + OrgLevelConsts.SEPARATOR
                 + parent.getDn());
             group.setGuidPath(parent.getGuidPath() + OrgLevelConsts.SEPARATOR + group.getId());
-            y9GroupRepository.save(group);
+            saveY9Group(group);
         }
 
         // 岗位
@@ -387,7 +388,7 @@ public class CompositeOrgBaseManagerImpl implements CompositeOrgBaseManager {
             position.setDn(OrgLevelConsts.getOrgLevel(OrgTypeEnum.POSITION) + position.getName()
                 + OrgLevelConsts.SEPARATOR + parent.getDn());
             position.setGuidPath(parent.getGuidPath() + OrgLevelConsts.SEPARATOR + position.getId());
-            y9PositionRepository.save(position);
+            saveY9Position(position);
         }
 
         // 人员
@@ -396,8 +397,32 @@ public class CompositeOrgBaseManagerImpl implements CompositeOrgBaseManager {
             person.setDn(OrgLevelConsts.getOrgLevel(OrgTypeEnum.PERSON) + person.getName() + OrgLevelConsts.SEPARATOR
                 + parent.getDn());
             person.setGuidPath(parent.getGuidPath() + OrgLevelConsts.SEPARATOR + person.getId());
-            y9PersonRepository.save(person);
+            saveY9Person(person);
         }
+    }
+
+    @CacheEvict(cacheNames = CacheNameConsts.ORG_DEPARTMENT, key = "#y9Department.id")
+    @Transactional(readOnly = false)
+    public Y9Department saveDepartment(Y9Department y9Department) {
+        return y9DepartmentRepository.save(y9Department);
+    }
+
+    @CacheEvict(cacheNames = CacheNameConsts.ORG_GROUP, key = "#y9Group.id")
+    @Transactional(readOnly = false)
+    public Y9Group saveY9Group(Y9Group y9Group) {
+        return y9GroupRepository.save(y9Group);
+    }
+
+    @CacheEvict(cacheNames = CacheNameConsts.ORG_PERSON, key = "#y9Person.id")
+    @Transactional(readOnly = false)
+    public Y9Person saveY9Person(Y9Person y9Person) {
+        return y9PersonRepository.save(y9Person);
+    }
+
+    @CacheEvict(cacheNames = CacheNameConsts.ORG_POSITION, key = "#y9Position.id")
+    @Transactional(readOnly = false)
+    public Y9Position saveY9Position(Y9Position y9Position) {
+        return y9PositionRepository.save(y9Position);
     }
 
 }
