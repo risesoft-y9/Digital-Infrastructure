@@ -1,0 +1,61 @@
+机器节点准备：
+需要一台manager机器，内存和硬盘大一点，多台worker机器。
+1、安装alma Linux 9.3，设置主机名、静态IP。
+2、设置主机名。sudo hostnamectl status
+               sudo hostnamectl set-hostname [swarm-manager01、swarm-worker01等等]
+3、设置静态IP，swarm mode需要使用静态IP，不能使用动态IP。
+               sudo vim /etc/NetworkManager/system-connections/ens160.nmconnection
+			   ...
+			   [ipv4]
+               address1=92.168.31.251/24,192.168.31.1   （ip自己替换）
+               dns=114.114.114.114;
+               method=manual
+			   ...
+			   
+			   nmcli c reload # 重新加载配置文件
+			   nmcli c up ens160			   
+4、关闭防火墙，sudo systemctl stop firewalld
+               sudo systemctl disable firewalld
+			   sudo systemctl disable --now firewalld
+			   sudo firewall-cmd --state
+5、关闭SELinux，sudo setenforce 0
+               sudo sed -ri 's/SELINUX=enforcing/SELINUX=disabled/' /etc/selinux/config
+			   sudo sestatus
+6、主机系统时间同步配置，
+               sudo yum install -y chrony
+			   sudo vim /etc/chrony.conf
+			       注释掉第三行原有的时间服务器地址，设置为阿里云的时间服务地址:
+				     # pool 2.almalinux.pool.ntp.org iburst
+                     pool ntp1.aliyun.com iburst
+					 ....
+			   sudo systemctl enable --now chronyd 
+			   sudo chronyc -a makestep
+
+
+Docker install
+
+1、 sudo yum install -y yum-utils
+2、 sudo yum-config-manager --add-repo https://download.docker.com/linux/centos/docker-ce.repo
+3、 sudo yum install docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin
+4、 sudo usermod -aG docker $USER
+5、 newgrp docker
+6、 sudo systemctl enable docker.service
+7、 sudo systemctl enable containerd.service
+8、 sudo systemctl start docker
+9、 docker run hello-world
+
+delete swarm
+On manager机器上，执行：docker swarm leave --force
+
+Create a swarm
+On manager机器上
+1、 docker swarm init --advertise-addr 192.168.3.188
+    记住输出的命令
+2、 docker info
+3、 docker node ls
+
+On worker机器上
+在manager机器上执行docker swarm join-token worker可以再次获取token
+
+1、docker swarm join --token xxx【刚才输出的命令】
+2、在manager机器上执行：docker node ls
