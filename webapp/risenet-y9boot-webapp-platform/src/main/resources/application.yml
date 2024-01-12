@@ -113,7 +113,7 @@ spring:
             hibernate:
                 hbm2ddl:
                     auto: none
-                dialect: org.hibernate.dialect.Kingbase8Dialect
+                dialect: org.hibernate.dialect.MySQL8Dialect
                 jdbc:
                     batch_size: 100
                 show_sql: true
