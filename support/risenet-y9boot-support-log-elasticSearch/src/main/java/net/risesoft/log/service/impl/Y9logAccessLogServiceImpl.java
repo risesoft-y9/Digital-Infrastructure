@@ -45,9 +45,9 @@ import net.risesoft.log.repository.Y9logAccessLogRepository;
 import net.risesoft.log.service.Y9logAccessLogService;
 import net.risesoft.log.service.Y9logMappingService;
 import net.risesoft.model.log.AccessLog;
+import net.risesoft.model.log.LogInfoModel;
 import net.risesoft.model.platform.Person;
 import net.risesoft.model.platform.Tenant;
-import net.risesoft.model.log.LogInfoModel;
 import net.risesoft.pojo.Y9Page;
 import net.risesoft.y9.Y9LoginUserHolder;
 import net.risesoft.y9.json.Y9JsonUtil;
@@ -747,6 +747,8 @@ public class Y9logAccessLogServiceImpl implements Y9logAccessLogService {
         List<Y9logAccessLog> list = searchHits.stream().map(SearchHit::getContent).collect(Collectors.toList());
         return new PageImpl<>(list, pageable, searchHits.getTotalHits());
     }
+
+    private final Y9logAccessLogRepository y9logAccessLogRepository;
 
     // 目前日志查询页有两种情况：一种是有开始时间和结束时间，另一种是只选一个时间
     private String[] createIndexNames(String startDate, String endDate) {
@@ -1493,7 +1495,7 @@ public class Y9logAccessLogServiceImpl implements Y9logAccessLogService {
     
     @Override
     public void save(Y9logAccessLog y9logAccessLog) {
-        elasticsearchOperations.save(y9logAccessLog);
+        y9logAccessLogRepository.save(y9logAccessLog);
     }
     
     @Override
@@ -1527,9 +1529,8 @@ public class Y9logAccessLogServiceImpl implements Y9logAccessLogService {
         }
         if (StringUtils.isNotBlank(loginInfoModel.getOperateType())) {
             // queryBuilder.must(
-            //     QueryBuilders.queryStringQuery(loginInfoModel.getOperateType()).field(Y9LogSearchConsts.OPERATE_TYPE));
-            queryBuilder.must(
-                QueryBuilders.termQuery(Y9LogSearchConsts.OPERATE_TYPE, loginInfoModel.getOperateType()));
+            // QueryBuilders.queryStringQuery(loginInfoModel.getOperateType()).field(Y9LogSearchConsts.OPERATE_TYPE));
+            queryBuilder.must(QueryBuilders.termQuery(Y9LogSearchConsts.OPERATE_TYPE, loginInfoModel.getOperateType()));
         }
         if (StringUtils.isNotBlank(loginInfoModel.getSuccess())) {
             queryBuilder
