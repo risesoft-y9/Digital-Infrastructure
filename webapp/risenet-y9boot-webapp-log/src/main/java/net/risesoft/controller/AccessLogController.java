@@ -44,10 +44,10 @@ public class AccessLogController {
     /**
      * 统计APP被点击的排行情况
      *
-     * @param orgId
-     * @param orgType
-     * @param startDay
-     * @param endDay
+     * @param orgId 组织id
+     * @param orgType 组织类型
+     * @param startDay 开始时间
+     * @param endDay 结束时间
      * @return
      */
     @RequestMapping(value = "/getAppClickCount")
@@ -66,10 +66,10 @@ public class AccessLogController {
     /**
      * 统计模块访问情况
      *
-     * @param orgId
-     * @param orgType
-     * @param startDay
-     * @param endDay
+     * @param orgId 组织id
+     * @param orgType 组织类型
+     * @param startDay 开始时间
+     * @param endDay 结束时间
      * @return
      */
     @RequestMapping(value = "/getModuleAccessData")
@@ -83,7 +83,7 @@ public class AccessLogController {
     /**
      * 获取操作状态的统计数据
      *
-     * @param selectedDate
+     * @param selectedDate 选择日期
      * @return
      */
     @RequestMapping(value = "/getOperateStatusData")
@@ -95,8 +95,8 @@ public class AccessLogController {
     /**
      * 获取操作用时的柱状图数据
      *
-     * @param startDay
-     * @param endDay
+     * @param startDay 开始日期
+     * @param endDay 结束日期
      * @return
      */
     @RequestMapping(value = "/listEplasedTimeData")
@@ -108,9 +108,9 @@ public class AccessLogController {
     /**
      * 查看安全审计员日志
      *
-     * @param userId
-     * @param pageQuery
-     * @param sort
+     * @param userId 人员id
+     * @param pageQuery 分页信息
+     * @param sort 排序字段
      * @return
      */
     @RiseLog(moduleName = "日志系统", operationName = "查看安全审计员日志")
@@ -130,20 +130,19 @@ public class AccessLogController {
     /**
      * 搜索操作用时列表
      *
-     * @param search
-     * @param startDay
-     * @param endDay
-     * @param sTime
-     * @param lTime
-     * @param rows
-     * @param page
+     * @param searchDto 搜索条件
+     * @param startDay 开始日期
+     * @param endDay 结束日期
+     * @param sTime 开始时间
+     * @param lTime 结束时间
+     * @param pageQuery 分页信息
      * @return
      */
     @RequestMapping(value = "/pageByElapsedTime")
-    public Y9Page<Y9logAccessLog> pageByElapsedTime(LogInfoModel search, String startDay, String endDay, String sTime,
-        String lTime, Y9PageQuery pageQuery) {
+    public Y9Page<Y9logAccessLog> pageByElapsedTime(LogInfoModel searchDto, String startDay, String endDay,
+        String sTime, String lTime, Y9PageQuery pageQuery) {
         try {
-            Page<Y9logAccessLog> pageResult = logService.pageElapsedTimeByCondition(search, startDay, endDay, sTime,
+            Page<Y9logAccessLog> pageResult = logService.pageElapsedTimeByCondition(searchDto, startDay, endDay, sTime,
                 lTime, pageQuery.getPage(), pageQuery.getSize());
             return Y9Page.success(pageQuery.getPage(), pageResult.getTotalPages(), pageResult.getTotalElements(),
                 pageResult.getContent());
@@ -156,11 +155,11 @@ public class AccessLogController {
     /**
      * 获取操作状态列表数据
      *
-     * @param searchDto
-     * @param date
-     * @param hour
-     * @param operateStatus
-     * @param pageQuery
+     * @param searchDto 搜索条件
+     * @param date 搜索时间
+     * @param hour 分
+     * @param operateStatus 操作状态
+     * @param pageQuery 分页信息
      * @return
      * @throws ParseException
      */
@@ -176,9 +175,9 @@ public class AccessLogController {
     /**
      * 查看安全保密员日志
      *
-     * @param userId
-     * @param pageQuery
-     * @param sort
+     * @param userId 用户id
+     * @param pageQuery 分页信息
+     * @param sort 排序字段
      * @return
      */
     @RiseLog(moduleName = "日志系统", operationName = "查看安全保密员日志")
@@ -198,9 +197,9 @@ public class AccessLogController {
     /**
      * 查看系统管理员日志
      *
-     * @param userId
-     * @param pageQuery
-     * @param sort
+     * @param userId 人员id
+     * @param pageQuery 分页信息
+     * @param sort 排序字段
      * @return
      */
     @RiseLog(moduleName = "日志系统", operationName = "查看系统管理员日志")
@@ -220,9 +219,9 @@ public class AccessLogController {
     /**
      * 查看用户日志
      *
-     * @param userId
-     * @param pageQuery
-     * @param sort
+     * @param userId 人员id
+     * @param pageQuery 分页信息
+     * @param sort 排序字段
      * @return
      */
     @RiseLog(moduleName = "日志系统", operationName = "查看用户日志")
@@ -238,8 +237,8 @@ public class AccessLogController {
     /**
      * 获取日志分页列表
      *
-     * @param pageQuery
-     * @param sort
+     * @param pageQuery 搜索信息
+     * @param sort 排序字段
      * @return
      */
     @RequestMapping(value = "/pageLogInfo")
@@ -252,10 +251,10 @@ public class AccessLogController {
     /**
      * 搜索日志信息
      *
-     * @param searchDto
-     * @param pageQuery
-     * @param startTime
-     * @param endTime
+     * @param searchDto 搜索信息
+     * @param pageQuery 分页信息
+     * @param startTime 开始时间
+     * @param endTime 结束时间
      * @return
      */
     @RequestMapping(value = "/pageSreachList")
@@ -270,8 +269,8 @@ public class AccessLogController {
     /**
      * 查询安全审计员日志
      *
-     * @param loginInfoModel
-     * @param pageQuery
+     * @param loginInfoModel 搜索信息
+     * @param pageQuery 分页信息
      * @return
      */
     @RiseLog(moduleName = "日志系统", operationName = "查询安全审计员日志")
@@ -291,8 +290,8 @@ public class AccessLogController {
     /**
      * 查询安全保密员日志
      *
-     * @param loginInfoModel
-     * @param pageQuery
+     * @param loginInfoModel 搜索信息
+     * @param pageQuery 分页信息
      * @return
      */
     @RiseLog(moduleName = "日志系统", operationName = "查询安全保密员日志")
@@ -312,8 +311,8 @@ public class AccessLogController {
     /**
      * 查询系统管理员日志
      *
-     * @param loginInfoModel
-     * @param pageQuery
+     * @param loginInfoModel 搜索信息
+     * @param pageQuery 分页信息
      * @return
      */
     @RiseLog(moduleName = "日志系统", operationName = "查询系统管理员日志")
@@ -333,8 +332,8 @@ public class AccessLogController {
     /**
      * 查询用户日志
      *
-     * @param loginInfoModel
-     * @param pageQuery
+     * @param loginInfoModel 搜索信息
+     * @param pageQuery 分页信息
      * @return
      */
     @RiseLog(moduleName = "日志系统", operationName = "查询用户日志")
