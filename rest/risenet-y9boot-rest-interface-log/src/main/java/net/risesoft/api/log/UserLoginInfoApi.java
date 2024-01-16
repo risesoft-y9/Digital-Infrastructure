@@ -44,7 +44,7 @@ public interface UserLoginInfoApi {
      * @param success 是否成功
      * @param startTime 开始时间
      * @param endTime 结束时间
-     * @param pageQuery
+     * @param pageQuery 分页信息
      * @return {@code Y9Page<LoginInfo>} 通用分页请求返回对象 - data 是登录日志集合
      * @since 9.6.0
      */

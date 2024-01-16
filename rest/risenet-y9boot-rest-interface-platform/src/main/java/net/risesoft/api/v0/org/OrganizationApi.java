@@ -44,7 +44,7 @@ public interface OrganizationApi {
      *
      * @param tenantId 租户id
      * @param organizationId 组织机构id
-     * @return List<Department> 部门对象集合
+     * @return List&lt;Department&gt; 部门对象集合
      * @since 9.6.0
      */
     @GetMapping("/listAllBureaus")
@@ -55,7 +55,7 @@ public interface OrganizationApi {
      * 根据租户id获取所有组织机构
      *
      * @param tenantId 租户id
-     * @return List<Organization> 组织机构对象集合
+     * @return List&lt;Organization&gt; 组织机构对象集合
      * @since 9.6.0
      */
     @GetMapping("/listAllOrganizations")
@@ -66,7 +66,7 @@ public interface OrganizationApi {
      *
      * @param tenantId 租户id
      * @param virtual 是否虚拟组织
-     * @return List<Organization> 组织机构对象集合
+     * @return List&lt;Organization&gt; 组织机构对象集合
      * @since 9.6.0
      */
     @GetMapping("/listByType")
@@ -78,7 +78,7 @@ public interface OrganizationApi {
      *
      * @param tenantId 租户id
      * @param organizationId 组织机构唯一标识
-     * @return List<Department> 部门对象集合
+     * @return List&lt;Department&gt; 部门对象集合
      * @since 9.6.0
      */
     @GetMapping("/listDepartments")
@@ -90,7 +90,7 @@ public interface OrganizationApi {
      *
      * @param tenantId 租户id
      * @param organizationId 组织机构唯一标识
-     * @return List<Group> 用户组对象集合
+     * @return List&lt;Group&gt; 用户组对象集合
      * @since 9.6.0
      */
     @GetMapping("/listGroups")
@@ -102,7 +102,7 @@ public interface OrganizationApi {
      *
      * @param tenantId 租户id
      * @param organizationId 组织机构唯一标识
-     * @return List<Person> 人员对象集合
+     * @return List&lt;Person&gt; 人员对象集合
      * @since 9.6.0
      */
     @GetMapping("/listPersons")
