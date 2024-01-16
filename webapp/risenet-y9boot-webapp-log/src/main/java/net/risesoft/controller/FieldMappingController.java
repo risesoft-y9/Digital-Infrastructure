@@ -69,7 +69,7 @@ public class FieldMappingController {
     /**
      * 根据id，获取字段映射
      *
-     * @param id
+     * @param id 字段映射id
      * @return
      */
     @RiseLog(operationName = "根据id，获取字段映射")
@@ -98,7 +98,7 @@ public class FieldMappingController {
      * 搜索字段映射分页列表
      *
      * @param modularName 模块名称
-     * @param modularCNName 模块中文名称
+     * @param modularCnName 模块中文名称
      * @param pageQuery 分页信息
      * @return
      */
