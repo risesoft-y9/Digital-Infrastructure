@@ -31,7 +31,7 @@ y9:
                     #获取用户信息 uri
                     profile-uri: http://localhost:7055/sso/oauth2.0/profile
     common:
-        #数字底座后端服务地址
+        #数字底座后端服务地址，调用数字底座接口信息时会用到
         orgBaseUrl: http://localhost:7055/platform
 #日志发布消息kafka配置
 spring:
