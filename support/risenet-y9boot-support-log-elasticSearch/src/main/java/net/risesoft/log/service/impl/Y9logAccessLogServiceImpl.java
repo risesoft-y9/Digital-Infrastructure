@@ -38,6 +38,7 @@ import org.springframework.data.domain.Sort;
 import org.springframework.data.domain.Sort.Direction;
 import org.springframework.data.domain.Sort.Order;
 import org.springframework.data.elasticsearch.core.ElasticsearchOperations;
+import org.springframework.data.elasticsearch.core.IndexOperations;
 import org.springframework.data.elasticsearch.core.SearchHit;
 import org.springframework.data.elasticsearch.core.SearchHits;
 import org.springframework.data.elasticsearch.core.mapping.IndexCoordinates;
@@ -768,6 +769,15 @@ public class Y9logAccessLogServiceImpl implements Y9logAccessLogService {
 
     @Override
     public void save(Y9logAccessLog y9logAccessLog) {
+    	IndexOperations indexOps = elasticsearchOperations.indexOps(Y9logAccessLog.class);
+    	if (!indexOps.exists()) {
+    		synchronized (this) {
+				if (!indexOps.exists()) {
+					indexOps.create();
+		    		indexOps.putMapping(indexOps.createMapping(Y9logAccessLog.class));
+				}
+			}
+    	}
         elasticsearchOperations.save(y9logAccessLog);
     }
 
