@@ -18,8 +18,12 @@ import net.risesoft.model.platform.Position;
 @Setter
 public class PersonInfoDTO implements Serializable {
 
+    private static final long serialVersionUID = 7283067452731317208L;
+
+    /** 人员信息 */
     private Person person;
 
+    /** 岗位列表 */
     private List<Position> positionList;
 
 }

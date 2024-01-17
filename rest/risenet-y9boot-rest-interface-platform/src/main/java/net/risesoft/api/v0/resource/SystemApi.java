@@ -49,7 +49,7 @@ public interface SystemApi {
      * @param cnName 系统名称
      * @param contextPath 系统上下文
      * @param isvGuid 租户id
-     * @return
+     * @return Y9Result&lt;System&gt;
      */
     @PostMapping("/registrySystem")
     Y9Result<System> registrySystem(@RequestParam("name") String name, @RequestParam("cnName") String cnName,

@@ -33,6 +33,9 @@ import net.risesoft.y9.util.mime.ContentDispositionUtil;
 
 import y9.client.platform.org.PersonApiClient;
 
+/**
+ * 下载管理
+ */
 @Controller
 @RequestMapping(value = "/admin/download")
 @Slf4j
@@ -42,17 +45,23 @@ public class DownloadController {
     private final Y9logUserLoginInfoService userLoginInfoService;
     private final PersonApiClient personManager;
 
+    /**
+     * 下载未登录信息
+     * 
+     * @param tenantId 租户id
+     * @param response 响应信息
+     */
     @ResponseBody
     @RequestMapping(value = "/exportNotLoginXLS", method = RequestMethod.GET)
-    public void exportNotLoginXLS(String tenantID, HttpServletResponse response) {
-        if (StringUtils.isNotBlank(tenantID)) {
-            Y9LoginUserHolder.setTenantId(tenantID);
+    public void exportNotLoginXLS(String tenantId, HttpServletResponse response) {
+        if (StringUtils.isNotBlank(tenantId)) {
+            Y9LoginUserHolder.setTenantId(tenantId);
         }
 
         try (OutputStream outStream = response.getOutputStream();
             InputStream in = new ClassPathResource("/template/exportSimpleTemplate.xlsx").getInputStream()) {
 
-            Map<String, Object> map = xlsLoginData2(tenantID);
+            Map<String, Object> map = xlsLoginData2(tenantId);
             response.setContentType("application/octet-stream");
             response.setHeader("Content-Disposition", ContentDispositionUtil.standardizeAttachment(
                 "有生云未登录信息-" + new SimpleDateFormat("yyyyMMddHHmmss").format(new Date()) + ".xlsx"));
@@ -65,15 +74,21 @@ public class DownloadController {
         }
     }
 
+    /**
+     * 下载已登录信息
+     * 
+     * @param tenantId 租户id
+     * @param response 响应信息
+     */
     @ResponseBody
     @RequestMapping(value = "/exportLoginXLS", method = RequestMethod.GET)
-    public void exportPersonXLS(String tenantID, HttpServletResponse response) {
-        if (StringUtils.isNotBlank(tenantID)) {
-            Y9LoginUserHolder.setTenantId(tenantID);
+    public void exportPersonXLS(String tenantId, HttpServletResponse response) {
+        if (StringUtils.isNotBlank(tenantId)) {
+            Y9LoginUserHolder.setTenantId(tenantId);
         }
         try (OutputStream outStream = response.getOutputStream();
             InputStream in = new ClassPathResource("/template/exportSimpleTemplate.xlsx").getInputStream()) {
-            Map<String, Object> map = xlsLoginData(tenantID);
+            Map<String, Object> map = xlsLoginData(tenantId);
             response.setContentType("application/octet-stream");
             response.setHeader("Content-Disposition", ContentDispositionUtil.standardizeAttachment(
                 "有生云登录信息-" + new SimpleDateFormat("yyyyMMddHHmmss").format(new Date()) + ".xlsx"));

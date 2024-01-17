@@ -35,7 +35,7 @@ public class UserLoginInfoController {
     /**
      * 获取安全审计员登录日志
      *
-     * @param pageQuery
+     * @param pageQuery 分页信息
      * @return
      */
     @RiseLog(moduleName = "日志系统", operationName = "查看安全审计员登录日志")
@@ -55,7 +55,7 @@ public class UserLoginInfoController {
     /**
      * 查看安全保密员登录日志
      *
-     * @param pageQuery
+     * @param pageQuery 分页信息
      * @return
      */
     @RiseLog(moduleName = "日志系统", operationName = "查看安全保密员登录日志")
@@ -75,7 +75,7 @@ public class UserLoginInfoController {
     /**
      * 查看系统管理员登录日志
      *
-     * @param pageQuery
+     * @param pageQuery 分页信息
      * @return
      */
     @RiseLog(moduleName = "日志系统", operationName = "查看系统管理员登录日志")
@@ -95,7 +95,7 @@ public class UserLoginInfoController {
     /**
      * 获取普通用户登录日志
      *
-     * @param pageQuery
+     * @param pageQuery 分页信息
      * @return
      */
     @RiseLog(moduleName = "日志系统", operationName = "查看用户登录日志")
@@ -111,8 +111,8 @@ public class UserLoginInfoController {
     /**
      * 根据条件查询安全审计员登录日志
      *
-     * @param loginInfoModel
-     * @param pageQuery
+     * @param loginInfoModel 搜索条件
+     * @param pageQuery 分页信息
      * @return
      */
     @RiseLog(moduleName = "日志系统", operationName = "查询安全审计员登录日志")
@@ -132,8 +132,8 @@ public class UserLoginInfoController {
     /**
      * 根据条件查询安全保密员登录日志
      *
-     * @param loginInfoModel
-     * @param pageQuery
+     * @param loginInfoModel 搜索条件
+     * @param pageQuery 分页信息
      * @return
      */
     @RiseLog(moduleName = "日志系统", operationName = "查询安全保密员登录日志")
@@ -153,8 +153,8 @@ public class UserLoginInfoController {
     /**
      * 根据条件查询系统管理员登录日志
      *
-     * @param loginInfoModel
-     * @param pageQuery
+     * @param loginInfoModel 搜索条件
+     * @param pageQuery 分页信息
      * @return
      */
     @RiseLog(moduleName = "日志系统", operationName = "查询系统管理员登录日志")
@@ -174,8 +174,8 @@ public class UserLoginInfoController {
     /**
      * 根据条件查询普通用户登录日志
      *
-     * @param loginInfoModel
-     * @param pageQuery
+     * @param loginInfoModel 搜索条件
+     * @param pageQuery 分页信息
      * @return
      */
     @RiseLog(moduleName = "日志系统", operationName = "查询用户登录日志")
