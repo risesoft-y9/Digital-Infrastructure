@@ -25,6 +25,7 @@ import org.springframework.data.domain.Sort;
 import org.springframework.data.domain.Sort.Direction;
 import org.springframework.data.domain.Sort.Order;
 import org.springframework.data.elasticsearch.client.elc.ElasticsearchTemplate;
+import org.springframework.data.elasticsearch.core.IndexOperations;
 import org.springframework.data.elasticsearch.core.SearchHit;
 import org.springframework.data.elasticsearch.core.SearchHits;
 import org.springframework.data.elasticsearch.core.mapping.IndexCoordinates;
@@ -679,6 +680,15 @@ public class Y9logAccessLogServiceImpl implements Y9logAccessLogService {
 
     @Override
     public void save(Y9logAccessLog y9logAccessLog) {
+        IndexOperations indexOps = elasticsearchTemplate.indexOps(Y9logAccessLog.class);
+        if (!indexOps.exists()) {
+            synchronized (this) {
+                if (!indexOps.exists()) {
+                    indexOps.create();
+                    indexOps.putMapping(indexOps.createMapping(Y9logAccessLog.class));
+                }
+            }
+        }
         y9logAccessLogRepository.save(y9logAccessLog);
     }
 
@@ -747,8 +757,6 @@ public class Y9logAccessLogServiceImpl implements Y9logAccessLogService {
         List<Y9logAccessLog> list = searchHits.stream().map(SearchHit::getContent).collect(Collectors.toList());
         return new PageImpl<>(list, pageable, searchHits.getTotalHits());
     }
-
-    private final Y9logAccessLogRepository y9logAccessLogRepository;
 
     // 目前日志查询页有两种情况：一种是有开始时间和结束时间，另一种是只选一个时间
     private String[] createIndexNames(String startDate, String endDate) {
@@ -1502,7 +1510,7 @@ public class Y9logAccessLogServiceImpl implements Y9logAccessLogService {
     public Page<Y9logAccessLog> searchQuery(String tenantId, String managerLevel, LogInfoModel loginInfoModel,
         int page,
         int rows) {
-
+    
     
         BoolQueryBuilder queryBuilder = QueryBuilders.boolQuery();
         if (StringUtils.isNotBlank(tenantId)) {
