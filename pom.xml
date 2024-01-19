@@ -19,6 +19,7 @@
         <module>example/risenet-y9demo-kernel-api/backend-demo</module>
         <module>example/risenet-y9demo-sso-oauth2/backend-demo</module>
         <module>example/risenet-y9demo-sync-kafka</module>
+        <module>example/risenet-y9demo-file</module>
 
         <module>rest/risenet-y9boot-rest-interface-platform</module>
         <module>rest/risenet-y9boot-rest-feignClient-platform</module>
