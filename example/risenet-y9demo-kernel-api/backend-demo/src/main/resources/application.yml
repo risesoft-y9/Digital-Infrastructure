@@ -2,6 +2,8 @@
 systemName: y9demo_kernel_api
 server:
     port: 7057
+    servlet:
+        context-path: /demo-api
 y9:
     feature:
         #单点登录配置信息
