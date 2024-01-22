@@ -1,8 +1,8 @@
 <!--
  * @Author: your name
  * @Date: 2022-05-05 09:43:05
- * @LastEditTime: 2023-08-03 11:30:44
- * @LastEditors: mengjuhua
+ * @LastEditTime: 2024-01-05 12:12:46
+ * @LastEditors:  
  * @Description: 安全审计员日志 - 登录日志 
 -->
 <template>
@@ -12,10 +12,10 @@
                 <y9Table
                     ref="filterRef"
                     :config="loginLogsTable"
+                    :filterConfig="filterLogsConfig"
+                    border
                     @on-curr-page-change="handlerPageChange"
                     @on-page-size-change="handlerSizeChange"
-                    border
-                    :filterConfig="filterLogsConfig"
                     @window-height-change="windowHeightChange"
                 >
                     <template v-slot:slotDate>
@@ -23,15 +23,15 @@
                             <el-form-item :label="$t('登录时间')" :size="fontSizeObj.buttonSize">
                                 <el-date-picker
                                     v-model="selectedDate"
-                                    type="datetimerange"
+                                    :end-placeholder="$t('结束时间')"
                                     :range-separator="$t('至')"
                                     :shortcuts="shortcuts"
                                     :start-placeholder="$t('开始时间')"
-                                    :end-placeholder="$t('结束时间')"
                                     format="YYYY-MM-DD"
+                                    style="width: 100%; height: var(--el-input-height)"
+                                    type="datetimerange"
                                     value-format="YYYY-MM-DD"
                                     @change="selectdDate()"
-                                    style="width: 100%; height: var(--el-input-height)"
                                 >
                                 </el-date-picker>
                             </el-form-item>
@@ -40,20 +40,20 @@
                     <template v-slot:slotSearch>
                         <el-divider content-position="center">
                             <el-button
-                                class="global-btn-main"
                                 :size="fontSizeObj.buttonSize"
                                 :style="{ fontSize: fontSizeObj.baseFontSize }"
+                                class="global-btn-main"
                                 type="primary"
                                 @click="search()"
-                                >{{ $t('查询') }}</el-button
-                            >
+                                >{{ $t('查询') }}
+                            </el-button>
                             <el-button
-                                class="global-btn-second"
                                 :size="fontSizeObj.buttonSize"
                                 :style="{ fontSize: fontSizeObj.baseFontSize }"
+                                class="global-btn-second"
                                 @click="reset()"
-                                >{{ $t('重置') }}</el-button
-                            >
+                                >{{ $t('重置') }}
+                            </el-button>
                         </el-divider>
                     </template>
                 </y9Table>
@@ -63,10 +63,12 @@
 </template>
 
 <script lang="ts" setup>
-    import { inject, computed, ref } from 'vue';
+    import { computed, inject, ref } from 'vue';
     import { searchLoginInfoList4AuditManagers } from '@/api/userLoginInfo/index';
     import { useSettingStore } from '@/store/modules/settingStore';
     import { useI18n } from 'vue-i18n';
+    import moment from 'moment';
+
     const { t } = useI18n();
     const settingStore = useSettingStore();
     // 注入 字体对象
@@ -83,7 +85,7 @@
                 const start = new Date();
                 start.setTime(start.getTime() - 3600 * 1000 * 24 * 7);
                 return [start, end];
-            },
+            }
         },
         {
             text: t('最近一个月'),
@@ -92,7 +94,7 @@
                 const start = new Date();
                 start.setTime(start.getTime() - 3600 * 1000 * 24 * 30);
                 return [start, end];
-            },
+            }
         },
         {
             text: t('最近三个月'),
@@ -101,8 +103,8 @@
                 const start = new Date();
                 start.setTime(start.getTime() - 3600 * 1000 * 24 * 90);
                 return [start, end];
-            },
-        },
+            }
+        }
     ];
     const selectdDate = () => {
         query.value.startTime = selectedDate.value[0];
@@ -120,7 +122,7 @@
                 key: 'userName',
                 label: computed(() => t('用户名称')),
                 labelWidth: '82px',
-                span: settingStore.device === 'mobile' ? 24 : 6,
+                span: settingStore.device === 'mobile' ? 24 : 6
             },
             {
                 type: 'input',
@@ -128,7 +130,7 @@
                 key: 'userHostIp',
                 labelWidth: '82px',
                 label: computed(() => t('客户端IP')),
-                span: settingStore.device === 'mobile' ? 24 : 6,
+                span: settingStore.device === 'mobile' ? 24 : 6
             },
             {
                 type: 'input',
@@ -136,7 +138,7 @@
                 key: 'oSName',
                 label: computed(() => t('操作系统')),
                 labelWidth: '82px',
-                span: settingStore.device === 'mobile' ? 24 : 6,
+                span: settingStore.device === 'mobile' ? 24 : 6
             },
             {
                 type: 'input',
@@ -144,7 +146,7 @@
                 key: 'screenResolution',
                 label: computed(() => t('分辨率')),
                 labelWidth: '82px',
-                span: settingStore.device === 'mobile' ? 24 : 6,
+                span: settingStore.device === 'mobile' ? 24 : 6
             },
             {
                 type: 'select',
@@ -157,19 +159,19 @@
                         //选项列表
                         {
                             label: computed(() => t('全部')),
-                            value: '',
+                            value: ''
                         },
                         {
                             label: computed(() => t('成功')),
-                            value: 'true',
+                            value: 'true'
                         },
                         {
                             label: computed(() => t('出错')),
-                            value: 'false',
-                        },
-                    ],
+                            value: 'false'
+                        }
+                    ]
                 },
-                span: settingStore.device === 'mobile' ? 24 : 6,
+                span: settingStore.device === 'mobile' ? 24 : 6
             },
             {
                 type: 'input',
@@ -177,7 +179,7 @@
                 key: 'browserName',
                 label: computed(() => t('浏览器名称')),
                 labelWidth: '82px',
-                span: settingStore.device === 'mobile' ? 24 : 6,
+                span: settingStore.device === 'mobile' ? 24 : 6
             },
             {
                 type: 'input',
@@ -185,20 +187,20 @@
                 key: 'browserVersion',
                 label: computed(() => t('浏览器版本')),
                 labelWidth: '82px',
-                span: settingStore.device === 'mobile' ? 24 : 6,
+                span: settingStore.device === 'mobile' ? 24 : 6
             },
             {
                 type: 'slot',
                 slotName: 'slotDate',
-                span: settingStore.device === 'mobile' ? 24 : 6,
+                span: settingStore.device === 'mobile' ? 24 : 6
             },
             {
                 type: 'slot',
                 slotName: 'slotSearch',
-                span: 24,
-            },
+                span: 24
+            }
         ],
-        showBorder: true,
+        showBorder: true
         // borderRadio: '4px'
     });
 
@@ -213,15 +215,18 @@
             var hour = logTime.getHours() < 10 ? '0' + logTime.getHours() : logTime.getHours();
             var minute = logTime.getMinutes() < 10 ? '0' + logTime.getMinutes() : logTime.getMinutes();
             var second = logTime.getSeconds() < 10 ? '0' + logTime.getSeconds() : logTime.getSeconds();
-            return year + '-' + month + '-' + date + ' ' + hour + ':' + minute + ':' + second;
+            // return year + '-' + month + '-' + date + ' ' + hour + ':' + minute + ':' + second;
+            return moment(row.loginTime).format('YYYY-MM-DD HH:mm:ss');
         } else {
             return cellValue;
         }
     };
+
     //窗口变动时触发，获取表格的高度
     function windowHeightChange(tableHeight) {
         loginLogsTable.value.maxHeight = tableHeight - 35 - 35; //35 35 是y9-card-content样式中上padding、下padding的值
     }
+
     // 表格 配置
     let loginLogsTable = ref({
         columns: [
@@ -238,24 +243,24 @@
                 width: 90,
                 render: (row) => {
                     return row.success == 'true' ? t('成功') : t('失败');
-                },
+                }
             },
             { title: computed(() => t('浏览器版本')), key: 'browserVersion', width: 150 },
             {
                 title: computed(() => t('登录时间')),
                 key: 'loginTime',
                 formatter: logTimeFormat,
-                width: settingStore.getDatetimeSpan,
+                width: settingStore.getDatetimeSpan
             },
-            { title: computed(() => t('错误信息')), key: 'throwable' },
+            { title: computed(() => t('错误信息')), key: 'throwable' }
         ],
         tableData: [],
         pageConfig: {
             currentPage: 1, //当前页数，支持 v-model 双向绑定
             pageSize: 20, //每页显示条目个数，支持 v-model 双向绑定
-            total: 0, //总条目数
+            total: 0 //总条目数
         },
-        loading: false,
+        loading: false
     });
 
     async function getDataList() {
@@ -299,6 +304,7 @@
         loginLogsTable.value.pageConfig.currentPage = currPage;
         getDataList();
     }
+
     //每页条数改变时触发
     function handlerSizeChange(pageSize) {
         loginLogsTable.value.pageConfig.pageSize = pageSize;
@@ -325,8 +331,10 @@
             overflow: auto;
             scrollbar-width: none;
         }
+
         :deep(.y9-card-content) {
             padding: 35px 20px;
+
             .el-divider--horizontal {
                 margin: 20px 0 30px 0;
             }
@@ -349,9 +357,11 @@
     :deep(.el-form-item__content) {
         align-items: stretch;
     }
+
     :deep(.el-form-item) {
         margin: 0;
     }
+
     :deep(.el-date-editor) {
         i,
         input {
