@@ -5,7 +5,7 @@ import org.springframework.core.ResolvableType;
 import org.springframework.core.ResolvableTypeProvider;
 
 /**
- * 实体删除事件
+ * 实体更新事件
  *
  * @author shidaobang
  * @date 2022/12/01
