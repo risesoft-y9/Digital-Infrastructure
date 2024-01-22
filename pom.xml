@@ -432,7 +432,6 @@
                 </plugin>
 
                 <plugin>
-                    <!-- <groupId>org.codehaus.mojo</groupId> -->
                     <!--<groupId>com.nickwongdev</groupId>-->
                     <groupId>dev.aspectj</groupId>
                     <artifactId>aspectj-maven-plugin</artifactId>
