@@ -240,6 +240,8 @@ webapp -- 系统公共模块
 | 2    | <a href="https://vue.youshengyun.com/files/apiv2.0.pdf" target="_blank">数字底座接口文档</a> |
 | 3    | <a href="https://vue.youshengyun.com/files/siyouhuabushu.pdf" target="_blank">安装部署文档</a> |
 | 4    | <a href="https://vue.youshengyun.com/files/Y9-DI-V5.0.pdf" target="_blank">操作使用文档（技术白皮书）</a> |
+| 5    | <a href="https://vue.youshengyun.com/files/Risesoft-DatabaseDesign.pdf" target="_blank">数字底座数据库设计文档</a> |
+| 6    | <a href="https://vue.youshengyun.com/files/Risesoft-JavaV1.0.pdf" target="_blank">有生博大Java开发手册</a> |
 
 
 
