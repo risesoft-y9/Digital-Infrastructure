@@ -1,7 +1,7 @@
 <!--
  * @Author: your name
  * @Date: 2022-05-05 09:43:05
- * @LastEditTime: 2023-08-03 11:30:13
+ * @LastEditTime: 2024-01-05 12:13:10
  * @LastEditors: mengjuhua
  * @Description: 安全保密员日志 - 操作日志 
 -->
@@ -12,10 +12,10 @@
                 <y9Table
                     ref="filterRef"
                     :config="operationLogsTable"
+                    :filterConfig="filterOperaConfig"
+                    border
                     @on-curr-page-change="handlerPageChange"
                     @on-page-size-change="handlerSizeChange"
-                    border
-                    :filterConfig="filterOperaConfig"
                     @window-height-change="windowHeightChange"
                 >
                     <template v-slot:slotDate>
@@ -23,15 +23,15 @@
                             <el-form-item :label="$t('操作时间')" :size="fontSizeObj.buttonSize">
                                 <el-date-picker
                                     v-model="selectedDate"
-                                    type="daterange"
+                                    :end-placeholder="$t('结束时间')"
                                     :range-separator="$t('至')"
                                     :shortcuts="shortcuts"
                                     :start-placeholder="$t('开始时间')"
-                                    :end-placeholder="$t('结束时间')"
                                     format="YYYY-MM-DD"
+                                    style="width: 100%; height: var(--el-input-height)"
+                                    type="daterange"
                                     value-format="YYYY-MM-DD"
                                     @change="selectdDate()"
-                                    style="width: 100%; height: var(--el-input-height)"
                                 ></el-date-picker>
                             </el-form-item>
                         </el-form>
@@ -39,20 +39,20 @@
                     <template v-slot:slotSearch>
                         <el-divider content-position="center">
                             <el-button
+                                :size="fontSizeObj.buttonSize"
+                                :style="{ fontSize: fontSizeObj.baseFontSize }"
                                 class="global-btn-main"
                                 type="primary"
-                                :size="fontSizeObj.buttonSize"
-                                :style="{ fontSize: fontSizeObj.baseFontSize }"
                                 @click="search()"
-                                >{{ $t('查询') }}</el-button
-                            >
+                                >{{ $t('查询') }}
+                            </el-button>
                             <el-button
-                                class="global-btn-second"
-                                :style="{ fontSize: fontSizeObj.baseFontSize }"
                                 :size="fontSizeObj.buttonSize"
+                                :style="{ fontSize: fontSizeObj.baseFontSize }"
+                                class="global-btn-second"
                                 @click="reset()"
-                                >{{ $t('重置') }}</el-button
-                            >
+                                >{{ $t('重置') }}
+                            </el-button>
                         </el-divider>
                     </template>
                 </y9Table>
@@ -62,10 +62,12 @@
 </template>
 
 <script lang="ts" setup>
-    import { inject, computed, ref } from 'vue';
+    import { computed, inject, ref } from 'vue';
     import { searchLogInfoList4SecurityManagers } from '@/api/log/index';
     import { useSettingStore } from '@/store/modules/settingStore';
     import { useI18n } from 'vue-i18n';
+    import moment from 'moment';
+
     const { t } = useI18n();
     const settingStore = useSettingStore();
     // 注入 字体对象
@@ -82,7 +84,7 @@
                 const start = new Date();
                 start.setTime(start.getTime() - 3600 * 1000 * 24 * 7);
                 return [start, end];
-            },
+            }
         },
         {
             text: t('最近一个月'),
@@ -91,7 +93,7 @@
                 const start = new Date();
                 start.setTime(start.getTime() - 3600 * 1000 * 24 * 30);
                 return [start, end];
-            },
+            }
         },
         {
             text: t('最近三个月'),
@@ -100,8 +102,8 @@
                 const start = new Date();
                 start.setTime(start.getTime() - 3600 * 1000 * 24 * 90);
                 return [start, end];
-            },
-        },
+            }
+        }
     ];
     const selectdDate = () => {
         query.value.startTime = selectedDate.value[0];
@@ -119,7 +121,7 @@
                 key: 'userName',
                 label: computed(() => t('用户名称')),
                 labelWidth: '82px',
-                span: settingStore.device === 'mobile' ? 24 : 6,
+                span: settingStore.device === 'mobile' ? 24 : 6
             },
             {
                 type: 'input',
@@ -127,7 +129,7 @@
                 key: 'userHostIp',
                 labelWidth: '82px',
                 label: computed(() => t('客户端IP')),
-                span: settingStore.device === 'mobile' ? 24 : 6,
+                span: settingStore.device === 'mobile' ? 24 : 6
             },
             {
                 type: 'input',
@@ -135,7 +137,7 @@
                 key: 'modularName',
                 label: computed(() => t('模块名称')),
                 labelWidth: '82px',
-                span: settingStore.device === 'mobile' ? 24 : 6,
+                span: settingStore.device === 'mobile' ? 24 : 6
             },
             {
                 type: 'input',
@@ -143,7 +145,7 @@
                 key: 'operateName',
                 label: computed(() => t('操作名称')),
                 labelWidth: '82px',
-                span: settingStore.device === 'mobile' ? 24 : 6,
+                span: settingStore.device === 'mobile' ? 24 : 6
             },
             {
                 type: 'select',
@@ -156,47 +158,51 @@
                         //选项列表
                         {
                             label: computed(() => t('全部')),
-                            value: '',
+                            value: ''
                         },
                         {
                             label: computed(() => t('使用')),
-                            value: '使用',
+                            value: '使用'
                         },
                         {
                             label: computed(() => t('登录')),
-                            value: '登录',
+                            value: '登录'
                         },
                         {
                             label: computed(() => t('退出')),
-                            value: '退出',
+                            value: '退出'
                         },
                         {
                             label: computed(() => t('查看')),
-                            value: '查看',
+                            value: '查看'
                         },
                         {
                             label: computed(() => t('增加')),
-                            value: '增加',
+                            value: '增加'
                         },
                         {
                             label: computed(() => t('修改')),
-                            value: '修改',
+                            value: '修改'
                         },
                         {
                             label: computed(() => t('删除')),
-                            value: '删除',
+                            value: '删除'
                         },
                         {
                             label: computed(() => t('发送')),
-                            value: '发送',
+                            value: '发送'
                         },
                         {
                             label: computed(() => t('活动')),
-                            value: '活动',
+                            value: '活动'
                         },
-                    ],
+                        {
+                            label: computed(() => t('检查')),
+                            value: '检查'
+                        }
+                    ]
                 },
-                span: settingStore.device === 'mobile' ? 24 : 6,
+                span: settingStore.device === 'mobile' ? 24 : 6
             },
             {
                 type: 'select',
@@ -209,19 +215,19 @@
                         //选项列表
                         {
                             label: computed(() => t('全部')),
-                            value: '',
+                            value: ''
                         },
                         {
                             label: computed(() => t('成功')),
-                            value: '成功',
+                            value: '成功'
                         },
                         {
                             label: computed(() => t('出错')),
-                            value: '出错',
-                        },
-                    ],
+                            value: '出错'
+                        }
+                    ]
                 },
-                span: settingStore.device === 'mobile' ? 24 : 6,
+                span: settingStore.device === 'mobile' ? 24 : 6
             },
             {
                 type: 'select',
@@ -234,52 +240,52 @@
                         //选项列表
                         {
                             label: computed(() => t('全部')),
-                            value: '',
+                            value: ''
                         },
                         {
                             label: computed(() => t('错误')),
-                            value: 'ERROR',
+                            value: 'ERROR'
                         },
                         {
                             label: computed(() => t('警告')),
-                            value: 'WARN',
+                            value: 'WARN'
                         },
                         {
                             label: computed(() => t('调试')),
-                            value: 'DEBUG',
+                            value: 'DEBUG'
                         },
                         {
                             label: computed(() => t('跟踪')),
-                            value: 'TRACE',
+                            value: 'TRACE'
                         },
                         {
                             label: computed(() => t('记录日志')),
-                            value: 'RSLOG',
+                            value: 'RSLOG'
                         },
                         {
                             label: computed(() => t('管理日志')),
-                            value: 'MANAGERLOG',
+                            value: 'MANAGERLOG'
                         },
                         {
                             label: computed(() => t('通知')),
-                            value: 'INFO',
-                        },
-                    ],
+                            value: 'INFO'
+                        }
+                    ]
                 },
-                span: settingStore.device === 'mobile' ? 24 : 6,
+                span: settingStore.device === 'mobile' ? 24 : 6
             },
             {
                 type: 'slot',
                 slotName: 'slotDate',
-                span: settingStore.device === 'mobile' ? 24 : 6,
+                span: settingStore.device === 'mobile' ? 24 : 6
             },
             {
                 type: 'slot',
                 slotName: 'slotSearch',
-                span: 24,
-            },
+                span: 24
+            }
         ],
-        showBorder: true,
+        showBorder: true
         // borderRadio: '4px'
     });
 
@@ -294,7 +300,8 @@
             var hour = logTime.getHours() < 10 ? '0' + logTime.getHours() : logTime.getHours();
             var minute = logTime.getMinutes() < 10 ? '0' + logTime.getMinutes() : logTime.getMinutes();
             var second = logTime.getSeconds() < 10 ? '0' + logTime.getSeconds() : logTime.getSeconds();
-            return year + '-' + month + '-' + date + ' ' + hour + ':' + minute + ':' + second;
+            // return year + '-' + month + '-' + date + ' ' + hour + ':' + minute + ':' + second;
+            return moment(row.logTime).format('YYYY-MM-DD HH:mm:ss');
         } else {
             return cellValue;
         }
@@ -347,24 +354,24 @@
                         case 'INFO':
                             return '通知';
                     }
-                },
+                }
             },
             { title: computed(() => t('操作用时')), key: 'elapsedTime', formatter: elapsedTimeFormat, width: 150 },
             {
                 title: computed(() => t('操作时间')),
                 key: 'logTime',
                 formatter: logTimeFormat,
-                width: settingStore.getDatetimeSpan,
+                width: settingStore.getDatetimeSpan
             },
-            { title: computed(() => t('错误信息')), key: 'throwable' },
+            { title: computed(() => t('错误信息')), key: 'throwable' }
         ],
         tableData: [],
         pageConfig: {
             currentPage: 1, //当前页数，支持 v-model 双向绑定
             pageSize: 20, //每页显示条目个数，支持 v-model 双向绑定
-            total: 0, //总条目数
+            total: 0 //总条目数
         },
-        loading: false,
+        loading: false
     });
 
     async function getDataList() {
@@ -408,6 +415,7 @@
         operationLogsTable.value.pageConfig.currentPage = currPage;
         getDataList();
     }
+
     //每页条数改变时触发
     function handlerSizeChange(pageSize) {
         operationLogsTable.value.pageConfig.pageSize = pageSize;
@@ -418,6 +426,7 @@
     .userLog .content {
         width: auto;
         margin: 0 auto;
+
         .pagination-style {
             display: flex;
             justify-content: v-bind("settingStore.device === 'mobile'?'flex-start':'flex-end'");
@@ -425,16 +434,20 @@
             overflow: auto;
             scrollbar-width: none;
         }
+
         :deep(.y9-card-content) {
             padding: 35px 20px;
+
             .el-divider--horizontal {
                 margin: 20px 0 30px 0;
             }
         }
     }
+
     :deep(.el-divider__text) {
         display: flex;
     }
+
     :deep(.el-form-item__label) {
         width: 90px;
         display: flex;
@@ -443,15 +456,19 @@
         align-items: center;
         line-height: 18px;
     }
+
     :deep(.el-date-range-picker__time-header) {
         display: none;
     }
+
     :deep(.el-form-item__content) {
         align-items: stretch;
     }
+
     :deep(.el-form-item) {
         margin: 0;
     }
+
     :deep(.el-date-editor) {
         i,
         input {
