@@ -234,14 +234,17 @@ webapp -- 系统公共模块
 
 ## 文档专区
 
-| 序号 | 名称                                                         |
-| :--- | ------------------------------------------------------------ |
-| 1    | <a href="https://vue.youshengyun.com/files/sso_OAuth2.0.pdf" target="_blank">单点登录对接文档</a> |
-| 2    | <a href="https://vue.youshengyun.com/files/apiv2.0.pdf" target="_blank">数字底座接口文档</a> |
-| 3    | <a href="https://vue.youshengyun.com/files/siyouhuabushu.pdf" target="_blank">安装部署文档</a> |
-| 4    | <a href="https://vue.youshengyun.com/files/Y9-DI-V5.0.pdf" target="_blank">操作使用文档（技术白皮书）</a> |
-| 5    | <a href="https://vue.youshengyun.com/files/Risesoft-DatabaseDesign.pdf" target="_blank">数字底座数据库设计文档</a> |
-| 6    | <a href="https://vue.youshengyun.com/files/Risesoft-JavaV1.0.pdf" target="_blank">内部Java开发规范手册</a> |
+| 序号 | 名称                                                                                                      |
+|:---|---------------------------------------------------------------------------------------------------------|
+| 1  | <a href="https://vue.youshengyun.com/files/sso_OAuth2.0.pdf" target="_blank">单点登录对接文档</a>               |
+| 2  | <a href="https://vue.youshengyun.com/files/apiv2.0.pdf" target="_blank">数字底座接口文档</a>                    |
+| 3  | <a href="https://vue.youshengyun.com/files/siyouhuabushu.pdf" target="_blank">安装部署文档</a>                |
+| 4  | <a href="https://vue.youshengyun.com/files/Y9-DI-V5.0.pdf" target="_blank">操作使用文档（技术白皮书）</a>            |
+| 5  | <a href="https://vue.youshengyun.com/files/Risesoft-DatabaseDesign.pdf" target="_blank">数字底座数据库设计文档</a> |
+| 6  | <a href="https://vue.youshengyun.com/files/Risesoft-JavaV1.0.pdf" target="_blank">内部Java开发规范手册</a>      |
+| 7  | <a href="https://vue.youshengyun.com/files/Risesoft-log.pdf" target="_blank">日志组件使用文档</a>          |
+| 8  | <a href="https://vue.youshengyun.com/files/Risesoft-file.pdf" target="_blank">文件组件使用文档</a>          |
+| 9  | <a href="https://vue.youshengyun.com/files/Risesoft-CodeGenerator.pdf" target="_blank">代码生成器使用文档</a>          |
 
 
 
