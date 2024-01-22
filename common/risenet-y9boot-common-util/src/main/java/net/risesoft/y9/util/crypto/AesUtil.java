@@ -30,7 +30,9 @@ import lombok.extern.slf4j.Slf4j;
  */
 @Slf4j
 public class AesUtil {
-    private static final String ALGORITHM = "AES/GCM/NoPadding";
+    private static final String ALGORITHM = "AES";
+
+    private static final String AES_ECB_PADDING = "AES/ECB/PKCS5Padding";
 
     private static final int KEY_SIZE = 128;
     private static final int CACHE_SIZE = 1024;
@@ -49,7 +51,7 @@ public class AesUtil {
         Key k = toKey(Base64.decodeBase64(key));
         byte[] raw = k.getEncoded();
         SecretKeySpec secretKeySpec = new SecretKeySpec(raw, ALGORITHM);
-        Cipher cipher = Cipher.getInstance(ALGORITHM);
+        Cipher cipher = Cipher.getInstance(AES_ECB_PADDING);
         cipher.init(Cipher.DECRYPT_MODE, secretKeySpec);
         return cipher.doFinal(data);
     }
@@ -73,13 +75,12 @@ public class AesUtil {
             }
             destFile.createNewFile();
             CipherOutputStream cout = null;
-            try (FileInputStream in = new FileInputStream(sourceFile);
-                FileOutputStream out = new FileOutputStream(destFile);) {
+            try (FileInputStream in = new FileInputStream(sourceFile); FileOutputStream out = new FileOutputStream(destFile);) {
 
                 Key k = toKey(Base64.decodeBase64(key));
                 byte[] raw = k.getEncoded();
                 SecretKeySpec secretKeySpec = new SecretKeySpec(raw, ALGORITHM);
-                Cipher cipher = Cipher.getInstance(ALGORITHM);
+                Cipher cipher = Cipher.getInstance(AES_ECB_PADDING);
                 cipher.init(Cipher.DECRYPT_MODE, secretKeySpec);
                 cout = new CipherOutputStream(out, cipher);
                 byte[] cache = new byte[CACHE_SIZE];
@@ -115,7 +116,7 @@ public class AesUtil {
         Key k = toKey(Base64.decodeBase64(key));
         byte[] raw = k.getEncoded();
         SecretKeySpec secretKeySpec = new SecretKeySpec(raw, ALGORITHM);
-        Cipher cipher = Cipher.getInstance(ALGORITHM);
+        Cipher cipher = Cipher.getInstance(AES_ECB_PADDING);
         cipher.init(Cipher.DECRYPT_MODE, secretKeySpec);
         CipherOutputStream cout = new CipherOutputStream(out, cipher);
         cout.close();
@@ -137,7 +138,7 @@ public class AesUtil {
         Key k = toKey(Base64.decodeBase64(key));
         byte[] raw = k.getEncoded();
         SecretKeySpec secretKeySpec = new SecretKeySpec(raw, ALGORITHM);
-        Cipher cipher = Cipher.getInstance(ALGORITHM);
+        Cipher cipher = Cipher.getInstance(AES_ECB_PADDING);
         cipher.init(Cipher.ENCRYPT_MODE, secretKeySpec);
         return cipher.doFinal(data);
     }
@@ -167,7 +168,7 @@ public class AesUtil {
                 Key k = toKey(Base64.decodeBase64(key));
                 byte[] raw = k.getEncoded();
                 SecretKeySpec secretKeySpec = new SecretKeySpec(raw, ALGORITHM);
-                Cipher cipher = Cipher.getInstance(ALGORITHM);
+                Cipher cipher = Cipher.getInstance(AES_ECB_PADDING);
                 cipher.init(Cipher.ENCRYPT_MODE, secretKeySpec);
                 cin = new CipherInputStream(in, cipher);
                 byte[] cache = new byte[CACHE_SIZE];
@@ -206,7 +207,7 @@ public class AesUtil {
         Key k = toKey(Base64.decodeBase64(key));
         byte[] raw = k.getEncoded();
         SecretKeySpec secretKeySpec = new SecretKeySpec(raw, ALGORITHM);
-        Cipher cipher = Cipher.getInstance(ALGORITHM);
+        Cipher cipher = Cipher.getInstance(AES_ECB_PADDING);
         cipher.init(Cipher.ENCRYPT_MODE, secretKeySpec);
         CipherInputStream cin = new CipherInputStream(in, cipher);
         cin.close();
