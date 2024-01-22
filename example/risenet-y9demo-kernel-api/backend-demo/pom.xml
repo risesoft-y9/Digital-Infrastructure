@@ -69,6 +69,7 @@
     </dependencies>
 
     <build>
+        <finalName>demo-api</finalName>
         <plugins>
             <plugin>
                 <groupId>org.springframework.boot</groupId>
