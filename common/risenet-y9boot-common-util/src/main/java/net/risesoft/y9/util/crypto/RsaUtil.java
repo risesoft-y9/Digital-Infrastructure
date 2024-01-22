@@ -193,7 +193,7 @@ public class RsaUtil {
     /**
      * 生成密钥对
      */
-    private static Map<String, String> initKey() throws Exception {
+    public static Map<String, String> initKey() throws Exception {
         KeyPairGenerator keygen = KeyPairGenerator.getInstance(RSA_KEY_ALGORITHM);
         SecureRandom secrand = new SecureRandom();
         /**
