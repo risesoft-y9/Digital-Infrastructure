@@ -28,9 +28,7 @@ services:
       mode: replicated
       replicas: 1
       placement:
-        constraints: 
-          - node.role==manager
-          - node.hostname==swarm-manager01
+        constraints: [node.role == manager, node.hostname == swarm-manager01]
 
 networks:
   agent_network:
