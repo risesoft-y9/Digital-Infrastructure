@@ -53,7 +53,7 @@
 
         <dependency>
             <groupId>net.risesoft</groupId>
-            <artifactId>risenet-y9boot-rest-feignClient-platform</artifactId>
+            <artifactId>risenet-y9boot-rest-feignclient-platform</artifactId>
             <version>${project.version}</version>
         </dependency>
 
