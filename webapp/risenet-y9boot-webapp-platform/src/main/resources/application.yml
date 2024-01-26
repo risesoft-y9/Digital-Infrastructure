@@ -149,9 +149,6 @@ y9:
     systemCnName: '数字底座'
     app:
         platform:
-            checkPermission: false
-            enableIpAddressWhiteList: false
-            strictRoleBasedAccessControll: false
             systemName: riseplatform
             position-name-pattern: "{0}（{1}）"
     common:
