@@ -13,7 +13,7 @@ html, body {
 }
 
 body {
-    background: #AC1E02 url("../img/loginbg.png") no-repeat fixed center;
+    background: #AC1E02 url("../img/loginbg-1.png") no-repeat fixed center;
     background-size: cover;
     filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#EA5C54 ',
     endColorstr='#bb6dec', GradientType=1);
@@ -280,7 +280,7 @@ body .noticeInfo img {
     padding-left: 40px;
     padding-right: 40px;
 }
- 
+
 
 body p {
     color: #DFDFDF;

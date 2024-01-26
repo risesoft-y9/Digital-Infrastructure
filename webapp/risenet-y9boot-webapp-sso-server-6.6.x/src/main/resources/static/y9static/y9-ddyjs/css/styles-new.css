@@ -1,0 +1,382 @@
+@font-face {
+    font-family: 'aaBoruokaishuBold';
+    src: url('../fonts/AaBanRuoKaiShuJiaCu-2.ttf') format('truetype');
+}
+
+html, body {
+    padding: 0;
+    margin: 0;
+    font-size: 16px;
+    color: #fff;
+    -webkit-app-region: drag;
+    -webkit-perspective: 800px;
+    perspective: 800px;
+    margin: 0;
+    overflow-y: auto;
+    font-family: Microsoft YaHei UI, PingFang SC, 'Source Sans Pro', 'Gudea', sans-serif;
+    height: 100%;
+}
+
+body {
+    background: #AC1E02 url("../img/loginbg-new.png") no-repeat fixed center;
+    background-size: cover;
+    filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#EA5C54 ',
+    endColorstr='#bb6dec', GradientType=1);
+}
+
+
+* {
+    margin: 0;
+    padding: 0;
+}
+
+body .logo {
+    position: absolute;
+    top: 25px;
+    left: 59px;
+    width: 35%;
+}
+
+body .logo img {
+    /*width: 560px;*/
+    width: 80%;
+    /*height: 103px;*/
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 15px;
+}
+
+body ::-webkit-input-placeholder {
+    color: #4E546D;
+}
+
+body .login {
+    position: relative;
+    /*margin-top: 236px;*/
+    /*margin-right: 66px;*/
+    margin-top: 11.5%;
+    margin-right: 3.2%;
+    width: 504px;
+    height: 654px;
+    background-color: transparent;
+    float: right;
+}
+
+body .layui-row {
+    height: 100% !important;
+}
+
+body .login_form {
+    border-radius: 10px 0px 0px 10px;
+    background-color: transparent;
+    padding-right: 53px;
+}
+
+body .login_form .login_title, body .login_fields, body .login_fields__submit {
+    width: 425px;
+}
+
+body .login_form .login_title {
+    color: #FFF;
+    font-family: AaBoruokaishuBold;
+    font-size: 52px;
+    font-style: normal;
+    font-weight: 400;
+    line-height: normal;
+    letter-spacing: -5.2px;
+    text-align: center;
+    margin-bottom: 59px;
+
+}
+
+body .login_fields {
+    margin: 0;
+    display: inline-block;
+}
+
+body .login_fields .form-label {
+    color: #FFF;
+    font-family: AaBoruokaishuBold;
+    font-size: 28px;
+    font-style: normal;
+    font-weight: 400;
+    line-height: normal;
+    width: 85px;
+    display: inline-block;
+    margin-right: 15px;
+    top: 8px;
+    position: relative;
+}
+
+
+body .login_fields input[type='text'], body .login_fields input[type='password'] {
+    display: inline-block;
+    width: 320px;
+    height: 31px;
+    vertical-align: middle;
+    border: none;
+    outline: none;
+    box-shadow: none;
+    border-radius: 2px;
+    background: transparent;
+    color: #FFF !important;
+    border-bottom: 2px solid #FFF;
+    font-family: AaBoruokaishuBold;
+    font-size: 28px;
+    font-style: normal;
+    font-weight: 400;
+    line-height: normal;
+}
+
+body .login_fields input[type='text']:hover, body .login_fields input[type='password']:hover {
+    border-radius: 2px;
+    border-bottom: 2px solid #F7E25D;
+    color: #FFF;
+    box-shadow: 0px 4px 10px -12px #F7E25D
+}
+
+body .login_fields__user, body .login_fields__password {
+    position: relative;
+    padding-bottom: 55px;
+    z-index: 1;
+}
+
+body .login_fields__submit {
+    position: relative;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    -webkit-transition-property: background, color;
+    transition-property: background, color;
+    -webkit-transition-duration: .2s;
+    transition-duration: .2s;
+    border-radius: 5px;
+    background: linear-gradient(90deg, #F6E25C 11.23%, #FFB423 113.13%);
+    margin-top: 5px;
+    cursor: pointer;
+}
+
+
+body .login_fields__submit input {
+    border: none;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-shrink: 0;
+    color: #C1261F;
+    font-family: AaBoruokaishuBold;
+    font-size: 32px;
+    font-style: normal;
+    font-weight: 400;
+    line-height: normal;
+    width: 100%;
+    height: 62px;
+    /*padding: 18px 0 18px 0;*/
+    background: transparent;
+    cursor: pointer;
+}
+
+body .login_fields__submit:hover {
+    background: linear-gradient(90deg, #FFF3A2 11.23%, #FFD37E 113.13%);
+    cursor: pointer;
+}
+
+
+body .login_fields_remember_password {
+    color: #FFF;
+    font-family: "PingFang SC";
+    font-size: 18px;
+    font-style: normal;
+    font-weight: 400;
+    margin-top: 15px;
+    margin-bottom: 66px;
+}
+
+body .login_fields_remember_password .left {
+    color: #FFF !important;
+}
+
+/* 复选框 */
+input[type="checkbox"] {
+    -webkit-appearance: none; /*清除复选框默认样式*/
+    border-radius: 2px;
+    border: 1px solid #FFF;
+    vertical-align: middle;
+    width: 17px;
+    height: 17px;
+    margin-top: 0;
+    margin-right: 10px !important;
+    cursor: pointer;
+}
+
+input[type="checkbox"]:checked {
+    /* background-position: -48px 0; */
+    background: #627BF6 url(../images/checked.png); /*复选框的背景图*/
+    background-size: contain;
+    cursor: pointer;
+}
+
+body .noticeInfo {
+    padding-bottom: 10px;
+}
+
+body .noticeInfo .title {
+    color: #FFF;
+    font-family: AaBoruokaishuBold;
+    font-size: 32px;
+    font-style: normal;
+    font-weight: 400;
+    line-height: normal;
+    letter-spacing: -3.2px;
+}
+
+
+body .noticeInfo .info {
+    padding-top: 9px;
+    list-style-type: decimal;
+    padding-left: 25px;
+}
+
+body .noticeInfo .info li {
+    color: #FFF;
+    font-family: "Source Han Sans CN";
+    font-size: 18px;
+    font-style: normal;
+    font-weight: 400;
+    line-height: 42px; /* 233.333% */
+    list-style-type: decimal;
+
+}
+
+body p {
+    color: #DFDFDF;
+    font-size: 10px;
+    text-align: left;
+}
+
+body .login .validation {
+    position: absolute;
+    z-index: 1;
+    right: 10px;
+    top: 14px;
+    opacity: 0;
+}
+
+body .login .disclaimer {
+    position: absolute;
+    margin: auto;
+    bottom: 25px;
+    width: 150px;
+    text-align: center;
+    left: 98.3px;
+}
+
+body .qvcode {
+    height: 208px;
+    width: 208px;
+    margin: auto;
+    position: relative;
+    top: 10px;
+    display: none;
+}
+
+body .qvcode img {
+    width: 100%;
+}
+
+body .disclaimer p {
+    text-align: center;
+    font-size: 13px;
+    cursor: pointer;
+}
+
+body .disclaimer p:hover {
+    color: rgb(255, 238, 0);
+}
+
+body .disclaimer a {
+    color: white;
+}
+
+body .disclaimer a:hover {
+    color: rgb(255, 238, 0);
+}
+
+body .toolTips {
+    width: 342px;
+    position: relative;
+    left: 65px;
+    overflow: hidden;
+    z-index: 10;
+    background: linear-gradient(45deg, #000, #dfdfdf);
+    border-radius: 5px;
+    top: -182px;
+}
+
+body .toolTips ul {
+    width: 342px;
+    max-height: 200px;
+    overflow-y: scroll;
+    overflow-x: hidden;
+    overflow: -moz-scrollbars-none;
+    -ms-overflow-style: none;
+    /* border: 1px solid #f40; */
+}
+
+body .toolTips ul::-webkit-scrollbar {
+    width: 0 !important;
+    height: 0 !important;
+}
+
+body .toolTips ul li {
+    line-height: 30px;
+    padding: 0 10px;
+    cursor: pointer;
+}
+
+body .toolTips ul li:hover {
+    color: #61BFFF !important;
+}
+
+body .toolTips ul li.active {
+    color: #61BFFF !important;
+}
+
+/* Color Schemes */
+.love {
+    position: absolute;
+    right: 20px;
+    bottom: 0px;
+    font-size: 11px;
+    font-weight: normal;
+}
+
+.love p {
+    color: white;
+    font-weight: normal;
+    font-family: 'Open Sans', sans-serif;
+}
+
+.love a {
+    color: white;
+    font-weight: 700;
+    text-decoration: none;
+}
+
+.love img {
+    position: relative;
+    top: 3px;
+    margin: 0px 4px;
+    width: 10px;
+}
+
+.brand {
+    position: absolute;
+    left: 20px;
+    bottom: 14px;
+}
+
+.brand img {
+    width: 30px;
+}
