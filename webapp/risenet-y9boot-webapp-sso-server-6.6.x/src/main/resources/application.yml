@@ -1,7 +1,6 @@
 cas:
     audit:
         engine:
-            #alternate-client-addr-header-name: X-Forwarded-For
             useServerHostAddress: true
     authn:
         throttle:
@@ -21,11 +20,11 @@ cas:
             refreshToken:
                 timeToKillInSeconds: P14D
             code:
-                timeToKillInSeconds: 600
+                timeToKillInSeconds: 30
                 numberOfUses: 1
             accessToken:
-                timeToKillInSeconds: PT7200S
-                maxTimeToLiveInSeconds: PT28800S
+                timeToKillInSeconds: PT2H
+                maxTimeToLiveInSeconds: PT8H
                 createAsJwt: false
                 crypto:
                     encryption:
@@ -245,7 +244,6 @@ spring:
         #prefix: classpath:/templates/
         #suffix: .html
         template-resolver-order: 100
-systemName: risesso
 y9:
     login:
         casLoginView: "casLoginView-y9-v3.0"
