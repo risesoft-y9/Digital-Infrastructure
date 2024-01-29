@@ -55,10 +55,10 @@ body .login {
     position: relative;
     /*margin-top: 236px;*/
     /*margin-right: 66px;*/
-    margin-top: 11.5%;
-    margin-right: 3.2%;
+    margin-top: 14%;
+    margin-right: 3%;
     width: 504px;
-    height: 654px;
+    height: 534px;
     background-color: transparent;
     float: right;
 }
@@ -74,20 +74,21 @@ body .login_form {
 }
 
 body .login_form .login_title, body .login_fields, body .login_fields__submit {
-    width: 425px;
+    width: 350px;
 }
 
 body .login_form .login_title {
     color: #FFF;
     font-family: AaBoruokaishuBold;
-    font-size: 52px;
+    /*font-size: 52px;*/
+    font-size: 38px;
     font-style: normal;
     font-weight: 400;
     line-height: normal;
-    letter-spacing: -5.2px;
+    /*letter-spacing: -5.2px;*/
+    letter-spacing: -3.8px;
     text-align: center;
     margin-bottom: 59px;
-
 }
 
 body .login_fields {
@@ -98,21 +99,22 @@ body .login_fields {
 body .login_fields .form-label {
     color: #FFF;
     font-family: AaBoruokaishuBold;
-    font-size: 28px;
+    /*font-size: 28px;*/
+    font-size: 22px;
     font-style: normal;
     font-weight: 400;
     line-height: normal;
-    width: 85px;
+    width: 66px;
     display: inline-block;
-    margin-right: 15px;
-    top: 8px;
+    margin-right: 18px;
+    top: 6px;
     position: relative;
 }
 
 
 body .login_fields input[type='text'], body .login_fields input[type='password'] {
     display: inline-block;
-    width: 320px;
+    width: 260px;
     height: 31px;
     vertical-align: middle;
     border: none;
@@ -123,7 +125,7 @@ body .login_fields input[type='text'], body .login_fields input[type='password']
     color: #FFF !important;
     border-bottom: 2px solid #FFF;
     font-family: AaBoruokaishuBold;
-    font-size: 28px;
+    font-size: 24px;
     font-style: normal;
     font-weight: 400;
     line-height: normal;
@@ -138,7 +140,7 @@ body .login_fields input[type='text']:hover, body .login_fields input[type='pass
 
 body .login_fields__user, body .login_fields__password {
     position: relative;
-    padding-bottom: 55px;
+    padding-bottom: 30px;
     z-index: 1;
 }
 
@@ -166,15 +168,21 @@ body .login_fields__submit input {
     flex-shrink: 0;
     color: #C1261F;
     font-family: AaBoruokaishuBold;
-    font-size: 32px;
+    /*font-size: 32px;*/
+    font-size: 28px;
     font-style: normal;
     font-weight: 400;
     line-height: normal;
     width: 100%;
-    height: 62px;
+    /*height: 62px;*/
+    height: 54px;
     /*padding: 18px 0 18px 0;*/
     background: transparent;
     cursor: pointer;
+    justify-content: center;
+    align-items: center;
+    gap: 10px;
+    flex-shrink: 0;
 }
 
 body .login_fields__submit:hover {
@@ -186,11 +194,11 @@ body .login_fields__submit:hover {
 body .login_fields_remember_password {
     color: #FFF;
     font-family: "PingFang SC";
-    font-size: 18px;
+    font-size: 16px;
     font-style: normal;
     font-weight: 400;
     margin-top: 15px;
-    margin-bottom: 66px;
+
 }
 
 body .login_fields_remember_password .left {
@@ -219,32 +227,35 @@ input[type="checkbox"]:checked {
 
 body .noticeInfo {
     padding-bottom: 10px;
+    margin-top: 21px;
 }
 
 body .noticeInfo .title {
     color: #FFF;
     font-family: AaBoruokaishuBold;
-    font-size: 32px;
+    font-size: 22px;
     font-style: normal;
     font-weight: 400;
     line-height: normal;
-    letter-spacing: -3.2px;
+    letter-spacing: -2.2px;
 }
 
 
 body .noticeInfo .info {
     padding-top: 9px;
     list-style-type: decimal;
-    padding-left: 25px;
+    padding-left: 22px;
 }
 
 body .noticeInfo .info li {
     color: #FFF;
-    font-family: "Source Han Sans CN";
+
+    font-family: AaBoruokaishuBold;
     font-size: 18px;
     font-style: normal;
     font-weight: 400;
-    line-height: 42px; /* 233.333% */
+    line-height: 28px; /* 155.556% */
+    letter-spacing: -1.8px;
     list-style-type: decimal;
 
 }
