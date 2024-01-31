@@ -92,7 +92,7 @@ public class CreatePersonDTO extends CreateOrgUnitBaseDTO {
      * <p>
      * {@link SexEnum}
      */
-    private Integer sex = SexEnum.MALE.getValue();
+    private SexEnum sex = SexEnum.MALE;
 
     /**
      * 人员类型
@@ -140,7 +140,7 @@ public class CreatePersonDTO extends CreateOrgUnitBaseDTO {
      *
      * {@link MaritalStatusEnum}
      */
-    private Integer maritalStatus = MaritalStatusEnum.SECRET.getValue();
+    private MaritalStatusEnum maritalStatus = MaritalStatusEnum.SECRET;
 
     /** 政治面貌 */
     private String politicalStatus;
