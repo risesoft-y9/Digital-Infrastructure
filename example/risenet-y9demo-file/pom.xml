@@ -1,31 +1,31 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-    xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
+<project xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://maven.apache.org/POM/4.0.0"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
     <groupId>net.risesoft</groupId>
     <artifactId>risenet-y9demo-file</artifactId>
     <version>0.0.1-SNAPSHOT</version>
     <name>risenet-y9demo-file</name>
     <description>Demo project for Spring Boot</description>
-    
+
     <repositories>
-	<repository>
-		<id>nexus</id>
-		<name>local private nexus</name>
-		<url>https://svn.youshengyun.com:9900/nexus/repository/maven-public/</url>
-		<snapshots>
-			<updatePolicy>always</updatePolicy>
-		</snapshots>
-	</repository>
-	</repositories>
-	<pluginRepositories>
-		<pluginRepository>
-			<id>nexus</id>
-			<name>local private nexus</name>
-			<url>https://svn.youshengyun.com:9900/nexus/repository/maven-public/</url>
-		</pluginRepository>
-	</pluginRepositories>
-    
+        <repository>
+            <id>nexus</id>
+            <name>local private nexus</name>
+            <url>https://svn.youshengyun.com:9900/nexus/repository/maven-public/</url>
+            <snapshots>
+                <updatePolicy>always</updatePolicy>
+            </snapshots>
+        </repository>
+    </repositories>
+    <pluginRepositories>
+        <pluginRepository>
+            <id>nexus</id>
+            <name>local private nexus</name>
+            <url>https://svn.youshengyun.com:9900/nexus/repository/maven-public/</url>
+        </pluginRepository>
+    </pluginRepositories>
+
     <properties>
         <java.version>11</java.version>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -43,11 +43,11 @@
             <artifactId>spring-boot-starter-test</artifactId>
             <scope>test</scope>
         </dependency>
-        
+
         <dependency>
             <groupId>net.risesoft</groupId>
             <artifactId>risenet-y9boot-support-fileService-FTP</artifactId>
-            <version>v9.6.3-SNAPSHOT</version>
+            <version>v9.7.0-SNAPSHOT</version>
         </dependency>
     </dependencies>
     <dependencyManagement>
@@ -63,7 +63,7 @@
     </dependencyManagement>
 
     <build>
-    	<finalName>demo-file</finalName>
+        <finalName>demo-file</finalName>
         <plugins>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
