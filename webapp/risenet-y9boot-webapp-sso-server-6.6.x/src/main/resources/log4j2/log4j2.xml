@@ -72,6 +72,7 @@
         <AsyncLogger name="com.hazelcast" level="warn"/>
         <AsyncLogger name="org.jasig.spring" level="warn"/>
         <AsyncLogger name="org.apache.catalina.startup.Catalina" level="info"/>
+        <AsyncLogger name="com.alibaba.cloud.nacos" level="info"/>
 
         <!-- Log perf stats only to perfStats.log -->
         <AsyncLogger name="perfStatsLogger" level="warn" additivity="false" includeLocation="true">
