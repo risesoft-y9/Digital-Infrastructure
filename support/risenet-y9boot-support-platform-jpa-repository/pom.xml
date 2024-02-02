@@ -4,7 +4,7 @@
 
     <modelVersion>4.0.0</modelVersion>
     <!-- <groupId>net.risesoft</groupId> -->
-    <artifactId>risenet-y9boot-support-platform-jpaRepository</artifactId>
+    <artifactId>risenet-y9boot-support-platform-jpa-repository</artifactId>
     <version>v9.7.0-SNAPSHOT</version>
     <packaging>jar</packaging>
 
@@ -27,7 +27,7 @@
 
         <dependency>
             <groupId>net.risesoft</groupId>
-            <artifactId>risenet-y9boot-starter-idGenerator</artifactId>
+            <artifactId>risenet-y9boot-starter-idgenerator</artifactId>
             <version>${project.version}</version>
         </dependency>
 

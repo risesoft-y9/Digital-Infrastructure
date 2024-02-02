@@ -27,10 +27,10 @@
     </pluginRepositories>
 
     <properties>
-        <java.version>11</java.version>
+        <java.version>21</java.version>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
-        <spring-boot.version>2.7.6</spring-boot.version>
+        <spring-boot.version>3.2.0</spring-boot.version>
     </properties>
     <dependencies>
         <dependency>
@@ -46,7 +46,7 @@
 
         <dependency>
             <groupId>net.risesoft</groupId>
-            <artifactId>risenet-y9boot-support-fileService-FTP</artifactId>
+            <artifactId>risenet-y9boot-support-file-service-ftp</artifactId>
             <version>v9.7.0-SNAPSHOT</version>
         </dependency>
     </dependencies>

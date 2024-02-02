@@ -1,9 +1,10 @@
 package net.risesoft.controller;
 
-import java.io.OutputStream;
-
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+
+import java.io.OutputStream;
+import java.nio.charset.StandardCharsets;
 
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
@@ -55,7 +56,7 @@ public class MainController {
         try {
             Y9FileStore y9FileStore = y9FileStoreService.getById(fileStoreId);
             String title = y9FileStore.getFileName();
-            title = java.net.URLEncoder.encode(title, "UTF-8");
+            title = java.net.URLEncoder.encode(title, StandardCharsets.UTF_8);
             title = StringUtils.replace(title, "+", "%20");// 替换空格
             response.reset();
             response.setHeader("Content-disposition", "attachment; filename=\"" + title + "\"");

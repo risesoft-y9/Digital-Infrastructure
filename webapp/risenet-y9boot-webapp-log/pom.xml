@@ -24,7 +24,7 @@
     <dependencies>
         <dependency>
             <groupId>net.risesoft</groupId>
-            <artifactId>risenet-y9boot-support-log-elasticSearch</artifactId>
+            <artifactId>risenet-y9boot-support-log-elasticsearch</artifactId>
             <version>${project.version}</version>
         </dependency>
 

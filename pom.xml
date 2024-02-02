@@ -13,16 +13,16 @@
         <module>common/risenet-y9boot-common-model</module>
         <module>common/risenet-y9boot-common-nacos</module>
         <module>common/risenet-y9boot-common-util</module>
-        <module>common/risenet-y9boot-common-tenantDataSource</module>
+        <module>common/risenet-y9boot-common-tenant-datasource</module>
 
         <module>rest/risenet-y9boot-rest-interface-platform</module>
-        <module>rest/risenet-y9boot-rest-feignClient-platform</module>
+        <module>rest/risenet-y9boot-rest-feignclient-platform</module>
         <module>rest/risenet-y9boot-rest-interface-log</module>
-        <module>rest/risenet-y9boot-rest-feignClient-log</module>
+        <module>rest/risenet-y9boot-rest-feignclient-log</module>
 
         <module>starter/risenet-y9boot-starter-apisix</module>
         <module>starter/risenet-y9boot-starter-cache-redis</module>
-        <module>starter/risenet-y9boot-starter-idGenerator</module>
+        <module>starter/risenet-y9boot-starter-idgenerator</module>
         <module>starter/risenet-y9boot-starter-jpa-public</module>
         <module>starter/risenet-y9boot-starter-jpa-tenant</module>
         <module>starter/risenet-y9boot-starter-kafka</module>
@@ -38,12 +38,12 @@
         <module>starter/risenet-y9boot-starter-web</module>
         <module>starter/risenet-y9boot-starter-openfeign</module>
 
-        <module>support/risenet-y9boot-support-file-jpaRepository</module>
-        <module>support/risenet-y9boot-support-fileService-FTP</module>
-        <module>support/risenet-y9boot-support-platform-jpaRepository</module>
+        <module>support/risenet-y9boot-support-file-jpa-repository</module>
+        <module>support/risenet-y9boot-support-file-service-ftp</module>
+        <module>support/risenet-y9boot-support-platform-jpa-repository</module>
         <module>support/risenet-y9boot-support-platform-service</module>
         <module>support/risenet-y9boot-support-platform-web</module>
-        <module>support/risenet-y9boot-support-log-elasticSearch</module>
+        <module>support/risenet-y9boot-support-log-elasticsearch</module>
         <module>support/risenet-y9boot-support-history</module>
 
         <module>webapp/risenet-y9boot-webapp-sso-server</module>

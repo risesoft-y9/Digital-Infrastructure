@@ -60,7 +60,7 @@
 
         <dependency>
             <groupId>net.risesoft</groupId>
-            <artifactId>risenet-y9boot-common-tenantDataSource</artifactId>
+            <artifactId>risenet-y9boot-common-tenant-datasource</artifactId>
             <version>${project.version}</version>
             <!-- <optional>true</optional> -->
         </dependency>
