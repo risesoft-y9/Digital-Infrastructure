@@ -20,6 +20,71 @@ services:
     command:
       - '--mysqld.address=mysql01:3306'
       - '--mysqld.username=root'
+  cadvisor:
+    image: gcr.io/cadvisor/cadvisor:v0.47.2
+    container_name: cadvisor
+    restart: always
+    volumes:
+      - /:/rootfs:ro
+      - /var/run:/var/run:rw
+      - /sys:/sys:ro
+      - /var/lib/docker/:/var/lib/docker:ro
+      - /dev/disk:/dev/disk:ro
+    ports:
+      - "8989:8080"
+    deploy:
+      mode: global
+    networks:
+      - y9-share-net
+  node-exporter:
+    image: quay.io/prometheus/node-exporter
+    container_name: node-exporter
+    restart: always
+    ports:
+      - "9100:9100"
+    networks:
+      - y9-share-net
+    deploy:
+      mode: global
+  elasticsearch-exporter:
+    image: quay.io/prometheuscommunity/elasticsearch-exporter:latest
+    container_name: elasticsearch-exporter
+    restart: always
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+    command:
+      - "--es.uri=http://stack-y9dev_elasticsearch:9200"
+    environment:
+      - ES_USERNAME=elastic
+      - ES_PASSWORD=Risesoft@2024
+    ports:
+      - "9114:9114"
+    networks:
+      - y9-share-net
+  kafka-exporter:
+    image: bitnami/kafka-exporter:latest
+    container_name: kafka-exporter
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+    restart: always
+    command:
+      - "--kafka.server=stack-y9dev_kafka:9092"
+    ports:
+      - "9308:9308"
+    networks:
+      - y9-share-net
+  redis-exporter:
+    image: bitnami/redis-exporter:latest
+    container_name: redis-exporter
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+    command:
+      - "redis.addr=redis://stack-y9dev_redis:6379"
+      - "redis.password=Y9i-83204585"
+    ports:
+      - "9121:9121"
+    networks:
+      - y9-share-net
 
 networks:
   y9-share-net:
