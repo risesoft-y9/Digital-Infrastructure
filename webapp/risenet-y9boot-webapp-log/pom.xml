@@ -157,10 +157,6 @@
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-maven-plugin</artifactId>
             </plugin>
-            <plugin>
-                <groupId>com.ly.smart-doc</groupId>
-                <artifactId>smart-doc-maven-plugin</artifactId>
-            </plugin>
         </plugins>
     </build>
 
@@ -172,6 +168,17 @@
                     <plugin>
                         <groupId>com.google.cloud.tools</groupId>
                         <artifactId>jib-maven-plugin</artifactId>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
+        <profile>
+            <id>api-doc</id>
+            <build>
+                <plugins>
+                    <plugin>
+                        <groupId>com.ly.smart-doc</groupId>
+                        <artifactId>smart-doc-maven-plugin</artifactId>
                     </plugin>
                 </plugins>
             </build>

@@ -92,27 +92,37 @@
                     <target>11</target>
                 </configuration>
             </plugin>
-            <plugin>
-                <groupId>com.ly.smart-doc</groupId>
-                <artifactId>smart-doc-maven-plugin</artifactId>
-                <configuration>
-                    <projectName>platform</projectName>
-                    <includes>
-                        <include>net.risesoft:risenet-y9boot-support-platform-jpaRepository</include>
-                        <include>net.risesoft:risenet-y9boot-common-model</include>
-                        <include>net.risesoft:risenet-y9boot-common-util</include>
-                        <include>net.risesoft:risenet-y9boot-starter-jpa-public</include>
-                    </includes>
-                </configuration>
-                <executions>
-                    <execution>
-                        <goals>
-                            <goal>html</goal>
-                        </goals>
-                    </execution>
-                </executions>
-            </plugin>
         </plugins>
-
     </build>
+
+    <profiles>
+        <profile>
+            <id>api-doc</id>
+            <build>
+                <plugins>
+                    <plugin>
+                        <groupId>com.ly.smart-doc</groupId>
+                        <artifactId>smart-doc-maven-plugin</artifactId>
+                        <configuration>
+                            <projectName>platform</projectName>
+                            <includes>
+                                <include>net.risesoft:risenet-y9boot-support-platform-jpaRepository</include>
+                                <include>net.risesoft:risenet-y9boot-common-model</include>
+                                <include>net.risesoft:risenet-y9boot-common-util</include>
+                                <include>net.risesoft:risenet-y9boot-starter-jpa-public</include>
+                            </includes>
+                        </configuration>
+                        <executions>
+                            <execution>
+                                <goals>
+                                    <goal>html</goal>
+                                </goals>
+                            </execution>
+                        </executions>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
+    </profiles>
+    
 </project>
