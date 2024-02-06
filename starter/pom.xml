@@ -1,0 +1,38 @@
+<project xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xmlns="http://maven.apache.org/POM/4.0.0"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+
+    <modelVersion>4.0.0</modelVersion>
+    <groupId>net.risesoft</groupId>
+    <artifactId>y9-digitalbase-starter</artifactId>
+    <packaging>pom</packaging>
+    <version>v9.6.3-SNAPSHOT</version>
+
+    <parent>
+        <groupId>net.risesoft</groupId>
+        <artifactId>y9-digitalbase</artifactId>
+        <version>v9.6.3-SNAPSHOT</version>
+        <relativePath>../pom.xml</relativePath>
+    </parent>
+
+    <modules>
+        <module>risenet-y9boot-starter-apisix</module>
+        <module>risenet-y9boot-starter-cache-redis</module>
+        <module>risenet-y9boot-starter-idgenerator</module>
+        <module>risenet-y9boot-starter-jpa-public</module>
+        <module>risenet-y9boot-starter-jpa-tenant</module>
+        <module>risenet-y9boot-starter-kafka</module>
+        <module>risenet-y9boot-starter-liquibase</module>
+        <module>risenet-y9boot-starter-publish-kafka</module>
+        <module>risenet-y9boot-starter-listener-kafka</module>
+        <module>risenet-y9boot-starter-multi-tenant</module>
+        <module>risenet-y9boot-starter-log</module>
+        <module>risenet-y9boot-starter-permission</module>
+        <module>risenet-y9boot-starter-security</module>
+        <module>risenet-y9boot-starter-sso-oauth2-resource</module>
+        <module>risenet-y9boot-starter-elasticsearch</module>
+        <module>risenet-y9boot-starter-web</module>
+        <module>risenet-y9boot-starter-openfeign</module>
+    </modules>
+
+</project>

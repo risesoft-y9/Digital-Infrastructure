@@ -1,0 +1,25 @@
+<project xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xmlns="http://maven.apache.org/POM/4.0.0"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+
+    <modelVersion>4.0.0</modelVersion>
+    <groupId>net.risesoft</groupId>
+    <artifactId>y9-digitalbase-rest</artifactId>
+    <packaging>pom</packaging>
+    <version>v9.6.3-SNAPSHOT</version>
+
+    <parent>
+        <groupId>net.risesoft</groupId>
+        <artifactId>y9-digitalbase</artifactId>
+        <version>v9.6.3-SNAPSHOT</version>
+        <relativePath>../pom.xml</relativePath>
+    </parent>
+
+    <modules>
+        <module>risenet-y9boot-rest-interface-platform</module>
+        <module>risenet-y9boot-rest-feignclient-platform</module>
+        <module>risenet-y9boot-rest-interface-log</module>
+        <module>risenet-y9boot-rest-feignclient-log</module>
+    </modules>
+
+</project>

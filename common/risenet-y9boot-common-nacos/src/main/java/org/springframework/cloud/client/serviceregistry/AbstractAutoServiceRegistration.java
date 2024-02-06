@@ -1,25 +1,22 @@
 /*
  * Copyright 2012-2020 the original author or authors.
  *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except in compliance with
+ * the License. You may obtain a copy of the License at
  *
- *      https://www.apache.org/licenses/LICENSE-2.0
+ * https://www.apache.org/licenses/LICENSE-2.0
  *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
+ * Unless required by applicable law or agreed to in writing, software distributed under the License is distributed on
+ * an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the License for the
+ * specific language governing permissions and limitations under the License.
  */
 
 package org.springframework.cloud.client.serviceregistry;
 
+import jakarta.annotation.PreDestroy;
+
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicInteger;
-
-import javax.annotation.PreDestroy;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -35,8 +32,7 @@ import org.springframework.context.ApplicationListener;
 import org.springframework.core.env.Environment;
 
 /**
- * Lifecycle methods that may be useful and common to {@link ServiceRegistry}
- * implementations.
+ * Lifecycle methods that may be useful and common to {@link ServiceRegistry} implementations.
  *
  * TODO: Document the lifecycle.
  *
@@ -44,228 +40,223 @@ import org.springframework.core.env.Environment;
  * @author Spencer Gibb
  */
 public abstract class AbstractAutoServiceRegistration<R extends Registration>
-		implements AutoServiceRegistration, ApplicationContextAware, ApplicationListener<ApplicationReadyEvent> {
+    implements AutoServiceRegistration, ApplicationContextAware, ApplicationListener<ApplicationReadyEvent> {
 
-	private static final Log logger = LogFactory.getLog(AbstractAutoServiceRegistration.class);
+    private static final Log logger = LogFactory.getLog(AbstractAutoServiceRegistration.class);
 
-	private final ServiceRegistry<R> serviceRegistry;
+    private final ServiceRegistry<R> serviceRegistry;
 
-	private boolean autoStartup = true;
+    private final boolean autoStartup = true;
 
-	private AtomicBoolean running = new AtomicBoolean(false);
+    private final AtomicBoolean running = new AtomicBoolean(false);
 
-	private int order = 0;
+    private final int order = 0;
+    private final AtomicInteger port = new AtomicInteger(0);
+    private ApplicationContext context;
+    private Environment environment;
+    private AutoServiceRegistrationProperties properties;
 
-	private ApplicationContext context;
+    @Deprecated
+    protected AbstractAutoServiceRegistration(ServiceRegistry<R> serviceRegistry) {
+        this.serviceRegistry = serviceRegistry;
+    }
 
-	private Environment environment;
+    protected AbstractAutoServiceRegistration(ServiceRegistry<R> serviceRegistry,
+        AutoServiceRegistrationProperties properties) {
+        this.serviceRegistry = serviceRegistry;
+        this.properties = properties;
+    }
 
-	private AtomicInteger port = new AtomicInteger(0);
+    protected ApplicationContext getContext() {
+        return this.context;
+    }
 
-	private AutoServiceRegistrationProperties properties;
+    @Override
+    @SuppressWarnings("deprecation")
+    public void onApplicationEvent(ApplicationReadyEvent event) {
+        bind(event);
+    }
 
-	@Deprecated
-	protected AbstractAutoServiceRegistration(ServiceRegistry<R> serviceRegistry) {
-		this.serviceRegistry = serviceRegistry;
-	}
+    @Deprecated
+    public void bind(ApplicationReadyEvent event) {
+        ApplicationContext context = event.getApplicationContext();
+        if (context instanceof ConfigurableWebServerApplicationContext) {
+            if ("management".equals(((ConfigurableWebServerApplicationContext)context).getServerNamespace())) {
+                return;
+            }
+        }
+        this.port.compareAndSet(0, environment.getProperty("server.port", Integer.class, 8080));
+        this.start();
+    }
 
-	protected AbstractAutoServiceRegistration(ServiceRegistry<R> serviceRegistry,
-			AutoServiceRegistrationProperties properties) {
-		this.serviceRegistry = serviceRegistry;
-		this.properties = properties;
-	}
+    @Override
+    public void setApplicationContext(ApplicationContext applicationContext) throws BeansException {
+        this.context = applicationContext;
+        this.environment = this.context.getEnvironment();
+    }
 
-	protected ApplicationContext getContext() {
-		return this.context;
-	}
+    @Deprecated
+    protected Environment getEnvironment() {
+        return this.environment;
+    }
 
-	@Override
-	@SuppressWarnings("deprecation")
-	public void onApplicationEvent(ApplicationReadyEvent event) {
-		bind(event);
-	}
+    @Deprecated
+    protected AtomicInteger getPort() {
+        return this.port;
+    }
 
-	@Deprecated
-	public void bind(ApplicationReadyEvent event) {
-		ApplicationContext context = event.getApplicationContext();
-		if (context instanceof ConfigurableWebServerApplicationContext) {
-			if ("management".equals(((ConfigurableWebServerApplicationContext) context).getServerNamespace())) {
-				return;
-			}
-		}
-		this.port.compareAndSet(0, environment.getProperty("server.port", Integer.class, 8080));
-		this.start();
-	}
+    public boolean isAutoStartup() {
+        return this.autoStartup;
+    }
 
-	@Override
-	public void setApplicationContext(ApplicationContext applicationContext) throws BeansException {
-		this.context = applicationContext;
-		this.environment = this.context.getEnvironment();
-	}
+    public void start() {
+        if (!isEnabled()) {
+            if (logger.isDebugEnabled()) {
+                logger.debug("Discovery Lifecycle disabled. Not starting");
+            }
+            return;
+        }
 
-	@Deprecated
-	protected Environment getEnvironment() {
-		return this.environment;
-	}
+        // only initialize if nonSecurePort is greater than 0 and it isn't already running
+        // because of containerPortInitializer below
+        if (!this.running.get()) {
+            this.context.publishEvent(new InstancePreRegisteredEvent(this, getRegistration()));
+            register();
+            if (shouldRegisterManagement()) {
+                registerManagement();
+            }
+            this.context.publishEvent(new InstanceRegisteredEvent<>(this, getConfiguration()));
+            this.running.compareAndSet(false, true);
+        }
 
-	@Deprecated
-	protected AtomicInteger getPort() {
-		return this.port;
-	}
+    }
 
-	public boolean isAutoStartup() {
-		return this.autoStartup;
-	}
+    /**
+     * @return Whether the management service should be registered with the {@link ServiceRegistry}.
+     */
+    protected boolean shouldRegisterManagement() {
+        if (this.properties == null || this.properties.isRegisterManagement()) {
+            return getManagementPort() != null && ManagementServerPortUtils.isDifferent(this.context);
+        }
+        return false;
+    }
 
-	public void start() {
-		if (!isEnabled()) {
-			if (logger.isDebugEnabled()) {
-				logger.debug("Discovery Lifecycle disabled. Not starting");
-			}
-			return;
-		}
+    /**
+     * @return The object used to configure the registration.
+     */
+    @Deprecated
+    protected abstract Object getConfiguration();
 
-		// only initialize if nonSecurePort is greater than 0 and it isn't already running
-		// because of containerPortInitializer below
-		if (!this.running.get()) {
-			this.context.publishEvent(new InstancePreRegisteredEvent(this, getRegistration()));
-			register();
-			if (shouldRegisterManagement()) {
-				registerManagement();
-			}
-			this.context.publishEvent(new InstanceRegisteredEvent<>(this, getConfiguration()));
-			this.running.compareAndSet(false, true);
-		}
+    /**
+     * @return True, if this is enabled.
+     */
+    protected abstract boolean isEnabled();
 
-	}
+    /**
+     * @return The serviceId of the Management Service.
+     */
+    @Deprecated
+    protected String getManagementServiceId() {
+        // TODO: configurable management suffix
+        return this.context.getId() + ":management";
+    }
 
-	/**
-	 * @return Whether the management service should be registered with the
-	 * {@link ServiceRegistry}.
-	 */
-	protected boolean shouldRegisterManagement() {
-		if (this.properties == null || this.properties.isRegisterManagement()) {
-			return getManagementPort() != null && ManagementServerPortUtils.isDifferent(this.context);
-		}
-		return false;
-	}
+    /**
+     * @return The service name of the Management Service.
+     */
+    @Deprecated
+    protected String getManagementServiceName() {
+        // TODO: configurable management suffix
+        return getAppName() + ":management";
+    }
 
-	/**
-	 * @return The object used to configure the registration.
-	 */
-	@Deprecated
-	protected abstract Object getConfiguration();
+    /**
+     * @return The management server port.
+     */
+    @Deprecated
+    protected Integer getManagementPort() {
+        return ManagementServerPortUtils.getPort(this.context);
+    }
 
-	/**
-	 * @return True, if this is enabled.
-	 */
-	protected abstract boolean isEnabled();
+    /**
+     * @return The app name (currently the spring.application.name property).
+     */
+    @Deprecated
+    protected String getAppName() {
+        return this.environment.getProperty("spring.application.name", "application");
+    }
 
-	/**
-	 * @return The serviceId of the Management Service.
-	 */
-	@Deprecated
-	protected String getManagementServiceId() {
-		// TODO: configurable management suffix
-		return this.context.getId() + ":management";
-	}
+    @PreDestroy
+    public void destroy() {
+        stop();
+    }
 
-	/**
-	 * @return The service name of the Management Service.
-	 */
-	@Deprecated
-	protected String getManagementServiceName() {
-		// TODO: configurable management suffix
-		return getAppName() + ":management";
-	}
+    public boolean isRunning() {
+        return this.running.get();
+    }
 
-	/**
-	 * @return The management server port.
-	 */
-	@Deprecated
-	protected Integer getManagementPort() {
-		return ManagementServerPortUtils.getPort(this.context);
-	}
+    protected AtomicBoolean getRunning() {
+        return this.running;
+    }
 
-	/**
-	 * @return The app name (currently the spring.application.name property).
-	 */
-	@Deprecated
-	protected String getAppName() {
-		return this.environment.getProperty("spring.application.name", "application");
-	}
+    public int getOrder() {
+        return this.order;
+    }
 
-	@PreDestroy
-	public void destroy() {
-		stop();
-	}
+    public int getPhase() {
+        return 0;
+    }
 
-	public boolean isRunning() {
-		return this.running.get();
-	}
+    protected ServiceRegistry<R> getServiceRegistry() {
+        return this.serviceRegistry;
+    }
 
-	protected AtomicBoolean getRunning() {
-		return this.running;
-	}
+    protected abstract R getRegistration();
 
-	public int getOrder() {
-		return this.order;
-	}
+    protected abstract R getManagementRegistration();
 
-	public int getPhase() {
-		return 0;
-	}
+    /**
+     * Register the local service with the {@link ServiceRegistry}.
+     */
+    protected void register() {
+        this.serviceRegistry.register(getRegistration());
+    }
 
-	protected ServiceRegistry<R> getServiceRegistry() {
-		return this.serviceRegistry;
-	}
+    /**
+     * Register the local management service with the {@link ServiceRegistry}.
+     */
+    protected void registerManagement() {
+        R registration = getManagementRegistration();
+        if (registration != null) {
+            this.serviceRegistry.register(registration);
+        }
+    }
 
-	protected abstract R getRegistration();
+    /**
+     * De-register the local service with the {@link ServiceRegistry}.
+     */
+    protected void deregister() {
+        this.serviceRegistry.deregister(getRegistration());
+    }
 
-	protected abstract R getManagementRegistration();
+    /**
+     * De-register the local management service with the {@link ServiceRegistry}.
+     */
+    protected void deregisterManagement() {
+        R registration = getManagementRegistration();
+        if (registration != null) {
+            this.serviceRegistry.deregister(registration);
+        }
+    }
 
-	/**
-	 * Register the local service with the {@link ServiceRegistry}.
-	 */
-	protected void register() {
-		this.serviceRegistry.register(getRegistration());
-	}
-
-	/**
-	 * Register the local management service with the {@link ServiceRegistry}.
-	 */
-	protected void registerManagement() {
-		R registration = getManagementRegistration();
-		if (registration != null) {
-			this.serviceRegistry.register(registration);
-		}
-	}
-
-	/**
-	 * De-register the local service with the {@link ServiceRegistry}.
-	 */
-	protected void deregister() {
-		this.serviceRegistry.deregister(getRegistration());
-	}
-
-	/**
-	 * De-register the local management service with the {@link ServiceRegistry}.
-	 */
-	protected void deregisterManagement() {
-		R registration = getManagementRegistration();
-		if (registration != null) {
-			this.serviceRegistry.deregister(registration);
-		}
-	}
-
-	public void stop() {
-		if (this.getRunning().compareAndSet(true, false) && isEnabled()) {
-			deregister();
-			if (shouldRegisterManagement()) {
-				deregisterManagement();
-			}
-			this.serviceRegistry.close();
-		}
-	}
+    public void stop() {
+        if (this.getRunning().compareAndSet(true, false) && isEnabled()) {
+            deregister();
+            if (shouldRegisterManagement()) {
+                deregisterManagement();
+            }
+            this.serviceRegistry.close();
+        }
+    }
 
 }
