@@ -16,7 +16,7 @@
     </parent>
 
     <modules>
-        <module>risenet-y9boot-webapp-sso-server-6.6.x</module>
+        <module>risenet-y9boot-webapp-sso-server</module>
         <module>risenet-y9boot-webapp-platform</module>
         <module>risenet-y9boot-webapp-log</module>
     </modules>

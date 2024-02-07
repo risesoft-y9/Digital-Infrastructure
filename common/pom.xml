@@ -21,7 +21,6 @@
         <module>risenet-y9boot-common-nacos</module>
         <module>risenet-y9boot-common-util</module>
         <module>risenet-y9boot-common-tenant-datasource</module>
-        <module>risenet-y9boot-3rd-jpa</module>
     </modules>
 
 </project>
