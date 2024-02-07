@@ -317,22 +317,11 @@
             <artifactId>spring-context-indexer</artifactId>
             <optional>true</optional>
         </dependency>
-
+        
         <dependency>
-            <groupId>com.alibaba.cloud</groupId>
-            <artifactId>spring-cloud-starter-alibaba-nacos-config</artifactId>
-            <version>${alibaba-cloud.version}</version>
-            <exclusions>
-                <exclusion>
-                    <groupId>com.alibaba.nacos</groupId>
-                    <artifactId>nacos-client</artifactId>
-                </exclusion>
-            </exclusions>
-        </dependency>
-        <dependency>
-            <groupId>com.alibaba.nacos</groupId>
-            <artifactId>nacos-client</artifactId>
-            <version>${alibaba-nacos.version}</version>
+            <groupId>net.risesoft</groupId>
+            <artifactId>risenet-y9boot-common-nacos</artifactId>
+            <version>${project.version}</version>
         </dependency>
 
         <dependency>
