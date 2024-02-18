@@ -204,6 +204,7 @@ management:
 server:
     intranet:
         ip: 192.168.x.x,10.x.x.x
+    port: 8080
     servlet:
         encoding:
             charset: UTF-8
