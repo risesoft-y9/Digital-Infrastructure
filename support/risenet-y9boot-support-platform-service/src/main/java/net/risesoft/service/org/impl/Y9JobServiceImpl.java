@@ -169,9 +169,9 @@ public class Y9JobServiceImpl implements Y9JobService {
             // 修改职位
             Optional<Y9Job> y9JobOptional = this.findById(job.getId());
             if (y9JobOptional.isPresent()) {
-                Y9Job originY9Job = y9JobOptional.get();
-                Y9Job updatedY9Job = new Y9Job();
-                Y9BeanUtil.copyProperties(originY9Job, updatedY9Job);
+                Y9Job originY9Job = new Y9Job();
+                Y9Job updatedY9Job = y9JobOptional.get();
+                Y9BeanUtil.copyProperties(updatedY9Job, originY9Job);
                 Y9BeanUtil.copyProperties(job, updatedY9Job);
                 final Y9Job savedJob = y9JobManager.save(updatedY9Job);
 
@@ -182,7 +182,7 @@ public class Y9JobServiceImpl implements Y9JobService {
                     public void afterCommit() {
                         Y9MessageOrg<Job> msg = new Y9MessageOrg<>(Y9ModelConvertUtil.convert(savedJob, Job.class),
                             Y9OrgEventConst.RISEORGEVENT_TYPE_UPDATE_JOB, Y9LoginUserHolder.getTenantId());
-                        Y9PublishServiceUtil.persistAndPublishMessageOrg(msg, "更新职位信息", "更新职位" + savedJob.getName());
+                        Y9PublishServiceUtil.persistAndPublishMessageOrg(msg, "更新职位信息", "更新职位" + originY9Job.getName());
                     }
                 });
 

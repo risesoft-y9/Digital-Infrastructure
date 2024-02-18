@@ -31,12 +31,12 @@ import net.risesoft.repository.Y9OrganizationRepository;
 import net.risesoft.repository.permission.Y9AuthorizationRepository;
 import net.risesoft.repository.relation.Y9OrgBasesToRolesRepository;
 import net.risesoft.service.org.Y9OrganizationService;
-import net.risesoft.util.Y9OrgUtil;
 import net.risesoft.util.Y9PublishServiceUtil;
 import net.risesoft.y9.Y9Context;
 import net.risesoft.y9.Y9LoginUserHolder;
 import net.risesoft.y9.pubsub.constant.Y9OrgEventConst;
 import net.risesoft.y9.pubsub.event.Y9EntityDeletedEvent;
+import net.risesoft.y9.pubsub.event.Y9EntityUpdatedEvent;
 import net.risesoft.y9.pubsub.message.Y9MessageOrg;
 import net.risesoft.y9.util.Y9BeanUtil;
 import net.risesoft.y9.util.Y9ModelConvertUtil;
@@ -184,23 +184,23 @@ public class Y9OrganizationServiceImpl implements Y9OrganizationService {
 
     @Override
     @Transactional(readOnly = false)
-    public Y9Organization saveOrUpdate(Y9Organization org) {
-        if (StringUtils.isNotEmpty(org.getId())) {
-            Optional<Y9Organization> y9OrganizationOptional = y9OrganizationManager.findById(org.getId());
+    public Y9Organization saveOrUpdate(Y9Organization organization) {
+        if (StringUtils.isNotEmpty(organization.getId())) {
+            Optional<Y9Organization> y9OrganizationOptional = y9OrganizationManager.findById(organization.getId());
             if (y9OrganizationOptional.isPresent()) {
-                Y9Organization oldOrg = y9OrganizationOptional.get();
+                Y9Organization originY9Organization = new Y9Organization();
+                Y9Organization updatedY9Organization = y9OrganizationOptional.get();
+                Y9BeanUtil.copyProperties(updatedY9Organization, originY9Organization);
 
-                boolean renamed = Y9OrgUtil.isRenamed(org, oldOrg);
-                Y9BeanUtil.copyProperties(org, oldOrg);
-                oldOrg.setDn(OrgLevelConsts.getOrgLevel(OrgTypeEnum.ORGANIZATION) + org.getName());
-                oldOrg.setGuidPath(org.getId());
-                oldOrg.setTenantId(Y9LoginUserHolder.getTenantId());
-                final Y9Organization savedOrganization = y9OrganizationManager.save(oldOrg);
+                Y9BeanUtil.copyProperties(organization, updatedY9Organization);
 
-                if (renamed) {
-                    // 是否需要递归DN
-                    compositeOrgBaseManager.recursivelyUpdateProperties(oldOrg);
-                }
+                updatedY9Organization
+                    .setDn(OrgLevelConsts.getOrgLevel(OrgTypeEnum.ORGANIZATION) + updatedY9Organization.getName());
+                updatedY9Organization.setGuidPath(updatedY9Organization.getId());
+                updatedY9Organization.setTenantId(Y9LoginUserHolder.getTenantId());
+                final Y9Organization savedOrganization = y9OrganizationManager.save(updatedY9Organization);
+
+                Y9Context.publishEvent(new Y9EntityUpdatedEvent<>(originY9Organization, savedOrganization));
 
                 TransactionSynchronizationManager.registerSynchronization(new TransactionSynchronization() {
                     @Override
@@ -208,23 +208,24 @@ public class Y9OrganizationServiceImpl implements Y9OrganizationService {
                         Y9MessageOrg<Organization> msg =
                             new Y9MessageOrg<>(Y9ModelConvertUtil.convert(savedOrganization, Organization.class),
                                 Y9OrgEventConst.RISEORGEVENT_TYPE_UPDATE_ORGANIZATION, Y9LoginUserHolder.getTenantId());
-                        Y9PublishServiceUtil.persistAndPublishMessageOrg(msg, "更新组织机构", "更新" + oldOrg.getName());
+                        Y9PublishServiceUtil.persistAndPublishMessageOrg(msg, "更新组织机构",
+                            "更新" + originY9Organization.getName());
                     }
                 });
 
-                return oldOrg;
+                return originY9Organization;
             }
         } else {
-            org.setId(Y9IdGenerator.genId(IdType.SNOWFLAKE));
+            organization.setId(Y9IdGenerator.genId(IdType.SNOWFLAKE));
         }
 
         Integer maxTabIndex = getMaxTabIndex();
-        org.setTabIndex(maxTabIndex != null ? maxTabIndex + 1 : 0);
-        org.setVersion(OrgTypeEnum.Y9_VERSION);
-        org.setDn(OrgLevelConsts.getOrgLevel(OrgTypeEnum.ORGANIZATION) + org.getName());
-        org.setGuidPath(org.getId());
-        org.setTenantId(Y9LoginUserHolder.getTenantId());
-        final Y9Organization savedOrganization = y9OrganizationManager.save(org);
+        organization.setTabIndex(maxTabIndex != null ? maxTabIndex + 1 : 0);
+        organization.setVersion(OrgTypeEnum.Y9_VERSION);
+        organization.setDn(OrgLevelConsts.getOrgLevel(OrgTypeEnum.ORGANIZATION) + organization.getName());
+        organization.setGuidPath(organization.getId());
+        organization.setTenantId(Y9LoginUserHolder.getTenantId());
+        final Y9Organization savedOrganization = y9OrganizationManager.save(organization);
 
         TransactionSynchronizationManager.registerSynchronization(new TransactionSynchronization() {
             @Override

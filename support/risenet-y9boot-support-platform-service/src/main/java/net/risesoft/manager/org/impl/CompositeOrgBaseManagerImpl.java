@@ -148,10 +148,6 @@ public class CompositeOrgBaseManagerImpl implements CompositeOrgBaseManager {
         return y9GroupRepository.findById(id).orElse(null);
     }
 
-    private List<Y9Group> findGroupByParentId(String parentId) {
-        return y9GroupRepository.findByParentIdOrderByTabIndexAsc(parentId);
-    }
-
     @Cacheable(cacheNames = CacheNameConsts.ORG_ORGANIZATION, key = "#id", condition = "#id!=null",
         unless = "#result==null")
     public Y9Organization findOrganizationById(String id) {
@@ -358,71 +354,6 @@ public class CompositeOrgBaseManagerImpl implements CompositeOrgBaseManager {
         List<Y9Position> positionList = new ArrayList<>();
         getAllPositionListByDownwardRecursion(parentId, positionList);
         return positionList;
-    }
-
-    @Override
-    @Transactional(readOnly = false)
-    public void recursivelyUpdateProperties(Y9OrgBase parent) {
-        // 部门
-        List<Y9Department> deptList = findDepartmentByParentId(parent.getId());
-        for (Y9Department dept : deptList) {
-            dept.setDn(OrgLevelConsts.getOrgLevel(OrgTypeEnum.DEPARTMENT) + dept.getName() + OrgLevelConsts.SEPARATOR
-                + parent.getDn());
-            dept.setGuidPath(parent.getGuidPath() + OrgLevelConsts.SEPARATOR + dept.getId());
-            dept = saveDepartment(dept);
-            recursivelyUpdateProperties(dept);
-        }
-
-        // 用户组
-        List<Y9Group> groupList = findGroupByParentId(parent.getId());
-        for (Y9Group group : groupList) {
-            group.setDn(OrgLevelConsts.getOrgLevel(OrgTypeEnum.GROUP) + group.getName() + OrgLevelConsts.SEPARATOR
-                + parent.getDn());
-            group.setGuidPath(parent.getGuidPath() + OrgLevelConsts.SEPARATOR + group.getId());
-            saveY9Group(group);
-        }
-
-        // 岗位
-        List<Y9Position> positionList = findPositionByParentId(parent.getId());
-        for (Y9Position position : positionList) {
-            position.setDn(OrgLevelConsts.getOrgLevel(OrgTypeEnum.POSITION) + position.getName()
-                + OrgLevelConsts.SEPARATOR + parent.getDn());
-            position.setGuidPath(parent.getGuidPath() + OrgLevelConsts.SEPARATOR + position.getId());
-            saveY9Position(position);
-        }
-
-        // 人员
-        List<Y9Person> personList = findPersonByParentId(parent.getId());
-        for (Y9Person person : personList) {
-            person.setDn(OrgLevelConsts.getOrgLevel(OrgTypeEnum.PERSON) + person.getName() + OrgLevelConsts.SEPARATOR
-                + parent.getDn());
-            person.setGuidPath(parent.getGuidPath() + OrgLevelConsts.SEPARATOR + person.getId());
-            saveY9Person(person);
-        }
-    }
-
-    @CacheEvict(cacheNames = CacheNameConsts.ORG_DEPARTMENT, key = "#y9Department.id")
-    @Transactional(readOnly = false)
-    public Y9Department saveDepartment(Y9Department y9Department) {
-        return y9DepartmentRepository.save(y9Department);
-    }
-
-    @CacheEvict(cacheNames = CacheNameConsts.ORG_GROUP, key = "#y9Group.id")
-    @Transactional(readOnly = false)
-    public Y9Group saveY9Group(Y9Group y9Group) {
-        return y9GroupRepository.save(y9Group);
-    }
-
-    @CacheEvict(cacheNames = CacheNameConsts.ORG_PERSON, key = "#y9Person.id")
-    @Transactional(readOnly = false)
-    public Y9Person saveY9Person(Y9Person y9Person) {
-        return y9PersonRepository.save(y9Person);
-    }
-
-    @CacheEvict(cacheNames = CacheNameConsts.ORG_POSITION, key = "#y9Position.id")
-    @Transactional(readOnly = false)
-    public Y9Position saveY9Position(Y9Position y9Position) {
-        return y9PositionRepository.save(y9Position);
     }
 
 }

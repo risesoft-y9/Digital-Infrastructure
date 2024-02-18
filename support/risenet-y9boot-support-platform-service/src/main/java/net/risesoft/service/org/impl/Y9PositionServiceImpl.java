@@ -8,7 +8,6 @@ import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.Query;
 
-import net.risesoft.repository.Y9DepartmentPropRepository;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.event.EventListener;
@@ -34,6 +33,7 @@ import net.risesoft.manager.org.CompositeOrgBaseManager;
 import net.risesoft.manager.org.Y9PositionManager;
 import net.risesoft.manager.relation.Y9PersonsToPositionsManager;
 import net.risesoft.model.platform.Position;
+import net.risesoft.repository.Y9DepartmentPropRepository;
 import net.risesoft.repository.Y9PositionRepository;
 import net.risesoft.repository.identity.position.Y9PositionToResourceAndAuthorityRepository;
 import net.risesoft.repository.identity.position.Y9PositionToRoleRepository;
@@ -42,6 +42,7 @@ import net.risesoft.repository.relation.Y9OrgBasesToRolesRepository;
 import net.risesoft.repository.relation.Y9PersonsToPositionsRepository;
 import net.risesoft.repository.relation.Y9PositionsToGroupsRepository;
 import net.risesoft.service.org.Y9PositionService;
+import net.risesoft.util.Y9OrgUtil;
 import net.risesoft.util.Y9PublishServiceUtil;
 import net.risesoft.y9.Y9Context;
 import net.risesoft.y9.Y9LoginUserHolder;
@@ -252,14 +253,14 @@ public class Y9PositionServiceImpl implements Y9PositionService {
     @Override
     @Transactional(readOnly = false)
     public Y9Position move(String positionId, String parentId) {
-        Y9Position originPosition = this.getById(positionId);
-        Y9Position updatedPosition = new Y9Position();
-        Y9BeanUtil.copyProperties(originPosition, updatedPosition);
+        Y9Position originPosition = new Y9Position();
+        Y9Position updatedPosition = this.getById(positionId);
+        Y9BeanUtil.copyProperties(updatedPosition, originPosition);
 
         Y9OrgBase parent = compositeOrgBaseManager.getOrgUnitAsParent(parentId);
         updatedPosition.setParentId(parent.getId());
-        updatedPosition.setGuidPath(parent.getGuidPath() + OrgLevelConsts.SEPARATOR + updatedPosition.getId());
-        updatedPosition.setDn(OrgLevelConsts.getOrgLevel(OrgTypeEnum.POSITION) + updatedPosition.getName()
+        updatedPosition.setGuidPath(parent.getGuidPath() + OrgLevelConsts.SEPARATOR + originPosition.getId());
+        updatedPosition.setDn(OrgLevelConsts.getOrgLevel(OrgTypeEnum.POSITION) + originPosition.getName()
             + OrgLevelConsts.SEPARATOR + parent.getDn());
         updatedPosition.setTabIndex(compositeOrgBaseManager.getMaxSubTabIndex(parentId));
         final Y9Position savedPosition = this.save(updatedPosition);
@@ -273,7 +274,7 @@ public class Y9PositionServiceImpl implements Y9PositionService {
                     new Y9MessageOrg<>(Y9ModelConvertUtil.convert(savedPosition, Position.class),
                         Y9OrgEventConst.RISEORGEVENT_TYPE_UPDATE_POSITION, Y9LoginUserHolder.getTenantId());
                 Y9PublishServiceUtil.persistAndPublishMessageOrg(msg, "移动岗位",
-                    savedPosition.getName() + "移动到" + parent.getName());
+                    originPosition.getName() + "移动到" + parent.getName());
             }
         });
 
@@ -294,6 +295,20 @@ public class Y9PositionServiceImpl implements Y9PositionService {
         Y9Organization y9Organization = event.getEntity();
         // 删除组织时其下岗位也要删除
         deleteByParentId(y9Organization.getId());
+    }
+
+    @EventListener
+    @Transactional(readOnly = false)
+    public void onParentUpdated(Y9EntityUpdatedEvent<? extends Y9OrgBase> event) {
+        Y9OrgBase originOrgBase = event.getOriginEntity();
+        Y9OrgBase updatedOrgBase = event.getUpdatedEntity();
+
+        if (Y9OrgUtil.isAncestorChanged(originOrgBase, updatedOrgBase)) {
+            List<Y9Position> positionList = y9PositionRepository.findByParentIdOrderByTabIndexAsc(updatedOrgBase.getId());
+            for (Y9Position position : positionList) {
+                this.saveOrUpdate(position);
+            }
+        }
     }
 
     private void recursionUpPosition(List<Y9Position> positionList, String parentId) {

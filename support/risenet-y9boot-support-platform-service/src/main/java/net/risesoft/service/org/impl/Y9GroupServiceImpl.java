@@ -32,6 +32,7 @@ import net.risesoft.repository.permission.Y9AuthorizationRepository;
 import net.risesoft.repository.relation.Y9OrgBasesToRolesRepository;
 import net.risesoft.repository.relation.Y9PersonsToGroupsRepository;
 import net.risesoft.service.org.Y9GroupService;
+import net.risesoft.util.Y9OrgUtil;
 import net.risesoft.util.Y9PublishServiceUtil;
 import net.risesoft.y9.Y9Context;
 import net.risesoft.y9.Y9LoginUserHolder;
@@ -175,9 +176,9 @@ public class Y9GroupServiceImpl implements Y9GroupService {
     @Override
     @Transactional(readOnly = false)
     public Y9Group move(String groupId, String parentId) {
-        Y9Group originY9Group = this.getById(groupId);
-        Y9Group updatedY9Group = new Y9Group();
-        Y9BeanUtil.copyProperties(originY9Group, updatedY9Group);
+        Y9Group originY9Group = new Y9Group();
+        Y9Group updatedY9Group = this.getById(groupId);
+        Y9BeanUtil.copyProperties(updatedY9Group, originY9Group);
 
         Y9OrgBase parent = compositeOrgBaseManager.getOrgUnitAsParent(parentId);
         updatedY9Group.setParentId(parent.getId());
@@ -195,7 +196,7 @@ public class Y9GroupServiceImpl implements Y9GroupService {
                 Y9MessageOrg<Group> msg = new Y9MessageOrg<>(Y9ModelConvertUtil.convert(savedY9Group, Group.class),
                     Y9OrgEventConst.RISEORGEVENT_TYPE_UPDATE_GROUP, Y9LoginUserHolder.getTenantId());
                 Y9PublishServiceUtil.persistAndPublishMessageOrg(msg, "移动用户组",
-                    savedY9Group.getName() + "移动到" + parent.getName());
+                    originY9Group.getName() + "移动到" + parent.getName());
             }
         });
 
@@ -216,6 +217,20 @@ public class Y9GroupServiceImpl implements Y9GroupService {
         Y9Organization y9Organization = event.getEntity();
         // 删除组织时其下岗位也要删除
         deleteByParentId(y9Organization.getId());
+    }
+
+    @EventListener
+    @Transactional(readOnly = false)
+    public void onParentUpdated(Y9EntityUpdatedEvent<? extends Y9OrgBase> event) {
+        Y9OrgBase originOrgBase = event.getOriginEntity();
+        Y9OrgBase updatedOrgBase = event.getUpdatedEntity();
+
+        if (Y9OrgUtil.isAncestorChanged(originOrgBase, updatedOrgBase)) {
+            List<Y9Group> groupList = y9GroupRepository.findByParentIdOrderByTabIndexAsc(updatedOrgBase.getId());
+            for (Y9Group group : groupList) {
+                this.saveOrUpdate(group);
+            }
+        }
     }
 
     @Override

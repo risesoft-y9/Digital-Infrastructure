@@ -128,11 +128,4 @@ public interface CompositeOrgBaseManager {
      */
     List<Y9Position> listAllPositionsRecursionDownward(String parentId);
 
-    /**
-     * 递归修改子节点的属性
-     *
-     * @param parent
-     */
-    void recursivelyUpdateProperties(Y9OrgBase parent);
-
 }
