@@ -3,6 +3,8 @@ package net.risesoft.listener;
 import java.util.List;
 import java.util.Optional;
 
+import net.risesoft.entity.Y9Person;
+import net.risesoft.util.Y9OrgUtil;
 import org.springframework.context.event.EventListener;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
@@ -49,6 +51,25 @@ public class UpdatePositionNameListener {
 
         if (LOGGER.isDebugEnabled()) {
             LOGGER.debug("更新岗位触发的更新岗位名称执行完成");
+        }
+    }
+
+    @EventListener
+    @Transactional(readOnly = false)
+    public void onY9PersonUpdated(Y9EntityUpdatedEvent<Y9Person> event) {
+        Y9Person originY9Person = event.getOriginEntity();
+        Y9Person updatedY9Person = event.getUpdatedEntity();
+
+        if (Y9OrgUtil.isRenamed(originY9Person, updatedY9Person)) {
+            List<String> positionIdList =
+                y9PersonsToPositionsService.listPositionIdsByPersonId(updatedY9Person.getId());
+            for (String positionId : positionIdList) {
+                this.updatePositionName(positionId);
+            }
+        }
+
+        if (LOGGER.isDebugEnabled()) {
+            LOGGER.debug("更新人员触发的更新岗位名称执行完成");
         }
     }
 
