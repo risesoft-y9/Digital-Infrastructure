@@ -14,6 +14,8 @@ import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.transaction.support.TransactionSynchronization;
+import org.springframework.transaction.support.TransactionSynchronizationManager;
 
 import lombok.RequiredArgsConstructor;
 
@@ -111,37 +113,38 @@ public class Y9PositionManagerImpl implements Y9PositionManager {
         Y9Job y9Job = y9JobManager.getById(position.getJobId());
 
         if (StringUtils.isNotEmpty(position.getId())) {
-            Y9Position originalPosition = y9PositionRepository.findById(position.getId()).orElse(null);
-            if (originalPosition != null) {
+            Optional<Y9Position> updatedY9PositionOptional = this.findById(position.getId());
+            if (updatedY9PositionOptional.isPresent()) {
+                Y9Position updatedY9Position = updatedY9PositionOptional.get();
                 // 修改的岗位容量不能小于当前岗位人数
                 checkHeadCountAvailability(position);
 
-                Y9Position updatedY9Position = new Y9Position();
-                Y9BeanUtil.copyProperties(originalPosition, updatedY9Position);
+                Y9Position originY9Position = new Y9Position();
+                Y9BeanUtil.copyProperties(updatedY9Position, originY9Position);
                 Y9BeanUtil.copyProperties(position, updatedY9Position);
 
-                if (null != parent) {
-                    updatedY9Position.setParentId(parent.getId());
-                    updatedY9Position
-                        .setGuidPath(parent.getGuidPath() + OrgLevelConsts.SEPARATOR + updatedY9Position.getId());
-                    updatedY9Position.setDn(OrgLevelConsts.getOrgLevel(OrgTypeEnum.POSITION)
-                        + updatedY9Position.getName() + OrgLevelConsts.SEPARATOR + parent.getDn());
-                } else {
-                    updatedY9Position.setGuidPath(updatedY9Position.getId());
-                    updatedY9Position
-                        .setDn(OrgLevelConsts.getOrgLevel(OrgTypeEnum.POSITION) + updatedY9Position.getName());
-                }
+                updatedY9Position.setParentId(parent.getId());
+                updatedY9Position
+                    .setGuidPath(parent.getGuidPath() + OrgLevelConsts.SEPARATOR + updatedY9Position.getId());
+                updatedY9Position.setDn(OrgLevelConsts.getOrgLevel(OrgTypeEnum.POSITION) + updatedY9Position.getName()
+                    + OrgLevelConsts.SEPARATOR + parent.getDn());
 
-                updatedY9Position = save(updatedY9Position);
+                final Y9Position savedY9Position = save(updatedY9Position);
 
-                Y9MessageOrg<Position> msg =
-                    new Y9MessageOrg<>(ModelConvertUtil.convert(updatedY9Position, Position.class),
-                        Y9OrgEventConst.RISEORGEVENT_TYPE_UPDATE_POSITION, Y9LoginUserHolder.getTenantId());
-                Y9PublishServiceUtil.persistAndPublishMessageOrg(msg, "更新岗位信息", "更新" + position.getName());
+                Y9Context.publishEvent(new Y9EntityUpdatedEvent<>(originY9Position, savedY9Position));
 
-                Y9Context.publishEvent(new Y9EntityUpdatedEvent<>(originalPosition, updatedY9Position));
+                TransactionSynchronizationManager.registerSynchronization(new TransactionSynchronization() {
+                    @Override
+                    public void afterCommit() {
+                        Y9MessageOrg<Position> msg =
+                            new Y9MessageOrg<>(ModelConvertUtil.convert(savedY9Position, Position.class),
+                                Y9OrgEventConst.RISEORGEVENT_TYPE_UPDATE_POSITION, Y9LoginUserHolder.getTenantId());
+                        Y9PublishServiceUtil.persistAndPublishMessageOrg(msg, "更新岗位信息",
+                            "更新" + originY9Position.getName());
+                    }
+                });
 
-                return updatedY9Position;
+                return savedY9Position;
             }
         }
         if (StringUtils.isEmpty(position.getId())) {

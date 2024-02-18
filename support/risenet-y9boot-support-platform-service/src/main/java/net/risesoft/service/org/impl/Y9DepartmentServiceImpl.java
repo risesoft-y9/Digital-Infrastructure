@@ -239,11 +239,11 @@ public class Y9DepartmentServiceImpl implements Y9DepartmentService {
     @Override
     @Transactional(readOnly = false)
     public Y9Department move(String deptId, String parentId) {
-        Y9Department originDepartment = getById(deptId);
-        Y9Department updatedDepartment = new Y9Department();
-        Y9BeanUtil.copyProperties(originDepartment, updatedDepartment);
+        Y9Department originDepartment = new Y9Department();
+        Y9Department updatedDepartment = getById(deptId);
+        Y9BeanUtil.copyProperties(updatedDepartment, originDepartment);
 
-        checkMoveTarget(originDepartment, parentId);
+        checkMoveTarget(updatedDepartment, parentId);
 
         Y9OrgBase parent = compositeOrgBaseManager.getOrgUnitAsParent(parentId);
         updatedDepartment.setParentId(parent.getId());
@@ -253,8 +253,6 @@ public class Y9DepartmentServiceImpl implements Y9DepartmentService {
         updatedDepartment.setTabIndex(compositeOrgBaseManager.getMaxSubTabIndex(parentId));
         final Y9Department savedDepartment = y9DepartmentManager.save(updatedDepartment);
 
-        compositeOrgBaseManager.recursivelyUpdateProperties(savedDepartment);
-
         Y9Context.publishEvent(new Y9EntityUpdatedEvent<>(originDepartment, savedDepartment));
 
         TransactionSynchronizationManager.registerSynchronization(new TransactionSynchronization() {
@@ -263,7 +261,7 @@ public class Y9DepartmentServiceImpl implements Y9DepartmentService {
                 Y9MessageOrg<Department> msg =
                     new Y9MessageOrg<>(Y9ModelConvertUtil.convert(savedDepartment, Department.class),
                         Y9OrgEventConst.RISEORGEVENT_TYPE_UPDATE_DEPARTMENT, Y9LoginUserHolder.getTenantId());
-                Y9PublishServiceUtil.persistAndPublishMessageOrg(msg, "移动部门", "移动" + savedDepartment.getName());
+                Y9PublishServiceUtil.persistAndPublishMessageOrg(msg, "移动部门", "移动" + originDepartment.getName());
             }
         });
 
@@ -338,21 +336,20 @@ public class Y9DepartmentServiceImpl implements Y9DepartmentService {
         if (StringUtils.isNotEmpty(dept.getId())) {
             Optional<Y9Department> y9DepartmentOptional = y9DepartmentManager.findById(dept.getId());
             if (y9DepartmentOptional.isPresent()) {
-                Y9Department originDepartment = y9DepartmentOptional.get();
+                Y9Department originDepartment = new Y9Department();
+                Y9Department updatedDepartment = y9DepartmentOptional.get();
+                Y9BeanUtil.copyProperties(updatedDepartment, originDepartment);
 
-                boolean renamed = Y9OrgUtil.isRenamed(dept, originDepartment);
-                Y9BeanUtil.copyProperties(dept, originDepartment);
-                originDepartment.setDn(OrgLevelConsts.getOrgLevel(OrgTypeEnum.DEPARTMENT) + dept.getName()
+                Y9BeanUtil.copyProperties(dept, updatedDepartment);
+
+                updatedDepartment.setDn(OrgLevelConsts.getOrgLevel(OrgTypeEnum.DEPARTMENT) + dept.getName()
                     + OrgLevelConsts.SEPARATOR + parent.getDn());
-                originDepartment.setParentId(parent.getId());
-                originDepartment.setGuidPath(parent.getGuidPath() + OrgLevelConsts.SEPARATOR + dept.getId());
+                updatedDepartment.setParentId(parent.getId());
+                updatedDepartment.setGuidPath(parent.getGuidPath() + OrgLevelConsts.SEPARATOR + dept.getId());
 
-                final Y9Department savedDepartment = y9DepartmentManager.save(originDepartment);
+                final Y9Department savedDepartment = y9DepartmentManager.save(updatedDepartment);
 
-                if (renamed) {
-                    // 更新下级节点的dn
-                    compositeOrgBaseManager.recursivelyUpdateProperties(savedDepartment);
-                }
+                Y9Context.publishEvent(new Y9EntityUpdatedEvent<>(originDepartment, savedDepartment));
 
                 TransactionSynchronizationManager.registerSynchronization(new TransactionSynchronization() {
                     @Override
@@ -361,7 +358,7 @@ public class Y9DepartmentServiceImpl implements Y9DepartmentService {
                             new Y9MessageOrg<>(Y9ModelConvertUtil.convert(savedDepartment, Department.class),
                                 Y9OrgEventConst.RISEORGEVENT_TYPE_UPDATE_DEPARTMENT, Y9LoginUserHolder.getTenantId());
                         Y9PublishServiceUtil.persistAndPublishMessageOrg(msg, "修改部门",
-                            "修改 " + savedDepartment.getName());
+                            "修改 " + originDepartment.getName());
                     }
                 });
 
@@ -615,6 +612,34 @@ public class Y9DepartmentServiceImpl implements Y9DepartmentService {
         Y9Organization y9Organization = event.getEntity();
         // 删除组织时其下部门也要删除
         removeByParentId(y9Organization.getId());
+    }
+
+    @EventListener
+    @Transactional(readOnly = false)
+    public void onParentOrganizationUpdated(Y9EntityUpdatedEvent<Y9Organization> event) {
+        Y9Organization originOrganization = event.getOriginEntity();
+        Y9Organization updatedOrganization = event.getUpdatedEntity();
+
+        if (Y9OrgUtil.isRenamed(originOrganization, updatedOrganization)) {
+            List<Y9Department> deptList = y9DepartmentRepository.findByParentId(updatedOrganization.getId());
+            for (Y9Department dept : deptList) {
+                this.saveOrUpdate(dept);
+            }
+        }
+    }
+
+    @EventListener
+    @Transactional(readOnly = false)
+    public void onParentDepartmentUpdated(Y9EntityUpdatedEvent<Y9Department> event) {
+        Y9Department originDepartment = event.getOriginEntity();
+        Y9Department updatedDepartment = event.getUpdatedEntity();
+
+        if (Y9OrgUtil.isAncestorChanged(originDepartment, updatedDepartment)) {
+            List<Y9Department> deptList = y9DepartmentRepository.findByParentId(updatedDepartment.getId());
+            for (Y9Department dept : deptList) {
+                this.saveOrUpdate(dept);
+            }
+        }
     }
 
     private void recursionParent(String parentId, List<Y9OrgBase> parentList) {

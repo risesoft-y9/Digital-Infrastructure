@@ -64,6 +64,7 @@ import net.risesoft.repository.relation.Y9PersonsToGroupsRepository;
 import net.risesoft.repository.relation.Y9PersonsToPositionsRepository;
 import net.risesoft.service.org.Y9PersonService;
 import net.risesoft.util.ModelConvertUtil;
+import net.risesoft.util.Y9OrgUtil;
 import net.risesoft.util.Y9PlatformUtil;
 import net.risesoft.util.Y9PublishServiceUtil;
 import net.risesoft.y9.Y9Context;
@@ -556,17 +557,19 @@ public class Y9PersonServiceImpl implements Y9PersonService {
     @Override
     @Transactional(readOnly = false)
     public Y9Person changeDisabled(String id) {
-        Y9Person y9Person = this.getById(id);
-        boolean disabled = !y9Person.getDisabled();
-        y9Person.setDisabled(disabled);
-        final Y9Person savedPerson = y9PersonManager.save(y9Person);
+        Y9Person originPerson = new Y9Person();
+        Y9Person updatedPerson = this.getById(id);
+        Y9BeanUtil.copyProperties(updatedPerson, originPerson);
+        boolean disabled = !updatedPerson.getDisabled();
+        updatedPerson.setDisabled(disabled);
+        final Y9Person savedPerson = y9PersonManager.save(updatedPerson);
 
         if (disabled) {
             // 禁用人员的时候，将人员岗位移除
             y9PersonsToPositionsManager.deleteByPersonId(id);
         }
 
-        Y9Context.publishEvent(new Y9EntityUpdatedEvent<>(y9Person, savedPerson));
+        Y9Context.publishEvent(new Y9EntityUpdatedEvent<>(originPerson, savedPerson));
 
         TransactionSynchronizationManager.registerSynchronization(new TransactionSynchronization() {
             @Override
@@ -574,7 +577,7 @@ public class Y9PersonServiceImpl implements Y9PersonService {
                 Y9MessageOrg<Person> msg = new Y9MessageOrg<>(ModelConvertUtil.orgPersonToPerson(savedPerson),
                     Y9OrgEventConst.RISEORGEVENT_TYPE_UPDATE_PERSON, Y9LoginUserHolder.getTenantId());
                 Y9PublishServiceUtil.persistAndPublishMessageOrg(msg, disabled ? "禁用人员" : "启用人员",
-                    (disabled ? "禁用" : "启用") + savedPerson.getName());
+                    (disabled ? "禁用" : "启用") + originPerson.getName());
             }
         });
 
@@ -854,25 +857,27 @@ public class Y9PersonServiceImpl implements Y9PersonService {
     @Override
     @Transactional(readOnly = false)
     public Y9Person modifyPassword(String personId, String oldPassword, String newPassword) {
-        Y9Person y9Person = this.getById(personId);
+        Y9Person originPerson = new Y9Person();
+        Y9Person updatedPerson = this.getById(personId);
+        Y9BeanUtil.copyProperties(updatedPerson, originPerson);
 
         if (StringUtils.isNotBlank(oldPassword)) {
             // 兼容旧接口，无 oldPassword
-            Y9Assert.isTrue(Y9MessageDigest.checkpw(oldPassword, y9Person.getPassword()),
+            Y9Assert.isTrue(Y9MessageDigest.checkpw(oldPassword, updatedPerson.getPassword()),
                 OrgUnitErrorCodeEnum.OLD_PASSWORD_IS_INCORRECT);
         }
 
-        y9Person.setPassword(Y9MessageDigest.hashpw(newPassword));
-        final Y9Person savedPerson = y9PersonManager.save(y9Person);
+        updatedPerson.setPassword(Y9MessageDigest.hashpw(newPassword));
+        final Y9Person savedPerson = y9PersonManager.save(updatedPerson);
 
-        Y9Context.publishEvent(new Y9EntityUpdatedEvent<>(y9Person, savedPerson));
+        Y9Context.publishEvent(new Y9EntityUpdatedEvent<>(originPerson, savedPerson));
 
         TransactionSynchronizationManager.registerSynchronization(new TransactionSynchronization() {
             @Override
             public void afterCommit() {
                 Y9MessageOrg<Person> msg = new Y9MessageOrg<>(ModelConvertUtil.orgPersonToPerson(savedPerson),
                     Y9OrgEventConst.RISEORGEVENT_TYPE_UPDATE_PERSON, Y9LoginUserHolder.getTenantId());
-                Y9PublishServiceUtil.persistAndPublishMessageOrg(msg, "修改密码", "修改" + y9Person.getName() + "的密码");
+                Y9PublishServiceUtil.persistAndPublishMessageOrg(msg, "修改密码", "修改" + originPerson.getName() + "的密码");
             }
         });
 
@@ -882,25 +887,24 @@ public class Y9PersonServiceImpl implements Y9PersonService {
     @Override
     @Transactional(readOnly = false)
     public Y9Person move(String personId, String parentId) {
-        Y9Person originPerson = this.getById(personId);
-        Y9Person updatedPerson = new Y9Person();
-
-        Y9BeanUtil.copyProperties(originPerson, updatedPerson);
-        updatedPerson.setTabIndex(compositeOrgBaseManager.getMaxSubTabIndex(parentId));
-        updatedPerson.setParentId(parentId);
+        Y9Person originPerson = new Y9Person();
+        Y9Person updatedPerson = this.getById(personId);
+        Y9BeanUtil.copyProperties(updatedPerson, originPerson);
+        
+        final Y9OrgBase parent = compositeOrgBaseManager.getOrgUnitAsParent(parentId);
+        updatedPerson.setParentId(parent.getId());
         updatedPerson.setTabIndex(compositeOrgBaseManager.getMaxSubTabIndex(parentId));
         final Y9Person savedPerson = this.save(updatedPerson);
 
         Y9Context.publishEvent(new Y9EntityUpdatedEvent<>(originPerson, savedPerson));
 
-        final Y9OrgBase parent = compositeOrgBaseManager.getOrgUnitAsParent(parentId);
         TransactionSynchronizationManager.registerSynchronization(new TransactionSynchronization() {
             @Override
             public void afterCommit() {
                 Y9MessageOrg<Person> msg = new Y9MessageOrg<>(ModelConvertUtil.orgPersonToPerson(savedPerson),
                     Y9OrgEventConst.RISEORGEVENT_TYPE_UPDATE_PERSON, Y9LoginUserHolder.getTenantId());
                 Y9PublishServiceUtil.persistAndPublishMessageOrg(msg, "移动人员",
-                    savedPerson.getName() + "移动到" + parent.getName());
+                    originPerson.getName() + "移动到" + parent.getName());
             }
         });
 
@@ -921,6 +925,20 @@ public class Y9PersonServiceImpl implements Y9PersonService {
         Y9Organization y9Organization = event.getEntity();
         // 删除组织时其下人员也要删除
         deleteByParentId(y9Organization.getId());
+    }
+
+    @EventListener
+    @Transactional(readOnly = false)
+    public void onParentUpdated(Y9EntityUpdatedEvent<? extends Y9OrgBase> event) {
+        Y9OrgBase originOrgBase = event.getOriginEntity();
+        Y9OrgBase updatedOrgBase = event.getUpdatedEntity();
+
+        if (Y9OrgUtil.isAncestorChanged(originOrgBase, updatedOrgBase)) {
+            List<Y9Person> personList = y9PersonRepository.findByParentIdOrderByTabIndex(updatedOrgBase.getId());
+            for (Y9Person person : personList) {
+                this.saveOrUpdate(person, null);
+            }
+        }
     }
 
     @Override
@@ -995,10 +1013,13 @@ public class Y9PersonServiceImpl implements Y9PersonService {
     @Override
     @Transactional(readOnly = false)
     public void resetDefaultPassword(String personId) {
-        Y9Person originPerson = this.getById(personId);
+        Y9Person originPerson = new Y9Person();
+        Y9Person updatedPerson = this.getById(personId);
+        Y9BeanUtil.copyProperties(updatedPerson, originPerson);
+        
         String password = y9config.getCommon().getDefaultPassword();
-        originPerson.setPassword(Y9MessageDigest.hashpw(password));
-        final Y9Person savedPerson = y9PersonManager.save(originPerson);
+        updatedPerson.setPassword(Y9MessageDigest.hashpw(password));
+        final Y9Person savedPerson = y9PersonManager.save(updatedPerson);
 
         Y9Context.publishEvent(new Y9EntityUpdatedEvent<>(originPerson, savedPerson));
 
@@ -1007,7 +1028,7 @@ public class Y9PersonServiceImpl implements Y9PersonService {
             public void afterCommit() {
                 Y9MessageOrg<Person> msg = new Y9MessageOrg<>(ModelConvertUtil.orgPersonToPerson(savedPerson),
                     Y9OrgEventConst.RISEORGEVENT_TYPE_UPDATE_PERSON, Y9LoginUserHolder.getTenantId());
-                Y9PublishServiceUtil.persistAndPublishMessageOrg(msg, "重置密码", "重置" + savedPerson.getName() + "的密码");
+                Y9PublishServiceUtil.persistAndPublishMessageOrg(msg, "重置密码", "重置" + originPerson.getName() + "的密码");
             }
         });
     }
@@ -1029,12 +1050,15 @@ public class Y9PersonServiceImpl implements Y9PersonService {
     @Override
     @Transactional(readOnly = false)
     public Y9Person saveAvator(String personId, String avatorUrl) {
-        Y9Person y9Person = this.getById(personId);
-        y9Person.setAvator(avatorUrl);
-        y9Person = this.save(y9Person);
+        Y9Person originPerson = new Y9Person();
+        Y9Person updatedPerson = this.getById(personId);
+        Y9BeanUtil.copyProperties(updatedPerson, originPerson);
+        
+        updatedPerson.setAvator(avatorUrl);
+        updatedPerson = this.save(updatedPerson);
 
-        Y9Context.publishEvent(new Y9EntityUpdatedEvent<>(y9Person, y9Person));
-        return y9Person;
+        Y9Context.publishEvent(new Y9EntityUpdatedEvent<>(originPerson, updatedPerson));
+        return updatedPerson;
     }
 
     @Override
@@ -1045,18 +1069,19 @@ public class Y9PersonServiceImpl implements Y9PersonService {
             Optional<Y9Person> y9PersonOptional = y9PersonManager.findById(person.getId());
             if (y9PersonOptional.isPresent()) {
                 // 判断为更新信息
-                Y9Person originPerson = y9PersonOptional.get();
-                Y9Person updatedPerson = new Y9Person();
-                Y9BeanUtil.copyProperties(originPerson, updatedPerson);
+                Y9Person originPerson = new Y9Person();
+                Y9Person updatedPerson = y9PersonOptional.get();
+                Y9BeanUtil.copyProperties(updatedPerson, originPerson);
                 Y9BeanUtil.copyProperties(person, updatedPerson);
+                
                 updatedPerson.setDn(OrgLevelConsts.getOrgLevel(OrgTypeEnum.PERSON) + updatedPerson.getName()
                     + OrgLevelConsts.SEPARATOR + parent.getDn());
                 updatedPerson.setParentId(parent.getId());
-                if (StringUtils.isBlank(updatedPerson.getEmail())) {
+                if (StringUtils.isBlank(originPerson.getEmail())) {
                     updatedPerson.setEmail(null);
                 }
 
-                if (Boolean.TRUE.equals(updatedPerson.getOriginal()) && null != personExt) {
+                if (Boolean.TRUE.equals(originPerson.getOriginal()) && null != personExt) {
                     updatePersonByOriginalId(updatedPerson, personExt);
                 }
                 final Y9Person savedPerson = save(updatedPerson);
@@ -1201,12 +1226,15 @@ public class Y9PersonServiceImpl implements Y9PersonService {
     @Override
     @Transactional(readOnly = false)
     public Y9Person saveWeixinId(String personId, String weixinId) {
-        Y9Person y9Person = this.getById(personId);
-        y9Person.setWeixinId(weixinId);
-        y9Person = this.save(y9Person);
+        Y9Person originPerson = new Y9Person();
+        Y9Person updatedPerson = this.getById(personId);
+        Y9BeanUtil.copyProperties(updatedPerson, originPerson);
+        
+        updatedPerson.setWeixinId(weixinId);
+        updatedPerson = this.save(updatedPerson);
 
-        Y9Context.publishEvent(new Y9EntityUpdatedEvent<>(y9Person, y9Person));
-        return y9Person;
+        Y9Context.publishEvent(new Y9EntityUpdatedEvent<>(originPerson, updatedPerson));
+        return updatedPerson;
     }
 
     @Override

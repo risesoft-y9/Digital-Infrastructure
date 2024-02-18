@@ -24,6 +24,18 @@ public class Y9OrgUtil {
     }
 
     /**
+     * 判断组织节点及其任一祖先节点是否有改变
+     *
+     * @param originOrgBase 原始组织节点对象
+     * @param updateOrgBase 更新后组织节点对象
+     * @return
+     */
+    public static boolean isAncestorChanged(Y9OrgBase originOrgBase, Y9OrgBase updateOrgBase) {
+        return !Objects.equals(originOrgBase.getDn(), updateOrgBase.getDn())
+            || !Objects.equals(originOrgBase.getGuidPath(), updateOrgBase.getGuidPath());
+    }
+
+    /**
      * 判断组织节点是否有改名
      *
      * @param originOrgBase 原始组织节点对象
