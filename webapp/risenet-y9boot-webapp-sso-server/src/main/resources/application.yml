@@ -315,6 +315,10 @@ spring:
         #prefix: classpath:/templates/
         #suffix: .html
         template-resolver-order: 100
+    cloud:
+        nacos:
+            discovery:
+                enabled: false
 y9:
     common:
         kafkaEnabled: true
