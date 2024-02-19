@@ -6,7 +6,7 @@
     <groupId>net.risesoft</groupId>
     <artifactId>y9-digitalbase</artifactId>
     <packaging>pom</packaging>
-    <version>v9.6.3</version>
+    <version>v9.6.4-SNAPSHOT</version>
 
     <modules>
         <module>common</module>
