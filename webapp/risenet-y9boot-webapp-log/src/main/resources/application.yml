@@ -29,6 +29,8 @@ spring:
                 server-addr: http://localhost:8848
                 username: nacos
                 password: nacos-83204585
+            discovery:
+                enabled: false
     config:
         import:
             - optional:nacos:log.yml

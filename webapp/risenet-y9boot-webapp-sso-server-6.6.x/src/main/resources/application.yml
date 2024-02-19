@@ -245,6 +245,10 @@ spring:
         #prefix: classpath:/templates/
         #suffix: .html
         template-resolver-order: 100
+    cloud:
+        nacos:
+            discovery:
+                enabled: false
 y9:
     login:
         casLoginView: "casLoginView-y9-v3.0"
