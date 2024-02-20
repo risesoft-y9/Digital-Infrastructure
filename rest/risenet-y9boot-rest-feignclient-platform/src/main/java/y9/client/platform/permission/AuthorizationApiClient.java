@@ -13,8 +13,8 @@ import net.risesoft.api.permission.AuthorizationApi;
  * @date 2022/2/10
  * @since 9.6.0
  */
-@FeignClient(contextId = "AuthorizationApiClient", name = "y9platform", url = "${y9.common.orgBaseUrl}",
-    path = "/services/rest/v1/authorization", primary = false)
+@FeignClient(contextId = "AuthorizationApiClient", name = "${y9.service.org.name:platform}", url = "${y9.service.org.directUrl:}",
+    path = "/${y9.service.org.name:platform}/services/rest/v1/authorization", primary = false)
 public interface AuthorizationApiClient extends AuthorizationApi {
 
 }

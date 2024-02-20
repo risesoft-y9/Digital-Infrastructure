@@ -73,6 +73,9 @@ y9:
             accessLogIndex: logindex
             accessLogSaveTarget: elastic
             kafkaEnabled: true
+    service:
+        org:
+            directUrl: http://localhost:7055
     common:
         cacheEnabled: true
         kafkaEnabled: true

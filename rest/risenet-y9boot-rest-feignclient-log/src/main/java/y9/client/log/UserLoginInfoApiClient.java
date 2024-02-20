@@ -17,8 +17,8 @@ import net.risesoft.pojo.Y9PageQuery;
  * @date 2022/12/28
  * @since 9.6.0
  */
-@FeignClient(contextId = "UserLoginInfoApiClient", name = "UserLoginInfo", url = "${y9.common.logBaseUrl}",
-    path = "/services/rest/v1/userLoginInfo")
+@FeignClient(contextId = "UserLoginInfoApiClient", name = "${y9.service.log.name:log}", url = "${y9.service.log.directUrl:}",
+    path = "/${y9.service.log.name:log}/services/rest/v1/userLoginInfo")
 public interface UserLoginInfoApiClient extends UserLoginInfoApi {
 
     @Override
