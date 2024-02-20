@@ -153,6 +153,9 @@ y9:
         platform:
             systemName: riseplatform
             position-name-pattern: "{0}（{1}）"
+    service:
+        log:
+            directUrl: http://localhost:7055
     common:
         cacheEnabled: true
         kafkaEnabled: true

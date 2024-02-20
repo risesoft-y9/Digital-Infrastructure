@@ -1,10 +1,10 @@
-#当前业务系统在数字底座中的系统英文名称，需要与注册到数字底座时的系统名称保持一致
-systemName: y9demo_kernel_api
 server:
     port: 7057
     servlet:
         context-path: /demo-api
 y9:
+    #当前业务系统在数字底座中的系统英文名称，需要与注册到数字底座时的系统名称保持一致
+    systemName: y9demo_kernel_api
     feature:
         #单点登录配置信息
         oauth2:
@@ -32,9 +32,10 @@ y9:
                     introspection-uri: http://localhost:7055/sso/oauth2.0/introspect
                     #获取用户信息 uri
                     profile-uri: http://localhost:7055/sso/oauth2.0/profile
-    common:
-        #数字底座后端服务地址，调用数字底座接口信息时会用到
-        orgBaseUrl: http://localhost:7055/platform
+    service:
+        org:
+            #数字底座后端服务地址，调用数字底座接口信息时会用到
+            directUrl: http://localhost:7055
 #日志发布消息kafka配置
 spring:
     kafka:

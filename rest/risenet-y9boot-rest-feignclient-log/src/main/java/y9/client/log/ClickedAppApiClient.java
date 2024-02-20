@@ -11,8 +11,8 @@ import net.risesoft.api.log.ClickedAppApi;
  * @date 2022/10/19
  * @since 9.6.0
  */
-@FeignClient(contextId = "ClickedAppApiClient", name = "clickedApp", url = "${y9.common.logBaseUrl}",
-    path = "/services/rest/v1/clickedApp")
+@FeignClient(contextId = "ClickedAppApiClient", name = "${y9.service.log.name:log}", url = "${y9.service.log.directUrl:}",
+    path = "/${y9.service.log.name:log}/services/rest/v1/clickedApp")
 public interface ClickedAppApiClient extends ClickedAppApi {
 
 }
