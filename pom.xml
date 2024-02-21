@@ -9,12 +9,11 @@
     <version>v9.6.4-SNAPSHOT</version>
 
     <modules>
-        <module>common</module>
-        <module>example</module>
-        <module>rest</module>
-        <module>starter</module>
-        <module>support</module>
-        <module>webapp</module>
+        <module>y9-digitalbase-common</module>
+        <module>y9-digitalbase-example</module>
+        <module>y9-digitalbase-starter</module>
+        <module>y9-digitalbase-support</module>
+        <module>y9-digitalbase-module</module>
     </modules>
 
     <repositories>
