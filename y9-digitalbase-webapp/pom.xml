@@ -1,22 +1,24 @@
-<project xmlns="http://maven.apache.org/POM/4.0.0"
-         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+<project xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xmlns="http://maven.apache.org/POM/4.0.0"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
 
     <modelVersion>4.0.0</modelVersion>
     <groupId>net.risesoft</groupId>
-    <artifactId>y9-module-sso</artifactId>
+    <artifactId>y9-digitalbase-webapp</artifactId>
     <packaging>pom</packaging>
     <version>v9.6.4-SNAPSHOT</version>
 
     <parent>
         <groupId>net.risesoft</groupId>
-        <artifactId>y9-digitalbase-module</artifactId>
+        <artifactId>y9-digitalbase</artifactId>
         <version>v9.6.4-SNAPSHOT</version>
         <relativePath>../pom.xml</relativePath>
     </parent>
 
-    <modules>        
-        <module>risenet-y9boot-webapp-sso-server-6.6.x</module>
+    <modules>
+        <module>y9-module-log</module>
+        <module>y9-module-platform</module>
+        <module>y9-module-sso</module>
     </modules>
 
 </project>

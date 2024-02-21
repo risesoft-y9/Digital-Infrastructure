@@ -4,22 +4,19 @@
 
     <modelVersion>4.0.0</modelVersion>
     <groupId>net.risesoft</groupId>
-    <artifactId>y9-module-log</artifactId>
+    <artifactId>y9-module-sso</artifactId>
     <packaging>pom</packaging>
     <version>v9.6.4-SNAPSHOT</version>
 
     <parent>
         <groupId>net.risesoft</groupId>
-        <artifactId>y9-digitalbase-module</artifactId>
+        <artifactId>y9-digitalbase-webapp</artifactId>
         <version>v9.6.4-SNAPSHOT</version>
         <relativePath>../pom.xml</relativePath>
     </parent>
 
-    <modules>
-        <module>risenet-y9boot-rest-feignclient-log</module>
-        <module>risenet-y9boot-rest-interface-log</module>
-        <module>risenet-y9boot-support-log-elasticsearch</module>
-        <module>risenet-y9boot-webapp-log</module>
+    <modules>        
+        <module>risenet-y9boot-webapp-sso-server-6.6.x</module>
     </modules>
 
 </project>
