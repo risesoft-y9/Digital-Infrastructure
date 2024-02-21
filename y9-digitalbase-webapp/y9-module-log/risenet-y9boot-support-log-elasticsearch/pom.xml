@@ -9,9 +9,9 @@
 
     <parent>
         <groupId>net.risesoft</groupId>
-        <artifactId>y9-digitalbase</artifactId>
+        <artifactId>y9-module-log</artifactId>
         <version>v9.6.4-SNAPSHOT</version>
-        <relativePath>../../pom.xml</relativePath>
+        <relativePath>../pom.xml</relativePath>
     </parent>
 
     <properties>
