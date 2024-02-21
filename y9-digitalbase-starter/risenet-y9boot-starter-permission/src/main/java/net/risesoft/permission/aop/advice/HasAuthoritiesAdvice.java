@@ -6,8 +6,8 @@ import java.util.Arrays;
 import org.springframework.aop.MethodBeforeAdvice;
 import org.springframework.core.annotation.AnnotationUtils;
 
-import net.risesoft.api.permission.PersonResourceApi;
-import net.risesoft.api.permission.PositionResourceApi;
+import net.risesoft.api.platform.permission.PersonResourceApi;
+import net.risesoft.api.platform.permission.PositionResourceApi;
 import net.risesoft.enums.LogicalEnum;
 import net.risesoft.enums.platform.AuthorityEnum;
 import net.risesoft.enums.platform.IdentityEnum;

@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import lombok.RequiredArgsConstructor;
 
+import net.risesoft.api.platform.resource.SystemApi;
 import net.risesoft.consts.InitDataConsts;
 import net.risesoft.model.platform.System;
 import net.risesoft.pojo.Y9Result;

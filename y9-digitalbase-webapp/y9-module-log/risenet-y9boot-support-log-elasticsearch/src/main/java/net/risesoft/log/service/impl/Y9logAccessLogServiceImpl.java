@@ -1,18 +1,22 @@
 package net.risesoft.log.service.impl;
 
-import java.io.IOException;
-import java.net.UnknownHostException;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-import java.util.stream.Collectors;
-
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import net.risesoft.enums.platform.OrgTypeEnum;
+import net.risesoft.log.AccessLogModelConvertUtil;
+import net.risesoft.log.constant.Y9ESIndexConst;
+import net.risesoft.log.constant.Y9LogSearchConsts;
+import net.risesoft.log.entity.Y9logAccessLog;
+import net.risesoft.log.repository.Y9logAccessLogRepository;
+import net.risesoft.log.service.Y9logAccessLogService;
+import net.risesoft.log.service.Y9logMappingService;
+import net.risesoft.model.log.AccessLog;
+import net.risesoft.model.log.LogInfoModel;
+import net.risesoft.model.platform.Person;
+import net.risesoft.model.platform.Tenant;
+import net.risesoft.pojo.Y9Page;
+import net.risesoft.y9.Y9LoginUserHolder;
+import net.risesoft.y9.util.Y9Day;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.elasticsearch.action.admin.indices.alias.get.GetAliasesRequest;
@@ -47,32 +51,25 @@ import org.springframework.data.elasticsearch.core.query.CriteriaQuery;
 import org.springframework.data.elasticsearch.core.query.NativeSearchQuery;
 import org.springframework.data.elasticsearch.core.query.NativeSearchQueryBuilder;
 import org.springframework.stereotype.Service;
+import y9.client.rest.platform.org.DepartmentApiClient;
+import y9.client.rest.platform.org.GroupApiClient;
+import y9.client.rest.platform.org.OrganizationApiClient;
+import y9.client.rest.platform.org.PersonApiClient;
+import y9.client.rest.platform.org.PositionApiClient;
+import y9.client.rest.platform.tenant.TenantApiClient;
 
-import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
-
-import net.risesoft.enums.platform.OrgTypeEnum;
-import net.risesoft.log.AccessLogModelConvertUtil;
-import net.risesoft.log.constant.Y9ESIndexConst;
-import net.risesoft.log.constant.Y9LogSearchConsts;
-import net.risesoft.log.entity.Y9logAccessLog;
-import net.risesoft.log.repository.Y9logAccessLogRepository;
-import net.risesoft.log.service.Y9logAccessLogService;
-import net.risesoft.log.service.Y9logMappingService;
-import net.risesoft.model.log.AccessLog;
-import net.risesoft.model.log.LogInfoModel;
-import net.risesoft.model.platform.Person;
-import net.risesoft.model.platform.Tenant;
-import net.risesoft.pojo.Y9Page;
-import net.risesoft.y9.Y9LoginUserHolder;
-import net.risesoft.y9.util.Y9Day;
-
-import y9.client.platform.org.DepartmentApiClient;
-import y9.client.platform.org.GroupApiClient;
-import y9.client.platform.org.OrganizationApiClient;
-import y9.client.platform.org.PersonApiClient;
-import y9.client.platform.org.PositionApiClient;
-import y9.client.platform.tenant.TenantApiClient;
+import java.io.IOException;
+import java.net.UnknownHostException;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 /**
  * @author guoweijun

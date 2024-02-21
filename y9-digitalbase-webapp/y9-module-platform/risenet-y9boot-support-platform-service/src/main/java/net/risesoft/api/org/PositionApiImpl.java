@@ -12,7 +12,8 @@ import org.springframework.web.bind.annotation.RestController;
 
 import lombok.RequiredArgsConstructor;
 
-import net.risesoft.api.org.dto.CreatePositionDTO;
+import net.risesoft.api.platform.org.PositionApi;
+import net.risesoft.api.platform.org.dto.CreatePositionDTO;
 import net.risesoft.entity.Y9OrgBase;
 import net.risesoft.entity.Y9Person;
 import net.risesoft.entity.Y9Position;

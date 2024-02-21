@@ -6,10 +6,10 @@ import java.util.List;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import net.risesoft.api.org.OrgUnitApi;
-import net.risesoft.api.org.OrganizationApi;
-import net.risesoft.api.permission.PersonResourceApi;
-import net.risesoft.api.resource.AppApi;
+import net.risesoft.api.platform.org.OrgUnitApi;
+import net.risesoft.api.platform.org.OrganizationApi;
+import net.risesoft.api.platform.permission.PersonResourceApi;
+import net.risesoft.api.platform.resource.AppApi;
 import net.risesoft.enums.platform.AuthorityEnum;
 import net.risesoft.enums.platform.OrgTreeTypeEnum;
 import net.risesoft.log.annotation.RiseLog;
@@ -44,9 +44,9 @@ public class TestController {
             organizationApi.listByType(Y9LoginUserHolder.getTenantId(), false).getData();
         for (Organization organization : organizationList) {
             // 组织机构树第二层
-            List<OrgUnit> orgUnitList1 =
-                orgUnitApi.getSubTree(Y9LoginUserHolder.getTenantId(), organization.getId(), OrgTreeTypeEnum.TREE_TYPE_ORG)
-                    .getData();
+            List<OrgUnit> orgUnitList1 = orgUnitApi
+                .getSubTree(Y9LoginUserHolder.getTenantId(), organization.getId(), OrgTreeTypeEnum.TREE_TYPE_ORG)
+                .getData();
             // 组织岗位树第二层
             List<OrgUnit> orgUnitList2 = orgUnitApi
                 .getSubTree(Y9LoginUserHolder.getTenantId(), organization.getId(), OrgTreeTypeEnum.TREE_TYPE_POSITION)
