@@ -17,8 +17,9 @@ import org.springframework.web.bind.annotation.RestController;
 
 import lombok.RequiredArgsConstructor;
 
-import net.risesoft.api.org.dto.CreatePersonDTO;
-import net.risesoft.api.org.dto.PersonInfoDTO;
+import net.risesoft.api.platform.org.PersonApi;
+import net.risesoft.api.platform.org.dto.CreatePersonDTO;
+import net.risesoft.api.platform.org.dto.PersonInfoDTO;
 import net.risesoft.entity.Y9Group;
 import net.risesoft.entity.Y9OrgBase;
 import net.risesoft.entity.Y9Person;

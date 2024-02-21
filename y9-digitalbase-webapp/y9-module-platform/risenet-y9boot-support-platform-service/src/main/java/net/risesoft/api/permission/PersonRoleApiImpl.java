@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import lombok.RequiredArgsConstructor;
 
+import net.risesoft.api.platform.permission.PersonRoleApi;
 import net.risesoft.entity.Y9Person;
 import net.risesoft.model.platform.Person;
 import net.risesoft.model.platform.Role;

@@ -23,6 +23,7 @@ import org.springframework.web.bind.annotation.RestController;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
+import net.risesoft.api.platform.v0.org.PersonApi;
 import net.risesoft.entity.Y9Group;
 import net.risesoft.entity.Y9OrgBase;
 import net.risesoft.entity.Y9Person;

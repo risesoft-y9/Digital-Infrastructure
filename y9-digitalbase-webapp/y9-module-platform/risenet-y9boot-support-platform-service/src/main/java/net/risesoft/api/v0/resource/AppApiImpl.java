@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.RestController;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
+import net.risesoft.api.platform.v0.resource.AppApi;
 import net.risesoft.consts.InitDataConsts;
 import net.risesoft.enums.platform.AppOpenTypeEnum;
 import net.risesoft.enums.platform.AppTypeEnum;

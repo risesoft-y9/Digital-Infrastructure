@@ -7,10 +7,10 @@ import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
-import net.risesoft.api.permission.PersonResourceApi;
-import net.risesoft.api.permission.PersonRoleApi;
-import net.risesoft.api.permission.PositionResourceApi;
-import net.risesoft.api.permission.PositionRoleApi;
+import net.risesoft.api.platform.permission.PersonResourceApi;
+import net.risesoft.api.platform.permission.PersonRoleApi;
+import net.risesoft.api.platform.permission.PositionResourceApi;
+import net.risesoft.api.platform.permission.PositionRoleApi;
 import net.risesoft.permission.aop.advice.HasAuthoritiesAdvice;
 import net.risesoft.permission.aop.advice.HasPositionsAdvice;
 import net.risesoft.permission.aop.advice.HasRolesAdvice;

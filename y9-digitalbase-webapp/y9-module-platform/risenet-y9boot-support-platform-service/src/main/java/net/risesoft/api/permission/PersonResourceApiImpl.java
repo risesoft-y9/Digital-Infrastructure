@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import lombok.RequiredArgsConstructor;
 
+import net.risesoft.api.platform.permission.PersonResourceApi;
 import net.risesoft.enums.platform.AuthorityEnum;
 import net.risesoft.model.platform.Menu;
 import net.risesoft.model.platform.Resource;

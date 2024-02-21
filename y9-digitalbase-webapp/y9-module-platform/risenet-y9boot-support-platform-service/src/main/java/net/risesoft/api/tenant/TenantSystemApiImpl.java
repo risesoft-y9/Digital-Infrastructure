@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import lombok.RequiredArgsConstructor;
 
+import net.risesoft.api.platform.tenant.TenantSystemApi;
 import net.risesoft.model.platform.System;
 import net.risesoft.model.platform.Tenant;
 import net.risesoft.pojo.Y9Result;

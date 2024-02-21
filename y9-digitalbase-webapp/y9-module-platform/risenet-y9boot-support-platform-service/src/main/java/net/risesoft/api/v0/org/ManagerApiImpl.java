@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import lombok.RequiredArgsConstructor;
 
+import net.risesoft.api.platform.v0.org.ManagerApi;
 import net.risesoft.entity.Y9Manager;
 import net.risesoft.model.platform.Manager;
 import net.risesoft.service.org.Y9ManagerService;
