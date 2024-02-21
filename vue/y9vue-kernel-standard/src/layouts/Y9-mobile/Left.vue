@@ -4,49 +4,49 @@
         :class="{ narrow: menuCollapsed, 'sidebar-separate': layoutSubName === 'sidebar-separate' ? true : false }"
     >
         <div class="indexlayout-left-logo">
-            <router-link to="/" class="logo-url">
+            <router-link class="logo-url" to="/">
                 <img alt="y9-logo" src="@/assets/images/yunLogo.png" />
-                <span class="logo-title" v-if="!menuCollapsed">{{ $t('数字底座') }}</span>
+                <span v-if="!menuCollapsed" class="logo-title">{{ $t('数字底座') }}</span>
             </router-link>
         </div>
         <div class="indexlayout-left-menu">
             <sider-menu
-                :menuCollapsed="menuCollapsed"
                 :belongTopMenu="belongTopMenu"
                 :defaultActive="defaultActive"
+                :menuCollapsed="menuCollapsed"
                 :menuData="menuData"
             ></sider-menu>
         </div>
     </div>
 </template>
 <script lang="ts" setup>
-    import { watch, inject, ref } from 'vue';
+    import { inject } from 'vue';
     import SiderMenu from '@/layouts/components/SiderMenu.vue';
     // 注入 字体变量
     const fontSizeObj: any = inject('sizeObjInfo');
     const props = defineProps({
         menuCollapsed: {
             type: Boolean as computed<Boolean>,
-            required: true,
+            required: true
         },
         belongTopMenu: {
             type: String,
-            default: '',
+            default: ''
         },
         defaultActive: {
             type: String,
-            default: '',
+            default: ''
         },
         menuData: {
             type: Array,
             default: () => {
                 return [];
-            },
+            }
         },
         layoutSubName: {
             type: String as Ref<string>,
-            required: true,
-        },
+            required: true
+        }
     });
 </script>
 
@@ -73,18 +73,21 @@
             top: $sidebar-separate-margin-top;
             height: $sidebar-separate-menu-height;
         }
+
         .indexlayout-left-logo {
             width: 100%;
             height: $headerHeight;
             line-height: $headerHeight;
             text-align: left;
             vertical-align: middle;
+
             .logo-url {
                 display: inline-flex;
                 align-items: center;
                 width: 100%;
                 height: 100%;
                 overflow: hidden;
+
                 .logo-title {
                     display: inline-block;
                     margin-left: 15px;
@@ -93,6 +96,7 @@
                     color: var(--el-text-color-primary);
                 }
             }
+
             img {
                 width: $logoWidth;
                 vertical-align: middle;
@@ -102,14 +106,18 @@
         .indexlayout-left-menu {
             flex: 1;
             overflow: hidden auto;
+
             & > ul {
                 border-right: none;
                 background-color: var(--el-bg-color);
+
                 :deep(a) {
                     text-decoration: none;
+
                     .is-active {
                         color: var(--el-color-primary);
                     }
+
                     & > li {
                         color: var(--el-text-color-primary);
 
@@ -118,11 +126,13 @@
                             font-size: v-bind('fontSizeObj.largeFontSize');
                         }
                     }
+
                     & > li:hover {
                         background-color: var(--el-bg-color);
                     }
                 }
             }
+
             .left-scrollbar {
                 width: 100%;
                 height: 100%;

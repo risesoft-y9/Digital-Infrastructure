@@ -5,22 +5,22 @@
                 <template #header>
                     <div class="custom-left">
                         <el-button
-                            @click="onRefreshTree"
-                            class="global-btn-second"
                             :size="fontSizeObj.buttonSize"
                             :style="{ fontSize: fontSizeObj.baseFontSize }"
+                            class="global-btn-second"
+                            @click="onRefreshTree"
                         >
                             <i class="ri-refresh-line"></i>
                             <span>{{ $t('刷新') }}</span>
                         </el-button>
-                        <input type="password" hidden autocomplete="new-password" />
+                        <input autocomplete="new-password" hidden type="password" />
                         <el-input
-                            type="search"
                             v-if="!hiddenSearch"
-                            :size="fontSizeObj.buttonSize"
                             v-model="apiSearchKey"
                             :placeholder="$t('请搜索')"
+                            :size="fontSizeObj.buttonSize"
                             autocomplete
+                            type="search"
                             @input="onSearchChange"
                         >
                             <template #prefix>
@@ -35,7 +35,7 @@
 
                 <y9Tree
                     ref="y9TreeRef"
-                    v-loading="treeLoading"
+                    v-loading="TreeLoading"
                     :data="alreadyLoadTreeData"
                     :lazy="lazy"
                     :load="onTreeLazyLoad"
@@ -43,13 +43,13 @@
                     @node-expand="onNodeExpand"
                 >
                     <template #title="{ item }">
-                        <slot name="title" :item="item">
+                        <slot :item="item" name="title">
                             <i :class="item.title_icon"></i>
                             <span>{{ item[nodeLabel] }}</span>
                         </slot>
                     </template>
                     <template #actions="{ item }">
-                        <slot name="actions" :item="item">
+                        <slot :item="item" name="actions">
                             <i v-if="item.delete_icon" class="ri-delete-bin-7-line" @click="onRemoveNode(item)"></i>
                         </slot>
                     </template>
@@ -64,55 +64,55 @@
 </template>
 
 <script lang="ts" setup>
-    import { getAllPersonsCount } from '@/api/org/index';
-    import { uuid } from '@/utils/index';
     import { useSettingStore } from '@/store/modules/settingStore';
-    import { $dataType, $deepAssignObject, $deeploneObject } from '@/utils/object'; //工具类
-    import { computed, onMounted, useCssModule, reactive, watch, inject, ref, nextTick } from 'vue';
+    import { computed, inject, nextTick, onMounted, ref, watch } from 'vue';
     import y9_storage from '@/utils/storage';
+
     const props = defineProps({
         treeApiObj: {
             //tree接口对象,参数名称请严格按照以下注释进行传参。
             /**
-			{
-				topLevel:treeInterface,//可以直接返回接口，也可以返回一个函数，函数里返回tree数据。
-				childLevel:{//子级（二级及二级以上）tree接口
-					api:getTreeItemById,//可以直接返回接口，也可以返回一个函数，函数里返回tree数据，如果返回函数，params就不需要传入。
-					params:{}//请求参数，注意使用此组件，parentId字段不需要传
-				},
-				search: {//搜索接口及参数
-					api:getTreeItemById,
-					params:{}/请求参数，注意使用此组件，key字段不需要传
-				}
-			}
-		 */
-            type: Object,
+         {
+         topLevel:treeInterface,//可以直接返回接口，也可以返回一个函数，函数里返回tree数据。
+         childLevel:{//子级（二级及二级以上）tree接口
+         api:getTreeItemById,//可以直接返回接口，也可以返回一个函数，函数里返回tree数据，如果返回函数，params就不需要传入。
+         params:{}//请求参数，注意使用此组件，parentId字段不需要传
+         },
+         search: {//搜索接口及参数
+         api:getTreeItemById,
+         params:{}/请求参数，注意使用此组件，key字段不需要传
+         }
+         }
+         */
+            type: Object
         },
 
         treeLoading: {
             //树加载状态
             type: Boolean,
-            default: false,
+            default: false
         },
 
         hiddenSearch: {
             //是否隐藏搜索条件
             type: Boolean,
-            default: false,
+            default: false
         },
 
         nodeLabel: {
             //显示的节点属性
             type: String,
-            default: 'name',
+            default: 'name'
         },
 
         showNodeDelete: {
             //是否显示删除icon
             type: Boolean,
-            default: true,
-        },
+            default: true
+        }
     });
+
+    const TreeLoading = ref(false);
 
     const emits = defineEmits(['onTreeClick', 'onDeleteTree', 'onNodeExpand']);
 
@@ -146,24 +146,28 @@
             item.delete_icon = props.showNodeDelete; //是否显示删除icon
 
             //组织机构tree
-            switch (item.orgType) {
+            switch (item.nodeType) {
                 case 'Organization': //组织
                     item.title_icon = 'ri-stackshare-line'; //设置图标
                     item.newName = item.name;
-                    if (treeType === 'tree_type_person' || treeType === 'tree_type_org_person') {
-                        let res = await getAllPersonsCount(item.id, item.orgType); //获取人员数量
-                        item.newName = item.name + '(' + res.data + ')'; //显示名称
-                        item.personCount = res.data; //人员数量
+                    if (item.memberCount != undefined) {
+                        item.newName = item.name + '(' + item.memberCount + ')'; //显示名称
+                        item.personCount = item.memberCount; //人员数量
+                    }
+                    // 子域管理员不能删除组织
+                    if (isGlobalManager) {
+                        item.delete_icon = props.showNodeDelete;
+                    } else {
+                        item.delete_icon = false;
                     }
                     break;
 
                 case 'Department': //部门
                     item.title_icon = 'ri-slack-line'; //设置图标
                     item.newName = item.name;
-                    if (treeType === 'tree_type_person' || treeType === 'tree_type_org_person') {
-                        let res = await getAllPersonsCount(item.id, item.orgType); //获取人员数量
-                        item.newName = item.name + '(' + res.data + ')'; //显示名称
-                        item.personCount = res.data; //人员数量
+                    if (item.memberCount != undefined) {
+                        item.newName = item.name + '(' + item.memberCount + ')'; //显示名称
+                        item.personCount = item.memberCount; //人员数量
                     }
 
                     //判断是否有权限删除
@@ -213,28 +217,20 @@
                         }
                     }
                     break;
-            }
-
-            // 资源tree
-            switch (item.resourceType) {
-                case 0: //应用
+                case 'APP': //应用
                     item.title_icon = 'ri-apps-line';
                     if (isTopLevel) {
                         item.delete_icon = false;
                     }
                     break;
 
-                case 1: //菜单
+                case 'MENU': //菜单
                     item.title_icon = 'ri-menu-4-line';
                     break;
 
-                case 2: //按钮
+                case 'OPERATION': //按钮
                     item.title_icon = 'ri-checkbox-multiple-blank-line';
                     break;
-            }
-
-            // 角色tree
-            switch (item.type) {
                 case 'role': //角色 人员
                     item.title_icon = 'ri-contacts-line';
                     if (managerLevel === 1) {
@@ -253,6 +249,45 @@
                     }
                     break;
             }
+
+            // 资源tree
+            // switch (item.nodeType) {
+            //     case 'APP': //应用
+            //         item.title_icon = 'ri-apps-line';
+            //         if (isTopLevel) {
+            //             item.delete_icon = false;
+            //         }
+            //         break;
+
+            //     case 1: //菜单
+            //         item.title_icon = 'ri-menu-4-line';
+            //         break;
+
+            //     case 2: //按钮
+            //         item.title_icon = 'ri-checkbox-multiple-blank-line';
+            //         break;
+            // }
+
+            // 角色tree
+            // switch (item.nodeType) {
+            //     case 'role': //角色 人员
+            //         item.title_icon = 'ri-contacts-line';
+            //         if (managerLevel === 1) {
+            //             item.delete_icon = props.showNodeDelete;
+            //         } else {
+            //             item.delete_icon = false;
+            //         }
+            //         item.isLeaf = true;
+            //         break;
+
+            //     case 'folder': // 文件夹
+            //         item.title_icon = 'ri-folder-2-line';
+            //         item.delete_icon = props.showNodeDelete;
+            //         if (isTopLevel) {
+            //             item.delete_icon = false;
+            //         }
+            //         break;
+            // }
 
             // 系统
             if (item.cnName) {
@@ -281,8 +316,16 @@
         if (node.$level === 0) {
             //1.获取数据
             let data = [];
-            const res = await props.treeApiObj?.topLevel(); //请求一级节点接口
-            data = res.data || res;
+            const topLevelParams = props.treeApiObj?.topLevel?.params;
+            if (topLevelParams) {
+                let params = {};
+                params = topLevelParams;
+                const res = await props.treeApiObj?.topLevel?.api(params);
+                data = res.data || res;
+            } else {
+                const res = await props.treeApiObj?.topLevel(); //请求一级节点接口
+                data = res.data || res;
+            }
 
             //2.格式化数据
             await formatLazyTreeData(data, true);
@@ -348,29 +391,36 @@
                 }
                 params.key = searchkey;
 
+                TreeLoading.value = true;
+
                 //请求搜索接口
                 const res = await props.treeApiObj?.search?.api(params);
+                if (res.code !== 0) {
+                    ElMessage({
+                        type: 'error',
+                        message: res.msg,
+                        offset: 65
+                    });
+                    TreeLoading.value = false;
+                    return;
+                }
+                if (!res.data.length) return;
                 const data = res.data;
 
                 //格式化tree数据
-                await formatLazyTreeData(data);
+                await formatLazyTreeData(data, true);
 
-                // type 为App 的parentId 为空
+                // nodeType 为App 的parentId 为空
                 await data?.map((item) => {
-                    if (item.type == 'App') {
-                        item.parentId = '';
-                    }
-                });
-
-                // resourceType 为0 的parentId 为空
-                await data?.map((item) => {
-                    if (item.resourceType == 0) {
+                    if (item.nodeType == 'App') {
                         item.parentId = '';
                     }
                 });
 
                 //根据搜索结果转换成tree结构显示出来
-                alreadyLoadTreeData.value = transformTreeBySearchResult(data);
+                alreadyLoadTreeData.value = await transformTreeBySearchResult(data);
+
+                TreeLoading.value = false;
 
                 nextTick(() => {
                     y9TreeRef.value.setExpandAll();
@@ -394,7 +444,7 @@
     };
 
     //根据搜索结果转换成tree结构
-    function transformTreeBySearchResult(result) {
+    async function transformTreeBySearchResult(result) {
         const treeData = [];
         for (let i = 0; i < result.length; i++) {
             const item = result[i];
@@ -405,21 +455,20 @@
                 if (child.length > 0) {
                     //如果有子节点则递归子节点，进行组合
                     item.children = child;
-                    const fn2 = (data) => {
+                    const fn2 = async (data) => {
                         for (let j = 0; j < data.length; j++) {
                             const itemJ = data[j];
                             const childs = result.filter((resultItem) => resultItem.parentId === itemJ.id);
                             if (childs.length > 0) {
                                 itemJ.children = childs;
                                 if (itemJ.children.length > 0) {
-                                    fn2(itemJ.children);
+                                    await fn2(itemJ.children);
                                 }
                             }
                         }
                     };
-                    fn2(item.children); //递归子节点
+                    await fn2(item.children); //递归子节点
                 }
-
                 treeData.push(item);
             }
         }
@@ -490,7 +539,7 @@
         setTreeData,
         getTreeData,
         findNode,
-        handClickNode,
+        handClickNode
     });
 
     //固定模块样式
@@ -551,14 +600,17 @@
     @import '@/theme/global.scss';
     @import '@/theme/global-vars.scss';
     @import '@/theme/global.scss';
+
     :deep(.node-title) {
         display: inline-flex;
         align-items: center;
+
         i {
             margin-right: 5px;
             font-weight: normal;
         }
     }
+
     :deep(.active-node) {
         .y9-tree-item-content {
             .y9-tree-item-content-div {
@@ -575,14 +627,18 @@
         display: flex;
         justify-content: space-between;
         flex-wrap: wrap;
+
         .custom-left {
             display: flex;
+
             .el-button {
                 margin-right: 16px;
             }
+
             .el-input__wrapper {
                 padding: 0;
                 border-radius: 30px;
+
                 .el-input__prefix {
                     .el-input__prefix-inner {
                         & > :last-child {
@@ -591,6 +647,7 @@
                     }
                 }
             }
+
             .el-input__inner {
                 min-width: 220px;
                 border-radius: 30px;
@@ -600,12 +657,14 @@
 
                 font-size: v-bind('fontSizeObj.baseFontSize');
             }
+
             .ri-search-line {
                 line-height: v-bind('fontSizeObj.lineHeight') !important;
 
                 margin-left: 2px;
                 font-size: v-bind('fontSizeObj.baseFontSize');
             }
+
             .el-input__clear {
                 margin-left: 4px;
                 line-height: v-bind('fontSizeObj.lineHeight') !important;
@@ -615,6 +674,7 @@
 
     .right-container {
         margin-left: v-bind("settingStore.device === 'mobile'? '0px' : 'calc(26.6vw + 35px)'");
+
         :deep(.y9-card) {
             margin-bottom: 35px;
         }
@@ -635,6 +695,7 @@
         animation: moveTop-2 0.2s;
         animation-fill-mode: forwards;
         margin-bottom: v-bind("settingStore.device === 'mobile'? '20px' : '0px'");
+
         :deep(.y9-card) {
             height: calc(100vh - #{$headerHeight} - #{$headerBreadcrumbHeight} - 35px);
             overflow: hidden;
@@ -643,6 +704,7 @@
 
     .fixed-herder-horizontal {
         margin-top: 60px;
+
         :deep(.y9-card) {
             height: calc(100vh - #{$headerHeight} - #{$headerBreadcrumbHeight} - 95px);
             overflow: hidden;
@@ -654,12 +716,14 @@
         width: 26.6vw;
         animation: moveTop 0.2s;
         animation-fill-mode: forwards;
+
         :deep(.y9-card) {
             height: calc(100vh - 35px - 35px);
             overflow: auto;
             scrollbar-width: none;
         }
     }
+
     @keyframes moveTop {
         0% {
             top: calc(#{$headerHeight} + #{$headerBreadcrumbHeight});
@@ -668,6 +732,7 @@
             top: 35px;
         }
     }
+
     @keyframes moveTop-2 {
         0% {
             top: 35px;

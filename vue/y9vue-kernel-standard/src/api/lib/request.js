@@ -1,7 +1,7 @@
 /*
  * @Author: your name
  * @Date: 2021-04-15 10:16:53
- * @LastEditTime: 2023-07-10 10:37:32
+ * @LastEditTime: 2024-01-11 16:11:56
  * @LastEditors: mengjuhua
  * @Description: In User Settings Edit
  * @FilePath: \workspace-y9boot-9.5-vuee:\workspace-y9boot-9.6-vue\y9vue-kernel-dcat-style\src\api\lib\request.js
@@ -22,7 +22,7 @@ function y9Request(baseUrl = '') {
     const service = axios.create({
         baseURL: import.meta.env.VUE_APP_CONTEXT,
         withCredentials: true,
-        timeout: 0,
+        timeout: 0
     });
     // 请求拦截器
     service.interceptors.request.use(
@@ -84,7 +84,7 @@ function y9Request(baseUrl = '') {
                                     } else {
                                         window.location.reload();
                                     }
-                                },
+                                }
                             });
                         }
 
@@ -96,6 +96,8 @@ function y9Request(baseUrl = '') {
                         window.location.href = import.meta.env.VUE_APP_PUBLIC_PATH + '/404';
                         break;
                     case 50000:
+                        return res;
+                    case 10401:
                         return res;
                     default:
                         if (!noVerifyBool) {
@@ -109,7 +111,7 @@ function y9Request(baseUrl = '') {
                         break;
                 }
 
-                if (code === 101000) {
+                if (code === 101000 || code === 10003) {
                     // 返回错误 走 catch
                     return Promise.resolve(res);
                 } else {
@@ -150,12 +152,12 @@ function y9Request(baseUrl = '') {
                                     __y9delete__: () => {
                                         // 删除前执行的函数
                                         console.log('删除前执行的函数');
-                                    },
+                                    }
                                 };
                                 $y9_SSO.ssoLogout(params);
                                 // window.location.reload();
                             }
-                        },
+                        }
                     });
                 } else if (error.response.status === 400) {
                     // 参数、业务上的错误统一返回 http 状态 400，返回原始 body 到请求处自行处理
@@ -166,7 +168,7 @@ function y9Request(baseUrl = '') {
             ElMessage({
                 message: error.message,
                 type: 'error',
-                duration: 5 * 1000,
+                duration: 5 * 1000
             });
 
             return Promise.reject(error);

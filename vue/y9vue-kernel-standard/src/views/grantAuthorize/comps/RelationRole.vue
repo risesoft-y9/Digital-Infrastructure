@@ -2,7 +2,7 @@
  * @Author:  
  * @Date: 2022-06-06 11:47:27
  * @LastEditors: mengjuhua
- * @LastEditTime: 2023-08-03 10:35:33
+ * @LastEditTime: 2024-01-12 10:48:41
  * @Description: 角色关联
 -->
 <template>
@@ -14,8 +14,8 @@
                     :size="fontSizeObj.buttonSize"
                     :style="{ fontSize: fontSizeObj.baseFontSize }"
                     class="global-btn-main"
-                    @click="initList"
                     type="primary"
+                    @click="initList"
                 >
                     <i class="ri-search-line"></i>
                     {{ $t('搜索') }}
@@ -23,8 +23,8 @@
                 <el-button
                     :size="fontSizeObj.buttonSize"
                     :style="{ fontSize: fontSizeObj.baseFontSize }"
-                    @click="handlerRoleAdd('app')"
                     class="global-btn-second"
+                    @click="handlerRoleAdd('app')"
                 >
                     <i class="ri-add-line" />
                     {{ $t('应用角色') }}
@@ -32,8 +32,8 @@
                 <el-button
                     :size="fontSizeObj.buttonSize"
                     :style="{ fontSize: fontSizeObj.baseFontSize }"
-                    @click="handlerRoleAdd('public')"
                     class="global-btn-second"
+                    @click="handlerRoleAdd('public')"
                 >
                     <i class="ri-add-line" />
                     {{ $t('公共角色') }}
@@ -43,35 +43,32 @@
         <!-- 授权 -->
         <y9Dialog v-model:config="positiveAuthorityDialog">
             <y9Filter
-                :itemList="filtersList"
                 :filtersValueCallBack="filtersValueCallBack"
+                :itemList="filtersList"
                 :showBorder="true"
             ></y9Filter>
             <!-- tree树 -->
             <selectTree
                 ref="selectTreeRef"
-                :selectField="[{ fieldName: 'type', value: 'role' }]"
-                @onTreeClick="handlerTreeClick"
-                :treeApiObj="treeApiObj"
+                :selectField="[{ fieldName: 'nodeType', value: 'role' }]"
                 :showHeader="false"
+                :treeApiObj="treeApiObj"
+                @onTreeClick="handlerTreeClick"
             ></selectTree>
         </y9Dialog>
         <!-- 制造loading效果 -->
-        <el-button style="display: none" v-loading.fullscreen.lock="loading"></el-button>
+        <el-button v-loading.fullscreen.lock="loading" style="display: none"></el-button>
     </div>
 </template>
 
 <script lang="ts" setup>
-    import { inject, watch, reactive, computed, h, onMounted, ref, toRefs } from 'vue';
+    import { computed, h, inject, onMounted, reactive, ref, toRefs, watch } from 'vue';
     import { ElMessage, ElMessageBox, ElNotification } from 'element-plus';
-    import {
-        getRelationRoleList, // 列表
-        removeRole, // 移除
-        saveOrUpdateRole, // 关联角色 信息 保存
-    } from '@/api/grantAuthorize/index';
-    import { getResourceTree, roleTreeList, getPublicRoleTree } from '@/api/role/index';
+    import { getRelationRoleList, removeRole, saveOrUpdateRole } from '@/api/grantAuthorize/index';
+    import { getPublicRoleTree, getResourceTree, roleTreeList } from '@/api/role/index';
     import { useI18n } from 'vue-i18n';
     import { useSettingStore } from '@/store/modules/settingStore';
+
     const settingStore = useSettingStore();
     // 注入 字体对象
     const fontSizeObj: any = inject('sizeObjInfo');
@@ -79,12 +76,12 @@
     const props = defineProps({
         id: {
             type: String,
-            default: '',
+            default: ''
         },
         appId: {
             type: String,
-            default: '',
-        },
+            default: ''
+        }
     });
 
     // 角色关联 表格总数
@@ -105,7 +102,7 @@
         // 角色关联 表格 行内表单的 变量
         roleFormLine: {
             roleNodeName: '',
-            operationType: 1,
+            operationType: 1
         },
         // 角色关联 表格的 配置信息
         tableRoleConfig: {
@@ -125,14 +122,14 @@
                             'span',
                             {
                                 style: {
-                                    cursor: 'pointer',
+                                    cursor: 'pointer'
                                 },
                                 class: 'global-btn-second',
                                 onClick: async () => {
                                     ElMessageBox.confirm(`${t('是否移除')}【${row.roleName}】?`, t('提示'), {
                                         confirmButtonText: t('确定'),
                                         cancelButtonText: t('取消'),
-                                        type: 'info',
+                                        type: 'info'
                                     })
                                         .then(async () => {
                                             // 请求 移除 接口函数---
@@ -143,7 +140,7 @@
                                                 message: result.success ? t('移除成功') : t('移除失败'),
                                                 type: result.success ? 'success' : 'error',
                                                 duration: 2000,
-                                                offset: 80,
+                                                offset: 80
                                             });
                                             loading.value = false;
                                             // 重新请求 列表数据
@@ -153,23 +150,23 @@
                                             ElMessage({
                                                 type: 'info',
                                                 message: t('已取消移除'),
-                                                offset: 65,
+                                                offset: 65
                                             });
                                         });
-                                },
+                                }
                             },
                             t('移除')
                         );
-                    },
-                },
+                    }
+                }
             ],
             tableData: [],
             pageConfig: {
                 // 分页配置，
                 currentPage: 1,
                 pageSize: 10,
-                total: roleTotal.value, // 总条数
-            },
+                total: roleTotal.value // 总条数
+            }
         },
         // 表格过滤
         filterConfig: {
@@ -184,7 +181,7 @@
                     key: 'roleNodeName',
                     label: computed(() => t('角色名称')),
                     span: settingStore.device === 'mobile' ? 24 : 6,
-                    clearable: true,
+                    clearable: true
                 },
                 {
                     type: 'select',
@@ -197,20 +194,20 @@
                             { label: computed(() => t('隐藏')).value, value: 0 },
                             { label: computed(() => t('浏览')), value: 1 },
                             { label: computed(() => t('维护')), value: 2 },
-                            { label: computed(() => t('管理')), value: 3 },
-                        ],
-                    },
+                            { label: computed(() => t('管理')), value: 3 }
+                        ]
+                    }
                 },
                 {
                     type: 'slot',
                     slotName: 'filterBtnSlot',
-                    span: 6,
-                },
-            ],
+                    span: 6
+                }
+            ]
         },
         // 权限 授权 弹框 搜索条件
         formline: {
-            operationType: 1,
+            operationType: 1
         },
         //选择树过滤
         filtersList: [
@@ -224,24 +221,24 @@
                     options: [
                         {
                             label: computed(() => t('隐藏')),
-                            value: 0,
+                            value: 0
                         },
                         {
                             label: computed(() => t('浏览')),
-                            value: 1,
+                            value: 1
                         },
                         {
                             label: computed(() => t('维护')),
-                            value: 2,
+                            value: 2
                         },
                         {
                             label: computed(() => t('管理')),
-                            value: 3,
-                        },
+                            value: 3
+                        }
                     ],
-                    placeholder: t('请选择操作权限'),
-                },
-            },
+                    placeholder: t('请选择操作权限')
+                }
+            }
         ],
         filtersValueCallBack: (filters) => {
             //过滤回调值
@@ -258,28 +255,24 @@
                     // 保存操作
                     const params = {
                         authority: formline.value.operationType,
-                        resourceId: props.id,
+                        resourceId: props.id
                     };
-                    await saveOrUpdateRole(params, ids.toString())
-                        .then((result) => {
-                            ElNotification({
-                                title: result.success ? t('成功') : t('失败'),
-                                message: result.success ? t('添加权限成功') : t('添加权限失败'),
-                                type: result.success ? 'success' : 'error',
-                                duration: 2000,
-                                offset: 80,
-                            });
-                            if (result.success) {
-                                // 重新请求 列表数据
-                                initList();
-                            }
-                            resolve();
-                        })
-                        .catch(() => {
-                            reject();
-                        });
+                    let result = { success: false, msg: '' };
+                    result = await saveOrUpdateRole(params, ids.toString());
+                    ElNotification({
+                        title: result.success ? t('成功') : t('失败'),
+                        message: result.success ? t('添加权限成功') : result.msg,
+                        type: result.success ? 'success' : 'error',
+                        duration: 2000,
+                        offset: 80
+                    });
+                    if (result.success) {
+                        // 重新请求 列表数据
+                        initList();
+                    }
+                    resolve();
                 });
-            },
+            }
         },
         treeApiObj: {
             topLevel: async () => {
@@ -287,6 +280,11 @@
                 if (roleTreeType.value === 'appRole') {
                     const res = await getResourceTree(props.appId);
                     data = res.data;
+                    data.forEach((item) => {
+                        if (item.resourceType === 0) {
+                            item.nodeType = 'APP';
+                        }
+                    });
                 } else {
                     const res = await getPublicRoleTree();
                     data = res.data;
@@ -295,9 +293,9 @@
             },
             childLevel: {
                 api: roleTreeList,
-                params: {},
-            },
-        },
+                params: {}
+            }
+        }
     });
 
     let {
@@ -310,7 +308,7 @@
         treeApiObj,
         positiveAuthorityDialog,
         filterConfig,
-        formline,
+        formline
     } = toRefs(state);
 
     onMounted(() => {
@@ -353,4 +351,4 @@
         currTreeData.value = data;
     }
 </script>
-<style scoped lang="scss"></style>
+<style lang="scss" scoped></style>

@@ -2,26 +2,27 @@
  * @Author: hongzhew
  * @Date: 2022-04-07 17:43:02
  * @LastEditors: mengjuhua
- * @LastEditTime: 2023-08-03 15:21:44
+ * @LastEditTime: 2023-12-26 11:25:49
  * @Description: 应用资源详情
 -->
 <template>
-    <y9Form :config="y9FormConfig" ref="y9FormRef"></y9Form>
+    <y9Form ref="y9FormRef" :config="y9FormConfig"></y9Form>
 </template>
 
 <script lang="ts" setup>
-    import { inject, watch, computed, h, onMounted, ref } from 'vue';
+    import { computed, h, onMounted, ref, watch } from 'vue';
     import { useI18n } from 'vue-i18n';
-    import { resourceInfo, getMenuInfo, getOperationInfo } from '@/api/resource/index';
+    import { getMenuInfo, getOperationInfo, resourceInfo } from '@/api/resource/index';
     import { useSettingStore } from '@/store/modules/settingStore';
     import { $validCheck } from '@/utils/validate';
+
     const settingStore = useSettingStore();
     const { t } = useI18n();
     const props = defineProps({
         id: String, // id
         type: Number, // 应用0 菜单1 按钮2的区分
         editFlag: Boolean, // 编辑 与 查看 的对应显示变量
-        saveClickFlag: Boolean, // 是否点击保存 的变量
+        saveClickFlag: Boolean // 是否点击保存 的变量
     });
     const emits = defineEmits(['getInfoData']);
 
@@ -50,8 +51,8 @@
                 render: () => {
                     //text类型渲染的内容
                     return h('span', basicInfo.value?.name);
-                },
-            },
+                }
+            }
         },
         {
             type: 'text',
@@ -63,8 +64,8 @@
                 render: () => {
                     //text类型渲染的内容
                     return h('span', basicInfo.value?.id);
-                },
-            },
+                }
+            }
         },
         {
             type: 'text',
@@ -76,8 +77,8 @@
                 render: () => {
                     //text类型渲染的内容
                     return h('span', basicInfo.value?.aliasName);
-                },
-            },
+                }
+            }
         },
         {
             type: 'text',
@@ -89,8 +90,8 @@
                 render: () => {
                     //text类型渲染的内容
                     return h('span', basicInfo.value?.customId);
-                },
-            },
+                }
+            }
         },
         {
             type: 'text',
@@ -101,13 +102,13 @@
             props: {
                 options: [
                     { label: computed(() => t('是')), value: true },
-                    { label: computed(() => t('否')), value: false },
+                    { label: computed(() => t('否')), value: false }
                 ],
                 render: () => {
                     //text类型渲染的内容
                     return h('span', basicInfo.value?.enabled ? t('是') : t('否'));
-                },
-            },
+                }
+            }
         },
         {
             type: 'text',
@@ -118,13 +119,13 @@
             props: {
                 options: [
                     { label: computed(() => t('是')), value: true },
-                    { label: computed(() => t('否')), value: false },
+                    { label: computed(() => t('否')), value: false }
                 ],
                 render: () => {
                     //text类型渲染的内容
                     return h('span', basicInfo.value?.hidden ? t('是') : t('否'));
-                },
-            },
+                }
+            }
         },
         {
             type: 'text',
@@ -135,13 +136,13 @@
             props: {
                 options: [
                     { label: computed(() => t('是')), value: true },
-                    { label: computed(() => t('否')), value: false },
+                    { label: computed(() => t('否')), value: false }
                 ],
                 render: () => {
                     //text类型渲染的内容
                     return h('span', basicInfo.value?.inherit ? t('是') : t('否'));
-                },
-            },
+                }
+            }
         },
         {
             type: 'text',
@@ -153,7 +154,7 @@
                 options: [
                     { label: computed(() => t('图标文本')), value: 0 },
                     { label: computed(() => t('图标')), value: 1 },
-                    { label: computed(() => t('文本')), value: 2 },
+                    { label: computed(() => t('文本')), value: 2 }
                 ],
                 render: () => {
                     //text类型渲染的内容
@@ -165,8 +166,8 @@
                             ? t('图标')
                             : t('文本')
                     );
-                },
-            },
+                }
+            }
         },
         {
             type: 'text',
@@ -178,8 +179,8 @@
                 render: () => {
                     //text类型渲染的内容
                     return h('span', basicInfo.value?.tabIndex);
-                },
-            },
+                }
+            }
         },
         {
             type: 'text',
@@ -190,13 +191,13 @@
             props: {
                 options: [
                     { label: computed(() => t('是')), value: true },
-                    { label: computed(() => t('否')), value: false },
+                    { label: computed(() => t('否')), value: false }
                 ],
                 render: () => {
                     //text类型渲染的内容
                     return h('span', basicInfo.value?.showNumber ? t('是') : t('否'));
-                },
-            },
+                }
+            }
         },
         {
             type: 'text',
@@ -209,8 +210,8 @@
                 render: () => {
                     //text类型渲染的内容
                     return h('span', basicInfo.value?.numberUrl);
-                },
-            },
+                }
+            }
         },
         {
             type: 'text',
@@ -222,8 +223,8 @@
                 render: () => {
                     //text类型渲染的内容
                     return h('span', basicInfo.value?.target);
-                },
-            },
+                }
+            }
         },
         {
             type: 'text',
@@ -235,8 +236,8 @@
                 render: () => {
                     //text类型渲染的内容
                     return h('span', basicInfo.value?.component);
-                },
-            },
+                }
+            }
         },
         {
             type: 'text',
@@ -249,8 +250,8 @@
                 render: () => {
                     //text类型渲染的内容
                     return h('span', basicInfo.value?.url);
-                },
-            },
+                }
+            }
         },
         {
             type: 'text',
@@ -263,8 +264,8 @@
                 render: () => {
                     //text类型渲染的内容
                     return h('span', basicInfo.value?.url2);
-                },
-            },
+                }
+            }
         },
         {
             type: 'text',
@@ -277,8 +278,8 @@
                 render: () => {
                     //text类型渲染的内容
                     return h('span', basicInfo.value?.eventName);
-                },
-            },
+                }
+            }
         },
         {
             type: 'text',
@@ -291,8 +292,8 @@
                 render: () => {
                     //text类型渲染的内容
                     return h('span', basicInfo.value?.iconUrl);
-                },
-            },
+                }
+            }
         },
         {
             type: 'text',
@@ -305,8 +306,8 @@
                 render: () => {
                     //text类型渲染的内容
                     return h('span', basicInfo.value?.meta);
-                },
-            },
+                }
+            }
         },
         {
             type: 'text',
@@ -319,8 +320,8 @@
                 render: () => {
                     //text类型渲染的内容
                     return h('span', basicInfo.value?.roleAdminUrl);
-                },
-            },
+                }
+            }
         },
         {
             type: 'text',
@@ -333,8 +334,8 @@
                 render: () => {
                     //text类型渲染的内容
                     return h('span', basicInfo.value?.resourceAdminUrl);
-                },
-            },
+                }
+            }
         },
         {
             type: 'text',
@@ -347,9 +348,9 @@
                 render: () => {
                     //text类型渲染的内容
                     return h('span', basicInfo.value?.description);
-                },
-            },
-        },
+                }
+            }
+        }
     ];
 
     //表单配置
@@ -359,17 +360,17 @@
             column: settingStore.device === 'mobile' ? 1 : 2,
             labelAlign: 'center',
             labelWidth: '150px',
-            contentWidth: '200px',
+            contentWidth: '200px'
         },
         model: {},
         rules: {}, //表单验证规则
-        itemList: formList,
+        itemList: formList
     });
 
     // 请求详情 函数
     async function getInfo() {
         let responseInfo;
-        if (props.type === 0) {
+        if (props.type === 'APP') {
             // 应用
             y9FormConfig.value.itemList = formList.filter(
                 (item) =>
@@ -386,7 +387,7 @@
                 }
             });
             responseInfo = await resourceInfo(props.id);
-        } else if (props.type === 1) {
+        } else if (props.type === 'MENU') {
             // 菜单
             y9FormConfig.value.itemList = formList.filter(
                 (item) =>
@@ -446,7 +447,7 @@
 
     // 监听 saveClicFlag 当为true 时 将对象传给 index
     watch(
-        async () => props.saveClickFlag,
+        () => props.saveClickFlag,
         async (new_, old_) => {
             if (new_) {
                 let valid = await y9FormRef?.value.elFormRef?.validate((valid) => valid); //获取表单验证结果;
@@ -470,17 +471,17 @@
     function changeY9FormType(isEdit) {
         if (isEdit) {
             //编辑状态设置表单校验规则
-            if (props.type === 0) {
+            if (props.type === 'APP') {
                 y9FormConfig.value.rules = {
                     name: [{ required: true, message: computed(() => t('请输入名称')), trigger: 'blur' }],
                     url: [
                         { required: true, message: computed(() => t('请输入链接地址')), trigger: 'blur' },
-                        { validator: validateUrl, trigger: 'blur' },
-                    ],
+                        { validator: validateUrl, trigger: 'blur' }
+                    ]
                 };
             } else {
                 y9FormConfig.value.rules = {
-                    name: [{ required: true, message: computed(() => t('请输入名称')), trigger: 'blur' }],
+                    name: [{ required: true, message: computed(() => t('请输入名称')), trigger: 'blur' }]
                 };
             }
         } else {
@@ -493,4 +494,4 @@
         });
     }
 </script>
-<style scoped lang="scss"></style>
+<style lang="scss" scoped></style>

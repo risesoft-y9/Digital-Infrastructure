@@ -2,7 +2,7 @@
  * @Author: hongzhew
  * @Date: 2022-04-07 17:43:02
  * @LastEditors: mengjuhua
- * @LastEditTime: 2023-08-03 17:06:11
+ * @LastEditTime: 2024-01-12 10:55:13
  * @Description: 应用资源管理
 -->
 <template>
@@ -29,9 +29,9 @@
                                 <div class="btn-top">
                                     <span style="margin-right: 10px">
                                         <el-button
-                                            class="global-btn-main"
                                             :size="fontSizeObj.buttonSize"
                                             :style="{ fontSize: fontSizeObj.baseFontSize }"
+                                            class="global-btn-main"
                                             type="primary"
                                             @click="handlerMenuClick"
                                         >
@@ -39,9 +39,9 @@
                                             {{ $t('菜单') }}
                                         </el-button>
                                         <el-button
-                                            class="global-btn-main"
                                             :size="fontSizeObj.buttonSize"
                                             :style="{ fontSize: fontSizeObj.baseFontSize }"
+                                            class="global-btn-main"
                                             type="primary"
                                             @click="handlerOperaClick"
                                         >
@@ -50,10 +50,10 @@
                                         </el-button>
                                     </span>
                                     <el-button
-                                        class="global-btn-second"
+                                        v-if="editBtnFlag"
                                         :size="fontSizeObj.buttonSize"
                                         :style="{ fontSize: fontSizeObj.baseFontSize }"
-                                        v-if="editBtnFlag"
+                                        class="global-btn-second"
                                         @click="editBtnFlag = false"
                                     >
                                         <i class="ri-edit-line"></i>
@@ -61,19 +61,19 @@
                                     </el-button>
                                     <span v-else>
                                         <el-button
-                                            class="global-btn-second"
+                                            :loading="saveBtnLoading"
                                             :size="fontSizeObj.buttonSize"
                                             :style="{ fontSize: fontSizeObj.baseFontSize }"
-                                            :loading="saveBtnLoading"
+                                            class="global-btn-second"
                                             @click="saveBtnClick = true"
                                         >
                                             <i class="ri-save-line"></i>
                                             {{ $t('保存') }}
                                         </el-button>
                                         <el-button
-                                            class="global-btn-second"
                                             :size="fontSizeObj.buttonSize"
                                             :style="{ fontSize: fontSizeObj.baseFontSize }"
+                                            class="global-btn-second"
                                             @click="editBtnFlag = true"
                                         >
                                             <i class="ri-close-line"></i>
@@ -98,9 +98,9 @@
                                             {{ $t("移动") }}
                                         </el-button> -->
                                         <el-button
-                                            class="global-btn-second"
                                             :size="fontSizeObj.buttonSize"
                                             :style="{ fontSize: fontSizeObj.baseFontSize }"
+                                            class="global-btn-second"
                                             @click="onSort"
                                         >
                                             <i class="ri-order-play-line"></i>
@@ -111,9 +111,9 @@
                             </div>
                             <BasicInfo
                                 :id="currData.id"
-                                :type="currData.resourceType"
                                 :editFlag="editBtnFlag"
                                 :saveClickFlag="saveBtnClick"
+                                :type="currData.nodeType"
                                 @getInfoData="handlerEditSave"
                             />
                         </template>
@@ -135,21 +135,21 @@
         </y9Dialog>
         <!-- 资源排序 弹框 -->
         <y9Dialog v-model:config="sortDialogConfig">
-            <treeSort ref="sortRef" :apiRequest="resourceTreeRoot" :apiParams="{ parentId: currData.id }"></treeSort>
+            <treeSort ref="sortRef" :apiParams="{ parentId: currData.id }" :apiRequest="resourceTreeRoot"></treeSort>
         </y9Dialog>
         <!-- 按钮操作 -->remix
         <y9Dialog v-model:config="addOperationConfig" @click.capture="remixIconPopVisible = false">
             <y9Form ref="operationFormRef" :config="operationFormConfig">
                 <template #iconSelect>
-                    <el-popover v-model:visible="remixIconPopVisible" placement="bottom" :width="400">
+                    <el-popover v-model:visible="remixIconPopVisible" :width="400" placement="bottom">
                         <remix @clickIcon="onClickRemixIcon"></remix>
                         <template #reference>
                             <div
                                 v-if="!operationUrl"
                                 style="color: var(--el-color-primary)"
                                 @click="remixIconPopVisible = true"
-                                >{{ $t('点击选择图标') }}</div
-                            >
+                                >{{ $t('点击选择图标') }}
+                            </div>
                             <div v-else style="display: flex; align-items: center" @click="remixIconPopVisible = true">
                                 <i :class="operationUrl" :style="{ fontSize: fontSizeObj.baseFontSize }"></i>
                             </div>
@@ -159,25 +159,25 @@
             </y9Form>
         </y9Dialog>
         <!-- 制造loading效果 -->
-        <el-button style="display: none" v-loading.fullscreen.lock="loading"></el-button>
+        <el-button v-loading.fullscreen.lock="loading" style="display: none"></el-button>
     </div>
 </template>
 
 <script lang="ts" setup>
-    import { inject, computed, ref } from 'vue';
+    import { computed, inject, ref } from 'vue';
     import { ElMessage, ElMessageBox, ElNotification } from 'element-plus';
     import y9_storage from '@/utils/storage';
     import settings from '@/settings';
     import {
-        resourceTreeList,
-        resourceTreeRoot,
         menuAdd,
         menuDelete,
-        resourceAdd,
         operationAdd,
         operationDel,
-        treeSearch,
+        resourceAdd,
+        resourceTreeList,
+        resourceTreeRoot,
         sort,
+        treeSearch
     } from '@/api/resource/index';
     import { applicationDel } from '@/api/system/index';
     // 基本信息
@@ -195,6 +195,7 @@
 
     // 点击树节点 对应数据的载体
     let currData: any = ref({ id: null });
+
     // 节点的 基本信息 获取
     function handlerTreeClick(data) {
         // 将拿到的节点信息 储存起来
@@ -208,13 +209,13 @@
         topLevel: resourceTreeList, //顶级（一级）tree接口,
         childLevel: {
             //子级（二级及二级以上）tree接口
-            api: resourceTreeRoot,
+            api: resourceTreeRoot
         },
         search: {
             //搜索接口及参数
             api: treeSearch,
-            params: {},
-        },
+            params: {}
+        }
     });
 
     // 删除资源
@@ -222,15 +223,15 @@
         ElMessageBox.confirm(`${t('是否删除')}【${data.name}】?`, t('提示'), {
             confirmButtonText: t('确定'),
             cancelButtonText: t('取消'),
-            type: 'info',
+            type: 'info'
         })
             .then(async () => {
                 loading.value = true;
                 // 进行 删除 操作 --
                 let result;
-                if (data.resourceType === 0) {
+                if (data.nodeType === 'APP') {
                     result = await applicationDel([data.id]);
-                } else if (data.resourceType === 1) {
+                } else if (data.nodeType === 'MENU') {
                     result = await menuDelete(data.id);
                 } else {
                     result = await operationDel(data.id);
@@ -260,14 +261,14 @@
                     message: result.success ? t('删除成功') : t('删除失败'),
                     type: result.success ? 'success' : 'error',
                     duration: 2000,
-                    offset: 80,
+                    offset: 80
                 });
             })
             .catch(() => {
                 ElMessage({
                     type: 'info',
                     message: t('已取消删除'),
-                    offset: 65,
+                    offset: 65
                 });
             });
     }
@@ -280,6 +281,7 @@
         addDialogConfig.value.show = true;
         addDialogConfig.value.title = computed(() => t('新增菜单'));
     }
+
     // 菜单表单ref
     const ruleFormRef = ref();
     // 菜单 表单
@@ -287,24 +289,24 @@
     let menuFormConfig = ref({
         model: menuForm.value,
         rules: {
-            name: [{ required: true, message: computed(() => t('请输入菜单名称')), trigger: 'blur' }],
+            name: [{ required: true, message: computed(() => t('请输入菜单名称')), trigger: 'blur' }]
         },
         itemList: [
             {
                 type: 'input',
                 prop: 'name',
                 label: computed(() => t('菜单名称')),
-                required: true,
+                required: true
             },
             {
                 type: 'input',
                 prop: 'customId',
-                label: computed(() => t('自定义ID')),
+                label: computed(() => t('自定义ID'))
             },
             {
                 type: 'input',
                 prop: 'url',
-                label: computed(() => t('链接地址')),
+                label: computed(() => t('链接地址'))
             },
             {
                 type: 'radio',
@@ -315,9 +317,9 @@
                     radioType: 'radio',
                     options: [
                         { label: computed(() => t('是')), value: true },
-                        { label: computed(() => t('否')), value: false },
-                    ],
-                },
+                        { label: computed(() => t('否')), value: false }
+                    ]
+                }
             },
             {
                 type: 'radio',
@@ -328,46 +330,46 @@
                     radioType: 'radio',
                     options: [
                         { label: computed(() => t('是')), value: true },
-                        { label: computed(() => t('否')), value: false },
-                    ],
-                },
+                        { label: computed(() => t('否')), value: false }
+                    ]
+                }
             },
             {
                 type: 'input',
                 prop: 'target',
-                label: computed(() => t('打开位置')),
+                label: computed(() => t('打开位置'))
             },
             {
                 type: 'input',
                 prop: 'component',
-                label: computed(() => t('菜单部件')),
+                label: computed(() => t('菜单部件'))
             },
             {
                 type: 'input',
                 prop: 'iconUrl',
-                label: computed(() => t('图标地址')),
+                label: computed(() => t('图标地址'))
             },
             {
                 type: 'input',
                 prop: 'meta',
-                label: computed(() => t('元信息')),
+                label: computed(() => t('元信息'))
             },
             {
                 type: 'input',
                 prop: 'tabIndex',
-                label: computed(() => t('排列序号')),
+                label: computed(() => t('排列序号'))
             },
             {
                 type: 'textarea',
                 prop: 'description',
                 label: computed(() => t('资源描述')),
-                rows: 3,
-            },
+                rows: 3
+            }
         ],
         descriptionsFormConfig: {
             labelWidth: '200px',
-            labelAlign: 'center',
-        },
+            labelAlign: 'center'
+        }
     });
 
     // 增加菜单 弹框的变量配置 控制
@@ -389,34 +391,29 @@
                             }
                         });
 
-                        await menuAdd(ruleFormRef.value?.model)
-                            .then(async (result) => {
-                                if (result.success) {
-                                    /**
-                                     * 对树进行操作：新增节点进入树
-                                     */
-                                    //1.更新当前节点的子节点信息
-                                    const treeData = fixedTreeRef.value.getTreeData(); //获取tree数据
-                                    const currNode = fixedTreeRef.value.findNode(treeData, currData.value.id); //找到树节点对应的节点信息
-                                    const childData = await postNode({ id: currData.value.id }); //重新请求当前节点的子节点，获取格式化后的子节点信息
-                                    Object.assign(currNode, { children: childData }); //合并节点信息
-                                    //2.手动设置点击当前节点
-                                    fixedTreeRef.value?.handClickNode(currNode); //手动设置点击当前节点
-                                }
-                                // 表单弹框消失 表单数据清空
-                                menuForm.value = { inherit: false, enabled: true };
-                                ElNotification({
-                                    title: result.success ? t('成功') : t('失败'),
-                                    message: result.success ? t('保存成功') : t('保存失败'),
-                                    type: result.success ? 'success' : 'error',
-                                    duration: 2000,
-                                    offset: 80,
-                                });
-                                resolve();
-                            })
-                            .catch(() => {
-                                reject();
-                            });
+                        let result = await menuAdd(ruleFormRef.value?.model);
+                        if (result.success) {
+                            /**
+                             * 对树进行操作：新增节点进入树
+                             */
+                            //1.更新当前节点的子节点信息
+                            const treeData = fixedTreeRef.value.getTreeData(); //获取tree数据
+                            const currNode = fixedTreeRef.value.findNode(treeData, currData.value.id); //找到树节点对应的节点信息
+                            const childData = await postNode({ id: currData.value.id }); //重新请求当前节点的子节点，获取格式化后的子节点信息
+                            Object.assign(currNode, { children: childData }); //合并节点信息
+                            //2.手动设置点击当前节点
+                            fixedTreeRef.value?.handClickNode(currNode); //手动设置点击当前节点
+                        }
+                        // 表单弹框消失 表单数据清空
+                        menuForm.value = { inherit: false, enabled: true };
+                        ElNotification({
+                            title: result.success ? t('成功') : t('失败'),
+                            message: result.success ? t('保存成功') : t('保存失败'),
+                            type: result.success ? 'success' : 'error',
+                            duration: 2000,
+                            offset: 80
+                        });
+                        resolve();
                     } else {
                         reject();
                     }
@@ -427,7 +424,7 @@
             if (!visible) {
                 menuForm.value = { inherit: false, enabled: true };
             }
-        },
+        }
     });
 
     // 点击按钮  按钮
@@ -447,19 +444,19 @@
     let operationFormConfig = ref({
         model: operationForm.value,
         rules: {
-            name: [{ required: true, message: computed(() => t('请输入按钮名称')), trigger: 'blur' }],
+            name: [{ required: true, message: computed(() => t('请输入按钮名称')), trigger: 'blur' }]
         },
         itemList: [
             {
                 type: 'input',
                 prop: 'name',
                 label: computed(() => t('按钮名称')),
-                required: true,
+                required: true
             },
             {
                 type: 'input',
                 prop: 'customId',
-                label: computed(() => t('自定义ID')),
+                label: computed(() => t('自定义ID'))
             },
             {
                 type: 'radio',
@@ -470,9 +467,9 @@
                     radioType: 'radio',
                     options: [
                         { label: computed(() => t('是')), value: true },
-                        { label: computed(() => t('否')), value: false },
-                    ],
-                },
+                        { label: computed(() => t('否')), value: false }
+                    ]
+                }
             },
             {
                 type: 'radio',
@@ -483,16 +480,16 @@
                     radioType: 'radio',
                     options: [
                         { label: computed(() => t('是')), value: true },
-                        { label: computed(() => t('否')), value: false },
-                    ],
-                },
+                        { label: computed(() => t('否')), value: false }
+                    ]
+                }
             },
             {
                 type: 'slot',
                 props: {
-                    slotName: 'iconSelect',
+                    slotName: 'iconSelect'
                 },
-                label: computed(() => t('选择图标')),
+                label: computed(() => t('选择图标'))
             },
             {
                 type: 'radio',
@@ -504,46 +501,48 @@
                     options: [
                         { label: computed(() => t('图标文本')), value: 0 },
                         { label: computed(() => t('图标')), value: 1 },
-                        { label: computed(() => t('文本')), value: 2 },
-                    ],
-                },
+                        { label: computed(() => t('文本')), value: 2 }
+                    ]
+                }
             },
             {
                 type: 'input',
                 prop: 'url',
-                label: computed(() => t('链接地址')),
+                label: computed(() => t('链接地址'))
             },
             {
                 type: 'input',
                 prop: 'eventName',
-                label: computed(() => t('事件')),
+                label: computed(() => t('事件'))
             },
             {
                 type: 'input',
                 prop: 'tabIndex',
-                label: computed(() => t('排列序号')),
+                label: computed(() => t('排列序号'))
             },
             {
                 type: 'input',
                 prop: 'description',
                 label: computed(() => t('资源描述')),
-                rows: 3,
-            },
+                rows: 3
+            }
         ],
         descriptionsFormConfig: {
             labelWidth: '200px',
-            labelAlign: 'center',
-        },
+            labelAlign: 'center'
+        }
     });
 
     //选择图标气泡框
     let remixIconPopVisible = ref(false);
     let operationUrl = ref('');
+
     //点击选择图标
     function onClickRemixIcon(item) {
         operationUrl.value = item.class;
         remixIconPopVisible.value = false;
     }
+
     // 增加 按钮 按钮 的配置
     let addOperationConfig = ref({
         show: false,
@@ -557,7 +556,7 @@
                     if (valid) {
                         const params = {
                             iconUrl: operationUrl.value,
-                            ...operationFormRef.value?.model,
+                            ...operationFormRef.value?.model
                         };
 
                         // 将数值为''的值去除
@@ -568,35 +567,30 @@
                             }
                         });
 
-                        await operationAdd(params)
-                            .then(async (result) => {
-                                /**
-                                 * 对树进行操作：新增节点进入树
-                                 */
-                                if (result.success) {
-                                    //1.更新当前节点的子节点信息
-                                    const treeData = fixedTreeRef.value.getTreeData(); //获取tree数据
-                                    const currNode = fixedTreeRef.value.findNode(treeData, currData.value.id); //找到树节点对应的节点信息
-                                    const childData = await postNode({ id: currData.value.id }); //重新请求当前节点的子节点，获取格式化后的子节点信息
-                                    Object.assign(currNode, { children: childData }); //合并节点信息
-                                    //2.手动设置点击当前节点
-                                    fixedTreeRef.value?.handClickNode(currNode); //手动设置点击当前节点
-                                }
+                        let result = await operationAdd(params);
+                        /**
+                         * 对树进行操作：新增节点进入树
+                         */
+                        if (result.success) {
+                            //1.更新当前节点的子节点信息
+                            const treeData = fixedTreeRef.value.getTreeData(); //获取tree数据
+                            const currNode = fixedTreeRef.value.findNode(treeData, currData.value.id); //找到树节点对应的节点信息
+                            const childData = await postNode({ id: currData.value.id }); //重新请求当前节点的子节点，获取格式化后的子节点信息
+                            Object.assign(currNode, { children: childData }); //合并节点信息
+                            //2.手动设置点击当前节点
+                            fixedTreeRef.value?.handClickNode(currNode); //手动设置点击当前节点
+                        }
 
-                                // 表单弹框消失 表单数据清空
-                                operationForm.value = { inherit: false, enabled: true };
-                                ElNotification({
-                                    title: result.success ? t('成功') : t('失败'),
-                                    message: result.success ? t('保存成功') : t('保存失败'),
-                                    type: result.success ? 'success' : 'error',
-                                    duration: 2000,
-                                    offset: 80,
-                                });
-                                resolve();
-                            })
-                            .catch(() => {
-                                reject();
-                            });
+                        // 表单弹框消失 表单数据清空
+                        operationForm.value = { inherit: false, enabled: true };
+                        ElNotification({
+                            title: result.success ? t('成功') : t('失败'),
+                            message: result.success ? t('保存成功') : t('保存失败'),
+                            type: result.success ? 'success' : 'error',
+                            duration: 2000,
+                            offset: 80
+                        });
+                        resolve();
                     } else {
                         reject();
                     }
@@ -607,7 +601,7 @@
             if (!visible) {
                 operationForm.value = { inherit: false, enabled: true };
             }
-        },
+        }
     });
 
     // 点击保存按钮 的 flag
@@ -616,6 +610,7 @@
     let editBtnFlag = ref(true);
     // 保存 按钮的loading 控制
     let saveBtnLoading = ref(false);
+
     // 基本信息 编辑后保存
     async function handlerEditSave(data) {
         saveBtnLoading.value = true;
@@ -629,22 +624,22 @@
         } else {
             result = await operationAdd(data);
         }
-
-        /**
-         * 对树进行操作：手动更新节点信息
-         */
-        //1.更新当前节点的信息
-        const treeData = fixedTreeRef.value.getTreeData(); //获取tree数据
-        const currNode = fixedTreeRef.value.findNode(treeData, currData.value.id); //找到树节点对应的节点信息
-        Object.assign(currNode, data); //合并节点信息
-        //2.手动设置点击当前节点
-        fixedTreeRef.value?.handClickNode(currNode); //手动设置点击当前节点
-
+        if (result.success) {
+            /**
+             * 对树进行操作：手动更新节点信息
+             */
+            //1.更新当前节点的信息
+            const treeData = fixedTreeRef.value.getTreeData(); //获取tree数据
+            const currNode = fixedTreeRef.value.findNode(treeData, currData.value.id); //找到树节点对应的节点信息
+            Object.assign(currNode, data); //合并节点信息
+            //2.手动设置点击当前节点
+            fixedTreeRef.value?.handClickNode(currNode); //手动设置点击当前节点
+        }
         ElNotification({
             message: result.success ? t('保存成功') : t('保存失败'),
             type: result.success ? 'success' : 'error',
             duration: 2000,
-            offset: 80,
+            offset: 80
         });
         // loading为false 编辑 按钮出现 保存按钮未点击状态
         saveBtnLoading.value = false;
@@ -662,6 +657,7 @@
             y9_storage.getObjectItem(settings.siteTokenKey, 'access_token');
         window.open(url);
     }
+
     let sortRef = ref();
     let sortDialogConfig = ref({
         show: false,
@@ -676,34 +672,30 @@
                 tableData.forEach((element) => {
                     ids.push(element.id);
                 });
-                await sort(ids.toString())
-                    .then(async (result) => {
-                        /**
-                         * 对树进行操作：手动更新当前节点的子节点信息
-                         */
-                        //1.更新当前节点的子节点信息
-                        const treeData = fixedTreeRef.value.getTreeData(); //获取tree数据
-                        const currNode = fixedTreeRef.value.findNode(treeData, currData.value.id); //找到树节点对应的节点信息
-                        const childData = await postNode({ id: currData.value.id }); //重新请求当前节点的子节点，获取格式化后的子节点信息
-                        Object.assign(currNode, { children: childData }); //合并节点信息
-                        //2.手动设置重新点击当前节点
-                        fixedTreeRef.value?.handClickNode(currNode); //手动设置点击当前节点
+                let result = await sort(ids.toString());
+                if (result.success) {
+                    /**
+                     * 对树进行操作：手动更新当前节点的子节点信息
+                     */
+                    //1.更新当前节点的子节点信息
+                    const treeData = fixedTreeRef.value.getTreeData(); //获取tree数据
+                    const currNode = fixedTreeRef.value.findNode(treeData, currData.value.id); //找到树节点对应的节点信息
+                    const childData = await postNode({ id: currData.value.id }); //重新请求当前节点的子节点，获取格式化后的子节点信息
+                    Object.assign(currNode, { children: childData }); //合并节点信息
+                    //2.手动设置重新点击当前节点
+                    fixedTreeRef.value?.handClickNode(currNode); //手动设置点击当前节点
+                }
+                ElNotification({
+                    title: result.success ? t('成功') : t('失败'),
+                    message: result.msg,
+                    type: result.success ? 'success' : 'error',
+                    duration: 2000,
+                    offset: 80
+                });
 
-                        ElNotification({
-                            title: result.success ? t('成功') : t('失败'),
-                            message: result.msg,
-                            type: result.success ? 'success' : 'error',
-                            duration: 2000,
-                            offset: 80,
-                        });
-
-                        resolve();
-                    })
-                    .catch(() => {
-                        reject();
-                    });
+                resolve();
             });
-        },
+        }
     });
 
     //请求某个节点，返回格式化好的数据
@@ -719,11 +711,11 @@
     const onSort = () => {
         Object.assign(sortDialogConfig.value, {
             show: true,
-            title: computed(() => t('综合排序')),
+            title: computed(() => t('综合排序'))
         });
     };
 </script>
-<style scoped lang="scss">
+<style lang="scss" scoped>
     .basic-btns {
         display: flex;
         justify-content: space-between;

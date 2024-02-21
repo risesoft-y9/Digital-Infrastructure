@@ -2,7 +2,7 @@
  * @Author: hongzhew
  * @Date: 2022-04-07 17:43:02
  * @LastEditors: mengjuhua
- * @LastEditTime: 2023-08-03 15:22:36
+ * @LastEditTime: 2024-01-12 10:09:49
  * @Description: 组织岗位-人员列表
 -->
 <template>
@@ -10,11 +10,11 @@
         <div class="margin-bottom-20" style="display: flex; justify-content: space-between">
             <div>
                 <el-button
-                    @click="addPerson"
-                    type="primary"
                     :size="fontSizeObj.buttonSize"
                     :style="{ fontSize: fontSizeObj.baseFontSize }"
                     class="global-btn-main"
+                    type="primary"
+                    @click="addPerson"
                 >
                     <i class="ri-add-line"></i>
                     <span>{{ $t('选择已有人员') }}</span>
@@ -22,9 +22,9 @@
                 <el-button
                     :size="fontSizeObj.buttonSize"
                     :style="{ fontSize: fontSizeObj.baseFontSize }"
+                    class="global-btn-main"
                     type="primary"
                     @click="savePersonOrder"
-                    class="global-btn-main"
                 >
                     <i class="ri-save-line"></i>
                     <span>{{ $t('保存') }}</span>
@@ -32,19 +32,19 @@
             </div>
             <div>
                 <el-button
-                    @click="upPerson"
                     :size="fontSizeObj.buttonSize"
                     :style="{ fontSize: fontSizeObj.baseFontSize }"
                     class="global-btn-second"
+                    @click="upPerson"
                 >
                     <i class="ri-arrow-up-line"></i>
                     <span>{{ $t('上移') }}</span>
                 </el-button>
                 <el-button
-                    @click="downPerson"
                     :size="fontSizeObj.buttonSize"
                     :style="{ fontSize: fontSizeObj.baseFontSize }"
                     class="global-btn-second"
+                    @click="downPerson"
                 >
                     <i class="ri-arrow-down-line"></i>
                     <span>{{ $t('下移') }}</span>
@@ -61,28 +61,29 @@
     <y9Dialog v-model:config="dialogConfig">
         <selectTree
             ref="selectTreeRef"
-            :treeApiObj="treeApiObj"
             :selectField="[
-                { fieldName: 'orgType', value: ['Person'] },
-                { fieldName: 'disabled', value: false },
+                { fieldName: 'nodeType', value: ['Person'] },
+                { fieldName: 'disabled', value: false }
             ]"
+            :treeApiObj="treeApiObj"
             @onNodeExpand="onNodeExpand"
         >
         </selectTree>
     </y9Dialog>
-    <el-button style="display: none" v-loading.fullscreen.lock="loading"></el-button>
+    <el-button v-loading.fullscreen.lock="loading" style="display: none"></el-button>
 </template>
 
 <script lang="ts" setup>
-    import { inject, watch, reactive, computed, h, onMounted, ref, toRefs } from 'vue';
+    import { computed, h, inject, onMounted, reactive, ref, toRefs, watch } from 'vue';
     import { ElMessage, ElMessageBox, ElNotification } from 'element-plus';
     import { getJobList } from '@/api/dictionary/index';
     import { $dictionary, $dictionaryFunc } from '@/utils/data';
     import { useI18n } from 'vue-i18n';
     import { $deepAssignObject } from '@/utils/object';
     import { getPersonsByPositionId } from '@/api/person/index';
-    import { removePersons, addPersons, orderPersons } from '@/api/position/index';
-    import { treeInterface, getTreeItemById, searchByName } from '@/api/org/index';
+    import { addPersons, orderPersons, removePersons, getPositionById } from '@/api/position/index';
+    import { getTreeItemById, searchByName, treeInterface } from '@/api/org/index';
+
     const { t } = useI18n();
     // 注入 字体对象
     const fontSizeObj: any = inject('sizeObjInfo');
@@ -92,16 +93,17 @@
             type: Object,
             default: () => {
                 return {};
-            },
+            }
         },
 
-        handAssginNode: Function, //手动更新节点信息
+        handAssginNode: Function //手动更新节点信息
     });
 
     const selectTreeRef = ref();
 
     //移动-选择树节点展开时触发
     const selectTreeExpandNode = ref();
+
     function onNodeExpand(node) {
         selectTreeExpandNode.value = node;
     }
@@ -116,7 +118,7 @@
                     const res = await getTreeItemById({
                         parentId: selectTreeExpandNode.value.id,
                         treeType: 'tree_type_person',
-                        disabled: false,
+                        disabled: false
                     });
 
                     const data = res.data || [];
@@ -133,14 +135,14 @@
 
                     return data;
                 },
-                params: { treeType: 'tree_type_person', disabled: false },
+                params: { treeType: 'tree_type_person', disabled: false }
             },
             search: {
                 api: searchByName,
                 params: {
-                    treeType: 'tree_type_org',
-                },
-            },
+                    treeType: 'tree_type_org'
+                }
+            }
         },
 
         //当前节点信息
@@ -150,26 +152,26 @@
             columns: [
                 {
                     type: 'radio',
-                    width: 80,
+                    width: 80
                 },
                 {
                     title: computed(() => t('姓名')),
                     key: 'name',
-                    width: 200,
+                    width: 200
                 },
                 {
                     title: computed(() => t('性别')),
                     key: 'sex',
-                    width: 120,
+                    width: 120
                 },
                 {
                     title: computed(() => t('职务')),
                     key: 'duty',
-                    width: 300,
+                    width: 300
                 },
                 {
                     title: computed(() => t('所属部门')),
-                    key: 'dn',
+                    key: 'dn'
                 },
                 {
                     title: computed(() => t('操作')),
@@ -181,7 +183,7 @@
                                 ElMessageBox.confirm(`${t('是否删除')}【${row.name}】?`, t('提示'), {
                                     confirmButtonText: t('确定'),
                                     cancelButtonText: t('取消'),
-                                    type: 'info',
+                                    type: 'info'
                                 })
                                     .then(async () => {
                                         loading.value = true;
@@ -193,14 +195,16 @@
                                                     personListTableConfig.value.tableData.splice(index, 1);
                                                 }
                                             });
-                                            let name = `${currInfo.value.jobName}  (空缺)`;
-                                            if (personListTableConfig.value.tableData.length > 0) {
-                                                name = `${
-                                                    currInfo.value.jobName
-                                                }  (${personListTableConfig.value.tableData
-                                                    .map((item) => item.name)
-                                                    .join('，')})`;
-                                            }
+                                            // let name = `${currInfo.value.jobName}  (空缺)`;
+                                            // if (personListTableConfig.value.tableData.length > 0) {
+                                            //     name = `${
+                                            //         currInfo.value.jobName
+                                            //     }  (${personListTableConfig.value.tableData
+                                            //         .map((item) => item.name)
+                                            //         .join('，')})`;
+                                            // }
+                                            let node = await getPositionById(currInfo.value.id);
+                                            let name = node.data.name;
                                             props.handAssginNode({ name: name }, currInfo.value.id); //手动更新节点信息
                                         }
                                         ElNotification({
@@ -208,23 +212,23 @@
                                             message: result.msg,
                                             type: result.success ? 'success' : 'error',
                                             duration: 2000,
-                                            offset: 80,
+                                            offset: 80
                                         });
                                     })
                                     .catch(() => {
                                         ElMessage({
                                             type: 'info',
                                             message: t('已取消删除'),
-                                            offset: 65,
+                                            offset: 65
                                         });
                                     });
-                            },
+                            }
                         });
-                    },
-                },
+                    }
+                }
             ],
             tableData: [],
-            pageConfig: false, //取消分页
+            pageConfig: false //取消分页
         },
         //弹窗配置
         dialogConfig: {
@@ -241,38 +245,36 @@
                             message: t('请选择人员'),
                             type: 'error',
                             duration: 2000,
-                            offset: 80,
+                            offset: 80
                         });
                         reject();
                         return;
                     }
-                    await addPersons(currInfo.value.id, orgBaseIds.toString())
-                        .then((result) => {
-                            if (result.success) {
-                                let data = personListTableConfig.value.tableData;
-                                data = data.concat(selectData);
+                    let result = { success: false, msg: '' };
+                    result = await addPersons(currInfo.value.id, orgBaseIds.toString());
+                    if (result.success) {
+                        let data = personListTableConfig.value.tableData;
+                        data = data.concat(selectData);
 
-                                const name = `${currInfo.value.jobName}  (${data.map((item) => item.name).join('，')})`;
-                                props.handAssginNode({ name: name }, currInfo.value.id); //手动更新节点信息
-                            }
-                            ElNotification({
-                                title: result.success ? t('成功') : t('失败'),
-                                message: result.msg,
-                                type: result.success ? 'success' : 'error',
-                                duration: 2000,
-                                offset: 80,
-                            });
-                            resolve();
-                        })
-                        .catch(() => {
-                            reject();
-                        });
+                        //const name = `${currInfo.value.jobName}  (${data.map((item) => item.name).join('，')})`;
+                        let node = await getPositionById(currInfo.value.id);
+                        let name = node.data.name;
+                        props.handAssginNode({ name: name }, currInfo.value.id); //手动更新节点信息
+                    }
+                    ElNotification({
+                        title: result.success ? t('成功') : t('失败'),
+                        message: result.msg,
+                        type: result.success ? 'success' : 'error',
+                        duration: 2000,
+                        offset: 80
+                    });
+                    resolve();
                 });
-            },
+            }
         },
         currentRow: '',
         userSelectedData: '',
-        personTableRef: '',
+        personTableRef: ''
     });
 
     let {
@@ -283,7 +285,7 @@
         currentRow,
         loading,
         userSelectedData,
-        personTableRef,
+        personTableRef
     } = toRefs(data);
 
     watch(
@@ -300,7 +302,7 @@
             getPersonsList();
         },
         {
-            deep: true,
+            deep: true
         }
     );
 
@@ -313,6 +315,11 @@
         //获取人员列表
         getPersonsList();
     });
+
+    async function getPositionName() {
+        let node = await getPositionById(currInfo.value.id);
+        return node.data.name;
+    }
 
     async function getPersonsList() {
         let result = await getPersonsByPositionId(currInfo.value.id);
@@ -346,7 +353,7 @@
     function addPerson() {
         Object.assign(dialogConfig.value, {
             show: true,
-            title: computed(() => t('添加人员')),
+            title: computed(() => t('添加人员'))
         });
     }
 
@@ -372,7 +379,7 @@
                     message: t('处于顶端，不能继续上移'),
                     type: 'error',
                     duration: 2000,
-                    offset: 80,
+                    offset: 80
                 });
                 return;
             }
@@ -399,7 +406,7 @@
                     message: t('处于末端，不能继续下移'),
                     type: 'error',
                     duration: 2000,
-                    offset: 80,
+                    offset: 80
                 });
                 return;
             }
@@ -427,7 +434,7 @@
             message: result.msg,
             type: result.success ? 'success' : 'error',
             duration: 2000,
-            offset: 80,
+            offset: 80
         });
     }
 </script>

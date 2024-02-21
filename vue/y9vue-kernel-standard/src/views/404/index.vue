@@ -2,7 +2,7 @@
  * @Author: error: git config user.name && git config user.email & please set dead value or install git
  * @Date: 2022-06-06 11:47:27
  * @LastEditors: mengjuhua
- * @LastEditTime: 2023-08-03 10:28:13
+ * @LastEditTime: 2023-12-26 11:22:25
  * @FilePath: \workspace-y9boot-v9.6.x-vue\y9vue-kernel-standard\src\views\404\index.vue
  * @Description: 404
 -->
@@ -12,9 +12,9 @@
             <h1 class="title"> 404 Error </h1>
             <p>抱歉，你访问的页面不存在</p>
             <el-button
-                type="primary"
                 :size="fontSizeObj.buttonSize"
                 :style="{ fontSize: fontSizeObj.baseFontSize }"
+                type="primary"
                 @click="$router.push('/')"
             >
                 返回首页
@@ -22,7 +22,7 @@
         </div>
     </div>
 </template>
-<script setup lang="ts">
+<script lang="ts" setup>
     import { inject } from 'vue';
     // 注入 字体对象
     const fontSizeObj: any = inject('sizeObjInfo');

@@ -14,6 +14,7 @@ import y9_storage from '@/utils/storage';
 import NProgress from 'nprogress'; // progress bar
 import { $y9_SSO } from '../main';
 import authRouter from './modules/authRouter';
+import {verifyPasswordExpiration} from '@/api/manager/index';
 
 NProgress.configure({ showSpinner: false, easing: 'ease', speed: 1000 });
 
@@ -112,6 +113,7 @@ async function check() {
         }
         return false;
     }
+
 }
 
 // 修复刷新bug
@@ -150,6 +152,7 @@ const cacheQuery = (query) => {
 
 let flag = 0;
 export const routerBeforeEach = async (to, from) => {
+    flag++;
     const settingStore = useSettingStore();
     // 进度条
     if (settingStore.getProgress) {
@@ -170,6 +173,28 @@ export const routerBeforeEach = async (to, from) => {
 
     let CHECK = await check();
     if (CHECK) {
+        // 每跳转一次 url 就进行一次判断
+        if(flag > 1){
+            // console.log(flag, 'flag');
+            const y9UserInfo = JSON.parse(sessionStorage.getItem('ssoUserInfo'));
+            let result = await verifyPasswordExpiration(y9UserInfo.personId);
+            if(result.data){
+                ElMessage({
+                    message: '密码已过期，请立即更新密码。',
+                    type: 'error',
+                    offset: 60
+                });
+                // ElNotification({
+                //     title: '失败',
+                //     message: '密码已过期，请立即更新密码',
+                //     type: 'error',
+                //     duration: 2000,
+                //     offset: 80
+                // });
+                router.push({ path: '/password' });
+            }
+        }
+    
         if (!to.name) {
             let array = await router.getRoutes();
             // 没有权限访问的路由 跳转到401

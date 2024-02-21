@@ -4,21 +4,22 @@
  * @Author: zhangchongjie
  * @Date: 2022-06-16 10:09:20
  * @LastEditors: mengjuhua
- * @LastEditTime: 2023-08-03 11:16:17
+ * @LastEditTime: 2024-01-12 10:11:33
 -->
 <template>
-    <y9Form :config="y9FormConfig" ref="y9FormRef"></y9Form>
+    <y9Form ref="y9FormRef" :config="y9FormConfig"></y9Form>
 </template>
 
 <script lang="ts" setup>
     import { useI18n } from 'vue-i18n';
-    import { inject, watch, reactive, computed, h, onMounted, ref, toRefs } from 'vue';
+    import { computed, h, inject, onMounted, ref, watch } from 'vue';
 
-    import { $keyNameAssign, $dataType } from '@/utils/object';
+    import { $keyNameAssign } from '@/utils/object';
     import { $dictionary, $dictionaryFunc } from '@/utils/data';
-    import { listByType, getJobList } from '@/api/dictionary/index';
+    import { getJobList } from '@/api/dictionary/index';
     import { useSettingStore } from '@/store/modules/settingStore';
     import { $validCheck } from '@/utils/validate';
+
     const { t } = useI18n();
     const settingStore = useSettingStore();
     // 注入 字体对象
@@ -27,19 +28,19 @@
         isAdd: {
             //是否为添加模式，添加模式有些字段不需要显示
             type: Boolean,
-            default: false,
+            default: false
         },
         isEditState: {
             //是否为编辑状态
-            type: Boolean,
+            type: Boolean
         },
         currInfo: {
             //当前信息
             type: Object,
             default: () => {
                 return {};
-            },
-        },
+            }
+        }
     });
 
     //表单配置
@@ -48,19 +49,17 @@
             //描述表单配置
             column: settingStore.device === 'mobile' ? 1 : 2,
             labelAlign: 'center',
-            labelWidth: '200px',
+            labelWidth: '200px'
         },
         model: {
             //表单属性
             id: '',
             parentId: props.currInfo.id,
             capacity: 1, //岗位容量
-            name: '',
+            name: '自动生成格式：职位名（人名）',
             jobId: '',
-            dutyType: '',
-            duty: '',
-            dutyLevelName: '',
             description: '',
+            tabIndex: null // 排序
         },
         rules: {}, //表单验证规则
         itemList: [
@@ -72,11 +71,12 @@
                 prop: 'name',
                 label: computed(() => t('岗位名称')),
                 props: {
+                    disabled: true,
                     render: () => {
                         //text类型渲染的内容
                         return h('span', props.currInfo?.name);
-                    },
-                },
+                    }
+                }
             },
             {
                 type: 'text',
@@ -88,8 +88,8 @@
                     render: () => {
                         //text类型渲染的内容
                         return h('span', props.currInfo?.id);
-                    },
-                },
+                    }
+                }
             },
             {
                 type: 'text',
@@ -103,8 +103,8 @@
                     render: () => {
                         //text类型渲染的内容
                         return h('span', props.currInfo?.capacity);
-                    },
-                },
+                    }
+                }
             },
             {
                 type: 'text',
@@ -117,50 +117,8 @@
                     render: () => {
                         //text类型渲染的内容
                         return h('span', getZhiWeiName());
-                    },
-                },
-            },
-            {
-                type: 'text',
-                type1: 'select', //自定义字段-编辑时显示的类型
-                type2: 'text', //自定义字段-非编辑状态显示文本类型
-                prop: 'dutyType',
-                label: computed(() => t('职务类型')),
-                props: {
-                    options: [],
-                    render: () => {
-                        //text类型渲染的内容
-                        return h('span', props.currInfo?.dutyType);
-                    },
-                },
-            },
-            {
-                type: 'text',
-                type1: 'select', //自定义字段-编辑时显示的类型
-                type2: 'text', //自定义字段-非编辑状态显示文本类型
-                prop: 'duty',
-                label: computed(() => t('职务名称')),
-                props: {
-                    options: [],
-                    render: () => {
-                        //text类型渲染的内容
-                        return h('span', props.currInfo?.duty);
-                    },
-                },
-            },
-            {
-                type: 'text',
-                type1: 'select', //自定义字段-编辑时显示的类型
-                type2: 'text', //自定义字段-非编辑状态显示文本类型
-                prop: 'dutyLevelName',
-                label: computed(() => t('职务级别')),
-                props: {
-                    options: [],
-                    render: () => {
-                        //text类型渲染的内容
-                        return h('span', props.currInfo?.dutyLevelName);
-                    },
-                },
+                    }
+                }
             },
             {
                 type: 'text',
@@ -172,10 +130,10 @@
                     render: () => {
                         //text类型渲染的内容
                         return h('span', props.currInfo?.description);
-                    },
-                },
-            },
-        ],
+                    }
+                }
+            }
+        ]
     });
 
     //岗位容量校验规则
@@ -193,12 +151,11 @@
         if (isEdit) {
             //编辑状态设置表单校验规则
             y9FormConfig.value.rules = {
-                name: [{ required: true, message: computed(() => t('请输入岗位名称')), trigger: 'blur' }],
                 capacity: [
                     { required: true, message: computed(() => t('请输入岗位容量')), trigger: 'blur' },
-                    { validator: capacityValidator, trigger: 'blur' },
+                    { validator: capacityValidator, trigger: 'blur' }
                 ],
-                jobId: [{ required: true, message: computed(() => t('请选择职位')), trigger: 'change' }],
+                jobId: [{ required: true, message: computed(() => t('请选择职位')), trigger: 'change' }]
             };
         } else {
             y9FormConfig.value.rules = {};
@@ -230,9 +187,6 @@
     );
 
     onMounted(async () => {
-        await $dictionaryFunc('dutyType', listByType, 'dutyType'); //请求职务类型
-        await $dictionaryFunc('duty', listByType, 'duty'); //请求职务
-        await $dictionaryFunc('dutyLevel', listByType, 'dutyLevel'); //请求职级
         await $dictionaryFunc('jobList', getJobList); //获取职位列表
 
         for (let i = 0; i < y9FormConfig.value.itemList.length; i++) {
@@ -241,28 +195,7 @@
                 item.props.options = $dictionary().jobList?.map((item) => {
                     return {
                         label: item.name,
-                        value: item.originalId,
-                    };
-                });
-            } else if (item.prop === 'dutyType') {
-                item.props.options = $dictionary().dutyType?.map((item) => {
-                    return {
-                        label: item.name,
-                        value: item.id,
-                    };
-                });
-            } else if (item.prop === 'duty') {
-                item.props.options = $dictionary().duty?.map((item) => {
-                    return {
-                        label: item.name,
-                        value: item.id,
-                    };
-                });
-            } else if (item.prop === 'dutyLevelName') {
-                item.props.options = $dictionary().dutyLevel?.map((item) => {
-                    return {
-                        label: item.name,
-                        value: item.id,
+                        value: item.originalId
                     };
                 });
             }
@@ -285,7 +218,7 @@
     //表单实例
     const y9FormRef = ref();
     defineExpose({
-        y9FormRef,
+        y9FormRef
     });
 </script>
 

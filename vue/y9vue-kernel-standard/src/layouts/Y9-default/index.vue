@@ -4,15 +4,15 @@
         :class="{
             fixedHeader: !settingStore.getFixedHeader,
             'fixedHeader-menuCollapsed': settingStore.getMenuCollapsed && !settingStore.getFixedHeader,
-            [layout]: true,
+            [layout]: true
         }"
     >
         <div id="indexlayout-left">
             <Left
-                :layoutSubName="layoutSubName"
-                :menuCollapsed="menuCollapsed"
                 :belongTopMenu="belongTopMenu"
                 :defaultActive="defaultActive"
+                :layoutSubName="layoutSubName"
+                :menuCollapsed="menuCollapsed"
                 :menuData="menuData"
             />
         </div>
@@ -27,14 +27,14 @@
             ></component>
 
             <div
+                :key="refreshContent"
                 :class="{
                     'indexlayout-right-main': true,
                     'sidebar-separate': layoutSubName === 'sidebar-separate' ? true : false,
                     'sidebar-separate-menuCollapsed': menuCollapsed && layoutSubName === 'sidebar-separate',
                     'tabs-position-left': routerStore.getTabs.length && settingStore.getLabelStyle === 'left',
-                    'tabs-position-right': routerStore.getTabs.length && settingStore.getLabelStyle === 'right',
+                    'tabs-position-right': routerStore.getTabs.length && settingStore.getLabelStyle === 'right'
                 }"
-                :key="refreshContent"
             >
                 <router-view></router-view>
             </div>
@@ -46,7 +46,7 @@
 </template>
 
 <script lang="ts" setup>
-    import { computed, defineComponent, onMounted, watch } from 'vue';
+    import { computed, watch } from 'vue';
     import { useSettingStore } from '@/store/modules/settingStore';
     import { useRouterStore } from '@/store/modules/routerStore';
     import Lock from '@/layouts/components/Lock/index.vue';
@@ -65,40 +65,41 @@
     const props = defineProps({
         layoutName: {
             type: String as Ref<string>,
-            required: true,
+            required: true
         },
         layoutSubName: {
             type: String as Ref<string>,
-            required: true,
+            required: true
         },
         menuData: {
             type: Object as RoutesDataItem[],
-            required: true,
+            required: true
         },
         menuCollapsed: {
             type: Boolean as computed<Boolean>,
-            required: true,
+            required: true
         },
         belongTopMenu: {
             type: String as ComputedRef<string>,
-            required: true,
+            required: true
         },
         defaultActive: {
             type: String as Ref<string>,
-            required: true,
+            required: true
         },
         breadCrumbs: {
             type: Array as ComputedRef<BreadcrumbType[]>,
-            required: true,
+            required: true
         },
         routeItem: {
             type: Object as ComputedRef<RoutesDataItem>,
-            required: true,
-        },
+            required: true
+        }
     });
 
     // 在 sidebar-separate 布局时 监听滚动事件，indexlayout-left 增加一个class改变样式
     const layout = computed(() => settingStore.getLayout);
+
     function listener() {
         const classList = document.getElementById('indexlayout-left').classList;
         const scroll_Y = window.scrollY;
@@ -127,6 +128,7 @@
             }
         }
     }
+
     if (layout.value.indexOf('sidebar-separate') > 0) {
         // fixed-header-after-scroll
         window.addEventListener('scroll', listener, false);
@@ -143,6 +145,7 @@
 
     // 刷新组件
     const refreshContent = ref(0);
+
     function refreshFunc() {
         refreshContent.value++;
     }
@@ -150,6 +153,7 @@
 
 <style lang="scss" scoped>
     @import '@/theme/global-vars.scss';
+
     #indexlayout {
         display: flex;
         height: 100vh;
@@ -174,6 +178,7 @@
             flex-direction: column;
             background-color: var(--el-color-primary-light-9);
             min-height: 100vh;
+
             .indexlayout-right-main {
                 flex: 1;
                 //暂时不变，等dark版本追加
@@ -183,15 +188,16 @@
                 overflow: auto;
                 scrollbar-width: none;
                 box-shadow: 3px 3px 3px var(--el-color-info-light);
-                > div {
-                    height: calc(100vh - 80px - 60px - 35px);
-                }
+                // > div {
+                //     height: calc(100vh - 80px - 60px - 35px);
+                // }
 
                 &.sidebar-separate {
                     padding-left: calc(#{$leftSideBarWidth} + #{$sidebar-separate-margin-left} + #{$main-padding});
                 }
             }
         }
+
         & > .breadcrumbs {
             display: flex;
             align-items: center;
@@ -203,10 +209,12 @@
             background-color: #eef0f7;
             padding: 0 35px;
             color: var(--el-text-color-primary) !important;
+
             :deep(a) {
                 color: var(--el-text-color-primary) !important;
             }
         }
+
         // & > .breadcrumbs span{
 
         //     color: var(--el-menu-text-color);
@@ -223,15 +231,18 @@
     #indexlayout {
         &.fixedHeader {
             height: auto;
+
             & > #indexlayout-left {
                 position: fixed;
                 z-index: 3;
             }
+
             & > #indexlayout-right {
                 padding-left: $leftSideBarWidth;
                 transition-duration: 0.2s;
             }
         }
+
         &.fixedHeader-menuCollapsed {
             & > #indexlayout-right {
                 padding-left: $menu-collapsed-width;
@@ -248,6 +259,7 @@
                 transition-duration: 0.2s;
             }
         }
+
         & > #indexlayout-left.fixed-header-after-scroll {
             & > :deep(div) {
                 top: 0;
@@ -257,6 +269,7 @@
                 transition-duration: 0.2s;
             }
         }
+
         & > #indexlayout-right {
             &.right {
                 .indexlayout-right-main {
@@ -265,17 +278,20 @@
                         padding-left: calc(54px + #{$sidebar-separate-margin-left} + #{$main-padding});
                         transition-duration: 0.2s;
                     }
-                    > div {
-                        height: calc(100vh - 80px - 60px - 35px);
-                    }
+
+                    // > div {
+                    //     height: calc(100vh - 80px - 60px - 35px);
+                    // }
                 }
             }
+
             & > .breadcrumbs {
                 // 2_breadcrumbs的调整
                 &.sidebar-separate-uncollapsed {
                     padding-left: calc(#{$sidebar-separate-margin-left} + #{$leftSideBarWidth} + #{$main-padding});
                     transition-duration: 0.25s;
                 }
+
                 &.sidebar-separate-menuCollapsed {
                     padding-left: calc(54px + #{$sidebar-separate-margin-left} + #{$main-padding});
                     transition-duration: 0.25s;

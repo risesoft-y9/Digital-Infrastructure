@@ -2,7 +2,7 @@
  * @Author: hongzhew
  * @Date: 2022-04-07 17:43:02
  * @LastEditors: mengjuhua
- * @LastEditTime: 2023-08-03 15:24:59
+ * @LastEditTime: 2023-12-26 11:25:01
  * @Description: 组织操作日志
 -->
 <template>
@@ -14,15 +14,16 @@
         </template>
     </fixedTreeModule>
 
-    <el-button style="display: none" v-loading.fullscreen.lock="loading"></el-button>
+    <el-button v-loading.fullscreen.lock="loading" style="display: none"></el-button>
 </template>
 
 <script lang="ts" setup>
     import { useI18n } from 'vue-i18n';
     import Log from './comps/log.vue';
-    import { treeInterface, getTreeItemById, removeOrg, searchByName, orgSaveOrUpdate } from '@/api/org/index';
+    import { getTreeItemById, searchByName, treeInterface } from '@/api/org/index';
     import { checkDeptManager } from '@/api/deptManager/index';
-    import { reactive, ref, toRefs } from 'vue';
+    import { reactive, toRefs } from 'vue';
+
     const { t } = useI18n();
 
     //数据
@@ -33,17 +34,17 @@
             topLevel: treeInterface,
             childLevel: {
                 api: getTreeItemById,
-                params: { treeType: 'tree_type_org', disabled: true },
+                params: { treeType: 'tree_type_org', disabled: true }
             },
             search: {
                 api: searchByName,
                 params: {
-                    treeType: 'tree_type_org',
-                },
-            },
+                    treeType: 'tree_type_org'
+                }
+            }
         },
         currTreeNodeInfo: { haveEditAuth: true }, //当前tree节点的信息
-        logRef: '',
+        logRef: ''
     });
 
     const { treeApiObj, currTreeNodeInfo, logRef, loading } = toRefs(data);
@@ -51,7 +52,7 @@
     //点击tree的回调
     async function onTreeClick(currTreeNode) {
         let isDeptManager = true;
-        if (currTreeNode.orgType === 'Department') {
+        if (currTreeNode.nodeType === 'Department') {
             const result = await checkDeptManager(currTreeNode.id);
 
             isDeptManager = result.data;

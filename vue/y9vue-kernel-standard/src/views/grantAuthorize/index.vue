@@ -2,7 +2,7 @@
  * @Author: fuyu
  * @Date: 2022-06-06 11:47:27
  * @LastEditors: mengjuhua
- * @LastEditTime: 2023-08-03 10:34:45
+ * @LastEditTime: 2023-12-26 11:23:15
  * @Description: 授权管理
 -->
 <template>
@@ -13,15 +13,15 @@
             @onDeleteTree="roleRemove"
             @onTreeClick="handlerTreeClick"
         >
-            <template v-slot:rightContainer v-if="currData.id">
+            <template v-if="currData.id" v-slot:rightContainer>
                 <!-- 右边卡片 -->
                 <y9Card :title="`${$t('基本信息')} - ${currData.name ? currData.name : ''}`">
                     <template v-slot>
                         <BasicInfo
                             :id="currData.id"
-                            :type="currData.resourceType"
                             :editFlag="editBtnFlag"
                             :saveClickFlag="saveBtnClick"
+                            :type="currData.nodeType"
                             @getInfoData="handlerEditSave"
                         />
                     </template>
@@ -39,7 +39,7 @@
             </template>
         </fixedTreeModule>
         <!-- 制造loading效果 -->
-        <el-button style="display: none" v-loading.fullscreen.lock="loading"></el-button>
+        <el-button v-loading.fullscreen.lock="loading" style="display: none"></el-button>
     </div>
 </template>
 
@@ -47,7 +47,7 @@
     import { reactive, ref, toRefs } from 'vue';
     import { ElMessage, ElMessageBox, ElNotification } from 'element-plus';
     import { useI18n } from 'vue-i18n';
-    import { resourceTreeList, menuDelete, operationDel, resourceTreeRoot, treeSearch } from '@/api/resource/index';
+    import { menuDelete, operationDel, resourceTreeList, resourceTreeRoot, treeSearch } from '@/api/resource/index';
     import { applicationDel } from '@/api/system/index';
     // 基本信息
     import BasicInfo from './comps/BasicInfo.vue';
@@ -80,14 +80,14 @@
             childLevel: {
                 //子级（二级及二级以上）tree接口
                 api: resourceTreeRoot,
-                params: {},
+                params: {}
             },
             search: {
                 //搜索接口及参数
                 api: treeSearch,
-                params: {},
-            },
-        },
+                params: {}
+            }
+        }
     });
 
     let { editBtnFlag, saveBtnLoading, saveBtnClick, treeApiObj, loading } = toRefs(state);
@@ -103,15 +103,15 @@
         ElMessageBox.confirm(`${t('是否删除')}【${data.name}】?`, t('提示'), {
             confirmButtonText: t('确定'),
             cancelButtonText: t('取消'),
-            type: 'info',
+            type: 'info'
         })
             .then(async () => {
                 // 进行 删除 操作 --
                 loading.value = true;
                 let result;
-                if (data.resourceType === 0) {
+                if (data.nodeType === 'APP') {
                     result = await applicationDel([data.id]);
-                } else if (data.resourceType === 1) {
+                } else if (data.nodeType === 'MENU') {
                     result = await menuDelete(data.id);
                 } else {
                     result = await operationDel(data.id);
@@ -139,21 +139,21 @@
                     message: result.success ? t('删除成功') : t('删除失败'),
                     type: result.success ? 'success' : 'error',
                     duration: 2000,
-                    offset: 80,
+                    offset: 80
                 });
             })
             .catch(() => {
                 ElMessage({
                     type: 'info',
                     message: t('已取消删除'),
-                    offset: 65,
+                    offset: 65
                 });
             });
     }
 
     function handlerEditSave(data) {}
 </script>
-<style scoped lang="scss">
+<style lang="scss" scoped>
     // .btn-class {
     //     // display: flex;
     //     // justify-content: space-between;

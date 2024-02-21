@@ -1,9 +1,9 @@
 <!--
  * @Author: your name
  * @Date: 2022-01-11 18:38:31
- * @LastEditTime: 2023-08-03 09:55:24
+ * @LastEditTime: 2023-12-26 11:21:17
  * @LastEditors: mengjuhua
- * @Description: 二级菜单 
+ * @Description: 二级菜单
 -->
 <template>
     <template v-if="!item.hidden">
@@ -19,8 +19,8 @@
                 <sider-menu-item
                     v-for="item2 in item.children"
                     :key="item2.path"
-                    :routeItem="item2"
                     :belongTopMenu="belongTopMenu"
+                    :routeItem="item2"
                 ></sider-menu-item>
             </el-sub-menu>
         </template>
@@ -39,11 +39,10 @@
     </template>
 </template>
 <script lang="ts" setup>
-    import { defineComponent, PropType, toRefs, computed, Ref, ComputedRef, ref, watch, inject } from 'vue';
-    import { RoutesDataItem, getRouteBelongTopMenu, hasChildRoute } from '@/utils/routes';
+    import { computed, ComputedRef, inject, PropType, ref, Ref, toRefs } from 'vue';
+    import { getRouteBelongTopMenu, hasChildRoute, RoutesDataItem } from '@/utils/routes';
     import { useSettingStore } from '@/store/modules/settingStore';
     import ALink from '@/layouts/components/ALink/index.vue';
-    import Icon from './Icon.vue';
 
     interface SiderMenuItemSetupData {
         item: Ref;
@@ -56,12 +55,12 @@
     const props = defineProps({
         routeItem: {
             type: Object as PropType<RoutesDataItem>,
-            required: true,
+            required: true
         },
         belongTopMenu: {
             type: String,
-            default: '',
-        },
+            default: ''
+        }
     });
 
     const { routeItem } = toRefs(props);
@@ -84,10 +83,12 @@
     .y9-el-sub-menu {
         :deep(div) {
             text-decoration: none;
+
             i {
                 font-size: v-bind('fontSizeObj.largeFontSize');
                 margin-right: 15px;
             }
+
             span {
                 font-size: v-bind('fontSizeObj.baseFontSize');
             }
@@ -96,6 +97,7 @@
 
     :deep(.el-menu-item) {
         font-size: v-bind('fontSizeObj.baseFontSize');
+
         .el-icon {
             font-size: v-bind('fontSizeObj.baseFontSize');
             color: inherit;
@@ -111,6 +113,7 @@
             & > a {
                 text-decoration: none;
             }
+
             li.el-menu-item {
                 & > i {
                     font-size: v-bind('fontSizeObj.largeFontSize');
@@ -119,6 +122,7 @@
             }
         }
     }
+
     .el-menu {
         background-color: none;
     }

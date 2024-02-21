@@ -2,52 +2,51 @@
  * @Author: hongzhew
  * @Date: 2022-04-07 17:43:02
  * @LastEditors: mengjuhua
- * @LastEditTime: 2023-08-03 15:19:19
+ * @LastEditTime: 2024-01-11 16:22:22
  * @Description: 应用系统管理
 -->
-<!--  -->
 <template>
     <div>
         <div class="system-main">
             <fixedTreeModule
-                nodeLabel="cnName"
                 ref="fixedTreeRef"
                 :hiddenSearch="true"
                 :treeApiObj="treeApiObj"
-                @onTreeClick="handlerTreeClick"
+                nodeLabel="cnName"
                 @onDeleteTree="systemRemove"
+                @onTreeClick="handlerTreeClick"
             >
                 <template v-slot:treeHeaderRight>
                     <el-button
-                        @click="onClickBtn('sort', '排序')"
                         :size="fontSizeObj.buttonSize"
                         :style="{ fontSize: fontSizeObj.baseFontSize }"
                         class="global-btn-second"
+                        @click="onClickBtn('sort', '排序')"
                     >
                         <i class="ri-arrow-up-down-line"></i>
                         <span> {{ $t('排序') }}</span>
                     </el-button>
                     <el-upload
-                        accept=".json"
                         :http-request="handlerUpload"
-                        style="display: inline-block; margin: 0 10px"
                         :show-file-list="false"
+                        accept=".json"
+                        style="display: inline-block; margin: 0 10px"
                     >
                         <el-button
-                            class="global-btn-second"
                             :size="fontSizeObj.buttonSize"
                             :style="{ fontSize: fontSizeObj.baseFontSize }"
+                            class="global-btn-second"
                         >
                             <i class="ri-file-download-line"></i>
                             {{ $t('导入') }}
                         </el-button>
                     </el-upload>
                     <el-button
-                        class="global-btn-main"
                         :size="fontSizeObj.buttonSize"
                         :style="{ fontSize: fontSizeObj.baseFontSize }"
-                        @click="onClickBtn('addSystem', '新增系统')"
+                        class="global-btn-main"
                         type="primary"
+                        @click="onClickBtn('addSystem', '新增系统')"
                     >
                         <i class="ri-add-line"></i>
                         <span>{{ $t('系统') }}</span>
@@ -60,11 +59,11 @@
                                 <div class="basic-btns">
                                     <span class="btn-top">
                                         <el-button
-                                            class="global-btn-main"
-                                            type="primary"
+                                            v-if="editBtnFlag"
                                             :size="fontSizeObj.buttonSize"
                                             :style="{ fontSize: fontSizeObj.baseFontSize }"
-                                            v-if="editBtnFlag"
+                                            class="global-btn-main"
+                                            type="primary"
                                             @click="editBtnFlag = false"
                                         >
                                             <i class="ri-edit-line"></i>
@@ -72,20 +71,20 @@
                                         </el-button>
                                         <span v-else>
                                             <el-button
-                                                class="global-btn-main"
-                                                type="primary"
+                                                :loading="saveBtnLoading"
                                                 :size="fontSizeObj.buttonSize"
                                                 :style="{ fontSize: fontSizeObj.baseFontSize }"
-                                                :loading="saveBtnLoading"
+                                                class="global-btn-main"
+                                                type="primary"
                                                 @click="saveBtnClick = true"
                                             >
                                                 <i class="ri-save-line"></i>
                                                 {{ $t('保存') }}
                                             </el-button>
                                             <el-button
-                                                class="global-btn-second"
                                                 :size="fontSizeObj.buttonSize"
                                                 :style="{ fontSize: fontSizeObj.baseFontSize }"
+                                                class="global-btn-second"
                                                 @click="editBtnFlag = true"
                                             >
                                                 <i class="ri-close-line"></i>
@@ -102,19 +101,19 @@
                                             </el-button>
                                         </el-upload> -->
                                         <el-button
-                                            class="global-btn-second"
                                             :size="fontSizeObj.buttonSize"
                                             :style="{ fontSize: fontSizeObj.baseFontSize }"
+                                            class="global-btn-second"
                                             @click="handlerExport"
                                         >
                                             <i class="ri-file-upload-line" />
                                             {{ $t('导出') }}
                                         </el-button>
                                         <el-button
-                                            class="global-btn-second"
                                             v-loading.fullscreen.lock="loading"
                                             :size="fontSizeObj.buttonSize"
                                             :style="{ fontSize: fontSizeObj.baseFontSize }"
+                                            class="global-btn-second"
                                             @click="handlerDisable"
                                         >
                                             <i class="ri-user-unfollow-line"></i>
@@ -126,7 +125,7 @@
                                     :id="currData.id"
                                     :editFlag="editBtnFlag"
                                     :saveClickFlag="saveBtnClick"
-                                    @getInfoData="handlerEditSave"
+                                    @getSystemData="handlerEditSave"
                                 />
                             </template>
                         </y9Card>
@@ -143,20 +142,20 @@
                 <y9Form v-if="dialogConfig.type === 'addSystem'" ref="ruleRef" :config="formSystem"></y9Form>
                 <treeSort
                     v-if="dialogConfig.type == 'sort'"
-                    :currInfo="currData"
                     ref="sortRef"
                     :apiRequest="systemList"
+                    :currInfo="currData"
                 ></treeSort>
             </y9Dialog>
         </div>
-        <el-button style="display: none" v-loading.fullscreen.lock="loading"></el-button>
+        <el-button v-loading.fullscreen.lock="loading" style="display: none"></el-button>
     </div>
 </template>
 
 <script lang="ts" setup>
-    import type { FormInstance, FormRules } from 'element-plus';
-    import { inject, watch, reactive, computed, h, onMounted, ref, toRefs } from 'vue';
+    import type { FormRules } from 'element-plus';
     import { ElMessage, ElMessageBox, ElNotification } from 'element-plus';
+    import { inject, reactive, ref } from 'vue';
     import { useI18n } from 'vue-i18n';
     import y9_storage from '@/utils/storage';
     import settings from '@/settings';
@@ -165,15 +164,15 @@
     // 应用管理
     import ApplicatManager from './comps/ApplicatMana.vue';
     import {
-        systemList,
+        importSystemJSON,
         removeSystem,
+        systemAdd,
         systemDisabled,
         systemEnabled,
-        applicationList,
-        systemAdd,
-        systemSaveOrder,
-        importSystemJSON,
+        systemList,
+        systemSaveOrder
     } from '@/api/system/index';
+
     const { t } = useI18n();
     // 注入 字体对象
     const fontSizeObj: any = inject('sizeObjInfo');
@@ -182,6 +181,7 @@
 
     // 点击树节点 对应数据的载体
     let currData = ref({} as any);
+
     // 点击树  拿到对应数据
     function handlerTreeClick(currTreeNode) {
         // 将拿到的数据 里的id赋值给 系统id变量
@@ -200,7 +200,7 @@
                 item.isLeaf = true;
             });
             return data;
-        },
+        }
         // childLevel:{//子级（二级及二级以上）tree接口
         //     api:applicationList,
         //     params:{
@@ -222,12 +222,13 @@
             });
         });
     }
+
     // 删除系统
     function systemRemove(data) {
         ElMessageBox.confirm(`${t('是否删除')}【${data.cnName}】?`, t('提示'), {
             confirmButtonText: t('确定'),
             cancelButtonText: t('取消'),
-            type: 'info',
+            type: 'info'
         })
             .then(async () => {
                 loading.value = true;
@@ -252,21 +253,20 @@
                     if (clickNode) {
                         fixedTreeRef.value?.handClickNode(clickNode); //手动设置点击当前节点
                     }
-
-                    ElNotification({
-                        title: t('成功'),
-                        message: t('删除成功'),
-                        type: 'success',
-                        duration: 2000,
-                        offset: 80,
-                    });
                 }
+                ElNotification({
+                    title: result.success ? t('成功') : t('失败'),
+                    message: result.success ? t('删除成功') : result.msg,
+                    type: result.success ? 'success' : 'error',
+                    duration: 2000,
+                    offset: 80
+                });
             })
             .catch(() => {
                 ElMessage({
                     type: 'info',
                     message: t('已取消删除'),
-                    offset: 65,
+                    offset: 65
                 });
             });
     }
@@ -289,7 +289,7 @@
     const ruleRef = ref();
     // 系统的增加表单
     let systemForm = ref({
-        enabled: true,
+        enabled: true
     });
     //
     // rule规则 表单 添加系统
@@ -298,16 +298,16 @@
             {
                 required: true,
                 message: t('请输入系统中文名称'),
-                trigger: 'blur',
-            },
+                trigger: 'blur'
+            }
         ],
         name: [
             {
                 required: true,
                 validator: validateName,
-                trigger: 'blur',
-            },
-        ],
+                trigger: 'blur'
+            }
+        ]
     });
     // form 组件的config 值
     const formSystem = ref({
@@ -318,20 +318,20 @@
             {
                 type: 'input',
                 props: {
-                    type: 'text',
+                    type: 'text'
                 },
                 label: t('系统中文名称'),
                 prop: 'cnName',
-                required: true,
+                required: true
             },
             {
                 type: 'input',
                 props: {
-                    type: 'text',
+                    type: 'text'
                 },
                 label: t('系统名称'),
                 prop: 'name',
-                required: true,
+                required: true
             },
             {
                 type: 'radio',
@@ -339,42 +339,42 @@
                     radioType: 'radio',
                     options: [
                         { label: t('是'), value: true },
-                        { label: t('否'), value: false },
-                    ],
+                        { label: t('否'), value: false }
+                    ]
                 },
                 label: t('是否启用'),
-                prop: 'enabled',
+                prop: 'enabled'
             },
             {
                 type: 'input',
                 props: {
-                    type: 'text',
+                    type: 'text'
                 },
                 label: t('应用上下文'),
-                prop: 'contextPath',
+                prop: 'contextPath'
             },
             {
                 type: 'input',
                 props: {
-                    type: 'text',
+                    type: 'text'
                 },
                 label: t('排列序号'),
-                prop: 'tabIndex',
+                prop: 'tabIndex'
             },
             {
                 type: 'input',
                 props: {
                     type: 'textarea',
-                    row: 3,
+                    row: 3
                 },
                 label: t('系统概述'),
-                prop: 'description',
-            },
+                prop: 'description'
+            }
         ],
         descriptionsFormConfig: {
             labelWidth: '200px',
-            labelAlign: 'center',
-        },
+            labelAlign: 'center'
+        }
     });
 
     let sortRef = ref();
@@ -384,42 +384,40 @@
         title: '',
         width: '40%',
         onOkLoading: true,
+        type: '',
         onOk: (newConfig) => {
             return new Promise(async (resolve, reject) => {
                 if (newConfig.value.type == 'addSystem') {
                     const ruleFormRef = ruleRef.value.elFormRef;
                     if (!ruleFormRef) return;
-                    await ruleFormRef.validate((valid, fields) => {
+                    await ruleFormRef.validate(async (valid, fields) => {
                         if (valid) {
                             // 通过验证
                             // 请求 新增系统 接口
-                            systemAdd(ruleRef.value.model)
-                                .then(async (res) => {
-                                    /**
-                                     * 对树进行操作
-                                     */
-                                    //1.更新一级节点数据
-                                    const treeData = await postNode({ $level: 0 }); //重新请求一级节点
-                                    await fixedTreeRef.value.setTreeData(treeData);
+                            let res = { success: false, msg: '' } as any;
+                            res = await systemAdd(ruleRef.value.model);
+                            if (res.success) {
+                                /**
+                                 * 对树进行操作
+                                 */
+                                //1.更新一级节点数据
+                                const treeData = await postNode({ $level: 0 }); //重新请求一级节点
+                                await fixedTreeRef.value.setTreeData(treeData);
 
-                                    //2.手动设置点击当前节点
-                                    const currNode = fixedTreeRef.value.findNode(treeData, res.data.id); //找到树节点对应的节点信息
-                                    fixedTreeRef.value.handClickNode(currNode);
-
-                                    ElNotification({
-                                        title: res.success ? t('成功') : t('失败'),
-                                        message: res.success ? t('保存成功') : t('保存失败'),
-                                        type: res.success ? 'success' : 'error',
-                                        duration: 2000,
-                                        offset: 80,
-                                    });
-                                    // 清空表单 数据
-                                    systemForm.value = { enabled: true };
-                                    resolve();
-                                })
-                                .catch(() => {
-                                    reject();
-                                });
+                                //2.手动设置点击当前节点
+                                const currNode = fixedTreeRef.value.findNode(treeData, res.data.id); //找到树节点对应的节点信息
+                                fixedTreeRef.value.handClickNode(currNode);
+                            }
+                            // 清空表单 数据
+                            systemForm.value = { enabled: true };
+                            ElNotification({
+                                title: res.success ? t('成功') : t('失败'),
+                                message: res.success ? t('保存成功') : res.msg,
+                                type: res.success ? 'success' : 'error',
+                                duration: 2000,
+                                offset: 80
+                            });
+                            resolve();
                         } else {
                             reject();
                         }
@@ -440,12 +438,12 @@
                         message: result.msg,
                         type: result.success ? 'success' : 'error',
                         duration: 2000,
-                        offset: 80,
+                        offset: 80
                     });
                     resolve();
                 }
             });
-        },
+        }
     });
 
     const onClickBtn = (type, title) => {
@@ -460,14 +458,14 @@
                           {
                               type: 'radio',
                               title: '请选择',
-                              width: 200,
+                              width: 200
                           },
                           {
                               title: '名称',
-                              key: 'cnName',
-                          },
+                              key: 'cnName'
+                          }
                       ]
-                    : [],
+                    : []
         });
     };
 
@@ -477,12 +475,15 @@
     let editBtnFlag = ref(true);
     // 保存 按钮 loading
     let saveBtnLoading = ref(false);
+
     // 基本信息 点击保存 后 进行 接口操作
-    function handlerEditSave(data) {
+    async function handlerEditSave(data) {
         saveBtnLoading.value = true;
         // 更新基本信息 接口操作 --
         // data 为基本信息 数据
-        systemAdd(data).then((res) => {
+        let res = { success: false, msg: '' } as any;
+        res = await systemAdd(data);
+        if (res.success) {
             /**
              * 对树进行操作：手动更新节点信息
              */
@@ -492,19 +493,18 @@
             Object.assign(currNode, data); //合并节点信息
             //2.手动设置点击当前节点
             fixedTreeRef.value?.handClickNode(currNode); //手动设置点击当前节点
-
-            ElNotification({
-                title: res.success ? t('成功') : t('失败'),
-                message: res.success ? t('更新成功') : t('更新失败'),
-                type: res.success ? 'success' : 'error',
-                duration: 2000,
-                offset: 80,
-            });
-            // loading为false 编辑 按钮出现 保存按钮未点击状态
-            saveBtnLoading.value = false;
-            editBtnFlag.value = true;
-            saveBtnClick.value = false;
+        }
+        ElNotification({
+            title: res.success ? t('成功') : t('失败'),
+            message: res.success ? t('更新成功') : res.msg,
+            type: res.success ? 'success' : 'error',
+            duration: 2000,
+            offset: 80
         });
+        // loading为false 编辑 按钮出现 保存按钮未点击状态
+        saveBtnLoading.value = false;
+        editBtnFlag.value = true;
+        saveBtnClick.value = false;
     }
 
     // 导入
@@ -515,7 +515,7 @@
                 message: res.msg,
                 type: res.success ? 'success' : 'error',
                 duration: 2000,
-                offset: 80,
+                offset: 80
             });
             if (res.success) {
                 // 重新刷新树 数据
@@ -523,6 +523,7 @@
             }
         });
     }
+
     // 导出
     function handlerExport() {
         const url =
@@ -540,7 +541,7 @@
         ElMessageBox.confirm(t(`是否${text}该系统?`), t('提示'), {
             confirmButtonText: t('确定'),
             cancelButtonText: t('取消'),
-            type: 'info',
+            type: 'info'
         })
             .then(async () => {
                 loading.value = true;
@@ -559,7 +560,7 @@
                         message: t(`${text}成功`),
                         type: 'success',
                         duration: 2000,
-                        offset: 80,
+                        offset: 80
                     });
                 }
             })
@@ -568,16 +569,17 @@
                 ElMessage({
                     type: 'info',
                     message: t(`已取消${text}`),
-                    offset: 65,
+                    offset: 65
                 });
             });
     }
 </script>
-<style scoped lang="scss">
+<style lang="scss" scoped>
     :deep(.custom-right) {
         display: flex;
         align-items: center;
     }
+
     .system-main {
         .tree-header {
             display: flex;

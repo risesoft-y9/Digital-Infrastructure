@@ -21,7 +21,7 @@ export const getManagerById = async (managerId) => {
         url: '/api/rest/personalCenter/getManagerById',
         method: 'GET',
         cType: false,
-        params: { 'managerId': managerId }
+        params: { managerId: managerId }
     });
 };
 
@@ -36,10 +36,9 @@ export const checkPassword = async (personId, password) => {
         url: '/api/rest/personalCenter/checkPassword',
         method: 'GET',
         cType: false,
-        params: { 'personId': personId, 'password': password }
+        params: { personId: personId, password: password }
     });
 };
-
 
 /**
  * 保存人员信息
@@ -62,7 +61,7 @@ export const updateManager = async (params) => {
  * @param {*} newPassword
  * @returns
  */
-export const modifyPassword = async (personId,newPassword) => {
+export const modifyPassword = async (personId, newPassword) => {
     const params = {
         personId: personId,
         newPassword: newPassword
@@ -91,5 +90,15 @@ export const savePersonPhoto = async (iconFile, personId) => {
         method: 'POST',
         cType: false,
         data: data
+    });
+};
+
+// 检验三员密码是否过期
+export const verifyPasswordExpiration = async (id) => {
+    return await platformRequest({
+        url: '/api/rest/personalCenter/isPasswordExpired',
+        method: 'GET',
+        cType: false,
+        params: { id }
     });
 };

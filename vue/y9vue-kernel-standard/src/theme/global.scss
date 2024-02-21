@@ -1,7 +1,8 @@
 //全局样式
-html{
+html {
 	background-color: #eff1f7;
 }
+
 @mixin textEllipsis {
 	//文本超出一行略号
 	overflow: hidden;
@@ -112,6 +113,12 @@ html{
 
 .flex-start {
 	display: flex;
+}
+
+.index-layout-setting-list {
+	.el-drawer__header {
+		margin-bottom: 18px !important;
+	}
 }
 
 
@@ -225,17 +232,18 @@ $hoverBgColor: rgb(231, 236, 237);
 }
 
 
-/* 表格多选框 */ 
+/* 表格多选框 */
 :deep(.el-table__body-wrapper) {
-	.el-table-column--selection > .cell {
+	.el-table-column--selection>.cell {
 		justify-content: center;
 	}
 
-} 
-/* 表格多选框 end */ 
+}
 
-/* 选择框 */ 
-:deep(.el-date-editor){
+/* 表格多选框 end */
+
+/* 选择框 */
+:deep(.el-date-editor) {
 	.el-range__icon {
 		margin-left: 10px;
 	}
@@ -245,5 +253,9 @@ $hoverBgColor: rgb(231, 236, 237);
 :deep(.el-form) {
 	.el-form-item__label {
 		font-size: v-bind('fontSizeObj.baseFontSize');
+	}
+
+	.el-form-item--default .el-form-item__content {
+		line-height: 23px;
 	}
 }

@@ -1,31 +1,32 @@
 <template>
     <div class="margin-bottom-20">
         <el-button
-            @click="upPerson"
-            class="global-btn-second"
             :size="fontSizeObj.buttonSize"
             :style="{ fontSize: fontSizeObj.baseFontSize }"
+            class="global-btn-second"
+            @click="upPerson"
         >
             <i class="ri-arrow-up-line"></i>
             <span>{{ $t('上移') }}</span>
         </el-button>
         <el-button
-            @click="downPerson"
-            class="global-btn-second"
             :size="fontSizeObj.buttonSize"
             :style="{ fontSize: fontSizeObj.baseFontSize }"
+            class="global-btn-second"
+            @click="downPerson"
         >
             <i class="ri-arrow-down-line"></i>
             <span>{{ $t('下移') }}</span>
         </el-button>
     </div>
-    <y9Table :config="tableConfig" @on-current-change="onCurrentChange" v-model:selectedVal="selecedtVal"></y9Table>
+    <y9Table v-model:selectedVal="selecedtVal" :config="tableConfig" @on-current-change="onCurrentChange"></y9Table>
 </template>
 
 <script lang="ts" setup>
     import { ElNotification } from 'element-plus';
-    import { computed, inject, nextTick, reactive, toRefs, watch } from 'vue';
+    import { computed, inject, reactive, toRefs, watch } from 'vue';
     import { useI18n } from 'vue-i18n';
+
     const { t } = useI18n();
     // 注入 字体对象
     const fontSizeObj: any = inject('sizeObjInfo');
@@ -36,20 +37,20 @@
             type: Object,
             default: () => {
                 return {};
-            },
+            }
         },
         apiRequest: {
-            type: Function,
+            type: Function
         },
         apiParams: {
-            type: [Number, Object, String],
+            type: [Number, Object, String]
         },
         columns: {
-            type: Array,
+            type: Array
         },
         type: {
-            type: String,
-        },
+            type: String
+        }
     });
 
     const data = reactive({
@@ -58,10 +59,10 @@
             //人员列表表格配置
             columns: [] as any,
             tableData: [] as any,
-            pageConfig: false, //取消分页
+            pageConfig: false //取消分页
         },
         currentRow: '',
-        selecedtVal: '',
+        selecedtVal: ''
     });
 
     let { tableConfig, currentRow, selecedtVal } = toRefs(data);
@@ -70,12 +71,12 @@
         {
             type: 'radio',
             title: computed(() => t('请选择')),
-            width: 200,
+            width: 200
         },
         {
             title: computed(() => t('名称')),
-            key: 'name',
-        },
+            key: 'name'
+        }
     ];
     watch(
         () => props.columns,
@@ -87,7 +88,7 @@
             }
         },
         {
-            immediate: true,
+            immediate: true
         }
     );
 
@@ -97,12 +98,12 @@
             getTableList();
         },
         {
-            immediate: true,
+            immediate: true
         }
     );
 
     defineExpose({
-        tableConfig,
+        tableConfig
     });
 
     async function getTableList() {
@@ -112,37 +113,54 @@
             let data = result.data;
             switch (props.type) {
                 case 'Person':
-                    data = await data.filter((item) => item.orgType !== 'Position');
+                    data = await data.filter((item) => item.nodeType !== 'Position');
                     break;
                 case 'Position':
-                    data = await data.filter((item) => item.orgType !== 'Person' && item.orgType !== 'Group');
+                    data = await data.filter((item) => item.nodeType !== 'Person' && item.nodeType !== 'Group');
                     break;
                 default:
                     break;
             }
             data.forEach((item) => {
-                if (item.orgType == 'Organization') {
-                    item.orgType = '组织机构';
-                }
-                if (item.orgType == 'Person') {
-                    item.orgType = '人员';
-                } else if (item.orgType == 'Department') {
-                    item.orgType = '部门';
-                } else if (item.orgType == 'Position') {
-                    item.orgType = '岗位';
-                } else if (item.orgType == 'Group') {
-                    item.orgType = '用户组';
-                }
+                // if (item.nodeType == 'Organization') {
+                //     item.nodeType = '组织机构';
+                // }
+                // if (item.nodeType == 'Person') {
+                //     item.nodeType = '人员';
+                // } else if (item.nodeType == 'Department') {
+                //     item.nodeType = '部门';
+                // } else if (item.nodeType == 'Position') {
+                //     item.nodeType = '岗位';
+                // } else if (item.nodeType == 'Group') {
+                //     item.nodeType = '用户组';
+                // }
 
-                switch (item.type) {
-                    case 0:
-                        item.type = '应用';
+                switch (item.nodeType) {
+                    case 'Organization':
+                        item.nodeType = '组织机构';
                         break;
-                    case 2:
-                        item.type = '按钮';
+                    case 'Person':
+                        item.nodeType = '人员';
+                        break;
+                    case 'Department':
+                        item.nodeType = '部门';
+                        break;
+                    case 'Position':
+                        item.nodeType = '岗位';
+                        break;
+                    case 'Group':
+                        item.nodeType = '用户组';
+                        break;
+                    case 'APP':
+                        item.nodeType = '应用';
+                        break;
+                    case 'MENU':
+                        item.nodeType = '按钮';
+                        break;
+                    case 'OPERATION':
+                        item.nodeType = '菜单';
                         break;
                     default:
-                        item.type = '菜单';
                         break;
                 }
                 tableConfig.value.tableData.push(item);
@@ -163,7 +181,7 @@
                 message: t('请选择一行数据'),
                 type: 'error',
                 duration: 2000,
-                offset: 80,
+                offset: 80
             });
             return;
         }
@@ -175,7 +193,7 @@
                     message: t('处于顶端，不能继续上移'),
                     type: 'error',
                     duration: 2000,
-                    offset: 80,
+                    offset: 80
                 });
                 return;
             }
@@ -196,7 +214,7 @@
                 message: t('请选择一行数据'),
                 type: 'error',
                 duration: 2000,
-                offset: 80,
+                offset: 80
             });
             return;
         }
@@ -208,7 +226,7 @@
                     message: t('处于末端，不能继续下移'),
                     type: 'error',
                     duration: 2000,
-                    offset: 80,
+                    offset: 80
                 });
                 return;
             }

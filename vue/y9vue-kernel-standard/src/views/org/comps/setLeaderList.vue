@@ -2,18 +2,18 @@
  * @Author: fuyu
  * @Date: 2022-04-07 17:43:02
  * @LastEditors: mengjuhua
- * @LastEditTime: 2023-08-03 15:26:02
+ * @LastEditTime: 2024-01-12 09:32:46
  * @Description: 组织架构-设置部门领导
 -->
 <template>
     <y9Card :title="`${$t('设置部门领导')}${currInfo.name ? ' - ' + currInfo.name : ''}`">
-        <div class="margin-bottom-20" v-show="currInfo.haveEditAuth">
+        <div v-show="currInfo.haveEditAuth" class="margin-bottom-20">
             <el-button
-                @click="setLeader"
-                class="global-btn-main"
                 :size="fontSizeObj.buttonSize"
                 :style="{ fontSize: fontSizeObj.baseFontSize }"
+                class="global-btn-main"
                 type="primary"
+                @click="setLeader"
             >
                 <i class="ri-add-line"></i>
                 <span>{{ $t('部门领导') }}</span>
@@ -24,31 +24,31 @@
         <y9Dialog v-model:config="dialogConfig">
             <selectTree
                 ref="selectTreeRef"
-                :treeApiObj="typeName == 'org' ? treeApiObj : positionTreeApiObj"
                 :selectField="
                     typeName == 'org'
                         ? [
-                              { fieldName: 'orgType', value: ['Person'] },
-                              { fieldName: 'disabled', value: false },
+                              { fieldName: 'nodeType', value: ['Person'] },
+                              { fieldName: 'disabled', value: false }
                           ]
                         : [
-                              { fieldName: 'orgType', value: ['Position'] },
-                              { fieldName: 'disabled', value: false },
+                              { fieldName: 'nodeType', value: ['Position'] },
+                              { fieldName: 'disabled', value: false }
                           ]
                 "
+                :treeApiObj="typeName == 'org' ? treeApiObj : positionTreeApiObj"
             ></selectTree>
         </y9Dialog>
     </y9Card>
-    <el-button style="display: none" v-loading.fullscreen.lock="loading"></el-button>
+    <el-button v-loading.fullscreen.lock="loading" style="display: none"></el-button>
 </template>
 
 <script lang="ts" setup>
     import { useI18n } from 'vue-i18n';
-    import { inject, watch, reactive, computed, h, onMounted, ref, toRefs } from 'vue';
+    import { computed, h, inject, onMounted, reactive, ref, toRefs, watch } from 'vue';
     import { ElMessage, ElMessageBox, ElNotification } from 'element-plus';
     import { $deepAssignObject } from '@/utils/object';
-    import { treeInterface, getTreeItemById, searchByName } from '@/api/org/index';
-    import { setDeptLeaders, getDeptLeaders, removeLeader } from '@/api/dept/index';
+    import { getTreeItemById, searchByName, treeInterface } from '@/api/org/index';
+    import { getDeptLeaders, removeLeader, setDeptLeaders } from '@/api/dept/index';
     // 注入 字体对象
     const fontSizeObj: any = inject('sizeObjInfo');
     const { t } = useI18n();
@@ -58,13 +58,13 @@
             type: Object,
             default: () => {
                 return {};
-            },
+            }
         },
 
         typeName: {
             type: String,
-            default: '',
-        },
+            default: ''
+        }
     });
 
     //选择tree实例
@@ -77,28 +77,28 @@
             topLevel: treeInterface,
             childLevel: {
                 api: getTreeItemById,
-                params: { treeType: 'tree_type_person', disabled: false },
+                params: { treeType: 'tree_type_person', disabled: false }
             },
             search: {
                 api: searchByName,
                 params: {
-                    treeType: 'tree_type_org_person',
-                },
-            },
+                    treeType: 'tree_type_org_person'
+                }
+            }
         },
         positionTreeApiObj: {
             //岗位tree接口对象
             topLevel: treeInterface,
             childLevel: {
                 api: getTreeItemById,
-                params: { treeType: 'tree_type_position', disabled: false },
+                params: { treeType: 'tree_type_position', disabled: false }
             },
             search: {
                 api: searchByName,
                 params: {
-                    treeType: 'tree_type_org_position',
-                },
-            },
+                    treeType: 'tree_type_org_position'
+                }
+            }
         },
         //当前节点信息
         currInfo: props.currTreeNodeInfo,
@@ -107,7 +107,7 @@
             columns: [
                 {
                     title: computed(() => t('姓名')),
-                    key: 'name',
+                    key: 'name'
                 },
                 {
                     title: computed(() => t('类别')),
@@ -117,7 +117,7 @@
                         } else if (row.orgType == 'Person') {
                             return '人员';
                         }
-                    },
+                    }
                 },
                 {
                     title: computed(() => t('操作')),
@@ -129,7 +129,7 @@
                                     ElMessageBox.confirm(`${t('是否移除')}【${row.name}】?`, t('提示'), {
                                         confirmButtonText: t('确定'),
                                         cancelButtonText: t('取消'),
-                                        type: 'info',
+                                        type: 'info'
                                     })
                                         .then(async () => {
                                             loading.value = true;
@@ -148,25 +148,25 @@
                                                 message: result.msg,
                                                 type: result.success ? 'success' : 'error',
                                                 duration: 2000,
-                                                offset: 80,
+                                                offset: 80
                                             });
                                         })
                                         .catch(() => {
                                             ElMessage({
                                                 type: 'info',
                                                 message: t('已取消移除'),
-                                                offset: 65,
+                                                offset: 65
                                             });
                                         });
-                                },
+                                }
                             },
                             t('移除')
                         );
-                    },
-                },
+                    }
+                }
             ],
             tableData: [],
-            pageConfig: false, //取消分页
+            pageConfig: false //取消分页
         },
         //弹窗配置
         dialogConfig: {
@@ -183,33 +183,28 @@
                             message: t('请选择人员'),
                             type: 'error',
                             duration: 2000,
-                            offset: 80,
+                            offset: 80
                         });
                         reject();
                         return;
                     }
 
-                    await setDeptLeaders(currInfo.value.id, orgBaseIds.toString())
-                        .then((result) => {
-                            ElNotification({
-                                title: result.success ? t('成功') : t('失败'),
-                                message: result.msg,
-                                type: result.success ? 'success' : 'error',
-                                duration: 2000,
-                                offset: 80,
-                            });
-                            if (result.success) {
-                                getDeptLeaderList();
-                            }
-                            resolve();
-                        })
-                        .catch(() => {
-                            reject();
-                        });
+                    let result = await setDeptLeaders(currInfo.value.id, orgBaseIds.toString());
+                    ElNotification({
+                        title: result.success ? t('成功') : t('失败'),
+                        message: result.msg,
+                        type: result.success ? 'success' : 'error',
+                        duration: 2000,
+                        offset: 80
+                    });
+                    if (result.success) {
+                        getDeptLeaderList();
+                    }
+                    resolve();
                 });
             },
-            visibleChange: (visible) => {},
-        },
+            visibleChange: (visible) => {}
+        }
     });
 
     let { treeApiObj, positionTreeApiObj, currInfo, setLeaderTableConfig, dialogConfig, loading } = toRefs(data);
@@ -222,7 +217,7 @@
             getDeptLeaderList();
         },
         {
-            deep: true,
+            deep: true
         }
     );
     onMounted(() => {
@@ -241,7 +236,7 @@
             show: true,
             title: computed(() => t('设置部门领导')),
             resetText: false,
-            cancelText: computed(() => t('取消')),
+            cancelText: computed(() => t('取消'))
         });
     }
 </script>

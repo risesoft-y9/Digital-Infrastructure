@@ -1,14 +1,14 @@
 <template>
-    <y9Form :config="y9FormConfig" ref="y9FormRef"></y9Form>
+    <y9Form ref="y9FormRef" :config="y9FormConfig"></y9Form>
 </template>
 
 <script lang="ts" setup>
     import { useI18n } from 'vue-i18n';
-    import { inject, watch, computed, h, onMounted, ref } from 'vue';
+    import { computed, h, inject, onMounted, ref, watch } from 'vue';
     import { $keyNameAssign } from '@/utils/object';
-    import { $dictionary } from '@/utils/data';
     import moment from 'moment';
     import { useSettingStore } from '@/store/modules/settingStore';
+
     const { t } = useI18n();
     const settingStore = useSettingStore();
     // 注入 字体对象
@@ -18,19 +18,19 @@
         isAdd: {
             //是否为添加模式，添加模式有些字段不需要显示
             type: Boolean,
-            default: false,
+            default: false
         },
         isEditState: {
             //是否为编辑状态
-            type: Boolean,
+            type: Boolean
         },
         currInfo: {
             //当前信息
             type: Object,
             default: () => {
                 return {};
-            },
-        },
+            }
+        }
     });
 
     //表单配置
@@ -40,7 +40,7 @@
             column: settingStore.device === 'mobile' ? 1 : 2,
             labelAlign: 'center',
             labelWidth: '150px',
-            contentWidth: '200px',
+            contentWidth: '200px'
         },
         model: {
             //表单属性
@@ -59,6 +59,7 @@
             establishDate: '',
             name: '',
             zipCode: '',
+            tabIndex: null // 排序
         },
         rules: {}, //表单验证规则
         itemList: [
@@ -73,8 +74,8 @@
                     render: () => {
                         //text类型渲染的内容
                         return h('span', props.currInfo?.name);
-                    },
-                },
+                    }
+                }
             },
             {
                 type: 'text',
@@ -86,8 +87,8 @@
                     render: () => {
                         //text类型渲染的内容
                         return h('span', props.currInfo?.customId);
-                    },
-                },
+                    }
+                }
             },
             {
                 type: 'text',
@@ -99,8 +100,8 @@
                     render: () => {
                         //text类型渲染的内容
                         return h('span', props.currInfo?.id);
-                    },
-                },
+                    }
+                }
             },
             {
                 type: 'text',
@@ -112,8 +113,8 @@
                     render: () => {
                         //text类型渲染的内容
                         return h('span', props.currInfo?.tenantId);
-                    },
-                },
+                    }
+                }
             },
             {
                 type: 'text',
@@ -125,8 +126,8 @@
                     render: () => {
                         //text类型渲染的内容
                         return h('span', props.currInfo?.aliasName);
-                    },
-                },
+                    }
+                }
             },
             {
                 type: 'text',
@@ -138,8 +139,8 @@
                     render: () => {
                         //text类型渲染的内容
                         return h('span', props.currInfo?.deptGivenName);
-                    },
-                },
+                    }
+                }
             },
             {
                 type: 'text',
@@ -151,8 +152,8 @@
                     render: () => {
                         //text类型渲染的内容
                         return h('span', props.currInfo?.enName);
-                    },
-                },
+                    }
+                }
             },
             {
                 type: 'text',
@@ -164,8 +165,8 @@
                     render: () => {
                         //text类型渲染的内容
                         return h('span', props.currInfo?.divisionCode);
-                    },
-                },
+                    }
+                }
             },
             {
                 type: 'text',
@@ -180,8 +181,8 @@
                     render: () => {
                         //text类型渲染的内容
                         return h('span', props.currInfo?.establishDate);
-                    },
-                },
+                    }
+                }
             },
             {
                 type: 'text',
@@ -193,8 +194,8 @@
                     render: () => {
                         //text类型渲染的内容
                         return h('span', props.currInfo?.deptOffice);
-                    },
-                },
+                    }
+                }
             },
             {
                 type: 'text',
@@ -206,8 +207,8 @@
                     render: () => {
                         //text类型渲染的内容
                         return h('span', props.currInfo?.deptFax);
-                    },
-                },
+                    }
+                }
             },
             {
                 type: 'text',
@@ -219,8 +220,8 @@
                     render: () => {
                         //text类型渲染的内容
                         return h('span', props.currInfo?.deptPhone);
-                    },
-                },
+                    }
+                }
             },
             {
                 type: 'text',
@@ -232,8 +233,8 @@
                     render: () => {
                         //text类型渲染的内容
                         return h('span', props.currInfo?.zipCode);
-                    },
-                },
+                    }
+                }
             },
             {
                 type: 'text',
@@ -245,18 +246,18 @@
                     options: [
                         {
                             label: computed(() => t('是')),
-                            value: true,
+                            value: true
                         },
                         {
                             label: computed(() => t('否')),
-                            value: false,
-                        },
+                            value: false
+                        }
                     ],
                     render: () => {
                         //text类型渲染的内容
                         return h('span', props.currInfo?.bureau ? t('是') : t('否'));
-                    },
-                },
+                    }
+                }
             },
             {
                 type: 'text',
@@ -268,8 +269,8 @@
                     render: () => {
                         //text类型渲染的内容
                         return h('span', props.currInfo?.deptAddress);
-                    },
-                },
+                    }
+                }
             },
 
             {
@@ -282,10 +283,10 @@
                     render: () => {
                         //text类型渲染的内容
                         return h('span', props.currInfo?.description);
-                    },
-                },
-            },
-        ],
+                    }
+                }
+            }
+        ]
     });
 
     //如果是添加模式
@@ -302,7 +303,7 @@
         if (isEdit) {
             //编辑状态设置表单校验规则
             y9FormConfig.value.rules = {
-                name: [{ required: true, message: computed(() => t('请输入部门名称')), trigger: 'blur' }],
+                name: [{ required: true, message: computed(() => t('请输入部门名称')), trigger: 'blur' }]
             };
         } else {
             y9FormConfig.value.rules = {};
@@ -340,7 +341,7 @@
     const y9FormRef = ref();
 
     defineExpose({
-        y9FormRef,
+        y9FormRef
     });
 </script>
 

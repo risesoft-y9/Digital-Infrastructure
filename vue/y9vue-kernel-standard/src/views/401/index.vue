@@ -2,7 +2,7 @@
  * @Author:  
  * @Date: 2022-08-02 10:51:50
  * @LastEditors: mengjuhua
- * @LastEditTime: 2023-08-03 10:27:59
+ * @LastEditTime: 2023-12-26 11:22:20
  * @Description: 无权限
 -->
 
@@ -12,9 +12,9 @@
             <h1 class="title"> 401 Error </h1>
             <p class="msg">抱歉，该登录账号非管理员用户账号，没有权限！！！</p>
             <el-button
-                type="primary"
                 :size="fontSizeObj.buttonSize"
                 :style="{ fontSize: fontSizeObj.baseFontSize }"
+                type="primary"
                 @click="logout"
             >
                 退出重新登录
@@ -36,7 +36,7 @@
                 __y9delete__: () => {
                     // 删除前执行的函数
                     console.log('删除前执行的函数');
-                },
+                }
             };
             $y9_SSO.ssoLogout(params);
         } catch (error) {

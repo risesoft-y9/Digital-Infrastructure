@@ -6,16 +6,17 @@
 
 <script lang="ts" setup>
     import { $deepAssignObject } from '@/utils/object';
-    import { getShadowTitles, getShadowRows } from '@/api/org/index';
-    import { onMounted, reactive, ref, toRefs, watch } from 'vue';
+    import { getShadowRows, getShadowTitles } from '@/api/org/index';
+    import { onMounted, reactive, toRefs, watch } from 'vue';
+
     const props = defineProps({
         currTreeNodeInfo: {
             //当前tree节点信息
             type: Object,
             default: () => {
                 return {};
-            },
-        },
+            }
+        }
     });
 
     const data = reactive({
@@ -26,8 +27,8 @@
             columns: [{}],
             tableData: [],
             emptytext: '暂无修改信息',
-            pageConfig: false, //取消分页
-        },
+            pageConfig: false //取消分页
+        }
     });
 
     let { currInfo, logTableConfig } = toRefs(data);
@@ -39,13 +40,14 @@
             getLogList();
         },
         {
-            deep: true,
+            deep: true
         }
     );
+
     async function getLogList() {
         let entityClass = '';
-        if (currInfo.value.orgType != undefined) {
-            switch (currInfo.value.orgType) {
+        if (currInfo.value.nodeType != undefined) {
+            switch (currInfo.value.nodeType) {
                 case 'Organization':
                     entityClass = 'net.risesoft.entity.Y9Organization';
                     break;
@@ -73,14 +75,14 @@
                         {
                             title: '操作信息',
                             key: 'commitAuthor',
-                            minWidth: 400,
-                        },
+                            minWidth: 400
+                        }
                     ];
                     for (let key in column) {
                         data.push({
                             title: column[key],
                             key: column[key],
-                            minWidth: 200,
+                            minWidth: 200
                         });
                     }
                     logTableConfig.value.columns = data;
@@ -97,6 +99,7 @@
                 });
         }
     }
+
     onMounted(() => {
         // getLogList();
     });

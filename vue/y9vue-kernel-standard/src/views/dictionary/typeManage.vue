@@ -4,15 +4,15 @@
  * @Author:  
  * @Date: 2022-06-28 10:03:00
  * @LastEditors: mengjuhua
- * @LastEditTime: 2023-08-03 10:39:36
+ * @LastEditTime: 2023-12-26 11:22:38
 -->
 <template>
     <y9Table :config="tableConfig" :filterConfig="filterConfig">
         <template #addDictionaryType>
             <el-button
-                class="global-btn-third"
                 :size="fontSizeObj.buttonSize"
                 :style="{ fontSize: fontSizeObj.baseFontSize }"
+                class="global-btn-third"
                 @click="onAddDictionaryType"
             >
                 <i class="ri-add-line"></i>
@@ -22,23 +22,23 @@
 
         <template #name="{ row, column, index }">
             <el-input v-if="editId === index" v-model="formData.name" />
-            <template v-else>{{ row.name }} </template>
+            <template v-else>{{ row.name }}</template>
         </template>
 
         <template #type="{ row, column, index }">
-            <input type="password" hidden autocomplete="new-password" />
+            <input autocomplete="new-password" hidden type="password" />
             <el-input v-if="editId === index" v-model="formData.type" />
             <template v-else>{{ row.type }}</template>
         </template>
     </y9Table>
-    <el-button style="display: none" v-loading.fullscreen.lock="loading"></el-button>
+    <el-button v-loading.fullscreen.lock="loading" style="display: none"></el-button>
 </template>
 
 <script lang="ts" setup>
     import { useI18n } from 'vue-i18n';
     import { $keyNameAssign } from '@/utils/object';
-    import { getOptionClassList, saveOptionClass, removeOptionClass } from '@/api/dictionary/index';
-    import { inject, watch, reactive, computed, h, onMounted } from 'vue';
+    import { getOptionClassList, removeOptionClass, saveOptionClass } from '@/api/dictionary/index';
+    import { computed, h, inject, onMounted, reactive } from 'vue';
     import { ElMessage, ElMessageBox, ElNotification } from 'element-plus';
     // 注入 字体对象
     const fontSizeObj: any = inject('sizeObjInfo');
@@ -47,7 +47,7 @@
     const data = reactive({
         formData: {
             name: '',
-            type: '',
+            type: ''
         },
         loading: false, // 全局loading
         editId: -1, //编辑id
@@ -60,19 +60,19 @@
                 {
                     title: '#',
                     type: 'index',
-                    width: 60,
+                    width: 60
                 },
                 {
                     title: computed(() => t('中文名称')),
                     key: 'name',
                     slot: 'name',
-                    showOverflowTooltip: false,
+                    showOverflowTooltip: false
                 },
                 {
                     title: computed(() => t('类型名称')),
                     key: 'type',
                     slot: 'type',
-                    showOverflowTooltip: false,
+                    showOverflowTooltip: false
                 },
                 {
                     title: computed(() => t('操作')),
@@ -83,12 +83,12 @@
                             h('span', {
                                 style: {
                                     display: 'inline-flex',
-                                    alignItems: 'center',
+                                    alignItems: 'center'
                                 },
                                 onClick: () => {
                                     editId.value = params.$index;
                                     $keyNameAssign(formData.value, row);
-                                },
+                                }
                             }),
                             h(
                                 'span',
@@ -96,13 +96,13 @@
                                     style: {
                                         marginLeft: '10px',
                                         display: 'inline-flex',
-                                        alignItems: 'center',
+                                        alignItems: 'center'
                                     },
                                     onClick: () => {
                                         ElMessageBox.confirm(`${t('是否删除')}【${row.name}】 ?`, t('提示'), {
                                             confirmButtonText: t('确定'),
                                             cancelButtonText: t('取消'),
-                                            type: 'info',
+                                            type: 'info'
                                             // loading: true,
                                         })
                                             .then(async () => {
@@ -119,28 +119,28 @@
                                                     message: result.msg,
                                                     type: result.success ? 'success' : 'error',
                                                     duration: 2000,
-                                                    offset: 80,
+                                                    offset: 80
                                                 });
                                             })
                                             .catch(() => {
                                                 ElMessage({
                                                     type: 'info',
                                                     message: t('已取消删除'),
-                                                    offset: 65,
+                                                    offset: 65
                                                 });
                                             });
-                                    },
+                                    }
                                 },
                                 [
                                     h('i', {
                                         class: 'ri-delete-bin-line',
                                         style: {
-                                            marginRight: '2px',
-                                        },
+                                            marginRight: '2px'
+                                        }
                                     }),
-                                    h('span', t('删除')),
+                                    h('span', t('删除'))
                                 ]
-                            ),
+                            )
                         ];
 
                         let saveActions = [
@@ -152,13 +152,13 @@
                                             ElMessage({
                                                 type: 'error',
                                                 message: t('请输入中文名称'),
-                                                offset: 65,
+                                                offset: 65
                                             });
                                         } else if (!formData.value.type) {
                                             ElMessage({
                                                 type: 'error',
                                                 message: t('请输入类型名称'),
-                                                offset: 65,
+                                                offset: 65
                                             });
                                         } else {
                                             tableConfig.value.loading = true;
@@ -175,12 +175,12 @@
                                                 message: result.msg,
                                                 type: result.success ? 'success' : 'error',
                                                 duration: 2000,
-                                                offset: 80,
+                                                offset: 80
                                             });
 
                                             tableConfig.value.loading = false;
                                         }
-                                    },
+                                    }
                                 },
                                 t('保存')
                             ),
@@ -188,7 +188,7 @@
                                 'span',
                                 {
                                     style: {
-                                        marginLeft: '10px',
+                                        marginLeft: '10px'
                                     },
                                     onClick: () => {
                                         if (editId.value === 0) {
@@ -203,18 +203,18 @@
                                             //取消编辑状态
                                             editId.value = -1;
                                         }
-                                    },
+                                    }
                                 },
                                 t('取消')
-                            ),
+                            )
                         ];
                         return h('span', editId.value === params.$index ? saveActions : editActions);
-                    },
-                },
+                    }
+                }
             ],
             tableData: [],
 
-            pageConfig: false,
+            pageConfig: false
         },
         filterConfig: {
             //过滤配置
@@ -222,10 +222,10 @@
                 {
                     type: 'slot',
                     span: 24,
-                    slotName: 'addDictionaryType',
-                },
-            ],
-        },
+                    slotName: 'addDictionaryType'
+                }
+            ]
+        }
     });
 
     let { formData, editId, tableConfig, filterConfig, loading } = toRefs(data);
@@ -252,7 +252,7 @@
             ElMessage({
                 type: 'error',
                 message: t('请保存编辑数据后再操作'),
-                offset: 65,
+                offset: 65
             });
 
             return;
@@ -261,7 +261,7 @@
         //表格上方插入空行
         tableConfig.value.tableData.unshift({
             name: '',
-            type: '',
+            type: ''
         });
 
         editId.value = 0; //第一行为编辑状态
@@ -272,4 +272,4 @@
         }
     }
 </script>
-<style scoped lang="scss"></style>
+<style lang="scss" scoped></style>

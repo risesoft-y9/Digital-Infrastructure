@@ -2,30 +2,30 @@
  * @Author: hongzhew
  * @Date: 2022-04-07 17:43:02
  * @LastEditors: mengjuhua
- * @LastEditTime: 2023-08-03 15:23:01
+ * @LastEditTime: 2024-01-12 09:35:33
  * @Description: 岗位基本信息
 -->
 <template>
     <y9Card :title="`${$t('基本信息')}${currInfo.name ? ' - ' + currInfo.name : ''}`">
-        <div class="oth-btns" v-show="currInfo.haveEditAuth">
+        <div v-show="currInfo.haveEditAuth" class="oth-btns">
             <div v-if="isEditState">
                 <el-button
-                    type="primary"
                     :loading="saveFormBtnLoading"
-                    :style="{ fontSize: fontSizeObj.baseFontSize }"
                     :size="fontSizeObj.buttonSize"
-                    @click="onActions('save')"
+                    :style="{ fontSize: fontSizeObj.baseFontSize }"
                     class="global-btn-main"
+                    type="primary"
+                    @click="onActions('save')"
                 >
                     <i class="ri-save-line"></i>
                     <span>{{ $t('保存') }}</span>
                 </el-button>
 
                 <el-button
-                    @click="isEditState = false"
-                    class="global-btn-second"
-                    :style="{ fontSize: fontSizeObj.baseFontSize }"
                     :size="fontSizeObj.buttonSize"
+                    :style="{ fontSize: fontSizeObj.baseFontSize }"
+                    class="global-btn-second"
+                    @click="isEditState = false"
                 >
                     <i class="ri-close-line"></i>
                     <span> {{ $t('取消') }}</span>
@@ -34,11 +34,11 @@
 
             <div v-else style="display: flex; justify-content: space-between; text-align: right">
                 <el-button
+                    :size="fontSizeObj.buttonSize"
+                    :style="{ fontSize: fontSizeObj.baseFontSize }"
+                    class="global-btn-main"
                     type="primary"
                     @click="onActions('edit')"
-                    class="global-btn-main"
-                    :style="{ fontSize: fontSizeObj.baseFontSize }"
-                    :size="fontSizeObj.buttonSize"
                 >
                     <i class="ri-edit-line"></i>
                     <span>{{ $t('编辑') }}</span>
@@ -47,10 +47,10 @@
                 <div style="margin-left: 10px">
                     <el-button
                         v-show="showBtn('addDepartment')"
-                        type="primary"
-                        :style="{ fontSize: fontSizeObj.baseFontSize }"
                         :size="fontSizeObj.buttonSize"
+                        :style="{ fontSize: fontSizeObj.baseFontSize }"
                         class="global-btn-main"
+                        type="primary"
                         @click="
                             onActions(
                                 'addDepartment',
@@ -63,10 +63,10 @@
                     </el-button>
                     <el-button
                         v-show="showBtn('addPosition')"
-                        type="primary"
-                        :style="{ fontSize: fontSizeObj.baseFontSize }"
                         :size="fontSizeObj.buttonSize"
+                        :style="{ fontSize: fontSizeObj.baseFontSize }"
                         class="global-btn-main"
+                        type="primary"
                         @click="onActions('addPosition', '新增岗位')"
                     >
                         <i class="ri-add-line"></i>
@@ -76,8 +76,8 @@
                         v-show="showBtn('move')"
                         :size="fontSizeObj.buttonSize"
                         :style="{ fontSize: fontSizeObj.baseFontSize }"
-                        @click="onActions('move', '移动')"
                         class="global-btn-second"
+                        @click="onActions('move', '移动')"
                     >
                         <i class="ri-route-line"></i>
                         <span>{{ $t('移动') }}</span>
@@ -86,8 +86,8 @@
                         v-show="showBtn('sort')"
                         :size="fontSizeObj.buttonSize"
                         :style="{ fontSize: fontSizeObj.baseFontSize }"
-                        @click="onActions('sort', '综合排序')"
                         class="global-btn-second"
+                        @click="onActions('sort', '综合排序')"
                     >
                         <i class="ri-arrow-up-down-line"></i>
                         <span> {{ $t('排序') }}</span>
@@ -100,8 +100,8 @@
                         v-show="showBtn('extendAttr')"
                         :size="fontSizeObj.buttonSize"
                         :style="{ fontSize: fontSizeObj.baseFontSize }"
-                        @click="onActions('extendAttr', '扩展属性')"
                         class="global-btn-second"
+                        @click="onActions('extendAttr', '扩展属性')"
                     >
                         <i class="ri-external-link-line"></i>
                         <span>{{ $t('扩展属性') }}</span>
@@ -110,8 +110,8 @@
                         v-show="showBtn('sync')"
                         :size="fontSizeObj.buttonSize"
                         :style="{ fontSize: fontSizeObj.baseFontSize }"
-                        @click="onActions('sync', '数据同步')"
                         class="global-btn-second"
+                        @click="onActions('sync', '数据同步')"
                     >
                         <i class="ri-repeat-line"></i>
                         <span>{{ $t('同步') }}</span>
@@ -166,42 +166,49 @@
         <Sync v-if="dialogConfig.type == 'sync'" ref="syncRef"></Sync>
         <selectTree
             v-if="dialogConfig.type == 'move'"
-            :treeApiObj="deptTreeApiObj"
-            :selectField="selectField"
             ref="selectTreeRef"
+            :selectField="selectField"
+            :treeApiObj="deptTreeApiObj"
             checkStrictly
             @onCheckChange="onCheckChange"
             @onNodeExpand="onNodeExpand"
         ></selectTree>
         <treeSort
             v-if="dialogConfig.type == 'sort'"
-            :currInfo="currInfo"
-            :apiRequest="getOrderDepts"
-            :apiParams="currInfo.id"
-            :columns="dialogConfig.columns"
-            type="Position"
             ref="sortRef"
+            :apiParams="currInfo.id"
+            :apiRequest="getOrderDepts"
+            :columns="dialogConfig.columns"
+            :currInfo="currInfo"
+            type="Position"
         ></treeSort>
     </y9Dialog>
 
-    <el-button style="display: none" v-loading.fullscreen.lock="loading"></el-button>
+    <el-button v-loading.fullscreen.lock="loading" style="display: none"></el-button>
 </template>
 l
 <script lang="ts" setup>
-    import { inject, watch, reactive, computed, ref, toRefs } from 'vue';
+    import { computed, inject, reactive, ref, toRefs, watch } from 'vue';
     import { ElNotification } from 'element-plus';
-    import { getOrderDepts } from '@/api/dept/index';
-    import { $dataType, $keyNameAssign, $deepAssignObject, $deeploneObject } from '@/utils/object';
+    import { deptSaveOrUpdate, getOrderDepts, moveDept, saveOrder } from '@/api/dept/index';
+    import { $deeploneObject } from '@/utils/object';
     import orgForm from '../../org/comps/baseInfoForm/orgForm.vue';
     import departmentForm from '../../org/comps/baseInfoForm/departmentForm.vue';
     import positionForm from '../comps/baseInfoForm/positionForm.vue';
     import extendAttr from '../../org/comps/dialogContent/extendAttr.vue';
     import Sync from '../../org/comps/dialogContent/sync.vue';
-    import { orgSaveOrUpdate, treeInterface, getTreeItemById, searchByName, sync } from '@/api/org/index';
-    import { deptSaveOrUpdate, moveDept, saveOrder } from '@/api/dept/index';
-    import { positionSaveOrUpdate, movePosition } from '@/api/position/index';
-    import { getOrgTypeList, listByType } from '@/api/dictionary/index';
+    import {
+        getDepartmentById,
+        getOrganizationById,
+        getTreeItemById,
+        orgSaveOrUpdate,
+        searchByName,
+        sync,
+        treeInterface
+    } from '@/api/org/index';
+    import { getPositionById, movePosition, positionSaveOrUpdate } from '@/api/position/index';
     import { useI18n } from 'vue-i18n';
+
     const { t } = useI18n();
     // 注入 字体对象
     const fontSizeObj: any = inject('sizeObjInfo');
@@ -211,14 +218,19 @@ l
             type: Object,
             default: () => {
                 return {};
-            },
+            }
         },
         handAssginNode: Function, //手动更新节点信息
+        updateTreePositionCount: Function, //更新当前节点以及其父节点的人员数量
         getTreeInstance: Object, //树的实例
+        getTreeData: Function, //获取树数据
+
+        findNode: Function //在树数据中根据id找到对应的节点并返回
     });
 
     //移动-选择树节点展开时触发
     const selectTreeExpandNode = ref();
+
     function onNodeExpand(node) {
         selectTreeExpandNode.value = node;
     }
@@ -248,7 +260,7 @@ l
             dutyType: '',
             dutyLevelName: '',
             jobId: '',
-            capacity: 1,
+            capacity: 1
         },
         //弹窗配置
         dialogConfig: {
@@ -265,13 +277,11 @@ l
                             reject();
                             return;
                         }
-                        await deptSaveOrUpdate(formData)
-                            .then(async (res) => {
-                                result = res;
-                                //更新当前节点的children信息到树数据当中
-                                await props.handAssginNode({}, currInfo.value.id, currInfo.value.id); //手动更新节点到tree
-                            })
-                            .catch(() => {});
+                        result = await deptSaveOrUpdate(formData);
+                        if (result.success) {
+                            //更新当前节点的children信息到树数据当中
+                            await props.handAssginNode({}, currInfo.value.id, currInfo.value.id); //手动更新节点到tree
+                        }
                     } else if (newConfig.value.type == 'addPosition') {
                         let formData = addPositionFormRef.value?.y9FormRef?.model;
                         let valid = await addPositionFormRef.value?.y9FormRef?.elFormRef?.validate((valid) => valid); //获取表单验证结果
@@ -279,60 +289,59 @@ l
                             reject();
                             return;
                         }
-                        await positionSaveOrUpdate(formData)
-                            .then(async (res) => {
-                                result = res;
-                                //更新当前节点的children信息到树数据当中
-                                await props.handAssginNode({}, currInfo.value.id, currInfo.value.id); //手动更新节点到tree
-                            })
-                            .catch(() => {});
+                        result = await positionSaveOrUpdate(formData);
+                        if (result.success) {
+                            //更新当前节点的children信息到树数据当中
+                            await props.handAssginNode({}, currInfo.value.id, currInfo.value.id); //手动更新节点到tree
+                            props.updateTreePositionCount(currInfo.value, 1, currInfo.value.id);
+                        }
                     } else if (newConfig.value.type == 'move') {
-                        const selectIds = selectTreeRef.value?.y9TreeRef?.getCheckedKeys();
-                        if (selectIds.length == 0) {
+                        const selectNodes = selectTreeRef.value?.y9TreeRef?.getCheckedNodes();
+
+                        if (selectNodes.length == 0) {
                             ElNotification({
                                 title: '失败',
                                 message: '请选择部门',
                                 type: 'error',
                                 duration: 2000,
-                                offset: 80,
+                                offset: 80
                             });
                             reject();
                             return;
                         }
-                        const targetId = selectIds[0];
-                        if (props.currTreeNodeInfo.orgType == 'Department') {
-                            await moveDept(props.currTreeNodeInfo.id, targetId)
-                                .then((res) => {
-                                    result = res;
-                                })
-                                .catch(() => {});
-                        } else if (props.currTreeNodeInfo.orgType == 'Position') {
-                            await movePosition(props.currTreeNodeInfo.id, targetId)
-                                .then((res) => {
-                                    result = res;
-                                })
-                                .catch(() => {});
-                        }
+                        const targetNode = selectNodes[0];
 
-                        //1.删除被移动的节点
-                        props.getTreeInstance().remove(currInfo.value);
-                        //2.重新请求，移动的目标节点，获得最新的子节点信息，然后手动点击该节点
-                        await props.handAssginNode({}, targetId, targetId);
+                        if (currInfo.value.orgType == 'Department') {
+                            result = await moveDept(currInfo.value.id, targetNode.id);
+                        } else if (currInfo.value.orgType == 'Position') {
+                            result = await movePosition(currInfo.value.id, targetNode.id);
+                        }
+                        if (result.success) {
+                            //1.删除被移动的节点
+                            props.getTreeInstance().remove(currInfo.value);
+                            // 2.获取被移动节点的父节点信息
+                            const currParentNode = props.findNode(props.getTreeData(), currInfo.value.parentId);
+
+                            // 3.更新所有父节点的数值信息
+                            await props.updateTreePositionCount(currParentNode, -1);
+
+                            //4.重新请求，移动的目标节点，获得最新的子节点信息，然后手动点击该节点
+                            await props.handAssginNode({}, targetNode.id, targetNode.id);
+
+                            // 5. 更新目标节点的所有父节点的数值
+                            await props.updateTreePositionCount(targetNode, 1);
+                        }
                     } else if (newConfig.value.type == 'sort') {
                         let tableData = sortRef.value.tableConfig.tableData;
                         const ids = [];
                         tableData.forEach((element) => {
                             ids.push(element.id);
                         });
-                        await saveOrder(props.currTreeNodeInfo.id, ids.toString())
-                            .then(async (res) => {
-                                result = res;
-                                if (res.success) {
-                                    //更新当前节点的children信息到树数据当中
-                                    await props.handAssginNode({}, currInfo.value.id, currInfo.value.id); //手动更新节点到tree
-                                }
-                            })
-                            .catch(() => {});
+                        result = await saveOrder(currInfo.value.id, ids.toString());
+                        if (result.success) {
+                            //更新当前节点的children信息到树数据当中
+                            await props.handAssginNode({}, currInfo.value.id, currInfo.value.id); //手动更新节点到tree
+                        }
                     } else if (newConfig.value.type == 'sync') {
                         let valid = await syncRef.value?.y9FormRef?.elFormRef?.validate((valid) => valid); //获取表单验证结果
 
@@ -346,20 +355,16 @@ l
                             syncId: currInfo.value.id,
                             orgType: currInfo.value.orgType,
                             targetSysName: formData.targetSysName,
-                            needRecursion: formData.needRecursion,
+                            needRecursion: formData.needRecursion
                         };
-                        await sync(params)
-                            .then((res) => {
-                                result = res;
-                            })
-                            .catch(() => {});
+                        result = await sync(params);
                     }
                     ElNotification({
                         title: result.success ? '成功' : '失败',
                         message: result.msg,
                         type: result.success ? 'success' : 'error',
                         duration: 2000,
-                        offset: 80,
+                        offset: 80
                     });
                     if (result.success) {
                         resolve();
@@ -375,7 +380,7 @@ l
                     Object.assign(addPositionFormRef.value.y9FormRef.model, poForm.value);
                 }
             },
-            columns: [] as any,
+            columns: [] as any
         },
         deptTreeApiObj: {
             //tree接口对象
@@ -385,7 +390,7 @@ l
                     const res = await getTreeItemById({
                         parentId: selectTreeExpandNode.value.id,
                         treeType: 'tree_type_dept',
-                        disabled: false,
+                        disabled: false
                     });
 
                     const data = res.data || [];
@@ -399,33 +404,36 @@ l
 
                     return data;
                 },
-                params: {},
+                params: {}
             },
             search: {
                 api: searchByName,
                 params: {
-                    treeType: 'tree_type_dept',
-                },
-            },
-        },
+                    treeType: 'tree_type_dept'
+                }
+            }
+        }
     });
 
     let { currInfo, isEditState, saveFormBtnLoading, dialogConfig, deptTreeApiObj, poForm, loading } = toRefs(data);
 
     const selectField = ref([
         {
-            fieldName: 'orgType',
-            value: ['Department'],
+            fieldName: 'nodeType',
+            value: ['Department']
         },
         {
             fieldName: 'disabled',
-            value: false,
-        },
+            value: false
+        }
     ]);
     watch(
         () => props.currTreeNodeInfo,
-        (newVal) => {
-            currInfo.value = $deeploneObject(newVal);
+        async (newVal) => {
+            // 请求详情接口
+            let currNodeInfo = await getNodeTypeInfo(newVal);
+
+            currInfo.value = $deeploneObject(currNodeInfo);
 
             if (currInfo.value.orgType == 'Position') {
                 selectField.value[0].value = ['Department'];
@@ -436,9 +444,29 @@ l
             isEditState.value = false;
         },
         {
-            deep: true,
+            deep: true
         }
     );
+
+    // 请求组织架构树的各类信息
+    async function getNodeTypeInfo(item: any) {
+        let result = { data: {} };
+        switch (item.nodeType) {
+            case 'Organization':
+                result = await getOrganizationById(item.id);
+                break;
+            case 'Department':
+                result = await getDepartmentById(item.id);
+                break;
+            case 'Position':
+                result = await getPositionById(item.id);
+                break;
+            default:
+                break;
+        }
+        let totalObj = Object.assign({}, item, result.data);
+        return totalObj;
+    }
 
     //选择树选择框被点击时触发
     const onCheckChange = (node, isChecked) => {
@@ -497,7 +525,7 @@ l
                         message: result.msg,
                         type: result.success ? 'success' : 'error',
                         duration: 2000,
-                        offset: 80,
+                        offset: 80
                     });
                     if (result.success) {
                         //修改后的数据更新到对应的树数据当中
@@ -516,7 +544,7 @@ l
                         message: result.msg,
                         type: result.success ? 'success' : 'error',
                         duration: 2000,
-                        offset: 80,
+                        offset: 80
                     });
                     if (result.success) {
                         //修改后的数据更新到对应的树数据当中
@@ -535,7 +563,7 @@ l
                         message: result.msg,
                         type: result.success ? 'success' : 'error',
                         duration: 2000,
-                        offset: 80,
+                        offset: 80
                     });
                     if (result.success) {
                         //修改后的数据更新到对应的树数据当中
@@ -572,18 +600,18 @@ l
                               {
                                   type: 'radio',
                                   title: computed(() => t('请选择')),
-                                  width: 200,
+                                  width: 200
                               },
                               {
                                   title: computed(() => t('名称')),
-                                  key: 'name',
+                                  key: 'name'
                               },
                               {
                                   title: computed(() => t('类别')),
-                                  key: 'orgType',
-                              },
+                                  key: 'orgType'
+                              }
                           ]
-                        : [],
+                        : []
             });
         }
     }
@@ -592,6 +620,7 @@ l
 <style lang="scss" scoped>
     .oth-btns {
         margin-bottom: 10px;
+
         :deep(.el-button) {
             margin-bottom: 10px;
         }

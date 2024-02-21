@@ -2,7 +2,7 @@
  * @Author: fuyu
  * @Date: 2022-04-07 17:43:02
  * @LastEditors: mengjuhua
- * @LastEditTime: 2023-08-03 15:27:19
+ * @LastEditTime: 2023-12-26 11:23:34
  * @Description: 组织架构-职位管理
 -->
 <template>
@@ -15,19 +15,19 @@
         >
             <template v-slot:slotSearch>
                 <el-button
-                    class="global-btn-third"
                     :size="fontSizeObj.buttonSize"
                     :style="{ fontSize: fontSizeObj.baseFontSize }"
+                    class="global-btn-third"
                     @click="getJobByName"
                 >
                     <i class="ri-search-line"></i>
                     {{ $t('搜索') }}
                 </el-button>
                 <el-button
-                    class="global-btn-third"
-                    type="primary"
                     :size="fontSizeObj.buttonSize"
                     :style="{ fontSize: fontSizeObj.baseFontSize }"
+                    class="global-btn-third"
+                    type="primary"
                     @click="getDictionaryData"
                 >
                     <i class="ri-restart-line"></i>
@@ -37,9 +37,9 @@
 
             <template #addDictionaryData>
                 <el-button
-                    class="global-btn-main"
                     :size="fontSizeObj.buttonSize"
                     :style="{ fontSize: fontSizeObj.baseFontSize }"
+                    class="global-btn-main"
                     type="primary"
                     @click="onAddDictionaryData"
                 >
@@ -47,9 +47,9 @@
                     <span>{{ $t('职位') }}</span>
                 </el-button>
                 <el-button
-                    class="global-btn-third"
                     :size="fontSizeObj.buttonSize"
                     :style="{ fontSize: fontSizeObj.baseFontSize }"
+                    class="global-btn-third"
                     type="primary"
                     @click="upJob"
                 >
@@ -57,9 +57,9 @@
                     <span>{{ $t('上移') }}</span>
                 </el-button>
                 <el-button
-                    class="global-btn-third"
                     :size="fontSizeObj.buttonSize"
                     :style="{ fontSize: fontSizeObj.baseFontSize }"
+                    class="global-btn-third"
                     type="primary"
                     @click="downJob"
                 >
@@ -67,9 +67,9 @@
                     <span>{{ $t('下移') }}</span>
                 </el-button>
                 <el-button
-                    class="global-btn-third"
                     :size="fontSizeObj.buttonSize"
                     :style="{ fontSize: fontSizeObj.baseFontSize }"
+                    class="global-btn-third"
                     type="primary"
                     @click="saveJobOrder"
                 >
@@ -83,7 +83,7 @@
                 <template v-else>{{ row.name }}</template>
             </template>
             <template #code="{ row, column, index }">
-                <input type="password" hidden autocomplete="new-password" />
+                <input autocomplete="new-password" hidden type="password" />
                 <el-input v-if="editId === index" v-model="formData.code" />
                 <template v-else>{{ row.code }}</template>
             </template>
@@ -95,24 +95,24 @@
             </template>
         </y9Dialog>
     </div>
-    <el-button style="display: none" v-loading.fullscreen.lock="loading"></el-button>
+    <el-button v-loading.fullscreen.lock="loading" style="display: none"></el-button>
 </template>
 
 <script lang="ts" setup>
     import { useI18n } from 'vue-i18n';
-    import { inject, watch, reactive, computed, h, onMounted, ref, toRefs } from 'vue';
-    import { ElMessage, ElMessageBox, ElNotification } from 'element-plus';
-    import { $keyNameAssign, $deeploneObject, $objEqual } from '@/utils/object';
+    import { computed, h, inject, onMounted, reactive, ref, toRefs, watch } from 'vue';
+    import { ElMessage, ElMessageBox, ElNotification, FormInstance } from 'element-plus';
+    import { $keyNameAssign } from '@/utils/object';
     import {
-        getJobList,
-        saveJobValue,
         deleteByIds,
         getJobByMajorName,
+        getJobList,
         jobInfoGet,
-        saveOrder,
+        saveJobValue,
+        saveOrder
     } from '@/api/dictionary/index';
     import { useSettingStore } from '@/store/modules/settingStore';
-    import { FormInstance } from 'element-plus';
+
     const { t } = useI18n();
     const settingStore = useSettingStore();
     // 注入 字体对象
@@ -128,7 +128,7 @@
         tableCurrSelectedVal: [], //表格选择的数据
         formData: {
             name: '',
-            code: '',
+            code: ''
             // tabIndex:"",
         },
         loading: false, // 全局loading
@@ -143,19 +143,19 @@
                 {
                     type: 'radio',
                     title: computed(() => t('请选择')),
-                    width: 200,
+                    width: 200
                 },
                 {
                     title: computed(() => t('职位名称')),
                     key: 'name',
                     slot: 'name',
-                    showOverflowTooltip: false,
+                    showOverflowTooltip: false
                 },
                 {
                     title: computed(() => t('数据代码')),
                     key: 'code',
                     slot: 'code',
-                    showOverflowTooltip: false,
+                    showOverflowTooltip: false
                 },
                 {
                     title: computed(() => t('操作')),
@@ -167,12 +167,12 @@
                             h('span', {
                                 style: {
                                     display: 'inline-flex',
-                                    alignItems: 'center',
+                                    alignItems: 'center'
                                 },
                                 onClick: () => {
                                     editId.value = params.$index;
                                     $keyNameAssign(formData.value, row);
-                                },
+                                }
                             }),
                             h(
                                 'span',
@@ -180,20 +180,20 @@
                                     style: {
                                         marginLeft: '10px',
                                         display: 'inline-flex',
-                                        alignItems: 'center',
+                                        alignItems: 'center'
                                     },
                                     onClick: () => {
                                         onDeleteDictionaryData(row);
-                                    },
+                                    }
                                 },
                                 [
                                     h('i', {
                                         class: 'ri-delete-bin-line',
                                         style: {
-                                            marginRight: '2px',
-                                        },
+                                            marginRight: '2px'
+                                        }
                                     }),
-                                    h('span', t('删除')),
+                                    h('span', t('删除'))
                                 ]
                             ),
 
@@ -203,25 +203,25 @@
                                     style: {
                                         marginLeft: '12px',
                                         display: 'inline-flex',
-                                        alignItems: 'center',
+                                        alignItems: 'center'
                                     },
                                     onClick: async () => {
                                         const result = await jobInfoGet(row.id);
                                         ruleFormConfig.value.model = result.data;
                                         addDialogConfig.value.show = true;
                                         addDialogConfig.value.title = computed(() => t('编辑职位'));
-                                    },
+                                    }
                                 },
                                 [
                                     h('i', {
                                         class: 'ri-pencil-line',
                                         style: {
-                                            marginRight: '2px',
-                                        },
+                                            marginRight: '2px'
+                                        }
                                     }),
-                                    h('span', t('编辑')),
+                                    h('span', t('编辑'))
                                 ]
-                            ),
+                            )
                         ];
 
                         let saveActions = [
@@ -233,13 +233,13 @@
                                             ElMessage({
                                                 type: 'error',
                                                 message: t('请输入职位名称'),
-                                                offset: 65,
+                                                offset: 65
                                             });
                                         } else if (!formData.value.code) {
                                             ElMessage({
                                                 type: 'error',
                                                 message: t('请输入数据代码'),
-                                                offset: 65,
+                                                offset: 65
                                             });
                                         } else {
                                             tableConfig.value.loading = true;
@@ -256,12 +256,12 @@
                                                 message: result.msg,
                                                 type: result.success ? 'success' : 'error',
                                                 duration: 2000,
-                                                offset: 80,
+                                                offset: 80
                                             });
 
                                             tableConfig.value.loading = false;
                                         }
-                                    },
+                                    }
                                 },
                                 t('保存')
                             ),
@@ -269,7 +269,7 @@
                                 'span',
                                 {
                                     style: {
-                                        marginLeft: '10px',
+                                        marginLeft: '10px'
                                     },
                                     onClick: () => {
                                         if (editId.value === 0) {
@@ -284,17 +284,17 @@
                                             //取消编辑状态
                                             editId.value = -1;
                                         }
-                                    },
+                                    }
                                 },
                                 t('取消')
-                            ),
+                            )
                         ];
                         return h('span', editId.value === params.$index ? saveActions : editActions);
-                    },
-                },
+                    }
+                }
             ],
             tableData: [],
-            pageConfig: false,
+            pageConfig: false
         },
         // 表单
         ruleFormConfig: {
@@ -303,27 +303,27 @@
             rules: {
                 //	表单验证规则。类型：FormRules
                 name: [{ required: true, message: computed(() => t('请输入职位名称')), trigger: 'blur' }],
-                code: [{ required: true, message: computed(() => t('请输入数据代码')), trigger: 'blur' }],
+                code: [{ required: true, message: computed(() => t('请输入数据代码')), trigger: 'blur' }]
             },
             itemList: [
                 {
                     type: 'input',
                     label: computed(() => t('职位名称')),
                     prop: 'name',
-                    required: true,
+                    required: true
                 },
 
                 {
                     type: 'input',
                     label: computed(() => t('数据代码')),
                     prop: 'code',
-                    required: true,
-                },
+                    required: true
+                }
             ],
             descriptionsFormConfig: {
                 labelWidth: '200px',
-                labelAlign: 'center',
-            },
+                labelAlign: 'center'
+            }
         },
         currentRow: '',
         tabIndexs: [],
@@ -336,15 +336,15 @@
                 {
                     type: 'slot',
                     span: settingStore.device === 'mobile' ? 12 : 18,
-                    slotName: 'addDictionaryData',
+                    slotName: 'addDictionaryData'
                 },
                 {
                     type: 'input',
                     key: 'name',
-                    span: settingStore.device === 'mobile' ? 12 : 6,
-                },
-            ],
-        },
+                    span: settingStore.device === 'mobile' ? 12 : 6
+                }
+            ]
+        }
     });
 
     let {
@@ -357,12 +357,12 @@
         currentRow,
         tabIndexs,
         ruleFormConfig,
-        filterConfig,
+        filterConfig
     } = toRefs(data);
 
     //监听过滤条件改变时，获取职位数据
     const formInline = ref({
-        name: undefined,
+        name: undefined
     });
 
     watch(
@@ -376,7 +376,7 @@
         },
         {
             deep: true,
-            immediate: true,
+            immediate: true
         }
     );
 
@@ -391,7 +391,7 @@
                 await y9RuleFormInstance.validate(async (valid) => {
                     if (valid) {
                         const params = {
-                            ...ruleFormRef.value?.model,
+                            ...ruleFormRef.value?.model
                         };
                         await saveJobValue(params)
                             .then(async (result) => {
@@ -400,13 +400,13 @@
                                     message: result.success ? t('操作成功') : t('操作失败'),
                                     type: result.success ? 'success' : 'error',
                                     duration: 2000,
-                                    offset: 80,
+                                    offset: 80
                                 });
                                 if (result.success) {
                                     // 更新成功后 表单的数据 清空
                                     ruleFormConfig.value.model = {
                                         code: '',
-                                        name: '',
+                                        name: ''
                                         // tabIndex: '',
                                     };
                                     // 重新获取职位列表数据
@@ -422,7 +422,7 @@
                     }
                 });
             });
-        },
+        }
     });
     onMounted(() => {
         getDictionaryData(); //获取职位列表
@@ -455,7 +455,7 @@
             ElMessage({
                 type: 'error',
                 message: t('请保存编辑数据后再操作'),
-                offset: 65,
+                offset: 65
             });
 
             return;
@@ -464,7 +464,7 @@
         //表格上方插入空行
         tableConfig.value.tableData.unshift({
             name: '',
-            type: '',
+            type: ''
         });
 
         editId.value = 0; //第一行为编辑状态
@@ -489,7 +489,7 @@
             ElMessageBox.confirm(`${t('是否删除')}${row ? '【' + row.name + '】' : t('选中的数据')} ?`, t('提示'), {
                 confirmButtonText: t('确定'),
                 cancelButtonText: t('取消'),
-                type: 'info',
+                type: 'info'
                 // loading: true,
             })
                 .then(async () => {
@@ -523,7 +523,7 @@
                             message: result.msg,
                             type: result.success ? 'success' : 'error',
                             duration: 2000,
-                            offset: 80,
+                            offset: 80
                         });
                         // loading.close()
                         loading.value = false;
@@ -536,14 +536,14 @@
                     ElMessage({
                         type: 'info',
                         message: t('已取消删除'),
-                        offset: 65,
+                        offset: 65
                     });
                 });
         } else {
             ElMessage({
                 type: 'error',
                 message: t('请选择数据'),
-                offset: 65,
+                offset: 65
             });
         }
     }
@@ -551,7 +551,7 @@
     //按职位名称搜索
     async function getJobByName() {
         let sendData = {
-            name: formInline.value.name,
+            name: formInline.value.name
         };
         if (sendData.name === undefined) {
             getDictionaryData();
@@ -580,7 +580,7 @@
                     message: t('处于顶端，不能继续上移'),
                     type: 'error',
                     duration: 2000,
-                    offset: 80,
+                    offset: 80
                 });
                 return;
             }
@@ -608,7 +608,7 @@
                     message: t('处于末端，不能继续下移'),
                     type: 'error',
                     duration: 2000,
-                    offset: 80,
+                    offset: 80
                 });
                 return;
             }
@@ -638,11 +638,11 @@
             message: result.msg,
             type: result.success ? 'success' : 'error',
             duration: 2000,
-            offset: 80,
+            offset: 80
         });
     }
 </script>
-<style scoped lang="scss">
+<style lang="scss" scoped>
     // :deep(.y9-filter-item) {
     //     .el-input__wrapper {
     //         padding: 0;

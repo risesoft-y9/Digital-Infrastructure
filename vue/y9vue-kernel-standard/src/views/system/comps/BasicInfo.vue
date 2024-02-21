@@ -2,19 +2,19 @@
  * @Author: hongzhew
  * @Date: 2022-04-07 17:43:02
  * @LastEditors: mengjuhua
- * @LastEditTime: 2023-08-03 15:19:43
+ * @LastEditTime: 2023-12-26 11:26:44
  * @Description: 应用系统详情
 -->
 <template>
-    <y9Form :config="y9FormConfig" ref="y9FormRef"></y9Form>
+    <y9Form ref="y9FormRef" :config="y9FormConfig"></y9Form>
 </template>
 
 <script lang="ts" setup>
-    import { watch, computed, h, onMounted, ref } from 'vue';
+    import { computed, h, onMounted, ref, watch } from 'vue';
     import { useI18n } from 'vue-i18n';
     import { systemInfoGet } from '@/api/system/index';
     import { useSettingStore } from '@/store/modules/settingStore';
-    import { $dataType, $tableHandleRender } from '@/utils/object';
+
     const settingStore = useSettingStore();
     const { t } = useI18n();
 
@@ -22,9 +22,9 @@
     const props = defineProps({
         id: String, // 系统id
         editFlag: Boolean, // 编辑 与 查看 的对应显示变量
-        saveClickFlag: Boolean, // 是否点击保存 的变量
+        saveClickFlag: Boolean // 是否点击保存 的变量
     });
-    const emits = defineEmits(['getInfoData']);
+    const emits = defineEmits(['getSystemData']);
 
     // 基本信息
     let systemInfo = ref({} as any);
@@ -65,7 +65,7 @@
             column: settingStore.device === 'mobile' ? 1 : 2,
             labelAlign: 'center',
             labelWidth: '150px',
-            contentWidth: '200px',
+            contentWidth: '200px'
         },
         model: {},
         rules: {}, //表单验证规则
@@ -81,8 +81,8 @@
                     render: () => {
                         //text类型渲染的内容
                         return h('span', systemInfo.value?.name);
-                    },
-                },
+                    }
+                }
             },
             {
                 type: 'text',
@@ -94,8 +94,8 @@
                     render: () => {
                         //text类型渲染的内容
                         return h('span', systemInfo.value?.cnName);
-                    },
-                },
+                    }
+                }
             },
             {
                 type: 'text',
@@ -106,13 +106,13 @@
                 props: {
                     options: [
                         { label: computed(() => t('是')), value: true },
-                        { label: computed(() => t('否')), value: false },
+                        { label: computed(() => t('否')), value: false }
                     ],
                     render: () => {
                         //text类型渲染的内容
                         return h('span', systemInfo.value?.enabled ? t('是') : t('否'));
-                    },
-                },
+                    }
+                }
             },
             {
                 type: 'text',
@@ -124,8 +124,8 @@
                     render: () => {
                         //text类型渲染的内容
                         return h('span', systemInfo.value?.singleDatasource ? t('是') : t('否'));
-                    },
-                },
+                    }
+                }
             },
             {
                 type: 'text',
@@ -137,8 +137,8 @@
                     render: () => {
                         //text类型渲染的内容
                         return h('span', systemInfo.value?.contextPath);
-                    },
-                },
+                    }
+                }
             },
             {
                 type: 'text',
@@ -151,8 +151,8 @@
                     render: () => {
                         //text类型渲染的内容
                         return h('span', systemInfo.value?.tabIndex);
-                    },
-                },
+                    }
+                }
             },
             {
                 type: 'text',
@@ -164,10 +164,10 @@
                     render: () => {
                         //text类型渲染的内容
                         return h('span', systemInfo.value?.description);
-                    },
-                },
-            },
-        ],
+                    }
+                }
+            }
+        ]
     });
 
     //改变y9Form显示类型
@@ -176,7 +176,7 @@
             //编辑状态设置表单校验规则
             y9FormConfig.value.rules = {
                 name: [{ required: true, message: computed(() => t('请输入系统名称')), trigger: 'blur' }],
-                cnName: [{ required: true, message: computed(() => t('请输系统中文名称')), trigger: 'blur' }],
+                cnName: [{ required: true, message: computed(() => t('请输系统中文名称')), trigger: 'blur' }]
             };
         } else {
             y9FormConfig.value.rules = {};
@@ -190,17 +190,17 @@
 
     // 监听 saveClicFlag 当为true 时 将对象传给 index
     watch(
-        async () => props.saveClickFlag,
+        () => props.saveClickFlag,
         async (new_, old_) => {
             if (new_) {
                 let valid = await y9FormRef?.value.elFormRef?.validate((valid) => valid); //获取表单验证结果;
                 if (valid) {
                     systemInfo.value = y9FormRef.value?.model;
-                    emits('getInfoData', systemInfo.value);
+                    emits('getSystemData', systemInfo.value);
                     return;
                 }
             }
         }
     );
 </script>
-<style scoped lang="scss"></style>
+<style lang="scss" scoped></style>

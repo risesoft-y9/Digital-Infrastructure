@@ -2,7 +2,7 @@
  * @Author: hongzhew
  * @Date: 2022-04-07 17:43:02
  * @LastEditors: mengjuhua
- * @LastEditTime: 2023-08-03 15:25:22
+ * @LastEditTime: 2024-01-11 17:28:38
  * @Description: 组织架构
 -->
 <template>
@@ -10,16 +10,16 @@
         ref="fixedTreeRef"
         :treeApiObj="treeApiObj"
         nodeLabel="newName"
-        @onTreeClick="onTreeClick"
         @onDeleteTree="onDeleteTree"
+        @onTreeClick="onTreeClick"
     >
         <template v-if="isGlobalManager" #treeHeaderRight>
             <el-popover placement="bottom" trigger="hover" @hide="onHidePopover">
                 <template #reference>
                     <el-button
-                        class="global-btn-main"
                         :size="fontSizeObj.buttonSize"
                         :style="{ fontSize: fontSizeObj.baseFontSize }"
+                        class="global-btn-main"
                         type="primary"
                     >
                         <i class="ri-menu-line"></i>
@@ -35,28 +35,28 @@
             <template v-if="Object.keys(currTreeNodeInfo).length > 0">
                 <baseInfo
                     :currTreeNodeInfo="currTreeNodeInfo"
-                    :refreshTree="refreshTree"
+                    :findNode="findNode"
                     :getTreeData="getTreeData"
                     :getTreeInstance="getTreeInstance"
-                    :postNode="postNode"
-                    :findNode="findNode"
                     :handAssginNode="handAssginNode"
+                    :postNode="postNode"
+                    :refreshTree="refreshTree"
                     :updateTreePersonCount="updateTreePersonCount"
                 >
                 </baseInfo>
 
-                <template v-if="currTreeNodeInfo.orgType == 'Person'">
+                <template v-if="currTreeNodeInfo.nodeType == 'Person'">
                     <positionList :currTreeNodeInfo="currTreeNodeInfo"></positionList>
                     <groupList :currTreeNodeInfo="currTreeNodeInfo"></groupList>
                 </template>
                 <personList
                     v-else
                     :currTreeNodeInfo="currTreeNodeInfo"
-                    :updateTreePersonCount="updateTreePersonCount"
                     :handAssginNode="handAssginNode"
+                    :updateTreePersonCount="updateTreePersonCount"
                 ></personList>
 
-                <template v-if="currTreeNodeInfo.orgType == 'Department'">
+                <template v-if="currTreeNodeInfo.nodeType == 'Department'">
                     <setLeaderList :currTreeNodeInfo="currTreeNodeInfo" typeName="org"></setLeaderList>
                     <setManagerList :currTreeNodeInfo="currTreeNodeInfo" typeName="org"></setManagerList>
                 </template>
@@ -82,19 +82,19 @@
         <historyUploadDetails v-if="dialogConfig.type == 'uploadHistory'"></historyUploadDetails>
         <treeSort
             v-if="dialogConfig.type == 'sort'"
-            :currInfo="currInfo"
             ref="sortRef"
             :apiRequest="treeInterface"
             :columns="dialogConfig.columns"
+            :currInfo="currInfo"
         ></treeSort>
     </y9Dialog>
 
-    <el-button style="display: none" v-loading.fullscreen.lock="loading"></el-button>
+    <el-button v-loading.fullscreen.lock="loading" style="display: none"></el-button>
 </template>
 
 <script lang="ts" setup>
     import { useI18n } from 'vue-i18n';
-    import { inject, reactive, computed, ref, toRefs } from 'vue';
+    import { computed, inject, reactive, ref, toRefs } from 'vue';
     import { ElMessage, ElMessageBox, ElNotification } from 'element-plus';
     import orgForm from './comps/baseInfoForm/orgForm.vue';
     import baseInfo from './comps/baseInfo.vue';
@@ -106,19 +106,20 @@
     import uploadOrgInfo from './comps/dialogContent/uploadOrgInfo.vue';
     import historyUploadDetails from './comps/dialogContent/historyUploadDetails.vue';
     import {
-        treeInterface,
+        getAllPersonsCount,
         getTreeItemById,
+        orgSaveOrder,
+        orgSaveOrUpdate,
         removeOrg,
         searchByName,
-        orgSaveOrUpdate,
-        orgSaveOrder,
-        getAllPersonsCount,
+        treeInterface
     } from '@/api/org/index';
     import { checkDeptManager } from '@/api/deptManager/index';
     import { removeDept } from '@/api/dept/index';
     import { removeGroup } from '@/api/group/index';
     import { delPerson } from '@/api/person/index';
     import { useSettingStore } from '@/store/modules/settingStore';
+
     const settingStore = useSettingStore();
     const { t } = useI18n();
     // 注入 字体对象
@@ -135,17 +136,20 @@
         loading: false,
         treeApiObj: {
             //tree接口对象
-            topLevel: treeInterface,
+            topLevel: {
+                api: treeInterface,
+                params: { treeType: 'tree_type_org_person' }
+            },
             childLevel: {
                 api: getTreeItemById,
-                params: { treeType: 'tree_type_org_person', disabled: true },
+                params: { treeType: 'tree_type_org_person', disabled: true }
             },
             search: {
                 api: searchByName,
                 params: {
-                    treeType: 'tree_type_org_person',
-                },
-            },
+                    treeType: 'tree_type_org_person'
+                }
+            }
         },
         currTreeNodeInfo: {} as any, //当前tree节点的信息
 
@@ -155,21 +159,21 @@
             listData: [
                 {
                     id: 'addOrg',
-                    name: computed(() => t('新增组织机构')),
+                    name: computed(() => t('新增组织机构'))
                 },
                 {
                     id: 'sort',
-                    name: computed(() => t('组织机构排序')),
+                    name: computed(() => t('组织机构排序'))
                 },
                 {
                     id: 'uploadOrgXML',
-                    name: computed(() => t('上传')),
-                },
+                    name: computed(() => t('上传'))
+                }
                 // {
                 // 	id:"uploadHistory",
                 // 	name:"历史上传详情"
                 // },
-            ],
+            ]
         },
 
         //弹窗配置
@@ -189,20 +193,16 @@
                             return;
                         }
 
-                        await orgSaveOrUpdate(addOrgFormRef.value?.y9FormRef?.model)
-                            .then(async (res) => {
-                                result = res;
-                                if (result.success && result.data) {
-                                    //请求一级接口
-                                    const res = await treeInterface();
-                                    if (res.data) {
-                                        await fixedTreeRef.value.setTreeData(res.data); //重新设置树数据
-                                    }
-                                    //手动设置点击当前节点
-                                    handClickNode(result.data, false); //手动设置点击当前节点
-                                }
-                            })
-                            .catch((err) => {});
+                        result = await orgSaveOrUpdate(addOrgFormRef.value?.y9FormRef?.model);
+                        if (result.success && result.data) {
+                            //请求一级接口
+                            const res = await treeInterface({ treeType: 'tree_type_org_person' });
+                            if (res.data) {
+                                await fixedTreeRef.value.setTreeData(res.data); //重新设置树数据
+                            }
+                            //手动设置点击当前节点
+                            handClickNode(result.data, false); //手动设置点击当前节点
+                        }
                     } else if (newConfig.value.type == 'sort') {
                         let tableData = sortRef.value.tableConfig.tableData;
                         const ids = [] as any;
@@ -219,7 +219,7 @@
                         message: result.msg,
                         type: result.success ? 'success' : 'error',
                         duration: 2000,
-                        offset: 80,
+                        offset: 80
                     });
                     if (result.success) {
                         resolve();
@@ -228,8 +228,8 @@
                     }
                 });
             },
-            columns: [] as any,
-        },
+            columns: [] as any
+        }
     });
 
     const { treeApiObj, currTreeNodeInfo, actionListConfig, dialogConfig, loading } = toRefs(data);
@@ -240,10 +240,10 @@
     async function onTreeClick(currTreeNode) {
         const isGlobalManager = JSON.parse(sessionStorage.getItem('ssoUserInfo')).globalManager;
         let isDeptManager = true;
-        if (currTreeNode.orgType === 'Department') {
+        if (currTreeNode.nodeType === 'Department') {
             const result = await checkDeptManager(currTreeNode.id);
             isDeptManager = result.data;
-        } else if (currTreeNode.orgType === 'Organization') {
+        } else if (currTreeNode.nodeType === 'Organization') {
             isDeptManager = isGlobalManager;
         }
         currTreeNodeInfo.value = currTreeNode;
@@ -254,18 +254,18 @@
         ElMessageBox.confirm(`${t('是否删除')}【${data.name}】?`, t('提示'), {
             confirmButtonText: t('确定'),
             cancelButtonText: t('取消'),
-            type: 'info',
+            type: 'info'
         })
             .then(async () => {
                 loading.value = true;
                 let result = { success: false, msg: '' };
-                if (data.orgType == 'Organization') {
+                if (data.nodeType == 'Organization') {
                     result = await removeOrg(data.id);
-                } else if (data.orgType == 'Department') {
+                } else if (data.nodeType == 'Department') {
                     result = await removeDept(data.id);
-                } else if (data.orgType == 'Group') {
+                } else if (data.nodeType == 'Group') {
                     result = await removeGroup(data.id);
-                } else if (data.orgType == 'Person') {
+                } else if (data.nodeType == 'Person') {
                     result = await delPerson([data.id].toString());
                 }
 
@@ -273,10 +273,12 @@
                     const treeData = getTreeData(); //获取tree数据
 
                     //1.更新父节点计数
-                    let count = -1;
-                    if (data.orgType === 'Person') {
+                    let count = 0;
+                    if (data.nodeType === 'Person') {
                         if (data.disabled) {
                             count = 0;
+                        } else {
+                            count = -1;
                         }
                     } else if (data.personCount) {
                         count = -data.personCount;
@@ -285,7 +287,7 @@
 
                     //2.删除后，需要手动点击的节点信息，如果有父节点则默认点击父节点，没有则点击tree数据的第一个节点
                     let clickNode = null;
-                    if (data.parentId) {
+                    if (data?.parentId) {
                         clickNode = findNode(treeData, data.parentId); //找到父节点的信息
                     } else if (treeData.length > 0) {
                         clickNode = treeData[0];
@@ -304,14 +306,14 @@
                     message: result.msg,
                     type: result.success ? 'success' : 'error',
                     duration: 2000,
-                    offset: 80,
+                    offset: 80
                 });
             })
             .catch((e) => {
                 ElMessage({
                     type: 'info',
                     message: t('已取消删除'),
-                    offset: 65,
+                    offset: 65
                 });
             });
     }
@@ -333,18 +335,18 @@
                           {
                               type: 'radio',
                               title: computed(() => t('请选择')),
-                              width: 200,
+                              width: 200
                           },
                           {
                               title: computed(() => t('名称')),
-                              key: 'name',
+                              key: 'name'
                           },
                           {
                               title: computed(() => t('类别')),
-                              key: 'orgType',
-                          },
+                              key: 'orgType'
+                          }
                       ]
-                    : [],
+                    : []
         });
     }
 
@@ -398,15 +400,15 @@
         const currNode = findNode(getTreeData(), targetId); //找到树节点对应的节点信息
         if (currNode) {
             if (isRePostPersonCount) {
-                let res = await getAllPersonsCount(currNode.id, currNode.orgType); //获取人员数量
+                let res = await getAllPersonsCount(currNode.id, currNode.nodeType); //获取人员数量
                 currNode.personCount = res.data; //人员数量
             }
             Object.assign(currNode, obj); //合并节点信息
 
-            if (currNode.orgType === 'Organization' || currNode.orgType === 'Department') {
+            if (currNode.nodeType === 'Organization' || currNode.nodeType === 'Department') {
                 //修改显示名称
                 currNode.newName = currNode.name + `(${currNode.personCount})`;
-            } else if (currNode.orgType == 'Person') {
+            } else if (currNode.nodeType == 'Person') {
                 // 人员有禁用的文字需要显示
                 if (currNode.disabled) {
                     currNode.newName = currNode.name + `[禁用]`;
@@ -437,17 +439,17 @@
      * @param {Number} count 需要增加或减少的数量
      */
     function updateParentPersonCount(currNode, treeData, count) {
-        if (currNode.parentId) {
+        if (currNode?.parentId) {
             //如果父节点存在
             const parentNode = findNode(treeData, currNode.parentId); //找到父节点的信息
             if (
-                parentNode.orgType === 'Organization' ||
-                (parentNode.orgType === 'Department' && parentNode.hasOwnProperty('personCount'))
+                parentNode.nodeType === 'Organization' ||
+                (parentNode.nodeType === 'Department' && parentNode.hasOwnProperty('personCount'))
             ) {
                 parentNode.personCount = parentNode.personCount + count;
                 parentNode.newName = parentNode.name + `(${parentNode.personCount})`;
             }
-            if (parentNode.parentId) {
+            if (parentNode?.parentId) {
                 updateParentPersonCount(parentNode, treeData, count);
             }
         }
@@ -470,8 +472,8 @@
         }
 
         if (
-            currNode.orgType === 'Organization' ||
-            (currNode.orgType === 'Department' && currNode.hasOwnProperty('personCount'))
+            currNode?.nodeType === 'Organization' ||
+            (currNode?.nodeType === 'Department' && currNode.hasOwnProperty('personCount'))
         ) {
             currNode.personCount = currNode.personCount + count;
             currNode.newName = currNode.name + `(${currNode.personCount})`;

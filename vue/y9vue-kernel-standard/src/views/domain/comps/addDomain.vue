@@ -4,40 +4,40 @@
  * @Author: zhangchongjie
  * @Date: 2022-06-28 10:03:00
  * @LastEditors: mengjuhua
- * @LastEditTime: 2023-08-03 10:38:49
+ * @LastEditTime: 2024-01-12 10:51:59
 -->
 <template>
     <y9Card :title="`${currInfo.name ? currInfo.name : ''}`">
         <div class="add-action">
             <el-button
-                type="primary"
+                v-show="showSysBnt === true"
                 :disabled="disabled1"
                 :size="fontSizeObj.buttonSize"
                 :style="{ fontSize: fontSizeObj.baseFontSize }"
+                type="primary"
                 @click="onAddTreeManage(1, '系统管理员', '')"
-                v-show="showSysBnt === true"
             >
                 <i class="ri-add-line"></i>
                 <span>{{ $t('系统管理员') }}</span>
             </el-button>
             <el-button
-                type="primary"
+                v-show="showSysBnt === true"
                 :disabled="disabled2"
                 :size="fontSizeObj.buttonSize"
                 :style="{ fontSize: fontSizeObj.baseFontSize }"
+                type="primary"
                 @click="onAddTreeManage(2, '安全保密员', '')"
-                v-show="showSysBnt === true"
             >
                 <i class="ri-add-line"></i>
                 <span>{{ $t('安全保密员') }}</span>
             </el-button>
             <el-button
-                type="primary"
+                v-show="showSysBnt === true"
                 :disabled="disabled3"
                 :size="fontSizeObj.buttonSize"
                 :style="{ fontSize: fontSizeObj.baseFontSize }"
+                type="primary"
                 @click="onAddTreeManage(3, '安全审计员', '')"
-                v-show="showSysBnt === true"
             >
                 <i class="ri-add-line"></i>
                 <span>{{ $t('安全审计员') }}</span>
@@ -49,25 +49,24 @@
     <y9Dialog v-model:config="dialogConfig">
         <y9Form ref="y9FormRef" :config="formConfig"></y9Form>
     </y9Dialog>
-    <el-button style="display: none" v-loading.fullscreen.lock="loading"></el-button>
+    <el-button v-loading.fullscreen.lock="loading" style="display: none"></el-button>
 </template>
 
 <script lang="ts" setup>
-    import { inject, watch, reactive, computed, h, onMounted, ref, toRefs } from 'vue';
+    import { computed, h, inject, onMounted, reactive, ref, toRefs, watch } from 'vue';
     import { ElMessage, ElMessageBox, ElNotification } from 'element-plus';
     import { $deepAssignObject } from '@/utils/object';
     import {
-        getManagersByParentId,
-        delManager,
-        resetPassword,
-        saveOrUpdate,
-        loginNameCheck,
-        getManagerById,
         changeDisabled,
+        delManager,
+        getManagerById,
+        getManagersByParentId,
+        loginNameCheck,
+        saveOrUpdate
     } from '@/api/deptManager/index';
     import { useI18n } from 'vue-i18n';
-    import y9_storage from '@/utils/storage';
     import { useSettingStore } from '@/store/modules/settingStore';
+
     const settingStore = useSettingStore();
     // 注入 字体对象
     const fontSizeObj: any = inject('sizeObjInfo');
@@ -82,8 +81,8 @@
             type: Object,
             default: () => {
                 return {};
-            },
-        },
+            }
+        }
     });
 
     const checkLoginName = (rule, value, callback) => {
@@ -113,24 +112,24 @@
                     title: computed(() => t('序号')),
                     type: 'index',
                     width: '100px',
-                    fixed: 'left',
+                    fixed: 'left'
                 },
                 {
                     title: computed(() => t('名称')),
-                    key: 'name',
+                    key: 'name'
                 },
                 {
                     title: computed(() => t('登录名称')),
-                    key: 'loginName',
+                    key: 'loginName'
                 },
                 {
                     title: computed(() => t('移动电话')),
-                    key: 'mobile',
+                    key: 'mobile'
                 },
                 {
                     title: computed(() => t('人员类型')),
                     key: 'userType',
-                    width: 150,
+                    width: 150
                 },
                 {
                     title: computed(() => t('操作')),
@@ -145,20 +144,20 @@
                                     style: {
                                         marginRight: '10px',
                                         display: 'inline-flex',
-                                        alignItems: 'center',
+                                        alignItems: 'center'
                                     },
                                     onClick: () => {
                                         onAddTreeManage(row.managerLevel, row.userType, row.id);
-                                    },
+                                    }
                                 },
                                 [
                                     h('i', {
                                         class: 'ri-edit-line',
                                         style: {
-                                            marginRight: '4px',
-                                        },
+                                            marginRight: '4px'
+                                        }
                                     }),
-                                    h('span', t('编辑')),
+                                    h('span', t('编辑'))
                                 ]
                             ),
                             h(
@@ -166,13 +165,13 @@
                                 {
                                     style: {
                                         display: 'inline-flex',
-                                        alignItems: 'center',
+                                        alignItems: 'center'
                                     },
                                     onClick: () => {
                                         ElMessageBox.confirm(`${t('是否删除')}【${row.name}】?`, t('提示'), {
                                             confirmButtonText: t('确定'),
                                             cancelButtonText: t('取消'),
-                                            type: 'info',
+                                            type: 'info'
                                         })
                                             .then(async () => {
                                                 loading.value = true;
@@ -182,7 +181,7 @@
                                                     message: res.msg,
                                                     type: res.success ? 'success' : 'error',
                                                     duration: 2000,
-                                                    offset: 80,
+                                                    offset: 80
                                                 });
                                                 if (res.success) {
                                                     getManagersList();
@@ -193,21 +192,21 @@
                                                 ElMessage({
                                                     type: 'info',
                                                     message: t('已取消删除'),
-                                                    offset: 65,
+                                                    offset: 65
                                                 });
                                             });
-                                    },
+                                    }
                                 },
                                 [
                                     h('i', {
                                         class: 'ri-delete-bin-line',
                                         style: {
-                                            marginRight: '4px',
-                                        },
+                                            marginRight: '4px'
+                                        }
                                     }),
-                                    h('span', t('删除')),
+                                    h('span', t('删除'))
                                 ]
-                            ),
+                            )
                         ];
                         if (!showSysBnt.value) {
                             if (row.disabled) {
@@ -218,13 +217,13 @@
                                             style: {
                                                 marginRight: '10px',
                                                 display: 'inline-flex',
-                                                alignItems: 'center',
+                                                alignItems: 'center'
                                             },
                                             onClick: () => {
                                                 ElMessageBox.confirm(`${t('是否启用')}【${row.name}】?`, t('提示'), {
                                                     confirmButtonText: t('确定'),
                                                     cancelButtonText: t('取消'),
-                                                    type: 'info',
+                                                    type: 'info'
                                                 })
                                                     .then(async () => {
                                                         loading.value = true;
@@ -234,7 +233,7 @@
                                                             message: res.success ? t('启用成功') : res.msg,
                                                             type: res.success ? 'success' : 'error',
                                                             duration: 2000,
-                                                            offset: 80,
+                                                            offset: 80
                                                         });
                                                         if (res.success) {
                                                             getManagersList();
@@ -245,21 +244,21 @@
                                                         ElMessage({
                                                             type: 'info',
                                                             message: t('已取消启用'),
-                                                            offset: 65,
+                                                            offset: 65
                                                         });
                                                     });
-                                            },
+                                            }
                                         },
                                         [
                                             h('i', {
                                                 class: 'ri-user-follow-line',
                                                 style: {
-                                                    marginRight: '4px',
-                                                },
+                                                    marginRight: '4px'
+                                                }
                                             }),
-                                            h('span', t('启用')),
+                                            h('span', t('启用'))
                                         ]
-                                    ),
+                                    )
                                 ];
                             } else {
                                 button = [
@@ -269,13 +268,13 @@
                                             style: {
                                                 marginRight: '10px',
                                                 display: 'inline-flex',
-                                                alignItems: 'center',
+                                                alignItems: 'center'
                                             },
                                             onClick: () => {
                                                 ElMessageBox.confirm(`${t('是否禁用')}【${row.name}】?`, t('提示'), {
                                                     confirmButtonText: t('确定'),
                                                     cancelButtonText: t('取消'),
-                                                    type: 'info',
+                                                    type: 'info'
                                                 })
                                                     .then(async () => {
                                                         loading.value = true;
@@ -285,7 +284,7 @@
                                                             message: res.success ? t('禁用成功') : res.msg,
                                                             type: res.success ? 'success' : 'error',
                                                             duration: 2000,
-                                                            offset: 80,
+                                                            offset: 80
                                                         });
                                                         if (res.success) {
                                                             getManagersList();
@@ -297,21 +296,21 @@
                                                         ElMessage({
                                                             type: 'info',
                                                             message: t('已取消禁用'),
-                                                            offset: 65,
+                                                            offset: 65
                                                         });
                                                     });
-                                            },
+                                            }
                                         },
                                         [
                                             h('i', {
                                                 class: 'ri-user-unfollow-line',
                                                 style: {
-                                                    marginRight: '4px',
-                                                },
+                                                    marginRight: '4px'
+                                                }
                                             }),
-                                            h('span', t('禁用')),
+                                            h('span', t('禁用'))
                                         ]
-                                    ),
+                                    )
                                 ];
                             }
                         } else {
@@ -323,7 +322,7 @@
                                             style: {
                                                 marginRight: '10px',
                                                 display: 'inline-flex',
-                                                alignItems: 'center',
+                                                alignItems: 'center'
                                             },
                                             onClick: async () => {
                                                 let res = await getManagerById(row.id);
@@ -352,30 +351,30 @@
                                                     show: true,
                                                     title: computed(() => t(`查看${row.userType}`)),
                                                     type: row.managerLevel,
-                                                    showFooter: false,
+                                                    showFooter: false
                                                 });
-                                            },
+                                            }
                                         },
                                         [
                                             h('i', {
                                                 class: 'ri-contacts-line',
                                                 style: {
-                                                    marginRight: '4px',
-                                                },
+                                                    marginRight: '4px'
+                                                }
                                             }),
-                                            h('span', t('查看')),
+                                            h('span', t('查看'))
                                         ]
-                                    ),
+                                    )
                                 ];
                             }
                         }
                         return button;
-                    },
-                },
+                    }
+                }
             ],
             tableData: [],
             pageConfig: false, //取消分页
-            loading: false,
+            loading: false
         },
         //弹窗配置
         dialogConfig: {
@@ -392,28 +391,23 @@
                             let prefix = formConfig.value.itemList[1].props.prependText;
                             data.loginName = prefix + data.loginName;
                             // data
-                            await saveOrUpdate(data)
-                                .then((res) => {
-                                    ElNotification({
-                                        title: res.success ? t('成功') : t('失败'),
-                                        message: res.msg,
-                                        type: res.success ? 'success' : 'error',
-                                        duration: 2000,
-                                        offset: 80,
-                                    });
-                                    if (res.success) {
-                                        getManagersList();
-                                    }
-                                    resolve();
-                                })
-                                .catch(() => {
-                                    reject();
-                                });
+                            let res = await saveOrUpdate(data);
+                            ElNotification({
+                                title: res.success ? t('成功') : t('失败'),
+                                message: res.msg,
+                                type: res.success ? 'success' : 'error',
+                                duration: 2000,
+                                offset: 80
+                            });
+                            if (res.success) {
+                                getManagersList();
+                            }
+                            resolve();
                         } else {
                             ElMessage({
                                 type: 'error',
                                 message: t('验证不通过，请检查'),
-                                offset: 65,
+                                offset: 65
                             });
                             reject();
                         }
@@ -422,7 +416,7 @@
             },
             onReset: (newConfig) => {
                 y9FormRef.value.elFormRef.resetFields();
-            },
+            }
         },
 
         formConfig: {
@@ -431,47 +425,47 @@
                 id: '',
                 sex: 1,
                 orgType: 'Manager',
-                parentId: props.currTreeNodeInfo.id,
+                parentId: props.currTreeNodeInfo.id
             },
             rules: {
                 //	表单验证规则。类型：FormRules
                 name: [{ required: true, message: computed(() => t('请输入姓名')), trigger: 'blur' }],
-                loginName: [{ required: true, validator: checkLoginName, trigger: 'blur' }],
+                loginName: [{ required: true, validator: checkLoginName, trigger: 'blur' }]
             },
             itemList: [
                 {
                     type: 'input',
                     label: computed(() => t('人员名称')),
-                    prop: 'name',
+                    prop: 'name'
                 },
                 {
                     type: 'input',
                     label: computed(() => t('登录名称')),
                     prop: 'loginName',
                     props: {
-                        prependText: '',
-                    },
+                        prependText: ''
+                    }
                 },
                 {
                     type: 'input',
                     label: computed(() => t('电子邮件')),
-                    prop: 'email',
+                    prop: 'email'
                 },
                 {
                     type: 'input',
                     label: computed(() => t('移动电话')),
-                    prop: 'mobile',
+                    prop: 'mobile'
                 },
                 {
                     type: 'textarea',
                     label: computed(() => t('人员描述')),
-                    prop: 'description',
-                },
-            ],
+                    prop: 'description'
+                }
+            ]
         },
         disabled1: false,
         disabled2: false,
-        disabled3: false,
+        disabled3: false
     });
 
     let { currInfo, tableConfig, dialogConfig, formConfig, loading, disabled1, disabled2, disabled3 } = toRefs(data);
@@ -556,7 +550,7 @@
             show: true,
             title: id == '' ? computed(() => t(`新增${title}`)) : computed(() => t(`编辑${title}`)),
             type: type,
-            showFooter: true,
+            showFooter: true
         });
     }
 </script>
@@ -564,6 +558,7 @@
 <style lang="scss" scoped>
     :deep(.add-action) {
         margin-bottom: 10px;
+
         button {
             margin-bottom: 10px;
             margin-left: 0;

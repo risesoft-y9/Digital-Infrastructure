@@ -36,6 +36,21 @@
         };
     });
 
+    let themeType = {
+        'theme-green': '#4e9876',
+        'theme-blue': '#1e5896',
+        'theme-default': '#586cb1'
+    };
+    // echarts 的颜色随主题颜色的变化而变化
+    let echartsColor = ref(themeType[settingStore.getThemeName]);
+    watch(
+        () => settingStore.getThemeName,
+        (newVal) => {
+            echartsColor.value = themeType[newVal];
+            initChart();
+        }
+    );
+
     // 初始化echarts 图
     function initChart() {
         // 左边下角的圆形
@@ -44,18 +59,19 @@
                 value: 60,
                 detail: {
                     valueAnimation: true,
-                    offsetCenter: ['0%', '0%'],
-                },
-            },
+                    offsetCenter: ['0%', '0%']
+                }
+            }
         ];
         const homeLeftBottom = {
+            color: [echartsColor.value],
             series: [
                 {
                     type: 'gauge',
                     startAngle: 90,
                     endAngle: -270,
                     pointer: {
-                        show: false,
+                        show: false
                     },
                     progress: {
                         show: true,
@@ -64,38 +80,38 @@
                         clip: false,
                         itemStyle: {
                             borderWidth: 1,
-                            borderColor: '#464646',
-                        },
+                            borderColor: '#464646'
+                        }
                     },
                     axisLine: {
                         lineStyle: {
-                            width: 40,
-                        },
+                            width: 40
+                        }
                     },
                     splitLine: {
                         show: false,
                         distance: 0,
-                        length: 10,
+                        length: 10
                     },
                     axisTick: {
-                        show: false,
+                        show: false
                     },
                     axisLabel: {
                         show: false,
-                        distance: 50,
+                        distance: 50
                     },
                     data: gaugeData,
                     title: {
-                        fontSize: fontSizeObj.baseFontSize,
+                        fontSize: fontSizeObj.baseFontSize
                     },
                     detail: {
                         width: 50,
                         height: 14,
                         fontSize: 24,
-                        formatter: '{value}%',
-                    },
-                },
-            ],
+                        formatter: '{value}%'
+                    }
+                }
+            ]
         };
         leftBottom.value = echarts.init(document.getElementById('home-left-circle'));
         leftBottom.value.setOption(homeLeftBottom);
@@ -106,23 +122,24 @@
                 show: false,
                 type: 'category',
                 boundaryGap: false,
-                data: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'],
+                data: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun']
             },
             yAxis: {
                 show: false,
-                type: 'value',
+                type: 'value'
             },
             tooltip: {
-                trigger: 'axis',
+                trigger: 'axis'
             },
+            color: [echartsColor.value],
             series: [
                 {
                     data: [730, 832, 1320, 900, 800, 1330, 801],
                     type: 'line',
                     areaStyle: {},
-                    smooth: true,
-                },
-            ],
+                    smooth: true
+                }
+            ]
         };
         RightOne.value = echarts.init(document.getElementById('right-top-one'));
         RightOne.value.setOption(rightTopOne);
@@ -130,14 +147,15 @@
         // 右上角两个图形 之二
         const rightTopTwo = {
             tooltip: {
-                trigger: 'item',
+                trigger: 'item'
             },
             legend: {
                 top: '30%',
                 left: '-8%',
                 orient: 'vertical',
-                itemGap: 20,
+                itemGap: 20
             },
+            color: [echartsColor.value, '#dceae4'],
             series: [
                 {
                     type: 'pie',
@@ -145,17 +163,17 @@
                     avoidLabelOverlap: false,
                     label: {
                         show: false,
-                        position: 'center',
+                        position: 'center'
                     },
                     labelLine: {
-                        show: false,
+                        show: false
                     },
                     data: [
                         { value: 1048, name: t('活跃') },
-                        { value: 735, name: t('不活跃') },
-                    ],
-                },
-            ],
+                        { value: 735, name: t('不活跃') }
+                    ]
+                }
+            ]
         };
         RightTwo.value = echarts.init(document.getElementById('right-top-two'));
 
@@ -166,12 +184,13 @@
             xAxis: {
                 show: false,
                 type: 'category',
-                data: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'],
+                data: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat']
             },
             yAxis: {
                 show: false,
-                type: 'value',
+                type: 'value'
             },
+            color: ['#333'],
             series: [
                 {
                     data: [
@@ -180,17 +199,16 @@
                         {
                             value: 200,
                             itemStyle: {
-                                // var(--el-color-primary)
-                                color: '#333',
-                            },
+                                color: echartsColor.value
+                            }
                         },
                         90,
                         110,
-                        130,
+                        130
                     ],
-                    type: 'bar',
-                },
-            ],
+                    type: 'bar'
+                }
+            ]
         };
         BottomOne.value = echarts.init(document.getElementById('right-bottom-one'));
         BottomOne.value.setOption(rightBottomOne);
@@ -201,30 +219,31 @@
                 max: 2,
                 startAngle: 30,
                 splitLine: {
-                    show: false,
-                },
+                    show: false
+                }
             },
             radiusAxis: {
                 type: 'category',
                 data: ['v', 'w', 'x', 'y', 'z'],
-                z: 10,
+                z: 10
             },
             polar: {},
+            color: [echartsColor.value, '#95d475'],
             series: [
                 {
                     type: 'bar',
                     data: [4, 3, 2, 1, 0],
                     coordinateSystem: 'polar',
-                    name: 'Finished',
+                    name: 'Finished'
                 },
                 {
                     type: 'bar',
                     data: [4, 3, 2, 1, 0],
                     coordinateSystem: 'polar',
                     name: 'Rejected',
-                    roundCap: true,
-                },
-            ],
+                    roundCap: true
+                }
+            ]
         };
         BottomTwo.value = echarts.init(document.getElementById('right-bottom-two'));
         BottomTwo.value.setOption(rightBottomTwo);
@@ -436,7 +455,7 @@
                                 <div class="content-left">
                                     <h1>2.7k</h1>
                                     <h5>
-                                        <span>+5.2%</span>
+                                        <span style="color: var(--el-color-primary)">+5.2%</span>
                                         <span>VS</span>
                                         <span> {{ $t('近7天') }}</span>
                                     </h5>
@@ -481,10 +500,7 @@
                                         <span>23043</span>
                                     </div>
                                     <div class="left-item">
-                                        <i
-                                            style="color: var(--el-color-info)"
-                                            class="ri-checkbox-blank-circle-line"
-                                        ></i>
+                                        <i style="color: #95d475" class="ri-checkbox-blank-circle-line"></i>
                                         <span>{{ $t('错误') }}</span>
                                         <span>2343</span>
                                     </div>

@@ -4,13 +4,15 @@
  * @Author: zhangchongjie
  * @Date: 2022-06-28 10:03:00
  * @LastEditors: mengjuhua
- * @LastEditTime: 2023-08-03 10:38:21
+ * @LastEditTime: 2023-12-26 11:22:57
 -->
-
 <template>
-    <fixedTreeModule :treeApiObj="treeApiObj" :showNodeDelete="false" @onTreeClick="onTreeClick">
-        <template #rightContainer v-if="Object.keys(currTreeNodeInfo).length > 0">
-            <addDomain v-if="currTreeNodeInfo.orgType == 'Department'" :currTreeNodeInfo="currTreeNodeInfo"></addDomain>
+    <fixedTreeModule :showNodeDelete="false" :treeApiObj="treeApiObj" @onTreeClick="onTreeClick">
+        <template v-if="Object.keys(currTreeNodeInfo).length > 0" #rightContainer>
+            <addDomain
+                v-if="currTreeNodeInfo.nodeType == 'Department'"
+                :currTreeNodeInfo="currTreeNodeInfo"
+            ></addDomain>
             <reminder v-else :currTreeNodeInfo="currTreeNodeInfo"></reminder>
         </template>
     </fixedTreeModule>
@@ -19,7 +21,7 @@
 <script lang="ts" setup>
     import addDomain from './comps/addDomain.vue';
     import reminder from './comps/reminder.vue';
-    import { treeInterface, getTreeItemById, searchByName } from '@/api/org/index';
+    import { getTreeItemById, searchByName, treeInterface } from '@/api/org/index';
     import { reactive, toRefs } from 'vue';
     //数据
     const data = reactive({
@@ -28,16 +30,16 @@
             topLevel: treeInterface,
             childLevel: {
                 api: getTreeItemById,
-                params: { treeType: 'tree_type_dept', disabled: false },
+                params: { treeType: 'tree_type_dept', disabled: false }
             },
             search: {
                 api: searchByName,
                 params: {
-                    treeType: 'tree_type_dept',
-                },
-            },
+                    treeType: 'tree_type_dept'
+                }
+            }
         },
-        currTreeNodeInfo: {} as any, //当前tree节点的信息
+        currTreeNodeInfo: {} as any //当前tree节点的信息
     });
 
     const { treeApiObj, currTreeNodeInfo } = toRefs(data);
@@ -48,4 +50,4 @@
     }
 </script>
 
-<style scoped lang="scss"></style>
+<style lang="scss" scoped></style>

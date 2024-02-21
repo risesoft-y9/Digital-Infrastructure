@@ -2,7 +2,7 @@
  * @Author: fuyu
  * @Date: 2022-04-07 17:43:02
  * @LastEditors: mengjuhua
- * @LastEditTime: 2023-08-03 15:26:24
+ * @LastEditTime: 2024-01-11 17:32:40
  * @Description: 组织架构-岗位列表
 -->
 <template>
@@ -10,21 +10,21 @@
         <div class="margin-bottom-20" style="display: flex; justify-content: space-between">
             <div>
                 <el-button
-                    type="primary"
-                    class="global-btn-main"
                     :size="fontSizeObj.buttonSize"
                     :style="{ fontSize: fontSizeObj.baseFontSize }"
+                    class="global-btn-main"
+                    type="primary"
                     @click="onAddPosition"
                 >
                     <i class="ri-add-line"></i>
                     <span>{{ $t('岗位') }}</span>
                 </el-button>
                 <el-button
-                    type="primary"
-                    @click="saveOrder"
                     :size="fontSizeObj.buttonSize"
                     :style="{ fontSize: fontSizeObj.baseFontSize }"
                     class="global-btn-main"
+                    type="primary"
+                    @click="saveOrder"
                 >
                     <i class="ri-save-line"></i>
                     <span>{{ $t('保存') }}</span>
@@ -32,19 +32,19 @@
             </div>
             <div>
                 <el-button
-                    @click="upPosition"
                     :size="fontSizeObj.buttonSize"
                     :style="{ fontSize: fontSizeObj.baseFontSize }"
                     class="global-btn-second"
+                    @click="upPosition"
                 >
                     <i class="ri-arrow-up-line"></i>
                     <span>{{ $t('上移') }}</span>
                 </el-button>
                 <el-button
-                    @click="downPosition"
                     :size="fontSizeObj.buttonSize"
                     :style="{ fontSize: fontSizeObj.baseFontSize }"
                     class="global-btn-second"
+                    @click="downPosition"
                 >
                     <i class="ri-arrow-down-line"></i>
                     <span>{{ $t('下移') }}</span>
@@ -61,26 +61,27 @@
     <y9Dialog v-model:config="dialogConfig">
         <selectTree
             ref="selectTreeRef"
-            :treeApiObj="treeApiObj"
             :selectField="[
-                { fieldName: 'orgType', value: ['Position'] },
-                { fieldName: 'disabled', value: false },
+                { fieldName: 'nodeType', value: ['Position'] },
+                { fieldName: 'disabled', value: false }
             ]"
+            :treeApiObj="treeApiObj"
         ></selectTree>
     </y9Dialog>
-    <el-button style="display: none" v-loading.fullscreen.lock="loading"></el-button>
+    <el-button v-loading.fullscreen.lock="loading" style="display: none"></el-button>
 </template>
 
 <script lang="ts" setup>
-    import { inject, watch, reactive, computed, h, onMounted, ref, toRefs } from 'vue';
+    import { computed, h, inject, onMounted, reactive, ref, toRefs, watch } from 'vue';
     import { ElMessage, ElMessageBox, ElNotification } from 'element-plus';
     import { getJobList } from '@/api/dictionary/index';
     import { $dictionary, $dictionaryFunc } from '@/utils/data';
     import { useI18n } from 'vue-i18n';
     import { $deepAssignObject } from '@/utils/object';
     import { getPositionsByPersonId, orderPositions } from '@/api/position/index';
-    import { treeInterface, getTreeItemById, searchByName } from '@/api/org/index';
+    import { getTreeItemById, searchByName, treeInterface } from '@/api/org/index';
     import { addPositions, removePositions } from '@/api/person/index';
+
     const { t } = useI18n();
     // 注入 字体对象
     const fontSizeObj: any = inject('sizeObjInfo');
@@ -90,26 +91,26 @@
             type: Object,
             default: () => {
                 return {};
-            },
-        },
+            }
+        }
     });
     //选择tree实例
-    const selectTreeRef = ref('');
-
+    const selectTreeRef = ref();
+    const positionTableRef = ref();
     const data = reactive({
         treeApiObj: {
             //tree接口对象
             topLevel: treeInterface,
             childLevel: {
                 api: getTreeItemById,
-                params: { treeType: 'tree_type_position', disabled: false },
+                params: { treeType: 'tree_type_position', disabled: false }
             },
             search: {
                 api: searchByName,
                 params: {
-                    treeType: 'tree_type_org',
-                },
-            },
+                    treeType: 'tree_type_org'
+                }
+            }
         },
         loading: false, // 全局loading
         //当前节点信息
@@ -120,7 +121,7 @@
             columns: [
                 {
                     type: 'radio',
-                    width: 80,
+                    width: 80
                 },
                 {
                     title: computed(() => t('名称')),
@@ -128,11 +129,11 @@
                     width: 300,
                     render: (row) => {
                         return h('span', row.name);
-                    },
+                    }
                 },
                 {
                     title: computed(() => t('全路径')),
-                    key: 'dn',
+                    key: 'dn'
                 },
                 {
                     title: computed(() => t('操作')),
@@ -144,7 +145,7 @@
                                 ElMessageBox.confirm(`${t('是否删除')}【${row.name}】?`, t('提示'), {
                                     confirmButtonText: t('确定'),
                                     cancelButtonText: t('取消'),
-                                    type: 'info',
+                                    type: 'info'
                                 })
                                     .then(async () => {
                                         loading.value = true;
@@ -162,23 +163,23 @@
                                             message: result.msg,
                                             type: result.success ? 'success' : 'error',
                                             duration: 2000,
-                                            offset: 80,
+                                            offset: 80
                                         });
                                     })
                                     .catch(() => {
                                         ElMessage({
                                             type: 'info',
                                             message: t('已取消删除'),
-                                            offset: 65,
+                                            offset: 65
                                         });
                                     });
-                            },
+                            }
                         });
-                    },
-                },
+                    }
+                }
             ],
             tableData: [],
-            pageConfig: false, //取消分页
+            pageConfig: false //取消分页
         },
         //弹窗配置
         dialogConfig: {
@@ -196,46 +197,32 @@
                             message: t('请选择岗位'),
                             type: 'error',
                             duration: 2000,
-                            offset: 80,
+                            offset: 80
                         });
                         reject();
                         return;
                     }
-                    await addPositions(currInfo.value.id, orgBaseIds.toString())
-                        .then((result) => {
-                            ElNotification({
-                                title: result.success ? t('成功') : t('失败'),
-                                message: result.msg,
-                                type: result.success ? 'success' : 'error',
-                                duration: 2000,
-                                offset: 80,
-                            });
-                            if (result.success) {
-                                getPositionsList();
-                            }
-                            resolve();
-                        })
-                        .catch(() => {
-                            reject();
-                        });
+                    result = await addPositions(currInfo.value.id, orgBaseIds.toString());
+                    ElNotification({
+                        title: result.success ? t('成功') : t('失败'),
+                        message: result.msg,
+                        type: result.success ? 'success' : 'error',
+                        duration: 2000,
+                        offset: 80
+                    });
+                    if (result.success) {
+                        getPositionsList();
+                    }
+                    resolve();
                 });
             },
-            visibleChange: (visible) => {},
+            visibleChange: (visible) => {}
         },
-        currentRow: '',
-        positionTableRef: '',
+        currentRow: ''
     });
 
-    let {
-        treeApiObj,
-        currInfo,
-        positionListTableConfig,
-        dialogConfig,
-        currentRow,
-        loading,
-        positionSelectedData,
-        positionTableRef,
-    } = toRefs(data);
+    let { treeApiObj, currInfo, positionListTableConfig, dialogConfig, currentRow, loading, positionSelectedData } =
+        toRefs(data);
 
     watch(
         () => props.currTreeNodeInfo,
@@ -249,7 +236,7 @@
             }
         },
         {
-            deep: true,
+            deep: true
         }
     );
 
@@ -278,10 +265,10 @@
 
         const data = result.data;
 
-        data.forEach((item) => {
-            item.jobName = getJobName(item.jobId);
-            item.name = `${item.jobName}（${currInfo.value.name}）`;
-        });
+        // data.forEach((item) => {
+        //     item.jobName = getJobName(item.jobId);
+        //     item.name = `${item.jobName}（${currInfo.value.name}）`;
+        // });
         if (result.success) {
             positionListTableConfig.value.tableData = data;
         }
@@ -291,7 +278,7 @@
     function onAddPosition() {
         Object.assign(dialogConfig.value, {
             show: true,
-            title: computed(() => t('添加岗位')),
+            title: computed(() => t('添加岗位'))
         });
     }
 
@@ -317,7 +304,7 @@
                     message: t('处于顶端，不能继续上移'),
                     type: 'error',
                     duration: 2000,
-                    offset: 80,
+                    offset: 80
                 });
                 return;
             }
@@ -344,7 +331,7 @@
                     message: t('处于末端，不能继续下移'),
                     type: 'error',
                     duration: 2000,
-                    offset: 80,
+                    offset: 80
                 });
                 return;
             }
@@ -372,7 +359,7 @@
             message: result.msg,
             type: result.success ? 'success' : 'error',
             duration: 2000,
-            offset: 80,
+            offset: 80
         });
     }
 </script>

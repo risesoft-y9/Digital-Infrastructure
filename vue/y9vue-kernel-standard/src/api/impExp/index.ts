@@ -24,9 +24,10 @@ export const importSystemJSON = async (file) => {
 };
 
 // 导入应用JSON
-export const importAppJSON = async (file) => {
+export const importAppJSON = async (file, systemId) => {
   var data = new FormData();
   data.append("file", file);
+  data.append("systemId", systemId);
   return await platformRequest({
     url: "/api/rest/impExp/importAppJSON",
     method: 'POST',

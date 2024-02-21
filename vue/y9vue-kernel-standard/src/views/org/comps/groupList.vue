@@ -2,7 +2,7 @@
  * @Author: fuyu
  * @Date: 2022-04-07 17:43:02
  * @LastEditors: mengjuhua
- * @LastEditTime: 2023-08-03 15:26:51
+ * @LastEditTime: 2024-01-11 17:35:20
  * @Description: 组织架构-用户组列表
 -->
 <template>
@@ -10,20 +10,20 @@
         <div class="margin-bottom-20" style="display: flex; justify-content: space-between">
             <div>
                 <el-button
-                    type="primary"
-                    class="global-btn-main"
                     :size="fontSizeObj.buttonSize"
                     :style="{ fontSize: fontSizeObj.baseFontSize }"
+                    class="global-btn-main"
+                    type="primary"
                     @click="addGroup"
                 >
                     <i class="ri-add-line"></i>
                     <span>{{ $t('用户组') }}</span>
                 </el-button>
                 <el-button
-                    type="primary"
-                    class="global-btn-main"
                     :size="fontSizeObj.buttonSize"
                     :style="{ fontSize: fontSizeObj.baseFontSize }"
+                    class="global-btn-main"
+                    type="primary"
                     @click="saveGroupOrder"
                 >
                     <i class="ri-save-line"></i>
@@ -32,18 +32,18 @@
             </div>
             <div>
                 <el-button
-                    class="global-btn-second"
                     :size="fontSizeObj.buttonSize"
                     :style="{ fontSize: fontSizeObj.baseFontSize }"
+                    class="global-btn-second"
                     @click="upGroup"
                 >
                     <i class="ri-arrow-up-line"></i>
                     <span>{{ $t('上移') }}</span>
                 </el-button>
                 <el-button
-                    class="global-btn-second"
                     :size="fontSizeObj.buttonSize"
                     :style="{ fontSize: fontSizeObj.baseFontSize }"
+                    class="global-btn-second"
                     @click="downGroup"
                 >
                     <i class="ri-arrow-down-line"></i>
@@ -61,24 +61,25 @@
     <y9Dialog v-model:config="dialogConfig">
         <selectTree
             ref="selectTreeRef"
-            :treeApiObj="treeApiObj"
             :selectField="[
-                { fieldName: 'orgType', value: ['Group'] },
-                { fieldName: 'disabled', value: false },
+                { fieldName: 'nodeType', value: ['Group'] },
+                { fieldName: 'disabled', value: false }
             ]"
+            :treeApiObj="treeApiObj"
         ></selectTree>
     </y9Dialog>
-    <el-button style="display: none" v-loading.fullscreen.lock="loading"></el-button>
+    <el-button v-loading.fullscreen.lock="loading" style="display: none"></el-button>
 </template>
 
 <script lang="ts" setup>
     import { useI18n } from 'vue-i18n';
-    import { inject, watch, reactive, computed, h, onMounted, ref, toRefs } from 'vue';
+    import { computed, h, inject, onMounted, reactive, ref, toRefs, watch } from 'vue';
     import { ElMessage, ElMessageBox, ElNotification } from 'element-plus';
     import { $deepAssignObject } from '@/utils/object';
     import { getGroupsByPersonId, orderGroups } from '@/api/group/index';
-    import { treeInterface, getTreeItemById, searchByName } from '@/api/org/index';
-    import { removeGroups, addGroups } from '@/api/person/index';
+    import { getTreeItemById, searchByName, treeInterface } from '@/api/org/index';
+    import { addGroups, removeGroups } from '@/api/person/index';
+
     const { t } = useI18n();
     // 注入 字体对象
     const fontSizeObj: any = inject('sizeObjInfo');
@@ -88,8 +89,8 @@
             type: Object,
             default: () => {
                 return {};
-            },
-        },
+            }
+        }
     });
 
     //选择tree实例
@@ -100,14 +101,14 @@
             topLevel: treeInterface,
             childLevel: {
                 api: getTreeItemById,
-                params: { treeType: 'tree_type_group', disabled: false },
+                params: { treeType: 'tree_type_group', disabled: false }
             },
             search: {
                 api: searchByName,
                 params: {
-                    treeType: 'ree_type_org',
-                },
-            },
+                    treeType: 'tree_type_org'
+                }
+            }
         },
         loading: false, // 全局loading
         //当前节点信息
@@ -119,15 +120,15 @@
             columns: [
                 {
                     type: 'radio',
-                    width: 80,
+                    width: 80
                 },
                 {
                     title: computed(() => t('名称')),
-                    key: 'name',
+                    key: 'name'
                 },
                 {
                     title: computed(() => t('全路径')),
-                    key: 'dn',
+                    key: 'dn'
                 },
                 {
                     title: computed(() => t('操作')),
@@ -138,7 +139,7 @@
                                 ElMessageBox.confirm(`${t('是否删除')}【${row.name}】?`, t('提示'), {
                                     confirmButtonText: t('确定'),
                                     cancelButtonText: t('取消'),
-                                    type: 'info',
+                                    type: 'info'
                                 })
                                     .then(async () => {
                                         loading.value = true;
@@ -157,24 +158,24 @@
                                             message: result.msg,
                                             type: result.success ? 'success' : 'error',
                                             duration: 2000,
-                                            offset: 80,
+                                            offset: 80
                                         });
                                     })
                                     .catch(() => {
                                         ElMessage({
                                             type: 'info',
                                             message: t('已取消删除'),
-                                            offset: 65,
+                                            offset: 65
                                         });
                                     });
                                 title;
-                            },
+                            }
                         });
-                    },
-                },
+                    }
+                }
             ],
             tableData: [],
-            pageConfig: false, //取消分页
+            pageConfig: false //取消分页
         },
         //弹窗配置
         dialogConfig: {
@@ -184,52 +185,40 @@
             onOk: (newConfig) => {
                 return new Promise(async (resolve, reject) => {
                     let orgBaseIds = selectTreeRef.value?.y9TreeRef?.getCheckedKeys(true);
-
+                    let result = { success: false, msg: '' };
                     if (orgBaseIds.length == 0) {
                         ElNotification({
                             title: t('失败'),
                             message: t('请选择人员'),
                             type: 'error',
                             duration: 2000,
-                            offset: 80,
+                            offset: 80
                         });
                         reject();
                         return;
                     }
 
-                    await addGroups(currInfo.value.id, orgBaseIds.toString())
-                        .then((result) => {
-                            ElNotification({
-                                title: result.success ? t('成功') : t('失败'),
-                                message: result.msg,
-                                type: result.success ? 'success' : 'error',
-                                duration: 2000,
-                                offset: 80,
-                            });
-                            if (result.success) {
-                                getGroupList();
-                                resolve();
-                            }
-                        })
-                        .catch(() => {
-                            reject();
-                        });
+                    result = await addGroups(currInfo.value.id, orgBaseIds.toString());
+                    ElNotification({
+                        title: result.success ? t('成功') : t('失败'),
+                        message: result.msg,
+                        type: result.success ? 'success' : 'error',
+                        duration: 2000,
+                        offset: 80
+                    });
+                    if (result.success) {
+                        getGroupList();
+                        resolve();
+                    }
                 });
-            },
-        },
-        groupTableRef: '',
+            }
+        }
     });
 
-    let {
-        treeApiObj,
-        currInfo,
-        currentRow,
-        groupSelectedData,
-        groupListTableConfig,
-        loading,
-        dialogConfig,
-        groupTableRef,
-    } = toRefs(data);
+    let { treeApiObj, currInfo, currentRow, groupSelectedData, groupListTableConfig, loading, dialogConfig } =
+        toRefs(data);
+
+    const groupTableRef = ref();
 
     watch(
         () => props.currTreeNodeInfo,
@@ -242,7 +231,7 @@
             }
         },
         {
-            deep: true,
+            deep: true
         }
     );
 
@@ -251,7 +240,7 @@
     });
 
     defineExpose({
-        getGroupList,
+        getGroupList
     });
 
     async function getGroupList() {
@@ -284,7 +273,7 @@
                     message: t('处于顶端，不能继续上移'),
                     type: 'error',
                     duration: 2000,
-                    offset: 80,
+                    offset: 80
                 });
                 return;
             }
@@ -311,7 +300,7 @@
                     message: t('处于末端，不能继续下移'),
                     type: 'error',
                     duration: 2000,
-                    offset: 80,
+                    offset: 80
                 });
                 return;
             }
@@ -324,6 +313,7 @@
             }
         }
     }
+
     //保存组排序
     async function saveGroupOrder() {
         const ids = [];
@@ -342,7 +332,7 @@
             message: result.msg,
             type: result.success ? 'success' : 'error',
             duration: 2000,
-            offset: 80,
+            offset: 80
         });
     }
 
@@ -351,7 +341,7 @@
         Object.assign(dialogConfig.value, {
             show: true,
             title: computed(() => t('添加用户组')),
-            width: '30%',
+            width: '30%'
         });
     }
 </script>

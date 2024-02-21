@@ -49,37 +49,37 @@
         pageAnimation: settingStore.getPageAnimation,
         settingPageStyle: settingStore.getSettingPageStyle,
         settingAnimation: settingStore.getSettingAnimation,
-        settingWidth: settingStore.getSettingWidth,
+        settingWidth: settingStore.getSettingWidth
     });
     // 布局 value-实际选中值 全局或者单一
     const allLayoutOptions = [
         { value: '全局模块', label: 'globalModule' },
-        { value: '单一模块', label: 'singleModule' },
+        { value: '单一模块', label: 'singleModule' }
     ];
     const layoutOptions = [
         { value: 'Y9Default', label: '左右' },
         { value: 'Y9Horizontal', label: '上下' },
-        { value: 'Y9Default sidebar-separate', label: '浮动' },
+        { value: 'Y9Default sidebar-separate', label: '浮动' }
     ];
 
     // 国际化
     const webLanguageOptions = [
         { value: '简体中文', label: 'zh' },
-        { value: 'English', label: 'en' },
+        { value: 'English', label: 'en' }
     ];
 
     // 字号
     const fontSizeOptions = [
         { value: '小', label: 'small' },
         { value: '中', label: 'default' },
-        { value: '大', label: 'large' },
+        { value: '大', label: 'large' }
     ];
 
     // 主题
     const themeOptions = [
         { value: 'theme-default', label: '默认' },
         { value: 'theme-green', label: '绿' },
-        { value: 'theme-blue', label: '蓝' },
+        { value: 'theme-blue', label: '蓝' }
     ];
 
     // 菜单移入方向控制
@@ -87,7 +87,7 @@
         { value: 'ltr', label: '左移入效果' },
         { value: 'rtl', label: '右移入效果' },
         { value: 'ttb', label: '下拉效果' },
-        { value: 'btt', label: '上拉效果' },
+        { value: 'btt', label: '上拉效果' }
     ];
 
     // 菜单背景
@@ -96,7 +96,7 @@
         new URL('../../assets/images/menu-bg7.png', import.meta.url).href,
         new URL('../../assets/images/menu-bg8.png', import.meta.url).href,
         new URL('../../assets/images/menu-bg9.png', import.meta.url).href,
-        new URL('../../assets/images/menu-bg10.png', import.meta.url).href,
+        new URL('../../assets/images/menu-bg10.png', import.meta.url).href
     ];
     // 把已选中的背景排在第一位
     const currentMenuBg = computed(() => settingStore.getMenuBg);
@@ -117,11 +117,11 @@
         { key: 'bg7', src: menuBgs[6] },
         { key: 'bg8', src: menuBgs[7] },
         { key: 'bg9', src: menuBgs[8] },
-        { key: 'bg10', src: menuBgs[9] },
+        { key: 'bg10', src: menuBgs[9] }
     ];
     const menuBgChange = () => {
         settingStore.$patch({
-            menuBg: form.menuBg,
+            menuBg: form.menuBg
         });
     };
 
@@ -131,14 +131,14 @@
         { value: '70%', label: '70%' },
         { value: '80%', label: '80%' },
         { value: '90%', label: '90%' },
-        { value: '100%', label: '100%' },
+        { value: '100%', label: '100%' }
     ];
 
     // 标签风格
     const labelStyleOptions = [
         { value: 'left', label: '左边' },
         { value: 'right', label: '右边' },
-        { value: 'top', label: '上面' },
+        { value: 'top', label: '上面' }
     ];
     // const labelStyleChange = () => {
     //     settingStore.$patch({
@@ -156,7 +156,7 @@
     // 设置风格
     const settingPageStyleOptions = [
         { value: 'Dcat', label: 'Dcat' },
-        { value: 'Admin-plus', label: 'Admin-plus' },
+        { value: 'Admin-plus', label: 'Admin-plus' }
     ];
 
     // 设置移入方向控制
@@ -164,7 +164,7 @@
         { value: 'ltr', label: '左移入效果' },
         { value: 'rtl', label: '右移入效果' },
         { value: 'ttb', label: '下拉效果' },
-        { value: 'btt', label: '上拉效果' },
+        { value: 'btt', label: '上拉效果' }
     ];
 
     // setting宽度
@@ -172,7 +172,7 @@
         { value: '15%', label: '15%' },
         { value: '20%', label: '20%' },
         { value: '25%', label: '25%' },
-        { value: '30%', label: '30%' },
+        { value: '30%', label: '30%' }
     ]);
 
     // 修复在上/下拉效果的时候，宽度问题
@@ -220,11 +220,11 @@
                 getAllPcLayoutList.push(obj);
             }
             settingStore.$patch({
-                allLayoutList: getAllPcLayoutList,
+                allLayoutList: getAllPcLayoutList
             });
         }
         settingStore.$patch({
-            [key]: form[key],
+            [key]: form[key]
         });
     };
     // 重置表单
@@ -255,7 +255,7 @@
             pageAnimation: form.pageAnimation,
             settingPageStyle: form.settingPageStyle,
             settingAnimation: form.settingAnimation,
-            settingWidth: form.settingWidth,
+            settingWidth: form.settingWidth
         });
         webSettingVisible.value = false;
     };
@@ -265,7 +265,7 @@
         if (!Array.from(targetElement.classList).includes('selected')) {
             const url = targetElement.style.backgroundImage.split('"')[1];
             settingStore.$patch({
-                menuBg: url ? url : '',
+                menuBg: url ? url : ''
             });
         }
     }
@@ -274,6 +274,7 @@
 <template>
     <el-drawer
         custom-class="indexlayout-settings"
+        class="index-layout-setting-list"
         :title="$t('网站设置')"
         v-model="webSettingVisible"
         :direction="settingPageAnimationdirection"
@@ -285,8 +286,8 @@
                 :label="$t('布局')"
                 :rules="[
                     {
-                        required: true,
-                    },
+                        required: true
+                    }
                 ]"
             >
                 <el-select
@@ -318,8 +319,8 @@
                 :label="$t('语言')"
                 :rules="[
                     {
-                        required: true,
-                    },
+                        required: true
+                    }
                 ]"
             >
                 <el-radio-group v-model="form.webLanguage" @change="settingChange('webLanguage')">
@@ -332,8 +333,8 @@
                 :label="$t('字号')"
                 :rules="[
                     {
-                        required: true,
-                    },
+                        required: true
+                    }
                 ]"
             >
                 <el-radio-group v-model="form.fontSize" @change="settingChange('fontSize')">
@@ -346,8 +347,8 @@
                 :label="$t('主题')"
                 :rules="[
                     {
-                        required: true,
-                    },
+                        required: true
+                    }
                 ]"
             >
                 <el-select v-model="form.themeName" placeholder="选择" @change="settingChange('themeName')">
@@ -368,7 +369,7 @@
                                 :class="{
                                     item: true,
                                     'item-off': currentMenuBg ? true : false,
-                                    selected: currentMenuBg === '',
+                                    selected: currentMenuBg === ''
                                 }"
                             >
                             </div>
@@ -486,12 +487,12 @@
             <el-form-item :label="$t('刷新')">
                 <el-switch v-model="form.refresh" @change="settingChange('refresh')" />
             </el-form-item>
-            <el-form-item :label="$t('搜索')">
+            <!-- <el-form-item :label="$t('搜索')">
                 <el-switch v-model="form.search" @change="settingChange('search')" />
             </el-form-item>
             <el-form-item :label="$t('通知')">
                 <el-switch v-model="form.notify" @change="settingChange('notify')" />
-            </el-form-item>
+            </el-form-item> -->
             <el-form-item :label="$t('全屏')">
                 <el-switch v-model="form.fullScreeen" @change="settingChange('fullScreeen')" />
             </el-form-item>

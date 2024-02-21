@@ -3,7 +3,7 @@
     "version": "0.0.0",
     "scripts": {
         "serve": "vite  --mode development",
-        "dev": "vite  --mode test",
+        "serve-local": "vite  --mode localEnv",
         "build": "vite build",
         "build-test": "vite build  --mode test",
         "preview": "vite preview",
@@ -20,8 +20,9 @@
         "animate.css": "^4.1.1",
         "axios": "^0.24.0",
         "core-js": "^3.20.1",
+        "dom-zindex": "^0.4.0",
         "echarts": "^5.3.2",
-        "element-plus": "^2.2.29",
+        "element-plus": "^2.3.9",
         "js-cookie": "^3.0.1",
         "lodash": "^4.17.21",
         "md5": "^2.3.0",
@@ -33,20 +34,20 @@
         "qs": "^6.10.2",
         "remixicon": "^2.5.0",
         "v-viewer": "^3.0.10",
-        "vue": "^3.2.41",
+        "vue": "^3.3.4",
         "vue-demi": "^0.12.4",
         "vue-i18n": "^9.2.2",
         "vue-router": "^4.0.13",
         "vxe-table": "^4.3.5",
         "xe-utils": "^3.5.7",
-        "y9plugin-components": "^2.0.4",
+        "y9plugin-components": "^2.1.0",
         "y9plugin-sso": "^4.0.81",
         "y9plugin-watermark": "^1.2.0"
     },
     "devDependencies": {
         "@babel/plugin-syntax-dynamic-import": "^7.8.3",
         "@iconify/json": "^2.1.14",
-        "@vitejs/plugin-vue": "^2.2.0",
+        "@vitejs/plugin-vue": "^4.3.2",
         "@vue/compiler-sfc": "^3.2.32",
         "@zougt/vite-plugin-theme-preprocessor": "^1.4.4",
         "babel-eslint": "^10.1.0",
@@ -63,6 +64,6 @@
         "unplugin-auto-import": "^0.5.11",
         "unplugin-icons": "^0.13.3",
         "unplugin-vue-components": "^0.17.11",
-        "vite": "^2.9.13"
+        "vite": "^4.4.9"
     }
 }

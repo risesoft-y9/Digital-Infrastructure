@@ -2,14 +2,13 @@
     <y9Card :title="`${currInfo.name ? currInfo.name : ''}`">
         <div style="height: 213px">
             <el-alert
+                :style="{ fontSize: fontSizeObj.baseFontSize }"
                 :title="$t('请点击左侧树，选择部门再进行操作。')"
                 type="warning"
-                :style="{ fontSize: fontSizeObj.baseFontSize }"
             />
         </div>
     </y9Card>
 </template>
-
 <script lang="ts" setup>
     import { $deepAssignObject } from '@/utils/object';
     import { inject, ref, watch } from 'vue';
@@ -21,8 +20,8 @@
             type: Object,
             default: () => {
                 return {};
-            },
-        },
+            }
+        }
     });
 
     let currInfo = ref(props.currTreeNodeInfo);

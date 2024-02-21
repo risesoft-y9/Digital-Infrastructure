@@ -4,34 +4,35 @@
  * @Author: zhangchongjie
  * @Date: 2022-06-16 10:16:08
  * @LastEditors: mengjuhua
- * @LastEditTime: 2023-08-03 10:44:53 
+ * @LastEditTime: 2023-12-26 11:23:52
 -->
 <template>
-    <y9Form :config="y9FormConfig" ref="y9FormRef"></y9Form>
+    <y9Form ref="y9FormRef" :config="y9FormConfig"></y9Form>
 </template>
 
 <script lang="ts" setup>
     import { useI18n } from 'vue-i18n';
-    import { watch, computed, h, ref } from 'vue';
+    import { computed, h, ref, watch } from 'vue';
     import { $keyNameAssign } from '@/utils/object';
+
     const { t } = useI18n();
     const props = defineProps({
         isAdd: {
             //是否为添加模式，添加模式有些字段不需要显示
             type: Boolean,
-            default: false,
+            default: false
         },
         isEditState: {
             //是否为编辑状态
-            type: Boolean,
+            type: Boolean
         },
         currInfo: {
             //当前信息
             type: Object,
             default: () => {
                 return {};
-            },
-        },
+            }
+        }
     });
 
     //表单配置
@@ -41,7 +42,7 @@
             column: 1,
             labelAlign: 'center',
             labelWidth: '150px',
-            contentWidth: '200px',
+            contentWidth: '200px'
         },
         model: {
             //表单属性
@@ -49,6 +50,7 @@
             name: '',
             description: '',
             parentId: props.currInfo.id,
+            tabIndex: null // 排序
         },
         rules: {}, //表单验证规则
         itemList: [
@@ -63,8 +65,8 @@
                     render: () => {
                         //text类型渲染的内容
                         return h('span', props.currInfo?.name);
-                    },
-                },
+                    }
+                }
             },
             {
                 type: 'text',
@@ -76,8 +78,8 @@
                     render: () => {
                         //text类型渲染的内容
                         return h('span', props.currInfo?.id);
-                    },
-                },
+                    }
+                }
             },
             {
                 type: 'text',
@@ -89,10 +91,10 @@
                     render: () => {
                         //text类型渲染的内容
                         return h('span', props.currInfo?.description);
-                    },
-                },
-            },
-        ],
+                    }
+                }
+            }
+        ]
     });
 
     //如果是添加模式
@@ -107,7 +109,7 @@
         if (isEdit) {
             //编辑状态设置表单校验规则
             y9FormConfig.value.rules = {
-                name: [{ required: true, message: computed(() => t('请输入用户组名称')), trigger: 'blur' }],
+                name: [{ required: true, message: computed(() => t('请输入用户组名称')), trigger: 'blur' }]
             };
         } else {
             y9FormConfig.value.rules = {};
@@ -135,7 +137,7 @@
     const y9FormRef = ref();
 
     defineExpose({
-        y9FormRef,
+        y9FormRef
     });
 </script>
 

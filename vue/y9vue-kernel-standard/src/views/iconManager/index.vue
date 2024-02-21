@@ -2,7 +2,7 @@
  * @Author: fuyu
  * @Date: 2022-06-06 11:47:27
  * @LastEditors: mengjuhua
- * @LastEditTime: 2023-08-03 10:42:11
+ * @LastEditTime: 2024-01-12 10:52:51
  * @Description: 图标库管理
 -->
 <template>
@@ -14,9 +14,9 @@
     >
         <template #addIcon>
             <el-button
-                class="global-btn-third"
                 :size="fontSizeObj.buttonSize"
                 :style="{ fontSize: fontSizeObj.baseFontSize }"
+                class="global-btn-third"
                 @click="onEditIcon('add', '新增图标')"
             >
                 <i class="ri-add-line"></i>
@@ -29,16 +29,17 @@
         <y9Form ref="y9FormRef" :config="formConfig"></y9Form>
     </y9Dialog>
 
-    <el-button style="display: none" v-loading.fullscreen.lock="loading"></el-button>
+    <el-button v-loading.fullscreen.lock="loading" style="display: none"></el-button>
 </template>
 
 <script lang="ts" setup>
     import { useI18n } from 'vue-i18n';
-    import { inject, watch, reactive, computed, toRefs, ref } from 'vue';
+    import { computed, inject, reactive, ref, toRefs, watch } from 'vue';
     import { ElMessage, ElMessageBox, ElNotification } from 'element-plus';
-    import { $keyNameAssign, $deeploneObject, $objEqual, $tableHandleRender } from '@/utils/object';
-    import { getAppIconPageList, searchIconPageByName, deleteIcon, uploadIcon, saveIcon } from '@/api/appIcon/index';
+    import { $keyNameAssign, $tableHandleRender } from '@/utils/object';
+    import { deleteIcon, getAppIconPageList, saveIcon, searchIconPageByName, uploadIcon } from '@/api/appIcon/index';
     import { useSettingStore } from '@/store/modules/settingStore';
+
     const settingStore = useSettingStore();
     // 注入 字体对象
     const fontSizeObj: any = inject('sizeObjInfo');
@@ -55,42 +56,42 @@
                     type: 'index',
                     title: computed(() => t('序号')),
                     width: 122,
-                    fixed: 'left',
+                    fixed: 'left'
                 },
                 {
                     title: computed(() => t('图标')),
                     showOverflowTooltip: false,
                     imgConfig: {
                         type: 'base64',
-                        popWidth: settingStore.device === 'mobile' ? 150 : 200,
+                        popWidth: settingStore.device === 'mobile' ? 150 : 200
                     },
-                    key: 'iconData',
+                    key: 'iconData'
                 },
                 {
                     title: computed(() => t('图标名称')),
-                    key: 'name',
+                    key: 'name'
                 },
                 {
                     title: computed(() => t('图标类型')),
-                    key: 'type',
+                    key: 'type'
                 },
                 {
                     title: computed(() => t('图标路径')),
-                    key: 'path',
+                    key: 'path'
                 },
                 {
                     title: computed(() => t('添加时间')),
                     key: 'createTime',
-                    width: settingStore.getDatetimeSpan,
+                    width: settingStore.getDatetimeSpan
                 },
                 {
                     title: computed(() => t('更新时间')),
                     key: 'updateTime',
-                    width: settingStore.getDatetimeSpan,
+                    width: settingStore.getDatetimeSpan
                 },
                 {
                     title: computed(() => t('备注')),
-                    key: 'remark',
+                    key: 'remark'
                 },
                 {
                     title: computed(() => t('操作')),
@@ -103,7 +104,7 @@
                                 remixicon: 'ri-edit-line',
                                 onClick: () => {
                                     onEditIcon('edit', '编辑图标', row);
-                                },
+                                }
                             },
                             {
                                 title: t('删除'),
@@ -112,7 +113,7 @@
                                     ElMessageBox.confirm(`${t('是否删除')}【${row.name}】 ?`, t('提示'), {
                                         confirmButtonText: t('确定'),
                                         cancelButtonText: t('取消'),
-                                        type: 'info',
+                                        type: 'info'
                                         // loading: true,
                                     })
                                         .then(async () => {
@@ -132,7 +133,7 @@
                                                 message: result.msg,
                                                 type: result.success ? 'success' : 'error',
                                                 duration: 2000,
-                                                offset: 80,
+                                                offset: 80
                                             });
 
                                             // loading.close()
@@ -142,21 +143,21 @@
                                             ElMessage({
                                                 type: 'info',
                                                 message: t('已取消删除'),
-                                                offset: 65,
+                                                offset: 65
                                             });
                                         });
-                                },
-                            },
+                                }
+                            }
                         ]);
-                    },
-                },
+                    }
+                }
             ],
             tableData: [],
             loading: false,
             pageConfig: {
                 currentPage: 1, //当前页数，支持 v-model 双向绑定
-                pageSize: 10, //每页显示条目个数，支持 v-model 双向绑定
-            },
+                pageSize: 10 //每页显示条目个数，支持 v-model 双向绑定
+            }
         },
         filterConfig: {
             //过滤配置
@@ -165,19 +166,19 @@
                 {
                     type: 'slot',
                     span: settingStore.device === 'mobile' ? 8 : 18,
-                    slotName: 'addIcon',
+                    slotName: 'addIcon'
                 },
                 {
                     type: 'input',
                     key: 'name',
-                    span: settingStore.device === 'mobile' ? 16 : 6,
-                },
+                    span: settingStore.device === 'mobile' ? 16 : 6
+                }
             ],
             filtersValueCallBack: (filters) => {
                 //过滤值回调
 
                 currFilters.value = filters;
-            },
+            }
         },
         dialogConfig: {
             //弹窗配置
@@ -190,26 +191,18 @@
                 return new Promise((resolve, reject) => {
                     getY9FormRef().validate(async (valid) => {
                         if (valid) {
-                            let res = {};
+                            let res = {} as any;
                             if (dialogConfig.value.type == 'edit') {
-                                await saveIcon(y9FormRef.value.model)
-                                    .then((result) => {
-                                        res = result;
-                                    })
-                                    .catch(() => {});
+                                res = await saveIcon(y9FormRef.value.model);
                             } else {
-                                await uploadIcon(y9FormRef.value.model)
-                                    .then((result) => {
-                                        res = result;
-                                    })
-                                    .catch(() => {});
+                                res = await uploadIcon(y9FormRef.value.model);
                             }
                             ElNotification({
                                 title: res.success ? t('成功') : t('失败'),
                                 message: res.msg,
                                 type: res.success ? 'success' : 'error',
                                 duration: 2000,
-                                offset: 80,
+                                offset: 80
                             });
                             if (res.success) {
                                 getIconList(); //获取icon列表
@@ -221,7 +214,7 @@
                             ElMessage({
                                 type: 'error',
                                 message: t('请上传图标'),
-                                offset: 65,
+                                offset: 65
                             });
                             reject();
                         }
@@ -247,7 +240,7 @@
                         }
                     }
                 }
-            },
+            }
         },
         formConfig: {
             //表单配置
@@ -255,12 +248,12 @@
                 id: '',
                 iconFile: [],
                 name: '',
-                remark: '',
+                remark: ''
             },
             rules: {
                 //	表单验证规则。类型：FormRules
                 iconFile: [{ required: true, message: computed(() => t('请选择图标')), trigger: 'change' }],
-                name: [{ required: true, message: computed(() => t('请输入图标名称')), trigger: 'blur' }],
+                name: [{ required: true, message: computed(() => t('请输入图标名称')), trigger: 'blur' }]
             },
             itemList: [
                 {
@@ -273,21 +266,21 @@
                         limit: 1,
                         drag: true,
                         accept: 'image/png',
-                        fileList: [],
-                    },
+                        fileList: []
+                    }
                 },
 
                 {
                     type: 'textarea',
                     label: computed(() => t('备注')),
-                    prop: 'remark',
-                },
+                    prop: 'remark'
+                }
             ],
             descriptionsFormConfig: {
                 labelWidth: '200px',
-                labelAlign: 'center',
-            },
-        },
+                labelAlign: 'center'
+            }
+        }
     });
 
     let { loading, currFilters, tableConfig, filterConfig, dialogConfig, formConfig } = toRefs(data);
@@ -304,13 +297,14 @@
         },
         {
             deep: true,
-            immediate: true,
+            immediate: true
         }
     );
 
     function getY9FormRef() {
         return y9FormRef.value.elFormRef;
     }
+
     //获取icon列表
     async function getIconList(isSearch = false) {
         tableConfig.value.loading = true;
@@ -318,7 +312,7 @@
         let sendData = {
             page: tableConfig.value.pageConfig.currentPage,
             rows: tableConfig.value.pageConfig.pageSize,
-            name: currFilters.value.name,
+            name: currFilters.value.name
         };
 
         let result = {};
@@ -343,6 +337,7 @@
         tableConfig.value.pageConfig.currentPage = currPage;
         getIconList(); //获取icon列表
     }
+
     //每页条数改变时触发
     function onPageSizeChange(pageSize) {
         tableConfig.value.pageConfig.pageSize = pageSize;
@@ -359,7 +354,7 @@
                     formConfig.value.itemList.splice(i + 1, 0, {
                         type: 'input',
                         label: computed(() => t('图标名称')),
-                        prop: 'name',
+                        prop: 'name'
                     });
                 }
 
@@ -380,8 +375,8 @@
                         {
                             name: row.name,
 
-                            url: 'data:image/png;base64,' + row.iconData,
-                        },
+                            url: 'data:image/png;base64,' + row.iconData
+                        }
                     ];
 
                     item.props.removeIcon = false;
@@ -404,8 +399,8 @@
 
             $keyNameAssign(formConfig.value.model, row, {
                 replace: {
-                    iconFile: 'iconData',
-                },
+                    iconFile: 'iconData'
+                }
             });
         }
 
@@ -413,11 +408,11 @@
         Object.assign(dialogConfig.value, {
             show: true,
             title: t(`${title}`),
-            type: type,
+            type: type
         });
     }
 </script>
-<style scoped lang="scss">
+<style lang="scss" scoped>
     :deep(.custom-picture-card) {
         .el-upload-list__item {
             width: 360px;

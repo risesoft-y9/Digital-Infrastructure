@@ -4,7 +4,7 @@
  * @Author:  
  * @Date: 2022-06-28 10:03:00
  * @LastEditors: mengjuhua
- * @LastEditTime: 2023-08-03 10:39:47
+ * @LastEditTime: 2023-12-26 11:22:31
 -->
 <template>
     <y9Table v-model:selectedVal="tableCurrSelectedVal" :config="tableConfig" :filterConfig="filterConfig">
@@ -18,7 +18,7 @@
                 <i class="ri-add-line"></i>
                 <span>{{ $t('字典表数据') }}</span>
             </el-button>
-            <!-- <el-button
+            <!-- <el-button 
 			class="global-btn-third"
 			@click="onDeleteDictionaryData()">
 			  	<i class="ri-delete-bin-line"></i>
@@ -30,21 +30,22 @@
             <template v-else>{{ row.name }}</template>
         </template>
         <template #code="{ row, column, index }">
-            <input type="password" hidden autocomplete="new-password" />
+            <input autocomplete="new-password" hidden type="password" />
             <el-input v-if="editId === index" v-model="formData.code" />
             <template v-else>{{ row.code }}</template>
         </template>
     </y9Table>
-    <el-button style="display: none" v-loading.fullscreen.lock="loading"></el-button>
+    <el-button v-loading.fullscreen.lock="loading" style="display: none"></el-button>
 </template>
 
 <script lang="ts" setup>
     import { useI18n } from 'vue-i18n';
-    import { $keyNameAssign, $deeploneObject, $objEqual } from '@/utils/object';
-    import { getOptionClassList, listByType, saveOptionValue, removeByIds } from '@/api/dictionary/index';
+    import { $keyNameAssign } from '@/utils/object';
+    import { getOptionClassList, listByType, removeByIds, saveOptionValue } from '@/api/dictionary/index';
     import { useSettingStore } from '@/store/modules/settingStore';
-    import { inject, watch, reactive, computed, h, onMounted } from 'vue';
+    import { computed, h, inject, onMounted, reactive, watch } from 'vue';
     import { ElMessage, ElMessageBox, ElNotification } from 'element-plus';
+
     const settingStore = useSettingStore();
     // 注入 字体对象
     const fontSizeObj: any = inject('sizeObjInfo');
@@ -56,7 +57,7 @@
             name: '',
             code: '',
             // tabIndex:"",
-            type: '',
+            type: ''
         },
         loading: false, // 全局loading
         editId: -1, //编辑id
@@ -68,29 +69,29 @@
             columns: [
                 {
                     type: 'selection',
-                    width: 60,
+                    width: 60
                 },
                 {
                     type: 'index',
                     width: 60,
-                    title: '#',
+                    title: '#'
                 },
                 {
                     title: computed(() => t('数据名称')),
                     key: 'name',
                     slot: 'name',
-                    showOverflowTooltip: false,
+                    showOverflowTooltip: false
                 },
                 {
                     title: computed(() => t('数据代码')),
                     key: 'code',
                     slot: 'code',
-                    showOverflowTooltip: false,
+                    showOverflowTooltip: false
                 },
                 {
                     title: computed(() => t('字典类型')),
                     key: 'type',
-                    showOverflowTooltip: false,
+                    showOverflowTooltip: false
                 },
                 {
                     title: computed(() => t('操作')),
@@ -102,12 +103,12 @@
                             h('span', {
                                 style: {
                                     display: 'inline-flex',
-                                    alignItems: 'center',
+                                    alignItems: 'center'
                                 },
                                 onClick: () => {
                                     editId.value = params.$index;
                                     $keyNameAssign(formData.value, row);
-                                },
+                                }
                             }),
                             h(
                                 'span',
@@ -115,22 +116,22 @@
                                     style: {
                                         marginLeft: '10px',
                                         display: 'inline-flex',
-                                        alignItems: 'center',
+                                        alignItems: 'center'
                                     },
                                     onClick: () => {
                                         onDeleteDictionaryData(row);
-                                    },
+                                    }
                                 },
                                 [
                                     h('i', {
                                         class: 'ri-delete-bin-line',
                                         style: {
-                                            marginRight: '2px',
-                                        },
+                                            marginRight: '2px'
+                                        }
                                     }),
-                                    h('span', t('删除')),
+                                    h('span', t('删除'))
                                 ]
-                            ),
+                            )
                         ];
 
                         let saveActions = [
@@ -142,13 +143,13 @@
                                             ElMessage({
                                                 type: 'error',
                                                 message: t('请输入数据名称'),
-                                                offset: 65,
+                                                offset: 65
                                             });
                                         } else if (!formData.value.code) {
                                             ElMessage({
                                                 type: 'error',
                                                 message: t('请输入数据代码'),
-                                                offset: 65,
+                                                offset: 65
                                             });
                                         } else {
                                             tableConfig.value.loading = true;
@@ -165,12 +166,12 @@
                                                 message: result.msg,
                                                 type: result.success ? 'success' : 'error',
                                                 duration: 2000,
-                                                offset: 80,
+                                                offset: 80
                                             });
 
                                             tableConfig.value.loading = false;
                                         }
-                                    },
+                                    }
                                 },
                                 t('保存')
                             ),
@@ -178,7 +179,7 @@
                                 'span',
                                 {
                                     style: {
-                                        marginLeft: '10px',
+                                        marginLeft: '10px'
                                     },
                                     onClick: () => {
                                         if (editId.value === 0) {
@@ -193,18 +194,18 @@
                                             //取消编辑状态
                                             editId.value = -1;
                                         }
-                                    },
+                                    }
                                 },
                                 t('取消')
-                            ),
+                            )
                         ];
                         return h('span', editId.value === params.$index ? saveActions : editActions);
-                    },
-                },
+                    }
+                }
             ],
             tableData: [],
 
-            pageConfig: false,
+            pageConfig: false
         },
         filterConfig: {
             itemList: [
@@ -212,22 +213,22 @@
                     type: 'select',
                     key: 'type',
                     props: {
-                        options: [],
+                        options: []
                     },
-                    span: settingStore.device === 'mobile' ? 12 : 4,
+                    span: settingStore.device === 'mobile' ? 12 : 4
                 },
                 {
                     type: 'slot',
                     span: settingStore.device === 'mobile' ? 12 : 20,
-                    slotName: 'addDictionaryData',
-                },
+                    slotName: 'addDictionaryData'
+                }
             ],
             filtersValueCallBack: (filters) => {
                 //过滤值回调
 
                 currFilters.value = filters;
-            },
-        },
+            }
+        }
     });
 
     let { loading, tableCurrSelectedVal, formData, editId, currFilters, tableConfig, filterConfig } = toRefs(data);
@@ -246,7 +247,7 @@
                     item.props.options = result.data.map((item) => {
                         return {
                             label: item.name,
-                            value: item.type,
+                            value: item.type
                         };
                     });
 
@@ -266,7 +267,7 @@
         },
         {
             deep: true,
-            immediate: true,
+            immediate: true
         }
     );
 
@@ -289,7 +290,7 @@
             ElMessage({
                 type: 'error',
                 message: t('请保存编辑数据后再操作'),
-                offset: 65,
+                offset: 65
             });
 
             return;
@@ -298,7 +299,7 @@
         //表格上方插入空行
         tableConfig.value.tableData.unshift({
             name: '',
-            type: '',
+            type: ''
         });
 
         editId.value = 0; //第一行为编辑状态
@@ -323,7 +324,7 @@
             ElMessageBox.confirm(`${t('是否删除')}${row ? '【' + row.name + '】' : t('选中的数据')} ?`, t('提示'), {
                 confirmButtonText: t('确定'),
                 cancelButtonText: t('取消'),
-                type: 'info',
+                type: 'info'
                 // loading: true,
             })
                 .then(async () => {
@@ -361,7 +362,7 @@
                             message: result.msg,
                             type: result.success ? 'success' : 'error',
                             duration: 2000,
-                            offset: 80,
+                            offset: 80
                         });
                         // loading.close()
                         loading.value = false;
@@ -374,16 +375,16 @@
                     ElMessage({
                         type: 'info',
                         message: t('已取消删除'),
-                        offset: 65,
+                        offset: 65
                     });
                 });
         } else {
             ElMessage({
                 type: 'error',
                 message: t('请选择数据'),
-                offset: 65,
+                offset: 65
             });
         }
     }
 </script>
-<style scoped lang="scss"></style>
+<style lang="scss" scoped></style>

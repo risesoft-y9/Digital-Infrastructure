@@ -1,9 +1,9 @@
 <!--
  * @Author: your name
  * @Date: 2022-01-11 18:38:31
- * @LastEditTime: 2023-08-03 09:52:54
+ * @LastEditTime: 2023-12-26 11:21:21
  * @LastEditors: mengjuhua
- * @Description: 菜单项 
+ * @Description: 菜单项
 -->
 <template>
     <!-- <div id="y9-menu"> -->
@@ -11,20 +11,20 @@
         :collapse="menuCollapsed"
         :collapse-transition="false"
         :default-active="defaultActive"
-        :mode="menuMode"
         :ellipsis="false"
+        :mode="menuMode"
     >
         <sider-menu-item
             v-for="item in newMenuData"
             :key="item.path"
-            :routeItem="item"
             :belongTopMenu="belongTopMenu"
+            :routeItem="item"
         ></sider-menu-item>
     </el-menu>
     <!-- </div> -->
 </template>
 <script lang="ts" setup>
-    import { computed, ComputedRef, defineComponent, toRefs } from 'vue';
+    import { computed, ComputedRef, toRefs } from 'vue';
     import { RoutesDataItem } from '@/utils/routes';
     import SiderMenuItem from './SiderMenuItem.vue';
 
@@ -35,26 +35,26 @@
     const props = defineProps({
         menuCollapsed: {
             type: Boolean,
-            default: false,
+            default: false
         },
         menuMode: {
             type: String,
-            default: 'vertical',
+            default: 'vertical'
         },
         belongTopMenu: {
             type: String,
-            default: '',
+            default: ''
         },
         defaultActive: {
             type: String,
-            default: '',
+            default: ''
         },
         menuData: {
             type: Array,
             default: () => {
                 return [];
-            },
-        },
+            }
+        }
     });
 
     const { menuData } = toRefs(props);
@@ -73,7 +73,7 @@
         return MenuItems;
     });
 </script>
-<style scoped lang="scss">
+<style lang="scss" scoped>
     //  #y9-menu{
     //    & > ul{
     //      :deep(a){

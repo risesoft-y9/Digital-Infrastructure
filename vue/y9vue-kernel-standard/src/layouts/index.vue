@@ -1,34 +1,23 @@
 <script lang="ts">
-    import {
-        defineComponent,
-        watch,
-        ref,
-        Ref,
-        unref,
-        reactive,
-        nextTick,
-        computed,
-        ComputedRef,
-        toRefs,
-        onMounted,
-    } from 'vue';
+    import { computed, ComputedRef, nextTick, onMounted, ref, Ref, unref, watch } from 'vue';
     import { useSettingStore } from '@/store/modules/settingStore';
     import { useRouterStore } from '@/store/modules/routerStore';
     import { useRoute } from 'vue-router';
     import {
-        getSelectLeftMenuPath,
-        getRouteBelongTopMenu,
-        getRouteItem,
-        RoutesDataItem,
+        BreadcrumbType,
         formatRoutePathTheParents,
         getBreadcrumbRoutes,
-        BreadcrumbType,
+        getRouteBelongTopMenu,
+        getRouteItem,
+        getSelectLeftMenuPath,
+        RoutesDataItem
     } from '@/utils/routes';
 
     import Y9Default from '@/layouts/Y9-default/index.vue';
     import Y9Horizontal from '@/layouts/Y9-horizontal/index.vue';
     import Y9Mobile from '@/layouts/Y9-mobile/index.vue';
     import { useI18n } from 'vue-i18n';
+
     const settingStore = useSettingStore();
 
     interface IndexLayoutSetupData {
@@ -47,7 +36,7 @@
         components: {
             Y9Default,
             Y9Horizontal,
-            Y9Mobile,
+            Y9Mobile
         },
         setup() {
             // PC网站配置
@@ -58,7 +47,7 @@
                 // horizontal布局时，menuCollapsed 必须为false，禁止折叠
                 if (settingStore.getLayout === 'Y9Horizontal') {
                     settingStore.$patch({
-                        menuCollapsed: false,
+                        menuCollapsed: false
                     });
                 }
                 const nameArray = settingStore.getLayout.split(' ');
@@ -85,7 +74,7 @@
             if (settingStore.getDevice === 'mobile') {
                 settingStore.$patch({
                     layout: 'Y9Mobile',
-                    settingWidth: '100%',
+                    settingWidth: '100%'
                 });
             }
             const { toggleDevice } = settingStore;
@@ -150,23 +139,23 @@
                 belongTopMenu,
                 defaultActive,
                 breadCrumbs,
-                routeItem,
+                routeItem
             };
-        },
+        }
     };
 </script>
 <template>
     <component
         :is="layoutName"
         :key="layoutName"
+        ref="indexLayoutRef"
+        :belongTopMenu="belongTopMenu"
+        :breadCrumbs="breadCrumbs"
+        :defaultActive="defaultActive"
         :layoutName="layoutName"
         :layoutSubName="layoutSubName"
         :menuCollapsed="menuCollapsed"
-        :belongTopMenu="belongTopMenu"
-        :defaultActive="defaultActive"
         :menuData="menuData"
-        :breadCrumbs="breadCrumbs"
         :routeItem="routeItem"
-        ref="indexLayoutRef"
     ></component>
 </template>

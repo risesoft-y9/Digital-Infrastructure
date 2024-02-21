@@ -2,26 +2,26 @@
  * @Author: hongzhew
  * @Date: 2022-04-07 17:43:02
  * @LastEditors: mengjuhua
- * @LastEditTime: 2023-08-03 10:31:44
+ * @LastEditTime: 2023-12-26 11:23:04
  * @Description: 
 -->
-<!--  -->
 <template>
-    <y9Form :config="y9FormConfig" ref="y9FormRef"></y9Form>
+    <y9Form ref="y9FormRef" :config="y9FormConfig"></y9Form>
 </template>
 
 <script lang="ts" setup>
-    import { inject, watch, reactive, computed, h, onMounted, ref, toRefs } from 'vue';
+    import { computed, h, onMounted, ref, watch } from 'vue';
     import { useI18n } from 'vue-i18n';
-    import { resourceInfo, getMenuInfo, getOperationInfo } from '@/api/resource/index';
+    import { getMenuInfo, getOperationInfo, resourceInfo } from '@/api/resource/index';
     import { useSettingStore } from '@/store/modules/settingStore';
+
     const settingStore = useSettingStore();
     const { t } = useI18n();
     const props = defineProps({
         id: String, // id
-        type: Number, // 应用0 菜单1 按钮2的区分
+        type: String, // 应用0 菜单1 按钮2的区分
         editFlag: Boolean, // 编辑 与 查看 的对应显示变量
-        saveClickFlag: Boolean, // 是否点击保存 的变量
+        saveClickFlag: Boolean // 是否点击保存 的变量
     });
     const emits = defineEmits(['getInfoData']);
 
@@ -37,7 +37,7 @@
             column: settingStore.device === 'mobile' ? 1 : 2,
             labelAlign: 'center',
             labelWidth: '150px',
-            contentWidth: '200px',
+            contentWidth: '200px'
         },
         model: {},
         rules: {}, //表单验证规则
@@ -53,8 +53,8 @@
                     render: () => {
                         //text类型渲染的内容
                         return h('span', basicInfo.value?.name);
-                    },
-                },
+                    }
+                }
             },
             {
                 type: 'text',
@@ -66,8 +66,8 @@
                     render: () => {
                         //text类型渲染的内容
                         return h('span', basicInfo.value?.id);
-                    },
-                },
+                    }
+                }
             },
             {
                 type: 'text',
@@ -79,8 +79,8 @@
                     render: () => {
                         //text类型渲染的内容
                         return h('span', basicInfo.value?.tenantId);
-                    },
-                },
+                    }
+                }
             },
             {
                 type: 'text',
@@ -92,8 +92,8 @@
                     render: () => {
                         //text类型渲染的内容
                         return h('span', basicInfo.value?.customId);
-                    },
-                },
+                    }
+                }
             },
             {
                 type: 'text',
@@ -104,8 +104,8 @@
                     render: () => {
                         //text类型渲染的内容
                         return h('span', basicInfo.value?.systemId);
-                    },
-                },
+                    }
+                }
             },
             {
                 type: 'text',
@@ -123,8 +123,8 @@
                                 ? t('菜单')
                                 : t('按钮')
                         );
-                    },
-                },
+                    }
+                }
             },
             {
                 type: 'text',
@@ -137,8 +137,8 @@
                     render: () => {
                         //text类型渲染的内容
                         return h('span', basicInfo.value?.url);
-                    },
-                },
+                    }
+                }
             },
             {
                 type: 'text',
@@ -151,19 +151,19 @@
                     render: () => {
                         //text类型渲染的内容
                         return h('span', basicInfo.value?.description);
-                    },
-                },
-            },
-        ],
+                    }
+                }
+            }
+        ]
     });
 
     // 请求详情 函数
     async function getInfo() {
         let responseInfo;
-        if (props.type === 0) {
+        if (props.type === 'APP') {
             // 应用
             responseInfo = await resourceInfo(props.id);
-        } else if (props.type === 1) {
+        } else if (props.type === 'MENU') {
             // 菜单
             responseInfo = await getMenuInfo(props.id);
         } else {
@@ -224,4 +224,4 @@
         });
     }
 </script>
-<style scoped lang="scss"></style>
+<style lang="scss" scoped></style>

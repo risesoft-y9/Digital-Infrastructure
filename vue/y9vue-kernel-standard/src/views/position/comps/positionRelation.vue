@@ -2,14 +2,14 @@
  * @Author: hongzhew
  * @Date: 2022-04-07 17:43:02
  * @LastEditors: mengjuhua
- * @LastEditTime: 2023-08-03 15:23:24
+ * @LastEditTime: 2023-12-26 11:25:38
  * @Description: 岗位列表
 -->
 <template>
     <y9Card :title="`${$t('岗位列表')}${currInfo.name ? ' - ' + currInfo.name : ''}`">
         <div
-            class="margin-bottom-20"
             v-show="currInfo.haveEditAuth"
+            class="margin-bottom-20"
             style="display: flex; justify-content: space-between"
         >
             <!-- <el-button
@@ -21,11 +21,11 @@
 			</el-button> -->
             <div>
                 <el-button
-                    type="primary"
-                    @click="savePositionOrder"
                     :size="fontSizeObj.buttonSize"
                     :style="{ fontSize: fontSizeObj.baseFontSize }"
                     class="global-btn-main"
+                    type="primary"
+                    @click="savePositionOrder"
                 >
                     <i class="ri-save-line"></i>
                     <span>{{ $t('保存') }}</span>
@@ -33,19 +33,19 @@
             </div>
             <div>
                 <el-button
-                    @click="upPosition"
                     :size="fontSizeObj.buttonSize"
                     :style="{ fontSize: fontSizeObj.baseFontSize }"
                     class="global-btn-second"
+                    @click="upPosition"
                 >
                     <i class="ri-arrow-up-line"></i>
                     <span>{{ $t('上移') }}</span>
                 </el-button>
                 <el-button
-                    @click="downPosition"
                     :size="fontSizeObj.buttonSize"
                     :style="{ fontSize: fontSizeObj.baseFontSize }"
                     class="global-btn-second"
+                    @click="downPosition"
                 >
                     <i class="ri-arrow-down-line"></i>
                     <span>{{ $t('下移') }}</span>
@@ -61,15 +61,16 @@
         >
         </y9Table>
     </y9Card>
-    <el-button style="display: none" v-loading.fullscreen.lock="loading"></el-button>
+    <el-button v-loading.fullscreen.lock="loading" style="display: none"></el-button>
 </template>
 
 <script lang="ts" setup>
     import { useI18n } from 'vue-i18n';
-    import { inject, watch, reactive, computed, h, onMounted, ref, toRefs } from 'vue';
+    import { computed, h, inject, onMounted, reactive, toRefs, watch } from 'vue';
     import { ElMessage, ElMessageBox, ElNotification } from 'element-plus';
-    import { $deepAssignObject, $dataType } from '@/utils/object';
+    import { $deepAssignObject } from '@/utils/object';
     import { getPositionsByParentId, removePosition, saveOrder } from '@/api/position/index';
+
     const { t } = useI18n();
     // 注入 字体对象
     const fontSizeObj: any = inject('sizeObjInfo');
@@ -79,10 +80,11 @@
             type: Object,
             default: () => {
                 return {};
-            },
+            }
         },
 
         handAssginNode: Function, //手动更新节点信息
+        updateTreePositionCount: Function //更新当前节点以及其父节点的人员数量
     });
 
     const data = reactive({
@@ -94,16 +96,16 @@
             columns: [
                 {
                     type: 'radio',
-                    width: 80,
+                    width: 80
                 },
                 {
                     title: computed(() => t('名称')),
                     key: 'name',
-                    width: 200,
+                    width: 200
                 },
                 {
                     title: computed(() => t('全路径')),
-                    key: 'dn',
+                    key: 'dn'
                 },
                 {
                     title: computed(() => t('操作')),
@@ -119,7 +121,7 @@
                                     ElMessageBox.confirm(`${t('是否删除岗位')}【${row.name}】?`, t('提示'), {
                                         confirmButtonText: t('确定'),
                                         cancelButtonText: t('取消'),
-                                        type: 'info',
+                                        type: 'info'
                                     })
                                         .then(async () => {
                                             loading.value = true;
@@ -133,43 +135,44 @@
                                                 });
 
                                                 props.handAssginNode({}, currInfo.value.id, currInfo.value.id); //手动更新节点到tree
+                                                props.updateTreePositionCount(currInfo.value, -1, currInfo.value.id);
                                             }
                                             ElNotification({
                                                 title: result.success ? t('成功') : t('失败'),
                                                 message: result.msg,
                                                 type: result.success ? 'success' : 'error',
                                                 duration: 2000,
-                                                offset: 80,
+                                                offset: 80
                                             });
                                         })
                                         .catch(() => {
                                             ElMessage({
                                                 type: 'info',
                                                 message: t('已取消删除岗位'),
-                                                offset: 65,
+                                                offset: 65
                                             });
                                         });
-                                },
+                                }
                             },
                             [
                                 h('i', {
                                     class: 'ri-delete-bin-line',
                                     style: {
-                                        marginRight: '4px',
-                                    },
-                                }),
+                                        marginRight: '4px'
+                                    }
+                                })
                             ]
                         );
-                    },
-                },
+                    }
+                }
             ],
             tableData: [],
-            pageConfig: false, //取消分页
+            pageConfig: false //取消分页
         },
         currentRow: '',
         positionSelectedData: '',
         positionTableRef: '',
-        tabIndexs: [],
+        tabIndexs: []
     });
 
     let { currInfo, positionListTableConfig, currentRow, tabIndexs, loading, positionSelectedData, positionTableRef } =
@@ -183,7 +186,7 @@
             getPositionsList();
         },
         {
-            deep: true,
+            deep: true
         }
     );
 
@@ -224,7 +227,7 @@
                     message: t('处于顶端，不能继续上移'),
                     type: 'error',
                     duration: 2000,
-                    offset: 80,
+                    offset: 80
                 });
                 return;
             }
@@ -251,7 +254,7 @@
                     message: t('处于末端，不能继续下移'),
                     type: 'error',
                     duration: 2000,
-                    offset: 80,
+                    offset: 80
                 });
                 return;
             }
@@ -282,7 +285,7 @@
             message: result.msg,
             type: result.success ? 'success' : 'error',
             duration: 2000,
-            offset: 80,
+            offset: 80
         });
     }
 </script>

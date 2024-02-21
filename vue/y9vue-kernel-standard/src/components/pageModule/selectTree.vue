@@ -1,25 +1,25 @@
 <template>
-    <slot name="header" v-if="showHeader">
+    <slot v-if="showHeader" name="header">
         <div class="select-tree-filter-div">
             <el-button
-                @click="onRefreshTree"
-                class="global-btn-second"
                 :size="fontSizeObj.buttonSize"
                 :style="{ fontSize: fontSizeObj.baseFontSize }"
+                class="global-btn-second"
+                @click="onRefreshTree"
             >
                 <i class="ri-refresh-line"></i>
                 <span>{{ $t('刷新') }}</span>
             </el-button>
 
-            <input type="password" hidden autocomplete="new-password" />
+            <input autocomplete="new-password" hidden type="password" />
             <el-input
-                type="search"
-                :size="fontSizeObj.buttonSize"
-                :style="{ fontSize: fontSizeObj.baseFontSize }"
-                name="select-tree-search"
                 v-model="apiSearchKey"
                 :placeholder="$t('请搜索')"
+                :size="fontSizeObj.buttonSize"
+                :style="{ fontSize: fontSizeObj.baseFontSize }"
                 autocomplete
+                name="select-tree-search"
+                type="search"
                 @input="onSearchChange"
             >
                 <template #prefix>
@@ -31,12 +31,12 @@
 
     <y9Tree
         ref="y9TreeRef"
-        showCheckbox
         :checkStrictly="checkStrictly"
-        :highlightCurrent="highlightCurrent"
         :data="alreadyLoadTreeData"
+        :highlightCurrent="highlightCurrent"
         :lazy="lazy"
         :load="onTreeLazyLoad"
+        showCheckbox
         @node-click="onNodeClick"
         @node-expand="onNodeExpand"
         @check-change="onCheckChange"
@@ -52,8 +52,8 @@
 </template>
 
 <script lang="ts" setup>
-    import { $dataType, $deepAssignObject, $deeploneObject } from '@/utils/object'; //工具类
-    import { inject, nextTick, ref, useCssModule, watch } from 'vue';
+    import { $dataType } from '@/utils/object'; //工具类
+    import { inject, nextTick, ref, watch } from 'vue';
     // 注入 字体对象
     const fontSizeObj: any = inject('sizeObjInfo');
 
@@ -61,24 +61,24 @@
         treeApiObj: {
             //tree接口对象,参数名称请严格按照以下注释进行传参。
             /**
-           			{
-           				topLevel:treeInterface,//可以直接返回接口，也可以返回一个函数，函数里返回tree数据。
-           				childLevel:{//子级（二级及二级以上）tree接口
-           					api:getTreeItemById,//可以直接返回接口，也可以返回一个函数，函数里返回tree数据，如果返回函数，params就不需要传入。
-           					params:{}//请求参数，注意使用此组件，parentId字段不需要传
-           				},
-           				search: {//搜索接口及参数
-           					api:getTreeItemById,
-           					params:{}/请求参数，注意使用此组件，key字段不需要传
-           				}
-           			}
-			*/
-            type: Object,
+         {
+         topLevel:treeInterface,//可以直接返回接口，也可以返回一个函数，函数里返回tree数据。
+         childLevel:{//子级（二级及二级以上）tree接口
+         api:getTreeItemById,//可以直接返回接口，也可以返回一个函数，函数里返回tree数据，如果返回函数，params就不需要传入。
+         params:{}//请求参数，注意使用此组件，parentId字段不需要传
+         },
+         search: {//搜索接口及参数
+         api:getTreeItemById,
+         params:{}/请求参数，注意使用此组件，key字段不需要传
+         }
+         }
+         */
+            type: Object
         },
 
         selectField: {
             //设置需要选择的字段
-            type: Array,
+            type: Array
             // default: () => {
             //     return [
             //         {
@@ -96,25 +96,25 @@
         showHeader: {
             //是否显示头部
             type: Boolean,
-            default: true,
+            default: true
         },
         nodeLabel: {
             //显示的节点属性
             type: String,
-            default: 'name',
+            default: 'name'
         },
 
         checkStrictly: {
             //是否严格的遵循父子不互相关联的做法，默认为 false,父子互相关联
             type: Boolean,
-            default: false,
+            default: false
         },
 
         highlightCurrent: {
             //是否高亮当前选中节点
             type: Boolean,
-            default: false,
-        },
+            default: false
+        }
     });
 
     //已经加载的tree数据
@@ -142,7 +142,7 @@
 
     //格式化懒加载的数据
     function formatLazyTreeData(data, isTopLevel?) {
-        for (let i = 0; i < data.length; i++) {
+        for (let i = 0; i < data?.length; i++) {
             const item = data[i];
 
             if (props.selectField && props.selectField.length > 0) {
@@ -161,7 +161,7 @@
                 }
             }
 
-            switch (item.orgType) {
+            switch (item.nodeType) {
                 case 'Organization': //组织
                     item.title_icon = 'ri-stackshare-line';
                     break;
@@ -190,27 +190,17 @@
                         item.name = item.name + (item.disabledRemark ? item.disabledRemark : '[禁用]');
                     }
                     break;
-
-                default:
-                    item.title_icon = '';
-            }
-            // 资源
-            switch (item.resourceType) {
-                case 0: //应用
+                case 'APP': //应用
                     item.title_icon = 'ri-apps-line';
                     break;
 
-                case 1: //菜单
+                case 'MENU': //菜单
                     item.title_icon = 'ri-menu-4-line';
                     break;
 
-                case 2: //按钮
+                case 'OPERATION': //按钮
                     item.title_icon = 'ri-checkbox-multiple-blank-line';
                     break;
-            }
-
-            // 角色
-            switch (item.type) {
                 case 'role': //角色 人员
                     item.title_icon = 'ri-contacts-line';
                     break;
@@ -218,7 +208,35 @@
                 case 'folder': // 文件夹
                     item.title_icon = 'ri-folder-2-line';
                     break;
+
+                default:
+                    item.title_icon = '';
             }
+            // 资源
+            // switch (item.resourceType) {
+            //     case 0: //应用
+            //         item.title_icon = 'ri-apps-line';
+            //         break;
+
+            //     case 1: //菜单
+            //         item.title_icon = 'ri-menu-4-line';
+            //         break;
+
+            //     case 2: //按钮
+            //         item.title_icon = 'ri-checkbox-multiple-blank-line';
+            //         break;
+            // }
+
+            // 角色
+            // switch (item.type) {
+            //     case 'role': //角色 人员
+            //         item.title_icon = 'ri-contacts-line';
+            //         break;
+
+            //     case 'folder': // 文件夹
+            //         item.title_icon = 'ri-folder-2-line';
+            //         break;
+            // }
         }
     }
 
@@ -296,9 +314,9 @@
             const data = res.data;
             //格式化tree数据
             await formatLazyTreeData(data);
-            // resourceType 为0 的parentId 为空
+            // nodeType 为APP 的parentId 为空
             await data?.map((item) => {
-                if (item.resourceType == 0) {
+                if (item.nodeType == 'APP') {
                     item.parentId = '';
                 }
             });
@@ -408,7 +426,7 @@
     defineExpose({
         y9TreeRef,
         onRefreshTree, //刷新tree
-        getTreeData,
+        getTreeData
     });
 </script>
 
@@ -423,14 +441,17 @@
         align-items: center;
         flex-wrap: wrap;
         margin-bottom: 16px;
+
         .el-button {
             margin-right: 16px;
             margin-bottom: 10px;
         }
+
         :deep(.el-input) {
             width: 250px;
             max-width: 100%;
             margin-bottom: 10px;
+
             .el-input__wrapper {
                 border-radius: 30px;
                 box-shadow: 0 2px 4px 0 rgb(0 0 0 / 5%);
@@ -442,11 +463,13 @@
     :deep(.node-title) {
         display: inline-flex;
         align-items: center;
+
         i {
             margin-right: 5px;
             font-weight: normal;
         }
     }
+
     :deep(.active-node) {
         .y9-tree-item-content {
             .y9-tree-item-content-div {

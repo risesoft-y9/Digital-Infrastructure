@@ -2,7 +2,7 @@
  * @Author:  
  * @Date: 2022-06-06 11:47:27
  * @LastEditors: mengjuhua
- * @LastEditTime: 2023-08-03 10:35:45
+ * @LastEditTime: 2024-01-12 10:48:01
  * @Description: 组织关联
 -->
 <template>
@@ -11,9 +11,9 @@
             <el-button
                 :size="fontSizeObj.buttonSize"
                 :style="{ fontSize: fontSizeObj.baseFontSize }"
-                @click="handlerOrgClick"
                 class="global-btn-main"
                 type="primary"
+                @click="handlerOrgClick"
             >
                 <i class="ri-add-line" />
                 {{ $t('组织') }}
@@ -21,41 +21,41 @@
             <el-button
                 :size="fontSizeObj.buttonSize"
                 :style="{ fontSize: fontSizeObj.baseFontSize }"
-                @click="handlerPosClick"
                 class="global-btn-main"
                 type="primary"
+                @click="handlerPosClick"
             >
                 <i class="ri-add-line" />
                 {{ $t('岗位') }}
             </el-button>
         </div>
         <!-- 表格 -->
-        <y9Table :config="tableOrgConfig"> </y9Table>
+        <y9Table :config="tableOrgConfig"></y9Table>
         <!-- 组织 岗位 -->
         <y9Dialog v-model:config="personConfigDialog">
-            <y9Filter :itemList="filtersList" :filtersValueCallBack="filtersValueCallBack" :showBorder="true">
+            <y9Filter :filtersValueCallBack="filtersValueCallBack" :itemList="filtersList" :showBorder="true">
                 <template #treeFilter>
                     <div class="custom-select-tree-filter">
                         <el-button
-                            @click="onRefreshTree"
-                            class="global-btn-second refresh-btn"
                             :size="fontSizeObj.buttonSize"
                             :style="{ fontSize: fontSizeObj.baseFontSize }"
+                            class="global-btn-second refresh-btn"
+                            @click="onRefreshTree"
                         >
                             <i class="ri-refresh-line"></i>
                             <span>{{ $t('刷新') }}</span>
                         </el-button>
 
-                        <input type="password" hidden autocomplete="new-password" />
+                        <input autocomplete="new-password" hidden type="password" />
                         <el-input
-                            class="search-input"
-                            type="search"
-                            :size="fontSizeObj.buttonSize"
-                            :style="{ fontSize: fontSizeObj.baseFontSize }"
-                            name="select-tree-search"
                             v-model="currFilters.searchKey"
                             :placeholder="$t('请搜索')"
+                            :size="fontSizeObj.buttonSize"
+                            :style="{ fontSize: fontSizeObj.baseFontSize }"
                             autocomplete
+                            class="search-input"
+                            name="select-tree-search"
+                            type="search"
                             @input="onSearchKeyChange"
                         >
                             <template #prefix>
@@ -68,30 +68,27 @@
             <!-- tree树 -->
             <selectTree
                 ref="selectTreeRef"
-                @onTreeClick="handlerTreeClick"
-                :selectField="selectField"
-                :treeApiObj="treeApiObj"
                 :checkStrictly="checkStrictly"
+                :selectField="selectField"
                 :showHeader="false"
+                :treeApiObj="treeApiObj"
+                @onTreeClick="handlerTreeClick"
             ></selectTree>
         </y9Dialog>
         <!-- 制造loading效果 -->
-        <el-button style="display: none" v-loading.fullscreen.lock="loading"></el-button>
+        <el-button v-loading.fullscreen.lock="loading" style="display: none"></el-button>
     </div>
 </template>
 
 <script lang="ts" setup>
-    import {
-        getRelationOrgList, // 关联的组织列表
-        saveOrUpdateOrg, // 保存 资源关联的组织 信息
-        removeRole, // 移除
-    } from '@/api/grantAuthorize/index';
-    import { treeInterface, getTreeItemById, searchByName } from '@/api/org/index';
-    import { inject, watch, reactive, computed, h, onMounted, ref, toRefs } from 'vue';
+    import { getRelationOrgList, removeRole, saveOrUpdateOrg } from '@/api/grantAuthorize/index';
+    import { getTreeItemById, searchByName, treeInterface } from '@/api/org/index';
+    import { computed, h, inject, onMounted, reactive, ref, toRefs, watch } from 'vue';
     import { ElMessage, ElMessageBox, ElNotification } from 'element-plus';
     import { useSettingStore } from '@/store/modules/settingStore';
 
     import { useI18n } from 'vue-i18n';
+
     const { t } = useI18n();
     const settingStore = useSettingStore();
     // 注入 字体对象
@@ -100,8 +97,8 @@
     const props = defineProps({
         id: {
             type: String,
-            default: '',
-        },
+            default: ''
+        }
     });
 
     // 组织 关联 列表 总数
@@ -135,14 +132,14 @@
                             'el-button',
                             {
                                 style: {
-                                    cursor: 'pointer',
+                                    cursor: 'pointer'
                                 },
                                 class: 'global-btn-second',
                                 onClick: async () => {
                                     ElMessageBox.confirm(`${t('是否移除')}【${row.orgName}】?`, t('提示'), {
                                         confirmButtonText: t('确定'),
                                         cancelButtonText: t('取消'),
-                                        type: 'info',
+                                        type: 'info'
                                     })
                                         .then(async () => {
                                             // 请求 移除 接口函数---
@@ -153,7 +150,7 @@
                                                 message: result.success ? t('移除成功') : t('移除失败'),
                                                 type: result.success ? 'success' : 'error',
                                                 duration: 2000,
-                                                offset: 80,
+                                                offset: 80
                                             });
                                             loading.value = false;
                                             // 重新请求 列表数据
@@ -163,23 +160,23 @@
                                             ElMessage({
                                                 type: 'info',
                                                 message: t('已取消移除'),
-                                                offset: 65,
+                                                offset: 65
                                             });
                                         });
-                                },
+                                }
                             },
                             t('移除')
                         );
-                    },
-                },
+                    }
+                }
             ],
             tableData: [],
             pageConfig: {
                 // 分页配置，
                 currentPage: 1,
                 pageSize: 10,
-                total: orgTotal.value, // 总条数
-            },
+                total: orgTotal.value // 总条数
+            }
         },
         // 组织，岗位 弹框 dialog
         personConfigDialog: {
@@ -196,28 +193,24 @@
                     // 保存操作
                     const params = {
                         authority: currFilters.value.operationType,
-                        resourceId: props.id,
+                        resourceId: props.id
                     };
-                    await saveOrUpdateOrg(params, ids.toString())
-                        .then((result) => {
-                            ElNotification({
-                                title: result.success ? t('成功') : t('失败'),
-                                message: result.msg,
-                                type: result.success ? 'success' : 'error',
-                                duration: 2000,
-                                offset: 80,
-                            });
-                            if (result.success) {
-                                // 重新请求 列表数据
-                                initList();
-                            }
-                            resolve();
-                        })
-                        .catch(() => {
-                            reject();
-                        });
+                    let result = { success: false, msg: '' };
+                    result = await saveOrUpdateOrg(params, ids.toString());
+                    ElNotification({
+                        title: result.success ? t('成功') : t('失败'),
+                        message: result.msg,
+                        type: result.success ? 'success' : 'error',
+                        duration: 2000,
+                        offset: 80
+                    });
+                    if (result.success) {
+                        // 重新请求 列表数据
+                        initList();
+                    }
+                    resolve();
                 });
-            },
+            }
         },
 
         currFilters: {} as any, //当前过滤值
@@ -232,7 +225,7 @@
             {
                 type: 'slot',
                 slotName: 'treeFilter',
-                span: settingStore.device === 'mobile' ? 24 : 16,
+                span: settingStore.device === 'mobile' ? 24 : 16
             },
             {
                 type: 'select',
@@ -244,23 +237,23 @@
                     options: [
                         {
                             label: computed(() => t('隐藏')),
-                            value: 0,
+                            value: 0
                         },
                         {
                             label: computed(() => t('浏览')),
-                            value: 1,
+                            value: 1
                         },
                         {
                             label: computed(() => t('维护')),
-                            value: 2,
+                            value: 2
                         },
                         {
                             label: computed(() => t('管理')),
-                            value: 3,
-                        },
-                    ],
-                },
-            },
+                            value: 3
+                        }
+                    ]
+                }
+            }
         ],
         // 组织，岗位树 请求接口
         treeApiObj: {
@@ -269,24 +262,24 @@
                 api: getTreeItemById,
                 params: {
                     treeType: 'tree_type_person',
-                    disabled: false,
-                },
+                    disabled: false
+                }
             },
             search: {
                 api: searchByName,
                 params: {
-                    treeType: 'tree_type_org_person',
-                },
-            },
+                    treeType: 'tree_type_org_person'
+                }
+            }
         },
         //
         selectField: [
             //设置需要选择的字段
             {
-                fieldName: 'orgType',
-                value: ['Person', 'Organization', 'Department'],
-            },
-        ],
+                fieldName: 'nodeType',
+                value: ['Person', 'Organization', 'Department']
+            }
+        ]
     });
 
     let {
@@ -297,7 +290,7 @@
         selectField,
         filtersList,
         currFilters,
-        filtersValueCallBack,
+        filtersValueCallBack
     } = toRefs(state);
 
     function onRefreshTree() {
@@ -305,12 +298,14 @@
     }
 
     let searchTimer = null;
+
     function onSearchKeyChange(searchVal) {
         clearTimeout(searchTimer);
         searchTimer = setTimeout(() => {
             treeApiObj.value.search.params.key = searchVal;
         }, 500);
     }
+
     onMounted(() => {
         initList();
     });
@@ -341,9 +336,9 @@
         treeApiObj.value.search.params.treeType = 'tree_type_org_person';
         selectField.value = [
             {
-                fieldName: 'orgType',
-                value: ['Person', 'Organization', 'Department'],
-            },
+                fieldName: 'nodeType',
+                value: ['Person', 'Organization', 'Department']
+            }
         ];
         checkStrictly.value = true;
         personConfigDialog.value.show = true;
@@ -357,9 +352,9 @@
         treeApiObj.value.search.params.treeType = 'tree_type_org_position';
         selectField.value = [
             {
-                fieldName: 'orgType',
-                value: ['Position'],
-            },
+                fieldName: 'nodeType',
+                value: ['Position']
+            }
         ];
         checkStrictly.value = false;
         personConfigDialog.value.show = true;
@@ -370,11 +365,13 @@
         currData.value = data;
     }
 </script>
-<style scoped lang="scss">
+<style lang="scss" scoped>
     .custom-select-tree-filter {
         display: flex;
+
         .refresh-btn {
         }
+
         .search-input {
             margin-left: 15px;
         }

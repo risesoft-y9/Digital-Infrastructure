@@ -1,14 +1,15 @@
 <template>
-    <y9Form :config="y9FormConfig" ref="y9FormRef"></y9Form>
+    <y9Form ref="y9FormRef" :config="y9FormConfig"></y9Form>
 </template>
 
 <script lang="ts" setup>
     import { useI18n } from 'vue-i18n';
-    import { inject, watch, computed, h, onMounted, ref } from 'vue';
+    import { computed, h, inject, onMounted, ref, watch } from 'vue';
     import { $keyNameAssign } from '@/utils/object';
     import { $dictionary, $dictionaryFunc } from '@/utils/data';
-    import { getOrgTypeList, listByType } from '@/api/dictionary/index';
+    import { getOrgTypeList } from '@/api/dictionary/index';
     import { useSettingStore } from '@/store/modules/settingStore';
+
     const { t } = useI18n();
 
     const settingStore = useSettingStore();
@@ -19,19 +20,19 @@
         isAdd: {
             //是否为添加模式，添加模式有些字段不需要显示
             type: Boolean,
-            default: false,
+            default: false
         },
         isEditState: {
             //是否为编辑状态
-            type: Boolean,
+            type: Boolean
         },
         currInfo: {
             //当前信息
             type: Object,
             default: () => {
                 return {};
-            },
-        },
+            }
+        }
     });
 
     onMounted(async () => {
@@ -42,7 +43,7 @@
                 item.props.options = $dictionary().organizationType?.map((item) => {
                     return {
                         label: computed(() => t(item.name)),
-                        value: item.id,
+                        value: item.id
                     };
                 });
                 break;
@@ -56,7 +57,7 @@
             column: settingStore.device === 'mobile' ? 1 : 2,
             labelAlign: 'center',
             labelWidth: '150px',
-            contentWidth: '200px',
+            contentWidth: '200px'
         },
         model: {
             //表单属性
@@ -66,7 +67,7 @@
             name: '',
             organizationCode: '',
             organizationType: '',
-            tabIndex: '',
+            tabIndex: ''
         },
         rules: {}, //表单验证规则
         itemList: [
@@ -81,8 +82,8 @@
                     render: () => {
                         //text类型渲染的内容
                         return h('span', props.currInfo?.name);
-                    },
-                },
+                    }
+                }
             },
             {
                 type: 'text',
@@ -94,8 +95,8 @@
                     render: () => {
                         //text类型渲染的内容
                         return h('span', props.currInfo?.id);
-                    },
-                },
+                    }
+                }
             },
             {
                 type: 'text',
@@ -107,8 +108,8 @@
                     render: () => {
                         //text类型渲染的内容
                         return h('span', props.currInfo?.customId);
-                    },
-                },
+                    }
+                }
             },
             {
                 type: 'text',
@@ -120,8 +121,8 @@
                     render: () => {
                         //text类型渲染的内容
                         return h('span', props.currInfo?.tenantId);
-                    },
-                },
+                    }
+                }
             },
             {
                 type: 'text',
@@ -133,8 +134,8 @@
                     render: () => {
                         //text类型渲染的内容
                         return h('span', props.currInfo?.enName);
-                    },
-                },
+                    }
+                }
             },
             {
                 type: 'text',
@@ -147,8 +148,8 @@
                     render: () => {
                         //text类型渲染的内容
                         return h('span', props.currInfo?.organizationType);
-                    },
-                },
+                    }
+                }
             },
             {
                 type: 'text',
@@ -160,8 +161,8 @@
                     render: () => {
                         //text类型渲染的内容
                         return h('span', props.currInfo?.organizationCode);
-                    },
-                },
+                    }
+                }
             },
             {
                 type: 'text',
@@ -173,10 +174,10 @@
                     render: () => {
                         //text类型渲染的内容
                         return h('span', props.currInfo?.description);
-                    },
-                },
-            },
-        ],
+                    }
+                }
+            }
+        ]
     });
 
     //如果是添加模式
@@ -192,7 +193,7 @@
         if (isEdit) {
             //编辑状态设置表单校验规则
             y9FormConfig.value.rules = {
-                name: [{ required: true, message: computed(() => t('请输入机构名称')), trigger: 'blur' }],
+                name: [{ required: true, message: computed(() => t('请输入机构名称')), trigger: 'blur' }]
             };
         } else {
             y9FormConfig.value.rules = {};
@@ -214,14 +215,14 @@
             changeY9FormType(isEdit);
         },
         {
-            immediate: true,
+            immediate: true
         }
     );
 
     //表单实例
     const y9FormRef = ref();
     defineExpose({
-        y9FormRef,
+        y9FormRef
     });
 </script>
 

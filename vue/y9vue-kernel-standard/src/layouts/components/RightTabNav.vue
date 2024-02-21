@@ -3,14 +3,14 @@
         <div class="left" @click="handleScroll(200)">
             <icon-svg class="icon" type="arrow-left" />
         </div>
-        <div class="middle" ref="scrollBox" @DOMMouseScroll="handleRolling" @mousewheel="handleRolling">
-            <div class="tab" ref="scrollContent" :style="{ transform: `translateX(${translateX}px)` }">
+        <div ref="scrollBox" class="middle" @DOMMouseScroll="handleRolling" @mousewheel="handleRolling">
+            <div ref="scrollContent" :style="{ transform: `translateX(${translateX}px)` }" class="tab">
                 <span
-                    :ref="tabNavSpanRef"
                     v-for="(item, index) in tabNavList"
                     :key="`tab-nav-${index}`"
-                    class="item"
+                    :ref="tabNavSpanRef"
                     :class="{ active: equalTabNavRView(route, item.route, item.menu.tabNavType) }"
+                    class="item"
                     @click="toRoute(item, index)"
                 >
                     <icon-svg class="icon-pre" type="refresh" @click.stop="refreshCurrentTabNav(item)" />
@@ -34,18 +34,22 @@
                 </span>
                 <template #dropdown>
                     <el-dropdown-menu>
-                        <el-dropdown-item command="closeleft"
-                            ><icon-svg class="icon-dropdown-menu" type="arrow-left2" /> 关闭左侧</el-dropdown-item
-                        >
-                        <el-dropdown-item command="closeright"
-                            ><icon-svg class="icon-dropdown-menu" type="arrow-right2" /> 关闭右侧</el-dropdown-item
-                        >
-                        <el-dropdown-item command="closeother"
-                            ><icon-svg class="icon-dropdown-menu" type="close" /> 关闭其他</el-dropdown-item
-                        >
-                        <el-dropdown-item command="closeall"
-                            ><icon-svg class="icon-dropdown-menu" type="close2" /> 关闭所有</el-dropdown-item
-                        >
+                        <el-dropdown-item command="closeleft">
+                            <icon-svg class="icon-dropdown-menu" type="arrow-left2" />
+                            关闭左侧
+                        </el-dropdown-item>
+                        <el-dropdown-item command="closeright">
+                            <icon-svg class="icon-dropdown-menu" type="arrow-right2" />
+                            关闭右侧
+                        </el-dropdown-item>
+                        <el-dropdown-item command="closeother">
+                            <icon-svg class="icon-dropdown-menu" type="close" />
+                            关闭其他
+                        </el-dropdown-item>
+                        <el-dropdown-item command="closeall">
+                            <icon-svg class="icon-dropdown-menu" type="close2" />
+                            关闭所有
+                        </el-dropdown-item>
                     </el-dropdown-menu>
                 </template>
             </el-dropdown>
@@ -55,20 +59,18 @@
 <script lang="ts" setup>
     import {
         computed,
-        defineComponent,
         ComputedRef,
+        inject,
+        nextTick,
+        onBeforeUpdate,
+        onMounted,
+        PropType,
         ref,
         Ref,
-        watch,
-        PropType,
         toRefs,
-        onMounted,
-        onBeforeUpdate,
-        onUpdated,
-        nextTick,
-        inject,
+        watch
     } from 'vue';
-    import { useRoute, useRouter, RouteLocationNormalizedLoaded } from 'vue-router';
+    import { RouteLocationNormalizedLoaded, useRoute, useRouter } from 'vue-router';
     import IconSvg from './IconSvg';
     import { equalTabNavRoute, RoutesDataItem, TabNavItem, TabNavType } from '@/utils/routes';
     import settings from '@/settings';
@@ -100,8 +102,8 @@
     const props = defineProps({
         routeItem: {
             type: Object as PropType<RoutesDataItem>,
-            required: true,
-        },
+            required: true
+        }
     });
 
     const settingStore = useSettingStore();
@@ -149,10 +151,10 @@
     onBeforeUpdate(() => {
         tabNavSpanRefs = [];
     });
-    /* 
-        onUpdated(() => {
-        }) 
-        */
+    /*
+    onUpdated(() => {
+    })
+    */
     const tabNavPadding = 10;
     const moveToView = (index: number): void => {
         if (!tabNavSpanRefs[index]) {
@@ -196,26 +198,26 @@
         }
 
         // 数组里是否已经存在当前route规则
-        /* 
-            const isRoute: boolean = tabNavList.value.some(item =>{
-                if(equalTabNavRoute(item.route, route, routeItem.value.tabNavType)) {
-                    return true;
-                }                
-            }); 
-            if(!isRoute) {
-                store.commit('global/setHeadTabNavList', [
-                    ...tabNavList.value,
-                    {
-                        route: {
-                            ...route
-                        },
-                        menu: {
-                            ...routeItem.value
-                        }
-                    }
-                ]);
+        /*
+        const isRoute: boolean = tabNavList.value.some(item =>{
+            if(equalTabNavRoute(item.route, route, routeItem.value.tabNavType)) {
+                return true;
             }
-            */
+        });
+        if(!isRoute) {
+            store.commit('global/setHeadTabNavList', [
+                ...tabNavList.value,
+                {
+                    route: {
+                        ...route
+                    },
+                    menu: {
+                        ...routeItem.value
+                    }
+                }
+            ]);
+        }
+        */
         // 数组里是否已经存在当前route规则，不存在下标为-1
         let index = tabNavList.value.findIndex((item) =>
             equalTabNavRoute(item.route, route, routeItem.value.tabNavType)
@@ -226,12 +228,12 @@
                 ...tabNavList.value,
                 {
                     route: {
-                        ...route,
+                        ...route
                     },
                     menu: {
-                        ...routeItem.value,
-                    },
-                },
+                        ...routeItem.value
+                    }
+                }
             ]);
         }
 
@@ -269,9 +271,9 @@
         );
         store.commit('global/setHeadTabNavList', [
             {
-                ...homeRoute,
+                ...homeRoute
             },
-            ...navList,
+            ...navList
         ]);
 
         router.push(homeRoute.route);
@@ -366,6 +368,7 @@
         box-shadow: 0 -1px 4px rgba(0, 21, 41, 0.08);
         display: flex;
         align-items: center;
+
         .left,
         .right,
         .down {
@@ -376,28 +379,34 @@
             text-align: center;
             font-size: v-bind('fontSizeObj.baseFontSize');
             cursor: pointer;
+
             .icon-box {
                 display: block;
                 width: ($headerTabNavHeight - 10px);
                 height: ($headerTabNavHeight - 8px);
                 line-height: ($headerTabNavHeight - 8px);
             }
+
             .icon {
                 color: rgba(0, 0, 0, 0.45);
             }
+
             &:hover {
                 .icon {
                     color: rgba(0, 0, 0, 0.75);
                 }
             }
         }
+
         .down {
             padding-right: 10px;
             line-height: normal;
         }
+
         .middle {
             flex: 1;
             overflow: hidden;
+
             .tab {
                 position: relative;
                 float: left;
@@ -405,6 +414,7 @@
                 overflow: visible;
                 white-space: nowrap;
                 transition: transform 0.5s ease-in-out;
+
                 .item {
                     height: ($headerTabNavHeight - 6px);
                     line-height: ($headerTabNavHeight - 6px);
@@ -419,34 +429,42 @@
                     font-size: v-bind('fontSizeObj.baseFontSize');
                     color: rgba(0, 0, 0, 0.65);
                     border: 1px solid $mainBgColor;
+
                     & + .item {
                         margin-left: 3px;
                     }
+
                     &:hover {
                         color: var(--el-color-primary);
                     }
+
                     .icon {
                         font-size: v-bind('fontSizeObj.baseFontSize');
                         margin: 0 0 2px 5px;
                         color: rgba(0, 0, 0, 0.45);
+
                         &:hover {
                             color: rgba(0, 0, 0, 0.75);
                         }
                     }
+
                     .icon-pre {
                         display: none;
                         font-size: v-bind('fontSizeObj.baseFontSize');
                         margin: 0 5px 0 0;
                         color: rgba(var(--el-color-primary), 0.75);
+
                         &:hover {
                             color: rgba(var(--el-color-primary), 1);
                         }
                     }
                 }
+
                 .active {
                     color: var(--el-color-primary);
                     background: #ffffff;
                     border-color: #ffffff;
+
                     .icon-pre {
                         display: inline-block;
                     }
@@ -454,6 +472,7 @@
             }
         }
     }
+
     .icon-dropdown-menu {
         font-size: v-bind('fontSizeObj.baseFontSize');
         margin-right: 5px;

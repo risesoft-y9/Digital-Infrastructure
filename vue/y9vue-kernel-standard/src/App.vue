@@ -61,6 +61,19 @@
       	watermark('');
     });
 
+	// 主题切换
+    const theme = computed(() => settingStore.getThemeName)
+    const toggleColor = (theme) => {
+        if (document.getElementById("head")) {
+            let themeDom = document.getElementById("head")
+            let pathArray = themeDom.href.split('/')
+            pathArray[pathArray.length-1] = theme + '.css'
+            let newPath = pathArray.join('/')
+            themeDom.href = newPath
+        }
+    }
+    toggleColor(theme.value);
+	
 	/***
 	 *  字体大中小
 	 * 定义变量

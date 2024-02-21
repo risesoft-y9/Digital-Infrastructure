@@ -2,34 +2,34 @@
  * @Author: fuyu
  * @Date: 2022-04-07 17:43:02
  * @LastEditors: mengjuhua
- * @LastEditTime: 2023-08-03 15:26:38
+ * @LastEditTime: 2024-01-11 17:33:40
  * @Description: 组织架构-人员列表
 -->
 <template>
     <y9Card :title="`${$t('人员列表')}${currInfo.name ? ' - ' + currInfo.name : ''}`">
         <div
+            v-show="currInfo.haveEditAuth"
             class="margin-bottom-20"
             style="display: flex; justify-content: space-between"
-            v-show="currInfo.haveEditAuth"
         >
             <div>
                 <el-button
-                    v-if="currTreeNodeInfo.orgType == 'Group'"
-                    @click="addPerson"
+                    v-if="currTreeNodeInfo.nodeType == 'Group'"
                     :size="fontSizeObj.buttonSize"
                     :style="{ fontSize: fontSizeObj.baseFontSize }"
-                    type="primary"
                     class="global-btn-main"
+                    type="primary"
+                    @click="addPerson"
                 >
                     <i class="ri-add-line"></i>
                     <span>{{ $t('选择已有人员') }}</span>
                 </el-button>
                 <el-button
-                    type="primary"
-                    @click="savePersonOrder"
                     :size="fontSizeObj.buttonSize"
                     :style="{ fontSize: fontSizeObj.baseFontSize }"
                     class="global-btn-main"
+                    type="primary"
+                    @click="savePersonOrder"
                 >
                     <i class="ri-save-line"></i>
                     <span>{{ $t('保存') }}</span>
@@ -37,19 +37,19 @@
             </div>
             <div>
                 <el-button
-                    @click="upPerson"
                     :size="fontSizeObj.buttonSize"
                     :style="{ fontSize: fontSizeObj.baseFontSize }"
                     class="global-btn-second"
+                    @click="upPerson"
                 >
                     <i class="ri-arrow-up-line"></i>
                     <span>{{ $t('上移') }}</span>
                 </el-button>
                 <el-button
-                    @click="downPerson"
                     :size="fontSizeObj.buttonSize"
                     :style="{ fontSize: fontSizeObj.baseFontSize }"
                     class="global-btn-second"
+                    @click="downPerson"
                 >
                     <i class="ri-arrow-down-line"></i>
                     <span>{{ $t('下移') }}</span>
@@ -66,26 +66,27 @@
     <y9Dialog v-model:config="dialogConfig">
         <selectTree
             ref="selectTreeRef"
-            :treeApiObj="treeApiObj"
             :selectField="[
-                { fieldName: 'orgType', value: ['Person'] },
-                { fieldName: 'disabled', value: false },
+                { fieldName: 'nodeType', value: ['Person'] },
+                { fieldName: 'disabled', value: false }
             ]"
+            :treeApiObj="treeApiObj"
             @onNodeExpand="onNodeExpand"
         >
         </selectTree>
     </y9Dialog>
-    <el-button style="display: none" v-loading.fullscreen.lock="loading"></el-button>
+    <el-button v-loading.fullscreen.lock="loading" style="display: none"></el-button>
 </template>
 
 <script lang="ts" setup>
     import { useI18n } from 'vue-i18n';
-    import { inject, watch, reactive, computed, h, onMounted, ref, toRefs } from 'vue';
+    import { computed, h, inject, onMounted, reactive, ref, toRefs, watch } from 'vue';
     import { ElMessage, ElMessageBox, ElNotification } from 'element-plus';
     import { $deepAssignObject } from '@/utils/object';
-    import { getPersonsByParentId, getPersonsByGroupID, delPerson, saveOrder, savePersons } from '@/api/person/index';
-    import { treeInterface, getTreeItemById, searchByName } from '@/api/org/index';
-    import { addPersons, removePersons, orderPersons } from '@/api/group/index';
+    import { delPerson, getPersonsByGroupID, getPersonsByParentId, saveOrder, savePersons } from '@/api/person/index';
+    import { getTreeItemById, searchByName, treeInterface } from '@/api/org/index';
+    import { addPersons, orderPersons, removePersons } from '@/api/group/index';
+
     const { t } = useI18n();
     // 注入 字体对象
     const fontSizeObj: any = inject('sizeObjInfo');
@@ -95,12 +96,12 @@
             type: Object,
             default: () => {
                 return {};
-            },
+            }
         },
 
         updateTreePersonCount: Function, //更新当前节点以及其父节点的人员数量
 
-        handAssginNode: Function, //手动更新节点信息
+        handAssginNode: Function //手动更新节点信息
     });
 
     //选择tree实例
@@ -108,6 +109,7 @@
 
     //移动-选择树节点展开时触发
     const selectTreeExpandNode = ref();
+
     function onNodeExpand(node) {
         selectTreeExpandNode.value = node;
     }
@@ -121,7 +123,7 @@
                     const res = await getTreeItemById({
                         parentId: selectTreeExpandNode.value.id,
                         treeType: 'tree_type_person',
-                        disabled: false,
+                        disabled: false
                     });
 
                     const data = res.data || [];
@@ -138,14 +140,14 @@
 
                     return data;
                 },
-                params: { treeType: 'tree_type_person', disabled: false },
+                params: { treeType: 'tree_type_person', disabled: false }
             },
             search: {
                 api: searchByName,
                 params: {
-                    treeType: 'ree_type_org',
-                },
-            },
+                    treeType: 'tree_type_org'
+                }
+            }
         },
         loading: false, // 全局loading
         userSelectedData: '', //选中的人员数据
@@ -156,12 +158,12 @@
             columns: [
                 {
                     type: 'radio',
-                    width: 80,
+                    width: 80
                 },
                 {
                     title: computed(() => t('姓名')),
                     key: 'name',
-                    width: 200,
+                    width: 200
                 },
                 {
                     title: computed(() => t('性别')),
@@ -176,16 +178,16 @@
                         }
 
                         return h('div', t(text));
-                    },
+                    }
                 },
                 {
                     title: computed(() => t('职务')),
                     key: 'duty',
-                    width: 300,
+                    width: 300
                 },
                 {
                     title: computed(() => t('所属部门')),
-                    key: 'dn',
+                    key: 'dn'
                 },
                 {
                     title: computed(() => t('操作')),
@@ -197,16 +199,16 @@
                                 ElMessageBox.confirm(`${t('是否删除')}【${row.name}】?`, t('提示'), {
                                     confirmButtonText: t('确定'),
                                     cancelButtonText: t('取消'),
-                                    type: 'info',
+                                    type: 'info'
                                 })
                                     .then(async () => {
                                         loading.value = true;
                                         let result = { success: false, msg: '' };
-                                        if (currInfo.value.orgType === 'Group') {
+                                        if (currInfo.value.nodeType === 'Group') {
                                             result = await removePersons(currInfo.value.id, [row.id].toString());
                                         } else if (
-                                            currInfo.value.orgType === 'Organization' ||
-                                            currInfo.value.orgType === 'Department'
+                                            currInfo.value.nodeType === 'Organization' ||
+                                            currInfo.value.nodeType === 'Department'
                                         ) {
                                             result = await delPerson([row.id].toString());
                                         }
@@ -218,31 +220,36 @@
                                                 }
                                             });
 
-                                            //手动更新tree的人员计数并更新子节点
-                                            props.updateTreePersonCount(currInfo.value, -1, currInfo.value.id);
+                                            if (
+                                                currInfo.value.nodeType === 'Organization' ||
+                                                currInfo.value.nodeType === 'Department'
+                                            ) {
+                                                //手动更新tree的人员计数并更新子节点
+                                                props.updateTreePersonCount(currInfo.value, -1, currInfo.value.id);
+                                            }
                                         }
                                         ElNotification({
                                             title: result.success ? t('成功') : t('失败'),
                                             message: result.msg,
                                             type: result.success ? 'success' : 'error',
                                             duration: 2000,
-                                            offset: 80,
+                                            offset: 80
                                         });
                                     })
                                     .catch(() => {
                                         ElMessage({
                                             type: 'info',
                                             message: t('已取消删除'),
-                                            offset: 65,
+                                            offset: 65
                                         });
                                     });
-                            },
+                            }
                         });
-                    },
-                },
+                    }
+                }
             ],
             tableData: [],
-            pageConfig: false, //取消分页
+            pageConfig: false //取消分页
         },
         currentRow: '',
         //弹窗配置
@@ -262,20 +269,16 @@
                             message: t('请选择人员'),
                             type: 'error',
                             duration: 2000,
-                            offset: 80,
+                            offset: 80
                         });
                         reject();
                         return;
                     }
 
-                    if (currInfo.value.orgType === 'Group') {
-                        await addPersons(props.currTreeNodeInfo.id, orgBaseIds.toString())
-                            .then((res) => (result = res))
-                            .catch(() => {});
-                    } else if (currInfo.value.orgType === 'Organization' || currInfo.value.orgType === 'Department') {
-                        await savePersons(props.currTreeNodeInfo.id, orgBaseIds.toString())
-                            .then((res) => (result = res))
-                            .catch(() => {});
+                    if (currInfo.value.nodeType === 'Group') {
+                        result = await addPersons(props.currTreeNodeInfo.id, orgBaseIds.toString());
+                    } else if (currInfo.value.nodeType === 'Organization' || currInfo.value.nodeType === 'Department') {
+                        result = await savePersons(props.currTreeNodeInfo.id, orgBaseIds.toString());
                     }
 
                     if (result.success) {
@@ -288,7 +291,7 @@
                         message: result.msg,
                         type: result.success ? 'success' : 'error',
                         duration: 2000,
-                        offset: 80,
+                        offset: 80
                     });
                     if (result.success) {
                         resolve();
@@ -296,10 +299,9 @@
                         reject();
                     }
                 });
-            },
+            }
         },
-        tabIndexs: [],
-        personTableRef: '',
+        tabIndexs: []
     });
 
     let {
@@ -310,10 +312,10 @@
         userSelectedData,
         dialogConfig,
         tabIndexs,
-        loading,
-        personTableRef,
+        loading
     } = toRefs(data);
 
+    const personTableRef = ref();
     watch(
         () => props.currTreeNodeInfo,
         (newVal) => {
@@ -322,7 +324,7 @@
             getPersonsList();
         },
         {
-            deep: true,
+            deep: true
         }
     );
 
@@ -331,14 +333,14 @@
     });
 
     defineExpose({
-        getPersonsList,
+        getPersonsList
     });
 
     async function getPersonsList() {
         let result;
-        if (currInfo.value.orgType === 'Group') {
+        if (currInfo.value.nodeType === 'Group') {
             result = await getPersonsByGroupID(currInfo.value.id);
-        } else if (currInfo.value.orgType === 'Organization' || currInfo.value.orgType === 'Department') {
+        } else if (currInfo.value.nodeType === 'Organization' || currInfo.value.nodeType === 'Department') {
             result = await getPersonsByParentId(currInfo.value.id);
         }
 
@@ -366,7 +368,7 @@
         Object.assign(dialogConfig.value, {
             show: true,
             title: computed(() => t('添加人员')),
-            width: '30%',
+            width: '30%'
         });
     }
 
@@ -392,7 +394,7 @@
                     message: t('处于顶端，不能继续上移'),
                     type: 'error',
                     duration: 2000,
-                    offset: 80,
+                    offset: 80
                 });
                 return;
             }
@@ -419,7 +421,7 @@
                     message: t('处于末端，不能继续下移'),
                     type: 'error',
                     duration: 2000,
-                    offset: 80,
+                    offset: 80
                 });
                 return;
             }
@@ -442,9 +444,9 @@
         loading.value = true;
 
         let result = { success: false, msg: '' };
-        if (currInfo.value.orgType === 'Group') {
+        if (currInfo.value.nodeType === 'Group') {
             result = await orderPersons(props.currTreeNodeInfo.id, ids.toString());
-        } else if (currInfo.value.orgType === 'Organization' || currInfo.value.orgType === 'Department') {
+        } else if (currInfo.value.nodeType === 'Organization' || currInfo.value.nodeType === 'Department') {
             result = await saveOrder(ids.toString(), tabIndexs.value.toString());
             props.handAssginNode({}, currInfo.value.id, currInfo.value.id); //手动更新当前节点的子节点
         }
@@ -455,7 +457,7 @@
             message: result.msg,
             type: result.success ? 'success' : 'error',
             duration: 2000,
-            offset: 80,
+            offset: 80
         });
     }
 </script>

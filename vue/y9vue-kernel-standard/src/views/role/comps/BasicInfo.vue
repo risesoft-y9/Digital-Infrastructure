@@ -2,28 +2,29 @@
  * @Author: hongzhew
  * @Date: 2022-04-07 17:43:02
  * @LastEditors: mengjuhua
- * @LastEditTime: 2023-08-03 15:21:07
+ * @LastEditTime: 2023-12-26 11:26:01
  * @Description: 应用角色详情
 -->
 <!--  -->
 <template>
-    <y9Form :config="y9FormConfig" ref="y9FormRef"></y9Form>
+    <y9Form ref="y9FormRef" :config="y9FormConfig"></y9Form>
 </template>
 
 <script lang="ts" setup>
-    import { watch, computed, h, onMounted, ref } from 'vue';
+    import { computed, h, onMounted, ref, watch } from 'vue';
     import { useI18n } from 'vue-i18n';
     import { getRoleInfo } from '@/api/role/index';
     import { resourceInfo } from '@/api/resource/index';
     import { useSettingStore } from '@/store/modules/settingStore';
+
     const settingStore = useSettingStore();
     const { t } = useI18n();
 
     const props = defineProps({
         id: String, // 系统id
-        type: Number, // 资源类型
+        type: String, // 资源类型
         editFlag: Boolean, // 编辑 与 查看 的对应显示变量
-        saveClickFlag: Boolean, // 是否点击保存 的变量
+        saveClickFlag: Boolean // 是否点击保存 的变量
     });
     const emits = defineEmits(['getInfoData']);
 
@@ -38,7 +39,7 @@
             column: settingStore.device === 'mobile' ? 1 : 2,
             labelAlign: 'center',
             labelWidth: '150px',
-            contentWidth: '200px',
+            contentWidth: '200px'
         },
         model: {},
         rules: {}, //表单验证规则
@@ -54,8 +55,8 @@
                     render: () => {
                         //text类型渲染的内容
                         return h('span', basicInfo.value?.name);
-                    },
-                },
+                    }
+                }
             },
             {
                 type: 'text',
@@ -67,8 +68,8 @@
                     render: () => {
                         //text类型渲染的内容
                         return h('span', basicInfo.value?.id);
-                    },
-                },
+                    }
+                }
             },
             {
                 type: 'text',
@@ -80,8 +81,8 @@
                     render: () => {
                         //text类型渲染的内容
                         return h('span', basicInfo.value?.tenantId);
-                    },
-                },
+                    }
+                }
             },
             {
                 type: 'text',
@@ -93,8 +94,8 @@
                     render: () => {
                         //text类型渲染的内容
                         return h('span', basicInfo.value?.customId);
-                    },
-                },
+                    }
+                }
             },
             {
                 type: 'text',
@@ -109,8 +110,8 @@
                                   'span',
                                   {
                                       style: {
-                                          wordBreak: 'break-all',
-                                      },
+                                          wordBreak: 'break-all'
+                                      }
                                   },
                                   basicInfo.value?.systemName
                               )
@@ -118,13 +119,13 @@
                                   'span',
                                   {
                                       style: {
-                                          wordBreak: 'break-all',
-                                      },
+                                          wordBreak: 'break-all'
+                                      }
                                   },
                                   basicInfo.value?.systemId
                               );
-                    },
-                },
+                    }
+                }
             },
             {
                 type: 'text',
@@ -136,8 +137,8 @@
                     render: () => {
                         //text类型渲染的内容
                         return h('span', basicInfo.value?.systemCnName);
-                    },
-                },
+                    }
+                }
             },
             {
                 type: 'text',
@@ -149,8 +150,8 @@
                     render: () => {
                         //text类型渲染的内容
                         return h('span', basicInfo.value?.properties);
-                    },
-                },
+                    }
+                }
             },
             {
                 type: 'text',
@@ -165,8 +166,8 @@
                                 ? h('span', t('角色'))
                                 : h('span', t('节点'))
                             : h('span', t('应用'));
-                    },
-                },
+                    }
+                }
             },
             {
                 type: 'text',
@@ -178,17 +179,17 @@
                     render: () => {
                         //text类型渲染的内容
                         return h('span', basicInfo.value?.description);
-                    },
-                },
-            },
-        ],
+                    }
+                }
+            }
+        ]
     });
 
     // 请求详情 函数
     async function getInfo() {
         // 请求接口 并赋予值
         let result;
-        if (props.type === 0) {
+        if (props.type === 'APP') {
             result = await resourceInfo(props.id);
         } else {
             result = await getRoleInfo(props.id);
@@ -211,7 +212,7 @@
 
     // 监听 saveClicFlag 当为true 时 将对象传给 index
     watch(
-        async () => props.saveClickFlag,
+        () => props.saveClickFlag,
         async (new_, old_) => {
             if (new_) {
                 let valid = await y9FormRef?.value.elFormRef?.validate((valid) => valid); //获取表单验证结果;
@@ -237,7 +238,7 @@
         if (isEdit) {
             //编辑状态设置表单校验规则
             y9FormConfig.value.rules = {
-                name: [{ required: true, message: computed(() => t('请输入名称')), trigger: 'blur' }],
+                name: [{ required: true, message: computed(() => t('请输入名称')), trigger: 'blur' }]
             };
         } else {
             y9FormConfig.value.rules = {};
@@ -249,4 +250,4 @@
         });
     }
 </script>
-<style scoped lang="scss"></style>
+<style lang="scss" scoped></style>
