@@ -39,13 +39,13 @@
 
         <dependency>
             <groupId>net.risesoft</groupId>
-            <artifactId>risenet-y9boot-rest-interface-platform</artifactId>
+            <artifactId>risenet-y9boot-api-interface-platform</artifactId>
             <version>${project.version}</version>
         </dependency>
 
         <dependency>
             <groupId>net.risesoft</groupId>
-            <artifactId>risenet-y9boot-rest-feignclient-log</artifactId>
+            <artifactId>risenet-y9boot-api-feignclient-log</artifactId>
             <version>${project.version}</version>
         </dependency>
 

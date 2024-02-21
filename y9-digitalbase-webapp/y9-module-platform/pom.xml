@@ -16,8 +16,8 @@
     </parent>
 
     <modules>
-        <module>risenet-y9boot-rest-feignclient-platform</module>
-        <module>risenet-y9boot-rest-interface-platform</module>
+        <module>risenet-y9boot-api-feignclient-platform</module>
+        <module>risenet-y9boot-api-interface-platform</module>
         <module>risenet-y9boot-support-platform-jpa-repository</module>
         <module>risenet-y9boot-support-platform-service</module>
         <module>risenet-y9boot-support-platform-web</module>

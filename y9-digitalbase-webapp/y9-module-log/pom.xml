@@ -16,8 +16,8 @@
     </parent>
 
     <modules>
-        <module>risenet-y9boot-rest-feignclient-log</module>
-        <module>risenet-y9boot-rest-interface-log</module>
+        <module>risenet-y9boot-api-feignclient-log</module>
+        <module>risenet-y9boot-api-interface-log</module>
         <module>risenet-y9boot-support-log-elasticsearch</module>
         <module>risenet-y9boot-webapp-log</module>
     </modules>

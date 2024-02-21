@@ -30,7 +30,7 @@
 
         <dependency>
             <groupId>net.risesoft</groupId>
-            <artifactId>risenet-y9boot-rest-interface-log</artifactId>
+            <artifactId>risenet-y9boot-api-interface-log</artifactId>
             <version>${project.version}</version>
         </dependency>
 
