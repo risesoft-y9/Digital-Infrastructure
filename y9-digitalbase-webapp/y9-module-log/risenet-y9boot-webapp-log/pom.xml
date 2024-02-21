@@ -16,9 +16,6 @@
 
     <properties>
         <maven.deploy.skip>true</maven.deploy.skip>
-
-        <alibaba-nacos.version>2.2.0</alibaba-nacos.version>
-        <alibaba-cloud.version>2021.0.4.0</alibaba-cloud.version>
     </properties>
 
     <dependencies>
@@ -74,23 +71,6 @@
             <groupId>org.springframework.kafka</groupId>
             <artifactId>spring-kafka</artifactId>
         </dependency>
-
-        <!--<dependency>
-            <groupId>com.alibaba.cloud</groupId>
-            <artifactId>spring-cloud-starter-alibaba-nacos-config</artifactId>
-            <version>${alibaba-cloud.version}</version>
-            <exclusions>
-                <exclusion>
-                    <groupId>com.alibaba.nacos</groupId>
-                    <artifactId>nacos-client</artifactId>
-                </exclusion>
-            </exclusions>
-        </dependency>
-        <dependency>
-            <groupId>com.alibaba.nacos</groupId>
-            <artifactId>nacos-client</artifactId>
-            <version>${alibaba-nacos.version}</version>
-        </dependency>-->
 
         <dependency>
             <groupId>net.risesoft</groupId>
