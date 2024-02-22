@@ -1,0 +1,269 @@
+body {
+    background-image: url(img/background.jpg?v=3.0);
+    font-family: "Microsoft YaHei", 微软雅黑, "MicrosoftJhengHei", 华文细黑, STHeiti,
+    MingLiu;
+}
+
+a:hover {
+    color: rgb(255, 255, 255);
+}
+
+.logo {
+    margin-top: 66px;
+    margin-left: 77px;
+}
+
+/*右侧登录*/
+.rightContext {
+    width: 344px;
+    margin: auto;
+    margin-top: 86px;
+}
+
+.conext_datetime {
+    float: right;
+}
+
+.conext_datetime .time {
+    font-size: 18px;
+    color: rgb(221, 222, 232);
+    margin-right: 20px;
+}
+
+.conext_datetime .date {
+    font-size: 14px;
+    color: rgb(160, 161, 191);
+    margin-left: 16px;
+}
+
+.alert-danger {
+    font-size: 16px;
+    color: red;
+    margin-top: 10px;
+    position: absolute;
+    margin-left: 10px;
+}
+
+/* 表单开始 */
+.conext_form {
+    padding-top: 96px;
+    height: 505px;
+}
+
+.layui-tab-content {
+    padding: 0px;
+}
+
+.layui-tab-title {
+    position: relative;
+    left: 0;
+    height: 40px;
+    white-space: nowrap;
+    font-size: 0;
+    border-bottom-width: 0;
+    border-bottom-style: solid;
+    transition: all .2s;
+    -webkit-transition: all .2s;
+    background-color: #464FB4;
+    border-radius: 25px;
+    z-index: 1;
+}
+
+.layui-tab-title li {
+    font-size: 18px;
+    width: 172px;
+    color: rgb(153, 153, 153);
+    padding: 0px;
+}
+
+.layui-tab-brief > .layui-tab-title .layui-this {
+    color: rgb(53, 54, 53);
+    height: 40px;
+    background-color: #fff;
+    border-radius: 25px;
+    opacity: 0.8;
+}
+
+.layui-tab-brief > .layui-tab-more li.layui-this::after, .layui-tab-brief > .layui-tab-title .layui-this::after {
+    border: none;
+    border-radius: 0;
+    border-bottom: 0;
+}
+
+.rightMain_form {
+    padding-top: 20px;
+    height: 305px;
+}
+
+.web_inputText {
+    font-size: 14px;
+    color: rgb(203, 205, 228);
+    border: 1px solid #8d92cf;
+    border-radius: 50px;
+    height: 40px;
+    margin: 22px 0 22px 0;
+}
+
+.web_inputText .icon, .web_listBlock .icon {
+    display: inline-block;
+    margin: 12px 14px;
+    color: rgb(203, 205, 228);
+}
+
+.web_inputText input {
+    border: none;
+    width: 280px;
+    color: rgb(203, 205, 228);
+    background: none;
+    height: 40px;
+}
+
+.web_listBlock {
+    margin-right: 20px;
+    padding: 0;
+    font-size: 14px;
+    height: 40px;
+    margin: 22px 0 22px 0;
+}
+
+
+.web_inputText2 {
+    width: 200px;
+    color: rgb(203, 205, 228);
+    border: 1px solid #8d92cf;
+    border-radius: 50px;
+    float: left;
+    height: 40px;
+}
+
+.web_listBlock input {
+    border: none;
+    width: 60%;
+    color: rgb(203, 205, 228);
+    background: none;
+    margin-right: 10px;
+    height: 40px;
+}
+
+.web_Captcha {
+    width: 102px;
+    height: 40px;
+    text-align: center;
+    float: left;
+}
+
+.web_Captcha img {
+    width: 102px;
+    height: 30px;
+    margin: 5px 0 0 15px;
+    color: rgb(203, 205, 228);
+}
+
+.web_login_submit {
+    margin-top: 32px;
+    font-size: 18px;
+    color: rgb(255, 255, 255);
+    line-height: 40px;
+    text-align: center;
+    background-color: #268BD9;
+    border-radius: 50px;
+    height: 40px;
+    display: inherit;
+    visibility: visible;
+}
+
+.web_list {
+    padding: 16px 0 20px 0;
+    font-size: 14px;
+    color: rgb(203, 205, 228);
+}
+
+.remember {
+    float: left;
+}
+
+.forget {
+    float: right;
+}
+
+.conext_wrap {
+    font-size: 14px;
+    color: rgb(148, 138, 149);
+    margin-top: 20px;
+    margin-bottom: 20px;
+}
+
+.conext_wrap a {
+    color: rgb(148, 138, 149);
+}
+
+a.cloud-href {
+    position: absolute;
+    padding: 10px 20px;
+    color: rgba(255, 255, 255, 0.75);
+    z-index: 1000
+}
+
+a.cloud-risecloud {
+    left: 216px;
+    top: 403px;
+}
+
+a.cloud-dev {
+    left: 510px;
+    top: 427px;
+}
+
+a.cloud-tenant {
+    left: 642px;
+    top: 477px;
+}
+
+a.cloud-admin {
+    left: 598px;
+    top: 614px;
+}
+
+a.cloud-risenet {
+    left: 632px;
+    top: 723px;
+}
+
+@media screen and (max-width: 1600px) {
+    .conext_form {
+        padding-top: 80px;
+        height: 420px;
+    }
+}
+
+@media screen and (min-width: 1930px) {
+    body {
+        background-image: url(img/background_2560.jpg?v=3.0);
+    }
+
+    a.cloud-risecloud {
+        left: 290px;
+        top: 542px;
+    }
+
+    a.cloud-dev {
+        left: 682px;
+        top: 573px;
+    }
+
+    a.cloud-tenant {
+        left: 860px;
+        top: 638px;
+    }
+
+    a.cloud-admin {
+        left: 800px;
+        top: 823px;
+    }
+
+    a.cloud-risenet {
+        left: 846px;
+        top: 966px;
+    }
+
+}
