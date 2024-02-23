@@ -86,9 +86,8 @@ public class Y9PositionServiceImpl implements Y9PositionService {
         Y9OrgBasesToRolesRepository y9OrgBasesToRolesRepository,
         Y9PositionToResourceAndAuthorityRepository y9PositionToResourceAndAuthorityRepository,
         Y9PositionToRoleRepository y9PositionToRoleRepository, Y9AuthorizationRepository y9AuthorizationRepository,
-        Y9DepartmentPropRepository y9DepartmentPropRepository,
-        CompositeOrgBaseManager compositeOrgBaseManager, Y9PositionManager y9PositionManager,
-        Y9PersonsToPositionsManager y9PersonsToPositionsManager) {
+        Y9DepartmentPropRepository y9DepartmentPropRepository, CompositeOrgBaseManager compositeOrgBaseManager,
+        Y9PositionManager y9PositionManager, Y9PersonsToPositionsManager y9PersonsToPositionsManager) {
         this.entityManagerFactory = entityManagerFactory;
         this.y9PositionRepository = y9PositionRepository;
         this.y9PersonsToPositionsRepository = y9PersonsToPositionsRepository;
@@ -110,7 +109,7 @@ public class Y9PositionServiceImpl implements Y9PositionService {
 
     @Override
     @Transactional(readOnly = false)
-    public Y9Position createPosition(Y9Position y9Position) {
+    public Y9Position create(Y9Position y9Position) {
         Y9OrgBase parent = compositeOrgBaseManager.getOrgUnitAsParent(y9Position.getParentId());
 
         if (StringUtils.isBlank(y9Position.getId())) {
@@ -123,6 +122,14 @@ public class Y9PositionServiceImpl implements Y9PositionService {
         y9Position.setDisabled(false);
 
         return save(y9Position);
+    }
+
+    @Override
+    public Y9Position create(String parentId, String jobId) {
+        Y9Position y9Position = new Y9Position();
+        y9Position.setParentId(parentId);
+        y9Position.setJobId(jobId);
+        return this.saveOrUpdate(y9Position);
     }
 
     @Override
@@ -306,7 +313,8 @@ public class Y9PositionServiceImpl implements Y9PositionService {
         Y9OrgBase updatedOrgBase = event.getUpdatedEntity();
 
         if (Y9OrgUtil.isAncestorChanged(originOrgBase, updatedOrgBase)) {
-            List<Y9Position> positionList = y9PositionRepository.findByParentIdOrderByTabIndexAsc(updatedOrgBase.getId());
+            List<Y9Position> positionList =
+                y9PositionRepository.findByParentIdOrderByTabIndexAsc(updatedOrgBase.getId());
             for (Y9Position position : positionList) {
                 this.saveOrUpdate(position);
             }

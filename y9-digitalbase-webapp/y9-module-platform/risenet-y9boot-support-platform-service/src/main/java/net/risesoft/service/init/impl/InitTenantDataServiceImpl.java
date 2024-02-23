@@ -8,9 +8,12 @@ import org.springframework.transaction.annotation.Transactional;
 import lombok.RequiredArgsConstructor;
 
 import net.risesoft.consts.InitDataConsts;
+import net.risesoft.entity.Y9Job;
 import net.risesoft.entity.Y9Manager;
 import net.risesoft.entity.Y9OptionClass;
 import net.risesoft.entity.Y9Organization;
+import net.risesoft.entity.Y9Person;
+import net.risesoft.entity.Y9Position;
 import net.risesoft.enums.platform.ManagerLevelEnum;
 import net.risesoft.service.dictionary.Y9OptionClassService;
 import net.risesoft.service.dictionary.Y9OptionValueService;
@@ -19,6 +22,8 @@ import net.risesoft.service.org.Y9JobService;
 import net.risesoft.service.org.Y9ManagerService;
 import net.risesoft.service.org.Y9OrganizationService;
 import net.risesoft.service.org.Y9PersonService;
+import net.risesoft.service.org.Y9PositionService;
+import net.risesoft.service.relation.Y9PersonsToPositionsService;
 
 /**
  * @author shidaobang
@@ -36,32 +41,33 @@ public class InitTenantDataServiceImpl implements InitTenantDataService {
     private final Y9OptionValueService y9OptionValueService;
     private final Y9JobService y9JobService;
     private final Y9PersonService y9PersonService;
+    private final Y9PositionService y9PositionService;
+    private final Y9PersonsToPositionsService y9PersonsToPositionsService;
 
     @Override
     @Transactional(readOnly = false)
     public void initAll(String tenantId) {
         // 租户的示例数据
         // FIXME 是否需要？
-        this.initJob();
-        this.initOrgUnit();
+        this.initOrg();
 
         // 租户必要的数据
         this.initOptionClass();
         this.initManagers();
     }
 
-    private void initOrgUnit() {
+    private void initOrg() {
         boolean organizationNotExists = y9OrganizationService.list(false).isEmpty();
         if (organizationNotExists) {
-            Y9Organization y9Organization = y9OrganizationService.create("组织", Boolean.FALSE);
-            y9PersonService.create(y9Organization.getId(), "业务用户", "user", "13511111111");
-        }
-    }
+            Y9Job y9Job = y9JobService.create("普通职位", "001");
 
-    private void initJob() {
-        boolean jobNotExists = y9JobService.count() == 0;
-        if (jobNotExists) {
-            y9JobService.create("普通职位", "001");
+            Y9Organization y9Organization = y9OrganizationService.create("组织", Boolean.FALSE);
+
+            Y9Person y9Person = y9PersonService.create(y9Organization.getId(), "业务用户", "user", "13511111111");
+
+            Y9Position y9Position = y9PositionService.create(y9Organization.getId(), y9Job.getId());
+
+            y9PersonsToPositionsService.addPositions(y9Person.getId(), new String[] {y9Position.getId()});
         }
     }
 

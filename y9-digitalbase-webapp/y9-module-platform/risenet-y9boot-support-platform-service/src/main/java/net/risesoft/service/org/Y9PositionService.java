@@ -31,7 +31,16 @@ public interface Y9PositionService {
      * @param y9Position 岗位对象
      * @return {@link Y9Position}
      */
-    Y9Position createPosition(Y9Position y9Position);
+    Y9Position create(Y9Position y9Position);
+
+    /**
+     * 创建岗位
+     *
+     * @param parentId 父ID
+     * @param jobId 职位id
+     * @return 岗位实体
+     */
+    Y9Position create(String parentId, String jobId);
 
     /**
      * 根据id数组删除岗位
