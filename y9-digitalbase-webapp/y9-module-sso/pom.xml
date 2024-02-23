@@ -15,8 +15,8 @@
         <relativePath>../pom.xml</relativePath>
     </parent>
 
-    <modules>        
-        <module>risenet-y9boot-webapp-sso-server-6.6.x</module>
+    <modules>
+        <module>risenet-y9boot-webapp-sso-server</module>
     </modules>
 
 </project>
