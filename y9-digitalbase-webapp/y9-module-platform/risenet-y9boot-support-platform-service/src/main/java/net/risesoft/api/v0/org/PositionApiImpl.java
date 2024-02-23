@@ -90,7 +90,7 @@ public class PositionApiImpl implements PositionApi {
         Y9LoginUserHolder.setTenantId(tenantId);
 
         Y9Position y9Position = Y9JsonUtil.readValue(positionJson, Y9Position.class);
-        y9Position = y9PositionService.createPosition(y9Position);
+        y9Position = y9PositionService.create(y9Position);
         return Y9ModelConvertUtil.convert(y9Position, Position.class);
     }
 

@@ -26,18 +26,6 @@ public class CreatePositionDTO implements Serializable {
     @NotBlank
     private String jobId;
 
-    /** 职务 */
-    private String duty;
-
-    /** 职务级别 */
-    private Integer dutyLevel = 0;
-
-    /** 职级名称 */
-    private String dutyLevelName;
-
-    /** 职务类型 */
-    private String dutyType;
-
     /** 岗位容量，默认容量为1，即一人一岗 */
     private Integer capacity = 1;
 
