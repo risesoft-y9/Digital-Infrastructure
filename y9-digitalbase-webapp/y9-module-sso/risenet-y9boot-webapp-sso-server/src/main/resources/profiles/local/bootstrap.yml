@@ -14,4 +14,4 @@ spring:
                 username: nacos
                 password: nacos
                 extension-configs:
-                    -   dataId: sso.yml
+                    - dataId: sso.yml

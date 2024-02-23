@@ -14,4 +14,4 @@ spring:
                 username: nacos
                 password: Risesoft@2022
                 extension-configs:
-                    -   dataId: sso.yml
+                    - dataId: sso.yml

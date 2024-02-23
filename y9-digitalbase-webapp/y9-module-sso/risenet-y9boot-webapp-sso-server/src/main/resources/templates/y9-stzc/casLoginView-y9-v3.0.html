@@ -1,4 +1,4 @@
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN""http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
     <meta charset="UTF-8"/>
@@ -42,18 +42,14 @@
             </div>
             <div class="login_fields__user">
                 <div class="icon"><img alt="" th:src="@{/y9static/y9new/img/user_icon_copy.png}"/></div>
-                <input id="username" placeholder="用户名" type="text" autocomplete="off" value=""
-                       onBlur="inputOnBlur();"/>
-                <input id="username1" name="username" style="width: 150px;" tabindex="1" autocomplete="false"
-                       htmlescape="true" type="hidden"/>
-                <input id="tenantShortName" name="tenantShortName" value="stzc" style="width: 150px;"
-                       autocomplete="false" htmlescape="true" type="hidden"/>
+                <input id="username" placeholder="用户名" type="text" autocomplete="off" value="" onBlur="inputOnBlur();"/>
+                <input id="username1" name="username" style="width: 150px;" tabindex="1" autocomplete="false" htmlescape="true" type="hidden"/>
+                <input id="tenantShortName" name="tenantShortName"  value="stzc" style="width: 150px;" autocomplete="false" htmlescape="true" type="hidden"/>
                 <div class="validation"><img alt="" th:src="@{/y9static/y9new/img/tick.png}"/></div>
             </div>
             <div class="login_fields__password">
                 <div class="icon"><img alt="" th:src="@{/y9static/y9new/img/lock_icon_copy.png}"/></div>
-                <input id="password" tabindex="2" type="text" htmlescape="true" autocomplete="off"
-                       placeholder="请输入您的密码" onfocus="this.type='password'"/>
+                <input id="password" tabindex="2" type="text" htmlescape="true" autocomplete="off" placeholder="请输入您的密码" onfocus="this.type='password'"/>
                 <input id="password1" name="password" htmlescape="true" autocomplete="off" type="hidden"/>
 
                 <div class="validation"><img alt="" th:src="@{/y9static/y9new/img/tick.png}"/></div>
@@ -62,7 +58,7 @@
             <input type="hidden" id="loginType" name="loginType" value="loginName"/>
             <input type="hidden" id="captchaKey" name="captchaKey" value=""/>
             <input type="hidden" id="noLoginScreen" name="noLoginScreen" value="false"/>
-            <input type="hidden" id="screenDimension" name="screenDimension" value=""/>
+             <input type="hidden" id="screenDimension" name="screenDimension" value=""/>
             <input type="hidden" id="pwdEcodeType" name="pwdEcodeType" value=""/>
             <input type="hidden" name="execution" th:value="${flowExecutionKey}"/>
             <input type="hidden" name="_eventId" value="submit"/> <input type="hidden" name="geolocation"/>
@@ -97,8 +93,7 @@
     <div>
         <span>北京首通智城科技创新有限责任公司版权所有</span>
         <a href="https://beian.miit.gov.cn/" target="_blank">京ICP备16060306号-4</a>
-        <a href="http://www.beian.gov.cn/portal/registerSystemInfo?recordcode=11010802026965" target="_blank"><img
-                th:src="@{/y9static/y9new/img/police.png}"/>京公网安备11010802026965号</a>
+        <a href="http://www.beian.gov.cn/portal/registerSystemInfo?recordcode=11010802026965" target="_blank"><img th:src="@{/y9static/y9new/img/police.png}"/>京公网安备11010802026965号</a>
     </div>
     <span>建议您使用1920x1080分辨率，IE9.0或以上版本浏览器访问本站，以获得最佳用户体验。 技术支持：0755-821072292</span>
 </div>
@@ -150,10 +145,7 @@
                 $("#toolTipsUl").empty();
                 $(".toolTips").attr({style: "display: flex;"});
                 data.length && data.map((item) => {
-                    $("<li></li>", {
-                        text: item.loginName,
-                        id: item.tenantShortName
-                    }).appendTo("#toolTipsUl").on("click", mouseClickEvent);
+                    $("<li></li>", {text: item.loginName, id: item.tenantShortName}).appendTo("#toolTipsUl").on("click", mouseClickEvent);
                 });
             });
         }, 250);
@@ -634,10 +626,10 @@
             }
         });
     }
-
-
-    function inputOnBlur() {
-        $("#username1").val($("#username").val());
+    
+    
+    function inputOnBlur(){
+    	$("#username1").val($("#username").val());
     }
 </script>
 </body>
