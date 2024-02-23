@@ -1,4 +1,4 @@
-//Ajax提交
+﻿//Ajax提交
 function AjaxPost(Url,JsonData,LodingFun,ReturnFun) {
     $.ajax({
         type: "post",
