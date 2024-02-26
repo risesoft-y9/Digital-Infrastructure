@@ -1,0 +1,126 @@
+management:
+    endpoints:
+        web:
+            exposure:
+                include: '*'
+server:
+    port: 7055
+    servlet:
+        encoding:
+            charset: UTF-8
+            enabled: true
+            force: true
+        session:
+            tracking-modes: COOKIE
+spring:
+    application:
+        name: log
+    autoconfigure:
+        exclude:
+            - org.springframework.boot.autoconfigure.jdbc.DataSourceAutoConfiguration
+    cloud:
+        nacos:
+            config:
+                enabled: false
+                group: DEFAULT_GROUP
+                namespace: dev
+                server-addr: http://localhost:8848
+                username: nacos
+                password: nacos-83204585
+            discovery:
+                enabled: false
+    config:
+        import:
+            - optional:nacos:log.yml
+            #- optional:nacos:test01.yml?group=group_02
+            #- optional:nacos:test02.yml?group=group_03&refreshEnabled=false
+    data:
+        elasticsearch:
+            repositories:
+                enabled: true
+        redis:
+            database: 8
+            host: localhost
+            port: 7379
+            username: default
+            password: y9i-83204585
+            lettuce:
+                pool:
+                    max-active: 8
+                    max-idle: 8
+                    max-wait: -1
+                    min-idle: 0
+            ssl: 
+                enabled: false
+    elasticsearch:
+        uris: localhost:9200
+        username: elastic
+        password: 'risesoft'
+    kafka:
+        bootstrap-servers: localhost:9092
+        consumer:
+            auto-commit-interval: 1000
+            enable-auto-commit: true
+            group-id: y9log-server
+    main:
+        allow-bean-definition-overriding: true
+    
+y9:
+    systemName: ${spring.application.name}
+    internalIp: 192.168.x.x,10.161.x.x
+    app:
+        log:
+            accessLogIndex: logindex
+            accessLogSaveTarget: elastic
+            kafkaEnabled: true
+    service:
+        org:
+            directUrl: http://localhost:7055
+    common:
+        cacheEnabled: true
+        kafkaEnabled: true
+        tomcatPassword: tomcat
+        tomcatUserName: tomcat
+        orgBaseUrl: http://localhost:7055/platform
+    feature:
+        apisix:
+            enabled: false
+            adminAddress: http://localhost:9080/apisix/admin/
+            adminKey: edd1c9f034335f136f87ad84b625c8f1
+            upstreamType: roundrobin   #负载均衡算法，1、roundrobin:轮训 ; 2、chash:一致性哈希; 3、ewma:指数加权移动平均法; 4、least_conn:最小连接数
+            #etcdAddress: http://localhost:2379  #有多个时逗号分隔
+            apiBasePackages: net.risesoft #有多个时逗号分隔
+            apiDomain: vue
+        elasticsearch:
+            packagesToScanEntityPublic: net.risesoft.log.entity
+            packagesToScanRepositoryPublic: net.risesoft.log.repository
+        log:
+            enabled: true
+        security:
+            enabled: true
+            cors:
+                allowCredentials: true
+                allowedOriginPatterns:
+                    - https://*.youshengyun.com
+                    - http://*.youshengyun.com
+                    - http://localhost:8080
+                    - http://localhost:8081
+                    - http://localhost:7070
+            xss:
+                ignoreParam:
+                    - ID
+                    - properties
+        oauth2:
+            resource:
+                enabled: true
+                saveLogMessage: false
+                saveOnlineMessage: false
+                allowBasicAuthentication: true
+                allowFormEncodedBodyParameter: true
+                allowUriQueryParameter: true
+                protectedUrlPatterns: /admin/*
+                opaque:
+                    client-id: clientid
+                    client-secret: secret
+                    introspection-uri: http://localhost:7055/sso/oauth2.0/introspect
+                    profile-uri: http://localhost:7055/sso/oauth2.0/profile

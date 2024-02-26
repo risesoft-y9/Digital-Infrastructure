@@ -1,0 +1,328 @@
+cas:
+    audit:
+        engine:
+            enabled: false
+            numberOfDaysInHistory: 30
+        redis:
+            enabled: false
+            useSsl: false
+            host: "localhost"
+            port: 6379
+            database: 12
+            username: default
+            password: "12345678"
+            timeout: "PT60S"
+            pool:
+                enabled: true
+                testWhileIdle: true
+                maxActive: 20
+                maxIdle: 5
+                maxWait: 1000
+                minIdle: 1
+    authn:
+        accept:
+            enabled: false
+        throttle:
+            failure:
+                threshold: 1
+                rangeSeconds: 3
+                throttleWindowSeconds: "PT600S"
+        oauth:
+            crypto:
+                encryption:
+                    key: "-VXZn5YBBmZMF1IS3hUtJbDZyrbG5USRi4Tvy8wm2uY"
+                    keySize: 256
+                signing:
+                    key: "EqOnwuhEV--lasE_nkbKq5sRz9AXbcOqx4z8BERorHmboftdiRwsVGYf9Lwz7WvfBhdhANEAWhurf4dgorCNHA"
+                    keySize: 512
+            refreshToken:
+                timeToKillInSeconds: P14D
+            code:
+                timeToKillInSeconds: 600
+                numberOfUses: 1
+            access-token:
+                timeToKillInSeconds: PT7200S
+                maxTimeToLiveInSeconds: PT28800S
+                createAsJwt: false
+                crypto:
+                    enabled: true
+                    encryptionEnabled: true
+                    signingEnabled: true
+                    encryption:
+                        key: "n7yTVThruFI2qmhPGDGfaudwO1mgSz2qTcnKPMHp2SQ"
+                        keySize: 256
+                    signing:
+                        key: "O7lkls3YXgzeHOwXEjm6kn-z8-DW0wvrmoQ2C1ayNsLd1gFhkWHCLEypl5kt-PL729C6OSQ83pVbysIrhS5ZaQ"
+                        keySize: 512
+            grants:
+                resourceOwner:
+                    requireServiceHeader: true
+            core:
+                userProfileViewType: FLAT
+                bypassApprovalPrompt: true
+            session-replication:
+                cookie:
+                    crypto:
+                        encryption:
+                            key: "bUBCgWJ9pPlFG1QbzWx9xaxgvp3ttxZdAs1RQPhzCig"
+                        signing:
+                            key: "igxMHmvG4tAJShq_Jq_ifH20PrthGcEjIu8n-ZEnx7HH8QS0po7ETvaohbOvWEI8-RxKdaWT5cabZoTcalLMOw"
+        token:
+            crypto:
+                encryption:
+                    key: "56hT1RUBooVtRTm_uSTZKubvK6V26bQ0fJAN_QvPfXQ"
+                    keySize: 256
+                signing:
+                    key: "vUkG4Wpsp8H8WGpys9-9Co6zxz1WUQvuiflbXMxvHvrN3KWPgUDEllmayek0BrqvepYY0Ha2NrOonj-2LUNbsw"
+                    keySize: 512
+
+    httpClient:
+        allowLocalUrls: true
+        hostNameVerifier: none
+    httpWebRequest:
+        header:
+            xframe: false
+            xframeOptions: SAMEORIGIN
+            #contentSecurityPolicy: 'frame-ancestors http://localhost:* http://127.0.0.1:* http://192.168.56.1:*'
+        cors:
+            enabled: true
+            allowCredentials: true
+            allowHeaders: "*"
+            allowMethods: "*"
+            allowOriginPatterns: "*"
+            maxAge: 36000
+    locale:
+        defaultValue: zh_CN
+    theme:
+        defaultThemeName: y9-apereo
+        paramName: theme
+    messageBundle:
+        useCodeMessage: false
+        fallbackSystemLocale: false
+    view:
+        #当service参数为空时，利用defaultRedirectUrl
+        defaultRedirectUrl: http://localhost:7070/home
+        #当defaultRedirectUrl为空、并且service参数为空时，自动计算service
+        authorizedServicesOnSuccessfulLogin: true
+    webflow:
+        crypto:
+            enabled: true
+            encryption:
+                key: "R2wxx0EpHUz_3ZbDEovE3w"
+                keySize: 16
+            signing:
+                key: "BEAHMw9OS4eQ2jxav4S1iDSkebnC4l5sKMGget-yhbgut1aH6prVqGLNex5PVAXqT7lSl1bzV_OOu8OcgH22EA"
+                keySize: 512
+    logout:
+        followServiceRedirects: true
+        confirmLogout: false
+    slo:
+        asynchronous: false
+    server:
+        name: http://localhost:7099
+        prefix: http://localhost:7099/sso
+    service-registry:
+        cache:
+            duration: PT8H
+            cacheSize: 10000
+            initialCapacity: 1000
+        core:
+            # 建议仅用于测试（集群部署时需考虑 service.json 的同步，使用 jpa-service-registry 即可）
+            initFromJson: true
+        json:
+            location: classpath:/services
+            watcherEnabled: true
+        jpa:
+            enabled: true
+            dialect: org.hibernate.dialect.MySQLDialect
+            driver-class: com.mysql.cj.jdbc.Driver
+            ddl-auto: update
+            url: jdbc:mysql://localhost:3306/y9_public?serverTimezone=GMT%2B8&nullCatalogMeansCurrent=true&useUnicode=true&characterEncoding=utf-8&rewriteBatchedStatements=true&useCompression=true&useSSL=false&allowPublicKeyRetrieval=true
+            user: root
+            password: '12345678'
+            idleTimeout: PT8M
+            leakThreshold: 0
+            autocommit: true
+        schedule:
+            enabled: true
+            repeatInterval: "PT30M"
+            startDelay: "PT2M"
+    tgc:
+        crypto:
+            enabled: true
+            encryption:
+                key: "RloscjL5pfht024HFh6i-Sp9uIhbhplOEqTIA06v0_Q"
+                keySize: 256
+            signing:
+                key: "im3F4MvBqkH9NCCpIy6JYD8tpoKz5kJyf-khj_-TWi0DzWO95RtBMfXRsd4pYWRCMnGyueM3JQq3SxOhHVcrOA"
+                keySize: 512
+        httpOnly: true
+        maxAge: -1
+        name: TGC
+        path: /sso/
+        pinToSession: false
+        rememberMeMaxAge: P14D
+        secure: true
+        sameSitePolicy: None
+    ticket:
+        trackDescendantTickets: true
+        crypto:
+            enabled: false
+            encryption:
+                key: "p9PWTU6aGGD_NI8dznomSLEcRu2XIjSSgnSWaxwzCvI"
+                keySize: 256
+            signing:
+                key: "XpUZR17C_vEero3mRpeGyTsdc_QMYZb8_xYdwEFthtVz53qbvLOw0oTh9y4i2NRu_o43CNZbKVAN4m5AcWxsXw"
+                keySize: 512
+        registry:
+            cleaner:
+                schedule:
+                    enabled: true
+                    startDelay: "PT15S"
+                    repeatInterval: "PT30M"
+            redis:
+                enabled: true
+                useSsl: false
+                host: "localhost"
+                port: 6379
+                database: 13
+                username: default
+                password: "12345678"
+                timeout: "PT60S"
+                pool:
+                    enabled: true
+                    testWhileIdle: true
+                    maxActive: 20
+                    maxIdle: 5
+                    maxWait: 1000
+                    minIdle: 1
+                crypto:
+                    enabled: true
+                    encryption:
+                        key: "6vJAg4gWORY0f8dF5XIc8Q"
+                        keySize: 16
+                    signing:
+                        key: "CzPeT3D2l7C-dwR2LfV9DFHrwmPGXCSsEReZeTn76xiWNU45De8s1CAdPNXovoBpEilbeTY1PkwPQuMxZdN4mQ"
+                        keySize: 512
+        st:
+            maxLength: 50
+            numberOfUses: 10
+            timeToKillInSeconds: 600
+        tgt:
+            primary:
+                maxTimeToLiveInSeconds: 28800
+                timeToKillInSeconds: 7200
+            core:
+                maxLength: 50
+            rememberMe:
+                enabled: true
+                timeToKillInSeconds: 28800
+                #supportedUserAgents: 
+                #supportedIpAddresses: 127.0.0.1,0:0:0:0:0:0:0:1
+
+management:
+    endpoint:
+        health:
+            show-details: always
+    endpoints:
+        web:
+            exposure:
+                include: '*'
+server:
+    port: 7099
+    servlet:
+        context-parameters:
+            isLog4jAutoInitializationDisabled: true
+        context-path: /sso
+        encoding:
+            charset: UTF-8
+            enabled: true
+            force: true
+            force-request: true
+            force-response: true
+        session:
+            cookie:
+                http-only: true
+                secure: false
+            timeout: 300
+            tracking-modes: COOKIE
+    shutdown: graceful
+    ssl:
+        enabled: false
+    tomcat:
+        accesslog:
+            enabled: true
+            pattern: '%t %a "%r" %s (%D ms)'
+            suffix: .log
+        additional-tld-skip-patterns: '*.jar'
+        background-processor-delay: 0s
+        basedir: build/tomcat
+        connection-timeout: PT20S
+        max-http-form-post-size: 2097152
+        remoteip:
+            port-header: X-Forwarded-Port
+            protocol-header: X-Forwarded-Proto
+            protocol-header-https-value: https
+            remote-ip-header: X-FORWARDED-FOR
+        threads:
+            max: 400
+            min-spare: 10
+        uri-encoding: UTF-8
+spring:
+    cloud:
+        compatibility-verifier:
+            enabled: false
+        config:
+            enabled: false
+    config:
+        import:
+            - optional:nacos:sso.yml
+    docker:
+        compose:
+            enabled: false
+            file: docker-dev.yml
+    data:
+        redis:
+            database: 8
+            host: localhost
+            port: 6379
+            username: default
+            password: '12345678'
+            ssl:
+                enabled: false
+            lettuce:
+                pool:
+                    max-active: 8
+                    max-idle: 8
+                    max-wait: -1
+                    min-idle: 1
+    jmx:
+        enabled: false
+    session:
+        timeout: 3600
+    main:
+        allow-bean-definition-overriding: true
+        allow-circular-references: false
+        lazy-initialization: false
+    security:
+        user:
+            name: y9admin
+            password: risesoft
+    thymeleaf:
+        cache: true
+        mode: HTML
+        encoding: UTF-8
+        #prefix: classpath:/templates/
+        #suffix: .html
+        template-resolver-order: 100
+    cloud:
+        nacos:
+            discovery:
+                enabled: false
+y9:
+    common:
+        kafkaEnabled: true
+        logBaseUrl: http://localhost:7099/log
+    login:
+        casLoginView: "casLoginView-y9-v3.0"
+        credentialPropsOptional: "isValidateIE,screenDimension,userAgent,systemName,clientIp,clientMac,clientDiskId,clientHostName,deptId,positionId,pwdEcodeType"

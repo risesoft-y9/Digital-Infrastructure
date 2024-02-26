@@ -1,0 +1,233 @@
+management:
+    endpoint:
+        health:
+            show-details: always
+    endpoints:
+        web:
+            exposure:
+                include: '*'
+server:
+    port: 7055
+    servlet:
+        session:
+            tracking-modes: COOKIE
+            timeout: 300
+            cookie:
+                http-only: true
+        encoding:
+            charset: UTF-8
+            enabled: true
+            force: true
+            force-request: true
+            force-response: true
+spring:
+    application:
+        name: platform
+    autoconfigure:
+        exclude:
+            - org.springframework.boot.autoconfigure.jdbc.DataSourceAutoConfiguration
+            - org.springframework.boot.autoconfigure.quartz.QuartzAutoConfiguration
+            - org.springframework.boot.autoconfigure.orm.jpa.HibernateJpaAutoConfiguration
+    cloud:
+        nacos:
+            config:
+                enabled: false
+                group: DEFAULT_GROUP
+                namespace: dev
+                server-addr: https://dev.youshengyun.com:443
+                username: nacos
+                password: nacos@2022
+            discovery:
+                enabled: false
+    config:
+        import:
+            - optional:nacos:platform.yml
+            #- optional:nacos:test01.yml?group=group_02
+            #- optional:nacos:test02.yml?group=group_03&refreshEnabled=false
+    cache:
+        redis:
+            time-to-live: PT2H
+        type: redis
+    data:
+        redis:
+            database: 8
+            host: localhost
+            port: 6379
+            username: default
+            password: '12345678'
+            ssl:
+                enabled: false
+            lettuce:
+                pool:
+                    max-active: 8
+                    max-idle: 8
+                    max-wait: -1
+                    min-idle: 1
+            repositories:
+                enabled: false
+    datasource:
+        hikari:
+            y9-public:
+                driverClassName: com.mysql.cj.jdbc.Driver
+                jdbcUrl: jdbc:mysql://localhost:3306/y9_public?serverTimezone=GMT%2B8&nullCatalogMeansCurrent=true&useUnicode=true&characterEncoding=utf-8&rewriteBatchedStatements=true&useCompression=true&useSSL=false&allowPublicKeyRetrieval=true
+                username: root
+                password: '12345678'
+                maximumPoolSize: 20
+                minimumIdle: 1
+    jpa:
+        #databasePlatform: org.hibernate.dialect.MySQL8Dialect
+        properties:
+            hibernate:
+                dialect: org.hibernate.dialect.MySQL8Dialect
+                hbm2ddl:
+                    auto: update
+                jdbc:
+                    batchSize: 100
+                showSql: true
+        hibernate:
+            ddl-auto: none
+            naming:
+                implicit-strategy: org.hibernate.boot.model.naming.ImplicitNamingStrategyLegacyHbmImpl
+                physical-strategy: org.hibernate.boot.model.naming.PhysicalNamingStrategyStandardImpl
+        open-in-view: false
+    kafka:
+        bootstrap-servers: localhost:9094
+        consumer:
+            auto-commit-interval: 1000
+            enable-auto-commit: true
+            group-id: 'y9platform-server'
+    main:
+        allow-bean-definition-overriding: true
+        allow-circular-references: false
+    servlet:
+        multipart:
+            max-file-size: 200MB
+            max-request-size: 1000MB
+    docker:
+        compose:
+            enabled: false
+            file: docker-compose.yaml
+y9:
+    systemName: riseplatform
+    systemCnName: '数字底座'
+    internalIp: 192.168.x.x,10.161.x.x,10.1.x.x,172.20.x.x
+    app:
+        log:
+            kafkaEnabled: true
+        platform:
+            systemName: riseplatform
+            position-name-pattern: "{0}（{1}）"
+    service:
+        log:
+            directUrl: http://localhost:7055
+    common:
+        cacheEnabled: true
+        kafkaEnabled: true
+        defaultPassword: Risesoft@2022
+        tomcatPassword: tomcat
+        tomcatUserName: tomcat
+        logBaseUrl: http://localhost:7055/log
+        orgBaseUrl: http://localhost:7055/platform
+    feature:
+        apisix:
+            enabled: false
+            adminAddress: http://localhost:9080/apisix/admin/
+            adminKey: edd1c9f034335f136f87ad84b625c8f1
+            upstreamType: roundrobin   #负载均衡算法，1、roundrobin:轮训 ; 2、chash:一致性哈希; 3、ewma:指数加权移动平均法; 4、least_conn:最小连接数
+            #etcdAddress: http://localhost:2379  #有多个时逗号分隔
+            apiBasePackages: net.risesoft #有多个时逗号分隔
+        file:
+            base64FileName: false
+            encryptionFileContent: false
+            #privateKey: 
+            #publicKey: 
+            ftp:
+                host: localhost
+                port: 21
+                username: y9admin
+                password: '111111'
+                blockWhenExhausted: true
+                bufferSize: 10240
+                connectTimeOut: 50000
+                controlEncoding: UTF-8
+                dataTimeout: 1200000
+                fileType: 2
+                maxIdle: 10
+                maxTotal: 50
+                minIdle: 2
+                maxWaitMillis: 5400000
+                testOnBorrow: true
+                testOnCreate: true
+                testOnReturn: true
+                testWhileIdle: true
+                useEPSVwithIPv4: false
+                passiveMode: true
+        jpa:
+            packagesToScanEntityPublic: net.risesoft.y9public.entity
+            packagesToScanEntityTenant: net.risesoft.entity
+            packagesToScanRepositoryPublic: net.risesoft.y9public.repository
+            packagesToScanRepositoryTenant: net.risesoft.repository
+        liquibase:
+            tenant-enabled: true
+            public-enabled: true
+        listener:
+            kafka:
+                enabled: false
+        log:
+            enabled: false
+        publish:
+            kafka:
+                enabled: true
+        session:
+            redis:
+                enabled: true
+                maxInactiveIntervalInSeconds: 3600
+        security:
+            enabled: true
+            csrf:
+                accepted-referer:
+                    - youshengyun.com
+                    - localhost
+                    - 127.0.0.1
+            cors:
+                allowCredentials: true
+                allowedOriginPatterns:
+                    - https://*.youshengyun.com
+                    - http://*.youshengyun.com
+                    - http://localhost:7056
+                    - http://localhost:8080
+                    - http://localhost:8081
+                    - http://localhost:7070
+                    - http://127.0.0.1:7055
+                    - http://127.0.0.1:7056
+                    - http://127.0.0.1:17055
+            xss:
+                ignoreParam:
+                    - ID
+                    - properties
+                    - operationArray
+                    - resourceInfoJson
+                    - meta
+                    - accessLogJson
+                    - clickedAppJson
+                    - departmentJson
+                    - personJson
+                    - groupJson
+                    - positionJson
+                    - password
+                    - name
+                    - whereClause
+        oauth2:
+            resource:
+                enabled: true
+                saveLogMessage: false
+                saveOnlineMessage: false
+                allowBasicAuthentication: true
+                allowFormEncodedBodyParameter: true
+                allowUriQueryParameter: true
+                protectedUrlPatterns: /api/*
+                opaque:
+                    client-id: clientid
+                    client-secret: secret
+                    introspection-uri: http://localhost:7099/sso/oauth2.0/introspect
+                    profile-uri: http://localhost:7099/sso/oauth2.0/profile

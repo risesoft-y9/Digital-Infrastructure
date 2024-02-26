@@ -1,0 +1,46 @@
+server:
+    port: 7057
+    servlet:
+        context-path: /demo-api
+y9:
+    #当前业务系统在数字底座中的系统英文名称，需要与注册到数字底座时的系统名称保持一致
+    systemName: y9demo_kernel_api
+    feature:
+        #单点登录配置信息
+        oauth2:
+            resource:
+                #是否开启OAuth2认证
+                enabled: true
+                #保存用户操作日志信息，如果业务系统集成了日志组件，这里设置为false或者true都是不保存用户操作日志的
+                saveLogMessage: false
+                #保存用户在线信息
+                saveOnlineMessage: false
+                #允许基本身份验证
+                allowBasicAuthentication: true
+                #是否允许从请求体参数中获取访问令牌
+                allowFormEncodedBodyParameter: true
+                #是否允许从 uri 查询参数中获取访问令牌
+                allowUriQueryParameter: true
+                #受保护url的正则表达式，/*表示所有地址都受保护   /api/*表示url中包含/api/的才受保护
+                protectedUrlPatterns: /*
+                opaque:
+                    #客户端id，由数字底座运维人员分配
+                    client-id: clientid
+                    #客户密钥，由数字底座运维人员分配
+                    client-secret: secret
+                    #检测 uri，可以查询给定访问令牌的状态
+                    introspection-uri: http://localhost:7055/sso/oauth2.0/introspect
+                    #获取用户信息 uri
+                    profile-uri: http://localhost:7055/sso/oauth2.0/profile
+    service:
+        org:
+            #数字底座后端服务地址，调用数字底座接口信息时会用到
+            directUrl: http://localhost:7055
+#日志发布消息kafka配置
+spring:
+    kafka:
+        #数字底座kafka地址
+        bootstrap-servers: localhost:9092
+        consumer:
+            #指定默认消费者group-id
+            group-id: y9demo-kernel-api-server
