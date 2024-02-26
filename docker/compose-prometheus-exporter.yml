@@ -85,6 +85,17 @@ services:
       - "9121:9121"
     networks:
       - y9-share-net
+  mongodb-exporter:
+    image: percona/mongodb_exporter:0.40.0
+    restart: always
+    container_name: mongodb-exporter
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+    command: --mongodb.uri=mongodb://y9admin:83204585@stack-mongodb_mongodb:27017/admin?authSource=admin --compatible-mode --log.level="info" --collect-all
+    networks:
+      - y9-share-net
+    ports:
+      - "9216:9216"
 
 networks:
   y9-share-net:
