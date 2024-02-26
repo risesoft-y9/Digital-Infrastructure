@@ -204,11 +204,10 @@
                 </div>
                 <div class="login_fields__user">
                     <div class="icon"><img alt="" th:src="@{/y9static/y9new/img/user_icon_copy.png}"/></div>
-                    <input id="username" placeholder="用户名" type="text" autocomplete="off" value=""
-                           oninput="inputEvent()" onblur="getTenant();"/>
+                    <input id="username" placeholder="用户名" type="text" autocomplete="off" value="" oninput="inputOnBlur()"/>
                     <input id="username1" name="username" style="width: 150px;" tabindex="1" autocomplete="false"
                            htmlescape="true" type="hidden"/>
-                    <input id="tenantShortName" name="tenantShortName" style="width: 150px;" autocomplete="false"
+                    <input id="tenantShortName" name="tenantShortName" value="gxs"  style="width: 150px;" autocomplete="false"
                            htmlescape="true" type="hidden"/>
                 </div>
                 <div class="login_fields__password">
@@ -534,6 +533,10 @@
             }
         });
     });
+
+    function inputOnBlur(){
+        $("#username1").val($("#username").val());
+    }
 </script>
 </body>
 
