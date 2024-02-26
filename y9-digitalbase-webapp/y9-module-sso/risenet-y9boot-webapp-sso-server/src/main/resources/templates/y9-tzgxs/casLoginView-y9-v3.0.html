@@ -280,10 +280,11 @@
             var password = $.cookie("password");
             username = decode64(username);
             $("#username").val(username);
-            if ($.trim(username).length > 0 && username.indexOf("@") != -1) {
-                $('#username1').val(username.split("@")[0]);
-                $('#tenantShortName').val(username.split("@")[1]);
-            }
+            //if ($.trim(username).length > 0 && username.indexOf("@") != -1) {
+                //$('#username1').val(username.split("@")[0]);
+                //$('#tenantShortName').val(username.split("@")[1]);
+            //}
+            $('#username1').val(username);
             $("#password").val(decode64(password));
             $("#checkbox1").attr("checked", "checked");
         }
