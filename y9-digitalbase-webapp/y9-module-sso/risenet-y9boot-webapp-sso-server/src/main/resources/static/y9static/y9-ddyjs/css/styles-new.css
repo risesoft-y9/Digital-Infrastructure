@@ -73,12 +73,16 @@ body .login_form {
     padding-right: 53px;
 }
 
+#fm1 {
+    float: left;
+}
+
 body .login_form .login_title, body .login_fields, body .login_fields__submit {
     width: 350px;
 }
 
 body .login_form .login_title {
-    color: #FFF;
+    color: #f6e05a;
     font-family: AaBoruokaishuBold;
     /*font-size: 52px;*/
     font-size: 38px;
@@ -97,7 +101,7 @@ body .login_fields {
 }
 
 body .login_fields .form-label {
-    color: #FFF;
+    color: #f6e05a;
     font-family: AaBoruokaishuBold;
     /*font-size: 28px;*/
     font-size: 22px;
@@ -122,8 +126,8 @@ body .login_fields input[type='text'], body .login_fields input[type='password']
     box-shadow: none;
     border-radius: 2px;
     background: transparent;
-    color: #FFF !important;
-    border-bottom: 2px solid #FFF;
+    color: #f6e05a !important;
+    border-bottom: 2px solid #F7E25D;
     font-family: AaBoruokaishuBold;
     font-size: 24px;
     font-style: normal;
@@ -133,9 +137,9 @@ body .login_fields input[type='text'], body .login_fields input[type='password']
 
 body .login_fields input[type='text']:hover, body .login_fields input[type='password']:hover {
     border-radius: 2px;
-    border-bottom: 2px solid #F7E25D;
+    border-bottom: 2px solid #fff3a2;
     color: #FFF;
-    box-shadow: 0px 4px 10px -12px #F7E25D
+    box-shadow: 0px 4px 10px -12px #fff3a2
 }
 
 body .login_fields__user, body .login_fields__password {
@@ -192,7 +196,7 @@ body .login_fields__submit:hover {
 
 
 body .login_fields_remember_password {
-    color: #FFF;
+    color: #f6e05a;
     font-family: "PingFang SC";
     font-size: 16px;
     font-style: normal;
@@ -209,13 +213,14 @@ body .login_fields_remember_password .left {
 input[type="checkbox"] {
     -webkit-appearance: none; /*清除复选框默认样式*/
     border-radius: 2px;
-    border: 1px solid #FFF;
+    border: 1px solid #f6e05a;
     vertical-align: middle;
     width: 17px;
     height: 17px;
     margin-top: 0;
     margin-right: 10px !important;
     cursor: pointer;
+    color: #f6e05a;
 }
 
 input[type="checkbox"]:checked {
@@ -228,10 +233,10 @@ input[type="checkbox"]:checked {
 body .noticeInfo {
     padding-bottom: 10px;
     margin-top: 21px;
+    color: #f6e05a;
 }
 
 body .noticeInfo .title {
-    color: #FFF;
     font-family: AaBoruokaishuBold;
     font-size: 22px;
     font-style: normal;
@@ -248,8 +253,6 @@ body .noticeInfo .info {
 }
 
 body .noticeInfo .info li {
-    color: #FFF;
-
     font-family: AaBoruokaishuBold;
     font-size: 18px;
     font-style: normal;
