@@ -162,7 +162,7 @@ public class OrgSyncApiImpl implements OrgSyncApi {
             compositeOrgBaseService.getSyncMap(organizationId, OrgTypeEnum.ORGANIZATION, 1);
         MessageOrg event =
             new MessageOrg(dateMap, Y9OrgEventConst.RISEORGEVENT_TYPE_SYNC, Y9LoginUserHolder.getTenantId());
-        y9PublishedEventSyncHistoryService.saveOrUpdate(tenantId, appName, syncTime);
+        y9PublishedEventSyncHistoryService.saveOrUpdate(tenantId, appName, syncTime, 1);
         return Y9Result.success(event, "获取成功！");
     }
 
@@ -200,7 +200,7 @@ public class OrgSyncApiImpl implements OrgSyncApi {
                 eventList.add(riseEvent);
             }
         }
-        y9PublishedEventSyncHistoryService.saveOrUpdate(tenantId, appName, syncTime);
+        y9PublishedEventSyncHistoryService.saveOrUpdate(tenantId, appName, syncTime, 1);
         return Y9Result.success(eventList, "获取成功！");
     }
 

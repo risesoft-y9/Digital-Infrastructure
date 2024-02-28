@@ -8,9 +8,12 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import net.risesoft.model.platform.Department;
 import net.risesoft.model.platform.MessageOrg;
 import net.risesoft.model.platform.OrgUnit;
+import net.risesoft.model.platform.Person;
 import net.risesoft.model.platform.SyncOrgUnits;
+import net.risesoft.pojo.Y9Page;
 import net.risesoft.pojo.Y9Result;
 
 /**
@@ -50,5 +53,38 @@ public interface OrgSyncApi {
     @GetMapping("/incrSync")
     Y9Result<List<MessageOrg<OrgUnit>>> incrSync(@RequestParam("appName") @NotBlank String appName,
         @RequestParam("tenantId") @NotBlank String tenantId);
+    
+    /**
+     * 返回增量接口处理结果，刷新同步时间
+     * @param appName 应用名称
+     * @param tenantId 租户id
+     * @return
+     */
+    @GetMapping("/syncTime")
+    Y9Result<String> syncTime(@RequestParam String appName, @RequestParam String tenantId);
+    
+    /**
+     * 分页获取部门数据
+     * @param appName 应用名称
+     * @param tenantId 租户id
+     * @param page 页数，初始值为1
+     * @param rows 每页返回数
+     * @return
+     */
+    @GetMapping("/fullSyncDept")
+    public Y9Page<Department> fullSyncDept(@RequestParam String appName, @RequestParam String tenantId, @RequestParam int page, @RequestParam int rows);
+    
+    /**
+     * 分页获取人员数据
+     * @param appName 应用名称
+     * @param tenantId 租户id
+     * @param type 0-查全量，1-查询没被禁用的
+     * @param page 页数，初始值为1
+     * @param rows 每页返回数
+     * @return
+     */
+    @GetMapping("/fullSyncUser")
+    public Y9Page<Person> fullSyncUser(@RequestParam String appName, @RequestParam String tenantId, @RequestParam String type, 
+    		@RequestParam int page, @RequestParam int rows);
 
 }

@@ -54,5 +54,14 @@ public class Y9PublishedEventSyncHistory extends BaseEntity {
     @Comment("上一次同步时间")
     @Column(name = "LAST_SYNC_TIME")
     private Date lastSyncTime;
+    
+    @Column(name = "STATUS")
+    @Comment("事件操作结果，1-结束，0-未结束")
+    private Integer status;
+    
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss", timezone = "GMT+8")
+    @Comment("记录同步时间")
+    @Column(name = "SINCE_SYNC_TIME")
+    private Date sinceSyncTime;
 
 }

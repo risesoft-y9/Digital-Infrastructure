@@ -30,5 +30,5 @@ public interface Y9PublishedEventSyncHistoryService {
      * @param syncTime
      * @return {@link Y9PublishedEventSyncHistory}
      */
-    Y9PublishedEventSyncHistory saveOrUpdate(String tenantId, String appName, Date syncTime);
+    Y9PublishedEventSyncHistory saveOrUpdate(String tenantId, String appName, Date syncTime, Integer status);
 }

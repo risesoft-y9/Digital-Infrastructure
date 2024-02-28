@@ -3,13 +3,6 @@ package net.risesoft.y9public.service.event.impl;
 import java.util.Date;
 import java.util.List;
 
-import javax.persistence.criteria.CriteriaBuilder;
-import javax.persistence.criteria.CriteriaQuery;
-import javax.persistence.criteria.Expression;
-import javax.persistence.criteria.Predicate;
-import javax.persistence.criteria.Root;
-
-import org.apache.commons.lang3.StringUtils;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -45,23 +38,8 @@ public class Y9PublishedEventServiceImpl implements Y9PublishedEventService {
     @Override
     public List<Y9PublishedEvent> listByTenantId(String tenantId, Date startTime) {
         Sort sort = Sort.by(Sort.Direction.ASC, "createTime");
-        return y9PublishedEventRepository.findAll(new Y9PublishedEventSpecification(tenantId, startTime) {
-            private static final long serialVersionUID = 4690624487610572887L;
-
-            @Override
-            public Predicate toPredicate(Root<Y9PublishedEvent> root, CriteriaQuery<?> query,
-                CriteriaBuilder criteriaBuilder) {
-                Predicate predicate = criteriaBuilder.conjunction();
-                List<Expression<Boolean>> expressions = predicate.getExpressions();
-                if (StringUtils.isNotBlank(tenantId)) {
-                    expressions.add(criteriaBuilder.equal(root.<String>get("tenantId"), tenantId));
-                }
-                if (startTime != null) {
-                    expressions.add(criteriaBuilder.greaterThanOrEqualTo(root.<Date>get("createTime"), startTime));
-                }
-                return predicate;
-            }
-        }, sort);
+        Y9PublishedEventSpecification spec = new Y9PublishedEventSpecification(tenantId, null, null, startTime, null);
+        return y9PublishedEventRepository.findAll(spec, sort);
     }
 
     @Override

@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.Optional;
 
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -19,7 +20,7 @@ import net.risesoft.entity.Y9Department;
 @Repository
 @Transactional(value = "rsTenantTransactionManager", readOnly = true)
 // @JaversSpringDataAuditable
-public interface Y9DepartmentRepository extends JpaRepository<Y9Department, String> {
+public interface Y9DepartmentRepository extends JpaRepository<Y9Department, String>, JpaSpecificationExecutor<Y9Department> {
 
     List<Y9Department> findByBureauAndDnContainingOrderByTabIndexAsc(boolean bureau, String dn);
 
