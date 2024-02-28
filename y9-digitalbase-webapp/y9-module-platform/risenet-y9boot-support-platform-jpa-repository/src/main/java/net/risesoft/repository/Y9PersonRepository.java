@@ -6,6 +6,7 @@ import java.util.Optional;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
@@ -22,7 +23,7 @@ import net.risesoft.entity.Y9Person;
 @Repository
 @Transactional(value = "rsTenantTransactionManager", readOnly = true)
 // @JaversSpringDataAuditable
-public interface Y9PersonRepository extends JpaRepository<Y9Person, String> {
+public interface Y9PersonRepository extends JpaRepository<Y9Person, String>, JpaSpecificationExecutor<Y9Person> {
 
     long countByDisabledAndGuidPathContaining(boolean disabled, String guidPath);
 

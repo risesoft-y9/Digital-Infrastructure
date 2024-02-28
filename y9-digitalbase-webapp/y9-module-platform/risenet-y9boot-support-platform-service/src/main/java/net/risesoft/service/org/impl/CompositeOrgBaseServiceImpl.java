@@ -8,6 +8,16 @@ import java.util.List;
 import java.util.Optional;
 import java.util.concurrent.CopyOnWriteArrayList;
 
+import javax.persistence.criteria.CriteriaBuilder;
+import javax.persistence.criteria.CriteriaQuery;
+import javax.persistence.criteria.Predicate;
+import javax.persistence.criteria.Root;
+
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -876,4 +886,52 @@ public class CompositeOrgBaseServiceImpl implements CompositeOrgBaseService {
         }
         dateMap.put(parentId + OrgTypeEnum.PERSON.getEnName(), personList);
     }
+    
+    @Override
+	public Page<Y9Person> personPage(String orgId, String type, int page, int rows) {
+		page = (page < 0) ? 0 : page - 1;
+        Pageable pageable = PageRequest.of(page, rows, Sort.by(Sort.Direction.DESC, "orderedPath"));
+        Specification<Y9Person> spec = new Specification<Y9Person>() {
+			private static final long serialVersionUID = -6506792884620973450L;
+
+			@Override
+            public Predicate toPredicate(Root<Y9Person> root, CriteriaQuery<?> criteriaQuery, CriteriaBuilder cb) {
+                List<Predicate> orList = new ArrayList<Predicate>();
+                String[] ids = orgId.split(",");
+                for(String id : ids) {
+                	orList.add(cb.like(root.get("guidPath").as(String.class), "%" + id + "%"));
+                }
+                Predicate pre_or = cb.or(orList.toArray(new Predicate[orList.size()]));
+                
+                List<Predicate> predicates = new ArrayList<Predicate>();
+                if (type != null && type.equals("1")) {
+                	predicates.add(cb.equal(root.get("disabled").as(Boolean.class), false));
+                }
+                Predicate pre_and = cb.and(predicates.toArray(new Predicate[predicates.size()]));
+                
+                return criteriaQuery.where(pre_and, pre_or).getRestriction();
+            }
+        };
+        return y9PersonRepository.findAll(spec, pageable);
+	}
+
+	@Override
+	public Page<Y9Department> deptPage(String orgId, int page, int rows) {
+		page = (page < 0) ? 0 : page - 1;
+        Pageable pageable = PageRequest.of(page, rows, Sort.by(Sort.Direction.ASC, "guidPath"));
+        Specification<Y9Department> spec = new Specification<Y9Department>() {
+			private static final long serialVersionUID = -95805766801894738L;
+
+			@Override
+            public Predicate toPredicate(Root<Y9Department> root, CriteriaQuery<?> criteriaQuery, CriteriaBuilder cb) {
+                List<Predicate> predicates = new ArrayList<Predicate>();
+                String[] ids = orgId.split(",");
+                for(String id : ids) {
+                	predicates.add(cb.like(root.get("guidPath").as(String.class), "%" + id + "%"));
+                }
+                return cb.or(predicates.toArray(new Predicate[predicates.size()]));
+            }
+        };
+        return y9DepartmentRepository.findAll(spec, pageable);
+	}
 }

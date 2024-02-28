@@ -33,12 +33,17 @@ public class Y9PublishedEventSyncHistoryServiceImpl implements Y9PublishedEventS
 
     @Override
     @Transactional(readOnly = false)
-    public Y9PublishedEventSyncHistory saveOrUpdate(String tenantId, String appName, Date syncTime) {
+    public Y9PublishedEventSyncHistory saveOrUpdate(String tenantId, String appName, Date syncTime, Integer status) {
         Optional<Y9PublishedEventSyncHistory> y9PublishedEventSyncHistoryOptional =
             y9PublishedEventSyncHistoryRepository.findByTenantIdAndAppName(tenantId, appName);
         if (y9PublishedEventSyncHistoryOptional.isPresent()) {
             Y9PublishedEventSyncHistory history = y9PublishedEventSyncHistoryOptional.get();
-            history.setLastSyncTime(syncTime);
+            history.setStatus(status);
+            if(status == 1) {
+            	history.setLastSyncTime(syncTime);
+            }else {
+            	history.setSinceSyncTime(syncTime);
+            }
             return y9PublishedEventSyncHistoryRepository.save(history);
         }
         Y9PublishedEventSyncHistory history = new Y9PublishedEventSyncHistory();
@@ -46,6 +51,7 @@ public class Y9PublishedEventSyncHistoryServiceImpl implements Y9PublishedEventS
         history.setAppName(appName);
         history.setTenantId(tenantId);
         history.setLastSyncTime(syncTime);
+        history.setStatus(status);
         return y9PublishedEventSyncHistoryRepository.save(history);
     }
 

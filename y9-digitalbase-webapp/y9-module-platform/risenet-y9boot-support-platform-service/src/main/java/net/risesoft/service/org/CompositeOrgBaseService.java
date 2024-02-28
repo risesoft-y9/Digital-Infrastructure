@@ -5,6 +5,9 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Optional;
 
+import org.springframework.data.domain.Page;
+
+import net.risesoft.entity.Y9Department;
 import net.risesoft.entity.Y9OrgBase;
 import net.risesoft.entity.Y9Organization;
 import net.risesoft.entity.Y9Person;
@@ -266,4 +269,23 @@ public interface CompositeOrgBaseService {
      * @return {@link List}<{@link Y9OrgBase}>
      */
     List<Y9OrgBase> treeSearch4DeptManager(String name, OrgTreeTypeEnum treeType);
+    
+    /**
+     * 分页获取机构下的人员列表
+     * @param orgId 机构id
+     * @param type 0-查全量，1-查询没被禁用的
+     * @param page
+     * @param rows
+     * @return
+     */
+    Page<Y9Person> personPage(String orgId, String type, int page, int rows);
+    
+    /**
+     * 分页获取机构下的部门列表
+     * @param orgId 机构id
+     * @param page
+     * @param rows
+     * @return
+     */
+    Page<Y9Department> deptPage(String orgId, int page, int rows);
 }
