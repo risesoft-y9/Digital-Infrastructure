@@ -153,6 +153,7 @@ y9:
         platform:
             systemName: riseplatform
             position-name-pattern: "{0}（{1}）"
+            managerModifyPasswordCycle: 7
     service:
         log:
             directUrl: http://localhost:7055
@@ -160,8 +161,6 @@ y9:
         cacheEnabled: true
         kafkaEnabled: true
         defaultPassword: Risesoft@2022
-        tomcatPassword: tomcat
-        tomcatUserName: tomcat
         logBaseUrl: http://localhost:7055/log
         orgBaseUrl: http://localhost:7055/platform
     feature:
@@ -203,17 +202,9 @@ y9:
             packagesToScanEntityTenant: net.risesoft.entity
             packagesToScanRepositoryPublic: net.risesoft.y9public.repository
             packagesToScanRepositoryTenant: net.risesoft.repository
-        mongo:
-            packagesToScanEntityPublic: net.risesoft.y9public.entity
-            packagesToScanRepositoryPublic: net.risesoft.y9public.repository
-            packagesToScanEntityTenant: net.risesoft.entity
-            packagesToScanRepositoryTenant: net.risesoft.repository
         liquibase:
             tenant-enabled: true
             public-enabled: true
-        listener:
-            kafka:
-                enabled: false
         log:
             enabled: true
         publish:
@@ -258,6 +249,7 @@ y9:
                     - password
                     - name
                     - whereClause
+                    - url
         oauth2:
             resource:
                 enabled: true
