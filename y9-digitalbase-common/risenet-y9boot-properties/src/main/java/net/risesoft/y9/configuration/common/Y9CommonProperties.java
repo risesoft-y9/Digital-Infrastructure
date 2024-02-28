@@ -19,10 +19,6 @@ public class Y9CommonProperties {
     @Deprecated
     private int guidLength = 32;
     /**
-     * 实体类的ID属性不是程序自动创建的，需要用户自己输入
-     */
-    private Integer idEnabled = 0;
-    /**
      * 是否启用缓存
      */
     private boolean cacheEnabled = false;
@@ -30,6 +26,20 @@ public class Y9CommonProperties {
      * 是否启用 kafka
      */
     private boolean kafkaEnabled = false;// 是否启用Kafka
+
+    /**
+     * 系统公共角色顶节点
+     */
+    private String topInternalRoleId4SystemList = "11111111-1111-1111-1111-111111111121";
+    /**
+     * 默认应用程序图标
+     */
+    private String defaultAppIcon = "/static/images/default.png";
+
+    /**
+     * 默认密码
+     */
+    private String defaultPassword = "Risesoft@2022";
 
     /**
      * 云
@@ -180,37 +190,5 @@ public class Y9CommonProperties {
 
     /** 手机消息提醒 */
     private String messageBaseUrl = "https://vue.youshengyun.com/message";
-    /**
-     * tomcat用户名
-     */
-    private String tomcatUserName = "tomcat";
-
-    /**
-     * tomcat密码
-     */
-    private String tomcatPassword = "tomcat";
-
-    /**
-     * 默认代理主机
-     */
-    private String defaultProxyHost = "127.0.0.1";
-    /**
-     * 默认代理端口
-     */
-    private int defaultProxyPort = 2000;
-
-    /**
-     * 系统公共角色顶节点
-     */
-    private String topInternalRoleId4SystemList = "11111111-1111-1111-1111-111111111121";
-    /**
-     * 默认应用程序图标
-     */
-    private String defaultAppIcon = "/static/images/default.png";
-
-    /**
-     * 默认密码
-     */
-    private String defaultPassword = "Risesoft@2022";
 
 }
