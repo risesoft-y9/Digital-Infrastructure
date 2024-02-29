@@ -78,10 +78,7 @@ y9:
         org:
             directUrl: http://localhost:7055
     common:
-        cacheEnabled: true
         kafkaEnabled: true
-        tomcatPassword: tomcat
-        tomcatUserName: tomcat
         orgBaseUrl: http://localhost:7055/platform
     feature:
         apisix:
