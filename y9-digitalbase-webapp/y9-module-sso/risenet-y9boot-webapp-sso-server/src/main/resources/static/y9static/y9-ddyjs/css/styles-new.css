@@ -1,7 +1,11 @@
 @font-face {
     font-family: 'aaBoruokaishuBold';
-    src: url('../fonts/AaBanRuoKaiShuJiaCu-simple.ttf') format('truetype'),
-    url('../fonts/AaBanRuoKaiShuJiaCu.woff2') format('woff2');
+    src: url('../fonts/AaBanRuoKaiShuJiaCu-simple.ttf') format('truetype');
+}
+
+@font-face {
+    font-family: 'aaBoruokaishuBold-all';
+    src: url('../fonts/AaBanRuoKaiShuJiaCu.woff2') format('woff2');
 }
 
 @font-face {
