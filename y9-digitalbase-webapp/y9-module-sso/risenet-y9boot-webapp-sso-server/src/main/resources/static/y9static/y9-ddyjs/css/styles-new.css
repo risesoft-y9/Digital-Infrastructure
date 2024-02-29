@@ -1,7 +1,11 @@
 @font-face {
     font-family: 'aaBoruokaishuBold';
-    src: url('../fonts/AaBanRuoKaiShuJiaCu-simple.ttf') format('truetype'),
-    url('../fonts/AaBanRuoKaiShuJiaCu.woff2') format('woff2');
+    src: url('../fonts/AaBanRuoKaiShuJiaCu-simple.ttf') format('truetype');
+}
+
+@font-face {
+    font-family: 'aaBoruokaishuBold-all';
+    src: url('../fonts/AaBanRuoKaiShuJiaCu.woff2') format('woff2');
 }
 
 html, body {
@@ -131,7 +135,7 @@ body .login_fields input[type='text'], body .login_fields input[type='password']
     background: transparent;
     color: #f6e05a !important;
     border-bottom: 2px solid #F7E25D;
-    font-family: AaBoruokaishuBold;
+    font-family: aaBoruokaishuBold-all;
     font-size: 24px;
     font-style: normal;
     font-weight: 400;
