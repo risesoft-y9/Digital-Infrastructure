@@ -11,13 +11,4 @@ public class Y9FlowableProperties {
 
     private String systemCnName;
 
-    private String tenantId = "c425281829dc4d4496ddddf7fc0198d0";
-    private Integer formType = 2;
-    private String systemWorkOrderKey = "systemWorkOrder";
-    private String workOrderItemId;
-    private String dzxhTenantId;
-    private String dzxhLyspItemId;
-    private String dzxhLyspFormId;
-    private String emailUrl = "https://www.youshengyun.com/sms/emailIndex";
-
 }
