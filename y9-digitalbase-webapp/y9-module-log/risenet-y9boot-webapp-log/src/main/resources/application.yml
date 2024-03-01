@@ -3,6 +3,13 @@ management:
         web:
             exposure:
                 include: '*'
+    metrics:
+      tags:
+        application: ${spring.application.name}
+    prometheus:
+      metrics:
+        export:
+          enabled: true
 server:
     port: 7055
     servlet:
