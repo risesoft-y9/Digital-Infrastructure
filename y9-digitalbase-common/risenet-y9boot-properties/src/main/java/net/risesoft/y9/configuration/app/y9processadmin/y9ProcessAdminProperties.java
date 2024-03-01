@@ -35,8 +35,4 @@ public class y9ProcessAdminProperties {
 
     private String weiXinUrl;
 
-    private Boolean dzxhSmsSwitch = false;// 地灾短信开关
-
-    private String dzxhTenantId;// 地灾租户id
-
 }
