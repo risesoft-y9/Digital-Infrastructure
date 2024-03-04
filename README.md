@@ -22,45 +22,42 @@ common -- 系统公共模块
  ├── risenet-y9boot-3rd-jpa -- SpringDataJPA相关配置
  ├── risenet-y9boot-common-model -- 公共对象模型
  ├── risenet-y9boot-common-nacos -- nacos加解密包
- ├── risenet-y9boot-common-tenantDataSource -- 租户动态数据源包
+ ├── risenet-y9boot-common-tenant-datasource -- 租户动态数据源包
  ├── risenet-y9boot-common-util -- 公共工具包
  ├── risenet-y9boot-properties -- 公共配置文件包
 example -- 基于数字底座的示例工程
+ ├── risenet-y9demo-file -- 文件服务使用示例
  ├── risenet-y9demo-kernel-api -- 数字底座接口调用示例
  ├── risenet-y9demo-sso-oauth2 -- 数字底座OAuth2认证示例
  ├── risenet-y9demo-sync-kafka -- 数字底座组织信息同步(kafka消息机制)示例
-rest -- 对外提供接口模块
- ├── risenet-y9boot-rest-feignClient-platform -- 基于feignClient实现
- ├── risenet-y9boot-rest-interface-platform -- 对外提供接口包
 starter -- 初始化模块
  ├── risenet-y9boot-starter-apisix -- 微服务api网关组件
  ├── risenet-y9boot-starter-cache-redis -- 缓存组件
  ├── risenet-y9boot-starter-elasticsearch -- 全文检索基本依赖封装
- ├── risenet-y9boot-starter-idGenerator -- 唯一标示生成组件
+ ├── risenet-y9boot-starter-idgenerator -- 唯一标示生成组件
  ├── risenet-y9boot-starter-jpa-public -- 公共库组件
  ├── risenet-y9boot-starter-jpa-tenant -- 多租户相关组件
  ├── risenet-y9boot-starter-kafka -- kafka通用消息监听组件(y9_common_event队列)
+ ├── risenet-y9boot-starter-liquibase -- 监听数据库结构变化组件
  ├── risenet-y9boot-starter-listener-kafka -- kafka组织信息消息监听组件(y9_org_event队列)
  ├── risenet-y9boot-starter-log -- 日志组件
+ ├── risenet-y9boot-starter-multi-tenant -- 多租户相关组件
+ ├── risenet-y9boot-starter-openfeign -- 远程调用组件
  ├── risenet-y9boot-starter-permission -- 权限组件
  ├── risenet-y9boot-starter-publish-kafka -- kafka发布消息组件
  ├── risenet-y9boot-starter-security -- 安全模块组件
  ├── risenet-y9boot-starter-sso-oauth2-resource -- OAuth2.0认证组件
  ├── risenet-y9boot-starter-web -- 全局的异常处理器
 support -- 业务支撑模块
- ├── risenet-y9boot-support-file-jpaRepository -- 文件信息存储模块
- ├── risenet-y9boot-support-fileService-FTP -- 文件服务器支持
+ ├── risenet-y9boot-support-file-jpa-repository -- 文件信息存储模块
+ ├── risenet-y9boot-support-file-service-ftp -- 文件服务器支持
  ├── risenet-y9boot-support-history -- 实体审计日志组件
- ├── risenet-y9boot-support-log-elasticSearch -- 日志组件
- ├── risenet-y9boot-support-platform-jpaRepository -- 数字底座持久层
- ├── risenet-y9boot-support-platform-service -- 数字底座业务层
- ├── risenet-y9boot-support-platform-web -- 数字底座控制层
 vue -- 前端工程
  ├── y9vue-kernel-standard -- 数字底座前端工程
 webapp -- 系统公共模块
- ├── risenet-y9boot-webapp-log -- 日志后端工程
- ├── risenet-y9boot-webapp-platform -- 数字底座后端工程
- ├── risenet-y9boot-webapp-sso-server-6.6.x -- OAuth2.0认证服务端
+ ├── y9-module-log -- 日志后端工程
+ ├── y9-module-platform -- 数字底座后端工程
+ ├── y9-module-sso -- OAuth2.0认证服务端
 ```
 
 ## 内置功能
@@ -213,7 +210,7 @@ webapp -- 系统公共模块
 
 ## 在线体验
 
-演示地址：<a href="https://dev.youshengyun.com/kernel-standard/" target="_blank">https://dev.youshengyun.com/kernel-standard/</a>
+演示地址：<a href="https://test.youshengyun.com/kernel-standard/" target="_blank">https://test.youshengyun.com/kernel-standard/</a>
 
 > 演示账号：
 >
@@ -227,7 +224,7 @@ webapp -- 系统公共模块
 
 ## 私有化部署
 
-地址：<a href="https://dev.youshengyun.com/y9vue-code/" target="_blank">https://dev.youshengyun.com/y9vue-code/</a>
+地址：<a href="https://test.youshengyun.com/y9vue-code/" target="_blank">https://test.youshengyun.com/y9vue-code/</a>
 
 > 包含数字底座使用中间件的安装教程、数字底座重要配置讲解，进行本地化部署务必要浏览该网站，会少走弯路。
 
@@ -235,16 +232,16 @@ webapp -- 系统公共模块
 
 | 序号 | 名称                                                                                                      |
 |:---|---------------------------------------------------------------------------------------------------------|
-| 1  | <a href="https://vue.youshengyun.com/files/sso_OAuth2.0.pdf" target="_blank">单点登录对接文档</a>               |
-| 2  | <a href="https://vue.youshengyun.com/files/apiv2.0.pdf" target="_blank">数字底座接口文档</a>                    |
-| 3  | <a href="https://vue.youshengyun.com/files/siyouhuabushu.pdf" target="_blank">安装部署文档</a>                |
-| 4  | <a href="https://vue.youshengyun.com/files/Y9-DI-V5.0.pdf" target="_blank">操作使用文档（技术白皮书）</a>            |
-| 5  | <a href="https://vue.youshengyun.com/files/Risesoft-DatabaseDesign.pdf" target="_blank">数字底座数据库设计文档</a> |
-| 6  | <a href="https://vue.youshengyun.com/files/Risesoft-JavaV1.0.pdf" target="_blank">内部Java开发规范手册</a>      |
-| 7  | <a href="https://vue.youshengyun.com/files/Risesoft-log.pdf" target="_blank">日志组件使用文档</a>               |
-| 8  | <a href="https://vue.youshengyun.com/files/Risesoft-file.pdf" target="_blank">文件组件使用文档</a>              |
-| 9  | <a href="https://vue.youshengyun.com/files/Risesoft-CodeGenerator.pdf" target="_blank">代码生成器使用文档</a>    |
-| 10 | <a href="https://vue.youshengyun.com/files/Risesoft-yml.pdf" target="_blank">配置文件说明文档</a>               |
+| 1  | <a href="https://vue.youshengyun.com/files/单点登录对接文档.pdf" target="_blank">单点登录对接文档</a>               |
+| 2  | <a href="https://vue.youshengyun.com/files/数字底座接口文档.pdf" target="_blank">数字底座接口文档</a>                    |
+| 3  | <a href="https://test.youshengyun.com/y9vue-code/digitalBase" target="_blank">安装部署文档</a>                |
+| 4  | <a href="https://vue.youshengyun.com/files/操作使用文档（技术白皮书）.pdf" target="_blank">操作使用文档（技术白皮书）</a>            |
+| 5  | <a href="https://vue.youshengyun.com/files/数字底座数据库设计文档.pdf" target="_blank">数字底座数据库设计文档</a> |
+| 6  | <a href="https://vue.youshengyun.com/files/内部Java开发规范手册.pdf" target="_blank">内部Java开发规范手册</a>      |
+| 7  | <a href="https://vue.youshengyun.com/files/日志组件使用文档.pdf" target="_blank">日志组件使用文档</a>               |
+| 8  | <a href="https://vue.youshengyun.com/files/文件组件使用文档.pdf" target="_blank">文件组件使用文档</a>              |
+| 9  | <a href="https://vue.youshengyun.com/files/代码生成器使用文档.pdf" target="_blank">代码生成器使用文档</a>    |
+| 10 | <a href="https://vue.youshengyun.com/files/配置文件说明文档.pdf" target="_blank">配置文件说明文档</a>               |
 | 11 | <a href="https://vue.youshengyun.com/files/有生博大Vue开发手册v1.0.pdf" target="_blank">Vue 开发手册</a>           |
 | 13 | <a href="https://vue.youshengyun.com/files/开发规范.pdf" target="_blank">Vue 开发规范</a>           |
 | 14 | <a href="https://vue.youshengyun.com/files/代码格式化.pdf" target="_blank">Vue 代码格式化</a>           |
