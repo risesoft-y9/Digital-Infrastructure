@@ -1,17 +1,15 @@
 <p align="center">
-	<img alt="logo" src="https://vue.youshengyun.com/files/img/qrCodeLogo.png">
+ <img alt="logo" src="https://vue.youshengyun.com/files/img/qrCodeLogo.png">
 </p>
 <p align="center">基于SpringBoot+Vue前后端分离的Java快速开发框架</p>
 <p align="center">
-	<a href='https://gitee.com/risesoft-y9/y9-core/stargazers'><img src='https://gitee.com/risesoft-y9/y9-core/badge/star.svg?theme=dark' alt='star'></img></a>
+ <a href='https://gitee.com/risesoft-y9/y9-core/stargazers'><img src='https://gitee.com/risesoft-y9/y9-core/badge/star.svg?theme=dark' alt='star'></img></a>
     <img src="https://img.shields.io/badge/version-v9.6.3-yellow.svg">
     <img src="https://img.shields.io/badge/Spring%20Boot-2.7-blue.svg">
     <img alt="logo" src="https://img.shields.io/badge/Vue-3.3-red.svg">
     <img alt="" src="https://img.shields.io/badge/JDK-11-green.svg">
     <a href="https://gitee.com/risesoft-y9/y9-core/blob/master/LICENSE"><img src="https://img.shields.io/badge/license-GPL3-blue.svg"></a>
 </p>
-
-
 
 ## 简介
 
@@ -21,48 +19,48 @@
 
 ```
 common -- 系统公共模块
-	├── risenet-y9boot-3rd-jpa -- SpringDataJPA相关配置
-	├── risenet-y9boot-common-model -- 公共对象模型
-	├── risenet-y9boot-common-nacos -- nacos加解密包
-	├── risenet-y9boot-common-tenantDataSource -- 租户动态数据源包
-	├── risenet-y9boot-common-util -- 公共工具包
-	├── risenet-y9boot-properties -- 公共配置文件包
+ ├── risenet-y9boot-3rd-jpa -- SpringDataJPA相关配置
+ ├── risenet-y9boot-common-model -- 公共对象模型
+ ├── risenet-y9boot-common-nacos -- nacos加解密包
+ ├── risenet-y9boot-common-tenantDataSource -- 租户动态数据源包
+ ├── risenet-y9boot-common-util -- 公共工具包
+ ├── risenet-y9boot-properties -- 公共配置文件包
 example -- 基于数字底座的示例工程
-	├── risenet-y9demo-kernel-api -- 数字底座接口调用示例
-	├── risenet-y9demo-sso-oauth2 -- 数字底座OAuth2认证示例
-	├── risenet-y9demo-sync-kafka -- 数字底座组织信息同步(kafka消息机制)示例
+ ├── risenet-y9demo-kernel-api -- 数字底座接口调用示例
+ ├── risenet-y9demo-sso-oauth2 -- 数字底座OAuth2认证示例
+ ├── risenet-y9demo-sync-kafka -- 数字底座组织信息同步(kafka消息机制)示例
 rest -- 对外提供接口模块
-	├── risenet-y9boot-rest-feignClient-platform -- 基于feignClient实现
-	├── risenet-y9boot-rest-interface-platform -- 对外提供接口包
+ ├── risenet-y9boot-rest-feignClient-platform -- 基于feignClient实现
+ ├── risenet-y9boot-rest-interface-platform -- 对外提供接口包
 starter -- 初始化模块
-	├── risenet-y9boot-starter-apisix -- 微服务api网关组件
-	├── risenet-y9boot-starter-cache-redis -- 缓存组件
-	├── risenet-y9boot-starter-elasticsearch -- 全文检索基本依赖封装
-	├── risenet-y9boot-starter-idGenerator -- 唯一标示生成组件
-	├── risenet-y9boot-starter-jpa-public -- 公共库组件
-	├── risenet-y9boot-starter-jpa-tenant -- 多租户相关组件
-	├── risenet-y9boot-starter-kafka -- kafka通用消息监听组件(y9_common_event队列)
-	├── risenet-y9boot-starter-listener-kafka -- kafka组织信息消息监听组件(y9_org_event队列)
-	├── risenet-y9boot-starter-log -- 日志组件
-	├── risenet-y9boot-starter-permission -- 权限组件
-	├── risenet-y9boot-starter-publish-kafka -- kafka发布消息组件
-	├── risenet-y9boot-starter-security -- 安全模块组件
-	├── risenet-y9boot-starter-sso-oauth2-resource -- OAuth2.0认证组件
-	├── risenet-y9boot-starter-web -- 全局的异常处理器
+ ├── risenet-y9boot-starter-apisix -- 微服务api网关组件
+ ├── risenet-y9boot-starter-cache-redis -- 缓存组件
+ ├── risenet-y9boot-starter-elasticsearch -- 全文检索基本依赖封装
+ ├── risenet-y9boot-starter-idGenerator -- 唯一标示生成组件
+ ├── risenet-y9boot-starter-jpa-public -- 公共库组件
+ ├── risenet-y9boot-starter-jpa-tenant -- 多租户相关组件
+ ├── risenet-y9boot-starter-kafka -- kafka通用消息监听组件(y9_common_event队列)
+ ├── risenet-y9boot-starter-listener-kafka -- kafka组织信息消息监听组件(y9_org_event队列)
+ ├── risenet-y9boot-starter-log -- 日志组件
+ ├── risenet-y9boot-starter-permission -- 权限组件
+ ├── risenet-y9boot-starter-publish-kafka -- kafka发布消息组件
+ ├── risenet-y9boot-starter-security -- 安全模块组件
+ ├── risenet-y9boot-starter-sso-oauth2-resource -- OAuth2.0认证组件
+ ├── risenet-y9boot-starter-web -- 全局的异常处理器
 support -- 业务支撑模块
-	├── risenet-y9boot-support-file-jpaRepository -- 文件信息存储模块
-	├── risenet-y9boot-support-fileService-FTP -- 文件服务器支持
-	├── risenet-y9boot-support-history -- 实体审计日志组件
-	├── risenet-y9boot-support-log-elasticSearch -- 日志组件
-	├── risenet-y9boot-support-platform-jpaRepository -- 数字底座持久层
-	├── risenet-y9boot-support-platform-service -- 数字底座业务层
-	├── risenet-y9boot-support-platform-web -- 数字底座控制层
+ ├── risenet-y9boot-support-file-jpaRepository -- 文件信息存储模块
+ ├── risenet-y9boot-support-fileService-FTP -- 文件服务器支持
+ ├── risenet-y9boot-support-history -- 实体审计日志组件
+ ├── risenet-y9boot-support-log-elasticSearch -- 日志组件
+ ├── risenet-y9boot-support-platform-jpaRepository -- 数字底座持久层
+ ├── risenet-y9boot-support-platform-service -- 数字底座业务层
+ ├── risenet-y9boot-support-platform-web -- 数字底座控制层
 vue -- 前端工程
-	├── y9vue-kernel-standard -- 数字底座前端工程
+ ├── y9vue-kernel-standard -- 数字底座前端工程
 webapp -- 系统公共模块
-	├── risenet-y9boot-webapp-log -- 日志后端工程
-	├── risenet-y9boot-webapp-platform -- 数字底座后端工程
-	├── risenet-y9boot-webapp-sso-server-6.6.x -- OAuth2.0认证服务端
+ ├── risenet-y9boot-webapp-log -- 日志后端工程
+ ├── risenet-y9boot-webapp-platform -- 数字底座后端工程
+ ├── risenet-y9boot-webapp-sso-server-6.6.x -- OAuth2.0认证服务端
 ```
 
 ## 内置功能
@@ -201,6 +199,7 @@ webapp -- 系统公共模块
 | 3    | ZL202310030893.3 | 《基于多租户模式下的权限调度方法及调度系统》       |
 | 4    | ZL202310238451.8 | 《一种基于前后端分离架构的前端双随机多态混淆方法》 |
 | 5    | ZL202310238534.7 | 《多租户模式下数字底座子域三员架构模型的实现方法》 |
+
 ## 数字底座信创
 
 | **序号** | 类型     | 对象                       |
@@ -212,17 +211,17 @@ webapp -- 系统公共模块
 | 5        | 操作系统 | 统信、麒麟、中科方德等     |
 | 6        | 芯片     | ARM体系、MIPS体系、X86体系 |
 
-##  在线体验
+## 在线体验
 
 演示地址：<a href="https://dev.youshengyun.com/kernel-standard/" target="_blank">https://dev.youshengyun.com/kernel-standard/</a>
 
 > 演示账号：
 >
-> 系统管理员：systemManager		密码：Risesoft@2022
+> 系统管理员：systemManager  密码：Risesoft@2022
 >
-> 安全保密员：securityManager		密码：Risesoft@2022
+> 安全保密员：securityManager  密码：Risesoft@2022
 >
-> 安全审计员：auditManager			密码：Risesoft@2022
+> 安全审计员：auditManager   密码：Risesoft@2022
 >
 > 说明：输入登录名后，请选择"北京有生博大软件股份有限公司"租户，再输入密码进行登录
 
@@ -246,13 +245,18 @@ webapp -- 系统公共模块
 | 8  | <a href="https://vue.youshengyun.com/files/Risesoft-file.pdf" target="_blank">文件组件使用文档</a>              |
 | 9  | <a href="https://vue.youshengyun.com/files/Risesoft-CodeGenerator.pdf" target="_blank">代码生成器使用文档</a>    |
 | 10 | <a href="https://vue.youshengyun.com/files/Risesoft-yml.pdf" target="_blank">配置文件说明文档</a>               |
-| 11 | <a href="https://vue.youshengyun.com/files/Risesoft-util.pdf" target="_blank">常用工具类使用示例文档</a>           |
-
-
+| 11 | <a href="https://vue.youshengyun.com/files/有生博大Vue开发手册v1.0.pdf" target="_blank">Vue 开发手册</a>           |
+| 13 | <a href="https://vue.youshengyun.com/files/开发规范.pdf" target="_blank">Vue 开发规范</a>           |
+| 14 | <a href="https://vue.youshengyun.com/files/代码格式化.pdf" target="_blank">Vue 代码格式化</a>           |
+| 15 | <a href="https://vue.youshengyun.com/files/系统组件.pdf" target="_blank">Vue 系统组件</a>           |
+| 16 | <a href="https://vue.youshengyun.com/files/通用方法.pdf" target="_blank">Vue 通用方法</a>           |
+| 17 | <a href="https://vue.youshengyun.com/files/国际化.pdf" target="_blank">Vue 国际化</a>           |
+| 18 | <a href="https://vue.youshengyun.com/files/Icon图标.pdf" target="_blank">Vue Icon图标</a>           |
 
 ## 数字底座截图
 
 #### 系统管理员界面截图
+
 <table>
     <tr>
         <td><img src="https://vue.youshengyun.com/files/img/1.png"></td>
@@ -276,6 +280,7 @@ webapp -- 系统公共模块
 </table>
 
 #### 安全保密员界面截图
+
 <table>
     <tr>
         <td><img src="https://vue.youshengyun.com/files/img/21.png"></td>
@@ -288,6 +293,7 @@ webapp -- 系统公共模块
 </table>
 
 #### 安全审计员界面截图
+
 <table>
     <tr>
         <td><img src="https://vue.youshengyun.com/files/img/31.png"></td>
@@ -355,6 +361,7 @@ webapp -- 系统公共模块
 ##### 简介
 
 电子邮件支持内网高效模式和互联网协议模式，具备精简、安全和高效的功能模块。
+
 ##### 截图
 
 <div><img src="https://vue.youshengyun.com/files/img/dianziyoujian.png"><div/>
@@ -370,10 +377,6 @@ webapp -- 系统公共模块
 #### 七步走
 
 <div><img src="https://vue.youshengyun.com/files/img/qibuzou.png"><div/>
-
-
-
-
 
 ## 需求定制开发
 
@@ -391,7 +394,7 @@ webapp -- 系统公共模块
 
 中关村软件和信息服务产业创新联盟
 
-官网：https://www.zgcsa.net/
+官网：<https://www.zgcsa.net/>
 
 北京有生博大软件股份有限公司
 
