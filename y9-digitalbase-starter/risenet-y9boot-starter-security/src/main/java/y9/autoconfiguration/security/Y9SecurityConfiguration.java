@@ -13,6 +13,7 @@ import lombok.extern.slf4j.Slf4j;
 
 import net.risesoft.filters.ApiTokenFilter;
 import net.risesoft.filters.CSRFFilter;
+import net.risesoft.filters.SQLInFilter;
 import net.risesoft.filters.XSSFilter;
 import net.risesoft.y9.configuration.Y9Properties;
 import net.risesoft.y9.configuration.feature.security.api.Y9ApiProperties;
@@ -46,20 +47,6 @@ public class Y9SecurityConfiguration {
     }
 
     @Bean
-    @ConditionalOnProperty(name = "y9.feature.security.xss.enabled", havingValue = "true", matchIfMissing = true)
-    public FilterRegistrationBean<XSSFilter> xssFilter(Y9Properties y9Properties) {
-        LOGGER.info("XSSFilter init. Configuration:{}",
-            Y9JsonUtil.writeValueAsString(y9Properties.getFeature().getSecurity().getXss()));
-
-        FilterRegistrationBean<XSSFilter> filterBean = new FilterRegistrationBean<>();
-        filterBean.setFilter(new XSSFilter());
-        filterBean.setAsyncSupported(false);
-        filterBean.setOrder(Ordered.HIGHEST_PRECEDENCE + 2);
-        filterBean.addUrlPatterns("/*");
-        return filterBean;
-    }
-
-    @Bean
     @ConditionalOnProperty(name = "y9.feature.security.csrf.enabled", havingValue = "true", matchIfMissing = true)
     public FilterRegistrationBean<CSRFFilter> csrfFilter(Y9Properties y9Properties) {
         LOGGER.info("CSRFFilter init. Configuration:{}",
@@ -69,6 +56,20 @@ public class Y9SecurityConfiguration {
         filterBean.setFilter(new CSRFFilter());
         filterBean.setAsyncSupported(false);
         filterBean.setOrder(Ordered.HIGHEST_PRECEDENCE + 1);
+        filterBean.addUrlPatterns("/*");
+        return filterBean;
+    }
+
+    @Bean
+    @ConditionalOnProperty(name = "y9.feature.security.xss.enabled", havingValue = "true", matchIfMissing = true)
+    public FilterRegistrationBean<XSSFilter> xssFilter(Y9Properties y9Properties) {
+        LOGGER.info("XSSFilter init. Configuration:{}",
+            Y9JsonUtil.writeValueAsString(y9Properties.getFeature().getSecurity().getXss()));
+
+        FilterRegistrationBean<XSSFilter> filterBean = new FilterRegistrationBean<>();
+        filterBean.setFilter(new XSSFilter());
+        filterBean.setAsyncSupported(false);
+        filterBean.setOrder(Ordered.HIGHEST_PRECEDENCE + 2);
         filterBean.addUrlPatterns("/*");
         return filterBean;
     }
@@ -84,6 +85,21 @@ public class Y9SecurityConfiguration {
         filterBean.setAsyncSupported(false);
         filterBean.setOrder(Ordered.HIGHEST_PRECEDENCE + 3);
         filterBean.addUrlPatterns(y9ApiProperties.getUrlPatterns().toArray(new String[0]));
+        return filterBean;
+    }
+
+    @Bean
+    @ConditionalOnProperty(name = "y9.feature.security.sqlIn.enabled", havingValue = "true")
+    public FilterRegistrationBean<SQLInFilter> sQLInFilter(Y9Properties y9Properties) {
+        LOGGER.info("SQLInFilter init. Configuration:{}",
+            Y9JsonUtil.writeValueAsString(y9Properties.getFeature().getSecurity().getSqlIn()));
+
+        FilterRegistrationBean<SQLInFilter> filterBean = new FilterRegistrationBean<>();
+        filterBean.setFilter(new SQLInFilter());
+        filterBean.setAsyncSupported(false);
+        filterBean.setOrder(Ordered.HIGHEST_PRECEDENCE + 4);
+        filterBean.addUrlPatterns("/*");
+        filterBean.addInitParameter("skip", y9Properties.getFeature().getSecurity().getSqlIn().getSkipUrl());
         return filterBean;
     }
 

@@ -1,10 +1,14 @@
 package net.risesoft.filters;
 
+import java.io.BufferedReader;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import javax.servlet.Filter;
 import javax.servlet.FilterChain;
@@ -15,16 +19,40 @@ import javax.servlet.ServletResponse;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.springframework.http.HttpStatus;
+
+import lombok.extern.slf4j.Slf4j;
+
+import net.risesoft.y9.Y9Context;
+import net.risesoft.y9.configuration.Y9Properties;
+import net.risesoft.y9.json.Y9JsonUtil;
+
 /**
  * SQL注入拦截器
  *
  * @author mengjuhua
  *
  */
+@Slf4j
 public class SQLInFilter implements Filter {
-    private static final String ERROR_PAGE = "ParameterError.jsp";
-    private String[] illegal;
+    private static final String SQL_REGX =
+        ".*(\\b(select|update|and|or|delete|insert|trancate|char|into|substr|ascii|declare|exec|count|master|drop|execute)\\b).*";
     private String[] skip;
+
+    // 获取request请求body中参数
+    public static String getBodyString(BufferedReader br) {
+        String inputLine;
+        String str = "";
+        try {
+            while ((inputLine = br.readLine()) != null) {
+                str += inputLine;
+            }
+            br.close();
+        } catch (IOException e) {
+            System.out.println("IOException: " + e);
+        }
+        return str;
+    }
 
     @Override
     public void destroy() {}
@@ -42,19 +70,40 @@ public class SQLInFilter implements Filter {
             return;
         }
 
-        @SuppressWarnings("rawtypes")
-        Map map = httpRequest.getParameterMap();
-        Object[] values = this.getParameterValues(map);
-        // System.out.println("----------checkURI:"+URI);
-        for (int i = 0; i < values.length; i++) {
-            if (!this.isLegal(values[i].toString())) {
-                HttpServletResponse httpResponse = (HttpServletResponse)response;
-                httpResponse.sendRedirect(httpRequest.getContextPath() + "/" + ERROR_PAGE);
-                return;
+        // 防止流读取一次后就没有了, 所以需要将流继续写出去
+        SqlInRequestWrapper requestWrapper = new SqlInRequestWrapper(httpRequest);
+
+        // 获取请求参数
+        Map<String, Object> paramsMaps = new HashMap<>();
+        if ("POST".equalsIgnoreCase(httpRequest.getMethod())) {
+            String body = requestWrapper.getBody();
+            paramsMaps = Y9JsonUtil.readValue(body, HashMap.class);
+        } else {
+            Map<String, String[]> parameterMap = requestWrapper.getParameterMap();
+            Set<Map.Entry<String, String[]>> entries = parameterMap.entrySet();
+            for (Map.Entry<String, String[]> next : entries) {
+                paramsMaps.put(next.getKey(), next.getValue()[0]);
             }
         }
+
+        // 校验SQL注入
+        for (Object o : paramsMaps.entrySet()) {
+            Map.Entry entry = (Map.Entry)o;
+            Object paramName = entry.getKey();
+            if (isParamIgnorable(paramName.toString())) {
+                continue;
+            }
+            Object value = entry.getValue();
+            if (value != null) {
+                boolean isValid = checkSqlInject(value.toString(), response);
+                if (!isValid) {
+                    return;
+                }
+            }
+        }
+
         try {
-            chain.doFilter(request, response);
+            chain.doFilter(requestWrapper, response);
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -73,9 +122,7 @@ public class SQLInFilter implements Filter {
             Object value = iter.next();
             if (value instanceof String[]) {
                 String[] values = (String[])value;
-                for (int i = 0; i < values.length; i++) {
-                    list.add(values[i]);
-                }
+                Collections.addAll(list, values);
             } else {
                 list.add(value);
             }
@@ -85,25 +132,7 @@ public class SQLInFilter implements Filter {
 
     @Override
     public void init(FilterConfig filterConfig) throws ServletException {
-        illegal = filterConfig.getInitParameter("illegal").split(";");
-        skip = filterConfig.getInitParameter("skip").split(";");
-    }
-
-    /**
-     * 参数是否合法
-     *
-     * @param value
-     * @return
-     */
-    private boolean isLegal(String value) {
-        for (int i = 0; i < this.illegal.length; i++) {
-            if (value.indexOf(this.illegal[i]) != -1) {
-                // System.out.println("----------URLP:ILLEGAL:" + illegal[i]);
-                // System.out.println("----------URLP:ILLvalue:" + value);
-                return false;
-            }
-        }
-        return true;
+        skip = filterConfig.getInitParameter("skip").split(",");
     }
 
     /**
@@ -120,4 +149,44 @@ public class SQLInFilter implements Filter {
         }
         return false;
     }
+
+    /**
+     * 检查SQL注入
+     *
+     * @param value 参数值
+     * @param servletResponse 相应实例
+     * @throws IOException IO异常
+     */
+    private boolean checkSqlInject(String value, ServletResponse servletResponse) throws IOException {
+
+        if (null != value && value.matches(SQL_REGX)) {
+            LOGGER.error("您输入的参数有非法字符，请输入正确的参数");
+            HttpServletResponse response = (HttpServletResponse)servletResponse;
+
+            Map<String, String> rsp = new HashMap<>();
+            rsp.put("code", HttpStatus.BAD_REQUEST.value() + "");
+            rsp.put("message", "您输入的参数有非法字符，请输入正确的参数！");
+
+            response.setStatus(HttpStatus.BAD_REQUEST.value());
+            response.setContentType("application/json;charset=UTF-8");
+            response.getWriter().write(Y9JsonUtil.writeValueAsString(rsp));
+            response.getWriter().flush();
+            response.getWriter().close();
+            return false;
+        }
+        return true;
+    }
+
+    /**
+     * 参数名是否在白名单内 在白名单内的参数则不进行处理
+     *
+     * @param paramName 参数名
+     * @return
+     */
+    private boolean isParamIgnorable(String paramName) {
+        List<String> ignoreParamList =
+            Y9Context.getBean(Y9Properties.class).getFeature().getSecurity().getSqlIn().getIgnoreParam();
+        return ignoreParamList.stream().anyMatch(paramName::equals);
+    }
+
 }
