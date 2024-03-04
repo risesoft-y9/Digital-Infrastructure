@@ -2,7 +2,7 @@ package net.risesoft.model.platform;
 
 import lombok.Data;
 
-import net.risesoft.enums.OperationDisplayTypeEnum;
+import net.risesoft.enums.platform.OperationDisplayTypeEnum;
 
 /**
  * 页面按钮操作资源

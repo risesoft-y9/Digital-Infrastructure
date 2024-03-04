@@ -1,7 +1,9 @@
-package net.risesoft.enums;
+package net.risesoft.enums.platform;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
+
+import net.risesoft.enums.ValuedEnum;
 
 /**
  * 操作按钮展示类型
