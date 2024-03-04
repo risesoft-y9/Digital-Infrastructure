@@ -159,8 +159,8 @@ public class OrgSyncApiImpl implements OrgSyncApi {
         @RequestParam("organizationId") @NotBlank String organizationId) {
         Y9LoginUserHolder.setTenantId(tenantId);
         Y9OrgSyncRole role = y9OrgSyncRoleRepository.findById(appName).orElse(null);
-        if(role == null) {
-        	return Y9Result.success(null, "应用名称不存在");
+        if (role == null) {
+            return Y9Result.success(null, "应用名称不存在");
         }
         Date syncTime = new Date();
         SyncOrgUnits syncOrgUnits =
@@ -184,8 +184,8 @@ public class OrgSyncApiImpl implements OrgSyncApi {
         @RequestParam("tenantId") @NotBlank String tenantId) {
         Y9LoginUserHolder.setTenantId(tenantId);
         Y9OrgSyncRole role = y9OrgSyncRoleRepository.findById(appName).orElse(null);
-        if(role == null) {
-        	return Y9Result.success(null, "应用名称不存在");
+        if (role == null) {
+            return Y9Result.success(null, "应用名称不存在");
         }
         Date syncTime = new Date();
         Date startTime = null;
@@ -203,84 +203,88 @@ public class OrgSyncApiImpl implements OrgSyncApi {
                 MessageOrg<OrgUnit> riseEvent = new MessageOrg<>(org, event.getEventType(), tenantId);
                 eventList.add(riseEvent);
             } else {
-            	boolean isAdd = false;
-            	OrgUnit orgUnit = Y9JsonUtil.readValue(event.getEntityJson(), OrgUnit.class);
-            	String guidPath = orgUnit.getGuidPath();
-            	if(StringUtils.isNotBlank(guidPath)) {
-            		String[] ids = role.getOrgIds().split(",");
-                	for(String id : ids) {
-                		if(guidPath.contains(id)) {
-                			isAdd = true;
-                			break;
-                		}
-                	}
-            	}else {// 岗位操作信息没有guidPath字段，默认通过
-            		isAdd = true;
-            	}
-            	if(isAdd) {
-            		MessageOrg<OrgUnit> riseEvent = new MessageOrg<>(orgUnit, event.getEventType(), tenantId);
+                boolean isAdd = false;
+                OrgUnit orgUnit = Y9JsonUtil.readValue(event.getEntityJson(), OrgUnit.class);
+                String guidPath = orgUnit.getGuidPath();
+                if (StringUtils.isNotBlank(guidPath)) {
+                    String[] ids = role.getOrgIds().split(",");
+                    for (String id : ids) {
+                        if (guidPath.contains(id)) {
+                            isAdd = true;
+                            break;
+                        }
+                    }
+                } else {// 岗位操作信息没有guidPath字段，默认通过
+                    isAdd = true;
+                }
+                if (isAdd) {
+                    MessageOrg<OrgUnit> riseEvent = new MessageOrg<>(orgUnit, event.getEventType(), tenantId);
                     eventList.add(riseEvent);
-            	}
+                }
             }
         }
         y9PublishedEventSyncHistoryService.saveOrUpdate(tenantId, appName, syncTime, 0);
         return Y9Result.success(eventList, "获取成功！");
     }
-    
+
     @Override
     public Y9Result<String> syncTime(@RequestParam String appName, @RequestParam String tenantId) {
         Y9LoginUserHolder.setTenantId(tenantId);
         Date syncTime = null;
-        Optional<Y9PublishedEventSyncHistory> history = y9PublishedEventSyncHistoryService.findByTenantIdAndAppName(tenantId, appName);
+        Optional<Y9PublishedEventSyncHistory> history =
+            y9PublishedEventSyncHistoryService.findByTenantIdAndAppName(tenantId, appName);
         if (history.isPresent()) {
-        	syncTime = history.get().getSinceSyncTime();
-        }else {
-        	return Y9Result.failure("获取不到记录！");
+            syncTime = history.get().getSinceSyncTime();
+        } else {
+            return Y9Result.failure("获取不到记录！");
         }
         y9PublishedEventSyncHistoryService.saveOrUpdate(tenantId, appName, syncTime, 1);
         return Y9Result.success("操作成功！");
     }
-    
+
     @Override
-    public Y9Page<Department> fullSyncDept(@RequestParam String appName, @RequestParam String tenantId, @RequestParam int page, @RequestParam int rows) {
+    public Y9Page<Department> fullSyncDept(@RequestParam String appName, @RequestParam String tenantId,
+        @RequestParam int page, @RequestParam int rows) {
         Y9LoginUserHolder.setTenantId(tenantId);
         Y9OrgSyncRole role = y9OrgSyncRoleRepository.findById(appName).orElse(null);
-        if(role == null) {
-        	return Y9Page.success(0, 0, 0, null, "应用名称不存在");
+        if (role == null) {
+            return Y9Page.success(0, 0, 0, null, "应用名称不存在");
         }
         Date syncTime = new Date();
         Page<Y9Department> deptPage = compositeOrgBaseService.deptPage(role.getOrgIds(), page, rows);
         List<Department> list = Y9ModelConvertUtil.convert(deptPage.getContent(), Department.class);
         y9PublishedEventSyncHistoryService.saveOrUpdate(tenantId, appName, syncTime, 1);
-        return Y9Page.success(deptPage.getNumber(), deptPage.getTotalPages(), deptPage.getTotalElements(), list, "获取成功");
+        return Y9Page.success(deptPage.getNumber(), deptPage.getTotalPages(), deptPage.getTotalElements(), list,
+            "获取成功");
     }
-    
+
     @Override
-    public Y9Page<Person> fullSyncUser(@RequestParam String appName, @RequestParam String tenantId, 
-    		@RequestParam String type, @RequestParam int page, @RequestParam int rows) {
+    public Y9Page<Person> fullSyncUser(@RequestParam String appName, @RequestParam String tenantId,
+        @RequestParam String type, @RequestParam int page, @RequestParam int rows) {
         Y9LoginUserHolder.setTenantId(tenantId);
         Y9OrgSyncRole role = y9OrgSyncRoleRepository.findById(appName).orElse(null);
-        if(role == null) {
-        	return Y9Page.success(0, 0, 0, null, "应用名称不存在");
+        if (role == null) {
+            return Y9Page.success(0, 0, 0, null, "应用名称不存在");
         }
         Date syncTime = new Date();
         Page<Y9Person> personPage = compositeOrgBaseService.personPage(role.getOrgIds(), type, page, rows);
         List<Person> list = Y9ModelConvertUtil.convert(personPage.getContent(), Person.class);
-        for(Person person : list) {
-        	person.setPassword("");
-        	List<Map<String, Object>> listMap = new ArrayList<Map<String, Object>>();
-        	List<Y9Position> plist = y9PositionService.listByPersonId(person.getId());
-        	for(Y9Position y9Position : plist) {
-        		Map<String, Object> map = new HashMap<String, Object>();
-        		map.put("dn", y9Position.getDn());
-        		map.put("parentId", y9Position.getParentId());
-        		map.put("jobName", y9Position.getJobName());
-        		listMap.add(map);
-        	}
-        	person.setPositions(Y9JsonUtil.writeValueAsString(listMap));
+        for (Person person : list) {
+            person.setPassword("");
+            List<Map<String, Object>> listMap = new ArrayList<Map<String, Object>>();
+            List<Y9Position> plist = y9PositionService.listByPersonId(person.getId());
+            for (Y9Position y9Position : plist) {
+                Map<String, Object> map = new HashMap<String, Object>();
+                map.put("dn", y9Position.getDn());
+                map.put("parentId", y9Position.getParentId());
+                map.put("jobName", y9Position.getJobName());
+                listMap.add(map);
+            }
+            person.setPositions(Y9JsonUtil.writeValueAsString(listMap));
         }
         y9PublishedEventSyncHistoryService.saveOrUpdate(tenantId, appName, syncTime, 1);
-        return Y9Page.success(personPage.getNumber(), personPage.getTotalPages(), personPage.getTotalElements(), list, "获取成功");
+        return Y9Page.success(personPage.getNumber(), personPage.getTotalPages(), personPage.getTotalElements(), list,
+            "获取成功");
     }
 
 }

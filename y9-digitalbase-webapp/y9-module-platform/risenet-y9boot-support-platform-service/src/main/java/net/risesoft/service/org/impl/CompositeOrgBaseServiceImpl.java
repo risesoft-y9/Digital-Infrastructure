@@ -496,7 +496,8 @@ public class CompositeOrgBaseServiceImpl implements CompositeOrgBaseService {
 
                         childrenList.addAll(findDepartmentByParentId(id));
 
-                        if (treeType.equals(OrgTreeTypeEnum.TREE_TYPE_ORG) || treeType.equals(OrgTreeTypeEnum.TREE_TYPE_GROUP)
+                        if (treeType.equals(OrgTreeTypeEnum.TREE_TYPE_ORG)
+                            || treeType.equals(OrgTreeTypeEnum.TREE_TYPE_GROUP)
                             || OrgTreeTypeEnum.TREE_TYPE_ORG_PERSON.equals(treeType)) {
                             childrenList.addAll(findGroupByParentId(id));
                         }
@@ -615,7 +616,8 @@ public class CompositeOrgBaseServiceImpl implements CompositeOrgBaseService {
     public List<Y9OrgBase> treeSearch(String name, OrgTreeTypeEnum treeType, String dnName) {
         List<Y9OrgBase> baseList = new ArrayList<>();
         if (treeType.equals(OrgTreeTypeEnum.TREE_TYPE_ORG) || treeType.equals(OrgTreeTypeEnum.TREE_TYPE_ORG_POSITION)
-            || treeType.equals(OrgTreeTypeEnum.TREE_TYPE_ORG_PERSON) || treeType.equals(OrgTreeTypeEnum.TREE_TYPE_ORG_MANAGER)
+            || treeType.equals(OrgTreeTypeEnum.TREE_TYPE_ORG_PERSON)
+            || treeType.equals(OrgTreeTypeEnum.TREE_TYPE_ORG_MANAGER)
             || treeType.equals(OrgTreeTypeEnum.TREE_TYPE_DEPT)) {
 
             baseList.addAll(this.findOrganizationByNameLike(name, dnName));
@@ -627,7 +629,8 @@ public class CompositeOrgBaseServiceImpl implements CompositeOrgBaseService {
             }
         }
         if (treeType.equals(OrgTreeTypeEnum.TREE_TYPE_ORG) || treeType.equals(OrgTreeTypeEnum.TREE_TYPE_ORG_POSITION)
-            || treeType.equals(OrgTreeTypeEnum.TREE_TYPE_ORG_PERSON) || treeType.equals(OrgTreeTypeEnum.TREE_TYPE_GROUP)) {
+            || treeType.equals(OrgTreeTypeEnum.TREE_TYPE_ORG_PERSON)
+            || treeType.equals(OrgTreeTypeEnum.TREE_TYPE_GROUP)) {
             List<Y9Group> groupList = this.findGroupByNameLike(name, dnName);
             baseList.addAll(groupList);
             for (Y9Group group : groupList) {
@@ -668,7 +671,8 @@ public class CompositeOrgBaseServiceImpl implements CompositeOrgBaseService {
         List<Y9OrgBase> baseList = new ArrayList<>();
 
         if (treeType.equals(OrgTreeTypeEnum.TREE_TYPE_ORG) || treeType.equals(OrgTreeTypeEnum.TREE_TYPE_ORG_POSITION)
-            || treeType.equals(OrgTreeTypeEnum.TREE_TYPE_ORG_PERSON) || treeType.equals(OrgTreeTypeEnum.TREE_TYPE_ORG_MANAGER)
+            || treeType.equals(OrgTreeTypeEnum.TREE_TYPE_ORG_PERSON)
+            || treeType.equals(OrgTreeTypeEnum.TREE_TYPE_ORG_MANAGER)
             || treeType.equals(OrgTreeTypeEnum.TREE_TYPE_DEPT)) {
 
             baseList.addAll(this.findOrganizationByNameLike(name));
@@ -680,7 +684,8 @@ public class CompositeOrgBaseServiceImpl implements CompositeOrgBaseService {
             }
         }
         if (treeType.equals(OrgTreeTypeEnum.TREE_TYPE_ORG) || treeType.equals(OrgTreeTypeEnum.TREE_TYPE_ORG_POSITION)
-            || treeType.equals(OrgTreeTypeEnum.TREE_TYPE_ORG_PERSON) || treeType.equals(OrgTreeTypeEnum.TREE_TYPE_GROUP)) {
+            || treeType.equals(OrgTreeTypeEnum.TREE_TYPE_ORG_PERSON)
+            || treeType.equals(OrgTreeTypeEnum.TREE_TYPE_GROUP)) {
             List<Y9Group> groupList = this.findGroupByNameLike(name);
             baseList.addAll(groupList);
             for (Y9Group group : groupList) {
@@ -886,52 +891,52 @@ public class CompositeOrgBaseServiceImpl implements CompositeOrgBaseService {
         }
         dateMap.put(parentId + OrgTypeEnum.PERSON.getEnName(), personList);
     }
-    
+
     @Override
-	public Page<Y9Person> personPage(String orgId, String type, int page, int rows) {
-		page = (page < 0) ? 0 : page - 1;
+    public Page<Y9Person> personPage(String orgId, String type, int page, int rows) {
+        page = (page < 0) ? 0 : page - 1;
         Pageable pageable = PageRequest.of(page, rows, Sort.by(Sort.Direction.DESC, "orderedPath"));
         Specification<Y9Person> spec = new Specification<Y9Person>() {
-			private static final long serialVersionUID = -6506792884620973450L;
+            private static final long serialVersionUID = -6506792884620973450L;
 
-			@Override
+            @Override
             public Predicate toPredicate(Root<Y9Person> root, CriteriaQuery<?> criteriaQuery, CriteriaBuilder cb) {
                 List<Predicate> orList = new ArrayList<Predicate>();
                 String[] ids = orgId.split(",");
-                for(String id : ids) {
-                	orList.add(cb.like(root.get("guidPath").as(String.class), "%" + id + "%"));
+                for (String id : ids) {
+                    orList.add(cb.like(root.get("guidPath").as(String.class), "%" + id + "%"));
                 }
                 Predicate pre_or = cb.or(orList.toArray(new Predicate[orList.size()]));
-                
+
                 List<Predicate> predicates = new ArrayList<Predicate>();
                 if (type != null && type.equals("1")) {
-                	predicates.add(cb.equal(root.get("disabled").as(Boolean.class), false));
+                    predicates.add(cb.equal(root.get("disabled").as(Boolean.class), false));
                 }
                 Predicate pre_and = cb.and(predicates.toArray(new Predicate[predicates.size()]));
-                
+
                 return criteriaQuery.where(pre_and, pre_or).getRestriction();
             }
         };
         return y9PersonRepository.findAll(spec, pageable);
-	}
+    }
 
-	@Override
-	public Page<Y9Department> deptPage(String orgId, int page, int rows) {
-		page = (page < 0) ? 0 : page - 1;
+    @Override
+    public Page<Y9Department> deptPage(String orgId, int page, int rows) {
+        page = (page < 0) ? 0 : page - 1;
         Pageable pageable = PageRequest.of(page, rows, Sort.by(Sort.Direction.ASC, "guidPath"));
         Specification<Y9Department> spec = new Specification<Y9Department>() {
-			private static final long serialVersionUID = -95805766801894738L;
+            private static final long serialVersionUID = -95805766801894738L;
 
-			@Override
+            @Override
             public Predicate toPredicate(Root<Y9Department> root, CriteriaQuery<?> criteriaQuery, CriteriaBuilder cb) {
                 List<Predicate> predicates = new ArrayList<Predicate>();
                 String[] ids = orgId.split(",");
-                for(String id : ids) {
-                	predicates.add(cb.like(root.get("guidPath").as(String.class), "%" + id + "%"));
+                for (String id : ids) {
+                    predicates.add(cb.like(root.get("guidPath").as(String.class), "%" + id + "%"));
                 }
                 return cb.or(predicates.toArray(new Predicate[predicates.size()]));
             }
         };
         return y9DepartmentRepository.findAll(spec, pageable);
-	}
+    }
 }

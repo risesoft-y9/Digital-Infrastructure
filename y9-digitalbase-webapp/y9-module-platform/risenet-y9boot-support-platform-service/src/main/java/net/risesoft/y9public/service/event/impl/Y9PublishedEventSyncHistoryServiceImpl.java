@@ -39,10 +39,10 @@ public class Y9PublishedEventSyncHistoryServiceImpl implements Y9PublishedEventS
         if (y9PublishedEventSyncHistoryOptional.isPresent()) {
             Y9PublishedEventSyncHistory history = y9PublishedEventSyncHistoryOptional.get();
             history.setStatus(status);
-            if(status == 1) {
-            	history.setLastSyncTime(syncTime);
-            }else {
-            	history.setSinceSyncTime(syncTime);
+            if (status == 1) {
+                history.setLastSyncTime(syncTime);
+            } else {
+                history.setSinceSyncTime(syncTime);
             }
             return y9PublishedEventSyncHistoryRepository.save(history);
         }

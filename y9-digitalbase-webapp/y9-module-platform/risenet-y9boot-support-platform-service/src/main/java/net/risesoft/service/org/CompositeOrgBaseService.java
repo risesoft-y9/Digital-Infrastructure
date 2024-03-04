@@ -269,9 +269,10 @@ public interface CompositeOrgBaseService {
      * @return {@link List}<{@link Y9OrgBase}>
      */
     List<Y9OrgBase> treeSearch4DeptManager(String name, OrgTreeTypeEnum treeType);
-    
+
     /**
      * 分页获取机构下的人员列表
+     * 
      * @param orgId 机构id
      * @param type 0-查全量，1-查询没被禁用的
      * @param page
@@ -279,9 +280,10 @@ public interface CompositeOrgBaseService {
      * @return
      */
     Page<Y9Person> personPage(String orgId, String type, int page, int rows);
-    
+
     /**
      * 分页获取机构下的部门列表
+     * 
      * @param orgId 机构id
      * @param page
      * @param rows

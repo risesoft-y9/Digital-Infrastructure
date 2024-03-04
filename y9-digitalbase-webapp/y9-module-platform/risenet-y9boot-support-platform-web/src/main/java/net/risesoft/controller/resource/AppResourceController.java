@@ -96,7 +96,8 @@ public class AppResourceController {
      */
     @RiseLog(operationName = "根据应用id获取应用详情")
     @GetMapping(value = "/{id}")
-    @IsManager({ManagerLevelEnum.SYSTEM_MANAGER, ManagerLevelEnum.SECURITY_MANAGER, ManagerLevelEnum.OPERATION_SYSTEM_MANAGER})
+    @IsManager({ManagerLevelEnum.SYSTEM_MANAGER, ManagerLevelEnum.SECURITY_MANAGER,
+        ManagerLevelEnum.OPERATION_SYSTEM_MANAGER})
     public Y9Result<Y9App> getById(@PathVariable @NotBlank String id) {
         return Y9Result.success(y9AppService.getById(id), "成功获取应用详情");
     }
