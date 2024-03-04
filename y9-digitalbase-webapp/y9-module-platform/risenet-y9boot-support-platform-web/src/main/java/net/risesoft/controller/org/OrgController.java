@@ -276,8 +276,8 @@ public class OrgController {
                 orgList.stream().filter(org -> mapping.contains(org.getGuidPath())).collect(Collectors.toList());
         }
 
-        return Y9Result.success(OrgTreeNodeVO.convertY9OrgBaseList(organizationList, treeType, true,
-                compositeOrgBaseService),
+        return Y9Result.success(
+            OrgTreeNodeVO.convertY9OrgBaseList(organizationList, treeType, true, compositeOrgBaseService),
             "获取组织架构列表成功！");
     }
 
@@ -301,9 +301,8 @@ public class OrgController {
         } else if (!ManagerLevelEnum.GENERAL_USER.equals(userInfo.getManagerLevel())) {
             y9OrgBaseList = compositeOrgBaseService.getTree4DeptManager(id, treeType);
         }
-        return Y9Result.success(OrgTreeNodeVO.convertY9OrgBaseList(y9OrgBaseList, treeType, true,
-                compositeOrgBaseService),
-            "获取机构树成功！");
+        return Y9Result.success(
+            OrgTreeNodeVO.convertY9OrgBaseList(y9OrgBaseList, treeType, true, compositeOrgBaseService), "获取机构树成功！");
     }
 
     /**
@@ -316,7 +315,8 @@ public class OrgController {
     @RiseLog(operationName = "查询机构主体")
     @GetMapping(value = "/treeSearch2")
     @IsManager({ManagerLevelEnum.SYSTEM_MANAGER, ManagerLevelEnum.SECURITY_MANAGER})
-    public Y9Result<List<OrgTreeNodeVO>> treeSearch2(@RequestParam String name, @RequestParam OrgTreeTypeEnum treeType) {
+    public Y9Result<List<OrgTreeNodeVO>> treeSearch2(@RequestParam String name,
+        @RequestParam OrgTreeTypeEnum treeType) {
         UserInfo userInfo = Y9LoginUserHolder.getUserInfo();
         List<Y9OrgBase> y9OrgBaseList = new ArrayList<>();
         if (userInfo.isGlobalManager()) {
@@ -325,9 +325,8 @@ public class OrgController {
             || ManagerLevelEnum.SECURITY_MANAGER.equals(userInfo.getManagerLevel())) {
             y9OrgBaseList = compositeOrgBaseService.treeSearch4DeptManager(name, treeType);
         }
-        return Y9Result.success(OrgTreeNodeVO.convertY9OrgBaseList(y9OrgBaseList, treeType, false,
-                compositeOrgBaseService),
-            "获取机构树成功！");
+        return Y9Result.success(
+            OrgTreeNodeVO.convertY9OrgBaseList(y9OrgBaseList, treeType, false, compositeOrgBaseService), "获取机构树成功！");
     }
 
 }

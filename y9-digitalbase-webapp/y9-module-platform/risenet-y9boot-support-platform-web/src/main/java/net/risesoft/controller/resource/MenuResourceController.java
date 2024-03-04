@@ -82,7 +82,8 @@ public class MenuResourceController {
      */
     @RiseLog(operationName = "根据id获取菜单资源详情")
     @GetMapping(value = "/{id}")
-    @IsManager({ManagerLevelEnum.SYSTEM_MANAGER, ManagerLevelEnum.SECURITY_MANAGER, ManagerLevelEnum.OPERATION_SYSTEM_MANAGER})
+    @IsManager({ManagerLevelEnum.SYSTEM_MANAGER, ManagerLevelEnum.SECURITY_MANAGER,
+        ManagerLevelEnum.OPERATION_SYSTEM_MANAGER})
     public Y9Result<Y9Menu> getById(@PathVariable @NotBlank String id) {
         return Y9Result.success(y9MenuService.getById(id), "根据id获取菜单资源详情成功");
     }

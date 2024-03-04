@@ -890,7 +890,7 @@ public class Y9PersonServiceImpl implements Y9PersonService {
         Y9Person originPerson = new Y9Person();
         Y9Person updatedPerson = this.getById(personId);
         Y9BeanUtil.copyProperties(updatedPerson, originPerson);
-        
+
         final Y9OrgBase parent = compositeOrgBaseManager.getOrgUnitAsParent(parentId);
         updatedPerson.setParentId(parent.getId());
         updatedPerson.setTabIndex(compositeOrgBaseManager.getMaxSubTabIndex(parentId));
@@ -1016,7 +1016,7 @@ public class Y9PersonServiceImpl implements Y9PersonService {
         Y9Person originPerson = new Y9Person();
         Y9Person updatedPerson = this.getById(personId);
         Y9BeanUtil.copyProperties(updatedPerson, originPerson);
-        
+
         String password = y9config.getCommon().getDefaultPassword();
         updatedPerson.setPassword(Y9MessageDigest.hashpw(password));
         final Y9Person savedPerson = y9PersonManager.save(updatedPerson);
@@ -1053,7 +1053,7 @@ public class Y9PersonServiceImpl implements Y9PersonService {
         Y9Person originPerson = new Y9Person();
         Y9Person updatedPerson = this.getById(personId);
         Y9BeanUtil.copyProperties(updatedPerson, originPerson);
-        
+
         updatedPerson.setAvator(avatorUrl);
         updatedPerson = this.save(updatedPerson);
 
@@ -1073,7 +1073,7 @@ public class Y9PersonServiceImpl implements Y9PersonService {
                 Y9Person updatedPerson = y9PersonOptional.get();
                 Y9BeanUtil.copyProperties(updatedPerson, originPerson);
                 Y9BeanUtil.copyProperties(person, updatedPerson);
-                
+
                 updatedPerson.setDn(OrgLevelConsts.getOrgLevel(OrgTypeEnum.PERSON) + updatedPerson.getName()
                     + OrgLevelConsts.SEPARATOR + parent.getDn());
                 updatedPerson.setParentId(parent.getId());
@@ -1229,7 +1229,7 @@ public class Y9PersonServiceImpl implements Y9PersonService {
         Y9Person originPerson = new Y9Person();
         Y9Person updatedPerson = this.getById(personId);
         Y9BeanUtil.copyProperties(updatedPerson, originPerson);
-        
+
         updatedPerson.setWeixinId(weixinId);
         updatedPerson = this.save(updatedPerson);
 

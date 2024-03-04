@@ -19,7 +19,7 @@ import net.risesoft.base.BaseEntity;
 @Data
 public class Y9OrgSyncRole extends BaseEntity {
 
-	private static final long serialVersionUID = 1370381862846471287L;
+    private static final long serialVersionUID = 1370381862846471287L;
 
     @Id
     @Column(name = "APP_NAME", length = 100, nullable = false)

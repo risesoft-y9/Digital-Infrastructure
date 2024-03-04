@@ -20,7 +20,8 @@ import net.risesoft.entity.Y9Department;
 @Repository
 @Transactional(value = "rsTenantTransactionManager", readOnly = true)
 // @JaversSpringDataAuditable
-public interface Y9DepartmentRepository extends JpaRepository<Y9Department, String>, JpaSpecificationExecutor<Y9Department> {
+public interface Y9DepartmentRepository
+    extends JpaRepository<Y9Department, String>, JpaSpecificationExecutor<Y9Department> {
 
     List<Y9Department> findByBureauAndDnContainingOrderByTabIndexAsc(boolean bureau, String dn);
 

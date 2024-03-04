@@ -32,11 +32,11 @@ public class Y9FeignConfiguration {
     public ErrorDecoder errorDecoder(ObjectMapper objectMapper) {
         return new Y9ErrorDecoder(objectMapper);
     }
-    
+
     @Bean
     @ConditionalOnProperty(name = "y9.feature.api.token-required", havingValue = "true", matchIfMissing = false)
     public RequestInterceptor tokenInterceptor(Y9Properties y9Properties, RedisTemplate<String, String> redisTemplate) {
         return new TokenInterceptor(y9Properties, redisTemplate);
-    } 
+    }
 
 }

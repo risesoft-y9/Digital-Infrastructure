@@ -54,7 +54,7 @@ public class PersonalCenterController {
         @RequestParam @NotBlank String password) {
         return Y9Result.success(y9ManagerService.checkPassword(personId, password), "校验密码操作成功");
     }
-    
+
     /**
      * 检查三员密码是否过期（三员密码需定期修改）
      *

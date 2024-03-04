@@ -9,6 +9,7 @@ import net.risesoft.y9public.entity.event.Y9OrgSyncRole;
 
 @Repository
 @Transactional(value = "rsPublicTransactionManager", readOnly = true)
-public interface Y9OrgSyncRoleRepository extends JpaRepository<Y9OrgSyncRole, String>, JpaSpecificationExecutor<Y9OrgSyncRole> {
-	
+public interface Y9OrgSyncRoleRepository
+    extends JpaRepository<Y9OrgSyncRole, String>, JpaSpecificationExecutor<Y9OrgSyncRole> {
+
 }
