@@ -4,7 +4,7 @@ import java.io.Serializable;
 
 import lombok.Data;
 
-import net.risesoft.enums.OperationDisplayTypeEnum;
+import net.risesoft.enums.platform.OperationDisplayTypeEnum;
 
 /**
  * vue 按钮
@@ -34,7 +34,7 @@ public class VueButton implements Serializable {
     /**
      * 展示方式
      * 
-     * {@link net.risesoft.enums.OperationDisplayTypeEnum}
+     * {@link OperationDisplayTypeEnum}
      */
     private OperationDisplayTypeEnum displayType;
 }

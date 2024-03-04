@@ -1,7 +1,6 @@
 package net.risesoft.persistence;
 
 import net.risesoft.enums.FileStoreTypeEnum;
-import net.risesoft.enums.OperationDisplayTypeEnum;
 import net.risesoft.enums.platform.AppOpenTypeEnum;
 import net.risesoft.enums.platform.AppTypeEnum;
 import net.risesoft.enums.platform.AuthorityEnum;
@@ -11,6 +10,7 @@ import net.risesoft.enums.platform.DepartmentPropCategoryEnum;
 import net.risesoft.enums.platform.GroupTypeEnum;
 import net.risesoft.enums.platform.ManagerLevelEnum;
 import net.risesoft.enums.platform.MaritalStatusEnum;
+import net.risesoft.enums.platform.OperationDisplayTypeEnum;
 import net.risesoft.enums.platform.OrgTypeEnum;
 import net.risesoft.enums.platform.PersonTypeEnum;
 import net.risesoft.enums.platform.ResourceTypeEnum;

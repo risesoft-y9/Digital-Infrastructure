@@ -10,7 +10,7 @@ import org.hibernate.annotations.Comment;
 
 import lombok.Data;
 
-import net.risesoft.enums.OperationDisplayTypeEnum;
+import net.risesoft.enums.platform.OperationDisplayTypeEnum;
 import net.risesoft.enums.platform.ResourceTypeEnum;
 import net.risesoft.persistence.EnumConverter;
 
