@@ -72,8 +72,9 @@ public class ServiceController {
     }
 
     @PostMapping(value = "/oAuthService")
-    public Y9Result<String> oAuthService(@RequestParam(required = false) Long id, String clientId, String clientSecret,
-        String serviceId, String name, @RequestParam(required = false) String description,
+    public Y9Result<String> oAuthService(@RequestParam(required = false) Long id,
+        @RequestParam(required = false) String theme, String clientId, String clientSecret, String serviceId,
+        String name, @RequestParam(required = false) String description,
         @RequestParam(required = false) String systemId, @RequestParam(required = false) String logoutUrl) {
         try {
             OAuthRegisteredService oAuthRegisteredService = new OAuthRegisteredService();
@@ -86,7 +87,8 @@ public class ServiceController {
             oAuthRegisteredService.setServiceId(serviceId);
             oAuthRegisteredService.setName(name);
             oAuthRegisteredService.setDescription(description);
-            oAuthRegisteredService.setTheme(casConfigurationProperties.getTheme().getDefaultThemeName());
+            oAuthRegisteredService
+                .setTheme(theme.isBlank() ? casConfigurationProperties.getTheme().getDefaultThemeName() : theme);
             oAuthRegisteredService.setEvaluationOrder(100);
             oAuthRegisteredService.setLogoutUrl(logoutUrl);
             ReturnAllAttributeReleasePolicy returnAllAttributeReleasePolicy = new ReturnAllAttributeReleasePolicy();
