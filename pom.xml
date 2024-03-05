@@ -258,6 +258,30 @@
 
     <!-- 构建 -->
     <build>
+        <plugins>
+            <plugin>
+                <groupId>io.github.git-commit-id</groupId>
+                <artifactId>git-commit-id-maven-plugin</artifactId>
+                <version>7.0.0</version>
+                <executions>
+                    <execution>
+                        <id>get-the-git-infos</id>
+                        <goals>
+                            <goal>revision</goal>
+                        </goals>
+                        <phase>initialize</phase>
+                    </execution>
+                </executions>
+                <configuration>
+                    <failOnNoGitDirectory>false</failOnNoGitDirectory>
+                    <injectAllReactorProjects>true</injectAllReactorProjects>
+                    <generateGitPropertiesFile>true</generateGitPropertiesFile>
+                    <generateGitPropertiesFilename>${project.build.outputDirectory}/git.properties</generateGitPropertiesFilename>
+                    <commitIdGenerationMode>full</commitIdGenerationMode>
+                </configuration>
+            </plugin>
+        </plugins>
+
         <pluginManagement>
             <plugins>
                 <plugin>
@@ -536,6 +560,47 @@
                             <phase>compile</phase>
                             <goals>
                                 <goal>html</goal>
+                            </goals>
+                        </execution>
+                    </executions>
+                </plugin>
+
+                <plugin>
+                    <groupId>com.google.cloud.tools</groupId>
+                    <artifactId>jib-maven-plugin</artifactId>
+                    <version>3.4.0</version>
+                    <configuration>
+                        <skip>false</skip>
+                        <from>
+                            <!--<image>eclipse-temurin:11-jre</image>-->
+                            <image>tomcat:9.0-jre11-temurin</image>
+                            <platforms>
+                                <platform>
+                                    <architecture>amd64</architecture>
+                                    <os>linux</os>
+                                </platform>
+                                <platform>
+                                    <architecture>arm64</architecture>
+                                    <os>linux</os>
+                                </platform>
+                            </platforms>
+                        </from>
+                        <container>
+                            <appRoot>/usr/local/tomcat/webapps/${project.build.finalName}</appRoot>
+                        </container>
+                        <to>
+                            <image>docker-registry-internal.youshengyun.com/${project.artifactId}</image>
+                            <tags>
+                                <tag>${project.version}</tag>
+                                <tag>${git.commit.id.full}</tag>
+                            </tags>
+                        </to>
+                    </configuration>
+                    <executions>
+                        <execution>
+                            <phase>package</phase>
+                            <goals>
+                                <goal>build</goal>
                             </goals>
                         </execution>
                     </executions>
