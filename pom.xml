@@ -269,6 +269,28 @@
                     </execution>
                 </executions>
             </plugin>
+
+            <plugin>
+                <groupId>io.github.git-commit-id</groupId>
+                <artifactId>git-commit-id-maven-plugin</artifactId>
+                <version>7.0.0</version>
+                <executions>
+                    <execution>
+                        <id>get-the-git-infos</id>
+                        <goals>
+                            <goal>revision</goal>
+                        </goals>
+                        <phase>initialize</phase>
+                    </execution>
+                </executions>
+                <configuration>
+                    <failOnNoGitDirectory>false</failOnNoGitDirectory>
+                    <injectAllReactorProjects>true</injectAllReactorProjects>
+                    <generateGitPropertiesFile>true</generateGitPropertiesFile>
+                    <generateGitPropertiesFilename>${project.build.outputDirectory}/git.properties</generateGitPropertiesFilename>
+                    <commitIdGenerationMode>full</commitIdGenerationMode>
+                </configuration>
+            </plugin>
         </plugins>
 
         <pluginManagement>
@@ -534,12 +556,13 @@
                             <image>docker-registry-internal.youshengyun.com/${project.artifactId}</image>
                             <tags>
                                 <tag>${project.version}</tag>
+                                <tag>${git.commit.id.full}</tag>
                             </tags>
                         </to>
                     </configuration>
                     <executions>
                         <execution>
-                            <phase>install</phase>
+                            <phase>package</phase>
                             <goals>
                                 <goal>build</goal>
                             </goals>
