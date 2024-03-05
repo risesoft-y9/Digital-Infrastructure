@@ -242,13 +242,13 @@ webapp -- 系统公共模块
 | 8  | <a href="https://vue.youshengyun.com/files/文件组件使用文档.pdf" target="_blank">文件组件使用文档</a>              |
 | 9  | <a href="https://vue.youshengyun.com/files/代码生成器使用文档.pdf" target="_blank">代码生成器使用文档</a>    |
 | 10 | <a href="https://vue.youshengyun.com/files/配置文件说明文档.pdf" target="_blank">配置文件说明文档</a>               |
-| 12 | <a href="https://vue.youshengyun.com/files/有生博大Vue开发手册v1.0.pdf" target="_blank">Vue 开发手册</a>           |
-| 13 | <a href="https://vue.youshengyun.com/files/开发规范.pdf" target="_blank">Vue 开发规范</a>           |
-| 14 | <a href="https://vue.youshengyun.com/files/代码格式化.pdf" target="_blank">Vue 代码格式化</a>           |
-| 15 | <a href="https://vue.youshengyun.com/files/系统组件.pdf" target="_blank">Vue 系统组件</a>           |
-| 16 | <a href="https://vue.youshengyun.com/files/通用方法.pdf" target="_blank">Vue 通用方法</a>           |
-| 17 | <a href="https://vue.youshengyun.com/files/国际化.pdf" target="_blank">Vue 国际化</a>           |
-| 18 | <a href="https://vue.youshengyun.com/files/Icon图标.pdf" target="_blank">Vue Icon图标</a>           |
+| 12 | <a href="https://vue.youshengyun.com/files/有生博大Vue开发手册v1.0.pdf" target="_blank">前端开发手册</a>           |
+| 13 | <a href="https://vue.youshengyun.com/files/开发规范.pdf" target="_blank">前端开发规范</a>           |
+| 14 | <a href="https://vue.youshengyun.com/files/代码格式化.pdf" target="_blank">前端代码格式化</a>           |
+| 15 | <a href="https://vue.youshengyun.com/files/系统组件.pdf" target="_blank">前端系统组件</a>           |
+| 16 | <a href="https://vue.youshengyun.com/files/通用方法.pdf" target="_blank">前端通用方法</a>           |
+| 17 | <a href="https://vue.youshengyun.com/files/国际化.pdf" target="_blank">前端国际化</a>           |
+| 18 | <a href="https://vue.youshengyun.com/files/Icon图标.pdf" target="_blank">前端Icon图标</a>           |
 
 ## 数字底座截图
 
