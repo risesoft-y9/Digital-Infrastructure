@@ -376,18 +376,6 @@ webapp -- 系统公共模块
 
 <div><img src="https://vue.youshengyun.com/files/img/qibuzou.png"><div/>
 
-## 需求定制开发
-
-联系人：曲经理
-
-微信号：qq349416828
-
-备注：开源数字底座咨询-姓名
-
-联系人：谢经理
-
-座机号：010-86393151
-
 ## 赞助与支持
 
 中关村软件和信息服务产业创新联盟
@@ -397,3 +385,16 @@ webapp -- 系统公共模块
 北京有生博大软件股份有限公司
 
 官网：[https://www.risesoft.net/](https://gitee.com/link?target=https://www.risesoft.net/)
+
+## 咨询与合作
+
+联系人：曲经理
+
+微信号：qq349416828
+
+备注：开源数字底座咨询-姓名
+<div><img style="width: 50%" src="https://vue.youshengyun.com/files/img/曲经理-二维码.png"><div/>
+联系人：有生博大-咨询热线
+
+座机号：010-86393151
+<div><img style="width: 50%" src="https://vue.youshengyun.com/files/img/有生博大-咨询热线.png"><div/>
