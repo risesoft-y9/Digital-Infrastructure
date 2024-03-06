@@ -393,8 +393,8 @@ webapp -- 系统公共模块
 微信号：qq349416828
 
 备注：开源数字底座咨询-姓名
-<div><img style="width: 50%" src="https://vue.youshengyun.com/files/img/曲经理-二维码.png"><div/>
+<div><img style="width: 40%" src="https://vue.youshengyun.com/files/img/曲经理-二维码.png"><div/>
 联系人：有生博大-咨询热线
 
 座机号：010-86393151
-<div><img style="width: 50%" src="https://vue.youshengyun.com/files/img/有生博大-咨询热线.png"><div/>
+<div><img style="width: 45%" src="https://vue.youshengyun.com/files/img/有生博大-咨询热线.png"><div/>
