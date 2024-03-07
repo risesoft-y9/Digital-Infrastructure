@@ -17,7 +17,6 @@ public class ServletInitializer extends SpringBootServletInitializer {
     @Override
     protected SpringApplicationBuilder configure(final SpringApplicationBuilder builder) {
         setRegisterErrorPageFilter(false);
-        builder.listeners(new OnApplicationContextInitialized());
         builder.sources(LogApplication.class);
         return builder;
     }
