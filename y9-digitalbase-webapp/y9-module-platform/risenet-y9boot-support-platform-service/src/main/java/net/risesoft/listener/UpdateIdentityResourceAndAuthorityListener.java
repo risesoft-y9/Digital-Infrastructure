@@ -305,7 +305,7 @@ public class UpdateIdentityResourceAndAuthorityListener {
         }
     }
 
-    @TransactionalEventListener()
+    @TransactionalEventListener
     @Async
     public void onY9PersonsToPositionsCreated(Y9EntityCreatedEvent<Y9PersonsToPositions> event) {
         Y9PersonsToPositions y9PersonsToPositions = event.getEntity();
@@ -313,7 +313,7 @@ public class UpdateIdentityResourceAndAuthorityListener {
         y9AuthorizationService.syncToIdentityResourceAndAuthority(y9PersonsToPositions.getPersonId());
 
         if (LOGGER.isDebugEnabled()) {
-            LOGGER.debug("新建人员和岗位的映射触发的重新计算角色执行完成");
+            LOGGER.debug("新建人员和岗位的映射触发的重新计算权限缓存执行完成");
         }
     }
 
