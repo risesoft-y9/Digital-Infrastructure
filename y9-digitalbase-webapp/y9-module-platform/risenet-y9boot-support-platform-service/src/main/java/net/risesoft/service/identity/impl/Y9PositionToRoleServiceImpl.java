@@ -9,15 +9,11 @@ import org.springframework.transaction.annotation.Transactional;
 import lombok.RequiredArgsConstructor;
 
 import net.risesoft.consts.InitDataConsts;
-import net.risesoft.entity.Y9Position;
 import net.risesoft.entity.identity.position.Y9PositionToRole;
 import net.risesoft.enums.platform.RoleTypeEnum;
-import net.risesoft.manager.authorization.Y9PositionToRoleManager;
-import net.risesoft.manager.org.Y9PositionManager;
 import net.risesoft.repository.identity.position.Y9PositionToRoleRepository;
 import net.risesoft.service.identity.Y9PositionToRoleService;
 import net.risesoft.y9public.entity.role.Y9Role;
-import net.risesoft.y9public.manager.role.Y9RoleManager;
 import net.risesoft.y9public.repository.role.Y9RoleRepository;
 
 /**
@@ -33,10 +29,6 @@ public class Y9PositionToRoleServiceImpl implements Y9PositionToRoleService {
 
     private final Y9PositionToRoleRepository y9PositionToRoleRepository;
     private final Y9RoleRepository y9RoleRepository;
-
-    private final Y9RoleManager y9RoleManager;
-    private final Y9PositionManager y9PositionManager;
-    private final Y9PositionToRoleManager y9PositionToRoleManager;
 
     @Override
     public Boolean hasPublicRole(String positionId, String roleName) {
@@ -76,14 +68,6 @@ public class Y9PositionToRoleServiceImpl implements Y9PositionToRoleService {
     @Override
     public List<Y9PositionToRole> listByPositionIdAndSystemName(String positionId, String systemName) {
         return y9PositionToRoleRepository.findByPositionIdAndSystemNameOrderByAppName(positionId, systemName);
-    }
-
-    @Override
-    @Transactional(readOnly = false)
-    public void recalculate(String positionId) {
-        List<Y9Role> positionRelatedY9RoleList = y9RoleManager.listOrgUnitRelatedWithoutNegative(positionId);
-        Y9Position y9Position = y9PositionManager.getById(positionId);
-        y9PositionToRoleManager.update(y9Position, positionRelatedY9RoleList);
     }
 
     @Override

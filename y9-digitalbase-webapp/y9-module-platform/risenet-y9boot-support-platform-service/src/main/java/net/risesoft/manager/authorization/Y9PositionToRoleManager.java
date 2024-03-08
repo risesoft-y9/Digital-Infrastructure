@@ -14,5 +14,9 @@ import net.risesoft.y9public.entity.role.Y9Role;
  */
 public interface Y9PositionToRoleManager {
 
-    void update(Y9Position y9Position, List<Y9Role> positionRelatedY9RoleList);
+    void deleteByPositionIdAndRoleId(String positionId, String roleId);
+
+    List<String> listRoleIdByPositionId(String positionId);
+
+    void save(Y9Position y9Position, Y9Role role);
 }

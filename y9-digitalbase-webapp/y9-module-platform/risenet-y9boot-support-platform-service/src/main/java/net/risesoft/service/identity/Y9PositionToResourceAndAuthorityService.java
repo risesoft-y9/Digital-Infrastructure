@@ -20,20 +20,6 @@ import net.risesoft.y9public.entity.resource.Y9ResourceBase;
 public interface Y9PositionToResourceAndAuthorityService {
 
     /**
-     * 按应用id删除
-     *
-     * @param appId id
-     */
-    void deleteByAppId(String appId);
-
-    /**
-     * 根据授权配置id删除权限缓存
-     *
-     * @param authorizationId
-     */
-    void deleteByAuthorizationId(String authorizationId);
-
-    /**
      * 根据授权配置id和组织id删除
      *
      * @param authorizationId
@@ -62,13 +48,6 @@ public interface Y9PositionToResourceAndAuthorityService {
      * @param positionId
      */
     void deleteByPositionId(String positionId);
-
-    /**
-     * 按资源id删除
-     *
-     * @param resourceId id
-     */
-    void deleteByResourceId(String resourceId);
 
     /**
      * 判断岗对资源是否有相应的权限

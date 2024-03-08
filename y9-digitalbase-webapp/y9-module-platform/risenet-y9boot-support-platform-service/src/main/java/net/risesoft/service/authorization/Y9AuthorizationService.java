@@ -5,8 +5,6 @@ import java.util.Optional;
 
 import org.springframework.data.domain.Page;
 
-import net.risesoft.entity.Y9Person;
-import net.risesoft.entity.Y9Position;
 import net.risesoft.entity.permission.Y9Authorization;
 import net.risesoft.enums.platform.AuthorityEnum;
 import net.risesoft.enums.platform.AuthorizationPrincipalTypeEnum;
@@ -98,14 +96,6 @@ public interface Y9AuthorizationService {
     List<Y9Authorization> listByResourceId(String resourceId);
 
     /**
-     * 根据资源id找到与其相关的授权（继承的）
-     *
-     * @param resourceId 资源id
-     * @return {@link List}<{@link Y9Authorization}>
-     */
-    List<Y9Authorization> listByResourceIdRelated(String resourceId);
-
-    /**
      * 根据RoleIds查询
      *
      * @param principalIds 授权主体的唯一标识列表
@@ -166,31 +156,4 @@ public interface Y9AuthorizationService {
      */
     Y9Authorization saveOrUpdateRole(Y9Authorization y9Authorization);
 
-    /**
-     * 同步orgUnitId相关的权限配置至身份（人员或者岗位）对资源的权限缓存表
-     *
-     * @param orgUnitId 组织节点id
-     */
-    void syncToIdentityResourceAndAuthority(String orgUnitId);
-
-    /**
-     * 同步人员相关的权限配置至人员对资源的权限缓存表
-     *
-     * @param person 人员对象
-     */
-    void syncToIdentityResourceAndAuthority(Y9Person person);
-
-    /**
-     * 同步岗位相关的权限配置至岗位对资源的权限缓存表
-     *
-     * @param position 岗位对象
-     */
-    void syncToIdentityResourceAndAuthority(Y9Position position);
-
-    /**
-     * 获取资源id相关的权限配置同步至权限缓存表
-     *
-     * @param resourceId 资源id
-     */
-    void syncToIdentityResourceAndAuthorityByResourceId(String resourceId);
 }

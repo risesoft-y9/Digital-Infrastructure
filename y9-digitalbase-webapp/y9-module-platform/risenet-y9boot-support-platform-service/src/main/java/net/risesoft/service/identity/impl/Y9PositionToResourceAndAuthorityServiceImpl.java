@@ -54,18 +54,6 @@ public class Y9PositionToResourceAndAuthorityServiceImpl implements Y9PositionTo
 
     @Transactional(readOnly = false)
     @Override
-    public void deleteByAppId(String appId) {
-        y9PositionToResourceAndAuthorityRepository.deleteByAppId(appId);
-    }
-
-    @Transactional(readOnly = false)
-    @Override
-    public void deleteByAuthorizationId(String authorizationId) {
-        y9PositionToResourceAndAuthorityManager.deleteByAuthorizationId(authorizationId);
-    }
-
-    @Transactional(readOnly = false)
-    @Override
     public void deleteByAuthorizationIdAndOrgUnitId(String authorizationId, String orgId) {
         List<Y9Position> allPersons = compositeOrgBaseManager.listAllPositionsRecursionDownward(orgId);
         for (Y9Position y9Position : allPersons) {
@@ -92,12 +80,6 @@ public class Y9PositionToResourceAndAuthorityServiceImpl implements Y9PositionTo
     @Override
     public void deleteByPositionId(String positionId) {
         y9PositionToResourceAndAuthorityRepository.deleteByPositionId(positionId);
-    }
-
-    @Transactional(readOnly = false)
-    @Override
-    public void deleteByResourceId(String resourceId) {
-        y9PositionToResourceAndAuthorityRepository.deleteByResourceId(resourceId);
     }
 
     @Override

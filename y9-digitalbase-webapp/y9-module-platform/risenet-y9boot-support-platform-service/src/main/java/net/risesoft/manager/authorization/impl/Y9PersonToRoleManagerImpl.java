@@ -2,9 +2,9 @@ package net.risesoft.manager.authorization.impl;
 
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 import lombok.RequiredArgsConstructor;
@@ -31,17 +31,7 @@ public class Y9PersonToRoleManagerImpl implements Y9PersonToRoleManager {
     private final Y9PersonToRoleRepository y9PersonToRoleRepository;
 
     @Override
-    @Transactional(readOnly = false)
-    public void update(Y9Person y9Person, List<Y9Role> personRelatedY9RoleList) {
-        removeInvalid(y9Person.getId(), personRelatedY9RoleList);
-
-        for (Y9Role y9Role : personRelatedY9RoleList) {
-            this.save(y9Person, y9Role);
-        }
-    }
-
-    // @Transactional(readOnly = false, noRollbackFor = DataIntegrityViolationException.class)
-    @Transactional(readOnly = false)
+    @Transactional(readOnly = false, propagation = Propagation.REQUIRES_NEW)
     public void save(Y9Person person, Y9Role role) {
         Optional<Y9PersonToRole> personToRoleOptional =
             y9PersonToRoleRepository.findByPersonIdAndRoleId(person.getId(), role.getId());
@@ -63,24 +53,12 @@ public class Y9PersonToRoleManagerImpl implements Y9PersonToRoleManager {
         }
     }
 
-    /**
-     * 移除失效的关联记录（即在最新计算的角色中不再包含的关联记录）
-     *
-     * @param personId 人员id
-     * @param newCalculatedY9RoleList 最新计算的角色列表
-     */
-    @Transactional(readOnly = false)
-    public void removeInvalid(String personId, List<Y9Role> newCalculatedY9RoleList) {
-        List<String> originY9RoleIdList = y9PersonToRoleRepository.findRoleIdByPersonId(personId);
-        List<String> newCalculatedY9RoleIdList =
-            newCalculatedY9RoleList.stream().map(Y9Role::getId).collect(Collectors.toList());
-        for (String roleId : originY9RoleIdList) {
-            if (!newCalculatedY9RoleIdList.contains(roleId)) {
-                this.removeByPersonIdAndRoleId(personId, roleId);
-            }
-        }
+    @Override
+    public List<String> findRoleIdByPersonId(String personId) {
+        return y9PersonToRoleRepository.findRoleIdByPersonId(personId);
     }
 
+    @Override
     @Transactional(readOnly = false)
     public void removeByPersonIdAndRoleId(String personId, String roleId) {
         Optional<Y9PersonToRole> y9PersonToRoleOptional =

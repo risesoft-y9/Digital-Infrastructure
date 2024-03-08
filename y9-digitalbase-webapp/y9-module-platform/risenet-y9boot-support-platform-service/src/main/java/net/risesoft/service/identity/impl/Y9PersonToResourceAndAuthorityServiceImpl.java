@@ -50,24 +50,11 @@ public class Y9PersonToResourceAndAuthorityServiceImpl implements Y9PersonToReso
     private final Y9MenuManager y9MenuManager;
     private final Y9TenantAppManager y9TenantAppManager;
 
-    @Transactional(readOnly = false)
-    @Override
-    public void deleteByAppId(String appId) {
-        y9PersonToResourceAndAuthorityRepository.deleteByAppId(appId);
-    }
-
-    @Transactional(readOnly = false)
-    @Override
-    public void deleteByAuthorizationId(String authorizationId) {
-        y9PersonToResourceAndAuthorityManager.deleteByAuthorizationId(authorizationId);
-    }
-
-    @Transactional(readOnly = false)
     @Override
     public void deleteByAuthorizationIdAndOrgUnitId(String authorizationId, String orgUnitId) {
         List<Y9Person> allPersons = compositeOrgBaseManager.listAllPersonsRecursionDownward(orgUnitId);
         for (Y9Person y9Person : allPersons) {
-            deleteByAuthorizationIdAndPersonId(authorizationId, y9Person.getId());
+            this.deleteByAuthorizationIdAndPersonId(authorizationId, y9Person.getId());
         }
     }
 
@@ -90,12 +77,6 @@ public class Y9PersonToResourceAndAuthorityServiceImpl implements Y9PersonToReso
     @Override
     public void deleteByPersonId(String personId) {
         y9PersonToResourceAndAuthorityRepository.deleteByPersonId(personId);
-    }
-
-    @Transactional(readOnly = false)
-    @Override
-    public void deleteByResourceId(String resourceId) {
-        y9PersonToResourceAndAuthorityRepository.deleteByResourceId(resourceId);
     }
 
     @Override

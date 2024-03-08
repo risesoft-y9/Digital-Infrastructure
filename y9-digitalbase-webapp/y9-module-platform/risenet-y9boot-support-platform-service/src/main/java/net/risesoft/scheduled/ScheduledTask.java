@@ -4,43 +4,55 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
-import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
+import net.javacrumbs.shedlock.spring.annotation.SchedulerLock;
 import net.risesoft.api.log.UserLoginInfoApi;
 import net.risesoft.entity.Y9Manager;
+import net.risesoft.entity.Y9Organization;
+import net.risesoft.enums.platform.TenantTypeEnum;
 import net.risesoft.id.Y9IdGenerator;
 import net.risesoft.log.LogLevelEnum;
 import net.risesoft.log.OperationTypeEnum;
 import net.risesoft.log.service.SaveLogInfo4Kafka;
 import net.risesoft.model.log.AccessLog;
 import net.risesoft.model.userlogininfo.LoginInfo;
+import net.risesoft.service.identity.IdentityResourceCalculator;
+import net.risesoft.service.identity.IdentityRoleCalculator;
 import net.risesoft.service.org.Y9ManagerService;
+import net.risesoft.service.org.Y9OrganizationService;
 import net.risesoft.util.Y9PlatformUtil;
 import net.risesoft.y9.Y9Context;
 import net.risesoft.y9.Y9LoginUserHolder;
 import net.risesoft.y9.util.InetAddressUtil;
+import net.risesoft.y9public.entity.tenant.Y9Tenant;
+import net.risesoft.y9public.service.tenant.Y9TenantService;
 
 @Service
-@EnableScheduling
 @Slf4j
 @RequiredArgsConstructor
-public class ManagerScheduledService {
+public class ScheduledTask {
 
-    private final Y9ManagerService y9ManagerService;
     private final SaveLogInfo4Kafka saveLogInfo4Kafka;
     private final UserLoginInfoApi userLoginInfoApi;
+    private final Y9ManagerService y9ManagerService;
+    private final Y9OrganizationService y9OrganizationService;
+    private final Y9TenantService y9TenantService;
+
+    private final IdentityResourceCalculator identityResourceCalculator;
+    private final IdentityRoleCalculator identityRoleCalculator;
 
     private final String serverIp = InetAddressUtil.getLocalAddress().getHostAddress();
 
     /**
-     * 每天凌晨2点检查是否登录系统进行审查
+     * 每天凌晨1点检查是否登录系统进行审查
      */
-    @Scheduled(cron = "0 0 2 * * ?")
+    @Scheduled(cron = "0 0 1 * * ?")
+    @SchedulerLock(name = "checkManagerLogReviewLock", lockAtLeastFor = "PT30M")
     public void checkManagerLogReview() {
         LOGGER.info("********************检查三员审查情况-开始**********************");
 
@@ -98,9 +110,10 @@ public class ManagerScheduledService {
     }
 
     /**
-     * 每天凌晨2点检查三员密码是不是按时修改
+     * 每天凌晨1点检查三员密码是不是按时修改
      */
-    @Scheduled(cron = "0 0 2 * * ?")
+    @Scheduled(cron = "0 0 1 * * ?")
+    @SchedulerLock(name = "checkManagerPasswordModificationLock", lockAtLeastFor = "PT30M")
     public void checkManagerPasswordModification() {
         LOGGER.info("********************检查三员密码修改情况-开始**********************");
 
@@ -152,4 +165,39 @@ public class ManagerScheduledService {
 
         LOGGER.info("********************检查三员密码修改情况-结束**********************");
     }
+
+    /**
+     * 每天凌晨2点同步授权主体的资源权限
+     */
+    @Scheduled(cron = "0 0 2 * * ?")
+    @SchedulerLock(name = "syncIdentityResourceLock", lockAtLeastFor = "PT30M")
+    public void syncIdentityResource() {
+        List<Y9Tenant> y9TenantList = y9TenantService.listByTenantType(TenantTypeEnum.TENANT);
+        for (Y9Tenant y9Tenant : y9TenantList) {
+            Y9LoginUserHolder.setTenantId(y9Tenant.getId());
+            for (Y9Organization y9Organization : y9OrganizationService.list()) {
+                identityResourceCalculator.recalculateByOrgUnitId(y9Organization.getId());
+            }
+        }
+
+        LOGGER.info("同步授权主体的资源权限结束");
+    }
+
+    /**
+     * 每天凌晨2点同步授权主体的角色
+     */
+    @Scheduled(cron = "0 0 4 * * ?")
+    @SchedulerLock(name = "syncIdentityRoleLock", lockAtLeastFor = "PT30M")
+    public void syncIdentityRole() {
+        List<Y9Tenant> y9TenantList = y9TenantService.listByTenantType(TenantTypeEnum.TENANT);
+        for (Y9Tenant y9Tenant : y9TenantList) {
+            Y9LoginUserHolder.setTenantId(y9Tenant.getId());
+            for (Y9Organization y9Organization : y9OrganizationService.list()) {
+                identityRoleCalculator.recalculateByOrgUnitId(y9Organization.getId());
+            }
+        }
+
+        LOGGER.info("同步授权主体的角色结束");
+    }
+
 }
