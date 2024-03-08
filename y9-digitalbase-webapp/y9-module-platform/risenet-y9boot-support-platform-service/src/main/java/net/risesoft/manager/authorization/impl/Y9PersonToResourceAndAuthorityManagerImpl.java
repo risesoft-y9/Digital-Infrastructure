@@ -4,7 +4,6 @@ import java.util.List;
 import java.util.Optional;
 
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 import lombok.RequiredArgsConstructor;
@@ -59,7 +58,7 @@ public class Y9PersonToResourceAndAuthorityManagerImpl implements Y9PersonToReso
         y9PersonToResourceAndAuthorityRepository.deleteByPersonIdAndResourceId(personId, resourceId);
     }
 
-    @Transactional(readOnly = false, propagation = Propagation.REQUIRES_NEW)
+    @Transactional(readOnly = false)
     @Override
     public void saveOrUpdate(Y9ResourceBase y9ResourceBase, Y9Person person, Y9Authorization y9Authorization,
         Boolean inherit) {

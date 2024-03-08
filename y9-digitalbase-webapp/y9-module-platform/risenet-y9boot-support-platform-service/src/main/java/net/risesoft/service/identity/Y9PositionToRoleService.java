@@ -45,13 +45,6 @@ public interface Y9PositionToRoleService {
     List<Y9PositionToRole> listByPositionIdAndSystemName(String positionId, String systemName);
 
     /**
-     * 重新计算岗位角色
-     *
-     * @param positionId 岗位id
-     */
-    void recalculate(String positionId);
-
-    /**
      * 根据岗位id移除
      *
      * @param positionId

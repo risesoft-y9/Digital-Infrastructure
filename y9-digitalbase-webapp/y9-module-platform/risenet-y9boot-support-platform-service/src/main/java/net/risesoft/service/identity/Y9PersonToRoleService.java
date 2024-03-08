@@ -79,13 +79,6 @@ public interface Y9PersonToRoleService {
     List<Y9Role> listRolesByPersonId(String personId);
 
     /**
-     * 重新计算人员的角色
-     *
-     * @param personId 人员id
-     */
-    void recalculate(String personId);
-
-    /**
      * 根据人员id删除
      *
      * @param personId

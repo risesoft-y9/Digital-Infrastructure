@@ -11,20 +11,17 @@ import org.springframework.web.bind.annotation.RestController;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
-import net.risesoft.entity.Y9Person;
-import net.risesoft.entity.Y9Position;
+import net.risesoft.entity.Y9Organization;
 import net.risesoft.enums.platform.TenantTypeEnum;
 import net.risesoft.log.annotation.RiseLog;
-import net.risesoft.service.identity.Y9PersonToRoleService;
-import net.risesoft.service.identity.Y9PositionToRoleService;
-import net.risesoft.service.org.Y9PersonService;
-import net.risesoft.service.org.Y9PositionService;
+import net.risesoft.service.identity.IdentityRoleCalculator;
+import net.risesoft.service.org.Y9OrganizationService;
 import net.risesoft.y9.Y9LoginUserHolder;
 import net.risesoft.y9public.entity.tenant.Y9Tenant;
 import net.risesoft.y9public.service.tenant.Y9TenantService;
 
 /**
- * 同步人员权限信息
+ * 同步人员/岗位角色信息
  *
  * @author dingzhaojun
  * @author qinman
@@ -38,43 +35,37 @@ import net.risesoft.y9public.service.tenant.Y9TenantService;
 public class SyncIdentityRolesController {
     private final FastDateFormat fdf = FastDateFormat.getInstance("yyyy-MM-dd HH:mm:ss");
 
-    private final Y9PersonToRoleService y9PersonToRoleService;
-    private final Y9PositionToRoleService y9PositionToRoleService;
-    private final Y9PositionService y9PositionService;
     private final Y9TenantService y9TenantService;
-    private final Y9PersonService y9PersonService;
+    private final Y9OrganizationService y9OrganizationService;
+
+    private final IdentityRoleCalculator identityRoleCalculator;
 
     /**
-     * 同步所有租户的所有人员的人员角色对应表
+     * 同步所有租户的所有人员/岗位角色对应表
      */
     @RiseLog()
     @RequestMapping("/identityRoles")
     public String syncIdentityRoles() {
         double start = System.currentTimeMillis();
-        LOGGER.info("更新个人权限开始时间--------------->>{}", fdf.format(new Date()));
+        LOGGER.info("更新人员/岗位角色开始时间：{}", fdf.format(new Date()));
 
         List<Y9Tenant> y9TenantList = y9TenantService.listByTenantType(TenantTypeEnum.TENANT);
         for (Y9Tenant y9Tenant : y9TenantList) {
             Y9LoginUserHolder.setTenantId(y9Tenant.getId());
-            List<Y9Person> y9PersonList = y9PersonService.listAll();
-            for (Y9Person y9Person : y9PersonList) {
-                y9PersonToRoleService.recalculate(y9Person.getId());
-            }
-            List<Y9Position> y9PositionList = y9PositionService.listAll();
-            for (Y9Position y9Position : y9PositionList) {
-                y9PositionToRoleService.recalculate(y9Position.getId());
+            for (Y9Organization y9Organization : y9OrganizationService.list()) {
+                identityRoleCalculator.recalculateByOrgUnitId(y9Organization.getId());
             }
         }
 
         double end = System.currentTimeMillis();
         double time = end - start;
-        LOGGER.info("更新个人权限完成时间--------------->>{}", fdf.format(new Date()));
-        LOGGER.info("更新个人权限所用时间--------------->>{}", time);
+        LOGGER.info("更新人员/岗位角色完成时间：{}", fdf.format(new Date()));
+        LOGGER.info("更新人员/岗位角色所用时间：{}", time);
         return "Success";
     }
 
     /**
-     * 同步租户下所有人员的人员角色对应表
+     * 同步某租户下所有人员/岗位角色对应表
      *
      * @param tenantId 租户id
      * @return
@@ -83,22 +74,40 @@ public class SyncIdentityRolesController {
     @RequestMapping("/identityRoles/{tenantId}")
     public String syncIdentityRolesByTenantId(@PathVariable String tenantId) {
         double start = System.currentTimeMillis();
-        LOGGER.info("更新个人权限开始时间--------------->>{},租户id--->{}", fdf.format(new Date()), tenantId);
+        LOGGER.info("更新人员/岗位角色开始时间：{},租户id--->{}", fdf.format(new Date()), tenantId);
 
         Y9LoginUserHolder.setTenantId(tenantId);
-        List<Y9Person> y9PersonList = y9PersonService.listAll();
-        for (Y9Person y9Person : y9PersonList) {
-            y9PersonToRoleService.recalculate(y9Person.getId());
-        }
-        List<Y9Position> y9PositionList = y9PositionService.listAll();
-        for (Y9Position y9Position : y9PositionList) {
-            y9PositionToRoleService.recalculate(y9Position.getId());
+        for (Y9Organization y9Organization : y9OrganizationService.list()) {
+            identityRoleCalculator.recalculateByOrgUnitId(y9Organization.getId());
         }
 
         double end = System.currentTimeMillis();
         double time = end - start;
-        LOGGER.info("更新个人权限所用时间--------------->>{}", time);
-        LOGGER.info("更新个人权限完成时间--------------->>{}", fdf.format(new Date()));
+        LOGGER.info("更新人员/岗位角色所用时间：{}", time);
+        LOGGER.info("更新人员/岗位角色完成时间：{}", fdf.format(new Date()));
+        return "Success";
+    }
+
+    /**
+     * 同步某租户下某组织节点或其下所有人员/岗位角色对应表
+     *
+     * @param tenantId 租户id
+     * @param orgUnitId 组织节点id
+     * @return
+     */
+    @RiseLog()
+    @RequestMapping("/identityRoles/{tenantId}/{orgUnitId}")
+    public String syncIdentityRolesByOrgUnitId(@PathVariable String tenantId, @PathVariable String orgUnitId) {
+        double start = System.currentTimeMillis();
+        LOGGER.info("更新人员/岗位角色开始时间：{},租户id--->{}", fdf.format(new Date()), tenantId);
+
+        Y9LoginUserHolder.setTenantId(tenantId);
+        identityRoleCalculator.recalculateByOrgUnitId(orgUnitId);
+
+        double end = System.currentTimeMillis();
+        double time = end - start;
+        LOGGER.info("更新人员/岗位角色所用时间：{}", time);
+        LOGGER.info("更新人员/岗位角色完成时间：{}", fdf.format(new Date()));
         return "Success";
     }
 }
