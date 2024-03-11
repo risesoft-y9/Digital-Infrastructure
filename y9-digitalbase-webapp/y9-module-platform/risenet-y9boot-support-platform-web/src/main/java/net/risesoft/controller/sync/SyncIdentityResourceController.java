@@ -59,7 +59,7 @@ public class SyncIdentityResourceController {
         double time = end - start;
         LOGGER.info("更新人员与（资源、权限）关系表完成时间--------------->>{}", fdf.format(new Date()));
         LOGGER.info("更新人员与（资源、权限）关系表所用时间--------------->>{}", time);
-        return Y9Result.success();
+        return Y9Result.success("同步所有租户人员的权限缓存完成！");
     }
 
     /**
@@ -83,7 +83,7 @@ public class SyncIdentityResourceController {
         double time = end - start;
         LOGGER.info("更新人员与（资源、权限）关系表完成时间--------------->>{}", fdf.format(new Date()));
         LOGGER.info("更新人员与（资源、权限）关系表所用时间--------------->>{}", time);
-        return Y9Result.success();
+        return Y9Result.success("更新人员与（资源、权限）关系完成！");
     }
 
 }

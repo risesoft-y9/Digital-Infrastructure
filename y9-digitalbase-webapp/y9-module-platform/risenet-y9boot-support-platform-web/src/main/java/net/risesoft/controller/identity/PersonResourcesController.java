@@ -39,7 +39,13 @@ public class PersonResourcesController {
     private final Y9PersonToResourceAndAuthorityService y9PersonToResourceAndAuthorityService;
     private final ResourcePermissionVOBuilder resourcePermissionVOBuilder;
 
-    @GetMapping
+    /**
+     * 根据人员id，获取人员的权限缓存列表
+     * 
+     * @param personId 人员id
+     * @return
+     */
+    @GetMapping("/getByPersonId")
     public Y9Result<List<ResourcePermissionVO>> getByPersonId(@RequestParam @NotBlank String personId) {
         List<Y9PersonToResourceAndAuthority> y9PersonToResourceAndAuthorityList =
             y9PersonToResourceAndAuthorityService.list(personId);

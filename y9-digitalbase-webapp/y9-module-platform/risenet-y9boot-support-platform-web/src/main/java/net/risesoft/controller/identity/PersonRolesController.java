@@ -39,7 +39,13 @@ public class PersonRolesController {
     private final RolePermissionVOBuilder rolePermissionVOBuilder;
     private final Y9PersonToRoleService y9PersonToRoleService;
 
-    @GetMapping
+    /**
+     * 根据人员id，获取人员角色列表
+     * 
+     * @param personId 人员id
+     * @return
+     */
+    @GetMapping("/getByPersonId")
     public Y9Result<List<RolePermissionVO>> getByPersonId(@RequestParam @NotBlank String personId) {
         List<Y9PersonToRole> rolePermissionVOList = y9PersonToRoleService.listByPersonId(personId);
         return Y9Result
