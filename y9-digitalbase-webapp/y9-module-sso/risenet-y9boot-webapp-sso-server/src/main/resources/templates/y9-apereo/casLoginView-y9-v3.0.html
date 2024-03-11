@@ -1,30 +1,28 @@
-<!DOCTYPE html
-        PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
-
 <head>
-    <meta charset="UTF-8" />
-    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <meta http-equiv="pragma" content="no-cache" />
-    <meta http-equiv="cache-control" content="no-cache" />
-    <meta http-equiv="expires" content="0" />
+    <meta charset="UTF-8"/>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <meta http-equiv="pragma" content="no-cache"/>
+    <meta http-equiv="cache-control" content="no-cache"/>
+    <meta http-equiv="expires" content="0"/>
     <!-- 管局要求保持备案名称和网站使用名称一致 -->
     <title>北京有生博大软件股份有限公司</title>
-    <link rel="stylesheet" type="text/css" th:href="@{/js/y9static/y9new/css/default.css}" />
-    <link rel="stylesheet" type="text/css" th:href="@{/js/y9static/y9new/css/styles.css}" />
-    <link rel="stylesheet" type="text/css" th:href="@{/js/y9static/y9new/css/demo.css}" />
-    <link rel="stylesheet" type="text/css" th:href="@{/js/y9static/y9new/css/loaders.css}" />
-    <link rel="stylesheet" type="text/css" th:href="@{/js/y9static/y9new/css/layerMsg.css}" />
-    <link rel="stylesheet" type="text/css" th:href="@{/js/y9static/y9new/css/verify.css}" />
-    <script type="text/javascript" th:src="@{/js/y9static/js/base64.js}"></script>
-    <script type="text/javascript" th:src="@{/js/y9static/y9new/js/jquery-2.1.1.min.js}"></script>
-    <script type="text/javascript" th:src="@{/js/y9static/js/jquery/jquery.cookie.js}"></script>
-    <script type="text/javascript" th:src="@{/js/y9static/y9new/js/jsencrypt.min.js}"></script>
+    <link rel="stylesheet" type="text/css" th:href="@{/y9static/y9new/css/default.css}"/>
+    <link rel="stylesheet" type="text/css" th:href="@{/y9static/y9new/css/styles.css}"/>
+    <link rel="stylesheet" type="text/css" th:href="@{/y9static/y9new/css/demo.css}"/>
+    <link rel="stylesheet" type="text/css" th:href="@{/y9static/y9new/css/loaders.css}"/>
+    <link rel="stylesheet" type="text/css" th:href="@{/y9static/y9new/css/layerMsg.css}"/>
+    <link rel="stylesheet" type="text/css" th:href="@{/y9static/y9new/css/verify.css}"/>
+    <script type="text/javascript" th:src="@{/y9static/js/base64.js}"></script>
+    <script type="text/javascript" th:src="@{/y9static/y9new/js/jquery-2.1.1.min.js}"></script>
+    <script type="text/javascript" th:src="@{/y9static/js/jquery/jquery.cookie.js}"></script>
+    <script type="text/javascript" th:src="@{/y9static/y9new/js/jsencrypt.min.js}"></script>
 </head>
 
 <body>
-<div class="logo"><img th:src="@{/js/y9static/y9new/img/cloud.png}"></div>
+<div class="logo"><img th:src="@{/y9static/y9new/img/cloud.png}"></div>
 <div class="login" id="tunnel">
     <div class="login_title">
         <span onclick="changeLoginType(0)">用户登录</span>
@@ -33,48 +31,43 @@
     </div>
     <div class="qvcode">
         <a href="javascript:getQRCode();" id="img_container">
-            <img th:src="@{/js/y9static/y9new/img/qrCodeTemp.jpg}" />
+            <img th:src="@{/y9static/y9new/img/qrCodeTemp.jpg}"/>
         </a>
         <span id="error_msg"></span>
     </div>
     <div class="login_fields">
         <form method="post" id="fm1" th:object="${credential}">
             <div class="alert alert-danger" th:if="${#fields.hasErrors('*')}">
-                登录失败：<span th:each="err : ${#fields.errors('*')}" th:utext="${err}" />
+                登录失败：<span th:each="err : ${#fields.errors('*')}" th:utext="${err}"/>
             </div>
             <div class="login_fields__user">
-                <div class="icon"><img alt="" th:src="@{/js/y9static/y9new/img/user_icon_copy.png}" /></div>
-                <input id="username" placeholder="用户名" type="text" autocomplete="off" value=""
-                       oninput="inputEvent()" onblur="getTenant();" />
-                <input id="username1" name="username" style="width: 150px;" tabindex="1" autocomplete="false"
-                       htmlescape="true" type="hidden" />
-                <input id="tenantShortName" name="tenantShortName" style="width: 150px;" autocomplete="false"
-                       htmlescape="true" type="hidden" />
-                <div class="validation"><img alt="" th:src="@{/js/y9static/y9new/img/tick.png}" /></div>
+                <div class="icon"><img alt="" th:src="@{/y9static/y9new/img/user_icon_copy.png}"/></div>
+                <input id="username" placeholder="用户名" type="text" autocomplete="off" value="" oninput="inputEvent()" onblur="getTenant();"/>
+                <input id="username1" name="username" style="width: 150px;" tabindex="1" autocomplete="false" htmlescape="true" type="hidden"/>
+                <input id="tenantShortName" name="tenantShortName" style="width: 150px;" autocomplete="false" htmlescape="true" type="hidden"/>
+                <div class="validation"><img alt="" th:src="@{/y9static/y9new/img/tick.png}"/></div>
             </div>
             <div class="login_fields__password">
-                <div class="icon"><img alt="" th:src="@{/js/y9static/y9new/img/lock_icon_copy.png}" /></div>
-                <input id="password" tabindex="2" type="text" htmlescape="true" autocomplete="off"
-                       placeholder="请输入您的密码" onfocus="this.type='password'" />
-                <input id="password1" name="password" htmlescape="true" autocomplete="off" type="hidden" />
+                <div class="icon"><img alt="" th:src="@{/y9static/y9new/img/lock_icon_copy.png}"/></div>
+                <input id="password" tabindex="2" type="text" htmlescape="true" autocomplete="off" placeholder="请输入您的密码" onfocus="this.type='password'"/>
+                <input id="password1" name="password" htmlescape="true" autocomplete="off" type="hidden"/>
 
-                <div class="validation"><img alt="" th:src="@{/js/y9static/y9new/img/tick.png}" /></div>
+                <div class="validation"><img alt="" th:src="@{/y9static/y9new/img/tick.png}"/></div>
             </div>
             <!-- 表单隐藏数据块开始 -->
-            <input type="hidden" id="loginType" name="loginType" value="loginName" />
-            <input type="hidden" id="captchaKey" name="captchaKey" value="" />
-            <input type="hidden" id="noLoginScreen" name="noLoginScreen" value="false" />
-            <input type="hidden" id="isValidateIE" name="isValidateIE" value="true">
-            <input type="hidden" id="screenDimension" name="screenDimension" value="" />
-            <input type="hidden" id="pwdEcodeType" name="pwdEcodeType" value="" />
-            <input type="hidden" name="execution" th:value="${flowExecutionKey}" />
-            <input type="hidden" name="_eventId" value="submit" /> <input type="hidden" name="geolocation" />
+            <input type="hidden" id="loginType" name="loginType" value="loginName"/>
+            <input type="hidden" id="captchaKey" name="captchaKey" value=""/>
+            <input type="hidden" id="noLoginScreen" name="noLoginScreen" value="false"/>
+             <input type="hidden" id="screenDimension" name="screenDimension" value=""/>
+            <input type="hidden" id="pwdEcodeType" name="pwdEcodeType" value=""/>
+            <input type="hidden" name="execution" th:value="${flowExecutionKey}"/>
+            <input type="hidden" name="_eventId" value="submit"/> <input type="hidden" name="geolocation"/>
             <!-- 表单隐藏数据块结束 -->
         </form>
         <!--点选验证码  -->
         <div id="mpanel6"></div>
         <div class="login_fields__submit">
-            <input type="button" value="登录" />
+            <input type="button" value="登录"/>
         </div>
     </div>
     <div></div>
@@ -88,11 +81,9 @@
     </div>
     <div class="success"></div>
     <div class="disclaimer">
-        <p onclick="changeLoginModule(0)" style="margin-bottom: 5px">登录<span
-                style="color: rgb(255, 238, 0)">「关联」</span>系统</p>
+        <p onclick="changeLoginModule(0)" style="margin-bottom: 5px">登录<span style="color: rgb(255, 238, 0)">「关联」</span>系统</p>
         <p onclick="changeLoginModule(1)" style="margin-bottom: 5px;display: none">返回用户登录</p>
-        <a href="https://www.youshengyun.com/baas/appstore/%E5%8D%8F%E4%BD%9C%E5%B9%B3%E9%9D%A25.0"
-           target="_blank">安信下载</a>
+        <a href="https://www.youshengyun.com/baas/appstore/%E5%8D%8F%E4%BD%9C%E5%B9%B3%E9%9D%A25.0" target="_blank">安信下载</a>
     </div>
     <div class="toolTips" style="display: none">
         <ul id="toolTipsUl"></ul>
@@ -102,18 +93,17 @@
     <div>
         <span>北京有生博大软件股份有限公司 版权所有</span>
         <a href="https://beian.miit.gov.cn/" target="_blank">京ICP备16060306号-4</a>
-        <a href="http://www.beian.gov.cn/portal/registerSystemInfo?recordcode=11010802026965" target="_blank"><img
-                th:src="@{/js/y9static/y9new/img/police.png}" />京公网安备11010802026965号</a>
+        <a href="http://www.beian.gov.cn/portal/registerSystemInfo?recordcode=11010802026965" target="_blank"><img th:src="@{/y9static/y9new/img/police.png}"/>京公网安备11010802026965号</a>
     </div>
     <span>建议您使用1920x1080分辨率，IE9.0或以上版本浏览器访问本站，以获得最佳用户体验。 技术支持：0755-821072292</span>
 </div>
 
-<link rel="stylesheet" type="text/css" th:href="@{/js/y9static/y9new/layui/css/layui.css}" />
-<script type="text/javascript" th:src="@{/js/y9static/y9new/js/verify.js}"></script>
-<script type="text/javascript" th:src="@{/js/y9static/y9new/layui/layui.js}"></script>
-<script type="text/javascript" th:src="@{/js/y9static/y9new/js/layerMsg.js}" charset="utf-8"></script>
-<script th:inline="javascript" type="text/javascript">
-    var ctx = '/sso/';
+<link rel="stylesheet" type="text/css" th:href="@{/y9static/y9new/layui/css/layui.css}"/>
+<script type="text/javascript" th:src="@{/y9static/y9new/js/verify.js}"></script>
+<script type="text/javascript" th:src="@{/y9static/y9new/layui/layui.js}"></script>
+<script type="text/javascript" th:src="@{/y9static/y9new/js/layerMsg.js}" charset="utf-8"></script>
+<script type="text/javascript">
+    var ctx = "[(${#request.getContextPath()})]";
     var canGetCookie = 1; //是否支持存储Cookie 0 不支持 1 支持
     var ajaxmockjax = 1; //是否启用虚拟Ajax的请求响 0 不启用  1 启用
     var inputTimer = null;
@@ -127,14 +117,6 @@
             $("#screenDimension").val(window.screen.width + '*' + window.screen.height);
         } catch (e) {
         }
-        var userAgent = navigator.userAgent.toLowerCase();
-        if (userAgent.indexOf("msie 9") > 0 || userAgent.indexOf("msie 10") > 0 || userAgent.indexOf("rv:11") > 0) {
-            $("#isValidateIE").val("true");
-        } else if (userAgent.indexOf("msie 6") > 0 || userAgent.indexOf("msie 7") > 0 || userAgent.indexOf("msie 8") > 0) {
-            $("#isValidateIE").val("false");
-        } else {
-            $("#isValidateIE").val("true");
-        }
     }
 
     function inputEvent() {
@@ -147,7 +129,7 @@
             return null;
         }
         inputTimer = setTimeout(() => {
-            fetch(ctx + "api/loginNameAndTenants", {
+            fetch(ctx + "/api/loginNameAndTenants", {
                 method: "POST",
                 credentials: "include",
                 headers: {
@@ -163,10 +145,7 @@
                 $("#toolTipsUl").empty();
                 $(".toolTips").attr({style: "display: flex;"});
                 data.length && data.map((item) => {
-                    $("<li></li>", {
-                        text: item.loginName,
-                        id: item.tenantShortName
-                    }).appendTo("#toolTipsUl").on("click", mouseClickEvent);
+                    $("<li></li>", {text: item.loginName, id: item.tenantShortName}).appendTo("#toolTipsUl").on("click", mouseClickEvent);
                 });
             });
         }, 250);
@@ -185,7 +164,7 @@
                     loginName: userName[0],
                     tenantName: tenantName[1]
                 },
-                url: ctx + 'api/getTenants',
+                url: ctx + '/api/getTenants',
                 success: function (res) {
                     if (res.length <= 0) {
                         layer.msg("当前用户不存在或者已禁用!");
@@ -312,7 +291,7 @@
                         async: false,
                         cache: false,
                         type: "GET",
-                        url: ctx + 'api/getRandom',
+                        url: ctx + '/api/getRandom',
                         dataType: "json",
                         success: function (y9Result) {
                             if (y9Result.success) {
@@ -325,7 +304,7 @@
                         async: false,
                         cache: false,
                         type: "POST",
-                        url: ctx + 'api/checkSsoLoginInfo',
+                        url: ctx + '/api/checkSsoLoginInfo',
                         data: {
                             username: encode64(username1),
                             password: encrypt($('#pwdEcodeType').val(), encode64(password)),
@@ -368,9 +347,9 @@
         }
     };
 </script>
-<script type="text/javascript" th:src="@{/js/y9static/y9new/img/ThreeWebGL.js}"></script>
-<script type="text/javascript" th:src="@{/js/y9static/y9new/img/ThreeExtras.js}"></script>
-<script type="text/javascript" th:src="@{/js/y9static/y9new/img/Detector.js}"></script>
+<script type="text/javascript" th:src="@{/y9static/y9new/img/ThreeWebGL.js}"></script>
+<script type="text/javascript" th:src="@{/y9static/y9new/img/ThreeExtras.js}"></script>
+<script type="text/javascript" th:src="@{/y9static/y9new/img/Detector.js}"></script>
 <script id="vs" type="x-shader/x-vertex">
     varying vec2 vUv; void main() { vUv = uv; gl_Position = projectionMatrix * modelViewMatrix * vec4( position, 1.0 ); }
 </script>
@@ -605,7 +584,7 @@
         $.ajax({
             type: 'POST',
             dataType: 'json',
-            url: ctx + 'api/getQRCode',
+            url: ctx + '/api/getQRCode',
             success: function (res) {
                 if (res.success && '' != res.img) {
                     uuid = res.uuid;
@@ -626,7 +605,7 @@
             type: 'POST',
             dataType: 'json',
             data: {uuid: uuid},
-            url: ctx + 'api/getScanResult',
+            url: ctx + '/api/getScanResult',
             success: function (res) {
                 var scanResult = res.scanResult;
                 if (scanResult == '1' || scanResult == 1) {
@@ -649,5 +628,4 @@
     }
 </script>
 </body>
-
 </html>

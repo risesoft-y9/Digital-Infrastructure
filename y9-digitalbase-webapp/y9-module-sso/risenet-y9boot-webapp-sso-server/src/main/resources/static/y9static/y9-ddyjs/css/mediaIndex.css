@@ -1,0 +1,81 @@
+@media screen and (max-width: 1290px) {
+    body .logo {
+        top: 8px;
+        left: 20px;
+    }
+
+    body .logo img {
+        width: 332px;
+        height: 70px;
+    }
+}
+
+@media screen and (max-width: 1399px) {
+    body .bg_top_right {
+        height: 187px;
+    }
+
+    body .login {
+        width: 650px;
+        height: 355px;
+    }
+
+    body .login_form .login_title {
+        padding-top: 40px;
+        padding-right: 25px;
+        padding-left: 24px;
+    }
+
+    body .login_fields {
+        padding-right: 25px;
+        padding-left: 24px;
+    }
+
+    body .login_fields__user, body .login_fields__password {
+        margin-top: 20px;
+        padding: 14px 16px 16px;
+    }
+
+    body .login_fields .icon-1 {
+        margin-left: 12px;
+    }
+
+    body .login_fields input[type="text"], body .login_fields input[type="password"] {
+        width: 150px;
+    }
+
+    body .noticeInfo .title {
+        margin: 30px 26px 0 26px;
+    }
+
+    body .noticeInfo .info {
+        margin: 20px 26px 0 28px;
+    }
+
+    body .noticeInfo .info span {
+        margin-bottom: 8px;
+    }
+
+    body .toolTips {
+        left: 25px;
+        width: 275px;
+    }
+}
+
+@media screen and (min-width: 1399px) and (max-width: 1590px) {
+    body .bg_top_right {
+        height: 215px;
+    }
+}
+
+@media screen and (min-width: 1590px) and (max-width: 1890px) {
+    body .bg_top_right {
+        height: 240px;
+    }
+}
+
+@media screen and (min-width: 1670px) and (max-width: 1890px) {
+    body .bg_top_right {
+        height: 260px;
+    }
+}
