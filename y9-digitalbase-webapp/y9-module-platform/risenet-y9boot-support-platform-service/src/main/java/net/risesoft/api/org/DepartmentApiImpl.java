@@ -1,12 +1,11 @@
 package net.risesoft.api.org;
 
-import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotEmpty;
-
 import java.util.Collections;
 import java.util.List;
 
-import net.risesoft.api.platform.org.DepartmentApi;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotEmpty;
+
 import org.springframework.context.annotation.Primary;
 import org.springframework.http.MediaType;
 import org.springframework.validation.annotation.Validated;
@@ -17,6 +16,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import lombok.RequiredArgsConstructor;
 
+import net.risesoft.api.platform.org.DepartmentApi;
 import net.risesoft.api.platform.org.dto.CreateDepartmentDTO;
 import net.risesoft.entity.Y9Department;
 import net.risesoft.entity.Y9DepartmentProp;

@@ -1,10 +1,10 @@
 package net.risesoft.y9.configuration.feature.security.api;
 
-import lombok.Getter;
-import lombok.Setter;
-
 import java.util.Arrays;
 import java.util.List;
+
+import lombok.Getter;
+import lombok.Setter;
 
 /**
  * API属性

@@ -1,13 +1,12 @@
 package net.risesoft.api.v0.permission;
 
-import jakarta.validation.constraints.NotBlank;
-
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
-import net.risesoft.api.platform.v0.permission.RoleApi;
+import jakarta.validation.constraints.NotBlank;
+
 import org.springframework.context.annotation.Primary;
 import org.springframework.http.MediaType;
 import org.springframework.validation.annotation.Validated;
@@ -18,6 +17,7 @@ import org.springframework.web.bind.annotation.RestController;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
+import net.risesoft.api.platform.v0.permission.RoleApi;
 import net.risesoft.entity.Y9OrgBase;
 import net.risesoft.entity.Y9Person;
 import net.risesoft.entity.relation.Y9OrgBasesToRoles;

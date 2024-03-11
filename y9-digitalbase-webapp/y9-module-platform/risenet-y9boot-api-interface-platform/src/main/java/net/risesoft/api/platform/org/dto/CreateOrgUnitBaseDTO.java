@@ -1,8 +1,8 @@
 package net.risesoft.api.platform.org.dto;
 
-import jakarta.validation.constraints.NotBlank;
-
 import java.io.Serializable;
+
+import jakarta.validation.constraints.NotBlank;
 
 import lombok.Getter;
 import lombok.Setter;

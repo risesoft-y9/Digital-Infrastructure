@@ -56,7 +56,7 @@ public class Y9Oauth2ClientProperties {
      * 获取用户信息 uri
      */
     private String profileUri;
-    
+
     /**
      * 自省检测 uri，可以查询给定访问令牌的状态
      */

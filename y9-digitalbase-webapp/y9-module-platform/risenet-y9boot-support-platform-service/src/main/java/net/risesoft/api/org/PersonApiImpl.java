@@ -1,12 +1,11 @@
 package net.risesoft.api.org;
 
-import jakarta.validation.constraints.NotBlank;
-
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-import net.risesoft.api.platform.org.PersonApi;
+import jakarta.validation.constraints.NotBlank;
+
 import org.springframework.context.annotation.Primary;
 import org.springframework.data.domain.Page;
 import org.springframework.http.MediaType;
@@ -18,6 +17,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import lombok.RequiredArgsConstructor;
 
+import net.risesoft.api.platform.org.PersonApi;
 import net.risesoft.api.platform.org.dto.CreatePersonDTO;
 import net.risesoft.api.platform.org.dto.PersonInfoDTO;
 import net.risesoft.entity.Y9Group;

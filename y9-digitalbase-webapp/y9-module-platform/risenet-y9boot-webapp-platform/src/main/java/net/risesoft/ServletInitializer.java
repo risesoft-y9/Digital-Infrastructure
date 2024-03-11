@@ -1,10 +1,10 @@
 package net.risesoft;
 
+import java.util.Collections;
+
 import jakarta.servlet.ServletContext;
 import jakarta.servlet.SessionCookieConfig;
 import jakarta.servlet.SessionTrackingMode;
-
-import java.util.Collections;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.builder.SpringApplicationBuilder;

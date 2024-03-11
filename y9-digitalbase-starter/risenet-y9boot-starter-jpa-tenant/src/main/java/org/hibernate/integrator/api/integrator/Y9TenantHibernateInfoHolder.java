@@ -1,9 +1,9 @@
 package org.hibernate.integrator.api.integrator;
 
-import jakarta.persistence.Entity;
-
 import java.io.File;
 import java.util.EnumSet;
+
+import jakarta.persistence.Entity;
 
 import org.hibernate.boot.Metadata;
 import org.hibernate.boot.MetadataSources;

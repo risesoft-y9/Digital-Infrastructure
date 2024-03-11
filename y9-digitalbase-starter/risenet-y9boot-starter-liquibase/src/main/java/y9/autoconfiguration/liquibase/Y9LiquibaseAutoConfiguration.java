@@ -33,7 +33,7 @@ public class Y9LiquibaseAutoConfiguration {
     @ConditionalOnBean(name = "y9TenantDataSourceLookup")
     @ConditionalOnProperty(name = "y9.feature.liquibase.tenant-enabled", havingValue = "true")
     public Y9MultiTenantSpringLiquibase y9MultiTenantSpringLiquibase(Y9TenantDataSourceLookup y9TenantDataSourceLookup,
-                                                                     Y9Properties properties, ResourceLoader resourceLoader) {
+        Y9Properties properties, ResourceLoader resourceLoader) {
         return new Y9MultiTenantSpringLiquibase(y9TenantDataSourceLookup, properties.getFeature().getLiquibase(),
             resourceLoader);
     }

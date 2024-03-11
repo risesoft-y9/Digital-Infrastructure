@@ -1,7 +1,5 @@
 package net.risesoft.api.org;
 
-import jakarta.validation.constraints.NotBlank;
-
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
@@ -9,7 +7,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
-import net.risesoft.api.platform.org.OrgSyncApi;
+import jakarta.validation.constraints.NotBlank;
+
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.context.annotation.Primary;
 import org.springframework.data.domain.Page;
@@ -21,6 +20,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import lombok.RequiredArgsConstructor;
 
+import net.risesoft.api.platform.org.OrgSyncApi;
 import net.risesoft.entity.Y9Department;
 import net.risesoft.entity.Y9Group;
 import net.risesoft.entity.Y9Organization;

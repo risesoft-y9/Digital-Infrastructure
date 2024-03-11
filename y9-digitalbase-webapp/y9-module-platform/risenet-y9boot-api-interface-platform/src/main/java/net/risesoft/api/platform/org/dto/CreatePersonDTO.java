@@ -1,9 +1,9 @@
 package net.risesoft.api.platform.org.dto;
 
+import java.util.Date;
+
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
-
-import java.util.Date;
 
 import org.springframework.format.annotation.DateTimeFormat;
 

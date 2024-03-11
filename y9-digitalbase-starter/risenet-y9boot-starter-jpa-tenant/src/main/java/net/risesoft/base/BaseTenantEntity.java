@@ -1,10 +1,10 @@
 package net.risesoft.base;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.MappedSuperclass;
-
 import java.io.Serializable;
 import java.util.Date;
+
+import jakarta.persistence.Column;
+import jakarta.persistence.MappedSuperclass;
 
 import org.hibernate.annotations.Comment;
 import org.hibernate.annotations.CreationTimestamp;

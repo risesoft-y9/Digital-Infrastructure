@@ -2,7 +2,6 @@ package net.risesoft.api.v0.permission;
 
 import jakarta.validation.constraints.NotBlank;
 
-import net.risesoft.api.platform.v0.permission.PositionRoleApi;
 import org.springframework.context.annotation.Primary;
 import org.springframework.http.MediaType;
 import org.springframework.validation.annotation.Validated;
@@ -12,6 +11,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import lombok.RequiredArgsConstructor;
 
+import net.risesoft.api.platform.v0.permission.PositionRoleApi;
 import net.risesoft.service.identity.Y9PositionToRoleService;
 import net.risesoft.y9.Y9LoginUserHolder;
 

@@ -1,8 +1,8 @@
 package net.risesoft.controller.dictionary;
 
-import jakarta.validation.constraints.NotBlank;
-
 import java.util.List;
+
+import jakarta.validation.constraints.NotBlank;
 
 import org.springframework.http.MediaType;
 import org.springframework.validation.annotation.Validated;

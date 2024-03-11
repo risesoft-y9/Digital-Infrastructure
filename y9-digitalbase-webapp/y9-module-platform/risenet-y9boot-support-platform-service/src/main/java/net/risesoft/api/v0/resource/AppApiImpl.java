@@ -1,11 +1,10 @@
 package net.risesoft.api.v0.resource;
 
-import jakarta.validation.constraints.NotBlank;
-
 import java.util.List;
 import java.util.Optional;
 
-import net.risesoft.api.platform.v0.resource.AppApi;
+import jakarta.validation.constraints.NotBlank;
+
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
@@ -18,6 +17,7 @@ import org.springframework.web.bind.annotation.RestController;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
+import net.risesoft.api.platform.v0.resource.AppApi;
 import net.risesoft.consts.InitDataConsts;
 import net.risesoft.enums.platform.AppOpenTypeEnum;
 import net.risesoft.enums.platform.AppTypeEnum;

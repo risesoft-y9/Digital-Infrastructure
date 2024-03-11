@@ -13,6 +13,7 @@ import net.risesoft.api.platform.tenant.TenantSystemApi;
  * @date 2022/2/10
  * @since 9.6.0
  */
-@FeignClient(contextId = "TenantSystemApiClient", name = "${y9.service.org.name:platform}", url = "${y9.service.org.directUrl:}",
-    path = "/${y9.service.org.name:platform}/services/rest/v1/tenantSystem", primary = false)
+@FeignClient(contextId = "TenantSystemApiClient", name = "${y9.service.org.name:platform}",
+    url = "${y9.service.org.directUrl:}", path = "/${y9.service.org.name:platform}/services/rest/v1/tenantSystem",
+    primary = false)
 public interface TenantSystemApiClient extends TenantSystemApi {}

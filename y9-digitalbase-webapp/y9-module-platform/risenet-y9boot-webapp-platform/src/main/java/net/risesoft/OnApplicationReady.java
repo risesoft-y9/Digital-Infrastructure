@@ -152,5 +152,5 @@ public class OnApplicationReady implements ApplicationListener<ApplicationReadyE
     private Y9DataSource createDataSource(String datasourceId, String dbName) {
         return y9DataSourceService.createTenantDefaultDataSource(dbName, datasourceId);
     }
-    
+
 }

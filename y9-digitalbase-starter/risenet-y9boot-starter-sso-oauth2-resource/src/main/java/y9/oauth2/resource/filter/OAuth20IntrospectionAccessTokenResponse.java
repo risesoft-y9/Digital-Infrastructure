@@ -44,7 +44,7 @@ public class OAuth20IntrospectionAccessTokenResponse implements Serializable {
 
     @JsonProperty("grant_type")
     private String grantType;
-    
+
     private String attr; // y9 add
 
     @JsonProperty("cnf")

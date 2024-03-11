@@ -29,7 +29,7 @@ public class Y9Properties {
 
     /** 上下文路径 */
     private String contextPath = "/";
-    
+
     /** 服务器的内部IP，服务器之间通过内部IP访问，速度比较快 */
     private String internalIp = "/";
 

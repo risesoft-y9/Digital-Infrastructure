@@ -13,5 +13,5 @@ import net.risesoft.model.log.AccessLog;
  */
 public interface Y9LogService {
     public void process(MethodInvocation invocation, AccessLog log, HttpServletRequest request,
-                        HttpServletResponse response);
+        HttpServletResponse response);
 }

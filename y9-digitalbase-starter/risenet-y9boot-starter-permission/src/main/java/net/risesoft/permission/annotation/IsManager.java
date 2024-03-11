@@ -1,12 +1,12 @@
 package net.risesoft.permission.annotation;
 
-import net.risesoft.enums.platform.ManagerLevelEnum;
-
 import java.lang.annotation.Documented;
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
+
+import net.risesoft.enums.platform.ManagerLevelEnum;
 
 /**
  * 是否为管理员 <br/>

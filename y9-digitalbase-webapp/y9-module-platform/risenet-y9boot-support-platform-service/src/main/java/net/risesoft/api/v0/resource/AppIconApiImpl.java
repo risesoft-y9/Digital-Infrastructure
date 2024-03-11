@@ -1,10 +1,9 @@
 package net.risesoft.api.v0.resource;
 
-import jakarta.validation.constraints.NotBlank;
-
 import java.util.List;
 
-import net.risesoft.api.platform.v0.resource.AppIconApi;
+import jakarta.validation.constraints.NotBlank;
+
 import org.springframework.http.MediaType;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -13,6 +12,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import lombok.RequiredArgsConstructor;
 
+import net.risesoft.api.platform.v0.resource.AppIconApi;
 import net.risesoft.model.platform.AppIcon;
 import net.risesoft.y9.util.Y9ModelConvertUtil;
 import net.risesoft.y9public.entity.resource.Y9AppIcon;

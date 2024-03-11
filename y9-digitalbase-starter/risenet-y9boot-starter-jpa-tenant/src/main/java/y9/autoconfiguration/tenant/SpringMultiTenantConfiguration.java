@@ -1,9 +1,9 @@
 
 package y9.autoconfiguration.tenant;
 
-import jakarta.persistence.EntityManagerFactory;
-
 import javax.sql.DataSource;
+
+import jakarta.persistence.EntityManagerFactory;
 
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.autoconfigure.AutoConfigureBefore;

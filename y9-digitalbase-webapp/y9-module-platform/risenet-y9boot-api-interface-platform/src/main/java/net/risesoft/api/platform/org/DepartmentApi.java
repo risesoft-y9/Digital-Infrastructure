@@ -1,17 +1,17 @@
 package net.risesoft.api.platform.org;
 
+import java.util.List;
+
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotEmpty;
 
-import java.util.List;
-
-import net.risesoft.api.platform.org.dto.CreateDepartmentDTO;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import net.risesoft.api.platform.org.dto.CreateDepartmentDTO;
 import net.risesoft.enums.platform.DepartmentPropCategoryEnum;
 import net.risesoft.model.platform.Department;
 import net.risesoft.model.platform.DepartmentProp;

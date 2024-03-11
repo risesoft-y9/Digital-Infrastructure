@@ -1,12 +1,12 @@
 package net.risesoft.api.v0.id;
 
-import net.risesoft.api.platform.v0.id.IdApi;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Primary;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import net.risesoft.api.platform.v0.id.IdApi;
 import net.risesoft.id.Y9IdGenerator;
 
 /**

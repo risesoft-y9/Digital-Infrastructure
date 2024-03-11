@@ -1,10 +1,9 @@
 package net.risesoft.api.v0.permission;
 
-import jakarta.validation.constraints.NotBlank;
-
 import java.util.List;
 
-import net.risesoft.api.platform.v0.permission.PositionResourceApi;
+import jakarta.validation.constraints.NotBlank;
+
 import org.springframework.context.annotation.Primary;
 import org.springframework.http.MediaType;
 import org.springframework.validation.annotation.Validated;
@@ -14,6 +13,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import lombok.RequiredArgsConstructor;
 
+import net.risesoft.api.platform.v0.permission.PositionResourceApi;
 import net.risesoft.enums.platform.AuthorityEnum;
 import net.risesoft.enums.platform.ResourceTypeEnum;
 import net.risesoft.model.platform.Resource;

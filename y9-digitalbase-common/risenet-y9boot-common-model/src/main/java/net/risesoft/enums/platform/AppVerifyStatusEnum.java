@@ -2,6 +2,7 @@ package net.risesoft.enums.platform;
 
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
+
 import net.risesoft.enums.ValuedEnum;
 
 /**

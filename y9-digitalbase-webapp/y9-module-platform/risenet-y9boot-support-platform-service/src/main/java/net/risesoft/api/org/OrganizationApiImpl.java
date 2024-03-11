@@ -1,10 +1,9 @@
 package net.risesoft.api.org;
 
-import jakarta.validation.constraints.NotBlank;
-
 import java.util.List;
 
-import net.risesoft.api.platform.org.OrganizationApi;
+import jakarta.validation.constraints.NotBlank;
+
 import org.springframework.context.annotation.Primary;
 import org.springframework.http.MediaType;
 import org.springframework.validation.annotation.Validated;
@@ -14,6 +13,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import lombok.RequiredArgsConstructor;
 
+import net.risesoft.api.platform.org.OrganizationApi;
 import net.risesoft.entity.Y9Department;
 import net.risesoft.entity.Y9Group;
 import net.risesoft.entity.Y9Organization;

@@ -2,7 +2,6 @@ package net.risesoft.api.org;
 
 import java.util.List;
 
-import net.risesoft.api.platform.org.PositionApi;
 import org.springframework.context.annotation.Primary;
 import org.springframework.http.MediaType;
 import org.springframework.validation.annotation.Validated;
@@ -13,6 +12,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import lombok.RequiredArgsConstructor;
 
+import net.risesoft.api.platform.org.PositionApi;
 import net.risesoft.api.platform.org.dto.CreatePositionDTO;
 import net.risesoft.entity.Y9OrgBase;
 import net.risesoft.entity.Y9Person;
