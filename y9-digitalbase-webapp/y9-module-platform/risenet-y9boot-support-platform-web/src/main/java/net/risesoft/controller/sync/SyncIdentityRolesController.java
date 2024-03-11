@@ -14,6 +14,7 @@ import lombok.extern.slf4j.Slf4j;
 import net.risesoft.entity.Y9Organization;
 import net.risesoft.enums.platform.TenantTypeEnum;
 import net.risesoft.log.annotation.RiseLog;
+import net.risesoft.pojo.Y9Result;
 import net.risesoft.service.identity.IdentityRoleCalculator;
 import net.risesoft.service.org.Y9OrganizationService;
 import net.risesoft.y9.Y9LoginUserHolder;
@@ -45,7 +46,7 @@ public class SyncIdentityRolesController {
      */
     @RiseLog()
     @RequestMapping("/identityRoles")
-    public String syncIdentityRoles() {
+    public Y9Result<Object> syncIdentityRoles() {
         double start = System.currentTimeMillis();
         LOGGER.info("更新人员/岗位角色开始时间：{}", fdf.format(new Date()));
 
@@ -61,7 +62,7 @@ public class SyncIdentityRolesController {
         double time = end - start;
         LOGGER.info("更新人员/岗位角色完成时间：{}", fdf.format(new Date()));
         LOGGER.info("更新人员/岗位角色所用时间：{}", time);
-        return "Success";
+        return Y9Result.success("同步所有租户的所有人员/岗位角色对应表完成！");
     }
 
     /**
@@ -72,7 +73,7 @@ public class SyncIdentityRolesController {
      */
     @RiseLog()
     @RequestMapping("/identityRoles/{tenantId}")
-    public String syncIdentityRolesByTenantId(@PathVariable String tenantId) {
+    public Y9Result<Object> syncIdentityRolesByTenantId(@PathVariable String tenantId) {
         double start = System.currentTimeMillis();
         LOGGER.info("更新人员/岗位角色开始时间：{},租户id--->{}", fdf.format(new Date()), tenantId);
 
@@ -85,7 +86,7 @@ public class SyncIdentityRolesController {
         double time = end - start;
         LOGGER.info("更新人员/岗位角色所用时间：{}", time);
         LOGGER.info("更新人员/岗位角色完成时间：{}", fdf.format(new Date()));
-        return "Success";
+        return Y9Result.success();
     }
 
     /**
@@ -97,7 +98,8 @@ public class SyncIdentityRolesController {
      */
     @RiseLog()
     @RequestMapping("/identityRoles/{tenantId}/{orgUnitId}")
-    public String syncIdentityRolesByOrgUnitId(@PathVariable String tenantId, @PathVariable String orgUnitId) {
+    public Y9Result<Object> syncIdentityRolesByOrgUnitId(@PathVariable String tenantId,
+        @PathVariable String orgUnitId) {
         double start = System.currentTimeMillis();
         LOGGER.info("更新人员/岗位角色开始时间：{},租户id--->{}", fdf.format(new Date()), tenantId);
 
@@ -108,6 +110,6 @@ public class SyncIdentityRolesController {
         double time = end - start;
         LOGGER.info("更新人员/岗位角色所用时间：{}", time);
         LOGGER.info("更新人员/岗位角色完成时间：{}", fdf.format(new Date()));
-        return "Success";
+        return Y9Result.success("更新人员/岗位角色完成！");
     }
 }

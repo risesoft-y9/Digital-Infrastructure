@@ -39,12 +39,17 @@ public class PositionResourcesController {
     private final Y9PositionToResourceAndAuthorityService y9PositionToResourceAndAuthorityService;
     private final ResourcePermissionVOBuilder resourcePermissionVOBuilder;
 
-    @GetMapping
+    /**
+     * 根据岗位id，获取岗位的权限缓存列表
+     *
+     * @param positionId 人员id
+     * @return
+     */
+    @GetMapping("/getByPositionId")
     public Y9Result<List<ResourcePermissionVO>> getByPositionId(@RequestParam @NotBlank String positionId) {
         List<Y9PositionToResourceAndAuthority> y9PositionToResourceAndAuthorityList =
             y9PositionToResourceAndAuthorityService.list(positionId);
         return Y9Result.success(resourcePermissionVOBuilder
             .buildResourcePermissionVOList(new ArrayList<>(y9PositionToResourceAndAuthorityList)));
     }
-
 }
