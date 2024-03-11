@@ -302,35 +302,6 @@
                     <commitIdGenerationMode>full</commitIdGenerationMode>
                 </configuration>
             </plugin>
-
-            <plugin>
-                <groupId>com.diffplug.spotless</groupId>
-                <artifactId>spotless-maven-plugin</artifactId>
-                <version>2.43.0</version>
-                <configuration>
-                    <java>
-                        <eclipse>
-                            <file>/Users/tobin/WorkSpaces/risesoft/y9-cloud-git/y9-digitalbase/style/eclipse-codestyle.xml</file> <!-- optional -->
-                        </eclipse>
-
-                        <removeUnusedImports />
-
-                        <importOrder>
-                            <file>/Users/tobin/WorkSpaces/risesoft/y9-cloud-git/y9-digitalbase/style/eclipse.importorder</file>
-                        </importOrder>
-
-                        <formatAnnotations />
-                    </java>
-                </configuration>
-                <executions>
-                    <execution>
-                        <goals>
-                            <goal>apply</goal>
-                        </goals>
-                        <phase>compile</phase>
-                    </execution>
-                </executions>
-            </plugin>
         </plugins>
 
         <pluginManagement>
