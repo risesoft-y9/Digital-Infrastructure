@@ -1,7 +1,8 @@
 package y9.client.rest.platform.tenant;
 
-import net.risesoft.api.platform.tenant.TenantSystemApi;
 import org.springframework.cloud.openfeign.FeignClient;
+
+import net.risesoft.api.platform.tenant.TenantSystemApi;
 
 /**
  * 租户系统

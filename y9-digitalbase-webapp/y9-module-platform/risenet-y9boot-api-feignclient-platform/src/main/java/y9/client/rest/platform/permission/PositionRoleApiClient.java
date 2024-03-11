@@ -1,7 +1,8 @@
 package y9.client.rest.platform.permission;
 
-import net.risesoft.api.platform.permission.PositionRoleApi;
 import org.springframework.cloud.openfeign.FeignClient;
+
+import net.risesoft.api.platform.permission.PositionRoleApi;
 
 /**
  * 岗位角色接口

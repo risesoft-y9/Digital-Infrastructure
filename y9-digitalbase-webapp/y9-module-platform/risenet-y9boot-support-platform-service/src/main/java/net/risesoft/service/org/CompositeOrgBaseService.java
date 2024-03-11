@@ -12,8 +12,8 @@ import net.risesoft.entity.Y9OrgBase;
 import net.risesoft.entity.Y9Organization;
 import net.risesoft.entity.Y9Person;
 import net.risesoft.entity.Y9Position;
-import net.risesoft.enums.platform.OrgTypeEnum;
 import net.risesoft.enums.platform.OrgTreeTypeEnum;
+import net.risesoft.enums.platform.OrgTypeEnum;
 import net.risesoft.model.platform.SyncOrgUnits;
 
 /**

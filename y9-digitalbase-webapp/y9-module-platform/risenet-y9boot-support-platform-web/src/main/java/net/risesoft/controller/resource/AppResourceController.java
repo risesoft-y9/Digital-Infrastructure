@@ -25,7 +25,6 @@ import net.risesoft.permission.annotation.IsManager;
 import net.risesoft.pojo.Y9Page;
 import net.risesoft.pojo.Y9PageQuery;
 import net.risesoft.pojo.Y9Result;
-import net.risesoft.y9.Y9LoginUserHolder;
 import net.risesoft.y9public.entity.resource.Y9App;
 import net.risesoft.y9public.service.resource.Y9AppService;
 import net.risesoft.y9public.service.tenant.Y9TenantAppService;

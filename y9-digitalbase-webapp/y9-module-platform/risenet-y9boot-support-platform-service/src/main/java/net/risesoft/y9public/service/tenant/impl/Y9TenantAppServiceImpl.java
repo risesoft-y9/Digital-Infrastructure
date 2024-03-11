@@ -1,6 +1,5 @@
 package net.risesoft.y9public.service.tenant.impl;
 
-import java.text.SimpleDateFormat;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
@@ -9,7 +8,6 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
-import org.apache.commons.lang3.StringUtils;
 import org.springframework.context.event.EventListener;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -20,10 +18,7 @@ import org.springframework.transaction.annotation.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
-import net.risesoft.enums.platform.ManagerLevelEnum;
 import net.risesoft.exception.TenantErrorCodeEnum;
-import net.risesoft.id.IdType;
-import net.risesoft.id.Y9IdGenerator;
 import net.risesoft.model.user.UserInfo;
 import net.risesoft.y9.Y9LoginUserHolder;
 import net.risesoft.y9.exception.util.Y9ExceptionUtil;

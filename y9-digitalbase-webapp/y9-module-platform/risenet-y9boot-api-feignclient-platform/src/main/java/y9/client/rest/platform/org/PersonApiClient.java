@@ -1,13 +1,14 @@
 package y9.client.rest.platform.org;
 
-import net.risesoft.api.platform.org.PersonApi;
-import net.risesoft.model.platform.Person;
-import net.risesoft.pojo.Y9Page;
-import net.risesoft.pojo.Y9PageQuery;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.cloud.openfeign.SpringQueryMap;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+
+import net.risesoft.api.platform.org.PersonApi;
+import net.risesoft.model.platform.Person;
+import net.risesoft.pojo.Y9Page;
+import net.risesoft.pojo.Y9PageQuery;
 
 /**
  * 人员服务组件

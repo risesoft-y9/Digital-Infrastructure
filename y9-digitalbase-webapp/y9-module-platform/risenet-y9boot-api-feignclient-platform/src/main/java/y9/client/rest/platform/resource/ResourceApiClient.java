@@ -1,7 +1,8 @@
 package y9.client.rest.platform.resource;
 
-import net.risesoft.api.platform.resource.ResourceApi;
 import org.springframework.cloud.openfeign.FeignClient;
+
+import net.risesoft.api.platform.resource.ResourceApi;
 
 /**
  * 资源管理组件

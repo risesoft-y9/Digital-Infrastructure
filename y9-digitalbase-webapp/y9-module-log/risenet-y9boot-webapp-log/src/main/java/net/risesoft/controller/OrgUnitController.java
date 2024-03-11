@@ -1,6 +1,15 @@
 package net.risesoft.controller;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import org.apache.commons.lang3.StringUtils;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
+
 import lombok.RequiredArgsConstructor;
+
 import net.risesoft.enums.platform.OrgTreeTypeEnum;
 import net.risesoft.enums.platform.TenantTypeEnum;
 import net.risesoft.log.annotation.RiseLog;
@@ -10,16 +19,10 @@ import net.risesoft.model.platform.Tenant;
 import net.risesoft.pojo.Y9Result;
 import net.risesoft.y9.Y9LoginUserHolder;
 import net.risesoft.y9.util.Y9EnumUtil;
-import org.apache.commons.lang3.StringUtils;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+
 import y9.client.rest.platform.org.OrgUnitApiClient;
 import y9.client.rest.platform.org.OrganizationApiClient;
 import y9.client.rest.platform.tenant.TenantApiClient;
-
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  * 组织管理

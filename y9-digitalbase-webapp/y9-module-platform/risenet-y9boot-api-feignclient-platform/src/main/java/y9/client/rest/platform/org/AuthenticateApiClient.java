@@ -1,7 +1,8 @@
 package y9.client.rest.platform.org;
 
-import net.risesoft.api.platform.org.AuthenticateApi;
 import org.springframework.cloud.openfeign.FeignClient;
+
+import net.risesoft.api.platform.org.AuthenticateApi;
 
 /**
  * 用户身份验证服务组件

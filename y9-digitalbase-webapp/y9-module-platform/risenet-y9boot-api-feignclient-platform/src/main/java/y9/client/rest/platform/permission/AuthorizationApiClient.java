@@ -1,7 +1,8 @@
 package y9.client.rest.platform.permission;
 
-import net.risesoft.api.platform.permission.AuthorizationApi;
 import org.springframework.cloud.openfeign.FeignClient;
+
+import net.risesoft.api.platform.permission.AuthorizationApi;
 
 /**
  * 权限管理组件

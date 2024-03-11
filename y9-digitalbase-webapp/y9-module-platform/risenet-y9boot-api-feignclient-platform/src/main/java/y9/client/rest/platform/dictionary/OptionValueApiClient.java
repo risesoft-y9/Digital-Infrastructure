@@ -1,7 +1,8 @@
 package y9.client.rest.platform.dictionary;
 
-import net.risesoft.api.platform.dictionary.OptionValueApi;
 import org.springframework.cloud.openfeign.FeignClient;
+
+import net.risesoft.api.platform.dictionary.OptionValueApi;
 
 /**
  * 字典表管理

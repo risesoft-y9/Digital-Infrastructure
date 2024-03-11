@@ -1,7 +1,8 @@
 package y9.client.rest.platform.permission;
 
-import net.risesoft.api.platform.permission.PositionResourceApi;
 import org.springframework.cloud.openfeign.FeignClient;
+
+import net.risesoft.api.platform.permission.PositionResourceApi;
 
 /**
  * 岗位资源管理组件

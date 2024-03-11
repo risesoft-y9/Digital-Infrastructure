@@ -1,7 +1,8 @@
 package y9.client.rest.platform.org;
 
-import net.risesoft.api.platform.org.OrganizationApi;
 import org.springframework.cloud.openfeign.FeignClient;
+
+import net.risesoft.api.platform.org.OrganizationApi;
 
 /**
  * 机构服务组件

@@ -30,15 +30,13 @@ public class Y9PageQuery {
     /**
      * 页数
      */
-    @NotNull
-    @Min(value = DEFAULT_PAGE)
+    @NotNull @Min(value = DEFAULT_PAGE)
     private Integer page = DEFAULT_PAGE;
 
     /**
      * 每页的条数
      */
-    @NotNull
-    @Min(value = MIN_SIZE)
+    @NotNull @Min(value = MIN_SIZE)
     @Max(value = MAX_SIZE)
     private Integer size = DEFAULT_SIZE;
 

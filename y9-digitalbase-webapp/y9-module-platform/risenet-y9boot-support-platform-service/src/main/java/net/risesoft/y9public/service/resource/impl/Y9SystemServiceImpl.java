@@ -4,7 +4,6 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
-import net.risesoft.y9.Y9LoginUserHolder;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -19,6 +18,7 @@ import net.risesoft.exception.SystemErrorCodeEnum;
 import net.risesoft.id.IdType;
 import net.risesoft.id.Y9IdGenerator;
 import net.risesoft.pojo.Y9PageQuery;
+import net.risesoft.y9.Y9LoginUserHolder;
 import net.risesoft.y9.exception.util.Y9ExceptionUtil;
 import net.risesoft.y9.util.Y9Assert;
 import net.risesoft.y9.util.Y9BeanUtil;

@@ -1,7 +1,8 @@
 package y9.client.rest.platform.id;
 
-import net.risesoft.api.platform.id.IdApi;
 import org.springframework.cloud.openfeign.FeignClient;
+
+import net.risesoft.api.platform.id.IdApi;
 
 /**
  * 唯一标识组件

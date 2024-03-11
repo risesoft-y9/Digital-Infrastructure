@@ -1,15 +1,16 @@
 package y9.client.rest.platform.customgroup;
 
+import org.springframework.cloud.openfeign.FeignClient;
+import org.springframework.cloud.openfeign.SpringQueryMap;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+
 import net.risesoft.api.platform.customgroup.CustomGroupApi;
 import net.risesoft.enums.platform.OrgTypeEnum;
 import net.risesoft.model.platform.CustomGroup;
 import net.risesoft.model.platform.CustomGroupMember;
 import net.risesoft.pojo.Y9Page;
 import net.risesoft.pojo.Y9PageQuery;
-import org.springframework.cloud.openfeign.FeignClient;
-import org.springframework.cloud.openfeign.SpringQueryMap;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 
 /**
  * 自定义用户组

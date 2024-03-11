@@ -5,6 +5,7 @@ import java.util.Map;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
+
 import net.risesoft.enums.ValuedEnum;
 
 /**
