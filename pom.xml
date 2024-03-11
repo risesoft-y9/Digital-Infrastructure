@@ -112,8 +112,6 @@
         <lombok.version>1.18.30</lombok.version>
 
         <liquibase.version>4.25.0</liquibase.version>
-        
-        <style.dir>/Users/tobin/WorkSpaces/risesoft/y9-cloud-git-9.7.x/y9-digitalbase</style.dir>
     </properties>
 
     <dependencyManagement>
@@ -292,34 +290,6 @@
                     <generateGitPropertiesFilename>${project.build.outputDirectory}/git.properties</generateGitPropertiesFilename>
                     <commitIdGenerationMode>full</commitIdGenerationMode>
                 </configuration>
-            </plugin>
-            <plugin>
-                <groupId>com.diffplug.spotless</groupId>
-                <artifactId>spotless-maven-plugin</artifactId>
-                <version>2.43.0</version>
-                <configuration>
-                    <java>
-                        <eclipse>
-                            <file>${style.dir}/style/eclipse-codestyle.xml</file> <!-- optional -->
-                        </eclipse>
-
-                        <removeUnusedImports />
-
-                        <importOrder>
-                            <file>${style.dir}/style/eclipse.importorder</file>
-                        </importOrder>
-
-                        <formatAnnotations />
-                    </java>
-                </configuration>
-                <executions>
-                    <execution>
-                        <goals>
-                            <goal>apply</goal>
-                        </goals>
-                        <phase>compile</phase>
-                    </execution>
-                </executions>
             </plugin>
         </plugins>
 
