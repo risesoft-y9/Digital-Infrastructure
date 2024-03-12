@@ -115,12 +115,11 @@ body .login_fields {
 body .login_fields .form-label {
     color: #f6e05a;
     font-family: AaBoruokaishuBold;
-    /*font-size: 28px;*/
-    font-size: 22px;
+    font-size: 24px;
     font-style: normal;
     font-weight: 400;
     line-height: normal;
-    width: 66px;
+    width: 72px;
     display: inline-block;
     margin-right: 18px;
     top: 6px;
@@ -130,7 +129,7 @@ body .login_fields .form-label {
 
 body .login_fields input[type='text'], body .login_fields input[type='password'] {
     display: inline-block;
-    width: 260px;
+    width: 255px;
     height: 31px;
     vertical-align: middle;
     border: none;
@@ -210,7 +209,7 @@ body .login_fields__submit:hover {
 body .login_fields_remember_password {
     color: #f6e05a;
     font-family: "AaBoruokaishuBold";
-    font-size: 16px;
+    font-size: 18px;
     font-style: normal;
     font-weight: 400;
     margin-top: 15px;
