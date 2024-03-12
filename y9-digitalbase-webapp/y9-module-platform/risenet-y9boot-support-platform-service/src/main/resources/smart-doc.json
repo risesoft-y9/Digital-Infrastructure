@@ -1,107 +1,107 @@
 {
-  "serverUrl": "https://vue.youshengyun.com",
-  "pathPrefix": "/platform",
-  "isStrict": false,
-  "allInOne": true,
-  "outPath": "../../../y9-digitalbase-pro/docs/smart-docs/platform/api",
-  "coverOld": true,
-  "createDebugPage": false,
-  "packageFilters": "net.risesoft.api",
-  "md5EncryptedHtmlName": false,
-  "style": "xt256",
-  "projectName": "组织身份后端接口文档",
-  "framework": "spring",
-  "skipTransientField": true,
-  "sortByTitle": false,
-  "showAuthor": true,
-  "requestFieldToUnderline": false,
-  "responseFieldToUnderline": false,
-  "inlineEnum": true,
-  "recursionLimit": 7,
-  "allInOneDocFileName": "index.html",
-  "requestExample": "true",
-  "responseExample": "true",
-  "urlSuffix": "",
-  "displayActualType": false,
-  "dataDictionaries": [
-    {
-      "title": "http状态码字典",
-      "enumClassName": "com.power.common.enums.HttpCodeEnum",
-      "codeField": "code",
-      "descField": "message"
-    }
-  ],
-  "errorCodeDictionaries": [
-    {
-      "enumClassName": "net.risesoft.exception.ErrorCode",
-      "codeField": "code",
-      "descField": "description"
-    }
-  ],
-  "revisionLogs": [
-    {
-      "version": "1.0",
-      "revisionTime": "2021/5/10",
-      "status": "创建",
-      "author": "mengjuhua,zhaobo",
-      "remarks": "创建后端接口文档"
+    "serverUrl": "https://vue.youshengyun.com",
+    "pathPrefix": "/platform",
+    "isStrict": false,
+    "allInOne": true,
+    "outPath": "../../../../y9-digitalbase-pro/docs/smart-docs/platform/api",
+    "coverOld": true,
+    "createDebugPage": false,
+    "packageFilters": "net.risesoft.api",
+    "md5EncryptedHtmlName": false,
+    "style": "xt256",
+    "projectName": "组织身份后端接口文档",
+    "framework": "spring",
+    "skipTransientField": true,
+    "sortByTitle": false,
+    "showAuthor": true,
+    "requestFieldToUnderline": false,
+    "responseFieldToUnderline": false,
+    "inlineEnum": true,
+    "recursionLimit": 7,
+    "allInOneDocFileName": "index.html",
+    "requestExample": "true",
+    "responseExample": "true",
+    "urlSuffix": "",
+    "displayActualType": false,
+    "dataDictionaries": [
+        {
+            "title": "http状态码字典",
+            "enumClassName": "com.power.common.enums.HttpCodeEnum",
+            "codeField": "code",
+            "descField": "message"
+        }
+    ],
+    "errorCodeDictionaries": [
+        {
+            "enumClassName": "net.risesoft.exception.ErrorCode",
+            "codeField": "code",
+            "descField": "description"
+        }
+    ],
+    "revisionLogs": [
+        {
+            "version": "1.0",
+            "revisionTime": "2021/5/10",
+            "status": "创建",
+            "author": "mengjuhua,zhaobo",
+            "remarks": "创建后端接口文档"
+        },
+        {
+            "version": "2.0",
+            "revisionTime": "2022/4/10",
+            "status": "更新",
+            "author": "qinman,shidaobang,dingzhaojun",
+            "remarks": "更新后端接口文档"
+        }
+    ],
+    "requestHeaders": [
+        {
+            "name": "Authorization",
+            "type": "string",
+            "desc": "单点登陆认证通过后得到的token",
+            "value": " Bearer {token}",
+            "required": true,
+            "since": "-",
+            "pathPatterns": "/api/*",
+            "excludePathPatterns": "/app/page/**"
+        }
+    ],
+    "responseBodyAdvice": {
+        "className": "net.risesoft.pojo.Y9Result"
     },
-    {
-      "version": "2.0",
-      "revisionTime": "2022/4/10",
-      "status": "更新",
-      "author": "qinman,shidaobang,dingzhaojun",
-      "remarks": "更新后端接口文档"
-    }
-  ],
-  "requestHeaders": [
-    {
-      "name": "Authorization",
-      "type": "string",
-      "desc": "单点登陆认证通过后得到的token",
-      "value": " Bearer {token}",
-      "required": true,
-      "since": "-",
-      "pathPatterns": "/api/*",
-      "excludePathPatterns": "/app/page/**"
-    }
-  ],
-  "responseBodyAdvice": {
-    "className": "net.risesoft.pojo.Y9Result"
-  },
-  "groups": [
-    {
-      "name": "用户组",
-      "apis": "net.risesoft.api.customgroup.*"
-    },
-    {
-      "name": "数据字典",
-      "apis": "net.risesoft.api.dictionary.*"
-    },
-    {
-      "name": "唯一标识",
-      "apis": "net.risesoft.api.id.*"
-    },
-    {
-      "name": "组织",
-      "apis": "net.risesoft.api.org.*"
-    },
-    {
-      "name": "权限",
-      "apis": "net.risesoft.api.permission.*"
-    },
-    {
-      "name": "资源",
-      "apis": "net.risesoft.api.resource.*"
-    },
-    {
-      "name": "租户",
-      "apis": "net.risesoft.api.tenant.*"
-    }
-  ],
-  "appToken": "632d60cc96d1474a9d5fa26b2044b778",
-  "openUrl": "https://dev.youshengyun.com/torna/api",
-  "replace": true,
-  "requestParamsTable": true,
-  "responseParamsTable": true
+    "groups": [
+        {
+            "name": "用户组",
+            "apis": "net.risesoft.api.customgroup.*"
+        },
+        {
+            "name": "数据字典",
+            "apis": "net.risesoft.api.dictionary.*"
+        },
+        {
+            "name": "唯一标识",
+            "apis": "net.risesoft.api.id.*"
+        },
+        {
+            "name": "组织",
+            "apis": "net.risesoft.api.org.*"
+        },
+        {
+            "name": "权限",
+            "apis": "net.risesoft.api.permission.*"
+        },
+        {
+            "name": "资源",
+            "apis": "net.risesoft.api.resource.*"
+        },
+        {
+            "name": "租户",
+            "apis": "net.risesoft.api.tenant.*"
+        }
+    ],
+    "appToken": "632d60cc96d1474a9d5fa26b2044b778",
+    "openUrl": "https://dev.youshengyun.com/torna/api",
+    "replace": true,
+    "requestParamsTable": true,
+    "responseParamsTable": true
 }
