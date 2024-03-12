@@ -1,4 +1,4 @@
-package net.risesoft.manager.authorization.impl;
+package net.risesoft.manager.identity.impl;
 
 import java.util.List;
 import java.util.Optional;
@@ -12,7 +12,7 @@ import net.risesoft.entity.Y9Position;
 import net.risesoft.entity.identity.position.Y9PositionToResourceAndAuthority;
 import net.risesoft.entity.permission.Y9Authorization;
 import net.risesoft.id.Y9IdGenerator;
-import net.risesoft.manager.authorization.Y9PositionToResourceAndAuthorityManager;
+import net.risesoft.manager.identity.Y9PositionToResourceAndAuthorityManager;
 import net.risesoft.repository.identity.position.Y9PositionToResourceAndAuthorityRepository;
 import net.risesoft.y9public.entity.resource.Y9App;
 import net.risesoft.y9public.entity.resource.Y9ResourceBase;

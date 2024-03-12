@@ -15,7 +15,6 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 
 import net.risesoft.api.platform.permission.RoleApi;
 import net.risesoft.entity.Y9OrgBase;
@@ -49,7 +48,6 @@ import net.risesoft.y9public.service.role.Y9RoleService;
 @Validated
 @RestController
 @RequestMapping(value = "/services/rest/v1/role", produces = MediaType.APPLICATION_JSON_VALUE)
-@Slf4j
 @RequiredArgsConstructor
 public class RoleApiImpl implements RoleApi {
 

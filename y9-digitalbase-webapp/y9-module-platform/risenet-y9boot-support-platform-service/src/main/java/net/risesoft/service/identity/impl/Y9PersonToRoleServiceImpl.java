@@ -14,7 +14,7 @@ import net.risesoft.consts.InitDataConsts;
 import net.risesoft.entity.Y9Person;
 import net.risesoft.entity.identity.person.Y9PersonToRole;
 import net.risesoft.enums.platform.RoleTypeEnum;
-import net.risesoft.manager.authorization.Y9PersonToRoleManager;
+import net.risesoft.manager.identity.Y9PersonToRoleManager;
 import net.risesoft.manager.org.Y9PersonManager;
 import net.risesoft.repository.identity.person.Y9PersonToRoleRepository;
 import net.risesoft.service.identity.Y9PersonToRoleService;
