@@ -24,7 +24,6 @@ import net.risesoft.enums.platform.AuthorizationPrincipalTypeEnum;
 import net.risesoft.enums.platform.OrgTypeEnum;
 import net.risesoft.id.IdType;
 import net.risesoft.id.Y9IdGenerator;
-import net.risesoft.manager.org.CompositeOrgBaseManager;
 import net.risesoft.manager.org.Y9OrganizationManager;
 import net.risesoft.model.platform.Organization;
 import net.risesoft.repository.Y9OrganizationRepository;
@@ -57,16 +56,14 @@ public class Y9OrganizationServiceImpl implements Y9OrganizationService {
 
     private final EntityManagerFactory entityManagerFactory;
 
-    private final CompositeOrgBaseManager compositeOrgBaseManager;
     private final Y9OrganizationManager y9OrganizationManager;
 
     public Y9OrganizationServiceImpl(Y9OrganizationRepository y9OrganizationRepository,
         @Qualifier("rsTenantEntityManagerFactory") EntityManagerFactory entityManagerFactory,
-        CompositeOrgBaseManager compositeOrgBaseManager, Y9OrgBasesToRolesRepository y9OrgBasesToRolesRepository,
-        Y9AuthorizationRepository y9AuthorizationRepository, Y9OrganizationManager y9OrganizationManager) {
+        Y9OrgBasesToRolesRepository y9OrgBasesToRolesRepository, Y9AuthorizationRepository y9AuthorizationRepository,
+        Y9OrganizationManager y9OrganizationManager) {
         this.y9OrganizationRepository = y9OrganizationRepository;
         this.entityManagerFactory = entityManagerFactory;
-        this.compositeOrgBaseManager = compositeOrgBaseManager;
         this.y9OrgBasesToRolesRepository = y9OrgBasesToRolesRepository;
         this.y9AuthorizationRepository = y9AuthorizationRepository;
         this.y9OrganizationManager = y9OrganizationManager;

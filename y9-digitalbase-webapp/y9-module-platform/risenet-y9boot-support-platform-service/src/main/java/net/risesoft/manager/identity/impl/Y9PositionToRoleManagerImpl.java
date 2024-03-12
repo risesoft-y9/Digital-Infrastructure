@@ -1,4 +1,4 @@
-package net.risesoft.manager.authorization.impl;
+package net.risesoft.manager.identity.impl;
 
 import java.util.List;
 import java.util.Optional;
@@ -12,7 +12,7 @@ import lombok.RequiredArgsConstructor;
 import net.risesoft.entity.Y9Position;
 import net.risesoft.entity.identity.position.Y9PositionToRole;
 import net.risesoft.id.Y9IdGenerator;
-import net.risesoft.manager.authorization.Y9PositionToRoleManager;
+import net.risesoft.manager.identity.Y9PositionToRoleManager;
 import net.risesoft.repository.identity.position.Y9PositionToRoleRepository;
 import net.risesoft.y9public.entity.role.Y9Role;
 

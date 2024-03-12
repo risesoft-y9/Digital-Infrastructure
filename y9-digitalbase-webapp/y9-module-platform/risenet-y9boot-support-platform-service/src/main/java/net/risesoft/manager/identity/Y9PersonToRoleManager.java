@@ -1,4 +1,4 @@
-package net.risesoft.manager.authorization;
+package net.risesoft.manager.identity;
 
 import java.util.List;
 

@@ -17,7 +17,7 @@ import net.risesoft.entity.identity.position.Y9PositionToResourceAndAuthority;
 import net.risesoft.entity.permission.Y9Authorization;
 import net.risesoft.enums.platform.AuthorityEnum;
 import net.risesoft.enums.platform.ResourceTypeEnum;
-import net.risesoft.manager.authorization.Y9PositionToResourceAndAuthorityManager;
+import net.risesoft.manager.identity.Y9PositionToResourceAndAuthorityManager;
 import net.risesoft.manager.org.CompositeOrgBaseManager;
 import net.risesoft.repository.identity.position.Y9PositionToResourceAndAuthorityRepository;
 import net.risesoft.service.identity.Y9PositionToResourceAndAuthorityService;
