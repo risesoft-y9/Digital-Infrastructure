@@ -3,13 +3,13 @@
     <modelVersion>4.0.0</modelVersion>
     <!-- <groupId>net.risesoft</groupId> -->
     <artifactId>risenet-y9boot-support-file-jpa-repository</artifactId>
-    <version>v9.6.4</version>
+    <version>v9.6.5-SNAPSHOT</version>
     <packaging>jar</packaging>
 
     <parent>
         <groupId>net.risesoft</groupId>
         <artifactId>y9-digitalbase</artifactId>
-        <version>v9.6.4</version>
+        <version>v9.6.5-SNAPSHOT</version>
         <relativePath>../../pom.xml</relativePath>
     </parent>
 

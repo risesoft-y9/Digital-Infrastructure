@@ -46,7 +46,7 @@
         <dependency>
             <groupId>net.risesoft</groupId>
             <artifactId>risenet-y9boot-starter-sso-oauth2-resource</artifactId>
-            <version>v9.6.4</version>
+            <version>v9.6.5-SNAPSHOT</version>
         </dependency>
         <!-- 单点登录-结束 -->
 
@@ -54,7 +54,7 @@
         <dependency>
             <groupId>net.risesoft</groupId>
             <artifactId>risenet-y9boot-api-feignclient-platform</artifactId>
-            <version>v9.6.4</version>
+            <version>v9.6.5-SNAPSHOT</version>
         </dependency>
         <!-- 接口调用-结束 -->
 
@@ -62,7 +62,7 @@
         <dependency>
             <groupId>net.risesoft</groupId>
             <artifactId>risenet-y9boot-starter-log</artifactId>
-            <version>v9.6.4</version>
+            <version>v9.6.5-SNAPSHOT</version>
         </dependency>
         <!-- 日志组件-结束 -->
 

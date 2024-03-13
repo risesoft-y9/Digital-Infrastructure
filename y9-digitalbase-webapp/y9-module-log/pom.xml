@@ -6,12 +6,12 @@
     <groupId>net.risesoft</groupId>
     <artifactId>y9-module-log</artifactId>
     <packaging>pom</packaging>
-    <version>v9.6.4</version>
+    <version>v9.6.5-SNAPSHOT</version>
 
     <parent>
         <groupId>net.risesoft</groupId>
         <artifactId>y9-digitalbase-webapp</artifactId>
-        <version>v9.6.4</version>
+        <version>v9.6.5-SNAPSHOT</version>
         <relativePath>../pom.xml</relativePath>
     </parent>
 

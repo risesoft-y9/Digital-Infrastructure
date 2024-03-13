@@ -45,7 +45,7 @@
         <dependency>
             <groupId>net.risesoft</groupId>
             <artifactId>risenet-y9boot-starter-sso-oauth2-resource</artifactId>
-            <version>v9.6.4</version>
+            <version>v9.6.5-SNAPSHOT</version>
         </dependency>
 
     </dependencies>

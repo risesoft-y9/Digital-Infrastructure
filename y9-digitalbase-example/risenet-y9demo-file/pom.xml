@@ -48,7 +48,7 @@
         <dependency>
             <groupId>net.risesoft</groupId>
             <artifactId>risenet-y9boot-support-file-service-ftp</artifactId>
-            <version>v9.6.4</version>
+            <version>v9.6.5-SNAPSHOT</version>
         </dependency>
     </dependencies>
     <dependencyManagement>
