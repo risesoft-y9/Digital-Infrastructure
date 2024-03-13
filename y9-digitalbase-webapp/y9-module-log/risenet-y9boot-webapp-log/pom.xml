@@ -4,13 +4,13 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>net.risesoft</groupId>
     <artifactId>risenet-y9boot-webapp-log</artifactId>
-    <version>v9.6.4-SNAPSHOT</version>
+    <version>v9.6.4</version>
     <packaging>war</packaging>
 
     <parent>
         <groupId>net.risesoft</groupId>
         <artifactId>y9-module-log</artifactId>
-        <version>v9.6.4-SNAPSHOT</version>
+        <version>v9.6.4</version>
         <relativePath>../pom.xml</relativePath>
     </parent>
 
@@ -52,7 +52,7 @@
         <dependency>
             <groupId>net.risesoft</groupId>
             <artifactId>risenet-y9boot-starter-sso-oauth2-resource</artifactId>
-            <version>v9.6.4-SNAPSHOT</version>
+            <version>v9.6.4</version>
         </dependency>
 
         <dependency>
