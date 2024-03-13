@@ -1,0 +1,29 @@
+groups:
+- name: server-alarm
+  rules:
+  - alert: "内存告警"
+    expr: (1 - (node_memory_MemAvailable_bytes / (node_memory_MemTotal_bytes))) * 100 > 85
+    for: 1m
+    labels:
+      severity: warning
+    annotations:
+      summary: "{{$labels.instance}}: 检测到高内存使用率！"
+      description: "{{$labels.instance}}: 内存使用率在 85% 以上 (当前使用值为:{{ $value }})"
+  
+  - alert: "CPU告警"
+    expr: (1 - avg(irate(node_cpu_seconds_total{mode="idle"}[2m])) by(instance)) * 100 > 80
+    for: 1m
+    labels:
+      severity: warning
+    annotations:
+      summary: "{{$labels.instance}}: 检测到 高CPU 使用率！"
+      description: "{{$labels.instance}}: CPU使用率在 80% 以上 (当前使用值为:{{ $value }})"
+  
+  - alert: "磁盘告警"
+    expr: 100 - (node_filesystem_free_bytes{fstype=~"tmpfs|ext4"} / node_filesystem_size_bytes{fstype=~"tmpfs|ext4"} * 100) > 80
+    for: 1m
+    labels:
+      severity: warning
+    annotations:
+      summary: "{{$labels.instance}}: 检测到 高磁盘 使用率！"
+      description: "{{$labels.instance}}: 磁盘使用率在 80% 以上 (当前使用值为:{{ $value }})"

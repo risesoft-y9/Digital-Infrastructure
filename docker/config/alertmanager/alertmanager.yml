@@ -1,0 +1,26 @@
+# alertmanager config
+# 通过qq邮箱来发送
+global:
+  resolve_timeout: 5m
+  smtp_from: 'xxxx@qq.com'
+  smtp_smarthost: 'smtp.qq.com:465'
+  smtp_auth_username: 'xxxx@qq.com'   # qq账号,根据实际填写
+  smtp_auth_password: 'xxxx'  # 授权客户端密码，非登录密码，根据实际填写
+  smtp_require_tls: false
+route:
+  group_by: ['alertname']
+  group_wait: 20s
+  group_interval: 5m
+  repeat_interval: 5m
+  receiver: 'email'
+receivers:
+  - name: 'email'
+    email_configs:
+      - to: 'xxxx@163.com'   # 根据实际填写
+        send_resolved: true
+inhibit_rules:
+  - source_match:
+      severity: 'critical'
+    target_match:
+      severity: 'warning'
+    equal: ['alertname','dev','instance']

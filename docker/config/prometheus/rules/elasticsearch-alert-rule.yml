@@ -1,0 +1,56 @@
+groups:
+- name: elasticsearch-alarm
+  rules:
+  - alert: "Elasticsearch宕机"
+    expr: elasticsearch_clusterinfo_up == 0
+    for: 1m
+    labels:
+      severity: warning
+    annotations:
+      summary: "{{$labels.url}}: 检测到Elasticsearch服务 已停止运行！请重点关注！！！"
+      description: "{{$labels.url}}: 当前Elasticsearch服务已停止！"
+  
+  - alert: "Elasticsearch集群不健康"
+    expr: elasticsearch_cluster_health_status{color="red"} == 1
+    for: 1m
+    labels:
+      severity: critical
+    annotations:
+      summary: "{{$labels.cluster}}: 检测到Elasticsearch集群不健康，可能存在主分片丢失的情况!请及时处理"
+      description: "{{$labels.cluster}}: Elasticsearch目前的健康状态为 {{$labels.color}}"
+      
+  - alert: "Elasticseatch磁盘空间过低"
+    expr: 100 * (elasticsearch_filesystem_data_free_bytes/elasticsearch_filesystem_data_size_bytes) < 20
+    for: 2m
+    labels:
+      severity: warning
+    annotations:
+      summary: "{{$labels.cluster}}: Elasticseatch磁盘空间过低！请尽快处理"
+      description: "{{$labels.cluster}}: Elasticsearch磁盘空间使用率超过80%。"
+    
+  - alert: "Elasticseatch磁盘空间超额使用"
+    expr: 100 * (elasticsearch_filesystem_data_free_bytes/elasticsearch_filesystem_data_size_bytes) < 10
+    for: 0m
+    labels:
+      severity: critical
+    annotations:
+      summary: "{{$labels.cluster}}: Elasticseatch磁盘空间不足！请马上处理！"
+      description: "{{$labels.cluster}}: Elasticsearch磁盘空间使用率超过90%"
+      
+  - alert: "Elasticseatch堆内存使用告警"
+    expr: 100 * elasticsearch_jvm_memory_used_bytes{area="heap"}/elasticsearch_jvm_memory_max_bytes{area="heap"} > 80
+    for: 15m
+    labels:
+      severity: warning
+    annotations:
+      summary: "{{$labels.cluster}}: Elasticseatch堆内存使用率过高！请尽快排查处理"
+      description: "{{$labels.cluster}}: Elasticsearch磁盘空间使用率超过80%"
+      
+  - alert: "Elasticseatch Pending Task 告警"
+    expr: elasticsearch_cluster_health_number_of_pending_tasks > 0
+    for: 15m
+    labels:
+      severity: warning
+    annotations:
+      summary: "{{$labels.cluster}}: Elasticseatch Pending Tasks"
+      description: "{{$labels.cluster}}: Elasticsearch存在等待的任务，集群执行缓慢"

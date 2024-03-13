@@ -1,0 +1,22 @@
+version: '3.9'
+services:
+  alertmanager:
+    image: prom/alertmanager
+    container_name: alertmanager
+    restart: always
+    ports:
+      - "9093:9093"
+    volumes:
+      - /alertmanager/data:/alertmanager/data
+      - /alertmanager/alertmanager.yml:/alertmanager.yml
+    command:
+      - "--config.file=/alertmanager.yml"
+    deploy:
+      placement:
+        constraints:
+          - node.hostname == dev4
+    networks:
+      - y9-share-net
+networks:
+  y9-share-net:
+    external: true

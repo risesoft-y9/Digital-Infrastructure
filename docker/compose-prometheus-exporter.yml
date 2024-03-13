@@ -47,7 +47,7 @@ services:
     deploy:
       mode: global
   elasticsearch-exporter:
-    image: quay.io/prometheuscommunity/elasticsearch-exporter:latest
+    image: quay.io/prometheuscommunity/elasticsearch-exporter:v1.7.0
     container_name: elasticsearch-exporter
     restart: always
     extra_hosts:
@@ -62,7 +62,7 @@ services:
     networks:
       - y9-share-net
   kafka-exporter:
-    image: bitnami/kafka-exporter:latest
+    image: bitnami/kafka-exporter:1.7.0
     container_name: kafka-exporter
     extra_hosts:
       - "host.docker.internal:host-gateway"
@@ -74,7 +74,7 @@ services:
     networks:
       - y9-share-net
   redis-exporter:
-    image: bitnami/redis-exporter:latest
+    image: bitnami/redis-exporter:1.58.0
     container_name: redis-exporter
     extra_hosts:
       - "host.docker.internal:host-gateway"

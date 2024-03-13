@@ -1,0 +1,20 @@
+groups:
+- name: MongoDB-Alarm
+  rules:
+  - alert: "MondoDB宕机"
+    expr: mongodb_up == 0
+    for: 0m
+    labels:
+      severity: critical
+    annotations:
+      summary: "{{$labels.instance}}: Mongodb is down"
+      description: "{{$labels.instance}}: Mongodb is down"
+
+  - alert: "MongoDB Connections 告警"
+    expr: mongodb_connections{state="current"} > 1000
+    for: 5m
+    labels:
+      severity: warning
+    annotations:
+      summary: "{{$labels.instance}}: 检测到mongodb的连接数大于1000，请查看是否存在问题"
+      description: "{{$labels.instance}}: MongoDB当前的连接数为 {{$value}}"
