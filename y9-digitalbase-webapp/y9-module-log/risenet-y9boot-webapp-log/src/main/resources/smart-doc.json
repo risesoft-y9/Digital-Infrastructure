@@ -3,7 +3,7 @@
   "pathPrefix": "/log",
   "isStrict": false,
   "allInOne": true,
-  "outPath": "../../../y9-digitalbase-pro/docs/smart-docs/log/api",
+  "outPath": "../../../../y9-digitalbase-pro/docs/smart-docs/log/api",
   "coverOld": true,
   "createDebugPage": false,
   "packageFilters": "net.risesoft.api",
@@ -45,7 +45,7 @@
       "status": "创建",
       "author": "guoweijun",
       "remarks": "创建后端接口文档"
-    },
+    }
   ],
   "requestHeaders": [
     {
