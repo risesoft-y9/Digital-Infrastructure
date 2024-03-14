@@ -1,0 +1,30 @@
+version: '3.9'
+services:
+  thanos-store-gateway:
+    image: quay.io/thanos/thanos:main-2024-03-11-7acce0c
+    container_name: thanos-store-gateway
+    restart: always
+    volumes:
+      - thanos:/etc/thanos
+    command:
+      - 'store'
+      - '--grpc-address=0.0.0.0:10091'
+      - '--http-address=0.0.0.0:10902'
+      - '--data-dir=/tmp/thanos/store'
+      - '--objstore.config-file=/etc/thanos/bucket_config.yaml'
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+    networks:
+      - y9-share-net
+
+volumes:
+  thanos:
+    driver: local
+    driver_opts:
+      type: "nfs"
+      o: 'addr=192.168.3.39,rw'
+      device: ":/software/docker_storage/thanos"
+
+networks:
+  y9-share-net:
+    external: true

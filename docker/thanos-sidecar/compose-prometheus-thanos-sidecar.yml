@@ -1,0 +1,131 @@
+version: '3.9'
+services:
+  prometheus-1:
+    image: prom/prometheus:main
+    container_name: prometheus-1
+    restart: always
+    command:
+      - '--config.file=/etc/prometheus/prometheus-1.yml'
+      - '--storage.tsdb.path=/prometheus'
+      - '--web.enable-lifecycle'
+      - '--storage.tsdb.max-block-duration=2h'
+      - '--storage.tsdb.min-block-duration=2h'
+      - '--storage.tsdb.retention.time=6h'
+      - '--web.console.libraries=/usr/share/prometheus/console_libraries'
+      - '--web.console.templates=/usr/share/prometheus/consoles'
+    volumes:
+      - prometheus:/etc/prometheus
+      - /prometheus-data:/prometheus
+    ports:
+      - 9081:9090
+    deploy:
+      placement:
+        constraints:
+          - "node.hostname == dev5"
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+    labels:
+      org.springframework.boot.readiness-check.tcp.disable: "true"
+    networks:
+      - y9-share-net
+
+  prometheus-2:
+    image: prom/prometheus:main
+    container_name: prometheus-2
+    restart: always
+    command:
+      - '--config.file=/etc/prometheus/prometheus-2.yml'
+      - '--storage.tsdb.path=/prometheus'
+      - '--web.enable-lifecycle'
+      - '--storage.tsdb.max-block-duration=2h'
+      - '--storage.tsdb.min-block-duration=2h'
+      - '--storage.tsdb.retention.time=6h'
+      - '--web.console.libraries=/usr/share/prometheus/console_libraries'
+      - '--web.console.templates=/usr/share/prometheus/consoles'
+    volumes:
+      - prometheus:/etc/prometheus
+      - /prometheus-data:/prometheus
+    ports:
+      - 9082:9090
+    deploy:
+      placement:
+        constraints:
+          - "node.hostname == dev6"
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+    labels:
+      org.springframework.boot.readiness-check.tcp.disable: "true"
+    networks:
+      - y9-share-net
+
+  thanos-sidecar-1:
+    user: root
+    image: quay.io/thanos/thanos:main-2024-03-11-7acce0c
+    container_name: thanos-sidecar-1
+    restart: always
+    volumes:
+      - thanos:/etc/thanos
+      - /prometheus-data:/prometheus
+    command:
+      - 'sidecar'
+      - '--tsdb.path=/prometheus'
+      - '--prometheus.url=http://stack-prometheus-ha_prometheus-1:9090'
+      - '--grpc-address=0.0.0.0:10091'
+      - '--http-address=0.0.0.0:10902'
+      - '--objstore.config-file=/etc/thanos/bucket_config.yaml'
+    deploy:
+      placement:
+        constraints:
+          - "node.hostname == dev5"
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+    labels:
+      org.springframework.boot.readiness-check.tcp.disable: "true"
+    networks:
+      - y9-share-net
+
+  thanos-sidecar-2:
+    user: root
+    image: quay.io/thanos/thanos:main-2024-03-11-7acce0c
+    container_name: thanos-sidecar-2
+    restart: always
+    volumes:
+      - thanos:/etc/thanos
+      - /prometheus-data:/prometheus
+    command:
+      - 'sidecar'
+      - '--tsdb.path=/prometheus'
+      - '--prometheus.url=http://stack-prometheus-ha_prometheus-2:9090'
+      - '--grpc-address=0.0.0.0:10091'
+      - '--http-address=0.0.0.0:10902'
+      - '--objstore.config-file=/etc/thanos/bucket_config.yaml'
+    deploy:
+      placement:
+        constraints:
+          - "node.hostname == dev6"
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+    labels:
+      org.springframework.boot.readiness-check.tcp.disable: "true"
+    networks:
+      - y9-share-net
+
+volumes:
+  prometheus:
+    driver: local
+    driver_opts:
+      type: "nfs"
+      o: "addr=192.168.3.39,rw"
+      device: ":/software/docker_storage/prometheus_ha"
+  thanos:
+    driver: local
+    driver_opts:
+      type: "nfs"
+      o: "addr=192.168.3.39,rw"
+      device: ":/software/docker_storage/thanos"
+
+networks:
+  y9-share-net:
+    external: true
+    name: y9-share-net
+    driver: overlay

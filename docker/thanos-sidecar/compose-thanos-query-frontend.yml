@@ -1,0 +1,19 @@
+version: '3.9'
+services:
+  thanos-query-frontend:
+    image: quay.io/thanos/thanos:main-2024-03-11-7acce0c
+    container_name: thanos-query-frontend
+    restart: always
+    command:
+      - 'query-frontend'
+      - '--http-address=0.0.0.0:10901'
+      - '--query-frontend.downstream-url=http://stack-thanos-querier_thanos-querier:10902'
+    ports:
+      - 10901:10901
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+    networks:
+      - y9-share-net
+networks:
+  y9-share-net:
+    external: true

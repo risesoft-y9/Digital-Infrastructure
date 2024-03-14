@@ -1,0 +1,22 @@
+version: '3.9'
+services:
+  thanos-querier:
+    image: quay.io/thanos/thanos:main-2024-03-11-7acce0c
+    restart: always
+    command:
+      - 'query'
+      - '--grpc-address=0.0.0.0:10091'
+      - '--http-address=0.0.0.0:10902'
+      - '--query.replica-label=replica'
+      - '--store=stack-prometheus-ha_thanos-sidecar-1:10091'
+      - '--store=stack-prometheus-ha_thanos-sidecar-2:10091'
+    ports:
+      - 10902:10902
+    networks:
+      - y9-share-net
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+
+networks:
+  y9-share-net:
+    external: true

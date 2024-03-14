@@ -1,0 +1,31 @@
+version: '3.9'
+services:
+  thanos-compactor:
+    image: quay.io/thanos/thanos:main-2024-03-11-7acce0c
+    user: root
+    container_name: thanos_compactor
+    restart: always
+    volumes:
+      - thanos:/etc/thanos
+    command:
+      - 'compact'
+      - '--log.level=debug'
+      - '--data-dir=/data'
+      - '--objstore.config-file=/etc/thanos/bucket_config.yaml'
+      - '--wait'
+    extra_hosts:
+      - 'host.docker.internal:host-gateway'
+    networks:
+      - y9-share-net
+
+volumes:
+  thanos:
+    driver: local
+    driver_opts:
+      type: "nfs"
+      o: "addr=192.168.3.39,rw"
+      device: ":/software/docker_storage/thanos"
+
+networks:
+  y9-share-net:
+    external: true

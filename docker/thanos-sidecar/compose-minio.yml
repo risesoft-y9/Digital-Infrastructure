@@ -1,0 +1,35 @@
+version: '3.9'
+services:
+  minio:
+    image: minio/minio:RELEASE.2024-03-10T02-53-48Z.fips
+    container_name: minio
+    command: server /data --console-address ":9001"
+    environment:
+      MINIO_ROOT_USER: "minioAdmin"
+      MINIO_ROOT_PASSWORD: "Risesoft@2024"
+    volumes:
+      - minio-data:/data
+    ports:
+      - "19000:9000"
+      - "19001:9001"
+    deploy:
+      mode: replicated
+      replicas: 1
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+    labels:
+      org.springframework.boot.readiness-check.tcp.disable: "true"
+    networks:
+      - y9-share-net
+volumes:
+  minio-data:
+    driver: local
+    driver_opts:
+      type: "nfs"
+      o: "addr=192.168.3.39,rw"
+      device: ":/software/docker_storage/minio_data"
+networks:
+  y9-share-net:
+    external: true
+    name: y9-share-net
+    driver: overlay
