@@ -174,7 +174,7 @@ public class PositionApiImpl implements PositionApi {
     public List<Position> listByParentId(@RequestParam String tenantId, @RequestParam String parentId) {
         Y9LoginUserHolder.setTenantId(tenantId);
 
-        List<Y9Position> y9PositionList = y9PositionService.listByParentId(parentId);
+        List<Y9Position> y9PositionList = y9PositionService.listByParentId(parentId, false);
         return Y9ModelConvertUtil.convert(y9PositionList, Position.class);
     }
 
@@ -190,7 +190,7 @@ public class PositionApiImpl implements PositionApi {
     public List<Position> listByPersonId(@RequestParam String tenantId, @RequestParam String personId) {
         Y9LoginUserHolder.setTenantId(tenantId);
 
-        List<Y9Position> y9PositionList = y9PositionService.listByPersonId(personId);
+        List<Y9Position> y9PositionList = y9PositionService.listByPersonId(personId, Boolean.FALSE);
         return Y9ModelConvertUtil.convert(y9PositionList, Position.class);
     }
 
@@ -206,7 +206,7 @@ public class PositionApiImpl implements PositionApi {
     public List<Person> listPersons(@RequestParam String tenantId, @RequestParam String positionId) {
         Y9LoginUserHolder.setTenantId(tenantId);
 
-        List<Y9Person> y9PersonList = orgPersonService.listByPositionId(positionId);
+        List<Y9Person> y9PersonList = orgPersonService.listByPositionId(positionId, Boolean.FALSE);
         return Y9ModelConvertUtil.convert(y9PersonList, Person.class);
     }
 

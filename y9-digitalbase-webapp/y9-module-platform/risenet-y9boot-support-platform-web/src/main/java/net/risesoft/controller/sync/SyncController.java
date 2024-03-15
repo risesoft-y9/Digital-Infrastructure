@@ -123,7 +123,7 @@ public class SyncController {
     @RiseLog(operationName = "同步人员信息", operationType = OperationTypeEnum.MODIFY)
     public Y9Result<String> syncPersonByTenantId(@PathVariable String tenantId) {
         Y9LoginUserHolder.setTenantId(tenantId);
-        List<Y9Person> persons = y9PersonService.list();
+        List<Y9Person> persons = y9PersonService.list(null);
         for (Y9Person person : persons) {
             if (person != null && person.getId() != null) {
                 y9PersonService.saveOrUpdate(person, null);

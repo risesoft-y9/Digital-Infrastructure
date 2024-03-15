@@ -25,23 +25,19 @@ import net.risesoft.entity.Y9Person;
 // @JaversSpringDataAuditable
 public interface Y9PersonRepository extends JpaRepository<Y9Person, String>, JpaSpecificationExecutor<Y9Person> {
 
-    long countByDisabledAndGuidPathContaining(boolean disabled, String guidPath);
+    long countByDisabledAndGuidPathContaining(Boolean disabled, String guidPath);
 
     long countByParentId(String parentId);
 
-    boolean existsByLoginName(String loginName);
+    List<Y9Person> findByDisabled(Boolean disabled);
 
-    Page<Y9Person> findByDisabledAndNameContaining(boolean disabled, String userName, Pageable pageable);
+    List<Y9Person> findByDisabledAndGuidPathContaining(Boolean disabled, String guidPath);
 
-    Page<Y9Person> findByDisabledAndParentId(boolean disabled, String parentId, Pageable pageable);
+    Page<Y9Person> findByDisabledAndNameContaining(Boolean disabled, String userName, Pageable pageable);
 
-    List<Y9Person> findByDisabledAndParentIdOrderByTabIndex(boolean disabled, String parentId);
+    Page<Y9Person> findByDisabledAndParentId(Boolean disabled, String parentId, Pageable pageable);
 
     Optional<Y9Person> findByDisabledFalseAndMobileAndOriginal(String mobile, Boolean original);
-
-    List<Y9Person> findByDisabledAndGuidPathContaining(boolean disabled, String guidPath);
-
-    List<Y9Person> findByEmailAndOriginal(String email, Boolean original);
 
     Optional<Y9Person> findByLoginNameAndOriginalTrue(String loginName);
 
@@ -51,29 +47,35 @@ public interface Y9PersonRepository extends JpaRepository<Y9Person, String>, Jpa
 
     List<Y9Person> findByMobileAndOriginal(String mobile, Boolean original);
 
-    List<Y9Person> findByNameContainingAndDnContaining(String name, String dnName);
-
     List<Y9Person> findByNameContaining(String name);
 
-    List<Y9Person> findByNameContainingAndDisabled(String name, boolean disable);
+    List<Y9Person> findByNameContainingAndDisabled(String name, Boolean disable);
+
+    List<Y9Person> findByNameContainingAndDnContaining(String name, String dnName);
+
+    List<Y9Person> findByNameContainingAndDnContainingAndDisabled(String name, String dnName, Boolean disabled);
 
     List<Y9Person> findByOriginalId(String originalId);
 
-    List<Y9Person> findByOriginalIdAndDisabled(String originalId, boolean disable);
+    List<Y9Person> findByOriginalIdAndDisabled(String originalId, Boolean disable);
 
     Optional<Y9Person> findByOriginalIdAndParentId(String originalId, String parentId);
 
-    Page<Y9Person> findByParentIdAndDisabledAndNameContaining(String parentId, boolean disabled, String userName,
+    Page<Y9Person> findByParentIdAndDisabledAndNameContaining(String parentId, Boolean disabled, String userName,
         Pageable pageable);
 
-    List<Y9Person> findByParentIdAndDisabledAndNameContainingOrderByTabIndex(String parentId, boolean disabled,
+    List<Y9Person> findByParentIdAndDisabledAndNameContainingOrderByTabIndex(String parentId, Boolean disabled,
         String name);
+
+    List<Y9Person> findByParentIdAndDisabledOrderByTabIndex(String parentId, Boolean disabled);
+
+    List<Y9Person> findByParentIdAndNameContainingOrderByTabIndex(String parentId, String name);
 
     List<Y9Person> findByParentIdOrderByTabIndex(String parentId);
 
-    Optional<Y9Person> findTopByParentIdOrderByTabIndexDesc(String parentId);
-
     @Query("select id from Y9Person where guidPath like ?1% and disabled = false")
     List<String> findIdByGuidPathStartingWith(String guidPath);
+
+    Optional<Y9Person> findTopByParentIdOrderByTabIndexDesc(String parentId);
 
 }

@@ -88,7 +88,7 @@ public class IdentityResourceCalculatorImpl implements IdentityResourceCalculato
             if (OrgTypeEnum.POSITION.equals(y9OrgBase.getOrgType())) {
                 this.recalculateByPosition((Y9Position)y9OrgBase);
                 // 人员权限包含包含岗位的权限，所以岗位关联的人员也需要计算
-                List<Y9Person> y9PersonList = y9PersonManager.listByPositionId(y9OrgBase.getId());
+                List<Y9Person> y9PersonList = y9PersonManager.listByPositionId(y9OrgBase.getId(), Boolean.FALSE);
                 for (Y9Person y9Person : y9PersonList) {
                     this.recalculateByPerson(y9Person);
                 }

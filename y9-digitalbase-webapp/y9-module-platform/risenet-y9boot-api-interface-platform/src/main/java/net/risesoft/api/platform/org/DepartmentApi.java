@@ -15,10 +15,7 @@ import net.risesoft.api.platform.org.dto.CreateDepartmentDTO;
 import net.risesoft.enums.platform.DepartmentPropCategoryEnum;
 import net.risesoft.model.platform.Department;
 import net.risesoft.model.platform.DepartmentProp;
-import net.risesoft.model.platform.Group;
 import net.risesoft.model.platform.OrgUnit;
-import net.risesoft.model.platform.Person;
-import net.risesoft.model.platform.Position;
 import net.risesoft.pojo.Y9Result;
 
 /**
@@ -41,21 +38,21 @@ public interface DepartmentApi {
      * @return {@code Y9Result<Department>} 通用请求返回对象 - data 是保存的部门
      * @since 9.6.0
      */
-    @PostMapping("/createDepartment")
-    Y9Result<Department> createDepartment(@RequestParam("tenantId") @NotBlank String tenantId,
+    @PostMapping("/create")
+    Y9Result<Department> create(@RequestParam("tenantId") @NotBlank String tenantId,
         @Validated @RequestBody CreateDepartmentDTO department);
 
     /**
      * 删除部门
      *
      * @param tenantId 租户id
-     * @param deptId 部门id
+     * @param departmentId 部门id
      * @return {@code Y9Result<Object>} 通用请求返回对象 - success 属性判断操作是否成功
      * @since 9.6.0
      */
-    @PostMapping("/deleteDepartment")
-    Y9Result<Object> deleteDepartment(@RequestParam("tenantId") @NotBlank String tenantId,
-        @RequestParam("deptId") @NotBlank String deptId);
+    @PostMapping("/delete")
+    Y9Result<Object> delete(@RequestParam("tenantId") @NotBlank String tenantId,
+        @RequestParam("departmentId") @NotBlank String departmentId);
 
     /**
      * 禁用部门
@@ -65,20 +62,8 @@ public interface DepartmentApi {
      * @return {@code Y9Result<Object>} 通用请求返回对象 - success 属性判断操作是否成功
      * @since 9.6.0
      */
-    @PostMapping("/disableDepartment")
-    Y9Result<Object> disableDepartment(@RequestParam("tenantId") @NotBlank String tenantId,
-        @RequestParam("departmentId") @NotBlank String departmentId);
-
-    /**
-     * 根据租户id和部门id，获取委办局
-     *
-     * @param tenantId 租户id
-     * @param departmentId 部门id
-     * @return {@code Y9Result<OrgUnit>} 通用请求返回对象 - data 是组织节点对象（部门或组织机构）
-     * @since 9.6.0
-     */
-    @GetMapping("/getBureau")
-    Y9Result<OrgUnit> getBureau(@RequestParam("tenantId") @NotBlank String tenantId,
+    @PostMapping("/disable")
+    Y9Result<Object> disable(@RequestParam("tenantId") @NotBlank String tenantId,
         @RequestParam("departmentId") @NotBlank String departmentId);
 
     /**
@@ -89,73 +74,45 @@ public interface DepartmentApi {
      * @return {@code Y9Result<Department>} 通用请求返回对象 - data 是部门对象
      * @since 9.6.0
      */
-    @GetMapping("/getDepartment")
-    Y9Result<Department> getDepartment(@RequestParam("tenantId") @NotBlank String tenantId,
+    @GetMapping("/get")
+    Y9Result<Department> get(@RequestParam("tenantId") @NotBlank String tenantId,
         @RequestParam("departmentId") @NotBlank String departmentId);
 
     /**
-     * 获取部门父节点
+     * 根据id列表获得部门对象列表
      *
      * @param tenantId 租户id
-     * @param departmentId 部门唯一标识
-     * @return {@code Y9Result<OrgUnit>} 通用请求返回对象 - data 是组织节点对象（部门或组织机构）
-     * @since 9.6.0
-     */
-    @GetMapping("/getParent")
-    Y9Result<OrgUnit> getParent(@RequestParam("tenantId") @NotBlank String tenantId,
-        @RequestParam("departmentId") @NotBlank String departmentId);
-
-    /**
-     * 获取部门下的所有人员(递归，包含部门下对应的人员)
-     *
-     * @param tenantId 租户id
-     * @param departmentId 部门id
-     * @return {@code Y9Result<List<Person>>} 通用请求返回对象 - data 是人员对象集合
-     * @since 9.6.0
-     */
-    @GetMapping("/listAllPersons")
-    Y9Result<List<Person>> listAllPersons(@RequestParam("tenantId") @NotBlank String tenantId,
-        @RequestParam("departmentId") @NotBlank String departmentId);
-
-    /**
-     * 获取部门下的所有没有禁用/禁用的人员(递归,对应的人员)
-     *
-     * @param tenantId 租户id
-     * @param departmentId 部门id
-     * @param disabled 是否禁用
-     * @return {@code Y9Result<List<Person>>} 通用请求返回对象 - data 是人员对象集合
-     * @since 9.6.0
-     */
-    @GetMapping("/listAllPersonsByDisabled")
-    Y9Result<List<Person>> listAllPersonsByDisabled(@RequestParam("tenantId") @NotBlank String tenantId,
-        @RequestParam("departmentId") @NotBlank String departmentId, @RequestParam("disabled") Boolean disabled);
-
-    /**
-     * 根据是否禁用，人员姓名获取部门下所有人员
-     *
-     * @param tenantId 租户id
-     * @param departmentId 部门id
-     * @param disabled 是否禁用
-     * @param name 人员姓名
-     * @return {@code Y9Result<List<Person>>} 通用请求返回对象 - data 是人员对象集合
-     * @since 9.6.0
-     */
-    @GetMapping("/listAllPersonsByDisabledAndName")
-    Y9Result<List<Person>> listAllPersonsByDisabledAndName(@RequestParam("tenantId") @NotBlank String tenantId,
-        @RequestParam("departmentId") @NotBlank String departmentId, @RequestParam("disabled") Boolean disabled,
-        @RequestParam("name") @NotBlank String name);
-
-    /**
-     * 根据租户id和路径获取所有部门对象
-     *
-     * @param tenantId 租户id
-     * @param dn 路径
+     * @param ids 部门唯一标识结合
      * @return {@code Y9Result<List<Department>>} 通用请求返回对象 - data 是部门对象集合
      * @since 9.6.0
      */
-    @GetMapping("/listByDn")
-    Y9Result<List<Department>> listByDn(@RequestParam("tenantId") @NotBlank String tenantId,
-        @RequestParam("dn") @NotBlank String dn);
+    @GetMapping("/listByIds")
+    Y9Result<List<Department>> listByIds(@RequestParam("tenantId") @NotBlank String tenantId,
+        @RequestParam("ids") @NotEmpty List<String> ids);
+
+    /**
+     * 根据部门名称模糊查询部门列表（不包含禁用）
+     *
+     * @param tenantId 租户id
+     * @param name 部门名称
+     * @return {@code Y9Result<List<Department>>} 通用请求返回对象 - data 是部门列表
+     * @since 9.6.0
+     */
+    @GetMapping("/listByName")
+    Y9Result<List<Department>> listByName(@RequestParam("tenantId") @NotBlank String tenantId,
+        @RequestParam("name") @NotBlank String name);
+
+    /**
+     * 获取下一级部门列表（不包含禁用）
+     *
+     * @param tenantId 租户id
+     * @param parentId 部门唯一标识
+     * @return {@code Y9Result<List<Department>>} 通用请求返回对象 - data 是部门对象集合
+     * @since 9.6.0
+     */
+    @GetMapping("/listByParentId")
+    Y9Result<List<Department>> listByParentId(@RequestParam("tenantId") @NotBlank String tenantId,
+        @RequestParam("parentId") @NotBlank String parentId);
 
     /**
      * 根据组织节点id查找管理的部门部门属性配置
@@ -166,49 +123,13 @@ public interface DepartmentApi {
      * @return {@code Y9Result<List<DepartmentProp>>} 通用请求返回对象 - data 是部门属性配置集合
      * @since 9.6.0
      */
-    @GetMapping("/listByOrgBaseIdAndCategory")
-    Y9Result<List<DepartmentProp>> listByOrgBaseIdAndCategory(@RequestParam("tenantId") @NotBlank String tenantId,
-        @RequestParam("orgUnitId") @NotBlank String orgUnitId,
+    @GetMapping("/listDepartmentPropByOrgUnitIdAndCategory")
+    Y9Result<List<DepartmentProp>> listDepartmentPropByOrgUnitIdAndCategory(
+        @RequestParam("tenantId") @NotBlank String tenantId, @RequestParam("orgUnitId") @NotBlank String orgUnitId,
         @RequestParam("category") DepartmentPropCategoryEnum category);
 
     /**
-     * 根据部门名称，模糊查询部门列表
-     *
-     * @param tenantId 租户id
-     * @param deptName 部门名称
-     * @return {@code Y9Result<List<Department>>} 通用请求返回对象 - data 是部门列表
-     * @since 9.6.0
-     */
-    @GetMapping("/listByTenantIdAndDeptName")
-    Y9Result<List<Department>> listByTenantIdAndDeptName(@RequestParam("tenantId") @NotBlank String tenantId,
-        @RequestParam("deptName") @NotBlank String deptName);
-
-    /**
-     * 获得一组部门对象
-     *
-     * @param tenantId 租户id
-     * @param ids 部门唯一标识结合
-     * @return {@code Y9Result<List<Department>>} 通用请求返回对象 - data 是部门对象集合
-     * @since 9.6.0
-     */
-    @GetMapping("/listDepartments")
-    Y9Result<List<Department>> listDepartments(@RequestParam("tenantId") @NotBlank String tenantId,
-        @RequestParam("ids") @NotEmpty List<String> ids);
-
-    /**
-     * 获取用户组(下一级)
-     *
-     * @param tenantId 租户id
-     * @param departmentId 部门唯一标识
-     * @return {@code Y9Result<List<Group>>} 通用请求返回对象 - data 是用户组对象集合
-     * @since 9.6.0
-     */
-    @GetMapping("/listGroups")
-    Y9Result<List<Group>> listGroups(@RequestParam("tenantId") @NotBlank String tenantId,
-        @RequestParam("departmentId") @NotBlank String departmentId);
-
-    /**
-     * 获取部门领导
+     * 获取部门领导（不包含禁用）
      *
      * @param tenantId 租户id
      * @param departmentId 部门唯一标识
@@ -220,7 +141,7 @@ public interface DepartmentApi {
         @RequestParam("departmentId") @NotBlank String departmentId);
 
     /**
-     * 获取部门主管领导
+     * 获取部门主管领导（不包含禁用）
      *
      * @param tenantId 租户id
      * @param departmentId 部门唯一标识
@@ -232,53 +153,16 @@ public interface DepartmentApi {
         @RequestParam("departmentId") @NotBlank String departmentId);
 
     /**
-     * 获取部门下的人员(下一级，包含部门下对应的人员)
+     * 递归获得所有层级子部门列表（不包含禁用）
      *
      * @param tenantId 租户id
-     * @param departmentId 部门唯一标识
-     * @return {@code Y9Result<List<Person>>} 通用请求返回对象 - data 是人员对象集合
-     * @since 9.6.0
-     */
-    @GetMapping("/listPersons")
-    Y9Result<List<Person>> listPersons(@RequestParam("tenantId") @NotBlank String tenantId,
-        @RequestParam("departmentId") @NotBlank String departmentId);
-
-    /**
-     * 获取部门下的没有禁用/禁用的人员(下一级，包含部门下对应的人员)
-     *
-     * @param tenantId 租户id
-     * @param departmentId 部门id
-     * @param disabled 是否禁用
-     * @return {@code Y9Result<List<Person>>} 通用请求返回对象 - data 是人员对象集合
-     * @since 9.6.0
-     */
-    @GetMapping("/listPersonsByDisabled")
-    Y9Result<List<Person>> listPersonsByDisabled(@RequestParam("tenantId") @NotBlank String tenantId,
-        @RequestParam("departmentId") @NotBlank String departmentId, @RequestParam("disabled") Boolean disabled);
-
-    /**
-     * 获取岗位(下一级)
-     *
-     * @param tenantId 租户id
-     * @param departmentId 部门唯一标识
-     * @return {@code Y9Result<List<Position>>} 通用请求返回对象 - data 是岗位对象集合
-     * @since 9.6.0
-     */
-    @GetMapping("/listPositions")
-    Y9Result<List<Position>> listPositions(@RequestParam("tenantId") @NotBlank String tenantId,
-        @RequestParam("departmentId") @NotBlank String departmentId);
-
-    /**
-     * 获取子部门(下一级)
-     *
-     * @param tenantId 租户id
-     * @param departmentId 部门唯一标识
+     * @param parentId 组织节点唯一标识(可能是机构ID,也可能是部门ID)
      * @return {@code Y9Result<List<Department>>} 通用请求返回对象 - data 是部门对象集合
      * @since 9.6.0
      */
-    @GetMapping("/listSubDepartments")
-    Y9Result<List<Department>> listSubDepartments(@RequestParam("tenantId") @NotBlank String tenantId,
-        @RequestParam("departmentId") @NotBlank String departmentId);
+    @GetMapping("/listRecursivelyByParentId")
+    Y9Result<List<Department>> listRecursivelyByParentId(@RequestParam("tenantId") @NotBlank String tenantId,
+        @RequestParam("parentId") @NotBlank String parentId);
 
     /**
      * 根据条件查询部门对象
@@ -291,5 +175,4 @@ public interface DepartmentApi {
     @GetMapping("/search")
     Y9Result<List<Department>> search(@RequestParam("tenantId") @NotBlank String tenantId,
         @RequestParam("whereClause") @NotBlank String whereClause);
-
 }

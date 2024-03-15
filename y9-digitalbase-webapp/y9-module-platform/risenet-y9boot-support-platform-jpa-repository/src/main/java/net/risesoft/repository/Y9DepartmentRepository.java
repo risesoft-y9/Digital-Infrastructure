@@ -23,19 +23,35 @@ import net.risesoft.entity.Y9Department;
 public interface Y9DepartmentRepository
     extends JpaRepository<Y9Department, String>, JpaSpecificationExecutor<Y9Department> {
 
-    List<Y9Department> findByBureauAndDnContainingOrderByTabIndexAsc(boolean bureau, String dn);
+    long countByDisabledAndGuidPathContaining(Boolean disabled, String guidPath);
 
-    List<Y9Department> findByNameContainingOrderByTabIndexAsc(String name);
+    List<Y9Department> findByBureauAndDnContainingOrderByTabIndexAsc(Boolean bureau, String dn);
+
+    List<Y9Department> findByBureauAndGuidPathContainingAndDisabledOrderByTabIndexAsc(Boolean bureau,
+        String organizationId, Boolean disabled);
+
+    List<Y9Department> findByBureauAndGuidPathContainingOrderByTabIndexAsc(Boolean isBureau, String guidPath);
+
+    List<Y9Department> findByDn(String dn);
+
+    List<Y9Department> findByDnAndDisabled(String dn, Boolean disabled);
+
+    List<Y9Department> findByNameContainingAndDisabledOrderByTabIndexAsc(String name, Boolean disabled);
+
+    List<Y9Department> findByNameContainingAndDnContainingAndDisabledOrderByTabIndexAsc(String name, String dnName,
+        Boolean disabled);
 
     List<Y9Department> findByNameContainingAndDnContainingOrderByTabIndexAsc(String name, String dnName);
 
+    List<Y9Department> findByNameContainingOrderByTabIndexAsc(String name);
+
     List<Y9Department> findByParentId(String parentId);
+
+    List<Y9Department> findByParentIdAndDisabled(String orgBaseId, Boolean disabled);
+
+    List<Y9Department> findByParentIdAndDisabledOrderByTabIndexAsc(String parentId, Boolean disabled);
 
     List<Y9Department> findByParentIdOrderByTabIndexAsc(String parentId);
 
     Optional<Y9Department> findTopByParentIdOrderByTabIndexDesc(String parentId);
-
-    List<Y9Department> getByDn(String dn);
-
-    List<Y9Department> findByBureauAndGuidPathContainingOrderByTabIndexAsc(boolean isBureau, String guidPath);
 }

@@ -43,6 +43,33 @@ public interface OrgSyncApi {
         @RequestParam("organizationId") @NotBlank String organizationId);
 
     /**
+     * 分页获取部门数据
+     * 
+     * @param appName 应用名称
+     * @param tenantId 租户id
+     * @param page 页数，初始值为1
+     * @param rows 每页返回数
+     * @return
+     */
+    @GetMapping("/fullSyncDept")
+    Y9Page<Department> fullSyncDept(@RequestParam String appName, @RequestParam String tenantId, @RequestParam int page,
+        @RequestParam int rows);
+
+    /**
+     * 分页获取人员数据
+     * 
+     * @param appName 应用名称
+     * @param tenantId 租户id
+     * @param type 0-查全量，1-查询没被禁用的
+     * @param page 页数，初始值为1
+     * @param rows 每页返回数
+     * @return
+     */
+    @GetMapping("/fullSyncUser")
+    Y9Page<Person> fullSyncUser(@RequestParam String appName, @RequestParam String tenantId, @RequestParam String type,
+        @RequestParam int page, @RequestParam int rows);
+
+    /**
      * 增量获取组织操作列表 系统记录了上一次同步的时间，从上一次同步时间往后获取数据
      *
      * @param appName 应用名称
@@ -63,32 +90,5 @@ public interface OrgSyncApi {
      */
     @GetMapping("/syncTime")
     Y9Result<String> syncTime(@RequestParam String appName, @RequestParam String tenantId);
-
-    /**
-     * 分页获取部门数据
-     * 
-     * @param appName 应用名称
-     * @param tenantId 租户id
-     * @param page 页数，初始值为1
-     * @param rows 每页返回数
-     * @return
-     */
-    @GetMapping("/fullSyncDept")
-    public Y9Page<Department> fullSyncDept(@RequestParam String appName, @RequestParam String tenantId,
-        @RequestParam int page, @RequestParam int rows);
-
-    /**
-     * 分页获取人员数据
-     * 
-     * @param appName 应用名称
-     * @param tenantId 租户id
-     * @param type 0-查全量，1-查询没被禁用的
-     * @param page 页数，初始值为1
-     * @param rows 每页返回数
-     * @return
-     */
-    @GetMapping("/fullSyncUser")
-    public Y9Page<Person> fullSyncUser(@RequestParam String appName, @RequestParam String tenantId,
-        @RequestParam String type, @RequestParam int page, @RequestParam int rows);
 
 }

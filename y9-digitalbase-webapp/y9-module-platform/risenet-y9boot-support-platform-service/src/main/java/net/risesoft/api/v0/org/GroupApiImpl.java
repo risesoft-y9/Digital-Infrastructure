@@ -153,7 +153,7 @@ public class GroupApiImpl implements GroupApi {
         @RequestParam("dn") @NotBlank String dn) {
         Y9LoginUserHolder.setTenantId(tenantId);
 
-        List<Y9Group> y9GroupList = y9GroupService.listByDn(dn);
+        List<Y9Group> y9GroupList = y9GroupService.listByDn(dn, false);
         return Y9ModelConvertUtil.convert(y9GroupList, Group.class);
     }
 
@@ -170,7 +170,7 @@ public class GroupApiImpl implements GroupApi {
         @RequestParam("groupId") @NotBlank String groupId) {
         Y9LoginUserHolder.setTenantId(tenantId);
 
-        List<Y9Person> y9PersonList = y9PersonService.listByGroupId(groupId);
+        List<Y9Person> y9PersonList = y9PersonService.listByGroupId(groupId, Boolean.FALSE);
         return Y9ModelConvertUtil.convert(y9PersonList, Person.class);
     }
 

@@ -43,9 +43,11 @@ import net.risesoft.exception.OrgUnitErrorCodeEnum;
 import net.risesoft.id.IdType;
 import net.risesoft.id.Y9IdGenerator;
 import net.risesoft.manager.org.CompositeOrgBaseManager;
+import net.risesoft.manager.org.Y9DepartmentPropManager;
 import net.risesoft.manager.org.Y9PersonExtManager;
 import net.risesoft.manager.org.Y9PersonManager;
 import net.risesoft.manager.org.Y9PositionManager;
+import net.risesoft.manager.relation.Y9PersonsToGroupsManager;
 import net.risesoft.manager.relation.Y9PersonsToPositionsManager;
 import net.risesoft.model.platform.AuthenticateResult;
 import net.risesoft.model.platform.Message;
@@ -113,11 +115,13 @@ public class Y9PersonServiceImpl implements Y9PersonService {
     private final Y9PersonToResourceAndAuthorityRepository y9PersonToResourceAndAuthorityRepository;
     private final Y9PersonToRoleRepository y9PersonToRoleRepository;
 
-    private final Y9PersonExtManager y9PersonExtManager;
     private final CompositeOrgBaseManager compositeOrgBaseManager;
+    private final Y9PersonExtManager y9PersonExtManager;
+    private final Y9PersonManager y9PersonManager;
     private final Y9PositionManager y9PositionManager;
     private final Y9PersonsToPositionsManager y9PersonsToPositionsManager;
-    private final Y9PersonManager y9PersonManager;
+    private final Y9PersonsToGroupsManager y9PersonsToGroupsManager;
+    private final Y9DepartmentPropManager y9DepartmentPropManager;
 
     private final Y9Properties y9config;
 
@@ -132,7 +136,8 @@ public class Y9PersonServiceImpl implements Y9PersonService {
         Y9DepartmentPropRepository y9DepartmentPropRepository,
         Y9PersonToResourceAndAuthorityRepository y9PersonToResourceAndAuthorityRepository,
         Y9PersonToRoleRepository y9PersonToRoleRepository, Y9PersonsToPositionsManager y9PersonsToPositionsManager,
-        Y9PositionManager y9PositionManager, Y9PersonManager y9PersonManager) {
+        Y9PositionManager y9PositionManager, Y9PersonManager y9PersonManager,
+        Y9PersonsToGroupsManager y9PersonsToGroupsManager, Y9DepartmentPropManager y9DepartmentPropManager) {
         this.y9PersonRepository = y9PersonRepository;
         this.entityManagerFactory = entityManagerFactory;
         this.y9PersonsToGroupsRepository = y9PersonsToGroupsRepository;
@@ -152,6 +157,8 @@ public class Y9PersonServiceImpl implements Y9PersonService {
         this.y9PersonsToPositionsManager = y9PersonsToPositionsManager;
         this.y9PositionManager = y9PositionManager;
         this.y9PersonManager = y9PersonManager;
+        this.y9PersonsToGroupsManager = y9PersonsToGroupsManager;
+        this.y9DepartmentPropManager = y9DepartmentPropManager;
     }
 
     @Override
@@ -565,8 +572,9 @@ public class Y9PersonServiceImpl implements Y9PersonService {
         final Y9Person savedPerson = y9PersonManager.save(updatedPerson);
 
         if (disabled) {
-            // 禁用人员的时候，将人员岗位移除
-            y9PersonsToPositionsManager.deleteByPersonId(id);
+            // y9PersonsToPositionsManager.deleteByPersonId(id);
+            // y9PersonsToGroupsManager.deleteByPersonId(id);
+            // y9DepartmentPropManager.deleteByOrgUnitId(id);
         }
 
         Y9Context.publishEvent(new Y9EntityUpdatedEvent<>(originPerson, savedPerson));
@@ -647,7 +655,7 @@ public class Y9PersonServiceImpl implements Y9PersonService {
     @Override
     @Transactional(readOnly = false)
     public void deleteByParentId(String parentId) {
-        List<Y9Person> personList = listByParentId(parentId);
+        List<Y9Person> personList = listByParentId(parentId, null);
         for (Y9Person person : personList) {
             delete(person.getId());
         }
@@ -721,14 +729,15 @@ public class Y9PersonServiceImpl implements Y9PersonService {
      * @return
      */
     private List<Y9Person> getPersonByParentId(String parentId) {
-        List<Y9Person> list = this.listByParentId(parentId);
+        List<Y9Person> list = this.listByParentId(parentId, Boolean.FALSE);
         // 查找部门下的所有岗位
         List<Y9Position> positions = y9PositionRepository.findByParentIdOrderByTabIndexAsc(parentId);
         for (Y9Position y9Position : positions) {
             List<Y9PersonsToPositions> orgPositionPersons =
                 y9PersonsToPositionsRepository.findByPositionId(y9Position.getId());
             for (Y9PersonsToPositions orgPositionsPerson : orgPositionPersons) {
-                List<Y9Person> positionPersons = this.listByPositionId(orgPositionsPerson.getPositionId());
+                List<Y9Person> positionPersons =
+                    this.listByPositionId(orgPositionsPerson.getPositionId(), Boolean.FALSE);
                 list.addAll(positionPersons);
             }
         }
@@ -737,7 +746,7 @@ public class Y9PersonServiceImpl implements Y9PersonService {
         for (Y9Group y9Group : groups) {
             List<Y9PersonsToGroups> y9PersonsToGroups = y9PersonsToGroupsRepository.findByGroupId(y9Group.getId());
             for (Y9PersonsToGroups p : y9PersonsToGroups) {
-                List<Y9Person> groupPersons = this.listByGroupId(p.getGroupId());
+                List<Y9Person> groupPersons = this.listByGroupId(p.getGroupId(), Boolean.FALSE);
                 list.addAll(groupPersons);
             }
         }
@@ -758,8 +767,12 @@ public class Y9PersonServiceImpl implements Y9PersonService {
     }
 
     @Override
-    public List<Y9Person> list() {
-        return y9PersonRepository.findAll();
+    public List<Y9Person> list(Boolean disabled) {
+        if (disabled == null) {
+            return y9PersonRepository.findAll();
+        } else {
+            return y9PersonRepository.findByDisabled(disabled);
+        }
     }
 
     @Override
@@ -780,46 +793,58 @@ public class Y9PersonServiceImpl implements Y9PersonService {
     }
 
     @Override
-    public List<Y9Person> listByGroupId(String groupId) {
-        return y9PersonManager.listByGroupId(groupId);
+    public List<Y9Person> listByGroupId(String groupId, Boolean disabled) {
+        return y9PersonManager.listByGroupId(groupId, disabled);
     }
 
     @Override
-    public List<Y9Person> listByIdTypeAndIdNum(String idType, String idNum) {
+    public List<Y9Person> listByIdTypeAndIdNum(String idType, String idNum, Boolean disabled) {
         List<Y9PersonExt> y9PersonExtList = y9PersonExtManager.listByIdTypeAndIdNum(idType, idNum);
         List<Y9Person> y9PersonList = new ArrayList<>();
         for (Y9PersonExt ext : y9PersonExtList) {
             Optional<Y9Person> y9PersonOptional = this.findById(ext.getPersonId());
             if (y9PersonOptional.isPresent()) {
-                y9PersonList.add(y9PersonOptional.get());
+                Y9Person y9Person = y9PersonOptional.get();
+                if (disabled == null) {
+                    y9PersonList.add(y9Person);
+                } else if (disabled.equals(y9Person.getDisabled())) {
+                    y9PersonList.add(y9Person);
+                }
             }
         }
         return y9PersonList;
     }
 
     @Override
-    public List<Y9Person> listByNameLike(String name) {
-        return y9PersonRepository.findByNameContaining(name);
+    public List<Y9Person> listByName(String name, Boolean disabled) {
+        if (disabled == null) {
+            return y9PersonRepository.findByNameContaining(name);
+        } else {
+            return y9PersonRepository.findByNameContainingAndDisabled(name, disabled);
+        }
     }
 
     @Override
-    public List<Y9Person> listByNameLike(String name, String dnName) {
-        return y9PersonRepository.findByNameContainingAndDnContaining(name, dnName);
+    public List<Y9Person> listByParentId(String parentId, Boolean disabled) {
+        if (disabled == null) {
+            return y9PersonRepository.findByParentIdOrderByTabIndex(parentId);
+        } else {
+            return y9PersonRepository.findByParentIdAndDisabledOrderByTabIndex(parentId, disabled);
+        }
     }
 
     @Override
-    public List<Y9Person> listByParentId(String parentId) {
-        return y9PersonRepository.findByParentIdOrderByTabIndex(parentId);
+    public List<Y9Person> listByParentIdAndDisabled(String parentId, Boolean disabled) {
+        if (disabled == null) {
+            return y9PersonRepository.findByParentIdOrderByTabIndex(parentId);
+        } else {
+            return y9PersonRepository.findByParentIdAndDisabledOrderByTabIndex(parentId, disabled);
+        }
     }
 
     @Override
-    public List<Y9Person> listByParentIdAndDisabled(String parentId, boolean disabled) {
-        return y9PersonRepository.findByDisabledAndParentIdOrderByTabIndex(disabled, parentId);
-    }
-
-    @Override
-    public List<Y9Person> listByPositionId(String positionId) {
-        return y9PersonManager.listByPositionId(positionId);
+    public List<Y9Person> listByPositionId(String positionId, Boolean disabled) {
+        return y9PersonManager.listByPositionId(positionId, disabled);
     }
 
     /**

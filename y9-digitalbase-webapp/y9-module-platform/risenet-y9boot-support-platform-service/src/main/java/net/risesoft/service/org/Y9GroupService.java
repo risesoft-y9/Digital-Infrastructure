@@ -16,6 +16,14 @@ import net.risesoft.y9.exception.Y9NotFoundException;
 public interface Y9GroupService {
 
     /**
+     * 更改禁用状态
+     *
+     * @param id ID
+     * @return 用户组
+     */
+    Y9Group changeDisabled(String id);
+
+    /**
      * 创建用户组
      *
      * @param y9Group 用户组对象
@@ -73,9 +81,10 @@ public interface Y9GroupService {
      * 根据dn查询
      *
      * @param dn dn
+     * @param disabled
      * @return {@link List}<{@link Y9Group}>
      */
-    List<Y9Group> listByDn(String dn);
+    List<Y9Group> listByDn(String dn, Boolean disabled);
 
     /**
      * 根据名称查询
@@ -98,17 +107,19 @@ public interface Y9GroupService {
      * 根据父节点id,获取本层级的用户组列表
      *
      * @param parentId 父节点id
+     * @param disabled
      * @return {@link List}<{@link Y9Group}>
      */
-    List<Y9Group> listByParentId(String parentId);
+    List<Y9Group> listByParentId(String parentId, Boolean disabled);
 
     /**
      * 根据人员 id获取用户组列表
      *
      * @param personId 人员id
+     * @param disabled
      * @return List<ORGGroup>
      */
-    List<Y9Group> listByPersonId(String personId);
+    List<Y9Group> listByPersonId(String personId, Boolean disabled);
 
     Y9Group move(String groupId, String parentId);
 

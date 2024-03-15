@@ -76,10 +76,12 @@ public class Y9CustomGroupMembersServiceImpl implements Y9CustomGroupMembersServ
                         .listAllPersonsRecursionDownward(y9CustomGroupMember.getMemberId(), false));
                     break;
                 case POSITION:
-                    orgPersonList.addAll(y9PersonManager.listByPositionId(y9CustomGroupMember.getMemberId()));
+                    orgPersonList
+                        .addAll(y9PersonManager.listByPositionId(y9CustomGroupMember.getMemberId(), Boolean.FALSE));
                     break;
                 case GROUP:
-                    orgPersonList.addAll(y9PersonManager.listByGroupId(y9CustomGroupMember.getMemberId()));
+                    orgPersonList
+                        .addAll(y9PersonManager.listByGroupId(y9CustomGroupMember.getMemberId(), Boolean.FALSE));
                     break;
                 case PERSON:
                     orgPersonList.add(y9PersonManager.getById(y9CustomGroupMember.getMemberId()));

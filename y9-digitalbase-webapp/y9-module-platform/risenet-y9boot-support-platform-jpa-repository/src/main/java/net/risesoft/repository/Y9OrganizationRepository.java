@@ -21,18 +21,22 @@ import net.risesoft.entity.Y9Organization;
 // @JaversSpringDataAuditable
 public interface Y9OrganizationRepository extends JpaRepository<Y9Organization, String> {
 
-    List<Y9Organization> findByOrderByTabIndexAsc();
+    List<Y9Organization> findByDisabledOrderByTabIndexAsc(Boolean disabled);
+
+    List<Y9Organization> findByDn(String dn);
+
+    List<Y9Organization> findByNameContainingAndDisabledOrderByTabIndexAsc(String name, Boolean disabled);
 
     List<Y9Organization> findByNameContainingOrderByTabIndexAsc(String name);
 
-    List<Y9Organization> findByNameContainingAndDnContainingOrderByTabIndexAsc(String name, String dnName);
+    List<Y9Organization> findByOrderByTabIndexAsc();
 
     List<Y9Organization> findByTenantIdOrderByTabIndexAsc(String tenantId);
+
+    List<Y9Organization> findByVirtualAndDisabledOrderByTabIndexAsc(Boolean virtual, Boolean disabled);
 
     List<Y9Organization> findByVirtualOrderByTabIndexAsc(Boolean virtual);
 
     Optional<Y9Organization> findTopByOrderByTabIndexDesc();
-
-    List<Y9Organization> findByDn(String dn);
 
 }

@@ -36,7 +36,7 @@ public interface Y9PersonsToGroupsService {
     void deleteByGroupId(String groupId);
 
     /**
-     * 根据人员ID,删除用户组和人员的映射关系 delete the group-person mapping relationship by personID
+     * 根据人员ID,删除用户组和人员的映射关系
      *
      * @param personId
      */

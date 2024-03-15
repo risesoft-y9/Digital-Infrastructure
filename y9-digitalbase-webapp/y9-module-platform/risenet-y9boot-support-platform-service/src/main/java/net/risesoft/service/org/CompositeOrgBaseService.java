@@ -147,21 +147,10 @@ public interface CompositeOrgBaseService {
      *
      * @param id 组织节点id
      * @param treeType 树类型
-     * @param disabled 是否已禁用
+     * @param disabled 节点是否禁用
      * @return {@link List}<{@link Y9OrgBase}>
      */
-    List<Y9OrgBase> getTree(String id, OrgTreeTypeEnum treeType, boolean disabled);
-
-    /**
-     * 获取组织机构树
-     *
-     * @param id 节点id
-     * @param treeType 节点类型
-     * @param isPersonIncluded 是否包含人员
-     * @param disabled 人员是否禁用
-     * @return {@link List}<{@link Y9OrgBase}>
-     */
-    List<Y9OrgBase> getTree(String id, OrgTreeTypeEnum treeType, boolean isPersonIncluded, boolean disabled);
+    List<Y9OrgBase> getTree(String id, OrgTreeTypeEnum treeType, Boolean disabled);
 
     /**
      * 子域三员获取部门树
@@ -209,11 +198,11 @@ public interface CompositeOrgBaseService {
      * 根据父节点id,人员姓名，是否禁用，递归获取其下所有人员
      *
      * @param parentId 父节点id
-     * @param disabled 是否禁用
      * @param name 组织节点名称
+     * @param disabled 是否禁用
      * @return {@link List}<{@link Y9Person}>
      */
-    List<Y9Person> searchAllPersonsRecursionDownward(String parentId, Boolean disabled, String name);
+    List<Y9Person> searchAllPersonsRecursionDownward(String parentId, String name, Boolean disabled);
 
     /**
      * 排序
@@ -247,19 +236,20 @@ public interface CompositeOrgBaseService {
      * @param name 组织节点名称
      * @param treeType 树类型
      * @param dnName dn
+     * @param disabled
      * @return {@link List}<{@link Y9OrgBase}>
      */
-    List<Y9OrgBase> treeSearch(String name, OrgTreeTypeEnum treeType, String dnName);
+    List<Y9OrgBase> treeSearch(String name, OrgTreeTypeEnum treeType, String dnName, Boolean disabled);
 
     /**
      * 根据name，和结构树类型查询机构主体(不含禁用人员)
      *
      * @param name 组织节点名称
      * @param treeType 树类型
-     * @param isDisabledIncluded 是否包含禁用的组织节点
+     * @param disabled 是否包含禁用的组织节点
      * @return {@link List}<{@link Y9OrgBase}>
      */
-    List<Y9OrgBase> treeSearch(String name, OrgTreeTypeEnum treeType, boolean isDisabledIncluded);
+    List<Y9OrgBase> treeSearch(String name, OrgTreeTypeEnum treeType, Boolean disabled);
 
     /**
      * 根据name，和结构树类型查询机构主体

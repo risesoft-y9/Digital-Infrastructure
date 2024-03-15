@@ -80,70 +80,6 @@ public class OrgSyncApiImpl implements OrgSyncApi {
     private final Y9PublishedEventSyncHistoryService y9PublishedEventSyncHistoryService;
     private final Y9OrgSyncRoleRepository y9OrgSyncRoleRepository;
 
-    private OrgUnit getOrgBase(String eventType, String objId) {
-        if (Y9OrgEventConst.RISEORGEVENT_TYPE_ADD_ORGANIZATION.equals(eventType)) {
-            Y9Organization org = y9OrganizationService.getById(objId);
-            return Y9ModelConvertUtil.convert(org, Organization.class);
-        }
-        if (Y9OrgEventConst.RISEORGEVENT_TYPE_ADD_DEPARTMENT.equals(eventType)) {
-            Y9Department dept = y9DepartmentService.getById(objId);
-            return Y9ModelConvertUtil.convert(dept, Department.class);
-        }
-        if (Y9OrgEventConst.RISEORGEVENT_TYPE_ADD_PERSON.equals(eventType)) {
-            Y9Person person = y9PersonService.getById(objId);
-            return Y9ModelConvertUtil.convert(person, Person.class);
-        }
-        if (Y9OrgEventConst.RISEORGEVENT_TYPE_UPDATE_ORGANIZATION.equals(eventType)) {
-            Y9Organization org = y9OrganizationService.getById(objId);
-            return Y9ModelConvertUtil.convert(org, Organization.class);
-        }
-        if (Y9OrgEventConst.RISEORGEVENT_TYPE_UPDATE_DEPARTMENT.equals(eventType)) {
-            Y9Department dept = y9DepartmentService.getById(objId);
-            return Y9ModelConvertUtil.convert(dept, Department.class);
-        }
-        if (Y9OrgEventConst.RISEORGEVENT_TYPE_UPDATE_PERSON.equals(eventType)) {
-            Y9Person person = y9PersonService.getById(objId);
-            return Y9ModelConvertUtil.convert(person, Person.class);
-        }
-        if (Y9OrgEventConst.RISEORGEVENT_TYPE_DELETE_ORGANIZATION.equals(eventType)) {
-            Y9Organization org = y9OrganizationService.getById(objId);
-            return Y9ModelConvertUtil.convert(org, Organization.class);
-        }
-        if (Y9OrgEventConst.RISEORGEVENT_TYPE_DELETE_DEPARTMENT.equals(eventType)) {
-            Y9Department dept = y9DepartmentService.getById(objId);
-            return Y9ModelConvertUtil.convert(dept, Department.class);
-        }
-        if (Y9OrgEventConst.RISEORGEVENT_TYPE_DELETE_PERSON.equals(eventType)) {
-            Y9Person person = y9PersonService.getById(objId);
-            return Y9ModelConvertUtil.convert(person, Person.class);
-        }
-        if (Y9OrgEventConst.RISEORGEVENT_TYPE_ADD_GROUP.equals(eventType)) {
-            Y9Group group = y9GroupService.getById(objId);
-            return Y9ModelConvertUtil.convert(group, Group.class);
-        }
-        if (Y9OrgEventConst.RISEORGEVENT_TYPE_ADD_POSITION.equals(eventType)) {
-            Y9Position position = y9PositionService.getById(objId);
-            return Y9ModelConvertUtil.convert(position, Position.class);
-        }
-        if (Y9OrgEventConst.RISEORGEVENT_TYPE_UPDATE_GROUP.equals(eventType)) {
-            Y9Group group = y9GroupService.getById(objId);
-            return Y9ModelConvertUtil.convert(group, Group.class);
-        }
-        if (Y9OrgEventConst.RISEORGEVENT_TYPE_UPDATE_POSITION.equals(eventType)) {
-            Y9Position position = y9PositionService.getById(objId);
-            return Y9ModelConvertUtil.convert(position, Position.class);
-        }
-        if (Y9OrgEventConst.RISEORGEVENT_TYPE_DELETE_GROUP.equals(eventType)) {
-            Y9Group group = y9GroupService.getById(objId);
-            return Y9ModelConvertUtil.convert(group, Group.class);
-        }
-        if (Y9OrgEventConst.RISEORGEVENT_TYPE_DELETE_POSITION.equals(eventType)) {
-            Y9Position position = y9PositionService.getById(objId);
-            return Y9ModelConvertUtil.convert(position, Position.class);
-        }
-        return null;
-    }
-
     /**
      * 根据机构id，全量获取整个组织机构所有组织节点数据
      *
@@ -169,6 +105,51 @@ public class OrgSyncApiImpl implements OrgSyncApi {
             new MessageOrg<>(syncOrgUnits, Y9OrgEventConst.RISEORGEVENT_TYPE_SYNC, Y9LoginUserHolder.getTenantId());
         y9PublishedEventSyncHistoryService.saveOrUpdate(tenantId, appName, syncTime, 1);
         return Y9Result.success(event, "获取成功！");
+    }
+
+    @Override
+    public Y9Page<Department> fullSyncDept(@RequestParam String appName, @RequestParam String tenantId,
+        @RequestParam int page, @RequestParam int rows) {
+        Y9LoginUserHolder.setTenantId(tenantId);
+        Y9OrgSyncRole role = y9OrgSyncRoleRepository.findById(appName).orElse(null);
+        if (role == null) {
+            return Y9Page.success(0, 0, 0, null, "应用名称不存在");
+        }
+        Date syncTime = new Date();
+        Page<Y9Department> deptPage = compositeOrgBaseService.deptPage(role.getOrgIds(), page, rows);
+        List<Department> list = Y9ModelConvertUtil.convert(deptPage.getContent(), Department.class);
+        y9PublishedEventSyncHistoryService.saveOrUpdate(tenantId, appName, syncTime, 1);
+        return Y9Page.success(deptPage.getNumber(), deptPage.getTotalPages(), deptPage.getTotalElements(), list,
+            "获取成功");
+    }
+
+    @Override
+    public Y9Page<Person> fullSyncUser(@RequestParam String appName, @RequestParam String tenantId,
+        @RequestParam String type, @RequestParam int page, @RequestParam int rows) {
+        Y9LoginUserHolder.setTenantId(tenantId);
+        Y9OrgSyncRole role = y9OrgSyncRoleRepository.findById(appName).orElse(null);
+        if (role == null) {
+            return Y9Page.success(0, 0, 0, null, "应用名称不存在");
+        }
+        Date syncTime = new Date();
+        Page<Y9Person> personPage = compositeOrgBaseService.personPage(role.getOrgIds(), type, page, rows);
+        List<Person> list = Y9ModelConvertUtil.convert(personPage.getContent(), Person.class);
+        for (Person person : list) {
+            person.setPassword("");
+            List<Map<String, Object>> listMap = new ArrayList<Map<String, Object>>();
+            List<Y9Position> plist = y9PositionService.listByPersonId(person.getId(), Boolean.FALSE);
+            for (Y9Position y9Position : plist) {
+                Map<String, Object> map = new HashMap<String, Object>();
+                map.put("dn", y9Position.getDn());
+                map.put("parentId", y9Position.getParentId());
+                map.put("jobName", y9Position.getJobName());
+                listMap.add(map);
+            }
+            person.setPositions(Y9JsonUtil.writeValueAsString(listMap));
+        }
+        y9PublishedEventSyncHistoryService.saveOrUpdate(tenantId, appName, syncTime, 1);
+        return Y9Page.success(personPage.getNumber(), personPage.getTotalPages(), personPage.getTotalElements(), list,
+            "获取成功");
     }
 
     /**
@@ -242,49 +223,68 @@ public class OrgSyncApiImpl implements OrgSyncApi {
         return Y9Result.success("操作成功！");
     }
 
-    @Override
-    public Y9Page<Department> fullSyncDept(@RequestParam String appName, @RequestParam String tenantId,
-        @RequestParam int page, @RequestParam int rows) {
-        Y9LoginUserHolder.setTenantId(tenantId);
-        Y9OrgSyncRole role = y9OrgSyncRoleRepository.findById(appName).orElse(null);
-        if (role == null) {
-            return Y9Page.success(0, 0, 0, null, "应用名称不存在");
+    private OrgUnit getOrgBase(String eventType, String objId) {
+        if (Y9OrgEventConst.RISEORGEVENT_TYPE_ADD_ORGANIZATION.equals(eventType)) {
+            Y9Organization org = y9OrganizationService.getById(objId);
+            return Y9ModelConvertUtil.convert(org, Organization.class);
         }
-        Date syncTime = new Date();
-        Page<Y9Department> deptPage = compositeOrgBaseService.deptPage(role.getOrgIds(), page, rows);
-        List<Department> list = Y9ModelConvertUtil.convert(deptPage.getContent(), Department.class);
-        y9PublishedEventSyncHistoryService.saveOrUpdate(tenantId, appName, syncTime, 1);
-        return Y9Page.success(deptPage.getNumber(), deptPage.getTotalPages(), deptPage.getTotalElements(), list,
-            "获取成功");
-    }
-
-    @Override
-    public Y9Page<Person> fullSyncUser(@RequestParam String appName, @RequestParam String tenantId,
-        @RequestParam String type, @RequestParam int page, @RequestParam int rows) {
-        Y9LoginUserHolder.setTenantId(tenantId);
-        Y9OrgSyncRole role = y9OrgSyncRoleRepository.findById(appName).orElse(null);
-        if (role == null) {
-            return Y9Page.success(0, 0, 0, null, "应用名称不存在");
+        if (Y9OrgEventConst.RISEORGEVENT_TYPE_ADD_DEPARTMENT.equals(eventType)) {
+            Y9Department dept = y9DepartmentService.getById(objId);
+            return Y9ModelConvertUtil.convert(dept, Department.class);
         }
-        Date syncTime = new Date();
-        Page<Y9Person> personPage = compositeOrgBaseService.personPage(role.getOrgIds(), type, page, rows);
-        List<Person> list = Y9ModelConvertUtil.convert(personPage.getContent(), Person.class);
-        for (Person person : list) {
-            person.setPassword("");
-            List<Map<String, Object>> listMap = new ArrayList<Map<String, Object>>();
-            List<Y9Position> plist = y9PositionService.listByPersonId(person.getId());
-            for (Y9Position y9Position : plist) {
-                Map<String, Object> map = new HashMap<String, Object>();
-                map.put("dn", y9Position.getDn());
-                map.put("parentId", y9Position.getParentId());
-                map.put("jobName", y9Position.getJobName());
-                listMap.add(map);
-            }
-            person.setPositions(Y9JsonUtil.writeValueAsString(listMap));
+        if (Y9OrgEventConst.RISEORGEVENT_TYPE_ADD_PERSON.equals(eventType)) {
+            Y9Person person = y9PersonService.getById(objId);
+            return Y9ModelConvertUtil.convert(person, Person.class);
         }
-        y9PublishedEventSyncHistoryService.saveOrUpdate(tenantId, appName, syncTime, 1);
-        return Y9Page.success(personPage.getNumber(), personPage.getTotalPages(), personPage.getTotalElements(), list,
-            "获取成功");
+        if (Y9OrgEventConst.RISEORGEVENT_TYPE_UPDATE_ORGANIZATION.equals(eventType)) {
+            Y9Organization org = y9OrganizationService.getById(objId);
+            return Y9ModelConvertUtil.convert(org, Organization.class);
+        }
+        if (Y9OrgEventConst.RISEORGEVENT_TYPE_UPDATE_DEPARTMENT.equals(eventType)) {
+            Y9Department dept = y9DepartmentService.getById(objId);
+            return Y9ModelConvertUtil.convert(dept, Department.class);
+        }
+        if (Y9OrgEventConst.RISEORGEVENT_TYPE_UPDATE_PERSON.equals(eventType)) {
+            Y9Person person = y9PersonService.getById(objId);
+            return Y9ModelConvertUtil.convert(person, Person.class);
+        }
+        if (Y9OrgEventConst.RISEORGEVENT_TYPE_DELETE_ORGANIZATION.equals(eventType)) {
+            Y9Organization org = y9OrganizationService.getById(objId);
+            return Y9ModelConvertUtil.convert(org, Organization.class);
+        }
+        if (Y9OrgEventConst.RISEORGEVENT_TYPE_DELETE_DEPARTMENT.equals(eventType)) {
+            Y9Department dept = y9DepartmentService.getById(objId);
+            return Y9ModelConvertUtil.convert(dept, Department.class);
+        }
+        if (Y9OrgEventConst.RISEORGEVENT_TYPE_DELETE_PERSON.equals(eventType)) {
+            Y9Person person = y9PersonService.getById(objId);
+            return Y9ModelConvertUtil.convert(person, Person.class);
+        }
+        if (Y9OrgEventConst.RISEORGEVENT_TYPE_ADD_GROUP.equals(eventType)) {
+            Y9Group group = y9GroupService.getById(objId);
+            return Y9ModelConvertUtil.convert(group, Group.class);
+        }
+        if (Y9OrgEventConst.RISEORGEVENT_TYPE_ADD_POSITION.equals(eventType)) {
+            Y9Position position = y9PositionService.getById(objId);
+            return Y9ModelConvertUtil.convert(position, Position.class);
+        }
+        if (Y9OrgEventConst.RISEORGEVENT_TYPE_UPDATE_GROUP.equals(eventType)) {
+            Y9Group group = y9GroupService.getById(objId);
+            return Y9ModelConvertUtil.convert(group, Group.class);
+        }
+        if (Y9OrgEventConst.RISEORGEVENT_TYPE_UPDATE_POSITION.equals(eventType)) {
+            Y9Position position = y9PositionService.getById(objId);
+            return Y9ModelConvertUtil.convert(position, Position.class);
+        }
+        if (Y9OrgEventConst.RISEORGEVENT_TYPE_DELETE_GROUP.equals(eventType)) {
+            Y9Group group = y9GroupService.getById(objId);
+            return Y9ModelConvertUtil.convert(group, Group.class);
+        }
+        if (Y9OrgEventConst.RISEORGEVENT_TYPE_DELETE_POSITION.equals(eventType)) {
+            Y9Position position = y9PositionService.getById(objId);
+            return Y9ModelConvertUtil.convert(position, Position.class);
+        }
+        return null;
     }
 
 }

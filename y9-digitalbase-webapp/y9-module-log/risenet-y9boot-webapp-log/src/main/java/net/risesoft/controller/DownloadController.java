@@ -128,7 +128,7 @@ public class DownloadController {
             }
         }
 
-        List<Person> persons = personManager.listAllPersons(tenantID).getData();
+        List<Person> persons = personManager.list(tenantID).getData();
         List<PersonInformation> personInformationList = new ArrayList<PersonInformation>();
         for (Person person : persons) {
             if (person.getDisabled()) {
@@ -174,7 +174,7 @@ public class DownloadController {
             }
         }
 
-        List<Person> persons = personManager.listAllPersons(tenantID).getData();
+        List<Person> persons = personManager.list(tenantID).getData();
         List<PersonInformation> personInformationList = new ArrayList<PersonInformation>();
         for (Person person : persons) {
             if (person.getDisabled()) {

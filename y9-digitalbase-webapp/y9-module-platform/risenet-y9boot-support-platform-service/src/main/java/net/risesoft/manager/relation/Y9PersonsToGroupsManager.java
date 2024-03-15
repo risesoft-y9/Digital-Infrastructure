@@ -11,7 +11,9 @@ import net.risesoft.entity.relation.Y9PersonsToGroups;
  */
 public interface Y9PersonsToGroupsManager {
 
+    void delete(Y9PersonsToGroups y9PersonsToGroups);
+
     void deleteByGroupId(String groupId);
 
-    void delete(Y9PersonsToGroups y9PersonsToGroups);
+    void deleteByPersonId(String personId);
 }

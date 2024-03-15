@@ -244,10 +244,10 @@ public interface Y9PersonService {
      *
      * @return {@link List}<{@link Y9Person}>
      */
-    List<Y9Person> list();
+    List<Y9Person> list(Boolean disabled);
 
     /**
-     * 查询所有未被删除的人员
+     * 查询所有人员
      *
      * @return {@link List}<{@link Y9Person}>
      */
@@ -273,43 +273,38 @@ public interface Y9PersonService {
      * 根据用户组节点id,获取本组的人员列表
      *
      * @param groupId 用户组id
+     * @param disabled
      * @return {@link List}<{@link Y9Person}>
      */
-    List<Y9Person> listByGroupId(String groupId);
+    List<Y9Person> listByGroupId(String groupId, Boolean disabled);
 
     /**
      * 根据idType和idNum查询
      *
      * @param idType 证件类型
      * @param idNum 证件号
+     * @param disabled
      * @return {@link List}<{@link Y9Person}>
      */
-    List<Y9Person> listByIdTypeAndIdNum(String idType, String idNum);
+    List<Y9Person> listByIdTypeAndIdNum(String idType, String idNum, Boolean disabled);
 
     /**
      * 根据名称查询
      *
      * @param name 姓名
+     * @param disabled
      * @return List<ORGPerson>
      */
-    List<Y9Person> listByNameLike(String name);
-
-    /**
-     * 根据名称查询
-     *
-     * @param name 姓名
-     * @param dnName dn
-     * @return List<ORGPerson>
-     */
-    List<Y9Person> listByNameLike(String name, String dnName);
+    List<Y9Person> listByName(String name, Boolean disabled);
 
     /**
      * 根据父节点id,获取本层级的岗位列表
      *
      * @param parentId 父节点id
+     * @param disabled
      * @return {@link List}<{@link Y9Person}>
      */
-    List<Y9Person> listByParentId(String parentId);
+    List<Y9Person> listByParentId(String parentId, Boolean disabled);
 
     /**
      * 根据父id及禁用状态查询人员
@@ -318,15 +313,16 @@ public interface Y9PersonService {
      * @param disabled 是否已禁用
      * @return {@link List}<{@link Y9Person}>
      */
-    List<Y9Person> listByParentIdAndDisabled(String parentId, boolean disabled);
+    List<Y9Person> listByParentIdAndDisabled(String parentId, Boolean disabled);
 
     /**
      * 根据岗位id,获取人员列表
      *
      * @param positionId 岗位id
+     * @param disabled
      * @return {@link List}<{@link Y9Person}>
      */
-    List<Y9Person> listByPositionId(String positionId);
+    List<Y9Person> listByPositionId(String positionId, Boolean disabled);
 
     /**
      * 获取人员的所有父节点 <br/>

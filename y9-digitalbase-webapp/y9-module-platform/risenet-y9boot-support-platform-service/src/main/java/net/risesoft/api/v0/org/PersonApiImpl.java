@@ -282,7 +282,7 @@ public class PersonApiImpl implements PersonApi {
     public List<Person> listAllPersons(@RequestParam("tenantId") @NotBlank String tenantId) {
         Y9LoginUserHolder.setTenantId(tenantId);
 
-        List<Y9Person> y9PersonList = y9PersonService.list();
+        List<Y9Person> y9PersonList = y9PersonService.list(false);
         Collections.sort(y9PersonList);
         return Y9ModelConvertUtil.convert(y9PersonList, Person.class);
     }
@@ -301,7 +301,7 @@ public class PersonApiImpl implements PersonApi {
         @RequestParam("idType") @NotBlank String idType, @RequestParam("idNum") @NotBlank String idNum) {
         Y9LoginUserHolder.setTenantId(tenantId);
 
-        List<Y9Person> y9PersonList = y9PersonService.listByIdTypeAndIdNum(idType, idNum);
+        List<Y9Person> y9PersonList = y9PersonService.listByIdTypeAndIdNum(idType, idNum, false);
         return Y9ModelConvertUtil.convert(y9PersonList, Person.class);
     }
 
@@ -318,7 +318,7 @@ public class PersonApiImpl implements PersonApi {
         @RequestParam(name = "name", required = false) String name) {
         Y9LoginUserHolder.setTenantId(tenantId);
 
-        List<Y9Person> y9PersonList = y9PersonService.listByNameLike(name);
+        List<Y9Person> y9PersonList = y9PersonService.listByName(name, false);
         return Y9ModelConvertUtil.convert(y9PersonList, Person.class);
     }
 
@@ -335,7 +335,7 @@ public class PersonApiImpl implements PersonApi {
         @RequestParam("personId") @NotBlank String personId) {
         Y9LoginUserHolder.setTenantId(tenantId);
 
-        List<Y9Group> y9GroupList = y9GroupService.listByPersonId(personId);
+        List<Y9Group> y9GroupList = y9GroupService.listByPersonId(personId, Boolean.FALSE);
         return Y9ModelConvertUtil.convert(y9GroupList, Group.class);
     }
 
@@ -368,7 +368,7 @@ public class PersonApiImpl implements PersonApi {
         @RequestParam(name = "name", required = false) String name) {
         Y9LoginUserHolder.setTenantId(tenantId);
 
-        List<Y9Person> y9PersonList = y9PersonService.listByNameLike(name);
+        List<Y9Person> y9PersonList = y9PersonService.listByName(name, false);
         List<Map<String, Object>> infoList = new ArrayList<>();
         if (!y9PersonList.isEmpty()) {
             for (Y9Person person : y9PersonList) {
@@ -379,7 +379,7 @@ public class PersonApiImpl implements PersonApi {
                 returnMap.put("avator", person.getAvator());
                 returnMap.put("disabled", person.getDisabled());
                 if (!Boolean.TRUE.equals(person.getDisabled())) {
-                    List<Y9Position> positions = y9PositionService.listByPersonId(person.getId());
+                    List<Y9Position> positions = y9PositionService.listByPersonId(person.getId(), Boolean.FALSE);
                     if (!positions.isEmpty()) {
 
                         StringBuilder ids = new StringBuilder();
@@ -415,7 +415,7 @@ public class PersonApiImpl implements PersonApi {
         @RequestParam("personId") @NotBlank String personId) {
         Y9LoginUserHolder.setTenantId(tenantId);
 
-        List<Y9Position> y9PositionList = y9PositionService.listByPersonId(personId);
+        List<Y9Position> y9PositionList = y9PositionService.listByPersonId(personId, Boolean.FALSE);
         return Y9ModelConvertUtil.convert(y9PositionList, Position.class);
     }
 

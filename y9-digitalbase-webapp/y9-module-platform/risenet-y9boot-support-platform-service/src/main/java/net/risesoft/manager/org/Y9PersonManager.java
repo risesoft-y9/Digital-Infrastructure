@@ -19,9 +19,9 @@ public interface Y9PersonManager {
 
     Optional<Y9Person> findById(String id);
 
-    List<Y9Person> listByPositionId(String positionId);
+    List<Y9Person> listByPositionId(String positionId, Boolean disabled);
 
-    List<Y9Person> listByGroupId(String groupId);
+    List<Y9Person> listByGroupId(String groupId, Boolean disabled);
 
     void delete(Y9Person y9Person);
 

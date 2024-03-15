@@ -54,23 +54,33 @@ public class Y9PersonManagerImpl implements Y9PersonManager {
     }
 
     @Override
-    public List<Y9Person> listByPositionId(String positionId) {
+    public List<Y9Person> listByPositionId(String positionId, Boolean disabled) {
         List<Y9PersonsToPositions> pps = y9PersonsToPositionsRepository.findByPositionIdOrderByPersonOrder(positionId);
         List<String> personIdList = pps.stream().map(Y9PersonsToPositions::getPersonId).collect(Collectors.toList());
         List<Y9Person> personList = new ArrayList<>();
         for (String personId : personIdList) {
-            personList.add(getById(personId));
+            Y9Person y9Person = getById(personId);
+            if (disabled == null) {
+                personList.add(y9Person);
+            } else if (disabled.equals(y9Person.getDisabled())) {
+                personList.add(y9Person);
+            }
         }
         return personList;
     }
 
     @Override
-    public List<Y9Person> listByGroupId(String groupId) {
+    public List<Y9Person> listByGroupId(String groupId, Boolean disabled) {
         List<Y9PersonsToGroups> pgs = y9PersonsToGroupsRepository.findByGroupIdOrderByPersonOrder(groupId);
         List<String> personIdList = pgs.stream().map(Y9PersonsToGroups::getPersonId).collect(Collectors.toList());
         List<Y9Person> personList = new ArrayList<>();
         for (String personId : personIdList) {
-            personList.add(getById(personId));
+            Y9Person y9Person = getById(personId);
+            if (disabled == null) {
+                personList.add(y9Person);
+            } else if (disabled.equals(y9Person.getDisabled())) {
+                personList.add(y9Person);
+            }
         }
         return personList;
     }

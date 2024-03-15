@@ -42,15 +42,6 @@ public class Y9PersonsToGroupsManagerImpl implements Y9PersonsToGroupsManager {
 
     @Override
     @Transactional(readOnly = false)
-    public void deleteByGroupId(String groupId) {
-        List<Y9PersonsToGroups> y9PersonsToGroupsList = y9PersonsToGroupsRepository.findByGroupId(groupId);
-        for (Y9PersonsToGroups y9PersonsToGroups : y9PersonsToGroupsList) {
-            this.delete(y9PersonsToGroups);
-        }
-    }
-
-    @Override
-    @Transactional(readOnly = false)
     public void delete(Y9PersonsToGroups y9PersonsToGroups) {
         y9PersonsToGroupsRepository.delete(y9PersonsToGroups);
 
@@ -63,5 +54,20 @@ public class Y9PersonsToGroupsManagerImpl implements Y9PersonsToGroupsManager {
             group.getName() + "移除用户组成员" + person.getName());
 
         Y9Context.publishEvent(new Y9EntityDeletedEvent<>(y9PersonsToGroups));
+    }
+
+    @Override
+    @Transactional(readOnly = false)
+    public void deleteByGroupId(String groupId) {
+        List<Y9PersonsToGroups> y9PersonsToGroupsList = y9PersonsToGroupsRepository.findByGroupId(groupId);
+        for (Y9PersonsToGroups y9PersonsToGroups : y9PersonsToGroupsList) {
+            this.delete(y9PersonsToGroups);
+        }
+    }
+
+    @Override
+    @Transactional(readOnly = false)
+    public void deleteByPersonId(String personId) {
+        y9PersonsToGroupsRepository.deleteByPersonId(personId);
     }
 }

@@ -18,17 +18,17 @@ public interface Y9DepartmentService {
     /**
      * 禁用/启用部门(级联子部门)
      *
-     * @param deptId 部门id
+     * @param id 部门id
      * @return {@link Y9Department}
      */
-    Y9Department changeDisable(String deptId);
+    Y9Department changeDisable(String id);
 
     /**
      * 根据主键id删除部门实例
      *
-     * @param deptId 部门id
+     * @param id 部门id
      */
-    void delete(String deptId);
+    void delete(String id);
 
     /**
      * 根据id判断部门是否存在
@@ -67,9 +67,10 @@ public interface Y9DepartmentService {
      * 获得部门树
      *
      * @param orgBaseId ：机构节点唯一标识(可能是机构id,也可能是部门id)
+     * @param disabled
      * @return {@link List}<{@link Y9Department}>
      */
-    List<Y9Department> getDeptTrees(String orgBaseId);
+    List<Y9Department> listRecursivelyByParentId(String orgBaseId, Boolean disabled);
 
     /**
      * 查询部门
@@ -84,49 +85,55 @@ public interface Y9DepartmentService {
      * 获取组织机构下所有的委办局
      *
      * @param organizationId 组织机构id
+     * @param disabled
      * @return {@link List}<{@link Y9Department}>
      */
-    List<Y9Department> listBureau(String organizationId);
+    List<Y9Department> listBureau(String organizationId, Boolean disabled);
 
     /**
      * 根据dn查询部门列表
      *
      * @param dn dn
+     * @param disabled
      * @return {@link List}<{@link Y9Department}>
      */
-    List<Y9Department> listByDn(String dn);
+    List<Y9Department> listByDn(String dn, Boolean disabled);
 
     /**
      * 根据名称查询
      *
      * @param name 部门名
+     * @param disabled
      * @return {@link List}<{@link Y9Department}>
      */
-    List<Y9Department> listByNameLike(String name);
+    List<Y9Department> listByName(String name, Boolean disabled);
 
     /**
      * 根据父节点id,获取本层级的部门列表
      *
      * @param parentId 父节点id
+     * @param disabled
      * @return {@link List}<{@link Y9Department}>
      */
-    List<Y9Department> listByParentId(String parentId);
+    List<Y9Department> listByParentId(String parentId, Boolean disabled);
 
     /**
      * 根据部门id获取部门领导
      *
      * @param deptId 部门id
+     * @param disabled
      * @return {@link List}<{@link Y9OrgBase}>
      */
-    List<Y9OrgBase> listLeaders(String deptId);
+    List<Y9OrgBase> listLeaders(String deptId, Boolean disabled);
 
     /**
      * 根据部门Id获取部门的主管领导
      *
      * @param deptId 部门id
+     * @param disabled
      * @return {@link List}<{@link Y9OrgBase}>
      */
-    List<Y9OrgBase> listManagers(String deptId);
+    List<Y9OrgBase> listManagers(String deptId, Boolean disabled);
 
     /**
      * 根据部门id获取部门副领导

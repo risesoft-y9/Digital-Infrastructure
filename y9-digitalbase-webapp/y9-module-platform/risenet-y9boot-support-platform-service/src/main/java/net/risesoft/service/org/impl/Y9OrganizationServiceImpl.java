@@ -24,6 +24,7 @@ import net.risesoft.enums.platform.AuthorizationPrincipalTypeEnum;
 import net.risesoft.enums.platform.OrgTypeEnum;
 import net.risesoft.id.IdType;
 import net.risesoft.id.Y9IdGenerator;
+import net.risesoft.manager.org.CompositeOrgBaseManager;
 import net.risesoft.manager.org.Y9OrganizationManager;
 import net.risesoft.model.platform.Organization;
 import net.risesoft.repository.Y9OrganizationRepository;
@@ -57,16 +58,43 @@ public class Y9OrganizationServiceImpl implements Y9OrganizationService {
     private final EntityManagerFactory entityManagerFactory;
 
     private final Y9OrganizationManager y9OrganizationManager;
+    private final CompositeOrgBaseManager compositeOrgBaseManager;
 
     public Y9OrganizationServiceImpl(Y9OrganizationRepository y9OrganizationRepository,
         @Qualifier("rsTenantEntityManagerFactory") EntityManagerFactory entityManagerFactory,
         Y9OrgBasesToRolesRepository y9OrgBasesToRolesRepository, Y9AuthorizationRepository y9AuthorizationRepository,
-        Y9OrganizationManager y9OrganizationManager) {
+        Y9OrganizationManager y9OrganizationManager, CompositeOrgBaseManager compositeOrgBaseManager) {
         this.y9OrganizationRepository = y9OrganizationRepository;
         this.entityManagerFactory = entityManagerFactory;
         this.y9OrgBasesToRolesRepository = y9OrgBasesToRolesRepository;
         this.y9AuthorizationRepository = y9AuthorizationRepository;
         this.y9OrganizationManager = y9OrganizationManager;
+        this.compositeOrgBaseManager = compositeOrgBaseManager;
+    }
+
+    @Override
+    public Y9Organization changeDisabled(String id) {
+
+        // 检查所有子节点是否都禁用了，只有所有子节点都禁用了，当前部门才能禁用
+        compositeOrgBaseManager.checkAllDecendantsDisabled(id);
+
+        Y9Organization y9Group = this.getById(id);
+        Boolean isDisabled = !y9Group.getDisabled();
+        y9Group.setDisabled(isDisabled);
+        final Y9Organization savedOrganization = y9OrganizationManager.save(y9Group);
+
+        TransactionSynchronizationManager.registerSynchronization(new TransactionSynchronization() {
+            @Override
+            public void afterCommit() {
+                String event = isDisabled ? "禁用" : "启用";
+                Y9MessageOrg<Organization> msg =
+                    new Y9MessageOrg<>(Y9ModelConvertUtil.convert(savedOrganization, Organization.class),
+                        Y9OrgEventConst.RISEORGEVENT_TYPE_UPDATE_ORGANIZATION, Y9LoginUserHolder.getTenantId());
+                Y9PublishServiceUtil.persistAndPublishMessageOrg(msg, event + "组织机构",
+                    event + savedOrganization.getName());
+            }
+        });
+        return savedOrganization;
     }
 
     @Override
@@ -130,11 +158,23 @@ public class Y9OrganizationServiceImpl implements Y9OrganizationService {
     }
 
     @Override
-    public List<Y9Organization> list(Boolean virtual) {
+    public List<Y9Organization> list(Boolean virtual, Boolean disabled) {
         if (null == virtual) {
-            return list();
+            return list(disabled);
         }
-        return y9OrganizationRepository.findByVirtualOrderByTabIndexAsc(virtual);
+        if (null == disabled) {
+            return y9OrganizationRepository.findByVirtualOrderByTabIndexAsc(virtual);
+        } else {
+            return y9OrganizationRepository.findByVirtualAndDisabledOrderByTabIndexAsc(virtual, disabled);
+        }
+    }
+
+    private List<Y9Organization> list(Boolean disabled) {
+        if (disabled == null) {
+            return y9OrganizationRepository.findByOrderByTabIndexAsc();
+        } else {
+            return y9OrganizationRepository.findByDisabledOrderByTabIndexAsc(disabled);
+        }
     }
 
     @Override

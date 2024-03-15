@@ -26,6 +26,14 @@ public interface Y9PositionService {
     String buildName(Y9Job y9Job, List<Y9PersonsToPositions> personsToPositionsList);
 
     /**
+     * 更改禁用状态
+     *
+     * @param id ID
+     * @return 岗位实体
+     */
+    Y9Position changeDisabled(String id);
+
+    /**
      * 创建岗位
      *
      * @param y9Position 岗位对象
@@ -149,17 +157,19 @@ public interface Y9PositionService {
      * 根据父节点id,获取本层级的岗位列表
      *
      * @param parentId 父节点id
+     * @param disabled
      * @return {@link List}<{@link Y9Position}>
      */
-    List<Y9Position> listByParentId(String parentId);
+    List<Y9Position> listByParentId(String parentId, Boolean disabled);
 
     /**
      * 根据人员id,获取本层级的岗位列
      *
      * @param personId 人员id
+     * @param disabled
      * @return {@link List}<{@link Y9Position}>
      */
-    List<Y9Position> listByPersonId(String personId);
+    List<Y9Position> listByPersonId(String personId, Boolean disabled);
 
     /**
      * 保存岗位
