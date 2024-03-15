@@ -80,19 +80,6 @@ public class JobController {
     }
 
     /**
-     * 保存职位排序结果
-     *
-     * @param jobIds 职位id列表
-     * @return
-     */
-    @RiseLog(operationName = "保存职位排序", operationType = OperationTypeEnum.MODIFY)
-    @PostMapping(value = "/saveOrder")
-    public Y9Result<List<Y9Job>> saveOrder(@RequestParam(value = "jobIds") List<String> jobIds) {
-        List<Y9Job> jobList = y9JobService.order(jobIds);
-        return Y9Result.success(jobList, "保存职位排序成功");
-    }
-
-    /**
      * 保存或修改职位
      *
      * @param job 职位对象
@@ -103,6 +90,19 @@ public class JobController {
     public Y9Result<Y9Job> saveOrUpdate(@Validated Y9Job job) {
         Y9Job y9Job = y9JobService.saveOrUpdate(job);
         return Y9Result.success(y9Job, "操作成功");
+    }
+
+    /**
+     * 保存职位排序结果
+     *
+     * @param jobIds 职位id列表
+     * @return
+     */
+    @RiseLog(operationName = "保存职位排序", operationType = OperationTypeEnum.MODIFY)
+    @PostMapping(value = "/saveOrder")
+    public Y9Result<List<Y9Job>> saveOrder(@RequestParam(value = "jobIds") List<String> jobIds) {
+        List<Y9Job> jobList = y9JobService.order(jobIds);
+        return Y9Result.success(jobList, "保存职位排序成功");
     }
 
     /**

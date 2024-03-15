@@ -72,23 +72,6 @@ public class PersonApiImpl implements PersonApi {
     private final Y9PersonToRoleService y9PersonToRoleService;
 
     /**
-     * 改变人员的禁用状态
-     *
-     * @param tenantId 租户id
-     * @param personId 人员id
-     * @return {@code Y9Result<Object>} 通用请求返回对象 - success 属性判断操作是否成功
-     * @since 9.6.0
-     */
-    @Override
-    public Y9Result<Object> changeDisabled(@RequestParam("tenantId") @NotBlank String tenantId,
-        @RequestParam("personId") @NotBlank String personId) {
-        Y9LoginUserHolder.setTenantId(tenantId);
-
-        y9PersonService.changeDisabled(personId);
-        return Y9Result.success();
-    }
-
-    /**
      * 检查登录名是否存在
      *
      * @param tenantId 租户id
@@ -114,7 +97,7 @@ public class PersonApiImpl implements PersonApi {
      * @since 9.6.0
      */
     @Override
-    public Y9Result<Object> deleteById(@RequestParam("tenantId") @NotBlank String tenantId,
+    public Y9Result<Object> delete(@RequestParam("tenantId") @NotBlank String tenantId,
         @RequestParam("personId") @NotBlank String personId) {
         Y9LoginUserHolder.setTenantId(tenantId);
 
@@ -123,24 +106,58 @@ public class PersonApiImpl implements PersonApi {
     }
 
     /**
-     * 根据租户id和人员id获取委办局
+     * 改变人员的禁用状态
      *
      * @param tenantId 租户id
      * @param personId 人员id
-     * @return {@code Y9Result<OrgUnit>} 通用请求返回对象 - data 是组织节点对象（部门或组织机构）
+     * @return {@code Y9Result<Object>} 通用请求返回对象 - success 属性判断操作是否成功
      * @since 9.6.0
      */
     @Override
-    public Y9Result<OrgUnit> getBureau(@RequestParam("tenantId") @NotBlank String tenantId,
+    public Y9Result<Object> disable(@RequestParam("tenantId") @NotBlank String tenantId,
         @RequestParam("personId") @NotBlank String personId) {
         Y9LoginUserHolder.setTenantId(tenantId);
 
-        Y9OrgBase bureau = compositeOrgBaseService.findOrgUnitBureau(personId).orElse(null);
-        return Y9Result.success(ModelConvertUtil.orgBaseToOrgUnit(bureau));
+        y9PersonService.changeDisabled(personId);
+        return Y9Result.success();
     }
 
     /**
-     * 根据登陆名和父节点id，获取人员信息
+     * 根据id获得人员对象
+     *
+     * @param tenantId 租户id
+     * @param personId 人员唯一标识
+     * @return {@code Y9Result<Person>} 通用请求返回对象 - data 是人员对象
+     * @since 9.6.0
+     */
+    @Override
+    public Y9Result<Person> get(@RequestParam("tenantId") @NotBlank String tenantId,
+        @RequestParam("personId") @NotBlank String personId) {
+        Y9LoginUserHolder.setTenantId(tenantId);
+
+        Y9Person y9Person = y9PersonService.findById(personId).orElse(null);
+        return Y9Result.success(Y9ModelConvertUtil.convert(y9Person, Person.class));
+    }
+
+    /**
+     * 根据登录名称获得人员对象
+     *
+     * @param tenantId 租户id
+     * @param loginName 人员登录名
+     * @return {@code Y9Result<Person>} 通用请求返回对象 - data 是人员对象
+     * @since 9.6.0
+     */
+    @Override
+    public Y9Result<Person> getByLoginName(@RequestParam("tenantId") @NotBlank String tenantId,
+        @RequestParam("loginName") @NotBlank String loginName) {
+        Y9LoginUserHolder.setTenantId(tenantId);
+
+        Y9Person y9Person = y9PersonService.findByLoginName(loginName).orElse(null);
+        return Y9Result.success(Y9ModelConvertUtil.convert(y9Person, Person.class));
+    }
+
+    /**
+     * 根据登录名和父节点id，获取人员信息
      *
      * @param tenantId 租户id
      * @param loginName 登录名称
@@ -158,58 +175,7 @@ public class PersonApiImpl implements PersonApi {
     }
 
     /**
-     * 获取人员父节点
-     *
-     * @param tenantId 租户id
-     * @param personId 人员唯一标识
-     * @return {@code Y9Result<OrgUnit>} 通用请求返回对象 - data 是组织节点对象（部门或组织机构）
-     * @since 9.6.0
-     */
-    @Override
-    public Y9Result<OrgUnit> getParent(@RequestParam("tenantId") @NotBlank String tenantId,
-        @RequestParam("personId") @NotBlank String personId) {
-        Y9LoginUserHolder.setTenantId(tenantId);
-
-        Y9OrgBase parent = compositeOrgBaseService.findOrgUnitParent(personId).orElse(null);
-        return Y9Result.success(ModelConvertUtil.orgBaseToOrgUnit(parent));
-    }
-
-    /**
-     * 根据id获得人员对象
-     *
-     * @param tenantId 租户id
-     * @param personId 人员唯一标识
-     * @return {@code Y9Result<Person>} 通用请求返回对象 - data 是人员对象
-     * @since 9.6.0
-     */
-    @Override
-    public Y9Result<Person> getPerson(@RequestParam("tenantId") @NotBlank String tenantId,
-        @RequestParam("personId") @NotBlank String personId) {
-        Y9LoginUserHolder.setTenantId(tenantId);
-
-        Y9Person y9Person = y9PersonService.findById(personId).orElse(null);
-        return Y9Result.success(Y9ModelConvertUtil.convert(y9Person, Person.class));
-    }
-
-    /**
-     * 根据登录名称和租户id，获得人员对象
-     *
-     * @param loginName 人员登录名
-     * @param tenantId 租户id
-     * @return {@code Y9Result<Person>} 通用请求返回对象 - data 是人员对象
-     * @since 9.6.0
-     */
-    @Override
-    public Y9Result<Person> getPersonByLoginNameAndTenantId(@RequestParam("loginName") @NotBlank String loginName,
-        @RequestParam("tenantId") @NotBlank String tenantId) {
-        Y9LoginUserHolder.setTenantId(tenantId);
-
-        Y9Person y9Person = y9PersonService.findByLoginName(loginName).orElse(null);
-        return Y9Result.success(Y9ModelConvertUtil.convert(y9Person, Person.class));
-    }
-
-    /**
-     * 根据人员id，获取人员扩展信息
+     * 根据人员id获取人员扩展信息
      *
      * @param tenantId 租户id
      * @param personId 人员id
@@ -242,23 +208,23 @@ public class PersonApiImpl implements PersonApi {
     }
 
     /**
-     * 获取全部人员
+     * 获取租户的人员列表（不包含禁用）
      *
      * @param tenantId 租户id
      * @return {@code Y9Result<List<Person>>} 通用请求返回对象 - data 是人员对象集合
      * @since 9.6.0
      */
     @Override
-    public Y9Result<List<Person>> listAllPersons(@RequestParam("tenantId") @NotBlank String tenantId) {
+    public Y9Result<List<Person>> list(@RequestParam("tenantId") @NotBlank String tenantId) {
         Y9LoginUserHolder.setTenantId(tenantId);
 
-        List<Y9Person> y9PersonList = y9PersonService.list();
+        List<Y9Person> y9PersonList = y9PersonService.list(false);
         Collections.sort(y9PersonList);
         return Y9Result.success(Y9ModelConvertUtil.convert(y9PersonList, Person.class));
     }
 
     /**
-     * 根据证件类型和证件号码，获取人员列表
+     * 根据证件类型和证件号码获取人员列表（不包含禁用）
      *
      * @param tenantId 租户id
      * @param idType 证件类型
@@ -271,12 +237,12 @@ public class PersonApiImpl implements PersonApi {
         @RequestParam("idType") @NotBlank String idType, @RequestParam("idNum") @NotBlank String idNum) {
         Y9LoginUserHolder.setTenantId(tenantId);
 
-        List<Y9Person> y9PersonList = y9PersonService.listByIdTypeAndIdNum(idType, idNum);
+        List<Y9Person> y9PersonList = y9PersonService.listByIdTypeAndIdNum(idType, idNum, false);
         return Y9Result.success(Y9ModelConvertUtil.convert(y9PersonList, Person.class));
     }
 
     /**
-     * 根据人员名称、租户id获取人员对象集合
+     * 根据人员名称获取人员对象列表（不包含禁用）
      *
      * @param tenantId 租户id
      * @param name 人员名称
@@ -284,16 +250,51 @@ public class PersonApiImpl implements PersonApi {
      * @since 9.6.2
      */
     @Override
-    public Y9Result<List<Person>> listByNameLike(@RequestParam("tenantId") @NotBlank String tenantId,
+    public Y9Result<List<Person>> listByName(@RequestParam("tenantId") @NotBlank String tenantId,
         @RequestParam(name = "name", required = false) String name) {
         Y9LoginUserHolder.setTenantId(tenantId);
 
-        List<Y9Person> y9PersonList = y9PersonService.listByNameLike(name);
+        List<Y9Person> y9PersonList = y9PersonService.listByName(name, false);
         return Y9Result.success(Y9ModelConvertUtil.convert(y9PersonList, Person.class));
     }
 
     /**
-     * 获取人员所在用户组列表
+     * 获取部门下的人员列表（不包含禁用）
+     *
+     * @param tenantId 租户id
+     * @param parentId 部门唯一标识
+     * @return {@code Y9Result<List<Person>>} 通用请求返回对象 - data 是人员对象集合
+     * @since 9.6.0
+     */
+    @Override
+    public Y9Result<List<Person>> listByParentId(@RequestParam("tenantId") @NotBlank String tenantId,
+        @RequestParam("parentId") @NotBlank String parentId) {
+        Y9LoginUserHolder.setTenantId(tenantId);
+
+        List<Y9Person> y9PersonList = y9PersonService.listByParentId(parentId, false);
+        return Y9Result.success(Y9ModelConvertUtil.convert(y9PersonList, Person.class));
+    }
+
+    /**
+     * 获取部门下的没有禁用/禁用的人员列表
+     *
+     * @param tenantId 租户id
+     * @param parentId 部门id
+     * @param disabled 是否禁用
+     * @return {@code Y9Result<List<Person>>} 通用请求返回对象 - data 是人员对象集合
+     * @since 9.6.0
+     */
+    @Override
+    public Y9Result<List<Person>> listByParentIdAndDisabled(@RequestParam("tenantId") @NotBlank String tenantId,
+        @RequestParam("parentId") @NotBlank String parentId, @RequestParam("disabled") Boolean disabled) {
+        Y9LoginUserHolder.setTenantId(tenantId);
+
+        List<Y9Person> y9PersonList = y9PersonService.listByParentIdAndDisabled(parentId, disabled);
+        return Y9Result.success(Y9ModelConvertUtil.convert(y9PersonList, Person.class));
+    }
+
+    /**
+     * 获取人员所在用户组列表（不包含禁用）
      *
      * @param tenantId 租户id
      * @param personId 人员唯一标识
@@ -301,16 +302,16 @@ public class PersonApiImpl implements PersonApi {
      * @since 9.6.0
      */
     @Override
-    public Y9Result<List<Group>> listGroups(@RequestParam("tenantId") @NotBlank String tenantId,
+    public Y9Result<List<Group>> listGroupsByPersonId(@RequestParam("tenantId") @NotBlank String tenantId,
         @RequestParam("personId") @NotBlank String personId) {
         Y9LoginUserHolder.setTenantId(tenantId);
 
-        List<Y9Group> y9GroupList = y9GroupService.listByPersonId(personId);
+        List<Y9Group> y9GroupList = y9GroupService.listByPersonId(personId, Boolean.FALSE);
         return Y9Result.success(Y9ModelConvertUtil.convert(y9GroupList, Group.class));
     }
 
     /**
-     * 根据人员id，获取父节点列表
+     * 根据人员id获取父节点列表（不包含禁用）
      *
      * @param tenantId 租户id
      * @param personId 人员id
@@ -318,7 +319,7 @@ public class PersonApiImpl implements PersonApi {
      * @since 9.6.0
      */
     @Override
-    public Y9Result<List<OrgUnit>> listParents(@RequestParam("tenantId") @NotBlank String tenantId,
+    public Y9Result<List<OrgUnit>> listParentsByPersonId(@RequestParam("tenantId") @NotBlank String tenantId,
         @RequestParam("personId") @NotBlank String personId) {
         Y9LoginUserHolder.setTenantId(tenantId);
 
@@ -327,26 +328,26 @@ public class PersonApiImpl implements PersonApi {
     }
 
     /**
-     * 根据人员名称、租户id获取人员基本信息，图像，岗位等
+     * 根据人员名称获取人员基本信息及其关联的岗位信息
      *
      * @param tenantId 租户id
      * @param name 人员名称
-     * @return List&lt;Map&lt;String, Object&gt;&gt;
+     * @return {@code Y9Result<List<PersonInfoDTO>>} 通用请求返回对象 - data 是人员基本信息及其关联的岗位信息
      * @since 9.6.2
      */
     @Override
-    public Y9Result<List<PersonInfoDTO>> listPersonInfoByNameLike(@RequestParam("tenantId") @NotBlank String tenantId,
+    public Y9Result<List<PersonInfoDTO>> listPersonInfoByName(@RequestParam("tenantId") @NotBlank String tenantId,
         @RequestParam(name = "name", required = false) String name) {
         Y9LoginUserHolder.setTenantId(tenantId);
 
-        List<Y9Person> y9PersonList = y9PersonService.listByNameLike(name);
+        List<Y9Person> y9PersonList = y9PersonService.listByName(name, false);
         List<PersonInfoDTO> personInfoDTOList = new ArrayList<>();
         if (!y9PersonList.isEmpty()) {
             for (Y9Person person : y9PersonList) {
                 PersonInfoDTO personInfoDTO = new PersonInfoDTO();
                 personInfoDTO.setPerson(Y9ModelConvertUtil.convert(person, Person.class, "password"));
                 if (!Boolean.TRUE.equals(person.getDisabled())) {
-                    List<Y9Position> positions = y9PositionService.listByPersonId(person.getId());
+                    List<Y9Position> positions = y9PositionService.listByPersonId(person.getId(), Boolean.FALSE);
                     personInfoDTO.setPositionList(Y9ModelConvertUtil.convert(positions, Position.class));
                 }
                 personInfoDTOList.add(personInfoDTO);
@@ -356,7 +357,7 @@ public class PersonApiImpl implements PersonApi {
     }
 
     /**
-     * 获取人员所在岗位列表
+     * 获取人员所在岗位列表（不包含禁用）
      *
      * @param tenantId 租户id
      * @param personId 人员唯一标识
@@ -364,16 +365,51 @@ public class PersonApiImpl implements PersonApi {
      * @since 9.6.0
      */
     @Override
-    public Y9Result<List<Position>> listPositions(@RequestParam("tenantId") @NotBlank String tenantId,
+    public Y9Result<List<Position>> listPositionsByPersonId(@RequestParam("tenantId") @NotBlank String tenantId,
         @RequestParam("personId") @NotBlank String personId) {
         Y9LoginUserHolder.setTenantId(tenantId);
 
-        List<Y9Position> y9PositionList = y9PositionService.listByPersonId(personId);
+        List<Y9Position> y9PositionList = y9PositionService.listByPersonId(personId, Boolean.FALSE);
         return Y9Result.success(Y9ModelConvertUtil.convert(y9PositionList, Position.class));
     }
 
     /**
-     * 获取角色
+     * 递归获取父节点及其所有层级子部门的所有人员列表（不包含禁用）
+     *
+     * @param tenantId 租户id
+     * @param parentId 部门id
+     * @return {@code Y9Result<List<Person>>} 通用请求返回对象 - data 是人员对象集合
+     * @since 9.6.0
+     */
+    @Override
+    public Y9Result<List<Person>> listRecursivelyByParentId(@RequestParam("tenantId") @NotBlank String tenantId,
+        @RequestParam("parentId") @NotBlank String parentId) {
+        Y9LoginUserHolder.setTenantId(tenantId);
+
+        List<Y9Person> y9PersonList = compositeOrgBaseService.listAllPersonsRecursionDownward(parentId, false);
+        return Y9Result.success(Y9ModelConvertUtil.convert(y9PersonList, Person.class));
+    }
+
+    /**
+     * 根据人员姓名递归获取父节点及其所有层级子部门的所有人员列表（不包含禁用）
+     *
+     * @param tenantId 租户id
+     * @param parentId 部门id
+     * @param name 人员姓名
+     * @return {@code Y9Result<List<Person>>} 通用请求返回对象 - data 是人员对象集合
+     * @since 9.6.0
+     */
+    @Override
+    public Y9Result<List<Person>> listRecursivelyByParentIdAndName(@RequestParam("tenantId") @NotBlank String tenantId,
+        @RequestParam("parentId") @NotBlank String parentId, @RequestParam("name") @NotBlank String name) {
+        Y9LoginUserHolder.setTenantId(tenantId);
+
+        List<Y9Person> y9PersonList = compositeOrgBaseService.searchAllPersonsRecursionDownward(parentId, name, false);
+        return Y9Result.success(Y9ModelConvertUtil.convert(y9PersonList, Person.class));
+    }
+
+    /**
+     * 获取人员拥有的角色列表
      *
      * @param tenantId 租户id
      * @param personId 人员唯一标识
@@ -415,7 +451,7 @@ public class PersonApiImpl implements PersonApi {
     }
 
     /**
-     * 模糊搜索人员分页列表（不含禁用和删除）
+     * 分页模糊搜索人员列表（不包含禁用）
      *
      * @param tenantId 租户id
      * @param name 人员名称
@@ -423,7 +459,7 @@ public class PersonApiImpl implements PersonApi {
      * @return {@code Y9Page<Person>} 通用请求返回对象 - data 是人员对象
      */
     @Override
-    public Y9Page<Person> pageByNameLike(@RequestParam("tenantId") @NotBlank String tenantId,
+    public Y9Page<Person> pageByName(@RequestParam("tenantId") @NotBlank String tenantId,
         @RequestParam(required = false) String name, @Validated Y9PageQuery pageQuery) {
         Y9LoginUserHolder.setTenantId(tenantId);
 
@@ -434,7 +470,7 @@ public class PersonApiImpl implements PersonApi {
     }
 
     /**
-     * 获取父节点下的全部人员
+     * 分页获取父节点下的人员
      *
      * @param tenantId 租户ID
      * @param parentId 部门ID
@@ -445,7 +481,7 @@ public class PersonApiImpl implements PersonApi {
      */
     @Override
     public Y9Page<Person> pageByParentId(@RequestParam("tenantId") @NotBlank String tenantId,
-        @RequestParam("parentId") @NotBlank String parentId, @RequestParam("disabled") boolean disabled,
+        @RequestParam("parentId") @NotBlank String parentId, @RequestParam("isDisabledInclude") boolean disabled,
         @Validated Y9PageQuery pageQuery) {
         Y9LoginUserHolder.setTenantId(tenantId);
 
@@ -456,7 +492,7 @@ public class PersonApiImpl implements PersonApi {
     }
 
     /**
-     * 获取父节点下的全部人员
+     * 分页模糊搜索父节点下的人员列表
      *
      * @param tenantId 租户ID
      * @param parentId 部门ID
@@ -468,7 +504,7 @@ public class PersonApiImpl implements PersonApi {
      */
     @Override
     public Y9Page<Person> pageByParentIdAndName(@RequestParam("tenantId") @NotBlank String tenantId,
-        @RequestParam("parentId") @NotBlank String parentId, @RequestParam("disabled") boolean disabled,
+        @RequestParam("parentId") @NotBlank String parentId, @RequestParam("isDisabledInclude") boolean disabled,
         @RequestParam("name") @NotBlank String name, Y9PageQuery pageQuery) {
         Y9LoginUserHolder.setTenantId(tenantId);
 
@@ -476,25 +512,6 @@ public class PersonApiImpl implements PersonApi {
         List<Person> personList = Y9ModelConvertUtil.convert(persons.getContent(), Person.class);
         return Y9Page.success(persons.getNumber(), persons.getTotalPages(), persons.getTotalElements(), personList,
             "操作成功");
-    }
-
-    /**
-     * 新增或修改人员
-     *
-     * @param tenantId 租户id
-     * @param personDTO 人员对象
-     * @return {@code Y9Result<Person>} 通用请求返回对象 - data 是保存的人员对象
-     * @since 9.6.0
-     */
-    @Override
-    public Y9Result<Person> savePerson(@RequestParam("tenantId") @NotBlank String tenantId,
-        @RequestBody @Validated CreatePersonDTO personDTO) {
-        Y9LoginUserHolder.setTenantId(tenantId);
-
-        Y9Person y9Person = Y9ModelConvertUtil.convert(personDTO, Y9Person.class);
-        Y9PersonExt y9PersonExt = Y9ModelConvertUtil.convert(personDTO, Y9PersonExt.class);
-        y9Person = y9PersonService.saveOrUpdate(y9Person, y9PersonExt);
-        return Y9Result.success(Y9ModelConvertUtil.convert(y9Person, Person.class));
     }
 
     /**
@@ -507,7 +524,7 @@ public class PersonApiImpl implements PersonApi {
      * @since 9.6.0
      */
     @Override
-    public Y9Result<Person> savePersonAvator(@RequestParam("tenantId") @NotBlank String tenantId,
+    public Y9Result<Person> savePersonAvatar(@RequestParam("tenantId") @NotBlank String tenantId,
         @RequestParam("personId") @NotBlank String personId, @RequestParam("avator") @NotBlank String avator) {
         Y9LoginUserHolder.setTenantId(tenantId);
         Y9Person y9Person = y9PersonService.saveAvator(personId, avator);
@@ -562,10 +579,29 @@ public class PersonApiImpl implements PersonApi {
      * @since 9.6.0
      */
     @Override
-    public Y9Result<Person> saveWeixinId(@RequestParam("tenantId") @NotBlank String tenantId,
+    public Y9Result<Person> savePersonWeixinId(@RequestParam("tenantId") @NotBlank String tenantId,
         @RequestParam("personId") @NotBlank String personId, @RequestParam("weixinId") @NotBlank String weixinId) {
         Y9LoginUserHolder.setTenantId(tenantId);
         Y9Person y9Person = y9PersonService.saveWeixinId(personId, weixinId);
+        return Y9Result.success(Y9ModelConvertUtil.convert(y9Person, Person.class));
+    }
+
+    /**
+     * 新增或修改人员
+     *
+     * @param tenantId 租户id
+     * @param personDTO 人员对象
+     * @return {@code Y9Result<Person>} 通用请求返回对象 - data 是保存的人员对象
+     * @since 9.6.0
+     */
+    @Override
+    public Y9Result<Person> savePersonWithExt(@RequestParam("tenantId") @NotBlank String tenantId,
+        @RequestBody @Validated CreatePersonDTO personDTO) {
+        Y9LoginUserHolder.setTenantId(tenantId);
+
+        Y9Person y9Person = Y9ModelConvertUtil.convert(personDTO, Y9Person.class);
+        Y9PersonExt y9PersonExt = Y9ModelConvertUtil.convert(personDTO, Y9PersonExt.class);
+        y9Person = y9PersonService.saveOrUpdate(y9Person, y9PersonExt);
         return Y9Result.success(Y9ModelConvertUtil.convert(y9Person, Person.class));
     }
 

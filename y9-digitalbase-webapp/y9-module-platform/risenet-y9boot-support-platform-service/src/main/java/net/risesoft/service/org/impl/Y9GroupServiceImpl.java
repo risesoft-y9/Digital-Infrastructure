@@ -65,6 +65,26 @@ public class Y9GroupServiceImpl implements Y9GroupService {
 
     @Override
     @Transactional(readOnly = false)
+    public Y9Group changeDisabled(String id) {
+        Y9Group y9Group = this.getById(id);
+        Boolean isDisabled = !y9Group.getDisabled();
+        y9Group.setDisabled(isDisabled);
+        final Y9Group savedGroup = y9GroupManager.save(y9Group);
+
+        TransactionSynchronizationManager.registerSynchronization(new TransactionSynchronization() {
+            @Override
+            public void afterCommit() {
+                String event = isDisabled ? "禁用" : "启用";
+                Y9MessageOrg<Group> msg = new Y9MessageOrg<>(Y9ModelConvertUtil.convert(savedGroup, Group.class),
+                    Y9OrgEventConst.RISEORGEVENT_TYPE_UPDATE_GROUP, Y9LoginUserHolder.getTenantId());
+                Y9PublishServiceUtil.persistAndPublishMessageOrg(msg, event + "用户组", event + savedGroup.getName());
+            }
+        });
+        return savedGroup;
+    }
+
+    @Override
+    @Transactional(readOnly = false)
     public Y9Group createGroup(Y9Group y9Group) {
         if (y9Group == null) {
             return null;
@@ -114,7 +134,7 @@ public class Y9GroupServiceImpl implements Y9GroupService {
     @Override
     @Transactional(readOnly = false)
     public void deleteByParentId(String parentId) {
-        List<Y9Group> groupList = listByParentId(parentId);
+        List<Y9Group> groupList = listByParentId(parentId, null);
         for (Y9Group group : groupList) {
             delete(group.getId());
         }
@@ -142,8 +162,12 @@ public class Y9GroupServiceImpl implements Y9GroupService {
     }
 
     @Override
-    public List<Y9Group> listByDn(String dn) {
-        return y9GroupRepository.getByDn(dn);
+    public List<Y9Group> listByDn(String dn, Boolean disabled) {
+        if (disabled == null) {
+            return y9GroupRepository.findByDn(dn);
+        } else {
+            return y9GroupRepository.findByDnAndDisabled(dn, disabled);
+        }
     }
 
     @Override
@@ -157,18 +181,29 @@ public class Y9GroupServiceImpl implements Y9GroupService {
     }
 
     @Override
-    public List<Y9Group> listByParentId(String parentId) {
-        return y9GroupRepository.findByParentIdOrderByTabIndexAsc(parentId);
+    public List<Y9Group> listByParentId(String parentId, Boolean disabled) {
+        if (disabled == null) {
+            return y9GroupRepository.findByParentIdOrderByTabIndexAsc(parentId);
+        } else {
+            return y9GroupRepository.findByParentIdAndDisabledOrderByTabIndexAsc(parentId, disabled);
+        }
     }
 
     @Override
-    public List<Y9Group> listByPersonId(String personId) {
+    public List<Y9Group> listByPersonId(String personId, Boolean disabled) {
         List<Y9PersonsToGroups> y9PersonsToGroupsList =
             y9PersonsToGroupsRepository.findByPersonIdOrderByGroupOrder(personId);
         List<Y9Group> groupList = new ArrayList<>();
         for (Y9PersonsToGroups y9PersonsToGroups : y9PersonsToGroupsList) {
             Optional<Y9Group> optionalY9Group = y9GroupManager.findById(y9PersonsToGroups.getGroupId());
-            optionalY9Group.ifPresent(groupList::add);
+            if (optionalY9Group.isPresent()) {
+                Y9Group y9Group = optionalY9Group.get();
+                if (disabled == null) {
+                    groupList.add(y9Group);
+                } else if (disabled.equals(y9Group.getDisabled())) {
+                    groupList.add(y9Group);
+                }
+            }
         }
         return groupList;
     }

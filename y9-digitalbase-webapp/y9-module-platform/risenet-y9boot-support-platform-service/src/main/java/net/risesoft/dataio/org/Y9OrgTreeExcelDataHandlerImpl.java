@@ -64,12 +64,12 @@ public class Y9OrgTreeExcelDataHandlerImpl implements Y9OrgTreeDataHandler {
     private final Y9JobService y9JobService;
 
     private void executeDepartment(String parentId, List<ObjectSheet> departmentList) {
-        List<Y9Department> departments = y9DepartmentService.listByParentId(parentId);
+        List<Y9Department> departments = y9DepartmentService.listByParentId(parentId, false);
         if (!departments.isEmpty()) {
             for (Y9Department department : departments) {
                 ObjectSheet departmentSheet = new ObjectSheet();
                 List<PersonSheet> personSheetList = new ArrayList<>();
-                List<Y9Person> personList = y9PersonService.listByParentId(department.getId());
+                List<Y9Person> personList = y9PersonService.listByParentId(department.getId(), false);
                 if (personList != null) {
                     for (Y9Person y9Person : personList) {
                         PersonSheet person = new PersonSheet();
@@ -107,7 +107,7 @@ public class Y9OrgTreeExcelDataHandlerImpl implements Y9OrgTreeDataHandler {
             for (Y9Group group : groupList) {
                 ObjectSheet groupSheet = new ObjectSheet();
                 List<PersonSheet> personSheetList = new ArrayList<>();
-                List<Y9Person> personList = y9PersonService.listByGroupId(group.getId());
+                List<Y9Person> personList = y9PersonService.listByGroupId(group.getId(), Boolean.FALSE);
                 if (personList != null) {
                     for (Y9Person y9Person : personList) {
                         PersonSheet person = new PersonSheet();
@@ -136,7 +136,7 @@ public class Y9OrgTreeExcelDataHandlerImpl implements Y9OrgTreeDataHandler {
             for (Y9Position position : positionList) {
                 ObjectSheet positionSheet = new ObjectSheet();
                 List<PersonSheet> personSheetList = new ArrayList<>();
-                List<Y9Person> personList = y9PersonService.listByPositionId(position.getId());
+                List<Y9Person> personList = y9PersonService.listByPositionId(position.getId(), Boolean.FALSE);
                 if (personList != null) {
                     for (Y9Person y9Person : personList) {
                         PersonSheet person = new PersonSheet();
@@ -339,7 +339,7 @@ public class Y9OrgTreeExcelDataHandlerImpl implements Y9OrgTreeDataHandler {
 
             } else {
                 dn = OrgLevelConsts.UNIT + paths[i] + SPLITTER + dn;
-                List<Y9Department> departmentList = y9DepartmentService.listByDn(dn);
+                List<Y9Department> departmentList = y9DepartmentService.listByDn(dn, false);
                 if (!departmentList.isEmpty()) {
                     parentId = departmentList.get(0).getId();
                 } else {

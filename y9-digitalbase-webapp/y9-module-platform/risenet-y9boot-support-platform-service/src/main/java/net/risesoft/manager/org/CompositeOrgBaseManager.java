@@ -31,6 +31,8 @@ public interface CompositeOrgBaseManager {
      */
     String buildOrderedPath(Y9OrgBase y9OrgBase);
 
+    void checkAllDecendantsDisabled(String orgUnitId);
+
     /**
      * 根据指定id获取ORGBase对象(可以是org的任意类型)
      *

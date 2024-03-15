@@ -202,7 +202,7 @@ public class PersonController {
     @RiseLog(operationName = "获取用户组人员列表")
     @RequestMapping(value = "/listPersonsByGroupId")
     public Y9Result<List<Y9Person>> listPersonsByGroupId(@RequestParam @NotBlank String groupId) {
-        return Y9Result.success(y9PersonService.listByGroupId(groupId), "获取用户组人员列表成功");
+        return Y9Result.success(y9PersonService.listByGroupId(groupId, null), "获取用户组人员列表成功");
     }
 
     /**
@@ -215,7 +215,7 @@ public class PersonController {
     @RiseLog(operationName = "获取人员列表")
     @RequestMapping(value = "/listPersonsByParentId")
     public Y9Result<List<Y9Person>> listPersonsByParentId(@RequestParam @NotBlank String parentId) {
-        return Y9Result.success(y9PersonService.listByParentId(parentId), "获取人员列表成功");
+        return Y9Result.success(y9PersonService.listByParentId(parentId, null), "获取人员列表成功");
     }
 
     /**
@@ -228,7 +228,7 @@ public class PersonController {
     @RiseLog(operationName = "获取岗位人员列表")
     @RequestMapping(value = "/listPersonsByPositionId")
     public Y9Result<List<Y9Person>> listPersonsByPositionId(@RequestParam @NotBlank String positionId) {
-        return Y9Result.success(y9PersonService.listByPositionId(positionId), "获取岗位人员列表成功");
+        return Y9Result.success(y9PersonService.listByPositionId(positionId, null), "获取岗位人员列表成功");
     }
 
     /**
@@ -302,6 +302,33 @@ public class PersonController {
     }
 
     /**
+     * 上传个人头像
+     * 
+     * @param iconFile 头像
+     * @return
+     */
+    @PostMapping(value = "/saveAvator")
+    public Y9Result<String> saveAvator(@RequestParam(required = false) MultipartFile iconFile,
+        @RequestParam @NotBlank String personId) {
+        try {
+            SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMddHHmmss");
+            if (iconFile != null) {
+                String fileType = FilenameUtils.getExtension(iconFile.getOriginalFilename());
+                String fileNewName = personId + "_" + sdf.format(new Date()) + "." + fileType;
+                String fullPath = Y9FileStore.buildFullPath(Y9Context.getSystemName(), "avator");
+                Y9FileStore y9FileStore = y9FileStoreService.uploadFile(iconFile, fullPath, fileNewName);
+                String url = y9FileStore.getUrl();
+                y9PersonService.saveAvator(personId, url);
+                return Y9Result.success(url, "保存个人头像成功！");
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            return Y9Result.failure("保存个人头像失败！");
+        }
+        return Y9Result.failure("保存个人头像失败！未上传图片！");
+    }
+
+    /**
      * 保存扩展属性(直接覆盖)
      *
      * @param personId 人员id
@@ -314,19 +341,6 @@ public class PersonController {
         @RequestParam String properties) {
         Y9Person y9Person = y9PersonService.saveProperties(personId, properties);
         return Y9Result.success(y9Person.getProperties(), "保存扩展属性成成功");
-    }
-
-    /**
-     * 保存排序结果
-     *
-     * @param personIds 人员id数组
-     * @return
-     */
-    @RiseLog(operationName = "保存人员排序", operationType = OperationTypeEnum.MODIFY)
-    @PostMapping(value = "/saveOrder")
-    public Y9Result<String> saveOrder(@RequestParam(value = "personIds") @NotEmpty List<String> personIds) {
-        y9PersonService.order(personIds);
-        return Y9Result.successMsg("保存人员排序成功");
     }
 
     /**
@@ -345,6 +359,19 @@ public class PersonController {
         @RequestParam(value = "jobIds", required = false) List<String> jobIds) {
         Y9Person y9Person = y9PersonService.saveOrUpdate(person, ext, positionIds, jobIds);
         return Y9Result.success(y9Person, "保存人员信息成功");
+    }
+
+    /**
+     * 保存排序结果
+     *
+     * @param personIds 人员id数组
+     * @return
+     */
+    @RiseLog(operationName = "保存人员排序", operationType = OperationTypeEnum.MODIFY)
+    @PostMapping(value = "/saveOrder")
+    public Y9Result<String> saveOrder(@RequestParam(value = "personIds") @NotEmpty List<String> personIds) {
+        y9PersonService.order(personIds);
+        return Y9Result.successMsg("保存人员排序成功");
     }
 
     /**
@@ -375,21 +402,6 @@ public class PersonController {
     }
 
     /**
-     * 保存添加人员
-     *
-     * @param personIds 人员Id数组
-     * @param parentId 父节点id
-     * @return
-     */
-    @RiseLog(operationName = "保存添加人员", operationType = OperationTypeEnum.ADD)
-    @PostMapping(value = "/savePersons")
-    public Y9Result<List<Y9Person>> savePersons(@RequestParam(value = "personIds") @NotEmpty List<String> personIds,
-        @RequestParam String parentId) {
-        List<Y9Person> persons = y9PersonService.addPersons(parentId, personIds);
-        return Y9Result.success(persons, "保存添加人员成功");
-    }
-
-    /**
      * 上传个人签名图片
      *
      * @param iconFile 签名文件
@@ -417,30 +429,18 @@ public class PersonController {
     }
 
     /**
-     * 上传个人头像
-     * 
-     * @param iconFile 头像
+     * 保存添加人员
+     *
+     * @param personIds 人员Id数组
+     * @param parentId 父节点id
      * @return
      */
-    @PostMapping(value = "/saveAvator")
-    public Y9Result<String> saveAvator(@RequestParam(required = false) MultipartFile iconFile,
-        @RequestParam @NotBlank String personId) {
-        try {
-            SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMddHHmmss");
-            if (iconFile != null) {
-                String fileType = FilenameUtils.getExtension(iconFile.getOriginalFilename());
-                String fileNewName = personId + "_" + sdf.format(new Date()) + "." + fileType;
-                String fullPath = Y9FileStore.buildFullPath(Y9Context.getSystemName(), "avator");
-                Y9FileStore y9FileStore = y9FileStoreService.uploadFile(iconFile, fullPath, fileNewName);
-                String url = y9FileStore.getUrl();
-                y9PersonService.saveAvator(personId, url);
-                return Y9Result.success(url, "保存个人头像成功！");
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-            return Y9Result.failure("保存个人头像失败！");
-        }
-        return Y9Result.failure("保存个人头像失败！未上传图片！");
+    @RiseLog(operationName = "保存添加人员", operationType = OperationTypeEnum.ADD)
+    @PostMapping(value = "/savePersons")
+    public Y9Result<List<Y9Person>> savePersons(@RequestParam(value = "personIds") @NotEmpty List<String> personIds,
+        @RequestParam String parentId) {
+        List<Y9Person> persons = y9PersonService.addPersons(parentId, personIds);
+        return Y9Result.success(persons, "保存添加人员成功");
     }
 
     /**

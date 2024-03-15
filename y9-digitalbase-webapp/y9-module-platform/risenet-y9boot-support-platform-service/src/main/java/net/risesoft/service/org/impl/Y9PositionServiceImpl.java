@@ -30,8 +30,10 @@ import net.risesoft.enums.platform.OrgTypeEnum;
 import net.risesoft.id.IdType;
 import net.risesoft.id.Y9IdGenerator;
 import net.risesoft.manager.org.CompositeOrgBaseManager;
+import net.risesoft.manager.org.Y9DepartmentPropManager;
 import net.risesoft.manager.org.Y9PositionManager;
 import net.risesoft.manager.relation.Y9PersonsToPositionsManager;
+import net.risesoft.manager.relation.Y9PositionsToGroupsManager;
 import net.risesoft.model.platform.Position;
 import net.risesoft.repository.Y9DepartmentPropRepository;
 import net.risesoft.repository.Y9PositionRepository;
@@ -77,6 +79,8 @@ public class Y9PositionServiceImpl implements Y9PositionService {
     private final CompositeOrgBaseManager compositeOrgBaseManager;
     private final Y9PositionManager y9PositionManager;
     private final Y9PersonsToPositionsManager y9PersonsToPositionsManager;
+    private final Y9DepartmentPropManager y9DepartmentPropManager;
+    private final Y9PositionsToGroupsManager y9PositionsToGroupsManager;
 
     public Y9PositionServiceImpl(@Qualifier("rsTenantEntityManagerFactory") EntityManagerFactory entityManagerFactory,
         Y9PositionRepository y9PositionRepository, Y9PersonsToPositionsRepository y9PersonsToPositionsRepository,
@@ -85,7 +89,8 @@ public class Y9PositionServiceImpl implements Y9PositionService {
         Y9PositionToResourceAndAuthorityRepository y9PositionToResourceAndAuthorityRepository,
         Y9PositionToRoleRepository y9PositionToRoleRepository, Y9AuthorizationRepository y9AuthorizationRepository,
         Y9DepartmentPropRepository y9DepartmentPropRepository, CompositeOrgBaseManager compositeOrgBaseManager,
-        Y9PositionManager y9PositionManager, Y9PersonsToPositionsManager y9PersonsToPositionsManager) {
+        Y9PositionManager y9PositionManager, Y9PersonsToPositionsManager y9PersonsToPositionsManager,
+        Y9DepartmentPropManager y9DepartmentPropManager, Y9PositionsToGroupsManager y9PositionsToGroupsManager) {
         this.entityManagerFactory = entityManagerFactory;
         this.y9PositionRepository = y9PositionRepository;
         this.y9PersonsToPositionsRepository = y9PersonsToPositionsRepository;
@@ -98,11 +103,40 @@ public class Y9PositionServiceImpl implements Y9PositionService {
         this.compositeOrgBaseManager = compositeOrgBaseManager;
         this.y9PositionManager = y9PositionManager;
         this.y9PersonsToPositionsManager = y9PersonsToPositionsManager;
+        this.y9DepartmentPropManager = y9DepartmentPropManager;
+        this.y9PositionsToGroupsManager = y9PositionsToGroupsManager;
     }
 
     @Override
     public String buildName(Y9Job y9Job, List<Y9PersonsToPositions> personsToPositionsList) {
         return y9PositionManager.buildName(y9Job, personsToPositionsList);
+    }
+
+    @Override
+    @Transactional(readOnly = false)
+    public Y9Position changeDisabled(String id) {
+        Y9Position y9Position = this.getById(id);
+        boolean isDisabled = !y9Position.getDisabled();
+        y9Position.setDisabled(isDisabled);
+        Y9Position savePosition = y9PositionManager.save(y9Position);
+
+        if (isDisabled) {
+            // y9PersonsToPositionsManager.deleteByPositionId(id);
+            // y9PositionsToGroupsManager.deleteByPositionId(id);
+            // y9DepartmentPropManager.deleteByOrgUnitId(id);
+        }
+
+        TransactionSynchronizationManager.registerSynchronization(new TransactionSynchronization() {
+            @Override
+            public void afterCommit() {
+                String event = isDisabled ? "禁用" : "启用";
+                Y9MessageOrg<Position> msg =
+                    new Y9MessageOrg<>(Y9ModelConvertUtil.convert(savePosition, Position.class),
+                        Y9OrgEventConst.RISEORGEVENT_TYPE_UPDATE_POSITION, Y9LoginUserHolder.getTenantId());
+                Y9PublishServiceUtil.persistAndPublishMessageOrg(msg, event + "岗位", event + savePosition.getName());
+            }
+        });
+        return savePosition;
     }
 
     @Override
@@ -171,7 +205,7 @@ public class Y9PositionServiceImpl implements Y9PositionService {
     @Override
     @Transactional(readOnly = false)
     public void deleteByParentId(String parentId) {
-        List<Y9Position> positionList = listByParentId(parentId);
+        List<Y9Position> positionList = listByParentId(parentId, null);
         for (Y9Position position : positionList) {
             deleteById(position.getId());
         }
@@ -206,7 +240,7 @@ public class Y9PositionServiceImpl implements Y9PositionService {
     @Override
     @Transactional(readOnly = true)
     public Boolean hasPosition(String positionName, String personId) {
-        List<Y9Position> list = listByPersonId(personId);
+        List<Y9Position> list = listByPersonId(personId, Boolean.FALSE);
         boolean exist = false;
         if (!list.isEmpty()) {
             for (Y9Position p : list) {
@@ -242,17 +276,26 @@ public class Y9PositionServiceImpl implements Y9PositionService {
     }
 
     @Override
-    public List<Y9Position> listByParentId(String parentId) {
-        return y9PositionRepository.findByParentIdOrderByTabIndexAsc(parentId);
+    public List<Y9Position> listByParentId(String parentId, Boolean disabled) {
+        if (disabled == null) {
+            return y9PositionRepository.findByParentIdOrderByTabIndexAsc(parentId);
+        } else {
+            return y9PositionRepository.findByParentIdAndDisabledOrderByTabIndexAsc(parentId, disabled);
+        }
     }
 
     @Override
-    public List<Y9Position> listByPersonId(String personId) {
+    public List<Y9Position> listByPersonId(String personId, Boolean disabled) {
         List<Y9PersonsToPositions> ppsList =
             y9PersonsToPositionsRepository.findByPersonIdOrderByPositionOrderAsc(personId);
         List<Y9Position> pList = new ArrayList<>();
         for (Y9PersonsToPositions pps : ppsList) {
-            pList.add(this.getById(pps.getPositionId()));
+            Y9Position y9Position = this.getById(pps.getPositionId());
+            if (disabled == null) {
+                pList.add(y9Position);
+            } else if (disabled.equals(y9Position.getDisabled())) {
+                pList.add(y9Position);
+            }
         }
         return pList;
     }

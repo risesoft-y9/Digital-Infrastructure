@@ -41,16 +41,16 @@ public class ManagerApiImpl implements ManagerApi {
      * 根据id获得管理员对象
      *
      * @param tenantId 租户id
-     * @param id 人员唯一标识
+     * @param managerId 人员唯一标识
      * @return {@code Y9Result<Manager>} 通用请求返回对象 - data 是管理员对象
      * @since 9.6.0
      */
     @Override
-    public Y9Result<Manager> getManagerById(@RequestParam("tenantId") @NotBlank String tenantId,
-        @RequestParam("id") @NotBlank String id) {
+    public Y9Result<Manager> get(@RequestParam("tenantId") @NotBlank String tenantId,
+        @RequestParam("id") @NotBlank String managerId) {
         Y9LoginUserHolder.setTenantId(tenantId);
 
-        Y9Manager y9Manager = y9ManagerService.findById(id).orElse(null);
+        Y9Manager y9Manager = y9ManagerService.findById(managerId).orElse(null);
         return Y9Result.success(Y9ModelConvertUtil.convert(y9Manager, Manager.class));
     }
 
@@ -63,7 +63,7 @@ public class ManagerApiImpl implements ManagerApi {
      * @since 9.6.0
      */
     @Override
-    public Y9Result<Manager> getManagerByLoginName(@RequestParam("tenantId") @NotBlank String tenantId,
+    public Y9Result<Manager> getByLoginName(@RequestParam("tenantId") @NotBlank String tenantId,
         @RequestParam("loginName") @NotBlank String loginName) {
         Y9LoginUserHolder.setTenantId(tenantId);
 
@@ -76,16 +76,17 @@ public class ManagerApiImpl implements ManagerApi {
      *
      * @param tenantId 租户id
      * @param managerId 管理员唯一标识
-     * @param deptId 部门id
+     * @param departmentId 部门id
      * @return {@code Y9Result<Boolean>} 通用请求返回对象 - data 属性判断是否为该部门的三员
      * @since 9.6.0
      */
     @Override
     public Y9Result<Boolean> isDeptManager(@RequestParam("tenantId") @NotBlank String tenantId,
-        @RequestParam("managerId") @NotBlank String managerId, @RequestParam("deptId") @NotBlank String deptId) {
+        @RequestParam("managerId") @NotBlank String managerId,
+        @RequestParam("departmentId") @NotBlank String departmentId) {
         Y9LoginUserHolder.setTenantId(tenantId);
 
-        return Y9Result.success(y9ManagerService.isDeptManager(managerId, deptId));
+        return Y9Result.success(y9ManagerService.isDeptManager(managerId, departmentId));
     }
 
 }

@@ -85,7 +85,7 @@ public class OrganizationApiImpl implements OrganizationApi {
         @RequestParam("organizationId") @NotBlank String organizationId) {
         Y9LoginUserHolder.setTenantId(tenantId);
 
-        List<Y9Department> y9DepartmentList = y9DepartmentService.listBureau(organizationId);
+        List<Y9Department> y9DepartmentList = y9DepartmentService.listBureau(organizationId, false);
         return Y9ModelConvertUtil.convert(y9DepartmentList, Department.class);
     }
 
@@ -100,7 +100,7 @@ public class OrganizationApiImpl implements OrganizationApi {
     public List<Organization> listAllOrganizations(@RequestParam("tenantId") @NotBlank String tenantId) {
         Y9LoginUserHolder.setTenantId(tenantId);
 
-        List<Y9Organization> y9OrganizationList = orgOrganizationService.list(false);
+        List<Y9Organization> y9OrganizationList = orgOrganizationService.list(false, false);
         return Y9ModelConvertUtil.convert(y9OrganizationList, Organization.class);
     }
 
@@ -117,7 +117,7 @@ public class OrganizationApiImpl implements OrganizationApi {
         @RequestParam("virtual") Boolean virtual) {
         Y9LoginUserHolder.setTenantId(tenantId);
 
-        List<Y9Organization> y9OrganizationList = orgOrganizationService.list(virtual);
+        List<Y9Organization> y9OrganizationList = orgOrganizationService.list(virtual, false);
         return Y9ModelConvertUtil.convert(y9OrganizationList, Organization.class);
     }
 
@@ -134,7 +134,7 @@ public class OrganizationApiImpl implements OrganizationApi {
         @RequestParam("organizationId") @NotBlank String organizationId) {
         Y9LoginUserHolder.setTenantId(tenantId);
 
-        List<Y9Department> y9DepartmentList = y9DepartmentService.listByParentId(organizationId);
+        List<Y9Department> y9DepartmentList = y9DepartmentService.listByParentId(organizationId, false);
         return Y9ModelConvertUtil.convert(y9DepartmentList, Department.class);
     }
 
@@ -151,7 +151,7 @@ public class OrganizationApiImpl implements OrganizationApi {
         @RequestParam("organizationId") @NotBlank String organizationId) {
         Y9LoginUserHolder.setTenantId(tenantId);
 
-        List<Y9Group> y9GroupList = orgGroupService.listByParentId(organizationId);
+        List<Y9Group> y9GroupList = orgGroupService.listByParentId(organizationId, false);
         return Y9ModelConvertUtil.convert(y9GroupList, Group.class);
     }
 
@@ -168,7 +168,7 @@ public class OrganizationApiImpl implements OrganizationApi {
         @RequestParam("organizationId") @NotBlank String organizationId) {
         Y9LoginUserHolder.setTenantId(tenantId);
 
-        List<Y9Person> y9PersonList = orgPersonService.listByParentId(organizationId);
+        List<Y9Person> y9PersonList = orgPersonService.listByParentId(organizationId, false);
         return Y9ModelConvertUtil.convert(y9PersonList, Person.class);
     }
 
@@ -185,7 +185,7 @@ public class OrganizationApiImpl implements OrganizationApi {
         @RequestParam("organizationId") @NotBlank String organizationId) {
         Y9LoginUserHolder.setTenantId(tenantId);
 
-        List<Y9Position> y9PositionList = orgPositionService.listByParentId(organizationId);
+        List<Y9Position> y9PositionList = orgPositionService.listByParentId(organizationId, false);
         return Y9ModelConvertUtil.convert(y9PositionList, Position.class);
     }
 

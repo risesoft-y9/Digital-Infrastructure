@@ -11,7 +11,6 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import net.risesoft.api.platform.org.dto.CreatePositionDTO;
-import net.risesoft.model.platform.OrgUnit;
 import net.risesoft.model.platform.Person;
 import net.risesoft.model.platform.Position;
 import net.risesoft.pojo.Y9Result;
@@ -49,32 +48,20 @@ public interface PositionApi {
      * @return {@code Y9Result<Position>} 通用请求返回对象 - data 是保存的岗位对象
      * @since 9.6.0
      */
-    @PostMapping("/createPosition")
-    Y9Result<Position> createPosition(@RequestParam("tenantId") @NotBlank String tenantId,
+    @PostMapping("/create")
+    Y9Result<Position> create(@RequestParam("tenantId") @NotBlank String tenantId,
         @RequestBody @Validated CreatePositionDTO position);
 
     /**
-     * 根据岗位id删除岗位
+     * 删除岗位
      *
      * @param tenantId 租户id
      * @param positionId 岗位id
      * @return {@code Y9Result<Object>} 通用请求返回对象 - success 属性判断操作是否成功
      * @since 9.6.0
      */
-    @PostMapping("/deletePosition")
-    Y9Result<Object> deletePosition(@RequestParam("tenantId") @NotBlank String tenantId,
-        @RequestParam("positionId") @NotBlank String positionId);
-
-    /**
-     * 获取岗位父节点
-     *
-     * @param tenantId 租户id
-     * @param positionId 岗位唯一标识
-     * @return {@code Y9Result<OrgUnit>} 通用请求返回对象 - data 是组织节点对象（部门或组织机构）
-     * @since 9.6.0
-     */
-    @GetMapping("/getParent")
-    Y9Result<OrgUnit> getParent(@RequestParam("tenantId") @NotBlank String tenantId,
+    @PostMapping("/delete")
+    Y9Result<Object> delete(@RequestParam("tenantId") @NotBlank String tenantId,
         @RequestParam("positionId") @NotBlank String positionId);
 
     /**
@@ -85,8 +72,8 @@ public interface PositionApi {
      * @return {@code Y9Result<Position>} 通用请求返回对象 - data 是岗位对象
      * @since 9.6.0
      */
-    @GetMapping("/getPosition")
-    Y9Result<Position> getPosition(@RequestParam("tenantId") @NotBlank String tenantId,
+    @GetMapping("/get")
+    Y9Result<Position> get(@RequestParam("tenantId") @NotBlank String tenantId,
         @RequestParam("positionId") @NotBlank String positionId);
 
     /**
@@ -104,7 +91,7 @@ public interface PositionApi {
         @RequestParam("personId") @NotBlank String personId);
 
     /**
-     * 根据父节点获取岗位列表
+     * 根据父节点获取岗位列表（不包含禁用）
      *
      * @param tenantId 租户唯一标识
      * @param parentId 父节点ID
@@ -116,7 +103,7 @@ public interface PositionApi {
         @RequestParam("parentId") @NotBlank String parentId);
 
     /**
-     * 根据用户ID,获取岗位列表
+     * 获取人员拥有的岗位列表（不包含禁用）
      *
      * @param tenantId 租户唯一标识
      * @param personId 人员ID
@@ -128,15 +115,15 @@ public interface PositionApi {
         @RequestParam("personId") @NotBlank String personId);
 
     /**
-     * 获取所在岗位的人员列表
+     * 获取岗位绑定的人员列表（不包含禁用）
      *
      * @param tenantId 租户id
      * @param positionId 岗位唯一标识
      * @return {@code Y9Result<List<Person>>} 通用请求返回对象 - data 是人员对象集合
      * @since 9.6.0
      */
-    @GetMapping("/listPersons")
-    Y9Result<List<Person>> listPersons(@RequestParam("tenantId") @NotBlank String tenantId,
+    @GetMapping("/listPersonsByPositionId")
+    Y9Result<List<Person>> listPersonsByPositionId(@RequestParam("tenantId") @NotBlank String tenantId,
         @RequestParam("positionId") @NotBlank String positionId);
 
     /**
@@ -163,5 +150,4 @@ public interface PositionApi {
     @PostMapping("/updatePosition")
     Y9Result<Position> updatePosition(@RequestParam("tenantId") @NotBlank String tenantId,
         @RequestBody @Validated CreatePositionDTO createPositionDTO);
-
 }

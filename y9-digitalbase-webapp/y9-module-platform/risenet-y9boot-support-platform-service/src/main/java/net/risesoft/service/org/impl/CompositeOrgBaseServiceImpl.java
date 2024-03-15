@@ -96,38 +96,6 @@ public class CompositeOrgBaseServiceImpl implements CompositeOrgBaseService {
     private final Y9ManagerRepository y9ManagerRepository;
     private final Y9OrgBaseDeletedRepository y9OrgBaseDeletedRepository;
 
-    private List<Y9Department> findDepartmentByNameLike(String name) {
-        return y9DepartmentRepository.findByNameContainingOrderByTabIndexAsc(name);
-    }
-
-    private List<Y9Department> findDepartmentByNameLike(String name, String dnName) {
-        return y9DepartmentRepository.findByNameContainingAndDnContainingOrderByTabIndexAsc(name, dnName);
-    }
-
-    private List<Y9Department> findDepartmentByParentId(String parentId) {
-        return y9DepartmentRepository.findByParentIdOrderByTabIndexAsc(parentId);
-    }
-
-    private List<Y9Group> findGroupByNameLike(String name) {
-        return y9GroupRepository.findByNameContainingOrderByTabIndexAsc(name);
-    }
-
-    private List<Y9Group> findGroupByNameLike(String name, String dnName) {
-        return y9GroupRepository.findByNameContainingAndDnContainingOrderByTabIndex(name, dnName);
-    }
-
-    private List<Y9Group> findGroupByParentId(String parentId) {
-        return y9GroupRepository.findByParentIdOrderByTabIndexAsc(parentId);
-    }
-
-    private List<Y9Manager> findManagerByNameLike(String name) {
-        return y9ManagerRepository.findByNameContainingAndGlobalManagerFalse(name);
-    }
-
-    private List<Y9Manager> findManagerByNameLike(String name, String dnName) {
-        return y9ManagerRepository.findByNameContainingAndDnContaining(name, dnName);
-    }
-
     @Override
     public long countByGuidPath(String guidPath, OrgTreeTypeEnum orgTreeTypeEnum) {
         if (OrgTreeTypeEnum.TREE_TYPE_ORG_PERSON.equals(orgTreeTypeEnum)
@@ -186,7 +154,7 @@ public class CompositeOrgBaseServiceImpl implements CompositeOrgBaseService {
 
     @Override
     public Optional<Y9Organization> findOrgUnitOrganization(String orgUnitId) {
-        Optional<Y9OrgBase> y9OrgBaseOptional = this.findOrgUnit(orgUnitId);
+        Optional<Y9OrgBase> y9OrgBaseOptional = findOrgUnit(orgUnitId);
         if (y9OrgBaseOptional.isPresent()) {
             Y9OrgBase y9OrgBase = y9OrgBaseOptional.get();
             if (OrgTypeEnum.ORGANIZATION.equals(y9OrgBase.getOrgType())) {
@@ -221,12 +189,12 @@ public class CompositeOrgBaseServiceImpl implements CompositeOrgBaseService {
 
     @Override
     public Y9OrgBase getOrgUnitDeleted(String orgUnitId) {
-        return this.findOrgUnitDeleted(orgUnitId).orElse(null);
+        return findOrgUnitDeleted(orgUnitId).orElse(null);
     }
 
     @Override
     public Y9Organization getOrgUnitOrganization(String orgUnitId) {
-        return this.findOrgUnitOrganization(orgUnitId).orElse(null);
+        return findOrgUnitOrganization(orgUnitId).orElse(null);
     }
 
     @Override
@@ -346,112 +314,33 @@ public class CompositeOrgBaseServiceImpl implements CompositeOrgBaseService {
         return syncOrgUnits;
     }
 
-    private void getSyncOrgUnitsRecursion(SyncOrgUnits syncOrgUnits, Position position) {
-        List<Y9Person> orgPersonList = y9PersonManager.listByPositionId(position.getId());
-        for (Y9Person y9Person : orgPersonList) {
-            syncOrgUnits.getPersons().add(ModelConvertUtil.convert(y9Person, Person.class));
-        }
-
-        List<Y9PersonsToPositions> orgPositionsPersonsList =
-            y9PersonsToPositionsRepository.findByPositionId(position.getId());
-        for (Y9PersonsToPositions y9PersonsToPositions : orgPositionsPersonsList) {
-            syncOrgUnits.getPersonsPositions()
-                .add(ModelConvertUtil.convert(y9PersonsToPositions, PersonsPositions.class));
-        }
-    }
-
-    private void getSyncOrgUnitsRecursion(SyncOrgUnits syncOrgUnits, Group group) {
-        List<Y9Person> orgPersonList = y9PersonManager.listByGroupId(group.getId());
-        for (Y9Person y9Person : orgPersonList) {
-            syncOrgUnits.getPersons().add(ModelConvertUtil.convert(y9Person, Person.class));
-        }
-        List<Y9PersonsToGroups> orgPersonsGroupsList =
-            y9PersonsToGroupsRepository.findByGroupIdOrderByPersonOrder(group.getId());
-        for (Y9PersonsToGroups y9PersonsToGroups : orgPersonsGroupsList) {
-            syncOrgUnits.getPersonsGroups().add(ModelConvertUtil.convert(y9PersonsToGroups, PersonsGroups.class));
-        }
-    }
-
-    private void getSyncOrgUnitsRecursion(SyncOrgUnits syncOrgUnits, Department parentDepartment) {
-        String parentId = parentDepartment.getId();
-        getSyncOrgUnitsRecursion(syncOrgUnits, parentId);
-    }
-
-    private void getSyncOrgUnitsRecursion(SyncOrgUnits syncOrgUnits, String parentId) {
-        List<Y9Department> orgDeptList = findDepartmentByParentId(parentId);
-        for (Y9Department orgDept : orgDeptList) {
-            Department department = ModelConvertUtil.convert(orgDept, Department.class);
-            syncOrgUnits.getDepartments().add(department);
-            getSyncOrgUnitsRecursion(syncOrgUnits, department);
-        }
-
-        List<Y9Group> orgGroupList = findGroupByParentId(parentId);
-        for (Y9Group y9Group : orgGroupList) {
-            Group group = ModelConvertUtil.convert(y9Group, Group.class);
-            syncOrgUnits.getGroups().add(group);
-            getSyncOrgUnitsRecursion(syncOrgUnits, group);
-        }
-
-        List<Y9Position> orgPositionList = findPositionByParentId(parentId);
-        for (Y9Position y9Position : orgPositionList) {
-            Position position = ModelConvertUtil.convert(y9Position, Position.class);
-            syncOrgUnits.getPositions().add(position);
-            getSyncOrgUnitsRecursion(syncOrgUnits, position);
-        }
-
-        List<Y9Person> orgPersonList = findPersonByParentId(parentId);
-        for (Y9Person y9Person : orgPersonList) {
-            Person person = ModelConvertUtil.convert(y9Person, Person.class);
-            syncOrgUnits.getPersons().add(person);
-        }
-    }
-
-    private void getSyncOrgUnitsRecursion(SyncOrgUnits syncOrgUnits, Organization organization) {
-        String parentId = organization.getId();
-        getSyncOrgUnitsRecursion(syncOrgUnits, parentId);
-    }
-
-    /**
-     * 默认类型排序：部门->用户组->角色->岗位->人员
-     */
     @Override
-    public List<Y9OrgBase> getTree(String id, OrgTreeTypeEnum treeType, boolean disabled) {
-        return getTree(id, treeType, true, disabled);
-    }
-
-    @Override
-    public List<Y9OrgBase> getTree(String id, OrgTreeTypeEnum treeType, boolean isPersonIncluded, boolean disabled) {
+    public List<Y9OrgBase> getTree(String id, OrgTreeTypeEnum treeType, Boolean disabled) {
         List<Y9OrgBase> childrenList = new CopyOnWriteArrayList<>();
+
         if (treeType.equals(OrgTreeTypeEnum.TREE_TYPE_BUREAU)) {
-            Optional<Y9Organization> y9OrganizationOptional = y9OrganizationManager.findById(id);
-            if (y9OrganizationOptional.isPresent()) {
-                Y9OrgBase org = y9OrganizationOptional.get();
-                List<Y9Department> bureauList =
-                    y9DepartmentRepository.findByBureauAndDnContainingOrderByTabIndexAsc(true, org.getDn());
-                childrenList.addAll(bureauList);
-                for (Y9Department bureau : bureauList) {
-                    getOrgUnitListByUpwardRecursion(bureau.getParentId(), childrenList);
-                }
-                childrenList.remove(org);
+            Y9Organization org = y9OrganizationManager.getById(id);
+            List<Y9Department> bureauList = findBureauOfOrganization(id, disabled);
+            childrenList.addAll(bureauList);
+            for (Y9Department bureau : bureauList) {
+                getOrgUnitListByUpwardRecursion(bureau.getParentId(), childrenList);
             }
+            childrenList.remove(org);
         } else {
-            childrenList.addAll(findDepartmentByParentId(id));
+            childrenList.addAll(findDepartmentByParentId(id, disabled));
+
             if (treeType.equals(OrgTreeTypeEnum.TREE_TYPE_ORG) || treeType.equals(OrgTreeTypeEnum.TREE_TYPE_ORG_PERSON)
                 || treeType.equals(OrgTreeTypeEnum.TREE_TYPE_GROUP)) {
-                childrenList.addAll(findGroupByParentId(id));
+                childrenList.addAll(findGroupByParentId(id, disabled));
             }
+
             if (treeType.equals(OrgTreeTypeEnum.TREE_TYPE_ORG) || treeType.equals(OrgTreeTypeEnum.TREE_TYPE_POSITION)) {
-                childrenList.addAll(findPositionByParentId(id));
+                childrenList.addAll(findPositionByParentId(id, disabled));
             }
-            if (isPersonIncluded) {
-                if (treeType.equals(OrgTreeTypeEnum.TREE_TYPE_ORG) || treeType.equals(OrgTreeTypeEnum.TREE_TYPE_PERSON)
-                    || OrgTreeTypeEnum.TREE_TYPE_ORG_PERSON.equals(treeType)) {
-                    if (disabled) {
-                        childrenList.addAll(findPersonByParentId(id));
-                    } else {
-                        childrenList.addAll(findPersonByParentIdAndDisabled(id, false));
-                    }
-                }
+
+            if (treeType.equals(OrgTreeTypeEnum.TREE_TYPE_ORG) || treeType.equals(OrgTreeTypeEnum.TREE_TYPE_PERSON)
+                || OrgTreeTypeEnum.TREE_TYPE_ORG_PERSON.equals(treeType)) {
+                childrenList.addAll(findPersonByParentId(id, disabled));
             }
         }
 
@@ -480,7 +369,7 @@ public class CompositeOrgBaseServiceImpl implements CompositeOrgBaseService {
                     childrenList.remove(org);
                 }
             } else {
-                List<Y9Department> deptList = findDepartmentByParentId(id);
+                List<Y9Department> deptList = findDepartmentByParentId(id, true);
                 for (Y9Department dept : deptList) {
                     if (Y9OrgUtil.isSameOf(dept, managerDept) || Y9OrgUtil.isAncestorOf(dept, managerDept)) {
                         // 筛选当前管理员所在部门及祖先部门
@@ -494,23 +383,23 @@ public class CompositeOrgBaseServiceImpl implements CompositeOrgBaseService {
                     if (Y9OrgUtil.isSameOf(y9Department, managerDept)
                         || Y9OrgUtil.isDescendantOf(y9Department, managerDept)) {
 
-                        childrenList.addAll(findDepartmentByParentId(id));
+                        childrenList.addAll(findDepartmentByParentId(id, true));
 
                         if (treeType.equals(OrgTreeTypeEnum.TREE_TYPE_ORG)
                             || treeType.equals(OrgTreeTypeEnum.TREE_TYPE_GROUP)
                             || OrgTreeTypeEnum.TREE_TYPE_ORG_PERSON.equals(treeType)) {
-                            childrenList.addAll(findGroupByParentId(id));
+                            childrenList.addAll(findGroupByParentId(id, true));
                         }
 
                         if (treeType.equals(OrgTreeTypeEnum.TREE_TYPE_ORG)
                             || treeType.equals(OrgTreeTypeEnum.TREE_TYPE_POSITION)) {
-                            childrenList.addAll(findPositionByParentId(id));
+                            childrenList.addAll(findPositionByParentId(id, true));
                         }
 
                         if (treeType.equals(OrgTreeTypeEnum.TREE_TYPE_ORG)
                             || treeType.equals(OrgTreeTypeEnum.TREE_TYPE_PERSON)
                             || OrgTreeTypeEnum.TREE_TYPE_ORG_PERSON.equals(treeType)) {
-                            childrenList.addAll(findPersonByParentId(id));
+                            childrenList.addAll(findPersonByParentId(id, true));
                         }
                     }
                 }
@@ -523,8 +412,8 @@ public class CompositeOrgBaseServiceImpl implements CompositeOrgBaseService {
     @Override
     public List<Y9OrgBase> listAllOrgUnits(String orgId) {
         List<Y9OrgBase> childrenList = new ArrayList<>();
-        List<Y9Department> depts = findDepartmentByParentId(orgId);
-        List<Y9Person> persons = findPersonByParentId(orgId);
+        List<Y9Department> depts = findDepartmentByParentId(orgId, true);
+        List<Y9Person> persons = findPersonByParentId(orgId, true);
         if (!depts.isEmpty()) {
             childrenList.addAll(depts);
         }
@@ -534,11 +423,11 @@ public class CompositeOrgBaseServiceImpl implements CompositeOrgBaseService {
         for (Y9Department y9Department : depts) {
             getOrgUnitListByDownwardRecursion(childrenList, y9Department.getId());
         }
-        List<Y9Group> groups = findGroupByParentId(orgId);
+        List<Y9Group> groups = findGroupByParentId(orgId, true);
         if (!groups.isEmpty()) {
             childrenList.addAll(groups);
         }
-        List<Y9Position> positions = findPositionByParentId(orgId);
+        List<Y9Position> positions = findPositionByParentId(orgId, true);
         if (!positions.isEmpty()) {
             childrenList.addAll(positions);
         }
@@ -561,9 +450,9 @@ public class CompositeOrgBaseServiceImpl implements CompositeOrgBaseService {
     }
 
     @Override
-    public List<Y9Person> searchAllPersonsRecursionDownward(String parentId, Boolean disabled, String name) {
+    public List<Y9Person> searchAllPersonsRecursionDownward(String parentId, String name, Boolean status) {
         List<Y9Person> personList = new ArrayList<>();
-        getPersonListByDownwardRecursion(parentId, personList, disabled, name);
+        getPersonListByDownwardRecursion(parentId, personList, status, name);
         return personList;
     }
 
@@ -598,7 +487,7 @@ public class CompositeOrgBaseServiceImpl implements CompositeOrgBaseService {
 
     @Override
     public void sync(String syncId, OrgTypeEnum orgType, boolean needRecursion, String targetSystemName) {
-        SyncOrgUnits syncOrgUnits = this.getSyncOrgUnits(syncId, orgType, needRecursion);
+        SyncOrgUnits syncOrgUnits = getSyncOrgUnits(syncId, orgType, needRecursion);
         Y9MessageOrg<SyncOrgUnits> event = new Y9MessageOrg<>(syncOrgUnits, Y9OrgEventConst.RISEORGEVENT_TYPE_SYNC,
             targetSystemName, Y9LoginUserHolder.getTenantId());
         Y9PublishServiceUtil.publishMessageOrg(event);
@@ -609,55 +498,60 @@ public class CompositeOrgBaseServiceImpl implements CompositeOrgBaseService {
      */
     @Override
     public List<Y9OrgBase> treeSearch(String name, OrgTreeTypeEnum treeType) {
-        return this.treeSearch(name, treeType, true);
+        return treeSearch(name, treeType, true);
     }
 
     @Override
-    public List<Y9OrgBase> treeSearch(String name, OrgTreeTypeEnum treeType, String dnName) {
+    public List<Y9OrgBase> treeSearch(String name, OrgTreeTypeEnum treeType, String dnName, Boolean disabled) {
         List<Y9OrgBase> baseList = new ArrayList<>();
+
         if (treeType.equals(OrgTreeTypeEnum.TREE_TYPE_ORG) || treeType.equals(OrgTreeTypeEnum.TREE_TYPE_ORG_POSITION)
             || treeType.equals(OrgTreeTypeEnum.TREE_TYPE_ORG_PERSON)
             || treeType.equals(OrgTreeTypeEnum.TREE_TYPE_ORG_MANAGER)
             || treeType.equals(OrgTreeTypeEnum.TREE_TYPE_DEPT)) {
 
-            baseList.addAll(this.findOrganizationByNameLike(name, dnName));
+            baseList.addAll(findOrganizationByNameLike(name, disabled));
 
-            List<Y9Department> deptList = this.findDepartmentByNameLike(name, dnName);
+            List<Y9Department> deptList = findDepartmentByNameLike(name, dnName, disabled);
             baseList.addAll(deptList);
             for (Y9Department dept : deptList) {
-                this.getOrgUnitListByUpwardRecursion(dept.getParentId(), baseList);
+                getOrgUnitListByUpwardRecursion(dept.getParentId(), baseList);
             }
         }
+
         if (treeType.equals(OrgTreeTypeEnum.TREE_TYPE_ORG) || treeType.equals(OrgTreeTypeEnum.TREE_TYPE_ORG_POSITION)
             || treeType.equals(OrgTreeTypeEnum.TREE_TYPE_ORG_PERSON)
             || treeType.equals(OrgTreeTypeEnum.TREE_TYPE_GROUP)) {
-            List<Y9Group> groupList = this.findGroupByNameLike(name, dnName);
+            List<Y9Group> groupList = findGroupByNameLike(name, dnName, disabled);
             baseList.addAll(groupList);
             for (Y9Group group : groupList) {
-                this.getOrgUnitListByUpwardRecursion(group.getParentId(), baseList);
+                getOrgUnitListByUpwardRecursion(group.getParentId(), baseList);
             }
         }
+
         if (treeType.equals(OrgTreeTypeEnum.TREE_TYPE_ORG) || treeType.equals(OrgTreeTypeEnum.TREE_TYPE_ORG_POSITION)
             || treeType.equals(OrgTreeTypeEnum.TREE_TYPE_POSITION)) {
-            List<Y9Position> positionList = this.findPositionByNameLike(name, dnName);
+            List<Y9Position> positionList = findPositionByNameLike(name, dnName, disabled);
             baseList.addAll(positionList);
             for (Y9Position position : positionList) {
-                this.getOrgUnitListByUpwardRecursion(position.getParentId(), baseList);
+                getOrgUnitListByUpwardRecursion(position.getParentId(), baseList);
             }
         }
+
         if (treeType.equals(OrgTreeTypeEnum.TREE_TYPE_ORG) || treeType.equals(OrgTreeTypeEnum.TREE_TYPE_ORG_PERSON)
             || treeType.equals(OrgTreeTypeEnum.TREE_TYPE_PERSON)) {
-            List<Y9Person> personList = this.findPersonByNameLike(name, dnName);
+            List<Y9Person> personList = findPersonByNameLike(name, dnName, disabled);
             baseList.addAll(personList);
             for (Y9Person person : personList) {
-                this.getOrgUnitListByUpwardRecursion(person.getParentId(), baseList);
+                getOrgUnitListByUpwardRecursion(person.getParentId(), baseList);
             }
         }
+
         if (OrgTreeTypeEnum.TREE_TYPE_ORG_MANAGER.equals(treeType)) {
-            List<Y9Manager> y9ManagerList = findManagerByNameLike(name, dnName);
+            List<Y9Manager> y9ManagerList = findManagerByNameLike(name, dnName, disabled);
             baseList.addAll(y9ManagerList);
             for (Y9Manager y9Manager : y9ManagerList) {
-                this.getOrgUnitListByUpwardRecursion(y9Manager.getParentId(), baseList);
+                getOrgUnitListByUpwardRecursion(y9Manager.getParentId(), baseList);
             }
         }
 
@@ -667,7 +561,7 @@ public class CompositeOrgBaseServiceImpl implements CompositeOrgBaseService {
     }
 
     @Override
-    public List<Y9OrgBase> treeSearch(String name, OrgTreeTypeEnum treeType, boolean isDisabledIncluded) {
+    public List<Y9OrgBase> treeSearch(String name, OrgTreeTypeEnum treeType, Boolean disabled) {
         List<Y9OrgBase> baseList = new ArrayList<>();
 
         if (treeType.equals(OrgTreeTypeEnum.TREE_TYPE_ORG) || treeType.equals(OrgTreeTypeEnum.TREE_TYPE_ORG_POSITION)
@@ -675,49 +569,48 @@ public class CompositeOrgBaseServiceImpl implements CompositeOrgBaseService {
             || treeType.equals(OrgTreeTypeEnum.TREE_TYPE_ORG_MANAGER)
             || treeType.equals(OrgTreeTypeEnum.TREE_TYPE_DEPT)) {
 
-            baseList.addAll(this.findOrganizationByNameLike(name));
+            baseList.addAll(findOrganizationByNameLike(name, disabled));
 
-            List<Y9Department> deptList = this.findDepartmentByNameLike(name);
+            List<Y9Department> deptList = findDepartmentByNameLike(name, disabled);
             baseList.addAll(deptList);
             for (Y9Department dept : deptList) {
-                this.getOrgUnitListByUpwardRecursion(dept.getParentId(), baseList);
+                getOrgUnitListByUpwardRecursion(dept.getParentId(), baseList);
             }
         }
+
         if (treeType.equals(OrgTreeTypeEnum.TREE_TYPE_ORG) || treeType.equals(OrgTreeTypeEnum.TREE_TYPE_ORG_POSITION)
             || treeType.equals(OrgTreeTypeEnum.TREE_TYPE_ORG_PERSON)
             || treeType.equals(OrgTreeTypeEnum.TREE_TYPE_GROUP)) {
-            List<Y9Group> groupList = this.findGroupByNameLike(name);
+            List<Y9Group> groupList = findGroupByNameLike(name, disabled);
             baseList.addAll(groupList);
             for (Y9Group group : groupList) {
-                this.getOrgUnitListByUpwardRecursion(group.getParentId(), baseList);
+                getOrgUnitListByUpwardRecursion(group.getParentId(), baseList);
             }
         }
+
         if (treeType.equals(OrgTreeTypeEnum.TREE_TYPE_ORG) || treeType.equals(OrgTreeTypeEnum.TREE_TYPE_ORG_POSITION)
             || treeType.equals(OrgTreeTypeEnum.TREE_TYPE_POSITION)) {
-            List<Y9Position> positionList = this.findPositionByNameLike(name);
+            List<Y9Position> positionList = findPositionByNameLike(name, disabled);
             baseList.addAll(positionList);
             for (Y9Position position : positionList) {
-                this.getOrgUnitListByUpwardRecursion(position.getParentId(), baseList);
+                getOrgUnitListByUpwardRecursion(position.getParentId(), baseList);
             }
         }
+
         if (treeType.equals(OrgTreeTypeEnum.TREE_TYPE_ORG) || treeType.equals(OrgTreeTypeEnum.TREE_TYPE_ORG_PERSON)
             || treeType.equals(OrgTreeTypeEnum.TREE_TYPE_PERSON)) {
-            List<Y9Person> personList;
-            if (isDisabledIncluded) {
-                personList = this.findPersonByNameLike(name);
-            } else {
-                personList = this.findPersonByNameLikeAndDisabled(name);
-            }
+            List<Y9Person> personList = findPersonByNameLike(name, disabled);
             baseList.addAll(personList);
             for (Y9Person person : personList) {
-                this.getOrgUnitListByUpwardRecursion(person.getParentId(), baseList);
+                getOrgUnitListByUpwardRecursion(person.getParentId(), baseList);
             }
         }
+
         if (OrgTreeTypeEnum.TREE_TYPE_ORG_MANAGER.equals(treeType)) {
-            List<Y9Manager> y9ManagerList = findManagerByNameLike(name);
+            List<Y9Manager> y9ManagerList = findManagerByNameLike(name, disabled);
             baseList.addAll(y9ManagerList);
             for (Y9Manager y9Manager : y9ManagerList) {
-                this.getOrgUnitListByUpwardRecursion(y9Manager.getParentId(), baseList);
+                getOrgUnitListByUpwardRecursion(y9Manager.getParentId(), baseList);
             }
         }
 
@@ -729,167 +622,7 @@ public class CompositeOrgBaseServiceImpl implements CompositeOrgBaseService {
     @Override
     public List<Y9OrgBase> treeSearch4DeptManager(String name, OrgTreeTypeEnum treeType) {
         Y9Department y9Department = y9DepartmentManager.getById(Y9LoginUserHolder.getDeptId());
-        return this.treeSearch(name, treeType, y9Department.getDn());
-    }
-
-    private List<Y9Organization> findOrganizationByNameLike(String name, String dnName) {
-        return y9OrganizationRepository.findByNameContainingAndDnContainingOrderByTabIndexAsc(name, dnName);
-    }
-
-    private List<Y9Organization> findOrganizationByNameLike(String name) {
-        return y9OrganizationRepository.findByNameContainingOrderByTabIndexAsc(name);
-    }
-
-    private List<Y9Person> findPersonByNameLike(String name) {
-        return y9PersonRepository.findByNameContaining(name);
-    }
-
-    private List<Y9Person> findPersonByNameLike(String name, String dnName) {
-        return y9PersonRepository.findByNameContainingAndDnContaining(name, dnName);
-    }
-
-    private List<Y9Person> findPersonByNameLikeAndDisabled(String name) {
-        return y9PersonRepository.findByNameContainingAndDisabled(name, false);
-    }
-
-    private List<Y9Person> findPersonByParentId(String parentId) {
-        return y9PersonRepository.findByParentIdOrderByTabIndex(parentId);
-    }
-
-    private List<Y9Person> findPersonByParentIdAndDisabled(String parentId, boolean disabled) {
-        return y9PersonRepository.findByDisabledAndParentIdOrderByTabIndex(disabled, parentId);
-    }
-
-    private List<Y9Person> findPersonByParentIdAndDisabledAndName(String parentId, boolean disabled, String name) {
-        return y9PersonRepository.findByParentIdAndDisabledAndNameContainingOrderByTabIndex(parentId, disabled, name);
-    }
-
-    private List<Y9Position> findPositionByNameLike(String name) {
-        return y9PositionRepository.findByNameContainingOrderByTabIndexAsc(name);
-    }
-
-    private List<Y9Position> findPositionByNameLike(String name, String dnName) {
-        return y9PositionRepository.findByNameContainingAndDnContainingOrderByTabIndexAsc(name, dnName);
-    }
-
-    private List<Y9Position> findPositionByParentId(String parentId) {
-        return y9PositionRepository.findByParentIdOrderByTabIndexAsc(parentId);
-    }
-
-    private void getOrgUnitListByDownwardRecursion(List<Y9OrgBase> childrenList, String orgId) {
-        List<Y9Department> depts = findDepartmentByParentId(orgId);
-        if (!depts.isEmpty()) {
-            childrenList.addAll(depts);
-        }
-        List<Y9Person> persons = findPersonByParentId(orgId);
-        if (!persons.isEmpty()) {
-            childrenList.addAll(persons);
-        }
-        List<Y9Group> groups = findGroupByParentId(orgId);
-        if (!groups.isEmpty()) {
-            childrenList.addAll(groups);
-        }
-        List<Y9Position> positions = findPositionByParentId(orgId);
-        if (!positions.isEmpty()) {
-            childrenList.addAll(positions);
-        }
-        for (Y9Department y9Department : depts) {
-            getOrgUnitListByDownwardRecursion(childrenList, y9Department.getId());
-        }
-    }
-
-    private void getOrgUnitListByUpwardRecursion(String parentId, List<Y9OrgBase> baseList) {
-        Y9OrgBase parent = getOrgUnit(parentId);
-        if (parent == null) {
-            LOGGER.debug("parentId={}", parentId);
-        } else {
-            if (baseList.stream().noneMatch(base -> base.getId().equals(parent.getId()))) {
-                baseList.add(parent);
-            }
-            if (parent.getOrgType().equals(OrgTypeEnum.DEPARTMENT)) {
-                Y9Department departmentParent = (Y9Department)parent;
-                getOrgUnitListByUpwardRecursion(departmentParent.getParentId(), baseList);
-            }
-        }
-    }
-
-    private void getPersonListByDownwardRecursion(String parentId, List<Y9Person> personList, Boolean disabled,
-        String name) {
-        personList.addAll(findPersonByParentIdAndDisabledAndName(parentId, disabled, name));
-
-        List<Y9Department> deptList = findDepartmentByParentId(parentId);
-        for (Y9Department dept : deptList) {
-            getPersonListByDownwardRecursion(dept.getId(), personList, disabled, name);
-        }
-    }
-
-    private void syncOrgGroupSub(Y9Group y9Group, HashMap<String, Serializable> dateMap) {
-
-        List<Y9Person> orgPersonList = y9PersonManager.listByGroupId(y9Group.getId());
-        ArrayList<Person> personList = new ArrayList<>();
-        for (Y9Person y9Person : orgPersonList) {
-            personList.add(ModelConvertUtil.convert(y9Person, Person.class));
-        }
-        dateMap.put(y9Group.getId() + OrgTypeEnum.PERSON.getEnName(), personList);
-        List<Y9PersonsToGroups> orgPersonsGroupsList =
-            y9PersonsToGroupsRepository.findByGroupIdOrderByPersonOrder(y9Group.getId());
-        ArrayList<PersonsGroups> personsGroupsList = new ArrayList<>();
-        for (Y9PersonsToGroups y9PersonsToGroups : orgPersonsGroupsList) {
-            personsGroupsList.add(ModelConvertUtil.convert(y9PersonsToGroups, PersonsGroups.class));
-        }
-        dateMap.put(y9Group.getId() + Y9OrgEventConst.ORG_MAPPING_PERSONSGROUPS, personsGroupsList);
-    }
-
-    private void syncOrgPositionSub(Y9Position y9Position, HashMap<String, Serializable> dateMap) {
-
-        List<Y9Person> orgPersonList = y9PersonManager.listByPositionId(y9Position.getId());
-        ArrayList<Person> personList = new ArrayList<>();
-        for (Y9Person y9Person : orgPersonList) {
-            personList.add(ModelConvertUtil.convert(y9Person, Person.class));
-        }
-        dateMap.put(y9Position.getId() + OrgTypeEnum.PERSON.getEnName(), personList);
-
-        List<Y9PersonsToPositions> orgPositionsPersonsList =
-            y9PersonsToPositionsRepository.findByPositionId(y9Position.getId());
-        ArrayList<PersonsPositions> positionsPersonsList = new ArrayList<>();
-        for (Y9PersonsToPositions y9PersonsToPositions : orgPositionsPersonsList) {
-            positionsPersonsList.add(ModelConvertUtil.convert(y9PersonsToPositions, PersonsPositions.class));
-        }
-        dateMap.put(y9Position.getId() + Y9OrgEventConst.ORG_MAPPING_PERSONSPOSITIONS, positionsPersonsList);
-    }
-
-    private void syncRecursion(String parentId, HashMap<String, Serializable> dateMap) {
-
-        List<Y9Department> orgDeptList = findDepartmentByParentId(parentId);
-        ArrayList<Department> deptList = new ArrayList<>();
-        for (Y9Department orgDept : orgDeptList) {
-            deptList.add(ModelConvertUtil.convert(orgDept, Department.class));
-            syncRecursion(orgDept.getId(), dateMap);
-        }
-        dateMap.put(parentId + OrgTypeEnum.DEPARTMENT.getEnName(), deptList);
-
-        List<Y9Group> orgGroupList = findGroupByParentId(parentId);
-        ArrayList<Group> groupList = new ArrayList<>();
-        for (Y9Group y9Group : orgGroupList) {
-            groupList.add(ModelConvertUtil.convert(y9Group, Group.class));
-            syncOrgGroupSub(y9Group, dateMap);
-        }
-        dateMap.put(parentId + OrgTypeEnum.GROUP.getEnName(), groupList);
-
-        List<Y9Position> orgPositionList = findPositionByParentId(parentId);
-        ArrayList<Position> positionList = new ArrayList<>();
-        for (Y9Position y9Position : orgPositionList) {
-            positionList.add(ModelConvertUtil.convert(y9Position, Position.class));
-            syncOrgPositionSub(y9Position, dateMap);
-        }
-        dateMap.put(parentId + OrgTypeEnum.POSITION.getEnName(), positionList);
-
-        List<Y9Person> orgPersonList = findPersonByParentId(parentId);
-        ArrayList<Person> personList = new ArrayList<>();
-        for (Y9Person y9Person : orgPersonList) {
-            personList.add(ModelConvertUtil.convert(y9Person, Person.class));
-        }
-        dateMap.put(parentId + OrgTypeEnum.PERSON.getEnName(), personList);
+        return treeSearch(name, treeType, y9Department.getDn(), false);
     }
 
     @Override
@@ -938,5 +671,330 @@ public class CompositeOrgBaseServiceImpl implements CompositeOrgBaseService {
             }
         };
         return y9DepartmentRepository.findAll(spec, pageable);
+    }
+
+    private List<Y9Department> findBureauOfOrganization(String organizationId, Boolean disabled) {
+        if (disabled == null) {
+            return y9DepartmentRepository.findByBureauAndGuidPathContainingOrderByTabIndexAsc(true, organizationId);
+        } else {
+            return y9DepartmentRepository.findByBureauAndGuidPathContainingAndDisabledOrderByTabIndexAsc(true,
+                organizationId, disabled);
+        }
+    }
+
+    private List<Y9Department> findDepartmentByNameLike(String name, Boolean disabled) {
+        if (disabled == null) {
+            return y9DepartmentRepository.findByNameContainingOrderByTabIndexAsc(name);
+        } else {
+            return y9DepartmentRepository.findByNameContainingAndDisabledOrderByTabIndexAsc(name, disabled);
+        }
+    }
+
+    private List<Y9Department> findDepartmentByNameLike(String name, String dnName, Boolean disabled) {
+        if (disabled == null) {
+            return y9DepartmentRepository.findByNameContainingAndDnContainingOrderByTabIndexAsc(name, dnName);
+        } else {
+            return y9DepartmentRepository.findByNameContainingAndDnContainingAndDisabledOrderByTabIndexAsc(name, dnName,
+                disabled);
+        }
+    }
+
+    private List<Y9Department> findDepartmentByParentId(String parentId, Boolean disabled) {
+        if (disabled == null) {
+            return y9DepartmentRepository.findByParentIdOrderByTabIndexAsc(parentId);
+        } else {
+            return y9DepartmentRepository.findByParentIdAndDisabledOrderByTabIndexAsc(parentId, disabled);
+        }
+    }
+
+    private List<Y9Group> findGroupByNameLike(String name, Boolean disabled) {
+        if (disabled == null) {
+            return y9GroupRepository.findByNameContainingOrderByTabIndexAsc(name);
+        } else {
+            return y9GroupRepository.findByNameContainingAndDisabledOrderByTabIndexAsc(name, disabled);
+        }
+    }
+
+    private List<Y9Group> findGroupByNameLike(String name, String dnName, Boolean disabled) {
+        if (disabled == null) {
+            return y9GroupRepository.findByNameContainingAndDnContainingOrderByTabIndex(name, dnName);
+        } else {
+            return y9GroupRepository.findByNameContainingAndDnContainingAndDisabledOrderByTabIndexAsc(name, dnName,
+                disabled);
+        }
+    }
+
+    private List<Y9Group> findGroupByParentId(String parentId, Boolean disabled) {
+        if (disabled == null) {
+            return y9GroupRepository.findByParentIdOrderByTabIndexAsc(parentId);
+        } else {
+            return y9GroupRepository.findByParentIdAndDisabledOrderByTabIndexAsc(parentId, disabled);
+        }
+    }
+
+    private List<Y9Manager> findManagerByNameLike(String name, Boolean disabled) {
+        if (disabled == null) {
+            return y9ManagerRepository.findByNameContainingAndGlobalManagerFalse(name);
+        } else {
+            return y9ManagerRepository.findByNameContainingAndGlobalManagerFalseAndDisabled(name, disabled);
+        }
+    }
+
+    private List<Y9Manager> findManagerByNameLike(String name, String dnName, Boolean disabled) {
+        if (disabled == null) {
+            return y9ManagerRepository.findByNameContainingAndDnContaining(name, dnName);
+        } else {
+            return y9ManagerRepository.findByNameContainingAndDnContainingAndDisabled(name, dnName, disabled);
+        }
+    }
+
+    private List<Y9Organization> findOrganizationByNameLike(String name, Boolean disabled) {
+        if (disabled == null) {
+            return y9OrganizationRepository.findByNameContainingOrderByTabIndexAsc(name);
+        } else {
+            return y9OrganizationRepository.findByNameContainingAndDisabledOrderByTabIndexAsc(name, disabled);
+        }
+    }
+
+    private List<Y9Person> findPersonByNameLike(String name, Boolean disabled) {
+        if (disabled == null) {
+            return y9PersonRepository.findByNameContaining(name);
+        } else {
+            return y9PersonRepository.findByNameContainingAndDisabled(name, disabled);
+        }
+    }
+
+    private List<Y9Person> findPersonByNameLike(String name, String dnName, Boolean disabled) {
+        if (disabled == null) {
+            return y9PersonRepository.findByNameContainingAndDnContaining(name, dnName);
+        } else {
+            return y9PersonRepository.findByNameContainingAndDnContainingAndDisabled(name, dnName, disabled);
+        }
+    }
+
+    private List<Y9Person> findPersonByParentId(String parentId, Boolean disabled) {
+        if (disabled == null) {
+            return y9PersonRepository.findByParentIdOrderByTabIndex(parentId);
+        } else {
+            return y9PersonRepository.findByParentIdAndDisabledOrderByTabIndex(parentId, disabled);
+        }
+    }
+
+    private List<Y9Person> findPersonByParentIdAndDisabledAndName(String parentId, boolean disabled, String name) {
+        return y9PersonRepository.findByParentIdAndDisabledAndNameContainingOrderByTabIndex(parentId, disabled, name);
+    }
+
+    private List<Y9Person> findPersonByParentIdAndName(String parentId, String name) {
+        return y9PersonRepository.findByParentIdAndNameContainingOrderByTabIndex(parentId, name);
+    }
+
+    private List<Y9Position> findPositionByNameLike(String name, Boolean disabled) {
+        if (disabled == null) {
+            return y9PositionRepository.findByNameContainingOrderByTabIndexAsc(name);
+        } else {
+            return y9PositionRepository.findByNameContainingAndDisabledOrderByTabIndexAsc(name, disabled);
+        }
+    }
+
+    private List<Y9Position> findPositionByNameLike(String name, String dnName, Boolean disabled) {
+        if (disabled == null) {
+            return y9PositionRepository.findByNameContainingAndDnContainingOrderByTabIndexAsc(name, dnName);
+        } else {
+            return y9PositionRepository.findByNameContainingAndDnContainingAndDisabledOrderByTabIndexAsc(name, dnName,
+                disabled);
+        }
+    }
+
+    private List<Y9Position> findPositionByParentId(String parentId, Boolean disabled) {
+        if (disabled == null) {
+            return y9PositionRepository.findByParentIdOrderByTabIndexAsc(parentId);
+        } else {
+            return y9PositionRepository.findByParentIdAndDisabledOrderByTabIndexAsc(parentId, disabled);
+        }
+    }
+
+    private void getOrgUnitListByDownwardRecursion(List<Y9OrgBase> childrenList, String orgId) {
+        List<Y9Department> depts = findDepartmentByParentId(orgId, true);
+        if (!depts.isEmpty()) {
+            childrenList.addAll(depts);
+        }
+        List<Y9Person> persons = findPersonByParentId(orgId, true);
+        if (!persons.isEmpty()) {
+            childrenList.addAll(persons);
+        }
+        List<Y9Group> groups = findGroupByParentId(orgId, true);
+        if (!groups.isEmpty()) {
+            childrenList.addAll(groups);
+        }
+        List<Y9Position> positions = findPositionByParentId(orgId, true);
+        if (!positions.isEmpty()) {
+            childrenList.addAll(positions);
+        }
+        for (Y9Department y9Department : depts) {
+            getOrgUnitListByDownwardRecursion(childrenList, y9Department.getId());
+        }
+    }
+
+    private void getOrgUnitListByUpwardRecursion(String parentId, List<Y9OrgBase> baseList) {
+        Y9OrgBase parent = getOrgUnit(parentId);
+        if (parent == null) {
+            LOGGER.debug("parentId={}", parentId);
+        } else {
+            if (baseList.stream().noneMatch(base -> base.getId().equals(parent.getId()))) {
+                baseList.add(parent);
+            }
+            if (parent.getOrgType().equals(OrgTypeEnum.DEPARTMENT)) {
+                Y9Department departmentParent = (Y9Department)parent;
+                getOrgUnitListByUpwardRecursion(departmentParent.getParentId(), baseList);
+            }
+        }
+    }
+
+    private void getPersonListByDownwardRecursion(String parentId, List<Y9Person> personList, Boolean disabled,
+        String name) {
+        if (disabled == null) {
+            personList.addAll(findPersonByParentIdAndName(parentId, name));
+        } else {
+            personList.addAll(findPersonByParentIdAndDisabledAndName(parentId, disabled, name));
+        }
+
+        List<Y9Department> deptList = findDepartmentByParentId(parentId, true);
+        for (Y9Department dept : deptList) {
+            getPersonListByDownwardRecursion(dept.getId(), personList, disabled, name);
+        }
+    }
+
+    private void getSyncOrgUnitsRecursion(SyncOrgUnits syncOrgUnits, Position position) {
+        List<Y9Person> orgPersonList = y9PersonManager.listByPositionId(position.getId(), null);
+        for (Y9Person y9Person : orgPersonList) {
+            syncOrgUnits.getPersons().add(ModelConvertUtil.convert(y9Person, Person.class));
+        }
+
+        List<Y9PersonsToPositions> orgPositionsPersonsList =
+            y9PersonsToPositionsRepository.findByPositionId(position.getId());
+        for (Y9PersonsToPositions y9PersonsToPositions : orgPositionsPersonsList) {
+            syncOrgUnits.getPersonsPositions()
+                .add(ModelConvertUtil.convert(y9PersonsToPositions, PersonsPositions.class));
+        }
+    }
+
+    private void getSyncOrgUnitsRecursion(SyncOrgUnits syncOrgUnits, Group group) {
+        List<Y9Person> orgPersonList = y9PersonManager.listByGroupId(group.getId(), null);
+        for (Y9Person y9Person : orgPersonList) {
+            syncOrgUnits.getPersons().add(ModelConvertUtil.convert(y9Person, Person.class));
+        }
+        List<Y9PersonsToGroups> orgPersonsGroupsList =
+            y9PersonsToGroupsRepository.findByGroupIdOrderByPersonOrder(group.getId());
+        for (Y9PersonsToGroups y9PersonsToGroups : orgPersonsGroupsList) {
+            syncOrgUnits.getPersonsGroups().add(ModelConvertUtil.convert(y9PersonsToGroups, PersonsGroups.class));
+        }
+    }
+
+    private void getSyncOrgUnitsRecursion(SyncOrgUnits syncOrgUnits, Department parentDepartment) {
+        String parentId = parentDepartment.getId();
+        getSyncOrgUnitsRecursion(syncOrgUnits, parentId);
+    }
+
+    private void getSyncOrgUnitsRecursion(SyncOrgUnits syncOrgUnits, String parentId) {
+        List<Y9Department> orgDeptList = findDepartmentByParentId(parentId, null);
+        for (Y9Department orgDept : orgDeptList) {
+            Department department = ModelConvertUtil.convert(orgDept, Department.class);
+            syncOrgUnits.getDepartments().add(department);
+            getSyncOrgUnitsRecursion(syncOrgUnits, department);
+        }
+
+        List<Y9Group> orgGroupList = findGroupByParentId(parentId, null);
+        for (Y9Group y9Group : orgGroupList) {
+            Group group = ModelConvertUtil.convert(y9Group, Group.class);
+            syncOrgUnits.getGroups().add(group);
+            getSyncOrgUnitsRecursion(syncOrgUnits, group);
+        }
+
+        List<Y9Position> orgPositionList = findPositionByParentId(parentId, null);
+        for (Y9Position y9Position : orgPositionList) {
+            Position position = ModelConvertUtil.convert(y9Position, Position.class);
+            syncOrgUnits.getPositions().add(position);
+            getSyncOrgUnitsRecursion(syncOrgUnits, position);
+        }
+
+        List<Y9Person> orgPersonList = findPersonByParentId(parentId, null);
+        for (Y9Person y9Person : orgPersonList) {
+            Person person = ModelConvertUtil.convert(y9Person, Person.class);
+            syncOrgUnits.getPersons().add(person);
+        }
+    }
+
+    private void getSyncOrgUnitsRecursion(SyncOrgUnits syncOrgUnits, Organization organization) {
+        String parentId = organization.getId();
+        getSyncOrgUnitsRecursion(syncOrgUnits, parentId);
+    }
+
+    private void syncOrgGroupSub(Y9Group y9Group, HashMap<String, Serializable> dateMap) {
+
+        List<Y9Person> orgPersonList = y9PersonManager.listByGroupId(y9Group.getId(), null);
+        ArrayList<Person> personList = new ArrayList<>();
+        for (Y9Person y9Person : orgPersonList) {
+            personList.add(ModelConvertUtil.convert(y9Person, Person.class));
+        }
+        dateMap.put(y9Group.getId() + OrgTypeEnum.PERSON.getEnName(), personList);
+        List<Y9PersonsToGroups> orgPersonsGroupsList =
+            y9PersonsToGroupsRepository.findByGroupIdOrderByPersonOrder(y9Group.getId());
+        ArrayList<PersonsGroups> personsGroupsList = new ArrayList<>();
+        for (Y9PersonsToGroups y9PersonsToGroups : orgPersonsGroupsList) {
+            personsGroupsList.add(ModelConvertUtil.convert(y9PersonsToGroups, PersonsGroups.class));
+        }
+        dateMap.put(y9Group.getId() + Y9OrgEventConst.ORG_MAPPING_PERSONSGROUPS, personsGroupsList);
+    }
+
+    private void syncOrgPositionSub(Y9Position y9Position, HashMap<String, Serializable> dateMap) {
+
+        List<Y9Person> orgPersonList = y9PersonManager.listByPositionId(y9Position.getId(), null);
+        ArrayList<Person> personList = new ArrayList<>();
+        for (Y9Person y9Person : orgPersonList) {
+            personList.add(ModelConvertUtil.convert(y9Person, Person.class));
+        }
+        dateMap.put(y9Position.getId() + OrgTypeEnum.PERSON.getEnName(), personList);
+
+        List<Y9PersonsToPositions> orgPositionsPersonsList =
+            y9PersonsToPositionsRepository.findByPositionId(y9Position.getId());
+        ArrayList<PersonsPositions> positionsPersonsList = new ArrayList<>();
+        for (Y9PersonsToPositions y9PersonsToPositions : orgPositionsPersonsList) {
+            positionsPersonsList.add(ModelConvertUtil.convert(y9PersonsToPositions, PersonsPositions.class));
+        }
+        dateMap.put(y9Position.getId() + Y9OrgEventConst.ORG_MAPPING_PERSONSPOSITIONS, positionsPersonsList);
+    }
+
+    private void syncRecursion(String parentId, HashMap<String, Serializable> dateMap) {
+
+        List<Y9Department> orgDeptList = findDepartmentByParentId(parentId, null);
+        ArrayList<Department> deptList = new ArrayList<>();
+        for (Y9Department orgDept : orgDeptList) {
+            deptList.add(ModelConvertUtil.convert(orgDept, Department.class));
+            syncRecursion(orgDept.getId(), dateMap);
+        }
+        dateMap.put(parentId + OrgTypeEnum.DEPARTMENT.getEnName(), deptList);
+
+        List<Y9Group> orgGroupList = findGroupByParentId(parentId, null);
+        ArrayList<Group> groupList = new ArrayList<>();
+        for (Y9Group y9Group : orgGroupList) {
+            groupList.add(ModelConvertUtil.convert(y9Group, Group.class));
+            syncOrgGroupSub(y9Group, dateMap);
+        }
+        dateMap.put(parentId + OrgTypeEnum.GROUP.getEnName(), groupList);
+
+        List<Y9Position> orgPositionList = findPositionByParentId(parentId, null);
+        ArrayList<Position> positionList = new ArrayList<>();
+        for (Y9Position y9Position : orgPositionList) {
+            positionList.add(ModelConvertUtil.convert(y9Position, Position.class));
+            syncOrgPositionSub(y9Position, dateMap);
+        }
+        dateMap.put(parentId + OrgTypeEnum.POSITION.getEnName(), positionList);
+
+        List<Y9Person> orgPersonList = findPersonByParentId(parentId, null);
+        ArrayList<Person> personList = new ArrayList<>();
+        for (Y9Person y9Person : orgPersonList) {
+            personList.add(ModelConvertUtil.convert(y9Person, Person.class));
+        }
+        dateMap.put(parentId + OrgTypeEnum.PERSON.getEnName(), personList);
     }
 }

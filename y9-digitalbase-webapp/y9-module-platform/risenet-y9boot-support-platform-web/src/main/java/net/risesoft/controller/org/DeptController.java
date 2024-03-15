@@ -46,13 +46,13 @@ public class DeptController {
     /**
      * 禁用/解除禁用部门
      *
-     * @param deptId 部门id
+     * @param id 部门id
      * @return
      */
     @RiseLog(operationName = "禁用/解除禁用部门", operationType = OperationTypeEnum.DELETE)
     @RequestMapping(value = "/changeDisabled")
-    public Y9Result<Y9Department> changeDisabled(@RequestParam @NotBlank String deptId) {
-        Y9Department dept = y9DepartmentService.changeDisable(deptId);
+    public Y9Result<Y9Department> changeDisabled(@RequestParam @NotBlank String id) {
+        Y9Department dept = y9DepartmentService.changeDisable(id);
         return Y9Result.success(dept, "禁用部门成功！");
     }
 
@@ -92,7 +92,7 @@ public class DeptController {
     @RiseLog(operationName = "根据部门id，获取部门领导列表")
     @RequestMapping(value = "/listDeptLeaders")
     public Y9Result<List<Y9OrgBase>> listDeptLeaders(@RequestParam @NotBlank String deptId) {
-        return Y9Result.success(y9DepartmentService.listLeaders(deptId), "获取部门领导列表成功");
+        return Y9Result.success(y9DepartmentService.listLeaders(deptId, null), "获取部门领导列表成功");
     }
 
     /**
@@ -105,7 +105,7 @@ public class DeptController {
     @RiseLog(operationName = "根据部门id获取部门的主管领导列表")
     @RequestMapping(value = "/listDeptManagers")
     public Y9Result<List<Y9OrgBase>> listDeptManagers(@RequestParam @NotBlank String deptId) {
-        return Y9Result.success(y9DepartmentService.listManagers(deptId), "获取部门的主管领导列表成功");
+        return Y9Result.success(y9DepartmentService.listManagers(deptId, null), "获取部门的主管领导列表成功");
     }
 
     /**
@@ -220,19 +220,6 @@ public class DeptController {
     }
 
     /**
-     * 保存部门排序
-     *
-     * @param deptIds 部门下成员ids
-     * @return
-     */
-    @RiseLog(operationName = "保存部门排序", operationType = OperationTypeEnum.MODIFY)
-    @PostMapping(value = "/saveOrder")
-    public Y9Result<String> saveOrder(@RequestParam(value = "deptIds") @NotEmpty List<String> deptIds) {
-        compositeOrgBaseService.sort(deptIds);
-        return Y9Result.successMsg("保存部门排序成功");
-    }
-
-    /**
      * 新建或者更新部门信息
      *
      * @param dept 部门实体
@@ -243,6 +230,19 @@ public class DeptController {
     public Y9Result<Y9Department> saveOrUpdate(@Validated Y9Department dept) {
         Y9Department returnDept = y9DepartmentService.saveOrUpdate(dept);
         return Y9Result.success(returnDept, "保存成功");
+    }
+
+    /**
+     * 保存部门排序
+     *
+     * @param deptIds 部门下成员ids
+     * @return
+     */
+    @RiseLog(operationName = "保存部门排序", operationType = OperationTypeEnum.MODIFY)
+    @PostMapping(value = "/saveOrder")
+    public Y9Result<String> saveOrder(@RequestParam(value = "deptIds") @NotEmpty List<String> deptIds) {
+        compositeOrgBaseService.sort(deptIds);
+        return Y9Result.successMsg("保存部门排序成功");
     }
 
     /**

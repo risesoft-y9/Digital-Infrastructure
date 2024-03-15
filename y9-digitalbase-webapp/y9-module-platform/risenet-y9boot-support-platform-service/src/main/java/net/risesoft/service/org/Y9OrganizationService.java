@@ -15,6 +15,14 @@ import net.risesoft.y9.exception.Y9NotFoundException;
 public interface Y9OrganizationService {
 
     /**
+     * 更改禁用状态
+     *
+     * @param id ID
+     * @return 组织机构实体
+     */
+    Y9Organization changeDisabled(String id);
+
+    /**
      * 创建组织机构
      *
      * @param organizationName 组织名称
@@ -73,9 +81,10 @@ public interface Y9OrganizationService {
      * 获取组织架构列表
      *
      * @param virtual 是否虚拟组织
+     * @param disabled
      * @return {@link List}<{@link Y9Organization}>
      */
-    List<Y9Organization> list(Boolean virtual);
+    List<Y9Organization> list(Boolean virtual, Boolean disabled);
 
     /**
      * 根据dn查找

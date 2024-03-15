@@ -76,7 +76,7 @@ public class OrgUnitApiImpl implements OrgUnitApi {
         @RequestParam("orgUnitId") @NotBlank String orgUnitId) {
         Y9LoginUserHolder.setTenantId(tenantId);
 
-        List<Y9Department> y9DepartmentList = y9DepartmentService.getDeptTrees(orgUnitId);
+        List<Y9Department> y9DepartmentList = y9DepartmentService.listRecursivelyByParentId(orgUnitId, Boolean.FALSE);
         return Y9ModelConvertUtil.convert(y9DepartmentList, Department.class);
     }
 
@@ -203,8 +203,8 @@ public class OrgUnitApiImpl implements OrgUnitApi {
         @RequestParam("dnName") @NotBlank String dnName) {
         Y9LoginUserHolder.setTenantId(tenantId);
 
-        List<Y9OrgBase> y9OrgBaseList =
-            compositeOrgBaseService.treeSearch(name, Y9EnumUtil.valueOf(OrgTreeTypeEnum.class, treeType), dnName);
+        List<Y9OrgBase> y9OrgBaseList = compositeOrgBaseService.treeSearch(name,
+            Y9EnumUtil.valueOf(OrgTreeTypeEnum.class, treeType), dnName, false);
         return ModelConvertUtil.orgBaseToOrgUnit(y9OrgBaseList);
     }
 

@@ -15,21 +15,12 @@ import lombok.RequiredArgsConstructor;
 
 import net.risesoft.api.platform.org.OrganizationApi;
 import net.risesoft.entity.Y9Department;
-import net.risesoft.entity.Y9Group;
 import net.risesoft.entity.Y9Organization;
-import net.risesoft.entity.Y9Person;
-import net.risesoft.entity.Y9Position;
 import net.risesoft.model.platform.Department;
-import net.risesoft.model.platform.Group;
 import net.risesoft.model.platform.Organization;
-import net.risesoft.model.platform.Person;
-import net.risesoft.model.platform.Position;
 import net.risesoft.pojo.Y9Result;
 import net.risesoft.service.org.Y9DepartmentService;
-import net.risesoft.service.org.Y9GroupService;
 import net.risesoft.service.org.Y9OrganizationService;
-import net.risesoft.service.org.Y9PersonService;
-import net.risesoft.service.org.Y9PositionService;
 import net.risesoft.y9.Y9LoginUserHolder;
 import net.risesoft.y9.util.Y9ModelConvertUtil;
 
@@ -50,10 +41,7 @@ import net.risesoft.y9.util.Y9ModelConvertUtil;
 public class OrganizationApiImpl implements OrganizationApi {
 
     private final Y9DepartmentService y9DepartmentService;
-    private final Y9GroupService orgGroupService;
     private final Y9OrganizationService orgOrganizationService;
-    private final Y9PersonService orgPersonService;
-    private final Y9PositionService orgPositionService;
 
     /**
      * 根据id获得组织机构对象
@@ -64,7 +52,7 @@ public class OrganizationApiImpl implements OrganizationApi {
      * @since 9.6.0
      */
     @Override
-    public Y9Result<Organization> getOrganization(@RequestParam("tenantId") @NotBlank String tenantId,
+    public Y9Result<Organization> get(@RequestParam("tenantId") @NotBlank String tenantId,
         @RequestParam("organizationId") @NotBlank String organizationId) {
         Y9LoginUserHolder.setTenantId(tenantId);
 
@@ -73,7 +61,22 @@ public class OrganizationApiImpl implements OrganizationApi {
     }
 
     /**
-     * 获取所有委办局
+     * 根据租户id获取组织机构列表（不包含禁用）
+     *
+     * @param tenantId 租户id
+     * @return {@code Y9Result<List<Organization>>} 通用请求返回对象 - data 是组织机构对象集合
+     * @since 9.6.0
+     */
+    @Override
+    public Y9Result<List<Organization>> list(@RequestParam("tenantId") @NotBlank String tenantId) {
+        Y9LoginUserHolder.setTenantId(tenantId);
+
+        List<Y9Organization> y9OrganizationList = orgOrganizationService.list(false, false);
+        return Y9Result.success(Y9ModelConvertUtil.convert(y9OrganizationList, Organization.class));
+    }
+
+    /**
+     * 获取机构的委办局列表（不包含禁用）
      *
      * @param tenantId 租户id
      * @param organizationId 组织机构id
@@ -85,27 +88,12 @@ public class OrganizationApiImpl implements OrganizationApi {
         @RequestParam("organizationId") @NotBlank String organizationId) {
         Y9LoginUserHolder.setTenantId(tenantId);
 
-        List<Y9Department> y9DepartmentList = y9DepartmentService.listBureau(organizationId);
+        List<Y9Department> y9DepartmentList = y9DepartmentService.listBureau(organizationId, false);
         return Y9Result.success(Y9ModelConvertUtil.convert(y9DepartmentList, Department.class));
     }
 
     /**
-     * 根据租户id获取所有组织机构
-     *
-     * @param tenantId 租户id
-     * @return {@code Y9Result<List<Organization>>} 通用请求返回对象 - data 是组织机构对象集合
-     * @since 9.6.0
-     */
-    @Override
-    public Y9Result<List<Organization>> listAllOrganizations(@RequestParam("tenantId") @NotBlank String tenantId) {
-        Y9LoginUserHolder.setTenantId(tenantId);
-
-        List<Y9Organization> y9OrganizationList = orgOrganizationService.list(false);
-        return Y9Result.success(Y9ModelConvertUtil.convert(y9OrganizationList, Organization.class));
-    }
-
-    /**
-     * 通过类型，获取组织机构列表
+     * 根据类型获取组织机构列表（不包含禁用）
      *
      * @param tenantId 租户id
      * @param virtual 是否虚拟组织
@@ -117,76 +105,8 @@ public class OrganizationApiImpl implements OrganizationApi {
         @RequestParam("virtual") Boolean virtual) {
         Y9LoginUserHolder.setTenantId(tenantId);
 
-        List<Y9Organization> y9OrganizationList = orgOrganizationService.list(virtual);
+        List<Y9Organization> y9OrganizationList = orgOrganizationService.list(virtual, false);
         return Y9Result.success(Y9ModelConvertUtil.convert(y9OrganizationList, Organization.class));
-    }
-
-    /**
-     * 获取组织机构下的部门（下一级）
-     *
-     * @param tenantId 租户id
-     * @param organizationId 组织机构唯一标识
-     * @return {@code Y9Result<List<Department>>} 通用请求返回对象 - data 是部门对象集合
-     * @since 9.6.0
-     */
-    @Override
-    public Y9Result<List<Department>> listDepartments(@RequestParam("tenantId") @NotBlank String tenantId,
-        @RequestParam("organizationId") @NotBlank String organizationId) {
-        Y9LoginUserHolder.setTenantId(tenantId);
-
-        List<Y9Department> y9DepartmentList = y9DepartmentService.listByParentId(organizationId);
-        return Y9Result.success(Y9ModelConvertUtil.convert(y9DepartmentList, Department.class));
-    }
-
-    /**
-     * 获取用户组（下一级）
-     *
-     * @param tenantId 租户id
-     * @param organizationId 组织机构唯一标识
-     * @return {@code Y9Result<List<Group>>} 通用请求返回对象 - data 是用户组对象集合
-     * @since 9.6.0
-     */
-    @Override
-    public Y9Result<List<Group>> listGroups(@RequestParam("tenantId") @NotBlank String tenantId,
-        @RequestParam("organizationId") @NotBlank String organizationId) {
-        Y9LoginUserHolder.setTenantId(tenantId);
-
-        List<Y9Group> y9GroupList = orgGroupService.listByParentId(organizationId);
-        return Y9Result.success(Y9ModelConvertUtil.convert(y9GroupList, Group.class));
-    }
-
-    /**
-     * 获取人员（下一级）
-     *
-     * @param tenantId 租户id
-     * @param organizationId 组织机构唯一标识
-     * @return {@code Y9Result<List<Person>>} 通用请求返回对象 - data 是人员对象集合
-     * @since 9.6.0
-     */
-    @Override
-    public Y9Result<List<Person>> listPersons(@RequestParam("tenantId") @NotBlank String tenantId,
-        @RequestParam("organizationId") @NotBlank String organizationId) {
-        Y9LoginUserHolder.setTenantId(tenantId);
-
-        List<Y9Person> y9PersonList = orgPersonService.listByParentId(organizationId);
-        return Y9Result.success(Y9ModelConvertUtil.convert(y9PersonList, Person.class));
-    }
-
-    /**
-     * 获取岗位（下一级）
-     *
-     * @param tenantId 租户id
-     * @param organizationId 组织机构唯一标识
-     * @return {@code Y9Result<List<Position>>} 通用请求返回对象 - data 是岗位对象集合
-     * @since 9.6.0
-     */
-    @Override
-    public Y9Result<List<Position>> listPositions(@RequestParam("tenantId") @NotBlank String tenantId,
-        @RequestParam("organizationId") @NotBlank String organizationId) {
-        Y9LoginUserHolder.setTenantId(tenantId);
-
-        List<Y9Position> y9PositionList = orgPositionService.listByParentId(organizationId);
-        return Y9Result.success(Y9ModelConvertUtil.convert(y9PositionList, Position.class));
     }
 
 }

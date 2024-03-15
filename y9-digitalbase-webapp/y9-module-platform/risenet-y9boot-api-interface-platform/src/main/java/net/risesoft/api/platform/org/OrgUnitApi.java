@@ -9,7 +9,6 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import net.risesoft.enums.platform.OrgTreeTypeEnum;
-import net.risesoft.model.platform.Department;
 import net.risesoft.model.platform.OrgUnit;
 import net.risesoft.model.platform.Organization;
 import net.risesoft.pojo.Y9Result;
@@ -27,7 +26,7 @@ import net.risesoft.pojo.Y9Result;
 public interface OrgUnitApi {
 
     /**
-     * 根据租户id和节点id获取委办局
+     * 获取组织节点所在委办局
      *
      * @param tenantId 租户id
      * @param orgUnitId 组织节点唯一标识
@@ -36,30 +35,6 @@ public interface OrgUnitApi {
      */
     @GetMapping("/getBureau")
     Y9Result<OrgUnit> getBureau(@RequestParam("tenantId") @NotBlank String tenantId,
-        @RequestParam("orgUnitId") @NotBlank String orgUnitId);
-
-    /**
-     * 获得部门树
-     *
-     * @param tenantId 租户id
-     * @param orgUnitId 组织节点唯一标识(可能是机构ID,也可能是部门ID)
-     * @return {@code Y9Result<List<Department>>} 通用请求返回对象 - data 是部门对象集合
-     * @since 9.6.0
-     */
-    @GetMapping("/getDeptTrees")
-    Y9Result<List<Department>> getDeptTrees(@RequestParam("tenantId") @NotBlank String tenantId,
-        @RequestParam("orgUnitId") @NotBlank String orgUnitId);
-
-    /**
-     * 获取组织节点所在的组织机构
-     *
-     * @param tenantId 租户id
-     * @param orgUnitId 组织节点唯一标识
-     * @return {@code Y9Result<Organization>} 通用请求返回对象 - data 是组织机构对象
-     * @since 9.6.0
-     */
-    @GetMapping("/getOrganization")
-    Y9Result<Organization> getOrganization(@RequestParam("tenantId") @NotBlank String tenantId,
         @RequestParam("orgUnitId") @NotBlank String orgUnitId);
 
     /**
@@ -75,7 +50,7 @@ public interface OrgUnitApi {
         @RequestParam("orgUnitId") @NotBlank String orgUnitId);
 
     /**
-     * 根据id，获取已删除的组织节点
+     * 根据id获取已删除的组织节点
      *
      * @param tenantId 租户id
      * @param orgUnitId 组织节点唯一标识
@@ -87,7 +62,20 @@ public interface OrgUnitApi {
         @RequestParam("orgUnitId") @NotBlank String orgUnitId);
 
     /**
-     * 根据id获得父对象
+     * 获取组织节点所在的组织机构
+     *
+     * @param tenantId 租户id
+     * @param orgUnitId 组织节点唯一标识
+     * @return {@code Y9Result<Organization>} 通用请求返回对象 - data 是组织机构对象
+     * @since 9.6.0
+     */
+    @GetMapping("/getOrganization")
+    Y9Result<Organization> getOrganization(@RequestParam("tenantId") @NotBlank String tenantId,
+        @RequestParam("orgUnitId") @NotBlank String orgUnitId);
+
+    /**
+     * 获取组织节点的父节点对象（部门或组织机构）<br/>
+     * 如果 orgUnitId 对应组织机构节点，则返回 null
      *
      * @param tenantId 租户id
      * @param orgUnitId 组织节点唯一标识
@@ -99,7 +87,7 @@ public interface OrgUnitApi {
         @RequestParam("orgUnitId") @NotBlank String orgUnitId);
 
     /**
-     * 获得子节点
+     * 获得下一级组织节点列表（不包含禁用）
      *
      * @param tenantId 租户id
      * @param orgUnitId 组织节点唯一标识
@@ -112,7 +100,17 @@ public interface OrgUnitApi {
         @RequestParam("orgUnitId") @NotBlank String orgUnitId, @RequestParam("treeType") OrgTreeTypeEnum treeType);
 
     /**
-     * 根据节点名称，和树类型查询组织节点
+     * 获取组织树的根节点即组织机构列表（不包含禁用）
+     *
+     * @param tenantId 租户id
+     * @return {@code Y9Result<List<Organization>>} 通用请求返回对象 - data 是组织机构对象集合
+     * @since 9.6.0
+     */
+    @GetMapping("/treeRoot")
+    Y9Result<List<Organization>> treeRoot(@RequestParam("tenantId") @NotBlank String tenantId);
+
+    /**
+     * 根据节点名称和树类型查询组织节点列表（不包含禁用）
      *
      * @param tenantId 租户id
      * @param name 组织节点名称
@@ -125,7 +123,7 @@ public interface OrgUnitApi {
         @RequestParam("name") @NotBlank String name, @RequestParam("treeType") OrgTreeTypeEnum treeType);
 
     /**
-     * 根据name，和结构树类型查询组织节点
+     * 根据节点名称和结构树类型查询组织节点列表（不包含禁用）
      *
      * @param tenantId 租户id
      * @param name 组织节点名称

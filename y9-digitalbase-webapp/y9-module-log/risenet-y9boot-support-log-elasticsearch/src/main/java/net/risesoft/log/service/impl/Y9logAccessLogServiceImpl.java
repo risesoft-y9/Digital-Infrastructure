@@ -953,19 +953,19 @@ public class Y9logAccessLogServiceImpl implements Y9logAccessLogService {
         String guidPath = null;
         if (StringUtils.isNotBlank(orgId) && StringUtils.isNotBlank(orgType)) {
             if (orgType.equals(OrgTypeEnum.ORGANIZATION.getEnName())) {
-                guidPath = organizationManager.getOrganization(tenantId, orgId).getData().getGuidPath();
+                guidPath = organizationManager.get(tenantId, orgId).getData().getGuidPath();
             } else if (orgType.equals(OrgTypeEnum.DEPARTMENT.getEnName())) {
                 // orgDepartmentService.getDNById(orgId);
-                guidPath = departmentManager.getDepartment(tenantId, orgId).getData().getGuidPath();
+                guidPath = departmentManager.get(tenantId, orgId).getData().getGuidPath();
             } else if (orgType.equals(OrgTypeEnum.GROUP.getEnName())) {
                 // orgGroupService.getDNById(orgId);
-                guidPath = groupManager.getGroup(tenantId, orgId).getData().getGuidPath();
+                guidPath = groupManager.get(tenantId, orgId).getData().getGuidPath();
             } else if (orgType.equals(OrgTypeEnum.POSITION.getEnName())) {
                 // orgPositionService.getDNById(orgId);
-                guidPath = positionManager.getPosition(tenantId, orgId).getData().getGuidPath();
+                guidPath = positionManager.get(tenantId, orgId).getData().getGuidPath();
             } else if (orgType.equals(OrgTypeEnum.PERSON.getEnName())) {
                 // orgPersonService.getDNById(orgId);
-                guidPath = personManager.getPerson(tenantId, orgId).getData().getGuidPath();
+                guidPath = personManager.get(tenantId, orgId).getData().getGuidPath();
             }
         }
         return guidPath;
@@ -1302,13 +1302,13 @@ public class Y9logAccessLogServiceImpl implements Y9logAccessLogService {
         List<String> ids = new ArrayList<>();
         List<Person> allPersons = new ArrayList<>();
         if (orgType.equals(OrgTypeEnum.DEPARTMENT.getEnName())) {
-            allPersons = departmentManager.listAllPersons(tenantId, orgId).getData();
+            allPersons = personManager.listRecursivelyByParentId(tenantId, orgId).getData();
         } else if (orgType.equals(OrgTypeEnum.GROUP.getEnName())) {
-            allPersons = groupManager.listPersons(tenantId, orgId).getData();
+            allPersons = groupManager.listPersonsByGroupId(tenantId, orgId).getData();
         } else if (orgType.equals(OrgTypeEnum.POSITION.getEnName())) {
-            allPersons = positionManager.listPersons(tenantId, orgId).getData();
+            allPersons = positionManager.listPersonsByPositionId(tenantId, orgId).getData();
         } else if (orgType.equals(OrgTypeEnum.PERSON.getEnName())) {
-            allPersons.add(personManager.getPerson(tenantId, orgId).getData());
+            allPersons.add(personManager.get(tenantId, orgId).getData());
         }
         for (Person p : allPersons) {
             ids.add(p.getId());

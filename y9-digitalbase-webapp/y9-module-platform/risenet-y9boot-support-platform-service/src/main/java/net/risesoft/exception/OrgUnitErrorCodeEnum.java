@@ -48,7 +48,15 @@ public enum OrgUnitErrorCodeEnum implements ErrorCode {
     /** custom group not found */
     CUSTOM_GROUP_NOT_FOUND(16, "自定义用户组[{}]不存在"),
     /** 旧密码不正确 */
-    OLD_PASSWORD_IS_INCORRECT(17, "旧密码不正确");
+    OLD_PASSWORD_IS_INCORRECT(17, "旧密码不正确"),
+    /** 存在未禁用的人员，禁止禁用当前节点 */
+    NOT_ALL_PERSONS_DISABLED(18, "存在未禁用的人员，禁止禁用当前节点"),
+    /** 存在未禁用的人员，禁止禁用当前节点 */
+    NOT_ALL_POSITIONS_DISABLED(19, "存在未禁用的岗位，禁止禁用当前节点"),
+    /** 存在未禁用的人员，禁止禁用当前节点 */
+    NOT_ALL_GROUPS_DISABLED(20, "存在未禁用的用户组，禁止禁用当前节点"),
+    /** 存在未禁用的人员，禁止禁用当前节点 */
+    NOT_ALL_DEPARTMENTS_DISABLED(21, "存在未禁用的部门，禁止禁用当前节点"),;
 
     private final int moduleErrorCode;
     private final String description;

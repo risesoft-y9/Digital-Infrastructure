@@ -22,15 +22,19 @@ public interface Y9ManagerRepository extends JpaRepository<Y9Manager, String> {
 
     boolean existsByLoginName(String loginName);
 
+    List<Y9Manager> findByGlobalManager(Boolean globalManager);
+
     Optional<Y9Manager> findByLoginName(String loginName);
 
+    List<Y9Manager> findByNameContainingAndDnContaining(String name, String dnName);
+
+    List<Y9Manager> findByNameContainingAndDnContainingAndDisabled(String name, String dnName, Boolean disabled);
+
     List<Y9Manager> findByNameContainingAndGlobalManagerFalse(String name);
+
+    List<Y9Manager> findByNameContainingAndGlobalManagerFalseAndDisabled(String name, Boolean disabled);
 
     List<Y9Manager> findByParentIdOrderByTabIndex(String parentId);
 
     Optional<Y9Manager> findTopByParentIdOrderByTabIndexDesc(String parentId);
-
-    List<Y9Manager> findByGlobalManager(boolean globalManager);
-
-    List<Y9Manager> findByNameContainingAndDnContaining(String name, String dnName);
 }

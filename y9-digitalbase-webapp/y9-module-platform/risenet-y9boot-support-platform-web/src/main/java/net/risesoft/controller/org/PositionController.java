@@ -58,6 +58,19 @@ public class PositionController {
     }
 
     /**
+     * 根据id，改变岗位禁用状态
+     *
+     * @param id 岗位id
+     * @return
+     */
+    @RiseLog(operationName = "禁用岗位", operationType = OperationTypeEnum.MODIFY)
+    @PostMapping(value = "/changeDisabled")
+    public Y9Result<Y9Position> changeDisabled(@NotBlank @RequestParam String id) {
+        Y9Position y9Position = y9PositionService.changeDisabled(id);
+        return Y9Result.success(y9Position, "禁用岗位成功");
+    }
+
+    /**
      * 根据岗位id，获取岗位的扩展属性
      *
      * @param positionId 岗位id
@@ -92,7 +105,7 @@ public class PositionController {
     @RiseLog(operationName = "根据父节点id，获取岗位列表")
     @RequestMapping(value = "/listPositionsByParentId")
     public Y9Result<List<Y9Position>> listPositionsByParentId(@RequestParam @NotBlank String parentId) {
-        return Y9Result.success(y9PositionService.listByParentId(parentId), "根据父节点id，获取岗位列表成功");
+        return Y9Result.success(y9PositionService.listByParentId(parentId, null), "根据父节点id，获取岗位列表成功");
     }
 
     /**
@@ -105,7 +118,7 @@ public class PositionController {
     @RiseLog(operationName = "根据人员id，获取岗位列表")
     @RequestMapping(value = "/listPositionsByPersonId")
     public Y9Result<List<Y9Position>> listPositionsByPersonId(@RequestParam @NotBlank String personId) {
-        return Y9Result.success(y9PositionService.listByPersonId(personId), "根据人员id，获取岗位列表成功");
+        return Y9Result.success(y9PositionService.listByPersonId(personId, null), "根据人员id，获取岗位列表成功");
     }
 
     /**
@@ -167,6 +180,19 @@ public class PositionController {
     }
 
     /**
+     * 新建或者更新岗位信息
+     *
+     * @param position 岗位实体
+     * @return
+     */
+    @RiseLog(operationName = "新建或者更新岗位信息", operationType = OperationTypeEnum.ADD)
+    @PostMapping(value = "/saveOrUpdate")
+    public Y9Result<Y9Position> saveOrUpdate(@Validated Y9Position position) {
+        Y9Position returnPosition = y9PositionService.saveOrUpdate(position);
+        return Y9Result.success(returnPosition, "保存岗位信息成功");
+    }
+
+    /**
      * 保存新的序号
      *
      * @param positionIds 岗位ids
@@ -206,18 +232,5 @@ public class PositionController {
         @RequestParam @NotEmpty String[] positionIds) {
         y9PersonsToPositionsService.orderPositions(personId, positionIds);
         return Y9Result.successMsg("保存人员的岗位排序成功");
-    }
-
-    /**
-     * 新建或者更新岗位信息
-     *
-     * @param position 岗位实体
-     * @return
-     */
-    @RiseLog(operationName = "新建或者更新岗位信息", operationType = OperationTypeEnum.ADD)
-    @PostMapping(value = "/saveOrUpdate")
-    public Y9Result<Y9Position> saveOrUpdate(@Validated Y9Position position) {
-        Y9Position returnPosition = y9PositionService.saveOrUpdate(position);
-        return Y9Result.success(returnPosition, "保存岗位信息成功");
     }
 }

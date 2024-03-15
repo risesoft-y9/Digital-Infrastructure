@@ -59,6 +59,19 @@ public class OrgController {
     private final Y9PersonService y9PersonService;
 
     /**
+     * 根据id，改变组织禁用状态
+     *
+     * @param id 组织id
+     * @return
+     */
+    @RiseLog(operationName = "禁用组织", operationType = OperationTypeEnum.MODIFY)
+    @PostMapping(value = "/changeDisabled")
+    public Y9Result<Y9Organization> changeDisabled(@NotBlank @RequestParam String id) {
+        Y9Organization y9Organization = y9OrganizationService.changeDisabled(id);
+        return Y9Result.success(y9Organization, "禁用组织成功");
+    }
+
+    /**
      * 根据组织机构id，获取扩展属性
      *
      * @param orgId 组织机构id
@@ -136,6 +149,29 @@ public class OrgController {
     }
 
     /**
+     * 获取机构树子节点
+     *
+     * @param id 父节点id
+     * @param treeType 树类型
+     * @return
+     */
+    @RiseLog(operationName = "获取机构树子节点")
+    @GetMapping(value = "/getTree2")
+    @IsManager({ManagerLevelEnum.SYSTEM_MANAGER, ManagerLevelEnum.SECURITY_MANAGER})
+    public Y9Result<List<OrgTreeNodeVO>> getTree2(@RequestParam @NotBlank String id,
+        @RequestParam OrgTreeTypeEnum treeType) {
+        UserInfo userInfo = Y9LoginUserHolder.getUserInfo();
+        List<Y9OrgBase> y9OrgBaseList = new ArrayList<>();
+        if (userInfo.isGlobalManager() && !ManagerLevelEnum.GENERAL_USER.equals(userInfo.getManagerLevel())) {
+            y9OrgBaseList = compositeOrgBaseService.getTree(id, treeType, null);
+        } else if (!ManagerLevelEnum.GENERAL_USER.equals(userInfo.getManagerLevel())) {
+            y9OrgBaseList = compositeOrgBaseService.getTree4DeptManager(id, treeType);
+        }
+        return Y9Result.success(
+            OrgTreeNodeVO.convertY9OrgBaseList(y9OrgBaseList, treeType, true, compositeOrgBaseService), "获取机构树成功！");
+    }
+
+    /**
      * 获取组织架构列表
      *
      * @param virtual 是否为虚拟组织
@@ -147,16 +183,44 @@ public class OrgController {
     @IsManager({ManagerLevelEnum.SYSTEM_MANAGER, ManagerLevelEnum.SECURITY_MANAGER})
     public Y9Result<List<Organization>> list(@RequestParam(required = false) boolean virtual) {
         if (Y9LoginUserHolder.getUserInfo().isGlobalManager()) {
-            return Y9Result.success(Y9ModelConvertUtil.convert(y9OrganizationService.list(virtual), Organization.class),
+            return Y9Result.success(
+                Y9ModelConvertUtil.convert(y9OrganizationService.list(virtual, null), Organization.class),
                 "获取组织架构列表成功！");
         } else {
-            List<Y9Organization> orgList = y9OrganizationService.list(false);
+            List<Y9Organization> orgList = y9OrganizationService.list(false, null);
             Y9Department managerDept = y9DepartmentService.getById(Y9LoginUserHolder.getUserInfo().getParentId());
             String mapping = managerDept.getGuidPath();
             List<Y9Organization> authOrgList =
                 orgList.stream().filter(org -> mapping.contains(org.getGuidPath())).collect(Collectors.toList());
             return Y9Result.success(Y9ModelConvertUtil.convert(authOrgList, Organization.class), "获取组织架构列表成功！");
         }
+    }
+
+    /**
+     * 获取组织架构列表
+     *
+     * @param virtual 是否为虚拟组织
+     * @return
+     */
+    @RiseLog(operationName = "获取组织架构列表")
+    @GetMapping(value = "/list2")
+    @IsManager({ManagerLevelEnum.SYSTEM_MANAGER, ManagerLevelEnum.SECURITY_MANAGER})
+    public Y9Result<List<OrgTreeNodeVO>> list2(@RequestParam OrgTreeTypeEnum treeType,
+        @RequestParam(required = false) boolean virtual) {
+        List<Y9Organization> organizationList;
+        if (Y9LoginUserHolder.getUserInfo().isGlobalManager()) {
+            organizationList = y9OrganizationService.list(virtual, null);
+        } else {
+            List<Y9Organization> orgList = y9OrganizationService.list(false, null);
+            Y9Department managerDept = y9DepartmentService.getById(Y9LoginUserHolder.getUserInfo().getParentId());
+            String mapping = managerDept.getGuidPath();
+            organizationList =
+                orgList.stream().filter(org -> mapping.contains(org.getGuidPath())).collect(Collectors.toList());
+        }
+
+        return Y9Result.success(
+            OrgTreeNodeVO.convertY9OrgBaseList(organizationList, treeType, true, compositeOrgBaseService),
+            "获取组织架构列表成功！");
     }
 
     /**
@@ -188,19 +252,6 @@ public class OrgController {
     }
 
     /**
-     * 对组织机构按id顺序排序
-     *
-     * @param orgIds 组织机构ids
-     * @return
-     */
-    @RiseLog(operationName = "对组织机构按id顺序排序", operationType = OperationTypeEnum.MODIFY)
-    @PostMapping(value = "/saveOrder")
-    public Y9Result<String> saveOrder(@RequestParam(value = "orgIds") @NotEmpty List<String> orgIds) {
-        y9OrganizationService.saveOrder(orgIds);
-        return Y9Result.success(null, "保存机构排序成功！");
-    }
-
-    /**
      * 新建或者更新组织机构
      *
      * @param org 组织机构实体
@@ -211,6 +262,19 @@ public class OrgController {
     public Y9Result<Organization> saveOrUpdate(@Validated Y9Organization org) {
         Y9Organization returnOrg = y9OrganizationService.saveOrUpdate(org);
         return Y9Result.success(Y9ModelConvertUtil.convert(returnOrg, Organization.class), "新建或者更新组织机构成功！");
+    }
+
+    /**
+     * 对组织机构按id顺序排序
+     *
+     * @param orgIds 组织机构ids
+     * @return
+     */
+    @RiseLog(operationName = "对组织机构按id顺序排序", operationType = OperationTypeEnum.MODIFY)
+    @PostMapping(value = "/saveOrder")
+    public Y9Result<String> saveOrder(@RequestParam(value = "orgIds") @NotEmpty List<String> orgIds) {
+        y9OrganizationService.saveOrder(orgIds);
+        return Y9Result.success(null, "保存机构排序成功！");
     }
 
     /**
@@ -252,57 +316,6 @@ public class OrgController {
             treeList = compositeOrgBaseService.treeSearch4DeptManager(name, treeType);
         }
         return Y9Result.success(treeList, "获取机构树成功！");
-    }
-
-    /**
-     * 获取组织架构列表
-     *
-     * @param virtual 是否为虚拟组织
-     * @return
-     */
-    @RiseLog(operationName = "获取组织架构列表")
-    @GetMapping(value = "/list2")
-    @IsManager({ManagerLevelEnum.SYSTEM_MANAGER, ManagerLevelEnum.SECURITY_MANAGER})
-    public Y9Result<List<OrgTreeNodeVO>> list2(@RequestParam OrgTreeTypeEnum treeType,
-        @RequestParam(required = false) boolean virtual) {
-        List<Y9Organization> organizationList;
-        if (Y9LoginUserHolder.getUserInfo().isGlobalManager()) {
-            organizationList = y9OrganizationService.list(virtual);
-        } else {
-            List<Y9Organization> orgList = y9OrganizationService.list(false);
-            Y9Department managerDept = y9DepartmentService.getById(Y9LoginUserHolder.getUserInfo().getParentId());
-            String mapping = managerDept.getGuidPath();
-            organizationList =
-                orgList.stream().filter(org -> mapping.contains(org.getGuidPath())).collect(Collectors.toList());
-        }
-
-        return Y9Result.success(
-            OrgTreeNodeVO.convertY9OrgBaseList(organizationList, treeType, true, compositeOrgBaseService),
-            "获取组织架构列表成功！");
-    }
-
-    /**
-     * 获取机构树子节点
-     *
-     * @param id 父节点id
-     * @param treeType 树类型
-     * @param disabled false为不显示禁用人员，true为显示禁用人员
-     * @return
-     */
-    @RiseLog(operationName = "获取机构树子节点")
-    @GetMapping(value = "/getTree2")
-    @IsManager({ManagerLevelEnum.SYSTEM_MANAGER, ManagerLevelEnum.SECURITY_MANAGER})
-    public Y9Result<List<OrgTreeNodeVO>> getTree2(@RequestParam @NotBlank String id,
-        @RequestParam OrgTreeTypeEnum treeType, boolean disabled) {
-        UserInfo userInfo = Y9LoginUserHolder.getUserInfo();
-        List<Y9OrgBase> y9OrgBaseList = new ArrayList<>();
-        if (userInfo.isGlobalManager() && !ManagerLevelEnum.GENERAL_USER.equals(userInfo.getManagerLevel())) {
-            y9OrgBaseList = compositeOrgBaseService.getTree(id, treeType, disabled);
-        } else if (!ManagerLevelEnum.GENERAL_USER.equals(userInfo.getManagerLevel())) {
-            y9OrgBaseList = compositeOrgBaseService.getTree4DeptManager(id, treeType);
-        }
-        return Y9Result.success(
-            OrgTreeNodeVO.convertY9OrgBaseList(y9OrgBaseList, treeType, true, compositeOrgBaseService), "获取机构树成功！");
     }
 
     /**

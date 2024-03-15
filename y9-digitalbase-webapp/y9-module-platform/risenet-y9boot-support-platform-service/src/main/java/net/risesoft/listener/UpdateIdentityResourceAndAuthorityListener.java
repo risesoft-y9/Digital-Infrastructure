@@ -238,7 +238,8 @@ public class UpdateIdentityResourceAndAuthorityListener {
                     y9PositionToResourceAndAuthorityService
                         .deleteByAuthorizationIdAndPositionId(y9Authorization.getId(), y9OrgBasesToRoles.getOrgId());
 
-                    List<Y9Person> y9PersonList = y9PersonService.listByPositionId(y9OrgBasesToRoles.getOrgId());
+                    List<Y9Person> y9PersonList =
+                        y9PersonService.listByPositionId(y9OrgBasesToRoles.getOrgId(), Boolean.FALSE);
                     for (Y9Person y9Person : y9PersonList) {
                         y9PersonToResourceAndAuthorityService
                             .deleteByAuthorizationIdAndPersonId(y9Authorization.getId(), y9Person.getId());
@@ -276,7 +277,8 @@ public class UpdateIdentityResourceAndAuthorityListener {
                     y9PositionToResourceAndAuthorityService
                         .deleteByAuthorizationIdAndPositionId(y9Authorization.getId(), orgBasesToRoles.getOrgId());
 
-                    List<Y9Person> y9PersonList = y9PersonService.listByPositionId(orgBasesToRoles.getOrgId());
+                    List<Y9Person> y9PersonList =
+                        y9PersonService.listByPositionId(orgBasesToRoles.getOrgId(), Boolean.FALSE);
                     for (Y9Person y9Person : y9PersonList) {
                         y9PersonToResourceAndAuthorityService
                             .deleteByAuthorizationIdAndPersonId(y9Authorization.getId(), y9Person.getId());
@@ -342,7 +344,7 @@ public class UpdateIdentityResourceAndAuthorityListener {
                 y9PersonSet.add(y9PersonService.getById(y9OrgBasesToRoles.getOrgId()));
             } else if (OrgTypeEnum.POSITION.equals(y9OrgBasesToRoles.getOrgType())) {
                 y9PositionSet.add(y9PositionService.getById(y9OrgBasesToRoles.getOrgId()));
-                y9PersonSet.addAll(y9PersonService.listByPositionId(y9OrgBasesToRoles.getOrgId()));
+                y9PersonSet.addAll(y9PersonService.listByPositionId(y9OrgBasesToRoles.getOrgId(), Boolean.FALSE));
             } else {
                 y9PersonSet
                     .addAll(compositeOrgBaseService.listAllPersonsRecursionDownward(y9OrgBasesToRoles.getOrgId()));

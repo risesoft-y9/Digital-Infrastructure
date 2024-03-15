@@ -106,7 +106,7 @@ public class Y9PersonsToGroupsServiceImpl implements Y9PersonsToGroupsService {
     @Override
     @Transactional(readOnly = false)
     public void deleteByPersonId(String personId) {
-        y9PersonsToGroupsRepository.deleteByPersonId(personId);
+        y9PersonsToGroupsManager.deleteByPersonId(personId);
     }
 
     @Override

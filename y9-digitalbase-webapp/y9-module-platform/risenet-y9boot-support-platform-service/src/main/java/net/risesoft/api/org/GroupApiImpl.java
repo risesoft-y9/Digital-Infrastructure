@@ -17,17 +17,13 @@ import lombok.RequiredArgsConstructor;
 import net.risesoft.api.platform.org.GroupApi;
 import net.risesoft.api.platform.org.dto.CreateGroupDTO;
 import net.risesoft.entity.Y9Group;
-import net.risesoft.entity.Y9OrgBase;
 import net.risesoft.entity.Y9Person;
 import net.risesoft.model.platform.Group;
-import net.risesoft.model.platform.OrgUnit;
 import net.risesoft.model.platform.Person;
 import net.risesoft.pojo.Y9Result;
-import net.risesoft.service.org.CompositeOrgBaseService;
 import net.risesoft.service.org.Y9GroupService;
 import net.risesoft.service.org.Y9PersonService;
 import net.risesoft.service.relation.Y9PersonsToGroupsService;
-import net.risesoft.util.ModelConvertUtil;
 import net.risesoft.y9.Y9LoginUserHolder;
 import net.risesoft.y9.util.Y9ModelConvertUtil;
 
@@ -47,7 +43,6 @@ import net.risesoft.y9.util.Y9ModelConvertUtil;
 @RequiredArgsConstructor
 public class GroupApiImpl implements GroupApi {
 
-    private final CompositeOrgBaseService compositeOrgBaseService;
     private final Y9PersonsToGroupsService y9PersonsToGroupsService;
     private final Y9GroupService y9GroupService;
     private final Y9PersonService y9PersonService;
@@ -62,7 +57,7 @@ public class GroupApiImpl implements GroupApi {
      * @since 9.6.0
      */
     @Override
-    public Y9Result<Object> addPerson2Group(@RequestParam("tenantId") @NotBlank String tenantId,
+    public Y9Result<Object> addPerson(@RequestParam("tenantId") @NotBlank String tenantId,
         @RequestParam("groupId") @NotBlank String groupId, @RequestParam("personId") @NotBlank String personId) {
         Y9LoginUserHolder.setTenantId(tenantId);
 
@@ -79,7 +74,7 @@ public class GroupApiImpl implements GroupApi {
      * @since 9.6.0
      */
     @Override
-    public Y9Result<Group> createGroup(@RequestParam("tenantId") @NotBlank String tenantId,
+    public Y9Result<Group> create(@RequestParam("tenantId") @NotBlank String tenantId,
         @RequestBody @Validated CreateGroupDTO createGroupDTO) {
         Y9LoginUserHolder.setTenantId(tenantId);
 
@@ -97,7 +92,7 @@ public class GroupApiImpl implements GroupApi {
      * @since 9.6.0
      */
     @Override
-    public Y9Result<Object> deleteGroup(@RequestParam("tenantId") @NotBlank String tenantId,
+    public Y9Result<Object> delete(@RequestParam("tenantId") @NotBlank String tenantId,
         @RequestParam("groupId") @NotBlank String groupId) {
         Y9LoginUserHolder.setTenantId(tenantId);
 
@@ -114,7 +109,7 @@ public class GroupApiImpl implements GroupApi {
      * @since 9.6.0
      */
     @Override
-    public Y9Result<Group> getGroup(@RequestParam @NotBlank String tenantId, @RequestParam @NotBlank String groupId) {
+    public Y9Result<Group> get(@RequestParam @NotBlank String tenantId, @RequestParam @NotBlank String groupId) {
         Y9LoginUserHolder.setTenantId(tenantId);
 
         Y9Group y9Group = y9GroupService.findById(groupId).orElse(null);
@@ -122,41 +117,24 @@ public class GroupApiImpl implements GroupApi {
     }
 
     /**
-     * 获取用户组父节点
+     * 获取下一级用户组列表（不包含禁用）
      *
      * @param tenantId 租户id
-     * @param groupId 用户组唯一标识
-     * @return {@code Y9Result<OrgUnit>} 通用请求返回对象 - data 是组织节点对象（部门或组织机构）
-     * @since 9.6.0
-     */
-    @Override
-    public Y9Result<OrgUnit> getParent(@RequestParam("tenantId") @NotBlank String tenantId,
-        @RequestParam("groupId") @NotBlank String groupId) {
-        Y9LoginUserHolder.setTenantId(tenantId);
-
-        Y9OrgBase parent = compositeOrgBaseService.findOrgUnitParent(groupId).orElse(null);
-        return Y9Result.success(ModelConvertUtil.orgBaseToOrgUnit(parent));
-    }
-
-    /**
-     * 根据租户id和路径获取所有用户组
-     *
-     * @param tenantId 租户id
-     * @param dn 路径
+     * @param departmentId 部门唯一标识
      * @return {@code Y9Result<List<Group>>} 通用请求返回对象 - data 是用户组对象集合
      * @since 9.6.0
      */
     @Override
-    public Y9Result<List<Group>> listByDn(@RequestParam("tenantId") @NotBlank String tenantId,
-        @RequestParam("dn") @NotBlank String dn) {
+    public Y9Result<List<Group>> listByParentId(@RequestParam("tenantId") @NotBlank String tenantId,
+        @RequestParam("parentId") @NotBlank String departmentId) {
         Y9LoginUserHolder.setTenantId(tenantId);
 
-        List<Y9Group> y9GroupList = y9GroupService.listByDn(dn);
+        List<Y9Group> y9GroupList = y9GroupService.listByParentId(departmentId, false);
         return Y9Result.success(Y9ModelConvertUtil.convert(y9GroupList, Group.class));
     }
 
     /**
-     * 获取组内的人员列表
+     * 获取用户组内的人员列表（不包含禁用）
      *
      * @param tenantId 租户id
      * @param groupId 用户组唯一标识
@@ -164,16 +142,16 @@ public class GroupApiImpl implements GroupApi {
      * @since 9.6.0
      */
     @Override
-    public Y9Result<List<Person>> listPersons(@RequestParam("tenantId") @NotBlank String tenantId,
+    public Y9Result<List<Person>> listPersonsByGroupId(@RequestParam("tenantId") @NotBlank String tenantId,
         @RequestParam("groupId") @NotBlank String groupId) {
         Y9LoginUserHolder.setTenantId(tenantId);
 
-        List<Y9Person> y9PersonList = y9PersonService.listByGroupId(groupId);
+        List<Y9Person> y9PersonList = y9PersonService.listByGroupId(groupId, Boolean.FALSE);
         return Y9Result.success(Y9ModelConvertUtil.convert(y9PersonList, Person.class));
     }
 
     /**
-     * 从用户组移除人员
+     * 将人员移除用户组
      *
      * @param tenantId 租户ID
      * @param groupId 用户组ID
@@ -189,5 +167,4 @@ public class GroupApiImpl implements GroupApi {
         y9PersonsToGroupsService.removePersons(groupId, new String[] {personId});
         return Y9Result.success();
     }
-
 }

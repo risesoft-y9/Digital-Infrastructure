@@ -25,9 +25,9 @@ import net.risesoft.pojo.Y9PageQuery;
 public interface PersonApiClient extends PersonApi {
 
     @Override
-    @GetMapping("/pageByNameLike")
-    Y9Page<Person> pageByNameLike(@RequestParam("tenantId") String tenantId,
-        @RequestParam(required = false) String name, @SpringQueryMap Y9PageQuery pageQuery);
+    @GetMapping("/pageByName")
+    Y9Page<Person> pageByName(@RequestParam("tenantId") String tenantId, @RequestParam(required = false) String name,
+        @SpringQueryMap Y9PageQuery pageQuery);
 
     @Override
     @GetMapping("/pageByParentId")

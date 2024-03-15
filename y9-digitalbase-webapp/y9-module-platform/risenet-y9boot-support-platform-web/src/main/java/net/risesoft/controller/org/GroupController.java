@@ -57,6 +57,19 @@ public class GroupController {
     }
 
     /**
+     * 根据id，改变用户组禁用状态
+     *
+     * @param id 用户组id
+     * @return
+     */
+    @RiseLog(operationName = "禁用用户组", operationType = OperationTypeEnum.MODIFY)
+    @PostMapping(value = "/changeDisabled")
+    public Y9Result<Y9Group> changeDisabled(@NotBlank @RequestParam String id) {
+        Y9Group y9Group = y9GroupService.changeDisabled(id);
+        return Y9Result.success(y9Group, "禁用用户组成功");
+    }
+
+    /**
      * 根据用户组id，获取扩展属性
      *
      * @param groupId 用户组id
@@ -90,7 +103,7 @@ public class GroupController {
     @RiseLog(operationName = "根据人员id，获取用户组列表")
     @RequestMapping(value = "/listGroupsByPersonId")
     public Y9Result<List<Y9Group>> listGroupsByPersonId(@RequestParam @NotBlank String personId) {
-        return Y9Result.success(y9GroupService.listByPersonId(personId), "根据人员id，获取用户组列表");
+        return Y9Result.success(y9GroupService.listByPersonId(personId, null), "根据人员id，获取用户组列表");
     }
 
     /**
@@ -150,6 +163,19 @@ public class GroupController {
     }
 
     /**
+     * 新建或者更新用户组信息
+     *
+     * @param group 用户组实体
+     * @return
+     */
+    @RiseLog(operationName = "新建或者更新用户组信息", operationType = OperationTypeEnum.ADD)
+    @PostMapping(value = "/saveOrUpdate")
+    public Y9Result<Y9Group> saveOrUpdate(@Validated Y9Group group) {
+        Y9Group returnGroup = y9GroupService.saveOrUpdate(group);
+        return Y9Result.success(returnGroup, "新建或者更新用户组信息成功");
+    }
+
+    /**
      * 保存新的序号
      *
      * @param groupIds 用户组ids
@@ -189,19 +215,6 @@ public class GroupController {
         @RequestParam @NotEmpty String[] personIds) {
         y9PersonsToGroupsService.orderPersons(groupId, personIds);
         return Y9Result.successMsg("保存用户组的人员排序成功");
-    }
-
-    /**
-     * 新建或者更新用户组信息
-     *
-     * @param group 用户组实体
-     * @return
-     */
-    @RiseLog(operationName = "新建或者更新用户组信息", operationType = OperationTypeEnum.ADD)
-    @PostMapping(value = "/saveOrUpdate")
-    public Y9Result<Y9Group> saveOrUpdate(@Validated Y9Group group) {
-        Y9Group returnGroup = y9GroupService.saveOrUpdate(group);
-        return Y9Result.success(returnGroup, "新建或者更新用户组信息成功");
     }
 
 }

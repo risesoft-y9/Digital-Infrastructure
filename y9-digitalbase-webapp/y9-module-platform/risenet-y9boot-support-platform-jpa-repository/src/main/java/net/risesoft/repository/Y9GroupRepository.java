@@ -21,14 +21,25 @@ import net.risesoft.entity.Y9Group;
 // @JaversSpringDataAuditable
 public interface Y9GroupRepository extends JpaRepository<Y9Group, String> {
 
-    List<Y9Group> findByNameContainingOrderByTabIndexAsc(String name);
+    long countByDisabledAndGuidPathContaining(Boolean diabled, String guidPath);
+
+    List<Y9Group> findByDn(String dn);
+
+    List<Y9Group> findByDnAndDisabled(String dn, Boolean disabled);
+
+    List<Y9Group> findByNameContainingAndDisabledOrderByTabIndexAsc(String name, Boolean disabled);
+
+    List<Y9Group> findByNameContainingAndDnContainingAndDisabledOrderByTabIndexAsc(String name, String dnName,
+        Boolean disabled);
 
     List<Y9Group> findByNameContainingAndDnContainingOrderByTabIndex(String name, String dnName);
+
+    List<Y9Group> findByNameContainingOrderByTabIndexAsc(String name);
+
+    List<Y9Group> findByParentIdAndDisabledOrderByTabIndexAsc(String parentId, Boolean disabled);
 
     List<Y9Group> findByParentIdOrderByTabIndexAsc(String parentId);
 
     Optional<Y9Group> findTopByParentIdOrderByTabIndexDesc(String parentId);
-
-    List<Y9Group> getByDn(String dn);
 
 }

@@ -157,7 +157,7 @@ public class Y9OrgTreeXmlDataHandlerImpl implements Y9OrgTreeDataHandler {
          * Element中include节点构造
          */
         Element include = element.addElement("include");
-        List<Y9Department> departmentList = y9DepartmentService.listByParentId(orgBaseId);
+        List<Y9Department> departmentList = y9DepartmentService.listByParentId(orgBaseId, false);
         for (Y9Department department : departmentList) {
             include.addElement(OrgTypeEnum.DEPARTMENT.getEnName()).addText(department.getId());
         }
@@ -180,7 +180,7 @@ public class Y9OrgTreeXmlDataHandlerImpl implements Y9OrgTreeDataHandler {
         /**
          * Element用户组或岗位组构造
          */
-        List<Y9Group> y9GroupList = y9GroupService.listByParentId(orgBaseId);
+        List<Y9Group> y9GroupList = y9GroupService.listByParentId(orgBaseId, false);
         for (Y9Group y9Group : y9GroupList) {
             include.addElement(OrgTypeEnum.GROUP.getEnName()).addText(y9Group.getId());
             Element groupElement = rootElement.addElement(OrgTypeEnum.GROUP.getEnName());
@@ -225,7 +225,7 @@ public class Y9OrgTreeXmlDataHandlerImpl implements Y9OrgTreeDataHandler {
         /**
          * Element岗位构造
          */
-        List<Y9Position> y9PositionList = y9PositionService.listByParentId(orgBaseId);
+        List<Y9Position> y9PositionList = y9PositionService.listByParentId(orgBaseId, false);
         for (Y9Position y9Position : y9PositionList) {
             include.addElement(OrgTypeEnum.POSITION.getEnName()).addText(y9Position.getId());
             Element positionElement = rootElement.addElement(OrgTypeEnum.POSITION.getEnName());
@@ -265,7 +265,7 @@ public class Y9OrgTreeXmlDataHandlerImpl implements Y9OrgTreeDataHandler {
         /**
          * Element人员构造
          */
-        List<Y9Person> orgPersonList = y9PersonService.listByParentId(orgBaseId);
+        List<Y9Person> orgPersonList = y9PersonService.listByParentId(orgBaseId, false);
         for (Y9Person person : orgPersonList) {
             include.addElement(OrgTypeEnum.PERSON.getEnName()).addText(person.getId());
             Element personElement = rootElement.addElement(OrgTypeEnum.PERSON.getEnName());
@@ -409,7 +409,7 @@ public class Y9OrgTreeXmlDataHandlerImpl implements Y9OrgTreeDataHandler {
      * 构造子节点信息
      */
     private Element buildSubElement(Element rootElement, String parentId) {
-        List<Y9Department> y9DepartmentList = y9DepartmentService.listByParentId(parentId);
+        List<Y9Department> y9DepartmentList = y9DepartmentService.listByParentId(parentId, false);
         for (Y9Department orgdepartment : y9DepartmentList) {
             Element orgDepartment = buildDeptElement(rootElement, orgdepartment);
             buildIncludeElement(rootElement, orgDepartment, orgdepartment.getId());

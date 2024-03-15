@@ -51,7 +51,7 @@ public class OrgUnitController {
         if (StringUtils.isBlank(tenantId)) {
             tenantId = Y9LoginUserHolder.getTenantId();
         }
-        List<Organization> org = organizationManager.listAllOrganizations(tenantId).getData();
+        List<Organization> org = organizationManager.list(tenantId).getData();
         return Y9Result.success(org);
     }
 
@@ -71,7 +71,7 @@ public class OrgUnitController {
             for (Tenant tenant : tenants) {
                 if (tenant.getTenantType().equals(tenantType)) {
                     Y9LoginUserHolder.setTenantId(tenant.getId());
-                    List<Organization> list = organizationManager.listAllOrganizations(tenant.getId()).getData();
+                    List<Organization> list = organizationManager.list(tenant.getId()).getData();
                     organizationList.addAll(list);
                 }
             }

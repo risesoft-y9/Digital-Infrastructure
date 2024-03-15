@@ -57,7 +57,7 @@ public class InitTenantDataServiceImpl implements InitTenantDataService {
     }
 
     private void initOrg() {
-        boolean organizationNotExists = y9OrganizationService.list(false).isEmpty();
+        boolean organizationNotExists = y9OrganizationService.list(false, false).isEmpty();
         if (organizationNotExists) {
             Y9Job y9Job = y9JobService.create("普通职位", "001");
 
@@ -75,7 +75,7 @@ public class InitTenantDataServiceImpl implements InitTenantDataService {
     @Transactional(readOnly = false)
     public void initManagers() {
         // 新建租户三员及他们所在的虚拟组织
-        boolean virtualOrganizationNotExists = y9OrganizationService.list(true).isEmpty();
+        boolean virtualOrganizationNotExists = y9OrganizationService.list(true, false).isEmpty();
         if (virtualOrganizationNotExists) {
             Y9Organization y9Organization = y9OrganizationService.create("虚拟组织", Boolean.TRUE);
             createSystemManager(y9Organization.getId());
