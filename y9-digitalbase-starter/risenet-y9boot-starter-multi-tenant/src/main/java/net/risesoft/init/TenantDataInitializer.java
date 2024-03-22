@@ -4,6 +4,8 @@ package net.risesoft.init;
  * 租户租用系统数据结构初始化后需要进行的数据初始化 <br/>
  * 系统可根据自己的需求实现接口做数据初始化
  * 
+ * @see net.risesoft.schema.SchemaUpdater
+ * 
  * @author shidaobang
  * @date 2023/11/20
  * @since 9.6.3

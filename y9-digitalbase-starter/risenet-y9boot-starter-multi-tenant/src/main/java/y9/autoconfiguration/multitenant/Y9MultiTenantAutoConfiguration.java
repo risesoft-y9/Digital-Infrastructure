@@ -20,9 +20,11 @@ import com.zaxxer.hikari.HikariDataSource;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
+import net.risesoft.init.TenantAppInitializer;
 import net.risesoft.init.TenantDataInitializer;
 import net.risesoft.kafka.MessageCommonListener;
 import net.risesoft.liquibase.Y9MultiTenantSpringLiquibase;
+import net.risesoft.listener.TenantAppEventListener;
 import net.risesoft.schema.JpaSchemaUpdater;
 import net.risesoft.schema.LiquibaseSchemaUpdater;
 import net.risesoft.schema.NoneSchemaUpdater;
@@ -85,6 +87,12 @@ public class Y9MultiTenantAutoConfiguration {
     @Bean
     public MessageCommonListener messageCommonListener(Y9TenantDataSourceLookup y9TenantDataSourceLookup) {
         return new MessageCommonListener(y9TenantDataSourceLookup);
+    }
+
+    @Bean
+    public TenantAppEventListener
+        tenantAppEventListener(@Autowired(required = false) TenantAppInitializer tenantAppInitializer) {
+        return new TenantAppEventListener(tenantAppInitializer);
     }
 
 }
