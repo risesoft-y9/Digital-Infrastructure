@@ -46,6 +46,12 @@ public class MessageCommonListener {
                 return;
             }
 
+            if (Y9CommonEventConst.TENANT_APP_REGISTERED.equals(eventType)
+                && !Objects.equals(Y9Context.getSystemName(), msg.getEventTarget())) {
+                // 对于非当前引入的系统的消息不处理
+                return;
+            }
+
             Y9EventCommon event = new Y9EventCommon();
             event.setEventType(msg.getEventType());
             event.setEventObject(msg.getEventObject());

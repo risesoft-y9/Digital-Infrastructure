@@ -25,10 +25,7 @@ import net.risesoft.y9.exception.util.Y9ExceptionUtil;
 import net.risesoft.y9.pubsub.event.Y9EntityDeletedEvent;
 import net.risesoft.y9public.entity.resource.Y9App;
 import net.risesoft.y9public.entity.tenant.Y9TenantApp;
-import net.risesoft.y9public.manager.resource.Y9AppManager;
 import net.risesoft.y9public.manager.tenant.Y9TenantAppManager;
-import net.risesoft.y9public.manager.tenant.Y9TenantManager;
-import net.risesoft.y9public.manager.tenant.Y9TenantSystemManager;
 import net.risesoft.y9public.repository.tenant.Y9TenantAppRepository;
 import net.risesoft.y9public.service.tenant.Y9TenantAppService;
 import net.risesoft.y9public.specification.Y9TenantAppSpecification;
@@ -46,10 +43,7 @@ public class Y9TenantAppServiceImpl implements Y9TenantAppService {
 
     private final Y9TenantAppRepository y9TenantAppRepository;
 
-    private final Y9AppManager y9AppManager;
     private final Y9TenantAppManager y9TenantAppManager;
-    private final Y9TenantManager y9TenantManager;
-    private final Y9TenantSystemManager y9TenantSystemManager;
 
     @Override
     public long countByTenantIdAndSystemId(String tenantId, String systemId) {

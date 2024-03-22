@@ -8,19 +8,28 @@ import java.util.Optional;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.transaction.support.TransactionSynchronization;
+import org.springframework.transaction.support.TransactionSynchronizationManager;
 
 import lombok.RequiredArgsConstructor;
 
 import net.risesoft.enums.platform.ManagerLevelEnum;
 import net.risesoft.id.IdType;
 import net.risesoft.id.Y9IdGenerator;
+import net.risesoft.model.platform.TenantApp;
 import net.risesoft.model.user.UserInfo;
 import net.risesoft.y9.Y9Context;
 import net.risesoft.y9.Y9LoginUserHolder;
+import net.risesoft.y9.pubsub.Y9PublishService;
+import net.risesoft.y9.pubsub.constant.Y9CommonEventConst;
 import net.risesoft.y9.pubsub.event.Y9EntityDeletedEvent;
+import net.risesoft.y9.pubsub.message.Y9MessageCommon;
+import net.risesoft.y9.util.Y9ModelConvertUtil;
 import net.risesoft.y9public.entity.resource.Y9App;
+import net.risesoft.y9public.entity.resource.Y9System;
 import net.risesoft.y9public.entity.tenant.Y9TenantApp;
 import net.risesoft.y9public.manager.resource.Y9AppManager;
+import net.risesoft.y9public.manager.resource.Y9SystemManager;
 import net.risesoft.y9public.manager.tenant.Y9TenantAppManager;
 import net.risesoft.y9public.manager.tenant.Y9TenantManager;
 import net.risesoft.y9public.manager.tenant.Y9TenantSystemManager;
@@ -43,6 +52,9 @@ public class Y9TenantAppManagerImpl implements Y9TenantAppManager {
     private final Y9AppManager y9AppManager;
     private final Y9TenantManager y9TenantManager;
     private final Y9TenantSystemManager y9TenantSystemManager;
+    private final Y9SystemManager y9SystemManager;
+
+    private final Y9PublishService y9PublishService;
 
     @Override
     @Transactional(readOnly = false)
@@ -120,6 +132,24 @@ public class Y9TenantAppManagerImpl implements Y9TenantAppManager {
         if (StringUtils.isBlank(y9TenantApp.getId())) {
             y9TenantApp.setId(Y9IdGenerator.genId(IdType.SNOWFLAKE));
         }
-        return y9TenantAppRepository.save(y9TenantApp);
+        Y9TenantApp savedTenantApp = y9TenantAppRepository.save(y9TenantApp);
+
+        if (Boolean.TRUE.equals(y9TenantApp.getTenancy())) {
+            Y9System y9System = y9SystemManager.getById(savedTenantApp.getSystemId());
+            TenantApp tenantApp = Y9ModelConvertUtil.convert(savedTenantApp, TenantApp.class);
+            // 注册事务同步器，在事务提交后做某些操作
+            TransactionSynchronizationManager.registerSynchronization(new TransactionSynchronization() {
+                @Override
+                public void afterCommit() {
+                    // 租户租用系统事件，应用可监听做对应租户的初始化的工作
+                    Y9MessageCommon tenantSystemRegisteredEvent = new Y9MessageCommon();
+                    tenantSystemRegisteredEvent.setEventObject(tenantApp);
+                    tenantSystemRegisteredEvent.setEventTarget(y9System.getName());
+                    tenantSystemRegisteredEvent.setEventType(Y9CommonEventConst.TENANT_APP_REGISTERED);
+                    y9PublishService.publishMessageCommon(tenantSystemRegisteredEvent);
+                }
+            });
+        }
+        return savedTenantApp;
     }
 }
