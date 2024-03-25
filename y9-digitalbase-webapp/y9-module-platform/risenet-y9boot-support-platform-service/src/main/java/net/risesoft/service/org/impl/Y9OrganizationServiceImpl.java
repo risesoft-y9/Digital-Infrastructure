@@ -17,6 +17,7 @@ import org.springframework.transaction.support.TransactionSynchronization;
 import org.springframework.transaction.support.TransactionSynchronizationManager;
 import org.springframework.util.Assert;
 
+import net.risesoft.consts.InitDataConsts;
 import net.risesoft.consts.OrgLevelConsts;
 import net.risesoft.entity.Y9OrgBase;
 import net.risesoft.entity.Y9Organization;
@@ -34,7 +35,7 @@ import net.risesoft.service.org.Y9OrganizationService;
 import net.risesoft.util.Y9PublishServiceUtil;
 import net.risesoft.y9.Y9Context;
 import net.risesoft.y9.Y9LoginUserHolder;
-import net.risesoft.y9.pubsub.constant.Y9OrgEventConst;
+import net.risesoft.y9.pubsub.constant.Y9OrgEventTypeConst;
 import net.risesoft.y9.pubsub.event.Y9EntityDeletedEvent;
 import net.risesoft.y9.pubsub.event.Y9EntityUpdatedEvent;
 import net.risesoft.y9.pubsub.message.Y9MessageOrg;
@@ -89,7 +90,7 @@ public class Y9OrganizationServiceImpl implements Y9OrganizationService {
                 String event = isDisabled ? "禁用" : "启用";
                 Y9MessageOrg<Organization> msg =
                     new Y9MessageOrg<>(Y9ModelConvertUtil.convert(savedOrganization, Organization.class),
-                        Y9OrgEventConst.RISEORGEVENT_TYPE_UPDATE_ORGANIZATION, Y9LoginUserHolder.getTenantId());
+                        Y9OrgEventTypeConst.ORGANIZATION_UPDATE, Y9LoginUserHolder.getTenantId());
                 Y9PublishServiceUtil.persistAndPublishMessageOrg(msg, event + "组织机构",
                     event + savedOrganization.getName());
             }
@@ -126,7 +127,7 @@ public class Y9OrganizationServiceImpl implements Y9OrganizationService {
             @Override
             public void afterCommit() {
                 Y9MessageOrg<Organization> msg = new Y9MessageOrg<>(Y9ModelConvertUtil.convert(org, Organization.class),
-                    Y9OrgEventConst.RISEORGEVENT_TYPE_DELETE_ORGANIZATION, Y9LoginUserHolder.getTenantId());
+                    Y9OrgEventTypeConst.ORGANIZATION_DELETE, Y9LoginUserHolder.getTenantId());
                 Y9PublishServiceUtil.persistAndPublishMessageOrg(msg, "删除组织机构", "删除 " + org.getName());
             }
         });
@@ -198,7 +199,7 @@ public class Y9OrganizationServiceImpl implements Y9OrganizationService {
             public void afterCommit() {
                 Y9MessageOrg<Organization> msg =
                     new Y9MessageOrg<>(Y9ModelConvertUtil.convert(savedOrganization, Organization.class),
-                        Y9OrgEventConst.RISEORGEVENT_TYPE_UPDATE_ORGANIZATION, Y9LoginUserHolder.getTenantId());
+                        Y9OrgEventTypeConst.ORGANIZATION_UPDATE, Y9LoginUserHolder.getTenantId());
                 Y9PublishServiceUtil.publishMessageOrg(msg);
             }
         });
@@ -244,7 +245,7 @@ public class Y9OrganizationServiceImpl implements Y9OrganizationService {
                     public void afterCommit() {
                         Y9MessageOrg<Organization> msg =
                             new Y9MessageOrg<>(Y9ModelConvertUtil.convert(savedOrganization, Organization.class),
-                                Y9OrgEventConst.RISEORGEVENT_TYPE_UPDATE_ORGANIZATION, Y9LoginUserHolder.getTenantId());
+                                Y9OrgEventTypeConst.ORGANIZATION_UPDATE, Y9LoginUserHolder.getTenantId());
                         Y9PublishServiceUtil.persistAndPublishMessageOrg(msg, "更新组织机构",
                             "更新" + originY9Organization.getName());
                     }
@@ -258,7 +259,7 @@ public class Y9OrganizationServiceImpl implements Y9OrganizationService {
 
         Integer maxTabIndex = getMaxTabIndex();
         organization.setTabIndex(maxTabIndex != null ? maxTabIndex + 1 : 0);
-        organization.setVersion(OrgTypeEnum.Y9_VERSION);
+        organization.setVersion(InitDataConsts.Y9_VERSION);
         organization.setDn(OrgLevelConsts.getOrgLevel(OrgTypeEnum.ORGANIZATION) + organization.getName());
         organization.setGuidPath(organization.getId());
         organization.setTenantId(Y9LoginUserHolder.getTenantId());
@@ -269,7 +270,7 @@ public class Y9OrganizationServiceImpl implements Y9OrganizationService {
             public void afterCommit() {
                 Y9MessageOrg<Organization> msg =
                     new Y9MessageOrg<>(Y9ModelConvertUtil.convert(savedOrganization, Organization.class),
-                        Y9OrgEventConst.RISEORGEVENT_TYPE_ADD_ORGANIZATION, Y9LoginUserHolder.getTenantId());
+                        Y9OrgEventTypeConst.ORGANIZATION_ADD, Y9LoginUserHolder.getTenantId());
                 Y9PublishServiceUtil.persistAndPublishMessageOrg(msg, "新增组织机构", "新增" + savedOrganization.getName());
             }
         });
@@ -289,7 +290,7 @@ public class Y9OrganizationServiceImpl implements Y9OrganizationService {
             public void afterCommit() {
                 Y9MessageOrg<Organization> msg =
                     new Y9MessageOrg<>(Y9ModelConvertUtil.convert(savedOrganization, Organization.class),
-                        Y9OrgEventConst.RISEORGEVENT_TYPE_UPDATE_ORGANIZATION, Y9LoginUserHolder.getTenantId());
+                        Y9OrgEventTypeConst.ORGANIZATION_UPDATE, Y9LoginUserHolder.getTenantId());
                 Y9PublishServiceUtil.publishMessageOrg(msg);
             }
         });

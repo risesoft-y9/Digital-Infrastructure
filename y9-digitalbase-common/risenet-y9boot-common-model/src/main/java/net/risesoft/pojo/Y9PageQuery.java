@@ -21,22 +21,24 @@ import lombok.Setter;
 @Setter
 public class Y9PageQuery {
 
-    private static final int DEFAULT_PAGE = 0;
+    private static final int DEFAULT_PAGE = 1;
     private static final int DEFAULT_SIZE = 10;
     private static final int MIN_SIZE = 1;
     // 分页查询时如果没有限制可能会造成的系统资源消耗漏洞
     private static final int MAX_SIZE = 200;
 
     /**
-     * 页数
+     * 页数，默认为 1
      */
-    @NotNull @Min(value = DEFAULT_PAGE)
+    @NotNull
+    @Min(value = DEFAULT_PAGE)
     private Integer page = DEFAULT_PAGE;
 
     /**
-     * 每页的条数
+     * 每页的条数，默认为 10
      */
-    @NotNull @Min(value = MIN_SIZE)
+    @NotNull
+    @Min(value = MIN_SIZE)
     @Max(value = MAX_SIZE)
     private Integer size = DEFAULT_SIZE;
 

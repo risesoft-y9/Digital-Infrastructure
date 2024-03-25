@@ -19,7 +19,7 @@ import net.risesoft.repository.Y9GroupRepository;
 import net.risesoft.util.Y9PublishServiceUtil;
 import net.risesoft.y9.Y9LoginUserHolder;
 import net.risesoft.y9.exception.util.Y9ExceptionUtil;
-import net.risesoft.y9.pubsub.constant.Y9OrgEventConst;
+import net.risesoft.y9.pubsub.constant.Y9OrgEventTypeConst;
 import net.risesoft.y9.pubsub.message.Y9MessageOrg;
 import net.risesoft.y9.util.Y9ModelConvertUtil;
 
@@ -66,7 +66,7 @@ public class Y9GroupManagerImpl implements Y9GroupManager {
         group = this.save(group);
 
         Y9MessageOrg<Group> msg = new Y9MessageOrg<>(Y9ModelConvertUtil.convert(group, Group.class),
-            Y9OrgEventConst.RISEORGEVENT_TYPE_UPDATE_GROUP_TABINDEX, Y9LoginUserHolder.getTenantId());
+            Y9OrgEventTypeConst.GROUP_UPDATE, Y9LoginUserHolder.getTenantId());
         Y9PublishServiceUtil.persistAndPublishMessageOrg(msg, "更新用户组排序号", group.getName() + "的排序号更新为" + tabIndex);
 
         return group;

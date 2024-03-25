@@ -66,6 +66,7 @@ import net.risesoft.util.Y9PublishServiceUtil;
 import net.risesoft.y9.Y9LoginUserHolder;
 import net.risesoft.y9.json.Y9JsonUtil;
 import net.risesoft.y9.pubsub.constant.Y9OrgEventConst;
+import net.risesoft.y9.pubsub.constant.Y9OrgEventTypeConst;
 import net.risesoft.y9.pubsub.message.Y9MessageOrg;
 
 /**
@@ -488,8 +489,8 @@ public class CompositeOrgBaseServiceImpl implements CompositeOrgBaseService {
     @Override
     public void sync(String syncId, OrgTypeEnum orgType, boolean needRecursion, String targetSystemName) {
         SyncOrgUnits syncOrgUnits = getSyncOrgUnits(syncId, orgType, needRecursion);
-        Y9MessageOrg<SyncOrgUnits> event = new Y9MessageOrg<>(syncOrgUnits, Y9OrgEventConst.RISEORGEVENT_TYPE_SYNC,
-            targetSystemName, Y9LoginUserHolder.getTenantId());
+        Y9MessageOrg<SyncOrgUnits> event = new Y9MessageOrg<>(syncOrgUnits, Y9OrgEventTypeConst.SYNC, targetSystemName,
+            Y9LoginUserHolder.getTenantId());
         Y9PublishServiceUtil.publishMessageOrg(event);
     }
 
@@ -943,7 +944,7 @@ public class CompositeOrgBaseServiceImpl implements CompositeOrgBaseService {
         for (Y9PersonsToGroups y9PersonsToGroups : orgPersonsGroupsList) {
             personsGroupsList.add(ModelConvertUtil.convert(y9PersonsToGroups, PersonsGroups.class));
         }
-        dateMap.put(y9Group.getId() + Y9OrgEventConst.ORG_MAPPING_PERSONSGROUPS, personsGroupsList);
+        dateMap.put(y9Group.getId() + Y9OrgEventConst.ORG_MAPPING_PERSONS_GROUPS, personsGroupsList);
     }
 
     private void syncOrgPositionSub(Y9Position y9Position, HashMap<String, Serializable> dateMap) {
@@ -961,7 +962,7 @@ public class CompositeOrgBaseServiceImpl implements CompositeOrgBaseService {
         for (Y9PersonsToPositions y9PersonsToPositions : orgPositionsPersonsList) {
             positionsPersonsList.add(ModelConvertUtil.convert(y9PersonsToPositions, PersonsPositions.class));
         }
-        dateMap.put(y9Position.getId() + Y9OrgEventConst.ORG_MAPPING_PERSONSPOSITIONS, positionsPersonsList);
+        dateMap.put(y9Position.getId() + Y9OrgEventConst.ORG_MAPPING_PERSONS_POSITIONS, positionsPersonsList);
     }
 
     private void syncRecursion(String parentId, HashMap<String, Serializable> dateMap) {

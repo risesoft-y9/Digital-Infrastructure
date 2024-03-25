@@ -19,6 +19,7 @@ import org.springframework.transaction.support.TransactionSynchronizationManager
 
 import lombok.RequiredArgsConstructor;
 
+import net.risesoft.consts.InitDataConsts;
 import net.risesoft.consts.OrgLevelConsts;
 import net.risesoft.entity.Y9Department;
 import net.risesoft.entity.Y9DepartmentProp;
@@ -43,7 +44,7 @@ import net.risesoft.util.Y9PublishServiceUtil;
 import net.risesoft.y9.Y9Context;
 import net.risesoft.y9.Y9LoginUserHolder;
 import net.risesoft.y9.exception.Y9BusinessException;
-import net.risesoft.y9.pubsub.constant.Y9OrgEventConst;
+import net.risesoft.y9.pubsub.constant.Y9OrgEventTypeConst;
 import net.risesoft.y9.pubsub.event.Y9EntityDeletedEvent;
 import net.risesoft.y9.pubsub.event.Y9EntityUpdatedEvent;
 import net.risesoft.y9.pubsub.message.Y9MessageOrg;
@@ -88,7 +89,7 @@ public class Y9DepartmentServiceImpl implements Y9DepartmentService {
                 String event = isDisabled ? "禁用" : "启用";
                 Y9MessageOrg<Department> msg =
                     new Y9MessageOrg<>(Y9ModelConvertUtil.convert(savedDepartment, Department.class),
-                        Y9OrgEventConst.RISEORGEVENT_TYPE_UPDATE_DEPARTMENT, Y9LoginUserHolder.getTenantId());
+                        Y9OrgEventTypeConst.DEPARTMENT_UPDATE, Y9LoginUserHolder.getTenantId());
                 Y9PublishServiceUtil.persistAndPublishMessageOrg(msg, event + "部门", event + savedDepartment.getName());
             }
         });
@@ -116,7 +117,7 @@ public class Y9DepartmentServiceImpl implements Y9DepartmentService {
             public void afterCommit() {
                 Y9MessageOrg<Department> msg =
                     new Y9MessageOrg<>(Y9ModelConvertUtil.convert(y9Department, Department.class),
-                        Y9OrgEventConst.RISEORGEVENT_TYPE_DELETE_DEPARTMENT, Y9LoginUserHolder.getTenantId());
+                        Y9OrgEventTypeConst.DEPARTMENT_DELETE, Y9LoginUserHolder.getTenantId());
                 Y9PublishServiceUtil.persistAndPublishMessageOrg(msg, "删除部门", "删除 " + y9Department.getName());
             }
         });
@@ -270,7 +271,7 @@ public class Y9DepartmentServiceImpl implements Y9DepartmentService {
             public void afterCommit() {
                 Y9MessageOrg<Department> msg =
                     new Y9MessageOrg<>(Y9ModelConvertUtil.convert(savedDepartment, Department.class),
-                        Y9OrgEventConst.RISEORGEVENT_TYPE_UPDATE_DEPARTMENT, Y9LoginUserHolder.getTenantId());
+                        Y9OrgEventTypeConst.DEPARTMENT_UPDATE, Y9LoginUserHolder.getTenantId());
                 Y9PublishServiceUtil.persistAndPublishMessageOrg(msg, "移动部门", "移动" + originDepartment.getName());
             }
         });
@@ -366,7 +367,7 @@ public class Y9DepartmentServiceImpl implements Y9DepartmentService {
                     public void afterCommit() {
                         Y9MessageOrg<Department> msg =
                             new Y9MessageOrg<>(Y9ModelConvertUtil.convert(savedDepartment, Department.class),
-                                Y9OrgEventConst.RISEORGEVENT_TYPE_UPDATE_DEPARTMENT, Y9LoginUserHolder.getTenantId());
+                                Y9OrgEventTypeConst.DEPARTMENT_UPDATE, Y9LoginUserHolder.getTenantId());
                         Y9PublishServiceUtil.persistAndPublishMessageOrg(msg, "修改部门",
                             "修改 " + originDepartment.getName());
                     }
@@ -379,7 +380,7 @@ public class Y9DepartmentServiceImpl implements Y9DepartmentService {
         }
         Integer maxTabIndex = compositeOrgBaseManager.getMaxSubTabIndex(parent.getId());
         dept.setTabIndex(maxTabIndex);
-        dept.setVersion(OrgTypeEnum.Y9_VERSION);
+        dept.setVersion(InitDataConsts.Y9_VERSION);
         dept.setDn(OrgLevelConsts.getOrgLevel(OrgTypeEnum.DEPARTMENT) + dept.getName() + OrgLevelConsts.SEPARATOR
             + parent.getDn());
         dept.setDisabled(false);
@@ -394,7 +395,7 @@ public class Y9DepartmentServiceImpl implements Y9DepartmentService {
             public void afterCommit() {
                 Y9MessageOrg<Department> msg =
                     new Y9MessageOrg<>(Y9ModelConvertUtil.convert(savedDepartment, Department.class),
-                        Y9OrgEventConst.RISEORGEVENT_TYPE_ADD_DEPARTMENT, Y9LoginUserHolder.getTenantId());
+                        Y9OrgEventTypeConst.DEPARTMENT_ADD, Y9LoginUserHolder.getTenantId());
                 Y9PublishServiceUtil.persistAndPublishMessageOrg(msg, "新增部门", "新增" + savedDepartment.getName());
             }
         });
@@ -414,7 +415,7 @@ public class Y9DepartmentServiceImpl implements Y9DepartmentService {
             public void afterCommit() {
                 Y9MessageOrg<Department> msg =
                     new Y9MessageOrg<>(Y9ModelConvertUtil.convert(savedDepartment, Department.class),
-                        Y9OrgEventConst.RISEORGEVENT_TYPE_UPDATE_DEPARTMENT, Y9LoginUserHolder.getTenantId());
+                        Y9OrgEventTypeConst.DEPARTMENT_UPDATE, Y9LoginUserHolder.getTenantId());
                 Y9PublishServiceUtil.publishMessageOrg(msg);
             }
         });
@@ -546,22 +547,7 @@ public class Y9DepartmentServiceImpl implements Y9DepartmentService {
     @Override
     @Transactional(readOnly = false)
     public Y9Department updateTabIndex(String id, int tabIndex) {
-        Y9Department department = this.getById(id);
-        department.setTabIndex(tabIndex);
-        final Y9Department savedDepartment = y9DepartmentManager.save(department);
-
-        TransactionSynchronizationManager.registerSynchronization(new TransactionSynchronization() {
-            @Override
-            public void afterCommit() {
-                Y9MessageOrg<Department> msg =
-                    new Y9MessageOrg<>(Y9ModelConvertUtil.convert(savedDepartment, Department.class),
-                        Y9OrgEventConst.RISEORGEVENT_TYPE_UPDATE_DEPARTMENT_TABINDEX, Y9LoginUserHolder.getTenantId());
-                Y9PublishServiceUtil.persistAndPublishMessageOrg(msg, "更新部门排序号",
-                    savedDepartment.getName() + "的排序号更新为" + tabIndex);
-            }
-        });
-
-        return savedDepartment;
+        return y9DepartmentManager.updateTabIndex(id, tabIndex);
     }
 
     @Override

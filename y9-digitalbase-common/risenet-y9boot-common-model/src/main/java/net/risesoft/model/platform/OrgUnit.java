@@ -29,7 +29,7 @@ import net.risesoft.enums.platform.OrgTypeEnum;
     @JsonSubTypes.Type(value = Organization.class, name = "Organization"),
     @JsonSubTypes.Type(value = Person.class, name = "Person"),
     @JsonSubTypes.Type(value = Position.class, name = "Position")})
-public class OrgUnit implements Serializable {
+public abstract class OrgUnit implements Serializable {
 
     private static final long serialVersionUID = 4473986529965103226L;
 

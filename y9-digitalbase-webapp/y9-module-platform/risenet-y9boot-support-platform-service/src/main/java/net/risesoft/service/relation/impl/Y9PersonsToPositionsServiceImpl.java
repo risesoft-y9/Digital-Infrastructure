@@ -23,7 +23,7 @@ import net.risesoft.service.relation.Y9PersonsToPositionsService;
 import net.risesoft.util.ModelConvertUtil;
 import net.risesoft.util.Y9PublishServiceUtil;
 import net.risesoft.y9.Y9LoginUserHolder;
-import net.risesoft.y9.pubsub.constant.Y9OrgEventConst;
+import net.risesoft.y9.pubsub.constant.Y9OrgEventTypeConst;
 import net.risesoft.y9.pubsub.message.Y9MessageOrg;
 
 /**
@@ -144,7 +144,7 @@ public class Y9PersonsToPositionsServiceImpl implements Y9PersonsToPositionsServ
                 Y9Position y9Position = y9PositionManager.getById(positionId);
                 Y9MessageOrg<PersonsPositions> msg =
                     new Y9MessageOrg<>(ModelConvertUtil.convert(y9PersonsToPositions, PersonsPositions.class),
-                        Y9OrgEventConst.RISEORGEVENT_TYPE_POSITION_ORDER, Y9LoginUserHolder.getTenantId());
+                        Y9OrgEventTypeConst.POSITION_ORDER, Y9LoginUserHolder.getTenantId());
 
                 Y9Person person = y9PersonManager.getById(y9PersonsToPositions.getPersonId());
                 Y9PublishServiceUtil.persistAndPublishMessageOrg(msg, "更新岗位的人员排序",
@@ -172,7 +172,7 @@ public class Y9PersonsToPositionsServiceImpl implements Y9PersonsToPositionsServ
                 Y9Person person = y9PersonManager.getById(personId);
                 Y9MessageOrg<PersonsPositions> msg =
                     new Y9MessageOrg<>(ModelConvertUtil.convert(y9PersonsToPositions, PersonsPositions.class),
-                        Y9OrgEventConst.RISEORGEVENT_TYPE_POSITION_ORDER, Y9LoginUserHolder.getTenantId());
+                        Y9OrgEventTypeConst.POSITION_ORDER, Y9LoginUserHolder.getTenantId());
                 Y9Position y9Position = y9PositionManager.getById(y9PersonsToPositions.getPositionId());
                 Y9PublishServiceUtil.persistAndPublishMessageOrg(msg, "更新人员的岗位排序", person.getName() + "的岗位："
                     + y9Position.getName() + "排序更改为" + y9PersonsToPositions.getPositionOrder());

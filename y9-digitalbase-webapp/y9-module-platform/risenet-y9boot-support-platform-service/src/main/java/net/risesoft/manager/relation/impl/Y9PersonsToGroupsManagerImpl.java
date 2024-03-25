@@ -19,7 +19,7 @@ import net.risesoft.util.ModelConvertUtil;
 import net.risesoft.util.Y9PublishServiceUtil;
 import net.risesoft.y9.Y9Context;
 import net.risesoft.y9.Y9LoginUserHolder;
-import net.risesoft.y9.pubsub.constant.Y9OrgEventConst;
+import net.risesoft.y9.pubsub.constant.Y9OrgEventTypeConst;
 import net.risesoft.y9.pubsub.event.Y9EntityDeletedEvent;
 import net.risesoft.y9.pubsub.message.Y9MessageOrg;
 
@@ -49,7 +49,7 @@ public class Y9PersonsToGroupsManagerImpl implements Y9PersonsToGroupsManager {
         Y9Group group = y9GroupManager.getById(y9PersonsToGroups.getGroupId());
         Y9MessageOrg<PersonsGroups> msg =
             new Y9MessageOrg<>(ModelConvertUtil.convert(y9PersonsToGroups, PersonsGroups.class),
-                Y9OrgEventConst.RISEORGEVENT_TYPE_GROUP_REMOVEPERSON, Y9LoginUserHolder.getTenantId());
+                Y9OrgEventTypeConst.GROUP_REMOVE_PERSON, Y9LoginUserHolder.getTenantId());
         Y9PublishServiceUtil.persistAndPublishMessageOrg(msg, "移除用户组人员",
             group.getName() + "移除用户组成员" + person.getName());
 
