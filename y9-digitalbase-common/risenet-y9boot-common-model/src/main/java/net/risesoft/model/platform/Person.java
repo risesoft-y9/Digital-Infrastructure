@@ -102,21 +102,6 @@ public class Person extends OrgUnit implements Serializable {
     private String mobile;
 
     /**
-     * 拥有的角色列表
-     */
-    private String roles;
-
-    /**
-     * 拥有的岗位列表
-     */
-    private String positions;
-
-    /**
-     * 当前的岗位Id
-     */
-    private String positionId;
-
-    /**
      * 人员类型,管理员用户：adminPerson,单位用户：deptPerson,个人用户:userPerson,专家用户:expertPerson
      */
     private String personType;
@@ -157,9 +142,6 @@ public class Person extends OrgUnit implements Serializable {
         userInfo.setPassword(password);
         userInfo.setPersonId(id);
         userInfo.setPersonType(personType);
-        userInfo.setPositionId(positionId);
-        userInfo.setPositions(positions);
-        userInfo.setY9Roles(roles);
         userInfo.setSex(sex);
         userInfo.setTenantId(tenantId);
         userInfo.setGlobalManager(false);

@@ -43,7 +43,7 @@ import net.risesoft.y9.Y9Context;
 import net.risesoft.y9.Y9LoginUserHolder;
 import net.risesoft.y9.configuration.Y9Properties;
 import net.risesoft.y9.exception.util.Y9ExceptionUtil;
-import net.risesoft.y9.pubsub.constant.Y9OrgEventConst;
+import net.risesoft.y9.pubsub.constant.Y9OrgEventTypeConst;
 import net.risesoft.y9.pubsub.event.Y9EntityCreatedEvent;
 import net.risesoft.y9.pubsub.event.Y9EntityUpdatedEvent;
 import net.risesoft.y9.pubsub.message.Y9MessageOrg;
@@ -138,7 +138,7 @@ public class Y9PositionManagerImpl implements Y9PositionManager {
                     public void afterCommit() {
                         Y9MessageOrg<Position> msg =
                             new Y9MessageOrg<>(ModelConvertUtil.convert(savedY9Position, Position.class),
-                                Y9OrgEventConst.RISEORGEVENT_TYPE_UPDATE_POSITION, Y9LoginUserHolder.getTenantId());
+                                Y9OrgEventTypeConst.POSITION_UPDATE, Y9LoginUserHolder.getTenantId());
                         Y9PublishServiceUtil.persistAndPublishMessageOrg(msg, "更新岗位信息",
                             "更新" + originY9Position.getName());
                     }
@@ -162,7 +162,7 @@ public class Y9PositionManagerImpl implements Y9PositionManager {
         Y9Position returnPosition = save(position);
 
         Y9MessageOrg<Position> msg = new Y9MessageOrg<>(ModelConvertUtil.convert(returnPosition, Position.class),
-            Y9OrgEventConst.RISEORGEVENT_TYPE_ADD_POSITION, Y9LoginUserHolder.getTenantId());
+            Y9OrgEventTypeConst.POSITION_ADD, Y9LoginUserHolder.getTenantId());
         Y9PublishServiceUtil.persistAndPublishMessageOrg(msg, "新增岗位信息", "新增" + position.getName());
 
         Y9Context.publishEvent(new Y9EntityCreatedEvent<>(returnPosition));
@@ -189,10 +189,11 @@ public class Y9PositionManagerImpl implements Y9PositionManager {
     public Y9Position updateTabIndex(String id, int tabIndex) {
         Y9Position position = this.getById(id);
         position.setTabIndex(tabIndex);
+        position.setOrderedPath(compositeOrgBaseManager.buildOrderedPath(position));
         position = this.save(position);
 
         Y9MessageOrg<Position> msg = new Y9MessageOrg<>(Y9ModelConvertUtil.convert(position, Position.class),
-            Y9OrgEventConst.RISEORGEVENT_TYPE_UPDATE_POSITION_TABINDEX, Y9LoginUserHolder.getTenantId());
+            Y9OrgEventTypeConst.POSITION_UPDATE, Y9LoginUserHolder.getTenantId());
         Y9PublishServiceUtil.persistAndPublishMessageOrg(msg, "更新岗位排序号", position.getName() + "的排序号更新为" + tabIndex);
 
         return position;

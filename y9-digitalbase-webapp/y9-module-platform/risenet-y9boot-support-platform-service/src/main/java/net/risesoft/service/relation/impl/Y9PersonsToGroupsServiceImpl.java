@@ -24,7 +24,7 @@ import net.risesoft.util.ModelConvertUtil;
 import net.risesoft.util.Y9PublishServiceUtil;
 import net.risesoft.y9.Y9Context;
 import net.risesoft.y9.Y9LoginUserHolder;
-import net.risesoft.y9.pubsub.constant.Y9OrgEventConst;
+import net.risesoft.y9.pubsub.constant.Y9OrgEventTypeConst;
 import net.risesoft.y9.pubsub.event.Y9EntityCreatedEvent;
 import net.risesoft.y9.pubsub.message.Y9MessageOrg;
 
@@ -74,7 +74,7 @@ public class Y9PersonsToGroupsServiceImpl implements Y9PersonsToGroupsService {
         Y9Group group = y9GroupManager.getById(groupId);
         Y9MessageOrg<PersonsGroups> msg =
             new Y9MessageOrg<>(ModelConvertUtil.convert(y9PersonsToGroups, PersonsGroups.class),
-                Y9OrgEventConst.RISEORGEVENT_TYPE_GROUP_ADDPERSON, Y9LoginUserHolder.getTenantId());
+                Y9OrgEventTypeConst.GROUP_ADD_PERSON, Y9LoginUserHolder.getTenantId());
         Y9PublishServiceUtil.persistAndPublishMessageOrg(msg, "添加用户组人员",
             group.getName() + "添加用户组成员" + person.getName());
 
@@ -155,7 +155,7 @@ public class Y9PersonsToGroupsServiceImpl implements Y9PersonsToGroupsService {
 
                 Y9MessageOrg<PersonsGroups> msg =
                     new Y9MessageOrg<>(ModelConvertUtil.convert(y9PersonsToGroups, PersonsGroups.class),
-                        Y9OrgEventConst.RISEORGEVENT_TYPE_GROUP_ORDER, Y9LoginUserHolder.getTenantId());
+                        Y9OrgEventTypeConst.GROUP_ORDER, Y9LoginUserHolder.getTenantId());
                 Y9Group group = y9GroupManager.getById(y9PersonsToGroups.getGroupId());
                 Y9PublishServiceUtil.persistAndPublishMessageOrg(msg, "人员用户组排序",
                     person.getName() + "的用户组：" + group.getName() + "排序更新为" + y9PersonsToGroups.getGroupOrder());
@@ -184,7 +184,7 @@ public class Y9PersonsToGroupsServiceImpl implements Y9PersonsToGroupsService {
                 Y9Person person = y9PersonManager.getById(y9PersonsToGroups.getPersonId());
                 Y9MessageOrg<PersonsGroups> msg =
                     new Y9MessageOrg<>(ModelConvertUtil.convert(y9PersonsToGroups, PersonsGroups.class),
-                        Y9OrgEventConst.RISEORGEVENT_TYPE_GROUP_ORDER, Y9LoginUserHolder.getTenantId());
+                        Y9OrgEventTypeConst.GROUP_ORDER, Y9LoginUserHolder.getTenantId());
                 Y9PublishServiceUtil.persistAndPublishMessageOrg(msg, "用户组人员排序",
                     group.getName() + "的成员" + person.getName() + "排序更新为" + y9PersonsToGroups.getPersonOrder());
 

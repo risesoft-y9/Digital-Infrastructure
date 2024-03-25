@@ -32,7 +32,7 @@ import net.risesoft.service.org.Y9JobService;
 import net.risesoft.util.Y9PublishServiceUtil;
 import net.risesoft.y9.Y9Context;
 import net.risesoft.y9.Y9LoginUserHolder;
-import net.risesoft.y9.pubsub.constant.Y9OrgEventConst;
+import net.risesoft.y9.pubsub.constant.Y9OrgEventTypeConst;
 import net.risesoft.y9.pubsub.event.Y9EntityUpdatedEvent;
 import net.risesoft.y9.pubsub.message.Y9MessageOrg;
 import net.risesoft.y9.util.Y9Assert;
@@ -181,7 +181,7 @@ public class Y9JobServiceImpl implements Y9JobService {
                     @Override
                     public void afterCommit() {
                         Y9MessageOrg<Job> msg = new Y9MessageOrg<>(Y9ModelConvertUtil.convert(savedJob, Job.class),
-                            Y9OrgEventConst.RISEORGEVENT_TYPE_UPDATE_JOB, Y9LoginUserHolder.getTenantId());
+                            Y9OrgEventTypeConst.JOB_UPDATE, Y9LoginUserHolder.getTenantId());
                         Y9PublishServiceUtil.persistAndPublishMessageOrg(msg, "更新职位信息", "更新职位" + originY9Job.getName());
                     }
                 });
@@ -203,7 +203,7 @@ public class Y9JobServiceImpl implements Y9JobService {
             @Override
             public void afterCommit() {
                 Y9MessageOrg<Job> msg = new Y9MessageOrg<>(Y9ModelConvertUtil.convert(savedJob, Job.class),
-                    Y9OrgEventConst.RISEORGEVENT_TYPE_ADD_JOB, Y9LoginUserHolder.getTenantId());
+                    Y9OrgEventTypeConst.JOB_ADD, Y9LoginUserHolder.getTenantId());
                 Y9PublishServiceUtil.persistAndPublishMessageOrg(msg, "新增职位信息", "新增职位" + savedJob.getName());
             }
         });

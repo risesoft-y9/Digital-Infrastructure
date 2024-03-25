@@ -31,19 +31,7 @@ public enum OrgTypeEnum implements ValuedEnum<String> {
     /** 人员 */
     PERSON("Person", "人员"),
     /** 三员管理员 */
-    MANAGER("Manager", "三员管理员"),
-
-    /** 自定义用户组 */
-    CUSTOM_GROUP("CustomGroup", "自定义用户组"),
-    /** 自定义用户组成员 */
-    CUSTOM_GROUP_MEMBER("CustomGroupMember", "自定义用户组成员"),
-    /** 通讯录组 */
-    CONTACT_GROUP("ContactGroup", "通讯录组"),
-    /** 通讯录组成员 */
-    CONTACT("Contact", "通讯录组成员");
-
-    /** RC8当前版本(用于数据库存版本号) */
-    public static final Integer Y9_VERSION = 0;
+    MANAGER("Manager", "三员管理员");
 
     public static final Map<String, String> ORG_TYPE_MAP = new HashMap<>(16);
     static {

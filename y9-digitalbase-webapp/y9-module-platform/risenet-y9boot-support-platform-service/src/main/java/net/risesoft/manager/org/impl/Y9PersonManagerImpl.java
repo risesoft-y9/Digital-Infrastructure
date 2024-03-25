@@ -27,7 +27,7 @@ import net.risesoft.util.ModelConvertUtil;
 import net.risesoft.util.Y9PublishServiceUtil;
 import net.risesoft.y9.Y9LoginUserHolder;
 import net.risesoft.y9.exception.util.Y9ExceptionUtil;
-import net.risesoft.y9.pubsub.constant.Y9OrgEventConst;
+import net.risesoft.y9.pubsub.constant.Y9OrgEventTypeConst;
 import net.risesoft.y9.pubsub.message.Y9MessageOrg;
 
 @Service
@@ -108,7 +108,7 @@ public class Y9PersonManagerImpl implements Y9PersonManager {
         person = this.save(person);
 
         Y9MessageOrg<Person> msg = new Y9MessageOrg<>(ModelConvertUtil.orgPersonToPerson(person),
-            Y9OrgEventConst.RISEORGEVENT_TYPE_UPDATE_PERSON_TABINDEX, Y9LoginUserHolder.getTenantId());
+            Y9OrgEventTypeConst.PERSON_UPDATE, Y9LoginUserHolder.getTenantId());
         Y9PublishServiceUtil.persistAndPublishMessageOrg(msg, "更新人员排序号", person.getName() + "的排序号更新为" + tabIndex);
 
         return person;

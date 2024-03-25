@@ -19,7 +19,7 @@ import net.risesoft.repository.Y9DepartmentRepository;
 import net.risesoft.util.Y9PublishServiceUtil;
 import net.risesoft.y9.Y9LoginUserHolder;
 import net.risesoft.y9.exception.util.Y9ExceptionUtil;
-import net.risesoft.y9.pubsub.constant.Y9OrgEventConst;
+import net.risesoft.y9.pubsub.constant.Y9OrgEventTypeConst;
 import net.risesoft.y9.pubsub.message.Y9MessageOrg;
 import net.risesoft.y9.util.Y9ModelConvertUtil;
 
@@ -66,7 +66,7 @@ public class Y9DepartmentManagerImpl implements Y9DepartmentManager {
         department = this.save(department);
 
         Y9MessageOrg<Department> msg = new Y9MessageOrg<>(Y9ModelConvertUtil.convert(department, Department.class),
-            Y9OrgEventConst.RISEORGEVENT_TYPE_UPDATE_DEPARTMENT_TABINDEX, Y9LoginUserHolder.getTenantId());
+            Y9OrgEventTypeConst.DEPARTMENT_UPDATE, Y9LoginUserHolder.getTenantId());
         Y9PublishServiceUtil.persistAndPublishMessageOrg(msg, "更新部门排序号", department.getName() + "的排序号更新为" + tabIndex);
 
         return department;

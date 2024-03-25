@@ -26,6 +26,7 @@ import org.springframework.util.Assert;
 
 import lombok.extern.slf4j.Slf4j;
 
+import net.risesoft.consts.InitDataConsts;
 import net.risesoft.consts.OrgLevelConsts;
 import net.risesoft.entity.Y9Department;
 import net.risesoft.entity.Y9Group;
@@ -74,7 +75,7 @@ import net.risesoft.y9.Y9LoginUserHolder;
 import net.risesoft.y9.configuration.Y9Properties;
 import net.risesoft.y9.exception.util.Y9ExceptionUtil;
 import net.risesoft.y9.json.Y9JsonUtil;
-import net.risesoft.y9.pubsub.constant.Y9OrgEventConst;
+import net.risesoft.y9.pubsub.constant.Y9OrgEventTypeConst;
 import net.risesoft.y9.pubsub.event.Y9EntityCreatedEvent;
 import net.risesoft.y9.pubsub.event.Y9EntityDeletedEvent;
 import net.risesoft.y9.pubsub.event.Y9EntityUpdatedEvent;
@@ -205,7 +206,7 @@ public class Y9PersonServiceImpl implements Y9PersonService {
                 @Override
                 public void afterCommit() {
                     Y9MessageOrg<Person> msg = new Y9MessageOrg<>(ModelConvertUtil.orgPersonToPerson(savedPerson),
-                        Y9OrgEventConst.RISEORGEVENT_TYPE_ADD_PERSON, Y9LoginUserHolder.getTenantId());
+                        Y9OrgEventTypeConst.PERSON_ADD, Y9LoginUserHolder.getTenantId());
                     Y9PublishServiceUtil.persistAndPublishMessageOrg(msg, "添加人员", "添加" + savedPerson.getName());
                 }
             });
@@ -583,7 +584,7 @@ public class Y9PersonServiceImpl implements Y9PersonService {
             @Override
             public void afterCommit() {
                 Y9MessageOrg<Person> msg = new Y9MessageOrg<>(ModelConvertUtil.orgPersonToPerson(savedPerson),
-                    Y9OrgEventConst.RISEORGEVENT_TYPE_UPDATE_PERSON, Y9LoginUserHolder.getTenantId());
+                    Y9OrgEventTypeConst.PERSON_UPDATE, Y9LoginUserHolder.getTenantId());
                 Y9PublishServiceUtil.persistAndPublishMessageOrg(msg, disabled ? "禁用人员" : "启用人员",
                     (disabled ? "禁用" : "启用") + originPerson.getName());
             }
@@ -643,7 +644,7 @@ public class Y9PersonServiceImpl implements Y9PersonService {
             @Override
             public void afterCommit() {
                 Y9MessageOrg<Person> msg = new Y9MessageOrg<>(ModelConvertUtil.orgPersonToPerson(y9Person),
-                    Y9OrgEventConst.RISEORGEVENT_TYPE_DELETE_PERSON, Y9LoginUserHolder.getTenantId());
+                    Y9OrgEventTypeConst.PERSON_DELETE, Y9LoginUserHolder.getTenantId());
                 Y9PublishServiceUtil.persistAndPublishMessageOrg(msg, "删除人员", "删除" + y9Person.getName());
             }
         });
@@ -901,7 +902,7 @@ public class Y9PersonServiceImpl implements Y9PersonService {
             @Override
             public void afterCommit() {
                 Y9MessageOrg<Person> msg = new Y9MessageOrg<>(ModelConvertUtil.orgPersonToPerson(savedPerson),
-                    Y9OrgEventConst.RISEORGEVENT_TYPE_UPDATE_PERSON, Y9LoginUserHolder.getTenantId());
+                    Y9OrgEventTypeConst.PERSON_UPDATE, Y9LoginUserHolder.getTenantId());
                 Y9PublishServiceUtil.persistAndPublishMessageOrg(msg, "修改密码", "修改" + originPerson.getName() + "的密码");
             }
         });
@@ -927,7 +928,7 @@ public class Y9PersonServiceImpl implements Y9PersonService {
             @Override
             public void afterCommit() {
                 Y9MessageOrg<Person> msg = new Y9MessageOrg<>(ModelConvertUtil.orgPersonToPerson(savedPerson),
-                    Y9OrgEventConst.RISEORGEVENT_TYPE_UPDATE_PERSON, Y9LoginUserHolder.getTenantId());
+                    Y9OrgEventTypeConst.PERSON_UPDATE, Y9LoginUserHolder.getTenantId());
                 Y9PublishServiceUtil.persistAndPublishMessageOrg(msg, "移动人员",
                     originPerson.getName() + "移动到" + parent.getName());
             }
@@ -989,7 +990,7 @@ public class Y9PersonServiceImpl implements Y9PersonService {
             @Override
             public void afterCommit() {
                 Y9MessageOrg<Person> msg = new Y9MessageOrg<>(ModelConvertUtil.orgPersonToPerson(savedPerson),
-                    Y9OrgEventConst.RISEORGEVENT_TYPE_UPDATE_PERSON, Y9LoginUserHolder.getTenantId());
+                    Y9OrgEventTypeConst.PERSON_UPDATE, Y9LoginUserHolder.getTenantId());
                 Y9PublishServiceUtil.publishMessageOrg(msg);
             }
         });
@@ -1052,7 +1053,7 @@ public class Y9PersonServiceImpl implements Y9PersonService {
             @Override
             public void afterCommit() {
                 Y9MessageOrg<Person> msg = new Y9MessageOrg<>(ModelConvertUtil.orgPersonToPerson(savedPerson),
-                    Y9OrgEventConst.RISEORGEVENT_TYPE_UPDATE_PERSON, Y9LoginUserHolder.getTenantId());
+                    Y9OrgEventTypeConst.PERSON_UPDATE, Y9LoginUserHolder.getTenantId());
                 Y9PublishServiceUtil.persistAndPublishMessageOrg(msg, "重置密码", "重置" + originPerson.getName() + "的密码");
             }
         });
@@ -1121,7 +1122,7 @@ public class Y9PersonServiceImpl implements Y9PersonService {
                     @Override
                     public void afterCommit() {
                         Y9MessageOrg<Person> msg = new Y9MessageOrg<>(ModelConvertUtil.orgPersonToPerson(savedPerson),
-                            Y9OrgEventConst.RISEORGEVENT_TYPE_UPDATE_PERSON, Y9LoginUserHolder.getTenantId());
+                            Y9OrgEventTypeConst.PERSON_UPDATE, Y9LoginUserHolder.getTenantId());
                         Y9PublishServiceUtil.persistAndPublishMessageOrg(msg, "更新人员信息", "更新" + originPerson.getName());
                     }
                 });
@@ -1137,7 +1138,7 @@ public class Y9PersonServiceImpl implements Y9PersonService {
         }
         person.setTabIndex(compositeOrgBaseManager.getMaxSubTabIndex(parent.getId()));
         person.setOfficial(1);
-        person.setVersion(OrgTypeEnum.Y9_VERSION);
+        person.setVersion(InitDataConsts.Y9_VERSION);
         person.setDn(OrgLevelConsts.getOrgLevel(OrgTypeEnum.PERSON) + person.getName() + OrgLevelConsts.SEPARATOR
             + parent.getDn());
         person.setDisabled(false);
@@ -1157,7 +1158,7 @@ public class Y9PersonServiceImpl implements Y9PersonService {
             @Override
             public void afterCommit() {
                 Y9MessageOrg<Person> msg = new Y9MessageOrg<>(ModelConvertUtil.orgPersonToPerson(savedPerson),
-                    Y9OrgEventConst.RISEORGEVENT_TYPE_ADD_PERSON, Y9LoginUserHolder.getTenantId());
+                    Y9OrgEventTypeConst.PERSON_ADD, Y9LoginUserHolder.getTenantId());
                 Y9PublishServiceUtil.persistAndPublishMessageOrg(msg, "新增人员信息", "新增" + savedPerson.getName());
             }
         });
@@ -1216,7 +1217,7 @@ public class Y9PersonServiceImpl implements Y9PersonService {
             }
             person.setDn(OrgLevelConsts.getOrgLevel(OrgTypeEnum.PERSON) + person.getName() + OrgLevelConsts.SEPARATOR
                 + parent.getDn());
-            person.setVersion(OrgTypeEnum.Y9_VERSION);
+            person.setVersion(InitDataConsts.Y9_VERSION);
             person.setParentId(parent.getId());
 
             if (StringUtils.isBlank(person.getPassword())) {
@@ -1241,7 +1242,7 @@ public class Y9PersonServiceImpl implements Y9PersonService {
             @Override
             public void afterCommit() {
                 Y9MessageOrg<Person> msg = new Y9MessageOrg<>(ModelConvertUtil.orgPersonToPerson(savedPerson),
-                    Y9OrgEventConst.RISEORGEVENT_TYPE_UPDATE_PERSON, Y9LoginUserHolder.getTenantId());
+                    Y9OrgEventTypeConst.PERSON_UPDATE, Y9LoginUserHolder.getTenantId());
                 Y9PublishServiceUtil.publishMessageOrg(msg);
             }
         });
@@ -1308,20 +1309,6 @@ public class Y9PersonServiceImpl implements Y9PersonService {
     @Override
     @Transactional(readOnly = false)
     public Y9Person updateTabIndex(String id, int tabIndex) {
-        Y9Person person = this.getById(id);
-        person.setTabIndex(tabIndex);
-        final Y9Person savedPerson = this.save(person);
-
-        TransactionSynchronizationManager.registerSynchronization(new TransactionSynchronization() {
-            @Override
-            public void afterCommit() {
-                Y9MessageOrg<Person> msg = new Y9MessageOrg<>(ModelConvertUtil.orgPersonToPerson(savedPerson),
-                    Y9OrgEventConst.RISEORGEVENT_TYPE_UPDATE_PERSON_TABINDEX, Y9LoginUserHolder.getTenantId());
-                Y9PublishServiceUtil.persistAndPublishMessageOrg(msg, "更新人员排序号",
-                    savedPerson.getName() + "的排序号更新为" + tabIndex);
-            }
-        });
-
-        return savedPerson;
+        return y9PersonManager.updateTabIndex(id, tabIndex);
     }
 }

@@ -23,7 +23,7 @@ import net.risesoft.util.ModelConvertUtil;
 import net.risesoft.util.Y9PublishServiceUtil;
 import net.risesoft.y9.Y9Context;
 import net.risesoft.y9.Y9LoginUserHolder;
-import net.risesoft.y9.pubsub.constant.Y9OrgEventConst;
+import net.risesoft.y9.pubsub.constant.Y9OrgEventTypeConst;
 import net.risesoft.y9.pubsub.event.Y9EntityCreatedEvent;
 import net.risesoft.y9.pubsub.event.Y9EntityDeletedEvent;
 import net.risesoft.y9.pubsub.message.Y9MessageOrg;
@@ -77,7 +77,7 @@ public class Y9PersonsToPositionsManagerImpl implements Y9PersonsToPositionsMana
         Y9Person person = y9PersonManager.getById(y9PersonsToPositions.getPersonId());
         Y9MessageOrg<PersonsPositions> msg =
             new Y9MessageOrg<>(ModelConvertUtil.convert(y9PersonsToPositions, PersonsPositions.class),
-                Y9OrgEventConst.RISEORGEVENT_TYPE_POSITION_REMOVEPERSON, Y9LoginUserHolder.getTenantId());
+                Y9OrgEventTypeConst.POSITION_REMOVE_PERSON, Y9LoginUserHolder.getTenantId());
         Y9Position y9Position = y9PositionManager.getById(y9PersonsToPositions.getPositionId());
         Y9PublishServiceUtil.persistAndPublishMessageOrg(msg, "移除岗位人员",
             y9Position.getName() + "移除成员" + person.getName());
@@ -136,7 +136,7 @@ public class Y9PersonsToPositionsManagerImpl implements Y9PersonsToPositionsMana
         Y9Person person = y9PersonManager.getById(personId);
         Y9MessageOrg<PersonsPositions> msg =
             new Y9MessageOrg<>(ModelConvertUtil.convert(y9PersonsToPositions, PersonsPositions.class),
-                Y9OrgEventConst.RISEORGEVENT_TYPE_POSITION_ADDPERSON, Y9LoginUserHolder.getTenantId());
+                Y9OrgEventTypeConst.POSITION_ADD_PERSON, Y9LoginUserHolder.getTenantId());
         Y9PublishServiceUtil.persistAndPublishMessageOrg(msg, "添加岗位人员",
             y9Position.getName() + "添加成员" + person.getName());
 

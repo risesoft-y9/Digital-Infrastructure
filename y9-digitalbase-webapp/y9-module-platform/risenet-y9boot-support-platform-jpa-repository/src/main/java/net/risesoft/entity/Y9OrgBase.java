@@ -29,7 +29,7 @@ import net.risesoft.persistence.EnumConverter;
 @MappedSuperclass
 @NoArgsConstructor
 @Data
-public class Y9OrgBase extends BaseEntity implements Comparable<Y9OrgBase> {
+public abstract class Y9OrgBase extends BaseEntity implements Comparable<Y9OrgBase> {
 
     private static final long serialVersionUID = 4564661506322616943L;
 

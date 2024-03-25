@@ -14,15 +14,10 @@ public class Y9TopicConst {
     public static final String Y9_COMMON_EVENT = "y9_common_event";
     public static final String Y9_TASK_EVENT = "y9_task_event";
     public static final String Y9_ORG_EVENT_REPLY = "y9_org_event_reply";
-    public static final String Y9_USER_EVENT = "y9_user_event";
 
     public static final String Y9_USERONLINE_MESSAGE = "y9_userOnline_message";
     public static final String Y9_ACCESSLOG_MESSAGE = "y9_accessLog_message";
     public static final String Y9_USERLOGININFO_MESSAGE = "y9_userLoginInfo_message";
-
-    public static final String Y9_SAVEORUPDATE_SOASERVICE_MESSAGE = "y9_saveOrUpdateSoaService_message";
-    public static final String Y9_DELETE_SOASERVICE_MESSAGE = "y9_deleteSoaService_message";
-    public static final String Y9_DISABLE_SOASERVICE_MESSAGE = "y9_disableSoaService_message";
 
     public static final String Y9_DATACOPY_MESSAGE = "y9_dataCopy_message";
     public static final String Y9_DATACOPY4SYSTEM_MESSAGE = "y9_dataCopy4System_message";
