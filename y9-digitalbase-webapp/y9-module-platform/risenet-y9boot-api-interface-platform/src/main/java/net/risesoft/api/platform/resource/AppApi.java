@@ -153,7 +153,7 @@ public interface AppApi {
 
     /**
      * 保存应用
-     * 
+     *
      * @param app 应用实体类
      * @return {@code Y9Result<App>} 通用请求返回对象 - data 是保存的应用
      * @since 9.6.0

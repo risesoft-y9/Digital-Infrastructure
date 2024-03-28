@@ -333,7 +333,7 @@ public interface PersonApi {
     @GetMapping("/pageByParentIdAndName")
     Y9Page<Person> pageByParentIdAndName(@RequestParam("tenantId") @NotBlank String tenantId,
         @RequestParam("parentId") @NotBlank String parentId, @RequestParam("disabled") boolean disabled,
-        @RequestParam("name") @NotBlank String name, Y9PageQuery pageQuery);
+        @RequestParam(value = "name", required = false) String name, Y9PageQuery pageQuery);
 
     /**
      * 保存人员头像

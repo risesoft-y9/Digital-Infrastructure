@@ -26,8 +26,8 @@ public interface PersonApiClient extends PersonApi {
 
     @Override
     @GetMapping("/pageByName")
-    Y9Page<Person> pageByName(@RequestParam("tenantId") String tenantId, @RequestParam(required = false) String name,
-        @SpringQueryMap Y9PageQuery pageQuery);
+    Y9Page<Person> pageByName(@RequestParam("tenantId") String tenantId,
+        @RequestParam(value = "name", required = false) String name, @SpringQueryMap Y9PageQuery pageQuery);
 
     @Override
     @GetMapping("/pageByParentId")
@@ -38,5 +38,5 @@ public interface PersonApiClient extends PersonApi {
     @GetMapping("/pageByParentIdAndName")
     Y9Page<Person> pageByParentIdAndName(@RequestParam("tenantId") String tenantId,
         @RequestParam("parentId") String parentId, @RequestParam("disabled") boolean disabled,
-        @RequestParam("name") String name, @SpringQueryMap Y9PageQuery pageQuery);
+        @RequestParam(value = "name", required = false) String name, @SpringQueryMap Y9PageQuery pageQuery);
 }

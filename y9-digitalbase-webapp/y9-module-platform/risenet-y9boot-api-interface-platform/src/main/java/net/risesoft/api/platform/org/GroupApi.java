@@ -50,7 +50,7 @@ public interface GroupApi {
      */
     @PostMapping("/create")
     Y9Result<Group> create(@RequestParam("tenantId") @NotBlank String tenantId,
-        @RequestParam("groupJson") @Validated @RequestBody CreateGroupDTO createGroupDTO);
+        @Validated @RequestBody CreateGroupDTO createGroupDTO);
 
     /**
      * 删除用户组
@@ -73,7 +73,7 @@ public interface GroupApi {
      * @since 9.6.0
      */
     @GetMapping("/get")
-    Y9Result<Group> get(@RequestParam @NotBlank String tenantId, @RequestParam @NotBlank String groupId);
+    Y9Result<Group> get(@RequestParam @NotBlank String tenantId, @RequestParam("groupId") @NotBlank String groupId);
 
     /**
      * 获取下一级用户组列表（不包含禁用）

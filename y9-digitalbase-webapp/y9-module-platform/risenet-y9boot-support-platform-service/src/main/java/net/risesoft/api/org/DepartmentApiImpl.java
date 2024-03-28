@@ -73,16 +73,16 @@ public class DepartmentApiImpl implements DepartmentApi {
      * 删除部门
      *
      * @param tenantId 租户id
-     * @param deptId 部门id
+     * @param departmentId 部门id
      * @return {@code Y9Result<Object>} 通用请求返回对象 - success 属性判断操作是否成功
      * @since 9.6.0
      */
     @Override
     public Y9Result<Object> delete(@RequestParam("tenantId") @NotBlank String tenantId,
-        @RequestParam("deptId") @NotBlank String deptId) {
+        @RequestParam("departmentId") @NotBlank String departmentId) {
         Y9LoginUserHolder.setTenantId(tenantId);
 
-        y9DepartmentService.delete(deptId);
+        y9DepartmentService.delete(departmentId);
         return Y9Result.success();
     }
 
@@ -96,7 +96,7 @@ public class DepartmentApiImpl implements DepartmentApi {
      */
     @Override
     public Y9Result<Object> disable(@RequestParam("tenantId") @NotBlank String tenantId,
-        @RequestParam("parentId") @NotBlank String departmentId) {
+        @RequestParam("departmentId") @NotBlank String departmentId) {
         Y9LoginUserHolder.setTenantId(tenantId);
 
         y9DepartmentService.changeDisable(departmentId);
@@ -114,7 +114,7 @@ public class DepartmentApiImpl implements DepartmentApi {
      */
     @Override
     public Y9Result<Department> get(@RequestParam("tenantId") @NotBlank String tenantId,
-        @RequestParam("parentId") @NotBlank String departmentId) {
+        @RequestParam("departmentId") @NotBlank String departmentId) {
         Y9LoginUserHolder.setTenantId(tenantId);
 
         Y9Department y9Department = y9DepartmentService.findById(departmentId).orElse(null);
@@ -142,16 +142,16 @@ public class DepartmentApiImpl implements DepartmentApi {
      * 根据部门名称模糊查询部门列表（不包含禁用）
      *
      * @param tenantId 租户id
-     * @param deptName 部门名称
+     * @param name 部门名称
      * @return {@code Y9Result<List<Department>>} 通用请求返回对象 - data 是部门列表
      * @since 9.6.0
      */
     @Override
     public Y9Result<List<Department>> listByName(@RequestParam("tenantId") @NotBlank String tenantId,
-        @RequestParam("deptName") @NotBlank String deptName) {
+        @RequestParam("name") @NotBlank String name) {
         Y9LoginUserHolder.setTenantId(tenantId);
 
-        List<Y9Department> y9DepartmentList = y9DepartmentService.listByName(deptName, false);
+        List<Y9Department> y9DepartmentList = y9DepartmentService.listByName(name, false);
         return Y9Result.success(Y9ModelConvertUtil.convert(y9DepartmentList, Department.class));
     }
 
@@ -159,16 +159,16 @@ public class DepartmentApiImpl implements DepartmentApi {
      * 获取下一级部门列表（不包含禁用）
      *
      * @param tenantId 租户id
-     * @param departmentId 部门唯一标识
+     * @param parentId 部门唯一标识
      * @return {@code Y9Result<List<Department>>} 通用请求返回对象 - data 是部门对象集合
      * @since 9.6.0
      */
     @Override
     public Y9Result<List<Department>> listByParentId(@RequestParam("tenantId") @NotBlank String tenantId,
-        @RequestParam("parentId") @NotBlank String departmentId) {
+        @RequestParam("parentId") @NotBlank String parentId) {
         Y9LoginUserHolder.setTenantId(tenantId);
 
-        List<Y9Department> y9DepartmentList = y9DepartmentService.listByParentId(departmentId, false);
+        List<Y9Department> y9DepartmentList = y9DepartmentService.listByParentId(parentId, false);
         return Y9Result.success(Y9ModelConvertUtil.convert(y9DepartmentList, Department.class));
     }
 
@@ -202,7 +202,7 @@ public class DepartmentApiImpl implements DepartmentApi {
      */
     @Override
     public Y9Result<List<OrgUnit>> listLeaders(@RequestParam("tenantId") @NotBlank String tenantId,
-        @RequestParam("parentId") @NotBlank String departmentId) {
+        @RequestParam("departmentId") @NotBlank String departmentId) {
         Y9LoginUserHolder.setTenantId(tenantId);
 
         List<Y9OrgBase> y9OrgBaseList = y9DepartmentService.listLeaders(departmentId, Boolean.FALSE);
@@ -219,7 +219,7 @@ public class DepartmentApiImpl implements DepartmentApi {
      */
     @Override
     public Y9Result<List<OrgUnit>> listManagers(@RequestParam("tenantId") @NotBlank String tenantId,
-        @RequestParam("parentId") @NotBlank String departmentId) {
+        @RequestParam("departmentId") @NotBlank String departmentId) {
         Y9LoginUserHolder.setTenantId(tenantId);
 
         List<Y9OrgBase> y9OrgBaseList = y9DepartmentService.listManagers(departmentId, Boolean.FALSE);
@@ -230,16 +230,16 @@ public class DepartmentApiImpl implements DepartmentApi {
      * 递归获得所有层级子部门列表（不包含禁用）
      *
      * @param tenantId 租户id
-     * @param orgUnitId 组织节点唯一标识(可能是机构ID,也可能是部门ID)
+     * @param parentId 组织节点唯一标识(可能是机构ID,也可能是部门ID)
      * @return {@code Y9Result<List<Department>>} 通用请求返回对象 - data 是部门对象集合
      * @since 9.6.0
      */
     @Override
     public Y9Result<List<Department>> listRecursivelyByParentId(@RequestParam("tenantId") @NotBlank String tenantId,
-        @RequestParam("orgUnitId") @NotBlank String orgUnitId) {
+        @RequestParam("parentId") @NotBlank String parentId) {
         Y9LoginUserHolder.setTenantId(tenantId);
 
-        List<Y9Department> y9DepartmentList = y9DepartmentService.listRecursivelyByParentId(orgUnitId, Boolean.FALSE);
+        List<Y9Department> y9DepartmentList = y9DepartmentService.listRecursivelyByParentId(parentId, Boolean.FALSE);
         return Y9Result.success(Y9ModelConvertUtil.convert(y9DepartmentList, Department.class));
     }
 
