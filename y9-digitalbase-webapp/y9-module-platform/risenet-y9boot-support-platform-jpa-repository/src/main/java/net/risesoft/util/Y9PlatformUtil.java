@@ -38,16 +38,6 @@ public class Y9PlatformUtil {
         return jdbcTemplate4Tenant;
     }
 
-    public static List<Map<String, Object>> getProductCode() {
-        List<Map<String, Object>> list = null;
-        try {
-            list = getJdbcTemplate4Public().queryForList("select NAME as product_code from Y9_COMMON_SYSTEM");
-        } catch (Exception e) {
-            LOGGER.warn(e.getMessage(), e);
-        }
-        return list;
-    }
-
     public static Map<String, Object> getSystemById(String systemId) {
         List<Map<String, Object>> systemNameList = getJdbcTemplate4Public()
             .queryForList("select ID,NAME,CN_NAME from Y9_COMMON_SYSTEM t where t.ID = ?", systemId);
