@@ -82,7 +82,8 @@ public class SystemApiImpl implements SystemApi {
      * @since 9.6.3
      */
     @Override
-    public Y9Result<System> registrySystem(String name, String cnName, String contextPath, String isvGuid) {
+    public Y9Result<System> registrySystem(@RequestParam("name") String name, @RequestParam("cnName") String cnName,
+        @RequestParam("contextPath") String contextPath, @RequestParam("isvGuid") String isvGuid) {
         List<Y9System> y9Systems = y9SystemService.listByContextPath(contextPath);
         if (!y9Systems.isEmpty()) {
             return Y9Result.failure("该系统上下文已存在，请重新输入！");

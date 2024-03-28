@@ -481,7 +481,7 @@ public class PersonApiImpl implements PersonApi {
      */
     @Override
     public Y9Page<Person> pageByParentId(@RequestParam("tenantId") @NotBlank String tenantId,
-        @RequestParam("parentId") @NotBlank String parentId, @RequestParam("isDisabledInclude") boolean disabled,
+        @RequestParam("parentId") @NotBlank String parentId, @RequestParam("disabled") boolean disabled,
         @Validated Y9PageQuery pageQuery) {
         Y9LoginUserHolder.setTenantId(tenantId);
 
@@ -504,8 +504,8 @@ public class PersonApiImpl implements PersonApi {
      */
     @Override
     public Y9Page<Person> pageByParentIdAndName(@RequestParam("tenantId") @NotBlank String tenantId,
-        @RequestParam("parentId") @NotBlank String parentId, @RequestParam("isDisabledInclude") boolean disabled,
-        @RequestParam("name") @NotBlank String name, Y9PageQuery pageQuery) {
+        @RequestParam("parentId") @NotBlank String parentId, @RequestParam("disabled") boolean disabled,
+        @RequestParam(value = "name", required = false) String name, Y9PageQuery pageQuery) {
         Y9LoginUserHolder.setTenantId(tenantId);
 
         Page<Y9Person> persons = y9PersonService.pageByParentId(parentId, disabled, name, pageQuery);
@@ -525,9 +525,9 @@ public class PersonApiImpl implements PersonApi {
      */
     @Override
     public Y9Result<Person> savePersonAvatar(@RequestParam("tenantId") @NotBlank String tenantId,
-        @RequestParam("personId") @NotBlank String personId, @RequestParam("avator") @NotBlank String avator) {
+        @RequestParam("personId") @NotBlank String personId, @RequestParam("avatar") @NotBlank String avatar) {
         Y9LoginUserHolder.setTenantId(tenantId);
-        Y9Person y9Person = y9PersonService.saveAvator(personId, avator);
+        Y9Person y9Person = y9PersonService.saveAvator(personId, avatar);
         return Y9Result.success(Y9ModelConvertUtil.convert(y9Person, Person.class));
     }
 

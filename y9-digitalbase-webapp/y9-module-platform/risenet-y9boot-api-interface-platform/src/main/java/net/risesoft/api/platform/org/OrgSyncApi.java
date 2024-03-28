@@ -44,7 +44,7 @@ public interface OrgSyncApi {
 
     /**
      * 分页获取部门数据
-     * 
+     *
      * @param appName 应用名称
      * @param tenantId 租户id
      * @param page 页数，初始值为1
@@ -57,7 +57,7 @@ public interface OrgSyncApi {
 
     /**
      * 分页获取人员数据
-     * 
+     *
      * @param appName 应用名称
      * @param tenantId 租户id
      * @param type 0-查全量，1-查询没被禁用的
@@ -83,7 +83,7 @@ public interface OrgSyncApi {
 
     /**
      * 返回增量接口处理结果，刷新同步时间
-     * 
+     *
      * @param appName 应用名称
      * @param tenantId 租户id
      * @return

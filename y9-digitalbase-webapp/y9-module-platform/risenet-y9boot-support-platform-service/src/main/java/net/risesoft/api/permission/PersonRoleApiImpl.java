@@ -109,7 +109,7 @@ public class PersonRoleApiImpl implements PersonRoleApi {
      */
     @Override
     public Y9Result<Boolean> hasRoleByCustomId(@RequestParam("tenantId") @NotBlank String tenantId,
-        @RequestParam("positionId") @NotBlank String personId, @RequestParam("customId") @NotBlank String customId) {
+        @RequestParam("personId") @NotBlank String personId, @RequestParam("customId") @NotBlank String customId) {
         Y9LoginUserHolder.setTenantId(tenantId);
 
         return Y9Result.success(y9PersonToRoleService.hasRoleByCustomId(personId, customId));

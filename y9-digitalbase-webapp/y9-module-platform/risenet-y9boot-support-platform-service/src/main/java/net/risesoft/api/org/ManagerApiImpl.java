@@ -47,7 +47,7 @@ public class ManagerApiImpl implements ManagerApi {
      */
     @Override
     public Y9Result<Manager> get(@RequestParam("tenantId") @NotBlank String tenantId,
-        @RequestParam("id") @NotBlank String managerId) {
+        @RequestParam("managerId") @NotBlank String managerId) {
         Y9LoginUserHolder.setTenantId(tenantId);
 
         Y9Manager y9Manager = y9ManagerService.findById(managerId).orElse(null);

@@ -190,8 +190,9 @@ public class AppApiImpl implements AppApi {
      * @since 9.6.3
      */
     @Override
-    public Y9Result<App> registerApp(@NotBlank String systemName, @NotBlank String name, @NotBlank String url,
-        String customId, String tenantGuid) {
+    public Y9Result<App> registerApp(@RequestParam("systemName") @NotBlank String systemName,
+        @RequestParam("name") @NotBlank String name, @RequestParam("url") @NotBlank String url,
+        @RequestParam("customId") String customId, @RequestParam("tenantGuid") String tenantGuid) {
         Optional<Y9System> y9SystemOptional = y9SystemService.findByName(systemName);
         if (y9SystemOptional.isEmpty()) {
             return Y9Result.failure("该系统不存在，请重新输入！");
@@ -254,8 +255,10 @@ public class AppApiImpl implements AppApi {
      * @since 9.6.3
      */
     @Override
-    public Y9Result<App> registerSystemAndApp(@NotBlank String systemName, @NotBlank String systemCnName,
-        String isvGuid, String contextPath, @NotBlank String appName, @NotBlank String url, String customId) {
+    public Y9Result<App> registerSystemAndApp(@RequestParam("systemName") @NotBlank String systemName,
+        @RequestParam("systemCnName") @NotBlank String systemCnName, @RequestParam("isvGuid") String isvGuid,
+        @RequestParam("contextPath") String contextPath, @RequestParam("appName") @NotBlank String appName,
+        @RequestParam("url") @NotBlank String url, @RequestParam("customId") String customId) {
 
         List<Y9System> y9Systems = y9SystemService.listByContextPath(contextPath);
         if (!y9Systems.isEmpty()) {

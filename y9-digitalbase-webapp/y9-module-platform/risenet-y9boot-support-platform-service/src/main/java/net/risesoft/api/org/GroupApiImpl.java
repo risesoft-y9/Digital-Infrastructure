@@ -93,7 +93,7 @@ public class GroupApiImpl implements GroupApi {
      */
     @Override
     public Y9Result<Object> delete(@RequestParam("tenantId") @NotBlank String tenantId,
-        @RequestParam("groupId") @NotBlank String groupId) {
+        @RequestParam @NotBlank String groupId) {
         Y9LoginUserHolder.setTenantId(tenantId);
 
         y9GroupService.delete(groupId);
@@ -120,16 +120,16 @@ public class GroupApiImpl implements GroupApi {
      * 获取下一级用户组列表（不包含禁用）
      *
      * @param tenantId 租户id
-     * @param departmentId 部门唯一标识
+     * @param parentId 父节点唯一标识
      * @return {@code Y9Result<List<Group>>} 通用请求返回对象 - data 是用户组对象集合
      * @since 9.6.0
      */
     @Override
     public Y9Result<List<Group>> listByParentId(@RequestParam("tenantId") @NotBlank String tenantId,
-        @RequestParam("parentId") @NotBlank String departmentId) {
+        @RequestParam("parentId") @NotBlank String parentId) {
         Y9LoginUserHolder.setTenantId(tenantId);
 
-        List<Y9Group> y9GroupList = y9GroupService.listByParentId(departmentId, false);
+        List<Y9Group> y9GroupList = y9GroupService.listByParentId(parentId, false);
         return Y9Result.success(Y9ModelConvertUtil.convert(y9GroupList, Group.class));
     }
 
