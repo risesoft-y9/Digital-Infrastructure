@@ -35,13 +35,12 @@ import net.risesoft.repository.permission.Y9AuthorizationRepository;
 import net.risesoft.repository.relation.Y9OrgBasesToRolesRepository;
 import net.risesoft.repository.relation.Y9PersonsToGroupsRepository;
 import net.risesoft.repository.relation.Y9PersonsToPositionsRepository;
+import net.risesoft.util.Y9PlatformUtil;
 import net.risesoft.y9.Y9LoginUserHolder;
 import net.risesoft.y9.exception.util.Y9ExceptionUtil;
 import net.risesoft.y9public.entity.role.Y9Role;
-import net.risesoft.y9public.entity.tenant.Y9TenantApp;
 import net.risesoft.y9public.manager.role.Y9RoleManager;
 import net.risesoft.y9public.repository.role.Y9RoleRepository;
-import net.risesoft.y9public.repository.tenant.Y9TenantAppRepository;
 
 /**
  * 角色管理 Y9RoleManager 实现类
@@ -66,7 +65,6 @@ public class Y9RoleManagerImpl implements Y9RoleManager {
     private final Y9PositionToRoleRepository y9PositionToRoleRepository;
     private final Y9PersonToResourceAndAuthorityRepository y9PersonToResourceAndAuthorityRepository;
     private final Y9PositionToResourceAndAuthorityRepository y9PositionToResourceAndAuthorityRepository;
-    private final Y9TenantAppRepository y9TenantAppRepository;
 
     @CacheEvict(key = "#id")
     @Transactional(readOnly = false)
@@ -75,9 +73,9 @@ public class Y9RoleManagerImpl implements Y9RoleManager {
         Y9Role y9Role = this.getById(id);
         if (RoleTypeEnum.ROLE.equals(y9Role.getType())) {
             // 删除租户关联数据
-            List<Y9TenantApp> y9TenantAppList = y9TenantAppRepository.findByTenantIdAndTenancy(id, true);
-            for (Y9TenantApp y9TenantApp : y9TenantAppList) {
-                Y9LoginUserHolder.setTenantId(y9TenantApp.getTenantId());
+            List<String> tenantIds = Y9PlatformUtil.getTenantIds();
+            for (String tenantId : tenantIds) {
+                Y9LoginUserHolder.setTenantId(tenantId);
                 this.deleteTenantRelatedByAppId(id);
             }
         } else if (RoleTypeEnum.FOLDER.equals(y9Role.getType())) {
