@@ -112,9 +112,6 @@ public class Y9PositionServiceImpl implements Y9PositionService {
     public Y9Position changeDisabled(String id) {
         Y9Position y9Position = y9PositionManager.findByIdNotCache(id)
             .orElseThrow(() -> Y9ExceptionUtil.notFoundException(OrgUnitErrorCodeEnum.POSITION_NOT_FOUND, id));
-        if (y9Position == null) {
-            return null;
-        }
         boolean isDisabled = !y9Position.getDisabled();
         y9Position.setDisabled(isDisabled);
         Y9Position savePosition = y9PositionManager.save(y9Position);
