@@ -99,11 +99,11 @@
 	<properties>
 		<java.version>21</java.version>
 
-		<cas.version>7.0.0</cas.version>
-		<spring-boot.version>3.2.0</spring-boot.version>
+		<cas.version>7.0.3</cas.version>
+		<spring-boot.version>3.2.1</spring-boot.version>
 		<spring-cloud.version>2023.0.0</spring-cloud.version>
 
-		<lombok.version>1.18.30</lombok.version>
+		<lombok.version>1.18.32</lombok.version>
 		<mysql.version>8.2.0</mysql.version>
 
 		<start-class>org.apereo.cas.web.CasWebApplication</start-class>

@@ -94,7 +94,7 @@
         <maven.javadoc.failOnError>false</maven.javadoc.failOnError>
 
         <spring-boot.version>3.2.4</spring-boot.version>
-        <spring-cloud.version>2023.0.0</spring-cloud.version>
+        <spring-cloud.version>2023.0.1</spring-cloud.version>
 
         <aspectj.version>1.9.21.2</aspectj.version>
         <guava.version>33.1.0-jre</guava.version>
