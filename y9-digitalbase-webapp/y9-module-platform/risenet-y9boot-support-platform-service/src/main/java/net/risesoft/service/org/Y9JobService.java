@@ -21,6 +21,8 @@ public interface Y9JobService {
      */
     long count();
 
+    Y9Job create(String name, String code);
+
     /**
      * 根据id数组删除
      *
@@ -98,6 +100,4 @@ public interface Y9JobService {
      * @return {@link Y9Job}
      */
     Y9Job saveOrUpdate(Y9Job job);
-
-    Y9Job create(String name, String code);
 }

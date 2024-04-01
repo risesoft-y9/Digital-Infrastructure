@@ -52,21 +52,21 @@ public interface Y9PersonService {
     /**
      * 用户认证
      *
+     * @param loginName 登录名
+     * @param base64EncodedPassword base编码过的密码
+     * @return {@link Message}
+     */
+    AuthenticateResult authenticate3(String loginName, String base64EncodedPassword);
+
+    /**
+     * 用户认证
+     *
      * @param tenantShortName 租户英文名
      * @param loginName 登录名
      * @param password 密码
      * @return {@link Message}
      */
     Message authenticate3(String tenantShortName, String loginName, String password);
-
-    /**
-     * 用户认证
-     *
-     * @param loginName 登录名
-     * @param base64EncodedPassword base编码过的密码
-     * @return {@link Message}
-     */
-    AuthenticateResult authenticate3(String loginName, String base64EncodedPassword);
 
     /**
      * 用户认证
@@ -80,21 +80,21 @@ public interface Y9PersonService {
     /**
      * 用户认证
      *
+     * @param mobile 手机号
+     * @param base64EncodedPassword base编码过的密码
+     * @return {@link Message}
+     */
+    AuthenticateResult authenticate5(String mobile, String base64EncodedPassword);
+
+    /**
+     * 用户认证
+     *
      * @param tenantShortName 租户英文名
      * @param mobile 手机号
      * @param password 密码
      * @return {@link Message}
      */
     Message authenticate5(String tenantShortName, String mobile, String password);
-
-    /**
-     * 用户认证
-     *
-     * @param mobile 手机号
-     * @param base64EncodedPassword base编码过的密码
-     * @return {@link Message}
-     */
-    AuthenticateResult authenticate5(String mobile, String base64EncodedPassword);
 
     /**
      * 用户认证
@@ -143,18 +143,18 @@ public interface Y9PersonService {
     Y9Person create(String parentId, String name, String loginName, String mobile);
 
     /**
-     * 根据主键id删除人员实例(人员与组，与角色，与岗位的关联关系都删掉)
-     *
-     * @param id id
-     */
-    void delete(String id);
-
-    /**
      * 根据id数组，删除人员
      *
      * @param ids id数组
      */
     void delete(List<String> ids);
+
+    /**
+     * 根据主键id删除人员实例(人员与组，与角色，与岗位的关联关系都删掉)
+     *
+     * @param id id
+     */
+    void delete(String id);
 
     /**
      * 根据父节点id，删除人员
@@ -370,16 +370,6 @@ public interface Y9PersonService {
     Page<Y9Person> pageByNameLike(String name, Y9PageQuery pageQuery);
 
     /**
-     * 根据父节点查询，本部门下的人员
-     *
-     * @param parentId 父节点id
-     * @param disabled 是否已禁用
-     * @param pageQuery
-     * @return {@link Page}<{@link Y9Person}>
-     */
-    Page<Y9Person> pageByParentId(String parentId, boolean disabled, Y9PageQuery pageQuery);
-
-    /**
      * 根据父节点id、人员禁用状态及名称模糊查询本部门下人员
      *
      * @param parentId 父节点id
@@ -389,6 +379,16 @@ public interface Y9PersonService {
      * @return {@link Page}<{@link Y9Person}>
      */
     Page<Y9Person> pageByParentId(String parentId, boolean disabled, String name, Y9PageQuery pageQuery);
+
+    /**
+     * 根据父节点查询，本部门下的人员
+     *
+     * @param parentId 父节点id
+     * @param disabled 是否已禁用
+     * @param pageQuery
+     * @return {@link Page}<{@link Y9Person}>
+     */
+    Page<Y9Person> pageByParentId(String parentId, boolean disabled, Y9PageQuery pageQuery);
 
     /**
      * 重置默认密码
@@ -415,6 +415,15 @@ public interface Y9PersonService {
     Y9Person saveAvator(String personId, String avatorUrl);
 
     /**
+     * 保存或者修改此岗位的信息
+     *
+     * @param person 人员对象
+     * @param personExt 人员扩展信息对象
+     * @return ORGPerson
+     */
+    Y9Person saveOrUpdate(Y9Person person, Y9PersonExt personExt);
+
+    /**
      * 保存或更新
      *
      * @param person 人员对象
@@ -424,15 +433,6 @@ public interface Y9PersonService {
      * @return {@link Y9Person}
      */
     Y9Person saveOrUpdate(Y9Person person, Y9PersonExt ext, List<String> positionIds, List<String> jobIds);
-
-    /**
-     * 保存或者修改此岗位的信息
-     *
-     * @param person 人员对象
-     * @param personExt 人员扩展信息对象
-     * @return ORGPerson
-     */
-    Y9Person saveOrUpdate(Y9Person person, Y9PersonExt personExt);
 
     /**
      * 保存或者修改此人员的信息(用于导入y9导出的组织机构：密码是什么就导入什么不做处理)

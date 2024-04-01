@@ -44,6 +44,7 @@ import net.risesoft.util.Y9PublishServiceUtil;
 import net.risesoft.y9.Y9Context;
 import net.risesoft.y9.Y9LoginUserHolder;
 import net.risesoft.y9.exception.Y9BusinessException;
+import net.risesoft.y9.exception.util.Y9ExceptionUtil;
 import net.risesoft.y9.pubsub.constant.Y9OrgEventTypeConst;
 import net.risesoft.y9.pubsub.event.Y9EntityDeletedEvent;
 import net.risesoft.y9.pubsub.event.Y9EntityUpdatedEvent;
@@ -78,7 +79,8 @@ public class Y9DepartmentServiceImpl implements Y9DepartmentService {
         // 检查所有子节点是否都禁用了，只有所有子节点都禁用了，当前部门才能禁用
         compositeOrgBaseManager.checkAllDecendantsDisabled(id);
 
-        Y9Department dept = this.getById(id);
+        Y9Department dept = y9DepartmentManager.findByIdNotCache(id)
+            .orElseThrow(() -> Y9ExceptionUtil.notFoundException(OrgUnitErrorCodeEnum.DEPARTMENT_NOT_FOUND, id));
         Boolean isDisabled = !dept.getDisabled();
         dept.setDisabled(isDisabled);
         final Y9Department savedDepartment = y9DepartmentManager.save(dept);
@@ -86,7 +88,7 @@ public class Y9DepartmentServiceImpl implements Y9DepartmentService {
         TransactionSynchronizationManager.registerSynchronization(new TransactionSynchronization() {
             @Override
             public void afterCommit() {
-                String event = isDisabled ? "禁用" : "启用";
+                String event = Boolean.TRUE.equals(isDisabled) ? "禁用" : "启用";
                 Y9MessageOrg<Department> msg =
                     new Y9MessageOrg<>(Y9ModelConvertUtil.convert(savedDepartment, Department.class),
                         Y9OrgEventTypeConst.DEPARTMENT_UPDATE, Y9LoginUserHolder.getTenantId());
@@ -95,6 +97,21 @@ public class Y9DepartmentServiceImpl implements Y9DepartmentService {
         });
 
         return savedDepartment;
+    }
+
+    /**
+     * 判断是否移动到自己，或者自己的子节点里面，这种情况要排除，不让移动
+     *
+     * @param dept
+     * @param parentId
+     */
+    private void checkMoveTarget(Y9Department dept, String parentId) {
+        List<Y9OrgBase> parentList = new ArrayList<>();
+        recursionParent(parentId, parentList);
+        if (parentList.contains(dept)) {
+            throw new Y9BusinessException(OrgUnitErrorCodeEnum.MOVE_TO_SUB_DEPARTMENT_NOT_PERMITTED.getCode(),
+                OrgUnitErrorCodeEnum.MOVE_TO_SUB_DEPARTMENT_NOT_PERMITTED.getDescription());
+        }
     }
 
     @Override
@@ -152,16 +169,30 @@ public class Y9DepartmentServiceImpl implements Y9DepartmentService {
         return y9OrgBaseList;
     }
 
-    @Override
-    public List<Y9Department> listRecursivelyByParentId(String orgUnitId, Boolean disabled) {
-        List<Y9Department> deptList = new ArrayList<>();
-        getDeptTrees(orgUnitId, deptList, disabled);
-        return deptList;
+    private void getDeptTrees(String orgBaseId, List<Y9Department> deptList, Boolean disabled) {
+        List<Y9Department> childrenList = this.listByParentIdAndDisabled(orgBaseId, disabled);
+        if (childrenList.isEmpty()) {
+            return;
+        }
+        deptList.addAll(childrenList);
+        for (Y9Department orgDept : childrenList) {
+            getDeptTrees(orgDept.getId(), deptList, disabled);
+        }
     }
 
     @Override
     public List<Y9Department> list() {
         return y9DepartmentRepository.findAll();
+    }
+
+    @Override
+    public List<Y9Department> list(List<String> ids) {
+        List<Y9Department> y9DepartmentList = new ArrayList<>();
+        for (String id : ids) {
+            Optional<Y9Department> y9DepartmentOptional = findById(id);
+            y9DepartmentOptional.ifPresent(y9DepartmentList::add);
+        }
+        return y9DepartmentList;
     }
 
     @Override
@@ -201,6 +232,10 @@ public class Y9DepartmentServiceImpl implements Y9DepartmentService {
         }
     }
 
+    private List<Y9Department> listByParentIdAndDisabled(String orgBaseId, boolean disabled) {
+        return y9DepartmentRepository.findByParentIdAndDisabled(orgBaseId, disabled);
+    }
+
     @Override
     public List<Y9OrgBase> listLeaders(String deptId, Boolean disabled) {
         List<Y9OrgBase> y9OrgBaseList = new ArrayList<>();
@@ -208,9 +243,7 @@ public class Y9DepartmentServiceImpl implements Y9DepartmentService {
             DepartmentPropCategoryEnum.LEADER);
         for (Y9DepartmentProp prop : propList) {
             Y9OrgBase y9OrgBase = compositeOrgBaseManager.getOrgUnit(prop.getOrgBaseId());
-            if (disabled == null) {
-                y9OrgBaseList.add(y9OrgBase);
-            } else if (disabled.equals(y9OrgBase.getDisabled())) {
+            if (disabled == null || disabled.equals(y9OrgBase.getDisabled())) {
                 y9OrgBaseList.add(y9OrgBase);
             }
         }
@@ -224,13 +257,18 @@ public class Y9DepartmentServiceImpl implements Y9DepartmentService {
             DepartmentPropCategoryEnum.MANAGER);
         for (Y9DepartmentProp prop : propList) {
             Y9OrgBase y9OrgBase = compositeOrgBaseManager.getOrgUnit(prop.getOrgBaseId());
-            if (disabled == null) {
-                y9OrgBaseList.add(y9OrgBase);
-            } else if (disabled.equals(y9OrgBase.getDisabled())) {
+            if (disabled == null || disabled.equals(y9OrgBase.getDisabled())) {
                 y9OrgBaseList.add(y9OrgBase);
             }
         }
         return y9OrgBaseList;
+    }
+
+    @Override
+    public List<Y9Department> listRecursivelyByParentId(String orgUnitId, Boolean disabled) {
+        List<Y9Department> deptList = new ArrayList<>();
+        getDeptTrees(orgUnitId, deptList, disabled);
+        return deptList;
     }
 
     @Override
@@ -251,9 +289,9 @@ public class Y9DepartmentServiceImpl implements Y9DepartmentService {
     @Transactional(readOnly = false)
     public Y9Department move(String deptId, String parentId) {
         Y9Department originDepartment = new Y9Department();
-        Y9Department updatedDepartment = getById(deptId);
+        Y9Department updatedDepartment = y9DepartmentManager.findByIdNotCache(deptId)
+            .orElseThrow(() -> Y9ExceptionUtil.notFoundException(OrgUnitErrorCodeEnum.DEPARTMENT_NOT_FOUND, deptId));
         Y9BeanUtil.copyProperties(updatedDepartment, originDepartment);
-
         checkMoveTarget(updatedDepartment, parentId);
 
         Y9OrgBase parent = compositeOrgBaseManager.getOrgUnitAsParent(parentId);
@@ -277,6 +315,67 @@ public class Y9DepartmentServiceImpl implements Y9DepartmentService {
         });
 
         return savedDepartment;
+    }
+
+    @EventListener
+    @Transactional(readOnly = false)
+    public void onParentDepartmentDeleted(Y9EntityDeletedEvent<Y9Department> event) {
+        Y9Department parentDepartment = event.getEntity();
+        // 删除部门时其下部门也要删除
+        removeByParentId(parentDepartment.getId());
+    }
+
+    @EventListener
+    @Transactional(readOnly = false)
+    public void onParentDepartmentUpdated(Y9EntityUpdatedEvent<Y9Department> event) {
+        Y9Department originDepartment = event.getOriginEntity();
+        Y9Department updatedDepartment = event.getUpdatedEntity();
+
+        if (Y9OrgUtil.isAncestorChanged(originDepartment, updatedDepartment)) {
+            List<Y9Department> deptList = y9DepartmentRepository.findByParentId(updatedDepartment.getId());
+            for (Y9Department dept : deptList) {
+                this.saveOrUpdate(dept);
+            }
+        }
+    }
+
+    @EventListener
+    @Transactional(readOnly = false)
+    public void onParentOrganizationDeleted(Y9EntityDeletedEvent<Y9Organization> event) {
+        Y9Organization y9Organization = event.getEntity();
+        // 删除组织时其下部门也要删除
+        removeByParentId(y9Organization.getId());
+    }
+
+    @EventListener
+    @Transactional(readOnly = false)
+    public void onParentOrganizationUpdated(Y9EntityUpdatedEvent<Y9Organization> event) {
+        Y9Organization originOrganization = event.getOriginEntity();
+        Y9Organization updatedOrganization = event.getUpdatedEntity();
+
+        if (Y9OrgUtil.isRenamed(originOrganization, updatedOrganization)) {
+            List<Y9Department> deptList = y9DepartmentRepository.findByParentId(updatedOrganization.getId());
+            for (Y9Department dept : deptList) {
+                this.saveOrUpdate(dept);
+            }
+        }
+    }
+
+    private void recursionParent(String parentId, List<Y9OrgBase> parentList) {
+        Y9OrgBase parent = compositeOrgBaseManager.getOrgUnitAsParent(parentId);
+        parentList.add(parent);
+        if (parent.getOrgType().equals(OrgTypeEnum.DEPARTMENT)) {
+            Y9Department dept = (Y9Department)parent;
+            recursionParent(dept.getParentId(), parentList);
+        }
+    }
+
+    @Transactional(readOnly = false)
+    public void removeByParentId(String parentId) {
+        List<Y9Department> y9DepartmentList = this.listByParentId(parentId, Boolean.FALSE);
+        for (Y9Department y9Department : y9DepartmentList) {
+            this.delete(y9Department.getId());
+        }
     }
 
     @Override
@@ -326,17 +425,9 @@ public class Y9DepartmentServiceImpl implements Y9DepartmentService {
 
         int tabIndex = 0;
         for (String deptId : deptIds) {
-            orgDeptList.add(this.saveOrder(deptId, tabIndex++));
+            orgDeptList.add(y9DepartmentManager.updateTabIndex(deptId, tabIndex++));
         }
-
         return orgDeptList;
-    }
-
-    @Transactional(readOnly = false)
-    public Y9Department saveOrder(String deptId, int i) {
-        Y9Department dept = this.getById(deptId);
-        dept.setTabIndex(i);
-        return y9DepartmentManager.save(dept);
     }
 
     @Override
@@ -345,7 +436,7 @@ public class Y9DepartmentServiceImpl implements Y9DepartmentService {
         Y9OrgBase parent = compositeOrgBaseManager.getOrgUnitAsParent(dept.getParentId());
 
         if (StringUtils.isNotEmpty(dept.getId())) {
-            Optional<Y9Department> y9DepartmentOptional = y9DepartmentManager.findById(dept.getId());
+            Optional<Y9Department> y9DepartmentOptional = y9DepartmentManager.findByIdNotCache(dept.getId());
             if (y9DepartmentOptional.isPresent()) {
                 Y9Department originDepartment = new Y9Department();
                 Y9Department updatedDepartment = y9DepartmentOptional.get();
@@ -406,21 +497,7 @@ public class Y9DepartmentServiceImpl implements Y9DepartmentService {
     @Override
     @Transactional(readOnly = false)
     public Y9Department saveProperties(String id, String properties) {
-        Y9Department dept = this.getById(id);
-        dept.setProperties(properties);
-        final Y9Department savedDepartment = y9DepartmentManager.save(dept);
-
-        TransactionSynchronizationManager.registerSynchronization(new TransactionSynchronization() {
-            @Override
-            public void afterCommit() {
-                Y9MessageOrg<Department> msg =
-                    new Y9MessageOrg<>(Y9ModelConvertUtil.convert(savedDepartment, Department.class),
-                        Y9OrgEventTypeConst.DEPARTMENT_UPDATE, Y9LoginUserHolder.getTenantId());
-                Y9PublishServiceUtil.publishMessageOrg(msg);
-            }
-        });
-
-        return savedDepartment;
+        return y9DepartmentManager.saveProperties(id, properties);
     }
 
     @SuppressWarnings("unchecked")
@@ -548,107 +625,6 @@ public class Y9DepartmentServiceImpl implements Y9DepartmentService {
     @Transactional(readOnly = false)
     public Y9Department updateTabIndex(String id, int tabIndex) {
         return y9DepartmentManager.updateTabIndex(id, tabIndex);
-    }
-
-    @Override
-    public List<Y9Department> list(List<String> ids) {
-        List<Y9Department> y9DepartmentList = new ArrayList<>();
-        for (String id : ids) {
-            Optional<Y9Department> y9DepartmentOptional = findById(id);
-            y9DepartmentOptional.ifPresent(y9DepartmentList::add);
-        }
-        return y9DepartmentList;
-    }
-
-    /**
-     * 判断是否移动到自己，或者自己的子节点里面，这种情况要排除，不让移动
-     *
-     * @param dept
-     * @param parentId
-     */
-    private void checkMoveTarget(Y9Department dept, String parentId) {
-        List<Y9OrgBase> parentList = new ArrayList<>();
-        recursionParent(parentId, parentList);
-        if (parentList.contains(dept)) {
-            throw new Y9BusinessException(OrgUnitErrorCodeEnum.MOVE_TO_SUB_DEPARTMENT_NOT_PERMITTED.getCode(),
-                OrgUnitErrorCodeEnum.MOVE_TO_SUB_DEPARTMENT_NOT_PERMITTED.getDescription());
-        }
-    }
-
-    private void getDeptTrees(String orgBaseId, List<Y9Department> deptList, Boolean disabled) {
-        List<Y9Department> childrenList = this.listByParentIdAndDisabled(orgBaseId, disabled);
-        if (childrenList.isEmpty()) {
-            return;
-        }
-        deptList.addAll(childrenList);
-        for (Y9Department orgDept : childrenList) {
-            getDeptTrees(orgDept.getId(), deptList, disabled);
-        }
-    }
-
-    private List<Y9Department> listByParentIdAndDisabled(String orgBaseId, boolean disabled) {
-        return y9DepartmentRepository.findByParentIdAndDisabled(orgBaseId, disabled);
-    }
-
-    @EventListener
-    @Transactional(readOnly = false)
-    public void onParentDepartmentDeleted(Y9EntityDeletedEvent<Y9Department> event) {
-        Y9Department parentDepartment = event.getEntity();
-        // 删除部门时其下部门也要删除
-        removeByParentId(parentDepartment.getId());
-    }
-
-    @Transactional(readOnly = false)
-    public void removeByParentId(String parentId) {
-        List<Y9Department> y9DepartmentList = this.listByParentId(parentId, Boolean.FALSE);
-        for (Y9Department y9Department : y9DepartmentList) {
-            this.delete(y9Department.getId());
-        }
-    }
-
-    @EventListener
-    @Transactional(readOnly = false)
-    public void onParentOrganizationDeleted(Y9EntityDeletedEvent<Y9Organization> event) {
-        Y9Organization y9Organization = event.getEntity();
-        // 删除组织时其下部门也要删除
-        removeByParentId(y9Organization.getId());
-    }
-
-    @EventListener
-    @Transactional(readOnly = false)
-    public void onParentOrganizationUpdated(Y9EntityUpdatedEvent<Y9Organization> event) {
-        Y9Organization originOrganization = event.getOriginEntity();
-        Y9Organization updatedOrganization = event.getUpdatedEntity();
-
-        if (Y9OrgUtil.isRenamed(originOrganization, updatedOrganization)) {
-            List<Y9Department> deptList = y9DepartmentRepository.findByParentId(updatedOrganization.getId());
-            for (Y9Department dept : deptList) {
-                this.saveOrUpdate(dept);
-            }
-        }
-    }
-
-    @EventListener
-    @Transactional(readOnly = false)
-    public void onParentDepartmentUpdated(Y9EntityUpdatedEvent<Y9Department> event) {
-        Y9Department originDepartment = event.getOriginEntity();
-        Y9Department updatedDepartment = event.getUpdatedEntity();
-
-        if (Y9OrgUtil.isAncestorChanged(originDepartment, updatedDepartment)) {
-            List<Y9Department> deptList = y9DepartmentRepository.findByParentId(updatedDepartment.getId());
-            for (Y9Department dept : deptList) {
-                this.saveOrUpdate(dept);
-            }
-        }
-    }
-
-    private void recursionParent(String parentId, List<Y9OrgBase> parentList) {
-        Y9OrgBase parent = compositeOrgBaseManager.getOrgUnitAsParent(parentId);
-        parentList.add(parent);
-        if (parent.getOrgType().equals(OrgTypeEnum.DEPARTMENT)) {
-            Y9Department dept = (Y9Department)parent;
-            recursionParent(dept.getParentId(), parentList);
-        }
     }
 
 }

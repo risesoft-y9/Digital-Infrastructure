@@ -23,6 +23,7 @@ import net.risesoft.entity.Y9OrgBase;
 import net.risesoft.entity.Y9Organization;
 import net.risesoft.enums.platform.AuthorizationPrincipalTypeEnum;
 import net.risesoft.enums.platform.OrgTypeEnum;
+import net.risesoft.exception.OrgUnitErrorCodeEnum;
 import net.risesoft.id.IdType;
 import net.risesoft.id.Y9IdGenerator;
 import net.risesoft.manager.org.CompositeOrgBaseManager;
@@ -35,6 +36,7 @@ import net.risesoft.service.org.Y9OrganizationService;
 import net.risesoft.util.Y9PublishServiceUtil;
 import net.risesoft.y9.Y9Context;
 import net.risesoft.y9.Y9LoginUserHolder;
+import net.risesoft.y9.exception.util.Y9ExceptionUtil;
 import net.risesoft.y9.pubsub.constant.Y9OrgEventTypeConst;
 import net.risesoft.y9.pubsub.event.Y9EntityDeletedEvent;
 import net.risesoft.y9.pubsub.event.Y9EntityUpdatedEvent;
@@ -79,7 +81,8 @@ public class Y9OrganizationServiceImpl implements Y9OrganizationService {
         // 检查所有子节点是否都禁用了，只有所有子节点都禁用了，当前部门才能禁用
         compositeOrgBaseManager.checkAllDecendantsDisabled(id);
 
-        Y9Organization y9Group = this.getById(id);
+        Y9Organization y9Group = y9OrganizationManager.findByIdNotCache(id)
+            .orElseThrow(() -> Y9ExceptionUtil.notFoundException(OrgUnitErrorCodeEnum.ORGANIZATION_NOT_FOUND, id));
         Boolean isDisabled = !y9Group.getDisabled();
         y9Group.setDisabled(isDisabled);
         final Y9Organization savedOrganization = y9OrganizationManager.save(y9Group);
@@ -87,7 +90,7 @@ public class Y9OrganizationServiceImpl implements Y9OrganizationService {
         TransactionSynchronizationManager.registerSynchronization(new TransactionSynchronization() {
             @Override
             public void afterCommit() {
-                String event = isDisabled ? "禁用" : "启用";
+                String event = Boolean.TRUE.equals(isDisabled) ? "禁用" : "启用";
                 Y9MessageOrg<Organization> msg =
                     new Y9MessageOrg<>(Y9ModelConvertUtil.convert(savedOrganization, Organization.class),
                         Y9OrgEventTypeConst.ORGANIZATION_UPDATE, Y9LoginUserHolder.getTenantId());
@@ -158,6 +161,14 @@ public class Y9OrganizationServiceImpl implements Y9OrganizationService {
         return y9OrganizationRepository.findByOrderByTabIndexAsc();
     }
 
+    private List<Y9Organization> list(Boolean disabled) {
+        if (disabled == null) {
+            return y9OrganizationRepository.findByOrderByTabIndexAsc();
+        } else {
+            return y9OrganizationRepository.findByDisabledOrderByTabIndexAsc(disabled);
+        }
+    }
+
     @Override
     public List<Y9Organization> list(Boolean virtual, Boolean disabled) {
         if (null == virtual) {
@@ -167,14 +178,6 @@ public class Y9OrganizationServiceImpl implements Y9OrganizationService {
             return y9OrganizationRepository.findByVirtualOrderByTabIndexAsc(virtual);
         } else {
             return y9OrganizationRepository.findByVirtualAndDisabledOrderByTabIndexAsc(virtual, disabled);
-        }
-    }
-
-    private List<Y9Organization> list(Boolean disabled) {
-        if (disabled == null) {
-            return y9OrganizationRepository.findByOrderByTabIndexAsc();
-        } else {
-            return y9OrganizationRepository.findByDisabledOrderByTabIndexAsc(disabled);
         }
     }
 
@@ -188,25 +191,6 @@ public class Y9OrganizationServiceImpl implements Y9OrganizationService {
         return y9OrganizationRepository.findByTenantIdOrderByTabIndexAsc(tenantId);
     }
 
-    @Transactional(readOnly = false)
-    public Y9Organization saveOrder(String orgId, int tabIndex) {
-        Y9Organization org = this.getById(orgId);
-        org.setTabIndex(tabIndex);
-        final Y9Organization savedOrganization = y9OrganizationManager.save(org);
-
-        TransactionSynchronizationManager.registerSynchronization(new TransactionSynchronization() {
-            @Override
-            public void afterCommit() {
-                Y9MessageOrg<Organization> msg =
-                    new Y9MessageOrg<>(Y9ModelConvertUtil.convert(savedOrganization, Organization.class),
-                        Y9OrgEventTypeConst.ORGANIZATION_UPDATE, Y9LoginUserHolder.getTenantId());
-                Y9PublishServiceUtil.publishMessageOrg(msg);
-            }
-        });
-
-        return savedOrganization;
-    }
-
     @Override
     @Transactional(readOnly = false)
     public List<Y9Organization> saveOrder(List<String> orgIds) {
@@ -214,9 +198,8 @@ public class Y9OrganizationServiceImpl implements Y9OrganizationService {
 
         int tabIndex = 0;
         for (String orgId : orgIds) {
-            orgList.add(saveOrder(orgId, tabIndex++));
+            orgList.add(y9OrganizationManager.updateTabIndex(orgId, tabIndex++));
         }
-
         return orgList;
     }
 
@@ -224,7 +207,8 @@ public class Y9OrganizationServiceImpl implements Y9OrganizationService {
     @Transactional(readOnly = false)
     public Y9Organization saveOrUpdate(Y9Organization organization) {
         if (StringUtils.isNotEmpty(organization.getId())) {
-            Optional<Y9Organization> y9OrganizationOptional = y9OrganizationManager.findById(organization.getId());
+            Optional<Y9Organization> y9OrganizationOptional =
+                y9OrganizationManager.findByIdNotCache(organization.getId());
             if (y9OrganizationOptional.isPresent()) {
                 Y9Organization originY9Organization = new Y9Organization();
                 Y9Organization updatedY9Organization = y9OrganizationOptional.get();
@@ -281,21 +265,7 @@ public class Y9OrganizationServiceImpl implements Y9OrganizationService {
     @Override
     @Transactional(readOnly = false)
     public Y9Organization saveProperties(String orgId, String properties) {
-        Y9Organization org = this.getById(orgId);
-        org.setProperties(properties);
-        final Y9Organization savedOrganization = y9OrganizationManager.save(org);
-
-        TransactionSynchronizationManager.registerSynchronization(new TransactionSynchronization() {
-            @Override
-            public void afterCommit() {
-                Y9MessageOrg<Organization> msg =
-                    new Y9MessageOrg<>(Y9ModelConvertUtil.convert(savedOrganization, Organization.class),
-                        Y9OrgEventTypeConst.ORGANIZATION_UPDATE, Y9LoginUserHolder.getTenantId());
-                Y9PublishServiceUtil.publishMessageOrg(msg);
-            }
-        });
-
-        return savedOrganization;
+        return y9OrganizationManager.saveProperties(orgId, properties);
     }
 
     @SuppressWarnings("unchecked")

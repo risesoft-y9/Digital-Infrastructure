@@ -64,15 +64,6 @@ public interface Y9DepartmentService {
     List<Y9OrgBase> getDeptSecretarys(String deptId);
 
     /**
-     * 获得部门树
-     *
-     * @param orgBaseId ：机构节点唯一标识(可能是机构id,也可能是部门id)
-     * @param disabled
-     * @return {@link List}<{@link Y9Department}>
-     */
-    List<Y9Department> listRecursivelyByParentId(String orgBaseId, Boolean disabled);
-
-    /**
      * 查询部门
      *
      * @return {@link List}<{@link Y9Department}>
@@ -136,6 +127,15 @@ public interface Y9DepartmentService {
     List<Y9OrgBase> listManagers(String deptId, Boolean disabled);
 
     /**
+     * 获得部门树
+     *
+     * @param orgBaseId ：机构节点唯一标识(可能是机构id,也可能是部门id)
+     * @param disabled
+     * @return {@link List}<{@link Y9Department}>
+     */
+    List<Y9Department> listRecursivelyByParentId(String orgBaseId, Boolean disabled);
+
+    /**
      * 根据部门id获取部门副领导
      *
      * @param deptId 部门id
@@ -185,20 +185,20 @@ public interface Y9DepartmentService {
     void removeViceLeader(String deptId, String personId);
 
     /**
-     * 保存或更新 新增或修改此部门实例的信息
-     *
-     * @param dept 部门对象
-     * @return {@link Y9Department}
-     */
-    Y9Department saveOrUpdate(Y9Department dept);
-
-    /**
      * 保存新的部门排序
      *
      * @param deptIds 部门id数组
      * @return {@link List}<{@link Y9Department}>
      */
     List<Y9Department> saveOrder(List<String> deptIds);
+
+    /**
+     * 保存或更新 新增或修改此部门实例的信息
+     *
+     * @param dept 部门对象
+     * @return {@link Y9Department}
+     */
+    Y9Department saveOrUpdate(Y9Department dept);
 
     /**
      * 保存或者更新部门扩展信息

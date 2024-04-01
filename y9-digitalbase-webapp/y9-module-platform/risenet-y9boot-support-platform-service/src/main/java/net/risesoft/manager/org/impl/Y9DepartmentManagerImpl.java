@@ -32,17 +32,28 @@ public class Y9DepartmentManagerImpl implements Y9DepartmentManager {
     private final Y9DepartmentRepository y9DepartmentRepository;
 
     @Override
-    @Cacheable(key = "#id", condition = "#id != null", unless = "#result == null")
-    public Y9Department getById(String id) {
-        return y9DepartmentRepository.findById(id)
-            .orElseThrow(() -> Y9ExceptionUtil.notFoundException(OrgUnitErrorCodeEnum.DEPARTMENT_NOT_FOUND, id));
-    }
-
-    @Override
     @CacheEvict(key = "#y9Department.id")
     @Transactional(readOnly = false)
     public void delete(Y9Department y9Department) {
         y9DepartmentRepository.delete(y9Department);
+    }
+
+    @Override
+    @Cacheable(key = "#id", condition = "#id!=null", unless = "#result==null")
+    public Optional<Y9Department> findById(String id) {
+        return y9DepartmentRepository.findById(id);
+    }
+
+    @Override
+    public Optional<Y9Department> findByIdNotCache(String id) {
+        return y9DepartmentRepository.findById(id);
+    }
+
+    @Override
+    @Cacheable(key = "#id", condition = "#id != null", unless = "#result == null")
+    public Y9Department getById(String id) {
+        return y9DepartmentRepository.findById(id)
+            .orElseThrow(() -> Y9ExceptionUtil.notFoundException(OrgUnitErrorCodeEnum.DEPARTMENT_NOT_FOUND, id));
     }
 
     @Override
@@ -53,13 +64,21 @@ public class Y9DepartmentManagerImpl implements Y9DepartmentManager {
     }
 
     @Override
-    @Cacheable(key = "#id", condition = "#id!=null", unless = "#result==null")
-    public Optional<Y9Department> findById(String id) {
-        return y9DepartmentRepository.findById(id);
+    @Transactional(readOnly = false)
+    @CacheEvict(key = "#id")
+    public Y9Department saveProperties(String id, String properties) {
+        Y9Department department = this.getById(id);
+        department.setProperties(properties);
+        department = save(department);
+        Y9MessageOrg<Department> msg = new Y9MessageOrg<>(Y9ModelConvertUtil.convert(department, Department.class),
+            Y9OrgEventTypeConst.DEPARTMENT_UPDATE, Y9LoginUserHolder.getTenantId());
+        Y9PublishServiceUtil.publishMessageOrg(msg);
+        return department;
     }
 
     @Override
     @Transactional(readOnly = false)
+    @CacheEvict(key = "#id")
     public Y9Department updateTabIndex(String id, int tabIndex) {
         Y9Department department = this.getById(id);
         department.setTabIndex(tabIndex);

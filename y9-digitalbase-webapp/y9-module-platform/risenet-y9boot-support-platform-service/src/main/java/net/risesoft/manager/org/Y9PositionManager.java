@@ -12,6 +12,18 @@ public interface Y9PositionManager {
 
     String buildName(Y9Job y9Job, List<Y9PersonsToPositions> personsToPositionsList);
 
+    void delete(Y9Position y9Position);
+
+    Optional<Y9Position> findById(String id);
+
+    /**
+     * 根据id，获取岗位信息（直接读取数据库）
+     *
+     * @param id 岗位id
+     * @return
+     */
+    Optional<Y9Position> findByIdNotCache(String id);
+
     /**
      * 根据主键id获取岗位实例
      *
@@ -21,13 +33,18 @@ public interface Y9PositionManager {
      */
     Y9Position getById(String id);
 
-    Optional<Y9Position> findById(String id);
+    Y9Position save(Y9Position position);
 
     Y9Position saveOrUpdate(Y9Position position);
 
-    Y9Position save(Y9Position position);
-
-    void delete(Y9Position y9Position);
+    /**
+     * 保存或者更新岗位扩展信息
+     *
+     * @param id 岗位id
+     * @param properties 扩展属性
+     * @return {@link Y9Position}
+     */
+    Y9Position saveProperties(String id, String properties);
 
     Y9Position updateTabIndex(String id, int tabIndex);
 }

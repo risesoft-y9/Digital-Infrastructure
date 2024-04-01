@@ -61,21 +61,22 @@ public class Y9JobServiceImpl implements Y9JobService {
             OrgUnitErrorCodeEnum.RELATED_POSITION_EXISTS);
     }
 
-    private boolean isNameAvailable(String name, String id) {
-        Optional<Y9Job> y9JobOptional = y9JobRepository.findByName(name);
-
-        if (y9JobOptional.isEmpty()) {
-            // 不存在同名的职位肯定可用
-            return true;
-        }
-
-        // 编辑职位时没修改名称同样认为可用
-        return y9JobOptional.get().getId().equals(id);
-    }
-
     @Override
     public long count() {
         return y9JobRepository.count();
+    }
+
+    @Override
+    @Transactional(readOnly = false)
+    public Y9Job create(String name, String code) {
+        Optional<Y9Job> y9JobOptional = y9JobRepository.findByName(name);
+        if (y9JobOptional.isPresent()) {
+            return y9JobOptional.get();
+        }
+        Y9Job y9Job = new Y9Job();
+        y9Job.setName(name);
+        y9Job.setCode(code);
+        return this.saveOrUpdate(y9Job);
     }
 
     @Override
@@ -123,6 +124,18 @@ public class Y9JobServiceImpl implements Y9JobService {
         return y9JobRepository.findTopByOrderByTabIndexDesc().map(Y9Job::getTabIndex).orElse(0);
     }
 
+    private boolean isNameAvailable(String name, String id) {
+        Optional<Y9Job> y9JobOptional = y9JobRepository.findByName(name);
+
+        if (y9JobOptional.isEmpty()) {
+            // 不存在同名的职位肯定可用
+            return true;
+        }
+
+        // 编辑职位时没修改名称同样认为可用
+        return y9JobOptional.get().getId().equals(id);
+    }
+
     @Override
     public List<Y9Job> listAll() {
         return y9JobRepository.findAll(Sort.by(Sort.Direction.ASC, "tabIndex"));
@@ -133,13 +146,6 @@ public class Y9JobServiceImpl implements Y9JobService {
         return y9JobRepository.findByNameContainingOrderByTabIndex(name);
     }
 
-    @Transactional(readOnly = false)
-    public Y9Job order(String jobId, int tabIndex) {
-        Y9Job y9Job = this.getById(jobId);
-        y9Job.setTabIndex(tabIndex);
-        return saveOrUpdate(y9Job);
-    }
-
     @Override
     @Transactional(readOnly = false)
     public List<Y9Job> order(List<String> jobIds) {
@@ -147,9 +153,8 @@ public class Y9JobServiceImpl implements Y9JobService {
 
         int tabIndex = 0;
         for (String jobId : jobIds) {
-            jobList.add(order(jobId, tabIndex++));
+            jobList.add(y9JobManager.updateTabIndex(jobId, tabIndex++));
         }
-
         return jobList;
     }
 
@@ -167,7 +172,7 @@ public class Y9JobServiceImpl implements Y9JobService {
 
         if (StringUtils.isNotBlank(job.getId())) {
             // 修改职位
-            Optional<Y9Job> y9JobOptional = this.findById(job.getId());
+            Optional<Y9Job> y9JobOptional = y9JobManager.findByIdNotCache(job.getId());
             if (y9JobOptional.isPresent()) {
                 Y9Job originY9Job = new Y9Job();
                 Y9Job updatedY9Job = y9JobOptional.get();
@@ -209,19 +214,6 @@ public class Y9JobServiceImpl implements Y9JobService {
         });
 
         return savedJob;
-    }
-
-    @Override
-    @Transactional(readOnly = false)
-    public Y9Job create(String name, String code) {
-        Optional<Y9Job> y9JobOptional = y9JobRepository.findByName(name);
-        if (y9JobOptional.isPresent()) {
-            return y9JobOptional.get();
-        }
-        Y9Job y9Job = new Y9Job();
-        y9Job.setName(name);
-        y9Job.setCode(code);
-        return this.saveOrUpdate(y9Job);
     }
 
 }
