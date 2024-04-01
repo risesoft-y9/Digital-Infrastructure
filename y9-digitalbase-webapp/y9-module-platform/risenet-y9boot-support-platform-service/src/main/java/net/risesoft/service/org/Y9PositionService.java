@@ -36,14 +36,6 @@ public interface Y9PositionService {
     /**
      * 创建岗位
      *
-     * @param y9Position 岗位对象
-     * @return {@link Y9Position}
-     */
-    Y9Position create(Y9Position y9Position);
-
-    /**
-     * 创建岗位
-     *
      * @param parentId 父ID
      * @param jobId 职位id
      * @return 岗位实体
@@ -51,8 +43,16 @@ public interface Y9PositionService {
     Y9Position create(String parentId, String jobId);
 
     /**
+     * 创建岗位
+     *
+     * @param y9Position 岗位对象
+     * @return {@link Y9Position}
+     */
+    Y9Position create(Y9Position y9Position);
+
+    /**
      * 根据id数组删除岗位
-     * 
+     *
      * @param ids id数组
      */
     void delete(List<String> ids);
@@ -172,6 +172,15 @@ public interface Y9PositionService {
     List<Y9Position> listByPersonId(String personId, Boolean disabled);
 
     /**
+     * 移动
+     *
+     * @param positionId 岗位id
+     * @param parentId 父节点id
+     * @return {@link Y9Position}
+     */
+    Y9Position move(String positionId, String parentId);
+
+    /**
      * 保存岗位
      *
      * @param position 岗位
@@ -228,13 +237,4 @@ public interface Y9PositionService {
      * @return {@link Y9Position}
      */
     Y9Position updateTabIndex(String id, int tabIndex);
-
-    /**
-     * 移动
-     *
-     * @param positionId 岗位id
-     * @param parentId 父节点id
-     * @return {@link Y9Position}
-     */
-    Y9Position move(String positionId, String parentId);
 }

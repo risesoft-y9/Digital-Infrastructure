@@ -74,7 +74,7 @@ public class Y9GroupServiceImpl implements Y9GroupService {
         TransactionSynchronizationManager.registerSynchronization(new TransactionSynchronization() {
             @Override
             public void afterCommit() {
-                String event = isDisabled ? "禁用" : "启用";
+                String event = Boolean.TRUE.equals(isDisabled) ? "禁用" : "启用";
                 Y9MessageOrg<Group> msg = new Y9MessageOrg<>(Y9ModelConvertUtil.convert(savedGroup, Group.class),
                     Y9OrgEventTypeConst.GROUP_UPDATE, Y9LoginUserHolder.getTenantId());
                 Y9PublishServiceUtil.persistAndPublishMessageOrg(msg, event + "用户组", event + savedGroup.getName());
@@ -198,9 +198,7 @@ public class Y9GroupServiceImpl implements Y9GroupService {
             Optional<Y9Group> optionalY9Group = y9GroupManager.findById(y9PersonsToGroups.getGroupId());
             if (optionalY9Group.isPresent()) {
                 Y9Group y9Group = optionalY9Group.get();
-                if (disabled == null) {
-                    groupList.add(y9Group);
-                } else if (disabled.equals(y9Group.getDisabled())) {
+                if (disabled == null || disabled.equals(y9Group.getDisabled())) {
                     groupList.add(y9Group);
                 }
             }
@@ -272,32 +270,11 @@ public class Y9GroupServiceImpl implements Y9GroupService {
     @Transactional(readOnly = false)
     public List<Y9Group> saveOrder(List<String> groupIds) {
         List<Y9Group> groupList = new ArrayList<>();
-
         int tabIndex = 0;
         for (String groupId : groupIds) {
-            groupList.add(saveOrder(groupId, tabIndex++));
-
+            groupList.add(y9GroupManager.updateTabIndex(groupId, tabIndex++));
         }
-
         return groupList;
-    }
-
-    @Transactional(readOnly = false)
-    public Y9Group saveOrder(String groupId, int tabIndex) {
-        Y9Group group = this.getById(groupId);
-        group.setTabIndex(tabIndex);
-        final Y9Group savedGroup = y9GroupManager.save(group);
-
-        TransactionSynchronizationManager.registerSynchronization(new TransactionSynchronization() {
-            @Override
-            public void afterCommit() {
-                Y9MessageOrg<Group> msg = new Y9MessageOrg<>(Y9ModelConvertUtil.convert(savedGroup, Group.class),
-                    Y9OrgEventTypeConst.GROUP_UPDATE, Y9LoginUserHolder.getTenantId());
-                Y9PublishServiceUtil.publishMessageOrg(msg);
-            }
-        });
-
-        return savedGroup;
     }
 
     @Override
@@ -306,7 +283,7 @@ public class Y9GroupServiceImpl implements Y9GroupService {
         Y9OrgBase parent = compositeOrgBaseManager.getOrgUnitAsParent(group.getParentId());
 
         if (StringUtils.isNotEmpty(group.getId())) {
-            Optional<Y9Group> optionalY9Group = y9GroupManager.findById(group.getId());
+            Optional<Y9Group> optionalY9Group = y9GroupManager.findByIdNotCache(group.getId());
             if (optionalY9Group.isPresent()) {
                 Y9Group y9Group = optionalY9Group.get();
                 y9Group.setName(group.getName());
@@ -360,20 +337,8 @@ public class Y9GroupServiceImpl implements Y9GroupService {
     @Override
     @Transactional(readOnly = false)
     public Y9Group saveProperties(String groupId, String properties) {
-        Y9Group group = this.getById(groupId);
-        group.setProperties(properties);
-        final Y9Group savedGroup = y9GroupManager.save(group);
 
-        TransactionSynchronizationManager.registerSynchronization(new TransactionSynchronization() {
-            @Override
-            public void afterCommit() {
-                Y9MessageOrg<Group> msg = new Y9MessageOrg<>(Y9ModelConvertUtil.convert(savedGroup, Group.class),
-                    Y9OrgEventTypeConst.GROUP_UPDATE, Y9LoginUserHolder.getTenantId());
-                Y9PublishServiceUtil.publishMessageOrg(msg);
-            }
-        });
-
-        return savedGroup;
+        return y9GroupManager.saveProperties(groupId, properties);
     }
 
     @Override

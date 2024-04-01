@@ -86,11 +86,17 @@ public class Y9PositionManagerImpl implements Y9PositionManager {
         return name;
     }
 
+    private void checkHeadCountAvailability(Y9Position position) {
+        Integer personCount = y9PersonsToPositionsRepository.countByPositionId(position.getId());
+        Y9Assert.lessThanOrEqualTo(personCount, position.getCapacity(), OrgUnitErrorCodeEnum.POSITION_IS_FULL,
+            position.getName());
+    }
+
     @Override
-    @Cacheable(key = "#id", condition = "#id!=null", unless = "#result==null")
-    public Y9Position getById(String id) {
-        return y9PositionRepository.findById(id)
-            .orElseThrow(() -> Y9ExceptionUtil.notFoundException(OrgUnitErrorCodeEnum.POSITION_NOT_FOUND, id));
+    @Transactional(readOnly = false)
+    @CacheEvict(key = "#y9Position.id")
+    public void delete(Y9Position y9Position) {
+        y9PositionRepository.delete(y9Position);
     }
 
     @Override
@@ -99,10 +105,23 @@ public class Y9PositionManagerImpl implements Y9PositionManager {
         return y9PositionRepository.findById(id);
     }
 
-    private void checkHeadCountAvailability(Y9Position position) {
-        Integer personCount = y9PersonsToPositionsRepository.countByPositionId(position.getId());
-        Y9Assert.lessThanOrEqualTo(personCount, position.getCapacity(), OrgUnitErrorCodeEnum.POSITION_IS_FULL,
-            position.getName());
+    @Override
+    public Optional<Y9Position> findByIdNotCache(String id) {
+        return y9PositionRepository.findById(id);
+    }
+
+    @Override
+    @Cacheable(key = "#id", condition = "#id!=null", unless = "#result==null")
+    public Y9Position getById(String id) {
+        return y9PositionRepository.findById(id)
+            .orElseThrow(() -> Y9ExceptionUtil.notFoundException(OrgUnitErrorCodeEnum.POSITION_NOT_FOUND, id));
+    }
+
+    @Override
+    @Transactional(readOnly = false)
+    @CacheEvict(key = "#position.id")
+    public Y9Position save(Y9Position position) {
+        return y9PositionRepository.save(position);
     }
 
     @Override
@@ -113,7 +132,7 @@ public class Y9PositionManagerImpl implements Y9PositionManager {
         Y9Job y9Job = y9JobManager.getById(position.getJobId());
 
         if (StringUtils.isNotEmpty(position.getId())) {
-            Optional<Y9Position> updatedY9PositionOptional = this.findById(position.getId());
+            Optional<Y9Position> updatedY9PositionOptional = this.findByIdNotCache(position.getId());
             if (updatedY9PositionOptional.isPresent()) {
                 Y9Position updatedY9Position = updatedY9PositionOptional.get();
                 // 修改的岗位容量不能小于当前岗位人数
@@ -172,20 +191,21 @@ public class Y9PositionManagerImpl implements Y9PositionManager {
 
     @Override
     @Transactional(readOnly = false)
-    @CacheEvict(key = "#position.id")
-    public Y9Position save(Y9Position position) {
-        return y9PositionRepository.save(position);
+    @CacheEvict(key = "#id")
+    public Y9Position saveProperties(String id, String properties) {
+        Y9Position position = this.getById(id);
+        position.setProperties(properties);
+        position = save(position);
+
+        Y9MessageOrg<Position> msg = new Y9MessageOrg<>(Y9ModelConvertUtil.convert(position, Position.class),
+            Y9OrgEventTypeConst.POSITION_UPDATE, Y9LoginUserHolder.getTenantId());
+        Y9PublishServiceUtil.publishMessageOrg(msg);
+        return position;
     }
 
     @Override
     @Transactional(readOnly = false)
-    @CacheEvict(key = "#y9Position.id")
-    public void delete(Y9Position y9Position) {
-        y9PositionRepository.delete(y9Position);
-    }
-
-    @Override
-    @Transactional(readOnly = false)
+    @CacheEvict(key = "#id")
     public Y9Position updateTabIndex(String id, int tabIndex) {
         Y9Position position = this.getById(id);
         position.setTabIndex(tabIndex);

@@ -32,16 +32,28 @@ public class Y9GroupManagerImpl implements Y9GroupManager {
     private final Y9GroupRepository y9GroupRepository;
 
     @Override
-    @Cacheable(key = "#id", condition = "#id!=null", unless = "#result==null")
-    public Y9Group getById(String id) {
-        return y9GroupRepository.findById(id)
-            .orElseThrow(() -> Y9ExceptionUtil.notFoundException(OrgUnitErrorCodeEnum.GROUP_NOT_FOUND, id));
+    @CacheEvict(key = "#y9Group.id")
+    @Transactional(readOnly = false)
+    public void delete(Y9Group y9Group) {
+        y9GroupRepository.delete(y9Group);
     }
 
     @Override
     @Cacheable(key = "#id", condition = "#id!=null")
     public Optional<Y9Group> findById(String id) {
         return y9GroupRepository.findById(id);
+    }
+
+    @Override
+    public Optional<Y9Group> findByIdNotCache(String id) {
+        return y9GroupRepository.findById(id);
+    }
+
+    @Override
+    @Cacheable(key = "#id", condition = "#id!=null", unless = "#result==null")
+    public Y9Group getById(String id) {
+        return y9GroupRepository.findById(id)
+            .orElseThrow(() -> Y9ExceptionUtil.notFoundException(OrgUnitErrorCodeEnum.GROUP_NOT_FOUND, id));
     }
 
     @Override
@@ -52,14 +64,23 @@ public class Y9GroupManagerImpl implements Y9GroupManager {
     }
 
     @Override
-    @CacheEvict(key = "#y9Group.id")
     @Transactional(readOnly = false)
-    public void delete(Y9Group y9Group) {
-        y9GroupRepository.delete(y9Group);
+    @CacheEvict(key = "#id")
+    public Y9Group saveProperties(String id, String properties) {
+        Y9Group group = this.getById(id);
+        group.setProperties(properties);
+        group = save(group);
+
+        Y9MessageOrg<Group> msg = new Y9MessageOrg<>(Y9ModelConvertUtil.convert(group, Group.class),
+            Y9OrgEventTypeConst.GROUP_UPDATE, Y9LoginUserHolder.getTenantId());
+        Y9PublishServiceUtil.publishMessageOrg(msg);
+
+        return group;
     }
 
     @Override
     @Transactional(readOnly = false)
+    @CacheEvict(key = "#id")
     public Y9Group updateTabIndex(String id, int tabIndex) {
         Y9Group group = this.getById(id);
         group.setTabIndex(tabIndex);

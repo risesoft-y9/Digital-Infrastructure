@@ -35,6 +35,16 @@ public interface CompositeOrgBaseService {
     long countByGuidPath(String guidPath, OrgTreeTypeEnum orgTreeTypeEnum);
 
     /**
+     * 分页获取机构下的部门列表
+     *
+     * @param orgId 机构id
+     * @param page
+     * @param rows
+     * @return
+     */
+    Page<Y9Department> deptPage(String orgId, int page, int rows);
+
+    /**
      * 根据指定id获取ORGBase对象(可以是org的任意类型)
      *
      * @param orgUnitId 组织节点id
@@ -195,6 +205,17 @@ public interface CompositeOrgBaseService {
     List<Y9Position> listAllPositionsRecursionDownward(String parentId);
 
     /**
+     * 分页获取机构下的人员列表
+     *
+     * @param orgId 机构id
+     * @param type 0-查全量，1-查询没被禁用的
+     * @param page
+     * @param rows
+     * @return
+     */
+    Page<Y9Person> personPage(String orgId, String type, int page, int rows);
+
+    /**
      * 根据父节点id,人员姓名，是否禁用，递归获取其下所有人员
      *
      * @param parentId 父节点id
@@ -231,17 +252,6 @@ public interface CompositeOrgBaseService {
     List<Y9OrgBase> treeSearch(String name, OrgTreeTypeEnum treeType);
 
     /**
-     * 根据name，和结构树类型查询机构主体
-     *
-     * @param name 组织节点名称
-     * @param treeType 树类型
-     * @param dnName dn
-     * @param disabled
-     * @return {@link List}<{@link Y9OrgBase}>
-     */
-    List<Y9OrgBase> treeSearch(String name, OrgTreeTypeEnum treeType, String dnName, Boolean disabled);
-
-    /**
      * 根据name，和结构树类型查询机构主体(不含禁用人员)
      *
      * @param name 组织节点名称
@@ -256,28 +266,18 @@ public interface CompositeOrgBaseService {
      *
      * @param name 组织节点名称
      * @param treeType 树类型
+     * @param dnName dn
+     * @param disabled
+     * @return {@link List}<{@link Y9OrgBase}>
+     */
+    List<Y9OrgBase> treeSearch(String name, OrgTreeTypeEnum treeType, String dnName, Boolean disabled);
+
+    /**
+     * 根据name，和结构树类型查询机构主体
+     *
+     * @param name 组织节点名称
+     * @param treeType 树类型
      * @return {@link List}<{@link Y9OrgBase}>
      */
     List<Y9OrgBase> treeSearch4DeptManager(String name, OrgTreeTypeEnum treeType);
-
-    /**
-     * 分页获取机构下的人员列表
-     * 
-     * @param orgId 机构id
-     * @param type 0-查全量，1-查询没被禁用的
-     * @param page
-     * @param rows
-     * @return
-     */
-    Page<Y9Person> personPage(String orgId, String type, int page, int rows);
-
-    /**
-     * 分页获取机构下的部门列表
-     * 
-     * @param orgId 机构id
-     * @param page
-     * @param rows
-     * @return
-     */
-    Page<Y9Department> deptPage(String orgId, int page, int rows);
 }

@@ -44,11 +44,9 @@ import net.risesoft.exception.OrgUnitErrorCodeEnum;
 import net.risesoft.id.IdType;
 import net.risesoft.id.Y9IdGenerator;
 import net.risesoft.manager.org.CompositeOrgBaseManager;
-import net.risesoft.manager.org.Y9DepartmentPropManager;
 import net.risesoft.manager.org.Y9PersonExtManager;
 import net.risesoft.manager.org.Y9PersonManager;
 import net.risesoft.manager.org.Y9PositionManager;
-import net.risesoft.manager.relation.Y9PersonsToGroupsManager;
 import net.risesoft.manager.relation.Y9PersonsToPositionsManager;
 import net.risesoft.model.platform.AuthenticateResult;
 import net.risesoft.model.platform.Message;
@@ -121,8 +119,6 @@ public class Y9PersonServiceImpl implements Y9PersonService {
     private final Y9PersonManager y9PersonManager;
     private final Y9PositionManager y9PositionManager;
     private final Y9PersonsToPositionsManager y9PersonsToPositionsManager;
-    private final Y9PersonsToGroupsManager y9PersonsToGroupsManager;
-    private final Y9DepartmentPropManager y9DepartmentPropManager;
 
     private final Y9Properties y9config;
 
@@ -137,8 +133,7 @@ public class Y9PersonServiceImpl implements Y9PersonService {
         Y9DepartmentPropRepository y9DepartmentPropRepository,
         Y9PersonToResourceAndAuthorityRepository y9PersonToResourceAndAuthorityRepository,
         Y9PersonToRoleRepository y9PersonToRoleRepository, Y9PersonsToPositionsManager y9PersonsToPositionsManager,
-        Y9PositionManager y9PositionManager, Y9PersonManager y9PersonManager,
-        Y9PersonsToGroupsManager y9PersonsToGroupsManager, Y9DepartmentPropManager y9DepartmentPropManager) {
+        Y9PositionManager y9PositionManager, Y9PersonManager y9PersonManager) {
         this.y9PersonRepository = y9PersonRepository;
         this.entityManagerFactory = entityManagerFactory;
         this.y9PersonsToGroupsRepository = y9PersonsToGroupsRepository;
@@ -158,8 +153,6 @@ public class Y9PersonServiceImpl implements Y9PersonService {
         this.y9PersonsToPositionsManager = y9PersonsToPositionsManager;
         this.y9PositionManager = y9PositionManager;
         this.y9PersonManager = y9PersonManager;
-        this.y9PersonsToGroupsManager = y9PersonsToGroupsManager;
-        this.y9DepartmentPropManager = y9DepartmentPropManager;
     }
 
     @Override
@@ -286,6 +279,53 @@ public class Y9PersonServiceImpl implements Y9PersonService {
     }
 
     @Override
+    public AuthenticateResult authenticate3(String loginName, String base64EncodedPassword) {
+        AuthenticateResult authenticateResult = new AuthenticateResult();
+        String newpassword = "";
+        try {
+            newpassword = Y9Base64Util.decode(base64EncodedPassword);
+        } catch (Exception e) {
+            LOGGER.warn(e.getMessage(), e);
+        }
+        Y9Person person = null;
+        String tenantId = "";
+        if (loginName.contains("&")) {
+            String realLoginName = loginName.split("&")[0];
+            String fakeLoginName = loginName.split("&")[1];
+            List<String> tenantIds = Y9PlatformUtil.getTenantByLoginName("operation");
+
+            if (!tenantIds.isEmpty()) {
+                tenantId = tenantIds.get(0);
+            }
+            Optional<Y9User> y9UserOptional =
+                y9UserRepository.findByTenantIdAndLoginNameAndOriginalTrue(tenantId, fakeLoginName);
+            Optional<Y9Person> y9PersonOptional = y9PersonRepository.findByLoginNameAndOriginalTrue(realLoginName);
+            if (y9UserOptional.isEmpty() || !(Y9MessageDigest.checkpw(newpassword, y9UserOptional.get().getPassword()))
+                || y9PersonOptional.isEmpty()) {
+                throw Y9ExceptionUtil.businessException(AuthenticationErrorCodeEnum.LOGINNAME_PASSWORD_INCORRECT);
+            }
+            person = y9PersonOptional.get();
+        } else {
+            Optional<Y9Person> y9PersonOptional = y9PersonRepository.findByLoginNameAndOriginalTrue(loginName);
+            if (y9PersonOptional.isEmpty()
+                || !(Y9MessageDigest.checkpw(newpassword, y9PersonOptional.get().getPassword()))) {
+                throw Y9ExceptionUtil.businessException(AuthenticationErrorCodeEnum.LOGINNAME_PASSWORD_INCORRECT);
+            }
+            person = y9PersonOptional.get();
+        }
+
+        Y9OrgBase department = compositeOrgBaseManager.getOrgUnitAsParent(person.getParentId());
+        Y9OrgBase bureau = compositeOrgBaseManager.getOrgUnitBureau(person.getId());
+
+        authenticateResult.setPerson(Y9ModelConvertUtil.convert(person, Person.class));
+        authenticateResult.setTenantId(Y9LoginUserHolder.getTenantId());
+        authenticateResult.setDeptName(department.getName());
+        authenticateResult.setBureauName(bureau.getName());
+
+        return authenticateResult;
+    }
+
+    @Override
     public Message authenticate3(final String tenantName, final String loginName, final String password) {
         Message message = new Message();
         if (StringUtils.isEmpty(tenantName)) {
@@ -353,53 +393,6 @@ public class Y9PersonServiceImpl implements Y9PersonService {
     }
 
     @Override
-    public AuthenticateResult authenticate3(String loginName, String base64EncodedPassword) {
-        AuthenticateResult authenticateResult = new AuthenticateResult();
-        String newpassword = "";
-        try {
-            newpassword = Y9Base64Util.decode(base64EncodedPassword);
-        } catch (Exception e) {
-            LOGGER.warn(e.getMessage(), e);
-        }
-        Y9Person person = null;
-        String tenantId = "";
-        if (loginName.contains("&")) {
-            String realLoginName = loginName.split("&")[0];
-            String fakeLoginName = loginName.split("&")[1];
-            List<String> tenantIds = Y9PlatformUtil.getTenantByLoginName("operation");
-
-            if (!tenantIds.isEmpty()) {
-                tenantId = tenantIds.get(0);
-            }
-            Optional<Y9User> y9UserOptional =
-                y9UserRepository.findByTenantIdAndLoginNameAndOriginalTrue(tenantId, fakeLoginName);
-            Optional<Y9Person> y9PersonOptional = y9PersonRepository.findByLoginNameAndOriginalTrue(realLoginName);
-            if (y9UserOptional.isEmpty() || !(Y9MessageDigest.checkpw(newpassword, y9UserOptional.get().getPassword()))
-                || y9PersonOptional.isEmpty()) {
-                throw Y9ExceptionUtil.businessException(AuthenticationErrorCodeEnum.LOGINNAME_PASSWORD_INCORRECT);
-            }
-            person = y9PersonOptional.get();
-        } else {
-            Optional<Y9Person> y9PersonOptional = y9PersonRepository.findByLoginNameAndOriginalTrue(loginName);
-            if (y9PersonOptional.isEmpty()
-                || !(Y9MessageDigest.checkpw(newpassword, y9PersonOptional.get().getPassword()))) {
-                throw Y9ExceptionUtil.businessException(AuthenticationErrorCodeEnum.LOGINNAME_PASSWORD_INCORRECT);
-            }
-            person = y9PersonOptional.get();
-        }
-
-        Y9OrgBase department = compositeOrgBaseManager.getOrgUnitAsParent(person.getParentId());
-        Y9OrgBase bureau = compositeOrgBaseManager.getOrgUnitBureau(person.getId());
-
-        authenticateResult.setPerson(Y9ModelConvertUtil.convert(person, Person.class));
-        authenticateResult.setTenantId(Y9LoginUserHolder.getTenantId());
-        authenticateResult.setDeptName(department.getName());
-        authenticateResult.setBureauName(bureau.getName());
-
-        return authenticateResult;
-    }
-
-    @Override
     public Message authenticate4(final String tenantName, final String loginName) {
         Message message = new Message();
         if (StringUtils.isEmpty(tenantName)) {
@@ -426,6 +419,30 @@ public class Y9PersonServiceImpl implements Y9PersonService {
         jsonObject.put("tenantId", Y9LoginUserHolder.getTenantId());
         message.setMsg(jsonObject.toString());
         return message;
+    }
+
+    @Override
+    public AuthenticateResult authenticate5(String mobile, String base64EncodedPassword) {
+        AuthenticateResult authenticateResult = new AuthenticateResult();
+
+        String password = Y9Base64Util.decode(base64EncodedPassword);
+        Optional<Y9Person> optionalY9Person =
+            y9PersonRepository.findByDisabledFalseAndMobileAndOriginal(mobile, Boolean.TRUE);
+        if (optionalY9Person.isEmpty() || !(Y9MessageDigest.checkpw(password, optionalY9Person.get().getPassword()))) {
+            throw Y9ExceptionUtil.businessException(AuthenticationErrorCodeEnum.LOGINNAME_PASSWORD_INCORRECT);
+        }
+
+        Y9Person person = optionalY9Person.get();
+
+        Y9OrgBase department = compositeOrgBaseManager.getOrgUnitAsParent(person.getParentId());
+        Y9OrgBase bureau = compositeOrgBaseManager.getOrgUnitBureau(person.getId());
+
+        authenticateResult.setPerson(Y9ModelConvertUtil.convert(person, Person.class));
+        authenticateResult.setTenantId(Y9LoginUserHolder.getTenantId());
+        authenticateResult.setDeptName(department.getName());
+        authenticateResult.setBureauName(bureau.getName());
+
+        return authenticateResult;
     }
 
     @Override
@@ -468,30 +485,6 @@ public class Y9PersonServiceImpl implements Y9PersonService {
         message.setStatus(Message.STATUS_SUCCESS);
         message.setMsg(Y9JsonUtil.writeValueAsString(map));
         return message;
-    }
-
-    @Override
-    public AuthenticateResult authenticate5(String mobile, String base64EncodedPassword) {
-        AuthenticateResult authenticateResult = new AuthenticateResult();
-
-        String password = Y9Base64Util.decode(base64EncodedPassword);
-        Optional<Y9Person> optionalY9Person =
-            y9PersonRepository.findByDisabledFalseAndMobileAndOriginal(mobile, Boolean.TRUE);
-        if (optionalY9Person.isEmpty() || !(Y9MessageDigest.checkpw(password, optionalY9Person.get().getPassword()))) {
-            throw Y9ExceptionUtil.businessException(AuthenticationErrorCodeEnum.LOGINNAME_PASSWORD_INCORRECT);
-        }
-
-        Y9Person person = optionalY9Person.get();
-
-        Y9OrgBase department = compositeOrgBaseManager.getOrgUnitAsParent(person.getParentId());
-        Y9OrgBase bureau = compositeOrgBaseManager.getOrgUnitBureau(person.getId());
-
-        authenticateResult.setPerson(Y9ModelConvertUtil.convert(person, Person.class));
-        authenticateResult.setTenantId(Y9LoginUserHolder.getTenantId());
-        authenticateResult.setDeptName(department.getName());
-        authenticateResult.setBureauName(bureau.getName());
-
-        return authenticateResult;
     }
 
     @Override
@@ -806,9 +799,7 @@ public class Y9PersonServiceImpl implements Y9PersonService {
             Optional<Y9Person> y9PersonOptional = this.findById(ext.getPersonId());
             if (y9PersonOptional.isPresent()) {
                 Y9Person y9Person = y9PersonOptional.get();
-                if (disabled == null) {
-                    y9PersonList.add(y9Person);
-                } else if (disabled.equals(y9Person.getDisabled())) {
+                if (disabled == null || disabled.equals(y9Person.getDisabled())) {
                     y9PersonList.add(y9Person);
                 }
             }
@@ -974,28 +965,9 @@ public class Y9PersonServiceImpl implements Y9PersonService {
 
         int tabIndex = 0;
         for (String personId : personIds) {
-            personList.add(order(personId, tabIndex++));
+            personList.add(y9PersonManager.updateTabIndex(personId, tabIndex++));
         }
-
         return personList;
-    }
-
-    @Transactional(readOnly = false)
-    public Y9Person order(String personId, int tabIndex) {
-        Y9Person person = this.getById(personId);
-        person.setTabIndex(tabIndex);
-        final Y9Person savedPerson = this.save(person);
-
-        TransactionSynchronizationManager.registerSynchronization(new TransactionSynchronization() {
-            @Override
-            public void afterCommit() {
-                Y9MessageOrg<Person> msg = new Y9MessageOrg<>(ModelConvertUtil.orgPersonToPerson(savedPerson),
-                    Y9OrgEventTypeConst.PERSON_UPDATE, Y9LoginUserHolder.getTenantId());
-                Y9PublishServiceUtil.publishMessageOrg(msg);
-            }
-        });
-
-        return savedPerson;
     }
 
     @Override
@@ -1006,17 +978,17 @@ public class Y9PersonServiceImpl implements Y9PersonService {
     }
 
     @Override
-    public Page<Y9Person> pageByParentId(String parentId, boolean disabled, Y9PageQuery pageQuery) {
-        Pageable pageable =
-            PageRequest.of(pageQuery.getPage4Db(), pageQuery.getSize(), Sort.by(Sort.Direction.DESC, "tabIndex"));
-        return y9PersonRepository.findByDisabledAndParentId(disabled, parentId, pageable);
-    }
-
-    @Override
     public Page<Y9Person> pageByParentId(String parentId, boolean disabled, String name, Y9PageQuery pageQuery) {
         Pageable pageable =
             PageRequest.of(pageQuery.getPage4Db(), pageQuery.getSize(), Sort.by(Sort.Direction.DESC, "tabIndex"));
         return y9PersonRepository.findByParentIdAndDisabledAndNameContaining(parentId, disabled, name, pageable);
+    }
+
+    @Override
+    public Page<Y9Person> pageByParentId(String parentId, boolean disabled, Y9PageQuery pageQuery) {
+        Pageable pageable =
+            PageRequest.of(pageQuery.getPage4Db(), pageQuery.getSize(), Sort.by(Sort.Direction.DESC, "tabIndex"));
+        return y9PersonRepository.findByDisabledAndParentId(disabled, parentId, pageable);
     }
 
     /**
@@ -1092,7 +1064,7 @@ public class Y9PersonServiceImpl implements Y9PersonService {
     public Y9Person saveOrUpdate(Y9Person person, Y9PersonExt personExt) {
         Y9OrgBase parent = compositeOrgBaseManager.getOrgUnitAsParent(person.getParentId());
         if (StringUtils.isNotEmpty(person.getId())) {
-            Optional<Y9Person> y9PersonOptional = y9PersonManager.findById(person.getId());
+            Optional<Y9Person> y9PersonOptional = y9PersonManager.findByIdNotCache(person.getId());
             if (y9PersonOptional.isPresent()) {
                 // 判断为更新信息
                 Y9Person originPerson = new Y9Person();
@@ -1155,12 +1127,14 @@ public class Y9PersonServiceImpl implements Y9PersonService {
         Y9Context.publishEvent(new Y9EntityCreatedEvent<>(savedPerson));
 
         TransactionSynchronizationManager.registerSynchronization(new TransactionSynchronization() {
+
             @Override
             public void afterCommit() {
                 Y9MessageOrg<Person> msg = new Y9MessageOrg<>(ModelConvertUtil.orgPersonToPerson(savedPerson),
                     Y9OrgEventTypeConst.PERSON_ADD, Y9LoginUserHolder.getTenantId());
                 Y9PublishServiceUtil.persistAndPublishMessageOrg(msg, "新增人员信息", "新增" + savedPerson.getName());
             }
+
         });
 
         return savedPerson;
@@ -1234,19 +1208,7 @@ public class Y9PersonServiceImpl implements Y9PersonService {
     @Override
     @Transactional(readOnly = false)
     public Y9Person saveProperties(String personId, String properties) {
-        Y9Person person = this.getById(personId);
-        person.setProperties(properties);
-        final Y9Person savedPerson = y9PersonManager.save(person);
-
-        TransactionSynchronizationManager.registerSynchronization(new TransactionSynchronization() {
-            @Override
-            public void afterCommit() {
-                Y9MessageOrg<Person> msg = new Y9MessageOrg<>(ModelConvertUtil.orgPersonToPerson(savedPerson),
-                    Y9OrgEventTypeConst.PERSON_UPDATE, Y9LoginUserHolder.getTenantId());
-                Y9PublishServiceUtil.publishMessageOrg(msg);
-            }
-        });
-        return savedPerson;
+        return y9PersonManager.saveProperties(personId, properties);
     }
 
     @Override

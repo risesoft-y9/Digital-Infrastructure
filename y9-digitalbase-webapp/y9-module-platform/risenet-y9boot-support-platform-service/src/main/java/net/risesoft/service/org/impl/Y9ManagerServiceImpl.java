@@ -75,37 +75,6 @@ public class Y9ManagerServiceImpl implements Y9ManagerService {
     }
 
     @Override
-    public int getPasswordModifiedCycle(ManagerLevelEnum managerLevel) {
-        return y9config.getApp().getPlatform().getManagerModifyPasswordCycle().getDays();
-    }
-
-    @Override
-    public int getReviewLogCycle(ManagerLevelEnum managerLevel) {
-        int checkCycle = 0;
-        Y9PlatformProperties platformProperties = y9config.getApp().getPlatform();
-        if (ManagerLevelEnum.SYSTEM_MANAGER.equals(managerLevel)) {
-            checkCycle = platformProperties.getSystemManagerReviewLogCycle().getDays();
-        }
-        if (ManagerLevelEnum.SECURITY_MANAGER.equals(managerLevel)) {
-            checkCycle = platformProperties.getSecurityManagerReviewLogCycle().getDays();
-        }
-        if (ManagerLevelEnum.AUDIT_MANAGER.equals(managerLevel)) {
-            checkCycle = platformProperties.getAuditManagerReviewLogCycle().getDays();
-        }
-        return checkCycle;
-    }
-
-    @Override
-    public boolean isLoginNameAvailable(final String id, final String loginName) {
-        if (StringUtils.isNotEmpty(id)) {
-            return y9ManagerRepository.existsById(id);
-        }
-
-        Optional<Y9Manager> y9ManagerOptional = y9ManagerRepository.findByLoginName(loginName);
-        return y9ManagerOptional.isEmpty();
-    }
-
-    @Override
     public boolean checkPassword(String personId, String password) {
         Y9Manager manager = this.getById(personId);
         return Y9MessageDigest.checkpw(password, manager.getPassword());
@@ -155,6 +124,27 @@ public class Y9ManagerServiceImpl implements Y9ManagerService {
     }
 
     @Override
+    public int getPasswordModifiedCycle(ManagerLevelEnum managerLevel) {
+        return y9config.getApp().getPlatform().getManagerModifyPasswordCycle().getDays();
+    }
+
+    @Override
+    public int getReviewLogCycle(ManagerLevelEnum managerLevel) {
+        int checkCycle = 0;
+        Y9PlatformProperties platformProperties = y9config.getApp().getPlatform();
+        if (ManagerLevelEnum.SYSTEM_MANAGER.equals(managerLevel)) {
+            checkCycle = platformProperties.getSystemManagerReviewLogCycle().getDays();
+        }
+        if (ManagerLevelEnum.SECURITY_MANAGER.equals(managerLevel)) {
+            checkCycle = platformProperties.getSecurityManagerReviewLogCycle().getDays();
+        }
+        if (ManagerLevelEnum.AUDIT_MANAGER.equals(managerLevel)) {
+            checkCycle = platformProperties.getAuditManagerReviewLogCycle().getDays();
+        }
+        return checkCycle;
+    }
+
+    @Override
     public boolean isDeptManager(String managerId, String deptId) {
         Y9Manager y9Manager = this.getById(managerId);
         if (Boolean.TRUE.equals(y9Manager.getGlobalManager())) {
@@ -167,6 +157,16 @@ public class Y9ManagerServiceImpl implements Y9ManagerService {
             String managerDepartmentGuidPath = managerDept.getGuidPath();
             return targetDepartmentGuidPath.contains(managerDepartmentGuidPath);
         }
+    }
+
+    @Override
+    public boolean isLoginNameAvailable(final String id, final String loginName) {
+        if (StringUtils.isNotEmpty(id)) {
+            return y9ManagerRepository.existsById(id);
+        }
+
+        Optional<Y9Manager> y9ManagerOptional = y9ManagerRepository.findByLoginName(loginName);
+        return y9ManagerOptional.isEmpty();
     }
 
     @Override
@@ -213,10 +213,9 @@ public class Y9ManagerServiceImpl implements Y9ManagerService {
 
     @Override
     @Transactional(readOnly = false)
-    public Y9Manager resetPassword(String id) {
+    public Y9Manager resetDefaultPassword(String id) {
         Y9Manager y9Manager = this.getById(id);
-        String password = y9config.getCommon().getDefaultPassword();
-        y9Manager.setPassword(Y9MessageDigest.hashpw(password));
+        y9Manager.setPassword(Y9MessageDigest.hashpw(y9config.getCommon().getDefaultPassword()));
         y9Manager = y9ManagerRepository.save(y9Manager);
 
         Y9Context.publishEvent(new Y9EntityUpdatedEvent<>(y9Manager, y9Manager));
@@ -225,9 +224,10 @@ public class Y9ManagerServiceImpl implements Y9ManagerService {
 
     @Override
     @Transactional(readOnly = false)
-    public Y9Manager resetDefaultPassword(String id) {
+    public Y9Manager resetPassword(String id) {
         Y9Manager y9Manager = this.getById(id);
-        y9Manager.setPassword(Y9MessageDigest.hashpw(y9config.getCommon().getDefaultPassword()));
+        String password = y9config.getCommon().getDefaultPassword();
+        y9Manager.setPassword(Y9MessageDigest.hashpw(password));
         y9Manager = y9ManagerRepository.save(y9Manager);
 
         Y9Context.publishEvent(new Y9EntityUpdatedEvent<>(y9Manager, y9Manager));
@@ -257,7 +257,7 @@ public class Y9ManagerServiceImpl implements Y9ManagerService {
         y9Manager.setDn(OrgLevelConsts.getOrgLevel(OrgTypeEnum.MANAGER) + y9Manager.getName() + OrgLevelConsts.SEPARATOR
             + parent.getDn());
         // 系统管理员新建的子域三员默认禁用 需安全管理员启用
-        y9Manager.setDisabled(y9Manager.getGlobalManager() ? false : true);
+        y9Manager.setDisabled(!y9Manager.getGlobalManager());
 
         y9Manager.setPassword(Y9MessageDigest.hashpw(password));
         y9Manager.setGuidPath(compositeOrgBaseManager.buildGuidPath(y9Manager));

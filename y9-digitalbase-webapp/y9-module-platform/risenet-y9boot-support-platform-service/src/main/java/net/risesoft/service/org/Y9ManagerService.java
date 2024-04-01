@@ -32,19 +32,6 @@ public interface Y9ManagerService {
      */
     void changePassword(String id, String newPassword);
 
-    int getPasswordModifiedCycle(ManagerLevelEnum managerLevel);
-
-    int getReviewLogCycle(ManagerLevelEnum managerLevel);
-
-    /**
-     * 判断管理员登录名
-     *
-     * @param id 管理员id
-     * @param loginName 登录名称
-     * @return boolean
-     */
-    boolean isLoginNameAvailable(String id, String loginName);
-
     /**
      * 检查密码是否正确
      *
@@ -103,6 +90,10 @@ public interface Y9ManagerService {
      */
     Y9Manager getById(String id);
 
+    int getPasswordModifiedCycle(ManagerLevelEnum managerLevel);
+
+    int getReviewLogCycle(ManagerLevelEnum managerLevel);
+
     /**
      * 是否为子域三员
      *
@@ -111,6 +102,15 @@ public interface Y9ManagerService {
      * @return boolean
      */
     boolean isDeptManager(String managerId, String deptId);
+
+    /**
+     * 判断管理员登录名
+     *
+     * @param id 管理员id
+     * @param loginName 登录名称
+     * @return boolean
+     */
+    boolean isLoginNameAvailable(String id, String loginName);
 
     Boolean isPasswordExpired(String id);
 
@@ -138,19 +138,19 @@ public interface Y9ManagerService {
     List<Y9Manager> listByParentId(String parentId);
 
     /**
+     * 密码重置为默认
+     *
+     * @param id 管理员id
+     */
+    Y9Manager resetDefaultPassword(String id);
+
+    /**
      * 重置管理员密码
      *
      * @param id 管理员id
      * @return {@link Y9Manager}
      */
     Y9Manager resetPassword(String id);
-
-    /**
-     * 密码重置为默认
-     *
-     * @param id 管理员id
-     */
-    Y9Manager resetDefaultPassword(String id);
 
     /**
      * 保存管理员信息

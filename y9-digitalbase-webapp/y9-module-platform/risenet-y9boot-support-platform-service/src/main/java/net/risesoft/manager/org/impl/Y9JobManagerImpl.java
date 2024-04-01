@@ -19,7 +19,7 @@ import net.risesoft.y9.exception.util.Y9ExceptionUtil;
 
 /**
  * 职位 manager 实现类
- * 
+ *
  * @author shidaobang
  * @date 2023/07/26
  * @since 9.6.3
@@ -33,8 +33,20 @@ public class Y9JobManagerImpl implements Y9JobManager {
     private final Y9JobRepository y9JobRepository;
 
     @Override
+    @CacheEvict(key = "#y9Job.id")
+    @Transactional(readOnly = false)
+    public void delete(Y9Job y9Job) {
+        y9JobRepository.delete(y9Job);
+    }
+
+    @Override
     @Cacheable(key = "#id", condition = "#id!=null", unless = "#result==null")
     public Optional<Y9Job> findById(String id) {
+        return y9JobRepository.findById(id);
+    }
+
+    @Override
+    public Optional<Y9Job> findByIdNotCache(String id) {
         return y9JobRepository.findById(id);
     }
 
@@ -53,10 +65,12 @@ public class Y9JobManagerImpl implements Y9JobManager {
     }
 
     @Override
-    @CacheEvict(key = "#y9Job.id")
+    @CacheEvict(key = "#id")
     @Transactional(readOnly = false)
-    public void delete(Y9Job y9Job) {
-        y9JobRepository.delete(y9Job);
+    public Y9Job updateTabIndex(String id, int tabIndex) {
+        Y9Job y9Job = this.getById(id);
+        y9Job.setTabIndex(tabIndex);
+        return save(y9Job);
     }
 
 }
