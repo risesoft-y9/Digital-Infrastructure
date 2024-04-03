@@ -138,19 +138,11 @@ public interface Y9ManagerService {
     List<Y9Manager> listByParentId(String parentId);
 
     /**
-     * 密码重置为默认
+     * 重置为默认密码
      *
      * @param id 管理员id
      */
     Y9Manager resetDefaultPassword(String id);
-
-    /**
-     * 重置管理员密码
-     *
-     * @param id 管理员id
-     * @return {@link Y9Manager}
-     */
-    Y9Manager resetPassword(String id);
 
     /**
      * 保存管理员信息

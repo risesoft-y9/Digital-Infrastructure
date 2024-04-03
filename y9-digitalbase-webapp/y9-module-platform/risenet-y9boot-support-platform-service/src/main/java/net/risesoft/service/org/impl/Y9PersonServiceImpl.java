@@ -37,6 +37,7 @@ import net.risesoft.entity.Y9PersonExt;
 import net.risesoft.entity.Y9Position;
 import net.risesoft.entity.relation.Y9PersonsToGroups;
 import net.risesoft.entity.relation.Y9PersonsToPositions;
+import net.risesoft.enums.SettingEnum;
 import net.risesoft.enums.platform.AuthorizationPrincipalTypeEnum;
 import net.risesoft.enums.platform.OrgTypeEnum;
 import net.risesoft.exception.AuthenticationErrorCodeEnum;
@@ -64,6 +65,7 @@ import net.risesoft.repository.relation.Y9OrgBasesToRolesRepository;
 import net.risesoft.repository.relation.Y9PersonsToGroupsRepository;
 import net.risesoft.repository.relation.Y9PersonsToPositionsRepository;
 import net.risesoft.service.org.Y9PersonService;
+import net.risesoft.service.setting.Y9SettingService;
 import net.risesoft.util.ModelConvertUtil;
 import net.risesoft.util.Y9OrgUtil;
 import net.risesoft.util.Y9PlatformUtil;
@@ -121,6 +123,7 @@ public class Y9PersonServiceImpl implements Y9PersonService {
     private final Y9PersonsToPositionsManager y9PersonsToPositionsManager;
 
     private final Y9Properties y9config;
+    private final Y9SettingService y9SettingService;
 
     public Y9PersonServiceImpl(Y9PersonRepository y9PersonRepository,
         @Qualifier("rsTenantEntityManagerFactory") EntityManagerFactory entityManagerFactory,
@@ -133,7 +136,7 @@ public class Y9PersonServiceImpl implements Y9PersonService {
         Y9DepartmentPropRepository y9DepartmentPropRepository,
         Y9PersonToResourceAndAuthorityRepository y9PersonToResourceAndAuthorityRepository,
         Y9PersonToRoleRepository y9PersonToRoleRepository, Y9PersonsToPositionsManager y9PersonsToPositionsManager,
-        Y9PositionManager y9PositionManager, Y9PersonManager y9PersonManager) {
+        Y9PositionManager y9PositionManager, Y9PersonManager y9PersonManager, Y9SettingService y9SettingService) {
         this.y9PersonRepository = y9PersonRepository;
         this.entityManagerFactory = entityManagerFactory;
         this.y9PersonsToGroupsRepository = y9PersonsToGroupsRepository;
@@ -153,6 +156,7 @@ public class Y9PersonServiceImpl implements Y9PersonService {
         this.y9PersonsToPositionsManager = y9PersonsToPositionsManager;
         this.y9PositionManager = y9PositionManager;
         this.y9PersonManager = y9PersonManager;
+        this.y9SettingService = y9SettingService;
     }
 
     @Override
@@ -1015,7 +1019,7 @@ public class Y9PersonServiceImpl implements Y9PersonService {
         Y9Person updatedPerson = this.getById(personId);
         Y9BeanUtil.copyProperties(updatedPerson, originPerson);
 
-        String password = y9config.getCommon().getDefaultPassword();
+        String password = y9SettingService.get(SettingEnum.USER_DEFAULT_PASSWORD, String.class);
         updatedPerson.setPassword(Y9MessageDigest.hashpw(password));
         final Y9Person savedPerson = y9PersonManager.save(updatedPerson);
 
@@ -1116,7 +1120,7 @@ public class Y9PersonServiceImpl implements Y9PersonService {
         person.setDisabled(false);
         person.setParentId(parent.getId());
 
-        String password = y9config.getCommon().getDefaultPassword();
+        String password = y9SettingService.get(SettingEnum.USER_DEFAULT_PASSWORD, String.class);
         person.setPassword(Y9MessageDigest.hashpw(password));
 
         final Y9Person savedPerson = save(person);
@@ -1195,7 +1199,8 @@ public class Y9PersonServiceImpl implements Y9PersonService {
             person.setParentId(parent.getId());
 
             if (StringUtils.isBlank(person.getPassword())) {
-                person.setPassword(Y9MessageDigest.hashpw(y9config.getCommon().getDefaultPassword()));
+                String password = y9SettingService.get(SettingEnum.USER_DEFAULT_PASSWORD, String.class);
+                person.setPassword(Y9MessageDigest.hashpw(password));
             }
             person = save(person);
             if (personExt != null) {

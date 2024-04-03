@@ -1,13 +1,17 @@
 package net.risesoft.y9.configuration.app.y9platform;
 
-import java.time.Period;
-
 import lombok.Getter;
 import lombok.Setter;
 
 @Getter
 @Setter
 public class Y9PlatformProperties {
+
+    public static final int MANAGER_MODIFY_PASSWORD_CYCLE_DEFAULT = 7;
+    public static final int SYSTEM_MANAGER_REVIEW_LOG_CYCLE_DEFAULT = 0;
+    public static final int SECURITY_MANAGER_REVIEW_LOG_CYCLE_DEFAULT = 7;
+    public static final int AUDIT_MANAGER_REVIEW_LOG_CYCLE_DEFAULT = 7;
+    public static final String USER_PASSWORD_DEFAULT = "Risesoft@2022";
 
     /**
      * 系统名称
@@ -30,15 +34,28 @@ public class Y9PlatformProperties {
      */
     private String positionNamePattern = "{0}（{1}）";
 
-    /** 三员修改密码周期 */
-    private Period managerModifyPasswordCycle = Period.ofDays(7);
+    /**
+     * 三员修改密码周期（天）
+     */
+    private int managerModifyPasswordCycle = MANAGER_MODIFY_PASSWORD_CYCLE_DEFAULT;
 
-    /** 系统管理员审查日志周期 */
-    private Period systemManagerReviewLogCycle = Period.ofDays(0);
+    /**
+     * 系统管理员审查日志周期（天）
+     */
+    private int systemManagerReviewLogCycle = SYSTEM_MANAGER_REVIEW_LOG_CYCLE_DEFAULT;
 
-    /** 安全保密员审查日志周期 */
-    private Period securityManagerReviewLogCycle = Period.ofDays(7);
+    /**
+     * 安全保密员审查日志周期（天）
+     */
+    private int securityManagerReviewLogCycle = SECURITY_MANAGER_REVIEW_LOG_CYCLE_DEFAULT;
 
-    /** 安全审计员审查日志周期 */
-    private Period AuditManagerReviewLogCycle = Period.ofDays(7);
+    /**
+     * 安全审计员审查日志周期（天）
+     */
+    private int auditManagerReviewLogCycle = AUDIT_MANAGER_REVIEW_LOG_CYCLE_DEFAULT;
+
+    /**
+     * 默认密码
+     */
+    private String defaultPassword = USER_PASSWORD_DEFAULT;
 }

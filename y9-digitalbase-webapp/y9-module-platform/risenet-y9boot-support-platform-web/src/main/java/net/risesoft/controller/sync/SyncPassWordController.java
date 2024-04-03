@@ -21,8 +21,6 @@ import net.risesoft.service.org.Y9OrganizationService;
 import net.risesoft.service.org.Y9PersonService;
 import net.risesoft.util.Y9PlatformUtil;
 import net.risesoft.y9.Y9LoginUserHolder;
-import net.risesoft.y9.configuration.Y9Properties;
-import net.risesoft.y9.util.signing.Y9MessageDigest;
 
 /**
  * 同步信息
@@ -41,7 +39,6 @@ public class SyncPassWordController {
     private final Y9OrganizationService y9OrganizationService;
     private final Y9PersonService y9PersonService;
     private final Y9ManagerService y9ManagerService;
-    private final Y9Properties y9Config;
 
     /**
      * 同步人员信息
@@ -54,12 +51,12 @@ public class SyncPassWordController {
         Y9LoginUserHolder.setTenantId(tenantId);
         List<Y9Person> persons = y9PersonService.listAll();
         for (Y9Person person : persons) {
-            restPersonPwd(person);
+            y9PersonService.resetDefaultPassword(person.getId());
         }
 
         List<Y9Manager> manageList = y9ManagerService.listAll();
         for (Y9Manager manager : manageList) {
-            restManagerPwd(manager);
+            y9ManagerService.resetDefaultPassword(manager.getId());
         }
 
         return Y9Result.successMsg("同步人员信息完成");
@@ -80,30 +77,16 @@ public class SyncPassWordController {
             for (Y9Organization organization : y9OrganizationList) {
                 List<Y9Person> persons = compositeOrgBaseService.listAllPersonsRecursionDownward(organization.getId());
                 for (Y9Person person : persons) {
-                    restPersonPwd(person);
+                    y9PersonService.resetDefaultPassword(person.getId());
                 }
             }
 
             List<Y9Manager> manageList = y9ManagerService.listAll();
             for (Y9Manager manager : manageList) {
-                restManagerPwd(manager);
+                y9ManagerService.resetDefaultPassword(manager.getId());
             }
         }
         return Y9Result.successMsg("同步人员信息完成");
-    }
-
-    private void restManagerPwd(Y9Manager manager) {
-        if (manager != null && manager.getId() != null) {
-            manager.setPassword(Y9MessageDigest.hashpw(y9Config.getCommon().getDefaultPassword()));
-            y9ManagerService.saveOrUpdate(manager);
-        }
-    }
-
-    private void restPersonPwd(Y9Person person) {
-        if (person != null && person.getId() != null) {
-            person.setPassword(Y9MessageDigest.hashpw(y9Config.getCommon().getDefaultPassword()));
-            y9PersonService.save(person);
-        }
     }
 
     /**
@@ -120,7 +103,7 @@ public class SyncPassWordController {
         Y9LoginUserHolder.setTenantId(tenantId);
         Y9Person person = y9PersonService.getPersonByLoginNameAndTenantId(loginName, tenantId);
         if (person != null) {
-            restPersonPwd(person);
+            y9PersonService.resetDefaultPassword(person.getId());
         }
 
         return Y9Result.successMsg("根据租户id和登陆名称同步人员信息完成");
