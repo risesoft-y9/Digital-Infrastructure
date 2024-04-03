@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+                      http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.9.xsd">
+    
+    <changeSet id="1712132948890-1"
+               author="shidaobang">
+        <preConditions onFail="MARK_RAN">
+            <not>
+                <tableExists tableName="Y9_ORG_SETTING"/>
+            </not>
+        </preConditions>
+        <createTable remarks="设置表"
+                     tableName="Y9_ORG_SETTING">
+            <column name="SETTING_KEY"
+                    remarks="设置key"
+                    type="VARCHAR(255)">
+                <constraints nullable="false"
+                             primaryKey="true"/>
+            </column>
+            <column name="CREATE_TIME"
+                    remarks="创建时间"
+                    type="datetime"/>
+            <column name="UPDATE_TIME"
+                    remarks="更新时间"
+                    type="datetime"/>
+            <column name="SETTING_VALUE"
+                    remarks="设置value"
+                    type="VARCHAR(255)"/>
+        </createTable>
+    </changeSet>
+
+</databaseChangeLog>

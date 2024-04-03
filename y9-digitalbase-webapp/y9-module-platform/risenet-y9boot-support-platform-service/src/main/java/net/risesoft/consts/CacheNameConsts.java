@@ -31,4 +31,6 @@ public class CacheNameConsts {
 
     public static final String ROLE = "y9cache_role";
 
+    public static final String SETTING = "y9cache_setting";
+
 }

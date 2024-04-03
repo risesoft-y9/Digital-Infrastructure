@@ -134,7 +134,7 @@ public class DeptManagerController {
     @PostMapping(value = "/resetPassword")
     @IsManager(ManagerLevelEnum.SYSTEM_MANAGER)
     public Y9Result<String> resetPassword(@NotBlank @RequestParam String personId) {
-        y9ManagerService.resetPassword(personId);
+        y9ManagerService.resetDefaultPassword(personId);
         return Y9Result.successMsg("重置密码成功");
     }
 
