@@ -32,7 +32,7 @@ import net.risesoft.y9public.service.event.Y9PublishedEventService;
 @RequestMapping(value = "/api/rest/publishedEvent", produces = MediaType.APPLICATION_JSON_VALUE)
 @RequiredArgsConstructor
 @Validated
-@IsManager(ManagerLevelEnum.OPERATION_SECURITY_MANAGER)
+@IsManager({ManagerLevelEnum.OPERATION_SECURITY_MANAGER, ManagerLevelEnum.SECURITY_MANAGER})
 public class PublishedEventController {
 
     private final Y9PublishedEventService y9PublishedEventService;
@@ -54,8 +54,13 @@ public class PublishedEventController {
     public Y9Page<Y9PublishedEvent> pagePublishedEventList(String eventName, String eventDescription,
         @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss") Date startTime,
         @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss") Date endTime, Y9PageQuery pageQuery) {
-        Page<Y9PublishedEvent> pageList = y9PublishedEventService.page(pageQuery, Y9LoginUserHolder.getTenantId(),
-            eventName, eventDescription, startTime, endTime);
+        Page<Y9PublishedEvent> pageList;
+        if (Y9LoginUserHolder.getUserInfo().getManagerLevel().equals(ManagerLevelEnum.OPERATION_SECURITY_MANAGER)) {
+            pageList = y9PublishedEventService.page(pageQuery, null, eventName, eventDescription, startTime, endTime);
+        } else {
+            pageList = y9PublishedEventService.page(pageQuery, Y9LoginUserHolder.getTenantId(), eventName,
+                eventDescription, startTime, endTime);
+        }
         return Y9Page.success(pageQuery.getPage(), pageList.getTotalPages(), pageList.getTotalElements(),
             pageList.getContent(), "获取数据成功");
     }
