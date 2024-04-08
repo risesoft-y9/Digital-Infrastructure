@@ -23,6 +23,8 @@ public enum GlobalErrorCodeEnum implements ErrorCode {
     FAILURE(NONE_MODULE_CODE, 1, "服务器内部错误，请联系开发人员"),
     /** 参数校验失败 */
     INVALID_ARGUMENT(NONE_MODULE_CODE, 2, "参数校验失败"),
+    /** 实体类不存在 */
+    ENTITY_NOT_FOUND(NONE_MODULE_CODE, 3, "对象[{}]不存在"),
 
     /** 令牌未传入 */
     ACCESS_TOKEN_NOT_FOUND(AUTH_MODULE_CODE, 0, "令牌未传入"),
@@ -54,15 +56,17 @@ public enum GlobalErrorCodeEnum implements ErrorCode {
     /** 当前用户没有被授权资源[{}] */
     PERSON_UNAUTHORIZED_RESOURCE(PERMISSION_MODULE_CODE, 30, "当前用户没有被授权资源[{}]"),
     /** 当前岗位没有被授权资源[{}] */
-    POSITION_UNAUTHORIZED_RESOURCE(PERMISSION_MODULE_CODE, 31, "当前岗位没有被授权资源[{}]"),;
+    POSITION_UNAUTHORIZED_RESOURCE(PERMISSION_MODULE_CODE, 31, "当前岗位没有被授权资源[{}]"),
+
+    ;
 
     private final int moduleCode;
     private final int moduleErrorCode;
     private final String description;
 
     @Override
-    public int systemCode() {
-        return GlobalErrorCodeConsts.SYSTEM_CODE;
+    public String getDescription() {
+        return this.description;
     }
 
     @Override
@@ -76,7 +80,7 @@ public enum GlobalErrorCodeEnum implements ErrorCode {
     }
 
     @Override
-    public String getDescription() {
-        return this.description;
+    public int systemCode() {
+        return GlobalErrorCodeConsts.SYSTEM_CODE;
     }
 }
