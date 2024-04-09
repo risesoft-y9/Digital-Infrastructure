@@ -97,7 +97,8 @@
 							type="text"
 							autocomplete="off"
 							value=""
-							onblur="inputOnBlur();"
+							oninput="inputEvent()"
+							onblur="getTenant();"
 						/>
 						<input
 							id="username1"
@@ -115,7 +116,6 @@
 							autocomplete="false"
 							htmlescape="true"
 							type="hidden"
-							value="default"
 						/>
 						<div class="validation">
 							<img
@@ -258,9 +258,6 @@
 				} catch (e) {}
 			}
 
-			function inputOnBlur(){
-				$("#username1").val($("#username").val());
-			}
 			function inputEvent() {
 				if (inputTimer) {
 					clearTimeout(inputTimer);
