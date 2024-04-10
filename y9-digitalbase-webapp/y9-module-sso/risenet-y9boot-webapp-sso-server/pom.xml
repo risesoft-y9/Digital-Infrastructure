@@ -11,6 +11,16 @@
 
     <repositories>
         <repository>
+            <id>y9-intranet-repo</id>
+            <url>https://nexus-internal.youshengyun.com/repository/maven-public/</url>
+            <releases>
+                <enabled>true</enabled>
+            </releases>
+            <snapshots>
+                <enabled>true</enabled>
+            </snapshots>
+        </repository>
+        <repository>
             <id>aliyun-repo</id>
             <url>https://maven.aliyun.com/repository/public</url>
             <releases>
@@ -21,8 +31,7 @@
             </snapshots>
         </repository>
         <repository>
-            <id>y9-repo</id>
-            <name>local private nexus</name>
+            <id>y9-internet-repo</id>
             <url>https://svn.youshengyun.com:9900/nexus/repository/maven-public/</url>
             <releases>
                 <enabled>true</enabled>
@@ -36,12 +45,15 @@
     </repositories>
     <pluginRepositories>
         <pluginRepository>
+            <id>y9-intranet-repo-plugin</id>
+            <url>https://nexus-internal.youshengyun.com/repository/maven-public/</url>
+        </pluginRepository>
+        <pluginRepository>
             <id>aliyun-repo-plugin</id>
             <url>https://maven.aliyun.com/repository/public</url>
         </pluginRepository>
         <pluginRepository>
-            <id>y9-repo-plugin</id>
-            <name>local private plugin nexus</name>
+            <id>y9-internet-repo-plugin</id>
             <url>https://svn.youshengyun.com:9900/nexus/repository/maven-public/</url>
         </pluginRepository>
     </pluginRepositories>
@@ -552,7 +564,7 @@
                         </configuration>
                         <executions>
                             <execution>
-                                <phase>install</phase>
+                                <phase>package</phase>
                                 <goals>
                                     <goal>build</goal>
                                 </goals>
