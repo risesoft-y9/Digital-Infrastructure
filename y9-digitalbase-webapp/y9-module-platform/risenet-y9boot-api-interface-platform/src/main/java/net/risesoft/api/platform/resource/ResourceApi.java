@@ -76,16 +76,6 @@ public interface ResourceApi {
     Y9Result<Resource> getResource(@RequestParam("resourceId") @NotBlank String resourceId);
 
     /**
-     * 根据系统标识获取该系统的资源树的顶级节点
-     *
-     * @param systemName 系统标识
-     * @return {@code Y9Result<Resource>} 通用请求返回对象 - data 是顶级资源对象
-     * @since 9.6.0
-     */
-    @GetMapping("/getRootResourceBySystemName")
-    Y9Result<Resource> getRootResourceBySystemName(@RequestParam("systemName") @NotBlank String systemName);
-
-    /**
      * 获取指定资源的子菜单资源
      *
      * @param resourceId 资源id
