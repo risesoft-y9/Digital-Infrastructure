@@ -398,14 +398,14 @@ body .login_fields__submit input:hover {
 
 
 body .toolTips{
-  width: 265px;
+  width: 260px;
   position: relative;
-  top: -140px;
-  left: 150px;
+  top: -184px;
+  left: 166px;
   overflow: hidden;
   z-index: 10;
   /*background: linear-gradient(45deg, #000,#dfdfdf);*/
-  background-image: url("../images/bgm.gif");
+  background-image: url("../images/xxx-bgm2.png");
   border-radius: 5px;
 }
 body .toolTips ul{
