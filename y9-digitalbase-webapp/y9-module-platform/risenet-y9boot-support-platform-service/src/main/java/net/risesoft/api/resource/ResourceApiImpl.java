@@ -137,20 +137,6 @@ public class ResourceApiImpl implements ResourceApi {
     }
 
     /**
-     * 根据系统标识获取该系统的资源树的顶级节点
-     *
-     * @param systemName 系统标识
-     * @return {@code Y9Result<Resource>} 通用请求返回对象 - data 是顶级资源对象
-     * @since 9.6.0
-     */
-    @Override
-    public Y9Result<Resource> getRootResourceBySystemName(@RequestParam("systemName") @NotBlank String systemName) {
-        Y9System y9System = y9SystemService.getByName(systemName);
-        Y9App app = y9AppRepository.findBySystemIdAndCustomId(y9System.getId(), systemName).orElse(null);
-        return Y9Result.success(ModelConvertUtil.resourceBaseToResource(app));
-    }
-
-    /**
      * 获取指定资源的子菜单资源
      *
      * @param resourceId 资源id
