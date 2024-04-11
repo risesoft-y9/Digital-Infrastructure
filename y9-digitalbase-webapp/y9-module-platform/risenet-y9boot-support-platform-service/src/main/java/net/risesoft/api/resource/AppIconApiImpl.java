@@ -4,6 +4,7 @@ import java.util.List;
 
 import jakarta.validation.constraints.NotBlank;
 
+import org.springframework.context.annotation.Primary;
 import org.springframework.http.MediaType;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -28,6 +29,7 @@ import net.risesoft.y9public.service.resource.Y9AppIconService;
  * @date 2022/2/10
  * @since 9.6.0
  */
+@Primary
 @RestController
 @Validated
 @RequestMapping(value = "/services/rest/v1/appIcon", produces = MediaType.APPLICATION_JSON_VALUE)
