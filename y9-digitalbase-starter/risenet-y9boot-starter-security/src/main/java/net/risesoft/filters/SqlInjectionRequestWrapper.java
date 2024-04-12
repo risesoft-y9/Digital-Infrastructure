@@ -20,10 +20,10 @@ import javax.servlet.http.HttpServletRequestWrapper;
  * @author mengjuhua
  * @date 2024/03/04
  */
-public class SqlInRequestWrapper extends HttpServletRequestWrapper {
+public class SqlInjectionRequestWrapper extends HttpServletRequestWrapper {
     private final String body;
 
-    public SqlInRequestWrapper(HttpServletRequest request) throws IOException {
+    public SqlInjectionRequestWrapper(HttpServletRequest request) throws IOException {
         super(request);
         StringBuilder stringBuilder = new StringBuilder();
         BufferedReader bufferedReader = null;

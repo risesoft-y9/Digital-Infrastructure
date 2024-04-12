@@ -10,7 +10,7 @@ import javax.servlet.ServletResponse;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-public class XSSFilter implements Filter {
+public class XssFilter implements Filter {
 
     /**
      * 判断Request ,Response 类型
@@ -37,7 +37,7 @@ public class XSSFilter implements Filter {
         // 转型
         HttpServletRequest httpRequest = (HttpServletRequest)request;
 
-        XSSHttpRequestWrapper xssRequest = new XSSHttpRequestWrapper(httpRequest);
+        XssHttpRequestWrapper xssRequest = new XssHttpRequestWrapper(httpRequest);
 
         chain.doFilter(xssRequest, response);
     }

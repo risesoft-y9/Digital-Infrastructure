@@ -24,7 +24,7 @@ import net.risesoft.y9.Y9Context;
 import net.risesoft.y9.configuration.Y9Properties;
 
 @Slf4j
-public class XSSHttpRequestWrapper extends HttpServletRequestWrapper {
+public class XssHttpRequestWrapper extends HttpServletRequestWrapper {
 
     public static void main(String[] args) {
         try {
@@ -54,7 +54,7 @@ public class XSSHttpRequestWrapper extends HttpServletRequestWrapper {
         }
     }
 
-    public XSSHttpRequestWrapper(HttpServletRequest request) {
+    public XssHttpRequestWrapper(HttpServletRequest request) {
         super(request);
     }
 

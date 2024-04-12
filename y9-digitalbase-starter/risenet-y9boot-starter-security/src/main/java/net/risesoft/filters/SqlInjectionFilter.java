@@ -34,7 +34,7 @@ import net.risesoft.y9.json.Y9JsonUtil;
  *
  */
 @Slf4j
-public class SQLInFilter implements Filter {
+public class SqlInjectionFilter implements Filter {
     private static final String SQL_REGX =
         ".*(\\b(select|update|and|or|delete|insert|trancate|char|into|substr|ascii|declare|exec|count|master|drop|execute)\\b).*";
     private String[] skip;
@@ -71,7 +71,7 @@ public class SQLInFilter implements Filter {
         }
 
         // 防止流读取一次后就没有了, 所以需要将流继续写出去
-        SqlInRequestWrapper requestWrapper = new SqlInRequestWrapper(httpRequest);
+        SqlInjectionRequestWrapper requestWrapper = new SqlInjectionRequestWrapper(httpRequest);
 
         // 获取请求参数
         Map<String, Object> paramsMaps = new HashMap<>();

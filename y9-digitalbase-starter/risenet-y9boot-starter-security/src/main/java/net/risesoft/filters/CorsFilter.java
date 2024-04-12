@@ -1,0 +1,54 @@
+package net.risesoft.filters;
+
+import java.io.IOException;
+
+import javax.servlet.FilterChain;
+import javax.servlet.ServletException;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
+import org.springframework.web.cors.CorsConfiguration;
+import org.springframework.web.cors.CorsProcessor;
+import org.springframework.web.cors.CorsUtils;
+import org.springframework.web.cors.DefaultCorsProcessor;
+import org.springframework.web.filter.OncePerRequestFilter;
+
+import net.risesoft.y9.Y9Context;
+import net.risesoft.y9.configuration.Y9Properties;
+import net.risesoft.y9.configuration.feature.security.cors.Y9CorsProperties;
+
+/**
+ * cors过滤器
+ *
+ * @author shidaobang
+ * @date 2024/04/12
+ * @see org.springframework.web.filter.CorsFilter
+ */
+public class CorsFilter extends OncePerRequestFilter {
+
+    private final CorsProcessor processor = new DefaultCorsProcessor();
+    private final CorsConfiguration corsConfiguration = new CorsConfiguration();
+
+    @Override
+    protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
+        throws ServletException, IOException {
+
+        Y9CorsProperties corsProperties = Y9Context.getBean(Y9Properties.class).getFeature().getSecurity().getCors();
+        applyLatestCorsProperties(corsConfiguration, corsProperties);
+        
+        boolean isValid = this.processor.processRequest(corsConfiguration, request, response);
+        if (!isValid || CorsUtils.isPreFlightRequest(request)) {
+            return;
+        }
+        filterChain.doFilter(request, response);
+    }
+
+    private void applyLatestCorsProperties(CorsConfiguration corsConfiguration, Y9CorsProperties corsProperties) {
+        corsConfiguration.setAllowedOriginPatterns(corsProperties.getAllowedOriginPatterns());
+        corsConfiguration.setAllowedMethods(corsProperties.getAllowedMethods());
+        corsConfiguration.setAllowedHeaders(corsProperties.getAllowedHeaders());
+        corsConfiguration.setAllowCredentials(corsProperties.isAllowCredentials());
+        corsConfiguration.setMaxAge(corsProperties.getMaxAge());
+    }
+
+}
