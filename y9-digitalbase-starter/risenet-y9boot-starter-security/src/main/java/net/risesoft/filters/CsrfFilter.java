@@ -16,7 +16,7 @@ import org.apache.commons.lang3.StringUtils;
 import net.risesoft.y9.Y9Context;
 import net.risesoft.y9.configuration.Y9Properties;
 
-public class CSRFFilter implements Filter {
+public class CsrfFilter implements Filter {
 
     @Override
     public void doFilter(ServletRequest servletRequest, ServletResponse servletResponse, FilterChain filterChain)
