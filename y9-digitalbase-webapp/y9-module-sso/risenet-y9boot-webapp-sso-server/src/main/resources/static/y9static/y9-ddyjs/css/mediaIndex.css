@@ -5,67 +5,59 @@
     }
 
     body .logo img {
-        width: 332px;
-        height: 70px;
-    }
-}
-
-@media screen and (max-width: 1399px) {
-    body .bg_top_right {
-        height: 187px;
+        height: 80px;
     }
 
     body .login {
-        width: 650px;
-        height: 355px;
+        margin-right: 0px;
+        width: 304px;
+    }
+
+    body .login_form {
+        padding-right: 23px;
+    }
+
+    body .login_form .login_title, body .login_form .login_fields .login_dev {
+        width: 275px;
+
     }
 
     body .login_form .login_title {
-        padding-top: 40px;
-        padding-right: 25px;
-        padding-left: 24px;
-    }
+        margin-bottom: 30px;
 
-    body .login_fields {
-        padding-right: 25px;
-        padding-left: 24px;
-    }
-
-    body .login_fields__user, body .login_fields__password {
-        margin-top: 20px;
-        padding: 14px 16px 16px;
-    }
-
-    body .login_fields .icon-1 {
-        margin-left: 12px;
     }
 
     body .login_fields input[type="text"], body .login_fields input[type="password"] {
-        width: 150px;
+        width: 178px;
     }
 
-    body .noticeInfo .title {
-        margin: 30px 26px 0 26px;
+}
+
+@media screen and (max-width: 1399px) {
+
+    body .login {
+        margin-right: 0px;
+        width: 428px;
     }
 
-    body .noticeInfo .info {
-        margin: 20px 26px 0 28px;
+    body .login_form {
+        margin-top: 30%;
     }
 
-    body .noticeInfo .info span {
-        margin-bottom: 8px;
-    }
+    body .login_form .login_title {
+        margin-bottom: 40px;
 
-    body .toolTips {
-        left: 25px;
-        width: 275px;
     }
 }
 
 @media screen and (min-width: 1399px) and (max-width: 1590px) {
-    body .bg_top_right {
-        height: 215px;
+
+    body .login {
+        margin-right: 10px;
+        width: 440px;
     }
+
+
 }
 
 @media screen and (min-width: 1590px) and (max-width: 1890px) {
@@ -78,4 +70,15 @@
     body .bg_top_right {
         height: 260px;
     }
+
+    body .login_form {
+        margin-top: 80%;
+    }
 }
+
+@media screen and (min-width: 2040px) {
+    body .login_form {
+        margin-top: 80%;
+    }
+}
+
