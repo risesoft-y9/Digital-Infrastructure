@@ -9,10 +9,12 @@
     <meta content="0" http-equiv="expires"/>
     <!-- 管局要求保持备案名称和网站使用名称一致 -->
     <title>当代中国研究所OA系统</title>
+    <link as="font" crossorigin rel="preload" th:href="@{/y9static/y9-ddyjs/fonts/AaBanRuoKaiShuJiaCu.woff2}"
+          type="font/woff2">
     <link rel="shortcut icon" th:href="@{/y9static/y9-ddyjs/img/logo-1.svg}" type="image/x-icon"/>
     <link rel="stylesheet" th:href="@{/y9static/js/layui/css/layui.css}" type="text/css"/>
     <link rel="stylesheet" th:href="@{/y9static/y9-ddyjs/css/default.css}" type="text/css"/>
-    <link rel="stylesheet" th:href="@{/y9static/y9-ddyjs/css/styles.css}" type="text/css"/>
+    <link rel="stylesheet" th:href="@{/y9static/y9-ddyjs/css/styles.css?v=1.1}" type="text/css"/>
     <link rel="stylesheet" th:href="@{/y9static/y9-ddyjs/css/mediaIndex.css}" type="text/css"/>
     <link rel="stylesheet" th:href="@{/y9static/y9-ddyjs/css/loaders.css}" type="text/css"/>
     <link rel="stylesheet" th:href="@{/y9static/y9-ddyjs/css/layerMsg.css}" type="text/css"/>
@@ -26,82 +28,73 @@
 </head>
 <body>
 <div class="logo">
-    <img th:src="@{/y9static/y9-ddyjs/img/logo.svg}"/>
+    <img th:src="@{/y9static/y9-ddyjs/img/logotitle.png}"/>
 </div>
-<div class="login">
-    <div class="layui-row">
-        <div class="layui-col-xs6 login_form" id="tunnel">
-            <div class="login_title">
-                <span>用户登录</span>
-            </div>
-            <div class="login_fields">
-                <form id="fm1" method="post" th:object="${credential}">
-                    <div class="alert alert-danger" th:if="${#fields.hasErrors('*')}">
-                        登录失败：<span th:each="err : ${#fields.errors('*')}" th:utext="${err}"/>
+<div class="login layui-row">
+    <div class="layui-col-xs12 login_form" id="tunnel">
+        <div class="login_title">用&nbsp;户&nbsp;登&nbsp;录</div>
+        <div class="login_fields">
+            <form id="fm1" method="post" th:object="${credential}">
+                <div class="alert alert-danger" th:if="${#fields.hasErrors('*')}">
+                    登录失败：<span th:each="err : ${#fields.errors('*')}" th:utext="${err}"/>
+                </div>
+                <div class="login_dev login_fields__user ">
+                    <div class="form-label">用户名</div>
+                    <input autocomplete="off" id="username" onBlur="inputOnBlur();" placeholder=" "
+                           tabindex="1" type="text" value=""/>
+                    <input autocomplete="false" htmlescape="true" id="username1" name="username"
+                           style="width: 150px;" type="hidden"/>
+                    <input autocomplete="false" htmlescape="true" id="tenantShortName" name="tenantShortName"
+                           style="width: 150px" type="hidden" value="default"/>
+                    <div class="validation">
+                        <img alt="" th:src="@{/y9static/y9new/img/tick.png}"/>
                     </div>
-                    <div class="login_fields__user">
-                        <div class="icon">
-                            <img alt="" th:src="@{/y9static/y9-ddyjs/img/user.svg}"/>
-                        </div>
-                        <span class="icon-1">|</span>
-                        <input autocomplete="off" id="username" onBlur="inputOnBlur();" placeholder="请输入账号"
-                               tabindex="1" type="text" value=""/>
-                        <input autocomplete="false" htmlescape="true" id="username1" name="username"
-                               style="width: 150px;" type="hidden"/>
-                        <input autocomplete="false" htmlescape="true" id="tenantShortName" name="tenantShortName"
-                               style="width: 150px" type="hidden" value="default"/>
-                        <div class="validation">
-                            <img alt="" th:src="@{/y9static/y9new/img/tick.png}"/>
-                        </div>
-                    </div>
-                    <div class="login_fields__password">
-                        <div class="icon">
-                            <img alt="" th:src="@{/y9static/y9-ddyjs/img/pwd.svg}"/>
-                        </div>
-                        <span class="icon-1">|</span>
-                        <input autocomplete="off" htmlescape="true" id="password" onfocus="this.type='password'"
-                               placeholder="请输入密码" tabindex="2" type="password"/>
-                        <input autocomplete="off" htmlescape="true" id="password1" name="password" type="hidden"/>
+                </div>
+                <div class="login_dev login_fields__password">
+                    <div class="form-label">密&nbsp;&nbsp;&nbsp;码</div>
+                    <input autocomplete="off" htmlescape="true" id="password" onfocus="this.type='password'"
+                           placeholder=" " tabindex="2" type="password"/>
+                    <input autocomplete="off" htmlescape="true" id="password1" name="password" type="hidden"/>
 
-                        <div class="validation"><img alt="" th:src="@{/y9static/y9-ddyjs/img/tick.png}"/></div>
-                    </div>
-                    <div class="login_fields_remember_password">
-                        <input class="chk left" id="checkbox1" type="checkbox"/>
-                        <label class="left" for="checkbox1"></label>
-                        <span class="left">记住密码</span>
-                    </div>
-                    <!-- 表单隐藏数据块开始 -->
-                    <input id="loginType" name="loginType" type="hidden" value="loginName"/>
-                    <input id="captchaKey" name="captchaKey" type="hidden" value=""/>
-                    <input id="noLoginScreen" name="noLoginScreen" type="hidden" value="false"/>
-                    <input id="screenDimension" name="screenDimension" type="hidden" value=""/>
-                    <input id="pwdEcodeType" name="pwdEcodeType" type="hidden" value=""/>
-                    <input name="execution" th:value="${flowExecutionKey}" type="hidden"/>
-                    <input name="_eventId" type="hidden" value="submit"/>
-                    <input name="geolocation" type="hidden"/>
-                    <!-- 表单隐藏数据块结束 -->
-                </form>
-                <div class="login_fields__submit">
+                    <div class="validation"><img alt="" th:src="@{/y9static/y9-ddyjs/img/tick.png}"/></div>
+                </div>
+                <!-- 表单隐藏数据块开始 -->
+                <input id="loginType" name="loginType" type="hidden" value="loginName"/>
+                <input id="captchaKey" name="captchaKey" type="hidden" value=""/>
+                <input id="noLoginScreen" name="noLoginScreen" type="hidden" value="false"/>
+                <input id="screenDimension" name="screenDimension" type="hidden" value=""/>
+                <input id="pwdEcodeType" name="pwdEcodeType" type="hidden" value=""/>
+                <input name="execution" th:value="${flowExecutionKey}" type="hidden"/>
+                <input name="_eventId" type="hidden" value="submit"/>
+                <input name="geolocation" type="hidden"/>
+                <!-- 表单隐藏数据块结束 -->
+
+                <div class="login_dev login_fields__submit ">
                     <input type="button" value="登录"/>
                 </div>
-            </div>
-            <div></div>
+                <div class="login_dev login_fields_remember_password ">
+                    <!-- <input class="chk left" id="checkbox1" type="checkbox"/>
+                     <label class="left" for="checkbox1"></label>
+                     <span class="left">记住密码</span>-->
 
-            <div class="success"></div>
-            <div class="toolTips" style="display: none">
-                <ul id="toolTipsUl"></ul>
-            </div>
+                    <input id="checkbox1" name="my-checkbox" type="checkbox"/>
+                    <label for="checkbox1">记住密码</label>
+                </div>
+            </form>
         </div>
-        <div class="layui-col-xs6 noticeInfo">
-            <img th:src="@{/y9static/y9-ddyjs/img/wxts.svg}">
-            <!--            <div class="title">温馨提示</div>-->
-            <!--            <div class="info">-->
-            <!--                <span>1、本系统为非涉密系统，请勿上传涉密文件，请勿将标密文件、电报掩盖密级扫描上传；要求按密件上报的报告请走线下纸质渠道上报。</span>-->
-            <!--                <span>2、不要在公共场合保存登录信息</span>-->
-            <!--                <span>3、尽量避免多人使用同一账号</span>-->
-            <!--                <span>4、为保证您的账户安全，退出时请注销，并定期修改密码</span>-->
-            <!--            </div>-->
+        <div></div>
+        <div class="success"></div>
+        <div class="toolTips" style="display: none">
+            <ul id="toolTipsUl"></ul>
         </div>
+    </div>
+    <div class="layui-col-xs12 noticeInfo">
+        <div class="title">温馨提示</div>
+        <ul class="info">
+            <li> 本系统严禁处理涉密信息，涉密文件请线下呈报。</li>
+            <li> 请勿在公用设备保存登录信息，避免多人使用同一账号。</li>
+            <li> 退出时请及时注销，定期修改账号密码。</li>
+        </ul>
     </div>
 </div>
 <!--<div class="bg_top_right"></div>-->
