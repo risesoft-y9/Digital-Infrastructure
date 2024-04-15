@@ -97,8 +97,7 @@
 							type="text"
 							autocomplete="off"
 							value=""
-							oninput="inputEvent()"
-							onblur="getTenant();"
+							onblur="inputOnBlur();"
 						/>
 						<input
 							id="username1"
@@ -116,6 +115,7 @@
 							autocomplete="false"
 							htmlescape="true"
 							type="hidden"
+							value="default"
 						/>
 						<div class="validation">
 							<img
@@ -258,6 +258,9 @@
 				} catch (e) {}
 			}
 
+			function inputOnBlur(){
+				$("#username1").val($("#username").val());
+			}
 			function inputEvent() {
 				if (inputTimer) {
 					clearTimeout(inputTimer);
@@ -475,8 +478,7 @@
 									}
 								},
 							})
-						)
-							.done(function () {
+						).done(function () {
 								$.ajax({
 									async: false,
 									cache: false,
@@ -494,9 +496,19 @@
 									dataType: "json",
 									success: function (data) {
 										if (data.success) {
-											$("#mpanel6").attr({
+											/*$("#mpanel6").attr({
 												style: "display: block;",
-											});
+											});*/
+											var username = $("#username1").val();
+											var password = $("#password").val();
+											var pwdEcodeType=$('#pwdEcodeType').val();
+
+											var encodeUserName = encode64(username);
+											var encodePassword = encode64(password);
+											var rsapwd=encrypt(pwdEcodeType,encodePassword);
+											$("#username1").val(encodeUserName);
+											$("#password1").val(rsapwd);
+											$("#fm1").submit();
 										} else {
 											var msg = data.msg;
 											if (msg != null && msg.length > 0) {
