@@ -28,7 +28,7 @@ public class Y9FtpProperties {
     /**
      * 密码
      */
-    private int password;
+    private String password;
     /**
      * 连接超时时间(毫秒)
      */
