@@ -175,7 +175,7 @@ public class Y9PersonServiceImpl implements Y9PersonService {
                 Y9Person oldperson = y9PersonOptional.get();
                 oldperson.setDn(OrgLevelConsts.getOrgLevel(OrgTypeEnum.PERSON) + oldperson.getName()
                     + OrgLevelConsts.SEPARATOR + parent.getDn());
-                oldperson.setDisabled(false);
+                oldperson.setDisabled(Boolean.FALSE);
                 oldperson.setName(originalPerson.getName());
                 oldperson.setLoginName(originalPerson.getLoginName());
                 oldperson.setEmail(originalPerson.getEmail());
@@ -592,7 +592,7 @@ public class Y9PersonServiceImpl implements Y9PersonService {
 
     @Override
     public long countByGuidPathLikeAndDisabledAndDeletedFalse(String guidPath) {
-        return y9PersonRepository.countByDisabledAndGuidPathContaining(false, guidPath);
+        return y9PersonRepository.countByDisabledAndGuidPathContaining(Boolean.FALSE, guidPath);
     }
 
     @Override
@@ -787,7 +787,7 @@ public class Y9PersonServiceImpl implements Y9PersonService {
 
     @Override
     public List<Y9Person> listByDisabledAndDeletedAndGuidPathLike(String guidPath) {
-        return y9PersonRepository.findByDisabledAndGuidPathContaining(false, guidPath);
+        return y9PersonRepository.findByDisabledAndGuidPathContaining(Boolean.FALSE, guidPath);
     }
 
     @Override
@@ -812,7 +812,7 @@ public class Y9PersonServiceImpl implements Y9PersonService {
     }
 
     @Override
-    public List<Y9Person> listByName(String name, Boolean disabled) {
+    public List<Y9Person> listByNameLike(String name, Boolean disabled) {
         if (disabled == null) {
             return y9PersonRepository.findByNameContaining(name);
         } else {
@@ -859,7 +859,7 @@ public class Y9PersonServiceImpl implements Y9PersonService {
             personId = originalPerson.getId();
         }
         parentIdList.add(parentId);
-        List<Y9Person> personList = y9PersonRepository.findByOriginalIdAndDisabled(personId, false);
+        List<Y9Person> personList = y9PersonRepository.findByOriginalIdAndDisabled(personId, Boolean.FALSE);
         parentIdList.addAll(personList.stream().map(Y9Person::getParentId).collect(Collectors.toList()));
         return parentIdList;
     }
@@ -978,7 +978,7 @@ public class Y9PersonServiceImpl implements Y9PersonService {
     public Page<Y9Person> pageByNameLike(String name, Y9PageQuery pageQuery) {
         Pageable pageable =
             PageRequest.of(pageQuery.getPage4Db(), pageQuery.getSize(), Sort.by(Sort.Direction.DESC, "guidPath"));
-        return y9PersonRepository.findByDisabledAndNameContaining(false, name, pageable);
+        return y9PersonRepository.findByDisabledAndNameContaining(Boolean.FALSE, name, pageable);
     }
 
     @Override

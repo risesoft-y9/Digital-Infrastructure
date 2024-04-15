@@ -148,7 +148,7 @@ public class PositionApiImpl implements PositionApi {
         @RequestParam("parentId") @NotBlank String parentId) {
         Y9LoginUserHolder.setTenantId(tenantId);
 
-        List<Y9Position> y9PositionList = y9PositionService.listByParentId(parentId, false);
+        List<Y9Position> y9PositionList = y9PositionService.listByParentId(parentId, Boolean.FALSE);
         return Y9Result.success(Y9ModelConvertUtil.convert(y9PositionList, Position.class));
     }
 

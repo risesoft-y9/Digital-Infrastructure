@@ -80,19 +80,6 @@ public class JobController {
     }
 
     /**
-     * 保存或修改职位
-     *
-     * @param job 职位对象
-     * @return
-     */
-    @RiseLog(operationName = "保存或修改职位", operationType = OperationTypeEnum.MODIFY)
-    @PostMapping("/saveOrUpdate")
-    public Y9Result<Y9Job> saveOrUpdate(@Validated Y9Job job) {
-        Y9Job y9Job = y9JobService.saveOrUpdate(job);
-        return Y9Result.success(y9Job, "操作成功");
-    }
-
-    /**
      * 保存职位排序结果
      *
      * @param jobIds 职位id列表
@@ -106,6 +93,19 @@ public class JobController {
     }
 
     /**
+     * 保存或修改职位
+     *
+     * @param job 职位对象
+     * @return
+     */
+    @RiseLog(operationName = "保存或修改职位", operationType = OperationTypeEnum.MODIFY)
+    @PostMapping("/saveOrUpdate")
+    public Y9Result<Y9Job> saveOrUpdate(@Validated Y9Job job) {
+        Y9Job y9Job = y9JobService.saveOrUpdate(job);
+        return Y9Result.success(y9Job, "操作成功");
+    }
+
+    /**
      * 根据名称获取职位
      *
      * @param name 职位名称
@@ -115,7 +115,7 @@ public class JobController {
     @RiseLog(operationName = "根据名称获取职位", operationType = OperationTypeEnum.BROWSE)
     @GetMapping("/searchByName")
     public Y9Result<List<Y9Job>> searchByName(@RequestParam String name) {
-        List<Y9Job> y9Jobs = y9JobService.listByName(name);
+        List<Y9Job> y9Jobs = y9JobService.listByNameLike(name);
         return Y9Result.success(y9Jobs, "操作成功");
     }
 }

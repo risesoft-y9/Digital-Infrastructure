@@ -318,7 +318,7 @@ public class PersonApiImpl implements PersonApi {
         @RequestParam(name = "name", required = false) String name) {
         Y9LoginUserHolder.setTenantId(tenantId);
 
-        List<Y9Person> y9PersonList = y9PersonService.listByName(name, false);
+        List<Y9Person> y9PersonList = y9PersonService.listByNameLike(name, false);
         return Y9ModelConvertUtil.convert(y9PersonList, Person.class);
     }
 
@@ -368,7 +368,7 @@ public class PersonApiImpl implements PersonApi {
         @RequestParam(name = "name", required = false) String name) {
         Y9LoginUserHolder.setTenantId(tenantId);
 
-        List<Y9Person> y9PersonList = y9PersonService.listByName(name, false);
+        List<Y9Person> y9PersonList = y9PersonService.listByNameLike(name, false);
         List<Map<String, Object>> infoList = new ArrayList<>();
         if (!y9PersonList.isEmpty()) {
             for (Y9Person person : y9PersonList) {

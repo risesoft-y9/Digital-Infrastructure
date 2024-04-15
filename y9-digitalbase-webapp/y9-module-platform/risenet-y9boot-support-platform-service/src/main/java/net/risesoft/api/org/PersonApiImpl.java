@@ -218,7 +218,7 @@ public class PersonApiImpl implements PersonApi {
     public Y9Result<List<Person>> list(@RequestParam("tenantId") @NotBlank String tenantId) {
         Y9LoginUserHolder.setTenantId(tenantId);
 
-        List<Y9Person> y9PersonList = y9PersonService.list(false);
+        List<Y9Person> y9PersonList = y9PersonService.list(Boolean.FALSE);
         Collections.sort(y9PersonList);
         return Y9Result.success(Y9ModelConvertUtil.convert(y9PersonList, Person.class));
     }
@@ -237,7 +237,7 @@ public class PersonApiImpl implements PersonApi {
         @RequestParam("idType") @NotBlank String idType, @RequestParam("idNum") @NotBlank String idNum) {
         Y9LoginUserHolder.setTenantId(tenantId);
 
-        List<Y9Person> y9PersonList = y9PersonService.listByIdTypeAndIdNum(idType, idNum, false);
+        List<Y9Person> y9PersonList = y9PersonService.listByIdTypeAndIdNum(idType, idNum, Boolean.FALSE);
         return Y9Result.success(Y9ModelConvertUtil.convert(y9PersonList, Person.class));
     }
 
@@ -254,7 +254,7 @@ public class PersonApiImpl implements PersonApi {
         @RequestParam(name = "name", required = false) String name) {
         Y9LoginUserHolder.setTenantId(tenantId);
 
-        List<Y9Person> y9PersonList = y9PersonService.listByName(name, false);
+        List<Y9Person> y9PersonList = y9PersonService.listByNameLike(name, Boolean.FALSE);
         return Y9Result.success(Y9ModelConvertUtil.convert(y9PersonList, Person.class));
     }
 
@@ -271,7 +271,7 @@ public class PersonApiImpl implements PersonApi {
         @RequestParam("parentId") @NotBlank String parentId) {
         Y9LoginUserHolder.setTenantId(tenantId);
 
-        List<Y9Person> y9PersonList = y9PersonService.listByParentId(parentId, false);
+        List<Y9Person> y9PersonList = y9PersonService.listByParentId(parentId, Boolean.FALSE);
         return Y9Result.success(Y9ModelConvertUtil.convert(y9PersonList, Person.class));
     }
 
@@ -340,7 +340,7 @@ public class PersonApiImpl implements PersonApi {
         @RequestParam(name = "name", required = false) String name) {
         Y9LoginUserHolder.setTenantId(tenantId);
 
-        List<Y9Person> y9PersonList = y9PersonService.listByName(name, false);
+        List<Y9Person> y9PersonList = y9PersonService.listByNameLike(name, Boolean.FALSE);
         List<PersonInfoDTO> personInfoDTOList = new ArrayList<>();
         if (!y9PersonList.isEmpty()) {
             for (Y9Person person : y9PersonList) {
@@ -386,7 +386,7 @@ public class PersonApiImpl implements PersonApi {
         @RequestParam("parentId") @NotBlank String parentId) {
         Y9LoginUserHolder.setTenantId(tenantId);
 
-        List<Y9Person> y9PersonList = compositeOrgBaseService.listAllPersonsRecursionDownward(parentId, false);
+        List<Y9Person> y9PersonList = compositeOrgBaseService.listAllPersonsRecursionDownward(parentId, Boolean.FALSE);
         return Y9Result.success(Y9ModelConvertUtil.convert(y9PersonList, Person.class));
     }
 
@@ -404,7 +404,8 @@ public class PersonApiImpl implements PersonApi {
         @RequestParam("parentId") @NotBlank String parentId, @RequestParam("name") @NotBlank String name) {
         Y9LoginUserHolder.setTenantId(tenantId);
 
-        List<Y9Person> y9PersonList = compositeOrgBaseService.searchAllPersonsRecursionDownward(parentId, name, false);
+        List<Y9Person> y9PersonList =
+            compositeOrgBaseService.searchAllPersonsRecursionDownward(parentId, name, Boolean.FALSE);
         return Y9Result.success(Y9ModelConvertUtil.convert(y9PersonList, Person.class));
     }
 
@@ -519,7 +520,7 @@ public class PersonApiImpl implements PersonApi {
      *
      * @param tenantId 租户id
      * @param personId 人员id
-     * @param avator 人员头像路径
+     * @param avatar 人员头像路径
      * @return {@code Y9Result<Person>} 通用请求返回对象 - data 是人员对象
      * @since 9.6.0
      */

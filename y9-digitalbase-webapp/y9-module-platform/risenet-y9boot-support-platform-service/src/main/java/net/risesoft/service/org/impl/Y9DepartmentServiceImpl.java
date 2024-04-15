@@ -198,9 +198,10 @@ public class Y9DepartmentServiceImpl implements Y9DepartmentService {
     @Override
     public List<Y9Department> listBureau(String organizationId, Boolean disabled) {
         if (disabled == null) {
-            return y9DepartmentRepository.findByBureauAndGuidPathContainingOrderByTabIndexAsc(true, organizationId);
+            return y9DepartmentRepository.findByBureauAndGuidPathContainingOrderByTabIndexAsc(Boolean.TRUE,
+                organizationId);
         } else {
-            return y9DepartmentRepository.findByBureauAndGuidPathContainingAndDisabledOrderByTabIndexAsc(true,
+            return y9DepartmentRepository.findByBureauAndGuidPathContainingAndDisabledOrderByTabIndexAsc(Boolean.TRUE,
                 organizationId, disabled);
         }
     }
@@ -215,7 +216,7 @@ public class Y9DepartmentServiceImpl implements Y9DepartmentService {
     }
 
     @Override
-    public List<Y9Department> listByName(String name, Boolean disabled) {
+    public List<Y9Department> listByNameLike(String name, Boolean disabled) {
         if (disabled == null) {
             return y9DepartmentRepository.findByNameContainingOrderByTabIndexAsc(name);
         } else {

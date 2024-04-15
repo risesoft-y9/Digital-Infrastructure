@@ -98,7 +98,7 @@ public class OrgSyncApiImpl implements OrgSyncApi {
         }
         Date syncTime = new Date();
         SyncOrgUnits syncOrgUnits =
-            compositeOrgBaseService.getSyncOrgUnits(organizationId, OrgTypeEnum.ORGANIZATION, true);
+            compositeOrgBaseService.getSyncOrgUnits(organizationId, OrgTypeEnum.ORGANIZATION, Boolean.TRUE);
         MessageOrg<SyncOrgUnits> event =
             new MessageOrg<>(syncOrgUnits, Y9OrgEventTypeConst.SYNC, Y9LoginUserHolder.getTenantId());
         y9PublishedEventSyncHistoryService.saveOrUpdate(tenantId, appName, syncTime, 1);

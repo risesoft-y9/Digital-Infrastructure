@@ -295,7 +295,7 @@ public interface Y9PersonService {
      * @param disabled
      * @return List<ORGPerson>
      */
-    List<Y9Person> listByName(String name, Boolean disabled);
+    List<Y9Person> listByNameLike(String name, Boolean disabled);
 
     /**
      * 根据父节点id,获取本层级的岗位列表

@@ -151,7 +151,7 @@ public class DepartmentApiImpl implements DepartmentApi {
         @RequestParam("name") @NotBlank String name) {
         Y9LoginUserHolder.setTenantId(tenantId);
 
-        List<Y9Department> y9DepartmentList = y9DepartmentService.listByName(name, false);
+        List<Y9Department> y9DepartmentList = y9DepartmentService.listByNameLike(name, Boolean.FALSE);
         return Y9Result.success(Y9ModelConvertUtil.convert(y9DepartmentList, Department.class));
     }
 
@@ -168,7 +168,7 @@ public class DepartmentApiImpl implements DepartmentApi {
         @RequestParam("parentId") @NotBlank String parentId) {
         Y9LoginUserHolder.setTenantId(tenantId);
 
-        List<Y9Department> y9DepartmentList = y9DepartmentService.listByParentId(parentId, false);
+        List<Y9Department> y9DepartmentList = y9DepartmentService.listByParentId(parentId, Boolean.FALSE);
         return Y9Result.success(Y9ModelConvertUtil.convert(y9DepartmentList, Department.class));
     }
 

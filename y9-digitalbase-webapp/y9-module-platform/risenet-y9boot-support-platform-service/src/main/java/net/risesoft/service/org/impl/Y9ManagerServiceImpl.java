@@ -28,7 +28,6 @@ import net.risesoft.service.org.Y9ManagerService;
 import net.risesoft.service.setting.Y9SettingService;
 import net.risesoft.y9.Y9Context;
 import net.risesoft.y9.Y9LoginUserHolder;
-import net.risesoft.y9.configuration.Y9Properties;
 import net.risesoft.y9.exception.util.Y9ExceptionUtil;
 import net.risesoft.y9.pubsub.event.Y9EntityCreatedEvent;
 import net.risesoft.y9.pubsub.event.Y9EntityDeletedEvent;
@@ -53,7 +52,6 @@ public class Y9ManagerServiceImpl implements Y9ManagerService {
     private final Y9ManagerRepository y9ManagerRepository;
     private final CompositeOrgBaseManager compositeOrgBaseManager;
     private final Y9DepartmentManager y9DepartmentManager;
-    private final Y9Properties y9config;
     private final Y9SettingService y9SettingService;
 
     @Override
