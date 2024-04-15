@@ -61,11 +61,12 @@ body ::-webkit-input-placeholder {
     color: #4E546D;
 }
 
+body .layui-row {
+    height: 100% !important;
+}
+
 body .login {
     position: relative;
-    /*margin-top: 236px;*/
-    /*margin-right: 66px;*/
-    margin-top: 14%;
     margin-right: 3%;
     width: 504px;
     height: 534px;
@@ -73,18 +74,14 @@ body .login {
     float: right;
 }
 
-body .layui-row {
-    height: 100% !important;
-}
-
 body .login_form {
     border-radius: 10px 0px 0px 10px;
     background-color: transparent;
     padding-right: 53px;
+    margin-top: 45%;
 }
 
-
-body .login_form .login_title, body .login_fields, body .login_fields__submit {
+body .login_form .login_title, body .login_form .login_fields .login_dev {
     width: 350px;
 }
 
@@ -108,7 +105,7 @@ body .login_fields {
     float: left;
 }
 
-#fm1 {
+body .login_fields #fm1 {
     float: left;
 }
 
@@ -129,7 +126,7 @@ body .login_fields .form-label {
 
 body .login_fields input[type='text'], body .login_fields input[type='password'] {
     display: inline-block;
-    width: 255px;
+    width: 250px;
     height: 31px;
     vertical-align: middle;
     border: none;
