@@ -14,8 +14,8 @@
         width: 304px;
     }
 
-    body .login_form .login_title, body .login_fields, body .login_fields__submit {
-        width: 285px;
+    body .login_form .login_title, body .login_form .login_fields .login_dev {
+        width: 275px;
     }
 
     body .login_form {
@@ -23,13 +23,13 @@
     }
 
     body .login_fields input[type="text"], body .login_fields input[type="password"] {
-        width: 178px;
+        width: 175px;
     }
 }
 
 @media screen and (max-width: 1399px) {
-    body .bg_top_right {
-        height: 187px;
+    body .login_form {
+        margin-top: 30%;
     }
 
     body .login {
@@ -38,23 +38,23 @@
 }
 
 @media screen and (min-width: 1399px) and (max-width: 1590px) {
-    body .bg_top_right {
-        height: 215px;
-    }
+
 
     body .login {
         margin-right: 10px;
     }
 }
 
-@media screen and (min-width: 1590px) and (max-width: 1890px) {
-    body .bg_top_right {
-        height: 240px;
+
+@media screen and (min-width: 1670px) and (max-width: 1890px) {
+
+    body .login_form {
+        margin-top: 60%;
     }
 }
 
-@media screen and (min-width: 1670px) and (max-width: 1890px) {
-    body .bg_top_right {
-        height: 260px;
+@media screen and (min-width: 2040px) {
+    body .login_form {
+        margin-top: 75%;
     }
 }
