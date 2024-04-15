@@ -97,7 +97,7 @@ public interface Y9DepartmentService {
      * @param disabled
      * @return {@link List}<{@link Y9Department}>
      */
-    List<Y9Department> listByName(String name, Boolean disabled);
+    List<Y9Department> listByNameLike(String name, Boolean disabled);
 
     /**
      * 根据父节点id,获取本层级的部门列表

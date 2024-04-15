@@ -71,7 +71,7 @@ public class OrganizationApiImpl implements OrganizationApi {
     public Y9Result<List<Organization>> list(@RequestParam("tenantId") @NotBlank String tenantId) {
         Y9LoginUserHolder.setTenantId(tenantId);
 
-        List<Y9Organization> y9OrganizationList = orgOrganizationService.list(false, false);
+        List<Y9Organization> y9OrganizationList = orgOrganizationService.list(Boolean.FALSE, Boolean.FALSE);
         return Y9Result.success(Y9ModelConvertUtil.convert(y9OrganizationList, Organization.class));
     }
 
@@ -88,7 +88,7 @@ public class OrganizationApiImpl implements OrganizationApi {
         @RequestParam("organizationId") @NotBlank String organizationId) {
         Y9LoginUserHolder.setTenantId(tenantId);
 
-        List<Y9Department> y9DepartmentList = y9DepartmentService.listBureau(organizationId, false);
+        List<Y9Department> y9DepartmentList = y9DepartmentService.listBureau(organizationId, Boolean.FALSE);
         return Y9Result.success(Y9ModelConvertUtil.convert(y9DepartmentList, Department.class));
     }
 
@@ -105,7 +105,7 @@ public class OrganizationApiImpl implements OrganizationApi {
         @RequestParam("virtual") Boolean virtual) {
         Y9LoginUserHolder.setTenantId(tenantId);
 
-        List<Y9Organization> y9OrganizationList = orgOrganizationService.list(virtual, false);
+        List<Y9Organization> y9OrganizationList = orgOrganizationService.list(virtual, Boolean.FALSE);
         return Y9Result.success(Y9ModelConvertUtil.convert(y9OrganizationList, Organization.class));
     }
 

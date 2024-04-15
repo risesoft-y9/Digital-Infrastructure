@@ -274,7 +274,7 @@ public class DepartmentApiImpl implements DepartmentApi {
         @RequestParam("deptName") @NotBlank String deptName) {
         Y9LoginUserHolder.setTenantId(tenantId);
 
-        List<Y9Department> y9DepartmentList = y9DepartmentService.listByName(deptName, false);
+        List<Y9Department> y9DepartmentList = y9DepartmentService.listByNameLike(deptName, false);
         return Y9ModelConvertUtil.convert(y9DepartmentList, Department.class);
     }
 

@@ -151,7 +151,6 @@ public class Y9GroupServiceImpl implements Y9GroupService {
     }
 
     @Override
-    @Transactional(readOnly = true)
     public Y9Group getById(String id) {
         return y9GroupManager.getById(id);
     }
@@ -176,7 +175,7 @@ public class Y9GroupServiceImpl implements Y9GroupService {
     }
 
     @Override
-    public List<Y9Group> listByNameLike(String name, String dn) {
+    public List<Y9Group> listByNameLikeAndDn(String name, String dn) {
         return y9GroupRepository.findByNameContainingAndDnContainingOrderByTabIndex(name, dn);
     }
 

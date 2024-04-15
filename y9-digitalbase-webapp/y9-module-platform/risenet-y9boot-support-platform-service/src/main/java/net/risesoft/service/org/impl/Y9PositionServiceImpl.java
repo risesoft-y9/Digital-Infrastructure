@@ -228,13 +228,11 @@ public class Y9PositionServiceImpl implements Y9PositionService {
     }
 
     @Override
-    @Transactional(readOnly = true)
     public Y9Position getById(String id) {
         return y9PositionManager.getById(id);
     }
 
     @Override
-    @Transactional(readOnly = true)
     public Boolean hasPosition(String positionName, String personId) {
         List<Y9Position> list = listByPersonId(personId, Boolean.FALSE);
         boolean exist = false;
@@ -266,7 +264,7 @@ public class Y9PositionServiceImpl implements Y9PositionService {
     }
 
     @Override
-    public List<Y9Position> listByNameLike(String name, String dn) {
+    public List<Y9Position> listByNameLikeAndDn(String name, String dn) {
         return y9PositionRepository.findByNameContainingAndDnContainingOrDnContaining(name, OrgLevelConsts.UNIT + dn,
             OrgLevelConsts.ORGANIZATION + dn);
     }

@@ -101,7 +101,7 @@ public interface Y9GroupService {
      * @param dn dn
      * @return List<ORGGroup>
      */
-    List<Y9Group> listByNameLike(String name, String dn);
+    List<Y9Group> listByNameLikeAndDn(String name, String dn);
 
     /**
      * 根据父节点id,获取本层级的用户组列表

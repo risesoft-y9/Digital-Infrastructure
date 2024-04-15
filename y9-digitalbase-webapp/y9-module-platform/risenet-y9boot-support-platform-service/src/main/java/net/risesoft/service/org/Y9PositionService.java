@@ -151,7 +151,7 @@ public interface Y9PositionService {
      * @param dn dn
      * @return List<ORGPosition>
      */
-    List<Y9Position> listByNameLike(String name, String dn);
+    List<Y9Position> listByNameLikeAndDn(String name, String dn);
 
     /**
      * 根据父节点id,获取本层级的岗位列表

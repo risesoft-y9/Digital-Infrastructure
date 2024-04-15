@@ -142,7 +142,7 @@ public class Y9JobServiceImpl implements Y9JobService {
     }
 
     @Override
-    public List<Y9Job> listByName(String name) {
+    public List<Y9Job> listByNameLike(String name) {
         return y9JobRepository.findByNameContainingOrderByTabIndex(name);
     }
 

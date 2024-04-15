@@ -142,7 +142,7 @@ public class OrgUnitApiImpl implements OrgUnitApi {
         @RequestParam("orgUnitId") @NotBlank String orgUnitId, @RequestParam("treeType") OrgTreeTypeEnum treeType) {
         Y9LoginUserHolder.setTenantId(tenantId);
 
-        List<Y9OrgBase> y9OrgBaseList = compositeOrgBaseService.getTree(orgUnitId, treeType, false);
+        List<Y9OrgBase> y9OrgBaseList = compositeOrgBaseService.getTree(orgUnitId, treeType, Boolean.FALSE);
         return Y9Result.success(ModelConvertUtil.orgBaseToOrgUnit(y9OrgBaseList));
     }
 
@@ -157,7 +157,7 @@ public class OrgUnitApiImpl implements OrgUnitApi {
     public Y9Result<List<Organization>> treeRoot(@RequestParam("tenantId") @NotBlank String tenantId) {
         Y9LoginUserHolder.setTenantId(tenantId);
 
-        List<Y9Organization> y9OrganizationList = y9OrganizationService.list(false, false);
+        List<Y9Organization> y9OrganizationList = y9OrganizationService.list(Boolean.FALSE, Boolean.FALSE);
         return Y9Result.success(Y9ModelConvertUtil.convert(y9OrganizationList, Organization.class));
     }
 
@@ -175,7 +175,7 @@ public class OrgUnitApiImpl implements OrgUnitApi {
         @RequestParam("name") @NotBlank String name, @RequestParam("treeType") OrgTreeTypeEnum treeType) {
         Y9LoginUserHolder.setTenantId(tenantId);
 
-        List<Y9OrgBase> y9OrgBaseList = compositeOrgBaseService.treeSearch(name, treeType, false);
+        List<Y9OrgBase> y9OrgBaseList = compositeOrgBaseService.treeSearch(name, treeType, Boolean.FALSE);
         return Y9Result.success(ModelConvertUtil.orgBaseToOrgUnit(y9OrgBaseList));
     }
 
@@ -195,7 +195,7 @@ public class OrgUnitApiImpl implements OrgUnitApi {
         @RequestParam("dnName") @NotBlank String dnName) {
         Y9LoginUserHolder.setTenantId(tenantId);
 
-        List<Y9OrgBase> y9OrgBaseList = compositeOrgBaseService.treeSearch(name, treeType, dnName, false);
+        List<Y9OrgBase> y9OrgBaseList = compositeOrgBaseService.treeSearch(name, treeType, dnName, Boolean.FALSE);
         return Y9Result.success(ModelConvertUtil.orgBaseToOrgUnit(y9OrgBaseList));
     }
 }

@@ -129,7 +129,7 @@ public class GroupApiImpl implements GroupApi {
         @RequestParam("parentId") @NotBlank String parentId) {
         Y9LoginUserHolder.setTenantId(tenantId);
 
-        List<Y9Group> y9GroupList = y9GroupService.listByParentId(parentId, false);
+        List<Y9Group> y9GroupList = y9GroupService.listByParentId(parentId, Boolean.FALSE);
         return Y9Result.success(Y9ModelConvertUtil.convert(y9GroupList, Group.class));
     }
 

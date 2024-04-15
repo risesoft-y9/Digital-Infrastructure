@@ -74,7 +74,7 @@ public interface Y9JobService {
      * @param name 名字
      * @return {@link List}<{@link Y9Job}>
      */
-    List<Y9Job> listByName(String name);
+    List<Y9Job> listByNameLike(String name);
 
     /**
      * 按照tabindexs的顺序重新排序职位列表
