@@ -6,7 +6,7 @@ import org.springframework.boot.web.servlet.FilterRegistrationBean;
 import org.springframework.cloud.context.config.annotation.RefreshScope;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.Primary;
+import org.springframework.context.annotation.ScopedProxyMode;
 import org.springframework.core.Ordered;
 
 import lombok.extern.slf4j.Slf4j;
@@ -16,7 +16,7 @@ import net.risesoft.filters.CorsFilter;
 import net.risesoft.filters.CsrfFilter;
 import net.risesoft.filters.SqlInjectionFilter;
 import net.risesoft.filters.XssFilter;
-import net.risesoft.y9.configuration.Y9Properties;
+import net.risesoft.y9.configuration.feature.security.Y9SecurityProperties;
 import net.risesoft.y9.configuration.feature.security.api.Y9ApiProperties;
 import net.risesoft.y9.json.Y9JsonUtil;
 
@@ -26,18 +26,17 @@ import net.risesoft.y9.json.Y9JsonUtil;
 public class Y9SecurityConfiguration {
 
     @Bean
-    @RefreshScope
-    @Primary
-    @ConfigurationProperties(prefix = "y9")
-    public Y9Properties y9Properties() {
-        return new Y9Properties();
+    @RefreshScope(proxyMode = ScopedProxyMode.DEFAULT)
+    @ConfigurationProperties(prefix = "y9.feature.security", ignoreInvalidFields = true)
+    public Y9SecurityProperties y9SecurityProperties() {
+        return new Y9SecurityProperties();
     }
 
     @Bean
     @ConditionalOnProperty(name = "y9.feature.security.cors.enabled", havingValue = "true", matchIfMissing = true)
-    public FilterRegistrationBean<CorsFilter> corsFilter(Y9Properties y9Properties) {
+    public FilterRegistrationBean<CorsFilter> corsFilter(Y9SecurityProperties y9SecurityProperties) {
         LOGGER.info("CorsFilter init. Configuration:{}",
-            Y9JsonUtil.writeValueAsString(y9Properties.getFeature().getSecurity().getCors()));
+            Y9JsonUtil.writeValueAsString(y9SecurityProperties.getCors()));
         FilterRegistrationBean<CorsFilter> filterBean = new FilterRegistrationBean<>();
         filterBean.setFilter(new CorsFilter());
         filterBean.setOrder(Ordered.HIGHEST_PRECEDENCE);
@@ -46,9 +45,9 @@ public class Y9SecurityConfiguration {
 
     @Bean
     @ConditionalOnProperty(name = "y9.feature.security.csrf.enabled", havingValue = "true", matchIfMissing = true)
-    public FilterRegistrationBean<CsrfFilter> csrfFilter(Y9Properties y9Properties) {
+    public FilterRegistrationBean<CsrfFilter> csrfFilter(Y9SecurityProperties y9SecurityProperties) {
         LOGGER.info("CSRFFilter init. Configuration:{}",
-            Y9JsonUtil.writeValueAsString(y9Properties.getFeature().getSecurity().getCsrf()));
+            Y9JsonUtil.writeValueAsString(y9SecurityProperties.getCsrf()));
 
         FilterRegistrationBean<CsrfFilter> filterBean = new FilterRegistrationBean<>();
         filterBean.setFilter(new CsrfFilter());
@@ -60,9 +59,9 @@ public class Y9SecurityConfiguration {
 
     @Bean
     @ConditionalOnProperty(name = "y9.feature.security.xss.enabled", havingValue = "true", matchIfMissing = true)
-    public FilterRegistrationBean<XssFilter> xssFilter(Y9Properties y9Properties) {
+    public FilterRegistrationBean<XssFilter> xssFilter(Y9SecurityProperties y9SecurityProperties) {
         LOGGER.info("XSSFilter init. Configuration:{}",
-            Y9JsonUtil.writeValueAsString(y9Properties.getFeature().getSecurity().getXss()));
+            Y9JsonUtil.writeValueAsString(y9SecurityProperties.getXss()));
 
         FilterRegistrationBean<XssFilter> filterBean = new FilterRegistrationBean<>();
         filterBean.setFilter(new XssFilter());
@@ -74,12 +73,12 @@ public class Y9SecurityConfiguration {
 
     @Bean
     @ConditionalOnProperty(name = "y9.feature.security.api.token-required", havingValue = "true")
-    public FilterRegistrationBean<ApiTokenFilter> apiTokenFilter(Y9Properties y9Properties) {
-        Y9ApiProperties y9ApiProperties = y9Properties.getFeature().getSecurity().getApi();
+    public FilterRegistrationBean<ApiTokenFilter> apiTokenFilter(Y9SecurityProperties y9SecurityProperties) {
+        Y9ApiProperties y9ApiProperties = y9SecurityProperties.getApi();
         LOGGER.info("ApiTokenFilter init. Configuration:{}", Y9JsonUtil.writeValueAsString(y9ApiProperties));
 
         FilterRegistrationBean<ApiTokenFilter> filterBean = new FilterRegistrationBean<>();
-        filterBean.setFilter(new ApiTokenFilter(y9Properties));
+        filterBean.setFilter(new ApiTokenFilter(y9SecurityProperties));
         filterBean.setAsyncSupported(false);
         filterBean.setOrder(Ordered.HIGHEST_PRECEDENCE + 3);
         filterBean.addUrlPatterns(y9ApiProperties.getUrlPatterns().toArray(new String[0]));
@@ -88,16 +87,16 @@ public class Y9SecurityConfiguration {
 
     @Bean
     @ConditionalOnProperty(name = "y9.feature.security.sqlIn.enabled", havingValue = "true")
-    public FilterRegistrationBean<SqlInjectionFilter> sqlInjectionFilter(Y9Properties y9Properties) {
+    public FilterRegistrationBean<SqlInjectionFilter> sqlInjectionFilter(Y9SecurityProperties y9SecurityProperties) {
         LOGGER.info("SQLInFilter init. Configuration:{}",
-            Y9JsonUtil.writeValueAsString(y9Properties.getFeature().getSecurity().getSqlIn()));
+            Y9JsonUtil.writeValueAsString(y9SecurityProperties.getSqlIn()));
 
         FilterRegistrationBean<SqlInjectionFilter> filterBean = new FilterRegistrationBean<>();
         filterBean.setFilter(new SqlInjectionFilter());
         filterBean.setAsyncSupported(false);
         filterBean.setOrder(Ordered.HIGHEST_PRECEDENCE + 4);
         filterBean.addUrlPatterns("/*");
-        filterBean.addInitParameter("skip", y9Properties.getFeature().getSecurity().getSqlIn().getSkipUrl());
+        filterBean.addInitParameter("skip", y9SecurityProperties.getSqlIn().getSkipUrl());
         return filterBean;
     }
 

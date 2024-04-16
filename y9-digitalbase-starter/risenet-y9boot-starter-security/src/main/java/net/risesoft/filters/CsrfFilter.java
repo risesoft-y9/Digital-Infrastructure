@@ -14,7 +14,7 @@ import javax.servlet.http.HttpServletResponse;
 import org.apache.commons.lang3.StringUtils;
 
 import net.risesoft.y9.Y9Context;
-import net.risesoft.y9.configuration.Y9Properties;
+import net.risesoft.y9.configuration.feature.security.Y9SecurityProperties;
 
 public class CsrfFilter implements Filter {
 
@@ -34,8 +34,8 @@ public class CsrfFilter implements Filter {
     }
 
     private boolean isAcceptedReferer(String referer) {
-        Y9Properties properties = Y9Context.getBean(Y9Properties.class);
-        List<String> acceptedRefererList = properties.getFeature().getSecurity().getCsrf().getAcceptedReferer();
+        Y9SecurityProperties y9SecurityProperties = Y9Context.getBean(Y9SecurityProperties.class);
+        List<String> acceptedRefererList = y9SecurityProperties.getCsrf().getAcceptedReferer();
         return acceptedRefererList.stream().anyMatch(referer::contains);
     }
 
