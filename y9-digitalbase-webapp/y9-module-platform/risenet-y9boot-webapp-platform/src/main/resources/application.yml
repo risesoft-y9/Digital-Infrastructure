@@ -154,13 +154,13 @@ y9:
             systemName: riseplatform
             position-name-pattern: "{0}（{1}）"
             managerModifyPasswordCycle: 7
+            userDefaultPassword: Risesoft@2024
     service:
         log:
             directUrl: http://localhost:7055
     common:
         cacheEnabled: true
         kafkaEnabled: true
-        defaultPassword: Risesoft@2022
         logBaseUrl: http://localhost:7055/log
         orgBaseUrl: http://localhost:7055/platform
     feature:
