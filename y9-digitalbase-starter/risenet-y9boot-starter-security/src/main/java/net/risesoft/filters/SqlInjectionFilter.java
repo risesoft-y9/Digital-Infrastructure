@@ -24,7 +24,7 @@ import org.springframework.http.HttpStatus;
 import lombok.extern.slf4j.Slf4j;
 
 import net.risesoft.y9.Y9Context;
-import net.risesoft.y9.configuration.Y9Properties;
+import net.risesoft.y9.configuration.feature.security.Y9SecurityProperties;
 import net.risesoft.y9.json.Y9JsonUtil;
 
 /**
@@ -185,7 +185,7 @@ public class SqlInjectionFilter implements Filter {
      */
     private boolean isParamIgnorable(String paramName) {
         List<String> ignoreParamList =
-            Y9Context.getBean(Y9Properties.class).getFeature().getSecurity().getSqlIn().getIgnoreParam();
+            Y9Context.getBean(Y9SecurityProperties.class).getSqlIn().getIgnoreParam();
         return ignoreParamList.stream().anyMatch(paramName::equals);
     }
 

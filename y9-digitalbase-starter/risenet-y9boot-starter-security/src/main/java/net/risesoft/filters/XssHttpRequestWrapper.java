@@ -21,7 +21,7 @@ import org.springframework.web.util.HtmlUtils;
 import lombok.extern.slf4j.Slf4j;
 
 import net.risesoft.y9.Y9Context;
-import net.risesoft.y9.configuration.Y9Properties;
+import net.risesoft.y9.configuration.feature.security.Y9SecurityProperties;
 
 @Slf4j
 public class XssHttpRequestWrapper extends HttpServletRequestWrapper {
@@ -146,7 +146,7 @@ public class XssHttpRequestWrapper extends HttpServletRequestWrapper {
      */
     private boolean isParamIgnorable(String paramName) {
         List<String> ignoreParamList =
-            Y9Context.getBean(Y9Properties.class).getFeature().getSecurity().getXss().getIgnoreParam();
+            Y9Context.getBean(Y9SecurityProperties.class).getXss().getIgnoreParam();
         return ignoreParamList.stream().anyMatch(paramName::equals);
     }
 }

@@ -14,7 +14,7 @@ import org.springframework.web.cors.DefaultCorsProcessor;
 import org.springframework.web.filter.OncePerRequestFilter;
 
 import net.risesoft.y9.Y9Context;
-import net.risesoft.y9.configuration.Y9Properties;
+import net.risesoft.y9.configuration.feature.security.Y9SecurityProperties;
 import net.risesoft.y9.configuration.feature.security.cors.Y9CorsProperties;
 
 /**
@@ -29,12 +29,17 @@ public class CorsFilter extends OncePerRequestFilter {
     private final CorsProcessor processor = new DefaultCorsProcessor();
     private final CorsConfiguration corsConfiguration = new CorsConfiguration();
 
+    private Y9CorsProperties y9CorsProperties = null;
+
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
         throws ServletException, IOException {
 
-        Y9CorsProperties corsProperties = Y9Context.getBean(Y9Properties.class).getFeature().getSecurity().getCors();
-        applyLatestCorsProperties(corsConfiguration, corsProperties);
+        Y9CorsProperties corsProperties = Y9Context.getBean(Y9SecurityProperties.class).getCors();
+        if (y9CorsProperties != corsProperties) {
+            y9CorsProperties = corsProperties;
+            applyLatestCorsProperties(corsConfiguration, corsProperties);
+        }
         
         boolean isValid = this.processor.processRequest(corsConfiguration, request, response);
         if (!isValid || CorsUtils.isPreFlightRequest(request)) {
