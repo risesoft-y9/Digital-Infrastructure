@@ -72,7 +72,6 @@ import net.risesoft.util.Y9PlatformUtil;
 import net.risesoft.util.Y9PublishServiceUtil;
 import net.risesoft.y9.Y9Context;
 import net.risesoft.y9.Y9LoginUserHolder;
-import net.risesoft.y9.configuration.Y9Properties;
 import net.risesoft.y9.exception.util.Y9ExceptionUtil;
 import net.risesoft.y9.json.Y9JsonUtil;
 import net.risesoft.y9.pubsub.constant.Y9OrgEventTypeConst;
@@ -122,7 +121,6 @@ public class Y9PersonServiceImpl implements Y9PersonService {
     private final Y9PositionManager y9PositionManager;
     private final Y9PersonsToPositionsManager y9PersonsToPositionsManager;
 
-    private final Y9Properties y9config;
     private final Y9SettingService y9SettingService;
 
     public Y9PersonServiceImpl(Y9PersonRepository y9PersonRepository,
@@ -131,9 +129,8 @@ public class Y9PersonServiceImpl implements Y9PersonService {
         Y9PersonsToPositionsRepository y9PersonsToPositionsRepository, Y9DepartmentRepository y9DepartmentRepository,
         Y9GroupRepository y9GroupRepository, Y9PositionRepository y9PositionRepository,
         Y9UserRepository y9UserRepository, Y9PersonExtManager y9PersonExtManager,
-        CompositeOrgBaseManager compositeOrgBaseManager, Y9Properties y9config,
-        Y9OrgBasesToRolesRepository y9OrgBasesToRolesRepository, Y9AuthorizationRepository y9AuthorizationRepository,
-        Y9DepartmentPropRepository y9DepartmentPropRepository,
+        CompositeOrgBaseManager compositeOrgBaseManager, Y9OrgBasesToRolesRepository y9OrgBasesToRolesRepository,
+        Y9AuthorizationRepository y9AuthorizationRepository, Y9DepartmentPropRepository y9DepartmentPropRepository,
         Y9PersonToResourceAndAuthorityRepository y9PersonToResourceAndAuthorityRepository,
         Y9PersonToRoleRepository y9PersonToRoleRepository, Y9PersonsToPositionsManager y9PersonsToPositionsManager,
         Y9PositionManager y9PositionManager, Y9PersonManager y9PersonManager, Y9SettingService y9SettingService) {
@@ -147,7 +144,6 @@ public class Y9PersonServiceImpl implements Y9PersonService {
         this.y9UserRepository = y9UserRepository;
         this.y9PersonExtManager = y9PersonExtManager;
         this.compositeOrgBaseManager = compositeOrgBaseManager;
-        this.y9config = y9config;
         this.y9OrgBasesToRolesRepository = y9OrgBasesToRolesRepository;
         this.y9AuthorizationRepository = y9AuthorizationRepository;
         this.y9DepartmentPropRepository = y9DepartmentPropRepository;
