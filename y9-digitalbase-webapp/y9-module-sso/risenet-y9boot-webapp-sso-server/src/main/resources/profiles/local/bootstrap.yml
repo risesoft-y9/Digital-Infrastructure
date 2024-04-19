@@ -7,11 +7,11 @@ spring:
         enabled: true
         nacos:
             config:
-                enabled: true
+                enabled: false
                 group: DEFAULT_GROUP
                 namespace: test
                 server-addr: 127.0.0.1:8848
                 username: nacos
                 password: nacos
                 extension-configs:
-                    - dataId: sso.yml
+                    -   dataId: sso.yml
