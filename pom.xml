@@ -108,22 +108,23 @@
         <spring-boot.version>3.2.4</spring-boot.version>
         <spring-cloud.version>2023.0.1</spring-cloud.version>
 
-        <aspectj.version>1.9.21.2</aspectj.version>
+        <aspectj.version>1.9.22</aspectj.version>
         <guava.version>33.1.0-jre</guava.version>
 
-        <fastjson.version>2.0.47</fastjson.version>
+        <fastjson.version>2.0.49</fastjson.version>
 
         <commons-lang3.version>3.13.0</commons-lang3.version>
         <commons-io.version>2.13.0</commons-io.version>
         <commons-net.version>3.10.0</commons-net.version>
         <commons-pool2.version>2.12.0</commons-pool2.version>
 
-        <javers.version>7.4.1</javers.version>
+        <javers.version>7.4.2</javers.version>
         <org-dom4j.version>2.1.4</org-dom4j.version>
-        <oshi.version>6.5.0</oshi.version>
+        <oshi.version>6.6.0</oshi.version>
         <lombok.version>1.18.32</lombok.version>
 
-        <liquibase.version>4.26.0</liquibase.version>
+        <liquibase.version>4.27.0</liquibase.version>
+        <shedlock.version>5.13.0</shedlock.version>
     </properties>
 
     <dependencyManagement>
@@ -269,12 +270,12 @@
             <dependency>
                 <groupId>net.javacrumbs.shedlock</groupId>
                 <artifactId>shedlock-spring</artifactId>
-                <version>5.12.0</version>
+                <version>${shedlock.version}</version>
             </dependency>
             <dependency>
                 <groupId>net.javacrumbs.shedlock</groupId>
                 <artifactId>shedlock-provider-redis-spring</artifactId>
-                <version>5.12.0</version>
+                <version>${shedlock.version}</version>
             </dependency>
         </dependencies>
     </dependencyManagement>
@@ -285,7 +286,7 @@
             <plugin>
                 <groupId>io.github.git-commit-id</groupId>
                 <artifactId>git-commit-id-maven-plugin</artifactId>
-                <version>7.0.0</version>
+                <version>8.0.2</version>
                 <executions>
                     <execution>
                         <id>get-the-git-infos</id>
@@ -307,7 +308,7 @@
             <plugin>
                 <groupId>org.codehaus.mojo</groupId>
                 <artifactId>buildnumber-maven-plugin</artifactId>
-                <version>3.1.0</version>
+                <version>3.2.0</version>
                 <executions>
                     <execution>
                         <goals>
@@ -328,7 +329,7 @@
                 <plugin>
                     <groupId>org.apache.maven.plugins</groupId>
                     <artifactId>maven-compiler-plugin</artifactId>
-                    <version>3.11.0</version>
+                    <version>3.13.0</version>
                     <configuration>
                         <annotationProcessorPaths>
                             <path>
@@ -354,7 +355,7 @@
                 <plugin>
                     <groupId>org.apache.maven.plugins</groupId>
                     <artifactId>maven-jar-plugin</artifactId>
-                    <version>3.3.0</version>
+                    <version>3.4.0</version>
                     <configuration>
                         <archive>
                             <manifest>
@@ -419,7 +420,7 @@
                 <plugin>
                     <groupId>org.graalvm.buildtools</groupId>
                     <artifactId>native-maven-plugin</artifactId>
-                    <version>0.9.28</version>
+                    <version>0.10.1</version>
                     <extensions>true</extensions>
                     <configuration>
                         <classesDirectory>${project.build.outputDirectory}</classesDirectory>
@@ -440,7 +441,7 @@
                 <plugin>
                     <groupId>org.apache.maven.plugins</groupId>
                     <artifactId>maven-javadoc-plugin</artifactId>
-                    <version>3.5.0</version>
+                    <version>3.6.3</version>
                     <configuration>
                         <charset>UTF-8</charset>
                         <encoding>UTF-8</encoding>
@@ -458,7 +459,7 @@
                 <plugin>
                     <groupId>org.apache.maven.plugins</groupId>
                     <artifactId>maven-source-plugin</artifactId>
-                    <version>3.3.0</version>
+                    <version>3.3.1</version>
                     <executions>
                         <execution>
                             <id>attach-sources</id>
@@ -471,7 +472,7 @@
                 <plugin>
                     <groupId>org.apache.maven.plugins</groupId>
                     <artifactId>maven-dependency-plugin</artifactId>
-                    <version>3.6.0</version>
+                    <version>3.6.1</version>
                     <executions>
                         <execution>
                             <phase>package</phase>
@@ -490,7 +491,7 @@
                     <!--<groupId>com.nickwongdev</groupId>-->
                     <groupId>dev.aspectj</groupId>
                     <artifactId>aspectj-maven-plugin</artifactId>
-                    <version>1.13.1</version>
+                    <version>1.14</version>
                     <dependencies>
                         <dependency>
                             <groupId>org.aspectj</groupId>
@@ -550,7 +551,7 @@
                 <plugin>
                     <groupId>org.apache.maven.plugins</groupId>
                     <artifactId>maven-release-plugin</artifactId>
-                    <version>3.0.0</version>
+                    <version>3.0.1</version>
                     <configuration>
                         <useReleaseProfile>false</useReleaseProfile>
                         <preparationGoals>clean install</preparationGoals>
@@ -586,7 +587,7 @@
                 <plugin>
                     <groupId>com.ly.smart-doc</groupId>
                     <artifactId>smart-doc-maven-plugin</artifactId>
-                    <version>3.0.0</version>
+                    <version>3.0.3</version>
                     <configuration>
                         <configFile>./src/main/resources/smart-doc.json</configFile>
                         <excludes>
@@ -609,7 +610,7 @@
                 <plugin>
                     <groupId>com.google.cloud.tools</groupId>
                     <artifactId>jib-maven-plugin</artifactId>
-                    <version>3.4.0</version>
+                    <version>3.4.2</version>
                     <configuration>
                         <skip>false</skip>
                         <from>
