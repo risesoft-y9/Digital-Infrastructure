@@ -75,6 +75,12 @@
 
 @media screen and (min-width: 2040px) {
     body .login_form {
+        margin-top: 85%;
+    }
+}
+
+@media screen and (min-width: 2500px) {
+    body .login_form {
         margin-top: 620px;
     }
 }
