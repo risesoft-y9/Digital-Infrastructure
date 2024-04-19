@@ -61,7 +61,7 @@ body .layui-row {
 
 body .login {
     position: relative;
-    margin-right: 3%;
+    margin-right: 6%;
     width: 480px;
     height: 534px;
     background-color: transparent;
@@ -72,7 +72,7 @@ body .login_form {
     border-radius: 10px 0px 0px 10px;
     background-color: transparent;
     padding-right: 53px;
-    margin-top: 62%;
+    margin-top: 80%;
 }
 
 body .login_form .login_title, body .login_form .login_fields .login_dev {
@@ -82,13 +82,21 @@ body .login_form .login_title, body .login_form .login_fields .login_dev {
 body .login_form .login_title {
     color: #FFFFFF;
     font-family: AaBoruokaishuBold;
-    font-size: 38px;
+    font-size: 26px;
     font-style: normal;
     font-weight: 400;
     line-height: normal;
     letter-spacing: -3.8px;
     text-align: center;
-    margin-bottom: 59px;
+    margin-bottom: 38px;
+}
+
+body .login_form .login_title .tilte {
+    color: #FFFFFF;
+    font-family: AaBoruokaishuBold;
+    font-size: 24px;
+    font-weight: normal;
+    margin-left: 3px;
 }
 
 
@@ -105,7 +113,7 @@ body .login_fields #fm1 {
 body .login_fields .form-label {
     color: #FFFFFF;
     font-family: AaBoruokaishuBold;
-    font-size: 24px;
+    font-size: 22px;
     font-style: normal;
     font-weight: 400;
     line-height: normal;
@@ -129,7 +137,7 @@ body .login_fields input[type='text'], body .login_fields input[type='password']
     color: #FFFFFF !important;
     border-bottom: 2px solid #FFFFFF;
     font-family: aaBoruokaishuBold-all;
-    font-size: 24px;
+    font-size: 22px;
     font-style: normal;
     font-weight: 400;
     line-height: normal;
@@ -161,6 +169,8 @@ body .login_fields__submit {
     background: linear-gradient(90deg, #F6E25C 11.23%, #FFB423 113.13%);
     margin-top: 5px;
     cursor: pointer;
+    width: 210px;
+    float: right;
 }
 
 
@@ -172,12 +182,12 @@ body .login_fields__submit input {
     flex-shrink: 0;
     color: #C1261F;
     font-family: AaBoruokaishuBold;
-    font-size: 28px;
+    font-size: 22px;
     font-style: normal;
     font-weight: 400;
     line-height: normal;
     width: 100%;
-    height: 54px;
+    height: 40px;
     background: transparent;
     cursor: pointer;
     justify-content: center;
@@ -191,15 +201,14 @@ body .login_fields__submit:hover {
     cursor: pointer;
 }
 
-
 body .login_fields_remember_password {
     color: #FFFFFF;
     font-family: "AaBoruokaishuBold";
-    font-size: 18px;
+    font-size: 16px;
     font-style: normal;
     font-weight: 400;
     margin-top: 15px;
-
+    float: left;
 }
 
 body .login_fields_remember_password .left {
@@ -229,13 +238,13 @@ input[type="checkbox"]:checked {
 
 body .noticeInfo {
     padding-bottom: 10px;
-    margin-top: 21px;
+    margin-top: 28px;
     color: #FFFFFF;
 }
 
 body .noticeInfo .title {
     font-family: AaBoruokaishuBold;
-    font-size: 22px;
+    font-size: 20px;
     font-style: normal;
     font-weight: 400;
     line-height: normal;
@@ -251,11 +260,11 @@ body .noticeInfo .info {
 
 body .noticeInfo .info li {
     font-family: AaBoruokaishuBold;
-    font-size: 18px;
+    font-size: 14px;
     font-style: normal;
     font-weight: 400;
-    line-height: 28px; /* 155.556% */
-    letter-spacing: -1.8px;
+    line-height: 24px; /* 155.556% */
+    letter-spacing: -10%;
     list-style-type: decimal;
 
 }
