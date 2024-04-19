@@ -10,25 +10,24 @@
 
     body .login {
         margin-right: 0px;
-        width: 304px;
+        width: 400px;
     }
 
     body .login_form {
         padding-right: 23px;
     }
 
-    body .login_form .login_title, body .login_form .login_fields .login_dev {
-        width: 275px;
+    body .login_form .login_title {
+        margin-bottom: 20px;
 
     }
 
-    body .login_form .login_title {
-        margin-bottom: 30px;
-
+    body .login_fields__user, body .login_fields__password {
+        padding-bottom: 20px;
     }
 
     body .login_fields input[type="text"], body .login_fields input[type="password"] {
-        width: 178px;
+        /*width: 178px;*/
     }
 
 }
@@ -45,7 +44,7 @@
     }
 
     body .login_form .login_title {
-        margin-bottom: 40px;
+        margin-bottom: 30px;
 
     }
 }
@@ -54,31 +53,29 @@
 
     body .login {
         margin-right: 10px;
-        width: 440px;
     }
 
+    body .login_form {
+        margin-top: 48%;
+    }
 
 }
 
 @media screen and (min-width: 1590px) and (max-width: 1890px) {
-    body .bg_top_right {
-        height: 240px;
+    body .login_form {
+        margin-top: 55%;
     }
 }
 
 @media screen and (min-width: 1670px) and (max-width: 1890px) {
-    body .bg_top_right {
-        height: 260px;
-    }
-
     body .login_form {
-        margin-top: 80%;
+        margin-top: 75%;
     }
 }
 
 @media screen and (min-width: 2040px) {
     body .login_form {
-        margin-top: 80%;
+        margin-top: 620px;
     }
 }
 
