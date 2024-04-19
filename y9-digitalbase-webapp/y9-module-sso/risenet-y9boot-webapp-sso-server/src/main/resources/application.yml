@@ -247,6 +247,8 @@ spring:
         template-resolver-order: 100
     cloud:
         nacos:
+            config:
+                enabled: false
             discovery:
                 enabled: false
 y9:
