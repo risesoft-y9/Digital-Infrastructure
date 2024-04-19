@@ -60,19 +60,20 @@ body .layui-row {
 }
 
 body .login {
-    position: relative;
-    margin-right: 6%;
-    width: 480px;
-    height: 534px;
+    width: 365px;
+    height: 366px !important;
     background-color: transparent;
     float: right;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    margin-left: 255px;
+    margin-top: -70px;
 }
 
 body .login_form {
     border-radius: 10px 0px 0px 10px;
     background-color: transparent;
-    padding-right: 53px;
-    margin-top: 80%;
 }
 
 body .login_form .login_title, body .login_form .login_fields .login_dev {
@@ -253,9 +254,9 @@ body .noticeInfo .title {
 
 
 body .noticeInfo .info {
-    padding-top: 9px;
+    padding-top: 3px;
     list-style-type: decimal;
-    padding-left: 22px;
+    padding-left: 15px;
 }
 
 body .noticeInfo .info li {
@@ -263,8 +264,7 @@ body .noticeInfo .info li {
     font-size: 14px;
     font-style: normal;
     font-weight: 400;
-    line-height: 24px; /* 155.556% */
-    letter-spacing: -10%;
+    line-height: 24px;
     list-style-type: decimal;
 
 }
