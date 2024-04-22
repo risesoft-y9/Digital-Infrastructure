@@ -1,0 +1,1315 @@
+{
+  "supplemental": {
+    "version": {
+      "_number": "$Revision: 13274 $",
+      "_unicodeVersion": "10.0.0",
+      "_cldrVersion": "32.0.1"
+    },
+    "telephoneCodeData": {
+      "001": [
+        {
+          "telephoneCountryCode": "388"
+        },
+        {
+          "telephoneCountryCode": "800"
+        },
+        {
+          "telephoneCountryCode": "808"
+        },
+        {
+          "telephoneCountryCode": "870"
+        },
+        {
+          "telephoneCountryCode": "871"
+        },
+        {
+          "telephoneCountryCode": "872"
+        },
+        {
+          "telephoneCountryCode": "873"
+        },
+        {
+          "telephoneCountryCode": "874"
+        },
+        {
+          "telephoneCountryCode": "878"
+        },
+        {
+          "telephoneCountryCode": "881"
+        },
+        {
+          "telephoneCountryCode": "882"
+        },
+        {
+          "telephoneCountryCode": "883"
+        },
+        {
+          "telephoneCountryCode": "888"
+        },
+        {
+          "telephoneCountryCode": "979"
+        },
+        {
+          "telephoneCountryCode": "991"
+        }
+      ],
+      "AC": [
+        {
+          "telephoneCountryCode": "247"
+        }
+      ],
+      "AD": [
+        {
+          "telephoneCountryCode": "376"
+        }
+      ],
+      "AE": [
+        {
+          "telephoneCountryCode": "971"
+        }
+      ],
+      "AF": [
+        {
+          "telephoneCountryCode": "93"
+        }
+      ],
+      "AG": [
+        {
+          "telephoneCountryCode": "1"
+        }
+      ],
+      "AI": [
+        {
+          "telephoneCountryCode": "1"
+        }
+      ],
+      "AL": [
+        {
+          "telephoneCountryCode": "355"
+        }
+      ],
+      "AM": [
+        {
+          "telephoneCountryCode": "374"
+        }
+      ],
+      "AO": [
+        {
+          "telephoneCountryCode": "244"
+        }
+      ],
+      "AQ": [
+        {
+          "telephoneCountryCode": "672"
+        }
+      ],
+      "AR": [
+        {
+          "telephoneCountryCode": "54"
+        }
+      ],
+      "AS": [
+        {
+          "telephoneCountryCode": "1"
+        }
+      ],
+      "AT": [
+        {
+          "telephoneCountryCode": "43"
+        }
+      ],
+      "AU": [
+        {
+          "telephoneCountryCode": "61"
+        }
+      ],
+      "AW": [
+        {
+          "telephoneCountryCode": "297"
+        }
+      ],
+      "AX": [
+        {
+          "telephoneCountryCode": "358"
+        }
+      ],
+      "AZ": [
+        {
+          "telephoneCountryCode": "994"
+        }
+      ],
+      "BA": [
+        {
+          "telephoneCountryCode": "387"
+        }
+      ],
+      "BB": [
+        {
+          "telephoneCountryCode": "1"
+        }
+      ],
+      "BD": [
+        {
+          "telephoneCountryCode": "880"
+        }
+      ],
+      "BE": [
+        {
+          "telephoneCountryCode": "32"
+        }
+      ],
+      "BF": [
+        {
+          "telephoneCountryCode": "226"
+        }
+      ],
+      "BG": [
+        {
+          "telephoneCountryCode": "359"
+        }
+      ],
+      "BH": [
+        {
+          "telephoneCountryCode": "973"
+        }
+      ],
+      "BI": [
+        {
+          "telephoneCountryCode": "257"
+        }
+      ],
+      "BJ": [
+        {
+          "telephoneCountryCode": "229"
+        }
+      ],
+      "BL": [
+        {
+          "telephoneCountryCode": "590"
+        }
+      ],
+      "BM": [
+        {
+          "telephoneCountryCode": "1"
+        }
+      ],
+      "BN": [
+        {
+          "telephoneCountryCode": "673"
+        }
+      ],
+      "BO": [
+        {
+          "telephoneCountryCode": "591"
+        }
+      ],
+      "BQ": [
+        {
+          "telephoneCountryCode": "599"
+        }
+      ],
+      "BR": [
+        {
+          "telephoneCountryCode": "55"
+        }
+      ],
+      "BS": [
+        {
+          "telephoneCountryCode": "1"
+        }
+      ],
+      "BT": [
+        {
+          "telephoneCountryCode": "975"
+        }
+      ],
+      "BW": [
+        {
+          "telephoneCountryCode": "267"
+        }
+      ],
+      "BY": [
+        {
+          "telephoneCountryCode": "375"
+        }
+      ],
+      "BZ": [
+        {
+          "telephoneCountryCode": "501"
+        }
+      ],
+      "CA": [
+        {
+          "telephoneCountryCode": "1"
+        }
+      ],
+      "CC": [
+        {
+          "telephoneCountryCode": "61"
+        }
+      ],
+      "CD": [
+        {
+          "telephoneCountryCode": "243"
+        }
+      ],
+      "CF": [
+        {
+          "telephoneCountryCode": "236"
+        }
+      ],
+      "CG": [
+        {
+          "telephoneCountryCode": "242"
+        }
+      ],
+      "CH": [
+        {
+          "telephoneCountryCode": "41"
+        }
+      ],
+      "CI": [
+        {
+          "telephoneCountryCode": "225"
+        }
+      ],
+      "CK": [
+        {
+          "telephoneCountryCode": "682"
+        }
+      ],
+      "CL": [
+        {
+          "telephoneCountryCode": "56"
+        }
+      ],
+      "CM": [
+        {
+          "telephoneCountryCode": "237"
+        }
+      ],
+      "CN": [
+        {
+          "telephoneCountryCode": "86"
+        }
+      ],
+      "CO": [
+        {
+          "telephoneCountryCode": "57"
+        }
+      ],
+      "CR": [
+        {
+          "telephoneCountryCode": "506"
+        }
+      ],
+      "CU": [
+        {
+          "telephoneCountryCode": "53"
+        }
+      ],
+      "CV": [
+        {
+          "telephoneCountryCode": "238"
+        }
+      ],
+      "CW": [
+        {
+          "telephoneCountryCode": "599"
+        }
+      ],
+      "CX": [
+        {
+          "telephoneCountryCode": "61"
+        }
+      ],
+      "CY": [
+        {
+          "telephoneCountryCode": "357"
+        }
+      ],
+      "CZ": [
+        {
+          "telephoneCountryCode": "420"
+        }
+      ],
+      "DE": [
+        {
+          "telephoneCountryCode": "49"
+        }
+      ],
+      "DJ": [
+        {
+          "telephoneCountryCode": "253"
+        }
+      ],
+      "DK": [
+        {
+          "telephoneCountryCode": "45"
+        }
+      ],
+      "DM": [
+        {
+          "telephoneCountryCode": "1"
+        }
+      ],
+      "DO": [
+        {
+          "telephoneCountryCode": "1"
+        }
+      ],
+      "DZ": [
+        {
+          "telephoneCountryCode": "213"
+        }
+      ],
+      "EC": [
+        {
+          "telephoneCountryCode": "593"
+        }
+      ],
+      "EE": [
+        {
+          "telephoneCountryCode": "372"
+        }
+      ],
+      "EG": [
+        {
+          "telephoneCountryCode": "20"
+        }
+      ],
+      "EH": [
+        {
+          "telephoneCountryCode": "212"
+        }
+      ],
+      "ER": [
+        {
+          "telephoneCountryCode": "291"
+        }
+      ],
+      "ES": [
+        {
+          "telephoneCountryCode": "34"
+        }
+      ],
+      "ET": [
+        {
+          "telephoneCountryCode": "251"
+        }
+      ],
+      "FI": [
+        {
+          "telephoneCountryCode": "358"
+        }
+      ],
+      "FJ": [
+        {
+          "telephoneCountryCode": "679"
+        }
+      ],
+      "FK": [
+        {
+          "telephoneCountryCode": "500"
+        }
+      ],
+      "FM": [
+        {
+          "telephoneCountryCode": "691"
+        }
+      ],
+      "FO": [
+        {
+          "telephoneCountryCode": "298"
+        }
+      ],
+      "FR": [
+        {
+          "telephoneCountryCode": "33"
+        }
+      ],
+      "GA": [
+        {
+          "telephoneCountryCode": "241"
+        }
+      ],
+      "GB": [
+        {
+          "telephoneCountryCode": "44"
+        }
+      ],
+      "GD": [
+        {
+          "telephoneCountryCode": "1"
+        }
+      ],
+      "GE": [
+        {
+          "telephoneCountryCode": "995"
+        }
+      ],
+      "GF": [
+        {
+          "telephoneCountryCode": "594"
+        }
+      ],
+      "GG": [
+        {
+          "telephoneCountryCode": "44"
+        }
+      ],
+      "GH": [
+        {
+          "telephoneCountryCode": "233"
+        }
+      ],
+      "GI": [
+        {
+          "telephoneCountryCode": "350"
+        }
+      ],
+      "GL": [
+        {
+          "telephoneCountryCode": "299"
+        }
+      ],
+      "GM": [
+        {
+          "telephoneCountryCode": "220"
+        }
+      ],
+      "GN": [
+        {
+          "telephoneCountryCode": "224"
+        }
+      ],
+      "GP": [
+        {
+          "telephoneCountryCode": "590"
+        }
+      ],
+      "GQ": [
+        {
+          "telephoneCountryCode": "240"
+        }
+      ],
+      "GR": [
+        {
+          "telephoneCountryCode": "30"
+        }
+      ],
+      "GS": [
+        {
+          "telephoneCountryCode": "500"
+        }
+      ],
+      "GT": [
+        {
+          "telephoneCountryCode": "502"
+        }
+      ],
+      "GU": [
+        {
+          "telephoneCountryCode": "1"
+        }
+      ],
+      "GW": [
+        {
+          "telephoneCountryCode": "245"
+        }
+      ],
+      "GY": [
+        {
+          "telephoneCountryCode": "592"
+        }
+      ],
+      "HK": [
+        {
+          "telephoneCountryCode": "852"
+        }
+      ],
+      "HN": [
+        {
+          "telephoneCountryCode": "504"
+        }
+      ],
+      "HR": [
+        {
+          "telephoneCountryCode": "385"
+        }
+      ],
+      "HT": [
+        {
+          "telephoneCountryCode": "509"
+        }
+      ],
+      "HU": [
+        {
+          "telephoneCountryCode": "36"
+        }
+      ],
+      "ID": [
+        {
+          "telephoneCountryCode": "62"
+        }
+      ],
+      "IE": [
+        {
+          "telephoneCountryCode": "353"
+        }
+      ],
+      "IL": [
+        {
+          "telephoneCountryCode": "972"
+        }
+      ],
+      "IM": [
+        {
+          "telephoneCountryCode": "44"
+        }
+      ],
+      "IN": [
+        {
+          "telephoneCountryCode": "91"
+        }
+      ],
+      "IO": [
+        {
+          "telephoneCountryCode": "246"
+        }
+      ],
+      "IQ": [
+        {
+          "telephoneCountryCode": "964"
+        }
+      ],
+      "IR": [
+        {
+          "telephoneCountryCode": "98"
+        }
+      ],
+      "IS": [
+        {
+          "telephoneCountryCode": "354"
+        }
+      ],
+      "IT": [
+        {
+          "telephoneCountryCode": "39"
+        }
+      ],
+      "JE": [
+        {
+          "telephoneCountryCode": "44"
+        }
+      ],
+      "JM": [
+        {
+          "telephoneCountryCode": "1"
+        }
+      ],
+      "JO": [
+        {
+          "telephoneCountryCode": "962"
+        }
+      ],
+      "JP": [
+        {
+          "telephoneCountryCode": "81"
+        }
+      ],
+      "KE": [
+        {
+          "telephoneCountryCode": "254"
+        }
+      ],
+      "KG": [
+        {
+          "telephoneCountryCode": "996"
+        }
+      ],
+      "KH": [
+        {
+          "telephoneCountryCode": "855"
+        }
+      ],
+      "KI": [
+        {
+          "telephoneCountryCode": "686"
+        }
+      ],
+      "KM": [
+        {
+          "telephoneCountryCode": "269"
+        }
+      ],
+      "KN": [
+        {
+          "telephoneCountryCode": "1"
+        }
+      ],
+      "KP": [
+        {
+          "telephoneCountryCode": "850"
+        }
+      ],
+      "KR": [
+        {
+          "telephoneCountryCode": "82"
+        }
+      ],
+      "KW": [
+        {
+          "telephoneCountryCode": "965"
+        }
+      ],
+      "KY": [
+        {
+          "telephoneCountryCode": "1"
+        }
+      ],
+      "KZ": [
+        {
+          "telephoneCountryCode": "7"
+        }
+      ],
+      "LA": [
+        {
+          "telephoneCountryCode": "856"
+        }
+      ],
+      "LB": [
+        {
+          "telephoneCountryCode": "961"
+        }
+      ],
+      "LC": [
+        {
+          "telephoneCountryCode": "1"
+        }
+      ],
+      "LI": [
+        {
+          "telephoneCountryCode": "423"
+        }
+      ],
+      "LK": [
+        {
+          "telephoneCountryCode": "94"
+        }
+      ],
+      "LR": [
+        {
+          "telephoneCountryCode": "231"
+        }
+      ],
+      "LS": [
+        {
+          "telephoneCountryCode": "266"
+        }
+      ],
+      "LT": [
+        {
+          "telephoneCountryCode": "370"
+        }
+      ],
+      "LU": [
+        {
+          "telephoneCountryCode": "352"
+        }
+      ],
+      "LV": [
+        {
+          "telephoneCountryCode": "371"
+        }
+      ],
+      "LY": [
+        {
+          "telephoneCountryCode": "218"
+        }
+      ],
+      "MA": [
+        {
+          "telephoneCountryCode": "212"
+        }
+      ],
+      "MC": [
+        {
+          "telephoneCountryCode": "377"
+        }
+      ],
+      "MD": [
+        {
+          "telephoneCountryCode": "373"
+        }
+      ],
+      "ME": [
+        {
+          "telephoneCountryCode": "382"
+        }
+      ],
+      "MF": [
+        {
+          "telephoneCountryCode": "590"
+        }
+      ],
+      "MG": [
+        {
+          "telephoneCountryCode": "261"
+        }
+      ],
+      "MH": [
+        {
+          "telephoneCountryCode": "692"
+        }
+      ],
+      "MK": [
+        {
+          "telephoneCountryCode": "389"
+        }
+      ],
+      "ML": [
+        {
+          "telephoneCountryCode": "223"
+        }
+      ],
+      "MM": [
+        {
+          "telephoneCountryCode": "95"
+        }
+      ],
+      "MN": [
+        {
+          "telephoneCountryCode": "976"
+        }
+      ],
+      "MO": [
+        {
+          "telephoneCountryCode": "853"
+        }
+      ],
+      "MP": [
+        {
+          "telephoneCountryCode": "1"
+        }
+      ],
+      "MQ": [
+        {
+          "telephoneCountryCode": "596"
+        }
+      ],
+      "MR": [
+        {
+          "telephoneCountryCode": "222"
+        }
+      ],
+      "MS": [
+        {
+          "telephoneCountryCode": "1"
+        }
+      ],
+      "MT": [
+        {
+          "telephoneCountryCode": "356"
+        }
+      ],
+      "MU": [
+        {
+          "telephoneCountryCode": "230"
+        }
+      ],
+      "MV": [
+        {
+          "telephoneCountryCode": "960"
+        }
+      ],
+      "MW": [
+        {
+          "telephoneCountryCode": "265"
+        }
+      ],
+      "MX": [
+        {
+          "telephoneCountryCode": "52"
+        }
+      ],
+      "MY": [
+        {
+          "telephoneCountryCode": "60"
+        }
+      ],
+      "MZ": [
+        {
+          "telephoneCountryCode": "258"
+        }
+      ],
+      "NA": [
+        {
+          "telephoneCountryCode": "264"
+        }
+      ],
+      "NC": [
+        {
+          "telephoneCountryCode": "687"
+        }
+      ],
+      "NE": [
+        {
+          "telephoneCountryCode": "227"
+        }
+      ],
+      "NF": [
+        {
+          "telephoneCountryCode": "672"
+        }
+      ],
+      "NG": [
+        {
+          "telephoneCountryCode": "234"
+        }
+      ],
+      "NI": [
+        {
+          "telephoneCountryCode": "505"
+        }
+      ],
+      "NL": [
+        {
+          "telephoneCountryCode": "31"
+        }
+      ],
+      "NO": [
+        {
+          "telephoneCountryCode": "47"
+        }
+      ],
+      "NP": [
+        {
+          "telephoneCountryCode": "977"
+        }
+      ],
+      "NR": [
+        {
+          "telephoneCountryCode": "674"
+        }
+      ],
+      "NU": [
+        {
+          "telephoneCountryCode": "683"
+        }
+      ],
+      "NZ": [
+        {
+          "telephoneCountryCode": "64"
+        }
+      ],
+      "OM": [
+        {
+          "telephoneCountryCode": "968"
+        }
+      ],
+      "PA": [
+        {
+          "telephoneCountryCode": "507"
+        }
+      ],
+      "PE": [
+        {
+          "telephoneCountryCode": "51"
+        }
+      ],
+      "PF": [
+        {
+          "telephoneCountryCode": "689"
+        }
+      ],
+      "PG": [
+        {
+          "telephoneCountryCode": "675"
+        }
+      ],
+      "PH": [
+        {
+          "telephoneCountryCode": "63"
+        }
+      ],
+      "PK": [
+        {
+          "telephoneCountryCode": "92"
+        }
+      ],
+      "PL": [
+        {
+          "telephoneCountryCode": "48"
+        }
+      ],
+      "PM": [
+        {
+          "telephoneCountryCode": "508"
+        }
+      ],
+      "PN": [
+        {
+          "telephoneCountryCode": "870"
+        }
+      ],
+      "PR": [
+        {
+          "telephoneCountryCode": "1"
+        }
+      ],
+      "PS": [
+        {
+          "telephoneCountryCode": "970"
+        },
+        {
+          "telephoneCountryCode": "972"
+        }
+      ],
+      "PT": [
+        {
+          "telephoneCountryCode": "351"
+        }
+      ],
+      "PW": [
+        {
+          "telephoneCountryCode": "680"
+        }
+      ],
+      "PY": [
+        {
+          "telephoneCountryCode": "595"
+        }
+      ],
+      "QA": [
+        {
+          "telephoneCountryCode": "974"
+        }
+      ],
+      "RE": [
+        {
+          "telephoneCountryCode": "262"
+        }
+      ],
+      "RO": [
+        {
+          "telephoneCountryCode": "40"
+        }
+      ],
+      "RS": [
+        {
+          "telephoneCountryCode": "381"
+        }
+      ],
+      "RU": [
+        {
+          "telephoneCountryCode": "7"
+        }
+      ],
+      "RW": [
+        {
+          "telephoneCountryCode": "250"
+        }
+      ],
+      "SA": [
+        {
+          "telephoneCountryCode": "966"
+        }
+      ],
+      "SB": [
+        {
+          "telephoneCountryCode": "677"
+        }
+      ],
+      "SC": [
+        {
+          "telephoneCountryCode": "248"
+        }
+      ],
+      "SD": [
+        {
+          "telephoneCountryCode": "249"
+        }
+      ],
+      "SE": [
+        {
+          "telephoneCountryCode": "46"
+        }
+      ],
+      "SG": [
+        {
+          "telephoneCountryCode": "65"
+        }
+      ],
+      "SH": [
+        {
+          "telephoneCountryCode": "290"
+        }
+      ],
+      "SI": [
+        {
+          "telephoneCountryCode": "386"
+        }
+      ],
+      "SJ": [
+        {
+          "telephoneCountryCode": "47"
+        }
+      ],
+      "SK": [
+        {
+          "telephoneCountryCode": "421"
+        }
+      ],
+      "SL": [
+        {
+          "telephoneCountryCode": "232"
+        }
+      ],
+      "SM": [
+        {
+          "telephoneCountryCode": "378"
+        }
+      ],
+      "SN": [
+        {
+          "telephoneCountryCode": "221"
+        }
+      ],
+      "SO": [
+        {
+          "telephoneCountryCode": "252"
+        }
+      ],
+      "SR": [
+        {
+          "telephoneCountryCode": "597"
+        }
+      ],
+      "SS": [
+        {
+          "telephoneCountryCode": "211"
+        }
+      ],
+      "ST": [
+        {
+          "telephoneCountryCode": "239"
+        }
+      ],
+      "SV": [
+        {
+          "telephoneCountryCode": "503"
+        }
+      ],
+      "SX": [
+        {
+          "telephoneCountryCode": "1"
+        }
+      ],
+      "SY": [
+        {
+          "telephoneCountryCode": "963"
+        }
+      ],
+      "SZ": [
+        {
+          "telephoneCountryCode": "268"
+        }
+      ],
+      "TC": [
+        {
+          "telephoneCountryCode": "1"
+        }
+      ],
+      "TD": [
+        {
+          "telephoneCountryCode": "235"
+        }
+      ],
+      "TF": [
+        {
+          "telephoneCountryCode": "262"
+        }
+      ],
+      "TG": [
+        {
+          "telephoneCountryCode": "228"
+        }
+      ],
+      "TH": [
+        {
+          "telephoneCountryCode": "66"
+        }
+      ],
+      "TJ": [
+        {
+          "telephoneCountryCode": "992"
+        }
+      ],
+      "TK": [
+        {
+          "telephoneCountryCode": "690"
+        }
+      ],
+      "TL": [
+        {
+          "telephoneCountryCode": "670"
+        }
+      ],
+      "TM": [
+        {
+          "telephoneCountryCode": "993"
+        }
+      ],
+      "TN": [
+        {
+          "telephoneCountryCode": "216"
+        }
+      ],
+      "TO": [
+        {
+          "telephoneCountryCode": "676"
+        }
+      ],
+      "TR": [
+        {
+          "telephoneCountryCode": "90"
+        }
+      ],
+      "TT": [
+        {
+          "telephoneCountryCode": "1"
+        }
+      ],
+      "TV": [
+        {
+          "telephoneCountryCode": "688"
+        }
+      ],
+      "TW": [
+        {
+          "telephoneCountryCode": "886"
+        }
+      ],
+      "TZ": [
+        {
+          "telephoneCountryCode": "255"
+        }
+      ],
+      "UA": [
+        {
+          "telephoneCountryCode": "380"
+        }
+      ],
+      "UG": [
+        {
+          "telephoneCountryCode": "256"
+        }
+      ],
+      "UM": [
+        {
+          "telephoneCountryCode": "1"
+        }
+      ],
+      "US": [
+        {
+          "telephoneCountryCode": "1"
+        }
+      ],
+      "UY": [
+        {
+          "telephoneCountryCode": "598"
+        }
+      ],
+      "UZ": [
+        {
+          "telephoneCountryCode": "998"
+        }
+      ],
+      "VA": [
+        {
+          "telephoneCountryCode": "39"
+        }
+      ],
+      "VC": [
+        {
+          "telephoneCountryCode": "1"
+        }
+      ],
+      "VE": [
+        {
+          "telephoneCountryCode": "58"
+        }
+      ],
+      "VG": [
+        {
+          "telephoneCountryCode": "1"
+        }
+      ],
+      "VI": [
+        {
+          "telephoneCountryCode": "1"
+        }
+      ],
+      "VN": [
+        {
+          "telephoneCountryCode": "84"
+        }
+      ],
+      "VU": [
+        {
+          "telephoneCountryCode": "678"
+        }
+      ],
+      "WF": [
+        {
+          "telephoneCountryCode": "681"
+        }
+      ],
+      "WS": [
+        {
+          "telephoneCountryCode": "685"
+        }
+      ],
+      "XK": [
+        {
+          "telephoneCountryCode": "377"
+        },
+        {
+          "telephoneCountryCode": "381"
+        },
+        {
+          "telephoneCountryCode": "383"
+        },
+        {
+          "telephoneCountryCode": "386"
+        }
+      ],
+      "YE": [
+        {
+          "telephoneCountryCode": "967"
+        }
+      ],
+      "YT": [
+        {
+          "telephoneCountryCode": "262"
+        }
+      ],
+      "ZA": [
+        {
+          "telephoneCountryCode": "27"
+        }
+      ],
+      "ZM": [
+        {
+          "telephoneCountryCode": "260"
+        }
+      ],
+      "ZW": [
+        {
+          "telephoneCountryCode": "263"
+        }
+      ]
+    }
+  }
+}
