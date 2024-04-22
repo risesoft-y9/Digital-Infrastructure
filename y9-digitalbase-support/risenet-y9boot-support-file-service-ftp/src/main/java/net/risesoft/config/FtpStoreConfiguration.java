@@ -11,9 +11,10 @@ import net.risesoft.y9public.ftp.FtpClientPool;
 import net.risesoft.y9public.ftp.FtpPoolConfig;
 import net.risesoft.y9public.service.StoreService;
 import net.risesoft.y9public.service.impl.FtpStoreServiceImpl;
+import org.springframework.context.annotation.Primary;
 
 @Configuration
-@ConditionalOnProperty(name = "y9.feature.file.ftp.enabled", havingValue = "true", matchIfMissing = false)
+@ConditionalOnProperty(name = "y9.feature.file.ftp.enabled", havingValue = "true", matchIfMissing = true)
 public class FtpStoreConfiguration {
 
     @Bean
@@ -42,6 +43,7 @@ public class FtpStoreConfiguration {
     }
 
     @Bean
+    @Primary
     public StoreService ftpStoreService(FtpClientHelper ftpClientHelper) {
         return new FtpStoreServiceImpl(ftpClientHelper);
     }

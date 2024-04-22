@@ -1,0 +1,144 @@
+server:
+    intranet:
+        ip: 192.168.x.x,10.161.x.x,10.1.x.x,10.3.x.x
+    servlet:
+        encoding:
+            charset: UTF-8
+            enabled: true
+            force: true
+        session:
+            tracking-modes: COOKIE
+spring:
+    application:
+        name: fileManager
+    cloud:
+        nacos:
+            config:
+                enabled: false
+                group: DEFAULT_GROUP
+                namespace: dev
+                server-addr: https://dev.youshengyun.com:443
+                username: nacos
+                password: nacos@2022
+            discovery:
+                enabled: false
+    config:
+        import:
+            - optional:nacos:fileManager.yml
+    mvc:
+        view:
+            prefix: /WEB-INF/jsp/
+            suffix: .jsp
+    servlet:
+        multipart:
+            max-file-size: 1000MB
+            max-request-size: 1000MB
+    aop:
+        auto: false
+        proxy-target-class: false
+    autoconfigure:
+        exclude:
+            - org.springframework.boot.autoconfigure.jdbc.DataSourceAutoConfiguration
+            - org.springframework.boot.autoconfigure.orm.jpa.HibernateJpaAutoConfiguration
+            - org.springframework.boot.autoconfigure.data.mongo.MongoDataAutoConfiguration
+    data:
+        jpa:
+            repositories:
+                bootstrap-mode: default
+                enabled: false
+    datasource:
+        generate-unique-name: false
+        name: y9PublicDS
+        type: com.alibaba.druid.pool.DruidDataSource
+        druid:
+            y9-public:
+                driver-class-name: com.mysql.cj.jdbc.Driver
+                url: jdbc:mysql://localhost:3306/y9_public?serverTimezone=GMT%2B8&nullCatalogMeansCurrent=true&useUnicode=true&characterEncoding=utf-8&rewriteBatchedStatements=true&useCompression=true&useSSL=false
+                username: root
+                #driver-class-name: oracle.jdbc.OracleDriver
+                #url: jdbc:oracle:thin:@127.0.0.1:1521:orcl
+                #username: Y9_PUBLIC
+                password: 111111
+                initialSize: 1
+                maxActive: 20
+                maxPoolPreparedStatementPerConnectionSize: 100
+                maxWait: 60000
+                minEvictableIdleTimeMillis: 300000
+                minIdle: 1
+                poolPreparedStatements: true
+                testOnBorrow: false
+                testOnReturn: false
+                testWhileIdle: true
+                timeBetweenEvictionRunsMillis: 60000
+                useGlobalDataSourceStat: true
+                validationQuery: SELECT 1 FROM DUAL
+            filter:
+                stat:
+                    log-slow-sql: true
+                    slow-sql-millis: 2000
+                wall:
+                    config:
+                        drop-table-allow: false
+                    enabled: true
+            stat-view-servlet:
+                enabled: true
+                login-password: admin
+                login-username: admin
+                reset-enable: false
+                url-pattern: /druid/*
+            web-stat-filter:
+                enabled: true
+                exclusions: '*.js,*.gif,*.jpg,*.png,*.css,*.ico,/druid/*,/static/*'
+                url-pattern: /*
+    jpa:
+        hibernate:
+            naming:
+                implicit-strategy: org.hibernate.boot.model.naming.ImplicitNamingStrategyLegacyHbmImpl
+                physical-strategy: org.hibernate.boot.model.naming.PhysicalNamingStrategyStandardImpl
+        open-in-view: false
+        properties:
+            hibernate:
+                cache:
+                    use_query_cache: false
+                    use_second_level_cache: false
+                dialect: org.hibernate.dialect.MySQL8Dialect
+                hbm2ddl:
+                    auto: none
+                jdbc:
+                    batch_size: 100
+                show_sql: true
+    main:
+        allow-bean-definition-overriding: false
+    redis:
+        database: 8
+        host: localhost
+        lettuce:
+            pool:
+                max-active: 8
+                max-idle: 8
+                max-wait: -1
+                min-idle: 0
+            shutdown-timeout: 100ms
+        password: y9i-83204585
+        port: 6379
+        ssl: false
+        timeout: 10000
+    web:
+        resources:
+            static-locations: classpath:/META-INF/resources/,classpath:/resources/,classpath:/static/,classpath:/public/,file:///d:/y9config/
+y9:
+    app:
+        fileManager:
+            fileRoot: d:/y9config/y9filestore
+    feature:
+        jpa:
+            packagesToScanEntityPublic: net.risesoft.y9public.entity
+            packagesToScanEntityTenant: net.risesoft.entity
+            packagesToScanRepositoryPublic: net.risesoft.y9public.repository
+            packagesToScanRepositoryTenant: net.risesoft.repository
+        listener:
+            redis:
+                enabled: true
+        publish:
+            redis:
+                enabled: true

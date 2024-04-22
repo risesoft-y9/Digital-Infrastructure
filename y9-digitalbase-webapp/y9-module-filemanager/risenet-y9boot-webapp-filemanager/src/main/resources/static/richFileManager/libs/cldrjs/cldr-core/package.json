@@ -1,0 +1,24 @@
+{
+  "name": "cldr-core",
+  "version": "32.0.1",
+  "homepage": "http://cldr.unicode.org",
+  "author": "The Unicode Consortium",
+  "maintainers": [
+    {
+      "name": "John Emmons",
+      "email": "emmo@us.ibm.com",
+      "url": "https://github.com/JCEmmons"
+    }
+  ],
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/unicode-cldr/cldr-core.git"
+  },
+  "licenses": [
+    {
+      "type": "Unicode-TOU",
+      "url": "http://www.unicode.org/copyright.html"
+    }
+  ],
+  "bugs": "http://unicode.org/cldr/trac/newticket"
+}
