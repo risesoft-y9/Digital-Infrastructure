@@ -148,6 +148,7 @@ y9:
             #privateKey: 
             #publicKey: 
             ftp:
+                enabled: false
                 host: localhost
                 port: 21
                 username: y9admin
@@ -168,6 +169,10 @@ y9:
                 testWhileIdle: true
                 useEPSVwithIPv4: false
                 passiveMode: true
+            local:
+                enabled: true
+                # 本地文件存储的根路径，按需设置为自己的
+                basePath: "d:/y9FileStore"
         jpa:
             packagesToScanEntityPublic: net.risesoft.y9public.entity
             packagesToScanEntityTenant: net.risesoft.entity
