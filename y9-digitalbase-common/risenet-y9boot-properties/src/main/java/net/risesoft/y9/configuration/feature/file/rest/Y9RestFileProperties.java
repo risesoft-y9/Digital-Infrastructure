@@ -14,6 +14,11 @@ import lombok.Setter;
 public class Y9RestFileProperties {
 
     /**
+     * 是否启用
+     */
+    private boolean enabled = false;
+
+    /**
      * 文件管理url
      */
     private String fileManagerUrl = "http://localhost:8888/fileManager";

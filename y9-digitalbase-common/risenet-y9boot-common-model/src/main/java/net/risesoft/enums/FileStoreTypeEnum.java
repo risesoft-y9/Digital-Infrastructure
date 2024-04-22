@@ -24,7 +24,9 @@ public enum FileStoreTypeEnum implements ValuedEnum<Integer> {
     /** nfs */
     NFS("nfs", 4),
     /** samba */
-    SAMBA("samba", 5);
+    SAMBA("samba", 5),
+    /** 本地 */
+    LOCAL("local", 6);
 
     private final String name;
     private final Integer value;

@@ -14,6 +14,11 @@ import lombok.Setter;
 public class Y9FtpProperties {
 
     /**
+     * 是否启用
+     */
+    private boolean enabled = false;
+
+    /**
      * 主机名
      */
     private String host = "localhost";
