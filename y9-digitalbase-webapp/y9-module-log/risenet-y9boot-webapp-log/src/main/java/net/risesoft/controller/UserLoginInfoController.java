@@ -9,12 +9,12 @@ import lombok.RequiredArgsConstructor;
 import net.risesoft.consts.InitDataConsts;
 import net.risesoft.enums.platform.ManagerLevelEnum;
 import net.risesoft.log.annotation.RiseLog;
-import net.risesoft.log.entity.Y9logUserLoginInfo;
-import net.risesoft.log.service.Y9logUserLoginInfoService;
 import net.risesoft.model.log.LogInfoModel;
 import net.risesoft.pojo.Y9Page;
 import net.risesoft.pojo.Y9PageQuery;
+import net.risesoft.service.Y9logUserLoginInfoService;
 import net.risesoft.y9.Y9LoginUserHolder;
+import net.risesoft.y9public.entity.Y9logUserLoginInfo;
 
 /**
  * 登录日志管理

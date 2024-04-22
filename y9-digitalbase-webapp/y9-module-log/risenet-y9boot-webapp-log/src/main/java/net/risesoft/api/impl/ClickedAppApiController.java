@@ -8,11 +8,11 @@ import org.springframework.web.bind.annotation.RestController;
 import lombok.RequiredArgsConstructor;
 
 import net.risesoft.api.log.ClickedAppApi;
-import net.risesoft.log.entity.Y9ClickedApp;
-import net.risesoft.log.service.Y9ClickedAppService;
 import net.risesoft.model.log.ClickedApp;
 import net.risesoft.pojo.Y9Result;
+import net.risesoft.service.Y9ClickedAppService;
 import net.risesoft.y9.json.Y9JsonUtil;
+import net.risesoft.y9public.entity.Y9ClickedApp;
 
 /**
  * 应用点击详情

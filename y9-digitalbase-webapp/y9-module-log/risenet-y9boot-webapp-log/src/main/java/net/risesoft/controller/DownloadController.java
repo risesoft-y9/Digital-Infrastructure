@@ -22,14 +22,14 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
-import net.risesoft.log.entity.Y9logUserLoginInfo;
-import net.risesoft.log.service.Y9logUserLoginInfoService;
 import net.risesoft.model.platform.Person;
 import net.risesoft.pojo.LoginInformation;
 import net.risesoft.pojo.PersonInformation;
+import net.risesoft.service.Y9logUserLoginInfoService;
 import net.risesoft.util.JxlsUtil;
 import net.risesoft.y9.Y9LoginUserHolder;
 import net.risesoft.y9.util.mime.ContentDispositionUtil;
+import net.risesoft.y9public.entity.Y9logUserLoginInfo;
 
 import y9.client.rest.platform.org.PersonApiClient;
 

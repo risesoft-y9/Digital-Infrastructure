@@ -16,11 +16,11 @@ import net.risesoft.id.IdType;
 import net.risesoft.id.Y9IdGenerator;
 import net.risesoft.log.OperationTypeEnum;
 import net.risesoft.log.annotation.RiseLog;
-import net.risesoft.log.entity.Y9logMapping;
-import net.risesoft.log.service.Y9logMappingService;
 import net.risesoft.pojo.Y9Page;
 import net.risesoft.pojo.Y9PageQuery;
 import net.risesoft.pojo.Y9Result;
+import net.risesoft.service.Y9logMappingService;
+import net.risesoft.y9public.entity.Y9logMapping;
 
 /**
  * 字段映射管理

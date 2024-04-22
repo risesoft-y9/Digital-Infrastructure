@@ -7,7 +7,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import lombok.RequiredArgsConstructor;
 
-import net.risesoft.log.service.Y9CommonAppForPersonService;
+import net.risesoft.service.Y9CommonAppForPersonService;
 
 @RestController
 @RequestMapping(value = "/sync")

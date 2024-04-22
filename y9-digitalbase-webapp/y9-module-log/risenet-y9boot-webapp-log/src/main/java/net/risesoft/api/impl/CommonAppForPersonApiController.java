@@ -12,8 +12,8 @@ import org.springframework.web.bind.annotation.RestController;
 import lombok.RequiredArgsConstructor;
 
 import net.risesoft.api.log.CommonAppForPersonApi;
-import net.risesoft.log.service.Y9CommonAppForPersonService;
 import net.risesoft.pojo.Y9Result;
+import net.risesoft.service.Y9CommonAppForPersonService;
 import net.risesoft.y9.Y9LoginUserHolder;
 
 /**

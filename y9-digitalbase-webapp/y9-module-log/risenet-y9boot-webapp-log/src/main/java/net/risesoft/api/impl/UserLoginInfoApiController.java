@@ -23,18 +23,18 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
 import net.risesoft.api.log.UserLoginInfoApi;
-import net.risesoft.log.entity.Y9logIpDeptMapping;
-import net.risesoft.log.entity.Y9logUserHostIpInfo;
-import net.risesoft.log.entity.Y9logUserLoginInfo;
-import net.risesoft.log.service.Y9logIpDeptMappingService;
-import net.risesoft.log.service.Y9logUserHostIpInfoService;
-import net.risesoft.log.service.Y9logUserLoginInfoService;
 import net.risesoft.model.userlogininfo.LoginInfo;
 import net.risesoft.pojo.Y9Page;
 import net.risesoft.pojo.Y9PageQuery;
 import net.risesoft.pojo.Y9Result;
+import net.risesoft.service.Y9logIpDeptMappingService;
+import net.risesoft.service.Y9logUserHostIpInfoService;
+import net.risesoft.service.Y9logUserLoginInfoService;
 import net.risesoft.y9.Y9LoginUserHolder;
 import net.risesoft.y9.util.Y9ModelConvertUtil;
+import net.risesoft.y9public.entity.Y9logIpDeptMapping;
+import net.risesoft.y9public.entity.Y9logUserHostIpInfo;
+import net.risesoft.y9public.entity.Y9logUserLoginInfo;
 
 import cn.hutool.core.thread.ThreadFactoryBuilder;
 

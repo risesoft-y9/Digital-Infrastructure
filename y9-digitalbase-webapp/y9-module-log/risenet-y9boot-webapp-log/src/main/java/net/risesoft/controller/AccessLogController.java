@@ -17,13 +17,13 @@ import lombok.extern.slf4j.Slf4j;
 import net.risesoft.consts.InitDataConsts;
 import net.risesoft.enums.platform.ManagerLevelEnum;
 import net.risesoft.log.annotation.RiseLog;
-import net.risesoft.log.entity.Y9logAccessLog;
-import net.risesoft.log.service.Y9logAccessLogService;
 import net.risesoft.model.log.LogInfoModel;
 import net.risesoft.pojo.Y9Page;
 import net.risesoft.pojo.Y9PageQuery;
 import net.risesoft.pojo.Y9Result;
+import net.risesoft.service.Y9logAccessLogService;
 import net.risesoft.y9.Y9LoginUserHolder;
+import net.risesoft.y9public.entity.Y9logAccessLog;
 
 /**
  * 日志管理

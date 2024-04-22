@@ -3,7 +3,7 @@
 
     <modelVersion>4.0.0</modelVersion>
     <!-- <groupId>net.risesoft</groupId> -->
-    <artifactId>risenet-y9boot-support-log-elasticsearch</artifactId>
+    <artifactId>risenet-y9boot-support-log-elasticsearch-repository</artifactId>
     <version>v9.6.5-SNAPSHOT</version>
     <packaging>jar</packaging>
 
@@ -24,19 +24,24 @@
             <artifactId>risenet-y9boot-starter-idgenerator</artifactId>
             <version>${project.version}</version>
         </dependency>
+
+        <dependency>
+            <groupId>net.risesoft</groupId>
+            <artifactId>risenet-y9boot-starter-elasticsearch</artifactId>
+            <version>${project.version}</version>
+        </dependency>
         
-        <dependency>
+         <dependency>
             <groupId>net.risesoft</groupId>
-            <artifactId>risenet-y9boot-support-log-elasticsearch-repository</artifactId>
+            <artifactId>risenet-y9boot-common-util</artifactId>
             <version>${project.version}</version>
-        </dependency>
+        </dependency> 
 
         <dependency>
-            <groupId>net.risesoft</groupId>
-            <artifactId>risenet-y9boot-api-feignclient-platform</artifactId>
-            <version>${project.version}</version>
+            <groupId>org.projectlombok</groupId>
+            <artifactId>lombok</artifactId>
+            <scope>provided</scope>
         </dependency>
-
     </dependencies>
 
     <build>
