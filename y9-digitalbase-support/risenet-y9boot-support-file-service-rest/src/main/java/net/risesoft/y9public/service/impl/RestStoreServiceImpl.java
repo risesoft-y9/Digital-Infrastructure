@@ -6,25 +6,24 @@ import java.io.OutputStream;
 
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
+
+import lombok.RequiredArgsConstructor;
 
 import net.risesoft.enums.FileStoreTypeEnum;
-import net.risesoft.y9.configuration.Y9Properties;
+import net.risesoft.y9.configuration.feature.file.rest.Y9RestFileProperties;
 import net.risesoft.y9public.service.StoreService;
 
 import jodd.http.HttpRequest;
 import jodd.http.HttpResponse;
 
-@Service
-public class StoreServiceImpl implements StoreService {
+@RequiredArgsConstructor
+public class RestStoreServiceImpl implements StoreService {
 
-    @Autowired
-    protected Y9Properties y9Config;
+    private final Y9RestFileProperties y9RestFileProperties;
 
     @Override
     public void deleteFile(String fullPath, String realFileName) throws Exception {
-        String fileManagerUrl = y9Config.getFeature().getFile().getRest().getFileManagerUrl();
+        String fileManagerUrl = y9RestFileProperties.getFileManagerUrl();
         String destination = fileManagerUrl + "/rest/deleteFile";
         HttpRequest httpRequest = HttpRequest.post(destination).form("fullPath", fullPath, "fileName", realFileName);
         HttpResponse httpResponse = httpRequest.send();
@@ -38,7 +37,7 @@ public class StoreServiceImpl implements StoreService {
 
     @Override
     public byte[] retrieveFileBytes(String fullPath, String realFileName) throws Exception {
-        String fileManagerUrl = y9Config.getFeature().getFile().getRest().getFileManagerUrl();
+        String fileManagerUrl = y9RestFileProperties.getFileManagerUrl();
         String destination = fileManagerUrl + "/rest/retrieveFileStream";
         HttpRequest httpRequest = HttpRequest.post(destination).form("fullPath", fullPath, "fileName", realFileName);
         HttpResponse httpResponse = httpRequest.send();
@@ -59,10 +58,10 @@ public class StoreServiceImpl implements StoreService {
         File tempFile = new File(tempDir, realFileName);
         FileUtils.writeByteArrayToFile(tempFile, bytes);
 
-        String fileManagerUrl = y9Config.getFeature().getFile().getRest().getFileManagerUrl();
+        String fileManagerUrl = y9RestFileProperties.getFileManagerUrl();
         String destination = fileManagerUrl + "/rest/storeFile";
         HttpRequest httpRequest = HttpRequest.post(destination).form("fullPath", fullPath, "fileName", realFileName,
-            "multipartFile", tempFile);
+                "multipartFile", tempFile);
         HttpResponse httpResponse = httpRequest.send();
         httpResponse.close();
 

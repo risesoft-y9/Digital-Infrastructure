@@ -36,15 +36,15 @@ import net.risesoft.y9public.repository.Y9FileStoreRepository;
 @RequiredArgsConstructor
 public class Y9FileController {
 
-    private final Y9FileStoreRepository fileRepository;
-
-    private final Environment environment;
-
     private String fileRoot = "d:/y9config";
 
     private String fileStoreRoot = "d:/y9config/y9filestore";
 
     private LocalFileManager localFileManager = null;
+
+    private final Y9FileStoreRepository fileRepository;
+
+    private final Environment environment;
 
     @RequestMapping(value = "/rest/deleteFile")
     @ResponseBody
