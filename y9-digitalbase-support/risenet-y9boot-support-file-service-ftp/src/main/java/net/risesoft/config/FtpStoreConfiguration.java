@@ -1,5 +1,6 @@
 package net.risesoft.config;
 
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -8,15 +9,17 @@ import net.risesoft.y9public.ftp.FtpClientFactory;
 import net.risesoft.y9public.ftp.FtpClientHelper;
 import net.risesoft.y9public.ftp.FtpClientPool;
 import net.risesoft.y9public.ftp.FtpPoolConfig;
+import net.risesoft.y9public.service.StoreService;
+import net.risesoft.y9public.service.impl.FtpStoreServiceImpl;
 
 @Configuration
-public class FtpConfig {
+@ConditionalOnProperty(name = "y9.feature.file.ftp.enabled", havingValue = "true", matchIfMissing = false)
+public class FtpStoreConfiguration {
 
     @Bean
     @ConfigurationProperties(prefix = "y9.feature.file.ftp")
     public FtpPoolConfig ftpPoolConfig() {
-        FtpPoolConfig ftpPoolConfig = new FtpPoolConfig();
-        return ftpPoolConfig;
+        return new FtpPoolConfig();
     }
 
     @Bean
@@ -28,8 +31,7 @@ public class FtpConfig {
 
     @Bean
     public FtpClientPool ftpClientPool(FtpClientFactory clientFactory) {
-        FtpClientPool ftpClientPool = new FtpClientPool(clientFactory);
-        return ftpClientPool;
+        return new FtpClientPool(clientFactory);
     }
 
     @Bean
@@ -37,6 +39,11 @@ public class FtpConfig {
         FtpClientHelper ftpClientHelper = new FtpClientHelper();
         ftpClientHelper.setFtpClientPool(ftpClientPool);
         return ftpClientHelper;
+    }
+
+    @Bean
+    public StoreService ftpStoreService(FtpClientHelper ftpClientHelper) {
+        return new FtpStoreServiceImpl(ftpClientHelper);
     }
 
 }

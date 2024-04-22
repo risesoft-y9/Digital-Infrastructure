@@ -3,9 +3,6 @@ package net.risesoft.y9public.service.impl;
 import java.io.InputStream;
 import java.io.OutputStream;
 
-import org.springframework.context.annotation.Primary;
-import org.springframework.stereotype.Service;
-
 import lombok.RequiredArgsConstructor;
 
 import net.risesoft.enums.FileStoreTypeEnum;
@@ -13,10 +10,8 @@ import net.risesoft.y9public.entity.Y9FileStore;
 import net.risesoft.y9public.ftp.FtpClientHelper;
 import net.risesoft.y9public.service.StoreService;
 
-@Primary
-@Service
 @RequiredArgsConstructor
-public class StoreServiceImpl implements StoreService {
+public class FtpStoreServiceImpl implements StoreService {
 
     private final FtpClientHelper ftpClientHelper;
 

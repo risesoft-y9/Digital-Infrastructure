@@ -12,10 +12,17 @@ import lombok.Setter;
 @Getter
 @Setter
 public class Y9NfsProperties {
+
+    /**
+     * 是否启用
+     */
+    private boolean enabled = false;
+
     /**
      * 主机名
      */
     private String hostname;
+
     /**
      * 导出路径
      */
