@@ -6,6 +6,7 @@ import lombok.Getter;
 import lombok.Setter;
 
 import net.risesoft.y9.configuration.feature.file.ftp.Y9FtpProperties;
+import net.risesoft.y9.configuration.feature.file.local.Y9LocalProperties;
 import net.risesoft.y9.configuration.feature.file.nfs.Y9NfsProperties;
 import net.risesoft.y9.configuration.feature.file.rest.Y9RestFileProperties;
 import net.risesoft.y9.configuration.feature.file.samba.Y9SambaProperties;
@@ -77,5 +78,11 @@ public class Y9FileProperties {
      */
     @NestedConfigurationProperty
     private WPSProperties wps = new WPSProperties();
+
+    /**
+     * 本地存储文件属性
+     */
+    @NestedConfigurationProperty
+    private Y9LocalProperties local = new Y9LocalProperties();
 
 }
