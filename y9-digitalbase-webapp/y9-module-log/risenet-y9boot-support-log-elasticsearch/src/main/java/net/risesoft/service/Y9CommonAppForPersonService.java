@@ -15,15 +15,10 @@ public interface Y9CommonAppForPersonService {
 
     List<String> getAppNamesByPersonId(String personId);
 
-    String getAppNamesFromLog(String personId);
-
     Y9CommonAppForPerson getCommonAppForPersonByPersonId(String personId);
 
     long getCount();
 
-    String saveForQuery();
-
     void saveOrUpdate(Y9CommonAppForPerson cafp);
 
-    String syncData();
 }

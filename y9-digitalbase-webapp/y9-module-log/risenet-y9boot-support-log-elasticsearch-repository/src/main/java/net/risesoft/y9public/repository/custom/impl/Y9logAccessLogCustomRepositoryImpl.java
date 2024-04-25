@@ -15,6 +15,7 @@ import java.util.stream.Collectors;
 
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang3.time.FastDateFormat;
 import org.elasticsearch.action.admin.indices.alias.get.GetAliasesRequest;
 import org.elasticsearch.action.search.SearchRequest;
 import org.elasticsearch.action.search.SearchResponse;
@@ -73,8 +74,10 @@ import net.risesoft.y9public.repository.custom.Y9logMappingCustomRepository;
 @RequiredArgsConstructor
 public class Y9logAccessLogCustomRepositoryImpl implements Y9logAccessLogCustomRepository {
 
+    private static final FastDateFormat DATETIME_FORMAT = FastDateFormat.getInstance("yyyy-MM-dd HH:mm:ss");
     private final Y9logMappingCustomRepository y9logMappingCustomRepository;
     private final RestHighLevelClient elasticsearchClient;
+
     private final ElasticsearchOperations elasticsearchOperations;
 
     // 目前日志查询页有两种情况：一种是有开始时间和结束时间，另一种是只选一个时间
@@ -125,8 +128,8 @@ public class Y9logAccessLogCustomRepositoryImpl implements Y9logAccessLogCustomR
 
         SearchResponse response = null;
         BoolQueryBuilder query = QueryBuilders.boolQuery();
-        query.must(QueryBuilders.queryStringQuery("net.risesoft.controller.admin.WebsiteController.saveAppCheckCount")
-            .field(Y9LogSearchConsts.MODULAR_NAME));
+        query.must(
+            QueryBuilders.queryStringQuery(Y9LogSearchConsts.APP_MODULARNAME).field(Y9LogSearchConsts.MODULAR_NAME));
         if (StringUtils.isNotBlank(tenantId)) {
             query.must(QueryBuilders.queryStringQuery(tenantId).field(Y9LogSearchConsts.TENANT_ID));
         }
@@ -455,16 +458,15 @@ public class Y9logAccessLogCustomRepositoryImpl implements Y9logAccessLogCustomR
         if (StringUtils.isNotBlank(startTime) && StringUtils.isNotBlank(endTime)) {
             startTime = startTime + " 00:00:00";
             endTime = endTime + " 23:59:59";
-            SimpleDateFormat logDate = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
             long startDate = 0;
             try {
-                startDate = logDate.parse(startTime).getTime();
+                startDate = DATETIME_FORMAT.parse(startTime).getTime();
             } catch (ParseException e) {
                 throw new RuntimeException(e);
             }
             long endDate = 0;
             try {
-                endDate = logDate.parse(endTime).getTime();
+                endDate = DATETIME_FORMAT.parse(endTime).getTime();
             } catch (ParseException e) {
                 throw new RuntimeException(e);
             }
@@ -516,8 +518,8 @@ public class Y9logAccessLogCustomRepositoryImpl implements Y9logAccessLogCustomR
                 CriteriaQuery criteriaQuery =
                     new CriteriaQuery(new Criteria().and(new Criteria(Y9LogSearchConsts.OPERATE_TYPE).is(operateType))
                         .and(new Criteria(Y9LogSearchConsts.USER_ID).in(personIds)))
-                        .setPageable(PageRequest.of((page < 1) ? 0 : page - 1, rows))
-                        .addSort(Sort.by(Order.desc(Y9LogSearchConsts.LOG_TIME)));
+                            .setPageable(PageRequest.of((page < 1) ? 0 : page - 1, rows))
+                            .addSort(Sort.by(Order.desc(Y9LogSearchConsts.LOG_TIME)));
 
                 SearchHits<Y9logAccessLog> searchHits =
                     elasticsearchOperations.search(criteriaQuery, Y9logAccessLog.class, index);
@@ -683,12 +685,11 @@ public class Y9logAccessLogCustomRepositoryImpl implements Y9logAccessLogCustomR
         if (StringUtils.isNotBlank(startTime) && StringUtils.isNotBlank(endTime)) {
             startTime = startTime + " 00:00:00";
             endTime = endTime + " 23:59:59";
-            SimpleDateFormat logDate = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
             long startDate = 0L;
             long endDate = 0L;
             try {
-                startDate = logDate.parse(startTime).getTime();
-                endDate = logDate.parse(endTime).getTime();
+                startDate = DATETIME_FORMAT.parse(startTime).getTime();
+                endDate = DATETIME_FORMAT.parse(endTime).getTime();
             } catch (ParseException e) {
                 LOGGER.warn(e.getMessage(), e);
             }

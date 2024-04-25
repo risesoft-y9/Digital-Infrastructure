@@ -1,7 +1,6 @@
 package net.risesoft.controller;
 
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -27,23 +26,4 @@ public class SyncController {
         return commonAppForPersonService.getCount();
     }
 
-    /**
-     * 保存常用应用
-     *
-     * @return String 操作结果
-     */
-    @PostMapping(value = "/save")
-    public String saveCommonApp() {
-        return commonAppForPersonService.saveForQuery();
-    }
-
-    /**
-     * 同步近半年的数据
-     *
-     * @return String 操作结果
-     */
-    @PostMapping(value = "/syncData")
-    public String syncData() {
-        return commonAppForPersonService.syncData();
-    }
 }

@@ -35,11 +35,6 @@ public class Y9CommonAppForPersonServiceImpl implements Y9CommonAppForPersonServ
     }
 
     @Override
-    public String getAppNamesFromLog(String personId) {
-        return y9CommonAppForPersonCustomRepository.getAppNamesFromLog(personId);
-    }
-
-    @Override
     public Y9CommonAppForPerson getCommonAppForPersonByPersonId(String personId) {
         return commonAppForPersonRepository.findByPersonId(personId);
     }
@@ -50,17 +45,8 @@ public class Y9CommonAppForPersonServiceImpl implements Y9CommonAppForPersonServ
     }
 
     @Override
-    public String saveForQuery() {
-        return y9CommonAppForPersonCustomRepository.saveForQuery();
-    }
-
-    @Override
     public void saveOrUpdate(Y9CommonAppForPerson cafp) {
         commonAppForPersonRepository.save(cafp);
     }
 
-    @Override
-    public String syncData() {
-        return y9CommonAppForPersonCustomRepository.syncData();
-    }
 }
