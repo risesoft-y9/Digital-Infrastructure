@@ -7,7 +7,6 @@ import java.util.List;
 import java.util.Map;
 
 import org.apache.commons.lang3.StringUtils;
-import org.joda.time.DateTime;
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Service;
 
@@ -15,17 +14,14 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
 import net.risesoft.enums.platform.OrgTypeEnum;
-import net.risesoft.log.constant.Y9ESIndexConst;
 import net.risesoft.model.log.AccessLog;
 import net.risesoft.model.log.LogInfoModel;
 import net.risesoft.model.platform.Person;
 import net.risesoft.model.platform.Tenant;
 import net.risesoft.pojo.Y9Page;
 import net.risesoft.service.Y9logAccessLogService;
-import net.risesoft.service.Y9logMappingService;
 import net.risesoft.y9.Y9LoginUserHolder;
 import net.risesoft.y9public.entity.Y9logAccessLog;
-import net.risesoft.y9public.repository.Y9logAccessLogRepository;
 import net.risesoft.y9public.repository.custom.Y9logAccessLogCustomRepository;
 
 import y9.client.rest.platform.org.DepartmentApiClient;
@@ -51,9 +47,7 @@ public class Y9logAccessLogServiceImpl implements Y9logAccessLogService {
     private final GroupApiClient groupManager;
     private final OrganizationApiClient organizationManager;
     private final TenantApiClient tenantManager;
-    private final Y9logMappingService y9logMappingService;
 
-    private final Y9logAccessLogRepository y9logAccessLogRepository;
     private final Y9logAccessLogCustomRepository y9logAccessLogCustomRepository;
 
     @Override
@@ -61,11 +55,6 @@ public class Y9logAccessLogServiceImpl implements Y9logAccessLogService {
         String endDay) throws UnknownHostException {
         String guidPath = getGuidPath(orgId, orgType, tenantId);
         return y9logAccessLogCustomRepository.getAppClickCount(tenantId, guidPath, startDay, endDay);
-    }
-
-    public String getCurrentYearIndexName() {
-        String yearStr = String.valueOf(new DateTime().getYear());
-        return Y9ESIndexConst.ACCESS_LOG_INDEX + "-" + yearStr;
     }
 
     public String getGuidPath(String orgId, String orgType, String tenantId) {

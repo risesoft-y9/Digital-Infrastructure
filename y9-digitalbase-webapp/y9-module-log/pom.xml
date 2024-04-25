@@ -20,7 +20,7 @@
         <module>risenet-y9boot-api-interface-log</module>
         <module>risenet-y9boot-support-log-elasticsearch-repository</module>
         <module>risenet-y9boot-support-log-jpa-repository</module>
-        <module>risenet-y9boot-support-log-elasticsearch</module>
+        <module>risenet-y9boot-support-log</module>
         <module>risenet-y9boot-webapp-log</module>
     </modules>
 

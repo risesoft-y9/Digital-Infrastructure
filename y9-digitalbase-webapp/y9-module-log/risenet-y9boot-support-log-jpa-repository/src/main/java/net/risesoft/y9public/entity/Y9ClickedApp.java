@@ -24,7 +24,7 @@ import lombok.NoArgsConstructor;
  */
 @Entity
 @Table(name = "Y9_LOG_CLICKED_APP")
-@org.hibernate.annotations.Table(comment = "应用点击信息表", appliesTo = "Y9_Log_CLICKED_APP")
+@org.hibernate.annotations.Table(comment = "应用点击信息表", appliesTo = "Y9_LOG_CLICKED_APP")
 @NoArgsConstructor
 @Data
 public class Y9ClickedApp implements Serializable {

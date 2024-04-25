@@ -52,6 +52,7 @@ import net.risesoft.y9public.repository.custom.Y9logMappingCustomRepository;
  */
 @Component
 @Slf4j
+@Transactional(value = "rsPublicTransactionManager", readOnly = true)
 public class Y9logAccessLogCustomRepositoryImpl implements Y9logAccessLogCustomRepository {
 
     private final Y9logMappingCustomRepository y9logMappingCustomRepository;
@@ -216,7 +217,7 @@ public class Y9logAccessLogCustomRepositoryImpl implements Y9logAccessLogCustomR
         return map;
     }
 
-    public long getOperateTimeCount(Date startDay, Date endDay, Integer tenantType, int i, int longArrayLeng,
+    public long getOperateTimeCount(Date startDay, Date endDay, Integer tenantType, boolean betweenAble,
         long elapsedTimeStart, Long elapsedTimeEnd) {
         return y9logAccessLogRepository.count(new Specification<Y9logAccessLog>() {
             private static final long serialVersionUID = -2210269486911993525L;
@@ -235,7 +236,7 @@ public class Y9logAccessLogCustomRepositoryImpl implements Y9logAccessLogCustomR
                 list.add(
                     criteriaBuilder.between(root.get(Y9LogSearchConsts.LOG_TIME).as(Date.class), startDay, endDay));
 
-                if (i < longArrayLeng - 1) {
+                if (betweenAble) {
                     list.add(criteriaBuilder.between(root.get(Y9LogSearchConsts.ELAPSED_TIME).as(Long.class),
                         elapsedTimeStart, elapsedTimeEnd));
                 } else {
@@ -308,8 +309,12 @@ public class Y9logAccessLogCustomRepositoryImpl implements Y9logAccessLogCustomR
             }
         }
         for (int i = 0; i < longArray.length; i++) {
-            list.add(
-                this.getOperateTimeCount(sDay, eDay, tenantType, i, longArray.length, longArray[i], longArray[i + 1]));
+
+            if (i < longArray.length - 1) {
+                list.add(this.getOperateTimeCount(sDay, eDay, tenantType, true, longArray[i], longArray[i + 1]));
+            } else {
+                list.add(this.getOperateTimeCount(sDay, eDay, tenantType, false, longArray[i], null));
+            }
         }
         return list;
     }

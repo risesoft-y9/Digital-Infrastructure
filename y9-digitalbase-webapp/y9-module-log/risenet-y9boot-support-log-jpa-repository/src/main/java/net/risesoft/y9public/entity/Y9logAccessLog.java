@@ -4,7 +4,6 @@ import java.io.Serializable;
 import java.util.Date;
 
 import javax.persistence.Column;
-import javax.persistence.Convert;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.Index;
@@ -13,7 +12,6 @@ import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 
-import org.hibernate.annotations.ColumnDefault;
 import org.hibernate.annotations.Comment;
 import org.springframework.format.annotation.DateTimeFormat;
 
@@ -23,7 +21,6 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import net.risesoft.enums.platform.ManagerLevelEnum;
-import net.risesoft.persistence.EnumConverter;
 
 /**
  * 日志信息
@@ -35,7 +32,7 @@ import net.risesoft.persistence.EnumConverter;
  */
 @Entity
 @Table(name = "Y9_LOG_ACCESS_LOG",
-    indexes = {@Index(name = "index_logInfo_userId", columnList = "userId ASC", unique = false)})
+    indexes = {@Index(name = "index_logInfo_userId", columnList = "USER_ID ASC", unique = false)})
 @org.hibernate.annotations.Table(comment = "日志信息表", appliesTo = "Y9_LOG_ACCESS_LOG")
 @NoArgsConstructor
 @Data
@@ -160,7 +157,7 @@ public class Y9logAccessLog implements Serializable {
     private String dn;
 
     /** 由ID组成的父子关系列表(正序)，之间用逗号分隔 */
-    @Column(name = "GUID_PATH", unique = true, length = 400)
+    @Column(name = "GUID_PATH", length = 400)
     @Comment("由ID组成的父子关系列表(正序)，之间用逗号分隔")
     private String guidPath;
 
@@ -179,8 +176,6 @@ public class Y9logAccessLog implements Serializable {
      */
     @Column(name = "MANAGER_LEVEL", nullable = false)
     @Comment("管理员类型")
-    @ColumnDefault("0")
-    @Convert(converter = EnumConverter.ManagerLevelEnumConverter.class)
     private String managerLevel;
 
 }

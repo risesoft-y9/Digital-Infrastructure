@@ -40,6 +40,66 @@ spring:
         elasticsearch:
             repositories:
                 enabled: true
+    datasource:
+        druid:
+            filter:
+                stat:
+                    log-slow-sql: true
+                    mergeSql: true
+                    slow-sql-millis: 3000
+                wall:
+                    config:
+                        drop-table-allow: false
+                    enabled: true
+            stat-view-servlet:
+                enabled: false
+                url-pattern: /druid/*
+                login-username: admin
+                login-password: admin
+                reset-enable: false
+                allow: 127.0.0.1
+            web-stat-filter:
+                enabled: false
+                url-pattern: /*
+                exclusions: '*.js,*.gif,*.jpg,*.png,*.css,*.ico,/druid/*,/static/*'
+            y9-public:
+                #driver-class-name: oracle.jdbc.OracleDriver
+                #url: jdbc:oracle:thin:@127.0.0.1:1521:orcl
+                #username: Y9_PUBLIC
+                #password: '111111'
+                driver-class-name: com.mysql.cj.jdbc.Driver
+                url: jdbc:mysql://localhost:3306/y9_public?serverTimezone=GMT%2B8&nullCatalogMeansCurrent=true&useUnicode=true&characterEncoding=utf-8&rewriteBatchedStatements=true&useCompression=true&useSSL=false&allowPublicKeyRetrieval=true
+                username: root
+                password: 111111
+                initialSize: 1
+                maxActive: 20
+                maxPoolPreparedStatementPerConnectionSize: 100
+                maxWait: 60000
+                minEvictableIdleTimeMillis: 300000
+                minIdle: 1
+                poolPreparedStatements: true
+                testOnBorrow: false
+                testOnReturn: false
+                testWhileIdle: true
+                timeBetweenEvictionRunsMillis: 60000
+                useGlobalDataSourceStat: true
+                validationQuery: SELECT 1 FROM DUAL
+    jpa:
+        generate-ddl: true
+        database-platform: org.hibernate.dialect.MySQL8Dialect
+        hibernate:
+            naming:
+                implicit-strategy: org.hibernate.boot.model.naming.ImplicitNamingStrategyLegacyHbmImpl
+                physical-strategy: org.hibernate.boot.model.naming.PhysicalNamingStrategyStandardImpl
+        open-in-view: false
+        properties:
+            hibernate:
+                hbm2ddl:
+                    auto: update
+                dialect: org.hibernate.dialect.MySQL8Dialect
+                jdbc:
+                    batch_size: 100
+                show_sql: true
     elasticsearch:
         rest:
             uris: localhost:9200
@@ -90,8 +150,11 @@ y9:
             apiBasePackages: net.risesoft #有多个时逗号分隔
             apiDomain: vue
         elasticsearch:
-            packagesToScanEntityPublic: net.risesoft.log.entity
-            packagesToScanRepositoryPublic: net.risesoft.log.repository
+            packagesToScanEntityPublic: net.risesoft.y9public.entity
+            packagesToScanRepositoryPublic: net.risesoft.y9public.repository
+        jpa:
+            packagesToScanEntityPublic: net.risesoft.y9public.entity
+            packagesToScanRepositoryPublic: net.risesoft.y9public.repository
         log:
             enabled: true
         security:
