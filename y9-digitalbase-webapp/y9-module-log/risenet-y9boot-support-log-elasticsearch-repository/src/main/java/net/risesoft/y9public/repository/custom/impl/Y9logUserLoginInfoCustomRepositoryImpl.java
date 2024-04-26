@@ -264,6 +264,32 @@ public class Y9logUserLoginInfoCustomRepositoryImpl implements Y9logUserLoginInf
     }
 
     @Override
+    public Y9Page<Y9logUserLoginInfo> pageByLoginTimeBetweenAndSuccess(Date startTime, Date endTime, String success,
+        int page, int rows) {
+        IndexCoordinates index = IndexCoordinates.of(Y9ESIndexConst.LOGIN_INFO_INDEX);
+
+        BoolQueryBuilder builder = QueryBuilders.boolQuery();
+        if (StringUtils.isNotBlank(success)) {
+            builder.must(QueryBuilders.queryStringQuery(success).field(Y9LogSearchConsts.SUCCESS));
+        }
+        if (startTime != null && endTime != null) {
+            builder.must(
+                QueryBuilders.rangeQuery(Y9LogSearchConsts.LOGIN_TIME).from(startTime.getTime()).to(endTime.getTime()));
+        }
+
+        Pageable pageable =
+            PageRequest.of((page < 1) ? 0 : page - 1, rows, Sort.by(Sort.Direction.DESC, Y9LogSearchConsts.LOGIN_TIME));
+        NativeSearchQuery query = new NativeSearchQueryBuilder().withQuery(builder).withPageable(pageable).build();
+        SearchHits<Y9logUserLoginInfo> searchHits =
+            elasticsearchOperations.search(query, Y9logUserLoginInfo.class, index);
+        List<Y9logUserLoginInfo> list = searchHits.stream()
+            .map(org.springframework.data.elasticsearch.core.SearchHit::getContent).collect(Collectors.toList());
+        int totalPages = (int)searchHits.getTotalHits() / rows;
+        return Y9Page.success(page, searchHits.getTotalHits() % rows == 0 ? totalPages : totalPages + 1,
+            searchHits.getTotalHits(), list);
+    }
+
+    @Override
     public Y9Page<Map<String, Object>> pageByUserHostIpAndSuccess(String userHostIp, String success, int page,
         int rows) {
         int startIndex = (page - 1) * rows;
@@ -366,38 +392,9 @@ public class Y9logUserLoginInfoCustomRepositoryImpl implements Y9logUserLoginInf
         return Y9Page.success(page, (int)Math.ceil((float)totalCount / (float)page), totalCount, strList);
     }
 
-    public void save(Y9logUserLoginInfo y9logUserLoginInfo) {
-        y9logUserLoginInfoRepository.save(y9logUserLoginInfo);
-    }
-
     @Override
-    public Y9Page<Y9logUserLoginInfo> search(Date startTime, Date endTime, String success, int page, int rows) {
-        IndexCoordinates index = IndexCoordinates.of(Y9ESIndexConst.LOGIN_INFO_INDEX);
-
-        BoolQueryBuilder builder = QueryBuilders.boolQuery();
-        if (StringUtils.isNotBlank(success)) {
-            builder.must(QueryBuilders.queryStringQuery(success).field(Y9LogSearchConsts.SUCCESS));
-        }
-        if (startTime != null && endTime != null) {
-            builder.must(
-                QueryBuilders.rangeQuery(Y9LogSearchConsts.LOGIN_TIME).from(startTime.getTime()).to(endTime.getTime()));
-        }
-
-        Pageable pageable =
-            PageRequest.of((page < 1) ? 0 : page - 1, rows, Sort.by(Sort.Direction.DESC, Y9LogSearchConsts.LOGIN_TIME));
-        NativeSearchQuery query = new NativeSearchQueryBuilder().withQuery(builder).withPageable(pageable).build();
-        SearchHits<Y9logUserLoginInfo> searchHits =
-            elasticsearchOperations.search(query, Y9logUserLoginInfo.class, index);
-        List<Y9logUserLoginInfo> list = searchHits.stream()
-            .map(org.springframework.data.elasticsearch.core.SearchHit::getContent).collect(Collectors.toList());
-        int totalPages = (int)searchHits.getTotalHits() / rows;
-        return Y9Page.success(page, searchHits.getTotalHits() % rows == 0 ? totalPages : totalPages + 1,
-            searchHits.getTotalHits(), list);
-    }
-
-    @Override
-    public Y9Page<Y9logUserLoginInfo> search(String userHostIp, Date startTime, Date endTime, String success, int page,
-        int rows) {
+    public Y9Page<Y9logUserLoginInfo> pageByUserHostIpLikeAndLoginTimeBetweenAndSuccess(String userHostIp,
+        Date startTime, Date endTime, String success, int page, int rows) {
         IndexCoordinates index = IndexCoordinates.of(Y9ESIndexConst.LOGIN_INFO_INDEX);
 
         BoolQueryBuilder builder = QueryBuilders.boolQuery();
@@ -424,6 +421,10 @@ public class Y9logUserLoginInfoCustomRepositoryImpl implements Y9logUserLoginInf
         int totalPages = (int)searchHits.getTotalHits() / rows;
         return Y9Page.success(page, searchHits.getTotalHits() % rows == 0 ? totalPages : totalPages + 1,
             searchHits.getTotalHits(), list);
+    }
+
+    public void save(Y9logUserLoginInfo y9logUserLoginInfo) {
+        y9logUserLoginInfoRepository.save(y9logUserLoginInfo);
     }
 
     @Override

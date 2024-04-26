@@ -12,7 +12,7 @@ import net.risesoft.y9public.entity.Y9logUserLoginInfo;
 public interface Y9logUserLoginInfoRepository extends ElasticsearchRepository<Y9logUserLoginInfo, String> {
     long countByUserHostIpAndSuccess(String userHostIp, String success);
 
-    long countByUserHostIpAndSuccessAndUserName(String userHostIp, String success, String userName);
+    long countByUserHostIpAndSuccessAndUserNameContaining(String userHostIp, String success, String userName);
 
     Page<Y9logUserLoginInfo> findBySuccessAndUserHostIpAndUserId(String success, String userHostIp, String userId,
         Pageable pageable);

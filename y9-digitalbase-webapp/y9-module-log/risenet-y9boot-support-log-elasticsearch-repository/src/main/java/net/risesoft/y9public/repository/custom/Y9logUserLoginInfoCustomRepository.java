@@ -35,15 +35,16 @@ public interface Y9logUserLoginInfoCustomRepository {
     Y9Page<Y9logUserLoginInfo> page(String tenantId, String userHostIp, String userId, String success, String startTime,
         String endTime, Y9PageQuery pageQuery);
 
+    Y9Page<Y9logUserLoginInfo> pageByLoginTimeBetweenAndSuccess(Date startTime, Date endTime, String success, int page,
+        int rows);
+
     Y9Page<Map<String, Object>> pageByUserHostIpAndSuccess(String userHostIp, String success, int page, int rows);
 
     Y9Page<Map<String, Object>> pageByUserHostIpAndSuccessAndUserNameLike(String userHostIp, String success,
         String userName, int page, int rows);
 
-    Y9Page<Y9logUserLoginInfo> search(Date startTime, Date endTime, String success, int page, int rows);
-
-    Y9Page<Y9logUserLoginInfo> search(String userHostIp, Date startTime, Date endTime, String success, int page,
-        int rows);
+    Y9Page<Y9logUserLoginInfo> pageByUserHostIpLikeAndLoginTimeBetweenAndSuccess(String userHostIp, Date startTime,
+        Date endTime, String success, int page, int rows);
 
     Y9Page<Y9logUserLoginInfo> searchQuery(String tenantId, String managerLevel, LogInfoModel loginInfoModel, int page,
         int rows);

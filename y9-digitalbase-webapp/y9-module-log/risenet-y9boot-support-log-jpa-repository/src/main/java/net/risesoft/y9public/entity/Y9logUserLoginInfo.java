@@ -143,7 +143,7 @@ public class Y9logUserLoginInfo implements Serializable {
     /**
      * 三员级别 {@link ManagerLevelEnum}
      */
-    @Column(name = "MANAGER_LEVEL", nullable = false)
+    @Column(name = "MANAGER_LEVEL")
     @Comment("三员级别")
     private String managerLevel;
 }

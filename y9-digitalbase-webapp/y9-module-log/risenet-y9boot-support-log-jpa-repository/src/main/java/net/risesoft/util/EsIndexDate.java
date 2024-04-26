@@ -1,11 +1,11 @@
 package net.risesoft.util;
 
-import cn.hutool.core.date.DateTime;
+import java.util.Date;
 
 public class EsIndexDate {
 
     public String getDateStr() {
-        return String.valueOf(new DateTime().getYear());
+        return String.valueOf(new Date().getYear());
     }
 
 }

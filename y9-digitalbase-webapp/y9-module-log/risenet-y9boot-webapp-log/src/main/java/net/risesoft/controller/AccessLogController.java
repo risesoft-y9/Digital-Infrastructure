@@ -16,6 +16,7 @@ import lombok.extern.slf4j.Slf4j;
 
 import net.risesoft.consts.InitDataConsts;
 import net.risesoft.enums.platform.ManagerLevelEnum;
+import net.risesoft.log.LogLevelEnum;
 import net.risesoft.log.annotation.RiseLog;
 import net.risesoft.model.log.LogInfoModel;
 import net.risesoft.pojo.Y9Page;
@@ -50,6 +51,7 @@ public class AccessLogController {
      * @param endDay 结束时间
      * @return
      */
+    @RiseLog(moduleName = "日志系统", operationName = "统计APP被点击的排行情况", logLevel = LogLevelEnum.RSLOG)
     @RequestMapping(value = "/getAppClickCount")
     public Y9Result<Map<String, Object>> getAppClickCount(String orgId, String orgType, String startDay,
         String endDay) {
@@ -72,6 +74,7 @@ public class AccessLogController {
      * @param endDay 结束时间
      * @return
      */
+    @RiseLog(moduleName = "日志系统", operationName = "统计模块访问情况", logLevel = LogLevelEnum.RSLOG)
     @RequestMapping(value = "/getModuleAccessData")
     public Y9Result<Map<String, Object>> getModuleAccessData(String orgId, String orgType, String startDay,
         String endDay) {
@@ -86,6 +89,7 @@ public class AccessLogController {
      * @param selectedDate 选择日期
      * @return
      */
+    @RiseLog(moduleName = "日志系统", operationName = "获取操作状态的统计数据", logLevel = LogLevelEnum.RSLOG)
     @RequestMapping(value = "/getOperateStatusData")
     public Y9Result<Map<String, Object>> getOperateStatusData(@RequestParam(required = false) String selectedDate) {
         Map<String, Object> map = logService.getOperateStatusCount(selectedDate);
@@ -99,6 +103,7 @@ public class AccessLogController {
      * @param endDay 结束日期
      * @return
      */
+    @RiseLog(moduleName = "日志系统", operationName = "获取操作用时的柱状图数据", logLevel = LogLevelEnum.RSLOG)
     @RequestMapping(value = "/listEplasedTimeData")
     public Y9Result<List<Long>> listEplasedTimeData(String startDay, String endDay) {
         List<Long> list = logService.listOperateTimeCount(startDay, endDay);
@@ -113,7 +118,7 @@ public class AccessLogController {
      * @param sort 排序字段
      * @return
      */
-    @RiseLog(moduleName = "日志系统", operationName = "查看安全审计员日志")
+    @RiseLog(moduleName = "日志系统", operationName = "查看安全审计员日志", logLevel = LogLevelEnum.MANAGERLOG)
     @RequestMapping(value = "/pageByAuditManagers")
     public Y9Page<Y9logAccessLog> pageByAuditManagers(String userId, Y9PageQuery pageQuery, String sort) {
         String tenantId = Y9LoginUserHolder.getTenantId();
@@ -138,6 +143,7 @@ public class AccessLogController {
      * @param pageQuery 分页信息
      * @return
      */
+    @RiseLog(moduleName = "日志系统", operationName = "搜索操作用时列表", logLevel = LogLevelEnum.RSLOG)
     @RequestMapping(value = "/pageByElapsedTime")
     public Y9Page<Y9logAccessLog> pageByElapsedTime(LogInfoModel searchDto, String startDay, String endDay,
         String sTime, String lTime, Y9PageQuery pageQuery) {
@@ -163,6 +169,7 @@ public class AccessLogController {
      * @return
      * @throws ParseException
      */
+    @RiseLog(moduleName = "日志系统", operationName = "获取操作状态列表数据", logLevel = LogLevelEnum.RSLOG)
     @RequestMapping(value = "/pageByOperateStatus")
     public Y9Page<Y9logAccessLog> pageByOperateStatus(LogInfoModel searchDto, String date, String hour,
         String operateStatus, Y9PageQuery pageQuery) throws ParseException {
@@ -180,7 +187,7 @@ public class AccessLogController {
      * @param sort 排序字段
      * @return
      */
-    @RiseLog(moduleName = "日志系统", operationName = "查看安全保密员日志")
+    @RiseLog(moduleName = "日志系统", operationName = "查看安全保密员日志", logLevel = LogLevelEnum.MANAGERLOG)
     @RequestMapping(value = "/pageBySecurityManagers")
     public Y9Page<Y9logAccessLog> pageBySecurityManagers(String userId, Y9PageQuery pageQuery, String sort) {
         String tenantId = Y9LoginUserHolder.getTenantId();
@@ -202,7 +209,7 @@ public class AccessLogController {
      * @param sort 排序字段
      * @return
      */
-    @RiseLog(moduleName = "日志系统", operationName = "查看系统管理员日志")
+    @RiseLog(moduleName = "日志系统", operationName = "查看系统管理员日志", logLevel = LogLevelEnum.MANAGERLOG)
     @RequestMapping(value = "/pageBySystemManagers")
     public Y9Page<Y9logAccessLog> pageBySystemManagers(String userId, Y9PageQuery pageQuery, String sort) {
         String tenantId = Y9LoginUserHolder.getTenantId();
@@ -224,7 +231,7 @@ public class AccessLogController {
      * @param sort 排序字段
      * @return
      */
-    @RiseLog(moduleName = "日志系统", operationName = "查看用户日志")
+    @RiseLog(moduleName = "日志系统", operationName = "查看用户日志", logLevel = LogLevelEnum.MANAGERLOG)
     @RequestMapping(value = "/pageByUsers")
     public Y9Page<Y9logAccessLog> pageByUsers(String userId, Y9PageQuery pageQuery, String sort) {
         Page<Y9logAccessLog> pageList = logService.pageByTenantIdAndManagerLevelAndUserId(
@@ -241,6 +248,7 @@ public class AccessLogController {
      * @param sort 排序字段
      * @return
      */
+    @RiseLog(moduleName = "日志系统", operationName = "获取日志分页列表", logLevel = LogLevelEnum.RSLOG)
     @RequestMapping(value = "/pageLogInfo")
     public Y9Page<Y9logAccessLog> pageLogInfo(Y9PageQuery pageQuery, String sort) {
         Page<Y9logAccessLog> pageList = logService.page(pageQuery.getPage(), pageQuery.getSize(), sort);
@@ -257,6 +265,7 @@ public class AccessLogController {
      * @param endTime 结束时间
      * @return
      */
+    @RiseLog(moduleName = "日志系统", operationName = "搜索日志信息", logLevel = LogLevelEnum.RSLOG)
     @RequestMapping(value = "/pageSreachList")
     public Y9Page<Y9logAccessLog> pageSreachList(LogInfoModel searchDto, Y9PageQuery pageQuery,
         @RequestParam(required = false) String startTime, @RequestParam(required = false) String endTime) {
@@ -273,7 +282,7 @@ public class AccessLogController {
      * @param pageQuery 分页信息
      * @return
      */
-    @RiseLog(moduleName = "日志系统", operationName = "查询安全审计员日志")
+    @RiseLog(moduleName = "日志系统", operationName = "查询安全审计员日志", logLevel = LogLevelEnum.MANAGERLOG)
     @RequestMapping(value = "/searchAuditManagers")
     public Y9Page<Y9logAccessLog> searchAuditManagers(LogInfoModel loginInfoModel, Y9PageQuery pageQuery) {
         String tenantId = Y9LoginUserHolder.getTenantId();
@@ -294,7 +303,7 @@ public class AccessLogController {
      * @param pageQuery 分页信息
      * @return
      */
-    @RiseLog(moduleName = "日志系统", operationName = "查询安全保密员日志")
+    @RiseLog(moduleName = "日志系统", operationName = "查询安全保密员日志", logLevel = LogLevelEnum.MANAGERLOG)
     @RequestMapping(value = "/searchSecurityManagers")
     public Y9Page<Y9logAccessLog> searchSecurityManagers(LogInfoModel loginInfoModel, Y9PageQuery pageQuery) {
         String tenantId = Y9LoginUserHolder.getTenantId();
@@ -315,7 +324,7 @@ public class AccessLogController {
      * @param pageQuery 分页信息
      * @return
      */
-    @RiseLog(moduleName = "日志系统", operationName = "查询系统管理员日志")
+    @RiseLog(moduleName = "日志系统", operationName = "查询系统管理员日志", logLevel = LogLevelEnum.MANAGERLOG)
     @RequestMapping(value = "/searchSystemManagers")
     public Y9Page<Y9logAccessLog> searchSystemManagers(LogInfoModel loginInfoModel, Y9PageQuery pageQuery) {
         String tenantId = Y9LoginUserHolder.getTenantId();
@@ -336,7 +345,7 @@ public class AccessLogController {
      * @param pageQuery 分页信息
      * @return
      */
-    @RiseLog(moduleName = "日志系统", operationName = "查询用户日志")
+    @RiseLog(moduleName = "日志系统", operationName = "查询用户日志", logLevel = LogLevelEnum.MANAGERLOG)
     @RequestMapping(value = "/searchUsers")
     public Y9Page<Y9logAccessLog> searchUsers(LogInfoModel loginInfoModel, Y9PageQuery pageQuery) {
         Page<Y9logAccessLog> pageList = logService.searchQuery(Y9LoginUserHolder.getTenantId(),

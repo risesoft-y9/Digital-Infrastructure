@@ -12,6 +12,7 @@ import lombok.RequiredArgsConstructor;
 
 import net.risesoft.enums.platform.OrgTreeTypeEnum;
 import net.risesoft.enums.platform.TenantTypeEnum;
+import net.risesoft.log.LogLevelEnum;
 import net.risesoft.log.annotation.RiseLog;
 import net.risesoft.model.platform.OrgUnit;
 import net.risesoft.model.platform.Organization;
@@ -45,7 +46,7 @@ public class OrgUnitController {
      * @param tenantId 租户id
      * @return
      */
-    @RiseLog(operationName = "获取租户组织机构列表")
+    @RiseLog(moduleName = "日志系统", operationName = "获取租户组织机构列表", logLevel = LogLevelEnum.RSLOG)
     @RequestMapping(value = "/getTenantOrganization")
     public Y9Result<List<Organization>> getTenantORGOrganization(String tenantId) {
         if (StringUtils.isBlank(tenantId)) {
@@ -61,7 +62,7 @@ public class OrgUnitController {
      * @param tenantType 租户类型
      * @return
      */
-    @RiseLog(operationName = "根据租户类型获取所有租户信息")
+    @RiseLog(moduleName = "日志系统", operationName = "根据租户类型获取所有租户信息", logLevel = LogLevelEnum.RSLOG)
     @RequestMapping(value = "/getTenantTreeByTenantType")
     public List<Organization> getTenantTreeByTenantType(@RequestParam Integer tenantType) {
         List<Tenant> tenants =
@@ -87,7 +88,7 @@ public class OrgUnitController {
      * @param treeType 数类型
      * @return
      */
-    @RiseLog(operationName = "获取组织架构树")
+    @RiseLog(moduleName = "日志系统", operationName = "获取组织架构树", logLevel = LogLevelEnum.RSLOG)
     @RequestMapping(value = "/getTree")
     public Y9Result<List<OrgUnit>> getTree(String tenantId, @RequestParam String id,
         @RequestParam OrgTreeTypeEnum treeType) {

@@ -119,7 +119,7 @@ public class Y9logAccessLog implements Serializable {
     private String systemName;
 
     /** 访问服务器IP */
-    @Column(name = "SERVER_IP", length = 50, nullable = false)
+    @Column(name = "SERVER_IP", length = 50)
     @Comment(value = "访问服务器IP")
     private String serverIp;
 
@@ -174,7 +174,7 @@ public class Y9logAccessLog implements Serializable {
     /**
      * 管理员类型 {@link ManagerLevelEnum}
      */
-    @Column(name = "MANAGER_LEVEL", nullable = false)
+    @Column(name = "MANAGER_LEVEL")
     @Comment("管理员类型")
     private String managerLevel;
 

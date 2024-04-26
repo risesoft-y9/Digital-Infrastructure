@@ -18,7 +18,7 @@ public interface Y9logUserLoginInfoRepository
     extends JpaRepository<Y9logUserLoginInfo, String>, JpaSpecificationExecutor<Y9logUserLoginInfo> {
     long countByUserHostIpAndSuccess(String userHostIp, String success);
 
-    long countByUserHostIpAndSuccessAndUserName(String userHostIp, String success, String userName);
+    long countByUserHostIpAndSuccessAndUserNameContaining(String userHostIp, String success, String userName);
 
     Page<Y9logUserLoginInfo> findBySuccessAndUserHostIpAndUserId(String success, String userHostIp, String userId,
         Pageable pageable);
@@ -28,8 +28,8 @@ public interface Y9logUserLoginInfoRepository
     Page<Y9logUserLoginInfo> findByUserHostIpAndSuccess(String userHostIp, String success, Pageable pageable);
 
     // 模糊查询终端IP下的人员
-    @Query("select u.userId,u.userName,u.userHostIp,COUNT(*) from Y9logUserLoginInfo u where u.userHostIp = ?1 and u.success = ?2 and u.userName like '%?3%' group by u.userId,u.userName,u.userHostIp")
-    public Page<Object[]> findByUserHostIpAndSuccessAndUserNameLike(String userHostIp, String success, String userName,
+    @Query("select u.userId,u.userName,u.userHostIp,COUNT(*) from Y9logUserLoginInfo u where u.userHostIp = ?1 and u.success = ?2 and u.userName like %?3% group by u.userId,u.userName,u.userHostIp")
+    Page<Object[]> findByUserHostIpAndSuccessAndUserNameLike(String userHostIp, String success, String userName,
         Pageable pageable);
 
     List<Y9logUserLoginInfo> findByUserId(String userId);
@@ -38,15 +38,15 @@ public interface Y9logUserLoginInfoRepository
 
     // 获得每个被登陆成功的终端IP下所有人员名称列表
     @Query("select u.userId,u.userName,u.userHostIp,COUNT(u) from Y9logUserLoginInfo u where u.userHostIp = ?1 and u.success = ?2 group by u.userId,u.userName,u.userHostIp")
-    public Page<Object[]> findDistinctByUserHostIpAndSuccess(String userHostIp, String success, Pageable pageable);
+    Page<Object[]> findDistinctByUserHostIpAndSuccess(String userHostIp, String success, Pageable pageable);
 
     // 获得该人员登陆此终端ip的次数。
-    @Query("select DISTINCT(u.userHostIp),count(*) from Y9logUserLoginInfo u where u.userHostIp like '?1%' group by u.userHostIp")
-    public List<Object[]> findDistinctByUserHostIpLike(String userHostIp);
+    @Query("select DISTINCT(u.userHostIp),count(*) from Y9logUserLoginInfo u where u.userHostIp like ?1% group by u.userHostIp")
+    List<Object[]> findDistinctByUserHostIpLike(String userHostIp);
 
-    // 获得该人员登陆此终端ip的次数。
+    // 根据人员id，获得该人员登陆的所有终端ip和登录次数。
     @Query("select DISTINCT(u.userHostIp),count(*) from Y9logUserLoginInfo u where u.userId=?1 and u.loginTime>=?2 and u.loginTime<=?3 group by u.userHostIp")
-    public List<Object[]> findDistinctUserHostIpByUserIdAndLoginTime(String userId, Date startTime, Date endTime);
+    List<Object[]> findDistinctUserHostIpByUserIdAndLoginTime(String userId, Date startTime, Date endTime);
 
     Y9logUserLoginInfo findTopByTenantIdAndUserIdOrderByLoginTimeDesc(String tenantId, String userId);
 

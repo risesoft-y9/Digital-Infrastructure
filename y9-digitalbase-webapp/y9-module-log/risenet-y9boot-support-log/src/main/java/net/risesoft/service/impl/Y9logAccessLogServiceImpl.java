@@ -11,7 +11,6 @@ import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Service;
 
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 
 import net.risesoft.enums.platform.OrgTypeEnum;
 import net.risesoft.model.log.AccessLog;
@@ -37,7 +36,6 @@ import y9.client.rest.platform.tenant.TenantApiClient;
  * @author mengjuhua
  */
 @Service
-@Slf4j
 @RequiredArgsConstructor
 public class Y9logAccessLogServiceImpl implements Y9logAccessLogService {
 
@@ -62,17 +60,17 @@ public class Y9logAccessLogServiceImpl implements Y9logAccessLogService {
         if (StringUtils.isNotBlank(orgId) && StringUtils.isNotBlank(orgType)) {
             if (orgType.equals(OrgTypeEnum.ORGANIZATION.getEnName())) {
                 guidPath = organizationManager.get(tenantId, orgId).getData().getGuidPath();
+
             } else if (orgType.equals(OrgTypeEnum.DEPARTMENT.getEnName())) {
-                // orgDepartmentService.getDNById(orgId);
                 guidPath = departmentManager.get(tenantId, orgId).getData().getGuidPath();
+
             } else if (orgType.equals(OrgTypeEnum.GROUP.getEnName())) {
-                // orgGroupService.getDNById(orgId);
                 guidPath = groupManager.get(tenantId, orgId).getData().getGuidPath();
+
             } else if (orgType.equals(OrgTypeEnum.POSITION.getEnName())) {
-                // orgPositionService.getDNById(orgId);
                 guidPath = positionManager.get(tenantId, orgId).getData().getGuidPath();
+
             } else if (orgType.equals(OrgTypeEnum.PERSON.getEnName())) {
-                // orgPersonService.getDNById(orgId);
                 guidPath = personManager.get(tenantId, orgId).getData().getGuidPath();
             }
         }
@@ -86,7 +84,6 @@ public class Y9logAccessLogServiceImpl implements Y9logAccessLogService {
         return y9logAccessLogCustomRepository.getModuleNameCount(tenantId, guidPath, startDay, endDay);
     }
 
-    @SuppressWarnings("deprecation")
     @Override
     public Map<String, Object> getOperateStatusCount(String selectedDate) {
         return y9logAccessLogCustomRepository.getOperateStatusCount(selectedDate,

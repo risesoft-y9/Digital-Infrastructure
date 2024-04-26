@@ -14,6 +14,7 @@ import lombok.RequiredArgsConstructor;
 
 import net.risesoft.id.IdType;
 import net.risesoft.id.Y9IdGenerator;
+import net.risesoft.log.LogLevelEnum;
 import net.risesoft.log.OperationTypeEnum;
 import net.risesoft.log.annotation.RiseLog;
 import net.risesoft.pojo.Y9Page;
@@ -43,7 +44,8 @@ public class FieldMappingController {
      * @param ids id数组
      * @return
      */
-    @RiseLog(operationType = OperationTypeEnum.DELETE, operationName = "批量移除字段映射")
+    @RiseLog(moduleName = "日志系统", operationType = OperationTypeEnum.DELETE, operationName = "批量移除字段映射",
+        logLevel = LogLevelEnum.RSLOG)
     @PostMapping(value = "/deleteByIds")
     public Y9Result<String> deleteByIds(String ids) {
         String[] id = ids.split(",");
@@ -59,7 +61,8 @@ public class FieldMappingController {
      * @param id 主键
      * @return
      */
-    @RiseLog(operationType = OperationTypeEnum.DELETE, operationName = "移除字段映射")
+    @RiseLog(moduleName = "日志系统", operationType = OperationTypeEnum.DELETE, operationName = "移除字段映射",
+        logLevel = LogLevelEnum.RSLOG)
     @PostMapping(value = "/deleteFieldMapping")
     public Y9Result<String> deleteFieldMapping(@RequestParam String id) {
         y9logMappingService.deleteFieldMapping(id);
@@ -72,7 +75,7 @@ public class FieldMappingController {
      * @param id 字段映射id
      * @return
      */
-    @RiseLog(operationName = "根据id，获取字段映射")
+    @RiseLog(moduleName = "日志系统", operationName = "根据id，获取字段映射", logLevel = LogLevelEnum.RSLOG)
     @GetMapping(value = "/getFieldMappingById")
     public Y9Result<Y9logMapping> getFieldMappingById(String id) {
         Y9logMapping y9logMapping = y9logMappingService.getFieldMappingEntity(id);
@@ -86,7 +89,7 @@ public class FieldMappingController {
      * @param sort 排序字段
      * @return
      */
-    @RiseLog(operationName = "获取字段映射分页列表")
+    @RiseLog(moduleName = "日志系统", operationName = "获取字段映射分页列表", logLevel = LogLevelEnum.RSLOG)
     @GetMapping(value = "/page")
     public Y9Page<Y9logMapping> page(Y9PageQuery pageQuery, String sort) {
         Page<Y9logMapping> resultPage = y9logMappingService.page(pageQuery.getPage(), pageQuery.getSize(), sort);
@@ -102,7 +105,7 @@ public class FieldMappingController {
      * @param pageQuery 分页信息
      * @return
      */
-    @RiseLog(operationName = "搜索字段映射分页列表")
+    @RiseLog(moduleName = "日志系统", operationName = "搜索字段映射分页列表", logLevel = LogLevelEnum.RSLOG)
     @GetMapping(value = "/pageSearchList")
     public Y9Page<Y9logMapping> pageSearchList(String modularName, String modularCnName, Y9PageQuery pageQuery) {
         Page<Y9logMapping> resultPage =
@@ -117,7 +120,8 @@ public class FieldMappingController {
      * @param modularNameMapping 字段映射信息
      * @return
      */
-    @RiseLog(operationType = OperationTypeEnum.ADD, operationName = "保存字段映射信息")
+    @RiseLog(moduleName = "日志系统", operationType = OperationTypeEnum.ADD, operationName = "保存字段映射信息",
+        logLevel = LogLevelEnum.RSLOG)
     @PostMapping(value = "/saveMapping")
     public Y9Result<String> saveMapping(Y9logMapping modularNameMapping) {
         if (StringUtils.isBlank(modularNameMapping.getId())) {
@@ -133,7 +137,7 @@ public class FieldMappingController {
      * @param name 字段映射
      * @return
      */
-    @RiseLog(operationName = "验证字段映射是否存在")
+    @RiseLog(moduleName = "日志系统", operationName = "验证字段映射是否存在", logLevel = LogLevelEnum.RSLOG)
     @PostMapping(value = "/validate")
     public Y9Result<Boolean> validateField(String name) {
         List<Y9logMapping> list = y9logMappingService.validateName(name);

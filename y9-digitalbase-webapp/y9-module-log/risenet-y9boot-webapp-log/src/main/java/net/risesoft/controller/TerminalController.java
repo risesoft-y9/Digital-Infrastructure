@@ -18,6 +18,7 @@ import org.springframework.web.bind.annotation.RestController;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
+import net.risesoft.log.LogLevelEnum;
 import net.risesoft.log.annotation.RiseLog;
 import net.risesoft.model.platform.Person;
 import net.risesoft.pojo.Y9Page;
@@ -52,13 +53,13 @@ public class TerminalController {
     private final Y9logUserHostIpInfoService y9logUserHostIpInfoService;
 
     /**
-     * 获取地址段的登录人数数据
+     * 获取一定时间段内的各个IP段登录人数数据
      *
      * @param startTime 开始时间
      * @param endTime 结束时间
      * @return
      */
-    @RiseLog(operationName = "获取地址段的登录人数数据")
+    @RiseLog(moduleName = "日志系统", operationName = "获取一定时间段内的各个IP段登录人数数据", logLevel = LogLevelEnum.RSLOG)
     @GetMapping(value = "/getUserLoginDataByIpSection")
     public Y9Result<Map<String, Object>> getUserLoginDataByIpSection(String startTime, String endTime) {
         Map<String, Object> map = new HashMap<>();
@@ -89,7 +90,7 @@ public class TerminalController {
      *
      * @return
      */
-    @RiseLog(operationName = "获取所有登录的终端IP")
+    @RiseLog(moduleName = "日志系统", operationName = "获取所有登录的终端IP", logLevel = LogLevelEnum.RSLOG)
     @GetMapping(value = "/listAllUserHostIPs")
     public Y9Result<List<Map<String, Object>>> listAllUserHostIPs() {
         List<Map<String, Object>> cIPlist = new ArrayList<>();
@@ -111,7 +112,7 @@ public class TerminalController {
      * @param cip c类IP段
      * @return String
      */
-    @RiseLog(operationName = "根据C类IP段，获取属于该IP段的IP地址和次数")
+    @RiseLog(moduleName = "日志系统", operationName = "根据C类IP段，获取属于该IP段的IP地址和次数", logLevel = LogLevelEnum.RSLOG)
     @GetMapping(value = "/listTerminalIpByCip")
     public Y9Result<List<Map<String, Object>>> listTerminalIpByCip(String cip) {
         List<Map<String, Object>> list = y9logUserLoginInfoService.listUserHostIpByCip(cip);
@@ -126,7 +127,7 @@ public class TerminalController {
      * @param userHostIp 终端IP
      * @return
      */
-    @RiseLog(operationName = "查询出该时间段终端IP的登录详情页面")
+    @RiseLog(moduleName = "日志系统", operationName = "查询出该时间段终端IP的登录详情页面", logLevel = LogLevelEnum.RSLOG)
     @GetMapping(value = "/listTerminator")
     public Y9Result<List<String>> listTerminator(String startTime, String endTime, String userHostIp) {
         List<String> userHostIpList = null;
@@ -144,7 +145,7 @@ public class TerminalController {
      * @param userId 人员id
      * @return
      */
-    @RiseLog(operationName = "根据人员id，获取所有登陆成功的终端ip")
+    @RiseLog(moduleName = "日志系统", operationName = "根据人员id，获取所有登陆成功的终端ip", logLevel = LogLevelEnum.RSLOG)
     @GetMapping(value = "/listUserHostIpByUserId")
     public Y9Result<List<Map<String, Object>>> listUserHostIpByUserId(@RequestParam String userId) {
         List<Map<String, Object>> list = new ArrayList<>();
@@ -167,7 +168,7 @@ public class TerminalController {
      * @param pageQuery 分页详情
      * @return
      */
-    @RiseLog(operationName = "根据部门获取部门下的所有人员")
+    @RiseLog(moduleName = "日志系统", operationName = "根据部门获取部门下的所有人员", logLevel = LogLevelEnum.RSLOG)
     @GetMapping(value = "/pagePersonByDeptId")
     public Y9Page<Map<String, Object>> pagePersonByDeptId(String parentId, Y9PageQuery pageQuery) {
         String tenantId = Y9LoginUserHolder.getTenantId();
@@ -198,7 +199,7 @@ public class TerminalController {
      * @param pageQuery 分页详情
      * @return
      */
-    @RiseLog(operationName = "根据部门id以及人员名称模糊查询该部门下的人员")
+    @RiseLog(moduleName = "日志系统", operationName = "根据部门id以及人员名称模糊查询该部门下的人员", logLevel = LogLevelEnum.RSLOG)
     @GetMapping(value = "/pagePersonByDeptIdAndUserName")
     public Y9Page<Map<String, Object>> pagePersonByDeptIdAndUserName(String parentId, String userName,
         Y9PageQuery pageQuery) {
@@ -219,7 +220,7 @@ public class TerminalController {
                 }
             }
         }
-        return Y9Page.success(pageQuery.getPage(), 0, list.size(), list);
+        return Y9Page.success(pageQuery.getPage(), personPage.getTotalPages(), personPage.getTotal(), list);
     }
 
     /**
@@ -231,7 +232,7 @@ public class TerminalController {
      * @param pageQuery 分页详情
      * @return
      */
-    @RiseLog(operationName = "根据终端C段IP和时间段查询出该时间段终端IP的登录详情")
+    @RiseLog(moduleName = "日志系统", operationName = "根据终端C段IP和时间段查询出该时间段终端IP的登录详情", logLevel = LogLevelEnum.RSLOG)
     @GetMapping(value = "/pageSearchByLoginTime")
     public Y9Page<Y9logUserLoginInfo> pageSearchByLoginTime(String startTime, String endTime, String userHostIp,
         Y9PageQuery pageQuery) {
@@ -254,11 +255,11 @@ public class TerminalController {
         }
         Y9Page<Y9logUserLoginInfo> userLoginInfoList = null;
         if (StringUtils.isNotBlank(userHostIp)) {
-            userLoginInfoList = y9logUserLoginInfoService.search(userHostIp, start, end, "true", pageQuery.getPage(),
-                pageQuery.getSize());
+            userLoginInfoList = y9logUserLoginInfoService.pageByUserHostIpLikeAndLoginTimeBetweenAndSuccess(userHostIp,
+                start, end, "true", pageQuery.getPage(), pageQuery.getSize());
         } else {
-            userLoginInfoList =
-                y9logUserLoginInfoService.search(start, end, "true", pageQuery.getPage(), pageQuery.getSize());
+            userLoginInfoList = y9logUserLoginInfoService.pageByLoginTimeBetweenAndSuccess(start, end, "true",
+                pageQuery.getPage(), pageQuery.getSize());
         }
 
         return userLoginInfoList;
@@ -274,7 +275,7 @@ public class TerminalController {
      * @param pageQuery 分页详情
      * @return
      */
-    @RiseLog(operationName = "根据终端IP和人员以及时间段模糊搜索改人员的详细信息")
+    @RiseLog(moduleName = "日志系统", operationName = "根据终端IP和人员以及时间段模糊搜索改人员的详细信息", logLevel = LogLevelEnum.RSLOG)
     @GetMapping(value = "/pageSearchList")
     public Y9Page<Y9logUserLoginInfo> pageSearchList(String userHostIp, String userId, String startTime, String endTime,
         Y9PageQuery pageQuery) {
@@ -289,7 +290,7 @@ public class TerminalController {
      * @param pageQuery 分页详情
      * @return
      */
-    @RiseLog(operationName = "根据不同的终端IP，查询相关人员信息")
+    @RiseLog(moduleName = "日志系统", operationName = "根据不同的终端IP，查询相关人员信息", logLevel = LogLevelEnum.RSLOG)
     @GetMapping(value = "/pageUserLoginListData")
     public Y9Page<Map<String, Object>> pageUserLoginListData(String userHostIp, String userName,
         Y9PageQuery pageQuery) {
@@ -309,11 +310,11 @@ public class TerminalController {
      * @param pageQuery 分页详情
      * @return
      */
-    @RiseLog(operationName = "根据终端IP和人员获取人员的详细信息")
+    @RiseLog(moduleName = "日志系统", operationName = "根据终端IP和人员获取人员的详细信息", logLevel = LogLevelEnum.RSLOG)
     @GetMapping(value = "/pageUserTerminalDetail")
     public Y9Page<Y9logUserLoginInfo> pageUserTerminalDetail(String userId, String userHostIp, Y9PageQuery pageQuery) {
         Page<Y9logUserLoginInfo> userLoginInfoList = y9logUserLoginInfoService
-            .pageBySuccessAndServerIpAndUserName("true", userHostIp, userId, pageQuery.getPage(), pageQuery.getSize());
+            .pageBySuccessAndUserHostIpAndUserId("true", userHostIp, userId, pageQuery.getPage(), pageQuery.getSize());
         return Y9Page.success(pageQuery.getPage(), userLoginInfoList.getTotalPages(),
             userLoginInfoList.getTotalElements(), userLoginInfoList.getContent());
     }

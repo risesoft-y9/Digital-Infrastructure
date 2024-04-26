@@ -1,5 +1,7 @@
 package net.risesoft.y9public.repository;
 
+import java.util.Date;
+
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -12,12 +14,12 @@ import net.risesoft.y9public.entity.Y9logAccessLog;
 public interface Y9logAccessLogRepository
     extends JpaRepository<Y9logAccessLog, String>, JpaSpecificationExecutor<Y9logAccessLog> {
 
-    long countBySuccessAndLogTimeBetweenAndUserNameNotNull(String success, long logTimeStart, long logTimeEnd);
+    long countBySuccessAndLogTimeBetweenAndUserNameNotNull(String success, Date logTimeStart, Date logTimeEnd);
 
     long countByTenantIdAndSuccessAndLogTimeBetweenAndUserNameNotNull(String tenantId, String success,
-        long logTimeStart, long logTimeEnd);
+        Date logTimeStart, Date logTimeEnd);
 
-    long countByModularNameAndLogTimeBetween(String ModularName, long logTimeStart, long logTimeEnd);
+    long countByModularNameAndLogTimeBetween(String ModularName, Date logTimeStart, Date logTimeEnd);
 
     Page<Y9logAccessLog> findByOperateType(String operateType, Pageable pageable);
 

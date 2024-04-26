@@ -1,6 +1,7 @@
 package net.risesoft.y9public.repository.custom.impl;
 
 import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -40,9 +41,9 @@ public class Y9CommonAppForPersonCustomRepositoryImpl implements Y9CommonAppForP
     public long getCount() {
         // 最近半年
         Calendar c = Calendar.getInstance();
-        long endTime = c.getTime().getTime();
+        Date endTime = c.getTime();
         c.add(Calendar.MONTH, -6);
-        long startTime = c.getTime().getTime();
+        Date startTime = c.getTime();
         return y9logAccessLogRepository.countByModularNameAndLogTimeBetween(Y9LogSearchConsts.MODULAR_NAME, startTime,
             endTime);
     }

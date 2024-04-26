@@ -79,9 +79,8 @@ public class Y9logIpDeptMappingServiceImpl implements Y9logIpDeptMappingService 
 
     @Override
     public List<String> listClientIpSections() {
-        List<String> clientIpSectionList = this.listAllOrderByClientIpSection().stream()
-            .map(Y9logIpDeptMapping::getClientIpSection).collect(Collectors.toList());
-        return clientIpSectionList;
+        return this.listAllOrderByClientIpSection().stream().map(Y9logIpDeptMapping::getClientIpSection)
+            .collect(Collectors.toList());
     }
 
     @Override

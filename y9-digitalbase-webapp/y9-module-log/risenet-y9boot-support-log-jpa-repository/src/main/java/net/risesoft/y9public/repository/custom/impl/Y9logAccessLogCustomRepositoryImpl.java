@@ -19,6 +19,7 @@ import javax.persistence.criteria.Root;
 
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang3.time.FastDateFormat;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -55,8 +56,13 @@ import net.risesoft.y9public.repository.custom.Y9logMappingCustomRepository;
 @Transactional(value = "rsPublicTransactionManager", readOnly = true)
 public class Y9logAccessLogCustomRepositoryImpl implements Y9logAccessLogCustomRepository {
 
+    private static final FastDateFormat DATE_TIME_FORMAT = FastDateFormat.getInstance("yyyy-MM-dd HH:mm:ss");
+
+    private static final FastDateFormat DATE_FORMAT = FastDateFormat.getInstance("yyyy-MM-dd");
+
     private final Y9logMappingCustomRepository y9logMappingCustomRepository;
     private final Y9logAccessLogRepository y9logAccessLogRepository;
+
     private final JdbcTemplate jdbcTemplate4Public;
 
     public Y9logAccessLogCustomRepositoryImpl(Y9logMappingCustomRepository y9logMappingCustomRepository,
@@ -75,29 +81,29 @@ public class Y9logAccessLogCustomRepositoryImpl implements Y9logAccessLogCustomR
         List<String> longList = new ArrayList<>();
         StringBuilder sql = new StringBuilder();
         sql.append(
-            "SELECT DISTINCT(log.METHOD_NAME) as appName,count(log.METHOD_NAME) as count FROM  Y9_LOG_ACCESS_LOG log WHERE ");
-        sql.append("log.MODULAR_NAME ='" + Y9LogSearchConsts.APP_MODULARNAME + "' ");
+            "SELECT DISTINCT(l.METHOD_NAME) as appName,count(l.METHOD_NAME) as count FROM  Y9_LOG_ACCESS_LOG l WHERE ");
+        sql.append("l.MODULAR_NAME ='" + Y9LogSearchConsts.APP_MODULARNAME + "' ");
 
         if (StringUtils.isNotBlank(tenantId)) {
-            sql.append("AND log.TENANT_ID ='" + tenantId + "' ");
+            sql.append("AND l.TENANT_ID ='" + tenantId + "' ");
         }
         if (StringUtils.isNotBlank(guidPath)) {
-            sql.append("AND log.GUID_PATH LIKE '" + guidPath + "%' ");
+            sql.append("AND l.GUID_PATH LIKE '" + guidPath + "%' ");
         }
 
         if (StringUtils.isNotBlank(startDay) && StringUtils.isNotBlank(endDay)) {
             Date sDay = new Date();
             Date eDay = new Date();
             try {
-                sDay = Y9Day.getStartOfDay(new SimpleDateFormat("yyyy-MM-dd").parse(startDay));
-                eDay = Y9Day.getEndOfDay(new SimpleDateFormat("yyyy-MM-dd").parse(endDay));
+                sDay = Y9Day.getStartOfDay(DATE_FORMAT.parse(startDay));
+                eDay = Y9Day.getEndOfDay(DATE_FORMAT.parse(endDay));
             } catch (ParseException e) {
                 LOGGER.warn(e.getMessage(), e);
             }
-            sql.append("AND log.LOG_TIME > '" + sDay.getTime() + "' ");
-            sql.append("AND log.LOG_TIME < '" + eDay.getTime() + "' ");
+            sql.append("AND l.LOG_TIME >= '" + sDay.getTime() + "' ");
+            sql.append("AND l.LOG_TIME <= '" + eDay.getTime() + "' ");
         }
-        sql.append("GROUP BY log.METHOD_NAME");
+        sql.append("GROUP BY l.METHOD_NAME");
 
         List<Map<String, Object>> countAppNames = jdbcTemplate4Public.queryForList(sql.toString());
 
@@ -135,8 +141,8 @@ public class Y9logAccessLogCustomRepositoryImpl implements Y9logAccessLogCustomR
             Date sDay = new Date();
             Date eDay = new Date();
             try {
-                sDay = Y9Day.getStartOfDay(new SimpleDateFormat("yyyy-MM-dd").parse(startDay));
-                eDay = Y9Day.getEndOfDay(new SimpleDateFormat("yyyy-MM-dd").parse(endDay));
+                sDay = Y9Day.getStartOfDay(DATE_FORMAT.parse(startDay));
+                eDay = Y9Day.getEndOfDay(DATE_FORMAT.parse(endDay));
             } catch (ParseException e) {
                 LOGGER.warn(e.getMessage(), e);
             }
@@ -144,7 +150,6 @@ public class Y9logAccessLogCustomRepositoryImpl implements Y9logAccessLogCustomR
             sql.append("AND log.LOG_TIME < '" + eDay.getTime() + "' ");
         }
         sql.append("GROUP BY log.MODULAR_NAME");
-
         List<Map<String, Object>> countModularNames = jdbcTemplate4Public.queryForList(sql.toString());
 
         int length = countModularNames.size();
@@ -176,7 +181,7 @@ public class Y9logAccessLogCustomRepositoryImpl implements Y9logAccessLogCustomR
         Date day = new Date();
         if (StringUtils.isNotBlank(selectedDate)) {
             try {
-                day = new SimpleDateFormat("yyyy-MM-dd").parse(selectedDate);
+                day = DATE_FORMAT.parse(selectedDate);
             } catch (ParseException e) {
                 LOGGER.warn(e.getMessage(), e);
             }
@@ -196,14 +201,14 @@ public class Y9logAccessLogCustomRepositoryImpl implements Y9logAccessLogCustomR
                 if (!tenantType.equals(1)) {
                     countSuccess =
                         y9logAccessLogRepository.countByTenantIdAndSuccessAndLogTimeBetweenAndUserNameNotNull(tenantId,
-                            success, startOfTime.getTime(), endOfTime.getTime());
+                            success, startOfTime, endOfTime);
                     countError = y9logAccessLogRepository.countByTenantIdAndSuccessAndLogTimeBetweenAndUserNameNotNull(
-                        tenantId, error, startOfTime.getTime(), endOfTime.getTime());
+                        tenantId, error, startOfTime, endOfTime);
                 } else {
                     countSuccess = y9logAccessLogRepository.countBySuccessAndLogTimeBetweenAndUserNameNotNull(success,
-                        startOfTime.getTime(), endOfTime.getTime());
+                        startOfTime, endOfTime);
                     countError = y9logAccessLogRepository.countBySuccessAndLogTimeBetweenAndUserNameNotNull(error,
-                        startOfTime.getTime(), endOfTime.getTime());
+                        startOfTime, endOfTime);
                 }
 
                 countOfSuccess.add(countSuccess);
@@ -250,7 +255,6 @@ public class Y9logAccessLogCustomRepositoryImpl implements Y9logAccessLogCustomR
 
     @Override
     public List<String> listAccessLog(String tenantId, String loginName, String startTime, String endTime) {
-        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         List<String> strList = new ArrayList<>();
         List<Y9logAccessLog> searchList = y9logAccessLogRepository.findAll(new Specification<Y9logAccessLog>() {
             private static final long serialVersionUID = -2210269486911993525L;
@@ -267,8 +271,8 @@ public class Y9logAccessLogCustomRepositoryImpl implements Y9logAccessLogCustomR
                 Date startDate = null;
                 Date endDate = null;
                 try {
-                    startDate = sdf.parse(startTime);
-                    endDate = sdf.parse(endTime);
+                    startDate = DATE_TIME_FORMAT.parse(startTime);
+                    endDate = DATE_TIME_FORMAT.parse(endTime);
                     list.add(criteriaBuilder.between(root.get(Y9LogSearchConsts.LOG_TIME).as(Date.class), startDate,
                         endDate));
                 } catch (ParseException e1) {
@@ -294,7 +298,7 @@ public class Y9logAccessLogCustomRepositoryImpl implements Y9logAccessLogCustomR
 
         if (StringUtils.isNotBlank(startDay)) {
             try {
-                Date day = new SimpleDateFormat("yyyy-MM-dd").parse(startDay);
+                Date day = DATE_FORMAT.parse(startDay);
                 sDay = Y9Day.getStartOfDay(day);
             } catch (ParseException e) {
                 LOGGER.warn(e.getMessage(), e);
@@ -302,7 +306,7 @@ public class Y9logAccessLogCustomRepositoryImpl implements Y9logAccessLogCustomR
         }
         if (StringUtils.isNotBlank(endDay)) {
             try {
-                Date day = new SimpleDateFormat("yyyy-MM-dd").parse(endDay);
+                Date day = DATE_FORMAT.parse(endDay);
                 eDay = Y9Day.getEndOfDay(day);
             } catch (ParseException e) {
                 LOGGER.warn(e.getMessage(), e);
@@ -393,10 +397,9 @@ public class Y9logAccessLogCustomRepositoryImpl implements Y9logAccessLogCustomR
                 if (StringUtils.isNotBlank(startTime) && StringUtils.isNotBlank(endTime)) {
                     String sTime = startTime + " 00:00:00";
                     String eTime = endTime + " 23:59:59";
-                    SimpleDateFormat logDate = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
                     try {
-                        Date startDate = logDate.parse(sTime);
-                        Date endDate = logDate.parse(eTime);
+                        Date startDate = DATE_TIME_FORMAT.parse(sTime);
+                        Date endDate = DATE_TIME_FORMAT.parse(eTime);
                         list.add(criteriaBuilder.between(root.get(Y9LogSearchConsts.LOG_TIME).as(Date.class), startDate,
                             endDate));
                     } catch (ParseException e) {
@@ -528,8 +531,8 @@ public class Y9logAccessLogCustomRepositoryImpl implements Y9logAccessLogCustomR
                 }
                 if (StringUtils.isNotBlank(startDay) && StringUtils.isNotBlank(endDay)) {
                     try {
-                        Date sDay = Y9Day.getStartOfDay(new SimpleDateFormat("yyyy-MM-dd").parse(startDay));
-                        Date eDay = Y9Day.getEndOfDay(new SimpleDateFormat("yyyy-MM-dd").parse(endDay));
+                        Date sDay = Y9Day.getStartOfDay(DATE_FORMAT.parse(startDay));
+                        Date eDay = Y9Day.getEndOfDay(DATE_FORMAT.parse(endDay));
                         list.add(
                             criteriaBuilder.between(root.get(Y9LogSearchConsts.LOG_TIME).as(Date.class), sDay, eDay));
                     } catch (ParseException e) {
@@ -604,7 +607,7 @@ public class Y9logAccessLogCustomRepositoryImpl implements Y9logAccessLogCustomR
                     int h = Integer.parseInt(hour);
                     Calendar cal = Calendar.getInstance();
                     try {
-                        Date day = new SimpleDateFormat("yyyy-MM-dd").parse(date);
+                        Date day = DATE_FORMAT.parse(date);
                         Date dat = Y9Day.getStartOfDay(day);
                         cal.setTime(dat);
                         cal.add(Calendar.HOUR_OF_DAY, h);
@@ -674,10 +677,9 @@ public class Y9logAccessLogCustomRepositoryImpl implements Y9logAccessLogCustomR
                     && StringUtils.isNotBlank(loginInfoModel.getEndTime())) {
                     String sTime = startTime + " 00:00:00";
                     String eTime = endTime + " 23:59:59";
-                    SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
                     try {
-                        Date startDate = sdf.parse(sTime);
-                        Date endDate = sdf.parse(eTime);
+                        Date startDate = DATE_TIME_FORMAT.parse(sTime);
+                        Date endDate = DATE_TIME_FORMAT.parse(eTime);
                         list.add(criteriaBuilder.between(root.get(Y9LogSearchConsts.LOG_TIME).as(Date.class), startDate,
                             endDate));
                     } catch (ParseException e) {
@@ -755,11 +757,10 @@ public class Y9logAccessLogCustomRepositoryImpl implements Y9logAccessLogCustomR
                     && StringUtils.isNotBlank(loginInfoModel.getEndTime())) {
                     String sTime = loginInfoModel.getStartTime() + " 00:00:00";
                     String eTime = loginInfoModel.getEndTime() + " 23:59:59";
-                    SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
                     SimpleDateFormat sdfUtc = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'");
                     try {
-                        Date startDate = sdf.parse(sTime);
-                        Date endDate = sdf.parse(eTime);
+                        Date startDate = DATE_TIME_FORMAT.parse(sTime);
+                        Date endDate = DATE_TIME_FORMAT.parse(eTime);
                         Date start = sdfUtc.parse(sdfUtc.format(startDate));
                         Date end = sdfUtc.parse(sdfUtc.format(endDate));
                         list.add(

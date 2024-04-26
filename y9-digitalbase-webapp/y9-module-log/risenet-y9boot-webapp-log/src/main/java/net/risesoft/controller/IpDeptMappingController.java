@@ -7,6 +7,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import lombok.RequiredArgsConstructor;
 
+import net.risesoft.log.LogLevelEnum;
 import net.risesoft.log.OperationTypeEnum;
 import net.risesoft.log.annotation.RiseLog;
 import net.risesoft.pojo.Y9Page;
@@ -38,7 +39,7 @@ public class IpDeptMappingController {
      * @param deptName 部门名称
      * @return
      */
-    @RiseLog(operationName = "查询部门网段分页列表")
+    @RiseLog(moduleName = "日志系统", operationName = "查询部门网段分页列表", logLevel = LogLevelEnum.RSLOG)
     @GetMapping(value = "/pageSearchList")
     public Y9Page<Y9logIpDeptMapping> pageSearchList(Y9PageQuery pageQuery, String clientIpSection, String deptName) {
         return ipDeptMappingService.pageSearchList(pageQuery.getPage(), pageQuery.getSize(), clientIpSection, deptName);
@@ -50,7 +51,8 @@ public class IpDeptMappingController {
      * @param ipDeptMappingIds 部门网段id数组
      * @return
      */
-    @RiseLog(operationType = OperationTypeEnum.DELETE, operationName = "移除部门网段信息")
+    @RiseLog(moduleName = "日志系统", operationType = OperationTypeEnum.DELETE, operationName = "移除部门网段信息",
+        logLevel = LogLevelEnum.RSLOG)
     @PostMapping(value = "/remove")
     public Y9Result<String> remove(String[] ipDeptMappingIds) {
         ipDeptMappingService.removeOrganWords(ipDeptMappingIds);
@@ -63,7 +65,8 @@ public class IpDeptMappingController {
      * @param idAndTabIndexs 部门网段id数组
      * @return
      */
-    @RiseLog(operationType = OperationTypeEnum.MODIFY, operationName = "部门网段排序")
+    @RiseLog(moduleName = "日志系统", operationType = OperationTypeEnum.MODIFY, operationName = "部门网段排序",
+        logLevel = LogLevelEnum.RSLOG)
     @PostMapping(value = "/saveOrder")
     public Y9Result<String> saveOrder(String[] idAndTabIndexs) {
         ipDeptMappingService.update4Order(idAndTabIndexs);
@@ -76,7 +79,8 @@ public class IpDeptMappingController {
      * @param ipDeptMapping 部门网段信息
      * @return
      */
-    @RiseLog(operationType = OperationTypeEnum.ADD, operationName = "保存部门网段信息")
+    @RiseLog(moduleName = "日志系统", operationType = OperationTypeEnum.ADD, operationName = "保存部门网段信息",
+        logLevel = LogLevelEnum.RSLOG)
     @PostMapping(value = "/saveOrUpdate")
     public Y9Result<Y9logIpDeptMapping> saveOrUpdate(Y9logIpDeptMapping ipDeptMapping) {
         Y9logIpDeptMapping y9logIpDeptMapping = ipDeptMappingService.saveOrUpdate(ipDeptMapping);

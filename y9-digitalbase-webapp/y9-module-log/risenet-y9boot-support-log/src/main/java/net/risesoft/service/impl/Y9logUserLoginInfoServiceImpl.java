@@ -14,7 +14,6 @@ import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 
 import net.risesoft.log.constant.Y9LogSearchConsts;
 import net.risesoft.model.log.LogInfoModel;
@@ -34,7 +33,6 @@ import net.risesoft.y9public.repository.custom.Y9logUserLoginInfoCustomRepositor
  *
  */
 @Service
-@Slf4j
 @RequiredArgsConstructor
 public class Y9logUserLoginInfoServiceImpl implements Y9logUserLoginInfoService {
 
@@ -64,8 +62,9 @@ public class Y9logUserLoginInfoServiceImpl implements Y9logUserLoginInfoService 
     }
 
     @Override
-    public long countByUserHostIpAndSuccessAndUserName(String userHostIp, String success, String userName) {
-        return y9logUserLoginInfoRepository.countByUserHostIpAndSuccessAndUserName(userHostIp, success, userName);
+    public long countByUserHostIpAndSuccessAndUserNameLike(String userHostIp, String success, String userName) {
+        return y9logUserLoginInfoRepository.countByUserHostIpAndSuccessAndUserNameContaining(userHostIp, success,
+            userName);
     }
 
     @Override
@@ -88,14 +87,12 @@ public class Y9logUserLoginInfoServiceImpl implements Y9logUserLoginInfoService 
 
     @Override
     public List<Object[]> listDistinctUserHostIpByUserIdAndLoginTime(String userId, Date startTime, Date endTime) {
-
         return y9logUserLoginInfoCustomRepository.listDistinctUserHostIpByUserIdAndLoginTime(userId, startTime,
             endTime);
     }
 
     @Override
     public List<Map<String, Object>> listUserHostIpByCip(String cip) {
-
         return y9logUserLoginInfoCustomRepository.listUserHostIpByCip(cip);
     }
 
@@ -117,7 +114,15 @@ public class Y9logUserLoginInfoServiceImpl implements Y9logUserLoginInfoService 
     }
 
     @Override
-    public Page<Y9logUserLoginInfo> pageBySuccessAndServerIpAndUserName(String success, String userHostIp,
+    public Y9Page<Y9logUserLoginInfo> pageByLoginTimeBetweenAndSuccess(Date startTime, Date endTime, String success,
+        int page, int rows) {
+
+        return y9logUserLoginInfoCustomRepository.pageByLoginTimeBetweenAndSuccess(startTime, endTime, success, page,
+            rows);
+    }
+
+    @Override
+    public Page<Y9logUserLoginInfo> pageBySuccessAndUserHostIpAndUserId(String success, String userHostIp,
         String userId, int page, int rows) {
         String parserUserId = Y9Util.escape(userId);
         String parserUserHostIp = Y9Util.escape(userHostIp);
@@ -150,21 +155,16 @@ public class Y9logUserLoginInfoServiceImpl implements Y9logUserLoginInfoService 
     }
 
     @Override
+    public Y9Page<Y9logUserLoginInfo> pageByUserHostIpLikeAndLoginTimeBetweenAndSuccess(String userHostIp,
+        Date startTime, Date endTime, String success, int page, int rows) {
+
+        return y9logUserLoginInfoCustomRepository.pageByUserHostIpLikeAndLoginTimeBetweenAndSuccess(userHostIp,
+            startTime, endTime, success, page, rows);
+    }
+
+    @Override
     public void save(Y9logUserLoginInfo y9logUserLoginInfo) {
         y9logUserLoginInfoRepository.save(y9logUserLoginInfo);
-    }
-
-    @Override
-    public Y9Page<Y9logUserLoginInfo> search(Date startTime, Date endTime, String success, int page, int rows) {
-
-        return y9logUserLoginInfoCustomRepository.search(startTime, endTime, success, page, rows);
-    }
-
-    @Override
-    public Y9Page<Y9logUserLoginInfo> search(String userHostIp, Date startTime, Date endTime, String success, int page,
-        int rows) {
-
-        return y9logUserLoginInfoCustomRepository.search(userHostIp, startTime, endTime, success, page, rows);
     }
 
     @Override

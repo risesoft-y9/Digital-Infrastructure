@@ -8,6 +8,7 @@ import lombok.RequiredArgsConstructor;
 
 import net.risesoft.consts.InitDataConsts;
 import net.risesoft.enums.platform.ManagerLevelEnum;
+import net.risesoft.log.LogLevelEnum;
 import net.risesoft.log.annotation.RiseLog;
 import net.risesoft.model.log.LogInfoModel;
 import net.risesoft.pojo.Y9Page;
@@ -38,7 +39,7 @@ public class UserLoginInfoController {
      * @param pageQuery 分页信息
      * @return
      */
-    @RiseLog(moduleName = "日志系统", operationName = "查看安全审计员登录日志")
+    @RiseLog(moduleName = "日志系统", operationName = "查看安全审计员登录日志", logLevel = LogLevelEnum.MANAGERLOG)
     @RequestMapping(value = "/pageByAuditManagers")
     public Y9Page<Y9logUserLoginInfo> pageByAuditManagers(Y9PageQuery pageQuery) {
         String tenantId = Y9LoginUserHolder.getTenantId();
@@ -58,7 +59,7 @@ public class UserLoginInfoController {
      * @param pageQuery 分页信息
      * @return
      */
-    @RiseLog(moduleName = "日志系统", operationName = "查看安全保密员登录日志")
+    @RiseLog(moduleName = "日志系统", operationName = "查看安全保密员登录日志", logLevel = LogLevelEnum.MANAGERLOG)
     @RequestMapping(value = "/pageBySecurityManagers")
     public Y9Page<Y9logUserLoginInfo> pageBySecurityManagers(Y9PageQuery pageQuery) {
         String tenantId = Y9LoginUserHolder.getTenantId();
@@ -78,7 +79,7 @@ public class UserLoginInfoController {
      * @param pageQuery 分页信息
      * @return
      */
-    @RiseLog(moduleName = "日志系统", operationName = "查看系统管理员登录日志")
+    @RiseLog(moduleName = "日志系统", operationName = "查看系统管理员登录日志", logLevel = LogLevelEnum.MANAGERLOG)
     @RequestMapping(value = "/pageBySystemManagers")
     public Y9Page<Y9logUserLoginInfo> pageBySystemManagers(Y9PageQuery pageQuery) {
         String tenantId = Y9LoginUserHolder.getTenantId();
@@ -98,7 +99,7 @@ public class UserLoginInfoController {
      * @param pageQuery 分页信息
      * @return
      */
-    @RiseLog(moduleName = "日志系统", operationName = "查看用户登录日志")
+    @RiseLog(moduleName = "日志系统", operationName = "查看用户登录日志", logLevel = LogLevelEnum.MANAGERLOG)
     @RequestMapping(value = "/pageByUsers")
     public Y9Page<Y9logUserLoginInfo> pageByUsers(Y9PageQuery pageQuery) {
         Page<Y9logUserLoginInfo> pageList =
@@ -115,7 +116,7 @@ public class UserLoginInfoController {
      * @param pageQuery 分页信息
      * @return
      */
-    @RiseLog(moduleName = "日志系统", operationName = "查询安全审计员登录日志")
+    @RiseLog(moduleName = "日志系统", operationName = "查询安全审计员登录日志", logLevel = LogLevelEnum.MANAGERLOG)
     @RequestMapping(value = "/searchAuditManagers")
     public Y9Page<Y9logUserLoginInfo> searchAuditManagers(LogInfoModel loginInfoModel, Y9PageQuery pageQuery) {
         String tenantId = Y9LoginUserHolder.getTenantId();
@@ -136,7 +137,7 @@ public class UserLoginInfoController {
      * @param pageQuery 分页信息
      * @return
      */
-    @RiseLog(moduleName = "日志系统", operationName = "查询安全保密员登录日志")
+    @RiseLog(moduleName = "日志系统", operationName = "查询安全保密员登录日志", logLevel = LogLevelEnum.MANAGERLOG)
     @RequestMapping(value = "/searchSecurityManagers")
     public Y9Page<Y9logUserLoginInfo> searchSecurityManagers(LogInfoModel loginInfoModel, Y9PageQuery pageQuery) {
         String tenantId = Y9LoginUserHolder.getTenantId();
@@ -157,7 +158,7 @@ public class UserLoginInfoController {
      * @param pageQuery 分页信息
      * @return
      */
-    @RiseLog(moduleName = "日志系统", operationName = "查询系统管理员登录日志")
+    @RiseLog(moduleName = "日志系统", operationName = "查询系统管理员登录日志", logLevel = LogLevelEnum.MANAGERLOG)
     @RequestMapping(value = "/searchSystemManagers")
     public Y9Page<Y9logUserLoginInfo> searchSystemManagers(LogInfoModel loginInfoModel, Y9PageQuery pageQuery) {
         String tenantId = Y9LoginUserHolder.getTenantId();
@@ -178,7 +179,7 @@ public class UserLoginInfoController {
      * @param pageQuery 分页信息
      * @return
      */
-    @RiseLog(moduleName = "日志系统", operationName = "查询用户登录日志")
+    @RiseLog(moduleName = "日志系统", operationName = "查询用户登录日志", logLevel = LogLevelEnum.MANAGERLOG)
     @RequestMapping(value = "/searchUsers")
     public Y9Page<Y9logUserLoginInfo> searchUsers(LogInfoModel loginInfoModel, Y9PageQuery pageQuery) {
         Y9Page<Y9logUserLoginInfo> pageList = userLoginInfoService.searchQuery(Y9LoginUserHolder.getTenantId(),
