@@ -4,38 +4,36 @@ import java.io.InputStream;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
-import java.util.concurrent.TimeUnit;
 
 import javax.servlet.http.HttpServletResponse;
 
 import org.apache.commons.lang3.StringUtils;
-import org.apereo.cas.redis.core.CasRedisTemplate;
+import org.apereo.cas.web.y9.service.Y9KeyValueService;
 import org.apereo.cas.web.y9.util.Y9Base64;
 import org.apereo.cas.web.y9.util.Y9QRCode;
 import org.apereo.cas.web.y9.util.Y9Result;
 import org.apereo.cas.web.y9.util.common.Y9Util;
 import org.apereo.cas.web.y9.util.json.Y9JacksonUtil;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
 @Controller
 @RequestMapping(value = "/api")
 @Slf4j
+@RequiredArgsConstructor
 public class QRCodeController {
 
-    private final CasRedisTemplate<Object, Object> redisTemplate;
+    private final Y9KeyValueService y9KeyValueService;
+    
     @Value("${cas.server.name}")
     private String name;
 
-    public QRCodeController(@Qualifier("y9RedisTemplate") CasRedisTemplate<Object, Object> redisTemplate) {
-        this.redisTemplate = redisTemplate;
-    }
 
     @ResponseBody
     @RequestMapping(value = "/getQRCode", method = RequestMethod.POST)
@@ -51,7 +49,8 @@ public class QRCodeController {
             InputStream imgis =
                 this.getClass().getClassLoader().getResourceAsStream("static/y9static/y9new/img/qrCodeLogo.png");
             String img = Y9QRCode.encode(url, 512, 512, imgis);
-            redisTemplate.opsForValue().set("QRCode:" + uuid, 2, 120, TimeUnit.SECONDS);
+            y9KeyValueService.put("QRCode:" + uuid, "2", 2);
+            // redisTemplate.opsForValue().set("QRCode:" + uuid, 2, 120, TimeUnit.SECONDS);
             map.put("img", img);
             map.put("uuid", uuid);
             map.put("success", true);
@@ -63,23 +62,23 @@ public class QRCodeController {
 
     @ResponseBody
     @RequestMapping(value = "/getScanResult", method = RequestMethod.POST)
-    public Map<String, Object> getQRCode(String uuid) {
+    public Map<String, Object> getScanResult(String uuid) {
         Map<String, Object> map = new HashMap<>();
         map.put("success", false);
         map.put("userId", "");
         map.put("msg", "获取扫描结果失败");
         try {
-            Object value = redisTemplate.opsForValue().get("QRCode:" + uuid);
+            String value = y9KeyValueService.get("QRCode:" + uuid);
+            // Object value = redisTemplate.opsForValue().get("QRCode:" + uuid);
             if (null != value) {
-                String val = String.valueOf(value);
-                if (val.contains("$")) {
-                    String[] valArr = val.split("\\$");
+                if (value.contains("$")) {
+                    String[] valArr = value.split("\\$");
                     map.put("scanResult", valArr[0]);
                     map.put("userId", valArr[1]);
                     map.put("success", true);
                 } else {
                     map.put("success", true);
-                    map.put("scanResult", val);
+                    map.put("scanResult", value);
                 }
                 map.put("msg", "获取扫描结果成功");
             } else {
@@ -102,14 +101,15 @@ public class QRCodeController {
                 return;
             }
             userId = Y9Base64.decode(userId);
-            Object obj = redisTemplate.opsForValue().get("QRCode:" + uuid);
+            // Object obj = redisTemplate.opsForValue().get("QRCode:" + uuid);
+            String obj = y9KeyValueService.get("QRCode:" + uuid);
             if (null != obj) {
-                String val = String.valueOf(obj);
-                if (val.contains("1$")) {
+                if (obj.contains("1$")) {
                     Y9Util.renderJson(response,
                         Y9JacksonUtil.writeValueAsString(Y9Result.failure(419, "二维码已过期：已被扫描。")));
                 } else {
-                    redisTemplate.opsForValue().set("QRCode:" + uuid, 1 + "$" + userId, 300, TimeUnit.SECONDS);
+                    y9KeyValueService.put("QRCode:" + uuid, 1 + "$" + userId, 5);
+                    // redisTemplate.opsForValue().set("QRCode:" + uuid, 1 + "$" + userId, 300, TimeUnit.SECONDS);
                     Y9Util.renderJson(response, Y9JacksonUtil.writeValueAsString(Y9Result.successMsg("扫码成功")));
                 }
             } else {

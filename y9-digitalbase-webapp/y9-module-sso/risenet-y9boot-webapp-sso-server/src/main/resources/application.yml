@@ -157,7 +157,7 @@ cas:
                     startDelay: "PT15S"
                     repeatInterval: "PT30M"
             redis:
-                enabled: true
+                enabled: false
                 useSsl: false
                 host: "localhost"
                 port: 6379
@@ -172,6 +172,25 @@ cas:
                     maxIdle: 5
                     maxWait: 1000
                     minIdle: 1
+                crypto:
+                    enabled: true
+                    encryption:
+                        key: "6vJAg4gWORY0f8dF5XIc8Q"
+                        keySize: 16
+                    signing:
+                        key: "CzPeT3D2l7C-dwR2LfV9DFHrwmPGXCSsEReZeTn76xiWNU45De8s1CAdPNXovoBpEilbeTY1PkwPQuMxZdN4mQ"
+                        keySize: 512
+            jpa:
+                enabled: true
+                dialect: org.hibernate.dialect.MySQL8Dialect
+                driver-class: com.mysql.cj.jdbc.Driver
+                ddl-auto: update
+                url: jdbc:mysql://localhost:3306/y9_public?serverTimezone=GMT%2B8&nullCatalogMeansCurrent=true&useUnicode=true&characterEncoding=utf-8&rewriteBatchedStatements=true&useCompression=true&useSSL=false&allowPublicKeyRetrieval=true
+                user: root
+                password: 111111
+                idleTimeout: PT10M
+                leakThreshold: 0
+                autocommit: true
                 crypto:
                     enabled: true
                     encryption:
@@ -231,9 +250,6 @@ spring:
             auto-commit-interval: 1000
             enable-auto-commit: true
             group-id: y9sso-server
-    session:
-        store-type: redis
-        timeout: 3600
     security:
         user:
             name: y9admin
@@ -251,9 +267,15 @@ spring:
                 enabled: false
             discovery:
                 enabled: false
+    integration:
+        jdbc:
+            initialize-schema: always
 y9:
     login:
         casLoginView: "casLoginView-y9-v3.0"
         credentialPropsOptional: "screenDimension,userAgent,systemName,clientIp,clientMac,clientDiskId,clientHostName,deptId,positionId,pwdEcodeType"
         #kafka , jpa
         loginInfoSaveTarget: kafka
+        encryptionRsaPublicKey: 'MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQC6DvO5m7p1Of/IkPwMRdQK7tx4wZKrbmVj2aqhlX5z+McbxeiP1XgwpiFINxigtXqU49rtCb1eyUafD4lIYZ399Z5TAZeD3kH+ggdP6xRr0G7+u1UE9qgoLXPOugZsABwSOq5w9v6qGUAY8U3doLDkjCueMbEeGG96FjqaaMLckwIDAQAB'
+        encryptionRsaPrivateKey: 'MIICdwIBADANBgkqhkiG9w0BAQEFAASCAmEwggJdAgEAAoGBALoO87mbunU5/8iQ/AxF1Aru3HjBkqtuZWPZqqGVfnP4xxvF6I/VeDCmIUg3GKC1epTj2u0JvV7JRp8PiUhhnf31nlMBl4PeQf6CB0/rFGvQbv67VQT2qCgtc866BmwAHBI6rnD2/qoZQBjxTd2gsOSMK54xsR4Yb3oWOppowtyTAgMBAAECgYACb5OtSGamhj3dCFjkaD2gbwQf6Jjc+bMGHaFoQCbJqeYhbPPgfjD2ohYpdd8yq22RaXJCTDBYf1YXWwK3GeARn19tYnJodqspAya3jyfSFY+IRDQ2kQ/59w1VmBiOtJsUJG4va2Bz9SRfLZuXwOyznjKk7BE89Anb3ici6u6HYQJBAONiagv+Kc8dkxoip1NWYVFjCWNHTejWTgLLgVDZi1jep/8Xx5d5E1aewcvPCJRz8A7hYEY5Uc8Mt9PB6NhLedkCQQDReSXdMdg+/lLYwdX7lRfPH7PIGNK4UwmZQ0LW7fsoy8/TD9gMnQ9sAVHILKxQuhubDHGfonVhA08WA2nvgzpLAkEA0hMmbpYPAm8MbOT/OhtgJdUd4z8JV8hGooZpnsyd1SlAhIjvuZ3+o9Rgr29DOgQzEUxfqgFi96uEWnuYJ9zzYQJBAK0SL5qmiEjj0IeO/8Gx2c4kH2KAP/pTgWbEEAGM9ysp2jhEqvkg+5D9Nhjx8B1y50Qf7/E5RUo2da12fJyMDCkCQDjBuq+dssaPGs36oijHBxzJmeaFR6vmKBUaiwYJEHg2ayi3r3/dHRrqYxXC2wblxOhkytUl/R1DErHztHHm878='
+        

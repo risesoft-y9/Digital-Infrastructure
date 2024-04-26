@@ -11,7 +11,6 @@ import org.apereo.cas.authentication.credential.RememberMeUsernamePasswordCreden
 import org.apereo.cas.authentication.metadata.BasicCredentialMetaData;
 import org.apereo.cas.authentication.principal.PrincipalFactory;
 import org.apereo.cas.authentication.principal.Service;
-import org.apereo.cas.redis.core.CasRedisTemplate;
 import org.apereo.cas.services.ServicesManager;
 import org.apereo.cas.services.Y9User;
 import org.apereo.cas.web.support.WebUtils;
@@ -29,7 +28,6 @@ import lombok.extern.slf4j.Slf4j;
 public class RiseAuthenticationHandler extends AbstractAuthenticationHandler {
     private Y9UserService y9UserService;
     private Y9LoginUserService y9LoginUserService;
-    private CasRedisTemplate<Object, Object> redisTemplate;
 
     public RiseAuthenticationHandler(String name, ServicesManager servicesManager, PrincipalFactory principalFactory,
         Integer order) {
@@ -42,7 +40,6 @@ public class RiseAuthenticationHandler extends AbstractAuthenticationHandler {
         if (y9UserService == null) {
             y9UserService = Y9Context.getBean(Y9UserService.class);
             y9LoginUserService = Y9Context.getBean(Y9LoginUserService.class);
-            redisTemplate = Y9Context.getBean("y9RedisTemplate");
         }
         RememberMeUsernamePasswordCredential riseCredential = (RememberMeUsernamePasswordCredential)credential;
         String loginType = riseCredential.getLoginType();
@@ -54,9 +51,10 @@ public class RiseAuthenticationHandler extends AbstractAuthenticationHandler {
         try {
             username = Base64Util.decode(username, "Unicode");
             if (StringUtils.isNotBlank(pwdEcodeType)) {
-                Object obj = redisTemplate.opsForValue().get(pwdEcodeType);
-                if (null != obj) {
-                    password = RSAUtil.privateDecrypt(password, String.valueOf(obj));
+                // Object obj = redisTemplate.opsForValue().get(pwdEcodeType);
+                String rsaPrivateKey = Y9Context.getProperty("y9.login.encryptionRsaPrivateKey");
+                if (null != rsaPrivateKey) {
+                    password = RSAUtil.privateDecrypt(password, rsaPrivateKey);
                 } else {
                     throw new FailedLoginException("认证失败：随机数已过期，请重新登录!");
                 }
@@ -141,8 +139,7 @@ public class RiseAuthenticationHandler extends AbstractAuthenticationHandler {
 
     @Override
     public boolean supports(final Credential credential) {
-        boolean b = credential instanceof RememberMeUsernamePasswordCredential;
-        return b;
+        return credential instanceof RememberMeUsernamePasswordCredential;
     }
 
 }

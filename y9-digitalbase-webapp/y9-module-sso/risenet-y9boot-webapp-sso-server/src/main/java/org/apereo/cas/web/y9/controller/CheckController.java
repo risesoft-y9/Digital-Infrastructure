@@ -4,7 +4,6 @@ import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.concurrent.TimeUnit;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -12,37 +11,30 @@ import javax.servlet.http.HttpSession;
 
 import org.apache.commons.lang3.StringUtils;
 import org.apereo.cas.authentication.credential.RememberMeUsernamePasswordCredential;
-import org.apereo.cas.redis.core.CasRedisTemplate;
 import org.apereo.cas.services.Y9User;
 import org.apereo.cas.web.y9.service.Y9UserService;
+import org.apereo.cas.web.y9.util.Y9Context;
 import org.apereo.cas.web.y9.util.Y9MessageDigest;
 import org.apereo.cas.web.y9.util.Y9Result;
 import org.apereo.cas.web.y9.util.common.Base64Util;
 import org.apereo.cas.web.y9.util.common.CheckPassWord;
 import org.apereo.cas.web.y9.util.common.RSAUtil;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
 @Controller
 @RequestMapping(value = "/api")
 @Slf4j
+@RequiredArgsConstructor
 public class CheckController {
 
     private final Y9UserService y9UserService;
-
-    private final CasRedisTemplate<Object, Object> redisTemplate;
-
-    public CheckController(Y9UserService y9UserService,
-        @Qualifier("y9RedisTemplate") CasRedisTemplate<Object, Object> redisTemplate) {
-        this.y9UserService = y9UserService;
-        this.redisTemplate = redisTemplate;
-    }
 
     private void changeSessionId(HttpServletRequest request) {
         HttpSession session = request.getSession(false);
@@ -74,7 +66,7 @@ public class CheckController {
     @RequestMapping(value = "/checkSsoLoginInfo", method = RequestMethod.POST)
     public Map<String, Object> checkSsoLoginInfo(final RememberMeUsernamePasswordCredential riseCredential,
         final HttpServletRequest request, final HttpServletResponse response) {
-        Map<String, Object> map = new HashMap<String, Object>();
+        Map<String, Object> map = new HashMap<>();
         map.put("success", true);
         map.put("msg", "认证成功!");
         changeSessionId(request);
@@ -86,13 +78,9 @@ public class CheckController {
 
             username = Base64Util.decode(username, "Unicode");
             if (StringUtils.isNotBlank(pwdEcodeType)) {
-                Object obj = redisTemplate.opsForValue().get(pwdEcodeType);
-                if (null != obj) {
-                    password = RSAUtil.privateDecrypt(password, String.valueOf(obj));
-                } else {
-                    map.put("msg", "认证失败：随机数已过期，请重新登录!");
-                    return map;
-                }
+                String privateKey = Y9Context.getProperty("y9.login.encryptionRsaPrivateKey");
+                // Object obj = redisTemplate.opsForValue().get(pwdEcodeType);
+                password = RSAUtil.privateDecrypt(password, privateKey);
             }
             password = Base64Util.decode(password, "Unicode");
             if (username.contains("&")) {
@@ -149,9 +137,9 @@ public class CheckController {
     @GetMapping(value = "/getRandom")
     public Y9Result<Object> getRandom() {
         try {
-            String[] rsaArr = RSAUtil.genKeyPair();
-            redisTemplate.opsForValue().set(rsaArr[0], rsaArr[1], 120, TimeUnit.SECONDS);
-            return Y9Result.success(rsaArr[0], "获取成功：随机字符串有效期为两分钟。");
+            // String[] rsaArr = RSAUtil.genKeyPair();
+            // redisTemplate.opsForValue().set(rsaArr[0], rsaArr[1], 120, TimeUnit.SECONDS);
+            return Y9Result.success(Y9Context.getProperty("y9.login.encryptionRsaPublicKey"), "获取成功");
         } catch (Exception e) {
             e.printStackTrace();
             return Y9Result.failure("获取失败");
