@@ -32,6 +32,8 @@ import cz.mallat.uasparser.UserAgentInfo;
 @Slf4j
 public class Y9LoginUserServiceImpl implements Y9LoginUserService {
 
+    public static String SSO_SERVER_IP = InetAddressUtil.getLocalAddress().getHostAddress();
+
     @Autowired
     private Y9UserService y9UserService;
 
@@ -47,8 +49,6 @@ public class Y9LoginUserServiceImpl implements Y9LoginUserService {
 
     @Autowired
     private ConfigurableApplicationContext applicationContext;
-
-    public static String SSO_SERVER_IP = InetAddressUtil.getLocalAddress().getHostAddress();
 
     @Override
     public void save(RememberMeUsernamePasswordCredential credential, String success, String logMessage) {
@@ -108,7 +108,7 @@ public class Y9LoginUserServiceImpl implements Y9LoginUserService {
                 user.setUserLoginName(userLoginName);
                 user.setUserName(userName);
                 user.setUserHostIp(userHostIP);
-                user.setUserHostMAC(userHostMAC);
+                user.setUserHostMac(userHostMAC);
                 user.setUserHostName(userHostName);
                 user.setUserHostDiskId(userHostDiskId);
                 user.setTenantId(tenantId);
