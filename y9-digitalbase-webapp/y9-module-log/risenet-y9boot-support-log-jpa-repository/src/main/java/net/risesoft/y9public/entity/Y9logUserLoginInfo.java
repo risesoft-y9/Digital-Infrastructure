@@ -12,6 +12,7 @@ import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 
+import org.hibernate.annotations.ColumnDefault;
 import org.hibernate.annotations.Comment;
 import org.springframework.format.annotation.DateTimeFormat;
 
@@ -24,14 +25,14 @@ import net.risesoft.enums.platform.ManagerLevelEnum;
 
 /**
  * 人员登录日志表
- *
+ * 
  * @author mengjuhua
  * @date 2024/04/23
  */
 @Entity
 @Table(name = "Y9_LOG_USER_LOGIN_INFO",
     indexes = {@Index(name = "index_loginInfo_userHostIp", columnList = "USER_HOST_IP ASC", unique = false)})
-@org.hibernate.annotations.Table(comment = "人员登录日志表", appliesTo = "Y9_LOG_USER_LOGIN_INFO")
+@org.hibernate.annotations.Table(comment = "用户登录历史表", appliesTo = "Y9_LOG_USER_LOGIN_INFO")
 @NoArgsConstructor
 @Data
 public class Y9logUserLoginInfo implements Serializable {
@@ -143,7 +144,8 @@ public class Y9logUserLoginInfo implements Serializable {
     /**
      * 三员级别 {@link ManagerLevelEnum}
      */
-    @Column(name = "MANAGER_LEVEL")
+    @Column(name = "MANAGER_LEVEL", nullable = false)
     @Comment("三员级别")
+    @ColumnDefault("0")
     private String managerLevel;
 }

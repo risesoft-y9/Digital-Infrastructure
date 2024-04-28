@@ -1,0 +1,215 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+                      http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.24.xsd"
+        objectQuotingStrategy="QUOTE_ONLY_RESERVED_WORDS">
+    <changeSet id="log-creatTable-1" author="mengjuhua">
+        <preConditions onFail="MARK_RAN">
+            <not>
+                <tableExists tableName="Y9_LOG_ACCESS_LOG"/>
+            </not>
+        </preConditions>
+        <createTable remarks="日志信息表" tableName="Y9_LOG_ACCESS_LOG">
+            <column name="ID" remarks="主键" type="VARCHAR(255)">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="PRIMARY"/>
+            </column>
+            <column name="DN" remarks="由name组成的父子关系列表(倒序)，之间用逗号分隔" type="VARCHAR(2000)"/>
+            <column name="ELAPSED_TIME" remarks="用时" type="BIGINT"/>
+            <column name="ERROR_MESSAGE" remarks="错误日志信息" type="CLOB"/>
+            <column name="GUID_PATH" remarks="由ID组成的父子关系列表(正序)，之间用逗号分隔" type="VARCHAR(400)"/>
+            <column name="LOG_LEVEL" remarks="日志级别 0=TRACE 1=DEBUG 2=INFO 3=WARN 4=ERROR" type="VARCHAR(38)"/>
+            <column name="LOG_MESSAGE" remarks="日志信息" type="CLOB"/>
+            <column name="LOG_TIME" remarks="日志时间" type="datetime"/>
+            <column name="LOGIN_NAME" remarks="登录名称" type="VARCHAR(50)"/>
+            <column name="MAC_ADDRESS" remarks="登录用户机器MAC" type="VARCHAR(100)"/>
+            <column defaultValue="0" name="MANAGER_LEVEL" remarks="管理员类型" type="VARCHAR(30)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="METHOD_NAME" remarks="方法类和名称" type="VARCHAR(200)"/>
+            <column name="MODULAR_NAME" remarks="模块名称，比如：公文就转-发文-授权管理" type="VARCHAR(200)"/>
+            <column name="OPERATE_NAME" remarks="操作名称" type="VARCHAR(200)"/>
+            <column name="OPERATE_TYPE"
+                    remarks="操作类别： 0=使用，1=登录，2=退出，3=查看，4=增加，5=修改，6=删除，7=发送，8=活动"
+                    type="VARCHAR(38)"/>
+            <column name="REQUEST_URL" remarks="访问路径" type="VARCHAR(1000)"/>
+            <column name="SERVER_IP" remarks="访问服务器IP" type="VARCHAR(50)"/>
+            <column name="SUCCESS" remarks="登录是否成功" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="SYSTEM_NAME" remarks="系统名称" type="VARCHAR(50)"/>
+            <column name="TENANT_ID" remarks="租户ID" type="VARCHAR(38)"/>
+            <column name="TENANT_NAME" remarks="租户名称" type="VARCHAR(50)"/>
+            <column name="THROWABLE" remarks="异常信息" type="CLOB"/>
+            <column name="USER_AGENT" remarks="用户登录浏览器信息" type="VARCHAR(200)"/>
+            <column name="USER_HOST_IP" remarks="登录用户机器IP" type="VARCHAR(50)"/>
+            <column name="USER_ID" remarks="用户id" type="VARCHAR(38)"/>
+            <column name="USER_NAME" remarks="登录名" type="VARCHAR(100)"/>
+        </createTable>
+    </changeSet>
+    <changeSet id="log-creatTable-2" author="mengjuhua">
+        <preConditions onFail="MARK_RAN">
+            <not>
+                <tableExists tableName="Y9_LOG_CLICKED_APP"/>
+            </not>
+        </preConditions>
+        <createTable remarks="应用点击信息表" tableName="Y9_LOG_CLICKED_APP">
+            <column name="ID" remarks="主键" type="VARCHAR(255)">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="PRIMARY"/>
+            </column>
+            <column name="APP_ID" remarks="应用ID " type="VARCHAR(38)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="APP_NAME" remarks="应用名称 " type="VARCHAR(255)"/>
+            <column name="PERSON_ID" remarks="用户ID " type="VARCHAR(100)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="SAVE_DATE" remarks="保存日期 " type="datetime"/>
+            <column name="TENANT_ID" remarks="租户ID " type="VARCHAR(38)">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+    <changeSet id="log-creatTable-3" author="mengjuhua">
+        <preConditions onFail="MARK_RAN">
+            <not>
+                <tableExists tableName="Y9_LOG_COMMON_APP_FOR_PERSON"/>
+            </not>
+        </preConditions>
+        <createTable remarks="个人常用应用信息表" tableName="Y9_LOG_COMMON_APP_FOR_PERSON">
+            <column name="ID" remarks="主键" type="VARCHAR(255)">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="PRIMARY"/>
+            </column>
+            <column name="APP_IDS" remarks="应用IDS " type="CLOB"/>
+            <column name="PERSON_ID" remarks="用户ID " type="VARCHAR(100)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="TENANT_ID" remarks="租户ID " type="VARCHAR(38)">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+    <changeSet id="log-creatTable-4" author="mengjuhua">
+        <preConditions onFail="MARK_RAN">
+            <not>
+                <tableExists tableName="Y9_LOG_IP_DEPT_MAPPING"/>
+            </not>
+        </preConditions>
+        <createTable remarks="人员登录部门配置记录表" tableName="Y9_LOG_IP_DEPT_MAPPING">
+            <column name="ID" remarks="主键" type="VARCHAR(255)">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="PRIMARY"/>
+            </column>
+            <column name="CLIENT_IP_SECTION" remarks="ip的前三位，如ip:192.168.1.114,则clientIp4ABC为192.168.1"
+                    type="VARCHAR(50)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="DEPT_NAME" remarks="部门名称" type="VARCHAR(100)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="OPERTATOR" remarks="操作者" type="VARCHAR(50)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="SAVE_TIME" remarks="保存时间" type="VARCHAR(255)"/>
+            <column name="STATUS" remarks="状态，用于表示是否有有人在该终端登录，0：表示没有，1，表示有" type="INT"/>
+            <column name="TAB_INDEX" remarks="排序号" type="INT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="UPDATE_TIME" remarks="修改时间" type="VARCHAR(255)"/>
+        </createTable>
+    </changeSet>
+    <changeSet id="log-creatTable-5" author="mengjuhua">
+        <preConditions onFail="MARK_RAN">
+            <not>
+                <tableExists tableName="Y9_LOG_MAPPING"/>
+            </not>
+        </preConditions>
+        <createTable remarks="模块名称映射表" tableName="Y9_LOG_MAPPING">
+            <column name="ID" remarks="主键" type="VARCHAR(255)">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="PRIMARY"/>
+            </column>
+            <column name="MODULAR_CN_NAME" remarks="模块中文名称" type="VARCHAR(100)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="MODULAR_NAME" remarks="模块名称，比如：公文就转-发文-授权管理" type="VARCHAR(200)">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+    <changeSet id="log-creatTable-6" author="mengjuhua">
+        <preConditions onFail="MARK_RAN">
+            <not>
+                <tableExists tableName="Y9_LOG_USER_HOSTIP_INFO"/>
+            </not>
+        </preConditions>
+        <createTable remarks="人员登录ip记录表" tableName="Y9_LOG_USER_HOSTIP_INFO">
+            <column name="ID" remarks="主键" type="VARCHAR(255)">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="PRIMARY"/>
+            </column>
+            <column name="CLIENT_IP_SECTION" remarks="ip的前三位，如ip:192.168.1.114,则clientIp4ABC为192.168.1"
+                    type="VARCHAR(50)"/>
+            <column name="USER_HOST_IP" remarks="登录用户机器IP" type="VARCHAR(50)"/>
+        </createTable>
+    </changeSet>
+    <changeSet id="log-creatTable-7" author="mengjuhua">
+        <preConditions onFail="MARK_RAN">
+            <not>
+                <tableExists tableName="Y9_LOG_USER_LOGIN_INFO"/>
+            </not>
+        </preConditions>
+        <createTable remarks="人员登录日志表" tableName="Y9_LOG_USER_LOGIN_INFO">
+            <column name="ID" remarks="主键" type="VARCHAR(255)">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="PRIMARY"/>
+            </column>
+            <column name="BROWSE_NAME" remarks="浏览器名称" type="VARCHAR(50)"/>
+            <column name="BROWSE_VERSION" remarks="浏览器版本" type="VARCHAR(50)"/>
+            <column name="CLIENT_IP_SECTION" remarks="ip的前三位，如ip:192.168.1.114,则clientIp4ABC为192.168.1"
+                    type="VARCHAR(50)"/>
+            <column name="LOG_MESSAGE" remarks="登陆日志信息" type="CLOB"/>
+            <column name="LOGIN_TIME" remarks="登录时间" type="datetime"/>
+            <column name="LOGIN_TYPE" remarks="登录方式" type="VARCHAR(38)"/>
+            <column defaultValue="0" name="MANAGER_LEVEL" remarks="三员级别" type="VARCHAR(30)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="OS_NAME" remarks="客户端电脑操作系统版本信息" type="VARCHAR(30)"/>
+            <column name="SCREEN_RESOLUTION" remarks="访问用户的电脑分辨率" type="VARCHAR(30)"/>
+            <column name="SERVER_IP" remarks="访问单点登录服务器IP" type="VARCHAR(50)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="SUCCESS" remarks="登录是否成功" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="TENANT_ID" remarks="租户ID" type="VARCHAR(38)"/>
+            <column name="TENANT_NAME" remarks="租户名称" type="VARCHAR(50)"/>
+            <column name="USER_HOST_DISK_ID" remarks="登录机器的硬盘ID" type="VARCHAR(50)"/>
+            <column name="USER_HOST_IP" remarks="登录用户机器IP" type="VARCHAR(50)"/>
+            <column name="USER_HOST_MAC" remarks="登录用户机器MAC" type="VARCHAR(100)"/>
+            <column name="USER_HOST_NAME" remarks="登录用户机器名称" type="VARCHAR(50)"/>
+            <column name="USER_ID" remarks="用户id" type="VARCHAR(38)"/>
+            <column name="USER_LOGIN_NAME" remarks="登录名称" type="VARCHAR(50)"/>
+            <column name="USER_NAME" remarks="登录名" type="VARCHAR(100)"/>
+        </createTable>
+    </changeSet>
+
+    <changeSet id="log-createIndex-8" author="mengjuhua">
+        <preConditions onFail="MARK_RAN">
+            <not>
+                <indexExists tableName="Y9_LOG_ACCESS_LOG" columnNames="USER_ID"/>
+            </not>
+        </preConditions>
+        <createIndex indexName="index_logInfo_userId" tableName="Y9_LOG_ACCESS_LOG">
+            <column name="USER_ID"/>
+        </createIndex>
+    </changeSet>
+
+    <changeSet id="log-createIndex-9" author="mengjuhua">
+        <preConditions onFail="MARK_RAN">
+            <not>
+                <indexExists tableName="Y9_LOG_USER_LOGIN_INFO" columnNames="USER_HOST_IP"/>
+            </not>
+        </preConditions>
+        <createIndex indexName="index_loginInfo_userHostIp" tableName="Y9_LOG_USER_LOGIN_INFO">
+            <column name="USER_HOST_IP"/>
+        </createIndex>
+    </changeSet>
+</databaseChangeLog>

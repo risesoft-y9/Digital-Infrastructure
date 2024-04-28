@@ -12,6 +12,7 @@ import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 
+import org.hibernate.annotations.ColumnDefault;
 import org.hibernate.annotations.Comment;
 import org.springframework.format.annotation.DateTimeFormat;
 
@@ -174,8 +175,9 @@ public class Y9logAccessLog implements Serializable {
     /**
      * 管理员类型 {@link ManagerLevelEnum}
      */
-    @Column(name = "MANAGER_LEVEL")
+    @Column(name = "MANAGER_LEVEL", nullable = false)
     @Comment("管理员类型")
+    @ColumnDefault("0")
     private String managerLevel;
 
 }
