@@ -5,6 +5,7 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.time.LocalDate;
 import java.util.Date;
 import java.util.concurrent.Future;
 
@@ -56,11 +57,14 @@ public class Y9FileStoreServiceImpl implements Y9FileStoreService {
     private String publicKey = "";
     private String prefix = "";
 
-    private String buildFullPath(String prefix, String fullPath) {
-        if (StringUtils.isNotBlank(prefix) && !fullPath.startsWith(prefix)) {
-            return prefix + fullPath;
+    private String buildFullPath(String prefix, String customPath) {
+        LocalDate localDate = LocalDate.now();
+        String datePath = Y9FileStore.buildPath(String.valueOf(localDate.getYear()),
+            String.valueOf(localDate.getMonthValue()), String.valueOf(localDate.getDayOfMonth()));
+        if (StringUtils.isNotBlank(prefix)) {
+            return Y9FileStore.buildPath(prefix, datePath, customPath);
         } else {
-            return fullPath;
+            return Y9FileStore.buildPath(datePath, customPath);
         }
     }
 
@@ -133,7 +137,7 @@ public class Y9FileStoreServiceImpl implements Y9FileStoreService {
         this.prefix = this.y9Config.getFeature().getFile().getPrefix();
     }
 
-    private Y9FileStore saveY9FileStore(String fullPath, String fileName, String fileEnvelope, long fileSize) {
+    private Y9FileStore saveY9FileStore(String customPath, String fileName, String fileEnvelope, long fileSize) {
         Y9FileStore y9FileStore = new Y9FileStore();
 
         String y9FileStoreId = Y9IdGenerator.genId(IdType.SNOWFLAKE);
@@ -146,7 +150,7 @@ public class Y9FileStoreServiceImpl implements Y9FileStoreService {
             y9FileStore.setUploader(Y9LoginUserHolder.getUserInfo().getName());
         }
         y9FileStore.setUploadTime(new Date());
-        y9FileStore.setFullPath(buildFullPath(prefix, fullPath));
+        y9FileStore.setFullPath(buildFullPath(prefix, customPath));
         y9FileStore.setFileName(fileName);
         String fileExt = FilenameUtils.getExtension(fileName);
         String realFileName = y9FileStoreId + "." + fileExt;
@@ -162,17 +166,17 @@ public class Y9FileStoreServiceImpl implements Y9FileStoreService {
     }
 
     @Override
-    public Y9FileStore uploadFile(byte[] bytes, String fullPath, String fileName) throws Exception {
-        return this.uploadFile(new ByteArrayInputStream(bytes), fullPath, fileName);
+    public Y9FileStore uploadFile(byte[] bytes, String customPath, String fileName) throws Exception {
+        return this.uploadFile(new ByteArrayInputStream(bytes), customPath, fileName);
     }
 
     @Override
-    public Y9FileStore uploadFile(File file, String fullPath, String fileName) throws Exception {
-        return this.uploadFile(new FileInputStream(file), fullPath, fileName);
+    public Y9FileStore uploadFile(File file, String customPath, String fileName) throws Exception {
+        return this.uploadFile(new FileInputStream(file), customPath, fileName);
     }
 
     @Override
-    public Y9FileStore uploadFile(InputStream inputStream, String fullPath, String fileName) throws Exception {
+    public Y9FileStore uploadFile(InputStream inputStream, String customPath, String fileName) throws Exception {
         int fileSize = inputStream.available();
         String fileEnvelope = null;
         if (encryptionFileContent) {
@@ -188,7 +192,7 @@ public class Y9FileStoreServiceImpl implements Y9FileStoreService {
             }
         }
 
-        Y9FileStore y9FileStore = saveY9FileStore(fullPath, fileName, fileEnvelope, fileSize);
+        Y9FileStore y9FileStore = saveY9FileStore(customPath, fileName, fileEnvelope, fileSize);
 
         storeService.storeFile(y9FileStore.getFullPath(), y9FileStore.getRealFileName(), inputStream);
 
@@ -196,22 +200,22 @@ public class Y9FileStoreServiceImpl implements Y9FileStoreService {
     }
 
     @Override
-    public Y9FileStore uploadFile(MultipartFile multipartFile, String fullPath, String fileName) throws Exception {
-        return this.uploadFile(multipartFile.getInputStream(), fullPath, fileName);
+    public Y9FileStore uploadFile(MultipartFile multipartFile, String customPath, String fileName) throws Exception {
+        return this.uploadFile(multipartFile.getInputStream(), customPath, fileName);
     }
 
     @Override
-    public Y9FileStore uploadFileAsync(byte[] bytes, String fullPath, String fileName) throws Exception {
-        return this.uploadFileAsync(new ByteArrayInputStream(bytes), fullPath, fileName);
+    public Y9FileStore uploadFileAsync(byte[] bytes, String customPath, String fileName) throws Exception {
+        return this.uploadFileAsync(new ByteArrayInputStream(bytes), customPath, fileName);
     }
 
     @Override
-    public Y9FileStore uploadFileAsync(File file, String fullPath, String fileName) throws Exception {
-        return this.uploadFileAsync(new FileInputStream(file), fullPath, fileName);
+    public Y9FileStore uploadFileAsync(File file, String customPath, String fileName) throws Exception {
+        return this.uploadFileAsync(new FileInputStream(file), customPath, fileName);
     }
 
     @Override
-    public Y9FileStore uploadFileAsync(InputStream inputStream, String fullPath, String fileName) throws Exception {
+    public Y9FileStore uploadFileAsync(InputStream inputStream, String customPath, String fileName) throws Exception {
         int fileSize = inputStream.available();
         String fileEnvelope = null;
         if (encryptionFileContent) {
@@ -226,7 +230,7 @@ public class Y9FileStoreServiceImpl implements Y9FileStoreService {
                 LOGGER.warn(e.getMessage(), e);
             }
         }
-        Y9FileStore y9FileStore = saveY9FileStore(fullPath, fileName, fileEnvelope, fileSize);
+        Y9FileStore y9FileStore = saveY9FileStore(customPath, fileName, fileEnvelope, fileSize);
 
         InputStream finalInputStream = inputStream;
         Future<Boolean> submit = taskExecutor.submit(() -> {
@@ -243,8 +247,9 @@ public class Y9FileStoreServiceImpl implements Y9FileStoreService {
     }
 
     @Override
-    public Y9FileStore uploadFileAsync(MultipartFile multipartFile, String fullPath, String fileName) throws Exception {
-        return this.uploadFileAsync(multipartFile.getInputStream(), fullPath, fileName);
+    public Y9FileStore uploadFileAsync(MultipartFile multipartFile, String customPath, String fileName)
+        throws Exception {
+        return this.uploadFileAsync(multipartFile.getInputStream(), customPath, fileName);
     }
 
     @Override
