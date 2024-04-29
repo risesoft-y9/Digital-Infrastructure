@@ -590,7 +590,7 @@ public class PersonApiImpl implements PersonApi {
                 }
                 byte[] data = base64.decode(picnote);
                 SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMddHHmmss");
-                String fullPath = Y9FileStore.buildFullPath(Y9Context.getSystemName(), "avator");
+                String fullPath = Y9FileStore.buildPath(Y9Context.getSystemName(), "avator");
                 String fileNewName = y9Person.getLoginName() + "_" + sdf.format(new Date()) + "."
                     + (StringUtils.isBlank(fileExt) ? "png" : fileExt);
 

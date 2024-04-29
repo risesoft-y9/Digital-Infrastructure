@@ -17,7 +17,7 @@ public class FtpStoreServiceImpl implements StoreService {
 
     @Override
     public void deleteFile(String fullPath, String realFileName) throws Exception {
-        String fullPathAndRealFileName = Y9FileStore.buildFullPath(fullPath, realFileName);
+        String fullPathAndRealFileName = Y9FileStore.buildPath(fullPath, realFileName);
         ftpClientHelper.deleteFile(fullPathAndRealFileName);
     }
 
@@ -28,13 +28,13 @@ public class FtpStoreServiceImpl implements StoreService {
 
     @Override
     public byte[] retrieveFileBytes(String fullPath, String realFileName) throws Exception {
-        String fullPathAndRealFileName = Y9FileStore.buildFullPath(fullPath, realFileName);
+        String fullPathAndRealFileName = Y9FileStore.buildPath(fullPath, realFileName);
         return ftpClientHelper.retrieveFileBytes(fullPathAndRealFileName);
     }
 
     @Override
     public void retrieveFileStream(String fullPath, String realFileName, OutputStream outputStream) throws Exception {
-        String fullPathAndRealFileName = Y9FileStore.buildFullPath(fullPath, realFileName);
+        String fullPathAndRealFileName = Y9FileStore.buildPath(fullPath, realFileName);
         ftpClientHelper.retrieveFileStream(fullPathAndRealFileName, outputStream);
     }
 

@@ -20,21 +20,21 @@ public interface Y9FileStoreService {
 
     Y9FileStore getById(String y9FileStoreId);
 
-    Y9FileStore uploadFile(byte[] bytes, String fullPath, String fileName) throws Exception;
+    Y9FileStore uploadFile(byte[] bytes, String customPath, String fileName) throws Exception;
 
-    Y9FileStore uploadFile(File file, String fullPath, String fileName) throws Exception;
+    Y9FileStore uploadFile(File file, String customPath, String fileName) throws Exception;
 
-    Y9FileStore uploadFile(MultipartFile multipartFile, String fullPath, String fileName) throws Exception;
+    Y9FileStore uploadFile(MultipartFile multipartFile, String customPath, String fileName) throws Exception;
 
-    Y9FileStore uploadFile(InputStream inputStream, String fullPath, String fileName) throws Exception;
+    Y9FileStore uploadFile(InputStream inputStream, String customPath, String fileName) throws Exception;
 
-    Y9FileStore uploadFileAsync(byte[] bytes, String fullPath, String fileName) throws Exception;
+    Y9FileStore uploadFileAsync(byte[] bytes, String customPath, String fileName) throws Exception;
 
-    Y9FileStore uploadFileAsync(File file, String fullPath, String fileName) throws Exception;
+    Y9FileStore uploadFileAsync(File file, String customPath, String fileName) throws Exception;
 
-    Y9FileStore uploadFileAsync(MultipartFile multipartFile, String fullPath, String fileName) throws Exception;
+    Y9FileStore uploadFileAsync(MultipartFile multipartFile, String customPath, String fileName) throws Exception;
 
-    Y9FileStore uploadFileAsync(InputStream inputStream, String fullPath, String fileName) throws Exception;
+    Y9FileStore uploadFileAsync(InputStream inputStream, String customPath, String fileName) throws Exception;
 
     Y9FileStore uploadFileReplace(byte[] bytes, String y9FileStoreId) throws Exception;
 

@@ -11,6 +11,7 @@ import lombok.RequiredArgsConstructor;
 
 import net.risesoft.enums.FileStoreTypeEnum;
 import net.risesoft.y9.configuration.feature.file.local.Y9LocalProperties;
+import net.risesoft.y9public.entity.Y9FileStore;
 import net.risesoft.y9public.service.StoreService;
 
 @RequiredArgsConstructor
@@ -20,7 +21,7 @@ public class LocalStoreServiceImpl implements StoreService {
     
     @Override
     public void deleteFile(String fullPath, String realFileName) throws Exception {
-        File file = new File(y9LocalProperties.getBasePath() + fullPath, realFileName);
+        File file = new File(Y9FileStore.buildPath(y9LocalProperties.getBasePath(), fullPath), realFileName);
         if (file.exists()) {
             file.delete();
         }
@@ -33,8 +34,7 @@ public class LocalStoreServiceImpl implements StoreService {
 
     @Override
     public byte[] retrieveFileBytes(String fullPath, String realFileName) throws Exception {
-        // String fullPathAndRealFileName = Y9FileStore.buildFullPath(fullPath, realFileName);
-        File file = new File(y9LocalProperties.getBasePath() + fullPath, realFileName);
+        File file = new File(Y9FileStore.buildPath(y9LocalProperties.getBasePath(), fullPath), realFileName);
         if (file.exists()) {
             return FileUtils.readFileToByteArray(file); 
         }
@@ -48,7 +48,7 @@ public class LocalStoreServiceImpl implements StoreService {
 
     @Override
     public void storeFile(String fullPath, String realFileName, byte[] bytes) throws Exception {
-        File parentFolder = new File(y9LocalProperties.getBasePath() + fullPath);
+        File parentFolder = new File(Y9FileStore.buildPath(y9LocalProperties.getBasePath(), fullPath));
         parentFolder.mkdirs();
         File newFile = new File(parentFolder, realFileName);
         FileUtils.writeByteArrayToFile(newFile, bytes);

@@ -105,23 +105,22 @@ public class Y9FileStore implements Serializable {
     @Comment("上传时间")
     private Date uploadTime;
 
-    public static String buildFullPath(String... paths) {
+    /**
+     * 构建/分割的文件路径
+     * 例子：传入参数 a, b, c，返回 /a/b/c
+     *
+     * @param paths 路径
+     * @return {@code String}
+     */
+    public static String buildPath(String... paths) {
         StringBuilder sb = new StringBuilder();
         for (String path : paths) {
             if (StringUtils.hasText(path)) {
-                for (int i = 0; i < 10; i++) {
-                    if (path.startsWith("/")) {
-                        path = path.substring(1);
-                    } else {
-                        break;
-                    }
+                while (path.startsWith("/")) {
+                    path = path.substring(1);
                 }
-                for (int i = 0; i < 10; i++) {
-                    if (path.endsWith("/")) {
-                        path = path.substring(0, path.length() - 1);
-                    } else {
-                        break;
-                    }
+                while (path.endsWith("/")) {
+                    path = path.substring(0, path.length() - 1);
                 }
 
                 sb.append("/").append(path);
