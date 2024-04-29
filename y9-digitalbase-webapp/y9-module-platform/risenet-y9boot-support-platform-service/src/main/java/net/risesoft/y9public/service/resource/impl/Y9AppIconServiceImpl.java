@@ -129,7 +129,7 @@ public class Y9AppIconServiceImpl implements Y9AppIconService {
         }
         appIcon.setRemark(remark);
         appIcon.setType(imgType);
-        String fullPath = Y9FileStore.buildFullPath("riseplatform", "public", "appIcon");
+        String fullPath = Y9FileStore.buildPath("riseplatform", "public", "appIcon");
         try {
             appIcon.setPath(y9FileStoreService.uploadFile(iconFile, fullPath, imgName).getId());
             appIcon.setIconData(Base64.encodeToString(iconData));
