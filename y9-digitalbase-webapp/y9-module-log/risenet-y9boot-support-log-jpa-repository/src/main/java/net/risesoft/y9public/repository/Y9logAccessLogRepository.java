@@ -14,12 +14,12 @@ import net.risesoft.y9public.entity.Y9logAccessLog;
 public interface Y9logAccessLogRepository
     extends JpaRepository<Y9logAccessLog, String>, JpaSpecificationExecutor<Y9logAccessLog> {
 
+    long countByMethodNameAndLogTimeBetween(String methodName, Date logTimeStart, Date logTimeEnd);
+
     long countBySuccessAndLogTimeBetweenAndUserNameNotNull(String success, Date logTimeStart, Date logTimeEnd);
 
     long countByTenantIdAndSuccessAndLogTimeBetweenAndUserNameNotNull(String tenantId, String success,
         Date logTimeStart, Date logTimeEnd);
-
-    long countByModularNameAndLogTimeBetween(String ModularName, Date logTimeStart, Date logTimeEnd);
 
     Page<Y9logAccessLog> findByOperateType(String operateType, Pageable pageable);
 

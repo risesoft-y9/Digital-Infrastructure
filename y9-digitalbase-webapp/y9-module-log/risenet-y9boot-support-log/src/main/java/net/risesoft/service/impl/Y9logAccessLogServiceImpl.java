@@ -177,6 +177,9 @@ public class Y9logAccessLogServiceImpl implements Y9logAccessLogService {
 
     @Override
     public void save(Y9logAccessLog y9logAccessLog) {
+        if(StringUtils.isBlank(y9logAccessLog.getManagerLevel())){
+            y9logAccessLog.setManagerLevel("0");
+        }
         y9logAccessLogCustomRepository.save(y9logAccessLog);
     }
 

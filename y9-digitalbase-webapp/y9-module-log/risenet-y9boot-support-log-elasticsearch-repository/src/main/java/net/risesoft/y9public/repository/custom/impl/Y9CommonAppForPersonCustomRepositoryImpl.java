@@ -80,7 +80,7 @@ public class Y9CommonAppForPersonCustomRepositoryImpl implements Y9CommonAppForP
     public long getCount() {
         BoolQueryBuilder query = QueryBuilders.boolQuery();
         query.must(
-            QueryBuilders.queryStringQuery(Y9LogSearchConsts.APP_MODULARNAME).field(Y9LogSearchConsts.MODULAR_NAME));
+            QueryBuilders.queryStringQuery(Y9LogSearchConsts.APP_METHODNAME).field(Y9LogSearchConsts.METHOD_NAME));
         // 最近半年
         Calendar c = Calendar.getInstance();
         long endTime = c.getTime().getTime();

@@ -129,7 +129,7 @@ public class Y9logAccessLogCustomRepositoryImpl implements Y9logAccessLogCustomR
         SearchResponse response = null;
         BoolQueryBuilder query = QueryBuilders.boolQuery();
         query.must(
-            QueryBuilders.queryStringQuery(Y9LogSearchConsts.APP_MODULARNAME).field(Y9LogSearchConsts.MODULAR_NAME));
+            QueryBuilders.queryStringQuery(Y9LogSearchConsts.APP_METHODNAME).field(Y9LogSearchConsts.METHOD_NAME));
         if (StringUtils.isNotBlank(tenantId)) {
             query.must(QueryBuilders.queryStringQuery(tenantId).field(Y9LogSearchConsts.TENANT_ID));
         }
@@ -151,7 +151,7 @@ public class Y9logAccessLogCustomRepositoryImpl implements Y9logAccessLogCustomR
 
         SearchSourceBuilder searchSourceBuilder = new SearchSourceBuilder();
         searchSourceBuilder.query(query)
-            .aggregation(AggregationBuilders.terms("by_appName").size(10000).field(Y9LogSearchConsts.METHOD_NAME));
+            .aggregation(AggregationBuilders.terms("by_appName").size(10000).field(Y9LogSearchConsts.MODULAR_NAME));
         SearchRequest searchRequest = new SearchRequest(createIndexNames(startDay, endDay));
         searchRequest.searchType(SearchType.DFS_QUERY_THEN_FETCH);
         searchRequest.source(searchSourceBuilder);

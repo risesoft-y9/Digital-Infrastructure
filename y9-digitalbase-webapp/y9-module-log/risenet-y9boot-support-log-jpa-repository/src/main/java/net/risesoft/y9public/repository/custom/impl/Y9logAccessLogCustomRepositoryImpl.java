@@ -81,8 +81,8 @@ public class Y9logAccessLogCustomRepositoryImpl implements Y9logAccessLogCustomR
         List<String> longList = new ArrayList<>();
         StringBuilder sql = new StringBuilder();
         sql.append(
-            "SELECT DISTINCT(l.METHOD_NAME) as appName,count(l.METHOD_NAME) as count FROM  Y9_LOG_ACCESS_LOG l WHERE ");
-        sql.append("l.MODULAR_NAME ='" + Y9LogSearchConsts.APP_MODULARNAME + "' ");
+            "SELECT DISTINCT(l.MODULAR_NAME) as appName,count(l.MODULAR_NAME) as count FROM  Y9_LOG_ACCESS_LOG l WHERE ");
+        sql.append("l.METHOD_NAME ='" + Y9LogSearchConsts.APP_METHODNAME + "' ");
 
         if (StringUtils.isNotBlank(tenantId)) {
             sql.append("AND l.TENANT_ID ='" + tenantId + "' ");
@@ -103,7 +103,7 @@ public class Y9logAccessLogCustomRepositoryImpl implements Y9logAccessLogCustomR
             sql.append("AND l.LOG_TIME >= '" + sDay.getTime() + "' ");
             sql.append("AND l.LOG_TIME <= '" + eDay.getTime() + "' ");
         }
-        sql.append("GROUP BY l.METHOD_NAME");
+        sql.append("GROUP BY l.MODULAR_NAME");
 
         List<Map<String, Object>> countAppNames = jdbcTemplate4Public.queryForList(sql.toString());
 

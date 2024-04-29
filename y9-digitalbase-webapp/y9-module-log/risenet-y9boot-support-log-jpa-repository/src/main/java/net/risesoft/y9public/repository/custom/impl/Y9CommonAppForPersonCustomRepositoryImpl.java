@@ -44,7 +44,7 @@ public class Y9CommonAppForPersonCustomRepositoryImpl implements Y9CommonAppForP
         Date endTime = c.getTime();
         c.add(Calendar.MONTH, -6);
         Date startTime = c.getTime();
-        return y9logAccessLogRepository.countByModularNameAndLogTimeBetween(Y9LogSearchConsts.MODULAR_NAME, startTime,
+        return y9logAccessLogRepository.countByMethodNameAndLogTimeBetween(Y9LogSearchConsts.APP_METHODNAME, startTime,
             endTime);
     }
 }

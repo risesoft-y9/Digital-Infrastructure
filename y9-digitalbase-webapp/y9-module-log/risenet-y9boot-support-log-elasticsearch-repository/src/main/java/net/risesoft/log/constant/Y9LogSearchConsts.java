@@ -42,7 +42,7 @@ public class Y9LogSearchConsts {
     public static final String ELAPSED_TIME = "elapsedTime";
 
     /** 应用点击模块路径 */
-    public static final String APP_MODULARNAME = "net.risesoft.controller.AppRestController.saveAppCheckCount";
+    public static final String APP_METHODNAME = "net.risesoft.controller.AppRestController.saveAppCheckCount";
 
     private Y9LogSearchConsts() {
         throw new IllegalStateException("Utility class");

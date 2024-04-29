@@ -7,6 +7,7 @@ import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
 
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -164,6 +165,9 @@ public class Y9logUserLoginInfoServiceImpl implements Y9logUserLoginInfoService 
 
     @Override
     public void save(Y9logUserLoginInfo y9logUserLoginInfo) {
+        if(StringUtils.isBlank(y9logUserLoginInfo.getManagerLevel())){
+            y9logUserLoginInfo.setManagerLevel("0");
+        }
         y9logUserLoginInfoRepository.save(y9logUserLoginInfo);
     }
 
