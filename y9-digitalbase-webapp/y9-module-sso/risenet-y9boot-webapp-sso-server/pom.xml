@@ -214,16 +214,6 @@
             <groupId>org.apereo.cas</groupId>
             <artifactId>cas-server-support-jpa-util</artifactId>
         </dependency>
-
-        <dependency>
-            <groupId>org.springframework.data</groupId>
-            <artifactId>spring-data-redis</artifactId>
-        </dependency>
-
-        <!--<dependency>
-            <groupId>org.apereo.cas</groupId>
-            <artifactId>cas-server-support-redis-ticket-registry</artifactId>
-        </dependency>-->
         
         <dependency>
             <groupId>org.apereo.cas</groupId>
