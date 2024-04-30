@@ -17,7 +17,7 @@
     </modules>
 
     <repositories>
-        <repository>
+        <!--<repository>
             <id>y9-intranet-repo</id>
             <url>https://nexus-internal.youshengyun.com/repository/maven-public/</url>
             <releases>
@@ -26,7 +26,7 @@
             <snapshots>
                 <enabled>true</enabled>
             </snapshots>
-        </repository>
+        </repository>-->
         <repository>
             <id>aliyun-repo</id>
             <url>https://maven.aliyun.com/repository/public</url>
@@ -51,10 +51,10 @@
         </repository>
     </repositories>
     <pluginRepositories>
-        <pluginRepository>
+        <!--<pluginRepository>
             <id>y9-intranet-repo-plugin</id>
             <url>https://nexus-internal.youshengyun.com/repository/maven-public/</url>
-        </pluginRepository>
+        </pluginRepository>-->
         <pluginRepository>
             <id>aliyun-repo-plugin</id>
             <url>https://maven.aliyun.com/repository/public</url>
