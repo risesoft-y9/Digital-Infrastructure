@@ -16,6 +16,7 @@
     </parent>
 
     <modules>
+        <module>risenet-y9boot-webapp-sso-server-jpa</module>
         <module>risenet-y9boot-webapp-sso-server</module>
     </modules>
 

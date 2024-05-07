@@ -1,0 +1,17 @@
+spring:
+    application:
+        name: sso
+    profiles:
+        active: local
+    cloud:
+        enabled: false
+        nacos:
+            config:
+                enabled: false
+                group: DEFAULT_GROUP
+                namespace: local
+                server-addr: 127.0.0.1:8848
+                username: nacos
+                password: nacos
+                extension-configs:
+                    -   dataId: sso.yml

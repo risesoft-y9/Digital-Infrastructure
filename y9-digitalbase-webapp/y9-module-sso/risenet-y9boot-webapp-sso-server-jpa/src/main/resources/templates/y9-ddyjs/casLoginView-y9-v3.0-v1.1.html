@@ -1,0 +1,362 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8"/>
+    <meta content="IE=edge,chrome=1" http-equiv="X-UA-Compatible"/>
+    <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+    <meta content="no-cache" http-equiv="pragma"/>
+    <meta content="no-cache" http-equiv="cache-control"/>
+    <meta content="0" http-equiv="expires"/>
+    <!-- 管局要求保持备案名称和网站使用名称一致 -->
+    <title>当代中国研究所OA系统</title>
+    <link as="font" crossorigin rel="preload" th:href="@{/y9static/y9-ddyjs/fonts/AaBanRuoKaiShuJiaCu.woff2}"
+          type="font/woff2">
+    <link rel="shortcut icon" th:href="@{/y9static/y9-ddyjs/img/logo-1.svg}" type="image/x-icon"/>
+    <link rel="stylesheet" th:href="@{/y9static/js/layui/css/layui.css}" type="text/css"/>
+    <link rel="stylesheet" th:href="@{/y9static/y9-ddyjs/css/default.css}" type="text/css"/>
+    <link rel="stylesheet" th:href="@{/y9static/y9-ddyjs/css/styles.css?v=1.1}" type="text/css"/>
+    <link rel="stylesheet" th:href="@{/y9static/y9-ddyjs/css/mediaIndex.css}" type="text/css"/>
+    <link rel="stylesheet" th:href="@{/y9static/y9-ddyjs/css/loaders.css}" type="text/css"/>
+    <link rel="stylesheet" th:href="@{/y9static/y9-ddyjs/css/layerMsg.css}" type="text/css"/>
+    <link rel="stylesheet" th:href="@{/y9static/y9-ddyjs/css/verify.css}" type="text/css"/>
+    <script charset="utf-8" th:src="@{/y9static/js/base64.js}" type="text/javascript"></script>
+    <script charset="utf-8" th:src="@{/y9static/js/jquery/jquery-2.1.1.min.js}" type="text/javascript"></script>
+    <script charset="utf-8" th:src="@{/y9static/js/jquery/jquery.cookie.js}" type="text/javascript"></script>
+    <script charset="utf-8" th:src="@{/y9static/js/jsencrypt.min.js}" type="text/javascript"></script>
+    <script charset="utf-8" th:src="@{/y9static/js/layui/layui.js}" type="text/javascript"></script>
+    <script charset="utf-8" th:src="@{/y9static/y9-ddyjs/js/layerMsg.js}" type="text/javascript"></script>
+</head>
+<body>
+<div class="logo">
+    <img th:src="@{/y9static/y9-ddyjs/img/logotitle.png}"/>
+</div>
+<div class="login layui-row">
+    <div class="layui-col-xs12 login_form" id="tunnel">
+        <div class="login_title">用&nbsp;户&nbsp;登&nbsp;录</div>
+        <div class="login_fields">
+            <form id="fm1" method="post" th:object="${credential}">
+                <div class="alert alert-danger" th:if="${#fields.hasErrors('*')}">
+                    登录失败：<span th:each="err : ${#fields.errors('*')}" th:utext="${err}"/>
+                </div>
+                <div class="login_dev login_fields__user ">
+                    <div class="form-label">用户名</div>
+                    <input autocomplete="off" id="username" onBlur="inputOnBlur();" placeholder=" "
+                           tabindex="1" type="text" value=""/>
+                    <input autocomplete="false" htmlescape="true" id="username1" name="username"
+                           style="width: 150px;" type="hidden"/>
+                    <input autocomplete="false" htmlescape="true" id="tenantShortName" name="tenantShortName"
+                           style="width: 150px" type="hidden" value="default"/>
+                    <div class="validation">
+                        <img alt="" th:src="@{/y9static/y9new/img/tick.png}"/>
+                    </div>
+                </div>
+                <div class="login_dev login_fields__password">
+                    <div class="form-label">密&nbsp;&nbsp;&nbsp;码</div>
+                    <input autocomplete="off" htmlescape="true" id="password" onfocus="this.type='password'"
+                           placeholder=" " tabindex="2" type="password"/>
+                    <input autocomplete="off" htmlescape="true" id="password1" name="password" type="hidden"/>
+
+                    <div class="validation"><img alt="" th:src="@{/y9static/y9-ddyjs/img/tick.png}"/></div>
+                </div>
+                <!-- 表单隐藏数据块开始 -->
+                <input id="loginType" name="loginType" type="hidden" value="loginName"/>
+                <input id="captchaKey" name="captchaKey" type="hidden" value=""/>
+                <input id="noLoginScreen" name="noLoginScreen" type="hidden" value="false"/>
+                <input id="screenDimension" name="screenDimension" type="hidden" value=""/>
+                <input id="pwdEcodeType" name="pwdEcodeType" type="hidden" value=""/>
+                <input name="execution" th:value="${flowExecutionKey}" type="hidden"/>
+                <input name="_eventId" type="hidden" value="submit"/>
+                <input name="geolocation" type="hidden"/>
+                <!-- 表单隐藏数据块结束 -->
+
+                <div class="login_dev login_fields__submit ">
+                    <input type="button" value="登录"/>
+                </div>
+                <div class="login_dev login_fields_remember_password ">
+                    <!-- <input class="chk left" id="checkbox1" type="checkbox"/>
+                     <label class="left" for="checkbox1"></label>
+                     <span class="left">记住密码</span>-->
+
+                    <input id="checkbox1" name="my-checkbox" type="checkbox"/>
+                    <label for="checkbox1">记住密码</label>
+                </div>
+            </form>
+        </div>
+        <div></div>
+        <div class="success"></div>
+        <div class="toolTips" style="display: none">
+            <ul id="toolTipsUl"></ul>
+        </div>
+    </div>
+    <div class="layui-col-xs12 noticeInfo">
+        <div class="title">温馨提示</div>
+        <ul class="info">
+            <li> 本系统严禁处理涉密信息，涉密文件请线下呈报。</li>
+            <li> 请勿在公用设备保存登录信息，避免多人使用同一账号。</li>
+            <li> 退出时请及时注销，定期修改账号密码。</li>
+        </ul>
+    </div>
+</div>
+<!--<div class="bg_top_right"></div>-->
+<script type="text/javascript">
+    var ctx = "[(${#request.getContextPath()})]";
+    var canGetCookie = 1; //是否支持存储Cookie 0 不支持 1 支持
+    var ajaxmockjax = 1; //是否启用虚拟Ajax的请求响 0 不启用  1 启用
+    var inputTimer = null;
+
+    document.addEventListener("keydown", function (event) {
+        console.log(11111);
+        if (event.keyCode === "9") {
+            // 在Tab键按下后执行的代码
+            let usernameInput = document.getElementById("username");
+            let passwordInput = document.getElementById("password");
+            console.log(2222);
+            if (!usernameInput.value) {
+                event.preventDefault();
+                usernameInput.focus();
+            } else if (!passwordInput.value) {
+                event.preventDefault();
+                passwordInput.focus();
+            } else {
+            }
+        }
+    });
+
+    $(function () {
+        validateIE();
+        initFormIfRemember();
+    });
+
+    function validateIE() {
+        try {
+            $("#screenDimension").val(
+                window.screen.width + "*" + window.screen.height);
+        } catch (e) {
+        }
+    }
+
+    function inputOnBlur() {
+        $("#username1").val($("#username").val());
+    }
+
+    function mouseClickEvent() {
+        $("#tenantShortName").val(this.id);
+        var userName = this.innerText;
+        $("#username").val(userName);
+        if ($.trim(userName).length > 0 && userName.indexOf("@") != -1) {
+            $("#username1").val(userName.split("@")[0]);
+        }
+        $("#toolTipsUl").empty();
+        $(".toolTips").attr({
+            style: "display: none;"
+        });
+        $("#password").focus();
+    }
+
+    $(document).keydown(function (e) {
+        // 回车键事件
+        if (e.which == 13) {
+            // 如（ev.ctrlKey && ev.keyCode==13）为ctrl+Center 触发
+            var userName = $("#username").val();
+            var password = $("#password").val();
+            if (userName.length == 0) {
+                console.log("用户名不能为空!");
+                layui.layer("warn", "用户名不能为空!");
+                $("#username").focus();
+            } else if (password.length == 0) {
+                console.log("回车键后为空!");
+                $("#password").blur(); //防止回车键后，密码框获取焦点从而使密码输入框变空
+                $("#password").focus();
+            } else {
+                $('input[type="button"]').click();
+            }
+        }
+
+        if (e.which == 9) {
+            // 如（ev.ctrlKey && ev.keyCode==13）为ctrl+Center 触发
+            var userName = $("#username").val();
+            var password = $("#password").val();
+            if (userName.length == 0) {
+                console.log("用户名不能为空!");
+                layui.layer("warn", "用户名不能为空!");
+                $("#username").focus();
+            } else if (password.length == 0) {
+                console.log("回车键后为空!");
+                $("#password").blur(); //防止回车键后，密码框获取焦点从而使密码输入框变空
+                $("#password").focus();
+            } else {
+                // $('input[type="button"]').click();
+            }
+        }
+    });
+
+    function enterEvent() {
+        let shoseEvent = false;
+        $("#toolTipsUl").children().length
+        && $("#toolTipsUl li").each(
+            function (index, element) {
+                if (this.className.includes("active")) {
+                    shoseEvent = true;
+                    $("#tenantShortName").val(this.id);
+                    var userName = this.innerText;
+                    $("#username").val(userName);
+                    if ($.trim(userName).length > 0
+                        && userName.indexOf("@") != -1) {
+                        $("#username1").val(
+                            userName.split("@")[0]);
+                    }
+                    $("#toolTipsUl").empty();
+                    $(".toolTips").attr({
+                        style: "display: none;"
+                    });
+                    $("#password").focus();
+                    return true;
+                }
+            });
+        if (!shoseEvent) {
+            $('input[type="button"]').click();
+        }
+    }
+
+    function initFormIfRemember() {
+        if ($.cookie("username") != null) {
+            var username = $.cookie("username");
+            var password = $.cookie("password");
+            $("#username").val(decode64(username));
+            $("#username1").val(username);
+            $("#password").val(decode64(password));
+            $("#password1").val(password);
+            $("#checkbox1").attr("checked", "checked");
+        }
+    }
+
+    var open = 0;
+    layui.use("layer", function () {
+        var option = {
+            type: "success",
+            position: "top-center",
+            showicon: true,
+            time: 3000,
+            title: "登录提示",
+            content: "提示",
+            shadow: false,
+            shadowclickclose: true,
+            autoclose: true,
+            callback: function (data, obj) {
+                obj.ele.close(0);
+            },
+        };
+        //非空验证
+        $('input[type="button"]').click(function () {
+            var username = $('#username').val();
+            var password = $('#password').val();
+            var tenantShortName = $("#tenantShortName").val();
+            if (username == "") {
+                option.type = "warn";
+                option.content = "请输入您的账号";
+                WfMsg(option);
+            } else if (password == "") {
+                option.type = "warn";
+                option.content = "请输入密码";
+                WfMsg(option);
+            } else {
+                $.when(
+                    $.ajax({
+                        async: false,
+                        cache: false,
+                        type: "GET",
+                        url: ctx + '/api/getRandom',
+                        dataType: "json",
+                        success: function (y9Result) {
+                            if (y9Result.success) {
+                                $('#pwdEcodeType').val(y9Result.data);
+                            }
+                        }
+                    })
+                ).done(function () {
+                    console.log(password);
+                    $.ajax({
+                        async: false,
+                        cache: false,
+                        type: "POST",
+                        url: ctx + '/api/checkSsoLoginInfo',
+                        data: {
+                            username: encode64(username),
+                            password: encrypt($('#pwdEcodeType').val(), encode64(password)),
+                            tenantShortName: tenantShortName,
+                            pwdEcodeType: $('#pwdEcodeType').val()
+                        },
+                        dataType: "json",
+                        success: function (data) {
+                            if (data.success) {
+                                var username = $("#username").val();
+                                var password = $("#password").val();
+                                var pwdEcodeType = $('#pwdEcodeType').val();
+
+                                var encodeUserName = encode64(username);
+                                var encodePassword = encode64(password);
+                                var rsapwd = encrypt(pwdEcodeType, encodePassword);
+                                $("#username1").val(encodeUserName);
+                                $("#password1").val(rsapwd);
+
+                                if ($("#checkbox1").prop("checked")) {
+                                    $.cookie("username", null);
+                                    $.cookie("username", encodeUserName, {
+                                        expires: 365
+                                    });
+                                    $.cookie("password", null);
+                                    $.cookie("password", encodePassword, {
+                                        expires: 365
+                                    });
+                                } else {
+                                    $.cookie("username", null, {
+                                        expires: 365
+                                    });
+                                    $.cookie("password", null, {
+                                        expires: 365
+                                    });
+                                }
+
+                                $("#fm1").submit();
+                            } else {
+                                var msg = data.msg;
+                                if (msg != null && msg.length > 0) {
+                                    option.type = "warn";
+                                    option.content = msg;
+                                    WfMsg(option);
+                                }
+                            }
+                        }
+                    })
+                }).fail(function () {
+                    option.type = "warn";
+                    option.content = "获取随机数失败。";
+                    WfMsg(option);
+                });
+            }
+        });
+    });
+    //全屏
+    var fullscreen = function () {
+        elem = document.body;
+        if (elem.webkitRequestFullScreen) {
+            elem.webkitRequestFullScreen();
+        } else if (elem.mozRequestFullScreen) {
+            elem.mozRequestFullScreen();
+        } else if (elem.requestFullScreen) {
+            elem.requestFullscreen();
+        } else {
+            //浏览器不支持全屏API或已被禁用
+        }
+    };
+
+    //加密
+    function encrypt(publicKey, pwd) {
+        var encrypt = new JSEncrypt();
+        encrypt.setPublicKey(publicKey);
+        var encrypted = encrypt.encrypt(pwd);
+        return encrypted;
+    }
+</script>
+</body>
+</html>

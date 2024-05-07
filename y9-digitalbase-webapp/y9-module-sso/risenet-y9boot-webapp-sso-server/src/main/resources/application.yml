@@ -156,17 +156,22 @@ cas:
                     enabled: true
                     startDelay: "PT15S"
                     repeatInterval: "PT30M"
-            jpa:
+            redis:
                 enabled: true
-                dialect: org.hibernate.dialect.MySQL8Dialect
-                driver-class: com.mysql.cj.jdbc.Driver
-                ddl-auto: update
-                url: jdbc:mysql://localhost:3306/y9_public?serverTimezone=GMT%2B8&nullCatalogMeansCurrent=true&useUnicode=true&characterEncoding=utf-8&rewriteBatchedStatements=true&useCompression=true&useSSL=false&allowPublicKeyRetrieval=true
-                user: root
-                password: 111111
-                idleTimeout: PT10M
-                leakThreshold: 0
-                autocommit: true
+                useSsl: false
+                host: "localhost"
+                port: 6379
+                database: 13
+                #username: default
+                password: "y9i-83204585"
+                timeout: "PT60S"
+                pool:
+                    enabled: true
+                    testWhileIdle: true
+                    maxActive: 20
+                    maxIdle: 5
+                    maxWait: 1000
+                    minIdle: 1
                 crypto:
                     enabled: true
                     encryption:
@@ -243,9 +248,6 @@ spring:
                 enabled: false
             discovery:
                 enabled: false
-    integration:
-        jdbc:
-            initialize-schema: always
 y9:
     login:
         casLoginView: "casLoginView-y9-v3.0"
