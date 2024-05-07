@@ -1,6 +1,7 @@
 package net.risesoft.service.dictionary.impl;
 
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -32,6 +33,11 @@ public class Y9OptionClassServiceImpl implements Y9OptionClassService {
     public void deleteByType(String type) {
         y9OptionValueManager.deleteByType(type);
         y9OptionClassRepository.deleteById(type);
+    }
+
+    @Override
+    public Optional<Y9OptionClass> findByType(String type) {
+        return y9OptionClassRepository.findById(type);
     }
 
     @Override

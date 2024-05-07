@@ -12,8 +12,6 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import net.risesoft.base.BaseEntity;
-import net.risesoft.enums.platform.DepartmentPropCategoryEnum;
-import net.risesoft.persistence.EnumConverter;
 
 /**
  * 部门信息配置表
@@ -49,14 +47,13 @@ public class Y9DepartmentProp extends BaseEntity {
     private String orgBaseId;
 
     /** 类别 */
-    @Column(name = "CATEGORY", length = 10, nullable = false)
+    @Column(name = "CATEGORY", nullable = false)
     @Comment("类别")
-    @Convert(converter = EnumConverter.DepartmentPropCategoryEnumConverter.class)
-    private DepartmentPropCategoryEnum category;
+    private Integer category;
 
     /** 排序号 */
-    @Column(name = "TAB_INDEX", length = 10, nullable = false)
+    @Column(name = "TAB_INDEX", nullable = false)
     @Comment("排序号")
-    protected Integer tabIndex = 0;
+    private Integer tabIndex = 0;
 
 }

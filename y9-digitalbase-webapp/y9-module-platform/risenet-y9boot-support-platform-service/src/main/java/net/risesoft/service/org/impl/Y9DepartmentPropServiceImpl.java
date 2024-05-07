@@ -53,7 +53,7 @@ public class Y9DepartmentPropServiceImpl implements Y9DepartmentPropService {
 
     @Override
     public List<Y9DepartmentProp> listByCategory(DepartmentPropCategoryEnum category) {
-        return y9DepartmentPropRepository.findByCategoryOrderByTabIndex(category);
+        return y9DepartmentPropRepository.findByCategoryOrderByTabIndex(category.getValue());
     }
 
     @Override
@@ -63,12 +63,12 @@ public class Y9DepartmentPropServiceImpl implements Y9DepartmentPropService {
 
     @Override
     public List<Y9DepartmentProp> listByDeptIdAndCategory(String deptId, DepartmentPropCategoryEnum category) {
-        return y9DepartmentPropRepository.findByDeptIdAndCategoryOrderByTabIndex(deptId, category);
+        return y9DepartmentPropRepository.findByDeptIdAndCategoryOrderByTabIndex(deptId, category.getValue());
     }
 
     @Override
     public List<Y9DepartmentProp> listByOrgBaseIdAndCategory(String orgBaseId, DepartmentPropCategoryEnum category) {
-        return y9DepartmentPropRepository.findByOrgBaseIdAndCategoryOrderByTabIndex(orgBaseId, category);
+        return y9DepartmentPropRepository.findByOrgBaseIdAndCategoryOrderByTabIndex(orgBaseId, category.getValue());
     }
 
     @Override
@@ -88,14 +88,9 @@ public class Y9DepartmentPropServiceImpl implements Y9DepartmentPropService {
         prop.setDeptId(y9DepartmentProp.getDeptId());
         prop.setOrgBaseId(y9DepartmentProp.getOrgBaseId());
         prop.setCategory(y9DepartmentProp.getCategory());
-        Integer tabIndex =
-            y9DepartmentPropRepository.getMaxTabIndex(y9DepartmentProp.getDeptId(), y9DepartmentProp.getCategory());
-        if (null == tabIndex) {
-            tabIndex = 1;
-        } else {
-            tabIndex++;
-        }
-        prop.setTabIndex(tabIndex);
+        Integer tabIndex = y9DepartmentPropRepository
+            .getMaxTabIndex(y9DepartmentProp.getDeptId(), y9DepartmentProp.getCategory()).orElse(1);
+        prop.setTabIndex(++tabIndex);
         y9DepartmentPropRepository.save(prop);
     }
 
