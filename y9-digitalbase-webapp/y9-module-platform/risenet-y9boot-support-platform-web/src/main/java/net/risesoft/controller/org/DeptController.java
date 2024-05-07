@@ -83,29 +83,17 @@ public class DeptController {
     }
 
     /**
-     * 获取部门领导列表
+     * 获取部门属性对应组织节点列表
      *
      * @param deptId 部门id
+     * @param category 部门属性类型
      * @return
-     * @since 9.6.1
+     * @since 9.6.5
      */
-    @RiseLog(operationName = "根据部门id，获取部门领导列表")
-    @RequestMapping(value = "/listDeptLeaders")
-    public Y9Result<List<Y9OrgBase>> listDeptLeaders(@RequestParam @NotBlank String deptId) {
-        return Y9Result.success(y9DepartmentService.listLeaders(deptId, null), "获取部门领导列表成功");
-    }
-
-    /**
-     * 根据部门id获取部门的主管领导列表
-     *
-     * @param deptId 部门id
-     * @return
-     * @since 9.6.1
-     */
-    @RiseLog(operationName = "根据部门id获取部门的主管领导列表")
-    @RequestMapping(value = "/listDeptManagers")
-    public Y9Result<List<Y9OrgBase>> listDeptManagers(@RequestParam @NotBlank String deptId) {
-        return Y9Result.success(y9DepartmentService.listManagers(deptId, null), "获取部门的主管领导列表成功");
+    @RiseLog(operationName = "获取部门属性对应组织节点列表")
+    @RequestMapping(value = "/listDepartmentPropOrgUnits")
+    public Y9Result<List<Y9OrgBase>> listDepartmentPropOrgUnits(@RequestParam @NotBlank String deptId, @RequestParam Integer category) {
+        return Y9Result.success(y9DepartmentService.listDepartmentPropOrgUnits(deptId, category, null), "获取部门领导列表成功");
     }
 
     /**
@@ -150,59 +138,15 @@ public class DeptController {
     }
 
     /**
-     * 移除部门领导
+     * 移除部门属性
      *
-     * @param deptId 部门id
-     * @param orgBaseId 部门领导id
      */
-    @RiseLog(operationName = "移除部门领导", operationType = OperationTypeEnum.DELETE)
-    @PostMapping(value = "/removeLeader")
-    public Y9Result<String> removeLeader(@RequestParam @NotBlank String deptId,
+    @RiseLog(operationName = "移除部门属性", operationType = OperationTypeEnum.DELETE)
+    @PostMapping(value = "/removeDepartmentProp")
+    public Y9Result<String> removeDepartmentProp(@RequestParam @NotBlank String deptId, @RequestParam Integer category,
         @RequestParam @NotBlank String orgBaseId) {
-        y9DepartmentService.removeLeader(deptId, orgBaseId);
+        y9DepartmentService.removeDepartmentProp(deptId, category, orgBaseId);
         return Y9Result.successMsg("移除部门领导成功");
-    }
-
-    /**
-     * 移除主管领导
-     *
-     * @param deptId 部门id
-     * @param orgBaseId 主管领导id
-     */
-    @RiseLog(operationName = "移除部门主管领导", operationType = OperationTypeEnum.DELETE)
-    @PostMapping(value = "/removeManager")
-    public Y9Result<String> removeManager(@RequestParam @NotBlank String deptId,
-        @RequestParam @NotBlank String orgBaseId) {
-        y9DepartmentService.removeManager(deptId, orgBaseId);
-        return Y9Result.successMsg("移除部门主管领导成功");
-    }
-
-    /**
-     * 移除部门秘书
-     *
-     * @param deptId 部门id
-     * @param personId 部门秘书id
-     */
-    @RiseLog(operationName = "移除部门秘书", operationType = OperationTypeEnum.DELETE)
-    @PostMapping(value = "/removeSecretary")
-    public Y9Result<String> removeSecretary(@RequestParam @NotBlank String deptId,
-        @RequestParam @NotBlank String personId) {
-        y9DepartmentService.removeSecretary(deptId, personId);
-        return Y9Result.successMsg("移除部门秘书成功");
-    }
-
-    /**
-     * 移除部门副领导
-     *
-     * @param deptId 部门id
-     * @param personId 部门副领导id
-     */
-    @RiseLog(operationName = "移除部门副领导", operationType = OperationTypeEnum.DELETE)
-    @PostMapping(value = "/removeViceLeader")
-    public Y9Result<String> removeViceLeader(@RequestParam @NotBlank String deptId,
-        @RequestParam @NotBlank String personId) {
-        y9DepartmentService.removeViceLeader(deptId, personId);
-        return Y9Result.successMsg("移除部门副领导成功");
     }
 
     /**
@@ -246,59 +190,18 @@ public class DeptController {
     }
 
     /**
-     * 设置部门领导
+     * 设置部门属性的组织节点
      *
      * @param deptId 部门id
+     * @param category 部门属性类型
      * @param orgBaseIds 人员ids
      */
-    @RiseLog(operationName = "设置部门领导", operationType = OperationTypeEnum.ADD)
-    @PostMapping(value = "/setDeptLeaders")
-    public Y9Result<String> setDeptLeaders(@RequestParam @NotBlank String deptId,
+    @RiseLog(operationName = "设置部门属性的组织节点", operationType = OperationTypeEnum.ADD)
+    @PostMapping(value = "/setDepartmentPropOrgUnits")
+    public Y9Result<String> setDepartmentPropOrgUnits(@RequestParam @NotBlank String deptId, Integer category,
         @RequestParam(value = "orgBaseIds") @NotEmpty List<String> orgBaseIds) {
-        y9DepartmentService.setDeptLeaders(deptId, orgBaseIds);
+        y9DepartmentService.setDepartmentPropOrgUnits(deptId, category, orgBaseIds);
         return Y9Result.successMsg("设置部门领导成功");
-    }
-
-    /**
-     * 设置部门主管领导
-     *
-     * @param deptId 部门id
-     * @param orgBaseIds 人员ids
-     */
-    @RiseLog(operationName = "设置部门主管领导", operationType = OperationTypeEnum.ADD)
-    @PostMapping(value = "/setDeptManagers")
-    public Y9Result<String> setDeptManagers(@RequestParam @NotBlank String deptId,
-        @RequestParam(value = "orgBaseIds") @NotEmpty List<String> orgBaseIds) {
-        y9DepartmentService.setDeptManagers(deptId, orgBaseIds);
-        return Y9Result.successMsg("设置部门主管领导成功");
-    }
-
-    /**
-     * 设置部门秘书
-     *
-     * @param deptId 部门id
-     * @param orgBaseIds 人员ids
-     */
-    @RiseLog(operationName = "设置部门秘书", operationType = OperationTypeEnum.ADD)
-    @PostMapping(value = "/setDeptSecretarys")
-    public Y9Result<String> setDeptSecretarys(@RequestParam @NotBlank String deptId,
-        @RequestParam(value = "orgBaseIds") @NotEmpty List<String> orgBaseIds) {
-        y9DepartmentService.setDeptSecretarys(deptId, orgBaseIds);
-        return Y9Result.successMsg("设置部门秘书成功");
-    }
-
-    /**
-     * 设置部门副领导
-     *
-     * @param deptId 部门id
-     * @param orgBaseIds 人员ids
-     */
-    @RiseLog(operationName = "设置部门副领导", operationType = OperationTypeEnum.ADD)
-    @PostMapping(value = "/setDeptViceLeaders")
-    public Y9Result<String> setDeptViceLeaders(@RequestParam @NotBlank String deptId,
-        @RequestParam(value = "orgBaseIds") @NotEmpty List<String> orgBaseIds) {
-        y9DepartmentService.setDeptViceLeaders(deptId, orgBaseIds);
-        return Y9Result.successMsg("设置部门副领导成功");
     }
 
 }

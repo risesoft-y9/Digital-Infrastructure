@@ -129,28 +129,17 @@ public interface DepartmentApi {
         @RequestParam("category") DepartmentPropCategoryEnum category);
 
     /**
-     * 获取部门领导（不包含禁用）
+     * 获取部门属性对应组织节点列表
      *
      * @param tenantId 租户id
      * @param departmentId 部门唯一标识
-     * @return {@code Y9Result<List<OrgUnit>>} 通用请求返回对象 - data 是人员对象集合
+     * @param category 部门属性类型
+     * @return {@code Y9Result<List<OrgUnit>>} 通用请求返回对象 - data 是人员或岗位对象集合
      * @since 9.6.0
      */
-    @GetMapping("/listLeaders")
-    Y9Result<List<OrgUnit>> listLeaders(@RequestParam("tenantId") @NotBlank String tenantId,
-        @RequestParam("departmentId") @NotBlank String departmentId);
-
-    /**
-     * 获取部门主管领导（不包含禁用）
-     *
-     * @param tenantId 租户id
-     * @param departmentId 部门唯一标识
-     * @return {@code Y9Result<List<OrgUnit>>} 通用请求返回对象 - data 是人员对象集合
-     * @since 9.6.0
-     */
-    @GetMapping("/listManagers")
-    Y9Result<List<OrgUnit>> listManagers(@RequestParam("tenantId") @NotBlank String tenantId,
-        @RequestParam("departmentId") @NotBlank String departmentId);
+    @GetMapping("/listDepartmentPropOrgUnits")
+    Y9Result<List<OrgUnit>> listDepartmentPropOrgUnits(@RequestParam("tenantId") @NotBlank String tenantId,
+        @RequestParam("departmentId") @NotBlank String departmentId, @RequestParam Integer category);
 
     /**
      * 递归获得所有层级子部门列表（不包含禁用）

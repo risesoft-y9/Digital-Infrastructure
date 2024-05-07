@@ -325,7 +325,8 @@ public class DepartmentApiImpl implements DepartmentApi {
         @RequestParam("departmentId") @NotBlank String departmentId) {
         Y9LoginUserHolder.setTenantId(tenantId);
 
-        List<Y9OrgBase> y9OrgBaseList = y9DepartmentService.listLeaders(departmentId, Boolean.FALSE);
+        List<Y9OrgBase> y9OrgBaseList = y9DepartmentService.listDepartmentPropOrgUnits(departmentId,
+            DepartmentPropCategoryEnum.LEADER.getValue(), Boolean.FALSE);
         return ModelConvertUtil.orgBaseToOrgUnit(y9OrgBaseList);
     }
 
@@ -342,7 +343,8 @@ public class DepartmentApiImpl implements DepartmentApi {
         @RequestParam("departmentId") @NotBlank String departmentId) {
         Y9LoginUserHolder.setTenantId(tenantId);
 
-        List<Y9OrgBase> y9OrgBaseList = y9DepartmentService.listManagers(departmentId, Boolean.FALSE);
+        List<Y9OrgBase> y9OrgBaseList = y9DepartmentService.listDepartmentPropOrgUnits(departmentId,
+            DepartmentPropCategoryEnum.MANAGER.getValue(), Boolean.FALSE);
         return ModelConvertUtil.orgBaseToOrgUnit(y9OrgBaseList);
     }
 

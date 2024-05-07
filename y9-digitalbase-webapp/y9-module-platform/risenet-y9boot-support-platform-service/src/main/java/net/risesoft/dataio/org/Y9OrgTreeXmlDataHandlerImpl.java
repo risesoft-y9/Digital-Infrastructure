@@ -39,7 +39,6 @@ import net.risesoft.entity.Y9Position;
 import net.risesoft.entity.relation.Y9PersonsToGroups;
 import net.risesoft.entity.relation.Y9PersonsToPositions;
 import net.risesoft.entity.relation.Y9PositionsToGroups;
-import net.risesoft.enums.platform.DepartmentPropCategoryEnum;
 import net.risesoft.enums.platform.GroupTypeEnum;
 import net.risesoft.enums.platform.MaritalStatusEnum;
 import net.risesoft.enums.platform.OrgTypeEnum;
@@ -173,7 +172,7 @@ public class Y9OrgTreeXmlDataHandlerImpl implements Y9OrgTreeDataHandler {
             propElement.addElement("UID").addText(prop.getId());
             propElement.addElement("deptId").addText(prop.getDeptId() == null ? "" : prop.getDeptId());
             propElement.addElement("orgBaseId").addText(prop.getOrgBaseId() == null ? "" : prop.getOrgBaseId());
-            propElement.addElement("category").addText(Integer.toString(prop.getCategory().getCategory()));
+            propElement.addElement("category").addText(Integer.toString(prop.getCategory()));
             propElement.addElement("tabIndex").addText(prop.getTabIndex() == null ? "" : prop.getTabIndex() + "");
         }
 
@@ -688,8 +687,7 @@ public class Y9OrgTreeXmlDataHandlerImpl implements Y9OrgTreeDataHandler {
                 }
                 prop.setDeptId(deptId == null ? "" : deptId);
                 prop.setOrgBaseId(orgBaseId == null ? "" : orgBaseId);
-                prop.setCategory(category != null
-                    ? Y9EnumUtil.valueOf(DepartmentPropCategoryEnum.class, Integer.parseInt(category)) : null);
+                prop.setCategory(category != null ? Integer.parseInt(category) : null);
                 prop.setTabIndex(tabIndex != null ? Integer.parseInt(tabIndex) : null);
                 y9DepartmentPropService.saveOrUpdate(prop);
             } catch (Exception e) {

@@ -11,7 +11,6 @@ import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
 import net.risesoft.entity.Y9DepartmentProp;
-import net.risesoft.enums.platform.DepartmentPropCategoryEnum;
 
 /**
  * @author dingzhaojun
@@ -31,20 +30,24 @@ public interface Y9DepartmentPropRepository
 
     @Modifying
     @Transactional(readOnly = false)
+    void deleteByDeptIdAndCategoryAndOrgBaseId(String deptId, Integer category, String orgBaseId);
+
+    @Modifying
+    @Transactional(readOnly = false)
     void deleteByOrgBaseId(String orgBaseId);
 
-    List<Y9DepartmentProp> findByCategoryOrderByTabIndex(DepartmentPropCategoryEnum category);
+    List<Y9DepartmentProp> findByCategoryOrderByTabIndex(Integer category);
 
     List<Y9DepartmentProp> findByDeptId(String deptId);
 
-    List<Y9DepartmentProp> findByDeptIdAndCategoryOrderByTabIndex(String deptId, DepartmentPropCategoryEnum category);
+    List<Y9DepartmentProp> findByDeptIdAndCategoryOrderByTabIndex(String deptId, Integer category);
 
     Optional<Y9DepartmentProp> findByDeptIdAndOrgBaseIdAndCategory(String deptId, String orgBaseId,
-        DepartmentPropCategoryEnum category);
+        Integer category);
 
     List<Y9DepartmentProp> findByOrgBaseIdAndCategoryOrderByTabIndex(String orgBaseId,
-        DepartmentPropCategoryEnum category);
+        Integer category);
 
     @Query("select max(tabIndex) from Y9DepartmentProp where deptId = ?1 and category = ?2")
-    Integer getMaxTabIndex(String deptId, DepartmentPropCategoryEnum category);
+    Optional<Integer> getMaxTabIndex(String deptId, Integer category);
 }

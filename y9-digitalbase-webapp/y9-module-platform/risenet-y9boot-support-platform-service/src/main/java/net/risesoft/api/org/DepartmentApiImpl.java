@@ -192,37 +192,12 @@ public class DepartmentApiImpl implements DepartmentApi {
         return Y9Result.success(Y9ModelConvertUtil.convert(y9DepartmentPropList, DepartmentProp.class));
     }
 
-    /**
-     * 获取部门领导（不包含禁用）
-     *
-     * @param tenantId 租户id
-     * @param departmentId 部门唯一标识
-     * @return {@code Y9Result<List<OrgUnit>>} 通用请求返回对象 - data 是人员对象集合
-     * @since 9.6.0
-     */
     @Override
-    public Y9Result<List<OrgUnit>> listLeaders(@RequestParam("tenantId") @NotBlank String tenantId,
-        @RequestParam("departmentId") @NotBlank String departmentId) {
+    public Y9Result<List<OrgUnit>> listDepartmentPropOrgUnits(String tenantId, String departmentId, Integer category) {
         Y9LoginUserHolder.setTenantId(tenantId);
 
-        List<Y9OrgBase> y9OrgBaseList = y9DepartmentService.listLeaders(departmentId, Boolean.FALSE);
-        return Y9Result.success(ModelConvertUtil.orgBaseToOrgUnit(y9OrgBaseList));
-    }
-
-    /**
-     * 获取部门主管领导（不包含禁用）
-     *
-     * @param tenantId 租户id
-     * @param departmentId 部门唯一标识
-     * @return {@code Y9Result<List<OrgUnit>>} 通用请求返回对象 - data 是人员对象集合
-     * @since 9.6.0
-     */
-    @Override
-    public Y9Result<List<OrgUnit>> listManagers(@RequestParam("tenantId") @NotBlank String tenantId,
-        @RequestParam("departmentId") @NotBlank String departmentId) {
-        Y9LoginUserHolder.setTenantId(tenantId);
-
-        List<Y9OrgBase> y9OrgBaseList = y9DepartmentService.listManagers(departmentId, Boolean.FALSE);
+        List<Y9OrgBase> y9OrgBaseList =
+            y9DepartmentService.listDepartmentPropOrgUnits(departmentId, category, Boolean.FALSE);
         return Y9Result.success(ModelConvertUtil.orgBaseToOrgUnit(y9OrgBaseList));
     }
 

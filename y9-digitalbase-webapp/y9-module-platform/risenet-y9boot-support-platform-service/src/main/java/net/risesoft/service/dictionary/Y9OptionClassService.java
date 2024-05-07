@@ -1,6 +1,7 @@
 package net.risesoft.service.dictionary;
 
 import java.util.List;
+import java.util.Optional;
 
 import net.risesoft.entity.Y9OptionClass;
 
@@ -18,6 +19,14 @@ public interface Y9OptionClassService {
      * @param type 类型
      */
     void deleteByType(String type);
+
+    /**
+     * 按类型查找
+     *
+     * @param type 类型
+     * @return {@code Optional<Y9OptionClass> }
+     */
+    Optional<Y9OptionClass> findByType(String type);
 
     /**
      * 字典类型表中是否有数据

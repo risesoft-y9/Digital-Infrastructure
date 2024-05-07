@@ -56,14 +56,6 @@ public interface Y9DepartmentService {
     Y9Department getById(String id);
 
     /**
-     * 根据部门id获取部门秘书
-     *
-     * @param deptId 部门id
-     * @return {@link List}<{@link Y9OrgBase}>
-     */
-    List<Y9OrgBase> getDeptSecretarys(String deptId);
-
-    /**
      * 查询部门
      *
      * @return {@link List}<{@link Y9Department}>
@@ -109,22 +101,14 @@ public interface Y9DepartmentService {
     List<Y9Department> listByParentId(String parentId, Boolean disabled);
 
     /**
-     * 根据部门id获取部门领导
+     * 组织节点（人员或岗位）列表
      *
-     * @param deptId 部门id
-     * @param disabled
-     * @return {@link List}<{@link Y9OrgBase}>
+     * @param deptId 部门ID
+     * @param category 部门属性类型
+     * @param disabled 是否禁用
+     * @return {@code List<Y9OrgBase> }
      */
-    List<Y9OrgBase> listLeaders(String deptId, Boolean disabled);
-
-    /**
-     * 根据部门Id获取部门的主管领导
-     *
-     * @param deptId 部门id
-     * @param disabled
-     * @return {@link List}<{@link Y9OrgBase}>
-     */
-    List<Y9OrgBase> listManagers(String deptId, Boolean disabled);
+    List<Y9OrgBase> listDepartmentPropOrgUnits(String deptId, Integer category, Boolean disabled);
 
     /**
      * 获得部门树
@@ -136,14 +120,6 @@ public interface Y9DepartmentService {
     List<Y9Department> listRecursivelyByParentId(String orgBaseId, Boolean disabled);
 
     /**
-     * 根据部门id获取部门副领导
-     *
-     * @param deptId 部门id
-     * @return {@link List}<{@link Y9OrgBase}>
-     */
-    List<Y9OrgBase> listViceLeaders(String deptId);
-
-    /**
      * 移动部门到新的节点
      *
      * @param deptId 部门id
@@ -152,37 +128,8 @@ public interface Y9DepartmentService {
      */
     Y9Department move(String deptId, String parentId);
 
-    /**
-     * 移除部门领导
-     *
-     * @param deptId 部门id
-     * @param orgBaseId 领导id
-     */
-    void removeLeader(String deptId, String orgBaseId);
+    void removeDepartmentProp(String deptId, Integer category, String orgBaseId);
 
-    /**
-     * 移除主管领导
-     *
-     * @param deptId 部门id
-     * @param orgBaseId 领导id
-     */
-    void removeManager(String deptId, String orgBaseId);
-
-    /**
-     * 移除秘书
-     *
-     * @param deptId 部门id
-     * @param personId 秘书id
-     */
-    void removeSecretary(String deptId, String personId);
-
-    /**
-     * 移除副领导
-     *
-     * @param deptId 部门id
-     * @param personId 副领导id
-     */
-    void removeViceLeader(String deptId, String personId);
 
     /**
      * 保存新的部门排序
@@ -218,37 +165,14 @@ public interface Y9DepartmentService {
     List<Y9Department> search(String whereClause);
 
     /**
-     * 设置部门主管领导
+     * 设置部门属性组织节点
      *
-     * @param deptId 部门id
-     * @param personIds 人员id数组
+     * @param deptId 部门ID
+     * @param category 部门属性类型
+     * @param orgBaseIds 组织节点ID
      */
-    void setDeptLeaders(String deptId, List<String> personIds);
-
-    /**
-     * 设置部门主管领导
-     *
-     * @param deptId 部门id
-     * @param orgBaseIds 组织节点id数组
-     */
-    void setDeptManagers(String deptId, List<String> orgBaseIds);
-
-    /**
-     * 设置部门秘书
-     *
-     * @param deptId 部门id
-     * @param orgBaseIds 组织节点id数组
-     */
-    void setDeptSecretarys(String deptId, List<String> orgBaseIds);
-
-    /**
-     * 设置部门副领导
-     *
-     * @param deptId 部门id
-     * @param orgBaseIds 组织节点id数组
-     */
-    void setDeptViceLeaders(String deptId, List<String> orgBaseIds);
-
+    void setDepartmentPropOrgUnits(String deptId, Integer category, List<String> orgBaseIds);
+    
     /**
      * 更新部门排列序号
      *
