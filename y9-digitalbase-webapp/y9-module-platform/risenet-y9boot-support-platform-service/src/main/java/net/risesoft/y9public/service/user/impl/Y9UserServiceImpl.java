@@ -3,7 +3,6 @@ package net.risesoft.y9public.service.user.impl;
 import java.util.List;
 import java.util.Optional;
 
-import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -25,18 +24,7 @@ import net.risesoft.y9public.service.user.Y9UserService;
 @RequiredArgsConstructor
 public class Y9UserServiceImpl implements Y9UserService {
 
-    private final KafkaTemplate<String, Object> y9KafkaTemplate;
     private final Y9UserRepository y9UserRepository;
-
-    @Override
-    public boolean isCaidAvailable(String personId, String caid) {
-        Optional<Y9User> y9UserOptional = y9UserRepository.findByTenantIdAndCaid(Y9LoginUserHolder.getTenantId(), caid);
-        if (y9UserOptional.isEmpty()) {
-            return true;
-        }
-
-        return y9UserOptional.get().getPersonId().equals(personId);
-    }
 
     @Override
     @Transactional(readOnly = false)
@@ -62,6 +50,16 @@ public class Y9UserServiceImpl implements Y9UserService {
     @Override
     public Optional<Y9User> findByPersonIdAndTenantId(String personId, String tenantId) {
         return y9UserRepository.findByTenantIdAndPersonId(tenantId, personId);
+    }
+
+    @Override
+    public boolean isCaidAvailable(String personId, String caid) {
+        Optional<Y9User> y9UserOptional = y9UserRepository.findByTenantIdAndCaid(Y9LoginUserHolder.getTenantId(), caid);
+        if (y9UserOptional.isEmpty()) {
+            return true;
+        }
+
+        return y9UserOptional.get().getPersonId().equals(personId);
     }
 
     @Override
