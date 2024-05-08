@@ -18,7 +18,7 @@ import net.risesoft.enums.platform.TenantTypeEnum;
 import net.risesoft.id.Y9IdGenerator;
 import net.risesoft.log.LogLevelEnum;
 import net.risesoft.log.OperationTypeEnum;
-import net.risesoft.log.service.SaveLogInfo4Kafka;
+import net.risesoft.log.service.AsyncSaveLogInfo;
 import net.risesoft.model.log.AccessLog;
 import net.risesoft.model.userlogininfo.LoginInfo;
 import net.risesoft.service.identity.IdentityResourceCalculator;
@@ -37,7 +37,7 @@ import net.risesoft.y9public.service.tenant.Y9TenantService;
 @RequiredArgsConstructor
 public class ScheduledTask {
 
-    private final SaveLogInfo4Kafka saveLogInfo4Kafka;
+    private final AsyncSaveLogInfo asyncSaveLogInfo;
     private final UserLoginInfoApi userLoginInfoApi;
     private final Y9ManagerService y9ManagerService;
     private final Y9OrganizationService y9OrganizationService;
@@ -97,7 +97,7 @@ public class ScheduledTask {
                         log.setOperateName("检查三员审查情况");
                         log.setOperateType(OperationTypeEnum.CHECK.getValue());
 
-                        saveLogInfo4Kafka.asyncSave(log);
+                        asyncSaveLogInfo.asyncSave(log);
                     }
                     y9ManagerService.updateCheckTime(y9Manager.getId(), checkTime);
                 } catch (Exception e) {
@@ -158,7 +158,7 @@ public class ScheduledTask {
                     log.setOperateName("检查三员密码修改");
                     log.setOperateType(OperationTypeEnum.CHECK.getValue());
 
-                    saveLogInfo4Kafka.asyncSave(log);
+                    asyncSaveLogInfo.asyncSave(log);
                 }
             }
         }

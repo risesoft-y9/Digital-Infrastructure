@@ -10,8 +10,6 @@ import org.springframework.boot.task.TaskExecutorBuilder;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.DependsOn;
-import org.springframework.kafka.core.KafkaTemplate;
-import org.springframework.kafka.core.ProducerFactory;
 import org.springframework.scheduling.annotation.EnableAsync;
 import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
 
@@ -59,12 +57,6 @@ public class Y9LogConfiguration {
     @ConditionalOnMissingBean
     public Y9Context y9Context() {
         return new Y9Context();
-    }
-
-    @Bean("y9KafkaTemplate")
-    @ConditionalOnMissingBean(name = "y9KafkaTemplate")
-    public KafkaTemplate<?, ?> y9KafkaTemplate(ProducerFactory<Object, Object> kafkaProducerFactory) {
-        return new KafkaTemplate<>(kafkaProducerFactory);
     }
 
     @Bean(name = {"y9ThreadPoolTaskExecutor"})

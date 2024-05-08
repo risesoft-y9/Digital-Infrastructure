@@ -136,11 +136,11 @@ public class Y9logUserLoginInfoCustomRepositoryImpl implements Y9logUserLoginInf
     @Override
     public List<Object[]> listDistinctUserHostIpByUserIdAndLoginTime(String userId, Date startTime, Date endTime) {
         List<Object[]> strList = new ArrayList<>();
-        List<Object[]> userHostIpList =
+        List<Map<String, Object>> userHostIpList =
             y9logUserLoginInfoRepository.findDistinctUserHostIpByUserIdAndLoginTime(userId, startTime, endTime);
         if (!userHostIpList.isEmpty()) {
             userHostIpList.forEach(userHostIp -> {
-                String[] userLoginInfo = {userHostIp[0] + "", String.valueOf(userHostIp[1])};
+                String[] userLoginInfo = {userHostIp.get("userHostIp") + "", String.valueOf(userHostIp.get("count"))};
                 strList.add(userLoginInfo);
             });
         }
@@ -150,12 +150,14 @@ public class Y9logUserLoginInfoCustomRepositoryImpl implements Y9logUserLoginInf
     @Override
     public List<Map<String, Object>> listUserHostIpByCip(String cip) {
         List<Map<String, Object>> list = new ArrayList<>();
-        List<Object[]> userHostIpList = y9logUserLoginInfoRepository.findDistinctByUserHostIpLike(cip);
+        List<Map<String, Object>> userHostIpList =
+            y9logUserLoginInfoRepository.findDistinctUserHostIpCountByUserHostIpLike(cip);
         if (!userHostIpList.isEmpty()) {
             userHostIpList.forEach(userHostIp -> {
                 Map<String, Object> map = new HashMap<>();
-                String text = userHostIp[0] + "<span style='color:red'>(" + userHostIp[1] + ")</span>";
-                map.put("serverIp", userHostIp[0]);
+                String text =
+                    userHostIp.get("userHostIp") + "<span style='color:red'>(" + userHostIp.get("count") + ")</span>";
+                map.put("serverIp", userHostIp.get("userHostIp"));
                 map.put("text", text);
                 list.add(map);
             });

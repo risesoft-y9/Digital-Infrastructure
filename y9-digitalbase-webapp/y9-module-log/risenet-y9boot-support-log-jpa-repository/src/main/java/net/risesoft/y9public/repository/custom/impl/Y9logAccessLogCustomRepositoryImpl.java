@@ -33,6 +33,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import lombok.extern.slf4j.Slf4j;
 
+import net.risesoft.consts.InitDataConsts;
 import net.risesoft.log.constant.Y9LogSearchConsts;
 import net.risesoft.model.log.AccessLog;
 import net.risesoft.model.log.LogInfoModel;
@@ -198,7 +199,7 @@ public class Y9logAccessLogCustomRepositoryImpl implements Y9logAccessLogCustomR
                 String tenantId = Y9LoginUserHolder.getTenantId();
                 long countSuccess = 0L;
                 long countError = 0L;
-                if (!tenantType.equals(1)) {
+                if (!tenantId.equals(InitDataConsts.OPERATION_TENANT_ID)) {
                     countSuccess =
                         y9logAccessLogRepository.countByTenantIdAndSuccessAndLogTimeBetweenAndUserNameNotNull(tenantId,
                             success, startOfTime, endOfTime);
@@ -224,6 +225,7 @@ public class Y9logAccessLogCustomRepositoryImpl implements Y9logAccessLogCustomR
 
     public long getOperateTimeCount(Date startDay, Date endDay, Integer tenantType, boolean betweenAble,
         long elapsedTimeStart, Long elapsedTimeEnd) {
+        String tenantId = Y9LoginUserHolder.getTenantId();
         return y9logAccessLogRepository.count(new Specification<Y9logAccessLog>() {
             private static final long serialVersionUID = -2210269486911993525L;
 
@@ -234,7 +236,7 @@ public class Y9logAccessLogCustomRepositoryImpl implements Y9logAccessLogCustomR
                 List<Expression<Boolean>> list = predicate.getExpressions();
                 list.add(criteriaBuilder.isNotNull(root.get(Y9LogSearchConsts.USER_NAME).as(String.class)));
 
-                if (!tenantType.equals(1)) {
+                if (!tenantId.equals(InitDataConsts.OPERATION_TENANT_ID)) {
                     list.add(criteriaBuilder.equal(root.get(Y9LogSearchConsts.TENANT_ID).as(String.class),
                         Y9LoginUserHolder.getTenantId()));
                 }
@@ -513,7 +515,7 @@ public class Y9logAccessLogCustomRepositoryImpl implements Y9logAccessLogCustomR
                 CriteriaBuilder criteriaBuilder) {
                 Predicate predicate = criteriaBuilder.conjunction();
                 List<Expression<Boolean>> list = predicate.getExpressions();
-                if (!tenantType.equals(1)) {
+                if (!tenantId.equals(InitDataConsts.OPERATION_TENANT_ID)) {
                     list.add(criteriaBuilder.equal(root.get(Y9LogSearchConsts.TENANT_ID).as(String.class), tenantId));
                 }
                 if (StringUtils.isNotBlank(searchDto.getLogLevel())) {
@@ -581,7 +583,7 @@ public class Y9logAccessLogCustomRepositoryImpl implements Y9logAccessLogCustomR
                         criteriaBuilder.equal(root.get(Y9LogSearchConsts.SUCCESS).as(String.class), operateStatus));
                 }
 
-                if (!tenantType.equals(1)) {
+                if (!tenantId.equals(InitDataConsts.OPERATION_TENANT_ID)) {
                     list.add(criteriaBuilder.equal(root.get(Y9LogSearchConsts.TENANT_ID).as(String.class), tenantId));
                 }
                 if (StringUtils.isNotBlank(searchDto.getUserName())) {
@@ -641,7 +643,7 @@ public class Y9logAccessLogCustomRepositoryImpl implements Y9logAccessLogCustomR
                 CriteriaBuilder criteriaBuilder) {
                 Predicate predicate = criteriaBuilder.conjunction();
                 List<Expression<Boolean>> list = predicate.getExpressions();
-                if (!tenantType.equals(1)) {
+                if (!tenantId.equals(InitDataConsts.OPERATION_TENANT_ID)) {
                     list.add(criteriaBuilder.equal(root.get(Y9LogSearchConsts.TENANT_ID).as(String.class), tenantId));
                 }
                 if (StringUtils.isNotBlank(loginInfoModel.getLogLevel())) {

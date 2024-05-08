@@ -11,6 +11,7 @@ import java.util.concurrent.TimeUnit;
 
 import javax.validation.constraints.NotBlank;
 
+import org.springframework.http.MediaType;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -46,7 +47,7 @@ import cn.hutool.core.thread.ThreadFactoryBuilder;
  * @since 9.6.0
  */
 @RestController
-@RequestMapping("/services/rest/v1/userLoginInfo")
+@RequestMapping(value = "/services/rest/v1/userLoginInfo", produces = MediaType.APPLICATION_JSON_VALUE)
 @Slf4j
 @RequiredArgsConstructor
 public class UserLoginInfoApiController implements UserLoginInfoApi {

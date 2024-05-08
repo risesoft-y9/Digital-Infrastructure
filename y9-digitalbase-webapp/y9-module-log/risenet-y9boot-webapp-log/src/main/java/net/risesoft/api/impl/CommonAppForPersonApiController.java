@@ -4,6 +4,7 @@ import java.util.List;
 
 import javax.validation.constraints.NotBlank;
 
+import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -24,7 +25,7 @@ import net.risesoft.y9.Y9LoginUserHolder;
  * @since 9.6.0
  */
 @RestController
-@RequestMapping(value = "/services/rest/v1/commonApp")
+@RequestMapping(value = "/services/rest/v1/commonApp", produces = MediaType.APPLICATION_JSON_VALUE)
 @RequiredArgsConstructor
 public class CommonAppForPersonApiController implements CommonAppForPersonApi {
 

@@ -8,6 +8,7 @@ import java.util.concurrent.TimeUnit;
 
 import javax.validation.constraints.NotBlank;
 
+import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -38,7 +39,7 @@ import cn.hutool.core.thread.ThreadFactoryBuilder;
  * @since 9.6.0
  */
 @RestController
-@RequestMapping("/services/rest/v1/accessLog")
+@RequestMapping(value = "/services/rest/v1/accessLog", produces = MediaType.APPLICATION_JSON_VALUE)
 @Slf4j
 @RequiredArgsConstructor
 public class AccessLogApiController implements AccessLogApi {

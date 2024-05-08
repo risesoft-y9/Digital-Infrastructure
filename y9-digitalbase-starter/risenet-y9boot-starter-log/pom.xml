@@ -57,10 +57,9 @@
             <version>v9.6.5-SNAPSHOT</version>
         </dependency>
 
-        <dependency>
-            <groupId>net.risesoft</groupId>
-            <artifactId>risenet-y9boot-starter-kafka</artifactId>
-            <version>${project.version}</version>
+         <dependency>
+            <groupId>org.springframework.kafka</groupId>
+            <artifactId>spring-kafka</artifactId>
         </dependency>
 
         <dependency>

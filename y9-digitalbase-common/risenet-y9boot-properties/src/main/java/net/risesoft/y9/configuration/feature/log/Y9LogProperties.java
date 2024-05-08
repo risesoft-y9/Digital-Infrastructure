@@ -18,4 +18,7 @@ public class Y9LogProperties {
      */
     private boolean enabled;
 
+    /** 日志信息保存方式 */
+    private String logSaveTarget = "kafka"; // kafka,api
+
 }

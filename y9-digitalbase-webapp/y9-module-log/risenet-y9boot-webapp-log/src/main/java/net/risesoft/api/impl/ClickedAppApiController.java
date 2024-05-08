@@ -1,5 +1,6 @@
 package net.risesoft.api.impl;
 
+import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -21,7 +22,7 @@ import net.risesoft.y9public.entity.Y9ClickedApp;
  * @date 2022/10/19
  */
 @RestController
-@RequestMapping(value = "/services/rest/v1/clickedApp")
+@RequestMapping(value = "/services/rest/v1/clickedApp", produces = MediaType.APPLICATION_JSON_VALUE)
 @RequiredArgsConstructor
 public class ClickedAppApiController implements ClickedAppApi {
 

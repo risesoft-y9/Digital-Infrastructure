@@ -139,6 +139,7 @@ y9:
             directUrl: http://localhost:7055
     common:
         kafkaEnabled: true
+        logBaseUrl: http://localhost:7056/log
         orgBaseUrl: http://localhost:7055/platform
     feature:
         apisix:
@@ -159,6 +160,7 @@ y9:
             public-enabled: true
         log:
             enabled: true
+            logSaveTarget: kafka
         security:
             enabled: true
             cors:

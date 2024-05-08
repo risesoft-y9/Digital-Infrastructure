@@ -25,17 +25,17 @@
             <version>${project.version}</version>
         </dependency>
 
-        <dependency>
+      <!--  <dependency>
             <groupId>net.risesoft</groupId>
             <artifactId>risenet-y9boot-support-log-elasticsearch-repository</artifactId>
             <version>${project.version}</version>
-        </dependency>
+        </dependency>-->
 
-<!--        <dependency>-->
-<!--            <groupId>net.risesoft</groupId>-->
-<!--            <artifactId>risenet-y9boot-support-log-jpa-repository</artifactId>-->
-<!--            <version>${project.version}</version>-->
-<!--        </dependency>-->
+        <dependency>
+            <groupId>net.risesoft</groupId>
+            <artifactId>risenet-y9boot-support-log-jpa-repository</artifactId>
+            <version>${project.version}</version>
+        </dependency>
 
         <dependency>
             <groupId>net.risesoft</groupId>
