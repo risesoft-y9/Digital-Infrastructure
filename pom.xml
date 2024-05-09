@@ -110,6 +110,7 @@
         <lombok.version>1.18.28</lombok.version>
 
         <liquibase.version>4.24.0</liquibase.version>
+        <shedlock.version>4.44.0</shedlock.version>
     </properties>
 
     <dependencyManagement>
@@ -258,12 +259,17 @@
             <dependency>
                 <groupId>net.javacrumbs.shedlock</groupId>
                 <artifactId>shedlock-spring</artifactId>
-                <version>4.44.0</version>
+                <version>${shedlock.version}</version>
             </dependency>
             <dependency>
                 <groupId>net.javacrumbs.shedlock</groupId>
                 <artifactId>shedlock-provider-redis-spring</artifactId>
-                <version>4.44.0</version>
+                <version>${shedlock.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>net.javacrumbs.shedlock</groupId>
+                <artifactId>shedlock-provider-jdbc-template</artifactId>
+                <version>${shedlock.version}</version>
             </dependency>
         </dependencies>
     </dependencyManagement>
