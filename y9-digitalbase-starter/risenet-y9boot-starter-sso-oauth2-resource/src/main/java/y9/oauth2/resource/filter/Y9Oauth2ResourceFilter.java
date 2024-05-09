@@ -7,6 +7,7 @@ import java.net.URI;
 import java.nio.charset.StandardCharsets;
 import java.util.Collections;
 import java.util.Date;
+import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
@@ -20,6 +21,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
+import org.apache.commons.httpclient.NameValuePair;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.core.env.Environment;
 import org.springframework.http.HttpHeaders;
@@ -46,6 +48,7 @@ import net.risesoft.y9.Y9LoginUserHolder;
 import net.risesoft.y9.json.Y9JsonUtil;
 import net.risesoft.y9.pubsub.constant.Y9TopicConst;
 import net.risesoft.y9.util.InetAddressUtil;
+import net.risesoft.y9.util.RemoteCallUtil;
 import net.risesoft.y9.util.Y9EnumUtil;
 
 /**
@@ -67,6 +70,7 @@ public class Y9Oauth2ResourceFilter implements Filter {
     private boolean saveLogMessage = false;
     private boolean saveOnlineMessage = false;
     private KafkaTemplate<String, Object> y9KafkaTemplate;
+    private String logSaveTarget = "";
 
     private String buildExceptionMessage(Exception ex) {
         StringWriter stringWriter = new StringWriter();
@@ -108,6 +112,7 @@ public class Y9Oauth2ResourceFilter implements Filter {
             tokenCachedInSession = Boolean
                 .parseBoolean(this.env.getProperty("y9.feature.oauth2.resource.opaque.tokenCachedInSession", "false"));
 
+            logSaveTarget = this.env.getProperty("y9.feature.log.logSaveTarget", String.class, "kafka");
             // restTemplateBasicAuth = new RestTemplate();
             // restTemplateBasicAuth.getInterceptors().add(new
             // BasicAuthenticationInterceptor(clientId, clientSecret,
@@ -123,7 +128,7 @@ public class Y9Oauth2ResourceFilter implements Filter {
                 saveLogMessage = true;
             }
 
-            if (saveOnlineMessage || saveLogMessage) {
+            if ((saveOnlineMessage || saveLogMessage) && logSaveTarget.equals("kafka")) {
                 try {
                     this.y9KafkaTemplate = ctx.getBean("y9KafkaTemplate", KafkaTemplate.class);
                 } catch (Exception ex) {
@@ -300,34 +305,43 @@ public class Y9Oauth2ResourceFilter implements Filter {
             // do nothing,skip
         } else {
             try {
-                if (this.y9KafkaTemplate != null) {
-                    AccessLog log = new AccessLog();
-                    log.setLogLevel("RSLOG");
-                    log.setLogTime(new Date());
-                    log.setRequestUrl(url);
-                    // log.setMethodName(url);
-                    log.setElapsedTime(String.valueOf(elapsedTime));
-                    log.setSuccess(success);
-                    log.setLogMessage(errorMessage);
-                    log.setThrowable(throwable);
-                    log.setId(UUID.randomUUID().toString().replaceAll("-", ""));
-                    log.setServerIp(this.serverIp);
-                    log.setUserHostIp(hostIp);
-                    // log.setModularName();
-                    // log.setOperateName("");
-                    // log.setOperateType("url");
-                    log.setUserAgent(userAgent);
-                    log.setSystemName(this.systemName);
-                    if (userInfo != null) {
-                        log.setUserId(userInfo.getParentId());
-                        log.setUserName(userInfo.getLoginName());
-                        log.setTenantId(userInfo.getTenantId());
-                        log.setTenantName(userInfo.getTenantName());
-                        log.setGuidPath(userInfo.getGuidPath());
-                        log.setManagerLevel(String.valueOf(userInfo.getManagerLevel().getValue()));
+                AccessLog log = new AccessLog();
+                log.setLogLevel("RSLOG");
+                log.setLogTime(new Date());
+                log.setRequestUrl(url);
+                // log.setMethodName(url);
+                log.setElapsedTime(String.valueOf(elapsedTime));
+                log.setSuccess(success);
+                log.setLogMessage(errorMessage);
+                log.setThrowable(throwable);
+                log.setId(UUID.randomUUID().toString().replaceAll("-", ""));
+                log.setServerIp(this.serverIp);
+                log.setUserHostIp(hostIp);
+                // log.setModularName();
+                // log.setOperateName("");
+                log.setOperateType("活动");
+                log.setUserAgent(userAgent);
+                log.setSystemName(this.systemName);
+                if (userInfo != null) {
+                    log.setUserId(userInfo.getParentId());
+                    log.setUserName(userInfo.getLoginName());
+                    log.setTenantId(userInfo.getTenantId());
+                    log.setTenantName(userInfo.getTenantName());
+                    log.setGuidPath(userInfo.getGuidPath());
+                    log.setManagerLevel(String.valueOf(userInfo.getManagerLevel().getValue()));
+                }
+                if (logSaveTarget.equals("kafka")) {
+                    if (this.y9KafkaTemplate != null) {
+
+                        String jsonString = Y9JsonUtil.writeValueAsString(log);
+                        this.y9KafkaTemplate.send(Y9TopicConst.Y9_ACCESSLOG_MESSAGE, jsonString);
                     }
-                    String jsonString = Y9JsonUtil.writeValueAsString(log);
-                    this.y9KafkaTemplate.send(Y9TopicConst.Y9_ACCESSLOG_MESSAGE, jsonString);
+                } else if (logSaveTarget.equals("api")) {
+                    String logBaseUrl =
+                        env.getProperty("y9.common.logBaseUrl", String.class, "http://localhost:7056/log");
+                    String logurl = logBaseUrl + "/services/rest/v1/accessLog/asyncSaveLog";
+                    List<NameValuePair> requestBody = RemoteCallUtil.objectToNameValuePairList(log);
+                    RemoteCallUtil.post(logurl, null, requestBody, Object.class);
                 }
             } catch (Exception e) {
                 LOGGER.warn(e.getMessage(), e);
@@ -338,9 +352,17 @@ public class Y9Oauth2ResourceFilter implements Filter {
     private void remoteSaveUserOnline(UserInfo userInfo) {
         if (userInfo != null) {
             try {
-                String jsonString = Y9JsonUtil.writeValueAsString(userInfo);
-                if (this.y9KafkaTemplate != null) {
-                    this.y9KafkaTemplate.send(Y9TopicConst.Y9_USERONLINE_MESSAGE, jsonString);
+                if (logSaveTarget.equals("kafka")) {
+                    String jsonString = Y9JsonUtil.writeValueAsString(userInfo);
+                    if (this.y9KafkaTemplate != null) {
+                        this.y9KafkaTemplate.send(Y9TopicConst.Y9_USERONLINE_MESSAGE, jsonString);
+                    }
+                } else if (logSaveTarget.equals("api")) {
+                    String userOnlineBaseUrl = env.getProperty("y9.common.userOnlineBaseUrl", String.class,
+                        "http://localhost:7056/userOnline");
+                    String onlineurl = userOnlineBaseUrl + "/services/rest/userOnline/saveAsync";
+                    List<NameValuePair> requestBody = RemoteCallUtil.objectToNameValuePairList(userInfo);
+                    RemoteCallUtil.post(onlineurl, null, requestBody, Object.class);
                 }
             } catch (Exception e) {
                 LOGGER.warn(e.getMessage(), e);
