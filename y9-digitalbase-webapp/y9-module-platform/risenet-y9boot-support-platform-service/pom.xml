@@ -169,7 +169,7 @@
         </dependency>
         <dependency>
             <groupId>net.javacrumbs.shedlock</groupId>
-            <artifactId>shedlock-provider-redis-spring</artifactId>
+            <artifactId>shedlock-provider-jdbc-template</artifactId>
         </dependency>
 
     </dependencies>
