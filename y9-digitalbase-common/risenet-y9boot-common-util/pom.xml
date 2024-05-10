@@ -117,14 +117,13 @@
         <dependency>
             <groupId>cn.hutool</groupId>
             <artifactId>hutool-all</artifactId>
-            <version>5.8.21</version>
         </dependency>
-        
+
         <dependency>
-		    <groupId>org.bouncycastle</groupId>
-		    <artifactId>bcprov-ext-jdk15to18</artifactId>
-		    <version>1.76</version>
-		</dependency>
+            <groupId>org.bouncycastle</groupId>
+            <artifactId>bcprov-ext-jdk15to18</artifactId>
+            <version>1.76</version>
+        </dependency>
 
         <dependency>
             <groupId>org.projectlombok</groupId>
