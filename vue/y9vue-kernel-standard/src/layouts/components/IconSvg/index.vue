@@ -28,14 +28,15 @@
      *      <IconSvg type="svg文件名" class="" style=""/>
      */
     import { defineComponent } from 'vue';
+
     export default defineComponent({
         name: 'IconSvg',
         props: {
             type: {
                 type: String,
-                required: true,
-            },
-        },
+                required: true
+            }
+        }
     });
 </script>
 <style scoped>

@@ -100,12 +100,14 @@
     ];
     // 把已选中的背景排在第一位
     const currentMenuBg = computed(() => settingStore.getMenuBg);
+
     function sortImgs() {
         if (currentMenuBg.value) {
             menuBgs.unshift(currentMenuBg.value);
             menuBgs = [...new Set(menuBgs)];
         }
     }
+
     sortImgs();
     const menuBgOptions = [
         { key: 'bg1', src: menuBgs[0] },
@@ -324,9 +326,9 @@
                 ]"
             >
                 <el-radio-group v-model="form.webLanguage" @change="settingChange('webLanguage')">
-                    <el-radio v-for="item in webLanguageOptions" :label="item.label" :key="item.label" size="large">{{
-                        item.value
-                    }}</el-radio>
+                    <el-radio v-for="item in webLanguageOptions" :label="item.label" :key="item.label" size="large"
+                        >{{ item.value }}
+                    </el-radio>
                 </el-radio-group>
             </el-form-item>
             <el-form-item
@@ -338,9 +340,9 @@
                 ]"
             >
                 <el-radio-group v-model="form.fontSize" @change="settingChange('fontSize')">
-                    <el-radio v-for="item in fontSizeOptions" :label="item.label" :key="item.label" size="large">{{
-                        $t(`${item.value}`)
-                    }}</el-radio>
+                    <el-radio v-for="item in fontSizeOptions" :label="item.label" :key="item.label" size="large"
+                        >{{ $t(`${item.value}`) }}
+                    </el-radio>
                 </el-radio-group>
             </el-form-item>
             <el-form-item
@@ -519,9 +521,9 @@
         </el-form>
         <el-divider />
         <el-row class="mb-4" style="justify-content: end">
-            <el-button style="background-color: var(--el-color-primary); color: #fff" @click="submit()">{{
-                $t('保存')
-            }}</el-button>
+            <el-button style="background-color: var(--el-color-primary); color: #fff" @click="submit()"
+                >{{ $t('保存') }}
+            </el-button>
             <el-button @click="resetFunc()">{{ $t('恢复默认') }}</el-button>
         </el-row>
     </el-drawer>
@@ -532,9 +534,11 @@
         .el-form-item--default .el-form-item__content {
             justify-content: end;
         }
+
         .el-form-item {
             align-items: center;
         }
+
         .menu-bg-content {
             display: flex;
             align-items: center;
@@ -557,16 +561,20 @@
                     cursor: pointer;
                 }
             }
+
             .item-off {
                 border: 1px solid var(--el-color-primary-light-5);
+
                 &::before {
                     content: '无';
                     color: var(--el-color-primary-light-5);
                     font-weight: bold;
                 }
             }
+
             .selected {
                 box-shadow: 0 0 2px 2px #1890ff;
+
                 &::before {
                     content: 'Current';
                     color: var(--el-color-primary-light-9);

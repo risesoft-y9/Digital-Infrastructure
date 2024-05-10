@@ -12,7 +12,7 @@
         :class="{
             breadcrumbs: true,
             'sidebar-separate-uncollapsed': !menuCollapsed && layoutSubName === 'sidebar-separate',
-            'sidebar-separate-menuCollapsed': menuCollapsed && layoutSubName === 'sidebar-separate',
+            'sidebar-separate-menuCollapsed': menuCollapsed && layoutSubName === 'sidebar-separate'
         }"
     >
         <span class="title">{{ $t(`${list[0].meta.title}`) }}</span>
@@ -35,6 +35,7 @@
     interface SiderMenuItemSetupData {
         fontSizeObj: Object;
     }
+
     export default defineComponent({
         name: 'BreadCrumbs',
         data() {
@@ -45,30 +46,30 @@
         props: {
             layoutSubName: {
                 type: String as Ref<string>,
-                required: true,
+                required: true
             },
             list: {
                 type: Array as PropType<BreadcrumbType[]>,
                 default: () => {
                     return [];
-                },
+                }
             },
             menuCollapsed: {
                 type: Boolean as computed<Boolean>,
-                required: true,
-            },
+                required: true
+            }
         },
         components: {
-            ALink,
+            ALink
         },
         setup(props): SiderMenuItemSetupData {
             // 注入 字体变量
             const fontSizeObj: any = inject('sizeObjInfo');
 
             return {
-                fontSizeObj,
+                fontSizeObj
             };
-        },
+        }
         // // beta-0.1(因最初的原型稿而增加的代码)  begin -->
         // 需要调整breadCrumbs宽度的情况
         // watch: {
@@ -140,6 +141,7 @@
     .title {
         font-size: v-bind('fontSizeObj.largerFontSize');
     }
+
     .title-link {
         font-size: v-bind('fontSizeObj.baseFontSize');
     }

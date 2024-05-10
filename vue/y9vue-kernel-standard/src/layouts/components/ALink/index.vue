@@ -15,17 +15,17 @@
         props: {
             to: {
                 type: String,
-                required: true,
+                required: true
             },
             replace: {
                 type: Boolean,
-                default: false,
-            },
+                default: false
+            }
         },
         setup() {
             return {
-                isExternal,
+                isExternal
             };
-        },
+        }
     });
 </script>

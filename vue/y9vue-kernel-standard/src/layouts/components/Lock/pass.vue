@@ -8,6 +8,7 @@
 <script lang="ts" setup>
     import { useSettingStore } from '@/store/modules/settingStore';
     import { computed, ref } from 'vue-demi';
+
     const settingStore = useSettingStore();
     const unlockScreenPwd = computed(() => settingStore.getUnlockScreenPwd);
 
@@ -19,7 +20,7 @@
     const checkPwdFunc = () => {
         if (inputPwd.value === unlockScreenPwd.value) {
             settingStore.$patch({
-                lockScreen: false,
+                lockScreen: false
             });
         } else {
             showError.value = true;
@@ -32,7 +33,7 @@
     const imageUrl = ref('');
     const changeImageUrlFunc = () => {
         settingStore.$patch({
-            lockScreenImage: imageUrl.value,
+            lockScreenImage: imageUrl.value
         });
         showInput.value = 'hidden';
     };
@@ -80,6 +81,7 @@
         opacity: 0.6;
         box-sizing: border-box;
     }
+
     .content {
         display: flex;
         flex-direction: column;
@@ -94,9 +96,11 @@
             overflow: hidden;
             // margin-bottom: 25px;
         }
+
         & > span {
             margin: 25px 0;
         }
+
         & > div.form {
             display: flex;
             justify-content: center;
@@ -109,12 +113,14 @@
                 border-bottom-left-radius: 0;
                 position: relative;
                 left: -2px;
+
                 & > i {
                     position: relative;
                     top: 2px;
                     margin-right: 3px;
                 }
             }
+
             & > span {
                 display: none;
                 font-size: 14px;
@@ -122,11 +128,13 @@
                 color: #f40;
                 position: absolute;
                 z-index: 1;
+
                 &.showErrorText {
                     display: block;
                 }
             }
         }
+
         & > a {
             margin-top: 30px;
             line-height: 30px;

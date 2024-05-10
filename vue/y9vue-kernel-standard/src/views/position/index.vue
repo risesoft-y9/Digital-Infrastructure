@@ -37,8 +37,7 @@
             </positionRelation>
 
             <template v-if="currTreeNodeInfo.nodeType == 'Department'">
-                <setLeaderList :currTreeNodeInfo="currTreeNodeInfo"></setLeaderList>
-                <setManagerList :currTreeNodeInfo="currTreeNodeInfo"></setManagerList>
+                <setDepartmentPropList :currTreeNodeInfo="currTreeNodeInfo"></setDepartmentPropList>
             </template>
         </template>
     </fixedTreeModule>
@@ -57,8 +56,7 @@
     import { checkDeptManager } from '@/api/deptManager/index';
     import { removeDept } from '@/api/dept/index';
     import { removePosition } from '@/api/position/index';
-    import setManagerList from '../org/comps/setManagerList.vue';
-    import setLeaderList from '../org/comps/setLeaderList.vue';
+    import setDepartmentPropList from '../org/comps/setDepartmentPropList.vue';
 
     const { t } = useI18n();
     let fixedTreeRef = ref(); //tree实例
@@ -204,9 +202,17 @@
                 currNode.personCount = res.data; //人员数量
             }
             Object.assign(currNode, obj); //合并节点信息
+
             if (currNode.nodeType === 'Organization' || currNode.nodeType === 'Department') {
                 //修改显示名称
                 currNode.newName = currNode.name + `(${currNode.personCount})`;
+            } else if (currNode.nodeType == 'Position') {
+                // 岗位有禁用的文字需要显示
+                if (currNode.disabled) {
+                    currNode.newName = currNode.name + `[禁用]`;
+                } else {
+                    currNode.newName = currNode.name;
+                }
             } else {
                 currNode.newName = currNode.name;
             }

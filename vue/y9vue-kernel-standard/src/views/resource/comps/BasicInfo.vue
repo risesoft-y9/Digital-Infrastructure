@@ -6,7 +6,7 @@
  * @Description: 应用资源详情
 -->
 <template>
-    <y9Form ref="y9FormRef" :config="y9FormConfig"></y9Form>
+    <y9Form ref="y9FormRef" :config="y9FormConfig" v-loading="loading"></y9Form>
 </template>
 
 <script lang="ts" setup>
@@ -25,6 +25,8 @@
         saveClickFlag: Boolean // 是否点击保存 的变量
     });
     const emits = defineEmits(['getInfoData']);
+
+    let loading = ref(false);
 
     // 基本信息
     let basicInfo: any = ref({});
@@ -369,6 +371,7 @@
 
     // 请求详情 函数
     async function getInfo() {
+        loading.value = true;
         let responseInfo;
         if (props.type === 'APP') {
             // 应用
@@ -430,6 +433,7 @@
             responseInfo = await getOperationInfo(props.id);
         }
         basicInfo.value = responseInfo.data;
+        loading.value = false;
     }
 
     onMounted(() => {

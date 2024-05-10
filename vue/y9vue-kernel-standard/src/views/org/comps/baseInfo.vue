@@ -60,7 +60,7 @@
                             :size="fontSizeObj.buttonSize"
                             :style="{ fontSize: fontSizeObj.baseFontSize }"
                             class="global-btn-second"
-                            @click="onActions('disabled', currInfo.disabled ? '取消禁用人员' : '禁用人员')"
+                            @click="onActions('disabled', currInfo.disabled ? '取消禁用' : '禁用')"
                         >
                             <i class="ri-user-unfollow-line"></i>
                             <span>{{ currInfo.disabled ? $t('取消禁用') : $t('禁用') }}</span>
@@ -334,7 +334,7 @@
         sync,
         treeInterface
     } from '@/api/org/index';
-    import { deptSaveOrUpdate, getOrderDepts, moveDept, saveOrder } from '@/api/dept/index';
+    import { changeDisabledDept, deptSaveOrUpdate, getOrderDepts, moveDept, saveOrder } from '@/api/dept/index';
     import { $deeploneObject } from '@/utils/object';
     import y9_storage from '@/utils/storage';
     import settings from '@/settings';
@@ -346,8 +346,15 @@
     import extendAttr from '../comps/dialogContent/extendAttr.vue';
     import Sync from '../comps/dialogContent/sync.vue';
     import uploadOrgInfo from '../comps/dialogContent/uploadOrgInfo.vue';
-    import { changeDisabled, movePerson, personSaveOrUpdate, resetPassword, savePersons } from '@/api/person/index';
-    import { groupSaveOrUpdate, moveGroup } from '@/api/group/index';
+    import {
+        changeDisabledPerson,
+        movePerson,
+        personSaveOrUpdate,
+        resetPassword,
+        savePersons
+    } from '@/api/person/index';
+    import { changeDisabledGroup, groupSaveOrUpdate, moveGroup } from '@/api/group/index';
+    import { changeDisabledOrganization } from '@/api/org/index';
     import { $dictionaryFunc } from '@/utils/data';
     import { ref } from '@vue/reactivity';
     import { listByType } from '@/api/dictionary/index';
@@ -786,12 +793,14 @@
                 ) {
                     return true;
                 }
-            } else if (btnType == 'disabled' || btnType == 'unlock' || btnType == 'resetPassword') {
+            } else if (btnType == 'unlock' || btnType == 'resetPassword') {
                 //设置禁用、账号解锁、重置密码
 
                 if (currInfo.value.orgType == 'Person') {
                     return true;
                 }
+            } else if (btnType == 'disabled') {
+                return true;
             } else if (btnType == 'updateIcon') {
                 //更新图标
 
@@ -974,7 +983,16 @@
                     if (type == 'resetPassword') {
                         res = await resetPassword(currInfo.value.id);
                     } else if (type == 'disabled') {
-                        res = await changeDisabled(currInfo.value.id);
+                        if (currInfo.value.orgType == 'Organization') {
+                            res = await changeDisabledOrganization(currInfo.value.id);
+                        } else if (currInfo.value.orgType == 'Department') {
+                            res = await changeDisabledDept(currInfo.value.id);
+                        } else if (currInfo.value.orgType == 'Group') {
+                            res = await changeDisabledGroup(currInfo.value.id);
+                        } else if (currInfo.value.orgType == 'Person') {
+                            res = await changeDisabledPerson(currInfo.value.id);
+                        }
+
                         if (res.success) {
                             //更新当前节点的人员计数信息
                             if (props.getTreeData) {
@@ -986,8 +1004,11 @@
                                 } else {
                                     currNode.newName = currNode.name; //显示名称
                                 }
-                                //2.更新其父节点的人员数量
-                                props.updateTreePersonCount(currNode, res.data.disabled ? -1 : 1); //手动更新tree的人员计数
+
+                                if (currInfo.value.orgType == 'Person') {
+                                    //2.更新其父节点的人员数量
+                                    props.updateTreePersonCount(currNode, res.data.disabled ? -1 : 1); //手动更新tree的人员计数
+                                }
                             }
                         }
                     } else if (type == 'updateIcon') {

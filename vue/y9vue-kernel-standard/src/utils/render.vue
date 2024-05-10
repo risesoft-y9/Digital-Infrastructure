@@ -4,7 +4,7 @@
         functional: true,
         props: {
             render: Function,
-            data: Object,
+            data: Object
         },
         render(h, ctx) {
             if (h.data) {
@@ -12,6 +12,6 @@
             } else {
                 return h.render(h);
             }
-        },
+        }
     };
 </script>

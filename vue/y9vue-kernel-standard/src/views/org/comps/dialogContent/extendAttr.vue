@@ -121,12 +121,48 @@
                                                             propertiesObj[item.name] = item.attrValue;
                                                         });
                                                         let propertiesString = JSON.stringify(propertiesObj);
-                                                        props.handAssginNode &&
-                                                            props.handAssginNode(
-                                                                { properties: propertiesString },
-                                                                props.currInfo.id
+                                                        let result;
+                                                        if (props.currInfo.nodeType == 'Department') {
+                                                            loading.value = true;
+                                                            result = await saveDeptExtendProperties(
+                                                                props.currInfo.id,
+                                                                propertiesString
                                                             );
-                                                        break;
+                                                        } else if (props.currInfo.nodeType == 'Person') {
+                                                            loading.value = true;
+                                                            result = await savePersonExtendProperties(
+                                                                props.currInfo.id,
+                                                                propertiesString
+                                                            );
+                                                        } else if (props.currInfo.nodeType == 'Organization') {
+                                                            loading.value = true;
+                                                            result = await saveOrgExtendProperties(
+                                                                props.currInfo.id,
+                                                                propertiesString
+                                                            );
+                                                        } else if (props.currInfo.nodeType == 'Group') {
+                                                            loading.value = true;
+                                                            result = await saveGroupExtendProperties(
+                                                                props.currInfo.id,
+                                                                propertiesString
+                                                            );
+                                                        } else if (props.currInfo.nodeType == 'Position') {
+                                                            loading.value = true;
+                                                            result = await savePositionExtendProperties(
+                                                                props.currInfo.id,
+                                                                propertiesString
+                                                            );
+                                                        }
+
+                                                        loading.value = false;
+                                                        if (result.success) {
+                                                            props.handAssginNode &&
+                                                                props.handAssginNode(
+                                                                    { properties: propertiesString },
+                                                                    props.currInfo.id
+                                                                );
+                                                            break;
+                                                        }
                                                     }
                                                 }
                                             } else {

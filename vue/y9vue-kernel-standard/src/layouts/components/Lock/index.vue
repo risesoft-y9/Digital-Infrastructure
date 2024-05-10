@@ -40,7 +40,7 @@
                 const lockDivClassName = document.getElementsByClassName('lock-div')[0]?.className;
                 if (lockStatus.value && lockDivClassName !== 'lock-div') {
                     const params = {
-                        logoutUrl: import.meta.env.VUE_APP_SSO_LOGOUT_URL + import.meta.env.VUE_APP_NAME + '/',
+                        logoutUrl: import.meta.env.VUE_APP_SSO_LOGOUT_URL + import.meta.env.VUE_APP_NAME + '/'
                     };
                     $y9_SSO.ssoLogout(params);
                 }
@@ -61,14 +61,14 @@
             return h(
                 'div',
                 {
-                    class: 'lock-div',
+                    class: 'lock-div'
                     // style: {
                     // backgroundImage: 'url(' + bgUrl.value + ')'
                     // }
                 },
                 h(Content)
             );
-        },
+        }
     });
 </script>
 <style lang="scss" scoped>

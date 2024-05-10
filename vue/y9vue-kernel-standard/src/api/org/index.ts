@@ -215,3 +215,21 @@ export const getPersonById = async (id) => {
         params: { personId: id }
     });
 };
+
+/**
+ * 禁用/解禁组织
+ * @param {*} ID
+ * @returns
+ */
+export const changeDisabledOrganization = async (id) => {
+    const params = {
+        id: id
+    };
+    const data = qs.stringify(params);
+    return await platformRequest({
+        url: '/api/rest/org/changeDisabled',
+        method: 'POST',
+        cType: false,
+        data: data
+    });
+};

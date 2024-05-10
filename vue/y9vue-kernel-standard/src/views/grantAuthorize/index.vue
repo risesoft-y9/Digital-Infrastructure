@@ -2,7 +2,7 @@
  * @Author: fuyu
  * @Date: 2022-06-06 11:47:27
  * @LastEditors: mengjuhua
- * @LastEditTime: 2023-12-26 11:23:15
+ * @LastEditTime: 2024-04-16 10:40:29
  * @Description: 授权管理
 -->
 <template>
@@ -12,6 +12,7 @@
             :treeApiObj="treeApiObj"
             @onDeleteTree="roleRemove"
             @onTreeClick="handlerTreeClick"
+            :showNodeDelete="false"
         >
             <template v-if="currData.id" v-slot:rightContainer>
                 <!-- 右边卡片 -->

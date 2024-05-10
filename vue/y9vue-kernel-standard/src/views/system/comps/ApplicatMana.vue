@@ -2,16 +2,16 @@
  * @Author: hongzhew
  * @Date: 2022-04-07 17:43:02
  * @LastEditors: mengjuhua
- * @LastEditTime: 2024-01-11 16:33:36
+ * @LastEditTime: 2024-04-02 09:59:22
  * @Description: 应用管理
 -->
 <template>
     <div class="application">
         <!-- 应用列表表格 -->
         <y9Table
+            ref="y9TableRef"
             :config="appListTableConfig"
             :filterConfig="filterConfig"
-            border
             @on-change="handlerGetData"
             @on-curr-page-change="onCurrPageChange"
             @on-page-size-change="onPageSizeChange"
@@ -105,7 +105,6 @@
             <y9Table
                 :config="iconSelectTable"
                 :filterConfig="filterIconConfig"
-                border
                 @on-curr-page-change="handelrPageChange"
                 @on-page-size-change="handlerSizeChange"
             >
@@ -166,6 +165,10 @@
 
     // loading
     let loading = ref(false);
+    // 表格行内表单 搜索应用的 表单
+    const formInline = ref({
+        name: ''
+    });
 
     // 接收传过来的 系统id
     const props = defineProps({
@@ -176,15 +179,11 @@
         () => props.id,
         async (new_, old_) => {
             if (new_ && new_ !== old_) {
-                getAppList();
+                getAppList(true);
             }
         }
     );
 
-    // 表格行内表单 搜索应用的 表单
-    const formInline = ref({
-        name: undefined
-    });
     // 列表 总数
     let total = ref(0);
     // 选择应用的 id数据信息
@@ -195,8 +194,11 @@
         ids.value = id;
     }
 
+    let y9TableRef = ref(null);
+
     // 请求 应用列表
     onMounted(() => {
+        formInline.value.name = '';
         getAppList();
     });
 
@@ -213,7 +215,15 @@
     }
 
     // 应用 请求 列表 初始函数
-    async function getAppList() {
+    async function getAppList(flag = false) {
+        appListTableConfig.value.loading = true;
+
+        // 重置搜索条件
+        if (flag == true && y9TableRef.value?.elTableFilterRef) {
+            formInline.value.name = '';
+            await y9TableRef.value?.elTableFilterRef.onReset();
+        }
+
         let sendData = {
             page: appListTableConfig.value.pageConfig.currentPage,
             size: appListTableConfig.value.pageConfig.pageSize,
@@ -221,8 +231,13 @@
             name: formInline.value.name
         };
         const result = await applicationList(sendData);
-        appListTableConfig.value.tableData = result.rows;
-        appListTableConfig.value.pageConfig.total = result.total;
+
+        if (result.code == 0) {
+            appListTableConfig.value.tableData = result.rows;
+            appListTableConfig.value.pageConfig.total = result.total;
+        }
+
+        appListTableConfig.value.loading = false;
     }
 
     // 应用列表表格 配置 信息
@@ -311,6 +326,7 @@
                 }
             }
         ],
+        loading: false,
         tableData: [],
         pageConfig: {
             // 分页配置，false隐藏分页
@@ -698,7 +714,7 @@
                             (item) => item.prop !== 'numberUrl'
                         );
                         // 重新获取应用列表 数据
-                        getAppList();
+                        getAppList(true);
                         resolve();
                     } else {
                         reject();
@@ -775,7 +791,7 @@
             });
             if (res.success) {
                 // 重新获取 数据
-                getAppList();
+                getAppList(true);
             }
         });
     }
@@ -896,7 +912,7 @@
                 });
                 if (result.success) {
                     // 重新获取应用列表 数据
-                    getAppList();
+                    getAppList(true);
                     resolve();
                 } else {
                     reject();

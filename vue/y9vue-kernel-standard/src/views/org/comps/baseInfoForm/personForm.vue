@@ -1,7 +1,7 @@
 <template>
     <div class="person-form-div">
         <div class="person-form-title-base">{{ $t('基本信息') }}</div>
-        <y9Form ref="y9FormBaseRef" :config="y9FormBaseConfig"> </y9Form>
+        <y9Form ref="y9FormBaseRef" :config="y9FormBaseConfig"></y9Form>
         <div class="person-form-title-person">{{ $t('个人信息') }}</div>
         <y9Form ref="y9FormPersonRef" :config="y9FormPersonConfig">
             <template #avator>
@@ -883,6 +883,7 @@
             }
         }
     }
+
     const y9FormBaseRef = ref();
     const y9FormPersonRef = ref();
     const personForm = computed(() => {
@@ -927,9 +928,11 @@
             margin: 0px;
         }
     }
+
     .upload-image {
         height: 3.5cm;
         margin: auto;
+
         :deep(.el-avatar) {
             width: 100%;
             height: 100%;
@@ -964,6 +967,7 @@
 
         :deep(.el-avatar) {
             background-color: transparent;
+
             img {
                 max-width: 100%;
                 height: auto;

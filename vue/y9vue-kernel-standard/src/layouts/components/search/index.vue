@@ -53,6 +53,7 @@
 <style lang="scss" scoped>
     .search {
         margin: 0 auto;
+
         &.is-pc {
             max-width: 50%;
         }

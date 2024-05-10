@@ -108,9 +108,17 @@
                     key: 'dn'
                 },
                 {
+                    title: computed(() => t('是否禁用')),
+                    key: 'disabled',
+                    width: 100,
+                    render: (row) => {
+                        return h('span', row.disabled ? '是' : '否');
+                    }
+                },
+                {
                     title: computed(() => t('操作')),
                     fixed: 'right',
-                    width: 120,
+                    width: 100,
                     showOverflowTooltip: false,
                     render: (row) => {
                         return h(

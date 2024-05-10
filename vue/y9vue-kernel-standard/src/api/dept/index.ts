@@ -17,30 +17,20 @@ export const getDepartmentById = async (deptId) => {
 };
 
 /**
- * 获取部门领导列表
- * @param {*} deptID
+ * 获取部门属性对应组织节点列表
+ * @param {*} deptId
+ * @param {*} category
  * @returns
  */
-export const getDeptLeaders = async (deptId) => {
+export const getDepartmentPropOrgUnits = async (deptId, category) => {
     return await platformRequest({
-        url: '/api/rest/dept/listDeptLeaders',
+        url: '/api/rest/dept/listDepartmentPropOrgUnits',
         method: 'GET',
         cType: false,
-        params: { 'deptId': deptId }
-    });
-};
-
-/**
- * 获取部门的主管领导列表
- * @param {*} deptID
- * @returns
- */
-export const getManagers = async (deptId) => {
-    return await platformRequest({
-        url: '/api/rest/dept/listDeptManagers',
-        method: 'GET',
-        cType: false,
-        params: { 'deptId': deptId }
+        params: {
+            'deptId': deptId,
+            'category': category
+        }
     });
 };
 
@@ -128,19 +118,20 @@ export const moveDept = async (deptId, parentId) => {
 };
 
 /**
- * 设置部门主管领导
- * @param {*} deptID
- * @param {*} personIDs
+ * 设置部门属性的组织节点
+ * @param {*} deptId
+ * @param {*} orgBaseIds
  * @returns
  */
-export const setDeptManagers = async (deptId, orgBaseIds) => {
+export const setDepartmentPropOrgUnits = async (deptId, category, orgBaseIds) => {
     const params = {
         deptId: deptId,
+        category: category,
         orgBaseIds: orgBaseIds
     };
     const data = qs.stringify(params);
     return await platformRequest({
-        url: '/api/rest/dept/setDeptManagers',
+        url: '/api/rest/dept/setDepartmentPropOrgUnits',
         method: 'POST',
         cType: false,
         data: data
@@ -148,64 +139,27 @@ export const setDeptManagers = async (deptId, orgBaseIds) => {
 };
 
 /**
- * 移除部门主管领导
- * @param {*} deptID
- * @param {*} personID
+ * 移除部门属性
+ * @param {*} deptId
+ * @param {*} orgBaseId
+ * @param {*} category
  * @returns
  */
-export const removeManager = async (deptId, orgBaseId) => {
+export const removeDepartmentProp = async (deptId, orgBaseId, category) => {
     const params = {
         deptId: deptId,
-        orgBaseId: orgBaseId
+        orgBaseId: orgBaseId,
+        category: category
     };
     const data = qs.stringify(params);
     return await platformRequest({
-        url: '/api/rest/dept/removeManager',
+        url: '/api/rest/dept/removeDepartmentProp',
         method: 'POST',
         cType: false,
         data: data
     });
 };
 
-/**
- * 设置部门领导
- * @param {*} deptID
- * @param {*} personIDs
- * @returns
- */
-export const setDeptLeaders = async (deptId, orgBaseIds) => {
-    const params = {
-        deptId: deptId,
-        orgBaseIds: orgBaseIds
-    };
-    const data = qs.stringify(params);
-    return await platformRequest({
-        url: '/api/rest/dept/setDeptLeaders',
-        method: 'POST',
-        cType: false,
-        data: data
-    });
-};
-
-/**
- * 移除部门领导
- * @param {*} deptID
- * @param {*} personID
- * @returns
- */
-export const removeLeader = async (deptId, orgBaseId) => {
-    const params = {
-        deptId: deptId,
-        orgBaseId: orgBaseId
-    };
-    const data = qs.stringify(params);
-    return await platformRequest({
-        url: '/api/rest/dept/removeLeader',
-        method: 'POST',
-        cType: false,
-        data: data
-    });
-};
 //保存扩展属性
 export const saveDeptExtendProperties = async (deptId,properties) => {
     const params = {
@@ -215,6 +169,24 @@ export const saveDeptExtendProperties = async (deptId,properties) => {
     const data = qs.stringify(params);
     return await platformRequest({
         url: '/api/rest/dept/saveExtendProperties',
+        method: 'POST',
+        cType: false,
+        data: data
+    });
+};
+
+/**
+ * 禁用/解禁部门
+ * @param {*} ID
+ * @returns
+ */
+export const changeDisabledDept = async (id) => {
+    const params = {
+        id: id
+    };
+    const data = qs.stringify(params);
+    return await platformRequest({
+        url: '/api/rest/dept/changeDisabled',
         method: 'POST',
         cType: false,
         data: data

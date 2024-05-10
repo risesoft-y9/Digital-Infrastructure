@@ -29,6 +29,7 @@ import sysManagerLogRouter from './modules/sysManagerLogRouter';
 import userLogRouter from './modules/userLogRouter';
 import jobRouter from './modules/jobRouter';
 import permission from './modules/permission';
+import settingRouter from './modules/settingRouter';
 
 //constantRoutes为不需要动态判断权限的路由，如登录、404、500等
 export const constantRoutes: Array<any> = [
@@ -84,7 +85,8 @@ export const asyncRoutes = [
     sysManagerLogRouter,
     securityUserLogRouter,
     securityAuditorLogRouter,
-    personalRouter
+    personalRouter,
+    settingRouter,
     // 引入其他模块路由
 ];
 

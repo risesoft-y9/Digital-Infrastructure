@@ -181,13 +181,16 @@
                     }
                 },
                 {
-                    title: computed(() => t('职务')),
-                    key: 'duty',
-                    width: 300
+                    title: computed(() => t('全路径')),
+                    key: 'dn'
                 },
                 {
-                    title: computed(() => t('所属部门')),
-                    key: 'dn'
+                    title: computed(() => t('是否禁用')),
+                    key: 'disabled',
+                    width: 100,
+                    render: (row) => {
+                        return h('span', row.disabled ? '是' : '否');
+                    }
                 },
                 {
                     title: computed(() => t('操作')),
@@ -282,8 +285,7 @@
                     }
 
                     if (result.success) {
-                        personListTableConfig.value.tableData =
-                            personListTableConfig.value.tableData.concat(selectData);
+                        getPersonsList();
                     }
 
                     ElNotification({
@@ -352,10 +354,6 @@
                 } else if (element.sex == 0) {
                     element.sex = '女';
                 }
-                // dn 只显示最后一个
-                let temp_1 = element.dn.split(',');
-                let temp_2 = temp_1[temp_1.length - 1].split('=');
-                element.dn = temp_2[temp_2.length - 1];
                 tabIndexs.value.push(element.tabIndex);
             });
             personListTableConfig.value.tableData = result.data;

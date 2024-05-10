@@ -92,6 +92,16 @@
                         <i class="ri-arrow-up-down-line"></i>
                         <span> {{ $t('排序') }}</span>
                     </el-button>
+                    <el-button
+                        v-show="showBtn('disabled')"
+                        :size="fontSizeObj.buttonSize"
+                        :style="{ fontSize: fontSizeObj.baseFontSize }"
+                        class="global-btn-second"
+                        @click="onActions('disabled', currInfo.disabled ? '取消禁用' : '禁用')"
+                    >
+                        <i class="ri-user-unfollow-line"></i>
+                        <span>{{ currInfo.disabled ? $t('取消禁用') : $t('禁用') }}</span>
+                    </el-button>
                     <!-- <el-button v-show="showBtn('positionLeader')" @click="onActions('positionLeader','设置岗位领导')" class="global-btn-second">
 						<i class="ri-account-pin-circle-line"></i>
 						<span>设置岗位领导</span>
@@ -189,8 +199,8 @@
 l
 <script lang="ts" setup>
     import { computed, inject, reactive, ref, toRefs, watch } from 'vue';
-    import { ElNotification } from 'element-plus';
-    import { deptSaveOrUpdate, getOrderDepts, moveDept, saveOrder } from '@/api/dept/index';
+    import { ElMessage, ElMessageBox, ElNotification } from 'element-plus';
+    import { changeDisabledDept, deptSaveOrUpdate, getOrderDepts, moveDept, saveOrder } from '@/api/dept/index';
     import { $deeploneObject } from '@/utils/object';
     import orgForm from '../../org/comps/baseInfoForm/orgForm.vue';
     import departmentForm from '../../org/comps/baseInfoForm/departmentForm.vue';
@@ -198,6 +208,7 @@ l
     import extendAttr from '../../org/comps/dialogContent/extendAttr.vue';
     import Sync from '../../org/comps/dialogContent/sync.vue';
     import {
+        changeDisabledOrganization,
         getDepartmentById,
         getOrganizationById,
         getTreeItemById,
@@ -206,8 +217,9 @@ l
         sync,
         treeInterface
     } from '@/api/org/index';
-    import { getPositionById, movePosition, positionSaveOrUpdate } from '@/api/position/index';
+    import { changeDisabledPosition, getPositionById, movePosition, positionSaveOrUpdate } from '@/api/position/index';
     import { useI18n } from 'vue-i18n';
+    import { changeDisabledGroup } from '@/api/group';
 
     const { t } = useI18n();
     // 注入 字体对象
@@ -501,6 +513,8 @@ l
                 if (currInfo.value.orgType == 'Position') {
                     return true;
                 }
+            } else if (btnType == 'disabled') {
+                return true;
             }
         };
     });
@@ -613,6 +627,60 @@ l
                           ]
                         : []
             });
+        } else if (type == 'disabled') {
+            ElMessageBox.confirm(`${t('确定要')}${title}`, t('提示'), {
+                confirmButtonText: t('确定'),
+                cancelButtonText: t('取消'),
+                type: 'info'
+            })
+                .then(async () => {
+                    loading.value = true;
+                    let res = { success: false, msg: '', data: {} as any };
+                    if (currInfo.value.orgType == 'Organization') {
+                        res = await changeDisabledOrganization(currInfo.value.id);
+                    } else if (currInfo.value.orgType == 'Department') {
+                        res = await changeDisabledDept(currInfo.value.id);
+                    } else if (currInfo.value.orgType == 'Group') {
+                        res = await changeDisabledGroup(currInfo.value.id);
+                    } else if (currInfo.value.orgType == 'Position') {
+                        res = await changeDisabledPosition(currInfo.value.id);
+                    }
+
+                    if (res.success) {
+                        //更新当前节点的人员计数信息
+                        if (props.getTreeData) {
+                            //1.更新当前节点显示的名称
+                            const currNode = props.findNode(props.getTreeData(), currInfo.value.id);
+                            currNode.disabled = res.data.disabled;
+                            if (res.data.disabled) {
+                                currNode.newName = currNode.name + '[禁用]'; //显示名称
+                            } else {
+                                currNode.newName = currNode.name; //显示名称
+                            }
+
+                            if (currInfo.value.orgType == 'Position') {
+                                //2.更新其父节点的人员数量
+                                props.updateTreePositionCount(currNode, res.data.disabled ? -1 : 1); //手动更新tree的人员计数
+                            }
+                        }
+                    }
+
+                    loading.value = false;
+                    ElNotification({
+                        title: res.success ? t('成功') : t('失败'),
+                        message: res.msg,
+                        type: res.success ? 'success' : 'error',
+                        duration: 2000,
+                        offset: 80
+                    });
+                })
+                .catch(() => {
+                    ElMessage({
+                        type: 'info',
+                        message: t('已取消') + title,
+                        offset: 65
+                    });
+                });
         }
     }
 </script>

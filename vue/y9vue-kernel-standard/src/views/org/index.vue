@@ -57,8 +57,7 @@
                 ></personList>
 
                 <template v-if="currTreeNodeInfo.nodeType == 'Department'">
-                    <setLeaderList :currTreeNodeInfo="currTreeNodeInfo" typeName="org"></setLeaderList>
-                    <setManagerList :currTreeNodeInfo="currTreeNodeInfo" typeName="org"></setManagerList>
+                    <setDepartmentPropList :currTreeNodeInfo="currTreeNodeInfo" typeName="org"></setDepartmentPropList>
                 </template>
 
                 <!-- <Log :currTreeNodeInfo="currTreeNodeInfo"></Log> -->
@@ -101,8 +100,7 @@
     import personList from './comps/personList.vue';
     import positionList from './comps/positionList.vue';
     import groupList from './comps/groupList.vue';
-    import setManagerList from './comps/setManagerList.vue';
-    import setLeaderList from './comps/setLeaderList.vue';
+    import setDepartmentPropList from './comps/setDepartmentPropList.vue';
     import uploadOrgInfo from './comps/dialogContent/uploadOrgInfo.vue';
     import historyUploadDetails from './comps/dialogContent/historyUploadDetails.vue';
     import {

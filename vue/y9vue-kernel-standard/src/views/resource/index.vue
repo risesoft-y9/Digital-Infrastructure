@@ -2,7 +2,7 @@
  * @Author: hongzhew
  * @Date: 2022-04-07 17:43:02
  * @LastEditors: mengjuhua
- * @LastEditTime: 2024-01-12 10:55:13
+ * @LastEditTime: 2024-04-02 14:40:13
  * @Description: 应用资源管理
 -->
 <template>
@@ -198,6 +198,7 @@
 
     // 节点的 基本信息 获取
     function handlerTreeClick(data) {
+        if (!editBtnFlag.value) editBtnFlag.value = true;
         // 将拿到的节点信息 储存起来
         currData.value = data;
     }
@@ -275,9 +276,6 @@
 
     // 点击菜单 按钮
     function handlerMenuClick() {
-        menuForm.value.parentId = currData.value.id;
-        menuForm.value.systemId = currData.value.systemId;
-        menuForm.value.appId = currData.value.appId;
         addDialogConfig.value.show = true;
         addDialogConfig.value.title = computed(() => t('新增菜单'));
     }
@@ -285,7 +283,7 @@
     // 菜单表单ref
     const ruleFormRef = ref();
     // 菜单 表单
-    let menuForm = ref({ inherit: false, enabled: true });
+    let menuForm: any = ref({ inherit: false, enabled: true });
     let menuFormConfig = ref({
         model: menuForm.value,
         rules: {
@@ -391,7 +389,14 @@
                             }
                         });
 
-                        let result = await menuAdd(ruleFormRef.value?.model);
+                        let params = {
+                            ...ruleFormRef.value.model,
+                            parentId: currData.value.id,
+                            systemId: currData.value.systemId,
+                            appId: currData.value.appId
+                        };
+
+                        let result = await menuAdd(params);
                         if (result.success) {
                             /**
                              * 对树进行操作：新增节点进入树
@@ -429,10 +434,6 @@
 
     // 点击按钮  按钮
     function handlerOperaClick() {
-        operationForm.value.parentId = currData.value.id;
-        operationForm.value.systemId = currData.value.systemId;
-        operationForm.value.appId = currData.value.appId;
-        operationForm.value.displayType = 0;
         addOperationConfig.value.show = true;
         addOperationConfig.value.title = computed(() => t('新增按钮'));
     }
@@ -440,7 +441,7 @@
     //按钮表单ref
     const operationFormRef = ref();
     // 按钮 增加表单
-    let operationForm = ref({ inherit: false, enabled: true, displayType: 0 });
+    let operationForm: any = ref({ inherit: false, enabled: true, displayType: 0 });
     let operationFormConfig = ref({
         model: operationForm.value,
         rules: {
@@ -556,12 +557,15 @@
                     if (valid) {
                         const params = {
                             iconUrl: operationUrl.value,
+                            parentId: currData.value.id,
+                            systemId: currData.value.systemId,
+                            appId: currData.value.appId,
                             ...operationFormRef.value?.model
                         };
 
                         // 将数值为''的值去除
                         Object.keys(params).forEach((key) => {
-                            if (params[key] == '' && params[key] !== false) {
+                            if (params[key] === '' && params[key] !== false) {
                                 delete params[key];
                                 return;
                             }
@@ -582,7 +586,7 @@
                         }
 
                         // 表单弹框消失 表单数据清空
-                        operationForm.value = { inherit: false, enabled: true };
+                        operationForm.value = { inherit: false, enabled: true, displayType: 0 };
                         ElNotification({
                             title: result.success ? t('成功') : t('失败'),
                             message: result.success ? t('保存成功') : t('保存失败'),
@@ -599,7 +603,7 @@
         },
         visibleChange: (visible) => {
             if (!visible) {
-                operationForm.value = { inherit: false, enabled: true };
+                operationForm.value = { inherit: false, enabled: true, displayType: 0 };
             }
         }
     });

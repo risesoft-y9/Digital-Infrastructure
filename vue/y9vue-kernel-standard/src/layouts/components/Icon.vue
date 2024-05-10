@@ -25,11 +25,11 @@
         props: {
             type: {
                 type: String,
-                required: true,
-            },
+                required: true
+            }
         },
         components: {
-            Icons,
-        },
+            Icons
+        }
     });
 </script>

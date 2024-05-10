@@ -258,7 +258,7 @@ export const savePersonExtendProperties = async (personId, properties) => {
  * @param {*} ID
  * @returns
  */
-export const changeDisabled = async (id) => {
+export const changeDisabledPerson = async (id) => {
     const params = {
         id: id
     };

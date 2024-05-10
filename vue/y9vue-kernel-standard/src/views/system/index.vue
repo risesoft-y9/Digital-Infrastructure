@@ -184,6 +184,7 @@
 
     // 点击树  拿到对应数据
     function handlerTreeClick(currTreeNode) {
+        if (!editBtnFlag.value) editBtnFlag.value = true;
         // 将拿到的数据 里的id赋值给 系统id变量
         currData.value = currTreeNode;
     }

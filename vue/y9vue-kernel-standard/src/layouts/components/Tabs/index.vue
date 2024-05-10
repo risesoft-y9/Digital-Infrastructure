@@ -12,7 +12,7 @@
                 top: tabPosition === 'top',
                 left: tabPosition === 'left',
                 right: tabPosition === 'right',
-                bottom: tabPosition === 'bottom',
+                bottom: tabPosition === 'bottom'
             }"
             v-model="activeName"
             :tab-position="tabPosition"
@@ -51,12 +51,12 @@
     const props = defineProps({
         menuCollapsed: {
             type: Boolean as computed<Boolean>,
-            required: false,
+            required: false
         },
         layoutSubName: {
             type: String as Ref<string>,
-            required: false,
-        },
+            required: false
+        }
     });
     // 当前tab
     const activeName = computed(() => routerStore.getActiveRoute);
@@ -76,7 +76,7 @@
         Timer = setTimeout(() => {
             if (count === 1) {
                 routerStore.$patch({
-                    activeRoute: event.props.name,
+                    activeRoute: event.props.name
                 });
             } else {
                 removeTab(event.props.name, tabPosition.value);
@@ -88,7 +88,7 @@
     // 关闭所有tabs
     const closeAllTabs = () => {
         routerStore.$patch({
-            tabs: [],
+            tabs: []
         });
     };
 </script>
@@ -99,19 +99,23 @@
             right: 15px;
             top: 72px;
         }
+
         & > .top {
             height: 40px;
             width: 94%;
         }
+
         & > .left,
         .right {
             position: absolute;
             top: 50%;
             transform: translate(0, -50%);
         }
+
         & > .right {
             right: 0;
         }
+
         .custom-tabs-label {
             max-width: 150px;
             overflow: hidden;

@@ -2,7 +2,7 @@
  * @Author:  
  * @Date: 2022-06-06 11:47:27
  * @LastEditors: mengjuhua
- * @LastEditTime: 2024-01-12 10:48:41
+ * @LastEditTime: 2024-04-07 11:36:08
  * @Description: 角色关联
 -->
 <template>
@@ -15,7 +15,7 @@
                     :style="{ fontSize: fontSizeObj.baseFontSize }"
                     class="global-btn-main"
                     type="primary"
-                    @click="initList"
+                    @click="search"
                 >
                     <i class="ri-search-line"></i>
                     {{ $t('搜索') }}
@@ -161,12 +161,7 @@
                 }
             ],
             tableData: [],
-            pageConfig: {
-                // 分页配置，
-                currentPage: 1,
-                pageSize: 10,
-                total: roleTotal.value // 总条数
-            }
+            pageConfig: false
         },
         // 表格过滤
         filterConfig: {
@@ -176,19 +171,12 @@
             showBorder: true,
             itemList: [
                 {
-                    type: 'input',
-                    value: '',
-                    key: 'roleNodeName',
-                    label: computed(() => t('角色名称')),
-                    span: settingStore.device === 'mobile' ? 24 : 6,
-                    clearable: true
-                },
-                {
                     type: 'select',
                     value: 1,
                     key: 'operationType',
                     label: computed(() => t('操作权限')),
-                    span: settingStore.device === 'mobile' ? 24 : 6,
+                    labelWidth: '60px',
+                    span: settingStore.device === 'mobile' ? 24 : 5,
                     props: {
                         options: [
                             { label: computed(() => t('隐藏')).value, value: 0 },
@@ -198,6 +186,15 @@
                         ]
                     }
                 },
+                {
+                    type: 'input',
+                    value: '',
+                    key: 'roleNodeName',
+                    label: computed(() => t('角色名称')),
+                    span: settingStore.device === 'mobile' ? 24 : 6,
+                    clearable: true
+                },
+
                 {
                     type: 'slot',
                     slotName: 'filterBtnSlot',
@@ -276,7 +273,7 @@
         },
         treeApiObj: {
             topLevel: async () => {
-                let data = [];
+                let data: any = [];
                 if (roleTreeType.value === 'appRole') {
                     const res = await getResourceTree(props.appId);
                     data = res.data;
@@ -304,7 +301,6 @@
         filtersValueCallBack,
         roleFormLine,
         tableRoleConfig,
-        selectIds,
         treeApiObj,
         positiveAuthorityDialog,
         filterConfig,
@@ -319,6 +315,10 @@
         () => props.id,
         (new_, old_) => {
             if (new_ && new_ !== old_) {
+                roleFormLine.value = {
+                    roleNodeName: '',
+                    operationType: 1
+                };
                 initList();
             }
         }
@@ -342,8 +342,21 @@
             roleFormLine.value.operationType
         );
         tableRoleConfig.value.tableData = result.data;
-        roleTotal.value = result.data.length;
-        tableRoleConfig.value.pageConfig.total = roleTotal.value;
+    }
+
+    async function search() {
+        if (roleFormLine.value.roleNodeName == '' || roleFormLine.value.roleNodeName == undefined) {
+            ElNotification({
+                title: t('提示'),
+                message: t('请输入角色名称'),
+                type: 'info',
+                duration: 2000,
+                offset: 80
+            });
+            return;
+        }
+        tableRoleConfig.value.tableData = [];
+        initList();
     }
 
     // 点击 tree 获取当前数据

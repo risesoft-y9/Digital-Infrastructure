@@ -1,7 +1,7 @@
 /*
  * @Author: your name
  * @Date: 2021-04-15 10:16:53
- * @LastEditTime: 2024-01-11 16:11:56
+ * @LastEditTime: 2024-04-01 10:53:57
  * @LastEditors: mengjuhua
  * @Description: In User Settings Edit
  * @FilePath: \workspace-y9boot-9.5-vuee:\workspace-y9boot-9.6-vue\y9vue-kernel-dcat-style\src\api\lib\request.js
@@ -133,6 +133,7 @@ function y9Request(baseUrl = '') {
                 // 请求成功发出且服务器也响应了状态码，但状态代码超出了 2xx 的范围
                 requestList.delete(error.config.url);
                 let data = error.response.data;
+                console.warn('error.response   ' + data);
                 if (error.response.status === 401 && (data.code === 101 || data.code === 102 || data.code === 100)) {
                     // 令牌已失效（过期或其他标签页单点登出）
                     ElMessageBox({
@@ -161,6 +162,9 @@ function y9Request(baseUrl = '') {
                     });
                 } else if (error.response.status === 400) {
                     // 参数、业务上的错误统一返回 http 状态 400，返回原始 body 到请求处自行处理
+                    return data;
+                } else if (error.response.status === 500) {
+                    // 后台代码 上的错误统一返回 http 状态 500，返回原始 body 到请求处自行处理
                     return data;
                 }
             }

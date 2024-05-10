@@ -154,9 +154,6 @@
                         item.newName = item.name + '(' + item.memberCount + ')'; //显示名称
                         item.personCount = item.memberCount; //人员数量
                     }
-                    if (item.disabled) {
-                        item.newName = item.name + '[禁用]'; //显示名称
-                    }
                     // 子域管理员不能删除组织
                     if (isGlobalManager) {
                         item.delete_icon = props.showNodeDelete;
@@ -171,9 +168,6 @@
                     if (item.memberCount != undefined) {
                         item.newName = item.name + '(' + item.memberCount + ')'; //显示名称
                         item.personCount = item.memberCount; //人员数量
-                    }
-                    if (item.disabled) {
-                        item.newName = item.name + '[禁用]'; //显示名称
                     }
 
                     //判断是否有权限删除
@@ -191,18 +185,12 @@
                     item.isLeaf = true; //叶子节点（即没有展开按钮）
                     item.title_icon = 'ri-shield-star-line'; //设置图标
                     item.newName = item.name; //显示名称
-                    if (item.disabled) {
-                        item.newName = item.name + '[禁用]'; //显示名称
-                    }
                     break;
 
                 case 'Position': //岗位
                     item.isLeaf = true; //叶子节点（即没有展开按钮）
                     item.title_icon = 'ri-shield-user-line'; //设置图标
                     item.newName = item.name; //显示名称
-                    if (item.disabled) {
-                        item.newName = item.name + '[禁用]'; //显示名称
-                    }
                     break;
                 case 'Manager': //子域三元
                     item.title_icon = 'ri-women-line'; //设置图标
@@ -215,11 +203,11 @@
                     item.isLeaf = true; //叶子节点（即没有展开按钮）
                     item.title_icon = 'ri-women-line'; //设置图标
                     item.newName = item.name; //显示名称
-                    if (item.disabled) {
-                        item.newName = item.name + '[禁用]'; //显示名称
-                    }
                     if (item.sex == 1) {
                         item.title_icon = 'ri-men-line'; //设置图标
+                    }
+                    if (item.disabled) {
+                        item.newName = item.name + '[禁用]'; //显示名称
                     }
                     if (!item.original) {
                         if (item.sex == 1) {
@@ -416,11 +404,7 @@
                     TreeLoading.value = false;
                     return;
                 }
-                if (searchkey != apiSearchKey.value) {
-                    // 解决逐字输入时（多次调用时），当数据量较大时前一个接口返回的数据较慢覆盖了后一个接口返回的数据的问题
-                    TreeLoading.value = false;
-                    return;
-                }
+                if (!res.data.length) return;
                 const data = res.data;
 
                 //格式化tree数据
@@ -497,11 +481,13 @@
      * isExpand 点击后是否展开节点
      */
     function handClickNode(node, isExpand = true) {
+        console.log(node, 'node');
+
         nextTick(() => {
-            y9TreeRef.value?.setCurrentKey(node.id); //设置为高亮节点
+            y9TreeRef.value?.setCurrentKey(node?.id); //设置为高亮节点
             y9TreeRef.value?.handNodeClick(node); //重新点击节点，获取最新的节点信息
             if (isExpand) {
-                y9TreeRef.value?.setExpandKeys([node.id]); //设置展开
+                y9TreeRef.value?.setExpandKeys([node?.id]); //设置展开
             }
         });
     }
@@ -700,9 +686,9 @@
         }
     }
 
-    // :deep(.el-col-12) {
-    //     padding-left: 25px !important;
-    // }
+    :deep(.el-col-12) {
+        padding-left: 25px !important;
+    }
 
     /* 固定左侧树 */
     .fixed {

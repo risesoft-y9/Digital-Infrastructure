@@ -224,3 +224,21 @@ export const orderPositions = async (personId, positionIds) => {
         data: data
     });
 };
+
+/**
+ * 禁用/解禁岗位
+ * @param {*} ID
+ * @returns
+ */
+export const changeDisabledPosition = async (id) => {
+    const params = {
+        id: id
+    };
+    const data = qs.stringify(params);
+    return await platformRequest({
+        url: '/api/rest/position/changeDisabled',
+        method: 'POST',
+        cType: false,
+        data: data
+    });
+};
