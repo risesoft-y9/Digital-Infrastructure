@@ -6,12 +6,12 @@
     <groupId>net.risesoft</groupId>
     <artifactId>risenet-y9boot-webapp-filemanager</artifactId>
     <packaging>war</packaging>
-    <version>v9.6.5-SNAPSHOT</version>
+    <version>v9.6.5</version>
 
     <parent>
         <groupId>net.risesoft</groupId>
         <artifactId>y9-module-filemanager</artifactId>
-        <version>v9.6.5-SNAPSHOT</version>
+        <version>v9.6.5</version>
         <relativePath>../pom.xml</relativePath>
     </parent>
 

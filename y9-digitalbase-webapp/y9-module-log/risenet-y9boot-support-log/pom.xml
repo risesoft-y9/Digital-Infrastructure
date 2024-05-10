@@ -4,13 +4,13 @@
     <modelVersion>4.0.0</modelVersion>
     <!-- <groupId>net.risesoft</groupId> -->
     <artifactId>risenet-y9boot-support-log</artifactId>
-    <version>v9.6.5-SNAPSHOT</version>
+    <version>v9.6.5</version>
     <packaging>jar</packaging>
 
     <parent>
         <groupId>net.risesoft</groupId>
         <artifactId>y9-module-log</artifactId>
-        <version>v9.6.5-SNAPSHOT</version>
+        <version>v9.6.5</version>
         <relativePath>../pom.xml</relativePath>
     </parent>
 
