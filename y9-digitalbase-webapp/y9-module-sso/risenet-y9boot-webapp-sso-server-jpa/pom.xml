@@ -289,10 +289,6 @@
             <artifactId>jose4j</artifactId>
         </dependency>
 
-        <!--<dependency>
-            <groupId>org.springframework.kafka</groupId>
-            <artifactId>spring-kafka</artifactId>
-        </dependency>-->
 
         <dependency>
             <groupId>org.jodd</groupId>
@@ -360,10 +356,6 @@
         </dependency>
         <!-- 二维码-结束 -->
 
-        <dependency>
-            <groupId>org.springframework.kafka</groupId>
-            <artifactId>spring-kafka</artifactId>
-        </dependency>
 
         <!-- 人大金仓数据库 -->
         <dependency>
