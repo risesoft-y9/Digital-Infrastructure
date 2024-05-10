@@ -11,9 +11,7 @@ public class Y9UserOnlineProperties {
     private String userOnlineSaveTarget = "console";
 
     /** 执行日志保存时间间隔 */
-    private String ttl;
-
-    private String indexView = "index";
+    private String ttl = "1800";
 
     /** 同步执行服务器IP */
     private String scheduleServerIp;
