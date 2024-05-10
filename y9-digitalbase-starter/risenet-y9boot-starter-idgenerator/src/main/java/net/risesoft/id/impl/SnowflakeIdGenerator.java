@@ -4,8 +4,24 @@ import lombok.extern.slf4j.Slf4j;
 
 import net.risesoft.id.Y9IdGenerator;
 
+import cn.hutool.core.util.IdUtil;
+
 /**
- * twitter的snowflake算法实现
+ * 在twitter的snowflake算法实现基础上根据自身需求进行了调整
+ * <p>
+ * snowflake的原始结构如下(每部分用-分开):<br>
+ * <pre>
+ * 符号位（1bit）- 时间戳相对值（41bit）- 数据中心标志（5bit）- 机器标志（5bit）- 递增序号（12bit）
+ * 0 - 0000000000 0000000000 0000000000 0000000000 0 - 00000 - 00000 - 000000000000
+ * </pre>
+ * 
+ * <p>
+ * 调整后的snowflake结构如下(每部分用-分开):<br>
+ * <pre>
+ * 符号位（1bit）- 时间戳相对值（41bit）- 机器标志（10bit）- 递增序号（12bit）
+ * 0 - 0000000000 0000000000 0000000000 0000000000 0 - 0000000000 - 000000000000
+ * </pre>
+ * <p>
  *
  * @author allen shen
  * @date 2019/10/24
@@ -16,17 +32,20 @@ public class SnowflakeIdGenerator implements Y9IdGenerator {
      * 起始的时间戳
      */
     private final static long START_STAMP = 1320076800000L;
-
+    
     /**
      * 每一部分占用的位数 序列号占用的位数
      */
+    private final static long DATA_CENTER_BIT = 5;
+    private final static long WORKER_BIT = 5;
+    private final static long MACHINE_BIT = DATA_CENTER_BIT + WORKER_BIT;
     private final static long SEQUENCE_BIT = 12;
-    /** 机器标识占用的位数 */
-    private final static long MACHINE_BIT = 10;
-
+    
     /**
      * 每一部分的最大值
      */
+    private final static long MAX_DATA_CENTER_NUM = -1L ^ (-1L << DATA_CENTER_BIT);
+    private final static long MAX_WORKER_NUM = -1L ^ (-1L << WORKER_BIT);
     private final static long MAX_MACHINE_NUM = -1L ^ (-1L << MACHINE_BIT);
     private final static long MAX_SEQUENCE = -1L ^ (-1L << SEQUENCE_BIT);
 
@@ -34,10 +53,10 @@ public class SnowflakeIdGenerator implements Y9IdGenerator {
      * 每一部分向左的位移
      */
     private final static long MACHINE_LEFT = SEQUENCE_BIT;
-    private final static long DATA_CENTER_LEFT = SEQUENCE_BIT + MACHINE_BIT;
+    private final static long TIME_STAMP_LEFT = SEQUENCE_BIT + MACHINE_BIT;
 
     /** 机器标识 */
-    private long machineId;
+    private final long machineId;
     /** 序列号 */
     private long sequence = 0L;
     /** 上一次时间戳 */
@@ -48,6 +67,20 @@ public class SnowflakeIdGenerator implements Y9IdGenerator {
             throw new IllegalArgumentException("machineId can't be greater than MAX_MACHINE_NUM or less than 0");
         }
         this.machineId = machineId;
+    }
+
+    public SnowflakeIdGenerator() {
+        this(getMachineId());
+    }
+
+    /**
+     * 依赖的服务集群部署时，极小概率生成重复 machineId
+     * @return
+     */
+    private static long getMachineId() {
+        long dataCenterId = IdUtil.getDataCenterId(MAX_DATA_CENTER_NUM);
+        long workerId = IdUtil.getWorkerId(dataCenterId, MAX_WORKER_NUM);
+        return dataCenterId | workerId << WORKER_BIT;
     }
 
     private long getNewStamp() {
@@ -97,7 +130,7 @@ public class SnowflakeIdGenerator implements Y9IdGenerator {
         }
 
         lastStamp = currStamp;
-        // 数据中心部分 | 机器标识部分 | 序列号部分
-        return (currStamp - START_STAMP) << DATA_CENTER_LEFT | machineId << MACHINE_LEFT | sequence;
+        // 时间戳 | 机器标识部分 | 序列号部分
+        return (currStamp - START_STAMP) << TIME_STAMP_LEFT | machineId << MACHINE_LEFT | sequence;
     }
 }
