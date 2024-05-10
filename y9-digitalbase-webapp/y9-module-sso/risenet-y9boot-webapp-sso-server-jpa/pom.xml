@@ -7,7 +7,7 @@
     <groupId>net.risesoft</groupId>
     <artifactId>risenet-y9boot-webapp-sso-server-jpa</artifactId>
     <packaging>war</packaging>
-    <version>v9.6.5</version>
+    <version>v9.6.6-SNAPSHOT</version>
 
     <repositories>
         <!--<repository>
