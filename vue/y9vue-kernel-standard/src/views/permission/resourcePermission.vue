@@ -2,42 +2,74 @@
  * @Author: shidaobang
  * @Date: 2022-04-07 17:43:02
  * @LastEditors: mengjuhua
- * @LastEditTime: 2023-08-03 15:24:27
+ * @LastEditTime: 2024-03-11 16:05:58
  * @Description: 资源权限树
 -->
 <template>
-    <fixedTreeModule
-        ref="fixedTreeRef"
-        :treeApiObj="treeApiObj"
-        :showNodeDelete="false"
-        nodeLabel="newName"
-        @onTreeClick="onTreeClick"
-    >
-        <template #treeHeaderRight> </template>
+    <fixedTreeModule ref="fixedTreeRef" :showNodeDelete="false" :treeApiObj="treeApiObj" @onTreeClick="onTreeClick">
+        <template #treeHeaderRight></template>
 
         <template #rightContainer>
             <template v-if="Object.keys(currTreeNodeInfo).length > 0">
-                <y9Table :config="y9TableConfig"></y9Table>
+                <y9Card :title="`${currTreeNodeInfo.name ? currTreeNodeInfo.name : ''}`">
+                    <template v-if="currTreeNodeInfo.nodeType === 'Position' || currTreeNodeInfo.nodeType === 'Person'">
+                        <y9Table
+                            :config="y9TableConfig"
+                            :filterConfig="filterConfig"
+                            @window-height-change="windowHeightChange"
+                        >
+                            <template v-slot:slotsync>
+                                <el-button class="global-btn-main" type="primary" @click="syncPosition()">
+                                    <i class="ri-refresh-line"></i>
+                                    {{ $t('权限') }}
+                                </el-button>
+                            </template>
+                        </y9Table>
+                    </template>
+                    <template v-else>
+                        <div style="height: 213px">
+                            <el-button
+                                class="global-btn-main"
+                                style="margin-bottom: 10px"
+                                type="primary"
+                                @click="syncPosition()"
+                            >
+                                <i class="ri-refresh-line"></i>
+                                {{ $t('权限') }}
+                            </el-button>
+                            <el-alert title="请点击左侧树，选择人员/岗位。" type="warning" />
+                        </div>
+                    </template>
+                </y9Card>
             </template>
         </template>
     </fixedTreeModule>
 
-    <el-button style="display: none" v-loading.fullscreen.lock="loading"></el-button>
+    <el-button v-loading.fullscreen.lock="loading" style="display: none"></el-button>
 </template>
 
 <script lang="ts" setup>
     import { useI18n } from 'vue-i18n';
-    import { inject, reactive, h, toRefs, ref } from 'vue';
-    import { treeInterface, getTreeItemById, searchByName } from '@/api/org/index';
+    import { h, inject, reactive, ref, toRefs } from 'vue';
+    import { getTreeItemById, searchByName, treeInterface } from '@/api/org/index';
     import { useSettingStore } from '@/store/modules/settingStore';
-    import { getPersonResourcePermissionList, getPositionResourcePermissionList } from '@/api/permission';
-    import { ElMessage } from 'element-plus';
+    import {
+        getPersonResourcePermissionList,
+        getPositionResourcePermissionList,
+        identityResources
+    } from '@/api/permission';
+    import { ElMessage, ElNotification } from 'element-plus';
+    import y9_storage from '@/utils/storage';
+
+    // 重新获取个人信息（登陆返回的个人信息有缺失的属性）
+    const ssoUserInfo = y9_storage.getObjectItem('ssoUserInfo');
 
     const settingStore = useSettingStore();
     const { t } = useI18n();
     // 注入 字体对象
     const fontSizeObj: any = inject('sizeObjInfo');
     let fixedTreeRef = ref(); //tree实例
+
     //数据
     const data = reactive({
         loading: false,
@@ -46,24 +78,25 @@
             topLevel: treeInterface,
             childLevel: {
                 api: getTreeItemById,
-                params: { treeType: 'tree_type_org', disabled: true },
+                params: { treeType: 'tree_type_org', disabled: true }
             },
             search: {
                 api: searchByName,
                 params: {
-                    treeType: 'tree_type_org',
-                },
-            },
+                    treeType: 'tree_type_org'
+                }
+            }
         },
-        currTreeNodeInfo: {}, //当前tree节点的信息
+        currTreeNodeInfo: {} as any, //当前tree节点的信息
         y9TableConfig: {
-            headerBackground: true,
+            headerBackground: false,
+            loading: false,
             border: true,
             columns: [
                 {
                     title: '系统',
                     key: 'systemCnName',
-                    width: 100,
+                    width: 100
                 },
                 {
                     title: '资源',
@@ -82,7 +115,7 @@
                             str = `&nbsp;&nbsp;&nbsp;&nbsp;${str}`;
                         }
                         return h('div', { innerHTML: str });
-                    },
+                    }
                 },
                 {
                     title: '权限类型',
@@ -101,7 +134,7 @@
                         }
 
                         return h('div', t(text));
-                    },
+                    }
                 },
                 {
                     title: '权限继承',
@@ -118,11 +151,11 @@
                         }
 
                         return h('div', t(text));
-                    },
+                    }
                 },
                 {
                     title: '授权主体（权限来源）',
-                    key: 'principalName',
+                    key: 'principalName'
                 },
                 {
                     title: '主体类型',
@@ -147,8 +180,8 @@
                         }
 
                         return h('div', t(text));
-                    },
-                },
+                    }
+                }
             ],
             tableData: [],
             pageConfig: false,
@@ -157,12 +190,12 @@
                     if (row.systemCnNameRowspan) {
                         return {
                             rowspan: row.systemCnNameRowspan,
-                            colspan: 1,
+                            colspan: 1
                         };
                     } else {
                         return {
                             rowspan: 0,
-                            colspan: 0,
+                            colspan: 0
                         };
                     }
                 }
@@ -171,20 +204,37 @@
                     if (row.detailRowspan) {
                         return {
                             rowspan: row.detailRowspan,
-                            colspan: 1,
+                            colspan: 1
                         };
                     } else {
                         return {
                             rowspan: 0,
-                            colspan: 0,
+                            colspan: 0
                         };
                     }
                 }
-            },
+            }
         },
+        filterConfig: {
+            filtersValueCallBack: (filter) => {},
+            itemList: [
+                {
+                    type: 'slot',
+                    slotName: 'slotsync',
+                    span: settingStore.device === 'mobile' ? 24 : 12
+                }
+            ],
+            showBorder: true
+        }
     });
 
-    const { treeApiObj, currTreeNodeInfo, loading, y9TableConfig } = toRefs(data);
+    const { treeApiObj, currTreeNodeInfo, loading, y9TableConfig, filterConfig } = toRefs(data);
+
+    //窗口变动时触发，获取表格的高度
+    function windowHeightChange(tableHeight) {
+        y9TableConfig.value.height = tableHeight - 35 - 35 - 28;
+        y9TableConfig.value.maxHeight = tableHeight - 35 - 35 - 28; //35 35 是y9-card-content样式中上padding、下padding的值
+    }
 
     function countSystemCnNameRowspan(permission) {
         let counter = 0;
@@ -248,22 +298,46 @@
 
     //点击tree的回调
     async function onTreeClick(currTreeNode) {
+        currTreeNodeInfo.value = currTreeNode;
+        getData();
+    }
+
+    async function getData() {
         let perData = [];
-        if (currTreeNode.orgType === 'Person') {
-            let result = await getPersonResourcePermissionList(currTreeNode.id);
+        y9TableConfig.value.loading = true;
+        if (currTreeNodeInfo.value.nodeType === 'Person') {
+            let result = await getPersonResourcePermissionList(currTreeNodeInfo.value.id);
             if (result.success) {
                 perData = result.data;
             }
-        } else if (currTreeNode.orgType === 'Position') {
-            let result = await getPositionResourcePermissionList(currTreeNode.id);
+        } else if (currTreeNodeInfo.value.nodeType === 'Position') {
+            let result = await getPositionResourcePermissionList(currTreeNodeInfo.value.id);
             if (result.success) {
                 perData = result.data;
             }
         } else {
-            ElMessage({ message: '请选择人员或岗位查看！', offset: 65 });
+            //ElMessage({ message: '请选择人员或岗位查看！', offset: 65 });
         }
         y9TableConfig.value.tableData = buildRowSpanData(perData);
-        currTreeNodeInfo.value = currTreeNode;
+        y9TableConfig.value.loading = false;
+    }
+
+    async function syncPosition() {
+        loading.value = true;
+        let result = await identityResources(ssoUserInfo.tenantId, currTreeNodeInfo.value.id);
+        loading.value = false;
+        if (result.success) {
+            if (currTreeNodeInfo.value.nodeType === 'Person' || currTreeNodeInfo.value.nodeType === 'Position') {
+                getData();
+            }
+        }
+        ElNotification({
+            title: result.success ? t('成功') : t('失败'),
+            message: result.msg,
+            type: result.success ? 'success' : 'error',
+            duration: 2000,
+            offset: 80
+        });
     }
 </script>
 

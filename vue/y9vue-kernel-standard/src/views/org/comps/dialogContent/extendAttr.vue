@@ -2,12 +2,17 @@
     <!-- 扩展属性 -->
     <div v-if="loading" class="loading">
         <svg class="circular" viewBox="25 25 50 50">
-            <circle class="path" cx="50" cy="50" r="20" fill="none"></circle>
+            <circle class="path" cx="50" cy="50" fill="none" r="20"></circle>
         </svg>
     </div>
     <div class="margin-bottom-20">
-        <el-button type="primary" class="global-btn-main" :style="{ fontSize: fontSizeObj.baseFontSize }"
-        :size="fontSizeObj.buttonSize"  @click="onAddExtendAttr">
+        <el-button
+            :size="fontSizeObj.buttonSize"
+            :style="{ fontSize: fontSizeObj.baseFontSize }"
+            class="global-btn-main"
+            type="primary"
+            @click="onAddExtendAttr"
+        >
             <i class="ri-external-link-line"></i>
             <span>{{ $t('扩展属性') }}</span>
         </el-button>
@@ -15,7 +20,7 @@
     <y9Table :config="tableConfig">
         <template #name="{ row, column, index }">
             <el-input v-if="editId === index" v-model="formData.name" />
-            <template v-else>{{ row.name }} </template>
+            <template v-else>{{ row.name }}</template>
         </template>
 
         <template #attrValue="{ row, column, index }">
@@ -27,15 +32,17 @@
 
 <script lang="ts" setup>
     import { useI18n } from 'vue-i18n';
+    import { computed, h, inject, onMounted, reactive, toRefs } from 'vue';
+    import { ElMessage, ElMessageBox } from 'element-plus';
     import { $keyNameAssign, $tableHandleRender } from '@/utils/object';
     import { saveDeptExtendProperties } from '@/api/dept/index';
     import { savePersonExtendProperties } from '@/api/person/index';
     import { saveOrgExtendProperties } from '@/api/org/index';
-	import { saveGroupExtendProperties } from '@/api/group/index';
-	import { savePositionExtendProperties } from '@/api/position/index';
-    import { useSettingStore } from "@/store/modules/settingStore";
-    import { inject, ref, watch } from 'vue';
-	const settingStore = useSettingStore();
+    import { saveGroupExtendProperties } from '@/api/group/index';
+    import { savePositionExtendProperties } from '@/api/position/index';
+    import { useSettingStore } from '@/store/modules/settingStore';
+
+    const settingStore = useSettingStore();
     // 注入 字体对象
     const fontSizeObj: any = inject('sizeObjInfo');
     const { t } = useI18n();
@@ -45,36 +52,36 @@
             type: Object,
             default: () => {
                 return {};
-            },
+            }
         },
-		
-		handAssginNode: {
+
+        handAssginNode: {
             //手动合并节点信息
-            type: Function,
-        },
+            type: Function
+        }
     });
     const data = reactive({
         loading: false,
         formData: {
             name: '',
-            attrValue: '',
+            attrValue: ''
         },
         editId: -1, //编辑id
         tableConfig: {
             //表格配置
             columns: [
                 {
-                    title: computed(() => t("标识")),
+                    title: computed(() => t('标识')),
                     key: 'name',
-                    slot: 'name',
+                    slot: 'name'
                 },
                 {
-                    title: computed(() => t("属性值")),
+                    title: computed(() => t('属性值')),
                     key: 'attrValue',
-                    slot: 'attrValue',
+                    slot: 'attrValue'
                 },
                 {
-                    title: computed(() => t("操作")),
+                    title: computed(() => t('操作')),
                     width: settingStore.getTwoBtnWidth,
                     render: (row, params) => {
                         let editActions = $tableHandleRender([
@@ -89,10 +96,10 @@
                                         ElMessage({
                                             type: 'error',
                                             message: t('请保存编辑数据后再操作'),
-                                            offset: 65,
+                                            offset: 65
                                         });
                                     }
-                                },
+                                }
                             },
                             {
                                 title: t('删除'),
@@ -101,7 +108,7 @@
                                     ElMessageBox.confirm(`${t('是否删除')}【${row.name}】 ?`, t('提示'), {
                                         confirmButtonText: t('确定'),
                                         cancelButtonText: t('取消'),
-                                        type: 'info',
+                                        type: 'info'
                                     })
                                         .then(async () => {
                                             if (editId.value == -1) {
@@ -109,20 +116,60 @@
                                                     const item = tableConfig.value.tableData[i];
                                                     if (item.id === row.id) {
                                                         tableConfig.value.tableData.splice(i, 1);
-														let propertiesObj = {};
-														tableConfig.value.tableData.forEach((item) => {
-														    propertiesObj[item.name] = item.attrValue;
-														});
-														let propertiesString = JSON.stringify(propertiesObj);
-														props.handAssginNode && props.handAssginNode({properties:propertiesString},props.currInfo.id)
-                                                        break;
+                                                        let propertiesObj = {};
+                                                        tableConfig.value.tableData.forEach((item) => {
+                                                            propertiesObj[item.name] = item.attrValue;
+                                                        });
+                                                        let propertiesString = JSON.stringify(propertiesObj);
+                                                        let result;
+                                                        if (props.currInfo.nodeType == 'Department') {
+                                                            loading.value = true;
+                                                            result = await saveDeptExtendProperties(
+                                                                props.currInfo.id,
+                                                                propertiesString
+                                                            );
+                                                        } else if (props.currInfo.nodeType == 'Person') {
+                                                            loading.value = true;
+                                                            result = await savePersonExtendProperties(
+                                                                props.currInfo.id,
+                                                                propertiesString
+                                                            );
+                                                        } else if (props.currInfo.nodeType == 'Organization') {
+                                                            loading.value = true;
+                                                            result = await saveOrgExtendProperties(
+                                                                props.currInfo.id,
+                                                                propertiesString
+                                                            );
+                                                        } else if (props.currInfo.nodeType == 'Group') {
+                                                            loading.value = true;
+                                                            result = await saveGroupExtendProperties(
+                                                                props.currInfo.id,
+                                                                propertiesString
+                                                            );
+                                                        } else if (props.currInfo.nodeType == 'Position') {
+                                                            loading.value = true;
+                                                            result = await savePositionExtendProperties(
+                                                                props.currInfo.id,
+                                                                propertiesString
+                                                            );
+                                                        }
+
+                                                        loading.value = false;
+                                                        if (result.success) {
+                                                            props.handAssginNode &&
+                                                                props.handAssginNode(
+                                                                    { properties: propertiesString },
+                                                                    props.currInfo.id
+                                                                );
+                                                            break;
+                                                        }
                                                     }
                                                 }
                                             } else {
                                                 ElMessage({
                                                     type: 'error',
                                                     message: t('请保存编辑数据后再操作'),
-                                                    offset: 65,
+                                                    offset: 65
                                                 });
                                             }
                                         })
@@ -130,11 +177,11 @@
                                             ElMessage({
                                                 type: 'info',
                                                 message: t('已取消删除'),
-                                                offset: 65,
+                                                offset: 65
                                             });
                                         });
-                                },
-                            },
+                                }
+                            }
                         ]);
 
                         let saveActions = $tableHandleRender([
@@ -145,20 +192,20 @@
                                         ElMessage({
                                             type: 'error',
                                             message: t('请输入标识'),
-                                            offset: 65,
+                                            offset: 65
                                         });
                                     } else if (!formData.value.attrValue) {
                                         ElMessage({
                                             type: 'error',
                                             message: t('请输入属性值'),
-                                            offset: 65,
+                                            offset: 65
                                         });
                                     } else {
                                         if (row.id) {
                                             for (let item of tableConfig.value.tableData) {
                                                 if (item.id === row.id) {
                                                     Object.assign(item, formData.value, {
-                                                        id: formData.value['name'] + '_' + formData.value['attrValue'],
+                                                        id: formData.value['name'] + '_' + formData.value['attrValue']
                                                     });
                                                     break;
                                                 }
@@ -166,7 +213,7 @@
                                         } else {
                                             Object.assign(tableConfig.value.tableData[0], {
                                                 id: formData.value['name'] + '_' + formData.value['attrValue'],
-                                                ...formData.value,
+                                                ...formData.value
                                             });
                                         }
 
@@ -177,32 +224,42 @@
                                         });
                                         let propertiesString = JSON.stringify(propertiesObj);
 
-                                        if (props.currInfo.orgType == 'Department') {
+                                        if (props.currInfo.nodeType == 'Department') {
                                             loading.value = true;
                                             result = await saveDeptExtendProperties(
                                                 props.currInfo.id,
                                                 propertiesString
                                             );
-                                        } else if (props.currInfo.orgType == 'Person') {
+                                        } else if (props.currInfo.nodeType == 'Person') {
                                             loading.value = true;
                                             result = await savePersonExtendProperties(
                                                 props.currInfo.id,
                                                 propertiesString
                                             );
-                                        } else if (props.currInfo.orgType == 'Organization') {
+                                        } else if (props.currInfo.nodeType == 'Organization') {
                                             loading.value = true;
                                             result = await saveOrgExtendProperties(props.currInfo.id, propertiesString);
-                                        } else if (props.currInfo.orgType == 'Group') {
+                                        } else if (props.currInfo.nodeType == 'Group') {
                                             loading.value = true;
-                                            result = await saveGroupExtendProperties(props.currInfo.id, propertiesString);
-                                        } else if (props.currInfo.orgType == 'Position') {
+                                            result = await saveGroupExtendProperties(
+                                                props.currInfo.id,
+                                                propertiesString
+                                            );
+                                        } else if (props.currInfo.nodeType == 'Position') {
                                             loading.value = true;
-                                            result = await savePositionExtendProperties(props.currInfo.id, propertiesString);
+                                            result = await savePositionExtendProperties(
+                                                props.currInfo.id,
+                                                propertiesString
+                                            );
                                         }
 
                                         loading.value = false;
                                         if (result.success) {
-											props.handAssginNode && props.handAssginNode({properties:propertiesString},props.currInfo.id)
+                                            props.handAssginNode &&
+                                                props.handAssginNode(
+                                                    { properties: propertiesString },
+                                                    props.currInfo.id
+                                                );
                                         }
 
                                         //初始化表单
@@ -212,7 +269,7 @@
                                         //取消编辑状态
                                         editId.value = -1;
                                     }
-                                },
+                                }
                             },
                             {
                                 title: t('取消'),
@@ -227,24 +284,24 @@
                                     }
                                     //取消编辑状态
                                     editId.value = -1;
-                                },
-                            },
+                                }
+                            }
                         ]);
 
                         return h('span', editId.value === params.$index ? saveActions : editActions);
-                    },
-                },
+                    }
+                }
             ],
             tableData: [],
-            pageConfig: false, //取消分页
-        },
+            pageConfig: false //取消分页
+        }
     });
 
     let { loading, formData, editId, tableConfig } = toRefs(data);
 
     defineExpose({
         editId,
-        tableConfig,
+        tableConfig
     });
 
     onMounted(() => {
@@ -259,7 +316,7 @@
                 data.push({
                     id: key + '_' + properties[key],
                     name: key,
-                    attrValue: properties[key],
+                    attrValue: properties[key]
                 });
             }
             tableConfig.value.tableData = data;
@@ -272,7 +329,7 @@
             ElMessage({
                 type: 'error',
                 message: t('请保存编辑数据后再操作'),
-                offset: 65,
+                offset: 65
             });
 
             return;
@@ -281,7 +338,7 @@
         //表格上方插入空行
         tableConfig.value.tableData.unshift({
             name: '',
-            attrValue: '',
+            attrValue: ''
         });
 
         editId.value = 0; //第一行为编辑状态
@@ -306,6 +363,7 @@
         display: flex;
         justify-content: center;
         align-items: center;
+
         .circular {
             display: inline;
             height: 42px;

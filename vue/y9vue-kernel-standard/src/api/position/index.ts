@@ -14,74 +14,73 @@ const platformRequest = Request();
 /**
  * 根据岗位id，获取岗位信息
  * @param {*} positionID 岗位id
- * @returns 
+ * @returns
  */
 export const getPositionById = async (positionId) => {
     return await platformRequest({
-        url: "/api/rest/position/getPositionById",
+        url: '/api/rest/position/getPositionById',
         method: 'GET',
         cType: false,
-        params: { "positionId": positionId },
+        params: { positionId: positionId }
     });
 };
 
 /**
  * 根据人员id，获取岗位列表
- * @param {*} personID 
- * @returns 
+ * @param {*} personID
+ * @returns
  */
 export const getPositionsByPersonId = async (personId) => {
     return await platformRequest({
-        url: "/api/rest/position/listPositionsByPersonId",
+        url: '/api/rest/position/listPositionsByPersonId',
         method: 'GET',
         cType: false,
-        params: { "personId": personId },
+        params: { personId: personId }
     });
 };
 
 /**
  * 根据父节点id，获取岗位列表
- * @param parentId 
- * @returns 
+ * @param parentId
+ * @returns
  */
 export const getPositionsByParentId = async (parentId) => {
     return await platformRequest({
-        url: "/api/rest/position/listPositionsByParentId",
+        url: '/api/rest/position/listPositionsByParentId',
         method: 'GET',
         cType: false,
-        params: { "parentId": parentId },
+        params: { parentId: parentId }
     });
 };
 
-
 /**
  * 保存岗位
- * @param {*} params 
- * @returns 
+ * @param {*} params
+ * @returns
  */
 export const positionSaveOrUpdate = async (params) => {
     const data = qs.stringify(params);
     return await platformRequest({
-        url: "/api/rest/position/saveOrUpdate",
+        url: '/api/rest/position/saveOrUpdate',
         method: 'POST',
         cType: false,
-        data: data,
+        data: data
     });
 };
 
 /**
- * 
+ *
  * @param positionIds 保存岗位排序
- * @returns 
+ * @returns
  */
-export const saveOrder = async (positionIds,tabindexs) => {
+export const saveOrder = async (positionIds, tabindexs) => {
     let params = {
         positionIds: positionIds,
-        tabindexs:tabindexs
+        tabindexs: tabindexs
     };
     const data = qs.stringify(params);
     return await platformRequest({
-        url: "/api/rest/position/saveOrder",
+        url: '/api/rest/position/saveOrder',
         method: 'POST',
         cType: false,
         data: data
@@ -90,18 +89,18 @@ export const saveOrder = async (positionIds,tabindexs) => {
 
 /**
  * 根据岗位id，批量删除人员
- * @param {*} positionID 
- * @param {*} personIDs 
- * @returns 
+ * @param {*} positionID
+ * @param {*} personIDs
+ * @returns
  */
- export const removePersons = async (positionId,personIds) => {
+export const removePersons = async (positionId, personIds) => {
     let params = {
         personIds: personIds,
         positionId: positionId
     };
     const data = qs.stringify(params);
     return await platformRequest({
-        url: "/api/rest/position/removePersons",
+        url: '/api/rest/position/removePersons',
         method: 'POST',
         cType: false,
         data: data
@@ -110,9 +109,9 @@ export const saveOrder = async (positionIds,tabindexs) => {
 
 /**
  * 保存岗位的人员排序
- * @param {*} positionID 
- * @param {*} personIDs 
- * @returns 
+ * @param {*} positionID
+ * @param {*} personIDs
+ * @returns
  */
 export const orderPersons = async (positionId, personIds) => {
     let params = {
@@ -121,7 +120,7 @@ export const orderPersons = async (positionId, personIds) => {
     };
     const data = qs.stringify(params);
     return await platformRequest({
-        url: "/api/rest/position/orderPersons",
+        url: '/api/rest/position/orderPersons',
         method: 'POST',
         cType: false,
         data: data
@@ -130,9 +129,9 @@ export const orderPersons = async (positionId, personIds) => {
 
 /**
  * 批量添加岗位人员
- * @param {*} positionID 
- * @param {*} personIDs 
- * @returns 
+ * @param {*} positionID
+ * @param {*} personIDs
+ * @returns
  */
 export const addPersons = async (positionId, personIds) => {
     let params = {
@@ -141,7 +140,7 @@ export const addPersons = async (positionId, personIds) => {
     };
     const data = qs.stringify(params);
     return await platformRequest({
-        url: "/api/rest/position/addPersons",
+        url: '/api/rest/position/addPersons',
         method: 'POST',
         cType: false,
         data: data
@@ -150,28 +149,28 @@ export const addPersons = async (positionId, personIds) => {
 
 /**
  * 保存岗位扩展信息
- * @param {*} positionID 
- * @param {*} properties 
- * @returns 
+ * @param {*} positionID
+ * @param {*} properties
+ * @returns
  */
-export const savePositionExtendProperties = async (positionId,properties) => {
+export const savePositionExtendProperties = async (positionId, properties) => {
     const params = {
         positionId: positionId,
-        properties:properties
+        properties: properties
     };
     const data = qs.stringify(params);
     return await platformRequest({
-        url: "/api/rest/position/saveExtendProperties",
+        url: '/api/rest/position/saveExtendProperties',
         method: 'POST',
         cType: false,
-        data: data,
+        data: data
     });
 };
 
 /**
  * 删除岗位
- * @param {*} ids 
- * @returns 
+ * @param {*} ids
+ * @returns
  */
 export const removePosition = async (ids) => {
     const params = {
@@ -179,7 +178,7 @@ export const removePosition = async (ids) => {
     };
     const data = qs.stringify(params);
     return await platformRequest({
-        url: "/api/rest/position/remove",
+        url: '/api/rest/position/remove',
         method: 'POST',
         cType: false,
         data: data
@@ -188,9 +187,9 @@ export const removePosition = async (ids) => {
 
 /**
  * 移动岗位
- * @param {*} positionID 
- * @param {*} parentID 
- * @returns 
+ * @param {*} positionID
+ * @param {*} parentID
+ * @returns
  */
 export const movePosition = async (positionId, parentId) => {
     const params = {
@@ -199,7 +198,7 @@ export const movePosition = async (positionId, parentId) => {
     };
     const data = qs.stringify(params);
     return await platformRequest({
-        url: "/api/rest/position/move",
+        url: '/api/rest/position/move',
         method: 'POST',
         cType: false,
         data: data
@@ -208,18 +207,36 @@ export const movePosition = async (positionId, parentId) => {
 
 /**
  * 保存人员的岗位排序
- * @param personId 
- * @param positionIds 
- * @returns 
+ * @param personId
+ * @param positionIds
+ * @returns
  */
-export const orderPositions = async (personId,positionIds) => {
+export const orderPositions = async (personId, positionIds) => {
     let params = {
         personId: personId,
-        positionIds:positionIds
+        positionIds: positionIds
     };
     const data = qs.stringify(params);
     return await platformRequest({
-        url: "/api/rest/position/orderPositions",
+        url: '/api/rest/position/orderPositions',
+        method: 'POST',
+        cType: false,
+        data: data
+    });
+};
+
+/**
+ * 禁用/解禁岗位
+ * @param {*} ID
+ * @returns
+ */
+export const changeDisabledPosition = async (id) => {
+    const params = {
+        id: id
+    };
+    const data = qs.stringify(params);
+    return await platformRequest({
+        url: '/api/rest/position/changeDisabled',
         method: 'POST',
         cType: false,
         data: data

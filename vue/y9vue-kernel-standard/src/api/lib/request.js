@@ -1,8 +1,8 @@
 /*
  * @Author: your name
  * @Date: 2021-04-15 10:16:53
- * @LastEditTime: 2022-08-02 11:11:33
- * @LastEditors: error: git config user.name && git config user.email & please set dead value or install git
+ * @LastEditTime: 2024-04-01 10:53:57
+ * @LastEditors: mengjuhua
  * @Description: In User Settings Edit
  * @FilePath: \workspace-y9boot-9.5-vuee:\workspace-y9boot-9.6-vue\y9vue-kernel-dcat-style\src\api\lib\request.js
  */
@@ -10,12 +10,10 @@ import settings from '@/settings';
 import y9_storage from '@/utils/storage';
 import axios from 'axios'; // 考虑CDN
 import { ElMessage } from 'element-plus';
-import i18n from "@/language/index"
-const { t } = i18n.global;
-import {isExternal} from '@/utils/validate.ts'
+import i18n from '@/language/index';
+import { isExternal } from '@/utils/validate.ts';
 import { $y9_SSO } from '@/main';
-// import { useI18n } from "vue-i18n"
-// const { t } = useI18n();
+const { t } = i18n.global;
 
 // 创建一个axios实例
 function y9Request(baseUrl = '') {
@@ -24,7 +22,7 @@ function y9Request(baseUrl = '') {
     const service = axios.create({
         baseURL: import.meta.env.VUE_APP_CONTEXT,
         withCredentials: true,
-        timeout: 0,
+        timeout: 0
     });
     // 请求拦截器
     service.interceptors.request.use(
@@ -70,11 +68,9 @@ function y9Request(baseUrl = '') {
                 const reqUrl = response.config.url.split('?')[0].replace(response.config.baseURL, '');
                 const noVerifyBool = settings.ajaxResponseNoVerifyUrl.includes(reqUrl);
                 switch (code) {
-                    case 40101:
-                    case 40101:
-                    case 40102:
-                    case 40102:
-                    case 401: // 未登陆
+                    case 100: // 未登陆
+                    case 101: // 令牌已失效
+                    case 102: // 校验令牌出问题了
                         if (!noVerifyBool) {
                             ElMessageBox({
                                 title: t('提示'),
@@ -88,7 +84,7 @@ function y9Request(baseUrl = '') {
                                     } else {
                                         window.location.reload();
                                     }
-                                },
+                                }
                             });
                         }
 
@@ -101,6 +97,8 @@ function y9Request(baseUrl = '') {
                         break;
                     case 50000:
                         return res;
+                    case 10401:
+                        return res;
                     default:
                         if (!noVerifyBool) {
                             console.error(res.msg);
@@ -112,15 +110,14 @@ function y9Request(baseUrl = '') {
                         }
                         break;
                 }
-				
-				if(code === 101000){
-					// 返回错误 走 catch
-					return Promise.resolve(res);
-				}else{
-					// 返回错误 走 catch
-					return res;
-				}
-              
+
+                if (code === 101000 || code === 10003) {
+                    // 返回错误 走 catch
+                    return Promise.resolve(res);
+                } else {
+                    // 返回错误 走 catch
+                    return res;
+                }
             } else {
                 return res;
             }
@@ -130,13 +127,14 @@ function y9Request(baseUrl = '') {
             if (axios.isCancel(error)) {
                 // log
                 // 请求取消
-                console.warn(error)
+                console.warn(error);
                 // console.table([error.message.split('---')[0]], 'cancel')
             } else if (error.response) {
                 // 请求成功发出且服务器也响应了状态码，但状态代码超出了 2xx 的范围
                 requestList.delete(error.config.url);
                 let data = error.response.data;
-                if (error.response.status === 401 && data.code === 101) {
+                console.warn('error.response   ' + data);
+                if (error.response.status === 401 && (data.code === 101 || data.code === 102 || data.code === 100)) {
                     // 令牌已失效（过期或其他标签页单点登出）
                     ElMessageBox({
                         title: t('提示'),
@@ -150,7 +148,8 @@ function y9Request(baseUrl = '') {
                             } else {
                                 const params = {
                                     to: { path: window.location.pathname },
-                                    logoutUrl: import.meta.env.VUE_APP_SSO_LOGOUT_URL + import.meta.env.VUE_APP_NAME + '/',
+                                    logoutUrl:
+                                        import.meta.env.VUE_APP_SSO_LOGOUT_URL + import.meta.env.VUE_APP_NAME + '/',
                                     __y9delete__: () => {
                                         // 删除前执行的函数
                                         console.log('删除前执行的函数');
@@ -159,10 +158,13 @@ function y9Request(baseUrl = '') {
                                 $y9_SSO.ssoLogout(params);
                                 // window.location.reload();
                             }
-                        },
+                        }
                     });
                 } else if (error.response.status === 400) {
                     // 参数、业务上的错误统一返回 http 状态 400，返回原始 body 到请求处自行处理
+                    return data;
+                } else if (error.response.status === 500) {
+                    // 后台代码 上的错误统一返回 http 状态 500，返回原始 body 到请求处自行处理
                     return data;
                 }
             }
@@ -170,7 +172,7 @@ function y9Request(baseUrl = '') {
             ElMessage({
                 message: error.message,
                 type: 'error',
-                duration: 5 * 1000,
+                duration: 5 * 1000
             });
 
             return Promise.reject(error);

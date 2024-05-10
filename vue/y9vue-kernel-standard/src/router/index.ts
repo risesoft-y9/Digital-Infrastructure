@@ -28,7 +28,8 @@ import subDomainRouter from './modules/subDomainRouter';
 import sysManagerLogRouter from './modules/sysManagerLogRouter';
 import userLogRouter from './modules/userLogRouter';
 import jobRouter from './modules/jobRouter';
-
+import permission from './modules/permission';
+import settingRouter from './modules/settingRouter';
 
 //constantRoutes为不需要动态判断权限的路由，如登录、404、500等
 export const constantRoutes: Array<any> = [
@@ -36,7 +37,7 @@ export const constantRoutes: Array<any> = [
         path: '/',
         name: 'index',
         hidden: true,
-        redirect: '/auth',
+        redirect: '/auth'
     },
     {
         path: '/401',
@@ -44,7 +45,7 @@ export const constantRoutes: Array<any> = [
         meta: {
             title: 'Not Permission'
         },
-        component: () => import('@/views/401/index.vue'),
+        component: () => import('@/views/401/index.vue')
     },
     {
         path: '/404',
@@ -52,7 +53,15 @@ export const constantRoutes: Array<any> = [
         meta: {
             title: 'Not Found'
         },
-        component: () => import('@/views/404/index.vue'),
+        component: () => import('@/views/404/index.vue')
+    },
+    {
+        path: '/password',
+        hidden: true,
+        meta: {
+            title: 'Change Password'
+        },
+        component: () => import('@/views/password/index.vue')
     }
 ];
 
@@ -69,6 +78,7 @@ export const asyncRoutes = [
     appRoleRouter,
     publicRoleRouter,
     appResourceRouter,
+    permission,
     dictionaryRouter,
     iconManagerRouter,
     userLogRouter,
@@ -76,14 +86,14 @@ export const asyncRoutes = [
     securityUserLogRouter,
     securityAuditorLogRouter,
     personalRouter,
+    settingRouter,
     // 引入其他模块路由
-
 ];
 
 //创建路由模式，采用history模式没有“#”
 const router = createRouter({
     history: createWebHistory(import.meta.env.VUE_APP_PUBLIC_PATH),
-    routes: constantRoutes,
+    routes: constantRoutes
 });
 
 //在用户点击前，进入routerBeforeEach去判断用户是否有权限

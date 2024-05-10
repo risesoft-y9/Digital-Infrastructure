@@ -164,7 +164,6 @@ export const moveGroup = async (groupId, parentId) => {
     });
 };
 
-
 export const orderGroups = async (personId,groupIds) => {
     const params = {
         personId: personId,
@@ -176,5 +175,23 @@ export const orderGroups = async (personId,groupIds) => {
         method: 'POST',
         cType: false,
         data: data,
+    });
+};
+
+/**
+ * 禁用/解禁用户组
+ * @param {*} ID
+ * @returns
+ */
+export const changeDisabledGroup = async (id) => {
+    const params = {
+        id: id
+    };
+    const data = qs.stringify(params);
+    return await platformRequest({
+        url: '/api/rest/group/changeDisabled',
+        method: 'POST',
+        cType: false,
+        data: data
     });
 };
