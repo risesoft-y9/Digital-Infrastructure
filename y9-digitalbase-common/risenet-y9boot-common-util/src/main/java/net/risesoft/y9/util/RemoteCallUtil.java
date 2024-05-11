@@ -72,19 +72,21 @@ public class RemoteCallUtil {
             }
 
             int code = client.executeMethod(method);
-            if (code == HttpStatus.SC_OK) {
-                InputStream inputStream = method.getResponseBodyAsStream();
-                if (null != inputStream) {
-                    BufferedReader br = new BufferedReader(new InputStreamReader(inputStream, StandardCharsets.UTF_8));
-                    StringBuilder stringBuffer = new StringBuilder();
-                    String b = "";
-                    while ((b = br.readLine()) != null) {
-                        stringBuffer.append(b);
-                    }
-                    String response = stringBuffer.toString();
-                    T value = objectMapper.readValue(response, clz);
-                    return value;
+            String response = null;
+            InputStream inputStream = method.getResponseBodyAsStream();
+            if (null != inputStream) {
+                BufferedReader br = new BufferedReader(new InputStreamReader(inputStream, StandardCharsets.UTF_8));
+                StringBuilder stringBuffer = new StringBuilder();
+                String b = "";
+                while ((b = br.readLine()) != null) {
+                    stringBuffer.append(b);
                 }
+                response = stringBuffer.toString();
+            }
+            if (code == HttpStatus.SC_OK) {
+                return objectMapper.readValue(response, clz);
+            } else {
+                LOGGER.info("http status code: {}, response: {}", code, response);
             }
         } catch (UnsupportedEncodingException e) {
             LOGGER.warn(e.getMessage(), e);
@@ -110,20 +112,22 @@ public class RemoteCallUtil {
             }
 
             int code = client.executeMethod(method);
-            if (code == HttpStatus.SC_OK) {
-                InputStream inputStream = method.getResponseBodyAsStream();
-                if (null != inputStream) {
-                    BufferedReader br = new BufferedReader(new InputStreamReader(inputStream, StandardCharsets.UTF_8));
-                    StringBuilder stringBuffer = new StringBuilder();
-                    String b = "";
-                    while ((b = br.readLine()) != null) {
-                        stringBuffer.append(b);
-                    }
-                    String response = stringBuffer.toString();
-                    List<T> value = objectMapper.readValue(response,
-                        objectMapper.getTypeFactory().constructCollectionType(ArrayList.class, clz));
-                    return value;
+            String response = null;
+            InputStream inputStream = method.getResponseBodyAsStream();
+            if (null != inputStream) {
+                BufferedReader br = new BufferedReader(new InputStreamReader(inputStream, StandardCharsets.UTF_8));
+                StringBuilder stringBuffer = new StringBuilder();
+                String b = "";
+                while ((b = br.readLine()) != null) {
+                    stringBuffer.append(b);
                 }
+                response = stringBuffer.toString();
+            }
+            if (code == HttpStatus.SC_OK) {
+                return objectMapper.readValue(response,
+                    objectMapper.getTypeFactory().constructCollectionType(ArrayList.class, clz));
+            } else {
+                LOGGER.info("http status code: {}, response: {}", code, response);
             }
         } catch (UnsupportedEncodingException e) {
             LOGGER.warn(e.getMessage(), e);
@@ -156,20 +160,22 @@ public class RemoteCallUtil {
             }
 
             int code = client.executeMethod(method);
-            if (code == HttpStatus.SC_OK) {
-                InputStream inputStream = method.getResponseBodyAsStream();
-                if (null != inputStream) {
-                    BufferedReader br = new BufferedReader(new InputStreamReader(inputStream, StandardCharsets.UTF_8));
-                    StringBuilder stringBuffer = new StringBuilder();
-                    String b = "";
-                    while ((b = br.readLine()) != null) {
-                        stringBuffer.append(b);
-                    }
-                    String response = stringBuffer.toString();
-                    List<T> value = objectMapper.readValue(response,
-                        objectMapper.getTypeFactory().constructCollectionType(ArrayList.class, clz));
-                    return value;
+            String response = null;
+            InputStream inputStream = method.getResponseBodyAsStream();
+            if (null != inputStream) {
+                BufferedReader br = new BufferedReader(new InputStreamReader(inputStream, StandardCharsets.UTF_8));
+                StringBuilder stringBuffer = new StringBuilder();
+                String b = "";
+                while ((b = br.readLine()) != null) {
+                    stringBuffer.append(b);
                 }
+                response = stringBuffer.toString();
+            }
+            if (code == HttpStatus.SC_OK) {
+                return objectMapper.readValue(response,
+                    objectMapper.getTypeFactory().constructCollectionType(ArrayList.class, clz));
+            } else {
+                LOGGER.info("http status code: {}, response: {}", code, response);
             }
         } catch (UnsupportedEncodingException e) {
             LOGGER.warn(e.getMessage(), e);
@@ -201,19 +207,21 @@ public class RemoteCallUtil {
             }
 
             int code = client.executeMethod(method);
-            if (code == HttpStatus.SC_OK) {
-                InputStream inputStream = method.getResponseBodyAsStream();
-                if (null != inputStream) {
-                    BufferedReader br = new BufferedReader(new InputStreamReader(inputStream, StandardCharsets.UTF_8));
-                    StringBuilder stringBuffer = new StringBuilder();
-                    String b = "";
-                    while ((b = br.readLine()) != null) {
-                        stringBuffer.append(b);
-                    }
-                    String response = stringBuffer.toString();
-                    T value = objectMapper.readValue(response, clz);
-                    return value;
+            String response = null;
+            InputStream inputStream = method.getResponseBodyAsStream();
+            if (null != inputStream) {
+                BufferedReader br = new BufferedReader(new InputStreamReader(inputStream, StandardCharsets.UTF_8));
+                StringBuilder stringBuffer = new StringBuilder();
+                String b = "";
+                while ((b = br.readLine()) != null) {
+                    stringBuffer.append(b);
                 }
+                response = stringBuffer.toString();
+            }
+            if (code == HttpStatus.SC_OK) {
+                return objectMapper.readValue(response, clz);
+            } else {
+                LOGGER.info("http status code: {}, response: {}", code, response);
             }
         } catch (UnsupportedEncodingException e) {
             LOGGER.warn(e.getMessage(), e);
@@ -270,19 +278,21 @@ public class RemoteCallUtil {
             }
 
             int code = client.executeMethod(method);
-            if (code == HttpStatus.SC_OK) {
-                InputStream inputStream = method.getResponseBodyAsStream();
-                if (null != inputStream) {
-                    BufferedReader br = new BufferedReader(new InputStreamReader(inputStream, StandardCharsets.UTF_8));
-                    StringBuilder stringBuffer = new StringBuilder();
-                    String b = "";
-                    while ((b = br.readLine()) != null) {
-                        stringBuffer.append(b);
-                    }
-                    String response = stringBuffer.toString();
-                    T value = objectMapper.readValue(response, clz);
-                    return value;
+            String response = null;
+            InputStream inputStream = method.getResponseBodyAsStream();
+            if (null != inputStream) {
+                BufferedReader br = new BufferedReader(new InputStreamReader(inputStream, StandardCharsets.UTF_8));
+                StringBuilder stringBuffer = new StringBuilder();
+                String b = "";
+                while ((b = br.readLine()) != null) {
+                    stringBuffer.append(b);
                 }
+                response = stringBuffer.toString();
+            }
+            if (code == HttpStatus.SC_OK) {
+                return objectMapper.readValue(response, clz);
+            } else {
+                LOGGER.info("http status code: {}, response: {}", code, response);
             }
         } catch (UnsupportedEncodingException e) {
             LOGGER.warn(e.getMessage(), e);
@@ -308,20 +318,22 @@ public class RemoteCallUtil {
             }
 
             int code = client.executeMethod(method);
-            if (code == HttpStatus.SC_OK) {
-                InputStream inputStream = method.getResponseBodyAsStream();
-                if (null != inputStream) {
-                    BufferedReader br = new BufferedReader(new InputStreamReader(inputStream, StandardCharsets.UTF_8));
-                    StringBuilder stringBuffer = new StringBuilder();
-                    String b = "";
-                    while ((b = br.readLine()) != null) {
-                        stringBuffer.append(b);
-                    }
-                    String response = stringBuffer.toString();
-                    List<T> value = objectMapper.readValue(response,
-                        objectMapper.getTypeFactory().constructCollectionType(ArrayList.class, clz));
-                    return value;
+            String response = null;
+            InputStream inputStream = method.getResponseBodyAsStream();
+            if (null != inputStream) {
+                BufferedReader br = new BufferedReader(new InputStreamReader(inputStream, StandardCharsets.UTF_8));
+                StringBuilder stringBuffer = new StringBuilder();
+                String b = "";
+                while ((b = br.readLine()) != null) {
+                    stringBuffer.append(b);
                 }
+                response = stringBuffer.toString();
+            }
+            if (code == HttpStatus.SC_OK) {
+                return objectMapper.readValue(response,
+                    objectMapper.getTypeFactory().constructCollectionType(ArrayList.class, clz));
+            } else {
+                LOGGER.info("http status code: {}, response: {}", code, response);
             }
         } catch (UnsupportedEncodingException e) {
             LOGGER.warn(e.getMessage(), e);
@@ -352,19 +364,21 @@ public class RemoteCallUtil {
         }
         try {
             int code = client.executeMethod(method);
-            if (code == HttpStatus.SC_OK) {
-                InputStream inputStream = method.getResponseBodyAsStream();
-                if (null != inputStream) {
-                    BufferedReader br = new BufferedReader(new InputStreamReader(inputStream, StandardCharsets.UTF_8));
-                    StringBuilder stringBuffer = new StringBuilder();
-                    String b = "";
-                    while ((b = br.readLine()) != null) {
-                        stringBuffer.append(b);
-                    }
-                    String response = stringBuffer.toString();
-                    T value = objectMapper.readValue(response, clz);
-                    return value;
+            String response = null;
+            InputStream inputStream = method.getResponseBodyAsStream();
+            if (null != inputStream) {
+                BufferedReader br = new BufferedReader(new InputStreamReader(inputStream, StandardCharsets.UTF_8));
+                StringBuilder stringBuffer = new StringBuilder();
+                String b = "";
+                while ((b = br.readLine()) != null) {
+                    stringBuffer.append(b);
                 }
+                response = stringBuffer.toString();
+            }
+            if (code == HttpStatus.SC_OK) {
+                return objectMapper.readValue(response, clz);
+            } else {
+                LOGGER.info("http status code: {}, response: {}", code, response);
             }
         } catch (UnsupportedEncodingException e) {
             LOGGER.warn(e.getMessage(), e);
@@ -395,20 +409,22 @@ public class RemoteCallUtil {
         }
         try {
             int code = client.executeMethod(method);
-            if (code == HttpStatus.SC_OK) {
-                InputStream inputStream = method.getResponseBodyAsStream();
-                if (null != inputStream) {
-                    BufferedReader br = new BufferedReader(new InputStreamReader(inputStream, StandardCharsets.UTF_8));
-                    StringBuilder stringBuffer = new StringBuilder();
-                    String b = "";
-                    while ((b = br.readLine()) != null) {
-                        stringBuffer.append(b);
-                    }
-                    String response = stringBuffer.toString();
-                    List<T> value = objectMapper.readValue(response,
-                        objectMapper.getTypeFactory().constructCollectionType(ArrayList.class, clz));
-                    return value;
+            String response = null;
+            InputStream inputStream = method.getResponseBodyAsStream();
+            if (null != inputStream) {
+                BufferedReader br = new BufferedReader(new InputStreamReader(inputStream, StandardCharsets.UTF_8));
+                StringBuilder stringBuffer = new StringBuilder();
+                String b = "";
+                while ((b = br.readLine()) != null) {
+                    stringBuffer.append(b);
                 }
+                response = stringBuffer.toString();
+            }
+            if (code == HttpStatus.SC_OK) {
+                return objectMapper.readValue(response,
+                    objectMapper.getTypeFactory().constructCollectionType(ArrayList.class, clz));
+            } else {
+                LOGGER.info("http status code: {}, response: {}", code, response);
             }
         } catch (UnsupportedEncodingException e) {
             LOGGER.warn(e.getMessage(), e);
@@ -447,7 +463,8 @@ public class RemoteCallUtil {
                 method.setQueryString(params.toArray(new NameValuePair[params.size()]));
             }
 
-            client.executeMethod(method);
+            int code = client.executeMethod(method);
+            String response = null;
             InputStream inputStream = method.getResponseBodyAsStream();
             if (null != inputStream) {
                 BufferedReader br = new BufferedReader(new InputStreamReader(inputStream, StandardCharsets.UTF_8));
@@ -456,8 +473,12 @@ public class RemoteCallUtil {
                 while ((b = br.readLine()) != null) {
                     stringBuffer.append(b);
                 }
-                String response = stringBuffer.toString();
+                response = stringBuffer.toString();
+            }
+            if (code == HttpStatus.SC_OK) {
                 return objectMapper.readValue(response, javaType);
+            } else {
+                LOGGER.info("http status code: {}, response: {}", code, response);
             }
         } catch (UnsupportedEncodingException e) {
             LOGGER.warn(e.getMessage(), e);
