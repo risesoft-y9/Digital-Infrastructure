@@ -567,7 +567,7 @@ public class Y9OrgTreeXmlDataHandlerImpl implements Y9OrgTreeDataHandler {
                 org.setOrganizationCode(organizationCode == null ? "" : organizationCode);
                 org.setOrganizationType(organizationType == null ? "" : organizationType);
                 org.setProperties(properties);
-                org.setVirtual(virtual != null && Boolean.parseBoolean(virtual));
+                org.setVirtual(Boolean.parseBoolean(virtual));
 
                 y9OrganizationService.saveOrUpdate(org);
 
@@ -723,14 +723,14 @@ public class Y9OrgTreeXmlDataHandlerImpl implements Y9OrgTreeDataHandler {
                  * 1、保存用户组和人员关系
                  */
                 List<String> persons = getPersons(currentNode);
-                if (persons.size() > 0) {
+                if (persons != null && !persons.isEmpty()) {
                     y9PersonsToGroupsService.addPersons(uid, persons.toArray(new String[] {}));
                 }
                 /**
                  * 2、保存岗位组和岗位关系
                  */
                 List<String> positions = getPositions(currentNode);
-                if (positions.size() > 0) {
+                if (positions != null && !positions.isEmpty()) {
                     y9PositionsToGroupsService.saveGroupPosition(uid, persons.toArray(new String[] {}));
                 }
             } catch (Exception e) {

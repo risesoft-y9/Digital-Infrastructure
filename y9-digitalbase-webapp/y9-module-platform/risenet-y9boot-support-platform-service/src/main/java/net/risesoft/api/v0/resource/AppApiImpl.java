@@ -6,7 +6,6 @@ import java.util.Optional;
 import jakarta.validation.constraints.NotBlank;
 
 import org.apache.commons.lang3.StringUtils;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -58,13 +57,8 @@ public class AppApiImpl implements AppApi {
     private final Y9AppService y9AppService;
     private final Y9PersonToResourceAndAuthorityService y9PersonToResourceAndAuthorityService;
     private final Y9PositionToResourceAndAuthorityService y9PositionToResourceAndAuthorityService;
-
     private final Y9SystemService y9SystemService;
-
-    @Autowired
     private final Y9TenantSystemService y9TenantSystemService;
-
-    @Autowired
     private final Y9TenantAppService y9TenantAppService;
 
     /**
