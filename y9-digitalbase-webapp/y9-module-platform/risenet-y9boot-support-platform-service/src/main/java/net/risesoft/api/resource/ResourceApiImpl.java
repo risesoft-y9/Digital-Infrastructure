@@ -23,10 +23,8 @@ import net.risesoft.util.ModelConvertUtil;
 import net.risesoft.y9.util.Y9ModelConvertUtil;
 import net.risesoft.y9public.entity.resource.Y9Menu;
 import net.risesoft.y9public.entity.resource.Y9ResourceBase;
-import net.risesoft.y9public.repository.resource.Y9AppRepository;
 import net.risesoft.y9public.service.resource.CompositeResourceService;
 import net.risesoft.y9public.service.resource.Y9MenuService;
-import net.risesoft.y9public.service.resource.Y9SystemService;
 
 /**
  * 资源管理组件
@@ -45,8 +43,6 @@ import net.risesoft.y9public.service.resource.Y9SystemService;
 public class ResourceApiImpl implements ResourceApi {
 
     private final CompositeResourceService compositeResourceService;
-    private final Y9SystemService y9SystemService;
-    private final Y9AppRepository y9AppRepository;
     private final Y9MenuService y9MenuService;
 
     /**
