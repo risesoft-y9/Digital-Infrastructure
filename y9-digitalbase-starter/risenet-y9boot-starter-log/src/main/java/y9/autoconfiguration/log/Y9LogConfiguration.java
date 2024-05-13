@@ -63,16 +63,15 @@ public class Y9LogConfiguration {
     @ConditionalOnMissingBean(name = "y9ThreadPoolTaskExecutor")
     public Executor y9ThreadPoolTaskExecutor(TaskExecutorBuilder builder) {
         ThreadPoolTaskExecutor taskExecutor = builder.build();
-        taskExecutor.setMaxPoolSize(4);
         // 核心线程数
-        taskExecutor.setCorePoolSize(4);
+        taskExecutor.setCorePoolSize(10);
         taskExecutor.setAllowCoreThreadTimeOut(true);
         // 最大线程数
-        taskExecutor.setMaxPoolSize(5);
+        taskExecutor.setMaxPoolSize(20);
         // 配置队列大小
-        taskExecutor.setQueueCapacity(50);
+        taskExecutor.setQueueCapacity(100);
+        taskExecutor.setThreadNamePrefix("y9Log-");
         taskExecutor.initialize();
         return TtlExecutors.getTtlExecutor(taskExecutor);
     }
-
 }
