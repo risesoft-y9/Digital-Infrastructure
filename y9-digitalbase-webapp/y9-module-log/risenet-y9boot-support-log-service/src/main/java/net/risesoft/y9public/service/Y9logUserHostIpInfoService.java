@@ -1,4 +1,4 @@
-package net.risesoft.service;
+package net.risesoft.y9public.service;
 
 import java.util.List;
 

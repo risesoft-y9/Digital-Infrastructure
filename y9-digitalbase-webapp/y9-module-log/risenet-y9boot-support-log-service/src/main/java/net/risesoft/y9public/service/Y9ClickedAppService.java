@@ -1,4 +1,4 @@
-package net.risesoft.service;
+package net.risesoft.y9public.service;
 
 import net.risesoft.y9public.entity.Y9ClickedApp;
 

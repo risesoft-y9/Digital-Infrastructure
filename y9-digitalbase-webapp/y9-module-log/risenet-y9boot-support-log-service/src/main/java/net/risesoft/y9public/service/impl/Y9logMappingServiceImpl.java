@@ -1,4 +1,4 @@
-package net.risesoft.service.impl;
+package net.risesoft.y9public.service.impl;
 
 import java.util.List;
 
@@ -10,10 +10,10 @@ import org.springframework.stereotype.Service;
 
 import lombok.RequiredArgsConstructor;
 
-import net.risesoft.service.Y9logMappingService;
 import net.risesoft.y9public.entity.Y9logMapping;
 import net.risesoft.y9public.repository.Y9logMappingRepository;
 import net.risesoft.y9public.repository.custom.Y9logMappingCustomRepository;
+import net.risesoft.y9public.service.Y9logMappingService;
 
 /**
  *
@@ -58,7 +58,6 @@ public class Y9logMappingServiceImpl implements Y9logMappingService {
 
     @Override
     public Page<Y9logMapping> pageSearchList(Integer page, Integer rows, String modularName, String modularCnName) {
-
         return y9logMappingCustomRepository.pageSearchList(page, rows, modularName, modularCnName);
     }
 

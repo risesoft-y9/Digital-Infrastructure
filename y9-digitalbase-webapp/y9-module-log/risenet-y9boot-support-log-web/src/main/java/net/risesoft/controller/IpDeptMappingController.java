@@ -13,8 +13,8 @@ import net.risesoft.log.annotation.RiseLog;
 import net.risesoft.pojo.Y9Page;
 import net.risesoft.pojo.Y9PageQuery;
 import net.risesoft.pojo.Y9Result;
-import net.risesoft.service.Y9logIpDeptMappingService;
 import net.risesoft.y9public.entity.Y9logIpDeptMapping;
+import net.risesoft.y9public.service.Y9logIpDeptMappingService;
 
 /**
  * 部门网段管理

@@ -1,4 +1,4 @@
-package net.risesoft.service.impl;
+package net.risesoft.y9public.service.impl;
 
 import java.util.List;
 
@@ -6,10 +6,10 @@ import org.springframework.stereotype.Service;
 
 import lombok.RequiredArgsConstructor;
 
-import net.risesoft.service.Y9CommonAppForPersonService;
 import net.risesoft.y9public.entity.Y9CommonAppForPerson;
 import net.risesoft.y9public.repository.Y9CommonAppForPersonRepository;
 import net.risesoft.y9public.repository.custom.Y9CommonAppForPersonCustomRepository;
+import net.risesoft.y9public.service.Y9CommonAppForPersonService;
 
 /**
  * 

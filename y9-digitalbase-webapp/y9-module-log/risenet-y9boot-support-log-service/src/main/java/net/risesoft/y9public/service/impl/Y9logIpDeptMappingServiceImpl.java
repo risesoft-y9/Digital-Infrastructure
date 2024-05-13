@@ -1,4 +1,4 @@
-package net.risesoft.service.impl;
+package net.risesoft.y9public.service.impl;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -21,11 +21,11 @@ import lombok.extern.slf4j.Slf4j;
 import net.risesoft.id.IdType;
 import net.risesoft.id.Y9IdGenerator;
 import net.risesoft.pojo.Y9Page;
-import net.risesoft.service.Y9logIpDeptMappingService;
 import net.risesoft.y9.Y9LoginUserHolder;
 import net.risesoft.y9public.entity.Y9logIpDeptMapping;
 import net.risesoft.y9public.repository.Y9logIpDeptMappingRepository;
 import net.risesoft.y9public.repository.custom.Y9logIpDeptMappingCustomRepository;
+import net.risesoft.y9public.service.Y9logIpDeptMappingService;
 
 /**
  *

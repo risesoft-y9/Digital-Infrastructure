@@ -1,4 +1,4 @@
-package net.risesoft.service;
+package net.risesoft.y9public.service;
 
 import java.net.UnknownHostException;
 import java.text.ParseException;
@@ -13,7 +13,7 @@ import net.risesoft.pojo.Y9Page;
 import net.risesoft.y9public.entity.Y9logAccessLog;
 
 /**
- *
+ * 
  * @author guoweijun
  * @author shidaobang
  * @author mengjuhua

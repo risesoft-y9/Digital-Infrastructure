@@ -1,4 +1,4 @@
-package net.risesoft.service.impl;
+package net.risesoft.y9public.service.impl;
 
 import java.net.UnknownHostException;
 import java.text.ParseException;
@@ -18,10 +18,10 @@ import net.risesoft.model.log.LogInfoModel;
 import net.risesoft.model.platform.Person;
 import net.risesoft.model.platform.Tenant;
 import net.risesoft.pojo.Y9Page;
-import net.risesoft.service.Y9logAccessLogService;
 import net.risesoft.y9.Y9LoginUserHolder;
 import net.risesoft.y9public.entity.Y9logAccessLog;
 import net.risesoft.y9public.repository.custom.Y9logAccessLogCustomRepository;
+import net.risesoft.y9public.service.Y9logAccessLogService;
 
 import y9.client.rest.platform.org.DepartmentApiClient;
 import y9.client.rest.platform.org.GroupApiClient;
@@ -177,7 +177,7 @@ public class Y9logAccessLogServiceImpl implements Y9logAccessLogService {
 
     @Override
     public void save(Y9logAccessLog y9logAccessLog) {
-        if(StringUtils.isBlank(y9logAccessLog.getManagerLevel())){
+        if (StringUtils.isBlank(y9logAccessLog.getManagerLevel())) {
             y9logAccessLog.setManagerLevel("0");
         }
         y9logAccessLogCustomRepository.save(y9logAccessLog);

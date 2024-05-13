@@ -1,4 +1,4 @@
-package net.risesoft.service.impl;
+package net.risesoft.y9public.service.impl;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -20,11 +20,11 @@ import net.risesoft.log.constant.Y9LogSearchConsts;
 import net.risesoft.model.log.LogInfoModel;
 import net.risesoft.pojo.Y9Page;
 import net.risesoft.pojo.Y9PageQuery;
-import net.risesoft.service.Y9logUserLoginInfoService;
 import net.risesoft.y9.util.Y9Util;
 import net.risesoft.y9public.entity.Y9logUserLoginInfo;
 import net.risesoft.y9public.repository.Y9logUserLoginInfoRepository;
 import net.risesoft.y9public.repository.custom.Y9logUserLoginInfoCustomRepository;
+import net.risesoft.y9public.service.Y9logUserLoginInfoService;
 
 /**
  *
@@ -165,7 +165,7 @@ public class Y9logUserLoginInfoServiceImpl implements Y9logUserLoginInfoService 
 
     @Override
     public void save(Y9logUserLoginInfo y9logUserLoginInfo) {
-        if(StringUtils.isBlank(y9logUserLoginInfo.getManagerLevel())){
+        if (StringUtils.isBlank(y9logUserLoginInfo.getManagerLevel())) {
             y9logUserLoginInfo.setManagerLevel("0");
         }
         y9logUserLoginInfoRepository.save(y9logUserLoginInfo);

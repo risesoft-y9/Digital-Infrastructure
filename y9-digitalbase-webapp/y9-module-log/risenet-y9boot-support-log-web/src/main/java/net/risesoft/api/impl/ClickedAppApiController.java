@@ -11,9 +11,9 @@ import lombok.RequiredArgsConstructor;
 import net.risesoft.api.log.ClickedAppApi;
 import net.risesoft.model.log.ClickedApp;
 import net.risesoft.pojo.Y9Result;
-import net.risesoft.service.Y9ClickedAppService;
 import net.risesoft.y9.json.Y9JsonUtil;
 import net.risesoft.y9public.entity.Y9ClickedApp;
+import net.risesoft.y9public.service.Y9ClickedAppService;
 
 /**
  * 应用点击详情

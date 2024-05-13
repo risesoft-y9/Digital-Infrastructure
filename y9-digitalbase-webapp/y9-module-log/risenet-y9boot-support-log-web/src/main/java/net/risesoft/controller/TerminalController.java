@@ -24,13 +24,13 @@ import net.risesoft.model.platform.Person;
 import net.risesoft.pojo.Y9Page;
 import net.risesoft.pojo.Y9PageQuery;
 import net.risesoft.pojo.Y9Result;
-import net.risesoft.service.Y9logIpDeptMappingService;
-import net.risesoft.service.Y9logUserHostIpInfoService;
-import net.risesoft.service.Y9logUserLoginInfoService;
 import net.risesoft.y9.Y9LoginUserHolder;
 import net.risesoft.y9.util.Y9Day;
 import net.risesoft.y9public.entity.Y9logIpDeptMapping;
 import net.risesoft.y9public.entity.Y9logUserLoginInfo;
+import net.risesoft.y9public.service.Y9logIpDeptMappingService;
+import net.risesoft.y9public.service.Y9logUserHostIpInfoService;
+import net.risesoft.y9public.service.Y9logUserLoginInfoService;
 
 import y9.client.rest.platform.org.PersonApiClient;
 

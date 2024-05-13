@@ -1,4 +1,4 @@
-package net.risesoft.service.impl;
+package net.risesoft.y9public.service.impl;
 
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -11,9 +11,9 @@ import org.springframework.stereotype.Service;
 
 import lombok.RequiredArgsConstructor;
 
-import net.risesoft.service.Y9logUserHostIpInfoService;
 import net.risesoft.y9public.entity.Y9logUserHostIpInfo;
 import net.risesoft.y9public.repository.Y9logUserHostIpInfoRepository;
+import net.risesoft.y9public.service.Y9logUserHostIpInfoService;
 
 /**
  *

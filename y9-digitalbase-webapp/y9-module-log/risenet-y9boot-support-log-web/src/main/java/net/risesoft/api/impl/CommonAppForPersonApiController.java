@@ -14,8 +14,8 @@ import lombok.RequiredArgsConstructor;
 
 import net.risesoft.api.log.CommonAppForPersonApi;
 import net.risesoft.pojo.Y9Result;
-import net.risesoft.service.Y9CommonAppForPersonService;
 import net.risesoft.y9.Y9LoginUserHolder;
+import net.risesoft.y9public.service.Y9CommonAppForPersonService;
 
 /**
  * 个人常用应用组件

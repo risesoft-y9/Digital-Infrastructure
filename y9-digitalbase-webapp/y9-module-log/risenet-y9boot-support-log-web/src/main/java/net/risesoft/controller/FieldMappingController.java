@@ -20,8 +20,8 @@ import net.risesoft.log.annotation.RiseLog;
 import net.risesoft.pojo.Y9Page;
 import net.risesoft.pojo.Y9PageQuery;
 import net.risesoft.pojo.Y9Result;
-import net.risesoft.service.Y9logMappingService;
 import net.risesoft.y9public.entity.Y9logMapping;
+import net.risesoft.y9public.service.Y9logMappingService;
 
 /**
  * 字段映射管理
