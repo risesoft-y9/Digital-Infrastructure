@@ -1,5 +1,6 @@
 package net.risesoft.listener;
 
+import net.risesoft.dao.MultiTenantDao;
 import org.springframework.context.event.EventListener;
 
 import lombok.RequiredArgsConstructor;
@@ -21,6 +22,7 @@ import net.risesoft.y9.pubsub.event.Y9EventCommon;
 public class TenantAppEventListener {
 
     private final TenantAppInitializer tenantAppInitializer;
+    private final MultiTenantDao multiTenantDao;
 
     @EventListener
     public void tenantSystemRegisteredEvent(Y9EventCommon event) {
@@ -33,6 +35,8 @@ public class TenantAppEventListener {
                     tenantAppInitializer.init(tenantApp);
                     LOGGER.info("处理租户应用事件完成");
                 }
+                
+                multiTenantDao.tenantAppInitialized(tenantApp.getId());
             }
         } catch (Exception e) {
             LOGGER.warn("处理租户应用事件发生异常", e);

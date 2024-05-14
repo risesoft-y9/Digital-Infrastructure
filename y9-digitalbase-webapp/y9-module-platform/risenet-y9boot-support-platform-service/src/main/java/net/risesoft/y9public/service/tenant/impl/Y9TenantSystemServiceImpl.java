@@ -5,7 +5,6 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
-import org.springframework.context.event.EventListener;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -15,10 +14,7 @@ import org.springframework.transaction.annotation.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
-import net.risesoft.model.platform.TenantSystem;
 import net.risesoft.pojo.Y9PageQuery;
-import net.risesoft.y9.pubsub.constant.Y9CommonEventConst;
-import net.risesoft.y9.pubsub.event.Y9EventCommon;
 import net.risesoft.y9public.entity.resource.Y9System;
 import net.risesoft.y9public.entity.tenant.Y9Tenant;
 import net.risesoft.y9public.entity.tenant.Y9TenantSystem;
@@ -165,22 +161,5 @@ public class Y9TenantSystemServiceImpl implements Y9TenantSystemService {
             y9TenantSystemList.add(saveTenantSystem(systemId, tenantId));
         }
         return y9TenantSystemList;
-    }
-
-    @EventListener
-    @Transactional(readOnly = false)
-    public void tenantSystemInitializedEvent(Y9EventCommon event) {
-        if (Y9CommonEventConst.TENANT_SYSTEM_INITIALIZED.equals(event.getEventType())) {
-            TenantSystem tenantSystem = (TenantSystem)event.getEventObject();
-
-            LOGGER.info("租户系统[{}]初始化完成", tenantSystem);
-
-            Optional<Y9TenantSystem> tenantSystemOptional = this.findById(tenantSystem.getId());
-            if (tenantSystemOptional.isPresent()) {
-                Y9TenantSystem y9TenantSystem = tenantSystemOptional.get();
-                y9TenantSystem.setInitialized(Boolean.TRUE);
-                y9TenantSystemRepository.save(y9TenantSystem);
-            }
-        }
     }
 }

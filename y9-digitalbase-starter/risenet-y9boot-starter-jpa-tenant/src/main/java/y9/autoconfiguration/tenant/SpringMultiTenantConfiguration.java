@@ -269,6 +269,12 @@ public class SpringMultiTenantConfiguration {
         return DruidDataSourceBuilder.create().build();
     }
 
+    @Bean(name = {"jdbcTemplate4Public"})
+    @ConditionalOnMissingBean(name = "jdbcTemplate4Public")
+    public JdbcTemplate jdbcTemplate4Public(@Qualifier("y9PublicDS") DruidDataSource y9PublicDS) {
+        return new JdbcTemplate(y9PublicDS);
+    }
+
     @Primary
     @Bean("y9TenantDataSource")
     @ConditionalOnMissingBean(name = "y9TenantDataSource")
