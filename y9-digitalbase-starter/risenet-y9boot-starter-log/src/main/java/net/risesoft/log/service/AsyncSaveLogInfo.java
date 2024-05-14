@@ -6,7 +6,6 @@ import org.apache.commons.httpclient.NameValuePair;
 import org.springframework.core.env.Environment;
 import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.scheduling.annotation.Async;
-import org.springframework.stereotype.Component;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -17,7 +16,6 @@ import net.risesoft.y9.json.Y9JsonUtil;
 import net.risesoft.y9.pubsub.constant.Y9TopicConst;
 import net.risesoft.y9.util.RemoteCallUtil;
 
-@Component
 @Slf4j
 @RequiredArgsConstructor
 public class AsyncSaveLogInfo {
