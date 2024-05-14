@@ -46,7 +46,7 @@ public class DbScanner {
         List<String> dataSourceIdList = multiTenantDao.getDataSourceIdList(this.lastCheckTime);
         for (String id : dataSourceIdList) {
 
-            Integer count = multiTenantDao.countTenantSystem(y9TenantDataSourceLookup.getSystemId(), id);
+            Integer count = multiTenantDao.countTenantSystem(y9TenantDataSourceLookup.getSystemName(), id);
             if (count > 0) {
                 Y9EventCommon tenantDataSourceSyncEvent = new Y9EventCommon();
                 tenantDataSourceSyncEvent.setEventType(Y9CommonEventConst.TENANT_DATASOURCE_SYNC);

@@ -139,7 +139,7 @@ public class SpringMultiTenantConfiguration {
 
     @Bean(name = {"jdbcTemplate4Public"})
     @ConditionalOnMissingBean(name = "jdbcTemplate4Public")
-    public JdbcTemplate jdbcTemplate4Public(@Qualifier("y9PublicDS") DruidDataSource y9PublicDS) {
+    public JdbcTemplate jdbcTemplate4Public(@Qualifier("y9PublicDS") HikariDataSource y9PublicDS) {
         return new JdbcTemplate(y9PublicDS);
     }
 
