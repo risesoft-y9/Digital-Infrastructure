@@ -13,6 +13,8 @@ import java.util.stream.Collectors;
 import javax.sql.DataSource;
 
 import org.apache.commons.collections4.CollectionUtils;
+import org.springframework.dao.DataAccessException;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.datasource.lookup.DataSourceLookup;
 import org.springframework.jdbc.datasource.lookup.DataSourceLookupFailureException;
@@ -223,8 +225,12 @@ public class Y9TenantDataSourceLookup implements DataSourceLookup {
         }
 
         // 2 重新设置租户的连接池
-        String systemId = publicJdbcTemplate.queryForObject("SELECT ID FROM Y9_COMMON_SYSTEM WHERE NAME=?",
-            String.class, this.systemName);
+        String systemId = null;
+        try {
+            systemId = publicJdbcTemplate.queryForObject("SELECT ID FROM Y9_COMMON_SYSTEM WHERE NAME=?",
+                String.class, this.systemName);
+        } catch (EmptyResultDataAccessException ignoreException) {
+        }
 
         // 2.1 系统存在(已在数字底座的应用系统管理添加系统),重新设置租户的连接池
         if (systemId != null) {
