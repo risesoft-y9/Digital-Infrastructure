@@ -33,8 +33,16 @@ public class DbScanner {
     private final MultiTenantDao multiTenantDao;
 
     private Date lastCheckTime = new Date();
+    private String systemId = null;
 
     public void scan() {
+        if (systemId == null) {
+            systemId = multiTenantDao.getSystemId(y9TenantDataSourceLookup.getSystemName());
+            if (systemId == null) {
+                return;
+            }
+        }
+
         produceTenantSystemRelatedEvent();
         produceTenantAppRelatedEvent();
         produceDataSourceRelatedEvent();
@@ -46,7 +54,7 @@ public class DbScanner {
         List<String> dataSourceIdList = multiTenantDao.getDataSourceIdList(this.lastCheckTime);
         for (String id : dataSourceIdList) {
 
-            Integer count = multiTenantDao.countTenantSystem(y9TenantDataSourceLookup.getSystemName(), id);
+            Integer count = multiTenantDao.countTenantSystem(this.systemId, id);
             if (count > 0) {
                 Y9EventCommon tenantDataSourceSyncEvent = new Y9EventCommon();
                 tenantDataSourceSyncEvent.setEventType(Y9CommonEventConst.TENANT_DATASOURCE_SYNC);
@@ -63,7 +71,7 @@ public class DbScanner {
     private void produceTenantAppRelatedEvent() {
         // 获取新加的租户应用发送事件
         List<TenantApp> tenantAppList =
-            multiTenantDao.getUninitializedTenantAppList(y9TenantDataSourceLookup.getSystemId());
+            multiTenantDao.getUninitializedTenantAppList(this.systemId);
         for (TenantApp tenantApp : tenantAppList) {
             Y9EventCommon tenantSystemRegisteredEvent = new Y9EventCommon();
             tenantSystemRegisteredEvent.setEventObject(tenantApp);
@@ -80,16 +88,12 @@ public class DbScanner {
     private void produceTenantSystemRelatedEvent() {
         Set<String> loadedTenantIdSet = y9TenantDataSourceLookup.getDataSources().keySet();
         List<TenantSystem> tenantSystemList =
-            multiTenantDao.getTenantSystemList(y9TenantDataSourceLookup.getSystemId());
+            multiTenantDao.getTenantSystemList(this.systemId);
 
         // 获取新的系统租用发送事件
-        Set<String> unInitialiedTenantIdSet =
-            tenantSystemList.stream().filter(tenantSystem -> Boolean.FALSE.equals(tenantSystem.getInitialized()))
-                .map(TenantSystem::getTenantId).collect(Collectors.toSet());
-        Collection<String> newTenantIds = CollectionUtils.subtract(unInitialiedTenantIdSet, loadedTenantIdSet);
-        List<TenantSystem> newTenantSystems =
-            tenantSystemList.stream().filter(p -> newTenantIds.contains(p.getTenantId())).collect(Collectors.toList());
-        for (TenantSystem tenantSystem : newTenantSystems) {
+        Set<TenantSystem> unInitialiedTenantSystems = tenantSystemList.stream()
+            .filter(tenantSystem -> Boolean.FALSE.equals(tenantSystem.getInitialized())).collect(Collectors.toSet());
+        for (TenantSystem tenantSystem : unInitialiedTenantSystems) {
             Y9EventCommon tenantSystemRegisteredEvent = new Y9EventCommon();
             tenantSystemRegisteredEvent.setEventType(Y9CommonEventConst.TENANT_SYSTEM_REGISTERED);
             tenantSystemRegisteredEvent.setEventObject(tenantSystem);

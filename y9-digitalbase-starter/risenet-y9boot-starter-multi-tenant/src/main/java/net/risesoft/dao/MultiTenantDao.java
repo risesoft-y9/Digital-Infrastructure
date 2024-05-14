@@ -3,6 +3,7 @@ package net.risesoft.dao;
 import java.util.Date;
 import java.util.List;
 
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.JdbcTemplate;
 
@@ -21,6 +22,15 @@ import net.risesoft.model.platform.TenantSystem;
 public class MultiTenantDao {
 
     private final JdbcTemplate publicJdbcTemplate;
+
+    public String getSystemId(String systemName) {
+        try {
+            return publicJdbcTemplate.queryForObject("SELECT ID FROM Y9_COMMON_SYSTEM WHERE NAME=?",
+                String.class, systemName);
+        } catch (EmptyResultDataAccessException ignoreException) {
+            return null;
+        }
+    }
 
     public void tenantAppInitialized(String id) {
         publicJdbcTemplate.update("UPDATE Y9_COMMON_TENANT_APP SET INITIALIZED = 1 WHERE ID = ?", id);
