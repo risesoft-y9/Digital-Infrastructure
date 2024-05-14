@@ -4,12 +4,15 @@ import java.util.concurrent.Executor;
 
 import org.springframework.aop.framework.autoproxy.AbstractAdvisorAutoProxyCreator;
 import org.springframework.aop.framework.autoproxy.DefaultAdvisorAutoProxyCreator;
+import org.springframework.boot.autoconfigure.AutoConfigureAfter;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
+import org.springframework.boot.autoconfigure.kafka.KafkaAutoConfiguration;
 import org.springframework.boot.task.TaskExecutorBuilder;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.DependsOn;
+import org.springframework.core.env.Environment;
 import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.kafka.core.ProducerFactory;
 import org.springframework.scheduling.annotation.EnableAsync;
@@ -17,8 +20,11 @@ import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
 
 import com.alibaba.ttl.threadpool.TtlExecutors;
 
+import lombok.extern.slf4j.Slf4j;
+
 import net.risesoft.log.aop.RiseLogAdvice;
 import net.risesoft.log.aop.RiseLogAdvisor;
+import net.risesoft.log.service.AsyncSaveLogInfo;
 import net.risesoft.y9.Y9Context;
 
 /**
@@ -56,16 +62,28 @@ public class Y9LogConfiguration {
     }
 
     @Bean
+    public AsyncSaveLogInfo asyncSaveLogInfo(Environment environment) {
+        return new AsyncSaveLogInfo(environment);
+    }
+    
+    @Bean
     @ConditionalOnMissingBean
     public Y9Context y9Context() {
         return new Y9Context();
     }
 
-    @Bean("y9KafkaTemplate")
-    @ConditionalOnProperty(name = "y9.app.log.kafkaEnabled", havingValue = "true", matchIfMissing = true)
-    @ConditionalOnMissingBean(name = "y9KafkaTemplate")
-    public KafkaTemplate<?, ?> y9KafkaTemplate(ProducerFactory<Object, Object> kafkaProducerFactory) {
-        return new KafkaTemplate<>(kafkaProducerFactory);
+    @Configuration
+    @AutoConfigureAfter(KafkaAutoConfiguration.class)
+    @ConditionalOnProperty(value = "y9.feature.log.logSaveTarget", havingValue = "kafka", matchIfMissing = true)
+    @Slf4j
+    static class Y9LogKafkaConfiguration {
+
+        @Bean("y9KafkaTemplate")
+        @ConditionalOnMissingBean(name = "y9KafkaTemplate")
+        public KafkaTemplate<?, ?> y9KafkaTemplate(ProducerFactory<Object, Object> kafkaProducerFactory) {
+            LOGGER.info("Y9LogKafkaConfiguration y9KafkaTemplate init ......");
+            return new KafkaTemplate<>(kafkaProducerFactory);
+        }
     }
 
     @Bean(name = {"y9ThreadPoolTaskExecutor"})

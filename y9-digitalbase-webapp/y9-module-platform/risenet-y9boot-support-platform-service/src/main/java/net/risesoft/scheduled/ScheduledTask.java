@@ -4,6 +4,7 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
@@ -36,8 +37,8 @@ import net.risesoft.y9public.service.tenant.Y9TenantService;
 @Slf4j
 @RequiredArgsConstructor
 public class ScheduledTask {
+    private final String serverIp = InetAddressUtil.getLocalAddress().getHostAddress();
 
-    private final AsyncSaveLogInfo asyncSaveLogInfo;
     private final UserLoginInfoApi userLoginInfoApi;
     private final Y9ManagerService y9ManagerService;
     private final Y9OrganizationService y9OrganizationService;
@@ -46,7 +47,7 @@ public class ScheduledTask {
     private final IdentityResourceCalculator identityResourceCalculator;
     private final IdentityRoleCalculator identityRoleCalculator;
 
-    private final String serverIp = InetAddressUtil.getLocalAddress().getHostAddress();
+    private AsyncSaveLogInfo asyncSaveLogInfo;
 
     /**
      * 每天凌晨1点检查是否登录系统进行审查
@@ -97,7 +98,9 @@ public class ScheduledTask {
                         log.setOperateName("检查三员审查情况");
                         log.setOperateType(OperationTypeEnum.CHECK.getValue());
 
-                        asyncSaveLogInfo.asyncSave(log);
+                        if (asyncSaveLogInfo != null) {
+                            asyncSaveLogInfo.asyncSave(log);
+                        }
                     }
                     y9ManagerService.updateCheckTime(y9Manager.getId(), checkTime);
                 } catch (Exception e) {
@@ -158,7 +161,9 @@ public class ScheduledTask {
                     log.setOperateName("检查三员密码修改");
                     log.setOperateType(OperationTypeEnum.CHECK.getValue());
 
-                    asyncSaveLogInfo.asyncSave(log);
+                    if (asyncSaveLogInfo != null) {
+                        asyncSaveLogInfo.asyncSave(log);
+                    }
                 }
             }
         }
@@ -200,4 +205,8 @@ public class ScheduledTask {
         LOGGER.info("同步授权主体的角色结束");
     }
 
+    @Autowired(required = false)
+    public void setAsyncSaveLogInfo(AsyncSaveLogInfo asyncSaveLogInfo) {
+        this.asyncSaveLogInfo = asyncSaveLogInfo;
+    }
 }
