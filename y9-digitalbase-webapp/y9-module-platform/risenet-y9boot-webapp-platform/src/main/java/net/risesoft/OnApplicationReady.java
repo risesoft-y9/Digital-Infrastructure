@@ -126,7 +126,7 @@ public class OnApplicationReady implements ApplicationListener<ApplicationReadyE
             y9TenantSystem.setTenantId(tenantId);
             y9TenantSystem.setTenantDataSource(dataSourceId);
             y9TenantSystem.setSystemId(systemId);
-            y9TenantSystem.setInitialized(true);
+            y9TenantSystem.setInitialized(false);
             y9TenantSystemService.save(y9TenantSystem);
         }
     }
@@ -138,7 +138,7 @@ public class OnApplicationReady implements ApplicationListener<ApplicationReadyE
         createDataSource(InitDataConsts.DATASOURCE_ID, "y9_default");
         createTenant(InitDataConsts.TENANT_ID, InitDataConsts.DATASOURCE_ID);
         createSystem(InitDataConsts.SYSTEM_ID);
-        // 租用系统会发送 租户租用系统事件 到消息中间件，系统做监听做数据初始化
+        // 租用系统会发送 租户租用系统事件 系统做监听做数据初始化
         createTenantSystem(InitDataConsts.TENANT_ID, InitDataConsts.SYSTEM_ID, InitDataConsts.DATASOURCE_ID);
         createApp(InitDataConsts.APP_ID, InitDataConsts.SYSTEM_ID);
         createTenantApp(InitDataConsts.APP_ID, InitDataConsts.TENANT_ID);

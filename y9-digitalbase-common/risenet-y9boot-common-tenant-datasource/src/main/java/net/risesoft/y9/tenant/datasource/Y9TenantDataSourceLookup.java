@@ -44,7 +44,6 @@ public class Y9TenantDataSourceLookup implements DataSourceLookup {
 
     private final DruidDataSource publicDataSource;
     private final String systemName;
-    private String systemId;
 
     /** 已加载的租户id和数据源Map：目前包括默认租户和租用了当前系统的租户 */
     private final Map<String, DruidDataSource> loadedTenantIdDataSourceMap = new ConcurrentHashMap<>();
@@ -205,10 +204,6 @@ public class Y9TenantDataSourceLookup implements DataSourceLookup {
         return systemName;
     }
 
-    public String getSystemId() {
-        return systemId;
-    }
-
     /**
      * 加载数据源 在系统启动时或收到同步租户数据源的事件时调用
      */
@@ -234,7 +229,6 @@ public class Y9TenantDataSourceLookup implements DataSourceLookup {
 
         // 2.1 系统存在(已在数字底座的应用系统管理添加系统),重新设置租户的连接池
         if (systemId != null) {
-            this.systemId = systemId;
             List<Map<String, Object>> tenantSystems = publicJdbcTemplate.queryForList(
                 "SELECT TENANT_ID, TENANT_DATA_SOURCE FROM Y9_COMMON_TENANT_SYSTEM WHERE SYSTEM_ID = ?", systemId);
             Set<String> tenantIdSet = tenantSystems.stream().map(tenantSystem -> (String)tenantSystem.get("TENANT_ID"))
