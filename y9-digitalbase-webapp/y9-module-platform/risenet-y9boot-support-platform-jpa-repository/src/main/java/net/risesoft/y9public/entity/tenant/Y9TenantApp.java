@@ -122,4 +122,10 @@ public class Y9TenantApp extends BaseEntity {
     @Comment("删除时间")
     private Date deletedTime;
 
+    /** 租户应用数据是否已经初始化 */
+    @Type(type = "numeric_boolean")
+    @Column(name = "INITIALIZED", nullable = false)
+    @Comment("租户应用数据是否已经初始化")
+    @ColumnDefault("0")
+    private Boolean initialized = false;
 }

@@ -105,11 +105,19 @@ public class Y9PublishServiceUtil {
         }
     }
 
-    public static void persistPublishMessageCommon(Y9MessageCommon msg, String eventName, String description,
+    public static void persistAndPublishMessageCommon(Y9MessageCommon msg, String eventName, String description,
         String clientIp) {
         checkBeans();
 
         persistMessageCommon(msg, eventName, description, clientIp);
+    }
+
+    public static void publishMessageCommon(Y9MessageCommon msg) {
+        checkBeans();
+
+        for (Y9PublishService s : y9PublishServices) {
+            s.publishMessageCommon(msg);
+        }
     }
 
     public static void publishMessageOrg(Y9MessageOrg msg) {

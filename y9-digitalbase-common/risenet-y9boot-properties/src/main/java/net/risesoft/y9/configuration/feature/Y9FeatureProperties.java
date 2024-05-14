@@ -19,6 +19,7 @@ import net.risesoft.y9.configuration.feature.liquibase.Y9LiquibaseProperties;
 import net.risesoft.y9.configuration.feature.listener.Y9ListenerProperties;
 import net.risesoft.y9.configuration.feature.log.Y9LogProperties;
 import net.risesoft.y9.configuration.feature.mongo.Y9MongoProperties;
+import net.risesoft.y9.configuration.feature.multitenant.Y9MultiTenantProperties;
 import net.risesoft.y9.configuration.feature.oauth2.Y9Oauth2Properties;
 import net.risesoft.y9.configuration.feature.permission.Y9PermissionProperties;
 import net.risesoft.y9.configuration.feature.publish.Y9PublishProperties;
@@ -167,5 +168,9 @@ public class Y9FeatureProperties {
     /** 接口调用 */
     @NestedConfigurationProperty
     private Y9ApiProperties api = new Y9ApiProperties();
+
+    /** 多租户 */
+    @NestedConfigurationProperty
+    private Y9MultiTenantProperties multiTenant = new Y9MultiTenantProperties();
 
 }

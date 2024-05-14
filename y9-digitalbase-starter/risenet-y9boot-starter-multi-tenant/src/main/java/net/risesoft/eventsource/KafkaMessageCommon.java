@@ -1,4 +1,4 @@
-package net.risesoft.kafka;
+package net.risesoft.eventsource;
 
 import java.util.Objects;
 
@@ -13,7 +13,6 @@ import net.risesoft.y9.json.Y9JsonUtil;
 import net.risesoft.y9.pubsub.constant.Y9CommonEventConst;
 import net.risesoft.y9.pubsub.event.Y9EventCommon;
 import net.risesoft.y9.pubsub.message.Y9MessageCommon;
-import net.risesoft.y9.tenant.datasource.Y9TenantDataSourceLookup;
 
 /**
  * @author shidaobang
@@ -22,9 +21,7 @@ import net.risesoft.y9.tenant.datasource.Y9TenantDataSourceLookup;
  */
 @RequiredArgsConstructor
 @Slf4j
-public class MessageCommonListener {
-
-    private final Y9TenantDataSourceLookup y9TenantDataSourceLookup;
+public class KafkaMessageCommon {
 
     @KafkaListener(topics = {"y9_common_event"})
     public void messageCommonListener4kafka(ConsumerRecord<String, String> data) {
@@ -33,20 +30,8 @@ public class MessageCommonListener {
             Y9MessageCommon msg = Y9JsonUtil.readValue(value, Y9MessageCommon.class);
             String eventType = msg.getEventType();
 
-            if (Y9CommonEventConst.TENANT_DATASOURCE_SYNC.equals(eventType)) {
-                this.y9TenantDataSourceLookup.loadDataSources();
-                LOGGER.info(this.y9TenantDataSourceLookup.getSystemName() + ", 同步租户数据源信息, 成功！");
-                return;
-            }
-
             if ((Y9CommonEventConst.TENANT_SYSTEM_REGISTERED.equals(eventType)
-                || Y9CommonEventConst.TENANT_SYSTEM_INITIALIZED.equals(eventType))
-                && !Objects.equals(Y9Context.getSystemName(), msg.getEventTarget())) {
-                // 对于非当前引入的系统的消息不处理
-                return;
-            }
-
-            if (Y9CommonEventConst.TENANT_APP_REGISTERED.equals(eventType)
+                || Y9CommonEventConst.TENANT_APP_REGISTERED.equals(eventType))
                 && !Objects.equals(Y9Context.getSystemName(), msg.getEventTarget())) {
                 // 对于非当前引入的系统的消息不处理
                 return;

@@ -18,9 +18,9 @@ import net.risesoft.id.IdType;
 import net.risesoft.id.Y9IdGenerator;
 import net.risesoft.model.platform.TenantApp;
 import net.risesoft.model.user.UserInfo;
+import net.risesoft.util.Y9PublishServiceUtil;
 import net.risesoft.y9.Y9Context;
 import net.risesoft.y9.Y9LoginUserHolder;
-import net.risesoft.y9.pubsub.Y9PublishService;
 import net.risesoft.y9.pubsub.constant.Y9CommonEventConst;
 import net.risesoft.y9.pubsub.event.Y9EntityDeletedEvent;
 import net.risesoft.y9.pubsub.message.Y9MessageCommon;
@@ -53,8 +53,6 @@ public class Y9TenantAppManagerImpl implements Y9TenantAppManager {
     private final Y9TenantManager y9TenantManager;
     private final Y9TenantSystemManager y9TenantSystemManager;
     private final Y9SystemManager y9SystemManager;
-
-    private final Y9PublishService y9PublishService;
 
     @Override
     @Transactional(readOnly = false)
@@ -146,7 +144,7 @@ public class Y9TenantAppManagerImpl implements Y9TenantAppManager {
                     tenantSystemRegisteredEvent.setEventObject(tenantApp);
                     tenantSystemRegisteredEvent.setEventTarget(y9System.getName());
                     tenantSystemRegisteredEvent.setEventType(Y9CommonEventConst.TENANT_APP_REGISTERED);
-                    y9PublishService.publishMessageCommon(tenantSystemRegisteredEvent);
+                    Y9PublishServiceUtil.publishMessageCommon(tenantSystemRegisteredEvent);
                 }
             });
         }
