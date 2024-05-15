@@ -27,6 +27,9 @@ server:
             force: true
             force-request: true
             force-response: true
+javers:
+    newObjectSnapshot: true
+    sqlSchemaManagementEnabled: false
 spring:
     application:
         name: platform
@@ -35,6 +38,8 @@ spring:
             - org.springframework.boot.autoconfigure.jdbc.DataSourceAutoConfiguration
             - org.springframework.boot.autoconfigure.quartz.QuartzAutoConfiguration
             - org.springframework.boot.autoconfigure.orm.jpa.HibernateJpaAutoConfiguration
+            # 需要使用 kafka 时注释掉让其能自动配置
+            - org.springframework.boot.autoconfigure.kafka.KafkaAutoConfiguration
     cloud:
         nacos:
             config:
@@ -98,13 +103,13 @@ spring:
                 physical-strategy: org.hibernate.boot.model.naming.PhysicalNamingStrategyStandardImpl
         open-in-view: false
     kafka:
-        bootstrap-servers: localhost:9094
+        bootstrap-servers: localhost:9092
         consumer:
             auto-commit-interval: 1000
             enable-auto-commit: true
             group-id: 'y9platform-server'
     main:
-        allow-bean-definition-overriding: true
+        allow-bean-definition-overriding: false
         allow-circular-references: false
     servlet:
         multipart:
@@ -130,8 +135,8 @@ y9:
         log:
             directUrl: http://localhost:7055
     common:
-        cacheEnabled: true
-        kafkaEnabled: true
+        cacheEnabled: false
+        kafkaEnabled: false
         logBaseUrl: http://localhost:7055/log
         orgBaseUrl: http://localhost:7055/platform
     feature:
@@ -181,11 +186,14 @@ y9:
         liquibase:
             tenant-enabled: true
             public-enabled: true
+        multi-tenant:
+            event-source: db
         log:
-            enabled: false
+            enabled: true
+            logSaveTarget: api
         publish:
             kafka:
-                enabled: true
+                enabled: false
         session:
             redis:
                 enabled: true
@@ -238,5 +246,5 @@ y9:
                 opaque:
                     client-id: clientid
                     client-secret: secret
-                    introspection-uri: http://localhost:7099/sso/oauth2.0/introspect
-                    profile-uri: http://localhost:7099/sso/oauth2.0/profile
+                    introspection-uri: http://localhost:7055/sso/oauth2.0/introspect
+                    profile-uri: http://localhost:7055/sso/oauth2.0/profile
