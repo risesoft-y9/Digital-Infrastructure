@@ -71,15 +71,18 @@ public class Y9GroupServiceImpl implements Y9GroupService {
         y9Group.setDisabled(isDisabled);
         final Y9Group savedGroup = y9GroupManager.save(y9Group);
 
-        TransactionSynchronizationManager.registerSynchronization(new TransactionSynchronization() {
-            @Override
-            public void afterCommit() {
-                String event = Boolean.TRUE.equals(isDisabled) ? "禁用" : "启用";
-                Y9MessageOrg<Group> msg = new Y9MessageOrg<>(Y9ModelConvertUtil.convert(savedGroup, Group.class),
-                    Y9OrgEventTypeConst.GROUP_UPDATE, Y9LoginUserHolder.getTenantId());
-                Y9PublishServiceUtil.persistAndPublishMessageOrg(msg, event + "用户组", event + savedGroup.getName());
-            }
-        });
+        if (TransactionSynchronizationManager.isActualTransactionActive()) {
+            TransactionSynchronizationManager.registerSynchronization(new TransactionSynchronization() {
+                @Override
+                public void afterCommit() {
+                    String event = Boolean.TRUE.equals(isDisabled) ? "禁用" : "启用";
+                    Y9MessageOrg<Group> msg = new Y9MessageOrg<>(Y9ModelConvertUtil.convert(savedGroup, Group.class),
+                        Y9OrgEventTypeConst.GROUP_UPDATE, Y9LoginUserHolder.getTenantId());
+                    Y9PublishServiceUtil.persistAndPublishMessageOrg(msg, event + "用户组",
+                        event + savedGroup.getName());
+                }
+            });
+        }
         return savedGroup;
     }
 
@@ -121,14 +124,16 @@ public class Y9GroupServiceImpl implements Y9GroupService {
 
         Y9Context.publishEvent(new Y9EntityDeletedEvent<>(y9Group));
 
-        TransactionSynchronizationManager.registerSynchronization(new TransactionSynchronization() {
-            @Override
-            public void afterCommit() {
-                Y9MessageOrg<Group> msg = new Y9MessageOrg<>(Y9ModelConvertUtil.convert(y9Group, Group.class),
-                    Y9OrgEventTypeConst.GROUP_DELETE, Y9LoginUserHolder.getTenantId());
-                Y9PublishServiceUtil.persistAndPublishMessageOrg(msg, "删除用户组", "删除" + y9Group.getName());
-            }
-        });
+        if (TransactionSynchronizationManager.isActualTransactionActive()) {
+            TransactionSynchronizationManager.registerSynchronization(new TransactionSynchronization() {
+                @Override
+                public void afterCommit() {
+                    Y9MessageOrg<Group> msg = new Y9MessageOrg<>(Y9ModelConvertUtil.convert(y9Group, Group.class),
+                        Y9OrgEventTypeConst.GROUP_DELETE, Y9LoginUserHolder.getTenantId());
+                    Y9PublishServiceUtil.persistAndPublishMessageOrg(msg, "删除用户组", "删除" + y9Group.getName());
+                }
+            });
+        }
     }
 
     @Override
@@ -222,15 +227,17 @@ public class Y9GroupServiceImpl implements Y9GroupService {
 
         Y9Context.publishEvent(new Y9EntityUpdatedEvent<>(originY9Group, savedY9Group));
 
-        TransactionSynchronizationManager.registerSynchronization(new TransactionSynchronization() {
-            @Override
-            public void afterCommit() {
-                Y9MessageOrg<Group> msg = new Y9MessageOrg<>(Y9ModelConvertUtil.convert(savedY9Group, Group.class),
-                    Y9OrgEventTypeConst.GROUP_UPDATE, Y9LoginUserHolder.getTenantId());
-                Y9PublishServiceUtil.persistAndPublishMessageOrg(msg, "移动用户组",
-                    originY9Group.getName() + "移动到" + parent.getName());
-            }
-        });
+        if (TransactionSynchronizationManager.isActualTransactionActive()) {
+            TransactionSynchronizationManager.registerSynchronization(new TransactionSynchronization() {
+                @Override
+                public void afterCommit() {
+                    Y9MessageOrg<Group> msg = new Y9MessageOrg<>(Y9ModelConvertUtil.convert(savedY9Group, Group.class),
+                        Y9OrgEventTypeConst.GROUP_UPDATE, Y9LoginUserHolder.getTenantId());
+                    Y9PublishServiceUtil.persistAndPublishMessageOrg(msg, "移动用户组",
+                        originY9Group.getName() + "移动到" + parent.getName());
+                }
+            });
+        }
 
         return savedY9Group;
     }
@@ -296,15 +303,18 @@ public class Y9GroupServiceImpl implements Y9GroupService {
                 }
                 final Y9Group savedGroup = y9GroupManager.save(y9Group);
 
-                TransactionSynchronizationManager.registerSynchronization(new TransactionSynchronization() {
-                    @Override
-                    public void afterCommit() {
-                        Y9MessageOrg<Group> msg =
-                            new Y9MessageOrg<>(Y9ModelConvertUtil.convert(savedGroup, Group.class),
-                                Y9OrgEventTypeConst.GROUP_UPDATE, Y9LoginUserHolder.getTenantId());
-                        Y9PublishServiceUtil.persistAndPublishMessageOrg(msg, "更新用户组信息", "更新" + group.getName());
-                    }
-                });
+                if (TransactionSynchronizationManager.isActualTransactionActive()) {
+                    TransactionSynchronizationManager.registerSynchronization(new TransactionSynchronization() {
+                        @Override
+                        public void afterCommit() {
+                            Y9MessageOrg<Group> msg =
+                                new Y9MessageOrg<>(Y9ModelConvertUtil.convert(savedGroup, Group.class),
+                                    Y9OrgEventTypeConst.GROUP_UPDATE, Y9LoginUserHolder.getTenantId());
+                            Y9PublishServiceUtil.persistAndPublishMessageOrg(msg, "更新用户组信息",
+                                "更新" + group.getName());
+                        }
+                    });
+                }
 
                 return savedGroup;
             }
@@ -321,14 +331,17 @@ public class Y9GroupServiceImpl implements Y9GroupService {
         group.setGuidPath(parent.getGuidPath() + OrgLevelConsts.SEPARATOR + group.getId());
         final Y9Group savedGroup = y9GroupManager.save(group);
 
-        TransactionSynchronizationManager.registerSynchronization(new TransactionSynchronization() {
-            @Override
-            public void afterCommit() {
-                Y9MessageOrg<Group> msg = new Y9MessageOrg<>(Y9ModelConvertUtil.convert(savedGroup, Group.class),
-                    Y9OrgEventTypeConst.GROUP_ADD, Y9LoginUserHolder.getTenantId());
-                Y9PublishServiceUtil.persistAndPublishMessageOrg(msg, "新增用户组信息", "新增" + savedGroup.getName());
-            }
-        });
+        if (TransactionSynchronizationManager.isActualTransactionActive()) {
+            TransactionSynchronizationManager.registerSynchronization(new TransactionSynchronization() {
+                @Override
+                public void afterCommit() {
+                    Y9MessageOrg<Group> msg = new Y9MessageOrg<>(Y9ModelConvertUtil.convert(savedGroup, Group.class),
+                        Y9OrgEventTypeConst.GROUP_ADD, Y9LoginUserHolder.getTenantId());
+                    Y9PublishServiceUtil.persistAndPublishMessageOrg(msg, "新增用户组信息",
+                        "新增" + savedGroup.getName());
+                }
+            });
+        }
 
         return savedGroup;
     }

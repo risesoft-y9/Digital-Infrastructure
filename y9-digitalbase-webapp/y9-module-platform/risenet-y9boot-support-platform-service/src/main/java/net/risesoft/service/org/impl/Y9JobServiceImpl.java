@@ -182,14 +182,17 @@ public class Y9JobServiceImpl implements Y9JobService {
 
                 Y9Context.publishEvent(new Y9EntityUpdatedEvent<>(originY9Job, savedJob));
 
-                TransactionSynchronizationManager.registerSynchronization(new TransactionSynchronization() {
-                    @Override
-                    public void afterCommit() {
-                        Y9MessageOrg<Job> msg = new Y9MessageOrg<>(Y9ModelConvertUtil.convert(savedJob, Job.class),
-                            Y9OrgEventTypeConst.JOB_UPDATE, Y9LoginUserHolder.getTenantId());
-                        Y9PublishServiceUtil.persistAndPublishMessageOrg(msg, "更新职位信息", "更新职位" + originY9Job.getName());
-                    }
-                });
+                if (TransactionSynchronizationManager.isActualTransactionActive()) {
+                    TransactionSynchronizationManager.registerSynchronization(new TransactionSynchronization() {
+                        @Override
+                        public void afterCommit() {
+                            Y9MessageOrg<Job> msg = new Y9MessageOrg<>(Y9ModelConvertUtil.convert(savedJob, Job.class),
+                                Y9OrgEventTypeConst.JOB_UPDATE, Y9LoginUserHolder.getTenantId());
+                            Y9PublishServiceUtil.persistAndPublishMessageOrg(msg, "更新职位信息",
+                                "更新职位" + originY9Job.getName());
+                        }
+                    });
+                }
 
                 return savedJob;
             }
@@ -204,14 +207,18 @@ public class Y9JobServiceImpl implements Y9JobService {
         job.setTabIndex(getMaxTabIndex() + 1);
         final Y9Job savedJob = y9JobManager.save(job);
 
-        TransactionSynchronizationManager.registerSynchronization(new TransactionSynchronization() {
-            @Override
-            public void afterCommit() {
-                Y9MessageOrg<Job> msg = new Y9MessageOrg<>(Y9ModelConvertUtil.convert(savedJob, Job.class),
-                    Y9OrgEventTypeConst.JOB_ADD, Y9LoginUserHolder.getTenantId());
-                Y9PublishServiceUtil.persistAndPublishMessageOrg(msg, "新增职位信息", "新增职位" + savedJob.getName());
-            }
-        });
+        if (TransactionSynchronizationManager.isActualTransactionActive()) {
+            TransactionSynchronizationManager.registerSynchronization(new TransactionSynchronization() {
+                @Override
+                public void afterCommit() {
+                    Y9MessageOrg<Job> msg =
+                        new Y9MessageOrg<>(Y9ModelConvertUtil.convert(savedJob, Job.class), Y9OrgEventTypeConst.JOB_ADD,
+                            Y9LoginUserHolder.getTenantId());
+                    Y9PublishServiceUtil.persistAndPublishMessageOrg(msg, "新增职位信息",
+                        "新增职位" + savedJob.getName());
+                }
+            });
+        }
 
         return savedJob;
     }

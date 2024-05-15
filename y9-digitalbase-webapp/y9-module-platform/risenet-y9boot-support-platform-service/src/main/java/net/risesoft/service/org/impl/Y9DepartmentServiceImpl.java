@@ -84,16 +84,19 @@ public class Y9DepartmentServiceImpl implements Y9DepartmentService {
         dept.setDisabled(isDisabled);
         final Y9Department savedDepartment = y9DepartmentManager.save(dept);
 
-        TransactionSynchronizationManager.registerSynchronization(new TransactionSynchronization() {
-            @Override
-            public void afterCommit() {
-                String event = Boolean.TRUE.equals(isDisabled) ? "禁用" : "启用";
-                Y9MessageOrg<Department> msg =
-                    new Y9MessageOrg<>(Y9ModelConvertUtil.convert(savedDepartment, Department.class),
-                        Y9OrgEventTypeConst.DEPARTMENT_UPDATE, Y9LoginUserHolder.getTenantId());
-                Y9PublishServiceUtil.persistAndPublishMessageOrg(msg, event + "部门", event + savedDepartment.getName());
-            }
-        });
+        if (TransactionSynchronizationManager.isActualTransactionActive()) {
+            TransactionSynchronizationManager.registerSynchronization(new TransactionSynchronization() {
+                @Override
+                public void afterCommit() {
+                    String event = Boolean.TRUE.equals(isDisabled) ? "禁用" : "启用";
+                    Y9MessageOrg<Department> msg =
+                        new Y9MessageOrg<>(Y9ModelConvertUtil.convert(savedDepartment, Department.class),
+                            Y9OrgEventTypeConst.DEPARTMENT_UPDATE, Y9LoginUserHolder.getTenantId());
+                    Y9PublishServiceUtil.persistAndPublishMessageOrg(msg, event + "部门",
+                        event + savedDepartment.getName());
+                }
+            });
+        }
 
         return savedDepartment;
     }
@@ -128,15 +131,17 @@ public class Y9DepartmentServiceImpl implements Y9DepartmentService {
         // 发布事件，程序内部监听处理相关业务
         Y9Context.publishEvent(new Y9EntityDeletedEvent<>(y9Department));
 
-        TransactionSynchronizationManager.registerSynchronization(new TransactionSynchronization() {
-            @Override
-            public void afterCommit() {
-                Y9MessageOrg<Department> msg =
-                    new Y9MessageOrg<>(Y9ModelConvertUtil.convert(y9Department, Department.class),
-                        Y9OrgEventTypeConst.DEPARTMENT_DELETE, Y9LoginUserHolder.getTenantId());
-                Y9PublishServiceUtil.persistAndPublishMessageOrg(msg, "删除部门", "删除 " + y9Department.getName());
-            }
-        });
+        if (TransactionSynchronizationManager.isActualTransactionActive()) {
+            TransactionSynchronizationManager.registerSynchronization(new TransactionSynchronization() {
+                @Override
+                public void afterCommit() {
+                    Y9MessageOrg<Department> msg =
+                        new Y9MessageOrg<>(Y9ModelConvertUtil.convert(y9Department, Department.class),
+                            Y9OrgEventTypeConst.DEPARTMENT_DELETE, Y9LoginUserHolder.getTenantId());
+                    Y9PublishServiceUtil.persistAndPublishMessageOrg(msg, "删除部门", "删除 " + y9Department.getName());
+                }
+            });
+        }
     }
 
     @Override
@@ -262,15 +267,18 @@ public class Y9DepartmentServiceImpl implements Y9DepartmentService {
 
         Y9Context.publishEvent(new Y9EntityUpdatedEvent<>(originDepartment, savedDepartment));
 
-        TransactionSynchronizationManager.registerSynchronization(new TransactionSynchronization() {
-            @Override
-            public void afterCommit() {
-                Y9MessageOrg<Department> msg =
-                    new Y9MessageOrg<>(Y9ModelConvertUtil.convert(savedDepartment, Department.class),
-                        Y9OrgEventTypeConst.DEPARTMENT_UPDATE, Y9LoginUserHolder.getTenantId());
-                Y9PublishServiceUtil.persistAndPublishMessageOrg(msg, "移动部门", "移动" + originDepartment.getName());
-            }
-        });
+        if (TransactionSynchronizationManager.isActualTransactionActive()) {
+            TransactionSynchronizationManager.registerSynchronization(new TransactionSynchronization() {
+                @Override
+                public void afterCommit() {
+                    Y9MessageOrg<Department> msg =
+                        new Y9MessageOrg<>(Y9ModelConvertUtil.convert(savedDepartment, Department.class),
+                            Y9OrgEventTypeConst.DEPARTMENT_UPDATE, Y9LoginUserHolder.getTenantId());
+                    Y9PublishServiceUtil.persistAndPublishMessageOrg(msg, "移动部门",
+                        "移动" + originDepartment.getName());
+                }
+            });
+        }
 
         return savedDepartment;
     }
@@ -377,16 +385,18 @@ public class Y9DepartmentServiceImpl implements Y9DepartmentService {
 
                 Y9Context.publishEvent(new Y9EntityUpdatedEvent<>(originDepartment, savedDepartment));
 
-                TransactionSynchronizationManager.registerSynchronization(new TransactionSynchronization() {
-                    @Override
-                    public void afterCommit() {
-                        Y9MessageOrg<Department> msg =
-                            new Y9MessageOrg<>(Y9ModelConvertUtil.convert(savedDepartment, Department.class),
-                                Y9OrgEventTypeConst.DEPARTMENT_UPDATE, Y9LoginUserHolder.getTenantId());
-                        Y9PublishServiceUtil.persistAndPublishMessageOrg(msg, "修改部门",
-                            "修改 " + originDepartment.getName());
-                    }
-                });
+                if (TransactionSynchronizationManager.isActualTransactionActive()) {
+                    TransactionSynchronizationManager.registerSynchronization(new TransactionSynchronization() {
+                        @Override
+                        public void afterCommit() {
+                            Y9MessageOrg<Department> msg =
+                                new Y9MessageOrg<>(Y9ModelConvertUtil.convert(savedDepartment, Department.class),
+                                    Y9OrgEventTypeConst.DEPARTMENT_UPDATE, Y9LoginUserHolder.getTenantId());
+                            Y9PublishServiceUtil.persistAndPublishMessageOrg(msg, "修改部门",
+                                "修改 " + originDepartment.getName());
+                        }
+                    });
+                }
 
                 return savedDepartment;
             }
@@ -405,15 +415,18 @@ public class Y9DepartmentServiceImpl implements Y9DepartmentService {
 
         final Y9Department savedDepartment = y9DepartmentManager.save(dept);
 
-        TransactionSynchronizationManager.registerSynchronization(new TransactionSynchronization() {
-            @Override
-            public void afterCommit() {
-                Y9MessageOrg<Department> msg =
-                    new Y9MessageOrg<>(Y9ModelConvertUtil.convert(savedDepartment, Department.class),
-                        Y9OrgEventTypeConst.DEPARTMENT_ADD, Y9LoginUserHolder.getTenantId());
-                Y9PublishServiceUtil.persistAndPublishMessageOrg(msg, "新增部门", "新增" + savedDepartment.getName());
-            }
-        });
+        if (TransactionSynchronizationManager.isActualTransactionActive()) {
+            TransactionSynchronizationManager.registerSynchronization(new TransactionSynchronization() {
+                @Override
+                public void afterCommit() {
+                    Y9MessageOrg<Department> msg =
+                        new Y9MessageOrg<>(Y9ModelConvertUtil.convert(savedDepartment, Department.class),
+                            Y9OrgEventTypeConst.DEPARTMENT_ADD, Y9LoginUserHolder.getTenantId());
+                    Y9PublishServiceUtil.persistAndPublishMessageOrg(msg, "新增部门",
+                        "新增" + savedDepartment.getName());
+                }
+            });
+        }
 
         return savedDepartment;
     }

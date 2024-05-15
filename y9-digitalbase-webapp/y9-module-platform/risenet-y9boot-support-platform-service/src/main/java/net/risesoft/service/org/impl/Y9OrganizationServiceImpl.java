@@ -87,17 +87,19 @@ public class Y9OrganizationServiceImpl implements Y9OrganizationService {
         y9Group.setDisabled(isDisabled);
         final Y9Organization savedOrganization = y9OrganizationManager.save(y9Group);
 
-        TransactionSynchronizationManager.registerSynchronization(new TransactionSynchronization() {
-            @Override
-            public void afterCommit() {
-                String event = Boolean.TRUE.equals(isDisabled) ? "禁用" : "启用";
-                Y9MessageOrg<Organization> msg =
-                    new Y9MessageOrg<>(Y9ModelConvertUtil.convert(savedOrganization, Organization.class),
-                        Y9OrgEventTypeConst.ORGANIZATION_UPDATE, Y9LoginUserHolder.getTenantId());
-                Y9PublishServiceUtil.persistAndPublishMessageOrg(msg, event + "组织机构",
-                    event + savedOrganization.getName());
-            }
-        });
+        if (TransactionSynchronizationManager.isActualTransactionActive()) {
+            TransactionSynchronizationManager.registerSynchronization(new TransactionSynchronization() {
+                @Override
+                public void afterCommit() {
+                    String event = Boolean.TRUE.equals(isDisabled) ? "禁用" : "启用";
+                    Y9MessageOrg<Organization> msg =
+                        new Y9MessageOrg<>(Y9ModelConvertUtil.convert(savedOrganization, Organization.class),
+                            Y9OrgEventTypeConst.ORGANIZATION_UPDATE, Y9LoginUserHolder.getTenantId());
+                    Y9PublishServiceUtil.persistAndPublishMessageOrg(msg, event + "组织机构",
+                        event + savedOrganization.getName());
+                }
+            });
+        }
         return savedOrganization;
     }
 
@@ -126,14 +128,17 @@ public class Y9OrganizationServiceImpl implements Y9OrganizationService {
         // 发布事件，程序内部监听处理相关业务
         Y9Context.publishEvent(new Y9EntityDeletedEvent<>(org));
 
-        TransactionSynchronizationManager.registerSynchronization(new TransactionSynchronization() {
-            @Override
-            public void afterCommit() {
-                Y9MessageOrg<Organization> msg = new Y9MessageOrg<>(Y9ModelConvertUtil.convert(org, Organization.class),
-                    Y9OrgEventTypeConst.ORGANIZATION_DELETE, Y9LoginUserHolder.getTenantId());
-                Y9PublishServiceUtil.persistAndPublishMessageOrg(msg, "删除组织机构", "删除 " + org.getName());
-            }
-        });
+        if (TransactionSynchronizationManager.isActualTransactionActive()) {
+            TransactionSynchronizationManager.registerSynchronization(new TransactionSynchronization() {
+                @Override
+                public void afterCommit() {
+                    Y9MessageOrg<Organization> msg =
+                        new Y9MessageOrg<>(Y9ModelConvertUtil.convert(org, Organization.class),
+                            Y9OrgEventTypeConst.ORGANIZATION_DELETE, Y9LoginUserHolder.getTenantId());
+                    Y9PublishServiceUtil.persistAndPublishMessageOrg(msg, "删除组织机构", "删除 " + org.getName());
+                }
+            });
+        }
     }
 
     @Override
@@ -224,16 +229,18 @@ public class Y9OrganizationServiceImpl implements Y9OrganizationService {
 
                 Y9Context.publishEvent(new Y9EntityUpdatedEvent<>(originY9Organization, savedOrganization));
 
-                TransactionSynchronizationManager.registerSynchronization(new TransactionSynchronization() {
-                    @Override
-                    public void afterCommit() {
-                        Y9MessageOrg<Organization> msg =
-                            new Y9MessageOrg<>(Y9ModelConvertUtil.convert(savedOrganization, Organization.class),
-                                Y9OrgEventTypeConst.ORGANIZATION_UPDATE, Y9LoginUserHolder.getTenantId());
-                        Y9PublishServiceUtil.persistAndPublishMessageOrg(msg, "更新组织机构",
-                            "更新" + originY9Organization.getName());
-                    }
-                });
+                if (TransactionSynchronizationManager.isActualTransactionActive()) {
+                    TransactionSynchronizationManager.registerSynchronization(new TransactionSynchronization() {
+                        @Override
+                        public void afterCommit() {
+                            Y9MessageOrg<Organization> msg =
+                                new Y9MessageOrg<>(Y9ModelConvertUtil.convert(savedOrganization, Organization.class),
+                                    Y9OrgEventTypeConst.ORGANIZATION_UPDATE, Y9LoginUserHolder.getTenantId());
+                            Y9PublishServiceUtil.persistAndPublishMessageOrg(msg, "更新组织机构",
+                                "更新" + originY9Organization.getName());
+                        }
+                    });
+                }
 
                 return originY9Organization;
             }
@@ -249,15 +256,18 @@ public class Y9OrganizationServiceImpl implements Y9OrganizationService {
         organization.setTenantId(Y9LoginUserHolder.getTenantId());
         final Y9Organization savedOrganization = y9OrganizationManager.save(organization);
 
-        TransactionSynchronizationManager.registerSynchronization(new TransactionSynchronization() {
-            @Override
-            public void afterCommit() {
-                Y9MessageOrg<Organization> msg =
-                    new Y9MessageOrg<>(Y9ModelConvertUtil.convert(savedOrganization, Organization.class),
-                        Y9OrgEventTypeConst.ORGANIZATION_ADD, Y9LoginUserHolder.getTenantId());
-                Y9PublishServiceUtil.persistAndPublishMessageOrg(msg, "新增组织机构", "新增" + savedOrganization.getName());
-            }
-        });
+        if (TransactionSynchronizationManager.isActualTransactionActive()) {
+            TransactionSynchronizationManager.registerSynchronization(new TransactionSynchronization() {
+                @Override
+                public void afterCommit() {
+                    Y9MessageOrg<Organization> msg =
+                        new Y9MessageOrg<>(Y9ModelConvertUtil.convert(savedOrganization, Organization.class),
+                            Y9OrgEventTypeConst.ORGANIZATION_ADD, Y9LoginUserHolder.getTenantId());
+                    Y9PublishServiceUtil.persistAndPublishMessageOrg(msg, "新增组织机构",
+                        "新增" + savedOrganization.getName());
+                }
+            });
+        }
 
         return savedOrganization;
     }

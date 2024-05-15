@@ -152,16 +152,18 @@ public class Y9PositionManagerImpl implements Y9PositionManager {
 
                 Y9Context.publishEvent(new Y9EntityUpdatedEvent<>(originY9Position, savedY9Position));
 
-                TransactionSynchronizationManager.registerSynchronization(new TransactionSynchronization() {
-                    @Override
-                    public void afterCommit() {
-                        Y9MessageOrg<Position> msg =
-                            new Y9MessageOrg<>(ModelConvertUtil.convert(savedY9Position, Position.class),
-                                Y9OrgEventTypeConst.POSITION_UPDATE, Y9LoginUserHolder.getTenantId());
-                        Y9PublishServiceUtil.persistAndPublishMessageOrg(msg, "更新岗位信息",
-                            "更新" + originY9Position.getName());
-                    }
-                });
+                if (TransactionSynchronizationManager.isActualTransactionActive()) {
+                    TransactionSynchronizationManager.registerSynchronization(new TransactionSynchronization() {
+                        @Override
+                        public void afterCommit() {
+                            Y9MessageOrg<Position> msg =
+                                new Y9MessageOrg<>(ModelConvertUtil.convert(savedY9Position, Position.class),
+                                    Y9OrgEventTypeConst.POSITION_UPDATE, Y9LoginUserHolder.getTenantId());
+                            Y9PublishServiceUtil.persistAndPublishMessageOrg(msg, "更新岗位信息",
+                                "更新" + originY9Position.getName());
+                        }
+                    });
+                }
 
                 return savedY9Position;
             }

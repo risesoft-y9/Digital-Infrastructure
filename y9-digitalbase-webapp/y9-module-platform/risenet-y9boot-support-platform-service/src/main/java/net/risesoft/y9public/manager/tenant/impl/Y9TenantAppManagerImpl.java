@@ -136,17 +136,19 @@ public class Y9TenantAppManagerImpl implements Y9TenantAppManager {
             Y9System y9System = y9SystemManager.getById(savedTenantApp.getSystemId());
             TenantApp tenantApp = Y9ModelConvertUtil.convert(savedTenantApp, TenantApp.class);
             // 注册事务同步器，在事务提交后做某些操作
-            TransactionSynchronizationManager.registerSynchronization(new TransactionSynchronization() {
-                @Override
-                public void afterCommit() {
-                    // 租户租用系统事件，应用可监听做对应租户的初始化的工作
-                    Y9MessageCommon tenantSystemRegisteredEvent = new Y9MessageCommon();
-                    tenantSystemRegisteredEvent.setEventObject(tenantApp);
-                    tenantSystemRegisteredEvent.setEventTarget(y9System.getName());
-                    tenantSystemRegisteredEvent.setEventType(Y9CommonEventConst.TENANT_APP_REGISTERED);
-                    Y9PublishServiceUtil.publishMessageCommon(tenantSystemRegisteredEvent);
-                }
-            });
+            if (TransactionSynchronizationManager.isActualTransactionActive()) {
+                TransactionSynchronizationManager.registerSynchronization(new TransactionSynchronization() {
+                    @Override
+                    public void afterCommit() {
+                        // 租户租用系统事件，应用可监听做对应租户的初始化的工作
+                        Y9MessageCommon tenantSystemRegisteredEvent = new Y9MessageCommon();
+                        tenantSystemRegisteredEvent.setEventObject(tenantApp);
+                        tenantSystemRegisteredEvent.setEventTarget(y9System.getName());
+                        tenantSystemRegisteredEvent.setEventType(Y9CommonEventConst.TENANT_APP_REGISTERED);
+                        Y9PublishServiceUtil.publishMessageCommon(tenantSystemRegisteredEvent);
+                    }
+                });
+            }
         }
         return savedTenantApp;
     }
