@@ -30,6 +30,8 @@ spring:
             - org.springframework.boot.autoconfigure.jdbc.DataSourceAutoConfiguration
             - org.springframework.boot.autoconfigure.quartz.QuartzAutoConfiguration
             - org.springframework.boot.autoconfigure.orm.jpa.HibernateJpaAutoConfiguration
+            # 需要使用 kafka 时注释掉让其能自动配置
+            - org.springframework.boot.autoconfigure.kafka.KafkaAutoConfiguration
     cloud:
         nacos:
             config:
@@ -159,8 +161,8 @@ y9:
         log:
             directUrl: http://localhost:7055
     common:
-        cacheEnabled: true
-        kafkaEnabled: true
+        cacheEnabled: false
+        kafkaEnabled: false
         logBaseUrl: http://localhost:7055/log
         orgBaseUrl: http://localhost:7055/platform
     feature:
@@ -210,11 +212,14 @@ y9:
         liquibase:
             tenant-enabled: true
             public-enabled: true
+        multi-tenant:
+            event-source: db
         log:
             enabled: true
+            logSaveTarget: api
         publish:
             kafka:
-                enabled: true
+                enabled: false
         session:
             redis:
                 enabled: true
