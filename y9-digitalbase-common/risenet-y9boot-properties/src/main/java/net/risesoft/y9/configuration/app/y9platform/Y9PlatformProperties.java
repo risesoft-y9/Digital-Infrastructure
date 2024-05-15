@@ -17,18 +17,7 @@ public class Y9PlatformProperties {
      * 系统名称
      */
     private String systemName = "riseplatform";
-    /**
-     * 是否检查权限
-     */
-    private boolean checkPermission = false;
-    /**
-     * 是否启用ip地址白名单
-     */
-    private boolean enableIpAddressWhiteList = false;
-    /**
-     * 基于角色访问控制
-     */
-    private boolean strictRoleBasedAccessControll = true;
+
     /**
      * 岗位名称格式，默认格式为 职位名称（人员名称），例 总经理（张三） {0} 职位名称 {1} 人员名称
      */
@@ -57,5 +46,15 @@ public class Y9PlatformProperties {
     /**
      * 默认密码
      */
-    private String defaultPassword = USER_PASSWORD_DEFAULT;
+    private String userDefaultPassword = USER_PASSWORD_DEFAULT;
+
+    /**
+     * 初始化租户名称
+     */
+    private String initTenantName = "default";
+
+    /**
+     * 初始化租户数据库 schema
+     */
+    private String initTenantSchema = "y9_default";
 }

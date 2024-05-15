@@ -108,8 +108,8 @@ public class OnApplicationReady implements ApplicationListener<ApplicationReadyE
             Y9Tenant y9Tenant = new Y9Tenant();
             y9Tenant.setId(tenantId);
             y9Tenant.setDefaultDataSourceId(dataSourceId);
-            y9Tenant.setShortName("default");
-            y9Tenant.setName("default");
+            y9Tenant.setShortName(y9Config.getApp().getPlatform().getInitTenantName());
+            y9Tenant.setName(y9Config.getApp().getPlatform().getInitTenantName());
             y9Tenant.setEnabled(true);
             y9Tenant.setTenantType(TenantTypeEnum.TENANT);
             y9Tenant.setTabIndex(10000);
@@ -135,7 +135,7 @@ public class OnApplicationReady implements ApplicationListener<ApplicationReadyE
     public void onApplicationEvent(ApplicationReadyEvent event) {
         LOGGER.info("platform ApplicationReady...");
 
-        createDataSource(InitDataConsts.DATASOURCE_ID, "y9_default");
+        createDataSource(InitDataConsts.DATASOURCE_ID, y9Config.getApp().getPlatform().getInitTenantSchema());
         createTenant(InitDataConsts.TENANT_ID, InitDataConsts.DATASOURCE_ID);
         createSystem(InitDataConsts.SYSTEM_ID);
         // 租用系统会发送 租户租用系统事件 系统做监听做数据初始化
@@ -146,7 +146,7 @@ public class OnApplicationReady implements ApplicationListener<ApplicationReadyE
     }
 
     private void createTenantApp(String appId, String tenantId) {
-        y9TenantAppService.save(appId, tenantId, "微内核默认租用");
+        y9TenantAppService.save(appId, tenantId, "系统默认租用");
     }
 
     private Y9DataSource createDataSource(String datasourceId, String dbName) {
