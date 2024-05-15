@@ -56,7 +56,7 @@ public class TenantSystemRegisteredEventListener {
                     LOGGER.info("租户数据初始化完成");
                 }
 
-                multiTenantDao.tenantSystemInitialized(tenantSystem.getId());
+                multiTenantDao.setTenantSystemInitialized(tenantSystem.getId());
 
             }
         } catch (Exception e) {
