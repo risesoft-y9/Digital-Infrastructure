@@ -233,7 +233,7 @@ public class AppApiImpl implements AppApi {
         try {
             LOGGER.info("租用系统");
             y9TenantSystemService.saveTenantSystem(systemId, tenantGuid);
-            y9TenantAppService.save(appId, tenantGuid, "微内核默认租用");
+            y9TenantAppService.save(appId, tenantGuid, "系统默认租用");
         } catch (Exception e) {
             e.printStackTrace();
             LOGGER.info("系统、应用已创建成功！但自动应用租用失败，请收到进行租用！");
