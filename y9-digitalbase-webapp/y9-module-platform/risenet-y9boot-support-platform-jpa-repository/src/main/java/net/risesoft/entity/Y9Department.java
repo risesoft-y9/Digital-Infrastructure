@@ -1,23 +1,20 @@
 package net.risesoft.entity;
 
-import java.util.Date;
+import com.fasterxml.jackson.annotation.JsonFormat;
+import lombok.Data;
+import net.risesoft.enums.platform.OrgTypeEnum;
+import org.hibernate.annotations.ColumnDefault;
+import org.hibernate.annotations.Comment;
+import org.hibernate.annotations.Type;
+import org.springframework.format.annotation.DateTimeFormat;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
-
-import org.hibernate.annotations.ColumnDefault;
-import org.hibernate.annotations.Comment;
-import org.hibernate.annotations.Type;
-import org.springframework.format.annotation.DateTimeFormat;
-
-import com.fasterxml.jackson.annotation.JsonFormat;
-
-import lombok.Data;
-
-import net.risesoft.enums.platform.OrgTypeEnum;
+import javax.validation.constraints.NotBlank;
+import java.util.Date;
 
 /**
  * 部门实体
@@ -35,6 +32,7 @@ public class Y9Department extends Y9OrgBase {
 
     private static final long serialVersionUID = 231356577350213851L;
     /** 父节点id */
+    @NotBlank
     @Column(name = "PARENT_ID", length = 38, nullable = false)
     @Comment("父节点id")
     private String parentId;
