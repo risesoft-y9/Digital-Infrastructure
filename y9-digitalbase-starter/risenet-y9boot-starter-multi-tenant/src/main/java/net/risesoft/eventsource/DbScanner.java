@@ -70,8 +70,7 @@ public class DbScanner {
 
     private void produceTenantAppRelatedEvent() {
         // 获取新加的租户应用发送事件
-        List<TenantApp> tenantAppList =
-            multiTenantDao.getUninitializedTenantAppList(this.systemId);
+        List<TenantApp> tenantAppList = multiTenantDao.getUninitializedTenantAppList(this.systemId);
         for (TenantApp tenantApp : tenantAppList) {
             Y9EventCommon tenantSystemRegisteredEvent = new Y9EventCommon();
             tenantSystemRegisteredEvent.setEventObject(tenantApp);
@@ -87,13 +86,12 @@ public class DbScanner {
 
     private void produceTenantSystemRelatedEvent() {
         Set<String> loadedTenantIdSet = y9TenantDataSourceLookup.getDataSources().keySet();
-        List<TenantSystem> tenantSystemList =
-            multiTenantDao.getTenantSystemList(this.systemId);
+        List<TenantSystem> tenantSystemList = multiTenantDao.getTenantSystemList(this.systemId);
 
         // 获取新的系统租用发送事件
-        Set<TenantSystem> unInitialiedTenantSystems = tenantSystemList.stream()
+        Set<TenantSystem> uninitializedTenantSystems = tenantSystemList.stream()
             .filter(tenantSystem -> Boolean.FALSE.equals(tenantSystem.getInitialized())).collect(Collectors.toSet());
-        for (TenantSystem tenantSystem : unInitialiedTenantSystems) {
+        for (TenantSystem tenantSystem : uninitializedTenantSystems) {
             Y9EventCommon tenantSystemRegisteredEvent = new Y9EventCommon();
             tenantSystemRegisteredEvent.setEventType(Y9CommonEventConst.TENANT_SYSTEM_REGISTERED);
             tenantSystemRegisteredEvent.setEventObject(tenantSystem);

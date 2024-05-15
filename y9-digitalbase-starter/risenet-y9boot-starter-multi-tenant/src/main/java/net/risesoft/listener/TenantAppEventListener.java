@@ -1,11 +1,14 @@
 package net.risesoft.listener;
 
-import net.risesoft.dao.MultiTenantDao;
+import java.util.List;
+
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.event.EventListener;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
+import net.risesoft.dao.MultiTenantDao;
 import net.risesoft.init.TenantAppInitializer;
 import net.risesoft.model.platform.TenantApp;
 import net.risesoft.y9.pubsub.constant.Y9CommonEventConst;
@@ -21,8 +24,14 @@ import net.risesoft.y9.pubsub.event.Y9EventCommon;
 @RequiredArgsConstructor
 public class TenantAppEventListener {
 
-    private final TenantAppInitializer tenantAppInitializer;
     private final MultiTenantDao multiTenantDao;
+
+    private List<TenantAppInitializer> tenantAppInitializerList;
+
+    @Autowired(required = false)
+    public void setTenantAppInitializerList(List<TenantAppInitializer> tenantAppInitializerList) {
+        this.tenantAppInitializerList = tenantAppInitializerList;
+    }
 
     @EventListener
     public void tenantSystemRegisteredEvent(Y9EventCommon event) {
@@ -31,12 +40,14 @@ public class TenantAppEventListener {
                 LOGGER.info("开始处理租户应用事件");
                 TenantApp tenantApp = (TenantApp)event.getEventObject();
 
-                if (tenantAppInitializer != null) {
-                    tenantAppInitializer.init(tenantApp);
+                if (tenantAppInitializerList != null && !tenantAppInitializerList.isEmpty()) {
+                    for (TenantAppInitializer tenantAppInitializer : tenantAppInitializerList) {
+                        tenantAppInitializer.init(tenantApp);
+                    }
                     LOGGER.info("处理租户应用事件完成");
                 }
-                
-                multiTenantDao.tenantAppInitialized(tenantApp.getId());
+
+                multiTenantDao.setTenantAppInitialized(tenantApp.getId());
             }
         } catch (Exception e) {
             LOGGER.warn("处理租户应用事件发生异常", e);

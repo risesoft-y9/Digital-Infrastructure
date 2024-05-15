@@ -1,7 +1,6 @@
 package y9.autoconfiguration.multitenant;
 
 import org.hibernate.integrator.api.integrator.Y9TenantHibernateInfoHolder;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.autoconfigure.AutoConfiguration;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnBean;
@@ -29,8 +28,8 @@ import lombok.extern.slf4j.Slf4j;
 import net.risesoft.dao.MultiTenantDao;
 import net.risesoft.eventsource.DbScanner;
 import net.risesoft.eventsource.KafkaMessageCommon;
-import net.risesoft.init.TenantAppInitializer;
 import net.risesoft.liquibase.Y9MultiTenantSpringLiquibase;
+import net.risesoft.listener.MultiTenantApplicationReadyListener;
 import net.risesoft.listener.TenantAppEventListener;
 import net.risesoft.listener.TenantDataSourceEventListener;
 import net.risesoft.listener.TenantSystemRegisteredEventListener;
@@ -81,9 +80,8 @@ public class Y9MultiTenantAutoConfiguration {
     }
 
     @Bean
-    public TenantAppEventListener tenantAppEventListener(
-        @Autowired(required = false) TenantAppInitializer tenantAppInitializer, MultiTenantDao multiTenantDao) {
-        return new TenantAppEventListener(tenantAppInitializer, multiTenantDao);
+    public TenantAppEventListener tenantAppEventListener(MultiTenantDao multiTenantDao) {
+        return new TenantAppEventListener(multiTenantDao);
     }
 
     @Bean
@@ -119,6 +117,12 @@ public class Y9MultiTenantAutoConfiguration {
         @Bean
         public KafkaMessageCommon messageCommonListener() {
             return new KafkaMessageCommon();
+        }
+
+        @Bean
+        public MultiTenantApplicationReadyListener multiTenantApplicationReadyListener(MultiTenantDao multiTenantDao,
+            Y9Properties y9Properties) {
+            return new MultiTenantApplicationReadyListener(multiTenantDao, y9Properties);
         }
     }
 
