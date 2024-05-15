@@ -46,5 +46,15 @@ public class Y9PlatformProperties {
     /**
      * 默认密码
      */
-    private String defaultPassword = USER_PASSWORD_DEFAULT;
+    private String userDefaultPassword = USER_PASSWORD_DEFAULT;
+
+    /**
+     * 初始化租户名称
+     */
+    private String initTenantName = "default";
+
+    /**
+     * 初始化租户数据库 schema
+     */
+    private String initTenantSchema = "y9_default";
 }
