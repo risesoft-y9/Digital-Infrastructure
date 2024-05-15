@@ -8,6 +8,7 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.Table;
 import jakarta.persistence.Temporal;
 import jakarta.persistence.TemporalType;
+import jakarta.validation.constraints.NotBlank;
 
 import org.hibernate.annotations.ColumnDefault;
 import org.hibernate.annotations.Comment;
@@ -35,6 +36,7 @@ public class Y9Department extends Y9OrgBase {
 
     private static final long serialVersionUID = 231356577350213851L;
     /** 父节点id */
+    @NotBlank
     @Column(name = "PARENT_ID", length = 38, nullable = false)
     @Comment("父节点id")
     private String parentId;
