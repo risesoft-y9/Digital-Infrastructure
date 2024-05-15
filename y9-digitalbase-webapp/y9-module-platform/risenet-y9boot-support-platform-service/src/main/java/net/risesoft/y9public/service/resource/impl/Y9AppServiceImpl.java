@@ -254,7 +254,7 @@ public class Y9AppServiceImpl implements Y9AppService {
         // 租用系统
         y9TenantSystemManager.saveTenantSystem(savedApp.getSystemId(), Y9LoginUserHolder.getTenantId());
         // 租用应用
-        y9TenantAppManager.save(savedApp.getId(), Y9LoginUserHolder.getTenantId(), "微内核默认租用");
+        y9TenantAppManager.save(savedApp.getId(), Y9LoginUserHolder.getTenantId(), "系统默认租用");
         return savedApp;
     }
 
