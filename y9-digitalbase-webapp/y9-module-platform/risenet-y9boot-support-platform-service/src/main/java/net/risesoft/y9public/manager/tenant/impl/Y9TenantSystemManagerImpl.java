@@ -68,18 +68,20 @@ public class Y9TenantSystemManagerImpl implements Y9TenantSystemManager {
         y9TenantSystemRepository.delete(y9TenantSystem);
 
         // 注册事务同步器，在事务提交后做某些操作
-        TransactionSynchronizationManager.registerSynchronization(new TransactionSynchronization() {
-            @Override
-            public void afterCommit() {
-                // 移除系统租用后，对应系统重新加载数据源
-                Y9MessageCommon syncDataSourceEvent = new Y9MessageCommon();
-                syncDataSourceEvent.setEventTarget(
-                    y9SystemManager.findById(y9TenantSystem.getSystemId()).map(Y9System::getName).orElse(null));
-                syncDataSourceEvent.setEventObject(Y9CommonEventConst.TENANT_DATASOURCE_SYNC);
-                syncDataSourceEvent.setEventType(Y9CommonEventConst.TENANT_DATASOURCE_SYNC);
-                Y9PublishServiceUtil.publishMessageCommon(syncDataSourceEvent);
-            }
-        });
+        if (TransactionSynchronizationManager.isActualTransactionActive()) {
+            TransactionSynchronizationManager.registerSynchronization(new TransactionSynchronization() {
+                @Override
+                public void afterCommit() {
+                    // 移除系统租用后，对应系统重新加载数据源
+                    Y9MessageCommon syncDataSourceEvent = new Y9MessageCommon();
+                    syncDataSourceEvent.setEventTarget(
+                        y9SystemManager.findById(y9TenantSystem.getSystemId()).map(Y9System::getName).orElse(null));
+                    syncDataSourceEvent.setEventObject(Y9CommonEventConst.TENANT_DATASOURCE_SYNC);
+                    syncDataSourceEvent.setEventType(Y9CommonEventConst.TENANT_DATASOURCE_SYNC);
+                    Y9PublishServiceUtil.publishMessageCommon(syncDataSourceEvent);
+                }
+            });
+        }
     }
 
     @Override
@@ -138,24 +140,26 @@ public class Y9TenantSystemManagerImpl implements Y9TenantSystemManager {
         Y9System y9System = y9SystemManager.getById(y9TenantSystem.getSystemId());
         TenantSystem tenantSystem = Y9ModelConvertUtil.convert(y9TenantSystem, TenantSystem.class);
         // 注册事务同步器，在事务提交后做某些操作
-        TransactionSynchronizationManager.registerSynchronization(new TransactionSynchronization() {
-            @Override
-            public void afterCommit() {
-                // 租户租用系统事件，应用可监听做对应租户的初始化的工作
-                Y9MessageCommon tenantSystemRegisteredEvent = new Y9MessageCommon();
-                tenantSystemRegisteredEvent.setEventObject(tenantSystem);
-                tenantSystemRegisteredEvent.setEventTarget(y9System.getName());
-                tenantSystemRegisteredEvent.setEventType(Y9CommonEventConst.TENANT_SYSTEM_REGISTERED);
-                Y9PublishServiceUtil.publishMessageCommon(tenantSystemRegisteredEvent);
+        if (TransactionSynchronizationManager.isActualTransactionActive()) {
+            TransactionSynchronizationManager.registerSynchronization(new TransactionSynchronization() {
+                @Override
+                public void afterCommit() {
+                    // 租户租用系统事件，应用可监听做对应租户的初始化的工作
+                    Y9MessageCommon tenantSystemRegisteredEvent = new Y9MessageCommon();
+                    tenantSystemRegisteredEvent.setEventObject(tenantSystem);
+                    tenantSystemRegisteredEvent.setEventTarget(y9System.getName());
+                    tenantSystemRegisteredEvent.setEventType(Y9CommonEventConst.TENANT_SYSTEM_REGISTERED);
+                    Y9PublishServiceUtil.publishMessageCommon(tenantSystemRegisteredEvent);
 
-                // 对应系统重新加载数据源
-                Y9MessageCommon syncDataSourceEvent = new Y9MessageCommon();
-                syncDataSourceEvent.setEventTarget(y9System.getName());
-                syncDataSourceEvent.setEventObject(Y9CommonEventConst.TENANT_DATASOURCE_SYNC);
-                syncDataSourceEvent.setEventType(Y9CommonEventConst.TENANT_DATASOURCE_SYNC);
-                Y9PublishServiceUtil.publishMessageCommon(syncDataSourceEvent);
-            }
-        });
+                    // 对应系统重新加载数据源
+                    Y9MessageCommon syncDataSourceEvent = new Y9MessageCommon();
+                    syncDataSourceEvent.setEventTarget(y9System.getName());
+                    syncDataSourceEvent.setEventObject(Y9CommonEventConst.TENANT_DATASOURCE_SYNC);
+                    syncDataSourceEvent.setEventType(Y9CommonEventConst.TENANT_DATASOURCE_SYNC);
+                    Y9PublishServiceUtil.publishMessageCommon(syncDataSourceEvent);
+                }
+            });
+        }
 
         return y9TenantSystem;
     }
