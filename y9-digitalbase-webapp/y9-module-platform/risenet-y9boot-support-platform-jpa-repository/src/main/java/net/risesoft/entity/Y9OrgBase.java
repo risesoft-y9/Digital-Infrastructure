@@ -55,10 +55,10 @@ public abstract class Y9OrgBase extends BaseEntity implements Comparable<Y9OrgBa
     @Version
     protected Integer version;
 
-    /** 是否可用 */
+    /** 是否禁用 */
     @Type(type = "numeric_boolean")
     @Column(name = "DISABLED", nullable = false)
-    @Comment("是否可用")
+    @Comment("是否禁用")
     @ColumnDefault("0")
     protected Boolean disabled = false;
 

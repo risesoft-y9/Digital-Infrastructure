@@ -134,7 +134,7 @@ public class Y9PositionToResourceAndAuthorityServiceImpl implements Y9PositionTo
                 y9TenantAppManager.getByTenantIdAndAppIdAndTenancy(Y9LoginUserHolder.getTenantId(), r.getAppId(), true);
             if (y9TenantAppOptional.isPresent()) {
                 Y9App y9App = y9AppManager.getById(r.getAppId());
-                if (!appList.contains(y9App)) {
+                if (y9App.getEnabled() && !appList.contains(y9App)) {
                     appList.add(y9App);
                 }
             }
@@ -177,7 +177,7 @@ public class Y9PositionToResourceAndAuthorityServiceImpl implements Y9PositionTo
         for (Y9PositionToResourceAndAuthority positionResource : personToResourceAndAuthorityList) {
             Y9ResourceBase y9ResourceBase = compositeResourceService
                 .findByIdAndResourceType(positionResource.getResourceId(), positionResource.getResourceType());
-            if (y9ResourceBase != null && !returnResourceList.contains(y9ResourceBase)) {
+            if (y9ResourceBase != null && y9ResourceBase.getEnabled() && !returnResourceList.contains(y9ResourceBase)) {
                 returnResourceList.add(y9ResourceBase);
             }
         }
@@ -194,7 +194,7 @@ public class Y9PositionToResourceAndAuthorityServiceImpl implements Y9PositionTo
         List<Y9Menu> y9MenuList = new ArrayList<>();
         for (String menuId : menuIdList) {
             Y9Menu y9Menu = y9MenuManager.getById(menuId);
-            if (!y9MenuList.contains(y9Menu)) {
+            if (y9Menu.getEnabled() && !y9MenuList.contains(y9Menu)) {
                 y9MenuList.add(y9Menu);
             }
         }

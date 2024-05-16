@@ -60,11 +60,11 @@ public abstract class Y9ResourceBase extends BaseEntity implements Comparable<Y9
     @Comment("描述")
     protected String description;
 
-    /** 启用状态:1=启用,0=禁用 */
+    /** 是否启用:1=启用,0=禁用 */
     @Type(type = "numeric_boolean")
     @ColumnDefault("1")
     @Column(name = "ENABLED", nullable = false)
-    @Comment("启用状态:1=启用,0=禁用")
+    @Comment("是否启用:1=启用,0=禁用")
     protected Boolean enabled = Boolean.TRUE;
 
     /** 是否隐藏:1=隐藏,0=显示 */
