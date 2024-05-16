@@ -11,7 +11,6 @@ import org.springframework.http.MediaType;
 import org.springframework.http.converter.HttpMessageConverter;
 import org.springframework.http.converter.StringHttpMessageConverter;
 import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
-import org.springframework.kafka.annotation.EnableKafka;
 import org.springframework.web.filter.RequestContextFilter;
 import org.springframework.web.servlet.config.annotation.DefaultServletHandlerConfigurer;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
@@ -20,7 +19,6 @@ import net.risesoft.util.EsIndexDate;
 import net.risesoft.y9.Y9Context;
 
 @Configuration
-@EnableKafka
 public class WebMvcConfig implements WebMvcConfigurer {
 
     // starter-log工程用到了RequestContextHolder

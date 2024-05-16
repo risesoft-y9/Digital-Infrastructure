@@ -20,6 +20,8 @@ spring:
     autoconfigure:
         exclude:
             - org.springframework.boot.autoconfigure.jdbc.DataSourceAutoConfiguration
+            # 需要使用 kafka 时注释掉让其能自动配置
+            - org.springframework.boot.autoconfigure.kafka.KafkaAutoConfiguration
     cloud:
         nacos:
             config:
@@ -133,12 +135,12 @@ y9:
         log:
             accessLogIndex: logindex
             accessLogSaveTarget: elastic
-            kafkaEnabled: true
+            kafkaEnabled: false
     service:
         org:
             directUrl: http://localhost:7055
     common:
-        kafkaEnabled: true
+        kafkaEnabled: false
         logBaseUrl: http://localhost:7056/log
         orgBaseUrl: http://localhost:7055/platform
     feature:
@@ -160,7 +162,7 @@ y9:
             public-enabled: true
         log:
             enabled: true
-            logSaveTarget: kafka
+            logSaveTarget: api
         security:
             enabled: true
             cors:

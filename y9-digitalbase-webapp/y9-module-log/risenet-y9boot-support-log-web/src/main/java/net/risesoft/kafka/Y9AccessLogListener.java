@@ -4,7 +4,6 @@ import java.util.Date;
 
 import org.apache.kafka.clients.consumer.ConsumerRecord;
 import org.springframework.kafka.annotation.KafkaListener;
-import org.springframework.stereotype.Component;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -14,7 +13,6 @@ import net.risesoft.y9.pubsub.constant.Y9TopicConst;
 import net.risesoft.y9public.entity.Y9logAccessLog;
 import net.risesoft.y9public.service.Y9logAccessLogService;
 
-@Component
 @Slf4j
 @RequiredArgsConstructor
 public class Y9AccessLogListener {

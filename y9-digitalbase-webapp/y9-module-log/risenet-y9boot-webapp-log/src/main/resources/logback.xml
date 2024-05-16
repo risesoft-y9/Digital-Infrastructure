@@ -2,7 +2,7 @@
 <configuration>
     <include resource="org/springframework/boot/logging/logback/base.xml"/>
     <logger name="y9.autoconfiguration" level="DEBUG"/>
-    <logger name="net.risesoft" level="DEBUG"/>
+    <logger name="net.risesoft" level="INFO"/>
     <logger name="org.mongodb" level="WARN"/>
     <logger name="org.hibernate" level="WARN"/>
     <logger name="org.apache.catalina.startup.Catalina" level="INFO"/>
