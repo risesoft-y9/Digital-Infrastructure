@@ -1,5 +1,5 @@
-<project xmlns="http://maven.apache.org/POM/4.0.0"
-         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+<project xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xmlns="http://maven.apache.org/POM/4.0.0"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
 
     <modelVersion>4.0.0</modelVersion>
@@ -86,31 +86,31 @@
         <maven.build.timestamp.format>yyyy-MM-dd_HH_mm</maven.build.timestamp.format>
         <maven.javadoc.failOnError>false</maven.javadoc.failOnError>
 
-        <spring-boot.version>2.7.15</spring-boot.version>
+        <spring-boot.version>2.7.18</spring-boot.version>
         <spring-cloud.version>2021.0.8</spring-cloud.version>
 
         <aspectj.version>1.9.20.1</aspectj.version>
 
-        <fastjson.version>2.0.40</fastjson.version>
+        <fastjson.version>2.0.49</fastjson.version>
         <rs-api.version>2.1.1</rs-api.version>
 
-        <guava.version>31.1-jre</guava.version>
+        <guava.version>32.1.2-jre</guava.version>
         <druid.version>1.2.19</druid.version>
         <druid-starter.version>1.2.19</druid-starter.version>
 
         <commons-fileupload.version>1.5</commons-fileupload.version>
-        <commons-lang3.version>3.12.0</commons-lang3.version>
-        <commons-io.version>2.11.0</commons-io.version>
-        <commons-net.version>3.9.0</commons-net.version>
-        <commons-pool2.version>2.11.1</commons-pool2.version>
+        <commons-lang3.version>3.14.0</commons-lang3.version>
+        <commons-io.version>2.15.1</commons-io.version>
+        <commons-net.version>3.10.0</commons-net.version>
+        <commons-pool2.version>2.12.0</commons-pool2.version>
 
         <javers.version>6.14.0</javers.version>
         <org-dom4j.version>2.1.4</org-dom4j.version>
-        <oshi.version>6.4.5</oshi.version>
+        <oshi.version>6.6.0</oshi.version>
         <lombok.version>1.18.28</lombok.version>
 
-        <liquibase.version>4.24.0</liquibase.version>
-        <shedlock.version>4.44.0</shedlock.version>
+        <liquibase.version>4.26.0</liquibase.version>
+        <shedlock.version>4.47.0</shedlock.version>
     </properties>
 
     <dependencyManagement>
