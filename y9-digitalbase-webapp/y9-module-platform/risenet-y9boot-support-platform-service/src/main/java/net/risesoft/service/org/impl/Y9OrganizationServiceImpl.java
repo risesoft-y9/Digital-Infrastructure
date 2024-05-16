@@ -76,6 +76,7 @@ public class Y9OrganizationServiceImpl implements Y9OrganizationService {
     }
 
     @Override
+    @Transactional(readOnly = false)
     public Y9Organization changeDisabled(String id) {
 
         // 检查所有子节点是否都禁用了，只有所有子节点都禁用了，当前部门才能禁用

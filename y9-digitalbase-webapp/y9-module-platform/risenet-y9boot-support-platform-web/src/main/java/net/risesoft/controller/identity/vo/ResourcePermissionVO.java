@@ -35,6 +35,8 @@ public class ResourcePermissionVO {
         /** 资源类型 */
         private ResourceTypeEnum resourceType;
 
+        private Boolean enabled;
+        
         /** 权限详细列表 */
         private List<PermissionDetail> permissionDetailList;
     }

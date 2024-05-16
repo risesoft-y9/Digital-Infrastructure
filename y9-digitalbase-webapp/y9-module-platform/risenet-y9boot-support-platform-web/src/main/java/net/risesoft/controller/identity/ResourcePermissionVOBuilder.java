@@ -86,6 +86,7 @@ public class ResourcePermissionVOBuilder {
             resource.setLevel(level);
             resource.setResourceType(y9ResourceBase.getResourceType());
             resource.setPermissionDetailList(buildDetail(y9ResourceBase, permissionList));
+            resource.setEnabled(y9ResourceBase.getEnabled());
             resourceList.add(resource);
             List<Y9ResourceBase> subResourceBaseList = allResourceBaseList.stream()
                 .filter(r -> y9ResourceBase.getId().equals(r.getParentId())).sorted().collect(Collectors.toList());

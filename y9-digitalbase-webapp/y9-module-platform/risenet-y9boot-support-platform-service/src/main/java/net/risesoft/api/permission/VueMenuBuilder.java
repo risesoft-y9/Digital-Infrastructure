@@ -42,8 +42,10 @@ public class VueMenuBuilder {
             .distinct().collect(Collectors.toList());
         for (String menuId : menuIdList) {
             Y9Menu y9Menu = y9MenuService.getById(menuId);
-            VueMenu vueMenu = buildVueMenu(personId, authority, menuId, y9Menu);
-            vueMenuList.add(vueMenu);
+            if (y9Menu.getEnabled()) {
+                VueMenu vueMenu = buildVueMenu(personId, authority, menuId, y9Menu);
+                vueMenuList.add(vueMenu);
+            }
         }
     }
 
@@ -73,7 +75,9 @@ public class VueMenuBuilder {
             .map(Y9IdentityToResourceAndAuthorityBase::getResourceId).distinct().collect(Collectors.toList());
         for (String buttonId : buttonIdList) {
             Y9Operation y9Operation = y9OperationService.getById(buttonId);
-            buttonList.add(buildVueButton(y9Operation));
+            if (y9Operation.getEnabled()) {
+                buttonList.add(buildVueButton(y9Operation));
+            }
         }
         return buttonList;
     }

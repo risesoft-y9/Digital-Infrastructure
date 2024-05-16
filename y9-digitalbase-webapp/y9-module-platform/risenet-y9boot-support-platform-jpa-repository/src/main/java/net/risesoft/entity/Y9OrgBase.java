@@ -10,6 +10,7 @@ import jakarta.validation.constraints.NotBlank;
 
 import org.hibernate.annotations.ColumnDefault;
 import org.hibernate.annotations.Comment;
+import org.hibernate.annotations.Type;
 
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -54,10 +55,10 @@ public abstract class Y9OrgBase extends BaseEntity implements Comparable<Y9OrgBa
     @Version
     protected Integer version;
 
-    /** 是否可用 */
+    /** 是否禁用 */
     @Convert(converter = org.hibernate.type.NumericBooleanConverter.class)
     @Column(name = "DISABLED", nullable = false)
-    @Comment("是否可用")
+    @Comment("是否禁用")
     @ColumnDefault("0")
     protected Boolean disabled = false;
 
