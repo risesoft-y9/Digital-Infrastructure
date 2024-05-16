@@ -135,6 +135,7 @@ y9:
         log:
             accessLogIndex: logindex
             accessLogSaveTarget: elastic
+            #kafkaEnabled=true时才会初始化Kafka的事件监听（注意要将KafkaAutoConfiguration启用）
             kafkaEnabled: false
     service:
         org:
