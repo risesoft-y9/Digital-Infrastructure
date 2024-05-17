@@ -53,7 +53,7 @@ public class DeptController {
     @RequestMapping(value = "/changeDisabled")
     public Y9Result<Y9Department> changeDisabled(@RequestParam @NotBlank String id) {
         Y9Department dept = y9DepartmentService.changeDisable(id);
-        return Y9Result.success(dept, "禁用部门成功！");
+        return Y9Result.success(dept, "部门禁用状态修改成功！");
     }
 
     /**

@@ -67,7 +67,7 @@ public class PositionController {
     @PostMapping(value = "/changeDisabled")
     public Y9Result<Y9Position> changeDisabled(@NotBlank @RequestParam String id) {
         Y9Position y9Position = y9PositionService.changeDisabled(id);
-        return Y9Result.success(y9Position, "禁用岗位成功");
+        return Y9Result.success(y9Position, "岗位禁用状态修改成功");
     }
 
     /**

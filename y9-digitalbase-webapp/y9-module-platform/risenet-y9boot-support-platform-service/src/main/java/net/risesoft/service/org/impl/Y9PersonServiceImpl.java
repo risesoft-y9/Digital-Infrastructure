@@ -568,12 +568,6 @@ public class Y9PersonServiceImpl implements Y9PersonService {
         updatedPerson.setDisabled(disabled);
         final Y9Person savedPerson = y9PersonManager.save(updatedPerson);
 
-        if (disabled) {
-            // y9PersonsToPositionsManager.deleteByPersonId(id);
-            // y9PersonsToGroupsManager.deleteByPersonId(id);
-            // y9DepartmentPropManager.deleteByOrgUnitId(id);
-        }
-
         Y9Context.publishEvent(new Y9EntityUpdatedEvent<>(originPerson, savedPerson));
 
         if (TransactionSynchronizationManager.isActualTransactionActive()) {

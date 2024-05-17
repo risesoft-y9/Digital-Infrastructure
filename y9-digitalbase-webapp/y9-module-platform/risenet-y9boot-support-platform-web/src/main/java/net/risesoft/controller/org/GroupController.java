@@ -66,7 +66,7 @@ public class GroupController {
     @PostMapping(value = "/changeDisabled")
     public Y9Result<Y9Group> changeDisabled(@NotBlank @RequestParam String id) {
         Y9Group y9Group = y9GroupService.changeDisabled(id);
-        return Y9Result.success(y9Group, "禁用用户组成功");
+        return Y9Result.success(y9Group, "用户组禁用状态修改成功");
     }
 
     /**

@@ -68,7 +68,7 @@ public class OrgController {
     @PostMapping(value = "/changeDisabled")
     public Y9Result<Y9Organization> changeDisabled(@NotBlank @RequestParam String id) {
         Y9Organization y9Organization = y9OrganizationService.changeDisabled(id);
-        return Y9Result.success(y9Organization, "禁用组织成功");
+        return Y9Result.success(y9Organization, "组织禁用状态修改成功");
     }
 
     /**
