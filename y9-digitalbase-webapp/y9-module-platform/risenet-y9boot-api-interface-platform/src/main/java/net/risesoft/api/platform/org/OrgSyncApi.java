@@ -49,7 +49,7 @@ public interface OrgSyncApi {
      * @param tenantId 租户id
      * @param page 页数，初始值为1
      * @param rows 每页返回数
-     * @return
+     * @return {@code Y9Result<Department>} 通用分页对象 - 部门数据
      */
     @GetMapping("/fullSyncDept")
     Y9Page<Department> fullSyncDept(@RequestParam String appName, @RequestParam String tenantId, @RequestParam int page,
@@ -63,7 +63,7 @@ public interface OrgSyncApi {
      * @param type 0-查全量，1-查询没被禁用的
      * @param page 页数，初始值为1
      * @param rows 每页返回数
-     * @return
+     * @return {@code Y9Result<Person>} 通用分页对象 - 人员数据
      */
     @GetMapping("/fullSyncUser")
     Y9Page<Person> fullSyncUser(@RequestParam String appName, @RequestParam String tenantId, @RequestParam String type,
@@ -86,7 +86,7 @@ public interface OrgSyncApi {
      *
      * @param appName 应用名称
      * @param tenantId 租户id
-     * @return
+     * @return {@code Y9Result<String>} 通用请求返回对象 - 增量接口处理结果
      */
     @GetMapping("/syncTime")
     Y9Result<String> syncTime(@RequestParam String appName, @RequestParam String tenantId);
