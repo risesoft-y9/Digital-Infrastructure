@@ -114,19 +114,6 @@ public interface Y9PositionToResourceAndAuthorityService {
         Boolean inherit);
 
     /**
-     * 更新
-     *
-     * @param resourceId
-     * @param resourceName
-     * @param systemName
-     * @param systemCnName
-     * @param description
-     * @return
-     */
-    void updateByResourceId(String resourceId, String resourceName, String systemName, String systemCnName,
-        String description);
-
-    /**
      * 获得某一资源下，有相应操作权限的子节点
      *
      * @param positionId 岗位id

@@ -18,6 +18,14 @@ import net.risesoft.y9public.entity.resource.Y9ResourceBase;
 public interface CompositeResourceService {
 
     /**
+     * 通过自定义ID查找
+     *
+     * @param customId 自定义id
+     * @return {@code List<Y9ResourceBase> }
+     */
+    List<Y9ResourceBase> findByCustomId(String customId);
+
+    /**
      * 根据customID和parentId获取资源
      *
      * @param customId

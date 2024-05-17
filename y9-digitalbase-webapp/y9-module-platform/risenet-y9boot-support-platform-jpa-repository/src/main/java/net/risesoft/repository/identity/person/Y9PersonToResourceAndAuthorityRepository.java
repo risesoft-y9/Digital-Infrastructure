@@ -28,10 +28,6 @@ public interface Y9PersonToResourceAndAuthorityRepository
 
     @Modifying
     @Transactional(readOnly = false)
-    void deleteByAppId(String appId);
-
-    @Modifying
-    @Transactional(readOnly = false)
     void deleteByAuthorizationId(String authorizationId);
 
     @Modifying
@@ -58,25 +54,19 @@ public interface Y9PersonToResourceAndAuthorityRepository
 
     Page<Y9PersonToResourceAndAuthority> findByPersonId(String personId, Pageable pageable);
 
-    List<Y9PersonToResourceAndAuthority> findByPersonIdAndAuthorityAndResourceTypeOrderByResourceTabIndex(
-        String personId, AuthorityEnum authority, ResourceTypeEnum resourceType);
+    List<Y9PersonToResourceAndAuthority> findByPersonIdAndAuthorityAndResourceType(String personId,
+        AuthorityEnum authority, ResourceTypeEnum resourceType);
 
-    List<Y9PersonToResourceAndAuthority>
-        findByPersonIdAndParentResourceIdAndAuthorityAndResourceTypeOrderByResourceTabIndex(String personId,
-            String parentResourceId, AuthorityEnum authority, ResourceTypeEnum resourceType);
+    List<Y9PersonToResourceAndAuthority> findByPersonIdAndParentResourceIdAndAuthorityAndResourceType(String personId,
+        String parentResourceId, AuthorityEnum authority, ResourceTypeEnum resourceType);
 
-    List<Y9PersonToResourceAndAuthority> findByPersonIdAndParentResourceIdAndAuthorityOrderByResourceTabIndex(
-        String personId, String parentResourceId, AuthorityEnum authority);
-
-    List<Y9PersonToResourceAndAuthority> findByPersonIdAndResourceCustomIdAndAuthority(String personId,
-        String resourceCustomId, AuthorityEnum authority);
+    List<Y9PersonToResourceAndAuthority> findByPersonIdAndParentResourceIdAndAuthority(String personId,
+        String parentResourceId, AuthorityEnum authority);
 
     List<Y9PersonToResourceAndAuthority> findByPersonIdAndResourceIdAndAuthority(String personId, String resourceId,
         AuthorityEnum authority);
 
     Optional<Y9PersonToResourceAndAuthority> findByPersonIdAndResourceIdAndAuthorizationIdAndAuthority(String personId,
         String resourceId, String authorizationId, AuthorityEnum authority);
-
-    List<Y9PersonToResourceAndAuthority> findByResourceId(String resourceId);
 
 }

@@ -27,8 +27,7 @@ import net.risesoft.persistence.EnumConverter;
 @MappedSuperclass
 @NoArgsConstructor
 @Data
-public abstract class Y9IdentityToResourceAndAuthorityBase extends BaseEntity
-    implements Comparable<Y9IdentityToResourceAndAuthorityBase> {
+public abstract class Y9IdentityToResourceAndAuthorityBase extends BaseEntity {
 
     private static final long serialVersionUID = 5073573498005834150L;
 
@@ -59,21 +58,10 @@ public abstract class Y9IdentityToResourceAndAuthorityBase extends BaseEntity
     @Comment("资源id")
     protected String resourceId;
 
-    /** 资源id */
-    @Column(name = "RESOURCE_CUSTOM_ID", length = 38)
-    @Comment("资源自定义id")
-    protected String resourceCustomId;
-
-    /** 资源名称 */
-    @Column(name = "RESOURCE_NAME", length = 255)
-    @Comment("资源名称")
-    protected String resourceName;
-
-    /** 资源是否为继承上级节点的权限。冗余字段，纯显示用 */
     @Convert(converter = org.hibernate.type.NumericBooleanConverter.class)
     @Column(name = "INHERIT", nullable = false)
     @Comment("资源是否为继承上级节点的权限。冗余字段，纯显示用")
-    private Boolean inherit;
+    protected Boolean inherit;
 
     /** 资源类型：0=应用，1=菜单，2=操作 */
     @Column(name = "RESOURCE_TYPE", nullable = false)
@@ -86,49 +74,13 @@ public abstract class Y9IdentityToResourceAndAuthorityBase extends BaseEntity
     @Column(name = "PARENT_RESOURCE_ID", length = 38)
     protected String parentResourceId;
 
-    /** 资源url */
-    @Column(name = "RESOURCE_URL", length = 255)
-    @Comment("资源URL")
-    protected String resourceUrl;
-
-    /** 描述 */
-    @Column(name = "RESOURCE_DESCRIPTION", length = 255)
-    @Comment("描述")
-    protected String resourceDescription;
-
-    /** 排序 */
-    @Column(name = "RESOURCE_TAB_INDEX", nullable = false)
-    @Comment("排序")
-    protected Integer resourceTabIndex = 0;
-
     /** 应用id */
     @Column(name = "APP_ID", length = 38, nullable = false)
     @Comment("应用id")
     protected String appId;
 
-    /** 应用名称 */
-    @Column(name = "APP_NAME", length = 255)
-    @Comment("应用名称")
-    protected String appName;
-
     /** 系统id */
     @Column(name = "SYSTEM_ID", length = 38, nullable = false)
     @Comment("系统id")
     protected String systemId;
-
-    /** 系统英文名称 */
-    @Column(name = "SYSTEM_NAME", length = 255)
-    @Comment("系统英文名称")
-    protected String systemName;
-
-    /** 系统中文名称 */
-    @Column(name = "SYSTEM_CN_NAME", length = 255)
-    @Comment("系统中文名称")
-    protected String systemCnName;
-
-    @Override
-    public int compareTo(Y9IdentityToResourceAndAuthorityBase o) {
-        int value = this.systemId.compareTo(o.systemId);
-        return value == 0 ? this.appId.compareTo(o.appId) : value;
-    }
 }

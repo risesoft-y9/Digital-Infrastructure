@@ -24,6 +24,7 @@ import net.risesoft.service.org.CompositeOrgBaseService;
 import net.risesoft.y9public.entity.resource.Y9ResourceBase;
 import net.risesoft.y9public.entity.role.Y9Role;
 import net.risesoft.y9public.service.resource.CompositeResourceService;
+import net.risesoft.y9public.service.resource.Y9SystemService;
 import net.risesoft.y9public.service.role.Y9RoleService;
 
 /**
@@ -42,6 +43,7 @@ public class ResourcePermissionVOBuilder {
 
     private final Y9AuthorizationService y9AuthorizationService;
     private final Y9RoleService y9RoleService;
+    private final Y9SystemService y9SystemService;
 
     public List<ResourcePermissionVO>
         buildResourcePermissionVOList(List<Y9IdentityToResourceAndAuthorityBase> y9PersonToResourceAndAuthorityList) {
@@ -52,14 +54,14 @@ public class ResourcePermissionVOBuilder {
                 .collect(Collectors.groupingBy(Y9IdentityToResourceAndAuthorityBase::getSystemId));
         for (Map.Entry<String, List<Y9IdentityToResourceAndAuthorityBase>> entry : systemIdPermissionListMap
             .entrySet()) {
-            permissionVOList.add(buildPermissionVO(entry.getValue()));
+            permissionVOList.add(buildPermissionVO(entry.getKey(), entry.getValue()));
         }
         return permissionVOList;
     }
 
-    private ResourcePermissionVO buildPermissionVO(List<Y9IdentityToResourceAndAuthorityBase> permissionList) {
+    private ResourcePermissionVO buildPermissionVO(String systemId, List<Y9IdentityToResourceAndAuthorityBase> permissionList) {
         ResourcePermissionVO permissionVO = new ResourcePermissionVO();
-        permissionVO.setSystemCnName(permissionList.get(0).getSystemCnName());
+        permissionVO.setSystemCnName(y9SystemService.getById(systemId).getCnName());
         permissionVO.setResourceList(buildResourceList(permissionList));
         return permissionVO;
     }

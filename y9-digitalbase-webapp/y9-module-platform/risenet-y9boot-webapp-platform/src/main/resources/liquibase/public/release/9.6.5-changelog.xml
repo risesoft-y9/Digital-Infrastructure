@@ -22,12 +22,4 @@
         </createTable>
     </changeSet>
 
-    <changeSet id="1715572323985-1" author="shidaobang">
-        <addColumn tableName="Y9_COMMON_TENANT_APP">
-            <column defaultValueNumeric="0" name="INITIALIZED" remarks="租户应用数据是否已经初始化" type="INT">
-                <constraints nullable="false"/>
-            </column>
-        </addColumn>
-    </changeSet>
-
 </databaseChangeLog>
