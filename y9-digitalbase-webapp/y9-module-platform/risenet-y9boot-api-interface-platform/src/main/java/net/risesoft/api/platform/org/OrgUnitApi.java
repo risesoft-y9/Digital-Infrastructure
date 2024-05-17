@@ -74,7 +74,7 @@ public interface OrgUnitApi {
         @RequestParam("orgUnitId") @NotBlank String orgUnitId);
 
     /**
-     * 获取组织节点的父节点对象（部门或组织机构）<br/>
+     * 获取组织节点的父节点对象（部门或组织机构）<br>
      * 如果 orgUnitId 对应组织机构节点，则返回 null
      *
      * @param tenantId 租户id
