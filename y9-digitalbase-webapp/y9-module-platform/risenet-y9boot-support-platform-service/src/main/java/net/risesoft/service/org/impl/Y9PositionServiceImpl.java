@@ -116,12 +116,6 @@ public class Y9PositionServiceImpl implements Y9PositionService {
         y9Position.setDisabled(isDisabled);
         Y9Position savePosition = y9PositionManager.save(y9Position);
 
-        if (isDisabled) {
-            // y9PersonsToPositionsManager.deleteByPositionId(id);
-            // y9PositionsToGroupsManager.deleteByPositionId(id);
-            // y9DepartmentPropManager.deleteByOrgUnitId(id);
-        }
-
         if (TransactionSynchronizationManager.isActualTransactionActive()) {
             TransactionSynchronizationManager.registerSynchronization(new TransactionSynchronization() {
                 @Override

@@ -78,15 +78,17 @@ public class Y9OrganizationServiceImpl implements Y9OrganizationService {
     @Override
     @Transactional(readOnly = false)
     public Y9Organization changeDisabled(String id) {
-
-        // 检查所有子节点是否都禁用了，只有所有子节点都禁用了，当前部门才能禁用
-        compositeOrgBaseManager.checkAllDecendantsDisabled(id);
-
-        Y9Organization y9Group = y9OrganizationManager.findByIdNotCache(id)
+        Y9Organization y9Organization = y9OrganizationManager.findByIdNotCache(id)
             .orElseThrow(() -> Y9ExceptionUtil.notFoundException(OrgUnitErrorCodeEnum.ORGANIZATION_NOT_FOUND, id));
-        Boolean isDisabled = !y9Group.getDisabled();
-        y9Group.setDisabled(isDisabled);
-        final Y9Organization savedOrganization = y9OrganizationManager.save(y9Group);
+        Boolean isDisabled = !y9Organization.getDisabled();
+        
+        if (isDisabled) {
+            // 禁用时检查所有子节点是否都禁用了，只有所有子节点都禁用了，当前组织才能禁用
+            compositeOrgBaseManager.checkAllDecendantsDisabled(id);
+        }
+
+        y9Organization.setDisabled(isDisabled);
+        final Y9Organization savedOrganization = y9OrganizationManager.save(y9Organization);
 
         if (TransactionSynchronizationManager.isActualTransactionActive()) {
             TransactionSynchronizationManager.registerSynchronization(new TransactionSynchronization() {

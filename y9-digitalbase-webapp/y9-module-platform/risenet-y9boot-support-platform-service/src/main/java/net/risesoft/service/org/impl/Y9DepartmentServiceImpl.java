@@ -74,13 +74,15 @@ public class Y9DepartmentServiceImpl implements Y9DepartmentService {
     @Override
     @Transactional(readOnly = false)
     public Y9Department changeDisable(String id) {
-
-        // 检查所有子节点是否都禁用了，只有所有子节点都禁用了，当前部门才能禁用
-        compositeOrgBaseManager.checkAllDecendantsDisabled(id);
-
         Y9Department dept = y9DepartmentManager.findByIdNotCache(id)
             .orElseThrow(() -> Y9ExceptionUtil.notFoundException(OrgUnitErrorCodeEnum.DEPARTMENT_NOT_FOUND, id));
         Boolean isDisabled = !dept.getDisabled();
+
+        if (isDisabled) {
+            // 检查所有子节点是否都禁用了，只有所有子节点都禁用了，当前部门才能禁用
+            compositeOrgBaseManager.checkAllDecendantsDisabled(id);
+        }
+
         dept.setDisabled(isDisabled);
         final Y9Department savedDepartment = y9DepartmentManager.save(dept);
 
@@ -274,8 +276,7 @@ public class Y9DepartmentServiceImpl implements Y9DepartmentService {
                     Y9MessageOrg<Department> msg =
                         new Y9MessageOrg<>(Y9ModelConvertUtil.convert(savedDepartment, Department.class),
                             Y9OrgEventTypeConst.DEPARTMENT_UPDATE, Y9LoginUserHolder.getTenantId());
-                    Y9PublishServiceUtil.persistAndPublishMessageOrg(msg, "移动部门",
-                        "移动" + originDepartment.getName());
+                    Y9PublishServiceUtil.persistAndPublishMessageOrg(msg, "移动部门", "移动" + originDepartment.getName());
                 }
             });
         }
@@ -422,8 +423,7 @@ public class Y9DepartmentServiceImpl implements Y9DepartmentService {
                     Y9MessageOrg<Department> msg =
                         new Y9MessageOrg<>(Y9ModelConvertUtil.convert(savedDepartment, Department.class),
                             Y9OrgEventTypeConst.DEPARTMENT_ADD, Y9LoginUserHolder.getTenantId());
-                    Y9PublishServiceUtil.persistAndPublishMessageOrg(msg, "新增部门",
-                        "新增" + savedDepartment.getName());
+                    Y9PublishServiceUtil.persistAndPublishMessageOrg(msg, "新增部门", "新增" + savedDepartment.getName());
                 }
             });
         }

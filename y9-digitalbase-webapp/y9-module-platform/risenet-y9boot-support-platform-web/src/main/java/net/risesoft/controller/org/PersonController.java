@@ -110,7 +110,7 @@ public class PersonController {
     @PostMapping(value = "/changeDisabled")
     public Y9Result<Y9Person> changeDisabled(@NotBlank @RequestParam String id) {
         Y9Person y9Person = y9PersonService.changeDisabled(id);
-        return Y9Result.success(y9Person, "禁用人员成功");
+        return Y9Result.success(y9Person, "人员禁用状态修改成功");
     }
 
     /**
