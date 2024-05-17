@@ -35,6 +35,11 @@ public class Y9Operation extends Y9ResourceBase {
     @Comment("应用id")
     private String appId;
 
+    /** 父节点ID */
+    @Comment("父节点ID")
+    @Column(name = "PARENT_ID", length = 38, nullable = false)
+    private String parentId;
+
     @ColumnDefault("0")
     @Column(name = "DISPLAY_TYPE", nullable = false)
     @Comment("按钮展示方式")

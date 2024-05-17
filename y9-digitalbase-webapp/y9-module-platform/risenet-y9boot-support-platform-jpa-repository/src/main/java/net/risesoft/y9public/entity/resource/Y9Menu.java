@@ -31,6 +31,11 @@ public class Y9Menu extends Y9ResourceBase {
     @Comment("应用id")
     private String appId;
 
+    /** 父节点ID */
+    @Comment("父节点ID")
+    @Column(name = "PARENT_ID", length = 38, nullable = false)
+    private String parentId;
+
     /** 打开模式 */
     @Column(name = "TARGET")
     @Comment("打开模式")

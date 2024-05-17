@@ -114,4 +114,9 @@ public class Y9App extends Y9ResourceBase {
         return this.id;
     }
 
+    @Override
+    public String getParentId() {
+        return null;
+    }
+
 }

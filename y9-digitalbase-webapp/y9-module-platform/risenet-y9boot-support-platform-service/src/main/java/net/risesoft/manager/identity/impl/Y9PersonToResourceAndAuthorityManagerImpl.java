@@ -77,28 +77,12 @@ public class Y9PersonToResourceAndAuthorityManagerImpl implements Y9PersonToReso
         } else {
             y9PersonToResourceAndAuthority = optionalY9PersonToResourceAndAuthority.get();
         }
-        y9PersonToResourceAndAuthority.setResourceName(y9ResourceBase.getName());
         y9PersonToResourceAndAuthority.setResourceType(y9ResourceBase.getResourceType());
-        y9PersonToResourceAndAuthority.setResourceUrl(y9ResourceBase.getUrl());
-        y9PersonToResourceAndAuthority.setResourceDescription(y9ResourceBase.getDescription());
-        y9PersonToResourceAndAuthority.setResourceTabIndex(y9ResourceBase.getTabIndex());
         y9PersonToResourceAndAuthority.setParentResourceId(y9ResourceBase.getParentId());
         y9PersonToResourceAndAuthority.setInherit(inherit);
+        y9PersonToResourceAndAuthority.setAppId(y9ResourceBase.getAppId());
+        y9PersonToResourceAndAuthority.setSystemId(y9ResourceBase.getSystemId());
 
-        Optional<Y9App> y9AppOptional = y9AppRepository.findById(y9ResourceBase.getAppId());
-        if (y9AppOptional.isPresent()) {
-            Y9App app = y9AppOptional.get();
-            y9PersonToResourceAndAuthority.setAppId(app.getAppId());
-            y9PersonToResourceAndAuthority.setAppName(app.getName());
-        }
-
-        Optional<Y9System> y9SystemOptional = y9SystemRepository.findById(y9ResourceBase.getSystemId());
-        if (y9SystemOptional.isPresent()) {
-            Y9System y9System = y9SystemOptional.get();
-            y9PersonToResourceAndAuthority.setSystemId(y9System.getId());
-            y9PersonToResourceAndAuthority.setSystemName(y9System.getName());
-            y9PersonToResourceAndAuthority.setSystemCnName(y9System.getCnName());
-        }
         y9PersonToResourceAndAuthorityRepository.save(y9PersonToResourceAndAuthority);
     }
 }

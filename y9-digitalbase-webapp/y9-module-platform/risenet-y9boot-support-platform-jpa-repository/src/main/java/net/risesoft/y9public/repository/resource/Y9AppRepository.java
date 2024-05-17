@@ -3,8 +3,6 @@ package net.risesoft.y9public.repository.resource;
 import java.util.List;
 import java.util.Optional;
 
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.stereotype.Repository;
@@ -38,8 +36,6 @@ public interface Y9AppRepository extends JpaRepository<Y9App, String>, JpaSpecif
 
     List<Y9App> findByNameContainingOrderByTabIndex(String name);
 
-    List<Y9App> findByParentIdOrderByTabIndex(String parentId);
-
     List<Y9App> findBySystemId(String systemId);
 
     Optional<Y9App> findBySystemIdAndCustomId(String systemId, String customId);
@@ -51,10 +47,6 @@ public interface Y9AppRepository extends JpaRepository<Y9App, String>, JpaSpecif
     List<Y9App> findBySystemIdOrderByTabIndex(String systemId);
 
     List<Y9App> findByUrlContaining(String url);
-
-    Page<Y9App> findPageBySystemId(String systemId, Pageable pageable);
-
-    Page<Y9App> findPageBySystemIdAndNameContaining(String systemId, String name, Pageable pageable);
 
     Optional<Y9App> findTopByOrderByTabIndexDesc();
 

@@ -1,8 +1,10 @@
 package net.risesoft.y9public.repository.resource;
 
+import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
 
+import net.risesoft.y9public.entity.resource.Y9ResourceBase;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
@@ -22,6 +24,8 @@ import net.risesoft.y9public.entity.resource.Y9Operation;
 public interface Y9OperationRepository extends JpaRepository<Y9Operation, String> {
 
     List<Y9Operation> findByAppId(String appId);
+
+    List<Y9Operation> findByCustomId(String customId);
 
     List<Y9Operation> findByNameContainingOrderByTabIndex(String name);
 

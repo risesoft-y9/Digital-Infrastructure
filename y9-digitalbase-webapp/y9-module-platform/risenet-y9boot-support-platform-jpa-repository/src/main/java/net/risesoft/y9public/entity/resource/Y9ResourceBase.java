@@ -1,5 +1,7 @@
 package net.risesoft.y9public.entity.resource;
 
+import java.util.Comparator;
+
 import javax.persistence.Column;
 import javax.persistence.Convert;
 import javax.persistence.Id;
@@ -41,13 +43,13 @@ public abstract class Y9ResourceBase extends BaseEntity implements Comparable<Y9
     /** 自定义id */
     @Column(name = "CUSTOM_ID", length = 500)
     @Comment("自定义id")
-    private String customId;
+    protected String customId;
 
     /** 系统id */
     @NotBlank
     @Column(name = "SYSTEM_ID", length = 38, nullable = false)
     @Comment("系统id")
-    private String systemId;
+    protected String systemId;
 
     /** 名称 */
     @NotBlank
@@ -89,11 +91,6 @@ public abstract class Y9ResourceBase extends BaseEntity implements Comparable<Y9
     @Comment("链接地址2")
     protected String url2;
 
-    /** 父节点ID */
-    @Comment("父节点ID")
-    @Column(name = "PARENT_ID", length = 38)
-    protected String parentId;
-
     /** 资源类型：0=应用，1=菜单，2=操作 */
     @ColumnDefault("0")
     @Column(name = "RESOURCE_TYPE", nullable = false)
@@ -115,8 +112,11 @@ public abstract class Y9ResourceBase extends BaseEntity implements Comparable<Y9
 
     @Override
     public int compareTo(Y9ResourceBase y9ResourceBase) {
-        return this.tabIndex.compareTo(y9ResourceBase.tabIndex);
+        return Comparator.comparing(Y9ResourceBase::getSystemId).thenComparing(Y9ResourceBase::getParentId, Comparator.nullsFirst(String::compareTo))
+            .thenComparing(Y9ResourceBase::getTabIndex).compare(this, y9ResourceBase);
     }
 
     public abstract String getAppId();
+
+    public abstract String getParentId();
 }
