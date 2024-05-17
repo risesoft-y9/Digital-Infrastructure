@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+                      http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.9.xsd">
+
+    <changeSet id="1715936106408-1" author="shidaobang">
+        <dropColumn
+                columnName="RESOURCE_CUSTOM_ID"
+                tableName="Y9_ORG_PERSONS_RESOURCES">
+        </dropColumn>
+        <dropColumn
+                columnName="RESOURCE_NAME"
+                tableName="Y9_ORG_PERSONS_RESOURCES">
+        </dropColumn>
+        <dropColumn
+                columnName="RESOURCE_URL"
+                tableName="Y9_ORG_PERSONS_RESOURCES">
+        </dropColumn>
+        <dropColumn
+                columnName="RESOURCE_DESCRIPTION"
+                tableName="Y9_ORG_PERSONS_RESOURCES">
+        </dropColumn>
+        <dropColumn
+                columnName="RESOURCE_TAB_INDEX"
+                tableName="Y9_ORG_PERSONS_RESOURCES">
+        </dropColumn>
+        <dropColumn
+                columnName="APP_NAME"
+                tableName="Y9_ORG_PERSONS_RESOURCES">
+        </dropColumn>
+        <dropColumn
+                columnName="SYSTEM_NAME"
+                tableName="Y9_ORG_PERSONS_RESOURCES">
+        </dropColumn>
+        <dropColumn
+                columnName="SYSTEM_CN_NAME"
+                tableName="Y9_ORG_PERSONS_RESOURCES">
+        </dropColumn>
+    </changeSet>
+
+    <changeSet id="1715936106408-2" author="shidaobang">
+        <dropColumn
+                columnName="RESOURCE_CUSTOM_ID"
+                tableName="Y9_ORG_POSITIONS_RESOURCES">
+        </dropColumn>
+        <dropColumn
+                columnName="RESOURCE_NAME"
+                tableName="Y9_ORG_POSITIONS_RESOURCES">
+        </dropColumn>
+        <dropColumn
+                columnName="RESOURCE_URL"
+                tableName="Y9_ORG_POSITIONS_RESOURCES">
+        </dropColumn>
+        <dropColumn
+                columnName="RESOURCE_DESCRIPTION"
+                tableName="Y9_ORG_POSITIONS_RESOURCES">
+        </dropColumn>
+        <dropColumn
+                columnName="RESOURCE_TAB_INDEX"
+                tableName="Y9_ORG_POSITIONS_RESOURCES">
+        </dropColumn>
+        <dropColumn
+                columnName="APP_NAME"
+                tableName="Y9_ORG_POSITIONS_RESOURCES">
+        </dropColumn>
+        <dropColumn
+                columnName="SYSTEM_NAME"
+                tableName="Y9_ORG_POSITIONS_RESOURCES">
+        </dropColumn>
+        <dropColumn
+                columnName="SYSTEM_CN_NAME"
+                tableName="Y9_ORG_POSITIONS_RESOURCES">
+        </dropColumn>
+    </changeSet>
+
+</databaseChangeLog>

@@ -18,6 +18,9 @@ import net.risesoft.enums.platform.ResourceTypeEnum;
 @Data
 public class ResourcePermissionVO {
 
+    /** 系统id */
+    private String systemId;
+    
     /** 系统中文名称 */
     private String systemCnName;
 

@@ -64,6 +64,15 @@ public class CompositeResourceServiceImpl implements CompositeResourceService {
     }
 
     @Override
+    public List<Y9ResourceBase> findByCustomId(String customId) {
+        List<Y9ResourceBase> y9ResourceBaseList = new ArrayList<>();
+        y9ResourceBaseList.addAll(y9AppRepository.findByCustomId(customId));
+        y9ResourceBaseList.addAll(y9MenuRepository.findByCustomId(customId));
+        y9ResourceBaseList.addAll(y9OperationRepository.findByCustomId(customId));
+        return y9ResourceBaseList;
+    }
+
+    @Override
     public Optional<? extends Y9ResourceBase> findByCustomIdAndParentId(String customId, String parentId,
         ResourceTypeEnum resourceType) {
         if (ResourceTypeEnum.APP.equals(resourceType)) {

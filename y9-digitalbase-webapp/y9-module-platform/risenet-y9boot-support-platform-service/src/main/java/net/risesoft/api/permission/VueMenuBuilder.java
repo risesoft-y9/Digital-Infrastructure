@@ -38,12 +38,11 @@ public class VueMenuBuilder {
     public void buildVueMenus(String personId, AuthorityEnum authority, String resourceId, List<VueMenu> vueMenuList) {
         List<Y9PersonToResourceAndAuthority> authorizedMenuList =
             y9PersonToResourceAndAuthorityService.list(personId, resourceId, ResourceTypeEnum.MENU, authority);
-        List<String> menuIdList = authorizedMenuList.stream().map(Y9IdentityToResourceAndAuthorityBase::getResourceId)
-            .distinct().collect(Collectors.toList());
-        for (String menuId : menuIdList) {
-            Y9Menu y9Menu = y9MenuService.getById(menuId);
+        List<Y9Menu> menuList = authorizedMenuList.stream().map(Y9IdentityToResourceAndAuthorityBase::getResourceId)
+            .distinct().map(y9MenuService::getById).sorted().collect(Collectors.toList());
+        for (Y9Menu y9Menu : menuList) {
             if (y9Menu.getEnabled()) {
-                VueMenu vueMenu = buildVueMenu(personId, authority, menuId, y9Menu);
+                VueMenu vueMenu = buildVueMenu(personId, authority, y9Menu.getId(), y9Menu);
                 vueMenuList.add(vueMenu);
             }
         }
@@ -71,10 +70,10 @@ public class VueMenuBuilder {
         List<VueButton> buttonList = new ArrayList<>();
         List<Y9PersonToResourceAndAuthority> authorizedButtonList =
             y9PersonToResourceAndAuthorityService.list(personId, menuId, ResourceTypeEnum.OPERATION, authority);
-        List<String> buttonIdList = authorizedButtonList.stream()
-            .map(Y9IdentityToResourceAndAuthorityBase::getResourceId).distinct().collect(Collectors.toList());
-        for (String buttonId : buttonIdList) {
-            Y9Operation y9Operation = y9OperationService.getById(buttonId);
+        List<Y9Operation> y9OperationList =
+            authorizedButtonList.stream().map(Y9IdentityToResourceAndAuthorityBase::getResourceId).distinct()
+                .map(y9OperationService::getById).sorted().collect(Collectors.toList());
+        for (Y9Operation y9Operation : y9OperationList) {
             if (y9Operation.getEnabled()) {
                 buttonList.add(buildVueButton(y9Operation));
             }

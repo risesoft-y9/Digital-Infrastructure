@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+                      http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.9.xsd">
+
+    <changeSet id="1715572323985-1" author="shidaobang">
+        <preConditions onFail="MARK_RAN">
+            <not>
+                <columnExists tableName="Y9_COMMON_TENANT_APP"
+                              columnName="INITIALIZED"/>
+            </not>
+        </preConditions>
+        <addColumn tableName="Y9_COMMON_TENANT_APP">
+            <column defaultValueNumeric="0" name="INITIALIZED" remarks="租户应用数据是否已经初始化" type="INT">
+                <constraints nullable="false"/>
+            </column>
+        </addColumn>
+    </changeSet>
+
+    <changeSet id="1715936315024-1" author="shidaobang">
+        <dropColumn
+                columnName="PARENT_ID"
+                tableName="Y9_COMMON_APP_STORE">
+        </dropColumn>
+        <addNotNullConstraint columnDataType="VARCHAR(38)" columnName="PARENT_ID" tableName="Y9_COMMON_MENU"
+                              validate="true"/>
+        <addNotNullConstraint columnDataType="VARCHAR(38)" columnName="PARENT_ID" tableName="Y9_COMMON_OPERATION"
+                              validate="true"/>
+    </changeSet>
+</databaseChangeLog>

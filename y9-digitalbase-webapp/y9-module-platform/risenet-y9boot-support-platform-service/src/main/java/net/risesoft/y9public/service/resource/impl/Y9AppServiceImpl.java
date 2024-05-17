@@ -162,11 +162,6 @@ public class Y9AppServiceImpl implements Y9AppService {
     }
 
     @Override
-    public List<Y9App> findByParentId(String parentId) {
-        return y9AppRepository.findByParentIdOrderByTabIndex(parentId);
-    }
-
-    @Override
     public Optional<Y9App> findBySystemIdAndCustomId(String systemId, String customId) {
         return y9AppRepository.findBySystemIdAndCustomId(systemId, customId);
     }

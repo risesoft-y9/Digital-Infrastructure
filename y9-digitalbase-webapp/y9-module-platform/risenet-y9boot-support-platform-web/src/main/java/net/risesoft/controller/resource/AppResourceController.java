@@ -27,8 +27,6 @@ import net.risesoft.pojo.Y9PageQuery;
 import net.risesoft.pojo.Y9Result;
 import net.risesoft.y9public.entity.resource.Y9App;
 import net.risesoft.y9public.service.resource.Y9AppService;
-import net.risesoft.y9public.service.tenant.Y9TenantAppService;
-import net.risesoft.y9public.service.tenant.Y9TenantSystemService;
 
 /**
  * 应用资源管理
@@ -47,8 +45,6 @@ import net.risesoft.y9public.service.tenant.Y9TenantSystemService;
 public class AppResourceController {
 
     private final Y9AppService y9AppService;
-    private final Y9TenantAppService y9TenantAppService;
-    private final Y9TenantSystemService y9TenantSystemService;
 
     /**
      * 批量删除应用

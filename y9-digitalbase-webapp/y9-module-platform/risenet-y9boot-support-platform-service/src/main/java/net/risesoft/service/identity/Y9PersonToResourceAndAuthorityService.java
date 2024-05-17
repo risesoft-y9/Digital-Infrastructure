@@ -114,17 +114,6 @@ public interface Y9PersonToResourceAndAuthorityService {
     void saveOrUpdate(Y9ResourceBase y9ResourceBase, Y9Person person, Y9Authorization y9Authorization, Boolean inherit);
 
     /**
-     * 更新
-     *
-     * @param resourceId
-     * @param resourceName
-     * @param systemName
-     * @param systemCnName
-     * @param description
-     */
-    void update(String resourceId, String resourceName, String systemName, String systemCnName, String description);
-
-    /**
      * 获得某一资源下,有相应操作权限的子节点
      *
      * @param personId 人员id

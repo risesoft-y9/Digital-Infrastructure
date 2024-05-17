@@ -1,6 +1,7 @@
 package net.risesoft.service.identity.impl;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -90,8 +91,9 @@ public class Y9PositionToResourceAndAuthorityServiceImpl implements Y9PositionTo
 
     @Override
     public boolean hasPermissionByCustomId(String positionId, String customId, AuthorityEnum authority) {
-        return !y9PositionToResourceAndAuthorityRepository
-            .findByPositionIdAndResourceCustomIdAndAuthority(positionId, customId, authority).isEmpty();
+        List<Y9ResourceBase> y9ResourceBaseList = compositeResourceService.findByCustomId(customId);
+        return y9ResourceBaseList.stream()
+            .anyMatch(y9ResourceBase -> hasPermission(positionId, y9ResourceBase.getId(), authority));
     }
 
     @Override
@@ -105,40 +107,39 @@ public class Y9PositionToResourceAndAuthorityServiceImpl implements Y9PositionTo
         if (StringUtils.isBlank(parentResourceId)) {
             List<Y9PositionToResourceAndAuthority> list = new ArrayList<>();
             list.addAll(y9PositionToResourceAndAuthorityRepository
-                .findByPositionIdAndParentResourceIdIsNullAndAuthorityOrderByResourceTabIndex(positionId, authority));
+                .findByPositionIdAndParentResourceIdIsNullAndAuthority(positionId, authority));
             list.addAll(y9PositionToResourceAndAuthorityRepository
-                .findByPositionIdAndParentResourceIdAndAuthorityOrderByResourceTabIndex(positionId, "", authority));
+                .findByPositionIdAndParentResourceIdAndAuthority(positionId, "", authority));
             return list;
         }
-        return y9PositionToResourceAndAuthorityRepository
-            .findByPositionIdAndParentResourceIdAndAuthorityOrderByResourceTabIndex(positionId, parentResourceId,
-                authority);
+        return y9PositionToResourceAndAuthorityRepository.findByPositionIdAndParentResourceIdAndAuthority(positionId,
+            parentResourceId, authority);
     }
 
     @Override
     public List<Y9PositionToResourceAndAuthority> list(String positionId, String parentResourceId,
         ResourceTypeEnum resourceType, AuthorityEnum authority) {
         return y9PositionToResourceAndAuthorityRepository
-            .findByPositionIdAndParentResourceIdAndAuthorityAndResourceTypeOrderByResourceTabIndex(positionId,
-                parentResourceId, authority, resourceType);
+            .findByPositionIdAndParentResourceIdAndAuthorityAndResourceType(positionId, parentResourceId, authority,
+                resourceType);
     }
 
     @Override
     public List<Y9App> listAppsByAuthority(String positionId, AuthorityEnum authority) {
         List<Y9PositionToResourceAndAuthority> resourceList = y9PositionToResourceAndAuthorityRepository
-            .findByPositionIdAndAuthorityAndResourceTypeOrderByResourceTabIndex(positionId, authority,
-                ResourceTypeEnum.APP);
+            .findByPositionIdAndAuthorityAndResourceType(positionId, authority, ResourceTypeEnum.APP);
         List<Y9App> appList = new ArrayList<>();
         for (Y9PositionToResourceAndAuthority r : resourceList) {
-            Optional<Y9TenantApp> y9TenantAppOptional =
-                y9TenantAppManager.getByTenantIdAndAppIdAndTenancy(Y9LoginUserHolder.getTenantId(), r.getAppId(), true);
+            Optional<Y9TenantApp> y9TenantAppOptional = y9TenantAppManager
+                .getByTenantIdAndAppIdAndTenancy(Y9LoginUserHolder.getTenantId(), r.getResourceId(), true);
             if (y9TenantAppOptional.isPresent()) {
-                Y9App y9App = y9AppManager.getById(r.getAppId());
+                Y9App y9App = y9AppManager.getById(r.getResourceId());
                 if (y9App.getEnabled() && !appList.contains(y9App)) {
                     appList.add(y9App);
                 }
             }
         }
+        Collections.sort(appList);
         return appList;
     }
 
@@ -154,21 +155,6 @@ public class Y9PositionToResourceAndAuthorityServiceImpl implements Y9PositionTo
         y9PositionToResourceAndAuthorityManager.saveOrUpdate(y9ResourceBase, y9Position, y9Authorization, inherit);
     }
 
-    @Transactional(readOnly = false)
-    @Override
-    public void updateByResourceId(String resourceId, String resourceName, String systemName, String systemCnName,
-        String description) {
-        List<Y9PositionToResourceAndAuthority> list =
-            y9PositionToResourceAndAuthorityRepository.findByResourceId(resourceId);
-        for (Y9PositionToResourceAndAuthority y9PositionToResourceAndAuthority : list) {
-            y9PositionToResourceAndAuthority.setResourceName(resourceName);
-            y9PositionToResourceAndAuthority.setSystemName(systemName);
-            y9PositionToResourceAndAuthority.setSystemCnName(systemCnName);
-            y9PositionToResourceAndAuthority.setResourceDescription(description);
-            y9PositionToResourceAndAuthorityRepository.save(y9PositionToResourceAndAuthority);
-        }
-    }
-
     @Override
     public List<Y9ResourceBase> listSubResources(String positionId, String resourceId, AuthorityEnum authority) {
         List<Y9ResourceBase> returnResourceList = new ArrayList<>();
@@ -181,6 +167,7 @@ public class Y9PositionToResourceAndAuthorityServiceImpl implements Y9PositionTo
                 returnResourceList.add(y9ResourceBase);
             }
         }
+        Collections.sort(returnResourceList);
         return returnResourceList;
     }
 
@@ -198,6 +185,7 @@ public class Y9PositionToResourceAndAuthorityServiceImpl implements Y9PositionTo
                 y9MenuList.add(y9Menu);
             }
         }
+        Collections.sort(y9MenuList);
         return y9MenuList;
     }
 

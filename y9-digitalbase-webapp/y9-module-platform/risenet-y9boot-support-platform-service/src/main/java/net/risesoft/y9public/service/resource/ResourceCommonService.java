@@ -85,14 +85,6 @@ public interface ResourceCommonService<T extends Y9ResourceBase> {
     List<T> findByNameLike(String name);
 
     /**
-     * 根据父资源id获取其下子资源
-     *
-     * @param parentId
-     * @return
-     */
-    List<T> findByParentId(String parentId);
-
-    /**
      * 根据id获取资源
      *
      * @param id
