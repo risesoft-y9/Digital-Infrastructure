@@ -999,6 +999,7 @@
                                 //1.更新当前节点显示的名称
                                 const currNode = props.findNode(props.getTreeData(), currInfo.value.id);
                                 currNode.disabled = res.data.disabled;
+                                currInfo.value.disabled = res.data.disabled;
                                 if (res.data.disabled) {
                                     currNode.newName = currNode.name + '[禁用]'; //显示名称
                                 } else {

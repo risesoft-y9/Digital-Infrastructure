@@ -118,6 +118,21 @@
                     }
                 },
                 {
+                    title: '资源状态',
+                    key: 'enabled',
+                    width: 100,
+                    render: (row) => {
+                        let text = '';
+                        if (row.enabled) {
+                            text = '启用';
+                        } else {
+                            text = '禁用';
+                        }
+
+                        return h('div', t(text));
+                    }
+                },
+                {
                     title: '权限类型',
                     key: 'authority',
                     width: 100,
@@ -263,6 +278,7 @@
                         content = detail;
                         content.resourceName = resource.resourceName;
                         content.resourceType = resource.resourceType;
+                        content.enabled = resource.enabled;
                         content.level = resource.level;
                         if (detailIndex === 0) {
                             content.detailRowspan = resource.permissionDetailList.length;
@@ -283,6 +299,7 @@
                     content.resourceName = resource.resourceName;
                     content.resourceType = resource.resourceType;
                     content.level = resource.level;
+                    content.enabled = resource.enabled;
                     content.detailRowspan = 1;
                     if (resourceIndex === 0) {
                         content.systemCnName = permission.systemCnName;
