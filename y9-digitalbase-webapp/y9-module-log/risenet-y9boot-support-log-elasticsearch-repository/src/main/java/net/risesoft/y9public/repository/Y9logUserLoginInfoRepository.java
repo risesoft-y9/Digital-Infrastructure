@@ -1,0 +1,31 @@
+package net.risesoft.y9public.repository;
+
+import java.util.List;
+import java.util.Set;
+
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.elasticsearch.repository.ElasticsearchRepository;
+
+import net.risesoft.y9public.entity.Y9logUserLoginInfo;
+
+public interface Y9logUserLoginInfoRepository extends ElasticsearchRepository<Y9logUserLoginInfo, String> {
+    public long countByUserHostIpAndSuccess(String userHostIp, String success);
+
+    public long countByUserHostIpAndSuccessAndUserNameContaining(String userHostIp, String success, String userName);
+
+    public long countByUserId(String userId);
+
+    public Page<Y9logUserLoginInfo> findBySuccessAndUserHostIpAndUserId(String success, String userHostIp,
+        String userId, Pageable pageable);
+
+    public Page<Y9logUserLoginInfo> findByTenantIdAndManagerLevel(String tenantId, String managerLevel,
+        Pageable pageable);
+
+    public List<Y9logUserLoginInfo> findByUserId(String userId);
+
+    public Set<Y9logUserLoginInfo> findByUserIdAndSuccess(String userId, String success);
+
+    Y9logUserLoginInfo findTopByTenantIdAndUserIdOrderByLoginTimeDesc(String tenantId, String userId);
+
+}

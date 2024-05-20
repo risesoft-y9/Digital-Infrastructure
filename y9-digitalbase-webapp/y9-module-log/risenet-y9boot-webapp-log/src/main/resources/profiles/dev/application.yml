@@ -1,6 +1,6 @@
 spring:
     application:
-        name: log
+        name: y9public
     profiles:
         active: dev
     cloud:
@@ -14,4 +14,4 @@ spring:
                 password: Risesoft@2022
     config:
         import:
-            - optional:nacos:log.yml
+            - optional:nacos:y9public.yml

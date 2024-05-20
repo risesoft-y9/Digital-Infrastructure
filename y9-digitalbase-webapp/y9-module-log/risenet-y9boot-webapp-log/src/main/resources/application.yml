@@ -38,7 +38,7 @@ spring:
                 enabled: false
     config:
         import:
-            - optional:nacos:log.yml
+            - optional:nacos:y9public.yml
             #- optional:nacos:test01.yml?group=group_02
             #- optional:nacos:test02.yml?group=group_03&refreshEnabled=false
     data:
