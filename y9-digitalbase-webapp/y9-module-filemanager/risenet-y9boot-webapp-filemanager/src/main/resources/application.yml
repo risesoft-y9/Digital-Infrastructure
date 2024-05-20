@@ -1,0 +1,104 @@
+server:
+    servlet:
+        encoding:
+            charset: UTF-8
+            enabled: true
+            force: true
+        session:
+            tracking-modes: COOKIE
+spring:
+    application:
+        name: fileManager
+    cloud:
+        nacos:
+            config:
+                enabled: false
+                group: DEFAULT_GROUP
+                namespace: dev
+                server-addr: https://dev.youshengyun.com:443
+                username: nacos
+                password: nacos@2022
+            discovery:
+                enabled: false
+    config:
+        import:
+            - optional:nacos:fileManager.yml
+    mvc:
+        view:
+            prefix: /WEB-INF/jsp/
+            suffix: .jsp
+    servlet:
+        multipart:
+            max-file-size: 1000MB
+            max-request-size: 1000MB
+    aop:
+        auto: false
+        proxy-target-class: false
+    autoconfigure:
+        exclude:
+            - org.springframework.boot.autoconfigure.jdbc.DataSourceAutoConfiguration
+            - org.springframework.boot.autoconfigure.orm.jpa.HibernateJpaAutoConfiguration
+            - org.springframework.boot.autoconfigure.data.mongo.MongoDataAutoConfiguration
+    data:
+        redis:
+            database: 8
+            host: localhost
+            port: 6379
+            username: default
+            password: '12345678'
+            ssl:
+                enabled: false
+            lettuce:
+                pool:
+                    max-active: 8
+                    max-idle: 8
+                    max-wait: -1
+                    min-idle: 1
+            repositories:
+                enabled: false
+    datasource:
+        hikari:
+            y9-public:
+                driverClassName: com.mysql.cj.jdbc.Driver
+                jdbcUrl: jdbc:mysql://localhost:3306/y9_public?serverTimezone=GMT%2B8&nullCatalogMeansCurrent=true&useUnicode=true&characterEncoding=utf-8&rewriteBatchedStatements=true&useCompression=true&useSSL=false&allowPublicKeyRetrieval=true
+                username: root
+                password: '12345678'
+                maximumPoolSize: 20
+                minimumIdle: 1
+    jpa:
+        properties:
+            hibernate:
+                dialect: org.hibernate.dialect.MySQL8Dialect
+                hbm2ddl:
+                    auto: update
+                jdbc:
+                    batchSize: 100
+                showSql: true
+        hibernate:
+            ddl-auto: update
+            naming:
+                implicit-strategy: org.hibernate.boot.model.naming.ImplicitNamingStrategyLegacyHbmImpl
+                physical-strategy: org.hibernate.boot.model.naming.PhysicalNamingStrategyStandardImpl
+        open-in-view: false
+    main:
+        allow-bean-definition-overriding: false
+    web:
+        resources:
+            static-locations: classpath:/META-INF/resources/,classpath:/resources/,classpath:/static/,classpath:/public/,file:///d:/y9config/
+y9:
+    internalIp: 192.168.x.x,10.161.x.x,10.1.x.x,172.20.x.x
+    app:
+        fileManager:
+            fileRoot: d:/y9config/y9filestore
+    feature:
+        jpa:
+            packagesToScanEntityPublic: net.risesoft.y9public.entity
+            packagesToScanEntityTenant: net.risesoft.entity
+            packagesToScanRepositoryPublic: net.risesoft.y9public.repository
+            packagesToScanRepositoryTenant: net.risesoft.repository
+        listener:
+            redis:
+                enabled: true
+        publish:
+            redis:
+                enabled: true

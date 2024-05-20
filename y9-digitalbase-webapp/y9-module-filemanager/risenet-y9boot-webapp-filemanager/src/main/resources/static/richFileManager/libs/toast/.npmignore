@@ -1,0 +1,6 @@
+.git/
+.gitignore
+nodes_modules/
+tests/
+gulpfile.js
+package.json

@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration>
+	<include resource="org/springframework/boot/logging/logback/base.xml" />
+	<logger name="net.risesoft" level="DEBUG" />
+	<logger name="org.hibernate" level="WARN" />
+	<logger name="org.apache.catalina.startup.Catalina" level="INFO" />
+</configuration>

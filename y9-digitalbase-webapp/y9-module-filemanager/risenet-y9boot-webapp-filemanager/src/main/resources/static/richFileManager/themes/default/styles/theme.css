@@ -1,0 +1,119 @@
+.fm-container * {
+    font-family: Oxygen, Lucida Sans Unicode, Lucida Grande, sans-serif;
+}
+
+.fm-container {
+    background-color: #F4F1ED;
+}
+
+.fm-container .fm-header .breadcrumbs {
+    color: #000000;
+}
+
+.fm-container .fm-splitter .splitter-bar-vertical {
+    width: 6px;
+}
+
+.fm-container .fm-filetree {
+    color: #333;
+    background-color: #fff;
+    border: 1px solid #ccc;
+}
+
+.fm-container .fm-fileinfo {
+    border: 1px solid #ccc;
+    background-color: #fff;
+}
+
+.fm-container .fm-preview .fm-preview-title h1 {
+    color: #8fabc6;
+}
+
+.fm-container .fm-preview .fm-preview-details td {
+    color: #333;
+    border-bottom: 1px dotted #ccc;
+}
+
+.fm-container .button-group .btn {
+    color: #777777;
+    background-color: #ffffff;
+    border: 1px solid #dcdcdc;
+    -moz-border-radius: 6px;
+    -webkit-border-radius: 6px;
+    border-radius: 6px;
+}
+
+.fm-container .button-group .separator {
+    padding: 0 1px;
+    background-color: #ffffff;
+}
+
+.fm-container .fm-header .button-group .btn {
+    padding: 2px 3px;
+}
+
+.fm-container .fm-header .button-group select.btn {
+    padding: 1px 2px;
+}
+
+.fm-container .button-group .btn:not(.disabled):hover {
+    background-color: #ffffff;
+}
+
+.fm-container .input-group .input-group-input {
+    color: #000;
+    background-color: #FFFFFF;
+    border-style: solid;
+    border-color: #dcdcdc;
+    border-width: 1px 0 1px 0;
+}
+
+.fm-container .input-group .input-group-addon {
+    background-color: #FFFFFF;
+    border-style: solid;
+    border-color: #dcdcdc;
+}
+
+.fm-container .input-group .input-group-addon:first-child {
+    border-width: 1px 0 1px 1px;
+}
+
+.fm-container .input-group .input-group-addon:last-child {
+    border-width: 1px 1px 1px 0;
+}
+
+.fm-container #folder-info {
+    color: #777;
+}
+
+.fm-container #summary {
+}
+
+.fm-container #link-to-project {
+}
+
+.fm-container .drag-helper-grid,
+.fm-container .view-items .grid li {
+    width: 142px;
+}
+
+.fm-container .view-items .grid li.drop-hover,
+.fm-container .view-items .list tr.drop-hover {
+    background-color: #e0e0e0;
+}
+
+.fm-container .view-items .list td {
+    border-bottom: 1px dotted #ccc;
+}
+
+.fm-popup.alertify .fm-fileupload-container #total-progress {
+    background-color: #A7A1C6;
+}
+
+.fm-popup.alertify .fm-fileupload-container #total-progress .progress-bar {
+    background-color: #294750;
+}
+
+.fm-container .drag-helper-grid {
+    width: 142px;
+}

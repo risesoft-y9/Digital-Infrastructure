@@ -1,0 +1,5 @@
+{
+  "devDependencies": {
+    "qunitjs": "^1.19.0"
+  }
+}
