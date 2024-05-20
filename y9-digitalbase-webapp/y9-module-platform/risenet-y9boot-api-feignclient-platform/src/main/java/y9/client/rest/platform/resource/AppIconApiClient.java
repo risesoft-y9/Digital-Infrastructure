@@ -5,7 +5,7 @@ import org.springframework.cloud.openfeign.FeignClient;
 import net.risesoft.api.platform.resource.AppIconApi;
 
 /**
- * 图标库管理
+ * 图标管理
  *
  * @author dingzhaojun
  * @author qinman

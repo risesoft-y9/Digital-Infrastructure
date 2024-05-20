@@ -12,7 +12,7 @@ const iconManagerRouter = {
     redirect: '/iconManager',
     name: 'iconManager',
     meta: {
-        title: '图标库管理',
+        title: '图标管理',
         roles: ['systemAdmin'] 
     },
     children: [
@@ -21,7 +21,7 @@ const iconManagerRouter = {
             component: () => import("@/views/iconManager/index.vue"),
             name: 'iconManagerIndex',
             meta: {
-                title: '图标库管理',
+                title: '图标管理',
                 icon: 'ri-remixicon-line',
                 roles: ['systemAdmin'] 
             }

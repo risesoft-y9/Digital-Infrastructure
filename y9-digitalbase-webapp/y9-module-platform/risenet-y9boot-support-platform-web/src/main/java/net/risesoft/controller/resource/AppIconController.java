@@ -33,7 +33,7 @@ import net.risesoft.y9public.service.resource.Y9AppIconService;
 import jodd.util.Base64;
 
 /**
- * 图标库管理
+ * 图标管理
  *
  * @author mengjuhua
  * @date 2022/06/21
