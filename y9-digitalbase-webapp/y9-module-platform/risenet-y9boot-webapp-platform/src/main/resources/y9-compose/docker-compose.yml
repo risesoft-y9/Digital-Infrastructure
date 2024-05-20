@@ -1,30 +1,76 @@
-version: '3.1'
+version: '3.9'
+name: y9-local-environments
 services:
     db:
         image: mysql:latest
-        container_name: y9-mysql
+        container_name: mysql01
         restart: always
+        extra_hosts:
+            - "host.docker.internal:host-gateway"
         ports:
-            - "3309:3306"
-        command: --default-authentication-plugin=mysql_native_password
+            - "3306:3306"
+        command:
+            --default-authentication-plugin=caching_sha2_password
+            --lower_case_table_names=1
         environment:
-            MYSQL_ROOT_PASSWORD: 'Y9i-83204585'
+            MYSQL_ROOT_PASSWORD: '111111'
             MYSQL_DATABASE: 'y9_public'
         volumes:
             - d:/docker-data/mysql:/var/lib/mysql
+            - d:/docker-config/mysql-init:/docker-entrypoint-initdb.d
+        healthcheck:
+            #test: [ "CMD", "mysqladmin" ,"ping", "-h", "localhost" ]
+            test: "mysql --user=root --password=111111 --execute='show databases;'"
+            interval: 5s
+            timeout: 10s
+            retries: 8
+        labels:
+            org.springframework.boot.readiness-check.tcp.disable: true
 
     redis:
         image: redis:latest
-        container_name: y9-redis
+        container_name: redis01
         restart: always
+        extra_hosts:
+            - "host.docker.internal:host-gateway"
         ports:
-            - "7379:6379"
+            - "6379:6379"
         command: redis-server --requirepass "y9i-83204585"
         volumes:
             - d:/docker-data/redis:/data
+        labels:
+            org.springframework.boot.readiness-check.tcp.disable: true
+    elasticsearch:
+        image: elasticsearch:8.11.0
+        container_name: elastic01
+        restart: always
+        #deploy:
+        #  resources:
+        #    limits:
+        #      cpus: '0.50'
+        #      memory: 50M
+        #    reservations:
+        #      cpus: '0.25'
+        #      memory: 20M
+        extra_hosts:
+            - "host.docker.internal:host-gateway"
+        ports:
+            - '9200:9200'
+            - '9300:9300'
+        volumes:
+            - d:/docker-data/es:/usr/share/elasticsearch/data
+        environment:
+            - discovery.type=single-node
+            - xpack.security.enabled=true
+            - ELASTIC_PASSWORD=risesoft
+            - ELASTIC_USERNAME=elastic
+        labels:
+            org.springframework.boot.service-connection: elasticsearch
+            org.springframework.boot.readiness-check.tcp.disable: true
+
     zookeeper:
         image: wurstmeister/zookeeper
-        container_name: y9-zookeeper
+        container_name: zookeeper
         environment:
             ZOOKEEPER_CLIENT_PORT: 2181
             ZOOKEEPER_TICK_TIME: 2000
@@ -32,7 +78,7 @@ services:
             - 2181:2181
     kafka:
         image: wurstmeister/kafka
-        container_name: y9-kafka
+        container_name: kafka
         depends_on:
             - zookeeper
         ports:
