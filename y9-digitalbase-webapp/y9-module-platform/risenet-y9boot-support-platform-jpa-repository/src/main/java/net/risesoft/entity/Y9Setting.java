@@ -20,8 +20,8 @@ import net.risesoft.base.BaseEntity;
  */
 @Entity
 @Table(name = "Y9_ORG_SETTING")
-@org.hibernate.annotations.Table(comment = "设置表", appliesTo = "Y9_ORG_SETTING")
-@NoArgsConstructor
+@Comment( "设置表")
+@NoArgsConstructor 
 @Data
 public class Y9Setting extends BaseEntity {
 

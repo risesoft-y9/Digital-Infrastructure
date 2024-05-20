@@ -14,7 +14,7 @@ import net.risesoft.base.BaseEntity;
 
 @Entity
 @Table(name = "Y9_ORG_SYNC_ROLE")
-@org.hibernate.annotations.Table(comment = "组织架构同步权限表", appliesTo = "Y9_ORG_SYNC_ROLE")
+@Comment(  "组织架构同步权限表" )
 @NoArgsConstructor
 @Data
 public class Y9OrgSyncRole extends BaseEntity {
