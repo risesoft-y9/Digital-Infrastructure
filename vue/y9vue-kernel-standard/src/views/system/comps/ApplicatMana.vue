@@ -268,7 +268,7 @@
             },
             // { title: '排列序号', key: 'tabIndex' },
             {
-                title: computed(() => t('是否可用')),
+                title: computed(() => t('是否启用')),
                 render: (row) => {
                     return row.enabled ? '是' : '否';
                 }
@@ -556,7 +556,7 @@
             },
             {
                 type: 'radio',
-                label: computed(() => t('是否可用')),
+                label: computed(() => t('是否启用')),
                 prop: 'enabled',
                 required: true,
                 props: {
