@@ -112,7 +112,7 @@ spring:
             max-request-size: 1000MB
     docker:
         compose:
-            enabled: true
+            enabled: false
             file: ./y9-compose/docker-compose.yml
 y9:
     systemName: riseplatform
