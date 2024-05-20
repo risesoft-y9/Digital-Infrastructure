@@ -234,14 +234,26 @@
                     if (isTopLevel) {
                         item.delete_icon = false;
                     }
+                    item.newName = item.name;
+                    if (!item.enabled) {
+                        item.newName = item.name + '[禁用]'; //显示名称
+                    }
                     break;
 
                 case 'MENU': //菜单
                     item.title_icon = 'ri-menu-4-line';
+                    item.newName = item.name;
+                    if (!item.enabled) {
+                        item.newName = item.name + '[禁用]'; //显示名称
+                    }
                     break;
 
                 case 'OPERATION': //按钮
                     item.title_icon = 'ri-checkbox-multiple-blank-line';
+                    item.newName = item.name;
+                    if (!item.enabled) {
+                        item.newName = item.name + '[禁用]'; //显示名称
+                    }
                     break;
                 case 'role': //角色 人员
                     item.title_icon = 'ri-contacts-line';
