@@ -20,7 +20,6 @@ import net.risesoft.util.EsIndexYear;
 import net.risesoft.y9.Y9Context;
 
 @Configuration
-@EnableKafka
 public class WebMvcConfig implements WebMvcConfigurer {
 
     // starter-log工程用到了RequestContextHolder
