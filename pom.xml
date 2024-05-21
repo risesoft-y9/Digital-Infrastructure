@@ -319,7 +319,7 @@
                 </configuration>
             </plugin>
 
-            <plugin>
+            <!--<plugin>
                 <groupId>org.codehaus.mojo</groupId>
                 <artifactId>buildnumber-maven-plugin</artifactId>
                 <version>3.2.0</version>
@@ -335,7 +335,7 @@
                     <timestampPropertyName>buildDate</timestampPropertyName>
                     <timezone>GMT+8</timezone>
                 </configuration>
-            </plugin>
+            </plugin>-->
         </plugins>
 
         <pluginManagement>
