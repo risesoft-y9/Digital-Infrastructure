@@ -123,7 +123,7 @@ public class Y9TenantApp extends BaseEntity {
     private Date deletedTime;
 
     /** 租户应用数据是否已经初始化 */
-    @Type(type = "numeric_boolean")
+    @Convert(converter = org.hibernate.type.NumericBooleanConverter.class)
     @Column(name = "INITIALIZED", nullable = false)
     @Comment("租户应用数据是否已经初始化")
     @ColumnDefault("0")
