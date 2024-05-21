@@ -21,7 +21,7 @@ import org.springframework.jdbc.datasource.lookup.DataSourceLookupFailureExcepti
 import org.springframework.jdbc.datasource.lookup.JndiDataSourceLookup;
 import org.springframework.util.Assert;
 
-import com.alibaba.druid.pool.DruidDataSource;
+import com.zaxxer.hikari.HikariDataSource;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -42,11 +42,11 @@ import net.risesoft.y9.util.base64.Y9Base64Util;
 @RequiredArgsConstructor
 public class Y9TenantDataSourceLookup implements DataSourceLookup {
 
-    private final DruidDataSource publicDataSource;
+    private final HikariDataSource publicDataSource;
     private final String systemName;
 
     /** 已加载的租户id和数据源Map：目前包括默认租户和租用了当前系统的租户 */
-    private final Map<String, DruidDataSource> loadedTenantIdDataSourceMap = new ConcurrentHashMap<>();
+    private final Map<String, HikariDataSource> loadedTenantIdDataSourceMap = new ConcurrentHashMap<>();
     private final JndiDataSourceLookup jndiDataSourceLookup = new JndiDataSourceLookup();
     private boolean loaded = false;
 
@@ -60,23 +60,24 @@ public class Y9TenantDataSourceLookup implements DataSourceLookup {
         }
     }
 
-    private void createOrUpdateDataSource(Map<String, Object> record, DruidDataSource ds, String tenantId) {
+    private void createOrUpdateDataSource(Map<String, Object> record, HikariDataSource ds, String tenantId) {
         Integer type = Integer.valueOf(record.get("TYPE").toString());
         String jndiName = (String)record.get("JNDI_NAME");
 
         if (DataSourceTypeEnum.JNDI.getValue().equals(type)) {
             try {
                 if (ds == null) {
-                    ds = (DruidDataSource)this.jndiDataSourceLookup.getDataSource(jndiName);
-                } else {
+                    ds = (HikariDataSource)this.jndiDataSourceLookup.getDataSource(jndiName);
+                    this.loadedTenantIdDataSourceMap.put(tenantId, ds);
+                }  else {
                     // 用旧的还是新的？
-                    // ds = (DruidDataSource) this.jndiDataSourceLookup.getDataSource(jndiName);
+                    // ds = (HikariDataSource) this.jndiDataSourceLookup.getDataSource(jndiName);
                     // this.dataSources.put(tenantId, ds);
                 }
             } catch (DataSourceLookupFailureException e) {
                 LOGGER.error(e.getMessage(), e);
             }
-        } else { // druid
+        } else { // hikari
             String url = (String)record.get("URL");
             String username = (String)record.get("USERNAME");
             String password = (String)record.get("PASSWORD");
@@ -87,87 +88,47 @@ public class Y9TenantDataSourceLookup implements DataSourceLookup {
             Integer maxActive = Integer.valueOf(record.get("MAX_ACTIVE").toString());
             Integer minIdle = Integer.valueOf(record.get("MIN_IDLE").toString());
 
-            if (ds != null) {
-                // 可能连接池的参数调整了
-                // url,username,password等属性在DruidDataSource初始化完成后不允许更改，否则抛出异常
-                boolean keepDataSourceInstance = false;
-                if (ds.getUrl().equals(url) && ds.getUsername().equals(username) && ds.getPassword().equals(password)) {
-                    keepDataSourceInstance = true;
+            if (ds == null) {
+                ds = new HikariDataSource();
+                ds.setMaximumPoolSize(maxActive);
+                ds.setMinimumIdle(minIdle);
+                if (driver.length() > 0) {
+                    ds.setDriverClassName(driver);
                 }
 
-                if (keepDataSourceInstance) {
-                    if (ds.getInitialSize() != initialSize) {
-                        ds.setInitialSize(initialSize);
-                    }
-                    if (ds.getMaxActive() != maxActive) {
-                        ds.setMaxActive(maxActive);
-                    }
-                    if (ds.getMinIdle() != minIdle) {
-                        ds.setMinIdle(minIdle);
-                    }
-                } else {
-                    // 关闭旧数据源
-                    try {
-                        ds.close();
-                    } catch (Exception e) {
-                        LOGGER.warn(e.getMessage(), e);
-                    }
+                ds.setJdbcUrl(url);
+                ds.setUsername(username);
+                ds.setPassword(password);
+                this.loadedTenantIdDataSourceMap.put(tenantId, ds);
+            } else {
+                // 可能连接池的参数调整了
+                // url,username,password等属性在HikariDataSource初始化完成后不允许更改，否则抛出异常?
+                boolean needCreate = false;
+                if (!ds.getJdbcUrl().equals(url)) {
+                    needCreate = true;
+                }
+                if (!ds.getUsername().equals(username)) {
+                    needCreate = true;
+                }
+                if (!ds.getPassword().equals(password)) {
+                    needCreate = true;
+                }
 
-                    // 重新创建数据源
-                    ds = new DruidDataSource();
-                    // ds.setDriverClassName(driver);
-                    ds.setTestOnBorrow(true);
-                    ds.setTestOnReturn(true);
-                    ds.setTestWhileIdle(true);
-                    ds.setInitialSize(initialSize);
-                    ds.setMaxActive(maxActive);
-                    ds.setMinIdle(minIdle);
+                if (needCreate) {
+                    ds = new HikariDataSource();
+                    ds.setMaximumPoolSize(maxActive);
+                    ds.setMinimumIdle(minIdle);
                     if (!"".equals(driver)) {
                         ds.setDriverClassName(driver);
                     }
-                    // 5分钟
-                    ds.setTimeBetweenConnectErrorMillis(300000);
-                    // ds.setTimeBetweenEvictionRunsMillis(60000);
-                    // ds.setMinEvictableIdleTimeMillis(1800000);
-                    // ds.setPoolPreparedStatements(false);
-                    // ds.setMaxOpenPreparedStatements(6);
-                    ds.setValidationQuery("SELECT 1 FROM DUAL");
-                    ds.setUrl(url);
+                    ds.setJdbcUrl(url);
                     ds.setUsername(username);
                     ds.setPassword(password);
+                } else {
+                    ds.setMaximumPoolSize(maxActive);
+                    ds.setMinimumIdle(minIdle);
                 }
-            } else {
-                ds = new DruidDataSource();
-                // ds.setDriverClassName(driver);
-                ds.setTestOnBorrow(true);
-                ds.setTestOnReturn(true);
-                ds.setTestWhileIdle(true);
-                ds.setInitialSize(initialSize);
-                ds.setMaxActive(maxActive);
-                ds.setMinIdle(minIdle);
-                if (!"".equals(driver)) {
-                    ds.setDriverClassName(driver);
-                }
-                // 5分钟
-                ds.setTimeBetweenConnectErrorMillis(300000);
-                // ds.setTimeBetweenEvictionRunsMillis(60000);
-                // ds.setMinEvictableIdleTimeMillis(1800000);
-                // ds.setPoolPreparedStatements(false);
-                // ds.setMaxOpenPreparedStatements(6);
-                ds.setValidationQuery("SELECT 1 FROM DUAL");
-                ds.setUrl(url);
-                ds.setUsername(username);
-                ds.setPassword(password);
-            }
-        }
-
-        DruidDataSource previousDataSource = this.loadedTenantIdDataSourceMap.put(tenantId, ds);
-
-        if (LOGGER.isDebugEnabled()) {
-            if (previousDataSource == null) {
-                LOGGER.debug("添加租户[{}]的数据源", tenantId);
-            } else {
-                LOGGER.debug("更新租户[{}]的数据源", tenantId);
+                this.loadedTenantIdDataSourceMap.put(tenantId, ds);
             }
         }
     }
@@ -188,7 +149,7 @@ public class Y9TenantDataSourceLookup implements DataSourceLookup {
      *
      * @return
      */
-    public Map<String, DruidDataSource> getDataSources() {
+    public Map<String, HikariDataSource> getDataSources() {
         if (!loaded) {
             loadDataSources();
             loaded = true;
@@ -247,7 +208,7 @@ public class Y9TenantDataSourceLookup implements DataSourceLookup {
                 // 添加或更新租用的
                 for (Map<String, Object> tenantSystem : tenantSystems) {
                     String tenantId = (String)tenantSystem.get("TENANT_ID");
-                    DruidDataSource ds = this.loadedTenantIdDataSourceMap.get(tenantId);
+                    HikariDataSource ds = this.loadedTenantIdDataSourceMap.get(tenantId);
 
                     String tenantDataSource = (String)tenantSystem.get("TENANT_DATA_SOURCE");
                     List<Map<String, Object>> dataSources = publicJdbcTemplate
@@ -267,12 +228,12 @@ public class Y9TenantDataSourceLookup implements DataSourceLookup {
         }
 
         // 3 初始化租户的数据库连接池
-        Collection<DruidDataSource> druidDataSources = loadedTenantIdDataSourceMap.values();
+        Collection<HikariDataSource> druidDataSources = loadedTenantIdDataSourceMap.values();
         if (!druidDataSources.isEmpty()) {
-            for (DruidDataSource ds : druidDataSources) {
+            for (HikariDataSource ds : druidDataSources) {
                 try {
-                    ds.init();
-                } catch (SQLException e) {
+                   // ds.init();
+                } catch (Exception e) {
                     LOGGER.warn(e.getMessage(), e);
                 }
             }
@@ -280,7 +241,7 @@ public class Y9TenantDataSourceLookup implements DataSourceLookup {
     }
 
     private void removeDataSource(String removedTenantId) {
-        DruidDataSource ds = this.loadedTenantIdDataSourceMap.remove(removedTenantId);
+        HikariDataSource ds = this.loadedTenantIdDataSourceMap.remove(removedTenantId);
         try {
             ds.close();
         } catch (Exception e) {
