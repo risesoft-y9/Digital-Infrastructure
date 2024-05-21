@@ -22,7 +22,7 @@ import lombok.extern.slf4j.Slf4j;
 
 import net.risesoft.log.LogLevelEnum;
 import net.risesoft.log.annotation.RiseLog;
-import net.risesoft.log.service.SaveLogInfo4Kafka;
+import net.risesoft.log.service.AsyncSaveLogInfo;
 import net.risesoft.model.log.AccessLog;
 import net.risesoft.model.user.UserInfo;
 import net.risesoft.y9.Y9Context;
@@ -42,7 +42,7 @@ public class RiseLogAdvice implements MethodInterceptor {
 
     private String serverIp = "";
 
-    private SaveLogInfo4Kafka saveLogInfo4Kafka;
+    private AsyncSaveLogInfo asyncSaveLogInfo;
 
     public RiseLogAdvice() {
         this.serverIp = InetAddressUtil.getLocalAddress().getHostAddress();
@@ -50,7 +50,7 @@ public class RiseLogAdvice implements MethodInterceptor {
 
     @PostConstruct
     public void init() {
-        this.saveLogInfo4Kafka = Y9Context.getBean(SaveLogInfo4Kafka.class);
+        this.asyncSaveLogInfo = Y9Context.getBean(AsyncSaveLogInfo.class);
     }
 
     @Override
@@ -152,10 +152,10 @@ public class RiseLogAdvice implements MethodInterceptor {
                         log.setManagerLevel(String.valueOf(userInfo.getManagerLevel().getValue()));
                     }
 
-                    if (saveLogInfo4Kafka == null) {
-                        this.saveLogInfo4Kafka = Y9Context.getBean(SaveLogInfo4Kafka.class);
+                    if (asyncSaveLogInfo == null) {
+                        this.asyncSaveLogInfo = Y9Context.getBean(AsyncSaveLogInfo.class);
                     }
-                    saveLogInfo4Kafka.asyncSave(log);
+                    asyncSaveLogInfo.asyncSave(log);
                     if (response != null) {
                         // Y9CommonFilter见到这个标志后，就不再记录日志了，因为这里已经写了日志，不需要重复写。
                         response.addHeader("y9aoplog", "true");
