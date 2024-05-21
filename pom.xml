@@ -179,6 +179,7 @@
                 <version>${commons-pool2.version}</version>
             </dependency>
 
+            <!-- jodd -->
             <dependency>
                 <groupId>org.jodd</groupId>
                 <artifactId>jodd-bean</artifactId>
@@ -199,6 +200,7 @@
                 <artifactId>jodd-lagarto</artifactId>
                 <version>6.0.6</version>
             </dependency>
+            <!-- jodd  end -->
 
             <dependency>
                 <groupId>org.apache.httpcomponents</groupId>
@@ -216,6 +218,13 @@
                 <groupId>org.apache.httpcomponents</groupId>
                 <artifactId>httpmime</artifactId>
                 <version>4.5.14</version>
+            </dependency>
+
+            <!-- hutool -->
+            <dependency>
+                <groupId>cn.hutool</groupId>
+                <artifactId>hutool-all</artifactId>
+                <version>5.8.27</version>
             </dependency>
 
             <!-- javers -->
