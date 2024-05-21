@@ -382,6 +382,18 @@
             <artifactId>KesDialect-for-hibernate4</artifactId>
             <version>1.0.0</version>
         </dependency>
+
+        <dependency>
+            <groupId>com.dameng</groupId>
+            <artifactId>DmDialect-for-hibernate5.6</artifactId>
+            <version>8.1.3.140</version>
+        </dependency>
+
+        <dependency>
+            <groupId>com.dameng</groupId>
+            <artifactId>DmJdbcDriver18</artifactId>
+            <version>8.1.3.140</version>
+        </dependency>
     </dependencies>
 
     <build>
