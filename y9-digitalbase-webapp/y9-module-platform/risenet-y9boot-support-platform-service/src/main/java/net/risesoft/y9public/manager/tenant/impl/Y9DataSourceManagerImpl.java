@@ -133,10 +133,6 @@ public class Y9DataSourceManagerImpl implements Y9DataSourceManager {
             password = dds.getPassword();
 
             String newTableSpace = y9config.getApp().getY9DigitalBase().getOrclNewTableSpace() + username + "_DATA.DBF";
-            // 创建临时表空间
-            // String newTempSpace = y9config.getApp().getY9DigitalBase().getOrclNewTableSpace()+username+"_TEMP.DBF";
-            // String sql0 = "CREATE TEMPORARY TABLESPACE "+username+"_TEMP TEMPFILE '"+newTempSpace+"' SIZE 10M
-            // AUTOEXTEND ON NEXT 10M EXTENT MANAGEMENT LOCAL";
 
             // 创建表空间
             String sql1 = "CREATE TABLESPACE " + username + "_DATA DATAFILE '" + newTableSpace
@@ -155,6 +151,34 @@ public class Y9DataSourceManagerImpl implements Y9DataSourceManager {
                 jdbcTemplate4Public.update(sql2);
                 jdbcTemplate4Public.update(sql3);
                 jdbcTemplate4Public.update(sql4);
+            } catch (DataAccessException e) {
+                LOGGER.warn("创建数据源失败", e);
+                return null;
+            }
+        }
+
+        if (DbType.dm.equals(dbType)) {
+            url = dds.getUrl();
+            String upperCaseDbName = dbName.toUpperCase();
+            username = upperCaseDbName;
+            password = dds.getPassword();
+
+            String newTableSpace = upperCaseDbName + "_DATA.DBF";
+
+            // 创建表空间
+            String sql1 = "create tablespace " + upperCaseDbName + "_DATA datafile '" + newTableSpace
+                + "' size 32 autoextend on next 32 CACHE = NORMAL;";
+            // 创建用户
+            String sql2 = "create user " + upperCaseDbName + " identified by " + password
+                + " password_policy 0 PROFILE \"DEFAULT\" default tablespace " + upperCaseDbName + "_DATA";
+            
+            // 给用户授权
+            String sql3 = "grant \"DBA\" to " + upperCaseDbName;
+
+            try {
+                jdbcTemplate4Public.update(sql1);
+                jdbcTemplate4Public.update(sql2);
+                jdbcTemplate4Public.update(sql3);
             } catch (DataAccessException e) {
                 LOGGER.warn("创建数据源失败", e);
                 return null;
