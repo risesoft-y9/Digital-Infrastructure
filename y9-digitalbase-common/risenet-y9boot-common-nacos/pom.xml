@@ -19,8 +19,8 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
 
-        <maven.compiler.source>17</maven.compiler.source>
-        <maven.compiler.target>17</maven.compiler.target>
+        <maven.compiler.source>21</maven.compiler.source>
+        <maven.compiler.target>21</maven.compiler.target>
 
         <alibaba-nacos.version>2.3.1</alibaba-nacos.version>
         <alibaba-cloud.version>2023.0.0.0-RC1</alibaba-cloud.version>
