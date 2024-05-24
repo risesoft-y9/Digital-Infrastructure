@@ -17,6 +17,7 @@
     <properties>
         <maven.javadoc.skip>true</maven.javadoc.skip>
         <java.version>21</java.version>
+        <maven.test.skip>true</maven.test.skip>
     </properties>
 
     <distributionManagement>
@@ -95,15 +96,6 @@
                 <configuration>
                     <source>11</source>
                     <target>11</target>
-                </configuration>
-            </plugin>
-
-            <!-- maven 打包时跳过测试 -->
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-surefire-plugin</artifactId>
-                <configuration>
-                    <skip>true</skip>
                 </configuration>
             </plugin>
         </plugins>
