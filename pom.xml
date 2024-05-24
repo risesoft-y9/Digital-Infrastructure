@@ -11,6 +11,7 @@
     <modules>
         <module>y9-digitalbase-common</module>
         <module>y9-digitalbase-example</module>
+        <module>y9-digitalbase-idcode</module>
         <module>y9-digitalbase-starter</module>
         <module>y9-digitalbase-support</module>
         <module>y9-digitalbase-webapp</module>
