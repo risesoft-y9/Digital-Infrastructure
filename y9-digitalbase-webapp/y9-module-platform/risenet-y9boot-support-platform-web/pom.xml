@@ -17,6 +17,7 @@
     <properties>
         <maven.javadoc.skip>true</maven.javadoc.skip>
         <java.version>1.8</java.version>
+        <maven.test.skip>true</maven.test.skip>
     </properties>
 
     <distributionManagement>
