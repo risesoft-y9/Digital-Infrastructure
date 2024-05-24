@@ -16,10 +16,12 @@ import org.springframework.stereotype.Service;
 
 import lombok.RequiredArgsConstructor;
 
+import net.risesoft.consts.InitDataConsts;
 import net.risesoft.log.constant.Y9LogSearchConsts;
 import net.risesoft.model.log.LogInfoModel;
 import net.risesoft.pojo.Y9Page;
 import net.risesoft.pojo.Y9PageQuery;
+import net.risesoft.y9.Y9LoginUserHolder;
 import net.risesoft.y9.util.Y9Util;
 import net.risesoft.y9public.entity.Y9logUserLoginInfo;
 import net.risesoft.y9public.repository.Y9logUserLoginInfoRepository;
@@ -129,6 +131,11 @@ public class Y9logUserLoginInfoServiceImpl implements Y9logUserLoginInfoService 
         String parserUserHostIp = Y9Util.escape(userHostIp);
         Pageable pageable =
             PageRequest.of((page < 1) ? 0 : page - 1, rows, Sort.by(Sort.Direction.DESC, Y9LogSearchConsts.LOGIN_TIME));
+        String tenantId = Y9LoginUserHolder.getTenantId();
+        if (!tenantId.equals(InitDataConsts.OPERATION_TENANT_ID)) {
+            return y9logUserLoginInfoRepository.findByTenantIdAndSuccessAndUserHostIpAndUserId(tenantId, success,
+                parserUserHostIp, parserUserId, pageable);
+        }
         return y9logUserLoginInfoRepository.findBySuccessAndUserHostIpAndUserId(success, parserUserHostIp, parserUserId,
             pageable);
     }

@@ -7,12 +7,15 @@ import org.springframework.data.elasticsearch.annotations.Document;
 import org.springframework.data.elasticsearch.annotations.Field;
 import org.springframework.data.elasticsearch.annotations.FieldType;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
 @NoArgsConstructor
 @Data
 @Document(indexName = "ipdeptmapping")
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class Y9logIpDeptMapping implements Serializable {
     private static final long serialVersionUID = -3758903946162468650L;
 

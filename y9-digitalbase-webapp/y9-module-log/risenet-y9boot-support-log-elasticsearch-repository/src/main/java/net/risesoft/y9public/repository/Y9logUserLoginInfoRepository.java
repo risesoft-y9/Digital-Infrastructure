@@ -19,6 +19,9 @@ public interface Y9logUserLoginInfoRepository extends ElasticsearchRepository<Y9
 
     Page<Y9logUserLoginInfo> findByTenantIdAndManagerLevel(String tenantId, String managerLevel, Pageable pageable);
 
+    Page<Y9logUserLoginInfo> findByTenantIdAndSuccessAndUserHostIpAndUserId(String tenantId, String success,
+        String userHostIp, String userId, Pageable pageable);
+
     List<Y9logUserLoginInfo> findByUserId(String userId);
 
     Set<Y9logUserLoginInfo> findByUserIdAndSuccess(String userId, String success);
