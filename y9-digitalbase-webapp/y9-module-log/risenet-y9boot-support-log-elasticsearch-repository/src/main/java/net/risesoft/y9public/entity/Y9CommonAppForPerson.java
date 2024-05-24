@@ -7,12 +7,15 @@ import org.springframework.data.elasticsearch.annotations.Document;
 import org.springframework.data.elasticsearch.annotations.Field;
 import org.springframework.data.elasticsearch.annotations.FieldType;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
 @NoArgsConstructor
 @Data
 @Document(indexName = "common_app_for_person")
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class Y9CommonAppForPerson implements Serializable {
     private static final long serialVersionUID = -6201670055765212286L;
 

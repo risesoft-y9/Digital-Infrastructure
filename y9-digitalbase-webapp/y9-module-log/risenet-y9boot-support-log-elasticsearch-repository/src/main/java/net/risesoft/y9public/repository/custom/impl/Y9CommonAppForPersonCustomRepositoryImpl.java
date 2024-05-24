@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
 
+import org.springframework.context.annotation.DependsOn;
 import org.springframework.data.elasticsearch.client.elc.ElasticsearchTemplate;
 import org.springframework.data.elasticsearch.core.query.Criteria;
 import org.springframework.data.elasticsearch.core.query.CriteriaQuery;
@@ -18,7 +19,6 @@ import net.risesoft.log.constant.Y9LogSearchConsts;
 import net.risesoft.y9.Y9LoginUserHolder;
 import net.risesoft.y9.util.Y9Util;
 import net.risesoft.y9public.entity.Y9logAccessLog;
-import net.risesoft.y9public.repository.Y9CommonAppForPersonRepository;
 import net.risesoft.y9public.repository.custom.Y9CommonAppForPersonCustomRepository;
 
 import co.elastic.clients.elasticsearch.ElasticsearchClient;
@@ -35,9 +35,9 @@ import co.elastic.clients.elasticsearch.core.SearchRequest;
 @Service
 @Slf4j
 @RequiredArgsConstructor
+@DependsOn(value = "elasticsearchTemplate")
 public class Y9CommonAppForPersonCustomRepositoryImpl implements Y9CommonAppForPersonCustomRepository {
 
-    private final Y9CommonAppForPersonRepository commonAppForPersonRepository;
     private final ElasticsearchTemplate elasticsearchTemplate;
     private final ElasticsearchClient elasticsearchClient;
 
@@ -73,12 +73,10 @@ public class Y9CommonAppForPersonCustomRepositoryImpl implements Y9CommonAppForP
         c.add(Calendar.MONTH, -6);
         long startTime = c.getTime().getTime();
 
-        Criteria criteria = new Criteria();
-        criteria.and(Y9LogSearchConsts.APP_METHODNAME).is(Y9LogSearchConsts.METHOD_NAME);
-        criteria.and(Y9LogSearchConsts.LOG_TIME).between(startTime, endTime);
+        Criteria criteria = new Criteria(Y9LogSearchConsts.APP_METHODNAME).is(Y9LogSearchConsts.METHOD_NAME)
+            .and(Y9LogSearchConsts.LOG_TIME).between(startTime, endTime);
         CriteriaQuery query = new CriteriaQuery(criteria);
         query.setTrackTotalHits(true);
-
         return elasticsearchTemplate.count(query, Y9logAccessLog.class);
     }
 

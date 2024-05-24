@@ -26,10 +26,12 @@ import org.springframework.stereotype.Component;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
+import net.risesoft.consts.InitDataConsts;
 import net.risesoft.log.constant.Y9LogSearchConsts;
 import net.risesoft.model.log.LogInfoModel;
 import net.risesoft.pojo.Y9Page;
 import net.risesoft.pojo.Y9PageQuery;
+import net.risesoft.y9.Y9LoginUserHolder;
 import net.risesoft.y9public.entity.Y9logUserLoginInfo;
 import net.risesoft.y9public.repository.Y9logUserLoginInfoRepository;
 import net.risesoft.y9public.repository.custom.Y9logUserLoginInfoCustomRepository;
@@ -65,6 +67,10 @@ public class Y9logUserLoginInfoCustomRepositoryImpl implements Y9logUserLoginInf
                 if (StringUtils.isNotBlank(success)) {
                     list.add(criteriaBuilder.equal(root.get(Y9LogSearchConsts.SUCCESS).as(String.class), success));
                 }
+                String tenantId = Y9LoginUserHolder.getTenantId();
+                if (!tenantId.equals(InitDataConsts.OPERATION_TENANT_ID)) {
+                    list.add(criteriaBuilder.equal(root.get(Y9LogSearchConsts.TENANT_ID).as(String.class), tenantId));
+                }
                 list.add(
                     criteriaBuilder.between(root.get(Y9LogSearchConsts.LOGIN_TIME).as(Date.class), startTime, endTime));
                 return predicate;
@@ -84,6 +90,10 @@ public class Y9logUserLoginInfoCustomRepositoryImpl implements Y9logUserLoginInf
                 CriteriaBuilder criteriaBuilder) {
                 Predicate predicate = criteriaBuilder.conjunction();
                 List<Expression<Boolean>> list = predicate.getExpressions();
+                String tenantId = Y9LoginUserHolder.getTenantId();
+                if (!tenantId.equals(InitDataConsts.OPERATION_TENANT_ID)) {
+                    list.add(criteriaBuilder.equal(root.get(Y9LogSearchConsts.TENANT_ID).as(String.class), tenantId));
+                }
                 if (StringUtils.isNotBlank(userHostIp)) {
                     list.add(
                         criteriaBuilder.equal(root.get(Y9LogSearchConsts.USER_HOST_IP).as(String.class), userHostIp));
@@ -117,7 +127,10 @@ public class Y9logUserLoginInfoCustomRepositoryImpl implements Y9logUserLoginInf
                 CriteriaBuilder criteriaBuilder) {
                 Predicate predicate = criteriaBuilder.conjunction();
                 List<Expression<Boolean>> list = predicate.getExpressions();
-
+                String tenantId = Y9LoginUserHolder.getTenantId();
+                if (!tenantId.equals(InitDataConsts.OPERATION_TENANT_ID)) {
+                    list.add(criteriaBuilder.equal(root.get(Y9LogSearchConsts.TENANT_ID).as(String.class), tenantId));
+                }
                 if (StringUtils.isNotBlank(success)) {
                     list.add(criteriaBuilder.equal(root.get(Y9LogSearchConsts.SUCCESS).as(String.class), success));
                 }
@@ -150,8 +163,14 @@ public class Y9logUserLoginInfoCustomRepositoryImpl implements Y9logUserLoginInf
     @Override
     public List<Map<String, Object>> listUserHostIpByCip(String cip) {
         List<Map<String, Object>> list = new ArrayList<>();
-        List<Map<String, Object>> userHostIpList =
-            y9logUserLoginInfoRepository.findDistinctUserHostIpCountByUserHostIpLike(cip);
+        List<Map<String, Object>> userHostIpList;
+        String tenantId = Y9LoginUserHolder.getTenantId();
+        if (tenantId.equals(InitDataConsts.OPERATION_TENANT_ID)) {
+            userHostIpList = y9logUserLoginInfoRepository.findDistinctUserHostIpCountByUserHostIpLike(cip);
+        } else {
+            userHostIpList =
+                y9logUserLoginInfoRepository.findDistinctUserHostIpCountByUserHostIpLikeAndTenantId(cip, tenantId);
+        }
         if (!userHostIpList.isEmpty()) {
             userHostIpList.forEach(userHostIp -> {
                 Map<String, Object> map = new HashMap<>();
@@ -233,7 +252,11 @@ public class Y9logUserLoginInfoCustomRepositoryImpl implements Y9logUserLoginInf
                         list.add(criteriaBuilder.between(root.get(Y9LogSearchConsts.LOGIN_TIME).as(Date.class),
                             startTime, endTime));
                     }
-
+                    String tenantId = Y9LoginUserHolder.getTenantId();
+                    if (!tenantId.equals(InitDataConsts.OPERATION_TENANT_ID)) {
+                        list.add(
+                            criteriaBuilder.equal(root.get(Y9LogSearchConsts.TENANT_ID).as(String.class), tenantId));
+                    }
                     return predicate;
                 }
             }, pageable);
@@ -246,8 +269,14 @@ public class Y9logUserLoginInfoCustomRepositoryImpl implements Y9logUserLoginInf
         int size) {
         List<Map<String, Object>> strList = new ArrayList<>();
         Pageable pageable = PageRequest.of((page < 1) ? 0 : page - 1, size);
-        Page<Object[]> pageInfo =
-            y9logUserLoginInfoRepository.findDistinctByUserHostIpAndSuccess(userHostIp, success, pageable);
+        Page<Object[]> pageInfo;
+        String tenantId = Y9LoginUserHolder.getTenantId();
+        if (tenantId.equals(InitDataConsts.OPERATION_TENANT_ID)) {
+            pageInfo = y9logUserLoginInfoRepository.findDistinctByUserHostIpAndSuccess(userHostIp, success, pageable);
+        } else {
+            pageInfo = y9logUserLoginInfoRepository.findDistinctByUserHostIpAndSuccessAndTenantId(userHostIp, success,
+                tenantId, pageable);
+        }
         if (!pageInfo.getContent().isEmpty()) {
             pageInfo.getContent().forEach(logUserLoginInfo -> {
                 String userId = (String)logUserLoginInfo[0];
@@ -268,8 +297,15 @@ public class Y9logUserLoginInfoCustomRepositoryImpl implements Y9logUserLoginInf
         String userName, int page, int size) {
         List<Map<String, Object>> strList = new ArrayList<>();
         Pageable pageable = PageRequest.of((page < 1) ? 0 : page - 1, size);
-        Page<Object[]> pageInfo = y9logUserLoginInfoRepository.findByUserHostIpAndSuccessAndUserNameLike(userHostIp,
-            success, userName, pageable);
+        Page<Object[]> pageInfo;
+        String tenantId = Y9LoginUserHolder.getTenantId();
+        if (tenantId.equals(InitDataConsts.OPERATION_TENANT_ID)) {
+            pageInfo = y9logUserLoginInfoRepository.findByUserHostIpAndSuccessAndUserNameLike(userHostIp, success,
+                userName, pageable);
+        } else {
+            pageInfo = y9logUserLoginInfoRepository.findByUserHostIpAndSuccessAndUserNameLikeAndTenantId(userHostIp,
+                success, userName, tenantId, pageable);
+        }
         if (!pageInfo.getContent().isEmpty()) {
             pageInfo.getContent().forEach(logUserLoginInfo -> {
                 String userId = (String)logUserLoginInfo[0];
@@ -311,7 +347,11 @@ public class Y9logUserLoginInfoCustomRepositoryImpl implements Y9logUserLoginInf
                         list.add(criteriaBuilder.between(root.get(Y9LogSearchConsts.LOGIN_TIME).as(Date.class),
                             startTime, endTime));
                     }
-
+                    String tenantId = Y9LoginUserHolder.getTenantId();
+                    if (!tenantId.equals(InitDataConsts.OPERATION_TENANT_ID)) {
+                        list.add(
+                            criteriaBuilder.equal(root.get(Y9LogSearchConsts.TENANT_ID).as(String.class), tenantId));
+                    }
                     return predicate;
                 }
             }, pageable);

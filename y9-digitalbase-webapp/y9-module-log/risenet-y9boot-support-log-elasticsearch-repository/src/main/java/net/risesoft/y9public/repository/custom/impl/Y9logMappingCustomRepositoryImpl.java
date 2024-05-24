@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import org.apache.commons.lang3.StringUtils;
+import org.springframework.context.annotation.DependsOn;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
@@ -15,7 +16,7 @@ import org.springframework.data.elasticsearch.core.SearchHits;
 import org.springframework.data.elasticsearch.core.query.Criteria;
 import org.springframework.data.elasticsearch.core.query.CriteriaQuery;
 import org.springframework.data.elasticsearch.core.query.Query;
-import org.springframework.stereotype.Service;
+import org.springframework.stereotype.Component;
 
 import lombok.RequiredArgsConstructor;
 
@@ -30,8 +31,9 @@ import net.risesoft.y9public.repository.custom.Y9logMappingCustomRepository;
  * @author mengjuhua
  *
  */
-@Service
+@Component
 @RequiredArgsConstructor
+@DependsOn(value = "elasticsearchTemplate")
 public class Y9logMappingCustomRepositoryImpl implements Y9logMappingCustomRepository {
     private final Y9logMappingRepository y9logMappingRepository;
     private final ElasticsearchTemplate elasticsearchTemplate;
@@ -51,10 +53,10 @@ public class Y9logMappingCustomRepositoryImpl implements Y9logMappingCustomRepos
         Pageable pageable = PageRequest.of((page < 1) ? 0 : page - 1, rows, sort);
         Criteria criteria = new Criteria();
         if (StringUtils.isNotBlank(modularCnName)) {
-            criteria.and("modularCnName").contains(modularCnName);
+            criteria.subCriteria(new Criteria("modularCnName").contains(modularCnName));
         }
         if (StringUtils.isNotBlank(modularName)) {
-            criteria.and("modularName").contains(modularName);
+            criteria.subCriteria(new Criteria("modularName").contains(modularName));
         }
         Query query = new CriteriaQuery(criteria).setPageable(pageable);
         query.setTrackTotalHits(true);

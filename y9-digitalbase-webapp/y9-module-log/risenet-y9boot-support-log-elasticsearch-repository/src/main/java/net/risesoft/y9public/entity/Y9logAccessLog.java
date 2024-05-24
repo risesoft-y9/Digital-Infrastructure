@@ -8,6 +8,8 @@ import org.springframework.data.elasticsearch.annotations.Document;
 import org.springframework.data.elasticsearch.annotations.Field;
 import org.springframework.data.elasticsearch.annotations.FieldType;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
@@ -24,6 +26,7 @@ import net.risesoft.enums.platform.ManagerLevelEnum;
 @NoArgsConstructor
 @Data
 @Document(indexName = "logindex-#{@esIndexYear.getYearStr()}")
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class Y9logAccessLog implements Serializable {
     private static final long serialVersionUID = 8905896381019503361L;
 

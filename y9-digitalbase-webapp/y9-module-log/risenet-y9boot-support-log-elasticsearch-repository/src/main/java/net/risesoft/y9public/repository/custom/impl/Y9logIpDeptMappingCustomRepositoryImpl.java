@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import org.apache.commons.lang3.StringUtils;
+import org.springframework.context.annotation.DependsOn;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.domain.Sort.Direction;
@@ -13,7 +14,7 @@ import org.springframework.data.elasticsearch.core.SearchHits;
 import org.springframework.data.elasticsearch.core.query.Criteria;
 import org.springframework.data.elasticsearch.core.query.CriteriaQueryBuilder;
 import org.springframework.data.elasticsearch.core.query.Query;
-import org.springframework.stereotype.Service;
+import org.springframework.stereotype.Component;
 
 import lombok.RequiredArgsConstructor;
 
@@ -28,8 +29,9 @@ import net.risesoft.y9public.repository.custom.Y9logIpDeptMappingCustomRepositor
  * @author mengjuhua
  *
  */
-@Service
+@Component
 @RequiredArgsConstructor
+@DependsOn(value = "elasticsearchTemplate")
 public class Y9logIpDeptMappingCustomRepositoryImpl implements Y9logIpDeptMappingCustomRepository {
 
     private final ElasticsearchTemplate elasticsearchTemplate;
@@ -38,10 +40,10 @@ public class Y9logIpDeptMappingCustomRepositoryImpl implements Y9logIpDeptMappin
     public Y9Page<Y9logIpDeptMapping> pageSearchList(int page, int rows, String clientIpSection, String deptName) {
         Criteria criteria = new Criteria();
         if (StringUtils.isNotBlank(deptName)) {
-            criteria.and("deptName").contains(deptName);
+            criteria.subCriteria(new Criteria("deptName").contains(deptName));
         }
         if (StringUtils.isNotBlank(clientIpSection)) {
-            criteria.and("clientIpSection").contains(clientIpSection);
+            criteria.subCriteria(new Criteria("clientIpSection").contains(clientIpSection));
         }
         Query query = new CriteriaQueryBuilder(criteria).withPageable(PageRequest.of((page < 1) ? 0 : page - 1, rows))
             .withSort(Sort.by(Direction.ASC, "clientIpSection")).build();
