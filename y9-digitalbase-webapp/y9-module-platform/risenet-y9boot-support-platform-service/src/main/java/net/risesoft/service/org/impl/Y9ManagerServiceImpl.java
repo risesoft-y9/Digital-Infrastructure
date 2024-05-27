@@ -68,7 +68,7 @@ public class Y9ManagerServiceImpl implements Y9ManagerService {
     @Transactional(readOnly = false)
     public void changePassword(String id, String newPassword) {
         Y9Manager manager = this.getById(id);
-        manager.setPassword(Y9MessageDigest.hashpw(newPassword));
+        manager.setPassword(Y9MessageDigest.bcrypt(newPassword));
         manager.setLastModifyPasswordTime(new Date());
         Y9Manager y9Manager = y9ManagerRepository.save(manager);
 
@@ -78,7 +78,7 @@ public class Y9ManagerServiceImpl implements Y9ManagerService {
     @Override
     public boolean checkPassword(String personId, String password) {
         Y9Manager manager = this.getById(personId);
-        return Y9MessageDigest.checkpw(password, manager.getPassword());
+        return Y9MessageDigest.bcryptMatch(password, manager.getPassword());
     }
 
     @Override
@@ -202,7 +202,7 @@ public class Y9ManagerServiceImpl implements Y9ManagerService {
     public Y9Manager resetDefaultPassword(String id) {
         Y9Manager y9Manager = this.getById(id);
         String defaultPassword = y9SettingService.get(SettingEnum.USER_DEFAULT_PASSWORD, String.class);
-        y9Manager.setPassword(Y9MessageDigest.hashpw(defaultPassword));
+        y9Manager.setPassword(Y9MessageDigest.bcrypt(defaultPassword));
         y9Manager = y9ManagerRepository.save(y9Manager);
 
         Y9Context.publishEvent(new Y9EntityUpdatedEvent<>(y9Manager, y9Manager));
@@ -231,7 +231,7 @@ public class Y9ManagerServiceImpl implements Y9ManagerService {
         y9Manager.setTabIndex(compositeOrgBaseManager.getNextSubTabIndex(y9Manager.getParentId()));
         // 系统管理员新建的子域三员默认禁用 需安全管理员启用
         y9Manager.setDisabled(!y9Manager.getGlobalManager());
-        y9Manager.setPassword(Y9MessageDigest.hashpw(defaultPassword));
+        y9Manager.setPassword(Y9MessageDigest.bcrypt(defaultPassword));
         y9Manager.setDn(Y9OrgUtil.buildDn(OrgTypeEnum.MANAGER, y9Manager.getName(), parent.getDn()));
         y9Manager.setGuidPath(Y9OrgUtil.buildGuidPath(parent.getGuidPath(), y9Manager.getId()));
         y9Manager.setOrderedPath(compositeOrgBaseManager.buildOrderedPath(y9Manager));

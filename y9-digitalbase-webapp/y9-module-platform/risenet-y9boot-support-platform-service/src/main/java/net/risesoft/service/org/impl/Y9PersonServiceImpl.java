@@ -333,12 +333,12 @@ public class Y9PersonServiceImpl implements Y9PersonService {
 
         if (StringUtils.isNotBlank(oldPassword)) {
             // 兼容旧接口，无 oldPassword
-            Y9Assert.isTrue(Y9MessageDigest.checkpw(oldPassword, person.getPassword()),
+            Y9Assert.isTrue(Y9MessageDigest.bcryptMatch(oldPassword, person.getPassword()),
                     OrgUnitErrorCodeEnum.OLD_PASSWORD_IS_INCORRECT);
         }
 
         Y9Person updatedPerson = Y9ModelConvertUtil.convert(person, Y9Person.class);
-        updatedPerson.setPassword(Y9MessageDigest.hashpw(newPassword));
+        updatedPerson.setPassword(Y9MessageDigest.bcrypt(newPassword));
         return y9PersonManager.saveOrUpdate(updatedPerson, null);
     }
 
@@ -393,7 +393,7 @@ public class Y9PersonServiceImpl implements Y9PersonService {
 
         Y9Person updatedPerson = Y9ModelConvertUtil.convert(person, Y9Person.class);
         String password = y9SettingService.get(SettingEnum.USER_DEFAULT_PASSWORD, String.class);
-        updatedPerson.setPassword(Y9MessageDigest.hashpw(password));
+        updatedPerson.setPassword(Y9MessageDigest.bcrypt(password));
         y9PersonManager.saveOrUpdate(updatedPerson, null);
     }
 
@@ -482,7 +482,7 @@ public class Y9PersonServiceImpl implements Y9PersonService {
 
             if (StringUtils.isBlank(person.getPassword())) {
                 String password = y9SettingService.get(SettingEnum.USER_DEFAULT_PASSWORD, String.class);
-                person.setPassword(Y9MessageDigest.hashpw(password));
+                person.setPassword(Y9MessageDigest.bcrypt(password));
             }
             person = save(person);
             if (personExt != null) {

@@ -166,7 +166,7 @@ public class OrgEventListener {
                     eventName = "修改密码";
                     eventDescription = Y9StringUtil.format("修改[{}]密码", updatedOrgUnit.getName());
                     String defaultPassword = y9SettingService.get(SettingEnum.USER_DEFAULT_PASSWORD, String.class);
-                    if (Y9MessageDigest.checkpw(defaultPassword, updatedPerson.getPassword())) {
+                    if (Y9MessageDigest.bcryptMatch(defaultPassword, updatedPerson.getPassword())) {
                         eventName = "重置密码";
                         eventDescription = Y9StringUtil.format("重置[{}]密码", updatedOrgUnit.getName());
                     }
