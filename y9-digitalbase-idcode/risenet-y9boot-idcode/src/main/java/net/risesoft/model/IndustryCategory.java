@@ -1,103 +1,55 @@
 package net.risesoft.model;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import lombok.Data;
 
+@Data
 public class IndustryCategory {
 
-	@JsonProperty("industrycategory_id")
-	private Integer id;
-	
-	@JsonProperty("industrycategory_name")
-	private String name;
-	
-	@JsonProperty("industrycategory_code")
-	private String code;
-	
-	@JsonProperty("industrycategory_id_parent")
-	private Integer parentId;
-	
-	@JsonProperty("industrycategory_level")
-	private Integer level;
-	
-	@JsonProperty("industrycategory_isdel")
-	private Integer isDel;
-	
-	@JsonProperty("codeuse_id")
-	private Integer useId;
-	
-	@JsonProperty("type_id")
-	private Integer typeId;
+    /**
+     * 品类id
+     */
+    @JsonProperty("industrycategory_id")
+    private Integer id;
 
-	@JsonProperty("check_format")
-	private String checkStr;
-
-	public Integer getId() {
-		return id;
-	}
-
-	public void setId(Integer id) {
-		this.id = id;
-	}
-
-	public String getName() {
-		return name;
-	}
-
-	public void setName(String name) {
-		this.name = name;
-	}
-
-	public String getCode() {
-		return code;
-	}
-
-	public void setCode(String code) {
-		this.code = code;
-	}
-
-	public Integer getParentId() {
-		return parentId;
-	}
-
-	public void setParentId(Integer parentId) {
-		this.parentId = parentId;
-	}
-
-	public Integer getLevel() {
-		return level;
-	}
-
-	public void setLevel(Integer level) {
-		this.level = level;
-	}
-
-	public Integer getIsDel() {
-		return isDel;
-	}
-
-	public void setIsDel(Integer isDel) {
-		this.isDel = isDel;
-	}
-
-	public Integer getUseId() {
-		return useId;
-	}
-
-	public void setUseId(Integer useId) {
-		this.useId = useId;
-	}
-
-	public Integer getTypeId() {
-		return typeId;
-	}
-
-	public void setTypeId(Integer typeId) {
-		this.typeId = typeId;
-	}
-
-	public String getCheckStr() { return checkStr; }
-
-	public void setCheckStr(String checkStr) { this.checkStr = checkStr; }
-	
-	
+    /**
+     * 品类名称
+     */
+    @JsonProperty("industrycategory_name")
+    private String name;
+    /**
+     * 品类代码
+     */
+    @JsonProperty("industrycategory_code")
+    private String code;
+    /**
+     * 品类父级ID
+     */
+    @JsonProperty("industrycategory_id_parent")
+    private Integer parentId;
+    /**
+     * 品类等级
+     */
+    @JsonProperty("industrycategory_level")
+    private Integer level;
+    /**
+     * 品类是否删除
+     */
+    @JsonProperty("industrycategory_isdel")
+    private Integer isDel;
+    /**
+     * 所属用途ID
+     */
+    @JsonProperty("codeuse_id")
+    private Integer useId;
+    /**
+     * 品类人事物类型
+     */
+    @JsonProperty("type_id")
+    private Integer typeId;
+    /**
+     * 填写项验证规则（正则表达式格式，目前仅用于身份证品类）
+     */
+    @JsonProperty("check_format")
+    private String checkStr;
 }

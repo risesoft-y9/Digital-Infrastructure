@@ -2,7 +2,7 @@
 <configuration>
     <include resource="org/springframework/boot/logging/logback/base.xml"/>
     <logger name="y9.autoconfiguration" level="DEBUG"/>
-    <logger name="net.risesoft" level="INFO"/>
+    <logger name="net.risesoft" level="DEBUG"/>
     <logger name="com.alibaba.cloud.nacos" level="INFO"/>
     <logger name="org.springframework.cloud.endpoint.event" level="INFO"/>
     <logger name="org.mongodb" level="WARN"/>

@@ -4,22 +4,22 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 
 /**
- * 审核类型
+ * 申请码类型
  *
  * @author qinman
  * @date 2024/5/23
  */
 @Getter
 @AllArgsConstructor
-public enum AuditTypeEnum {
+public enum CodePayTypeEnum {
     /**
-     * 单位注册审核
+     * 注册
      */
-    UNIT_REGISTER(1, "单位注册审核"),
+    REGISTER(2, "注册"),
     /**
-     * 解析地址审核
+     * 备案
      */
-    RESOLVE_ADDRESS(2, "解析地址审核");
+    FILING(5, "备案");
 
     private final Integer value;
     private final String name;
