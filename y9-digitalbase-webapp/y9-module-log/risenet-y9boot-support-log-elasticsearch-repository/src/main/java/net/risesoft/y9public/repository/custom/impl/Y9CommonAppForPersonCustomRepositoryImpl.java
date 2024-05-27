@@ -5,21 +5,10 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
 
-import org.apache.commons.lang3.StringUtils;
-import org.elasticsearch.action.search.SearchRequest;
-import org.elasticsearch.action.search.SearchResponse;
-import org.elasticsearch.client.RequestOptions;
-import org.elasticsearch.client.RestHighLevelClient;
-import org.elasticsearch.index.query.BoolQueryBuilder;
-import org.elasticsearch.index.query.QueryBuilders;
-import org.elasticsearch.search.aggregations.AggregationBuilders;
-import org.elasticsearch.search.aggregations.bucket.terms.Terms;
-import org.elasticsearch.search.aggregations.bucket.terms.Terms.Bucket;
-import org.elasticsearch.search.builder.SearchSourceBuilder;
-import org.springframework.data.elasticsearch.core.ElasticsearchOperations;
-import org.springframework.data.elasticsearch.core.mapping.IndexCoordinates;
-import org.springframework.data.elasticsearch.core.query.NativeSearchQuery;
-import org.springframework.data.elasticsearch.core.query.NativeSearchQueryBuilder;
+import org.springframework.context.annotation.DependsOn;
+import org.springframework.data.elasticsearch.client.elc.ElasticsearchTemplate;
+import org.springframework.data.elasticsearch.core.query.Criteria;
+import org.springframework.data.elasticsearch.core.query.CriteriaQuery;
 import org.springframework.stereotype.Component;
 
 import lombok.RequiredArgsConstructor;
@@ -29,7 +18,12 @@ import net.risesoft.log.constant.Y9ESIndexConst;
 import net.risesoft.log.constant.Y9LogSearchConsts;
 import net.risesoft.y9.Y9LoginUserHolder;
 import net.risesoft.y9.util.Y9Util;
+import net.risesoft.y9public.entity.Y9logAccessLog;
 import net.risesoft.y9public.repository.custom.Y9CommonAppForPersonCustomRepository;
+
+import co.elastic.clients.elasticsearch.ElasticsearchClient;
+import co.elastic.clients.elasticsearch._types.ElasticsearchException;
+import co.elastic.clients.elasticsearch.core.SearchRequest;
 
 /**
  *
@@ -41,36 +35,31 @@ import net.risesoft.y9public.repository.custom.Y9CommonAppForPersonCustomReposit
 @Component
 @Slf4j
 @RequiredArgsConstructor
+@DependsOn(value = "elasticsearchTemplate")
 public class Y9CommonAppForPersonCustomRepositoryImpl implements Y9CommonAppForPersonCustomRepository {
 
-    private final ElasticsearchOperations elasticsearchOperations;
-    private final RestHighLevelClient restHighLevelClient;
+    private final ElasticsearchTemplate elasticsearchTemplate;
+    private final ElasticsearchClient elasticsearchClient;
 
     @Override
     public List<String> getAppNamesByPersonId(String personId) {
-        BoolQueryBuilder query = QueryBuilders.boolQuery();
-        if (StringUtils.isNotBlank(personId)) {
-            query.must(QueryBuilders.queryStringQuery(Y9Util.escape(personId)).field("personId"));
-            query.must(QueryBuilders.queryStringQuery(Y9Util.escape(Y9LoginUserHolder.getTenantId()))
-                .field(Y9LogSearchConsts.TENANT_ID));
-        }
+        SearchRequest searchRequest = SearchRequest.of(s -> s.index(Y9ESIndexConst.CLICKED_APP_INDEX)
+            .query(
+                q -> q.bool(b -> b.must(m -> m.queryString(qs -> qs.fields("personId").query(Y9Util.escape(personId))))
+                    .must(m -> m.queryString(qs -> qs.fields(Y9LogSearchConsts.TENANT_ID)
+                        .query(Y9Util.escape(Y9LoginUserHolder.getTenantId()))))))
+            .aggregations("by_appName", a -> a.terms(t -> t.field("appName").size(100000)))
+            .trackTotalHits(h -> h.enabled(true)));
 
-        SearchRequest request = new SearchRequest(Y9ESIndexConst.CLICKED_APP_INDEX);
-        SearchSourceBuilder searchSourceBuilder =
-            new SearchSourceBuilder().aggregation(AggregationBuilders.terms("by_appName").field("appName").size(100000))
-                .query(query).trackTotalHits(true);
-        request.source(searchSourceBuilder);
         try {
-            SearchResponse response = restHighLevelClient.search(request, RequestOptions.DEFAULT);
-            Terms terms = response.getAggregations().get("by_appName");
-            List<? extends Bucket> buckets = terms.getBuckets();
             List<String> list = new ArrayList<>();
-            for (Bucket bucket : buckets) {
-                String appName = bucket.getKeyAsString();
-                list.add(appName);
-            }
+            elasticsearchClient.search(searchRequest, Void.class).aggregations().get("by_appName").sterms().buckets()
+                .array().forEach(bucket -> {
+                    String appName = bucket.key().toString();
+                    list.add(appName);
+                });
             return list;
-        } catch (IOException e) {
+        } catch (ElasticsearchException | IOException e) {
             LOGGER.error(e.getMessage());
             return null;
         }
@@ -78,20 +67,17 @@ public class Y9CommonAppForPersonCustomRepositoryImpl implements Y9CommonAppForP
 
     @Override
     public long getCount() {
-        BoolQueryBuilder query = QueryBuilders.boolQuery();
-        query.must(
-            QueryBuilders.queryStringQuery(Y9LogSearchConsts.APP_METHODNAME).field(Y9LogSearchConsts.METHOD_NAME));
         // 最近半年
         Calendar c = Calendar.getInstance();
         long endTime = c.getTime().getTime();
         c.add(Calendar.MONTH, -6);
         long startTime = c.getTime().getTime();
-        query.must(QueryBuilders.rangeQuery(Y9LogSearchConsts.LOG_TIME).from(startTime).to(endTime));
 
-        IndexCoordinates index = IndexCoordinates.of(Y9ESIndexConst.ACCESS_LOG_INDEX);
-        NativeSearchQuery searchQuery = new NativeSearchQueryBuilder().withQuery(query).build();
-        searchQuery.setTrackTotalHits(true);
-        return elasticsearchOperations.count(searchQuery, index);
+        Criteria criteria = new Criteria(Y9LogSearchConsts.APP_METHODNAME).is(Y9LogSearchConsts.METHOD_NAME)
+            .and(Y9LogSearchConsts.LOG_TIME).between(startTime, endTime);
+        CriteriaQuery query = new CriteriaQuery(criteria);
+        query.setTrackTotalHits(true);
+        return elasticsearchTemplate.count(query, Y9logAccessLog.class);
     }
 
 }
