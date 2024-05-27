@@ -27,7 +27,7 @@ public class UnitAttrTest {
         AreaInfoResult result = UnitAttr.addresses();
         assertEquals(result.getResultCode(), 1);
         if (LOGGER.isDebugEnabled()) {
-            result.getList().forEach(item -> LOGGER.debug("区划名称:{} 区域ID:{} 区域父ID:{} 区域级别:{}", item.getAddressName(), item.getAddressId(), item.getAddressParentId(), item.getAddressLevel()));
+            result.getList().forEach(item -> LOGGER.debug("区划名称:{} 区域ID:{} 区域父ID:{} 区域级别:{}", item.getName(), item.getId(), item.getParentId(), item.getLevel()));
         }
     }
 
@@ -41,7 +41,7 @@ public class UnitAttrTest {
         AreaInfoResult result = UnitAttr.addressesParentId(440000, AddressLevelEnum.PREFECTURE.getValue());
         assertEquals(result.getResultCode(), 1);
         if (LOGGER.isDebugEnabled()) {
-            result.getList().forEach(item -> LOGGER.debug("区划名称:{} 区域ID:{} 区域父ID:{} 区域级别:{}", item.getAddressName(), item.getAddressId(), item.getAddressParentId(), item.getAddressLevel()));
+            result.getList().forEach(item -> LOGGER.debug("区划名称:{} 区域ID:{} 区域父ID:{} 区域级别:{}", item.getName(), item.getId(), item.getParentId(), item.getLevel()));
         }
     }
 
@@ -52,7 +52,7 @@ public class UnitAttrTest {
         TradeInfoResult result = UnitAttr.trades();
         assertEquals(result.getResultCode(), 1);
         if (LOGGER.isDebugEnabled()) {
-            result.getList().forEach(item -> LOGGER.debug("行业名称:{} 行业ID:{} 行业父ID:{} 行业级别:{}", item.getTradeName(), item.getTradeId(), item.getParentId(), item.getTradeLevel()));
+            result.getList().forEach(item -> LOGGER.debug("行业名称:{} 行业ID:{} 行业父ID:{} 行业级别:{}", item.getName(), item.getId(), item.getParentId(), item.getLevel()));
         }
     }
 
@@ -66,7 +66,7 @@ public class UnitAttrTest {
         TradeInfoResult result = UnitAttr.tradesParentId(2);
         assertEquals(result.getResultCode(), 1);
         if (LOGGER.isDebugEnabled()) {
-            result.getList().forEach(item -> LOGGER.debug("行业名称:{} 行业ID:{} 行业父ID:{} 行业级别:{}", item.getTradeName(), item.getTradeId(), item.getParentId(), item.getTradeLevel()));
+            result.getList().forEach(item -> LOGGER.debug("行业名称:{} 行业ID:{} 行业父ID:{} 行业级别:{}", item.getName(), item.getId(), item.getParentId(), item.getLevel()));
         }
     }
 
@@ -77,7 +77,7 @@ public class UnitAttrTest {
         UnitTypeInfoResult result = UnitAttr.unitTypes();
         assertEquals(result.getResultCode(), 1);
         if (LOGGER.isDebugEnabled()) {
-            result.getList().forEach(item -> LOGGER.debug("单位性质名称:{} 单位性质便面:{}", item.getName(), item.getCode()));
+            result.getList().forEach(item -> LOGGER.debug("单位性质名称:{} 单位性质编码:{}", item.getName(), item.getCode()));
         }
     }
 }

@@ -14,28 +14,28 @@ public class AreaInfo {
      * 区划ID
      */
     @JsonProperty("address_id")
-    private Integer addressId;
+    private Integer id;
 
     /**
      * 区划名称
      */
     @JsonProperty("address_name")
-    private String addressName;
+    private String name;
     /**
      * 区划级别
      */
     @JsonProperty("address_level")
-    private Integer addressLevel;
+    private Integer level;
 
     /**
      * 父级区划ID
      */
     @JsonProperty("address_id_parent")
-    private Integer addressParentId;
+    private Integer parentId;
 
     /**
      * 区划编码
      */
     @JsonProperty("address_code")
-    private String addressCode;
+    private String code;
 }

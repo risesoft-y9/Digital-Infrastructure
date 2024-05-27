@@ -6,8 +6,8 @@ import lombok.Data;
 import java.util.List;
 
 @Data
-public class IndustryCategoryResult extends Result{
+public class OrganUnitResult extends Result {
 
-	@JsonProperty("industrycategory_list")
-	private List<IndustryCategory> list;
+    @JsonProperty("organunit_list")
+    private List<OrganUnit> list;
 }
