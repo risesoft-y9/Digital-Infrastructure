@@ -190,12 +190,12 @@ public class UrlConst {
     /**
      * 505 根据上传批次ID获取IDcode码
      */
-    public static final String URL_505 = "：/sp/idcode/uploadcode/json";
+    public static final String URL_505 = "/sp/idcode/uploadcode/json";
 
     /**
      * 506 根据原码查询简码
      */
-    public static final String URL_506 = "：/sp/idcode/shortcode/search";
+    public static final String URL_506 = "/sp/idcode/shortcode/search";
 
     /**
      * 601 登录验证接口
