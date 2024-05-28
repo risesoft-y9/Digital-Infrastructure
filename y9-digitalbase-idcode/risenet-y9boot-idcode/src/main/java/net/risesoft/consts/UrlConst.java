@@ -120,6 +120,12 @@ public class UrlConst {
      * 404接口 查询所有注册品类
      */
     public static final String URL_404 = "/sp/idcode/idcodeinfo/search";
+    /**
+     * 405接口 注册/备案产品品类IDcode码接口(页面接口)
+     * 注册/备案产品品类的IDcode码，相对于接口401来说此接口非
+     * 通用接口，目前仅针对个别用户开放。
+     */
+    public static final String URL_405 = "/sp/idcode/category/apply/product";
 
     /**
      * 406接口 注册/备案产品品类IDcode码接口
