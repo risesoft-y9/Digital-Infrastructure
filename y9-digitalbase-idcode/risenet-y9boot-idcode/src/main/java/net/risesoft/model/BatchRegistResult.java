@@ -6,8 +6,8 @@ import lombok.Data;
 import java.util.List;
 
 @Data
-public class CategoryResult extends Result{
+public class BatchRegistResult  extends Result {
 
-    @JsonProperty("base_idcode_list")
-    private List<Category> list;
+    @JsonProperty("batch_regist_list")
+    private List<CategoryRegModel> list;
 }

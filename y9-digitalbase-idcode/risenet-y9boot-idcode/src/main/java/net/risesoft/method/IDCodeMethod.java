@@ -167,7 +167,7 @@ public class IDCodeMethod {
         List<Map<String, Object>> listMap3 = new ArrayList<Map<String, Object>>();
         CategoryResult result = this.queryAllCategory(search_type);
         if (result.getResultMsg().equals("成功")) {
-            List<Category> list = result.getBase_idcode_list();
+            List<Category> list = result.getList();
             for (Category category : list) {
                 Map<String, Object> map = new HashMap<String, Object>();
                 map.put("model_number", category.getModel_number());

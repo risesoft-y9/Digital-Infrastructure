@@ -6,8 +6,8 @@ import lombok.Data;
 import java.util.List;
 
 @Data
-public class CategoryResult extends Result{
+public class BaseIdCodeInfo extends Result {
 
     @JsonProperty("base_idcode_list")
-    private List<Category> list;
+    private List<CategoryRegModel> list;
 }
