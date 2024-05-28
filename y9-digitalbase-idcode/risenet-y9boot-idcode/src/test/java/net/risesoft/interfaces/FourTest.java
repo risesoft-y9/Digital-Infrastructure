@@ -62,7 +62,7 @@ public class FourTest {
         BaseIdCodeInfo result = Four.m403(ConfigReader.MAIN_CODE, idCodeOfCategory, modelNumberCode, categoryRegId);
         assertEquals(result.getResultCode(), 1);
         if (LOGGER.isDebugEnabled()) {
-            result.getList().forEach(item -> LOGGER.debug("主键ID:{} 品类用途编码:{} 品类码号:{} 品类描述:{} 完整码:{}", item.getId(), item.getCodeUseId(), item.getCategoryCode(), item.getCategoryMemo(),item.getCompleteCode()));
+            result.getList().forEach(item -> LOGGER.debug("主键ID:{} 品类用途编码:{} 品类码号:{} 品类描述:{} 完整码:{} 型号码:{}", item.getId(), item.getCodeUseId(), item.getCategoryCode(), item.getCategoryMemo(),item.getCompleteCode(), item.getModelNumberCode()));
         }
     }
 

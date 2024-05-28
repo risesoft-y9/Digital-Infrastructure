@@ -10,4 +10,7 @@ public class BaseIdCodeInfo extends Result {
 
     @JsonProperty("base_idcode_list")
     private List<CategoryRegModel> list;
+
+    @JsonProperty("codefileurl_info")
+    private int codeFileUrlInfo;
 }
