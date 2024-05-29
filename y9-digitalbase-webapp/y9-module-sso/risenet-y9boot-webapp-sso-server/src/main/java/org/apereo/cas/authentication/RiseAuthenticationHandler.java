@@ -50,10 +50,9 @@ public class RiseAuthenticationHandler extends AbstractAuthenticationHandler {
         String username = riseCredential.getUsername();
         String password = riseCredential.toPassword();
         String pwdEcodeType = riseCredential.getPwdEcodeType();
-
-        String oldTenantname = tenantShortName;
-        String oldUsername = username;
-        // password = Y9MessageDigest.hashpw(password);
+        // 特殊登录处理
+        String realTenantname = tenantShortName;
+        String realUsername = username;
         try {
             username = Base64Util.decode(username, "Unicode");
             if (StringUtils.isNotBlank(pwdEcodeType)) {
@@ -65,11 +64,11 @@ public class RiseAuthenticationHandler extends AbstractAuthenticationHandler {
                 }
             }
             password = Base64Util.decode(password, "Unicode");
-            // 特殊登录处理
+
             if (username.contains("&")) {
-                oldUsername = username;
+                realUsername = username;
                 String agentTenantShortName = "operation";
-                String agentUserName = username.substring(username.indexOf("&") + 1, username.length());
+                String agentUserName = username.substring(username.indexOf("&") + 1);
                 username = agentUserName;
                 tenantShortName = agentTenantShortName;
 
@@ -141,12 +140,11 @@ public class RiseAuthenticationHandler extends AbstractAuthenticationHandler {
                         throw new FailedLoginException("密码错误。");
                     }
                     // 特殊处理登录成功后还原登录账号
-                    if (oldUsername.contains("&")) {
-                        username = oldUsername.substring(0, oldUsername.indexOf("&"));
+                    if (realUsername.contains("&")) {
+                        username = realUsername.substring(0, realUsername.indexOf("&"));
                         riseCredential.setUsername(username);
-                        riseCredential.setTenantShortName(oldTenantname);
+                        riseCredential.setTenantShortName(realTenantname);
                     }
-
                     try {
                         y9LoginUserService.save(riseCredential, "true", "登录成功");
                     } catch (Exception e) {
