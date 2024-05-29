@@ -24,7 +24,7 @@ public class CategoryRegModel {
      * 品类ID（必填），可通过接口202/203获取
      */
     @JsonProperty("industrycategory_id")
-    private String industryCategoryId;
+    private Integer industryCategoryId;
 
     /**
      * 码用途编码（必填），可通过接口201获取
