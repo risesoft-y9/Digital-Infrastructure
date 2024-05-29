@@ -25,7 +25,7 @@ public class SevenTest {
     @Test
     @Order(1)
     @Disabled
-    @DisplayName("【601】单位登录验证接口")
+    @DisplayName("【601】单位登录验证")
     public void testM601() {
         String loginName = "zgcsa";
         String loginPswd = "zgcsa";
@@ -66,7 +66,7 @@ public class SevenTest {
         }
     }
 
-    @Test
+    /*@Test
     @Order(4)
     @Disabled
     @DisplayName("【607】单位登录页面接口(页面接口)")
@@ -77,12 +77,12 @@ public class SevenTest {
         if (LOGGER.isDebugEnabled()) {
             LOGGER.debug("码图地址:{}", result);
         }
-    }
+    }*/
 
     @Test
     @Order(5)
     @Disabled
-    @DisplayName("【608】查询审核状态接口")
+    @DisplayName("【608】查询审核状态")
     public void testM608() {
         String idCode = ConfigReader.MAIN_CODE;
         String categoryRegId = "";
@@ -96,7 +96,7 @@ public class SevenTest {
 
     @Test
     @Order(1)
-    @DisplayName("【701】获取认证图片接口")
+    @DisplayName("【701】获取认证图片")
     void testM701() {
         Integer bgImage = 0;
         Integer isMarkName = 1;

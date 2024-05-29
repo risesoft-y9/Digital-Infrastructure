@@ -20,9 +20,9 @@ public class TwoTest {
 
     @Test
     @Order(1)
-    @DisplayName("【201】获取人、事、物所有用途接口")
+    @DisplayName("【201】获取人、事、物所有用途")
     void testM201() {
-        CodeUseInfoResult result = Two.codeUse();
+        CodeUseInfoResult result = Two.m201();
         assertEquals(result.getResultCode(), 1);
         if (LOGGER.isDebugEnabled()) {
             result.getList().forEach(item -> LOGGER.debug("用途ID:{} 用途名称:{} 用途代码:{} 人事物类型:{}", item.getId(), item.getName(), item.getCode(), item.getTypeId()));
@@ -31,9 +31,9 @@ public class TwoTest {
 
     @Test
     @Order(2)
-    @DisplayName("【202】获取所有品类接口")
+    @DisplayName("【202】获取所有品类")
     void testM202() {
-        IndustryCategoryResult result = Two.industryCategory();
+        IndustryCategoryResult result = Two.m202();
         assertEquals(result.getResultCode(), 1);
         if (LOGGER.isDebugEnabled()) {
             result.getList().forEach(item -> LOGGER.debug("品类名称:{} 品类ID:{} 品类父ID:{} 品类级别:{}", item.getName(), item.getId(), item.getParentId(), item.getLevel()));
@@ -42,12 +42,12 @@ public class TwoTest {
 
     @Test
     @Order(3)
-    @DisplayName("【203】获取某一级品类接口")
+    @DisplayName("【203】获取某一级品类")
     void testM203() {
         /**
          * 为0时获取到第一级品类
          */
-        IndustryCategoryResult result = Two.industryCategoryParentId(0);
+        IndustryCategoryResult result = Two.m203(0);
         assertEquals(result.getResultCode(), 1);
         if (LOGGER.isDebugEnabled()) {
             result.getList().forEach(item -> LOGGER.debug("品类名称:{} 品类ID:{} 品类父ID:{} 品类级别:{}", item.getName(), item.getId(), item.getParentId(), item.getLevel()));
@@ -56,9 +56,9 @@ public class TwoTest {
 
     @Test
     @Order(4)
-    @DisplayName("【204】获取产品所有品类接口")
+    @DisplayName("【204】获取产品所有品类")
     void testM204() {
-        IndustryCategoryResult result = Two.industryCategoryProduct();
+        IndustryCategoryResult result = Two.m204();
         assertEquals(result.getResultCode(), 1);
         if (LOGGER.isDebugEnabled()) {
             result.getList().forEach(item -> LOGGER.debug("品类名称:{} 品类ID:{} 品类父ID:{} 品类级别:{}", item.getName(), item.getId(), item.getParentId(), item.getLevel()));
