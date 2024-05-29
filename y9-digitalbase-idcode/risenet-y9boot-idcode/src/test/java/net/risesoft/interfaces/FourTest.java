@@ -147,10 +147,10 @@ public class FourTest {
          * industryCategoryId: 10222
          * categoryCode: 46100000
          */
-        Integer industryCategoryId = 10222;
-        String categoryCode = "46100000";
-        String modelNumber = "数字底座";
-        String modelNumberCode = "platform";
+        Integer industryCategoryId = 1564;
+        String categoryCode = "10024006";
+        String modelNumber = "电脑桌-001";
+        String modelNumberCode = "desktop-001";
         Integer codePayType = CodePayTypeEnum.REGISTER.getValue();
         String gotoUrl = "http://example.com/goto";
         String sampleUrl = "http://example.com/goto";
@@ -169,18 +169,18 @@ public class FourTest {
         /**
          * 名片codeUseId: 73 {@link net.risesoft.interfaces.TwoTest#testM201()}
          */
-        String codeUseId = "73";
+        String codeUseId = "60";
         Integer codePayType = CodePayTypeEnum.REGISTER.getValue();
         /**
          * 员工/职员名片
          * industryCategoryId: 10127
          * categoryCode: 10000000
          */
-        Integer industryCategoryId = 10127;
+        Integer industryCategoryId = 10166;
         String categoryCode = "10000000";
-        String modelNumber = "秦漫";
-        String modelNumberEn = "qinman";
-        String introduction = "南方第六事业部";
+        String modelNumber = "电脑桌-A001";
+        String modelNumberEn = "desktop-A001";
+        String introduction = "所属南方第六事业部";
         String gotoUrl = "http://example.com/goto";
         String sampleUrl = "http://example.com/goto";
         IdcodeRegResult result = Four.m407(ConfigReader.MAIN_CODE, codeUseId, industryCategoryId, categoryCode, modelNumber, modelNumberEn, introduction, codePayType, gotoUrl, sampleUrl);

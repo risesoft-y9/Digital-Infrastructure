@@ -36,7 +36,7 @@ public class TwoTest {
         IndustryCategoryResult result = Two.m202();
         assertEquals(result.getResultCode(), 1);
         if (LOGGER.isDebugEnabled()) {
-            result.getList().forEach(item -> LOGGER.debug("品类名称:{} 品类ID:{} 品类父ID:{} 品类级别:{}", item.getName(), item.getId(), item.getParentId(), item.getLevel()));
+            result.getList().forEach(item -> LOGGER.debug("品类ID:{} 名称:{} 用途:{} 代码:{} ",item.getId(), item.getName(),item.getUseId(), item.getCode()));
         }
     }
 
@@ -47,7 +47,7 @@ public class TwoTest {
         /**
          * 为0时获取到第一级品类
          */
-        IndustryCategoryResult result = Two.m203(0);
+        IndustryCategoryResult result = Two.m203(16);
         assertEquals(result.getResultCode(), 1);
         if (LOGGER.isDebugEnabled()) {
             result.getList().forEach(item -> LOGGER.debug("品类名称:{} 品类ID:{} 品类父ID:{} 品类级别:{}", item.getName(), item.getId(), item.getParentId(), item.getLevel()));

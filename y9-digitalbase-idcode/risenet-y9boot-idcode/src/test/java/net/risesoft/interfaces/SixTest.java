@@ -26,7 +26,7 @@ public class SixTest {
     @Order(1)
     @DisplayName("【603】生成码图")
     public void testM603() {
-        String code = "MA.156.1003.1629/73.10000000.1";
+        String code = "MA.156.1003.1629/60.10000000.1/";
         Integer picSize = 300;
         Integer codeType = CodeTypeEnum.QR.getValue();
         CodeAddress result = Six.m603(code, picSize, codeType);
