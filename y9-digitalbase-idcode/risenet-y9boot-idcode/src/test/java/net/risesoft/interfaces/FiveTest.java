@@ -33,7 +33,7 @@ public class FiveTest {
     @Test
     @Order(1)
     @Disabled
-    @DisplayName("【5011】上传码接口（方式一：上传TXT文件）")
+    @DisplayName("【5011】上传码（方式一：上传TXT文件）")
     public void testM5011() {
         String categoryRegId = "category_reg_id";
         File codeFile = new File("path/to/codeFile");
@@ -45,7 +45,7 @@ public class FiveTest {
     @Test
     @Order(2)
     @Disabled
-    @DisplayName("【5012】上传码接口（方式二：参数列表传递）")
+    @DisplayName("【5012】上传码（方式二：参数列表传递）")
     public void testM5012() {
         String categoryRegId = "category_reg_id";
         String codeListStr = "codeListStr";
@@ -57,7 +57,7 @@ public class FiveTest {
     @Test
     @Order(3)
     @Disabled
-    @DisplayName("【5013】上传码接口（方式三：前缀 + 起始号、终止号）")
+    @DisplayName("【5013】上传码（方式三：前缀 + 起始号、终止号）")
     public void testM5013() {
         String categoryRegId = "category_reg_id";
         String generateType = "generate_type";
@@ -71,7 +71,7 @@ public class FiveTest {
     @Test
     @Order(4)
     @Disabled
-    @DisplayName("【5014】上传码接口（方式四：前缀 + 起始号、终止号、数值长度，数值位数不够规定长度时高位补零）")
+    @DisplayName("【5014】上传码（方式四：前缀 + 起始号、终止号、数值长度，数值位数不够规定长度时高位补零）")
     public void testM5014() {
         String categoryRegId = "category_reg_id";
         String generateType = "generate_type";
@@ -85,7 +85,7 @@ public class FiveTest {
 
     @Test
     @Order(5)
-    @DisplayName("【502】按品类查询上传的二维码接口")
+    @DisplayName("【502】按品类查询上传的二维码")
     public void testM502() {
         String idCodeOfCategory = "10000000";
         String modelNumberCode = "rise15727338539";
@@ -96,7 +96,7 @@ public class FiveTest {
     @Test
     @Order(6)
     @Disabled
-    @DisplayName("【503】按上传批次ID查询上传的二维码接口")
+    @DisplayName("【503】按上传批次ID查询上传的二维码")
     public void testM503() {
         String uploadCodeId = "";
         CodeRecordResult result = Five.m503(ConfigReader.MAIN_CODE, uploadCodeId);

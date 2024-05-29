@@ -14,7 +14,7 @@ import java.util.Map;
  */
 public class Two {
 
-    public static CodeUseInfoResult codeUse() {
+    public static CodeUseInfoResult m201() {
         Map<String, Object> params = new HashMap<String, Object>();
         params.put("access_token", ConfigReader.API_KEY);
         params.put("time", System.currentTimeMillis());
@@ -27,7 +27,7 @@ public class Two {
         return result;
     }
 
-    public static IndustryCategoryResult industryCategory() {
+    public static IndustryCategoryResult m202() {
         Map<String, Object> params = new HashMap<String, Object>();
         params.put("access_token", ConfigReader.API_KEY);
         params.put("time", System.currentTimeMillis());
@@ -40,7 +40,7 @@ public class Two {
         return result;
     }
 
-    public static IndustryCategoryResult industryCategoryParentId(Integer parentId) {
+    public static IndustryCategoryResult m203(Integer parentId) {
         Map<String, Object> params = new HashMap<String, Object>();
         params.put("access_token", ConfigReader.API_KEY);
         params.put("time", System.currentTimeMillis());
@@ -54,7 +54,7 @@ public class Two {
         return result;
     }
 
-    public static IndustryCategoryResult industryCategoryProduct() {
+    public static IndustryCategoryResult m204() {
         Map<String, Object> params = new HashMap<String, Object>();
         params.put("access_token", ConfigReader.API_KEY);
         params.put("time", System.currentTimeMillis());

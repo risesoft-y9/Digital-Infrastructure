@@ -38,7 +38,7 @@ public class Six {
         params.put("color", color);
         CodePicBase64 result = null;
         try {
-            result = new IDCodeApiExecute<CodePicBase64>().execute(CodePicBase64.class, params, UrlConst.URL_604, false);
+            result = new IDCodeApiExecute<CodePicBase64>().execute(CodePicBase64.class, params, UrlConst.URL_604, true);
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -61,7 +61,7 @@ public class Six {
         params.put("code_color", codeColor);
         CodePicBase64 result = null;
         try {
-            result = new IDCodeApiExecute<CodePicBase64>().execute(CodePicBase64.class, params, UrlConst.URL_605, false);
+            result = new IDCodeApiExecute<CodePicBase64>().execute(CodePicBase64.class, params, UrlConst.URL_605, true);
         } catch (Exception e) {
             e.printStackTrace();
         }

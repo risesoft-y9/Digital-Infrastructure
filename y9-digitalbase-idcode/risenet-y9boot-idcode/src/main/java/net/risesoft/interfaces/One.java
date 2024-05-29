@@ -12,7 +12,7 @@ import java.util.Map;
 
 public class One {
 
-    public static AreaInfoResult addresses() {
+    public static AreaInfoResult m101() {
         Map<String, Object> params = new HashMap<String, Object>();
         params.put("access_token", ConfigReader.API_KEY);
         params.put("time", System.currentTimeMillis());
@@ -26,7 +26,7 @@ public class One {
     }
 
 
-    public static AreaInfoResult addressesParentId(Integer parentId, Integer level) {
+    public static AreaInfoResult m102(Integer parentId, Integer level) {
         Map<String, Object> params = new HashMap<String, Object>();
         params.put("access_token", ConfigReader.API_KEY);
         params.put("time", System.currentTimeMillis());
@@ -42,7 +42,7 @@ public class One {
     }
 
 
-    public static TradeInfoResult trades() {
+    public static TradeInfoResult m103() {
         Map<String, Object> params = new HashMap<String, Object>();
         params.put("access_token", ConfigReader.API_KEY);
         params.put("time", System.currentTimeMillis());
@@ -57,7 +57,7 @@ public class One {
     }
 
 
-    public static TradeInfoResult tradesParentId(Integer parentId) {
+    public static TradeInfoResult m104(Integer parentId) {
         Map<String, Object> params = new HashMap<String, Object>();
         params.put("access_token", ConfigReader.API_KEY);
         params.put("time", System.currentTimeMillis());
@@ -72,7 +72,7 @@ public class One {
     }
 
 
-    public static UnitTypeInfoResult unitTypes() {
+    public static UnitTypeInfoResult m105() {
         Map<String, Object> params = new HashMap<String, Object>();
         params.put("access_token", ConfigReader.API_KEY);
         params.put("time", System.currentTimeMillis());

@@ -50,7 +50,7 @@ public class FourTest {
     @Test
     @Order(2)
     @Disabled
-    @DisplayName("【402】批量注册/备案品类接口")
+    @DisplayName("【402】批量注册/备案品类")
     public void testM402() {
         List<CategoryRegModel> list=new ArrayList<>();
         CategoryRegModel model=new CategoryRegModel();
@@ -135,8 +135,12 @@ public class FourTest {
     @Test
     @Order(6)
     @Disabled
-    @DisplayName("【406】注册/备案产品品类IDcode码接口")
+    @DisplayName("【406】注册/备案产品品类IDcode码")
     public void testM406() {
+        /**
+         * 产品
+         * codeUseId: 10 {@link net.risesoft.interfaces.TwoTest#testM201()}
+         */
         String codeUseId = "10";
         /**
          * 网站
@@ -160,8 +164,11 @@ public class FourTest {
     @Test
     @Order(7)
     @Disabled
-    @DisplayName("【407】注册/备案非产品品类IDcode码接口")
+    @DisplayName("【407】注册/备案非产品品类IDcode码")
     public void testM407() {
+        /**
+         * 名片codeUseId: 73 {@link net.risesoft.interfaces.TwoTest#testM201()}
+         */
         String codeUseId = "73";
         Integer codePayType = CodePayTypeEnum.REGISTER.getValue();
         /**

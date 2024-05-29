@@ -21,7 +21,7 @@ public class Seven {
         params.put("login_pswd", loginPswd);
         OrganUnit result = null;
         try {
-            result = new IDCodeApiExecute<OrganUnit>().execute(OrganUnit.class, params, UrlConst.URL_601, false);
+            result = new IDCodeApiExecute<OrganUnit>().execute(OrganUnit.class, params, UrlConst.URL_601, true);
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -38,7 +38,7 @@ public class Seven {
         params.put("reg_id", regId);
         Result result = null;
         try {
-            result = new IDCodeApiExecute<Result>().execute(Result.class, params, UrlConst.URL_602, false);
+            result = new IDCodeApiExecute<Result>().execute(Result.class, params, UrlConst.URL_602, true);
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -53,14 +53,14 @@ public class Seven {
         params.put("sample_url", sampleUrl);
         Result result = null;
         try {
-            result = new IDCodeApiExecute<Result>().execute(Result.class, params, UrlConst.URL_606, false);
+            result = new IDCodeApiExecute<Result>().execute(Result.class, params, UrlConst.URL_606, true);
         } catch (Exception e) {
             e.printStackTrace();
         }
         return result;
     }
 
-    public static OrganUnit m607(String callbackUrl) {
+    /*public static OrganUnit m607(String callbackUrl) {
         Map<String, Object> params = new HashMap<String, Object>();
         params.put("access_token", ConfigReader.API_KEY);
         params.put("time", System.currentTimeMillis());
@@ -72,7 +72,7 @@ public class Seven {
             e.printStackTrace();
         }
         return result;
-    }
+    }*/
 
     public static ExamineResult m608(String idCode, String categoryRegId, Integer type) {
         Map<String, Object> params = new HashMap<String, Object>();

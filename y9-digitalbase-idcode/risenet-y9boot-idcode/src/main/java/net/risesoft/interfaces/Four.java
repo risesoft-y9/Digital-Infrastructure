@@ -92,7 +92,7 @@ public class Four {
 
         Result result = null;
         try {
-            result = new IDCodeApiExecute<Result>().execute(Result.class, params, UrlConst.URL_405, false);
+            result = new IDCodeApiExecute<Result>().execute(Result.class, params, UrlConst.URL_405, true);
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -115,7 +115,7 @@ public class Four {
 
         IdcodeRegResult result = null;
         try {
-            result = new IDCodeApiExecute<IdcodeRegResult>().execute(IdcodeRegResult.class, params, UrlConst.URL_406, false);
+            result = new IDCodeApiExecute<IdcodeRegResult>().execute(IdcodeRegResult.class, params, UrlConst.URL_406, true);
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -139,7 +139,7 @@ public class Four {
 
         IdcodeRegResult result = null;
         try {
-            result = new IDCodeApiExecute<IdcodeRegResult>().execute(IdcodeRegResult.class, params, UrlConst.URL_407, false);
+            result = new IDCodeApiExecute<IdcodeRegResult>().execute(IdcodeRegResult.class, params, UrlConst.URL_407, true);
         } catch (Exception e) {
             e.printStackTrace();
         }

@@ -28,7 +28,7 @@ public class Five {
         params.put("version", "1.0");
         Result result = null;
         try {
-            result = new IDCodeApiExecute<Result>().execute(Result.class, params, UrlConst.URL_5011, false);
+            result = new IDCodeApiExecute<Result>().execute(Result.class, params, UrlConst.URL_5011, true);
         } catch (Exception e) {
             e.printStackTrace();
         }
