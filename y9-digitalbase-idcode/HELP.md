@@ -1,10 +1,16 @@
-# Getting Started
+# 统一码组件使用说明
 
-### Reference Documentation
+### 注册SP账号
 
-For further reference, please consider the following sections:
 
-* [Official Apache Maven documentation](https://maven.apache.org/guides/index.html)
-* [Spring Boot Maven Plugin Reference Guide](https://docs.spring.io/spring-boot/docs/2.6.13/maven-plugin/reference/html/)
-* [Create an OCI image](https://docs.spring.io/spring-boot/docs/2.6.13/maven-plugin/reference/html/#build-image)
+
+
+
+怎么为一个物品生成一个码
+
+1、确定物品所属品类信息【202接口】
+
+2、注册物品获得一个idcode【406接口或者407接口】
+
+3、为idcode生成一个码【603接口、604接口或者605接口】
 
