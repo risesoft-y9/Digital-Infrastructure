@@ -31,7 +31,7 @@ public class ThreeTest {
     @Order(1)
     @DisplayName("【301】单位注册信息提交接口1")
     @Disabled
-    void testCompanyinfoReg() {
+    void testM301() {
         RegistResult result = Three.companyinfoReg("loginName", "loginPassword", "email", "orgUnitName", "orgUnitEnName", 1, 1, 1, 1, "linkman", "linkmanEn", "linkPhone", "smsVerifyCode");
         assertEquals(result.getResultCode(), 1);
         if (LOGGER.isDebugEnabled()) {
@@ -43,7 +43,7 @@ public class ThreeTest {
     @Order(2)
     @DisplayName("【302】获取激活验证码接口(SP平台发短信）")
     @Disabled
-    void testVerifyCode() {
+    void testM302() {
         SmsVerifyCode result = Three.verifyCode("13049881814");
         assertEquals(result.getResultCode(), 1);
         if (LOGGER.isDebugEnabled()) {
@@ -55,7 +55,7 @@ public class ThreeTest {
     @Order(3)
     @DisplayName("【303】发送激活验证码接口(IDcode平台发短信）")
     @Disabled
-    void testVerifyCodeSend() {
+    void testM303() {
         Result result = Three.verifyCodeSend("13049881814");
         assertEquals(result.getResultCode(), 1);
         if (LOGGER.isDebugEnabled()) {
@@ -67,7 +67,7 @@ public class ThreeTest {
     @Order(4)
     @DisplayName("【304】单位认证接口")
     @Disabled
-    void testCompanyinfoVerify() {
+    void testM304() {
         Result result = Three.companyinfoVerify(ConfigReader.MAIN_CODE, 2, "51110000500317549R",new File("D:/1111.jpg"));
         assertEquals(result.getResultCode(), 1);
         if (LOGGER.isDebugEnabled()) {
@@ -79,7 +79,7 @@ public class ThreeTest {
     @Order(5)
     @DisplayName("【305】单位资料完善相关接口")
     @Disabled
-    void testCompanyinfoModify() {
+    void testM305() {
         Result result = Three.companyinfoModify(ConfigReader.MAIN_CODE, 1, "address", "name", "nameEn", "addressEn", "email", "linkman", "linkmanEn", "fax", "workAddress", "workAddressEn", 1, 1, 1, "gotoUrl", "linkPhone", new File("D:/1111.jpg"));
         assertEquals(result.getResultCode(), 1);
         if (LOGGER.isDebugEnabled()) {
@@ -90,7 +90,7 @@ public class ThreeTest {
     @Test
     @Order(6)
     @DisplayName("【306】获取单位基本信息接口")
-    void testCompanyinfoBase() {
+    void testM306() {
         Result result = Three.companyinfoBase(ConfigReader.MAIN_CODE);
         assertEquals(result.getResultCode(), 1);
         if (LOGGER.isDebugEnabled()) {
@@ -101,7 +101,7 @@ public class ThreeTest {
     @Test
     @Order(7)
     @DisplayName("【307】根据单位名称获取单位基本信息接口")
-    void testCompanyinfoSearch() {
+    void testM307() {
         OrganUnitResult result = Three.companyinfoSearch("中关村软件", "0");
         assertEquals(result.getResultCode(), 1);
         if (LOGGER.isDebugEnabled()) {
@@ -112,7 +112,7 @@ public class ThreeTest {
     @Test
     @Order(8)
     @DisplayName("【308】获取单位状态接口")
-    void testOrganUnitStatus() {
+    void testM308() {
         OrganUnitStatusInfo result = Three.organUnitStatus(ConfigReader.MAIN_CODE);
         assertEquals(result.getResultCode(), 1);
         if (LOGGER.isDebugEnabled()) {
@@ -124,7 +124,7 @@ public class ThreeTest {
     @Order(9)
     @DisplayName("【309】单位注册信息提交接口2")
     @Disabled
-    void testUnitRegist() {
+    void testM309() {
         UnitRegistResult result = Three.unitRegist("loginName", "orgUnitName", "email", "code", "provinceId", "cityId", "areaId", "linkman", "linkPhone", new File("D:/1111.jpg"), "qrCodeColor", new File("D:/1111.jpg"), "gotoUrl", "qrCodeSize");
         assertEquals(result.getResultCode(), 1);
         if (LOGGER.isDebugEnabled()) {
@@ -133,10 +133,10 @@ public class ThreeTest {
     }
 
     @Test
-    @Order(9)
+    @Order(10)
     @DisplayName("【310】修改单位logo或企业码解析地址")
     @Disabled
-    void testCompanyIdCodeGotoUrl() {
+    void testM310() {
         UpdateGotoUrlResult result = Three.companyIdCodeGotoUrl("loginName", "pwd", "1111", "gotoUrl", 1, 1, 1);
         assertEquals(result.getResultCode(), 1);
         if (LOGGER.isDebugEnabled()) {

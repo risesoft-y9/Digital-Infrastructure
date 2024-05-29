@@ -23,7 +23,7 @@ public class OneTest {
     @Test
     @Order(1)
     @DisplayName("【101】一次性返回所有级别行政信息")
-    void testAddresses() {
+    void testM101() {
         AreaInfoResult result = One.addresses();
         assertEquals(result.getResultCode(), 1);
         if (LOGGER.isDebugEnabled()) {
@@ -34,7 +34,7 @@ public class OneTest {
     @Test
     @Order(2)
     @DisplayName("【102】按照父级ID返回子级信息")
-    void testAddressesParentId() {
+    void testM102() {
         /**
          * 440000 代表广东省
          */
@@ -48,7 +48,7 @@ public class OneTest {
     @Test
     @Order(3)
     @DisplayName("【103】一次性返回所有级别行业信息")
-    void testTrades() {
+    void testM103() {
         TradeInfoResult result = One.trades();
         assertEquals(result.getResultCode(), 1);
         if (LOGGER.isDebugEnabled()) {
@@ -59,7 +59,7 @@ public class OneTest {
     @Test
     @Order(4)
     @DisplayName("【104】按照父级ID返回子级信息")
-    void testTradesParentId() {
+    void testM104() {
         /**
          * 农、林、牧、渔业 行业ID为2
          */
@@ -73,7 +73,7 @@ public class OneTest {
     @Test
     @Order(5)
     @DisplayName("【105】获取单位性质分类接口")
-    void testUnitTypes() {
+    void testM105() {
         UnitTypeInfoResult result = One.unitTypes();
         assertEquals(result.getResultCode(), 1);
         if (LOGGER.isDebugEnabled()) {
