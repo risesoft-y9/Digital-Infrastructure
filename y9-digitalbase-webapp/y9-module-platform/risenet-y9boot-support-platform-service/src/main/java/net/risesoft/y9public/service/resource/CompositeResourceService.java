@@ -92,17 +92,17 @@ public interface CompositeResourceService {
     List<Y9ResourceBase> searchByName(String name);
 
     /**
+     * 排序
+     *
+     * @param ids id
+     */
+    void sort(String[] ids);
+
+    /**
      * 通过名字查询资源
      *
      * @param name
      * @return
      */
     List<Y9ResourceBase> treeSearch(String name);
-
-    /**
-     * 排序
-     *
-     * @param ids id
-     */
-    void sort(String[] ids);
 }

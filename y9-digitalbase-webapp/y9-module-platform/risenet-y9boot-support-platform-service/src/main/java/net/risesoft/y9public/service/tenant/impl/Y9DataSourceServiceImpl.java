@@ -55,6 +55,34 @@ public class Y9DataSourceServiceImpl implements Y9DataSourceService {
         this.y9DataSourceManager = y9DataSourceManager;
     }
 
+    private static boolean isY9DataSourceModified(Y9DataSource cachedY9DataSource, Y9DataSource queriedY9DataSource) {
+        boolean modified = false;
+        if (cachedY9DataSource == null) {
+            modified = true;
+        } else {
+            if (Objects.equals(queriedY9DataSource.getType(), DataSourceTypeEnum.DRUID)) {
+                if (!Objects.equals(cachedY9DataSource.getType(), DataSourceTypeEnum.DRUID)) {
+                    modified = true;
+                }
+                if (!queriedY9DataSource.getJndiName().equals(cachedY9DataSource.getJndiName())) {
+                    modified = true;
+                }
+            } else {
+                // druid
+                if (!queriedY9DataSource.getUrl().equals(cachedY9DataSource.getUrl())
+                    || !queriedY9DataSource.getInitialSize().equals(cachedY9DataSource.getInitialSize())
+                    || !queriedY9DataSource.getMaxActive().equals(cachedY9DataSource.getMaxActive())
+                    || !queriedY9DataSource.getMinIdle().equals(cachedY9DataSource.getMinIdle())
+                    || !queriedY9DataSource.getUsername().equals(cachedY9DataSource.getUsername())
+                    || !queriedY9DataSource.getPassword().equals(cachedY9DataSource.getPassword())
+                    || !queriedY9DataSource.getType().equals(cachedY9DataSource.getType())) {
+                    modified = true;
+                }
+            }
+        }
+        return modified;
+    }
+
     @Override
     public String buildDataSourceName(String shortName, TenantTypeEnum tenantType, String systemName) {
         return y9DataSourceManager.buildDataSourceName(shortName, tenantType, systemName);
@@ -152,34 +180,6 @@ public class Y9DataSourceServiceImpl implements Y9DataSourceService {
         }
 
         return dataSource;
-    }
-
-    private static boolean isY9DataSourceModified(Y9DataSource cachedY9DataSource, Y9DataSource queriedY9DataSource) {
-        boolean modified = false;
-        if (cachedY9DataSource == null) {
-            modified = true;
-        } else {
-            if (Objects.equals(queriedY9DataSource.getType(), DataSourceTypeEnum.DRUID)) {
-                if (!Objects.equals(cachedY9DataSource.getType(), DataSourceTypeEnum.DRUID)) {
-                    modified = true;
-                }
-                if (!queriedY9DataSource.getJndiName().equals(cachedY9DataSource.getJndiName())) {
-                    modified = true;
-                }
-            } else {
-                // druid
-                if (!queriedY9DataSource.getUrl().equals(cachedY9DataSource.getUrl())
-                    || !queriedY9DataSource.getInitialSize().equals(cachedY9DataSource.getInitialSize())
-                    || !queriedY9DataSource.getMaxActive().equals(cachedY9DataSource.getMaxActive())
-                    || !queriedY9DataSource.getMinIdle().equals(cachedY9DataSource.getMinIdle())
-                    || !queriedY9DataSource.getUsername().equals(cachedY9DataSource.getUsername())
-                    || !queriedY9DataSource.getPassword().equals(cachedY9DataSource.getPassword())
-                    || !queriedY9DataSource.getType().equals(cachedY9DataSource.getType())) {
-                    modified = true;
-                }
-            }
-        }
-        return modified;
     }
 
     @Override

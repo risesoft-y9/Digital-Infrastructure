@@ -6,6 +6,7 @@ import javax.persistence.Id;
 import javax.persistence.Table;
 
 import org.hibernate.annotations.Comment;
+import org.hibernate.annotations.DynamicUpdate;
 
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -22,6 +23,7 @@ import net.risesoft.base.BaseEntity;
  */
 @Entity
 @Table(name = "Y9_ORG_PERMISSION_DATAROW")
+@DynamicUpdate
 @org.hibernate.annotations.Table(comment = "数据行权限表", appliesTo = "Y9_ORG_PERMISSION_DATAROW")
 @NoArgsConstructor
 @Data

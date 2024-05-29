@@ -32,5 +32,5 @@ public interface Y9CustomGroupRepository
     List<Y9CustomGroup> findByPersonIdOrderByTabIndexAsc(String personId);
 
     @Query("select max(t.tabIndex) from Y9CustomGroup t where t.personId=?1 order by t.tabIndex desc")
-    Integer getMaxTabIndex(String personId);
+    Optional<Integer> getMaxTabIndex(String personId);
 }

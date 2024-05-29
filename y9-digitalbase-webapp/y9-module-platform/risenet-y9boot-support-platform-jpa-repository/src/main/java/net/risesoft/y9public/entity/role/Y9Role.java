@@ -9,6 +9,7 @@ import javax.validation.constraints.NotBlank;
 
 import org.hibernate.annotations.ColumnDefault;
 import org.hibernate.annotations.Comment;
+import org.hibernate.annotations.DynamicUpdate;
 import org.hibernate.annotations.Type;
 
 import lombok.Data;
@@ -28,6 +29,7 @@ import net.risesoft.persistence.EnumConverter;
  */
 @Entity
 @Table(name = "Y9_ORG_ROLE")
+@DynamicUpdate
 @org.hibernate.annotations.Table(comment = "角色表", appliesTo = "Y9_ORG_ROLE")
 @NoArgsConstructor
 @Data

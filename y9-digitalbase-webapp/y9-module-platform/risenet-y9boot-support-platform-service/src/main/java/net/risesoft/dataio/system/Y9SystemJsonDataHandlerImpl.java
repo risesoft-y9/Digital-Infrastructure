@@ -50,63 +50,6 @@ public class Y9SystemJsonDataHandlerImpl implements Y9SystemDataHandler {
         return y9AppExportModel;
     }
 
-    private Y9SystemExportModel buildSystem(String systemId) {
-        Y9System y9System = y9SystemService.getById(systemId);
-        Y9SystemExportModel y9SystemExportModel = Y9ModelConvertUtil.convert(y9System, Y9SystemExportModel.class);
-        y9SystemExportModel.setAppList(buildAppList(systemId));
-        return y9SystemExportModel;
-    }
-
-    @Override
-    public void importApp(Y9AppExportModel y9AppExportModel, String systemId) {
-        Y9App y9App = Y9ModelConvertUtil.convert(y9AppExportModel, Y9App.class);
-        y9App.setSystemId(systemId);
-        y9AppService.saveAndRegister4Tenant(y9App);
-        importMenuList(y9AppExportModel.getSubMenuList(), systemId);
-        importOperationList(y9AppExportModel.getSubOperationList(), systemId);
-        importRoleList(y9AppExportModel.getSubRoleList(), systemId);
-    }
-
-    @Override
-    public void importSystem(Y9SystemExportModel y9SystemExportModel) {
-        Y9System y9System = Y9ModelConvertUtil.convert(y9SystemExportModel, Y9System.class);
-        y9System = y9SystemService.saveAndRegister4Tenant(y9System);
-        importAppList(y9SystemExportModel.getAppList(), y9System.getId());
-    }
-
-    @Override
-    public void exportSystem(String systemId, OutputStream outStream) {
-        Y9SystemExportModel y9SystemExportModel = this.buildSystem(systemId);
-        String jsonStr = Y9JsonUtil.writeValueAsStringWithDefaultPrettyPrinter(y9SystemExportModel);
-
-        try (InputStream in = new ByteArrayInputStream(jsonStr.getBytes(StandardCharsets.UTF_8))) {
-            int len;
-            byte[] buf = new byte[1024];
-            while ((len = in.read(buf, 0, 1024)) != -1) {
-                outStream.write(buf, 0, len);
-            }
-            outStream.flush();
-        } catch (IOException e) {
-            LOGGER.warn(e.getMessage(), e);
-        }
-    }
-
-    @Override
-    public void exportApp(String appId, OutputStream outStream) {
-        Y9AppExportModel y9AppExportModel = this.buildApp(appId);
-        String jsonStr = Y9JsonUtil.writeValueAsStringWithDefaultPrettyPrinter(y9AppExportModel);
-        try (InputStream in = new ByteArrayInputStream(jsonStr.getBytes(StandardCharsets.UTF_8))) {
-            int len;
-            byte[] buf = new byte[1024];
-            while ((len = in.read(buf, 0, 1024)) != -1) {
-                outStream.write(buf, 0, len);
-            }
-            outStream.flush();
-        } catch (IOException e) {
-            LOGGER.warn(e.getMessage(), e);
-        }
-    }
-
     private List<Y9AppExportModel> buildAppList(String systemId) {
         List<Y9App> y9AppList = y9AppService.listBySystemId(systemId);
         List<Y9AppExportModel> y9AppExportModelList = Y9ModelConvertUtil.convert(y9AppList, Y9AppExportModel.class);
@@ -146,6 +89,63 @@ public class Y9SystemJsonDataHandlerImpl implements Y9SystemDataHandler {
             y9RoleExportModel.setSubRoleList(buildRoleList(y9RoleExportModel.getId()));
         }
         return y9RoleExportModelList;
+    }
+
+    private Y9SystemExportModel buildSystem(String systemId) {
+        Y9System y9System = y9SystemService.getById(systemId);
+        Y9SystemExportModel y9SystemExportModel = Y9ModelConvertUtil.convert(y9System, Y9SystemExportModel.class);
+        y9SystemExportModel.setAppList(buildAppList(systemId));
+        return y9SystemExportModel;
+    }
+
+    @Override
+    public void exportApp(String appId, OutputStream outStream) {
+        Y9AppExportModel y9AppExportModel = this.buildApp(appId);
+        String jsonStr = Y9JsonUtil.writeValueAsStringWithDefaultPrettyPrinter(y9AppExportModel);
+        try (InputStream in = new ByteArrayInputStream(jsonStr.getBytes(StandardCharsets.UTF_8))) {
+            int len;
+            byte[] buf = new byte[1024];
+            while ((len = in.read(buf, 0, 1024)) != -1) {
+                outStream.write(buf, 0, len);
+            }
+            outStream.flush();
+        } catch (IOException e) {
+            LOGGER.warn(e.getMessage(), e);
+        }
+    }
+
+    @Override
+    public void exportSystem(String systemId, OutputStream outStream) {
+        Y9SystemExportModel y9SystemExportModel = this.buildSystem(systemId);
+        String jsonStr = Y9JsonUtil.writeValueAsStringWithDefaultPrettyPrinter(y9SystemExportModel);
+
+        try (InputStream in = new ByteArrayInputStream(jsonStr.getBytes(StandardCharsets.UTF_8))) {
+            int len;
+            byte[] buf = new byte[1024];
+            while ((len = in.read(buf, 0, 1024)) != -1) {
+                outStream.write(buf, 0, len);
+            }
+            outStream.flush();
+        } catch (IOException e) {
+            LOGGER.warn(e.getMessage(), e);
+        }
+    }
+
+    @Override
+    public void importApp(Y9AppExportModel y9AppExportModel, String systemId) {
+        Y9App y9App = Y9ModelConvertUtil.convert(y9AppExportModel, Y9App.class);
+        y9App.setSystemId(systemId);
+        y9AppService.saveAndRegister4Tenant(y9App);
+        importMenuList(y9AppExportModel.getSubMenuList(), systemId);
+        importOperationList(y9AppExportModel.getSubOperationList(), systemId);
+        importRoleList(y9AppExportModel.getSubRoleList(), systemId);
+    }
+
+    @Override
+    public void importSystem(Y9SystemExportModel y9SystemExportModel) {
+        Y9System y9System = Y9ModelConvertUtil.convert(y9SystemExportModel, Y9System.class);
+        y9System = y9SystemService.saveAndRegister4Tenant(y9System);
+        importAppList(y9SystemExportModel.getAppList(), y9System.getId());
     }
 
     private void importAppList(List<Y9AppExportModel> y9AppExportModelList, String systemId) {

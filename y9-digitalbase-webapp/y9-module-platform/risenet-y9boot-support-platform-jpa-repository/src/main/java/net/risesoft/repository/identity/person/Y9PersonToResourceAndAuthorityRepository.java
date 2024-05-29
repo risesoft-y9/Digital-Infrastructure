@@ -57,11 +57,11 @@ public interface Y9PersonToResourceAndAuthorityRepository
     List<Y9PersonToResourceAndAuthority> findByPersonIdAndAuthorityAndResourceType(String personId,
         AuthorityEnum authority, ResourceTypeEnum resourceType);
 
-    List<Y9PersonToResourceAndAuthority> findByPersonIdAndParentResourceIdAndAuthorityAndResourceType(String personId,
-        String parentResourceId, AuthorityEnum authority, ResourceTypeEnum resourceType);
-
     List<Y9PersonToResourceAndAuthority> findByPersonIdAndParentResourceIdAndAuthority(String personId,
         String parentResourceId, AuthorityEnum authority);
+
+    List<Y9PersonToResourceAndAuthority> findByPersonIdAndParentResourceIdAndAuthorityAndResourceType(String personId,
+        String parentResourceId, AuthorityEnum authority, ResourceTypeEnum resourceType);
 
     List<Y9PersonToResourceAndAuthority> findByPersonIdAndResourceIdAndAuthority(String personId, String resourceId,
         AuthorityEnum authority);

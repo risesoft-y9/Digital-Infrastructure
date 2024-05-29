@@ -6,6 +6,7 @@ import javax.persistence.Index;
 import javax.persistence.Table;
 
 import org.hibernate.annotations.Comment;
+import org.hibernate.annotations.DynamicUpdate;
 
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -22,6 +23,7 @@ import net.risesoft.entity.identity.Y9IdentityToRoleBase;
  */
 @Entity
 @Table(name = "Y9_ORG_POSITIONS_ROLES", indexes = {@Index(columnList = "POSITION_ID,ROLE_ID", unique = true)})
+@DynamicUpdate
 @org.hibernate.annotations.Table(comment = "岗位与角色关系表", appliesTo = "Y9_ORG_POSITIONS_ROLES")
 @NoArgsConstructor
 @Data

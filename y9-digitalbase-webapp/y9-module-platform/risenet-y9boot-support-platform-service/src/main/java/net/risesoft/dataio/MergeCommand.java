@@ -26,6 +26,11 @@ import jxl.write.WriteException;
  *
  */
 public class MergeCommand extends AbstractCommand {
+    private String cols;
+    private String rows;
+    private CellStyle cellStyle;
+    private Area area;
+
     private static void setRegionStyle(CellStyle cs, CellRangeAddress region, Sheet sheet) {
         for (int i = region.getFirstRow(); i <= region.getLastRow(); i++) {
             Row row = sheet.getRow(i);
@@ -42,12 +47,6 @@ public class MergeCommand extends AbstractCommand {
         }
     }
 
-    private String cols;
-    private String rows;
-    private CellStyle cellStyle;
-
-    private Area area;
-
     @Override
     public Command addArea(Area area) {
         if (super.getAreaList().size() >= 1) {
@@ -55,6 +54,35 @@ public class MergeCommand extends AbstractCommand {
         }
         this.area = area;
         return super.addArea(area);
+    }
+
+    public Area getArea() {
+        return area;
+    }
+
+    public void setArea(Area area) {
+        this.area = area;
+    }
+
+    public CellStyle getCellStyle() {
+        return cellStyle;
+    }
+
+    public void setCellStyle(CellStyle cellStyle) {
+        this.cellStyle = cellStyle;
+    }
+
+    public String getCols() {
+        return cols;
+    }
+
+    public void setCols(String cols) {
+        this.cols = cols;
+    }
+
+    @Override
+    public String getName() {
+        return "merge";
     }
 
     @Override
@@ -86,25 +114,12 @@ public class MergeCommand extends AbstractCommand {
         return new Size(colsAt, rowsAt);
     }
 
-    public Area getArea() {
-        return area;
-    }
-
-    public CellStyle getCellStyle() {
-        return cellStyle;
-    }
-
-    public String getCols() {
-        return cols;
-    }
-
-    @Override
-    public String getName() {
-        return "merge";
-    }
-
     public String getRows() {
         return rows;
+    }
+
+    public void setRows(String rows) {
+        this.rows = rows;
     }
 
     protected Size jexcelMerge(CellRef cellRef, Context context, JexcelTransformer transformer, int rows, int cols) {
@@ -134,22 +149,6 @@ public class MergeCommand extends AbstractCommand {
         }
         setRegionStyle(cellStyle, region, sheet);
         return new Size(cols, rows);
-    }
-
-    public void setArea(Area area) {
-        this.area = area;
-    }
-
-    public void setCellStyle(CellStyle cellStyle) {
-        this.cellStyle = cellStyle;
-    }
-
-    public void setCols(String cols) {
-        this.cols = cols;
-    }
-
-    public void setRows(String rows) {
-        this.rows = rows;
     }
 
 }

@@ -25,14 +25,14 @@ public class SettingController {
 
     private final Y9SettingService y9SettingService;
 
+    @GetMapping("/getTenantSetting")
+    public Y9Result<TenantSettingVO> getTenantSetting() {
+        return Y9Result.success(y9SettingService.getObjectFromSetting(TenantSettingVO.class));
+    }
+
     @PostMapping("/saveTenantSetting")
     public Y9Result<Object> saveTenantSetting(TenantSettingVO tenantSettingVO) {
         y9SettingService.saveObjectFiledAsSetting(tenantSettingVO);
         return Y9Result.success();
-    }
-
-    @GetMapping("/getTenantSetting")
-    public Y9Result<TenantSettingVO> getTenantSetting() {
-        return Y9Result.success(y9SettingService.getObjectFromSetting(TenantSettingVO.class));
     }
 }

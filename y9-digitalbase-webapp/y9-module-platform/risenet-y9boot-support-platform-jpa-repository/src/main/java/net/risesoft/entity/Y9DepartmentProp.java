@@ -6,6 +6,7 @@ import javax.persistence.Id;
 import javax.persistence.Table;
 
 import org.hibernate.annotations.Comment;
+import org.hibernate.annotations.DynamicUpdate;
 
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -22,6 +23,7 @@ import net.risesoft.base.BaseEntity;
  */
 @Entity
 @Table(name = "Y9_ORG_DEPARTMENT_PROP")
+@DynamicUpdate
 @org.hibernate.annotations.Table(comment = "部门信息配置表", appliesTo = "Y9_ORG_DEPARTMENT_PROP")
 @NoArgsConstructor
 @Data

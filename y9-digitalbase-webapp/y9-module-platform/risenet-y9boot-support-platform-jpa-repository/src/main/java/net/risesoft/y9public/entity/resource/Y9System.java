@@ -8,6 +8,7 @@ import javax.validation.constraints.NotBlank;
 
 import org.hibernate.annotations.ColumnDefault;
 import org.hibernate.annotations.Comment;
+import org.hibernate.annotations.DynamicUpdate;
 import org.hibernate.annotations.Type;
 
 import lombok.Data;
@@ -25,6 +26,7 @@ import net.risesoft.base.BaseEntity;
  */
 @Entity
 @Table(name = "Y9_COMMON_SYSTEM")
+@DynamicUpdate
 @org.hibernate.annotations.Table(comment = "系统信息表", appliesTo = "Y9_COMMON_SYSTEM")
 @NoArgsConstructor
 @Data

@@ -50,18 +50,6 @@ public interface OrgUnitApi {
         @RequestParam("orgUnitId") @NotBlank String orgUnitId);
 
     /**
-     * 获取组织节点所在的组织机构
-     *
-     * @param tenantId 租户id
-     * @param orgUnitId 组织节点唯一标识
-     * @return Organization 组织机构对象
-     * @since 9.6.0
-     */
-    @GetMapping("/getOrganization")
-    Organization getOrganization(@RequestParam("tenantId") @NotBlank String tenantId,
-        @RequestParam("orgUnitId") @NotBlank String orgUnitId);
-
-    /**
      * 根据id获得组织节点对象
      *
      * @param tenantId 租户id
@@ -83,6 +71,18 @@ public interface OrgUnitApi {
      */
     @GetMapping("/getOrgUnitDeletedById")
     OrgUnit getOrgUnitDeletedById(@RequestParam("tenantId") @NotBlank String tenantId,
+        @RequestParam("orgUnitId") @NotBlank String orgUnitId);
+
+    /**
+     * 获取组织节点所在的组织机构
+     *
+     * @param tenantId 租户id
+     * @param orgUnitId 组织节点唯一标识
+     * @return Organization 组织机构对象
+     * @since 9.6.0
+     */
+    @GetMapping("/getOrganization")
+    Organization getOrganization(@RequestParam("tenantId") @NotBlank String tenantId,
         @RequestParam("orgUnitId") @NotBlank String orgUnitId);
 
     /**

@@ -43,19 +43,6 @@ public interface PositionRoleApi {
         @RequestParam("roleId") @NotBlank String roleId, @RequestParam("positionId") @NotBlank String positionId);
 
     /**
-     * 判断岗位是否拥有 customId 对应的角色
-     *
-     * @param tenantId 租户id
-     * @param positionId 岗位id
-     * @param customId 自定义id
-     * @return Boolean
-     * @since 9.6.0
-     */
-    @GetMapping("/hasRole2")
-    Boolean hasRoleByCustomId(@RequestParam("tenantId") @NotBlank String tenantId,
-        @RequestParam("positionId") @NotBlank String positionId, @RequestParam("customId") @NotBlank String customId);
-
-    /**
      * 根据岗位id判断该岗位是否拥有 roleName 这个角色
      *
      * @param tenantId 租户id
@@ -71,4 +58,17 @@ public interface PositionRoleApi {
         @RequestParam("systemName") @NotBlank String systemName,
         @RequestParam(value = "properties", required = false) String properties,
         @RequestParam("roleName") @NotBlank String roleName, @RequestParam("positionId") @NotBlank String positionId);
+
+    /**
+     * 判断岗位是否拥有 customId 对应的角色
+     *
+     * @param tenantId 租户id
+     * @param positionId 岗位id
+     * @param customId 自定义id
+     * @return Boolean
+     * @since 9.6.0
+     */
+    @GetMapping("/hasRole2")
+    Boolean hasRoleByCustomId(@RequestParam("tenantId") @NotBlank String tenantId,
+        @RequestParam("positionId") @NotBlank String positionId, @RequestParam("customId") @NotBlank String customId);
 }

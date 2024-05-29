@@ -31,6 +31,21 @@ public class Y9PersonToRoleManagerImpl implements Y9PersonToRoleManager {
     private final Y9PersonToRoleRepository y9PersonToRoleRepository;
 
     @Override
+    public List<String> findRoleIdByPersonId(String personId) {
+        return y9PersonToRoleRepository.findRoleIdByPersonId(personId);
+    }
+
+    @Override
+    @Transactional(readOnly = false)
+    public void removeByPersonIdAndRoleId(String personId, String roleId) {
+        Optional<Y9PersonToRole> y9PersonToRoleOptional =
+            y9PersonToRoleRepository.findByPersonIdAndRoleId(personId, roleId);
+        if (y9PersonToRoleOptional.isPresent()) {
+            y9PersonToRoleRepository.deleteById(y9PersonToRoleOptional.get().getId());
+        }
+    }
+
+    @Override
     @Transactional(readOnly = false, propagation = Propagation.REQUIRES_NEW)
     public void save(Y9Person person, Y9Role role) {
         Optional<Y9PersonToRole> personToRoleOptional =
@@ -50,21 +65,6 @@ public class Y9PersonToRoleManagerImpl implements Y9PersonToRoleManager {
             matrix.setDescription(role.getDescription());
 
             y9PersonToRoleRepository.save(matrix);
-        }
-    }
-
-    @Override
-    public List<String> findRoleIdByPersonId(String personId) {
-        return y9PersonToRoleRepository.findRoleIdByPersonId(personId);
-    }
-
-    @Override
-    @Transactional(readOnly = false)
-    public void removeByPersonIdAndRoleId(String personId, String roleId) {
-        Optional<Y9PersonToRole> y9PersonToRoleOptional =
-            y9PersonToRoleRepository.findByPersonIdAndRoleId(personId, roleId);
-        if (y9PersonToRoleOptional.isPresent()) {
-            y9PersonToRoleRepository.deleteById(y9PersonToRoleOptional.get().getId());
         }
     }
 

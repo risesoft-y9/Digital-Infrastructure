@@ -64,6 +64,24 @@ public class IdentityResourceCalculatorImpl implements IdentityResourceCalculato
     }
 
     /**
+     * 拿到人员或岗位所有关联的组织和角色id
+     *
+     * @param identityId
+     * @return
+     */
+    private List<String> getIdentityRelatedPrincipalId(String identityId) {
+        List<String> principalIdList = new ArrayList<>();
+
+        List<Y9Role> y9RoleList = y9RoleManager.listOrgUnitRelatedWithoutNegative(identityId);
+        principalIdList.addAll(y9RoleList.stream().map(Y9Role::getId).collect(Collectors.toList()));
+
+        List<String> orgUnitIdList = y9RoleManager.listOrgUnitIdRecursively(identityId);
+        principalIdList.addAll(orgUnitIdList);
+
+        return principalIdList.stream().distinct().collect(Collectors.toList());
+    }
+
+    /**
      * 根据资源id找到与其相关的授权（继承的）
      *
      * @param resourceId 资源id
@@ -73,6 +91,13 @@ public class IdentityResourceCalculatorImpl implements IdentityResourceCalculato
         List<Y9Authorization> authorizationList = new ArrayList<>();
         listByResourceIdRelated(authorizationList, resourceId);
         return authorizationList;
+    }
+
+    private void listByResourceIdRelated(List<Y9Authorization> authorizationList, String resourceId) {
+        if (StringUtils.isNotBlank(resourceId)) {
+            authorizationList.addAll(y9AuthorizationRepository.findByResourceId(resourceId));
+            listByResourceIdRelated(authorizationList, compositeResourceService.findById(resourceId).getParentId());
+        }
     }
 
     @Override
@@ -169,31 +194,6 @@ public class IdentityResourceCalculatorImpl implements IdentityResourceCalculato
             } else {
                 this.recalculateByOrgUnitId(y9Authorization.getPrincipalId());
             }
-        }
-    }
-
-    /**
-     * 拿到人员或岗位所有关联的组织和角色id
-     *
-     * @param identityId
-     * @return
-     */
-    private List<String> getIdentityRelatedPrincipalId(String identityId) {
-        List<String> principalIdList = new ArrayList<>();
-
-        List<Y9Role> y9RoleList = y9RoleManager.listOrgUnitRelatedWithoutNegative(identityId);
-        principalIdList.addAll(y9RoleList.stream().map(Y9Role::getId).collect(Collectors.toList()));
-
-        List<String> orgUnitIdList = y9RoleManager.listOrgUnitIdRecursively(identityId);
-        principalIdList.addAll(orgUnitIdList);
-
-        return principalIdList.stream().distinct().collect(Collectors.toList());
-    }
-
-    private void listByResourceIdRelated(List<Y9Authorization> authorizationList, String resourceId) {
-        if (StringUtils.isNotBlank(resourceId)) {
-            authorizationList.addAll(y9AuthorizationRepository.findByResourceId(resourceId));
-            listByResourceIdRelated(authorizationList, compositeResourceService.findById(resourceId).getParentId());
         }
     }
 

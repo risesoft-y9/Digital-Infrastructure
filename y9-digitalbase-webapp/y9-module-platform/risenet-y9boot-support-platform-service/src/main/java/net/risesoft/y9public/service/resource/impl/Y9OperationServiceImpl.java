@@ -76,27 +76,6 @@ public class Y9OperationServiceImpl implements Y9OperationService {
         Y9Context.publishEvent(new Y9EntityDeletedEvent<>(y9Operation));
     }
 
-    @Transactional(readOnly = false)
-    public void deleteByParentId(String parentId) {
-        List<Y9Operation> y9OperationList = this.findByParentId(parentId);
-        for (Y9Operation y9Operation : y9OperationList) {
-            this.delete(y9Operation.getId());
-        }
-    }
-
-    /**
-     * 删除相关租户数据 <br/>
-     * 切换不同的数据源 需开启新事务
-     *
-     * @param operationId 应用id
-     */
-    @Transactional(readOnly = false, propagation = Propagation.REQUIRES_NEW)
-    public void deleteTenantRelatedByOperationId(String operationId) {
-        y9AuthorizationRepository.deleteByResourceId(operationId);
-        y9PersonToResourceAndAuthorityRepository.deleteByResourceId(operationId);
-        y9PositionToResourceAndAuthorityRepository.deleteByResourceId(operationId);
-    }
-
     @Override
     @Transactional(readOnly = false)
     public List<Y9Operation> disable(List<String> idList) {
@@ -149,13 +128,66 @@ public class Y9OperationServiceImpl implements Y9OperationService {
     }
 
     @Override
-    public List<Y9Operation> findByParentId(String parentId) {
-        return y9OperationRepository.findByParentIdOrderByTabIndex(parentId);
+    public Y9Operation getById(String id) {
+        return y9OperationManager.getById(id);
     }
 
     @Override
-    public Y9Operation getById(String id) {
-        return y9OperationManager.getById(id);
+    @Transactional(readOnly = false)
+    public Y9Operation saveOrUpdate(Y9Operation y9Operation) {
+        if (StringUtils.isNotBlank(y9Operation.getId())) {
+            Optional<Y9Operation> y9OperationOptional = y9OperationManager.findById(y9Operation.getId());
+            if (y9OperationOptional.isPresent()) {
+                Y9Operation originOperationResource = y9OperationOptional.get();
+                Y9Operation updatedOperationResource = new Y9Operation();
+                Y9BeanUtil.copyProperties(originOperationResource, updatedOperationResource);
+                Y9BeanUtil.copyProperties(y9Operation, updatedOperationResource);
+                updatedOperationResource = y9OperationManager.save(updatedOperationResource);
+
+                Y9Context.publishEvent(new Y9EntityUpdatedEvent<>(originOperationResource, updatedOperationResource));
+
+                return updatedOperationResource;
+            }
+        } else {
+            y9Operation.setId(Y9IdGenerator.genId(IdType.SNOWFLAKE));
+            Integer maxTabIndex = getMaxIndexByParentId(y9Operation.getParentId());
+            y9Operation.setTabIndex(maxTabIndex != null ? maxTabIndex + 1 : 0);
+        }
+
+        Y9Context.publishEvent(new Y9EntityCreatedEvent<>(y9Operation));
+
+        return y9OperationManager.save(y9Operation);
+    }
+
+    @Override
+    public Y9Operation updateTabIndex(String id, int index) {
+        return y9OperationManager.updateTabIndex(id, index);
+    }
+
+    @Transactional(readOnly = false)
+    public void deleteByParentId(String parentId) {
+        List<Y9Operation> y9OperationList = this.findByParentId(parentId);
+        for (Y9Operation y9Operation : y9OperationList) {
+            this.delete(y9Operation.getId());
+        }
+    }
+
+    /**
+     * 删除相关租户数据 <br/>
+     * 切换不同的数据源 需开启新事务
+     *
+     * @param operationId 应用id
+     */
+    @Transactional(readOnly = false, propagation = Propagation.REQUIRES_NEW)
+    public void deleteTenantRelatedByOperationId(String operationId) {
+        y9AuthorizationRepository.deleteByResourceId(operationId);
+        y9PersonToResourceAndAuthorityRepository.deleteByResourceId(operationId);
+        y9PositionToResourceAndAuthorityRepository.deleteByResourceId(operationId);
+    }
+
+    @Override
+    public List<Y9Operation> findByParentId(String parentId) {
+        return y9OperationRepository.findByParentIdOrderByTabIndex(parentId);
     }
 
     @Override
@@ -195,37 +227,5 @@ public class Y9OperationServiceImpl implements Y9OperationService {
         for (Y9Operation y9Operation : y9OperationList) {
             this.deleteTenantRelatedByOperationId(y9Operation.getId());
         }
-    }
-
-    @Override
-    @Transactional(readOnly = false)
-    public Y9Operation saveOrUpdate(Y9Operation y9Operation) {
-        if (StringUtils.isNotBlank(y9Operation.getId())) {
-            Optional<Y9Operation> y9OperationOptional = y9OperationManager.findById(y9Operation.getId());
-            if (y9OperationOptional.isPresent()) {
-                Y9Operation originOperationResource = y9OperationOptional.get();
-                Y9Operation updatedOperationResource = new Y9Operation();
-                Y9BeanUtil.copyProperties(originOperationResource, updatedOperationResource);
-                Y9BeanUtil.copyProperties(y9Operation, updatedOperationResource);
-                updatedOperationResource = y9OperationManager.save(updatedOperationResource);
-
-                Y9Context.publishEvent(new Y9EntityUpdatedEvent<>(originOperationResource, updatedOperationResource));
-
-                return updatedOperationResource;
-            }
-        } else {
-            y9Operation.setId(Y9IdGenerator.genId(IdType.SNOWFLAKE));
-            Integer maxTabIndex = getMaxIndexByParentId(y9Operation.getParentId());
-            y9Operation.setTabIndex(maxTabIndex != null ? maxTabIndex + 1 : 0);
-        }
-
-        Y9Context.publishEvent(new Y9EntityCreatedEvent<>(y9Operation));
-
-        return y9OperationManager.save(y9Operation);
-    }
-
-    @Override
-    public Y9Operation updateTabIndex(String id, int index) {
-        return y9OperationManager.updateTabIndex(id, index);
     }
 }

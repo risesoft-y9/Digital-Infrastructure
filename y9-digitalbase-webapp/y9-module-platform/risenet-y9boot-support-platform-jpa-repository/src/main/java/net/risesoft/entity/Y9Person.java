@@ -9,6 +9,7 @@ import javax.validation.constraints.NotBlank;
 
 import org.hibernate.annotations.ColumnDefault;
 import org.hibernate.annotations.Comment;
+import org.hibernate.annotations.DynamicUpdate;
 import org.hibernate.annotations.Type;
 
 import lombok.Data;
@@ -29,6 +30,7 @@ import net.risesoft.validation.Mobile;
  */
 @Entity
 @Table(name = "Y9_ORG_PERSON")
+@DynamicUpdate
 @org.hibernate.annotations.Table(comment = "人员表", appliesTo = "Y9_ORG_PERSON")
 @Data
 public class Y9Person extends Y9OrgBase {

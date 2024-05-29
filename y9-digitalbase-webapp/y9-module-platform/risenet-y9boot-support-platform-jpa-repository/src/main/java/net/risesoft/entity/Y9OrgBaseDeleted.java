@@ -8,6 +8,7 @@ import javax.persistence.Lob;
 import javax.persistence.Table;
 
 import org.hibernate.annotations.Comment;
+import org.hibernate.annotations.DynamicUpdate;
 
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -26,6 +27,7 @@ import net.risesoft.persistence.EnumConverter;
  */
 @Entity
 @Table(name = "Y9_ORGBASE_DELETED")
+@DynamicUpdate
 @org.hibernate.annotations.Table(comment = "删除的组织表", appliesTo = "Y9_ORGBASE_DELETED")
 @NoArgsConstructor
 @Data

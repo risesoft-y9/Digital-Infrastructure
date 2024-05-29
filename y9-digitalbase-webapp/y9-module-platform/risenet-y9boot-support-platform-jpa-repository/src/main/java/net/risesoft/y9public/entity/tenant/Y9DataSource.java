@@ -8,6 +8,7 @@ import javax.persistence.Table;
 import javax.validation.constraints.NotBlank;
 
 import org.hibernate.annotations.Comment;
+import org.hibernate.annotations.DynamicUpdate;
 
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -26,6 +27,7 @@ import net.risesoft.persistence.EnumConverter;
  */
 @Entity
 @Table(name = "Y9_COMMON_DATASOURCE")
+@DynamicUpdate
 @org.hibernate.annotations.Table(comment = "数据源基本信息表", appliesTo = "Y9_COMMON_DATASOURCE")
 @NoArgsConstructor
 @Data

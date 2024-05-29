@@ -25,11 +25,11 @@ public interface Y9UserRepository extends JpaRepository<Y9User, String>, JpaSpec
 
     List<Y9User> findByLoginName(String loginName);
 
-    Optional<Y9User> findByTenantIdAndLoginNameAndOriginalTrue(String tenantId, String loginName);
-
-    Optional<Y9User> findByTenantIdAndPersonId(String tenantId, String personId);
-
     List<Y9User> findByTenantId(String tenantId);
 
     Optional<Y9User> findByTenantIdAndCaid(String tenantId, String caid);
+
+    Optional<Y9User> findByTenantIdAndLoginNameAndOriginalTrue(String tenantId, String loginName);
+
+    Optional<Y9User> findByTenantIdAndPersonId(String tenantId, String personId);
 }

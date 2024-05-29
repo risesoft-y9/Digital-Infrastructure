@@ -5,6 +5,7 @@ import javax.persistence.Entity;
 import javax.persistence.Table;
 
 import org.hibernate.annotations.Comment;
+import org.hibernate.annotations.DynamicUpdate;
 
 import lombok.Data;
 
@@ -20,6 +21,7 @@ import net.risesoft.enums.platform.ResourceTypeEnum;
  */
 @Entity
 @Table(name = "Y9_COMMON_MENU")
+@DynamicUpdate
 @org.hibernate.annotations.Table(comment = "应用的菜单表", appliesTo = "Y9_COMMON_MENU")
 @Data
 public class Y9Menu extends Y9ResourceBase {

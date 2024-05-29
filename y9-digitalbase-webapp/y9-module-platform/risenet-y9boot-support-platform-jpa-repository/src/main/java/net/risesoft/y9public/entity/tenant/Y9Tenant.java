@@ -8,6 +8,7 @@ import javax.persistence.Table;
 
 import org.hibernate.annotations.ColumnDefault;
 import org.hibernate.annotations.Comment;
+import org.hibernate.annotations.DynamicUpdate;
 import org.hibernate.annotations.Type;
 
 import lombok.Data;
@@ -27,6 +28,7 @@ import net.risesoft.persistence.EnumConverter;
  */
 @Entity
 @Table(name = "Y9_COMMON_TENANT")
+@DynamicUpdate
 @org.hibernate.annotations.Table(comment = "租户信息表", appliesTo = "Y9_COMMON_TENANT")
 @NoArgsConstructor
 @Data

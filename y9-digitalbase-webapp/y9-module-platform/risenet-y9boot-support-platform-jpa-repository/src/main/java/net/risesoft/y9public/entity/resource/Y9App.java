@@ -9,6 +9,7 @@ import javax.persistence.Transient;
 
 import org.hibernate.annotations.ColumnDefault;
 import org.hibernate.annotations.Comment;
+import org.hibernate.annotations.DynamicUpdate;
 import org.hibernate.annotations.Type;
 
 import lombok.Data;
@@ -28,6 +29,7 @@ import net.risesoft.persistence.EnumConverter;
  */
 @Entity
 @Table(name = "Y9_COMMON_APP_STORE")
+@DynamicUpdate
 @org.hibernate.annotations.Table(comment = "应用市场表", appliesTo = "Y9_COMMON_APP_STORE")
 @Data
 public class Y9App extends Y9ResourceBase {

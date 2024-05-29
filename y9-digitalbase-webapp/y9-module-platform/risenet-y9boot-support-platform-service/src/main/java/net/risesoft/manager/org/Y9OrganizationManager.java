@@ -27,7 +27,11 @@ public interface Y9OrganizationManager {
 
     Y9Organization getById(String id);
 
+    Y9Organization getByIdNotCache(String id);
+
     Y9Organization save(Y9Organization y9Organization);
+
+    Y9Organization saveOrUpdate(Y9Organization organization);
 
     /**
      * 保存或者更新组织机构扩展信息

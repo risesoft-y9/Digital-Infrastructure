@@ -64,13 +64,6 @@ public interface Y9OrganizationService {
     Y9Organization getById(String id);
 
     /**
-     * 获取子节点最大的tabIndex
-     *
-     * @return {@link Integer}
-     */
-    Integer getMaxTabIndex();
-
-    /**
      * 组织机构列表
      *
      * @return List<ORGOrganization>
@@ -103,20 +96,20 @@ public interface Y9OrganizationService {
     List<Y9Organization> listByTenantId(String tenantId);
 
     /**
-     * 保存新的序号
-     *
-     * @param orgIds 机构id数组
-     * @return {@link List}<{@link Y9Organization}>
-     */
-    List<Y9Organization> saveOrder(List<String> orgIds);
-
-    /**
      * 保存或者更新组织机构基本信息
      *
      * @param org 组织机构对象
      * @return ORGOrganization
      */
     Y9Organization saveOrUpdate(Y9Organization org);
+
+    /**
+     * 保存新的序号
+     *
+     * @param orgIds 机构id数组
+     * @return {@link List}<{@link Y9Organization}>
+     */
+    List<Y9Organization> saveOrder(List<String> orgIds);
 
     /**
      * 保存或者更新组织机构扩展信息
@@ -126,12 +119,4 @@ public interface Y9OrganizationService {
      * @return {@link Y9Organization}
      */
     Y9Organization saveProperties(String orgId, String properties);
-
-    /**
-     * 根据where子句查询
-     *
-     * @param whereClause 查询子句
-     * @return {@link List}<{@link Y9Organization}>
-     */
-    List<Y9Organization> search(String whereClause);
 }

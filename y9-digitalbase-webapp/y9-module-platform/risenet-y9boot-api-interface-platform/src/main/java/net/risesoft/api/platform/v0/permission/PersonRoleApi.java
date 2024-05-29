@@ -63,19 +63,6 @@ public interface PersonRoleApi {
         @RequestParam("roleId") @NotBlank String roleId, @RequestParam("personId") @NotBlank String personId);
 
     /**
-     * 判断人员是否拥有 customId 对应的角色
-     *
-     * @param tenantId 租户id
-     * @param personId 人员id
-     * @param customId 自定义id
-     * @return {@link Boolean}
-     * @since 9.6.0
-     */
-    @GetMapping("/hasRole2")
-    Boolean hasRoleByCustomId(@RequestParam("tenantId") @NotBlank String tenantId,
-        @RequestParam("personId") @NotBlank String personId, @RequestParam("customId") @NotBlank String customId);
-
-    /**
      * 根据人员id判断该人员是否拥有 roleName 这个角色
      *
      * @param tenantId 租户id
@@ -91,6 +78,19 @@ public interface PersonRoleApi {
         @RequestParam("systemName") @NotBlank String systemName,
         @RequestParam(value = "properties", required = false) String properties,
         @RequestParam("roleName") @NotBlank String roleName, @RequestParam("personId") @NotBlank String personId);
+
+    /**
+     * 判断人员是否拥有 customId 对应的角色
+     *
+     * @param tenantId 租户id
+     * @param personId 人员id
+     * @param customId 自定义id
+     * @return {@link Boolean}
+     * @since 9.6.0
+     */
+    @GetMapping("/hasRole2")
+    Boolean hasRoleByCustomId(@RequestParam("tenantId") @NotBlank String tenantId,
+        @RequestParam("personId") @NotBlank String personId, @RequestParam("customId") @NotBlank String customId);
 
     /**
      * 根据角色Id获取角色下所有人员

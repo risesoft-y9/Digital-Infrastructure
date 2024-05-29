@@ -102,6 +102,11 @@ public class Y9TenantServiceImpl implements Y9TenantService {
     }
 
     @Override
+    public Optional<Y9Tenant> findByShortName(String shortName) {
+        return y9TenantRepository.findByShortName(shortName);
+    }
+
+    @Override
     public Y9Tenant getById(String id) {
         return y9TenantManager.getById(id);
     }
@@ -127,11 +132,6 @@ public class Y9TenantServiceImpl implements Y9TenantService {
             return y9TenantRepository.findByTenantTypeAndParentIdIsNullOrderByTabIndexAsc(tenantType);
         }
         return y9TenantRepository.findByParentIdOrderByTabIndexAsc(parentId);
-    }
-
-    @Override
-    public Optional<Y9Tenant> findByShortName(String shortName) {
-        return y9TenantRepository.findByShortName(shortName);
     }
 
     @Override
@@ -219,16 +219,14 @@ public class Y9TenantServiceImpl implements Y9TenantService {
         return save(y9Tenant);
     }
 
-    private boolean isShortNameAvailable(String shortName, String id) {
-        Optional<Y9Tenant> y9TenantOptional = y9TenantRepository.findByShortName(shortName);
-
-        if (y9TenantOptional.isEmpty()) {
-            // 不存在同名的租户肯定可用
-            return true;
+    @Override
+    @Transactional(readOnly = false)
+    public void saveTenantOrders(String[] tenantIds) {
+        for (int i = 0; i < tenantIds.length; i++) {
+            Y9Tenant y9Tenant = this.getById(tenantIds[i]);
+            y9Tenant.setTabIndex(i);
+            y9TenantRepository.save(y9Tenant);
         }
-
-        // 编辑租户时没修改英文名称同样认为可用
-        return y9TenantOptional.get().getId().equals(id);
     }
 
     private boolean isNameAvailable(String name, String id) {
@@ -243,14 +241,16 @@ public class Y9TenantServiceImpl implements Y9TenantService {
         return y9TenantOptional.get().getId().equals(id);
     }
 
-    @Override
-    @Transactional(readOnly = false)
-    public void saveTenantOrders(String[] tenantIds) {
-        for (int i = 0; i < tenantIds.length; i++) {
-            Y9Tenant y9Tenant = this.getById(tenantIds[i]);
-            y9Tenant.setTabIndex(i);
-            y9TenantRepository.save(y9Tenant);
+    private boolean isShortNameAvailable(String shortName, String id) {
+        Optional<Y9Tenant> y9TenantOptional = y9TenantRepository.findByShortName(shortName);
+
+        if (y9TenantOptional.isEmpty()) {
+            // 不存在同名的租户肯定可用
+            return true;
         }
+
+        // 编辑租户时没修改英文名称同样认为可用
+        return y9TenantOptional.get().getId().equals(id);
     }
 
 }

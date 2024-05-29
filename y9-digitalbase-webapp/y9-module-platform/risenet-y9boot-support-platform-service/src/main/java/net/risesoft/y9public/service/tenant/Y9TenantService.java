@@ -83,6 +83,14 @@ public interface Y9TenantService {
     Optional<Y9Tenant> findByShortName(String shortName);
 
     /**
+     * 根据租户名称查找租户列表
+     *
+     * @param tenantName 租户名称
+     * @return List&lt;Tenant&gt;
+     */
+    Optional<Y9Tenant> findByTenantName(String tenantName);
+
+    /**
      * 根据id查找租户
      *
      * @param id 租户主键id
@@ -121,14 +129,6 @@ public interface Y9TenantService {
      * @return {@link List}<{@link Y9Tenant}>
      */
     List<Y9Tenant> listByParentIdAndTenantType(String parentId, TenantTypeEnum tenantType);
-
-    /**
-     * 根据租户名称查找租户列表
-     *
-     * @param tenantName 租户名称
-     * @return List&lt;Tenant&gt;
-     */
-    Optional<Y9Tenant> findByTenantName(String tenantName);
 
     /**
      * 根据租户类型(TenantType)获取租户

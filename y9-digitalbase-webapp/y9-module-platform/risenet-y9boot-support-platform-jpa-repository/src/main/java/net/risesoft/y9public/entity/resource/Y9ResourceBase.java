@@ -112,7 +112,8 @@ public abstract class Y9ResourceBase extends BaseEntity implements Comparable<Y9
 
     @Override
     public int compareTo(Y9ResourceBase y9ResourceBase) {
-        return Comparator.comparing(Y9ResourceBase::getSystemId).thenComparing(Y9ResourceBase::getParentId, Comparator.nullsFirst(String::compareTo))
+        return Comparator.comparing(Y9ResourceBase::getSystemId)
+            .thenComparing(Y9ResourceBase::getParentId, Comparator.nullsFirst(String::compareTo))
             .thenComparing(Y9ResourceBase::getTabIndex).compare(this, y9ResourceBase);
     }
 

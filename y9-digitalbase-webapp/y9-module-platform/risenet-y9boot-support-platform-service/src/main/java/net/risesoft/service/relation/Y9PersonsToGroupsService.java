@@ -50,7 +50,7 @@ public interface Y9PersonsToGroupsService {
      * @param personId
      * @return
      */
-    Integer getMaxGroupOrderByPersonId(String personId);
+    Integer getNextGroupOrderByPersonId(String personId);
 
     /**
      * 根据组id获取最大的人员排列序号
@@ -58,7 +58,7 @@ public interface Y9PersonsToGroupsService {
      * @param groupId
      * @return
      */
-    Integer getMaxPersonOrderByGroupId(String groupId);
+    Integer getNextPersonOrderByGroupId(String groupId);
 
     /**
      * 根据用户组id获取

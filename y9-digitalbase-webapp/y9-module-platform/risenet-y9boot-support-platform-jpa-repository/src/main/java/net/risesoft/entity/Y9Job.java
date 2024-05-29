@@ -7,6 +7,7 @@ import javax.persistence.Table;
 import javax.validation.constraints.NotBlank;
 
 import org.hibernate.annotations.Comment;
+import org.hibernate.annotations.DynamicUpdate;
 
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -24,6 +25,7 @@ import net.risesoft.base.BaseEntity;
  */
 @Entity
 @Table(name = "Y9_ORG_JOB")
+@DynamicUpdate
 @org.hibernate.annotations.Table(comment = "职位表", appliesTo = "Y9_ORG_JOB")
 @NoArgsConstructor
 @Data

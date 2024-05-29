@@ -1,6 +1,5 @@
 package net.risesoft.api.org;
 
-import java.util.Collections;
 import java.util.List;
 
 import javax.validation.constraints.NotBlank;
@@ -218,21 +217,4 @@ public class DepartmentApiImpl implements DepartmentApi {
         return Y9Result.success(Y9ModelConvertUtil.convert(y9DepartmentList, Department.class));
     }
 
-    /**
-     * 根据条件查询部门对象
-     *
-     * @param tenantId 租户id
-     * @param whereClause sql语句where后面的条件语句
-     * @return {@code Y9Result<List<Department>>} 通用请求返回对象 - data 是部门对象集合
-     * @since 9.6.0
-     */
-    @Override
-    public Y9Result<List<Department>> search(@RequestParam("tenantId") @NotBlank String tenantId,
-        @RequestParam("whereClause") @NotBlank String whereClause) {
-        Y9LoginUserHolder.setTenantId(tenantId);
-
-        List<Y9Department> y9DepartmentList = y9DepartmentService.search(whereClause);
-        Collections.sort(y9DepartmentList);
-        return Y9Result.success(Y9ModelConvertUtil.convert(y9DepartmentList, Department.class));
-    }
 }

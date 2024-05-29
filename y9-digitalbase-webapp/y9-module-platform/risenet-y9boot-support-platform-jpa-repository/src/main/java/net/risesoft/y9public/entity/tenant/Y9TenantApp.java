@@ -11,6 +11,7 @@ import javax.persistence.TemporalType;
 
 import org.hibernate.annotations.ColumnDefault;
 import org.hibernate.annotations.Comment;
+import org.hibernate.annotations.DynamicUpdate;
 import org.hibernate.annotations.Type;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
@@ -30,6 +31,7 @@ import net.risesoft.base.BaseEntity;
  */
 @Entity
 @Table(name = "Y9_COMMON_TENANT_APP")
+@DynamicUpdate
 @org.hibernate.annotations.Table(comment = "租户应用信息表", appliesTo = "Y9_COMMON_TENANT_APP")
 @NoArgsConstructor
 @Data

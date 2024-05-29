@@ -8,6 +8,7 @@ import javax.persistence.Table;
 
 import org.hibernate.annotations.ColumnDefault;
 import org.hibernate.annotations.Comment;
+import org.hibernate.annotations.DynamicUpdate;
 
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -26,6 +27,7 @@ import net.risesoft.base.BaseEntity;
 @Table(name = "Y9_ORG_PERSONS_POSITIONS",
     indexes = {@Index(columnList = "POSITION_ID,PERSON_ID", unique = true),
         @Index(columnList = "PERSON_ID,POSITION_ID", unique = true)})
+@DynamicUpdate
 @org.hibernate.annotations.Table(comment = "人员岗位关联表", appliesTo = "Y9_ORG_PERSONS_POSITIONS")
 @NoArgsConstructor
 @Data

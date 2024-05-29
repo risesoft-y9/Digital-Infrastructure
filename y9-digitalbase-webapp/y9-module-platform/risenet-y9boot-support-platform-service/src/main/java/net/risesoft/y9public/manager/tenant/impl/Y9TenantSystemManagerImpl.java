@@ -92,37 +92,6 @@ public class Y9TenantSystemManagerImpl implements Y9TenantSystemManager {
 
     @Override
     @Transactional(readOnly = false)
-    public Y9TenantSystem saveTenantSystem(String systemId, String tenantId) {
-        Y9Tenant tenant = y9TenantManager.getById(tenantId);
-        Y9System y9System = y9SystemManager.getById(systemId);
-
-        Optional<Y9TenantSystem> y9TenantSystemOptional =
-            y9TenantSystemRepository.findByTenantIdAndSystemId(tenantId, systemId);
-        if (y9TenantSystemOptional.isPresent()) {
-            return y9TenantSystemOptional.get();
-        }
-
-        Y9TenantSystem y9TenantSystem = new Y9TenantSystem();
-        y9TenantSystem.setTenantId(tenantId);
-        y9TenantSystem.setTenantDataSource(tenant.getDefaultDataSourceId());
-        y9TenantSystem.setSystemId(systemId);
-        y9TenantSystem.setInitialized(false);
-        if (Boolean.TRUE.equals(y9System.getSingleDatasource())) {
-            String datasoureId = tenant.getDefaultDataSourceId();
-            try {
-                Y9DataSource y9DataSource = y9DataSourceManager.createTenantDefaultDataSource(tenant.getShortName(),
-                    tenant.getTenantType(), y9System.getName());
-                datasoureId = y9DataSource.getId();
-            } catch (Exception e) {
-                LOGGER.warn(e.getMessage(), e);
-            }
-            y9TenantSystem.setTenantDataSource(datasoureId);
-        }
-        return this.save(y9TenantSystem);
-    }
-
-    @Override
-    @Transactional(readOnly = false)
     public Y9TenantSystem save(Y9TenantSystem y9TenantSystem) {
         if (StringUtils.isBlank(y9TenantSystem.getId())) {
             y9TenantSystem.setId(Y9IdGenerator.genId(IdType.SNOWFLAKE));
@@ -162,5 +131,36 @@ public class Y9TenantSystemManagerImpl implements Y9TenantSystemManager {
         }
 
         return y9TenantSystem;
+    }
+
+    @Override
+    @Transactional(readOnly = false)
+    public Y9TenantSystem saveTenantSystem(String systemId, String tenantId) {
+        Y9Tenant tenant = y9TenantManager.getById(tenantId);
+        Y9System y9System = y9SystemManager.getById(systemId);
+
+        Optional<Y9TenantSystem> y9TenantSystemOptional =
+            y9TenantSystemRepository.findByTenantIdAndSystemId(tenantId, systemId);
+        if (y9TenantSystemOptional.isPresent()) {
+            return y9TenantSystemOptional.get();
+        }
+
+        Y9TenantSystem y9TenantSystem = new Y9TenantSystem();
+        y9TenantSystem.setTenantId(tenantId);
+        y9TenantSystem.setTenantDataSource(tenant.getDefaultDataSourceId());
+        y9TenantSystem.setSystemId(systemId);
+        y9TenantSystem.setInitialized(false);
+        if (Boolean.TRUE.equals(y9System.getSingleDatasource())) {
+            String datasoureId = tenant.getDefaultDataSourceId();
+            try {
+                Y9DataSource y9DataSource = y9DataSourceManager.createTenantDefaultDataSource(tenant.getShortName(),
+                    tenant.getTenantType(), y9System.getName());
+                datasoureId = y9DataSource.getId();
+            } catch (Exception e) {
+                LOGGER.warn(e.getMessage(), e);
+            }
+            y9TenantSystem.setTenantDataSource(datasoureId);
+        }
+        return this.save(y9TenantSystem);
     }
 }

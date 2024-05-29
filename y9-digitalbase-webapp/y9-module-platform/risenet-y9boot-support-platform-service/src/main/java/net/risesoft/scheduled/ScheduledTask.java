@@ -171,6 +171,11 @@ public class ScheduledTask {
         LOGGER.info("********************检查三员密码修改情况-结束**********************");
     }
 
+    @Autowired(required = false)
+    public void setAsyncSaveLogInfo(AsyncSaveLogInfo asyncSaveLogInfo) {
+        this.asyncSaveLogInfo = asyncSaveLogInfo;
+    }
+
     /**
      * 每天凌晨2点同步授权主体的资源权限
      */
@@ -203,10 +208,5 @@ public class ScheduledTask {
         }
 
         LOGGER.info("同步授权主体的角色结束");
-    }
-
-    @Autowired(required = false)
-    public void setAsyncSaveLogInfo(AsyncSaveLogInfo asyncSaveLogInfo) {
-        this.asyncSaveLogInfo = asyncSaveLogInfo;
     }
 }

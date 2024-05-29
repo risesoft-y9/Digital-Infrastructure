@@ -27,7 +27,11 @@ public interface Y9DepartmentManager {
 
     Y9Department getById(String id);
 
+    Y9Department getByIdNotCache(String id);
+
     Y9Department save(Y9Department y9Department);
+
+    Y9Department saveOrUpdate(Y9Department dept);
 
     /**
      * 保存或者更新部门扩展信息

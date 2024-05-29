@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
+import org.springframework.context.event.EventListener;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -22,6 +23,7 @@ import net.risesoft.manager.org.CompositeOrgBaseManager;
 import net.risesoft.repository.identity.person.Y9PersonToResourceAndAuthorityRepository;
 import net.risesoft.service.identity.Y9PersonToResourceAndAuthorityService;
 import net.risesoft.y9.Y9LoginUserHolder;
+import net.risesoft.y9.pubsub.event.Y9EntityDeletedEvent;
 import net.risesoft.y9public.entity.resource.Y9App;
 import net.risesoft.y9public.entity.resource.Y9Menu;
 import net.risesoft.y9public.entity.resource.Y9ResourceBase;
@@ -172,4 +174,10 @@ public class Y9PersonToResourceAndAuthorityServiceImpl implements Y9PersonToReso
         return y9MenuList;
     }
 
+    @EventListener
+    @Transactional(readOnly = false)
+    public void onPersonDeleted(Y9EntityDeletedEvent<Y9Person> event) {
+        Y9Person person = event.getEntity();
+        y9PersonToResourceAndAuthorityRepository.deleteByPersonId(person.getId());
+    }
 }

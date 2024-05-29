@@ -68,6 +68,14 @@ public interface Y9PersonsToPositionsService {
      */
     List<Y9PersonsToPositions> findByPositionId(String positionId);
 
+    /**
+     * 根据人员id获取所拥有的岗位id（,分隔）
+     *
+     * @param personId 人员id
+     * @return {@link String}
+     */
+    String getPositionIdsByPersonId(String personId);
+
     List<Y9PersonsToPositions> listByPersonId(String personId);
 
     /**
@@ -103,12 +111,4 @@ public interface Y9PersonsToPositionsService {
      * @return
      */
     List<Y9PersonsToPositions> orderPositions(String personId, String[] positionIds);
-
-    /**
-     * 根据人员id获取所拥有的岗位id（,分隔）
-     *
-     * @param personId 人员id
-     * @return {@link String}
-     */
-    String getPositionIdsByPersonId(String personId);
 }

@@ -6,6 +6,7 @@ import javax.persistence.Index;
 import javax.persistence.Table;
 
 import org.hibernate.annotations.Comment;
+import org.hibernate.annotations.DynamicUpdate;
 
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -24,6 +25,7 @@ import net.risesoft.entity.identity.Y9IdentityToResourceAndAuthorityBase;
 @Entity
 @Table(name = "Y9_ORG_POSITIONS_RESOURCES",
     indexes = {@Index(columnList = "POSITION_ID,RESOURCE_ID,AUTHORIZATION_ID,AUTHORITY", unique = true)})
+@DynamicUpdate
 @org.hibernate.annotations.Table(comment = "岗位与（资源、权限）关系表", appliesTo = "Y9_ORG_POSITIONS_RESOURCES")
 @NoArgsConstructor
 @Data

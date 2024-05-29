@@ -86,6 +86,13 @@ public class Y9DataSourceManagerImpl implements Y9DataSourceManager {
 
     @Override
     @Transactional(readOnly = false)
+    public Y9DataSource createTenantDefaultDataSource(String shortName, TenantTypeEnum tenantType, String systemName) {
+        String dataSourceName = this.buildDataSourceName(shortName, tenantType, systemName);
+        return this.createTenantDefaultDataSource(dataSourceName, null);
+    }
+
+    @Override
+    @Transactional(readOnly = false)
     public Y9DataSource createTenantDefaultDataSource(String dbName) {
         return this.createTenantDefaultDataSource(dbName, null);
     }
@@ -171,7 +178,7 @@ public class Y9DataSourceManagerImpl implements Y9DataSourceManager {
             // 创建用户
             String sql2 = "create user " + upperCaseDbName + " identified by " + password
                 + " password_policy 0 PROFILE \"DEFAULT\" default tablespace " + upperCaseDbName + "_DATA";
-            
+
             // 给用户授权
             String sql3 = "grant \"DBA\" to " + upperCaseDbName;
 
@@ -214,13 +221,6 @@ public class Y9DataSourceManagerImpl implements Y9DataSourceManager {
 
     @Override
     @Transactional(readOnly = false)
-    public Y9DataSource createTenantDefaultDataSource(String shortName, TenantTypeEnum tenantType, String systemName) {
-        String dataSourceName = this.buildDataSourceName(shortName, tenantType, systemName);
-        return this.createTenantDefaultDataSource(dataSourceName, null);
-    }
-
-    @Override
-    @Transactional(readOnly = false)
     public void delete(String id) {
         datasourceRepository.deleteById(id);
     }
@@ -252,6 +252,18 @@ public class Y9DataSourceManagerImpl implements Y9DataSourceManager {
         }
     }
 
+    @Override
+    @Transactional(readOnly = false)
+    public Y9DataSource save(Y9DataSource y9DataSource) {
+        if (StringUtils.isBlank(y9DataSource.getId())) {
+            y9DataSource.setId(Y9IdGenerator.genId(IdType.SNOWFLAKE));
+        }
+        if (y9DataSource.getPassword() != null) {
+            y9DataSource.setPassword(Y9Base64Util.encode(y9DataSource.getPassword()));
+        }
+        return datasourceRepository.save(y9DataSource);
+    }
+
     public String replaceDatabaseNameInMysqlJdbcUrl(String originalJdbcUrl, String newDatabaseName) {
         // 假设原始的 JDBC URL 格式为：jdbc:mysql://localhost:3306/y9_public?allowPublicKeyRetrieval=true
         int dbNameStart = originalJdbcUrl.lastIndexOf("/") + 1;
@@ -265,18 +277,6 @@ public class Y9DataSourceManagerImpl implements Y9DataSourceManager {
             // 如果无法提取数据库名称部分或者替换失败，返回原始的 JDBC URL
             return originalJdbcUrl;
         }
-    }
-
-    @Override
-    @Transactional(readOnly = false)
-    public Y9DataSource save(Y9DataSource y9DataSource) {
-        if (StringUtils.isBlank(y9DataSource.getId())) {
-            y9DataSource.setId(Y9IdGenerator.genId(IdType.SNOWFLAKE));
-        }
-        if (y9DataSource.getPassword() != null) {
-            y9DataSource.setPassword(Y9Base64Util.encode(y9DataSource.getPassword()));
-        }
-        return datasourceRepository.save(y9DataSource);
     }
 
 }

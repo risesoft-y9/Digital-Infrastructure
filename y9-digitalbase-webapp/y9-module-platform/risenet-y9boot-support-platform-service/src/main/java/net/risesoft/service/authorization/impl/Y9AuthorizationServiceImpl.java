@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.Optional;
 
 import org.apache.commons.lang3.StringUtils;
+import org.springframework.context.event.EventListener;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
@@ -12,7 +13,11 @@ import org.springframework.transaction.annotation.Transactional;
 
 import lombok.RequiredArgsConstructor;
 
+import net.risesoft.entity.Y9Department;
+import net.risesoft.entity.Y9Group;
 import net.risesoft.entity.Y9OrgBase;
+import net.risesoft.entity.Y9Person;
+import net.risesoft.entity.Y9Position;
 import net.risesoft.entity.permission.Y9Authorization;
 import net.risesoft.enums.platform.AuthorityEnum;
 import net.risesoft.enums.platform.AuthorizationPrincipalTypeEnum;
@@ -54,11 +59,6 @@ public class Y9AuthorizationServiceImpl implements Y9AuthorizationService {
     private final Y9RoleManager y9RoleManager;
     private final Y9PersonToResourceAndAuthorityManager y9PersonToResourceAndAuthorityManager;
     private final Y9PositionToResourceAndAuthorityManager y9PositionToResourceAndAuthorityManager;
-
-    private Y9Authorization getById(String id) {
-        return y9AuthorizationRepository.findById(id).orElseThrow(
-            () -> Y9ExceptionUtil.notFoundException(AuthorizationErrorCodeEnum.AUTHORIZATION_NOT_FOUND, id));
-    }
 
     @Override
     @Transactional(readOnly = false)
@@ -234,4 +234,40 @@ public class Y9AuthorizationServiceImpl implements Y9AuthorizationService {
         return this.saveOrUpdate(y9Authorization);
     }
 
+    private Y9Authorization getById(String id) {
+        return y9AuthorizationRepository.findById(id).orElseThrow(
+            () -> Y9ExceptionUtil.notFoundException(AuthorizationErrorCodeEnum.AUTHORIZATION_NOT_FOUND, id));
+    }
+
+    @EventListener
+    @Transactional(readOnly = false)
+    public void onDepartmentDeleted(Y9EntityDeletedEvent<Y9Department> event) {
+        Y9Department department = event.getEntity();
+        y9AuthorizationRepository.deleteByPrincipalIdAndPrincipalType(department.getId(),
+            AuthorizationPrincipalTypeEnum.DEPARTMENT);
+    }
+
+    @EventListener
+    @Transactional(readOnly = false)
+    public void onGroupDeleted(Y9EntityDeletedEvent<Y9Group> event) {
+        Y9Group group = event.getEntity();
+        y9AuthorizationRepository.deleteByPrincipalIdAndPrincipalType(group.getId(),
+            AuthorizationPrincipalTypeEnum.GROUP);
+    }
+
+    @EventListener
+    @Transactional(readOnly = false)
+    public void onPersonDeleted(Y9EntityDeletedEvent<Y9Person> event) {
+        Y9Person person = event.getEntity();
+        y9AuthorizationRepository.deleteByPrincipalIdAndPrincipalType(person.getId(),
+            AuthorizationPrincipalTypeEnum.PERSON);
+    }
+
+    @EventListener
+    @Transactional(readOnly = false)
+    public void onPositionDeleted(Y9EntityDeletedEvent<Y9Position> event) {
+        Y9Position position = event.getEntity();
+        y9AuthorizationRepository.deleteByPrincipalIdAndPrincipalType(position.getId(),
+            AuthorizationPrincipalTypeEnum.POSITION);
+    }
 }

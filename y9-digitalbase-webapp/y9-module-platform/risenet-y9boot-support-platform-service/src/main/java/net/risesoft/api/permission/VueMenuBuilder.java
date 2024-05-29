@@ -35,17 +35,30 @@ public class VueMenuBuilder {
     private final Y9OperationService y9OperationService;
     private final Y9PersonToResourceAndAuthorityService y9PersonToResourceAndAuthorityService;
 
-    public void buildVueMenus(String personId, AuthorityEnum authority, String resourceId, List<VueMenu> vueMenuList) {
-        List<Y9PersonToResourceAndAuthority> authorizedMenuList =
-            y9PersonToResourceAndAuthorityService.list(personId, resourceId, ResourceTypeEnum.MENU, authority);
-        List<Y9Menu> menuList = authorizedMenuList.stream().map(Y9IdentityToResourceAndAuthorityBase::getResourceId)
-            .distinct().map(y9MenuService::getById).sorted().collect(Collectors.toList());
-        for (Y9Menu y9Menu : menuList) {
-            if (y9Menu.getEnabled()) {
-                VueMenu vueMenu = buildVueMenu(personId, authority, y9Menu.getId(), y9Menu);
-                vueMenuList.add(vueMenu);
+    private VueButton buildVueButton(Y9Operation y9Operation) {
+        VueButton button = new VueButton();
+        button.setName(y9Operation.getName());
+        button.setIcon(y9Operation.getIconUrl());
+        button.setButtonId(y9Operation.getCustomId());
+        button.setDisplayType(y9Operation.getDisplayType());
+        button.setUrl(y9Operation.getUrl());
+        button.setEventName(y9Operation.getEventName());
+        return button;
+    }
+
+    private List<VueButton> buildVueButtons(String personId, AuthorityEnum authority, String menuId) {
+        List<VueButton> buttonList = new ArrayList<>();
+        List<Y9PersonToResourceAndAuthority> authorizedButtonList =
+            y9PersonToResourceAndAuthorityService.list(personId, menuId, ResourceTypeEnum.OPERATION, authority);
+        List<Y9Operation> y9OperationList =
+            authorizedButtonList.stream().map(Y9IdentityToResourceAndAuthorityBase::getResourceId).distinct()
+                .map(y9OperationService::getById).sorted().collect(Collectors.toList());
+        for (Y9Operation y9Operation : y9OperationList) {
+            if (y9Operation.getEnabled()) {
+                buttonList.add(buildVueButton(y9Operation));
             }
         }
+        return buttonList;
     }
 
     private VueMenu buildVueMenu(String personId, AuthorityEnum authority, String menuId, Y9Menu y9Menu) {
@@ -66,29 +79,16 @@ public class VueMenuBuilder {
         return vueMenu;
     }
 
-    private List<VueButton> buildVueButtons(String personId, AuthorityEnum authority, String menuId) {
-        List<VueButton> buttonList = new ArrayList<>();
-        List<Y9PersonToResourceAndAuthority> authorizedButtonList =
-            y9PersonToResourceAndAuthorityService.list(personId, menuId, ResourceTypeEnum.OPERATION, authority);
-        List<Y9Operation> y9OperationList =
-            authorizedButtonList.stream().map(Y9IdentityToResourceAndAuthorityBase::getResourceId).distinct()
-                .map(y9OperationService::getById).sorted().collect(Collectors.toList());
-        for (Y9Operation y9Operation : y9OperationList) {
-            if (y9Operation.getEnabled()) {
-                buttonList.add(buildVueButton(y9Operation));
+    public void buildVueMenus(String personId, AuthorityEnum authority, String resourceId, List<VueMenu> vueMenuList) {
+        List<Y9PersonToResourceAndAuthority> authorizedMenuList =
+            y9PersonToResourceAndAuthorityService.list(personId, resourceId, ResourceTypeEnum.MENU, authority);
+        List<Y9Menu> menuList = authorizedMenuList.stream().map(Y9IdentityToResourceAndAuthorityBase::getResourceId)
+            .distinct().map(y9MenuService::getById).sorted().collect(Collectors.toList());
+        for (Y9Menu y9Menu : menuList) {
+            if (y9Menu.getEnabled()) {
+                VueMenu vueMenu = buildVueMenu(personId, authority, y9Menu.getId(), y9Menu);
+                vueMenuList.add(vueMenu);
             }
         }
-        return buttonList;
-    }
-
-    private VueButton buildVueButton(Y9Operation y9Operation) {
-        VueButton button = new VueButton();
-        button.setName(y9Operation.getName());
-        button.setIcon(y9Operation.getIconUrl());
-        button.setButtonId(y9Operation.getCustomId());
-        button.setDisplayType(y9Operation.getDisplayType());
-        button.setUrl(y9Operation.getUrl());
-        button.setEventName(y9Operation.getEventName());
-        return button;
     }
 }

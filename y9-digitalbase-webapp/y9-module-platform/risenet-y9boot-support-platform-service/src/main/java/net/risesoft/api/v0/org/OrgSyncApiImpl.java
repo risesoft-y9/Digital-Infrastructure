@@ -75,6 +75,67 @@ public class OrgSyncApiImpl implements OrgSyncApi {
     private final Y9PublishedEventService y9PublishedEventService;
     private final Y9PublishedEventSyncHistoryService y9PublishedEventSyncHistoryService;
 
+    /**
+     * 根据机构id，全量获取整个组织机构数据
+     *
+     * @param appName 应用名称
+     * @param tenantId 租户id
+     * @param organizationId 机构id
+     * @return Y9Result&lt;MessageOrg&gt; 整个组织机构对象集合
+     * @since 9.6.0
+     */
+    @Override
+    public Y9Result<MessageOrg> fullSync(@RequestParam("appName") @NotBlank String appName,
+        @RequestParam("tenantId") @NotBlank String tenantId,
+        @RequestParam("organizationId") @NotBlank String organizationId) {
+        Y9LoginUserHolder.setTenantId(tenantId);
+
+        Date syncTime = new Date();
+        HashMap<String, Serializable> dateMap =
+            compositeOrgBaseService.getSyncMap(organizationId, OrgTypeEnum.ORGANIZATION, 1);
+        MessageOrg event = new MessageOrg(dateMap, Y9OrgEventTypeConst.SYNC, Y9LoginUserHolder.getTenantId());
+        y9PublishedEventSyncHistoryService.saveOrUpdate(tenantId, appName, syncTime, 1);
+        return Y9Result.success(event, "获取成功！");
+    }
+
+    /**
+     * 增量获取组织操作列表 系统记录了上一次同步的时间，从上一次同步时间往后获取数据
+     *
+     * @param appName 应用名称
+     * @param tenantId 租户id
+     * @return Y9Result&lt;List&lt;MessageOrg&gt;&gt; 事件列表
+     * @since 9.6.0
+     */
+    @Override
+    public Y9Result<List<MessageOrg>> incrSync(@RequestParam("appName") @NotBlank String appName,
+        @RequestParam("tenantId") @NotBlank String tenantId) {
+        Y9LoginUserHolder.setTenantId(tenantId);
+
+        Date syncTime = new Date();
+        Date startTime = null;
+        Optional<Y9PublishedEventSyncHistory> y9PublishedEventSyncHistoryOptional =
+            y9PublishedEventSyncHistoryService.findByTenantIdAndAppName(tenantId, appName);
+        if (y9PublishedEventSyncHistoryOptional.isPresent()) {
+            startTime = y9PublishedEventSyncHistoryOptional.get().getLastSyncTime();
+        }
+
+        List<Y9PublishedEvent> list = y9PublishedEventService.listByTenantId(tenantId, startTime);
+        List<MessageOrg> eventList = new ArrayList<>();
+        for (Y9PublishedEvent event : list) {
+            if (StringUtils.isBlank(event.getEntityJson())) {
+                OrgUnit org = getOrgBase(event.getEventType(), event.getObjId());
+                MessageOrg riseEvent =
+                    new MessageOrg(Y9JsonUtil.writeValueAsString(org), event.getEventType(), tenantId);
+                eventList.add(riseEvent);
+            } else {
+                MessageOrg riseEvent = new MessageOrg(event.getEntityJson(), event.getEventType(), tenantId);
+                eventList.add(riseEvent);
+            }
+        }
+        y9PublishedEventSyncHistoryService.saveOrUpdate(tenantId, appName, syncTime, 1);
+        return Y9Result.success(eventList, "获取成功！");
+    }
+
     private OrgUnit getOrgBase(String eventType, String objId) {
         if (StringUtils.isBlank(objId)) {
             return null;
@@ -140,67 +201,6 @@ public class OrgSyncApiImpl implements OrgSyncApi {
             return Y9ModelConvertUtil.convert(position, Position.class);
         }
         return null;
-    }
-
-    /**
-     * 根据机构id，全量获取整个组织机构数据
-     *
-     * @param appName 应用名称
-     * @param tenantId 租户id
-     * @param organizationId 机构id
-     * @return Y9Result&lt;MessageOrg&gt; 整个组织机构对象集合
-     * @since 9.6.0
-     */
-    @Override
-    public Y9Result<MessageOrg> fullSync(@RequestParam("appName") @NotBlank String appName,
-        @RequestParam("tenantId") @NotBlank String tenantId,
-        @RequestParam("organizationId") @NotBlank String organizationId) {
-        Y9LoginUserHolder.setTenantId(tenantId);
-
-        Date syncTime = new Date();
-        HashMap<String, Serializable> dateMap =
-            compositeOrgBaseService.getSyncMap(organizationId, OrgTypeEnum.ORGANIZATION, 1);
-        MessageOrg event = new MessageOrg(dateMap, Y9OrgEventTypeConst.SYNC, Y9LoginUserHolder.getTenantId());
-        y9PublishedEventSyncHistoryService.saveOrUpdate(tenantId, appName, syncTime, 1);
-        return Y9Result.success(event, "获取成功！");
-    }
-
-    /**
-     * 增量获取组织操作列表 系统记录了上一次同步的时间，从上一次同步时间往后获取数据
-     *
-     * @param appName 应用名称
-     * @param tenantId 租户id
-     * @return Y9Result&lt;List&lt;MessageOrg&gt;&gt; 事件列表
-     * @since 9.6.0
-     */
-    @Override
-    public Y9Result<List<MessageOrg>> incrSync(@RequestParam("appName") @NotBlank String appName,
-        @RequestParam("tenantId") @NotBlank String tenantId) {
-        Y9LoginUserHolder.setTenantId(tenantId);
-
-        Date syncTime = new Date();
-        Date startTime = null;
-        Optional<Y9PublishedEventSyncHistory> y9PublishedEventSyncHistoryOptional =
-            y9PublishedEventSyncHistoryService.findByTenantIdAndAppName(tenantId, appName);
-        if (y9PublishedEventSyncHistoryOptional.isPresent()) {
-            startTime = y9PublishedEventSyncHistoryOptional.get().getLastSyncTime();
-        }
-
-        List<Y9PublishedEvent> list = y9PublishedEventService.listByTenantId(tenantId, startTime);
-        List<MessageOrg> eventList = new ArrayList<>();
-        for (Y9PublishedEvent event : list) {
-            if (StringUtils.isBlank(event.getEntityJson())) {
-                OrgUnit org = getOrgBase(event.getEventType(), event.getObjId());
-                MessageOrg riseEvent =
-                    new MessageOrg(Y9JsonUtil.writeValueAsString(org), event.getEventType(), tenantId);
-                eventList.add(riseEvent);
-            } else {
-                MessageOrg riseEvent = new MessageOrg(event.getEntityJson(), event.getEventType(), tenantId);
-                eventList.add(riseEvent);
-            }
-        }
-        y9PublishedEventSyncHistoryService.saveOrUpdate(tenantId, appName, syncTime, 1);
-        return Y9Result.success(eventList, "获取成功！");
     }
 
 }

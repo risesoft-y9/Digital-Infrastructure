@@ -14,15 +14,6 @@ import net.risesoft.y9public.entity.user.Y9User;
 public interface Y9UserService {
 
     /**
-     * 检查caid是否可用
-     *
-     * @param personId
-     * @param caid ca唯一标识
-     * @return boolean
-     */
-    boolean isCaidAvailable(String personId, String caid);
-
-    /**
      * 根据id删除用户
      *
      * @param id 唯一标识
@@ -53,6 +44,15 @@ public interface Y9UserService {
      * @return {@link Y9User}
      */
     Optional<Y9User> findByPersonIdAndTenantId(String personId, String tenantId);
+
+    /**
+     * 检查caid是否可用
+     *
+     * @param personId
+     * @param caid ca唯一标识
+     * @return boolean
+     */
+    boolean isCaidAvailable(String personId, String caid);
 
     /**
      * 查询所有用户信息

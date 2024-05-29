@@ -45,69 +45,6 @@ public class InitTenantDataServiceImpl implements InitTenantDataService {
     private final Y9PositionService y9PositionService;
     private final Y9PersonsToPositionsService y9PersonsToPositionsService;
 
-    @Override
-    @Transactional(readOnly = false)
-    public void initAll(String tenantId) {
-        // 租户的示例数据
-        // FIXME 是否需要？
-        this.initOrg();
-
-        // 租户必要的数据
-        this.initOptionClass();
-        this.initManagers();
-    }
-
-    private void initOrg() {
-        boolean organizationNotExists = y9OrganizationService.list(false, false).isEmpty();
-        if (organizationNotExists) {
-            Y9Job y9Job = y9JobService.create("普通职位", "001");
-
-            Y9Organization y9Organization = y9OrganizationService.create("组织", Boolean.FALSE);
-
-            Y9Person y9Person = y9PersonService.create(y9Organization.getId(), "业务用户", "user", "13511111111");
-
-            Y9Position y9Position = y9PositionService.create(y9Organization.getId(), y9Job.getId());
-
-            y9PersonsToPositionsService.addPositions(y9Person.getId(), new String[] {y9Position.getId()});
-        }
-    }
-
-    @Override
-    @Transactional(readOnly = false)
-    public void initManagers() {
-        // 新建租户三员及他们所在的虚拟组织
-        boolean virtualOrganizationNotExists = y9OrganizationService.list(true, false).isEmpty();
-        if (virtualOrganizationNotExists) {
-            Y9Organization y9Organization = y9OrganizationService.create("虚拟组织", Boolean.TRUE);
-            createSystemManager(y9Organization.getId());
-            createSecurityManager(y9Organization.getId());
-            createAuditManager(y9Organization.getId());
-        }
-    }
-
-    @Override
-    @Transactional(readOnly = false)
-    public void initOptionClass() {
-        createOptionClass("职务", "duty");
-        createOptionClass("职级", "dutyLevel");
-        createOptionClass("编制类型", "officialType");
-        createOptionClass("机构类型", "organizationType");
-        createOptionClass("证件类型", "principalIDType");
-        createOptionClass("部门属性类型", "departmentPropCategory");
-    }
-
-    @Transactional(readOnly = false)
-    public void createOptionClass(String className, String type) {
-        Optional<Y9OptionClass> optionClass = y9OptionClassService.findByType(type);
-        if (!optionClass.isPresent()) {
-            Y9OptionClass option = new Y9OptionClass();
-            option.setName(className);
-            option.setType(type);
-            y9OptionClassService.saveOptionClass(option);
-            creatOptionValue(type);
-        }
-    }
-
     public void creatOptionValue(String type) {
         if ("duty".equals(type)) {
             createDutyValues(type);
@@ -138,10 +75,25 @@ public class InitTenantDataServiceImpl implements InitTenantDataService {
             createPrincipalIDTypeValues(type);
             return;
         }
-        
+
         if ("departmentPropCategory".equals(type)) {
             createDepartmentPropCategoryValues(type);
             return;
+        }
+    }
+
+    private void createAuditManager(String parentId) {
+        if (!y9ManagerService.existsByLoginName(InitDataConsts.DEFAULT_AUDIT_MANAGER)) {
+            Y9Manager auditManager = new Y9Manager();
+            auditManager.setParentId(parentId);
+            auditManager.setName(ManagerLevelEnum.AUDIT_MANAGER.getName());
+            auditManager.setLoginName(InitDataConsts.DEFAULT_AUDIT_MANAGER);
+            auditManager.setGlobalManager(true);
+            auditManager.setManagerLevel(ManagerLevelEnum.AUDIT_MANAGER);
+            auditManager.setUserHostIp("");
+            auditManager.setLastReviewLogTime(new Date());
+            auditManager.setLastModifyPasswordTime(new Date());
+            y9ManagerService.saveOrUpdate(auditManager);
         }
     }
 
@@ -152,55 +104,6 @@ public class InitTenantDataServiceImpl implements InitTenantDataService {
         y9OptionValueService.create("4", "副部门领导", type);
         y9OptionValueService.create("5", "部门收发员", type);
         y9OptionValueService.create("6", "秘书", type);
-    }
-
-    private void createPrincipalIDTypeValues(String type) {
-        y9OptionValueService.create("10", "身份证", type);
-        y9OptionValueService.create("11", "护照", type);
-        y9OptionValueService.create("12", "户口簿", type);
-        y9OptionValueService.create("13", "军人证", type);
-    }
-
-    private void createOrganizationTypeValues(String type) {
-        y9OptionValueService.create("11", "公司", type);
-        y9OptionValueService.create("13", "非公司制企业法人", type);
-        y9OptionValueService.create("15", "企业分支机构", type);
-        y9OptionValueService.create("17", "个人独资企业、合伙企业", type);
-        y9OptionValueService.create("19", "其它企业", type);
-        y9OptionValueService.create("31", "中国共产党", type);
-        y9OptionValueService.create("32", "国家权力机关法人", type);
-        y9OptionValueService.create("33", "国家行政机关法人", type);
-        y9OptionValueService.create("34", "国家司法机关法人", type);
-        y9OptionValueService.create("35", "政协组织", type);
-        y9OptionValueService.create("36", "民主党派", type);
-        y9OptionValueService.create("37", "人民解放军、武警部队", type);
-        y9OptionValueService.create("39", "其他机关", type);
-        y9OptionValueService.create("51", "事业单位法人", type);
-        y9OptionValueService.create("53", "事业单位分支、派出机构", type);
-        y9OptionValueService.create("59", "其它事业单位", type);
-        y9OptionValueService.create("71", "社会团体法人", type);
-        y9OptionValueService.create("73", "社会团体分支、代表机构", type);
-        y9OptionValueService.create("79", "其它社会团体", type);
-        y9OptionValueService.create("91", "民办非企业单位", type);
-        y9OptionValueService.create("93", "基金会", type);
-        y9OptionValueService.create("94", "宗教活动场所", type);
-        y9OptionValueService.create("95", "农村居民委员会", type);
-        y9OptionValueService.create("96", "城市居民委员会", type);
-        y9OptionValueService.create("97", "自定义区", type);
-        y9OptionValueService.create("99", "其它", type);
-    }
-
-    private void createOfficialTypeValues(String type) {
-        y9OptionValueService.create("1", "公务员", type);
-        y9OptionValueService.create("2", "行政编", type);
-        y9OptionValueService.create("3", "事业编", type);
-        y9OptionValueService.create("4", "企业编", type);
-        y9OptionValueService.create("5", "其他", type);
-    }
-
-    private void createDutyTypeValues(String type) {
-        y9OptionValueService.create("1", "领导", type);
-        y9OptionValueService.create("2", "公务员", type);
     }
 
     private void createDutyLevelValues(String type) {
@@ -216,6 +119,11 @@ public class InitTenantDataServiceImpl implements InitTenantDataService {
         y9OptionValueService.create("11", "科员级", type);
         y9OptionValueService.create("12", "办事员级", type);
         y9OptionValueService.create("14", "县长", type);
+    }
+
+    private void createDutyTypeValues(String type) {
+        y9OptionValueService.create("1", "领导", type);
+        y9OptionValueService.create("2", "公务员", type);
     }
 
     private void createDutyValues(String type) {
@@ -301,19 +209,60 @@ public class InitTenantDataServiceImpl implements InitTenantDataService {
         y9OptionValueService.create("842A", "负责人", type);
     }
 
-    private void createAuditManager(String parentId) {
-        if (!y9ManagerService.existsByLoginName(InitDataConsts.DEFAULT_AUDIT_MANAGER)) {
-            Y9Manager auditManager = new Y9Manager();
-            auditManager.setParentId(parentId);
-            auditManager.setName(ManagerLevelEnum.AUDIT_MANAGER.getName());
-            auditManager.setLoginName(InitDataConsts.DEFAULT_AUDIT_MANAGER);
-            auditManager.setGlobalManager(true);
-            auditManager.setManagerLevel(ManagerLevelEnum.AUDIT_MANAGER);
-            auditManager.setUserHostIp("");
-            auditManager.setLastReviewLogTime(new Date());
-            auditManager.setLastModifyPasswordTime(new Date());
-            y9ManagerService.saveOrUpdate(auditManager);
+    private void createOfficialTypeValues(String type) {
+        y9OptionValueService.create("1", "公务员", type);
+        y9OptionValueService.create("2", "行政编", type);
+        y9OptionValueService.create("3", "事业编", type);
+        y9OptionValueService.create("4", "企业编", type);
+        y9OptionValueService.create("5", "其他", type);
+    }
+
+    @Transactional(readOnly = false)
+    public void createOptionClass(String className, String type) {
+        Optional<Y9OptionClass> optionClass = y9OptionClassService.findByType(type);
+        if (!optionClass.isPresent()) {
+            Y9OptionClass option = new Y9OptionClass();
+            option.setName(className);
+            option.setType(type);
+            y9OptionClassService.saveOptionClass(option);
+            creatOptionValue(type);
         }
+    }
+
+    private void createOrganizationTypeValues(String type) {
+        y9OptionValueService.create("11", "公司", type);
+        y9OptionValueService.create("13", "非公司制企业法人", type);
+        y9OptionValueService.create("15", "企业分支机构", type);
+        y9OptionValueService.create("17", "个人独资企业、合伙企业", type);
+        y9OptionValueService.create("19", "其它企业", type);
+        y9OptionValueService.create("31", "中国共产党", type);
+        y9OptionValueService.create("32", "国家权力机关法人", type);
+        y9OptionValueService.create("33", "国家行政机关法人", type);
+        y9OptionValueService.create("34", "国家司法机关法人", type);
+        y9OptionValueService.create("35", "政协组织", type);
+        y9OptionValueService.create("36", "民主党派", type);
+        y9OptionValueService.create("37", "人民解放军、武警部队", type);
+        y9OptionValueService.create("39", "其他机关", type);
+        y9OptionValueService.create("51", "事业单位法人", type);
+        y9OptionValueService.create("53", "事业单位分支、派出机构", type);
+        y9OptionValueService.create("59", "其它事业单位", type);
+        y9OptionValueService.create("71", "社会团体法人", type);
+        y9OptionValueService.create("73", "社会团体分支、代表机构", type);
+        y9OptionValueService.create("79", "其它社会团体", type);
+        y9OptionValueService.create("91", "民办非企业单位", type);
+        y9OptionValueService.create("93", "基金会", type);
+        y9OptionValueService.create("94", "宗教活动场所", type);
+        y9OptionValueService.create("95", "农村居民委员会", type);
+        y9OptionValueService.create("96", "城市居民委员会", type);
+        y9OptionValueService.create("97", "自定义区", type);
+        y9OptionValueService.create("99", "其它", type);
+    }
+
+    private void createPrincipalIDTypeValues(String type) {
+        y9OptionValueService.create("10", "身份证", type);
+        y9OptionValueService.create("11", "护照", type);
+        y9OptionValueService.create("12", "户口簿", type);
+        y9OptionValueService.create("13", "军人证", type);
     }
 
     private void createSecurityManager(String parentId) {
@@ -343,6 +292,57 @@ public class InitTenantDataServiceImpl implements InitTenantDataService {
             systemManager.setLastReviewLogTime(new Date());
             systemManager.setLastModifyPasswordTime(new Date());
             y9ManagerService.saveOrUpdate(systemManager);
+        }
+    }
+
+    @Override
+    @Transactional(readOnly = false)
+    public void initAll(String tenantId) {
+        // 租户的示例数据
+        // FIXME 是否需要？
+        this.initOrg();
+
+        // 租户必要的数据
+        this.initOptionClass();
+        this.initManagers();
+    }
+
+    @Override
+    @Transactional(readOnly = false)
+    public void initManagers() {
+        // 新建租户三员及他们所在的虚拟组织
+        boolean virtualOrganizationNotExists = y9OrganizationService.list(true, false).isEmpty();
+        if (virtualOrganizationNotExists) {
+            Y9Organization y9Organization = y9OrganizationService.create("虚拟组织", Boolean.TRUE);
+            createSystemManager(y9Organization.getId());
+            createSecurityManager(y9Organization.getId());
+            createAuditManager(y9Organization.getId());
+        }
+    }
+
+    @Override
+    @Transactional(readOnly = false)
+    public void initOptionClass() {
+        createOptionClass("职务", "duty");
+        createOptionClass("职级", "dutyLevel");
+        createOptionClass("编制类型", "officialType");
+        createOptionClass("机构类型", "organizationType");
+        createOptionClass("证件类型", "principalIDType");
+        createOptionClass("部门属性类型", "departmentPropCategory");
+    }
+
+    private void initOrg() {
+        boolean organizationNotExists = y9OrganizationService.list(false, false).isEmpty();
+        if (organizationNotExists) {
+            Y9Job y9Job = y9JobService.create("普通职位", "001");
+
+            Y9Organization y9Organization = y9OrganizationService.create("组织", Boolean.FALSE);
+
+            Y9Person y9Person = y9PersonService.create(y9Organization.getId(), "业务用户", "user", "13511111111");
+
+            Y9Position y9Position = y9PositionService.create(y9Organization.getId(), y9Job.getId());
+
+            y9PersonsToPositionsService.addPositions(y9Person.getId(), new String[] {y9Position.getId()});
         }
     }
 }

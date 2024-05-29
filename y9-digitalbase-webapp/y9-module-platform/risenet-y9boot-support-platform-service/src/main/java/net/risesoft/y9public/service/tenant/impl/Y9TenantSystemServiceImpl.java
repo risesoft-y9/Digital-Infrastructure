@@ -82,46 +82,10 @@ public class Y9TenantSystemServiceImpl implements Y9TenantSystemService {
     }
 
     @Override
-    public List<Y9System> listSystemByTenantId(String tenantId) {
-        List<String> systemIdList = this.listSystemIdByTenantId(tenantId);
-        List<Y9System> y9SystemList = new ArrayList<>();
-        if (!systemIdList.isEmpty()) {
-            for (String systemId : systemIdList) {
-                y9SystemManager.findById(systemId).ifPresent(y9SystemList::add);
-            }
-        }
-        return y9SystemList;
-    }
-
-    @Override
     public List<String> listSystemIdByTenantId(String tenantId) {
         List<Y9TenantSystem> ts = y9TenantSystemRepository.findByTenantId(tenantId);
         if (ts != null) {
             return ts.stream().map(Y9TenantSystem::getSystemId).collect(Collectors.toList());
-        }
-        return new ArrayList<>();
-    }
-
-    @Override
-    public List<Y9Tenant> listTenantBySystemId(String systemId) {
-        List<String> tenantIdList = this.listTenantIdBySystemId(systemId);
-        List<Y9Tenant> y9TenantList = new ArrayList<>();
-        if (!tenantIdList.isEmpty()) {
-            for (String tenantId : tenantIdList) {
-                Y9Tenant tenant = y9TenantManager.getById(tenantId);
-                if (tenant != null) {
-                    y9TenantList.add(tenant);
-                }
-            }
-        }
-        return y9TenantList;
-    }
-
-    @Override
-    public List<Y9Tenant> listTenantBySystemName(String systemName) {
-        Optional<Y9System> y9SystemOptional = y9SystemManager.findByName(systemName);
-        if (y9SystemOptional.isPresent()) {
-            return this.listTenantBySystemId(y9SystemOptional.get().getId());
         }
         return new ArrayList<>();
     }
@@ -161,5 +125,41 @@ public class Y9TenantSystemServiceImpl implements Y9TenantSystemService {
             y9TenantSystemList.add(saveTenantSystem(systemId, tenantId));
         }
         return y9TenantSystemList;
+    }
+
+    @Override
+    public List<Y9Tenant> listTenantBySystemId(String systemId) {
+        List<String> tenantIdList = this.listTenantIdBySystemId(systemId);
+        List<Y9Tenant> y9TenantList = new ArrayList<>();
+        if (!tenantIdList.isEmpty()) {
+            for (String tenantId : tenantIdList) {
+                Y9Tenant tenant = y9TenantManager.getById(tenantId);
+                if (tenant != null) {
+                    y9TenantList.add(tenant);
+                }
+            }
+        }
+        return y9TenantList;
+    }
+
+    @Override
+    public List<Y9Tenant> listTenantBySystemName(String systemName) {
+        Optional<Y9System> y9SystemOptional = y9SystemManager.findByName(systemName);
+        if (y9SystemOptional.isPresent()) {
+            return this.listTenantBySystemId(y9SystemOptional.get().getId());
+        }
+        return new ArrayList<>();
+    }
+
+    @Override
+    public List<Y9System> listSystemByTenantId(String tenantId) {
+        List<String> systemIdList = this.listSystemIdByTenantId(tenantId);
+        List<Y9System> y9SystemList = new ArrayList<>();
+        if (!systemIdList.isEmpty()) {
+            for (String systemId : systemIdList) {
+                y9SystemManager.findById(systemId).ifPresent(y9SystemList::add);
+            }
+        }
+        return y9SystemList;
     }
 }

@@ -58,8 +58,8 @@ public interface Y9AuthorizationRepository extends JpaRepository<Y9Authorization
     List<Y9Authorization> findByResourceIdAndAuthorityAndPrincipalIdIn(String resourceId, AuthorityEnum authority,
         List<String> principalIds);
 
-    List<Y9Authorization> getByPrincipalIdIn(List<String> principalIds);
-
     Page<Y9Authorization> findByResourceIdAndPrincipalType(String resourceId,
         AuthorizationPrincipalTypeEnum principalType, Pageable pageRequest);
+
+    List<Y9Authorization> getByPrincipalIdIn(List<String> principalIds);
 }

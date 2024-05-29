@@ -14,11 +14,7 @@ import net.risesoft.entity.permission.Y9Authorization;
 import net.risesoft.id.Y9IdGenerator;
 import net.risesoft.manager.identity.Y9PersonToResourceAndAuthorityManager;
 import net.risesoft.repository.identity.person.Y9PersonToResourceAndAuthorityRepository;
-import net.risesoft.y9public.entity.resource.Y9App;
 import net.risesoft.y9public.entity.resource.Y9ResourceBase;
-import net.risesoft.y9public.entity.resource.Y9System;
-import net.risesoft.y9public.repository.resource.Y9AppRepository;
-import net.risesoft.y9public.repository.resource.Y9SystemRepository;
 
 /**
  * 人员权限缓存 Manager 实现类
@@ -33,8 +29,6 @@ import net.risesoft.y9public.repository.resource.Y9SystemRepository;
 public class Y9PersonToResourceAndAuthorityManagerImpl implements Y9PersonToResourceAndAuthorityManager {
 
     private final Y9PersonToResourceAndAuthorityRepository y9PersonToResourceAndAuthorityRepository;
-    private final Y9AppRepository y9AppRepository;
-    private final Y9SystemRepository y9SystemRepository;
 
     @Transactional(readOnly = false)
     @Override

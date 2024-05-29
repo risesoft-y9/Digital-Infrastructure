@@ -33,6 +33,17 @@ public class Y9SettingServiceImpl implements Y9SettingService {
     private final Y9SettingManager y9SettingManager;
     private final Environment environment;
 
+    private Object convert(String stringValue, Class<?> tClass) {
+        if (tClass == Integer.class || tClass == int.class) {
+            return Integer.valueOf(stringValue);
+        } else if (tClass == Long.class || tClass == long.class) {
+            return Long.valueOf(stringValue);
+        } else if (tClass == Boolean.class || tClass == boolean.class) {
+            return Boolean.valueOf(stringValue);
+        }
+        return stringValue;
+    }
+
     @Override
     public <T> T get(SettingEnum settingEnum, Class<T> tClass) {
         Optional<Y9Setting> y9SettingOptional = y9SettingManager.findById(settingEnum.getKey());
@@ -74,17 +85,6 @@ public class Y9SettingServiceImpl implements Y9SettingService {
             }
         }
         return t;
-    }
-
-    private Object convert(String stringValue, Class<?> tClass) {
-        if (tClass == Integer.class || tClass == int.class) {
-            return Integer.valueOf(stringValue);
-        } else if (tClass == Long.class || tClass == long.class) {
-            return Long.valueOf(stringValue);
-        } else if (tClass == Boolean.class || tClass == boolean.class) {
-            return Boolean.valueOf(stringValue);
-        }
-        return stringValue;
     }
 
     @Override

@@ -39,20 +39,20 @@ public class Y9AppSpecification<Y9App> implements Specification<Y9App> {
         return appName;
     }
 
-    public String getIds() {
-        return ids;
-    }
-
-    public String getSystemId() {
-        return systemId;
-    }
-
     public void setAppName(String appName) {
         this.appName = appName;
     }
 
+    public String getIds() {
+        return ids;
+    }
+
     public void setIds(String ids) {
         this.ids = ids;
+    }
+
+    public String getSystemId() {
+        return systemId;
     }
 
     public void setSystemId(String systemId) {

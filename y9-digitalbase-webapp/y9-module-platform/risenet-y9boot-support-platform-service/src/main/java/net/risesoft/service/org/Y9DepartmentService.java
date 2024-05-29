@@ -130,6 +130,13 @@ public interface Y9DepartmentService {
 
     void removeDepartmentProp(String deptId, Integer category, String orgBaseId);
 
+    /**
+     * 保存或更新 新增或修改此部门实例的信息
+     *
+     * @param dept 部门对象
+     * @return {@link Y9Department}
+     */
+    Y9Department saveOrUpdate(Y9Department dept);
 
     /**
      * 保存新的部门排序
@@ -138,14 +145,6 @@ public interface Y9DepartmentService {
      * @return {@link List}<{@link Y9Department}>
      */
     List<Y9Department> saveOrder(List<String> deptIds);
-
-    /**
-     * 保存或更新 新增或修改此部门实例的信息
-     *
-     * @param dept 部门对象
-     * @return {@link Y9Department}
-     */
-    Y9Department saveOrUpdate(Y9Department dept);
 
     /**
      * 保存或者更新部门扩展信息
@@ -157,14 +156,6 @@ public interface Y9DepartmentService {
     Y9Department saveProperties(String id, String properties);
 
     /**
-     * 根据whereClause搜索
-     *
-     * @param whereClause 查询子句
-     * @return {@link List}<{@link Y9Department}>
-     */
-    List<Y9Department> search(String whereClause);
-
-    /**
      * 设置部门属性组织节点
      *
      * @param deptId 部门ID
@@ -172,7 +163,7 @@ public interface Y9DepartmentService {
      * @param orgBaseIds 组织节点ID
      */
     void setDepartmentPropOrgUnits(String deptId, Integer category, List<String> orgBaseIds);
-    
+
     /**
      * 更新部门排列序号
      *

@@ -33,6 +33,8 @@ public interface Y9PositionManager {
      */
     Y9Position getById(String id);
 
+    Y9Position getByIdNotCache(String id);
+
     Y9Position save(Y9Position position);
 
     Y9Position saveOrUpdate(Y9Position position);

@@ -8,8 +8,6 @@ import org.springframework.data.domain.Page;
 import net.risesoft.entity.Y9OrgBase;
 import net.risesoft.entity.Y9Person;
 import net.risesoft.entity.Y9PersonExt;
-import net.risesoft.model.platform.AuthenticateResult;
-import net.risesoft.model.platform.Message;
 import net.risesoft.pojo.Y9PageQuery;
 import net.risesoft.y9.exception.Y9NotFoundException;
 
@@ -29,83 +27,6 @@ public interface Y9PersonService {
      * @return {@link List}<{@link Y9Person}>
      */
     List<Y9Person> addPersons(String parentId, List<String> personIds);
-
-    /**
-     * 用户认证
-     *
-     * @param loginName 登录名
-     * @param password 密码
-     * @return {@link Message}
-     */
-    Message authenticate(String loginName, String password);
-
-    /**
-     * 用户认证
-     *
-     * @param tenantName 租户名
-     * @param loginName 登录名
-     * @param password 密码
-     * @return {@link Message}
-     */
-    Message authenticate2(String tenantName, String loginName, String password);
-
-    /**
-     * 用户认证
-     *
-     * @param loginName 登录名
-     * @param base64EncodedPassword base编码过的密码
-     * @return {@link Message}
-     */
-    AuthenticateResult authenticate3(String loginName, String base64EncodedPassword);
-
-    /**
-     * 用户认证
-     *
-     * @param tenantShortName 租户英文名
-     * @param loginName 登录名
-     * @param password 密码
-     * @return {@link Message}
-     */
-    Message authenticate3(String tenantShortName, String loginName, String password);
-
-    /**
-     * 用户认证
-     *
-     * @param tenantShortName 租户英文名
-     * @param loginName 登录名
-     * @return {@link Message}
-     */
-    Message authenticate4(String tenantShortName, String loginName);
-
-    /**
-     * 用户认证
-     *
-     * @param mobile 手机号
-     * @param base64EncodedPassword base编码过的密码
-     * @return {@link Message}
-     */
-    AuthenticateResult authenticate5(String mobile, String base64EncodedPassword);
-
-    /**
-     * 用户认证
-     *
-     * @param tenantShortName 租户英文名
-     * @param mobile 手机号
-     * @param password 密码
-     * @return {@link Message}
-     */
-    Message authenticate5(String tenantShortName, String mobile, String password);
-
-    /**
-     * 用户认证
-     *
-     * @param tenantShortName 租户英文名
-     * @param loginName 登录名
-     * @param password 密码
-     * @param parentId 父节点id
-     * @return {@link Message}
-     */
-    Message authenticate6(String tenantShortName, String loginName, String password, String parentId);
 
     /**
      * 根据人员id，改变人员禁用状态
@@ -254,14 +175,6 @@ public interface Y9PersonService {
     List<Y9Person> listAll();
 
     /**
-     * 根据父节点id，获取子节点下的所有人员，包括用户组和岗位下的人员
-     *
-     * @param parentId 父节点id
-     * @return {@link List}<{@link Y9Person}>
-     */
-    List<Y9Person> listAllByParentId(String parentId);
-
-    /**
      * 根据guidPath（模糊查询），获取人员列表
      *
      * @param guidPath guid路径
@@ -298,22 +211,13 @@ public interface Y9PersonService {
     List<Y9Person> listByNameLike(String name, Boolean disabled);
 
     /**
-     * 根据父节点id,获取本层级的岗位列表
-     *
-     * @param parentId 父节点id
-     * @param disabled
-     * @return {@link List}<{@link Y9Person}>
-     */
-    List<Y9Person> listByParentId(String parentId, Boolean disabled);
-
-    /**
      * 根据父id及禁用状态查询人员
      *
      * @param parentId 父节点id
      * @param disabled 是否已禁用
      * @return {@link List}<{@link Y9Person}>
      */
-    List<Y9Person> listByParentIdAndDisabled(String parentId, Boolean disabled);
+    List<Y9Person> listByParentId(String parentId, Boolean disabled);
 
     /**
      * 根据岗位id,获取人员列表
@@ -459,14 +363,6 @@ public interface Y9PersonService {
      * @param weixinId 微信 id
      */
     Y9Person saveWeixinId(String personId, String weixinId);
-
-    /**
-     * 根据where子句查询
-     *
-     * @param whereClause 查询子句
-     * @return {@link List}<{@link Y9Person}>
-     */
-    List<Y9Person> search(String whereClause);
 
     /**
      * 更新排序序列号

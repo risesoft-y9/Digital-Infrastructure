@@ -13,11 +13,9 @@ import org.springframework.transaction.annotation.Transactional;
 import lombok.RequiredArgsConstructor;
 
 import net.risesoft.entity.Y9CustomGroup;
-import net.risesoft.entity.Y9Person;
 import net.risesoft.exception.OrgUnitErrorCodeEnum;
 import net.risesoft.id.IdType;
 import net.risesoft.id.Y9IdGenerator;
-import net.risesoft.manager.org.Y9PersonManager;
 import net.risesoft.manager.relation.Y9CustomGroupMembersManager;
 import net.risesoft.pojo.Y9PageQuery;
 import net.risesoft.repository.Y9CustomGroupRepository;
@@ -41,7 +39,6 @@ public class Y9CustomGroupServiceImpl implements Y9CustomGroupService {
     private final Y9CustomGroupMembersRepository customGroupMembersRepository;
 
     private final Y9CustomGroupMembersManager y9CustomGroupMembersManager;
-    private final Y9PersonManager y9PersonManager;
 
     @Override
     @Transactional(readOnly = false)
@@ -111,14 +108,9 @@ public class Y9CustomGroupServiceImpl implements Y9CustomGroupService {
             group.setId(guid);
             group.setTenantId(tenantId);
             group.setGroupName(groupName);
-            Optional<Y9Person> y9PersonOptional = y9PersonManager.findById(personId);
-            if (y9PersonOptional.isPresent()) {
-                Y9Person person = y9PersonOptional.get();
-                Integer tabIndex = customGroupRepository.getMaxTabIndex(person.getId());
-                group.setPersonName(person.getName());
-                group.setTabIndex(tabIndex == null ? 1 : tabIndex + 1);
-                group.setPersonId(person.getId());
-            }
+            Integer tabIndex = customGroupRepository.getMaxTabIndex(personId).map(index -> index + 1).orElse(1);
+            group.setTabIndex(tabIndex);
+            group.setPersonId(personId);
             group = this.save(group);
         } else {
             group = this.getById(groupId);
@@ -144,21 +136,15 @@ public class Y9CustomGroupServiceImpl implements Y9CustomGroupService {
     @Transactional(readOnly = false)
     public Y9CustomGroup share(String personId, String groupId) {
         Y9CustomGroup customGroup = this.getById(groupId);
-        Integer tabIndex = customGroupRepository.getMaxTabIndex(personId);
         Y9CustomGroup group = new Y9CustomGroup();
         String id = Y9IdGenerator.genId(IdType.SNOWFLAKE);
         group.setId(id);
         group.setGroupName(customGroup.getGroupName());
-        group.setTabIndex(tabIndex == null ? 1 : tabIndex + 1);
+        Integer tabIndex = customGroupRepository.getMaxTabIndex(personId).map(index -> index + 1).orElse(1);
+        group.setTabIndex(tabIndex);
         group.setTenantId(customGroup.getTenantId());
         group.setShareId(customGroup.getPersonId());
-        group.setShareName(customGroup.getPersonName());
-        Optional<Y9Person> y9PersonOptional = y9PersonManager.findById(personId);
-        if (y9PersonOptional.isPresent()) {
-            Y9Person person = y9PersonOptional.get();
-            group.setPersonName(person.getName());
-            group.setPersonId(person.getId());
-        }
+        group.setPersonId(personId);
         return this.save(group);
     }
 

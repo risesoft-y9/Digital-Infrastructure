@@ -18,7 +18,7 @@ public interface Y9OperationService extends ResourceCommonService<Y9Operation> {
      * @return
      */
     List<Y9Operation> findByParentId(String parentId);
-    
+
     /**
      * 根据父节点id，获取最大排序
      *

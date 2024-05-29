@@ -67,23 +67,6 @@ public class PositionRoleApiImpl implements PositionRoleApi {
     }
 
     /**
-     * 判断岗位是否拥有 customId 对应的角色
-     *
-     * @param tenantId 租户id
-     * @param positionId 岗位id
-     * @param customId 自定义id
-     * @return
-     * @since 9.6.0
-     */
-    @Override
-    public Boolean hasRoleByCustomId(@RequestParam("tenantId") @NotBlank String tenantId,
-        @RequestParam("positionId") @NotBlank String positionId, @RequestParam("customId") @NotBlank String customId) {
-        Y9LoginUserHolder.setTenantId(tenantId);
-
-        return y9PositionToRoleService.hasRoleByCustomId(positionId, customId);
-    }
-
-    /**
      * 根据岗位id判断该岗位是否拥有 roleName 这个角色
      *
      * @param tenantId 租户id
@@ -102,5 +85,22 @@ public class PositionRoleApiImpl implements PositionRoleApi {
         Y9LoginUserHolder.setTenantId(tenantId);
 
         return y9PositionToRoleService.hasRole(positionId, systemName, roleName, properties);
+    }
+
+    /**
+     * 判断岗位是否拥有 customId 对应的角色
+     *
+     * @param tenantId 租户id
+     * @param positionId 岗位id
+     * @param customId 自定义id
+     * @return
+     * @since 9.6.0
+     */
+    @Override
+    public Boolean hasRoleByCustomId(@RequestParam("tenantId") @NotBlank String tenantId,
+        @RequestParam("positionId") @NotBlank String positionId, @RequestParam("customId") @NotBlank String customId) {
+        Y9LoginUserHolder.setTenantId(tenantId);
+
+        return y9PositionToRoleService.hasRoleByCustomId(positionId, customId);
     }
 }

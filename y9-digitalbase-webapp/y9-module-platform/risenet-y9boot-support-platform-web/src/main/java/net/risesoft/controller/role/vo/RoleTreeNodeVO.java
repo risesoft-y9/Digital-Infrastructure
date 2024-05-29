@@ -26,11 +26,6 @@ public class RoleTreeNodeVO extends TreeNodeVO {
 
     private String appId;
 
-    @Override
-    public TreeTypeEnum getTreeType() {
-        return TreeTypeEnum.ROLE;
-    }
-
     public static RoleTreeNodeVO convertY9Role(Y9Role y9Role) {
         RoleTreeNodeVO roleTreeNodeVO = new RoleTreeNodeVO();
         roleTreeNodeVO.setId(y9Role.getId());
@@ -69,5 +64,10 @@ public class RoleTreeNodeVO extends TreeNodeVO {
             roleTreeNodeVOList.add(convertY9App(y9App));
         }
         return roleTreeNodeVOList;
+    }
+
+    @Override
+    public TreeTypeEnum getTreeType() {
+        return TreeTypeEnum.ROLE;
     }
 }

@@ -24,6 +24,10 @@ public class Y9PlatformUtil {
 
     private static JdbcTemplate jdbcTemplate4Tenant = null;
 
+    private Y9PlatformUtil() {
+        throw new IllegalStateException("Y9PlatformUtil class");
+    }
+
     private static JdbcTemplate getJdbcTemplate4Public() {
         if (jdbcTemplate4Public == null) {
             jdbcTemplate4Public = Y9Context.getBean("jdbcTemplate4Public");
@@ -133,9 +137,5 @@ public class Y9PlatformUtil {
             LOGGER.warn(e.getMessage(), e);
         }
         return false;
-    }
-
-    private Y9PlatformUtil() {
-        throw new IllegalStateException("Y9PlatformUtil class");
     }
 }

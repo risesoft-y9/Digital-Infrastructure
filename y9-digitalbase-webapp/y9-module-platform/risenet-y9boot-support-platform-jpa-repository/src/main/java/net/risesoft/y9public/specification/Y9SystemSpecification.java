@@ -39,20 +39,20 @@ public class Y9SystemSpecification<Y9System> implements Specification<Y9System> 
         return isvId;
     }
 
-    public String getName() {
-        return name;
-    }
-
-    public String getType() {
-        return type;
-    }
-
     public void setIsvId(String isvId) {
         this.isvId = isvId;
     }
 
+    public String getName() {
+        return name;
+    }
+
     public void setName(String name) {
         this.name = name;
+    }
+
+    public String getType() {
+        return type;
     }
 
     public void setType(String type) {

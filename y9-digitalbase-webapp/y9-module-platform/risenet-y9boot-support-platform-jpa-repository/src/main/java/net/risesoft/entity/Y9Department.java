@@ -1,12 +1,6 @@
 package net.risesoft.entity;
 
-import com.fasterxml.jackson.annotation.JsonFormat;
-import lombok.Data;
-import net.risesoft.enums.platform.OrgTypeEnum;
-import org.hibernate.annotations.ColumnDefault;
-import org.hibernate.annotations.Comment;
-import org.hibernate.annotations.Type;
-import org.springframework.format.annotation.DateTimeFormat;
+import java.util.Date;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -14,7 +8,18 @@ import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 import javax.validation.constraints.NotBlank;
-import java.util.Date;
+
+import org.hibernate.annotations.ColumnDefault;
+import org.hibernate.annotations.Comment;
+import org.hibernate.annotations.DynamicUpdate;
+import org.hibernate.annotations.Type;
+import org.springframework.format.annotation.DateTimeFormat;
+
+import com.fasterxml.jackson.annotation.JsonFormat;
+
+import lombok.Data;
+
+import net.risesoft.enums.platform.OrgTypeEnum;
 
 /**
  * 部门实体
@@ -26,6 +31,7 @@ import java.util.Date;
  */
 @Entity
 @Table(name = "Y9_ORG_DEPARTMENT")
+@DynamicUpdate
 @org.hibernate.annotations.Table(comment = "部门实体表", appliesTo = "Y9_ORG_DEPARTMENT")
 @Data
 public class Y9Department extends Y9OrgBase {

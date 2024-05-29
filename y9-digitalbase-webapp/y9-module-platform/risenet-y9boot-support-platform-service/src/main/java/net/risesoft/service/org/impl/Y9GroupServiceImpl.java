@@ -8,39 +8,27 @@ import org.apache.commons.lang3.StringUtils;
 import org.springframework.context.event.EventListener;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.transaction.support.TransactionSynchronization;
-import org.springframework.transaction.support.TransactionSynchronizationManager;
 
 import lombok.RequiredArgsConstructor;
 
-import net.risesoft.consts.OrgLevelConsts;
 import net.risesoft.entity.Y9Department;
 import net.risesoft.entity.Y9Group;
 import net.risesoft.entity.Y9OrgBase;
 import net.risesoft.entity.Y9Organization;
 import net.risesoft.entity.relation.Y9PersonsToGroups;
-import net.risesoft.enums.platform.AuthorizationPrincipalTypeEnum;
 import net.risesoft.enums.platform.OrgTypeEnum;
 import net.risesoft.id.IdType;
 import net.risesoft.id.Y9IdGenerator;
 import net.risesoft.manager.org.CompositeOrgBaseManager;
 import net.risesoft.manager.org.Y9GroupManager;
 import net.risesoft.manager.relation.Y9PersonsToGroupsManager;
-import net.risesoft.model.platform.Group;
 import net.risesoft.repository.Y9GroupRepository;
-import net.risesoft.repository.permission.Y9AuthorizationRepository;
-import net.risesoft.repository.relation.Y9OrgBasesToRolesRepository;
 import net.risesoft.repository.relation.Y9PersonsToGroupsRepository;
 import net.risesoft.service.org.Y9GroupService;
 import net.risesoft.util.Y9OrgUtil;
-import net.risesoft.util.Y9PublishServiceUtil;
 import net.risesoft.y9.Y9Context;
-import net.risesoft.y9.Y9LoginUserHolder;
-import net.risesoft.y9.pubsub.constant.Y9OrgEventTypeConst;
 import net.risesoft.y9.pubsub.event.Y9EntityDeletedEvent;
 import net.risesoft.y9.pubsub.event.Y9EntityUpdatedEvent;
-import net.risesoft.y9.pubsub.message.Y9MessageOrg;
-import net.risesoft.y9.util.Y9BeanUtil;
 import net.risesoft.y9.util.Y9ModelConvertUtil;
 
 /**
@@ -56,8 +44,6 @@ public class Y9GroupServiceImpl implements Y9GroupService {
 
     private final Y9GroupRepository y9GroupRepository;
     private final Y9PersonsToGroupsRepository y9PersonsToGroupsRepository;
-    private final Y9OrgBasesToRolesRepository y9OrgBasesToRolesRepository;
-    private final Y9AuthorizationRepository y9AuthorizationRepository;
 
     private final CompositeOrgBaseManager compositeOrgBaseManager;
     private final Y9GroupManager y9GroupManager;
@@ -66,24 +52,11 @@ public class Y9GroupServiceImpl implements Y9GroupService {
     @Override
     @Transactional(readOnly = false)
     public Y9Group changeDisabled(String id) {
-        Y9Group y9Group = this.getById(id);
-        Boolean isDisabled = !y9Group.getDisabled();
-        y9Group.setDisabled(isDisabled);
-        final Y9Group savedGroup = y9GroupManager.save(y9Group);
+        final Y9Group y9Group = this.getById(id);
 
-        if (TransactionSynchronizationManager.isActualTransactionActive()) {
-            TransactionSynchronizationManager.registerSynchronization(new TransactionSynchronization() {
-                @Override
-                public void afterCommit() {
-                    String event = Boolean.TRUE.equals(isDisabled) ? "禁用" : "启用";
-                    Y9MessageOrg<Group> msg = new Y9MessageOrg<>(Y9ModelConvertUtil.convert(savedGroup, Group.class),
-                        Y9OrgEventTypeConst.GROUP_UPDATE, Y9LoginUserHolder.getTenantId());
-                    Y9PublishServiceUtil.persistAndPublishMessageOrg(msg, event + "用户组",
-                        event + savedGroup.getName());
-                }
-            });
-        }
-        return savedGroup;
+        Y9Group updatedGroup = Y9ModelConvertUtil.convert(y9Group, Y9Group.class);
+        updatedGroup.setDisabled(!y9Group.getDisabled());
+        return y9GroupManager.saveOrUpdate(updatedGroup);
     }
 
     @Override
@@ -102,8 +75,7 @@ public class Y9GroupServiceImpl implements Y9GroupService {
         if (null == y9Group.getTabIndex()) {
             y9Group.setTabIndex(Integer.MAX_VALUE);
         }
-        y9Group.setDn(OrgLevelConsts.getOrgLevel(OrgTypeEnum.GROUP) + y9Group.getName() + OrgLevelConsts.SEPARATOR
-            + parent.getDn());
+        y9Group.setDn(Y9OrgUtil.buildDn(OrgTypeEnum.GROUP, y9Group.getName(), parent.getDn()));
         y9Group.setDisabled(false);
         y9Group.setParentId(parent.getId());
 
@@ -117,23 +89,9 @@ public class Y9GroupServiceImpl implements Y9GroupService {
 
         // 删除用户组关联数据
         y9PersonsToGroupsManager.deleteByGroupId(groupId);
-        y9OrgBasesToRolesRepository.deleteByOrgId(groupId);
-        y9AuthorizationRepository.deleteByPrincipalIdAndPrincipalType(groupId, AuthorizationPrincipalTypeEnum.GROUP);
-
         y9GroupManager.delete(y9Group);
 
         Y9Context.publishEvent(new Y9EntityDeletedEvent<>(y9Group));
-
-        if (TransactionSynchronizationManager.isActualTransactionActive()) {
-            TransactionSynchronizationManager.registerSynchronization(new TransactionSynchronization() {
-                @Override
-                public void afterCommit() {
-                    Y9MessageOrg<Group> msg = new Y9MessageOrg<>(Y9ModelConvertUtil.convert(y9Group, Group.class),
-                        Y9OrgEventTypeConst.GROUP_DELETE, Y9LoginUserHolder.getTenantId());
-                    Y9PublishServiceUtil.persistAndPublishMessageOrg(msg, "删除用户组", "删除" + y9Group.getName());
-                }
-            });
-        }
     }
 
     @Override
@@ -213,33 +171,41 @@ public class Y9GroupServiceImpl implements Y9GroupService {
     @Override
     @Transactional(readOnly = false)
     public Y9Group move(String groupId, String parentId) {
-        Y9Group originY9Group = new Y9Group();
-        Y9Group updatedY9Group = this.getById(groupId);
-        Y9BeanUtil.copyProperties(updatedY9Group, originY9Group);
+        final Y9Group y9Group = this.getById(groupId);
 
-        Y9OrgBase parent = compositeOrgBaseManager.getOrgUnitAsParent(parentId);
-        updatedY9Group.setParentId(parent.getId());
-        updatedY9Group.setDn(OrgLevelConsts.getOrgLevel(OrgTypeEnum.GROUP) + updatedY9Group.getName()
-            + OrgLevelConsts.SEPARATOR + parent.getDn());
-        updatedY9Group.setGuidPath(parent.getGuidPath() + OrgLevelConsts.SEPARATOR + updatedY9Group.getId());
-        updatedY9Group.setTabIndex(compositeOrgBaseManager.getMaxSubTabIndex(parentId));
-        final Y9Group savedY9Group = y9GroupManager.save(updatedY9Group);
+        Y9Group updatedGroup = Y9ModelConvertUtil.convert(y9Group, Y9Group.class);
+        updatedGroup.setParentId(parentId);
+        return y9GroupManager.saveOrUpdate(updatedGroup);
+    }
 
-        Y9Context.publishEvent(new Y9EntityUpdatedEvent<>(originY9Group, savedY9Group));
-
-        if (TransactionSynchronizationManager.isActualTransactionActive()) {
-            TransactionSynchronizationManager.registerSynchronization(new TransactionSynchronization() {
-                @Override
-                public void afterCommit() {
-                    Y9MessageOrg<Group> msg = new Y9MessageOrg<>(Y9ModelConvertUtil.convert(savedY9Group, Group.class),
-                        Y9OrgEventTypeConst.GROUP_UPDATE, Y9LoginUserHolder.getTenantId());
-                    Y9PublishServiceUtil.persistAndPublishMessageOrg(msg, "移动用户组",
-                        originY9Group.getName() + "移动到" + parent.getName());
-                }
-            });
+    @Override
+    @Transactional(readOnly = false)
+    public List<Y9Group> saveOrder(List<String> groupIds) {
+        List<Y9Group> groupList = new ArrayList<>();
+        int tabIndex = 0;
+        for (String groupId : groupIds) {
+            groupList.add(y9GroupManager.updateTabIndex(groupId, tabIndex++));
         }
+        return groupList;
+    }
 
-        return savedY9Group;
+    @Override
+    @Transactional(readOnly = false)
+    public Y9Group saveOrUpdate(Y9Group group) {
+        return y9GroupManager.saveOrUpdate(group);
+    }
+
+    @Override
+    @Transactional(readOnly = false)
+    public Y9Group saveProperties(String groupId, String properties) {
+
+        return y9GroupManager.saveProperties(groupId, properties);
+    }
+
+    @Override
+    @Transactional(readOnly = false)
+    public Y9Group updateTabIndex(String id, int tabIndex) {
+        return y9GroupManager.updateTabIndex(id, tabIndex);
     }
 
     @EventListener
@@ -270,92 +236,5 @@ public class Y9GroupServiceImpl implements Y9GroupService {
                 this.saveOrUpdate(group);
             }
         }
-    }
-
-    @Override
-    @Transactional(readOnly = false)
-    public List<Y9Group> saveOrder(List<String> groupIds) {
-        List<Y9Group> groupList = new ArrayList<>();
-        int tabIndex = 0;
-        for (String groupId : groupIds) {
-            groupList.add(y9GroupManager.updateTabIndex(groupId, tabIndex++));
-        }
-        return groupList;
-    }
-
-    @Override
-    @Transactional(readOnly = false)
-    public Y9Group saveOrUpdate(Y9Group group) {
-        Y9OrgBase parent = compositeOrgBaseManager.getOrgUnitAsParent(group.getParentId());
-
-        if (StringUtils.isNotEmpty(group.getId())) {
-            Optional<Y9Group> optionalY9Group = y9GroupManager.findByIdNotCache(group.getId());
-            if (optionalY9Group.isPresent()) {
-                Y9Group y9Group = optionalY9Group.get();
-                y9Group.setName(group.getName());
-                y9Group.setDescription(group.getDescription());
-                y9Group.setParentId(parent.getId());
-                y9Group.setDn(OrgLevelConsts.getOrgLevel(OrgTypeEnum.GROUP) + group.getName() + OrgLevelConsts.SEPARATOR
-                    + parent.getDn());
-                y9Group.setGuidPath(parent.getGuidPath() + OrgLevelConsts.SEPARATOR + group.getId());
-                if (group.getTabIndex() != null) {
-                    y9Group.setTabIndex(group.getTabIndex());
-                }
-                final Y9Group savedGroup = y9GroupManager.save(y9Group);
-
-                if (TransactionSynchronizationManager.isActualTransactionActive()) {
-                    TransactionSynchronizationManager.registerSynchronization(new TransactionSynchronization() {
-                        @Override
-                        public void afterCommit() {
-                            Y9MessageOrg<Group> msg =
-                                new Y9MessageOrg<>(Y9ModelConvertUtil.convert(savedGroup, Group.class),
-                                    Y9OrgEventTypeConst.GROUP_UPDATE, Y9LoginUserHolder.getTenantId());
-                            Y9PublishServiceUtil.persistAndPublishMessageOrg(msg, "更新用户组信息",
-                                "更新" + group.getName());
-                        }
-                    });
-                }
-
-                return savedGroup;
-            }
-        } else {
-            group.setId(Y9IdGenerator.genId(IdType.SNOWFLAKE));
-        }
-
-        group.setTenantId(Y9LoginUserHolder.getTenantId());
-        group.setDn(OrgLevelConsts.getOrgLevel(OrgTypeEnum.GROUP) + group.getName() + OrgLevelConsts.SEPARATOR
-            + parent.getDn());
-        group.setDisabled(false);
-        group.setParentId(parent.getId());
-        group.setTabIndex(compositeOrgBaseManager.getMaxSubTabIndex(parent.getId()));
-        group.setGuidPath(parent.getGuidPath() + OrgLevelConsts.SEPARATOR + group.getId());
-        final Y9Group savedGroup = y9GroupManager.save(group);
-
-        if (TransactionSynchronizationManager.isActualTransactionActive()) {
-            TransactionSynchronizationManager.registerSynchronization(new TransactionSynchronization() {
-                @Override
-                public void afterCommit() {
-                    Y9MessageOrg<Group> msg = new Y9MessageOrg<>(Y9ModelConvertUtil.convert(savedGroup, Group.class),
-                        Y9OrgEventTypeConst.GROUP_ADD, Y9LoginUserHolder.getTenantId());
-                    Y9PublishServiceUtil.persistAndPublishMessageOrg(msg, "新增用户组信息",
-                        "新增" + savedGroup.getName());
-                }
-            });
-        }
-
-        return savedGroup;
-    }
-
-    @Override
-    @Transactional(readOnly = false)
-    public Y9Group saveProperties(String groupId, String properties) {
-
-        return y9GroupManager.saveProperties(groupId, properties);
-    }
-
-    @Override
-    @Transactional(readOnly = false)
-    public Y9Group updateTabIndex(String id, int tabIndex) {
-        return y9GroupManager.updateTabIndex(id, tabIndex);
     }
 }

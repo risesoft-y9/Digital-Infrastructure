@@ -34,20 +34,20 @@ public class Y9TenantSpecification<Y9Tenant> implements Specification<Y9Tenant> 
         return enabled;
     }
 
-    public String getName() {
-        return name;
-    }
-
-    public Integer getTenantType() {
-        return tenantType;
-    }
-
     public void setEnabled(Integer enabled) {
         this.enabled = enabled;
     }
 
+    public String getName() {
+        return name;
+    }
+
     public void setName(String name) {
         this.name = name;
+    }
+
+    public Integer getTenantType() {
+        return tenantType;
     }
 
     public void setTenantType(Integer tenantType) {

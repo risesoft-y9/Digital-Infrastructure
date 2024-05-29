@@ -13,6 +13,7 @@ import org.hibernate.annotations.UpdateTimestamp;
 import com.fasterxml.jackson.annotation.JsonFormat;
 
 import lombok.EqualsAndHashCode;
+import lombok.NoArgsConstructor;
 
 /**
  * 实体基类
@@ -24,6 +25,7 @@ import lombok.EqualsAndHashCode;
  */
 @MappedSuperclass
 @EqualsAndHashCode
+@NoArgsConstructor
 public class BaseEntity implements Serializable {
 
     private static final long serialVersionUID = 7442864321155282821L;

@@ -10,9 +10,9 @@ import net.risesoft.y9public.entity.tenant.Y9TenantSystem;
  * @since 9.6.2
  */
 public interface Y9TenantSystemManager {
-    void deleteBySystemId(String systemId);
-
     void delete(String id);
+
+    void deleteBySystemId(String systemId);
 
     String getDataSourceIdByTenantIdAndSystemId(String tenantId, String systemId);
 

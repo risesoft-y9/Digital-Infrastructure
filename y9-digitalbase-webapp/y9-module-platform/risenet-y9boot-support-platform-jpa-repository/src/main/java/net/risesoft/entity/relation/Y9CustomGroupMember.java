@@ -7,6 +7,7 @@ import javax.persistence.Id;
 import javax.persistence.Table;
 
 import org.hibernate.annotations.Comment;
+import org.hibernate.annotations.DynamicUpdate;
 
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -26,6 +27,7 @@ import net.risesoft.persistence.EnumConverter;
  */
 @Entity
 @Table(name = "Y9_ORG_CUSTOM_GROUP_MEMBER")
+@DynamicUpdate
 @org.hibernate.annotations.Table(comment = "自定义群组成员表", appliesTo = "Y9_ORG_CUSTOM_GROUP_MEMBER")
 @NoArgsConstructor
 @Data

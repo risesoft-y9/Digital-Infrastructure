@@ -172,6 +172,14 @@ public interface CompositeOrgBaseService {
     List<Y9OrgBase> getTree4DeptManager(String id, OrgTreeTypeEnum treeType);
 
     /**
+     * 根据父节点id，获取子节点下的所有人员，包括用户组和岗位下的人员
+     *
+     * @param parentId 父节点id
+     * @return {@link List}<{@link Y9Person}>
+     */
+    List<Y9Person> listAllByParentId(String parentId);
+
+    /**
      * 根据组织节点id向下递归获取所有组织节点
      *
      * @param orgId 组织节点id

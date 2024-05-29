@@ -11,6 +11,7 @@ import javax.validation.constraints.NotBlank;
 
 import org.hibernate.annotations.ColumnDefault;
 import org.hibernate.annotations.Comment;
+import org.hibernate.annotations.DynamicUpdate;
 import org.hibernate.annotations.Type;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
@@ -32,16 +33,19 @@ import net.risesoft.persistence.EnumConverter;
  */
 @Entity
 @Table(name = "Y9_ORG_MANAGER")
+@DynamicUpdate
 @org.hibernate.annotations.Table(comment = "三员表", appliesTo = "Y9_ORG_MANAGER")
 @Data
 public class Y9Manager extends Y9OrgBase {
 
     private static final long serialVersionUID = -6531424704457510017L;
-
-    public Y9Manager() {
-        super.setOrgType(OrgTypeEnum.MANAGER);
-    }
-
+    /**
+     * 修改密码时间
+     */
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss", timezone = "GMT+8")
+    @Comment("上一次密码修改时间")
+    @Column(name = "LAST_MODIFY_PASSWORD_TIME")
+    protected Date lastModifyPasswordTime;
     /** 父节点id */
     @Column(name = "PARENT_ID", length = 38, nullable = false)
     @Comment("父节点id")
@@ -129,11 +133,7 @@ public class Y9Manager extends Y9OrgBase {
     @Column(name = "LAST_REVIEW_LOG_TIME")
     private Date lastReviewLogTime;
 
-    /**
-     * 修改密码时间
-     */
-    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss", timezone = "GMT+8")
-    @Comment("上一次密码修改时间")
-    @Column(name = "LAST_MODIFY_PASSWORD_TIME")
-    protected Date lastModifyPasswordTime;
+    public Y9Manager() {
+        super.setOrgType(OrgTypeEnum.MANAGER);
+    }
 }
