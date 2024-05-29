@@ -12,7 +12,7 @@ import net.risesoft.entity.Y9OptionValue;
 public interface Y9OptionValueManager {
     Y9OptionValue create(String code, String name, String type);
 
-    Integer getMaxTabIndexByType(String type);
-
     void deleteByType(String type);
+
+    Integer getMaxTabIndexByType(String type);
 }

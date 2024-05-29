@@ -6,6 +6,7 @@ import jakarta.persistence.Id;
 import jakarta.persistence.Table;
 
 import org.hibernate.annotations.Comment;
+import org.hibernate.annotations.DynamicUpdate;
 
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -22,6 +23,7 @@ import net.risesoft.base.BaseEntity;
  */
 @Entity
 @Table(name = "Y9_ORG_CUSTOM_GROUP")
+@DynamicUpdate
 @Comment("自定义群组")
 @NoArgsConstructor
 @Data
@@ -50,11 +52,6 @@ public class Y9CustomGroup extends BaseEntity {
     @Column(name = "USER_ID", length = 38)
     private String personId;
 
-    /** 用户名称 */
-    @Comment("用户名称")
-    @Column(name = "USER_NAME", length = 255)
-    private String personName;
-
     /** 租户id */
     @Comment("租户id")
     @Column(name = "TENANT_ID", length = 38)
@@ -64,11 +61,6 @@ public class Y9CustomGroup extends BaseEntity {
     @Comment("分享人Id")
     @Column(name = "SHARE_ID", length = 38)
     private String shareId;
-
-    /** 分享人 */
-    @Comment("分享人")
-    @Column(name = "SHARE_NAME", length = 255)
-    private String shareName;
 
     /** 排序字段 */
     @Comment("排序字段")

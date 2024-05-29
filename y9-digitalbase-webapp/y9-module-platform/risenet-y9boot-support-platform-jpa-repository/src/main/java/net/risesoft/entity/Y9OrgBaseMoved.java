@@ -15,6 +15,7 @@ import lombok.NoArgsConstructor;
 import net.risesoft.base.BaseEntity;
 import net.risesoft.enums.platform.OrgTypeEnum;
 import net.risesoft.persistence.EnumConverter;
+import org.hibernate.annotations.DynamicUpdate;
 
 /**
  * 移动的组织表
@@ -26,6 +27,7 @@ import net.risesoft.persistence.EnumConverter;
  */
 @Entity
 @Table(name = "Y9_ORGBASE_MOVED")
+@DynamicUpdate
 @Comment("移动的组织表")
 @NoArgsConstructor
 @Data

@@ -9,6 +9,7 @@ import jakarta.persistence.Table;
 
 import org.hibernate.annotations.ColumnDefault;
 import org.hibernate.annotations.Comment;
+import org.hibernate.annotations.DynamicUpdate;
 
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -33,6 +34,7 @@ import net.risesoft.persistence.EnumConverter;
     indexes = {@Index(columnList = "PRINCIPAL_ID,RESOURCE_ID,AUTHORITY", unique = true),
         @Index(columnList = "TENANT_ID,PRINCIPAL_ID ASC", unique = false),
         @Index(columnList = "TENANT_ID,RESOURCE_ID ASC", unique = false)})
+@DynamicUpdate
 @Comment("权限配置表")
 @NoArgsConstructor
 @Data

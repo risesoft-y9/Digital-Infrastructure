@@ -4,19 +4,12 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
-import jakarta.persistence.EntityManager;
-import jakarta.persistence.EntityManagerFactory;
-import jakarta.persistence.Query;
-
 import org.apache.commons.lang3.StringUtils;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.event.EventListener;
-import org.springframework.orm.jpa.EntityManagerFactoryUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.transaction.support.TransactionSynchronization;
-import org.springframework.transaction.support.TransactionSynchronizationManager;
-import org.springframework.util.Assert;
+
+import lombok.RequiredArgsConstructor;
 
 import net.risesoft.consts.OrgLevelConsts;
 import net.risesoft.entity.Y9Department;
@@ -25,34 +18,19 @@ import net.risesoft.entity.Y9OrgBase;
 import net.risesoft.entity.Y9Organization;
 import net.risesoft.entity.Y9Position;
 import net.risesoft.entity.relation.Y9PersonsToPositions;
-import net.risesoft.enums.platform.AuthorizationPrincipalTypeEnum;
 import net.risesoft.enums.platform.OrgTypeEnum;
-import net.risesoft.exception.OrgUnitErrorCodeEnum;
 import net.risesoft.id.IdType;
 import net.risesoft.id.Y9IdGenerator;
 import net.risesoft.manager.org.CompositeOrgBaseManager;
 import net.risesoft.manager.org.Y9PositionManager;
 import net.risesoft.manager.relation.Y9PersonsToPositionsManager;
-import net.risesoft.model.platform.Position;
-import net.risesoft.repository.Y9DepartmentPropRepository;
 import net.risesoft.repository.Y9PositionRepository;
-import net.risesoft.repository.identity.position.Y9PositionToResourceAndAuthorityRepository;
-import net.risesoft.repository.identity.position.Y9PositionToRoleRepository;
-import net.risesoft.repository.permission.Y9AuthorizationRepository;
-import net.risesoft.repository.relation.Y9OrgBasesToRolesRepository;
 import net.risesoft.repository.relation.Y9PersonsToPositionsRepository;
-import net.risesoft.repository.relation.Y9PositionsToGroupsRepository;
 import net.risesoft.service.org.Y9PositionService;
 import net.risesoft.util.Y9OrgUtil;
-import net.risesoft.util.Y9PublishServiceUtil;
 import net.risesoft.y9.Y9Context;
-import net.risesoft.y9.Y9LoginUserHolder;
-import net.risesoft.y9.exception.util.Y9ExceptionUtil;
-import net.risesoft.y9.pubsub.constant.Y9OrgEventTypeConst;
 import net.risesoft.y9.pubsub.event.Y9EntityDeletedEvent;
 import net.risesoft.y9.pubsub.event.Y9EntityUpdatedEvent;
-import net.risesoft.y9.pubsub.message.Y9MessageOrg;
-import net.risesoft.y9.util.Y9BeanUtil;
 import net.risesoft.y9.util.Y9ModelConvertUtil;
 
 /**
@@ -63,44 +41,15 @@ import net.risesoft.y9.util.Y9ModelConvertUtil;
  */
 @Transactional(value = "rsTenantTransactionManager", readOnly = true)
 @Service
+@RequiredArgsConstructor
 public class Y9PositionServiceImpl implements Y9PositionService {
-
-    private final EntityManagerFactory entityManagerFactory;
 
     private final Y9PositionRepository y9PositionRepository;
     private final Y9PersonsToPositionsRepository y9PersonsToPositionsRepository;
-    private final Y9PositionsToGroupsRepository y9PositionsToGroupsRepository;
-    private final Y9OrgBasesToRolesRepository y9OrgBasesToRolesRepository;
-    private final Y9PositionToResourceAndAuthorityRepository y9PositionToResourceAndAuthorityRepository;
-    private final Y9PositionToRoleRepository y9PositionToRoleRepository;
-    private final Y9AuthorizationRepository y9AuthorizationRepository;
-    private final Y9DepartmentPropRepository y9DepartmentPropRepository;
 
     private final CompositeOrgBaseManager compositeOrgBaseManager;
     private final Y9PositionManager y9PositionManager;
     private final Y9PersonsToPositionsManager y9PersonsToPositionsManager;
-
-    public Y9PositionServiceImpl(@Qualifier("rsTenantEntityManagerFactory") EntityManagerFactory entityManagerFactory,
-        Y9PositionRepository y9PositionRepository, Y9PersonsToPositionsRepository y9PersonsToPositionsRepository,
-        Y9PositionsToGroupsRepository y9PositionsToGroupsRepository,
-        Y9OrgBasesToRolesRepository y9OrgBasesToRolesRepository,
-        Y9PositionToResourceAndAuthorityRepository y9PositionToResourceAndAuthorityRepository,
-        Y9PositionToRoleRepository y9PositionToRoleRepository, Y9AuthorizationRepository y9AuthorizationRepository,
-        Y9DepartmentPropRepository y9DepartmentPropRepository, CompositeOrgBaseManager compositeOrgBaseManager,
-        Y9PositionManager y9PositionManager, Y9PersonsToPositionsManager y9PersonsToPositionsManager) {
-        this.entityManagerFactory = entityManagerFactory;
-        this.y9PositionRepository = y9PositionRepository;
-        this.y9PersonsToPositionsRepository = y9PersonsToPositionsRepository;
-        this.y9PositionsToGroupsRepository = y9PositionsToGroupsRepository;
-        this.y9OrgBasesToRolesRepository = y9OrgBasesToRolesRepository;
-        this.y9PositionToResourceAndAuthorityRepository = y9PositionToResourceAndAuthorityRepository;
-        this.y9PositionToRoleRepository = y9PositionToRoleRepository;
-        this.y9AuthorizationRepository = y9AuthorizationRepository;
-        this.y9DepartmentPropRepository = y9DepartmentPropRepository;
-        this.compositeOrgBaseManager = compositeOrgBaseManager;
-        this.y9PositionManager = y9PositionManager;
-        this.y9PersonsToPositionsManager = y9PersonsToPositionsManager;
-    }
 
     @Override
     public String buildName(Y9Job y9Job, List<Y9PersonsToPositions> personsToPositionsList) {
@@ -110,26 +59,11 @@ public class Y9PositionServiceImpl implements Y9PositionService {
     @Override
     @Transactional(readOnly = false)
     public Y9Position changeDisabled(String id) {
-        Y9Position y9Position = y9PositionManager.findByIdNotCache(id)
-            .orElseThrow(() -> Y9ExceptionUtil.notFoundException(OrgUnitErrorCodeEnum.POSITION_NOT_FOUND, id));
-        boolean isDisabled = !y9Position.getDisabled();
-        y9Position.setDisabled(isDisabled);
-        Y9Position savePosition = y9PositionManager.save(y9Position);
+        final Y9Position position = y9PositionManager.getByIdNotCache(id);
 
-        if (TransactionSynchronizationManager.isActualTransactionActive()) {
-            TransactionSynchronizationManager.registerSynchronization(new TransactionSynchronization() {
-                @Override
-                public void afterCommit() {
-                    String event = Boolean.TRUE.equals(isDisabled) ? "禁用" : "启用";
-                    Y9MessageOrg<Position> msg =
-                        new Y9MessageOrg<>(Y9ModelConvertUtil.convert(savePosition, Position.class),
-                            Y9OrgEventTypeConst.POSITION_UPDATE, Y9LoginUserHolder.getTenantId());
-                    Y9PublishServiceUtil.persistAndPublishMessageOrg(msg, event + "岗位",
-                        event + savePosition.getName());
-                }
-            });
-        }
-        return savePosition;
+        Y9Position updatedPosition = Y9ModelConvertUtil.convert(position, Y9Position.class);
+        updatedPosition.setDisabled(!updatedPosition.getDisabled());
+        return y9PositionManager.saveOrUpdate(updatedPosition);
     }
 
     @Override
@@ -150,8 +84,7 @@ public class Y9PositionServiceImpl implements Y9PositionService {
         }
         y9Position.setTabIndex(Integer.MAX_VALUE);
         y9Position.setParentId(parent.getId());
-        y9Position.setDn(OrgLevelConsts.getOrgLevel(OrgTypeEnum.POSITION) + y9Position.getName()
-            + OrgLevelConsts.SEPARATOR + parent.getDn());
+        y9Position.setDn(Y9OrgUtil.buildDn(OrgTypeEnum.POSITION, y9Position.getName(), parent.getDn()));
         y9Position.setDisabled(false);
 
         return save(y9Position);
@@ -171,31 +104,12 @@ public class Y9PositionServiceImpl implements Y9PositionService {
         final Y9Position y9Position = this.getById(positionId);
 
         // 删除岗位关联数据
-        y9OrgBasesToRolesRepository.deleteByOrgId(positionId);
-        y9PositionToRoleRepository.deleteByPositionId(positionId);
-        y9PositionToResourceAndAuthorityRepository.deleteByPositionId(positionId);
         y9PersonsToPositionsManager.deleteByPositionId(positionId);
-        y9DepartmentPropRepository.deleteByOrgBaseId(positionId);
-        y9PositionsToGroupsRepository.deleteByPositionId(positionId);
-        y9AuthorizationRepository.deleteByPrincipalIdAndPrincipalType(positionId,
-            AuthorizationPrincipalTypeEnum.POSITION);
 
         y9PositionManager.delete(y9Position);
 
         // 发布事件，程序内部监听处理相关业务
         Y9Context.publishEvent(new Y9EntityDeletedEvent<>(y9Position));
-
-        if (TransactionSynchronizationManager.isActualTransactionActive()) {
-            TransactionSynchronizationManager.registerSynchronization(new TransactionSynchronization() {
-                @Override
-                public void afterCommit() {
-                    Y9MessageOrg<Position> msg =
-                        new Y9MessageOrg<>(Y9ModelConvertUtil.convert(y9Position, Position.class),
-                            Y9OrgEventTypeConst.POSITION_DELETE, Y9LoginUserHolder.getTenantId());
-                    Y9PublishServiceUtil.persistAndPublishMessageOrg(msg, "删除岗位", "删除" + y9Position.getName());
-                }
-            });
-        }
     }
 
     @Override
@@ -295,35 +209,60 @@ public class Y9PositionServiceImpl implements Y9PositionService {
     @Override
     @Transactional(readOnly = false)
     public Y9Position move(String positionId, String parentId) {
-        Y9Position originPosition = new Y9Position();
-        Y9Position updatedPosition = y9PositionManager.findByIdNotCache(positionId)
-            .orElseThrow(() -> Y9ExceptionUtil.notFoundException(OrgUnitErrorCodeEnum.POSITION_NOT_FOUND, positionId));
-        Y9BeanUtil.copyProperties(updatedPosition, originPosition);
+        final Y9Position position = y9PositionManager.getByIdNotCache(positionId);
 
-        Y9OrgBase parent = compositeOrgBaseManager.getOrgUnitAsParent(parentId);
-        updatedPosition.setParentId(parent.getId());
-        updatedPosition.setGuidPath(parent.getGuidPath() + OrgLevelConsts.SEPARATOR + originPosition.getId());
-        updatedPosition.setDn(OrgLevelConsts.getOrgLevel(OrgTypeEnum.POSITION) + originPosition.getName()
-            + OrgLevelConsts.SEPARATOR + parent.getDn());
+        Y9Position updatedPosition = Y9ModelConvertUtil.convert(position, Y9Position.class);
+        updatedPosition.setParentId(parentId);
         updatedPosition.setTabIndex(compositeOrgBaseManager.getMaxSubTabIndex(parentId));
-        final Y9Position savedPosition = this.save(updatedPosition);
+        return y9PositionManager.saveOrUpdate(updatedPosition);
+    }
 
-        Y9Context.publishEvent(new Y9EntityUpdatedEvent<>(originPosition, savedPosition));
+    @Override
+    @Transactional(readOnly = false)
+    public Y9Position save(Y9Position position) {
+        return y9PositionManager.save(position);
+    }
 
-        if (TransactionSynchronizationManager.isActualTransactionActive()) {
-            TransactionSynchronizationManager.registerSynchronization(new TransactionSynchronization() {
-                @Override
-                public void afterCommit() {
-                    Y9MessageOrg<Position> msg =
-                        new Y9MessageOrg<>(Y9ModelConvertUtil.convert(savedPosition, Position.class),
-                            Y9OrgEventTypeConst.POSITION_UPDATE, Y9LoginUserHolder.getTenantId());
-                    Y9PublishServiceUtil.persistAndPublishMessageOrg(msg, "移动岗位",
-                        originPosition.getName() + "移动到" + parent.getName());
-                }
-            });
+    @Override
+    @Transactional(readOnly = false)
+    public List<Y9Position> saveOrder(List<String> positionIds) {
+        List<Y9Position> orgPositionList = new ArrayList<>();
+
+        int tabIndex = 0;
+        for (String positionId : positionIds) {
+            orgPositionList.add(y9PositionManager.updateTabIndex(positionId, tabIndex++));
         }
 
-        return savedPosition;
+        return orgPositionList;
+    }
+
+    @Override
+    @Transactional(readOnly = false)
+    public Y9Position saveOrUpdate(Y9Position position) {
+        return y9PositionManager.saveOrUpdate(position);
+    }
+
+    @Override
+    @Transactional(readOnly = false)
+    public Y9Position saveProperties(String positionId, String properties) {
+        return y9PositionManager.saveProperties(positionId, properties);
+    }
+
+    @Override
+    public List<Y9Position> treeSearch(String name) {
+        List<Y9Position> positionList = new ArrayList<>();
+        List<Y9Position> positionListTemp = y9PositionRepository.findByNameContainingOrderByTabIndexAsc(name);
+        positionList.addAll(positionListTemp);
+        for (Y9Position p : positionListTemp) {
+            recursionUpPosition(positionList, p.getParentId());
+        }
+        return positionList;
+    }
+
+    @Override
+    @Transactional(readOnly = false)
+    public Y9Position updateTabIndex(String id, int tabIndex) {
+        return y9PositionManager.updateTabIndex(id, tabIndex);
     }
 
     @EventListener
@@ -364,69 +303,6 @@ public class Y9PositionServiceImpl implements Y9PositionService {
         Y9Position position = this.getById(parentId);
         positionList.add(position);
         recursionUpPosition(positionList, position.getParentId());
-    }
-
-    @Override
-    @Transactional(readOnly = false)
-    public Y9Position save(Y9Position position) {
-        return y9PositionManager.save(position);
-    }
-
-    @Override
-    @Transactional(readOnly = false)
-    public List<Y9Position> saveOrder(List<String> positionIds) {
-        List<Y9Position> orgPositionList = new ArrayList<>();
-
-        int tabIndex = 0;
-        for (String positionId : positionIds) {
-            orgPositionList.add(y9PositionManager.updateTabIndex(positionId, tabIndex++));
-        }
-
-        return orgPositionList;
-    }
-
-    @Override
-    @Transactional(readOnly = false)
-    public Y9Position saveOrUpdate(Y9Position position) {
-        return y9PositionManager.saveOrUpdate(position);
-    }
-
-    @Override
-    @Transactional(readOnly = false)
-    public Y9Position saveProperties(String positionId, String properties) {
-        return y9PositionManager.saveProperties(positionId, properties);
-    }
-
-    @Override
-    @SuppressWarnings("unchecked")
-    public List<Y9Position> search(String whereClause) {
-        EntityManager em = EntityManagerFactoryUtils.getTransactionalEntityManager(entityManagerFactory);
-        Assert.notNull(em, "EntityManager must not be null");
-        Query query = null;
-        if (whereClause == null || "".equals(whereClause.trim())) {
-            query = em.createNativeQuery(" select * from Y9_ORG_POSITION ", Y9Position.class);
-
-        } else {
-            query = em.createNativeQuery(" select * from Y9_ORG_POSITION where " + whereClause, Y9Position.class);
-        }
-        return query.getResultList();
-    }
-
-    @Override
-    public List<Y9Position> treeSearch(String name) {
-        List<Y9Position> positionList = new ArrayList<>();
-        List<Y9Position> positionListTemp = y9PositionRepository.findByNameContainingOrderByTabIndexAsc(name);
-        positionList.addAll(positionListTemp);
-        for (Y9Position p : positionListTemp) {
-            recursionUpPosition(positionList, p.getParentId());
-        }
-        return positionList;
-    }
-
-    @Override
-    @Transactional(readOnly = false)
-    public Y9Position updateTabIndex(String id, int tabIndex) {
-        return y9PositionManager.updateTabIndex(id, tabIndex);
     }
 
 }

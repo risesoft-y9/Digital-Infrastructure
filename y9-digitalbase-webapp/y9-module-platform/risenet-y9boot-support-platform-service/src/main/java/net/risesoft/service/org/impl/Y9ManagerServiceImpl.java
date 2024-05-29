@@ -11,7 +11,6 @@ import org.springframework.transaction.annotation.Transactional;
 
 import lombok.RequiredArgsConstructor;
 
-import net.risesoft.consts.OrgLevelConsts;
 import net.risesoft.entity.Y9Department;
 import net.risesoft.entity.Y9Manager;
 import net.risesoft.entity.Y9OrgBase;
@@ -26,6 +25,7 @@ import net.risesoft.manager.org.Y9DepartmentManager;
 import net.risesoft.repository.Y9ManagerRepository;
 import net.risesoft.service.org.Y9ManagerService;
 import net.risesoft.service.setting.Y9SettingService;
+import net.risesoft.util.Y9OrgUtil;
 import net.risesoft.y9.Y9Context;
 import net.risesoft.y9.Y9LoginUserHolder;
 import net.risesoft.y9.exception.util.Y9ExceptionUtil;
@@ -194,22 +194,6 @@ public class Y9ManagerServiceImpl implements Y9ManagerService {
         return y9ManagerRepository.findByParentIdOrderByTabIndex(parentId);
     }
 
-    @EventListener
-    @Transactional(readOnly = false)
-    public void onParentDepartmentDeleted(Y9EntityDeletedEvent<Y9Department> event) {
-        Y9Department parentDepartment = event.getEntity();
-        // 删除部门时其下管理员也要删除
-        removeByParentId(parentDepartment.getId());
-    }
-
-    @Transactional(readOnly = false)
-    public void removeByParentId(String parentId) {
-        List<Y9Manager> y9ManagerList = listByParentId(parentId);
-        for (Y9Manager y9Manager : y9ManagerList) {
-            this.delete(y9Manager.getId());
-        }
-    }
-
     @Override
     @Transactional(readOnly = false)
     public Y9Manager resetDefaultPassword(String id) {
@@ -242,12 +226,10 @@ public class Y9ManagerServiceImpl implements Y9ManagerService {
 
         y9Manager.setTenantId(Y9LoginUserHolder.getTenantId());
         y9Manager.setTabIndex(compositeOrgBaseManager.getMaxSubTabIndex(y9Manager.getParentId()));
-        y9Manager.setDn(OrgLevelConsts.getOrgLevel(OrgTypeEnum.MANAGER) + y9Manager.getName() + OrgLevelConsts.SEPARATOR
-            + parent.getDn());
         // 系统管理员新建的子域三员默认禁用 需安全管理员启用
         y9Manager.setDisabled(!y9Manager.getGlobalManager());
-
         y9Manager.setPassword(Y9MessageDigest.hashpw(defaultPassword));
+        y9Manager.setDn(Y9OrgUtil.buildDn(OrgTypeEnum.MANAGER, y9Manager.getName(), parent.getDn()));
         y9Manager.setGuidPath(compositeOrgBaseManager.buildGuidPath(y9Manager));
         y9Manager.setOrderedPath(compositeOrgBaseManager.buildOrderedPath(y9Manager));
         y9Manager = y9ManagerRepository.save(y9Manager);
@@ -262,5 +244,21 @@ public class Y9ManagerServiceImpl implements Y9ManagerService {
         Y9Manager y9Manager = this.getById(managerId);
         y9Manager.setLastReviewLogTime(checkTime);
         y9ManagerRepository.save(y9Manager);
+    }
+
+    @EventListener
+    @Transactional(readOnly = false)
+    public void onParentDepartmentDeleted(Y9EntityDeletedEvent<Y9Department> event) {
+        Y9Department parentDepartment = event.getEntity();
+        // 删除部门时其下管理员也要删除
+        removeByParentId(parentDepartment.getId());
+    }
+
+    @Transactional(readOnly = false)
+    public void removeByParentId(String parentId) {
+        List<Y9Manager> y9ManagerList = listByParentId(parentId);
+        for (Y9Manager y9Manager : y9ManagerList) {
+            this.delete(y9Manager.getId());
+        }
     }
 }

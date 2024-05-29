@@ -20,7 +20,7 @@ public class ResourcePermissionVO {
 
     /** 系统id */
     private String systemId;
-    
+
     /** 系统中文名称 */
     private String systemCnName;
 
@@ -39,7 +39,7 @@ public class ResourcePermissionVO {
         private ResourceTypeEnum resourceType;
 
         private Boolean enabled;
-        
+
         /** 权限详细列表 */
         private List<PermissionDetail> permissionDetailList;
     }

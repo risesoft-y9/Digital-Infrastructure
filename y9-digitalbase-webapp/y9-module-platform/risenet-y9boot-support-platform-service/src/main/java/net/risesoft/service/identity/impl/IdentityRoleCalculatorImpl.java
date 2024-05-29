@@ -53,6 +53,21 @@ public class IdentityRoleCalculatorImpl implements IdentityRoleCalculator {
     private final Y9PersonToRoleManager y9PersonToRoleManager;
     private final Y9PositionToRoleManager y9PositionToRoleManager;
 
+    private void recalculate(Y9Person y9Person, List<Y9Role> personRelatedY9RoleList) {
+        removeInvalidByPersonId(y9Person.getId(), personRelatedY9RoleList);
+
+        for (Y9Role y9Role : personRelatedY9RoleList) {
+            y9PersonToRoleManager.save(y9Person, y9Role);
+        }
+    }
+
+    private void recalculate(Y9Position y9Position, List<Y9Role> positionRelatedY9RoleList) {
+        removeInvalidByPositionId(y9Position.getId(), positionRelatedY9RoleList);
+        for (Y9Role y9Role : positionRelatedY9RoleList) {
+            y9PositionToRoleManager.save(y9Position, y9Role);
+        }
+    }
+
     @Override
     public void recalculateByOrgUnitId(final String orgUnitId) {
         Y9OrgBase y9OrgBase = compositeOrgBaseService.getOrgUnit(orgUnitId);
@@ -104,31 +119,6 @@ public class IdentityRoleCalculatorImpl implements IdentityRoleCalculator {
         }
     }
 
-    private void recalculate(Y9Person y9Person, List<Y9Role> personRelatedY9RoleList) {
-        removeInvalidByPersonId(y9Person.getId(), personRelatedY9RoleList);
-
-        for (Y9Role y9Role : personRelatedY9RoleList) {
-            y9PersonToRoleManager.save(y9Person, y9Role);
-        }
-    }
-
-    /**
-     * 移除失效的关联记录（即在最新计算的角色中不再包含的关联记录）
-     *
-     * @param personId 人员id
-     * @param newCalculatedY9RoleList 最新计算的角色列表
-     */
-    private void removeInvalidByPersonId(String personId, List<Y9Role> newCalculatedY9RoleList) {
-        List<String> originY9RoleIdList = y9PersonToRoleManager.findRoleIdByPersonId(personId);
-        List<String> newCalculatedY9RoleIdList =
-            newCalculatedY9RoleList.stream().map(Y9Role::getId).collect(Collectors.toList());
-        for (String roleId : originY9RoleIdList) {
-            if (!newCalculatedY9RoleIdList.contains(roleId)) {
-                y9PersonToRoleManager.removeByPersonIdAndRoleId(personId, roleId);
-            }
-        }
-    }
-
     @Override
     public void recalculateByPersonId(String personId) {
         try {
@@ -154,10 +144,20 @@ public class IdentityRoleCalculatorImpl implements IdentityRoleCalculator {
         }
     }
 
-    private void recalculate(Y9Position y9Position, List<Y9Role> positionRelatedY9RoleList) {
-        removeInvalidByPositionId(y9Position.getId(), positionRelatedY9RoleList);
-        for (Y9Role y9Role : positionRelatedY9RoleList) {
-            y9PositionToRoleManager.save(y9Position, y9Role);
+    /**
+     * 移除失效的关联记录（即在最新计算的角色中不再包含的关联记录）
+     *
+     * @param personId 人员id
+     * @param newCalculatedY9RoleList 最新计算的角色列表
+     */
+    private void removeInvalidByPersonId(String personId, List<Y9Role> newCalculatedY9RoleList) {
+        List<String> originY9RoleIdList = y9PersonToRoleManager.findRoleIdByPersonId(personId);
+        List<String> newCalculatedY9RoleIdList =
+            newCalculatedY9RoleList.stream().map(Y9Role::getId).collect(Collectors.toList());
+        for (String roleId : originY9RoleIdList) {
+            if (!newCalculatedY9RoleIdList.contains(roleId)) {
+                y9PersonToRoleManager.removeByPersonIdAndRoleId(personId, roleId);
+            }
         }
     }
 

@@ -299,6 +299,18 @@ public class UpdateIdentityResourceAndAuthorityListener {
 
     @TransactionalEventListener
     @Async
+    public void onY9PersonsToGroupsCreated(Y9EntityCreatedEvent<Y9PersonsToGroups> event) {
+        Y9PersonsToGroups y9PersonsToGroups = event.getEntity();
+
+        identityResourceCalculator.recalculateByOrgUnitId(y9PersonsToGroups.getPersonId());
+
+        if (LOGGER.isDebugEnabled()) {
+            LOGGER.debug("用户组加人触发的重新计算权限缓存执行完成");
+        }
+    }
+
+    @TransactionalEventListener
+    @Async
     public void onY9PersonsToGroupsDeleted(Y9EntityDeletedEvent<Y9PersonsToGroups> event) {
         Y9PersonsToGroups y9PersonsToGroups = event.getEntity();
 

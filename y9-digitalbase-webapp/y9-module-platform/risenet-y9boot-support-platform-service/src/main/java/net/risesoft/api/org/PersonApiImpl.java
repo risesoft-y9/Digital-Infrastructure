@@ -289,7 +289,7 @@ public class PersonApiImpl implements PersonApi {
         @RequestParam("parentId") @NotBlank String parentId, @RequestParam("disabled") Boolean disabled) {
         Y9LoginUserHolder.setTenantId(tenantId);
 
-        List<Y9Person> y9PersonList = y9PersonService.listByParentIdAndDisabled(parentId, disabled);
+        List<Y9Person> y9PersonList = y9PersonService.listByParentId(parentId, disabled);
         return Y9Result.success(Y9ModelConvertUtil.convert(y9PersonList, Person.class));
     }
 

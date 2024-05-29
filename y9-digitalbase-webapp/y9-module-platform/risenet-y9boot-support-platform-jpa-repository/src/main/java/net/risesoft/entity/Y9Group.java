@@ -7,6 +7,7 @@ import jakarta.persistence.Table;
 
 import org.hibernate.annotations.ColumnDefault;
 import org.hibernate.annotations.Comment;
+import org.hibernate.annotations.DynamicUpdate;
 
 import lombok.Data;
 
@@ -24,26 +25,25 @@ import net.risesoft.persistence.EnumConverter;
  */
 @Entity
 @Table(name = "Y9_ORG_GROUP")
+@DynamicUpdate
 @Comment("用户组表")
 @Data
 public class Y9Group extends Y9OrgBase {
 
     private static final long serialVersionUID = -8480745083494990707L;
-
-    public Y9Group() {
-        super.setOrgType(OrgTypeEnum.GROUP);
-    }
-
     /** 父节点id */
     @Column(name = "PARENT_ID", length = 38, nullable = false)
     @Comment("父节点id")
     private String parentId;
-
     /** 岗位组或者用户组 */
     @ColumnDefault("'person'")
     @Column(name = "TYPE", length = 10, nullable = false)
     @Comment("类型：position、person")
     @Convert(converter = EnumConverter.GroupTypeEnumConverter.class)
     private GroupTypeEnum type = GroupTypeEnum.PERSON;
+
+    public Y9Group() {
+        super.setOrgType(OrgTypeEnum.GROUP);
+    }
 
 }

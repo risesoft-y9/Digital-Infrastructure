@@ -26,13 +26,6 @@ import org.springframework.web.context.WebApplicationContext;
 public class ServletInitializer extends SpringBootServletInitializer implements WebApplicationInitializer {
 
     @Override
-    protected SpringApplicationBuilder configure(final SpringApplicationBuilder builder) {
-        setRegisterErrorPageFilter(false);
-        builder.sources(Platform.class);
-        return builder;
-    }
-
-    @Override
     protected WebApplicationContext run(SpringApplication application) {
         WebApplicationContext ctx = super.run(application);
         Environment env = ctx.getEnvironment();
@@ -44,5 +37,12 @@ public class ServletInitializer extends SpringBootServletInitializer implements 
         sessionCookieConfig.setHttpOnly(true);
         sessionCookieConfig.setSecure(Boolean.valueOf(cookieSecure));
         return ctx;
+    }
+
+    @Override
+    protected SpringApplicationBuilder configure(final SpringApplicationBuilder builder) {
+        setRegisterErrorPageFilter(false);
+        builder.sources(Platform.class);
+        return builder;
     }
 }

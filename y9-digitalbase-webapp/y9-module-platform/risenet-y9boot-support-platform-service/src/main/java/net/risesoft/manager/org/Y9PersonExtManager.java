@@ -16,8 +16,6 @@ public interface Y9PersonExtManager {
 
     Optional<Y9PersonExt> findByPersonId(String personId);
 
-    Y9PersonExt saveOrUpdate(Y9PersonExt personExt, Y9Person person);
-
     /**
      * 根据idType和idNum查询
      *
@@ -26,4 +24,6 @@ public interface Y9PersonExtManager {
      * @return {@link List}<{@link Y9PersonExt}>
      */
     List<Y9PersonExt> listByIdTypeAndIdNum(String idType, String idNum);
+
+    Y9PersonExt saveOrUpdate(Y9PersonExt personExt, Y9Person person);
 }

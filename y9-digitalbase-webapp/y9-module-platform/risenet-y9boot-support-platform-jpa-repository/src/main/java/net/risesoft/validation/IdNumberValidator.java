@@ -15,21 +15,6 @@ import cn.hutool.core.util.IdcardUtil;
  */
 public class IdNumberValidator implements ConstraintValidator<IdNumber, String> {
 
-    @Override
-    public boolean isValid(String idNumber, ConstraintValidatorContext constraintValidatorContext) {
-        if (StringUtils.isEmpty(idNumber)) {
-            // 身份证号非必填 为空直接验证通过
-            return true;
-        }
-        if (IdcardUtil.isValidCard(idNumber)) {
-            return true;
-        }
-        if (isValidHKCard(idNumber)) {
-            return true;
-        }
-        return false;
-    }
-
     /**
      * 验证香港身份证号码(存在Bug，部份特殊身份证无法检查)
      *
@@ -44,5 +29,20 @@ public class IdNumberValidator implements ConstraintValidator<IdNumber, String> 
     public static boolean isValidHKCard(String idCard) {
         String regularExpression = "^([A-Z]\\d{6,10}(\\(\\w{1}\\))?)$";
         return idCard.matches(regularExpression);
+    }
+
+    @Override
+    public boolean isValid(String idNumber, ConstraintValidatorContext constraintValidatorContext) {
+        if (StringUtils.isEmpty(idNumber)) {
+            // 身份证号非必填 为空直接验证通过
+            return true;
+        }
+        if (IdcardUtil.isValidCard(idNumber)) {
+            return true;
+        }
+        if (isValidHKCard(idNumber)) {
+            return true;
+        }
+        return false;
     }
 }

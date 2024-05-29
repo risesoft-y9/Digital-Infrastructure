@@ -66,25 +66,6 @@ public class SyncPhotoController {
     }
 
     /**
-     * 同步个人头像信息
-     *
-     * @param tenantId 租户id
-     * @param id 人员id
-     * @return
-     */
-    @RequestMapping("/syncPersonPhotoByPersonId")
-    @RiseLog(operationName = "同步人员信息", operationType = OperationTypeEnum.MODIFY)
-    public Y9Result<String> syncPersonPhotoByPersonId(@RequestParam String tenantId, @RequestParam String id) {
-        Y9LoginUserHolder.setTenantId(tenantId);
-        Y9Person person = y9PersonService.getById(id);
-        if (person != null && person.getId() != null) {
-            y9PersonExtService.savePersonPhoto(person, getPhotoById(person.getId()));
-        }
-
-        return Y9Result.successMsg("同步完成");
-    }
-
-    /**
      * 同步全部人员头像信息
      *
      * @return
@@ -117,6 +98,25 @@ public class SyncPhotoController {
         Y9LoginUserHolder.setTenantId(tenantId);
         List<Y9Person> persons = y9PersonService.listAll();
         for (Y9Person person : persons) {
+            y9PersonExtService.savePersonPhoto(person, getPhotoById(person.getId()));
+        }
+
+        return Y9Result.successMsg("同步完成");
+    }
+
+    /**
+     * 同步个人头像信息
+     *
+     * @param tenantId 租户id
+     * @param id 人员id
+     * @return
+     */
+    @RequestMapping("/syncPersonPhotoByPersonId")
+    @RiseLog(operationName = "同步人员信息", operationType = OperationTypeEnum.MODIFY)
+    public Y9Result<String> syncPersonPhotoByPersonId(@RequestParam String tenantId, @RequestParam String id) {
+        Y9LoginUserHolder.setTenantId(tenantId);
+        Y9Person person = y9PersonService.getById(id);
+        if (person != null && person.getId() != null) {
             y9PersonExtService.savePersonPhoto(person, getPhotoById(person.getId()));
         }
 

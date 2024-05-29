@@ -13,6 +13,7 @@ import jakarta.persistence.TemporalType;
 
 import org.hibernate.annotations.ColumnDefault;
 import org.hibernate.annotations.Comment;
+import org.hibernate.annotations.DynamicUpdate;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
@@ -36,6 +37,7 @@ import net.risesoft.validation.IdNumber;
  */
 @Entity
 @Table(name = "Y9_ORG_PERSON_EXT")
+@DynamicUpdate
 @Comment("人员信息扩展表")
 @NoArgsConstructor
 @Data

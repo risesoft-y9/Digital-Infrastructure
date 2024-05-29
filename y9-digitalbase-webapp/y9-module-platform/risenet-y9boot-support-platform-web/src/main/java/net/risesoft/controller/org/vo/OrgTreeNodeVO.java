@@ -47,11 +47,6 @@ public class OrgTreeNodeVO extends TreeNodeVO {
     @JsonInclude(JsonInclude.Include.NON_NULL)
     private Boolean original;
 
-    @Override
-    public TreeTypeEnum getTreeType() {
-        return TreeTypeEnum.ORG;
-    }
-
     public static OrgTreeNodeVO convertY9OrgBase(Y9OrgBase y9OrgBase, OrgTreeTypeEnum treeType, boolean countMember,
         CompositeOrgBaseService compositeOrgBaseService) {
         OrgTreeNodeVO orgTreeNodeVO = new OrgTreeNodeVO();
@@ -82,5 +77,10 @@ public class OrgTreeNodeVO extends TreeNodeVO {
             roleTreeNodeVOList.add(convertY9OrgBase(y9OrgBase, treeType, countMember, compositeOrgBaseService));
         }
         return roleTreeNodeVOList;
+    }
+
+    @Override
+    public TreeTypeEnum getTreeType() {
+        return TreeTypeEnum.ORG;
     }
 }

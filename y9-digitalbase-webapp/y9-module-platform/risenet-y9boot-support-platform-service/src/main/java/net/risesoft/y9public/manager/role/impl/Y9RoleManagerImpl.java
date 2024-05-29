@@ -95,28 +95,6 @@ public class Y9RoleManagerImpl implements Y9RoleManager {
         }
     }
 
-    /**
-     * 删除相关租户数据 <br/>
-     * 切换不同的数据源 需开启新事务
-     *
-     * @param roleId 角色id
-     */
-    @Transactional(readOnly = false, propagation = Propagation.REQUIRES_NEW)
-    public void deleteTenantRelatedByAppId(String roleId) {
-        y9OrgBasesToRolesRepository.deleteByRoleId(roleId);
-
-        List<Y9Authorization> authorizationList =
-            y9AuthorizationRepository.findByPrincipalIdAndPrincipalType(roleId, AuthorizationPrincipalTypeEnum.ROLE);
-        for (Y9Authorization y9Authorization : authorizationList) {
-            y9PersonToResourceAndAuthorityRepository.deleteByAuthorizationId(y9Authorization.getId());
-            y9PositionToResourceAndAuthorityRepository.deleteByAuthorizationId(y9Authorization.getId());
-        }
-        y9AuthorizationRepository.deleteAll(authorizationList);
-
-        y9PersonToRoleRepository.deleteByRoleId(roleId);
-        y9PositionToRoleRepository.deleteByRoleId(roleId);
-    }
-
     @Override
     @Cacheable(key = "#id", condition = "#id!=null", unless = "#result==null")
     public Optional<Y9Role> findById(String id) {
@@ -128,35 +106,6 @@ public class Y9RoleManagerImpl implements Y9RoleManager {
     public Y9Role getById(String id) {
         return y9RoleRepository.findById(id)
             .orElseThrow(() -> Y9ExceptionUtil.notFoundException(RoleErrorCodeEnum.ROLE_NOT_FOUND, id));
-    }
-
-    private void getOrgUnitIdsByUpwardRecursion(List<String> orgUnitIds, String orgUnitId) {
-        if (StringUtils.isNotBlank(orgUnitId)) {
-            Y9OrgBase y9OrgBase = compositeOrgBaseManager.getOrgUnit(orgUnitId);
-
-            orgUnitIds.add(orgUnitId);
-            if (OrgTypeEnum.PERSON.equals(y9OrgBase.getOrgType())) {
-                getOrgUnitIdsByUpwardRecursion(orgUnitIds, y9OrgBase.getParentId());
-
-                List<String> groupList = y9PersonsToGroupsRepository.listGroupIdsByPersonId(y9OrgBase.getId());
-                orgUnitIds.addAll(groupList);
-                for (String groupId : groupList) {
-                    Y9Group group = (Y9Group)compositeOrgBaseManager.getOrgUnit(groupId);
-                    getOrgUnitIdsByUpwardRecursion(orgUnitIds, group.getParentId());
-                }
-
-                List<String> positionIds = y9PersonsToPositionsRepository.listPositionIdsByPersonId(y9OrgBase.getId());
-                orgUnitIds.addAll(positionIds);
-                for (String positionId : positionIds) {
-                    Y9Position position = (Y9Position)compositeOrgBaseManager.getOrgUnit(positionId);
-                    getOrgUnitIdsByUpwardRecursion(orgUnitIds, position.getParentId());
-                }
-            } else if (OrgTypeEnum.POSITION.equals(y9OrgBase.getOrgType())) {
-                getOrgUnitIdsByUpwardRecursion(orgUnitIds, y9OrgBase.getParentId());
-            } else {
-                getOrgUnitIdsByUpwardRecursion(orgUnitIds, y9OrgBase.getParentId());
-            }
-        }
     }
 
     @Override
@@ -208,5 +157,56 @@ public class Y9RoleManagerImpl implements Y9RoleManager {
     @Transactional(readOnly = false)
     public Y9Role save(Y9Role y9Role) {
         return y9RoleRepository.save(y9Role);
+    }
+
+    /**
+     * 删除相关租户数据 <br/>
+     * 切换不同的数据源 需开启新事务
+     *
+     * @param roleId 角色id
+     */
+    @Transactional(readOnly = false, propagation = Propagation.REQUIRES_NEW)
+    public void deleteTenantRelatedByAppId(String roleId) {
+        y9OrgBasesToRolesRepository.deleteByRoleId(roleId);
+
+        List<Y9Authorization> authorizationList =
+            y9AuthorizationRepository.findByPrincipalIdAndPrincipalType(roleId, AuthorizationPrincipalTypeEnum.ROLE);
+        for (Y9Authorization y9Authorization : authorizationList) {
+            y9PersonToResourceAndAuthorityRepository.deleteByAuthorizationId(y9Authorization.getId());
+            y9PositionToResourceAndAuthorityRepository.deleteByAuthorizationId(y9Authorization.getId());
+        }
+        y9AuthorizationRepository.deleteAll(authorizationList);
+
+        y9PersonToRoleRepository.deleteByRoleId(roleId);
+        y9PositionToRoleRepository.deleteByRoleId(roleId);
+    }
+
+    private void getOrgUnitIdsByUpwardRecursion(List<String> orgUnitIds, String orgUnitId) {
+        if (StringUtils.isNotBlank(orgUnitId)) {
+            Y9OrgBase y9OrgBase = compositeOrgBaseManager.getOrgUnit(orgUnitId);
+
+            orgUnitIds.add(orgUnitId);
+            if (OrgTypeEnum.PERSON.equals(y9OrgBase.getOrgType())) {
+                getOrgUnitIdsByUpwardRecursion(orgUnitIds, y9OrgBase.getParentId());
+
+                List<String> groupList = y9PersonsToGroupsRepository.listGroupIdsByPersonId(y9OrgBase.getId());
+                orgUnitIds.addAll(groupList);
+                for (String groupId : groupList) {
+                    Y9Group group = (Y9Group)compositeOrgBaseManager.getOrgUnit(groupId);
+                    getOrgUnitIdsByUpwardRecursion(orgUnitIds, group.getParentId());
+                }
+
+                List<String> positionIds = y9PersonsToPositionsRepository.listPositionIdsByPersonId(y9OrgBase.getId());
+                orgUnitIds.addAll(positionIds);
+                for (String positionId : positionIds) {
+                    Y9Position position = (Y9Position)compositeOrgBaseManager.getOrgUnit(positionId);
+                    getOrgUnitIdsByUpwardRecursion(orgUnitIds, position.getParentId());
+                }
+            } else if (OrgTypeEnum.POSITION.equals(y9OrgBase.getOrgType())) {
+                getOrgUnitIdsByUpwardRecursion(orgUnitIds, y9OrgBase.getParentId());
+            } else {
+                getOrgUnitIdsByUpwardRecursion(orgUnitIds, y9OrgBase.getParentId());
+            }
+        }
     }
 }

@@ -9,24 +9,16 @@ import org.springframework.transaction.annotation.Transactional;
 
 import lombok.RequiredArgsConstructor;
 
-import net.risesoft.entity.Y9Person;
 import net.risesoft.entity.Y9Position;
 import net.risesoft.entity.relation.Y9PersonsToPositions;
 import net.risesoft.exception.OrgUnitErrorCodeEnum;
 import net.risesoft.id.Y9IdGenerator;
-import net.risesoft.manager.org.Y9PersonManager;
 import net.risesoft.manager.org.Y9PositionManager;
 import net.risesoft.manager.relation.Y9PersonsToPositionsManager;
-import net.risesoft.model.platform.PersonsPositions;
 import net.risesoft.repository.relation.Y9PersonsToPositionsRepository;
-import net.risesoft.util.ModelConvertUtil;
-import net.risesoft.util.Y9PublishServiceUtil;
 import net.risesoft.y9.Y9Context;
-import net.risesoft.y9.Y9LoginUserHolder;
-import net.risesoft.y9.pubsub.constant.Y9OrgEventTypeConst;
 import net.risesoft.y9.pubsub.event.Y9EntityCreatedEvent;
 import net.risesoft.y9.pubsub.event.Y9EntityDeletedEvent;
-import net.risesoft.y9.pubsub.message.Y9MessageOrg;
 import net.risesoft.y9.util.Y9Assert;
 
 /**
@@ -43,7 +35,6 @@ public class Y9PersonsToPositionsManagerImpl implements Y9PersonsToPositionsMana
 
     private final Y9PersonsToPositionsRepository y9PersonsToPositionsRepository;
 
-    private final Y9PersonManager y9PersonManager;
     private final Y9PositionManager y9PositionManager;
 
     @Override
@@ -74,14 +65,6 @@ public class Y9PersonsToPositionsManagerImpl implements Y9PersonsToPositionsMana
     public void delete(Y9PersonsToPositions y9PersonsToPositions) {
         y9PersonsToPositionsRepository.delete(y9PersonsToPositions);
 
-        Y9Person person = y9PersonManager.getById(y9PersonsToPositions.getPersonId());
-        Y9MessageOrg<PersonsPositions> msg =
-            new Y9MessageOrg<>(ModelConvertUtil.convert(y9PersonsToPositions, PersonsPositions.class),
-                Y9OrgEventTypeConst.POSITION_REMOVE_PERSON, Y9LoginUserHolder.getTenantId());
-        Y9Position y9Position = y9PositionManager.getById(y9PersonsToPositions.getPositionId());
-        Y9PublishServiceUtil.persistAndPublishMessageOrg(msg, "移除岗位人员",
-            y9Position.getName() + "移除成员" + person.getName());
-
         Y9Context.publishEvent(new Y9EntityDeletedEvent<>(y9PersonsToPositions));
     }
 
@@ -104,15 +87,15 @@ public class Y9PersonsToPositionsManagerImpl implements Y9PersonsToPositionsMana
     }
 
     @Override
-    public Integer getMaxPersonOrderByPositionId(String positionId) {
+    public Integer getNextPersonOrderByPositionId(String positionId) {
         return y9PersonsToPositionsRepository.findTopByPositionIdOrderByPersonOrderDesc(positionId)
-            .map(Y9PersonsToPositions::getPersonOrder).orElse(0);
+            .map(Y9PersonsToPositions::getPersonOrder).orElse(-1) + 1;
     }
 
     @Override
-    public Integer getMaxPositionOrderByPersonId(String personId) {
+    public Integer getNextPositionOrderByPersonId(String personId) {
         return y9PersonsToPositionsRepository.findTopByPersonIdOrderByPositionOrderDesc(personId)
-            .map(Y9PersonsToPositions::getPositionOrder).orElse(0);
+            .map(Y9PersonsToPositions::getPositionOrder).orElse(-1) + 1;
     }
 
     @Override
@@ -123,22 +106,13 @@ public class Y9PersonsToPositionsManagerImpl implements Y9PersonsToPositionsMana
         Y9Assert.lessThanOrEqualTo(countByPositionId(positionId) + 1, y9Position.getCapacity(),
             OrgUnitErrorCodeEnum.POSITION_IS_FULL);
 
-        Integer maxPositionsOrder = getMaxPositionOrderByPersonId(personId);
-        Integer maxPersonsOrder = getMaxPersonOrderByPositionId(positionId);
         Y9PersonsToPositions y9PersonsToPositions = new Y9PersonsToPositions();
         y9PersonsToPositions.setId(Y9IdGenerator.genId());
         y9PersonsToPositions.setPositionId(positionId);
         y9PersonsToPositions.setPersonId(personId);
-        y9PersonsToPositions.setPositionOrder(maxPositionsOrder != null ? maxPositionsOrder + 1 : 0);
-        y9PersonsToPositions.setPersonOrder(maxPersonsOrder != null ? maxPersonsOrder + 1 : 0);
+        y9PersonsToPositions.setPositionOrder(getNextPositionOrderByPersonId(personId));
+        y9PersonsToPositions.setPersonOrder(getNextPersonOrderByPositionId(positionId));
         Y9PersonsToPositions savedPersonToPositions = y9PersonsToPositionsRepository.save(y9PersonsToPositions);
-
-        Y9Person person = y9PersonManager.getById(personId);
-        Y9MessageOrg<PersonsPositions> msg =
-            new Y9MessageOrg<>(ModelConvertUtil.convert(y9PersonsToPositions, PersonsPositions.class),
-                Y9OrgEventTypeConst.POSITION_ADD_PERSON, Y9LoginUserHolder.getTenantId());
-        Y9PublishServiceUtil.persistAndPublishMessageOrg(msg, "添加岗位人员",
-            y9Position.getName() + "添加成员" + person.getName());
 
         Y9Context.publishEvent(new Y9EntityCreatedEvent<>(savedPersonToPositions));
 

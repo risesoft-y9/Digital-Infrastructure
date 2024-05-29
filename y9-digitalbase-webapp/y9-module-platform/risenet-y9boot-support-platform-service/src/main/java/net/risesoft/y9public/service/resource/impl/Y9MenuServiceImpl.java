@@ -75,27 +75,6 @@ public class Y9MenuServiceImpl implements Y9MenuService {
         Y9Context.publishEvent(new Y9EntityDeletedEvent<>(y9Menu));
     }
 
-    @Transactional(readOnly = false)
-    public void deleteByParentId(String parentId) {
-        List<Y9Menu> y9MenuList = this.findByParentId(parentId);
-        for (Y9Menu y9Menu : y9MenuList) {
-            this.delete(y9Menu.getId());
-        }
-    }
-
-    /**
-     * 删除相关租户数据 <br/>
-     * 切换不同的数据源 需开启新事务
-     *
-     * @param menuId 菜单id
-     */
-    @Transactional(readOnly = false, propagation = Propagation.REQUIRES_NEW)
-    public void deleteTenantRelatedByMenuId(String menuId) {
-        y9AuthorizationRepository.deleteByResourceId(menuId);
-        y9PersonToResourceAndAuthorityRepository.deleteByResourceId(menuId);
-        y9PositionToResourceAndAuthorityRepository.deleteByResourceId(menuId);
-    }
-
     @Override
     @Transactional(readOnly = false)
     public List<Y9Menu> disable(List<String> idList) {
@@ -148,13 +127,68 @@ public class Y9MenuServiceImpl implements Y9MenuService {
     }
 
     @Override
-    public List<Y9Menu> findByParentId(String parentId) {
-        return y9MenuRepository.findByParentIdOrderByTabIndex(parentId);
+    public Y9Menu getById(String id) {
+        return y9MenuManager.getById(id);
     }
 
     @Override
-    public Y9Menu getById(String id) {
-        return y9MenuManager.getById(id);
+    @Transactional(readOnly = false)
+    public Y9Menu saveOrUpdate(Y9Menu y9Menu) {
+        if (StringUtils.isNotBlank(y9Menu.getId())) {
+            Optional<Y9Menu> y9MenuOptional = y9MenuManager.findById(y9Menu.getId());
+            if (y9MenuOptional.isPresent()) {
+                Y9Menu originMenuResource = y9MenuOptional.get();
+                Y9Menu updatedMenuResource = new Y9Menu();
+                Y9BeanUtil.copyProperties(originMenuResource, updatedMenuResource);
+                Y9BeanUtil.copyProperties(y9Menu, updatedMenuResource);
+                updatedMenuResource = y9MenuManager.save(updatedMenuResource);
+
+                Y9Context.publishEvent(new Y9EntityUpdatedEvent<>(originMenuResource, updatedMenuResource));
+
+                return updatedMenuResource;
+            }
+        } else {
+            y9Menu.setId(Y9IdGenerator.genId(IdType.SNOWFLAKE));
+
+            Integer maxTabIndex = getMaxIndexByParentId(y9Menu.getParentId());
+            y9Menu.setTabIndex(maxTabIndex != null ? maxTabIndex + 1 : 0);
+        }
+        y9Menu = y9MenuManager.save(y9Menu);
+
+        Y9Context.publishEvent(new Y9EntityCreatedEvent<>(y9Menu));
+
+        return y9Menu;
+    }
+
+    @Override
+    public Y9Menu updateTabIndex(String id, int index) {
+        return y9MenuManager.updateTabIndex(id, index);
+    }
+
+    @Transactional(readOnly = false)
+    public void deleteByParentId(String parentId) {
+        List<Y9Menu> y9MenuList = this.findByParentId(parentId);
+        for (Y9Menu y9Menu : y9MenuList) {
+            this.delete(y9Menu.getId());
+        }
+    }
+
+    /**
+     * 删除相关租户数据 <br/>
+     * 切换不同的数据源 需开启新事务
+     *
+     * @param menuId 菜单id
+     */
+    @Transactional(readOnly = false, propagation = Propagation.REQUIRES_NEW)
+    public void deleteTenantRelatedByMenuId(String menuId) {
+        y9AuthorizationRepository.deleteByResourceId(menuId);
+        y9PersonToResourceAndAuthorityRepository.deleteByResourceId(menuId);
+        y9PositionToResourceAndAuthorityRepository.deleteByResourceId(menuId);
+    }
+
+    @Override
+    public List<Y9Menu> findByParentId(String parentId) {
+        return y9MenuRepository.findByParentIdOrderByTabIndex(parentId);
     }
 
     @Override
@@ -193,40 +227,6 @@ public class Y9MenuServiceImpl implements Y9MenuService {
         for (Y9Menu y9Menu : y9MenuList) {
             this.deleteTenantRelatedByMenuId(y9Menu.getId());
         }
-    }
-
-    @Override
-    @Transactional(readOnly = false)
-    public Y9Menu saveOrUpdate(Y9Menu y9Menu) {
-        if (StringUtils.isNotBlank(y9Menu.getId())) {
-            Optional<Y9Menu> y9MenuOptional = y9MenuManager.findById(y9Menu.getId());
-            if (y9MenuOptional.isPresent()) {
-                Y9Menu originMenuResource = y9MenuOptional.get();
-                Y9Menu updatedMenuResource = new Y9Menu();
-                Y9BeanUtil.copyProperties(originMenuResource, updatedMenuResource);
-                Y9BeanUtil.copyProperties(y9Menu, updatedMenuResource);
-                updatedMenuResource = y9MenuManager.save(updatedMenuResource);
-
-                Y9Context.publishEvent(new Y9EntityUpdatedEvent<>(originMenuResource, updatedMenuResource));
-
-                return updatedMenuResource;
-            }
-        } else {
-            y9Menu.setId(Y9IdGenerator.genId(IdType.SNOWFLAKE));
-
-            Integer maxTabIndex = getMaxIndexByParentId(y9Menu.getParentId());
-            y9Menu.setTabIndex(maxTabIndex != null ? maxTabIndex + 1 : 0);
-        }
-        y9Menu = y9MenuManager.save(y9Menu);
-
-        Y9Context.publishEvent(new Y9EntityCreatedEvent<>(y9Menu));
-
-        return y9Menu;
-    }
-
-    @Override
-    public Y9Menu updateTabIndex(String id, int index) {
-        return y9MenuManager.updateTabIndex(id, index);
     }
 
 }

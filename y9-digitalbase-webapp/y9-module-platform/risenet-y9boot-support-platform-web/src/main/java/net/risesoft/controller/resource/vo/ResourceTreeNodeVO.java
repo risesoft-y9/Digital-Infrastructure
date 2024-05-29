@@ -21,7 +21,7 @@ import net.risesoft.y9public.entity.resource.Y9ResourceBase;
 public class ResourceTreeNodeVO extends TreeNodeVO {
 
     private static final long serialVersionUID = 6086483154815612739L;
-    
+
     /** 应用id */
     private String appId;
     /** 系统id */

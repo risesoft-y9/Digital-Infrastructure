@@ -81,23 +81,6 @@ public class OrgUnitApiImpl implements OrgUnitApi {
     }
 
     /**
-     * 获取组织节点所在的组织机构
-     *
-     * @param tenantId 租户id
-     * @param orgUnitId 组织节点唯一标识
-     * @return Organization 组织机构对象
-     * @since 9.6.0
-     */
-    @Override
-    public Organization getOrganization(@RequestParam("tenantId") @NotBlank String tenantId,
-        @RequestParam("orgUnitId") @NotBlank String orgUnitId) {
-        Y9LoginUserHolder.setTenantId(tenantId);
-
-        Y9OrgBase y9OrgBase = compositeOrgBaseService.getOrgUnitOrganization(orgUnitId);
-        return Y9ModelConvertUtil.convert(y9OrgBase, Organization.class);
-    }
-
-    /**
      * 根据id获得组织节点对象
      *
      * @param tenantId 租户id
@@ -127,6 +110,23 @@ public class OrgUnitApiImpl implements OrgUnitApi {
         Y9LoginUserHolder.setTenantId(tenantId);
 
         return ModelConvertUtil.orgBaseToOrgUnit(compositeOrgBaseService.findOrgUnitDeleted(orgUnitId).orElse(null));
+    }
+
+    /**
+     * 获取组织节点所在的组织机构
+     *
+     * @param tenantId 租户id
+     * @param orgUnitId 组织节点唯一标识
+     * @return Organization 组织机构对象
+     * @since 9.6.0
+     */
+    @Override
+    public Organization getOrganization(@RequestParam("tenantId") @NotBlank String tenantId,
+        @RequestParam("orgUnitId") @NotBlank String orgUnitId) {
+        Y9LoginUserHolder.setTenantId(tenantId);
+
+        Y9OrgBase y9OrgBase = compositeOrgBaseService.getOrgUnitOrganization(orgUnitId);
+        return Y9ModelConvertUtil.convert(y9OrgBase, Organization.class);
     }
 
     /**

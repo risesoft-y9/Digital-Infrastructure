@@ -62,24 +62,44 @@ public class Y9TenantAppSpecification<TenantApp> implements Specification<Tenant
         return appName;
     }
 
-    public String getcreateTime() {
-        return createTime;
+    public void setAppName(String appName) {
+        this.appName = appName;
     }
 
     public String getSystemId() {
         return systemId;
     }
 
+    public void setSystemId(String systemId) {
+        this.systemId = systemId;
+    }
+
     public Boolean getTenancy() {
         return tenancy;
+    }
+
+    public void setTenancy(Boolean tenancy) {
+        this.tenancy = tenancy;
     }
 
     public String getTenantName() {
         return tenantName;
     }
 
+    public void setTenantName(String tenantName) {
+        this.tenantName = tenantName;
+    }
+
     public Boolean getVerify() {
         return verify;
+    }
+
+    public void setVerify(Boolean verify) {
+        this.verify = verify;
+    }
+
+    public String getcreateTime() {
+        return createTime;
     }
 
     public String getverifyTime() {
@@ -93,32 +113,12 @@ public class Y9TenantAppSpecification<TenantApp> implements Specification<Tenant
         return value == null;
     }
 
-    public void setAppName(String appName) {
-        this.appName = appName;
+    public void setVerifyTime(String verifyTime) {
+        this.verifyTime = verifyTime;
     }
 
     public void setcreateTime(String createTime) {
         this.createTime = createTime;
-    }
-
-    public void setSystemId(String systemId) {
-        this.systemId = systemId;
-    }
-
-    public void setTenancy(Boolean tenancy) {
-        this.tenancy = tenancy;
-    }
-
-    public void setTenantName(String tenantName) {
-        this.tenantName = tenantName;
-    }
-
-    public void setVerify(Boolean verify) {
-        this.verify = verify;
-    }
-
-    public void setVerifyTime(String verifyTime) {
-        this.verifyTime = verifyTime;
     }
 
     @Override

@@ -69,19 +69,8 @@ public class OnApplicationReady implements ApplicationListener<ApplicationReadyE
         }
     }
 
-    private void createSystem(String systemId) {
-        Optional<Y9System> y9SystemOptional = y9SystemService.findById(systemId);
-        if (y9SystemOptional.isEmpty()) {
-            Y9System y9System = new Y9System();
-            y9System.setId(systemId);
-            y9System.setContextPath(y9Config.getContextPath());
-            y9System.setName(y9Config.getSystemName());
-            y9System.setCnName(y9Config.getSystemCnName());
-            y9System.setEnabled(true);
-            y9System.setAutoInit(true);
-            y9System.setTabIndex(10000);
-            y9SystemService.saveOrUpdate(y9System);
-        }
+    private Y9DataSource createDataSource(String datasourceId, String dbName) {
+        return y9DataSourceService.createTenantDefaultDataSource(dbName, datasourceId);
     }
 
     private void createPublicRoleTopNode() {
@@ -102,6 +91,21 @@ public class OnApplicationReady implements ApplicationListener<ApplicationReadyE
         }
     }
 
+    private void createSystem(String systemId) {
+        Optional<Y9System> y9SystemOptional = y9SystemService.findById(systemId);
+        if (y9SystemOptional.isEmpty()) {
+            Y9System y9System = new Y9System();
+            y9System.setId(systemId);
+            y9System.setContextPath(y9Config.getContextPath());
+            y9System.setName(y9Config.getSystemName());
+            y9System.setCnName(y9Config.getSystemCnName());
+            y9System.setEnabled(true);
+            y9System.setAutoInit(true);
+            y9System.setTabIndex(10000);
+            y9SystemService.saveOrUpdate(y9System);
+        }
+    }
+
     private void createTenant(String tenantId, String dataSourceId) {
         Optional<Y9Tenant> y9TenantOptional = y9TenantService.findById(tenantId);
         if (y9TenantOptional.isEmpty()) {
@@ -115,6 +119,10 @@ public class OnApplicationReady implements ApplicationListener<ApplicationReadyE
             y9Tenant.setTabIndex(10000);
             y9TenantService.save(y9Tenant);
         }
+    }
+
+    private void createTenantApp(String appId, String tenantId) {
+        y9TenantAppService.save(appId, tenantId, "系统默认租用");
     }
 
     private void createTenantSystem(String tenantId, String systemId, String dataSourceId) {
@@ -143,14 +151,6 @@ public class OnApplicationReady implements ApplicationListener<ApplicationReadyE
         createApp(InitDataConsts.APP_ID, InitDataConsts.SYSTEM_ID);
         createTenantApp(InitDataConsts.APP_ID, InitDataConsts.TENANT_ID);
         createPublicRoleTopNode();
-    }
-
-    private void createTenantApp(String appId, String tenantId) {
-        y9TenantAppService.save(appId, tenantId, "系统默认租用");
-    }
-
-    private Y9DataSource createDataSource(String datasourceId, String dbName) {
-        return y9DataSourceService.createTenantDefaultDataSource(dbName, datasourceId);
     }
 
 }

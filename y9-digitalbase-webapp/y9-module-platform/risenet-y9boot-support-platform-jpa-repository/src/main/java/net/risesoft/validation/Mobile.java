@@ -20,11 +20,11 @@ import jakarta.validation.Payload;
 @Target({ElementType.FIELD})
 @Constraint(validatedBy = MobileValidator.class)
 public @interface Mobile {
-    // 默认校验错误提示
-    String message() default "手机号不合法";
-
     // 分组
     Class<?>[] groups() default {};
+
+    // 默认校验错误提示
+    String message() default "手机号不合法";
 
     // 负载
     Class<? extends Payload>[] payload() default {};

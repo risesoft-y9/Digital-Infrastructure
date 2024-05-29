@@ -23,6 +23,16 @@ public interface Y9OrgBasesToRolesService {
     List<Y9OrgBasesToRoles> addOrgUnitsForRole(String roleId, List<String> orgIds, Boolean negative);
 
     /**
+     * 对此组织机构节点添加角色关联
+     *
+     * @param orgId
+     * @param roleIds
+     * @param negative
+     * @return
+     */
+    List<Y9OrgBasesToRoles> addRolesForOrgUnit(String orgId, List<String> roleIds, Boolean negative);
+
+    /**
      * 根据角色id算出传入的组织id列表的关联数量
      *
      * @param roleId
@@ -119,15 +129,5 @@ public interface Y9OrgBasesToRolesService {
      * @param orgIds
      */
     void removeOrgBases(String roleId, List<String> orgIds);
-
-    /**
-     * 对此组织机构节点添加角色关联
-     *
-     * @param orgId
-     * @param roleIds
-     * @param negative
-     * @return
-     */
-    List<Y9OrgBasesToRoles> addRolesForOrgUnit(String orgId, List<String> roleIds, Boolean negative);
 
 }

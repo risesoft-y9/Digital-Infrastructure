@@ -2,7 +2,11 @@ package net.risesoft.util;
 
 import java.util.Objects;
 
+import org.apache.commons.lang3.StringUtils;
+
+import net.risesoft.consts.OrgLevelConsts;
 import net.risesoft.entity.Y9OrgBase;
+import net.risesoft.enums.platform.OrgTypeEnum;
 
 /**
  * 组织工具类
@@ -54,18 +58,18 @@ public class Y9OrgUtil {
      * @return boolean
      */
     public static boolean isAncestorOf(Y9OrgBase a, Y9OrgBase b) {
-        return b.getGuidPath().contains(a.getGuidPath()) && !Objects.equals(a.getGuidPath(), b.getGuidPath());
+        return isDescendantOf(b, a);
     }
 
     /**
-     * 组织节点a是否为组织节点b的子孙节点
+     * 组织节点a和组织节点b是否为相同节点
      *
      * @param a 组织节点a
      * @param b 组织节点b
      * @return boolean
      */
     public static boolean isSameOf(Y9OrgBase a, Y9OrgBase b) {
-        return Objects.equals(a.getId(), b.getId());
+        return Objects.equals(a, b);
     }
 
     /**
@@ -77,5 +81,34 @@ public class Y9OrgUtil {
      */
     public static boolean isDescendantOf(Y9OrgBase a, Y9OrgBase b) {
         return a.getGuidPath().contains(b.getGuidPath()) && !Objects.equals(a.getGuidPath(), b.getGuidPath());
+    }
+
+    /**
+     * 构建 dn
+     *
+     * @param orgTypeEnum 组织类型列举
+     * @param name 名称
+     * @param parentDn 父dn
+     * @return {@code String }
+     */
+    public static String buildDn(OrgTypeEnum orgTypeEnum, String name, String parentDn) {
+        if (StringUtils.isEmpty(parentDn)) {
+            return OrgLevelConsts.getOrgLevel(orgTypeEnum) + name;
+        }
+        return OrgLevelConsts.getOrgLevel(orgTypeEnum) + name + OrgLevelConsts.SEPARATOR + parentDn;
+    }
+
+    /**
+     * 构建 id 路径
+     *
+     * @param parentGuidPath 父 id 路径
+     * @param id ID
+     * @return {@code String }
+     */
+    public static String buildGuidPath(String parentGuidPath, String id) {
+        if (StringUtils.isEmpty(parentGuidPath)) {
+            return id;
+        }
+        return parentGuidPath + OrgLevelConsts.SEPARATOR + id;
     }
 }

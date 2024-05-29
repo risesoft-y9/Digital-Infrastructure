@@ -189,20 +189,20 @@ public interface Y9PositionService {
     Y9Position save(Y9Position position);
 
     /**
-     * 保存新的序号
-     *
-     * @param positionIds 岗位id数组
-     * @return {@link List}<{@link Y9Position}>
-     */
-    List<Y9Position> saveOrder(List<String> positionIds);
-
-    /**
      * 保存或者修改此岗位的信息
      *
      * @param position 岗位对象
      * @return ORGRole
      */
     Y9Position saveOrUpdate(Y9Position position);
+
+    /**
+     * 保存新的序号
+     *
+     * @param positionIds 岗位id数组
+     * @return {@link List}<{@link Y9Position}>
+     */
+    List<Y9Position> saveOrder(List<String> positionIds);
 
     /**
      * 保存或者更新岗位扩展信息
@@ -212,14 +212,6 @@ public interface Y9PositionService {
      * @return {@link Y9Position}
      */
     Y9Position saveProperties(String positionId, String properties);
-
-    /**
-     * 根据whereClause查询岗位
-     *
-     * @param whereClause 查询子句
-     * @return {@link List}<{@link Y9Position}>
-     */
-    List<Y9Position> search(String whereClause);
 
     /**
      * 针对岗位树，根据岗位名字查找

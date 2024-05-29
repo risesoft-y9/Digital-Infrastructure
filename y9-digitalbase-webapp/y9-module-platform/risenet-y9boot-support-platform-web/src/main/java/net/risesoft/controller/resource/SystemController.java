@@ -106,6 +106,17 @@ public class SystemController {
     }
 
     /**
+     * 获取系统列表
+     *
+     * @return
+     */
+    @RiseLog(operationName = "获取系统列表")
+    @GetMapping(value = "/list2")
+    public Y9Result<List<SystemTreeNodeVO>> list2() {
+        return Y9Result.success(SystemTreeNodeVO.convertY9SystemList(y9SystemService.listAll()), "获取系统列表成功");
+    }
+
+    /**
      * 根据系统中文名称，模糊搜索系统列表
      *
      * @param systemCnName 系统中文名称
@@ -141,16 +152,5 @@ public class SystemController {
     public Y9Result<String> saveOrder(@RequestParam String[] systemIds) {
         y9SystemService.saveOrder(systemIds);
         return Y9Result.success(null, "系统排序成功！");
-    }
-
-    /**
-     * 获取系统列表
-     *
-     * @return
-     */
-    @RiseLog(operationName = "获取系统列表")
-    @GetMapping(value = "/list2")
-    public Y9Result<List<SystemTreeNodeVO>> list2() {
-        return Y9Result.success(SystemTreeNodeVO.convertY9SystemList(y9SystemService.listAll()), "获取系统列表成功");
     }
 }

@@ -104,14 +104,14 @@ public interface Y9PersonToResourceAndAuthorityService {
     List<Y9App> listAppsByAuthority(String personId, AuthorityEnum authority);
 
     /**
-     * 更新或保存
+     * 子菜单列表
      *
-     * @param y9ResourceBase
-     * @param person
-     * @param y9Authorization
-     * @param inherit
+     * @param personId 人员id
+     * @param resourceId 资源id
+     * @param authority 权限类型
+     * @return {@link List}<{@link Y9Menu}>
      */
-    void saveOrUpdate(Y9ResourceBase y9ResourceBase, Y9Person person, Y9Authorization y9Authorization, Boolean inherit);
+    List<Y9Menu> listSubMenus(String personId, String resourceId, AuthorityEnum authority);
 
     /**
      * 获得某一资源下,有相应操作权限的子节点
@@ -124,12 +124,12 @@ public interface Y9PersonToResourceAndAuthorityService {
     List<Y9ResourceBase> listSubResources(String personId, String resourceId, AuthorityEnum authority);
 
     /**
-     * 子菜单列表
+     * 更新或保存
      *
-     * @param personId 人员id
-     * @param resourceId 资源id
-     * @param authority 权限类型
-     * @return {@link List}<{@link Y9Menu}>
+     * @param y9ResourceBase
+     * @param person
+     * @param y9Authorization
+     * @param inherit
      */
-    List<Y9Menu> listSubMenus(String personId, String resourceId, AuthorityEnum authority);
+    void saveOrUpdate(Y9ResourceBase y9ResourceBase, Y9Person person, Y9Authorization y9Authorization, Boolean inherit);
 }

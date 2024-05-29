@@ -12,8 +12,6 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.transaction.support.TransactionSynchronization;
-import org.springframework.transaction.support.TransactionSynchronizationManager;
 
 import lombok.RequiredArgsConstructor;
 
@@ -24,20 +22,15 @@ import net.risesoft.exception.OrgUnitErrorCodeEnum;
 import net.risesoft.id.Y9IdGenerator;
 import net.risesoft.manager.org.Y9JobManager;
 import net.risesoft.manager.org.Y9PositionManager;
-import net.risesoft.model.platform.Job;
 import net.risesoft.repository.Y9JobRepository;
 import net.risesoft.repository.Y9PositionRepository;
 import net.risesoft.repository.relation.Y9PersonsToPositionsRepository;
 import net.risesoft.service.org.Y9JobService;
-import net.risesoft.util.Y9PublishServiceUtil;
 import net.risesoft.y9.Y9Context;
-import net.risesoft.y9.Y9LoginUserHolder;
-import net.risesoft.y9.pubsub.constant.Y9OrgEventTypeConst;
+import net.risesoft.y9.pubsub.event.Y9EntityCreatedEvent;
 import net.risesoft.y9.pubsub.event.Y9EntityUpdatedEvent;
-import net.risesoft.y9.pubsub.message.Y9MessageOrg;
 import net.risesoft.y9.util.Y9Assert;
 import net.risesoft.y9.util.Y9BeanUtil;
-import net.risesoft.y9.util.Y9ModelConvertUtil;
 
 /**
  * @author sdb
@@ -120,22 +113,6 @@ public class Y9JobServiceImpl implements Y9JobService {
         return y9JobManager.getById(id);
     }
 
-    private Integer getMaxTabIndex() {
-        return y9JobRepository.findTopByOrderByTabIndexDesc().map(Y9Job::getTabIndex).orElse(0);
-    }
-
-    private boolean isNameAvailable(String name, String id) {
-        Optional<Y9Job> y9JobOptional = y9JobRepository.findByName(name);
-
-        if (y9JobOptional.isEmpty()) {
-            // 不存在同名的职位肯定可用
-            return true;
-        }
-
-        // 编辑职位时没修改名称同样认为可用
-        return y9JobOptional.get().getId().equals(id);
-    }
-
     @Override
     public List<Y9Job> listAll() {
         return y9JobRepository.findAll(Sort.by(Sort.Direction.ASC, "tabIndex"));
@@ -182,18 +159,6 @@ public class Y9JobServiceImpl implements Y9JobService {
 
                 Y9Context.publishEvent(new Y9EntityUpdatedEvent<>(originY9Job, savedJob));
 
-                if (TransactionSynchronizationManager.isActualTransactionActive()) {
-                    TransactionSynchronizationManager.registerSynchronization(new TransactionSynchronization() {
-                        @Override
-                        public void afterCommit() {
-                            Y9MessageOrg<Job> msg = new Y9MessageOrg<>(Y9ModelConvertUtil.convert(savedJob, Job.class),
-                                Y9OrgEventTypeConst.JOB_UPDATE, Y9LoginUserHolder.getTenantId());
-                            Y9PublishServiceUtil.persistAndPublishMessageOrg(msg, "更新职位信息",
-                                "更新职位" + originY9Job.getName());
-                        }
-                    });
-                }
-
                 return savedJob;
             }
         }
@@ -207,20 +172,25 @@ public class Y9JobServiceImpl implements Y9JobService {
         job.setTabIndex(getMaxTabIndex() + 1);
         final Y9Job savedJob = y9JobManager.save(job);
 
-        if (TransactionSynchronizationManager.isActualTransactionActive()) {
-            TransactionSynchronizationManager.registerSynchronization(new TransactionSynchronization() {
-                @Override
-                public void afterCommit() {
-                    Y9MessageOrg<Job> msg =
-                        new Y9MessageOrg<>(Y9ModelConvertUtil.convert(savedJob, Job.class), Y9OrgEventTypeConst.JOB_ADD,
-                            Y9LoginUserHolder.getTenantId());
-                    Y9PublishServiceUtil.persistAndPublishMessageOrg(msg, "新增职位信息",
-                        "新增职位" + savedJob.getName());
-                }
-            });
-        }
+        Y9Context.publishEvent(new Y9EntityCreatedEvent<>(savedJob));
 
         return savedJob;
+    }
+
+    private Integer getMaxTabIndex() {
+        return y9JobRepository.findTopByOrderByTabIndexDesc().map(Y9Job::getTabIndex).orElse(0);
+    }
+
+    private boolean isNameAvailable(String name, String id) {
+        Optional<Y9Job> y9JobOptional = y9JobRepository.findByName(name);
+
+        if (y9JobOptional.isEmpty()) {
+            // 不存在同名的职位肯定可用
+            return true;
+        }
+
+        // 编辑职位时没修改名称同样认为可用
+        return y9JobOptional.get().getId().equals(id);
     }
 
 }

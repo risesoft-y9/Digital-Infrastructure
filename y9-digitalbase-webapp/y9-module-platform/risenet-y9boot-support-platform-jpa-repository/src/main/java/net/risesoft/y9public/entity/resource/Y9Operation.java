@@ -7,6 +7,7 @@ import jakarta.persistence.Table;
 
 import org.hibernate.annotations.ColumnDefault;
 import org.hibernate.annotations.Comment;
+import org.hibernate.annotations.DynamicUpdate;
 
 import lombok.Data;
 
@@ -24,6 +25,7 @@ import net.risesoft.persistence.EnumConverter;
  */
 @Entity
 @Table(name = "Y9_COMMON_OPERATION")
+@DynamicUpdate
 @Comment("页面按钮操作表")
 @Data
 public class Y9Operation extends Y9ResourceBase {

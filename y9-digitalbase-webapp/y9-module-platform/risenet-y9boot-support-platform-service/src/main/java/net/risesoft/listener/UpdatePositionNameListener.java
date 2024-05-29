@@ -10,7 +10,6 @@ import org.springframework.transaction.annotation.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
-import net.risesoft.consts.OrgLevelConsts;
 import net.risesoft.entity.Y9Job;
 import net.risesoft.entity.Y9OrgBase;
 import net.risesoft.entity.Y9Person;
@@ -44,10 +43,10 @@ public class UpdatePositionNameListener {
 
     @EventListener
     @Transactional(readOnly = false)
-    public void onY9PositionUpdated(Y9EntityUpdatedEvent<Y9Position> event) {
-        Y9Position updatedY9Position = event.getUpdatedEntity();
+    public void onY9JobUpdated(Y9EntityUpdatedEvent<Y9Job> event) {
+        Y9Job y9Job = event.getUpdatedEntity();
 
-        this.updatePositionName(updatedY9Position);
+        this.updatePositionName(y9Job);
 
         if (LOGGER.isDebugEnabled()) {
             LOGGER.debug("更新岗位触发的更新岗位名称执行完成");
@@ -75,18 +74,6 @@ public class UpdatePositionNameListener {
 
     @EventListener
     @Transactional(readOnly = false)
-    public void onY9JobUpdated(Y9EntityUpdatedEvent<Y9Job> event) {
-        Y9Job y9Job = event.getUpdatedEntity();
-
-        this.updatePositionName(y9Job);
-
-        if (LOGGER.isDebugEnabled()) {
-            LOGGER.debug("更新岗位触发的更新岗位名称执行完成");
-        }
-    }
-
-    @EventListener
-    @Transactional(readOnly = false)
     public void onY9PersonsToPositionsCreated(Y9EntityCreatedEvent<Y9PersonsToPositions> event) {
         Y9PersonsToPositions y9PersonsToPositions = event.getEntity();
 
@@ -109,6 +96,18 @@ public class UpdatePositionNameListener {
         }
     }
 
+    @EventListener
+    @Transactional(readOnly = false)
+    public void onY9PositionUpdated(Y9EntityUpdatedEvent<Y9Position> event) {
+        Y9Position updatedY9Position = event.getUpdatedEntity();
+
+        this.updatePositionName(updatedY9Position);
+
+        if (LOGGER.isDebugEnabled()) {
+            LOGGER.debug("更新岗位触发的更新岗位名称执行完成");
+        }
+    }
+
     @Transactional(readOnly = false)
     public void updatePositionName(Y9Position y9Position) {
         Y9Job y9Job = y9JobService.getById(y9Position.getJobId());
@@ -126,9 +125,8 @@ public class UpdatePositionNameListener {
             y9Position.setJobId(y9Job.getId());
             y9Position.setJobName(y9Job.getName());
             y9Position.setHeadCount(personsToPositionsList.size());
-            y9Position.setGuidPath(parent.getGuidPath() + OrgLevelConsts.SEPARATOR + y9Position.getId());
-            y9Position.setDn(OrgLevelConsts.getOrgLevel(OrgTypeEnum.POSITION) + y9Position.getName()
-                + OrgLevelConsts.SEPARATOR + parent.getDn());
+            y9Position.setGuidPath(Y9OrgUtil.buildGuidPath(parent.getGuidPath(), y9Position.getId()));
+            y9Position.setDn(Y9OrgUtil.buildDn(OrgTypeEnum.POSITION, y9Position.getName(), parent.getDn()));
 
             y9PositionService.save(y9Position);
         }

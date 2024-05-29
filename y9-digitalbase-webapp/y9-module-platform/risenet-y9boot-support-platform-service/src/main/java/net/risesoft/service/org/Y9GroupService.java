@@ -124,20 +124,20 @@ public interface Y9GroupService {
     Y9Group move(String groupId, String parentId);
 
     /**
-     * 保存新的序号
-     *
-     * @param groupIds 用户组id数组
-     * @return {@link List}<{@link Y9Group}>
-     */
-    List<Y9Group> saveOrder(List<String> groupIds);
-
-    /**
      * 修改此用户组实例的信息
      *
      * @param group 用户组对象
      * @return ORGGroup
      */
     Y9Group saveOrUpdate(Y9Group group);
+
+    /**
+     * 保存新的序号
+     *
+     * @param groupIds 用户组id数组
+     * @return {@link List}<{@link Y9Group}>
+     */
+    List<Y9Group> saveOrder(List<String> groupIds);
 
     /**
      * 保存或者更新用户组扩展信息

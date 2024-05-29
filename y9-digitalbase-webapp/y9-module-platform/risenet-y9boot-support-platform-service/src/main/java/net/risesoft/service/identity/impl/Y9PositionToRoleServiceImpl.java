@@ -3,16 +3,19 @@ package net.risesoft.service.identity.impl;
 import java.util.List;
 
 import org.apache.commons.lang3.StringUtils;
+import org.springframework.context.event.EventListener;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import lombok.RequiredArgsConstructor;
 
 import net.risesoft.consts.InitDataConsts;
+import net.risesoft.entity.Y9Position;
 import net.risesoft.entity.identity.position.Y9PositionToRole;
 import net.risesoft.enums.platform.RoleTypeEnum;
 import net.risesoft.repository.identity.position.Y9PositionToRoleRepository;
 import net.risesoft.service.identity.Y9PositionToRoleService;
+import net.risesoft.y9.pubsub.event.Y9EntityDeletedEvent;
 import net.risesoft.y9public.entity.role.Y9Role;
 import net.risesoft.y9public.repository.role.Y9RoleRepository;
 
@@ -99,6 +102,13 @@ public class Y9PositionToRoleServiceImpl implements Y9PositionToRoleService {
             y9PositionToRole.setDescription(description);
             y9PositionToRoleRepository.save(y9PositionToRole);
         }
+    }
+
+    @EventListener
+    @Transactional(readOnly = false)
+    public void onPositionDeleted(Y9EntityDeletedEvent<Y9Position> event) {
+        Y9Position position = event.getEntity();
+        y9PositionToRoleRepository.deleteByPositionId(position.getId());
     }
 
 }

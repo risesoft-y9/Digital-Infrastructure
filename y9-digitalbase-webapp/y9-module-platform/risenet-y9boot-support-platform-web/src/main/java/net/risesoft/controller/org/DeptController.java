@@ -92,7 +92,8 @@ public class DeptController {
      */
     @RiseLog(operationName = "获取部门属性对应组织节点列表")
     @RequestMapping(value = "/listDepartmentPropOrgUnits")
-    public Y9Result<List<Y9OrgBase>> listDepartmentPropOrgUnits(@RequestParam @NotBlank String deptId, @RequestParam Integer category) {
+    public Y9Result<List<Y9OrgBase>> listDepartmentPropOrgUnits(@RequestParam @NotBlank String deptId,
+        @RequestParam Integer category) {
         return Y9Result.success(y9DepartmentService.listDepartmentPropOrgUnits(deptId, category, null), "获取部门领导列表成功");
     }
 

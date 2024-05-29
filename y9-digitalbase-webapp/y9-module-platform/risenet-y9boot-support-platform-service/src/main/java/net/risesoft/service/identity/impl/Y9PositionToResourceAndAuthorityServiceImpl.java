@@ -7,6 +7,7 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 
 import org.apache.commons.lang3.StringUtils;
+import org.springframework.context.event.EventListener;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -23,6 +24,7 @@ import net.risesoft.manager.org.CompositeOrgBaseManager;
 import net.risesoft.repository.identity.position.Y9PositionToResourceAndAuthorityRepository;
 import net.risesoft.service.identity.Y9PositionToResourceAndAuthorityService;
 import net.risesoft.y9.Y9LoginUserHolder;
+import net.risesoft.y9.pubsub.event.Y9EntityDeletedEvent;
 import net.risesoft.y9public.entity.resource.Y9App;
 import net.risesoft.y9public.entity.resource.Y9Menu;
 import net.risesoft.y9public.entity.resource.Y9ResourceBase;
@@ -187,6 +189,13 @@ public class Y9PositionToResourceAndAuthorityServiceImpl implements Y9PositionTo
         }
         Collections.sort(y9MenuList);
         return y9MenuList;
+    }
+
+    @EventListener
+    @Transactional(readOnly = false)
+    public void onPositionDeleted(Y9EntityDeletedEvent<Y9Position> event) {
+        Y9Position position = event.getEntity();
+        y9PositionToResourceAndAuthorityRepository.deleteByPositionId(position.getId());
     }
 
 }

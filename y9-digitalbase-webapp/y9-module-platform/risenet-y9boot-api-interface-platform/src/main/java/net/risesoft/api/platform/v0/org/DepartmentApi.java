@@ -289,16 +289,4 @@ public interface DepartmentApi {
     Department saveDepartment(@RequestParam("tenantId") @NotBlank String tenantId,
         @RequestParam("departmentJson") @NotBlank String departmentJson);
 
-    /**
-     * 根据条件查询部门对象
-     *
-     * @param tenantId 租户id
-     * @param whereClause sql语句where后面的条件语句
-     * @return List&lt;Department&gt; 部门对象集合
-     * @since 9.6.0
-     */
-    @GetMapping("/search")
-    List<Department> search(@RequestParam("tenantId") @NotBlank String tenantId,
-        @RequestParam("whereClause") @NotBlank String whereClause);
-
 }

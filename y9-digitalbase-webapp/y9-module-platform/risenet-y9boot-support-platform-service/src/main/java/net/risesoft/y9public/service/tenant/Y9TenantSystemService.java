@@ -65,6 +65,8 @@ public interface Y9TenantSystemService {
      */
     List<Y9TenantSystem> listBySystemId(String systemId);
 
+    List<Y9System> listSystemByTenantId(String tenantId);
+
     /**
      * 根据租户id查询所关联的系统id列表
      *
@@ -72,6 +74,10 @@ public interface Y9TenantSystemService {
      * @return {@link List}<{@link String}>
      */
     List<String> listSystemIdByTenantId(String tenantId);
+
+    List<Y9Tenant> listTenantBySystemId(String systemId);
+
+    List<Y9Tenant> listTenantBySystemName(String systemName);
 
     /**
      * 根据系统id查询所关联的租户id
@@ -115,11 +121,5 @@ public interface Y9TenantSystemService {
      * @return {@link List}<{@link Y9TenantSystem}>
      */
     List<Y9TenantSystem> saveTenantSystems(String[] systemIds, String tenantId);
-
-    List<Y9Tenant> listTenantBySystemId(String systemId);
-
-    List<Y9Tenant> listTenantBySystemName(String systemName);
-
-    List<Y9System> listSystemByTenantId(String tenantId);
 
 }

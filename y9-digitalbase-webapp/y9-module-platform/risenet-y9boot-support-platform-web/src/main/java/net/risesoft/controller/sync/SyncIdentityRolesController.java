@@ -66,30 +66,6 @@ public class SyncIdentityRolesController {
     }
 
     /**
-     * 同步某租户下所有人员/岗位角色对应表
-     *
-     * @param tenantId 租户id
-     * @return
-     */
-    @RiseLog()
-    @RequestMapping("/identityRoles/{tenantId}")
-    public Y9Result<Object> syncIdentityRolesByTenantId(@PathVariable String tenantId) {
-        double start = System.currentTimeMillis();
-        LOGGER.info("更新人员/岗位角色开始时间：{},租户id--->{}", fdf.format(new Date()), tenantId);
-
-        Y9LoginUserHolder.setTenantId(tenantId);
-        for (Y9Organization y9Organization : y9OrganizationService.list()) {
-            identityRoleCalculator.recalculateByOrgUnitId(y9Organization.getId());
-        }
-
-        double end = System.currentTimeMillis();
-        double time = end - start;
-        LOGGER.info("更新人员/岗位角色所用时间：{}", time);
-        LOGGER.info("更新人员/岗位角色完成时间：{}", fdf.format(new Date()));
-        return Y9Result.success();
-    }
-
-    /**
      * 同步某租户下某组织节点或其下所有人员/岗位角色对应表
      *
      * @param tenantId 租户id
@@ -111,5 +87,29 @@ public class SyncIdentityRolesController {
         LOGGER.info("更新人员/岗位角色所用时间：{}", time);
         LOGGER.info("更新人员/岗位角色完成时间：{}", fdf.format(new Date()));
         return Y9Result.success("更新人员/岗位角色完成！");
+    }
+
+    /**
+     * 同步某租户下所有人员/岗位角色对应表
+     *
+     * @param tenantId 租户id
+     * @return
+     */
+    @RiseLog()
+    @RequestMapping("/identityRoles/{tenantId}")
+    public Y9Result<Object> syncIdentityRolesByTenantId(@PathVariable String tenantId) {
+        double start = System.currentTimeMillis();
+        LOGGER.info("更新人员/岗位角色开始时间：{},租户id--->{}", fdf.format(new Date()), tenantId);
+
+        Y9LoginUserHolder.setTenantId(tenantId);
+        for (Y9Organization y9Organization : y9OrganizationService.list()) {
+            identityRoleCalculator.recalculateByOrgUnitId(y9Organization.getId());
+        }
+
+        double end = System.currentTimeMillis();
+        double time = end - start;
+        LOGGER.info("更新人员/岗位角色所用时间：{}", time);
+        LOGGER.info("更新人员/岗位角色完成时间：{}", fdf.format(new Date()));
+        return Y9Result.success();
     }
 }

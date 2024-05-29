@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
+import org.springframework.context.event.EventListener;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -15,6 +16,7 @@ import net.risesoft.id.Y9IdGenerator;
 import net.risesoft.manager.org.Y9PositionManager;
 import net.risesoft.repository.relation.Y9PositionsToGroupsRepository;
 import net.risesoft.service.relation.Y9PositionsToGroupsService;
+import net.risesoft.y9.pubsub.event.Y9EntityDeletedEvent;
 
 /**
  *
@@ -29,6 +31,7 @@ import net.risesoft.service.relation.Y9PositionsToGroupsService;
 public class Y9PositionsToGroupsServiceImpl implements Y9PositionsToGroupsService {
 
     private final Y9PositionsToGroupsRepository y9PositionsToGroupsRepository;
+
     private final Y9PositionManager y9PositionManager;
 
     @Transactional(readOnly = false)
@@ -130,4 +133,10 @@ public class Y9PositionsToGroupsServiceImpl implements Y9PositionsToGroupsServic
         }
     }
 
+    @EventListener
+    @Transactional(readOnly = false)
+    public void onPositionDeleted(Y9EntityDeletedEvent<Y9Position> event) {
+        Y9Position position = event.getEntity();
+        y9PositionsToGroupsRepository.deleteByPositionId(position.getId());
+    }
 }

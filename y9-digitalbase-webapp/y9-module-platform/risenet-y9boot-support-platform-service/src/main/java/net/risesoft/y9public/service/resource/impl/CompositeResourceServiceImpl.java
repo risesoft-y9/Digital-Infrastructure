@@ -51,18 +51,6 @@ public class CompositeResourceServiceImpl implements CompositeResourceService {
         return y9AppRepository.findById(id).orElse(null);
     }
 
-    @Cacheable(cacheNames = CacheNameConsts.RESOURCE_MENU, key = "#id", condition = "#id!=null",
-        unless = "#result==null")
-    public Y9Menu findMenuById(String id) {
-        return y9MenuRepository.findById(id).orElse(null);
-    }
-
-    @Cacheable(cacheNames = CacheNameConsts.RESOURCE_OPERATION, key = "#id", condition = "#id!=null",
-        unless = "#result==null")
-    public Y9Operation findOperationById(String id) {
-        return y9OperationRepository.findById(id).orElse(null);
-    }
-
     @Override
     public List<Y9ResourceBase> findByCustomId(String customId) {
         List<Y9ResourceBase> y9ResourceBaseList = new ArrayList<>();
@@ -139,17 +127,6 @@ public class CompositeResourceServiceImpl implements CompositeResourceService {
         return y9AppRepository.findAll(Sort.by("systemId", "tabIndex"));
     }
 
-    private void recursionUpToRoot(Y9ResourceBase y9ResourceBase, List<Y9ResourceBase> returnList) {
-        if (StringUtils.isEmpty(y9ResourceBase.getParentId())) {
-            return;
-        }
-        Y9ResourceBase parent = this.findById(y9ResourceBase.getParentId());
-        if (!returnList.contains(parent)) {
-            returnList.add(parent);
-        }
-        recursionUpToRoot(parent, returnList);
-    }
-
     @Override
     public List<Y9ResourceBase> searchByName(String name) {
         List<Y9ResourceBase> resourceList = new ArrayList<>();
@@ -186,5 +163,28 @@ public class CompositeResourceServiceImpl implements CompositeResourceService {
                 }
             }
         }
+    }
+
+    @Cacheable(cacheNames = CacheNameConsts.RESOURCE_MENU, key = "#id", condition = "#id!=null",
+        unless = "#result==null")
+    public Y9Menu findMenuById(String id) {
+        return y9MenuRepository.findById(id).orElse(null);
+    }
+
+    @Cacheable(cacheNames = CacheNameConsts.RESOURCE_OPERATION, key = "#id", condition = "#id!=null",
+        unless = "#result==null")
+    public Y9Operation findOperationById(String id) {
+        return y9OperationRepository.findById(id).orElse(null);
+    }
+
+    private void recursionUpToRoot(Y9ResourceBase y9ResourceBase, List<Y9ResourceBase> returnList) {
+        if (StringUtils.isEmpty(y9ResourceBase.getParentId())) {
+            return;
+        }
+        Y9ResourceBase parent = this.findById(y9ResourceBase.getParentId());
+        if (!returnList.contains(parent)) {
+            returnList.add(parent);
+        }
+        recursionUpToRoot(parent, returnList);
     }
 }

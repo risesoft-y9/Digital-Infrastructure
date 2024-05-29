@@ -180,103 +180,6 @@ public class Y9OrgTreeExcelDataHandlerImpl implements Y9OrgTreeDataHandler {
         }
     }
 
-    private Map<String, Object> impData2Db(PersonInformation pf, String orgId) {
-        String fullPath;
-        Map<String, Object> retMap = new HashMap<>();
-        retMap.put("isRepeat", "false");
-        retMap.put("isMobileRepeat", "false");
-        retMap.put("isMobileNull", "false");
-        retMap.put("isMobileError", "false");
-        if (StringUtils.isBlank(pf.getFullPath())) {
-            fullPath = pf.getName();
-        } else {
-            fullPath = pf.getFullPath() + SPLITTER + pf.getName();
-        }
-        String[] paths = fullPath.split(SPLITTER);
-        Y9OrgBase y9OrgBase = compositeOrgBaseService.getOrgUnit(orgId);
-        String dn = y9OrgBase.getDn();
-        String parentId = y9OrgBase.getId();
-        for (int i = 0, length = paths.length; i < length; i++) {
-            if (i == length - 1) {
-
-                String personName = pf.getLoginName().replaceAll("\\s*", "");
-                Optional<Y9Person> y9PersonOptional = y9PersonService.findByLoginName(personName);
-                if (y9PersonOptional.isPresent()) {
-                    // 人员重复
-                    retMap.put("isRepeat", "true");
-                    retMap.put("name", pf.getLoginName().replaceAll("\\s*", ""));
-                    continue;
-                }
-
-                if (StringUtils.isBlank(pf.getMobile())) {
-                    // 人员号码为空
-                    retMap.put("isMobileNull", "true");
-                    retMap.put("mobileNullNames", pf.getLoginName().replaceAll("\\s*", ""));
-                    continue;
-                }
-
-                // 数值类型号码
-                if (pf.getMobile().indexOf("E") > 0) {
-                    BigDecimal mobileValue = new BigDecimal(pf.getMobile());
-                    String mobile = mobileValue.toPlainString();
-                    pf.setMobile(mobile);
-                }
-                String personMobile = pf.getMobile().replaceAll("\\s*", "");
-                if (personMobile.length() == 11) {
-                    // 手机号可重复 此处暂时移除手机号重复校验
-                    // if (y9PersonService.getPersonByMobile(new BigDecimal(personMobile).toString()) != null) {
-                    // // 人员号码重复
-                    // retMap.put("isMobileRepeat", "true");
-                    // retMap.put("mobileNames", pf.getLoginName().replaceAll("\\s*", ""));
-                    // retMap.put("mobiles", new BigDecimal(pf.getMobile()).toString());
-                    // }
-                } else {
-                    // 人员号码错误
-                    retMap.put("isMobileError", "true");
-                    retMap.put("mobileErrorNames", pf.getLoginName().replaceAll("\\s*", ""));
-                    continue;
-                }
-
-                Y9Person y9Person = new Y9Person();
-                y9Person.setName(paths[i].replaceAll("\\s*", ""));
-                y9Person.setEmail(pf.getEmail());
-                y9Person.setMobile(pf.getMobile().replaceAll("\\s*", ""));
-                y9Person.setLoginName(pf.getLoginName().replaceAll("\\s*", ""));
-                y9Person.setSex("男".equals(pf.getSex()) ? SexEnum.MALE : SexEnum.FEMALE);
-                y9Person.setParentId(parentId);
-
-                String jobs = pf.getJobs();
-                if (StringUtils.isNotBlank(jobs)) {
-                    String[] jobArray = jobs.split(SPLITTER);
-                    List<String> y9JobIdList = new ArrayList<>();
-                    for (String job : jobArray) {
-                        y9JobIdList.add(y9JobService.create(job, job).getId());
-                    }
-                    y9PersonService.saveOrUpdate(y9Person, null, null, y9JobIdList);
-                } else {
-                    y9PersonService.saveOrUpdate(y9Person, null);
-                }
-
-            } else {
-                dn = OrgLevelConsts.UNIT + paths[i] + SPLITTER + dn;
-                List<Y9Department> departmentList = y9DepartmentService.listByDn(dn, false);
-                if (!departmentList.isEmpty()) {
-                    parentId = departmentList.get(0).getId();
-                } else {
-                    Y9Department department = new Y9Department();
-                    department.setId(Y9IdGenerator.genId(IdType.SNOWFLAKE));
-                    department.setTenantId(Y9LoginUserHolder.getTenantId());
-                    department.setName(paths[i].replaceAll("\\s*", ""));
-                    department.setOrgType(OrgTypeEnum.DEPARTMENT);
-                    department.setParentId(parentId);
-                    Y9Department dept = y9DepartmentService.saveOrUpdate(department);
-                    parentId = dept.getId();
-                }
-            }
-        }
-        return retMap;
-    }
-
     @Override
     public Y9Result<Object> importOrgTree(InputStream inputStream, String orgId) {
         return null;
@@ -377,6 +280,103 @@ public class Y9OrgTreeExcelDataHandlerImpl implements Y9OrgTreeDataHandler {
             LOGGER.warn("导入XLS组织架构发生异常", e);
             return Y9Result.failure("上传失败:" + e.getMessage());
         }
+    }
+
+    private Map<String, Object> impData2Db(PersonInformation pf, String orgId) {
+        String fullPath;
+        Map<String, Object> retMap = new HashMap<>();
+        retMap.put("isRepeat", "false");
+        retMap.put("isMobileRepeat", "false");
+        retMap.put("isMobileNull", "false");
+        retMap.put("isMobileError", "false");
+        if (StringUtils.isBlank(pf.getFullPath())) {
+            fullPath = pf.getName();
+        } else {
+            fullPath = pf.getFullPath() + SPLITTER + pf.getName();
+        }
+        String[] paths = fullPath.split(SPLITTER);
+        Y9OrgBase y9OrgBase = compositeOrgBaseService.getOrgUnit(orgId);
+        String dn = y9OrgBase.getDn();
+        String parentId = y9OrgBase.getId();
+        for (int i = 0, length = paths.length; i < length; i++) {
+            if (i == length - 1) {
+
+                String personName = pf.getLoginName().replaceAll("\\s*", "");
+                Optional<Y9Person> y9PersonOptional = y9PersonService.findByLoginName(personName);
+                if (y9PersonOptional.isPresent()) {
+                    // 人员重复
+                    retMap.put("isRepeat", "true");
+                    retMap.put("name", pf.getLoginName().replaceAll("\\s*", ""));
+                    continue;
+                }
+
+                if (StringUtils.isBlank(pf.getMobile())) {
+                    // 人员号码为空
+                    retMap.put("isMobileNull", "true");
+                    retMap.put("mobileNullNames", pf.getLoginName().replaceAll("\\s*", ""));
+                    continue;
+                }
+
+                // 数值类型号码
+                if (pf.getMobile().indexOf("E") > 0) {
+                    BigDecimal mobileValue = new BigDecimal(pf.getMobile());
+                    String mobile = mobileValue.toPlainString();
+                    pf.setMobile(mobile);
+                }
+                String personMobile = pf.getMobile().replaceAll("\\s*", "");
+                if (personMobile.length() == 11) {
+                    // 手机号可重复 此处暂时移除手机号重复校验
+                    // if (y9PersonService.getPersonByMobile(new BigDecimal(personMobile).toString()) != null) {
+                    // // 人员号码重复
+                    // retMap.put("isMobileRepeat", "true");
+                    // retMap.put("mobileNames", pf.getLoginName().replaceAll("\\s*", ""));
+                    // retMap.put("mobiles", new BigDecimal(pf.getMobile()).toString());
+                    // }
+                } else {
+                    // 人员号码错误
+                    retMap.put("isMobileError", "true");
+                    retMap.put("mobileErrorNames", pf.getLoginName().replaceAll("\\s*", ""));
+                    continue;
+                }
+
+                Y9Person y9Person = new Y9Person();
+                y9Person.setName(paths[i].replaceAll("\\s*", ""));
+                y9Person.setEmail(pf.getEmail());
+                y9Person.setMobile(pf.getMobile().replaceAll("\\s*", ""));
+                y9Person.setLoginName(pf.getLoginName().replaceAll("\\s*", ""));
+                y9Person.setSex("男".equals(pf.getSex()) ? SexEnum.MALE : SexEnum.FEMALE);
+                y9Person.setParentId(parentId);
+
+                String jobs = pf.getJobs();
+                if (StringUtils.isNotBlank(jobs)) {
+                    String[] jobArray = jobs.split(SPLITTER);
+                    List<String> y9JobIdList = new ArrayList<>();
+                    for (String job : jobArray) {
+                        y9JobIdList.add(y9JobService.create(job, job).getId());
+                    }
+                    y9PersonService.saveOrUpdate(y9Person, null, null, y9JobIdList);
+                } else {
+                    y9PersonService.saveOrUpdate(y9Person, null);
+                }
+
+            } else {
+                dn = OrgLevelConsts.UNIT + paths[i] + SPLITTER + dn;
+                List<Y9Department> departmentList = y9DepartmentService.listByDn(dn, false);
+                if (!departmentList.isEmpty()) {
+                    parentId = departmentList.get(0).getId();
+                } else {
+                    Y9Department department = new Y9Department();
+                    department.setId(Y9IdGenerator.genId(IdType.SNOWFLAKE));
+                    department.setTenantId(Y9LoginUserHolder.getTenantId());
+                    department.setName(paths[i].replaceAll("\\s*", ""));
+                    department.setOrgType(OrgTypeEnum.DEPARTMENT);
+                    department.setParentId(parentId);
+                    Y9Department dept = y9DepartmentService.saveOrUpdate(department);
+                    parentId = dept.getId();
+                }
+            }
+        }
+        return retMap;
     }
 
     private String reverseSplit(String path) {

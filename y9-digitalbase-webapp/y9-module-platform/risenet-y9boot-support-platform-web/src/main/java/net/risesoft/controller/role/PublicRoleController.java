@@ -56,6 +56,19 @@ public class PublicRoleController {
     }
 
     /**
+     * 获取系统公共角色顶节点
+     *
+     * @return
+     */
+    @RiseLog(operationName = "获取系统公共角色顶节点")
+    @RequestMapping(value = "/treeRoot2")
+    public Y9Result<List<RoleTreeNodeVO>> treeRoot2() {
+        Y9Role y9Role = y9RoleService.getById(InitDataConsts.TOP_PUBLIC_ROLE_ID);
+        List<Y9Role> y9RoleList = List.of(y9Role);
+        return Y9Result.success(RoleTreeNodeVO.convertY9RoleList(y9RoleList), "展开应用角色树成功");
+    }
+
+    /**
      * 根据角色名称，查询公共角色节点
      *
      * @param name 角色名称
@@ -76,19 +89,6 @@ public class PublicRoleController {
             roleVOList.add(roleVO);
         }
         return Y9Result.success(roleVOList, "根据角色名称查询角色节点成功");
-    }
-
-    /**
-     * 获取系统公共角色顶节点
-     *
-     * @return
-     */
-    @RiseLog(operationName = "获取系统公共角色顶节点")
-    @RequestMapping(value = "/treeRoot2")
-    public Y9Result<List<RoleTreeNodeVO>> treeRoot2() {
-        Y9Role y9Role = y9RoleService.getById(InitDataConsts.TOP_PUBLIC_ROLE_ID);
-        List<Y9Role> y9RoleList = List.of(y9Role);
-        return Y9Result.success(RoleTreeNodeVO.convertY9RoleList(y9RoleList), "展开应用角色树成功");
     }
 
     /**

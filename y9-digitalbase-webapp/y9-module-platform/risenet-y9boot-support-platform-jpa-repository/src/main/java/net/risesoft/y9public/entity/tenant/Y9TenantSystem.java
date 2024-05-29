@@ -9,6 +9,7 @@ import jakarta.persistence.Transient;
 
 import org.hibernate.annotations.ColumnDefault;
 import org.hibernate.annotations.Comment;
+import org.hibernate.annotations.DynamicUpdate;
 
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -25,6 +26,7 @@ import net.risesoft.base.BaseEntity;
  */
 @Entity
 @Table(name = "Y9_COMMON_TENANT_SYSTEM")
+@DynamicUpdate
 @Comment("租户系统表")
 @NoArgsConstructor
 @Data

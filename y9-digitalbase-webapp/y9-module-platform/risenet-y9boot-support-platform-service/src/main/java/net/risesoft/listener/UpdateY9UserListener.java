@@ -265,56 +265,6 @@ public class UpdateY9UserListener {
     }
 
     /**
-     * 监听人员-岗位关联新增事件 并更新用户拥有的岗位id
-     *
-     * @param event
-     */
-    @EventListener
-    @Transactional(readOnly = false)
-    public void onY9PersonsToPositionsCreated(Y9EntityCreatedEvent<Y9PersonsToPositions> event) {
-        Y9PersonsToPositions y9PersonsToPositions = event.getEntity();
-
-        Optional<Y9User> y9UserOptional = y9UserService.findByPersonIdAndTenantId(y9PersonsToPositions.getPersonId(),
-            Y9LoginUserHolder.getTenantId());
-        if (y9UserOptional.isPresent()) {
-            Y9User y9User = y9UserOptional.get();
-            String positionIds =
-                y9PersonsToPositionsService.getPositionIdsByPersonId(y9PersonsToPositions.getPersonId());
-            y9User.setPositions(positionIds);
-            y9UserService.save(y9User);
-        }
-
-        if (LOGGER.isDebugEnabled()) {
-            LOGGER.debug("人员-岗位关联新增触发的更新用户拥有的岗位id完成");
-        }
-    }
-
-    /**
-     * 监听人员-岗位关联删除事件 并更新用户拥有的岗位id
-     *
-     * @param event
-     */
-    @EventListener
-    @Transactional(readOnly = false)
-    public void onY9PersonsToPositionsDeleted(Y9EntityDeletedEvent<Y9PersonsToPositions> event) {
-        Y9PersonsToPositions y9PersonsToPositions = event.getEntity();
-
-        Optional<Y9User> y9UserOptional = y9UserService.findByPersonIdAndTenantId(y9PersonsToPositions.getPersonId(),
-            Y9LoginUserHolder.getTenantId());
-        if (y9UserOptional.isPresent()) {
-            Y9User y9User = y9UserOptional.get();
-            String positionIds =
-                y9PersonsToPositionsService.getPositionIdsByPersonId(y9PersonsToPositions.getPersonId());
-            y9User.setPositions(positionIds);
-            y9UserService.save(y9User);
-        }
-
-        if (LOGGER.isDebugEnabled()) {
-            LOGGER.debug("人员-岗位关联删除触发的更新用户拥有的岗位id完成");
-        }
-    }
-
-    /**
      * 监听人员更新事件
      *
      * @param event
@@ -376,6 +326,56 @@ public class UpdateY9UserListener {
         y9UserService.save(y9User);
         if (LOGGER.isDebugEnabled()) {
             LOGGER.debug("更新人员->{}执行完成", person.getId());
+        }
+    }
+
+    /**
+     * 监听人员-岗位关联新增事件 并更新用户拥有的岗位id
+     *
+     * @param event
+     */
+    @EventListener
+    @Transactional(readOnly = false)
+    public void onY9PersonsToPositionsCreated(Y9EntityCreatedEvent<Y9PersonsToPositions> event) {
+        Y9PersonsToPositions y9PersonsToPositions = event.getEntity();
+
+        Optional<Y9User> y9UserOptional = y9UserService.findByPersonIdAndTenantId(y9PersonsToPositions.getPersonId(),
+            Y9LoginUserHolder.getTenantId());
+        if (y9UserOptional.isPresent()) {
+            Y9User y9User = y9UserOptional.get();
+            String positionIds =
+                y9PersonsToPositionsService.getPositionIdsByPersonId(y9PersonsToPositions.getPersonId());
+            y9User.setPositions(positionIds);
+            y9UserService.save(y9User);
+        }
+
+        if (LOGGER.isDebugEnabled()) {
+            LOGGER.debug("人员-岗位关联新增触发的更新用户拥有的岗位id完成");
+        }
+    }
+
+    /**
+     * 监听人员-岗位关联删除事件 并更新用户拥有的岗位id
+     *
+     * @param event
+     */
+    @EventListener
+    @Transactional(readOnly = false)
+    public void onY9PersonsToPositionsDeleted(Y9EntityDeletedEvent<Y9PersonsToPositions> event) {
+        Y9PersonsToPositions y9PersonsToPositions = event.getEntity();
+
+        Optional<Y9User> y9UserOptional = y9UserService.findByPersonIdAndTenantId(y9PersonsToPositions.getPersonId(),
+            Y9LoginUserHolder.getTenantId());
+        if (y9UserOptional.isPresent()) {
+            Y9User y9User = y9UserOptional.get();
+            String positionIds =
+                y9PersonsToPositionsService.getPositionIdsByPersonId(y9PersonsToPositions.getPersonId());
+            y9User.setPositions(positionIds);
+            y9UserService.save(y9User);
+        }
+
+        if (LOGGER.isDebugEnabled()) {
+            LOGGER.debug("人员-岗位关联删除触发的更新用户拥有的岗位id完成");
         }
     }
 }

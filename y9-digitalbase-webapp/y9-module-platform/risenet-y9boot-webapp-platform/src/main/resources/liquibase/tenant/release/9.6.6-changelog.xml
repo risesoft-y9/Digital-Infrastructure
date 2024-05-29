@@ -75,4 +75,16 @@
         </dropColumn>
     </changeSet>
 
+
+    <changeSet id="1716456512373-1" author="shidaobang">
+        <dropColumn
+                columnName="USER_NAME"
+                tableName="Y9_ORG_CUSTOM_GROUP">
+        </dropColumn>
+        <dropColumn
+                columnName="SHARE_NAME"
+                tableName="Y9_ORG_CUSTOM_GROUP">
+        </dropColumn>
+    </changeSet>
+
 </databaseChangeLog>

@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.Optional;
 
 import net.risesoft.entity.Y9Person;
+import net.risesoft.entity.Y9PersonExt;
 import net.risesoft.y9.exception.Y9NotFoundException;
 
 public interface Y9PersonManager {
@@ -29,11 +30,17 @@ public interface Y9PersonManager {
      */
     Y9Person getById(String id);
 
+    Y9Person getByIdNotCache(String id);
+
     List<Y9Person> listByGroupId(String groupId, Boolean disabled);
+
+    List<Y9Person> listByParentId(String parentId, Boolean disabled);
 
     List<Y9Person> listByPositionId(String positionId, Boolean disabled);
 
     Y9Person save(Y9Person y9Person);
+
+    Y9Person saveOrUpdate(Y9Person person, Y9PersonExt personExt);
 
     /**
      * 保存或者更新人员扩展信息

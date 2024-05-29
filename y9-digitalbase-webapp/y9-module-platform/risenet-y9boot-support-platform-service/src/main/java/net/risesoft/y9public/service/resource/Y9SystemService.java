@@ -75,6 +75,15 @@ public interface Y9SystemService {
     Y9System getByName(String systemName);
 
     /**
+     * 检查系统名称可用性
+     *
+     * @param id id
+     * @param name 系统名
+     * @return boolean
+     */
+    boolean isNameAvailable(String id, String name);
+
+    /**
      * 查询所有Y9System
      *
      * @return List<Y9System>
@@ -116,13 +125,6 @@ public interface Y9SystemService {
     Y9System saveAndRegister4Tenant(Y9System y9System);
 
     /**
-     * 保存系统排序
-     *
-     * @param systemIds 系统id数组
-     */
-    void saveOrder(String[] systemIds);
-
-    /**
      * 保存系统
      *
      * @param y9System 系统对象
@@ -131,11 +133,9 @@ public interface Y9SystemService {
     Y9System saveOrUpdate(Y9System y9System);
 
     /**
-     * 检查系统名称可用性
+     * 保存系统排序
      *
-     * @param id id
-     * @param name 系统名
-     * @return boolean
+     * @param systemIds 系统id数组
      */
-    boolean isNameAvailable(String id, String name);
+    void saveOrder(String[] systemIds);
 }

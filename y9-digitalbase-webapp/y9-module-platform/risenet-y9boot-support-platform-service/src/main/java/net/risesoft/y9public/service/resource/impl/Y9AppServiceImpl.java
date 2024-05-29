@@ -46,48 +46,15 @@ import net.risesoft.y9public.specification.Y9AppSpecification;
 @RequiredArgsConstructor
 public class Y9AppServiceImpl implements Y9AppService {
 
+    protected final Y9TenantAppManager y9TenantAppManager;
     private final Y9AppRepository y9AppRepository;
     private final Y9SystemRepository y9SystemRepository;
-
     private final Y9AppManager y9AppManager;
     private final Y9TenantSystemManager y9TenantSystemManager;
-    protected final Y9TenantAppManager y9TenantAppManager;
 
     @Override
     public long countBySystemId(String systemId) {
         return y9AppRepository.countBySystemId(systemId);
-    }
-
-    @Override
-    @Transactional(readOnly = false)
-    public void delete(List<String> idList) {
-        for (String id : idList) {
-            this.delete(id);
-        }
-    }
-
-    @Override
-    @Transactional(readOnly = false)
-    public void delete(String id) {
-        y9AppManager.delete(id);
-    }
-
-    @Override
-    @Transactional(readOnly = false)
-    public List<Y9App> disable(List<String> idList) {
-        List<Y9App> y9AppList = new ArrayList<>();
-        for (String id : idList) {
-            y9AppList.add(this.disable(id));
-        }
-        return y9AppList;
-    }
-
-    @Override
-    @Transactional(readOnly = false)
-    public Y9App disable(String id) {
-        Y9App y9App = this.getById(id);
-        y9App.setEnabled(Boolean.FALSE);
-        return this.saveOrUpdate(y9App);
     }
 
     @Override
@@ -101,24 +68,6 @@ public class Y9AppServiceImpl implements Y9AppService {
                 y9AppManager.save(y9App);
             }
         }
-    }
-
-    @Override
-    @Transactional(readOnly = false)
-    public List<Y9App> enable(List<String> idList) {
-        List<Y9App> y9AppList = new ArrayList<>();
-        for (String id : idList) {
-            y9AppList.add(this.enable(id));
-        }
-        return y9AppList;
-    }
-
-    @Override
-    @Transactional(readOnly = false)
-    public Y9App enable(String id) {
-        Y9App y9App = this.getById(id);
-        y9App.setEnabled(Boolean.TRUE);
-        return this.saveOrUpdate(y9App);
     }
 
     @Override
@@ -147,21 +96,6 @@ public class Y9AppServiceImpl implements Y9AppService {
     }
 
     @Override
-    public boolean existsById(String id) {
-        return y9AppRepository.existsById(id);
-    }
-
-    @Override
-    public Optional<Y9App> findById(String id) {
-        return y9AppManager.findById(id);
-    }
-
-    @Override
-    public List<Y9App> findByNameLike(String name) {
-        return y9AppRepository.findByNameContainingOrderByTabIndex(name);
-    }
-
-    @Override
     public Optional<Y9App> findBySystemIdAndCustomId(String systemId, String customId) {
         return y9AppRepository.findBySystemIdAndCustomId(systemId, customId);
     }
@@ -181,13 +115,13 @@ public class Y9AppServiceImpl implements Y9AppService {
     }
 
     @Override
-    public Y9App getById(String id) {
-        return y9AppManager.getById(id);
+    public List<Y9App> listAll() {
+        return y9AppRepository.findAll(Sort.by("systemId", "tabIndex"));
     }
 
     @Override
-    public List<Y9App> listAll() {
-        return y9AppRepository.findAll(Sort.by("systemId", "tabIndex"));
+    public List<Y9App> listByEnable() {
+        return y9AppRepository.findByEnabledOrderByTabIndex(true);
     }
 
     @Override
@@ -211,11 +145,6 @@ public class Y9AppServiceImpl implements Y9AppService {
     @Override
     public List<Y9App> listByCustomId(String customId) {
         return y9AppRepository.findByCustomId(customId);
-    }
-
-    @Override
-    public List<Y9App> listByEnable() {
-        return y9AppRepository.findByEnabledOrderByTabIndex(true);
     }
 
     @Override
@@ -279,6 +208,85 @@ public class Y9AppServiceImpl implements Y9AppService {
 
     @Override
     @Transactional(readOnly = false)
+    public Y9App verifyApp(String id, boolean checked, String verifyUserName) {
+        Y9App y9App = this.getById(id);
+        y9App.setChecked(checked);
+        y9App.setVerifyUserName(verifyUserName);
+        return y9AppManager.save(y9App);
+    }
+
+    @Override
+    @Transactional(readOnly = false)
+    public void delete(List<String> idList) {
+        for (String id : idList) {
+            this.delete(id);
+        }
+    }
+
+    @Override
+    @Transactional(readOnly = false)
+    public void delete(String id) {
+        y9AppManager.delete(id);
+    }
+
+    @Override
+    @Transactional(readOnly = false)
+    public List<Y9App> disable(List<String> idList) {
+        List<Y9App> y9AppList = new ArrayList<>();
+        for (String id : idList) {
+            y9AppList.add(this.disable(id));
+        }
+        return y9AppList;
+    }
+
+    @Override
+    @Transactional(readOnly = false)
+    public Y9App disable(String id) {
+        Y9App y9App = this.getById(id);
+        y9App.setEnabled(Boolean.FALSE);
+        return this.saveOrUpdate(y9App);
+    }
+
+    @Override
+    @Transactional(readOnly = false)
+    public List<Y9App> enable(List<String> idList) {
+        List<Y9App> y9AppList = new ArrayList<>();
+        for (String id : idList) {
+            y9AppList.add(this.enable(id));
+        }
+        return y9AppList;
+    }
+
+    @Override
+    @Transactional(readOnly = false)
+    public Y9App enable(String id) {
+        Y9App y9App = this.getById(id);
+        y9App.setEnabled(Boolean.TRUE);
+        return this.saveOrUpdate(y9App);
+    }
+
+    @Override
+    public boolean existsById(String id) {
+        return y9AppRepository.existsById(id);
+    }
+
+    @Override
+    public Optional<Y9App> findById(String id) {
+        return y9AppManager.findById(id);
+    }
+
+    @Override
+    public List<Y9App> findByNameLike(String name) {
+        return y9AppRepository.findByNameContainingOrderByTabIndex(name);
+    }
+
+    @Override
+    public Y9App getById(String id) {
+        return y9AppManager.getById(id);
+    }
+
+    @Override
+    @Transactional(readOnly = false)
     public Y9App saveOrUpdate(Y9App y9App) {
         // 每次保存都更改审核状态为未审核
         y9App.setChecked(false);
@@ -308,15 +316,6 @@ public class Y9AppServiceImpl implements Y9AppService {
     @Override
     public Y9App updateTabIndex(String id, int index) {
         return y9AppManager.updateTabIndex(id, index);
-    }
-
-    @Override
-    @Transactional(readOnly = false)
-    public Y9App verifyApp(String id, boolean checked, String verifyUserName) {
-        Y9App y9App = this.getById(id);
-        y9App.setChecked(checked);
-        y9App.setVerifyUserName(verifyUserName);
-        return y9AppManager.save(y9App);
     }
 
     @EventListener

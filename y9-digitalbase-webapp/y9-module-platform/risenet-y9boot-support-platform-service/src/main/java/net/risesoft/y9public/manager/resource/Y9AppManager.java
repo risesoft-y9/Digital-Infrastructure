@@ -14,15 +14,15 @@ import net.risesoft.y9public.entity.resource.Y9App;
  * @since 9.6.2
  */
 public interface Y9AppManager {
-    void deleteBySystemId(String systemId);
-
     void delete(String id);
+
+    void deleteBySystemId(String systemId);
 
     void deleteTenantRelatedByAppId(String appId);
 
-    Y9App getById(String id);
-
     Optional<Y9App> findById(String id);
+
+    Y9App getById(String id);
 
     Y9App save(Y9App y9App);
 

@@ -1,10 +1,8 @@
 package net.risesoft.y9public.repository.resource;
 
-import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
 
-import net.risesoft.y9public.entity.resource.Y9ResourceBase;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;

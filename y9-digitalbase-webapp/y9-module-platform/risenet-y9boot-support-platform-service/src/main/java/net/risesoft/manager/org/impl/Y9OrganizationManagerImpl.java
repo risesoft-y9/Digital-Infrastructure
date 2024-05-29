@@ -2,6 +2,7 @@ package net.risesoft.manager.org.impl;
 
 import java.util.Optional;
 
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
@@ -11,16 +12,22 @@ import org.springframework.transaction.annotation.Transactional;
 import lombok.RequiredArgsConstructor;
 
 import net.risesoft.consts.CacheNameConsts;
+import net.risesoft.consts.InitDataConsts;
+import net.risesoft.entity.Y9OrgBase;
 import net.risesoft.entity.Y9Organization;
+import net.risesoft.enums.platform.OrgTypeEnum;
 import net.risesoft.exception.OrgUnitErrorCodeEnum;
+import net.risesoft.id.IdType;
+import net.risesoft.id.Y9IdGenerator;
 import net.risesoft.manager.org.Y9OrganizationManager;
-import net.risesoft.model.platform.Organization;
 import net.risesoft.repository.Y9OrganizationRepository;
-import net.risesoft.util.Y9PublishServiceUtil;
+import net.risesoft.util.Y9OrgUtil;
+import net.risesoft.y9.Y9Context;
 import net.risesoft.y9.Y9LoginUserHolder;
 import net.risesoft.y9.exception.util.Y9ExceptionUtil;
-import net.risesoft.y9.pubsub.constant.Y9OrgEventTypeConst;
-import net.risesoft.y9.pubsub.message.Y9MessageOrg;
+import net.risesoft.y9.pubsub.event.Y9EntityCreatedEvent;
+import net.risesoft.y9.pubsub.event.Y9EntityUpdatedEvent;
+import net.risesoft.y9.util.Y9BeanUtil;
 import net.risesoft.y9.util.Y9ModelConvertUtil;
 
 /**
@@ -57,6 +64,12 @@ public class Y9OrganizationManagerImpl implements Y9OrganizationManager {
     }
 
     @Override
+    public Y9Organization getByIdNotCache(String id) {
+        return y9OrganizationRepository.findById(id)
+            .orElseThrow(() -> Y9ExceptionUtil.notFoundException(OrgUnitErrorCodeEnum.ORGANIZATION_NOT_FOUND, id));
+    }
+
+    @Override
     @Cacheable(key = "#id", condition = "#id!=null", unless = "#result==null")
     public Y9Organization getById(String id) {
         return y9OrganizationRepository.findById(id)
@@ -71,30 +84,67 @@ public class Y9OrganizationManagerImpl implements Y9OrganizationManager {
     }
 
     @Override
+    @Transactional(readOnly = false)
+    public Y9Organization saveOrUpdate(Y9Organization organization) {
+        if (StringUtils.isNotEmpty(organization.getId())) {
+            Optional<Y9Organization> y9OrganizationOptional = this.findByIdNotCache(organization.getId());
+            if (y9OrganizationOptional.isPresent()) {
+                Y9Organization originY9Organization = new Y9Organization();
+                Y9Organization updatedY9Organization = y9OrganizationOptional.get();
+                Y9BeanUtil.copyProperties(updatedY9Organization, originY9Organization);
+
+                Y9BeanUtil.copyProperties(organization, updatedY9Organization);
+
+                updatedY9Organization
+                    .setDn(Y9OrgUtil.buildDn(OrgTypeEnum.ORGANIZATION, updatedY9Organization.getName(), null));
+                updatedY9Organization.setGuidPath(Y9OrgUtil.buildGuidPath(null, updatedY9Organization.getId()));
+                updatedY9Organization.setTenantId(Y9LoginUserHolder.getTenantId());
+                final Y9Organization savedOrganization = this.save(updatedY9Organization);
+
+                Y9Context.publishEvent(new Y9EntityUpdatedEvent<>(originY9Organization, savedOrganization));
+
+                return originY9Organization;
+            }
+        } else {
+            organization.setId(Y9IdGenerator.genId(IdType.SNOWFLAKE));
+        }
+
+        Integer maxTabIndex = getMaxTabIndex();
+        organization.setTabIndex(maxTabIndex != null ? maxTabIndex + 1 : 0);
+        organization.setVersion(InitDataConsts.Y9_VERSION);
+        organization.setDn(Y9OrgUtil.buildDn(OrgTypeEnum.ORGANIZATION, organization.getName(), null));
+        organization.setGuidPath(Y9OrgUtil.buildGuidPath(null, organization.getId()));
+        organization.setTenantId(Y9LoginUserHolder.getTenantId());
+        final Y9Organization savedOrganization = this.save(organization);
+
+        Y9Context.publishEvent(new Y9EntityCreatedEvent<>(savedOrganization));
+
+        return savedOrganization;
+    }
+
+    @Override
     @CacheEvict(key = "#id")
     @Transactional(readOnly = false)
     public Y9Organization saveProperties(String id, String properties) {
-        Y9Organization org = this.getById(id);
-        org.setProperties(properties);
-        org = save(org);
+        final Y9Organization organization = this.getById(id);
 
-        Y9MessageOrg<Organization> msg = new Y9MessageOrg<>(Y9ModelConvertUtil.convert(org, Organization.class),
-            Y9OrgEventTypeConst.ORGANIZATION_UPDATE, Y9LoginUserHolder.getTenantId());
-        Y9PublishServiceUtil.publishMessageOrg(msg);
-        return org;
+        Y9Organization updatedOrganization = Y9ModelConvertUtil.convert(organization, Y9Organization.class);
+        updatedOrganization.setProperties(properties);
+        return this.saveOrUpdate(updatedOrganization);
     }
 
     @Override
     @Transactional(readOnly = false)
     @CacheEvict(key = "#id")
     public Y9Organization updateTabIndex(String id, int tabIndex) {
-        Y9Organization org = this.getById(id);
-        org.setTabIndex(tabIndex);
-        org = save(org);
+        Y9Organization organization = this.getById(id);
 
-        Y9MessageOrg<Organization> msg = new Y9MessageOrg<>(Y9ModelConvertUtil.convert(org, Organization.class),
-            Y9OrgEventTypeConst.ORGANIZATION_UPDATE, Y9LoginUserHolder.getTenantId());
-        Y9PublishServiceUtil.persistAndPublishMessageOrg(msg, "更新组织机构排序号", org.getName() + "的排序号更新为" + tabIndex);
-        return org;
+        Y9Organization updatedOrganization = Y9ModelConvertUtil.convert(organization, Y9Organization.class);
+        updatedOrganization.setTabIndex(tabIndex);
+        return this.saveOrUpdate(updatedOrganization);
+    }
+
+    private Integer getMaxTabIndex() {
+        return y9OrganizationRepository.findTopByOrderByTabIndexDesc().map(Y9OrgBase::getTabIndex).orElse(0);
     }
 }

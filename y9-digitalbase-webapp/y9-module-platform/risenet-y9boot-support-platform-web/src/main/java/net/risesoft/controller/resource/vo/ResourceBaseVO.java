@@ -40,17 +40,17 @@ public class ResourceBaseVO {
     /** 是否继承上级节点的权限 */
     private Boolean inherit;
 
-    public String getParentId() {
-        if (resourceType.equals(ResourceTypeEnum.APP)) {
-            return systemId;
-        }
-        return parentId;
-    }
-
     public String getAppId() {
         if (resourceType.equals(ResourceTypeEnum.APP)) {
             return id;
         }
         return appId;
+    }
+
+    public String getParentId() {
+        if (resourceType.equals(ResourceTypeEnum.APP)) {
+            return systemId;
+        }
+        return parentId;
     }
 }

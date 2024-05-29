@@ -1,6 +1,5 @@
 package net.risesoft.api.v0.org;
 
-import java.util.Collections;
 import java.util.List;
 
 import jakarta.validation.constraints.NotBlank;
@@ -379,7 +378,7 @@ public class DepartmentApiImpl implements DepartmentApi {
         @RequestParam("departmentId") @NotBlank String departmentId, @RequestParam("disabled") Boolean disabled) {
         Y9LoginUserHolder.setTenantId(tenantId);
 
-        List<Y9Person> y9PersonList = y9PersonService.listByParentIdAndDisabled(departmentId, disabled);
+        List<Y9Person> y9PersonList = y9PersonService.listByParentId(departmentId, disabled);
         return Y9ModelConvertUtil.convert(y9PersonList, Person.class);
     }
 
@@ -433,23 +432,5 @@ public class DepartmentApiImpl implements DepartmentApi {
         Y9Department y9Department = Y9JsonUtil.readValue(departmentJson, Y9Department.class);
         y9Department = y9DepartmentService.saveOrUpdate(y9Department);
         return Y9ModelConvertUtil.convert(y9Department, Department.class);
-    }
-
-    /**
-     * 根据条件查询部门对象
-     *
-     * @param tenantId 租户id
-     * @param whereClause sql语句where后面的条件语句
-     * @return List<Department> 部门对象集合
-     * @since 9.6.0
-     */
-    @Override
-    public List<Department> search(@RequestParam("tenantId") @NotBlank String tenantId,
-        @RequestParam("whereClause") @NotBlank String whereClause) {
-        Y9LoginUserHolder.setTenantId(tenantId);
-
-        List<Y9Department> y9DepartmentList = y9DepartmentService.search(whereClause);
-        Collections.sort(y9DepartmentList);
-        return Y9ModelConvertUtil.convert(y9DepartmentList, Department.class);
     }
 }

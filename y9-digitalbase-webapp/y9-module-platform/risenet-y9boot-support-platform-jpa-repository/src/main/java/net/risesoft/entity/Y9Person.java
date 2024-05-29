@@ -17,6 +17,7 @@ import net.risesoft.enums.platform.PersonTypeEnum;
 import net.risesoft.enums.platform.SexEnum;
 import net.risesoft.persistence.EnumConverter;
 import net.risesoft.validation.Mobile;
+import org.hibernate.annotations.DynamicUpdate;
 
 /**
  * 人员实体
@@ -28,6 +29,7 @@ import net.risesoft.validation.Mobile;
  */
 @Entity
 @Table(name = "Y9_ORG_PERSON")
+@DynamicUpdate
 @Comment("人员表")
 @Data
 public class Y9Person extends Y9OrgBase {

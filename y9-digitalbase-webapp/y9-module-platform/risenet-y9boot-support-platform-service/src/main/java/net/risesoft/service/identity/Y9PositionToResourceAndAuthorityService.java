@@ -110,19 +110,6 @@ public interface Y9PositionToResourceAndAuthorityService {
      */
     List<Y9PositionToResourceAndAuthority> listByPositionId(String positionId);
 
-    void saveOrUpdate(Y9ResourceBase y9ResourceBase, Y9Position y9Position, Y9Authorization y9Authorization,
-        Boolean inherit);
-
-    /**
-     * 获得某一资源下，有相应操作权限的子节点
-     *
-     * @param positionId 岗位id
-     * @param resourceId 资源id
-     * @param authority 权限类型
-     * @return {@link List}<{@link Y9ResourceBase}>
-     */
-    List<Y9ResourceBase> listSubResources(String positionId, String resourceId, AuthorityEnum authority);
-
     /**
      * 获得某一资源下,主体对象有相应操作权限的子菜单
      *
@@ -134,4 +121,17 @@ public interface Y9PositionToResourceAndAuthorityService {
      */
     List<Y9Menu> listSubMenus(String positionId, String resourceId, ResourceTypeEnum resourceType,
         AuthorityEnum authority);
+
+    /**
+     * 获得某一资源下，有相应操作权限的子节点
+     *
+     * @param positionId 岗位id
+     * @param resourceId 资源id
+     * @param authority 权限类型
+     * @return {@link List}<{@link Y9ResourceBase}>
+     */
+    List<Y9ResourceBase> listSubResources(String positionId, String resourceId, AuthorityEnum authority);
+
+    void saveOrUpdate(Y9ResourceBase y9ResourceBase, Y9Position y9Position, Y9Authorization y9Authorization,
+        Boolean inherit);
 }

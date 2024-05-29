@@ -41,31 +41,6 @@ public class TenantApiImpl implements TenantApi {
     private final Y9TenantService y9TenantService;
 
     /**
-     * 根据租户id获取租户对象
-     *
-     * @param tenantId 租户id
-     * @return Tenant 租户对象
-     * @since 9.6.0
-     */
-    @Override
-    public Tenant getById(@RequestParam("tenantId") @NotBlank String tenantId) {
-        Y9Tenant y9Tenant = y9TenantService.getById(tenantId);
-        return Y9ModelConvertUtil.convert(y9Tenant, Tenant.class);
-    }
-
-    /**
-     * 获取所有租户对象
-     *
-     * @return List&lt;Tenant&gt; 所有租户对象的集合
-     * @since 9.6.0
-     */
-    @Override
-    public List<Tenant> listAllTenants() {
-        List<Y9Tenant> tenantEntityList = y9TenantService.listAll();
-        return Y9ModelConvertUtil.convert(tenantEntityList, Tenant.class);
-    }
-
-    /**
      * 根据租户名，获取租户列表
      *
      * @param tenantName 租户名
@@ -89,6 +64,31 @@ public class TenantApiImpl implements TenantApi {
     public Tenant findByShortName(@RequestParam("shortName") @NotBlank String shortName) {
         Y9Tenant y9Tenant = y9TenantService.findByShortName(shortName).orElse(null);
         return Y9ModelConvertUtil.convert(y9Tenant, Tenant.class);
+    }
+
+    /**
+     * 根据租户id获取租户对象
+     *
+     * @param tenantId 租户id
+     * @return Tenant 租户对象
+     * @since 9.6.0
+     */
+    @Override
+    public Tenant getById(@RequestParam("tenantId") @NotBlank String tenantId) {
+        Y9Tenant y9Tenant = y9TenantService.getById(tenantId);
+        return Y9ModelConvertUtil.convert(y9Tenant, Tenant.class);
+    }
+
+    /**
+     * 获取所有租户对象
+     *
+     * @return List&lt;Tenant&gt; 所有租户对象的集合
+     * @since 9.6.0
+     */
+    @Override
+    public List<Tenant> listAllTenants() {
+        List<Y9Tenant> tenantEntityList = y9TenantService.listAll();
+        return Y9ModelConvertUtil.convert(tenantEntityList, Tenant.class);
     }
 
     /**

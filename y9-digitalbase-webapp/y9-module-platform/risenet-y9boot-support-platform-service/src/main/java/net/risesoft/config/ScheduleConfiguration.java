@@ -19,7 +19,7 @@ public class ScheduleConfiguration {
 
     // @Bean
     // public LockProvider lockProvider(RedisConnectionFactory connectionFactory) {
-    //     return new RedisLockProvider(connectionFactory);
+    // return new RedisLockProvider(connectionFactory);
     // }
 
     @Bean

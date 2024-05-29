@@ -4,17 +4,22 @@ import java.util.List;
 import java.util.Optional;
 
 import org.apache.commons.lang3.StringUtils;
+import org.springframework.context.event.EventListener;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import lombok.RequiredArgsConstructor;
 
+import net.risesoft.entity.Y9Department;
 import net.risesoft.entity.Y9DepartmentProp;
+import net.risesoft.entity.Y9Person;
+import net.risesoft.entity.Y9Position;
 import net.risesoft.enums.platform.DepartmentPropCategoryEnum;
 import net.risesoft.id.IdType;
 import net.risesoft.id.Y9IdGenerator;
 import net.risesoft.repository.Y9DepartmentPropRepository;
 import net.risesoft.service.org.Y9DepartmentPropService;
+import net.risesoft.y9.pubsub.event.Y9EntityDeletedEvent;
 
 /**
  * @author dingzhaojun
@@ -94,4 +99,24 @@ public class Y9DepartmentPropServiceImpl implements Y9DepartmentPropService {
         y9DepartmentPropRepository.save(prop);
     }
 
+    @EventListener
+    @Transactional(readOnly = false)
+    public void onDepartmentDeleted(Y9EntityDeletedEvent<Y9Department> event) {
+        Y9Department department = event.getEntity();
+        y9DepartmentPropRepository.deleteByDeptId(department.getId());
+    }
+
+    @EventListener
+    @Transactional(readOnly = false)
+    public void onPersonDeleted(Y9EntityDeletedEvent<Y9Person> event) {
+        Y9Person person = event.getEntity();
+        y9DepartmentPropRepository.deleteByOrgBaseId(person.getId());
+    }
+
+    @EventListener
+    @Transactional(readOnly = false)
+    public void onPositionDeleted(Y9EntityDeletedEvent<Y9Position> event) {
+        Y9Position position = event.getEntity();
+        y9DepartmentPropRepository.deleteByOrgBaseId(position.getId());
+    }
 }

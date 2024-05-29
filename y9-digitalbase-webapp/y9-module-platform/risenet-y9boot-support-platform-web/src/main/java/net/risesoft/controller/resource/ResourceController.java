@@ -74,46 +74,6 @@ public class ResourceController {
     }
 
     /**
-     * 根据父资源id获取子资源列表
-     *
-     * @param parentId 父节点id
-     * @return
-     */
-    @RiseLog(operationName = "根据父资源id获取子资源列表")
-    @GetMapping(value = "/listByParentId")
-    @Deprecated
-    public Y9Result<List<ResourceBaseVO>> listByParentId(@RequestParam @NotBlank String parentId) {
-        List<Y9ResourceBase> y9ResourceBaseList = compositeResourceService.listByParentId(parentId);
-        return Y9Result.success(Y9ModelConvertUtil.convert(y9ResourceBaseList, ResourceBaseVO.class),
-            "根据父资源id获取子资源列表成功");
-    }
-
-    /**
-     * 查询所有的根资源（有权限的App资源）
-     *
-     * @return
-     */
-    @RiseLog(operationName = "查询所有的根资源（有权限的App资源）")
-    @GetMapping(value = "/treeRoot")
-    @Deprecated
-    public Y9Result<List<ResourceBaseVO>> treeRoot() {
-        List<Y9App> appResourceList = compositeResourceService.listRootResourceList();
-        List<Y9App> accessibleAppResourceList;
-
-        UserInfo userInfo = Y9LoginUserHolder.getUserInfo();
-        if (ManagerLevelEnum.OPERATION_SYSTEM_MANAGER.equals(userInfo.getManagerLevel())) {
-            accessibleAppResourceList = appResourceList;
-        } else {
-            List<String> appIds =
-                y9TenantAppService.listAppIdByTenantId(Y9LoginUserHolder.getTenantId(), Boolean.TRUE, Boolean.TRUE);
-            accessibleAppResourceList = appResourceList.stream().filter(resource -> appIds.contains(resource.getId()))
-                .collect(Collectors.toList());
-        }
-        return Y9Result.success(Y9ModelConvertUtil.convert(accessibleAppResourceList, ResourceBaseVO.class),
-            "查询所有的根资源成功");
-    }
-
-    /**
      * 根据应用id查询资源（App资源）
      *
      * @param appId 应用id
@@ -145,6 +105,34 @@ public class ResourceController {
     }
 
     /**
+     * 根据父资源id获取子资源列表
+     *
+     * @param parentId 父节点id
+     * @return
+     */
+    @RiseLog(operationName = "根据父资源id获取子资源列表")
+    @GetMapping(value = "/listByParentId")
+    @Deprecated
+    public Y9Result<List<ResourceBaseVO>> listByParentId(@RequestParam @NotBlank String parentId) {
+        List<Y9ResourceBase> y9ResourceBaseList = compositeResourceService.listByParentId(parentId);
+        return Y9Result.success(Y9ModelConvertUtil.convert(y9ResourceBaseList, ResourceBaseVO.class),
+            "根据父资源id获取子资源列表成功");
+    }
+
+    /**
+     * 根据父资源id获取子资源列表
+     *
+     * @param parentId 父节点id
+     * @return
+     */
+    @RiseLog(operationName = "根据父资源id获取子资源列表")
+    @GetMapping(value = "/listByParentId2")
+    public Y9Result<List<ResourceTreeNodeVO>> listByParentId2(@RequestParam @NotBlank String parentId) {
+        List<Y9ResourceBase> y9ResourceBaseList = compositeResourceService.listByParentId(parentId);
+        return Y9Result.success(ResourceTreeNodeVO.convertY9ResourceBaseList(y9ResourceBaseList), "根据父资源id获取子资源列表成功");
+    }
+
+    /**
      * 对同一级的资源进行排序
      *
      * @param ids 资源id数组
@@ -158,26 +146,28 @@ public class ResourceController {
     }
 
     /**
-     * 根据名称查询资源树
+     * 查询所有的根资源（有权限的App资源）
      *
-     * @param name 资源名称
      * @return
      */
-    @RiseLog(operationName = "根据名称查询资源树")
-    @GetMapping(value = "/treeSearch")
+    @RiseLog(operationName = "查询所有的根资源（有权限的App资源）")
+    @GetMapping(value = "/treeRoot")
     @Deprecated
-    public Y9Result<List<ResourceBaseVO>> treeSearch(@RequestParam String name, String appId) {
-        List<Y9ResourceBase> appResourceList = compositeResourceService.treeSearch(name);
-        List<String> appIds =
-            y9TenantAppService.listAppIdByTenantId(Y9LoginUserHolder.getTenantId(), Boolean.TRUE, Boolean.TRUE);
-        List<Y9ResourceBase> accessAppResourceList =
-            appResourceList.stream().filter(resource -> appIds.contains(resource.getAppId()))
-                .filter(distinctByKey(Y9ResourceBase::getId)).collect(Collectors.toList());
-        if (StringUtils.isNotBlank(appId)) {
-            accessAppResourceList = accessAppResourceList.stream().filter(resource -> appId.equals(resource.getAppId()))
-                .filter(distinctByKey(Y9ResourceBase::getId)).collect(Collectors.toList());
+    public Y9Result<List<ResourceBaseVO>> treeRoot() {
+        List<Y9App> appResourceList = compositeResourceService.listRootResourceList();
+        List<Y9App> accessibleAppResourceList;
+
+        UserInfo userInfo = Y9LoginUserHolder.getUserInfo();
+        if (ManagerLevelEnum.OPERATION_SYSTEM_MANAGER.equals(userInfo.getManagerLevel())) {
+            accessibleAppResourceList = appResourceList;
+        } else {
+            List<String> appIds =
+                y9TenantAppService.listAppIdByTenantId(Y9LoginUserHolder.getTenantId(), Boolean.TRUE, Boolean.TRUE);
+            accessibleAppResourceList = appResourceList.stream().filter(resource -> appIds.contains(resource.getId()))
+                .collect(Collectors.toList());
         }
-        return Y9Result.success(Y9ModelConvertUtil.convert(accessAppResourceList, ResourceBaseVO.class), "根据名称查询资源树成功");
+        return Y9Result.success(Y9ModelConvertUtil.convert(accessibleAppResourceList, ResourceBaseVO.class),
+            "查询所有的根资源成功");
     }
 
     /**
@@ -204,16 +194,26 @@ public class ResourceController {
     }
 
     /**
-     * 根据父资源id获取子资源列表
+     * 根据名称查询资源树
      *
-     * @param parentId 父节点id
+     * @param name 资源名称
      * @return
      */
-    @RiseLog(operationName = "根据父资源id获取子资源列表")
-    @GetMapping(value = "/listByParentId2")
-    public Y9Result<List<ResourceTreeNodeVO>> listByParentId2(@RequestParam @NotBlank String parentId) {
-        List<Y9ResourceBase> y9ResourceBaseList = compositeResourceService.listByParentId(parentId);
-        return Y9Result.success(ResourceTreeNodeVO.convertY9ResourceBaseList(y9ResourceBaseList), "根据父资源id获取子资源列表成功");
+    @RiseLog(operationName = "根据名称查询资源树")
+    @GetMapping(value = "/treeSearch")
+    @Deprecated
+    public Y9Result<List<ResourceBaseVO>> treeSearch(@RequestParam String name, String appId) {
+        List<Y9ResourceBase> appResourceList = compositeResourceService.treeSearch(name);
+        List<String> appIds =
+            y9TenantAppService.listAppIdByTenantId(Y9LoginUserHolder.getTenantId(), Boolean.TRUE, Boolean.TRUE);
+        List<Y9ResourceBase> accessAppResourceList =
+            appResourceList.stream().filter(resource -> appIds.contains(resource.getAppId()))
+                .filter(distinctByKey(Y9ResourceBase::getId)).collect(Collectors.toList());
+        if (StringUtils.isNotBlank(appId)) {
+            accessAppResourceList = accessAppResourceList.stream().filter(resource -> appId.equals(resource.getAppId()))
+                .filter(distinctByKey(Y9ResourceBase::getId)).collect(Collectors.toList());
+        }
+        return Y9Result.success(Y9ModelConvertUtil.convert(accessAppResourceList, ResourceBaseVO.class), "根据名称查询资源树成功");
     }
 
     /**

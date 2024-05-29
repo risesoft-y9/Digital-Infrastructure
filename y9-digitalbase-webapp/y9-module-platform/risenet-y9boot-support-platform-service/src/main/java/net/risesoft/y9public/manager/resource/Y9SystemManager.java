@@ -15,15 +15,15 @@ import net.risesoft.y9public.entity.resource.Y9System;
  */
 public interface Y9SystemManager {
 
-    Optional<Y9System> findByName(String systemName);
-
     @Transactional(readOnly = false)
-    Y9System save(Y9System y9System);
-
-    Y9System getById(String id);
+    void delete(String id);
 
     Optional<Y9System> findById(String id);
 
+    Optional<Y9System> findByName(String systemName);
+
+    Y9System getById(String id);
+
     @Transactional(readOnly = false)
-    void delete(String id);
+    Y9System save(Y9System y9System);
 }

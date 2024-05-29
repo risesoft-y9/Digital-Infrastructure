@@ -1,16 +1,15 @@
 package net.risesoft.controller;
 
-import net.risesoft.controller.org.OrgController;
-import net.risesoft.entity.Y9Department;
-import net.risesoft.entity.Y9Organization;
-import net.risesoft.enums.platform.ManagerLevelEnum;
-import net.risesoft.enums.platform.OrgTypeEnum;
-import net.risesoft.model.user.UserInfo;
-import net.risesoft.service.org.CompositeOrgBaseService;
-import net.risesoft.service.org.Y9DepartmentService;
-import net.risesoft.service.org.Y9OrganizationService;
-import net.risesoft.service.org.Y9PersonService;
-import net.risesoft.y9.Y9LoginUserHolder;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+
+import java.nio.charset.Charset;
+
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -22,23 +21,25 @@ import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
 
-import java.nio.charset.Charset;
-
-import static org.mockito.Mockito.times;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
-
+import net.risesoft.controller.org.OrgController;
+import net.risesoft.entity.Y9Department;
+import net.risesoft.entity.Y9Organization;
+import net.risesoft.enums.platform.ManagerLevelEnum;
+import net.risesoft.enums.platform.OrgTypeEnum;
+import net.risesoft.model.user.UserInfo;
+import net.risesoft.service.org.CompositeOrgBaseService;
+import net.risesoft.service.org.Y9DepartmentService;
+import net.risesoft.service.org.Y9OrganizationService;
+import net.risesoft.service.org.Y9PersonService;
+import net.risesoft.y9.Y9LoginUserHolder;
 
 @WebMvcTest(controllers = {OrgController.class})
 public class OrgControllerTest {
 
     @Autowired
     public MockMvc mockMvc;
-
+    public Y9Organization y9Organization = new Y9Organization();
+    public Y9Department y9Department = new Y9Department();
     @MockBean
     private Y9DepartmentService y9DepartmentService;
     @MockBean
@@ -48,9 +49,26 @@ public class OrgControllerTest {
     @MockBean
     private Y9PersonService y9PersonService;
 
-    public Y9Organization y9Organization = new Y9Organization();
-
-    public Y9Department y9Department = new Y9Department();
+    @ParameterizedTest
+    @EnumSource(value = OrgTypeEnum.class, names = {"ORGANIZATION", "DEPARTMENT"})
+    void getAllPersonsCount(OrgTypeEnum orgType) throws Exception {
+        when(y9OrganizationService.getById(y9Organization.getId())).thenReturn(y9Organization);
+        when(y9DepartmentService.getById(y9Department.getId())).thenReturn(y9Department);
+        String id = y9Organization.getId();
+        if (orgType.equals(OrgTypeEnum.DEPARTMENT)) {
+            id = y9Department.getId();
+        }
+        mockMvc.perform(post("/api/rest/org/getAllPersonsCount")
+                        .param("id", id).param("orgType", orgType.toString()))
+                .andExpect(status().isOk());
+        if (orgType.equals(OrgTypeEnum.ORGANIZATION)) {
+            verify(y9OrganizationService, times(1)).getById(y9Organization.getId());
+        }
+        if (orgType.equals(OrgTypeEnum.DEPARTMENT)) {
+            verify(y9DepartmentService, times(1)).getById(y9Department.getId());
+        }
+        verify(y9PersonService, times(1)).countByGuidPathLikeAndDisabledAndDeletedFalse(id);
+    }
 
     @BeforeEach
     void setUp() {
@@ -90,25 +108,11 @@ public class OrgControllerTest {
                 .andExpect(status().isOk());
     }
 
-    @ParameterizedTest
-    @EnumSource(value = OrgTypeEnum.class, names = {"ORGANIZATION", "DEPARTMENT"})
-    void getAllPersonsCount(OrgTypeEnum orgType) throws Exception {
-        when(y9OrganizationService.getById(y9Organization.getId())).thenReturn(y9Organization);
-        when(y9DepartmentService.getById(y9Department.getId())).thenReturn(y9Department);
-        String id = y9Organization.getId();
-        if (orgType.equals(OrgTypeEnum.DEPARTMENT)) {
-            id = y9Department.getId();
-        }
-        mockMvc.perform(post("/api/rest/org/getAllPersonsCount")
-                        .param("id", id).param("orgType", orgType.toString()))
-                .andExpect(status().isOk());
-        if (orgType.equals(OrgTypeEnum.ORGANIZATION)) {
-            verify(y9OrganizationService, times(1)).getById(y9Organization.getId());
-        }
-        if (orgType.equals(OrgTypeEnum.DEPARTMENT)) {
-            verify(y9DepartmentService, times(1)).getById(y9Department.getId());
-        }
-        verify(y9PersonService, times(1)).countByGuidPathLikeAndDisabledAndDeletedFalse(id);
+    @Test
+    void testRemove() throws Exception {
+        mockMvc.perform(
+            post("/api/rest/org/remove").contentType(MediaType.APPLICATION_JSON).param("orgId", y9Organization.getId()))
+            .andExpect(status().isOk()).andExpect(jsonPath("$.success").value(true));
     }
 
     @Test
@@ -119,12 +123,5 @@ public class OrgControllerTest {
                 .andExpect(jsonPath("$.success").value(true))
                 .andReturn();
         System.out.println(mvcResult.getResponse().getContentAsString(Charset.defaultCharset()));
-    }
-
-    @Test
-    void testRemove() throws Exception {
-        mockMvc.perform(post("/api/rest/org/remove").contentType(MediaType.APPLICATION_JSON).param("orgId", y9Organization.getId()))
-                .andExpect(status().isOk())
-                .andExpect(jsonPath("$.success").value(true));
     }
 }

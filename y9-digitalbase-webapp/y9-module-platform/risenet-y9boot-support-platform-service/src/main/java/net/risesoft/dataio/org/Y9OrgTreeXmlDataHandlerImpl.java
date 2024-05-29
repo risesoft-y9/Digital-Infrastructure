@@ -440,6 +440,38 @@ public class Y9OrgTreeXmlDataHandlerImpl implements Y9OrgTreeDataHandler {
 
     }
 
+    @Override
+    public Y9Result<Object> importOrgTree(InputStream inputStream, String orgId) {
+
+        DocumentFactory factory = DocumentFactory.getInstance();
+        SAXReader saxReader = new SAXReader(factory);
+        Document document = null;
+        try {
+            errorMsg = "";
+            saxReader.setEncoding("UTF-8");
+            document = saxReader.read(inputStream);
+
+            String level = "";
+            Element root = document.getRootElement();
+            String uid = root.attributeValue("uid");
+            String y9 = root.attributeValue("y9");
+            boolean y9Version = "true".equals(y9);
+            String[] uids = uid.split(",");
+            for (String id : uids) {
+                recursiveRun(document, level, id, y9Version);
+            }
+        } catch (DocumentException e) {
+            LOGGER.warn(e.getMessage(), e);
+            return Y9Result.failure(getPrintStackTrace(e));
+        }
+        return Y9Result.success("", errorMsg);
+    }
+
+    @Override
+    public Y9Result<Object> importPerson(InputStream inputStream, String orgId) {
+        return null;
+    }
+
     private List<String> getPersons(Element currentNode) {
         List<String> persons = new ArrayList<>();
         Element include = currentNode.element("include");
@@ -482,38 +514,6 @@ public class Y9OrgTreeXmlDataHandlerImpl implements Y9OrgTreeDataHandler {
         pw.flush();
         sw.flush();
         return sw.toString();
-    }
-
-    @Override
-    public Y9Result<Object> importOrgTree(InputStream inputStream, String orgId) {
-
-        DocumentFactory factory = DocumentFactory.getInstance();
-        SAXReader saxReader = new SAXReader(factory);
-        Document document = null;
-        try {
-            errorMsg = "";
-            saxReader.setEncoding("UTF-8");
-            document = saxReader.read(inputStream);
-
-            String level = "";
-            Element root = document.getRootElement();
-            String uid = root.attributeValue("uid");
-            String y9 = root.attributeValue("y9");
-            boolean y9Version = "true".equals(y9);
-            String[] uids = uid.split(",");
-            for (String id : uids) {
-                recursiveRun(document, level, id, y9Version);
-            }
-        } catch (DocumentException e) {
-            LOGGER.warn(e.getMessage(), e);
-            return Y9Result.failure(getPrintStackTrace(e));
-        }
-        return Y9Result.success("", errorMsg);
-    }
-
-    @Override
-    public Y9Result<Object> importPerson(InputStream inputStream, String orgId) {
-        return null;
     }
 
     private void recursiveRun(Document document, String level, String uid, boolean y9Version) {

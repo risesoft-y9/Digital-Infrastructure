@@ -7,6 +7,7 @@ import jakarta.persistence.Index;
 import jakarta.persistence.Table;
 
 import org.hibernate.annotations.Comment;
+import org.hibernate.annotations.DynamicUpdate;
 
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -25,6 +26,7 @@ import net.risesoft.base.BaseEntity;
 @Table(name = "Y9_ORG_PERSONS_GROUPS",
     indexes = {@Index(columnList = "GROUP_ID,PERSON_ID", unique = true),
         @Index(columnList = "PERSON_ID,GROUP_ID", unique = true)})
+@DynamicUpdate
 @Comment("人员用户组关联表")
 @NoArgsConstructor
 @Data

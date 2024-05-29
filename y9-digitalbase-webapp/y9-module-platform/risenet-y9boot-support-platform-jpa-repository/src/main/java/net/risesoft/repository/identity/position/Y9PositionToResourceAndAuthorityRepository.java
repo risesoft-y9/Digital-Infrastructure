@@ -57,14 +57,14 @@ public interface Y9PositionToResourceAndAuthorityRepository
     List<Y9PositionToResourceAndAuthority> findByPositionIdAndAuthorityAndResourceType(String positionId,
         AuthorityEnum authority, ResourceTypeEnum resourceType);
 
+    List<Y9PositionToResourceAndAuthority> findByPositionIdAndParentResourceIdAndAuthority(String positionId,
+        String parentResourceId, AuthorityEnum authority);
+
     List<Y9PositionToResourceAndAuthority> findByPositionIdAndParentResourceIdAndAuthorityAndResourceType(
         String positionId, String parentResourceId, AuthorityEnum authority, ResourceTypeEnum resourceType);
 
-    List<Y9PositionToResourceAndAuthority> findByPositionIdAndParentResourceIdAndAuthority(
-        String positionId, String parentResourceId, AuthorityEnum authority);
-
-    List<Y9PositionToResourceAndAuthority> findByPositionIdAndParentResourceIdIsNullAndAuthority(
-        String positionId, AuthorityEnum authority);
+    List<Y9PositionToResourceAndAuthority> findByPositionIdAndParentResourceIdIsNullAndAuthority(String positionId,
+        AuthorityEnum authority);
 
     List<Y9PositionToResourceAndAuthority> findByPositionIdAndResourceIdAndAuthority(String positionId,
         String resourceId, AuthorityEnum authority);

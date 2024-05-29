@@ -7,13 +7,18 @@ import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
 
+import org.springframework.context.event.EventListener;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import lombok.RequiredArgsConstructor;
 
+import net.risesoft.entity.Y9Department;
+import net.risesoft.entity.Y9Group;
 import net.risesoft.entity.Y9OrgBase;
+import net.risesoft.entity.Y9Person;
+import net.risesoft.entity.Y9Position;
 import net.risesoft.entity.relation.Y9OrgBasesToRoles;
 import net.risesoft.exception.RoleErrorCodeEnum;
 import net.risesoft.id.Y9IdGenerator;
@@ -46,19 +51,6 @@ public class Y9OrgBasesToRolesServiceImpl implements Y9OrgBasesToRolesService {
     public List<Y9OrgBasesToRoles> addOrgUnitsForRole(String roleId, List<String> orgIds, Boolean negative) {
         List<Y9OrgBasesToRoles> mappingList = new ArrayList<>();
         for (String orgId : orgIds) {
-            if (y9OrgBasesToRolesRepository.findByRoleIdAndOrgIdAndNegative(roleId, orgId, negative).isPresent()) {
-                continue;
-            }
-            mappingList.add(saveOrUpdate(roleId, orgId, negative));
-        }
-        return mappingList;
-    }
-
-    @Override
-    @Transactional(readOnly = false)
-    public List<Y9OrgBasesToRoles> addRolesForOrgUnit(String orgId, List<String> roleIds, Boolean negative) {
-        List<Y9OrgBasesToRoles> mappingList = new ArrayList<>();
-        for (String roleId : roleIds) {
             if (y9OrgBasesToRolesRepository.findByRoleIdAndOrgIdAndNegative(roleId, orgId, negative).isPresent()) {
                 continue;
             }
@@ -137,6 +129,55 @@ public class Y9OrgBasesToRolesServiceImpl implements Y9OrgBasesToRolesService {
         }
     }
 
+    @Override
+    @Transactional(readOnly = false)
+    public void removeOrgBases(String roleId, List<String> orgIds) {
+        for (String orgId : orgIds) {
+            remove(roleId, orgId);
+        }
+    }
+
+    @Override
+    @Transactional(readOnly = false)
+    public List<Y9OrgBasesToRoles> addRolesForOrgUnit(String orgId, List<String> roleIds, Boolean negative) {
+        List<Y9OrgBasesToRoles> mappingList = new ArrayList<>();
+        for (String roleId : roleIds) {
+            if (y9OrgBasesToRolesRepository.findByRoleIdAndOrgIdAndNegative(roleId, orgId, negative).isPresent()) {
+                continue;
+            }
+            mappingList.add(saveOrUpdate(roleId, orgId, negative));
+        }
+        return mappingList;
+    }
+
+    @EventListener
+    @Transactional(readOnly = false)
+    public void onDepartmentDeleted(Y9EntityDeletedEvent<Y9Department> event) {
+        Y9Department department = event.getEntity();
+        y9OrgBasesToRolesRepository.deleteByOrgId(department.getId());
+    }
+
+    @EventListener
+    @Transactional(readOnly = false)
+    public void onGroupDeleted(Y9EntityDeletedEvent<Y9Group> event) {
+        Y9Group group = event.getEntity();
+        y9OrgBasesToRolesRepository.deleteByOrgId(group.getId());
+    }
+
+    @EventListener
+    @Transactional(readOnly = false)
+    public void onPersonDeleted(Y9EntityDeletedEvent<Y9Person> event) {
+        Y9Person person = event.getEntity();
+        y9OrgBasesToRolesRepository.deleteByOrgId(person.getId());
+    }
+
+    @EventListener
+    @Transactional(readOnly = false)
+    public void onPositionDeleted(Y9EntityDeletedEvent<Y9Position> event) {
+        Y9Position position = event.getEntity();
+        y9OrgBasesToRolesRepository.deleteByOrgId(position.getId());
+    }
+
     @Transactional(readOnly = false)
     public void remove(String roleId, String orgId) {
         List<Y9OrgBasesToRoles> y9OrgBasesToRolesList = y9OrgBasesToRolesRepository.findByRoleIdAndOrgId(roleId, orgId);
@@ -150,14 +191,6 @@ public class Y9OrgBasesToRolesServiceImpl implements Y9OrgBasesToRolesService {
         y9OrgBasesToRolesRepository.delete(y9OrgBasesToRoles);
 
         Y9Context.publishEvent(new Y9EntityDeletedEvent<>(y9OrgBasesToRoles));
-    }
-
-    @Override
-    @Transactional(readOnly = false)
-    public void removeOrgBases(String roleId, List<String> orgIds) {
-        for (String orgId : orgIds) {
-            remove(roleId, orgId);
-        }
     }
 
     @Transactional(readOnly = false)

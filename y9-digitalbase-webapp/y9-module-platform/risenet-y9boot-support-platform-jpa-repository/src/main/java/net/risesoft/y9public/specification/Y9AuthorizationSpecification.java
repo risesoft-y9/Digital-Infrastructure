@@ -33,44 +33,44 @@ public class Y9AuthorizationSpecification<RoleResourcePermission> implements Spe
         return code;
     }
 
-    public Integer getInherit() {
-        return inherit;
-    }
-
-    public Integer getNegative() {
-        return negative;
-    }
-
-    public String getResourceId() {
-        return resourceId;
-    }
-
-    public String getRoleId() {
-        return roleId;
-    }
-
-    public String getTenantId() {
-        return tenantId;
-    }
-
     public void setCode(String code) {
         this.code = code;
+    }
+
+    public Integer getInherit() {
+        return inherit;
     }
 
     public void setInherit(Integer inherit) {
         this.inherit = inherit;
     }
 
+    public Integer getNegative() {
+        return negative;
+    }
+
     public void setNegative(Integer negative) {
         this.negative = negative;
+    }
+
+    public String getResourceId() {
+        return resourceId;
     }
 
     public void setResourceId(String resourceId) {
         this.resourceId = resourceId;
     }
 
+    public String getRoleId() {
+        return roleId;
+    }
+
     public void setRoleId(String roleId) {
         this.roleId = roleId;
+    }
+
+    public String getTenantId() {
+        return tenantId;
     }
 
     public void setTenantId(String tenantId) {

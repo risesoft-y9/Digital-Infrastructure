@@ -16,7 +16,7 @@ import lombok.RequiredArgsConstructor;
 import net.risesoft.api.platform.org.AuthenticateApi;
 import net.risesoft.model.platform.AuthenticateResult;
 import net.risesoft.pojo.Y9Result;
-import net.risesoft.service.org.Y9PersonService;
+import net.risesoft.service.org.AuthService;
 import net.risesoft.util.Y9PlatformUtil;
 import net.risesoft.y9.Y9LoginUserHolder;
 
@@ -36,7 +36,7 @@ import net.risesoft.y9.Y9LoginUserHolder;
 @RequiredArgsConstructor
 public class AuthenticateApiImpl implements AuthenticateApi {
 
-    private final Y9PersonService y9PersonService;
+    private final AuthService authService;
 
     /**
      * 用户登录名密码认证
@@ -56,7 +56,7 @@ public class AuthenticateApiImpl implements AuthenticateApi {
             String tenantId = tenantIds.get(0);
             Y9LoginUserHolder.setTenantId(tenantId);
         }
-        return Y9Result.success(y9PersonService.authenticate3(loginName, base64EncodedPassword));
+        return Y9Result.success(authService.authenticate3(loginName, base64EncodedPassword));
     }
 
     /**
@@ -77,6 +77,6 @@ public class AuthenticateApiImpl implements AuthenticateApi {
             String tenantId = tenantIds.get(0);
             Y9LoginUserHolder.setTenantId(tenantId);
         }
-        return Y9Result.success(y9PersonService.authenticate5(mobile, base64EncodedPassword));
+        return Y9Result.success(authService.authenticate5(mobile, base64EncodedPassword));
     }
 }

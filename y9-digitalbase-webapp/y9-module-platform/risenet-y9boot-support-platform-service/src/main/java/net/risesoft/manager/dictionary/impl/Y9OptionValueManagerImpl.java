@@ -24,12 +24,12 @@ import net.risesoft.repository.Y9OptionValueRepository;
 @RequiredArgsConstructor
 public class Y9OptionValueManagerImpl implements Y9OptionValueManager {
 
-    private final Y9OptionValueRepository orgOptionValueRepository;
+    private final Y9OptionValueRepository y9OptionValueRepository;
 
     @Override
     @Transactional(readOnly = false)
     public Y9OptionValue create(String code, String name, String type) {
-        Optional<Y9OptionValue> optionalY9OptionValue = orgOptionValueRepository.findByTypeAndName(type, name);
+        Optional<Y9OptionValue> optionalY9OptionValue = y9OptionValueRepository.findByTypeAndName(type, name);
         if (optionalY9OptionValue.isEmpty()) {
             Y9OptionValue optionValue = new Y9OptionValue();
             Integer maxTabIndex = getMaxTabIndexByType(optionValue.getType());
@@ -38,20 +38,20 @@ public class Y9OptionValueManagerImpl implements Y9OptionValueManager {
             optionValue.setType(type);
             optionValue.setName(name);
             optionValue.setCode(code);
-            return orgOptionValueRepository.save(optionValue);
+            return y9OptionValueRepository.save(optionValue);
         }
         return optionalY9OptionValue.get();
     }
 
     @Override
     public Integer getMaxTabIndexByType(String type) {
-        return orgOptionValueRepository.findTopByType(type).map(Y9OptionValue::getTabIndex).orElse(0);
+        return y9OptionValueRepository.findTopByType(type).map(Y9OptionValue::getTabIndex).orElse(0);
     }
 
     @Override
     @Transactional(readOnly = false)
     public void deleteByType(String type) {
-        orgOptionValueRepository.deleteByType(type);
+        y9OptionValueRepository.deleteByType(type);
     }
 
 }

@@ -14,6 +14,7 @@ import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 
 import lombok.extern.slf4j.Slf4j;
+
 import net.risesoft.entity.Y9Manager;
 import net.risesoft.model.user.UserInfo;
 import net.risesoft.service.org.Y9ManagerService;
@@ -30,20 +31,19 @@ import net.risesoft.y9.Y9LoginUserHolder;
 public class CheckUserLoginFilter4Platform implements Filter {
 
     @Override
-    public void destroy() {
-    }
+    public void init(final FilterConfig filterConfig) throws ServletException {}
 
     @Override
     public void doFilter(ServletRequest servletRequest, ServletResponse servletResponse, FilterChain chain)
-            throws IOException, ServletException {
-        HttpServletRequest request = (HttpServletRequest) servletRequest;
+        throws IOException, ServletException {
+        HttpServletRequest request = (HttpServletRequest)servletRequest;
         HttpSession session = request.getSession();
-        HttpServletResponse response = (HttpServletResponse) servletResponse;
+        HttpServletResponse response = (HttpServletResponse)servletResponse;
         // 在risenet-y9boot-starter-sso-oauth2-resource工程的Y9Oauth2ResourceFilter类中，已经往session中保存了以下对象：
         // access_token、userInfo、loginName、positionId、deptId
         // 同时Y9LoginUserHolder也设置了positionId、tenantId、tenantName、tenantShortName、UserInfo
         try {
-            UserInfo loginUser = (UserInfo) session.getAttribute("loginUser");
+            UserInfo loginUser = (UserInfo)session.getAttribute("loginUser");
             if (loginUser == null) {
                 loginUser = Y9LoginUserHolder.getUserInfo();
             }
@@ -68,7 +68,6 @@ public class CheckUserLoginFilter4Platform implements Filter {
     }
 
     @Override
-    public void init(final FilterConfig filterConfig) throws ServletException {
-    }
+    public void destroy() {}
 
 }

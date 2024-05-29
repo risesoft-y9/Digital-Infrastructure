@@ -88,8 +88,6 @@ public interface Y9AppService extends ResourceCommonService<Y9App> {
      */
     List<Y9App> listAll();
 
-    List<Y9App> listByEnable();
-
     /**
      * 根据appName，查询应用
      *
@@ -122,6 +120,8 @@ public interface Y9AppService extends ResourceCommonService<Y9App> {
      * @return {@link List}<{@link Y9App}>
      */
     List<Y9App> listByCustomId(String customId);
+
+    List<Y9App> listByEnable();
 
     /**
      * 根据systemId，获取应用列表

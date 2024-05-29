@@ -22,9 +22,9 @@ public interface Y9PersonsToPositionsManager {
 
     void deleteByPositionId(String positionId);
 
-    Integer getMaxPersonOrderByPositionId(String positionId);
+    Integer getNextPersonOrderByPositionId(String positionId);
 
-    Integer getMaxPositionOrderByPersonId(String personId);
+    Integer getNextPositionOrderByPersonId(String personId);
 
     Y9PersonsToPositions save(String personId, String positionId);
 

@@ -27,6 +27,8 @@ public interface Y9JobManager {
 
     Y9Job getById(String id);
 
+    Y9Job getByIdNotCache(String id);
+
     Y9Job save(Y9Job y9Job);
 
     Y9Job updateTabIndex(String id, int tabIndex);

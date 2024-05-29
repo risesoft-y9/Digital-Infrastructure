@@ -12,6 +12,7 @@ import jakarta.validation.constraints.NotBlank;
 
 import org.hibernate.annotations.ColumnDefault;
 import org.hibernate.annotations.Comment;
+import org.hibernate.annotations.DynamicUpdate;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
@@ -30,6 +31,7 @@ import net.risesoft.enums.platform.OrgTypeEnum;
  */
 @Entity
 @Table(name = "Y9_ORG_DEPARTMENT")
+@DynamicUpdate
 @Comment("部门实体表")
 @Data
 public class Y9Department extends Y9OrgBase {

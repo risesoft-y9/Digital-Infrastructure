@@ -5,6 +5,7 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 
 import org.apache.commons.lang3.StringUtils;
+import org.springframework.context.event.EventListener;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -14,10 +15,10 @@ import net.risesoft.consts.InitDataConsts;
 import net.risesoft.entity.Y9Person;
 import net.risesoft.entity.identity.person.Y9PersonToRole;
 import net.risesoft.enums.platform.RoleTypeEnum;
-import net.risesoft.manager.identity.Y9PersonToRoleManager;
 import net.risesoft.manager.org.Y9PersonManager;
 import net.risesoft.repository.identity.person.Y9PersonToRoleRepository;
 import net.risesoft.service.identity.Y9PersonToRoleService;
+import net.risesoft.y9.pubsub.event.Y9EntityDeletedEvent;
 import net.risesoft.y9public.entity.role.Y9Role;
 import net.risesoft.y9public.manager.role.Y9RoleManager;
 import net.risesoft.y9public.repository.role.Y9RoleRepository;
@@ -36,7 +37,6 @@ public class Y9PersonToRoleServiceImpl implements Y9PersonToRoleService {
     private final Y9PersonToRoleRepository y9PersonToRoleRepository;
     private final Y9RoleRepository y9RoleRepository;
 
-    private final Y9PersonToRoleManager y9PersonToRoleManager;
     private final Y9RoleManager y9RoleManager;
     private final Y9PersonManager y9PersonManager;
 
@@ -63,11 +63,6 @@ public class Y9PersonToRoleServiceImpl implements Y9PersonToRoleService {
     }
 
     @Override
-    public boolean hasRole(String personId, String roleId) {
-        return y9PersonToRoleRepository.countByPersonIdAndRoleId(personId, roleId) > 0;
-    }
-
-    @Override
     public Boolean hasRole(String personId, String systemName, String roleName, String properties) {
         List<Y9Role> y9RoleList;
         if (StringUtils.isBlank(properties)) {
@@ -78,6 +73,11 @@ public class Y9PersonToRoleServiceImpl implements Y9PersonToRoleService {
         }
 
         return y9RoleList.stream().anyMatch(y9Role -> hasRole(personId, y9Role.getId()));
+    }
+
+    @Override
+    public boolean hasRole(String personId, String roleId) {
+        return y9PersonToRoleRepository.countByPersonIdAndRoleId(personId, roleId) > 0;
     }
 
     @Override
@@ -146,5 +146,12 @@ public class Y9PersonToRoleServiceImpl implements Y9PersonToRoleService {
             positionToRole.setDescription(y9Role.getDescription());
             y9PersonToRoleRepository.save(positionToRole);
         }
+    }
+
+    @EventListener
+    @Transactional(readOnly = false)
+    public void onPersonDeleted(Y9EntityDeletedEvent<Y9Person> event) {
+        Y9Person person = event.getEntity();
+        y9PersonToRoleRepository.deleteByPersonId(person.getId());
     }
 }

@@ -153,15 +153,4 @@ public interface DepartmentApi {
     Y9Result<List<Department>> listRecursivelyByParentId(@RequestParam("tenantId") @NotBlank String tenantId,
         @RequestParam("parentId") @NotBlank String parentId);
 
-    /**
-     * 根据条件查询部门对象
-     *
-     * @param tenantId 租户id
-     * @param whereClause sql语句where后面的条件语句
-     * @return {@code Y9Result<List<Department>>} 通用请求返回对象 - data 是部门对象集合
-     * @since 9.6.0
-     */
-    @GetMapping("/search")
-    Y9Result<List<Department>> search(@RequestParam("tenantId") @NotBlank String tenantId,
-        @RequestParam("whereClause") @NotBlank String whereClause);
 }

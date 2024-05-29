@@ -34,11 +34,11 @@ public interface Y9PositionToRoleRepository extends JpaRepository<Y9PositionToRo
 
     @Modifying
     @Transactional(readOnly = false)
-    void deleteByRoleId(String roleId);
+    void deleteByPositionIdAndRoleId(String positionId, String roleId);
 
     @Modifying
     @Transactional(readOnly = false)
-    void deleteByPositionIdAndRoleId(String positionId, String roleId);
+    void deleteByRoleId(String roleId);
 
     List<Y9PositionToRole> findByPositionId(String positionId);
 
