@@ -21,7 +21,7 @@ public class TwoTest {
     @Test
     @Order(1)
     @DisplayName("【201】获取人、事、物所有用途接口")
-    void testCodeUse() {
+    void testM201() {
         CodeUseInfoResult result = Two.codeUse();
         assertEquals(result.getResultCode(), 1);
         if (LOGGER.isDebugEnabled()) {
@@ -32,7 +32,7 @@ public class TwoTest {
     @Test
     @Order(2)
     @DisplayName("【202】获取所有品类接口")
-    void testIndustryCategory() {
+    void testM202() {
         IndustryCategoryResult result = Two.industryCategory();
         assertEquals(result.getResultCode(), 1);
         if (LOGGER.isDebugEnabled()) {
@@ -43,7 +43,7 @@ public class TwoTest {
     @Test
     @Order(3)
     @DisplayName("【203】获取某一级品类接口")
-    void testIndustryCategoryParentId() {
+    void testM203() {
         /**
          * 为0时获取到第一级品类
          */
@@ -57,7 +57,7 @@ public class TwoTest {
     @Test
     @Order(4)
     @DisplayName("【204】获取产品所有品类接口")
-    void testTradesParentId() {
+    void testM204() {
         IndustryCategoryResult result = Two.industryCategoryProduct();
         assertEquals(result.getResultCode(), 1);
         if (LOGGER.isDebugEnabled()) {
