@@ -10,7 +10,7 @@ import net.risesoft.util.IDCodeApiExecute;
 import java.util.HashMap;
 import java.util.Map;
 
-public class UnitAttr {
+public class One {
 
     public static AreaInfoResult addresses() {
         Map<String, Object> params = new HashMap<String, Object>();

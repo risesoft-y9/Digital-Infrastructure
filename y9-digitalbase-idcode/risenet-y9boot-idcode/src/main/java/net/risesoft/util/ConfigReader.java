@@ -16,6 +16,8 @@ public class ConfigReader {
 
     public static String MAIN_CODE;
 
+    public static String ANALYZE_URL;
+
     static {
         try (InputStream inputStream = ConfigReader.class.getResourceAsStream("/application.yml")) {
             if (inputStream != null) {
@@ -26,6 +28,7 @@ public class ConfigReader {
                 API_KEY= properties.getProperty("api_key");
                 IDCODE_URL= properties.getProperty("idCode_url");
                 MAIN_CODE= properties.getProperty("main_code");
+                ANALYZE_URL= properties.getProperty("analyze_url");
             } else {
                 throw new FileNotFoundException("配置文件未找到");
             }

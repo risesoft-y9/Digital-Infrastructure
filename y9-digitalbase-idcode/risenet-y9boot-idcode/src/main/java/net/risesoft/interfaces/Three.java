@@ -16,7 +16,7 @@ import java.io.File;
 import java.util.HashMap;
 import java.util.Map;
 
-public class UnitUser {
+public class Three {
 
     public static RegistResult companyinfoReg(String loginName, String loginPassword, String email, String orgUnitName, String orgUnitEnName, Integer code, Integer provinceId, Integer cityId, Integer areaId, String linkman, String linkmanEn, String linkPhone, String smsVerifyCode) {
         Map<String, Object> params = new HashMap<String, Object>();
