@@ -12,7 +12,7 @@ import java.util.Map;
 /**
  * 品类分类相关基础数据接口
  */
-public class Category {
+public class Two {
 
     public static CodeUseInfoResult codeUse() {
         Map<String, Object> params = new HashMap<String, Object>();

@@ -18,13 +18,13 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 @Slf4j
 @DisplayName("单位属性相关的基础数据接口")
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
-public class UnitAttrTest {
+public class OneTest {
 
     @Test
     @Order(1)
     @DisplayName("【101】一次性返回所有级别行政信息")
     void testAddresses() {
-        AreaInfoResult result = UnitAttr.addresses();
+        AreaInfoResult result = One.addresses();
         assertEquals(result.getResultCode(), 1);
         if (LOGGER.isDebugEnabled()) {
             result.getList().forEach(item -> LOGGER.debug("区划名称:{} 区域ID:{} 区域父ID:{} 区域级别:{}", item.getName(), item.getId(), item.getParentId(), item.getLevel()));
@@ -38,7 +38,7 @@ public class UnitAttrTest {
         /**
          * 440000 代表广东省
          */
-        AreaInfoResult result = UnitAttr.addressesParentId(440000, AddressLevelEnum.PREFECTURE.getValue());
+        AreaInfoResult result = One.addressesParentId(440000, AddressLevelEnum.PREFECTURE.getValue());
         assertEquals(result.getResultCode(), 1);
         if (LOGGER.isDebugEnabled()) {
             result.getList().forEach(item -> LOGGER.debug("区划名称:{} 区域ID:{} 区域父ID:{} 区域级别:{}", item.getName(), item.getId(), item.getParentId(), item.getLevel()));
@@ -49,7 +49,7 @@ public class UnitAttrTest {
     @Order(3)
     @DisplayName("【103】一次性返回所有级别行业信息")
     void testTrades() {
-        TradeInfoResult result = UnitAttr.trades();
+        TradeInfoResult result = One.trades();
         assertEquals(result.getResultCode(), 1);
         if (LOGGER.isDebugEnabled()) {
             result.getList().forEach(item -> LOGGER.debug("行业名称:{} 行业ID:{} 行业父ID:{} 行业级别:{}", item.getName(), item.getId(), item.getParentId(), item.getLevel()));
@@ -63,7 +63,7 @@ public class UnitAttrTest {
         /**
          * 农、林、牧、渔业 行业ID为2
          */
-        TradeInfoResult result = UnitAttr.tradesParentId(2);
+        TradeInfoResult result = One.tradesParentId(2);
         assertEquals(result.getResultCode(), 1);
         if (LOGGER.isDebugEnabled()) {
             result.getList().forEach(item -> LOGGER.debug("行业名称:{} 行业ID:{} 行业父ID:{} 行业级别:{}", item.getName(), item.getId(), item.getParentId(), item.getLevel()));
@@ -74,7 +74,7 @@ public class UnitAttrTest {
     @Order(5)
     @DisplayName("【105】获取单位性质分类接口")
     void testUnitTypes() {
-        UnitTypeInfoResult result = UnitAttr.unitTypes();
+        UnitTypeInfoResult result = One.unitTypes();
         assertEquals(result.getResultCode(), 1);
         if (LOGGER.isDebugEnabled()) {
             result.getList().forEach(item -> LOGGER.debug("单位性质名称:{} 单位性质编码:{}", item.getName(), item.getCode()));
