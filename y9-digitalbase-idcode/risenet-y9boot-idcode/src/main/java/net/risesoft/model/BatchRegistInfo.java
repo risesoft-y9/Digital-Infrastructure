@@ -6,7 +6,7 @@ import lombok.Data;
 import java.util.List;
 
 @Data
-public class BatchRegistInfo extends Result {
+public class BatchRegistInfo{
 
     @JsonProperty("access_token")
     private String accessToken;

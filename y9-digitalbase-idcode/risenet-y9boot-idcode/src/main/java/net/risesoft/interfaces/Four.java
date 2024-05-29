@@ -4,7 +4,6 @@ import net.risesoft.consts.UrlConst;
 import net.risesoft.model.BaseIdCodeInfo;
 import net.risesoft.model.BatchRegistResult;
 import net.risesoft.model.IdcodeRegResult;
-import net.risesoft.model.Result;
 import net.risesoft.util.ConfigReader;
 import net.risesoft.util.IDCodeApiExecute;
 
@@ -16,7 +15,7 @@ import java.util.Map;
  */
 public class Four {
 
-    public static Result m401(String idCode, String gotoUrl, String sampleUrl, String callbackUrl) {
+    /*public static Result m401(String idCode, String gotoUrl, String sampleUrl, String callbackUrl) {
         Map<String, Object> params = new HashMap<String, Object>();
         params.put("access_token", ConfigReader.API_KEY);
         params.put("time", System.currentTimeMillis());
@@ -31,7 +30,7 @@ public class Four {
             e.printStackTrace();
         }
         return result;
-    }
+    }*/
 
     public static BatchRegistResult m402(String jsonStr) {
         Map<String, Object> params = new HashMap<String, Object>();
@@ -39,7 +38,7 @@ public class Four {
         params.put("time", System.currentTimeMillis());
         BatchRegistResult result = null;
         try {
-            result = new IDCodeApiExecute<BatchRegistResult>().execute(BatchRegistResult.class, params, UrlConst.URL_402, false);
+            result = new IDCodeApiExecute<BatchRegistResult>().execute(BatchRegistResult.class, params, UrlConst.URL_402, true);
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -80,7 +79,7 @@ public class Four {
         return result;
     }
 
-    public static Result m405(String idCode, String industryCategoryId, String codePayType, String gotoUrl, String sampleUrl, String callbackUrl) {
+    /*public static Result m405(String idCode, String industryCategoryId, String codePayType, String gotoUrl, String sampleUrl, String callbackUrl) {
         Map<String, Object> params = new HashMap<String, Object>();
         params.put("access_token", ConfigReader.API_KEY);
         params.put("time", System.currentTimeMillis());
@@ -98,7 +97,7 @@ public class Four {
             e.printStackTrace();
         }
         return result;
-    }
+    }*/
 
     public static IdcodeRegResult m406(String idCode, String codeUseId, Integer industryCategoryId, String categoryCode, String modelNumber, String modelNumberCode, Integer codePayType, String gotoUrl, String sampleUrl) {
         Map<String, Object> params = new HashMap<String, Object>();
@@ -147,7 +146,7 @@ public class Four {
         return result;
     }
 
-    public static Result m408(String idCode,String gotoUrl, String sampleUrl, String callbackUrl) {
+    /*public static Result m408(String idCode,String gotoUrl, String sampleUrl, String callbackUrl) {
         Map<String, Object> params = new HashMap<String, Object>();
         params.put("access_token", ConfigReader.API_KEY);
         params.put("time", System.currentTimeMillis());
@@ -163,7 +162,7 @@ public class Four {
             e.printStackTrace();
         }
         return result;
-    }
+    }*/
 
     public static BaseIdCodeInfo m409(String idCode, String idCodeOfCategory, String modelNumberCode, String categoryRegId) {
         Map<String, Object> params = new HashMap<String, Object>();
