@@ -9,6 +9,7 @@ import org.hibernate.annotations.Comment;
 import org.hibernate.annotations.DynamicUpdate;
 
 import lombok.Data;
+import lombok.experimental.SuperBuilder;
 
 import net.risesoft.enums.platform.OrgTypeEnum;
 
@@ -25,6 +26,7 @@ import net.risesoft.enums.platform.OrgTypeEnum;
 @DynamicUpdate
 @Comment("岗位表")
 @Data
+@SuperBuilder
 public class Y9Position extends Y9OrgBase {
 
     private static final long serialVersionUID = -5753173583033676828L;

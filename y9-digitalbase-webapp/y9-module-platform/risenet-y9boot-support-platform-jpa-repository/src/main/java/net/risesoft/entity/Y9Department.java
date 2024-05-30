@@ -18,6 +18,7 @@ import org.springframework.format.annotation.DateTimeFormat;
 import com.fasterxml.jackson.annotation.JsonFormat;
 
 import lombok.Data;
+import lombok.experimental.SuperBuilder;
 
 import net.risesoft.enums.platform.OrgTypeEnum;
 
@@ -34,9 +35,11 @@ import net.risesoft.enums.platform.OrgTypeEnum;
 @DynamicUpdate
 @Comment("部门实体表")
 @Data
+@SuperBuilder
 public class Y9Department extends Y9OrgBase {
 
     private static final long serialVersionUID = 231356577350213851L;
+
     /** 父节点id */
     @NotBlank
     @Column(name = "PARENT_ID", length = 38, nullable = false)

@@ -4,6 +4,7 @@ import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Table;
 
+import lombok.experimental.SuperBuilder;
 import org.hibernate.annotations.Comment;
 import org.hibernate.annotations.DynamicUpdate;
 
@@ -24,6 +25,7 @@ import net.risesoft.enums.platform.ResourceTypeEnum;
 @DynamicUpdate
 @Comment("应用的菜单表")
 @Data
+@SuperBuilder
 public class Y9Menu extends Y9ResourceBase {
 
     private static final long serialVersionUID = 7952871346132443097L;

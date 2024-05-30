@@ -13,6 +13,7 @@ import org.hibernate.annotations.Comment;
 
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import lombok.experimental.SuperBuilder;
 
 import net.risesoft.base.BaseEntity;
 import net.risesoft.enums.platform.ResourceTypeEnum;
@@ -29,6 +30,7 @@ import net.risesoft.persistence.EnumConverter;
 @MappedSuperclass
 @NoArgsConstructor
 @Data
+@SuperBuilder
 public abstract class Y9ResourceBase extends BaseEntity implements Comparable<Y9ResourceBase> {
 
     private static final long serialVersionUID = -1618076945780899968L;
@@ -111,6 +113,7 @@ public abstract class Y9ResourceBase extends BaseEntity implements Comparable<Y9
 
     @Override
     public int compareTo(Y9ResourceBase y9ResourceBase) {
+        // 排序时能保证同系统中同一层级（parentId 相同）的资源能按 tabIndex 升序排列
         return Comparator.comparing(Y9ResourceBase::getSystemId)
             .thenComparing(Y9ResourceBase::getParentId, Comparator.nullsFirst(String::compareTo))
             .thenComparing(Y9ResourceBase::getTabIndex).compare(this, y9ResourceBase);

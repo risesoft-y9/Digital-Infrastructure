@@ -1,5 +1,7 @@
 package net.risesoft.entity;
 
+import java.util.Comparator;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Convert;
 import jakarta.persistence.Id;
@@ -10,10 +12,10 @@ import jakarta.validation.constraints.NotBlank;
 
 import org.hibernate.annotations.ColumnDefault;
 import org.hibernate.annotations.Comment;
-import org.hibernate.annotations.Type;
 
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import lombok.experimental.SuperBuilder;
 
 import net.risesoft.base.BaseEntity;
 import net.risesoft.enums.platform.OrgTypeEnum;
@@ -30,6 +32,7 @@ import net.risesoft.persistence.EnumConverter;
 @MappedSuperclass
 @NoArgsConstructor
 @Data
+@SuperBuilder
 public abstract class Y9OrgBase extends BaseEntity implements Comparable<Y9OrgBase> {
 
     private static final long serialVersionUID = 4564661506322616943L;
@@ -106,7 +109,8 @@ public abstract class Y9OrgBase extends BaseEntity implements Comparable<Y9OrgBa
 
     @Override
     public int compareTo(Y9OrgBase o) {
-        return this.tabIndex.compareTo(o.getTabIndex());
+        return Comparator.comparing(Y9OrgBase::getParentId, Comparator.nullsFirst(String::compareTo))
+            .thenComparing(Y9OrgBase::getTabIndex).compare(this, o);
     }
 
 }

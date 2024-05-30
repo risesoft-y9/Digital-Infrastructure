@@ -11,6 +11,7 @@ import org.hibernate.annotations.ColumnDefault;
 import org.hibernate.annotations.Comment;
 
 import lombok.Data;
+import lombok.experimental.SuperBuilder;
 
 import net.risesoft.enums.platform.OrgTypeEnum;
 import net.risesoft.enums.platform.PersonTypeEnum;
@@ -32,6 +33,7 @@ import org.hibernate.annotations.DynamicUpdate;
 @DynamicUpdate
 @Comment("人员表")
 @Data
+@SuperBuilder
 public class Y9Person extends Y9OrgBase {
 
     private static final long serialVersionUID = -6531424704457510017L;

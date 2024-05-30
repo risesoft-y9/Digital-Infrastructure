@@ -14,6 +14,7 @@ import com.fasterxml.jackson.annotation.JsonFormat;
 
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
+import lombok.experimental.SuperBuilder;
 
 /**
  * 实体基类
@@ -26,6 +27,7 @@ import lombok.NoArgsConstructor;
 @MappedSuperclass
 @EqualsAndHashCode
 @NoArgsConstructor
+@SuperBuilder
 public class BaseEntity implements Serializable {
 
     private static final long serialVersionUID = 7442864321155282821L;

@@ -7,6 +7,7 @@ import jakarta.persistence.Lob;
 import jakarta.persistence.Table;
 import jakarta.persistence.Transient;
 
+import lombok.experimental.SuperBuilder;
 import org.hibernate.annotations.ColumnDefault;
 import org.hibernate.annotations.Comment;
 import org.hibernate.annotations.DynamicUpdate;
@@ -32,6 +33,7 @@ import net.risesoft.persistence.EnumConverter;
 @DynamicUpdate
 @Comment("应用市场表")
 @Data
+@SuperBuilder
 public class Y9App extends Y9ResourceBase {
 
     private static final long serialVersionUID = 1771730705695533602L;

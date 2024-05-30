@@ -10,6 +10,7 @@ import org.hibernate.annotations.Comment;
 import org.hibernate.annotations.DynamicUpdate;
 
 import lombok.Data;
+import lombok.experimental.SuperBuilder;
 
 import net.risesoft.enums.platform.OperationDisplayTypeEnum;
 import net.risesoft.enums.platform.ResourceTypeEnum;
@@ -28,6 +29,7 @@ import net.risesoft.persistence.EnumConverter;
 @DynamicUpdate
 @Comment("页面按钮操作表")
 @Data
+@SuperBuilder
 public class Y9Operation extends Y9ResourceBase {
 
     private static final long serialVersionUID = -138076174688809730L;
