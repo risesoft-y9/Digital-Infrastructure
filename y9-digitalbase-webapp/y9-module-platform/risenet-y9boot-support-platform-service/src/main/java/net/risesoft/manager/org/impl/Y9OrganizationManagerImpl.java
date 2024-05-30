@@ -98,7 +98,6 @@ public class Y9OrganizationManagerImpl implements Y9OrganizationManager {
                 updatedY9Organization
                     .setDn(Y9OrgUtil.buildDn(OrgTypeEnum.ORGANIZATION, updatedY9Organization.getName(), null));
                 updatedY9Organization.setGuidPath(Y9OrgUtil.buildGuidPath(null, updatedY9Organization.getId()));
-                updatedY9Organization.setTenantId(Y9LoginUserHolder.getTenantId());
                 final Y9Organization savedOrganization = this.save(updatedY9Organization);
 
                 Y9Context.publishEvent(new Y9EntityUpdatedEvent<>(originY9Organization, savedOrganization));
@@ -109,12 +108,11 @@ public class Y9OrganizationManagerImpl implements Y9OrganizationManager {
             organization.setId(Y9IdGenerator.genId(IdType.SNOWFLAKE));
         }
 
-        Integer maxTabIndex = getMaxTabIndex();
-        organization.setTabIndex(maxTabIndex != null ? maxTabIndex + 1 : 0);
+        organization.setTenantId(Y9LoginUserHolder.getTenantId());
         organization.setVersion(InitDataConsts.Y9_VERSION);
         organization.setDn(Y9OrgUtil.buildDn(OrgTypeEnum.ORGANIZATION, organization.getName(), null));
+        organization.setTabIndex(getNextTabIndex());
         organization.setGuidPath(Y9OrgUtil.buildGuidPath(null, organization.getId()));
-        organization.setTenantId(Y9LoginUserHolder.getTenantId());
         final Y9Organization savedOrganization = this.save(organization);
 
         Y9Context.publishEvent(new Y9EntityCreatedEvent<>(savedOrganization));
@@ -144,7 +142,7 @@ public class Y9OrganizationManagerImpl implements Y9OrganizationManager {
         return this.saveOrUpdate(updatedOrganization);
     }
 
-    private Integer getMaxTabIndex() {
-        return y9OrganizationRepository.findTopByOrderByTabIndexDesc().map(Y9OrgBase::getTabIndex).orElse(0);
+    private Integer getNextTabIndex() {
+        return y9OrganizationRepository.findTopByOrderByTabIndexDesc().map(Y9OrgBase::getTabIndex).orElse(-1) + 1;
     }
 }

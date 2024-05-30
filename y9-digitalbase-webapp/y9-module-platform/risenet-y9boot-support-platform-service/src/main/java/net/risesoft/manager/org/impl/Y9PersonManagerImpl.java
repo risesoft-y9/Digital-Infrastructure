@@ -150,8 +150,10 @@ public class Y9PersonManagerImpl implements Y9PersonManager {
                 Y9BeanUtil.copyProperties(updatedPerson, originPerson);
                 Y9BeanUtil.copyProperties(person, updatedPerson);
 
+                updatedPerson.setGuidPath(Y9OrgUtil.buildGuidPath(parent.getGuidPath(), updatedPerson.getId()));
                 updatedPerson.setDn(Y9OrgUtil.buildDn(OrgTypeEnum.PERSON, updatedPerson.getName(), parent.getDn()));
-                updatedPerson.setParentId(parent.getId());
+                updatedPerson.setOrderedPath(compositeOrgBaseManager.buildOrderedPath(updatedPerson));
+
                 if (StringUtils.isBlank(originPerson.getEmail())) {
                     updatedPerson.setEmail(null);
                 }
@@ -177,13 +179,13 @@ public class Y9PersonManagerImpl implements Y9PersonManager {
             person.setEmail(null);
         }
         person.setTenantId(Y9LoginUserHolder.getTenantId());
-        person.setTabIndex(compositeOrgBaseManager.getMaxSubTabIndex(parent.getId()));
-        person.setOfficial(1);
         person.setVersion(InitDataConsts.Y9_VERSION);
-        person.setDn(Y9OrgUtil.buildDn(OrgTypeEnum.PERSON, person.getName(), parent.getDn()));
+        person.setOfficial(1);
         person.setDisabled(false);
         person.setParentId(parent.getId());
+        person.setDn(Y9OrgUtil.buildDn(OrgTypeEnum.PERSON, person.getName(), parent.getDn()));
         person.setGuidPath(compositeOrgBaseManager.buildGuidPath(person));
+        person.setTabIndex(compositeOrgBaseManager.getNextSubTabIndex(parent.getId()));
         person.setOrderedPath(compositeOrgBaseManager.buildOrderedPath(person));
 
         String password = y9SettingService.get(SettingEnum.USER_DEFAULT_PASSWORD, String.class);

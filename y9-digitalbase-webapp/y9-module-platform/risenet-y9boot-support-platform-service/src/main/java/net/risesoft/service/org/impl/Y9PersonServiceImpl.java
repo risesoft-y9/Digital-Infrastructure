@@ -96,14 +96,13 @@ public class Y9PersonServiceImpl implements Y9PersonService {
                 personList.add(oldperson);
                 continue;
             }
-            Integer maxIndex = compositeOrgBaseManager.getMaxSubTabIndex(parentId);
             Y9Person person = new Y9Person();
             Y9BeanUtil.copyProperties(originalPerson, person);
             person.setId(Y9IdGenerator.genId(IdType.SNOWFLAKE));
             person.setOriginal(Boolean.FALSE);
             person.setOriginalId(originalId);
             person.setParentId(parentId);
-            person.setTabIndex(maxIndex);
+            person.setTabIndex(compositeOrgBaseManager.getNextSubTabIndex(parentId));
             person.setDn(Y9OrgUtil.buildDn(OrgTypeEnum.PERSON, person.getName(), parent.getDn()));
 
             final Y9Person savedPerson = save(person);
@@ -345,9 +344,7 @@ public class Y9PersonServiceImpl implements Y9PersonService {
 
         Y9Person updatedPerson = Y9ModelConvertUtil.convert(person, Y9Person.class);
         updatedPerson.setParentId(parentId);
-        updatedPerson.setGuidPath(compositeOrgBaseManager.buildGuidPath(updatedPerson));
-        updatedPerson.setTabIndex(compositeOrgBaseManager.getMaxSubTabIndex(parentId));
-        updatedPerson.setOrderedPath(compositeOrgBaseManager.buildOrderedPath(updatedPerson));
+        updatedPerson.setTabIndex(compositeOrgBaseManager.getNextSubTabIndex(parentId));
         return this.saveOrUpdate(updatedPerson, null);
     }
 
@@ -472,7 +469,7 @@ public class Y9PersonServiceImpl implements Y9PersonService {
         } else {
             // 判断为从xml导入的代码并且数据库中没有相应信息,把密码统一设置为defaultPassword
             if (null == person.getTabIndex()) {
-                person.setTabIndex(compositeOrgBaseManager.getMaxSubTabIndex(parent.getId()));
+                person.setTabIndex(compositeOrgBaseManager.getNextSubTabIndex(parent.getId()));
             }
             person.setDn(Y9OrgUtil.buildDn(OrgTypeEnum.PERSON, person.getName(), parent.getDn()));
             person.setVersion(InitDataConsts.Y9_VERSION);
@@ -555,7 +552,7 @@ public class Y9PersonServiceImpl implements Y9PersonService {
         Y9OrgBase originOrgBase = event.getOriginEntity();
         Y9OrgBase updatedOrgBase = event.getUpdatedEntity();
 
-        if (Y9OrgUtil.isAncestorChanged(originOrgBase, updatedOrgBase)) {
+        if (Y9OrgUtil.isCurrentOrAncestorChanged(originOrgBase, updatedOrgBase)) {
             List<Y9Person> personList = y9PersonRepository.findByParentIdOrderByTabIndex(updatedOrgBase.getId());
             for (Y9Person person : personList) {
                 this.saveOrUpdate(person, null);

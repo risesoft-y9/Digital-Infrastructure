@@ -225,12 +225,12 @@ public class Y9ManagerServiceImpl implements Y9ManagerService {
         }
 
         y9Manager.setTenantId(Y9LoginUserHolder.getTenantId());
-        y9Manager.setTabIndex(compositeOrgBaseManager.getMaxSubTabIndex(y9Manager.getParentId()));
+        y9Manager.setTabIndex(compositeOrgBaseManager.getNextSubTabIndex(y9Manager.getParentId()));
         // 系统管理员新建的子域三员默认禁用 需安全管理员启用
         y9Manager.setDisabled(!y9Manager.getGlobalManager());
         y9Manager.setPassword(Y9MessageDigest.hashpw(defaultPassword));
         y9Manager.setDn(Y9OrgUtil.buildDn(OrgTypeEnum.MANAGER, y9Manager.getName(), parent.getDn()));
-        y9Manager.setGuidPath(compositeOrgBaseManager.buildGuidPath(y9Manager));
+        y9Manager.setGuidPath(Y9OrgUtil.buildGuidPath(parent.getGuidPath(), y9Manager.getId()));
         y9Manager.setOrderedPath(compositeOrgBaseManager.buildOrderedPath(y9Manager));
         y9Manager = y9ManagerRepository.save(y9Manager);
 

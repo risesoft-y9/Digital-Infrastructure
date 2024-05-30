@@ -135,10 +135,11 @@ public class Y9PositionManagerImpl implements Y9PositionManager {
                 Y9BeanUtil.copyProperties(updatedY9Position, originY9Position);
                 Y9BeanUtil.copyProperties(position, updatedY9Position);
 
-                updatedY9Position.setParentId(parent.getId());
+                updatedY9Position.setOrderedPath(compositeOrgBaseManager.buildOrderedPath(updatedY9Position));
                 updatedY9Position.setGuidPath(Y9OrgUtil.buildGuidPath(parent.getGuidPath(), updatedY9Position.getId()));
                 updatedY9Position
                     .setDn(Y9OrgUtil.buildDn(OrgTypeEnum.POSITION, updatedY9Position.getName(), parent.getDn()));
+                
 
                 final Y9Position savedY9Position = save(updatedY9Position);
 
@@ -151,13 +152,15 @@ public class Y9PositionManagerImpl implements Y9PositionManager {
             position.setId(Y9IdGenerator.genId(IdType.SNOWFLAKE));
         }
         position.setTenantId(Y9LoginUserHolder.getTenantId());
-        position.setName(this.buildName(y9Job, Collections.emptyList()));
         position.setJobName(y9Job.getName());
-        position.setTabIndex(compositeOrgBaseManager.getMaxSubTabIndex(parent.getId()));
         position.setDisabled(false);
+        position.setName(this.buildName(y9Job, Collections.emptyList()));
+        position.setDn(Y9OrgUtil.buildDn(OrgTypeEnum.POSITION, position.getName(), parent.getDn()));
+        position.setTabIndex(compositeOrgBaseManager.getNextSubTabIndex(parent.getId()));
+        position.setOrderedPath(compositeOrgBaseManager.buildOrderedPath(position));
         position.setParentId(parent.getId());
         position.setGuidPath(Y9OrgUtil.buildGuidPath(parent.getGuidPath(), position.getId()));
-        position.setDn(Y9OrgUtil.buildDn(OrgTypeEnum.POSITION, position.getName(), parent.getDn()));
+
         final Y9Position savedPosition = save(position);
 
         Y9Context.publishEvent(new Y9EntityCreatedEvent<>(savedPosition));
