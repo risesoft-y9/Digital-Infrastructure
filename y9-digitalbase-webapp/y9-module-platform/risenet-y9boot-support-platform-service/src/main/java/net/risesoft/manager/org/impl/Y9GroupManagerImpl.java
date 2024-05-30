@@ -91,14 +91,8 @@ public class Y9GroupManagerImpl implements Y9GroupManager {
                 Y9BeanUtil.copyProperties(updatedGroup, originGroup);
                 Y9BeanUtil.copyProperties(group, updatedGroup);
 
-                updatedGroup.setName(group.getName());
-                updatedGroup.setDescription(group.getDescription());
-                updatedGroup.setParentId(parent.getId());
                 updatedGroup.setDn(Y9OrgUtil.buildDn(OrgTypeEnum.GROUP, group.getName(), parent.getDn()));
                 updatedGroup.setGuidPath(Y9OrgUtil.buildGuidPath(parent.getGuidPath(), group.getId()));
-                if (group.getTabIndex() != null) {
-                    updatedGroup.setTabIndex(group.getTabIndex());
-                }
                 final Y9Group savedGroup = this.save(updatedGroup);
 
                 Y9Context.publishEvent(new Y9EntityUpdatedEvent<>(originGroup, savedGroup));
@@ -111,7 +105,7 @@ public class Y9GroupManagerImpl implements Y9GroupManager {
         group.setTenantId(Y9LoginUserHolder.getTenantId());
         group.setDisabled(false);
         group.setParentId(parent.getId());
-        group.setTabIndex(compositeOrgBaseManager.getMaxSubTabIndex(parent.getId()));
+        group.setTabIndex(compositeOrgBaseManager.getNextSubTabIndex(parent.getId()));
         group.setDn(Y9OrgUtil.buildDn(OrgTypeEnum.GROUP, group.getName(), parent.getDn()));
         group.setGuidPath(Y9OrgUtil.buildGuidPath(parent.getGuidPath(), group.getId()));
 

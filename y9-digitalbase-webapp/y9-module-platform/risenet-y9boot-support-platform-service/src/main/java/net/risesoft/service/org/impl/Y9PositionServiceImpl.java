@@ -213,7 +213,7 @@ public class Y9PositionServiceImpl implements Y9PositionService {
 
         Y9Position updatedPosition = Y9ModelConvertUtil.convert(position, Y9Position.class);
         updatedPosition.setParentId(parentId);
-        updatedPosition.setTabIndex(compositeOrgBaseManager.getMaxSubTabIndex(parentId));
+        updatedPosition.setTabIndex(compositeOrgBaseManager.getNextSubTabIndex(parentId));
         return y9PositionManager.saveOrUpdate(updatedPosition);
     }
 
@@ -287,7 +287,7 @@ public class Y9PositionServiceImpl implements Y9PositionService {
         Y9OrgBase originOrgBase = event.getOriginEntity();
         Y9OrgBase updatedOrgBase = event.getUpdatedEntity();
 
-        if (Y9OrgUtil.isAncestorChanged(originOrgBase, updatedOrgBase)) {
+        if (Y9OrgUtil.isCurrentOrAncestorChanged(originOrgBase, updatedOrgBase)) {
             List<Y9Position> positionList =
                 y9PositionRepository.findByParentIdOrderByTabIndexAsc(updatedOrgBase.getId());
             for (Y9Position position : positionList) {

@@ -178,7 +178,7 @@ public class Y9DepartmentServiceImpl implements Y9DepartmentService {
 
         Y9Department updatedDepartment = Y9ModelConvertUtil.convert(y9Department, Y9Department.class);
         updatedDepartment.setParentId(parentId);
-        updatedDepartment.setTabIndex(compositeOrgBaseManager.getMaxSubTabIndex(parentId));
+        updatedDepartment.setTabIndex(compositeOrgBaseManager.getNextSubTabIndex(parentId));
         return y9DepartmentManager.saveOrUpdate(updatedDepartment);
     }
 
@@ -282,7 +282,7 @@ public class Y9DepartmentServiceImpl implements Y9DepartmentService {
         Y9Department originDepartment = event.getOriginEntity();
         Y9Department updatedDepartment = event.getUpdatedEntity();
 
-        if (Y9OrgUtil.isAncestorChanged(originDepartment, updatedDepartment)) {
+        if (Y9OrgUtil.isCurrentOrAncestorChanged(originDepartment, updatedDepartment)) {
             List<Y9Department> deptList = y9DepartmentRepository.findByParentId(updatedDepartment.getId());
             for (Y9Department dept : deptList) {
                 this.saveOrUpdate(dept);

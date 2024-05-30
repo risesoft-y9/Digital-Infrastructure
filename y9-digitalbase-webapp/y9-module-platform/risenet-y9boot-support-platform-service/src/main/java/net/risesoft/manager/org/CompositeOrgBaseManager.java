@@ -66,12 +66,12 @@ public interface CompositeOrgBaseManager {
     Optional<Y9OrgBase> findOrgUnitParent(String orgUnitId);
 
     /**
-     * 根据父节点id获取子节点最大的tabIndex
+     * 根据父节点id获取子节点的下一个 tabIndex 值（获取已有子节点最大的 tabIndex + 1）
      *
      * @param parentId
      * @return {@link Integer}
      */
-    Integer getMaxSubTabIndex(String parentId);
+    Integer getNextSubTabIndex(String parentId);
 
     /**
      * 根据指定id获取ORGBase对象(可以是org的任意类型)

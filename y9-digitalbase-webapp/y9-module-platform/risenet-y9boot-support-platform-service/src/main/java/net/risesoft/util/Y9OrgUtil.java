@@ -28,13 +28,13 @@ public class Y9OrgUtil {
     }
 
     /**
-     * 判断组织节点及其任一祖先节点是否有改变
+     * 判断当前组织节点及其任一祖先节点的名字是否有改变或其祖先节点是否还是原先的
      *
      * @param originOrgBase 原始组织节点对象
      * @param updateOrgBase 更新后组织节点对象
      * @return
      */
-    public static boolean isAncestorChanged(Y9OrgBase originOrgBase, Y9OrgBase updateOrgBase) {
+    public static boolean isCurrentOrAncestorChanged(Y9OrgBase originOrgBase, Y9OrgBase updateOrgBase) {
         return !Objects.equals(originOrgBase.getDn(), updateOrgBase.getDn())
             || !Objects.equals(originOrgBase.getGuidPath(), updateOrgBase.getGuidPath());
     }
@@ -84,7 +84,8 @@ public class Y9OrgUtil {
     }
 
     /**
-     * 构建 dn
+     * 构建 dn <br/>
+     * dn 例子: cn=测试人员,ou=测试部门,o=测试组织
      *
      * @param orgTypeEnum 组织类型列举
      * @param name 名称
@@ -101,7 +102,7 @@ public class Y9OrgUtil {
     /**
      * 构建 id 路径
      *
-     * @param parentGuidPath 父 id 路径
+     * @param parentGuidPath 父 id 路径 {@link Y9OrgBase}
      * @param id ID
      * @return {@code String }
      */

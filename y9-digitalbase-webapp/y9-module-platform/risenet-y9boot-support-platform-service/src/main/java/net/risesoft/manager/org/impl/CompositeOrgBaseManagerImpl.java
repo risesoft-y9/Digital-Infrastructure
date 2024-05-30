@@ -200,7 +200,7 @@ public class CompositeOrgBaseManagerImpl implements CompositeOrgBaseManager {
     }
 
     @Override
-    public Integer getMaxSubTabIndex(String parentId) {
+    public Integer getNextSubTabIndex(String parentId) {
         Integer maxTabIndex = -1;
 
         Integer maxDepartmentTabIndex =

@@ -93,7 +93,6 @@ public class Y9DepartmentManagerImpl implements Y9DepartmentManager {
 
                 Y9BeanUtil.copyProperties(dept, updatedDepartment);
 
-                updatedDepartment.setParentId(parent.getId());
                 updatedDepartment.setDn(Y9OrgUtil.buildDn(OrgTypeEnum.DEPARTMENT, dept.getName(), parent.getDn()));
                 updatedDepartment.setGuidPath(Y9OrgUtil.buildGuidPath(parent.getGuidPath(), dept.getId()));
 
@@ -106,13 +105,12 @@ public class Y9DepartmentManagerImpl implements Y9DepartmentManager {
         } else {
             dept.setId(Y9IdGenerator.genId(IdType.SNOWFLAKE));
         }
-        Integer maxTabIndex = compositeOrgBaseManager.getMaxSubTabIndex(parent.getId());
-        dept.setTabIndex(maxTabIndex);
+        dept.setTenantId(Y9LoginUserHolder.getTenantId());
         dept.setVersion(InitDataConsts.Y9_VERSION);
         dept.setDisabled(false);
-        dept.setParentId(parent.getId());
-        dept.setTenantId(Y9LoginUserHolder.getTenantId());
+        dept.setTabIndex(compositeOrgBaseManager.getNextSubTabIndex(parent.getId()));
         dept.setDn(Y9OrgUtil.buildDn(OrgTypeEnum.DEPARTMENT, dept.getName(), parent.getDn()));
+        dept.setParentId(parent.getId());
         dept.setGuidPath(Y9OrgUtil.buildGuidPath(parent.getGuidPath(), dept.getId()));
 
         final Y9Department savedDepartment = this.save(dept);

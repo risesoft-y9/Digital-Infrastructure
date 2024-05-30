@@ -175,6 +175,7 @@ public class Y9GroupServiceImpl implements Y9GroupService {
 
         Y9Group updatedGroup = Y9ModelConvertUtil.convert(y9Group, Y9Group.class);
         updatedGroup.setParentId(parentId);
+        updatedGroup.setTabIndex(compositeOrgBaseManager.getNextSubTabIndex(parentId));
         return y9GroupManager.saveOrUpdate(updatedGroup);
     }
 
@@ -230,7 +231,7 @@ public class Y9GroupServiceImpl implements Y9GroupService {
         Y9OrgBase originOrgBase = event.getOriginEntity();
         Y9OrgBase updatedOrgBase = event.getUpdatedEntity();
 
-        if (Y9OrgUtil.isAncestorChanged(originOrgBase, updatedOrgBase)) {
+        if (Y9OrgUtil.isCurrentOrAncestorChanged(originOrgBase, updatedOrgBase)) {
             List<Y9Group> groupList = y9GroupRepository.findByParentIdOrderByTabIndexAsc(updatedOrgBase.getId());
             for (Y9Group group : groupList) {
                 this.saveOrUpdate(group);

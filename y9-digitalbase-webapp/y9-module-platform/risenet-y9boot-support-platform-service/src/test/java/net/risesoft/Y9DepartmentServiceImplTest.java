@@ -3,9 +3,6 @@ package net.risesoft;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 
-import net.risesoft.exception.OrgUnitErrorCodeEnum;
-import net.risesoft.y9.exception.Y9NotFoundException;
-import net.risesoft.y9.exception.util.Y9ExceptionUtil;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -14,11 +11,14 @@ import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 
 import net.risesoft.entity.Y9Department;
+import net.risesoft.exception.OrgUnitErrorCodeEnum;
 import net.risesoft.manager.org.CompositeOrgBaseManager;
 import net.risesoft.manager.org.Y9DepartmentManager;
 import net.risesoft.repository.Y9DepartmentPropRepository;
 import net.risesoft.repository.Y9DepartmentRepository;
 import net.risesoft.service.org.impl.Y9DepartmentServiceImpl;
+import net.risesoft.y9.exception.Y9NotFoundException;
+import net.risesoft.y9.exception.util.Y9ExceptionUtil;
 
 public class Y9DepartmentServiceImplTest {
 

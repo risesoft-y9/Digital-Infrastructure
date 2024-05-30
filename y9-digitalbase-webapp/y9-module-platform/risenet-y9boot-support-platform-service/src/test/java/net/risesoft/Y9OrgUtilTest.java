@@ -12,11 +12,25 @@ import net.risesoft.util.Y9OrgUtil;
 public class Y9OrgUtilTest {
 
     @Test
-    public void testIsAncestorChanged() {
+    public void testIsCurrentOrAncestorChanged() {
         Y9Person originPerson = new Y9Person();
-        originPerson.setDn("");
+        originPerson.setDn("cn=测试人员,ou=测试部门,o=测试组织");
+        originPerson.setGuidPath("1,2,3");
         Y9Person updatePerson = new Y9Person();
-        updatePerson.setDn("");
+        updatePerson.setDn("cn=测试人员,ou=测试部门,o=测试组织");
+        updatePerson.setGuidPath("1,2,3");
+        
+        assertFalse(Y9OrgUtil.isCurrentOrAncestorChanged(originPerson, updatePerson));
+        
+        updatePerson.setDn("cn=测试人员1,ou=测试部门,o=测试组织");
+        assertTrue(Y9OrgUtil.isCurrentOrAncestorChanged(originPerson, updatePerson));
+        
+        updatePerson.setDn("cn=测试人员,ou=测试部门1,o=测试组织");
+        assertTrue(Y9OrgUtil.isCurrentOrAncestorChanged(originPerson, updatePerson));
+
+        updatePerson.setDn("cn=测试人员,ou=测试部门,o=测试组织");
+        updatePerson.setGuidPath("1,4,3");
+        assertTrue(Y9OrgUtil.isCurrentOrAncestorChanged(originPerson, updatePerson));
     }
 
     @Test
