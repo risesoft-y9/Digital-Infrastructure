@@ -10,6 +10,7 @@ import org.hibernate.annotations.DynamicUpdate;
 import org.hibernate.annotations.Type;
 
 import lombok.Data;
+import lombok.experimental.SuperBuilder;
 
 import net.risesoft.enums.platform.OrgTypeEnum;
 
@@ -26,21 +27,26 @@ import net.risesoft.enums.platform.OrgTypeEnum;
 @DynamicUpdate
 @org.hibernate.annotations.Table(comment = "组织机构实体表", appliesTo = "Y9_ORG_ORGANIZATION")
 @Data
+@SuperBuilder
 public class Y9Organization extends Y9OrgBase {
 
     private static final long serialVersionUID = -5379834937852013780L;
+
     /** 英文名称 */
     @Column(name = "EN_NAME", length = 255)
     @Comment("英文名称")
     private String enName;
+
     /** 组织机构代码 */
     @Column(name = "ORGANIZATION_CODE", length = 255)
     @Comment("组织机构代码")
     private String organizationCode;
+
     /** 组织机构类型 */
     @Column(name = "ORGANIZATION_TYPE", length = 255)
     @Comment("组织机构类型")
     private String organizationType;
+
     /** 类型:0=实体组织，1=虚拟组织 */
     @ColumnDefault("0")
     @Column(name = "VIRTUALIZED", nullable = false)

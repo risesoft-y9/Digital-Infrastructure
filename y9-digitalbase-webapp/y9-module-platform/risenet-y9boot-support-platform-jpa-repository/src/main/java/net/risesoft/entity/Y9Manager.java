@@ -17,6 +17,7 @@ import org.hibernate.annotations.Type;
 import com.fasterxml.jackson.annotation.JsonFormat;
 
 import lombok.Data;
+import lombok.experimental.SuperBuilder;
 
 import net.risesoft.enums.platform.ManagerLevelEnum;
 import net.risesoft.enums.platform.OrgTypeEnum;
@@ -36,16 +37,11 @@ import net.risesoft.persistence.EnumConverter;
 @DynamicUpdate
 @org.hibernate.annotations.Table(comment = "三员表", appliesTo = "Y9_ORG_MANAGER")
 @Data
+@SuperBuilder
 public class Y9Manager extends Y9OrgBase {
 
     private static final long serialVersionUID = -6531424704457510017L;
-    /**
-     * 修改密码时间
-     */
-    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss", timezone = "GMT+8")
-    @Comment("上一次密码修改时间")
-    @Column(name = "LAST_MODIFY_PASSWORD_TIME")
-    protected Date lastModifyPasswordTime;
+
     /** 父节点id */
     @Column(name = "PARENT_ID", length = 38, nullable = false)
     @Comment("父节点id")
@@ -124,6 +120,14 @@ public class Y9Manager extends Y9OrgBase {
     @Comment(value = "允许访问的客户端IP")
     @Column(name = "USER_HOST_IP", length = 150)
     private String userHostIp;
+
+    /**
+     * 修改密码时间
+     */
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss", timezone = "GMT+8")
+    @Comment("上一次密码修改时间")
+    @Column(name = "LAST_MODIFY_PASSWORD_TIME")
+    private Date lastModifyPasswordTime;
 
     /**
      * 上一次审查时间
