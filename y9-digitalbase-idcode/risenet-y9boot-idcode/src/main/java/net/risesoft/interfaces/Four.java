@@ -16,7 +16,7 @@ import java.util.Map;
 public class Four {
 
     /*public static Result m401(String idCode, String gotoUrl, String sampleUrl, String callbackUrl) {
-        Map<String, Object> params = new HashMap<String, Object>();
+        Map<String, Object> params = new HashMap<>();
         params.put("access_token", ConfigReader.API_KEY);
         params.put("time", System.currentTimeMillis());
         params.put("company_idcode", idCode);
@@ -39,7 +39,7 @@ public class Four {
      * @return
      */
     public static BatchRegistResult m402(String jsonStr) {
-        Map<String, Object> params = new HashMap<String, Object>();
+        Map<String, Object> params = new HashMap<>();
         params.put("json_str", jsonStr);
         params.put("time", System.currentTimeMillis());
         BatchRegistResult result = null;
@@ -61,7 +61,7 @@ public class Four {
      * @return
      */
     public static BaseIdCodeInfo m403(String idCode, String idCodeOfCategory, String modelNumberCode, String categoryRegId) {
-        Map<String, Object> params = new HashMap<String, Object>();
+        Map<String, Object> params = new HashMap<>();
         params.put("access_token", ConfigReader.API_KEY);
         params.put("time", System.currentTimeMillis());
         params.put("company_idcode", idCode);
@@ -86,7 +86,7 @@ public class Four {
      * @return
      */
     public static BaseIdCodeInfo m404(String idCode, Integer searchType) {
-        Map<String, Object> params = new HashMap<String, Object>();
+        Map<String, Object> params = new HashMap<>();
         params.put("access_token", ConfigReader.API_KEY);
         params.put("time", System.currentTimeMillis());
         params.put("company_idcode", idCode);
@@ -102,7 +102,7 @@ public class Four {
     }
 
     /*public static Result m405(String idCode, String industryCategoryId, String codePayType, String gotoUrl, String sampleUrl, String callbackUrl) {
-        Map<String, Object> params = new HashMap<String, Object>();
+        Map<String, Object> params = new HashMap<>();
         params.put("access_token", ConfigReader.API_KEY);
         params.put("time", System.currentTimeMillis());
         params.put("company_idcode", idCode);
@@ -136,7 +136,7 @@ public class Four {
      * @return
      */
     public static IdcodeRegResult m406(String idCode, String codeUseId, Integer industryCategoryId, String categoryCode, String modelNumber, String modelNumberCode, Integer codePayType, String gotoUrl, String sampleUrl) {
-        Map<String, Object> params = new HashMap<String, Object>();
+        Map<String, Object> params = new HashMap<>();
         params.put("access_token", ConfigReader.API_KEY);
         params.put("time", System.currentTimeMillis());
         params.put("company_idcode", idCode);
@@ -174,7 +174,7 @@ public class Four {
      * @return
      */
     public static IdcodeRegResult m407(String idCode, String codeUseId, Integer industryCategoryId, String categoryCode, String modelNumber, String modelNumberEn, String introduction, Integer codePayType, String gotoUrl, String sampleUrl) {
-        Map<String, Object> params = new HashMap<String, Object>();
+        Map<String, Object> params = new HashMap<>();
         params.put("access_token", ConfigReader.API_KEY);
         params.put("time", System.currentTimeMillis());
         params.put("company_idcode", idCode);
@@ -198,7 +198,7 @@ public class Four {
     }
 
     /*public static Result m408(String idCode,String gotoUrl, String sampleUrl, String callbackUrl) {
-        Map<String, Object> params = new HashMap<String, Object>();
+        Map<String, Object> params = new HashMap<>();
         params.put("access_token", ConfigReader.API_KEY);
         params.put("time", System.currentTimeMillis());
         params.put("company_idcode", idCode);
@@ -225,7 +225,7 @@ public class Four {
      * @return
      */
     public static BaseIdCodeInfo m409(String idCode, String idCodeOfCategory, String modelNumberCode, String categoryRegId) {
-        Map<String, Object> params = new HashMap<String, Object>();
+        Map<String, Object> params = new HashMap<>();
         params.put("access_token", ConfigReader.API_KEY);
         params.put("time", System.currentTimeMillis());
         params.put("company_idcode", idCode);
@@ -250,7 +250,7 @@ public class Four {
      * @return
      */
     public static BaseIdCodeInfo m410(String idCode, Integer searchType) {
-        Map<String, Object> params = new HashMap<String, Object>();
+        Map<String, Object> params = new HashMap<>();
         params.put("access_token", ConfigReader.API_KEY);
         params.put("time", System.currentTimeMillis());
         params.put("company_idcode", idCode);

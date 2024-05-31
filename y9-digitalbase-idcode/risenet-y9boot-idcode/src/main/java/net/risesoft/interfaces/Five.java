@@ -26,7 +26,7 @@ public class Five {
      * @return
      */
     public static Result m5011(String idCode, String categoryRegId, File codeFile, String generateType) {
-        Map<String, Object> params = new HashMap<String, Object>();
+        Map<String, Object> params = new HashMap<>();
         params.put("access_token", ConfigReader.API_KEY);
         params.put("time", System.currentTimeMillis());
         params.put("company_idcode", idCode);
@@ -53,7 +53,7 @@ public class Five {
      * @return
      */
     public static Result m5012(String idCode, String categoryRegId, String codeListStr, String generateType) {
-        Map<String, Object> params = new HashMap<String, Object>();
+        Map<String, Object> params = new HashMap<>();
         params.put("access_token", ConfigReader.API_KEY);
         params.put("time", System.currentTimeMillis());
         params.put("company_idcode", idCode);
@@ -82,7 +82,7 @@ public class Five {
      * @return
      */
     public static Result m5013(String idCode, String categoryRegId, String prefixStr, Integer startNum, Integer endNum, String generateType) {
-        Map<String, Object> params = new HashMap<String, Object>();
+        Map<String, Object> params = new HashMap<>();
         params.put("access_token", ConfigReader.API_KEY);
         params.put("time", System.currentTimeMillis());
         params.put("company_idcode", idCode);
@@ -114,7 +114,7 @@ public class Five {
      * @return
      */
     public static Result m5014(String idCode, String categoryRegId, String prefixStr, Integer startNum, Integer endNum, Integer length, String generateType) {
-        Map<String, Object> params = new HashMap<String, Object>();
+        Map<String, Object> params = new HashMap<>();
         params.put("access_token", ConfigReader.API_KEY);
         params.put("time", System.currentTimeMillis());
         params.put("company_idcode", idCode);
@@ -143,7 +143,7 @@ public class Five {
      * @return
      */
     public static CodeRecordResult m502(String idCode, String idCodeOfCategory, String modelNumberCode) {
-        Map<String, Object> params = new HashMap<String, Object>();
+        Map<String, Object> params = new HashMap<>();
         params.put("access_token", ConfigReader.API_KEY);
         params.put("time", System.currentTimeMillis());
         params.put("company_idcode", idCode);
@@ -166,7 +166,7 @@ public class Five {
      * @return
      */
     public static CodeRecordResult m503(String idCode, String uploadCodeId) {
-        Map<String, Object> params = new HashMap<String, Object>();
+        Map<String, Object> params = new HashMap<>();
         params.put("access_token", ConfigReader.API_KEY);
         params.put("time", System.currentTimeMillis());
         params.put("company_idcode", idCode);
@@ -190,7 +190,7 @@ public class Five {
      * @return
      */
     public static BaseIdCodeInfo m504(String idCode, String uploadCodeId, String password, String codeType) {
-        Map<String, Object> params = new HashMap<String, Object>();
+        Map<String, Object> params = new HashMap<>();
         params.put("access_token", ConfigReader.API_KEY);
         params.put("time", System.currentTimeMillis());
         params.put("company_idcode", idCode);
@@ -215,7 +215,7 @@ public class Five {
      * @return
      */
     public static ResultObject m505(String idCode, String uploadCodeId, String codeType) {
-        Map<String, Object> params = new HashMap<String, Object>();
+        Map<String, Object> params = new HashMap<>();
         params.put("access_token", ConfigReader.API_KEY);
         params.put("time", System.currentTimeMillis());
         params.put("company_idcode", idCode);
@@ -237,7 +237,7 @@ public class Five {
      * @return
      */
     public static ResultObject m506(String code) {
-        Map<String, Object> params = new HashMap<String, Object>();
+        Map<String, Object> params = new HashMap<>();
         params.put("access_token", ConfigReader.API_KEY);
         params.put("time", System.currentTimeMillis());
         params.put("code", code);
