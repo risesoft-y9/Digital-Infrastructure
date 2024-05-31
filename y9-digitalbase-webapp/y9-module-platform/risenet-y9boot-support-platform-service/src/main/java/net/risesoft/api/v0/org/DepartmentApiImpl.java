@@ -181,7 +181,7 @@ public class DepartmentApiImpl implements DepartmentApi {
         @RequestParam("departmentId") @NotBlank String departmentId) {
         Y9LoginUserHolder.setTenantId(tenantId);
 
-        List<Y9Person> y9PersonList = compositeOrgBaseService.listAllPersonsRecursionDownward(departmentId);
+        List<Y9Person> y9PersonList = compositeOrgBaseService.listAllDescendantPersons(departmentId);
         return Y9ModelConvertUtil.convert(y9PersonList, Person.class);
     }
 
@@ -199,7 +199,7 @@ public class DepartmentApiImpl implements DepartmentApi {
         @RequestParam("departmentId") @NotBlank String departmentId, @RequestParam("disabled") Boolean disabled) {
         Y9LoginUserHolder.setTenantId(tenantId);
 
-        List<Y9Person> y9PersonList = compositeOrgBaseService.listAllPersonsRecursionDownward(departmentId, disabled);
+        List<Y9Person> y9PersonList = compositeOrgBaseService.listAllDescendantPersons(departmentId, disabled);
         return Y9ModelConvertUtil.convert(y9PersonList, Person.class);
     }
 

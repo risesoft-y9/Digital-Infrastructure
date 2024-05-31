@@ -2,6 +2,7 @@ package net.risesoft.service.identity.impl;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 import org.springframework.stereotype.Component;
@@ -152,10 +153,10 @@ public class IdentityRoleCalculatorImpl implements IdentityRoleCalculator {
      */
     private void removeInvalidByPersonId(String personId, List<Y9Role> newCalculatedY9RoleList) {
         List<String> originY9RoleIdList = y9PersonToRoleManager.findRoleIdByPersonId(personId);
-        List<String> newCalculatedY9RoleIdList =
-            newCalculatedY9RoleList.stream().map(Y9Role::getId).collect(Collectors.toList());
+        Set<String> newCalculatedY9RoleIdSet =
+            newCalculatedY9RoleList.stream().map(Y9Role::getId).collect(Collectors.toSet());
         for (String roleId : originY9RoleIdList) {
-            if (!newCalculatedY9RoleIdList.contains(roleId)) {
+            if (!newCalculatedY9RoleIdSet.contains(roleId)) {
                 y9PersonToRoleManager.removeByPersonIdAndRoleId(personId, roleId);
             }
         }
@@ -169,10 +170,10 @@ public class IdentityRoleCalculatorImpl implements IdentityRoleCalculator {
      */
     private void removeInvalidByPositionId(String positionId, List<Y9Role> newCalculatedY9RoleList) {
         List<String> originY9RoleIdList = y9PositionToRoleManager.listRoleIdByPositionId(positionId);
-        List<String> newCalculatedY9RoleIdList =
-            newCalculatedY9RoleList.stream().map(Y9Role::getId).collect(Collectors.toList());
+        Set<String> newCalculatedY9RoleIdSet =
+            newCalculatedY9RoleList.stream().map(Y9Role::getId).collect(Collectors.toSet());
         for (String roleId : originY9RoleIdList) {
-            if (!newCalculatedY9RoleIdList.contains(roleId)) {
+            if (!newCalculatedY9RoleIdSet.contains(roleId)) {
                 y9PositionToRoleManager.deleteByPositionIdAndRoleId(positionId, roleId);
             }
         }

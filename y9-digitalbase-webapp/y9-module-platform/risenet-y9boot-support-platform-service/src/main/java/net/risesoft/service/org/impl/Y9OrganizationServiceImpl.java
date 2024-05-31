@@ -47,7 +47,7 @@ public class Y9OrganizationServiceImpl implements Y9OrganizationService {
 
         if (isDisabled) {
             // 禁用时检查所有子节点是否都禁用了，只有所有子节点都禁用了，当前组织才能禁用
-            compositeOrgBaseManager.checkAllDecendantsDisabled(id);
+            compositeOrgBaseManager.checkAllDescendantsDisabled(id);
         }
 
         Y9Organization updatedOrganization = Y9ModelConvertUtil.convert(y9Organization, Y9Organization.class);

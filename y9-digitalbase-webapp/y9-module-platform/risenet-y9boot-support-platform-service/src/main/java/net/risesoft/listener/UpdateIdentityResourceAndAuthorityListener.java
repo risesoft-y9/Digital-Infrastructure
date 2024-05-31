@@ -359,7 +359,7 @@ public class UpdateIdentityResourceAndAuthorityListener {
                 y9PersonSet.addAll(y9PersonService.listByPositionId(y9OrgBasesToRoles.getOrgId(), Boolean.FALSE));
             } else {
                 y9PersonSet
-                    .addAll(compositeOrgBaseService.listAllPersonsRecursionDownward(y9OrgBasesToRoles.getOrgId()));
+                    .addAll(compositeOrgBaseService.listAllDescendantPersons(y9OrgBasesToRoles.getOrgId()));
                 y9PositionSet
                     .addAll(compositeOrgBaseService.listAllPositionsRecursionDownward(y9OrgBasesToRoles.getOrgId()));
             }

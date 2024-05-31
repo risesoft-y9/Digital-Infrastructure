@@ -2,6 +2,7 @@ package net.risesoft.service.org.impl;
 
 import java.util.Date;
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 
 import org.apache.commons.lang3.StringUtils;
@@ -149,12 +150,14 @@ public class Y9ManagerServiceImpl implements Y9ManagerService {
         if (Boolean.TRUE.equals(y9Manager.getGlobalManager())) {
             return true;
         } else {
-            // 验证是否为某个部门的三员（小三员）
+            if (Objects.equals(deptId, y9Manager.getParentId())) {
+                // deptId 对应部门的三员
+                return true;
+            }
             Y9Department targetDepartment = y9DepartmentManager.getById(deptId);
             Y9Department managerDept = y9DepartmentManager.getById(y9Manager.getParentId());
-            String targetDepartmentGuidPath = targetDepartment.getGuidPath();
-            String managerDepartmentGuidPath = managerDept.getGuidPath();
-            return targetDepartmentGuidPath.contains(managerDepartmentGuidPath);
+            // 部门三员管理 parentId 对应的部门及其后代部门
+            return Y9OrgUtil.isDescendantOf(targetDepartment, managerDept);
         }
     }
 

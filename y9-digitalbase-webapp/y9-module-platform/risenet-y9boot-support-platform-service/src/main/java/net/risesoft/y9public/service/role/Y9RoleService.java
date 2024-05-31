@@ -64,13 +64,6 @@ public interface Y9RoleService {
     Y9Role getById(String roleId);
 
     /**
-     * 获取子节点的最大TableIndex
-     *
-     * @return {@link Integer}
-     */
-    Integer getMaxTabIndex();
-
-    /**
      * 获取所有角色
      *
      * @return {@link List}<{@link Y9Role}>
@@ -173,14 +166,6 @@ public interface Y9RoleService {
      */
     Y9Role saveProperties(String id, String properties);
 
-    /**
-     * 根据whereClause进行搜索
-     *
-     * @param whereClause where查询条件
-     * @return {@link List}<{@link Y9Role}>
-     */
-    List<Y9Role> searchRole(String whereClause);
-
     List<Y9Role> treeSearch(String name, String parentId);
 
     /**
@@ -189,6 +174,6 @@ public interface Y9RoleService {
      * @param name 角色名
      * @return {@link List}<{@link Y9Role}>
      */
-    List<Y9Role> treeSearchByName(String name);
+    List<Y9Role> treeSearch(String name);
 
 }

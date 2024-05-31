@@ -241,7 +241,7 @@ public class RoleController {
     @RequestMapping(value = "/treeSearch")
     @Deprecated
     public Y9Result<List<RoleVO>> treeSearch(@RequestParam String name) {
-        List<Y9Role> y9RoleList = y9RoleService.treeSearchByName(name);
+        List<Y9Role> y9RoleList = y9RoleService.treeSearch(name);
         List<RoleVO> roleVOList = new ArrayList<>();
         Set<String> appIdList = y9RoleList.stream().map(Y9Role::getAppId).collect(Collectors.toSet());
         List<Y9App> appList = new ArrayList<>();
@@ -290,7 +290,7 @@ public class RoleController {
     public Y9Result<List<RoleTreeNodeVO>> treeSearch2(@RequestParam String name) {
         List<RoleTreeNodeVO> roleTreeNodeVOList = new ArrayList<>();
 
-        List<Y9Role> y9RoleList = y9RoleService.treeSearchByName(name);
+        List<Y9Role> y9RoleList = y9RoleService.treeSearch(name);
         Set<String> appIdList = y9RoleList.stream().map(Y9Role::getAppId).collect(Collectors.toSet());
         List<Y9App> appList = new ArrayList<>();
         for (String appId : appIdList) {

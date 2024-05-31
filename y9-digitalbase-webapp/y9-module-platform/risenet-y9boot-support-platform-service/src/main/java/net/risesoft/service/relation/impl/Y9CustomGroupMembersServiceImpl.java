@@ -69,11 +69,11 @@ public class Y9CustomGroupMembersServiceImpl implements Y9CustomGroupMembersServ
             switch (orgType) {
                 case ORGANIZATION:
                     orgPersonList.addAll(compositeOrgBaseManager
-                        .listAllPersonsRecursionDownward(y9CustomGroupMember.getMemberId(), false));
+                        .listAllDescendantPersons(y9CustomGroupMember.getMemberId(), false));
                     break;
                 case DEPARTMENT:
                     orgPersonList.addAll(compositeOrgBaseManager
-                        .listAllPersonsRecursionDownward(y9CustomGroupMember.getMemberId(), false));
+                        .listAllDescendantPersons(y9CustomGroupMember.getMemberId(), false));
                     break;
                 case POSITION:
                     orgPersonList

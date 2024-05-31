@@ -1,9 +1,10 @@
 package net.risesoft.service.identity.impl;
 
 import java.util.ArrayList;
-import java.util.Collections;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 import org.apache.commons.lang3.StringUtils;
@@ -58,7 +59,7 @@ public class Y9PositionToResourceAndAuthorityServiceImpl implements Y9PositionTo
     @Transactional(readOnly = false)
     @Override
     public void deleteByAuthorizationIdAndOrgUnitId(String authorizationId, String orgId) {
-        List<Y9Position> allPersons = compositeOrgBaseManager.listAllPositionsRecursionDownward(orgId);
+        List<Y9Position> allPersons = compositeOrgBaseManager.listAllDescendantPositions(orgId);
         for (Y9Position y9Position : allPersons) {
             deleteByAuthorizationIdAndPositionId(authorizationId, y9Position.getId());
         }
@@ -73,7 +74,7 @@ public class Y9PositionToResourceAndAuthorityServiceImpl implements Y9PositionTo
     @Transactional(readOnly = false)
     @Override
     public void deleteByOrgUnitId(String orgUnitId) {
-        List<Y9Position> positionList = compositeOrgBaseManager.listAllPositionsRecursionDownward(orgUnitId);
+        List<Y9Position> positionList = compositeOrgBaseManager.listAllDescendantPositions(orgUnitId);
         for (Y9Position y9Position : positionList) {
             deleteByPositionId(y9Position.getId());
         }
@@ -130,19 +131,18 @@ public class Y9PositionToResourceAndAuthorityServiceImpl implements Y9PositionTo
     public List<Y9App> listAppsByAuthority(String positionId, AuthorityEnum authority) {
         List<Y9PositionToResourceAndAuthority> resourceList = y9PositionToResourceAndAuthorityRepository
             .findByPositionIdAndAuthorityAndResourceType(positionId, authority, ResourceTypeEnum.APP);
-        List<Y9App> appList = new ArrayList<>();
+        Set<Y9App> appList = new HashSet<>();
         for (Y9PositionToResourceAndAuthority r : resourceList) {
             Optional<Y9TenantApp> y9TenantAppOptional = y9TenantAppManager
                 .getByTenantIdAndAppIdAndTenancy(Y9LoginUserHolder.getTenantId(), r.getResourceId(), true);
             if (y9TenantAppOptional.isPresent()) {
                 Y9App y9App = y9AppManager.getById(r.getResourceId());
-                if (y9App.getEnabled() && !appList.contains(y9App)) {
+                if (y9App.getEnabled()) {
                     appList.add(y9App);
                 }
             }
         }
-        Collections.sort(appList);
-        return appList;
+        return appList.stream().sorted().collect(Collectors.toList());
     }
 
     @Override
@@ -159,18 +159,17 @@ public class Y9PositionToResourceAndAuthorityServiceImpl implements Y9PositionTo
 
     @Override
     public List<Y9ResourceBase> listSubResources(String positionId, String resourceId, AuthorityEnum authority) {
-        List<Y9ResourceBase> returnResourceList = new ArrayList<>();
+        Set<Y9ResourceBase> returnResourceSet = new HashSet<>();
         List<Y9PositionToResourceAndAuthority> personToResourceAndAuthorityList =
             this.list(positionId, resourceId, authority);
         for (Y9PositionToResourceAndAuthority positionResource : personToResourceAndAuthorityList) {
             Y9ResourceBase y9ResourceBase = compositeResourceService
                 .findByIdAndResourceType(positionResource.getResourceId(), positionResource.getResourceType());
-            if (y9ResourceBase != null && y9ResourceBase.getEnabled() && !returnResourceList.contains(y9ResourceBase)) {
-                returnResourceList.add(y9ResourceBase);
+            if (y9ResourceBase != null && y9ResourceBase.getEnabled()) {
+                returnResourceSet.add(y9ResourceBase);
             }
         }
-        Collections.sort(returnResourceList);
-        return returnResourceList;
+        return returnResourceSet.stream().sorted().collect(Collectors.toList());
     }
 
     @Override
@@ -180,15 +179,14 @@ public class Y9PositionToResourceAndAuthorityServiceImpl implements Y9PositionTo
             this.list(positionId, resourceId, resourceType, authority);
         List<String> menuIdList = personToResourceAndAuthorityList.stream()
             .map(Y9IdentityToResourceAndAuthorityBase::getResourceId).distinct().collect(Collectors.toList());
-        List<Y9Menu> y9MenuList = new ArrayList<>();
+        Set<Y9Menu> y9MenuSet = new HashSet<>();
         for (String menuId : menuIdList) {
             Y9Menu y9Menu = y9MenuManager.getById(menuId);
-            if (y9Menu.getEnabled() && !y9MenuList.contains(y9Menu)) {
-                y9MenuList.add(y9Menu);
+            if (y9Menu.getEnabled()) {
+                y9MenuSet.add(y9Menu);
             }
         }
-        Collections.sort(y9MenuList);
-        return y9MenuList;
+        return y9MenuSet.stream().sorted().collect(Collectors.toList());
     }
 
     @EventListener

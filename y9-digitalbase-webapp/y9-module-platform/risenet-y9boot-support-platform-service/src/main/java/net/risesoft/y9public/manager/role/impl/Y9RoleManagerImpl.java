@@ -126,30 +126,23 @@ public class Y9RoleManagerImpl implements Y9RoleManager {
 
     @Override
     public List<Y9Role> listOrgUnitRelatedWithoutNegative(String orgUnitId) {
-        List<String> positiveRoleIdList = new ArrayList<>();
-        List<String> negativeRoleIdList = new ArrayList<>();
-        Set<String> calculatedRoleIdList = new HashSet<>();
+        Set<String> positiveRoleIdSet = new HashSet<>();
+        Set<String> negativeRoleIdSet = new HashSet<>();
+        Set<String> calculatedRoleIdSet = new HashSet<>();
 
         List<String> orgUnitIds = this.listOrgUnitIdRecursively(orgUnitId);
         for (String id : orgUnitIds) {
-            positiveRoleIdList.addAll(y9OrgBasesToRolesRepository.findRoleIdsByOrgIdAndNegative(id, Boolean.FALSE));
-            negativeRoleIdList.addAll(y9OrgBasesToRolesRepository.findRoleIdsByOrgIdAndNegative(id, Boolean.TRUE));
+            positiveRoleIdSet.addAll(y9OrgBasesToRolesRepository.findRoleIdsByOrgIdAndNegative(id, Boolean.FALSE));
+            negativeRoleIdSet.addAll(y9OrgBasesToRolesRepository.findRoleIdsByOrgIdAndNegative(id, Boolean.TRUE));
         }
-        for (String roleId : positiveRoleIdList) {
-            if (negativeRoleIdList.isEmpty() || !negativeRoleIdList.contains(roleId)) {
+        for (String roleId : positiveRoleIdSet) {
+            if (!negativeRoleIdSet.contains(roleId)) {
                 // 负角色关联列表中没包含当前正角色关联，说明当前组织节点拥有该角色
-                calculatedRoleIdList.add(roleId);
+                calculatedRoleIdSet.add(roleId);
             }
         }
 
-        List<Y9Role> y9RoleList = new ArrayList<>();
-        for (String roleId : calculatedRoleIdList) {
-            Y9Role roleNode = getById(roleId);
-            if (roleNode != null && !y9RoleList.contains(roleNode)) {
-                y9RoleList.add(roleNode);
-            }
-        }
-        return y9RoleList;
+        return calculatedRoleIdSet.stream().map(this::getById).collect(Collectors.toList());
     }
 
     @Override

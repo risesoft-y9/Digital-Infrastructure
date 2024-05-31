@@ -193,7 +193,7 @@ public interface CompositeOrgBaseService {
      * @param parentId 父节点id
      * @return {@link List}<{@link Y9Person}>
      */
-    List<Y9Person> listAllPersonsRecursionDownward(String parentId);
+    List<Y9Person> listAllDescendantPersons(String parentId);
 
     /**
      * 根据父节点id,递归获取其下所有没有禁用/禁用人员
@@ -202,7 +202,7 @@ public interface CompositeOrgBaseService {
      * @param disabled 是否禁用
      * @return {@link List}<{@link Y9Person}>
      */
-    List<Y9Person> listAllPersonsRecursionDownward(String parentId, Boolean disabled);
+    List<Y9Person> listAllDescendantPersons(String parentId, Boolean disabled);
 
     /**
      * 根据父节点id，递归获取其下所有岗位

@@ -343,7 +343,7 @@ public class CompositeOrgBaseServiceImpl implements CompositeOrgBaseService {
             List<Y9Department> bureauList = findBureauOfOrganization(id, disabled);
             orgBaseSet.addAll(bureauList);
             for (Y9Department bureau : bureauList) {
-                getOrgUnitsByUpwardRecursion(bureau.getParentId(), orgBaseSet);
+                fillWithOrgUnitsByUpwardRecursion(bureau.getParentId(), orgBaseSet);
             }
             orgBaseSet.remove(org);
         } else {
@@ -382,7 +382,7 @@ public class CompositeOrgBaseServiceImpl implements CompositeOrgBaseService {
                         y9DepartmentRepository.findByBureauAndDnContainingOrderByTabIndexAsc(Boolean.TRUE, org.getDn());
                     orgBaseSet.addAll(bureauList);
                     for (Y9Department bureau : bureauList) {
-                        getOrgUnitsByUpwardRecursion(bureau.getParentId(), orgBaseSet);
+                        fillWithOrgUnitsByUpwardRecursion(bureau.getParentId(), orgBaseSet);
                     }
                     orgBaseSet.remove(org);
                 }
@@ -452,18 +452,18 @@ public class CompositeOrgBaseServiceImpl implements CompositeOrgBaseService {
     }
 
     @Override
-    public List<Y9Person> listAllPersonsRecursionDownward(String parentId) {
-        return compositeOrgBaseManager.listAllPersonsRecursionDownward(parentId);
+    public List<Y9Person> listAllDescendantPersons(String parentId) {
+        return compositeOrgBaseManager.listAllDescendantPersons(parentId);
     }
 
     @Override
-    public List<Y9Person> listAllPersonsRecursionDownward(String parentId, Boolean disabled) {
-        return compositeOrgBaseManager.listAllPersonsRecursionDownward(parentId, disabled);
+    public List<Y9Person> listAllDescendantPersons(String parentId, Boolean disabled) {
+        return compositeOrgBaseManager.listAllDescendantPersons(parentId, disabled);
     }
 
     @Override
     public List<Y9Position> listAllPositionsRecursionDownward(String parentId) {
-        return compositeOrgBaseManager.listAllPositionsRecursionDownward(parentId);
+        return compositeOrgBaseManager.listAllDescendantPositions(parentId);
     }
 
     @Override
@@ -560,7 +560,7 @@ public class CompositeOrgBaseServiceImpl implements CompositeOrgBaseService {
             List<Y9Department> deptList = findDepartmentByNameLike(name, disabled);
             orgBaseSet.addAll(deptList);
             for (Y9Department dept : deptList) {
-                getOrgUnitsByUpwardRecursion(dept.getParentId(), orgBaseSet);
+                fillWithOrgUnitsByUpwardRecursion(dept.getParentId(), orgBaseSet);
             }
         }
 
@@ -570,7 +570,7 @@ public class CompositeOrgBaseServiceImpl implements CompositeOrgBaseService {
             List<Y9Group> groupList = findGroupByNameLike(name, disabled);
             orgBaseSet.addAll(groupList);
             for (Y9Group group : groupList) {
-                getOrgUnitsByUpwardRecursion(group.getParentId(), orgBaseSet);
+                fillWithOrgUnitsByUpwardRecursion(group.getParentId(), orgBaseSet);
             }
         }
 
@@ -579,7 +579,7 @@ public class CompositeOrgBaseServiceImpl implements CompositeOrgBaseService {
             List<Y9Position> positionList = findPositionByNameLike(name, disabled);
             orgBaseSet.addAll(positionList);
             for (Y9Position position : positionList) {
-                getOrgUnitsByUpwardRecursion(position.getParentId(), orgBaseSet);
+                fillWithOrgUnitsByUpwardRecursion(position.getParentId(), orgBaseSet);
             }
         }
 
@@ -588,7 +588,7 @@ public class CompositeOrgBaseServiceImpl implements CompositeOrgBaseService {
             List<Y9Person> personList = findPersonByNameLike(name, disabled);
             orgBaseSet.addAll(personList);
             for (Y9Person person : personList) {
-                getOrgUnitsByUpwardRecursion(person.getParentId(), orgBaseSet);
+                fillWithOrgUnitsByUpwardRecursion(person.getParentId(), orgBaseSet);
             }
         }
 
@@ -596,7 +596,7 @@ public class CompositeOrgBaseServiceImpl implements CompositeOrgBaseService {
             List<Y9Manager> y9ManagerList = findManagerByNameLike(name, disabled);
             orgBaseSet.addAll(y9ManagerList);
             for (Y9Manager y9Manager : y9ManagerList) {
-                getOrgUnitsByUpwardRecursion(y9Manager.getParentId(), orgBaseSet);
+                fillWithOrgUnitsByUpwardRecursion(y9Manager.getParentId(), orgBaseSet);
             }
         }
 
@@ -617,7 +617,7 @@ public class CompositeOrgBaseServiceImpl implements CompositeOrgBaseService {
             List<Y9Department> deptList = findDepartmentByNameLike(name, dnName, disabled);
             orgBaseSet.addAll(deptList);
             for (Y9Department dept : deptList) {
-                getOrgUnitsByUpwardRecursion(dept.getParentId(), orgBaseSet);
+                fillWithOrgUnitsByUpwardRecursion(dept.getParentId(), orgBaseSet);
             }
         }
 
@@ -627,7 +627,7 @@ public class CompositeOrgBaseServiceImpl implements CompositeOrgBaseService {
             List<Y9Group> groupList = findGroupByNameLike(name, dnName, disabled);
             orgBaseSet.addAll(groupList);
             for (Y9Group group : groupList) {
-                getOrgUnitsByUpwardRecursion(group.getParentId(), orgBaseSet);
+                fillWithOrgUnitsByUpwardRecursion(group.getParentId(), orgBaseSet);
             }
         }
 
@@ -636,7 +636,7 @@ public class CompositeOrgBaseServiceImpl implements CompositeOrgBaseService {
             List<Y9Position> positionList = findPositionByNameLike(name, dnName, disabled);
             orgBaseSet.addAll(positionList);
             for (Y9Position position : positionList) {
-                getOrgUnitsByUpwardRecursion(position.getParentId(), orgBaseSet);
+                fillWithOrgUnitsByUpwardRecursion(position.getParentId(), orgBaseSet);
             }
         }
 
@@ -645,7 +645,7 @@ public class CompositeOrgBaseServiceImpl implements CompositeOrgBaseService {
             List<Y9Person> personList = findPersonByNameLike(name, dnName, disabled);
             orgBaseSet.addAll(personList);
             for (Y9Person person : personList) {
-                getOrgUnitsByUpwardRecursion(person.getParentId(), orgBaseSet);
+                fillWithOrgUnitsByUpwardRecursion(person.getParentId(), orgBaseSet);
             }
         }
 
@@ -653,7 +653,7 @@ public class CompositeOrgBaseServiceImpl implements CompositeOrgBaseService {
             List<Y9Manager> y9ManagerList = findManagerByNameLike(name, dnName, disabled);
             orgBaseSet.addAll(y9ManagerList);
             for (Y9Manager y9Manager : y9ManagerList) {
-                getOrgUnitsByUpwardRecursion(y9Manager.getParentId(), orgBaseSet);
+                fillWithOrgUnitsByUpwardRecursion(y9Manager.getParentId(), orgBaseSet);
             }
         }
 
@@ -836,13 +836,13 @@ public class CompositeOrgBaseServiceImpl implements CompositeOrgBaseService {
         }
     }
 
-    private void getOrgUnitsByUpwardRecursion(String parentId, Set<Y9OrgBase> orgBaseSet) {
+    private void fillWithOrgUnitsByUpwardRecursion(String parentId, Set<Y9OrgBase> orgBaseSet) {
         Y9OrgBase parent = getOrgUnit(parentId);
         if (!orgBaseSet.contains(parent)) {
             orgBaseSet.add(parent);
             if (parent.getOrgType().equals(OrgTypeEnum.DEPARTMENT)) {
                 Y9Department departmentParent = (Y9Department)parent;
-                getOrgUnitsByUpwardRecursion(departmentParent.getParentId(), orgBaseSet);
+                fillWithOrgUnitsByUpwardRecursion(departmentParent.getParentId(), orgBaseSet);
             }
         }
     }
