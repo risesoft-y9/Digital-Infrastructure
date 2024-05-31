@@ -24,8 +24,6 @@ import net.risesoft.entity.identity.position.Y9PositionToRole;
 @Transactional(value = "rsTenantTransactionManager", readOnly = true)
 public interface Y9PositionToRoleRepository extends JpaRepository<Y9PositionToRole, String> {
 
-    long countByPositionIdAndRoleCustomId(String positionId, String customId);
-
     int countByPositionIdAndRoleId(String positionId, String roleId);
 
     @Modifying
@@ -45,8 +43,6 @@ public interface Y9PositionToRoleRepository extends JpaRepository<Y9PositionToRo
     Page<Y9PositionToRole> findByPositionId(String positionId, Pageable pageable);
 
     Optional<Y9PositionToRole> findByPositionIdAndRoleId(String positionId, String roleId);
-
-    List<Y9PositionToRole> findByPositionIdAndSystemNameOrderByAppName(String positionId, String systemName);
 
     List<Y9PositionToRole> findByRoleId(String roleId);
 

@@ -51,14 +51,8 @@ public class Y9PositionToRoleManagerImpl implements Y9PositionToRoleManager {
             y9PositionToRole.setId(Y9IdGenerator.genId());
             y9PositionToRole.setTenantId(y9Position.getTenantId());
             y9PositionToRole.setPositionId(y9Position.getId());
-            y9PositionToRole.setDepartmentId(y9Position.getParentId());
             y9PositionToRole.setRoleId(role.getId());
-            y9PositionToRole.setRoleName(role.getName());
-            y9PositionToRole.setSystemCnName(role.getSystemCnName());
-            y9PositionToRole.setSystemName(role.getSystemName());
-            y9PositionToRole.setAppName(role.getAppCnName());
             y9PositionToRole.setAppId(role.getAppId());
-            y9PositionToRole.setDescription(role.getDescription());
             y9PositionToRoleRepository.save(y9PositionToRole);
         }
     }

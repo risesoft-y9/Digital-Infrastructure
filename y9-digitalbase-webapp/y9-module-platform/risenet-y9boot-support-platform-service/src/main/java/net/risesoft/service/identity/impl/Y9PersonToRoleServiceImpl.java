@@ -1,7 +1,6 @@
 package net.risesoft.service.identity.impl;
 
 import java.util.List;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
 import org.apache.commons.lang3.StringUtils;
@@ -46,11 +45,6 @@ public class Y9PersonToRoleServiceImpl implements Y9PersonToRoleService {
     }
 
     @Override
-    public long countByPersonIdAndSystemName(String personId, String systemName) {
-        return y9PersonToRoleRepository.countByPersonIdAndSystemName(personId, systemName);
-    }
-
-    @Override
     public String getRoleIdsByPersonId(String personId) {
         List<String> roleIdList = y9PersonToRoleRepository.findRoleIdByPersonId(personId);
         return StringUtils.join(roleIdList, ",");
@@ -82,8 +76,8 @@ public class Y9PersonToRoleServiceImpl implements Y9PersonToRoleService {
 
     @Override
     public Boolean hasRoleByCustomId(String personId, String customId) {
-        int count = y9PersonToRoleRepository.countByPersonIdAndRoleCustomId(personId, customId);
-        return count > 0;
+        List<Y9Role> y9RoleList = y9RoleRepository.findByCustomId(customId);
+        return y9RoleList.stream().anyMatch(y9Role -> hasRole(personId, y9Role.getId()));
     }
 
     @Override
@@ -115,37 +109,6 @@ public class Y9PersonToRoleServiceImpl implements Y9PersonToRoleService {
     public void removeByRoleId(String roleId) {
         List<Y9PersonToRole> mappingList = y9PersonToRoleRepository.findByRoleId(roleId);
         y9PersonToRoleRepository.deleteAll(mappingList);
-    }
-
-    @Override
-    @Transactional(readOnly = false)
-    public void update(String roleId, String roleName, String systemName, String systemCnName, String description) {
-        List<Y9PersonToRole> list = y9PersonToRoleRepository.findByRoleId(roleId);
-        List<String> ids = list.stream().map(Y9PersonToRole::getId).collect(Collectors.toList());
-        for (String id : ids) {
-            Optional<Y9PersonToRole> y9PersonToRoleOptional = y9PersonToRoleRepository.findById(id);
-            if (y9PersonToRoleOptional.isPresent()) {
-                Y9PersonToRole y9PersonToRole = y9PersonToRoleOptional.get();
-                y9PersonToRole.setRoleName(roleName);
-                y9PersonToRole.setSystemCnName(systemCnName);
-                y9PersonToRole.setSystemName(systemName);
-                y9PersonToRole.setDescription(description);
-                y9PersonToRoleRepository.save(y9PersonToRole);
-            }
-        }
-    }
-
-    @Override
-    @Transactional(readOnly = false)
-    public void updateByRole(Y9Role y9Role) {
-        List<Y9PersonToRole> mappingList = y9PersonToRoleRepository.findByRoleId(y9Role.getId());
-        for (Y9PersonToRole positionToRole : mappingList) {
-            positionToRole.setRoleName(y9Role.getName());
-            positionToRole.setSystemName(y9Role.getSystemName());
-            positionToRole.setSystemCnName(y9Role.getSystemCnName());
-            positionToRole.setDescription(y9Role.getDescription());
-            y9PersonToRoleRepository.save(positionToRole);
-        }
     }
 
     @EventListener

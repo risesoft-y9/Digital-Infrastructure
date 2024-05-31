@@ -23,15 +23,6 @@ public interface Y9PersonToRoleService {
     long countByPersonId(String personId);
 
     /**
-     * 根据人员id及系统名对个人授权计数
-     *
-     * @param personId
-     * @param systemName
-     * @return
-     */
-    long countByPersonIdAndSystemName(String personId, String systemName);
-
-    /**
      * 根据人员id获取拥有的角色id（,分隔）
      *
      * @param personId id
@@ -92,22 +83,4 @@ public interface Y9PersonToRoleService {
      */
     void removeByRoleId(String roleId);
 
-    /**
-     * 更新人员授权信息
-     *
-     * @param roleId
-     * @param roleName
-     * @param systemName
-     * @param systemCnName
-     * @param description
-     */
-    void update(String roleId, String roleName, String systemName, String systemCnName, String description);
-
-    /**
-     * 根据角色更新
-     *
-     * @param y9Role
-     * @return
-     */
-    void updateByRole(Y9Role y9Role);
 }

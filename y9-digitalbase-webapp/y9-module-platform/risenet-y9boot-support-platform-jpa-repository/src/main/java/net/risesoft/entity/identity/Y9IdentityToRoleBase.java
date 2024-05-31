@@ -37,20 +37,10 @@ public class Y9IdentityToRoleBase extends BaseEntity {
     @Comment("租户id")
     protected String tenantId;
 
-    /** 部门id */
-    @Column(name = "DEPARTMENT_ID", length = 38, nullable = false)
-    @Comment("部门id")
-    protected String departmentId;
-
     /** 角色id */
     @Column(name = "ROLE_ID", length = 38, nullable = false)
     @Comment("角色id")
     protected String roleId;
-
-    /** 角色自定义id */
-    @Column(name = "ROLE_CUSTOM_ID", length = 38)
-    @Comment("角色自定义id")
-    protected String roleCustomId;
 
     /** 应用id */
     @Column(name = "APP_ID", length = 38)
@@ -61,30 +51,5 @@ public class Y9IdentityToRoleBase extends BaseEntity {
     @Column(name = "SYSTEM_ID", length = 38)
     @Comment("系统id")
     protected String systemId;
-
-    /** 描述 */
-    @Column(name = "DESCRIPTION", length = 255)
-    @Comment("描述")
-    protected String description;
-
-    /** 角色名称 */
-    @Column(name = "ROLE_NAME", length = 255)
-    @Comment("角色名称")
-    protected String roleName;
-
-    /** 系统英文名称 */
-    @Column(name = "SYSTEM_NAME", length = 255)
-    @Comment("系统英文名称")
-    protected String systemName;
-
-    /** 系统中文名称 */
-    @Column(name = "SYSTEM_CN_NAME", length = 255)
-    @Comment("系统中文名称")
-    protected String systemCnName;
-
-    /** 应用名称 */
-    @Column(name = "APP_NAME", length = 255)
-    @Comment("应用名称")
-    protected String appName;
 
 }
