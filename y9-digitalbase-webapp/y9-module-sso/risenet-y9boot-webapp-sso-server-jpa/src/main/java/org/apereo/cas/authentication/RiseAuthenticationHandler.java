@@ -112,7 +112,7 @@ public class RiseAuthenticationHandler extends AbstractAuthenticationHandler {
                 if (users != null && !users.isEmpty()) {
                     Y9User y9User = users.get(0);
                     String hashed = y9User.getPassword();
-                    if (!Y9MessageDigest.checkpw(password, hashed)) {
+                    if (!Y9MessageDigest.bcryptMatch(password, hashed)) {
                         throw new FailedLoginException("密码错误。");
                     }
                     try {

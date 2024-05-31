@@ -44,7 +44,7 @@ public class OnApplicationReady implements ApplicationListener<ApplicationReadyE
             y9User.setManagerLevel(1);
             y9User.setName("系统管理员");
             y9User.setOriginal(true);
-            y9User.setPassword(Y9MessageDigest.hashpw("Risesoft@2023"));
+            y9User.setPassword(Y9MessageDigest.bcrypt("Risesoft@2023"));
             y9User.setPersonType("Manager");
             y9User.setSex(1);
             y9User.setTenantName("default");

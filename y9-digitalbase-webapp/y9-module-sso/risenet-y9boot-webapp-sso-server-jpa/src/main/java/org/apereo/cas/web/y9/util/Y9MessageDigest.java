@@ -6,7 +6,7 @@ import java.security.NoSuchAlgorithmException;
 import org.mindrot.jbcrypt.BCrypt;
 
 public class Y9MessageDigest {
-    public static String byte2hex(byte[] b) {
+    private static String byte2hexSplitWithColon(byte[] b) {
         String hs = "";
         String stmp = "";
         for (int n = 0; n < b.length; n++) {
@@ -30,42 +30,41 @@ public class Y9MessageDigest {
      * @return
      * @throws NoSuchAlgorithmException
      */
-    public static String SHA1(String str) throws NoSuchAlgorithmException {
+    public static String sha1(String str) throws NoSuchAlgorithmException {
         if (str == null || str.length() == 0) {
             return "";
         }
         MessageDigest messageDigest = MessageDigest.getInstance("SHA-1");
         messageDigest.update(str.getBytes());
         byte[] sha1Bytes = messageDigest.digest();
-        return byte2hex(sha1Bytes);
+        return byte2hexSplitWithColon(sha1Bytes);
     }
 
-    public static String SHA256(String str) throws NoSuchAlgorithmException {
+    public static String sha256(String str) throws NoSuchAlgorithmException {
         if (str == null || str.length() == 0) {
             return "";
         }
         MessageDigest messageDigest = MessageDigest.getInstance("SHA-256");
         messageDigest.update(str.getBytes());
         byte[] sha1Bytes = messageDigest.digest();
-        return byte2hex(sha1Bytes);
+        return byte2hexSplitWithColon(sha1Bytes);
     }
 
-    public static String SHA512(String str) throws NoSuchAlgorithmException {
+    public static String sha512(String str) throws NoSuchAlgorithmException {
         if (str == null || str.length() == 0) {
             return "";
         }
         MessageDigest messageDigest = MessageDigest.getInstance("SHA-512");
         messageDigest.update(str.getBytes());
         byte[] sha1Bytes = messageDigest.digest();
-        return byte2hex(sha1Bytes);
+        return byte2hexSplitWithColon(sha1Bytes);
     }
 
-    public static String hashpw(String password) {
-        String hashed = BCrypt.hashpw(password, BCrypt.gensalt());
-        return hashed;
+    public static String bcrypt(String password) {
+        return BCrypt.hashpw(password, BCrypt.gensalt());
     }
 
-    public static boolean checkpw(String candidate, String hashed) {
+    public static boolean bcryptMatch(String candidate, String hashed) {
         return BCrypt.checkpw(candidate, hashed);
     }
 }

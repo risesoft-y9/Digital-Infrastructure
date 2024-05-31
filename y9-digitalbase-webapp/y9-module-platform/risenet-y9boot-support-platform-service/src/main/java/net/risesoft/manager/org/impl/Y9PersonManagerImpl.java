@@ -189,7 +189,7 @@ public class Y9PersonManagerImpl implements Y9PersonManager {
         person.setOrderedPath(compositeOrgBaseManager.buildOrderedPath(person));
 
         String password = y9SettingService.get(SettingEnum.USER_DEFAULT_PASSWORD, String.class);
-        person.setPassword(Y9MessageDigest.hashpw(password));
+        person.setPassword(Y9MessageDigest.bcrypt(password));
 
         final Y9Person savedPerson = save(person);
         if (null != personExt) {

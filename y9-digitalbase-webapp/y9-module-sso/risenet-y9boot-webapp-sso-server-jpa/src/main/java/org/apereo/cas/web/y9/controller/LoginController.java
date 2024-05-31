@@ -108,7 +108,7 @@ public class LoginController {
             }
             Y9User y9User = users.get(0);
             String hashed = y9User.getPassword();
-            if (!Y9MessageDigest.checkpw(password, hashed)) {
+            if (!Y9MessageDigest.bcryptMatch(password, hashed)) {
                 map.put("msg", "密码错误!");
                 map.put("success", false);
                 return map;
