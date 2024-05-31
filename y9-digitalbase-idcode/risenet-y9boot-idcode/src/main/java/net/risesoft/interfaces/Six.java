@@ -19,7 +19,7 @@ public class Six {
      * @return
      */
     public static CodeAddress m603(String code, Integer picSize, Integer codeType) {
-        Map<String, Object> params = new HashMap<String, Object>();
+        Map<String, Object> params = new HashMap<>();
         params.put("access_token", ConfigReader.API_KEY);
         params.put("time", System.currentTimeMillis());
         params.put("code", code);
@@ -45,7 +45,7 @@ public class Six {
      * @return
      */
     public static CodePicBase64 m604(String code, Integer isMargin, String unitIcon, Integer qrCodeSize, Integer color) {
-        Map<String, Object> params = new HashMap<String, Object>();
+        Map<String, Object> params = new HashMap<>();
         params.put("access_token", ConfigReader.API_KEY);
         params.put("time", System.currentTimeMillis());
         params.put("code", code);
@@ -78,7 +78,7 @@ public class Six {
      * @return
      */
     public static CodePicBase64 m605(String idCode, String code, Integer useLogo, String unitLogo, Integer marginType, Integer categoryId, Integer marginTypeLv2, Integer codeType, Integer codeSize, String codeColor) {
-        Map<String, Object> params = new HashMap<String, Object>();
+        Map<String, Object> params = new HashMap<>();
         params.put("access_token", ConfigReader.API_KEY);
         params.put("time", System.currentTimeMillis());
         params.put("company_idcode", idCode);

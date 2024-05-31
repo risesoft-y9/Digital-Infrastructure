@@ -17,7 +17,7 @@ public class One {
      * @return {@link net.risesoft.model.AreaInfoResult}
      */
     public static AreaInfoResult m101() {
-        Map<String, Object> params = new HashMap<String, Object>();
+        Map<String, Object> params = new HashMap<>();
         params.put("access_token", ConfigReader.API_KEY);
         params.put("time", System.currentTimeMillis());
         AreaInfoResult result = null;
@@ -36,7 +36,7 @@ public class One {
      * @return {@link net.risesoft.model.AreaInfoResult}
      */
     public static AreaInfoResult m102(Integer parentId, Integer level) {
-        Map<String, Object> params = new HashMap<String, Object>();
+        Map<String, Object> params = new HashMap<>();
         params.put("access_token", ConfigReader.API_KEY);
         params.put("time", System.currentTimeMillis());
         params.put("address_id_parent", parentId);
@@ -55,7 +55,7 @@ public class One {
      * @return {@link net.risesoft.model.TradeInfoResult}
      */
     public static TradeInfoResult m103() {
-        Map<String, Object> params = new HashMap<String, Object>();
+        Map<String, Object> params = new HashMap<>();
         params.put("access_token", ConfigReader.API_KEY);
         params.put("time", System.currentTimeMillis());
         TradeInfoResult result = null;
@@ -74,7 +74,7 @@ public class One {
      * @return {@link net.risesoft.model.TradeInfoResult}
      */
     public static TradeInfoResult m104(Integer parentId) {
-        Map<String, Object> params = new HashMap<String, Object>();
+        Map<String, Object> params = new HashMap<>();
         params.put("access_token", ConfigReader.API_KEY);
         params.put("time", System.currentTimeMillis());
         params.put("trade_id_parent", parentId);
@@ -92,7 +92,7 @@ public class One {
      * @return
      */
     public static UnitTypeInfoResult m105() {
-        Map<String, Object> params = new HashMap<String, Object>();
+        Map<String, Object> params = new HashMap<>();
         params.put("access_token", ConfigReader.API_KEY);
         params.put("time", System.currentTimeMillis());
         UnitTypeInfoResult result = null;

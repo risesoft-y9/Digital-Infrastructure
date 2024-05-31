@@ -36,7 +36,7 @@ public class Three {
      * @return
      */
     public static RegistResult m301(String loginName, String loginPassword, String email, String orgUnitName, String orgUnitEnName, Integer code, Integer provinceId, Integer cityId, Integer areaId, String linkman, String linkmanEn, String linkPhone, String smsVerifyCode) {
-        Map<String, Object> params = new HashMap<String, Object>();
+        Map<String, Object> params = new HashMap<>();
         params.put("access_token", ConfigReader.API_KEY);
         params.put("time", System.currentTimeMillis());
         params.put("login_name", loginName);
@@ -68,7 +68,7 @@ public class Three {
      * @return
      */
     public static SmsVerifyCode m302(String phoneCode) {
-        Map<String, Object> params = new HashMap<String, Object>();
+        Map<String, Object> params = new HashMap<>();
         params.put("access_token", ConfigReader.API_KEY);
         params.put("time", System.currentTimeMillis());
         params.put("phone_code", phoneCode);
@@ -88,7 +88,7 @@ public class Three {
      * @return
      */
     public static Result m303(String phoneCode) {
-        Map<String, Object> params = new HashMap<String, Object>();
+        Map<String, Object> params = new HashMap<>();
         params.put("access_token", ConfigReader.API_KEY);
         params.put("time", System.currentTimeMillis());
         params.put("phone_code", phoneCode);
@@ -111,7 +111,7 @@ public class Three {
      * @return
      */
     public static Result m304(String idCode, Integer payType, String orgCode, File file) {
-        Map<String, Object> params = new HashMap<String, Object>();
+        Map<String, Object> params = new HashMap<>();
         params.put("access_token", ConfigReader.API_KEY);
         params.put("time", System.currentTimeMillis());
         params.put("company_idcode", idCode);
@@ -151,7 +151,7 @@ public class Three {
      * @return
      */
     public static Result m305(String idCode, Integer tradeId, String address, String name, String nameEn, String addressEn, String email, String linkman, String linkmanEn, String fax, String workAddress, String workAddressEn, Integer sizeType, Integer registeredCapital, Integer unitTypeId, String gotoUrl, String linkPhone, File unitLogo) {
-        Map<String, Object> params = new HashMap<String, Object>();
+        Map<String, Object> params = new HashMap<>();
         params.put("access_token", ConfigReader.API_KEY);
         params.put("time", System.currentTimeMillis());
         params.put("company_idcode", idCode);
@@ -189,7 +189,7 @@ public class Three {
      * @return
      */
     public static OrganUnit m306(String idCode) {
-        Map<String, Object> params = new HashMap<String, Object>();
+        Map<String, Object> params = new HashMap<>();
         params.put("access_token", ConfigReader.API_KEY);
         params.put("time", System.currentTimeMillis());
         params.put("company_idcode", idCode);
@@ -210,7 +210,7 @@ public class Three {
      * @return
      */
     public static OrganUnitResult m307(String name, String searchType) {
-        Map<String, Object> params = new HashMap<String, Object>();
+        Map<String, Object> params = new HashMap<>();
         params.put("access_token", ConfigReader.API_KEY);
         params.put("time", System.currentTimeMillis());
         params.put("company_name", name);
@@ -231,7 +231,7 @@ public class Three {
      * @return
      */
     public static OrganUnitStatusInfo m308(String idCode) {
-        Map<String, Object> params = new HashMap<String, Object>();
+        Map<String, Object> params = new HashMap<>();
         params.put("access_token", ConfigReader.API_KEY);
         params.put("time", System.currentTimeMillis());
         params.put("company_idcode", idCode);
@@ -264,7 +264,7 @@ public class Three {
      * @return
      */
     public static UnitRegistResult m309(String loginName, String orgUnitName, String email, String code, String provinceId, String cityId, String areaId, String linkman, String linkPhone, File unitLogo, String qrCodeColor, File qrCodeLogo, String gotoUrl, String qrCodeSize) {
-        Map<String, Object> params = new HashMap<String, Object>();
+        Map<String, Object> params = new HashMap<>();
         params.put("access_token", ConfigReader.API_KEY);
         params.put("time", System.currentTimeMillis());
         params.put("login_name", loginName);
@@ -303,7 +303,7 @@ public class Three {
      * @return
      */
     public static UpdateGotoUrlResult m310(String loginName, String pwd, String unitLogo, String gotoUrl, Integer qrCodeColor, Integer qrCodeLogo, Integer qrCodeSize) {
-        Map<String, Object> params = new HashMap<String, Object>();
+        Map<String, Object> params = new HashMap<>();
         params.put("access_token", ConfigReader.API_KEY);
         params.put("time", System.currentTimeMillis());
         params.put("login_name", loginName);

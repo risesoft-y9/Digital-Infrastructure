@@ -20,7 +20,7 @@ public class Two {
      * @return
      */
     public static CodeUseInfoResult m201() {
-        Map<String, Object> params = new HashMap<String, Object>();
+        Map<String, Object> params = new HashMap<>();
         params.put("access_token", ConfigReader.API_KEY);
         params.put("time", System.currentTimeMillis());
         CodeUseInfoResult result = null;
@@ -38,7 +38,7 @@ public class Two {
      * @return
      */
     public static IndustryCategoryResult m202() {
-        Map<String, Object> params = new HashMap<String, Object>();
+        Map<String, Object> params = new HashMap<>();
         params.put("access_token", ConfigReader.API_KEY);
         params.put("time", System.currentTimeMillis());
         IndustryCategoryResult result = null;
@@ -57,7 +57,7 @@ public class Two {
      * @return
      */
     public static IndustryCategoryResult m203(Integer parentId) {
-        Map<String, Object> params = new HashMap<String, Object>();
+        Map<String, Object> params = new HashMap<>();
         params.put("access_token", ConfigReader.API_KEY);
         params.put("time", System.currentTimeMillis());
         params.put("industrycategory_id_parent", parentId);
@@ -75,7 +75,7 @@ public class Two {
      * @return
      */
     public static IndustryCategoryResult m204() {
-        Map<String, Object> params = new HashMap<String, Object>();
+        Map<String, Object> params = new HashMap<>();
         params.put("access_token", ConfigReader.API_KEY);
         params.put("time", System.currentTimeMillis());
         IndustryCategoryResult result = null;
