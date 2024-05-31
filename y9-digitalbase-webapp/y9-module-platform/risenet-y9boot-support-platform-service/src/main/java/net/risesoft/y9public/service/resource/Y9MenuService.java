@@ -28,13 +28,4 @@ public interface Y9MenuService extends ResourceCommonService<Y9Menu> {
      */
     Integer getMaxIndexByParentId(String parentId);
 
-    /**
-     * 移动
-     *
-     * @param id 菜单资源id
-     * @param parentId 父资源id
-     * @return {@link Y9Menu}
-     */
-    Y9Menu move(String id, String parentId);
-
 }

@@ -101,16 +101,4 @@ public class MenuResourceController {
         return Y9Result.success(savedMenu, "保存菜单资源成功");
     }
 
-    /**
-     * 移动资源
-     *
-     * @param id 资源id
-     * @param parentId 目标父节点id
-     * @return
-     */
-    @RiseLog(operationName = "移动资源", operationType = OperationTypeEnum.MODIFY)
-    @PostMapping(value = "/move")
-    public Y9Result<Y9Menu> saveMove(@RequestParam @NotBlank String id, @RequestParam @NotBlank String parentId) {
-        return Y9Result.success(y9MenuService.move(id, parentId), "移动资源成功");
-    }
 }

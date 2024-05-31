@@ -196,14 +196,6 @@ public class Y9OperationServiceImpl implements Y9OperationService {
             .orElse(0);
     }
 
-    @Override
-    @Transactional(readOnly = false)
-    public Y9Operation move(String id, String parentId) {
-        Y9Operation y9Operation = this.getById(id);
-        y9Operation.setParentId(parentId);
-        return this.saveOrUpdate(y9Operation);
-    }
-
     @EventListener
     @Transactional(readOnly = false)
     public void onAppDeleted(Y9EntityDeletedEvent<Y9App> event) {

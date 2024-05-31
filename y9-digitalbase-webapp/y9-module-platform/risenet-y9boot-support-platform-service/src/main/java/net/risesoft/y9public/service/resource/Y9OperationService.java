@@ -27,13 +27,4 @@ public interface Y9OperationService extends ResourceCommonService<Y9Operation> {
      */
     Integer getMaxIndexByParentId(String parentId);
 
-    /**
-     * 移动
-     *
-     * @param id 按钮资源id
-     * @param parentId 父资源id
-     * @return {@link Y9Operation}
-     */
-    Y9Operation move(String id, String parentId);
-
 }

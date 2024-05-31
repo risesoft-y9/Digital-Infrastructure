@@ -47,10 +47,11 @@ import net.risesoft.y9public.specification.Y9AppSpecification;
 public class Y9AppServiceImpl implements Y9AppService {
 
     protected final Y9TenantAppManager y9TenantAppManager;
-    private final Y9AppRepository y9AppRepository;
-    private final Y9SystemRepository y9SystemRepository;
     private final Y9AppManager y9AppManager;
     private final Y9TenantSystemManager y9TenantSystemManager;
+
+    private final Y9AppRepository y9AppRepository;
+    private final Y9SystemRepository y9SystemRepository;
 
     @Override
     public long countBySystemId(String systemId) {
