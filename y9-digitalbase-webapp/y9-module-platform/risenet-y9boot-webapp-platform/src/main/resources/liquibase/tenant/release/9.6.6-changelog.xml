@@ -75,7 +75,6 @@
         </dropColumn>
     </changeSet>
 
-
     <changeSet id="1716456512373-1" author="shidaobang">
         <dropColumn
                 columnName="USER_NAME"
@@ -84,6 +83,68 @@
         <dropColumn
                 columnName="SHARE_NAME"
                 tableName="Y9_ORG_CUSTOM_GROUP">
+        </dropColumn>
+    </changeSet>
+
+    <changeSet id="1717124156043-1" author="shidaobang">
+        <dropColumn
+                columnName="DEPARTMENT_ID"
+                tableName="Y9_ORG_PERSONS_ROLES">
+        </dropColumn>
+        <dropColumn
+                columnName="ROLE_CUSTOM_ID"
+                tableName="Y9_ORG_PERSONS_ROLES">
+        </dropColumn>
+        <dropColumn
+                columnName="DESCRIPTION"
+                tableName="Y9_ORG_PERSONS_ROLES">
+        </dropColumn>
+        <dropColumn
+                columnName="ROLE_NAME"
+                tableName="Y9_ORG_PERSONS_ROLES">
+        </dropColumn>
+        <dropColumn
+                columnName="SYSTEM_NAME"
+                tableName="Y9_ORG_PERSONS_ROLES">
+        </dropColumn>
+        <dropColumn
+                columnName="SYSTEM_CN_NAME"
+                tableName="Y9_ORG_PERSONS_ROLES">
+        </dropColumn>
+        <dropColumn
+                columnName="APP_NAME"
+                tableName="Y9_ORG_PERSONS_ROLES">
+        </dropColumn>
+    </changeSet>
+
+    <changeSet id="1717124156043-2" author="shidaobang">
+        <dropColumn
+                columnName="DEPARTMENT_ID"
+                tableName="Y9_ORG_POSITIONS_ROLES">
+        </dropColumn>
+        <dropColumn
+                columnName="ROLE_CUSTOM_ID"
+                tableName="Y9_ORG_POSITIONS_ROLES">
+        </dropColumn>
+        <dropColumn
+                columnName="DESCRIPTION"
+                tableName="Y9_ORG_POSITIONS_ROLES">
+        </dropColumn>
+        <dropColumn
+                columnName="ROLE_NAME"
+                tableName="Y9_ORG_POSITIONS_ROLES">
+        </dropColumn>
+        <dropColumn
+                columnName="SYSTEM_NAME"
+                tableName="Y9_ORG_POSITIONS_ROLES">
+        </dropColumn>
+        <dropColumn
+                columnName="SYSTEM_CN_NAME"
+                tableName="Y9_ORG_POSITIONS_ROLES">
+        </dropColumn>
+        <dropColumn
+                columnName="APP_NAME"
+                tableName="Y9_ORG_POSITIONS_ROLES">
         </dropColumn>
     </changeSet>
 
