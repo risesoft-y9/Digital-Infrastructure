@@ -100,17 +100,4 @@ public class OperationResourceController {
         Y9Operation savedOperation = y9OperationService.saveOrUpdate(y9Operation);
         return Y9Result.success(savedOperation, "保存操作按钮资源成功");
     }
-
-    /**
-     * 移动按钮资源
-     *
-     * @param id 资源id
-     * @param parentId 目标父节点id
-     * @return
-     */
-    @RiseLog(operationName = "移动按钮资源", operationType = OperationTypeEnum.MODIFY)
-    @PostMapping(value = "/move")
-    public Y9Result<Y9Operation> saveMove(@RequestParam @NotBlank String id, @RequestParam @NotBlank String parentId) {
-        return Y9Result.success(y9OperationService.move(id, parentId), "移动按钮资源成功");
-    }
 }

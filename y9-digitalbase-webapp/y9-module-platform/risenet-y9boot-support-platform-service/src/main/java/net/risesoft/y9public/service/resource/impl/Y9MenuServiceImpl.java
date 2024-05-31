@@ -196,14 +196,6 @@ public class Y9MenuServiceImpl implements Y9MenuService {
         return y9MenuRepository.findTopByParentIdOrderByTabIndexDesc(parentId).map(Y9Menu::getTabIndex).orElse(0);
     }
 
-    @Override
-    @Transactional(readOnly = false)
-    public Y9Menu move(String id, String parentId) {
-        Y9Menu y9Menu = this.getById(id);
-        y9Menu.setParentId(parentId);
-        return this.saveOrUpdate(y9Menu);
-    }
-
     @EventListener
     @Transactional(readOnly = false)
     public void onAppDeleted(Y9EntityDeletedEvent<Y9App> event) {

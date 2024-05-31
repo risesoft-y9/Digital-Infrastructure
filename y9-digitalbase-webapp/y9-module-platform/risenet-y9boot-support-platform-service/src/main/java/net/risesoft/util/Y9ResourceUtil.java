@@ -23,14 +23,4 @@ public class Y9ResourceUtil {
         return !Objects.equals(originResourceBase.getInherit(), updateResourceBase.getInherit());
     }
 
-    /**
-     * 判断资源是否有移动
-     *
-     * @param originResourceBase 原始资源对象
-     * @param updateResourceBase 更新后的资源对象
-     * @return boolean
-     */
-    public static boolean isMoved(Y9ResourceBase originResourceBase, Y9ResourceBase updateResourceBase) {
-        return Objects.equals(originResourceBase.getParentId(), updateResourceBase.getParentId());
-    }
 }
