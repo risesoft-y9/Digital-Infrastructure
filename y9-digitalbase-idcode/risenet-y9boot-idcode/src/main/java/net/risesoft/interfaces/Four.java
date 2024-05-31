@@ -32,6 +32,12 @@ public class Four {
         return result;
     }*/
 
+    /**
+     * 批量注册/备案品类接口
+     *
+     * @param jsonStr 提交的json数据
+     * @return
+     */
     public static BatchRegistResult m402(String jsonStr) {
         Map<String, Object> params = new HashMap<String, Object>();
         params.put("json_str", jsonStr);
@@ -45,6 +51,15 @@ public class Four {
         return result;
     }
 
+    /**
+     * 查询注册品类
+     *
+     * @param idCode           单位主码(必填)
+     * @param idCodeOfCategory 品类编码(非必填)
+     * @param modelNumberCode  型号编码(非必填)
+     * @param categoryRegId    品类注册ID(主键ID，非必填)
+     * @return
+     */
     public static BaseIdCodeInfo m403(String idCode, String idCodeOfCategory, String modelNumberCode, String categoryRegId) {
         Map<String, Object> params = new HashMap<String, Object>();
         params.put("access_token", ConfigReader.API_KEY);
@@ -63,6 +78,13 @@ public class Four {
         return result;
     }
 
+    /**
+     * 查询所有注册品类
+     *
+     * @param idCode     单位主码(必填)
+     * @param searchType 查询类型(默认0) 0：全部 1：注册 2：备案
+     * @return
+     */
     public static BaseIdCodeInfo m404(String idCode, Integer searchType) {
         Map<String, Object> params = new HashMap<String, Object>();
         params.put("access_token", ConfigReader.API_KEY);
@@ -99,6 +121,20 @@ public class Four {
         return result;
     }*/
 
+    /**
+     * 注册/备案产品品类IDcode码接口
+     *
+     * @param idCode             单位主码（必填）
+     * @param codeUseId          用途(固定值：10；必填)
+     * @param industryCategoryId 品类ID（必填）
+     * @param categoryCode       品类编码(必填)
+     * @param modelNumber        型号名称(必填)
+     * @param modelNumberCode    型号编码(必填)
+     * @param codePayType        申请码类型（必填） 2：注册 5：备案
+     * @param gotoUrl            解析地址（必填）
+     * @param sampleUrl          示例地址（必填）
+     * @return
+     */
     public static IdcodeRegResult m406(String idCode, String codeUseId, Integer industryCategoryId, String categoryCode, String modelNumber, String modelNumberCode, Integer codePayType, String gotoUrl, String sampleUrl) {
         Map<String, Object> params = new HashMap<String, Object>();
         params.put("access_token", ConfigReader.API_KEY);
@@ -122,6 +158,21 @@ public class Four {
         return result;
     }
 
+    /**
+     * 注册/备案非产品品类IDcode码接口
+     *
+     * @param idCode             单位主码（必填）
+     * @param codeUseId          用途(非10；必填)
+     * @param industryCategoryId 品类ID（必填）
+     * @param categoryCode       品类码号(必填)
+     * @param modelNumber        名称(必填)
+     * @param modelNumberEn      英文名称
+     * @param introduction       简介
+     * @param codePayType        申请码类型（必填） 2：注册 5：备案
+     * @param gotoUrl            解析地址（必填）
+     * @param sampleUrl          示例地址（必填）
+     * @return
+     */
     public static IdcodeRegResult m407(String idCode, String codeUseId, Integer industryCategoryId, String categoryCode, String modelNumber, String modelNumberEn, String introduction, Integer codePayType, String gotoUrl, String sampleUrl) {
         Map<String, Object> params = new HashMap<String, Object>();
         params.put("access_token", ConfigReader.API_KEY);
@@ -164,6 +215,15 @@ public class Four {
         return result;
     }*/
 
+    /**
+     * 查询注册品类（细化申请码类型）
+     *
+     * @param idCode           单位主码(必填)
+     * @param idCodeOfCategory 品类编码(非必填)
+     * @param modelNumberCode  型号编码(非必填)
+     * @param categoryRegId    品类注册ID(主键ID，非必填)
+     * @return
+     */
     public static BaseIdCodeInfo m409(String idCode, String idCodeOfCategory, String modelNumberCode, String categoryRegId) {
         Map<String, Object> params = new HashMap<String, Object>();
         params.put("access_token", ConfigReader.API_KEY);
@@ -182,6 +242,13 @@ public class Four {
         return result;
     }
 
+    /**
+     * 查询所有注册品类（细化申请码类型）
+     *
+     * @param idCode     单位主码(必填)
+     * @param searchType 查询类型(默认0)0：全部1：注册2：备案
+     * @return
+     */
     public static BaseIdCodeInfo m410(String idCode, Integer searchType) {
         Map<String, Object> params = new HashMap<String, Object>();
         params.put("access_token", ConfigReader.API_KEY);

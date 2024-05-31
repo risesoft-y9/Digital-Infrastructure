@@ -12,6 +12,10 @@ import java.util.Map;
 
 public class One {
 
+    /**
+     * 一次性返回所有级别行政信息
+     * @return {@link net.risesoft.model.AreaInfoResult}
+     */
     public static AreaInfoResult m101() {
         Map<String, Object> params = new HashMap<String, Object>();
         params.put("access_token", ConfigReader.API_KEY);
@@ -25,7 +29,12 @@ public class One {
         return result;
     }
 
-
+    /**
+     * 按照父级ID返回子级信息
+     * @param parentId 区域父级ID(必填)，父级ID值为0，则返回第一级区域列表。
+     * @param level 需要返回的区域等级（1、2、3）
+     * @return {@link net.risesoft.model.AreaInfoResult}
+     */
     public static AreaInfoResult m102(Integer parentId, Integer level) {
         Map<String, Object> params = new HashMap<String, Object>();
         params.put("access_token", ConfigReader.API_KEY);
@@ -41,7 +50,10 @@ public class One {
         return result;
     }
 
-
+    /**
+     * 一次性返回所有级别行业信息
+     * @return {@link net.risesoft.model.TradeInfoResult}
+     */
     public static TradeInfoResult m103() {
         Map<String, Object> params = new HashMap<String, Object>();
         params.put("access_token", ConfigReader.API_KEY);
@@ -56,7 +68,11 @@ public class One {
         return result;
     }
 
-
+    /**
+     * 按照父级ID返回子级信息
+     * @param parentId 行业父节点(必填)，父级ID为0时，返回第一级行业信息。
+     * @return {@link net.risesoft.model.TradeInfoResult}
+     */
     public static TradeInfoResult m104(Integer parentId) {
         Map<String, Object> params = new HashMap<String, Object>();
         params.put("access_token", ConfigReader.API_KEY);
@@ -71,7 +87,10 @@ public class One {
         return result;
     }
 
-
+    /**
+     * 获取单位性质分类接口
+     * @return
+     */
     public static UnitTypeInfoResult m105() {
         Map<String, Object> params = new HashMap<String, Object>();
         params.put("access_token", ConfigReader.API_KEY);
