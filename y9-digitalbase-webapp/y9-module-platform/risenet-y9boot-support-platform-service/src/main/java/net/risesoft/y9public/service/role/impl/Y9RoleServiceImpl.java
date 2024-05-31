@@ -17,8 +17,6 @@ import net.risesoft.consts.RoleLevelConsts;
 import net.risesoft.id.IdType;
 import net.risesoft.id.Y9IdGenerator;
 import net.risesoft.repository.relation.Y9OrgBasesToRolesRepository;
-import net.risesoft.service.identity.Y9PersonToRoleService;
-import net.risesoft.y9.Y9Context;
 import net.risesoft.y9.Y9LoginUserHolder;
 import net.risesoft.y9.pubsub.event.Y9EntityDeletedEvent;
 import net.risesoft.y9.util.Y9BeanUtil;
@@ -236,8 +234,6 @@ public class Y9RoleServiceImpl implements Y9RoleService {
 
                 Y9Role role = y9RoleManager.save(originRole);
 
-                Y9PersonToRoleService y9PersonToRoleService = Y9Context.getBean(Y9PersonToRoleService.class);
-                y9PersonToRoleService.updateByRole(role);
                 if (update && StringUtils.isNotBlank(y9Role.getParentId())) {
                     recursiveUpdate(role);
                 }

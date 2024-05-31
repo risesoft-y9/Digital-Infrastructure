@@ -16,6 +16,7 @@ import net.risesoft.entity.identity.Y9IdentityToRoleBase;
 import net.risesoft.y9public.entity.resource.Y9App;
 import net.risesoft.y9public.entity.role.Y9Role;
 import net.risesoft.y9public.service.resource.Y9AppService;
+import net.risesoft.y9public.service.resource.Y9SystemService;
 import net.risesoft.y9public.service.role.Y9RoleService;
 
 /**
@@ -31,6 +32,7 @@ public class RolePermissionVOBuilder {
 
     private final Y9AppService y9AppService;
     private final Y9RoleService y9RoleService;
+    private final Y9SystemService y9SystemService;
 
     private RolePermissionVO.App buildApp(String appId, List<Y9IdentityToRoleBase> y9IdentityToRoleBaseList) {
         RolePermissionVO.App app = new RolePermissionVO.App();
@@ -71,19 +73,20 @@ public class RolePermissionVOBuilder {
         return permissionDetailList;
     }
 
-    private RolePermissionVO buildRolePermissionVO(List<Y9IdentityToRoleBase> y9IdentityToRoleBaseList) {
+    private RolePermissionVO buildRolePermissionVO(String systemId,
+        List<Y9IdentityToRoleBase> y9IdentityToRoleBaseList) {
         RolePermissionVO rolePermissionVO = new RolePermissionVO();
-        rolePermissionVO.setSystemCnName(y9IdentityToRoleBaseList.get(0).getSystemCnName());
+        rolePermissionVO.setSystemCnName(y9SystemService.getById(systemId).getCnName());
         rolePermissionVO.setAppList(buildAppList(y9IdentityToRoleBaseList));
         return rolePermissionVO;
     }
 
     public List<RolePermissionVO> buildRolePermissionVOList(List<Y9IdentityToRoleBase> y9IdentityToRoleBaseList) {
         List<RolePermissionVO> rolePermissionVOList = new ArrayList<>();
-        Map<String, List<Y9IdentityToRoleBase>> systemNameY9IdentityToRoleBaseListMap =
-            y9IdentityToRoleBaseList.stream().collect(Collectors.groupingBy(Y9IdentityToRoleBase::getSystemName));
-        for (Map.Entry<String, List<Y9IdentityToRoleBase>> entry : systemNameY9IdentityToRoleBaseListMap.entrySet()) {
-            rolePermissionVOList.add(buildRolePermissionVO(entry.getValue()));
+        Map<String, List<Y9IdentityToRoleBase>> systemIdY9IdentityToRoleBaseListMap =
+            y9IdentityToRoleBaseList.stream().collect(Collectors.groupingBy(Y9IdentityToRoleBase::getSystemId));
+        for (Map.Entry<String, List<Y9IdentityToRoleBase>> entry : systemIdY9IdentityToRoleBaseListMap.entrySet()) {
+            rolePermissionVOList.add(buildRolePermissionVO(entry.getKey(), entry.getValue()));
         }
         return rolePermissionVOList;
     }

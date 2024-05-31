@@ -55,14 +55,8 @@ public class Y9PersonToRoleManagerImpl implements Y9PersonToRoleManager {
             matrix.setId(Y9IdGenerator.genId());
             matrix.setTenantId(person.getTenantId());
             matrix.setPersonId(person.getId());
-            matrix.setDepartmentId(person.getParentId());
             matrix.setRoleId(role.getId());
-            matrix.setRoleName(role.getName());
-            matrix.setSystemCnName(role.getSystemCnName());
-            matrix.setSystemName(role.getSystemName());
-            matrix.setAppName(role.getAppCnName());
             matrix.setAppId(role.getAppId());
-            matrix.setDescription(role.getDescription());
 
             y9PersonToRoleRepository.save(matrix);
         }

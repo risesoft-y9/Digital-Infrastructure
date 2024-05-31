@@ -27,6 +27,8 @@ public interface Y9RoleRepository extends JpaRepository<Y9Role, String>, JpaSpec
 
     List<Y9Role> findByAppIdAndParentIdIsNull(String appId);
 
+    List<Y9Role> findByCustomId(String customId);
+
     Optional<Y9Role> findByCustomIdAndParentId(String customId, String parentId);
 
     List<Y9Role> findByNameAndSystemNameAndPropertiesAndType(String name, String systemName, String properties,

@@ -59,18 +59,13 @@ public class Y9PositionToRoleServiceImpl implements Y9PositionToRoleService {
 
     @Override
     public Boolean hasRoleByCustomId(String positionId, String customId) {
-        long count = y9PositionToRoleRepository.countByPositionIdAndRoleCustomId(positionId, customId);
-        return count > 0;
+        List<Y9Role> y9RoleList = y9RoleRepository.findByCustomId(customId);
+        return y9RoleList.stream().anyMatch(y9Role -> hasRole(positionId, y9Role.getId()));
     }
 
     @Override
     public List<Y9PositionToRole> listByPositionId(String positionId) {
         return y9PositionToRoleRepository.findByPositionId(positionId);
-    }
-
-    @Override
-    public List<Y9PositionToRole> listByPositionIdAndSystemName(String positionId, String systemName) {
-        return y9PositionToRoleRepository.findByPositionIdAndSystemNameOrderByAppName(positionId, systemName);
     }
 
     @Override
@@ -88,19 +83,6 @@ public class Y9PositionToRoleServiceImpl implements Y9PositionToRoleService {
         List<Y9PositionToRole> y9PositionToRoleList = y9PositionToRoleRepository.findByRoleId(roleId);
         if (!y9PositionToRoleList.isEmpty()) {
             y9PositionToRoleRepository.deleteAll(y9PositionToRoleList);
-        }
-    }
-
-    @Override
-    @Transactional(readOnly = false)
-    public void update(String roleId, String roleName, String systemName, String systemCnName, String description) {
-        List<Y9PositionToRole> y9PositionToRoleList = y9PositionToRoleRepository.findByRoleId(roleId);
-        for (Y9PositionToRole y9PositionToRole : y9PositionToRoleList) {
-            y9PositionToRole.setSystemCnName(systemCnName);
-            y9PositionToRole.setSystemName(systemName);
-            y9PositionToRole.setRoleName(roleName);
-            y9PositionToRole.setDescription(description);
-            y9PositionToRoleRepository.save(y9PositionToRole);
         }
     }
 
