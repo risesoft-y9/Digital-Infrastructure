@@ -14,6 +14,11 @@ import java.util.Map;
  */
 public class Two {
 
+    /**
+     * 获取人、事、物所有用途接口
+     *
+     * @return
+     */
     public static CodeUseInfoResult m201() {
         Map<String, Object> params = new HashMap<String, Object>();
         params.put("access_token", ConfigReader.API_KEY);
@@ -27,6 +32,11 @@ public class Two {
         return result;
     }
 
+    /**
+     * 获取所有品类接口
+     *
+     * @return
+     */
     public static IndustryCategoryResult m202() {
         Map<String, Object> params = new HashMap<String, Object>();
         params.put("access_token", ConfigReader.API_KEY);
@@ -40,6 +50,12 @@ public class Two {
         return result;
     }
 
+    /**
+     * 获取某一级品类接口
+     *
+     * @param parentId 父级ID，为0时获取到第一级品类
+     * @return
+     */
     public static IndustryCategoryResult m203(Integer parentId) {
         Map<String, Object> params = new HashMap<String, Object>();
         params.put("access_token", ConfigReader.API_KEY);
@@ -54,6 +70,10 @@ public class Two {
         return result;
     }
 
+    /**
+     * 获取产品所有品类接口
+     * @return
+     */
     public static IndustryCategoryResult m204() {
         Map<String, Object> params = new HashMap<String, Object>();
         params.put("access_token", ConfigReader.API_KEY);

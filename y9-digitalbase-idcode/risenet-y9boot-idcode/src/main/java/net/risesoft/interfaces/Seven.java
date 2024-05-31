@@ -12,7 +12,13 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class Seven {
-
+    /**
+     * 单位登录验证接口
+     *
+     * @param loginName 登录名称(必填)
+     * @param loginPswd 登录密码（必填）
+     * @return
+     */
     public static OrganUnit m601(String loginName, String loginPswd) {
         Map<String, Object> params = new HashMap<String, Object>();
         params.put("access_token", ConfigReader.API_KEY);
@@ -28,6 +34,15 @@ public class Seven {
         return result;
     }
 
+    /**
+     * 修改解析地址
+     *
+     * @param idCode    单位主码(必填)
+     * @param gotoUrl   解析地址
+     * @param sampleUrl 示例地址
+     * @param regId     品类注册ID
+     * @return
+     */
     public static Result m602(String idCode, String gotoUrl, String sampleUrl, String regId) {
         Map<String, Object> params = new HashMap<String, Object>();
         params.put("access_token", ConfigReader.API_KEY);
@@ -45,6 +60,13 @@ public class Seven {
         return result;
     }
 
+    /**
+     * 申请IDcode解析地址白名单
+     *
+     * @param gotoUrl   解析地址（必填）
+     * @param sampleUrl 示例地址（必填）
+     * @return
+     */
     public static Result m606(String gotoUrl, String sampleUrl) {
         Map<String, Object> params = new HashMap<String, Object>();
         params.put("access_token", ConfigReader.API_KEY);
@@ -74,6 +96,14 @@ public class Seven {
         return result;
     }*/
 
+    /**
+     * 查询审核状态接口
+     *
+     * @param idCode        单位主码(必填)
+     * @param categoryRegId 品类申请ID(如果type=2，则必填)
+     * @param type          审核类型 1：单位注册审核 2：解析地址审核
+     * @return
+     */
     public static ExamineResult m608(String idCode, String categoryRegId, Integer type) {
         Map<String, Object> params = new HashMap<String, Object>();
         params.put("access_token", ConfigReader.API_KEY);
@@ -90,6 +120,13 @@ public class Seven {
         return result;
     }
 
+    /**
+     * 获取认证图片接口
+     *
+     * @param bgImage    背景图片编号(必填)
+     * @param isMarkName 是否将系统名称添加为水印（必填）0：否 1：是
+     * @return
+     */
     public static AuthenPicResult m701(Integer bgImage, Integer isMarkName) {
         Map<String, Object> params = new HashMap<String, Object>();
         params.put("access_token", ConfigReader.API_KEY);
