@@ -1,8 +1,11 @@
 package net.risesoft.y9public.service.resource.impl;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.cache.annotation.Cacheable;
@@ -138,13 +141,12 @@ public class CompositeResourceServiceImpl implements CompositeResourceService {
 
     @Override
     public List<Y9ResourceBase> treeSearch(String name) {
-        List<Y9ResourceBase> resourceList = new ArrayList<>();
-        resourceList.addAll(this.searchByName(name));
-        List<Y9ResourceBase> returnList = new ArrayList<>(resourceList);
+        List<Y9ResourceBase> resourceList = this.searchByName(name);
+        Set<Y9ResourceBase> returnSet = new HashSet<>(resourceList);
         for (Y9ResourceBase resource : resourceList) {
-            recursionUpToRoot(resource, returnList);
+            fillResourcesRecursivelyToRoot(resource, returnSet);
         }
-        return returnList;
+        return returnSet.stream().sorted().collect(Collectors.toList());
     }
 
     @Override
@@ -177,14 +179,12 @@ public class CompositeResourceServiceImpl implements CompositeResourceService {
         return y9OperationRepository.findById(id).orElse(null);
     }
 
-    private void recursionUpToRoot(Y9ResourceBase y9ResourceBase, List<Y9ResourceBase> returnList) {
+    private void fillResourcesRecursivelyToRoot(Y9ResourceBase y9ResourceBase, Set<Y9ResourceBase> resourceSet) {
         if (StringUtils.isEmpty(y9ResourceBase.getParentId())) {
             return;
         }
         Y9ResourceBase parent = this.findById(y9ResourceBase.getParentId());
-        if (!returnList.contains(parent)) {
-            returnList.add(parent);
-        }
-        recursionUpToRoot(parent, returnList);
+        resourceSet.add(parent);
+        fillResourcesRecursivelyToRoot(parent, resourceSet);
     }
 }

@@ -438,7 +438,7 @@ public class Y9OrgTreeExcelDataHandlerImpl implements Y9OrgTreeDataHandler {
     private Map<String, Object> xlsPersonData(String orgBaseId) {
         Map<String, Object> map = new HashMap<>();
 
-        List<Y9Person> persons = compositeOrgBaseService.listAllPersonsRecursionDownward(orgBaseId);
+        List<Y9Person> persons = compositeOrgBaseService.listAllDescendantPersons(orgBaseId);
         List<PersonInformation> personList = new ArrayList<>();
         for (Y9Person person : persons) {
             PersonInformation personInformation = new PersonInformation();

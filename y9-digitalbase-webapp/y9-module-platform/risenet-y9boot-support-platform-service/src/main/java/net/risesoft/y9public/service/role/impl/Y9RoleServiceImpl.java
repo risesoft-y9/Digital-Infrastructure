@@ -1,16 +1,18 @@
 package net.risesoft.y9public.service.role.impl;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 import org.apache.commons.lang3.StringUtils;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.event.EventListener;
-import org.springframework.jdbc.core.BeanPropertyRowMapper;
-import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import lombok.RequiredArgsConstructor;
 
 import net.risesoft.consts.InitDataConsts;
 import net.risesoft.consts.RoleLevelConsts;
@@ -37,9 +39,8 @@ import net.risesoft.y9public.service.role.Y9RoleService;
  */
 @Transactional(value = "rsPublicTransactionManager", readOnly = true)
 @Service
+@RequiredArgsConstructor
 public class Y9RoleServiceImpl implements Y9RoleService {
-
-    private final JdbcTemplate jdbcTemplate4Public;
 
     private final Y9RoleRepository y9RoleRepository;
     private final Y9OrgBasesToRolesRepository y9OrgBasesToRolesRepository;
@@ -47,17 +48,6 @@ public class Y9RoleServiceImpl implements Y9RoleService {
     private final Y9RoleManager y9RoleManager;
     private final Y9AppManager y9AppManager;
     private final Y9SystemManager y9SystemManager;
-
-    public Y9RoleServiceImpl(@Qualifier("jdbcTemplate4Public") JdbcTemplate jdbcTemplate4Public,
-        Y9RoleRepository y9RoleRepository, Y9OrgBasesToRolesRepository y9OrgBasesToRolesRepository,
-        Y9RoleManager y9RoleManager, Y9AppManager y9AppManager, Y9SystemManager y9SystemManager) {
-        this.jdbcTemplate4Public = jdbcTemplate4Public;
-        this.y9RoleRepository = y9RoleRepository;
-        this.y9OrgBasesToRolesRepository = y9OrgBasesToRolesRepository;
-        this.y9RoleManager = y9RoleManager;
-        this.y9AppManager = y9AppManager;
-        this.y9SystemManager = y9SystemManager;
-    }
 
     @Override
     @Transactional(readOnly = false)
@@ -72,8 +62,7 @@ public class Y9RoleServiceImpl implements Y9RoleService {
             y9Role.setSystemCnName("");
         }
         if (y9Role.getTabIndex() == null) {
-            Integer maxTabIndex = getMaxTabIndex();
-            y9Role.setTabIndex(maxTabIndex != null ? maxTabIndex + 1 : 0);
+            y9Role.setTabIndex(getNextTabIndex());
         }
         Optional<Y9Role> parentRoleOptional = Optional.empty();
         if (StringUtils.isNotEmpty(y9Role.getParentId())) {
@@ -83,7 +72,7 @@ public class Y9RoleServiceImpl implements Y9RoleService {
             Y9Role parent = parentRoleOptional.get();
             y9Role.setParentId(parent.getId());
             y9Role.setDn(RoleLevelConsts.CN + y9Role.getName() + RoleLevelConsts.SEPARATOR + parent.getDn());
-            y9Role.setGuidPath(parent.getGuidPath() + "," + y9Role.getId());
+            y9Role.setGuidPath(parent.getGuidPath() + RoleLevelConsts.SEPARATOR + y9Role.getId());
         } else {
             y9Role.setParentId(y9Role.getParentId());
             y9Role.setDn(RoleLevelConsts.CN + y9Role.getName());
@@ -123,9 +112,8 @@ public class Y9RoleServiceImpl implements Y9RoleService {
         return y9RoleManager.getById(roleId);
     }
 
-    @Override
-    public Integer getMaxTabIndex() {
-        return y9RoleRepository.findTopByOrderByTabIndexDesc().map(Y9Role::getTabIndex).orElse(0);
+    private Integer getNextTabIndex() {
+        return y9RoleRepository.findTopByOrderByTabIndexDesc().map(Y9Role::getTabIndex).orElse(-1) + 1;
     }
 
     @Override
@@ -217,7 +205,7 @@ public class Y9RoleServiceImpl implements Y9RoleService {
                     originRole.setParentId(parent.getId());
                     originRole
                         .setDn(RoleLevelConsts.CN + y9Role.getName() + RoleLevelConsts.SEPARATOR + parent.getDn());
-                    originRole.setGuidPath(parent.getGuidPath() + "," + y9Role.getId());
+                    originRole.setGuidPath(parent.getGuidPath() + RoleLevelConsts.SEPARATOR + y9Role.getId());
                 } else {
                     originRole.setParentId(y9Role.getParentId());
                     originRole.setDn(RoleLevelConsts.CN + y9Role.getName());
@@ -244,13 +232,12 @@ public class Y9RoleServiceImpl implements Y9RoleService {
         if (StringUtils.isEmpty(y9Role.getSystemName())) {
             y9Role.setSystemName("");
         }
-        Integer maxTabIndex = getMaxTabIndex();
-        y9Role.setTabIndex(maxTabIndex != null ? maxTabIndex + 1 : 0);
+        y9Role.setTabIndex(getNextTabIndex());
         y9Role.setSystemCnName(y9Role.getSystemCnName());
         if (parent != null) {
             y9Role.setParentId(parent.getId());
             y9Role.setDn(RoleLevelConsts.CN + y9Role.getName() + RoleLevelConsts.SEPARATOR + parent.getDn());
-            y9Role.setGuidPath(parent.getGuidPath() + "," + y9Role.getId());
+            y9Role.setGuidPath(parent.getGuidPath() + RoleLevelConsts.SEPARATOR + y9Role.getId());
         } else {
             y9Role.setParentId(y9Role.getParentId());
             y9Role.setDn(RoleLevelConsts.CN + y9Role.getName());
@@ -289,39 +276,24 @@ public class Y9RoleServiceImpl implements Y9RoleService {
         return y9RoleManager.save(roleNode);
     }
 
-    @SuppressWarnings({"rawtypes", "unchecked"})
-    @Override
-    public List<Y9Role> searchRole(String whereClause) {
-        if (StringUtils.isBlank(whereClause)) {
-            whereClause = "";
-        } else {
-            whereClause = " where " + whereClause;
-        }
-        String sql = "select * from Y9_ROLE " + whereClause;
-
-        return jdbcTemplate4Public.query(sql, new BeanPropertyRowMapper(Y9Role.class));
-    }
-
     @Override
     public List<Y9Role> treeSearch(String name, String parentId) {
-        List<Y9Role> roleNodeList = y9RoleRepository.findByParentIdAndNameContainingOrderByTabIndexAsc(parentId, name);
-        List<Y9Role> returnList = new ArrayList<>();
-        returnList.addAll(roleNodeList);
-        for (Y9Role role : roleNodeList) {
-            recursionUpToTop(role.getParentId(), returnList);
+        List<Y9Role> roleList = y9RoleRepository.findByParentIdAndNameContainingOrderByTabIndexAsc(parentId, name);
+        Set<Y9Role> roleSet = new HashSet<>(roleList);
+        for (Y9Role role : roleList) {
+            fillRolesRecursivelyToRoot(role.getParentId(), roleSet);
         }
-        return returnList;
+        return roleSet.stream().sorted().collect(Collectors.toList());
     }
 
     @Override
-    public List<Y9Role> treeSearchByName(String name) {
+    public List<Y9Role> treeSearch(String name) {
         List<Y9Role> roleNodeList = y9RoleRepository.findByNameContainingOrderByTabIndexAsc(name);
-        List<Y9Role> returnList = new ArrayList<>();
-        returnList.addAll(roleNodeList);
+        Set<Y9Role> roleSet = new HashSet<>(roleNodeList);
         for (Y9Role role : roleNodeList) {
-            recursionUpToTop(role.getParentId(), returnList);
+            fillRolesRecursivelyToRoot(role.getParentId(), roleSet);
         }
-        return returnList;
+        return roleSet.stream().sorted().collect(Collectors.toList());
     }
 
     @EventListener
@@ -334,15 +306,13 @@ public class Y9RoleServiceImpl implements Y9RoleService {
         }
     }
 
-    private void recursionUpToTop(String parentId, List<Y9Role> returnList) {
+    private void fillRolesRecursivelyToRoot(String parentId, Set<Y9Role> roleSet) {
         if (StringUtils.isEmpty(parentId)) {
             return;
         }
-        Y9Role parentNode = this.findById(parentId).orElse(null);
-        if (parentNode != null && !returnList.contains(parentNode)) {
-            returnList.add(parentNode);
-            recursionUpToTop(parentNode.getParentId(), returnList);
-        }
+        Y9Role parentNode = this.getById(parentId);
+        roleSet.add(parentNode);
+        fillRolesRecursivelyToRoot(parentNode.getParentId(), roleSet);
     }
 
     @Transactional(readOnly = false)

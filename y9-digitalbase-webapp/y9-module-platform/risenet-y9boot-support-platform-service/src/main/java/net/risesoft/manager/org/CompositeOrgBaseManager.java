@@ -31,7 +31,7 @@ public interface CompositeOrgBaseManager {
      */
     String buildOrderedPath(Y9OrgBase y9OrgBase);
 
-    void checkAllDecendantsDisabled(String orgUnitId);
+    void checkAllDescendantsDisabled(String orgUnitId);
 
     /**
      * 根据指定id获取ORGBase对象(可以是org的任意类型)
@@ -111,7 +111,7 @@ public interface CompositeOrgBaseManager {
      * @param parentId
      * @return
      */
-    List<Y9Person> listAllPersonsRecursionDownward(String parentId);
+    List<Y9Person> listAllDescendantPersons(String parentId);
 
     /**
      * 根据父节点id,递归获取其下所有没有禁用/禁用人员
@@ -120,7 +120,7 @@ public interface CompositeOrgBaseManager {
      * @param disabled
      * @return
      */
-    List<Y9Person> listAllPersonsRecursionDownward(String parentId, Boolean disabled);
+    List<Y9Person> listAllDescendantPersons(String parentId, Boolean disabled);
 
     /**
      * 根据父节点id，递归获取其下所有岗位
@@ -128,6 +128,6 @@ public interface CompositeOrgBaseManager {
      * @param parentId
      * @return
      */
-    List<Y9Position> listAllPositionsRecursionDownward(String parentId);
+    List<Y9Position> listAllDescendantPositions(String parentId);
 
 }

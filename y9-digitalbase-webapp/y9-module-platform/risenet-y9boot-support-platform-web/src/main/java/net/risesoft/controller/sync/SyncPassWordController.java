@@ -75,7 +75,7 @@ public class SyncPassWordController {
             Y9LoginUserHolder.setTenantId(tenantId);
             List<Y9Organization> y9OrganizationList = y9OrganizationService.list();
             for (Y9Organization organization : y9OrganizationList) {
-                List<Y9Person> persons = compositeOrgBaseService.listAllPersonsRecursionDownward(organization.getId());
+                List<Y9Person> persons = compositeOrgBaseService.listAllDescendantPersons(organization.getId());
                 for (Y9Person person : persons) {
                     y9PersonService.resetDefaultPassword(person.getId());
                 }

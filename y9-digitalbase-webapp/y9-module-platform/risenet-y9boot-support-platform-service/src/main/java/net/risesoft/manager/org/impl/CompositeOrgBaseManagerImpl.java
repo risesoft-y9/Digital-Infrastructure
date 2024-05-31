@@ -98,7 +98,7 @@ public class CompositeOrgBaseManagerImpl implements CompositeOrgBaseManager {
     }
 
     @Override
-    public void checkAllDecendantsDisabled(String orgUnitId) {
+    public void checkAllDescendantsDisabled(String orgUnitId) {
         Y9OrgBase orgUnit = getOrgUnit(orgUnitId);
         String guidPathPrefix = orgUnit.getGuidPath() + ",";
 
@@ -251,23 +251,23 @@ public class CompositeOrgBaseManagerImpl implements CompositeOrgBaseManager {
     }
 
     @Override
-    public List<Y9Person> listAllPersonsRecursionDownward(String parentId) {
+    public List<Y9Person> listAllDescendantPersons(String parentId) {
         List<Y9Person> personList = new ArrayList<>();
-        getPersonListByDownwardRecursion(parentId, personList);
+        fillPersonsRecursivelyToLeaf(parentId, personList);
         return personList;
     }
 
     @Override
-    public List<Y9Person> listAllPersonsRecursionDownward(String parentId, Boolean disabled) {
+    public List<Y9Person> listAllDescendantPersons(String parentId, Boolean disabled) {
         List<Y9Person> personList = new ArrayList<>();
-        getPersonListByDownwardRecursion(parentId, personList, disabled);
+        fillPersonsRecursivelyToLeaf(parentId, personList, disabled);
         return personList;
     }
 
     @Override
-    public List<Y9Position> listAllPositionsRecursionDownward(String parentId) {
+    public List<Y9Position> listAllDescendantPositions(String parentId) {
         List<Y9Position> positionList = new ArrayList<>();
-        getAllPositionListByDownwardRecursion(parentId, positionList);
+        fillPositionsRecursivelyToLeaf(parentId, positionList);
         return positionList;
     }
 
@@ -349,25 +349,25 @@ public class CompositeOrgBaseManagerImpl implements CompositeOrgBaseManager {
         return y9PositionRepository.findByParentIdOrderByTabIndexAsc(parentId);
     }
 
-    private void getAllPositionListByDownwardRecursion(String parentId, List<Y9Position> positionList) {
+    private void fillPositionsRecursivelyToLeaf(String parentId, List<Y9Position> positionList) {
         positionList.addAll(findPositionByParentId(parentId));
 
         List<Y9Department> y9DepartmentList = findDepartmentByParentId(parentId);
         for (Y9Department y9Department : y9DepartmentList) {
-            getAllPositionListByDownwardRecursion(y9Department.getId(), positionList);
+            fillPositionsRecursivelyToLeaf(y9Department.getId(), positionList);
         }
     }
 
-    private void getPersonListByDownwardRecursion(String parentId, List<Y9Person> personList) {
+    private void fillPersonsRecursivelyToLeaf(String parentId, List<Y9Person> personList) {
         personList.addAll(findPersonByParentId(parentId));
 
         List<Y9Department> deptList = findDepartmentByParentId(parentId);
         for (Y9Department dept : deptList) {
-            getPersonListByDownwardRecursion(dept.getId(), personList);
+            fillPersonsRecursivelyToLeaf(dept.getId(), personList);
         }
     }
 
-    private void getPersonListByDownwardRecursion(String parentId, List<Y9Person> personList, Boolean disabled) {
+    private void fillPersonsRecursivelyToLeaf(String parentId, List<Y9Person> personList, Boolean disabled) {
         if (disabled == null) {
             personList.addAll(findPersonByParentId(parentId));
         } else {
@@ -376,7 +376,7 @@ public class CompositeOrgBaseManagerImpl implements CompositeOrgBaseManager {
 
         List<Y9Department> deptList = findDepartmentByParentId(parentId);
         for (Y9Department dept : deptList) {
-            getPersonListByDownwardRecursion(dept.getId(), personList, disabled);
+            fillPersonsRecursivelyToLeaf(dept.getId(), personList, disabled);
         }
     }
 

@@ -2,6 +2,7 @@ package net.risesoft.y9public.service.tenant.impl;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 import org.apache.commons.lang3.StringUtils;
@@ -157,10 +158,10 @@ public class Y9TenantServiceImpl implements Y9TenantService {
 
         if (StringUtils.isNotBlank(parentId)) {
             List<Y9Tenant> tenants = this.listByGuidPathLike(y9Tenant.getGuidPath());
-            List<String> tenantIds = tenants.stream().map(Y9Tenant::getId).collect(Collectors.toList());
+            Set<String> tenantIdSet = tenants.stream().map(Y9Tenant::getId).collect(Collectors.toSet());
 
             // 不能将租户移动到本身或子租户中
-            Y9Assert.notNull(tenantIds.contains(parentId), TenantErrorCodeEnum.MOVE_TO_SUB_TENANT_NOT_PERMITTED);
+            Y9Assert.notNull(tenantIdSet.contains(parentId), TenantErrorCodeEnum.MOVE_TO_SUB_TENANT_NOT_PERMITTED);
         }
 
         y9Tenant.setParentId(parentId);

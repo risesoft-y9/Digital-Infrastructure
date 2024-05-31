@@ -1,9 +1,11 @@
 package net.risesoft.service.identity.impl;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 import org.apache.commons.lang3.StringUtils;
@@ -120,11 +122,11 @@ public class IdentityResourceCalculatorImpl implements IdentityResourceCalculato
                 return;
             }
 
-            List<Y9Person> personList = compositeOrgBaseManager.listAllPersonsRecursionDownward(orgUnitId);
+            List<Y9Person> personList = compositeOrgBaseManager.listAllDescendantPersons(orgUnitId);
             for (Y9Person person : personList) {
                 this.recalculateByPerson(person);
             }
-            List<Y9Position> positionList = compositeOrgBaseManager.listAllPositionsRecursionDownward(orgUnitId);
+            List<Y9Position> positionList = compositeOrgBaseManager.listAllDescendantPositions(orgUnitId);
             for (Y9Position position : positionList) {
                 this.recalculateByPosition(position);
             }
@@ -148,7 +150,7 @@ public class IdentityResourceCalculatorImpl implements IdentityResourceCalculato
                 .stream().collect(Collectors.groupingBy(Y9Authorization::getResourceId));
             for (String resourceId : resourceIdAuthorizationListMap.keySet()) {
                 Y9ResourceBase y9ResourceBase = compositeResourceService.findById(resourceId);
-                this.recalculateByPerson(resourceIdAuthorizationListMap, new ArrayList<>(), y9ResourceBase, person,
+                this.recalculateByPerson(resourceIdAuthorizationListMap, new HashSet<>(), y9ResourceBase, person,
                     new Y9Authorization());
             }
         } catch (Exception e) {
@@ -173,7 +175,7 @@ public class IdentityResourceCalculatorImpl implements IdentityResourceCalculato
                 .stream().collect(Collectors.groupingBy(Y9Authorization::getResourceId));
             for (String resourceId : resourceIdAuthorizationListMap.keySet()) {
                 Y9ResourceBase y9ResourceBase = compositeResourceService.findById(resourceId);
-                this.recalculateByPosition(resourceIdAuthorizationListMap, new ArrayList<>(), y9ResourceBase, position,
+                this.recalculateByPosition(resourceIdAuthorizationListMap, new HashSet<>(), y9ResourceBase, position,
                     new Y9Authorization());
             }
         } catch (Exception e) {
@@ -198,12 +200,12 @@ public class IdentityResourceCalculatorImpl implements IdentityResourceCalculato
     }
 
     private void recalculateByPerson(Map<String, List<Y9Authorization>> resourceIdAuthorizationListMap,
-        final List<String> solvedResourceIdList, Y9ResourceBase y9ResourceBase, Y9Person person,
+        final Set<String> solvedResourceIdSet, Y9ResourceBase y9ResourceBase, Y9Person person,
         Y9Authorization inheritY9Authorization) {
         String resourceId = y9ResourceBase.getId();
-        if (!solvedResourceIdList.contains(resourceId)) {
+        if (!solvedResourceIdSet.contains(resourceId)) {
             // 对于已经处理过的资源及其子资源直接跳过
-            solvedResourceIdList.add(resourceId);
+            solvedResourceIdSet.add(resourceId);
 
             List<Y9Authorization> resourceRelatedY9AuthorizationList = resourceIdAuthorizationListMap.get(resourceId);
             if (resourceRelatedY9AuthorizationList != null && !resourceRelatedY9AuthorizationList.isEmpty()) {
@@ -228,7 +230,7 @@ public class IdentityResourceCalculatorImpl implements IdentityResourceCalculato
                     List<Y9ResourceBase> subResourceList =
                         compositeResourceService.listChildrenById(y9ResourceBase.getId());
                     for (Y9ResourceBase resource : subResourceList) {
-                        this.recalculateByPerson(resourceIdAuthorizationListMap, solvedResourceIdList, resource, person,
+                        this.recalculateByPerson(resourceIdAuthorizationListMap, solvedResourceIdSet, resource, person,
                             y9Authorization);
                     }
                 }
@@ -243,7 +245,7 @@ public class IdentityResourceCalculatorImpl implements IdentityResourceCalculato
                 List<Y9ResourceBase> subResourceList =
                     compositeResourceService.listChildrenById(y9ResourceBase.getId());
                 for (Y9ResourceBase resource : subResourceList) {
-                    this.recalculateByPerson(resourceIdAuthorizationListMap, solvedResourceIdList, resource, person,
+                    this.recalculateByPerson(resourceIdAuthorizationListMap, solvedResourceIdSet, resource, person,
                         inheritY9Authorization);
                 }
             }
@@ -251,12 +253,12 @@ public class IdentityResourceCalculatorImpl implements IdentityResourceCalculato
     }
 
     private void recalculateByPosition(final Map<String, List<Y9Authorization>> resourceIdAuthorizationListMap,
-        final List<String> solvedResourceIdList, Y9ResourceBase y9ResourceBase, Y9Position position,
+        final Set<String> solvedResourceIdSet, Y9ResourceBase y9ResourceBase, Y9Position position,
         Y9Authorization inheritY9Authorization) {
         String resourceId = y9ResourceBase.getId();
-        if (!solvedResourceIdList.contains(resourceId)) {
+        if (!solvedResourceIdSet.contains(resourceId)) {
             // 对于已经处理过的资源及其子资源直接跳过
-            solvedResourceIdList.add(resourceId);
+            solvedResourceIdSet.add(resourceId);
 
             List<Y9Authorization> resourceRelatedY9AuthorizationList =
                 resourceIdAuthorizationListMap.get(y9ResourceBase.getId());
@@ -283,7 +285,7 @@ public class IdentityResourceCalculatorImpl implements IdentityResourceCalculato
                     List<Y9ResourceBase> subResourceList =
                         compositeResourceService.listChildrenById(y9ResourceBase.getId());
                     for (Y9ResourceBase resource : subResourceList) {
-                        this.recalculateByPosition(resourceIdAuthorizationListMap, solvedResourceIdList, resource,
+                        this.recalculateByPosition(resourceIdAuthorizationListMap, solvedResourceIdSet, resource,
                             position, y9Authorization);
                     }
                 }
@@ -299,7 +301,7 @@ public class IdentityResourceCalculatorImpl implements IdentityResourceCalculato
                 List<Y9ResourceBase> subResourceList =
                     compositeResourceService.listChildrenById(y9ResourceBase.getId());
                 for (Y9ResourceBase resource : subResourceList) {
-                    this.recalculateByPosition(resourceIdAuthorizationListMap, solvedResourceIdList, resource, position,
+                    this.recalculateByPosition(resourceIdAuthorizationListMap, solvedResourceIdSet, resource, position,
                         inheritY9Authorization);
                 }
             }

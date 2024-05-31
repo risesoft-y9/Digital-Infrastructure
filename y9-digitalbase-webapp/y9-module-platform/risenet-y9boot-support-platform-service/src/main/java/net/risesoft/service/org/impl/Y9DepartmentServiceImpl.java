@@ -57,7 +57,7 @@ public class Y9DepartmentServiceImpl implements Y9DepartmentService {
 
         if (isDisabled) {
             // 检查所有子节点是否都禁用了，只有所有子节点都禁用了，当前部门才能禁用
-            compositeOrgBaseManager.checkAllDecendantsDisabled(id);
+            compositeOrgBaseManager.checkAllDescendantsDisabled(id);
         }
 
         Y9Department updatedDepartment = Y9ModelConvertUtil.convert(department, Y9Department.class);
@@ -240,9 +240,9 @@ public class Y9DepartmentServiceImpl implements Y9DepartmentService {
      * @param parentId
      */
     private void checkMoveTarget(Y9Department dept, String parentId) {
-        Set<Y9OrgBase> parentList = new HashSet<>();
-        recursionParent(parentId, parentList);
-        if (parentList.contains(dept)) {
+        Set<Y9OrgBase> parentSet = new HashSet<>();
+        recursionParent(parentId, parentSet);
+        if (parentSet.contains(dept)) {
             throw new Y9BusinessException(OrgUnitErrorCodeEnum.MOVE_TO_SUB_DEPARTMENT_NOT_PERMITTED.getCode(),
                 OrgUnitErrorCodeEnum.MOVE_TO_SUB_DEPARTMENT_NOT_PERMITTED.getDescription());
         }

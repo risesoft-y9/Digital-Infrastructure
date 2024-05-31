@@ -386,7 +386,7 @@ public class PersonApiImpl implements PersonApi {
         @RequestParam("parentId") @NotBlank String parentId) {
         Y9LoginUserHolder.setTenantId(tenantId);
 
-        List<Y9Person> y9PersonList = compositeOrgBaseService.listAllPersonsRecursionDownward(parentId, Boolean.FALSE);
+        List<Y9Person> y9PersonList = compositeOrgBaseService.listAllDescendantPersons(parentId, Boolean.FALSE);
         return Y9Result.success(Y9ModelConvertUtil.convert(y9PersonList, Person.class));
     }
 
