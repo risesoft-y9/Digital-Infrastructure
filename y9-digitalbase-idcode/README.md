@@ -145,3 +145,21 @@ System.out.println("码图地址:" + result.getAddress());
 ```
 
 请求接口后会得到一个码图地址：http://api.idcode.org.cn/Photo/20240603155634578985.jpg
+
+这里以604为例：
+
+```
+String code = ConfigReader.ANALYZE_URL + "?code=MA.156.1003.1629/60.10000000.2";
+Integer isMargin = 1;
+//将单位logo图片转换为base64字符串-非必填
+String unitIcon = "";
+Integer qrCodeSize = 400;
+Integer color = ColorTypeEnum.COLOR.getValue();
+CodePicBase64 result = Six.m604(code, isMargin, unitIcon, qrCodeSize, color);
+System.out.println("生成的码图base64字符串:" + result.getStr());
+```
+
+把base64转为图片后可以得到如下码图：
+
+<div><img src="https://vue.youshengyun.com/files/idcode/idcode5.png"><div/>
+
