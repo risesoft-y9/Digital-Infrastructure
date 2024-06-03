@@ -167,19 +167,20 @@ public class FourTest {
     @DisplayName("【407】注册/备案非产品品类IDcode码")
     public void testM407() {
         /**
-         * 名片codeUseId: 73 {@link net.risesoft.interfaces.TwoTest#testM201()}
+         * 有形资产用途ID
+         * codeUseId: 60 {@link net.risesoft.interfaces.TwoTest#testM201()}
          */
         String codeUseId = "60";
         Integer codePayType = CodePayTypeEnum.REGISTER.getValue();
         /**
-         * 员工/职员名片
-         * industryCategoryId: 10127
-         * categoryCode: 10000000
+         * 有形资产
+         * 品类ID-industryCategoryId: 10166
+         * 品类码号-categoryCode: 10000000
          */
         Integer industryCategoryId = 10166;
         String categoryCode = "10000000";
-        String modelNumber = "电脑桌-A001";
-        String modelNumberEn = "desktop-A001";
+        String modelNumber = "电脑桌-A002";
+        String modelNumberEn = "desktop-A002";
         String introduction = "所属南方第六事业部";
         String gotoUrl = "http://example.com/goto";
         String sampleUrl = "http://example.com/goto";
