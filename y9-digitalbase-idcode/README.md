@@ -146,6 +146,10 @@ System.out.println("码图地址:" + result.getAddress());
 
 请求接口后会得到一个码图地址：http://api.idcode.org.cn/Photo/20240603155634578985.jpg
 
+具体码图如下：
+
+<div><img src="http://api.idcode.org.cn/Photo/20240603155634578985.jpg"><div/>
+
 这里以604为例：
 
 ```
