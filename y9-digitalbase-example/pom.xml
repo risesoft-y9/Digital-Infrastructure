@@ -20,6 +20,7 @@
         <module>risenet-y9demo-sso-oauth2/backend-demo</module>
         <module>risenet-y9demo-sync-kafka</module>
         <module>risenet-y9demo-file</module>
+        <module>risenet-y9demo-idcode</module>
     </modules>
 
 </project>
