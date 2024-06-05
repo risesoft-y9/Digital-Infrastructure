@@ -71,8 +71,9 @@ public class IdentityRoleCalculatorImpl implements IdentityRoleCalculator {
 
     @Override
     public void recalculateByOrgUnitId(final String orgUnitId) {
-        Y9OrgBase y9OrgBase = compositeOrgBaseService.getOrgUnit(orgUnitId);
-        if (y9OrgBase != null && y9OrgBase.getId() != null) {
+        Optional<Y9OrgBase> y9OrgBaseOptional = compositeOrgBaseService.findOrgUnit(orgUnitId);
+        if (y9OrgBaseOptional.isPresent()) {
+            Y9OrgBase y9OrgBase = y9OrgBaseOptional.get();
             OrgTypeEnum orgType = y9OrgBase.getOrgType();
             switch (orgType) {
                 case ORGANIZATION:

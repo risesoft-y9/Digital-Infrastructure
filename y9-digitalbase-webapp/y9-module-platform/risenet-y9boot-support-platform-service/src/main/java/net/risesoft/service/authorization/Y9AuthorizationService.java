@@ -133,14 +133,6 @@ public interface Y9AuthorizationService {
     void saveByRoles(AuthorityEnum authority, String resourceId, String[] roleIds);
 
     /**
-     * 保存或者修改权限配置
-     *
-     * @param y9Authorization 权限配置对象
-     * @return Authorization
-     */
-    Y9Authorization saveOrUpdate(Y9Authorization y9Authorization);
-
-    /**
      * 保存或者修改资源关联组织信息
      *
      * @param y9Authorization 权限配置对象

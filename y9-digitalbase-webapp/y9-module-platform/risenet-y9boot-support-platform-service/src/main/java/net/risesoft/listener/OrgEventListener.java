@@ -77,12 +77,14 @@ public class OrgEventListener {
                 break;
         }
 
-        Y9MessageOrg<OrgUnit> msg = new Y9MessageOrg<>(ModelConvertUtil.orgBaseToOrgUnit(y9OrgBase), eventType,
-            Y9LoginUserHolder.getTenantId());
-        Y9PublishServiceUtil.persistAndPublishMessageOrg(msg, eventName, eventDescription);
+        if (!OrgTypeEnum.MANAGER.equals(orgType)) {
+            Y9MessageOrg<OrgUnit> msg = new Y9MessageOrg<>(ModelConvertUtil.orgBaseToOrgUnit(y9OrgBase), eventType,
+                Y9LoginUserHolder.getTenantId());
+            Y9PublishServiceUtil.persistAndPublishMessageOrg(msg, eventName, eventDescription);
 
-        if (LOGGER.isDebugEnabled()) {
-            LOGGER.debug("新增组织节点后保存及发送消息到中间件完成");
+            if (LOGGER.isDebugEnabled()) {
+                LOGGER.debug("新增组织节点后保存及发送消息到中间件完成");
+            }
         }
     }
 

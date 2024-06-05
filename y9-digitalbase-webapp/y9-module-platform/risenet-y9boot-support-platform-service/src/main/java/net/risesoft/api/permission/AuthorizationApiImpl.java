@@ -67,7 +67,7 @@ public class AuthorizationApiImpl implements AuthorizationApi {
         y9Authorization.setPrincipalId(roleId);
         y9Authorization.setTenantId(tenantId);
 
-        y9AuthorizationService.saveOrUpdate(y9Authorization);
+        y9AuthorizationService.saveOrUpdateRole(y9Authorization);
         return Y9Result.success();
     }
 

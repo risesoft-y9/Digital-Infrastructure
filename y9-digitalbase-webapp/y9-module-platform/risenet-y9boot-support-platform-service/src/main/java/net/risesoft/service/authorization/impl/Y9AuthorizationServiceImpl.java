@@ -27,6 +27,7 @@ import net.risesoft.id.Y9IdGenerator;
 import net.risesoft.manager.identity.Y9PersonToResourceAndAuthorityManager;
 import net.risesoft.manager.identity.Y9PositionToResourceAndAuthorityManager;
 import net.risesoft.manager.org.CompositeOrgBaseManager;
+import net.risesoft.model.user.UserInfo;
 import net.risesoft.pojo.Y9PageQuery;
 import net.risesoft.repository.permission.Y9AuthorizationRepository;
 import net.risesoft.service.authorization.Y9AuthorizationService;
@@ -184,7 +185,6 @@ public class Y9AuthorizationServiceImpl implements Y9AuthorizationService {
         }
     }
 
-    @Override
     @Transactional(readOnly = false)
     public Y9Authorization saveOrUpdate(Y9Authorization y9Authorization) {
         // 如已存在则修改
@@ -206,7 +206,8 @@ public class Y9AuthorizationServiceImpl implements Y9AuthorizationService {
         y9Authorization.setResourceName(y9ResourceBase.getName());
         y9Authorization.setResourceType(y9ResourceBase.getResourceType());
         y9Authorization.setTenantId(Y9LoginUserHolder.getTenantId());
-        y9Authorization.setAuthorizer(Y9LoginUserHolder.getUserInfo().getName());
+        y9Authorization
+            .setAuthorizer(Optional.ofNullable(Y9LoginUserHolder.getUserInfo()).map(UserInfo::getName).orElse(null));
         Y9Authorization savedY9Authorization = y9AuthorizationRepository.save(y9Authorization);
 
         Y9Context.publishEvent(new Y9EntityCreatedEvent<>(savedY9Authorization));
