@@ -17,11 +17,13 @@ import lombok.extern.slf4j.Slf4j;
 
 import net.risesoft.enums.platform.DataSourceTypeEnum;
 import net.risesoft.enums.platform.TenantTypeEnum;
+import net.risesoft.exception.DataSourceErrorCodeEnum;
 import net.risesoft.id.IdType;
 import net.risesoft.id.Y9IdGenerator;
 import net.risesoft.y9.configuration.Y9Properties;
 import net.risesoft.y9.db.DbType;
 import net.risesoft.y9.db.DbUtil;
+import net.risesoft.y9.exception.Y9BusinessException;
 import net.risesoft.y9.util.base64.Y9Base64Util;
 import net.risesoft.y9public.entity.tenant.Y9DataSource;
 import net.risesoft.y9public.manager.tenant.Y9DataSourceManager;
@@ -127,12 +129,7 @@ public class Y9DataSourceManagerImpl implements Y9DataSourceManager {
 
             String sql = "CREATE DATABASE IF NOT EXISTS " + dbName + " DEFAULT CHARACTER SET UTF8 COLLATE UTF8_BIN";
 
-            try {
-                jdbcTemplate4Public.update(sql);
-            } catch (DataAccessException e) {
-                LOGGER.warn("创建数据源失败", e);
-                return null;
-            }
+            jdbcTemplate4Public.update(sql);
         }
 
         if (DbType.oracle.name().equals(dbType)) {
@@ -140,7 +137,7 @@ public class Y9DataSourceManagerImpl implements Y9DataSourceManager {
             username = dbName.toUpperCase();
             password = dds.getPassword();
 
-            String newTableSpace = y9config.getApp().getY9DigitalBase().getOrclNewTableSpace() + username + "_DATA.DBF";
+            String newTableSpace = y9config.getApp().getPlatform().getNewTableSpacePath() + username + "_DATA.DBF";
 
             // 创建表空间
             String sql1 = "CREATE TABLESPACE " + username + "_DATA DATAFILE '" + newTableSpace
@@ -153,16 +150,10 @@ public class Y9DataSourceManagerImpl implements Y9DataSourceManager {
             // 修改权限
             String sql4 = "ALTER USER " + username + " DEFAULT ROLE DBA";
 
-            try {
-                // jdbcTemplate4Public.update(sql0);
-                jdbcTemplate4Public.update(sql1);
-                jdbcTemplate4Public.update(sql2);
-                jdbcTemplate4Public.update(sql3);
-                jdbcTemplate4Public.update(sql4);
-            } catch (DataAccessException e) {
-                LOGGER.warn("创建数据源失败", e);
-                return null;
-            }
+            jdbcTemplate4Public.update(sql1);
+            jdbcTemplate4Public.update(sql2);
+            jdbcTemplate4Public.update(sql3);
+            jdbcTemplate4Public.update(sql4);
         }
 
         if (DbType.dm.equals(dbType)) {
@@ -183,14 +174,9 @@ public class Y9DataSourceManagerImpl implements Y9DataSourceManager {
             // 给用户授权
             String sql3 = "grant \"DBA\" to " + upperCaseDbName;
 
-            try {
-                jdbcTemplate4Public.update(sql1);
-                jdbcTemplate4Public.update(sql2);
-                jdbcTemplate4Public.update(sql3);
-            } catch (DataAccessException e) {
-                LOGGER.warn("创建数据源失败", e);
-                return null;
-            }
+            jdbcTemplate4Public.update(sql1);
+            jdbcTemplate4Public.update(sql2);
+            jdbcTemplate4Public.update(sql3);
         }
 
         if (DbType.kingbase.name().equals(dbType)) {
@@ -205,6 +191,17 @@ public class Y9DataSourceManagerImpl implements Y9DataSourceManager {
             username = dds.getUsername();
             url = dds.getJdbcUrl().split("=")[0] + "=" + dbName.toUpperCase();
             password = dds.getPassword();
+        }
+
+        if (DbType.h2.name().equals(dbType)) {
+            url = "jdbc:h2:mem:" + dbName;
+            username = dds.getUsername();
+            password = dds.getPassword();
+        }
+
+        if (url == null) {
+            throw new Y9BusinessException(DataSourceErrorCodeEnum.DATABASE_NOT_FULLY_SUPPORTED.getCode(),
+                DataSourceErrorCodeEnum.DATABASE_NOT_FULLY_SUPPORTED.getDescription());
         }
 
         Y9DataSource y9DataSource = new Y9DataSource();

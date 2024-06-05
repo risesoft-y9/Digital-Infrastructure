@@ -10,8 +10,8 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
  * @date 2022/2/10
  */
 @SpringBootApplication
-public class TestPlatform {
+public class TestPlatformWeb {
     public static void main(String[] args) {
-        SpringApplication.run(TestPlatform.class, args);
+        SpringApplication.run(TestPlatformWeb.class, args);
     }
 }

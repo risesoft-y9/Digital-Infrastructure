@@ -57,4 +57,10 @@ public class Y9PlatformProperties {
      * 初始化租户数据库 schema
      */
     private String initTenantSchema = "y9_default";
+
+    /**
+     * 新建的表空间存储目录 不指定一般会存储在数据库的默认路径下 例子：/u01/app/oracle/oradata/orcl/
+     */
+    private String newTableSpacePath = "";
+
 }

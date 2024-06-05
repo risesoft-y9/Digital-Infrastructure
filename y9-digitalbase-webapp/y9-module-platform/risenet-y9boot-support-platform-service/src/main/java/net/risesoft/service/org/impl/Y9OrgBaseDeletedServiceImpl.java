@@ -1,5 +1,7 @@
 package net.risesoft.service.org.impl;
 
+import java.util.Optional;
+
 import org.springframework.context.ApplicationListener;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -9,6 +11,7 @@ import lombok.RequiredArgsConstructor;
 import net.risesoft.entity.Y9OrgBase;
 import net.risesoft.entity.Y9OrgBaseDeleted;
 import net.risesoft.id.Y9IdGenerator;
+import net.risesoft.model.user.UserInfo;
 import net.risesoft.repository.Y9OrgBaseDeletedRepository;
 import net.risesoft.service.org.Y9OrgBaseDeletedService;
 import net.risesoft.y9.Y9LoginUserHolder;
@@ -46,7 +49,8 @@ public class Y9OrgBaseDeletedServiceImpl
         y9OrgBaseDeleted.setDn(y9OrgBase.getDn());
         y9OrgBaseDeleted.setOrgType(y9OrgBase.getOrgType());
         y9OrgBaseDeleted.setJsonContent(json);
-        y9OrgBaseDeleted.setOperator(Y9LoginUserHolder.getUserInfo().getName());
+        y9OrgBaseDeleted
+            .setOperator(Optional.ofNullable(Y9LoginUserHolder.getUserInfo()).map(UserInfo::getName).orElse(null));
         y9OrgBaseDeletedRepository.save(y9OrgBaseDeleted);
     }
 }

@@ -53,9 +53,11 @@
 
     <changeSet id="1702520031601-1" author="shidaobang" runOnChange="true">
         <addColumn tableName="Y9_ORG_ORGBASES_ROLES">
-            <column name="NEW_ID" type="VARCHAR(38)"/>
+            <column name="NEW_ID" type="VARCHAR(38)">
+                <constraints nullable="false" />
+            </column>
         </addColumn>
-        <sql dbms="mysql">
+        <sql dbms="h2, mysql">
             UPDATE Y9_ORG_ORGBASES_ROLES
             SET NEW_ID = CAST(ID AS CHAR);
         </sql>
@@ -70,9 +72,11 @@
     </changeSet>
     <changeSet id="1702520031601-2" author="shidaobang" runOnChange="true">
         <addColumn tableName="Y9_ORG_PERSONS_GROUPS">
-            <column name="NEW_ID" type="VARCHAR(38)"/>
+            <column name="NEW_ID" type="VARCHAR(38)">
+                <constraints nullable="false" />
+            </column>
         </addColumn>
-        <sql dbms="mysql">
+        <sql dbms="h2, mysql">
             UPDATE Y9_ORG_PERSONS_GROUPS
             SET NEW_ID = CAST(ID AS CHAR);
         </sql>
@@ -87,9 +91,11 @@
     </changeSet>
     <changeSet id="1702520031601-3" author="shidaobang" runOnChange="true">
         <addColumn tableName="Y9_ORG_PERSONS_POSITIONS">
-            <column name="NEW_ID" type="VARCHAR(38)"/>
+            <column name="NEW_ID" type="VARCHAR(38)">
+                <constraints nullable="false" />
+            </column>
         </addColumn>
-        <sql dbms="mysql">
+        <sql dbms="h2, mysql">
             UPDATE Y9_ORG_PERSONS_POSITIONS
             SET NEW_ID = CAST(ID AS CHAR);
         </sql>
@@ -104,9 +110,11 @@
     </changeSet>
     <changeSet id="1702520031601-4" author="shidaobang" runOnChange="true">
         <addColumn tableName="Y9_ORG_POSITIONS_GROUPS">
-            <column name="NEW_ID" type="VARCHAR(38)"/>
+            <column name="NEW_ID" type="VARCHAR(38)">
+                <constraints nullable="false" />
+            </column>
         </addColumn>
-        <sql dbms="mysql">
+        <sql dbms="h2, mysql">
             UPDATE Y9_ORG_POSITIONS_GROUPS
             SET NEW_ID = CAST(ID AS CHAR);
         </sql>
@@ -121,9 +129,11 @@
     </changeSet>
     <changeSet id="1702520031601-5" author="shidaobang" runOnChange="true">
         <addColumn tableName="Y9_ORG_PERSONS_RESOURCES">
-            <column name="NEW_ID" type="VARCHAR(38)"/>
+            <column name="NEW_ID" type="VARCHAR(38)">
+                <constraints nullable="false" />
+            </column>
         </addColumn>
-        <sql dbms="mysql">
+        <sql dbms="h2, mysql">
             UPDATE Y9_ORG_PERSONS_RESOURCES
             SET NEW_ID = CAST(ID AS CHAR);
         </sql>
@@ -138,9 +148,11 @@
     </changeSet>
     <changeSet id="1702520031601-6" author="shidaobang" runOnChange="true">
         <addColumn tableName="Y9_ORG_PERSONS_ROLES">
-            <column name="NEW_ID" type="VARCHAR(38)"/>
+            <column name="NEW_ID" type="VARCHAR(38)">
+                <constraints nullable="false" />
+            </column>
         </addColumn>
-        <sql dbms="mysql">
+        <sql dbms="h2, mysql">
             UPDATE Y9_ORG_PERSONS_ROLES
             SET NEW_ID = CAST(ID AS CHAR);
         </sql>
@@ -155,9 +167,11 @@
     </changeSet>
     <changeSet id="1702520031601-7" author="shidaobang" runOnChange="true">
         <addColumn tableName="Y9_ORG_POSITIONS_RESOURCES">
-            <column name="NEW_ID" type="VARCHAR(38)"/>
+            <column name="NEW_ID" type="VARCHAR(38)">
+                <constraints nullable="false" />
+            </column>
         </addColumn>
-        <sql dbms="mysql">
+        <sql dbms="h2, mysql">
             UPDATE Y9_ORG_POSITIONS_RESOURCES
             SET NEW_ID = CAST(ID AS CHAR);
         </sql>
@@ -172,9 +186,11 @@
     </changeSet>
     <changeSet id="1702520031601-8" author="shidaobang" runOnChange="true">
         <addColumn tableName="Y9_ORG_POSITIONS_ROLES">
-            <column name="NEW_ID" type="VARCHAR(38)"/>
+            <column name="NEW_ID" type="VARCHAR(38)">
+                <constraints nullable="false" />
+            </column>
         </addColumn>
-        <sql dbms="mysql">
+        <sql dbms="h2, mysql">
             UPDATE Y9_ORG_POSITIONS_ROLES
             SET NEW_ID = CAST(ID AS CHAR);
         </sql>

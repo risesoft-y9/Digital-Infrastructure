@@ -4,6 +4,7 @@ import java.util.Date;
 import java.util.Optional;
 
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 import lombok.RequiredArgsConstructor;
@@ -296,7 +297,7 @@ public class InitTenantDataServiceImpl implements InitTenantDataService {
     }
 
     @Override
-    @Transactional(readOnly = false)
+    @Transactional(readOnly = false, propagation = Propagation.REQUIRES_NEW)
     public void initAll(String tenantId) {
         // 租户的示例数据
         // FIXME 是否需要？
