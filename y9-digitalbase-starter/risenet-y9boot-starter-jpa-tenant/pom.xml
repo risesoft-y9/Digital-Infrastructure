@@ -38,7 +38,8 @@
 		<dependency>
 			<groupId>com.mysql</groupId>
 			<artifactId>mysql-connector-j</artifactId>
-		</dependency>
+			<version>${mysql-connector-j.version}</version>
+        </dependency>
 
 		<dependency>
 			<groupId>com.oracle.database.jdbc</groupId>

@@ -126,6 +126,7 @@
 
         <liquibase.version>4.27.0</liquibase.version>
         <shedlock.version>5.13.0</shedlock.version>
+        <mysql-connector-j.version>8.2.0</mysql-connector-j.version>
     </properties>
 
     <dependencyManagement>
