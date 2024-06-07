@@ -397,7 +397,7 @@ webapp -- 系统公共模块
 
 官网：<a href="https://www.idcode.org.cn/" target="_blank">https://www.idcode.org.cn/</a>
 
-> 介绍：标识代码是数字世界的身份证，可以为现实世界和虚拟世界有形或无形的对象分配全球唯一数字身份，是人、事、物、数据等对象的全球唯一数字身份证，可控安全、兼容开放、国际通用。MA码是中国首个获得ISO、CEN、AIM三大国际组织认可的全球顶级节点代码，是ISO/IEC 15459国际标准的组成部分。数字底座已经全面接入统一标识码（MA码），具体使用说明请查看：<a href="https://gitee.com/risesoft-y9/y9-core/tree/main/y9-digitalbase-idcode" target="_blank">https://gitee.com/risesoft-y9/y9-core/tree/main/y9-digitalbase-idcode</a>
+> 数字底座已经全面接入统一标识码（MA码），具体使用说明请查看：<a href="https://gitee.com/risesoft-y9/y9-core/tree/main/y9-digitalbase-idcode" target="_blank">https://gitee.com/risesoft-y9/y9-core/tree/main/y9-digitalbase-idcode</a>
 >
 
 ## 咨询与合作
