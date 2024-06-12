@@ -18,6 +18,10 @@ public class ConfigReader {
 
     public static String ANALYZE_URL;
 
+    public static String GOTO_URL;
+
+    public static String SAMPLE_URL;
+
     static {
         try (InputStream inputStream = ConfigReader.class.getResourceAsStream("/application.yml")) {
             if (inputStream != null) {
@@ -29,6 +33,8 @@ public class ConfigReader {
                 IDCODE_URL= properties.getProperty("idCode_url");
                 MAIN_CODE= properties.getProperty("main_code");
                 ANALYZE_URL= properties.getProperty("analyze_url");
+                GOTO_URL= properties.getProperty("goto_url");
+                SAMPLE_URL= properties.getProperty("sample_url");
             } else {
                 throw new FileNotFoundException("配置文件未找到");
             }
