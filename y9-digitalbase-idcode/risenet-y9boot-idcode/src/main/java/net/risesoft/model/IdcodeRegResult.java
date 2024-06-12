@@ -11,7 +11,7 @@ import lombok.Data;
 public class IdcodeRegResult extends Result{
 
 	@JsonProperty("organunit_idcode")
-	private String organunitIdcode;
+	private String organUnitIdCode;
 	
 	@JsonProperty("category_reg_id")
 	private String categoryRegId;

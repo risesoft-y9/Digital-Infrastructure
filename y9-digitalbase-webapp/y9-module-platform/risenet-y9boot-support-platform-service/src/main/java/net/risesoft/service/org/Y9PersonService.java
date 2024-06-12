@@ -1,15 +1,14 @@
 package net.risesoft.service.org;
 
-import java.util.List;
-import java.util.Optional;
-
-import org.springframework.data.domain.Page;
-
 import net.risesoft.entity.Y9OrgBase;
 import net.risesoft.entity.Y9Person;
 import net.risesoft.entity.Y9PersonExt;
 import net.risesoft.pojo.Y9PageQuery;
 import net.risesoft.y9.exception.Y9NotFoundException;
+import org.springframework.data.domain.Page;
+
+import java.util.List;
+import java.util.Optional;
 
 /**
  * @author dingzhaojun
@@ -59,7 +58,7 @@ public interface Y9PersonService {
      * @param name 名字
      * @param loginName 登录名
      * @param mobile 手机号
-     * @return
+     * @return Y9Person
      */
     Y9Person create(String parentId, String name, String loginName, String mobile);
 
@@ -154,7 +153,7 @@ public interface Y9PersonService {
     /**
      * 判断用户名是否可用
      *
-     * @param personId
+     * @param personId 人员id
      * @param loginName 登录名
      * @return boolean
      */
@@ -186,7 +185,7 @@ public interface Y9PersonService {
      * 根据用户组节点id,获取本组的人员列表
      *
      * @param groupId 用户组id
-     * @param disabled
+     * @param disabled 是否已禁用
      * @return {@link List}<{@link Y9Person}>
      */
     List<Y9Person> listByGroupId(String groupId, Boolean disabled);
@@ -196,7 +195,7 @@ public interface Y9PersonService {
      *
      * @param idType 证件类型
      * @param idNum 证件号
-     * @param disabled
+     * @param disabled 是否已禁用
      * @return {@link List}<{@link Y9Person}>
      */
     List<Y9Person> listByIdTypeAndIdNum(String idType, String idNum, Boolean disabled);
@@ -205,7 +204,7 @@ public interface Y9PersonService {
      * 根据名称查询
      *
      * @param name 姓名
-     * @param disabled
+     * @param disabled 是否已禁用
      * @return List<ORGPerson>
      */
     List<Y9Person> listByNameLike(String name, Boolean disabled);
@@ -223,7 +222,7 @@ public interface Y9PersonService {
      * 根据岗位id,获取人员列表
      *
      * @param positionId 岗位id
-     * @param disabled
+     * @param disabled 是否已禁用
      * @return {@link List}<{@link Y9Person}>
      */
     List<Y9Person> listByPositionId(String positionId, Boolean disabled);
