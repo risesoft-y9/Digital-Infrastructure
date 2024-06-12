@@ -8,3 +8,7 @@ main_code: MA.156.1003.1629
 api_key: 9XRMKN90QA8O90SDAAAAAKJ
 #系统授权码
 api_code: 09DN09QA8X08XRNN9DRMXRXM9DNAK09Q
+#统一码解析地址
+gotourl: http://s.idcode.org.cn/
+#统一码示例地址
+sample_url: http://s.idcode.org.cn/

@@ -60,7 +60,7 @@ public class IdCodeController {
         }
         Y9IdCode y9IdCode = y9IdCodeService.findByOrgUnitId(personId);
         if (y9IdCode == null) {
-            IdcodeRegResult result = Four.m407(ConfigReader.MAIN_CODE, "73", 10127, "10000000", personId, "", y9Person.getName(), CodePayTypeEnum.REGISTER.getValue(), null, null);
+            IdcodeRegResult result = Four.m407(ConfigReader.MAIN_CODE, "73", 10127, "10000000", personId, "", y9Person.getName(), CodePayTypeEnum.REGISTER.getValue(), ConfigReader.GOTO_URL, ConfigReader.SAMPLE_URL);
             if (result.getResultCode() == 1) {
                 y9IdCode = new Y9IdCode();
                 y9IdCode.setId(result.getOrganUnitIdCode());
@@ -94,26 +94,5 @@ public class IdCodeController {
     @RequestMapping(value = "/getPersonById")
     public Y9Result<Y9IdCode> getPersonById(@RequestParam @NotBlank String personId) {
         return Y9Result.success(y9IdCodeService.findByOrgUnitId(personId), "根据人员id，获取人员统一码信息");
-    }
-
-    /**
-     * 根据统一码，获取人员信息
-     *
-     * @param code 统一码ID
-     * @return Y9Result<Y9Person>
-     */
-    @RiseLog(operationName = "根据统一码，获取人员信息")
-    @RequestMapping(value = "/getPerson")
-    public Y9Result<Y9Person> getPerson(@RequestParam @NotBlank String code) {
-        Y9IdCode y9IdCode = y9IdCodeService.findById(code);
-        if (y9IdCode == null) {
-            return Y9Result.failure("统一码不存在");
-        }
-        Y9Person y9Person = y9PersonService.getById(y9IdCode.getOrgUnitId());
-        if (y9Person == null) {
-            return Y9Result.failure("人员已删除");
-        }
-        y9Person.setPassword(null);
-        return Y9Result.success(y9Person, "根据人员id，获取人员统一码信息");
     }
 }
