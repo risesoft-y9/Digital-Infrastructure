@@ -113,6 +113,7 @@ public class IdCodeController {
         if (y9Person == null) {
             return Y9Result.failure("人员已删除");
         }
+        y9Person.setPassword(null);
         return Y9Result.success(y9Person, "根据人员id，获取人员统一码信息");
     }
 }
