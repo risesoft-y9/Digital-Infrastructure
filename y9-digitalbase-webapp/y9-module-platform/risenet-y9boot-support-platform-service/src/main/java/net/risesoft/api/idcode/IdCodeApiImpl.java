@@ -12,6 +12,7 @@ import net.risesoft.y9.util.Y9ModelConvertUtil;
 import org.springframework.context.annotation.Primary;
 import org.springframework.http.MediaType;
 import org.springframework.validation.annotation.Validated;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
@@ -44,6 +45,7 @@ public class IdCodeApiImpl {
      * @return {@code Y9Result<Person>} 通用请求返回对象 - data 是人员对象
      * @since 9.6.0
      */
+    @GetMapping("/getPerson")
     public Y9Result<Person> getPerson(@RequestParam("tenantId") @NotBlank String tenantId,
                                       @RequestParam("code") @NotBlank String code) {
         Y9LoginUserHolder.setTenantId(tenantId);
