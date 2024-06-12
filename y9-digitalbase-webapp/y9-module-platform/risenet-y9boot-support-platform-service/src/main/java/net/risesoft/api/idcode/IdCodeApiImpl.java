@@ -43,7 +43,7 @@ public class IdCodeApiImpl {
      * @param tenantId 租户id
      * @param code     人员统一码
      * @return {@code Y9Result<Person>} 通用请求返回对象 - data 是人员对象
-     * @since 9.6.0
+     * @since 9.6.6
      */
     @GetMapping("/getPerson")
     public Y9Result<Person> getPerson(@RequestParam("tenantId") @NotBlank String tenantId,
