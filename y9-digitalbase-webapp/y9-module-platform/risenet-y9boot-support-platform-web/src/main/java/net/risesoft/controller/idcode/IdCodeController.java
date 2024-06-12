@@ -95,4 +95,24 @@ public class IdCodeController {
     public Y9Result<Y9IdCode> getPersonById(@RequestParam @NotBlank String personId) {
         return Y9Result.success(y9IdCodeService.findByOrgUnitId(personId), "根据人员id，获取人员统一码信息");
     }
+
+    /**
+     * 根据统一码，获取人员信息
+     *
+     * @param code 统一码ID
+     * @return Y9Result<Y9Person>
+     */
+    @RiseLog(operationName = "根据统一码，获取人员信息")
+    @RequestMapping(value = "/getPerson")
+    public Y9Result<Y9Person> getPerson(@RequestParam @NotBlank String code) {
+        Y9IdCode y9IdCode = y9IdCodeService.findById(code);
+        if (y9IdCode == null) {
+            return Y9Result.failure("统一码不存在");
+        }
+        Y9Person y9Person = y9PersonService.getById(y9IdCode.getOrgUnitId());
+        if (y9Person == null) {
+            return Y9Result.failure("人员已删除");
+        }
+        return Y9Result.success(y9Person, "根据人员id，获取人员统一码信息");
+    }
 }
