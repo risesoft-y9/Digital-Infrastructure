@@ -31,10 +31,10 @@ public class Y9IdCode implements Serializable {
     private String regId;
 
     @Comment("二维码地址")
-    @Column(name = "IMGURL", length = 200)
+    @Column(name = "IMG_URL", length = 200)
     private String imgUrl;
 
     @Comment("组织ID")
-    @Column(name = "ORGUNITID", nullable = false, unique = true, length = 50)
+    @Column(name = "ORG_UNIT_ID", nullable = false, unique = true, length = 50)
     private String orgUnitId;
 }

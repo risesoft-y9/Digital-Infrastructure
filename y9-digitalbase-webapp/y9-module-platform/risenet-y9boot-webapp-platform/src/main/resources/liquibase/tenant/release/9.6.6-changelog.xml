@@ -148,4 +148,24 @@
         </dropColumn>
     </changeSet>
 
+    <changeSet id="2024061216072-1" author="zhangjiabao">
+        <preConditions onFail="MARK_RAN">
+            <not>
+                <tableExists tableName="Y9_ORG_IDCODE"/>
+            </not>
+        </preConditions>
+        <createTable remarks="统一码信息表" tableName="Y9_ORG_IDCODE">
+            <column name="ID" remarks="主键" type="VARCHAR(100)">
+                <constraints nullable="false" primaryKey="true"/>
+            </column>
+            <column name="CATEGORY_REG_ID" remarks="品类注册ID" type="VARCHAR(50)">
+                <constraints nullable="false" unique="true"/>
+            </column>
+            <column name="IMG_URL" remarks="二维码地址" type="VARCHAR(200)"/>
+            <column name="ORG_UNIT_ID" remarks="组织ID" type="VARCHAR(50)">
+                <constraints nullable="false" unique="true"/>
+            </column>
+        </createTable>
+    </changeSet>
+
 </databaseChangeLog>
