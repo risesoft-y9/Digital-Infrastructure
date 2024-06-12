@@ -60,7 +60,7 @@ public class IdCodeController {
         }
         Y9IdCode y9IdCode = y9IdCodeService.findByOrgUnitId(personId);
         if (y9IdCode == null) {
-            IdcodeRegResult result = Four.m407(ConfigReader.MAIN_CODE, "73", 10127, "10000000", personId, "", y9Person.getName(), CodePayTypeEnum.REGISTER.getValue(), ConfigReader.GOTO_URL, ConfigReader.SAMPLE_URL);
+            IdcodeRegResult result = Four.m407(ConfigReader.MAIN_CODE, "73", 10127, "10000000", personId, "", y9Person.getName(), CodePayTypeEnum.REGISTER.getValue(), ConfigReader.GOTO_URL + "?tenantId=" + y9Person.getTenantId(), ConfigReader.SAMPLE_URL + "?tenantId=" + y9Person.getTenantId());
             if (result.getResultCode() == 1) {
                 y9IdCode = new Y9IdCode();
                 y9IdCode.setId(result.getOrganUnitIdCode());
