@@ -595,16 +595,16 @@
                         <skip>false</skip>
                         <from>
                             <!--<image>eclipse-temurin:11-jre</image>-->
-                            <image>tomcat:9.0-jre11-temurin</image>
+                            <image>docker-registry-internal.youshengyun.com/tomcat:9.0.89-jre11-temurin</image>
                             <platforms>
                                 <platform>
                                     <architecture>amd64</architecture>
                                     <os>linux</os>
                                 </platform>
-                                <platform>
+                                <!--<platform>
                                     <architecture>arm64</architecture>
                                     <os>linux</os>
-                                </platform>
+                                </platform>-->
                             </platforms>
                         </from>
                         <container>
