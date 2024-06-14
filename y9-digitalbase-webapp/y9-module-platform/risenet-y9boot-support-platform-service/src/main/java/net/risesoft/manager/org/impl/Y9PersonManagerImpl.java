@@ -148,7 +148,7 @@ public class Y9PersonManagerImpl implements Y9PersonManager {
                 Y9Person originPerson = new Y9Person();
                 Y9Person updatedPerson = y9PersonOptional.get();
                 Y9BeanUtil.copyProperties(updatedPerson, originPerson);
-                Y9BeanUtil.copyProperties(person, updatedPerson);
+                Y9BeanUtil.copyProperties(person, updatedPerson, "tenantId");
 
                 updatedPerson.setGuidPath(Y9OrgUtil.buildGuidPath(parent.getGuidPath(), updatedPerson.getId()));
                 updatedPerson.setDn(Y9OrgUtil.buildDn(OrgTypeEnum.PERSON, updatedPerson.getName(), parent.getDn()));

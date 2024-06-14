@@ -96,6 +96,7 @@ public class Y9TenantApp extends BaseEntity {
     private String verifyTime;
 
     /** 审核状态，0：未审核；1：通过 */
+    @Type(type = "numeric_boolean")
     @Column(name = "VERIFY_STATUS")
     @Comment("审核状态，0：未审核；1：通过")
     private Boolean verify;
