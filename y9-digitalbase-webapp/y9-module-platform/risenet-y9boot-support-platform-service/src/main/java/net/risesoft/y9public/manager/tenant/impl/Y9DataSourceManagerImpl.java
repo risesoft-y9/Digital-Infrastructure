@@ -123,7 +123,7 @@ public class Y9DataSourceManagerImpl implements Y9DataSourceManager {
         String password = null;
 
         if (DbType.mysql.name().equals(dbType)) {
-            url = replaceDatabaseNameInMysqlJdbcUrl(dds.getJdbcUrl(), dbName);
+            url = replaceDatabaseNameInJdbcUrl(dds.getJdbcUrl(), dbName);
             username = dds.getUsername();
             password = dds.getPassword();
 
@@ -154,6 +154,18 @@ public class Y9DataSourceManagerImpl implements Y9DataSourceManager {
             jdbcTemplate4Public.update(sql2);
             jdbcTemplate4Public.update(sql3);
             jdbcTemplate4Public.update(sql4);
+        }
+
+        if (DbType.postgresql.name().equals(dbType)) {
+            url = replaceDatabaseNameInJdbcUrl(dds.getUrl(), dbName);
+            username = dds.getUsername();
+            password = dds.getPassword();
+            dbName = dbName.toLowerCase();
+
+            String sql1 = "CREATE DATABASE " + dbName + " WITH ENCODING = 'UTF8' OWNER = " + username;
+            String sql2 = "GRANT ALL PRIVILEGES ON DATABASE " + dbName + " TO " + username;
+            jdbcTemplate4Public.update(sql1);
+            jdbcTemplate4Public.update(sql2);
         }
 
         if (DbType.dm.equals(dbType)) {
@@ -246,6 +258,10 @@ public class Y9DataSourceManagerImpl implements Y9DataSourceManager {
                     String username = dbName.toUpperCase();
                     String sql1 = "DROP SCHEMA " + username + " CASCADE;";
                     jdbcTemplate4Public.execute(sql1);
+                } else if (DbType.postgresql.name().equals(dds.getDbType())) {
+                    String username = dbName.toUpperCase();
+                    String sql1 = "DROP DATABASE IF EXISTS " + username;
+                    jdbcTemplate4Public.execute(sql1);
                 }
             }
         }
@@ -263,14 +279,29 @@ public class Y9DataSourceManagerImpl implements Y9DataSourceManager {
         return datasourceRepository.save(y9DataSource);
     }
 
-    public String replaceDatabaseNameInMysqlJdbcUrl(String originalJdbcUrl, String newDatabaseName) {
-        // 假设原始的 JDBC URL 格式为：jdbc:mysql://localhost:3306/y9_public?allowPublicKeyRetrieval=true
+    /**
+     * 替换 jdbc url 中的数据库名称 <br/>
+     * 
+     * 例如：replaceDatabaseNameInJdbcUrl("jdbc:mysql://localhost:3306/y9_public?allowPublicKeyRetrieval=true",
+     * "y9_default") -> "jdbc:mysql://localhost:3306/y9_default?allowPublicKeyRetrieval=true"
+     *
+     * @param originalJdbcUrl 原始 jdbc url
+     * @param newDatabaseName 新数据库名称
+     * @return {@code String }
+     */
+    public String replaceDatabaseNameInJdbcUrl(String originalJdbcUrl, String newDatabaseName) {
+        //
         int dbNameStart = originalJdbcUrl.lastIndexOf("/") + 1;
         int dbNameEnd = originalJdbcUrl.indexOf("?");
 
-        if (dbNameStart >= 0 && dbNameEnd > dbNameStart) {
-            String oldDatabaseName = originalJdbcUrl.substring(dbNameStart, dbNameEnd);
-
+        if (dbNameStart > 0) {
+            String oldDatabaseName;
+            if (dbNameEnd > dbNameStart) {
+                // jdbc url 后不带参数
+                oldDatabaseName = originalJdbcUrl.substring(dbNameStart, dbNameEnd);
+            } else {
+                oldDatabaseName = originalJdbcUrl.substring(dbNameStart);
+            }
             return originalJdbcUrl.replace(oldDatabaseName, newDatabaseName);
         } else {
             // 如果无法提取数据库名称部分或者替换失败，返回原始的 JDBC URL

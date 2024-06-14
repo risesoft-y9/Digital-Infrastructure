@@ -394,7 +394,7 @@
                 <constraints nullable="false"/>
             </column>
             <column name="TENANT_NAME" remarks="租户名称" type="VARCHAR(200)"/>
-            <column name="VERIFY_STATUS" remarks="审核状态，0：未审核；1：通过" type="BIT(1)"/>
+            <column name="VERIFY_STATUS" remarks="审核状态，0：未审核；1：通过" type="INT"/>
             <column name="VERIFY_TIME" remarks="审核时间" type="VARCHAR(50)"/>
             <column name="VERIFY_USER_NAME" remarks="审核人" type="VARCHAR(200)"/>
         </createTable>

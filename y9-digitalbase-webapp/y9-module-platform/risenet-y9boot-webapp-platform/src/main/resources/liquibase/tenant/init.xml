@@ -719,11 +719,11 @@
             <column name="NAME" remarks="登录名，拥于查找" type="VARCHAR(255)">
                 <constraints nullable="false"/>
             </column>
-            <column name="PHOTO" remarks="照片" type="LONGBLOB"/>
+            <column name="PHOTO" remarks="照片" type="BLOB"/>
             <column name="POLITICAL_STATUS" remarks="政治面貌" type="VARCHAR(255)"/>
             <column name="PROFESSIONAL" remarks="专业" type="VARCHAR(255)"/>
             <column name="PROVINCE" remarks="人员籍贯" type="VARCHAR(255)"/>
-            <column name="SIGN" remarks="签名" type="LONGBLOB"/>
+            <column name="SIGN" remarks="签名" type="BLOB"/>
             <column name="WORK_TIME" remarks="入职时间" type="date"/>
         </createTable>
     </changeSet>
