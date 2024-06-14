@@ -13,7 +13,7 @@ import java.util.stream.Collectors;
 import javax.sql.DataSource;
 
 import org.apache.commons.collections4.CollectionUtils;
-import org.springframework.dao.DataAccessException;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.datasource.lookup.DataSourceLookup;
@@ -80,8 +80,8 @@ public class Y9TenantDataSourceLookup implements DataSourceLookup {
             String url = (String)record.get("URL");
             String username = (String)record.get("USERNAME");
             String password = (String)record.get("PASSWORD");
-            String driver = record.get("DRIVER") != null ? (String)record.get("DRIVER") : "";
             password = Y9Base64Util.decode(password);
+            String driver = record.get("DRIVER") != null ? (String)record.get("DRIVER") : "";
 
             Integer initialSize = Integer.valueOf(record.get("INITIAL_SIZE").toString());
             Integer maxActive = Integer.valueOf(record.get("MAX_ACTIVE").toString());
@@ -115,14 +115,14 @@ public class Y9TenantDataSourceLookup implements DataSourceLookup {
 
                     // 重新创建数据源
                     ds = new DruidDataSource();
-                    // ds.setDriverClassName(driver);
-                    ds.setTestOnBorrow(true);
-                    ds.setTestOnReturn(true);
-                    ds.setTestWhileIdle(true);
+                    ds.setTestOnBorrow(publicDataSource.isTestOnBorrow());
+                    ds.setTestOnReturn(publicDataSource.isTestOnReturn());
+                    ds.setTestWhileIdle(publicDataSource.isTestWhileIdle());
+                    ds.setValidationQuery(publicDataSource.getValidationQuery());
                     ds.setInitialSize(initialSize);
                     ds.setMaxActive(maxActive);
                     ds.setMinIdle(minIdle);
-                    if (!"".equals(driver)) {
+                    if (StringUtils.isNotBlank(driver)) {
                         ds.setDriverClassName(driver);
                     }
                     // 5分钟
@@ -131,21 +131,20 @@ public class Y9TenantDataSourceLookup implements DataSourceLookup {
                     // ds.setMinEvictableIdleTimeMillis(1800000);
                     // ds.setPoolPreparedStatements(false);
                     // ds.setMaxOpenPreparedStatements(6);
-                    ds.setValidationQuery("SELECT 1 FROM DUAL");
                     ds.setUrl(url);
                     ds.setUsername(username);
                     ds.setPassword(password);
                 }
             } else {
                 ds = new DruidDataSource();
-                // ds.setDriverClassName(driver);
-                ds.setTestOnBorrow(true);
-                ds.setTestOnReturn(true);
-                ds.setTestWhileIdle(true);
+                ds.setTestOnBorrow(publicDataSource.isTestOnBorrow());
+                ds.setTestOnReturn(publicDataSource.isTestOnReturn());
+                ds.setTestWhileIdle(publicDataSource.isTestWhileIdle());
+                ds.setValidationQuery(publicDataSource.getValidationQuery());
                 ds.setInitialSize(initialSize);
                 ds.setMaxActive(maxActive);
                 ds.setMinIdle(minIdle);
-                if (!"".equals(driver)) {
+                if (StringUtils.isNotBlank(driver)) {
                     ds.setDriverClassName(driver);
                 }
                 // 5分钟
@@ -154,7 +153,6 @@ public class Y9TenantDataSourceLookup implements DataSourceLookup {
                 // ds.setMinEvictableIdleTimeMillis(1800000);
                 // ds.setPoolPreparedStatements(false);
                 // ds.setMaxOpenPreparedStatements(6);
-                ds.setValidationQuery("SELECT 1 FROM DUAL");
                 ds.setUrl(url);
                 ds.setUsername(username);
                 ds.setPassword(password);
