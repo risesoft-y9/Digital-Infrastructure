@@ -81,7 +81,12 @@
         <maven.compiler.target>11</maven.compiler.target>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <maven.deploy.skip>true</maven.deploy.skip>
-        <mysql-connector-j.version>8.2.0</mysql-connector-j.version>
+
+        <mysql-driver.version>8.2.0</mysql-driver.version>
+        <postgresql-driver.version>42.7.3</postgresql-driver.version>
+        <kingbase-driver.version>8.6.0</kingbase-driver.version>
+        <dameng-driver.version>8.1.3.140</dameng-driver.version>
+        <oracle-driver.version>21.5.0.0</oracle-driver.version>
     </properties>
 
     <dependencyManagement>
@@ -307,12 +312,6 @@
         </dependency>
 
         <dependency>
-            <groupId>com.mysql</groupId>
-            <artifactId>mysql-connector-j</artifactId>
-            <version>${mysql-connector-j.version}</version>
-        </dependency>
-
-        <dependency>
             <groupId>org.springframework</groupId>
             <artifactId>spring-context-indexer</artifactId>
             <optional>true</optional>
@@ -371,11 +370,29 @@
             <artifactId>spring-kafka</artifactId>
         </dependency>
 
+        <dependency>
+            <groupId>com.mysql</groupId>
+            <artifactId>mysql-connector-j</artifactId>
+            <version>${mysql-driver.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.postgresql</groupId>
+            <artifactId>postgresql</artifactId>
+            <version>${postgresql-driver.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>com.oracle.database.jdbc</groupId>
+            <artifactId>ojdbc11</artifactId>
+            <version>${oracle-driver.version}</version>
+        </dependency>
+
         <!-- 人大金仓数据库 -->
         <dependency>
             <groupId>cn.com.kingbase</groupId>
             <artifactId>kingbase8</artifactId>
-            <version>8.6.0</version>
+            <version>${kingbase-driver.version}</version>
         </dependency>
 
         <dependency>
@@ -387,13 +404,13 @@
         <dependency>
             <groupId>com.dameng</groupId>
             <artifactId>DmDialect-for-hibernate5.6</artifactId>
-            <version>8.1.3.140</version>
+            <version>${dameng-driver.version}</version>
         </dependency>
 
         <dependency>
             <groupId>com.dameng</groupId>
             <artifactId>DmJdbcDriver18</artifactId>
-            <version>8.1.3.140</version>
+            <version>${dameng-driver.version}</version>
         </dependency>
     </dependencies>
 
