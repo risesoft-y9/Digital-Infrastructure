@@ -137,6 +137,16 @@ webapp -- 系统公共模块
 <div><img src="https://vue.youshengyun.com/files/img/architecture1.png"><div/>
 
 
+## 功能架构图
+
+<div><img src="https://vue.youshengyun.com/files/img/function1.png"><div/>
+
+## 部署架构图
+
+<div><img src="https://vue.youshengyun.com/files/img/deploy1.png"><div/>
+
+
+
 ## 后端技术选型
 
 | 序号 | 依赖            | 版本    | 官网                                                         |
