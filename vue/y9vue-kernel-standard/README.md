@@ -66,6 +66,7 @@ src\views:              页面组件及其子组件
 App.vue:                根组件
 main.ts:                项目程序入口文件
 settings:               项目部分设置文件
+.env.test:              测试环境配置文件
 .env.development:       开发环境配置文件
 .env.production:        生产环境配置文件
 .eslintignore:          语法规范忽略文件
@@ -84,10 +85,6 @@ vite.config.js:         vite脚手架各种环境编译配置文件
 # 四、单点登录
 
 ## 单点登录时序图
-
-```
-<a href="https://vue.youshengyun.com/files/img/前端/单点登录原理时序图.pdf" target="_blank">高清单点登录原理时序图 PDF文档</a>
-```
 
 <img src="https://vue.youshengyun.com/files/img/前端/单点登录原理时序图.png">
 
@@ -165,4 +162,7 @@ vite.config.js:         vite脚手架各种环境编译配置文件
 
 # 八、更新记录
 
+> 2024-06-14 更新前端的配置文件和说明文档，以适配最新的开源代码
+> 2024-05-20 图标库管理-->图标管理
+> 2024-05-10 新增组织禁用，租户设置以及门属性类型使用字典表代替枚举以实现动态的增删
 > 2023-12-19 优化个人中心页面，只需替换 src/view/personal 文件夹即可
