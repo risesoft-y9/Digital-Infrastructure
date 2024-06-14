@@ -1,6 +1,5 @@
 package net.risesoft.y9.tenant.datasource;
 
-import java.sql.SQLException;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashSet;
@@ -13,7 +12,7 @@ import java.util.stream.Collectors;
 import javax.sql.DataSource;
 
 import org.apache.commons.collections4.CollectionUtils;
-import org.springframework.dao.DataAccessException;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.datasource.lookup.DataSourceLookup;
@@ -81,54 +80,67 @@ public class Y9TenantDataSourceLookup implements DataSourceLookup {
             String url = (String)record.get("URL");
             String username = (String)record.get("USERNAME");
             String password = (String)record.get("PASSWORD");
-            String driver = record.get("DRIVER") != null ? (String)record.get("DRIVER") : "";
             password = Y9Base64Util.decode(password);
+            String driver = record.get("DRIVER") != null ? (String)record.get("DRIVER") : "";
 
             Integer initialSize = Integer.valueOf(record.get("INITIAL_SIZE").toString());
             Integer maxActive = Integer.valueOf(record.get("MAX_ACTIVE").toString());
             Integer minIdle = Integer.valueOf(record.get("MIN_IDLE").toString());
 
-            if (ds == null) {
-                ds = new HikariDataSource();
-                ds.setMaximumPoolSize(maxActive);
-                ds.setMinimumIdle(minIdle);
-                if (driver.length() > 0) {
-                    ds.setDriverClassName(driver);
-                }
-
-                ds.setJdbcUrl(url);
-                ds.setUsername(username);
-                ds.setPassword(password);
-                this.loadedTenantIdDataSourceMap.put(tenantId, ds);
-            } else {
+            if (ds != null) {
                 // 可能连接池的参数调整了
-                // url,username,password等属性在HikariDataSource初始化完成后不允许更改，否则抛出异常?
-                boolean needCreate = false;
-                if (!ds.getJdbcUrl().equals(url)) {
-                    needCreate = true;
-                }
-                if (!ds.getUsername().equals(username)) {
-                    needCreate = true;
-                }
-                if (!ds.getPassword().equals(password)) {
-                    needCreate = true;
+                // url,username,password等属性在DruidDataSource初始化完成后不允许更改，否则抛出异常
+                boolean keepDataSourceInstance = false;
+                if (ds.getJdbcUrl().equals(url) && ds.getUsername().equals(username) && ds.getPassword().equals(password)) {
+                    keepDataSourceInstance = true;
                 }
 
-                if (needCreate) {
+                if (keepDataSourceInstance) {
+                    if (ds.getMaximumPoolSize() != maxActive) {
+                        ds.setMaximumPoolSize(maxActive);
+                    }
+                    if (ds.getMinimumIdle() != minIdle) {
+                        ds.setMinimumIdle(minIdle);
+                    }
+                } else {
+                    // 关闭旧数据源
+                    try {
+                        ds.close();
+                    } catch (Exception e) {
+                        LOGGER.warn(e.getMessage(), e);
+                    }
+
+                    // 重新创建数据源
                     ds = new HikariDataSource();
                     ds.setMaximumPoolSize(maxActive);
                     ds.setMinimumIdle(minIdle);
-                    if (!"".equals(driver)) {
+                    if (StringUtils.isNotBlank(driver)) {
                         ds.setDriverClassName(driver);
                     }
                     ds.setJdbcUrl(url);
                     ds.setUsername(username);
                     ds.setPassword(password);
-                } else {
-                    ds.setMaximumPoolSize(maxActive);
-                    ds.setMinimumIdle(minIdle);
                 }
-                this.loadedTenantIdDataSourceMap.put(tenantId, ds);
+            } else {
+                ds = new HikariDataSource();
+                ds.setMaximumPoolSize(maxActive);
+                ds.setMinimumIdle(minIdle);
+                if (StringUtils.isNotBlank(driver)) {
+                    ds.setDriverClassName(driver);
+                }
+                ds.setJdbcUrl(url);
+                ds.setUsername(username);
+                ds.setPassword(password);
+            }
+        }
+
+        HikariDataSource previousDataSource = this.loadedTenantIdDataSourceMap.put(tenantId, ds);
+
+        if (LOGGER.isDebugEnabled()) {
+            if (previousDataSource == null) {
+                LOGGER.debug("添加租户[{}]的数据源", tenantId);
+            } else {
+                LOGGER.debug("更新租户[{}]的数据源", tenantId);
             }
         }
     }
