@@ -88,9 +88,7 @@ vite.config.js:         vite脚手架各种环境编译配置文件
 
 <img src="https://vue.youshengyun.com/files/img/前端/单点登录原理时序图.png">
 
-```
-<a href="https://vue.youshengyun.com/files/img/前端/单点登录原理时序图.pdf" target="_blank">单点登录原理时序图-清晰版</a>
-```
+## <a href="https://vue.youshengyun.com/files/img/前端/单点登录原理时序图.pdf" target="_blank">单点登录原理时序图-清晰版</a>
 
 # 五、路由
 
