@@ -88,35 +88,8 @@ vite.config.js:         vite脚手架各种环境编译配置文件
 
 <img src="https://vue.youshengyun.com/files/img/前端/单点登录原理时序图.png">
 
-## 依据单点登录时序图，我们单独封装了单点登录插件，适用基于当前开源项目构建的各个前端工程（微服务）
-
 ```
-下载地址（私有仓库）：npm --registry https://svn.youshengyun.com:9900/nexus/repository/y9npm-hosted install y9plugin-sso@3
-
-插件内部依赖说明：
-    "dependencies": {
-        "axios": "^0.24.0",
-        "core-js": "^3.6.5",
-        "js-cookie": "^3.0.1",
-        "md5": "^2.3.0",
-        "qs": "^6.10.2"
-    }
-
-可能遇到的问题说明：
-第一次添加单点登陆插件，可能会遇到一些常规错误提示。
-
-原因：
-这个插件内，依赖了以下几个插件，但这几个插件无法在我们的私有仓库里找到。
-
-解决方式：
-第一种尝试：
-    控制台错误里，提示找不到哪个插件，先单独安装这个插件，
-    据经验看来，都是提示一些常用的插件，如遇到问题，期待您的主动联系反馈，我们将乐意为您解答！
-第二种尝试：
-    找到项目下的 packge.json 文件，如果有以下来源于似有仓库的插件，
-    第一步先删除，
-    第二步再执行npm i，
-    第三步再通过复制对应的加载地址重新下载对应的插件
+<a href="https://vue.youshengyun.com/files/img/前端/单点登录原理时序图.pdf" target="_blank">单点登录原理时序图-清晰版</a>
 ```
 
 # 五、路由
