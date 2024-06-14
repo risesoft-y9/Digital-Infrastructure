@@ -123,7 +123,9 @@ vite.config.js:         vite脚手架各种环境编译配置文件
 
 ## 路由程序设计流程图
 
-<img src="https://vue.youshengyun.com/files/img/前端/路由程序流程图.png">
+<div style="text-align: center;">
+    <img src="https://vue.youshengyun.com/files/img/前端/路由程序流程图.png">
+</div>
 
 # 六、组件
 
