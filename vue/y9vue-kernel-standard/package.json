@@ -2,6 +2,8 @@
     "name": "y9vue-kernel-standard",
     "version": "0.0.0",
     "scripts": {
+        "dev": "vite  --mode development",
+        "test": "vite  --mode test",
         "serve": "vite  --mode development",
         "serve-local": "vite  --mode localEnv",
         "build": "vite build",
