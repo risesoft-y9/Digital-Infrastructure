@@ -157,6 +157,23 @@ public class PersonApiImpl implements PersonApi {
     }
 
     /**
+     * 根据ca证书id获得人员对象
+     *
+     * @param tenantId 租户id
+     * @param caId ca证书Id
+     * @return {@code Y9Result<Person>} 通用请求返回对象 - data 是人员对象
+     * @since 9.6.0
+     */
+    @Override
+    public Y9Result<Person> getByCaId(@RequestParam("tenantId") @NotBlank String tenantId,
+                                           @RequestParam("caId") @NotBlank String caId) {
+        Y9LoginUserHolder.setTenantId(tenantId);
+
+        Y9Person y9Person = y9PersonService.findByCaId(caId).orElse(null);
+        return Y9Result.success(Y9ModelConvertUtil.convert(y9Person, Person.class));
+    }
+
+    /**
      * 根据登录名和父节点id，获取人员信息
      *
      * @param tenantId 租户id

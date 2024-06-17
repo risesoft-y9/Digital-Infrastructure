@@ -96,6 +96,18 @@ public interface PersonApi {
         @RequestParam("loginName") @NotBlank String loginName);
 
     /**
+     * 根据ca证书id获得人员对象
+     *
+     * @param tenantId 租户id
+     * @param caId ca证书id
+     * @return {@code Y9Result<Person>} 通用请求返回对象 - data 是人员对象
+     * @since 9.6.6
+     */
+    @GetMapping("/getByCaId")
+    Y9Result<Person> getByCaId(@RequestParam("tenantId") @NotBlank String tenantId,
+                                    @RequestParam("caId") @NotBlank String caId);
+
+    /**
      * 根据登录名和父节点id，获取人员信息
      *
      * @param tenantId 租户id

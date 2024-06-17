@@ -1,8 +1,6 @@
 package net.risesoft.repository;
 
-import java.util.List;
-import java.util.Optional;
-
+import net.risesoft.entity.Y9Person;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -11,7 +9,8 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
-import net.risesoft.entity.Y9Person;
+import java.util.List;
+import java.util.Optional;
 
 /**
  * @author dingzhaojun
@@ -40,6 +39,8 @@ public interface Y9PersonRepository extends JpaRepository<Y9Person, String>, Jpa
     Optional<Y9Person> findByDisabledFalseAndMobileAndOriginal(String mobile, Boolean original);
 
     Optional<Y9Person> findByLoginNameAndOriginalTrue(String loginName);
+
+    Optional<Y9Person> findByCaidAndOriginalTrue(String caId);
 
     Optional<Y9Person> findByLoginNameAndParentId(String loginName, String parentId);
 
