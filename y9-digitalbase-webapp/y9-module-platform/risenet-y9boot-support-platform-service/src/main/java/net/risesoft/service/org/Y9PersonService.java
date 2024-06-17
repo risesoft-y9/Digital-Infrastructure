@@ -108,6 +108,14 @@ public interface Y9PersonService {
     Optional<Y9Person> findByLoginName(String loginName);
 
     /**
+     * 根据ca证书Id获取人员
+     *
+     * @param caId ca证书Id
+     * @return {@link Y9Person}
+     */
+    Optional<Y9Person> findByCaId(String caId);
+
+    /**
      * 查找 guidPath 包含传入参数的对应人的 id
      *
      * @param guidPath guid path
