@@ -122,7 +122,7 @@ public class Y9DataSourceManagerImpl implements Y9DataSourceManager {
         String username = null;
         String password = null;
 
-        if (DbType.mysql.name().equals(dbType)) {
+        if (Objects.equals(DbType.mysql.name(), dbType) || Objects.equals(DbType.mariadb.name(), dbType)) {
             url = replaceDatabaseNameInJdbcUrl(dds.getJdbcUrl(), dbName);
             username = dds.getUsername();
             password = dds.getPassword();
