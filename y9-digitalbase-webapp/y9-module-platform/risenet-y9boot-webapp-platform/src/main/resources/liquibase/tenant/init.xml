@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <databaseChangeLog
-        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
         xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
                       http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.9.xsd"
         objectQuotingStrategy="QUOTE_ONLY_RESERVED_WORDS">
@@ -613,7 +613,7 @@
             </column>
         </createTable>
     </changeSet>
-    <changeSet id="1697701085071-20" author="shidaobang">
+    <changeSet id="1697701085071-20" author="shidaobang" runOnChange="true">
         <preConditions onFail="MARK_RAN">
             <not>
                 <tableExists tableName="Y9_ORG_PERSONS_RESOURCES"/>
@@ -693,7 +693,7 @@
             </column>
         </createTable>
     </changeSet>
-    <changeSet id="1697701085071-22" author="shidaobang">
+    <changeSet id="1697701085071-22" author="shidaobang" runOnChange="true">
         <preConditions onFail="MARK_RAN">
             <not>
                 <tableExists tableName="Y9_ORG_PERSON_EXT"/>
@@ -892,7 +892,7 @@
         <preConditions onFail="MARK_RAN">
             <not>
                 <indexExists tableName="Y9_ORG_POSITIONS_RESOURCES"
-                                        columnNames="POSITION_ID, RESOURCE_ID, AUTHORIZATION_ID, AUTHORITY"/>
+                             columnNames="POSITION_ID, RESOURCE_ID, AUTHORIZATION_ID, AUTHORITY"/>
             </not>
         </preConditions>
         <addUniqueConstraint columnNames="POSITION_ID, RESOURCE_ID, AUTHORIZATION_ID, AUTHORITY"
@@ -902,7 +902,7 @@
         <preConditions onFail="MARK_RAN">
             <not>
                 <indexExists tableName="Y9_ORG_POSITIONS_ROLES"
-                                        columnNames="POSITION_ID, ROLE_ID"/>
+                             columnNames="POSITION_ID, ROLE_ID"/>
             </not>
         </preConditions>
         <addUniqueConstraint columnNames="POSITION_ID, ROLE_ID" constraintName="UK8w7r8ookrjq6rcgiy98k56aba"
@@ -912,7 +912,7 @@
         <preConditions onFail="MARK_RAN">
             <not>
                 <indexExists tableName="Y9_ORG_PERSONS_ROLES"
-                                        columnNames="PERSON_ID, ROLE_ID"/>
+                             columnNames="PERSON_ID, ROLE_ID"/>
             </not>
         </preConditions>
         <addUniqueConstraint columnNames="PERSON_ID, ROLE_ID" constraintName="UKa1ns3b527lyr0sn45sk036ts9"
@@ -922,7 +922,7 @@
         <preConditions onFail="MARK_RAN">
             <not>
                 <indexExists tableName="Y9_ORG_PERSONS_GROUPS"
-                                        columnNames="GROUP_ID, PERSON_ID"/>
+                             columnNames="GROUP_ID, PERSON_ID"/>
             </not>
         </preConditions>
         <addUniqueConstraint columnNames="GROUP_ID, PERSON_ID" constraintName="UKbk6jbj6n5gui7fd6e2ljak95k"
@@ -932,7 +932,7 @@
         <preConditions onFail="MARK_RAN">
             <not>
                 <indexExists tableName="Y9_ORG_PERSONS_RESOURCES"
-                                        columnNames="PERSON_ID, RESOURCE_ID, AUTHORIZATION_ID, AUTHORITY"/>
+                             columnNames="PERSON_ID, RESOURCE_ID, AUTHORIZATION_ID, AUTHORITY"/>
             </not>
         </preConditions>
         <addUniqueConstraint columnNames="PERSON_ID, RESOURCE_ID, AUTHORIZATION_ID, AUTHORITY"
@@ -942,7 +942,7 @@
         <preConditions onFail="MARK_RAN">
             <not>
                 <indexExists tableName="Y9_ORG_AUTHORIZATION"
-                                        columnNames="PRINCIPAL_ID, RESOURCE_ID, AUTHORITY"/>
+                             columnNames="PRINCIPAL_ID, RESOURCE_ID, AUTHORITY"/>
             </not>
         </preConditions>
         <addUniqueConstraint columnNames="PRINCIPAL_ID, RESOURCE_ID, AUTHORITY"
@@ -952,7 +952,7 @@
         <preConditions onFail="MARK_RAN">
             <not>
                 <indexExists tableName="Y9_ORG_PERSONS_POSITIONS"
-                                        columnNames="POSITION_ID, PERSON_ID"/>
+                             columnNames="POSITION_ID, PERSON_ID"/>
             </not>
         </preConditions>
         <addUniqueConstraint columnNames="POSITION_ID, PERSON_ID" constraintName="UKrty6axgf79bgsw4vxtki54i3c"
@@ -962,7 +962,7 @@
         <preConditions onFail="MARK_RAN">
             <not>
                 <indexExists tableName="Y9_ORG_POSITIONS_GROUPS"
-                                        columnNames="GROUP_ID, POSITION_ID"/>
+                             columnNames="GROUP_ID, POSITION_ID"/>
             </not>
         </preConditions>
         <addUniqueConstraint columnNames="GROUP_ID, POSITION_ID" constraintName="UKtjxh3p9qk2s8we8mtrg2mxc9y"
