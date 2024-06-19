@@ -40,7 +40,7 @@ public class Y9DepartmentServiceImplTest {
         MockitoAnnotations.openMocks(this);
     }
     
-    // @Test
+    /*@Test
     public void testChangeDisable() {
         when(y9DepartmentManager.getByIdNotCache("11")).thenReturn(new Y9Department());
         when(y9DepartmentManager.save(any())).thenReturn(new Y9Department());
@@ -51,5 +51,5 @@ public class Y9DepartmentServiceImplTest {
         
         Assertions.assertThrows(Y9NotFoundException.class, () -> y9DepartmentService.changeDisable("22"));
         
-    }
+    }*/
 }
