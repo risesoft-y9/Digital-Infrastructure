@@ -1,12 +1,13 @@
 package net.risesoft.y9public.manager.tenant.impl;
 
+import java.util.Arrays;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.Random;
+import java.util.stream.Collectors;
 
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.dao.DataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -24,6 +25,7 @@ import net.risesoft.y9.configuration.Y9Properties;
 import net.risesoft.y9.db.DbType;
 import net.risesoft.y9.db.DbUtil;
 import net.risesoft.y9.exception.Y9BusinessException;
+import net.risesoft.y9.util.Y9StringUtil;
 import net.risesoft.y9.util.base64.Y9Base64Util;
 import net.risesoft.y9public.entity.tenant.Y9DataSource;
 import net.risesoft.y9public.manager.tenant.Y9DataSourceManager;
@@ -127,7 +129,8 @@ public class Y9DataSourceManagerImpl implements Y9DataSourceManager {
             username = dds.getUsername();
             password = dds.getPassword();
 
-            String sql = "CREATE DATABASE IF NOT EXISTS " + dbName + " DEFAULT CHARACTER SET UTF8 COLLATE UTF8_BIN";
+            String sql = Y9StringUtil
+                .format("CREATE DATABASE IF NOT EXISTS {} DEFAULT CHARACTER SET UTF8 COLLATE UTF8_BIN", dbName);
 
             jdbcTemplate4Public.update(sql);
         }
@@ -137,18 +140,21 @@ public class Y9DataSourceManagerImpl implements Y9DataSourceManager {
             username = dbName.toUpperCase();
             password = dds.getPassword();
 
-            String newTableSpace = y9config.getApp().getPlatform().getNewTableSpacePath() + username + "_DATA.DBF";
+            String tableSpace = username + "_DATA";
+            String dataFile = y9config.getApp().getPlatform().getNewTableSpacePath() + tableSpace + ".DBF";
 
             // 创建表空间
-            String sql1 = "CREATE TABLESPACE " + username + "_DATA DATAFILE '" + newTableSpace
-                + "' SIZE 100M AUTOEXTEND ON NEXT 10M MAXSIZE UNLIMITED EXTENT MANAGEMENT LOCAL";
+            String sql1 = Y9StringUtil.format(
+                "CREATE TABLESPACE {} DATAFILE '{}' SIZE 100M AUTOEXTEND ON NEXT 10M MAXSIZE UNLIMITED EXTENT MANAGEMENT LOCAL",
+                tableSpace, dataFile);
             // 创建用户
-            String sql2 = "CREATE USER " + username + " IDENTIFIED BY " + password
-                + " ACCOUNT UNLOCK DEFAULT TABLESPACE " + username + "_DATA TEMPORARY TABLESPACE TEMP PROFILE DEFAULT";
+            String sql2 = Y9StringUtil.format(
+                "CREATE USER {} IDENTIFIED BY {} ACCOUNT UNLOCK DEFAULT TABLESPACE {} TEMPORARY TABLESPACE TEMP PROFILE DEFAULT",
+                username, password, tableSpace);
             // 给用户授权
-            String sql3 = "GRANT DBA TO " + username + " WITH ADMIN OPTION";
+            String sql3 = Y9StringUtil.format("GRANT DBA TO {} WITH ADMIN OPTION", username);
             // 修改权限
-            String sql4 = "ALTER USER " + username + " DEFAULT ROLE DBA";
+            String sql4 = Y9StringUtil.format("ALTER USER {} DEFAULT ROLE DBA", username);
 
             jdbcTemplate4Public.update(sql1);
             jdbcTemplate4Public.update(sql2);
@@ -162,8 +168,8 @@ public class Y9DataSourceManagerImpl implements Y9DataSourceManager {
             password = dds.getPassword();
             dbName = dbName.toLowerCase();
 
-            String sql1 = "CREATE DATABASE " + dbName + " WITH ENCODING = 'UTF8' OWNER = " + username;
-            String sql2 = "GRANT ALL PRIVILEGES ON DATABASE " + dbName + " TO " + username;
+            String sql1 = Y9StringUtil.format("CREATE DATABASE {} WITH ENCODING = 'UTF8' OWNER = {}", dbName, username);
+            String sql2 = Y9StringUtil.format("GRANT ALL PRIVILEGES ON DATABASE {} TO {}", dbName, username);
             jdbcTemplate4Public.update(sql1);
             jdbcTemplate4Public.update(sql2);
         }
@@ -174,17 +180,20 @@ public class Y9DataSourceManagerImpl implements Y9DataSourceManager {
             username = upperCaseDbName;
             password = dds.getPassword();
 
-            String newTableSpace = upperCaseDbName + "_DATA.DBF";
+            String tableSpace = upperCaseDbName + "_DATA";
+            String dataFile = y9config.getApp().getPlatform().getNewTableSpacePath() + tableSpace + ".DBF";
 
             // 创建表空间
-            String sql1 = "create tablespace " + upperCaseDbName + "_DATA datafile '" + newTableSpace
-                + "' size 32 autoextend on next 32 CACHE = NORMAL;";
+            String sql1 =
+                Y9StringUtil.format("create tablespace {} datafile '{}' size 32 autoextend on next 32 CACHE = NORMAL;",
+                    tableSpace, dataFile);
             // 创建用户
-            String sql2 = "create user " + upperCaseDbName + " identified by " + password
-                + " password_policy 0 PROFILE \"DEFAULT\" default tablespace " + upperCaseDbName + "_DATA";
+            String sql2 = Y9StringUtil.format(
+                "create user {} identified by {} password_policy 0 PROFILE \"DEFAULT\" default tablespace {}", username,
+                password, tableSpace);
 
             // 给用户授权
-            String sql3 = "grant \"DBA\" to " + upperCaseDbName;
+            String sql3 = Y9StringUtil.format("grant \"DBA\" to {}", username);
 
             jdbcTemplate4Public.update(sql1);
             jdbcTemplate4Public.update(sql2);
@@ -192,17 +201,20 @@ public class Y9DataSourceManagerImpl implements Y9DataSourceManager {
         }
 
         if (DbType.kingbase.name().equals(dbType)) {
-            // 创建模式并授权
-            String sql1 = "CREATE SCHEMA " + dbName;
-            try {
-                jdbcTemplate4Public.update(sql1);
-            } catch (DataAccessException e) {
-                LOGGER.warn("创建数据源失败", e);
-                return null;
-            }
+            url = replaceSchemaNameInJdbcUrlParam(dds.getJdbcUrl(), dbName);
             username = dds.getUsername();
-            url = dds.getJdbcUrl().split("=")[0] + "=" + dbName.toUpperCase();
             password = dds.getPassword();
+            // 创建模式
+            String sql1 = Y9StringUtil.format("CREATE SCHEMA {}", dbName);
+            jdbcTemplate4Public.update(sql1);
+            // url = replaceDatabaseNameInJdbcUrl(dds.getUrl(), dbName);
+            // username = dds.getUsername();
+            // password = dds.getPassword();
+            // String sql1 = Y9StringUtil.format(
+            // "CREATE DATABASE {} WITH OWNER = \"{}\" ENCODING 'UTF8' TEMPLATE template0 lc_ctype = 'C' lc_collate =
+            // 'C';",
+            // dbName, username);
+            // jdbcTemplate4Public.update(sql1);
         }
 
         if (DbType.h2.name().equals(dbType)) {
@@ -289,8 +301,7 @@ public class Y9DataSourceManagerImpl implements Y9DataSourceManager {
      * @param newDatabaseName 新数据库名称
      * @return {@code String }
      */
-    public String replaceDatabaseNameInJdbcUrl(String originalJdbcUrl, String newDatabaseName) {
-        //
+    private String replaceDatabaseNameInJdbcUrl(String originalJdbcUrl, String newDatabaseName) {
         int dbNameStart = originalJdbcUrl.lastIndexOf("/") + 1;
         int dbNameEnd = originalJdbcUrl.indexOf("?");
 
@@ -306,6 +317,25 @@ public class Y9DataSourceManagerImpl implements Y9DataSourceManager {
         } else {
             // 如果无法提取数据库名称部分或者替换失败，返回原始的 JDBC URL
             return originalJdbcUrl;
+        }
+    }
+
+    private static String replaceSchemaNameInJdbcUrlParam(String originalJdbcUrl, String newSchemaName) {
+        int paramStart = originalJdbcUrl.indexOf("?") + 1;
+
+        if (paramStart > 0) {
+            String jdbcUrl = originalJdbcUrl.substring(0, paramStart);
+            String originalParams = originalJdbcUrl.substring(paramStart);
+            String newParams = Arrays.stream(StringUtils.split(originalParams, "&")).map(param -> {
+                if (param.startsWith("currentSchema=")) {
+                    return "currentSchema=" + newSchemaName;
+                } else {
+                    return param;
+                }
+            }).collect(Collectors.joining("&"));
+            return jdbcUrl + newParams;
+        } else {
+            return originalJdbcUrl + "?currentSchema=" + newSchemaName;
         }
     }
 
