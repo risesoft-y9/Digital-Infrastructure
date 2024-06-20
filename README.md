@@ -227,13 +227,13 @@ webapp -- 系统公共模块
 
 > 演示账号：
 >
-> 系统管理员：systemManager  密码：Risesoft@2022
+> 系统管理员：systemManager  密码：Risesoft@2024
 >
-> 安全保密员：securityManager  密码：Risesoft@2022
+> 安全保密员：securityManager  密码：Risesoft@2024
 >
-> 安全审计员：auditManager   密码：Risesoft@2022
+> 安全审计员：auditManager   密码：Risesoft@2024
 >
-> 说明：输入登录名后，请选择"北京有生博大软件股份有限公司"租户，再输入密码进行登录
+> 说明：输入登录名后，请选择"测试"租户，如：systemManager@测试，再输入密码进行登录
 
 ## 私有化部署
 
