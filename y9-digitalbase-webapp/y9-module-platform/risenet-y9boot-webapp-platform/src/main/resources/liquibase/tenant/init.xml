@@ -695,9 +695,14 @@
     </changeSet>
     <changeSet id="1697701085071-22" author="shidaobang" runOnChange="true">
         <preConditions onFail="MARK_RAN">
-            <not>
-                <tableExists tableName="Y9_ORG_PERSON_EXT"/>
-            </not>
+            <and>
+                <not>
+                    <tableExists tableName="Y9_ORG_PERSON_EXT"/>
+                </not>
+                <not>
+                    <dbms type="kingbase"/>
+                </not>
+            </and>
         </preConditions>
         <createTable remarks="人员信息扩展表" tableName="Y9_ORG_PERSON_EXT">
             <column name="PERSON_ID" remarks="人员ID" type="VARCHAR(38)">
@@ -726,6 +731,60 @@
             <column name="SIGN" remarks="签名" type="BLOB"/>
             <column name="WORK_TIME" remarks="入职时间" type="date"/>
         </createTable>
+    </changeSet>
+    <changeSet id="1697701085071-22-2" author="shidaobang" runOnChange="true">
+        <preConditions onFail="MARK_RAN">
+            <and>
+                <not>
+                    <tableExists tableName="Y9_ORG_PERSON_EXT"/>
+                </not>
+                <dbms type="kingbase"/>
+            </and>
+        </preConditions>
+        <sql>
+            CREATE TABLE "Y9_ORG_PERSON_EXT" (
+                "PERSON_ID" character varying(38 char) NOT NULL,
+                "CREATE_TIME" timestamp without time zone NULL,
+                "UPDATE_TIME" timestamp without time zone NULL,
+                "BIRTHDAY" date NULL,
+                "CITY" character varying(255 char) NULL,
+                "COUNTRY" character varying(255 char) NULL,
+                "EDUCATION" character varying(255 char) NULL,
+                "HOME_ADDRESS" character varying(255 char) NULL,
+                "HOME_PHONE" character varying(255 char) NULL,
+                "ID_NUM" character varying(255 char) NULL,
+                "ID_TYPE" character varying(255 char) NULL,
+                "MARITAL_STATUS" integer NOT NULL DEFAULT 0,
+                "NAME" character varying(255 char) NOT NULL,
+                "PHOTO" blob NULL,
+                "POLITICAL_STATUS" character varying(255 char) NULL,
+                "PROFESSIONAL" character varying(255 char) NULL,
+                "PROVINCE" character varying(255 char) NULL,
+                "SIGN" blob NULL,
+                "WORK_TIME" date NULL,
+                CONSTRAINT "Y9_ORG_PERSON_EXT_pkey" PRIMARY KEY (PERSON_ID)
+            );
+            COMMENT ON TABLE "Y9_ORG_PERSON_EXT" IS '人员信息扩展表';
+            COMMENT ON COLUMN "Y9_ORG_PERSON_EXT"."PERSON_ID" IS '人员ID';
+            COMMENT ON COLUMN "Y9_ORG_PERSON_EXT"."CREATE_TIME" IS '创建时间';
+            COMMENT ON COLUMN "Y9_ORG_PERSON_EXT"."UPDATE_TIME" IS '更新时间';
+            COMMENT ON COLUMN "Y9_ORG_PERSON_EXT"."BIRTHDAY" IS '出生年月';
+            COMMENT ON COLUMN "Y9_ORG_PERSON_EXT"."CITY" IS '居住城市';
+            COMMENT ON COLUMN "Y9_ORG_PERSON_EXT"."COUNTRY" IS '居住国家';
+            COMMENT ON COLUMN "Y9_ORG_PERSON_EXT"."EDUCATION" IS '学历';
+            COMMENT ON COLUMN "Y9_ORG_PERSON_EXT"."HOME_ADDRESS" IS '家庭地址';
+            COMMENT ON COLUMN "Y9_ORG_PERSON_EXT"."HOME_PHONE" IS '家庭电话';
+            COMMENT ON COLUMN "Y9_ORG_PERSON_EXT"."ID_NUM" IS '证件号码';
+            COMMENT ON COLUMN "Y9_ORG_PERSON_EXT"."ID_TYPE" IS '证件类型';
+            COMMENT ON COLUMN "Y9_ORG_PERSON_EXT"."MARITAL_STATUS" IS '婚姻状况';
+            COMMENT ON COLUMN "Y9_ORG_PERSON_EXT"."NAME" IS '登录名，拥于查找';
+            COMMENT ON COLUMN "Y9_ORG_PERSON_EXT"."PHOTO" IS '照片';
+            COMMENT ON COLUMN "Y9_ORG_PERSON_EXT"."POLITICAL_STATUS" IS '政治面貌';
+            COMMENT ON COLUMN "Y9_ORG_PERSON_EXT"."PROFESSIONAL" IS '专业';
+            COMMENT ON COLUMN "Y9_ORG_PERSON_EXT"."PROVINCE" IS '人员籍贯';
+            COMMENT ON COLUMN "Y9_ORG_PERSON_EXT"."SIGN" IS '签名';
+            COMMENT ON COLUMN "Y9_ORG_PERSON_EXT"."WORK_TIME" IS '入职时间';
+        </sql>
     </changeSet>
     <changeSet id="1697701085071-23" author="shidaobang">
         <preConditions onFail="MARK_RAN">
