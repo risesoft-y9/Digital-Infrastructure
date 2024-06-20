@@ -8,7 +8,9 @@
     <img src="https://img.shields.io/badge/Spring%20Boot-2.7-blue.svg">
     <img alt="logo" src="https://img.shields.io/badge/Vue-3.3-red.svg">
     <img alt="" src="https://img.shields.io/badge/JDK-11-green.svg">
-    <a href="https://gitee.com/risesoft-y9/y9-core/blob/master/LICENSE"><img src="https://img.shields.io/badge/license-GPL3-blue.svg"></a>
+    <a href="https://gitee.com/risesoft-y9/y9-core/blob/master/LICENSE">
+    <img src="https://img.shields.io/badge/license-GPL3-blue.svg"></a>
+<img src="https://img.shields.io/badge/total%20lines-788.9k-blue.svg">
 </p>
 
 ## 简介
