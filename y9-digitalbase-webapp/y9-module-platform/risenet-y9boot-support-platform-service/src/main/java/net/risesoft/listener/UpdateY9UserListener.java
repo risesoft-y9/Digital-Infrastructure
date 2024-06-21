@@ -82,7 +82,7 @@ public class UpdateY9UserListener {
         y9User.setCaid(null);
         y9User.setWeixinId(null);
         y9User.setGuidPath(y9Manager.getGuidPath());
-        y9User.setOrderedPath(null);
+        y9User.setOrderedPath(y9Manager.getOrderedPath());
         y9User.setDn(y9Manager.getDn());
         y9User.setManagerLevel(y9Manager.getManagerLevel());
 
@@ -163,7 +163,7 @@ public class UpdateY9UserListener {
         y9User.setCaid(null);
         y9User.setWeixinId(null);
         y9User.setGuidPath(y9Manager.getGuidPath());
-        y9User.setOrderedPath(null);
+        y9User.setOrderedPath(y9Manager.getOrderedPath());
         y9User.setDn(y9Manager.getDn());
         y9User.setManagerLevel(y9Manager.getManagerLevel());
 
