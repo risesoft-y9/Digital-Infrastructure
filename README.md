@@ -233,13 +233,23 @@ webapp -- 系统公共模块
 >
 > 安全审计员：auditManager   密码：Risesoft@2024
 >
-> 说明：输入登录名后，请选择"测试"租户，如：systemManager@测试，再输入密码进行登录
+> **<p style="color:#1e70bf">说明：输入登录名后，请选择"测试"租户，如：systemManager@测试，再输入密码进行登录</p>**
 
 ## 私有化部署
 
 地址：<a href="https://test.youshengyun.com/y9vue-code/" target="_blank">https://test.youshengyun.com/y9vue-code/</a>
-
 > 包含数字底座使用中间件的安装教程、数字底座重要配置讲解，进行本地化部署务必要浏览该网站，会少走弯路。
+
+> **系统管理员：systemManager** 
+> 负责系统的配置和组织人员的管理，包括控制台、组织架构、组织岗位、应用系统管理、应用角色管理、应用资源管理、菜单管理、字典表管理、图标库管理等。
+> 
+> **安全保密员：securityManager**
+> 负责权限管理和子域三员管理（部门三员管理）以及查看安全审计员的日志和普通用户的日志。
+> 
+> **安全审计员：auditManager**
+> 负责审查系统管理员的日志和安全保密员的日志
+> 
+
 
 ## 文档专区
 
