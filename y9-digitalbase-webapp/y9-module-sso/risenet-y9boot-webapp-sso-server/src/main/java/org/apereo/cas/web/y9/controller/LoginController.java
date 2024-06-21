@@ -20,9 +20,11 @@ import org.apereo.cas.ticket.ServiceTicket;
 import org.apereo.cas.ticket.TicketGrantingTicket;
 import org.apereo.cas.web.cookie.CasCookieBuilder;
 import org.apereo.cas.web.y9.service.Y9UserService;
+import org.apereo.cas.web.y9.util.Y9Context;
 import org.apereo.cas.web.y9.util.Y9MessageDigest;
 import org.apereo.cas.web.y9.util.common.Base64Util;
 import org.apereo.cas.web.y9.util.common.CheckPassWord;
+import org.apereo.cas.web.y9.util.common.RSAUtil;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -71,41 +73,31 @@ public class LoginController {
     public Map<String, Object> checkSsoLoginInfo(String tenantShortName, String username, String password,
         String pwdEcodeType, String loginType, final HttpServletRequest request, final HttpServletResponse response) {
         Map<String, Object> map = new HashMap<String, Object>();
-        boolean validation = false;
         try {
             username = Base64Util.decode(username, "Unicode");
-            if (StringUtils.isBlank(pwdEcodeType) || !"SHA1".equals(pwdEcodeType)) {
-                password = Base64Util.decode(password, "Unicode");
-                // password = Y9MessageDigest.hashpw(password);
+            if (StringUtils.isNotBlank(pwdEcodeType)) {
+                String privateKey = Y9Context.getProperty("y9.login.encryptionRsaPrivateKey");
+                // Object obj = redisTemplate.opsForValue().get(pwdEcodeType);
+                password = RSAUtil.privateDecrypt(password, privateKey);
             }
+            password = Base64Util.decode(password, "Unicode");
             if (username.contains("&")) {
-                username = username.substring(username.indexOf("&") + 1, username.length());
-                tenantShortName = "isv";
+                username = username.substring(username.indexOf("&") + 1);
+                tenantShortName = "operation";
             }
-            String encryptedPassword = password;
             List<Y9User> users = null;
             if ("mobile".equals(loginType)) {
                 users = y9UserService.findByTenantShortNameAndMobile(tenantShortName, username);
             } else {
                 users = y9UserService.findByTenantShortNameAndLoginName(tenantShortName, username);
             }
+
             if (users.isEmpty()) {
                 map.put("msg", "该账号不存在，请检查账号输入是否正确！");
                 map.put("success", false);
                 return map;
             }
-            // 检验该账号是否已经被锁定
-            // checkLoginThrottle(map, username);
-            if (!users.isEmpty()) {
-                validation = true;
-            }
 
-            if (!validation) {
-                // processLoginThrottle(map, username);
-                map.put("success", false);
-                map.put("msg", "登录名或者密码输入错误!");
-                return map;
-            }
             Y9User y9User = users.get(0);
             String hashed = y9User.getPassword();
             if (!Y9MessageDigest.bcryptMatch(password, hashed)) {
