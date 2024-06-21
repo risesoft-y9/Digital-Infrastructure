@@ -1,6 +1,7 @@
 package org.apereo.cas.web.y9.controller;
 
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -75,6 +76,7 @@ public class TenantController {
         try {
             loginName = XSSCheckUtil.filter(loginName);
             List<Y9User> y9users = y9UserService.findByOriginalAndLoginNameStartingWith(Boolean.TRUE, loginName);
+            y9users.sort(Comparator.comparing(Y9User::getOrderedPath, Comparator.nullsFirst(Comparator.naturalOrder())));
             if (!y9users.isEmpty()) {
                 for (Y9User user : y9users) {
                     Map<String, Object> mapTemp = new HashMap<String, Object>();

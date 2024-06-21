@@ -290,8 +290,8 @@ public class CompositeOrgBaseManagerImpl implements CompositeOrgBaseManager {
             // 遍历开始时，一定是manager，尾部的逗号不用加
             sb.insert(0, String.format("%05d", y9OrgBase.getTabIndex()));
 
-            Y9Manager person = (Y9Manager)y9OrgBase;
-            Y9OrgBase parent = this.getOrgUnitAsParent(person.getParentId());
+            Y9Manager y9Manager = (Y9Manager)y9OrgBase;
+            Y9OrgBase parent = this.getOrgUnitAsParent(y9Manager.getParentId());
             buildOrderedPath(sb, parent);
         } else if (OrgTypeEnum.DEPARTMENT.equals(y9OrgBase.getOrgType())) {
             sb.insert(0, String.format("%05d", y9OrgBase.getTabIndex()) + ",");

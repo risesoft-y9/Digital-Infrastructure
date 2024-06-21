@@ -299,13 +299,13 @@ public class InitTenantDataServiceImpl implements InitTenantDataService {
     @Override
     @Transactional(readOnly = false, propagation = Propagation.REQUIRES_NEW)
     public void initAll(String tenantId) {
-        // 租户的示例数据
-        // FIXME 是否需要？
-        this.initOrg();
-
         // 租户必要的数据
         this.initOptionClass();
         this.initManagers();
+
+        // 租户的示例数据
+        // FIXME 是否需要？
+        this.initOrg();
     }
 
     @Override
