@@ -47,7 +47,7 @@ public class Tenant implements Serializable {
     /** 是否启用 */
     private boolean enabled;
 
-    /** 租户类型： 0=用户，2=开发商，1=运维团队，3=普通租户 */
+    /** 租户类型： 3=普通租户 */
     private TenantTypeEnum tenantType;
 
     /** 排序号 */
