@@ -1,14 +1,7 @@
 package net.risesoft.api.idcode;
 
-import lombok.RequiredArgsConstructor;
-import net.risesoft.entity.Y9Person;
-import net.risesoft.entity.idcode.Y9IdCode;
-import net.risesoft.model.platform.Person;
-import net.risesoft.pojo.Y9Result;
-import net.risesoft.service.idcode.Y9IdCodeService;
-import net.risesoft.service.org.Y9PersonService;
-import net.risesoft.y9.Y9LoginUserHolder;
-import net.risesoft.y9.util.Y9ModelConvertUtil;
+import jakarta.validation.constraints.NotBlank;
+
 import org.springframework.context.annotation.Primary;
 import org.springframework.http.MediaType;
 import org.springframework.validation.annotation.Validated;
@@ -17,7 +10,16 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import javax.validation.constraints.NotBlank;
+import lombok.RequiredArgsConstructor;
+
+import net.risesoft.entity.Y9Person;
+import net.risesoft.entity.idcode.Y9IdCode;
+import net.risesoft.model.platform.Person;
+import net.risesoft.pojo.Y9Result;
+import net.risesoft.service.idcode.Y9IdCodeService;
+import net.risesoft.service.org.Y9PersonService;
+import net.risesoft.y9.Y9LoginUserHolder;
+import net.risesoft.y9.util.Y9ModelConvertUtil;
 
 /**
  * 统一码服务组件
