@@ -159,7 +159,7 @@ public class Y9DataSourceManagerImpl implements Y9DataSourceManager {
         }
 
         if (DbType.dm.equals(dbType)) {
-            url = dds.getUrl();
+            url = dds.getJdbcUrl();
             String upperCaseDbName = dbName.toUpperCase();
             username = upperCaseDbName;
             password = dds.getPassword();

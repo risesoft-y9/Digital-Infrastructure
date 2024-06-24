@@ -172,6 +172,11 @@
             <artifactId>shedlock-provider-jdbc-template</artifactId>
         </dependency>
 
+        <dependency>
+            <groupId>com.google.guava</groupId>
+            <artifactId>guava</artifactId>
+        </dependency>
+
     </dependencies>
 
     <build>
