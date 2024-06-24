@@ -138,25 +138,25 @@ webapp -- 系统公共模块
 
 <div><img src="https://vue.youshengyun.com/files/img/architecture1.png"><div/>
 
-1. **数字底座围绕组织身份、应用资源、安全防御、工具支撑四个方向构建**
-2. **数字底座的操作逻辑需要第三方应用接入单点登录，导入组织架构，按照岗位将人员和应用资源进行绑定**
-3. **数字底座基于三员管理，支持云租户模式，主要面向大规模分布式的数字化基础建设**
+1. 数字底座围绕组织身份、应用资源、安全防御、工具支撑四个方向构建
+2. 数字底座的操作逻辑需要第三方应用接入单点登录，导入组织架构，按照岗位将人员和应用资源进行绑定
+3. 数字底座基于三员管理，支持云租户模式，主要面向大规模分布式的数字化基础建设
 
 ## 功能架构图
 
 <div><img src="https://vue.youshengyun.com/files/img/function1.png"><div/>
 
-1. **数字底座的功能分布按照三员管理的逻辑进行划分**
-2. **数字底座内置单点登录（统一身份认证）模块，实际使用也可以对接其他单点登录系统**
+1. 数字底座的功能分布按照三员管理的逻辑进行划分
+2. 数字底座内置单点登录（统一身份认证）模块，实际使用也可以对接其他单点登录系统
 
 ## 部署架构图
 
 <div><img src="https://vue.youshengyun.com/files/img/deploy1.png"><div/>
 
-1. **数字底座支持以微服务、分布式的方式进行平行扩展**
-2. **数字底座支持容器化方式部署**
-3. **数字底座中需要单独部署单点登录服务器**
-3. **数字底座单体在信创环境中，4核8GB内存的虚拟机可以轻松应对2000用户**
+1. 数字底座支持以微服务、分布式的方式进行平行扩展
+2. 数字底座支持容器化方式部署
+3. 数字底座中需要单独部署单点登录服务器
+3. 数字底座单体在信创环境中，4核8GB内存的虚拟机可以轻松应对2000用户
 
 ## 后端技术选型
 
@@ -403,7 +403,7 @@ webapp -- 系统公共模块
 <div><img src="https://vue.youshengyun.com/files/img/youjianxiangqing.png"><div/>
 <div><img src="https://vue.youshengyun.com/files/img/tongxunlu.png"><div/>
 
-## 助力政企数字化转型
+## 数字化解决方案
 
 #### 三座大山
 
@@ -412,6 +412,13 @@ webapp -- 系统公共模块
 #### 七步走
 
 <div><img src="https://vue.youshengyun.com/files/img/qibuzou.png"><div/>
+#### 三模态
+
+<div><img src="https://vue.youshengyun.com/files/img/smt.png"><div/>
+
+#### 信创安全
+
+<div><img src="https://vue.youshengyun.com/files/img/xcyaq.png"><div/>
 
 ## 赞助与支持
 
