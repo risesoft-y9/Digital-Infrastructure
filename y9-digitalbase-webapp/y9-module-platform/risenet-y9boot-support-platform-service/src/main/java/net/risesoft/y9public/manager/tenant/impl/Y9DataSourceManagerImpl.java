@@ -163,7 +163,7 @@ public class Y9DataSourceManagerImpl implements Y9DataSourceManager {
         }
 
         if (DbType.postgresql.name().equals(dbType)) {
-            url = replaceDatabaseNameInJdbcUrl(dds.getUrl(), dbName);
+            url = replaceDatabaseNameInJdbcUrl(dds.getJdbcUrl(), dbName);
             username = dds.getUsername();
             password = dds.getPassword();
             dbName = dbName.toLowerCase();
@@ -270,7 +270,7 @@ public class Y9DataSourceManagerImpl implements Y9DataSourceManager {
                     String username = dbName.toUpperCase();
                     String sql1 = "DROP SCHEMA " + username + " CASCADE;";
                     jdbcTemplate4Public.execute(sql1);
-                } else if (DbType.postgresql.name().equals(dds.getDbType())) {
+                } else if (DbType.postgresql.name().equals(dbType)) {
                     String username = dbName.toUpperCase();
                     String sql1 = "DROP DATABASE IF EXISTS " + username;
                     jdbcTemplate4Public.execute(sql1);

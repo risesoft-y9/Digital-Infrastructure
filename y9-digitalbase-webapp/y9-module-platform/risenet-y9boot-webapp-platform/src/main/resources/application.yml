@@ -92,7 +92,7 @@ spring:
             hibernate:
                 dialect: org.hibernate.dialect.MySQL8Dialect
                 hbm2ddl:
-                    auto: update
+                    auto: none
                 jdbc:
                     batchSize: 100
                 showSql: true

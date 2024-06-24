@@ -1,20 +1,22 @@
 package net.risesoft.entity.idcode;
 
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import java.io.Serializable;
+
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.Id;
+import jakarta.persistence.Table;
+
 import org.hibernate.annotations.Comment;
 import org.hibernate.annotations.DynamicUpdate;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Id;
-import javax.persistence.Table;
-import java.io.Serializable;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
 @Entity
 @Table(name = "Y9_ORG_IDCODE")
 @DynamicUpdate
-@org.hibernate.annotations.Table(comment = "统一码信息表", appliesTo = "Y9_ORG_IDCODE")
+@Comment("统一码信息表")
 @NoArgsConstructor
 @Data
 public class Y9IdCode implements Serializable {
