@@ -76,9 +76,6 @@ public class Y9DataSourceManagerImpl implements Y9DataSourceManager {
     @Override
     public String buildDataSourceName(String shortName, TenantTypeEnum tenantType, String systemName) {
         String dataSourceName = shortName;
-        if (Objects.equals(tenantType, TenantTypeEnum.ISV)) {
-            dataSourceName = "isv_" + shortName;
-        }
         if (Objects.equals(tenantType, TenantTypeEnum.TENANT) && !"default".equals(shortName)) {
             dataSourceName = "yt_" + generateRandomString() + "_" + shortName;
         }
