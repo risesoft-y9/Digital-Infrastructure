@@ -10,7 +10,7 @@
     <img alt="" src="https://img.shields.io/badge/JDK-11-green.svg">
     <a href="https://gitee.com/risesoft-y9/y9-core/blob/master/LICENSE">
     <img src="https://img.shields.io/badge/license-GPL3-blue.svg"></a>
-<img src="https://img.shields.io/badge/total%20lines-788.9k-blue.svg">
+    <img src="https://img.shields.io/badge/total%20lines-810.2k-blue.svg">
 </p>
 
 ## 简介
@@ -139,15 +139,54 @@ webapp -- 系统公共模块
 <div><img src="https://vue.youshengyun.com/files/img/architecture1.png"><div/>
 
 
+
+1. 数字底座围绕组织身份、应用资源、安全防御、工具支撑四个方向构建
+
+   
+
+2. 数字底座的操作逻辑需要第三方应用接入单点登录，导入组织架构，按照岗位将人员和应用资源进行绑定
+
+   
+
+3. 数字底座基于三员管理，支持云租户模式，主要面向大规模分布式的数字化基础建设
+
+   
+
 ## 功能架构图
 
 <div><img src="https://vue.youshengyun.com/files/img/function1.png"><div/>
+
+
+
+1. 数字底座的功能分布按照三员管理的逻辑进行划分
+
+   
+
+2. 数字底座内置单点登录（统一身份认证）模块，实际使用也可以对接其他单点登录系统
+
+   
 
 ## 部署架构图
 
 <div><img src="https://vue.youshengyun.com/files/img/deploy1.png"><div/>
 
 
+
+1. 数字底座支持以微服务、分布式的方式进行平行扩展
+
+   
+
+2. 数字底座支持容器化方式部署
+
+   
+
+3. 数字底座中需要单独部署单点登录服务器
+
+   
+
+4. 数字底座单体在信创环境中，4核8GB内存的虚拟机可以轻松应对2000用户
+
+   
 
 ## 后端技术选型
 
@@ -202,7 +241,7 @@ webapp -- 系统公共模块
 
 ## 数字底座专利
 
-| 序号 | 专利号           | 专利名称 |
+| 序&nbsp;号 | 专利号           | 专利名称 |
 | ----- | ---------------- | ----------------------- |
 | 1    | ZL202111207338.0 | 《基于集合运算的资源授权方法及资源授权系统》       |
 | 2    | ZL202210702228.X | 《一种静默化数据处理方法及处理系统》             |
@@ -210,7 +249,7 @@ webapp -- 系统公共模块
 | 4    | ZL202310238451.8 | 《一种基于前后端分离架构的前端双随机多态混淆方法》 |
 | 5    | ZL202310238534.7 | 《多租户模式下数字底座子域三员架构模型的实现方法》 |
 
-## 数字底座信创
+## 信创兼容适配
 
 | **序号** | 类型     | 对象                       |
 | :------- | -------- | -------------------------- |
@@ -227,19 +266,29 @@ webapp -- 系统公共模块
 
 > 演示账号：
 >
-> 系统管理员：systemManager  密码：Risesoft@2022
+> 系统管理员：systemManager  密码：Risesoft@2024
 >
-> 安全保密员：securityManager  密码：Risesoft@2022
+> 安全保密员：securityManager  密码：Risesoft@2024
 >
-> 安全审计员：auditManager   密码：Risesoft@2022
+> 安全审计员：auditManager   密码：Risesoft@2024
 >
-> 说明：输入登录名后，请选择"北京有生博大软件股份有限公司"租户，再输入密码进行登录
+> **<p style="color:#1e70bf">说明：输入登录名后，请选择"测试"租户，如：systemManager@测试，再输入密码进行登录</p>**
 
 ## 私有化部署
 
 地址：<a href="https://test.youshengyun.com/y9vue-code/" target="_blank">https://test.youshengyun.com/y9vue-code/</a>
-
 > 包含数字底座使用中间件的安装教程、数字底座重要配置讲解，进行本地化部署务必要浏览该网站，会少走弯路。
+
+> **系统管理员：systemManager** 
+> 负责系统的配置和组织人员的管理，包括控制台、组织架构、组织岗位、应用系统管理、应用角色管理、应用资源管理、菜单管理、字典表管理、图标库管理等。
+> 
+> **安全保密员：securityManager**
+> 负责权限管理和子域三员管理（部门三员管理）以及查看安全审计员的日志和普通用户的日志。
+> 
+> **安全审计员：auditManager**
+> 负责审查系统管理员的日志和安全保密员的日志
+> 
+
 
 ## 文档专区
 
@@ -384,7 +433,7 @@ webapp -- 系统公共模块
 <div><img src="https://vue.youshengyun.com/files/img/youjianxiangqing.png"><div/>
 <div><img src="https://vue.youshengyun.com/files/img/tongxunlu.png"><div/>
 
-## 助力政企数字化转型
+## 数字化解决方案
 
 #### 三座大山
 
@@ -393,6 +442,22 @@ webapp -- 系统公共模块
 #### 七步走
 
 <div><img src="https://vue.youshengyun.com/files/img/qibuzou.png"><div/>
+
+#### 三模态
+
+<div><img src="https://vue.youshengyun.com/files/img/smt.png"><div/>
+
+#### 信创安全
+
+<div><img src="https://vue.youshengyun.com/files/img/xcyaq.png"><div/>
+
+## 同构开源项目
+
+
+| 序&nbsp;号 | 项&nbsp;目&nbsp;名&nbsp;称&nbsp; | 项目介绍                                                     | 地&nbsp;址                                            |
+| :--------- | -------------------------------- | ------------------------------------------------------------ | ----------------------------------------------------- |
+| 1          | 工作流引擎                       | 工作流引擎对内提供单位/机关流程管理规则和内部业务流程的数字化落地实践；对外提供自动化地第三方业务驱动、接口接入和算法单元驱动能力；工作流引擎在提供底层驱动引擎的同时对全局透明监控、安全防御和国产化特色功能进行充分考虑，是内部流程管理和业务算法驱动的不二之选。 | [码云地址](https://gitee.com/risesoft-y9/y9-flowable) |
+| 2          | 数据流引擎                       | 数据流引擎是一款面向数据集成、数据同步、数据交换、数据共享、任务配置、任务调度的底层数据驱动引擎。数据流引擎采用管执分离、多流层、插件库等体系应对大规模数据任务、数据高频上报、数据高频采集、异构数据兼容的实际数据问题。 | [码云地址](https://gitee.com/risesoft-y9/y9-dataflow) |
 
 ## 赞助与支持
 
@@ -410,6 +475,10 @@ webapp -- 系统公共模块
 
 > 数字底座已经全面接入统一标识码（MA码），具体使用说明请查看：<a href="https://gitee.com/risesoft-y9/y9-core/tree/main/y9-digitalbase-idcode" target="_blank">https://gitee.com/risesoft-y9/y9-core/tree/main/y9-digitalbase-idcode</a>
 >
+
+### 中国城市发展研究会
+
+官网：<a href="https://www.china-cfh.com/" target="_blank">https://www.china-cfh.com/</a>
 
 ## 咨询与合作
 
