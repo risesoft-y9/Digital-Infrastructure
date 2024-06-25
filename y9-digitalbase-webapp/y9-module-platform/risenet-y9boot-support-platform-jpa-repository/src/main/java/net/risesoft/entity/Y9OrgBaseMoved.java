@@ -8,6 +8,7 @@ import jakarta.persistence.Table;
 
 import org.hibernate.annotations.ColumnDefault;
 import org.hibernate.annotations.Comment;
+import org.hibernate.annotations.DynamicUpdate;
 
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -15,7 +16,6 @@ import lombok.NoArgsConstructor;
 import net.risesoft.base.BaseEntity;
 import net.risesoft.enums.platform.OrgTypeEnum;
 import net.risesoft.persistence.EnumConverter;
-import org.hibernate.annotations.DynamicUpdate;
 
 /**
  * 移动的组织表

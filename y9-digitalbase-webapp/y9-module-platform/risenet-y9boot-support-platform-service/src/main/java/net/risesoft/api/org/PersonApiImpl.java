@@ -166,7 +166,7 @@ public class PersonApiImpl implements PersonApi {
      */
     @Override
     public Y9Result<Person> getByCaId(@RequestParam("tenantId") @NotBlank String tenantId,
-                                           @RequestParam("caId") @NotBlank String caId) {
+        @RequestParam("caId") @NotBlank String caId) {
         Y9LoginUserHolder.setTenantId(tenantId);
 
         Y9Person y9Person = y9PersonService.findByCaId(caId).orElse(null);

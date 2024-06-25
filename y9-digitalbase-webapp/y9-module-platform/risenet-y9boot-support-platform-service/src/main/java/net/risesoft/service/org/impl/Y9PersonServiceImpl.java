@@ -334,7 +334,7 @@ public class Y9PersonServiceImpl implements Y9PersonService {
         if (StringUtils.isNotBlank(oldPassword)) {
             // 兼容旧接口，无 oldPassword
             Y9Assert.isTrue(Y9MessageDigest.bcryptMatch(oldPassword, person.getPassword()),
-                    OrgUnitErrorCodeEnum.OLD_PASSWORD_IS_INCORRECT);
+                OrgUnitErrorCodeEnum.OLD_PASSWORD_IS_INCORRECT);
         }
 
         Y9Person updatedPerson = Y9ModelConvertUtil.convert(person, Y9Person.class);
@@ -368,21 +368,21 @@ public class Y9PersonServiceImpl implements Y9PersonService {
     @Override
     public Page<Y9Person> pageByNameLike(String name, Y9PageQuery pageQuery) {
         Pageable pageable =
-                PageRequest.of(pageQuery.getPage4Db(), pageQuery.getSize(), Sort.by(Sort.Direction.DESC, "guidPath"));
+            PageRequest.of(pageQuery.getPage4Db(), pageQuery.getSize(), Sort.by(Sort.Direction.DESC, "guidPath"));
         return y9PersonRepository.findByDisabledAndNameContaining(Boolean.FALSE, name, pageable);
     }
 
     @Override
     public Page<Y9Person> pageByParentId(String parentId, boolean disabled, String name, Y9PageQuery pageQuery) {
         Pageable pageable =
-                PageRequest.of(pageQuery.getPage4Db(), pageQuery.getSize(), Sort.by(Sort.Direction.DESC, "tabIndex"));
+            PageRequest.of(pageQuery.getPage4Db(), pageQuery.getSize(), Sort.by(Sort.Direction.DESC, "tabIndex"));
         return y9PersonRepository.findByParentIdAndDisabledAndNameContaining(parentId, disabled, name, pageable);
     }
 
     @Override
     public Page<Y9Person> pageByParentId(String parentId, boolean disabled, Y9PageQuery pageQuery) {
         Pageable pageable =
-                PageRequest.of(pageQuery.getPage4Db(), pageQuery.getSize(), Sort.by(Sort.Direction.DESC, "tabIndex"));
+            PageRequest.of(pageQuery.getPage4Db(), pageQuery.getSize(), Sort.by(Sort.Direction.DESC, "tabIndex"));
         return y9PersonRepository.findByDisabledAndParentId(disabled, parentId, pageable);
     }
 

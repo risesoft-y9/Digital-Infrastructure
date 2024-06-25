@@ -22,8 +22,8 @@ import net.risesoft.base.BaseEntity;
 @Entity
 @Table(name = "Y9_ORG_SETTING")
 @DynamicUpdate
-@Comment( "设置表")
-@NoArgsConstructor 
+@Comment("设置表")
+@NoArgsConstructor
 @Data
 public class Y9Setting extends BaseEntity {
 

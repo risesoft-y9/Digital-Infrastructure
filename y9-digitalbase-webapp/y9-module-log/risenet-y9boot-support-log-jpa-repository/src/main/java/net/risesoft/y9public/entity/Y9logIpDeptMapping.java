@@ -20,7 +20,7 @@ import lombok.NoArgsConstructor;
  */
 @Entity
 @Table(name = "Y9_LOG_IP_DEPT_MAPPING")
-@Comment(  "人员登录部门配置记录表" )
+@Comment("人员登录部门配置记录表")
 @NoArgsConstructor
 @Data
 public class Y9logIpDeptMapping implements Serializable {

@@ -5,10 +5,10 @@ import java.util.List;
 
 import org.springframework.beans.BeanUtils;
 
-import net.risesoft.y9public.entity.Y9logAccessLog;
-import net.risesoft.y9public.entity.Y9logUserLoginInfo;
 import net.risesoft.model.log.AccessLog;
 import net.risesoft.model.userlogininfo.LoginInfo;
+import net.risesoft.y9public.entity.Y9logAccessLog;
+import net.risesoft.y9public.entity.Y9logUserLoginInfo;
 
 /**
  * 日志转换工具类

@@ -139,7 +139,6 @@ public class Y9PositionManagerImpl implements Y9PositionManager {
                 updatedY9Position.setGuidPath(Y9OrgUtil.buildGuidPath(parent.getGuidPath(), updatedY9Position.getId()));
                 updatedY9Position
                     .setDn(Y9OrgUtil.buildDn(OrgTypeEnum.POSITION, updatedY9Position.getName(), parent.getDn()));
-                
 
                 final Y9Position savedY9Position = save(updatedY9Position);
 

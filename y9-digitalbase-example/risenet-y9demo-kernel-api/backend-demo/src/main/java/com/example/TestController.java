@@ -44,9 +44,9 @@ public class TestController {
             organizationApi.listByType(Y9LoginUserHolder.getTenantId(), false).getData();
         for (Organization organization : organizationList) {
             // 组织机构树第二层
-            List<OrgUnit> orgUnitList1 =
-                orgUnitApi.getSubTree(Y9LoginUserHolder.getTenantId(), organization.getId(), OrgTreeTypeEnum.TREE_TYPE_ORG)
-                    .getData();
+            List<OrgUnit> orgUnitList1 = orgUnitApi
+                .getSubTree(Y9LoginUserHolder.getTenantId(), organization.getId(), OrgTreeTypeEnum.TREE_TYPE_ORG)
+                .getData();
             // 组织岗位树第二层
             List<OrgUnit> orgUnitList2 = orgUnitApi
                 .getSubTree(Y9LoginUserHolder.getTenantId(), organization.getId(), OrgTreeTypeEnum.TREE_TYPE_POSITION)

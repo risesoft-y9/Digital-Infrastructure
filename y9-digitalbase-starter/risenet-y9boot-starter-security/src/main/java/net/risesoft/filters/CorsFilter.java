@@ -40,7 +40,7 @@ public class CorsFilter extends OncePerRequestFilter {
             y9CorsProperties = corsProperties;
             applyLatestCorsProperties(corsConfiguration, corsProperties);
         }
-        
+
         boolean isValid = this.processor.processRequest(corsConfiguration, request, response);
         if (!isValid || CorsUtils.isPreFlightRequest(request)) {
             return;

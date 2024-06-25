@@ -1,5 +1,14 @@
 package net.risesoft.util;
 
+import java.io.File;
+import java.io.IOException;
+import java.io.UnsupportedEncodingException;
+import java.nio.charset.Charset;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+
 import org.apache.http.Header;
 import org.apache.http.HttpEntity;
 import org.apache.http.NameValuePair;
@@ -16,15 +25,6 @@ import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClients;
 import org.apache.http.message.BasicNameValuePair;
 import org.apache.http.util.EntityUtils;
-
-import java.io.File;
-import java.io.IOException;
-import java.io.UnsupportedEncodingException;
-import java.nio.charset.Charset;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
 
 /**
  * http处理工具
@@ -184,7 +184,8 @@ public class HttpUtil {
     /**
      * 发送 http post 请求，支持文件上传
      */
-    public static String httpPostFormMultipart(String url, Map<String, Object> params, Map<String, File> files, Map<String, String> headers, String encode) {
+    public static String httpPostFormMultipart(String url, Map<String, Object> params, Map<String, File> files,
+        Map<String, String> headers, String encode) {
         String content = null;
         if (encode == null) {
             encode = "utf-8";
@@ -192,7 +193,7 @@ public class HttpUtil {
         CloseableHttpClient closeableHttpClient = HttpClients.createDefault();
         HttpPost httpost = new HttpPost(url);
 
-        //设置header
+        // 设置header
         if (headers != null && headers.size() > 0) {
             for (Map.Entry<String, String> entry : headers.entrySet()) {
                 httpost.setHeader(entry.getKey(), entry.getValue());
@@ -203,7 +204,7 @@ public class HttpUtil {
         mEntityBuilder.setCharset(Charset.forName(encode));
 
         // 普通参数
-        ContentType contentType = ContentType.create("text/plain", Charset.forName(encode));//解决中文乱码
+        ContentType contentType = ContentType.create("text/plain", Charset.forName(encode));// 解决中文乱码
         if (params != null && params.size() > 0) {
             Set<String> keySet = params.keySet();
             for (String key : keySet) {
@@ -212,12 +213,12 @@ public class HttpUtil {
                 mEntityBuilder.addTextBody(key, params.get(key).toString(), contentType);
             }
         }
-        //二进制参数
+        // 二进制参数
         if (files != null && files.size() > 0) {
             Set<String> keySet = files.keySet();
             for (String key : keySet) {
                 File file = files.get(key);
-                ContentType contentType1 = ContentType.create("application/octet-stream", Charset.forName(encode));//解决中文乱码
+                ContentType contentType1 = ContentType.create("application/octet-stream", Charset.forName(encode));// 解决中文乱码
                 mEntityBuilder.addBinaryBody(key, file, contentType1, file.getName());
             }
         }
@@ -237,7 +238,7 @@ public class HttpUtil {
                 e.printStackTrace();
             }
         }
-        try {  //关闭连接、释放资源
+        try { // 关闭连接、释放资源
             closeableHttpClient.close();
         } catch (IOException e) {
             e.printStackTrace();

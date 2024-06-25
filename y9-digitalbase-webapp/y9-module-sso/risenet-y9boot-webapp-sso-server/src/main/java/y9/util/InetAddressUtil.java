@@ -37,7 +37,7 @@ public class InetAddressUtil {
     public static Properties properties = new Properties();
 
     public static String ips = "192.168.x.x,10.161.x.x,10.1.x.x,172.20.x.x";
-    
+
     /*
      * A类网络 ip地址范围:10.0.0.0~10.255.255.255     ip地址数量:16777216    网络数:1个A类网络
      * B类网络 ip地址范围:172.16.0.0~172.31.255.255   ip地址数量:1048576     网络数:16个B类网络

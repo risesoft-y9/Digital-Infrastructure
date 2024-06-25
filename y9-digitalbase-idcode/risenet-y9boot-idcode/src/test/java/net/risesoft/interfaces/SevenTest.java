@@ -1,11 +1,7 @@
 package net.risesoft.interfaces;
 
-import lombok.extern.slf4j.Slf4j;
-import net.risesoft.model.AuthenPicResult;
-import net.risesoft.model.ExamineResult;
-import net.risesoft.model.OrganUnit;
-import net.risesoft.model.Result;
-import net.risesoft.util.ConfigReader;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.MethodOrderer;
@@ -14,7 +10,13 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestMethodOrder;
 import org.springframework.boot.test.context.SpringBootTest;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
+import lombok.extern.slf4j.Slf4j;
+
+import net.risesoft.model.AuthenPicResult;
+import net.risesoft.model.ExamineResult;
+import net.risesoft.model.OrganUnit;
+import net.risesoft.model.Result;
+import net.risesoft.util.ConfigReader;
 
 @SpringBootTest
 @Slf4j

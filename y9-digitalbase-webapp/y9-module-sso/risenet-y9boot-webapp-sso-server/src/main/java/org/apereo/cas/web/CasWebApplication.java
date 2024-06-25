@@ -22,6 +22,7 @@ import org.springframework.transaction.annotation.EnableTransactionManagement;
 
 import lombok.NoArgsConstructor;
 import lombok.val;
+
 import y9.Y9Config;
 
 /**
@@ -31,12 +32,9 @@ import y9.Y9Config;
  * @since 5.0.0
  */
 @EnableDiscoveryClient
-@SpringBootApplication(proxyBeanMethods = false, exclude = {
-    DataSourceAutoConfiguration.class,
-    HibernateJpaAutoConfiguration.class,
-    MongoAutoConfiguration.class,
-    MongoDataAutoConfiguration.class
-})
+@SpringBootApplication(proxyBeanMethods = false,
+    exclude = {DataSourceAutoConfiguration.class, HibernateJpaAutoConfiguration.class, MongoAutoConfiguration.class,
+        MongoDataAutoConfiguration.class})
 @EnableConfigurationProperties(CasConfigurationProperties.class)
 @EnableAspectJAutoProxy(proxyTargetClass = false)
 @EnableTransactionManagement(proxyTargetClass = false)
@@ -51,25 +49,20 @@ public class CasWebApplication {
      */
     public static void main(final String[] args) {
         val applicationClasses = getApplicationSources(args);
-        new SpringApplicationBuilder()
-            .lazyInitialization(false)
-            .sources(applicationClasses.toArray(ArrayUtils.EMPTY_CLASS_ARRAY))
-            .banner(CasBanner.getInstance())
-            .web(WebApplicationType.SERVLET)
-            .logStartupInfo(true)
-            .applicationStartup(ApplicationUtils.getApplicationStartup())
-            .run(args);
+        new SpringApplicationBuilder().lazyInitialization(false)
+            .sources(applicationClasses.toArray(ArrayUtils.EMPTY_CLASS_ARRAY)).banner(CasBanner.getInstance())
+            .web(WebApplicationType.SERVLET).logStartupInfo(true)
+            .applicationStartup(ApplicationUtils.getApplicationStartup()).run(args);
     }
 
     protected static List<Class> getApplicationSources(final String[] args) {
         val applicationClasses = new ArrayList<Class>();
         applicationClasses.add(CasWebApplication.class);
-        applicationClasses.add(Y9Config.class); //y9 added
-        ApplicationUtils.getApplicationEntrypointInitializers()
-            .forEach(init -> {
-                init.initialize(args);
-                applicationClasses.addAll(init.getApplicationSources(args));
-            });
+        applicationClasses.add(Y9Config.class); // y9 added
+        ApplicationUtils.getApplicationEntrypointInitializers().forEach(init -> {
+            init.initialize(args);
+            applicationClasses.addAll(init.getApplicationSources(args));
+        });
         return applicationClasses;
     }
 

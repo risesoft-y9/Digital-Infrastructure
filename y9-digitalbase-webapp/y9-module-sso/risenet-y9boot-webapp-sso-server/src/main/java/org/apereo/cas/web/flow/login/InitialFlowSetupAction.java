@@ -1,5 +1,10 @@
 package org.apereo.cas.web.flow.login;
 
+import java.util.List;
+import java.util.Optional;
+import java.util.stream.Collectors;
+
+import org.apache.commons.lang3.StringUtils;
 import org.apereo.cas.authentication.Authentication;
 import org.apereo.cas.authentication.AuthenticationEventExecutionPlan;
 import org.apereo.cas.authentication.AuthenticationServiceSelectionPlan;
@@ -20,12 +25,6 @@ import org.apereo.cas.web.flow.SingleSignOnParticipationStrategy;
 import org.apereo.cas.web.flow.actions.BaseCasWebflowAction;
 import org.apereo.cas.web.support.ArgumentExtractor;
 import org.apereo.cas.web.support.WebUtils;
-
-import lombok.Getter;
-import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
-import lombok.val;
-import org.apache.commons.lang3.StringUtils;
 import org.jooq.lambda.Unchecked;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -34,18 +33,18 @@ import org.springframework.http.HttpStatus;
 import org.springframework.webflow.execution.Event;
 import org.springframework.webflow.execution.RequestContext;
 
-import java.util.List;
-import java.util.Optional;
-import java.util.stream.Collectors;
+import lombok.Getter;
+import lombok.RequiredArgsConstructor;
+import lombok.val;
+import lombok.extern.slf4j.Slf4j;
 
 /**
  * Class to automatically set the paths for the CookieGenerators.
  * <p>
- * Note: This is technically not thread-safe, but because its overriding with a
- * constant value it doesn't matter.
+ * Note: This is technically not thread-safe, but because its overriding with a constant value it doesn't matter.
  * <p>
- * Note: As of CAS 3.1, this is a required class that retrieves and exposes the
- * values in the two cookies for subclasses to use.
+ * Note: As of CAS 3.1, this is a required class that retrieves and exposes the values in the two cookies for subclasses
+ * to use.
  *
  * @author Scott Battaglia
  * @since 3.1
@@ -72,7 +71,7 @@ public class InitialFlowSetupAction extends BaseCasWebflowAction {
     private final SingleSignOnParticipationStrategy renewalStrategy;
 
     private final TicketRegistrySupport ticketRegistrySupport;
-    
+
     @Autowired
     @Qualifier("logoutManager")
     private LogoutManager logoutManager;// y9 add
@@ -120,7 +119,8 @@ public class InitialFlowSetupAction extends BaseCasWebflowAction {
         return null;
     }
 
-    protected void clearTicketGrantingCookieFromContext(final RequestContext context, final String ticketGrantingTicketId) {
+    protected void clearTicketGrantingCookieFromContext(final RequestContext context,
+        final String ticketGrantingTicketId) {
         val request = WebUtils.getHttpServletRequestFromExternalWebflowContext(context);
         val response = WebUtils.getHttpServletResponseFromExternalWebflowContext(context);
         ticketGrantingTicketCookieGenerator.removeAll(request, response);
@@ -142,37 +142,37 @@ public class InitialFlowSetupAction extends BaseCasWebflowAction {
         val service = WebUtils.getService(argumentExtractors, context);
         if (service != null) {
             LOGGER.debug("Placing service in context scope: [{}]", service.getId());
-            val selectedService = FunctionUtils.doUnchecked(() -> authenticationRequestServiceSelectionStrategies.resolveService(service));
+            val selectedService = FunctionUtils
+                .doUnchecked(() -> authenticationRequestServiceSelectionStrategies.resolveService(service));
             val registeredService = servicesManager.findServiceBy(selectedService);
             RegisteredServiceAccessStrategyUtils.ensureServiceAccessIsAllowed(service, registeredService);
-            if (registeredService != null && registeredService.getAccessStrategy().isServiceAccessAllowed(registeredService, selectedService)) {
+            if (registeredService != null
+                && registeredService.getAccessStrategy().isServiceAccessAllowed(registeredService, selectedService)) {
                 LOGGER.debug("Placing registered service [{}] with id [{}] in context scope",
-                    registeredService.getServiceId(),
-                    registeredService.getId());
+                    registeredService.getServiceId(), registeredService.getId());
                 WebUtils.putRegisteredService(context, registeredService);
                 WebUtils.putWildcardedRegisteredService(context,
                     RegisteredServiceProperties.WILDCARDED_SERVICE_DEFINITION.isAssignedTo(registeredService));
                 val accessStrategy = registeredService.getAccessStrategy();
                 if (accessStrategy.getUnauthorizedRedirectUrl() != null) {
-                    LOGGER.debug("Placing registered service's unauthorized redirect url [{}] with id [{}] in context scope",
-                        accessStrategy.getUnauthorizedRedirectUrl(),
-                        registeredService.getServiceId());
-                    WebUtils.putUnauthorizedRedirectUrlIntoFlowScope(context, accessStrategy.getUnauthorizedRedirectUrl());
+                    LOGGER.debug(
+                        "Placing registered service's unauthorized redirect url [{}] with id [{}] in context scope",
+                        accessStrategy.getUnauthorizedRedirectUrl(), registeredService.getServiceId());
+                    WebUtils.putUnauthorizedRedirectUrlIntoFlowScope(context,
+                        accessStrategy.getUnauthorizedRedirectUrl());
                 }
             }
             WebUtils.putServiceIntoFlowScope(context, service);
         }
     }
 
-    protected void configureWebflowForSsoParticipation(final RequestContext context, final String ticketGrantingTicketId) throws Throwable {
+    protected void configureWebflowForSsoParticipation(final RequestContext context,
+        final String ticketGrantingTicketId) throws Throwable {
         val request = WebUtils.getHttpServletRequestFromExternalWebflowContext(context);
         val response = WebUtils.getHttpServletResponseFromExternalWebflowContext(context);
 
-        val ssoRequest = SingleSignOnParticipationRequest.builder()
-            .requestContext(context)
-            .httpServletRequest(request)
-            .httpServletResponse(response)
-            .build();
+        val ssoRequest = SingleSignOnParticipationRequest.builder().requestContext(context).httpServletRequest(request)
+            .httpServletResponse(response).build();
         val ssoParticipation = renewalStrategy.supports(ssoRequest) && renewalStrategy.isParticipating(ssoRequest);
         if (!ssoParticipation && StringUtils.isNotBlank(ticketGrantingTicketId)) {
             val auth = ticketRegistrySupport.getAuthenticationFrom(ticketGrantingTicketId);
@@ -188,20 +188,18 @@ public class InitialFlowSetupAction extends BaseCasWebflowAction {
         WebUtils.putWarningCookie(context, Boolean.valueOf(warnCookieGenerator.retrieveCookieValue(request)));
 
         WebUtils.putGeoLocationTrackingIntoFlowScope(context, casProperties.getEvents().getCore().isTrackGeolocation());
-        WebUtils.putRememberMeAuthenticationEnabled(context, casProperties.getTicket().getTgt().getRememberMe().isEnabled());
+        WebUtils.putRememberMeAuthenticationEnabled(context,
+            casProperties.getTicket().getTgt().getRememberMe().isEnabled());
 
         val staticAuthEnabled = (casProperties.getAuthn().getAccept().isEnabled()
-                                 && StringUtils.isNotBlank(casProperties.getAuthn().getAccept().getUsers()))
-                                || StringUtils.isNotBlank(casProperties.getAuthn().getReject().getUsers());
+            && StringUtils.isNotBlank(casProperties.getAuthn().getAccept().getUsers()))
+            || StringUtils.isNotBlank(casProperties.getAuthn().getReject().getUsers());
         WebUtils.putStaticAuthenticationIntoFlowScope(context, staticAuthEnabled);
 
         if (casProperties.getAuthn().getPolicy().isSourceSelectionEnabled()) {
-            val availableHandlers = authenticationEventExecutionPlan.getAuthenticationHandlers()
-                .stream()
+            val availableHandlers = authenticationEventExecutionPlan.getAuthenticationHandlers().stream()
                 .filter(handler -> handler.supports(UsernamePasswordCredential.class))
-                .map(handler -> StringUtils.capitalize(handler.getName().trim()))
-                .distinct()
-                .sorted()
+                .map(handler -> StringUtils.capitalize(handler.getName().trim())).distinct().sorted()
                 .collect(Collectors.toList());
             WebUtils.putAvailableAuthenticationHandleNames(context, availableHandlers);
         }
@@ -219,7 +217,8 @@ public class InitialFlowSetupAction extends BaseCasWebflowAction {
                 LOGGER.debug("Setting path for cookies for warn cookie generator to: [{}]", cookiePath);
                 warnCookieGenerator.setCookiePath(cookiePath);
             } else {
-                LOGGER.trace("Warning cookie is set to [{}] with path [{}]", warnCookieGenerator.getCookieDomain(), path);
+                LOGGER.trace("Warning cookie is set to [{}] with path [{}]", warnCookieGenerator.getCookieDomain(),
+                    path);
             }
         }
 
@@ -229,7 +228,8 @@ public class InitialFlowSetupAction extends BaseCasWebflowAction {
                 LOGGER.debug("Setting path for cookies for TGC cookie generator to: [{}]", cookiePath);
                 ticketGrantingTicketCookieGenerator.setCookiePath(cookiePath);
             } else {
-                LOGGER.trace("Ticket-granting cookie domain is [{}] with path [{}]", ticketGrantingTicketCookieGenerator.getCookieDomain(), path);
+                LOGGER.trace("Ticket-granting cookie domain is [{}] with path [{}]",
+                    ticketGrantingTicketCookieGenerator.getCookieDomain(), path);
             }
         }
     }

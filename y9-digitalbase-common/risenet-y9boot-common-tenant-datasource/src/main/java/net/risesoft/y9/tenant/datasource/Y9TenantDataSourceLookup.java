@@ -68,7 +68,7 @@ public class Y9TenantDataSourceLookup implements DataSourceLookup {
                 if (ds == null) {
                     ds = (HikariDataSource)this.jndiDataSourceLookup.getDataSource(jndiName);
                     this.loadedTenantIdDataSourceMap.put(tenantId, ds);
-                }  else {
+                } else {
                     // 用旧的还是新的？
                     // ds = (HikariDataSource) this.jndiDataSourceLookup.getDataSource(jndiName);
                     // this.dataSources.put(tenantId, ds);
@@ -91,7 +91,8 @@ public class Y9TenantDataSourceLookup implements DataSourceLookup {
                 // 可能连接池的参数调整了
                 // url,username,password等属性在DruidDataSource初始化完成后不允许更改，否则抛出异常
                 boolean keepDataSourceInstance = false;
-                if (ds.getJdbcUrl().equals(url) && ds.getUsername().equals(username) && ds.getPassword().equals(password)) {
+                if (ds.getJdbcUrl().equals(url) && ds.getUsername().equals(username)
+                    && ds.getPassword().equals(password)) {
                     keepDataSourceInstance = true;
                 }
 
@@ -195,8 +196,8 @@ public class Y9TenantDataSourceLookup implements DataSourceLookup {
         // 2 重新设置租户的连接池
         String systemId = null;
         try {
-            systemId = publicJdbcTemplate.queryForObject("SELECT ID FROM Y9_COMMON_SYSTEM WHERE NAME=?",
-                String.class, this.systemName);
+            systemId = publicJdbcTemplate.queryForObject("SELECT ID FROM Y9_COMMON_SYSTEM WHERE NAME=?", String.class,
+                this.systemName);
         } catch (EmptyResultDataAccessException ignoreException) {
         }
 
@@ -244,7 +245,7 @@ public class Y9TenantDataSourceLookup implements DataSourceLookup {
         if (!druidDataSources.isEmpty()) {
             for (HikariDataSource ds : druidDataSources) {
                 try {
-                   // ds.init();
+                    // ds.init();
                 } catch (Exception e) {
                     LOGGER.warn(e.getMessage(), e);
                 }

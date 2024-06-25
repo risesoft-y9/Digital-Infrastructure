@@ -34,7 +34,7 @@ import net.risesoft.enums.platform.ManagerLevelEnum;
 @Entity
 @Table(name = "Y9_LOG_ACCESS_LOG",
     indexes = {@Index(name = "index_logInfo_userId", columnList = "USER_ID ASC", unique = false)})
-@Comment( "日志信息表" )
+@Comment("日志信息表")
 @NoArgsConstructor
 @Data
 public class Y9logAccessLog implements Serializable {

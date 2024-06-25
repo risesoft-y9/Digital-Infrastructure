@@ -41,12 +41,12 @@ public class LiquibaseUtil {
     public static DataSource getMigrateDataSource(HikariDataSource dataSource) {
         // String url = dataSource.getJdbcUrl();
         // if (url.contains("jdbc:kingbase8")) {
-        //     // 人大金仓数据库需特殊处理
-        //     DataSourceBuilder<?> builder = DataSourceBuilder.derivedFrom(dataSource).type(SimpleDriverDataSource.class);
-        //     url = url.replace("jdbc:kingbase8", "jdbc:postgresql");
-        //     builder.url(url);
-        //     builder.driverClassName("org.postgresql.Driver");
-        //     return builder.build();
+        // // 人大金仓数据库需特殊处理
+        // DataSourceBuilder<?> builder = DataSourceBuilder.derivedFrom(dataSource).type(SimpleDriverDataSource.class);
+        // url = url.replace("jdbc:kingbase8", "jdbc:postgresql");
+        // builder.url(url);
+        // builder.driverClassName("org.postgresql.Driver");
+        // return builder.build();
         // }
         return dataSource;
     }

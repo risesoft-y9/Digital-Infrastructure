@@ -1,8 +1,8 @@
 package y9.util.common;
 
-import jakarta.servlet.http.HttpServletRequest;
-
 import java.io.IOException;
+
+import jakarta.servlet.http.HttpServletRequest;
 
 import cz.mallat.uasparser.OnlineUpdater;
 import cz.mallat.uasparser.UASparser;

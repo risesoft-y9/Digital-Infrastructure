@@ -184,8 +184,7 @@ public class SqlInjectionFilter implements Filter {
      * @return
      */
     private boolean isParamIgnorable(String paramName) {
-        List<String> ignoreParamList =
-            Y9Context.getBean(Y9SecurityProperties.class).getSqlIn().getIgnoreParam();
+        List<String> ignoreParamList = Y9Context.getBean(Y9SecurityProperties.class).getSqlIn().getIgnoreParam();
         return ignoreParamList.stream().anyMatch(paramName::equals);
     }
 

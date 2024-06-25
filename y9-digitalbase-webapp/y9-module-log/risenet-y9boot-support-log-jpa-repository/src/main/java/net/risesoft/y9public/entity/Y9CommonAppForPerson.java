@@ -21,7 +21,7 @@ import lombok.NoArgsConstructor;
  */
 @Entity
 @Table(name = "Y9_LOG_COMMON_APP_FOR_PERSON")
-@Comment(  "个人常用应用信息表" )
+@Comment("个人常用应用信息表")
 @NoArgsConstructor
 @Data
 public class Y9CommonAppForPerson implements Serializable {

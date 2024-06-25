@@ -1,6 +1,7 @@
 package net.risesoft.model;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+
 import lombok.Data;
 
 /**
@@ -8,11 +9,11 @@ import lombok.Data;
  *
  */
 @Data
-public class IdcodeRegResult extends Result{
+public class IdcodeRegResult extends Result {
 
-	@JsonProperty("organunit_idcode")
-	private String organUnitIdCode;
-	
-	@JsonProperty("category_reg_id")
-	private String categoryRegId;
+    @JsonProperty("organunit_idcode")
+    private String organUnitIdCode;
+
+    @JsonProperty("category_reg_id")
+    private String categoryRegId;
 }

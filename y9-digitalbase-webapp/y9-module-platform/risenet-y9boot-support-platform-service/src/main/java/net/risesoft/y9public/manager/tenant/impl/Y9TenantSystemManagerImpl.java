@@ -110,12 +110,12 @@ public class Y9TenantSystemManagerImpl implements Y9TenantSystemManager {
 
         Y9System y9System = y9SystemManager.getById(y9TenantSystem.getSystemId());
         TenantSystem tenantSystem = Y9ModelConvertUtil.convert(y9TenantSystem, TenantSystem.class);
-        
+
         Y9EventCommon tenantSystemRegisteredEvent = new Y9EventCommon();
         tenantSystemRegisteredEvent.setEventType(Y9CommonEventConst.TENANT_SYSTEM_REGISTERED);
         tenantSystemRegisteredEvent.setEventObject(tenantSystem);
         Y9Context.publishEvent(tenantSystemRegisteredEvent);
-        
+
         // 注册事务同步器，在事务提交后做某些操作
         if (TransactionSynchronizationManager.isActualTransactionActive()) {
             TransactionSynchronizationManager.registerSynchronization(new TransactionSynchronization() {

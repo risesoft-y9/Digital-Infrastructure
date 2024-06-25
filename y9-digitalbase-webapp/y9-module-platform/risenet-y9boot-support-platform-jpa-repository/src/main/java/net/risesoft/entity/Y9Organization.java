@@ -7,12 +7,12 @@ import jakarta.persistence.Table;
 
 import org.hibernate.annotations.ColumnDefault;
 import org.hibernate.annotations.Comment;
+import org.hibernate.annotations.DynamicUpdate;
 
 import lombok.Data;
 import lombok.experimental.SuperBuilder;
 
 import net.risesoft.enums.platform.OrgTypeEnum;
-import org.hibernate.annotations.DynamicUpdate;
 
 /**
  * 组织机构实体

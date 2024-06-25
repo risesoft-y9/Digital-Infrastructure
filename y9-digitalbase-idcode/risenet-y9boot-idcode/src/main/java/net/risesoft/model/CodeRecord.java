@@ -1,9 +1,10 @@
 package net.risesoft.model;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
-import lombok.Data;
-
 import java.math.BigDecimal;
+
+import com.fasterxml.jackson.annotation.JsonProperty;
+
+import lombok.Data;
 
 @Data
 public class CodeRecord {
@@ -26,9 +27,7 @@ public class CodeRecord {
     private BigDecimal ioIdCategoryId;
 
     /**
-     * 码类型
-     * 1：产品码
-     * 2：非产品码
+     * 码类型 1：产品码 2：非产品码
      */
     @JsonProperty("code_type")
     private Integer codeType;
@@ -43,10 +42,7 @@ public class CodeRecord {
     @JsonProperty("code_num")
     private Integer codeNum;
     /**
-     * 上传类型
-     * 1：接口5011方式
-     * 2：接口5012/5013方式
-     * 3：特定业务
+     * 上传类型 1：接口5011方式 2：接口5012/5013方式 3：特定业务
      */
     @JsonProperty("upload_type")
     private Integer uploadType;
@@ -61,9 +57,7 @@ public class CodeRecord {
     @JsonProperty("iftrans")
     private Integer ifTrans;
     /**
-     * 是否转换标记
-     * 1：已转换
-     * 0：未转换
+     * 是否转换标记 1：已转换 0：未转换
      */
     @JsonProperty("trans_flag")
     private Integer transFlag;

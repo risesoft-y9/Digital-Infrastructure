@@ -10,6 +10,7 @@ import cn.hutool.core.util.IdUtil;
  * 在twitter的snowflake算法实现基础上根据自身需求进行了调整
  * <p>
  * snowflake的原始结构如下(每部分用-分开):<br>
+ * 
  * <pre>
  * 符号位（1bit）- 时间戳相对值（41bit）- 数据中心标志（5bit）- 机器标志（5bit）- 递增序号（12bit）
  * 0 - 0000000000 0000000000 0000000000 0000000000 0 - 00000 - 00000 - 000000000000
@@ -17,6 +18,7 @@ import cn.hutool.core.util.IdUtil;
  * 
  * <p>
  * 调整后的snowflake结构如下(每部分用-分开):<br>
+ * 
  * <pre>
  * 符号位（1bit）- 时间戳相对值（41bit）- 机器标志（10bit）- 递增序号（12bit）
  * 0 - 0000000000 0000000000 0000000000 0000000000 0 - 0000000000 - 000000000000
@@ -32,7 +34,7 @@ public class SnowflakeIdGenerator implements Y9IdGenerator {
      * 起始的时间戳
      */
     private final static long START_STAMP = 1320076800000L;
-    
+
     /**
      * 每一部分占用的位数 序列号占用的位数
      */
@@ -40,7 +42,7 @@ public class SnowflakeIdGenerator implements Y9IdGenerator {
     private final static long WORKER_BIT = 5;
     private final static long MACHINE_BIT = DATA_CENTER_BIT + WORKER_BIT;
     private final static long SEQUENCE_BIT = 12;
-    
+
     /**
      * 每一部分的最大值
      */
@@ -75,6 +77,7 @@ public class SnowflakeIdGenerator implements Y9IdGenerator {
 
     /**
      * 依赖的服务集群部署时，极小概率生成重复 machineId
+     * 
      * @return
      */
     private static long getMachineId() {

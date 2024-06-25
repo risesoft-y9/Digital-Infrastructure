@@ -32,7 +32,7 @@ import net.risesoft.enums.platform.ManagerLevelEnum;
 @Entity
 @Table(name = "Y9_LOG_USER_LOGIN_INFO",
     indexes = {@Index(name = "index_loginInfo_userHostIp", columnList = "USER_HOST_IP ASC", unique = false)})
-@Comment( "用户登录历史表" )
+@Comment("用户登录历史表")
 @NoArgsConstructor
 @Data
 public class Y9logUserLoginInfo implements Serializable {

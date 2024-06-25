@@ -106,8 +106,7 @@ public class Y9FileStore implements Serializable {
     private Date uploadTime;
 
     /**
-     * 构建/分割的文件路径
-     * 例子：传入参数 a, b, c，返回 /a/b/c
+     * 构建/分割的文件路径 例子：传入参数 a, b, c，返回 /a/b/c
      *
      * @param paths 路径
      * @return {@code String}

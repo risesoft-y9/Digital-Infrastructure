@@ -1,6 +1,6 @@
 package net.risesoft.model;
 
-public class StatusResult extends Result{
+public class StatusResult extends Result {
 
     private String examine_content;
 

@@ -24,7 +24,7 @@ import lombok.NoArgsConstructor;
  */
 @Entity
 @Table(name = "Y9_LOG_CLICKED_APP")
-@Comment(  "应用点击信息表" )
+@Comment("应用点击信息表")
 @NoArgsConstructor
 @Data
 public class Y9ClickedApp implements Serializable {

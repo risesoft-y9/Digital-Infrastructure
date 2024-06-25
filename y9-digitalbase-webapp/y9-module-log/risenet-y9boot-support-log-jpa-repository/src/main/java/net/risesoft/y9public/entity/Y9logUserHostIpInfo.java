@@ -20,7 +20,7 @@ import lombok.NoArgsConstructor;
  */
 @Entity
 @Table(name = "Y9_LOG_USER_HOSTIP_INFO")
-@Comment(  "人员登录ip记录表" )
+@Comment("人员登录ip记录表")
 @NoArgsConstructor
 @Data
 public class Y9logUserHostIpInfo implements Serializable {

@@ -4,6 +4,7 @@ import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Primary;
 
 import net.risesoft.y9public.ftp.FtpClientFactory;
 import net.risesoft.y9public.ftp.FtpClientHelper;
@@ -11,7 +12,6 @@ import net.risesoft.y9public.ftp.FtpClientPool;
 import net.risesoft.y9public.ftp.FtpPoolConfig;
 import net.risesoft.y9public.service.StoreService;
 import net.risesoft.y9public.service.impl.FtpStoreServiceImpl;
-import org.springframework.context.annotation.Primary;
 
 @Configuration
 @ConditionalOnProperty(name = "y9.feature.file.ftp.enabled", havingValue = "true", matchIfMissing = true)

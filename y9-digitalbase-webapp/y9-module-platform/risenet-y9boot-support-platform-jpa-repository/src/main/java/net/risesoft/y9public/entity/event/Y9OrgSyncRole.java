@@ -16,7 +16,7 @@ import net.risesoft.base.BaseEntity;
 @Entity
 @Table(name = "Y9_ORG_SYNC_ROLE")
 @DynamicUpdate
-@Comment(  "组织架构同步权限表" )
+@Comment("组织架构同步权限表")
 @NoArgsConstructor
 @Data
 public class Y9OrgSyncRole extends BaseEntity {

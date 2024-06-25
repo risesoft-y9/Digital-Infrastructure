@@ -28,13 +28,13 @@ public class ConfigReader {
                 properties = new Properties();
                 properties.load(inputStream);
 
-                API_CODE= properties.getProperty("api_code");
-                API_KEY= properties.getProperty("api_key");
-                IDCODE_URL= properties.getProperty("idCode_url");
-                MAIN_CODE= properties.getProperty("main_code");
-                ANALYZE_URL= properties.getProperty("analyze_url");
-                GOTO_URL= properties.getProperty("goto_url");
-                SAMPLE_URL= properties.getProperty("sample_url");
+                API_CODE = properties.getProperty("api_code");
+                API_KEY = properties.getProperty("api_key");
+                IDCODE_URL = properties.getProperty("idCode_url");
+                MAIN_CODE = properties.getProperty("main_code");
+                ANALYZE_URL = properties.getProperty("analyze_url");
+                GOTO_URL = properties.getProperty("goto_url");
+                SAMPLE_URL = properties.getProperty("sample_url");
             } else {
                 throw new FileNotFoundException("配置文件未找到");
             }

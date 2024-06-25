@@ -105,7 +105,7 @@ public interface PersonApi {
      */
     @GetMapping("/getByCaId")
     Y9Result<Person> getByCaId(@RequestParam("tenantId") @NotBlank String tenantId,
-                                    @RequestParam("caId") @NotBlank String caId);
+        @RequestParam("caId") @NotBlank String caId);
 
     /**
      * 根据登录名和父节点id，获取人员信息

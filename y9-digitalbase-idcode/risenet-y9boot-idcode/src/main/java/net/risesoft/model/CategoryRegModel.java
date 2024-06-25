@@ -1,9 +1,10 @@
 package net.risesoft.model;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
-import lombok.Data;
-
 import java.math.BigDecimal;
+
+import com.fasterxml.jackson.annotation.JsonProperty;
+
+import lombok.Data;
 
 @Data
 public class CategoryRegModel {
@@ -45,9 +46,7 @@ public class CategoryRegModel {
     private String categoryMemo;
 
     /**
-     * 申请类型（必填）
-     * 2：注册
-     * 5：备案
+     * 申请类型（必填） 2：注册 5：备案
      */
     @JsonProperty("code_pay_type")
     private Integer codePayType;
@@ -131,10 +130,7 @@ public class CategoryRegModel {
     private String pictureName;
 
     /**
-     * 申请码类型(细化类型)
-     * 1：通用标准二维码申请
-     * 2：商品二维码申请
-     * 3：农药二维码申请 -1：备案
+     * 申请码类型(细化类型) 1：通用标准二维码申请 2：商品二维码申请 3：农药二维码申请 -1：备案
      */
     @JsonProperty("regist_type")
     private Integer registType;

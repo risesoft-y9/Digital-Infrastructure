@@ -145,8 +145,7 @@ public class XssHttpRequestWrapper extends HttpServletRequestWrapper {
      * @return
      */
     private boolean isParamIgnorable(String paramName) {
-        List<String> ignoreParamList =
-            Y9Context.getBean(Y9SecurityProperties.class).getXss().getIgnoreParam();
+        List<String> ignoreParamList = Y9Context.getBean(Y9SecurityProperties.class).getXss().getIgnoreParam();
         return ignoreParamList.stream().anyMatch(paramName::equals);
     }
 }

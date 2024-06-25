@@ -9,6 +9,7 @@ import jakarta.validation.constraints.NotBlank;
 
 import org.hibernate.annotations.ColumnDefault;
 import org.hibernate.annotations.Comment;
+import org.hibernate.annotations.DynamicUpdate;
 
 import lombok.Data;
 import lombok.experimental.SuperBuilder;
@@ -18,7 +19,6 @@ import net.risesoft.enums.platform.PersonTypeEnum;
 import net.risesoft.enums.platform.SexEnum;
 import net.risesoft.persistence.EnumConverter;
 import net.risesoft.validation.Mobile;
-import org.hibernate.annotations.DynamicUpdate;
 
 /**
  * 人员实体

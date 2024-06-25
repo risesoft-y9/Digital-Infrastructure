@@ -19,7 +19,7 @@ public enum DataSourceErrorCodeEnum implements ErrorCode {
     DATA_SOURCE_OLD_PASSWORD_IS_WRONG(1, "数据源原密码错误"),
     /** JNDI数据源不允许重置密码 */
     JNDI_DATA_SOURCE_RESET_PASSWORD_NOT_ALLOWED(2, "JNDI数据源不允许重置密码"),
-    /** 当前数据库暂未完全适配 */ 
+    /** 当前数据库暂未完全适配 */
     DATABASE_NOT_FULLY_SUPPORTED(3, "当前数据库暂未完全适配");
 
     private final int moduleErrorCode;

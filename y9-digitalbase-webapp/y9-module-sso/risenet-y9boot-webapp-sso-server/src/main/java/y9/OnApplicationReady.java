@@ -16,7 +16,7 @@ import y9.service.Y9UserService;
  * @date 2023/8/13
  * @since 9.6.3
  */
-//@Component
+// @Component
 public class OnApplicationReady implements ApplicationListener<ApplicationReadyEvent> {
     @Autowired
     private Y9UserService y9UserService;

@@ -1,15 +1,11 @@
 package y9.service.impl;
 
-import jakarta.persistence.EntityManager;
-import jakarta.persistence.PersistenceContext;
-import y9.service.Y9LoginUserService;
-import y9.service.Y9UserService;
-import y9.util.InetAddressUtil;
-import y9.util.common.UserAgentUtil;
-
 import java.util.Date;
 import java.util.List;
 import java.util.UUID;
+
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.PersistenceContext;
 
 import org.apereo.cas.authentication.credential.RememberMeUsernamePasswordCredential;
 import org.apereo.cas.services.Y9LoginUser;
@@ -19,6 +15,11 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.support.TransactionOperations;
 import org.springframework.util.StringUtils;
+
+import y9.service.Y9LoginUserService;
+import y9.service.Y9UserService;
+import y9.util.InetAddressUtil;
+import y9.util.common.UserAgentUtil;
 
 import cz.mallat.uasparser.UserAgentInfo;
 

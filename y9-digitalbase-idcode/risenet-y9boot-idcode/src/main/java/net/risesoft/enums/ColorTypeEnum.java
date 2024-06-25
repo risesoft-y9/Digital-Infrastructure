@@ -11,7 +11,7 @@ import lombok.Getter;
  */
 @Getter
 @AllArgsConstructor
-public enum ColorTypeEnum{
+public enum ColorTypeEnum {
     /**
      * Qr
      */

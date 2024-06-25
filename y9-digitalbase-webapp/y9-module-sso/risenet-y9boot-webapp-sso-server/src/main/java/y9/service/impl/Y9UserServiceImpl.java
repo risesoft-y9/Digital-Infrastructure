@@ -1,17 +1,18 @@
 package y9.service.impl;
 
+import java.util.List;
+
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
 import jakarta.persistence.TypedQuery;
-import y9.service.Y9UserService;
-
-import java.util.List;
 
 import org.apereo.cas.services.Y9User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.support.TransactionOperations;
+
+import y9.service.Y9UserService;
 
 @Service("y9UserService")
 public class Y9UserServiceImpl implements Y9UserService {

@@ -1,12 +1,12 @@
 package y9.controller;
 
-import jakarta.servlet.http.HttpServletResponse;
-
 import java.io.InputStream;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
 import java.util.concurrent.TimeUnit;
+
+import jakarta.servlet.http.HttpServletResponse;
 
 import org.apache.commons.lang3.StringUtils;
 import org.apereo.cas.redis.core.CasRedisTemplate;
@@ -18,6 +18,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import lombok.extern.slf4j.Slf4j;
+
 import y9.util.Y9Base64;
 import y9.util.Y9QRCode;
 import y9.util.Y9Result;

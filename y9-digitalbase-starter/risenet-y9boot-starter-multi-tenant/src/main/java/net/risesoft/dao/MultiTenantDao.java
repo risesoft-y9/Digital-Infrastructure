@@ -36,8 +36,8 @@ public class MultiTenantDao {
 
     public String getSystemId(String systemName) {
         try {
-            return publicJdbcTemplate.queryForObject("SELECT ID FROM Y9_COMMON_SYSTEM WHERE NAME=?",
-                String.class, systemName);
+            return publicJdbcTemplate.queryForObject("SELECT ID FROM Y9_COMMON_SYSTEM WHERE NAME=?", String.class,
+                systemName);
         } catch (EmptyResultDataAccessException ignoreException) {
             return null;
         }

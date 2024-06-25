@@ -2,13 +2,13 @@ package net.risesoft.listener;
 
 import java.util.List;
 
-import net.risesoft.dao.MultiTenantDao;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.event.EventListener;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
+import net.risesoft.dao.MultiTenantDao;
 import net.risesoft.init.TenantDataInitializer;
 import net.risesoft.model.platform.TenantSystem;
 import net.risesoft.schema.SchemaUpdater;

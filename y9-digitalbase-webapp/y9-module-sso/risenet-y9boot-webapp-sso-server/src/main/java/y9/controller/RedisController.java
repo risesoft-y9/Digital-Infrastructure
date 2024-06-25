@@ -1,8 +1,8 @@
 package y9.controller;
 
-import jakarta.servlet.http.HttpServletRequest;
-
 import java.util.concurrent.TimeUnit;
+
+import jakarta.servlet.http.HttpServletRequest;
 
 import org.apache.commons.lang3.StringUtils;
 import org.apereo.cas.redis.core.CasRedisTemplate;
@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import lombok.extern.slf4j.Slf4j;
+
 import y9.util.Y9Result;
 
 @RestController

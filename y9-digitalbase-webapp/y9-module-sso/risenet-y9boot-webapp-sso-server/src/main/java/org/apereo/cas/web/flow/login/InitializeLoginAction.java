@@ -1,9 +1,9 @@
 package org.apereo.cas.web.flow.login;
 
+import java.util.Optional;
+
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-
-import java.util.Optional;
 
 import org.apache.commons.lang3.StringUtils;
 import org.apereo.cas.configuration.CasConfigurationProperties;
@@ -44,7 +44,7 @@ public class InitializeLoginAction extends BaseCasWebflowAction {
      * CAS Properties.
      */
     protected final CasConfigurationProperties casProperties;
-    
+
     @Autowired
     @Qualifier("logoutManager")
     private LogoutManager logoutManager; // y9 add
@@ -56,15 +56,18 @@ public class InitializeLoginAction extends BaseCasWebflowAction {
     @Autowired
     @Qualifier("ticketRegistry")
     private TicketRegistry ticketRegistry; // y9 add
-    
+
     @Override
     protected Event doExecuteInternal(final RequestContext requestContext) throws Exception {
         LOGGER.trace("Initialized login sequence");
         val service = WebUtils.getService(requestContext);
         if (service == null && !casProperties.getSso().getServices().isAllowMissingServiceParameter()) {
             val request = WebUtils.getHttpServletRequestFromExternalWebflowContext(requestContext);
-            LOGGER.warn("No service authentication request is available at [{}]. CAS is configured to disable the flow.", request.getRequestURL());
-            throw new NoSuchFlowExecutionException(requestContext.getFlowExecutionContext().getKey(), UnauthorizedServiceException.required());
+            LOGGER.warn(
+                "No service authentication request is available at [{}]. CAS is configured to disable the flow.",
+                request.getRequestURL());
+            throw new NoSuchFlowExecutionException(requestContext.getFlowExecutionContext().getKey(),
+                UnauthorizedServiceException.required());
         }
 
         // y9 add
@@ -92,7 +95,7 @@ public class InitializeLoginAction extends BaseCasWebflowAction {
 
         return success();
     }
-    
+
     // y9 add
     protected Event nonInteractiveLogin() {
         return getEventFactorySupport().event(this, "nonInteractiveLogin");

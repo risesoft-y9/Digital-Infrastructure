@@ -40,6 +40,7 @@ import org.springframework.data.redis.connection.RedisConnectionFactory;
 import org.springframework.webflow.execution.Action;
 
 import lombok.val;
+
 import y9.controller.CheckController;
 import y9.controller.LoginController;
 import y9.controller.QRCodeController;
@@ -56,9 +57,9 @@ import y9.util.Y9Context;
 @Configuration(proxyBeanMethods = false)
 public class Y9Config {
 
-	@Configuration
+    @Configuration
     public static class Y9RedisConfig {
-    	@Bean
+        @Bean
         public Y9Context y9Context() {
             return new Y9Context();
         }
@@ -67,18 +68,21 @@ public class Y9Config {
         @RefreshScope
         public CasRedisTemplate<Object, Object> y9RedisTemplate(
             @Qualifier("redisTicketConnectionFactory") final RedisConnectionFactory redisTicketConnectionFactory) {
-            CasRedisTemplate<Object, Object> redisTemplate = RedisObjectFactory.newRedisTemplate(redisTicketConnectionFactory);
+            CasRedisTemplate<Object, Object> redisTemplate =
+                RedisObjectFactory.newRedisTemplate(redisTicketConnectionFactory);
             return redisTemplate;
         }
     }
 
     @Configuration
     public static class Y9JpaConfig {
-    	private static final BeanCondition CONDITION = BeanCondition.on("cas.service-registry.jpa.enabled").isTrue().evenIfMissing();
+        private static final BeanCondition CONDITION =
+            BeanCondition.on("cas.service-registry.jpa.enabled").isTrue().evenIfMissing();
 
         @Bean
         @RefreshScope(proxyMode = ScopedProxyMode.DEFAULT)
-        public JpaPersistenceProviderConfigurer jpaServicePersistenceProviderConfigurer(final ConfigurableApplicationContext applicationContext) {
+        public JpaPersistenceProviderConfigurer
+            jpaServicePersistenceProviderConfigurer(final ConfigurableApplicationContext applicationContext) {
             return BeanSupplier.of(JpaPersistenceProviderConfigurer.class)
                 .when(CONDITION.given(applicationContext.getEnvironment())).supply(() -> context -> {
                     String s1 = JpaRegisteredServiceEntity.class.getName();
@@ -92,7 +96,7 @@ public class Y9Config {
 
     @Configuration
     public static class Y9CasWebSecurityConfigurer {
-    	@Bean
+        @Bean
         public CasWebSecurityConfigurer<Void> y9ResourceConfigurer() {
             return new CasWebSecurityConfigurer<>() {
                 @Override
@@ -105,11 +109,13 @@ public class Y9Config {
 
     @Configuration
     public static class Y9AuthenticationConfiguration {
-    	@Bean
+        @Bean
         public AuthenticationEventExecutionPlanConfigurer riseAuthenticationEventExecutionPlanConfigurer(
             @Qualifier(ServicesManager.BEAN_NAME) final ServicesManager servicesManager) {
-            RiseAuthenticationHandler handler = new RiseAuthenticationHandler("y9AuthenticationHandler", servicesManager, risePrincipalFactory(), 0);
-            return plan -> plan.registerAuthenticationHandlerWithPrincipalResolver(handler, risePersonDirectoryPrincipalResolver());
+            RiseAuthenticationHandler handler =
+                new RiseAuthenticationHandler("y9AuthenticationHandler", servicesManager, risePrincipalFactory(), 0);
+            return plan -> plan.registerAuthenticationHandlerWithPrincipalResolver(handler,
+                risePersonDirectoryPrincipalResolver());
         }
 
         @Bean
@@ -117,10 +123,8 @@ public class Y9Config {
             @Qualifier("adaptiveAuthenticationPolicy") final AdaptiveAuthenticationPolicy adaptiveAuthenticationPolicy,
             @Qualifier("serviceTicketRequestWebflowEventResolver") final CasWebflowEventResolver serviceTicketRequestWebflowEventResolver,
             @Qualifier("initialAuthenticationAttemptWebflowEventResolver") final CasDelegatingWebflowEventResolver initialAuthenticationAttemptWebflowEventResolver) {
-            return new RiseCredentialNonInteractiveCredentialsAction(
-                initialAuthenticationAttemptWebflowEventResolver, 
-                serviceTicketRequestWebflowEventResolver, 
-                adaptiveAuthenticationPolicy);
+            return new RiseCredentialNonInteractiveCredentialsAction(initialAuthenticationAttemptWebflowEventResolver,
+                serviceTicketRequestWebflowEventResolver, adaptiveAuthenticationPolicy);
         }
 
         @Bean
@@ -137,44 +141,46 @@ public class Y9Config {
     @Configuration
     public static class Y9ControllerConfig {
 
-		@Bean
-		public CheckController checkController(Y9UserService y9UserService,
-				@Qualifier("y9RedisTemplate") CasRedisTemplate<Object, Object> redisTemplate) {
-			return new CheckController(y9UserService, redisTemplate);
-		}
+        @Bean
+        public CheckController checkController(Y9UserService y9UserService,
+            @Qualifier("y9RedisTemplate") CasRedisTemplate<Object, Object> redisTemplate) {
+            return new CheckController(y9UserService, redisTemplate);
+        }
 
-		@Bean
-		@ConditionalOnMissingBean
-		public LoginController loginController(CentralAuthenticationService centralAuthenticationService,
-				@Qualifier("ticketGrantingTicketCookieGenerator") CasCookieBuilder ticketGrantingTicketCookieGenerator,
-				@Qualifier("defaultAuthenticationSystemSupport") AuthenticationSystemSupport authenticationSystemSupport,
-				@Qualifier("webApplicationServiceFactory") ServiceFactory webApplicationServiceFactory,
-				Y9UserService y9UserService) {
-			return new LoginController(centralAuthenticationService, ticketGrantingTicketCookieGenerator,
-					authenticationSystemSupport, webApplicationServiceFactory, y9UserService);
-		}
-    	
-    	@Bean
-    	@ConditionalOnMissingBean
-        public QRCodeController qRCodeController(@Qualifier("y9RedisTemplate") CasRedisTemplate<Object, Object> redisTemplate) {
+        @Bean
+        @ConditionalOnMissingBean
+        public LoginController loginController(CentralAuthenticationService centralAuthenticationService,
+            @Qualifier("ticketGrantingTicketCookieGenerator") CasCookieBuilder ticketGrantingTicketCookieGenerator,
+            @Qualifier("defaultAuthenticationSystemSupport") AuthenticationSystemSupport authenticationSystemSupport,
+            @Qualifier("webApplicationServiceFactory") ServiceFactory webApplicationServiceFactory,
+            Y9UserService y9UserService) {
+            return new LoginController(centralAuthenticationService, ticketGrantingTicketCookieGenerator,
+                authenticationSystemSupport, webApplicationServiceFactory, y9UserService);
+        }
+
+        @Bean
+        @ConditionalOnMissingBean
+        public QRCodeController
+            qRCodeController(@Qualifier("y9RedisTemplate") CasRedisTemplate<Object, Object> redisTemplate) {
             return new QRCodeController(redisTemplate);
         }
-    	
-    	@Bean
-    	@ConditionalOnMissingBean
-        public RedisController redisController(@Qualifier("y9RedisTemplate") CasRedisTemplate<Object, Object> redisTemplate) {
+
+        @Bean
+        @ConditionalOnMissingBean
+        public RedisController
+            redisController(@Qualifier("y9RedisTemplate") CasRedisTemplate<Object, Object> redisTemplate) {
             return new RedisController(redisTemplate);
         }
-    	
-    	@Bean
-    	@ConditionalOnMissingBean
+
+        @Bean
+        @ConditionalOnMissingBean
         public ServiceController serviceController(ServicesManager servicesManager,
-        		CasConfigurationProperties casConfigurationProperties) {
+            CasConfigurationProperties casConfigurationProperties) {
             return new ServiceController(servicesManager, casConfigurationProperties);
         }
-    	
-    	@Bean
-    	@ConditionalOnMissingBean
+
+        @Bean
+        @ConditionalOnMissingBean
         public TenantController tenantController(Y9UserService y9UserService) {
             return new TenantController(y9UserService);
         }
@@ -182,16 +188,16 @@ public class Y9Config {
 
     @Configuration
     public static class Y9ServiceConfig {
-    	@Bean
+        @Bean
         public Y9UserService y9UserService() {
             return new Y9UserServiceImpl();
         }
-        
+
         @Bean
         public Y9LoginUserService y9LoginUserService() {
             return new Y9LoginUserServiceImpl();
         }
 
     }
-    
+
 }

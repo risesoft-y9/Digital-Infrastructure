@@ -38,18 +38,17 @@ public class IdCodeApiImpl {
     private final Y9PersonService y9PersonService;
     private final Y9IdCodeService y9IdCodeService;
 
-
     /**
      * 根据统一码，获取人员信息
      *
      * @param tenantId 租户id
-     * @param code     人员统一码
+     * @param code 人员统一码
      * @return {@code Y9Result<Person>} 通用请求返回对象 - data 是人员对象
      * @since 9.6.6
      */
     @GetMapping("/getPerson")
     public Y9Result<Person> getPerson(@RequestParam("tenantId") @NotBlank String tenantId,
-                                      @RequestParam("code") @NotBlank String code) {
+        @RequestParam("code") @NotBlank String code) {
         Y9LoginUserHolder.setTenantId(tenantId);
         Y9IdCode y9IdCode = y9IdCodeService.findById(code);
         if (y9IdCode == null) {

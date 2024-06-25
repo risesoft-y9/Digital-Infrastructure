@@ -1,12 +1,13 @@
 package net.risesoft.model;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
-import lombok.Data;
-
 import java.util.List;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+
+import lombok.Data;
+
 @Data
-public class BatchRegistInfo{
+public class BatchRegistInfo {
 
     @JsonProperty("access_token")
     private String accessToken;
