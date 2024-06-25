@@ -4,11 +4,11 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Table;
 
-import lombok.experimental.SuperBuilder;
 import org.hibernate.annotations.Comment;
 import org.hibernate.annotations.DynamicUpdate;
 
 import lombok.Data;
+import lombok.experimental.SuperBuilder;
 
 import net.risesoft.enums.platform.ResourceTypeEnum;
 

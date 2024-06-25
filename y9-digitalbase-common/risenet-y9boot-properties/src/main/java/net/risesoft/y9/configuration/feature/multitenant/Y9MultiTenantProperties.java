@@ -13,8 +13,8 @@ import lombok.Setter;
 @Getter
 @Setter
 public class Y9MultiTenantProperties {
-    
-    private MultiTenantEventSourceEnum eventSource = MultiTenantEventSourceEnum.KAFKA; 
+
+    private MultiTenantEventSourceEnum eventSource = MultiTenantEventSourceEnum.KAFKA;
 
     @Getter
     @AllArgsConstructor

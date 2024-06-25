@@ -1,10 +1,7 @@
 package net.risesoft.interfaces;
 
-import lombok.extern.slf4j.Slf4j;
-import net.risesoft.enums.AddressLevelEnum;
-import net.risesoft.model.AreaInfoResult;
-import net.risesoft.model.TradeInfoResult;
-import net.risesoft.model.UnitTypeInfoResult;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.MethodOrderer;
 import org.junit.jupiter.api.Order;
@@ -12,7 +9,12 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestMethodOrder;
 import org.springframework.boot.test.context.SpringBootTest;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
+import lombok.extern.slf4j.Slf4j;
+
+import net.risesoft.enums.AddressLevelEnum;
+import net.risesoft.model.AreaInfoResult;
+import net.risesoft.model.TradeInfoResult;
+import net.risesoft.model.UnitTypeInfoResult;
 
 @SpringBootTest
 @Slf4j
@@ -27,7 +29,8 @@ public class OneTest {
         AreaInfoResult result = One.m101();
         assertEquals(result.getResultCode(), 1);
         if (LOGGER.isDebugEnabled()) {
-            result.getList().forEach(item -> LOGGER.debug("区划名称:{} 区域ID:{} 区域父ID:{} 区域级别:{}", item.getName(), item.getId(), item.getParentId(), item.getLevel()));
+            result.getList().forEach(item -> LOGGER.debug("区划名称:{} 区域ID:{} 区域父ID:{} 区域级别:{}", item.getName(),
+                item.getId(), item.getParentId(), item.getLevel()));
         }
     }
 
@@ -41,7 +44,8 @@ public class OneTest {
         AreaInfoResult result = One.m102(440000, AddressLevelEnum.PREFECTURE.getValue());
         assertEquals(result.getResultCode(), 1);
         if (LOGGER.isDebugEnabled()) {
-            result.getList().forEach(item -> LOGGER.debug("区划名称:{} 区域ID:{} 区域父ID:{} 区域级别:{}", item.getName(), item.getId(), item.getParentId(), item.getLevel()));
+            result.getList().forEach(item -> LOGGER.debug("区划名称:{} 区域ID:{} 区域父ID:{} 区域级别:{}", item.getName(),
+                item.getId(), item.getParentId(), item.getLevel()));
         }
     }
 
@@ -52,7 +56,8 @@ public class OneTest {
         TradeInfoResult result = One.m103();
         assertEquals(result.getResultCode(), 1);
         if (LOGGER.isDebugEnabled()) {
-            result.getList().forEach(item -> LOGGER.debug("行业名称:{} 行业ID:{} 行业父ID:{} 行业级别:{}", item.getName(), item.getId(), item.getParentId(), item.getLevel()));
+            result.getList().forEach(item -> LOGGER.debug("行业名称:{} 行业ID:{} 行业父ID:{} 行业级别:{}", item.getName(),
+                item.getId(), item.getParentId(), item.getLevel()));
         }
     }
 
@@ -66,7 +71,8 @@ public class OneTest {
         TradeInfoResult result = One.m104(2);
         assertEquals(result.getResultCode(), 1);
         if (LOGGER.isDebugEnabled()) {
-            result.getList().forEach(item -> LOGGER.debug("行业名称:{} 行业ID:{} 行业父ID:{} 行业级别:{}", item.getName(), item.getId(), item.getParentId(), item.getLevel()));
+            result.getList().forEach(item -> LOGGER.debug("行业名称:{} 行业ID:{} 行业父ID:{} 行业级别:{}", item.getName(),
+                item.getId(), item.getParentId(), item.getLevel()));
         }
     }
 

@@ -30,10 +30,9 @@ import lombok.extern.slf4j.Slf4j;
 public class QRCodeController {
 
     private final Y9KeyValueService y9KeyValueService;
-    
+
     @Value("${cas.server.name}")
     private String name;
-
 
     @ResponseBody
     @RequestMapping(value = "/getQRCode", method = RequestMethod.POST)

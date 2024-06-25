@@ -2,7 +2,7 @@ package net.risesoft.model;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
-public class CodePicResult extends Result{
+public class CodePicResult extends Result {
 
     @JsonProperty("code_pic_address")
     private String code_pic_address;

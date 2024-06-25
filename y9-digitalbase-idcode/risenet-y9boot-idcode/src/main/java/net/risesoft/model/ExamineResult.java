@@ -1,10 +1,11 @@
 package net.risesoft.model;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+
 import lombok.Data;
 
 @Data
-public class ExamineResult extends Result{
+public class ExamineResult extends Result {
 
     @JsonProperty("examine_content")
     private String content;

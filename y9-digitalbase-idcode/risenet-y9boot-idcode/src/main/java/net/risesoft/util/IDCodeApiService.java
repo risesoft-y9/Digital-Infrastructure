@@ -1,15 +1,15 @@
 package net.risesoft.util;
 
-import lombok.extern.slf4j.Slf4j;
-
 import java.io.File;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.TreeMap;
 
+import lombok.extern.slf4j.Slf4j;
+
 /**
  * 针对于http://api.idcode.org.cn接口的调用处理
-
+ * 
  */
 @Slf4j
 public class IDCodeApiService {
@@ -32,7 +32,7 @@ public class IDCodeApiService {
             Object value = s.getValue();
             if (value instanceof File) {
                 containFile = true;
-                files.put(key, (File) value);
+                files.put(key, (File)value);
                 continue;
             }
             stringBuilder.append(key).append("=").append(value).append("&");
@@ -101,7 +101,7 @@ public class IDCodeApiService {
     }
 
     private void printResult(String rs) {
-        if(LOGGER.isDebugEnabled()){
+        if (LOGGER.isDebugEnabled()) {
             LOGGER.debug(rs);
         }
     }

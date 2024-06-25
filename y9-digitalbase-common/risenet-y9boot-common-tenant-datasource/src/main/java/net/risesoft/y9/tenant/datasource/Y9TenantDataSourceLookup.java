@@ -220,8 +220,8 @@ public class Y9TenantDataSourceLookup implements DataSourceLookup {
         // 2 重新设置租户的连接池
         String systemId = null;
         try {
-            systemId = publicJdbcTemplate.queryForObject("SELECT ID FROM Y9_COMMON_SYSTEM WHERE NAME=?",
-                String.class, this.systemName);
+            systemId = publicJdbcTemplate.queryForObject("SELECT ID FROM Y9_COMMON_SYSTEM WHERE NAME=?", String.class,
+                this.systemName);
         } catch (EmptyResultDataAccessException ignoreException) {
         }
 

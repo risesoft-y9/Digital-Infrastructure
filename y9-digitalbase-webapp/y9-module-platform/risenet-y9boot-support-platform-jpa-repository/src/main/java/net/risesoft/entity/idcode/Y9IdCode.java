@@ -1,15 +1,17 @@
 package net.risesoft.entity.idcode;
 
-import lombok.Data;
-import lombok.NoArgsConstructor;
-import org.hibernate.annotations.Comment;
-import org.hibernate.annotations.DynamicUpdate;
+import java.io.Serializable;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.Table;
-import java.io.Serializable;
+
+import org.hibernate.annotations.Comment;
+import org.hibernate.annotations.DynamicUpdate;
+
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
 @Entity
 @Table(name = "Y9_ORG_IDCODE")

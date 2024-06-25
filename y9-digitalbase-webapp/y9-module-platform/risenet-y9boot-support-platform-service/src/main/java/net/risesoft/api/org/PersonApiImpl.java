@@ -1,6 +1,22 @@
 package net.risesoft.api.org;
 
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+
+import javax.validation.constraints.NotBlank;
+
+import org.springframework.context.annotation.Primary;
+import org.springframework.data.domain.Page;
+import org.springframework.http.MediaType;
+import org.springframework.validation.annotation.Validated;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
+
 import lombok.RequiredArgsConstructor;
+
 import net.risesoft.api.platform.org.PersonApi;
 import net.risesoft.api.platform.org.dto.CreatePersonDTO;
 import net.risesoft.api.platform.org.dto.PersonInfoDTO;
@@ -30,19 +46,6 @@ import net.risesoft.y9.Y9LoginUserHolder;
 import net.risesoft.y9.util.Y9ModelConvertUtil;
 import net.risesoft.y9public.entity.role.Y9Role;
 import net.risesoft.y9public.service.role.Y9RoleService;
-import org.springframework.context.annotation.Primary;
-import org.springframework.data.domain.Page;
-import org.springframework.http.MediaType;
-import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
-
-import javax.validation.constraints.NotBlank;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
 
 /**
  * 人员服务组件
@@ -163,7 +166,7 @@ public class PersonApiImpl implements PersonApi {
      */
     @Override
     public Y9Result<Person> getByCaId(@RequestParam("tenantId") @NotBlank String tenantId,
-                                           @RequestParam("caId") @NotBlank String caId) {
+        @RequestParam("caId") @NotBlank String caId) {
         Y9LoginUserHolder.setTenantId(tenantId);
 
         Y9Person y9Person = y9PersonService.findByCaId(caId).orElse(null);

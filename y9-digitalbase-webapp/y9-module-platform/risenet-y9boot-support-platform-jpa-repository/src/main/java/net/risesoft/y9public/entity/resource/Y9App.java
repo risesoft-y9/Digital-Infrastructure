@@ -7,13 +7,13 @@ import javax.persistence.Lob;
 import javax.persistence.Table;
 import javax.persistence.Transient;
 
-import lombok.experimental.SuperBuilder;
 import org.hibernate.annotations.ColumnDefault;
 import org.hibernate.annotations.Comment;
 import org.hibernate.annotations.DynamicUpdate;
 import org.hibernate.annotations.Type;
 
 import lombok.Data;
+import lombok.experimental.SuperBuilder;
 
 import net.risesoft.enums.platform.AppOpenTypeEnum;
 import net.risesoft.enums.platform.AppTypeEnum;

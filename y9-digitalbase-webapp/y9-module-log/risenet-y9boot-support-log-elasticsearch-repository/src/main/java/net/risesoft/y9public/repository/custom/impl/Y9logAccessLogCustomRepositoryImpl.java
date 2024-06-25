@@ -477,8 +477,8 @@ public class Y9logAccessLogCustomRepositoryImpl implements Y9logAccessLogCustomR
                 CriteriaQuery criteriaQuery =
                     new CriteriaQuery(new Criteria().and(new Criteria(Y9LogSearchConsts.OPERATE_TYPE).is(operateType))
                         .and(new Criteria(Y9LogSearchConsts.USER_ID).in(personIds)))
-                            .setPageable(PageRequest.of((page < 1) ? 0 : page - 1, rows))
-                            .addSort(Sort.by(Order.desc(Y9LogSearchConsts.LOG_TIME)));
+                        .setPageable(PageRequest.of((page < 1) ? 0 : page - 1, rows))
+                        .addSort(Sort.by(Order.desc(Y9LogSearchConsts.LOG_TIME)));
 
                 SearchHits<Y9logAccessLog> searchHits =
                     elasticsearchTemplate.search(criteriaQuery, Y9logAccessLog.class, index);

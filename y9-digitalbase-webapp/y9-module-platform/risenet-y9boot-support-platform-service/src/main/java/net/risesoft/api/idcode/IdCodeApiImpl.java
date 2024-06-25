@@ -1,14 +1,7 @@
 package net.risesoft.api.idcode;
 
-import lombok.RequiredArgsConstructor;
-import net.risesoft.entity.Y9Person;
-import net.risesoft.entity.idcode.Y9IdCode;
-import net.risesoft.model.platform.Person;
-import net.risesoft.pojo.Y9Result;
-import net.risesoft.service.idcode.Y9IdCodeService;
-import net.risesoft.service.org.Y9PersonService;
-import net.risesoft.y9.Y9LoginUserHolder;
-import net.risesoft.y9.util.Y9ModelConvertUtil;
+import javax.validation.constraints.NotBlank;
+
 import org.springframework.context.annotation.Primary;
 import org.springframework.http.MediaType;
 import org.springframework.validation.annotation.Validated;
@@ -17,7 +10,16 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import javax.validation.constraints.NotBlank;
+import lombok.RequiredArgsConstructor;
+
+import net.risesoft.entity.Y9Person;
+import net.risesoft.entity.idcode.Y9IdCode;
+import net.risesoft.model.platform.Person;
+import net.risesoft.pojo.Y9Result;
+import net.risesoft.service.idcode.Y9IdCodeService;
+import net.risesoft.service.org.Y9PersonService;
+import net.risesoft.y9.Y9LoginUserHolder;
+import net.risesoft.y9.util.Y9ModelConvertUtil;
 
 /**
  * 统一码服务组件
@@ -36,18 +38,17 @@ public class IdCodeApiImpl {
     private final Y9PersonService y9PersonService;
     private final Y9IdCodeService y9IdCodeService;
 
-
     /**
      * 根据统一码，获取人员信息
      *
      * @param tenantId 租户id
-     * @param code     人员统一码
+     * @param code 人员统一码
      * @return {@code Y9Result<Person>} 通用请求返回对象 - data 是人员对象
      * @since 9.6.6
      */
     @GetMapping("/getPerson")
     public Y9Result<Person> getPerson(@RequestParam("tenantId") @NotBlank String tenantId,
-                                      @RequestParam("code") @NotBlank String code) {
+        @RequestParam("code") @NotBlank String code) {
         Y9LoginUserHolder.setTenantId(tenantId);
         Y9IdCode y9IdCode = y9IdCodeService.findById(code);
         if (y9IdCode == null) {

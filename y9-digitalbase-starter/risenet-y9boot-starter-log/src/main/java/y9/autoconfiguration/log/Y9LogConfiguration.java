@@ -65,7 +65,7 @@ public class Y9LogConfiguration {
     public AsyncSaveLogInfo asyncSaveLogInfo(Environment environment) {
         return new AsyncSaveLogInfo(environment);
     }
-    
+
     @Bean
     @ConditionalOnMissingBean
     public Y9Context y9Context() {

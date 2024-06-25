@@ -1,6 +1,7 @@
 package net.risesoft.model;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+
 import lombok.Data;
 
 /**
@@ -10,15 +11,15 @@ import lombok.Data;
 @Data
 public class Result {
 
-	@JsonProperty("result_code")
-	private int resultCode;
+    @JsonProperty("result_code")
+    private int resultCode;
 
-	@JsonProperty("result_msg")
-	private String resultMsg;
+    @JsonProperty("result_msg")
+    private String resultMsg;
 
-	@JsonProperty("ResultCode")
-	private int resultCodeError;
+    @JsonProperty("ResultCode")
+    private int resultCodeError;
 
-	@JsonProperty("ResultMsg")
-	private String resultMsgError;
+    @JsonProperty("ResultMsg")
+    private String resultMsgError;
 }

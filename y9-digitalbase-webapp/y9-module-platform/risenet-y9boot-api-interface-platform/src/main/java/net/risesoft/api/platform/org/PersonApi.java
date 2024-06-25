@@ -1,5 +1,15 @@
 package net.risesoft.api.platform.org;
 
+import java.util.List;
+
+import javax.validation.constraints.NotBlank;
+
+import org.springframework.validation.annotation.Validated;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestParam;
+
 import net.risesoft.api.platform.org.dto.CreatePersonDTO;
 import net.risesoft.api.platform.org.dto.PersonInfoDTO;
 import net.risesoft.model.platform.Group;
@@ -11,14 +21,6 @@ import net.risesoft.model.platform.Role;
 import net.risesoft.pojo.Y9Page;
 import net.risesoft.pojo.Y9PageQuery;
 import net.risesoft.pojo.Y9Result;
-import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestParam;
-
-import javax.validation.constraints.NotBlank;
-import java.util.List;
 
 /**
  * 人员服务组件
@@ -103,7 +105,7 @@ public interface PersonApi {
      */
     @GetMapping("/getByCaId")
     Y9Result<Person> getByCaId(@RequestParam("tenantId") @NotBlank String tenantId,
-                                    @RequestParam("caId") @NotBlank String caId);
+        @RequestParam("caId") @NotBlank String caId);
 
     /**
      * 根据登录名和父节点id，获取人员信息

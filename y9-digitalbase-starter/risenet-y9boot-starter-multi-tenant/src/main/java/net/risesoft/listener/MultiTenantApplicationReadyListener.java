@@ -22,7 +22,7 @@ public class MultiTenantApplicationReadyListener implements ApplicationListener<
 
     private final MultiTenantDao multiTenantDao;
     private final Y9Properties y9Properties;
-    
+
     @Override
     public void onApplicationEvent(ApplicationReadyEvent event) {
         String systemId = multiTenantDao.getSystemId(y9Properties.getSystemName());

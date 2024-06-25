@@ -17,7 +17,7 @@ public enum AddressLevelEnum {
      */
     PROVINCE(1, "省级行政区"),
     /**
-     *地级行政区
+     * 地级行政区
      */
     PREFECTURE(2, "地级行政区"),
 

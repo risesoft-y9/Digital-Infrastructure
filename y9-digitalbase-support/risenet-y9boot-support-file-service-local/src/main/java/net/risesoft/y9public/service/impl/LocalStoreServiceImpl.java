@@ -18,7 +18,7 @@ import net.risesoft.y9public.service.StoreService;
 public class LocalStoreServiceImpl implements StoreService {
 
     private final Y9LocalProperties y9LocalProperties;
-    
+
     @Override
     public void deleteFile(String fullPath, String realFileName) throws Exception {
         File file = new File(Y9FileStore.buildPath(y9LocalProperties.getBasePath(), fullPath), realFileName);
@@ -36,7 +36,7 @@ public class LocalStoreServiceImpl implements StoreService {
     public byte[] retrieveFileBytes(String fullPath, String realFileName) throws Exception {
         File file = new File(Y9FileStore.buildPath(y9LocalProperties.getBasePath(), fullPath), realFileName);
         if (file.exists()) {
-            return FileUtils.readFileToByteArray(file); 
+            return FileUtils.readFileToByteArray(file);
         }
         return new byte[0];
     }

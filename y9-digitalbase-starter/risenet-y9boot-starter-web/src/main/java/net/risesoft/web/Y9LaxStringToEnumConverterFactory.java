@@ -30,7 +30,8 @@ public class Y9LaxStringToEnumConverterFactory implements ConverterFactory<Strin
         }
 
         @Override
-        @Nullable public T convert(String source) {
+        @Nullable
+        public T convert(String source) {
             if (source.isEmpty()) {
                 // It's an empty enum identifier: reset the enum value to null.
                 return null;

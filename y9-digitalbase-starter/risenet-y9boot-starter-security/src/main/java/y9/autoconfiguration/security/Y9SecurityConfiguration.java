@@ -35,8 +35,7 @@ public class Y9SecurityConfiguration {
     @Bean
     @ConditionalOnProperty(name = "y9.feature.security.cors.enabled", havingValue = "true", matchIfMissing = true)
     public FilterRegistrationBean<CorsFilter> corsFilter(Y9SecurityProperties y9SecurityProperties) {
-        LOGGER.info("CorsFilter init. Configuration:{}",
-            Y9JsonUtil.writeValueAsString(y9SecurityProperties.getCors()));
+        LOGGER.info("CorsFilter init. Configuration:{}", Y9JsonUtil.writeValueAsString(y9SecurityProperties.getCors()));
         FilterRegistrationBean<CorsFilter> filterBean = new FilterRegistrationBean<>();
         filterBean.setFilter(new CorsFilter());
         filterBean.setOrder(Ordered.HIGHEST_PRECEDENCE);
@@ -46,8 +45,7 @@ public class Y9SecurityConfiguration {
     @Bean
     @ConditionalOnProperty(name = "y9.feature.security.csrf.enabled", havingValue = "true", matchIfMissing = true)
     public FilterRegistrationBean<CsrfFilter> csrfFilter(Y9SecurityProperties y9SecurityProperties) {
-        LOGGER.info("CSRFFilter init. Configuration:{}",
-            Y9JsonUtil.writeValueAsString(y9SecurityProperties.getCsrf()));
+        LOGGER.info("CSRFFilter init. Configuration:{}", Y9JsonUtil.writeValueAsString(y9SecurityProperties.getCsrf()));
 
         FilterRegistrationBean<CsrfFilter> filterBean = new FilterRegistrationBean<>();
         filterBean.setFilter(new CsrfFilter());
@@ -60,8 +58,7 @@ public class Y9SecurityConfiguration {
     @Bean
     @ConditionalOnProperty(name = "y9.feature.security.xss.enabled", havingValue = "true", matchIfMissing = true)
     public FilterRegistrationBean<XssFilter> xssFilter(Y9SecurityProperties y9SecurityProperties) {
-        LOGGER.info("XSSFilter init. Configuration:{}",
-            Y9JsonUtil.writeValueAsString(y9SecurityProperties.getXss()));
+        LOGGER.info("XSSFilter init. Configuration:{}", Y9JsonUtil.writeValueAsString(y9SecurityProperties.getXss()));
 
         FilterRegistrationBean<XssFilter> filterBean = new FilterRegistrationBean<>();
         filterBean.setFilter(new XssFilter());

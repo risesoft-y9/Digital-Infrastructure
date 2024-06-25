@@ -1,6 +1,7 @@
 package net.risesoft.model;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+
 import lombok.Data;
 
 /**
@@ -8,7 +9,6 @@ import lombok.Data;
  */
 @Data
 public class TradeInfo {
-
 
     /**
      * 行业ID

@@ -1,7 +1,5 @@
 package org.apereo.cas.web.y9.config;
 
-import javax.sql.DataSource;
-
 import org.apereo.cas.web.y9.service.Y9KeyValueService;
 import org.apereo.cas.web.y9.service.impl.Y9JpaKeyValueServiceImpl;
 import org.apereo.cas.web.y9.service.impl.Y9RedisKeyValueServiceImpl;
@@ -10,14 +8,11 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.Primary;
 import org.springframework.data.redis.connection.RedisConnectionFactory;
 import org.springframework.data.redis.core.RedisTemplate;
-import org.springframework.jdbc.datasource.DataSourceTransactionManager;
 import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.scheduling.annotation.SchedulingConfigurer;
 import org.springframework.scheduling.config.ScheduledTaskRegistrar;
-import org.springframework.transaction.PlatformTransactionManager;
 import org.springframework.transaction.support.TransactionOperations;
 
 @Configuration(proxyBeanMethods = false)

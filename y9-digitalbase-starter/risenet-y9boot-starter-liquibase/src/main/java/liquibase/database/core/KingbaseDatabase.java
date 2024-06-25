@@ -41,13 +41,13 @@ public class KingbaseDatabase extends PostgresDatabase {
         int majorVersion = conn.getDatabaseMajorVersion();
         int minorVersion = conn.getDatabaseMinorVersion();
 
-        if ((majorVersion < MINIMUM_DBMS_MAJOR_VERSION) || ((majorVersion == MINIMUM_DBMS_MAJOR_VERSION) &&
-            (minorVersion < MINIMUM_DBMS_MINOR_VERSION))) {
-            LOG.warning(
-                String.format(
-                    "Your PostgreSQL software version (%d.%d) seems to indicate that your software is " +
-                        "older than %d.%d. This means that you might encounter strange behaviour and " +
-                        "incorrect error messages.", majorVersion, minorVersion, MINIMUM_DBMS_MAJOR_VERSION, MINIMUM_DBMS_MINOR_VERSION));
+        if ((majorVersion < MINIMUM_DBMS_MAJOR_VERSION)
+            || ((majorVersion == MINIMUM_DBMS_MAJOR_VERSION) && (minorVersion < MINIMUM_DBMS_MINOR_VERSION))) {
+            LOG.warning(String.format(
+                "Your PostgreSQL software version (%d.%d) seems to indicate that your software is "
+                    + "older than %d.%d. This means that you might encounter strange behaviour and "
+                    + "incorrect error messages.",
+                majorVersion, minorVersion, MINIMUM_DBMS_MAJOR_VERSION, MINIMUM_DBMS_MINOR_VERSION));
             return true;
         }
 

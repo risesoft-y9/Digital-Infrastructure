@@ -68,12 +68,12 @@ public class Y9CustomGroupMembersServiceImpl implements Y9CustomGroupMembersServ
             OrgTypeEnum orgType = y9CustomGroupMember.getMemberType();
             switch (orgType) {
                 case ORGANIZATION:
-                    orgPersonList.addAll(compositeOrgBaseManager
-                        .listAllDescendantPersons(y9CustomGroupMember.getMemberId(), false));
+                    orgPersonList.addAll(
+                        compositeOrgBaseManager.listAllDescendantPersons(y9CustomGroupMember.getMemberId(), false));
                     break;
                 case DEPARTMENT:
-                    orgPersonList.addAll(compositeOrgBaseManager
-                        .listAllDescendantPersons(y9CustomGroupMember.getMemberId(), false));
+                    orgPersonList.addAll(
+                        compositeOrgBaseManager.listAllDescendantPersons(y9CustomGroupMember.getMemberId(), false));
                     break;
                 case POSITION:
                     orgPersonList

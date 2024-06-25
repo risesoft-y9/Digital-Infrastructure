@@ -1,8 +1,8 @@
 package net.risesoft.model;
 
-import lombok.Data;
-
 import java.util.List;
+
+import lombok.Data;
 
 @Data
 public class ResultObject extends Result {

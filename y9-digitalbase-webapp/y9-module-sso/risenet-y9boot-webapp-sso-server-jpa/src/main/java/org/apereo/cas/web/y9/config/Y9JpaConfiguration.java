@@ -48,7 +48,8 @@ public class Y9JpaConfiguration {
     @Primary
     @Bean
     @RefreshScope(proxyMode = ScopedProxyMode.DEFAULT)
-    public PlatformTransactionManager jdbcLockTransactionManager(final ConfigurableApplicationContext applicationContext,
+    public PlatformTransactionManager jdbcLockTransactionManager(
+        final ConfigurableApplicationContext applicationContext,
         @Qualifier("dataSourceTicket") DataSource dataSourceTicket) {
         return BeanSupplier.of(PlatformTransactionManager.class)
             .when(CONDITION2.given(applicationContext.getEnvironment()))

@@ -1,14 +1,10 @@
 package net.risesoft.interfaces;
 
-import lombok.extern.slf4j.Slf4j;
-import net.risesoft.enums.CodePayTypeEnum;
-import net.risesoft.model.BaseIdCodeInfo;
-import net.risesoft.model.BatchRegistInfo;
-import net.risesoft.model.BatchRegistResult;
-import net.risesoft.model.CategoryRegModel;
-import net.risesoft.model.IdcodeRegResult;
-import net.risesoft.util.ConfigReader;
-import net.risesoft.util.JsonUtil;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+
+import java.util.ArrayList;
+import java.util.List;
+
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.DisplayName;
@@ -18,10 +14,16 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestMethodOrder;
 import org.springframework.boot.test.context.SpringBootTest;
 
-import java.util.ArrayList;
-import java.util.List;
+import lombok.extern.slf4j.Slf4j;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
+import net.risesoft.enums.CodePayTypeEnum;
+import net.risesoft.model.BaseIdCodeInfo;
+import net.risesoft.model.BatchRegistInfo;
+import net.risesoft.model.BatchRegistResult;
+import net.risesoft.model.CategoryRegModel;
+import net.risesoft.model.IdcodeRegResult;
+import net.risesoft.util.ConfigReader;
+import net.risesoft.util.JsonUtil;
 
 @SpringBootTest
 @Slf4j
@@ -52,8 +54,8 @@ public class FourTest {
     @Disabled
     @DisplayName("【402】批量注册/备案品类")
     public void testM402() {
-        List<CategoryRegModel> list=new ArrayList<>();
-        CategoryRegModel model=new CategoryRegModel();
+        List<CategoryRegModel> list = new ArrayList<>();
+        CategoryRegModel model = new CategoryRegModel();
         model.setCodeUseId(10);
         model.setIndustryCategoryId(10222);
         model.setCategoryCode("46100000");
@@ -63,14 +65,12 @@ public class FourTest {
         model.setCodePayType(CodePayTypeEnum.REGISTER.getValue());
         model.setGotoUrl("http://example.com/goto");
         model.setSampleUrl("http://example.com/goto");
-        //list.add(model);
+        // list.add(model);
 
-        CategoryRegModel modelX=new CategoryRegModel();
+        CategoryRegModel modelX = new CategoryRegModel();
         modelX.setCodeUseId(73);
         /**
-         * 员工/职员名片
-         * industryCategoryId: 10127
-         * categoryCode: 10000000
+         * 员工/职员名片 industryCategoryId: 10127 categoryCode: 10000000
          */
         modelX.setIndustryCategoryId(10127);
         modelX.setCategoryCode("10000000");
@@ -102,7 +102,10 @@ public class FourTest {
         BaseIdCodeInfo result = Four.m403(ConfigReader.MAIN_CODE, idCodeOfCategory, modelNumberCode, categoryRegId);
         assertEquals(result.getResultCode(), 1);
         if (LOGGER.isDebugEnabled()) {
-            result.getList().forEach(item -> LOGGER.debug("主键ID:{} 品类用途编码:{} 品类码号:{} 品类描述:{} 完整码:{} 型号码:{}", item.getId(), item.getCodeUseId(), item.getCategoryCode(), item.getCategoryMemo(),item.getCompleteCode(), item.getModelNumberCode()));
+            result.getList()
+                .forEach(item -> LOGGER.debug("主键ID:{} 品类用途编码:{} 品类码号:{} 品类描述:{} 完整码:{} 型号码:{}", item.getId(),
+                    item.getCodeUseId(), item.getCategoryCode(), item.getCategoryMemo(), item.getCompleteCode(),
+                    item.getModelNumberCode()));
         }
     }
 
@@ -114,7 +117,8 @@ public class FourTest {
         BaseIdCodeInfo result = Four.m404(ConfigReader.MAIN_CODE, searchType);
         assertEquals(result.getResultCode(), 1);
         if (LOGGER.isDebugEnabled()) {
-            result.getList().forEach(item -> LOGGER.debug("主键ID:{} 品类用途编码:{} 品类码号:{} 品类描述:{} 完整码:{}", item.getId(), item.getCodeUseId(), item.getCategoryCode(), item.getCategoryMemo(),item.getCompleteCode()));
+            result.getList().forEach(item -> LOGGER.debug("主键ID:{} 品类用途编码:{} 品类码号:{} 品类描述:{} 完整码:{}", item.getId(),
+                item.getCodeUseId(), item.getCategoryCode(), item.getCategoryMemo(), item.getCompleteCode()));
         }
     }
 
@@ -138,14 +142,11 @@ public class FourTest {
     @DisplayName("【406】注册/备案产品品类IDcode码")
     public void testM406() {
         /**
-         * 产品
-         * codeUseId: 10 {@link net.risesoft.interfaces.TwoTest#testM201()}
+         * 产品 codeUseId: 10 {@link net.risesoft.interfaces.TwoTest#testM201()}
          */
         String codeUseId = "10";
         /**
-         * 网站
-         * industryCategoryId: 10222
-         * categoryCode: 46100000
+         * 网站 industryCategoryId: 10222 categoryCode: 46100000
          */
         Integer industryCategoryId = 1564;
         String categoryCode = "10024006";
@@ -154,7 +155,8 @@ public class FourTest {
         Integer codePayType = CodePayTypeEnum.REGISTER.getValue();
         String gotoUrl = "http://example.com/goto";
         String sampleUrl = "http://example.com/goto";
-        IdcodeRegResult result = Four.m406(ConfigReader.MAIN_CODE, codeUseId, industryCategoryId, categoryCode, modelNumber, modelNumberCode, codePayType, gotoUrl, sampleUrl);
+        IdcodeRegResult result = Four.m406(ConfigReader.MAIN_CODE, codeUseId, industryCategoryId, categoryCode,
+            modelNumber, modelNumberCode, codePayType, gotoUrl, sampleUrl);
         assertEquals(result.getResultCode(), 1);
         if (LOGGER.isDebugEnabled()) {
             LOGGER.debug("注册/备案结果:{}", result);
@@ -167,15 +169,12 @@ public class FourTest {
     @DisplayName("【407】注册/备案非产品品类IDcode码")
     public void testM407() {
         /**
-         * 有形资产用途ID
-         * codeUseId: 60 {@link net.risesoft.interfaces.TwoTest#testM201()}
+         * 有形资产用途ID codeUseId: 60 {@link net.risesoft.interfaces.TwoTest#testM201()}
          */
         String codeUseId = "60";
         Integer codePayType = CodePayTypeEnum.REGISTER.getValue();
         /**
-         * 有形资产
-         * 品类ID-industryCategoryId: 10166
-         * 品类码号-categoryCode: 10000000
+         * 有形资产 品类ID-industryCategoryId: 10166 品类码号-categoryCode: 10000000
          */
         Integer industryCategoryId = 10166;
         String categoryCode = "10000000";
@@ -184,7 +183,8 @@ public class FourTest {
         String introduction = "所属南方第六事业部";
         String gotoUrl = "http://example.com/goto";
         String sampleUrl = "http://example.com/goto";
-        IdcodeRegResult result = Four.m407(ConfigReader.MAIN_CODE, codeUseId, industryCategoryId, categoryCode, modelNumber, modelNumberEn, introduction, codePayType, gotoUrl, sampleUrl);
+        IdcodeRegResult result = Four.m407(ConfigReader.MAIN_CODE, codeUseId, industryCategoryId, categoryCode,
+            modelNumber, modelNumberEn, introduction, codePayType, gotoUrl, sampleUrl);
         assertEquals(result.getResultCode(), 1);
         if (LOGGER.isDebugEnabled()) {
             LOGGER.debug("注册/备案结果:{}", result);
@@ -213,7 +213,10 @@ public class FourTest {
         BaseIdCodeInfo result = Four.m409(ConfigReader.MAIN_CODE, idCodeOfCategory, modelNumberCode, categoryRegId);
         assertEquals(result.getResultCode(), 1);
         if (LOGGER.isDebugEnabled()) {
-            result.getList().forEach(item -> LOGGER.debug("主键ID:{} 品类用途编码:{} 品类码号:{} 品类描述:{} 完整码:{} 申请码类型(细化类型):{}", item.getId(), item.getCodeUseId(), item.getCategoryCode(), item.getCategoryMemo(),item.getCompleteCode(),item.getRegistType()));
+            result.getList()
+                .forEach(item -> LOGGER.debug("主键ID:{} 品类用途编码:{} 品类码号:{} 品类描述:{} 完整码:{} 申请码类型(细化类型):{}", item.getId(),
+                    item.getCodeUseId(), item.getCategoryCode(), item.getCategoryMemo(), item.getCompleteCode(),
+                    item.getRegistType()));
         }
     }
 
@@ -225,7 +228,8 @@ public class FourTest {
         BaseIdCodeInfo result = Four.m410(ConfigReader.MAIN_CODE, searchType);
         assertEquals(result.getResultCode(), 1);
         if (LOGGER.isDebugEnabled()) {
-            result.getList().forEach(item -> LOGGER.debug("主键ID:{} 品类用途编码:{} 品类码号:{} 品类描述:{} 完整码:{}", item.getId(), item.getCodeUseId(), item.getCategoryCode(), item.getCategoryMemo(),item.getCompleteCode()));
+            result.getList().forEach(item -> LOGGER.debug("主键ID:{} 品类用途编码:{} 品类码号:{} 品类描述:{} 完整码:{}", item.getId(),
+                item.getCodeUseId(), item.getCategoryCode(), item.getCategoryMemo(), item.getCompleteCode()));
         }
     }
 }

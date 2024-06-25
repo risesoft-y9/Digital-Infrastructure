@@ -1,5 +1,12 @@
 package net.risesoft;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+
+import org.junit.jupiter.api.Disabled;
+import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Test;
+import org.springframework.boot.test.context.SpringBootTest;
+
 import net.risesoft.enums.CodePayTypeEnum;
 import net.risesoft.enums.CodeTypeEnum;
 import net.risesoft.interfaces.Four;
@@ -9,12 +16,6 @@ import net.risesoft.model.CodeAddress;
 import net.risesoft.model.IdcodeRegResult;
 import net.risesoft.model.Result;
 import net.risesoft.util.ConfigReader;
-import org.junit.jupiter.api.Disabled;
-import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.api.Test;
-import org.springframework.boot.test.context.SpringBootTest;
-
-import static org.junit.jupiter.api.Assertions.assertEquals;
 
 @SpringBootTest
 class RisenetY9demoIdcodeApplicationTests {
@@ -32,15 +33,12 @@ class RisenetY9demoIdcodeApplicationTests {
     @DisplayName("【407】注册/备案非产品品类IDcode码")
     public void testM407() {
         /**
-         * 有形资产用途ID
-         * codeUseId: 60 {@link net.risesoft.interfaces.TwoTest#testM201()}
+         * 有形资产用途ID codeUseId: 60 {@link net.risesoft.interfaces.TwoTest#testM201()}
          */
         String codeUseId = "60";
         Integer codePayType = CodePayTypeEnum.REGISTER.getValue();
         /**
-         * 有形资产
-         * 品类ID-industryCategoryId: 10166
-         * 品类码号-categoryCode: 10000000
+         * 有形资产 品类ID-industryCategoryId: 10166 品类码号-categoryCode: 10000000
          */
         Integer industryCategoryId = 10166;
         String categoryCode = "10000000";
@@ -49,7 +47,8 @@ class RisenetY9demoIdcodeApplicationTests {
         String introduction = "所属南方第六事业部";
         String gotoUrl = "http://example.com/goto";
         String sampleUrl = "http://example.com/goto";
-        IdcodeRegResult result = Four.m407(ConfigReader.MAIN_CODE, codeUseId, industryCategoryId, categoryCode, modelNumber, modelNumberEn, introduction, codePayType, gotoUrl, sampleUrl);
+        IdcodeRegResult result = Four.m407(ConfigReader.MAIN_CODE, codeUseId, industryCategoryId, categoryCode,
+            modelNumber, modelNumberEn, introduction, codePayType, gotoUrl, sampleUrl);
         assertEquals(result.getResultCode(), 1);
         System.out.println("注册信息:" + result);
     }

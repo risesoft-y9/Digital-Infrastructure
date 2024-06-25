@@ -1,11 +1,9 @@
 package net.risesoft.interfaces;
 
-import lombok.extern.slf4j.Slf4j;
-import net.risesoft.model.BaseIdCodeInfo;
-import net.risesoft.model.CodeRecordResult;
-import net.risesoft.model.Result;
-import net.risesoft.model.ResultObject;
-import net.risesoft.util.ConfigReader;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+
+import java.io.File;
+
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.DisplayName;
@@ -15,9 +13,13 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestMethodOrder;
 import org.springframework.boot.test.context.SpringBootTest;
 
-import java.io.File;
+import lombok.extern.slf4j.Slf4j;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
+import net.risesoft.model.BaseIdCodeInfo;
+import net.risesoft.model.CodeRecordResult;
+import net.risesoft.model.Result;
+import net.risesoft.model.ResultObject;
+import net.risesoft.util.ConfigReader;
 
 @SpringBootTest
 @Slf4j
@@ -79,7 +81,8 @@ public class FiveTest {
         Integer startNum = 1;
         Integer endNum = 2;
         Integer length = 3;
-        Result result = Five.m5014(ConfigReader.MAIN_CODE, categoryRegId, prefixStr, startNum, endNum, length, generateType);
+        Result result =
+            Five.m5014(ConfigReader.MAIN_CODE, categoryRegId, prefixStr, startNum, endNum, length, generateType);
         assertEquals(result.getResultCode(), 1);
     }
 

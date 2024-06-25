@@ -19,12 +19,12 @@ public class Y9OrgUtilTest {
         Y9Person updatePerson = new Y9Person();
         updatePerson.setDn("cn=测试人员,ou=测试部门,o=测试组织");
         updatePerson.setGuidPath("1,2,3");
-        
+
         assertFalse(Y9OrgUtil.isCurrentOrAncestorChanged(originPerson, updatePerson));
-        
+
         updatePerson.setDn("cn=测试人员1,ou=测试部门,o=测试组织");
         assertTrue(Y9OrgUtil.isCurrentOrAncestorChanged(originPerson, updatePerson));
-        
+
         updatePerson.setDn("cn=测试人员,ou=测试部门1,o=测试组织");
         assertTrue(Y9OrgUtil.isCurrentOrAncestorChanged(originPerson, updatePerson));
 
