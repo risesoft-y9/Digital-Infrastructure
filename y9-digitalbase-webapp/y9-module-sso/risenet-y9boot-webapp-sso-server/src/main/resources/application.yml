@@ -10,7 +10,7 @@ cas:
             port: 6379
             database: 12
             username: default
-            password: "12345678"
+            password: "y9i-83204585"
             timeout: "PT60S"
             pool:
                 enabled: true
@@ -139,7 +139,7 @@ cas:
             ddl-auto: update
             url: jdbc:mysql://localhost:3306/y9_public?serverTimezone=GMT%2B8&nullCatalogMeansCurrent=true&useUnicode=true&characterEncoding=utf-8&rewriteBatchedStatements=true&useCompression=true&useSSL=false&allowPublicKeyRetrieval=true
             user: root
-            password: '12345678'
+            password: '111111'
             idleTimeout: PT8M
             leakThreshold: 0
             autocommit: true
@@ -187,7 +187,7 @@ cas:
                 port: 6379
                 database: 13
                 username: default
-                password: "12345678"
+                password: "y9i-83204585"
                 timeout: "PT60S"
                 pool:
                     enabled: true
@@ -270,6 +270,11 @@ server:
         uri-encoding: UTF-8
 spring:
     cloud:
+        nacos:
+            config:
+                enabled: false
+            discovery:
+                enabled: false
         compatibility-verifier:
             enabled: false
         config:
@@ -287,7 +292,7 @@ spring:
             host: localhost
             port: 6379
             username: default
-            password: '12345678'
+            password: 'y9i-83204585'
             ssl:
                 enabled: false
             lettuce:
@@ -315,15 +320,8 @@ spring:
         #prefix: classpath:/templates/
         #suffix: .html
         template-resolver-order: 100
-    cloud:
-        nacos:
-            config:
-                enabled: false
-            discovery:
-                enabled: false
 y9:
     common:
-        kafkaEnabled: true
         logBaseUrl: http://localhost:7099/log
     login:
         casLoginView: "casLoginView-y9-v3.0"
