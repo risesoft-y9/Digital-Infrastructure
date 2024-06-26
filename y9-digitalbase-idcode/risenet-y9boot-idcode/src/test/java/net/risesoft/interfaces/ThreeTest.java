@@ -1,19 +1,6 @@
 package net.risesoft.interfaces;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-
-import java.io.File;
-
-import org.junit.jupiter.api.Disabled;
-import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.api.MethodOrderer;
-import org.junit.jupiter.api.Order;
-import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.TestMethodOrder;
-import org.springframework.boot.test.context.SpringBootTest;
-
 import lombok.extern.slf4j.Slf4j;
-
 import net.risesoft.model.OrganUnitResult;
 import net.risesoft.model.OrganUnitStatusInfo;
 import net.risesoft.model.RegistResult;
@@ -22,6 +9,17 @@ import net.risesoft.model.SmsVerifyCode;
 import net.risesoft.model.UnitRegistResult;
 import net.risesoft.model.UpdateGotoUrlResult;
 import net.risesoft.util.ConfigReader;
+import org.junit.jupiter.api.Disabled;
+import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.MethodOrderer;
+import org.junit.jupiter.api.Order;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.TestMethodOrder;
+import org.springframework.boot.test.context.SpringBootTest;
+
+import java.io.File;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 @SpringBootTest
 @Slf4j
@@ -84,7 +82,7 @@ public class ThreeTest {
     @Disabled
     void testM305() {
         Result result = Three.m305(ConfigReader.MAIN_CODE, 1, "address", "name", "nameEn", "addressEn", "email",
-            "linkman", "linkmanEn", "fax", "workAddress", "workAddressEn", 1, 1, 1, "gotoUrl", "linkPhone",
+            "linkman", "linkmanEn", "fax", "workAddress", "workAddressEn", 1, 1, 1, ConfigReader.GOTO_URL, "linkPhone",
             new File("D:/1111.jpg"));
         assertEquals(result.getResultCode(), 1);
         if (LOGGER.isDebugEnabled()) {
@@ -132,7 +130,7 @@ public class ThreeTest {
     void testM309() {
         UnitRegistResult result =
             Three.m309("loginName", "orgUnitName", "email", "code", "provinceId", "cityId", "areaId", "linkman",
-                "linkPhone", new File("D:/1111.jpg"), "qrCodeColor", new File("D:/1111.jpg"), "gotoUrl", "qrCodeSize");
+                "linkPhone", new File("D:/1111.jpg"), "qrCodeColor", new File("D:/1111.jpg"), ConfigReader.GOTO_URL, "qrCodeSize");
         assertEquals(result.getResultCode(), 1);
         if (LOGGER.isDebugEnabled()) {
             LOGGER.debug("单位主码:{} 二维码:{} 登录名:{}", result.getIdCode(), result.getQrCode(), result.getLoginName());
@@ -144,7 +142,7 @@ public class ThreeTest {
     @DisplayName("【310】修改单位logo或企业码解析地址")
     @Disabled
     void testM310() {
-        UpdateGotoUrlResult result = Three.m310("loginName", "pwd", "1111", "gotoUrl", 1, 1, 1);
+        UpdateGotoUrlResult result = Three.m310("loginName", "pwd", "1111", ConfigReader.GOTO_URL, 1, 1, 1);
         assertEquals(result.getResultCode(), 1);
         if (LOGGER.isDebugEnabled()) {
             LOGGER.debug("结果信息:{}", result.getQrCode());

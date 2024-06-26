@@ -80,6 +80,10 @@ main_code: MA.156.1003.16291
 api_key: 9XRMKN90QA8O90SDAAAAAKJ
 #系统授权码
 api_code: 09DN09QA8X08XRNN9DRMXRXM9DNAK09Q
+#统一码解析地址
+goto_url:
+#统一码示例地址
+sample_url:
 ```
 
 ### 六.统一码接口调用
@@ -92,15 +96,37 @@ System.out.println("结果信息:" + result);
 
 ## 怎么为一个物品生成一个码
 
+### 说明
+
+为统一码生成一个码图时，需要该码图的解析地址，也就是说扫描该码时，统一码平台会跳转到码图的解析地址，并把统一码拼接在解析地址后面。具体的解析地址信息请参阅**<a href="https://work.idcode.org.cn/UploadFiles/SP%E5%BC%80%E5%8F%91%E6%8E%A5%E5%8F%A3%E8%AF%B4%E6%98%8E%E6%96%87%E6%A1%A3.rar" target="_blank">SP开放文档</a>**文档中的**十三、 解析地址格式说明**  章节。
+
+生成的码图会有对解析地址的审核，审核期间会使用统一码平台的解析地址，如下
+
+<div><img src="https://vue.youshengyun.com/files/idcode/idcode7.png"><div/>
+
+审核过后会使用自己定义的解析地址，示例如下。
+
+<div><img src="https://vue.youshengyun.com/files/idcode/idcode8.png"><div/>
+
+### 注意
+
+**如果解析地址不存在，测扫描二维码后将提示页面错误，务必要自己开发解析地址。**
+
+**如果解析地址不存在，测扫描二维码后将提示页面错误，务必要自己开发解析地址。**
+
+**如果解析地址不存在，测扫描二维码后将提示页面错误，务必要自己开发解析地址。**
+
+**如果前期解析地址没有开发或者错误，也可以使用【602接口】对解析地址进行修改。**
+
 ### 一.确定物品所属品类信息
 
 通过【202接口】查看【品类用途】获取品类信息
 
-这里以注册一个有形资产为示例。得到一下信息：
+这里以注册一个**员工/职员名片**为示例。得到一下信息：
 
-用途：60
+用途：73
 
-品类ID :10166
+品类ID :10127
 
 品类码号：10000000
 
@@ -108,40 +134,39 @@ System.out.println("结果信息:" + result);
 
 <div><img src="https://vue.youshengyun.com/files/idcode/idcode4.png"><div/>
 
-### 二.注册物品获得一个idcode
+### 二.注册物品获得一个统一码
 
 >  406接口：注册/备案***产品***品类IDcode码接口 
 
 > 407接口： 注册/备案***非产品***品类IDcode码接口 
 
-有形资产属于非产品类，所以调用407接口，得到物品的idcode码：**MA.156.1003.1629/60.10000000.2/**
+**员工/职员名片**属于非产品类，所以调用407接口，得到统一码：
 
-注意：一个modelNumber只能注册一次，注册成功后，再使用相同的modelNumber会提示“重复申请”。
+**MA.156.1003.1629/73.10000000.6/**
+
+注意：一个modelNumber只能注册一次，注册成功后，再使用相同的modelNumber会提示“重复申请”，所以这里以数字底座中人员的唯一标示作为modelNumber注册，注册过的人员不能再注册。
 
 ```
 /**
-* 有形资产用途ID
-* codeUseId: 60 {@link net.risesoft.interfaces.TwoTest#testM201()}
+* 员工/职员名片用途ID
+* codeUseId: 73 {@link net.risesoft.interfaces.TwoTest#testM202()}
 */
-String codeUseId = "60";
+String codeUseId = "73";
 Integer codePayType = CodePayTypeEnum.REGISTER.getValue();
 /**
-* 有形资产
-* 品类ID-industryCategoryId: 10166
+* 员工/职员名片
+* 品类ID-industryCategoryId: 10127
 * 品类码号-categoryCode: 10000000
 */
-Integer industryCategoryId = 10166;
+Integer industryCategoryId = 10127;
 String categoryCode = "10000000";
-String modelNumber = "电脑桌-A002";
-String modelNumberEn = "desktop-A002";
-String introduction = "所属南方第六事业部";
-String gotoUrl = "http://example.com/goto";
-String sampleUrl = "http://example.com/goto";
-IdcodeRegResult result = Four.m407(ConfigReader.MAIN_CODE, codeUseId, industryCategoryId, categoryCode, modelNumber, modelNumberEn, introduction, codePayType, gotoUrl, sampleUrl);
+String personId = "1634534857272987648";
+String personName = "统一码测试";
+IdcodeRegResult result = Four.m407(ConfigReader.MAIN_CODE, codeUseId, industryCategoryId, categoryCode, personId, "", personName, codePayType, ConfigReader.GOTO_URL, ConfigReader.SAMPLE_URL);
 System.out.println("注册/备案结果:" + result);
 ```
 
-### 三.为idcode生成一个码
+### 三.为统一码生成一个码图
 
 >  603：生成码图接口 
 >
@@ -150,26 +175,27 @@ System.out.println("注册/备案结果:" + result);
 
 >  605：生成质量认证二维码图  
 
-这里以603为例：
+以603为例：
 
 ```
-String code = "MA.156.1003.1629/60.10000000.2/";
+String code = "MA.156.1003.1629/73.10000000.6/";
 Integer picSize = 300;
 Integer codeType = CodeTypeEnum.QR.getValue();
 CodeAddress result = Six.m603(code, picSize, codeType);
 System.out.println("码图地址:" + result.getAddress());
 ```
 
-请求接口后会得到一个码图地址：http://api.idcode.org.cn/Photo/20240603155634578985.jpg
+请求接口后会得到一个码图地址：http://api.idcode.org.cn/Photo/20240613154801521699.jpg
 
 具体码图如下：
 
-<div><img src="http://api.idcode.org.cn/Photo/20240603155634578985.jpg"><div/>
+<div><img src="http://api.idcode.org.cn/Photo/20240613154801521699.jpg"><div/>
 
-这里以604为例：
+
+以604为例：
 
 ```
-String code = ConfigReader.ANALYZE_URL + "?code=MA.156.1003.1629/60.10000000.2";
+String code = ConfigReader.ANALYZE_URL + "?code=MA.156.1003.1629/73.10000000.6/";
 Integer isMargin = 1;
 //将单位logo图片转换为base64字符串-非必填
 String unitIcon = "";
@@ -182,4 +208,30 @@ System.out.println("生成的码图base64字符串:" + result.getStr());
 把base64转为图片后可以得到如下码图：
 
 <div><img src="https://vue.youshengyun.com/files/idcode/idcode5.png"><div/>
+
+
+以605为例：
+
+```
+String idCode = ConfigReader.MAIN_CODE;
+String code = "MA.156.1003.1629/73.10000000.6/";
+Integer useLogo = 1;
+String unitLogo ="";
+Integer marginType = MarginTypeEnum.SQUARE.getValue();
+Integer categoryId = 1;
+Integer marginTypeLv2 = 1;
+Integer codeType = CodeTypeEnum.QR.getValue();
+Integer codeSize = 5;
+String codeColor = "000000";
+CodePicBase64 result = Six.m605(idCode, code, useLogo, unitLogo, marginType, categoryId, marginTypeLv2,
+codeType, codeSize, codeColor);
+assertEquals(result.getResultCode(), 1);
+if (LOGGER.isDebugEnabled()) {
+	LOGGER.debug("生成质量认证二维码图base64字符串::{}", result.getStr());
+}
+```
+
+把base64转为图片后可以得到如下码图：
+
+<div><img src="https://vue.youshengyun.com/files/idcode/idcode6.png"><div/>
 

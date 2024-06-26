@@ -1,7 +1,11 @@
 package net.risesoft.interfaces;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-
+import lombok.extern.slf4j.Slf4j;
+import net.risesoft.model.AuthenPicResult;
+import net.risesoft.model.ExamineResult;
+import net.risesoft.model.OrganUnit;
+import net.risesoft.model.Result;
+import net.risesoft.util.ConfigReader;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.MethodOrderer;
@@ -10,13 +14,7 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestMethodOrder;
 import org.springframework.boot.test.context.SpringBootTest;
 
-import lombok.extern.slf4j.Slf4j;
-
-import net.risesoft.model.AuthenPicResult;
-import net.risesoft.model.ExamineResult;
-import net.risesoft.model.OrganUnit;
-import net.risesoft.model.Result;
-import net.risesoft.util.ConfigReader;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 @SpringBootTest
 @Slf4j
@@ -44,10 +42,8 @@ public class SevenTest {
     @DisplayName("【602】修改解析地址")
     public void testM602() {
         String idCode = ConfigReader.MAIN_CODE;
-        String gotoUrl = "";
-        String sampleUrl = "";
         String regId = "";
-        Result result = Seven.m602(idCode, gotoUrl, sampleUrl, regId);
+        Result result = Seven.m602(idCode, ConfigReader.GOTO_URL, ConfigReader.SAMPLE_URL, regId);
         assertEquals(result.getResultCode(), 1);
         if (LOGGER.isDebugEnabled()) {
             LOGGER.debug("码图地址:{}", result);
@@ -59,9 +55,7 @@ public class SevenTest {
     @Disabled
     @DisplayName("【606】申请IDcode解析地址白名单")
     public void testM606() {
-        String gotoUrl = "";
-        String sampleUrl = "";
-        Result result = Seven.m606(gotoUrl, sampleUrl);
+        Result result = Seven.m606(ConfigReader.GOTO_URL, ConfigReader.SAMPLE_URL);
         assertEquals(result.getResultCode(), 1);
         if (LOGGER.isDebugEnabled()) {
             LOGGER.debug("码图地址:{}", result);
