@@ -205,6 +205,7 @@ public class InitialFlowSetupAction extends BaseCasWebflowAction {
         }
         context.getFlowScope().put("httpRequestSecure", request.isSecure());
         context.getFlowScope().put("httpRequestMethod", request.getMethod());
+        context.getFlowScope().put("contextPath", request.getContextPath()); // y9 add
     }
 
     protected void configureCookieGenerators(final RequestContext context) {
