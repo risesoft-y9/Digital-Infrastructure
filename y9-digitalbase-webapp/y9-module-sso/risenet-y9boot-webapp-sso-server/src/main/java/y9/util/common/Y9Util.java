@@ -14,6 +14,9 @@ import jakarta.servlet.http.HttpServletResponse;
 import org.apache.commons.beanutils.PropertyUtils;
 import org.springframework.util.StringUtils;
 
+import lombok.extern.slf4j.Slf4j;
+
+@Slf4j
 public class Y9Util {
     /*
      * 生成自定义的字符串，例如a,b,c 其中str是要生成的字符串 addNew是添加的字符串
@@ -51,11 +54,11 @@ public class Y9Util {
                 }
             }
         } catch (IllegalAccessException e) {
-            e.printStackTrace();
+            LOGGER.warn(e.getMessage(), e);
         } catch (InvocationTargetException e) {
-            e.printStackTrace();
+            LOGGER.warn(e.getMessage(), e);
         } catch (NoSuchMethodException e) {
-            e.printStackTrace();
+            LOGGER.warn(e.getMessage(), e);
         }
 
         return list.toArray(new String[0]);
@@ -102,7 +105,7 @@ public class Y9Util {
         try {
             response.getWriter().write(text);
         } catch (IOException e) {
-            e.printStackTrace();
+            LOGGER.warn(e.getMessage(), e);
         }
     }
 

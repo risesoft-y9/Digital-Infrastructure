@@ -58,7 +58,7 @@ public class Y9LoginUser implements Serializable {
 
     @Column(name = "USER_HOST_MAC", length = 255)
     @Comment("用户主机MAC")
-    private String userHostMAC;
+    private String userHostMac;
 
     @Column(name = "USER_HOST_NAME", length = 255)
     @Comment("用户主机名称")
@@ -98,7 +98,7 @@ public class Y9LoginUser implements Serializable {
 
     @Column(name = "OS_NAME", length = 255)
     @Comment("OS名称")
-    private String oSName;
+    private String osName;
 
     @Column(name = "SCREEN_RESOLUTION", length = 255)
     @Comment("用户主机屏幕分辨率")

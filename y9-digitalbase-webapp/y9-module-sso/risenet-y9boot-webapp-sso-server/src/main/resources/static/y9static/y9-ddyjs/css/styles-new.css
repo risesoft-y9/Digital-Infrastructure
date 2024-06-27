@@ -8,11 +8,6 @@
     src: url('../fonts/AaBanRuoKaiShuJiaCu.woff2') format('woff2');
 }
 
-@font-face {
-    font-family: 'aaBoruokaishuBold-all';
-    src: url('../fonts/AaBanRuoKaiShuJiaCu.woff2') format('woff2');
-}
-
 html, body {
     padding: 0;
     margin: 0;

@@ -103,7 +103,7 @@ public class RSAUtil {
             String encryptString = publicEncrypt("Risesoft@2023", arr[0]);
             System.out.println("公钥加密后字符串:" + encryptString);
             String decryptString = privateDecrypt(encryptString, arr[1]);
-            System.out.println("私钥加密后字符串:" + decryptString);
+            System.out.println("私钥解密后字符串:" + decryptString);
         } catch (Exception e) {
             e.printStackTrace();
         }

@@ -14,7 +14,7 @@ import org.springframework.transaction.support.TransactionOperations;
 
 import y9.service.Y9UserService;
 
-@Service("y9UserService")
+@Service
 public class Y9UserServiceImpl implements Y9UserService {
     private static final String SELECT_QUERY = "SELECT r from Y9User r ";
 

@@ -16,6 +16,8 @@ import org.apache.hc.core5.http.NameValuePair;
 import org.apache.hc.core5.http.io.entity.EntityUtils;
 import org.apache.hc.core5.http.message.BasicNameValuePair;
 
+import lombok.extern.slf4j.Slf4j;
+
 import y9.util.json.Y9JacksonUtil;
 
 /**
@@ -28,6 +30,7 @@ import y9.util.json.Y9JacksonUtil;
  *
  * @date 2022/09/26
  */
+@Slf4j
 public class Y9YunSmsUtil {
 
     /**
@@ -114,7 +117,7 @@ public class Y9YunSmsUtil {
                 resualt = map.get("code").toString();
             }
         } catch (Exception e) {
-            e.printStackTrace();
+            LOGGER.warn(e.getMessage(), e);
         }
         return resualt;
     }

@@ -35,9 +35,11 @@ import lombok.val;
 import lombok.extern.slf4j.Slf4j;
 
 import y9.service.Y9UserService;
+import y9.util.Y9Context;
 import y9.util.Y9MessageDigest;
 import y9.util.common.Base64Util;
 import y9.util.common.CheckPassWord;
+import y9.util.common.RSAUtil;
 
 /**
  *
@@ -68,56 +70,44 @@ public class LoginController {
         this.authenticationSystemSupport = authenticationSystemSupport;
         this.webApplicationServiceFactory = webApplicationServiceFactory;
         this.y9UserService = y9UserService;
-        LOGGER.info("LoginController created...");
     }
 
     public Map<String, Object> checkSsoLoginInfo(String tenantShortName, String username, String password,
         String pwdEcodeType, String loginType, final HttpServletRequest request, final HttpServletResponse response) {
         Map<String, Object> map = new HashMap<String, Object>();
-        boolean validation = false;
         try {
             username = Base64Util.decode(username, "Unicode");
-            if (StringUtils.isBlank(pwdEcodeType) || !"SHA1".equals(pwdEcodeType)) {
-                password = Base64Util.decode(password, "Unicode");
-                // password = Y9MessageDigest.hashpw(password);
+            if (StringUtils.isNotBlank(pwdEcodeType)) {
+                String privateKey = Y9Context.getProperty("y9.login.encryptionRsaPrivateKey");
+                // Object obj = redisTemplate.opsForValue().get(pwdEcodeType);
+                password = RSAUtil.privateDecrypt(password, privateKey);
             }
+            password = Base64Util.decode(password, "Unicode");
             if (username.contains("&")) {
-                username = username.substring(username.indexOf("&") + 1, username.length());
-                tenantShortName = "isv";
+                username = username.substring(username.indexOf("&") + 1);
+                tenantShortName = "operation";
             }
-            String encryptedPassword = password;
             List<Y9User> users = null;
             if ("mobile".equals(loginType)) {
                 users = y9UserService.findByTenantShortNameAndMobile(tenantShortName, username);
             } else {
                 users = y9UserService.findByTenantShortNameAndLoginName(tenantShortName, username);
             }
+
             if (users.isEmpty()) {
                 map.put("msg", "该账号不存在，请检查账号输入是否正确！");
                 map.put("success", false);
                 return map;
             }
-            // 检验该账号是否已经被锁定
-            // checkLoginThrottle(map, username);
-            if (!users.isEmpty()) {
-                validation = true;
-            }
 
-            if (!validation) {
-                // processLoginThrottle(map, username);
-                map.put("success", false);
-                map.put("msg", "登录名或者密码输入错误!");
-                return map;
-            }
             Y9User y9User = users.get(0);
             String hashed = y9User.getPassword();
-            if (!Y9MessageDigest.checkpw(password, hashed)) {
+            if (!Y9MessageDigest.bcryptMatch(password, hashed)) {
                 map.put("msg", "密码错误!");
                 map.put("success", false);
                 return map;
             }
-            // mongoTemplate.remove(new Query(Criteria.where("name").is(username)),
-            // LoginThrottle.class);
+            // mongoTemplate.remove(new Query(Criteria.where("name").is(username)), LoginThrottle.class);
             boolean isSimplePassWord = CheckPassWord.isSimplePassWord(password);
             if (isSimplePassWord) {
                 map.put("msg", "密码过于简单,请重新设置密码！");

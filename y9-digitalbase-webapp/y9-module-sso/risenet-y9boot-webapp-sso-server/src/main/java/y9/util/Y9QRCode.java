@@ -19,6 +19,9 @@ import com.google.zxing.MultiFormatWriter;
 import com.google.zxing.WriterException;
 import com.google.zxing.common.BitMatrix;
 
+import lombok.extern.slf4j.Slf4j;
+
+@Slf4j
 public class Y9QRCode {
     // 图片宽度的一半
     private static final int IMAGE_WIDTH = 50;
@@ -37,9 +40,9 @@ public class Y9QRCode {
             String base64 = base.encodeToString(stream.toByteArray());
             return "data:image/png;base64," + base64;
         } catch (IOException e) {
-            e.printStackTrace();
+            LOGGER.warn(e.getMessage(), e);
         } catch (WriterException e) {
-            e.printStackTrace();
+            LOGGER.warn(e.getMessage(), e);
         }
         return "";
     }

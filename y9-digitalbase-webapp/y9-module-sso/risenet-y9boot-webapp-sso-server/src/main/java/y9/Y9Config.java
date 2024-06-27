@@ -2,20 +2,14 @@ package y9;
 
 import java.util.List;
 
-import org.apereo.cas.CentralAuthenticationService;
 import org.apereo.cas.authentication.AuthenticationEventExecutionPlanConfigurer;
-import org.apereo.cas.authentication.AuthenticationSystemSupport;
 import org.apereo.cas.authentication.RiseAuthenticationHandler;
 import org.apereo.cas.authentication.adaptive.AdaptiveAuthenticationPolicy;
 import org.apereo.cas.authentication.principal.DefaultPrincipalFactory;
 import org.apereo.cas.authentication.principal.PrincipalFactory;
 import org.apereo.cas.authentication.principal.PrincipalResolver;
 import org.apereo.cas.authentication.principal.RisePersonDirectoryPrincipalResolver;
-import org.apereo.cas.authentication.principal.ServiceFactory;
-import org.apereo.cas.configuration.CasConfigurationProperties;
 import org.apereo.cas.jpa.JpaPersistenceProviderConfigurer;
-import org.apereo.cas.redis.core.CasRedisTemplate;
-import org.apereo.cas.redis.core.RedisObjectFactory;
 import org.apereo.cas.services.JpaRegisteredServiceEntity;
 import org.apereo.cas.services.ServicesManager;
 import org.apereo.cas.services.Y9LoginUser;
@@ -24,12 +18,11 @@ import org.apereo.cas.util.CollectionUtils;
 import org.apereo.cas.util.spring.beans.BeanCondition;
 import org.apereo.cas.util.spring.beans.BeanSupplier;
 import org.apereo.cas.web.CasWebSecurityConfigurer;
-import org.apereo.cas.web.cookie.CasCookieBuilder;
 import org.apereo.cas.web.flow.actions.RiseCredentialNonInteractiveCredentialsAction;
 import org.apereo.cas.web.flow.resolver.CasDelegatingWebflowEventResolver;
 import org.apereo.cas.web.flow.resolver.CasWebflowEventResolver;
 import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.cloud.context.config.annotation.RefreshScope;
 import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.context.annotation.Bean;
@@ -37,42 +30,23 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.context.annotation.ScopedProxyMode;
 import org.springframework.data.redis.connection.RedisConnectionFactory;
+import org.springframework.data.redis.core.RedisTemplate;
+import org.springframework.scheduling.annotation.EnableScheduling;
+import org.springframework.scheduling.annotation.SchedulingConfigurer;
+import org.springframework.scheduling.config.ScheduledTaskRegistrar;
+import org.springframework.transaction.support.TransactionOperations;
 import org.springframework.webflow.execution.Action;
 
 import lombok.val;
 
-import y9.controller.CheckController;
-import y9.controller.LoginController;
-import y9.controller.QRCodeController;
-import y9.controller.RedisController;
-import y9.controller.ServiceController;
-import y9.controller.TenantController;
-import y9.service.Y9LoginUserService;
-import y9.service.Y9UserService;
-import y9.service.impl.Y9LoginUserServiceImpl;
-import y9.service.impl.Y9UserServiceImpl;
+import y9.service.Y9KeyValueService;
+import y9.service.impl.Y9JpaKeyValueServiceImpl;
+import y9.service.impl.Y9RedisKeyValueServiceImpl;
 import y9.util.Y9Context;
 
 @Lazy(false)
 @Configuration(proxyBeanMethods = false)
 public class Y9Config {
-
-    @Configuration
-    public static class Y9RedisConfig {
-        @Bean
-        public Y9Context y9Context() {
-            return new Y9Context();
-        }
-
-        @Bean
-        @RefreshScope
-        public CasRedisTemplate<Object, Object> y9RedisTemplate(
-            @Qualifier("redisTicketConnectionFactory") final RedisConnectionFactory redisTicketConnectionFactory) {
-            CasRedisTemplate<Object, Object> redisTemplate =
-                RedisObjectFactory.newRedisTemplate(redisTicketConnectionFactory);
-            return redisTemplate;
-        }
-    }
 
     @Configuration
     public static class Y9JpaConfig {
@@ -138,66 +112,62 @@ public class Y9Config {
         }
     }
 
-    @Configuration
-    public static class Y9ControllerConfig {
+    @Configuration(proxyBeanMethods = false)
+    public static class Y9KeyValueConfiguration {
 
         @Bean
-        public CheckController checkController(Y9UserService y9UserService,
-            @Qualifier("y9RedisTemplate") CasRedisTemplate<Object, Object> redisTemplate) {
-            return new CheckController(y9UserService, redisTemplate);
+        public Y9Context y9Context() {
+            return new Y9Context();
         }
 
-        @Bean
-        @ConditionalOnMissingBean
-        public LoginController loginController(CentralAuthenticationService centralAuthenticationService,
-            @Qualifier("ticketGrantingTicketCookieGenerator") CasCookieBuilder ticketGrantingTicketCookieGenerator,
-            @Qualifier("defaultAuthenticationSystemSupport") AuthenticationSystemSupport authenticationSystemSupport,
-            @Qualifier("webApplicationServiceFactory") ServiceFactory webApplicationServiceFactory,
-            Y9UserService y9UserService) {
-            return new LoginController(centralAuthenticationService, ticketGrantingTicketCookieGenerator,
-                authenticationSystemSupport, webApplicationServiceFactory, y9UserService);
+        @Configuration(proxyBeanMethods = false)
+        @ConditionalOnProperty(name = "cas.ticket.registry.redis.enabled", havingValue = "true", matchIfMissing = false)
+        public static class Y9RedisKeyValueConfiguration {
+
+            @Bean
+            public RedisTemplate<Object, Object> y9RedisTemplate(
+                @Qualifier("redisTicketConnectionFactory") final RedisConnectionFactory redisConnectionFactory) {
+                RedisTemplate<Object, Object> redisTemplate = new RedisTemplate<>();
+                redisTemplate.setConnectionFactory(redisConnectionFactory);
+                return redisTemplate;
+            }
+
+            @Bean
+            public Y9KeyValueService
+            y9RedisKeyValueService(@Qualifier("y9RedisTemplate") RedisTemplate<Object, Object> y9RedisTemplate) {
+                return new Y9RedisKeyValueServiceImpl(y9RedisTemplate);
+            }
         }
 
-        @Bean
-        @ConditionalOnMissingBean
-        public QRCodeController
-            qRCodeController(@Qualifier("y9RedisTemplate") CasRedisTemplate<Object, Object> redisTemplate) {
-            return new QRCodeController(redisTemplate);
-        }
+        @Configuration(proxyBeanMethods = false)
+        @ConditionalOnProperty(name = "cas.ticket.registry.jpa.enabled", havingValue = "true", matchIfMissing = false)
+        public static class Y9JpaKeyValueConfiguration {
 
-        @Bean
-        @ConditionalOnMissingBean
-        public RedisController
-            redisController(@Qualifier("y9RedisTemplate") CasRedisTemplate<Object, Object> redisTemplate) {
-            return new RedisController(redisTemplate);
-        }
+            @Bean
+            public Y9KeyValueService y9JpaKeyValueService(
+                @Qualifier("jdbcServiceRegistryTransactionTemplate") TransactionOperations transactionTemplate) {
+                return new Y9JpaKeyValueServiceImpl(transactionTemplate);
+            }
 
-        @Bean
-        @ConditionalOnMissingBean
-        public ServiceController serviceController(ServicesManager servicesManager,
-            CasConfigurationProperties casConfigurationProperties) {
-            return new ServiceController(servicesManager, casConfigurationProperties);
-        }
+            @EnableScheduling
+            @Configuration(proxyBeanMethods = false)
+            class Y9KeyValueCleanupConfiguration implements SchedulingConfigurer {
+                // 每分钟执行一次
+                private final String cleanupCron = "0 * * * * *";
 
-        @Bean
-        @ConditionalOnMissingBean
-        public TenantController tenantController(Y9UserService y9UserService) {
-            return new TenantController(y9UserService);
-        }
-    }
+                private final Y9KeyValueService y9KeyValueService;
 
-    @Configuration
-    public static class Y9ServiceConfig {
-        @Bean
-        public Y9UserService y9UserService() {
-            return new Y9UserServiceImpl();
-        }
+                public Y9KeyValueCleanupConfiguration(Y9KeyValueService y9KeyValueService) {
+                    this.y9KeyValueService = y9KeyValueService;
+                }
 
-        @Bean
-        public Y9LoginUserService y9LoginUserService() {
-            return new Y9LoginUserServiceImpl();
-        }
+                @Override
+                public void configureTasks(ScheduledTaskRegistrar taskRegistrar) {
+                    taskRegistrar.addCronTask(this.y9KeyValueService::cleanUpExpiredKeyValue, this.cleanupCron);
+                }
 
+            }
+        }
     }
 
 }

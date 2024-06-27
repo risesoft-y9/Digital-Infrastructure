@@ -17,7 +17,11 @@ import com.fasterxml.jackson.databind.ObjectWriter;
 import com.fasterxml.jackson.databind.ser.FilterProvider;
 import com.fasterxml.jackson.databind.ser.impl.SimpleBeanPropertyFilter;
 import com.fasterxml.jackson.databind.ser.impl.SimpleFilterProvider;
+import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 
+import lombok.extern.slf4j.Slf4j;
+
+@Slf4j
 public class Y9JacksonUtil {
 
     // jackson的objectMapper 设计为单例，其他地方使用时，不要重复创建
@@ -27,6 +31,7 @@ public class Y9JacksonUtil {
         objectMapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
         Y9DateFormat sdf = new Y9DateFormat();
         objectMapper.setDateFormat(sdf);
+        objectMapper.registerModule(new JavaTimeModule());
     }
 
     public static void main(String[] args) {
@@ -79,11 +84,11 @@ public class Y9JacksonUtil {
         try {
             return objectMapper.readValue(content, objectMapper.getTypeFactory().constructArrayType(valueType));
         } catch (JsonParseException e) {
-            e.printStackTrace();
+            LOGGER.warn(e.getMessage(), e);
         } catch (JsonMappingException e) {
-            e.printStackTrace();
+            LOGGER.warn(e.getMessage(), e);
         } catch (IOException e) {
-            e.printStackTrace();
+            LOGGER.warn(e.getMessage(), e);
         }
         return null;
     }
@@ -93,11 +98,11 @@ public class Y9JacksonUtil {
             return objectMapper.readValue(content,
                 objectMapper.getTypeFactory().constructMapType(HashMap.class, String.class, Object.class));
         } catch (JsonParseException e) {
-            e.printStackTrace();
+            LOGGER.warn(e.getMessage(), e);
         } catch (JsonMappingException e) {
-            e.printStackTrace();
+            LOGGER.warn(e.getMessage(), e);
         } catch (IOException e) {
-            e.printStackTrace();
+            LOGGER.warn(e.getMessage(), e);
         }
         return null;
     }
@@ -107,11 +112,11 @@ public class Y9JacksonUtil {
             return objectMapper.readValue(content,
                 objectMapper.getTypeFactory().constructMapType(HashMap.class, keyClass, valueClass));
         } catch (JsonParseException e) {
-            e.printStackTrace();
+            LOGGER.warn(e.getMessage(), e);
         } catch (JsonMappingException e) {
-            e.printStackTrace();
+            LOGGER.warn(e.getMessage(), e);
         } catch (IOException e) {
-            e.printStackTrace();
+            LOGGER.warn(e.getMessage(), e);
         }
         return null;
     }
@@ -121,11 +126,11 @@ public class Y9JacksonUtil {
             return objectMapper.readValue(content,
                 objectMapper.getTypeFactory().constructCollectionType(ArrayList.class, valueType));
         } catch (JsonParseException e) {
-            e.printStackTrace();
+            LOGGER.warn(e.getMessage(), e);
         } catch (JsonMappingException e) {
-            e.printStackTrace();
+            LOGGER.warn(e.getMessage(), e);
         } catch (IOException e) {
-            e.printStackTrace();
+            LOGGER.warn(e.getMessage(), e);
         }
         return null;
     }
@@ -136,11 +141,11 @@ public class Y9JacksonUtil {
             return objectMapper.readValue(content,
                 objectMapper.getTypeFactory().constructCollectionType(ArrayList.class, inner));
         } catch (JsonParseException e) {
-            e.printStackTrace();
+            LOGGER.warn(e.getMessage(), e);
         } catch (JsonMappingException e) {
-            e.printStackTrace();
+            LOGGER.warn(e.getMessage(), e);
         } catch (IOException e) {
-            e.printStackTrace();
+            LOGGER.warn(e.getMessage(), e);
         }
         return null;
     }
@@ -151,11 +156,11 @@ public class Y9JacksonUtil {
             return objectMapper.readValue(content,
                 objectMapper.getTypeFactory().constructCollectionType(ArrayList.class, inner));
         } catch (JsonParseException e) {
-            e.printStackTrace();
+            LOGGER.warn(e.getMessage(), e);
         } catch (JsonMappingException e) {
-            e.printStackTrace();
+            LOGGER.warn(e.getMessage(), e);
         } catch (IOException e) {
-            e.printStackTrace();
+            LOGGER.warn(e.getMessage(), e);
         }
         return null;
     }
@@ -164,11 +169,11 @@ public class Y9JacksonUtil {
         try {
             return objectMapper.readValue(content, valueType);
         } catch (JsonParseException e) {
-            e.printStackTrace();
+            LOGGER.warn(e.getMessage(), e);
         } catch (JsonMappingException e) {
-            e.printStackTrace();
+            LOGGER.warn(e.getMessage(), e);
         } catch (IOException e) {
-            e.printStackTrace();
+            LOGGER.warn(e.getMessage(), e);
         }
         return null;
     }
@@ -177,11 +182,11 @@ public class Y9JacksonUtil {
         try {
             return objectMapper.readValue(content, valueType);
         } catch (JsonParseException e) {
-            e.printStackTrace();
+            LOGGER.warn(e.getMessage(), e);
         } catch (JsonMappingException e) {
-            e.printStackTrace();
+            LOGGER.warn(e.getMessage(), e);
         } catch (IOException e) {
-            e.printStackTrace();
+            LOGGER.warn(e.getMessage(), e);
         }
         return null;
     }
@@ -190,11 +195,11 @@ public class Y9JacksonUtil {
         try {
             return objectMapper.readValue(content, valueTypeRef);
         } catch (JsonParseException e) {
-            e.printStackTrace();
+            LOGGER.warn(e.getMessage(), e);
         } catch (JsonMappingException e) {
-            e.printStackTrace();
+            LOGGER.warn(e.getMessage(), e);
         } catch (IOException e) {
-            e.printStackTrace();
+            LOGGER.warn(e.getMessage(), e);
         }
         return null;
     }
@@ -204,7 +209,7 @@ public class Y9JacksonUtil {
         try {
             s = objectMapper.writeValueAsString(value);
         } catch (JsonProcessingException e) {
-            e.printStackTrace();
+            LOGGER.warn(e.getMessage(), e);
         }
         return s;
     }
@@ -223,7 +228,7 @@ public class Y9JacksonUtil {
         try {
             s = writer.writeValueAsString(value);
         } catch (JsonProcessingException e) {
-            e.printStackTrace();
+            LOGGER.warn(e.getMessage(), e);
         }
         return s;
     }
@@ -233,7 +238,7 @@ public class Y9JacksonUtil {
         try {
             s = objectMapper.writerWithDefaultPrettyPrinter().writeValueAsString(value);
         } catch (JsonProcessingException e) {
-            e.printStackTrace();
+            LOGGER.warn(e.getMessage(), e);
         }
         return s;
     }

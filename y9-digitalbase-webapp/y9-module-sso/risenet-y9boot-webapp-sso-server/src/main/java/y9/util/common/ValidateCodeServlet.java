@@ -14,12 +14,15 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 
+import lombok.extern.slf4j.Slf4j;
+
 /**
  * 生成随机验证码
  * 
  * @author bitiliu http://blog.csdn.net/joliny/archive/2007/08/30/1764839.aspx
  * 
  */
+@Slf4j
 public class ValidateCodeServlet extends HttpServlet {
     private static final long serialVersionUID = 5473036569686182053L;
     // 验证码图片的宽度。
@@ -39,7 +42,7 @@ public class ValidateCodeServlet extends HttpServlet {
                                                                 // 0比较类似，我去掉了。
 
     @Override
-    public void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+    public void doGet(HttpServletRequest request, HttpServletResponse response) {
         // 宽度
         String strWidth = request.getParameter("width");
         // 高度
@@ -125,9 +128,11 @@ public class ValidateCodeServlet extends HttpServlet {
         response.setContentType("image/jpeg");
 
         // 将图像输出到Servlet输出流中。
-        ServletOutputStream sos = response.getOutputStream();
-        ImageIO.write(buffImg, "jpeg", sos);
-        sos.close();
+        try (ServletOutputStream sos = response.getOutputStream()) {
+            ImageIO.write(buffImg, "jpeg", sos);
+        } catch (IOException e) {
+            LOGGER.warn(e.getMessage(), e);
+        }
     }
 
     // 处理post

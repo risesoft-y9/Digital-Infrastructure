@@ -63,14 +63,14 @@ public class InetAddressUtil {
         try (InputStream inputStream =
             InetAddressUtil.class.getClassLoader().getResourceAsStream("application.properties")) {
             properties.load(inputStream);
-        } catch (IOException ignored) {
+        } catch (IOException e) {
         }
 
         if (properties.isEmpty()) {
-            try (InputStream inputStream2 =
-                InetAddressUtil.class.getClassLoader().getResourceAsStream("properties/application.properties");) {
-                properties.load(inputStream2);
-            } catch (IOException ignored) {
+            try (InputStream inputStream =
+                InetAddressUtil.class.getClassLoader().getResourceAsStream("properties/application.properties")) {
+                properties.load(inputStream);
+            } catch (IOException e) {
             }
         }
 

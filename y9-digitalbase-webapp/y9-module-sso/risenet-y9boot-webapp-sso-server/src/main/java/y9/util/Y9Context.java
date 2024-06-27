@@ -16,9 +16,12 @@ import org.springframework.context.EnvironmentAware;
 import org.springframework.core.env.Environment;
 import org.springframework.web.context.ServletContextAware;
 
+import lombok.extern.slf4j.Slf4j;
+
 /**
  * 获取WebApplicationContext的一条途径
  */
+@Slf4j
 public class Y9Context implements ApplicationContextAware, EnvironmentAware, ServletContextAware {
 
     private static ApplicationContext applicationContext;
@@ -49,7 +52,7 @@ public class Y9Context implements ApplicationContextAware, EnvironmentAware, Ser
      * 
      * @param name
      * @return
-     * @throws org.springframework.beans.factory.NoSuchBeanDefinitionException
+     * @throws NoSuchBeanDefinitionException
      */
     public static String[] getAliases(String name) throws NoSuchBeanDefinitionException {
         return applicationContext.getAliases(name);
@@ -61,10 +64,10 @@ public class Y9Context implements ApplicationContextAware, EnvironmentAware, Ser
      * 
      * @param clz
      * @return
-     * @throws org.springframework.beans.BeansException
+     * @throws BeansException
      */
     public static <T> T getBean(Class<T> clz) throws BeansException {
-        T result = applicationContext.getBean(clz);
+        T result = (T)applicationContext.getBean(clz);
         return result;
     }
 
@@ -75,7 +78,7 @@ public class Y9Context implements ApplicationContextAware, EnvironmentAware, Ser
      * @param name
      * @return Object 一个以所给名字注册的bean的实例
      * 
-     * @throws org.springframework.beans.BeansException
+     * @throws BeansException
      */
     @SuppressWarnings("unchecked")
     public static <T> T getBean(String name) throws BeansException {
@@ -102,7 +105,7 @@ public class Y9Context implements ApplicationContextAware, EnvironmentAware, Ser
             try {
                 Y9Context.hostName = InetAddress.getLocalHost().getHostName();
             } catch (UnknownHostException e) {
-                e.printStackTrace();
+                LOGGER.warn(e.getMessage(), e);
             }
         }
 
@@ -171,7 +174,7 @@ public class Y9Context implements ApplicationContextAware, EnvironmentAware, Ser
      * @param name
      * @return Class 注册对象的类型
      * 
-     * @throws org.springframework.beans.factory.NoSuchBeanDefinitionException
+     * @throws NoSuchBeanDefinitionException
      */
     public static Class<?> getType(String name) throws NoSuchBeanDefinitionException {
         return applicationContext.getType(name);
@@ -187,7 +190,7 @@ public class Y9Context implements ApplicationContextAware, EnvironmentAware, Ser
      * 
      * @param name
      * @return boolean
-     * @throws org.springframework.beans.factory.NoSuchBeanDefinitionException
+     * @throws NoSuchBeanDefinitionException
      */
     public static boolean isSingleton(String name) throws NoSuchBeanDefinitionException {
         return applicationContext.isSingleton(name);

@@ -12,19 +12,27 @@ import org.apereo.cas.services.Y9LoginUser;
 import org.apereo.cas.services.Y9User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.context.ConfigurableApplicationContext;
+import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.support.TransactionOperations;
 import org.springframework.util.StringUtils;
+
+import lombok.extern.slf4j.Slf4j;
 
 import y9.service.Y9LoginUserService;
 import y9.service.Y9UserService;
 import y9.util.InetAddressUtil;
 import y9.util.common.UserAgentUtil;
+import y9.util.json.Y9JacksonUtil;
 
 import cz.mallat.uasparser.UserAgentInfo;
 
-@Service("y9LoginUserService")
+@Service
+@Slf4j
 public class Y9LoginUserServiceImpl implements Y9LoginUserService {
+
+    public static String SSO_SERVER_IP = InetAddressUtil.getLocalAddress().getHostAddress();
 
     @Autowired
     private Y9UserService y9UserService;
@@ -33,16 +41,11 @@ public class Y9LoginUserServiceImpl implements Y9LoginUserService {
     @Qualifier("jdbcServiceRegistryTransactionTemplate")
     private TransactionOperations transactionTemplate;
 
-    // @Autowired
-    // @Qualifier("serviceEntityManagerFactory")
-    // private EntityManagerFactory serviceEntityManagerFactory;
-    // private EntityManager entityManager =
-    // EntityManagerFactoryUtils.getTransactionalEntityManager(serviceEntityManagerFactory);
-
     @PersistenceContext(unitName = "jpaServiceRegistryContext")
     private EntityManager entityManager;
 
-    public static String SSO_SERVER_IP = InetAddressUtil.getLocalAddress().getHostAddress();
+    @Autowired
+    private ConfigurableApplicationContext applicationContext;
 
     @Override
     public void save(RememberMeUsernamePasswordCredential credential, String success, String logMessage) {
@@ -102,7 +105,7 @@ public class Y9LoginUserServiceImpl implements Y9LoginUserService {
                 user.setUserLoginName(userLoginName);
                 user.setUserName(userName);
                 user.setUserHostIp(userHostIP);
-                user.setUserHostMAC(userHostMAC);
+                user.setUserHostMac(userHostMAC);
                 user.setUserHostName(userHostName);
                 user.setUserHostDiskId(userHostDiskId);
                 user.setTenantId(tenantId);
@@ -113,10 +116,21 @@ public class Y9LoginUserServiceImpl implements Y9LoginUserService {
                 user.setBrowserName(browser);
                 user.setBrowserVersion(uaInfo.getBrowserVersionInfo());
                 user.setScreenResolution(screenResolution);
-                user.setOSName(uaInfo.getOsName());
+                user.setOsName(uaInfo.getOsName());
                 user.setManagerLevel(managerLevel);
-
-                transactionTemplate.execute(status -> entityManager.merge(user));
+                Environment environment = applicationContext.getEnvironment();
+                String loginInfoSaveTarget = environment.getProperty("y9.login.loginInfoSaveTarget", "jpa");
+                if ("jpa".equals(loginInfoSaveTarget)) {
+                    transactionTemplate.execute(status -> {
+                        entityManager.persist(user);
+                        LOGGER.info("保存登录日志成功");
+                        return null;
+                    });
+                } else {
+                    String jsonString = Y9JacksonUtil.writeValueAsString(user);
+                    // kafkaTemplate.send("y9_userLoginInfo_message", jsonString);
+                    LOGGER.info("保存登录日志成功至Kafka成功");
+                }
             }
         } catch (Exception e) {
             e.printStackTrace();

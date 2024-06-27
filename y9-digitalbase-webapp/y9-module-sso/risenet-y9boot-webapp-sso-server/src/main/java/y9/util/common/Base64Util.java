@@ -144,8 +144,6 @@ public class Base64Util {
             bytes[bytes.length - 2] = (byte)((b2 << 4) | (b3 >> 2));
             bytes[bytes.length - 1] = (byte)((b3 << 6) | b4);
         }
-        // for (int i = 0; i < bytes.length; i++)
-        // System.out.println("," + bytes[i]);
         return bytes;
     }
 
@@ -180,7 +178,7 @@ public class Base64Util {
         return sb.toString();
     }
 
-    public static String encode(byte[] data) throws Exception {
+    public static String encode(byte[] data) {
         byte[] result = encode(data, 0);
         StringBuffer sb = new StringBuffer(result.length);
         for (int i = 0; i < result.length; i++) {

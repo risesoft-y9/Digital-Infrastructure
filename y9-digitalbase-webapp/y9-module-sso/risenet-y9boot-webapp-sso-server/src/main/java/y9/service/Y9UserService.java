@@ -7,7 +7,7 @@ import org.apereo.cas.services.Y9User;
 public interface Y9UserService {
     Y9User save(Y9User y9User);
 
-    public Y9User findByPersonIdAndTenantId(String id, String tenantId);
+    Y9User findByPersonIdAndTenantId(String personId, String tenantId);
 
     List<Y9User> findByLoginNameAndOriginal(String loginName, Boolean original);
 

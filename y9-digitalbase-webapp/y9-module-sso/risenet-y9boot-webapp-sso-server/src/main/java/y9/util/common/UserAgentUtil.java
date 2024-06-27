@@ -4,6 +4,8 @@ import java.io.IOException;
 
 import jakarta.servlet.http.HttpServletRequest;
 
+import lombok.extern.slf4j.Slf4j;
+
 import cz.mallat.uasparser.OnlineUpdater;
 import cz.mallat.uasparser.UASparser;
 import cz.mallat.uasparser.UserAgentInfo;
@@ -16,13 +18,14 @@ import cz.mallat.uasparser.UserAgentInfo;
  * @author qinman
  * @date 2022/12/29
  */
+@Slf4j
 public class UserAgentUtil {
     static UASparser uasParser = null;
     static {
         try {
             uasParser = new UASparser(OnlineUpdater.getVendoredInputStream());
         } catch (IOException e) {
-            e.printStackTrace();
+            LOGGER.warn(e.getMessage(), e);
         }
     }
 
@@ -56,7 +59,7 @@ public class UserAgentUtil {
             UserAgentInfo userAgentInfo = UserAgentUtil.uasParser.parse(str);
             return userAgentInfo;
         } catch (IOException e) {
-            e.printStackTrace();
+            LOGGER.warn(e.getMessage(), e);
         }
         return null;
     }
