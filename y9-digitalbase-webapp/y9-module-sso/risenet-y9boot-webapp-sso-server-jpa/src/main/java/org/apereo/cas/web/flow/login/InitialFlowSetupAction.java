@@ -224,6 +224,7 @@ public class InitialFlowSetupAction extends BaseCasWebflowAction {
                 .map(h -> StringUtils.capitalize(h.getName().trim())).distinct().sorted().collect(Collectors.toList());
             WebUtils.putAvailableAuthenticationHandleNames(context, availableHandlers);
         }
+        context.getFlowScope().put("contextPath", request.getContextPath()); // y9 add
     }
 
     /**
