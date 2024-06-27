@@ -5,6 +5,7 @@ import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
@@ -41,6 +42,25 @@ public class Y9Util {
                 // Ignored
             }
         }
+    }
+
+    /**
+     * Returns a String where those characters that QueryParser expects to be escaped are escaped by a preceding
+     * <code>\</code>. 拷贝org.apache.lucene.queryparser.classic.QueryParserBase
+     */
+    public static String escape(String s) {
+        StringBuilder sb = new StringBuilder();
+        for (int i = 0; i < s.length(); i++) {
+            char c = s.charAt(i);
+            // These characters are part of the query syntax and must be escaped
+            if (c == '\\' || c == '+' || c == '-' || c == '!' || c == '(' || c == ')' || c == ':' || c == '^'
+                || c == '[' || c == ']' || c == '\"' || c == '{' || c == '}' || c == '~' || c == '*' || c == '?'
+                || c == '|' || c == '&' || c == '/') {
+                sb.append('\\');
+            }
+            sb.append(c);
+        }
+        return sb.toString();
     }
 
     /**
@@ -87,6 +107,15 @@ public class Y9Util {
         return stringBuffer;
     }
 
+    public static StringBuilder genCustomStr(StringBuilder stringBuffer, String addNew, String delimiter) {
+        if (stringBuffer.length() == 0) {
+            stringBuffer.append(addNew);
+        } else {
+            stringBuffer.append(delimiter + addNew);
+        }
+        return stringBuffer;
+    }
+
     public static String[] getBeanPropertyNames(Object bean, String exclude) {
         return getBeanPropertyNames(bean, exclude.split(","));
     }
@@ -102,11 +131,9 @@ public class Y9Util {
                 }
             }
 
-            if (exclude.length > 0) {
-                for (String name : exclude) {
-                    if (StringUtils.hasText(name)) {
-                        list.remove(name);
-                    }
+            for (String name : exclude) {
+                if (StringUtils.hasText(name)) {
+                    list.remove(name);
                 }
             }
         } catch (IllegalAccessException e) {
@@ -272,29 +299,8 @@ public class Y9Util {
             return resultList;
         }
         String[] temp = source.split(",");
-        for (int i = 0; i < temp.length; i++) {
-            resultList.add(temp[i]);
-        }
+        Collections.addAll(resultList, temp);
         return resultList;
-    }
-
-    /**
-     * Returns a String where those characters that QueryParser expects to be escaped are escaped by a preceding
-     * <code>\</code>. 拷贝org.apache.lucene.queryparser.classic.QueryParserBase
-     */
-    public static String escape(String s) {
-        StringBuilder sb = new StringBuilder();
-        for (int i = 0; i < s.length(); i++) {
-            char c = s.charAt(i);
-            // These characters are part of the query syntax and must be escaped
-            if (c == '\\' || c == '+' || c == '-' || c == '!' || c == '(' || c == ')' || c == ':' || c == '^'
-                || c == '[' || c == ']' || c == '\"' || c == '{' || c == '}' || c == '~' || c == '*' || c == '?'
-                || c == '|' || c == '&' || c == '/') {
-                sb.append('\\');
-            }
-            sb.append(c);
-        }
-        return sb.toString();
     }
 
 }
