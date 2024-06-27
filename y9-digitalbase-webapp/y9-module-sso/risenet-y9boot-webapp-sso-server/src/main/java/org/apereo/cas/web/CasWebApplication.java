@@ -16,14 +16,13 @@ import org.springframework.boot.autoconfigure.orm.jpa.HibernateJpaAutoConfigurat
 import org.springframework.boot.builder.SpringApplicationBuilder;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.cloud.client.discovery.EnableDiscoveryClient;
+import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.EnableAspectJAutoProxy;
 import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
 
 import lombok.NoArgsConstructor;
 import lombok.val;
-
-import y9.Y9Config;
 
 /**
  * This is {@link CasWebApplication} that houses the main method.
@@ -40,6 +39,7 @@ import y9.Y9Config;
 @EnableTransactionManagement(proxyTargetClass = false)
 @EnableScheduling
 @NoArgsConstructor
+@ComponentScan("y9") // y9 add
 public class CasWebApplication {
 
     /**
@@ -58,7 +58,6 @@ public class CasWebApplication {
     protected static List<Class> getApplicationSources(final String[] args) {
         val applicationClasses = new ArrayList<Class>();
         applicationClasses.add(CasWebApplication.class);
-        applicationClasses.add(Y9Config.class); // y9 added
         ApplicationUtils.getApplicationEntrypointInitializers().forEach(init -> {
             init.initialize(args);
             applicationClasses.addAll(init.getApplicationSources(args));
