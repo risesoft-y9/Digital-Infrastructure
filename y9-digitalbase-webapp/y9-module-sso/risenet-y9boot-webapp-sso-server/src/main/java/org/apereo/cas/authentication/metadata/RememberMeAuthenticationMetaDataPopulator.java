@@ -8,12 +8,13 @@ import org.apereo.cas.authentication.AuthenticationTransaction;
 import org.apereo.cas.authentication.Credential;
 import org.apereo.cas.authentication.RememberMeCredential;
 import org.apereo.cas.configuration.model.core.ticket.RememberMeAuthenticationProperties;
-import org.apereo.cas.web.y9.util.common.Y9Util;
 import org.apereo.inspektr.common.web.ClientInfoHolder;
 
 import lombok.RequiredArgsConstructor;
 import lombok.ToString;
 import lombok.val;
+
+import y9.util.common.Y9Util;
 
 /**
  * Determines if the credential provided are for Remember Me Services and then sets the appropriate Authentication

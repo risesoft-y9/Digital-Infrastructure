@@ -24,7 +24,6 @@ import org.apereo.cas.ticket.OAuth20Token;
 import org.apereo.cas.util.CollectionUtils;
 import org.apereo.cas.util.HttpRequestUtils;
 import org.apereo.cas.util.LoggingUtils;
-import org.apereo.cas.web.y9.util.json.Y9JacksonUtil;
 import org.pac4j.core.credentials.UsernamePasswordCredentials;
 import org.pac4j.core.credentials.extractor.BasicAuthExtractor;
 import org.pac4j.jee.context.JEEContext;
@@ -37,6 +36,8 @@ import org.springframework.web.bind.annotation.PostMapping;
 
 import lombok.val;
 import lombok.extern.slf4j.Slf4j;
+
+import y9.util.json.Y9JacksonUtil;
 
 /**
  * This is {@link OAuth20IntrospectionEndpointController}.

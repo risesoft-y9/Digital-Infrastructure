@@ -14,15 +14,16 @@ import org.apereo.cas.authentication.principal.Service;
 import org.apereo.cas.services.ServicesManager;
 import org.apereo.cas.services.Y9User;
 import org.apereo.cas.web.support.WebUtils;
-import org.apereo.cas.web.y9.service.Y9LoginUserService;
-import org.apereo.cas.web.y9.service.Y9UserService;
-import org.apereo.cas.web.y9.util.Y9Context;
-import org.apereo.cas.web.y9.util.Y9MessageDigest;
-import org.apereo.cas.web.y9.util.common.Base64Util;
-import org.apereo.cas.web.y9.util.common.RSAUtil;
 import org.springframework.dao.DataAccessException;
 
 import lombok.extern.slf4j.Slf4j;
+
+import y9.service.Y9LoginUserService;
+import y9.service.Y9UserService;
+import y9.util.Y9Context;
+import y9.util.Y9MessageDigest;
+import y9.util.common.Base64Util;
+import y9.util.common.RSAUtil;
 
 @Slf4j
 public class RiseAuthenticationHandler extends AbstractAuthenticationHandler {
