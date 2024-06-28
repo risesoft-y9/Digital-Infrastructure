@@ -854,6 +854,52 @@
                 </plugins>
             </build>
         </profile>
+        <profile>
+            <id>build-docker-image</id>
+            <build>
+                <plugins>
+                    <plugin>
+                        <groupId>com.google.cloud.tools</groupId>
+                        <artifactId>jib-maven-plugin</artifactId>
+                        <version>3.4.2</version>
+                        <configuration>
+                            <skip>false</skip>
+                            <from>
+                                <!--<image>eclipse-temurin:21-jre</image>-->
+                                <image>docker-internal.youshengyun.com/tomcat:10.1-jre21-temurin</image>
+                                <platforms>
+                                    <platform>
+                                        <architecture>amd64</architecture>
+                                        <os>linux</os>
+                                    </platform>
+                                    <platform>
+                                        <architecture>arm64</architecture>
+                                        <os>linux</os>
+                                    </platform>
+                                </platforms>
+                            </from>
+                            <container>
+                                <appRoot>/usr/local/tomcat/webapps/${project.build.finalName}</appRoot>
+                            </container>
+                            <to>
+                                <image>docker-registry-internal.youshengyun.com/${project.artifactId}</image>
+                                <tags>
+                                    <tag>${project.version}</tag>
+                                </tags>
+                            </to>
+                        </configuration>
+                        <executions>
+                            <execution>
+                                <phase>package</phase>
+                                <goals>
+                                    <goal>build</goal>
+                                </goals>
+                            </execution>
+                        </executions>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
     </profiles>
 
 </project>
