@@ -1,5 +1,7 @@
 package y9;
 
+import java.util.List;
+
 import org.apereo.cas.authentication.AuthenticationEventExecutionPlanConfigurer;
 import org.apereo.cas.authentication.RiseAuthenticationHandler;
 import org.apereo.cas.authentication.adaptive.AdaptiveAuthenticationPolicy;
@@ -16,6 +18,7 @@ import org.apereo.cas.services.Y9User;
 import org.apereo.cas.util.CollectionUtils;
 import org.apereo.cas.util.spring.beans.BeanCondition;
 import org.apereo.cas.util.spring.beans.BeanSupplier;
+import org.apereo.cas.web.ProtocolEndpointWebSecurityConfigurer;
 import org.apereo.cas.web.flow.actions.RiseCredentialNonInteractiveCredentialsAction;
 import org.apereo.cas.web.flow.resolver.CasDelegatingWebflowEventResolver;
 import org.apereo.cas.web.flow.resolver.CasWebflowEventResolver;
@@ -75,6 +78,19 @@ public class Y9Config {
         @Bean
         public PrincipalFactory risePrincipalFactory() {
             return new DefaultPrincipalFactory();
+        }
+    }
+
+    @Configuration
+    public static class Y9CasWebSecurityConfigurer {
+        @Bean
+        public ProtocolEndpointWebSecurityConfigurer<Void> y9ResourceConfigurer() {
+            return new ProtocolEndpointWebSecurityConfigurer<>() {
+                @Override
+                public List<String> getIgnoredEndpoints() {
+                    return List.of("/y9static/**", "/api/**");
+                }
+            };
         }
     }
 
