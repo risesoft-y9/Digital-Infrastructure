@@ -445,6 +445,12 @@
         </dependency>-->
 
         <dependency>
+            <groupId>net.risesoft</groupId>
+            <artifactId>risenet-y9boot-common-nacos</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+        
+        <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-docker-compose</artifactId>
         </dependency>
@@ -627,7 +633,7 @@
                     </delimiters>
                     <useDefaultDelimiters>false</useDefaultDelimiters>
                 </configuration>
-                <!--<executions>
+                <executions>
                     <execution>
                         <phase>process-resources</phase>
                         <goals>
@@ -644,12 +650,12 @@
                             <overwrite>true</overwrite>
                         </configuration>
                     </execution>
-                </executions>-->
+                </executions>
             </plugin>
         </plugins>
 
         <!-- 动态编译环境配置 -->
-        <!--<resources>
+        <resources>
             <resource>
                 <directory>src/main/resources</directory>
                 <excludes>
@@ -659,10 +665,50 @@
             <resource>
                 <directory>src/main/resources/profiles/${dir}</directory>
             </resource>
-        </resources>-->
+        </resources>
     </build>
 
     <profiles>
+        <profile>
+            <!-- 本机个人开发环境 -->
+            <id>local</id>
+            <properties>
+                <dir>local</dir>
+            </properties>
+            <activation>
+                <activeByDefault>false</activeByDefault>
+            </activation>
+        </profile>
+        <profile>
+            <!-- 本地团队开发环境 -->
+            <id>dev</id>
+            <properties>
+                <dir>dev</dir>
+            </properties>
+            <activation>
+                <activeByDefault>false</activeByDefault>
+            </activation>
+        </profile>
+        <profile>
+            <!-- 测试环境 -->
+            <id>test</id>
+            <properties>
+                <dir>test</dir>
+            </properties>
+            <activation>
+                <activeByDefault>false</activeByDefault>
+            </activation>
+        </profile>
+        <profile>
+            <!-- 生产环境 -->
+            <id>prod</id>
+            <properties>
+                <dir>prod</dir>
+            </properties>
+            <activation>
+                <activeByDefault>false</activeByDefault>
+            </activation>
+        </profile>
         <profile>
             <!-- docker环境 -->
             <id>docker-jib</id>

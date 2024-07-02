@@ -273,11 +273,14 @@ spring:
         nacos:
             config:
                 enabled: false
+                group: DEFAULT_GROUP
+                namespace: local
+                server-addr: https://dev.youshengyun.com:443
+                username: nacos
+                password: Risesoft@2022
             discovery:
                 enabled: false
         compatibility-verifier:
-            enabled: false
-        config:
             enabled: false
     config:
         import:

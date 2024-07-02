@@ -4,14 +4,14 @@ spring:
     profiles:
         active: test
     cloud:
-        enabled: true
         nacos:
             config:
                 enabled: true
+                namespace: test2
                 group: DEFAULT_GROUP
-                namespace: test
                 server-addr: nacos:8848
                 username: nacos
                 password: Risesoft@2024
-                extension-configs:
-                    - dataId: sso.yml
+    config:
+        import:
+            - optional:nacos:sso.yml

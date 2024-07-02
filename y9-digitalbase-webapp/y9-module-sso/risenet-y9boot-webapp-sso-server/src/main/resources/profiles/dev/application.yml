@@ -2,16 +2,16 @@ spring:
     application:
         name: sso
     profiles:
-        active: vue
+        active: dev
     cloud:
-        enabled: true
         nacos:
             config:
                 enabled: true
-                namespace: vue
+                namespace: dev
                 group: DEFAULT_GROUP
-                server-addr: https://vue.youshengyun.com:443
+                server-addr: https://dev.youshengyun.com:443
                 username: nacos
                 password: Risesoft@2022
-                extension-configs:
-                    - dataId: sso.yml
+    config:
+        import:
+            - optional:nacos:sso.yml
