@@ -1,2 +1,0 @@
-org.springframework.boot.autoconfigure.EnableAutoConfiguration=\
-y9.autoconfiguration.NacosAutoConfiguration
