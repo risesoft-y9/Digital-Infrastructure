@@ -66,14 +66,14 @@ public class IdCodeController {
                 Four.m407(ConfigReader.MAIN_CODE, "73", 10127, "10000000", personId, "", y9Person.getName(),
                     CodePayTypeEnum.REGISTER.getValue(), ConfigReader.GOTO_URL + "?tenantId=" + y9Person.getTenantId(),
                     ConfigReader.SAMPLE_URL + "?tenantId=" + y9Person.getTenantId());
-            if (result.getResultCode() == 1) {
+            if (result != null && result.getResultCode() == 1) {
                 y9IdCode = new Y9IdCode();
                 y9IdCode.setId(result.getOrganUnitIdCode());
                 y9IdCode.setOrgUnitId(personId);
                 y9IdCode.setRegId(result.getCategoryRegId());
                 y9IdCodeService.save(y9IdCode);
             } else {
-                return Y9Result.failure("调用统一码407接口失败：" + result.getResultMsg());
+                return Y9Result.failure("调用统一码407接口失败：" + result);
             }
         }
         if (StringUtils.isNotEmpty(y9IdCode.getImgUrl())) {
