@@ -6,7 +6,8 @@ import lombok.Data;
 
 /**
  * 针对于idcode平台接口返回值的定义
- * 
+ *
+ * @author qinman
  */
 @Data
 public class Result {

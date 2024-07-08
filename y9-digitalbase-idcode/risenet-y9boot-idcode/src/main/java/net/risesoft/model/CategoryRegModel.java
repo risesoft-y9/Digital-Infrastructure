@@ -6,6 +6,9 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 
 import lombok.Data;
 
+/**
+ * @author qinman
+ */
 @Data
 public class CategoryRegModel {
 

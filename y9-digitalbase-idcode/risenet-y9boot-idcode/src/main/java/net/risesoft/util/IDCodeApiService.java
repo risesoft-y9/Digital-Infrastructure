@@ -9,7 +9,8 @@ import lombok.extern.slf4j.Slf4j;
 
 /**
  * 针对于http://api.idcode.org.cn接口的调用处理
- * 
+ *
+ * @author qinman
  */
 @Slf4j
 public class IDCodeApiService {
@@ -21,8 +22,8 @@ public class IDCodeApiService {
     /**
      * 对map集合参数按ASCII由小到大排序
      *
-     * @param params
-     * @return
+     * @param params 参数
+     * @return String
      */
     private String sortMapToString(Map<String, Object> params) {
         Map<String, Object> sortMap = new TreeMap<>(params);
@@ -48,24 +49,24 @@ public class IDCodeApiService {
      *
      * @param url
      * @param params
-     * @return
+     * @return String
      */
     public String get(String url, Map<String, Object> params) {
         HttpUtil http = new HttpUtil();
         if (!params.isEmpty()) {
             String urlParams = sortMapToString(params);
-            if (url.indexOf("?") > -1) {
+            if (url.contains("?")) {
                 url = url + "&";
             } else {
                 url = url + "?";
             }
-            String hash = MD5Util.MD5Encode(url + urlParams + ConfigReader.API_CODE).toUpperCase();
+            String hash = MD5Util.md5Encode(url + urlParams + ConfigReader.API_CODE).toUpperCase();
             urlParams += "&hash=" + hash;
             String resultJson = http.get(ConfigReader.IDCODE_URL + url + urlParams);
             printResult("get json结果：" + resultJson);
             return resultJson;
         } else {
-            String hash = MD5Util.MD5Encode(url + ConfigReader.API_CODE).toUpperCase();
+            String hash = MD5Util.md5Encode(url + ConfigReader.API_CODE).toUpperCase();
             String resultJson = http.get(ConfigReader.IDCODE_URL + url + "&" + hash);
             printResult("get json结果：" + resultJson);
             return resultJson;
@@ -87,7 +88,7 @@ public class IDCodeApiService {
         } else {
             encodeUrl = url + "?";
         }
-        String hash = MD5Util.MD5Encode(encodeUrl + urlParams + ConfigReader.API_CODE).toUpperCase();
+        String hash = MD5Util.md5Encode(encodeUrl + urlParams + ConfigReader.API_CODE).toUpperCase();
         params.put("hash", hash);
         HttpUtil http = new HttpUtil();
         String resultJson = "";

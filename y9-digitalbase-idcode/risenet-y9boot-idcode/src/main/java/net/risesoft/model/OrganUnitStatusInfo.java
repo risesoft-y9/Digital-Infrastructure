@@ -6,6 +6,7 @@ import lombok.Data;
 
 /**
  * 单位状态信息
+ * @author qinman
  */
 @Data
 public class OrganUnitStatusInfo extends Result {

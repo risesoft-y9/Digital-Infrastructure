@@ -7,6 +7,7 @@ import lombok.Data;
 /**
  * idcode406接口对应的返回对象
  *
+ * @author qinman
  */
 @Data
 public class IdcodeRegResult extends Result {

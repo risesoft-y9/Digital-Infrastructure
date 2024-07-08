@@ -6,6 +6,7 @@ import lombok.Data;
 
 /**
  * 短信验证码
+ * @author qinman
  */
 @Data
 public class SmsVerifyCode extends Result {
