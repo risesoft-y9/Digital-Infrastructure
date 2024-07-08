@@ -87,6 +87,15 @@ public class Y9Util {
         return stringBuffer;
     }
 
+    public static StringBuilder genCustomStr(StringBuilder stringBuffer, String addNew, String delimiter) {
+        if (stringBuffer.length() == 0) {
+            stringBuffer.append(addNew);
+        } else {
+            stringBuffer.append(delimiter + addNew);
+        }
+        return stringBuffer;
+    }
+
     public static String[] getBeanPropertyNames(Object bean, String exclude) {
         return getBeanPropertyNames(bean, exclude.split(","));
     }
