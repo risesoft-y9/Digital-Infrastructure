@@ -35,7 +35,7 @@
 
 ### 四.添加数字底座中央仓库地址
 
-pom.xml中添加统一码组件依赖，改组件已发布至<a href="https://central.sonatype.com/artifact/net.risesoft/risenet-y9boot-idcode" target="_blank">**maven中央仓库**</a>
+pom.xml中添加统一码组件依赖，该组件已发布至<a href="https://central.sonatype.com/artifact/net.risesoft/risenet-y9boot-idcode" target="_blank">**maven中央仓库**</a>
 
 ```
 <dependency>
