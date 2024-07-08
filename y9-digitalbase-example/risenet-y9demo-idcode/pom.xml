@@ -14,24 +14,6 @@
         <spring-boot.version>2.6.13</spring-boot.version>
     </properties>
 
-    <repositories>
-        <repository>
-            <id>nexus</id>
-            <name>local private nexus</name>
-            <url>https://svn.youshengyun.com:9900/nexus/repository/maven-public/</url>
-            <snapshots>
-                <updatePolicy>always</updatePolicy>
-            </snapshots>
-        </repository>
-    </repositories>
-    <pluginRepositories>
-        <pluginRepository>
-            <id>nexus</id>
-            <name>local private nexus</name>
-            <url>https://svn.youshengyun.com:9900/nexus/repository/maven-public/</url>
-        </pluginRepository>
-    </pluginRepositories>
-
     <dependencies>
         <dependency>
             <groupId>org.springframework.boot</groupId>

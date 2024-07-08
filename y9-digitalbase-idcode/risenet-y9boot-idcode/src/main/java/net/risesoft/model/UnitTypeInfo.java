@@ -6,6 +6,7 @@ import lombok.Data;
 
 /**
  * 单位性质
+ * @author qinman
  */
 @Data
 public class UnitTypeInfo {
