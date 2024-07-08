@@ -35,35 +35,13 @@
 
 ### 四.添加数字底座中央仓库地址
 
-pom.xml中添加数字底座中央仓库地址
-
-```
-<repositories>
-        <repository>
-            <id>nexus</id>
-            <name>local private nexus</name>
-            <url>https://svn.youshengyun.com:9900/nexus/repository/maven-public/</url>
-            <snapshots>
-                <updatePolicy>always</updatePolicy>
-            </snapshots>
-        </repository>
-    </repositories>
-    <pluginRepositories>
-        <pluginRepository>
-            <id>nexus</id>
-            <name>local private nexus</name>
-            <url>https://svn.youshengyun.com:9900/nexus/repository/maven-public/</url>
-        </pluginRepository>
-    </pluginRepositories>
-```
-
-pom.xml中添加统一码组件依赖
+pom.xml中添加统一码组件依赖，改组件已发布至**<a href="https://central.sonatype.com/artifact/net.risesoft/risenet-y9boot-idcode" target="_blank">maven中央仓库</a>**
 
 ```
 <dependency>
      <groupId>net.risesoft</groupId>
      <artifactId>risenet-y9boot-idcode</artifactId>
-     <version>v9.6.6-SNAPSHOT</version>
+     <version>v9.6.6</version>
 </dependency>
 ```
 
