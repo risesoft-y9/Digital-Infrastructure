@@ -73,7 +73,7 @@ public class IdCodeController {
                 y9IdCode.setRegId(result.getCategoryRegId());
                 y9IdCodeService.save(y9IdCode);
             } else {
-                return Y9Result.failure("调用统一码407接口失败：" + result);
+                return Y9Result.failure("调用统一码407接口失败：" + (result == null ? "请检查接口地址" : result.getResultMsg()));
             }
         }
         if (StringUtils.isNotEmpty(y9IdCode.getImgUrl())) {
