@@ -23,7 +23,7 @@ public class ConfigReader {
     public static String SAMPLE_URL;
 
     static {
-        try (InputStream inputStream = ConfigReader.class.getResourceAsStream("/application.yml")) {
+        try (InputStream inputStream = ConfigReader.class.getResourceAsStream("/bootstrap.yml")) {
             if (inputStream != null) {
                 properties = new Properties();
                 properties.load(inputStream);

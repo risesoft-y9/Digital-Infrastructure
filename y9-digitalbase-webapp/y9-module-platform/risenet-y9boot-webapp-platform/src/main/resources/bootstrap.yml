@@ -10,6 +10,6 @@ idCode:
   #系统授权码
   api_code: 09DN09QA8X08XRNN9DRMXRXM9DNAK09Q
   #统一码解析地址
-  goto_url: http://example.com/goto
+  goto_url: https://test.youshengyun.com/kernel-standard/goto
   #统一码示例地址
-  sample_url: http://example.com/goto
+  sample_url: https://test.youshengyun.com/kernel-standard/goto
