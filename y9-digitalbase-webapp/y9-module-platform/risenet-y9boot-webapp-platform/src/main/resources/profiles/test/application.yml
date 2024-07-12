@@ -15,17 +15,3 @@ spring:
     config:
         import:
             - optional:nacos:platform.yml
-#统一码接口地址
-idCode_url: https://api.idcode.org.cn
-#统一码解析地址
-analyze_url: http://s.idcode.org.cn/
-#单位主码
-main_code: MA.156.1003.1629
-#系统授权key
-api_key: 9XRMKN90QA8O90SDAAAAAKJ
-#系统授权码
-api_code: 09DN09QA8X08XRNN9DRMXRXM9DNAK09Q
-#统一码解析地址
-goto_url: https://test.youshengyun.com/kernel-standard/goto
-#统一码示例地址
-sample_url: https://test.youshengyun.com/kernel-standard/goto
