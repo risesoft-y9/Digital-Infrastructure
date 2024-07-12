@@ -138,185 +138,165 @@ webapp -- 系统公共模块
 
 <div><img src="https://vue.youshengyun.com/files/img/architecture1.png"><div/>
 
-
-
 1. 数字底座围绕组织身份、应用资源、安全防御、工具支撑四个方向构建
 
-   
 
 2. 数字底座的操作逻辑需要第三方应用接入单点登录，导入组织架构，按照岗位将人员和应用资源进行绑定
 
-   
 
 3. 数字底座基于三员管理，支持云租户模式，主要面向大规模分布式的数字化基础建设
-
-   
 
 ## 功能架构图
 
 <div><img src="https://vue.youshengyun.com/files/img/function1.png"><div/>
 
-
-
 1. 数字底座的功能分布按照三员管理的逻辑进行划分
 
-   
 
 2. 数字底座内置单点登录（统一身份认证）模块，实际使用也可以对接其他单点登录系统
-
-   
 
 ## 部署架构图
 
 <div><img src="https://vue.youshengyun.com/files/img/deploy1.png"><div/>
 
-
-
 1. 数字底座支持以微服务、分布式的方式进行平行扩展
 
-   
 
 2. 数字底座支持容器化方式部署
 
-   
 
 3. 数字底座中需要单独部署单点登录服务器
 
-   
 
 4. 数字底座单体在信创环境中，4核8GB内存的虚拟机可以轻松应对2000用户
 
-   
-
 ## 后端技术选型
 
-| 序号 | 依赖            | 版本    | 官网                                                         |
-| ---- | --------------- | ------- | ------------------------------------------------------------ |
-| 1    | Spring Boot     | 2.7.10  | <a href="https://spring.io/projects/spring-boot" target="_blank">官网</a> |
-| 2    | SpringDataJPA   | 2.7.10  | <a href="https://spring.io/projects/spring-data-jpa" target="_blank">官网</a> |
-| 3    | SpringDataRedis | 2.7.10  | <a href="https://spring.io/projects/spring-data-redis" target="_blank">官网</a> |
-| 4    | SpringKafka     | 2.8.11  | <a href="https://spring.io/projects/spring-kafka" target="_blank">官网</a> |
-| 5    | nacos           | 2.2.1   | <a href="https://nacos.io/zh-cn/docs/v2/quickstart/quick-start.html" target="_blank">官网</a> |
-| 6    | druid           | 1.2.16  | <a href="https://github.com/alibaba/druid/wiki/%E9%A6%96%E9%A1%B5" target="_blank">官网</a> |
-| 7    | Jackson         | 2.13.5  | <a href="https://github.com/FasterXML/jackson-core" target="_blank">官网</a> |
-| 8    | javers          | 6.13.0  | <a href="https://github.com/javers/javers" target="_blank">官网</a> |
-| 9    | lombok          | 1.18.26 | <a href="https://projectlombok.org/" target="_blank">官网</a> |
-| 10   | logback         | 1.2.11  | <a href="https://www.docs4dev.com/docs/zh/logback/1.3.0-alpha4/reference/introduction.html" target="_blank">官网</a> |
+| 序号 | 依赖              | 版本      | 官网                                                                                                                 |
+|----|-----------------|---------|--------------------------------------------------------------------------------------------------------------------|
+| 1  | Spring Boot     | 2.7.10  | <a href="https://spring.io/projects/spring-boot" target="_blank">官网</a>                                            |
+| 2  | SpringDataJPA   | 2.7.10  | <a href="https://spring.io/projects/spring-data-jpa" target="_blank">官网</a>                                        |
+| 3  | SpringDataRedis | 2.7.10  | <a href="https://spring.io/projects/spring-data-redis" target="_blank">官网</a>                                      |
+| 4  | SpringKafka     | 2.8.11  | <a href="https://spring.io/projects/spring-kafka" target="_blank">官网</a>                                           |
+| 5  | nacos           | 2.2.1   | <a href="https://nacos.io/zh-cn/docs/v2/quickstart/quick-start.html" target="_blank">官网</a>                        |
+| 6  | druid           | 1.2.16  | <a href="https://github.com/alibaba/druid/wiki/%E9%A6%96%E9%A1%B5" target="_blank">官网</a>                          |
+| 7  | Jackson         | 2.13.5  | <a href="https://github.com/FasterXML/jackson-core" target="_blank">官网</a>                                         |
+| 8  | javers          | 6.13.0  | <a href="https://github.com/javers/javers" target="_blank">官网</a>                                                  |
+| 9  | lombok          | 1.18.26 | <a href="https://projectlombok.org/" target="_blank">官网</a>                                                        |
+| 10 | logback         | 1.2.11  | <a href="https://www.docs4dev.com/docs/zh/logback/1.3.0-alpha4/reference/introduction.html" target="_blank">官网</a> |
 
 ## 前端技术选型
 
-| 序号 | 依赖         | 版本    | 官网                                                         |
-| ---- | ------------ | ------- | ------------------------------------------------------------ |
-| 1    | vue          | 3.3.2   | <a href="https://cn.vuejs.org/" target="_blank">官网</a>     |
-| 2    | vite2        | 2.9.13  | <a href="https://vitejs.cn/" target="_blank">官网</a>        |
-| 3    | vue-router   | 4.0.13  | <a href="https://router.vuejs.org/zh/" target="_blank">官网</a> |
-| 4    | pinia        | 2.0.11  | <a href="https://pinia.vuejs.org/zh/" target="_blank">官网</a> |
-| 5    | axios        | 0.24.0  | <a href="https://www.axios-http.cn/" target="_blank">官网</a> |
-| 6    | typescript   | 4.5.4   | <a href="https://www.typescriptlang.org/" target="_blank">官网</a> |
-| 7    | core-js      | 3.20.1  | <a href="https://www.npmjs.com/package/core-js" target="_blank">官网</a> |
-| 8    | element-plus | 2.2.29  | <a href="https://element-plus.org/zh-CN/" target="_blank">官网</a> |
-| 9    | sass         | 1.58.0  | <a href="https://www.sass.hk/" target="_blank">官网</a>      |
-| 10   | animate.css  | 4.1.1   | <a href="https://animate.style/" target="_blank">官网</a>    |
-| 11   | vxe-table    | 4.3.5   | <a href="https://vxetable.cn" target="_blank">官网</a>       |
-| 12   | echarts      | 5.3.2   | <a href="https://echarts.apache.org/zh/" target="_blank">官网</a> |
-| 13   | svgo         | 1.3.2   | <a href="https://github.com/svg/svgo" target="_blank">官网</a> |
-| 14   | lodash       | 4.17.21 | <a href="https://lodash.com/" target="_blank">官网</a>       |
+| 序号 | 依赖           | 版本      | 官网                                                                     |
+|----|--------------|---------|------------------------------------------------------------------------|
+| 1  | vue          | 3.3.2   | <a href="https://cn.vuejs.org/" target="_blank">官网</a>                 |
+| 2  | vite2        | 2.9.13  | <a href="https://vitejs.cn/" target="_blank">官网</a>                    |
+| 3  | vue-router   | 4.0.13  | <a href="https://router.vuejs.org/zh/" target="_blank">官网</a>          |
+| 4  | pinia        | 2.0.11  | <a href="https://pinia.vuejs.org/zh/" target="_blank">官网</a>           |
+| 5  | axios        | 0.24.0  | <a href="https://www.axios-http.cn/" target="_blank">官网</a>            |
+| 6  | typescript   | 4.5.4   | <a href="https://www.typescriptlang.org/" target="_blank">官网</a>       |
+| 7  | core-js      | 3.20.1  | <a href="https://www.npmjs.com/package/core-js" target="_blank">官网</a> |
+| 8  | element-plus | 2.2.29  | <a href="https://element-plus.org/zh-CN/" target="_blank">官网</a>       |
+| 9  | sass         | 1.58.0  | <a href="https://www.sass.hk/" target="_blank">官网</a>                  |
+| 10 | animate.css  | 4.1.1   | <a href="https://animate.style/" target="_blank">官网</a>                |
+| 11 | vxe-table    | 4.3.5   | <a href="https://vxetable.cn" target="_blank">官网</a>                   |
+| 12 | echarts      | 5.3.2   | <a href="https://echarts.apache.org/zh/" target="_blank">官网</a>        |
+| 13 | svgo         | 1.3.2   | <a href="https://github.com/svg/svgo" target="_blank">官网</a>           |
+| 14 | lodash       | 4.17.21 | <a href="https://lodash.com/" target="_blank">官网</a>                   |
 
 ## 中间件选型
 
-| 序号 | 工具             | 版本 | 官网                                                         |
-| ---- | ---------------- | ---- | ------------------------------------------------------------ |
-| 1    | JDK              | 11   | <a href="https://openjdk.org/" target="_blank">官网</a>      |
-| 2    | Tomcat           | 9.0+ | <a href="https://tomcat.apache.org/" target="_blank">官网</a> |
-| 3    | Kafka            | 2.6+ | <a href="https://kafka.apache.org/" target="_blank">官网</a> |
-| 4    | filezilla server | 1.7+ | <a href="https://www.filezilla.cn/download/server" target="_blank">官网</a> |
+| 序号 | 工具               | 版本   | 官网                                                                        |
+|----|------------------|------|---------------------------------------------------------------------------|
+| 1  | JDK              | 11   | <a href="https://openjdk.org/" target="_blank">官网</a>                     |
+| 2  | Tomcat           | 9.0+ | <a href="https://tomcat.apache.org/" target="_blank">官网</a>               |
+| 3  | Kafka            | 2.6+ | <a href="https://kafka.apache.org/" target="_blank">官网</a>                |
+| 4  | filezilla server | 1.7+ | <a href="https://www.filezilla.cn/download/server" target="_blank">官网</a> |
 
 ## 数据库选型
 
-| 序号 | 工具          | 版本       | 官网                                                         |
-| ---- | ------------- | ---------- | ------------------------------------------------------------ |
-| 1    | Mysql         | 5.7 / 8.0+ | <a href="https://www.mysql.com/cn/" target="_blank">官网</a> |
-| 2    | Redis         | 6.2+       | <a href="https://redis.io/" target="_blank">官网</a>         |
-| 3    | elasticsearch | 7.9+       | <a href="https://www.elastic.co/cn/elasticsearch/" target="_blank">官网</a> |
+| 序号 | 工具            | 版本         | 官网                                                                        |
+|----|---------------|------------|---------------------------------------------------------------------------|
+| 1  | Mysql         | 5.7 / 8.0+ | <a href="https://www.mysql.com/cn/" target="_blank">官网</a>                |
+| 2  | Redis         | 6.2+       | <a href="https://redis.io/" target="_blank">官网</a>                        |
+| 3  | elasticsearch | 7.9+       | <a href="https://www.elastic.co/cn/elasticsearch/" target="_blank">官网</a> |
 
 ## 数字底座专利
 
-| 序&nbsp;号 | 专利号           | 专利名称 |
-| ----- | ---------------- | ----------------------- |
-| 1    | ZL202111207338.0 | 《基于集合运算的资源授权方法及资源授权系统》       |
-| 2    | ZL202210702228.X | 《一种静默化数据处理方法及处理系统》             |
-| 3    | ZL202310030893.3 | 《基于多租户模式下的权限调度方法及调度系统》       |
-| 4    | ZL202310238451.8 | 《一种基于前后端分离架构的前端双随机多态混淆方法》 |
-| 5    | ZL202310238534.7 | 《多租户模式下数字底座子域三员架构模型的实现方法》 |
+| 序&nbsp;号 | 专利号              | 专利名称                      |
+|----------|------------------|---------------------------|
+| 1        | ZL202111207338.0 | 《基于集合运算的资源授权方法及资源授权系统》    |
+| 2        | ZL202210702228.X | 《一种静默化数据处理方法及处理系统》        |
+| 3        | ZL202310030893.3 | 《基于多租户模式下的权限调度方法及调度系统》    |
+| 4        | ZL202310238451.8 | 《一种基于前后端分离架构的前端双随机多态混淆方法》 |
+| 5        | ZL202310238534.7 | 《多租户模式下数字底座子域三员架构模型的实现方法》 |
 
 ## 信创兼容适配
 
-| **序号** | 类型     | 对象                       |
-| :------- | -------- | -------------------------- |
-| 1        | 浏览器   | 奇安信、火狐、谷歌、360等  |
-| 2        | 插件     | 金山、永中、数科、福昕等   |
-| 3        | 中间件   | 东方通、金蝶、宝兰德等     |
-| 4        | 数据库   | 人大金仓、达梦、高斯等     |
-| 5        | 操作系统 | 统信、麒麟、中科方德等     |
-| 6        | 芯片     | ARM体系、MIPS体系、X86体系 |
+| **序号** | 类型   | 对象                 |
+|:-------|------|--------------------|
+| 1      | 浏览器  | 奇安信、火狐、谷歌、360等     |
+| 2      | 插件   | 金山、永中、数科、福昕等       |
+| 3      | 中间件  | 东方通、金蝶、宝兰德等        |
+| 4      | 数据库  | 人大金仓、达梦、高斯等        |
+| 5      | 操作系统 | 统信、麒麟、中科方德等        |
+| 6      | 芯片   | ARM体系、MIPS体系、X86体系 |
 
 ## 在线体验
 
-演示地址：<a href="https://test.youshengyun.com/kernel-standard/" target="_blank">https://test.youshengyun.com/kernel-standard/</a>
+演示地址：<a href="https://test.youshengyun.com/kernel-standard/" target="_blank">https://test.youshengyun.com/kernel-standard/ </a>
 
 > 演示账号：
 >
-> 系统管理员：systemManager  密码：Risesoft@2024
+> 系统管理员：systemManager 密码：Risesoft@2024
 >
-> 安全保密员：securityManager  密码：Risesoft@2024
+> 安全保密员：securityManager 密码：Risesoft@2024
 >
-> 安全审计员：auditManager   密码：Risesoft@2024
+> 安全审计员：auditManager 密码：Risesoft@2024
 >
-> **<p style="color:#1e70bf">说明：输入登录名后，请选择"测试"租户，如：systemManager@测试，再输入密码进行登录</p>**
 
 ## 私有化部署
 
-地址：<a href="https://test.youshengyun.com/y9vue-code/" target="_blank">https://test.youshengyun.com/y9vue-code/</a>
+地址：<a href="https://test.youshengyun.com/y9vue-code/" target="_blank">https://test.youshengyun.com/y9vue-code/ </a>
 > 包含数字底座使用中间件的安装教程、数字底座重要配置讲解，进行本地化部署务必要浏览该网站，会少走弯路。
 
-> **系统管理员：systemManager** 
+> **系统管理员：systemManager**
 > 负责系统的配置和组织人员的管理，包括控制台、组织架构、组织岗位、应用系统管理、应用角色管理、应用资源管理、菜单管理、字典表管理、图标库管理等。
-> 
+>
 > **安全保密员：securityManager**
 > 负责权限管理和子域三员管理（部门三员管理）以及查看安全审计员的日志和普通用户的日志。
-> 
+>
 > **安全审计员：auditManager**
 > 负责审查系统管理员的日志和安全保密员的日志
-> 
-
+>
 
 ## 文档专区
 
-| 序号 | 名称                                                                                              |
-|:---|-------------------------------------------------------------------------------------------------|
-| 1  | <a href="https://vue.youshengyun.com/files/单点登录对接文档.pdf" target="_blank">单点登录对接文档</a>           |
-| 2  | <a href="https://vue.youshengyun.com/files/数字底座接口文档.pdf" target="_blank">数字底座接口文档</a>           |
-| 3  | <a href="https://test.youshengyun.com/y9vue-code/digitalBase" target="_blank">安装部署文档</a>        |
-| 4  | <a href="https://vue.youshengyun.com/files/操作使用文档（技术白皮书）.pdf" target="_blank">操作使用文档（技术白皮书）</a> |
-| 5  | <a href="https://vue.youshengyun.com/files/数字底座数据库设计文档.pdf" target="_blank">数字底座数据库设计文档</a>     |
-| 6  | <a href="https://vue.youshengyun.com/files/内部Java开发规范手册.pdf" target="_blank">内部Java开发规范手册</a>   |
-| 7  | <a href="https://vue.youshengyun.com/files/日志组件使用文档.pdf" target="_blank">日志组件使用文档</a>           |
-| 8  | <a href="https://vue.youshengyun.com/files/文件组件使用文档.pdf" target="_blank">文件组件使用文档</a>           |
-| 9  | <a href="https://vue.youshengyun.com/files/代码生成器使用文档.pdf" target="_blank">代码生成器使用文档</a>         |
-| 10 | <a href="https://vue.youshengyun.com/files/配置文件说明文档.pdf" target="_blank">配置文件说明文档</a>           |
-| 11 | <a href="https://vue.youshengyun.com/files/常用工具类使用示例文档.pdf" target="_blank">常用工具类使用示例文档</a>     |
-| 12 | <a href="https://vue.youshengyun.com/files/有生博大Vue开发手册v1.0.pdf" target="_blank">前端开发手册</a>      |
-| 13 | <a href="https://vue.youshengyun.com/files/开发规范.pdf" target="_blank">前端开发规范</a>                 |
-| 14 | <a href="https://vue.youshengyun.com/files/代码格式化.pdf" target="_blank">前端代码格式化</a>               |
-| 15 | <a href="https://vue.youshengyun.com/files/系统组件.pdf" target="_blank">前端系统组件</a>                 |
-| 16 | <a href="https://vue.youshengyun.com/files/通用方法.pdf" target="_blank">前端通用方法</a>                 |
-| 17 | <a href="https://vue.youshengyun.com/files/国际化.pdf" target="_blank">前端国际化</a>                   |
-| 18 | <a href="https://vue.youshengyun.com/files/Icon图标.pdf" target="_blank">前端Icon图标</a>             |
-| 19 | <a href="https://vue.youshengyun.com/files/Oracle数据库适配文档.pdf" target="_blank">Oracle数据库适配文档</a>          |
-| 20 | <a href="https://vue.youshengyun.com/files/Dameng数据库适配文档.pdf" target="_blank">Dameng数据库适配文档</a>          |
-| 21 | <a href="https://vue.youshengyun.com/files/PostgreSQL数据库适配文档.pdf" target="_blank">PostgreSQL数据库适配文档</a>    |
-| 22 | <a href="https://vue.youshengyun.com/files/Kingbase数据库适配文档.pdf" target="_blank">Kingbase数据库适配文档</a>          |
-| 23 | <a href="https://vue.youshengyun.com/files/Mariadb数据库适配文档.pdf" target="_blank">Mariadb数据库适配文档</a>            |
+| 序号 | 名称                                                                                                      |
+|:---|---------------------------------------------------------------------------------------------------------|
+| 1  | <a href="https://vue.youshengyun.com/files/单点登录对接文档.pdf" target="_blank">单点登录对接文档</a>                   |
+| 2  | <a href="https://vue.youshengyun.com/files/数字底座接口文档.pdf" target="_blank">数字底座接口文档</a>                   |
+| 3  | <a href="https://test.youshengyun.com/y9vue-code/digitalBase" target="_blank">安装部署文档</a>                |
+| 4  | <a href="https://vue.youshengyun.com/files/操作使用文档（技术白皮书）.pdf" target="_blank">操作使用文档（技术白皮书）</a>         |
+| 5  | <a href="https://vue.youshengyun.com/files/数字底座数据库设计文档.pdf" target="_blank">数字底座数据库设计文档</a>             |
+| 6  | <a href="https://vue.youshengyun.com/files/内部Java开发规范手册.pdf" target="_blank">内部Java开发规范手册</a>           |
+| 7  | <a href="https://vue.youshengyun.com/files/日志组件使用文档.pdf" target="_blank">日志组件使用文档</a>                   |
+| 8  | <a href="https://vue.youshengyun.com/files/文件组件使用文档.pdf" target="_blank">文件组件使用文档</a>                   |
+| 9  | <a href="https://vue.youshengyun.com/files/代码生成器使用文档.pdf" target="_blank">代码生成器使用文档</a>                 |
+| 10 | <a href="https://vue.youshengyun.com/files/配置文件说明文档.pdf" target="_blank">配置文件说明文档</a>                   |
+| 11 | <a href="https://vue.youshengyun.com/files/常用工具类使用示例文档.pdf" target="_blank">常用工具类使用示例文档</a>             |
+| 12 | <a href="https://vue.youshengyun.com/files/有生博大Vue开发手册v1.0.pdf" target="_blank">前端开发手册</a>              |
+| 13 | <a href="https://vue.youshengyun.com/files/开发规范.pdf" target="_blank">前端开发规范</a>                         |
+| 14 | <a href="https://vue.youshengyun.com/files/代码格式化.pdf" target="_blank">前端代码格式化</a>                       |
+| 15 | <a href="https://vue.youshengyun.com/files/系统组件.pdf" target="_blank">前端系统组件</a>                         |
+| 16 | <a href="https://vue.youshengyun.com/files/通用方法.pdf" target="_blank">前端通用方法</a>                         |
+| 17 | <a href="https://vue.youshengyun.com/files/国际化.pdf" target="_blank">前端国际化</a>                           |
+| 18 | <a href="https://vue.youshengyun.com/files/Icon图标.pdf" target="_blank">前端Icon图标</a>                     |
+| 19 | <a href="https://vue.youshengyun.com/files/Oracle数据库适配文档.pdf" target="_blank">Oracle数据库适配文档</a>         |
+| 20 | <a href="https://vue.youshengyun.com/files/Dameng数据库适配文档.pdf" target="_blank">Dameng数据库适配文档</a>         |
+| 21 | <a href="https://vue.youshengyun.com/files/PostgreSQL数据库适配文档.pdf" target="_blank">PostgreSQL数据库适配文档</a> |
+| 22 | <a href="https://vue.youshengyun.com/files/Kingbase数据库适配文档.pdf" target="_blank">Kingbase数据库适配文档</a>     |
+| 23 | <a href="https://vue.youshengyun.com/files/Mariadb数据库适配文档.pdf" target="_blank">Mariadb数据库适配文档</a>       |
 
 ## 数字底座截图
 
@@ -453,11 +433,10 @@ webapp -- 系统公共模块
 
 ## 同构开源项目
 
-
-| 序&nbsp;号 | 项&nbsp;目&nbsp;名&nbsp;称&nbsp; | 项目介绍                                                     | 地&nbsp;址                                            |
-| :--------- | -------------------------------- | ------------------------------------------------------------ | ----------------------------------------------------- |
-| 1          | 工作流引擎                       | 工作流引擎对内提供单位/机关流程管理规则和内部业务流程的数字化落地实践；对外提供自动化地第三方业务驱动、接口接入和算法单元驱动能力；工作流引擎在提供底层驱动引擎的同时对全局透明监控、安全防御和国产化特色功能进行充分考虑，是内部流程管理和业务算法驱动的不二之选。 | [码云地址](https://gitee.com/risesoft-y9/y9-flowable) |
-| 2          | 数据流引擎                       | 数据流引擎是一款面向数据集成、数据同步、数据交换、数据共享、任务配置、任务调度的底层数据驱动引擎。数据流引擎采用管执分离、多流层、插件库等体系应对大规模数据任务、数据高频上报、数据高频采集、异构数据兼容的实际数据问题。 | [码云地址](https://gitee.com/risesoft-y9/y9-dataflow) |
+| 序&nbsp;号 | 项&nbsp;目&nbsp;名&nbsp;称&nbsp; | 项目介绍                                                                                                                               | 地&nbsp;址                                          |
+|:---------|------------------------------|------------------------------------------------------------------------------------------------------------------------------------|---------------------------------------------------|
+| 1        | 工作流引擎                        | 工作流引擎对内提供单位/机关流程管理规则和内部业务流程的数字化落地实践；对外提供自动化地第三方业务驱动、接口接入和算法单元驱动能力；工作流引擎在提供底层驱动引擎的同时对全局透明监控、安全防御和国产化特色功能进行充分考虑，是内部流程管理和业务算法驱动的不二之选。 | [码云地址](https://gitee.com/risesoft-y9/y9-flowable) |
+| 2        | 数据流引擎                        | 数据流引擎是一款面向数据集成、数据同步、数据交换、数据共享、任务配置、任务调度的底层数据驱动引擎。数据流引擎采用管执分离、多流层、插件库等体系应对大规模数据任务、数据高频上报、数据高频采集、异构数据兼容的实际数据问题。                      | [码云地址](https://gitee.com/risesoft-y9/y9-dataflow) |
 
 ## 赞助与支持
 
@@ -473,7 +452,8 @@ webapp -- 系统公共模块
 
 官网：<a href="https://www.idcode.org.cn/" target="_blank">https://www.idcode.org.cn/</a>
 
-> 数字底座已经全面接入统一标识码（MA码），具体使用说明请查看：<a href="https://gitee.com/risesoft-y9/y9-core/tree/main/y9-digitalbase-idcode" target="_blank">https://gitee.com/risesoft-y9/y9-core/tree/main/y9-digitalbase-idcode</a>
+>
+数字底座已经全面接入统一标识码（MA码），具体使用说明请查看：<a href="https://gitee.com/risesoft-y9/y9-core/tree/main/y9-digitalbase-idcode" target="_blank">https://gitee.com/risesoft-y9/y9-core/tree/main/y9-digitalbase-idcode</a>
 >
 
 ### 中国城市发展研究会
