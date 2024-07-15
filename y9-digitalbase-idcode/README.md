@@ -45,29 +45,18 @@ pom.xml中添加统一码组件依赖，该组件已发布至<a href="https://ce
 </dependency>
 ```
 
-### 五.配置文件添加配置信息
+### 五.统一码接口调用
 
 ```
-#统一码接口地址
-idCode_url: https://api.idcode.org.cn
-#统一码解析地址
-analyze_url: http://s.idcode.org.cn/
-#单位主码
-main_code: MA.156.1003.16291
-#系统授权key
-api_key: 9XRMKN90QA8O90SDAAAAAKJ
-#系统授权码
-api_code: 09DN09QA8X08XRNN9DRMXRXM9DNAK09Q
-#统一码解析地址
-goto_url:
-#统一码示例地址
-sample_url:
-```
-
-### 六.统一码接口调用
-
-```
-以【获取单位基本信息接口】为例
+# 调用接口前需对 IdCode 进行配置参数初始化。此处仅为示例，可根据使用的框架选择合适的时机进行初始化
+IdCode.init("09DN09QA8X08XRNN9DRMXRXM9DNAK09Q" // 系统授权码
+        , "9XRMKN90QA8O90SDAAAAAKJ" // 系统授权key
+        , "https://api.idcode.org.cn" // 统一码接口地址
+        , "MA.156.1003.16291" // 单位主码
+        , "http://s.idcode.org.cn/" // 统一码解析地址
+        , "" // goto_url
+        , ""); // 统一码示例地址
+# 以【获取单位基本信息接口】为例
 Result result = Three.m306(ConfigReader.MAIN_CODE);
 System.out.println("结果信息:" + result);
 ```
