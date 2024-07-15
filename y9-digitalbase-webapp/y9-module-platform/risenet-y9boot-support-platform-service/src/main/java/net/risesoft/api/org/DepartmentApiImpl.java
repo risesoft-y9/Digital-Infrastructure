@@ -130,6 +130,7 @@ public class DepartmentApiImpl implements DepartmentApi {
      */
     @Override
     public Y9Result<List<Department>> listBureauByNameLike(@NotBlank String tenantId, String name) {
+        Y9LoginUserHolder.setTenantId(tenantId);
         List<Y9Department> y9DepartmentList = y9DepartmentService.listBureauByNameLike(name, Boolean.FALSE);
         return Y9Result.success(Y9ModelConvertUtil.convert(y9DepartmentList, Department.class));
     }
