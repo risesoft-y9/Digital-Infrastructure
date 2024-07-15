@@ -79,6 +79,18 @@ public interface DepartmentApi {
         @RequestParam("departmentId") @NotBlank String departmentId);
 
     /**
+     * 模糊查询委办局列表
+     *
+     * @param tenantId 租户id
+     * @param name 委办局名称
+     * @return{@code Y9Result<List<Department>>} 通用请求返回对象 - data 是委办局集合
+     * @since 9.6.6
+     */
+    @GetMapping("/listBureauByNameLike")
+    Y9Result<List<Department>> listBureauByNameLike(@RequestParam("tenantId") @NotBlank String tenantId,
+        @RequestParam(name = "name", required = false) String name);
+
+    /**
      * 根据id列表获得部门对象列表
      *
      * @param tenantId 租户id

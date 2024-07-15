@@ -65,6 +65,21 @@ public class Y9DepartmentServiceImpl implements Y9DepartmentService {
         return y9DepartmentManager.saveOrUpdate(updatedDepartment);
     }
 
+    /**
+     * 判断是否移动到自己，或者自己的子节点里面，这种情况要排除，不让移动
+     *
+     * @param dept
+     * @param parentId
+     */
+    private void checkMoveTarget(Y9Department dept, String parentId) {
+        Set<Y9OrgBase> parentSet = new HashSet<>();
+        recursionParent(parentId, parentSet);
+        if (parentSet.contains(dept)) {
+            throw new Y9BusinessException(OrgUnitErrorCodeEnum.MOVE_TO_SUB_DEPARTMENT_NOT_PERMITTED.getCode(),
+                OrgUnitErrorCodeEnum.MOVE_TO_SUB_DEPARTMENT_NOT_PERMITTED.getDescription());
+        }
+    }
+
     @Override
     @Transactional(readOnly = false)
     public void delete(String id) {
@@ -89,6 +104,17 @@ public class Y9DepartmentServiceImpl implements Y9DepartmentService {
     @Override
     public Y9Department getById(String id) {
         return y9DepartmentManager.getById(id);
+    }
+
+    private void getDeptTrees(String orgBaseId, List<Y9Department> deptList, Boolean disabled) {
+        List<Y9Department> childrenList = this.listByParentIdAndDisabled(orgBaseId, disabled);
+        if (childrenList.isEmpty()) {
+            return;
+        }
+        deptList.addAll(childrenList);
+        for (Y9Department orgDept : childrenList) {
+            getDeptTrees(orgDept.getId(), deptList, disabled);
+        }
     }
 
     @Override
@@ -118,6 +144,16 @@ public class Y9DepartmentServiceImpl implements Y9DepartmentService {
     }
 
     @Override
+    public List<Y9Department> listBureauByNameLike(String name, Boolean disabled) {
+        if (disabled == null) {
+            return y9DepartmentRepository.findByBureauAndNameContainingOrderByGuidPathAsc(Boolean.TRUE, name);
+        } else {
+            return y9DepartmentRepository.findByBureauAndNameContainingAndDisabledOrderByGuidPathAsc(Boolean.TRUE, name,
+                disabled);
+        }
+    }
+
+    @Override
     public List<Y9Department> listByDn(String dn, Boolean disabled) {
         if (disabled == null) {
             return y9DepartmentRepository.findByDn(dn);
@@ -142,6 +178,10 @@ public class Y9DepartmentServiceImpl implements Y9DepartmentService {
         } else {
             return y9DepartmentRepository.findByParentIdAndDisabledOrderByTabIndexAsc(parentId, disabled);
         }
+    }
+
+    private List<Y9Department> listByParentIdAndDisabled(String orgBaseId, boolean disabled) {
+        return y9DepartmentRepository.findByParentIdAndDisabled(orgBaseId, disabled);
     }
 
     @Override
@@ -175,92 +215,6 @@ public class Y9DepartmentServiceImpl implements Y9DepartmentService {
         updatedDepartment.setParentId(parentId);
         updatedDepartment.setTabIndex(compositeOrgBaseManager.getNextSubTabIndex(parentId));
         return y9DepartmentManager.saveOrUpdate(updatedDepartment);
-    }
-
-    @Override
-    @Transactional(readOnly = false)
-    public void removeDepartmentProp(String deptId, Integer category, String orgBaseId) {
-        y9DepartmentPropRepository.deleteByDeptIdAndCategoryAndOrgBaseId(deptId, category, orgBaseId);
-    }
-
-    @Override
-    @Transactional(readOnly = false)
-    public List<Y9Department> saveOrder(List<String> deptIds) {
-        List<Y9Department> orgDeptList = new ArrayList<>();
-
-        int tabIndex = 0;
-        for (String deptId : deptIds) {
-            orgDeptList.add(y9DepartmentManager.updateTabIndex(deptId, ++tabIndex));
-        }
-        return orgDeptList;
-    }
-
-    @Override
-    @Transactional(readOnly = false)
-    public Y9Department saveOrUpdate(Y9Department dept) {
-        return y9DepartmentManager.saveOrUpdate(dept);
-    }
-
-    @Override
-    @Transactional(readOnly = false)
-    public Y9Department saveProperties(String id, String properties) {
-        return y9DepartmentManager.saveProperties(id, properties);
-    }
-
-    @Override
-    @Transactional(readOnly = false)
-    public void setDepartmentPropOrgUnits(String deptId, Integer category, List<String> orgBaseIds) {
-        for (String orgBaseId : orgBaseIds) {
-            Optional<Y9DepartmentProp> optionalY9DepartmentProp =
-                y9DepartmentPropRepository.findByDeptIdAndOrgBaseIdAndCategory(deptId, orgBaseId, category);
-            if (optionalY9DepartmentProp.isEmpty()) {
-                Y9DepartmentProp y9DepartmentProp = new Y9DepartmentProp();
-                y9DepartmentProp.setId(Y9IdGenerator.genId(IdType.SNOWFLAKE));
-                y9DepartmentProp.setDeptId(deptId);
-                y9DepartmentProp.setOrgBaseId(orgBaseId);
-                y9DepartmentProp.setCategory(category);
-
-                Integer tabIndex = y9DepartmentPropRepository.getMaxTabIndex(deptId, category).orElse(1);
-                y9DepartmentProp.setTabIndex(++tabIndex);
-                y9DepartmentPropRepository.save(y9DepartmentProp);
-            }
-        }
-    }
-
-    @Override
-    @Transactional(readOnly = false)
-    public Y9Department updateTabIndex(String id, int tabIndex) {
-        return y9DepartmentManager.updateTabIndex(id, tabIndex);
-    }
-
-    /**
-     * 判断是否移动到自己，或者自己的子节点里面，这种情况要排除，不让移动
-     *
-     * @param dept
-     * @param parentId
-     */
-    private void checkMoveTarget(Y9Department dept, String parentId) {
-        Set<Y9OrgBase> parentSet = new HashSet<>();
-        recursionParent(parentId, parentSet);
-        if (parentSet.contains(dept)) {
-            throw new Y9BusinessException(OrgUnitErrorCodeEnum.MOVE_TO_SUB_DEPARTMENT_NOT_PERMITTED.getCode(),
-                OrgUnitErrorCodeEnum.MOVE_TO_SUB_DEPARTMENT_NOT_PERMITTED.getDescription());
-        }
-    }
-
-    private void getDeptTrees(String orgBaseId, List<Y9Department> deptList, Boolean disabled) {
-        List<Y9Department> childrenList = this.listByParentIdAndDisabled(orgBaseId, disabled);
-        if (childrenList.isEmpty()) {
-            return;
-        }
-        deptList.addAll(childrenList);
-        for (Y9Department orgDept : childrenList) {
-            getDeptTrees(orgDept.getId(), deptList, disabled);
-        }
-    }
-
-    private List<Y9Department> listByParentIdAndDisabled(String orgBaseId, boolean disabled) {
-        return y9DepartmentRepository.findByParentIdAndDisabled(orgBaseId, disabled);
     }
 
     @EventListener
@@ -322,6 +276,62 @@ public class Y9DepartmentServiceImpl implements Y9DepartmentService {
         for (Y9Department y9Department : y9DepartmentList) {
             this.delete(y9Department.getId());
         }
+    }
+
+    @Override
+    @Transactional(readOnly = false)
+    public void removeDepartmentProp(String deptId, Integer category, String orgBaseId) {
+        y9DepartmentPropRepository.deleteByDeptIdAndCategoryAndOrgBaseId(deptId, category, orgBaseId);
+    }
+
+    @Override
+    @Transactional(readOnly = false)
+    public List<Y9Department> saveOrder(List<String> deptIds) {
+        List<Y9Department> orgDeptList = new ArrayList<>();
+
+        int tabIndex = 0;
+        for (String deptId : deptIds) {
+            orgDeptList.add(y9DepartmentManager.updateTabIndex(deptId, ++tabIndex));
+        }
+        return orgDeptList;
+    }
+
+    @Override
+    @Transactional(readOnly = false)
+    public Y9Department saveOrUpdate(Y9Department dept) {
+        return y9DepartmentManager.saveOrUpdate(dept);
+    }
+
+    @Override
+    @Transactional(readOnly = false)
+    public Y9Department saveProperties(String id, String properties) {
+        return y9DepartmentManager.saveProperties(id, properties);
+    }
+
+    @Override
+    @Transactional(readOnly = false)
+    public void setDepartmentPropOrgUnits(String deptId, Integer category, List<String> orgBaseIds) {
+        for (String orgBaseId : orgBaseIds) {
+            Optional<Y9DepartmentProp> optionalY9DepartmentProp =
+                y9DepartmentPropRepository.findByDeptIdAndOrgBaseIdAndCategory(deptId, orgBaseId, category);
+            if (optionalY9DepartmentProp.isEmpty()) {
+                Y9DepartmentProp y9DepartmentProp = new Y9DepartmentProp();
+                y9DepartmentProp.setId(Y9IdGenerator.genId(IdType.SNOWFLAKE));
+                y9DepartmentProp.setDeptId(deptId);
+                y9DepartmentProp.setOrgBaseId(orgBaseId);
+                y9DepartmentProp.setCategory(category);
+
+                Integer tabIndex = y9DepartmentPropRepository.getMaxTabIndex(deptId, category).orElse(1);
+                y9DepartmentProp.setTabIndex(++tabIndex);
+                y9DepartmentPropRepository.save(y9DepartmentProp);
+            }
+        }
+    }
+
+    @Override
+    @Transactional(readOnly = false)
+    public Y9Department updateTabIndex(String id, int tabIndex) {
+        return y9DepartmentManager.updateTabIndex(id, tabIndex);
     }
 
 }
