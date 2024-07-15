@@ -32,6 +32,11 @@ public interface Y9DepartmentRepository
 
     List<Y9Department> findByBureauAndGuidPathContainingOrderByTabIndexAsc(Boolean isBureau, String guidPath);
 
+    List<Y9Department> findByBureauAndNameContainingAndDisabledOrderByGuidPathAsc(Boolean isBureau, String name,
+        Boolean disabled);
+
+    List<Y9Department> findByBureauAndNameContainingOrderByGuidPathAsc(Boolean isBureau, String name);
+
     List<Y9Department> findByDn(String dn);
 
     List<Y9Department> findByDnAndDisabled(String dn, Boolean disabled);

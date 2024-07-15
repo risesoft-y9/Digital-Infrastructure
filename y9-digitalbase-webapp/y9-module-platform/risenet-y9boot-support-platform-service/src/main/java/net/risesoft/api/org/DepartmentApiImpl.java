@@ -121,6 +121,20 @@ public class DepartmentApiImpl implements DepartmentApi {
     }
 
     /**
+     * 模糊查询委办局列表
+     *
+     * @param tenantId 租户id
+     * @param name 委办局名称
+     * @return{@code Y9Result<List<Department>>} 通用请求返回对象 - data 是委办局集合
+     * @since 9.6.6
+     */
+    @Override
+    public Y9Result<List<Department>> listBureauByNameLike(@NotBlank String tenantId, String name) {
+        List<Y9Department> y9DepartmentList = y9DepartmentService.listBureauByNameLike(name, Boolean.FALSE);
+        return Y9Result.success(Y9ModelConvertUtil.convert(y9DepartmentList, Department.class));
+    }
+
+    /**
      * 根据id列表获得部门对象列表
      *
      * @param tenantId 租户id

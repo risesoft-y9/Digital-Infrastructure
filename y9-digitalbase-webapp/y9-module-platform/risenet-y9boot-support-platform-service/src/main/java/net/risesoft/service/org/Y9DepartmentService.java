@@ -74,6 +74,16 @@ public interface Y9DepartmentService {
     List<Y9Department> listBureau(String organizationId, Boolean disabled);
 
     /**
+     * 根据名称查询委办局列表
+     *
+     * @param name 部门名
+     * @param disabled
+     * @return {@link List}<{@link Y9Department}>
+     * @since 9.6.6
+     */
+    List<Y9Department> listBureauByNameLike(String name, Boolean disabled);
+
+    /**
      * 根据dn查询部门列表
      *
      * @param dn dn
@@ -131,20 +141,20 @@ public interface Y9DepartmentService {
     void removeDepartmentProp(String deptId, Integer category, String orgBaseId);
 
     /**
-     * 保存或更新 新增或修改此部门实例的信息
-     *
-     * @param dept 部门对象
-     * @return {@link Y9Department}
-     */
-    Y9Department saveOrUpdate(Y9Department dept);
-
-    /**
      * 保存新的部门排序
      *
      * @param deptIds 部门id数组
      * @return {@link List}<{@link Y9Department}>
      */
     List<Y9Department> saveOrder(List<String> deptIds);
+
+    /**
+     * 保存或更新 新增或修改此部门实例的信息
+     *
+     * @param dept 部门对象
+     * @return {@link Y9Department}
+     */
+    Y9Department saveOrUpdate(Y9Department dept);
 
     /**
      * 保存或者更新部门扩展信息
