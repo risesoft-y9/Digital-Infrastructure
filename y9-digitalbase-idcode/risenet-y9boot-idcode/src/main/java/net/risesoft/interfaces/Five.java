@@ -9,8 +9,8 @@ import net.risesoft.model.BaseIdCodeInfo;
 import net.risesoft.model.CodeRecordResult;
 import net.risesoft.model.Result;
 import net.risesoft.model.ResultObject;
-import net.risesoft.util.ConfigReader;
-import net.risesoft.util.IDCodeApiExecute;
+import net.risesoft.util.Config;
+import net.risesoft.util.IdCodeApiExecute;
 
 /**
  * 一物一码二维码接口
@@ -27,7 +27,7 @@ public class Five {
      */
     public static Result m5011(String idCode, String categoryRegId, File codeFile, String generateType) {
         Map<String, Object> params = new HashMap<>();
-        params.put("access_token", ConfigReader.API_KEY);
+        params.put("access_token", Config.API_KEY);
         params.put("time", System.currentTimeMillis());
         params.put("company_idcode", idCode);
         params.put("category_reg_id", categoryRegId);
@@ -36,7 +36,7 @@ public class Five {
         params.put("version", "1.0");
         Result result = null;
         try {
-            result = new IDCodeApiExecute<Result>().execute(Result.class, params, UrlConst.URL_5011, true);
+            result = new IdCodeApiExecute<Result>().execute(Result.class, params, UrlConst.URL_5011, true);
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -54,7 +54,7 @@ public class Five {
      */
     public static Result m5012(String idCode, String categoryRegId, String codeListStr, String generateType) {
         Map<String, Object> params = new HashMap<>();
-        params.put("access_token", ConfigReader.API_KEY);
+        params.put("access_token", Config.API_KEY);
         params.put("time", System.currentTimeMillis());
         params.put("company_idcode", idCode);
         params.put("category_reg_id", categoryRegId);
@@ -63,7 +63,7 @@ public class Five {
         params.put("version", "1.0");
         Result result = null;
         try {
-            result = new IDCodeApiExecute<Result>().execute(Result.class, params, UrlConst.URL_5012, false);
+            result = new IdCodeApiExecute<Result>().execute(Result.class, params, UrlConst.URL_5012, false);
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -84,7 +84,7 @@ public class Five {
     public static Result m5013(String idCode, String categoryRegId, String prefixStr, Integer startNum, Integer endNum,
         String generateType) {
         Map<String, Object> params = new HashMap<>();
-        params.put("access_token", ConfigReader.API_KEY);
+        params.put("access_token", Config.API_KEY);
         params.put("time", System.currentTimeMillis());
         params.put("company_idcode", idCode);
         params.put("category_reg_id", categoryRegId);
@@ -95,7 +95,7 @@ public class Five {
         params.put("version", "1.0");
         Result result = null;
         try {
-            result = new IDCodeApiExecute<Result>().execute(Result.class, params, UrlConst.URL_5013, false);
+            result = new IdCodeApiExecute<Result>().execute(Result.class, params, UrlConst.URL_5013, false);
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -117,7 +117,7 @@ public class Five {
     public static Result m5014(String idCode, String categoryRegId, String prefixStr, Integer startNum, Integer endNum,
         Integer length, String generateType) {
         Map<String, Object> params = new HashMap<>();
-        params.put("access_token", ConfigReader.API_KEY);
+        params.put("access_token", Config.API_KEY);
         params.put("time", System.currentTimeMillis());
         params.put("company_idcode", idCode);
         params.put("category_reg_id", categoryRegId);
@@ -129,7 +129,7 @@ public class Five {
         params.put("version", "1.0");
         Result result = null;
         try {
-            result = new IDCodeApiExecute<Result>().execute(Result.class, params, UrlConst.URL_5014, false);
+            result = new IdCodeApiExecute<Result>().execute(Result.class, params, UrlConst.URL_5014, false);
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -146,14 +146,14 @@ public class Five {
      */
     public static CodeRecordResult m502(String idCode, String idCodeOfCategory, String modelNumberCode) {
         Map<String, Object> params = new HashMap<>();
-        params.put("access_token", ConfigReader.API_KEY);
+        params.put("access_token", Config.API_KEY);
         params.put("time", System.currentTimeMillis());
         params.put("company_idcode", idCode);
         params.put("idcode_of_category", idCodeOfCategory);
         params.put("model_number_code", modelNumberCode);
         CodeRecordResult result = null;
         try {
-            result = new IDCodeApiExecute<CodeRecordResult>().execute(CodeRecordResult.class, params, UrlConst.URL_502,
+            result = new IdCodeApiExecute<CodeRecordResult>().execute(CodeRecordResult.class, params, UrlConst.URL_502,
                 false);
         } catch (Exception e) {
             e.printStackTrace();
@@ -170,13 +170,13 @@ public class Five {
      */
     public static CodeRecordResult m503(String idCode, String uploadCodeId) {
         Map<String, Object> params = new HashMap<>();
-        params.put("access_token", ConfigReader.API_KEY);
+        params.put("access_token", Config.API_KEY);
         params.put("time", System.currentTimeMillis());
         params.put("company_idcode", idCode);
         params.put("uploadcode_id", uploadCodeId);
         CodeRecordResult result = null;
         try {
-            result = new IDCodeApiExecute<CodeRecordResult>().execute(CodeRecordResult.class, params, UrlConst.URL_503,
+            result = new IdCodeApiExecute<CodeRecordResult>().execute(CodeRecordResult.class, params, UrlConst.URL_503,
                 false);
         } catch (Exception e) {
             e.printStackTrace();
@@ -195,7 +195,7 @@ public class Five {
      */
     public static BaseIdCodeInfo m504(String idCode, String uploadCodeId, String password, String codeType) {
         Map<String, Object> params = new HashMap<>();
-        params.put("access_token", ConfigReader.API_KEY);
+        params.put("access_token", Config.API_KEY);
         params.put("time", System.currentTimeMillis());
         params.put("company_idcode", idCode);
         params.put("uploadcode_id", uploadCodeId);
@@ -204,7 +204,7 @@ public class Five {
         BaseIdCodeInfo result = null;
         try {
             result =
-                new IDCodeApiExecute<BaseIdCodeInfo>().execute(BaseIdCodeInfo.class, params, UrlConst.URL_504, false);
+                new IdCodeApiExecute<BaseIdCodeInfo>().execute(BaseIdCodeInfo.class, params, UrlConst.URL_504, false);
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -221,14 +221,14 @@ public class Five {
      */
     public static ResultObject m505(String idCode, String uploadCodeId, String codeType) {
         Map<String, Object> params = new HashMap<>();
-        params.put("access_token", ConfigReader.API_KEY);
+        params.put("access_token", Config.API_KEY);
         params.put("time", System.currentTimeMillis());
         params.put("company_idcode", idCode);
         params.put("uploadcode_id", uploadCodeId);
         params.put("code_type", codeType);
         ResultObject result = null;
         try {
-            result = new IDCodeApiExecute<ResultObject>().execute(ResultObject.class, params, UrlConst.URL_505, false);
+            result = new IdCodeApiExecute<ResultObject>().execute(ResultObject.class, params, UrlConst.URL_505, false);
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -243,12 +243,12 @@ public class Five {
      */
     public static ResultObject m506(String code) {
         Map<String, Object> params = new HashMap<>();
-        params.put("access_token", ConfigReader.API_KEY);
+        params.put("access_token", Config.API_KEY);
         params.put("time", System.currentTimeMillis());
         params.put("code", code);
         ResultObject result = null;
         try {
-            result = new IDCodeApiExecute<ResultObject>().execute(ResultObject.class, params, UrlConst.URL_506, false);
+            result = new IdCodeApiExecute<ResultObject>().execute(ResultObject.class, params, UrlConst.URL_506, false);
         } catch (Exception e) {
             e.printStackTrace();
         }

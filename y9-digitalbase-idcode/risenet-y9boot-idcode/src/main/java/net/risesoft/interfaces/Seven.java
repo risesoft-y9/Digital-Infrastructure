@@ -8,8 +8,8 @@ import net.risesoft.model.AuthenPicResult;
 import net.risesoft.model.ExamineResult;
 import net.risesoft.model.OrganUnit;
 import net.risesoft.model.Result;
-import net.risesoft.util.ConfigReader;
-import net.risesoft.util.IDCodeApiExecute;
+import net.risesoft.util.Config;
+import net.risesoft.util.IdCodeApiExecute;
 
 public class Seven {
     /**
@@ -21,13 +21,13 @@ public class Seven {
      */
     public static OrganUnit m601(String loginName, String loginPswd) {
         Map<String, Object> params = new HashMap<String, Object>();
-        params.put("access_token", ConfigReader.API_KEY);
+        params.put("access_token", Config.API_KEY);
         params.put("time", System.currentTimeMillis());
         params.put("login_name", loginName);
         params.put("login_pswd", loginPswd);
         OrganUnit result = null;
         try {
-            result = new IDCodeApiExecute<OrganUnit>().execute(OrganUnit.class, params, UrlConst.URL_601, true);
+            result = new IdCodeApiExecute<OrganUnit>().execute(OrganUnit.class, params, UrlConst.URL_601, true);
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -45,7 +45,7 @@ public class Seven {
      */
     public static Result m602(String idCode, String gotoUrl, String sampleUrl, String regId) {
         Map<String, Object> params = new HashMap<String, Object>();
-        params.put("access_token", ConfigReader.API_KEY);
+        params.put("access_token", Config.API_KEY);
         params.put("time", System.currentTimeMillis());
         params.put("company_idcode", idCode);
         params.put("gotourl", gotoUrl);
@@ -53,7 +53,7 @@ public class Seven {
         params.put("reg_id", regId);
         Result result = null;
         try {
-            result = new IDCodeApiExecute<Result>().execute(Result.class, params, UrlConst.URL_602, true);
+            result = new IdCodeApiExecute<Result>().execute(Result.class, params, UrlConst.URL_602, true);
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -69,13 +69,13 @@ public class Seven {
      */
     public static Result m606(String gotoUrl, String sampleUrl) {
         Map<String, Object> params = new HashMap<String, Object>();
-        params.put("access_token", ConfigReader.API_KEY);
+        params.put("access_token", Config.API_KEY);
         params.put("time", System.currentTimeMillis());
         params.put("gotourl", gotoUrl);
         params.put("sample_url", sampleUrl);
         Result result = null;
         try {
-            result = new IDCodeApiExecute<Result>().execute(Result.class, params, UrlConst.URL_606, true);
+            result = new IdCodeApiExecute<Result>().execute(Result.class, params, UrlConst.URL_606, true);
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -106,7 +106,7 @@ public class Seven {
      */
     public static ExamineResult m608(String idCode, String categoryRegId, Integer type) {
         Map<String, Object> params = new HashMap<String, Object>();
-        params.put("access_token", ConfigReader.API_KEY);
+        params.put("access_token", Config.API_KEY);
         params.put("time", System.currentTimeMillis());
         params.put("company_idcode", idCode);
         params.put("category_reg_id", categoryRegId);
@@ -114,7 +114,7 @@ public class Seven {
         ExamineResult result = null;
         try {
             result =
-                new IDCodeApiExecute<ExamineResult>().execute(ExamineResult.class, params, UrlConst.URL_608, false);
+                new IdCodeApiExecute<ExamineResult>().execute(ExamineResult.class, params, UrlConst.URL_608, false);
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -130,14 +130,14 @@ public class Seven {
      */
     public static AuthenPicResult m701(Integer bgImage, Integer isMarkName) {
         Map<String, Object> params = new HashMap<String, Object>();
-        params.put("access_token", ConfigReader.API_KEY);
+        params.put("access_token", Config.API_KEY);
         params.put("time", System.currentTimeMillis());
         params.put("bgimage", bgImage);
         params.put("ismarkname", isMarkName);
         AuthenPicResult result = null;
         try {
             result =
-                new IDCodeApiExecute<AuthenPicResult>().execute(AuthenPicResult.class, params, UrlConst.URL_701, false);
+                new IdCodeApiExecute<AuthenPicResult>().execute(AuthenPicResult.class, params, UrlConst.URL_701, false);
         } catch (Exception e) {
             e.printStackTrace();
         }

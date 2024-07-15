@@ -11,15 +11,18 @@ import org.junit.jupiter.api.MethodOrderer;
 import org.junit.jupiter.api.Order;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestMethodOrder;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.core.env.Environment;
 
 import lombok.extern.slf4j.Slf4j;
 
+import net.risesoft.IdCode;
 import net.risesoft.model.BaseIdCodeInfo;
 import net.risesoft.model.CodeRecordResult;
 import net.risesoft.model.Result;
 import net.risesoft.model.ResultObject;
-import net.risesoft.util.ConfigReader;
+import net.risesoft.util.Config;
 
 @SpringBootTest
 @Slf4j
@@ -27,9 +30,15 @@ import net.risesoft.util.ConfigReader;
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 public class FiveTest {
 
+    @Autowired
+    private Environment environment;
+
     @BeforeEach
     public void setUp() {
-
+        IdCode.init(environment.getProperty("idCode.api_code"), environment.getProperty("idCode.api_key"),
+            environment.getProperty("idCode.idCode_url"), environment.getProperty("idCode.main_code"),
+            environment.getProperty("idCode.analyze_url"), environment.getProperty("idCode.goto_url"),
+            environment.getProperty("idCode.sample_url"));
     }
 
     @Test
@@ -40,7 +49,7 @@ public class FiveTest {
         String categoryRegId = "category_reg_id";
         File codeFile = new File("path/to/codeFile");
         String generateType = "generate_type";
-        Result result = Five.m5011(ConfigReader.MAIN_CODE, categoryRegId, codeFile, generateType);
+        Result result = Five.m5011(Config.MAIN_CODE, categoryRegId, codeFile, generateType);
         assertEquals(result.getResultCode(), 1);
     }
 
@@ -52,7 +61,7 @@ public class FiveTest {
         String categoryRegId = "category_reg_id";
         String codeListStr = "codeListStr";
         String generateType = "generate_type";
-        Result result = Five.m5012(ConfigReader.MAIN_CODE, categoryRegId, codeListStr, generateType);
+        Result result = Five.m5012(Config.MAIN_CODE, categoryRegId, codeListStr, generateType);
         assertEquals(result.getResultCode(), 1);
     }
 
@@ -66,7 +75,7 @@ public class FiveTest {
         String prefixStr = "";
         Integer startNum = 1;
         Integer endNum = 2;
-        Result result = Five.m5013(ConfigReader.MAIN_CODE, categoryRegId, prefixStr, startNum, endNum, generateType);
+        Result result = Five.m5013(Config.MAIN_CODE, categoryRegId, prefixStr, startNum, endNum, generateType);
         assertEquals(result.getResultCode(), 1);
     }
 
@@ -81,8 +90,7 @@ public class FiveTest {
         Integer startNum = 1;
         Integer endNum = 2;
         Integer length = 3;
-        Result result =
-            Five.m5014(ConfigReader.MAIN_CODE, categoryRegId, prefixStr, startNum, endNum, length, generateType);
+        Result result = Five.m5014(Config.MAIN_CODE, categoryRegId, prefixStr, startNum, endNum, length, generateType);
         assertEquals(result.getResultCode(), 1);
     }
 
@@ -92,7 +100,7 @@ public class FiveTest {
     public void testM502() {
         String idCodeOfCategory = "10000000";
         String modelNumberCode = "rise15727338539";
-        CodeRecordResult result = Five.m502(ConfigReader.MAIN_CODE, idCodeOfCategory, modelNumberCode);
+        CodeRecordResult result = Five.m502(Config.MAIN_CODE, idCodeOfCategory, modelNumberCode);
         assertEquals(result.getResultCode(), 1);
     }
 
@@ -102,7 +110,7 @@ public class FiveTest {
     @DisplayName("【503】按上传批次ID查询上传的二维码")
     public void testM503() {
         String uploadCodeId = "";
-        CodeRecordResult result = Five.m503(ConfigReader.MAIN_CODE, uploadCodeId);
+        CodeRecordResult result = Five.m503(Config.MAIN_CODE, uploadCodeId);
         assertEquals(result.getResultCode(), 1);
     }
 
@@ -114,7 +122,7 @@ public class FiveTest {
         String uploadCodeId = "";
         String password = "";
         String codeType = "";
-        BaseIdCodeInfo result = Five.m504(ConfigReader.MAIN_CODE, uploadCodeId, password, codeType);
+        BaseIdCodeInfo result = Five.m504(Config.MAIN_CODE, uploadCodeId, password, codeType);
         assertEquals(result.getResultCode(), 1);
     }
 
@@ -125,7 +133,7 @@ public class FiveTest {
     public void testM505() {
         String uploadCodeId = "";
         String codeType = "";
-        ResultObject result = Five.m505(ConfigReader.MAIN_CODE, uploadCodeId, codeType);
+        ResultObject result = Five.m505(Config.MAIN_CODE, uploadCodeId, codeType);
         assertEquals(result.getResultCode(), 1);
     }
 

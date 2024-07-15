@@ -1,8 +1,10 @@
 package net.risesoft.controller.idcode;
 
+import javax.annotation.PostConstruct;
 import javax.validation.constraints.NotBlank;
 
 import org.apache.commons.lang3.StringUtils;
+import org.springframework.core.env.Environment;
 import org.springframework.http.MediaType;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -13,6 +15,7 @@ import org.springframework.web.bind.annotation.RestController;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
+import net.risesoft.IdCode;
 import net.risesoft.entity.Y9Person;
 import net.risesoft.entity.idcode.Y9IdCode;
 import net.risesoft.enums.CodePayTypeEnum;
@@ -28,7 +31,7 @@ import net.risesoft.permission.annotation.IsManager;
 import net.risesoft.pojo.Y9Result;
 import net.risesoft.service.idcode.Y9IdCodeService;
 import net.risesoft.service.org.Y9PersonService;
-import net.risesoft.util.ConfigReader;
+import net.risesoft.util.Config;
 
 /**
  * 统一码管理
@@ -47,6 +50,16 @@ public class IdCodeController {
     private final Y9IdCodeService y9IdCodeService;
     private final Y9PersonService y9PersonService;
 
+    private final Environment environment;
+
+    @PostConstruct
+    public void init() {
+        IdCode.init(environment.getProperty("idCode.api_code"), environment.getProperty("idCode.api_key"),
+            environment.getProperty("idCode.idCode_url"), environment.getProperty("idCode.main_code"),
+            environment.getProperty("idCode.analyze_url"), environment.getProperty("idCode.goto_url"),
+            environment.getProperty("idCode.sample_url"));
+    }
+
     /**
      * 为人员添加统一码
      *
@@ -63,9 +76,9 @@ public class IdCodeController {
         Y9IdCode y9IdCode = y9IdCodeService.findByOrgUnitId(personId);
         if (y9IdCode == null) {
             IdcodeRegResult result =
-                Four.m407(ConfigReader.MAIN_CODE, "73", 10127, "10000000", personId, "", y9Person.getName(),
-                    CodePayTypeEnum.REGISTER.getValue(), ConfigReader.GOTO_URL + "?tenantId=" + y9Person.getTenantId(),
-                    ConfigReader.SAMPLE_URL + "?tenantId=" + y9Person.getTenantId());
+                Four.m407(Config.MAIN_CODE, "73", 10127, "10000000", personId, "", y9Person.getName(),
+                    CodePayTypeEnum.REGISTER.getValue(), Config.GOTO_URL + "?tenantId=" + y9Person.getTenantId(),
+                    Config.SAMPLE_URL + "?tenantId=" + y9Person.getTenantId());
             if (result != null && result.getResultCode() == 1) {
                 y9IdCode = new Y9IdCode();
                 y9IdCode.setId(result.getOrganUnitIdCode());
