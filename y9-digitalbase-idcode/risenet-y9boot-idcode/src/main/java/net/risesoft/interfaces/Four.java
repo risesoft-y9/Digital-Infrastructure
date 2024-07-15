@@ -7,8 +7,8 @@ import net.risesoft.consts.UrlConst;
 import net.risesoft.model.BaseIdCodeInfo;
 import net.risesoft.model.BatchRegistResult;
 import net.risesoft.model.IdcodeRegResult;
-import net.risesoft.util.ConfigReader;
-import net.risesoft.util.IDCodeApiExecute;
+import net.risesoft.util.Config;
+import net.risesoft.util.IdCodeApiExecute;
 
 /**
  * 品类注册/备案相关接口
@@ -44,7 +44,7 @@ public class Four {
         params.put("time", System.currentTimeMillis());
         BatchRegistResult result = null;
         try {
-            result = new IDCodeApiExecute<BatchRegistResult>().execute(BatchRegistResult.class, params,
+            result = new IdCodeApiExecute<BatchRegistResult>().execute(BatchRegistResult.class, params,
                 UrlConst.URL_402, true);
         } catch (Exception e) {
             e.printStackTrace();
@@ -64,7 +64,7 @@ public class Four {
     public static BaseIdCodeInfo m403(String idCode, String idCodeOfCategory, String modelNumberCode,
         String categoryRegId) {
         Map<String, Object> params = new HashMap<>();
-        params.put("access_token", ConfigReader.API_KEY);
+        params.put("access_token", Config.API_KEY);
         params.put("time", System.currentTimeMillis());
         params.put("company_idcode", idCode);
         params.put("idcode_of_category", idCodeOfCategory);
@@ -74,7 +74,7 @@ public class Four {
         BaseIdCodeInfo result = null;
         try {
             result =
-                new IDCodeApiExecute<BaseIdCodeInfo>().execute(BaseIdCodeInfo.class, params, UrlConst.URL_403, false);
+                new IdCodeApiExecute<BaseIdCodeInfo>().execute(BaseIdCodeInfo.class, params, UrlConst.URL_403, false);
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -90,7 +90,7 @@ public class Four {
      */
     public static BaseIdCodeInfo m404(String idCode, Integer searchType) {
         Map<String, Object> params = new HashMap<>();
-        params.put("access_token", ConfigReader.API_KEY);
+        params.put("access_token", Config.API_KEY);
         params.put("time", System.currentTimeMillis());
         params.put("company_idcode", idCode);
         params.put("search_type", searchType);
@@ -98,7 +98,7 @@ public class Four {
         BaseIdCodeInfo result = null;
         try {
             result =
-                new IDCodeApiExecute<BaseIdCodeInfo>().execute(BaseIdCodeInfo.class, params, UrlConst.URL_404, false);
+                new IdCodeApiExecute<BaseIdCodeInfo>().execute(BaseIdCodeInfo.class, params, UrlConst.URL_404, false);
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -142,7 +142,7 @@ public class Four {
     public static IdcodeRegResult m406(String idCode, String codeUseId, Integer industryCategoryId, String categoryCode,
         String modelNumber, String modelNumberCode, Integer codePayType, String gotoUrl, String sampleUrl) {
         Map<String, Object> params = new HashMap<>();
-        params.put("access_token", ConfigReader.API_KEY);
+        params.put("access_token", Config.API_KEY);
         params.put("time", System.currentTimeMillis());
         params.put("company_idcode", idCode);
         params.put("codeuse_id", codeUseId);
@@ -157,7 +157,7 @@ public class Four {
         IdcodeRegResult result = null;
         try {
             result =
-                new IDCodeApiExecute<IdcodeRegResult>().execute(IdcodeRegResult.class, params, UrlConst.URL_406, true);
+                new IdCodeApiExecute<IdcodeRegResult>().execute(IdcodeRegResult.class, params, UrlConst.URL_406, true);
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -183,7 +183,7 @@ public class Four {
         String modelNumber, String modelNumberEn, String introduction, Integer codePayType, String gotoUrl,
         String sampleUrl) {
         Map<String, Object> params = new HashMap<>();
-        params.put("access_token", ConfigReader.API_KEY);
+        params.put("access_token", Config.API_KEY);
         params.put("time", System.currentTimeMillis());
         params.put("company_idcode", idCode);
         params.put("codeuse_id", codeUseId);
@@ -199,7 +199,7 @@ public class Four {
         IdcodeRegResult result = null;
         try {
             result =
-                new IDCodeApiExecute<IdcodeRegResult>().execute(IdcodeRegResult.class, params, UrlConst.URL_407, true);
+                new IdCodeApiExecute<IdcodeRegResult>().execute(IdcodeRegResult.class, params, UrlConst.URL_407, true);
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -236,7 +236,7 @@ public class Four {
     public static BaseIdCodeInfo m409(String idCode, String idCodeOfCategory, String modelNumberCode,
         String categoryRegId) {
         Map<String, Object> params = new HashMap<>();
-        params.put("access_token", ConfigReader.API_KEY);
+        params.put("access_token", Config.API_KEY);
         params.put("time", System.currentTimeMillis());
         params.put("company_idcode", idCode);
         params.put("idcode_of_category", idCodeOfCategory);
@@ -246,7 +246,7 @@ public class Four {
         BaseIdCodeInfo result = null;
         try {
             result =
-                new IDCodeApiExecute<BaseIdCodeInfo>().execute(BaseIdCodeInfo.class, params, UrlConst.URL_409, false);
+                new IdCodeApiExecute<BaseIdCodeInfo>().execute(BaseIdCodeInfo.class, params, UrlConst.URL_409, false);
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -262,7 +262,7 @@ public class Four {
      */
     public static BaseIdCodeInfo m410(String idCode, Integer searchType) {
         Map<String, Object> params = new HashMap<>();
-        params.put("access_token", ConfigReader.API_KEY);
+        params.put("access_token", Config.API_KEY);
         params.put("time", System.currentTimeMillis());
         params.put("company_idcode", idCode);
         params.put("search_type", searchType);
@@ -270,7 +270,7 @@ public class Four {
         BaseIdCodeInfo result = null;
         try {
             result =
-                new IDCodeApiExecute<BaseIdCodeInfo>().execute(BaseIdCodeInfo.class, params, UrlConst.URL_404, false);
+                new IdCodeApiExecute<BaseIdCodeInfo>().execute(BaseIdCodeInfo.class, params, UrlConst.URL_404, false);
         } catch (Exception e) {
             e.printStackTrace();
         }

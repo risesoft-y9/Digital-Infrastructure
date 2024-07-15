@@ -13,7 +13,7 @@ import lombok.extern.slf4j.Slf4j;
  * @author qinman
  */
 @Slf4j
-public class IDCodeApiService {
+public class IdCodeApiService {
 
     private boolean containFile = false;
 
@@ -60,14 +60,14 @@ public class IDCodeApiService {
             } else {
                 url = url + "?";
             }
-            String hash = MD5Util.md5Encode(url + urlParams + ConfigReader.API_CODE).toUpperCase();
+            String hash = MD5Util.md5Encode(url + urlParams + Config.API_CODE).toUpperCase();
             urlParams += "&hash=" + hash;
-            String resultJson = http.get(ConfigReader.IDCODE_URL + url + urlParams);
+            String resultJson = http.get(Config.IDCODE_URL + url + urlParams);
             printResult("get json结果：" + resultJson);
             return resultJson;
         } else {
-            String hash = MD5Util.md5Encode(url + ConfigReader.API_CODE).toUpperCase();
-            String resultJson = http.get(ConfigReader.IDCODE_URL + url + "&" + hash);
+            String hash = MD5Util.md5Encode(url + Config.API_CODE).toUpperCase();
+            String resultJson = http.get(Config.IDCODE_URL + url + "&" + hash);
             printResult("get json结果：" + resultJson);
             return resultJson;
         }
@@ -88,14 +88,14 @@ public class IDCodeApiService {
         } else {
             encodeUrl = url + "?";
         }
-        String hash = MD5Util.md5Encode(encodeUrl + urlParams + ConfigReader.API_CODE).toUpperCase();
+        String hash = MD5Util.md5Encode(encodeUrl + urlParams + Config.API_CODE).toUpperCase();
         params.put("hash", hash);
         HttpUtil http = new HttpUtil();
         String resultJson = "";
         if (containFile) {
-            resultJson = http.postMapContainFile(ConfigReader.IDCODE_URL + url, params, files);
+            resultJson = http.postMapContainFile(Config.IDCODE_URL + url, params, files);
         } else {
-            resultJson = http.postMap(ConfigReader.IDCODE_URL + url, params);
+            resultJson = http.postMap(Config.IDCODE_URL + url, params);
         }
         printResult("post json结果：" + resultJson);
         return resultJson;

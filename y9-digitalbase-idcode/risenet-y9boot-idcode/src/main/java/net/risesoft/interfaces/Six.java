@@ -6,8 +6,8 @@ import java.util.Map;
 import net.risesoft.consts.UrlConst;
 import net.risesoft.model.CodeAddress;
 import net.risesoft.model.CodePicBase64;
-import net.risesoft.util.ConfigReader;
-import net.risesoft.util.IDCodeApiExecute;
+import net.risesoft.util.Config;
+import net.risesoft.util.IdCodeApiExecute;
 
 public class Six {
     /**
@@ -20,14 +20,14 @@ public class Six {
      */
     public static CodeAddress m603(String code, Integer picSize, Integer codeType) {
         Map<String, Object> params = new HashMap<>();
-        params.put("access_token", ConfigReader.API_KEY);
+        params.put("access_token", Config.API_KEY);
         params.put("time", System.currentTimeMillis());
         params.put("code", code);
         params.put("pic_size", picSize);
         params.put("code_type", codeType);
         CodeAddress result = null;
         try {
-            result = new IDCodeApiExecute<CodeAddress>().execute(CodeAddress.class, params, UrlConst.URL_603, false);
+            result = new IdCodeApiExecute<CodeAddress>().execute(CodeAddress.class, params, UrlConst.URL_603, false);
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -47,7 +47,7 @@ public class Six {
     public static CodePicBase64 m604(String code, Integer isMargin, String unitIcon, Integer qrCodeSize,
         Integer color) {
         Map<String, Object> params = new HashMap<>();
-        params.put("access_token", ConfigReader.API_KEY);
+        params.put("access_token", Config.API_KEY);
         params.put("time", System.currentTimeMillis());
         params.put("code", code);
         params.put("is_margin", isMargin);
@@ -56,7 +56,7 @@ public class Six {
         params.put("color", color);
         CodePicBase64 result = null;
         try {
-            result = new IDCodeApiExecute<CodePicBase64>().execute(CodePicBase64.class, params, UrlConst.URL_604, true);
+            result = new IdCodeApiExecute<CodePicBase64>().execute(CodePicBase64.class, params, UrlConst.URL_604, true);
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -81,7 +81,7 @@ public class Six {
     public static CodePicBase64 m605(String idCode, String code, Integer useLogo, String unitLogo, Integer marginType,
         Integer categoryId, Integer marginTypeLv2, Integer codeType, Integer codeSize, String codeColor) {
         Map<String, Object> params = new HashMap<>();
-        params.put("access_token", ConfigReader.API_KEY);
+        params.put("access_token", Config.API_KEY);
         params.put("time", System.currentTimeMillis());
         params.put("company_idcode", idCode);
         params.put("code", code);
@@ -95,7 +95,7 @@ public class Six {
         params.put("code_color", codeColor);
         CodePicBase64 result = null;
         try {
-            result = new IDCodeApiExecute<CodePicBase64>().execute(CodePicBase64.class, params, UrlConst.URL_605, true);
+            result = new IdCodeApiExecute<CodePicBase64>().execute(CodePicBase64.class, params, UrlConst.URL_605, true);
         } catch (Exception e) {
             e.printStackTrace();
         }

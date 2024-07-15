@@ -90,7 +90,7 @@
         <dependency>
             <groupId>net.risesoft</groupId>
             <artifactId>risenet-y9boot-idcode</artifactId>
-            <version>v9.6.6</version>
+            <version>${project.version}</version>
         </dependency>
     </dependencies>
 

@@ -12,17 +12,20 @@ import org.junit.jupiter.api.MethodOrderer;
 import org.junit.jupiter.api.Order;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestMethodOrder;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.core.env.Environment;
 
 import lombok.extern.slf4j.Slf4j;
 
+import net.risesoft.IdCode;
 import net.risesoft.enums.CodePayTypeEnum;
 import net.risesoft.model.BaseIdCodeInfo;
 import net.risesoft.model.BatchRegistInfo;
 import net.risesoft.model.BatchRegistResult;
 import net.risesoft.model.CategoryRegModel;
 import net.risesoft.model.IdcodeRegResult;
-import net.risesoft.util.ConfigReader;
+import net.risesoft.util.Config;
 import net.risesoft.util.JsonUtil;
 
 @SpringBootTest
@@ -31,9 +34,15 @@ import net.risesoft.util.JsonUtil;
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 public class FourTest {
 
+    @Autowired
+    private Environment environment;
+
     @BeforeEach
     public void setUp() {
-
+        IdCode.init(environment.getProperty("idCode.api_code"), environment.getProperty("idCode.api_key"),
+            environment.getProperty("idCode.idCode_url"), environment.getProperty("idCode.main_code"),
+            environment.getProperty("idCode.analyze_url"), environment.getProperty("idCode.goto_url"),
+            environment.getProperty("idCode.sample_url"));
     }
 
     /*@Test
@@ -83,8 +92,8 @@ public class FourTest {
         list.add(modelX);
 
         BatchRegistInfo bri = new BatchRegistInfo();
-        bri.setAccessToken(ConfigReader.API_KEY);
-        bri.setIdCode(ConfigReader.MAIN_CODE);
+        bri.setAccessToken(Config.API_KEY);
+        bri.setIdCode(Config.MAIN_CODE);
         bri.setList(list);
         String jsonStr = JsonUtil.writeValueAsString(bri);
         System.out.println(jsonStr);
@@ -99,7 +108,7 @@ public class FourTest {
         String idCodeOfCategory = "46100000";
         String modelNumberCode = "itemAdmin";
         String categoryRegId = "10030000000000001923";
-        BaseIdCodeInfo result = Four.m403(ConfigReader.MAIN_CODE, idCodeOfCategory, modelNumberCode, categoryRegId);
+        BaseIdCodeInfo result = Four.m403(Config.MAIN_CODE, idCodeOfCategory, modelNumberCode, categoryRegId);
         assertEquals(result.getResultCode(), 1);
         if (LOGGER.isDebugEnabled()) {
             result.getList()
@@ -114,7 +123,7 @@ public class FourTest {
     @DisplayName("【404】查询所有注册品类")
     public void testM404() {
         Integer searchType = 1;
-        BaseIdCodeInfo result = Four.m404(ConfigReader.MAIN_CODE, searchType);
+        BaseIdCodeInfo result = Four.m404(Config.MAIN_CODE, searchType);
         assertEquals(result.getResultCode(), 1);
         if (LOGGER.isDebugEnabled()) {
             result.getList().forEach(item -> LOGGER.debug("主键ID:{} 品类用途编码:{} 品类码号:{} 品类描述:{} 完整码:{}", item.getId(),
@@ -153,10 +162,8 @@ public class FourTest {
         String modelNumber = "电脑桌-001";
         String modelNumberCode = "desktop-001";
         Integer codePayType = CodePayTypeEnum.REGISTER.getValue();
-        String gotoUrl = "http://example.com/goto";
-        String sampleUrl = "http://example.com/goto";
-        IdcodeRegResult result = Four.m406(ConfigReader.MAIN_CODE, codeUseId, industryCategoryId, categoryCode,
-            modelNumber, modelNumberCode, codePayType, gotoUrl, sampleUrl);
+        IdcodeRegResult result = Four.m406(Config.MAIN_CODE, codeUseId, industryCategoryId, categoryCode, modelNumber,
+            modelNumberCode, codePayType, Config.GOTO_URL, Config.SAMPLE_URL);
         assertEquals(result.getResultCode(), 1);
         if (LOGGER.isDebugEnabled()) {
             LOGGER.debug("注册/备案结果:{}", result);
@@ -174,18 +181,15 @@ public class FourTest {
         String codeUseId = "60";
         Integer codePayType = CodePayTypeEnum.REGISTER.getValue();
         /**
-         * 有形资产 品类ID-industryCategoryId: 10166 品类码号-categoryCode: 10000000
+         * 员工/职员名片 品类ID-industryCategoryId: 10127 品类码号-categoryCode: 10000000
          */
         Integer industryCategoryId = 10166;
         String categoryCode = "10000000";
-        String modelNumber = "电脑桌-A002";
-        String modelNumberEn = "desktop-A002";
-        String introduction = "所属南方第六事业部";
-        String gotoUrl = "http://example.com/goto";
-        String sampleUrl = "http://example.com/goto";
-        IdcodeRegResult result = Four.m407(ConfigReader.MAIN_CODE, codeUseId, industryCategoryId, categoryCode,
-            modelNumber, modelNumberEn, introduction, codePayType, gotoUrl, sampleUrl);
-        assertEquals(result.getResultCode(), 1);
+        String personId = "1634534857272987648";
+        String personName = "统一码测试";
+        IdcodeRegResult result = Four.m407(Config.MAIN_CODE, codeUseId, industryCategoryId, categoryCode, personId, "",
+            personName, codePayType, Config.GOTO_URL, Config.SAMPLE_URL);
+        System.out.println("注册/备案结果:" + result);
         if (LOGGER.isDebugEnabled()) {
             LOGGER.debug("注册/备案结果:{}", result);
         }
@@ -210,7 +214,7 @@ public class FourTest {
         String idCodeOfCategory = "";
         String modelNumberCode = "";
         String categoryRegId = "";
-        BaseIdCodeInfo result = Four.m409(ConfigReader.MAIN_CODE, idCodeOfCategory, modelNumberCode, categoryRegId);
+        BaseIdCodeInfo result = Four.m409(Config.MAIN_CODE, idCodeOfCategory, modelNumberCode, categoryRegId);
         assertEquals(result.getResultCode(), 1);
         if (LOGGER.isDebugEnabled()) {
             result.getList()
@@ -225,7 +229,7 @@ public class FourTest {
     @DisplayName("【410】查询所有注册品类（细化申请码类型）")
     public void testM410() {
         Integer searchType = 1;
-        BaseIdCodeInfo result = Four.m410(ConfigReader.MAIN_CODE, searchType);
+        BaseIdCodeInfo result = Four.m410(Config.MAIN_CODE, searchType);
         assertEquals(result.getResultCode(), 1);
         if (LOGGER.isDebugEnabled()) {
             result.getList().forEach(item -> LOGGER.debug("主键ID:{} 品类用途编码:{} 品类码号:{} 品类描述:{} 完整码:{}", item.getId(),

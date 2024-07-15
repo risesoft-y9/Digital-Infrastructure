@@ -6,7 +6,7 @@ import org.apache.commons.beanutils.BeanMap;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
-public class IDCodeApiExecute<T> {
+public class IdCodeApiExecute<T> {
 
     public Map<?, ?> objectToMap(Object obj) {
         if (obj == null)
@@ -16,7 +16,7 @@ public class IDCodeApiExecute<T> {
     }
 
     public T execute(Class<T> t, Object obj, String url, boolean post) {
-        IDCodeApiService impl = new IDCodeApiService();
+        IdCodeApiService impl = new IdCodeApiService();
         try {
             String resultJson = null;
             @SuppressWarnings("unchecked")
@@ -36,7 +36,7 @@ public class IDCodeApiExecute<T> {
     }
 
     public T execute(Class<T> t, Map<String, Object> params, String url, boolean post) {
-        IDCodeApiService impl = new IDCodeApiService();
+        IdCodeApiService impl = new IdCodeApiService();
         try {
             String resultJson = null;
             if (post) {

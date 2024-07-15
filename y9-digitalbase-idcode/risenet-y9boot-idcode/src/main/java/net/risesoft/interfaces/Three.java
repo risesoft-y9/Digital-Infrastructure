@@ -13,8 +13,8 @@ import net.risesoft.model.Result;
 import net.risesoft.model.SmsVerifyCode;
 import net.risesoft.model.UnitRegistResult;
 import net.risesoft.model.UpdateGotoUrlResult;
-import net.risesoft.util.ConfigReader;
-import net.risesoft.util.IDCodeApiExecute;
+import net.risesoft.util.Config;
+import net.risesoft.util.IdCodeApiExecute;
 
 public class Three {
     /**
@@ -39,7 +39,7 @@ public class Three {
         String orgUnitEnName, Integer code, Integer provinceId, Integer cityId, Integer areaId, String linkman,
         String linkmanEn, String linkPhone, String smsVerifyCode) {
         Map<String, Object> params = new HashMap<>();
-        params.put("access_token", ConfigReader.API_KEY);
+        params.put("access_token", Config.API_KEY);
         params.put("time", System.currentTimeMillis());
         params.put("login_name", loginName);
         params.put("login_password", loginPassword);
@@ -56,7 +56,7 @@ public class Three {
         params.put("sms_verify_code", smsVerifyCode);
         RegistResult result = null;
         try {
-            result = new IDCodeApiExecute<RegistResult>().execute(RegistResult.class, params, UrlConst.URL_301, true);
+            result = new IdCodeApiExecute<RegistResult>().execute(RegistResult.class, params, UrlConst.URL_301, true);
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -71,13 +71,13 @@ public class Three {
      */
     public static SmsVerifyCode m302(String phoneCode) {
         Map<String, Object> params = new HashMap<>();
-        params.put("access_token", ConfigReader.API_KEY);
+        params.put("access_token", Config.API_KEY);
         params.put("time", System.currentTimeMillis());
         params.put("phone_code", phoneCode);
         SmsVerifyCode result = null;
         try {
             result =
-                new IDCodeApiExecute<SmsVerifyCode>().execute(SmsVerifyCode.class, params, UrlConst.URL_302, false);
+                new IdCodeApiExecute<SmsVerifyCode>().execute(SmsVerifyCode.class, params, UrlConst.URL_302, false);
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -92,12 +92,12 @@ public class Three {
      */
     public static Result m303(String phoneCode) {
         Map<String, Object> params = new HashMap<>();
-        params.put("access_token", ConfigReader.API_KEY);
+        params.put("access_token", Config.API_KEY);
         params.put("time", System.currentTimeMillis());
         params.put("phone_code", phoneCode);
         Result result = null;
         try {
-            result = new IDCodeApiExecute<Result>().execute(Result.class, params, UrlConst.URL_303, false);
+            result = new IdCodeApiExecute<Result>().execute(Result.class, params, UrlConst.URL_303, false);
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -115,7 +115,7 @@ public class Three {
      */
     public static Result m304(String idCode, Integer payType, String orgCode, File file) {
         Map<String, Object> params = new HashMap<>();
-        params.put("access_token", ConfigReader.API_KEY);
+        params.put("access_token", Config.API_KEY);
         params.put("time", System.currentTimeMillis());
         params.put("company_idcode", idCode);
         params.put("code_pay_type", payType);
@@ -123,7 +123,7 @@ public class Three {
         params.put("file1", file);
         Result result = null;
         try {
-            result = new IDCodeApiExecute<Result>().execute(Result.class, params, UrlConst.URL_304, true);
+            result = new IdCodeApiExecute<Result>().execute(Result.class, params, UrlConst.URL_304, true);
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -158,7 +158,7 @@ public class Three {
         String workAddressEn, Integer sizeType, Integer registeredCapital, Integer unitTypeId, String gotoUrl,
         String linkPhone, File unitLogo) {
         Map<String, Object> params = new HashMap<>();
-        params.put("access_token", ConfigReader.API_KEY);
+        params.put("access_token", Config.API_KEY);
         params.put("time", System.currentTimeMillis());
         params.put("company_idcode", idCode);
         params.put("trade_id", tradeId);
@@ -181,7 +181,7 @@ public class Three {
 
         Result result = null;
         try {
-            result = new IDCodeApiExecute<Result>().execute(Result.class, params, UrlConst.URL_305, true);
+            result = new IdCodeApiExecute<Result>().execute(Result.class, params, UrlConst.URL_305, true);
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -196,12 +196,12 @@ public class Three {
      */
     public static OrganUnit m306(String idCode) {
         Map<String, Object> params = new HashMap<>();
-        params.put("access_token", ConfigReader.API_KEY);
+        params.put("access_token", Config.API_KEY);
         params.put("time", System.currentTimeMillis());
         params.put("company_idcode", idCode);
         OrganUnit result = null;
         try {
-            result = new IDCodeApiExecute<OrganUnit>().execute(OrganUnit.class, params, UrlConst.URL_306, false);
+            result = new IdCodeApiExecute<OrganUnit>().execute(OrganUnit.class, params, UrlConst.URL_306, false);
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -217,14 +217,14 @@ public class Three {
      */
     public static OrganUnitResult m307(String name, String searchType) {
         Map<String, Object> params = new HashMap<>();
-        params.put("access_token", ConfigReader.API_KEY);
+        params.put("access_token", Config.API_KEY);
         params.put("time", System.currentTimeMillis());
         params.put("company_name", name);
         params.put("search_type", searchType);
         OrganUnitResult result = null;
         try {
             result =
-                new IDCodeApiExecute<OrganUnitResult>().execute(OrganUnitResult.class, params, UrlConst.URL_307, false);
+                new IdCodeApiExecute<OrganUnitResult>().execute(OrganUnitResult.class, params, UrlConst.URL_307, false);
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -239,12 +239,12 @@ public class Three {
      */
     public static OrganUnitStatusInfo m308(String idCode) {
         Map<String, Object> params = new HashMap<>();
-        params.put("access_token", ConfigReader.API_KEY);
+        params.put("access_token", Config.API_KEY);
         params.put("time", System.currentTimeMillis());
         params.put("company_idcode", idCode);
         OrganUnitStatusInfo result = null;
         try {
-            result = new IDCodeApiExecute<OrganUnitStatusInfo>().execute(OrganUnitStatusInfo.class, params,
+            result = new IdCodeApiExecute<OrganUnitStatusInfo>().execute(OrganUnitStatusInfo.class, params,
                 UrlConst.URL_308, false);
         } catch (Exception e) {
             e.printStackTrace();
@@ -275,7 +275,7 @@ public class Three {
         String provinceId, String cityId, String areaId, String linkman, String linkPhone, File unitLogo,
         String qrCodeColor, File qrCodeLogo, String gotoUrl, String qrCodeSize) {
         Map<String, Object> params = new HashMap<>();
-        params.put("access_token", ConfigReader.API_KEY);
+        params.put("access_token", Config.API_KEY);
         params.put("time", System.currentTimeMillis());
         params.put("login_name", loginName);
         params.put("organunit_name", orgUnitName);
@@ -293,7 +293,7 @@ public class Three {
         params.put("qrcode_size", qrCodeSize);
         UnitRegistResult result = null;
         try {
-            result = new IDCodeApiExecute<UnitRegistResult>().execute(UnitRegistResult.class, params, UrlConst.URL_309,
+            result = new IdCodeApiExecute<UnitRegistResult>().execute(UnitRegistResult.class, params, UrlConst.URL_309,
                 true);
         } catch (Exception e) {
             e.printStackTrace();
@@ -316,7 +316,7 @@ public class Three {
     public static UpdateGotoUrlResult m310(String loginName, String pwd, String unitLogo, String gotoUrl,
         Integer qrCodeColor, Integer qrCodeLogo, Integer qrCodeSize) {
         Map<String, Object> params = new HashMap<>();
-        params.put("access_token", ConfigReader.API_KEY);
+        params.put("access_token", Config.API_KEY);
         params.put("time", System.currentTimeMillis());
         params.put("login_name", loginName);
         params.put("login_pwd", pwd);
@@ -327,7 +327,7 @@ public class Three {
         params.put("qrcode_size", qrCodeSize);
         UpdateGotoUrlResult result = null;
         try {
-            result = new IDCodeApiExecute<UpdateGotoUrlResult>().execute(UpdateGotoUrlResult.class, params,
+            result = new IdCodeApiExecute<UpdateGotoUrlResult>().execute(UpdateGotoUrlResult.class, params,
                 UrlConst.URL_310, true);
         } catch (Exception e) {
             e.printStackTrace();
