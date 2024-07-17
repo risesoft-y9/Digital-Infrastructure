@@ -79,7 +79,9 @@
                 <constraints nullable="false"/>
             </column>
             <column name="RESOURCE_NAME" remarks="资源名称。冗余字段，纯显示用" type="VARCHAR(255)"/>
-            <column name="RESOURCE_TYPE" remarks="资源类型。冗余字段，纯显示用" type="INT"/>
+            <column name="RESOURCE_TYPE" remarks="资源类型。冗余字段，纯显示用" type="INT">
+                <constraints nullable="false"/>
+            </column>
             <column name="TENANT_ID" remarks="租户id" type="VARCHAR(38)"/>
         </createTable>
     </changeSet>
@@ -128,7 +130,9 @@
             <column name="MEMBER_NAME" remarks="成员名称" type="VARCHAR(255)">
                 <constraints nullable="false"/>
             </column>
-            <column name="MEMBER_TYPE" remarks="成员类型" type="VARCHAR(255)"/>
+            <column name="MEMBER_TYPE" remarks="成员类型" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
             <column name="PARENT_ID" remarks="所在组织架构父节点id" type="VARCHAR(38)"/>
             <column name="SEX" remarks="性别" type="INT"/>
             <column name="TAB_INDEX" remarks="排序" type="INT">
@@ -315,8 +319,8 @@
             <column name="TENANT_ID" remarks="租户id" type="VARCHAR(38)"/>
             <column name="VERSION" remarks="版本号,乐观锁" type="INT"/>
             <column name="AVATOR" remarks="头像" type="VARCHAR(100)"/>
-            <column name="CHECK_CYCLE" remarks="审查周期" type="INT"/>
-            <column name="CHECK_TIME" remarks="审查时间" type="VARCHAR(50)"/>
+            <column name="LAST_REVIEW_LOG_TIME" remarks="上一次审查时间" type="datetime"/>
+            <column name="LAST_MODIFY_PASSWORD_TIME" remarks="上一次密码修改时间" type="datetime"/>
             <column name="EMAIL" remarks="电子邮箱" type="VARCHAR(255)"/>
             <column defaultValueNumeric="0" name="GLOBAL_MANAGER" remarks="是否全局管理员" type="INT">
                 <constraints nullable="false"/>
@@ -328,13 +332,11 @@
                 <constraints nullable="false"/>
             </column>
             <column name="MOBILE" remarks="手机号码" type="VARCHAR(255)"/>
-            <column name="MODIFY_PWD_TIME" remarks="修改密码时间" type="VARCHAR(50)"/>
             <column name="ORDERED_PATH" remarks="排序序列号" type="VARCHAR(500)"/>
             <column name="PARENT_ID" remarks="父节点id" type="VARCHAR(38)">
                 <constraints nullable="false"/>
             </column>
             <column name="PASSWORD" remarks="登录密码" type="VARCHAR(255)"/>
-            <column name="PWD_CYCLE" remarks="修改密码周期（天）" type="INT"/>
             <column defaultValueNumeric="1" name="SEX" remarks="性别" type="INT">
                 <constraints nullable="false"/>
             </column>
@@ -432,7 +434,7 @@
             </not>
         </preConditions>
         <createTable remarks="组织节点与角色关联表" tableName="Y9_ORG_ORGBASES_ROLES">
-            <column autoIncrement="true" name="ID" remarks="主键" type="INT">
+            <column name="ID" remarks="主键" type="VARCHAR(38)">
                 <constraints nullable="false" primaryKey="true"/>
             </column>
             <column name="CREATE_TIME" remarks="创建时间" type="datetime"/>
@@ -446,7 +448,9 @@
             <column name="ORG_ORDER" remarks="关联排序号" type="INT">
                 <constraints nullable="false"/>
             </column>
-            <column name="ORG_TYPE" remarks="组织类型" type="VARCHAR(255)"/>
+            <column name="ORG_TYPE" remarks="组织类型" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
             <column name="ORG_PARENT_ID" remarks="父节点唯一标识" type="VARCHAR(255)"/>
             <column name="ROLE_ID" remarks="角色id" type="VARCHAR(38)">
                 <constraints nullable="false"/>
@@ -568,7 +572,7 @@
             </not>
         </preConditions>
         <createTable remarks="人员用户组关联表" tableName="Y9_ORG_PERSONS_GROUPS">
-            <column autoIncrement="true" name="ID" remarks="主键" type="INT">
+            <column name="ID" remarks="主键" type="VARCHAR(38)">
                 <constraints nullable="false" primaryKey="true"/>
             </column>
             <column name="CREATE_TIME" remarks="创建时间" type="datetime"/>
@@ -594,7 +598,7 @@
             </not>
         </preConditions>
         <createTable remarks="人员岗位关联表" tableName="Y9_ORG_PERSONS_POSITIONS">
-            <column autoIncrement="true" name="ID" remarks="主键" type="INT">
+            <column name="ID" remarks="主键" type="VARCHAR(38)">
                 <constraints nullable="false" primaryKey="true"/>
             </column>
             <column name="CREATE_TIME" remarks="创建时间" type="datetime"/>
@@ -620,7 +624,7 @@
             </not>
         </preConditions>
         <createTable remarks="人员与（资源、权限）关系表" tableName="Y9_ORG_PERSONS_RESOURCES">
-            <column autoIncrement="true" name="ID" remarks="主键id" type="INT">
+            <column name="ID" remarks="主键id" type="VARCHAR(38)">
                 <constraints nullable="false" primaryKey="true"/>
             </column>
             <column name="CREATE_TIME" remarks="创建时间" type="datetime"/>
@@ -668,7 +672,7 @@
             </not>
         </preConditions>
         <createTable remarks="人员与角色关系表" tableName="Y9_ORG_PERSONS_ROLES">
-            <column autoIncrement="true" name="ID" remarks="主键id" type="INT">
+            <column name="ID" remarks="主键id" type="VARCHAR(38)">
                 <constraints nullable="false" primaryKey="true"/>
             </column>
             <column name="CREATE_TIME" remarks="创建时间" type="datetime"/>
@@ -822,17 +826,14 @@
             <column defaultValueNumeric="1" name="CAPACITY" remarks="岗位容量，默认容量为1，即一人一岗" type="INT">
                 <constraints nullable="false"/>
             </column>
-            <column name="DUTY" remarks="职务" type="VARCHAR(255)"/>
-            <column defaultValueNumeric="0" name="DUTY_LEVEL" remarks="职务级别" type="INT">
-                <constraints nullable="false"/>
-            </column>
-            <column name="DUTY_LEVEL_NAME" remarks="职级名称" type="VARCHAR(255)"/>
-            <column name="DUTY_TYPE" remarks="职务类型" type="VARCHAR(255)"/>
             <column name="EXCLUSIVE_IDS" remarks="互斥的岗位Id列表，之间用逗号分割" type="VARCHAR(500)"/>
             <column defaultValueNumeric="0" name="HEAD_COUNT" remarks="岗位当前人数，小于或等于岗位容量" type="INT">
                 <constraints nullable="false"/>
             </column>
             <column name="JOB_ID" remarks="职位id" type="VARCHAR(38)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="JOB_NAME" remarks="职位名称" type="VARCHAR(255)">
                 <constraints nullable="false"/>
             </column>
             <column name="ORDERED_PATH" remarks="排序序列号" type="VARCHAR(500)"/>
@@ -848,7 +849,7 @@
             </not>
         </preConditions>
         <createTable remarks="岗位与岗位组关联表" tableName="Y9_ORG_POSITIONS_GROUPS">
-            <column autoIncrement="true" name="ID" remarks="主键" type="INT">
+            <column name="ID" remarks="主键" type="VARCHAR(38)">
                 <constraints nullable="false" primaryKey="true"/>
             </column>
             <column name="CREATE_TIME" remarks="创建时间" type="datetime"/>
@@ -874,7 +875,7 @@
             </not>
         </preConditions>
         <createTable remarks="岗位与（资源、权限）关系表" tableName="Y9_ORG_POSITIONS_RESOURCES">
-            <column autoIncrement="true" name="ID" remarks="主键id" type="INT">
+            <column name="ID" remarks="主键id" type="VARCHAR(38)">
                 <constraints nullable="false" primaryKey="true"/>
             </column>
             <column name="CREATE_TIME" remarks="创建时间" type="datetime"/>
@@ -922,7 +923,7 @@
             </not>
         </preConditions>
         <createTable remarks="岗位与角色关系表" tableName="Y9_ORG_POSITIONS_ROLES">
-            <column autoIncrement="true" name="ID" remarks="主键id" type="INT">
+            <column name="ID" remarks="主键id" type="VARCHAR(38)">
                 <constraints nullable="false" primaryKey="true"/>
             </column>
             <column name="CREATE_TIME" remarks="创建时间" type="datetime"/>
