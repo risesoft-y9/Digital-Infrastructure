@@ -123,11 +123,11 @@
             <version>${kingbase-driver.version}</version>
         </dependency>
 
-       <!-- <dependency>
-            <groupId>cn.com.kingbase</groupId>
-            <artifactId>KesDialect-for-hibernate4</artifactId>
-            <version>1.0.0</version>
-        </dependency>-->
+        <!-- <dependency>
+             <groupId>cn.com.kingbase</groupId>
+             <artifactId>KesDialect-for-hibernate4</artifactId>
+             <version>1.0.0</version>
+         </dependency>-->
 
         <!-- 人大金仓数据库 -->
         <dependency>
@@ -140,6 +140,13 @@
             <groupId>cn.com.kingbase</groupId>
             <artifactId>hibernate-jpa-api</artifactId>
             <version>2.1.0.Final</version>
+        </dependency>
+
+        <!-- OceanBase数据库 -->
+        <dependency>
+            <groupId>com.oceanbase</groupId>
+            <artifactId>oceanbase-client</artifactId>
+            <version>2.4.0</version>
         </dependency>
     </dependencies>
 
