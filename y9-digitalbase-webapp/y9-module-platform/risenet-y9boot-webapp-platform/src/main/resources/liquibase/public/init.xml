@@ -134,13 +134,17 @@
             </column>
             <column name="ICON_DATA" remarks="图标图片的base64" type="LONGTEXT"/>
             <column name="NUMBER_URL" remarks="获取数字的URL" type="VARCHAR(255)"/>
-            <column name="OPEN_TYPE" remarks="应用打开方式:0在桌面窗口打开；1在新浏览器窗口打开" type="INT"/>
+            <column name="OPEN_TYPE" remarks="应用打开方式:0在桌面窗口打开；1在新浏览器窗口打开" type="INT">
+                <constraints nullable="false"/>
+            </column>
             <column name="RESOURCE_ADMIN_URL" remarks="资源管理的URL" type="VARCHAR(255)"/>
             <column name="ROLE_ADMIN_URL" remarks="角色管理的URL" type="VARCHAR(255)"/>
             <column defaultValueNumeric="0" name="SHOW_NUMBER" remarks="是否显示右上角数字，0=不显示，1=显示" type="INT">
                 <constraints nullable="false"/>
             </column>
-            <column name="TYPE" remarks="分类" type="INT"/>
+            <column name="TYPE" remarks="分类" type="INT">
+                <constraints nullable="false"/>
+            </column>
             <column name="VERIFY_USER_NAME" remarks="审核人" type="VARCHAR(30)"/>
         </createTable>
     </changeSet>
@@ -164,7 +168,9 @@
             <column name="MAX_ACTIVE" remarks="参数maxActive" type="INT"/>
             <column name="MIN_IDLE" remarks="参数minIdle" type="INT"/>
             <column name="PASSWORD" remarks="密码" type="VARCHAR(20)"/>
-            <column name="TYPE" remarks="数据源类型1=jndi; 2=druid" type="INT"/>
+            <column name="TYPE" remarks="数据源类型1=jndi; 2=druid" type="INT">
+                <constraints nullable="false"/>
+            </column>
             <column name="URL" remarks="路径" type="VARCHAR(300)"/>
             <column name="USERNAME" remarks="用户名" type="VARCHAR(50)"/>
         </createTable>
@@ -288,7 +294,9 @@
             <column name="APP_ID" remarks="应用id" type="VARCHAR(38)">
                 <constraints nullable="false"/>
             </column>
-            <column defaultValueNumeric="0" name="DISPLAY_TYPE" remarks="按钮展示方式" type="INT"/>
+            <column defaultValueNumeric="0" name="DISPLAY_TYPE" remarks="按钮展示方式" type="INT">
+                <constraints nullable="false"/>
+            </column>
             <column name="EVENT_NAME" remarks="按钮事件" type="VARCHAR(50)"/>
         </createTable>
     </changeSet>
@@ -351,14 +359,15 @@
             </column>
             <column name="NAME_PATH" remarks="由shortName组成的父子关系列表，之间用逗号分隔" type="VARCHAR(800)"/>
             <column name="PARENT_ID" remarks="父节点id" type="VARCHAR(38)"/>
-            <column name="SERIAL" remarks="租户顺序号，自增字段" type="INT"/>
             <column name="SHORT_NAME" remarks="租户英文名称" type="VARCHAR(200)">
                 <constraints nullable="false" unique="true"/>
             </column>
             <column name="TAB_INDEX" remarks="排序号" type="INT">
                 <constraints nullable="false"/>
             </column>
-            <column name="TENANT_TYPE" remarks="租户类型： 0=超级用户，1=运维团队，2=开发商，3=普通租户" type="INT"/>
+            <column name="TENANT_TYPE" remarks="租户类型： 0=超级用户，1=运维团队，2=开发商，3=普通租户" type="INT">
+                <constraints nullable="false"/>
+            </column>
         </createTable>
     </changeSet>
     <changeSet id="1697708034037-10" author="shidaobang" runOnChange="true">

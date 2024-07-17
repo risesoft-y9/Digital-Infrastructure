@@ -6,6 +6,11 @@
                       http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.9.xsd">
 
     <changeSet id="1715216903000-1" author="shidaobang">
+        <preConditions onFail="MARK_RAN">
+            <not>
+                <tableExists tableName="shedlock"/>
+            </not>
+        </preConditions>
         <createTable tableName="shedlock">
             <column name="name" type="VARCHAR(64)">
                 <constraints nullable="false" primaryKey="true"/>
