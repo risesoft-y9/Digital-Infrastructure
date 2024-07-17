@@ -5,7 +5,7 @@
         xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
                       http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.9.xsd"
         objectQuotingStrategy="QUOTE_ONLY_RESERVED_WORDS">
-    <changeSet id="1697708034037-1" author="shidaobang">
+    <changeSet id="1697708034037-1" author="shidaobang" runOnChange="true">
         <preConditions onFail="MARK_RAN">
             <not>
                 <tableExists tableName="Y9_COMMON_ACCOUNT"/>
@@ -64,7 +64,7 @@
             <column name="WEIXIN_ID" remarks="用户绑定的微信id" type="VARCHAR(255)"/>
         </createTable>
     </changeSet>
-    <changeSet id="1697708034037-2" author="shidaobang">
+    <changeSet id="1697708034037-2" author="shidaobang" runOnChange="true">
         <preConditions onFail="MARK_RAN">
             <not>
                 <tableExists tableName="Y9_COMMON_APP_ICON"/>
@@ -85,7 +85,7 @@
             <column name="ICON_TYPE" remarks="类型" type="VARCHAR(38)"/>
         </createTable>
     </changeSet>
-    <changeSet id="1697708034037-3" author="shidaobang">
+    <changeSet id="1697708034037-3" author="shidaobang" runOnChange="true">
         <preConditions onFail="MARK_RAN">
             <not>
                 <tableExists tableName="Y9_COMMON_APP_STORE"/>
@@ -148,7 +148,7 @@
             <column name="VERIFY_USER_NAME" remarks="审核人" type="VARCHAR(30)"/>
         </createTable>
     </changeSet>
-    <changeSet id="1697708034037-4" author="shidaobang">
+    <changeSet id="1697708034037-4" author="shidaobang" runOnChange="true">
         <preConditions onFail="MARK_RAN">
             <not>
                 <tableExists tableName="Y9_COMMON_DATASOURCE"/>
@@ -175,7 +175,7 @@
             <column name="USERNAME" remarks="用户名" type="VARCHAR(50)"/>
         </createTable>
     </changeSet>
-    <changeSet id="1697708034037-5" author="shidaobang">
+    <changeSet id="1697708034037-5" author="shidaobang" runOnChange="true">
         <preConditions onFail="MARK_RAN">
             <not>
                 <tableExists tableName="Y9_COMMON_FILE_STORE"/>
@@ -202,7 +202,7 @@
             <column name="FILEURL" remarks="完整的文件地址" type="VARCHAR(500)"/>
         </createTable>
     </changeSet>
-    <changeSet id="1697708034037-6" author="shidaobang">
+    <changeSet id="1697708034037-6" author="shidaobang" runOnChange="true">
         <preConditions onFail="MARK_RAN">
             <not>
                 <tableExists tableName="Y9_COMMON_MENU"/>
@@ -251,7 +251,7 @@
             <column name="TARGET" remarks="打开模式" type="VARCHAR(255)"/>
         </createTable>
     </changeSet>
-    <changeSet id="1697708034037-7" author="shidaobang">
+    <changeSet id="1697708034037-7" author="shidaobang" runOnChange="true">
         <preConditions onFail="MARK_RAN">
             <not>
                 <tableExists tableName="Y9_COMMON_OPERATION"/>
@@ -300,7 +300,7 @@
             <column name="EVENT_NAME" remarks="按钮事件" type="VARCHAR(50)"/>
         </createTable>
     </changeSet>
-    <changeSet id="1697708034037-8" author="shidaobang">
+    <changeSet id="1697708034037-8" author="shidaobang" runOnChange="true">
         <preConditions onFail="MARK_RAN">
             <not>
                 <tableExists tableName="Y9_COMMON_SYSTEM"/>
@@ -333,7 +333,7 @@
             </column>
         </createTable>
     </changeSet>
-    <changeSet id="1697708034037-9" author="shidaobang">
+    <changeSet id="1697708034037-9" author="shidaobang" runOnChange="true">
         <preConditions onFail="MARK_RAN">
             <not>
                 <tableExists tableName="Y9_COMMON_TENANT"/>
@@ -408,7 +408,7 @@
             <column name="VERIFY_USER_NAME" remarks="审核人" type="VARCHAR(200)"/>
         </createTable>
     </changeSet>
-    <changeSet id="1697708034037-11" author="shidaobang">
+    <changeSet id="1697708034037-11" author="shidaobang" runOnChange="true">
         <preConditions onFail="MARK_RAN">
             <not>
                 <tableExists tableName="Y9_COMMON_TENANT_SYSTEM"/>
@@ -434,7 +434,7 @@
             </column>
         </createTable>
     </changeSet>
-    <changeSet id="1697708034037-12" author="shidaobang">
+    <changeSet id="1697708034037-12" author="shidaobang" runOnChange="true">
         <preConditions onFail="MARK_RAN">
             <not>
                 <tableExists tableName="Y9_ORG_ROLE"/>
@@ -482,7 +482,7 @@
             </column>
         </createTable>
     </changeSet>
-    <changeSet id="1697708034037-13" author="shidaobang">
+    <changeSet id="1697708034037-13" author="shidaobang" runOnChange="true">
         <preConditions onFail="MARK_RAN">
             <not>
                 <tableExists tableName="Y9_PUBLISHED_EVENT"/>
@@ -514,7 +514,7 @@
             <column name="TENANT_ID" remarks="租户id" type="VARCHAR(38)"/>
         </createTable>
     </changeSet>
-    <changeSet id="1697708034037-14" author="shidaobang">
+    <changeSet id="1697708034037-14" author="shidaobang" runOnChange="true">
         <preConditions onFail="MARK_RAN">
             <not>
                 <tableExists tableName="Y9_PUBLISHED_EVENT_LISTENER"/>
@@ -538,7 +538,7 @@
             <column name="TENANT_ID" remarks="租户id" type="VARCHAR(38)"/>
         </createTable>
     </changeSet>
-    <changeSet id="1697708034037-15" author="shidaobang">
+    <changeSet id="1697708034037-15" author="shidaobang" runOnChange="true">
         <preConditions onFail="MARK_RAN">
             <not>
                 <tableExists tableName="Y9_PUBLISHED_EVENT_SYNC_HIST"/>
@@ -557,7 +557,7 @@
             </column>
         </createTable>
     </changeSet>
-    <changeSet id="1697708034037-16" author="shidaobang">
+    <changeSet id="1697708034037-16" author="shidaobang" runOnChange="true">
         <preConditions onFail="MARK_RAN">
             <not>
                 <indexExists tableName="Y9_COMMON_ACCOUNT" columnNames="LOGIN_NAME"/>

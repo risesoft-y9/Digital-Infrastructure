@@ -5,7 +5,7 @@
         xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
                       http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.9.xsd"
         objectQuotingStrategy="QUOTE_ONLY_RESERVED_WORDS">
-    <changeSet id="1697701085071-1" author="shidaobang">
+    <changeSet id="1697701085071-1" author="shidaobang" runOnChange="true">
         <preConditions onFail="MARK_RAN">
             <not>
                 <tableExists tableName="Y9_ORGBASE_DELETED"/>
@@ -27,7 +27,7 @@
             <column name="PARENT_ID" remarks="父节点的Id" type="VARCHAR(38)"/>
         </createTable>
     </changeSet>
-    <changeSet id="1697701085071-2" author="shidaobang">
+    <changeSet id="1697701085071-2" author="shidaobang" runOnChange="true">
         <preConditions onFail="MARK_RAN">
             <not>
                 <tableExists tableName="Y9_ORGBASE_MOVED"/>
@@ -51,7 +51,7 @@
             <column name="PARENT_ID_TO" remarks="目标父节点Id" type="VARCHAR(38)"/>
         </createTable>
     </changeSet>
-    <changeSet id="1697701085071-3" author="shidaobang">
+    <changeSet id="1697701085071-3" author="shidaobang" runOnChange="true">
         <preConditions onFail="MARK_RAN">
             <not>
                 <tableExists tableName="Y9_ORG_AUTHORIZATION"/>
@@ -85,7 +85,7 @@
             <column name="TENANT_ID" remarks="租户id" type="VARCHAR(38)"/>
         </createTable>
     </changeSet>
-    <changeSet id="1697701085071-4" author="shidaobang">
+    <changeSet id="1697701085071-4" author="shidaobang" runOnChange="true">
         <preConditions onFail="MARK_RAN">
             <not>
                 <tableExists tableName="Y9_ORG_CUSTOM_GROUP"/>
@@ -111,7 +111,7 @@
             <column name="TENANT_ID" remarks="租户id" type="VARCHAR(38)"/>
         </createTable>
     </changeSet>
-    <changeSet id="1697701085071-5" author="shidaobang">
+    <changeSet id="1697701085071-5" author="shidaobang" runOnChange="true">
         <preConditions onFail="MARK_RAN">
             <not>
                 <tableExists tableName="Y9_ORG_CUSTOM_GROUP_MEMBER"/>
@@ -140,7 +140,7 @@
             </column>
         </createTable>
     </changeSet>
-    <changeSet id="1697701085071-6" author="shidaobang">
+    <changeSet id="1697701085071-6" author="shidaobang" runOnChange="true">
         <preConditions onFail="MARK_RAN">
             <not>
                 <tableExists tableName="Y9_ORG_DEPARTMENT"/>
@@ -195,7 +195,7 @@
             <column name="ZIP_CODE" remarks="邮政编码" type="VARCHAR(255)"/>
         </createTable>
     </changeSet>
-    <changeSet id="1697701085071-7" author="shidaobang">
+    <changeSet id="1697701085071-7" author="shidaobang" runOnChange="true">
         <preConditions onFail="MARK_RAN">
             <not>
                 <tableExists tableName="Y9_ORG_DEPARTMENT_PROP"/>
@@ -221,7 +221,7 @@
             </column>
         </createTable>
     </changeSet>
-    <changeSet id="1697701085071-8" author="shidaobang">
+    <changeSet id="1697701085071-8" author="shidaobang" runOnChange="true">
         <preConditions onFail="MARK_RAN">
             <not>
                 <tableExists tableName="Y9_ORG_GROUP"/>
@@ -262,7 +262,7 @@
             </column>
         </createTable>
     </changeSet>
-    <changeSet id="1697701085071-9" author="shidaobang">
+    <changeSet id="1697701085071-9" author="shidaobang" runOnChange="true">
         <preConditions onFail="MARK_RAN">
             <not>
                 <tableExists tableName="Y9_ORG_JOB"/>
@@ -285,7 +285,7 @@
             </column>
         </createTable>
     </changeSet>
-    <changeSet id="1697701085071-10" author="shidaobang">
+    <changeSet id="1697701085071-10" author="shidaobang" runOnChange="true">
         <preConditions onFail="MARK_RAN">
             <not>
                 <tableExists tableName="Y9_ORG_MANAGER"/>
@@ -343,7 +343,7 @@
             <column name="USER_HOST_IP" remarks="允许访问的客户端IP" type="VARCHAR(150)"/>
         </createTable>
     </changeSet>
-    <changeSet id="1697701085071-11" author="shidaobang">
+    <changeSet id="1697701085071-11" author="shidaobang" runOnChange="true">
         <preConditions onFail="MARK_RAN">
             <not>
                 <tableExists tableName="Y9_ORG_OPTIONCLASS"/>
@@ -360,7 +360,7 @@
             </column>
         </createTable>
     </changeSet>
-    <changeSet id="1697701085071-12" author="shidaobang">
+    <changeSet id="1697701085071-12" author="shidaobang" runOnChange="true">
         <preConditions onFail="MARK_RAN">
             <not>
                 <tableExists tableName="Y9_ORG_OPTIONVALUE"/>
@@ -386,7 +386,7 @@
             </column>
         </createTable>
     </changeSet>
-    <changeSet id="1697701085071-13" author="shidaobang">
+    <changeSet id="1697701085071-13" author="shidaobang" runOnChange="true">
         <preConditions onFail="MARK_RAN">
             <not>
                 <tableExists tableName="Y9_ORG_ORGANIZATION"/>
@@ -427,7 +427,7 @@
             </column>
         </createTable>
     </changeSet>
-    <changeSet id="1697701085071-14" author="shidaobang">
+    <changeSet id="1697701085071-14" author="shidaobang" runOnChange="true">
         <preConditions onFail="MARK_RAN">
             <not>
                 <tableExists tableName="Y9_ORG_ORGBASES_ROLES"/>
@@ -457,7 +457,7 @@
             </column>
         </createTable>
     </changeSet>
-    <changeSet id="1697701085071-15" author="shidaobang">
+    <changeSet id="1697701085071-15" author="shidaobang" runOnChange="true">
         <preConditions onFail="MARK_RAN">
             <not>
                 <tableExists tableName="Y9_ORG_PERMISSION_DATAFIELD"/>
@@ -479,7 +479,7 @@
             </column>
         </createTable>
     </changeSet>
-    <changeSet id="1697701085071-16" author="shidaobang">
+    <changeSet id="1697701085071-16" author="shidaobang" runOnChange="true">
         <preConditions onFail="MARK_RAN">
             <not>
                 <tableExists tableName="Y9_ORG_PERMISSION_DATAROW"/>
@@ -500,7 +500,7 @@
             </column>
         </createTable>
     </changeSet>
-    <changeSet id="1697701085071-17" author="shidaobang">
+    <changeSet id="1697701085071-17" author="shidaobang" runOnChange="true">
         <preConditions onFail="MARK_RAN">
             <not>
                 <tableExists tableName="Y9_ORG_PERSON"/>
@@ -565,7 +565,7 @@
             <column name="WEIXIN_ID" remarks="人员绑定微信的唯一标识" type="VARCHAR(255)"/>
         </createTable>
     </changeSet>
-    <changeSet id="1697701085071-18" author="shidaobang">
+    <changeSet id="1697701085071-18" author="shidaobang" runOnChange="true">
         <preConditions onFail="MARK_RAN">
             <not>
                 <tableExists tableName="Y9_ORG_PERSONS_GROUPS"/>
@@ -591,7 +591,7 @@
             </column>
         </createTable>
     </changeSet>
-    <changeSet id="1697701085071-19" author="shidaobang">
+    <changeSet id="1697701085071-19" author="shidaobang" runOnChange="true">
         <preConditions onFail="MARK_RAN">
             <not>
                 <tableExists tableName="Y9_ORG_PERSONS_POSITIONS"/>
@@ -665,7 +665,7 @@
             </column>
         </createTable>
     </changeSet>
-    <changeSet id="1697701085071-21" author="shidaobang">
+    <changeSet id="1697701085071-21" author="shidaobang" runOnChange="true">
         <preConditions onFail="MARK_RAN">
             <not>
                 <tableExists tableName="Y9_ORG_PERSONS_ROLES"/>
@@ -790,7 +790,7 @@
             COMMENT ON COLUMN "Y9_ORG_PERSON_EXT"."WORK_TIME" IS '入职时间';
         </sql>
     </changeSet>
-    <changeSet id="1697701085071-23" author="shidaobang">
+    <changeSet id="1697701085071-23" author="shidaobang" runOnChange="true">
         <preConditions onFail="MARK_RAN">
             <not>
                 <tableExists tableName="Y9_ORG_POSITION"/>
@@ -842,7 +842,7 @@
             </column>
         </createTable>
     </changeSet>
-    <changeSet id="1697701085071-24" author="shidaobang">
+    <changeSet id="1697701085071-24" author="shidaobang" runOnChange="true">
         <preConditions onFail="MARK_RAN">
             <not>
                 <tableExists tableName="Y9_ORG_POSITIONS_GROUPS"/>
@@ -868,7 +868,7 @@
             </column>
         </createTable>
     </changeSet>
-    <changeSet id="1697701085071-25" author="shidaobang">
+    <changeSet id="1697701085071-25" author="shidaobang" runOnChange="true">
         <preConditions onFail="MARK_RAN">
             <not>
                 <tableExists tableName="Y9_ORG_POSITIONS_RESOURCES"/>
@@ -916,7 +916,7 @@
             </column>
         </createTable>
     </changeSet>
-    <changeSet id="1697701085071-26" author="shidaobang">
+    <changeSet id="1697701085071-26" author="shidaobang" runOnChange="true">
         <preConditions onFail="MARK_RAN">
             <not>
                 <tableExists tableName="Y9_ORG_POSITIONS_ROLES"/>
@@ -948,7 +948,7 @@
             </column>
         </createTable>
     </changeSet>
-    <changeSet id="1697701085071-27" author="shidaobang">
+    <changeSet id="1697701085071-27" author="shidaobang" runOnChange="true">
         <preConditions onFail="MARK_RAN">
             <not>
                 <indexExists tableName="Y9_ORG_POSITIONS_RESOURCES"
@@ -958,7 +958,7 @@
         <addUniqueConstraint columnNames="POSITION_ID, RESOURCE_ID, AUTHORIZATION_ID, AUTHORITY"
                              constraintName="UK5cps1b1fq199989ni2hcrlwmd" tableName="Y9_ORG_POSITIONS_RESOURCES"/>
     </changeSet>
-    <changeSet id="1697701085071-28" author="shidaobang">
+    <changeSet id="1697701085071-28" author="shidaobang" runOnChange="true">
         <preConditions onFail="MARK_RAN">
             <not>
                 <indexExists tableName="Y9_ORG_POSITIONS_ROLES"
@@ -968,7 +968,7 @@
         <addUniqueConstraint columnNames="POSITION_ID, ROLE_ID" constraintName="UK8w7r8ookrjq6rcgiy98k56aba"
                              tableName="Y9_ORG_POSITIONS_ROLES"/>
     </changeSet>
-    <changeSet id="1697701085071-29" author="shidaobang">
+    <changeSet id="1697701085071-29" author="shidaobang" runOnChange="true">
         <preConditions onFail="MARK_RAN">
             <not>
                 <indexExists tableName="Y9_ORG_PERSONS_ROLES"
@@ -978,7 +978,7 @@
         <addUniqueConstraint columnNames="PERSON_ID, ROLE_ID" constraintName="UKa1ns3b527lyr0sn45sk036ts9"
                              tableName="Y9_ORG_PERSONS_ROLES"/>
     </changeSet>
-    <changeSet id="1697701085071-30" author="shidaobang">
+    <changeSet id="1697701085071-30" author="shidaobang" runOnChange="true">
         <preConditions onFail="MARK_RAN">
             <not>
                 <indexExists tableName="Y9_ORG_PERSONS_GROUPS"
@@ -988,7 +988,7 @@
         <addUniqueConstraint columnNames="GROUP_ID, PERSON_ID" constraintName="UKbk6jbj6n5gui7fd6e2ljak95k"
                              tableName="Y9_ORG_PERSONS_GROUPS"/>
     </changeSet>
-    <changeSet id="1697701085071-31" author="shidaobang">
+    <changeSet id="1697701085071-31" author="shidaobang" runOnChange="true">
         <preConditions onFail="MARK_RAN">
             <not>
                 <indexExists tableName="Y9_ORG_PERSONS_RESOURCES"
@@ -998,7 +998,7 @@
         <addUniqueConstraint columnNames="PERSON_ID, RESOURCE_ID, AUTHORIZATION_ID, AUTHORITY"
                              constraintName="UKn2p2pe8jbhlmtlxv8ixn8cw7d" tableName="Y9_ORG_PERSONS_RESOURCES"/>
     </changeSet>
-    <changeSet id="1697701085071-32" author="shidaobang">
+    <changeSet id="1697701085071-32" author="shidaobang" runOnChange="true">
         <preConditions onFail="MARK_RAN">
             <not>
                 <indexExists tableName="Y9_ORG_AUTHORIZATION"
@@ -1008,7 +1008,7 @@
         <addUniqueConstraint columnNames="PRINCIPAL_ID, RESOURCE_ID, AUTHORITY"
                              constraintName="UKpv5gy69bjyoflhhexyix9d8gt" tableName="Y9_ORG_AUTHORIZATION"/>
     </changeSet>
-    <changeSet id="1697701085071-33" author="shidaobang">
+    <changeSet id="1697701085071-33" author="shidaobang" runOnChange="true">
         <preConditions onFail="MARK_RAN">
             <not>
                 <indexExists tableName="Y9_ORG_PERSONS_POSITIONS"
@@ -1018,7 +1018,7 @@
         <addUniqueConstraint columnNames="POSITION_ID, PERSON_ID" constraintName="UKrty6axgf79bgsw4vxtki54i3c"
                              tableName="Y9_ORG_PERSONS_POSITIONS"/>
     </changeSet>
-    <changeSet id="1697701085071-34" author="shidaobang">
+    <changeSet id="1697701085071-34" author="shidaobang" runOnChange="true">
         <preConditions onFail="MARK_RAN">
             <not>
                 <indexExists tableName="Y9_ORG_POSITIONS_GROUPS"
@@ -1028,7 +1028,7 @@
         <addUniqueConstraint columnNames="GROUP_ID, POSITION_ID" constraintName="UKtjxh3p9qk2s8we8mtrg2mxc9y"
                              tableName="Y9_ORG_POSITIONS_GROUPS"/>
     </changeSet>
-    <changeSet id="1697701085071-35" author="shidaobang">
+    <changeSet id="1697701085071-35" author="shidaobang" runOnChange="true">
         <preConditions onFail="MARK_RAN">
             <not>
                 <indexExists tableName="Y9_ORG_ORGBASES_ROLES" columnNames="ROLE_ID, ORG_ID"/>
@@ -1039,7 +1039,7 @@
             <column name="ORG_ID"/>
         </createIndex>
     </changeSet>
-    <changeSet id="1697701085071-36" author="shidaobang">
+    <changeSet id="1697701085071-36" author="shidaobang" runOnChange="true">
         <preConditions onFail="MARK_RAN">
             <not>
                 <indexExists tableName="Y9_ORG_AUTHORIZATION" columnNames="TENANT_ID, PRINCIPAL_ID"/>
@@ -1050,7 +1050,7 @@
             <column name="PRINCIPAL_ID"/>
         </createIndex>
     </changeSet>
-    <changeSet id="1697701085071-37" author="shidaobang">
+    <changeSet id="1697701085071-37" author="shidaobang" runOnChange="true">
         <preConditions onFail="MARK_RAN">
             <not>
                 <indexExists tableName="Y9_ORG_AUTHORIZATION" columnNames="TENANT_ID, RESOURCE_ID"/>
