@@ -69,7 +69,7 @@ public class Y9DataSource extends BaseEntity {
     private String username;
 
     /** 密码 */
-    @Column(name = "PASSWORD", length = 20)
+    @Column(name = "PASSWORD", length = 50)
     @Comment("密码")
     private String password;
 

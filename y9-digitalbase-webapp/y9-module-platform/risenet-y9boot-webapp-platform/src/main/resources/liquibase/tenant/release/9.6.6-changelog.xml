@@ -5,7 +5,7 @@
         xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
                       http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.9.xsd">
 
-    <changeSet id="1715936106408-1" author="shidaobang">
+    <changeSet id="1715936106408-1" author="shidaobang" runOnChange="true">
         <dropColumn
                 columnName="RESOURCE_CUSTOM_ID"
                 tableName="Y9_ORG_PERSONS_RESOURCES">
@@ -40,7 +40,7 @@
         </dropColumn>
     </changeSet>
 
-    <changeSet id="1715936106408-2" author="shidaobang">
+    <changeSet id="1715936106408-2" author="shidaobang" runOnChange="true">
         <dropColumn
                 columnName="RESOURCE_CUSTOM_ID"
                 tableName="Y9_ORG_POSITIONS_RESOURCES">
@@ -75,7 +75,7 @@
         </dropColumn>
     </changeSet>
 
-    <changeSet id="1716456512373-1" author="shidaobang">
+    <changeSet id="1716456512373-1" author="shidaobang" runOnChange="true">
         <dropColumn
                 columnName="USER_NAME"
                 tableName="Y9_ORG_CUSTOM_GROUP">
@@ -86,7 +86,7 @@
         </dropColumn>
     </changeSet>
 
-    <changeSet id="1717124156043-1" author="shidaobang">
+    <changeSet id="1717124156043-1" author="shidaobang" runOnChange="true">
         <dropColumn
                 columnName="DEPARTMENT_ID"
                 tableName="Y9_ORG_PERSONS_ROLES">
@@ -117,7 +117,7 @@
         </dropColumn>
     </changeSet>
 
-    <changeSet id="1717124156043-2" author="shidaobang">
+    <changeSet id="1717124156043-2" author="shidaobang" runOnChange="true">
         <dropColumn
                 columnName="DEPARTMENT_ID"
                 tableName="Y9_ORG_POSITIONS_ROLES">
@@ -148,7 +148,7 @@
         </dropColumn>
     </changeSet>
 
-    <changeSet id="2024061216072-1" author="zhangjiabao">
+    <changeSet id="2024061216072-1" author="zhangjiabao" runOnChange="true">
         <preConditions onFail="MARK_RAN">
             <not>
                 <tableExists tableName="Y9_ORG_IDCODE"/>

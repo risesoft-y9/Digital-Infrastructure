@@ -5,7 +5,7 @@
         xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
                       http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.9.xsd">
 
-    <changeSet id="1715572323985-1" author="shidaobang">
+    <changeSet id="1715572323985-1" author="shidaobang" runOnChange="true">
         <preConditions onFail="MARK_RAN">
             <not>
                 <columnExists tableName="Y9_COMMON_TENANT_APP"
@@ -19,7 +19,7 @@
         </addColumn>
     </changeSet>
 
-    <changeSet id="1715936315024-1" author="shidaobang">
+    <changeSet id="1715936315024-1" author="shidaobang" runOnChange="true">
         <dropColumn
                 columnName="PARENT_ID"
                 tableName="Y9_COMMON_APP_STORE">
@@ -28,5 +28,13 @@
                               validate="true"/>
         <addNotNullConstraint columnDataType="VARCHAR(38)" columnName="PARENT_ID" tableName="Y9_COMMON_OPERATION"
                               validate="true"/>
+    </changeSet>
+
+    <changeSet id="1721204301828-1" author="shidaobang" runOnChange="true">
+        <preConditions onFail="MARK_RAN">
+            <columnExists tableName="Y9_COMMON_DATASOURCE"
+                          columnName="PASSWORD"/>
+        </preConditions>
+        <modifyDataType tableName="Y9_COMMON_DATASOURCE" columnName="PASSWORD" newDataType="VARCHAR(50)"/>
     </changeSet>
 </databaseChangeLog>
