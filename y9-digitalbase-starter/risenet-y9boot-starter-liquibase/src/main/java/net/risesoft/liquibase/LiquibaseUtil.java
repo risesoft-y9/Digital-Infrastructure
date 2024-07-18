@@ -23,8 +23,8 @@ public class LiquibaseUtil {
         liquibase.setChangeLog(isTenant ? properties.getTenantChangeLog() : properties.getPublicChangeLog());
         liquibase.setClearCheckSums(properties.isClearChecksums());
         liquibase.setContexts(properties.getContexts());
-        liquibase.setDefaultSchema(properties.getDefaultSchema());
-        liquibase.setLiquibaseSchema(properties.getLiquibaseSchema());
+        // liquibase.setDefaultSchema(properties.getDefaultSchema());
+        // liquibase.setLiquibaseSchema(properties.getLiquibaseSchema());
         liquibase.setLiquibaseTablespace(properties.getLiquibaseTablespace());
         liquibase.setDatabaseChangeLogTable(properties.getDatabaseChangeLogTable());
         liquibase.setDatabaseChangeLogLockTable(properties.getDatabaseChangeLogLockTable());
