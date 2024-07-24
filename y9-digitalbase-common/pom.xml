@@ -22,6 +22,7 @@
         <module>risenet-y9boot-common-util</module>
         <module>risenet-y9boot-common-tenant-datasource</module>
         <module>risenet-y9boot-3rd-jpa</module>
+        <module>risenet-y9boot-common-sqlddl</module>
     </modules>
 
 </project>
