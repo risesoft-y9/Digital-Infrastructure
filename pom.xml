@@ -10,7 +10,7 @@
 
     <modules>
         <module>y9-digitalbase-common</module>
-        <!--   <module>y9-digitalbase-example</module> -->
+        <module>y9-digitalbase-example</module>
         <module>y9-digitalbase-idcode</module>
         <module>y9-digitalbase-starter</module>
         <module>y9-digitalbase-support</module>
@@ -112,7 +112,7 @@
 
         <liquibase.version>4.26.0</liquibase.version>
         <shedlock.version>4.47.0</shedlock.version>
-        
+
         <mysql-driver.version>8.2.0</mysql-driver.version>
         <mariadb-driver.version>3.1.4</mariadb-driver.version>
         <postgresql-driver.version>42.7.3</postgresql-driver.version>
