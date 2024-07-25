@@ -25,14 +25,13 @@ import net.risesoft.y9.sqlddl.pojo.DbColumn;
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class DdlKingbase {
 
-    public static void addTableColumn(DataSource dataSource, String tableName, List<DbColumn> dbcs) throws Exception {
+    public static void addTableColumn(DataSource dataSource, String tableName, String jsonDbColumns) throws Exception {
         StringBuilder sb = new StringBuilder();
+        DbColumn[] dbcs = Y9JsonUtil.objectMapper.readValue(jsonDbColumns,
+            TypeFactory.defaultInstance().constructArrayType(DbColumn.class));
         if (DbMetaDataUtil.checkTableExist(dataSource, tableName)) {
             for (DbColumn dbc : dbcs) {
                 String columnName = dbc.getColumnName();
-                if ("GUID".equalsIgnoreCase(columnName) || "PROCESSINSTANCEID".equalsIgnoreCase(columnName)) {
-                    continue;
-                }
                 sb = new StringBuilder();
                 sb.append("ALTER TABLE \"" + tableName + "\"");
                 String nullable = "";

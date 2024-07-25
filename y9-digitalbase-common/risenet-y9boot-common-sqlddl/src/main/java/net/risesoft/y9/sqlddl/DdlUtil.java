@@ -28,6 +28,8 @@ public class DdlUtil {
             DdlMssql.addTableColumn(dataSource, tableName, jsonDbColumns);
         } else if (SqlConstants.DBTYPE_DM.equalsIgnoreCase(dbType)) {
             DdlDm.addTableColumn(dataSource, tableName, jsonDbColumns);
+        } else if (SqlConstants.DBTYPE_KINGBASE.equalsIgnoreCase(dbType)) {
+            DdlKingbase.addTableColumn(dataSource, tableName, jsonDbColumns);
         }
     }
 
@@ -42,6 +44,8 @@ public class DdlUtil {
             DdlMssql.alterTableColumn(dataSource, tableName, jsonDbColumns);
         } else if (SqlConstants.DBTYPE_DM.equalsIgnoreCase(dbType)) {
             DdlDm.alterTableColumn(dataSource, tableName, jsonDbColumns);
+        } else if (SqlConstants.DBTYPE_KINGBASE.equalsIgnoreCase(dbType)) {
+            DdlKingbase.alterTableColumn(dataSource, tableName, jsonDbColumns);
         }
     }
 
@@ -55,6 +59,8 @@ public class DdlUtil {
             DdlMssql.dropTable(dataSource, tableName);
         } else if (SqlConstants.DBTYPE_DM.equalsIgnoreCase(dbType)) {
             DdlDm.dropTable(dataSource, tableName);
+        } else if (SqlConstants.DBTYPE_KINGBASE.equalsIgnoreCase(dbType)) {
+            DdlKingbase.dropTable(dataSource, tableName);
         }
     }
 
@@ -68,6 +74,8 @@ public class DdlUtil {
             DdlMssql.dropTableColumn(dataSource, tableName, columnName);
         } else if (SqlConstants.DBTYPE_DM.equalsIgnoreCase(dbType)) {
             DdlDm.dropTableColumn(dataSource, tableName, columnName);
+        } else if (SqlConstants.DBTYPE_KINGBASE.equalsIgnoreCase(dbType)) {
+            DdlKingbase.dropTableColumn(dataSource, tableName, columnName);
         }
     }
 
@@ -81,6 +89,8 @@ public class DdlUtil {
             DdlMssql.renameTable(dataSource, tableNameOld, tableNameNew);
         } else if (SqlConstants.DBTYPE_DM.equalsIgnoreCase(dbType)) {
             DdlDm.renameTable(dataSource, tableNameOld, tableNameNew);
+        } else if (SqlConstants.DBTYPE_KINGBASE.equalsIgnoreCase(dbType)) {
+            DdlKingbase.renameTable(dataSource, tableNameOld, tableNameNew);
         }
     }
 
