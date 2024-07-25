@@ -9,6 +9,8 @@ import javax.sql.DataSource;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import net.risesoft.consts.SqlConstants;
+
 /**
  *
  *
@@ -18,10 +20,14 @@ import org.slf4j.LoggerFactory;
  * @author shidaobang
  */
 public class SqlPaginationUtil {
-    private static Logger log = LoggerFactory.getLogger(SqlPaginationUtil.class);
+    private static final Logger log = LoggerFactory.getLogger(SqlPaginationUtil.class);
 
     private static String dbType;
     private static int dbVersion;
+
+    private SqlPaginationUtil() {
+        throw new IllegalStateException("SqlPaginationUtil Utility class");
+    }
 
     public static String generatePagedSql(DataSource ds, String sql, int start, int limit) throws Exception {
         String rSql = "";
@@ -30,14 +36,14 @@ public class SqlPaginationUtil {
         }
 
         if (dbType == null) {
-            try (Connection connection = ds.getConnection();) {
+            try (Connection connection = ds.getConnection()) {
                 DatabaseMetaData dbmd = connection.getMetaData();
                 String databaseName = dbmd.getDatabaseProductName().toLowerCase();
-                if (databaseName.indexOf(SqlConstantUtil.DBTYPE_MYSQL) > -1) {
+                if (databaseName.indexOf(SqlConstants.DBTYPE_MYSQL) > -1) {
                     dbType = "mysql";
-                } else if (databaseName.indexOf(SqlConstantUtil.DBTYPE_ORACLE) > -1) {
+                } else if (databaseName.indexOf(SqlConstants.DBTYPE_ORACLE) > -1) {
                     dbType = "oracle";
-                } else if (databaseName.indexOf(SqlConstantUtil.DBTYPE_MICROSOFT) > -1) {
+                } else if (databaseName.indexOf(SqlConstants.DBTYPE_MICROSOFT) > -1) {
                     dbType = "mssql";
                 }
 
@@ -58,9 +64,9 @@ public class SqlPaginationUtil {
             limit = Integer.MAX_VALUE;
         }
 
-        if (SqlConstantUtil.DBTYPE_MYSQL.equalsIgnoreCase(databaseType)) {
+        if (SqlConstants.DBTYPE_MYSQL.equalsIgnoreCase(databaseType)) {
             rSql = sql + " limit " + start + "," + limit;
-        } else if (SqlConstantUtil.DBTYPE_MSSQL.equalsIgnoreCase(databaseType)) {
+        } else if (SqlConstants.DBTYPE_MSSQL.equalsIgnoreCase(databaseType)) {
             if (databaseVersion >= 12) {
                 if (sql.toLowerCase().contains(" order by ")) {
                     // 只适用mssql2012版本
@@ -81,10 +87,6 @@ public class SqlPaginationUtil {
         }
 
         return rSql;
-    }
-
-    private SqlPaginationUtil() {
-        throw new IllegalStateException("SqlPaginationUtil Utility class");
     }
 
 }
