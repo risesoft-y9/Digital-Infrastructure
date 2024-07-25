@@ -10,7 +10,9 @@ import com.fasterxml.jackson.databind.type.TypeFactory;
 
 import lombok.extern.slf4j.Slf4j;
 
+import net.risesoft.consts.SqlConstants;
 import net.risesoft.y9.json.Y9JsonUtil;
+import net.risesoft.y9.sqlddl.pojo.DbColumn;
 
 /**
  *
@@ -23,6 +25,10 @@ import net.risesoft.y9.json.Y9JsonUtil;
 @Slf4j
 public class DdlOracle {
 
+	private DdlOracle() {
+        throw new IllegalStateException("DdlOracle Utility class");
+    }
+
     public static void addTableColumn(DataSource dataSource, String tableName, String jsonDbColumns) throws Exception {
         StringBuilder sb = new StringBuilder();
         DbColumn[] dbcs = Y9JsonUtil.objectMapper.readValue(jsonDbColumns,
@@ -31,13 +37,13 @@ public class DdlOracle {
             for (DbColumn dbc : dbcs) {
                 sb.append("ALTER TABLE " + tableName + " ADD " + dbc.getColumnName() + " ");
                 String sType = dbc.getTypeName().toUpperCase();
-                if (SqlConstantUtil.CHAR_TYPE.equals(sType) || SqlConstantUtil.NCHAR_TYPE.equals(sType)
-                    || SqlConstantUtil.VARCHAR2_TYPE.equals(sType) || SqlConstantUtil.NVARCHAR2_TYPE.equals(sType)
-                    || SqlConstantUtil.RAW_TYPE.equals(sType)) {
+                if (SqlConstants.CHAR_TYPE.equals(sType) || SqlConstants.NCHAR_TYPE.equals(sType)
+                    || SqlConstants.VARCHAR2_TYPE.equals(sType) || SqlConstants.NVARCHAR2_TYPE.equals(sType)
+                    || SqlConstants.RAW_TYPE.equals(sType)) {
                     sb.append(sType + "(" + dbc.getDataLength() + ")");
-                } else if (SqlConstantUtil.DECIMAL_TYPE.equalsIgnoreCase(sType)
-                    || SqlConstantUtil.NUMERIC_TYPE.equalsIgnoreCase(sType)
-                    || SqlConstantUtil.NUMBER_TYPE.equalsIgnoreCase(sType)) {
+                } else if (SqlConstants.DECIMAL_TYPE.equalsIgnoreCase(sType)
+                    || SqlConstants.NUMERIC_TYPE.equalsIgnoreCase(sType)
+                    || SqlConstants.NUMBER_TYPE.equalsIgnoreCase(sType)) {
                     if (dbc.getDataScale() == null) {
                         sb.append(sType + "(" + dbc.getDataLength() + ")");
                     } else {
@@ -72,9 +78,9 @@ public class DdlOracle {
 
 				sb.append(columnName).append(" ");
 				String sType = dbc.getTypeName().toUpperCase();
-				if (SqlConstantUtil.CHAR_TYPE.equals(sType) || SqlConstantUtil.NCHAR_TYPE.equals(sType) || SqlConstantUtil.VARCHAR2_TYPE.equals(sType) || SqlConstantUtil.NVARCHAR2_TYPE.equals(sType) || SqlConstantUtil.RAW_TYPE.equals(sType)) {
+				if (SqlConstants.CHAR_TYPE.equals(sType) || SqlConstants.NCHAR_TYPE.equals(sType) || SqlConstants.VARCHAR2_TYPE.equals(sType) || SqlConstants.NVARCHAR2_TYPE.equals(sType) || SqlConstants.RAW_TYPE.equals(sType)) {
 					sb.append(sType + "(" + dbc.getDataLength() + ")");
-				} else if (SqlConstantUtil.DECIMAL_TYPE.equalsIgnoreCase(sType) || SqlConstantUtil.NUMERIC_TYPE.equalsIgnoreCase(sType) || SqlConstantUtil.NUMBER_TYPE.equalsIgnoreCase(sType)) {
+				} else if (SqlConstants.DECIMAL_TYPE.equalsIgnoreCase(sType) || SqlConstants.NUMERIC_TYPE.equalsIgnoreCase(sType) || SqlConstants.NUMBER_TYPE.equalsIgnoreCase(sType)) {
 					if (dbc.getDataScale() == null) {
 						sb.append(sType + "(" + dbc.getDataLength() + ")");
 					} else {
@@ -84,7 +90,7 @@ public class DdlOracle {
 					sb.append(sType);
 				}
 
-				if (dbc.getNullable() == false) {
+				if (!dbc.getNullable()) {
 					sb.append(" NOT NULL");
 				}
 				sb.append(",\r\n");
@@ -121,9 +127,9 @@ public class DdlOracle {
                 sb.append(" MODIFY " + dbc.getColumnName() + " ");
 
                 String sType = dbc.getTypeName().toUpperCase();
-                if (SqlConstantUtil.CHAR_TYPE.equals(sType) || SqlConstantUtil.NCHAR_TYPE.equals(sType) || SqlConstantUtil.VARCHAR2_TYPE.equals(sType) || SqlConstantUtil.NVARCHAR2_TYPE.equals(sType) || SqlConstantUtil.RAW_TYPE.equals(sType)) {
+                if (SqlConstants.CHAR_TYPE.equals(sType) || SqlConstants.NCHAR_TYPE.equals(sType) || SqlConstants.VARCHAR2_TYPE.equals(sType) || SqlConstants.NVARCHAR2_TYPE.equals(sType) || SqlConstants.RAW_TYPE.equals(sType)) {
                     sb.append(sType + "(" + dbc.getDataLength() + ")");
-                } else if (SqlConstantUtil.DECIMAL_TYPE.equalsIgnoreCase(sType) || SqlConstantUtil.NUMERIC_TYPE.equalsIgnoreCase(sType) || SqlConstantUtil.NUMBER_TYPE.equalsIgnoreCase(sType)) {
+                } else if (SqlConstants.DECIMAL_TYPE.equalsIgnoreCase(sType) || SqlConstants.NUMERIC_TYPE.equalsIgnoreCase(sType) || SqlConstants.NUMBER_TYPE.equalsIgnoreCase(sType)) {
                     if (dbc.getDataScale() == null) {
                         sb.append(sType + "(" + dbc.getDataLength() + ")");
                     } else {
@@ -158,15 +164,11 @@ public class DdlOracle {
 		DbMetaDataUtil.executeDdl(dataSource, "DROP TABLE " + tableName);
 	}
 
-	public static void dropTableColumn(DataSource dataSource, String tableName, String columnName) throws Exception {
+    public static void dropTableColumn(DataSource dataSource, String tableName, String columnName) throws Exception {
 		DbMetaDataUtil.executeDdl(dataSource, "ALTER TABLE " + tableName + " DROP COLUMN " + columnName);
 	}
 
 	public static void renameTable(DataSource dataSource, String tableNameOld, String tableNameNew) throws Exception {
 		DbMetaDataUtil.executeDdl(dataSource, "RENAME " + tableNameOld + " TO " + tableNameNew);
 	}
-
-	private DdlOracle() {
-        throw new IllegalStateException("DdlOracle Utility class");
-    }
 }

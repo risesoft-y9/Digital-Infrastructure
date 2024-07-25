@@ -1,14 +1,14 @@
-package net.risesoft.y9.sqlddl;
+package net.risesoft.consts;
 
 /**
  *
  * @author mengjuhua
  *
  */
-public class SqlConstantUtil {
+public class SqlConstants {
+
     /** microsoft数据库 */
     public static final String DBTYPE_MICROSOFT = "microsoft";
-
     /** microsoft数据库 */
     public static final String DBTYPE_MSSQL = "mssql";
     /** mysql数据库 */
@@ -19,9 +19,11 @@ public class SqlConstantUtil {
     public static final String DBTYPE_DM = "dm";
     /** dm数据库 */
     public static final String DBTYPE_DBMS = "dbms";
+    /** 人大金仓 */
+    public static final String DBTYPE_KINGBASE = "kingbase";
+
     /** CHAR */
     public static final String CHAR_TYPE = "CHAR";
-
     /** VARCHAR */
     public static final String VARCHAR_TYPE = "VARCHAR";
     /** NCHAR */
@@ -39,8 +41,8 @@ public class SqlConstantUtil {
     /** NUMBER */
     public static final String NUMBER_TYPE = "NUMBER";
 
-    private SqlConstantUtil() {
-        throw new IllegalStateException("SqlConstantUtil Utility class");
+    private SqlConstants() {
+        throw new IllegalStateException("SqlConstants Utility class");
     }
 
 }

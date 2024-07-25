@@ -4,7 +4,9 @@ import javax.sql.DataSource;
 
 import com.fasterxml.jackson.databind.type.TypeFactory;
 
+import net.risesoft.consts.SqlConstants;
 import net.risesoft.y9.json.Y9JsonUtil;
+import net.risesoft.y9.sqlddl.pojo.DbColumn;
 
 /**
  *
@@ -16,6 +18,10 @@ import net.risesoft.y9.json.Y9JsonUtil;
  */
 public class DdlMysql {
 
+    private DdlMysql() {
+        throw new IllegalStateException("DdlMysql Utility class");
+    }
+
     public static void addTableColumn(DataSource dataSource, String tableName, String jsonDbColumns) throws Exception {
         DbColumn[] dbcs = Y9JsonUtil.objectMapper.readValue(jsonDbColumns,
             TypeFactory.defaultInstance().constructArrayType(DbColumn.class));
@@ -23,9 +29,9 @@ public class DdlMysql {
             for (DbColumn dbc : dbcs) {
                 String ddl = "ALTER TABLE " + tableName + " ADD COLUMN " + dbc.getColumnName() + " ";
                 String sType = dbc.getTypeName().toUpperCase();
-                if (SqlConstantUtil.CHAR_TYPE.equals(sType) || SqlConstantUtil.VARCHAR_TYPE.equals(sType)) {
+                if (SqlConstants.CHAR_TYPE.equals(sType) || SqlConstants.VARCHAR_TYPE.equals(sType)) {
                     ddl += sType + "(" + dbc.getDataLength() + ")";
-                } else if (SqlConstantUtil.DECIMAL_TYPE.equals(sType) || SqlConstantUtil.NUMERIC_TYPE.equals(sType)) {
+                } else if (SqlConstants.DECIMAL_TYPE.equals(sType) || SqlConstants.NUMERIC_TYPE.equals(sType)) {
                     if (dbc.getDataScale() == null) {
                         ddl += sType + "(" + dbc.getDataLength() + ")";
                     } else {
@@ -35,7 +41,7 @@ public class DdlMysql {
                     ddl += sType;
                 }
 
-                if (dbc.getNullable() == true) {
+                if (dbc.getNullable()) {
                     ddl += " DEFAULT NULL";
                 } else {
                     ddl += " NOT NULL";
@@ -58,9 +64,9 @@ public class DdlMysql {
 
 				sb.append(columnName).append(" ");
 				String sType = dbc.getTypeName().toUpperCase();
-				if (SqlConstantUtil.CHAR_TYPE.equals(sType) || SqlConstantUtil.VARCHAR_TYPE.equals(sType)) {
+				if (SqlConstants.CHAR_TYPE.equals(sType) || SqlConstants.VARCHAR_TYPE.equals(sType)) {
 					sb.append(sType + "(" + dbc.getDataLength() + ")");
-				} else if (SqlConstantUtil.DECIMAL_TYPE.equals(sType) || SqlConstantUtil.NUMERIC_TYPE.equals(sType)) {
+				} else if (SqlConstants.DECIMAL_TYPE.equals(sType) || SqlConstants.NUMERIC_TYPE.equals(sType)) {
 					if (dbc.getDataScale() == null) {
 						sb.append(sType + "(" + dbc.getDataLength() + ")");
 					} else {
@@ -84,7 +90,6 @@ public class DdlMysql {
 		}
 	}
 
-
     public static void alterTableColumn(DataSource dataSource, String tableName, String jsonDbColumns) throws Exception {
         if (!DbMetaDataUtil.checkTableExist(dataSource, tableName)) {
             throw new Exception("数据库中不存在这个表：" + tableName);
@@ -101,9 +106,9 @@ public class DdlMysql {
             }
 
             String sType = dbc.getTypeName().toUpperCase();
-            if (SqlConstantUtil.CHAR_TYPE.equals(sType) || SqlConstantUtil.VARCHAR_TYPE.equals(sType)) {
+            if (SqlConstants.CHAR_TYPE.equals(sType) || SqlConstants.VARCHAR_TYPE.equals(sType)) {
                 ddl += sType + "(" + dbc.getDataLength() + ")";
-            } else if (SqlConstantUtil.DECIMAL_TYPE.equals(sType) || SqlConstantUtil.NUMERIC_TYPE.equals(sType)) {
+            } else if (SqlConstants.DECIMAL_TYPE.equals(sType) || SqlConstants.NUMERIC_TYPE.equals(sType)) {
                 if (dbc.getDataScale() == null) {
                     ddl += sType + "(" + dbc.getDataLength() + ")";
                 } else {
@@ -113,7 +118,7 @@ public class DdlMysql {
                 ddl += sType;
             }
 
-            if (dbc.getNullable() == true) {
+            if (dbc.getNullable()) {
                 ddl += " DEFAULT NULL";
             } else {
                 ddl += " NOT NULL";
@@ -137,9 +142,5 @@ public class DdlMysql {
 	public static void renameTable(DataSource dataSource, String tableNameOld, String tableNameNew) throws Exception {
 		DbMetaDataUtil.executeDdl(dataSource, "ALTER TABLE " + tableNameOld + " RENAME " + tableNameNew);
 	}
-
-	private DdlMysql() {
-        throw new IllegalStateException("DdlMysql Utility class");
-      }
 
 }
