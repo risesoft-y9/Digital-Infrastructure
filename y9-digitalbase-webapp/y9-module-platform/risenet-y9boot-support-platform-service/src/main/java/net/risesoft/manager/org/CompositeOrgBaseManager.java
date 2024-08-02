@@ -66,6 +66,14 @@ public interface CompositeOrgBaseManager {
     Optional<Y9OrgBase> findOrgUnitParent(String orgUnitId);
 
     /**
+     * 根据id获得组织节点对象（人员或岗位）
+     *
+     * @param orgUnitId 组织节点id
+     * @return ORGBase
+     */
+    Optional<Y9OrgBase> findOrgUnitPersonOrPosition(String orgUnitId);
+
+    /**
      * 根据父节点id获取子节点的下一个 tabIndex 值（获取已有子节点最大的 tabIndex + 1）
      *
      * @param parentId

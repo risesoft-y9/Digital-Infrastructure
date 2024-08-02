@@ -93,6 +93,14 @@ public interface CompositeOrgBaseService {
     Optional<Y9OrgBase> findOrgUnitParent(String orgUnitId);
 
     /**
+     * 根据id获得组织节点对象（人员或岗位）
+     *
+     * @param orgUnitId 组织节点id
+     * @return {@link Y9OrgBase}
+     */
+    Optional<Y9OrgBase> findOrgUnitPersonOrPosition(String orgUnitId);
+
+    /**
      * 根据指定id获取ORGBase对象(可以是org的任意类型)
      *
      * @param orgUnitId 组织节点id
@@ -180,14 +188,6 @@ public interface CompositeOrgBaseService {
     List<Y9Person> listAllByParentId(String parentId);
 
     /**
-     * 根据组织节点id向下递归获取所有组织节点
-     *
-     * @param orgId 组织节点id
-     * @return {@link List}<{@link Y9OrgBase}>
-     */
-    List<Y9OrgBase> listAllOrgUnits(String orgId);
-
-    /**
      * 根据父节点id,递归获取其下所有人员
      *
      * @param parentId 父节点id
@@ -203,6 +203,14 @@ public interface CompositeOrgBaseService {
      * @return {@link List}<{@link Y9Person}>
      */
     List<Y9Person> listAllDescendantPersons(String parentId, Boolean disabled);
+
+    /**
+     * 根据组织节点id向下递归获取所有组织节点
+     *
+     * @param orgId 组织节点id
+     * @return {@link List}<{@link Y9OrgBase}>
+     */
+    List<Y9OrgBase> listAllOrgUnits(String orgId);
 
     /**
      * 根据父节点id，递归获取其下所有岗位

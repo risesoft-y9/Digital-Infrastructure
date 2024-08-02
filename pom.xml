@@ -10,7 +10,6 @@
     <name>y9-digitalbase</name>
     <description>RiseSoft/Digital Infrastructure Parent</description>
     <url>https://gitee.com/risesoft-y9/y9-core</url>
-
     <licenses>
         <license>
             <name>GNU General Public License (GPL) version 3.0</name>
@@ -18,7 +17,6 @@
             <distribution>repo</distribution>
         </license>
     </licenses>
-
     <developers>
         <developer>
             <name>dingzhaojun</name>
@@ -26,28 +24,25 @@
             <organization>risesoft</organization>
             <organizationUrl>https://www.risesoft.net</organizationUrl>
         </developer>
-
         <developer>
             <name>qinman</name>
             <email>qinman@risesoft.net</email>
             <organization>risesoft</organization>
             <organizationUrl>https://www.risesoft.net</organizationUrl>
         </developer>
-
         <developer>
             <name>shidaobang</name>
             <email>shidaobang@risesoft.net</email>
             <organization>risesoft</organization>
             <organizationUrl>https://www.risesoft.net</organizationUrl>
         </developer>
-
-        <developer>
-            <name>mengjuhua</name>
-            <email>mengjuhua@risesoft.net</email>
-            <organization>risesoft</organization>
-            <organizationUrl>https://www.risesoft.net</organizationUrl>
-        </developer>
     </developers>
+
+    <properties>
+        <!--  版本号  -->
+        <revision>v9.6.7-SNAPSHOT</revision>
+        <java.version>11</java.version>
+    </properties>
 
     <scm>
         <url>https://gitee.com/risesoft-y9/y9-core</url>
@@ -55,6 +50,15 @@
         <developerConnection>https://gitee.com/risesoft-y9/y9-core</developerConnection>
     </scm>
 
+    <modules>
+        <module>y9-digitalbase-parent</module>
+        <module>y9-digitalbase-common</module>
+        <module>y9-digitalbase-example</module>
+        <module>y9-digitalbase-idcode</module>
+        <module>y9-digitalbase-starter</module>
+        <module>y9-digitalbase-support</module>
+        <module>y9-digitalbase-webapp</module>
+    </modules>
 
     <repositories>
         <!--<repository>
@@ -104,7 +108,6 @@
             <url>https://svn.youshengyun.com:9900/nexus/repository/maven-public/</url>
         </pluginRepository>
     </pluginRepositories>
-
     <distributionManagement>
         <repository>
             <id>releases</id>
@@ -115,20 +118,4 @@
             <url>https://svn.youshengyun.com:9900/nexus/repository/maven-snapshots/</url>
         </snapshotRepository>
     </distributionManagement>
-
-    <properties>
-        <!--  版本号  -->
-        <revision>v9.6.7-SNAPSHOT</revision>
-        <java.version>11</java.version>
-    </properties>
-
-    <modules>
-        <module>y9-digitalbase-parent</module>
-        <module>y9-digitalbase-common</module>
-        <module>y9-digitalbase-example</module>
-        <module>y9-digitalbase-idcode</module>
-        <module>y9-digitalbase-starter</module>
-        <module>y9-digitalbase-support</module>
-        <module>y9-digitalbase-webapp</module>
-    </modules>
 </project>
