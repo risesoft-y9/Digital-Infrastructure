@@ -37,7 +37,7 @@ public class Y9BeanUtil {
      * 
      * @param source 更新后的实体类
      * @param target 以前的老实体类
-     * @throws BeansException
+     * @throws BeansException Beans异常
      */
     public static void copyProperties(Object source, Object target) throws BeansException {
         copyProperties(source, target, null, (String[])null);
@@ -50,7 +50,7 @@ public class Y9BeanUtil {
      * @param source 更新后的实体类
      * @param target 以前的老实体类
      * @param editable 限制属性设置为的类（或接口）
-     * @throws BeansException
+     * @throws BeansException Beans异常
      */
     public static void copyProperties(Object source, Object target, Class<?> editable) {
         copyProperties(source, target, editable, (String[])null);
@@ -63,7 +63,7 @@ public class Y9BeanUtil {
      * @param source 更新后的实体类
      * @param target 以前的老实体类
      * @param ignoreProperties 忽略的属性名
-     * @throws BeansException
+     * @throws BeansException Beans异常
      */
     public static void copyProperties(Object source, Object target, String... ignoreProperties) throws BeansException {
         copyProperties(source, target, null, ignoreProperties);

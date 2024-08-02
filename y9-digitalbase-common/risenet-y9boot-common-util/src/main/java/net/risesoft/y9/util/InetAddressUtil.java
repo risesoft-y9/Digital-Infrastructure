@@ -35,24 +35,12 @@ public class InetAddressUtil {
     public static final String LOCALHOST = "127.0.0.1";
 
     public static final String ANYHOST = "0.0.0.0";
-
-    private static volatile InetAddress LOCAL_ADDRESS = null;
-
     private static final Pattern LOCAL_IP_PATTERN = Pattern.compile("127(\\.\\d{1,3}){3}$");
-
     private static final Pattern ADDRESS_PATTERN = Pattern.compile("^\\d{1,3}(\\.\\d{1,3}){3}\\:\\d{1,5}$");
-
     private static final Pattern IP_PATTERN = Pattern.compile("\\d{1,3}(\\.\\d{1,3}){3,5}$");
-
     public static Properties properties = new Properties();
-
-    public static String ips = "192.168.x.x,10.161.x.x,10.1.x.x,172.20.x.x";
-
-    /*
-     * A类网络 ip地址范围:10.0.0.0~10.255.255.255     ip地址数量:16777216    网络数:1个A类网络
-     * B类网络 ip地址范围:172.16.0.0~172.31.255.255   ip地址数量:1048576     网络数:16个B类网络
-     * C类网络 ip地址范围:192.168.0.0~192.168.255.255 ip地址数量:65536       网络数:256个C类网络
-     */
+    public static String ips = null;
+    private static volatile InetAddress LOCAL_ADDRESS = null;
 
     static {
         Environment environment = Y9Context.getEnvironment();
@@ -78,7 +66,7 @@ public class InetAddressUtil {
 
         if (properties.isEmpty()) {
             try (InputStream inputStream2 =
-                InetAddressUtil.class.getClassLoader().getResourceAsStream("properties/application.properties");) {
+                InetAddressUtil.class.getClassLoader().getResourceAsStream("properties/application.properties")) {
                 properties.load(inputStream2);
             } catch (IOException ignored) {
             }
@@ -109,18 +97,19 @@ public class InetAddressUtil {
     /**
      * {@link #getLocalAddress(Map)}
      * 
-     * @return
+     * @return InetAddress IP地址
      */
     public static InetAddress getLocalAddress() {
         return getLocalAddress(null);
     }
 
     /**
-     * <pre>
+     * <p>
      * 查找策略：首先看是否已经查到ip --> hostname对应的ip --> 根据连接目标端口得到的本地ip --> 轮询网卡
-     * </pre>
+     * </p>
      * 
-     * @return loca ip
+     * @param destHostPorts host端口信息
+     * @return InetAddress locaip
      */
     public static InetAddress getLocalAddress(Map<String, Integer> destHostPorts) {
         if (LOCAL_ADDRESS != null) {
@@ -217,7 +206,7 @@ public class InetAddressUtil {
         String ipAddress = address.getHostAddress();
         boolean valid = ipAddress != null && !ANYHOST.equals(ipAddress) && !LOCALHOST.equals(ipAddress)
             && IP_PATTERN.matcher(ipAddress).matches();
-        if (valid == false) {
+        if (!valid) {
             return false;
         }
 

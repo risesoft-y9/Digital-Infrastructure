@@ -49,8 +49,8 @@ public class RsaUtil {
     /**
      * 密钥转成byte[]
      *
-     * @param key
-     * @return
+     * @param key 密钥
+     * @return byte[] 密钥
      */
     public static byte[] decodeBase64(String key) {
         return Base64.decodeBase64(key);
@@ -61,8 +61,8 @@ public class RsaUtil {
      *
      * @param data 待解密的数据
      * @param priKey 私钥
-     * @return
-     * @throws Exception
+     * @return byte[] 解密的数据
+     * @throws Exception 异常
      */
     public static byte[] decryptByPriKey(byte[] data, byte[] priKey) throws Exception {
         PKCS8EncodedKeySpec pkcs8KeySpec = new PKCS8EncodedKeySpec(priKey);
@@ -78,8 +78,8 @@ public class RsaUtil {
      *
      * @param data 解密前的字符串
      * @param privateKey 私钥
-     * @return 解密后的字符串
-     * @throws Exception
+     * @return String 解密后的字符串
+     * @throws Exception 异常
      */
     public static String decryptByPriKey(String data, String privateKey) throws Exception {
         byte[] priKey = RsaUtil.decodeBase64(privateKey);
@@ -92,8 +92,8 @@ public class RsaUtil {
      *
      * @param data 待解密的数据
      * @param pubKey 公钥
-     * @return 解密后的数据
-     * @throws Exception
+     * @return String 解密后的数据
+     * @throws Exception 异常
      */
     public static byte[] decryptByPubKey(byte[] data, byte[] pubKey) throws Exception {
         X509EncodedKeySpec x509KeySpec = new X509EncodedKeySpec(pubKey);
@@ -109,8 +109,8 @@ public class RsaUtil {
      *
      * @param data 解密前的字符串
      * @param publicKey 公钥
-     * @return 解密后的字符串
-     * @throws Exception
+     * @return String 解密后的字符串
+     * @throws Exception 异常
      */
     public static String decryptByPubKey(String data, String publicKey) throws Exception {
         byte[] pubKey = RsaUtil.decodeBase64(publicKey);
@@ -121,8 +121,8 @@ public class RsaUtil {
     /**
      * 密钥转成字符串
      *
-     * @param key
-     * @return
+     * @param key 密钥
+     * @return String 密钥转成的字符串
      */
     public static String encodeBase64StringBase64String(byte[] key) {
         return Base64.encodeBase64String(key);
@@ -133,8 +133,8 @@ public class RsaUtil {
      *
      * @param data 待加密的数据
      * @param priKey 私钥
-     * @return 加密后的数据
-     * @throws Exception
+     * @return byte[] 加密后的数据
+     * @throws Exception 异常
      */
     public static byte[] encryptByPriKey(byte[] data, byte[] priKey) throws Exception {
         PKCS8EncodedKeySpec pkcs8KeySpec = new PKCS8EncodedKeySpec(priKey);
@@ -150,8 +150,8 @@ public class RsaUtil {
      *
      * @param data 加密前的字符串
      * @param privateKey 私钥
-     * @return 加密后的字符串
-     * @throws Exception
+     * @return String 加密后的字符串
+     * @throws Exception 异常
      */
     public static String encryptByPriKey(String data, String privateKey) throws Exception {
         byte[] priKey = RsaUtil.decodeBase64(privateKey);
@@ -164,8 +164,8 @@ public class RsaUtil {
      *
      * @param data 待加密数据
      * @param pubKey 公钥
-     * @return
-     * @throws Exception
+     * @return byte[] 加密数据
+     * @throws Exception 异常
      */
     public static byte[] encryptByPubKey(byte[] data, byte[] pubKey) throws Exception {
         X509EncodedKeySpec x509KeySpec = new X509EncodedKeySpec(pubKey);
@@ -181,8 +181,8 @@ public class RsaUtil {
      *
      * @param data 加密前的字符串
      * @param publicKey 公钥
-     * @return 加密后的字符串
-     * @throws Exception
+     * @return String 加密后的字符串
+     * @throws Exception 异常
      */
     public static String encryptByPubKey(String data, String publicKey) throws Exception {
         byte[] pubKey = RsaUtil.decodeBase64(publicKey);
@@ -222,8 +222,8 @@ public class RsaUtil {
     /**
      * 生成文件保存秘钥
      *
-     * @param filePath
-     * @param keyStr
+     * @param filePath 文件路径
+     * @param keyStr 秘钥
      */
     public static void saveKeyForFile(String filePath, String keyStr) {
         File file = new File(filePath);
@@ -243,8 +243,8 @@ public class RsaUtil {
      *
      * @param data 待签名数据
      * @param priKey 私钥
-     * @return 签名
-     * @throws Exception
+     * @return String 签名
+     * @throws Exception 异常
      */
     public static String sign(byte[] data, byte[] priKey) throws Exception {
         // 取得私钥

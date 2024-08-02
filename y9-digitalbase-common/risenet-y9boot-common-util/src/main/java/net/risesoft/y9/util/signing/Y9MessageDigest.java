@@ -58,7 +58,10 @@ public class Y9MessageDigest {
     }
 
     /**
-     * MD5加密-32位小写 @
+     * MD5加密-32位小写
+     * 
+     * @param content 内容
+     * @return String MD5加密后的字符串
      */
     public static String md5(byte[] content) {
         try {
@@ -73,6 +76,9 @@ public class Y9MessageDigest {
 
     /**
      * MD5加密-32位小写
+     * 
+     * @param encryptStr 加密字符串
+     * @return String MD5加密后的字符串
      */
     public static String md5(String encryptStr) {
         try {

@@ -37,15 +37,19 @@ public class AesUtil {
     private static final int KEY_SIZE = 128;
     private static final int CACHE_SIZE = 1024;
 
+    private AesUtil() {
+        throw new IllegalStateException("Utility class");
+    }
+
     /**
      * <p>
      * 解密
      * </p>
      *
-     * @param data
-     * @param key
-     * @return
-     * @throws Exception
+     * @param data 数据
+     * @param key 解密key
+     * @return byte[] 解密后的数据
+     * @throws Exception 异常
      */
     public static byte[] decryptByte(byte[] data, String key) throws Exception {
         Key k = toKey(Base64.decodeBase64(key));
@@ -61,10 +65,10 @@ public class AesUtil {
      * 文件解密
      * </p>
      *
-     * @param key
-     * @param sourceFilePath
-     * @param destFilePath
-     * @throws Exception
+     * @param key 解密key
+     * @param sourceFilePath 目标文件路径
+     * @param destFilePath 完成后的文件路径
+     * @throws Exception 异常
      */
     public static void decryptFile(String key, String sourceFilePath, String destFilePath) throws Exception {
         File sourceFile = new File(sourceFilePath);
@@ -76,7 +80,7 @@ public class AesUtil {
             destFile.createNewFile();
             CipherOutputStream cout = null;
             try (FileInputStream in = new FileInputStream(sourceFile);
-                FileOutputStream out = new FileOutputStream(destFile);) {
+                FileOutputStream out = new FileOutputStream(destFile)) {
 
                 Key k = toKey(Base64.decodeBase64(key));
                 byte[] raw = k.getEncoded();
@@ -110,8 +114,10 @@ public class AesUtil {
      * 文件解密
      * </p>
      *
-     * @param key
-     * @throws Exception
+     * @param key 解密key
+     * @param out 输出流
+     * @return OutputStream 输出流
+     * @throws Exception 异常
      */
     public static OutputStream decryptStream(String key, OutputStream out) throws Exception {
         Key k = toKey(Base64.decodeBase64(key));
@@ -130,10 +136,10 @@ public class AesUtil {
      * 加密
      * </p>
      *
-     * @param data
-     * @param key
-     * @return
-     * @throws Exception
+     * @param data 数据
+     * @param key 加密key
+     * @return byte[] 加密后数据
+     * @throws Exception 异常信息
      */
     public static byte[] encryptByte(byte[] data, String key) throws Exception {
         Key k = toKey(Base64.decodeBase64(key));
@@ -149,10 +155,10 @@ public class AesUtil {
      * 文件加密
      * </p>
      *
-     * @param key
-     * @param sourceFilePath
-     * @param destFilePath
-     * @throws Exception
+     * @param key 加密key
+     * @param sourceFilePath 目标文件路径
+     * @param destFilePath 加密后文件路径
+     * @throws Exception 异常
      */
     public static void encryptFile(String key, String sourceFilePath, String destFilePath) throws Exception {
         File sourceFile = new File(sourceFilePath);
@@ -164,7 +170,7 @@ public class AesUtil {
             destFile.createNewFile();
 
             CipherInputStream cin = null;
-            try (InputStream in = new FileInputStream(sourceFile); OutputStream out = new FileOutputStream(destFile);) {
+            try (InputStream in = new FileInputStream(sourceFile); OutputStream out = new FileOutputStream(destFile)) {
 
                 Key k = toKey(Base64.decodeBase64(key));
                 byte[] raw = k.getEncoded();
@@ -202,7 +208,8 @@ public class AesUtil {
      *
      * @param key AES密钥
      * @param in 输入流
-     * @throws Exception
+     * @return InputStream 加密后的输入流
+     * @throws Exception 异常
      */
     public static InputStream encryptStream(String key, InputStream in) throws Exception {
         Key k = toKey(Base64.decodeBase64(key));
@@ -221,8 +228,8 @@ public class AesUtil {
      * 生成随机密钥
      * </p>
      *
-     * @return
-     * @throws Exception
+     * @return String 随机密钥
+     * @throws Exception 异常
      */
     public static String getSecretKey() throws Exception {
         return getSecretKey(null);
@@ -234,8 +241,8 @@ public class AesUtil {
      * </p>
      *
      * @param seed 密钥种子
-     * @return
-     * @throws Exception
+     * @return String 密钥
+     * @throws Exception 异常
      */
     public static String getSecretKey(String seed) throws Exception {
         KeyGenerator keyGenerator = KeyGenerator.getInstance(ALGORITHM);
@@ -255,17 +262,13 @@ public class AesUtil {
      * 转换密钥
      * </p>
      *
-     * @param key
-     * @return
-     * @throws Exception
+     * @param key 加密key
+     * @return String 密钥
+     * @throws Exception 异常
      */
     private static Key toKey(byte[] key) throws Exception {
         SecretKey secretKey = new SecretKeySpec(key, ALGORITHM);
         return secretKey;
-    }
-
-    private AesUtil() {
-        throw new IllegalStateException("Utility class");
     }
 
 }

@@ -3,17 +3,38 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
 
     <modelVersion>4.0.0</modelVersion>
-    <!-- <groupId>net.risesoft</groupId> -->
-    <artifactId>risenet-y9boot-api-feignclient-log</artifactId>
-    <version>v9.7.0-SNAPSHOT</version>
-    <packaging>jar</packaging>
-
     <parent>
         <groupId>net.risesoft</groupId>
         <artifactId>y9-module-log</artifactId>
         <version>v9.7.0-SNAPSHOT</version>
         <relativePath>../pom.xml</relativePath>
     </parent>
+    <artifactId>risenet-y9boot-api-feignclient-log</artifactId>
+    <packaging>jar</packaging>
+    <name>risenet-y9boot-api-feignclient-log</name>
+    <description>RiseSoft/Digital Infrastructure webapp parent</description>
+
+    <scm>
+        <url>${gitee.url}</url>
+        <connection>${gitee.connection}</connection>
+        <developerConnection>${gitee.developerConnection}</developerConnection>
+    </scm>
+    <developers>
+        <developer>
+            <name>dingzhaojun</name>
+            <email>dingzhaojun@risesoft.net</email>
+            <organization>risesoft</organization>
+            <organizationUrl>https://www.risesoft.net</organizationUrl>
+        </developer>
+
+        <developer>
+            <name>shidaobang</name>
+            <email>shidaobang@risesoft.net</email>
+            <organization>risesoft</organization>
+            <organizationUrl>https://www.risesoft.net</organizationUrl>
+        </developer>
+    </developers>
+
 
     <distributionManagement>
         <repository>
@@ -65,5 +86,4 @@
             </plugin>
         </plugins>
     </build>
-
 </project>

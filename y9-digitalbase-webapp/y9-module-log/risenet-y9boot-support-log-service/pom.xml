@@ -2,17 +2,46 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
 
     <modelVersion>4.0.0</modelVersion>
-    <!-- <groupId>net.risesoft</groupId> -->
-    <artifactId>risenet-y9boot-support-log-service</artifactId>
-    <version>v9.7.0-SNAPSHOT</version>
-    <packaging>jar</packaging>
-
     <parent>
         <groupId>net.risesoft</groupId>
         <artifactId>y9-module-log</artifactId>
         <version>v9.7.0-SNAPSHOT</version>
         <relativePath>../pom.xml</relativePath>
     </parent>
+    <artifactId>risenet-y9boot-support-log-service</artifactId>
+    <packaging>jar</packaging>
+
+    <name>risenet-y9boot-support-log-service</name>
+    <description>RiseSoft/Digital Infrastructure webapp parent</description>
+
+    <developers>
+        <developer>
+            <name>dingzhaojun</name>
+            <email>dingzhaojun@risesoft.net</email>
+            <organization>risesoft</organization>
+            <organizationUrl>https://www.risesoft.net</organizationUrl>
+        </developer>
+
+        <developer>
+            <name>shidaobang</name>
+            <email>shidaobang@risesoft.net</email>
+            <organization>risesoft</organization>
+            <organizationUrl>https://www.risesoft.net</organizationUrl>
+        </developer>
+
+        <developer>
+            <name>mengjuhua</name>
+            <email>mengjuhua@risesoft.net</email>
+            <organization>risesoft</organization>
+            <organizationUrl>https://www.risesoft.net</organizationUrl>
+        </developer>
+    </developers>
+
+    <scm>
+        <url>${gitee.url}</url>
+        <connection>${gitee.connection}</connection>
+        <developerConnection>${gitee.developerConnection}</developerConnection>
+    </scm>
 
     <properties>
         <maven.deploy.skip>true</maven.deploy.skip>
@@ -60,6 +89,14 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-source-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <id>attach-sources</id>
+                        <goals>
+                            <goal>jar-no-fork</goal>
+                        </goals>
+                    </execution>
+                </executions>
             </plugin>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
