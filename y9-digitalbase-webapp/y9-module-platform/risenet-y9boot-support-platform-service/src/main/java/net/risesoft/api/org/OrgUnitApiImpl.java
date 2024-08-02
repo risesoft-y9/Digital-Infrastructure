@@ -94,6 +94,22 @@ public class OrgUnitApiImpl implements OrgUnitApi {
     }
 
     /**
+     * 根据id获得组织节点对象（人员或岗位）
+     *
+     * @param tenantId 租户id
+     * @param orgUnitId 组织节点唯一标识
+     * @return {@code Y9Result<OrgUnit>} 通用请求返回对象 - data 是组织节点对象（人员或岗位）
+     * @since 9.6.0
+     */
+    @Override
+    public Y9Result<OrgUnit> getOrgUnitPersonOrPosition(@RequestParam("tenantId") @NotBlank String tenantId,
+        @RequestParam("orgUnitId") @NotBlank String orgUnitId) {
+        Y9LoginUserHolder.setTenantId(tenantId);
+        Y9OrgBase y9OrgBase = compositeOrgBaseService.findOrgUnitPersonOrPosition(orgUnitId).orElse(null);
+        return Y9Result.success(ModelConvertUtil.orgBaseToOrgUnit(y9OrgBase));
+    }
+
+    /**
      * 获取组织节点所在的组织机构
      *
      * @param tenantId 租户id

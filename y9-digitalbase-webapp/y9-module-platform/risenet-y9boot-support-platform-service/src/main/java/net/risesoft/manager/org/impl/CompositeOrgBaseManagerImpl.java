@@ -97,6 +97,40 @@ public class CompositeOrgBaseManagerImpl implements CompositeOrgBaseManager {
         return sb.toString();
     }
 
+    private void buildOrderedPath(StringBuilder sb, Y9OrgBase y9OrgBase) {
+        if (OrgTypeEnum.PERSON.equals(y9OrgBase.getOrgType())) {
+            // 遍历开始时，一定是person，尾部的逗号不用加
+            sb.insert(0, String.format("%05d", y9OrgBase.getTabIndex()));
+
+            Y9Person person = (Y9Person)y9OrgBase;
+            Y9OrgBase parent = this.getOrgUnitAsParent(person.getParentId());
+            buildOrderedPath(sb, parent);
+        } else if (OrgTypeEnum.POSITION.equals(y9OrgBase.getOrgType())) {
+            // 遍历开始时，一定是manager，尾部的逗号不用加
+            sb.insert(0, String.format("%05d", y9OrgBase.getTabIndex()));
+
+            Y9Position y9Position = (Y9Position)y9OrgBase;
+            Y9OrgBase parent = this.getOrgUnitAsParent(y9Position.getParentId());
+            buildOrderedPath(sb, parent);
+        } else if (OrgTypeEnum.MANAGER.equals(y9OrgBase.getOrgType())) {
+            // 遍历开始时，一定是manager，尾部的逗号不用加
+            sb.insert(0, String.format("%05d", y9OrgBase.getTabIndex()));
+
+            Y9Manager y9Manager = (Y9Manager)y9OrgBase;
+            Y9OrgBase parent = this.getOrgUnitAsParent(y9Manager.getParentId());
+            buildOrderedPath(sb, parent);
+        } else if (OrgTypeEnum.DEPARTMENT.equals(y9OrgBase.getOrgType())) {
+            sb.insert(0, String.format("%05d", y9OrgBase.getTabIndex()) + ",");
+
+            Y9Department dept = (Y9Department)y9OrgBase;
+            Y9OrgBase parent = this.getOrgUnitAsParent(dept.getParentId());
+            buildOrderedPath(sb, parent);
+        } else if (OrgTypeEnum.ORGANIZATION.equals(y9OrgBase.getOrgType())) {
+            // 遍历结束时，一定是org
+            sb.insert(0, String.format("%05d", y9OrgBase.getTabIndex()) + ",");
+        }
+    }
+
     @Override
     public void checkAllDescendantsDisabled(String orgUnitId) {
         Y9OrgBase orgUnit = getOrgUnit(orgUnitId);
@@ -117,6 +151,52 @@ public class CompositeOrgBaseManagerImpl implements CompositeOrgBaseManager {
         if (y9DepartmentRepository.countByDisabledAndGuidPathContaining(Boolean.FALSE, guidPathPrefix) > 0) {
             throw Y9ExceptionUtil.businessException(OrgUnitErrorCodeEnum.NOT_ALL_DEPARTMENTS_DISABLED);
         }
+    }
+
+    private void fillPersonsRecursivelyToLeaf(String parentId, List<Y9Person> personList) {
+        personList.addAll(findPersonByParentId(parentId));
+
+        List<Y9Department> deptList = findDepartmentByParentId(parentId);
+        for (Y9Department dept : deptList) {
+            fillPersonsRecursivelyToLeaf(dept.getId(), personList);
+        }
+    }
+
+    private void fillPersonsRecursivelyToLeaf(String parentId, List<Y9Person> personList, Boolean disabled) {
+        if (disabled == null) {
+            personList.addAll(findPersonByParentId(parentId));
+        } else {
+            personList.addAll(findPersonByParentIdAndDisabled(parentId, disabled));
+        }
+
+        List<Y9Department> deptList = findDepartmentByParentId(parentId);
+        for (Y9Department dept : deptList) {
+            fillPersonsRecursivelyToLeaf(dept.getId(), personList, disabled);
+        }
+    }
+
+    private void fillPositionsRecursivelyToLeaf(String parentId, List<Y9Position> positionList) {
+        positionList.addAll(findPositionByParentId(parentId));
+
+        List<Y9Department> y9DepartmentList = findDepartmentByParentId(parentId);
+        for (Y9Department y9Department : y9DepartmentList) {
+            fillPositionsRecursivelyToLeaf(y9Department.getId(), positionList);
+        }
+    }
+
+    @Cacheable(cacheNames = CacheNameConsts.ORG_DEPARTMENT, key = "#id", condition = "#id!=null",
+        unless = "#result==null")
+    public Y9Department findDepartmentById(String id) {
+        return y9DepartmentRepository.findById(id).orElse(null);
+    }
+
+    private List<Y9Department> findDepartmentByParentId(String parentId) {
+        return y9DepartmentRepository.findByParentIdOrderByTabIndexAsc(parentId);
+    }
+
+    @Cacheable(cacheNames = CacheNameConsts.ORG_GROUP, key = "#id", condition = "#id!=null", unless = "#result==null")
+    public Y9Group findGroupById(String id) {
+        return y9GroupRepository.findById(id).orElse(null);
     }
 
     @Override
@@ -200,6 +280,51 @@ public class CompositeOrgBaseManagerImpl implements CompositeOrgBaseManager {
     }
 
     @Override
+    public Optional<Y9OrgBase> findOrgUnitPersonOrPosition(String orgUnitId) {
+        if (StringUtils.isBlank(orgUnitId)) {
+            return Optional.empty();
+        }
+        Y9OrgBase y9OrgBase = this.findPositionById(orgUnitId);
+        if (y9OrgBase != null) {
+            return Optional.of(y9OrgBase);
+        }
+        y9OrgBase = this.findPersonById(orgUnitId);
+        if (y9OrgBase != null) {
+            return Optional.of(y9OrgBase);
+        }
+        return Optional.empty();
+    }
+
+    @Cacheable(cacheNames = CacheNameConsts.ORG_ORGANIZATION, key = "#id", condition = "#id!=null",
+        unless = "#result==null")
+    public Y9Organization findOrganizationById(String id) {
+        return y9OrganizationRepository.findById(id).orElse(null);
+    }
+
+    @Cacheable(cacheNames = CacheNameConsts.ORG_PERSON, key = "#id", condition = "#id!=null", unless = "#result==null")
+    public Y9Person findPersonById(String id) {
+        return y9PersonRepository.findById(id).orElse(null);
+    }
+
+    private List<Y9Person> findPersonByParentId(String parentId) {
+        return y9PersonRepository.findByParentIdOrderByTabIndex(parentId);
+    }
+
+    private List<Y9Person> findPersonByParentIdAndDisabled(String parentId, boolean disabled) {
+        return y9PersonRepository.findByParentIdAndDisabledOrderByTabIndex(parentId, disabled);
+    }
+
+    @Cacheable(cacheNames = CacheNameConsts.ORG_POSITION, key = "#id", condition = "#id!=null",
+        unless = "#result==null")
+    public Y9Position findPositionById(String id) {
+        return y9PositionRepository.findById(id).orElse(null);
+    }
+
+    private List<Y9Position> findPositionByParentId(String parentId) {
+        return y9PositionRepository.findByParentIdOrderByTabIndexAsc(parentId);
+    }
+
+    @Override
     public Integer getNextSubTabIndex(String parentId) {
         Integer maxTabIndex = -1;
 
@@ -269,115 +394,6 @@ public class CompositeOrgBaseManagerImpl implements CompositeOrgBaseManager {
         List<Y9Position> positionList = new ArrayList<>();
         fillPositionsRecursivelyToLeaf(parentId, positionList);
         return positionList;
-    }
-
-    private void buildOrderedPath(StringBuilder sb, Y9OrgBase y9OrgBase) {
-        if (OrgTypeEnum.PERSON.equals(y9OrgBase.getOrgType())) {
-            // 遍历开始时，一定是person，尾部的逗号不用加
-            sb.insert(0, String.format("%05d", y9OrgBase.getTabIndex()));
-
-            Y9Person person = (Y9Person)y9OrgBase;
-            Y9OrgBase parent = this.getOrgUnitAsParent(person.getParentId());
-            buildOrderedPath(sb, parent);
-        } else if (OrgTypeEnum.POSITION.equals(y9OrgBase.getOrgType())) {
-            // 遍历开始时，一定是manager，尾部的逗号不用加
-            sb.insert(0, String.format("%05d", y9OrgBase.getTabIndex()));
-
-            Y9Position y9Position = (Y9Position)y9OrgBase;
-            Y9OrgBase parent = this.getOrgUnitAsParent(y9Position.getParentId());
-            buildOrderedPath(sb, parent);
-        } else if (OrgTypeEnum.MANAGER.equals(y9OrgBase.getOrgType())) {
-            // 遍历开始时，一定是manager，尾部的逗号不用加
-            sb.insert(0, String.format("%05d", y9OrgBase.getTabIndex()));
-
-            Y9Manager y9Manager = (Y9Manager)y9OrgBase;
-            Y9OrgBase parent = this.getOrgUnitAsParent(y9Manager.getParentId());
-            buildOrderedPath(sb, parent);
-        } else if (OrgTypeEnum.DEPARTMENT.equals(y9OrgBase.getOrgType())) {
-            sb.insert(0, String.format("%05d", y9OrgBase.getTabIndex()) + ",");
-
-            Y9Department dept = (Y9Department)y9OrgBase;
-            Y9OrgBase parent = this.getOrgUnitAsParent(dept.getParentId());
-            buildOrderedPath(sb, parent);
-        } else if (OrgTypeEnum.ORGANIZATION.equals(y9OrgBase.getOrgType())) {
-            // 遍历结束时，一定是org
-            sb.insert(0, String.format("%05d", y9OrgBase.getTabIndex()) + ",");
-        }
-    }
-
-    @Cacheable(cacheNames = CacheNameConsts.ORG_DEPARTMENT, key = "#id", condition = "#id!=null",
-        unless = "#result==null")
-    public Y9Department findDepartmentById(String id) {
-        return y9DepartmentRepository.findById(id).orElse(null);
-    }
-
-    private List<Y9Department> findDepartmentByParentId(String parentId) {
-        return y9DepartmentRepository.findByParentIdOrderByTabIndexAsc(parentId);
-    }
-
-    @Cacheable(cacheNames = CacheNameConsts.ORG_GROUP, key = "#id", condition = "#id!=null", unless = "#result==null")
-    public Y9Group findGroupById(String id) {
-        return y9GroupRepository.findById(id).orElse(null);
-    }
-
-    @Cacheable(cacheNames = CacheNameConsts.ORG_ORGANIZATION, key = "#id", condition = "#id!=null",
-        unless = "#result==null")
-    public Y9Organization findOrganizationById(String id) {
-        return y9OrganizationRepository.findById(id).orElse(null);
-    }
-
-    @Cacheable(cacheNames = CacheNameConsts.ORG_PERSON, key = "#id", condition = "#id!=null", unless = "#result==null")
-    public Y9Person findPersonById(String id) {
-        return y9PersonRepository.findById(id).orElse(null);
-    }
-
-    private List<Y9Person> findPersonByParentId(String parentId) {
-        return y9PersonRepository.findByParentIdOrderByTabIndex(parentId);
-    }
-
-    private List<Y9Person> findPersonByParentIdAndDisabled(String parentId, boolean disabled) {
-        return y9PersonRepository.findByParentIdAndDisabledOrderByTabIndex(parentId, disabled);
-    }
-
-    @Cacheable(cacheNames = CacheNameConsts.ORG_POSITION, key = "#id", condition = "#id!=null",
-        unless = "#result==null")
-    public Y9Position findPositionById(String id) {
-        return y9PositionRepository.findById(id).orElse(null);
-    }
-
-    private List<Y9Position> findPositionByParentId(String parentId) {
-        return y9PositionRepository.findByParentIdOrderByTabIndexAsc(parentId);
-    }
-
-    private void fillPositionsRecursivelyToLeaf(String parentId, List<Y9Position> positionList) {
-        positionList.addAll(findPositionByParentId(parentId));
-
-        List<Y9Department> y9DepartmentList = findDepartmentByParentId(parentId);
-        for (Y9Department y9Department : y9DepartmentList) {
-            fillPositionsRecursivelyToLeaf(y9Department.getId(), positionList);
-        }
-    }
-
-    private void fillPersonsRecursivelyToLeaf(String parentId, List<Y9Person> personList) {
-        personList.addAll(findPersonByParentId(parentId));
-
-        List<Y9Department> deptList = findDepartmentByParentId(parentId);
-        for (Y9Department dept : deptList) {
-            fillPersonsRecursivelyToLeaf(dept.getId(), personList);
-        }
-    }
-
-    private void fillPersonsRecursivelyToLeaf(String parentId, List<Y9Person> personList, Boolean disabled) {
-        if (disabled == null) {
-            personList.addAll(findPersonByParentId(parentId));
-        } else {
-            personList.addAll(findPersonByParentIdAndDisabled(parentId, disabled));
-        }
-
-        List<Y9Department> deptList = findDepartmentByParentId(parentId);
-        for (Y9Department dept : deptList) {
-            fillPersonsRecursivelyToLeaf(dept.getId(), personList, disabled);
-        }
     }
 
 }
