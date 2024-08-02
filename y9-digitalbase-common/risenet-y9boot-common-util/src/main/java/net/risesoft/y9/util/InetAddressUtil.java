@@ -35,18 +35,12 @@ public class InetAddressUtil {
     public static final String LOCALHOST = "127.0.0.1";
 
     public static final String ANYHOST = "0.0.0.0";
-
-    private static volatile InetAddress LOCAL_ADDRESS = null;
-
     private static final Pattern LOCAL_IP_PATTERN = Pattern.compile("127(\\.\\d{1,3}){3}$");
-
     private static final Pattern ADDRESS_PATTERN = Pattern.compile("^\\d{1,3}(\\.\\d{1,3}){3}\\:\\d{1,5}$");
-
     private static final Pattern IP_PATTERN = Pattern.compile("\\d{1,3}(\\.\\d{1,3}){3,5}$");
-
     public static Properties properties = new Properties();
-
     public static String ips = null;
+    private static volatile InetAddress LOCAL_ADDRESS = null;
 
     static {
         Environment environment = Y9Context.getEnvironment();
@@ -72,7 +66,7 @@ public class InetAddressUtil {
 
         if (properties.isEmpty()) {
             try (InputStream inputStream2 =
-                InetAddressUtil.class.getClassLoader().getResourceAsStream("properties/application.properties");) {
+                InetAddressUtil.class.getClassLoader().getResourceAsStream("properties/application.properties")) {
                 properties.load(inputStream2);
             } catch (IOException ignored) {
             }
@@ -103,18 +97,19 @@ public class InetAddressUtil {
     /**
      * {@link #getLocalAddress(Map)}
      * 
-     * @return
+     * @return InetAddress IP地址
      */
     public static InetAddress getLocalAddress() {
         return getLocalAddress(null);
     }
 
     /**
-     * <pre>
+     * <p>
      * 查找策略：首先看是否已经查到ip --> hostname对应的ip --> 根据连接目标端口得到的本地ip --> 轮询网卡
-     * </pre>
+     * </p>
      * 
-     * @return loca ip
+     * @param destHostPorts host端口信息
+     * @return InetAddress locaip
      */
     public static InetAddress getLocalAddress(Map<String, Integer> destHostPorts) {
         if (LOCAL_ADDRESS != null) {
@@ -211,7 +206,7 @@ public class InetAddressUtil {
         String ipAddress = address.getHostAddress();
         boolean valid = ipAddress != null && !ANYHOST.equals(ipAddress) && !LOCALHOST.equals(ipAddress)
             && IP_PATTERN.matcher(ipAddress).matches();
-        if (valid == false) {
+        if (!valid) {
             return false;
         }
 

@@ -1,23 +1,52 @@
-<project xmlns="http://maven.apache.org/POM/4.0.0"
-         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+<project xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xmlns="http://maven.apache.org/POM/4.0.0"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
 
     <modelVersion>4.0.0</modelVersion>
-    <groupId>net.risesoft</groupId>
-    <artifactId>y9-module-sso</artifactId>
-    <packaging>pom</packaging>
-    <version>v9.6.7-SNAPSHOT</version>
-
     <parent>
         <groupId>net.risesoft</groupId>
         <artifactId>y9-digitalbase-webapp</artifactId>
         <version>v9.6.7-SNAPSHOT</version>
         <relativePath>../pom.xml</relativePath>
     </parent>
+    <groupId>net.risesoft</groupId>
+    <artifactId>y9-module-sso</artifactId>
+    <packaging>pom</packaging>
 
     <modules>
         <module>risenet-y9boot-webapp-sso-server-jpa</module>
         <module>risenet-y9boot-webapp-sso-server</module>
     </modules>
 
+    <profiles>
+        <profile>
+            <id>sign-publish</id>
+            <build>
+                <plugins>
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-javadoc-plugin</artifactId>
+                        <configuration>
+                            <skip>true</skip>
+                        </configuration>
+                    </plugin>
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-gpg-plugin</artifactId>
+                        <configuration>
+                            <skip>true</skip>
+                        </configuration>
+                    </plugin>
+                    <plugin>
+                        <groupId>org.sonatype.central</groupId>
+                        <artifactId>central-publishing-maven-plugin</artifactId>
+                        <extensions>true</extensions>
+                        <configuration>
+                            <skipPublishing>true</skipPublishing>
+                        </configuration>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
+    </profiles>
 </project>

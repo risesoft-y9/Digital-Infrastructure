@@ -30,7 +30,7 @@ public class Y9MessageCommon implements Serializable {
     /**
      * 事件内容 <br>
      * 
-     * @JsonTypeInfo 解决 jackson 序列化丢失类型
+     * {@link JsonTypeInfo} 解决 jackson 序列化丢失类型
      */
     @JsonTypeInfo(use = JsonTypeInfo.Id.CLASS)
     private Serializable eventObject;

@@ -21,10 +21,10 @@ public class Y9Assert {
     /**
      * 当前值需小于或等于最大值 反之则抛出异常 {@link Y9BusinessException}
      * 
-     * @param currentValue
-     * @param maxValue
-     * @param errorCode
-     * @param arguments
+     * @param currentValue 当前值
+     * @param maxValue 最大值
+     * @param errorCode 错误代码
+     * @param arguments 参数
      */
     public static void lessThanOrEqualTo(int currentValue, int maxValue, ErrorCode errorCode, Object... arguments) {
         if (currentValue > maxValue) {
@@ -35,9 +35,9 @@ public class Y9Assert {
     /**
      * 当 object 为空时抛出异常 {@link Y9NotFoundException}
      * 
-     * @param object
-     * @param errorCode
-     * @param arguments
+     * @param object 判断对象
+     * @param errorCode 错误代码
+     * @param arguments 参数
      */
     public static void notNull(Object object, ErrorCode errorCode, Object... arguments) {
         if (object == null) {
@@ -48,9 +48,9 @@ public class Y9Assert {
     /**
      * 当 object 不为空时抛出异常 {@link Y9BusinessException}
      *
-     * @param object
-     * @param errorCode
-     * @param arguments
+     * @param object 判断对象
+     * @param errorCode 错误代码
+     * @param arguments 参数
      */
     public static void isNull(Object object, ErrorCode errorCode, Object... arguments) {
         if (object != null) {

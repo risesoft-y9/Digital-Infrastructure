@@ -42,8 +42,8 @@ public class DbMetaDataUtil {
      *
      * @param dataSource 数据源
      * @param sqlList sql语句列表
-     * @return
-     * @throws SQLException
+     * @return int[] 执行
+     * @throws SQLException sql异常信息
      */
     public static int[] batchExecuteDdl(DataSource dataSource, List<String> sqlList) throws SQLException {
         java.sql.Statement stmt = null;
@@ -82,8 +82,8 @@ public class DbMetaDataUtil {
      *
      * @param dataSource 数据源
      * @param sqlList sql语句列表
-     * @return
-     * @throws SQLException
+     * @return int[] 执行
+     * @throws SQLException sql异常信息
      */
     public static int[] batchExecuteDdl4Kingbase(DataSource dataSource, List<String> sqlList) throws SQLException {
         java.sql.Statement stmt = null;
@@ -109,8 +109,8 @@ public class DbMetaDataUtil {
      *
      * @param dataSource 数据源
      * @param tableName 表名称
-     * @return
-     * @throws Exception
+     * @return boolean 表是否存在
+     * @throws Exception 异常信息
      */
     public static boolean checkTableExist(DataSource dataSource, String tableName) throws Exception {
         String databaseName = null;
@@ -153,10 +153,10 @@ public class DbMetaDataUtil {
     /**
      * 执行单条SQL语句
      *
-     * @param dataSource
+     * @param dataSource 数据源
      * @param sql any SQL statement
-     * @return
-     * @throws SQLException
+     * @return Boolean 判断结果
+     * @throws SQLException sql异常信息
      */
     public static Boolean executeDdl(DataSource dataSource, String sql) throws SQLException {
         try (Connection connection = dataSource.getConnection(); Statement stmt = connection.createStatement()) {
@@ -170,14 +170,14 @@ public class DbMetaDataUtil {
     /**
      * 获得表的所有列的属性
      *
-     * @param dialect
-     * @param dbmd
-     * @param databaseName
-     * @param tableName
-     * @param tableSchema
-     * @param columnNamePatten
-     * @return
-     * @throws SQLException
+     * @param dialect 方言
+     * @param dbmd DatabaseMetaData实例
+     * @param databaseName 数据源名称
+     * @param tableName 表名称
+     * @param tableSchema 数据库的名称
+     * @param columnNamePatten 列名模式
+     * @return ResultSet 结果集
+     * @throws SQLException sql异常信息
      */
     private static ResultSet getColumns(String dialect, DatabaseMetaData dbmd, String databaseName, String tableName,
         String tableSchema, String columnNamePatten) throws SQLException {
@@ -206,6 +206,12 @@ public class DbMetaDataUtil {
         return rs;
     }
 
+    /**
+     * 获取数据库方言
+     * 
+     * @param dataSource 数据源
+     * @return String 数据库方言
+     */
     public static String getDatabaseDialectName(DataSource dataSource) {
         String databaseName = "";
         try {
@@ -228,6 +234,12 @@ public class DbMetaDataUtil {
         return "";
     }
 
+    /**
+     * 获取数据库方言
+     * 
+     * @param connection 数据库的连接
+     * @return String 数据库方言
+     */
     public static String getDatabaseDialectNameByConnection(Connection connection) {
         String databaseName = "";
         try {
@@ -304,13 +316,13 @@ public class DbMetaDataUtil {
     /**
      * 获取主键
      *
-     * @param dialect
-     * @param dbmd
-     * @param databaseName
-     * @param tableName
-     * @param tableSchema
-     * @return
-     * @throws SQLException
+     * @param dialect 方言
+     * @param dbmd DatabaseMetaData实例
+     * @param databaseName 数据源名称
+     * @param tableName 表名称
+     * @param tableSchema 数据库的名称
+     * @return ResultSet 结果集
+     * @throws SQLException sql异常信息
      */
     private static ResultSet getPrimaryKeys(String dialect, DatabaseMetaData dbmd, String databaseName,
         String tableName, String tableSchema) throws SQLException {
@@ -616,10 +628,17 @@ public class DbMetaDataUtil {
         }
     }
 
-    /***********
+    /**
+     * 获全部表的树
+     *
      * 供应商 Catalog支持 Schema支持 Oracle 不支持 Oracle User ID MySQL 不支持 数据库名 MSSQL 数据库名 对象属主名 Sybase 数据库名 数据库属主名 Informix 不支持
      * 不需要 PointBase 不支持 数据库名
-     ***********/
+     * 
+     * @param dataSource 数据源
+     * @param tableNamePattern 表名
+     * @return String 表树JSON信息
+     * @throws Exception 异常
+     */
     public static String listAllTablesTree(DataSource dataSource, String tableNamePattern) throws Exception {
         List<Map<String, Object>> list = new ArrayList<>();
         ResultSet rs = null;

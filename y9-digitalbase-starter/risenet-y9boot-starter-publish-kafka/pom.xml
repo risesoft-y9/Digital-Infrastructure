@@ -1,17 +1,47 @@
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+<project xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://maven.apache.org/POM/4.0.0"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
     <modelVersion>4.0.0</modelVersion>
-    <!-- <groupId>net.risesoft</groupId> -->
-    <artifactId>risenet-y9boot-starter-publish-kafka</artifactId>
-    <version>v9.6.7-SNAPSHOT</version>
-    <packaging>jar</packaging>
-
     <parent>
         <groupId>net.risesoft</groupId>
-        <artifactId>y9-digitalbase</artifactId>
+        <artifactId>y9-digitalbase-parent</artifactId>
         <version>v9.6.7-SNAPSHOT</version>
-        <relativePath>../../pom.xml</relativePath>
+        <relativePath>../../y9-digitalbase-parent/pom.xml</relativePath>
     </parent>
+    <artifactId>risenet-y9boot-starter-publish-kafka</artifactId>
+    <packaging>jar</packaging>
+    <name>risenet-y9boot-starter-publish-kafka</name>
+    <description>RiseSoft/Digital Infrastructure publish starter</description>
+    <url>${gitee.url}</url>
+
+    <licenses>
+        <license>
+            <name>GNU General Public License (GPL) version 3.0</name>
+            <url>https://www.gnu.org/licenses/gpl-3.0.en.html</url>
+            <distribution>repo</distribution>
+        </license>
+    </licenses>
+
+    <developers>
+        <developer>
+            <name>dingzhaojun</name>
+            <email>dingzhaojun@risesoft.net</email>
+            <organization>risesoft</organization>
+            <organizationUrl>https://www.risesoft.net</organizationUrl>
+        </developer>
+
+        <developer>
+            <name>shidaobang</name>
+            <email>shidaobang@risesoft.net</email>
+            <organization>risesoft</organization>
+            <organizationUrl>https://www.risesoft.net</organizationUrl>
+        </developer>
+    </developers>
+
+    <scm>
+        <url>${gitee.url}</url>
+        <connection>${gitee.connection}</connection>
+        <developerConnection>${gitee.developerConnection}</developerConnection>
+    </scm>
 
     <distributionManagement>
         <repository>
@@ -84,8 +114,16 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-source-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <id>attach-sources</id>
+                        <goals>
+                            <goal>jar-no-fork</goal>
+                        </goals>
+                    </execution>
+                </executions>
             </plugin>
         </plugins>
     </build>
-
+ 
 </project>

@@ -49,11 +49,11 @@ public class Y9FileUtil {
     /**
      * 写出XML文件在本地，自定义存储路径
      * 
-     * @param uploadDir
-     * @param list
-     * @param names
-     * @param fileType
-     * @return
+     * @param uploadDir 上传路径
+     * @param list 值列表
+     * @param names 名称列表
+     * @param fileType 文件类型
+     * @return String 存储路径
      */
     public static String exportFile(String uploadDir, List<Map<String, Object>> list, List<String> names,
         String fileType) {
@@ -66,7 +66,7 @@ public class Y9FileUtil {
         File file = new File(filePath);
 
         try (FileWriter fw = new FileWriter(file); BufferedWriter bw = new BufferedWriter(fw)) {
-            StringBuffer str = new StringBuffer("");
+            StringBuffer str = new StringBuffer();
             str.append("<?xml version=\"1.0\" encoding=\"utf-8\"?>\n");
             str.append("<root>\n");
             for (int i = 0; i < list.size(); i++) {
@@ -97,8 +97,8 @@ public class Y9FileUtil {
     /**
      * 读取文件内容转为String
      * 
-     * @param filePath
-     * @return
+     * @param filePath 文件路径
+     * @return String 文件内容
      */
     public static String getContent(String filePath) {
         File file = new File(filePath);
@@ -110,7 +110,7 @@ public class Y9FileUtil {
 
         String content = "";
         try (BufferedReader reader =
-            new BufferedReader(new InputStreamReader(new FileInputStream(file), StandardCharsets.UTF_8));) {
+            new BufferedReader(new InputStreamReader(new FileInputStream(file), StandardCharsets.UTF_8))) {
             String line;
             while ((line = reader.readLine()) != null) {
                 content += line + "\n";
@@ -124,8 +124,8 @@ public class Y9FileUtil {
     /**
      * 获取自定义个数的随机数字组成的字符串
      * 
-     * @param length
-     * @return
+     * @param length 长度
+     * @return String 随机数字组成的字符串
      */
     public static String getRandomNum(int length) {
         Random r = new Random();
@@ -137,9 +137,11 @@ public class Y9FileUtil {
     }
 
     /**
+     * <p>
      * Iterates over a base name and returns the first non-existent file.<br />
      * This method extracts a file's base name, iterates over it until the first non-existent appearance with
      * <code>basename(n).ext</code>. Where n is a positive integer starting from one.
+     * </p>
      * 
      * @param file base file
      * @return first non-existent file
@@ -163,23 +165,20 @@ public class Y9FileUtil {
     /**
      * 根据传进来的文件路径，判断文件是否存在
      * 
-     * @param filePath
-     * @return
+     * @param filePath 文件路径
+     * @return boolean 判断结果
      */
     public static boolean isExists(String filePath) {
         File file = new File(filePath);
-        if (file.exists()) {
-            return true;
-        }
-        return false;
+        return file.exists();
     }
 
     /**
      * 读取 SQL 文件，获取 SQL 语句
      *
      * @param sqlFile SQL 脚本文件
-     * @return List<sql> 返回所有 SQL 语句的 List
-     * @throws Exception
+     * @return {@code List<sql>} 返回所有 SQL 语句的 List
+     * @throws Exception 异常
      */
     public static List<String> loadSql(String sqlFile) throws Exception {
         List<String> sqlList = new ArrayList<>();
@@ -198,9 +197,9 @@ public class Y9FileUtil {
     /**
      * 导入xml文件
      * 
-     * @param file
-     * @param proNames
-     * @param tagName
+     * @param file 文件
+     * @param proNames 属性数组
+     * @param tagName 标记名称
      * @return
      */
     public static List<Map<String, Object>> readXml(File file, String[] proNames, String tagName) {
@@ -236,10 +235,10 @@ public class Y9FileUtil {
     /**
      * 写文件到本地(自定义存储路径、自动生成文件名)
      * 
-     * @param in
-     * @param fileType
-     * @param filePath
-     * @return
+     * @param in 输入流
+     * @param fileType 文件类型
+     * @param filePath 文件路径
+     * @return File 文件
      */
     public static File writeFile(InputStream in, String fileType, String filePath) {
         File dir = new File(filePath);
@@ -266,10 +265,9 @@ public class Y9FileUtil {
     /**
      * 写文件到本地(自定义存储路径、文件名)
      *
-     * @param in
-     * @param fileName
-     * @param filePath
-     * @throws java.io.IOException
+     * @param in 输入流
+     * @param fileName 文件名称
+     * @param filePath 文件路径
      */
     public static File writeFile2(InputStream in, String fileName, String filePath) {
         File dir = new File(filePath);
@@ -278,7 +276,7 @@ public class Y9FileUtil {
         }
         String path = filePath + File.separator + fileName;
         File saveFile = new File(path);
-        try (FileOutputStream fs = new FileOutputStream(saveFile);) {
+        try (FileOutputStream fs = new FileOutputStream(saveFile)) {
             byte[] buffer = new byte[1024 * 1024];
             int byteread = 0;
             while ((byteread = in.read(buffer)) != -1) {
@@ -295,7 +293,8 @@ public class Y9FileUtil {
     /**
      * 根据传入字符串内容写入到log格式数据文件中
      * 
-     * @param message
+     * @param prefix 文件名称
+     * @param message 字符串内容
      */
     public static void writerLogByStr(String prefix, String message) {
         String fileName = Y9Context.getRealPath("/file/temp/") + prefix + ".log";
@@ -308,12 +307,18 @@ public class Y9FileUtil {
         }
     }
 
-    // 导出xml文件
+    /**
+     * 导出xml文件
+     * 
+     * @param fileName 文件名称
+     * @param list 对象列表
+     * @param names 名称列表
+     */
     public static void writerXml(String fileName, List<Map<String, Object>> list, List<String> names) {
 
         try (FileWriter fw = new FileWriter(fileName); // 用来写入字符文件的便捷类
             BufferedWriter bw = new BufferedWriter(fw)) {
-            StringBuffer str = new StringBuffer(""); // 用来存储xml字符串的
+            StringBuffer str = new StringBuffer(); // 用来存储xml字符串的
             str.append("<?xml version=\"1.0\" encoding=\"utf-8\"?>\n");
             str.append("<root>\n");
             for (int i = 0; i < list.size(); i++) {
@@ -343,10 +348,10 @@ public class Y9FileUtil {
     /**
      * 根据传入字符串内容导出XML格式数据文件
      * 
-     * @param uploadDir
-     * @param dataStr
-     * @param fileType
-     * @return
+     * @param uploadDir 上传路径
+     * @param dataStr 字符串内容
+     * @param fileType 文件列表
+     * @return File 文件
      */
     public static File writerXmlByStr(String uploadDir, String dataStr, String fileType) {
         File dir = new File(uploadDir);
@@ -369,8 +374,8 @@ public class Y9FileUtil {
     /**
      * 文件字节数转换为可读性较好的格式（B KB MB GB 保留小数点后两位）
      * 
-     * @param fileSize
-     * @return
+     * @param fileSize 文件字节数
+     * @return String 转换过的文件字节数
      */
     public static String getDisplayFileSize(long fileSize) {
         if (fileSize < 0) {

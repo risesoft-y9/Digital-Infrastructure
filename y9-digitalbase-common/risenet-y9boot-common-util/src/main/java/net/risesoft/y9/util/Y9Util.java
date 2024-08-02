@@ -47,6 +47,8 @@ public class Y9Util {
     /**
      * Returns a String where those characters that QueryParser expects to be escaped are escaped by a preceding
      * <code>\</code>. 拷贝org.apache.lucene.queryparser.classic.QueryParserBase
+     *
+     * @param s 字符串
      */
     public static String escape(String s) {
         StringBuilder sb = new StringBuilder();
@@ -65,6 +67,10 @@ public class Y9Util {
 
     /**
      * 生成自定义的字符串，例如a,b,c 其中str是要生成的字符串 addNew是添加的字符串
+     * 
+     * @param str 字符串
+     * @param addNew 添加的字符串
+     * @return String 自定义的字符串
      */
     public static String genCustomStr(String str, String addNew) {
         if (str == null) {
@@ -81,10 +87,10 @@ public class Y9Util {
     /**
      * 生成自定义的字符串,用指定的分隔符
      *
-     * @param str
-     * @param addNew
-     * @param delimiter
-     * @return
+     * @param str 字符串
+     * @param addNew 添加的字符串
+     * @param delimiter 分隔符
+     * @return String 自定义的字符串
      */
     public static String genCustomStr(String str, String addNew, String delimiter) {
         if (str == null) {
@@ -190,9 +196,9 @@ public class Y9Util {
     /**
      * 发送内容。使用UTF-8编码。
      *
-     * @param response
-     * @param contentType
-     * @param text
+     * @param response 响应信息
+     * @param contentType 内容格式
+     * @param text 发送内容
      */
     public static void render(HttpServletResponse response, String contentType, String text) {
         response.setContentType(contentType);
@@ -292,6 +298,9 @@ public class Y9Util {
 
     /**
      * source是a,b,c，按照,拆分，将每个值放入List中
+     * 
+     * @param source 字符串
+     * @return {@code List<String>} 拆分后的字符列表
      */
     public static List<String> strToList(String source) {
         List<String> resultList = new ArrayList<String>();

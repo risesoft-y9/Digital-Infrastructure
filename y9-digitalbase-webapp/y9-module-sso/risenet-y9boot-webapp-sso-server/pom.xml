@@ -231,7 +231,7 @@
             <groupId>org.apereo.cas</groupId>
             <artifactId>cas-server-support-redis-ticket-registry</artifactId>
         </dependency>
-        
+
         <dependency>
             <groupId>org.apereo.cas</groupId>
             <artifactId>cas-server-support-token-tickets</artifactId>

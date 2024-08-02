@@ -11,12 +11,13 @@ import cn.hutool.core.util.StrUtil;
 public class Y9StringUtil {
 
     /**
-     * 格式化文本, {} 表示占位符 <br/>
+     * 格式化文本, {} 表示占位符
+     *
      * {@link cn.hutool.core.util.StrUtil#format(CharSequence, Object...)}
      * 
      * @param template 模板
      * @param params params 参数
-     * @return {@code String }
+     * @return {@code String } 格式化后的文本
      */
     public static String format(String template, Object... params) {
         return StrUtil.format(template, params);
