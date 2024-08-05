@@ -31,23 +31,20 @@ public class OAuth20DefaultUserProfileViewRenderer implements OAuth20UserProfile
     private final OAuthProperties oauthProperties;
 
     @Override
-    public ResponseEntity render(final Map<String, Object> model,
-                                 final OAuth20AccessToken accessToken,
-                                 final HttpServletResponse response) {
+    public ResponseEntity render(final Map<String, Object> model, final OAuth20AccessToken accessToken,
+        final HttpServletResponse response) {
         val userProfile = getRenderedUserProfile(model, accessToken, response);
         return renderProfileForModel(userProfile, accessToken, response);
     }
 
     protected ResponseEntity renderProfileForModel(final Map<String, Object> userProfile,
-                                                   final OAuth20AccessToken accessToken,
-                                                   final HttpServletResponse response) {
+        final OAuth20AccessToken accessToken, final HttpServletResponse response) {
         val json = OAuth20Utils.toJson(userProfile); // y9 add 转json时对只有单个属性的数组直接解开，为了兼容旧版本
         return new ResponseEntity<>(json, HttpStatus.OK);
     }
 
     protected Map<String, Object> getRenderedUserProfile(final Map<String, Object> model,
-                                                         final OAuth20AccessToken accessToken,
-                                                         final HttpServletResponse response) {
+        final OAuth20AccessToken accessToken, final HttpServletResponse response) {
         val type = determineUserProfileType(accessToken);
         LOGGER.debug("User profile view type for client [{}] is set to [{}]", accessToken.getClientId(), type);
         if (type == OAuthCoreProperties.UserProfileViewTypes.FLAT) {
@@ -57,21 +54,19 @@ public class OAuth20DefaultUserProfileViewRenderer implements OAuth20UserProfile
     }
 
     protected OAuthCoreProperties.UserProfileViewTypes determineUserProfileType(final OAuth20AccessToken accessToken) {
-        val registeredService = OAuth20Utils.getRegisteredOAuthServiceByClientId(servicesManager, accessToken.getClientId());
+        val registeredService =
+            OAuth20Utils.getRegisteredOAuthServiceByClientId(servicesManager, accessToken.getClientId());
         return registeredService != null && registeredService.getUserProfileViewType() != null
-            ? registeredService.getUserProfileViewType()
-            : oauthProperties.getCore().getUserProfileViewType();
+            ? registeredService.getUserProfileViewType() : oauthProperties.getCore().getUserProfileViewType();
     }
 
     protected Map<String, Object> flattenUserProfile(final Map<String, Object> model) {
         val flattened = new LinkedHashMap<String, Object>();
         if (model.containsKey(MODEL_ATTRIBUTE_ATTRIBUTES)) {
-            val attributes = (Map) model.get(MODEL_ATTRIBUTE_ATTRIBUTES);
+            val attributes = (Map)model.get(MODEL_ATTRIBUTE_ATTRIBUTES);
             flattened.putAll(attributes);
         }
-        model.keySet()
-            .stream()
-            .filter(attributeName -> !attributeName.equalsIgnoreCase(MODEL_ATTRIBUTE_ATTRIBUTES))
+        model.keySet().stream().filter(attributeName -> !attributeName.equalsIgnoreCase(MODEL_ATTRIBUTE_ATTRIBUTES))
             .forEach(attributeName -> flattened.put(attributeName, model.get(attributeName)));
         LOGGER.trace("Flattened user profile attributes with the final model as [{}]", model);
         return flattened;

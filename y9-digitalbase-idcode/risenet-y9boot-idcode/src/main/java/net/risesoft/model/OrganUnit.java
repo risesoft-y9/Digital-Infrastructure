@@ -6,6 +6,7 @@ import lombok.Data;
 
 /**
  * 单位基本信息
+ * 
  * @author qinman
  */
 @Data

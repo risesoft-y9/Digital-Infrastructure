@@ -10,7 +10,6 @@ import org.apache.commons.lang3.StringUtils;
 import org.apereo.cas.authentication.credential.RememberMeUsernamePasswordCredential;
 import org.apereo.cas.authentication.principal.PrincipalFactory;
 import org.apereo.cas.authentication.principal.Service;
-import org.apereo.cas.redis.core.CasRedisTemplate;
 import org.apereo.cas.services.ServicesManager;
 import org.apereo.cas.services.Y9User;
 import org.apereo.cas.web.support.WebUtils;
