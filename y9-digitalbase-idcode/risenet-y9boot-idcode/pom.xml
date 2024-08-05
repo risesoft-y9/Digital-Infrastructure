@@ -2,6 +2,12 @@
 <project xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://maven.apache.org/POM/4.0.0"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
+    <parent>
+        <groupId>net.risesoft</groupId>
+        <artifactId>y9-digitalbase-parent</artifactId>
+        <version>v9.7.0-SNAPSHOT</version>
+        <relativePath>../../y9-digitalbase-parent/pom.xml</relativePath>
+    </parent>
     <artifactId>risenet-y9boot-idcode</artifactId>
     <version>v9.7.0-SNAPSHOT</version>
     <packaging>jar</packaging>
@@ -33,12 +39,16 @@
         <developerConnection>https://gitee.com/risesoft-y9/y9-core/tree/main/y9-digitalbase-idcode</developerConnection>
     </scm>
 
-    <parent>
-        <groupId>net.risesoft</groupId>
-        <artifactId>y9-digitalbase-parent</artifactId>
-        <version>v9.7.0-SNAPSHOT</version>
-        <relativePath>../../y9-digitalbase-parent/pom.xml</relativePath>
-    </parent>
+    <distributionManagement>
+        <repository>
+            <id>releases</id>
+            <url>https://svn.youshengyun.com:9900/nexus/repository/maven-releases</url>
+        </repository>
+        <snapshotRepository>
+            <id>snapshots</id>
+            <url>https://svn.youshengyun.com:9900/nexus/repository/maven-snapshots/</url>
+        </snapshotRepository>
+    </distributionManagement>
 
     <properties>
         <java.version>21</java.version>
@@ -85,77 +95,4 @@
             <scope>provided</scope>
         </dependency>
     </dependencies>
-
-    <build>
-        <plugins>
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-javadoc-plugin</artifactId>
-                <configuration>
-                    <additionalOptions>
-                        <additionalOption>-Xdoclint:none</additionalOption>
-                    </additionalOptions>
-                </configuration>
-                <executions>
-                    <execution>
-                        <id>attach-javadocs</id>
-                        <goals>
-                            <goal>jar</goal>
-                        </goals>
-                    </execution>
-                </executions>
-            </plugin>
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-source-plugin</artifactId>
-                <version>3.3.0</version>
-                <executions>
-                    <execution>
-                        <id>attach-sources</id>
-                        <goals>
-                            <goal>jar-no-fork</goal>
-                        </goals>
-                    </execution>
-                </executions>
-            </plugin>
-        </plugins>
-    </build>
-
-    <profiles>
-        <profile>
-            <id>release</id>
-            <build>
-                <plugins>
-                    <plugin>
-                        <groupId>org.apache.maven.plugins</groupId>
-                        <artifactId>maven-gpg-plugin</artifactId>
-                        <version>1.6</version>
-                        <executions>
-                            <execution>
-                                <id>sign-artifacts</id>
-                                <phase>verify</phase>
-                                <goals>
-                                    <goal>sign</goal>
-                                </goals>
-                            </execution>
-                        </executions>
-                    </plugin>
-                    <plugin>
-                        <groupId>org.sonatype.central</groupId>
-                        <artifactId>central-publishing-maven-plugin</artifactId>
-                        <version>0.5.0</version>
-                        <extensions>true</extensions>
-                        <configuration>
-                            <publishingServerId>mvn-central</publishingServerId>
-                            <centralBaseUrl>https://central.sonatype.com</centralBaseUrl>
-                            <deploymentName>${project.artifactId}-${project.version}</deploymentName>
-                            <skipPublishing>false</skipPublishing>
-                            <autoPublish>true</autoPublish>
-                            <waitUntil>published</waitUntil><!--validated uploaded-->
-                        </configuration>
-                    </plugin>
-                </plugins>
-            </build>
-        </profile>
-    </profiles>
 </project>

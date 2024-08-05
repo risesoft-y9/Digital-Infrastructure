@@ -13,8 +13,6 @@
     <version>v9.7.0-SNAPSHOT</version>
     <packaging>pom</packaging>
 
-
-
     <modules>
         <module>risenet-y9boot-idcode</module>
     </modules>
