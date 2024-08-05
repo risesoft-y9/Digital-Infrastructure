@@ -172,7 +172,7 @@
         </profile>
 
         <profile>
-            <id>sign-publish</id>
+            <id>release</id>
             <build>
                 <plugins>
                     <plugin>
