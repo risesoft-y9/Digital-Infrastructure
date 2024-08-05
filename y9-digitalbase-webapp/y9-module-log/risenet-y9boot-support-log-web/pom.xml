@@ -12,7 +12,8 @@
     <packaging>jar</packaging>
     <name>risenet-y9boot-support-log-web</name>
     <description>RiseSoft/Digital Infrastructure webapp parent</description>
-
+    <url>${gitee.url}</url>
+    
     <developers>
         <developer>
             <name>dingzhaojun</name>
@@ -36,16 +37,15 @@
         </developer>
     </developers>
 
+    <properties>
+        <maven.deploy.skip>true</maven.deploy.skip>
+    </properties>
+
     <scm>
         <url>${gitee.url}</url>
         <connection>${gitee.connection}</connection>
         <developerConnection>${gitee.developerConnection}</developerConnection>
     </scm>
-
-
-    <properties>
-        <maven.deploy.skip>true</maven.deploy.skip>
-    </properties>
 
     <dependencies>
 

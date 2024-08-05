@@ -13,7 +13,7 @@
     <packaging>jar</packaging>
     <name>risenet-y9boot-common-nacos</name>
     <description>RiseSoft/Digital Infrastructure extend for nacos</description>
-
+    <url>${gitee.url}</url>
     <developers>
         <developer>
             <name>dingzhaojun</name>
@@ -23,12 +23,6 @@
         </developer>
     </developers>
 
-    <scm>
-        <url>${gitee.url}</url>
-        <connection>${gitee.connection}</connection>
-        <developerConnection>${gitee.developerConnection}</developerConnection>
-    </scm>
-    
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
@@ -39,6 +33,12 @@
         <alibaba-nacos.version>2.3.1</alibaba-nacos.version>
         <alibaba-cloud.version>2023.0.0.0-RC1</alibaba-cloud.version>
     </properties>
+
+    <scm>
+        <url>${gitee.url}</url>
+        <connection>${gitee.connection}</connection>
+        <developerConnection>${gitee.developerConnection}</developerConnection>
+    </scm>
 
     <dependencies>
 
@@ -107,14 +107,6 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-source-plugin</artifactId>
-                <executions>
-                    <execution>
-                        <id>attach-sources</id>
-                        <goals>
-                            <goal>jar-no-fork</goal>
-                        </goals>
-                    </execution>
-                </executions>
             </plugin>
         </plugins>
     </build>

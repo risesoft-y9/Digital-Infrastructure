@@ -159,53 +159,6 @@
                 </plugins>
             </build>
         </profile>
-        <profile>
-            <id>api-doc</id>
-            <build>
-                <plugins>
-                    <plugin>
-                        <groupId>com.ly.smart-doc</groupId>
-                        <artifactId>smart-doc-maven-plugin</artifactId>
-                    </plugin>
-                </plugins>
-            </build>
-        </profile>
-
-        <profile>
-            <id>release</id>
-            <build>
-                <plugins>
-                    <plugin>
-                        <groupId>org.apache.maven.plugins</groupId>
-                        <artifactId>maven-javadoc-plugin</artifactId>
-                        <configuration>
-                            <skip>true</skip>
-                        </configuration>
-                    </plugin>
-                    <plugin>
-                        <groupId>org.apache.maven.plugins</groupId>
-                        <artifactId>maven-gpg-plugin</artifactId>
-                        <configuration>
-                            <skip>true</skip>
-                        </configuration>
-                    </plugin>
-                    <plugin>
-                        <groupId>org.sonatype.central</groupId>
-                        <artifactId>central-publishing-maven-plugin</artifactId>
-                        <executions>
-                            <!--加一个execution , phase设置成空-->
-                            <execution>
-                                <phase/>
-                            </execution>
-                            <!--加一个有自己id的execution，id随便，其余可以不写-->
-                            <execution>
-                                <id>myid</id>
-                            </execution>
-                        </executions>
-                    </plugin>
-                </plugins>
-            </build>
-        </profile>
     </profiles>
     
 </project>

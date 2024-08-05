@@ -46,15 +46,15 @@
         </developer>
     </developers>
 
+    <properties>
+
+    </properties>
+
     <scm>
         <url>${gitee.url}</url>
         <connection>${gitee.connection}</connection>
         <developerConnection>${gitee.developerConnection}</developerConnection>
     </scm>
-
-    <properties>
-
-    </properties>
 
     <distributionManagement>
         <repository>

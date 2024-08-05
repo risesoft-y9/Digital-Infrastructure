@@ -13,7 +13,8 @@
     <packaging>pom</packaging>
     <name>y9-module-platform</name>
     <description>RiseSoft/Digital Infrastructure webapp parent</description>
-
+    <url>${gitee.url}</url>
+    
     <scm>
         <url>${gitee.url}</url>
         <connection>${gitee.connection}</connection>
@@ -28,4 +29,5 @@
         <module>risenet-y9boot-support-platform-web</module>
         <module>risenet-y9boot-webapp-platform</module>
     </modules>
+
 </project>
