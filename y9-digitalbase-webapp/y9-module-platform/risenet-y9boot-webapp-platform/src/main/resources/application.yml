@@ -215,7 +215,7 @@ y9:
         multi-tenant:
             event-source: db
         log:
-            enabled: true
+            enabled: false
             logSaveTarget: api
         publish:
             kafka:

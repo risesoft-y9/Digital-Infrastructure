@@ -6,6 +6,7 @@ import lombok.Data;
 
 /**
  * 单位主码（若注册激活成功），否则返回空字符串
+ * 
  * @author qinman
  */
 @Data

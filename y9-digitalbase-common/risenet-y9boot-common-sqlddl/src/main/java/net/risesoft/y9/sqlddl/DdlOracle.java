@@ -25,7 +25,7 @@ import net.risesoft.y9.sqlddl.pojo.DbColumn;
 @Slf4j
 public class DdlOracle {
 
-	private DdlOracle() {
+    private DdlOracle() {
         throw new IllegalStateException("DdlOracle Utility class");
     }
 
