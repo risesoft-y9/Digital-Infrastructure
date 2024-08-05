@@ -11,7 +11,12 @@ cas:
                 threshold: -1
         oauth:
             crypto:
-                enabled: false
+                encryption:
+                    key: vO3o3AOVnmpzaDqAiOYa8UOJv6AX7EBygE6fANNN1G0
+                    keySize: 256
+                signing:
+                    key: NXGpoAtRG60AXIh2XmxyxEPh6ZWUBeKp9n994hsGww5cPgYHRmA6Zv-2krWJ5NgZmOtbqV9dmeiaSorX6lz6tw
+                    keySize: 512
             refreshToken:
                 timeToKillInSeconds: P14D
             code:
@@ -22,7 +27,12 @@ cas:
                 maxTimeToLiveInSeconds: PT8H
                 createAsJwt: false
                 crypto:
-                    enabled: false
+                    encryption:
+                        key: vO3o3AOVnmpzaDqAiOYa8UOJv6AX7EBygE6fANNN1G0
+                        keySize: 256
+                    signing:
+                        key: NXGpoAtRG60AXIh2XmxyxEPh6ZWUBeKp9n994hsGww5cPgYHRmA6Zv-2krWJ5NgZmOtbqV9dmeiaSorX6lz6tw
+                        keySize: 512
             grants:
                 resourceOwner:
                     requireServiceHeader: true
@@ -36,7 +46,12 @@ cas:
                     sameSitePolicy: Lax
         token:
             crypto:
-                enabled: false
+                encryption:
+                    key: vO3o3AOVnmpzaDqAiOYa8UOJv6AX7EBygE6fANNN1G0
+                    keySize: 256
+                signing:
+                    key: NXGpoAtRG60AXIh2XmxyxEPh6ZWUBeKp9n994hsGww5cPgYHRmA6Zv-2krWJ5NgZmOtbqV9dmeiaSorX6lz6tw
+                    keySize: 512
 
     httpClient:
         allowLocalUrls: true
@@ -68,7 +83,13 @@ cas:
         authorizedServicesOnSuccessfulLogin: true
     webflow:
         crypto:
-            enabled: false
+            enabled: true
+            encryption:
+                key: YWue7qiEmHJ42I8TMMrg5Q
+                keySize: 16
+            signing:
+                key: CzPeT3D2l7C-dwR2LfV9DFHrwmPGXCSsEReZeTn76xiWNU45De8s1CAdPNXovoBpEilbeTY1PkwPQuMxZdN4mQ
+                keySize: 512
     logout:
         followServiceRedirects: true
         removeDescendantTickets: true
@@ -105,7 +126,13 @@ cas:
             startDelay: "PT2M"
     tgc:
         crypto:
-            enabled: false
+            enabled: true
+            encryption:
+                key: vO3o3AOVnmpzaDqAiOYa8UOJv6AX7EBygE6fANNN1G0
+                keySize: 256
+            signing:
+                key: NXGpoAtRG60AXIh2XmxyxEPh6ZWUBeKp9n994hsGww5cPgYHRmA6Zv-2krWJ5NgZmOtbqV9dmeiaSorX6lz6tw
+                keySize: 512
         httpOnly: true
         maxAge: -1
         name: TGC
@@ -117,6 +144,12 @@ cas:
     ticket:
         crypto:
             enabled: false
+            encryption:
+                key: vO3o3AOVnmpzaDqAiOYa8UOJv6AX7EBygE6fANNN1G0
+                keySize: 256
+            signing:
+                key: NXGpoAtRG60AXIh2XmxyxEPh6ZWUBeKp9n994hsGww5cPgYHRmA6Zv-2krWJ5NgZmOtbqV9dmeiaSorX6lz6tw
+                keySize: 512
         registry:
             cleaner:
                 schedule:
@@ -135,7 +168,13 @@ cas:
                 leakThreshold: 0
                 autocommit: true
                 crypto:
-                    enabled: false
+                    enabled: true
+                    encryption:
+                        key: "6vJAg4gWORY0f8dF5XIc8Q"
+                        keySize: 16
+                    signing:
+                        key: "CzPeT3D2l7C-dwR2LfV9DFHrwmPGXCSsEReZeTn76xiWNU45De8s1CAdPNXovoBpEilbeTY1PkwPQuMxZdN4mQ"
+                        keySize: 512
         st:
             maxLength: 50
             numberOfUses: 10
