@@ -131,7 +131,7 @@
 
     <profiles>
         <profile>
-            <id>sign</id>
+            <id>release</id>
             <build>
                 <plugins>
                     <plugin>

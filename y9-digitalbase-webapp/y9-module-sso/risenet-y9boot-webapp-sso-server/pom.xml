@@ -513,7 +513,7 @@
     <profiles>
         <profile>
             <!-- 本机个人开发环境 -->
-            <id>local</id>
+            <id>env-local</id>
             <properties>
                 <dir>local</dir>
             </properties>
@@ -523,7 +523,7 @@
         </profile>
         <profile>
             <!-- 本地团队开发环境 -->
-            <id>dev</id>
+            <id>env-dev</id>
             <properties>
                 <dir>dev</dir>
             </properties>
@@ -533,7 +533,7 @@
         </profile>
         <profile>
             <!-- 测试环境 -->
-            <id>test</id>
+            <id>env-test</id>
             <properties>
                 <dir>test</dir>
             </properties>
@@ -543,7 +543,7 @@
         </profile>
         <profile>
             <!-- 生产环境 -->
-            <id>prod</id>
+            <id>env-prod</id>
             <properties>
                 <dir>prod</dir>
             </properties>
