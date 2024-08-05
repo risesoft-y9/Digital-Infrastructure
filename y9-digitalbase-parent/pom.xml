@@ -116,7 +116,7 @@
             <url>https://svn.youshengyun.com:9900/nexus/repository/maven-snapshots/</url>
         </snapshotRepository>
     </distributionManagement>
-    
+
     <dependencyManagement>
         <dependencies>
             <!-- net.risesoft common-->
@@ -1208,6 +1208,38 @@
                             <waitUntil>uploaded</waitUntil><!--validated uploaded-->
                             <checksums>required</checksums>
                         </configuration>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
+
+        <profile>
+            <!-- 修改注释的时候 勾选（避免有些工程没加） -->
+            <id>javadoc</id>
+            <activation>
+                <activeByDefault>false</activeByDefault>
+            </activation>
+            <build>
+                <plugins>
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-javadoc-plugin</artifactId>
+                        <configuration>
+                            <skip>false</skip>
+                            <tags>
+                                <tag>
+                                    <name>date</name>
+                                </tag>
+                            </tags>
+                        </configuration>
+                        <executions>
+                            <execution>
+                                <id>attach-javadocs</id>
+                                <goals>
+                                    <goal>jar</goal>
+                                </goals>
+                            </execution>
+                        </executions>
                     </plugin>
                 </plugins>
             </build>

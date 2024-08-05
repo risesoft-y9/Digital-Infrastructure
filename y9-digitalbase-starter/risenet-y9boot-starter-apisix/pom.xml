@@ -38,6 +38,10 @@
         </developer>
     </developers>
 
+    <properties>
+        <java.version>11</java.version>
+    </properties>
+
     <scm>
         <url>${gitee.url}</url>
         <connection>${gitee.connection}</connection>
@@ -54,10 +58,6 @@
             <url>https://svn.youshengyun.com:9900/nexus/repository/maven-snapshots/</url>
         </snapshotRepository>
     </distributionManagement>
-
-    <properties>
-        <java.version>11</java.version>
-    </properties>
 
     <dependencies>
         <dependency>
@@ -125,14 +125,6 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-source-plugin</artifactId>
-                <executions>
-                    <execution>
-                        <id>attach-sources</id>
-                        <goals>
-                            <goal>jar-no-fork</goal>
-                        </goals>
-                    </execution>
-                </executions>
             </plugin>
         </plugins>
     </build>

@@ -9,16 +9,10 @@
     </parent>
     <artifactId>risenet-y9boot-api-interface-log</artifactId>
     <packaging>jar</packaging>
-
     <name>risenet-y9boot-api-interface-log</name>
     <description>RiseSoft/Digital Infrastructure webapp parent</description>
-
-    <scm>
-        <url>${gitee.url}</url>
-        <connection>${gitee.connection}</connection>
-        <developerConnection>${gitee.developerConnection}</developerConnection>
-    </scm>
-
+    <url>${gitee.url}</url>
+    
     <developers>
         <developer>
             <name>dingzhaojun</name>
@@ -35,10 +29,15 @@
         </developer>
     </developers>
 
-
     <properties>
         <java.version>1.8</java.version>
     </properties>
+
+    <scm>
+        <url>${gitee.url}</url>
+        <connection>${gitee.connection}</connection>
+        <developerConnection>${gitee.developerConnection}</developerConnection>
+    </scm>
 
     <distributionManagement>
         <repository>

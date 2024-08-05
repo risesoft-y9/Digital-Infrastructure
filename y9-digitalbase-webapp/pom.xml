@@ -14,6 +14,7 @@
     <packaging>pom</packaging>
     <name>y9-digitalbase-webapp</name>
     <description>RiseSoft/Digital Infrastructure webapp parent</description>
+    <url>${gitee.url}</url>
 
     <scm>
         <url>${gitee.url}</url>
@@ -27,4 +28,27 @@
         <module>y9-module-platform</module>
         <module>y9-module-sso</module>
     </modules>
+
+    <profiles>
+        <profile>
+            <id>release</id>
+            <build>
+                <plugins>
+                    <plugin>
+                        <groupId>org.sonatype.central</groupId>
+                        <artifactId>central-publishing-maven-plugin</artifactId>
+                        <configuration>
+                            <excludeArtifacts>
+                                <artifact>y9-module-filemanager</artifact>
+                                <artifact>risenet-y9boot-webapp-filemanager</artifact>
+                                <artifact>risenet-y9boot-webapp-log</artifact>
+                                <artifact>risenet-y9boot-webapp-platform</artifact>
+                                <artifact>y9-module-sso</artifact>
+                            </excludeArtifacts>
+                        </configuration>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
+    </profiles>
 </project>

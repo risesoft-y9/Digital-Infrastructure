@@ -10,9 +10,9 @@
     </parent>
     <artifactId>risenet-y9boot-support-log-service</artifactId>
     <packaging>jar</packaging>
-
     <name>risenet-y9boot-support-log-service</name>
     <description>RiseSoft/Digital Infrastructure webapp parent</description>
+    <url>${gitee.url}</url>
 
     <developers>
         <developer>
@@ -37,15 +37,15 @@
         </developer>
     </developers>
 
+    <properties>
+        <maven.deploy.skip>true</maven.deploy.skip>
+    </properties>
+
     <scm>
         <url>${gitee.url}</url>
         <connection>${gitee.connection}</connection>
         <developerConnection>${gitee.developerConnection}</developerConnection>
     </scm>
-
-    <properties>
-        <maven.deploy.skip>true</maven.deploy.skip>
-    </properties>
 
     <dependencies>
         <dependency>
@@ -83,14 +83,6 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-source-plugin</artifactId>
-                <executions>
-                    <execution>
-                        <id>attach-sources</id>
-                        <goals>
-                            <goal>jar-no-fork</goal>
-                        </goals>
-                    </execution>
-                </executions>
             </plugin>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>

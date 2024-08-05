@@ -13,12 +13,8 @@
     <packaging>jar</packaging>
     <name>risenet-y9boot-api-feignclient-log</name>
     <description>RiseSoft/Digital Infrastructure webapp parent</description>
+    <url>${gitee.url}</url>
 
-    <scm>
-        <url>${gitee.url}</url>
-        <connection>${gitee.connection}</connection>
-        <developerConnection>${gitee.developerConnection}</developerConnection>
-    </scm>
     <developers>
         <developer>
             <name>dingzhaojun</name>
@@ -34,7 +30,18 @@
             <organizationUrl>https://www.risesoft.net</organizationUrl>
         </developer>
     </developers>
+ 
+    <properties>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <maven.build.timestamp.format>yyyy-MM-dd_HH_mm</maven.build.timestamp.format>
+        <java.version>1.8</java.version>
+    </properties>
 
+    <scm>
+        <url>${gitee.url}</url>
+        <connection>${gitee.connection}</connection>
+        <developerConnection>${gitee.developerConnection}</developerConnection>
+    </scm>
 
     <distributionManagement>
         <repository>
@@ -46,12 +53,6 @@
             <url>https://svn.youshengyun.com:9900/nexus/repository/maven-snapshots/</url>
         </snapshotRepository>
     </distributionManagement>
-
-    <properties>
-        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <maven.build.timestamp.format>yyyy-MM-dd_HH_mm</maven.build.timestamp.format>
-        <java.version>1.8</java.version>
-    </properties>
 
     <dependencies>
         <dependency>

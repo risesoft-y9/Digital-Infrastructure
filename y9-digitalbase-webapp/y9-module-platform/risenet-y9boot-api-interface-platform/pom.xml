@@ -44,15 +44,15 @@
         </developer>
     </developers>
 
+    <properties>
+        <java.version>1.8</java.version>
+    </properties>
+
     <scm>
         <url>${gitee.url}</url>
         <connection>${gitee.connection}</connection>
         <developerConnection>${gitee.developerConnection}</developerConnection>
     </scm>
-
-    <properties>
-        <java.version>1.8</java.version>
-    </properties>
 
     <distributionManagement>
         <repository>
@@ -115,5 +115,5 @@
             </plugin>
         </plugins>
     </build>
- 
+
 </project>

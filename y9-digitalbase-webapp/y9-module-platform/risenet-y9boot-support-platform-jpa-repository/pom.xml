@@ -39,15 +39,15 @@
         </developer>
     </developers>
 
+    <properties>
+
+    </properties>
+
     <scm>
         <url>${gitee.url}</url>
         <connection>${gitee.connection}</connection>
         <developerConnection>${gitee.developerConnection}</developerConnection>
     </scm>
-
-    <properties>
-
-    </properties>
 
     <dependencies>
         <dependency>
@@ -91,14 +91,6 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-source-plugin</artifactId>
-                <executions>
-                    <execution>
-                        <id>attach-sources</id>
-                        <goals>
-                            <goal>jar-no-fork</goal>
-                        </goals>
-                    </execution>
-                </executions>
             </plugin>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
