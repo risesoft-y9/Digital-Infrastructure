@@ -11,7 +11,8 @@
         <java.version>11</java.version>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
-        <spring-boot.version>2.6.13</spring-boot.version>
+        <maven.deploy.skip>true</maven.deploy.skip>
+        <spring-boot.version>2.7.18</spring-boot.version>
     </properties>
 
     <dependencies>

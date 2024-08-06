@@ -56,17 +56,6 @@
         <developerConnection>${gitee.developerConnection}</developerConnection>
     </scm>
 
-    <distributionManagement>
-        <repository>
-            <id>releases</id>
-            <url>https://svn.youshengyun.com:9900/nexus/repository/maven-releases/</url>
-        </repository>
-        <snapshotRepository>
-            <id>snapshots</id>
-            <url>https://svn.youshengyun.com:9900/nexus/repository/maven-snapshots/</url>
-        </snapshotRepository>
-    </distributionManagement>
-
     <dependencies>
         <dependency>
             <groupId>net.risesoft</groupId>
@@ -224,11 +213,6 @@
 
     <build>
         <plugins>
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-compiler-plugin</artifactId>
-            </plugin>
-
             <plugin>
                 <groupId>dev.aspectj</groupId>
                 <artifactId>aspectj-maven-plugin</artifactId>

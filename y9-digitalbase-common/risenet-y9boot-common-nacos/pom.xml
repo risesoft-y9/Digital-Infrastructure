@@ -5,9 +5,9 @@
     <modelVersion>4.0.0</modelVersion>
     <parent>
         <groupId>net.risesoft</groupId>
-        <artifactId>y9-digitalbase-parent</artifactId>
+        <artifactId>y9-digitalbase-common</artifactId>
         <version>v9.7.0-SNAPSHOT</version>
-        <relativePath>../../y9-digitalbase-parent/pom.xml</relativePath>
+        <relativePath>../pom.xml</relativePath>
     </parent>
     <artifactId>risenet-y9boot-common-nacos</artifactId>
     <packaging>jar</packaging>
@@ -24,12 +24,6 @@
     </developers>
 
     <properties>
-        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
-
-        <maven.compiler.source>21</maven.compiler.source>
-        <maven.compiler.target>21</maven.compiler.target>
-
         <alibaba-nacos.version>2.3.1</alibaba-nacos.version>
         <alibaba-cloud.version>2023.0.0.0-RC1</alibaba-cloud.version>
     </properties>
@@ -97,17 +91,4 @@
         </dependency>
 
     </dependencies>
-
-    <build>
-        <plugins>
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-compiler-plugin</artifactId>
-            </plugin>
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-source-plugin</artifactId>
-            </plugin>
-        </plugins>
-    </build>
 </project>

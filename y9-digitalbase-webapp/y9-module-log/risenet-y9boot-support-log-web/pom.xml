@@ -38,7 +38,6 @@
     </developers>
 
     <properties>
-        <maven.deploy.skip>true</maven.deploy.skip>
     </properties>
 
     <scm>
@@ -111,20 +110,6 @@
             <version>2.1.0</version>
         </dependency>
     </dependencies>
-
-
-    <build>
-        <plugins>
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-compiler-plugin</artifactId>
-                <configuration>
-                    <source>11</source>
-                    <target>11</target>
-                </configuration>
-            </plugin>
-        </plugins>
-    </build>
 
     <profiles>
         <profile>

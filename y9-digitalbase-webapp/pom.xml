@@ -31,7 +31,7 @@
 
     <profiles>
         <profile>
-            <id>release</id>
+            <id>deploy-maven-central</id>
             <build>
                 <plugins>
                     <plugin>

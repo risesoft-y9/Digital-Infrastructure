@@ -4,9 +4,9 @@
     <modelVersion>4.0.0</modelVersion>
     <parent>
         <groupId>net.risesoft</groupId>
-        <artifactId>y9-digitalbase-parent</artifactId>
+        <artifactId>y9-digitalbase-starter</artifactId>
         <version>v9.7.0-SNAPSHOT</version>
-        <relativePath>../../y9-digitalbase-parent/pom.xml</relativePath>
+        <relativePath>../pom.xml</relativePath>
     </parent>
     <artifactId>risenet-y9boot-starter-multi-tenant</artifactId>
     <packaging>jar</packaging>
@@ -39,7 +39,6 @@
     </developers>
 
     <properties>
-        <java.version>11</java.version>
     </properties>
 
     <scm>
@@ -47,17 +46,6 @@
         <connection>${gitee.connection}</connection>
         <developerConnection>${gitee.developerConnection}</developerConnection>
     </scm>
-
-    <distributionManagement>
-        <repository>
-            <id>releases</id>
-            <url>https://svn.youshengyun.com:9900/nexus/repository/maven-releases/</url>
-        </repository>
-        <snapshotRepository>
-            <id>snapshots</id>
-            <url>https://svn.youshengyun.com:9900/nexus/repository/maven-snapshots/</url>
-        </snapshotRepository>
-    </distributionManagement>
 
     <dependencies>
         <dependency>
@@ -99,17 +87,4 @@
         </dependency>
 
     </dependencies>
-
-    <build>
-        <plugins>
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-compiler-plugin</artifactId>
-            </plugin>
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-source-plugin</artifactId>
-            </plugin>
-        </plugins>
-    </build>
 </project>

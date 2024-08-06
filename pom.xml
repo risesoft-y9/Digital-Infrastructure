@@ -49,6 +49,12 @@
         </developer>
     </developers>
 
+    <properties>
+        <!--  版本号  -->
+        <revision>v9.7.0-SNAPSHOT</revision>
+        <java.version>21</java.version>
+    </properties>
+
     <scm>
         <url>https://gitee.com/risesoft-y9/y9-core</url>
         <connection>https://gitee.com/risesoft-y9/y9-core</connection>
@@ -69,16 +75,6 @@
             <url>https://repo.spring.io/milestone</url>
         </repository>
 
-       <!-- <repository>
-            <id>y9-intranet-repo</id>
-            <url>https://nexus-internal.youshengyun.com/repository/maven-public/</url>
-            <releases>
-                <enabled>true</enabled>
-            </releases>
-            <snapshots>
-                <enabled>true</enabled>
-            </snapshots>
-        </repository>-->
         <repository>
             <id>aliyun-repo</id>
             <url>https://maven.aliyun.com/repository/public</url>
@@ -110,10 +106,6 @@
             <id>spring-milestones</id>
             <url>https://repo.spring.io/milestone</url>
         </pluginRepository>
-        <!--<pluginRepository>
-            <id>y9-intranet-repo-plugin</id>
-            <url>https://nexus-internal.youshengyun.com/repository/maven-public/</url>
-        </pluginRepository>-->
         <pluginRepository>
             <id>aliyun-repo-plugin</id>
             <url>https://maven.aliyun.com/repository/public</url>
