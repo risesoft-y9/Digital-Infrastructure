@@ -7,6 +7,7 @@ import java.io.IOException;
 import java.security.KeyFactory;
 import java.security.KeyPair;
 import java.security.KeyPairGenerator;
+import java.security.NoSuchAlgorithmException;
 import java.security.PrivateKey;
 import java.security.PublicKey;
 import java.security.SecureRandom;
@@ -192,6 +193,11 @@ public class RsaUtil {
 
     /**
      * 生成密钥对
+     * 
+     * @return 密钥对
+     * @throws NoSuchAlgorithmException – if no Provider supports a KeyPairGeneratorSpi implementation for the specified
+     *             algorithm
+     * @throws NullPointerException – if algorithm is null
      */
     public static Map<String, String> initKey() throws Exception {
         KeyPairGenerator keygen = KeyPairGenerator.getInstance(RSA_KEY_ALGORITHM);
@@ -268,6 +274,7 @@ public class RsaUtil {
      * @param sign 数字签名
      * @param pubKey 公钥
      * @return boolean 校验成功返回true，失败返回false
+     * @exception Exception error
      */
     public boolean verify(byte[] data, byte[] sign, byte[] pubKey) throws Exception {
         // 实例化密钥工厂

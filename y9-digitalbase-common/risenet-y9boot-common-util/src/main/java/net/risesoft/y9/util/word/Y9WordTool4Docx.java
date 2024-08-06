@@ -120,7 +120,7 @@ public class Y9WordTool4Docx {
                         XWPFRun run = para.createRun();
                         if (content.get(i - rowNum).get(columnMap.get(j + "")) != null) {
                             // 改变单元格的值，标题栏不用改变单元格的值
-                            run.setText(content.get(i - rowNum).get(columnMap.get(j + "")) + "");
+                            run.setText(content.get(i - rowNum).get(columnMap.get(j + "")));
                             // 将单元格段落的字体格式设为原来单元格的字体格式
                             run.getCTR().getDomNode().insertBefore(styleNode.get(j + "").cloneNode(true),
                                 run.getCTR().getDomNode().getFirstChild());
@@ -169,7 +169,9 @@ public class Y9WordTool4Docx {
     /**
      * 进行标签替换的例子,传入的Map中，key表示标签名称，value是替换的信息
      * 
-     * @param map
+     * @param is 输入流
+     * @param response 响应
+     * @param map 标签替换Map，key表示标签名称，value是替换的信息
      */
     public static void replaceBookMark(InputStream is, HttpServletResponse response, Map<String, Object> map) {
         try (OutputStream out = response.getOutputStream()) {

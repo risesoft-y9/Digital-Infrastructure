@@ -35,7 +35,7 @@ public class Y9MultiTenantSpringLiquibase implements InitializingBean {
     /**
      * 更新所有租户数据源的表结构
      *
-     * @throws LiquibaseException
+     * @throws LiquibaseException - all Liquibase exceptions.
      */
     public void updateAll() throws LiquibaseException {
         Map<String, DruidDataSource> dataSources = y9TenantDataSourceLookup.getDataSources();
@@ -55,7 +55,7 @@ public class Y9MultiTenantSpringLiquibase implements InitializingBean {
      * 更新单个租户数据源的表结构
      *
      * @param tenantId 租户id
-     * @throws LiquibaseException
+     * @throws LiquibaseException - all Liquibase exceptions.
      */
     public void update(String tenantId) throws LiquibaseException {
         // 方法暴露出去 工程中可调用执行

@@ -23,21 +23,29 @@ public @interface HasAuthorities {
 
     /**
      * 资源自定义标识 customId 数组
+     * 
+     * @return {@code String[] } customId数组
      */
     String[] value();
 
     /**
      * 权限类型
+     * 
+     * @return {@code AuthorityEnum } 权限类型
      */
     AuthorityEnum authority() default AuthorityEnum.BROWSE;
 
     /**
      * 身份类型
+     * 
+     * @return {@code IdentityEnum } 身份类型
      */
     IdentityEnum identity() default IdentityEnum.PERSON;
 
     /**
      * 检查资源权限的逻辑操作 与 和 或，默认是 与
+     * 
+     * @return {@code LogicalEnum } 资源权限的逻辑操作
      */
     LogicalEnum logical() default LogicalEnum.AND;
 }

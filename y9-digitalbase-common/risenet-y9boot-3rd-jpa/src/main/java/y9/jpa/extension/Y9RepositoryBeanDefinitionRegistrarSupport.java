@@ -30,7 +30,7 @@ public abstract class Y9RepositoryBeanDefinitionRegistrarSupport
      * {@link AnnotationRepositoryConfigurationSource} so have a look at the constants in there for what annotation
      * attributes it expects.
      *
-     * @return
+     * @return the annotation to obtain configuration information from
      */
     protected abstract Class<? extends Annotation> getAnnotation();
 
@@ -39,7 +39,8 @@ public abstract class Y9RepositoryBeanDefinitionRegistrarSupport
      * post-processing.
      *
      * @see RepositoryConfigurationExtensionSupport
-     * @return
+     * @return the {@link RepositoryConfigurationExtension} for store specific callbacks and {@link BeanDefinition}
+     *         post-processing.
      */
     protected abstract RepositoryConfigurationExtension getExtension();
 
