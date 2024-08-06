@@ -18,9 +18,9 @@ public class FtpClientHelper {
     /**
      * 删除文件 单个 ，不可递归
      *
-     * @param pathname
-     * @return
-     * @throws Exception
+     * @param pathname 带路径的文件名称
+     * @return boolean 删除状态
+     * @throws Exception error occurs.
      */
     public boolean deleteFile(String pathname) throws Exception {
         FTPClient client = null;
@@ -39,10 +39,11 @@ public class FtpClientHelper {
 
     /**
      * Creates a nested directory structure on a FTP server
-     *
+     * 
+     * @param client object instance from the pool
      * @param dirPath Path of the directory, i.e /projects/java/ftp/demo
-     * @return true if the directory was created successfully, false otherwise
-     * @throws Exception
+     * @return boolean true if the directory was created successfully, false otherwise
+     * @throws Exception – error occurs.
      */
     public boolean makeDirectories(FTPClient client, String dirPath) throws Exception {
         int errCount = 0;
@@ -67,15 +68,16 @@ public class FtpClientHelper {
                 }
             }
         }
-        return errCount == 0 ? true : false;
+        return errCount == 0;
     }
 
     /**
      * 创建目录 单个不可递归
      *
+     * @param client object instance from the pool
      * @param pathname 目录名称
-     * @return
-     * @throws Exception
+     * @return boolean true if the directory was created successfully, false otherwise
+     * @throws Exception error occurs.
      */
     public boolean makeDirectory(FTPClient client, String pathname) throws Exception {
         // new String(pathname.getBytes(), "ISO-8859-1");
@@ -86,9 +88,9 @@ public class FtpClientHelper {
     /**
      * 删除目录，单个不可递归
      *
-     * @param pathname
-     * @return
-     * @throws IOException
+     * @param pathname 目录名称
+     * @return boolean true if the File is remove successfully, false otherwise
+     * @throws IOException error occurs.
      */
     public boolean removeDirectory(String pathname) throws Exception {
         FTPClient client = null;
@@ -110,7 +112,7 @@ public class FtpClientHelper {
      *
      * @param remote 远程文件
      * @return 字节数据
-     * @throws Exception
+     * @throws Exception error occurs.
      */
     public byte[] retrieveFileBytes(String remote) throws Exception {
         long start = System.currentTimeMillis();
@@ -170,11 +172,11 @@ public class FtpClientHelper {
     /**
      * 上传文件
      *
-     * @param fullPath
-     * @param realFileName
-     * @param local
-     * @return
-     * @throws Exception
+     * @param fullPath 路径
+     * @param realFileName 真实文件名称
+     * @param local 文件流
+     * @return boolean true if the File was upload successfully, false otherwise
+     * @throws Exception error occurs.
      */
     public boolean storeFile(String fullPath, String realFileName, InputStream local) throws Exception {
         FTPClient client = ftpClientPool.borrowObject();

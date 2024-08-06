@@ -37,7 +37,7 @@ public class IpDeptMappingController {
      * @param pageQuery 分页详情
      * @param clientIpSection IP的ABC段
      * @param deptName 部门名称
-     * @return
+     * @return {@code Y9Page<Y9logIpDeptMapping>}
      */
     @RiseLog(moduleName = "日志系统", operationName = "查询部门网段分页列表", logLevel = LogLevelEnum.RSLOG)
     @GetMapping(value = "/pageSearchList")
@@ -49,7 +49,7 @@ public class IpDeptMappingController {
      * 批量移除部门网段信息
      *
      * @param ipDeptMappingIds 部门网段id数组
-     * @return
+     * @return {@code Y9Result<String>}
      */
     @RiseLog(moduleName = "日志系统", operationType = OperationTypeEnum.DELETE, operationName = "移除部门网段信息",
         logLevel = LogLevelEnum.RSLOG)
@@ -63,7 +63,7 @@ public class IpDeptMappingController {
      * 部门网段排序
      *
      * @param idAndTabIndexs 部门网段id数组
-     * @return
+     * @return {@code Y9Result<String>}
      */
     @RiseLog(moduleName = "日志系统", operationType = OperationTypeEnum.MODIFY, operationName = "部门网段排序",
         logLevel = LogLevelEnum.RSLOG)
@@ -77,7 +77,7 @@ public class IpDeptMappingController {
      * 保存部门网段信息
      *
      * @param ipDeptMapping 部门网段信息
-     * @return
+     * @return {@code Y9Result<Y9logIpDeptMapping>}
      */
     @RiseLog(moduleName = "日志系统", operationType = OperationTypeEnum.ADD, operationName = "保存部门网段信息",
         logLevel = LogLevelEnum.RSLOG)

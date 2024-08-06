@@ -15,7 +15,7 @@ public interface Y9ClickedAppService {
     /**
      * 保存应用点击日志
      *
-     * @param clickedApp
+     * @param clickedApp 应用点击日志信息
      */
     void save(Y9ClickedApp clickedApp);
 }

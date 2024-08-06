@@ -42,7 +42,7 @@ public class FieldMappingController {
      * 批量移除字段映射
      *
      * @param ids id数组
-     * @return
+     * @return {@code Y9Result<String>}
      */
     @RiseLog(moduleName = "日志系统", operationType = OperationTypeEnum.DELETE, operationName = "批量移除字段映射",
         logLevel = LogLevelEnum.RSLOG)
@@ -59,7 +59,7 @@ public class FieldMappingController {
      * 移除字段映射
      *
      * @param id 主键
-     * @return
+     * @return {@code Y9Result<String>}
      */
     @RiseLog(moduleName = "日志系统", operationType = OperationTypeEnum.DELETE, operationName = "移除字段映射",
         logLevel = LogLevelEnum.RSLOG)
@@ -73,7 +73,7 @@ public class FieldMappingController {
      * 根据id，获取字段映射
      *
      * @param id 字段映射id
-     * @return
+     * @return {@code Y9Result<Y9logMapping>}
      */
     @RiseLog(moduleName = "日志系统", operationName = "根据id，获取字段映射", logLevel = LogLevelEnum.RSLOG)
     @GetMapping(value = "/getFieldMappingById")
@@ -87,7 +87,7 @@ public class FieldMappingController {
      *
      * @param pageQuery 分页信息
      * @param sort 排序字段
-     * @return
+     * @return {@code Y9Page<Y9logMapping>}
      */
     @RiseLog(moduleName = "日志系统", operationName = "获取字段映射分页列表", logLevel = LogLevelEnum.RSLOG)
     @GetMapping(value = "/page")
@@ -103,7 +103,7 @@ public class FieldMappingController {
      * @param modularName 模块名称
      * @param modularCnName 模块中文名称
      * @param pageQuery 分页信息
-     * @return
+     * @return {@code Y9Page<Y9logMapping>}
      */
     @RiseLog(moduleName = "日志系统", operationName = "搜索字段映射分页列表", logLevel = LogLevelEnum.RSLOG)
     @GetMapping(value = "/pageSearchList")
@@ -118,7 +118,7 @@ public class FieldMappingController {
      * 保存字段映射信息
      *
      * @param modularNameMapping 字段映射信息
-     * @return
+     * @return {@code Y9Result<String>}
      */
     @RiseLog(moduleName = "日志系统", operationType = OperationTypeEnum.ADD, operationName = "保存字段映射信息",
         logLevel = LogLevelEnum.RSLOG)
@@ -135,7 +135,7 @@ public class FieldMappingController {
      * 验证字段映射是否存在
      *
      * @param name 字段映射
-     * @return
+     * @return {@code Y9Result<Boolean>}
      */
     @RiseLog(moduleName = "日志系统", operationName = "验证字段映射是否存在", logLevel = LogLevelEnum.RSLOG)
     @PostMapping(value = "/validate")

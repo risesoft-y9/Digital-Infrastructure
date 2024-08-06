@@ -6,7 +6,8 @@ import net.risesoft.pojo.Y9Page;
 import net.risesoft.y9public.entity.Y9logIpDeptMapping;
 
 /**
- *
+ * 人员登录部门配置管理
+ * 
  * @author guoweijun
  * @author shidaobang
  * @author mengjuhua
