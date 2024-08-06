@@ -138,7 +138,7 @@ public class Y9FileUtil {
 
     /**
      * <p>
-     * Iterates over a base name and returns the first non-existent file.<br />
+     * Iterates over a base name and returns the first non-existent file.<br>
      * This method extracts a file's base name, iterates over it until the first non-existent appearance with
      * <code>basename(n).ext</code>. Where n is a positive integer starting from one.
      * </p>
@@ -200,7 +200,7 @@ public class Y9FileUtil {
      * @param file 文件
      * @param proNames 属性数组
      * @param tagName 标记名称
-     * @return
+     * @return {@code List<Map<String, Object>>} tag属性列表
      */
     public static List<Map<String, Object>> readXml(File file, String[] proNames, String tagName) {
         List<Map<String, Object>> list = new ArrayList<Map<String, Object>>();
@@ -268,6 +268,7 @@ public class Y9FileUtil {
      * @param in 输入流
      * @param fileName 文件名称
      * @param filePath 文件路径
+     * @return File 文件
      */
     public static File writeFile2(InputStream in, String fileName, String filePath) {
         File dir = new File(filePath);

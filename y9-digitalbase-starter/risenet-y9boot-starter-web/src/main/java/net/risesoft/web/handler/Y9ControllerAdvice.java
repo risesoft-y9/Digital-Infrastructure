@@ -38,8 +38,8 @@ public class Y9ControllerAdvice {
     /**
      * 参数校验失败 例如 {@link jakarta.validation.constraints.NotBlank}
      *
-     * @param e e
-     * @return {@link Y9Result}<{@link Object}>
+     * @param e ConstraintViolationException
+     * @return {@code Y9Result<Object>} 校验结果
      */
     @ExceptionHandler({ConstraintViolationException.class})
     @ResponseBody
@@ -53,8 +53,8 @@ public class Y9ControllerAdvice {
     /**
      * 缺少参数
      *
-     * @param e e
-     * @return {@link Y9Result}<{@link Object}>
+     * @param e MissingServletRequestParameterException
+     * @return {@code Y9Result<Object>} 校验结果
      */
     @ExceptionHandler({MissingServletRequestParameterException.class})
     @ResponseBody
@@ -68,8 +68,8 @@ public class Y9ControllerAdvice {
     /**
      * 参数类型不匹配
      *
-     * @param e e
-     * @return {@link Y9Result}<{@link Object}>
+     * @param e MethodArgumentTypeMismatchException
+     * @return {@code Y9Result<Object>} 校验结果
      */
     @ExceptionHandler({MethodArgumentTypeMismatchException.class})
     @ResponseBody
@@ -84,8 +84,8 @@ public class Y9ControllerAdvice {
     /**
      * 缺少路径参数
      *
-     * @param e e
-     * @return {@link Y9Result}<{@link Object}>
+     * @param e MissingPathVariableException
+     * @return {@code Y9Result<Object>} 校验结果
      */
     @ExceptionHandler({MissingPathVariableException.class})
     @ResponseBody
@@ -99,8 +99,8 @@ public class Y9ControllerAdvice {
     /**
      * 参数绑定异常
      *
-     * @param e e
-     * @return {@link Y9Result}<{@link Object}>
+     * @param e BindException
+     * @return {@code Y9Result<Object>} 异常结果
      */
     @ExceptionHandler(BindException.class)
     @ResponseBody
@@ -126,8 +126,8 @@ public class Y9ControllerAdvice {
      * 业务异常 <br>
      * 统一返回 http 的状态码为 400
      *
-     * @param e e
-     * @return {@link Y9Result}<{@link Object}>
+     * @param e 业务异常
+     * @return {@code Y9Result<Object>} 异常结果
      */
     @ExceptionHandler({Y9BusinessException.class})
     @ResponseBody
@@ -141,8 +141,8 @@ public class Y9ControllerAdvice {
     /**
      * y9 权限异常
      *
-     * @param e e
-     * @return {@link Y9Result}<{@link Object}>
+     * @param e y9权限异常
+     * @return {@code Y9Result<Object>} 异常结果
      */
     @ExceptionHandler({Y9PermissionException.class})
     @ResponseBody
@@ -157,8 +157,8 @@ public class Y9ControllerAdvice {
      * 通用的错误异常 <br>
      * 对异常处理得当的应用理论上不会走这里 而是走上方更具体的异常 如果走到了这里应用应处理掉能处理的异常
      *
-     * @param e e
-     * @return {@link Y9Result}<{@link Object}>
+     * @param e Throwable
+     * @return {@code Y9Result<Object>} 错误异常结果
      */
     @ExceptionHandler({Throwable.class})
     @ResponseBody

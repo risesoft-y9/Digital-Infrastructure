@@ -28,7 +28,8 @@ public class Y9IpUtil {
      * 获取已激活网卡的IP地址
      *
      * @param interfaceName 可指定网卡名称,null则获取全部
-     * @return List<String>
+     * @return {@code List<String>} 已激活网卡的IP地址
+     * @exception SocketException Thrown to indicate that there is an error creating or accessing a Socket.
      */
     public static List<String> getHostAddress(String interfaceName) throws SocketException {
         List<String> ipList = new ArrayList<String>(5);

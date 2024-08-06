@@ -23,35 +23,35 @@ public @interface RiseLog {
     /**
      * 是否记录日志
      * 
-     * @return
+     * @return boolean 是否记录日志
      */
     boolean enable() default true;
 
     /**
      * 日志级别 {@link LogLevelEnum}
      * 
-     * @return
+     * @return {@code LogLevelEnum} 操作类型 日志级别
      */
     LogLevelEnum logLevel() default LogLevelEnum.MANAGERLOG;
 
     /**
      * 模块名称
      * 
-     * @return
+     * @return String 模块名称
      */
     String moduleName() default "";
 
     /**
      * 操作名称
      * 
-     * @return
+     * @return String 操作名称
      */
     String operationName() default "";
 
     /**
      * 操作类型
      * 
-     * @return
+     * @return {@code OperationTypeEnum} 操作类型
      */
     OperationTypeEnum operationType() default OperationTypeEnum.BROWSE;
 

@@ -22,16 +22,22 @@ public @interface HasRoles {
 
     /**
      * 角色自定义标识 customId 数组
+     * 
+     * @return {@code String[] } customId数组
      */
     String[] value();
 
     /**
      * 身份类型
+     * 
+     * @return {@code IdentityEnum } 身份类型
      */
     IdentityEnum identity() default IdentityEnum.PERSON;
 
     /**
      * 检查角色的逻辑操作 与 和 或，默认是 与
+     * 
+     * @return {@code LogicalEnum } 角色的逻辑操作
      */
     LogicalEnum logical() default LogicalEnum.AND;
 }

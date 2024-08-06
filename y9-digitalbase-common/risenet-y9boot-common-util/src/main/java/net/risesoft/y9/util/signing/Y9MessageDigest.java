@@ -106,8 +106,8 @@ public class Y9MessageDigest {
     /**
      * SHA1加密
      * 
-     * @param str
-     * @return str
+     * @param str 需加密的字符串
+     * @return str SHA1加密字符串
      */
     public static String sha1(String str) {
         if (str == null || str.length() == 0) {

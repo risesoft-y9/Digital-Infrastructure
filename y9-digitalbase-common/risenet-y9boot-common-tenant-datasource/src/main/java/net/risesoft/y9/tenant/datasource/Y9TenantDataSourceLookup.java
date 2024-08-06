@@ -30,7 +30,8 @@ import net.risesoft.enums.platform.DataSourceTypeEnum;
 import net.risesoft.y9.util.base64.Y9Base64Util;
 
 /**
- *
+ * 动态数据源切换
+ * 
  * @author dingzhaojun
  * @author qinman
  * @author mengjuhua
@@ -90,11 +91,9 @@ public class Y9TenantDataSourceLookup implements DataSourceLookup {
             if (ds != null) {
                 // 可能连接池的参数调整了
                 // url,username,password等属性在DruidDataSource初始化完成后不允许更改，否则抛出异常
-                boolean keepDataSourceInstance = false;
-                if (ds.getJdbcUrl().equals(url) && ds.getUsername().equals(username)
-                    && ds.getPassword().equals(password)) {
-                    keepDataSourceInstance = true;
-                }
+                boolean keepDataSourceInstance =
+                    ds.getJdbcUrl().equals(url) && ds.getUsername().equals(username)
+                    && ds.getPassword().equals(password);
 
                 if (keepDataSourceInstance) {
                     if (ds.getMaximumPoolSize() != maxActive) {
@@ -160,7 +159,7 @@ public class Y9TenantDataSourceLookup implements DataSourceLookup {
     /**
      * Y9TenantHibernateInfoHolder.schemaUpdate()用到本方法
      *
-     * @return
+     * @return {@code Map<String, DruidDataSource>} 数据源
      */
     public Map<String, HikariDataSource> getDataSources() {
         if (!loaded) {

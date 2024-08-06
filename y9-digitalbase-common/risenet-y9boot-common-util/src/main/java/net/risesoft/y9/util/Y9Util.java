@@ -48,6 +48,7 @@ public class Y9Util {
      * <code>\</code>. 拷贝org.apache.lucene.queryparser.classic.QueryParserBase
      *
      * @param s 字符串
+     * @return String characters that QueryParser expects to be escaped are escaped by a preceding
      */
     public static String escape(String s) {
         StringBuilder sb = new StringBuilder();

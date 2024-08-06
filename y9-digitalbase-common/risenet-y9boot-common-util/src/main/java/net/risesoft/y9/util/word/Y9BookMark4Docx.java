@@ -59,8 +59,8 @@ public class Y9BookMark4Docx {
     /**
      * 构造函数
      *
-     * @param ctBookmark
-     * @param para
+     * @param ctBookmark 内部的标签定义类
+     * @param para 标签所处的段落
      */
     public Y9BookMark4Docx(CTBookmark ctBookmark, XWPFParagraph para) {
         this.ctBookmark = ctBookmark;
@@ -73,14 +73,39 @@ public class Y9BookMark4Docx {
     /**
      * 构造函数，用于表格中的标签
      *
-     * @param ctBookmark
-     * @param para
-     * @param tableCell
+     * @param ctBookmark 内部的标签定义类
+     * @param para 标签所处的段落
+     * @param tableCell 标签所在的表cell对象
      */
     public Y9BookMark4Docx(CTBookmark ctBookmark, XWPFParagraph para, XWPFTableCell tableCell) {
         this(ctBookmark, para);
         this.tableCell = tableCell;
         this.isCell = true;
+    }
+
+    public static void main(String[] args) {
+        try {
+            FileInputStream inputStreamdoc = new FileInputStream("D:/qm1.docx");
+            OutputStream out = new FileOutputStream("D:/qm2.docx");
+            XWPFDocument document = new XWPFDocument(inputStreamdoc);
+            Y9BookMarks4Docx bookMarks = new Y9BookMarks4Docx(document);
+            // 循环进行替换
+            Iterator<String> bookMarkIter = bookMarks.getNameIterator();
+            while (bookMarkIter.hasNext()) {
+                String bookMarkName = bookMarkIter.next();
+                // 得到标签名称
+                System.out.println("=======bookMarkName:" + bookMarkName);
+                Y9BookMark4Docx bookMark = bookMarks.getBookmark(bookMarkName);
+                // 进行替换
+                bookMark.insertPicAtBookMark(new FileInputStream("D:/1.png"), XWPFDocument.PICTURE_TYPE_PNG, "2.png",
+                    Units.toEMU(100), Units.toEMU(100), Y9BookMark4Docx.REPLACE);
+            }
+            document.write(out);
+            out.close();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
     }
 
     private void deleteChildNodes(Stack<Node> nodeStack) {

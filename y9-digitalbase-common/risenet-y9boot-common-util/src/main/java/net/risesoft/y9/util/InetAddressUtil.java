@@ -104,9 +104,9 @@ public class InetAddressUtil {
     }
 
     /**
-     * <p>
-     * 查找策略：首先看是否已经查到ip --> hostname对应的ip --> 根据连接目标端口得到的本地ip --> 轮询网卡
-     * </p>
+     * <pre>
+     * 查找策略：首先看是否已经查到 ip --{@literal>} hostname 对应的ip --{@literal>}  根据连接目标端口得到的本地ip --{@literal>}  轮询网卡
+     * </pre>
      * 
      * @param destHostPorts host端口信息
      * @return InetAddress locaip

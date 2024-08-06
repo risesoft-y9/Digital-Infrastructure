@@ -9,7 +9,7 @@ import java.lang.annotation.Target;
 import net.risesoft.enums.platform.ManagerLevelEnum;
 
 /**
- * 是否为管理员 <br/>
+ * 是否为管理员 <br>
  * 可用在方法及类上，方法上的注解优先于类上的
  *
  * @author shidaobang
@@ -22,11 +22,15 @@ public @interface IsManager {
 
     /**
      * 管理员类型
+     * 
+     * @return {@code  ManagerLevelEnum[]} 管理员类型
      */
     ManagerLevelEnum[] value() default {};
 
     /**
      * 必须为全局的管理员
+     * 
+     * @return boolean 是否必须为全局的管理员
      */
     boolean globalOnly() default false;
 

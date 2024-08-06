@@ -21,11 +21,15 @@ public @interface HasPositions {
 
     /**
      * 岗位 id 数组
+     * 
+     * @return {@code String[] } 岗位Id数组
      */
     String[] value();
 
     /**
      * 检查岗位的逻辑操作 与 和 或，默认是 与
+     * 
+     * @return {@code LogicalEnum } 岗位的逻辑操作
      */
     LogicalEnum logical() default LogicalEnum.AND;
 }

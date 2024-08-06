@@ -61,7 +61,8 @@ public class Y9Context implements ApplicationContextAware, EnvironmentAware, Ser
      *
      * @param name bean名字
      * @return String[] bean定义中别名
-     * @throws org.springframework.beans.factory.NoSuchBeanDefinitionException 未定义异常
+     * @throws org.springframework.beans.factory.NoSuchBeanDefinitionException if there is no bean with the specified
+     *             name
      */
     public static String[] getAliases(String name) throws NoSuchBeanDefinitionException {
         return applicationContext.getAliases(name);
@@ -72,9 +73,12 @@ public class Y9Context implements ApplicationContextAware, EnvironmentAware, Ser
      *
      *
      * @param clz 类型
-     * @throws org.springframework.beans.BeansException 异常
+     * @return T an instance of the single bean matching the required type
+     * @param <T> type the bean must match; can be an interface or superclass
+     * @throws org.springframework.beans.BeansException if the bean could not be obtained
      * @see BeansException
      */
+
     public static <T> T getBean(Class<T> clz) throws BeansException {
         T result = applicationContext.getBean(clz);
         return result;
@@ -82,11 +86,11 @@ public class Y9Context implements ApplicationContextAware, EnvironmentAware, Ser
 
     /**
      * 获取对象
-     *
-     *
+     * 
      * @param name bean名字
      * @return T 一个以所给名字注册的bean的实例
-     * @throws org.springframework.beans.BeansException 异常
+     * @param <T> 返回类型
+     * @throws org.springframework.beans.BeansException if the bean could not be obtained
      */
     @SuppressWarnings("unchecked")
     public static <T> T getBean(String name) throws BeansException {
@@ -95,8 +99,11 @@ public class Y9Context implements ApplicationContextAware, EnvironmentAware, Ser
 
     /**
      * 获取对应类型的bean
-     *
-     * @param clz 类型
+     * 
+     * @param clz the class or interface to match, or null for all concrete beans
+     * @return a Map with the matching beans, containing the bean names as keys and the corresponding bean instances as
+     *         values
+     * @param <T> 返回类型
      */
     public static <T> Map<String, T> getBeans(Class<T> clz) {
         return applicationContext.getBeansOfType(clz);
@@ -212,9 +219,10 @@ public class Y9Context implements ApplicationContextAware, EnvironmentAware, Ser
 
     /**
      * @param name bean名字
-     * @return Class 注册对象的类型
+     * @return Class the name of the bean to query
      *
-     * @throws org.springframework.beans.factory.NoSuchBeanDefinitionException 未定义类异常
+     * @throws org.springframework.beans.factory.NoSuchBeanDefinitionException if there is no bean with the specified
+     *             name
      */
     public static Class<?> getType(String name) throws NoSuchBeanDefinitionException {
         return applicationContext.getType(name);
@@ -228,9 +236,10 @@ public class Y9Context implements ApplicationContextAware, EnvironmentAware, Ser
      * 判断以给定名字注册的bean定义是一个singleton还是一个prototype。 如果与给定名字相应的bean定义没有被找到，将会抛出一个异常（NoSuchBeanDefinitionException）
      *
      *
-     * @param name bean名字
-     * @return boolean
-     * @throws org.springframework.beans.factory.NoSuchBeanDefinitionException
+     * @param name the name of the bean to query
+     * @return boolean whether this bean corresponds to a singleton instance
+     * @throws org.springframework.beans.factory.NoSuchBeanDefinitionException if there is no bean with the specified
+     *             name
      */
     public static boolean isSingleton(String name) throws NoSuchBeanDefinitionException {
         return applicationContext.isSingleton(name);
