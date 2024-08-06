@@ -49,7 +49,7 @@ public class AccessLogController {
      * @param orgType 组织类型
      * @param startDay 开始时间
      * @param endDay 结束时间
-     * @return
+     * @return {@code Y9Result<Map<String, Object>>}
      */
     @RiseLog(moduleName = "日志系统", operationName = "统计APP被点击的排行情况", logLevel = LogLevelEnum.RSLOG)
     @RequestMapping(value = "/getAppClickCount")
@@ -72,7 +72,7 @@ public class AccessLogController {
      * @param orgType 组织类型
      * @param startDay 开始时间
      * @param endDay 结束时间
-     * @return
+     * @return {@code Y9Result<Map<String, Object>>}
      */
     @RiseLog(moduleName = "日志系统", operationName = "统计模块访问情况", logLevel = LogLevelEnum.RSLOG)
     @RequestMapping(value = "/getModuleAccessData")
@@ -87,7 +87,7 @@ public class AccessLogController {
      * 获取操作状态的统计数据
      *
      * @param selectedDate 选择日期
-     * @return
+     * @return {@code Y9Result<Map<String, Object>>}
      */
     @RiseLog(moduleName = "日志系统", operationName = "获取操作状态的统计数据", logLevel = LogLevelEnum.RSLOG)
     @RequestMapping(value = "/getOperateStatusData")
@@ -101,7 +101,7 @@ public class AccessLogController {
      *
      * @param startDay 开始日期
      * @param endDay 结束日期
-     * @return
+     * @return {@code Y9Result<List<Long>>}
      */
     @RiseLog(moduleName = "日志系统", operationName = "获取操作用时的柱状图数据", logLevel = LogLevelEnum.RSLOG)
     @RequestMapping(value = "/listEplasedTimeData")
@@ -116,7 +116,7 @@ public class AccessLogController {
      * @param userId 人员id
      * @param pageQuery 分页信息
      * @param sort 排序字段
-     * @return
+     * @return {@code Y9Page<Y9logAccessLog>}
      */
     @RiseLog(moduleName = "日志系统", operationName = "查看安全审计员日志", logLevel = LogLevelEnum.MANAGERLOG)
     @RequestMapping(value = "/pageByAuditManagers")
@@ -141,7 +141,7 @@ public class AccessLogController {
      * @param sTime 开始时间
      * @param lTime 结束时间
      * @param pageQuery 分页信息
-     * @return
+     * @return {@code Y9Page<Y9logAccessLog>}
      */
     @RiseLog(moduleName = "日志系统", operationName = "搜索操作用时列表", logLevel = LogLevelEnum.RSLOG)
     @RequestMapping(value = "/pageByElapsedTime")
@@ -166,8 +166,8 @@ public class AccessLogController {
      * @param hour 分
      * @param operateStatus 操作状态
      * @param pageQuery 分页信息
-     * @return
-     * @throws ParseException
+     * @return {@code Y9Page<Y9logAccessLog>}
+     * @throws ParseException an error has been reached unexpectedly while parsing.
      */
     @RiseLog(moduleName = "日志系统", operationName = "获取操作状态列表数据", logLevel = LogLevelEnum.RSLOG)
     @RequestMapping(value = "/pageByOperateStatus")
@@ -185,7 +185,7 @@ public class AccessLogController {
      * @param userId 用户id
      * @param pageQuery 分页信息
      * @param sort 排序字段
-     * @return
+     * @return {@code Y9Page<Y9logAccessLog>}
      */
     @RiseLog(moduleName = "日志系统", operationName = "查看安全保密员日志", logLevel = LogLevelEnum.MANAGERLOG)
     @RequestMapping(value = "/pageBySecurityManagers")
@@ -207,7 +207,7 @@ public class AccessLogController {
      * @param userId 人员id
      * @param pageQuery 分页信息
      * @param sort 排序字段
-     * @return
+     * @return {@code Y9Page<Y9logAccessLog>}
      */
     @RiseLog(moduleName = "日志系统", operationName = "查看系统管理员日志", logLevel = LogLevelEnum.MANAGERLOG)
     @RequestMapping(value = "/pageBySystemManagers")
@@ -229,7 +229,7 @@ public class AccessLogController {
      * @param userId 人员id
      * @param pageQuery 分页信息
      * @param sort 排序字段
-     * @return
+     * @return {@code Y9Page<Y9logAccessLog>}
      */
     @RiseLog(moduleName = "日志系统", operationName = "查看用户日志", logLevel = LogLevelEnum.MANAGERLOG)
     @RequestMapping(value = "/pageByUsers")
@@ -246,7 +246,7 @@ public class AccessLogController {
      *
      * @param pageQuery 搜索信息
      * @param sort 排序字段
-     * @return
+     * @return {@code Y9Page<Y9logAccessLog>}
      */
     @RiseLog(moduleName = "日志系统", operationName = "获取日志分页列表", logLevel = LogLevelEnum.RSLOG)
     @RequestMapping(value = "/pageLogInfo")
@@ -263,7 +263,7 @@ public class AccessLogController {
      * @param pageQuery 分页信息
      * @param startTime 开始时间
      * @param endTime 结束时间
-     * @return
+     * @return {@code Y9Page<Y9logAccessLog>}
      */
     @RiseLog(moduleName = "日志系统", operationName = "搜索日志信息", logLevel = LogLevelEnum.RSLOG)
     @RequestMapping(value = "/pageSreachList")
@@ -280,7 +280,7 @@ public class AccessLogController {
      *
      * @param loginInfoModel 搜索信息
      * @param pageQuery 分页信息
-     * @return
+     * @return {@code Y9Page<Y9logAccessLog>}
      */
     @RiseLog(moduleName = "日志系统", operationName = "查询安全审计员日志", logLevel = LogLevelEnum.MANAGERLOG)
     @RequestMapping(value = "/searchAuditManagers")
@@ -301,7 +301,7 @@ public class AccessLogController {
      *
      * @param loginInfoModel 搜索信息
      * @param pageQuery 分页信息
-     * @return
+     * @return {@code Y9Page<Y9logAccessLog>}
      */
     @RiseLog(moduleName = "日志系统", operationName = "查询安全保密员日志", logLevel = LogLevelEnum.MANAGERLOG)
     @RequestMapping(value = "/searchSecurityManagers")
@@ -322,7 +322,7 @@ public class AccessLogController {
      *
      * @param loginInfoModel 搜索信息
      * @param pageQuery 分页信息
-     * @return
+     * @return {@code Y9Page<Y9logAccessLog>}
      */
     @RiseLog(moduleName = "日志系统", operationName = "查询系统管理员日志", logLevel = LogLevelEnum.MANAGERLOG)
     @RequestMapping(value = "/searchSystemManagers")
@@ -343,7 +343,7 @@ public class AccessLogController {
      *
      * @param loginInfoModel 搜索信息
      * @param pageQuery 分页信息
-     * @return
+     * @return {@code Y9Page<Y9logAccessLog>}
      */
     @RiseLog(moduleName = "日志系统", operationName = "查询用户日志", logLevel = LogLevelEnum.MANAGERLOG)
     @RequestMapping(value = "/searchUsers")

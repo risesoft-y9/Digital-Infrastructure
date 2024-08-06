@@ -44,7 +44,7 @@ public class OrgUnitController {
      * 获取租户组织机构列表
      *
      * @param tenantId 租户id
-     * @return
+     * @return {@code Y9Result<List<Organization>>}
      */
     @RiseLog(moduleName = "日志系统", operationName = "获取租户组织机构列表", logLevel = LogLevelEnum.RSLOG)
     @RequestMapping(value = "/getTenantOrganization")
@@ -60,11 +60,11 @@ public class OrgUnitController {
      * 根据租户类型获取所有租户信息
      *
      * @param tenantType 租户类型
-     * @return
+     * @return {@code Y9Result<List<Organization>>}
      */
     @RiseLog(moduleName = "日志系统", operationName = "根据租户类型获取所有租户信息", logLevel = LogLevelEnum.RSLOG)
     @RequestMapping(value = "/getTenantTreeByTenantType")
-    public List<Organization> getTenantTreeByTenantType(@RequestParam Integer tenantType) {
+    public Y9Result<List<Organization>> getTenantTreeByTenantType(@RequestParam Integer tenantType) {
         List<Tenant> tenants =
             tenantApiClient.listByTenantType(Y9EnumUtil.valueOf(TenantTypeEnum.class, tenantType)).getData();
         List<Organization> organizationList = new ArrayList<>();
@@ -77,7 +77,7 @@ public class OrgUnitController {
                 }
             }
         }
-        return organizationList;
+        return Y9Result.success(organizationList);
     }
 
     /**
@@ -86,7 +86,7 @@ public class OrgUnitController {
      * @param tenantId 租户id
      * @param id 父节点id
      * @param treeType 数类型
-     * @return
+     * @return {@code Y9Result<List<OrgUnit>>}
      */
     @RiseLog(moduleName = "日志系统", operationName = "获取组织架构树", logLevel = LogLevelEnum.RSLOG)
     @RequestMapping(value = "/getTree")

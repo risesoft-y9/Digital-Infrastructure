@@ -13,6 +13,7 @@ import net.risesoft.pojo.Y9Page;
 import net.risesoft.y9public.entity.Y9logAccessLog;
 
 /**
+ * 日志管理
  * 
  * @author guoweijun
  * @author shidaobang
@@ -29,8 +30,9 @@ public interface Y9logAccessLogService {
      * @param tenantId 租户id
      * @param startDay 开始时间
      * @param endDay 结束时间
-     * @return
-     * @throws UnknownHostException
+     * @return {@code Map<String, Object>} APP被点击的排行情况统计信息
+     * @throws UnknownHostException -Thrown to indicate that the IP address of a host could not be determined.
+     * @see UnknownHostException
      */
     Map<String, Object> getAppClickCount(String orgId, String orgType, String tenantId, String startDay, String endDay)
         throws UnknownHostException;
@@ -43,7 +45,7 @@ public interface Y9logAccessLogService {
      * @param tenantId 租户id
      * @param startDay 开始时间
      * @param endDay 结束时间
-     * @return
+     * @return {@code Map<String, Object>} 模块访问情况统计信息
      */
     Map<String, Object> getModuleNameCount(String orgId, String orgType, String tenantId, String startDay,
         String endDay);
@@ -52,7 +54,7 @@ public interface Y9logAccessLogService {
      * 统计操作状态的用时情况
      *
      * @param selectedDate 时间段
-     * @return
+     * @return {@code Map<String, Object>} 操作状态用时情况统计信息
      */
     Map<String, Object> getOperateStatusCount(String selectedDate);
 
@@ -63,7 +65,7 @@ public interface Y9logAccessLogService {
      *
      * @param startDay 开始时间
      * @param endDay 结束时间
-     * @return
+     * @return {@code List<Long>} 操作用时的柱状图数据
      */
     List<Long> listOperateTimeCount(String startDay, String endDay);
 
@@ -73,7 +75,7 @@ public interface Y9logAccessLogService {
      * @param page 页数
      * @param rows 条数
      * @param sort 排序方式
-     * @return
+     * @return {@code Page<Y9logAccessLog>}
      */
     Page<Y9logAccessLog> page(int page, int rows, String sort);
 
@@ -85,7 +87,7 @@ public interface Y9logAccessLogService {
      * @param endTime 结束时间
      * @param page 页数
      * @param rows 条数
-     * @return
+     * @return {@code Y9Page<AccessLog>}
      */
     Y9Page<AccessLog> pageByCondition(LogInfoModel search, String startTime, String endTime, Integer page,
         Integer rows);
@@ -96,7 +98,7 @@ public interface Y9logAccessLogService {
      * @param operateType 操作类别： 0=使用，1=登录，2=退出，3=查看，4=增加，5=修改，6=删除，7=发送，8=活动
      * @param page 页数
      * @param rows 条数
-     * @return
+     * @return {@code Y9Page<AccessLog>}
      */
     Y9Page<AccessLog> pageByOperateType(String operateType, Integer page, Integer rows);
 
@@ -109,7 +111,7 @@ public interface Y9logAccessLogService {
      * @param operateType 操作状态
      * @param page 页数
      * @param rows 条数
-     * @return
+     * @return {@code Y9Page<AccessLog>}
      */
     Y9Page<AccessLog> pageByOrgType(String tenantId, String orgId, String orgType, String operateType, Integer page,
         Integer rows);
@@ -123,7 +125,7 @@ public interface Y9logAccessLogService {
      * @param page 页数
      * @param rows 条数
      * @param sort 排序条件
-     * @return
+     * @return {@code Page<Y9logAccessLog>}
      */
     Page<Y9logAccessLog> pageByTenantIdAndManagerLevelAndUserId(String tenantId, String managerLevel, String userId,
         Integer page, Integer rows, String sort);
@@ -138,8 +140,8 @@ public interface Y9logAccessLogService {
      * @param endTime 操作用时结束时间
      * @param page 页数
      * @param rows 条数
-     * @return
-     * @throws ParseException
+     * @return {@code Page<Y9logAccessLog>}
+     * @throws ParseException -an error has been reached unexpectedly while parsing.
      */
     Page<Y9logAccessLog> pageElapsedTimeByCondition(LogInfoModel search, String startDay, String endDay,
         String startTime, String endTime, Integer page, Integer rows) throws ParseException;
@@ -153,8 +155,8 @@ public interface Y9logAccessLogService {
      * @param hour 分
      * @param page 页数
      * @param rows 条数
-     * @return
-     * @throws ParseException
+     * @return {@code Page<Y9logAccessLog>}
+     * @throws ParseException -an error has been reached unexpectedly while parsing.
      */
     Page<Y9logAccessLog> pageOperateStatusByOperateStatus(LogInfoModel search, String operateStatus, String date,
         String hour, Integer page, Integer rows) throws ParseException;
@@ -167,7 +169,7 @@ public interface Y9logAccessLogService {
      * @param endTime 日志结束时间
      * @param page 页数
      * @param rows 条数
-     * @return
+     * @return {@code Page<Y9logAccessLog>}
      */
     Page<Y9logAccessLog> pageSearchByCondition(LogInfoModel search, String startTime, String endTime, Integer page,
         Integer rows);
@@ -179,10 +181,10 @@ public interface Y9logAccessLogService {
      *
      * @param tenantId 租户id
      * @param managerLevel 三元级别
-     * @param loginInfoModel
+     * @param loginInfoModel 搜索信息
      * @param page 页数
      * @param rows 条数
-     * @return
+     * @return {@code Page<Y9logAccessLog>}
      */
     Page<Y9logAccessLog> searchQuery(String tenantId, String managerLevel, LogInfoModel loginInfoModel, Integer page,
         Integer rows);

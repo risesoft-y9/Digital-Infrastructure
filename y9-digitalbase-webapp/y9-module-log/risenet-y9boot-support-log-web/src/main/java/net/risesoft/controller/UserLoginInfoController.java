@@ -37,7 +37,7 @@ public class UserLoginInfoController {
      * 获取安全审计员登录日志
      *
      * @param pageQuery 分页信息
-     * @return
+     * @return {@code Y9Page<Y9logUserLoginInfo>}
      */
     @RiseLog(moduleName = "日志系统", operationName = "查看安全审计员登录日志", logLevel = LogLevelEnum.MANAGERLOG)
     @RequestMapping(value = "/pageByAuditManagers")
@@ -57,7 +57,7 @@ public class UserLoginInfoController {
      * 查看安全保密员登录日志
      *
      * @param pageQuery 分页信息
-     * @return
+     * @return {@code Y9Page<Y9logUserLoginInfo>}
      */
     @RiseLog(moduleName = "日志系统", operationName = "查看安全保密员登录日志", logLevel = LogLevelEnum.MANAGERLOG)
     @RequestMapping(value = "/pageBySecurityManagers")
@@ -77,7 +77,7 @@ public class UserLoginInfoController {
      * 查看系统管理员登录日志
      *
      * @param pageQuery 分页信息
-     * @return
+     * @return {@code Y9Page<Y9logUserLoginInfo>}
      */
     @RiseLog(moduleName = "日志系统", operationName = "查看系统管理员登录日志", logLevel = LogLevelEnum.MANAGERLOG)
     @RequestMapping(value = "/pageBySystemManagers")
@@ -97,7 +97,7 @@ public class UserLoginInfoController {
      * 获取普通用户登录日志
      *
      * @param pageQuery 分页信息
-     * @return
+     * @return {@code Y9Page<Y9logUserLoginInfo>}
      */
     @RiseLog(moduleName = "日志系统", operationName = "查看用户登录日志", logLevel = LogLevelEnum.MANAGERLOG)
     @RequestMapping(value = "/pageByUsers")
@@ -114,7 +114,7 @@ public class UserLoginInfoController {
      *
      * @param loginInfoModel 搜索条件
      * @param pageQuery 分页信息
-     * @return
+     * @return {@code Y9Page<Y9logUserLoginInfo>}
      */
     @RiseLog(moduleName = "日志系统", operationName = "查询安全审计员登录日志", logLevel = LogLevelEnum.MANAGERLOG)
     @RequestMapping(value = "/searchAuditManagers")
@@ -135,7 +135,7 @@ public class UserLoginInfoController {
      *
      * @param loginInfoModel 搜索条件
      * @param pageQuery 分页信息
-     * @return
+     * @return {@code Y9Page<Y9logUserLoginInfo>}
      */
     @RiseLog(moduleName = "日志系统", operationName = "查询安全保密员登录日志", logLevel = LogLevelEnum.MANAGERLOG)
     @RequestMapping(value = "/searchSecurityManagers")
@@ -156,7 +156,7 @@ public class UserLoginInfoController {
      *
      * @param loginInfoModel 搜索条件
      * @param pageQuery 分页信息
-     * @return
+     * @return {@code Y9Page<Y9logUserLoginInfo>}
      */
     @RiseLog(moduleName = "日志系统", operationName = "查询系统管理员登录日志", logLevel = LogLevelEnum.MANAGERLOG)
     @RequestMapping(value = "/searchSystemManagers")
@@ -177,7 +177,7 @@ public class UserLoginInfoController {
      *
      * @param loginInfoModel 搜索条件
      * @param pageQuery 分页信息
-     * @return
+     * @return {@code Y9Page<Y9logUserLoginInfo>}
      */
     @RiseLog(moduleName = "日志系统", operationName = "查询用户登录日志", logLevel = LogLevelEnum.MANAGERLOG)
     @RequestMapping(value = "/searchUsers")

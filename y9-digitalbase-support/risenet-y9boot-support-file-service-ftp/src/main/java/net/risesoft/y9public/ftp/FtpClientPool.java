@@ -12,17 +12,17 @@ public class FtpClientPool {
     /**
      * ftp客户端连接池
      */
-    private GenericObjectPool<FTPClient> pool;
+    private final GenericObjectPool<FTPClient> pool;
 
     /**
      * ftp客户端工厂
      */
-    private FtpClientFactory clientFactory;
+    private final FtpClientFactory clientFactory;
 
     /**
      * 构造函数中 注入一个bean
      * 
-     * @param clientFactory
+     * @param clientFactory 客户端连接池
      */
     public FtpClientPool(FtpClientFactory clientFactory) {
         this.clientFactory = clientFactory;
@@ -33,8 +33,8 @@ public class FtpClientPool {
     /**
      * 借 获取一个连接对象
      * 
-     * @return
-     * @throws Exception
+     * @return object instance from the pool
+     * @throws Exception – if an object instance cannot be returned due to an error
      */
     public FTPClient borrowObject() throws Exception {
         return pool.borrowObject();
@@ -51,7 +51,7 @@ public class FtpClientPool {
     /**
      * 还 归还一个连接对象
      * 
-     * @param ftpClient
+     * @param ftpClient object instance from the pool
      */
     public void returnObject(FTPClient ftpClient) {
         if (ftpClient != null) {
