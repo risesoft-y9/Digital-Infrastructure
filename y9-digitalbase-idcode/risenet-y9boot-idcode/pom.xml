@@ -12,32 +12,13 @@
     <groupId>net.risesoft</groupId>
     <version>v9.6.7-SNAPSHOT</version>
     <packaging>jar</packaging>
-
     <name>risenet-y9boot-idcode</name>
     <description>risesoft Digital base integration unified idcode</description>
-    <url>https://gitee.com/risesoft-y9/y9-core/tree/main/y9-digitalbase-idcode</url>
-
-    <licenses>
-        <license>
-            <name>GNU General Public License (GPL) version 3.0</name>
-            <url>https://www.gnu.org/licenses/gpl-3.0.en.html</url>
-            <distribution>repo</distribution>
-        </license>
-    </licenses>
-
-    <developers>
-        <developer>
-            <name>dingzhaojun</name>
-            <email>dingzhaojun@risesoft.net</email>
-            <organization>risesoft</organization>
-            <organizationUrl>https://www.risesoft.net</organizationUrl>
-        </developer>
-    </developers>
 
     <scm>
-        <url>https://gitee.com/risesoft-y9/y9-core/tree/main/y9-digitalbase-idcode</url>
-        <connection>https://gitee.com/risesoft-y9/y9-core/tree/main/y9-digitalbase-idcode</connection>
-        <developerConnection>https://gitee.com/risesoft-y9/y9-core/tree/main/y9-digitalbase-idcode</developerConnection>
+        <url>${gitee.url}</url>
+        <connection>${gitee.connection}</connection>
+        <developerConnection>${gitee.developerConnection}</developerConnection>
     </scm>
 
     <properties>

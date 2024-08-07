@@ -26,3 +26,5 @@ rebel.xml
 # vue
 kernel-standard/
 node_modules/
+
+.flattened-pom.xml

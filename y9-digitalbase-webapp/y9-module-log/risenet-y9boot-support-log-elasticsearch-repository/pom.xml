@@ -12,30 +12,6 @@
     <packaging>jar</packaging>
     <name>risenet-y9boot-support-log-elasticsearch-repository</name>
     <description>RiseSoft/Digital Infrastructure webapp parent</description>
-    <url>${gitee.url}</url>
-
-    <developers>
-        <developer>
-            <name>dingzhaojun</name>
-            <email>dingzhaojun@risesoft.net</email>
-            <organization>risesoft</organization>
-            <organizationUrl>https://www.risesoft.net</organizationUrl>
-        </developer>
-
-        <developer>
-            <name>shidaobang</name>
-            <email>shidaobang@risesoft.net</email>
-            <organization>risesoft</organization>
-            <organizationUrl>https://www.risesoft.net</organizationUrl>
-        </developer>
-
-        <developer>
-            <name>mengjuhua</name>
-            <email>mengjuhua@risesoft.net</email>
-            <organization>risesoft</organization>
-            <organizationUrl>https://www.risesoft.net</organizationUrl>
-        </developer>
-    </developers>
 
     <properties>
     </properties>

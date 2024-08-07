@@ -16,6 +16,7 @@
 
     <properties>
     </properties>
+    
     <scm>
         <url>${gitee.url}</url>
         <connection>${gitee.connection}</connection>

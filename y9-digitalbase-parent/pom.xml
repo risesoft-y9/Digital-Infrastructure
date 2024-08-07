@@ -15,7 +15,8 @@
     <version>v9.6.7-SNAPSHOT</version>
     <name>y9-digitalbase-parent</name>
     <description>RiseSoft/Digital Infrastructure Parent</description>
-    <url>https://gitee.com/risesoft-y9/y9-core</url>
+    <url>https://gitee.com/risesoft-y9/y9-core/tree/main/</url>
+    
     <licenses>
         <license>
             <name>GNU General Public License (GPL) version 3.0</name>
@@ -23,41 +24,13 @@
             <distribution>repo</distribution>
         </license>
     </licenses>
+    
     <scm>
         <url>${gitee.url}</url>
         <connection>${gitee.connection}</connection>
         <developerConnection>${gitee.developerConnection}</developerConnection>
     </scm>
-    <developers>
-        <developer>
-            <name>dingzhaojun</name>
-            <email>dingzhaojun@risesoft.net</email>
-            <organization>risesoft</organization>
-            <organizationUrl>https://www.risesoft.net</organizationUrl>
-        </developer>
-
-        <developer>
-            <name>qinman</name>
-            <email>qinman@risesoft.net</email>
-            <organization>risesoft</organization>
-            <organizationUrl>https://www.risesoft.net</organizationUrl>
-        </developer>
-
-        <developer>
-            <name>shidaobang</name>
-            <email>shidaobang@risesoft.net</email>
-            <organization>risesoft</organization>
-            <organizationUrl>https://www.risesoft.net</organizationUrl>
-        </developer>
-
-        <developer>
-            <name>mengjuhua</name>
-            <email>mengjuhua@risesoft.net</email>
-            <organization>risesoft</organization>
-            <organizationUrl>https://www.risesoft.net</organizationUrl>
-        </developer>
-    </developers>
-
+    
     <properties>
         <java.version>11</java.version>
         <resource.delimiter>@</resource.delimiter>
@@ -67,6 +40,10 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <maven.build.timestamp.format>yyyy-MM-dd_HH_mm</maven.build.timestamp.format>
         <maven.javadoc.failOnError>false</maven.javadoc.failOnError>
+
+        <gitee.url>https://gitee.com/risesoft-y9/y9-core</gitee.url>
+        <gitee.connection>scm:git:https://gitee.com/risesoft-y9/y9-core.git</gitee.connection>
+        <gitee.developerConnection>scm:git:https://gitee.com/risesoft-y9/y9-core.git</gitee.developerConnection>
 
         <spring-boot.version>2.7.18</spring-boot.version>
         <spring-cloud.version>2021.0.8</spring-cloud.version>
@@ -100,10 +77,6 @@
         <kingbase-driver.version>8.6.0</kingbase-driver.version>
         <dameng-driver.version>8.1.3.140</dameng-driver.version>
         <oracle-driver.version>21.5.0.0</oracle-driver.version>
-
-        <gitee.url>https://gitee.com/risesoft-y9/y9-core</gitee.url>
-        <gitee.connection>https://gitee.com/risesoft-y9/y9-core</gitee.connection>
-        <gitee.developerConnection>https://gitee.com/risesoft-y9/y9-core</gitee.developerConnection>
     </properties>
     
     <dependencyManagement>
@@ -722,6 +695,32 @@
                     <timestampPropertyName>buildDate</timestampPropertyName>
                     <timezone>GMT+8</timezone>
                 </configuration>
+            </plugin>
+
+            <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>flatten-maven-plugin</artifactId>
+                <version>1.6.0</version>
+                <inherited>true</inherited>
+                <executions>
+                    <execution>
+                        <!-- Tidy up all POMs before they are published -->
+                        <id>flatten</id>
+                        <phase>process-resources</phase>
+                        <goals>
+                            <goal>flatten</goal>
+                        </goals>
+                        <configuration>
+                            <!-- <updatePomFile>true</updatePomFile> -->
+                            <flattenMode>oss</flattenMode>
+                            <pomElements>
+                                <parent>expand</parent>
+                                <distributionManagement>remove</distributionManagement>
+                                <repositories>remove</repositories>
+                            </pomElements>
+                        </configuration>
+                    </execution>
+                </executions>
             </plugin>
 
         </plugins>

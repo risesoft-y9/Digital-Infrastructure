@@ -13,7 +13,6 @@
     <packaging>pom</packaging>
     <name>y9-digitalbase-common</name>
     <description>RiseSoft/Digital Infrastructure common parent</description>
-    <url>${gitee.url}</url>
 
     <scm>
         <url>${gitee.url}</url>
