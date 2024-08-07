@@ -14,7 +14,6 @@
     <packaging>pom</packaging>
     <name>y9-digitalbase-webapp</name>
     <description>RiseSoft/Digital Infrastructure webapp parent</description>
-    <url>${gitee.url}</url>
 
     <scm>
         <url>${gitee.url}</url>

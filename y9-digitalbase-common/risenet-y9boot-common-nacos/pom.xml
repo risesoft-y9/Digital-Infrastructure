@@ -13,15 +13,6 @@
     <packaging>jar</packaging>
     <name>risenet-y9boot-common-nacos</name>
     <description>RiseSoft/Digital Infrastructure extend for nacos</description>
-    <url>${gitee.url}</url>
-    <developers>
-        <developer>
-            <name>dingzhaojun</name>
-            <email>dingzhaojun@risesoft.net</email>
-            <organization>risesoft</organization>
-            <organizationUrl>https://www.risesoft.net</organizationUrl>
-        </developer>
-    </developers>
 
     <properties>
         <alibaba-nacos.version>2.3.1</alibaba-nacos.version>

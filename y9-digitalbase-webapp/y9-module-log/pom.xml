@@ -15,7 +15,6 @@
     <version>v9.7.0-SNAPSHOT</version>
     <name>y9-module-log</name>
     <description>RiseSoft/Digital Infrastructure webapp parent</description>
-    <url>${gitee.url}</url>
     
     <scm>
         <url>${gitee.url}</url>

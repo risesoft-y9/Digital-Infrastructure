@@ -12,31 +12,6 @@
     <packaging>jar</packaging>
     <name>risenet-y9boot-starter-sso-oauth2-resource</name>
     <description>RiseSoft/Digital Infrastructure sso-oauth2 starter</description>
-    <url>${gitee.url}</url>
-
-    <licenses>
-        <license>
-            <name>GNU General Public License (GPL) version 3.0</name>
-            <url>https://www.gnu.org/licenses/gpl-3.0.en.html</url>
-            <distribution>repo</distribution>
-        </license>
-    </licenses>
-
-    <developers>
-        <developer>
-            <name>dingzhaojun</name>
-            <email>dingzhaojun@risesoft.net</email>
-            <organization>risesoft</organization>
-            <organizationUrl>https://www.risesoft.net</organizationUrl>
-        </developer>
-
-        <developer>
-            <name>shidaobang</name>
-            <email>shidaobang@risesoft.net</email>
-            <organization>risesoft</organization>
-            <organizationUrl>https://www.risesoft.net</organizationUrl>
-        </developer>
-    </developers>
 
     <properties>
     </properties>

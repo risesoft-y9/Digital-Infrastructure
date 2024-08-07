@@ -13,15 +13,6 @@
     <packaging>jar</packaging>
     <name>risenet-y9boot-common-util</name>
     <description>RiseSoft/Digital Infrastructure common utils</description>
-    <url>${gitee.url}</url>
-
-    <licenses>
-        <license>
-            <name>GNU General Public License (GPL) version 3.0</name>
-            <url>https://www.gnu.org/licenses/gpl-3.0.en.html</url>
-            <distribution>repo</distribution>
-        </license>
-    </licenses>
 
     <scm>
         <url>${gitee.url}</url>
