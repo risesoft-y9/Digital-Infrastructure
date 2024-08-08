@@ -170,6 +170,7 @@ public class SyncController {
             Y9LoginUserHolder.setTenantId(tenantId);
             List<Y9Position> positions = y9PositionService.listAll();
             for (Y9Position position : positions) {
+                position.setTenantId(tenantId);
                 y9PositionService.saveOrUpdate(position);
             }
         }
