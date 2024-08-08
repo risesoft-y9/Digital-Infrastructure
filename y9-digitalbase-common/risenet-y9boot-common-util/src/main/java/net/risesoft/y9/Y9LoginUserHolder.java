@@ -2,6 +2,8 @@ package net.risesoft.y9;
 
 import java.util.Map;
 
+import org.apache.commons.lang3.StringUtils;
+
 import com.alibaba.ttl.TransmittableThreadLocal;
 
 import net.risesoft.model.platform.OrgUnit;
@@ -73,7 +75,9 @@ public abstract class Y9LoginUserHolder {
     public static void setOrgUnit(final OrgUnit orgUnit) {
         ORGUNIT_HOLDER.set(orgUnit);
         ORGUNIT_ID_HOLDER.set(orgUnit.getId());
-        TENANT_ID_HOLDER.set(orgUnit.getTenantId());
+        if (StringUtils.isNotBlank(orgUnit.getTenantId())) {
+            TENANT_ID_HOLDER.set(orgUnit.getTenantId());
+        }
     }
 
     public static String getOrgUnitId() {
