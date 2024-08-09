@@ -5,12 +5,12 @@
     <modelVersion>4.0.0</modelVersion>
     <parent>
         <groupId>net.risesoft</groupId>
-        <artifactId>y9-digitalbase-parent</artifactId>
-        <version>v9.7.0-SNAPSHOT</version>
-        <relativePath>../y9-digitalbase-parent/pom.xml</relativePath>
+        <artifactId>y9-digitalbase</artifactId>
+        <version>${revision}</version>
+        <relativePath>../pom.xml</relativePath>
     </parent>
     <artifactId>y9-digitalbase-idcode</artifactId>
-    <version>v9.7.0-SNAPSHOT</version>
+    <version>${revision}</version>
     <packaging>pom</packaging>
 
     <modules>

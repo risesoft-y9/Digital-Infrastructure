@@ -5,14 +5,14 @@
     <modelVersion>4.0.0</modelVersion>
     <parent>
         <groupId>net.risesoft</groupId>
-        <artifactId>y9-digitalbase-parent</artifactId>
-        <version>v9.7.0-SNAPSHOT</version>
-        <relativePath>../y9-digitalbase-parent/pom.xml</relativePath>
+        <artifactId>y9-digitalbase</artifactId>
+        <version>${revision}</version>
+        <relativePath>../pom.xml</relativePath>
     </parent>
     <groupId>net.risesoft</groupId>
     <artifactId>y9-digitalbase-example</artifactId>
     <packaging>pom</packaging>
-    <version>v9.7.0-SNAPSHOT</version>
+    <version>${revision}</version>
 
 
     <modules>
@@ -22,5 +22,28 @@
         <module>risenet-y9demo-file</module>
         <module>risenet-y9demo-idcode</module>
     </modules>
+
+    <profiles>
+        <profile>
+            <id>deploy-maven-central</id>
+            <build>
+                <plugins>
+                    <plugin>
+                        <groupId>org.sonatype.central</groupId>
+                        <artifactId>central-publishing-maven-plugin</artifactId>
+                        <configuration>
+                            <excludeArtifacts>
+                                <artifact>risenet-y9demo-kernel-api</artifact>
+                                <artifact>risenet-y9demo-sso-oauth2</artifact>
+                                <artifact>risenet-y9demo-sync-kafka</artifact>
+                                <artifact>risenet-y9demo-file</artifact>
+                                <artifact>risenet-y9demo-idcode</artifact>
+                            </excludeArtifacts>
+                        </configuration>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
+    </profiles>
 
 </project>
