@@ -5,14 +5,14 @@
     <modelVersion>4.0.0</modelVersion>
     <parent>
         <groupId>net.risesoft</groupId>
-        <artifactId>y9-digitalbase-parent</artifactId>
-        <version>v9.6.7-SNAPSHOT</version>
-        <relativePath>../y9-digitalbase-parent/pom.xml</relativePath>
+        <artifactId>y9-digitalbase</artifactId>
+        <version>${revision}</version>
+        <relativePath>../pom.xml</relativePath>
     </parent>
     <groupId>net.risesoft</groupId>
     <artifactId>y9-digitalbase-starter</artifactId>
     <packaging>pom</packaging>
-    <version>v9.6.7-SNAPSHOT</version>
+    <version>${revision}</version>
     <name>y9-digitalbase-starter</name>
     <description>RiseSoft/Digital Infrastructure starter parent</description>
 

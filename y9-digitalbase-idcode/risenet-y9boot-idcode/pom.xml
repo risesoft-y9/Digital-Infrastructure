@@ -5,12 +5,12 @@
     <parent>
         <groupId>net.risesoft</groupId>
         <artifactId>y9-digitalbase-idcode</artifactId>
-        <version>v9.6.7-SNAPSHOT</version>
+        <version>${revision}</version>
         <relativePath>../pom.xml</relativePath>
     </parent>
     <artifactId>risenet-y9boot-idcode</artifactId>
     <groupId>net.risesoft</groupId>
-    <version>v9.6.7-SNAPSHOT</version>
+    <version>${revision}</version>
     <packaging>jar</packaging>
     <name>risenet-y9boot-idcode</name>
     <description>risesoft Digital base integration unified idcode</description>
