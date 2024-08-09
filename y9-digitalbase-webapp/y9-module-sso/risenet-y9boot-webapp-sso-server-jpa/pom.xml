@@ -4,77 +4,22 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd ">
 
     <modelVersion>4.0.0</modelVersion>
+    <parent>
+        <groupId>net.risesoft</groupId>
+        <artifactId>y9-module-sso</artifactId>
+        <version>${revision}</version>
+        <relativePath>../pom.xml</relativePath>
+    </parent>
     <groupId>net.risesoft</groupId>
     <artifactId>risenet-y9boot-webapp-sso-server-jpa</artifactId>
     <packaging>war</packaging>
-    <version>v9.6.7-SNAPSHOT</version>
-
-    <repositories>
-        <repository>
-            <id>aliyun-repo</id>
-            <url>https://maven.aliyun.com/repository/public</url>
-            <releases>
-                <enabled>true</enabled>
-            </releases>
-            <snapshots>
-                <enabled>true</enabled>
-            </snapshots>
-        </repository>
-        <repository>
-            <id>y9-internet-repo</id>
-            <url>https://svn.youshengyun.com:9900/nexus/repository/maven-public/</url>
-            <releases>
-                <enabled>true</enabled>
-            </releases>
-            <snapshots>
-                <enabled>true</enabled>
-                <!-- <updatePolicy>always</updatePolicy> -->
-                <!-- always,daily(default),interval:XXX,never -->
-            </snapshots>
-        </repository>
-    </repositories>
-    <pluginRepositories>
-        <pluginRepository>
-            <id>aliyun-repo-plugin</id>
-            <url>https://maven.aliyun.com/repository/public</url>
-        </pluginRepository>
-        <pluginRepository>
-            <id>y9-internet-repo-plugin</id>
-            <url>https://svn.youshengyun.com:9900/nexus/repository/maven-public/</url>
-        </pluginRepository>
-    </pluginRepositories>
-
-    <distributionManagement>
-        <repository>
-            <id>releases</id>
-            <url>https://svn.youshengyun.com:9900/nexus/repository/maven-releases</url>
-        </repository>
-        <snapshotRepository>
-            <id>snapshots</id>
-            <url>https://svn.youshengyun.com:9900/nexus/repository/maven-snapshots/</url>
-        </snapshotRepository>
-    </distributionManagement>
+    <version>${revision}</version>
 
     <properties>
         <cas.version>6.6.9</cas.version>
-        <springboot.version>2.7.15</springboot.version>
-        <jodd-http.version>6.0.8</jodd-http.version>
         <pac4j.version>5.4.6</pac4j.version>
-        <alibaba-nacos.version>2.2.1</alibaba-nacos.version>
-        <alibaba-cloud.version>2021.0.5.0</alibaba-cloud.version>
 
-        <maven.compiler.source>11</maven.compiler.source>
-        <maven.compiler.target>11</maven.compiler.target>
-        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <maven.deploy.skip>true</maven.deploy.skip>
-
-        <mysql-driver.version>8.2.0</mysql-driver.version>
-        <mariadb-driver.version>3.1.4</mariadb-driver.version>
-        <postgresql-driver.version>42.7.3</postgresql-driver.version>
-        <kingbase-driver.version>8.6.0</kingbase-driver.version>
-        <dameng-driver.version>8.1.3.140</dameng-driver.version>
-        <oracle-driver.version>21.5.0.0</oracle-driver.version>
-
     </properties>
 
     <dependencyManagement>
@@ -83,13 +28,6 @@
                 <groupId>org.apereo.cas</groupId>
                 <artifactId>cas-server-support-bom</artifactId>
                 <version>${cas.version}</version>
-                <type>pom</type>
-                <scope>import</scope>
-            </dependency>
-            <dependency>
-                <groupId>com.alibaba.cloud</groupId>
-                <artifactId>spring-cloud-alibaba-dependencies</artifactId>
-                <version>${alibaba-cloud.version}</version>
                 <type>pom</type>
                 <scope>import</scope>
             </dependency>
@@ -287,7 +225,6 @@
         <dependency>
             <groupId>org.jodd</groupId>
             <artifactId>jodd-http</artifactId>
-            <version>${jodd-http.version}</version>
         </dependency>
 
         <dependency>
@@ -347,50 +284,42 @@
         <dependency>
             <groupId>com.mysql</groupId>
             <artifactId>mysql-connector-j</artifactId>
-            <version>${mysql-driver.version}</version>
         </dependency>
 
         <dependency>
             <groupId>org.mariadb.jdbc</groupId>
             <artifactId>mariadb-java-client</artifactId>
-            <version>${mariadb-driver.version}</version>
         </dependency>
 
         <dependency>
             <groupId>org.postgresql</groupId>
             <artifactId>postgresql</artifactId>
-            <version>${postgresql-driver.version}</version>
         </dependency>
 
         <dependency>
             <groupId>com.oracle.database.jdbc</groupId>
             <artifactId>ojdbc11</artifactId>
-            <version>${oracle-driver.version}</version>
         </dependency>
 
         <!-- 人大金仓数据库 -->
         <dependency>
             <groupId>cn.com.kingbase</groupId>
             <artifactId>kingbase8</artifactId>
-            <version>${kingbase-driver.version}</version>
         </dependency>
 
         <dependency>
             <groupId>cn.com.kingbase</groupId>
-            <artifactId>KesDialect-for-hibernate4</artifactId>
-            <version>1.0.0</version>
+            <artifactId>hibernate-dialect</artifactId>
         </dependency>
 
         <dependency>
             <groupId>com.dameng</groupId>
             <artifactId>DmDialect-for-hibernate5.6</artifactId>
-            <version>${dameng-driver.version}</version>
         </dependency>
 
         <dependency>
             <groupId>com.dameng</groupId>
             <artifactId>DmJdbcDriver18</artifactId>
-            <version>${dameng-driver.version}</version>
         </dependency>
     </dependencies>
 
@@ -398,132 +327,34 @@
         <finalName>sso</finalName>
 
         <plugins>
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-compiler-plugin</artifactId>
-                <version>3.8.1</version>
+            <!-- <plugin>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-maven-plugin</artifactId>
+                <version>${springboot.version}</version>
                 <configuration>
-                    <parameters>true</parameters>
+                    <mainClass>org.apereo.cas.web.CasWebApplication</mainClass>
+                    <executable>false</executable>
+                    <layout>NONE</layout>
                 </configuration>
-            </plugin>
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-deploy-plugin</artifactId>
-                <version>3.0.0-M1</version>
-                <configuration>
-                    <skip>true</skip>
-                </configuration>
-            </plugin>
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-source-plugin</artifactId>
-                <version>3.2.1</version>
                 <executions>
                     <execution>
-                        <id>attach-sources</id>
+                        <id>package</id>
                         <goals>
-                            <goal>jar-no-fork</goal>
+                            <goal>repackage</goal>
+                        </goals>
+                    </execution>
+                    <execution>
+                        <id>generate-resources</id>
+                        <goals>
+                            <goal>build-info</goal>
                         </goals>
                     </execution>
                 </executions>
-            </plugin>
-            <!-- <plugin> <groupId>org.springframework.boot</groupId> <artifactId>spring-boot-maven-plugin</artifactId> 
-                <version>${springboot.version}</version> <configuration> <mainClass>org.apereo.cas.web.CasWebApplication</mainClass> 
-                <executable>false</executable> <layout>NONE</layout> </configuration> <executions> 
-                <execution> <id>package</id> <goals> <goal>repackage</goal> </goals> </execution> 
-                <execution> <id>generate-resources</id> <goals> <goal>build-info</goal> </goals> 
-                </execution> </executions> </plugin> -->
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-war-plugin</artifactId>
-                <version>3.3.2</version>
-                <configuration>
-                    <failOnMissingWebXml>false</failOnMissingWebXml>
-                </configuration>
-            </plugin>
-
-            <!-- 动态编译环境配置 -->
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-resources-plugin</artifactId>
-                <version>3.2.0</version>
-                <executions>
-                    <execution>
-                        <phase>process-resources</phase>
-                        <goals>
-                            <goal>copy-resources</goal>
-                        </goals>
-                        <configuration>
-                            <resources>
-                                <resource>
-                                    <directory>src/main/resources/profiles/${dir}</directory>
-                                    <filtering>true</filtering>
-                                </resource>
-                            </resources>
-                            <outputDirectory>${project.build.outputDirectory}</outputDirectory>
-                            <overwrite>true</overwrite>
-                        </configuration>
-                    </execution>
-                </executions>
-            </plugin>
-            <!-- 动态编译环境配置 -->
+            </plugin> -->
         </plugins>
-
-        <!-- 动态编译环境配置 -->
-        <resources>
-            <resource>
-                <directory>src/main/resources</directory>
-                <excludes>
-                    <exclude>profiles/*</exclude>
-                </excludes>
-            </resource>
-            <resource>
-                <directory>src/main/resources/profiles/${dir}</directory>
-            </resource>
-        </resources>
     </build>
 
     <profiles>
-        <profile>
-            <!-- 本机个人开发环境 -->
-            <id>env-local</id>
-            <properties>
-                <dir>local</dir>
-            </properties>
-            <activation>
-                <activeByDefault>false</activeByDefault>
-            </activation>
-        </profile>
-        <profile>
-            <!-- 本地团队开发环境 -->
-            <id>env-dev</id>
-            <properties>
-                <dir>dev</dir>
-            </properties>
-            <activation>
-                <activeByDefault>false</activeByDefault>
-            </activation>
-        </profile>
-        <profile>
-            <!-- 测试环境 -->
-            <id>env-test</id>
-            <properties>
-                <dir>test</dir>
-            </properties>
-            <activation>
-                <activeByDefault>false</activeByDefault>
-            </activation>
-        </profile>
-        <profile>
-            <!-- 生产环境 -->
-            <id>env-prod</id>
-            <properties>
-                <dir>prod</dir>
-            </properties>
-            <activation>
-                <activeByDefault>false</activeByDefault>
-            </activation>
-        </profile>
         <profile>
             <id>build-docker-image</id>
             <build>
@@ -531,42 +362,6 @@
                     <plugin>
                         <groupId>com.google.cloud.tools</groupId>
                         <artifactId>jib-maven-plugin</artifactId>
-                        <version>3.4.0</version>
-                        <configuration>
-                            <skip>false</skip>
-                            <from>
-                                <!--<image>eclipse-temurin:11-jre</image>-->
-                                <image>docker-internal.youshengyun.com/tomcat:9.0-jre11-temurin</image>
-                                <platforms>
-                                    <platform>
-                                        <architecture>amd64</architecture>
-                                        <os>linux</os>
-                                    </platform>
-                                    <platform>
-                                        <architecture>arm64</architecture>
-                                        <os>linux</os>
-                                    </platform>
-                                </platforms>
-                            </from>
-                            <container>
-                                <appRoot>/usr/local/tomcat/webapps/${project.build.finalName}</appRoot>
-                            </container>
-                            <to>
-                                <image>docker-registry-internal.youshengyun.com/${project.artifactId}</image>
-                                <tags>
-                                    <tag>${project.version}</tag>
-                                    <tag>v9.6.x</tag>
-                                </tags>
-                            </to>
-                        </configuration>
-                        <executions>
-                            <execution>
-                                <phase>package</phase>
-                                <goals>
-                                    <goal>build</goal>
-                                </goals>
-                            </execution>
-                        </executions>
                     </plugin>
                 </plugins>
             </build>
