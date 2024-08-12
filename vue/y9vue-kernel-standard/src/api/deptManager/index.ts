@@ -1,6 +1,6 @@
 /*
- * @Descripttion: 
- * @version: 
+ * @Descripttion:
+ * @version:
  * @Author: zhangchongjie
  * @Date: 2022-06-27 10:48:32
  * @LastEditors: zhangchongjie
@@ -8,21 +8,22 @@
  * @FilePath: \workspace-y9boot-9.5-vuee:\workspace-y9boot-9.6-vue\y9vue-kernel-dcat-style\src\api\deptManager\index.ts
  */
 import Request from '@/api/lib/request';
-import qs from "qs";
+import qs from 'qs';
+
 const platformRequest = Request();
 
 /**
  * 设置部门管理员
- * @param params 
- * @returns 
+ * @param params
+ * @returns
  */
 export const saveOrUpdate = async (params) => {
     const data = qs.stringify(params);
     return await platformRequest({
-        url: "/api/rest/deptManager/saveOrUpdate",
+        url: '/api/rest/deptManager/saveOrUpdate',
         method: 'POST',
         cType: false,
-        data: data,
+        data: data
     });
 };
 
@@ -36,10 +37,9 @@ export const getManagersByParentId = async (parentId) => {
         url: '/api/rest/deptManager/listManagersByParentId',
         method: 'GET',
         cType: false,
-        params: { 'parentId': parentId }
+        params: { parentId: parentId }
     });
 };
-
 
 /**
  * 批量删除人员
@@ -58,7 +58,6 @@ export const delManager = async (ids) => {
     });
 };
 
-
 /**
  * 根据用户id，获取用户信息
  * @param {*} managerId 人员id
@@ -69,7 +68,7 @@ export const getManagerById = async (managerId) => {
         url: '/api/rest/deptManager/getManagerById',
         method: 'GET',
         cType: false,
-        params: { 'managerId': managerId }
+        params: { managerId: managerId }
     });
 };
 
@@ -84,7 +83,7 @@ export const loginNameCheck = async (personId, loginName) => {
         url: '/api/rest/deptManager/checkLoginName',
         method: 'GET',
         cType: false,
-        params: { 'personId': personId, 'loginName': loginName }
+        params: { personId: personId, loginName: loginName }
     });
 };
 

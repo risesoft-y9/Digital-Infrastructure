@@ -8,7 +8,7 @@
 
 const dictionaryRouter = {
     path: '/dictionary',
-    component: () => import("@/layouts/index.vue"),
+    component: () => import('@/layouts/index.vue'),
     redirect: '/dictionary',
     name: 'dictionary',
     meta: {
@@ -19,7 +19,7 @@ const dictionaryRouter = {
     children: [
         {
             path: '/dictionary/typeManage',
-            component: () => import("@/views/dictionary/typeManage.vue"),
+            component: () => import('@/views/dictionary/typeManage.vue'),
             name: 'dictionaryTypeManage',
             meta: {
                 title: '字典表类型管理',
@@ -27,16 +27,16 @@ const dictionaryRouter = {
                 roles: ['systemAdmin']
             }
         },
-		{
-		    path: '/dictionary/dataManage',
-		    component: () => import("@/views/dictionary/dataManage.vue"),
-		    name: 'dictionaryDataManage',
-		    meta: {
-		        title: '字典表数据管理',
-		        icon: 'ri-book-open-line',
-		        roles: ['systemAdmin']
-		    }
-		}
+        {
+            path: '/dictionary/dataManage',
+            component: () => import('@/views/dictionary/dataManage.vue'),
+            name: 'dictionaryDataManage',
+            meta: {
+                title: '字典表数据管理',
+                icon: 'ri-book-open-line',
+                roles: ['systemAdmin']
+            }
+        }
     ]
 };
 

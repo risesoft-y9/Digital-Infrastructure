@@ -1,10 +1,8 @@
 {
     "name": "y9vue-kernel-standard",
-    "version": "0.0.0",
+    "version": "9.6.6",
     "scripts": {
-        "dev": "vite  --mode development",
-        "test": "vite  --mode test",
-        "serve": "vite  --mode development",
+        "serve": "vite  --mode development --host 0.0.0.0",
         "serve-local": "vite  --mode localEnv",
         "build": "vite build",
         "build-test": "vite build  --mode test",
@@ -42,8 +40,8 @@
         "vue-router": "^4.0.13",
         "vxe-table": "^4.3.5",
         "xe-utils": "^3.5.7",
-        "y9plugin-components": "^2.1.8",
-        "y9plugin-sso": "^4.1.0",
+        "y9plugin-components": "^2.2.3",
+        "y9plugin-sso": "^4.1.4",
         "y9plugin-watermark": "^1.2.0"
     },
     "devDependencies": {

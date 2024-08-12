@@ -8,6 +8,7 @@
  */
 import Request from '@/api/lib/request';
 import qs from 'qs';
+
 const platformRequest = Request();
 
 /**
@@ -17,10 +18,10 @@ const platformRequest = Request();
  */
 export const getOptionClassList = async () => {
     return await platformRequest({
-        url: "/api/rest/optionClass/listOptionClass",
+        url: '/api/rest/optionClass/listOptionClass',
         method: 'GET',
         cType: false,
-        params: {},
+        params: {}
     });
 };
 
@@ -30,13 +31,12 @@ export const getOptionClassList = async () => {
  * @returns
  */
 export const saveOptionClass = async (params) => {
-
     const data = qs.stringify(params);
     return await platformRequest({
-        url: "/api/rest/optionClass/saveOptionClass",
+        url: '/api/rest/optionClass/saveOptionClass',
         method: 'POST',
         cType: false,
-        data: data,
+        data: data
     });
 };
 
@@ -47,17 +47,16 @@ export const saveOptionClass = async (params) => {
  */
 export const removeOptionClass = async (type) => {
     const params = {
-        type: type,
+        type: type
     };
     const data = qs.stringify(params);
     return await platformRequest({
-        url: "/api/rest/optionClass/remove",
+        url: '/api/rest/optionClass/remove',
         method: 'POST',
         cType: false,
-        data: data,
+        data: data
     });
 };
-
 
 /**
  *  根据字典类型，获取字典属性值列表
@@ -65,12 +64,11 @@ export const removeOptionClass = async (type) => {
  * @returns
  */
 export const listByType = async (type) => {
-
     return await platformRequest({
         url: '/api/rest/optionValue/listByType',
         method: 'GET',
         cType: false,
-        params: { 'type': type }
+        params: { type: type }
     });
 };
 
@@ -95,9 +93,8 @@ export const saveOptionValue = async (params) => {
  * @returns
  */
 export const removeByIds = async (ids) => {
-
     const params = {
-        ids: ids,
+        ids: ids
     };
     const data = qs.stringify(params);
 
@@ -196,7 +193,7 @@ export const getJobList = async () => {
         cType: false,
         params: {}
     });
-}
+};
 
 /**
  * 保存新增职位数据
@@ -220,7 +217,7 @@ export const saveJobValue = async (params) => {
  */
 export const deleteByIds = async (ids) => {
     const params = {
-        ids: ids,
+        ids: ids
     };
     return await platformRequest({
         url: '/api/rest/job/deleteByIds',
@@ -245,9 +242,9 @@ export const jobInfoGet = async (id) => {
     return await platformRequest({
         url: `/api/rest/job/getJobById/${id}`,
         method: 'get',
-        cType: false,
-    })
-}
+        cType: false
+    });
+};
 
 /**
  * 保存职位排序
@@ -268,8 +265,3 @@ export const saveOrder = async (jobIds, tabindexs) => {
         data: data
     });
 };
-
-
-
-
-

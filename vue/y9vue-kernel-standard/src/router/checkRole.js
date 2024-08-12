@@ -52,7 +52,7 @@ export function getPermissionRoutes(rolesArr = ['systemAdmin']) {
     const permissionRoutes = filterAsyncRoutes(asyncRoutes, roles);
     // 项目存储中心 pinia - routerStore模块 存储有权限的所有路由源数据，permissionRoutes即包含项目所有可跳转的路由
     routerStore.$patch({
-        PermissionRoutes: permissionRoutes,
+        PermissionRoutes: permissionRoutes
     });
     return permissionRoutes;
 }

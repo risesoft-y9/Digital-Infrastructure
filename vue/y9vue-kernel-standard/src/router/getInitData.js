@@ -12,8 +12,8 @@ export async function getLoginInfo() {
         method: 'GET',
         headers: {
             'Content-Type': 'application/x-www-form-urlencoded;charset=UTF-8',
-            Authorization: 'Bearer ' + sessionObj.access_token,
-        },
+            Authorization: 'Bearer ' + sessionObj.access_token
+        }
     })
         .then((res) => {
             return res.json();

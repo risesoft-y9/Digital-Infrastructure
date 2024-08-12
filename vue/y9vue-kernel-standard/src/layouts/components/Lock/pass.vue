@@ -42,16 +42,16 @@
 <template>
     <div class="lock-pane"></div>
     <div class="content">
-        <img src="https://i.gtimg.cn/club/item/face/img/2/16022_100.gif" alt srcset />
+        <img alt src="https://i.gtimg.cn/club/item/face/img/2/16022_100.gif" srcset />
         <!-- <i class="ri-lock-2-fill"></i> -->
         <span> {{ $t('屏幕已锁定') }}</span>
         <div class="form">
             <span :class="{ showErrorText: showError }">{{ $t('密码错误') }}</span>
             <el-input
                 v-model="inputPwd"
-                type="password"
                 placeholder="Please input password"
                 show-password
+                type="password"
                 @change="checkPwdFunc"
                 @focus="showError = false"
             />

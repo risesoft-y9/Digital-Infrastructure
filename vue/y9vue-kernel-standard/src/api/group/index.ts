@@ -7,59 +7,60 @@
  * @FilePath: \workspace-y9boot-9.5-vuee:\workspace-y9boot-9.6-vue\y9vue-kernel-dcat-style\src\api\group\index.ts
  */
 import Request from '@/api/lib/request';
-import qs from "qs";
+import qs from 'qs';
+
 const platformRequest = Request();
 /**
  * 根据用户组id，获取用户组信息
  * @param {*} groupID 用户组id
- * @returns 
+ * @returns
  */
 export const getGroupById = async (groupId) => {
     return await platformRequest({
-        url: "/api/rest/group/getGroupById",
+        url: '/api/rest/group/getGroupById',
         method: 'GET',
         cType: false,
-        params: { "groupId": groupId },
+        params: { groupId: groupId }
     });
 };
 
 /**
  * 根据人员id，获取用户组列表
- * @param {*} personID 
- * @returns 
+ * @param {*} personID
+ * @returns
  */
 export const getGroupsByPersonId = async (personId) => {
     return await platformRequest({
-        url: "/api/rest/group/listGroupsByPersonId",
+        url: '/api/rest/group/listGroupsByPersonId',
         method: 'GET',
         cType: false,
-        params: { "personId": personId },
+        params: { personId: personId }
     });
 };
 
 /**
  * 根据用户组id，批量删除用户组成员
- * @param {*} groupID 
- * @param {*} personIDs 
- * @returns 
+ * @param {*} groupID
+ * @param {*} personIDs
+ * @returns
  */
 export const removePersons = async (groupId, personIds) => {
     return await platformRequest({
-        url: "/api/rest/group/removePersons",
+        url: '/api/rest/group/removePersons',
         method: 'POST',
         cType: false,
         params: {
-			"groupId":groupId,
-			"personIds":personIds,
-		}
+            groupId: groupId,
+            personIds: personIds
+        }
     });
 };
 
 /**
  * 保存用户组的人员排序
- * @param {*} groupID 
- * @param {*} personIDs 
- * @returns 
+ * @param {*} groupID
+ * @param {*} personIDs
+ * @returns
  */
 export const orderPersons = async (groupId, personIds) => {
     let params = {
@@ -68,7 +69,7 @@ export const orderPersons = async (groupId, personIds) => {
     };
     const data = qs.stringify(params);
     return await platformRequest({
-        url: "/api/rest/group/orderPersons",
+        url: '/api/rest/group/orderPersons',
         method: 'POST',
         cType: false,
         data: data
@@ -78,8 +79,8 @@ export const orderPersons = async (groupId, personIds) => {
 /**
  * 批量添加用户组成员
  * @param {*} groupID 用户组id
- * @param {*} personIDs 
- * @returns 
+ * @param {*} personIDs
+ * @returns
  */
 export const addPersons = async (groupId, personIds) => {
     let params = {
@@ -88,7 +89,7 @@ export const addPersons = async (groupId, personIds) => {
     };
     const data = qs.stringify(params);
     return await platformRequest({
-        url: "/api/rest/group/addPersons",
+        url: '/api/rest/group/addPersons',
         method: 'POST',
         cType: false,
         data: data
@@ -97,24 +98,24 @@ export const addPersons = async (groupId, personIds) => {
 
 /**
  * 保存用户组信息
- * @param {*} params 
- * @returns 
+ * @param {*} params
+ * @returns
  */
 export const groupSaveOrUpdate = async (params) => {
     const data = qs.stringify(params);
     return await platformRequest({
-        url: "/api/rest/group/saveOrUpdate",
+        url: '/api/rest/group/saveOrUpdate',
         method: 'POST',
         cType: false,
-        data: data,
+        data: data
     });
 };
 
 /**
  * 保存用户组扩展信息
- * @param {*} groupID 
- * @param {*} properties 
- * @returns 
+ * @param {*} groupID
+ * @param {*} properties
+ * @returns
  */
 export const saveGroupExtendProperties = async (groupId, properties) => {
     const params = {
@@ -123,32 +124,32 @@ export const saveGroupExtendProperties = async (groupId, properties) => {
     };
     const data = qs.stringify(params);
     return await platformRequest({
-        url: "/api/rest/group/saveExtendProperties",
+        url: '/api/rest/group/saveExtendProperties',
         method: 'POST',
         cType: false,
-        data: data,
+        data: data
     });
 };
 
 /**
  * 删除岗位
- * @param {*} groupID 
- * @returns 
+ * @param {*} groupID
+ * @returns
  */
 export const removeGroup = async (groupId) => {
     return await platformRequest({
-        url: "/api/rest/group/remove",
+        url: '/api/rest/group/remove',
         method: 'POST',
         cType: false,
-        params: { "groupId": groupId },
+        params: { groupId: groupId }
     });
 };
 
 /**
  * 移动用户组
- * @param {*} groupID 
- * @param {*} parentID 
- * @returns 
+ * @param {*} groupID
+ * @param {*} parentID
+ * @returns
  */
 export const moveGroup = async (groupId, parentId) => {
     const params = {
@@ -157,24 +158,24 @@ export const moveGroup = async (groupId, parentId) => {
     };
     const data = qs.stringify(params);
     return await platformRequest({
-        url: "/api/rest/group/move",
+        url: '/api/rest/group/move',
         method: 'POST',
         cType: false,
         data: data
     });
 };
 
-export const orderGroups = async (personId,groupIds) => {
+export const orderGroups = async (personId, groupIds) => {
     const params = {
         personId: personId,
-        groupIds:groupIds
+        groupIds: groupIds
     };
     const data = qs.stringify(params);
     return await platformRequest({
-        url: "/api/rest/group/orderGroups",
+        url: '/api/rest/group/orderGroups',
         method: 'POST',
         cType: false,
-        data: data,
+        data: data
     });
 };
 

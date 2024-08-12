@@ -69,11 +69,11 @@
             </div>
             <div class="item full-screen" @click="toggleFullScreen">
                 <i class="ri-fullscreen-line"></i>
-                <span v-show="settingStore.getWindowWidth > 425">{{ $t('全屏') }}</span>
+                <!-- <span v-show="settingStore.getWindowWidth > 425">{{ $t('全屏') }}</span> -->
             </div>
             <div class="item web-setting">
                 <i class="ri-edit-box-line"></i>
-                <span v-show="settingStore.getWindowWidth > 425">{{ $t('设置') }}</span>
+                <!-- <span v-show="settingStore.getWindowWidth > 425">{{ $t('设置') }}</span> -->
             </div>
             <!-- <div class="item notify">
                 <el-badge :value="3" class="badge"></el-badge>

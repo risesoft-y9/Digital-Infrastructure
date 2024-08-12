@@ -6,7 +6,8 @@
  * @Description: 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
  * @FilePath: /sz- team-frontend-9.6.x/y9vue-home/src/settings.ts
  */
-import { RoutesDataItem } from "@/utils/routes";
+import { RoutesDataItem } from '@/utils/routes';
+
 /**
  * 站点配置
  * @author LiQingSong
@@ -16,12 +17,12 @@ export interface SettingsType {
      * 站点名称
      */
     siteTitle: string;
-  
+
     /**
      * 顶部菜单开启
      */
     topNavEnable: boolean;
-  
+
     /**
      * 头部固定开启
      */
@@ -30,23 +31,23 @@ export interface SettingsType {
     /**
      * tab菜单开启
      */
-     tabNavEnable: boolean;
+    tabNavEnable: boolean;
 
-     /**
+    /**
      * 站点首页路由
      */
     homeRouteItem: RoutesDataItem;
-  
+
     /**
      * 站点本地存储Token 的 Key值
      */
     siteTokenKey: string;
-  
+
     /**
      * Ajax请求头发送Token 的 Key值
      */
     ajaxHeadersTokenKey: string;
-  
+
     /**
      * Ajax返回值不参加统一验证的api地址
      */
@@ -57,7 +58,7 @@ export interface SettingsType {
      */
     iconfontUrl: string[];
 }
-  
+
 const settings: SettingsType = {
     siteTitle: 'Y9-ADMIN-VUE',
     topNavEnable: true,
@@ -67,16 +68,15 @@ const settings: SettingsType = {
         icon: 'control',
         title: 'index-layout.menu.home.workplace',
         path: '/home/workplace',
-        component: ()=> import('@/App.vue')
+        component: () => import('@/App.vue')
     },
     siteTokenKey: 'y9AT',
     ajaxHeadersTokenKey: 'x-token',
     ajaxResponseNoVerifyUrl: [
         '/user/login', // 用户登录
-        '/user/info', // 获取用户信息
+        '/user/info' // 获取用户信息
     ],
-    iconfontUrl: [],
+    iconfontUrl: []
 };
 
 export default settings;
-  

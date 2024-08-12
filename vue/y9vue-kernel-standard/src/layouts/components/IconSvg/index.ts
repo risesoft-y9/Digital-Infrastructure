@@ -1,3 +1,3 @@
-import iconsvg from "./index.vue";
+import iconsvg from './index.vue';
 
 export default iconsvg;

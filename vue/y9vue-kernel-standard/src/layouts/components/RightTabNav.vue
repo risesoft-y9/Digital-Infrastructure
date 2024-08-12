@@ -199,25 +199,25 @@ onUpdated(() => {
 
         // 数组里是否已经存在当前route规则
         /*
-    const isRoute: boolean = tabNavList.value.some(item =>{
-        if(equalTabNavRoute(item.route, route, routeItem.value.tabNavType)) {
-            return true;
-        }
-    });
-    if(!isRoute) {
-        store.commit('global/setHeadTabNavList', [
-            ...tabNavList.value,
-            {
-                route: {
-                    ...route
-                },
-                menu: {
-                    ...routeItem.value
-                }
-            }
-        ]);
+const isRoute: boolean = tabNavList.value.some(item =>{
+    if(equalTabNavRoute(item.route, route, routeItem.value.tabNavType)) {
+        return true;
     }
-    */
+});
+if(!isRoute) {
+    store.commit('global/setHeadTabNavList', [
+        ...tabNavList.value,
+        {
+            route: {
+                ...route
+            },
+            menu: {
+                ...routeItem.value
+            }
+        }
+    ]);
+}
+*/
         // 数组里是否已经存在当前route规则，不存在下标为-1
         let index = tabNavList.value.findIndex((item) =>
             equalTabNavRoute(item.route, route, routeItem.value.tabNavType)
