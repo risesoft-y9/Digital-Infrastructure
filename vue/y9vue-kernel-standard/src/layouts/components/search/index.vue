@@ -33,12 +33,12 @@
 </script>
 
 <template>
-    <el-drawer :z-index="9000" v-model="searchVisible" :show-close="false" direction="ttb">
+    <el-drawer v-model="searchVisible" :show-close="false" :z-index="9000" direction="ttb">
         <div :class="{ search: true, 'is-pc': settingStore.getDevice === 'pc' }">
             <el-input
                 v-model="searchKey"
-                placeholder="Please Input"
                 class="input"
+                placeholder="Please Input"
                 @change="(searchVisible = false), searchFunc()"
                 @focus="searchKey = ''"
             >

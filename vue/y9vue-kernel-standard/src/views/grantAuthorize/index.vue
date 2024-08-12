@@ -9,10 +9,10 @@
     <div>
         <fixedTreeModule
             ref="fixedTreeRef"
+            :showNodeDelete="false"
             :treeApiObj="treeApiObj"
             @onDeleteTree="roleRemove"
             @onTreeClick="handlerTreeClick"
-            :showNodeDelete="false"
         >
             <template v-if="currData.id" v-slot:rightContainer>
                 <!-- 右边卡片 -->

@@ -12,7 +12,7 @@ export const getDepartmentById = async (deptId) => {
         url: '/api/rest/dept/getDepartmentById',
         method: 'GET',
         cType: false,
-        params: { 'deptId': deptId }
+        params: { deptId: deptId }
     });
 };
 
@@ -28,8 +28,8 @@ export const getDepartmentPropOrgUnits = async (deptId, category) => {
         method: 'GET',
         cType: false,
         params: {
-            'deptId': deptId,
-            'category': category
+            deptId: deptId,
+            category: category
         }
     });
 };
@@ -59,7 +59,7 @@ export const removeDept = async (deptId) => {
         url: '/api/rest/dept/remove',
         method: 'POST',
         cType: false,
-        params: { 'deptId': deptId }
+        params: { deptId: deptId }
     });
 };
 
@@ -73,7 +73,7 @@ export const getOrderDepts = async (parentId) => {
         url: '/api/rest/dept/listOrderDepts',
         method: 'GET',
         cType: false,
-        params: { 'parentId': parentId }
+        params: { parentId: parentId }
     });
 };
 
@@ -161,10 +161,10 @@ export const removeDepartmentProp = async (deptId, orgBaseId, category) => {
 };
 
 //保存扩展属性
-export const saveDeptExtendProperties = async (deptId,properties) => {
+export const saveDeptExtendProperties = async (deptId, properties) => {
     const params = {
         deptId: deptId,
-        properties:properties
+        properties: properties
     };
     const data = qs.stringify(params);
     return await platformRequest({

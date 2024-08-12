@@ -6,7 +6,6 @@
  * @Description: 首页路由
  */
 
-
 const homeRouter = {
     path: '/home',
     component: () => import('@/layouts/index.vue'),
@@ -14,7 +13,7 @@ const homeRouter = {
     name: 'home',
     meta: {
         title: '控制台',
-        roles: ['systemAdmin','subSystemAdmin'] 
+        roles: ['systemAdmin', 'subSystemAdmin']
     },
     children: [
         {
@@ -24,7 +23,7 @@ const homeRouter = {
             meta: {
                 title: '控制台',
                 icon: 'ri-equalizer-line',
-                roles: ['systemAdmin','subSystemAdmin'] 
+                roles: ['systemAdmin', 'subSystemAdmin']
             }
         }
     ]

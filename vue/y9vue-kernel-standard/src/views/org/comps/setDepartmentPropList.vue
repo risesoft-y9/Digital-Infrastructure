@@ -307,8 +307,8 @@
     async function getDepartmentPropList() {
         if (departmentPropFormLine.value.departmentPropCategory) {
             let res = await getDepartmentPropOrgUnits(
-              props.currTreeNodeInfo.id,
-              departmentPropFormLine.value.departmentPropCategory
+                props.currTreeNodeInfo.id,
+                departmentPropFormLine.value.departmentPropCategory
             );
             if (res.success) {
                 setDepartmentPropTableConfig.value.tableData = res.data;

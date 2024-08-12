@@ -8,23 +8,23 @@
 
 const jobRouter = {
     path: '/jobManage',
-    component: () => import("@/layouts/index.vue"),
+    component: () => import('@/layouts/index.vue'),
     redirect: '/jobManage',
     name: 'jobManage',
     meta: {
         title: '职位管理',
         icon: 'ri-folder-user-line',
-        roles: ['systemAdmin','subSystemAdmin']
+        roles: ['systemAdmin', 'subSystemAdmin']
     },
     children: [
         {
             path: '/jobManage',
-            component: () => import("@/views/job/index.vue"),
+            component: () => import('@/views/job/index.vue'),
             name: 'jobManage',
             meta: {
                 title: '职位管理',
                 icon: 'ri-folder-user-line',
-                roles: ['systemAdmin','subSystemAdmin']
+                roles: ['systemAdmin', 'subSystemAdmin']
             }
         }
     ]

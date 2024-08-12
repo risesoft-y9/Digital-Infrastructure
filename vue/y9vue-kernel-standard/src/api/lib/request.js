@@ -13,6 +13,7 @@ import { ElMessage } from 'element-plus';
 import i18n from '@/language/index';
 import { isExternal } from '@/utils/validate.ts';
 import { $y9_SSO } from '@/main';
+
 const { t } = i18n.global;
 
 // 创建一个axios实例

@@ -10,7 +10,7 @@ const storageType = sessionStorage;
 // const storageType = localStorage;
 
 export default {
-    type: function(str) {
+    type: function (str) {
         // 为空 使用默认设定类型
         if (!str) {
             return storageType;
@@ -32,9 +32,10 @@ export default {
             storage.removeItem(x);
             return true;
         } catch (e) {
-            return e instanceof DOMException && (
-                    // everything except Firefox
-                    e.code === 22 ||
+            return (
+                e instanceof DOMException &&
+                // everything except Firefox
+                (e.code === 22 ||
                     // Firefox
                     e.code === 1014 ||
                     // test name field too, because code might not be present
@@ -43,30 +44,32 @@ export default {
                     // Firefox
                     e.name === 'NS_ERROR_DOM_QUOTA_REACHED') &&
                 // acknowledge QuotaExceededError only if there's something already stored
-                (storage && storage.length !== 0);
+                storage &&
+                storage.length !== 0
+            );
         }
     },
-    setStringItem: function(key, string) {
-        if (typeof(string) !== 'string' && typeof(string) !== 'number') {
+    setStringItem: function (key, string) {
+        if (typeof string !== 'string' && typeof string !== 'number') {
             return false;
         }
         storageType.setItem(key, string);
     },
-    getStringItem: function(key) {
+    getStringItem: function (key) {
         const str = storageType.getItem(key);
         if (!str || str == 'undefined') {
             return false;
         }
         return str;
     },
-    setObjectItem: function(key, obj) {
-        if (typeof(obj) !== 'object') {
+    setObjectItem: function (key, obj) {
+        if (typeof obj !== 'object') {
             return false;
         }
         storageType.setItem(key, JSON.stringify(obj));
         return true;
     },
-    getObjectItem: function(key, item = '') {
+    getObjectItem: function (key, item = '') {
         const object = storageType.getItem(key);
         if (!object) {
             return false;
@@ -84,4 +87,4 @@ export default {
             return false;
         }
     }
-}
+};

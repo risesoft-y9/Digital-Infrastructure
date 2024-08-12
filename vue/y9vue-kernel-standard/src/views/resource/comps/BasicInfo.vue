@@ -88,7 +88,7 @@
                 </span>
             </div>
             <div>
-                <y9Form ref="y9FormRef" :config="y9FormConfig" v-loading="loading"></y9Form>
+                <y9Form ref="y9FormRef" v-loading="loading" :config="y9FormConfig"></y9Form>
             </div>
         </template>
     </y9Card>

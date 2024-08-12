@@ -16,10 +16,10 @@
         <template v-if="Object.keys(currTreeNodeInfo).length > 0" #rightContainer>
             <baseInfo
                 :currTreeNodeInfo="currTreeNodeInfo"
-                :getTreeInstance="getTreeInstance"
-                :handAssginNode="handAssginNode"
                 :findNode="findNode"
                 :getTreeData="getTreeData"
+                :getTreeInstance="getTreeInstance"
+                :handAssginNode="handAssginNode"
                 :updateTreePositionCount="updateTreePositionCount"
             >
             </baseInfo>

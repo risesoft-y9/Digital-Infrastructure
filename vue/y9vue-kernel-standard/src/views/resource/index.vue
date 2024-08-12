@@ -37,8 +37,8 @@
                         :findNode="findNode"
                         :getTreeData="getTreeData"
                         :getTreeInstance="getTreeInstance"
-                        :postNode="postNode"
                         :handClickNode="handClickNode"
+                        :postNode="postNode"
                     />
                 </div>
             </template>
@@ -175,5 +175,4 @@
         fixedTreeRef.value?.handClickNode(node, isExpand);
     }
 </script>
-<style lang="scss" scoped>
-</style>
+<style lang="scss" scoped></style>

@@ -1,8 +1,8 @@
 <template>
-    <a v-if="isExternal(to)" :href="to" target="_blank" rel="noreferrer">
+    <a v-if="isExternal(to)" :href="to" rel="noreferrer" target="_blank">
         <slot></slot>
     </a>
-    <router-link v-else :to="to" :replace="replace">
+    <router-link v-else :replace="replace" :to="to">
         <slot></slot>
     </router-link>
 </template>

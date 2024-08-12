@@ -275,13 +275,13 @@
 
 <template>
     <el-drawer
-        custom-class="indexlayout-settings"
-        class="index-layout-setting-list"
-        :title="$t('网站设置')"
         v-model="webSettingVisible"
         :direction="settingPageAnimationdirection"
         :size="device !== 'mobile' ? size : '68%'"
+        :title="$t('网站设置')"
         :z-index="2000"
+        class="index-layout-setting-list"
+        custom-class="indexlayout-settings"
     >
         <el-form id="webSettingForm">
             <el-form-item
@@ -294,8 +294,8 @@
             >
                 <el-select
                     v-model="form.pcLayout"
-                    placeholder="选择"
                     :disabled="device === 'mobile' ? true : false"
+                    placeholder="选择"
                     @change="settingChange('pcLayout')"
                 >
                     <el-option
@@ -326,7 +326,7 @@
                 ]"
             >
                 <el-radio-group v-model="form.webLanguage" @change="settingChange('webLanguage')">
-                    <el-radio v-for="item in webLanguageOptions" :label="item.label" :key="item.label" size="large"
+                    <el-radio v-for="item in webLanguageOptions" :key="item.label" :label="item.label" size="large"
                         >{{ item.value }}
                     </el-radio>
                 </el-radio-group>
@@ -340,7 +340,7 @@
                 ]"
             >
                 <el-radio-group v-model="form.fontSize" @change="settingChange('fontSize')">
-                    <el-radio v-for="item in fontSizeOptions" :label="item.label" :key="item.label" size="large"
+                    <el-radio v-for="item in fontSizeOptions" :key="item.label" :label="item.label" size="large"
                         >{{ $t(`${item.value}`) }}
                     </el-radio>
                 </el-radio-group>
@@ -378,14 +378,14 @@
                             <div
                                 v-for="item in menuBgOptions"
                                 :key="item.key"
-                                :style="{ backgroundImage: 'url(' + item.src + ')', backgroundSize: 'cover' }"
                                 :class="{ item: true, selected: currentMenuBg === item.src }"
+                                :style="{ backgroundImage: 'url(' + item.src + ')', backgroundSize: 'cover' }"
                             ></div>
                         </div>
                     </el-scrollbar>
                 </template>
             </el-form-item>
-            <el-form-item :label="$t('菜单动画')" v-show="device === 'mobile'">
+            <el-form-item v-show="device === 'mobile'" :label="$t('菜单动画')">
                 <el-select v-model="form.menuAnimation" placeholder="选择" @change="settingChange('menuAnimation')">
                     <el-option
                         v-for="item in menuAnimationOptions"
@@ -395,7 +395,7 @@
                     />
                 </el-select>
             </el-form-item>
-            <el-form-item :label="$t('菜单宽度')" v-show="device === 'mobile'">
+            <el-form-item v-show="device === 'mobile'" :label="$t('菜单宽度')">
                 <el-select v-model="form.menuWidth" placeholder="选择" @change="settingChange('menuWidth')">
                     <el-option
                         v-for="item in menuWidthOptions"
@@ -467,8 +467,8 @@
             <el-form-item :label="$t('设置宽度')">
                 <el-select
                     v-model="form.settingWidth"
-                    placeholder="选择"
                     :disabled="device === 'mobile' ? true : false"
+                    placeholder="选择"
                     @change="settingChange('settingWidth')"
                 >
                     <el-option
@@ -510,12 +510,12 @@
             </el-form-item>
             <el-form-item :label="$t('锁屏密码')">
                 <el-input
-                    :style="{ width: '60%' }"
                     v-model="form.unlockScreenPwd"
-                    type="password"
-                    show-password
-                    @change="settingChange('unlockScreenPwd')"
                     :placeholder="form.unlockScreenPwd"
+                    :style="{ width: '60%' }"
+                    show-password
+                    type="password"
+                    @change="settingChange('unlockScreenPwd')"
                 ></el-input>
             </el-form-item>
         </el-form>

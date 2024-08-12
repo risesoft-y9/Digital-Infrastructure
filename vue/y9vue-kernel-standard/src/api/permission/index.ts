@@ -2,9 +2,10 @@
  * @Author: mengjuhua
  * @Date: 2023-08-02 16:04:34
  * @LastEditors: mengjuhua
- * @Description: 
+ * @Description:
  */
-import Request from "@/api/lib/request";
+import Request from '@/api/lib/request';
+
 const request = Request();
 
 export const getPersonResourcePermissionList = async (personId) => {
@@ -12,17 +13,16 @@ export const getPersonResourcePermissionList = async (personId) => {
         url: '/api/rest/personResources/getByPersonId',
         method: 'get',
         cType: false,
-        params: { 'personId': personId }
+        params: { personId: personId }
     });
 };
-
 
 export const getPositionResourcePermissionList = async (positionId) => {
     return await request({
         url: '/api/rest/positionResources/getByPositionId',
         method: 'get',
         cType: false,
-        params: { 'positionId': positionId }
+        params: { positionId: positionId }
     });
 };
 
@@ -31,17 +31,16 @@ export const getPersonRolePermissionList = async (personId) => {
         url: '/api/rest/personRoles/getByPersonId',
         method: 'get',
         cType: false,
-        params: { 'personId': personId }
+        params: { personId: personId }
     });
 };
-
 
 export const getPositionRolePermissionList = async (positionId) => {
     return await request({
         url: '/api/rest/positionRoles/getByPositionId',
         method: 'get',
         cType: false,
-        params: { 'positionId': positionId }
+        params: { positionId: positionId }
     });
 };
 

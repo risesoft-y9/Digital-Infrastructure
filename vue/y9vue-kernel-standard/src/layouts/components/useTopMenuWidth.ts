@@ -13,7 +13,6 @@
 import { ComputedRef, onMounted, Ref, ref, watch, nextTick, computed } from 'vue';
 
 export default function useTopMenuWidth(topNavEnable: ComputedRef<boolean> | Ref<boolean>) {
-
     const topMenuCon = ref<HTMLElement | null>(null);
 
     const topMenuWidth = ref<string>('auto');
@@ -25,7 +24,7 @@ export default function useTopMenuWidth(topNavEnable: ComputedRef<boolean> | Ref
             const child = topMenuCon.value.children;
             for (let index = 0, len = child.length; index < len; index++) {
                 const element = child[index] as HTMLElement;
-                width =  width + element.offsetWidth + 0.5;
+                width = width + element.offsetWidth + 0.5;
             }
             topMenuWidth.value = width + 'px';
         } else {
@@ -33,22 +32,16 @@ export default function useTopMenuWidth(topNavEnable: ComputedRef<boolean> | Ref
         }
     };
 
+    watch(topNavEnable, () => {
+        setWidth();
+    });
 
-    watch(topNavEnable,()=> {
-        setWidth(); 
-    })
-
-
-    onMounted(()=> {
-        setWidth();       
-    })
-
+    onMounted(() => {
+        setWidth();
+    });
 
     return {
         topMenuCon,
         topMenuWidth
-    }
-
-
-
+    };
 }
