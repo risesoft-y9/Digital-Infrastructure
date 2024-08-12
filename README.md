@@ -469,7 +469,7 @@ webapp -- 系统公共模块
 
 微信号：qq349416828
 
-备注：开源数字底座咨询-姓名
+备注：开源咨询-姓名
 <div><img style="width: 40%" src="https://vue.youshengyun.com/files/img/曲经理统一二维码咨询.png"><div/>
 联系人：有生博大-咨询热线
 
