@@ -8,13 +8,13 @@
 <template>
     <div id="kernel-tabs">
         <el-tabs
+            v-model="activeName"
             :class="{
                 top: tabPosition === 'top',
                 left: tabPosition === 'left',
                 right: tabPosition === 'right',
                 bottom: tabPosition === 'bottom'
             }"
-            v-model="activeName"
             :tab-position="tabPosition"
             stretch
             @tab-click="handleClick"
@@ -30,9 +30,9 @@
         </el-tabs>
         <el-tooltip content="关闭所有Tab" effect="light">
             <i
+                v-show="settingStore.getLabelStyle === 'top'"
                 class="ri-close-fill close-all-icon"
                 @click="closeAllTabs"
-                v-show="settingStore.getLabelStyle === 'top'"
             ></i>
         </el-tooltip>
     </div>

@@ -1,5 +1,6 @@
 import Request from '@/api/lib/request';
 import qs from 'qs';
+
 const settingRequest = Request();
 
 // 租户设置

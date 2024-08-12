@@ -14,7 +14,7 @@ import y9_storage from '@/utils/storage';
 import NProgress from 'nprogress'; // progress bar
 import { $y9_SSO } from '../main';
 import authRouter from './modules/authRouter';
-import {verifyPasswordExpiration} from '@/api/manager/index';
+import { verifyPasswordExpiration } from '@/api/manager/index';
 
 NProgress.configure({ showSpinner: false, easing: 'ease', speed: 1000 });
 
@@ -56,6 +56,7 @@ export async function checkWriteList(to, from) {
 }
 
 let userRole = ['user'];
+
 async function check() {
     let isTokenValid, isRoleValid;
 
@@ -108,12 +109,11 @@ async function check() {
     } else {
         if (!isTokenValid || !isRoleValid) {
             await $y9_SSO.ssoLogout({
-                logoutUrl: import.meta.env.VUE_APP_SSO_LOGOUT_URL + import.meta.env.VUE_APP_NAME + '/',
+                logoutUrl: import.meta.env.VUE_APP_SSO_LOGOUT_URL + import.meta.env.VUE_APP_NAME + '/'
             });
         }
         return false;
     }
-
 }
 
 // 修复刷新bug
@@ -126,6 +126,7 @@ function isFresh(role, path) {
     });
     return fresh;
 }
+
 // 所有路由上带的参数塞到一个对象里
 const parseQueryString = (string) => {
     if (string == '') {
@@ -174,11 +175,11 @@ export const routerBeforeEach = async (to, from) => {
     let CHECK = await check();
     if (CHECK) {
         // 每跳转一次 url 就进行一次判断
-        if(flag > 1){
+        if (flag > 1) {
             // console.log(flag, 'flag');
             const y9UserInfo = JSON.parse(sessionStorage.getItem('ssoUserInfo'));
             let result = await verifyPasswordExpiration(y9UserInfo.personId);
-            if(result.data){
+            if (result.data) {
                 ElMessage({
                     message: '密码已过期，请立即更新密码。',
                     type: 'error',
@@ -194,7 +195,7 @@ export const routerBeforeEach = async (to, from) => {
                 router.push({ path: '/password' });
             }
         }
-    
+
         if (!to.name) {
             let array = await router.getRoutes();
             // 没有权限访问的路由 跳转到401

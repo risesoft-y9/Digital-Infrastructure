@@ -3,7 +3,7 @@
  * @Date: 2022-03-31 20:14:43
  * @LastEditors: hongzhew
  * @LastEditTime: 2022-04-07 17:46:04
- * @Description: 
+ * @Description:
  */
 const positionRouter = {
     path: '/position',
@@ -12,7 +12,7 @@ const positionRouter = {
     name: 'position',
     meta: {
         title: '组织岗位',
-        roles: ['systemAdmin','subSystemAdmin'] 
+        roles: ['systemAdmin', 'subSystemAdmin']
     },
     children: [
         {
@@ -22,7 +22,7 @@ const positionRouter = {
             meta: {
                 title: '组织岗位',
                 icon: 'ri-shield-user-line',
-                roles: ['systemAdmin','subSystemAdmin'] 
+                roles: ['systemAdmin', 'subSystemAdmin']
             },
             children: [
                 // {
@@ -30,7 +30,7 @@ const positionRouter = {
                 //     component: () => import('@/views/position/edit.vue'),
                 //     name: 'positionEdit',
                 //     hidden: true,
-                //     props: true, 
+                //     props: true,
                 //     meta: {
                 //         title: '编辑查看',
                 //         icon: 'ri-organization-chart',
@@ -38,7 +38,7 @@ const positionRouter = {
                 //         transition: 'slide-left'
                 //     },
                 // },
-            ],
+            ]
         }
     ]
 };

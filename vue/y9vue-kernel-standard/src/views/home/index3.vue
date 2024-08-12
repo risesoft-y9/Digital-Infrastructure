@@ -311,7 +311,7 @@
                 <div class="left">
                     <el-card class="box-card">
                         <div class="center">
-                            <img src="@/assets/images/app-icon.png" class="image" />
+                            <img class="image" src="@/assets/images/app-icon.png" />
                             <h1>{{ $t('数字底座') }}</h1>
                             <div class="remark">
                                 <span>{{ $t('邮件系统') }}</span>
@@ -325,9 +325,9 @@
                             <span>{{ $t('内存最高占用比例图') }}</span>
                             <el-dropdown>
                                 <el-button
-                                    disabled
                                     :size="fontSizeObj.buttonSize"
                                     :style="{ 'font-size': fontSizeObj.baseFontSize }"
+                                    disabled
                                 >
                                     {{ $t('最近一个月') }}
                                 </el-button>
@@ -345,7 +345,7 @@
                             </el-dropdown>
                         </div>
                         <div class="two-content">
-                            <div class="row" v-loading="loading">
+                            <div v-loading="loading" class="row">
                                 <div class="left">
                                     <h1>60%</h1>
                                     <small>{{ $t('占用') }}</small>
@@ -397,7 +397,7 @@
                                         </template>
                                     </el-dropdown>
                                 </div>
-                                <div class="metric-content" v-loading="loading">
+                                <div v-loading="loading" class="metric-content">
                                     <div class="one-content">
                                         <h2>89.2k</h2>
                                         <span>{{ $t('在线用户') }}</span>
@@ -417,14 +417,14 @@
                                 <div class="card-header">
                                     <span>{{ $t('活跃用户数量比例图') }}</span>
                                     <el-button
-                                        disabled
                                         :size="fontSizeObj.buttonSize"
                                         :style="{ 'font-size': fontSizeObj.baseFontSize }"
+                                        disabled
                                     >
                                         {{ $t('最近一个月') }}
                                     </el-button>
                                 </div>
-                                <div style="display: flex; justify-content: space-around" v-loading="loading">
+                                <div v-loading="loading" style="display: flex; justify-content: space-around">
                                     <!-- echarts图 -->
                                     <div id="right-top-two" style="width: 235px; height: 132px"></div>
                                 </div>
@@ -452,7 +452,7 @@
                                     </template>
                                 </el-dropdown>
                             </div>
-                            <div class="card-content" v-loading="loading">
+                            <div v-loading="loading" class="card-content">
                                 <div class="content-left">
                                     <h1>2.7k</h1>
                                     <h5>
@@ -493,7 +493,7 @@
                                     </template>
                                 </el-dropdown>
                             </div>
-                            <div class="card-item" v-loading="loading">
+                            <div v-loading="loading" class="card-item">
                                 <div class="item-left">
                                     <div class="left-item">
                                         <i class="ri-checkbox-blank-circle-line"></i>
@@ -501,7 +501,7 @@
                                         <span>23043</span>
                                     </div>
                                     <div class="left-item">
-                                        <i style="color: #95d475" class="ri-checkbox-blank-circle-line"></i>
+                                        <i class="ri-checkbox-blank-circle-line" style="color: #95d475"></i>
                                         <span>{{ $t('错误') }}</span>
                                         <span>2343</span>
                                     </div>

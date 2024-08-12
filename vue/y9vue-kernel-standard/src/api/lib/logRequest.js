@@ -14,12 +14,13 @@ import { ElMessage } from 'element-plus';
 import i18n from '@/language/index';
 import { isExternal } from '@/utils/validate.ts';
 import { $y9_SSO } from '@/main';
+
 const { t } = i18n.global;
 // 创建一个axios实例
 const logRequest = axios.create({
     baseURL: import.meta.env.VUE_APP_LOG_URL,
     withCredentials: true,
-    timeout: 0,
+    timeout: 0
 });
 // 全局设置 - post请求头
 // service.defaults.headers.post['content-type'] = 'application/x-www-form-urlencoded;charset=UTF-8';
@@ -72,7 +73,7 @@ logRequest.interceptors.response.use(
                             } else {
                                 window.location.reload();
                             }
-                        },
+                        }
                     });
                     break;
                 case 401:
@@ -84,7 +85,7 @@ logRequest.interceptors.response.use(
                     ElMessage({
                         message: res.msg || 'Error',
                         type: 'error',
-                        duration: 3 * 1000,
+                        duration: 3 * 1000
                     });
                     break;
             }
@@ -121,12 +122,12 @@ logRequest.interceptors.response.use(
                                 __y9delete__: () => {
                                     // 删除前执行的函数
                                     console.log('删除前执行的函数');
-                                },
+                                }
                             };
                             $y9_SSO.ssoLogout(params);
                             // window.location.reload();
                         }
-                    },
+                    }
                 });
             } else if (error.response.status === 400) {
                 // 参数、业务上的错误统一返回 http 状态 400，返回原始 body 到请求处自行处理

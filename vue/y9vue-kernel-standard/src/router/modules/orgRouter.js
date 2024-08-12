@@ -13,7 +13,7 @@ const orgRouter = {
     name: 'org',
     meta: {
         title: '组织架构',
-        roles: ['systemAdmin','subSystemAdmin'],
+        roles: ['systemAdmin', 'subSystemAdmin']
     },
     children: [
         {
@@ -23,7 +23,7 @@ const orgRouter = {
             meta: {
                 title: '组织架构',
                 icon: 'ri-node-tree',
-                roles: ['systemAdmin','subSystemAdmin'],
+                roles: ['systemAdmin', 'subSystemAdmin']
             },
             children: [
                 // {
@@ -31,7 +31,7 @@ const orgRouter = {
                 //     component: () => import('@/views/org/edit.vue'),
                 //     name: 'orgEdit',
                 //     hidden: true,
-                //     props: true, 
+                //     props: true,
                 //     meta: {
                 //         title: '编辑查看',
                 //         icon: 'ri-organization-chart',
@@ -39,9 +39,9 @@ const orgRouter = {
                 //         transition: 'slide-left'
                 //     },
                 // },
-            ],
-        },
-    ],
+            ]
+        }
+    ]
 };
 
 export default orgRouter;

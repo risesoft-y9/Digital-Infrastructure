@@ -233,3 +233,47 @@ export const changeDisabledOrganization = async (id) => {
         data: data
     });
 };
+
+/**
+ * 获取统一码的信息
+ * @param {*} personId
+ * @returns
+ */
+export const getPersonQRcode = async (params) => {
+    return await platformRequest({
+        url: '/api/rest/idCode/getPersonById',
+        method: 'GET',
+        cType: false,
+        params
+    });
+};
+
+/**
+ * 为人员添加统一码
+ * @param {*} personId
+ * @returns
+ */
+export const createPersonQRcode = async (params) => {
+    const data = qs.stringify(params);
+    return await platformRequest({
+        url: '/api/rest/idCode/creat',
+        method: 'POST',
+        cType: false,
+        data
+    });
+};
+
+/**
+ * 根据统一码 获取人员信息
+ * @param {*} tenantId
+ * @param {*} code
+ * @returns
+ */
+export const getPersonInfo = async (params) => {
+    return await platformRequest({
+        url: '/services/rest/v1/idCode/getPerson',
+        method: 'GET',
+        cType: false,
+        params
+    });
+};

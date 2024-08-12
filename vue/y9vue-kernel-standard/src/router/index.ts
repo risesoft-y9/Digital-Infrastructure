@@ -62,6 +62,14 @@ export const constantRoutes: Array<any> = [
             title: 'Change Password'
         },
         component: () => import('@/views/password/index.vue')
+    },
+    {
+        path: '/goto',
+        hidden: true,
+        component: () => import('@/views/org/goto/index.vue'),
+        meta: {
+            title: '二维码信息'
+        }
     }
 ];
 
@@ -86,7 +94,7 @@ export const asyncRoutes = [
     securityUserLogRouter,
     securityAuditorLogRouter,
     personalRouter,
-    settingRouter,
+    settingRouter
     // 引入其他模块路由
 ];
 
@@ -98,7 +106,12 @@ const router = createRouter({
 
 //在用户点击前，进入routerBeforeEach去判断用户是否有权限
 //全部判断逻辑请查看checkRouter.js
-router.beforeEach(routerBeforeEach);
+router.beforeEach((to, from) => {
+    if (to.path == '/goto') {
+        document.title = '数字底座-人员名片';
+    }
+    routerBeforeEach(to, from);
+});
 router.afterEach(() => {
     NProgress.done();
 });

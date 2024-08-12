@@ -22,7 +22,7 @@ export const getPersonById = async (personId) => {
         url: '/api/rest/person/getPersonById',
         method: 'GET',
         cType: false,
-        params: { 'personId': personId }
+        params: { personId: personId }
     });
 };
 
@@ -36,7 +36,7 @@ export const getPersonExtById = async (personId) => {
         url: '/api/rest/person/getPersonExtById',
         method: 'GET',
         cType: false,
-        params: { 'personId': personId }
+        params: { personId: personId }
     });
 };
 
@@ -50,7 +50,7 @@ export const getPersonExtByIdWithEncry = async (personId) => {
         url: '/api/rest/person/getPersonExtByIdWithEncry',
         method: 'GET',
         cType: false,
-        params: { 'personId': personId }
+        params: { personId: personId }
     });
 };
 
@@ -65,7 +65,7 @@ export const loginNameCheck = async (personId, loginName) => {
         url: '/api/rest/person/checkLoginName',
         method: 'GET',
         cType: false,
-        params: { 'personId': personId, 'loginName': loginName }
+        params: { personId: personId, loginName: loginName }
     });
 };
 
@@ -80,7 +80,7 @@ export const EmailCheck = async (personId, email) => {
         url: '/api/rest/person/checkEmail',
         method: 'GET',
         cType: false,
-        params: { 'personId': personId, 'email': email }
+        params: { personId: personId, email: email }
     });
 };
 
@@ -95,7 +95,7 @@ export const CAIDCheck = async (personId, CAID) => {
         url: '/api/rest/person/checkCaid',
         method: 'GET',
         cType: false,
-        params: { 'personId': personId, 'CAID': CAID }
+        params: { personId: personId, CAID: CAID }
     });
 };
 
@@ -109,7 +109,7 @@ export const getPersonsByParentId = async (parentId) => {
         url: '/api/rest/person/listPersonsByParentId',
         method: 'GET',
         cType: false,
-        params: { 'parentId': parentId }
+        params: { parentId: parentId }
     });
 };
 
@@ -123,7 +123,7 @@ export const getPersonsByPositionId = async (positionId) => {
         url: '/api/rest/person/listPersonsByPositionId',
         method: 'GET',
         cType: false,
-        params: { 'positionId': positionId }
+        params: { positionId: positionId }
     });
 };
 
@@ -137,7 +137,7 @@ export const getPersonsByGroupID = async (groupId) => {
         url: '/api/rest/person/listPersonsByGroupId',
         method: 'GET',
         cType: false,
-        params: { 'groupId': groupId }
+        params: { groupId: groupId }
     });
 };
 

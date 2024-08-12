@@ -6,7 +6,7 @@
  * @Description: 自定义 svg icon 
 -->
 <template>
-    <svg class="svg-icon" aria-hidden="true">
+    <svg aria-hidden="true" class="svg-icon">
         <use :xlink:href="`#${type}`" />
     </svg>
 </template>

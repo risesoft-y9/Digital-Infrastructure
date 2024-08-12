@@ -48,6 +48,7 @@
                 <template v-if="currTreeNodeInfo.nodeType == 'Person'">
                     <positionList :currTreeNodeInfo="currTreeNodeInfo"></positionList>
                     <groupList :currTreeNodeInfo="currTreeNodeInfo"></groupList>
+                    <QRcodeCom :currTreeNodeInfo="currTreeNodeInfo"></QRcodeCom>
                 </template>
                 <personList
                     v-else
@@ -100,6 +101,7 @@
     import personList from './comps/personList.vue';
     import positionList from './comps/positionList.vue';
     import groupList from './comps/groupList.vue';
+    import QRcodeCom from './comps/QRcode.vue';
     import setDepartmentPropList from './comps/setDepartmentPropList.vue';
     import uploadOrgInfo from './comps/dialogContent/uploadOrgInfo.vue';
     import historyUploadDetails from './comps/dialogContent/historyUploadDetails.vue';
