@@ -58,7 +58,6 @@
         <spring-cloud.version>2021.0.8</spring-cloud.version>
         
         <aspectj.version>1.9.20.1</aspectj.version>
-        <lombok.version>1.18.28</lombok.version>
 
         <central-publishing-maven-plugin.version>0.5.0</central-publishing-maven-plugin.version>
         <maven-gpg-plugin.version>1.6</maven-gpg-plugin.version>
@@ -72,7 +71,7 @@
         <maven-resources-plugin.version>3.3.1</maven-resources-plugin.version>
         <maven-deploy-plugin.version>3.1.1</maven-deploy-plugin.version>
         <maven-war-plugin.version>3.4.0</maven-war-plugin.version>
-        <maven-compiler-plugin.version>3.11.0</maven-compiler-plugin.version>
+        <maven-compiler-plugin.version>3.13.0</maven-compiler-plugin.version>
         <flatten-maven-plugin.version>1.6.0</flatten-maven-plugin.version>
         <buildnumber-maven-plugin.version>3.1.0</buildnumber-maven-plugin.version>
         <git-commit-id-maven-plugin.version>7.0.0</git-commit-id-maven-plugin.version>
@@ -268,15 +267,16 @@
                             <path>
                                 <groupId>org.projectlombok</groupId>
                                 <artifactId>lombok</artifactId>
-                                <version>${lombok.version}</version>
                             </path>
                             <path>
                                 <groupId>org.springframework.boot</groupId>
                                 <artifactId>spring-boot-configuration-processor</artifactId>
-                                <version>${spring-boot.version}</version>
+                            </path>
+                            <path>
+                                <groupId>org.springframework</groupId>
+                                <artifactId>spring-context-indexer</artifactId>
                             </path>
                         </annotationProcessorPaths>
-
                         <source>${java.version}</source>
                         <target>${java.version}</target>
                         <parameters>true</parameters>
