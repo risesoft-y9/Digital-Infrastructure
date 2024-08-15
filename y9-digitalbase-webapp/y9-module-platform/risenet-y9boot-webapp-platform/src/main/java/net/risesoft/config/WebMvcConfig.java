@@ -15,8 +15,6 @@ import org.springframework.http.MediaType;
 import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
 import org.springframework.scheduling.annotation.EnableAsync;
 import org.springframework.web.filter.RequestContextFilter;
-import org.springframework.web.servlet.config.annotation.DefaultServletHandlerConfigurer;
-import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
 import net.risesoft.y9.Y9Context;
 import net.risesoft.y9.configuration.Y9Properties;
@@ -30,7 +28,7 @@ import net.risesoft.y9.configuration.Y9Properties;
 @Configuration
 @EnableConfigurationProperties(Y9Properties.class)
 @EnableAsync(proxyTargetClass = true, mode = AdviceMode.ASPECTJ)
-public class WebMvcConfig implements WebMvcConfigurer {
+public class WebMvcConfig {
 
     // starter-log工程用到了RequestContextHolder
     // https://github.com/spring-projects/spring-boot/issues/2637
@@ -55,11 +53,6 @@ public class WebMvcConfig implements WebMvcConfigurer {
         filterBean.setOrder(50);
         filterBean.addUrlPatterns("/api/*");
         return filterBean;
-    }
-
-    @Override
-    public void configureDefaultServletHandling(DefaultServletHandlerConfigurer configurer) {
-        configurer.enable();
     }
 
     @Bean
