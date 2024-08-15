@@ -303,11 +303,6 @@
                                 <artifactId>spring-boot-configuration-processor</artifactId>
                                 <version>${spring-boot.version}</version>
                             </path>
-                            <path>
-                                <groupId>org.springframework</groupId>
-                                <artifactId>spring-context-indexer</artifactId>
-                                <version>5.3.22</version>
-                            </path>
                         </annotationProcessorPaths>
                         <source>${java.version}</source>
                         <target>${java.version}</target>
