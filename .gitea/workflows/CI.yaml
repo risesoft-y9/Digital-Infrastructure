@@ -1,0 +1,29 @@
+name: CI
+on:
+    push:
+        branches:
+            - main
+
+jobs:
+    build:
+        runs-on: ubuntu-22.04
+        steps:
+
+            - name: Checkout current repository
+              uses: https://githubfast.com/actions/checkout@v4.1.7
+
+            - name: Maven Settings
+              uses: https://githubfast.com/s4u/maven-settings-action@v3.0.0
+              with:
+                  servers: '[{"id": "snapshots", "username": "${{ secrets.MAVEN_USERNAME }}", "password": "${{ secrets.MAVEN_PASSWORD }}"}]'
+
+            - name: Cache Maven packages
+              uses: https://githubfast.com/actions/cache@v4
+              with:
+                  path: ~/.m2/repository
+                  key: ${{ runner.os }}-maven-${{ hashFiles('**/pom.xml') }}
+                  restore-keys: |
+                      ${{ runner.os }}-maven- 
+
+            - name: Publish to private maven repository
+              run: mvn -B deploy -T 1C -P deploy-private-repo -DskipTests=true
