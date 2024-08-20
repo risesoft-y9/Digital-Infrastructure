@@ -1,8 +1,4 @@
 spring:
-    application:
-        name: platform
-    profiles:
-        active: local
     cloud:
         nacos:
             config:
@@ -14,4 +10,4 @@ spring:
                 password: Risesoft@2022
     config:
         import:
-            - optional:nacos:platform.yml
+            - optional:nacos:log.yml

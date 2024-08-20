@@ -1,6 +1,4 @@
 spring:
-    application:
-        name: sso
     profiles:
         active: local
     cloud:
@@ -14,4 +12,55 @@ spring:
                 username: nacos
                 password: nacos
                 extension-configs:
-                    -   dataId: sso.yml
+                    - dataId: sso.yml
+---
+spring:
+    config:
+        activate:
+            on-profile: dev
+    cloud:
+        enabled: true
+        nacos:
+            config:
+                enabled: true
+                namespace: dev
+                group: DEFAULT_GROUP
+                server-addr: https://dev.youshengyun.com:443
+                username: nacos
+                password: Risesoft@2022
+                extension-configs:
+                    - dataId: sso.yml
+---
+spring:
+    config:
+        activate:
+            on-profile: prod
+    cloud:
+        enabled: true
+        nacos:
+            config:
+                enabled: true
+                namespace: vue
+                group: DEFAULT_GROUP
+                server-addr: https://vue.youshengyun.com:443
+                username: nacos
+                password: Risesoft@2022
+                extension-configs:
+                    - dataId: sso.yml
+---
+spring:
+    config:
+        activate:
+            on-profile: test
+    cloud:
+        enabled: true
+        nacos:
+            config:
+                enabled: true
+                group: DEFAULT_GROUP
+                namespace: test
+                server-addr: nacos:8848
+                username: nacos
+                password: Risesoft@2024
+                extension-configs:
+                    - dataId: sso.yml

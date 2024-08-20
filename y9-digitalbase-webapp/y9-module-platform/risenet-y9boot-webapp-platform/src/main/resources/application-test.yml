@@ -1,17 +1,13 @@
 spring:
-    application:
-        name: log
-    profiles:
-        active: test
     cloud:
         nacos:
             config:
                 enabled: true
-                namespace: test
                 group: DEFAULT_GROUP
+                namespace: test
                 server-addr: nacos:8848
                 username: nacos
                 password: Risesoft@2024
     config:
         import:
-            - optional:nacos:log.yml
+            - optional:nacos:platform.yml

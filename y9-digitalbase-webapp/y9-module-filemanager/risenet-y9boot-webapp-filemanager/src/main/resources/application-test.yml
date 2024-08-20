@@ -1,10 +1,5 @@
 spring:
-    application:
-        name: sso
-    profiles:
-        active: test
     cloud:
-        enabled: true
         nacos:
             config:
                 enabled: true
@@ -13,5 +8,6 @@ spring:
                 server-addr: nacos:8848
                 username: nacos
                 password: Risesoft@2024
-                extension-configs:
-                    - dataId: sso.yml
+    config:
+        import:
+            - optional:nacos:fileManager.yml

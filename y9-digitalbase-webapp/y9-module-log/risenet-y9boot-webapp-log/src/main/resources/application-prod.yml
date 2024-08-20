@@ -1,10 +1,5 @@
 spring:
-    application:
-        name: sso
-    profiles:
-        active: vue
     cloud:
-        enabled: true
         nacos:
             config:
                 enabled: true
@@ -13,5 +8,6 @@ spring:
                 server-addr: https://vue.youshengyun.com:443
                 username: nacos
                 password: Risesoft@2022
-                extension-configs:
-                    - dataId: sso.yml
+    config:
+        import:
+            - optional:nacos:log.yml
