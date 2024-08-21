@@ -197,8 +197,11 @@
                     </execution>
                 </executions>
                 <configuration>
+                    <!-- <verbose>true</verbose> -->
+                    <dotGitDirectory>${project.basedir}/.git</dotGitDirectory>
                     <failOnNoGitDirectory>false</failOnNoGitDirectory>
-                    <injectAllReactorProjects>true</injectAllReactorProjects>
+                    <!-- 对于多个仓库聚合不会更新 git 的信息 -->
+                    <!-- <injectAllReactorProjects>true</injectAllReactorProjects> -->
                     <generateGitPropertiesFile>true</generateGitPropertiesFile>
                     <generateGitPropertiesFilename>${project.build.outputDirectory}/git.properties
                     </generateGitPropertiesFilename>
@@ -218,7 +221,7 @@
                     </execution>
                 </executions>
                 <configuration>
-                    <timestampFormat>yyyyMMdd</timestampFormat>
+                    <timestampFormat>yyyyMMddHHmm</timestampFormat>
                     <timestampPropertyName>buildDate</timestampPropertyName>
                     <timezone>GMT+8</timezone>
                 </configuration>
