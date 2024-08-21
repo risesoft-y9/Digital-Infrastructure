@@ -78,7 +78,7 @@ public class SystemApiImpl implements SystemApi {
      * @param cnName 系统名称
      * @param contextPath 系统上下文
      * @param isvGuid 租户id
-     * @return
+     * @return {@code Y9Result<System>}
      */
     @Override
     public Y9Result<System> registrySystem(String name, String cnName, String contextPath, String isvGuid) {

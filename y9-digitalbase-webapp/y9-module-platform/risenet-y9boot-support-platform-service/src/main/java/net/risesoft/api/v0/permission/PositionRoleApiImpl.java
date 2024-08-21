@@ -93,7 +93,7 @@ public class PositionRoleApiImpl implements PositionRoleApi {
      * @param tenantId 租户id
      * @param positionId 岗位id
      * @param customId 自定义id
-     * @return
+     * @return Boolean 是否拥有角色
      * @since 9.6.0
      */
     @Override

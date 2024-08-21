@@ -22,50 +22,50 @@ public interface Y9PositionToResourceAndAuthorityService {
     /**
      * 根据授权配置id和组织id删除
      *
-     * @param authorizationId
-     * @param orgId
+     * @param authorizationId 授权配置id
+     * @param orgId 组织id
      */
     void deleteByAuthorizationIdAndOrgUnitId(String authorizationId, String orgId);
 
     /**
      * 根据授权配置id和岗位id删除
      *
-     * @param authorizationId
-     * @param positionId
+     * @param authorizationId 授权配置id
+     * @param positionId 岗位id
      */
     void deleteByAuthorizationIdAndPositionId(String authorizationId, String positionId);
 
     /**
      * 根据组织id删除其下所有所有岗位的授权缓存
      *
-     * @param orgUnitId
+     * @param orgUnitId 组织id
      */
     void deleteByOrgUnitId(String orgUnitId);
 
     /**
      * 根据岗位id删除
      *
-     * @param positionId
+     * @param positionId 岗位id
      */
     void deleteByPositionId(String positionId);
 
     /**
      * 判断岗对资源是否有相应的权限
      *
-     * @param positionId
-     * @param resourceId
-     * @param authority
-     * @return
+     * @param positionId 岗位id
+     * @param resourceId 资源id
+     * @param authority 权限类型{@link AuthorityEnum}
+     * @return boolean
      */
     boolean hasPermission(String positionId, String resourceId, AuthorityEnum authority);
 
     /**
      * 判断岗对资源是否有相应的权限
      *
-     * @param positionId
-     * @param customId
-     * @param authority
-     * @return
+     * @param positionId 岗位id
+     * @param customId 自定义id
+     * @param authority 权限类型 {@link AuthorityEnum}
+     * @return boolean
      */
     boolean hasPermissionByCustomId(String positionId, String customId, AuthorityEnum authority);
 
@@ -74,21 +74,21 @@ public interface Y9PositionToResourceAndAuthorityService {
     /**
      * 根据岗位id、父资源id及授权类型查找
      *
-     * @param positionId
-     * @param parentResourceId
-     * @param authority
-     * @return
+     * @param positionId 岗位id
+     * @param parentResourceId 父资源id
+     * @param authority 权限类型{@link AuthorityEnum}
+     * @return {@code List<Y9PositionToResourceAndAuthority>}
      */
     List<Y9PositionToResourceAndAuthority> list(String positionId, String parentResourceId, AuthorityEnum authority);
 
     /**
      * 根据岗位id、父资源id、资源类型及授权类型查找
      *
-     * @param positionId
-     * @param parentResourceId
-     * @param resourceType
-     * @param authority
-     * @return
+     * @param positionId 岗位id
+     * @param parentResourceId 父资源id
+     * @param resourceType 资源类型{@link ResourceTypeEnum}
+     * @param authority 权限类型{@link AuthorityEnum}
+     * @return {@code List<Y9PositionToResourceAndAuthority>}
      */
     List<Y9PositionToResourceAndAuthority> list(String positionId, String parentResourceId,
         ResourceTypeEnum resourceType, AuthorityEnum authority);
@@ -97,16 +97,16 @@ public interface Y9PositionToResourceAndAuthorityService {
      * 根据岗位id 及授权类型查找应用列表
      *
      * @param positionId 岗位id
-     * @param authority {@link AuthorityEnum}
-     * @return
+     * @param authority 权限类型{@link AuthorityEnum}
+     * @return {@code List<Y9App>}
      */
     List<Y9App> listAppsByAuthority(String positionId, AuthorityEnum authority);
 
     /**
-     * 根据人员查找
+     * 根据岗位id查找
      *
-     * @param positionId
-     * @return
+     * @param positionId 岗位id
+     * @return {@code List<Y9PositionToResourceAndAuthority>}
      */
     List<Y9PositionToResourceAndAuthority> listByPositionId(String positionId);
 
@@ -115,9 +115,9 @@ public interface Y9PositionToResourceAndAuthorityService {
      *
      * @param positionId 岗位id
      * @param resourceId 资源id
-     * @param resourceType 资源类型
-     * @param authority 权限类型
-     * @return {@link List}<{@link Y9Menu}>
+     * @param resourceType 资源类型{@link ResourceTypeEnum}
+     * @param authority 权限类型{@link AuthorityEnum}
+     * @return {@code List<Y9Menu>}
      */
     List<Y9Menu> listSubMenus(String positionId, String resourceId, ResourceTypeEnum resourceType,
         AuthorityEnum authority);
@@ -127,8 +127,8 @@ public interface Y9PositionToResourceAndAuthorityService {
      *
      * @param positionId 岗位id
      * @param resourceId 资源id
-     * @param authority 权限类型
-     * @return {@link List}<{@link Y9ResourceBase}>
+     * @param authority 权限类型{@link AuthorityEnum}
+     * @return {@code List<Y9ResourceBase>}
      */
     List<Y9ResourceBase> listSubResources(String positionId, String resourceId, AuthorityEnum authority);
 

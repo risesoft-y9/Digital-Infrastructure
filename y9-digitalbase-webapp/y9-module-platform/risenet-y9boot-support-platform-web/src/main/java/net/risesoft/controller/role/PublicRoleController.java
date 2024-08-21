@@ -41,7 +41,7 @@ public class PublicRoleController {
     /**
      * 获取系统公共角色顶节点
      *
-     * @return
+     * @return {@code Y9Result<List<}{@link RoleVO}{@code >>}
      */
     @RiseLog(operationName = "获取系统公共角色顶节点")
     @RequestMapping(value = "/treeRoot")
@@ -58,7 +58,7 @@ public class PublicRoleController {
     /**
      * 获取系统公共角色顶节点
      *
-     * @return
+     * @return {@code Y9Result<List<}{@link RoleTreeNodeVO}{@code >>}
      */
     @RiseLog(operationName = "获取系统公共角色顶节点")
     @RequestMapping(value = "/treeRoot2")
@@ -72,7 +72,7 @@ public class PublicRoleController {
      * 根据角色名称，查询公共角色节点
      *
      * @param name 角色名称
-     * @return
+     * @return {@code Y9Result<List<}{@link RoleVO}{@code >>}
      */
     @RiseLog(operationName = "根据角色名称，查询公共角色节点")
     @RequestMapping(value = "/treeSearch")
@@ -95,7 +95,7 @@ public class PublicRoleController {
      * 根据角色名称，查询公共角色节点
      *
      * @param name 角色名称
-     * @return
+     * @return {@code Y9Result<List<}{@link RoleTreeNodeVO}{@code >>}
      */
     @RiseLog(operationName = "根据角色名称，查询公共角色节点")
     @RequestMapping(value = "/treeSearch2")

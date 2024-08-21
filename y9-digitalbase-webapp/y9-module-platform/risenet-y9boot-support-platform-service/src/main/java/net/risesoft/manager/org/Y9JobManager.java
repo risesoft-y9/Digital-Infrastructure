@@ -3,6 +3,7 @@ package net.risesoft.manager.org;
 import java.util.Optional;
 
 import net.risesoft.entity.Y9Job;
+import net.risesoft.y9.exception.Y9NotFoundException;
 
 /**
  * 职位 manager
@@ -21,12 +22,25 @@ public interface Y9JobManager {
      * 根据id，获取职位信息（直接读取数据库）
      *
      * @param id 职位id
-     * @return
+     * @return {@link Y9Job} 职位对象
      */
     Optional<Y9Job> findByIdNotCache(String id);
 
+    /**
+     * 根据id，获取职位信息
+     * 
+     * @param id 职位id
+     * @return {@link Y9Job} 职位对象
+     * @throws Y9NotFoundException id 对应的记录不存在的情况
+     */
     Y9Job getById(String id);
 
+    /**
+     * 根据id，获取职位信息（直接读取数据库）
+     *
+     * @param id 职位id
+     * @return {@link Y9Job} 职位对象
+     */
     Y9Job getByIdNotCache(String id);
 
     Y9Job save(Y9Job y9Job);

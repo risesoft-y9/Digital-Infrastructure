@@ -136,7 +136,7 @@ public class PersonRoleApiImpl implements PersonRoleApi {
      *
      * @param tenantId 租户id
      * @param roleId 角色唯一标识
-     * @return List&lt;Person&gt; 人员对象集合
+     * @return {@code List<Person>} 人员对象集合
      * @since 9.6.0
      */
     @Override
@@ -153,7 +153,7 @@ public class PersonRoleApiImpl implements PersonRoleApi {
      *
      * @param tenantId 租户id
      * @param personId 人员id
-     * @return List<Role> 角色对象集合
+     * @return {@code List<Role>} 角色对象集合
      * @since 9.6.0
      */
     @Override

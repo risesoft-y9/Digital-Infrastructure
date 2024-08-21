@@ -46,7 +46,7 @@ public class PersonalCenterController {
      *
      * @param personId 人员id
      * @param password 密码（明文）
-     * @return
+     * @return {@code Y9Result<Boolean>}
      */
     @RiseLog(operationName = "校验密码")
     @RequestMapping("/checkPassword")
@@ -59,7 +59,7 @@ public class PersonalCenterController {
      * 获取管理员信息
      *
      * @param managerId 管理员id
-     * @return
+     * @return {@code Y9Result<Map<String, Object>>}
      */
     @RiseLog(operationName = "根据人员id，获取人员信息")
     @RequestMapping(value = "/getManagerById")
@@ -90,7 +90,7 @@ public class PersonalCenterController {
      * 检查三员密码是否过期（三员密码需定期修改）
      *
      * @param id 管理员id
-     * @return true 为密码已过期 false 为密码未过期
+     * @return {@code Y9Result<Boolean>} 为密码已过期 false 为密码未过期
      */
     @RiseLog(operationName = "检查密码是否过期")
     @RequestMapping("/isPasswordExpired")
@@ -103,7 +103,7 @@ public class PersonalCenterController {
      *
      * @param personId 人员信息
      * @param newPassword 人员新密码
-     * @return
+     * @return {@code Y9Result<String>}
      */
     @RiseLog(operationType = OperationTypeEnum.MODIFY, operationName = "修改密码")
     @PostMapping(value = "/modifyPassword")
@@ -117,7 +117,7 @@ public class PersonalCenterController {
      * 更新个人数据
      *
      * @param y9Manager 人员信息
-     * @return
+     * @return {@code Y9Result<Y9Manager>}
      */
     @RiseLog(operationType = OperationTypeEnum.MODIFY, operationName = "更新个人数据")
     @PostMapping(value = "/updateManager")

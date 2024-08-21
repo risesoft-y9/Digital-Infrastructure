@@ -40,7 +40,7 @@ public interface Y9OptionValueService {
      * 根据字典类型，获取字典属性值列表
      *
      * @param type 字典类型
-     * @return {@link List}<{@link Y9OptionValue}>
+     * @return {@code List<Y9OptionValue>}
      */
     List<Y9OptionValue> listByType(String type);
 

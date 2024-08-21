@@ -68,7 +68,7 @@ public class SyncPhotoController {
     /**
      * 同步全部人员头像信息
      *
-     * @return
+     * @return {@code Y9Result<String>}
      */
     @RequestMapping("/syncPersonPhoto")
     @RiseLog(operationName = "同步人员信息", operationType = OperationTypeEnum.MODIFY)
@@ -90,7 +90,7 @@ public class SyncPhotoController {
      * 根据租户id，同步租户人员头像信息
      *
      * @param tenantId 租户id
-     * @return
+     * @return {@code Y9Result<String>}
      */
     @RequestMapping("/syncTenantPersonPhoto")
     @RiseLog(operationName = "同步人员信息", operationType = OperationTypeEnum.MODIFY)
@@ -109,7 +109,7 @@ public class SyncPhotoController {
      *
      * @param tenantId 租户id
      * @param id 人员id
-     * @return
+     * @return {@code Y9Result<String>}
      */
     @RequestMapping("/syncPersonPhotoByPersonId")
     @RiseLog(operationName = "同步人员信息", operationType = OperationTypeEnum.MODIFY)

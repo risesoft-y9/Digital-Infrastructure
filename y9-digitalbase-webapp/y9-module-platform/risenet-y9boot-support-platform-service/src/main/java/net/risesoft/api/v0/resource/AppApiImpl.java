@@ -65,7 +65,7 @@ public class AppApiImpl implements AppApi {
      * 根据应用id，获取应用信息
      *
      * @param appId 应用id
-     * @return
+     * @return App 应用
      */
     @Override
     public App findById(@RequestParam("appId") @NotBlank String appId) {
@@ -109,7 +109,7 @@ public class AppApiImpl implements AppApi {
      * @param tenantId 租户id
      * @param personId 人员id
      * @param authority 操作类型 {@link AuthorityEnum}
-     * @return List&lt;App&gt; 应用列表
+     * @return {@code List<App>} 应用列表
      * @since 9.6.0
      */
     @Override
@@ -128,7 +128,7 @@ public class AppApiImpl implements AppApi {
      * @param tenantId 租户id
      * @param positionId 人员id
      * @param authority 操作类型 {@link AuthorityEnum}
-     * @return List&lt;App&gt; 应用列表
+     * @return {@code List<App>} 应用列表
      * @since 9.6.0
      */
     @Override
@@ -145,7 +145,7 @@ public class AppApiImpl implements AppApi {
      * 根据 customId ，获取应用列表
      *
      * @param customId customId
-     * @return List&lt;App&gt; 应用列表
+     * @return {@code List<App>} 应用列表
      * @since 9.6.0
      */
     @Override
@@ -158,7 +158,7 @@ public class AppApiImpl implements AppApi {
      * 根据 systemId ，获取应用列表
      *
      * @param systemId systemId
-     * @return List&lt;App&gt; 应用列表
+     * @return {@code List<App>} 应用列表
      * @since 9.6.0
      */
     @Override
@@ -170,8 +170,8 @@ public class AppApiImpl implements AppApi {
     /**
      * 根据 systemName 获取应用列表
      *
-     * @param systemName
-     * @return
+     * @param systemName 系统英文名称
+     * @return {@code List<App>}
      * @since 9.6.0
      */
     @Override
@@ -188,7 +188,7 @@ public class AppApiImpl implements AppApi {
      * @param url url
      * @param customId customId
      * @param tenantGuid 租户id
-     * @return App
+     * @return {@code Y9Result<App>}
      * @since 9.6.3
      */
     @Override

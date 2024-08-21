@@ -22,7 +22,7 @@ import net.risesoft.y9public.entity.resource.Y9ResourceBase;
 public class SortTest {
 
     /**
-     * 测试组织节点排序 <br/>
+     * 测试组织节点排序 <br>
      * {@link Y9OrgBase#compareTo(Y9OrgBase)}
      */
     @Test
@@ -62,7 +62,7 @@ public class SortTest {
     }
 
     /**
-     * 测试资源排序 <br/>
+     * 测试资源排序 <br>
      * {@link Y9ResourceBase#compareTo(Y9ResourceBase)}
      */
     @Test

@@ -77,7 +77,7 @@ public class OrganizationApiImpl implements OrganizationApi {
      *
      * @param tenantId 租户id
      * @param organizationId 组织机构id
-     * @return List<Department> 部门对象集合
+     * @return {@code List<Department>} 部门对象集合
      * @since 9.6.0
      */
     @Override
@@ -93,7 +93,7 @@ public class OrganizationApiImpl implements OrganizationApi {
      * 根据租户id获取所有组织机构
      *
      * @param tenantId 租户id
-     * @return List<Organization> 组织机构对象集合
+     * @return {@code List<Organization>} 组织机构对象集合
      * @since 9.6.0
      */
     @Override
@@ -109,7 +109,7 @@ public class OrganizationApiImpl implements OrganizationApi {
      *
      * @param tenantId 租户id
      * @param virtual 是否虚拟组织
-     * @return List<Organization> 组织机构对象集合
+     * @return {@code List<Organization>} 组织机构对象集合
      * @since 9.6.0
      */
     @Override
@@ -126,7 +126,7 @@ public class OrganizationApiImpl implements OrganizationApi {
      *
      * @param tenantId 租户id
      * @param organizationId 组织机构唯一标识
-     * @return List<Department> 部门对象集合
+     * @return {@code List<Department>} 部门对象集合
      * @since 9.6.0
      */
     @Override
@@ -143,7 +143,7 @@ public class OrganizationApiImpl implements OrganizationApi {
      *
      * @param tenantId 租户id
      * @param organizationId 组织机构唯一标识
-     * @return List<Group> 用户组对象集合
+     * @return {@code List<Group>} 用户组对象集合
      * @since 9.6.0
      */
     @Override
@@ -160,7 +160,7 @@ public class OrganizationApiImpl implements OrganizationApi {
      *
      * @param tenantId 租户id
      * @param organizationId 组织机构唯一标识
-     * @return List<Person> 人员对象集合
+     * @return {@code List<Person>} 人员对象集合
      * @since 9.6.0
      */
     @Override
@@ -177,7 +177,7 @@ public class OrganizationApiImpl implements OrganizationApi {
      *
      * @param tenantId 租户id
      * @param organizationId 组织机构唯一标识
-     * @return List&lt;Position&gt; 岗位对象集合
+     * @return {@code List<Position>} 岗位对象集合
      * @since 9.6.0
      */
     @Override

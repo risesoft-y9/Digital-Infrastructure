@@ -43,7 +43,7 @@ public class PositionResourcesController {
      * 根据岗位id，获取岗位的权限缓存列表
      *
      * @param positionId 人员id
-     * @return
+     * @return {@code Y9Result<List<ResourcePermissionVO>>}
      */
     @GetMapping("/getByPositionId")
     public Y9Result<List<ResourcePermissionVO>> getByPositionId(@RequestParam @NotBlank String positionId) {

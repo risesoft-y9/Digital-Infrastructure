@@ -42,7 +42,7 @@ public interface Y9DepartmentService {
      * 根据id查找部门
      *
      * @param id 部门id
-     * @return 部门对象 或 null
+     * @return {@code Optional<Y9Department>} 部门对象 或 null
      */
     Optional<Y9Department> findById(String id);
 
@@ -58,7 +58,7 @@ public interface Y9DepartmentService {
     /**
      * 查询部门
      *
-     * @return {@link List}<{@link Y9Department}>
+     * @return {@code List<Y9Department>}
      */
     List<Y9Department> list();
 
@@ -68,8 +68,8 @@ public interface Y9DepartmentService {
      * 获取组织机构下所有的委办局
      *
      * @param organizationId 组织机构id
-     * @param disabled
-     * @return {@link List}<{@link Y9Department}>
+     * @param disabled 是否禁用
+     * @return {@code List<Y9Department>}
      */
     List<Y9Department> listBureau(String organizationId, Boolean disabled);
 
@@ -77,8 +77,8 @@ public interface Y9DepartmentService {
      * 根据名称查询委办局列表
      *
      * @param name 部门名
-     * @param disabled
-     * @return {@link List}<{@link Y9Department}>
+     * @param disabled 是否禁用
+     * @return {@code List<Y9Department>}
      * @since 9.6.6
      */
     List<Y9Department> listBureauByNameLike(String name, Boolean disabled);
@@ -87,8 +87,8 @@ public interface Y9DepartmentService {
      * 根据dn查询部门列表
      *
      * @param dn dn
-     * @param disabled
-     * @return {@link List}<{@link Y9Department}>
+     * @param disabled 是否禁用
+     * @return {@code List<Y9Department>}
      */
     List<Y9Department> listByDn(String dn, Boolean disabled);
 
@@ -96,8 +96,8 @@ public interface Y9DepartmentService {
      * 根据名称查询
      *
      * @param name 部门名
-     * @param disabled
-     * @return {@link List}<{@link Y9Department}>
+     * @param disabled 是否禁用
+     * @return {@code List<Y9Department>}
      */
     List<Y9Department> listByNameLike(String name, Boolean disabled);
 
@@ -105,8 +105,8 @@ public interface Y9DepartmentService {
      * 根据父节点id,获取本层级的部门列表
      *
      * @param parentId 父节点id
-     * @param disabled
-     * @return {@link List}<{@link Y9Department}>
+     * @param disabled 是否禁用
+     * @return {@code List<Y9Department>}
      */
     List<Y9Department> listByParentId(String parentId, Boolean disabled);
 
@@ -124,8 +124,8 @@ public interface Y9DepartmentService {
      * 获得部门树
      *
      * @param orgBaseId ：机构节点唯一标识(可能是机构id,也可能是部门id)
-     * @param disabled
-     * @return {@link List}<{@link Y9Department}>
+     * @param disabled 是否禁用
+     * @return {@code List<Y9Department>}
      */
     List<Y9Department> listRecursivelyByParentId(String orgBaseId, Boolean disabled);
 
@@ -144,7 +144,7 @@ public interface Y9DepartmentService {
      * 保存新的部门排序
      *
      * @param deptIds 部门id数组
-     * @return {@link List}<{@link Y9Department}>
+     * @return {@code List<Y9Department>}
      */
     List<Y9Department> saveOrder(List<String> deptIds);
 

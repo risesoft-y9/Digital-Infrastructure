@@ -108,7 +108,7 @@ public class AuthorizationController {
      * 根据资源id获取关联的角色列表
      *
      * @param resourceId 资源id
-     * @return
+     * @return {@code Y9Result<List<}{@link AuthorizationVO}{@code >>}
      */
     @RiseLog(operationName = "根据资源id获取关联的组织列表 ")
     @RequestMapping(value = "/listRelateOrgList")
@@ -126,7 +126,7 @@ public class AuthorizationController {
      * @param roleId 角色ID
      * @param page 页数
      * @param rows 条数
-     * @return
+     * @return {@code Y9Page<AuthorizationVO>}
      */
     @RiseLog(operationName = "根据角色ID获取权限列表 ")
     @RequestMapping(value = "/listRelateResource")
@@ -153,7 +153,7 @@ public class AuthorizationController {
      * @param resourceId 资源id
      * @param roleName 角色名
      * @param authority 权限类型 {@link AuthorityEnum}
-     * @return
+     * @return {@code Y9Result<List<AuthorizationVO>>}
      */
     @RiseLog(operationName = "根据资源id获取关联的角色列表 ")
     @RequestMapping(value = "/listRelateRole")
@@ -186,7 +186,7 @@ public class AuthorizationController {
      * 移除角色授权许可记录
      *
      * @param ids 角色权限许可id数组
-     * @return
+     * @return {@code Y9Result<String>}
      */
     @RiseLog(operationName = "移除角色授权许可记录", operationType = OperationTypeEnum.DELETE)
     @PostMapping(value = "/remove")
@@ -202,7 +202,7 @@ public class AuthorizationController {
      * @param authority 权限类型
      * @param principalId 授权主体id
      * @param principalType 授权主体类型
-     * @return {@link Y9Result}<{@link String}>
+     * @return {@code Y9Result<String>}
      */
     @RiseLog(operationName = "保存管理资源权限许可对象 ", operationType = OperationTypeEnum.MODIFY)
     @PostMapping(value = "/saveOrUpdate")
@@ -218,7 +218,7 @@ public class AuthorizationController {
      * @param authority 权限类型
      * @param resourceId 资源id
      * @param orgIds 组织节点id数组
-     * @return
+     * @return {@code Y9Result<String>}
      */
     @RiseLog(operationName = "保存资源授权管理关联组织信息", operationType = OperationTypeEnum.MODIFY)
     @PostMapping(value = "/saveOrUpdateOrg")
@@ -234,7 +234,7 @@ public class AuthorizationController {
      * @param authority 权限类型
      * @param resourceId 资源id
      * @param roleIds 角色id数组
-     * @return
+     * @return {@code Y9Result<String>}
      */
     @RiseLog(operationName = "保存关联角色权限许可对象 ", operationType = OperationTypeEnum.MODIFY)
     @PostMapping(value = "/saveOrUpdateRole")

@@ -28,7 +28,7 @@ public interface Y9CustomGroupService {
      * 根据自定义id查找用户组
      *
      * @param customId 自定义id
-     * @return {@link Y9CustomGroup}
+     * @return {@code Optional<Y9CustomGroup>}
      */
     Optional<Y9CustomGroup> findByCustomId(String customId);
 
@@ -36,7 +36,7 @@ public interface Y9CustomGroupService {
      * 根据id查找自定义用户组
      *
      * @param id 唯一标识
-     * @return 自定义用户组对象 或 null
+     * @return {@code Optional<Y9CustomGroup>} 自定义用户组对象 或 null
      */
     Optional<Y9CustomGroup> findById(String id);
 
@@ -44,7 +44,7 @@ public interface Y9CustomGroupService {
      * 根据id获取自定义用户组
      *
      * @param id 唯一标识
-     * @return 自定义用户组对象
+     * @return {@link Y9CustomGroup }自定义用户组对象
      * @throws Y9NotFoundException id 对应的记录不存在的情况
      */
     Y9CustomGroup getById(String id);
@@ -53,7 +53,7 @@ public interface Y9CustomGroupService {
      * 根据人员id获取所有自定义群组
      *
      * @param personId 人员id
-     * @return {@link List}<{@link Y9CustomGroup}>
+     * @return {@code List<Y9CustomGroup>}
      */
     List<Y9CustomGroup> listByPersonId(String personId);
 
@@ -61,8 +61,8 @@ public interface Y9CustomGroupService {
      * 获取自定用户组列表
      *
      * @param personId 人员id
-     * @param pageQuery
-     * @return {@link Page}<{@link Y9CustomGroup}>
+     * @param pageQuery 分页信息
+     * @return {@code Page<Y9CustomGroup>}
      */
     Page<Y9CustomGroup> pageByPersonId(String personId, Y9PageQuery pageQuery);
 

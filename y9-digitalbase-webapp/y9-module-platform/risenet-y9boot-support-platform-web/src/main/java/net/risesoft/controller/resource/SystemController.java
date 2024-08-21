@@ -47,7 +47,7 @@ public class SystemController {
      * 删除系统
      *
      * @param id 系统id
-     * @return
+     * @return {@code Y9Result<Object>}
      */
     @RiseLog(operationName = "删除系统")
     @PostMapping(value = "/delete")
@@ -61,7 +61,7 @@ public class SystemController {
      * 禁用系统
      *
      * @param id 系统id
-     * @return
+     * @return {@code Y9Result<}{@link Y9System}{@code >}
      */
     @RiseLog(operationName = "禁用系统")
     @PostMapping(value = "/disable")
@@ -73,7 +73,7 @@ public class SystemController {
      * 启用系统
      *
      * @param id 系统id
-     * @return
+     * @return {@code Y9Result<}{@link Y9System}{@code >}
      */
     @RiseLog(operationName = "启用系统")
     @PostMapping(value = "/enable")
@@ -85,7 +85,7 @@ public class SystemController {
      * 根据系统id获取系统详情
      *
      * @param id 系统id
-     * @return
+     * @return {@code Y9Result<}{@link Y9System}{@code >}
      */
     @RiseLog(operationName = "根据系统id获取系统详情")
     @GetMapping(value = "/{id}")
@@ -96,7 +96,7 @@ public class SystemController {
     /**
      * 获取系统列表
      *
-     * @return
+     * @return {@code Y9Result<List<}{@link Y9System}{@code >>}
      */
     @RiseLog(operationName = "获取系统列表")
     @GetMapping(value = "/list")
@@ -108,7 +108,7 @@ public class SystemController {
     /**
      * 获取系统列表
      *
-     * @return
+     * @return {@code Y9Result<List<}{@link SystemTreeNodeVO}{@code >>}
      */
     @RiseLog(operationName = "获取系统列表")
     @GetMapping(value = "/list2")
@@ -120,7 +120,7 @@ public class SystemController {
      * 根据系统中文名称，模糊搜索系统列表
      *
      * @param systemCnName 系统中文名称
-     * @return
+     * @return {@code Y9Result<List<}{@link Y9System}{@code >>}
      */
     @RiseLog(operationName = "根据系统中文名称，模糊搜索系统列表")
     @GetMapping(value = "/listByCnName")
@@ -132,7 +132,7 @@ public class SystemController {
      * 保存系统
      *
      * @param y9System 系统
-     * @return
+     * @return {@code Y9Result<}{@link Y9System}{@code >}
      */
     @RiseLog(operationName = "保存系统")
     @PostMapping(value = "/save")
@@ -145,7 +145,7 @@ public class SystemController {
      * 保存系统排序
      *
      * @param systemIds 系统id数组
-     * @return
+     * @return {@code Y9Result<String>}
      */
     @RiseLog(operationName = "保存系统排序", operationType = OperationTypeEnum.MODIFY)
     @PostMapping(value = "/saveOrder")

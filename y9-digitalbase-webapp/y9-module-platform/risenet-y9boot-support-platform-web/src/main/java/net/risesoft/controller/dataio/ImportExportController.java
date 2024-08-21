@@ -82,7 +82,7 @@ public class ImportExportController {
      * 导出应用JSON
      *
      * @param appId 应用id
-     * @param response
+     * @param response 响应
      */
     @RiseLog(operationName = "导出应用JSON", operationType = OperationTypeEnum.ADD)
     @GetMapping(value = "/exportAppJSON")
@@ -107,7 +107,7 @@ public class ImportExportController {
      * 导出组织架构XLS
      *
      * @param resourceId 资源id
-     * @param response
+     * @param response 响应
      */
     @RiseLog(operationName = "导出组织架构XLS", operationType = OperationTypeEnum.ADD)
     @GetMapping(value = "/exportOrgTreeXls")
@@ -130,8 +130,7 @@ public class ImportExportController {
      * 导出组织架构树XML
      *
      * @param orgBaseId 组织节点id
-     *
-     * @return
+     * @param response 响应
      */
     @RiseLog(operationName = "导出组织架构树XML", operationType = OperationTypeEnum.ADD)
     @GetMapping(value = "/exportOrgTreeXml")
@@ -156,11 +155,12 @@ public class ImportExportController {
      * 导出人员XLS
      *
      * @param orgBaseId 组织机构id
+     * @param response 响应
      */
     @RiseLog(operationName = "导出人员XLS", operationType = OperationTypeEnum.ADD)
     @GetMapping(value = "/exportOrgXls")
     public void exportPersonXls(@RequestParam @NotBlank String orgBaseId, HttpServletResponse response) {
-        try (OutputStream outStream = response.getOutputStream();) {
+        try (OutputStream outStream = response.getOutputStream()) {
             Y9OrgBase base = compositeOrgBaseService.getOrgUnit(orgBaseId);
             String filename =
                 base.getName() + "-组织架构" + new SimpleDateFormat("yyyyMMddHHmmss").format(new Date()) + ".xlsx";
@@ -177,7 +177,7 @@ public class ImportExportController {
      * 导出系统JSON
      *
      * @param systemId 系统id
-     * @param response
+     * @param response 响应
      */
     @RiseLog(operationName = "导出系统JSON", operationType = OperationTypeEnum.ADD)
     @GetMapping(value = "/exportSystemJSON")
@@ -199,10 +199,11 @@ public class ImportExportController {
 
     /**
      * 导入应用JSON
-     *
+     * 
      * @param file 文件
-     * @return
-     * @throws IOException
+     * @param systemId 系统id
+     * @return {@code Y9Result<Object>}
+     * @throws IOException IO异常
      */
     @RiseLog(operationName = "导入应用JSON", operationType = OperationTypeEnum.ADD)
     @RequestMapping(value = "/importAppJSON")
@@ -218,7 +219,7 @@ public class ImportExportController {
      *
      * @param file 文件
      * @param orgId 组织id
-     * @return
+     * @return {@code Y9Result<Object>}
      */
     @RiseLog(operationName = "上传组织机构XLS", operationType = OperationTypeEnum.ADD)
     @RequestMapping(value = "/importOrgTreeXls")
@@ -235,8 +236,8 @@ public class ImportExportController {
      * 导入组织机构信息XML
      *
      * @param upload 文件
-     * @return
-     * @throws IOException
+     * @return {@code Y9Result<Object>}
+     * @throws IOException IO异常
      */
     @RiseLog(operationName = "导入组织机构信息XML", operationType = OperationTypeEnum.ADD)
     @RequestMapping(value = "/importOrgXml")
@@ -248,8 +249,8 @@ public class ImportExportController {
      * 导入系统JSON
      *
      * @param file 文件
-     * @return
-     * @throws IOException
+     * @return {@code Y9Result<Object>}
+     * @throws IOException IO异常
      */
     @RiseLog(operationName = "导入系统JSON", operationType = OperationTypeEnum.ADD)
     @RequestMapping(value = "/importSystemJSON")

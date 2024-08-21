@@ -39,7 +39,7 @@ public class AppIconApiImpl implements AppIconApi {
     /**
      * 查询所有图标
      *
-     * @return
+     * @return {@code List<AppIcon>}
      * @since 9.6.0
      */
     @Override
@@ -52,7 +52,7 @@ public class AppIconApiImpl implements AppIconApi {
      * 根据名称查询应用图标列表
      *
      * @param name 图标名称
-     * @return
+     * @return {@code List<AppIcon>}
      * @since 9.6.0
      */
     @Override

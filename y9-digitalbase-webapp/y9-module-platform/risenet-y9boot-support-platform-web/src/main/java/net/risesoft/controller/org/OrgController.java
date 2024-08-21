@@ -62,7 +62,7 @@ public class OrgController {
      * 根据id，改变组织禁用状态
      *
      * @param id 组织id
-     * @return
+     * @return {@code Y9Result<Y9Organization>}
      */
     @RiseLog(operationName = "禁用组织", operationType = OperationTypeEnum.MODIFY)
     @PostMapping(value = "/changeDisabled")
@@ -75,7 +75,7 @@ public class OrgController {
      * 根据组织机构id，获取扩展属性
      *
      * @param orgId 组织机构id
-     * @return
+     * @return {@code Y9Result<String>}
      */
     @RiseLog(operationName = "获取扩展属性")
     @RequestMapping(value = "/getExtendProperties")
@@ -88,7 +88,7 @@ public class OrgController {
      * 根据组织机构id，获取组织机构信息
      *
      * @param orgId 组织机构id
-     * @return
+     * @return {@code Y9Result<Organization>}
      */
     @RiseLog(operationName = "根据组织机构id，获取组织机构信息")
     @RequestMapping(value = "/getOrganizationById")
@@ -102,7 +102,7 @@ public class OrgController {
      *
      * @param id 节点id
      * @param orgType 组织类型
-     * @return
+     * @return {@code Y9Result<Long>}
      */
     @RiseLog(operationName = "根据guidPath和禁用/未禁用状态查找部门下人员总数")
     @RequestMapping(value = "/getAllPersonsCount")
@@ -130,7 +130,7 @@ public class OrgController {
      * @param treeType
      *            树类型：tree_type_org，tree_type_bureau，tree_type_dept，tree_type_group，tree_type_position，tree_type_person
      * @param disabled false为不显示禁用人员，true为显示禁用人员
-     * @return
+     * @return {@code Y9Result<List<Y9OrgBase>>}
      */
     @RiseLog(operationName = "获取机构树子节点")
     @RequestMapping(value = "/getTree")
@@ -153,7 +153,7 @@ public class OrgController {
      *
      * @param id 父节点id
      * @param treeType 树类型
-     * @return
+     * @return {@code Y9Result<List<OrgTreeNodeVO>>}
      */
     @RiseLog(operationName = "获取机构树子节点")
     @GetMapping(value = "/getTree2")
@@ -175,7 +175,7 @@ public class OrgController {
      * 获取组织架构列表
      *
      * @param virtual 是否为虚拟组织
-     * @return
+     * @return {@code Y9Result<List<Organization>>}
      */
     @RiseLog(operationName = "获取组织架构列表")
     @RequestMapping(value = "/list")
@@ -198,9 +198,10 @@ public class OrgController {
 
     /**
      * 获取组织架构列表
-     *
+     * 
+     * @param treeType 树类型{@link OrgTreeTypeEnum}
      * @param virtual 是否为虚拟组织
-     * @return
+     * @return {@code Y9Result<List<OrgTreeNodeVO>>}
      */
     @RiseLog(operationName = "获取组织架构列表")
     @GetMapping(value = "/list2")
@@ -227,7 +228,7 @@ public class OrgController {
      * 根据主键id删除机构实例
      *
      * @param orgId 组织机构id
-     * @return
+     * @return {@code Y9Result<String>}
      */
     @IsManager({ManagerLevelEnum.SYSTEM_MANAGER, ManagerLevelEnum.SECURITY_MANAGER})
     @RiseLog(operationName = "删除机构", operationType = OperationTypeEnum.DELETE)
@@ -242,6 +243,7 @@ public class OrgController {
      *
      * @param orgId 组织id
      * @param properties 扩展属性
+     * @return {@code Y9Result<String>}
      */
     @RiseLog(operationName = "新增扩展属性", operationType = OperationTypeEnum.ADD)
     @PostMapping(value = "/saveExtendProperties")
@@ -255,7 +257,7 @@ public class OrgController {
      * 新建或者更新组织机构
      *
      * @param org 组织机构实体
-     * @return
+     * @return {@code Y9Result<Organization>}
      */
     @RiseLog(operationName = "新建或者更新组织机构", operationType = OperationTypeEnum.ADD)
     @PostMapping(value = "/saveOrUpdate")
@@ -268,7 +270,7 @@ public class OrgController {
      * 对组织机构按id顺序排序
      *
      * @param orgIds 组织机构ids
-     * @return
+     * @return {@code Y9Result<String>}
      */
     @RiseLog(operationName = "对组织机构按id顺序排序", operationType = OperationTypeEnum.MODIFY)
     @PostMapping(value = "/saveOrder")
@@ -300,7 +302,7 @@ public class OrgController {
      * @param name 名称
      * @param treeType
      *            树类型：tree_type_org，tree_type_bureau，tree_type_dept，tree_type_group，tree_type_position，tree_type_person
-     * @return
+     * @return {@code Y9Result<List<Y9OrgBase>>}
      */
     @RiseLog(operationName = "查询机构主体")
     @RequestMapping(value = "/treeSearch")
@@ -323,7 +325,7 @@ public class OrgController {
      *
      * @param name 名称
      * @param treeType 树类型
-     * @return
+     * @return {@code Y9Result<List<OrgTreeNodeVO>>}
      */
     @RiseLog(operationName = "查询机构主体")
     @GetMapping(value = "/treeSearch2")

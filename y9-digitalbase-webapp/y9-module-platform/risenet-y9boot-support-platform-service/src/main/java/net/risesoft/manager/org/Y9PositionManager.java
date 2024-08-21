@@ -20,7 +20,7 @@ public interface Y9PositionManager {
      * 根据id，获取岗位信息（直接读取数据库）
      *
      * @param id 岗位id
-     * @return
+     * @return {@code Optional<Y9Position>}
      */
     Optional<Y9Position> findByIdNotCache(String id);
 
@@ -28,11 +28,17 @@ public interface Y9PositionManager {
      * 根据主键id获取岗位实例
      *
      * @param id 唯一标识
-     * @return 岗位对象
+     * @return {@link Y9Position} 岗位对象
      * @throws Y9NotFoundException id 对应的记录不存在的情况
      */
     Y9Position getById(String id);
 
+    /**
+     * 根据主键id获取岗位实例（直接读取数据库）
+     *
+     * @param id 唯一标识
+     * @return {@link Y9Position} 岗位对象
+     */
     Y9Position getByIdNotCache(String id);
 
     Y9Position save(Y9Position position);

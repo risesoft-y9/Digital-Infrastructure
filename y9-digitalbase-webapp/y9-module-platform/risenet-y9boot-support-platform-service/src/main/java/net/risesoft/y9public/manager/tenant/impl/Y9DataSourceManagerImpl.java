@@ -74,6 +74,25 @@ public class Y9DataSourceManagerImpl implements Y9DataSourceManager {
         return sb.toString();
     }
 
+    private static String replaceSchemaNameInJdbcUrlParam(String originalJdbcUrl, String newSchemaName) {
+        int paramStart = originalJdbcUrl.indexOf("?") + 1;
+
+        if (paramStart > 0) {
+            String jdbcUrl = originalJdbcUrl.substring(0, paramStart);
+            String originalParams = originalJdbcUrl.substring(paramStart);
+            String newParams = Arrays.stream(StringUtils.split(originalParams, "&")).map(param -> {
+                if (param.startsWith("currentSchema=")) {
+                    return "currentSchema=" + newSchemaName;
+                } else {
+                    return param;
+                }
+            }).collect(Collectors.joining("&"));
+            return jdbcUrl + newParams;
+        } else {
+            return originalJdbcUrl + "?currentSchema=" + newSchemaName;
+        }
+    }
+
     @Override
     public String buildDataSourceName(String shortName, TenantTypeEnum tenantType, String systemName) {
         String dataSourceName = shortName;
@@ -289,8 +308,8 @@ public class Y9DataSourceManagerImpl implements Y9DataSourceManager {
     }
 
     /**
-     * 替换 jdbc url 中的数据库名称 <br/>
-     * 
+     * 替换 jdbc url 中的数据库名称 <br>
+     *
      * 例如：replaceDatabaseNameInJdbcUrl("jdbc:mysql://localhost:3306/y9_public?allowPublicKeyRetrieval=true",
      * "y9_default") -> "jdbc:mysql://localhost:3306/y9_default?allowPublicKeyRetrieval=true"
      *
@@ -314,25 +333,6 @@ public class Y9DataSourceManagerImpl implements Y9DataSourceManager {
         } else {
             // 如果无法提取数据库名称部分或者替换失败，返回原始的 JDBC URL
             return originalJdbcUrl;
-        }
-    }
-
-    private static String replaceSchemaNameInJdbcUrlParam(String originalJdbcUrl, String newSchemaName) {
-        int paramStart = originalJdbcUrl.indexOf("?") + 1;
-
-        if (paramStart > 0) {
-            String jdbcUrl = originalJdbcUrl.substring(0, paramStart);
-            String originalParams = originalJdbcUrl.substring(paramStart);
-            String newParams = Arrays.stream(StringUtils.split(originalParams, "&")).map(param -> {
-                if (param.startsWith("currentSchema=")) {
-                    return "currentSchema=" + newSchemaName;
-                } else {
-                    return param;
-                }
-            }).collect(Collectors.joining("&"));
-            return jdbcUrl + newParams;
-        } else {
-            return originalJdbcUrl + "?currentSchema=" + newSchemaName;
         }
     }
 

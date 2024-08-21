@@ -17,7 +17,7 @@ public interface Y9PersonManager {
      * 根据id，获取人员信息（直接读取数据库）
      *
      * @param id 人员id
-     * @return
+     * @return {@code Optional<Y9Person>}
      */
     Optional<Y9Person> findByIdNotCache(String id);
 
@@ -25,7 +25,7 @@ public interface Y9PersonManager {
      * 根据主键id获取人员实例
      *
      * @param id 唯一标识
-     * @return 人员对象
+     * @return {@link Y9Person } 人员对象
      * @throws Y9NotFoundException id 对应的记录不存在的情况
      */
     Y9Person getById(String id);

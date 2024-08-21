@@ -27,7 +27,8 @@ public interface Y9PublishedEventSyncHistoryService {
      *
      * @param tenantId 租户id
      * @param appName 应用名
-     * @param syncTime
+     * @param syncTime 同步时间
+     * @param status 状态
      * @return {@link Y9PublishedEventSyncHistory}
      */
     Y9PublishedEventSyncHistory saveOrUpdate(String tenantId, String appName, Date syncTime, Integer status);

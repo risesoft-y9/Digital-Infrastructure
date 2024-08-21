@@ -24,7 +24,7 @@ public interface Y9PersonService {
      *
      * @param parentId 父节点id
      * @param personIds 人员id数组
-     * @return {@link List}<{@link Y9Person}>
+     * @return {@code List<Y9Person>}
      */
     List<Y9Person> addPersons(String parentId, List<String> personIds);
 
@@ -59,7 +59,7 @@ public interface Y9PersonService {
      * @param name 名字
      * @param loginName 登录名
      * @param mobile 手机号
-     * @return Y9Person
+     * @return {@link Y9Person}
      */
     Y9Person create(String parentId, String name, String loginName, String mobile);
 
@@ -96,7 +96,7 @@ public interface Y9PersonService {
      * 根据id查找人员对象
      *
      * @param id 唯一标识
-     * @return 人员对象 或 null
+     * @return {@code Optional<Y9Person>}人员对象 或 null
      */
     Optional<Y9Person> findById(String id);
 
@@ -104,7 +104,7 @@ public interface Y9PersonService {
      * 根据登录名获取人员
      *
      * @param loginName 登录名
-     * @return {@link Y9Person}
+     * @return {@code Optional<Y9Person>}
      */
     Optional<Y9Person> findByLoginName(String loginName);
 
@@ -112,7 +112,7 @@ public interface Y9PersonService {
      * 根据ca证书Id获取人员
      *
      * @param caId ca证书Id
-     * @return {@link Y9Person}
+     * @return {@code Optional<Y9Person>}
      */
     Optional<Y9Person> findByCaId(String caId);
 
@@ -120,7 +120,7 @@ public interface Y9PersonService {
      * 查找 guidPath 包含传入参数的对应人的 id
      *
      * @param guidPath guid path
-     * @return {@link List}<{@link String}>
+     * @return {@code List<String>}
      */
     List<String> findIdByGuidPathStartingWith(String guidPath);
 
@@ -128,7 +128,7 @@ public interface Y9PersonService {
      * 根据主键id获取人员实例
      *
      * @param id 唯一标识
-     * @return 人员对象
+     * @return {@link Y9Person} 人员对象
      * @throws Y9NotFoundException id 对应的记录不存在的情况
      */
     Y9Person getById(String id);
@@ -138,7 +138,7 @@ public interface Y9PersonService {
      *
      * @param loginName 登录名
      * @param parentId 父节点id
-     * @return {@link Y9Person}
+     * @return {@code Optional<Y9Person>}
      */
     Optional<Y9Person> getByLoginNameAndParentId(String loginName, String parentId);
 
@@ -170,15 +170,16 @@ public interface Y9PersonService {
 
     /**
      * 查找所有人员
-     *
-     * @return {@link List}<{@link Y9Person}>
+     * 
+     * @param disabled 是否包含禁用的人员
+     * @return {@code List<Y9Person>}
      */
     List<Y9Person> list(Boolean disabled);
 
     /**
      * 查询所有人员
      *
-     * @return {@link List}<{@link Y9Person}>
+     * @return {@code List<Y9Person>}
      */
     List<Y9Person> listAll();
 
@@ -186,7 +187,7 @@ public interface Y9PersonService {
      * 根据guidPath（模糊查询），获取人员列表
      *
      * @param guidPath guid路径
-     * @return {@link List}<{@link Y9Person}>
+     * @return {@code List<Y9Person>}
      */
     List<Y9Person> listByDisabledAndDeletedAndGuidPathLike(String guidPath);
 
@@ -194,8 +195,8 @@ public interface Y9PersonService {
      * 根据用户组节点id,获取本组的人员列表
      *
      * @param groupId 用户组id
-     * @param disabled 是否已禁用
-     * @return {@link List}<{@link Y9Person}>
+     * @param disabled 是否包含禁用的人员
+     * @return {@code List<Y9Person>}
      */
     List<Y9Person> listByGroupId(String groupId, Boolean disabled);
 
@@ -205,7 +206,7 @@ public interface Y9PersonService {
      * @param idType 证件类型
      * @param idNum 证件号
      * @param disabled 是否已禁用
-     * @return {@link List}<{@link Y9Person}>
+     * @return {@code List<Y9Person>}
      */
     List<Y9Person> listByIdTypeAndIdNum(String idType, String idNum, Boolean disabled);
 
@@ -214,7 +215,7 @@ public interface Y9PersonService {
      *
      * @param name 姓名
      * @param disabled 是否已禁用
-     * @return List<ORGPerson>
+     * @return {@code List<Y9Person>}
      */
     List<Y9Person> listByNameLike(String name, Boolean disabled);
 
@@ -223,7 +224,7 @@ public interface Y9PersonService {
      *
      * @param parentId 父节点id
      * @param disabled 是否已禁用
-     * @return {@link List}<{@link Y9Person}>
+     * @return {@code List<Y9Person>}
      */
     List<Y9Person> listByParentId(String parentId, Boolean disabled);
 
@@ -232,16 +233,16 @@ public interface Y9PersonService {
      *
      * @param positionId 岗位id
      * @param disabled 是否已禁用
-     * @return {@link List}<{@link Y9Person}>
+     * @return {@code List<Y9Person>}
      */
     List<Y9Person> listByPositionId(String positionId, Boolean disabled);
 
     /**
-     * 获取人员的所有父节点 <br/>
+     * 获取人员的所有父节点 <br>
      * 一般只会有一个，一人多账号的情况可能会有多个
      *
      * @param personId 人员id
-     * @return {@link List}<{@link Y9OrgBase}>
+     * @return {@code List<Y9OrgBase>}
      */
     List<Y9OrgBase> listParents(String personId);
 
@@ -268,7 +269,7 @@ public interface Y9PersonService {
      * 按照tabindexs的顺序重新排序人员列表
      *
      * @param personIds 人员id数组
-     * @return {@link List}<{@link Y9OrgBase}>
+     * @return {@code List<Y9OrgBase>}
      */
     List<Y9OrgBase> order(List<String> personIds);
 
@@ -288,7 +289,7 @@ public interface Y9PersonService {
      * @param disabled 是否已禁用
      * @param name 人员姓名
      * @param pageQuery 分页查询参数
-     * @return {@link Page}<{@link Y9Person}>
+     * @return {@code Page<Y9OrgBase>}
      */
     Page<Y9Person> pageByParentId(String parentId, boolean disabled, String name, Y9PageQuery pageQuery);
 
@@ -297,8 +298,8 @@ public interface Y9PersonService {
      *
      * @param parentId 父节点id
      * @param disabled 是否已禁用
-     * @param pageQuery
-     * @return {@link Page}<{@link Y9Person}>
+     * @param pageQuery 分页信息
+     * @return {@code Page<}{@link Y9Person}{@code >}
      */
     Page<Y9Person> pageByParentId(String parentId, boolean disabled, Y9PageQuery pageQuery);
 
@@ -322,7 +323,7 @@ public interface Y9PersonService {
      *
      * @param personId 人员id
      * @param avatorUrl 头像路径
-     * @return
+     * @return {@link Y9Person}
      */
     Y9Person saveAvator(String personId, String avatorUrl);
 
@@ -331,7 +332,7 @@ public interface Y9PersonService {
      *
      * @param person 人员对象
      * @param personExt 人员扩展信息对象
-     * @return ORGPerson
+     * @return {@link Y9Person}
      */
     Y9Person saveOrUpdate(Y9Person person, Y9PersonExt personExt);
 
@@ -351,7 +352,7 @@ public interface Y9PersonService {
      *
      * @param person 人员对象
      * @param personExt 人员扩展信息
-     * @return ORGPerson
+     * @return {@link Y9Person}
      */
     Y9Person saveOrUpdate4ImpOrg(Y9Person person, Y9PersonExt personExt);
 
@@ -369,6 +370,7 @@ public interface Y9PersonService {
      *
      * @param personId 人员 id
      * @param weixinId 微信 id
+     * @return {@link Y9Person}
      */
     Y9Person saveWeixinId(String personId, String weixinId);
 

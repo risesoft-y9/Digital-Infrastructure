@@ -160,7 +160,7 @@ public class RoleApiImpl implements RoleApi {
      * @param tenantId 租户id
      * @param roleId 角色唯一标识
      * @param orgType 组织类型
-     * @return List<OrgUnit> 机构对象集合
+     * @return {@code List<OrgUnit>} 机构对象集合
      * @since 9.6.0
      */
     @Override
@@ -188,7 +188,7 @@ public class RoleApiImpl implements RoleApi {
      *
      * @param tenantId 租户id
      * @param roleId 角色唯一标识
-     * @return List<Person> 人员对象集合
+     * @return {@code List<Person>} 人员对象集合
      * @since 9.6.0
      */
     @Override
@@ -215,7 +215,7 @@ public class RoleApiImpl implements RoleApi {
      * 根据父节点Id获取相应子级角色节点
      *
      * @param roleId 角色唯一标识
-     * @return List&lt;Role&gt; 角色对象集合
+     * @return {@code List<Role>} 角色对象集合
      * @since 9.6.0
      */
     @Override

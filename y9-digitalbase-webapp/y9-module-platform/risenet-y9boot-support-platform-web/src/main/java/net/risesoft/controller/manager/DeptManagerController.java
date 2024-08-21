@@ -45,7 +45,7 @@ public class DeptManagerController {
      * 禁用/解除禁用三员
      *
      * @param id id
-     * @return {@link Y9Result}<{@link Y9Manager}>
+     * @return {@code Y9Result<Y9Manager>}
      */
     @RiseLog(operationName = "禁用/解除禁用三员", operationType = OperationTypeEnum.MODIFY)
     @PostMapping(value = "/changeDisabled")
@@ -59,7 +59,7 @@ public class DeptManagerController {
      * 根据部门id，验证该成员是否部门管理员
      *
      * @param deptId 部门id
-     * @return
+     * @return {@code Y9Result<Boolean>}
      */
     @RiseLog(operationName = "根据部门id，验证该成员是否部门管理员", operationType = OperationTypeEnum.BROWSE)
     @PostMapping(value = "/checkDeptManager")
@@ -74,7 +74,7 @@ public class DeptManagerController {
      *
      * @param personId 人员id
      * @param loginName 登录名称
-     * @return
+     * @return {@code Y9Result<Boolean>}
      */
     @RiseLog(operationName = "判断登录名是否可用")
     @RequestMapping(value = "/checkLoginName")
@@ -87,7 +87,7 @@ public class DeptManagerController {
      * 根据人员id，获取人员信息
      *
      * @param managerId 管理员id
-     * @return
+     * @return {@code Y9Result<Y9Manager>}
      */
     @RiseLog(operationName = "根据人员id，获取人员信息")
     @RequestMapping(value = "/getManagerById")
@@ -100,7 +100,7 @@ public class DeptManagerController {
      * 根据父节点id，获取人员列表
      *
      * @param parentId 父节点id
-     * @return
+     * @return {@code Y9Result<List<Y9Manager>>}
      * @since 9.6.1
      */
     @RiseLog(operationName = "获取人员列表")
@@ -114,7 +114,7 @@ public class DeptManagerController {
      * 根据id数组，删除人员
      *
      * @param ids 人员id数组
-     * @return
+     * @return {@code Y9Result<String>}
      */
     @RiseLog(operationName = "删除部门管理员", operationType = OperationTypeEnum.DELETE)
     @PostMapping(value = "/remove")
@@ -128,7 +128,7 @@ public class DeptManagerController {
      * 重置密码
      *
      * @param personId 人员id
-     * @return
+     * @return {@code Y9Result<String>}
      */
     @RiseLog(operationName = "重置密码", operationType = OperationTypeEnum.MODIFY)
     @PostMapping(value = "/resetPassword")
@@ -142,7 +142,7 @@ public class DeptManagerController {
      * 新建或者更新部门管理员
      *
      * @param manager 部门管理员实体
-     * @return
+     * @return {@code Y9Result<Y9Manager>}
      */
     @RiseLog(operationName = "新建或者更新部门管理员信息", operationType = OperationTypeEnum.ADD)
     @PostMapping(value = "/saveOrUpdate")

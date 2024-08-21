@@ -41,7 +41,7 @@ public interface Y9JobService {
      * 根据id获取职位
      *
      * @param id id
-     * @return {@link Y9Job}
+     * @return {@code Optional<Y9Job>}
      */
     Optional<Y9Job> findById(String id);
 
@@ -49,7 +49,7 @@ public interface Y9JobService {
      * 根据人员id查找其拥有的职位
      *
      * @param personId 人员ID
-     * @return {@link List}<{@link Y9Job}>
+     * @return {@code List<Y9Job>}
      */
     List<Y9Job> findByPersonId(String personId);
 
@@ -64,7 +64,7 @@ public interface Y9JobService {
     /**
      * 获取所有职位
      *
-     * @return {@link List}<{@link Y9Job}>
+     * @return {@code List<Y9Job>}
      */
     List<Y9Job> listAll();
 
@@ -72,7 +72,7 @@ public interface Y9JobService {
      * 根据职位名获取职位
      *
      * @param name 名字
-     * @return {@link List}<{@link Y9Job}>
+     * @return {@code List<Y9Job>}
      */
     List<Y9Job> listByNameLike(String name);
 
@@ -80,7 +80,7 @@ public interface Y9JobService {
      * 按照tabindexs的顺序重新排序职位列表
      *
      * @param jobIds 岗位id
-     * @return {@link List}<{@link Y9Job}>
+     * @return {@code List<Y9Job>}
      */
     List<Y9Job> order(List<String> jobIds);
 
@@ -89,7 +89,7 @@ public interface Y9JobService {
      *
      * @param page 页数
      * @param limit 每页的行数
-     * @return {@link Page}<{@link Y9Job}>
+     * @return {@code Page<Y9Job>}
      */
     Page<Y9Job> page(Integer page, Integer limit);
 

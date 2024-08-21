@@ -1,6 +1,6 @@
 package net.risesoft.controller.resource;
 
-import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
@@ -64,7 +64,7 @@ public class ResourceController {
     /**
      * 查询所有的根资源（App资源）
      *
-     * @return {@link Y9Result}<{@link List}<{@link ResourceBaseVO}>>
+     * @return {@code Y9Result<List<}{@link ResourceBaseVO}{@code >>}
      */
     @RiseLog(operationName = "查询所有的根资源（App资源）")
     @GetMapping(value = "/allTreeRoot")
@@ -77,20 +77,21 @@ public class ResourceController {
      * 根据应用id查询资源（App资源）
      *
      * @param appId 应用id
-     * @return
+     * @return {@code Y9Result<List<}{@link ResourceBaseVO}{@code >>}
      */
     @RiseLog(operationName = "根据应用id查询资源（App资源）")
     @GetMapping(value = "/appTreeRoot/{appId}")
     public Y9Result<List<ResourceBaseVO>> getTreeRootByAppId(@PathVariable @NotBlank String appId) {
         Y9App y9App = y9AppService.getById(appId);
-        return Y9Result.success(Y9ModelConvertUtil.convert(Arrays.asList(y9App), ResourceBaseVO.class), "根据应用id查询资源成功");
+        return Y9Result.success(Y9ModelConvertUtil.convert(Collections.singletonList(y9App), ResourceBaseVO.class),
+            "根据应用id查询资源成功");
     }
 
     /**
      * 根据系统id查询所有的根资源（有权限的App资源）
      *
      * @param systemId 系统id
-     * @return
+     * @return {@code Y9Result<List<}{@link ResourceBaseVO}{@code >>}
      */
     @RiseLog(operationName = "根据系统id查询所有的根资源（有权限的App资源）")
     @GetMapping(value = "/treeRoot/{systemId}")
@@ -108,7 +109,7 @@ public class ResourceController {
      * 根据父资源id获取子资源列表
      *
      * @param parentId 父节点id
-     * @return
+     * @return {@code Y9Result<List<}{@link ResourceBaseVO}{@code >>}
      */
     @RiseLog(operationName = "根据父资源id获取子资源列表")
     @GetMapping(value = "/listByParentId")
@@ -123,7 +124,7 @@ public class ResourceController {
      * 根据父资源id获取子资源列表
      *
      * @param parentId 父节点id
-     * @return
+     * @return {@code Y9Result<List<}{@link ResourceTreeNodeVO}{@code >>}
      */
     @RiseLog(operationName = "根据父资源id获取子资源列表")
     @GetMapping(value = "/listByParentId2")
@@ -136,7 +137,7 @@ public class ResourceController {
      * 对同一级的资源进行排序
      *
      * @param ids 资源id数组
-     * @return
+     * @return {@code Y9Result<Object>}
      */
     @RiseLog(operationName = "对同一级的资源进行排序", operationType = OperationTypeEnum.MODIFY)
     @GetMapping(value = "/sort")
@@ -148,7 +149,7 @@ public class ResourceController {
     /**
      * 查询所有的根资源（有权限的App资源）
      *
-     * @return
+     * @return {@code Y9Result<List<}{@link ResourceBaseVO}{@code >>}
      */
     @RiseLog(operationName = "查询所有的根资源（有权限的App资源）")
     @GetMapping(value = "/treeRoot")
@@ -173,7 +174,7 @@ public class ResourceController {
     /**
      * 查询所有的根资源（有权限的App资源）
      *
-     * @return
+     * @return {@code Y9Result<List<}{@link ResourceTreeNodeVO}{@code >>}
      */
     @RiseLog(operationName = "查询所有的根资源（有权限的App资源）")
     @GetMapping(value = "/treeRoot2")
@@ -197,7 +198,8 @@ public class ResourceController {
      * 根据名称查询资源树
      *
      * @param name 资源名称
-     * @return
+     * @param appId 应用id
+     * @return {@code Y9Result<List<}{@link ResourceBaseVO}{@code >>}
      */
     @RiseLog(operationName = "根据名称查询资源树")
     @GetMapping(value = "/treeSearch")
@@ -220,7 +222,8 @@ public class ResourceController {
      * 根据名称查询资源树
      *
      * @param name 资源名称
-     * @return
+     * @param appId 应用id
+     * @return {@code Y9Result<List<}{@link ResourceTreeNodeVO}{@code >>}
      */
     @RiseLog(operationName = "根据名称查询资源树")
     @GetMapping(value = "/treeSearch2")

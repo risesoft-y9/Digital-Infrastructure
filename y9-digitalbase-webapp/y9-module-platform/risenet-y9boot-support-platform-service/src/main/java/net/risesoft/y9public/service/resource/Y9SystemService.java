@@ -44,7 +44,7 @@ public interface Y9SystemService {
      * 根据id获取系统对象
      *
      * @param id 唯一标识
-     * @return 系统对象 或 null
+     * @return {@code Optional<Y9System>}系统对象 或 null
      */
     Optional<Y9System> findById(String id);
 
@@ -52,7 +52,7 @@ public interface Y9SystemService {
      * 根据系统名称获取系统实体
      *
      * @param name 系统名
-     * @return {@link Y9System}
+     * @return {@code Optional<Y9System>}
      */
     Optional<Y9System> findByName(String name);
 
@@ -86,7 +86,7 @@ public interface Y9SystemService {
     /**
      * 查询所有Y9System
      *
-     * @return List<Y9System>
+     * @return {@code List<Y9System>}
      */
     List<Y9System> listAll();
 
@@ -94,7 +94,7 @@ public interface Y9SystemService {
      * 获取系统id列表
      *
      * @param autoInit 是否自动租用系统
-     * @return {@link List}<{@link String}>
+     * @return {@code List<Y9System>}
      */
     List<String> listByAutoInit(Boolean autoInit);
 
@@ -102,7 +102,7 @@ public interface Y9SystemService {
      * 根据系统中文名称，模糊搜索系统列表
      *
      * @param cnName 系统中文名称
-     * @return {@link List}<{@link Y9System}>
+     * @return {@code List<Y9System>}
      */
     List<Y9System> listByCnNameContaining(String cnName);
 
@@ -110,7 +110,7 @@ public interface Y9SystemService {
      * 根据contextPath获取系统实体
      *
      * @param contextPath 上下文路径
-     * @return {@link List}<{@link Y9System}>
+     * @return {@code List<Y9System>}
      */
     List<Y9System> listByContextPath(String contextPath);
 
@@ -118,7 +118,7 @@ public interface Y9SystemService {
      * 分页查询系统列表
      *
      * @param pageQuery 分页查询参数
-     * @return {@link Page}<{@link Y9System}>
+     * @return {@code Page<Y9System>}
      */
     Page<Y9System> page(Y9PageQuery pageQuery);
 

@@ -46,7 +46,7 @@ public class GroupController {
      *
      * @param groupId 用户组id
      * @param personIds 人员ids
-     * @return
+     * @return {@code Y9Result<Object>}
      */
     @RiseLog(operationName = "用户组添加人员", operationType = OperationTypeEnum.ADD)
     @PostMapping(value = "/addPersons")
@@ -60,7 +60,7 @@ public class GroupController {
      * 根据id，改变用户组禁用状态
      *
      * @param id 用户组id
-     * @return
+     * @return {@code Y9Result<Y9Group>}
      */
     @RiseLog(operationName = "禁用用户组", operationType = OperationTypeEnum.MODIFY)
     @PostMapping(value = "/changeDisabled")
@@ -73,7 +73,7 @@ public class GroupController {
      * 根据用户组id，获取扩展属性
      *
      * @param groupId 用户组id
-     * @return
+     * @return {@code Y9Result<String>}
      */
     @RiseLog(operationName = "获取扩展属性")
     @RequestMapping(value = "/getExtendProperties")
@@ -86,7 +86,7 @@ public class GroupController {
      * 根据用户组id，获取用户组信息
      *
      * @param groupId 用户组id
-     * @return
+     * @return {@code Y9Result<Y9Group>}
      */
     @RequestMapping(value = "/getGroupById")
     public Y9Result<Y9Group> getGroupById(@RequestParam @NotBlank String groupId) {
@@ -97,7 +97,7 @@ public class GroupController {
      * 根据人员id，获取用户组列表
      *
      * @param personId 人员id
-     * @return
+     * @return {@code Y9Result<List<Y9Group>>}
      * @since 9.6.1
      */
     @RiseLog(operationName = "根据人员id，获取用户组列表")
@@ -111,7 +111,7 @@ public class GroupController {
      *
      * @param groupId 用户组id
      * @param parentId 父节点id
-     * @return
+     * @return {@code Y9Result<Y9Group>}
      */
     @RiseLog(operationName = "移动用户组", operationType = OperationTypeEnum.MODIFY)
     @PostMapping(value = "/move")
@@ -124,7 +124,7 @@ public class GroupController {
      * 删除用户组
      *
      * @param groupId 用户组id
-     * @return
+     * @return {@code Y9Result<String>}
      */
     @RiseLog(operationName = "删除用户组", operationType = OperationTypeEnum.DELETE)
     @PostMapping(value = "/remove")
@@ -138,7 +138,7 @@ public class GroupController {
      *
      * @param groupId 用户组id
      * @param personIds 人员ids
-     * @return
+     * @return {@code Y9Result<String>}
      */
     @RiseLog(operationName = "用户组移除人员", operationType = OperationTypeEnum.DELETE)
     @PostMapping(value = "/removePersons")
@@ -153,6 +153,7 @@ public class GroupController {
      *
      * @param groupId 用户组id
      * @param properties 扩展属性
+     * @return {@code Y9Result<String>}
      */
     @RiseLog(operationName = "新增扩展属性", operationType = OperationTypeEnum.ADD)
     @PostMapping(value = "/saveExtendProperties")
@@ -166,7 +167,7 @@ public class GroupController {
      * 新建或者更新用户组信息
      *
      * @param group 用户组实体
-     * @return
+     * @return {@code Y9Result<Y9Group>}
      */
     @RiseLog(operationName = "新建或者更新用户组信息", operationType = OperationTypeEnum.ADD)
     @PostMapping(value = "/saveOrUpdate")
@@ -179,6 +180,7 @@ public class GroupController {
      * 保存新的序号
      *
      * @param groupIds 用户组ids
+     * @return {@code Y9Result<String>}
      */
     @RiseLog(operationName = "保存用户组排序", operationType = OperationTypeEnum.MODIFY)
     @PostMapping(value = "/saveOrder")
@@ -192,7 +194,7 @@ public class GroupController {
      *
      * @param personId 人员id
      * @param groupIds 用户组ids
-     * @return
+     * @return {@code Y9Result<String>}
      */
     @RiseLog(operationName = "保存人员的用户组排序", operationType = OperationTypeEnum.MODIFY)
     @PostMapping(value = "/orderGroups")
@@ -207,7 +209,7 @@ public class GroupController {
      *
      * @param groupId 用户组id
      * @param personIds 成员ids
-     * @return
+     * @return {@code Y9Result<String>}
      */
     @RiseLog(operationName = "保存用户组的人员排序", operationType = OperationTypeEnum.MODIFY)
     @PostMapping(value = "/orderPersons")

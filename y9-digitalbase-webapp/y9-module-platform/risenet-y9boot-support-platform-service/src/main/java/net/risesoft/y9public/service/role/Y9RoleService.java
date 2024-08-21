@@ -34,7 +34,7 @@ public interface Y9RoleService {
      *
      * @param customId 自定义id
      * @param parentId 父节点id
-     * @return {@link Y9Role}
+     * @return {@code Optional<}{@link Y9Role}{@code >}
      */
     Optional<Y9Role> findByCustomIdAndParentId(String customId, String parentId);
 
@@ -42,7 +42,7 @@ public interface Y9RoleService {
      * 根据主键获取角色节点对象
      *
      * @param id 唯一标识
-     * @return 角色对象 或 null
+     * @return {@code Optional<}{@link Y9Role}{@code >}角色对象 或 null
      */
     Optional<Y9Role> findById(String id);
 
@@ -66,7 +66,7 @@ public interface Y9RoleService {
     /**
      * 获取所有角色
      *
-     * @return {@link List}<{@link Y9Role}>
+     * @return {@code List<}{@link Y9Role}{@code >}
      */
     List<Y9Role> listAll();
 
@@ -74,7 +74,7 @@ public interface Y9RoleService {
      * 根据角色名称查找
      *
      * @param name 角色名
-     * @return {@link List}<{@link Y9Role}>
+     * @return {@code List<}{@link Y9Role}{@code >}
      */
     List<Y9Role> listByName(String name);
 
@@ -82,7 +82,7 @@ public interface Y9RoleService {
      * 根据orgUnitId获取角色列表
      *
      * @param orgUnitId 组织节点id
-     * @return {@link List}<{@link Y9Role}>
+     * @return {@code List<}{@link Y9Role}{@code >}
      */
     List<Y9Role> listByOrgUnitId(String orgUnitId);
 
@@ -90,7 +90,7 @@ public interface Y9RoleService {
      * 根据orgUnitId获取拥有正权限关联的角色列表
      *
      * @param orgUnitId 组织节点id
-     * @return {@link List}<{@link Y9Role}>
+     * @return {@code List<}{@link Y9Role}{@code >}
      */
     List<Y9Role> listByOrgUnitIdWithoutNegative(String orgUnitId);
 
@@ -98,7 +98,7 @@ public interface Y9RoleService {
      * 根据父节点id,获取本层级的角色节点列表
      *
      * @param parentId 父节点id
-     * @return {@link List}<{@link Y9Role}>
+     * @return {@code List<}{@link Y9Role}{@code >}
      */
     List<Y9Role> listByParentId(String parentId);
 
@@ -107,22 +107,22 @@ public interface Y9RoleService {
      *
      * @param parentId 父节点id
      * @param roleName 角色名称
-     * @return {@link List}<{@link Y9Role}>
+     * @return {@code List<}{@link Y9Role}{@code >}
      */
     List<Y9Role> listByParentIdAndName(String parentId, String roleName);
 
     /**
      * 查询parentId为null的角色集合
      *
-     * @return {@link List}<{@link Y9Role}>
+     * @return {@code List<}{@link Y9Role}{@code >}
      */
     List<Y9Role> listByParentIdIsNull();
 
     /**
      * 从给定节点开始，向上递归，返回递归链上所有的节点id(如果是人员，会包括所在组，岗位id)
      *
-     * @param orgUnitId
-     * @return
+     * @param orgUnitId 组织节点id
+     * @return {@code List<String>}
      */
     List<String> listOrgUnitIdRecursively(String orgUnitId);
 
@@ -130,7 +130,7 @@ public interface Y9RoleService {
      * 根据组织节点id获取所有关联的角色列表（已排除掉负关联） 对于组织机构到组织根节点及所有中间组织节点关联的角色也包含在内
      *
      * @param orgUnitId 组织节点id
-     * @return {@link List}<{@link Y9Role}>
+     * @return {@code List<}{@link Y9Role}{@code >}
      */
     List<Y9Role> listOrgUnitRelatedWithoutNegative(String orgUnitId);
 
@@ -172,7 +172,7 @@ public interface Y9RoleService {
      * 根据name查询角色节点
      *
      * @param name 角色名
-     * @return {@link List}<{@link Y9Role}>
+     * @return {@code List<}{@link Y9Role}{@code >}
      */
     List<Y9Role> treeSearch(String name);
 

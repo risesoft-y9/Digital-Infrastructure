@@ -47,7 +47,7 @@ public class DeptController {
      * 禁用/解除禁用部门
      *
      * @param id 部门id
-     * @return
+     * @return {@code Y9Result<Y9Department>}
      */
     @RiseLog(operationName = "禁用/解除禁用部门", operationType = OperationTypeEnum.DELETE)
     @RequestMapping(value = "/changeDisabled")
@@ -60,7 +60,7 @@ public class DeptController {
      * 获取部门信息
      *
      * @param deptId 部门id
-     * @return
+     * @return {@code Y9Result<Y9Department>}
      */
     @RiseLog(operationName = "根据部门id，获取部门信息")
     @RequestMapping(value = "/getDepartmentById")
@@ -73,7 +73,7 @@ public class DeptController {
      * 根据部门id，获取扩展属性
      *
      * @param deptId 部门id
-     * @return
+     * @return {@code Y9Result<String>}
      */
     @RiseLog(operationName = "获取扩展属性")
     @RequestMapping(value = "/getExtendProperties")
@@ -87,7 +87,7 @@ public class DeptController {
      *
      * @param deptId 部门id
      * @param category 部门属性类型
-     * @return
+     * @return {@code Y9Result<List<Y9OrgBase>>}
      * @since 9.6.5
      */
     @RiseLog(operationName = "获取部门属性对应组织节点列表")
@@ -101,7 +101,7 @@ public class DeptController {
      * 获取部门排序列表
      *
      * @param parentId 父节点id
-     * @return
+     * @return {@code Y9Result<List<Y9OrgBase>>}
      * @since 9.6.1
      */
     @RiseLog(operationName = "获取部门排序列表")
@@ -116,7 +116,7 @@ public class DeptController {
      *
      * @param deptId 部门id
      * @param parentId 新部门父节点id
-     * @return
+     * @return {@code Y9Result<Y9Department>}
      */
     @RiseLog(operationName = "移动部门", operationType = OperationTypeEnum.MODIFY)
     @PostMapping(value = "/move")
@@ -129,7 +129,7 @@ public class DeptController {
      * 根据主键id删除部门实例
      *
      * @param deptId 部门id
-     * @return
+     * @return {@code Y9Result<String>}
      */
     @RiseLog(operationName = "删除部门", operationType = OperationTypeEnum.DELETE)
     @PostMapping(value = "/remove")
@@ -140,7 +140,11 @@ public class DeptController {
 
     /**
      * 移除部门属性
-     *
+     * 
+     * @param deptId 部门id
+     * @param category 部门属性类型
+     * @param orgBaseId 人员ids
+     * @return {@code Y9Result<String>}
      */
     @RiseLog(operationName = "移除部门属性", operationType = OperationTypeEnum.DELETE)
     @PostMapping(value = "/removeDepartmentProp")
@@ -155,6 +159,7 @@ public class DeptController {
      *
      * @param deptId 部门id
      * @param properties 扩展属性，json字符串
+     * @return {@code Y9Result<String>}
      */
     @RiseLog(operationName = "新增扩展属性", operationType = OperationTypeEnum.ADD)
     @PostMapping(value = "/saveExtendProperties")
@@ -168,7 +173,7 @@ public class DeptController {
      * 新建或者更新部门信息
      *
      * @param dept 部门实体
-     * @return
+     * @return {@code Y9Result<Y9Department>}
      */
     @RiseLog(operationName = "保存部门信息", operationType = OperationTypeEnum.ADD)
     @PostMapping(value = "/saveOrUpdate")
@@ -181,7 +186,7 @@ public class DeptController {
      * 保存部门排序
      *
      * @param deptIds 部门下成员ids
-     * @return
+     * @return {@code Y9Result<String>}
      */
     @RiseLog(operationName = "保存部门排序", operationType = OperationTypeEnum.MODIFY)
     @PostMapping(value = "/saveOrder")
@@ -196,6 +201,7 @@ public class DeptController {
      * @param deptId 部门id
      * @param category 部门属性类型
      * @param orgBaseIds 人员ids
+     * @return {@code Y9Result<String>}
      */
     @RiseLog(operationName = "设置部门属性的组织节点", operationType = OperationTypeEnum.ADD)
     @PostMapping(value = "/setDepartmentPropOrgUnits")

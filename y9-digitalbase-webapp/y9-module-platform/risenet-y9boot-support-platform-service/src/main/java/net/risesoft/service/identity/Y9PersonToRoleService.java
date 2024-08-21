@@ -17,15 +17,15 @@ public interface Y9PersonToRoleService {
     /**
      * 根据人员id对个人授权计数
      *
-     * @param personId
-     * @return
+     * @param personId 人员id
+     * @return long
      */
     long countByPersonId(String personId);
 
     /**
      * 根据人员id获取拥有的角色id（,分隔）
      *
-     * @param personId id
+     * @param personId 人员id
      * @return {@link String}
      */
     String getRoleIdsByPersonId(String personId);
@@ -39,17 +39,17 @@ public interface Y9PersonToRoleService {
     /**
      * 人员是否拥有customId对应的角色
      * 
-     * @param personId
-     * @param customId
-     * @return
+     * @param personId 人员id
+     * @param customId 自定义id
+     * @return Boolean
      */
     Boolean hasRoleByCustomId(String personId, String customId);
 
     /**
      * 根据人员id，查询个人授权列表
      *
-     * @param personId
-     * @return
+     * @param personId 人员id
+     * @return {@code List<Y9PersonToRole>}
      */
     List<Y9PersonToRole> listByPersonId(String personId);
 
@@ -57,7 +57,7 @@ public interface Y9PersonToRoleService {
      * 根据角色id查询拥有角色的所有人
      *
      * @param roleId 角色id
-     * @return {@link List}<{@link Y9Person}>
+     * @return {@code List<Y9Person>}
      */
     List<Y9Person> listPersonsByRoleId(String roleId);
 
@@ -65,21 +65,21 @@ public interface Y9PersonToRoleService {
      * 根据人员id查询其拥有的所有角色
      *
      * @param personId 人员id
-     * @return {@link List}<{@link Y9Role}>
+     * @return {@code List<Y9Role>}
      */
     List<Y9Role> listRolesByPersonId(String personId);
 
     /**
      * 根据人员id删除
      *
-     * @param personId
+     * @param personId 人员id
      */
     void removeByPersonId(String personId);
 
     /**
      * 根据角色id移除
      *
-     * @param roleId
+     * @param roleId 角色id
      */
     void removeByRoleId(String roleId);
 

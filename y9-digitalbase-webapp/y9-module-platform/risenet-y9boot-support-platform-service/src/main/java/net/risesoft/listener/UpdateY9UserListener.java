@@ -45,7 +45,7 @@ public class UpdateY9UserListener {
     /**
      * 监听管理员添加事件
      * 
-     * @param event
+     * @param event 管理员添加事件
      */
     @EventListener
     @Transactional(readOnly = false)
@@ -103,7 +103,7 @@ public class UpdateY9UserListener {
     /**
      * 监听管理员删除事件
      *
-     * @param event
+     * @param event 管理员删除事件
      */
     @EventListener
     @Transactional(readOnly = false)
@@ -124,7 +124,7 @@ public class UpdateY9UserListener {
     /**
      * 监听管理员更新事件
      *
-     * @param event
+     * @param event 管理员更新事件
      */
     @EventListener
     @Transactional(readOnly = false)
@@ -184,7 +184,7 @@ public class UpdateY9UserListener {
     /**
      * 监听人员添加事件
      *
-     * @param event
+     * @param event 人员添加事件
      */
     @EventListener
     @Transactional(readOnly = false)
@@ -247,7 +247,7 @@ public class UpdateY9UserListener {
     /**
      * 监听人员删除事件
      *
-     * @param event
+     * @param event 人员删除事件
      */
     @EventListener
     @Transactional(readOnly = false)
@@ -267,7 +267,7 @@ public class UpdateY9UserListener {
     /**
      * 监听人员更新事件
      *
-     * @param event
+     * @param event 人员更新事件
      */
     @EventListener
     @Transactional(readOnly = false)
@@ -332,7 +332,7 @@ public class UpdateY9UserListener {
     /**
      * 监听人员-岗位关联新增事件 并更新用户拥有的岗位id
      *
-     * @param event
+     * @param event 人员-岗位关联新增事件
      */
     @EventListener
     @Transactional(readOnly = false)
@@ -357,7 +357,7 @@ public class UpdateY9UserListener {
     /**
      * 监听人员-岗位关联删除事件 并更新用户拥有的岗位id
      *
-     * @param event
+     * @param event 人员-岗位关联删除事件
      */
     @EventListener
     @Transactional(readOnly = false)

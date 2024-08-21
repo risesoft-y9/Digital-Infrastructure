@@ -30,22 +30,22 @@ public interface Y9PositionToRoleService {
     /**
      * 根据人员id，查询个人授权列表
      *
-     * @param positionId
-     * @return
+     * @param positionId 岗位id
+     * @return {@code List<Y9PositionToRole>}
      */
     List<Y9PositionToRole> listByPositionId(String positionId);
 
     /**
      * 根据岗位id移除
      *
-     * @param positionId
+     * @param positionId 岗位id
      */
     void removeByPositionId(String positionId);
 
     /**
      * 根据角色id移除
      *
-     * @param roleId
+     * @param roleId 角色id
      */
     void removeByRoleId(String roleId);
 

@@ -64,7 +64,7 @@ public class IdCodeController {
      * 为人员添加统一码
      *
      * @param personId 人员id
-     * @return Y9Result<Y9IdCode>
+     * @return {@code Y9Result<Y9IdCode>}
      */
     @RiseLog(operationName = "为人员添加统一码", operationType = OperationTypeEnum.ADD)
     @PostMapping(value = "/creat")
@@ -106,7 +106,7 @@ public class IdCodeController {
      * 根据人员id，获取人员统一码信息
      *
      * @param personId 人员id
-     * @return Y9Result<Y9IdCode>
+     * @return {@code Y9Result<Y9IdCode>}
      */
     @RiseLog(operationName = "根据人员id，获取人员统一码信息")
     @RequestMapping(value = "/getPersonById")

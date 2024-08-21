@@ -43,6 +43,8 @@ public class SyncIdentityRolesController {
 
     /**
      * 同步所有租户的所有人员/岗位角色对应表
+     * 
+     * @return {@code Y9Result<Object>}
      */
     @RiseLog()
     @RequestMapping("/identityRoles")
@@ -70,7 +72,7 @@ public class SyncIdentityRolesController {
      *
      * @param tenantId 租户id
      * @param orgUnitId 组织节点id
-     * @return
+     * @return {@code Y9Result<Object>}
      */
     @RiseLog()
     @RequestMapping("/identityRoles/{tenantId}/{orgUnitId}")
@@ -93,7 +95,7 @@ public class SyncIdentityRolesController {
      * 同步某租户下所有人员/岗位角色对应表
      *
      * @param tenantId 租户id
-     * @return
+     * @return {@code Y9Result<Object>}
      */
     @RiseLog()
     @RequestMapping("/identityRoles/{tenantId}")

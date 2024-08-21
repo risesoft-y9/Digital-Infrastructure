@@ -153,7 +153,7 @@ public class Y9RoleManagerImpl implements Y9RoleManager {
     }
 
     /**
-     * 删除相关租户数据 <br/>
+     * 删除相关租户数据 <br>
      * 切换不同的数据源 需开启新事务
      *
      * @param roleId 角色id

@@ -68,7 +68,7 @@ public class RoleController {
      * 删除角色节点
      *
      * @param id 角色id
-     * @return
+     * @return {@code Y9Result<String>}
      */
     @RiseLog(operationName = "删除角色", operationType = OperationTypeEnum.DELETE)
     @PostMapping(value = "/deleteById")
@@ -81,7 +81,7 @@ public class RoleController {
      * 根据角色id，获取扩展属性
      *
      * @param roleId 角色id
-     * @return
+     * @return {@code Y9Result<String>}
      */
     @RiseLog(operationName = "获取扩展属性")
     @RequestMapping(value = "/getExtendProperties")
@@ -94,7 +94,7 @@ public class RoleController {
      * 根据id，获取角色对象
      *
      * @param id 唯一标识
-     * @return
+     * @return {@code Y9Result<}{@link RoleVO}{@code >}
      */
     @RiseLog(operationName = "获取角色对象")
     @RequestMapping(value = "/getRoleById")
@@ -105,7 +105,7 @@ public class RoleController {
     /**
      * 获取主角色树
      *
-     * @return
+     * @return {@code Y9Result<List<}{@link RoleVO}{@code >>}
      */
     @RiseLog(operationName = "获取主角色树")
     @RequestMapping(value = "/getRootTree")
@@ -128,7 +128,7 @@ public class RoleController {
     /**
      * 获取角色树根节点
      *
-     * @return
+     * @return {@code Y9Result<List<}{@link RoleTreeNodeVO}{@code >>}
      * @since 9.6.3
      */
     @RiseLog(operationName = "获取主角色树")
@@ -153,7 +153,7 @@ public class RoleController {
      * 根据父节点id，获取角色节点列表
      *
      * @param parentId 父节点id
-     * @return
+     * @return {@code Y9Result<List<}{@link Y9Role}{@code >>}
      * @since 9.6.1
      */
     @RiseLog(operationName = "根据父节点id，获取角色节点列表 ")
@@ -168,7 +168,7 @@ public class RoleController {
      * 根据父节点id，获取角色节点列表
      *
      * @param parentId 父节点id
-     * @return
+     * @return {@code Y9Result<List<}{@link RoleTreeNodeVO}{@code >>}
      * @since 9.6.3
      */
     @RiseLog(operationName = "根据父节点id，获取角色节点列表 ")
@@ -183,6 +183,7 @@ public class RoleController {
      *
      * @param id 角色或节点id
      * @param properties 扩展属性
+     * @return {@code Y9Result<String>}
      */
     @RiseLog(operationName = "保存角色节点扩展属性(直接覆盖)", operationType = OperationTypeEnum.MODIFY)
     @PostMapping(value = "/saveExtendProperties")
@@ -196,7 +197,7 @@ public class RoleController {
      *
      * @param id 角色id
      * @param parentId 移动目标节点id
-     * @return
+     * @return {@code Y9Result<String>}
      */
     @RiseLog(operationName = "保存角色节点移动信息 ", operationType = OperationTypeEnum.MODIFY)
     @PostMapping(value = "/saveMove")
@@ -209,7 +210,7 @@ public class RoleController {
      * 新建或者更新角色节点信息
      *
      * @param y9Role 角色实体
-     * @return
+     * @return {@code Y9Result<}{@link RoleVO}{@code >}
      */
     @RiseLog(operationName = "新建或者更新角色节点信息", operationType = OperationTypeEnum.MODIFY)
     @PostMapping(value = "/saveOrUpdate")
@@ -222,7 +223,7 @@ public class RoleController {
      * 保存角色排序
      *
      * @param ids 角色id数组
-     * @return
+     * @return {@code Y9Result<String>}
      */
     @RiseLog(operationName = "保存角色节点排序 ", operationType = OperationTypeEnum.MODIFY)
     @PostMapping(value = "/saveOrder")
@@ -235,7 +236,7 @@ public class RoleController {
      * 根据角色名称，查询角色节点
      *
      * @param name 角色名称
-     * @return
+     * @return {@code Y9Result<List<}{@link RoleVO}{@code >>}
      */
     @RiseLog(operationName = "查询角色")
     @RequestMapping(value = "/treeSearch")
@@ -282,7 +283,7 @@ public class RoleController {
      * 根据角色名称，查询角色节点
      *
      * @param name 角色名称
-     * @return
+     * @return {@code Y9Result<List<}{@link RoleTreeNodeVO}{@code >>}
      * @since 9.6.3
      */
     @RiseLog(operationName = "查询角色")

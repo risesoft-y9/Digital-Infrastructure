@@ -44,7 +44,7 @@ public interface Y9TenantSystemService {
      * 根据id查找租户应用
      *
      * @param id 租户应用主键id
-     * @return {@link Y9TenantSystem}
+     * @return {@code Optional<}{@link Y9TenantSystem}{@code >}
      */
     Optional<Y9TenantSystem> findById(String id);
 
@@ -53,7 +53,7 @@ public interface Y9TenantSystemService {
      *
      * @param tenantId 租户id
      * @param systemId 系统id
-     * @return {@link Y9TenantSystem}
+     * @return {@code Optional<}{@link Y9TenantSystem}{@code >}
      */
     Optional<Y9TenantSystem> getByTenantIdAndSystemId(String tenantId, String systemId);
 
@@ -61,7 +61,7 @@ public interface Y9TenantSystemService {
      * 根据系统唯一标示查找租户系统集合
      *
      * @param systemId 系统id
-     * @return {@link List}<{@link Y9TenantSystem}>
+     * @return {@code List<}{@link Y9TenantSystem}{@code >}
      */
     List<Y9TenantSystem> listBySystemId(String systemId);
 
@@ -71,7 +71,7 @@ public interface Y9TenantSystemService {
      * 根据租户id查询所关联的系统id列表
      *
      * @param tenantId 租户id
-     * @return {@link List}<{@link String}>
+     * @return {@code List<}{@link String}{@code >}
      */
     List<String> listSystemIdByTenantId(String tenantId);
 
@@ -83,7 +83,7 @@ public interface Y9TenantSystemService {
      * 根据系统id查询所关联的租户id
      *
      * @param systemId 系统id
-     * @return {@link List}<{@link String}>
+     * @return {@code List<}{@link String}{@code >}
      */
     List<String> listTenantIdBySystemId(String systemId);
 
@@ -92,7 +92,7 @@ public interface Y9TenantSystemService {
      *
      * @param tenantId 租户id
      * @param pageQuery 分页查询参数
-     * @return {@link Page}<{@link Y9TenantSystem}>
+     * @return {@code Page<}{@link Y9TenantSystem}{@code >}
      */
     Page<Y9TenantSystem> pageByTenantId(String tenantId, Y9PageQuery pageQuery);
 
@@ -100,7 +100,7 @@ public interface Y9TenantSystemService {
      * 保存租户应用实体类
      *
      * @param entity 租户应用实体类
-     * @return
+     * @return {@link Y9TenantSystem}
      */
     Y9TenantSystem save(Y9TenantSystem entity);
 
@@ -118,7 +118,7 @@ public interface Y9TenantSystemService {
      *
      * @param systemIds 系统id数组
      * @param tenantId 租户id
-     * @return {@link List}<{@link Y9TenantSystem}>
+     * @return {@code List<}{@link Y9TenantSystem}{@code >}
      */
     List<Y9TenantSystem> saveTenantSystems(String[] systemIds, String tenantId);
 

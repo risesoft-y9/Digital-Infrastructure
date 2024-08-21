@@ -38,7 +38,7 @@ public interface Y9OptionClassService {
     /**
      * 字曲典类型列表
      *
-     * @return List<ORGOptionClass>
+     * @return {@code List<Y9OptionClass>}
      */
     List<Y9OptionClass> list();
 
