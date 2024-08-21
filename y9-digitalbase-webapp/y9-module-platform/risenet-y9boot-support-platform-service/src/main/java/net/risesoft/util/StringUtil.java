@@ -27,8 +27,8 @@ public class StringUtil {
     /**
      * 获取自定义个数的随机数字组成的字符串
      *
-     * @param length
-     * @return
+     * @param length 长度
+     * @return String
      */
     public static String getRandomNum(int length) {
         Random r = new Random();
@@ -41,12 +41,18 @@ public class StringUtil {
 
     /**
      * 将相应数据转换成XML格式字符串(包含两个集合)
-     *
-     * @return
+     * 
+     * @param tagName1 标记名称1
+     * @param list1 数据集1
+     * @param proNames1 属性名称2
+     * @param tagName2 标记名称2
+     * @param list2 数据集2
+     * @param proNames2 属性名称2
+     * @return String
      */
     public static String parseXmlStr(String tagName1, List<Map<String, Object>> list1, String[] proNames1,
         String tagName2, List<Map<String, Object>> list2, String[] proNames2) {
-        StringBuilder str = new StringBuilder("");
+        StringBuilder str = new StringBuilder();
         str.append("<?xml version=\"1.0\" encoding=\"utf-8\"?>\n");
         str.append("<root>\n");
         for (int i = 0; i < list1.size(); i++) {
@@ -83,14 +89,14 @@ public class StringUtil {
     /**
      * 实现替换字符串中所有要替换字段的功能
      *
-     * @param str
-     * @param sptr
-     * @param sptr1
-     * @return
+     * @param str 字符串
+     * @param target 目标字符串
+     * @param replacement 替换字符串
+     * @return String
      */
-    public static String replaceAll(String str, String sptr, String sptr1) {
-        while (str.indexOf(sptr) >= 0) {
-            str = str.replace(sptr, sptr1);
+    public static String replaceAll(String str, String target, String replacement) {
+        while (str.indexOf(target) >= 0) {
+            str = str.replace(target, replacement);
         }
         return str;
     }
@@ -98,8 +104,8 @@ public class StringUtil {
     /**
      * 实现将xml的String字符串转化标准格式的String字符串
      *
-     * @param str
-     * @return
+     * @param str xml字节流
+     * @return String
      */
     public static String strChangeToXml(byte[] str) {
         SAXReader saxReader = new SAXReader();

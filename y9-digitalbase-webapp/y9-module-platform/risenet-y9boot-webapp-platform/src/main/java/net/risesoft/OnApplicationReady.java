@@ -30,7 +30,7 @@ import net.risesoft.y9public.service.tenant.Y9TenantService;
 import net.risesoft.y9public.service.tenant.Y9TenantSystemService;
 
 /**
- * 应用启动监听器 <br/>
+ * 应用启动监听器 <br>
  * 执行一系列的数据初始化
  * 
  * @author dingzhaojun

@@ -40,7 +40,7 @@ public class MenuResourceController {
      * 删除菜单资源
      *
      * @param id 菜单资源Id
-     * @return
+     * @return {@code Y9Result<Object>}
      */
     @RiseLog(operationName = "删除菜单资源")
     @PostMapping(value = "/delete")
@@ -53,7 +53,7 @@ public class MenuResourceController {
      * 禁用菜单资源
      *
      * @param id 菜单资源Id
-     * @return
+     * @return {@code Y9Result<Y9Menu>}
      */
     @RiseLog(operationName = "禁用菜单资源")
     @PostMapping(value = "/disable")
@@ -65,7 +65,7 @@ public class MenuResourceController {
      * 启用菜单资源
      *
      * @param id 菜单资源Id
-     * @return
+     * @return {@code Y9Result<Y9Menu>}
      */
     @RiseLog(operationName = "启用菜单资源")
     @PostMapping(value = "/enable")
@@ -77,7 +77,7 @@ public class MenuResourceController {
      * 根据id获取菜单资源详情
      *
      * @param id 菜单资源Id
-     * @return
+     * @return {@code Y9Result<Y9Menu>}
      */
     @RiseLog(operationName = "根据id获取菜单资源详情")
     @GetMapping(value = "/{id}")
@@ -91,7 +91,7 @@ public class MenuResourceController {
      * 保存菜单资源
      *
      * @param appResource 菜单资源
-     * @return
+     * @return {@code Y9Result<Y9Menu>}
      */
     @RiseLog(operationName = "保存菜单资源")
     @PostMapping(value = "/save")

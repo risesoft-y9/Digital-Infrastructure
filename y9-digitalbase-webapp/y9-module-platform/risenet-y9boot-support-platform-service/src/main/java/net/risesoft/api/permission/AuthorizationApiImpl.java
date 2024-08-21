@@ -49,7 +49,7 @@ public class AuthorizationApiImpl implements AuthorizationApi {
      * @param resourceId 资源id
      * @param roleId 角色id
      * @param authority 操作类型 {@link AuthorityEnum}
-     * @return
+     * @return {@code Y9Result<Object>}
      * @since 9.6.0
      */
     @Override

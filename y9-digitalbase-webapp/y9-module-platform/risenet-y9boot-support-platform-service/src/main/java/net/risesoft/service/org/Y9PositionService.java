@@ -21,7 +21,7 @@ public interface Y9PositionService {
      *
      * @param y9Job 职位
      * @param personsToPositionsList 人员和岗位对应列表
-     * @return {@code String}
+     * @return String
      */
     String buildName(Y9Job y9Job, List<Y9PersonsToPositions> personsToPositionsList);
 
@@ -83,7 +83,7 @@ public interface Y9PositionService {
      * 根据id查找岗位
      *
      * @param id 唯一标识
-     * @return 岗位对象 或 null
+     * @return {@code Optional<Y9Position>} 岗位对象 或 null
      */
     Optional<Y9Position> findById(String id);
 
@@ -91,7 +91,7 @@ public interface Y9PositionService {
      * 根据职位id查找岗位
      *
      * @param jobId 职位id
-     * @return {@link List}<{@link Y9Position}>
+     * @return {@code List<Y9Position>}
      */
     List<Y9Position> findByJobId(String jobId);
 
@@ -99,7 +99,7 @@ public interface Y9PositionService {
      * 查找 guidPath 包含传入参数的对应岗的 id
      *
      * @param guidPath guid path
-     * @return {@link List}<{@link String}>
+     * @return {@code List<String>}
      */
     List<String> findIdByGuidPathStartingWith(String guidPath);
 
@@ -107,7 +107,7 @@ public interface Y9PositionService {
      * 根据主键id获取岗位实例
      *
      * @param id 唯一标识
-     * @return 岗位对象
+     * @return {@link Y9Position} 岗位对象
      * @throws Y9NotFoundException id 对应的记录不存在的情况
      */
     Y9Position getById(String id);
@@ -124,7 +124,7 @@ public interface Y9PositionService {
     /**
      * 获取所有岗位
      *
-     * @return {@link List}<{@link Y9Position}>
+     * @return {@code List<Y9Position>}
      */
     List<Y9Position> listAll();
 
@@ -132,7 +132,7 @@ public interface Y9PositionService {
      * 根据dn查询岗位
      *
      * @param dn dn
-     * @return {@link List}<{@link Y9Position}>
+     * @return {@code List<Y9Position>}
      */
     List<Y9Position> listByDn(String dn);
 
@@ -140,7 +140,7 @@ public interface Y9PositionService {
      * 根据名称查询
      *
      * @param name 岗位名
-     * @return List<ORGPosition>
+     * @return {@code List<Y9Position>}
      */
     List<Y9Position> listByNameLike(String name);
 
@@ -149,7 +149,7 @@ public interface Y9PositionService {
      *
      * @param name 岗位名
      * @param dn dn
-     * @return List<ORGPosition>
+     * @return {@code List<Y9Position>}
      */
     List<Y9Position> listByNameLikeAndDn(String name, String dn);
 
@@ -157,8 +157,8 @@ public interface Y9PositionService {
      * 根据父节点id,获取本层级的岗位列表
      *
      * @param parentId 父节点id
-     * @param disabled
-     * @return {@link List}<{@link Y9Position}>
+     * @param disabled 是否包含禁用的岗位
+     * @return {@code List<Y9Position>}
      */
     List<Y9Position> listByParentId(String parentId, Boolean disabled);
 
@@ -166,8 +166,8 @@ public interface Y9PositionService {
      * 根据人员id,获取本层级的岗位列
      *
      * @param personId 人员id
-     * @param disabled
-     * @return {@link List}<{@link Y9Position}>
+     * @param disabled 是否包含禁用的岗位
+     * @return {@code List<Y9Position>}
      */
     List<Y9Position> listByPersonId(String personId, Boolean disabled);
 
@@ -192,7 +192,7 @@ public interface Y9PositionService {
      * 保存或者修改此岗位的信息
      *
      * @param position 岗位对象
-     * @return ORGRole
+     * @return {@link Y9Position}
      */
     Y9Position saveOrUpdate(Y9Position position);
 
@@ -200,7 +200,7 @@ public interface Y9PositionService {
      * 保存新的序号
      *
      * @param positionIds 岗位id数组
-     * @return {@link List}<{@link Y9Position}>
+     * @return {@code List<Y9Position>}
      */
     List<Y9Position> saveOrder(List<String> positionIds);
 
@@ -217,7 +217,7 @@ public interface Y9PositionService {
      * 针对岗位树，根据岗位名字查找
      *
      * @param name 岗位名
-     * @return {@link List}<{@link Y9Position}>
+     * @return {@code List<Y9Position>}
      */
     List<Y9Position> treeSearch(String name);
 

@@ -3,7 +3,6 @@ package net.risesoft.service.org;
 import java.util.List;
 import java.util.Optional;
 
-import net.risesoft.entity.Y9Department;
 import net.risesoft.entity.Y9Group;
 import net.risesoft.y9.exception.Y9NotFoundException;
 
@@ -57,7 +56,7 @@ public interface Y9GroupService {
      * 根据id查找用户组
      *
      * @param id 唯一标识
-     * @return 用户组对象 或 null
+     * @return {@code Y9Group} 用户组对象 或 null
      */
     Optional<Y9Group> findById(String id);
 
@@ -65,7 +64,7 @@ public interface Y9GroupService {
      * 根据主键id获取用户组实例
      *
      * @param id 唯一标识
-     * @return 用户组对象
+     * @return Y9Group 用户组对象
      * @throws Y9NotFoundException id 对应的记录不存在的情况
      */
     Y9Group getById(String id);
@@ -73,7 +72,7 @@ public interface Y9GroupService {
     /**
      * 获取所有用户组
      *
-     * @return {@link List}<{@link Y9Group}>
+     * @return {@code List<Y9Group>}
      */
     List<Y9Group> listAll();
 
@@ -81,8 +80,8 @@ public interface Y9GroupService {
      * 根据dn查询
      *
      * @param dn dn
-     * @param disabled
-     * @return {@link List}<{@link Y9Group}>
+     * @param disabled 是否包含禁用的用户组
+     * @return {@code List<Y9Group>}
      */
     List<Y9Group> listByDn(String dn, Boolean disabled);
 
@@ -90,7 +89,7 @@ public interface Y9GroupService {
      * 根据名称查询
      *
      * @param name 用户组名称
-     * @return List<ORGGroup>
+     * @return {@code List<Y9Group>}
      */
     List<Y9Group> listByNameLike(String name);
 
@@ -99,7 +98,7 @@ public interface Y9GroupService {
      *
      * @param name 用户组名称
      * @param dn dn
-     * @return List<ORGGroup>
+     * @return {@code List<Y9Group>}
      */
     List<Y9Group> listByNameLikeAndDn(String name, String dn);
 
@@ -107,8 +106,8 @@ public interface Y9GroupService {
      * 根据父节点id,获取本层级的用户组列表
      *
      * @param parentId 父节点id
-     * @param disabled
-     * @return {@link List}<{@link Y9Group}>
+     * @param disabled 是否包含禁用的用户组
+     * @return {@code List<Y9Group>}
      */
     List<Y9Group> listByParentId(String parentId, Boolean disabled);
 
@@ -116,8 +115,8 @@ public interface Y9GroupService {
      * 根据人员 id获取用户组列表
      *
      * @param personId 人员id
-     * @param disabled
-     * @return List<ORGGroup>
+     * @param disabled 是否包含禁用的用户组
+     * @return {@code List<Y9Group>}
      */
     List<Y9Group> listByPersonId(String personId, Boolean disabled);
 
@@ -127,7 +126,7 @@ public interface Y9GroupService {
      * 修改此用户组实例的信息
      *
      * @param group 用户组对象
-     * @return ORGGroup
+     * @return Y9Group
      */
     Y9Group saveOrUpdate(Y9Group group);
 
@@ -135,7 +134,7 @@ public interface Y9GroupService {
      * 保存新的序号
      *
      * @param groupIds 用户组id数组
-     * @return {@link List}<{@link Y9Group}>
+     * @return {@code List<Y9Group>}
      */
     List<Y9Group> saveOrder(List<String> groupIds);
 
@@ -153,7 +152,7 @@ public interface Y9GroupService {
      *
      * @param id 用户组唯一标识
      * @param tabIndex 排列序号
-     * @return {@link Y9Department}
+     * @return {@link Y9Group}
      */
     Y9Group updateTabIndex(String id, int tabIndex);
 }

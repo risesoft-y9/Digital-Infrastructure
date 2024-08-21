@@ -50,7 +50,7 @@ public class SyncController {
     /**
      * 初始化租户三员
      *
-     * @return
+     * @return {@code Y9Result<String>}
      */
     @RequestMapping("/initManagers")
     @RiseLog(operationName = "初始化租户三员", operationType = OperationTypeEnum.ADD)
@@ -69,7 +69,7 @@ public class SyncController {
     /**
      * 初始化数据字典
      *
-     * @return
+     * @return {@code Y9Result<String>}
      */
     @RequestMapping("/initOptionClass")
     @RiseLog(operationName = "初始化数据字典", operationType = OperationTypeEnum.ADD)
@@ -88,7 +88,7 @@ public class SyncController {
     /**
      * 同步人员信息
      *
-     * @return
+     * @return {@code Y9Result<String>}
      */
     @RequestMapping("/personInfo")
     @RiseLog(operationName = "同步人员信息", operationType = OperationTypeEnum.MODIFY)
@@ -115,9 +115,10 @@ public class SyncController {
     }
 
     /**
-     * 同步人员信息
-     *
+     * 根据租户id，同步人员信息
+     * 
      * @param tenantId 租户id
+     * @return {@code Y9Result<String>}
      */
     @RequestMapping("/personInfo/{tenantId}")
     @RiseLog(operationName = "同步人员信息", operationType = OperationTypeEnum.MODIFY)
@@ -143,7 +144,7 @@ public class SyncController {
      *
      * @param tenantId 租户id
      * @param loginName 登录名
-     * @return
+     * @return {@code Y9Result<String>}
      */
     @RequestMapping("/personInfo/{tenantId}/{loginName}")
     @RiseLog(operationName = "根据租户id和登录名称同步人员信息", operationType = OperationTypeEnum.MODIFY)
@@ -160,7 +161,7 @@ public class SyncController {
     /**
      * 同步岗位信息
      *
-     * @return
+     * @return {@code Y9Result<String>}
      */
     @RequestMapping("/positionInfo")
     @RiseLog(operationName = "同步岗位信息", operationType = OperationTypeEnum.MODIFY)
@@ -174,7 +175,6 @@ public class SyncController {
                 y9PositionService.saveOrUpdate(position);
             }
         }
-
         return Y9Result.successMsg("同步岗位信息完成");
     }
 }

@@ -44,7 +44,7 @@ public interface Y9AuthorizationService {
      * 根据授权主体id，获取所有与此授权主体相关的权限记录
      *
      * @param principalId 授权主体的唯一标识
-     * @return {@link List}<{@link Y9Authorization}>
+     * @return {@code List<Y9Authorization>}
      */
     List<Y9Authorization> listByPrincipalId(String principalId);
 
@@ -53,7 +53,7 @@ public interface Y9AuthorizationService {
      *
      * @param principalId 授权主体的唯一标识
      * @param principalTypeEnum 授权主体类型 {@link AuthorizationPrincipalTypeEnum}
-     * @return {@link List}<{@link Y9Authorization}>
+     * @return {@code List<Y9Authorization>}
      */
     List<Y9Authorization> listByPrincipalIdAndPrincipalType(String principalId,
         AuthorizationPrincipalTypeEnum principalTypeEnum);
@@ -63,7 +63,7 @@ public interface Y9AuthorizationService {
      *
      * @param principalId 授权主体的唯一标识
      * @param resourceId 资源id
-     * @return {@link List}<{@link Y9Authorization}>
+     * @return {@code List<Y9Authorization>}
      */
     List<Y9Authorization> listByPrincipalIdAndResourceId(String principalId, String resourceId);
 
@@ -72,7 +72,7 @@ public interface Y9AuthorizationService {
      *
      * @param principalType 授权主体类型
      * @param resourceId 资源id
-     * @return {@link List}<{@link Y9Authorization}>
+     * @return {@code List<Y9Authorization>}
      */
     List<Y9Authorization> listByPrincipalTypeAndResourceId(AuthorizationPrincipalTypeEnum principalType,
         String resourceId);
@@ -82,7 +82,7 @@ public interface Y9AuthorizationService {
      *
      * @param principalType 授权主体类型
      * @param resourceId 资源id
-     * @return {@link List}<{@link Y9Authorization}>
+     * @return {@code List<Y9Authorization>}
      */
     List<Y9Authorization> listByPrincipalTypeNotAndResourceId(AuthorizationPrincipalTypeEnum principalType,
         String resourceId);
@@ -91,7 +91,7 @@ public interface Y9AuthorizationService {
      * 根据资源id、操作类型和人员id，获取该用户拥有的权限列表
      *
      * @param resourceId 资源id
-     * @return {@link List}<{@link Y9Authorization}>
+     * @return {@code List<Y9Authorization>}
      */
     List<Y9Authorization> listByResourceId(String resourceId);
 
@@ -101,7 +101,7 @@ public interface Y9AuthorizationService {
      * @param principalIds 授权主体的唯一标识列表
      * @param resourceId 资源id
      * @param authority 权限类型 {@link AuthorityEnum}
-     * @return {@link List}<{@link Y9Authorization}>
+     * @return {@code List<Y9Authorization>}
      */
     List<Y9Authorization> listByRoleIds(List<String> principalIds, String resourceId, AuthorityEnum authority);
 
@@ -110,8 +110,8 @@ public interface Y9AuthorizationService {
      *
      * @param pageQuery 分页查询
      * @param resourceId 资源id
-     * @param principalType
-     * @return {@link Page}<{@link Y9Authorization}>
+     * @param principalType 授权主体类型{@link AuthorizationPrincipalTypeEnum}
+     * @return {@code Page<Y9Authorization>}
      */
     Page<Y9Authorization> page(Y9PageQuery pageQuery, String resourceId, AuthorizationPrincipalTypeEnum principalType);
 
@@ -121,7 +121,7 @@ public interface Y9AuthorizationService {
      * @param principalId 授权主体的唯一标识
      * @param rows 每页显示的行数
      * @param page 当前第几页
-     * @return Page<Authorization>
+     * @return {@code Page<Y9Authorization>}
      */
     Page<Y9Authorization> pageByPrincipalId(String principalId, Integer rows, Integer page);
 
@@ -136,7 +136,7 @@ public interface Y9AuthorizationService {
      * 保存或者修改资源关联组织信息
      *
      * @param y9Authorization 权限配置对象
-     * @return Authorization
+     * @return {@link Y9Authorization}
      */
     Y9Authorization saveOrUpdateOrg(Y9Authorization y9Authorization);
 
@@ -144,7 +144,7 @@ public interface Y9AuthorizationService {
      * 保存或者修改资源关联角色信息
      *
      * @param y9Authorization 权限配置对象
-     * @return Authorization
+     * @return {@link Y9Authorization}
      */
     Y9Authorization saveOrUpdateRole(Y9Authorization y9Authorization);
 

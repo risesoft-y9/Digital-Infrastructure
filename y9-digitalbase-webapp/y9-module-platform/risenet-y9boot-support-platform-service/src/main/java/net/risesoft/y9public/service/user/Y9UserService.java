@@ -32,7 +32,7 @@ public interface Y9UserService {
      *
      * @param loginName 登录名
      * @param tenantId 租户id
-     * @return {@link Y9User}
+     * @return {@code Optional<}{@link Y9User}{@code >}
      */
     Optional<Y9User> findByLoginNameAndTenantId(String loginName, String tenantId);
 
@@ -41,14 +41,14 @@ public interface Y9UserService {
      *
      * @param personId 人员id
      * @param tenantId 租户id
-     * @return {@link Y9User}
+     * @return {@code Optional<}{@link Y9User}{@code >}
      */
     Optional<Y9User> findByPersonIdAndTenantId(String personId, String tenantId);
 
     /**
      * 检查caid是否可用
      *
-     * @param personId
+     * @param personId 人员id
      * @param caid ca唯一标识
      * @return boolean
      */
@@ -57,7 +57,7 @@ public interface Y9UserService {
     /**
      * 查询所有用户信息
      *
-     * @return {@link List}<{@link Y9User}>
+     * @return {@code List<}{@link Y9User}{@code >}
      */
     List<Y9User> listAll();
 
@@ -65,7 +65,7 @@ public interface Y9UserService {
      * 根据guidPath查找用户
      *
      * @param guidPath id路径
-     * @return {@link List}<{@link Y9User}>
+     * @return {@code List<}{@link Y9User}{@code >}
      */
     List<Y9User> listByGuidPathLike(String guidPath);
 
@@ -73,7 +73,7 @@ public interface Y9UserService {
      * 根据登录名称进行查询
      *
      * @param loginName 登录名
-     * @return {@link List}<{@link Y9User}>
+     * @return {@code List<}{@link Y9User}{@code >}
      */
     List<Y9User> listByLoginName(String loginName);
 
@@ -81,7 +81,7 @@ public interface Y9UserService {
      * 根据租户id查找用户
      *
      * @param tenantId 租户id
-     * @return {@link List}<{@link Y9User}>
+     * @return {@code List<}{@link Y9User}{@code >}
      */
     List<Y9User> listByTenantId(String tenantId);
 

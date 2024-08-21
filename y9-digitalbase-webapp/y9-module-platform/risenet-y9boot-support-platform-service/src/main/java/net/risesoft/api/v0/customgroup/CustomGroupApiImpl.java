@@ -126,7 +126,7 @@ public class CustomGroupApiImpl implements CustomGroupApi {
      *
      * @param tenantId 租户id
      * @param groupId 用户组id
-     * @return List&lt;Person&gt; 人员列表
+     * @return {@code List<Person>} 人员列表
      * @since 9.6.0
      */
     @Override
@@ -143,7 +143,7 @@ public class CustomGroupApiImpl implements CustomGroupApi {
      *
      * @param tenantId 租户id
      * @param personId 人员Id
-     * @return List&lt;CustomGroup&gt; 用户组对象列表
+     * @return {@code List<CustomGroup>} 用户组对象列表
      * @since 9.6.0
      */
     @Override
@@ -161,7 +161,7 @@ public class CustomGroupApiImpl implements CustomGroupApi {
      * @param tenantId 租户id
      * @param personId 人员Id
      * @param groupId 用户组id
-     * @return List&lt;CustomGroupMember&gt; 用户组成员列表
+     * @return {@code List<CustomGroupMember>} 用户组成员列表
      * @since 9.6.0
      */
     @Override
@@ -180,7 +180,7 @@ public class CustomGroupApiImpl implements CustomGroupApi {
      * @param personId 人员id
      * @param groupId 用户组id
      * @param memberType 成员类型，如：Person、Position
-     * @return List&lt;CustomGroupMember&gt; 用户组员列表
+     * @return {@code List<CustomGroupMember>} 用户组员列表
      * @since 9.6.0
      */
     @Override
@@ -201,7 +201,7 @@ public class CustomGroupApiImpl implements CustomGroupApi {
      * @param personId 人员id
      * @param page 第几页
      * @param rows 返回多少条数据
-     * @return Y9Page&ltMap&lt;String, Object&gt&gt;
+     * @return {@code Y9Page<CustomGroup>}
      * @since 9.6.0
      */
     @Override
@@ -223,7 +223,7 @@ public class CustomGroupApiImpl implements CustomGroupApi {
      * @param groupId 用户组Id
      * @param page 第几页
      * @param rows 返回多少条数据
-     * @return Y9Page&ltMap&lt;String, Object&gt&gt; 人员分页列表
+     * @return {@code Y9Page<CustomGroupMember>} 人员分页列表
      * @since 9.6.0
      */
     @Override
@@ -246,7 +246,7 @@ public class CustomGroupApiImpl implements CustomGroupApi {
      * @param memberType 成员类型，如：Person、Position
      * @param page 第几页
      * @param rows 返回多少条数据
-     * @return Map&lt;String, Object&gt; 人员分页列表
+     * @return {@code Y9Page<CustomGroupMember>} 人员分页列表
      * @since 9.6.0
      */
     @Override

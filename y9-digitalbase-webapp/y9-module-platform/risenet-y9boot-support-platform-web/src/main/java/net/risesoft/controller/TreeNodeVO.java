@@ -23,10 +23,10 @@ public abstract class TreeNodeVO implements Serializable {
     public boolean hasChild = true;
 
     /**
-     * 节点类型，包括所有树的节点类型 <br/>
-     * 组织树的所有节点类型 {@link net.risesoft.enums.platform.OrgTypeEnum} <br/>
-     * 角色树的所有节点类型 {@link net.risesoft.enums.platform.RoleTypeEnum} <br/>
-     * 资源树的所有节点类型 {@link net.risesoft.enums.platform.ResourceTypeEnum} <br/>
+     * 节点类型，包括所有树的节点类型 <br>
+     * 组织树的所有节点类型 {@link net.risesoft.enums.platform.OrgTypeEnum} <br>
+     * 角色树的所有节点类型 {@link net.risesoft.enums.platform.RoleTypeEnum} <br>
+     * 资源树的所有节点类型 {@link net.risesoft.enums.platform.ResourceTypeEnum} <br>
      * 系统树的所有节点类型
      **/
     public String nodeType;

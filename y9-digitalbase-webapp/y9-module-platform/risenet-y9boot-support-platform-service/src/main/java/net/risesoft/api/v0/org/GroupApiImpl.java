@@ -145,7 +145,7 @@ public class GroupApiImpl implements GroupApi {
      *
      * @param tenantId 租户id
      * @param dn 路径
-     * @return List<Group> 用户组对象集合
+     * @return {@code List<Group>} 用户组对象集合
      * @since 9.6.0
      */
     @Override
@@ -162,7 +162,7 @@ public class GroupApiImpl implements GroupApi {
      *
      * @param tenantId 租户id
      * @param groupId 用户组唯一标识
-     * @return List<Person> 人员对象集合
+     * @return {@code List<Person>} 人员对象集合
      * @since 9.6.0
      */
     @Override

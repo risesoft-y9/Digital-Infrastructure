@@ -21,7 +21,7 @@ public class Y9OrgUtil {
      * 
      * @param originOrgBase 原始组织节点对象
      * @param updateOrgBase 更新后组织节点对象
-     * @return
+     * @return boolean
      */
     public static boolean isMoved(Y9OrgBase originOrgBase, Y9OrgBase updateOrgBase) {
         return !Objects.equals(originOrgBase.getParentId(), updateOrgBase.getParentId());
@@ -32,7 +32,7 @@ public class Y9OrgUtil {
      *
      * @param originOrgBase 原始组织节点对象
      * @param updateOrgBase 更新后组织节点对象
-     * @return
+     * @return boolean
      */
     public static boolean isCurrentOrAncestorChanged(Y9OrgBase originOrgBase, Y9OrgBase updateOrgBase) {
         return !Objects.equals(originOrgBase.getDn(), updateOrgBase.getDn())
@@ -44,7 +44,7 @@ public class Y9OrgUtil {
      *
      * @param originOrgBase 原始组织节点对象
      * @param updateOrgBase 更新后组织节点对象
-     * @return
+     * @return boolean
      */
     public static boolean isRenamed(Y9OrgBase originOrgBase, Y9OrgBase updateOrgBase) {
         return !Objects.equals(originOrgBase.getName(), updateOrgBase.getName());
@@ -84,7 +84,7 @@ public class Y9OrgUtil {
     }
 
     /**
-     * 构建 dn <br/>
+     * 构建 dn <br>
      * dn 例子: cn=测试人员,ou=测试部门,o=测试组织
      *
      * @param orgTypeEnum 组织类型列举

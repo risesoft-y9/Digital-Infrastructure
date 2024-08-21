@@ -44,6 +44,7 @@ public class SyncPassWordController {
      * 同步人员信息
      *
      * @param tenantId 租户id
+     * @return {@code Y9Result<String>}
      */
     @RequestMapping("/restPersonPwdByTenantId/{tenantId}")
     @RiseLog(operationName = "修改", operationType = OperationTypeEnum.MODIFY)
@@ -65,7 +66,7 @@ public class SyncPassWordController {
     /**
      * 同步人员信息
      *
-     * @return
+     * @return {@code Y9Result<String>}
      */
     @RequestMapping("/restAllPersonPwd")
     @RiseLog(operationName = "修改", operationType = OperationTypeEnum.MODIFY)
@@ -94,7 +95,7 @@ public class SyncPassWordController {
      *
      * @param tenantId 租户id
      * @param loginName 登录名
-     * @return
+     * @return {@code Y9Result<String>}
      */
     @RequestMapping("/restPwd/{tenantId}/{loginName}")
     @RiseLog(operationType = OperationTypeEnum.MODIFY, operationName = "根据租户id和登陆名称，更改个人密码")

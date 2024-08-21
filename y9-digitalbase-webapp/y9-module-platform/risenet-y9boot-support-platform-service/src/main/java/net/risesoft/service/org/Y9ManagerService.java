@@ -37,7 +37,7 @@ public interface Y9ManagerService {
      *
      * @param personId 人员ID
      * @param password 密码
-     * @return
+     * @return boolean
      */
     boolean checkPassword(String personId, String password);
 
@@ -75,7 +75,7 @@ public interface Y9ManagerService {
      * 根据id查找管理员
      *
      * @param id 管理员id
-     * @return 管理员对象 或 null
+     * @return {@code Optional<Y9Manager>} 管理员对象 或 null
      */
     Optional<Y9Manager> findById(String id);
 
@@ -85,7 +85,7 @@ public interface Y9ManagerService {
      * 根据id获取管理员信息
      *
      * @param id 管理员id
-     * @return 管理员对象
+     * @return Y9Manager 管理员对象
      * @throws Y9NotFoundException id 对应的记录不存在的情况
      */
     Y9Manager getById(String id);
@@ -117,7 +117,7 @@ public interface Y9ManagerService {
     /**
      * 查询所有管理员
      *
-     * @return {@link List}<{@link Y9Manager}>
+     * @return {@code List<Y9Manager}
      */
     List<Y9Manager> listAll();
 
@@ -125,7 +125,7 @@ public interface Y9ManagerService {
      * 获取管理员列表
      *
      * @param globalManager 是否全局管理员
-     * @return {@link List}<{@link Y9Manager}>
+     * @return {@code List<Y9Manager>}
      */
     List<Y9Manager> listByGlobalManager(boolean globalManager);
 
@@ -133,7 +133,7 @@ public interface Y9ManagerService {
      * 根据父节点id获取管理员列表
      *
      * @param parentId 父节点id
-     * @return {@link List}<{@link Y9Manager}>
+     * @return {@code List<Y9Manager>}
      */
     List<Y9Manager> listByParentId(String parentId);
 
@@ -141,6 +141,7 @@ public interface Y9ManagerService {
      * 重置为默认密码
      *
      * @param id 管理员id
+     * @return {@link Y9Manager}
      */
     Y9Manager resetDefaultPassword(String id);
 

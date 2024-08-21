@@ -173,7 +173,7 @@ public class Y9OperationServiceImpl implements Y9OperationService {
     }
 
     /**
-     * 删除相关租户数据 <br/>
+     * 删除相关租户数据 <br>
      * 切换不同的数据源 需开启新事务
      *
      * @param operationId 应用id

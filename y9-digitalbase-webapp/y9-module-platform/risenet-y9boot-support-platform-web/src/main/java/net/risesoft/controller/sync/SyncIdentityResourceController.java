@@ -39,7 +39,7 @@ public class SyncIdentityResourceController {
     /**
      * 同步所有租户人员的权限缓存
      *
-     * @return
+     * @return {@code Y9Result<Object>}
      */
     @RiseLog()
     @RequestMapping("/identityResources")
@@ -67,7 +67,7 @@ public class SyncIdentityResourceController {
      *
      * @param tenantId 租户id
      * @param orgUnitId 组织节点id
-     * @return
+     * @return {@code Y9Result<Object>}
      */
     @RiseLog()
     @RequestMapping("/identityResources/{tenantId}/{orgUnitId}")

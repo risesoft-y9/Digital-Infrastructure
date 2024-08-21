@@ -173,7 +173,7 @@ public class DepartmentApiImpl implements DepartmentApi {
      *
      * @param tenantId 租户id
      * @param departmentId 部门id
-     * @return List<Person> 人员对象集合
+     * @return {@code List<Person> }人员对象集合
      * @since 9.6.0
      */
     @Override
@@ -191,7 +191,7 @@ public class DepartmentApiImpl implements DepartmentApi {
      * @param tenantId 租户id
      * @param departmentId 部门id
      * @param disabled 是否禁用
-     * @return List<Person> 人员对象集合
+     * @return {@code List<Person> } 人员对象集合
      * @since 9.6.0
      */
     @Override
@@ -210,7 +210,7 @@ public class DepartmentApiImpl implements DepartmentApi {
      * @param departmentId 部门id
      * @param disabled 是否禁用
      * @param name 人员姓名
-     * @return List<Person> 人员对象集合
+     * @return {@code List<Person> } 人员对象集合
      * @since 9.6.0
      */
     @Override
@@ -229,7 +229,7 @@ public class DepartmentApiImpl implements DepartmentApi {
      *
      * @param tenantId 租户id
      * @param dn 路径
-     * @return List<Department> 部门对象集合
+     * @return {@code List<Department> } 部门对象集合
      * @since 9.6.0
      */
     @Override
@@ -247,7 +247,7 @@ public class DepartmentApiImpl implements DepartmentApi {
      * @param tenantId 租户id
      * @param orgUnitId 组织节点id
      * @param category 配置类型 {@link DepartmentPropCategoryEnum}
-     * @return
+     * @return {@code List<DepartmentProp> }
      * @since 9.6.0
      */
     @Override
@@ -265,7 +265,7 @@ public class DepartmentApiImpl implements DepartmentApi {
      *
      * @param tenantId 租户id
      * @param deptName 部门名称
-     * @return
+     * @return {@code List<Department> }
      * @since 9.6.0
      */
     @Override
@@ -282,7 +282,7 @@ public class DepartmentApiImpl implements DepartmentApi {
      *
      * @param tenantId 租户id
      * @param ids 部门唯一标识结合
-     * @return List&lt;Department&gt; 部门对象集合
+     * @return {@code List<Department> } 部门对象集合
      * @since 9.6.0
      */
     @Override
@@ -299,7 +299,7 @@ public class DepartmentApiImpl implements DepartmentApi {
      *
      * @param tenantId 租户id
      * @param departmentId 部门唯一标识
-     * @return List<Group> 用户组对象集合
+     * @return {@code List<Group> } 用户组对象集合
      * @since 9.6.0
      */
     @Override
@@ -316,7 +316,7 @@ public class DepartmentApiImpl implements DepartmentApi {
      *
      * @param tenantId 租户id
      * @param departmentId 部门唯一标识
-     * @return List<OrgUnit> 人员对象集合
+     * @return {@code List<OrgUnit> } 人员对象集合
      * @since 9.6.0
      */
     @Override
@@ -334,7 +334,7 @@ public class DepartmentApiImpl implements DepartmentApi {
      *
      * @param tenantId 租户id
      * @param departmentId 部门唯一标识
-     * @return List<OrgUnit> 人员对象集合
+     * @return {@code List<OrgUnit> } 人员对象集合
      * @since 9.6.0
      */
     @Override
@@ -352,7 +352,7 @@ public class DepartmentApiImpl implements DepartmentApi {
      *
      * @param tenantId 租户id
      * @param departmentId 部门唯一标识
-     * @return List<Person> 岗位对象集合
+     * @return {@code List<Person> } 岗位对象集合
      * @since 9.6.0
      */
     @Override
@@ -370,7 +370,7 @@ public class DepartmentApiImpl implements DepartmentApi {
      * @param tenantId 租户id
      * @param departmentId 部门id
      * @param disabled 是否禁用
-     * @return List<Person> 人员对象集合
+     * @return {@code List<Person> } 人员对象集合
      * @since 9.6.0
      */
     @Override
@@ -387,7 +387,7 @@ public class DepartmentApiImpl implements DepartmentApi {
      *
      * @param tenantId 租户id
      * @param departmentId 部门唯一标识
-     * @return List<Position> 岗位对象集合
+     * @return {@code List<Position>} 岗位对象集合
      * @since 9.6.0
      */
     @Override
@@ -404,7 +404,7 @@ public class DepartmentApiImpl implements DepartmentApi {
      *
      * @param tenantId 租户id
      * @param departmentId 部门唯一标识
-     * @return List<Department> 部门对象集合
+     * @return {@code List<Department>} 部门对象集合
      * @since 9.6.0
      */
     @Override

@@ -71,7 +71,7 @@ public interface Y9DataSourceService {
      * 根据 jndi数据源名称 查找
      *
      * @param jndiName jndi数据源名称
-     * @return {@link Y9DataSource}
+     * @return {@code Optional<}{@link Y9DataSource}{@code >}
      */
     Optional<Y9DataSource> findByJndiName(String jndiName);
 
@@ -79,6 +79,7 @@ public interface Y9DataSourceService {
      * 根据ID获取数据源
      *
      * @param id 数据源主键id
+     * @return {@link Y9DataSource}
      * @throws Y9NotFoundException id 对应的记录不存在的情况
      */
     Y9DataSource getById(String id);
@@ -87,15 +88,15 @@ public interface Y9DataSourceService {
      * 获取根据ID获取要测试的数据源
      *
      * @param id 唯一标识
-     * @return {@link DataSource}
-     * @throws Exception 异常
+     * @return {@link Y9DataSource}
      */
     DataSource getDataSource(String id);
 
     /**
      * 查询租户数据源分页列表
      *
-     * @param pageQuery@return {@link Page}<{@link Y9DataSource}>
+     * @param pageQuery 分页信息
+     * @return {@code Page<}{@link Y9DataSource}{@code >}
      */
     Page<Y9DataSource> page(Y9PageQuery pageQuery);
 

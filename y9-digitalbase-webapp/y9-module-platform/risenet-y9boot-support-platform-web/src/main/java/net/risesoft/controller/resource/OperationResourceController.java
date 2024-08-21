@@ -40,7 +40,7 @@ public class OperationResourceController {
      * 删除操作按钮资源
      *
      * @param id 按钮资源id
-     * @return
+     * @return {@code Y9Result<Object>}
      */
     @RiseLog(operationName = "删除操作按钮资源")
     @PostMapping(value = "/delete")
@@ -53,7 +53,7 @@ public class OperationResourceController {
      * 禁用操作按钮资源
      *
      * @param id 按钮资源id
-     * @return
+     * @return {@code Y9Result<Y9Operation>}
      */
     @RiseLog(operationName = "禁用操作按钮资源")
     @PostMapping(value = "/disable")
@@ -65,7 +65,7 @@ public class OperationResourceController {
      * 启用操作按钮资源
      *
      * @param id 按钮资源id
-     * @return
+     * @return {@code Y9Result<Y9Operation>}
      */
     @RiseLog(operationName = "启用操作按钮资源")
     @PostMapping(value = "/enable")
@@ -77,7 +77,7 @@ public class OperationResourceController {
      * 根据id获取操作按钮资源详情
      *
      * @param id 按钮资源id
-     * @return
+     * @return {@code Y9Result<Y9Operation>}
      */
     @RiseLog(operationName = "根据id获取操作按钮资源详情")
     @GetMapping(value = "/{id}")
@@ -91,7 +91,7 @@ public class OperationResourceController {
      * 保存操作按钮资源
      *
      * @param y9Operation 操作按钮资源
-     * @return
+     * @return {@code Y9Result<Y9Operation>}
      */
     @RiseLog(operationName = "保存操作按钮资源")
     @PostMapping(value = "/save")

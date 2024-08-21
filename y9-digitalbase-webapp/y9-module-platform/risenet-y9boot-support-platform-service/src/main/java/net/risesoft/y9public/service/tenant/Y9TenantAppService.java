@@ -71,6 +71,8 @@ public interface Y9TenantAppService {
      *
      * @param tenantId 租户id
      * @param appId 应用id
+     * @param tenancy 是否租用状态
+     * @return {@code Optional<}{@link Y9TenantApp}{@code >}
      */
     Optional<Y9TenantApp> getByTenantIdAndAppIdAndTenancy(String tenantId, String appId, Boolean tenancy);
 
@@ -80,7 +82,7 @@ public interface Y9TenantAppService {
      * @param tenantId 租户id
      * @param verify 是否已审核
      * @param tenancy 是否已租用
-     * @return {@link List}<{@link String}>
+     * @return {@code Page<}{@link String}{@code >}
      */
     List<String> listAppIdByTenantId(String tenantId, Boolean verify, Boolean tenancy);
 
@@ -89,7 +91,7 @@ public interface Y9TenantAppService {
      *
      * @param tenantId 租户id
      * @param tenancy 是否已租用
-     * @return {@link List}<{@link String}>
+     * @return {@code Page<}{@link String}{@code >}
      */
     List<String> listAppIdByTenantIdAndTenancy(String tenantId, Boolean tenancy);
 
@@ -98,7 +100,7 @@ public interface Y9TenantAppService {
      *
      * @param appId 应用id
      * @param tenancy 是否已租用
-     * @return {@link List}<{@link Y9TenantApp}>
+     * @return {@code Page<}{@link Y9TenantApp}{@code >}
      */
     List<Y9TenantApp> listByAppIdAndTenancy(String appId, Boolean tenancy);
 
@@ -108,7 +110,7 @@ public interface Y9TenantAppService {
      * @param tenantId 租户id
      * @param verify 是否已审核
      * @param tenancy 是否已租用
-     * @return {@link List}<{@link Y9TenantApp}>
+     * @return {@code Page<}{@link Y9TenantApp}{@code >}
      */
     List<Y9TenantApp> listByTenantIdAndTenancy(String tenantId, Boolean verify, Boolean tenancy);
 
@@ -123,7 +125,7 @@ public interface Y9TenantAppService {
      * @param verifyTime 审核事件
      * @param tenancy 是否已租用
      * @param systemId 系统id
-     * @return {@link Page}<{@link Y9TenantApp}>
+     * @return {@code Page<}{@link Y9TenantApp}{@code >}
      */
     Page<Y9TenantApp> page(Integer page, Integer rows, Boolean verify, String tenantName, String createTime,
         String verifyTime, Boolean tenancy, String systemId);
@@ -140,7 +142,7 @@ public interface Y9TenantAppService {
      * @param tenancy 租户状态
      * @param appName 应用名称
      * @param systemIds 管理的应用ids
-     * @return {@link Page}<{@link Y9TenantApp}>
+     * @return {@code Page<}{@link Y9TenantApp}{@code >}
      */
     Page<Y9TenantApp> page(Integer page, Integer rows, Boolean verify, String tenantName, String createTime,
         String verifyTime, Boolean tenancy, String appName, String systemIds);

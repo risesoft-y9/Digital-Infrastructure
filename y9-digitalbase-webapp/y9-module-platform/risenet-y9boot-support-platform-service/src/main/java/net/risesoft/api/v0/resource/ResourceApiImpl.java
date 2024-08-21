@@ -161,7 +161,7 @@ public class ResourceApiImpl implements ResourceApi {
      * 获取指定资源的子菜单资源
      *
      * @param resourceId 资源id
-     * @return List&lt;Resource&gt; 资源对象集合
+     * @return {@code List<Resource>} 资源对象集合
      * @since 9.6.0
      */
     @Override
@@ -174,7 +174,7 @@ public class ResourceApiImpl implements ResourceApi {
      * 获得指定资源的子资源
      *
      * @param resourceId 资源唯一标识
-     * @return List&lt;Resource&gt; 资源对象集合
+     * @return {@code List<Resource>} 资源对象集合
      * @since 9.6.0
      */
     @Override

@@ -37,7 +37,7 @@ public interface Y9AppIconService {
      * 根据id，获取应用图标
      *
      * @param id 唯一标识
-     * @return 应用图标对象 或 null
+     * @return {@code Optional<Y9AppIcon>}应用图标对象 或 null
      */
     Optional<Y9AppIcon> findById(String id);
 
@@ -45,7 +45,7 @@ public interface Y9AppIconService {
      * 根据名字获取应用图标
      *
      * @param name 图标名称
-     * @return Y9AppIcon
+     * @return {@code Optional<Y9AppIcon>}
      */
     Optional<Y9AppIcon> findByName(String name);
 
@@ -61,7 +61,7 @@ public interface Y9AppIconService {
     /**
      * 查询所有图标
      *
-     * @return {@link List}<{@link Y9AppIcon}>
+     * @return {@code List<Y9AppIcon>}
      */
     List<Y9AppIcon> listAll();
 
@@ -69,7 +69,7 @@ public interface Y9AppIconService {
      * 根据名称查询应用图标列表
      *
      * @param name 图标名称
-     * @return {@link List}<{@link Y9AppIcon}>
+     * @return {@code List<Y9AppIcon>}
      */
     List<Y9AppIcon> listByName(String name);
 
@@ -77,7 +77,7 @@ public interface Y9AppIconService {
      * 分页获取图标列表
      *
      * @param pageQuery 分页查询参数
-     * @return {@link Page}<{@link Y9AppIcon}>
+     * @return {@code Page<Y9AppIcon>}
      */
     Page<Y9AppIcon> pageAll(Y9PageQuery pageQuery);
 
@@ -92,7 +92,8 @@ public interface Y9AppIconService {
      * @param iconFile 图标文件
      * @param remark 备注
      * @return {@link Y9AppIcon}
-     * @throws Exception 异常
+     * @throws Y9BusinessException 业务异常
+     * @see Y9BusinessException
      */
     Y9AppIcon save(MultipartFile iconFile, String remark) throws Y9BusinessException;
 
@@ -108,7 +109,7 @@ public interface Y9AppIconService {
      *
      * @param name 图标名称
      * @param pageQuery 分页查询参数
-     * @return {@link Page}<{@link Y9AppIcon}>
+     * @return {@code Page<Y9AppIcon>}
      */
     Page<Y9AppIcon> searchByName(String name, Y9PageQuery pageQuery);
 }

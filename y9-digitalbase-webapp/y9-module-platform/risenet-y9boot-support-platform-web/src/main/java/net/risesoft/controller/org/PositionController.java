@@ -47,7 +47,7 @@ public class PositionController {
      *
      * @param positionId 岗位id
      * @param personIds 人员id数组
-     * @return
+     * @return {@code Y9Result<List<Y9PersonsToPositions>>}
      */
     @RiseLog(operationName = "为岗位添加人员", operationType = OperationTypeEnum.ADD)
     @PostMapping(value = "/addPersons")
@@ -61,7 +61,7 @@ public class PositionController {
      * 根据id，改变岗位禁用状态
      *
      * @param id 岗位id
-     * @return
+     * @return {@code Y9Result<Y9Position>}
      */
     @RiseLog(operationName = "禁用岗位", operationType = OperationTypeEnum.MODIFY)
     @PostMapping(value = "/changeDisabled")
@@ -74,7 +74,7 @@ public class PositionController {
      * 根据岗位id，获取岗位的扩展属性
      *
      * @param positionId 岗位id
-     * @return
+     * @return {@code Y9Result<String>}
      */
     @RiseLog(operationName = "获取扩展属性")
     @RequestMapping(value = "/getExtendProperties")
@@ -87,7 +87,7 @@ public class PositionController {
      * 根据岗位id，获取岗位信息
      *
      * @param positionId 岗位id
-     * @return
+     * @return {@code Y9Result<Y9Position>}
      */
     @RiseLog(operationName = "根据岗位id，获取岗位信息信息")
     @RequestMapping(value = "/getPositionById")
@@ -99,7 +99,7 @@ public class PositionController {
      * 根据父节点id，获取岗位列表
      *
      * @param parentId 父节点id
-     * @return
+     * @return {@code Y9Result<List<Y9Position>>}
      * @since 9.6.1
      */
     @RiseLog(operationName = "根据父节点id，获取岗位列表")
@@ -112,7 +112,7 @@ public class PositionController {
      * 根据人员id，获取岗位列表
      *
      * @param personId 人员id
-     * @return
+     * @return {@code Y9Result<List<Y9Position>>}
      * @since 9.6.1
      */
     @RiseLog(operationName = "根据人员id，获取岗位列表")
@@ -126,7 +126,7 @@ public class PositionController {
      *
      * @param positionId 岗位id
      * @param parentId 目标父节点id
-     * @return
+     * @return {@code Y9Result<Y9Position>}
      */
     @RiseLog(operationName = "移动岗位", operationType = OperationTypeEnum.MODIFY)
     @PostMapping(value = "/move")
@@ -140,7 +140,7 @@ public class PositionController {
      * 删除岗位
      *
      * @param ids 岗位id数组
-     * @return
+     * @return {@code Y9Result<String>}
      */
     @RiseLog(operationName = "删除岗位", operationType = OperationTypeEnum.DELETE)
     @PostMapping(value = "/remove")
@@ -154,7 +154,7 @@ public class PositionController {
      *
      * @param positionId 岗位id
      * @param personIds 人员id数组
-     * @return
+     * @return {@code Y9Result<String>}
      */
     @RiseLog(operationName = "移除岗位的人员", operationType = OperationTypeEnum.DELETE)
     @PostMapping(value = "/removePersons")
@@ -169,7 +169,7 @@ public class PositionController {
      *
      * @param positionId 岗位id
      * @param properties 扩展属性
-     * @return
+     * @return {@code Y9Result<String>}
      */
     @RiseLog(operationName = "保存扩展属性", operationType = OperationTypeEnum.ADD)
     @PostMapping(value = "/saveExtendProperties")
@@ -183,7 +183,7 @@ public class PositionController {
      * 新建或者更新岗位信息
      *
      * @param position 岗位实体
-     * @return
+     * @return {@code Y9Result<Y9Position>}
      */
     @RiseLog(operationName = "新建或者更新岗位信息", operationType = OperationTypeEnum.ADD)
     @PostMapping(value = "/saveOrUpdate")
@@ -196,6 +196,7 @@ public class PositionController {
      * 保存新的序号
      *
      * @param positionIds 岗位ids
+     * @return {@code Y9Result<String>}
      */
     @RiseLog(operationName = "保存岗位排序", operationType = OperationTypeEnum.MODIFY)
     @PostMapping(value = "/saveOrder")
@@ -209,7 +210,7 @@ public class PositionController {
      *
      * @param positionId 岗位id
      * @param personIds 人员id数组
-     * @return
+     * @return {@code Y9Result<String>}
      */
     @RiseLog(operationName = "保存岗位的人员排序", operationType = OperationTypeEnum.MODIFY)
     @PostMapping(value = "/orderPersons")
@@ -224,7 +225,7 @@ public class PositionController {
      *
      * @param personId 人员id
      * @param positionIds 岗位id数组
-     * @return
+     * @return {@code Y9Result<String>}
      */
     @RiseLog(operationName = "保存人员的岗位排序", operationType = OperationTypeEnum.MODIFY)
     @PostMapping(value = "/orderPositions")

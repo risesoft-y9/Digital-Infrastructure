@@ -48,7 +48,7 @@ public class PositionsToGroupsController {
      *
      * @param groupId 用户组id
      * @param positionIds 岗位ids
-     * @return
+     * @return {@code Y9Result<Object>}
      */
     @RiseLog(operationName = "批量添加用户组的岗位", operationType = OperationTypeEnum.ADD)
     @PostMapping(value = "/addPositions")
@@ -62,7 +62,7 @@ public class PositionsToGroupsController {
      * 获取岗位关联列表
      *
      * @param groupId 用户组id
-     * @return
+     * @return {@code Y9Result<List<Y9Position>>}
      * @since 9.6.1
      */
     @RiseLog(operationName = "获取组岗位列表")
@@ -84,7 +84,7 @@ public class PositionsToGroupsController {
      *
      * @param groupId 用户组id
      * @param positionIds 岗位ids
-     * @return
+     * @return {@code Y9Result<String>}
      */
     @RiseLog(operationName = "批量移除用户组的岗位", operationType = OperationTypeEnum.DELETE)
     @PostMapping(value = "/removePositions")

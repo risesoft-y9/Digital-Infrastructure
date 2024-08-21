@@ -44,7 +44,7 @@ public class TenantApiImpl implements TenantApi {
      * 根据租户名，获取租户列表
      *
      * @param tenantName 租户名
-     * @return List&lt;Tenant&gt; 租户对象集合
+     * @return {@code Tenant} 租户对象集合
      * @since 9.6.0
      */
     @Override
@@ -57,7 +57,7 @@ public class TenantApiImpl implements TenantApi {
      * 根据租户登录名称（租户英文名称），获取租户列表
      *
      * @param shortName 租户登录名称（租户英文名称）
-     * @return List&lt;Tenant&gt; 租户对象集合
+     * @return {@code Tenant} 租户对象集合
      * @since 9.6.0
      */
     @Override
@@ -82,7 +82,7 @@ public class TenantApiImpl implements TenantApi {
     /**
      * 获取所有租户对象
      *
-     * @return List&lt;Tenant&gt; 所有租户对象的集合
+     * @return {@code List<Tenant>}所有租户对象的集合
      * @since 9.6.0
      */
     @Override
@@ -95,7 +95,7 @@ public class TenantApiImpl implements TenantApi {
      * 获取指定租户类型的所有租户对象
      *
      * @param tenantType 租户类型 {@link TenantTypeEnum}
-     * @return List&lt;Tenant&gt; 所有租户对象的集合
+     * @return {@code List<Tenant>} 所有租户对象的集合
      * @since 9.6.0
      */
     @Override

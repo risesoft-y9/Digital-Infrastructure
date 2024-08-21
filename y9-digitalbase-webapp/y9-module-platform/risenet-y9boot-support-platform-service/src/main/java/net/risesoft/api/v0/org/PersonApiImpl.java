@@ -275,7 +275,7 @@ public class PersonApiImpl implements PersonApi {
      * 获取全部人员
      *
      * @param tenantId 租户id
-     * @return List&lt;Person&gt; 人员对象集合
+     * @return {@code List<Person>} 人员对象集合
      * @since 9.6.0
      */
     @Override
@@ -293,7 +293,7 @@ public class PersonApiImpl implements PersonApi {
      * @param tenantId 租户id
      * @param idType 证件类型
      * @param idNum 证件号码
-     * @return
+     * @return {@code List<Person>}
      * @since 9.6.0
      */
     @Override
@@ -310,7 +310,7 @@ public class PersonApiImpl implements PersonApi {
      *
      * @param tenantId 租户id
      * @param name 人员名称
-     * @return List&lt;Person&gt;
+     * @return {@code List<Person>}
      * @since 9.6.2
      */
     @Override
@@ -327,7 +327,7 @@ public class PersonApiImpl implements PersonApi {
      *
      * @param tenantId 租户id
      * @param personId 人员唯一标识
-     * @return List<Group> 用户组对象集合
+     * @return {@code List<Group>} 用户组对象集合
      * @since 9.6.0
      */
     @Override
@@ -344,7 +344,7 @@ public class PersonApiImpl implements PersonApi {
      *
      * @param tenantId 租户id
      * @param personId 人员id
-     * @return {@link List}<{@link OrgUnit}> 父节点对象集合
+     * @return {@code List<OrgUnit>>} 父节点对象集合
      */
     @Override
     public List<OrgUnit> listParents(@RequestParam("tenantId") @NotBlank String tenantId,
@@ -360,7 +360,7 @@ public class PersonApiImpl implements PersonApi {
      *
      * @param tenantId 租户id
      * @param name 人员名称
-     * @return List&lt;Map&lt;String, Object&gt;&gt;
+     * @return {@code List<Map<String, Object>>}
      * @since 9.6.2
      */
     @Override
@@ -407,7 +407,7 @@ public class PersonApiImpl implements PersonApi {
      *
      * @param tenantId 租户id
      * @param personId 人员唯一标识
-     * @return List<Position> 岗位对象集合
+     * @return {@code List<Position>} 岗位对象集合
      * @since 9.6.0
      */
     @Override
@@ -424,7 +424,7 @@ public class PersonApiImpl implements PersonApi {
      *
      * @param tenantId 租户id
      * @param personId 人员唯一标识
-     * @return List<Role> 角色对象集合
+     * @return {@code List<Role>} 角色对象集合
      * @since 9.6.0
      */
     @Override
@@ -467,7 +467,7 @@ public class PersonApiImpl implements PersonApi {
      * @param name 人员名称
      * @param page 页数
      * @param rows 条数
-     * @return
+     * @return {@code Y9Page<Person>}
      */
     @Override
     public Y9Page<Person> pageByNameLike(@RequestParam("tenantId") @NotBlank String tenantId,
@@ -488,7 +488,7 @@ public class PersonApiImpl implements PersonApi {
      * @param disabled 是否禁用
      * @param page 页号
      * @param rows 条数
-     * @return Y9Page<Person> 人员对象集合
+     * @return {@code Y9Page<Person>} 人员对象集合
      * @since 9.6.0
      */
     @Override
@@ -512,7 +512,7 @@ public class PersonApiImpl implements PersonApi {
      * @param userName 用户名称
      * @param page 页号
      * @param rows 条数
-     * @return Y9Page<Person> 人员对象集合
+     * @return {@code Y9Page<Person>} 人员对象集合
      * @since 9.6.0
      */
     @Override

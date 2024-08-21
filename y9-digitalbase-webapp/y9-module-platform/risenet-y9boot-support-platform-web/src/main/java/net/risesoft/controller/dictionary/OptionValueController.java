@@ -44,7 +44,7 @@ public class OptionValueController {
      * 根据字典类型，获取字典属性值列表
      *
      * @param type 字典类型
-     * @return
+     * @return {@code Y9Result<List<Y9OptionValue>>}
      * @since 9.6.1
      */
     @RiseLog(operationName = "获取字典属性值列表")
@@ -56,7 +56,7 @@ public class OptionValueController {
     /**
      * 获取职务名称列表
      *
-     * @return
+     * @return {@code Y9Result<List<Y9OptionValue>>}
      * @since 9.6.1
      */
     @RiseLog(operationName = "获取职务名称列表")
@@ -68,7 +68,7 @@ public class OptionValueController {
     /**
      * 获取职备级别列表
      *
-     * @return
+     * @return {@code Y9Result<List<Y9OptionValue>>}
      * @since 9.6.1
      */
     @RiseLog(operationName = "获取职备级别列表")
@@ -80,7 +80,7 @@ public class OptionValueController {
     /**
      * 获取职务类型列表
      *
-     * @return
+     * @return {@code Y9Result<List<Y9OptionValue>>}
      * @since 9.6.1
      */
     @RiseLog(operationName = "获取职务类型列表")
@@ -92,7 +92,7 @@ public class OptionValueController {
     /**
      * 获取人员编制列表
      *
-     * @return
+     * @return {@code Y9Result<List<Y9OptionValue>>}
      * @since 9.6.1
      */
     @RiseLog(operationName = "获取人员编制列表")
@@ -104,7 +104,7 @@ public class OptionValueController {
     /**
      * 获取组织机构类型列表
      *
-     * @return
+     * @return {@code Y9Result<List<Y9OptionValue>>}
      * @since 9.6.1
      */
     @RiseLog(operationName = "获取组织机构类型列表")
@@ -116,7 +116,7 @@ public class OptionValueController {
     /**
      * 获取证件类型列表
      *
-     * @return
+     * @return {@code Y9Result<List<Y9OptionValue>>}
      * @since 9.6.1
      */
     @RiseLog(operationName = "获取证件类型列表")
@@ -129,6 +129,7 @@ public class OptionValueController {
      * 根据id数组，删除字典数据
      *
      * @param ids id数组
+     * @return {@code Y9Result<String>}
      */
     @RiseLog(operationName = "删除字典数据", operationType = OperationTypeEnum.DELETE)
     @PostMapping(value = "/removeByIds")
@@ -141,7 +142,7 @@ public class OptionValueController {
      * 保存新增字典数据
      *
      * @param optionValue 字典数据实体
-     * @return
+     * @return {@code Y9Result<Y9OptionValue>}
      */
     @RiseLog(operationName = "保存新增字典数据", operationType = OperationTypeEnum.ADD)
     @PostMapping(value = "/saveOptionValue")

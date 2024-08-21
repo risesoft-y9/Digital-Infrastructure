@@ -50,7 +50,7 @@ public class AppResourceController {
      * 批量删除应用
      *
      * @param ids 应用id数组
-     * @return
+     * @return {@code Y9Result<Object>}
      */
     @RiseLog(operationName = "删除应用")
     @PostMapping(value = "/delete")
@@ -63,7 +63,7 @@ public class AppResourceController {
      * 批量禁用应用
      *
      * @param ids 应用id数组
-     * @return
+     * @return {@code Y9Result<List<Y9App>>}
      */
     @RiseLog(operationName = "禁用应用")
     @PostMapping(value = "/disable")
@@ -75,7 +75,7 @@ public class AppResourceController {
      * 批量启用应用
      *
      * @param ids 应用id数组
-     * @return
+     * @return {@code Y9Result<List<Y9App>>}
      */
     @RiseLog(operationName = "启用应用")
     @PostMapping(value = "/enable")
@@ -87,7 +87,7 @@ public class AppResourceController {
      * 根据应用id获取应用详情
      *
      * @param id 应用资源id
-     * @return
+     * @return {@code Y9Result<Y9App>}
      */
     @RiseLog(operationName = "根据应用id获取应用详情")
     @GetMapping(value = "/{id}")
@@ -101,7 +101,7 @@ public class AppResourceController {
      * 根据系统id，获取应用列表
      *
      * @param systemId 系统id
-     * @return
+     * @return {@code Y9Result<List<Y9App>>}
      */
     @RiseLog(operationName = "根据系统id，获取应用列表")
     @GetMapping(value = "/listBySystemId")
@@ -116,7 +116,7 @@ public class AppResourceController {
      * @param pageQuery 分页
      * @param systemId 系统id
      * @param name 应用名称
-     * @return
+     * @return {@code Y9Page<Y9App>}
      */
     @RiseLog(operationName = "分页获取应用列表")
     @GetMapping(value = "/page")
@@ -129,8 +129,8 @@ public class AppResourceController {
     /**
      * 保存应用
      *
-     * @param y9App
-     * @return
+     * @param y9App 应用信息
+     * @return {@code Y9Result<Y9App>}
      */
     @RiseLog(operationName = "保存应用")
     @PostMapping(value = "/save")
@@ -143,7 +143,7 @@ public class AppResourceController {
      * 保存应用排序
      *
      * @param appIds 应用id数组
-     * @return
+     * @return {@code Y9Result<String>}
      */
     @RiseLog(operationName = "保存应用排序", operationType = OperationTypeEnum.MODIFY)
     @PostMapping(value = "/saveOrder")

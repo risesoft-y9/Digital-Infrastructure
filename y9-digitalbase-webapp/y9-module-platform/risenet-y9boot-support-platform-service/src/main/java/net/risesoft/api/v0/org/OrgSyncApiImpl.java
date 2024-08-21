@@ -81,7 +81,7 @@ public class OrgSyncApiImpl implements OrgSyncApi {
      * @param appName 应用名称
      * @param tenantId 租户id
      * @param organizationId 机构id
-     * @return Y9Result&lt;MessageOrg&gt; 整个组织机构对象集合
+     * @return {@code Y9Result<MessageOrg>} 整个组织机构对象集合
      * @since 9.6.0
      */
     @Override
@@ -103,7 +103,7 @@ public class OrgSyncApiImpl implements OrgSyncApi {
      *
      * @param appName 应用名称
      * @param tenantId 租户id
-     * @return Y9Result&lt;List&lt;MessageOrg&gt;&gt; 事件列表
+     * @return {@code Y9Result<List<MessageOrg>>} 事件列表
      * @since 9.6.0
      */
     @Override

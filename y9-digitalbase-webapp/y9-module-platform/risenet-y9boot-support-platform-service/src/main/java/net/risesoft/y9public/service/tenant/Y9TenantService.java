@@ -55,7 +55,7 @@ public interface Y9TenantService {
      * @param tenantName 租户中文名称
      * @param tenantShortName 租户英文名称
      * @param dataSourceId 默认租户数据源
-     * @return Tenant
+     * @return {@link Y9Tenant}
      */
     Y9Tenant createTenant(String tenantName, String tenantShortName, String dataSourceId);
 
@@ -70,7 +70,7 @@ public interface Y9TenantService {
      * 根据id获取租户对象
      *
      * @param id 唯一标识
-     * @return 租户对象 或 null
+     * @return {@code Optional<}{@link Y9Tenant}{@code >}租户对象 或 null
      */
     Optional<Y9Tenant> findById(String id);
 
@@ -78,7 +78,7 @@ public interface Y9TenantService {
      * 根据租户英文名查找租户列表
      *
      * @param shortName 租户英文名称
-     * @return List&lt;Tenant&gt;
+     * @return {@code Optional<}{@link Y9Tenant}{@code >}
      */
     Optional<Y9Tenant> findByShortName(String shortName);
 
@@ -86,7 +86,7 @@ public interface Y9TenantService {
      * 根据租户名称查找租户列表
      *
      * @param tenantName 租户名称
-     * @return List&lt;Tenant&gt;
+     * @return {@code Optional<}{@link Y9Tenant}{@code >}
      */
     Optional<Y9Tenant> findByTenantName(String tenantName);
 
@@ -109,7 +109,7 @@ public interface Y9TenantService {
     /**
      * 获取所有租户列表
      *
-     * @return List&lt;Tenant&gt;
+     * @return {@code List<}{@link Y9Tenant}{@code >}
      */
     List<Y9Tenant> listAll();
 
@@ -117,7 +117,7 @@ public interface Y9TenantService {
      * 根据guidPath查找租户列表
      *
      * @param guidPath id路径
-     * @return {@link List}<{@link Y9Tenant}>
+     * @return {@code List<}{@link Y9Tenant}{@code >}
      */
     List<Y9Tenant> listByGuidPathLike(String guidPath);
 
@@ -126,7 +126,7 @@ public interface Y9TenantService {
      *
      * @param parentId 父节点id
      * @param tenantType 租户类型 {@link TenantTypeEnum}
-     * @return {@link List}<{@link Y9Tenant}>
+     * @return {@code List<}{@link Y9Tenant}{@code >}
      */
     List<Y9Tenant> listByParentIdAndTenantType(String parentId, TenantTypeEnum tenantType);
 
@@ -134,7 +134,7 @@ public interface Y9TenantService {
      * 根据租户类型(TenantType)获取租户
      *
      * @param tenantType 租户类型： 0=用户，2=开发商，1=运维团队，3=普通租户
-     * @return List&lt;Tenant&gt;
+     * @return {@code List<}{@link Y9Tenant}{@code >}
      */
     List<Y9Tenant> listByTenantType(TenantTypeEnum tenantType);
 
@@ -143,7 +143,7 @@ public interface Y9TenantService {
      *
      * @param name 租户名称
      * @param tenantType 租户类型： 0=用户，2=开发商，1=运维团队，3=普通租户
-     * @return List&lt;Tenant&gt;
+     * @return {@code List<}{@link Y9Tenant}{@code >}
      */
     List<Y9Tenant> listByTenantType(String name, Integer tenantType);
 

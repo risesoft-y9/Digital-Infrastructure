@@ -73,7 +73,7 @@ public class PersonController {
      *
      * @param personId 人员id
      * @param groupIds 用户组id数组
-     * @return
+     * @return {@code Y9Result<Object>}
      */
     @RiseLog(operationName = "为人员添加用户组", operationType = OperationTypeEnum.ADD)
     @PostMapping(value = "/addGroups")
@@ -88,7 +88,7 @@ public class PersonController {
      *
      * @param personId 人员id
      * @param positionIds 岗位id数组
-     * @return
+     * @return {@code Y9Result<List<Y9PersonsToPositions>>}
      */
     @RiseLog(operationName = "为人员添加岗位", operationType = OperationTypeEnum.ADD)
     @PostMapping(value = "/addPositions")
@@ -103,7 +103,7 @@ public class PersonController {
      * 根据id，改变人员禁用状态
      *
      * @param id 人员id
-     * @return
+     * @return {@code Y9Result<Y9Person>}
      */
     @RiseLog(operationName = "禁用人员", operationType = OperationTypeEnum.MODIFY)
     @PostMapping(value = "/changeDisabled")
@@ -115,8 +115,9 @@ public class PersonController {
     /**
      * 判断CA认证码是否可用（同一个租户）
      *
+     * @param personId 人员id
      * @param caid CA认证码
-     * @return
+     * @return {@code Y9Result<Boolean>}
      */
     @RiseLog(operationName = "判断同一个租户CA认证码是否重复")
     @RequestMapping(value = "/checkCaid")
@@ -127,9 +128,10 @@ public class PersonController {
 
     /**
      * 判断登录名是否可用（同一个租户）
-     *
+     * 
+     * @param personId 人员id
      * @param loginName 登录名称
-     * @return
+     * @return {@code Y9Result<Boolean>}
      */
     @RiseLog(operationName = "判断登录名是否可用")
     @RequestMapping(value = "/checkLoginName")
@@ -142,7 +144,7 @@ public class PersonController {
      * 根据人员id，获取扩展属性
      *
      * @param personId 人员id
-     * @return
+     * @return {@code Y9Result<String>}
      */
     @RiseLog(operationName = "获取扩展属性")
     @RequestMapping(value = "/getExtendProperties")
@@ -155,7 +157,7 @@ public class PersonController {
      * 根据人员id，获取人员信息
      *
      * @param personId 人员id
-     * @return
+     * @return {@code Y9Result<Y9Person>}
      */
     @RiseLog(operationName = "根据人员id，获取人员信息")
     @RequestMapping(value = "/getPersonById")
@@ -167,7 +169,7 @@ public class PersonController {
      * 根据人员id，获取人员扩展信息
      *
      * @param personId 人员id
-     * @return
+     * @return {@code Y9Result<Y9PersonExt>}
      */
     @RiseLog(operationName = "根据人员id，获取人员扩展信息")
     @RequestMapping(value = "/getPersonExtById")
@@ -179,7 +181,7 @@ public class PersonController {
      * 根据人员id，获取脱敏后的人员扩展信息
      *
      * @param personId 人员id
-     * @return
+     * @return {@code Y9Result<Y9PersonExt>}
      */
     @RiseLog(operationName = "根据人员id，获取脱敏后的人员扩展信息")
     @RequestMapping(value = "/getPersonExtByIdWithEncry")
@@ -195,7 +197,7 @@ public class PersonController {
      * 根据用户组id，获取用户组人员列表
      *
      * @param groupId 用户组id
-     * @return
+     * @return {@code Y9Result<List<Y9Person>>}
      * @since 9.6.1
      */
     @RiseLog(operationName = "获取用户组人员列表")
@@ -208,7 +210,7 @@ public class PersonController {
      * 根据父节点id，获取人员列表
      *
      * @param parentId 父节点id
-     * @return
+     * @return {@code Y9Result<List<Y9Person>>}
      * @since 9.6.1
      */
     @RiseLog(operationName = "获取人员列表")
@@ -221,7 +223,7 @@ public class PersonController {
      * 根据岗位Id，获取人员列表
      *
      * @param positionId 岗位id
-     * @return
+     * @return {@code Y9Result<List<Y9Person>>}
      * @since 9.6.1
      */
     @RiseLog(operationName = "获取岗位人员列表")
@@ -235,7 +237,7 @@ public class PersonController {
      *
      * @param personId 人员id
      * @param parentId 目标父节点id
-     * @return
+     * @return {@code Y9Result<Y9Person>}
      */
     @RiseLog(operationName = "移动人员到新的节点", operationType = OperationTypeEnum.MODIFY)
     @PostMapping(value = "/move")
@@ -248,7 +250,7 @@ public class PersonController {
      * 根据id数组，删除人员
      *
      * @param ids 人员id数组
-     * @return
+     * @return {@code Y9Result<String>}
      */
     @RiseLog(operationName = "删除人员", operationType = OperationTypeEnum.DELETE)
     @PostMapping(value = "/remove")
@@ -262,7 +264,7 @@ public class PersonController {
      *
      * @param personId 人员id
      * @param groupIds 用户组id数组
-     * @return
+     * @return {@code Y9Result<String>}
      */
     @RiseLog(operationName = "移除人员关联的用户组", operationType = OperationTypeEnum.DELETE)
     @PostMapping(value = "/removeGroups")
@@ -277,7 +279,7 @@ public class PersonController {
      *
      * @param personId 人员id
      * @param positionIds 岗位id数组
-     * @return
+     * @return {@code Y9Result<String>}
      */
     @RiseLog(operationName = "移除人员的岗位", operationType = OperationTypeEnum.DELETE)
     @PostMapping(value = "/removePositions")
@@ -291,7 +293,7 @@ public class PersonController {
      * 重置密码
      *
      * @param personId 人员id
-     * @return
+     * @return {@code Y9Result<String>}
      */
     @RiseLog(operationName = "重置密码", operationType = OperationTypeEnum.MODIFY)
     @PostMapping(value = "/resetPassword")
@@ -304,7 +306,8 @@ public class PersonController {
      * 上传个人头像
      * 
      * @param iconFile 头像
-     * @return
+     * @param personId 人员id
+     * @return {@code Y9Result<String>}
      */
     @PostMapping(value = "/saveAvator")
     public Y9Result<String> saveAvator(@RequestParam(required = false) MultipartFile iconFile,
@@ -332,7 +335,7 @@ public class PersonController {
      *
      * @param personId 人员id
      * @param properties 属性值
-     * @return
+     * @return {@code Y9Result<String>}
      */
     @RiseLog(operationName = "保存扩展属性", operationType = OperationTypeEnum.ADD)
     @PostMapping(value = "/saveExtendProperties")
@@ -349,7 +352,7 @@ public class PersonController {
      * @param ext 人员扩展信息实体
      * @param jobIds 职位id数组
      * @param positionIds 岗位id数组
-     * @return
+     * @return {@code Y9Result<Y9Person>}
      */
     @RiseLog(operationName = "新建或者更新人员信息", operationType = OperationTypeEnum.ADD)
     @PostMapping(value = "/saveOrUpdate")
@@ -364,7 +367,7 @@ public class PersonController {
      * 保存排序结果
      *
      * @param personIds 人员id数组
-     * @return
+     * @return {@code Y9Result<String>}
      */
     @RiseLog(operationName = "保存人员排序", operationType = OperationTypeEnum.MODIFY)
     @PostMapping(value = "/saveOrder")
@@ -378,7 +381,7 @@ public class PersonController {
      *
      * @param iconFile 头像文件
      * @param personId 人员id
-     * @return
+     * @return {@code Y9Result<String>}
      */
     @RiseLog(operationType = OperationTypeEnum.ADD, operationName = "上传个人证件照图片")
     @PostMapping(value = "/savePersonPhoto")
@@ -405,7 +408,7 @@ public class PersonController {
      *
      * @param iconFile 签名文件
      * @param personId 人员id
-     * @return
+     * @return {@code Y9Result<String>}
      */
     @RiseLog(operationType = OperationTypeEnum.ADD, operationName = "上传个人签名照图片")
     @PostMapping(value = "/savePersonSign")
@@ -432,7 +435,7 @@ public class PersonController {
      *
      * @param personIds 人员Id数组
      * @param parentId 父节点id
-     * @return
+     * @return {@code Y9Result<List<Y9Person>>}
      */
     @RiseLog(operationName = "保存添加人员", operationType = OperationTypeEnum.ADD)
     @PostMapping(value = "/savePersons")
@@ -446,8 +449,7 @@ public class PersonController {
      * 查看人员证件照片
      *
      * @param personId 人员id
-     * @param response
-     *
+     * @param response 响应
      */
     @RiseLog(operationName = "查看人员证件照片")
     @RequestMapping("/showPersonPhoto")
@@ -473,7 +475,7 @@ public class PersonController {
      * 查看人员签名照片
      *
      * @param personId 人员id
-     * @param response
+     * @param response 响应
      *
      */
     @RiseLog(operationName = "查看人员签名照片")

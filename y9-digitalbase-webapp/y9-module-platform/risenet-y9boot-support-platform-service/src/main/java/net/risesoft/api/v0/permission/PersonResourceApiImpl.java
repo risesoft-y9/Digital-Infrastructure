@@ -93,7 +93,7 @@ public class PersonResourceApiImpl implements PersonResourceApi {
      * @param personId 操作者唯一标识
      * @param authority 操作类型 {@link AuthorityEnum}
      * @param resourceId 资源唯一标识
-     * @return List&lt;Resource&gt; 有权限的子菜单
+     * @return {@code List<VueMenu>} 有权限的子菜单
      * @since 9.6.0
      */
     @Override
@@ -116,7 +116,7 @@ public class PersonResourceApiImpl implements PersonResourceApi {
      * @param personId 操作者唯一标识
      * @param authority 操作类型 {@link AuthorityEnum}
      * @param resourceId 资源唯一标识
-     * @return List&lt;Resource&gt; 有操作权限的子菜单
+     * @return {@code List<Menu>} 有操作权限的子菜单
      * @since 9.6.0
      */
     @Override
@@ -137,7 +137,7 @@ public class PersonResourceApiImpl implements PersonResourceApi {
      * @param personId 操作者唯一标识
      * @param authority 操作类型 {@link AuthorityEnum}
      * @param resourceId 资源唯一标识
-     * @return List&lt;Resource&gt; 有操作权限的子节点
+     * @return {@code List<Resource>} 有操作权限的子节点
      * @since 9.6.0
      */
     @Override

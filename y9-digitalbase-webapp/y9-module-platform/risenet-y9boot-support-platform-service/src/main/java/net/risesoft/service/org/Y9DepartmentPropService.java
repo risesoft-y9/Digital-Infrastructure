@@ -32,14 +32,14 @@ public interface Y9DepartmentPropService {
      * 根据部门唯一标识查找
      *
      * @param id 唯一标识
-     * @return 部门配置对象 或 null
+     * @return {@code Optional<Y9DepartmentProp>} 部门配置对象 或 null
      */
     Optional<Y9DepartmentProp> findById(String id);
 
     /**
      * 查找所有的部门管理员
      *
-     * @return {@link List}<{@link Y9DepartmentProp}>
+     * @return {@code List<Y9DepartmentProp>}
      */
     List<Y9DepartmentProp> listAll();
 
@@ -47,7 +47,7 @@ public interface Y9DepartmentPropService {
      * 根据部门唯一标识和类别查找部门配置信息
      *
      * @param category 类别
-     * @return {@link List}<{@link Y9DepartmentProp}>
+     * @return {@code List<Y9DepartmentProp>}
      */
     List<Y9DepartmentProp> listByCategory(DepartmentPropCategoryEnum category);
 
@@ -55,7 +55,7 @@ public interface Y9DepartmentPropService {
      * 根据部门唯一标识查找部门配置信息
      *
      * @param deptId 部门id
-     * @return {@link List}<{@link Y9DepartmentProp}>
+     * @return {@code List<Y9DepartmentProp>}
      */
     List<Y9DepartmentProp> listByDeptId(String deptId);
 
@@ -64,7 +64,7 @@ public interface Y9DepartmentPropService {
      *
      * @param deptId 部门id
      * @param category 类别
-     * @return {@link List}<{@link Y9DepartmentProp}>
+     * @return {@code List<Y9DepartmentProp>}
      */
     List<Y9DepartmentProp> listByDeptIdAndCategory(String deptId, DepartmentPropCategoryEnum category);
 
@@ -73,7 +73,7 @@ public interface Y9DepartmentPropService {
      *
      * @param orgBaseId 组织节点id
      * @param category 类别
-     * @return {@link List}<{@link Y9DepartmentProp}>
+     * @return {@code List<Y9DepartmentProp>}
      */
     List<Y9DepartmentProp> listByOrgBaseIdAndCategory(String orgBaseId, DepartmentPropCategoryEnum category);
 

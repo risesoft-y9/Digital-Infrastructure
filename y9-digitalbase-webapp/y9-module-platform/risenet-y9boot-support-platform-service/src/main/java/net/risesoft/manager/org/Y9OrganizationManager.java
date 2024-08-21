@@ -3,6 +3,7 @@ package net.risesoft.manager.org;
 import java.util.Optional;
 
 import net.risesoft.entity.Y9Organization;
+import net.risesoft.y9.exception.Y9NotFoundException;
 
 /**
  * 组织 manager
@@ -21,12 +22,25 @@ public interface Y9OrganizationManager {
      * 根据id，获取组织机构信息（直接读取数据库）
      *
      * @param id 组织机构id
-     * @return
+     * @return {@code Optional<Y9Organization>}
      */
     Optional<Y9Organization> findByIdNotCache(String id);
 
+    /**
+     * 根据id，获取组织机构信息
+     *
+     * @param id 组织机构id
+     * @return {@link Y9Organization}
+     * @throws Y9NotFoundException id 对应的记录不存在的情况
+     */
     Y9Organization getById(String id);
 
+    /**
+     * 根据id，获取组织机构信息（直接读取数据库）
+     *
+     * @param id 组织机构id
+     * @return {@link Y9Organization}
+     */
     Y9Organization getByIdNotCache(String id);
 
     Y9Organization save(Y9Organization y9Organization);
@@ -47,7 +61,7 @@ public interface Y9OrganizationManager {
      *
      * @param id 组织机构id
      * @param tabIndex 排序
-     * @return
+     * @return {@link Y9Organization}
      */
     Y9Organization updateTabIndex(String id, int tabIndex);
 }

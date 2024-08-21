@@ -44,11 +44,11 @@ public class JobController {
      * 根据id列表删除职位
      *
      * @param ids id数组
-     * @return
+     * @return {@code Y9Result<Object>}
      */
     @RiseLog(operationName = "根据id列表删除职位", operationType = OperationTypeEnum.DELETE)
     @GetMapping("/deleteByIds")
-    public Y9Result<Void> deleteById(@RequestParam("ids") @NotEmpty List<String> ids) {
+    public Y9Result<Object> deleteById(@RequestParam("ids") @NotEmpty List<String> ids) {
         y9JobService.delete(ids);
         return Y9Result.successMsg("删除成功");
     }
@@ -57,7 +57,7 @@ public class JobController {
      * 根据id查找职位
      *
      * @param id 唯一标识
-     * @return
+     * @return {@code Y9Result<Y9Job>}
      */
     @RiseLog(operationName = "根据id查找职位", operationType = OperationTypeEnum.BROWSE)
     @GetMapping("/getJobById/{id}")
@@ -69,7 +69,7 @@ public class JobController {
     /**
      * 查找所有职位
      *
-     * @return
+     * @return {@code Y9Result<List<Y9Job>>}
      * @since 9.6.1
      */
     @RiseLog(operationName = "查找所有职位", operationType = OperationTypeEnum.BROWSE)
@@ -83,7 +83,7 @@ public class JobController {
      * 保存或修改职位
      *
      * @param job 职位对象
-     * @return
+     * @return {@code Y9Result<Y9Job>}
      */
     @RiseLog(operationName = "保存或修改职位", operationType = OperationTypeEnum.MODIFY)
     @PostMapping("/saveOrUpdate")
@@ -96,7 +96,7 @@ public class JobController {
      * 保存职位排序结果
      *
      * @param jobIds 职位id列表
-     * @return
+     * @return {@code Y9Result<List<Y9Job>>}
      */
     @RiseLog(operationName = "保存职位排序", operationType = OperationTypeEnum.MODIFY)
     @PostMapping(value = "/saveOrder")
@@ -109,7 +109,7 @@ public class JobController {
      * 根据名称获取职位
      *
      * @param name 职位名称
-     * @return
+     * @return {@code Y9Result<List<Y9Job>>}
      * @since 9.6.1
      */
     @RiseLog(operationName = "根据名称获取职位", operationType = OperationTypeEnum.BROWSE)

@@ -17,7 +17,7 @@ public interface Y9OrganizationService {
     /**
      * 更改禁用状态
      *
-     * @param id ID
+     * @param id id
      * @return 组织机构实体
      */
     Y9Organization changeDisabled(String id);
@@ -27,7 +27,7 @@ public interface Y9OrganizationService {
      *
      * @param organizationName 组织名称
      * @param virtual 是否虚拟组织
-     * @return
+     * @return {@link Y9Organization}
      */
     Y9Organization create(String organizationName, Boolean virtual);
 
@@ -50,7 +50,7 @@ public interface Y9OrganizationService {
      * 根据id查找组织机构
      *
      * @param id 组织id
-     * @return 组织机构对象 或 null
+     * @return {@code Optional<Y9Organization>}组织机构对象 或 null
      */
     Optional<Y9Organization> findById(String id);
 
@@ -58,7 +58,7 @@ public interface Y9OrganizationService {
      * 根据主键id从缓存中获取组织机构实例
      *
      * @param id 组织id
-     * @return 组织机构对象
+     * @return {@link Y9Organization}组织机构对象
      * @throws Y9NotFoundException id 对应的记录不存在的情况
      */
     Y9Organization getById(String id);
@@ -66,7 +66,7 @@ public interface Y9OrganizationService {
     /**
      * 组织机构列表
      *
-     * @return List<ORGOrganization>
+     * @return {@code List<Y9Organization>}
      */
     List<Y9Organization> list();
 
@@ -74,8 +74,8 @@ public interface Y9OrganizationService {
      * 获取组织架构列表
      *
      * @param virtual 是否虚拟组织
-     * @param disabled
-     * @return {@link List}<{@link Y9Organization}>
+     * @param disabled 是否包含禁用
+     * @return {@code List<Y9Organization>}
      */
     List<Y9Organization> list(Boolean virtual, Boolean disabled);
 
@@ -83,7 +83,7 @@ public interface Y9OrganizationService {
      * 根据dn查找
      *
      * @param dn 域
-     * @return {@link List}<{@link Y9Organization}>
+     * @return {@code List<Y9Organization>}
      */
     List<Y9Organization> listByDn(String dn);
 
@@ -91,7 +91,7 @@ public interface Y9OrganizationService {
      * 根据租户唯一标示查找组织机构列表
      *
      * @param tenantId 租户id
-     * @return {@link List}<{@link Y9Organization}>
+     * @return {@code List<Y9Organization>}
      */
     List<Y9Organization> listByTenantId(String tenantId);
 
@@ -99,7 +99,7 @@ public interface Y9OrganizationService {
      * 保存或者更新组织机构基本信息
      *
      * @param org 组织机构对象
-     * @return ORGOrganization
+     * @return {@link Y9Organization}
      */
     Y9Organization saveOrUpdate(Y9Organization org);
 
@@ -107,7 +107,7 @@ public interface Y9OrganizationService {
      * 保存新的序号
      *
      * @param orgIds 机构id数组
-     * @return {@link List}<{@link Y9Organization}>
+     * @return {@code List<Y9Organization>}
      */
     List<Y9Organization> saveOrder(List<String> orgIds);
 

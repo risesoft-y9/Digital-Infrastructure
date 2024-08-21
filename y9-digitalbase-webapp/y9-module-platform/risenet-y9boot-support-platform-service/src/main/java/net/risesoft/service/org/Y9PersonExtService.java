@@ -17,7 +17,7 @@ public interface Y9PersonExtService {
      * 根据人员id，查找人员扩展信息
      *
      * @param personId 人员id
-     * @return {@link Y9PersonExt}
+     * @return {@code Optional<Y9PersonExt>}
      */
     Optional<Y9PersonExt> findByPersonId(String personId);
 
@@ -25,7 +25,7 @@ public interface Y9PersonExtService {
      * 根据主键id获取人员扩展实例
      *
      * @param id 唯一标识
-     * @return ORGPerson
+     * @return {@link Y9PersonExt}
      */
     Y9PersonExt getById(String id);
 
@@ -33,7 +33,7 @@ public interface Y9PersonExtService {
      * 根据人员主键id获取人员扩展实例
      *
      * @param personId 人员唯一标识
-     * @return ORGPerson
+     * @return {@link Y9PersonExt}
      */
     Y9PersonExt getByPersonId(String personId);
 

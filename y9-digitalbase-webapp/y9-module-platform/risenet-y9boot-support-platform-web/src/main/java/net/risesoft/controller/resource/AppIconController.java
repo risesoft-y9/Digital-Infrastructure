@@ -53,7 +53,7 @@ public class AppIconController {
      * 删除图标
      *
      * @param id 应用图标id
-     * @return
+     * @return {@code Y9Result<String>}
      */
     @RiseLog(operationType = OperationTypeEnum.DELETE, operationName = "删除图标")
     @PostMapping(value = "/deleteIcon")
@@ -66,7 +66,7 @@ public class AppIconController {
      * 获取应用图标
      *
      * @param id 应用图标id
-     * @return
+     * @return {@code Y9Result<Y9AppIcon>}
      */
     @RiseLog(operationName = "获取应用图标")
     @RequestMapping("/getAppIconById")
@@ -78,7 +78,7 @@ public class AppIconController {
     /**
      * 图片文件读取
      *
-     * @return
+     * @return {@code Y9Result<List<Y9AppIcon>>}
      * @since 9.6.1
      */
     @RiseLog(operationName = "图片列表的读取")
@@ -92,7 +92,7 @@ public class AppIconController {
      * 查询图标分页列表
      *
      * @param pageQuery 分页信息
-     * @return
+     * @return {@code Y9Page<Y9AppIcon>}
      * @since 9.6.1
      */
     @RiseLog(operationName = "查看图标")
@@ -106,7 +106,7 @@ public class AppIconController {
     /**
      * 刷新图标数据
      *
-     * @return
+     * @return {@code Y9Result<String>}
      */
     @RiseLog(operationType = OperationTypeEnum.MODIFY, operationName = "刷新图标数据")
     @RequestMapping(value = "/refreshAppIconDatas")
@@ -121,7 +121,7 @@ public class AppIconController {
      * @param name 图标名称
      * @param remark 描述
      * @param id 图标id
-     * @return
+     * @return {@code Y9Result<String>}
      */
     @RiseLog(operationType = OperationTypeEnum.MODIFY, operationName = "修改图标")
     @PostMapping(value = "/saveIcon")
@@ -148,7 +148,7 @@ public class AppIconController {
      * 根据名称搜索图标
      *
      * @param name 图标名
-     * @return
+     * @return {@code Y9Result<List<Y9AppIcon>>}
      */
     @RiseLog(operationName = "根据名称搜索图标")
     @RequestMapping(value = "/searchAppIcon")
@@ -162,7 +162,7 @@ public class AppIconController {
      *
      * @param pageQuery 分页信息
      * @param name 图标名称
-     * @return
+     * @return {@code Y9Page<Y9AppIcon>}
      */
     @RiseLog(operationType = OperationTypeEnum.BROWSE, operationName = "搜索图标")
     @RequestMapping("/searchIconPageByName")
@@ -177,6 +177,8 @@ public class AppIconController {
      *
      * @param iconFile 需要上传的图标文件
      * @param remark 备注
+     * @return {@code Y9Result<String>}
+     * @throws Y9BusinessException 业务异常
      */
     @RiseLog(operationType = OperationTypeEnum.ADD, operationName = "上传图标")
     @RequestMapping("/uploadIcon")

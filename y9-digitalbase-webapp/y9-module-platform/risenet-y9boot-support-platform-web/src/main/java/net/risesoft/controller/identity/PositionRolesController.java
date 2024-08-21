@@ -43,7 +43,7 @@ public class PositionRolesController {
      * 根据岗位id，获取岗位角色列表
      * 
      * @param positionId 岗位id
-     * @return
+     * @return {@code Y9Result<List<RolePermissionVO>>}
      */
     @GetMapping("/getByPositionId")
     public Y9Result<List<RolePermissionVO>> getByPositionId(@RequestParam @NotBlank String positionId) {

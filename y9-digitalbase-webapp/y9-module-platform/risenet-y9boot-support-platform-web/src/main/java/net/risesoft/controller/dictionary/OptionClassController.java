@@ -41,7 +41,7 @@ public class OptionClassController {
     /**
      * 获取字曲类型列表
      *
-     * @return
+     * @return {@code Y9Result<List<Y9OptionClass>>}
      * @since 9.6.1
      */
     @RiseLog(operationName = "获取字典类型列表")
@@ -55,7 +55,7 @@ public class OptionClassController {
      * 根据type删除字典类型，以及该类型对应的数据列表， type
      *
      * @param type 类型名称
-     * @return
+     * @return {@code Y9Result<String>}
      */
     @RiseLog(operationName = "删除字典类型", operationType = OperationTypeEnum.DELETE)
     @PostMapping(value = "/remove")
@@ -68,7 +68,7 @@ public class OptionClassController {
      * 保存新增字典类型
      *
      * @param optionClass 字典类型实体
-     * @return
+     * @return {@code Y9Result<Y9OptionClass>}
      */
     @RiseLog(operationName = "新增字典类型", operationType = OperationTypeEnum.ADD)
     @PostMapping(value = "/saveOptionClass")

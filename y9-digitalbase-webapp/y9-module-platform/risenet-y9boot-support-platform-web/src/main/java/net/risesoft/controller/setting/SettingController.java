@@ -15,6 +15,11 @@ import net.risesoft.permission.annotation.IsManager;
 import net.risesoft.pojo.Y9Result;
 import net.risesoft.service.setting.Y9SettingService;
 
+/**
+ * 系统设置
+ * 
+ * @author shidaobang
+ */
 @RestController
 @RequestMapping(value = "/api/rest/setting", produces = MediaType.APPLICATION_JSON_VALUE)
 @RequiredArgsConstructor
@@ -25,11 +30,22 @@ public class SettingController {
 
     private final Y9SettingService y9SettingService;
 
+    /**
+     * 获取租户设置
+     * 
+     * @return {@code Y9Result<TenantSettingVO>}
+     */
     @GetMapping("/getTenantSetting")
     public Y9Result<TenantSettingVO> getTenantSetting() {
         return Y9Result.success(y9SettingService.getObjectFromSetting(TenantSettingVO.class));
     }
 
+    /**
+     * 保存租户设置
+     * 
+     * @param tenantSettingVO 租户设置信息
+     * @return {@code Y9Result<Object>}
+     */
     @PostMapping("/saveTenantSetting")
     public Y9Result<Object> saveTenantSetting(TenantSettingVO tenantSettingVO) {
         y9SettingService.saveObjectFiledAsSetting(tenantSettingVO);

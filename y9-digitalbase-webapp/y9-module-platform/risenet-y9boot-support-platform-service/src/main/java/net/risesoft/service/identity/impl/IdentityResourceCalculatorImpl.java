@@ -87,7 +87,7 @@ public class IdentityResourceCalculatorImpl implements IdentityResourceCalculato
      * 根据资源id找到与其相关的授权（继承的）
      *
      * @param resourceId 资源id
-     * @return {@link List}<{@link Y9Authorization}>
+     * @return {@code List<}{@link Y9Authorization}{@code >}
      */
     public List<Y9Authorization> listByResourceIdRelated(String resourceId) {
         List<Y9Authorization> authorizationList = new ArrayList<>();

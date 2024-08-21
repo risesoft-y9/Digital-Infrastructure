@@ -45,7 +45,7 @@ public class PublishedEventController {
      * @param startTime 开始时间 格式 yyyy-MM-dd HH:mm:ss
      * @param endTime 结束时间 格式 yyyy-MM-dd HH:mm:ss
      * @param pageQuery 分页
-     * @return
+     * @return {@code Y9Page<Y9PublishedEvent>}
      *
      * @since 9.6.3
      */

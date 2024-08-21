@@ -57,7 +57,7 @@ public class RoleMemberController {
      * @param roleId 角色id
      * @param orgUnitIds 组织节点id数组
      * @param negative 是否为负角色关联
-     * @return
+     * @return {@code Y9Result<Object>}
      */
     @RiseLog(operationName = "对角色，添加组织节点的映射", operationType = OperationTypeEnum.ADD)
     @PostMapping(value = "/addOrgUnits")
@@ -90,7 +90,7 @@ public class RoleMemberController {
      * @param orgUnitId 组织节点id
      * @param roleIds 角色id数组
      * @param negative 是否为负角色关联
-     * @return
+     * @return {@code Y9Result<List<}{@link Y9Role}{@code >>}
      */
     @RiseLog(operationName = "对组织节点，添加角色的映射", operationType = OperationTypeEnum.ADD)
     @PostMapping(value = "/saveRoles")
@@ -106,7 +106,7 @@ public class RoleMemberController {
      * 根据角色id，返回角色关联的机构节点（机构，部门，用户组，岗位，人员）
      *
      * @param roleId 角色id
-     * @return
+     * @return {@code Y9Result<List<}{@link RoleMemberVO}{@code >>}
      * @since 9.6.1
      */
     @RiseLog(operationName = "根据角色id，返回角色关联的机构节点（机构，部门，用户组，岗位，人员）")
@@ -135,7 +135,7 @@ public class RoleMemberController {
      * 角色组织节点关联移除
      *
      * @param ids 织机构节点id数组
-     * @return
+     * @return {@code Y9Result<String>}
      */
     @RiseLog(operationName = "角色-组织节点关联移除", operationType = OperationTypeEnum.DELETE)
     @PostMapping(value = "/remove")
@@ -150,7 +150,7 @@ public class RoleMemberController {
      * @param roleId 角色id
      * @param unitName 成员名称
      * @param unitDn 部门名称
-     * @return
+     * @return {@code Y9Result<List<}{@link RoleMemberVO}{@code >>}
      */
     @RiseLog(operationName = "根据名称和所属部门查找角色成员")
     @RequestMapping(value = "/searchByUnitNameAndUnitDN")

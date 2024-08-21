@@ -19,7 +19,7 @@ public interface Y9PublishedEventService {
      * 根据租户id，获取所有同步事件
      *
      * @param tenantId 租户id
-     * @return {@link List}<{@link Y9PublishedEvent}>
+     * @return {@code List<Y9PublishedEvent>}
      */
     List<Y9PublishedEvent> listByTenantId(String tenantId);
 
@@ -28,20 +28,20 @@ public interface Y9PublishedEventService {
      *
      * @param tenantId 租户id
      * @param startTime 开始事件
-     * @return {@link List}<{@link Y9PublishedEvent}>
+     * @return {@code List<Y9PublishedEvent>}
      */
     List<Y9PublishedEvent> listByTenantId(String tenantId, Date startTime);
 
     /**
      * 分页查询
      *
-     * @param pageQuery
+     * @param pageQuery 分页信息
      * @param tenantId 租户id
      * @param eventName 事件名
      * @param eventDescription 事件描述
      * @param startTime 开始事件
      * @param endTime 结束事件
-     * @return {@link Page}<{@link Y9PublishedEvent}>
+     * @return {@code Page<Y9PublishedEvent>}
      */
     Page<Y9PublishedEvent> page(Y9PageQuery pageQuery, String tenantId, String eventName, String eventDescription,
         Date startTime, Date endTime);

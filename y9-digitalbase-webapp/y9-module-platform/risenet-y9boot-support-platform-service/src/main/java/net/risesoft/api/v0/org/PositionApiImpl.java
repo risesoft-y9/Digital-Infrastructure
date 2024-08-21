@@ -167,7 +167,7 @@ public class PositionApiImpl implements PositionApi {
      *
      * @param tenantId 租户唯一标识
      * @param parentId 父节点ID
-     * @return List<Position> 岗位对象集合
+     * @return {@code List<Position>} 岗位对象集合
      * @since 9.6.0
      */
     @Override
@@ -183,7 +183,7 @@ public class PositionApiImpl implements PositionApi {
      *
      * @param tenantId 租户唯一标识
      * @param personId 人员ID
-     * @return List<Position> 岗位对象集合
+     * @return {@code List<Position>} 岗位对象集合
      * @since 9.6.0
      */
     @Override
@@ -199,7 +199,7 @@ public class PositionApiImpl implements PositionApi {
      *
      * @param tenantId 租户id
      * @param positionId 岗位唯一标识
-     * @return List<Person> 人员对象集合
+     * @return {@code List<Person>}人员对象集合
      * @since 9.6.0
      */
     @Override
