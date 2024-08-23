@@ -73,7 +73,7 @@
         <central-publishing-maven-plugin.version>0.5.0</central-publishing-maven-plugin.version>
         <maven-gpg-plugin.version>1.6</maven-gpg-plugin.version>
         <jib-maven-plugin.version>3.4.0</jib-maven-plugin.version>
-        <smart-doc-maven-plugin.version>3.0.6</smart-doc-maven-plugin.version>
+        <smart-doc-maven-plugin.version>3.0.0</smart-doc-maven-plugin.version>
         <maven-release-plugin.version>3.0.1</maven-release-plugin.version>
         <aspectj-maven-plugin.version>1.14</aspectj-maven-plugin.version>
         <maven-dependency-plugin.version>3.6.1</maven-dependency-plugin.version>
