@@ -4,8 +4,6 @@ management:
             exposure:
                 include: '*'
 server:
-    intranet:
-        ip: 192.168.x.x,10.161.x.x
     port: 7055
     servlet:
         encoding:
@@ -131,6 +129,7 @@ spring:
         timeout: 10000
 y9:
     systemName: ${spring.application.name}
+    internalIp: 192.168.x.x,10.0.x.x,172.20.x.x
     app:
         log:
             accessLogIndex: logindex

@@ -4,8 +4,6 @@ management:
             exposure:
                 include: '*'
 server:
-    intranet:
-        ip: 192.168.x.x,10.x.x.x,172.20.x.x
     port: 7055
     servlet:
         session:
@@ -151,6 +149,7 @@ spring:
 y9:
     systemName: riseplatform
     systemCnName: '数字底座'
+    internalIp: 192.168.x.x,10.0.x.x,172.20.x.x
     app:
         platform:
             systemName: riseplatform

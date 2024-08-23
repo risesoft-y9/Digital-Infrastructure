@@ -51,9 +51,9 @@ public class InetAddressUtil {
             if (properties.isEmpty()) {
                 getApplicationProperties();
             }
-            ips = properties.getProperty("server.intranet.ip");
+            ips = properties.getProperty("y9.internalIp");
         } else {
-            ips = environment.getProperty("server.intranet.ip");
+            ips = environment.getProperty("y9.internalIp");
         }
     }
 
@@ -210,8 +210,8 @@ public class InetAddressUtil {
             return false;
         }
 
-        // application.propters中server.intranet.ip=192.168.1.x,10.0.x.x
-        // String ips = Y9Context.getProperty("server.intranet.ip");
+        // application.propters中y9.internalIp=192.168.1.x,10.0.x.x
+        // String ips = Y9Context.getProperty("y9.internalIp");
         if (StringUtils.hasText(ips)) {
             valid = false;
             String[] arry = ips.toLowerCase().split(",");

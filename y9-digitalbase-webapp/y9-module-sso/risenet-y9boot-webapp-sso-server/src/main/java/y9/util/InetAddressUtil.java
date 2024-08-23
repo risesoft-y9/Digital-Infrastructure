@@ -47,9 +47,9 @@ public class InetAddressUtil {
             if (properties.isEmpty()) {
                 getApplicationProperties();
             }
-            ips = properties.getProperty("server.intranet.ip");
+            ips = properties.getProperty("y9.internalIp");
         } else {
-            ips = environment.getProperty("server.intranet.ip");
+            ips = environment.getProperty("y9.internalIp");
         }
     }
 

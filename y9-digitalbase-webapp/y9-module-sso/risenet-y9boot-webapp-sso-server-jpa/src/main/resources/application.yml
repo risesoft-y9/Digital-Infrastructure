@@ -197,8 +197,6 @@ management:
         enable:
             all: false
 server:
-    intranet:
-        ip: 192.168.x.x,10.x.x.x
     port: 8080
     servlet:
         encoding:
@@ -241,6 +239,7 @@ spring:
         jdbc:
             initialize-schema: always
 y9:
+    internalIp: 192.168.x.x,10.0.x.x,172.20.x.x
     login:
         casLoginView: "casLoginView-y9-v3.0"
         credentialPropsOptional: "screenDimension,userAgent,systemName,clientIp,clientMac,clientDiskId,clientHostName,deptId,positionId,pwdEcodeType"

@@ -1,6 +1,4 @@
 server:
-    intranet:
-        ip: 192.168.x.x,10.161.x.x,10.1.x.x,10.3.x.x
     servlet:
         encoding:
             charset: UTF-8
@@ -127,6 +125,7 @@ spring:
         resources:
             static-locations: classpath:/META-INF/resources/,classpath:/resources/,classpath:/static/,classpath:/public/,file:///d:/y9config/
 y9:
+    internalIp: 192.168.x.x,10.0.x.x,172.20.x.x
     app:
         fileManager:
             fileRoot: d:/y9config/y9filestore
