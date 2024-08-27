@@ -4,7 +4,7 @@ management:
             exposure:
                 include: '*'
 server:
-    port: 7055
+    port: 8080
     servlet:
         session:
             tracking-modes: COOKIE
@@ -17,6 +17,7 @@ server:
             force: true
             force-request: true
             force-response: true
+        context-path: /platform
 javers:
     newObjectSnapshot: true
     sqlSchemaManagementEnabled: false

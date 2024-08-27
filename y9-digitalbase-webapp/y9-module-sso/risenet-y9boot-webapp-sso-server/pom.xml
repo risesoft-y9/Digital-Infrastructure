@@ -18,7 +18,7 @@
     <properties>
         <cas.version>6.6.9</cas.version>
         <pac4j.version>5.4.6</pac4j.version>
-        
+
         <maven.deploy.skip>true</maven.deploy.skip>
     </properties>
 
@@ -203,6 +203,7 @@
             <groupId>org.apereo.cas</groupId>
             <artifactId>cas-server-webapp-init</artifactId>
         </dependency>
+
         <dependency>
             <groupId>org.apereo.cas</groupId>
             <artifactId>cas-server-webapp-config</artifactId>
@@ -219,6 +220,12 @@
         <dependency>
             <groupId>org.apereo.cas</groupId>
             <artifactId>cas-server-core-logging</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>org.apereo.cas</groupId>
+            <artifactId>cas-server-webapp-starter-tomcat</artifactId>
+            <scope>provided</scope>
         </dependency>
 
         <dependency>
@@ -258,17 +265,6 @@
             <groupId>cz.mallat.uasparser</groupId>
             <artifactId>uasparser</artifactId>
             <version>0.6.2</version>
-        </dependency>
-
-        <dependency>
-            <groupId>javax.servlet</groupId>
-            <artifactId>jstl</artifactId>
-        </dependency>
-
-        <dependency>
-            <groupId>javax.servlet</groupId>
-            <artifactId>javax.servlet-api</artifactId>
-            <scope>provided</scope>
         </dependency>
 
         <dependency>
@@ -362,14 +358,11 @@
                     </annotationProcessorPaths>
                 </configuration>
             </plugin>
-            <!-- <plugin>
+            <plugin>
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-maven-plugin</artifactId>
-                <version>${springboot.version}</version>
                 <configuration>
                     <mainClass>org.apereo.cas.web.CasWebApplication</mainClass>
-                    <executable>false</executable>
-                    <layout>NONE</layout>
                 </configuration>
                 <executions>
                     <execution>
@@ -385,7 +378,7 @@
                         </goals>
                     </execution>
                 </executions>
-            </plugin> -->
+            </plugin>
         </plugins>
     </build>
 

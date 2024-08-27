@@ -8,9 +8,9 @@ import net.risesoft.y9.configuration.Y9Properties;
 
 @SpringBootApplication
 @EnableConfigurationProperties(Y9Properties.class)
-public class Application {
+public class FileManagerApplication {
 
     public static void main(String[] args) {
-        SpringApplication.run(Application.class, args);
+        SpringApplication.run(FileManagerApplication.class, args);
     }
 }

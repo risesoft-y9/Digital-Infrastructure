@@ -17,7 +17,7 @@ public class ServletInitializer extends SpringBootServletInitializer implements 
 
     @Override
     protected SpringApplicationBuilder configure(final SpringApplicationBuilder builder) {
-        return builder.sources(Application.class);
+        return builder.sources(FileManagerApplication.class);
     }
 
     @Override

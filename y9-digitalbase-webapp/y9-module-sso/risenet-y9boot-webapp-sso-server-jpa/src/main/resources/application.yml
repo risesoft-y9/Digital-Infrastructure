@@ -190,8 +190,6 @@ cas:
                 timeToKillInSeconds: 28800
                 #supportedUserAgents: 
                 #supportedIpAddresses: 127.0.0.1,0:0:0:0:0:0:0:1
-logging:
-    config: classpath:/log4j2/log4j2.xml
 management:
     metrics:
         enable:
@@ -211,6 +209,9 @@ server:
                 secure: false
             timeout: 300
             tracking-modes: COOKIE
+        context-path: /sso
+    ssl:
+        enabled: false
 spring:
     autoconfigure:
         exclude:

@@ -217,10 +217,15 @@
         </dependency>
 
         <dependency>
+            <groupId>org.apereo.cas</groupId>
+            <artifactId>cas-server-webapp-starter-tomcat</artifactId>
+            <scope>provided</scope>
+        </dependency>
+
+        <dependency>
             <groupId>org.bitbucket.b_c</groupId>
             <artifactId>jose4j</artifactId>
         </dependency>
-
 
         <dependency>
             <groupId>org.jodd</groupId>
@@ -249,17 +254,6 @@
             <groupId>cz.mallat.uasparser</groupId>
             <artifactId>uasparser</artifactId>
             <version>0.6.2</version>
-        </dependency>
-
-        <dependency>
-            <groupId>javax.servlet</groupId>
-            <artifactId>jstl</artifactId>
-        </dependency>
-
-        <dependency>
-            <groupId>javax.servlet</groupId>
-            <artifactId>javax.servlet-api</artifactId>
-            <scope>provided</scope>
         </dependency>
 
         <dependency>
@@ -324,7 +318,6 @@
 
     <build>
         <finalName>sso</finalName>
-
         <plugins>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
@@ -349,14 +342,11 @@
                     </annotationProcessorPaths>
                 </configuration>
             </plugin>
-            <!-- <plugin>
+            <plugin>
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-maven-plugin</artifactId>
-                <version>${springboot.version}</version>
                 <configuration>
                     <mainClass>org.apereo.cas.web.CasWebApplication</mainClass>
-                    <executable>false</executable>
-                    <layout>NONE</layout>
                 </configuration>
                 <executions>
                     <execution>
@@ -372,7 +362,7 @@
                         </goals>
                     </execution>
                 </executions>
-            </plugin> -->
+            </plugin>
         </plugins>
     </build>
 

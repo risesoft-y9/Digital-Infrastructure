@@ -42,7 +42,7 @@ public class ServletInitializer extends SpringBootServletInitializer implements 
     @Override
     protected SpringApplicationBuilder configure(final SpringApplicationBuilder builder) {
         setRegisterErrorPageFilter(false);
-        builder.sources(Platform.class);
+        builder.sources(PlatformApplication.class);
         return builder;
     }
 }
