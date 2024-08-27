@@ -1,1 +1,6 @@
 * text=auto eol=lf
+*.vue linguist-language=Java
+*.java linguist-language=Java
+*.js linguist-language=Java
+*.css linguist-language=Java
+*.html linguist-language=Java
