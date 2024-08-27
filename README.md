@@ -19,7 +19,7 @@
 
 ## 开源地址
 
-源码地址：<a href="https://github.com/y9digitalbase/Digital-Infrastructure" target="_blank">https://github.com/y9digitalbase/Digital-Infrastructure </a>
+源码地址：<a href="https://github.com/risesoft-y9/Digital-Infrastructure" target="_blank">https://github.com/risesoft-y9/Digital-Infrastructure </a>
 
 ## 源码目录
 
@@ -277,6 +277,7 @@ webapp -- 系统公共模块
 >
 
 ## 文档专区
+
 开发文档：https://docs.youshengyun.com/
 
 | 序号 | 名称                                                                                                      |
