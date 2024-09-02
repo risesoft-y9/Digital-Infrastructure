@@ -1,0 +1,13 @@
+spring:
+    cloud:
+        nacos:
+            config:
+                enabled: true
+                group: DEFAULT_GROUP
+                namespace: demo
+                server-addr: nacos:8848
+                username: nacos
+                password: Risesoft@2024
+    config:
+        import:
+            - optional:nacos:fileManager.yml

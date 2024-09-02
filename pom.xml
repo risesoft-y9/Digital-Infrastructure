@@ -56,7 +56,7 @@
 
         <spring-boot.version>2.7.18</spring-boot.version>
         <spring-cloud.version>2021.0.8</spring-cloud.version>
-        
+
         <aspectj.version>1.9.20.1</aspectj.version>
         <lombok.version>1.18.28</lombok.version>
 
@@ -121,7 +121,7 @@
                 <scope>import</scope>
             </dependency>
         </dependencies>
-        
+
     </dependencyManagement>
 
     <repositories>
@@ -654,7 +654,17 @@
                 <activeByDefault>false</activeByDefault>
             </activation>
         </profile>
-        
+        <profile>
+            <!-- demo测试环境 -->
+            <id>env-demo</id>
+            <properties>
+                <dir>demo</dir>
+            </properties>
+            <activation>
+                <activeByDefault>false</activeByDefault>
+            </activation>
+        </profile>
+
         <profile>
             <id>deploy-private-repo</id>
             <activation>

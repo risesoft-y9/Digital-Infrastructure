@@ -12,7 +12,7 @@ spring:
                 username: nacos
                 password: nacos
                 extension-configs:
-                    - dataId: sso.yml
+                    -   dataId: sso.yml
 ---
 spring:
     config:
@@ -29,7 +29,7 @@ spring:
                 username: nacos
                 password: Risesoft@2022
                 extension-configs:
-                    - dataId: sso.yml
+                    -   dataId: sso.yml
 ---
 spring:
     config:
@@ -46,7 +46,7 @@ spring:
                 username: nacos
                 password: Risesoft@2022
                 extension-configs:
-                    - dataId: sso.yml
+                    -   dataId: sso.yml
 ---
 spring:
     config:
@@ -63,4 +63,21 @@ spring:
                 username: nacos
                 password: Risesoft@2024
                 extension-configs:
-                    - dataId: sso.yml
+                    -   dataId: sso.yml
+---
+spring:
+    config:
+        activate:
+            on-profile: demo
+    cloud:
+        enabled: true
+        nacos:
+            config:
+                enabled: true
+                group: DEFAULT_GROUP
+                namespace: demo
+                server-addr: nacos:8848
+                username: nacos
+                password: Risesoft@2024
+                extension-configs:
+                    -   dataId: sso.yml
