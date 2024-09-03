@@ -5,7 +5,6 @@ import java.io.OutputStream;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,6 +14,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
+import net.risesoft.y9.util.mime.ContentDispositionUtil;
 import net.risesoft.y9public.entity.Y9FileStore;
 import net.risesoft.y9public.service.Y9FileStoreService;
 
@@ -28,16 +28,14 @@ public class MainController {
     private Y9FileStoreService y9FileStoreService;
 
     /**
-     * 上传文件
-     * 
-     * @param file
+     * 根据文件唯一标示删除文件
+     *
+     * @param fileStoreId
      */
-    @PostMapping(value = "/uploadFile")
-    public void uploadFile(MultipartFile file) {
+    @RequestMapping(value = "/deleteFile")
+    public void deleteFile(@RequestParam String fileStoreId) {
         try {
-            String fullPath = "/aaaa/bbbb";
-            Y9FileStore y9FileStore = y9FileStoreService.uploadFile(file, fullPath, file.getOriginalFilename());
-            log.info("fileStoreId:{}", y9FileStore.getId());
+            y9FileStoreService.deleteFile(fileStoreId);
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -45,7 +43,7 @@ public class MainController {
 
     /**
      * 根据文件唯一标示下载文件
-     * 
+     *
      * @param fileStoreId
      * @param response
      * @param request
@@ -55,12 +53,10 @@ public class MainController {
         try {
             Y9FileStore y9FileStore = y9FileStoreService.getById(fileStoreId);
             String title = y9FileStore.getFileName();
-            title = java.net.URLEncoder.encode(title, "UTF-8");
-            title = StringUtils.replace(title, "+", "%20");// 替换空格
-            response.reset();
-            response.setHeader("Content-disposition", "attachment; filename=\"" + title + "\"");
-            response.setHeader("Content-type", "text/html;charset=UTF-8");
+
+            response.setContentType("text/html;charset=UTF-8");
             response.setContentType("application/octet-stream");
+            response.setHeader("Content-disposition", ContentDispositionUtil.standardizeAttachment(title));
             OutputStream out = response.getOutputStream();
             y9FileStoreService.downloadFileToOutputStream(fileStoreId, out);
             out.flush();
@@ -71,14 +67,16 @@ public class MainController {
     }
 
     /**
-     * 根据文件唯一标示删除文件
-     * 
-     * @param fileStoreId
+     * 上传文件
+     *
+     * @param file
      */
-    @RequestMapping(value = "/deleteFile")
-    public void deleteFile(@RequestParam String fileStoreId) {
+    @PostMapping(value = "/uploadFile")
+    public void uploadFile(MultipartFile file) {
         try {
-            y9FileStoreService.deleteFile(fileStoreId);
+            String fullPath = Y9FileStore.buildPath("aaa","bbb");
+            Y9FileStore y9FileStore = y9FileStoreService.uploadFile(file, fullPath, file.getOriginalFilename());
+            log.info("fileStoreId:{}", y9FileStore.getId());
         } catch (Exception e) {
             e.printStackTrace();
         }
