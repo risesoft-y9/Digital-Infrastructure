@@ -188,7 +188,7 @@ webapp -- 系统公共模块
 | 序号 | 依赖           | 版本      | 官网                                                                     |
 |----|--------------|---------|------------------------------------------------------------------------|
 | 1  | vue          | 3.3.2   | <a href="https://cn.vuejs.org/" target="_blank">官网</a>                 |
-| 2  | vite4        | 4.4.9  | <a href="https://vitejs.cn/" target="_blank">官网</a>                    |
+| 2  | vite4        | 4.4.9   | <a href="https://vitejs.cn/" target="_blank">官网</a>                    |
 | 3  | vue-router   | 4.0.13  | <a href="https://router.vuejs.org/zh/" target="_blank">官网</a>          |
 | 4  | pinia        | 2.0.11  | <a href="https://pinia.vuejs.org/zh/" target="_blank">官网</a>           |
 | 5  | axios        | 0.24.0  | <a href="https://www.axios-http.cn/" target="_blank">官网</a>            |
@@ -244,7 +244,7 @@ webapp -- 系统公共模块
 
 ## 在线体验
 
-演示地址：<a href="https://test.youshengyun.com/kernel-standard/" target="_blank">https://test.youshengyun.com/kernel-standard/ </a>
+演示地址：<a href="https://demo.youshengyun.com/kernel-standard/" target="_blank">https://demo.youshengyun.com/kernel-standard/ </a>
 
 > 演示账号：
 >
@@ -257,7 +257,7 @@ webapp -- 系统公共模块
 
 ## 私有化部署
 
-地址：<a href="https://test.youshengyun.com/y9vue-code/" target="_blank">https://test.youshengyun.com/y9vue-code/ </a>
+地址：<a href="https://demo.youshengyun.com/y9vue-code/" target="_blank">https://demo.youshengyun.com/y9vue-code/ </a>
 > 包含数字底座使用中间件的安装教程、数字底座重要配置讲解，进行本地化部署务必要浏览该网站，会少走弯路。
 
 > **系统管理员：systemManager**
@@ -278,7 +278,7 @@ webapp -- 系统公共模块
 |:---|---------------------------------------------------------------------------------------------------------|
 | 1  | <a href="https://vue.youshengyun.com/files/单点登录对接文档.pdf" target="_blank">单点登录对接文档</a>                   |
 | 2  | <a href="https://vue.youshengyun.com/files/数字底座接口文档.pdf" target="_blank">数字底座接口文档</a>                   |
-| 3  | <a href="https://test.youshengyun.com/y9vue-code/digitalBase" target="_blank">安装部署文档</a>                |
+| 3  | <a href="https://demo.youshengyun.com/y9vue-code/digitalBase" target="_blank">安装部署文档</a>                |
 | 4  | <a href="https://vue.youshengyun.com/files/操作使用文档（技术白皮书）.pdf" target="_blank">操作使用文档（技术白皮书）</a>         |
 | 5  | <a href="https://vue.youshengyun.com/files/数字底座数据库设计文档.pdf" target="_blank">数字底座数据库设计文档</a>             |
 | 6  | <a href="https://vue.youshengyun.com/files/内部Java开发规范手册.pdf" target="_blank">内部Java开发规范手册</a>           |
