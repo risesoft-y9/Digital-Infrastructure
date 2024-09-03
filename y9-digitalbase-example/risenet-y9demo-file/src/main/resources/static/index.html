@@ -1,6 +1,37 @@
+<!DOCTYPE html>
 <html>
-    <body>
-        <h1>hello word!!!</h1>
-        <p>this is a html page</p>
-    </body>
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Demo</title>
+  <!-- 请勿在项目正式环境中引用该 layui.css 地址 -->
+  <link href="//unpkg.com/layui@2.9.16/dist/css/layui.css" rel="stylesheet">
+</head>
+<body>
+<div class="layui-btn-container">
+  <button type="button" class="layui-btn layui-btn-normal" id="ID-upload-demo-choose">选择文件</button>
+  <button type="button" class="layui-btn" id="ID-upload-demo-action">开始上传</button>
+</div>
+  
+<!-- 请勿在项目正式环境中引用该 layui.js 地址 -->
+<script src="//unpkg.com/layui@2.9.16/dist/layui.js"></script>
+<script>
+layui.use(function(){
+  var upload = layui.upload;
+  // 渲染
+  upload.render({
+    elem: '#ID-upload-demo-choose',
+    url: './main/uploadFile', // 此处配置你自己的上传接口即可
+    auto: false,
+    // multiple: true,
+    bindAction: '#ID-upload-demo-action',
+    done: function(res){
+      layer.msg('上传成功');
+      console.log(res)
+    }
+  });
+});
+</script>
+ 
+</body>
 </html>

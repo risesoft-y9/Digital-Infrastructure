@@ -7,16 +7,23 @@ y9:
     systemName: demo-file
     feature:
         jpa:
-             #数字底座文件上传的包的需要扫描的包路径，不能更改
+            #数字底座文件上传的包的需要扫描的包路径，不能更改
             packagesToScanEntityPublic: net.risesoft.y9public.entity
             packagesToScanRepositoryPublic: net.risesoft.y9public.repository
         file:
+            #是否对文件名 base64 编码
             base64FileName: false
+            #是否用对称加密算法 AES 加密文件内容
             encryptionFileContent: false
+            #对于不能动态扩容的存储空间 可以通过分目录挂新盘扩展存储空间
+            #prefix:
+            #私钥
             #privateKey: 
+            #公钥
             #publicKey: 
-            #ftp配置信息
             ftp:
+              #是否启用
+                enabled: true
                 host: localhost
                 port: 21
                 username: y9admin
@@ -37,7 +44,15 @@ y9:
                 testWhileIdle: true
                 useEPSVwithIPv4: false
                 passiveMode: true
+            local:
+                enabled: false
+                # 本地文件存储的根路径，按需设置为自己的
+                basePath: "d:/y9FileStore"
 spring:
+    autoconfigure:
+        exclude:
+            - org.springframework.boot.autoconfigure.jdbc.DataSourceAutoConfiguration
+            - org.springframework.boot.autoconfigure.orm.jpa.HibernateJpaAutoConfiguration
     #文件相关表信息需要的数据源信息，需要配置为数字底座的公共数据源
     datasource:
         druid:
@@ -59,18 +74,3 @@ spring:
                 timeBetweenEvictionRunsMillis: 60000
                 useGlobalDataSourceStat: true
                 validationQuery: SELECT 1 FROM DUAL
-    #redis配置，主要用于雪花算法生成id
-    redis:
-        database: 8
-        host: localhost
-        lettuce:
-            pool:
-                max-active: 8
-                max-idle: 8
-                max-wait: -1
-                min-idle: 0
-            shutdown-timeout: 100ms
-        password: y9i-83204585
-        port: 6379
-        ssl: false
-        timeout: 10000
