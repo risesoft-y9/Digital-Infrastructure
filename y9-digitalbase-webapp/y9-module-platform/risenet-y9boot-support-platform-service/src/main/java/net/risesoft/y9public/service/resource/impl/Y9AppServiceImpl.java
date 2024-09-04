@@ -126,6 +126,11 @@ public class Y9AppServiceImpl implements Y9AppService {
     }
 
     @Override
+    public List<Y9App> listByIds(List<String> appIdList) {
+        return y9AppRepository.findAllById(appIdList);
+    }
+
+    @Override
     public List<Y9App> listByAppName(String appName) {
         if (appName != null && appName.length() > 0) {
             return y9AppRepository.findByName(appName);

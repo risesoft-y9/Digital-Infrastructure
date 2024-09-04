@@ -117,6 +117,16 @@ public class Y9SystemServiceImpl implements Y9SystemService {
     }
 
     @Override
+    public List<Y9System> listByIds(List<String> systemIdList) {
+        return y9SystemRepository.findAllById(systemIdList);
+    }
+
+    @Override
+    public List<Y9System> listByTenantId(String tenantId) {
+        return y9SystemRepository.findByTenantIdOrderByTabIndexAsc(tenantId);
+    }
+
+    @Override
     public Page<Y9System> page(Y9PageQuery pageQuery) {
         Pageable pageable =
             PageRequest.of(pageQuery.getPage4Db(), pageQuery.getSize(), Sort.by(Sort.Direction.ASC, "tabIndex"));

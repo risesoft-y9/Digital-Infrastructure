@@ -18,15 +18,6 @@ import net.risesoft.y9public.entity.tenant.Y9TenantApp;
 public interface Y9TenantAppService {
 
     /**
-     * 根据租户id和系统id计数
-     *
-     * @param tenantId 租户id
-     * @param systemId 系统id
-     * @return long 租户应用数
-     */
-    long countByTenantIdAndSystemId(String tenantId, String systemId);
-
-    /**
      * 根据appId删除对象
      *
      * @param appId 应用id
@@ -77,6 +68,17 @@ public interface Y9TenantAppService {
     Optional<Y9TenantApp> getByTenantIdAndAppIdAndTenancy(String tenantId, String appId, Boolean tenancy);
 
     /**
+     * 根据租户id、系统id，获取已审核且还在租用的应用id列表
+     *
+     * @param systemId 系统id
+     * @param tenantId 租户id
+     * @param verify 是否已审核
+     * @param tenancy 是否已租用
+     * @return {@code Page<}{@link String}{@code >}
+     */
+    List<String> listAppIdBySystemIdAndTenantId(String systemId, String tenantId, Boolean verify, Boolean tenancy);
+    
+    /**
      * 根据租户id，获取已审核且还在租用的应用id列表
      *
      * @param tenantId 租户id
@@ -94,15 +96,6 @@ public interface Y9TenantAppService {
      * @return {@code Page<}{@link String}{@code >}
      */
     List<String> listAppIdByTenantIdAndTenancy(String tenantId, Boolean tenancy);
-
-    /**
-     * 根据应用Id，查询租户应用列表
-     *
-     * @param appId 应用id
-     * @param tenancy 是否已租用
-     * @return {@code Page<}{@link Y9TenantApp}{@code >}
-     */
-    List<Y9TenantApp> listByAppIdAndTenancy(String appId, Boolean tenancy);
 
     /**
      * 根据租户id，审核状态和租用状态，获取租户应用列表

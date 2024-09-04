@@ -46,11 +46,6 @@ public class Y9TenantAppServiceImpl implements Y9TenantAppService {
     private final Y9TenantAppManager y9TenantAppManager;
 
     @Override
-    public long countByTenantIdAndSystemId(String tenantId, String systemId) {
-        return y9TenantAppRepository.countByTenantIdAndSystemId(tenantId, systemId);
-    }
-
-    @Override
     @Transactional(readOnly = false)
     public void deleteByAppId(String appId) {
         y9TenantAppManager.deleteByAppId(appId);
@@ -91,13 +86,18 @@ public class Y9TenantAppServiceImpl implements Y9TenantAppService {
     }
 
     @Override
+    public List<String> listAppIdBySystemIdAndTenantId(String systemId, String tenantId, Boolean verify,
+        Boolean tenancy) {
+        List<Y9TenantApp> tas =
+            y9TenantAppRepository.findByTenantIdAndSystemIdAndVerifyAndTenancy(tenantId, systemId, verify, tenancy);
+        return tas.stream().map(Y9TenantApp::getAppId).collect(Collectors.toList());
+    }
+
+    @Override
     public List<String> listAppIdByTenantId(String tenantId, Boolean verify, Boolean tenancy) {
         List<Y9TenantApp> tas =
             y9TenantAppRepository.findByTenantIdAndVerifyAndTenancyOrderByCreateTimeDesc(tenantId, verify, tenancy);
-        if (tas != null) {
-            return tas.stream().map(Y9TenantApp::getAppId).collect(Collectors.toList());
-        }
-        return new ArrayList<>();
+        return tas.stream().map(Y9TenantApp::getAppId).collect(Collectors.toList());
     }
 
     @Override
@@ -107,11 +107,6 @@ public class Y9TenantAppServiceImpl implements Y9TenantAppService {
             return tas.stream().map(Y9TenantApp::getAppId).collect(Collectors.toList());
         }
         return new ArrayList<>();
-    }
-
-    @Override
-    public List<Y9TenantApp> listByAppIdAndTenancy(String appId, Boolean tenancy) {
-        return y9TenantAppManager.listByAppIdAndTenancy(appId, tenancy);
     }
 
     @Override

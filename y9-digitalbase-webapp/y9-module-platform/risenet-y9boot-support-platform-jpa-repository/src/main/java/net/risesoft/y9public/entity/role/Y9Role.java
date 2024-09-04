@@ -102,16 +102,9 @@ public class Y9Role extends BaseEntity implements Comparable<Y9Role> {
     @Comment("系统中文名称，冗余字段，仅用于显示")
     private String systemCnName;
 
-    /** 租户自定义 */
-    @Type(type = "numeric_boolean")
-    @ColumnDefault("0")
-    @Column(name = "TENANT_CUSTOM", nullable = false)
-    @Comment("租户自定义")
-    private Boolean tenantCustom = false;
-
-    /** tenantCustom=true时的租户id */
+    /** 租户id，如设置了表示是租户特有角色 */
     @Column(name = "TENANT_ID", length = 255)
-    @Comment("tenantCustom=true时的租户id")
+    @Comment("租户id，如设置了表示是租户特有角色")
     private String tenantId;
 
     /** 动态角色 */

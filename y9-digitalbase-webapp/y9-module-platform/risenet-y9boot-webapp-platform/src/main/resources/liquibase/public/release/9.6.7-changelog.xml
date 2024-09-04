@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+                      http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.9.xsd">
+
+    <changeSet id="1725351850846-1" author="shidaobang" runOnChange="true">
+        <preConditions onFail="MARK_RAN">
+            <columnExists tableName="Y9_ORG_ROLE"
+                          columnName="TENANT_CUSTOM"/>
+        </preConditions>
+        <dropColumn
+                columnName="TENANT_CUSTOM"
+                tableName="Y9_ORG_ROLE">
+        </dropColumn>
+    </changeSet>
+    <changeSet id="1725351850846-2" author="shidaobang" runOnChange="true">
+        <preConditions onFail="MARK_RAN">
+            <columnExists tableName="Y9_COMMON_SYSTEM"
+                          columnName="ISV_GUID"/>
+        </preConditions>
+        <renameColumn tableName="Y9_COMMON_SYSTEM" oldColumnName="ISV_GUID" newColumnName="TENANT_ID"
+                      columnDataType="VARCHAR(38)"/>
+    </changeSet>
+
+</databaseChangeLog>
