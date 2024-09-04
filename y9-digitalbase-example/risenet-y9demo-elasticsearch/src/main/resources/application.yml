@@ -1,0 +1,24 @@
+server:
+    port: 8080
+    servlet:
+          context-path: /demo-elk
+spring:
+    application:
+        name: demo-elk
+    autoconfigure:
+        exclude:
+            - org.springframework.boot.autoconfigure.jdbc.DataSourceAutoConfiguration
+    data:
+        elasticsearch:
+            repositories:
+                enabled: true
+    elasticsearch:
+        rest:
+            uris: localhost:9200
+            username: elastic
+            password: 'risesoft'
+y9:
+    feature:
+        elasticsearch:
+            packagesToScanEntityPublic: net.risesoft.elastic.entity
+            packagesToScanRepositoryPublic: net.risesoft.elastic.repository
