@@ -38,7 +38,8 @@ import net.risesoft.y9public.service.tenant.Y9TenantSystemService;
 @RestController
 @RequestMapping(value = "/api/rest/system", produces = MediaType.APPLICATION_JSON_VALUE)
 @RequiredArgsConstructor
-@IsManager({ManagerLevelEnum.SYSTEM_MANAGER, ManagerLevelEnum.OPERATION_SYSTEM_MANAGER})
+@IsManager({ManagerLevelEnum.SYSTEM_MANAGER, ManagerLevelEnum.OPERATION_SYSTEM_MANAGER,
+    ManagerLevelEnum.SECURITY_MANAGER})
 public class SystemController {
 
     private final Y9SystemService y9SystemService;
@@ -106,7 +107,7 @@ public class SystemController {
         if (ManagerLevelEnum.SYSTEM_MANAGER.equals(Y9LoginUserHolder.getUserInfo().getManagerLevel())) {
             y9SystemList = y9TenantSystemService.listSystemByTenantId(Y9LoginUserHolder.getTenantId());
         } else if (ManagerLevelEnum.OPERATION_SYSTEM_MANAGER
-                .equals(Y9LoginUserHolder.getUserInfo().getManagerLevel())) {
+            .equals(Y9LoginUserHolder.getUserInfo().getManagerLevel())) {
             y9SystemList = y9SystemService.listAll();
         }
         return Y9Result.success(SystemTreeNodeVO.convertY9SystemList(y9SystemList), "获取系统列表成功");
