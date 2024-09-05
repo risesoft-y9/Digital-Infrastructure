@@ -13,6 +13,16 @@ export const resourceAllTreeList = async () => {
   });
 };
 
+//资源树
+export const resourceTree = async (params) => {
+    return await resourceRequest({
+        url: '/api/rest/resource/tree',
+        method: 'get',
+        cType: false,
+        params
+    });
+};
+
 // 应用树
 export const resourceTreeList = async () => {
   return await resourceRequest({

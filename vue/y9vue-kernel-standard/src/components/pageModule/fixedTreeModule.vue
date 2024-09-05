@@ -229,10 +229,28 @@
                         }
                     }
                     break;
+                case 'SYSTEM':
+                    item.title_icon = 'ri-settings-line';
+                    item.newName = item.name; //显示名称
+                    let systemManageableByCurrentTenant = isSystemManageableByCurrentTenant(item.tenantId);
+                    if (item.treeType === 'ROLE' || item.treeType === 'RESOURCE' || !systemManageableByCurrentTenant) {
+                        item.delete_icon = false;
+                    }
+                    item.isManageable = systemManageableByCurrentTenant;
+                    break;
                 case 'APP': //应用
                     item.title_icon = 'ri-apps-line';
                     if (isTopLevel) {
                         item.delete_icon = false;
+                    }
+                    if (item.treeType === 'ROLE') {
+                        item.delete_icon = false;
+                        item.isManageable = managerLevel !== 2;
+                    }
+                    if (item.treeType === 'RESOURCE') {
+                        let resourceManageableByCurrentTenant = isResourceManageableByCurrentTenant(item.systemId);
+                        item.delete_icon = resourceManageableByCurrentTenant;
+                        item.isManageable = resourceManageableByCurrentTenant;
                     }
                     item.newName = item.name;
                     if (!item.enabled) {
@@ -242,6 +260,11 @@
 
                 case 'MENU': //菜单
                     item.title_icon = 'ri-menu-4-line';
+                    if (isResourceManageableByCurrentTenant(item.systemId)) {
+                        item.isManageable = true;
+                    } else {
+                        item.delete_icon = false;
+                    }
                     item.newName = item.name;
                     if (!item.enabled) {
                         item.newName = item.name + '[禁用]'; //显示名称
@@ -250,80 +273,39 @@
 
                 case 'OPERATION': //按钮
                     item.title_icon = 'ri-checkbox-multiple-blank-line';
+                    if (isResourceManageableByCurrentTenant(item.systemId)) {
+                        item.isManageable = true;
+                    } else {
+                        item.delete_icon = false;
+                    }
                     item.newName = item.name;
                     if (!item.enabled) {
                         item.newName = item.name + '[禁用]'; //显示名称
                     }
                     break;
-                case 'role': //角色 人员
+                case 'role': //角色
                     item.title_icon = 'ri-contacts-line';
-                    if (managerLevel === 1) {
-                        item.delete_icon = props.showNodeDelete;
+                    if (props.showNodeDelete === true) {
+                        let isManageable = isRoleManageableByCurrentTenant(item.tenantId);
+                        item.delete_icon = isManageable;
+                        item.isManageable = isManageable;
                     } else {
                         item.delete_icon = false;
                     }
                     item.isLeaf = true;
                     break;
 
-                case 'folder': // 文件夹
+                case 'folder': //角色文件夹
                     item.title_icon = 'ri-folder-2-line';
-                    item.delete_icon = props.showNodeDelete;
-                    if (isTopLevel) {
+                    if (props.showNodeDelete === true) {
+                        let isManageable = isRoleManageableByCurrentTenant(item.tenantId);
+                        item.delete_icon = isManageable;
+                        item.isManageable = isManageable;
+                    } else {
                         item.delete_icon = false;
                     }
                     break;
             }
-
-            // 资源tree
-            // switch (item.nodeType) {
-            //     case 'APP': //应用
-            //         item.title_icon = 'ri-apps-line';
-            //         if (isTopLevel) {
-            //             item.delete_icon = false;
-            //         }
-            //         break;
-
-            //     case 1: //菜单
-            //         item.title_icon = 'ri-menu-4-line';
-            //         break;
-
-            //     case 2: //按钮
-            //         item.title_icon = 'ri-checkbox-multiple-blank-line';
-            //         break;
-            // }
-
-            // 角色tree
-            // switch (item.nodeType) {
-            //     case 'role': //角色 人员
-            //         item.title_icon = 'ri-contacts-line';
-            //         if (managerLevel === 1) {
-            //             item.delete_icon = props.showNodeDelete;
-            //         } else {
-            //             item.delete_icon = false;
-            //         }
-            //         item.isLeaf = true;
-            //         break;
-
-            //     case 'folder': // 文件夹
-            //         item.title_icon = 'ri-folder-2-line';
-            //         item.delete_icon = props.showNodeDelete;
-            //         if (isTopLevel) {
-            //             item.delete_icon = false;
-            //         }
-            //         break;
-            // }
-
-            // 系统
-            if (item.cnName) {
-                item.title_icon = 'ri-settings-line';
-            }
-
-            //公共角色管理
-            // if (item.type && item.type === 'folder') {
-            //     item.delete_icon = false;
-            //     item.title_icon = 'ri-folder-2-line';
-            //     item.hasChild = true;
-            // }
 
             if (!item.isLeaf) {
                 //设置chilren属性，有chilren属性才有展开icon
@@ -380,6 +362,9 @@
                     params = childLevelParams;
                 }
                 params.parentId = node.id;
+                if (node.nodeType) {
+                    params.parentNodeType = node.nodeType;
+                }
                 //请求接口
                 const res = await props.treeApiObj?.childLevel?.api(params);
                 data = res.data || res;
@@ -516,6 +501,49 @@
                 y9TreeRef.value?.setExpandKeys([node.id]); //设置展开
             }
         });
+    }
+
+    /**
+     * 系统是否可管理，仅当前租户创建的系统或运维管理员可管理
+     */
+    function isSystemManageableByCurrentTenant(owningTenantId) {
+        const managerLevel = y9_storage.getObjectItem('ssoUserInfo', 'managerLevel');
+        if (managerLevel === 4) {
+            return true;
+        }
+
+        const currentTenantId = y9_storage.getObjectItem('ssoUserInfo', 'tenantId');
+        return currentTenantId === owningTenantId;
+    }
+
+    /**
+     * 角色是否可管理，仅当前租户创建的角色或运维管理员可管理
+     */
+    function isRoleManageableByCurrentTenant(owningTenantId) {
+        const managerLevel = y9_storage.getObjectItem('ssoUserInfo', 'managerLevel');
+        if (managerLevel === 4) {
+            return true;
+        }
+        if (managerLevel === 2) {
+            return false;
+        }
+
+        const currentTenantId = y9_storage.getObjectItem('ssoUserInfo', 'tenantId');
+        return currentTenantId === owningTenantId;
+    }
+
+    /**
+     * 资源是否可管理，仅当前租户创建的系统下的资源或运维管理员可管理
+     */
+    function isResourceManageableByCurrentTenant(resourceSystemId) {
+        const managerLevel = y9_storage.getObjectItem('ssoUserInfo', 'managerLevel');
+        if (managerLevel === 4) {
+            return true;
+        }
+
+        const currentTenantId = y9_storage.getObjectItem('ssoUserInfo', 'tenantId');
+        const systemNode = findNode(getTreeData(), resourceSystemId);
+        return currentTenantId === systemNode.tenantId;
     }
 
     //刷新tree
