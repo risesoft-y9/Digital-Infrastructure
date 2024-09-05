@@ -7,7 +7,7 @@
  * @FilePath: /sz-team-frontend-9.5.x/y9vue-home/src/api/lib/localToken.js
  */
 import Cookies from 'js-cookie'; // 考虑CDN
-import { siteTokenKey } from '@/settings';
+import {siteTokenKey} from '@/settings';
 
 /**
  * 获取本地Token

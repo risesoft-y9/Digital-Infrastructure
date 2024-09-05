@@ -76,7 +76,7 @@
                 type1: 'text', //自定义字段-编辑时显示的类型
                 type2: 'text', //自定义字段-非编辑状态显示文本类型
                 prop: 'tenantId',
-                label: computed(() => t('租户唯一标识')),
+                label: computed(() => t('所属租户ID')),
                 props: {
                     render: () => {
                         //text类型渲染的内容

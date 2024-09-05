@@ -32,7 +32,14 @@
                     <y9Card :title="`角色关联 - ${currData.name? currData.name : ''}`">
                         <RoleRelation />
                     </y9Card>-->
+
+                    <y9Card v-if="currData.nodeType === 'SYSTEM'" :title="`${$t('基本信息')} - ${currData.name ? currData.name : ''}`">
+                        <template v-slot>
+                            <SystemBasicInfo :id="currData.id" :editFlag="true" />
+                        </template>
+                    </y9Card>
                     <BasicInfo
+                        v-else
                         :currTreeNodeInfo="currData"
                         :findNode="findNode"
                         :getTreeData="getTreeData"
@@ -51,10 +58,11 @@
 <script lang="ts" setup>
     import { inject, ref } from 'vue';
     import { ElMessage, ElMessageBox, ElNotification } from 'element-plus';
-    import { menuDelete, operationDel, resourceTreeList, resourceTreeRoot, treeSearch } from '@/api/resource/index';
+    import { menuDelete, operationDel, resourceTree, treeSearch } from '@/api/resource/index';
     import { applicationDel } from '@/api/system/index';
     // 基本信息
     import BasicInfo from './comps/BasicInfo.vue';
+    import SystemBasicInfo from '@/views/system/comps/BasicInfo.vue';
     import { useI18n } from 'vue-i18n';
     // 注入 字体对象
     const fontSizeObj: any = inject('sizeObjInfo');
@@ -77,10 +85,10 @@
     const fixedTreeRef = ref();
     // 树的一级 子级的请求接口函数
     const treeApiObj = ref({
-        topLevel: resourceTreeList, //顶级（一级）tree接口,
+        topLevel: resourceTree, //顶级（一级）tree接口,
         childLevel: {
             //子级（二级及二级以上）tree接口
-            api: resourceTreeRoot
+            api: resourceTree
         },
         search: {
             //搜索接口及参数
