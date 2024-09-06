@@ -2,8 +2,6 @@ package net.risesoft.y9public.manager.resource;
 
 import java.util.Optional;
 
-import org.springframework.transaction.annotation.Transactional;
-
 import net.risesoft.y9public.entity.resource.Y9System;
 
 /**
@@ -15,7 +13,6 @@ import net.risesoft.y9public.entity.resource.Y9System;
  */
 public interface Y9SystemManager {
 
-    @Transactional(readOnly = false)
     void delete(String id);
 
     Optional<Y9System> findById(String id);
@@ -24,6 +21,8 @@ public interface Y9SystemManager {
 
     Y9System getById(String id);
 
-    @Transactional(readOnly = false)
+    Y9System getByName(String systemName);
+
     Y9System save(Y9System y9System);
+
 }

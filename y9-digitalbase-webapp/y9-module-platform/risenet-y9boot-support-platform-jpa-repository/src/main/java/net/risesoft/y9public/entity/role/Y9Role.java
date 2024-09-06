@@ -43,11 +43,15 @@ public class Y9Role extends BaseEntity implements Comparable<Y9Role> {
     @Comment("主键")
     private String id;
 
-    /** 应用id */
-    @NotBlank
-    @Column(name = "APP_ID", length = 38, nullable = false)
+    /** 应用id 公共角色时为空 */
+    @Column(name = "APP_ID", length = 38)
     @Comment("应用id")
     private String appId;
+
+    /** 系统id 公共角色时为空 */
+    @Column(name = "SYSTEM_ID", length = 38)
+    @Comment("系统id")
+    private String systemId;
 
     /** 角色名称 */
     @NotBlank
@@ -87,23 +91,8 @@ public class Y9Role extends BaseEntity implements Comparable<Y9Role> {
     @Convert(converter = EnumConverter.RoleTypeEnumConverter.class)
     private RoleTypeEnum type = RoleTypeEnum.ROLE;
 
-    /** 应用中文名称，冗余字段，仅用于显示 */
-    @Column(name = "APP_CN_NAME", length = 255, nullable = false)
-    @Comment("应用中文名称，冗余字段，仅用于显示")
-    private String appCnName;
-
-    /** 系统名称，冗余字段，仅用于显示 */
-    @Column(name = "SYSTEM_NAME", length = 255, nullable = false)
-    @Comment("系统名称，冗余字段，仅用于显示")
-    private String systemName;
-
-    /** 系统中文名称，冗余字段，仅用于显示 */
-    @Column(name = "SYSTEM_CN_NAME", length = 255, nullable = false)
-    @Comment("系统中文名称，冗余字段，仅用于显示")
-    private String systemCnName;
-
     /** 租户id，如设置了表示是租户特有角色 */
-    @Column(name = "TENANT_ID", length = 255)
+    @Column(name = "TENANT_ID", length = 38)
     @Comment("租户id，如设置了表示是租户特有角色")
     private String tenantId;
 

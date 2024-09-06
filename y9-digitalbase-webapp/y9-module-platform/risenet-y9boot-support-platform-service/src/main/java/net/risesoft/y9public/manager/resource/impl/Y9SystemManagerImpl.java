@@ -45,6 +45,12 @@ public class Y9SystemManagerImpl implements Y9SystemManager {
     }
 
     @Override
+    public Y9System getByName(String systemName) {
+        return y9SystemRepository.findByName(systemName)
+            .orElseThrow(() -> Y9ExceptionUtil.notFoundException(SystemErrorCodeEnum.SYSTEM_NOT_FOUND, systemName));
+    }
+
+    @Override
     @Cacheable(key = "#id", condition = "#id!=null", unless = "#result==null")
     public Optional<Y9System> findById(String id) {
         return y9SystemRepository.findById(id);

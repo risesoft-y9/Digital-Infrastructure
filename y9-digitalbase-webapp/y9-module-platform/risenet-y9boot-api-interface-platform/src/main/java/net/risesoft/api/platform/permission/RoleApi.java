@@ -47,16 +47,13 @@ public interface RoleApi {
      * @param parentId 父节点id
      * @param customId 自定义id
      * @param type 角色类型，node或者role
-     * @param systemName 系统标识
-     * @param systemCnName 系统中文名称
      * @return {@code Y9Result<Role>} 通用请求返回对象 - data 是保存的角色对象
      * @since 9.6.0
      */
     @PostMapping("/createRole")
     Y9Result<Role> createRole(@RequestParam("roleId") String roleId, @RequestParam("roleName") String roleName,
         @RequestParam("parentId") String parentId, @RequestParam("customId") String customId,
-        @RequestParam("type") RoleTypeEnum type, @RequestParam("systemName") String systemName,
-        @RequestParam("systemCnName") String systemCnName);
+        @RequestParam("type") RoleTypeEnum type);
 
     /**
      * 删除角色

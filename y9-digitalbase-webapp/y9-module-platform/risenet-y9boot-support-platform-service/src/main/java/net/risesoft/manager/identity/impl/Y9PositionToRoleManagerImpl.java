@@ -53,7 +53,13 @@ public class Y9PositionToRoleManagerImpl implements Y9PositionToRoleManager {
             y9PositionToRole.setPositionId(y9Position.getId());
             y9PositionToRole.setRoleId(role.getId());
             y9PositionToRole.setAppId(role.getAppId());
+            y9PositionToRole.setSystemId(role.getSystemId());
             y9PositionToRoleRepository.save(y9PositionToRole);
-        }
+        } else {
+            Y9PositionToRole y9PositionToRole = optionalY9PositionToRole.get();
+            y9PositionToRole.setAppId(role.getAppId());
+            y9PositionToRole.setSystemId(role.getSystemId());
+            y9PositionToRoleRepository.save(y9PositionToRole);
+        } 
     }
 }

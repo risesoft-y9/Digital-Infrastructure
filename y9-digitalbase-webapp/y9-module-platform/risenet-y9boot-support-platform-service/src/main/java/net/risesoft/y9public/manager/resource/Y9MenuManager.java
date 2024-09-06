@@ -2,8 +2,6 @@ package net.risesoft.y9public.manager.resource;
 
 import java.util.Optional;
 
-import org.springframework.transaction.annotation.Transactional;
-
 import net.risesoft.y9public.entity.resource.Y9Menu;
 
 /**
@@ -22,6 +20,5 @@ public interface Y9MenuManager {
 
     Y9Menu save(Y9Menu y9Menu);
 
-    @Transactional(readOnly = false)
     Y9Menu updateTabIndex(String id, int index);
 }

@@ -82,16 +82,13 @@ public class RoleApiImpl implements RoleApi {
      * @param parentId 父节点id
      * @param customId 自定义id
      * @param type 角色类型，node或者role
-     * @param systemName 系统标识
-     * @param systemCnName 系统中文名称
      * @return {@code Y9Result<Role>} 通用请求返回对象 - data 是保存的角色对象
      * @since 9.6.0
      */
     @Override
     public Y9Result<Role> createRole(@RequestParam("roleId") String roleId, @RequestParam("roleName") String roleName,
         @RequestParam("parentId") String parentId, @RequestParam("customId") String customId,
-        @RequestParam("type") RoleTypeEnum type, @RequestParam("systemName") String systemName,
-        @RequestParam("systemCnName") String systemCnName) {
+        @RequestParam("type") RoleTypeEnum type) {
         Optional<Y9Role> y9RoleOptional = y9RoleService.findByCustomIdAndParentId(customId, parentId);
         Y9Role roleNode;
         if (y9RoleOptional.isEmpty()) {
@@ -100,8 +97,6 @@ public class RoleApiImpl implements RoleApi {
             roleNode.setCustomId(customId);
             roleNode.setParentId(parentId);
             roleNode.setType(type);
-            roleNode.setSystemName(systemName);
-            roleNode.setSystemCnName(systemCnName);
         } else {
             roleNode = y9RoleOptional.get();
         }

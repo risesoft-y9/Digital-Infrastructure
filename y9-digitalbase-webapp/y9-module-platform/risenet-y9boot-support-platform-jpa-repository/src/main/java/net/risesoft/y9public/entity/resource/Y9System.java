@@ -45,10 +45,10 @@ public class Y9System extends BaseEntity {
     @Comment("租户id，如设置了表示是租户特有系统")
     private String tenantId;
 
-    /** 系统名称 */
+    /** 系统英文名称 */
     @NotBlank
     @Column(name = "NAME", length = 50, nullable = false, unique = true)
-    @Comment("系统名称")
+    @Comment("系统英文名称")
     private String name;
 
     /** 系统中文名称 */

@@ -24,4 +24,60 @@
                       columnDataType="VARCHAR(38)"/>
     </changeSet>
 
+    <changeSet id="1725594463394-1" author="shidaobang" runOnChange="true">
+        <preConditions onFail="MARK_RAN">
+            <columnExists tableName="Y9_ORG_ROLE"
+                          columnName="APP_CN_NAME"/>
+        </preConditions>
+        <dropColumn
+                columnName="APP_CN_NAME"
+                tableName="Y9_ORG_ROLE">
+        </dropColumn>
+    </changeSet>
+    <changeSet id="1725594463394-2" author="shidaobang" runOnChange="true">
+        <preConditions onFail="MARK_RAN">
+            <columnExists tableName="Y9_ORG_ROLE"
+                          columnName="SYSTEM_CN_NAME"/>
+        </preConditions>
+        <dropColumn
+                columnName="SYSTEM_CN_NAME"
+                tableName="Y9_ORG_ROLE">
+        </dropColumn>
+    </changeSet>
+    <changeSet id="1725594463394-3" author="shidaobang" runOnChange="true">
+        <preConditions onFail="MARK_RAN">
+            <columnExists tableName="Y9_ORG_ROLE"
+                          columnName="SYSTEM_NAME"/>
+        </preConditions>
+        <dropColumn
+                columnName="SYSTEM_NAME"
+                tableName="Y9_ORG_ROLE">
+        </dropColumn>
+    </changeSet>
+    <changeSet id="1725594463394-4" author="shidaobang" runOnChange="true">
+        <dropNotNullConstraint
+                columnDataType="VARCHAR(38)"
+                columnName="APP_ID"
+                tableName="Y9_ORG_ROLE"/>
+    </changeSet>
+    <changeSet id="1725594463394-5" author="shidaobang" runOnChange="true">
+        <preConditions onFail="MARK_RAN">
+            <not>
+                <columnExists tableName="Y9_ORG_ROLE"
+                              columnName="SYSTEM_ID"/>
+            </not>
+        </preConditions>
+        <addColumn tableName="Y9_ORG_ROLE">
+            <column name="SYSTEM_ID" type="VARCHAR(38)" remarks="系统id" />
+        </addColumn>
+        <sql>
+            UPDATE Y9_ORG_ROLE r
+                JOIN Y9_COMMON_APP_STORE a ON r.APP_ID = a.ID
+                SET r.SYSTEM_ID = a.SYSTEM_ID;
+        </sql>
+        <sql>
+            UPDATE Y9_ORG_ROLE r SET r.APP_ID = NULL where r.APP_ID = '11111111-1111-1111-1111-111111111121';
+        </sql>
+    </changeSet>
+
 </databaseChangeLog>
