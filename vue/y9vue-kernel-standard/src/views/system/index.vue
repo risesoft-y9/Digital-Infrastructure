@@ -56,7 +56,7 @@
                     <div v-if="currData.id">
                         <y9Card :title="`${$t('基本信息')} - ${currData.cnName ? currData.cnName : ''}`">
                             <template v-slot>
-                                <div class="basic-btns">
+                                <div v-show="currData.isManageable" class="basic-btns">
                                     <span class="btn-top">
                                         <el-button
                                             v-if="editBtnFlag"
@@ -129,7 +129,7 @@
                                 />
                             </template>
                         </y9Card>
-                        <y9Card :title="`${$t('应用管理')} - ${currData.cnName ? currData.cnName : ''}`">
+                        <y9Card v-show="currData.isManageable" :title="`${$t('应用管理')} - ${currData.cnName ? currData.cnName : ''}`">
                             <template v-slot>
                                 <ApplicatManager :id="currData.id" />
                             </template>
