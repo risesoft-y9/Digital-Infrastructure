@@ -1,9 +1,9 @@
 package net.risesoft.y9public.repository.custom.impl;
 
-import java.io.IOException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -11,20 +11,32 @@ import java.util.Map;
 import java.util.stream.Collectors;
 
 import org.apache.commons.lang3.StringUtils;
-import org.springframework.context.annotation.DependsOn;
+import org.elasticsearch.index.query.BoolQueryBuilder;
+import org.elasticsearch.index.query.QueryBuilders;
+import org.elasticsearch.search.aggregations.AggregationBuilders;
+import org.elasticsearch.search.aggregations.Aggregations;
+import org.elasticsearch.search.aggregations.bucket.terms.Terms;
+import org.elasticsearch.search.aggregations.bucket.terms.TermsAggregationBuilder;
+import org.elasticsearch.search.aggregations.metrics.ParsedTopHits;
+import org.elasticsearch.search.aggregations.metrics.TopHitsAggregationBuilder;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.domain.Sort.Direction;
-import org.springframework.data.elasticsearch.client.elc.ElasticsearchTemplate;
+import org.springframework.data.elasticsearch.core.ElasticsearchAggregations;
+import org.springframework.data.elasticsearch.core.ElasticsearchOperations;
 import org.springframework.data.elasticsearch.core.SearchHit;
 import org.springframework.data.elasticsearch.core.SearchHits;
 import org.springframework.data.elasticsearch.core.mapping.IndexCoordinates;
 import org.springframework.data.elasticsearch.core.query.Criteria;
 import org.springframework.data.elasticsearch.core.query.CriteriaQuery;
 import org.springframework.data.elasticsearch.core.query.CriteriaQueryBuilder;
+import org.springframework.data.elasticsearch.core.query.NativeSearchQueryBuilder;
 import org.springframework.data.elasticsearch.core.query.Query;
 import org.springframework.stereotype.Component;
+
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.JsonMappingException;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -36,19 +48,14 @@ import net.risesoft.model.log.LogInfoModel;
 import net.risesoft.pojo.Y9Page;
 import net.risesoft.pojo.Y9PageQuery;
 import net.risesoft.y9.Y9LoginUserHolder;
+import net.risesoft.y9.json.Y9JsonUtil;
 import net.risesoft.y9.util.Y9Util;
 import net.risesoft.y9public.entity.Y9logUserLoginInfo;
 import net.risesoft.y9public.repository.Y9logUserLoginInfoRepository;
 import net.risesoft.y9public.repository.custom.Y9logUserLoginInfoCustomRepository;
 
-import co.elastic.clients.elasticsearch.ElasticsearchClient;
 import co.elastic.clients.elasticsearch._types.ElasticsearchException;
-import co.elastic.clients.elasticsearch._types.aggregations.StringTermsBucket;
-import co.elastic.clients.elasticsearch._types.query_dsl.BoolQuery.Builder;
-import co.elastic.clients.elasticsearch.core.SearchRequest;
-import co.elastic.clients.elasticsearch.core.SearchResponse;
-import co.elastic.clients.elasticsearch.core.search.Hit;
-import co.elastic.clients.json.JsonData;
+import co.elastic.clients.elasticsearch._types.aggregations.Aggregate;
 
 /**
  *
@@ -60,13 +67,11 @@ import co.elastic.clients.json.JsonData;
 @Component
 @Slf4j
 @RequiredArgsConstructor
-@DependsOn(value = "elasticsearchTemplate")
 public class Y9logUserLoginInfoCustomRepositoryImpl implements Y9logUserLoginInfoCustomRepository {
     private static final IndexCoordinates INDEX = IndexCoordinates.of(Y9ESIndexConst.LOGIN_INFO_INDEX);
 
-    private final ElasticsearchClient elasticsearchClient;
     private final Y9logUserLoginInfoRepository y9logUserLoginInfoRepository;
-    private final ElasticsearchTemplate elasticsearchTemplate;
+    private final ElasticsearchOperations elasticsearchOperations;
 
     @Override
     public long countByLoginTimeBetweenAndSuccess(Date startTime, Date endTime, String success) {
@@ -79,7 +84,7 @@ public class Y9logUserLoginInfoCustomRepositoryImpl implements Y9logUserLoginInf
             criteria.subCriteria(new Criteria(Y9LogSearchConsts.TENANT_ID).is(tenantId));
         }
         Query query = new CriteriaQueryBuilder(criteria).build();
-        return elasticsearchTemplate.count(query, INDEX);
+        return elasticsearchOperations.count(query, INDEX);
     }
 
     @Override
@@ -101,7 +106,7 @@ public class Y9logUserLoginInfoCustomRepositoryImpl implements Y9logUserLoginInf
             criteria.subCriteria(new Criteria(Y9LogSearchConsts.TENANT_ID).is(tenantId));
         }
         Query query = new CriteriaQuery(criteria);
-        return elasticsearchTemplate.count(query, INDEX);
+        return elasticsearchOperations.count(query, INDEX);
     }
 
     @Override
@@ -124,58 +129,76 @@ public class Y9logUserLoginInfoCustomRepositoryImpl implements Y9logUserLoginInf
             criteria.subCriteria(new Criteria(Y9LogSearchConsts.TENANT_ID).is(tenantId));
         }
         Query query = new CriteriaQuery(criteria);
-        return elasticsearchTemplate.count(query, INDEX);
+        return elasticsearchOperations.count(query, INDEX);
     }
 
     @Override
     public List<Object[]> listDistinctUserHostIpByUserIdAndLoginTime(String userId, Date startTime, Date endTime) {
-        List<Object[]> list = new ArrayList<>();
+        BoolQueryBuilder boolQueryBuilder = QueryBuilders.boolQuery();
+        boolQueryBuilder.must(QueryBuilders.termQuery(Y9LogSearchConsts.USER_ID, userId));
+        boolQueryBuilder.must(QueryBuilders.rangeQuery(Y9LogSearchConsts.LOGIN_TIME)
+            .from(String.valueOf(startTime.getTime())).to(String.valueOf(endTime.getTime())));
 
-        SearchRequest searchRequest = SearchRequest.of(s -> s.index(Y9ESIndexConst.LOGIN_INFO_INDEX)
-            .query(q -> q.bool(b -> b.must(m -> m.queryString(qs -> qs.fields(Y9LogSearchConsts.USER_ID).query(userId)))
-                .must(m -> m.range(r -> r.field(Y9LogSearchConsts.LOGIN_TIME).from(String.valueOf(startTime.getTime()))
-                    .to(String.valueOf(endTime.getTime()))))))
-            .aggregations("by_userHostIp", a -> a.terms(t -> t.field(Y9LogSearchConsts.USER_HOST_IP))));
-
+        NativeSearchQueryBuilder builder = new NativeSearchQueryBuilder();
+        builder.withQuery(boolQueryBuilder);
+        builder.withAggregations(
+            AggregationBuilders.terms("by_userHostIp").field(Y9LogSearchConsts.USER_HOST_IP).size(Integer.MAX_VALUE));
         try {
-            elasticsearchClient.search(searchRequest, Y9logUserLoginInfo.class).aggregations().get("by_userHostIp")
-                .sterms().buckets().array().forEach(bucket -> {
-                    String[] userLoginInfo = {bucket.key().toString(), String.valueOf(bucket.docCount())};
+            SearchHits<Y9logUserLoginInfo> searchHits =
+                elasticsearchOperations.search(builder.build(), Y9logUserLoginInfo.class, INDEX);
+            ElasticsearchAggregations aggregations = (ElasticsearchAggregations)searchHits.getAggregations();
+            if (aggregations != null) {
+                Terms terms = aggregations.aggregations().get("by_userHostIp");
+                List<? extends Terms.Bucket> buckets = terms.getBuckets();
+                List<Object[]> list = new ArrayList<>();
+                buckets.forEach(bucket -> {
+                    String[] userLoginInfo = {bucket.getKeyAsString(), String.valueOf(bucket.getDocCount())};
                     list.add(userLoginInfo);
                 });
-        } catch (ElasticsearchException | IOException e) {
+                return list;
+            }
+
+        } catch (ElasticsearchException e) {
             LOGGER.warn(e.getMessage(), e);
         }
-        return list;
+        return Collections.emptyList();
     }
 
     @Override
     public List<Map<String, Object>> listUserHostIpByCip(String cip) {
-        List<Map<String, Object>> list = new ArrayList<>();
-        Builder build = new Builder();
-        build.must(m -> m.queryString(qs -> qs.fields(Y9LogSearchConsts.USER_HOST_IP).query(cip + "*")));
         String tenantId = Y9LoginUserHolder.getTenantId();
+        BoolQueryBuilder boolQueryBuilder = QueryBuilders.boolQuery();
+        boolQueryBuilder.must(QueryBuilders.wildcardQuery(Y9LogSearchConsts.USER_HOST_IP, cip + "*"));
         if (!tenantId.equals(InitDataConsts.OPERATION_TENANT_ID)) {
-            build.must(m -> m.queryString(qs -> qs.fields(Y9LogSearchConsts.TENANT_ID).query(tenantId)));
+            boolQueryBuilder.must(QueryBuilders.matchQuery(Y9LogSearchConsts.TENANT_ID, tenantId));
         }
-        SearchRequest searchRequest =
-            SearchRequest.of(s -> s.index(Y9ESIndexConst.LOGIN_INFO_INDEX).query(build.build()._toQuery())
-                .aggregations("by_UserHostIP", a -> a.terms(t -> t.field(Y9LogSearchConsts.USER_HOST_IP))));
+
+        NativeSearchQueryBuilder builder = new NativeSearchQueryBuilder();
+        builder.withQuery(boolQueryBuilder);
+        builder.withAggregations(
+            AggregationBuilders.terms("by_UserHostIP").field(Y9LogSearchConsts.USER_HOST_IP).size(Integer.MAX_VALUE));
         try {
-            SearchResponse<Y9logUserLoginInfo> response =
-                elasticsearchClient.search(searchRequest, Y9logUserLoginInfo.class);
-            response.aggregations().get("by_UserHostIP").sterms().buckets().array().forEach(bucket -> {
-                Map<String, Object> map = new HashMap<>();
-                String serverIp = bucket.key().stringValue();
-                String text = serverIp + "<span style='color:red'>(" + bucket.docCount() + ")</span>";
-                map.put("serverIp", serverIp);
-                map.put("text", text);
-                list.add(map);
-            });
-        } catch (ElasticsearchException | IOException e) {
+            SearchHits<Y9logUserLoginInfo> searchHits =
+                elasticsearchOperations.search(builder.build(), Y9logUserLoginInfo.class, INDEX);
+            ElasticsearchAggregations aggregations = (ElasticsearchAggregations)searchHits.getAggregations();
+            if (aggregations != null) {
+                Terms terms = aggregations.aggregations().get("by_UserHostIP");
+                List<? extends Terms.Bucket> buckets = terms.getBuckets();
+                List<Map<String, Object>> list = new ArrayList<>();
+                buckets.forEach(bucket -> {
+                    Map<String, Object> map = new HashMap<>();
+                    String serverIp = bucket.getKeyAsString();
+                    String text = serverIp + "<span style='color:red'>(" + bucket.getDocCount() + ")</span>";
+                    map.put("serverIp", serverIp);
+                    map.put("text", text);
+                    list.add(map);
+                });
+                return list;
+            }
+        } catch (ElasticsearchException e) {
             LOGGER.warn(e.getMessage(), e);
         }
-        return list;
+        return Collections.emptyList();
     }
 
     @Override
@@ -211,7 +234,7 @@ public class Y9logUserLoginInfoCustomRepositoryImpl implements Y9logUserLoginInf
         Query query = new CriteriaQuery(criteria).setPageable(PageRequest.of(page, size))
             .addSort(Sort.by(Direction.DESC, Y9LogSearchConsts.LOGIN_TIME));
         SearchHits<Y9logUserLoginInfo> searchHits =
-            elasticsearchTemplate.search(query, Y9logUserLoginInfo.class, INDEX);
+            elasticsearchOperations.search(query, Y9logUserLoginInfo.class, INDEX);
 
         List<Y9logUserLoginInfo> list = searchHits.stream().map(SearchHit::getContent).collect(Collectors.toList());
         int totalPages = (int)searchHits.getTotalHits() / size;
@@ -231,84 +254,107 @@ public class Y9logUserLoginInfoCustomRepositoryImpl implements Y9logUserLoginInf
         int startIndex = (page - 1) * rows;
         int endIndex = page * rows;
         List<Map<String, Object>> strList = new ArrayList<>();
-        Builder build = new Builder();
-        build.must(m -> m.term(t -> t.field(Y9LogSearchConsts.SUCCESS).value(success)));
-        build.must(m -> m.term(t -> t.field(Y9LogSearchConsts.USER_HOST_IP).value(userHostIp)));
         String tenantId = Y9LoginUserHolder.getTenantId();
+        BoolQueryBuilder boolQueryBuilder = QueryBuilders.boolQuery();
+        boolQueryBuilder.must(QueryBuilders.termQuery(Y9LogSearchConsts.SUCCESS, success));
+        boolQueryBuilder.must(QueryBuilders.termQuery(Y9LogSearchConsts.USER_HOST_IP, userHostIp));
         if (!tenantId.equals(InitDataConsts.OPERATION_TENANT_ID)) {
-            build.must(m -> m.queryString(qs -> qs.fields(Y9LogSearchConsts.TENANT_ID).query(tenantId)));
+            boolQueryBuilder.must(QueryBuilders.matchQuery(Y9LogSearchConsts.TENANT_ID, tenantId));
         }
-        SearchRequest searchRequest =
-            SearchRequest.of(s -> s.index(Y9ESIndexConst.LOGIN_INFO_INDEX).query(build.build()._toQuery())
-                .aggregations("username-aggs", a -> a.terms(t -> t.field(Y9LogSearchConsts.USER_NAME))
-                    .aggregations("topHits", aggs -> aggs.topHits(h -> h.size(1).explain(true)))));
+        TermsAggregationBuilder termsAggregation =
+            AggregationBuilders.terms("username-aggs").field(Y9LogSearchConsts.USER_NAME).executionHint("map");
+        TopHitsAggregationBuilder topHits = AggregationBuilders.topHits("topHits").size(1).explain(true);
+        termsAggregation.subAggregation(topHits);
 
-        try {
-            SearchResponse<Y9logUserLoginInfo> response =
-                elasticsearchClient.search(searchRequest, Y9logUserLoginInfo.class);
-            List<StringTermsBucket> stbList = response.aggregations().get("username-aggs").sterms().buckets().array();
+        NativeSearchQueryBuilder builder = new NativeSearchQueryBuilder();
+        builder.withQuery(boolQueryBuilder);
+        builder.withAggregations(termsAggregation);
+        SearchHits<Y9logUserLoginInfo> searchHits =
+            elasticsearchOperations.search(builder.build(), Y9logUserLoginInfo.class, INDEX);
+        ElasticsearchAggregations aggregations = (ElasticsearchAggregations)searchHits.getAggregations();
+        if (aggregations != null) {
+            Terms terms = aggregations.aggregations().get("username-aggs");
+            List<? extends Terms.Bucket> stbList = terms.getBuckets();
             int totalCount = stbList.size();
             endIndex = endIndex < totalCount ? endIndex : totalCount;
             for (int i = startIndex; i < endIndex; i++) {
                 Map<String, Object> map = new HashMap<>();
-                StringTermsBucket bucket = stbList.get(i);
-                long count = bucket.docCount();
-                Y9logUserLoginInfo y9logUserLoginInfo = bucket.aggregations().get("topHits").topHits().hits().hits()
-                    .get(0).source().to(Y9logUserLoginInfo.class);
-                map.put(Y9LogSearchConsts.USER_ID, y9logUserLoginInfo.getUserId());
-                map.put(Y9LogSearchConsts.USER_NAME, y9logUserLoginInfo.getUserName());
+                Terms.Bucket bucket = stbList.get(i);
+                long count = bucket.getDocCount();
+
+                Aggregations topAggregations = bucket.getAggregations();
+                ParsedTopHits topScoreResult = topAggregations.get("topHits");
+                if (topScoreResult.getHits().getHits().length > 0) {
+                    String loginInfoJson = topScoreResult.getHits().getAt(0).getSourceAsString();
+                    try {
+                        Y9logUserLoginInfo y9logUserLoginInfo =
+                            Y9JsonUtil.objectMapper.setDateFormat(new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss"))
+                                .readValue(loginInfoJson, Y9logUserLoginInfo.class);
+                        map.put(Y9LogSearchConsts.USER_ID, y9logUserLoginInfo.getUserId());
+                        map.put(Y9LogSearchConsts.USER_NAME, y9logUserLoginInfo.getUserName());
+                    } catch (JsonMappingException e) {
+                        e.printStackTrace();
+                    } catch (JsonProcessingException e) {
+                        e.printStackTrace();
+                    }
+
+                }
                 map.put("serverCount", String.valueOf(count));
                 strList.add(map);
             }
             return Y9Page.success(page, (int)Math.ceil((float)totalCount / (float)page), totalCount, strList);
-        } catch (ElasticsearchException | IOException e) {
-            LOGGER.warn(e.getMessage(), e);
         }
-        return null;
+        return Y9Page.failure(page, page, startIndex, null, tenantId, endIndex);
     }
 
     @Override
     public Y9Page<Map<String, Object>> pageByUserHostIpAndSuccessAndUserNameLike(String userHostIp, String success,
         String userName, int page, int rows) {
+        int startIndex = (page - 1) * rows;
         int endIndex = page * rows;
         List<Map<String, Object>> strList = new ArrayList<>();
-        Builder build = new Builder();
-        build.must(m -> m.term(t -> t.field(Y9LogSearchConsts.SUCCESS).value(success)));
-        build.must(m -> m.term(t -> t.field(Y9LogSearchConsts.USER_HOST_IP).value(userHostIp)));
-        build.must(m -> m.term(t -> t.field(Y9LogSearchConsts.USER_NAME).value("*" + userName + "*")));
         String tenantId = Y9LoginUserHolder.getTenantId();
+
+        BoolQueryBuilder boolQueryBuilder = QueryBuilders.boolQuery();
+        boolQueryBuilder.must(QueryBuilders.termQuery(Y9LogSearchConsts.SUCCESS, success));
+        boolQueryBuilder.must(QueryBuilders.termQuery(Y9LogSearchConsts.USER_HOST_IP, userHostIp));
+        boolQueryBuilder.must(QueryBuilders.matchQuery(Y9LogSearchConsts.USER_NAME, "*" + userName + "*"));
         if (!tenantId.equals(InitDataConsts.OPERATION_TENANT_ID)) {
-            build.must(m -> m.queryString(qs -> qs.fields(Y9LogSearchConsts.TENANT_ID).query(tenantId)));
+            boolQueryBuilder.must(QueryBuilders.matchQuery(Y9LogSearchConsts.TENANT_ID, tenantId));
         }
-        SearchRequest searchRequest =
-            SearchRequest.of(s -> s.index(Y9ESIndexConst.LOGIN_INFO_INDEX).query(build.build()._toQuery())
-                .aggregations("userNameAggs", a -> a.terms(t -> t.field(Y9LogSearchConsts.USER_NAME))
-                    .aggregations("topHits", aggs -> aggs.topHits(h -> h.size(1).explain(true)))));
+
+        NativeSearchQueryBuilder builder = new NativeSearchQueryBuilder();
+        builder.withQuery(boolQueryBuilder);
+        builder.withAggregations(AggregationBuilders.terms("username-aggs").field(Y9LogSearchConsts.USER_NAME),
+            AggregationBuilders.topHits("topHits").size(1).explain(true));
 
         try {
-            SearchResponse<Y9logUserLoginInfo> response =
-                elasticsearchClient.search(searchRequest, Y9logUserLoginInfo.class);
-            List<StringTermsBucket> list = response.aggregations().get("userNameAggs").sterms().buckets().array();
-            int totalCount = list.size();
-            endIndex = endIndex < totalCount ? endIndex : totalCount;
-            for (StringTermsBucket bucket : list) {
-                long count = bucket.docCount();
-                List<Hit<JsonData>> topHitList = bucket.aggregations().get("topHits").topHits().hits().hits();
-                for (Hit<JsonData> h : topHitList) {
+
+            SearchHits<Y9logUserLoginInfo> searchHits =
+                elasticsearchOperations.search(builder.build(), Y9logUserLoginInfo.class, INDEX);
+            ElasticsearchAggregations aggregations = (ElasticsearchAggregations)searchHits.getAggregations();
+            if (aggregations != null) {
+                Terms terms = aggregations.aggregations().get("username-aggs");
+                List<? extends Terms.Bucket> stbList = terms.getBuckets();
+                int totalCount = stbList.size();
+                endIndex = endIndex < totalCount ? endIndex : totalCount;
+                for (int i = startIndex; i < endIndex; i++) {
                     Map<String, Object> map = new HashMap<>();
-                    Y9logUserLoginInfo y9logUserLoginInfo = h.source().to(Y9logUserLoginInfo.class);
+                    Terms.Bucket bucket = stbList.get(i);
+                    long count = bucket.getDocCount();
+                    Y9logUserLoginInfo y9logUserLoginInfo = ((Aggregate)bucket.getAggregations().get("topHits"))
+                        .topHits().hits().hits().get(0).source().to(Y9logUserLoginInfo.class);
                     map.put(Y9LogSearchConsts.USER_ID, y9logUserLoginInfo.getUserId());
                     map.put(Y9LogSearchConsts.USER_NAME, y9logUserLoginInfo.getUserName());
                     map.put("serverCount", String.valueOf(count));
                     strList.add(map);
                 }
+                return Y9Page.success(page, (int)Math.ceil((float)totalCount / (float)page), totalCount, strList);
             }
-            return Y9Page.success(page, (int)Math.ceil((float)totalCount / (float)page), totalCount, strList);
         } catch (ElasticsearchException e) {
-            LOGGER.error(e.getMessage(), e);
-        } catch (IOException e) {
-            LOGGER.error(e.getMessage(), e);
+            LOGGER.warn(e.getMessage(), e);
         }
+
         return null;
     }
 
@@ -334,7 +380,7 @@ public class Y9logUserLoginInfoCustomRepositoryImpl implements Y9logUserLoginInf
             .addSort(Sort.by(Direction.DESC, Y9LogSearchConsts.LOGIN_TIME));
 
         SearchHits<Y9logUserLoginInfo> searchHits =
-            elasticsearchTemplate.search(query, Y9logUserLoginInfo.class, INDEX);
+            elasticsearchOperations.search(query, Y9logUserLoginInfo.class, INDEX);
 
         List<Y9logUserLoginInfo> list = searchHits.stream().map(SearchHit::getContent).collect(Collectors.toList());
         int totalPages = (int)searchHits.getTotalHits() / rows;
@@ -387,7 +433,7 @@ public class Y9logUserLoginInfoCustomRepositoryImpl implements Y9logUserLoginInf
         }
         Query query = new CriteriaQuery(criteria).setPageable(pageable);
         SearchHits<Y9logUserLoginInfo> searchHits =
-            elasticsearchTemplate.search(query, Y9logUserLoginInfo.class, INDEX);
+            elasticsearchOperations.search(query, Y9logUserLoginInfo.class, INDEX);
         List<Y9logUserLoginInfo> list = searchHits.stream().map(SearchHit::getContent).collect(Collectors.toList());
         int totalPages = (int)searchHits.getTotalHits() / rows;
         return Y9Page.success(page, searchHits.getTotalHits() % rows == 0 ? totalPages : totalPages + 1,

@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import net.risesoft.elastic.entity.User;
 import net.risesoft.id.Y9IdGenerator;
+import net.risesoft.pojo.Y9Page;
 import net.risesoft.pojo.Y9Result;
 import net.risesoft.service.UserService;
 
@@ -18,11 +19,15 @@ import net.risesoft.service.UserService;
  * 描述：控制层
  */
 @Controller
-@RequestMapping("/")
 public class UserController {
 
     @Autowired
     private UserService userService;
+
+    @RequestMapping("/html")
+    public String html() {
+        return "index.html";
+    }
 
     /**
      * 获取最新一条数据
@@ -81,7 +86,7 @@ public class UserController {
 
     @GetMapping("/page")
     @ResponseBody
-    public Page<User> page(String name, String mobile, Integer page, Integer limit, Model model) {
+    public Y9Page<User> page(String name, String mobile, Integer page, Integer limit, Model model) {
         // 插入测试数据
         Iterable<User> list = userService.findAll();
         if (!list.iterator().hasNext()) {
@@ -97,6 +102,8 @@ public class UserController {
             user.setSex("男");
             user = userService.save(user);
         }
-        return userService.search(name, mobile, page, limit);
+        Page<User> pageList = userService.search(name, mobile, page, limit);
+        return Y9Page.success(page, pageList.getTotalPages(), pageList.getTotalElements(), pageList.getContent(),
+            "获取数据成功");
     }
 }

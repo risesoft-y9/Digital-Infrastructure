@@ -1,14 +1,21 @@
 package net.risesoft.y9public.repository.custom.impl;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Collections;
 import java.util.List;
 
-import org.springframework.context.annotation.DependsOn;
-import org.springframework.data.elasticsearch.client.elc.ElasticsearchTemplate;
+import org.elasticsearch.index.query.BoolQueryBuilder;
+import org.elasticsearch.index.query.QueryBuilders;
+import org.elasticsearch.search.aggregations.AggregationBuilders;
+import org.elasticsearch.search.aggregations.bucket.terms.Terms;
+import org.springframework.data.elasticsearch.core.ElasticsearchAggregations;
+import org.springframework.data.elasticsearch.core.ElasticsearchOperations;
+import org.springframework.data.elasticsearch.core.SearchHits;
+import org.springframework.data.elasticsearch.core.mapping.IndexCoordinates;
 import org.springframework.data.elasticsearch.core.query.Criteria;
 import org.springframework.data.elasticsearch.core.query.CriteriaQuery;
+import org.springframework.data.elasticsearch.core.query.NativeSearchQueryBuilder;
 import org.springframework.stereotype.Component;
 
 import lombok.RequiredArgsConstructor;
@@ -18,12 +25,11 @@ import net.risesoft.log.constant.Y9ESIndexConst;
 import net.risesoft.log.constant.Y9LogSearchConsts;
 import net.risesoft.y9.Y9LoginUserHolder;
 import net.risesoft.y9.util.Y9Util;
+import net.risesoft.y9public.entity.Y9ClickedApp;
 import net.risesoft.y9public.entity.Y9logAccessLog;
 import net.risesoft.y9public.repository.custom.Y9CommonAppForPersonCustomRepository;
 
-import co.elastic.clients.elasticsearch.ElasticsearchClient;
 import co.elastic.clients.elasticsearch._types.ElasticsearchException;
-import co.elastic.clients.elasticsearch.core.SearchRequest;
 
 /**
  *
@@ -35,34 +41,40 @@ import co.elastic.clients.elasticsearch.core.SearchRequest;
 @Component
 @Slf4j
 @RequiredArgsConstructor
-@DependsOn(value = "elasticsearchTemplate")
 public class Y9CommonAppForPersonCustomRepositoryImpl implements Y9CommonAppForPersonCustomRepository {
 
-    private final ElasticsearchTemplate elasticsearchTemplate;
-    private final ElasticsearchClient elasticsearchClient;
+    private static final IndexCoordinates INDEX = IndexCoordinates.of(Y9ESIndexConst.CLICKED_APP_INDEX);
+    private final ElasticsearchOperations elasticsearchOperations;
 
     @Override
     public List<String> getAppNamesByPersonId(String personId) {
-        SearchRequest searchRequest = SearchRequest.of(s -> s.index(Y9ESIndexConst.CLICKED_APP_INDEX)
-            .query(
-                q -> q.bool(b -> b.must(m -> m.queryString(qs -> qs.fields("personId").query(Y9Util.escape(personId))))
-                    .must(m -> m.queryString(qs -> qs.fields(Y9LogSearchConsts.TENANT_ID)
-                        .query(Y9Util.escape(Y9LoginUserHolder.getTenantId()))))))
-            .aggregations("by_appName", a -> a.terms(t -> t.field("appName").size(100000)))
-            .trackTotalHits(h -> h.enabled(true)));
+        BoolQueryBuilder boolQueryBuilder = QueryBuilders.boolQuery();
+        boolQueryBuilder.must(QueryBuilders.termQuery("personId", Y9Util.escape(personId)));
+        boolQueryBuilder
+            .must(QueryBuilders.termQuery(Y9LogSearchConsts.TENANT_ID, Y9Util.escape(Y9LoginUserHolder.getTenantId())));
+
+        NativeSearchQueryBuilder builder = new NativeSearchQueryBuilder();
+        builder.withQuery(boolQueryBuilder);
+        builder.withAggregations(AggregationBuilders.terms("by_appName").field("appName").size(100000));
+        builder.withTrackTotalHits(true);
 
         try {
             List<String> list = new ArrayList<>();
-            elasticsearchClient.search(searchRequest, Void.class).aggregations().get("by_appName").sterms().buckets()
-                .array().forEach(bucket -> {
-                    String appName = bucket.key().toString();
-                    list.add(appName);
+            SearchHits<Y9ClickedApp> searchHits =
+                elasticsearchOperations.search(builder.build(), Y9ClickedApp.class, INDEX);
+            ElasticsearchAggregations aggregations = (ElasticsearchAggregations)searchHits.getAggregations();
+            if (aggregations != null) {
+                Terms terms = aggregations.aggregations().get("by_appName");
+                List<? extends Terms.Bucket> buckets = terms.getBuckets();
+                buckets.forEach(bucket -> {
+                    list.add(bucket.getKeyAsString());
                 });
+            }
             return list;
-        } catch (ElasticsearchException | IOException e) {
+        } catch (ElasticsearchException e) {
             LOGGER.error(e.getMessage());
-            return null;
         }
+        return Collections.emptyList();
     }
 
     @Override
@@ -77,7 +89,7 @@ public class Y9CommonAppForPersonCustomRepositoryImpl implements Y9CommonAppForP
             .and(Y9LogSearchConsts.LOG_TIME).between(startTime, endTime);
         CriteriaQuery query = new CriteriaQuery(criteria);
         query.setTrackTotalHits(true);
-        return elasticsearchTemplate.count(query, Y9logAccessLog.class);
+        return elasticsearchOperations.count(query, Y9logAccessLog.class);
     }
 
 }

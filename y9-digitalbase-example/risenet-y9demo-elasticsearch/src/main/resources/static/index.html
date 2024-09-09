@@ -2,35 +2,69 @@
 <html>
 <head>
     <meta charset="utf-8">
-    <title>table模块快速使用</title>
-    <link href="/layui/css/layui.css" media="all" rel="stylesheet">
+    <title>搜索</title>
+    <link href="//unpkg.com/layui@2.9.16/dist/css/layui.css" rel="stylesheet">
 </head>
 <body>
 
 <table id="demo" lay-filter="test"></table>
-
-<script src="/layui/layui.js"></script>
+<script id="toolbarDemo" type="text/html">
+    <form class="layui-form" lay-filter="input2">
+        <div class="layui-form-item">
+            <label class="layui-form-label">姓名</label>
+            <div class="layui-input-block">
+                <input type="text" name="name" required lay-verify="required" placeholder="请输入标题"
+                       autocomplete="off" class="layui-input">
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <div class="layui-input-block">
+                <button class="layui-btn" lay-submit lay-filter="formDemo">搜索</button>
+            </div>
+        </div>
+    </form>
+</script>
+<script src="//unpkg.com/layui@2.9.16/dist/layui.js"></script>
 <script>
-    layui.use('table', function () {
+    layui.use(['table', 'form'], function () {
         var table = layui.table;
-
         //第一个实例
         table.render({
             elem: '#demo'
+            , toolbar: '#toolbarDemo'
             , height: 312
-            , url: './index/page' //数据接口
+            , url: './page' //数据接口
+            , response: {
+                msgName: 'msg' //规定状态信息的字段名称，默认：msg
+                , countName: 'total' //规定数据总数的字段名称，默认：count
+                , dataName: 'rows' //规定数据列表的字段名称，默认：data
+            }
             , page: true //开启分页
             , cols: [[ //表头
-                {field: 'id', title: 'ID', width: 80, sort: true, fixed: 'left'}
-                , {field: 'name', title: '用户名', width: 80}
-                , {field: 'sex', title: '性别', width: 80, sort: true}
-                , {field: 'age', title: '年龄', width: 80}
-                , {field: 'mobile', title: '电话', width: 177}
-                , {field: 'createTime', title: '创建时间', width: 80, sort: true}
+                {field: 'id', title: 'ID', width: 300, fixed: 'left'}
+                , {field: 'name', title: '用户名'}
+                , {field: 'sex', title: '性别'}
+                , {field: 'age', title: '年龄'}
+                , {field: 'mobile', title: '电话'}
+                , {field: 'createTime', title: '创建时间', sort: true}
             ]]
         });
 
+        var form = layui.form;
+
+        //监听提交
+        form.on('submit(formDemo)', function (data) {
+            table.reload('demo', {
+                where: data.field,
+                url: './page'
+            });
+            return false;
+        });
+
+
     });
+
+
 </script>
 </body>
 </html>
