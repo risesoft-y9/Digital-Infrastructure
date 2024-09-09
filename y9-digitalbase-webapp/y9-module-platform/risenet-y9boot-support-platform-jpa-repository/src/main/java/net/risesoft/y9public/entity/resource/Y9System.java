@@ -40,15 +40,15 @@ public class Y9System extends BaseEntity {
     @Comment("主键")
     private String id;
 
-    /** 开发商GUID */
-    @Column(name = "ISV_GUID", length = 38)
-    @Comment("开发商GUID")
-    private String isvGuid;
+    /** 租户id，如设置了表示是特定租户的系统 */
+    @Column(name = "TENANT_ID", length = 38)
+    @Comment("租户id，如设置了表示是租户特有系统")
+    private String tenantId;
 
-    /** 系统名称 */
+    /** 系统英文名称 */
     @NotBlank
     @Column(name = "NAME", length = 50, nullable = false, unique = true)
-    @Comment("系统名称")
+    @Comment("系统英文名称")
     private String name;
 
     /** 系统中文名称 */

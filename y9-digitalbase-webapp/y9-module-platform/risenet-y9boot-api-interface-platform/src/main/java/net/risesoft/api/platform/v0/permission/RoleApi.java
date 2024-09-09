@@ -45,16 +45,13 @@ public interface RoleApi {
      * @param parentId 父节点id
      * @param customId customId对应工作流的processDefineKey
      * @param type 角色类型，systemNode、tenantNode、node或者role
-     * @param systemName 系统标识
-     * @param systemCnName 系统中文名称
      * @return Role 角色对象
      * @since 9.6.0
      */
     @PostMapping("/createRoleNodeAddCustomId")
     Role createRole(@RequestParam("roleId") String roleId, @RequestParam("roleName") String roleName,
         @RequestParam("parentId") String parentId, @RequestParam("customId") String customId,
-        @RequestParam("type") String type, @RequestParam("systemName") String systemName,
-        @RequestParam("systemCnName") String systemCnName);
+        @RequestParam("type") String type);
 
     /**
      * 删除权限节点

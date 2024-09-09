@@ -6,7 +6,6 @@
  * @Description: 导入
  */
 import Request from '@/api/lib/request';
-import qs from 'qs';
 
 const platformRequest = Request();
 

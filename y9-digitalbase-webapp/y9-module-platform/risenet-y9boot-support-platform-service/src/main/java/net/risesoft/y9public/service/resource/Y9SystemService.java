@@ -114,6 +114,16 @@ public interface Y9SystemService {
      */
     List<Y9System> listByContextPath(String contextPath);
 
+    List<Y9System> listByIds(List<String> systemIdList);
+
+    /**
+     * 按租户ID获取系统列表
+     *
+     * @param tenantId 租户 ID
+     * @return {@code List<Y9System> }
+     */
+    List<Y9System> listByTenantId(String tenantId);
+
     /**
      * 分页查询系统列表
      *

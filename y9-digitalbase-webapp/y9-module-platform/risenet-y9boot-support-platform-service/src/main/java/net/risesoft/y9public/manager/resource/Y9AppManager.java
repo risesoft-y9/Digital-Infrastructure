@@ -2,8 +2,6 @@ package net.risesoft.y9public.manager.resource;
 
 import java.util.Optional;
 
-import org.springframework.transaction.annotation.Transactional;
-
 import net.risesoft.y9public.entity.resource.Y9App;
 
 /**
@@ -32,6 +30,5 @@ public interface Y9AppManager {
 
     Y9App save(Y9App y9App);
 
-    @Transactional(readOnly = false)
     Y9App updateTabIndex(String id, int index);
 }

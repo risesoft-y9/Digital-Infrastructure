@@ -9,10 +9,10 @@
 import settings from '@/settings';
 import y9_storage from '@/utils/storage';
 import axios from 'axios'; // 考虑CDN
-import { ElMessage } from 'element-plus';
+import {ElMessage} from 'element-plus';
 import i18n from '@/language/index';
-import { isExternal } from '@/utils/validate.ts';
-import { $y9_SSO } from '@/main';
+import {isExternal} from '@/utils/validate.ts';
+import {$y9_SSO} from '@/main';
 
 const { t } = i18n.global;
 

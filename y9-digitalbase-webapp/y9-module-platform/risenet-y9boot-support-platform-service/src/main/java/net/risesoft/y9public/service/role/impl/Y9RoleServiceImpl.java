@@ -23,10 +23,8 @@ import net.risesoft.y9.Y9LoginUserHolder;
 import net.risesoft.y9.pubsub.event.Y9EntityDeletedEvent;
 import net.risesoft.y9.util.Y9BeanUtil;
 import net.risesoft.y9public.entity.resource.Y9App;
-import net.risesoft.y9public.entity.resource.Y9System;
 import net.risesoft.y9public.entity.role.Y9Role;
 import net.risesoft.y9public.manager.resource.Y9AppManager;
-import net.risesoft.y9public.manager.resource.Y9SystemManager;
 import net.risesoft.y9public.manager.role.Y9RoleManager;
 import net.risesoft.y9public.repository.role.Y9RoleRepository;
 import net.risesoft.y9public.service.role.Y9RoleService;
@@ -47,19 +45,12 @@ public class Y9RoleServiceImpl implements Y9RoleService {
 
     private final Y9RoleManager y9RoleManager;
     private final Y9AppManager y9AppManager;
-    private final Y9SystemManager y9SystemManager;
 
     @Override
     @Transactional(readOnly = false)
     public Y9Role createRole(Y9Role y9Role) {
         if (StringUtils.isBlank(y9Role.getId())) {
             y9Role.setId(Y9IdGenerator.genId(IdType.SNOWFLAKE));
-        }
-        if (StringUtils.isEmpty(y9Role.getSystemName())) {
-            y9Role.setSystemName("");
-        }
-        if (StringUtils.isEmpty(y9Role.getSystemCnName())) {
-            y9Role.setSystemCnName("");
         }
         if (y9Role.getTabIndex() == null) {
             y9Role.setTabIndex(getNextTabIndex());
@@ -154,6 +145,12 @@ public class Y9RoleServiceImpl implements Y9RoleService {
     }
 
     @Override
+    public List<Y9Role> listByParentId4Tenant(String parentId, String tenantId) {
+        return y9RoleRepository.findByParentIdAndTenantIdOrParentIdAndTenantIdIsNullOrderByTabIndexAsc(parentId,
+            tenantId, parentId);
+    }
+
+    @Override
     public List<Y9Role> listByParentIdAndName(String parentId, String roleName) {
         return y9RoleRepository.findByParentIdAndName(parentId, roleName);
     }
@@ -193,12 +190,6 @@ public class Y9RoleServiceImpl implements Y9RoleService {
             Optional<Y9Role> y9RoleOptional = this.findById(y9Role.getId());
             if (y9RoleOptional.isPresent()) {
                 Y9Role originRole = y9RoleOptional.get();
-                boolean update = false;
-                String systemName = y9Role.getSystemName();
-                String oldSystemName = originRole.getSystemName();
-                if (StringUtils.isNotBlank(oldSystemName) && !systemName.equals(oldSystemName)) {
-                    update = true;
-                }
 
                 Y9BeanUtil.copyProperties(y9Role, originRole);
                 if (parent != null) {
@@ -211,29 +202,17 @@ public class Y9RoleServiceImpl implements Y9RoleService {
                     originRole.setDn(RoleLevelConsts.CN + y9Role.getName());
                     originRole.setGuidPath(y9Role.getId());
                 }
-                if (StringUtils.isBlank(y9Role.getAppCnName())) {
-                    // 公共角色特殊处理
-                    Y9App y9App = y9AppManager.getById(originRole.getAppId());
-                    originRole.setAppCnName(y9App.getName());
-                    Y9System y9System = y9SystemManager.getById(y9App.getSystemId());
-                    originRole.setSystemName(y9System.getName());
-                    originRole.setSystemCnName(y9System.getCnName());
+                if (StringUtils.isBlank(originRole.getAppId())) {
+                    originRole.setAppId(null);
                 }
-
-                Y9Role role = y9RoleManager.save(originRole);
-
-                if (update && StringUtils.isNotBlank(y9Role.getParentId())) {
-                    recursiveUpdate(role);
+                if (StringUtils.isBlank(originRole.getSystemId())) {
+                    originRole.setSystemId(null);
                 }
-                return role;
+                return y9RoleManager.save(originRole);
             }
         }
         y9Role.setId(Y9IdGenerator.genId(IdType.SNOWFLAKE));
-        if (StringUtils.isEmpty(y9Role.getSystemName())) {
-            y9Role.setSystemName("");
-        }
         y9Role.setTabIndex(getNextTabIndex());
-        y9Role.setSystemCnName(y9Role.getSystemCnName());
         if (parent != null) {
             y9Role.setParentId(parent.getId());
             y9Role.setDn(RoleLevelConsts.CN + y9Role.getName() + RoleLevelConsts.SEPARATOR + parent.getDn());
@@ -243,16 +222,16 @@ public class Y9RoleServiceImpl implements Y9RoleService {
             y9Role.setDn(RoleLevelConsts.CN + y9Role.getName());
             y9Role.setGuidPath(y9Role.getId());
         }
-        if (StringUtils.isBlank(y9Role.getAppCnName())) {
-            // 公共角色特殊处理
+        if (StringUtils.isNotBlank(y9Role.getAppId())) {
             Y9App y9App = y9AppManager.getById(y9Role.getAppId());
-            y9Role.setAppCnName(y9App.getName());
-            Y9System y9System = y9SystemManager.getById(y9App.getSystemId());
-            y9Role.setSystemName(y9System.getName());
-            y9Role.setSystemCnName(y9System.getCnName());
+            y9Role.setSystemId(y9App.getSystemId());
         }
+
         if (!InitDataConsts.TOP_PUBLIC_ROLE_ID.equals(y9Role.getParentId())) {
             y9Role.setTenantId(Y9LoginUserHolder.getTenantId());
+        }
+        if (InitDataConsts.OPERATION_TENANT_ID.equals(Y9LoginUserHolder.getTenantId())) {
+            y9Role.setTenantId(null);
         }
         return y9RoleManager.save(y9Role);
     }
@@ -310,21 +289,12 @@ public class Y9RoleServiceImpl implements Y9RoleService {
         if (StringUtils.isEmpty(parentId)) {
             return;
         }
-        Y9Role parentNode = this.getById(parentId);
-        roleSet.add(parentNode);
-        fillRolesRecursivelyToRoot(parentNode.getParentId(), roleSet);
-    }
-
-    @Transactional(readOnly = false)
-    public void recursiveUpdate(Y9Role y9Role) {
-        List<Y9Role> childrenList = listByParentId(y9Role.getId());
-        if (!childrenList.isEmpty()) {
-            for (Y9Role childrenRole : childrenList) {
-                Y9Role oldRole = y9RoleManager.getById(childrenRole.getId());
-                oldRole.setSystemName(y9Role.getSystemName());
-                saveOrUpdate(oldRole);
-                recursiveUpdate(oldRole);
-            }
+        // parentId 可能为 appId
+        Optional<Y9Role> y9RoleOptional = this.findById(parentId);
+        if (y9RoleOptional.isPresent()) {
+            Y9Role parentNode = y9RoleOptional.get();
+            roleSet.add(parentNode);
+            fillRolesRecursivelyToRoot(parentNode.getParentId(), roleSet);
         }
     }
 

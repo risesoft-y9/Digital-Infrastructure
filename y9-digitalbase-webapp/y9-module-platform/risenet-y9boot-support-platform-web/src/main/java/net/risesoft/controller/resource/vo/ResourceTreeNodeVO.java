@@ -8,7 +8,10 @@ import lombok.Setter;
 
 import net.risesoft.controller.TreeNodeVO;
 import net.risesoft.controller.TreeTypeEnum;
+import net.risesoft.enums.platform.ResourceTypeEnum;
+import net.risesoft.enums.platform.TreeNodeType;
 import net.risesoft.y9public.entity.resource.Y9ResourceBase;
+import net.risesoft.y9public.entity.resource.Y9System;
 
 /**
  * 资源树节点vo
@@ -28,13 +31,19 @@ public class ResourceTreeNodeVO extends TreeNodeVO {
     private String systemId;
     /** 是否启用 */
     private Boolean enabled;
+    /** 租户id */
+    private String tenantId;
 
     public static ResourceTreeNodeVO convertY9ResourceBase(Y9ResourceBase y9ResourceBase) {
         ResourceTreeNodeVO resourceTreeNodeVO = new ResourceTreeNodeVO();
         resourceTreeNodeVO.setId(y9ResourceBase.getId());
         resourceTreeNodeVO.setAppId(y9ResourceBase.getAppId());
         resourceTreeNodeVO.setName(y9ResourceBase.getName());
-        resourceTreeNodeVO.setParentId(y9ResourceBase.getParentId());
+        if (ResourceTypeEnum.APP.equals(y9ResourceBase.getResourceType())) {
+            resourceTreeNodeVO.setParentId(y9ResourceBase.getSystemId());
+        } else {
+            resourceTreeNodeVO.setParentId(y9ResourceBase.getParentId());
+        } 
         resourceTreeNodeVO.setTabIndex(y9ResourceBase.getTabIndex());
         resourceTreeNodeVO.setHasChild(true);
         resourceTreeNodeVO.setNodeType(y9ResourceBase.getResourceType().toString());
@@ -50,6 +59,29 @@ public class ResourceTreeNodeVO extends TreeNodeVO {
             roleTreeNodeVOList.add(convertY9ResourceBase(y9ResourceBase));
         }
         return roleTreeNodeVOList;
+    }
+
+    public static ResourceTreeNodeVO convertY9System(Y9System y9System) {
+        ResourceTreeNodeVO resourceTreeNodeVO = new ResourceTreeNodeVO();
+        resourceTreeNodeVO.setId(y9System.getId());
+        resourceTreeNodeVO.setAppId(null);
+        resourceTreeNodeVO.setName(y9System.getCnName());
+        resourceTreeNodeVO.setParentId(null);
+        resourceTreeNodeVO.setTabIndex(y9System.getTabIndex());
+        resourceTreeNodeVO.setHasChild(true);
+        resourceTreeNodeVO.setNodeType(TreeNodeType.SYSTEM.toString());
+        resourceTreeNodeVO.setSystemId(null);
+        resourceTreeNodeVO.setEnabled(y9System.getEnabled());
+        resourceTreeNodeVO.setTenantId(y9System.getTenantId());
+        return resourceTreeNodeVO;
+    }
+
+    public static List<ResourceTreeNodeVO> convertY9SystemList(List<Y9System> y9SystemList) {
+        List<ResourceTreeNodeVO> resourceTreeNodeVOList = new ArrayList<>();
+        for (Y9System y9System : y9SystemList) {
+            resourceTreeNodeVOList.add(convertY9System(y9System));
+        }
+        return resourceTreeNodeVOList;
     }
 
     @Override

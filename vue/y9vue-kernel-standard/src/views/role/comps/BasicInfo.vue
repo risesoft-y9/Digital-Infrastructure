@@ -76,7 +76,7 @@
                 type1: 'text', //自定义字段-编辑时显示的类型
                 type2: 'text', //自定义字段-非编辑状态显示文本类型
                 prop: 'tenantId',
-                label: computed(() => t('租户唯一标识')),
+                label: computed(() => t('所属租户ID')),
                 props: {
                     render: () => {
                         //text类型渲染的内容
@@ -105,38 +105,7 @@
                 props: {
                     render: () => {
                         //text类型渲染的内容
-                        return basicInfo.value.resourceType != 0
-                            ? h(
-                                  'span',
-                                  {
-                                      style: {
-                                          wordBreak: 'break-all'
-                                      }
-                                  },
-                                  basicInfo.value?.systemName
-                              )
-                            : h(
-                                  'span',
-                                  {
-                                      style: {
-                                          wordBreak: 'break-all'
-                                      }
-                                  },
-                                  basicInfo.value?.systemId
-                              );
-                    }
-                }
-            },
-            {
-                type: 'text',
-                type1: 'text', //自定义字段-编辑时显示的类型
-                type2: 'text', //自定义字段-非编辑状态显示文本类型
-                prop: 'systemCnName',
-                label: computed(() => t('系统中文名称')),
-                props: {
-                    render: () => {
-                        //text类型渲染的内容
-                        return h('span', basicInfo.value?.systemCnName);
+                        return h('span', basicInfo.value?.systemId);
                     }
                 }
             },

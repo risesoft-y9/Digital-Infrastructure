@@ -99,7 +99,7 @@ public class SystemApiImpl implements SystemApi {
 
         try {
             Y9System y9System = new Y9System();
-            y9System.setIsvGuid(isvGuid);
+            y9System.setTenantId(isvGuid);
             y9System.setName(name);
             y9System.setCnName(cnName);
             y9System.setContextPath(contextPath);

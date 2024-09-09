@@ -8,7 +8,7 @@
 <template>
     <y9Card :title="`${$t('基本信息')} - ${currTreeNodeInfo.name ? currTreeNodeInfo.name : ''}`">
         <template v-slot>
-            <div class="basic-btns">
+            <div v-show="currTreeNodeInfo.isManageable" class="basic-btns">
                 <span v-if="editBtnFlag">
                     <el-button
                         :size="fontSizeObj.buttonSize"
@@ -130,7 +130,7 @@
 
 <script lang="ts" setup>
     import { computed, h, inject, onMounted, ref, watch } from 'vue';
-    import { ElMessage, ElMessageBox, ElNotification } from 'element-plus';
+    import { ElNotification } from 'element-plus';
     import y9_storage from '@/utils/storage';
     import { useI18n } from 'vue-i18n';
     import {

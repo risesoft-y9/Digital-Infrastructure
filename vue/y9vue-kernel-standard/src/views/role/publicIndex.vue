@@ -417,10 +417,6 @@
         customId: '',
         description: '',
         properties: '',
-        systemCnName: '系统公共顶节点',
-        systemName: 'Y9OrgHierarchyManagement',
-        appCnName: '系统公共角色',
-        appId: '',
         type: 'role',
         parentId: ''
     });
@@ -439,18 +435,8 @@
             },
             {
                 type: 'input',
-                prop: 'systemName',
-                label: computed(() => t('系统名称'))
-            },
-            {
-                type: 'input',
-                prop: 'systemCnName',
-                label: computed(() => t('系统中文名称'))
-            },
-            {
-                type: 'input',
                 prop: 'customId',
-                label: computed(() => t('ID'))
+                label: computed(() => t('自定义ID'))
             },
             {
                 type: 'textarea',
@@ -480,10 +466,6 @@
             customId: '',
             description: '',
             properties: '',
-            systemCnName: '系统公共顶节点',
-            systemName: 'Y9OrgHierarchyManagement',
-            appCnName: '系统公共角色',
-            appId: '',
             type: 'role',
             parentId: ''
         };
@@ -506,7 +488,6 @@
                         const params = {
                             ...roleFormRef.value?.model
                         };
-                        params.appId = currData.value.id;
                         params.parentId = currData.value.id;
                         await saveOrUpdate(params)
                             .then(async (result) => {
@@ -540,10 +521,6 @@
                             customId: '',
                             description: '',
                             properties: '',
-                            systemCnName: '系统公共顶节点',
-                            systemName: 'Y9OrgHierarchyManagement',
-                            appCnName: '系统公共角色',
-                            appId: '',
                             type: 'role',
                             parentId: ''
                         };

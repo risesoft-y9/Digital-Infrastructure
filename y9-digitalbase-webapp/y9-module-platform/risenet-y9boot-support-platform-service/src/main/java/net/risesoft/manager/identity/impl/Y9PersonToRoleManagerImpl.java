@@ -51,15 +51,20 @@ public class Y9PersonToRoleManagerImpl implements Y9PersonToRoleManager {
         Optional<Y9PersonToRole> personToRoleOptional =
             y9PersonToRoleRepository.findByPersonIdAndRoleId(person.getId(), role.getId());
         if (personToRoleOptional.isEmpty()) {
-            Y9PersonToRole matrix = new Y9PersonToRole();
-            matrix.setId(Y9IdGenerator.genId());
-            matrix.setTenantId(person.getTenantId());
-            matrix.setPersonId(person.getId());
-            matrix.setRoleId(role.getId());
-            matrix.setAppId(role.getAppId());
-
-            y9PersonToRoleRepository.save(matrix);
-        }
+            Y9PersonToRole y9PersonToRole = new Y9PersonToRole();
+            y9PersonToRole.setId(Y9IdGenerator.genId());
+            y9PersonToRole.setTenantId(person.getTenantId());
+            y9PersonToRole.setPersonId(person.getId());
+            y9PersonToRole.setRoleId(role.getId());
+            y9PersonToRole.setAppId(role.getAppId());
+            y9PersonToRole.setSystemId(role.getSystemId());
+            y9PersonToRoleRepository.save(y9PersonToRole);
+        } else {
+            Y9PersonToRole y9PersonToRole = personToRoleOptional.get();
+            y9PersonToRole.setAppId(role.getAppId());
+            y9PersonToRole.setSystemId(role.getSystemId());
+            y9PersonToRoleRepository.save(y9PersonToRole);
+        } 
     }
 
 }

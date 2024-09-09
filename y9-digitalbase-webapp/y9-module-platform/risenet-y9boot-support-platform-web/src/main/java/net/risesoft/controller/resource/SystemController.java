@@ -1,5 +1,6 @@
 package net.risesoft.controller.resource;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.validation.constraints.NotBlank;
@@ -37,7 +38,8 @@ import net.risesoft.y9public.service.tenant.Y9TenantSystemService;
 @RestController
 @RequestMapping(value = "/api/rest/system", produces = MediaType.APPLICATION_JSON_VALUE)
 @RequiredArgsConstructor
-@IsManager({ManagerLevelEnum.SYSTEM_MANAGER, ManagerLevelEnum.OPERATION_SYSTEM_MANAGER})
+@IsManager({ManagerLevelEnum.SYSTEM_MANAGER, ManagerLevelEnum.OPERATION_SYSTEM_MANAGER,
+    ManagerLevelEnum.SECURITY_MANAGER})
 public class SystemController {
 
     private final Y9SystemService y9SystemService;
@@ -96,36 +98,19 @@ public class SystemController {
     /**
      * 获取系统列表
      *
-     * @return {@code Y9Result<List<}{@link Y9System}{@code >>}
-     */
-    @RiseLog(operationName = "获取系统列表")
-    @GetMapping(value = "/list")
-    @Deprecated
-    public Y9Result<List<Y9System>> list() {
-        return Y9Result.success(y9SystemService.listAll(), "获取系统列表成功");
-    }
-
-    /**
-     * 获取系统列表
-     *
      * @return {@code Y9Result<List<}{@link SystemTreeNodeVO}{@code >>}
      */
     @RiseLog(operationName = "获取系统列表")
     @GetMapping(value = "/list2")
     public Y9Result<List<SystemTreeNodeVO>> list2() {
-        return Y9Result.success(SystemTreeNodeVO.convertY9SystemList(y9SystemService.listAll()), "获取系统列表成功");
-    }
-
-    /**
-     * 根据系统中文名称，模糊搜索系统列表
-     *
-     * @param systemCnName 系统中文名称
-     * @return {@code Y9Result<List<}{@link Y9System}{@code >>}
-     */
-    @RiseLog(operationName = "根据系统中文名称，模糊搜索系统列表")
-    @GetMapping(value = "/listByCnName")
-    public Y9Result<List<Y9System>> listByCnName(String systemCnName) {
-        return Y9Result.success(y9SystemService.listByCnNameContaining(systemCnName), "获取系统列表成功");
+        List<Y9System> y9SystemList = new ArrayList<>();
+        if (ManagerLevelEnum.SYSTEM_MANAGER.equals(Y9LoginUserHolder.getUserInfo().getManagerLevel())) {
+            y9SystemList = y9TenantSystemService.listSystemByTenantId(Y9LoginUserHolder.getTenantId());
+        } else if (ManagerLevelEnum.OPERATION_SYSTEM_MANAGER
+            .equals(Y9LoginUserHolder.getUserInfo().getManagerLevel())) {
+            y9SystemList = y9SystemService.listAll();
+        }
+        return Y9Result.success(SystemTreeNodeVO.convertY9SystemList(y9SystemList), "获取系统列表成功");
     }
 
     /**
@@ -137,6 +122,7 @@ public class SystemController {
     @RiseLog(operationName = "保存系统")
     @PostMapping(value = "/save")
     public Y9Result<Y9System> save(@Validated Y9System y9System) {
+        y9System.setTenantId(Y9LoginUserHolder.getTenantId());
         Y9System savedSystem = y9SystemService.saveAndRegister4Tenant(y9System);
         return Y9Result.success(savedSystem, "保存系统成功");
     }

@@ -19,9 +19,12 @@
                 <div v-if="currData.id">
                     <y9Card :title="`${$t('基本信息')} - ${currData.name ? currData.name : ''}`">
                         <template v-slot>
-                            <div v-if="managerLevel === 1" class="basic-btns">
+                            <div v-show="currData.isManageable" class="basic-btns">
                                 <div class="btn-top">
-                                    <span v-if="currData.nodeType !== 'APP'" style="margin-right: 15px">
+                                    <span
+                                        v-if="currData.nodeType == 'role' || currData.nodeType == 'folder'"
+                                        style="margin-right: 15px"
+                                    >
                                         <el-button
                                             v-if="editBtnFlag"
                                             :size="fontSizeObj.buttonSize"
@@ -56,7 +59,7 @@
                                             </el-button>
                                         </span>
                                     </span>
-                                    <span v-if="currData.nodeType !== 'role'">
+                                    <span v-if="currData.nodeType == 'APP' || currData.nodeType == 'folder'">
                                         <el-button
                                             :size="fontSizeObj.buttonSize"
                                             :style="{ fontSize: fontSizeObj.baseFontSize }"
@@ -81,7 +84,7 @@
                                 </div>
                                 <div>
                                     <el-button
-                                        v-if="currData.nodeType !== 'role'"
+                                        v-if="currData.nodeType == 'APP' || currData.nodeType == 'folder'"
                                         :size="fontSizeObj.buttonSize"
                                         :style="{ fontSize: fontSizeObj.baseFontSize }"
                                         class="global-btn-second"
@@ -92,7 +95,7 @@
                                     </el-button>
                                     <!-- v-if="currData.resourceType !== 0" -->
                                     <el-button
-                                        v-if="currData.nodeType !== 'APP'"
+                                        v-if="currData.nodeType == 'role' || currData.nodeType == 'folder'"
                                         :size="fontSizeObj.buttonSize"
                                         :style="{ fontSize: fontSizeObj.baseFontSize }"
                                         class="global-btn-second"
@@ -118,11 +121,17 @@
                                 </div>
                             </div>
                             <BasicInfo
+                              v-if="currData.nodeType === 'folder' || currData.nodeType === 'role' || currData.nodeType === 'APP'"
                                 :id="currData.id"
                                 :editFlag="editBtnFlag"
                                 :saveClickFlag="saveBtnClick"
                                 :type="currData.nodeType"
                                 @getInfoData="handlerEditSave"
+                            />
+                            <SystemBasicInfo
+                              v-if="currData.nodeType === 'SYSTEM'"
+                                :id="currData.id"
+                                :editFlag="true"
                             />
                         </template>
                     </y9Card>
@@ -315,6 +324,7 @@
         getResourceTree,
         removeAuthPermissionRecord,
         removeOrgUnits,
+        roleTree,
         roleTreeList,
         saveMoveRole,
         saveOrder,
@@ -324,9 +334,10 @@
         treeSelect
     } from '@/api/role/index';
     import { getTreeItemById, searchByName, treeInterface } from '@/api/org/index';
-    import { appTreeRoot, resourceTreeList, resourceTreeRoot, treeSearch } from '@/api/resource/index';
+    import { appTreeRoot, resourceTreeRoot, treeSearch } from '@/api/resource/index';
     // 基本信息
     import BasicInfo from './comps/BasicInfo.vue';
+    import SystemBasicInfo from '@/views/system/comps/BasicInfo.vue';
     import { useSettingStore } from '@/store/modules/settingStore';
     import { useI18n } from 'vue-i18n';
 
@@ -410,22 +421,16 @@
     function handlerTreeClick(data) {
         // 将拿到的节点信息 储存起来
         currData.value = data;
-        // if (currData.value.nodeType === 'App') {
-        //     currData.value.resourceType = 0;
-        // } else {
-        //     currData.value.resourceType = data.resourceType;
-        // }
     }
 
     // 树 ref
     const fixedTreeRef = ref();
     // 树的一级 子级的请求接口函数
     const treeApiObj = ref({
-        topLevel: resourceTreeList,
+        topLevel: roleTree,
         childLevel: {
             //子级（二级及二级以上）tree接口
-            api: roleTreeList,
-            params: {}
+            api: roleTree
         },
         search: {
             //搜索接口及参数
