@@ -11,6 +11,7 @@ import org.apache.commons.collections4.CollectionUtils;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
+import net.risesoft.consts.InitDataConsts;
 import net.risesoft.dao.MultiTenantDao;
 import net.risesoft.model.platform.TenantApp;
 import net.risesoft.model.platform.TenantSystem;
@@ -59,6 +60,7 @@ public class DbScanner {
                 Y9EventCommon tenantDataSourceSyncEvent = new Y9EventCommon();
                 tenantDataSourceSyncEvent.setEventType(Y9CommonEventConst.TENANT_DATASOURCE_SYNC);
                 tenantDataSourceSyncEvent.setEventObject(Y9CommonEventConst.TENANT_DATASOURCE_SYNC);
+                tenantDataSourceSyncEvent.setTarget(y9TenantDataSourceLookup.getSystemName());
                 Y9Context.publishEvent(tenantDataSourceSyncEvent);
 
                 if (LOGGER.isDebugEnabled()) {
@@ -95,6 +97,7 @@ public class DbScanner {
             Y9EventCommon tenantSystemRegisteredEvent = new Y9EventCommon();
             tenantSystemRegisteredEvent.setEventType(Y9CommonEventConst.TENANT_SYSTEM_REGISTERED);
             tenantSystemRegisteredEvent.setEventObject(tenantSystem);
+            tenantSystemRegisteredEvent.setTarget(y9TenantDataSourceLookup.getSystemName());
             Y9Context.publishEvent(tenantSystemRegisteredEvent);
 
             if (LOGGER.isDebugEnabled()) {
@@ -105,11 +108,14 @@ public class DbScanner {
         // 获取已移除的系统租用租户发送事件
         Set<String> allTenantIdSet =
             tenantSystemList.stream().map(TenantSystem::getTenantId).collect(Collectors.toSet());
+        // 特殊的默认租户
+        allTenantIdSet.add(InitDataConsts.TENANT_ID);
         Collection<String> removedTenantIds = CollectionUtils.subtract(loadedTenantIdSet, allTenantIdSet);
         if (!removedTenantIds.isEmpty()) {
             Y9EventCommon tenantDataSourceSyncEvent = new Y9EventCommon();
             tenantDataSourceSyncEvent.setEventType(Y9CommonEventConst.TENANT_DATASOURCE_SYNC);
             tenantDataSourceSyncEvent.setEventObject(Y9CommonEventConst.TENANT_DATASOURCE_SYNC);
+            tenantDataSourceSyncEvent.setTarget(y9TenantDataSourceLookup.getSystemName());
             Y9Context.publishEvent(tenantDataSourceSyncEvent);
 
             if (LOGGER.isDebugEnabled()) {

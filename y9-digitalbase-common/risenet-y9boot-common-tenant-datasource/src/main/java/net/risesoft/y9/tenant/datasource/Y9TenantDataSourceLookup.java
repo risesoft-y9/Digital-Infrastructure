@@ -162,9 +162,7 @@ public class Y9TenantDataSourceLookup implements DataSourceLookup {
 
         if (LOGGER.isDebugEnabled()) {
             if (previousDataSource == null) {
-                LOGGER.debug("添加租户[{}]的数据源", tenantId);
-            } else {
-                LOGGER.debug("更新租户[{}]的数据源", tenantId);
+                LOGGER.debug("添加系统[{}]的租户[{}]的数据源", systemName, tenantId);
             }
         }
     }
@@ -285,7 +283,7 @@ public class Y9TenantDataSourceLookup implements DataSourceLookup {
         }
 
         if (LOGGER.isDebugEnabled()) {
-            LOGGER.debug("移除租户[{}]的数据源", removedTenantId);
+            LOGGER.debug("移除系统[{}]租户[{}]的数据源", systemName, removedTenantId);
         }
     }
 }
