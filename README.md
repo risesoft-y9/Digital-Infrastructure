@@ -19,7 +19,7 @@
 
 ## 开源地址
 
-源码地址：https://github.com/risesoft-y9/Digital-Infrastructure
+源码地址：<https://github.com/risesoft-y9/Digital-Infrastructure>
 
 ## 源码目录
 
@@ -244,7 +244,7 @@ webapp -- 系统公共模块
 
 ## 在线体验
 
-演示地址：https://demo.youshengyun.com/kernel-standard/
+演示地址：<https://demo.youshengyun.com/kernel-standard/>
 
 > 演示账号：
 >
@@ -257,7 +257,7 @@ webapp -- 系统公共模块
 
 ## 私有化部署
 
-地址：https://demo.youshengyun.com/y9vue-code/
+地址：<https://demo.youshengyun.com/y9vue-code/>
 > 包含数字底座使用中间件的安装教程、数字底座重要配置讲解，进行本地化部署务必要浏览该网站，会少走弯路。
 
 > **系统管理员：systemManager**
