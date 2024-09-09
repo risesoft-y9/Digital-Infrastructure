@@ -102,10 +102,9 @@ spring:
                     batch_size: 100
                 show_sql: true
     elasticsearch:
-        rest:
-            uris: localhost:9200
-            username: elastic
-            password: 'risesoft'
+        uris: localhost:9200
+        username: elastic
+        password: 'risesoft'
     kafka:
         bootstrap-servers: localhost:9092
         consumer:
@@ -139,11 +138,11 @@ y9:
             kafkaEnabled: false
     service:
         org:
-            directUrl: http://localhost:7055
+            directUrl: https://test-api.youshengyun.com
     common:
         kafkaEnabled: false
-        logBaseUrl: http://localhost:7056/log
-        orgBaseUrl: http://localhost:7055/platform
+        logBaseUrl: https://test-api.youshengyun.com/log
+        orgBaseUrl: https://test-api.youshengyun.com/platform
     feature:
         apisix:
             enabled: false
@@ -190,5 +189,5 @@ y9:
                 opaque:
                     client-id: clientid
                     client-secret: secret
-                    introspection-uri: http://localhost:7055/sso/oauth2.0/introspect
-                    profile-uri: http://localhost:7055/sso/oauth2.0/profile
+                    introspection-uri: https://test.youshengyun.com/sso/oauth2.0/introspect
+                    profile-uri: https://test.youshengyun.com/sso/oauth2.0/profile
