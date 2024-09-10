@@ -7,7 +7,7 @@ spring:
                 namespace: test
                 server-addr: nacos:8848
                 username: nacos
-                password: Risesoft@2024
+                password: ${NACOS_PASSWORD:111111}
     config:
         import:
             - optional:nacos:fileManager.yml
