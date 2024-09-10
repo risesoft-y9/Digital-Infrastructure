@@ -1,7 +1,6 @@
 package net.risesoft.y9public.controller;
 
 import java.io.File;
-import java.io.IOException;
 import java.net.URLEncoder;
 
 import javax.annotation.PostConstruct;
@@ -12,17 +11,12 @@ import javax.servlet.http.HttpServletResponse;
 import org.apache.commons.io.FileUtils;
 import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
-
-import com.fabriceci.fmc.error.FMInitializationException;
-import com.fabriceci.fmc.error.FileManagerException;
-import com.fabriceci.fmc.impl.LocalFileManager;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -35,11 +29,7 @@ import net.risesoft.y9public.repository.Y9FileStoreRepository;
 @RequiredArgsConstructor
 public class Y9FileController {
 
-    private String fileRoot = "d:/y9config";
-
     private String fileStoreRoot = "d:/y9config/y9filestore";
-
-    private LocalFileManager localFileManager = null;
 
     private final Y9FileStoreRepository fileRepository;
 
@@ -69,19 +59,10 @@ public class Y9FileController {
         downloadFile(realStoreFileName, request, response);
     }
 
-    // 等同于 /api?mode=download&path=
-    @RequestMapping(value = "/download")
-    public void download(String path, HttpServletResponse response) throws Exception {
-        String s = path;
-        if (!s.startsWith("/")) {
-            s = "/" + s;
-        }
-        localFileManager.actionDownload(response, s);
-    }
-
     @RequestMapping(value = "/s")
-    public void download2(@RequestParam String realStoreFileName, HttpServletResponse response) throws Exception {
-        download(realStoreFileName, response);
+    public void download2(@RequestParam String realStoreFileName, HttpServletRequest request,
+        HttpServletResponse response) throws Exception {
+        downloadFile(realStoreFileName, request, response);
     }
 
     /**
@@ -154,27 +135,9 @@ public class Y9FileController {
         download(realStoreFileName, request, response);
     }
 
-    @RequestMapping(value = "/api")
-    public void handleRequest(HttpServletRequest request, HttpServletResponse response)
-        throws IOException, FileManagerException {
-        localFileManager.handleRequest(request, response);
-    }
-
-    @GetMapping(value = {"/index", ""})
-    public String index() {
-        return "index";
-    }
-
     @PostConstruct
     public void init() {
         this.fileStoreRoot = environment.getProperty("y9.app.fileManager.fileRoot", "d:/y9config/y9filestore");
-        try {
-            localFileManager = new LocalFileManager();
-            fileRoot = localFileManager.getPropertiesConfig().getProperty("fileRoot", fileRoot);
-        } catch (FMInitializationException e) {
-            e.printStackTrace();
-            System.exit(-1);
-        }
     }
 
     @RequestMapping(value = "/rest/retrieveFileStream")
