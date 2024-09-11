@@ -19,7 +19,25 @@ public interface UserService {
 
     Iterable<User> findAll();
 
-    User findTopByOrderByIdDesc();
-
+    /**
+     * Criteria查询
+     * 
+     * @param name
+     * @param mobile
+     * @param page
+     * @param rows
+     * @return
+     */
     Page<User> search(String name, String mobile, Integer page, Integer rows);
+
+    /**
+     * NativeSearchQueryBuilder查询
+     * 
+     * @param name
+     * @param mobile
+     * @param page
+     * @param rows
+     * @return
+     */
+    Page<User> search2(String name, String mobile, Integer page, Integer rows);
 }

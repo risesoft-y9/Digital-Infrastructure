@@ -7,6 +7,8 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 
 import org.apache.commons.lang3.StringUtils;
+import org.elasticsearch.index.query.BoolQueryBuilder;
+import org.elasticsearch.index.query.QueryBuilders;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
@@ -17,6 +19,7 @@ import org.springframework.data.elasticsearch.core.SearchHit;
 import org.springframework.data.elasticsearch.core.SearchHits;
 import org.springframework.data.elasticsearch.core.query.Criteria;
 import org.springframework.data.elasticsearch.core.query.CriteriaQuery;
+import org.springframework.data.elasticsearch.core.query.NativeSearchQueryBuilder;
 import org.springframework.data.elasticsearch.core.query.Query;
 import org.springframework.stereotype.Service;
 
@@ -53,11 +56,6 @@ public class UserServiceImpl implements UserService {
     @Override
     public User findById(String id) {
         return userRepository.findById(id).orElse(null);
-    }
-
-    @Override
-    public User findTopByOrderByIdDesc() {
-        return userRepository.findTopByOrderByIdDesc();
     }
 
     @Override
@@ -105,4 +103,24 @@ public class UserServiceImpl implements UserService {
         return pageResult;
     }
 
+    @Override
+    public Page<User> search2(String name, String mobile, Integer page, Integer rows) {
+        Sort sort = Sort.by(Sort.Direction.DESC, "createTime");
+        Pageable pageable = PageRequest.of((page < 1) ? 0 : page - 1, rows, sort);
+        BoolQueryBuilder boolQueryBuilder = QueryBuilders.boolQuery();
+        if (StringUtils.isNotBlank(name)) {
+            boolQueryBuilder.must(QueryBuilders.wildcardQuery("title", "*" + name + "*"));
+        }
+        if (StringUtils.isNotBlank(mobile)) {
+            boolQueryBuilder.must(QueryBuilders.wildcardQuery("mobile", "*" + mobile + "*"));
+        }
+        NativeSearchQueryBuilder builder = new NativeSearchQueryBuilder();
+        builder.withQuery(boolQueryBuilder);
+        builder.withPageable(pageable);
+        builder.withTrackTotalHits(true);
+        SearchHits<User> search = elasticsearchOperations.search(builder.build(), User.class);
+        List<User> list = search.stream().map(SearchHit::getContent).collect(Collectors.toList());
+        Page<User> pageResult = new PageImpl<>(list, pageable, search.getTotalHits());
+        return pageResult;
+    }
 }
