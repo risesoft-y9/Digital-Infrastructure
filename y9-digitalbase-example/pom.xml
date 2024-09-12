@@ -22,6 +22,8 @@
         <module>risenet-y9demo-file</module>
         <module>risenet-y9demo-idcode</module>
         <module>risenet-y9demo-cache</module>
+        <module>risenet-y9demo-elasticsearch</module>
+        <module>risenet-y9demo-data-jpa</module>
     </modules>
 
     <profiles>

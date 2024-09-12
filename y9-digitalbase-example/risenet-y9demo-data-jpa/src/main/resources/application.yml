@@ -1,0 +1,99 @@
+server:
+    port: 8080
+    servlet:
+        encoding:
+            charset: UTF-8
+            enabled: true
+            force: true
+            force-request: true
+            force-response: true
+        context-path: /y9demo-dataJpa
+spring:
+    application:
+        name: y9demo-dataJpa
+    autoconfigure:
+        exclude:
+            - org.springframework.boot.autoconfigure.jdbc.DataSourceAutoConfiguration
+            - org.springframework.boot.autoconfigure.orm.jpa.HibernateJpaAutoConfiguration
+    data:
+        jpa:
+            repositories:
+                bootstrap-mode: default
+                enabled: false
+    datasource:
+        druid:
+            filter:
+                stat:
+                    log-slow-sql: true
+                    mergeSql: true
+                    slow-sql-millis: 3000
+                wall:
+                    config:
+                        drop-table-allow: false
+                    enabled: true
+            stat-view-servlet:
+                enabled: false
+                url-pattern: /druid/*
+                login-username: admin
+                login-password: admin
+                reset-enable: false
+                allow: 127.0.0.1
+            web-stat-filter:
+                enabled: false
+                url-pattern: /*
+                exclusions: '*.js,*.gif,*.jpg,*.png,*.css,*.ico,/druid/*,/static/*'
+            y9-public:
+                driver-class-name: com.mysql.cj.jdbc.Driver
+                url: jdbc:mysql://localhost:3306/risesoft_demo?serverTimezone=GMT%2B8&nullCatalogMeansCurrent=true&useUnicode=true&characterEncoding=utf-8&rewriteBatchedStatements=true&useCompression=true&useSSL=false&allowPublicKeyRetrieval=true
+                username: root
+                password: 111111
+                initialSize: 1
+                maxActive: 20
+                maxPoolPreparedStatementPerConnectionSize: 100
+                maxWait: 60000
+                minEvictableIdleTimeMillis: 300000
+                minIdle: 1
+                poolPreparedStatements: true
+                testOnBorrow: false
+                testOnReturn: false
+                testWhileIdle: true
+                timeBetweenEvictionRunsMillis: 60000
+                useGlobalDataSourceStat: true
+                validationQuery: SELECT 1 FROM DUAL
+    jpa:
+        generate-ddl: true
+        hibernate:
+            naming:
+                implicit-strategy: org.hibernate.boot.model.naming.ImplicitNamingStrategyLegacyHbmImpl
+                physical-strategy: org.hibernate.boot.model.naming.PhysicalNamingStrategyStandardImpl
+        open-in-view: false
+        properties:
+            hibernate:
+                hbm2ddl:
+                    auto: none
+                dialect: org.hibernate.dialect.MySQL8Dialect
+                jdbc:
+                    batch_size: 100
+                show_sql: true
+    #multi-tenant.event-source=kafka时需要配置
+    kafka:
+        bootstrap-servers: localhost:9092
+        consumer:
+            auto-commit-interval: 1000
+            enable-auto-commit: true
+            group-id: y9demo-dataJpa-server
+y9:
+    systemName: y9demo-dataJpa
+    systemCnName: 'jpa测试示例'
+    feature:
+        jpa:
+            packagesToScanEntityPublic: net.risesoft.y9public.entity
+            packagesToScanEntityTenant: net.risesoft.example.entity
+            packagesToScanRepositoryPublic: net.risesoft.y9public.repository
+            packagesToScanRepositoryTenant: net.risesoft.example.repository
+        #开启liquibase需要把把自动更新关闭，hbm2ddl.auto=none，此外tenant的数据库生成需要在数字底座生成系统并租用后才会初始化成功
+        liquibase:
+            tenant-enabled: true
+            public-enabled: true
+        multi-tenant:
+            event-source: db
