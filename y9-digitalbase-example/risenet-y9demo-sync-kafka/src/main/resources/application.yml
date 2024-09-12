@@ -1,9 +1,25 @@
 server:
     port: 7058
+    servlet:
+        encoding:
+            charset: UTF-8
+            enabled: true
+            force: true
+            force-request: true
+            force-response: true
+        context-path: /y9demo-sync
 spring:
     kafka:
+        bootstrap-servers: localhost:9092
         consumer:
             bootstrap-servers: localhost:9092
             group-id: y9demo-sync
 y9:
     systemName: y9demo-sync
+    feature:
+      listener:
+        kafka:
+          enabled: true
+      publish:
+        kafka:
+          enabled: true

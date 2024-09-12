@@ -41,6 +41,11 @@
             <groupId>net.risesoft</groupId>
             <artifactId>risenet-y9boot-starter-listener-kafka</artifactId>
         </dependency>
+        
+        <dependency>
+		    <groupId>net.risesoft</groupId>
+		    <artifactId>risenet-y9boot-starter-publish-kafka</artifactId>
+		</dependency>
 
     </dependencies>
 
