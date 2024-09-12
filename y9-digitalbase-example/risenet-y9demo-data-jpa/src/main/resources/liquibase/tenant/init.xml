@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+                      http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.9.xsd"
+        objectQuotingStrategy="QUOTE_ONLY_RESERVED_WORDS">
+    <changeSet id="1697701085071-1" author="test" runOnChange="true">
+        <preConditions onFail="MARK_RAN">
+            <not>
+                <tableExists tableName="RISESOFT_DEMO_USER"/>
+            </not>
+        </preConditions>
+        <createTable remarks="人员表" tableName="RISESOFT_DEMO_USER">
+            <column name="user_id" remarks="UUID字段" type="VARCHAR(38)">
+                <constraints nullable="false" primaryKey="true"/>
+            </column>
+           
+            <column name="USER_NAME" remarks="名称" type="VARCHAR(30)"/>
+            <column name="USER_AGE" remarks="年龄" type="INT"> 
+            </column>
+            <column name="USER_SEX" remarks="性别" type="VARCHAR(10)"/>
+            <column name="USER_BIRTH" remarks="出生年月" type="date"/>
+            
+            <column name="COUNTRY" remarks="居住国家" type="VARCHAR(255)"/>
+            <column name="USER_EDUCATION" remarks="教育" type="VARCHAR(255)"/>
+            <column name="USER_MOBILE" remarks="电话" type="VARCHAR(255)"/>
+            <column name="HOME_PHONE" remarks="家庭电话" type="VARCHAR(255)"/>
+             <column name="CREATE_TIME" remarks="创建时间" type="datetime"/>
+        </createTable>
+    </changeSet>   
+</databaseChangeLog>
