@@ -1,5 +1,6 @@
 package net.risesoft.y9.configuration.feature.log;
 
+import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -18,7 +19,13 @@ public class Y9LogProperties {
      */
     private boolean enabled;
 
-    /** 日志信息保存方式 ：kafka,api */
-    private String logSaveTarget = "kafka";
+    /** 日志信息上报方式 */
+    private LogSaveTarget logSaveTarget = LogSaveTarget.KAFKA;
 
+    @Getter
+    @AllArgsConstructor
+    public enum LogSaveTarget {
+        API, KAFKA;
+    }
+    
 }
