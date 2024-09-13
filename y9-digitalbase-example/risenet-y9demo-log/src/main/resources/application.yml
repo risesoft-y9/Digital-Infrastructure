@@ -1,0 +1,16 @@
+server:
+    servlet:
+        context-path: /y9demo-log
+y9:
+    feature:
+        log:
+            enabled: true
+            # kafka 或者 api，选择其中一种方式
+            logSaveTarget: kafka
+    common:
+        logBaseUrl: http://localhost:7055/log
+spring:
+    kafka:
+        bootstrap-servers: localhost:9092
+        consumer:
+            group-id: y9demo-log-server
