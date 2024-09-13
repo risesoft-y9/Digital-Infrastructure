@@ -9,13 +9,12 @@ import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.boot.autoconfigure.kafka.KafkaAutoConfiguration;
 import org.springframework.boot.autoconfigure.web.servlet.ConditionalOnMissingFilterBean;
+import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.boot.task.TaskExecutorBuilder;
 import org.springframework.boot.web.servlet.filter.OrderedRequestContextFilter;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.DependsOn;
-import org.springframework.context.annotation.Primary;
-import org.springframework.core.env.Environment;
 import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.kafka.core.ProducerFactory;
 import org.springframework.scheduling.annotation.EnableAsync;
@@ -30,15 +29,16 @@ import net.risesoft.log.aop.RiseLogAdvice;
 import net.risesoft.log.aop.RiseLogAdvisor;
 import net.risesoft.log.service.AsyncSaveLogInfo;
 import net.risesoft.y9.Y9Context;
+import net.risesoft.y9.configuration.Y9Properties;
 
 /**
- *
  * @author dzj
  * @author shidaobang
  */
 @Configuration
 @ConditionalOnProperty(name = "y9.feature.log.enabled", havingValue = "true", matchIfMissing = true)
 @EnableAsync
+@EnableConfigurationProperties(Y9Properties.class)
 public class Y9LogConfiguration {
 
     // https://github.com/spring-projects/spring-boot/issues/2637
@@ -48,7 +48,7 @@ public class Y9LogConfiguration {
     public static RequestContextFilter requestContextFilter() {
         return new OrderedRequestContextFilter();
     }
-    
+
     @Bean
     @ConditionalOnMissingBean(AbstractAdvisorAutoProxyCreator.class)
     public DefaultAdvisorAutoProxyCreator defaultAdvisorAutoProxyCreator() {
@@ -74,8 +74,8 @@ public class Y9LogConfiguration {
     }
 
     @Bean
-    public AsyncSaveLogInfo asyncSaveLogInfo(Environment environment) {
-        return new AsyncSaveLogInfo(environment);
+    public AsyncSaveLogInfo asyncSaveLogInfo(Y9Properties y9Properties) {
+        return new AsyncSaveLogInfo(y9Properties);
     }
 
     @Bean
