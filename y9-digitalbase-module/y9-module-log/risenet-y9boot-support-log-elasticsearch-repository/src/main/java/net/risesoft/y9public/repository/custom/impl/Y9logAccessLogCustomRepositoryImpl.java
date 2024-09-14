@@ -59,6 +59,7 @@ import co.elastic.clients.elasticsearch._types.ElasticsearchException;
 import co.elastic.clients.elasticsearch._types.SortOrder;
 import co.elastic.clients.elasticsearch._types.aggregations.AggregationRange;
 import co.elastic.clients.elasticsearch._types.aggregations.CalendarInterval;
+import co.elastic.clients.elasticsearch._types.aggregations.FieldDateMath;
 import co.elastic.clients.elasticsearch._types.aggregations.StringTermsBucket;
 import co.elastic.clients.elasticsearch._types.query_dsl.BoolQuery.Builder;
 import co.elastic.clients.elasticsearch.core.SearchRequest;
@@ -256,12 +257,22 @@ public class Y9logAccessLogCustomRepositoryImpl implements Y9logAccessLogCustomR
             sbuilder.must(m -> m.queryString(qs -> qs.fields(Y9LogSearchConsts.TENANT_ID).query(tenantId)));
         }
 
-        SearchRequest sRequest = SearchRequest.of(s -> s.index(Arrays.asList(createIndexNames(selectedDate, null)))
-            .query(sbuilder.build()._toQuery()).aggregations("by_success_logtime", a -> a.dateHistogram(
-                d -> d.field(Y9LogSearchConsts.LOG_TIME).calendarInterval(CalendarInterval.Hour).minDocCount(0))));
-        SearchRequest eRequest = SearchRequest.of(s -> s.index(Arrays.asList(createIndexNames(selectedDate, null)))
-            .query(ebuilder.build()._toQuery()).aggregations("by_error_logtime", a -> a.dateHistogram(
-                d -> d.field(Y9LogSearchConsts.LOG_TIME).calendarInterval(CalendarInterval.Hour).minDocCount(0))));
+        SearchRequest sRequest =
+            SearchRequest
+                .of(s -> s.index(Arrays.asList(createIndexNames(selectedDate, null))).query(sbuilder.build()._toQuery())
+                    .aggregations("by_success_logtime", a -> a.dateHistogram(d -> d.field(Y9LogSearchConsts.LOG_TIME)
+                        .calendarInterval(CalendarInterval.Hour).minDocCount(0)
+                        .extendedBounds(bounds -> bounds
+                            .min(FieldDateMath.of(f -> f.expr(DATETIME_UTC_FORMAT.format(startOfTime.getTime()))))
+                            .max(FieldDateMath.of(f -> f.expr(DATETIME_UTC_FORMAT.format(endOfTime.getTime()))))))));
+        SearchRequest eRequest =
+            SearchRequest
+                .of(s -> s.index(Arrays.asList(createIndexNames(selectedDate, null))).query(ebuilder.build()._toQuery())
+                    .aggregations("by_error_logtime", a -> a.dateHistogram(d -> d.field(Y9LogSearchConsts.LOG_TIME)
+                        .calendarInterval(CalendarInterval.Hour).minDocCount(0)
+                        .extendedBounds(bounds -> bounds
+                            .min(FieldDateMath.of(f -> f.expr(DATETIME_UTC_FORMAT.format(startOfTime.getTime()))))
+                            .max(FieldDateMath.of(f -> f.expr(DATETIME_UTC_FORMAT.format(endOfTime.getTime()))))))));
 
         try {
             elasticsearchClient.search(sRequest, Void.class).aggregations().get("by_success_logtime").dateHistogram()
