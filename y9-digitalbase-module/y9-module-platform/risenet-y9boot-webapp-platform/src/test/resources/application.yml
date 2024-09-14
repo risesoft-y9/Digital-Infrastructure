@@ -14,7 +14,7 @@ management:
             export:
                 enabled: true
 server:
-    port: 7055
+    port: 8080
     servlet:
         session:
             tracking-modes: COOKIE

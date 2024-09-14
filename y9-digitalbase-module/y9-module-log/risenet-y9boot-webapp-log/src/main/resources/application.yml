@@ -11,7 +11,7 @@ management:
         export:
           enabled: true
 server:
-    port: 7055
+    port: 8080
     servlet:
         encoding:
             charset: UTF-8
@@ -19,6 +19,7 @@ server:
             force: true
         session:
             tracking-modes: COOKIE
+        context-path: /log
 spring:
     application:
         name: log
