@@ -2,16 +2,16 @@ package net.risesoft.example.entity;
 
 import java.io.Serializable;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Id;
-import javax.persistence.Table;
-
 import org.hibernate.annotations.Comment;
 import org.hibernate.annotations.DynamicUpdate;
 
 import lombok.Data;
 import lombok.NoArgsConstructor;
+
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.Id;
+import jakarta.persistence.Table;
 
 /**
  * 描述：人员
@@ -19,7 +19,7 @@ import lombok.NoArgsConstructor;
 @Entity
 @Table(name = "RISESOFT_DEMO_USER")
 @DynamicUpdate
-@org.hibernate.annotations.Table(comment = "人员表", appliesTo = "RISESOFT_DEMO_USER")
+@Comment("人员表")
 @NoArgsConstructor
 @Data
 public class User implements Serializable {
@@ -69,7 +69,6 @@ public class User implements Serializable {
      */
     @Column(name = "USER_MOBILE", length = 50)
     private String mobile;
-
 
     /**
      * 创建时间
