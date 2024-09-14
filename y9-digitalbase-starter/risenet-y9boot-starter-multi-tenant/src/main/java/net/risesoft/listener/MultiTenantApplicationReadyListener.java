@@ -32,6 +32,7 @@ public class MultiTenantApplicationReadyListener implements ApplicationListener<
                 Y9EventCommon tenantSystemRegisteredEvent = new Y9EventCommon();
                 tenantSystemRegisteredEvent.setEventType(Y9CommonEventConst.TENANT_SYSTEM_REGISTERED);
                 tenantSystemRegisteredEvent.setEventObject(tenantSystem);
+                tenantSystemRegisteredEvent.setTarget(y9Properties.getSystemName());
                 Y9Context.publishEvent(tenantSystemRegisteredEvent);
 
                 if (LOGGER.isDebugEnabled()) {

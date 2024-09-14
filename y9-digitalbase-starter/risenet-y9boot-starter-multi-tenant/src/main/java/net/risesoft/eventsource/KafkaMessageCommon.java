@@ -31,7 +31,8 @@ public class KafkaMessageCommon {
             String eventType = msg.getEventType();
 
             if ((Y9CommonEventConst.TENANT_SYSTEM_REGISTERED.equals(eventType)
-                || Y9CommonEventConst.TENANT_APP_REGISTERED.equals(eventType))
+                || Y9CommonEventConst.TENANT_APP_REGISTERED.equals(eventType)
+                || Y9CommonEventConst.TENANT_DATASOURCE_SYNC.equals(eventType))
                 && !Objects.equals(Y9Context.getSystemName(), msg.getEventTarget())) {
                 // 对于非当前引入的系统的消息不处理
                 return;
@@ -40,6 +41,7 @@ public class KafkaMessageCommon {
             Y9EventCommon event = new Y9EventCommon();
             event.setEventType(msg.getEventType());
             event.setEventObject(msg.getEventObject());
+            event.setTarget(msg.getEventTarget());
             Y9Context.publishEvent(event);
             LOGGER.info("[common]将消息中间件发过来的消息转换成spring的事件后发送：{}", event);
         } catch (Exception e) {
