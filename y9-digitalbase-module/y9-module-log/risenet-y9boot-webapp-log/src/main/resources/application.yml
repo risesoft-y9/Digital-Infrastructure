@@ -31,10 +31,10 @@ spring:
             config:
                 enabled: false
                 group: DEFAULT_GROUP
-                namespace: dev
+                namespace: local
                 server-addr: http://localhost:8848
                 username: nacos
-                password: nacos-83204585
+                password: ${NACOS_PASSWORD:111111}
             discovery:
                 enabled: false
     config:

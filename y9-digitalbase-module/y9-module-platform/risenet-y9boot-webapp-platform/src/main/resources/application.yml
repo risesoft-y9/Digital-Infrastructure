@@ -46,10 +46,10 @@ spring:
             config:
                 enabled: false
                 group: DEFAULT_GROUP
-                namespace: dev
-                server-addr: https://dev.youshengyun.com:443
+                namespace: local
+                server-addr: https://test.youshengyun.com:443
                 username: nacos
-                password: nacos@2022
+                password: ${NACOS_PASSWORD:111111}
             discovery:
                 enabled: false
     config:
@@ -131,7 +131,7 @@ y9:
             systemName: riseplatform
             position-name-pattern: "{0}（{1}）"
             managerModifyPasswordCycle: 7
-            userDefaultPassword: Risesoft@2022
+            userDefaultpassword: ${NACOS_PASSWORD:111111}
     service:
         log:
             directUrl: http://localhost:7055

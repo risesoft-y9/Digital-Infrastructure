@@ -277,7 +277,7 @@ spring:
                 namespace: local
                 server-addr: https://dev.youshengyun.com:443
                 username: nacos
-                password: Risesoft@2022
+                password: ${NACOS_PASSWORD:111111}
             discovery:
                 enabled: false
         compatibility-verifier:
