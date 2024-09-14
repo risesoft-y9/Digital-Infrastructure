@@ -6,14 +6,13 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Component;
 
 import lombok.RequiredArgsConstructor;
 
-import net.risesoft.consts.InitDataConsts;
 import net.risesoft.controller.identity.vo.RolePermissionVO;
 import net.risesoft.entity.identity.Y9IdentityToRoleBase;
-import net.risesoft.y9public.entity.resource.Y9App;
 import net.risesoft.y9public.entity.role.Y9Role;
 import net.risesoft.y9public.service.resource.Y9AppService;
 import net.risesoft.y9public.service.resource.Y9SystemService;
@@ -21,7 +20,7 @@ import net.risesoft.y9public.service.role.Y9RoleService;
 
 /**
  * 构建 角色权限Vo 集合
- * 
+ *
  * @author shidaobang
  * @date 2023/07/20
  * @since 9.6.2
@@ -37,11 +36,10 @@ public class RolePermissionVOBuilder {
     private RolePermissionVO.App buildApp(String appId, List<Y9IdentityToRoleBase> y9IdentityToRoleBaseList) {
         RolePermissionVO.App app = new RolePermissionVO.App();
 
-        Optional<Y9App> y9AppOptional = y9AppService.findById(appId);
-        if (y9AppOptional.isPresent()) {
-            app.setAppName(y9AppOptional.get().getName());
-        } else if (InitDataConsts.TOP_PUBLIC_ROLE_ID.equals(appId)) {
-            app.setAppName("公共角色");
+        if (StringUtils.isBlank(appId)) {
+            app.setAppName(null);
+        } else {
+            app.setAppName(y9AppService.getById(appId).getName());
         }
         app.setPermissionDetailList(buildPermissionDetailList(y9IdentityToRoleBaseList));
         return app;
@@ -50,7 +48,7 @@ public class RolePermissionVOBuilder {
     private List<RolePermissionVO.App> buildAppList(List<Y9IdentityToRoleBase> y9IdentityToRoleBaseList) {
         List<RolePermissionVO.App> appList = new ArrayList<>();
         Map<String, List<Y9IdentityToRoleBase>> appIdY9IdentityToRoleBaseListMap =
-            y9IdentityToRoleBaseList.stream().collect(Collectors.groupingBy(Y9IdentityToRoleBase::getAppId));
+                y9IdentityToRoleBaseList.stream().collect(Collectors.groupingBy(Y9IdentityToRoleBase::getAppId));
         for (Map.Entry<String, List<Y9IdentityToRoleBase>> entry : appIdY9IdentityToRoleBaseListMap.entrySet()) {
             appList.add(buildApp(entry.getKey(), entry.getValue()));
         }
@@ -58,7 +56,7 @@ public class RolePermissionVOBuilder {
     }
 
     private List<RolePermissionVO.PermissionDetail>
-        buildPermissionDetailList(List<Y9IdentityToRoleBase> y9IdentityToRoleBaseList) {
+    buildPermissionDetailList(List<Y9IdentityToRoleBase> y9IdentityToRoleBaseList) {
         List<RolePermissionVO.PermissionDetail> permissionDetailList = new ArrayList<>();
         for (Y9IdentityToRoleBase y9IdentityToRoleBase : y9IdentityToRoleBaseList) {
             RolePermissionVO.PermissionDetail permissionDetail = new RolePermissionVO.PermissionDetail();
@@ -74,20 +72,36 @@ public class RolePermissionVOBuilder {
     }
 
     private RolePermissionVO buildRolePermissionVO(String systemId,
-        List<Y9IdentityToRoleBase> y9IdentityToRoleBaseList) {
+                                                   List<Y9IdentityToRoleBase> y9IdentityToRoleBaseList) {
         RolePermissionVO rolePermissionVO = new RolePermissionVO();
-        rolePermissionVO.setSystemCnName(y9SystemService.getById(systemId).getCnName());
-        rolePermissionVO.setAppList(buildAppList(y9IdentityToRoleBaseList));
+        if (StringUtils.isBlank(systemId)) {
+            rolePermissionVO.setSystemCnName(null);
+            rolePermissionVO.setAppList(List.of(buildApp(null, y9IdentityToRoleBaseList)));
+        } else {
+            rolePermissionVO.setSystemCnName(y9SystemService.getById(systemId).getCnName());
+            rolePermissionVO.setAppList(buildAppList(y9IdentityToRoleBaseList));
+        }
         return rolePermissionVO;
     }
 
     public List<RolePermissionVO> buildRolePermissionVOList(List<Y9IdentityToRoleBase> y9IdentityToRoleBaseList) {
         List<RolePermissionVO> rolePermissionVOList = new ArrayList<>();
-        Map<String, List<Y9IdentityToRoleBase>> systemIdY9IdentityToRoleBaseListMap =
-            y9IdentityToRoleBaseList.stream().collect(Collectors.groupingBy(Y9IdentityToRoleBase::getSystemId));
+
+        // 系统应用角色
+        Map<String,
+                List<Y9IdentityToRoleBase>> systemIdY9IdentityToRoleBaseListMap = y9IdentityToRoleBaseList.stream()
+                .filter(y9IdentityToRoleBase -> StringUtils.isNotBlank(y9IdentityToRoleBase.getSystemId()))
+                .collect(Collectors.groupingBy(Y9IdentityToRoleBase::getSystemId));
         for (Map.Entry<String, List<Y9IdentityToRoleBase>> entry : systemIdY9IdentityToRoleBaseListMap.entrySet()) {
             rolePermissionVOList.add(buildRolePermissionVO(entry.getKey(), entry.getValue()));
         }
+
+        // 公共角色
+        List<Y9IdentityToRoleBase> identityToPublicRoleList = y9IdentityToRoleBaseList.stream()
+                .filter(y9IdentityToRoleBase -> StringUtils.isBlank(y9IdentityToRoleBase.getSystemId()))
+                .collect(Collectors.toList());
+        rolePermissionVOList.add(buildRolePermissionVO(null, identityToPublicRoleList));
+
         return rolePermissionVOList;
     }
 }
