@@ -11,18 +11,13 @@
     <groupId>net.risesoft</groupId>
     <artifactId>risenet-y9demo-idcode</artifactId>
     <version>${revision}</version>
+    <packaging>war</packaging>
     <name>risenet-y9demo-idcode</name>
     <description>risenet-y9demo-idcode</description>
     
     <properties>
         <maven.deploy.skip>true</maven.deploy.skip>
     </properties>
-
-    <scm>
-        <url>${gitee.url}</url>
-        <connection>${gitee.connection}</connection>
-        <developerConnection>${gitee.developerConnection}</developerConnection>
-    </scm>
 
     <dependencies>
         <dependency>
@@ -43,23 +38,11 @@
     </dependencies>
 
     <build>
+        <finalName>y9demo-idcode</finalName>
         <plugins>
             <plugin>
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-maven-plugin</artifactId>
-                <version>${spring-boot.version}</version>
-                <configuration>
-                    <mainClass>net.risesoft.RisenetY9demoIdcodeApplication</mainClass>
-                    <skip>true</skip>
-                </configuration>
-                <executions>
-                    <execution>
-                        <id>repackage</id>
-                        <goals>
-                            <goal>repackage</goal>
-                        </goals>
-                    </execution>
-                </executions>
             </plugin>
         </plugins>
     </build>

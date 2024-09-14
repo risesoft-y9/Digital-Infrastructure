@@ -11,6 +11,7 @@
     <groupId>net.risesoft</groupId>
     <artifactId>risenet-y9demo-sync-kafka</artifactId>
     <version>${revision}</version>
+    <packaging>war</packaging>
     <name>risenet-y9demo-sync-kafka</name>
     <description>risenet-y9demo-sync-kafka</description>
 
@@ -18,12 +19,6 @@
         <maven.deploy.skip>true</maven.deploy.skip>
     </properties>
 
-    <scm>
-        <url>${gitee.url}</url>
-        <connection>${gitee.connection}</connection>
-        <developerConnection>${gitee.developerConnection}</developerConnection>
-    </scm>
-    
     <dependencies>
         <dependency>
             <groupId>org.springframework.boot</groupId>
@@ -40,15 +35,16 @@
             <groupId>net.risesoft</groupId>
             <artifactId>risenet-y9boot-starter-listener-kafka</artifactId>
         </dependency>
-        
+
         <dependency>
-		    <groupId>net.risesoft</groupId>
-		    <artifactId>risenet-y9boot-starter-publish-kafka</artifactId>
-		</dependency>
+            <groupId>net.risesoft</groupId>
+            <artifactId>risenet-y9boot-starter-publish-kafka</artifactId>
+        </dependency>
 
     </dependencies>
 
     <build>
+        <finalName>y9demo-sync-kafka</finalName>
         <plugins>
             <plugin>
                 <groupId>org.springframework.boot</groupId>

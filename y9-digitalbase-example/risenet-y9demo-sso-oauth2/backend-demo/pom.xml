@@ -11,18 +11,13 @@
     <groupId>net.risesoft</groupId>
     <artifactId>risenet-y9demo-sso-oauth2</artifactId>
     <version>${revision}</version>
+    <packaging>war</packaging>
     <name>risenet-y9demo-sso-oauth2</name>
     <description>risenet-y9demo-sso-oauth2</description>
     
     <properties>
         <maven.deploy.skip>true</maven.deploy.skip>
     </properties>
-
-    <scm>
-        <url>${gitee.url}</url>
-        <connection>${gitee.connection}</connection>
-        <developerConnection>${gitee.developerConnection}</developerConnection>
-    </scm>
 
     <dependencies>
         <dependency>
@@ -37,6 +32,7 @@
     </dependencies>
 
     <build>
+        <finalName>y9demo-oauth2</finalName>
         <plugins>
             <plugin>
                 <groupId>org.springframework.boot</groupId>

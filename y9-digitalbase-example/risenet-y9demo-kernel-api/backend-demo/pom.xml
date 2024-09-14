@@ -11,18 +11,13 @@
     <groupId>net.risesoft</groupId>
     <artifactId>risenet-y9demo-kernel-api</artifactId>
     <version>${revision}</version>
+    <packaging>war</packaging>
     <name>risenet-y9demo-kernel-api</name>
     <description>risenet-y9demo-kernel-api</description>
-    
+
     <properties>
         <maven.deploy.skip>true</maven.deploy.skip>
     </properties>
-
-    <scm>
-        <url>${gitee.url}</url>
-        <connection>${gitee.connection}</connection>
-        <developerConnection>${gitee.developerConnection}</developerConnection>
-    </scm>
 
     <dependencies>
         <dependency>
@@ -54,7 +49,7 @@
     </dependencies>
 
     <build>
-        <finalName>demo-api</finalName>
+        <finalName>y9demo-api</finalName>
         <plugins>
             <plugin>
                 <groupId>org.springframework.boot</groupId>

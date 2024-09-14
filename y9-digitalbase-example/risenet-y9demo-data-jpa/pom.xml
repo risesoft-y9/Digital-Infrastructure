@@ -17,7 +17,6 @@
     <description>net-y9demo-data-jpa</description>
 
     <properties>
-        <java.version>11</java.version>
         <maven.deploy.skip>true</maven.deploy.skip>
     </properties>
 
@@ -37,35 +36,35 @@
     </repositories>
 
     <dependencies>
-       
 
         <dependency>
             <groupId>net.risesoft</groupId>
             <artifactId>risenet-y9boot-starter-idgenerator</artifactId>
             <version>${revision}</version>
-        </dependency> 
-		
-		 <dependency>
+        </dependency>
+
+        <dependency>
             <groupId>net.risesoft</groupId>
             <artifactId>risenet-y9boot-starter-jpa-public</artifactId>
             <version>${revision}</version>
         </dependency>
-		<dependency>
-			<groupId>net.risesoft</groupId>
-			<artifactId>risenet-y9boot-starter-jpa-tenant</artifactId> 
-			<version>${revision}</version>
-		</dependency>
-		
-		<dependency>
-			<groupId>net.risesoft</groupId>
-			<artifactId>risenet-y9boot-starter-multi-tenant</artifactId> 
-			<version>${revision}</version>
-		</dependency>
+
+        <dependency>
+            <groupId>net.risesoft</groupId>
+            <artifactId>risenet-y9boot-starter-jpa-tenant</artifactId>
+            <version>${revision}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>net.risesoft</groupId>
+            <artifactId>risenet-y9boot-starter-multi-tenant</artifactId>
+            <version>${revision}</version>
+        </dependency>
 
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-web</artifactId>
-        </dependency> 
+        </dependency>
 
         <dependency>
             <groupId>org.projectlombok</groupId>
@@ -92,15 +91,7 @@
             <plugin>
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-maven-plugin</artifactId>
-                <configuration>
-                    <excludes>
-                        <exclude>
-                            <groupId>org.projectlombok</groupId>
-                            <artifactId>lombok</artifactId>
-                        </exclude>
-                    </excludes>
-                </configuration>
-            </plugin> 
+            </plugin>
         </plugins>
     </build>
 

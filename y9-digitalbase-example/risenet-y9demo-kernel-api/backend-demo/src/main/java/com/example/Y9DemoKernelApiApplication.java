@@ -14,10 +14,10 @@ import org.springframework.web.filter.CorsFilter;
 
 @SpringBootApplication
 @ComponentScan(basePackages = {"net.risesoft", "com.example"})
-public class DemoKernelApiApplication {
+public class Y9DemoKernelApiApplication {
 
     public static void main(String[] args) {
-        SpringApplication.run(DemoKernelApiApplication.class, args);
+        SpringApplication.run(Y9DemoKernelApiApplication.class, args);
     }
 
     @Bean
