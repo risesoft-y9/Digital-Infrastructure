@@ -12,10 +12,10 @@ import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 import org.springframework.web.filter.CorsFilter;
 
 @SpringBootApplication
-public class DemoSyncKafkaApplication {
+public class Y9DemoSyncKafkaApplication {
 
     public static void main(String[] args) {
-        SpringApplication.run(DemoSyncKafkaApplication.class, args);
+        SpringApplication.run(Y9DemoSyncKafkaApplication.class, args);
     }
 
     @Bean

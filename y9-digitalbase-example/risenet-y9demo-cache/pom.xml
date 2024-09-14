@@ -17,7 +17,6 @@
     <description>net-y9demo-cache</description>
 
     <properties>
-        <java.version>11</java.version>
         <maven.deploy.skip>true</maven.deploy.skip>
     </properties>
 
@@ -90,14 +89,6 @@
             <plugin>
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-maven-plugin</artifactId>
-                <configuration>
-                    <excludes>
-                        <exclude>
-                            <groupId>org.projectlombok</groupId>
-                            <artifactId>lombok</artifactId>
-                        </exclude>
-                    </excludes>
-                </configuration>
             </plugin>
 
             <plugin>

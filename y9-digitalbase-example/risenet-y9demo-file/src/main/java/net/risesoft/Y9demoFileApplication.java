@@ -8,10 +8,10 @@ import net.risesoft.y9.configuration.Y9Properties;
 
 @SpringBootApplication
 @EnableConfigurationProperties(Y9Properties.class)
-public class RisenetY9demoFileApplication {
+public class Y9demoFileApplication {
 
     public static void main(String[] args) {
-        SpringApplication.run(RisenetY9demoFileApplication.class, args);
+        SpringApplication.run(Y9demoFileApplication.class, args);
     }
 
 }

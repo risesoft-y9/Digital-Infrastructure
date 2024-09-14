@@ -19,12 +19,6 @@
         <maven.deploy.skip>true</maven.deploy.skip>
     </properties>
 
-    <scm>
-        <url>${gitee.url}</url>
-        <connection>${gitee.connection}</connection>
-        <developerConnection>${gitee.developerConnection}</developerConnection>
-    </scm>
-
     <dependencies>
         <dependency>
             <groupId>net.risesoft</groupId>
@@ -56,7 +50,7 @@
     </dependencies>
 
     <build>
-        <finalName>demo-elk</finalName>
+        <finalName>demo-elasticsearch</finalName>
         <plugins>
             <plugin>
                 <groupId>org.springframework.boot</groupId>

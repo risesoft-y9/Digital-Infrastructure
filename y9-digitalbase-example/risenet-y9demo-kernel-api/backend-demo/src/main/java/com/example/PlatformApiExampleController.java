@@ -23,15 +23,15 @@ import net.risesoft.y9.Y9Context;
 import net.risesoft.y9.Y9LoginUserHolder;
 
 @RestController
-public class TestController {
+public class PlatformApiExampleController {
 
     private final OrgUnitApi orgUnitApi;
     private final OrganizationApi organizationApi;
     private final AppApi appApi;
     private final PersonResourceApi personResourceApi;
 
-    public TestController(OrgUnitApi orgUnitApi, OrganizationApi organizationApi, AppApi appApi,
-        PersonResourceApi personResourceApi) {
+    public PlatformApiExampleController(OrgUnitApi orgUnitApi, OrganizationApi organizationApi, AppApi appApi,
+                                        PersonResourceApi personResourceApi) {
         this.orgUnitApi = orgUnitApi;
         this.organizationApi = organizationApi;
         this.appApi = appApi;

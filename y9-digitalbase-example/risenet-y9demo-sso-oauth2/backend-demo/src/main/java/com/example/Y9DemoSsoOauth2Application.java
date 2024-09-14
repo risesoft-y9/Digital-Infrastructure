@@ -12,10 +12,10 @@ import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 import org.springframework.web.filter.CorsFilter;
 
 @SpringBootApplication
-public class DemoSsoOauth2Application {
+public class Y9DemoSsoOauth2Application {
 
     public static void main(String[] args) {
-        SpringApplication.run(DemoSsoOauth2Application.class, args);
+        SpringApplication.run(Y9DemoSsoOauth2Application.class, args);
     }
 
     @Bean
