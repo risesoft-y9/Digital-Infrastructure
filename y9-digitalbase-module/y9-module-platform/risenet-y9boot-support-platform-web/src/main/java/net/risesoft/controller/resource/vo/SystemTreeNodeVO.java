@@ -21,9 +21,13 @@ import net.risesoft.y9public.entity.resource.Y9System;
 public class SystemTreeNodeVO extends TreeNodeVO {
 
     private static final long serialVersionUID = -7329269439077778947L;
+
+    /** 系统中文名 */
     private String cnName;
     /** 系统id */
     private String systemId;
+    /** 租户id */
+    private String tenantId;
 
     public static SystemTreeNodeVO convertY9System(Y9System y9System) {
         SystemTreeNodeVO systemTreeNodeVO = new SystemTreeNodeVO();
@@ -35,6 +39,7 @@ public class SystemTreeNodeVO extends TreeNodeVO {
         systemTreeNodeVO.setHasChild(true);
         systemTreeNodeVO.setNodeType("SYSTEM");
         systemTreeNodeVO.setSystemId(y9System.getId());
+        systemTreeNodeVO.setTenantId(y9System.getTenantId());
         return systemTreeNodeVO;
     }
 

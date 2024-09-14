@@ -102,6 +102,8 @@ public interface Y9RoleService {
      */
     List<Y9Role> listByParentId(String parentId);
 
+    List<Y9Role> listByParentId4Tenant(String parentId, String tenantId);
+
     /**
      * 根据父节点id和角色名称，获取角色列表
      *
@@ -175,5 +177,4 @@ public interface Y9RoleService {
      * @return {@code List<}{@link Y9Role}{@code >}
      */
     List<Y9Role> treeSearch(String name);
-
 }

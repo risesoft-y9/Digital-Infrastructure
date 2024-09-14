@@ -262,7 +262,7 @@ public class AppApiImpl implements AppApi {
         String msg = "创建成功!";
         try {
             Y9System y9System = new Y9System();
-            y9System.setIsvGuid(isvGuid);
+            y9System.setTenantId(isvGuid);
             y9System.setName(systemName);
             y9System.setCnName(systemCnName);
             y9System.setContextPath(contextPath);

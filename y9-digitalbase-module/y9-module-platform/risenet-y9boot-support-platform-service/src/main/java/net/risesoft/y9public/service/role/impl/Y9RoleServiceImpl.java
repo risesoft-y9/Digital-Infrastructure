@@ -154,6 +154,12 @@ public class Y9RoleServiceImpl implements Y9RoleService {
     }
 
     @Override
+    public List<Y9Role> listByParentId4Tenant(String parentId, String tenantId) {
+        return y9RoleRepository.findByParentIdAndTenantIdOrParentIdAndTenantIdIsNullOrderByTabIndexAsc(parentId,
+                tenantId, parentId);
+    }
+
+    @Override
     public List<Y9Role> listByParentIdAndName(String parentId, String roleName) {
         return y9RoleRepository.findByParentIdAndName(parentId, roleName);
     }
@@ -204,7 +210,7 @@ public class Y9RoleServiceImpl implements Y9RoleService {
                 if (parent != null) {
                     originRole.setParentId(parent.getId());
                     originRole
-                        .setDn(RoleLevelConsts.CN + y9Role.getName() + RoleLevelConsts.SEPARATOR + parent.getDn());
+                            .setDn(RoleLevelConsts.CN + y9Role.getName() + RoleLevelConsts.SEPARATOR + parent.getDn());
                     originRole.setGuidPath(parent.getGuidPath() + RoleLevelConsts.SEPARATOR + y9Role.getId());
                 } else {
                     originRole.setParentId(y9Role.getParentId());
@@ -253,6 +259,9 @@ public class Y9RoleServiceImpl implements Y9RoleService {
         }
         if (!InitDataConsts.TOP_PUBLIC_ROLE_ID.equals(y9Role.getParentId())) {
             y9Role.setTenantId(Y9LoginUserHolder.getTenantId());
+        }
+        if (InitDataConsts.OPERATION_TENANT_ID.equals(Y9LoginUserHolder.getTenantId())) {
+            y9Role.setTenantId(null);
         }
         return y9RoleManager.save(y9Role);
     }
@@ -310,9 +319,13 @@ public class Y9RoleServiceImpl implements Y9RoleService {
         if (StringUtils.isEmpty(parentId)) {
             return;
         }
-        Y9Role parentNode = this.getById(parentId);
-        roleSet.add(parentNode);
-        fillRolesRecursivelyToRoot(parentNode.getParentId(), roleSet);
+        // parentId 可能为 appId
+        Optional<Y9Role> y9RoleOptional = this.findById(parentId);
+        if (y9RoleOptional.isPresent()) {
+            Y9Role parentNode = y9RoleOptional.get();
+            roleSet.add(parentNode);
+            fillRolesRecursivelyToRoot(parentNode.getParentId(), roleSet);
+        }
     }
 
     @Transactional(readOnly = false)

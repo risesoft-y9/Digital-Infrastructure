@@ -1,6 +1,7 @@
 package net.risesoft.controller.role;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 import java.util.Set;
@@ -9,6 +10,8 @@ import java.util.stream.Collectors;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotEmpty;
 
+import org.apache.commons.collections4.CollectionUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.http.MediaType;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -24,15 +27,15 @@ import net.risesoft.consts.InitDataConsts;
 import net.risesoft.controller.role.vo.RoleTreeNodeVO;
 import net.risesoft.controller.role.vo.RoleVO;
 import net.risesoft.enums.platform.ManagerLevelEnum;
-import net.risesoft.enums.platform.RoleTypeEnum;
+import net.risesoft.enums.platform.TreeNodeType;
 import net.risesoft.log.OperationTypeEnum;
 import net.risesoft.log.annotation.RiseLog;
 import net.risesoft.model.user.UserInfo;
 import net.risesoft.permission.annotation.IsManager;
 import net.risesoft.pojo.Y9Result;
 import net.risesoft.y9.Y9LoginUserHolder;
-import net.risesoft.y9.util.Y9ModelConvertUtil;
 import net.risesoft.y9public.entity.resource.Y9App;
+import net.risesoft.y9public.entity.resource.Y9ResourceBase;
 import net.risesoft.y9public.entity.resource.Y9System;
 import net.risesoft.y9public.entity.role.Y9Role;
 import net.risesoft.y9public.service.resource.CompositeResourceService;
@@ -40,6 +43,7 @@ import net.risesoft.y9public.service.resource.Y9AppService;
 import net.risesoft.y9public.service.resource.Y9SystemService;
 import net.risesoft.y9public.service.role.Y9RoleService;
 import net.risesoft.y9public.service.tenant.Y9TenantAppService;
+import net.risesoft.y9public.service.tenant.Y9TenantSystemService;
 
 /**
  * 角色管理
@@ -55,14 +59,15 @@ import net.risesoft.y9public.service.tenant.Y9TenantAppService;
 @RequiredArgsConstructor
 @Validated
 @IsManager({ManagerLevelEnum.SYSTEM_MANAGER, ManagerLevelEnum.SECURITY_MANAGER,
-    ManagerLevelEnum.OPERATION_SYSTEM_MANAGER})
+        ManagerLevelEnum.OPERATION_SYSTEM_MANAGER})
 public class RoleController {
 
     private final Y9RoleService y9RoleService;
     private final Y9AppService y9AppService;
-    private final Y9SystemService y9SystemService;
     private final CompositeResourceService compositeResourceService;
     private final Y9TenantAppService y9TenantAppService;
+    private final Y9TenantSystemService y9TenantSystemService;
+    private final Y9SystemService y9SystemService;
 
     /**
      * 删除角色节点
@@ -103,29 +108,6 @@ public class RoleController {
     }
 
     /**
-     * 获取主角色树
-     *
-     * @return {@code Y9Result<List<}{@link RoleVO}{@code >>}
-     */
-    @RiseLog(operationName = "获取主角色树")
-    @RequestMapping(value = "/getRootTree")
-    @Deprecated
-    public Y9Result<List<RoleVO>> getRootTree() {
-        List<Y9Role> y9RoleList = y9RoleService.listByParentIdIsNull();
-        List<RoleVO> roleVOList = new ArrayList<>();
-        if (y9RoleList != null && !y9RoleList.isEmpty()) {
-            for (Y9Role y9Role : y9RoleList) {
-                RoleVO roleVO = Y9ModelConvertUtil.convert(y9Role, RoleVO.class);
-                if (RoleTypeEnum.FOLDER.equals(y9Role.getType())) {
-                    roleVO.setHasChild(!y9RoleService.listByParentId(y9Role.getId()).isEmpty());
-                }
-                roleVOList.add(roleVO);
-            }
-        }
-        return Y9Result.success(roleVOList, "获取主角色树成功");
-    }
-
-    /**
      * 获取角色树根节点
      *
      * @return {@code Y9Result<List<}{@link RoleTreeNodeVO}{@code >>}
@@ -142,26 +124,11 @@ public class RoleController {
             accessibleAppResourceList = appResourceList;
         } else {
             List<String> appIds =
-                y9TenantAppService.listAppIdByTenantId(Y9LoginUserHolder.getTenantId(), Boolean.TRUE, Boolean.TRUE);
+                    y9TenantAppService.listAppIdByTenantId(Y9LoginUserHolder.getTenantId(), Boolean.TRUE, Boolean.TRUE);
             accessibleAppResourceList = appResourceList.stream().filter(resource -> appIds.contains(resource.getId()))
-                .collect(Collectors.toList());
+                    .collect(Collectors.toList());
         }
         return Y9Result.success(RoleTreeNodeVO.convertY9AppList(accessibleAppResourceList), "查询所有的根资源成功");
-    }
-
-    /**
-     * 根据父节点id，获取角色节点列表
-     *
-     * @param parentId 父节点id
-     * @return {@code Y9Result<List<}{@link Y9Role}{@code >>}
-     * @since 9.6.1
-     */
-    @RiseLog(operationName = "根据父节点id，获取角色节点列表 ")
-    @RequestMapping(value = "/listByParentId")
-    @Deprecated
-    public Y9Result<List<Y9Role>> listByParentId(@RequestParam @NotBlank String parentId) {
-        List<Y9Role> roleList = y9RoleService.listByParentId(parentId);
-        return Y9Result.success(roleList, "获取角色列表成功");
     }
 
     /**
@@ -233,50 +200,62 @@ public class RoleController {
     }
 
     /**
-     * 根据角色名称，查询角色节点
+     * 根据父节点id，父节点类型分层获取角色树
      *
-     * @param name 角色名称
-     * @return {@code Y9Result<List<}{@link RoleVO}{@code >>}
+     * @param parentId 父节点id
+     * @param parentNodeType 父节点类型
+     * @return {@code Y9Result<List<}{@link RoleTreeNodeVO}{@code >>}
+     * @since 9.6.3
      */
-    @RiseLog(operationName = "查询角色")
-    @RequestMapping(value = "/treeSearch")
-    @Deprecated
-    public Y9Result<List<RoleVO>> treeSearch(@RequestParam String name) {
-        List<Y9Role> y9RoleList = y9RoleService.treeSearch(name);
-        List<RoleVO> roleVOList = new ArrayList<>();
-        Set<String> appIdList = y9RoleList.stream().map(Y9Role::getAppId).collect(Collectors.toSet());
-        List<Y9App> appList = new ArrayList<>();
-        for (String appId : appIdList) {
-            if (!InitDataConsts.TOP_PUBLIC_ROLE_ID.equals(appId)) {
-                Y9App y9App = y9AppService.getById(appId);
-                appList.add(y9App);
-            }
+    @RiseLog(operationName = "根据父节点id，父节点类型分层获取角色树")
+    @GetMapping(value = "/tree")
+    public Y9Result<List<RoleTreeNodeVO>> tree(@RequestParam(required = false) String parentId,
+                                               @RequestParam(required = false) TreeNodeType parentNodeType) {
+        List<RoleTreeNodeVO> roleTreeNodeVOList;
+        if (ManagerLevelEnum.SYSTEM_MANAGER.equals(Y9LoginUserHolder.getUserInfo().getManagerLevel())) {
+            roleTreeNodeVOList = treeBySystemManager(parentId, parentNodeType);
+        } else {
+            roleTreeNodeVOList = treeByOperationSystemManager(parentId, parentNodeType);
         }
-        Collections.sort(appList);
-        for (Y9App y9App : appList) {
-            Y9System y9System = y9SystemService.getById(y9App.getSystemId());
-            RoleVO appVO = new RoleVO();
-            appVO.setId(y9App.getId());
-            appVO.setName(y9App.getName());
-            appVO.setSystemName(y9System.getName());
-            appVO.setSystemCnName(y9System.getCnName());
-            appVO.setType(RoleTypeEnum.FOLDER);
-            appVO.setHasChild(true);
-            appVO.setParentId(y9App.getId());
-            appVO.setGuidPath(y9App.getId());
-            roleVOList.add(appVO);
+        return Y9Result.success(roleTreeNodeVOList, "获取角色列表成功");
+    }
+
+    private List<RoleTreeNodeVO> treeByOperationSystemManager(String parentId, TreeNodeType parentNodeType) {
+        List<RoleTreeNodeVO> roleTreeNodeVOList = new ArrayList<>();
+        if (StringUtils.isBlank(parentId)) {
+            // 根节点为系统
+            List<Y9System> y9SystemList = y9SystemService.listAll();
+            roleTreeNodeVOList.addAll(RoleTreeNodeVO.convertY9SystemList(y9SystemList));
+        } else if (TreeNodeType.SYSTEM.equals(parentNodeType)) {
+            // 系统节点下为应用
+            List<Y9App> appList = y9AppService.listBySystemId(parentId);
+            roleTreeNodeVOList.addAll(RoleTreeNodeVO.convertY9AppList(appList));
+        } else {
+            // 应用节点下为角色文件夹或角色节点
+            List<Y9Role> roleList = y9RoleService.listByParentId(parentId);
+            roleTreeNodeVOList.addAll(RoleTreeNodeVO.convertY9RoleList(roleList));
         }
-        for (Y9Role y9Role : y9RoleList) {
-            if (!InitDataConsts.TOP_PUBLIC_ROLE_ID.equals(y9Role.getAppId())) {
-                RoleVO roleVO = Y9ModelConvertUtil.convert(y9Role, RoleVO.class);
-                if (RoleTypeEnum.FOLDER.equals(y9Role.getType())) {
-                    roleVO.setHasChild(!y9RoleService.listByParentId(y9Role.getId()).isEmpty());
-                }
-                roleVO.setGuidPath(y9Role.getAppId() + "," + y9Role.getGuidPath());
-                roleVOList.add(roleVO);
-            }
+        return roleTreeNodeVOList;
+    }
+
+    private List<RoleTreeNodeVO> treeBySystemManager(String parentId, TreeNodeType parentNodeType) {
+        List<RoleTreeNodeVO> roleTreeNodeVOList = new ArrayList<>();
+        if (StringUtils.isBlank(parentId)) {
+            // 根节点为系统
+            List<Y9System> y9SystemList = y9TenantSystemService.listSystemByTenantId(Y9LoginUserHolder.getTenantId());
+            roleTreeNodeVOList.addAll(RoleTreeNodeVO.convertY9SystemList(y9SystemList));
+        } else if (TreeNodeType.SYSTEM.equals(parentNodeType)) {
+            // 系统节点下为应用
+            List<String> appIdList = y9TenantAppService.listAppIdBySystemIdAndTenantId(parentId,
+                    Y9LoginUserHolder.getTenantId(), true, true);
+            List<Y9App> appList = y9AppService.listByIds(appIdList);
+            roleTreeNodeVOList.addAll(RoleTreeNodeVO.convertY9AppList(appList));
+        } else {
+            // 应用节点下为角色文件夹或角色节点
+            List<Y9Role> roleList = y9RoleService.listByParentId4Tenant(parentId, Y9LoginUserHolder.getTenantId());
+            roleTreeNodeVOList.addAll(RoleTreeNodeVO.convertY9RoleList(roleList));
         }
-        return Y9Result.success(roleVOList, "根据角色名称查询角色节点成功");
+        return roleTreeNodeVOList;
     }
 
     /**
@@ -289,6 +268,16 @@ public class RoleController {
     @RiseLog(operationName = "查询角色")
     @GetMapping(value = "/treeSearch2")
     public Y9Result<List<RoleTreeNodeVO>> treeSearch2(@RequestParam String name) {
+        List<RoleTreeNodeVO> roleTreeNodeVOList;
+        if (ManagerLevelEnum.SYSTEM_MANAGER.equals(Y9LoginUserHolder.getUserInfo().getManagerLevel())) {
+            roleTreeNodeVOList = treeSearchBySystemManager(name);
+        } else {
+            roleTreeNodeVOList = treeSearchByOperationSystemManager(name);
+        }
+        return Y9Result.success(roleTreeNodeVOList, "根据角色名称查询角色节点成功");
+    }
+
+    private List<RoleTreeNodeVO> treeSearchByOperationSystemManager(String name) {
         List<RoleTreeNodeVO> roleTreeNodeVOList = new ArrayList<>();
 
         List<Y9Role> y9RoleList = y9RoleService.treeSearch(name);
@@ -301,15 +290,51 @@ public class RoleController {
             }
         }
         Collections.sort(appList);
-        for (Y9App y9App : appList) {
-            roleTreeNodeVOList.add(RoleTreeNodeVO.convertY9App(y9App));
-        }
+        roleTreeNodeVOList.addAll(RoleTreeNodeVO.convertY9AppList(appList));
+
+        List<String> systemIdList =
+                appList.stream().map(Y9ResourceBase::getSystemId).distinct().collect(Collectors.toList());
+        List<Y9System> y9SystemList = y9SystemService.listByIds(systemIdList);
+        roleTreeNodeVOList.addAll(RoleTreeNodeVO.convertY9SystemList(y9SystemList));
+
         for (Y9Role y9Role : y9RoleList) {
             if (!InitDataConsts.TOP_PUBLIC_ROLE_ID.equals(y9Role.getAppId())) {
                 roleTreeNodeVOList.add(RoleTreeNodeVO.convertY9Role(y9Role));
             }
         }
-        return Y9Result.success(roleTreeNodeVOList, "根据角色名称查询角色节点成功");
+        return roleTreeNodeVOList;
+    }
+
+    private List<RoleTreeNodeVO> treeSearchBySystemManager(String name) {
+        List<RoleTreeNodeVO> roleTreeNodeVOList = new ArrayList<>();
+
+        List<Y9Role> y9RoleList = y9RoleService.treeSearch(name);
+
+        List<String> tenantedAppIdList =
+                y9TenantAppService.listAppIdByTenantId(Y9LoginUserHolder.getTenantId(), true, true);
+        Set<String> roleRelatedAppIdSet = y9RoleList.stream().map(Y9Role::getAppId).collect(Collectors.toSet());
+        Collection<String> resultAppIdCollection = CollectionUtils.intersection(tenantedAppIdList, roleRelatedAppIdSet);
+        List<Y9App> appList = new ArrayList<>();
+        for (String appId : resultAppIdCollection) {
+            if (!InitDataConsts.TOP_PUBLIC_ROLE_ID.equals(appId)) {
+                Y9App y9App = y9AppService.getById(appId);
+                appList.add(y9App);
+            }
+        }
+        Collections.sort(appList);
+        roleTreeNodeVOList.addAll(RoleTreeNodeVO.convertY9AppList(appList));
+
+        List<String> systemIdList =
+                appList.stream().map(Y9ResourceBase::getSystemId).distinct().collect(Collectors.toList());
+        List<Y9System> y9SystemList = y9SystemService.listByIds(systemIdList);
+        roleTreeNodeVOList.addAll(RoleTreeNodeVO.convertY9SystemList(y9SystemList));
+
+        for (Y9Role y9Role : y9RoleList) {
+            if (!InitDataConsts.TOP_PUBLIC_ROLE_ID.equals(y9Role.getAppId())) {
+                roleTreeNodeVOList.add(RoleTreeNodeVO.convertY9Role(y9Role));
+            }
+        }
+        return roleTreeNodeVOList;
     }
 
 }

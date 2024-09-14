@@ -124,6 +124,8 @@ public interface Y9AppService extends ResourceCommonService<Y9App> {
 
     List<Y9App> listByEnable();
 
+    List<Y9App> listByIds(List<String> appIdList);
+
     /**
      * 根据systemId，获取应用列表
      *

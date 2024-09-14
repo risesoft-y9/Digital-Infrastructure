@@ -127,31 +127,6 @@ public class OrgController {
      * 获取机构树子节点
      *
      * @param id 父节点id
-     * @param treeType
-     *            树类型：tree_type_org，tree_type_bureau，tree_type_dept，tree_type_group，tree_type_position，tree_type_person
-     * @param disabled false为不显示禁用人员，true为显示禁用人员
-     * @return {@code Y9Result<List<Y9OrgBase>>}
-     */
-    @RiseLog(operationName = "获取机构树子节点")
-    @RequestMapping(value = "/getTree")
-    @Deprecated
-    @IsManager({ManagerLevelEnum.SYSTEM_MANAGER, ManagerLevelEnum.SECURITY_MANAGER})
-    public Y9Result<List<Y9OrgBase>> getTree(@RequestParam @NotBlank String id, @RequestParam OrgTreeTypeEnum treeType,
-        boolean disabled) {
-        UserInfo userInfo = Y9LoginUserHolder.getUserInfo();
-        List<Y9OrgBase> treeList = new ArrayList<>();
-        if (userInfo.isGlobalManager() && !ManagerLevelEnum.GENERAL_USER.equals(userInfo.getManagerLevel())) {
-            treeList = compositeOrgBaseService.getTree(id, treeType, disabled);
-        } else if (!ManagerLevelEnum.GENERAL_USER.equals(userInfo.getManagerLevel())) {
-            treeList = compositeOrgBaseService.getTree4DeptManager(id, treeType);
-        }
-        return Y9Result.success(treeList, "获取机构树成功！");
-    }
-
-    /**
-     * 获取机构树子节点
-     *
-     * @param id 父节点id
      * @param treeType 树类型
      * @return {@code Y9Result<List<OrgTreeNodeVO>>}
      */

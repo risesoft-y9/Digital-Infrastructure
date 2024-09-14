@@ -126,6 +126,11 @@ public class Y9AppServiceImpl implements Y9AppService {
     }
 
     @Override
+    public List<Y9App> listByIds(List<String> appIdList) {
+        return y9AppRepository.findAllById(appIdList);
+    }
+
+    @Override
     public List<Y9App> listByAppName(String appName) {
         if (appName != null && appName.length() > 0) {
             return y9AppRepository.findByName(appName);
@@ -166,7 +171,7 @@ public class Y9AppServiceImpl implements Y9AppService {
     public Page<Y9App> page(Y9PageQuery pageQuery, String systemId, String name) {
         Y9AppSpecification<Y9App> specification = new Y9AppSpecification<>(systemId, name);
         PageRequest pageRequest = PageRequest.of(pageQuery.getPage4Db(), pageQuery.getSize(),
-            Sort.by(Sort.Direction.ASC, "tabIndex").and(Sort.by(Sort.Direction.DESC, "createTime")));
+                Sort.by(Sort.Direction.ASC, "tabIndex").and(Sort.by(Sort.Direction.DESC, "createTime")));
         return y9AppRepository.findAll(specification, pageRequest);
     }
 
@@ -188,7 +193,7 @@ public class Y9AppServiceImpl implements Y9AppService {
     public Y9App saveIsvApp(Y9App app) {
         if (app.getTabIndex() == null || app.getTabIndex() == 0) {
             Integer tabIndex =
-                y9AppRepository.findTopByOrderByTabIndexDesc().map(y9App -> y9App.getTabIndex() + 1).orElse(1);
+                    y9AppRepository.findTopByOrderByTabIndexDesc().map(y9App -> y9App.getTabIndex() + 1).orElse(1);
             app.setTabIndex(tabIndex);
         }
 

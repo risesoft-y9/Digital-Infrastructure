@@ -84,7 +84,6 @@ public class OnApplicationReady implements ApplicationListener<ApplicationReadyE
             publicRole.setSystemCnName("公共角色顶节点");
             publicRole.setSystemName("Y9OrgHierarchyManagement");
             publicRole.setType(RoleTypeEnum.FOLDER);
-            publicRole.setTenantCustom(false);
             publicRole.setDynamic(false);
             publicRole.setTabIndex(0);
             y9RoleService.createRole(publicRole);
