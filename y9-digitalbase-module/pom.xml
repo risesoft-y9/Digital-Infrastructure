@@ -10,17 +10,23 @@
         <relativePath>../y9-digitalbase-parent/pom.xml</relativePath>
     </parent>
     <groupId>net.risesoft</groupId>
-    <artifactId>y9-digitalbase-example</artifactId>
+    <artifactId>y9-digitalbase-module</artifactId>
     <packaging>pom</packaging>
-    <version>${revision}</version>
+    <name>y9-digitalbase-module</name>
+    <description>RiseSoft/Digital Infrastructure module parent</description>
 
+    <scm>
+        <url>${gitee.url}</url>
+        <connection>${gitee.connection}</connection>
+        <developerConnection>${gitee.developerConnection}</developerConnection>
+    </scm>
 
     <modules>
-        <module>risenet-y9demo-kernel-api/backend-demo</module>
-        <module>risenet-y9demo-sso-oauth2/backend-demo</module>
-        <module>risenet-y9demo-sync-kafka</module>
-        <module>risenet-y9demo-file</module>
-        <module>risenet-y9demo-idcode</module>
+        <module>y9-module-filemanager</module>
+        <module>y9-module-log</module>
+        <module>y9-module-idcode</module>
+        <module>y9-module-platform</module>
+        <module>y9-module-sso</module>
     </modules>
 
     <profiles>
@@ -33,11 +39,11 @@
                         <artifactId>central-publishing-maven-plugin</artifactId>
                         <configuration>
                             <excludeArtifacts>
-                                <artifact>risenet-y9demo-kernel-api</artifact>
-                                <artifact>risenet-y9demo-sso-oauth2</artifact>
-                                <artifact>risenet-y9demo-sync-kafka</artifact>
-                                <artifact>risenet-y9demo-file</artifact>
-                                <artifact>risenet-y9demo-idcode</artifact>
+                                <artifact>y9-module-filemanager</artifact>
+                                <artifact>risenet-y9boot-webapp-filemanager</artifact>
+                                <artifact>risenet-y9boot-webapp-log</artifact>
+                                <artifact>risenet-y9boot-webapp-platform</artifact>
+                                <artifact>y9-module-sso</artifact>
                             </excludeArtifacts>
                         </configuration>
                     </plugin>
@@ -45,5 +51,4 @@
             </build>
         </profile>
     </profiles>
-
 </project>

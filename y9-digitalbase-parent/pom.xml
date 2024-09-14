@@ -5,17 +5,17 @@
     <modelVersion>4.0.0</modelVersion>
     <parent>
         <groupId>net.risesoft</groupId>
-        <artifactId>y9-digitalbase</artifactId>
+        <artifactId>y9-digitalbase-dependencies</artifactId>
         <version>${revision}</version>
-        <relativePath>../pom.xml</relativePath>
+        <relativePath>../y9-digitalbase-dependencies</relativePath>
     </parent>
     <groupId>net.risesoft</groupId>
-    <artifactId>y9-digitalbase-dependencies</artifactId>
+    <artifactId>y9-digitalbase-parent</artifactId>
     <packaging>pom</packaging>
     <version>${revision}</version>
-    <name>y9-digitalbase-dependencies</name>
-    <description>RiseSoft/Digital Infrastructure dependencies</description>
-    <url>https://gitee.com/risesoft-y9/y9-core/tree/main/y9-digitalbase-dependencies</url>
+    <name>y9-digitalbase-parent</name>
+    <description>RiseSoft/Digital Infrastructure dependencies parent</description>
+    <url>https://gitee.com/risesoft-y9/y9-core/tree/main/y9-digitalbase-parent</url>
 
     <licenses>
         <license>

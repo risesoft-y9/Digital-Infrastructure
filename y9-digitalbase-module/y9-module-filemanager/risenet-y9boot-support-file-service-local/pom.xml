@@ -1,0 +1,45 @@
+<project xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xmlns="http://maven.apache.org/POM/4.0.0"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+    <parent>
+        <groupId>net.risesoft</groupId>
+        <artifactId>y9-module-filemanager</artifactId>
+        <version>${revision}</version>
+        <relativePath>../pom.xml</relativePath>
+    </parent>
+    <artifactId>risenet-y9boot-support-file-service-local</artifactId>
+    <packaging>jar</packaging>
+    <name>risenet-y9boot-support-file-service-local</name>
+    <description>RiseSoft/Digital Infrastructure file local service</description>
+
+    <properties>
+    </properties>
+
+    <scm>
+        <url>${gitee.url}</url>
+        <connection>${gitee.connection}</connection>
+        <developerConnection>${gitee.developerConnection}</developerConnection>
+    </scm>
+
+    <dependencies>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-configuration-processor</artifactId>
+            <optional>true</optional>
+        </dependency>
+
+        <dependency>
+            <groupId>org.slf4j</groupId>
+            <artifactId>slf4j-api</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>net.risesoft</groupId>
+            <artifactId>risenet-y9boot-support-file-jpa-repository</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+
+    </dependencies>
+
+</project>

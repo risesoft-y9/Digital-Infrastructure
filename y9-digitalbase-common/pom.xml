@@ -4,9 +4,9 @@
     <modelVersion>4.0.0</modelVersion>
     <parent>
         <groupId>net.risesoft</groupId>
-        <artifactId>y9-digitalbase</artifactId>
+        <artifactId>y9-digitalbase-parent</artifactId>
         <version>${revision}</version>
-        <relativePath>../pom.xml</relativePath>
+        <relativePath>../y9-digitalbase-parent/pom.xml</relativePath>
     </parent>
     <groupId>net.risesoft</groupId>
     <artifactId>y9-digitalbase-common</artifactId>
@@ -27,5 +27,6 @@
         <module>risenet-y9boot-common-util</module>
         <module>risenet-y9boot-common-tenant-datasource</module>
         <module>risenet-y9boot-common-sqlddl</module>
+        <module>risenet-y9boot-support-history</module>
     </modules>
 </project>
