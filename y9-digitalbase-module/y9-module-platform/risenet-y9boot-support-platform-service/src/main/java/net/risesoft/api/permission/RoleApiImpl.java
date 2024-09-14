@@ -67,7 +67,7 @@ public class RoleApiImpl implements RoleApi {
      */
     @Override
     public Y9Result<Object> addPerson(@RequestParam("personId") @NotBlank String personId,
-        @RequestParam("roleId") @NotBlank String roleId, @RequestParam("tenantId") @NotBlank String tenantId) {
+                                      @RequestParam("roleId") @NotBlank String roleId, @RequestParam("tenantId") @NotBlank String tenantId) {
         Y9LoginUserHolder.setTenantId(tenantId);
 
         y9OrgBasesToRolesService.addOrgUnitsForRole(roleId, Collections.singletonList(personId), Boolean.TRUE);
@@ -82,16 +82,13 @@ public class RoleApiImpl implements RoleApi {
      * @param parentId 父节点id
      * @param customId 自定义id
      * @param type 角色类型，node或者role
-     * @param systemName 系统标识
-     * @param systemCnName 系统中文名称
      * @return {@code Y9Result<Role>} 通用请求返回对象 - data 是保存的角色对象
      * @since 9.6.0
      */
     @Override
     public Y9Result<Role> createRole(@RequestParam("roleId") String roleId, @RequestParam("roleName") String roleName,
-        @RequestParam("parentId") String parentId, @RequestParam("customId") String customId,
-        @RequestParam("type") RoleTypeEnum type, @RequestParam("systemName") String systemName,
-        @RequestParam("systemCnName") String systemCnName) {
+                                     @RequestParam("parentId") String parentId, @RequestParam("customId") String customId,
+                                     @RequestParam("type") RoleTypeEnum type) {
         Optional<Y9Role> y9RoleOptional = y9RoleService.findByCustomIdAndParentId(customId, parentId);
         Y9Role roleNode;
         if (y9RoleOptional.isEmpty()) {
@@ -100,8 +97,6 @@ public class RoleApiImpl implements RoleApi {
             roleNode.setCustomId(customId);
             roleNode.setParentId(parentId);
             roleNode.setType(type);
-            roleNode.setSystemName(systemName);
-            roleNode.setSystemCnName(systemCnName);
         } else {
             roleNode = y9RoleOptional.get();
         }
@@ -133,7 +128,7 @@ public class RoleApiImpl implements RoleApi {
      */
     @Override
     public Y9Result<Role> findByCustomIdAndParentId(@RequestParam("customId") @NotBlank String customId,
-        @RequestParam("parentId") @NotBlank String parentId) {
+                                                    @RequestParam("parentId") @NotBlank String parentId) {
         Y9Role roleNode = y9RoleService.findByCustomIdAndParentId(customId, parentId).orElse(null);
         return Y9Result.success(ModelConvertUtil.y9RoleToRole(roleNode));
     }
@@ -162,7 +157,7 @@ public class RoleApiImpl implements RoleApi {
      */
     @Override
     public Y9Result<List<OrgUnit>> listOrgUnitsById(@RequestParam("tenantId") @NotBlank String tenantId,
-        @RequestParam("roleId") @NotBlank String roleId, @RequestParam("orgType") OrgTypeEnum orgType) {
+                                                    @RequestParam("roleId") @NotBlank String roleId, @RequestParam("orgType") OrgTypeEnum orgType) {
         Y9LoginUserHolder.setTenantId(tenantId);
 
         List<Y9OrgBasesToRoles> roleMappingList = y9OrgBasesToRolesService.listByRoleId(roleId);
@@ -190,7 +185,7 @@ public class RoleApiImpl implements RoleApi {
      */
     @Override
     public Y9Result<List<Person>> listPersonsById(@RequestParam("tenantId") @NotBlank String tenantId,
-        @RequestParam("roleId") @NotBlank String roleId) {
+                                                  @RequestParam("roleId") @NotBlank String roleId) {
         Y9LoginUserHolder.setTenantId(tenantId);
 
         List<Y9OrgBasesToRoles> roleMappingList = y9OrgBasesToRolesService.listByRoleId(roleId);
@@ -236,7 +231,7 @@ public class RoleApiImpl implements RoleApi {
      */
     @Override
     public Y9Result<Object> removePerson(@RequestParam("personId") @NotBlank String personId,
-        @RequestParam("roleId") @NotBlank String roleId, @RequestParam("tenantId") @NotBlank String tenantId) {
+                                         @RequestParam("roleId") @NotBlank String roleId, @RequestParam("tenantId") @NotBlank String tenantId) {
         Y9LoginUserHolder.setTenantId(tenantId);
         y9OrgBasesToRolesService.removeOrgBases(roleId, Collections.singletonList(personId));
         return Y9Result.success();

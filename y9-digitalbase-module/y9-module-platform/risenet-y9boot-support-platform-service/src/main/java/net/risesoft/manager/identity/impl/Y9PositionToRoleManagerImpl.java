@@ -45,7 +45,7 @@ public class Y9PositionToRoleManagerImpl implements Y9PositionToRoleManager {
     @Transactional(readOnly = false, propagation = Propagation.REQUIRES_NEW)
     public void save(Y9Position y9Position, Y9Role role) {
         Optional<Y9PositionToRole> optionalY9PositionToRole =
-            y9PositionToRoleRepository.findByPositionIdAndRoleId(y9Position.getId(), role.getId());
+                y9PositionToRoleRepository.findByPositionIdAndRoleId(y9Position.getId(), role.getId());
         if (optionalY9PositionToRole.isEmpty()) {
             Y9PositionToRole y9PositionToRole = new Y9PositionToRole();
             y9PositionToRole.setId(Y9IdGenerator.genId());
@@ -53,6 +53,12 @@ public class Y9PositionToRoleManagerImpl implements Y9PositionToRoleManager {
             y9PositionToRole.setPositionId(y9Position.getId());
             y9PositionToRole.setRoleId(role.getId());
             y9PositionToRole.setAppId(role.getAppId());
+            y9PositionToRole.setSystemId(role.getSystemId());
+            y9PositionToRoleRepository.save(y9PositionToRole);
+        } else {
+            Y9PositionToRole y9PositionToRole = optionalY9PositionToRole.get();
+            y9PositionToRole.setAppId(role.getAppId());
+            y9PositionToRole.setSystemId(role.getSystemId());
             y9PositionToRoleRepository.save(y9PositionToRole);
         }
     }

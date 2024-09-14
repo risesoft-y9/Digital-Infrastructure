@@ -32,7 +32,7 @@ import net.risesoft.y9public.service.tenant.Y9TenantSystemService;
 /**
  * 应用启动监听器 <br>
  * 执行一系列的数据初始化
- * 
+ *
  * @author dingzhaojun
  * @author qinman
  * @author mengjuhua
@@ -79,10 +79,6 @@ public class OnApplicationReady implements ApplicationListener<ApplicationReadyE
             Y9Role publicRole = new Y9Role();
             publicRole.setId(InitDataConsts.TOP_PUBLIC_ROLE_ID);
             publicRole.setName("公共角色列表");
-            publicRole.setAppId(InitDataConsts.TOP_PUBLIC_ROLE_ID);
-            publicRole.setAppCnName("公共角色");
-            publicRole.setSystemCnName("公共角色顶节点");
-            publicRole.setSystemName("Y9OrgHierarchyManagement");
             publicRole.setType(RoleTypeEnum.FOLDER);
             publicRole.setDynamic(false);
             publicRole.setTabIndex(0);
@@ -126,7 +122,7 @@ public class OnApplicationReady implements ApplicationListener<ApplicationReadyE
 
     private void createTenantSystem(String tenantId, String systemId, String dataSourceId) {
         Optional<Y9TenantSystem> y9TenantSystemOptional =
-            y9TenantSystemService.getByTenantIdAndSystemId(tenantId, systemId);
+                y9TenantSystemService.getByTenantIdAndSystemId(tenantId, systemId);
         if (y9TenantSystemOptional.isEmpty()) {
             Y9TenantSystem y9TenantSystem = new Y9TenantSystem();
             y9TenantSystem.setId(Y9IdGenerator.genId(IdType.SNOWFLAKE));

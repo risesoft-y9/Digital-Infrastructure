@@ -37,7 +37,7 @@ public interface RoleApi {
      */
     @PostMapping("/addPerson")
     Y9Result<Object> addPerson(@RequestParam("personId") @NotBlank String personId,
-        @RequestParam("roleId") @NotBlank String roleId, @RequestParam("tenantId") @NotBlank String tenantId);
+                               @RequestParam("roleId") @NotBlank String roleId, @RequestParam("tenantId") @NotBlank String tenantId);
 
     /**
      * 新增角色节点
@@ -47,16 +47,13 @@ public interface RoleApi {
      * @param parentId 父节点id
      * @param customId 自定义id
      * @param type 角色类型，node或者role
-     * @param systemName 系统标识
-     * @param systemCnName 系统中文名称
      * @return {@code Y9Result<Role>} 通用请求返回对象 - data 是保存的角色对象
      * @since 9.6.0
      */
     @PostMapping("/createRole")
     Y9Result<Role> createRole(@RequestParam("roleId") String roleId, @RequestParam("roleName") String roleName,
-        @RequestParam("parentId") String parentId, @RequestParam("customId") String customId,
-        @RequestParam("type") RoleTypeEnum type, @RequestParam("systemName") String systemName,
-        @RequestParam("systemCnName") String systemCnName);
+                              @RequestParam("parentId") String parentId, @RequestParam("customId") String customId,
+                              @RequestParam("type") RoleTypeEnum type);
 
     /**
      * 删除角色
@@ -78,7 +75,7 @@ public interface RoleApi {
      */
     @GetMapping("/findByCustomIdAndParentId")
     Y9Result<Role> findByCustomIdAndParentId(@RequestParam("customId") @NotBlank String customId,
-        @RequestParam("parentId") @NotBlank String parentId);
+                                             @RequestParam("parentId") @NotBlank String parentId);
 
     /**
      * 根据id获取相应角色节点
@@ -101,7 +98,7 @@ public interface RoleApi {
      */
     @GetMapping("/listOrgUnitsById")
     Y9Result<List<OrgUnit>> listOrgUnitsById(@RequestParam("tenantId") @NotBlank String tenantId,
-        @RequestParam("roleId") @NotBlank String roleId, @RequestParam("orgType") OrgTypeEnum orgType);
+                                             @RequestParam("roleId") @NotBlank String roleId, @RequestParam("orgType") OrgTypeEnum orgType);
 
     /**
      * 根据角色Id获取直接关联的人员对象集合
@@ -113,7 +110,7 @@ public interface RoleApi {
      */
     @GetMapping("/listPersonsById")
     Y9Result<List<Person>> listPersonsById(@RequestParam("tenantId") @NotBlank String tenantId,
-        @RequestParam("roleId") @NotBlank String roleId);
+                                           @RequestParam("roleId") @NotBlank String roleId);
 
     /**
      * 根据父节点Id获取相应子级角色节点
@@ -136,5 +133,5 @@ public interface RoleApi {
      */
     @PostMapping("/removePerson")
     Y9Result<Object> removePerson(@RequestParam("personId") @NotBlank String personId,
-        @RequestParam("roleId") @NotBlank String roleId, @RequestParam("tenantId") @NotBlank String tenantId);
+                                  @RequestParam("roleId") @NotBlank String roleId, @RequestParam("tenantId") @NotBlank String tenantId);
 }

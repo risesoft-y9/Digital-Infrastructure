@@ -16,7 +16,9 @@ import net.risesoft.enums.platform.RoleTypeEnum;
 import net.risesoft.repository.identity.position.Y9PositionToRoleRepository;
 import net.risesoft.service.identity.Y9PositionToRoleService;
 import net.risesoft.y9.pubsub.event.Y9EntityDeletedEvent;
+import net.risesoft.y9public.entity.resource.Y9System;
 import net.risesoft.y9public.entity.role.Y9Role;
+import net.risesoft.y9public.manager.resource.Y9SystemManager;
 import net.risesoft.y9public.repository.role.Y9RoleRepository;
 
 /**
@@ -33,6 +35,8 @@ public class Y9PositionToRoleServiceImpl implements Y9PositionToRoleService {
     private final Y9PositionToRoleRepository y9PositionToRoleRepository;
     private final Y9RoleRepository y9RoleRepository;
 
+    private final Y9SystemManager y9SystemManager;
+
     @Override
     public Boolean hasPublicRole(String positionId, String roleName) {
         List<Y9Role> y9RoleList = y9RoleRepository.findByParentIdAndName(InitDataConsts.TOP_PUBLIC_ROLE_ID, roleName);
@@ -46,12 +50,14 @@ public class Y9PositionToRoleServiceImpl implements Y9PositionToRoleService {
 
     @Override
     public Boolean hasRole(String positionId, String systemName, String roleName, String properties) {
+        Y9System y9System = y9SystemManager.getByName(systemName);
+
         List<Y9Role> y9RoleList;
         if (StringUtils.isBlank(properties)) {
-            y9RoleList = y9RoleRepository.findByNameAndSystemNameAndType(roleName, systemName, RoleTypeEnum.ROLE);
+            y9RoleList = y9RoleRepository.findByNameAndSystemIdAndType(roleName, y9System.getId(), RoleTypeEnum.ROLE);
         } else {
-            y9RoleList = y9RoleRepository.findByNameAndSystemNameAndPropertiesAndType(roleName, systemName, properties,
-                RoleTypeEnum.ROLE);
+            y9RoleList = y9RoleRepository.findByNameAndSystemIdAndPropertiesAndType(roleName, y9System.getId(), properties,
+                    RoleTypeEnum.ROLE);
         }
 
         return y9RoleList.stream().anyMatch(y9Role -> hasRole(positionId, y9Role.getId()));

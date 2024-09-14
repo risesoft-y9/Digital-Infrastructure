@@ -54,7 +54,6 @@
     import { getTreeItemById, searchByName, treeInterface } from '@/api/org/index';
     import { useSettingStore } from '@/store/modules/settingStore';
     import { getPersonRolePermissionList, getPositionRolePermissionList, identityRoles } from '@/api/permission';
-    import { ElMessage } from 'element-plus';
     import y9_storage from '@/utils/storage';
 
     const settingStore = useSettingStore();
@@ -99,8 +98,12 @@
                     key: 'appName',
                     width: 150,
                     render: (row) => {
-                        let str = '<i class="ri-apps-line"></i><span>' + row.appName + '</span>';
-                        return h('div', { innerHTML: str });
+                        if (row.appName) {
+                            let str = '<i class="ri-apps-line"></i><span>' + row.appName + '</span>';
+                            return h('div', { innerHTML: str });
+                        } else {
+                            return '';
+                        }
                     }
                 },
                 {
@@ -130,7 +133,7 @@
                     }
                 }
 
-                if (column.property === 'resourceName') {
+                if (column.property === 'appName') {
                     if (row.detailRowspan) {
                         return {
                             rowspan: row.detailRowspan,
