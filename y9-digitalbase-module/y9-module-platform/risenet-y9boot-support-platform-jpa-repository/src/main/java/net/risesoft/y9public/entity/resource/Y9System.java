@@ -47,7 +47,7 @@ public class Y9System extends BaseEntity {
 
     /** 系统英文名称 */
     @NotBlank
-    @javax.persistence.Column(name = "NAME", length = 50, nullable = false, unique = true)
+    @Column(name = "NAME", length = 50, nullable = false, unique = true)
     @Comment("系统英文名称")
     private String name;
 
