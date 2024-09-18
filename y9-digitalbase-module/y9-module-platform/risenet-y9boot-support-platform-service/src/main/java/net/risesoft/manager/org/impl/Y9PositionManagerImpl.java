@@ -17,6 +17,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import lombok.RequiredArgsConstructor;
 
+import net.risesoft.config.Y9PlatformProperties;
 import net.risesoft.consts.CacheNameConsts;
 import net.risesoft.entity.Y9Job;
 import net.risesoft.entity.Y9OrgBase;
@@ -36,7 +37,6 @@ import net.risesoft.repository.relation.Y9PersonsToPositionsRepository;
 import net.risesoft.util.Y9OrgUtil;
 import net.risesoft.y9.Y9Context;
 import net.risesoft.y9.Y9LoginUserHolder;
-import net.risesoft.y9.configuration.Y9Properties;
 import net.risesoft.y9.exception.util.Y9ExceptionUtil;
 import net.risesoft.y9.pubsub.event.Y9EntityCreatedEvent;
 import net.risesoft.y9.pubsub.event.Y9EntityUpdatedEvent;
@@ -57,12 +57,12 @@ public class Y9PositionManagerImpl implements Y9PositionManager {
     private final Y9PersonManager y9PersonManager;
     private final CompositeOrgBaseManager compositeOrgBaseManager;
 
-    private final Y9Properties y9Properties;
+    private final Y9PlatformProperties y9PlatformProperties;
 
     @Override
     public String buildName(Y9Job y9Job, List<Y9PersonsToPositions> personsToPositionsList) {
         String name;
-        String pattern = y9Properties.getApp().getPlatform().getPositionNamePattern();
+        String pattern = y9PlatformProperties.getPositionNamePattern();
 
         if (personsToPositionsList.isEmpty()) {
             name = MessageFormat.format(pattern, y9Job.getName(), "空缺");

@@ -7,7 +7,7 @@ import org.springframework.boot.context.properties.EnableConfigurationProperties
 import net.risesoft.y9.configuration.Y9Properties;
 
 @SpringBootApplication
-@EnableConfigurationProperties(Y9Properties.class)
+@EnableConfigurationProperties({Y9Properties.class, Y9FileManagerProperties.class})
 public class FileManagerApplication {
 
     public static void main(String[] args) {

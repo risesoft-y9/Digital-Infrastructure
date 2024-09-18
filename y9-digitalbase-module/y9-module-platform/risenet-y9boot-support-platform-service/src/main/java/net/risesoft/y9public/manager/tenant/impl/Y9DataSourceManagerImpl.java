@@ -16,12 +16,12 @@ import com.zaxxer.hikari.HikariDataSource;
 
 import lombok.extern.slf4j.Slf4j;
 
+import net.risesoft.config.Y9PlatformProperties;
 import net.risesoft.enums.platform.DataSourceTypeEnum;
 import net.risesoft.enums.platform.TenantTypeEnum;
 import net.risesoft.exception.DataSourceErrorCodeEnum;
 import net.risesoft.id.IdType;
 import net.risesoft.id.Y9IdGenerator;
-import net.risesoft.y9.configuration.Y9Properties;
 import net.risesoft.y9.db.DbType;
 import net.risesoft.y9.db.DbUtil;
 import net.risesoft.y9.exception.Y9BusinessException;
@@ -44,13 +44,13 @@ import net.risesoft.y9public.repository.tenant.Y9DataSourceRepository;
 public class Y9DataSourceManagerImpl implements Y9DataSourceManager {
 
     private final JdbcTemplate jdbcTemplate4Public;
-    private final Y9Properties y9config;
+    private final Y9PlatformProperties y9PlatformProperties;
     private final Y9DataSourceRepository datasourceRepository;
 
     public Y9DataSourceManagerImpl(@Qualifier("jdbcTemplate4Public") JdbcTemplate jdbcTemplate4Public,
-        Y9Properties y9config, Y9DataSourceRepository datasourceRepository) {
+        Y9PlatformProperties y9PlatformProperties, Y9DataSourceRepository datasourceRepository) {
         this.jdbcTemplate4Public = jdbcTemplate4Public;
-        this.y9config = y9config;
+        this.y9PlatformProperties = y9PlatformProperties;
         this.datasourceRepository = datasourceRepository;
     }
 
@@ -157,7 +157,7 @@ public class Y9DataSourceManagerImpl implements Y9DataSourceManager {
             password = dds.getPassword();
 
             String tableSpace = username + "_DATA";
-            String dataFile = y9config.getApp().getPlatform().getNewTableSpacePath() + tableSpace + ".DBF";
+            String dataFile = y9PlatformProperties.getNewTableSpacePath() + tableSpace + ".DBF";
 
             // 创建表空间
             String sql1 = Y9StringUtil.format(
@@ -197,7 +197,7 @@ public class Y9DataSourceManagerImpl implements Y9DataSourceManager {
             password = dds.getPassword();
 
             String tableSpace = upperCaseDbName + "_DATA";
-            String dataFile = y9config.getApp().getPlatform().getNewTableSpacePath() + tableSpace + ".DBF";
+            String dataFile = y9PlatformProperties.getNewTableSpacePath() + tableSpace + ".DBF";
 
             // 创建表空间
             String sql1 =
@@ -309,7 +309,7 @@ public class Y9DataSourceManagerImpl implements Y9DataSourceManager {
 
     /**
      * 替换 jdbc url 中的数据库名称 <br>
-     *
+     * <p>
      * 例如：replaceDatabaseNameInJdbcUrl("jdbc:mysql://localhost:3306/y9_public?allowPublicKeyRetrieval=true",
      * "y9_default") -> "jdbc:mysql://localhost:3306/y9_default?allowPublicKeyRetrieval=true"
      *

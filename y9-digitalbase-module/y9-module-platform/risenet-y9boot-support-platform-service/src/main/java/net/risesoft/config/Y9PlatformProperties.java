@@ -1,4 +1,4 @@
-package net.risesoft.y9.configuration.app.y9platform;
+package net.risesoft.config;
 
 import lombok.Getter;
 import lombok.Setter;

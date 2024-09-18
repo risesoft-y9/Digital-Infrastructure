@@ -3,7 +3,7 @@ package net.risesoft.enums;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 
-import net.risesoft.y9.configuration.app.y9platform.Y9PlatformProperties;
+import net.risesoft.config.Y9PlatformProperties;
 
 /**
  * 默认设置枚举
