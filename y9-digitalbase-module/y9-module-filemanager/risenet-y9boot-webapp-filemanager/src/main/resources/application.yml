@@ -15,8 +15,8 @@ spring:
             config:
                 enabled: false
                 group: DEFAULT_GROUP
-                namespace: dev
-                server-addr: https://dev.youshengyun.com:443
+                namespace: local
+                server-addr: http://localhost:8848
                 username: nacos
                 password: ${NACOS_PASSWORD:111111}
             discovery:
