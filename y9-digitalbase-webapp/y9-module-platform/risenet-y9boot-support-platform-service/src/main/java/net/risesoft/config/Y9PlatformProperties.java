@@ -1,10 +1,13 @@
-package net.risesoft.y9.configuration.app.y9platform;
+package net.risesoft.config;
+
+import org.springframework.boot.context.properties.ConfigurationProperties;
 
 import lombok.Getter;
 import lombok.Setter;
 
 @Getter
 @Setter
+@ConfigurationProperties(prefix = "y9.app.platform", ignoreInvalidFields = true, ignoreUnknownFields = true)
 public class Y9PlatformProperties {
 
     public static final int MANAGER_MODIFY_PASSWORD_CYCLE_DEFAULT = 7;

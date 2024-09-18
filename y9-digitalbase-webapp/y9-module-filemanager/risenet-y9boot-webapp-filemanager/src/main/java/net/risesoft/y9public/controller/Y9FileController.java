@@ -3,13 +3,11 @@ package net.risesoft.y9public.controller;
 import java.io.File;
 import java.net.URLEncoder;
 
-import javax.annotation.PostConstruct;
 import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.apache.commons.io.FileUtils;
-import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -21,6 +19,7 @@ import org.springframework.web.multipart.MultipartFile;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
+import net.risesoft.Y9FileManagerProperties;
 import net.risesoft.y9public.entity.Y9FileStore;
 import net.risesoft.y9public.repository.Y9FileStoreRepository;
 
@@ -29,17 +28,15 @@ import net.risesoft.y9public.repository.Y9FileStoreRepository;
 @RequiredArgsConstructor
 public class Y9FileController {
 
-    private String fileStoreRoot = "d:/y9config/y9filestore";
-
     private final Y9FileStoreRepository fileRepository;
 
-    private final Environment environment;
+    private final Y9FileManagerProperties y9FileManagerProperties;
 
     @RequestMapping(value = "/rest/deleteFile")
     @ResponseBody
     public String deleteFile(String fullPath, String fileName, HttpServletResponse response) throws Exception {
         try {
-            File path = new File(this.fileStoreRoot + fullPath);
+            File path = new File(y9FileManagerProperties.getFileRoot() + fullPath);
             path.mkdirs();
             File file = new File(path, fileName);
             if (file.exists()) {
@@ -87,7 +84,7 @@ public class Y9FileController {
                 String fileName = f.getFileName();
                 String fullPath = f.getFullPath();
 
-                File file = new File(this.fileStoreRoot + fullPath + "/" + f.getRealFileName());
+                File file = new File(y9FileManagerProperties.getFileRoot() + fullPath + "/" + f.getRealFileName());
                 if (file.exists()) {
                     String userAgent = request.getHeader("User-Agent");
                     if (userAgent.contains("MSIE") || userAgent.contains("Trident")) {
@@ -135,17 +132,12 @@ public class Y9FileController {
         download(realStoreFileName, request, response);
     }
 
-    @PostConstruct
-    public void init() {
-        this.fileStoreRoot = environment.getProperty("y9.app.fileManager.fileRoot", "d:/y9config/y9filestore");
-    }
-
     @RequestMapping(value = "/rest/retrieveFileStream")
     public void retrieveFileStream(String fullPath, String fileName, HttpServletRequest request,
         HttpServletResponse response) throws Exception {
         ServletOutputStream out = response.getOutputStream();
         try {
-            File path = new File(this.fileStoreRoot + fullPath);
+            File path = new File(y9FileManagerProperties.getFileRoot() + fullPath);
             File file = new File(path, fileName);
             if (file.exists()) {
                 String userAgent = request.getHeader("User-Agent");
@@ -176,7 +168,7 @@ public class Y9FileController {
     @ResponseBody
     public String storeFile(MultipartFile multipartFile, String fullPath, String fileName) throws Exception {
         try {
-            File path = new File(this.fileStoreRoot + fullPath);
+            File path = new File(y9FileManagerProperties.getFileRoot() + fullPath);
             path.mkdirs();
             File file = new File(path, fileName);
             multipartFile.transferTo(file);

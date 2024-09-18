@@ -1,4 +1,6 @@
-package net.risesoft.y9.configuration.app.y9filemanager;
+package net.risesoft;
+
+import org.springframework.boot.context.properties.ConfigurationProperties;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -11,6 +13,7 @@ import lombok.Setter;
  */
 @Getter
 @Setter
+@ConfigurationProperties(prefix = "y9.app.file-manager", ignoreInvalidFields = true, ignoreUnknownFields = true)
 public class Y9FileManagerProperties {
 
     /**

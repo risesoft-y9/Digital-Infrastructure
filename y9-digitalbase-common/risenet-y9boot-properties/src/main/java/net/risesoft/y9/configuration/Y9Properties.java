@@ -6,7 +6,6 @@ import org.springframework.boot.context.properties.NestedConfigurationProperty;
 import lombok.Getter;
 import lombok.Setter;
 
-import net.risesoft.y9.configuration.app.Y9AppProperties;
 import net.risesoft.y9.configuration.common.Y9CommonProperties;
 import net.risesoft.y9.configuration.feature.Y9FeatureProperties;
 
@@ -44,12 +43,6 @@ public class Y9Properties {
      */
     @NestedConfigurationProperty
     private Y9CommonProperties common = new Y9CommonProperties();
-
-    /**
-     * 应用配置
-     */
-    @NestedConfigurationProperty
-    private Y9AppProperties app = new Y9AppProperties();
 
     /**
      * 特性、功能配置

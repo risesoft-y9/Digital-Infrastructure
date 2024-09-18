@@ -9,6 +9,7 @@ import org.springframework.stereotype.Component;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
+import net.risesoft.config.Y9PlatformProperties;
 import net.risesoft.consts.InitDataConsts;
 import net.risesoft.enums.platform.RoleTypeEnum;
 import net.risesoft.enums.platform.TenantTypeEnum;
@@ -48,7 +49,8 @@ public class OnApplicationReady implements ApplicationListener<ApplicationReadyE
     private final Y9AppService y9AppService;
     private final Y9DataSourceService y9DataSourceService;
     private final Y9TenantSystemService y9TenantSystemService;
-    private final Y9Properties y9Config;
+    private final Y9Properties y9Properties;
+    private final Y9PlatformProperties y9PlatformProperties;
     private final Y9RoleService y9RoleService;
     private final Y9TenantAppService y9TenantAppService;
 
@@ -61,7 +63,7 @@ public class OnApplicationReady implements ApplicationListener<ApplicationReadyE
             y9App.setAliasName("部门管理");
             y9App.setEnabled(true);
             y9App.setHidden(false);
-            y9App.setUrl(y9Config.getCommon().getOrgBaseUrl());
+            y9App.setUrl(y9Properties.getCommon().getOrgBaseUrl());
             y9App.setInherit(false);
             y9App.setChecked(false);
             y9App.setShowNumber(false);
@@ -91,9 +93,9 @@ public class OnApplicationReady implements ApplicationListener<ApplicationReadyE
         if (y9SystemOptional.isEmpty()) {
             Y9System y9System = new Y9System();
             y9System.setId(systemId);
-            y9System.setContextPath(y9Config.getContextPath());
-            y9System.setName(y9Config.getSystemName());
-            y9System.setCnName(y9Config.getSystemCnName());
+            y9System.setContextPath(y9Properties.getContextPath());
+            y9System.setName(y9Properties.getSystemName());
+            y9System.setCnName(y9Properties.getSystemCnName());
             y9System.setEnabled(true);
             y9System.setAutoInit(true);
             y9System.setTabIndex(10000);
@@ -107,8 +109,8 @@ public class OnApplicationReady implements ApplicationListener<ApplicationReadyE
             Y9Tenant y9Tenant = new Y9Tenant();
             y9Tenant.setId(tenantId);
             y9Tenant.setDefaultDataSourceId(dataSourceId);
-            y9Tenant.setShortName(y9Config.getApp().getPlatform().getInitTenantName());
-            y9Tenant.setName(y9Config.getApp().getPlatform().getInitTenantName());
+            y9Tenant.setShortName(y9PlatformProperties.getInitTenantName());
+            y9Tenant.setName(y9PlatformProperties.getInitTenantName());
             y9Tenant.setEnabled(true);
             y9Tenant.setTenantType(TenantTypeEnum.TENANT);
             y9Tenant.setTabIndex(10000);
@@ -138,7 +140,7 @@ public class OnApplicationReady implements ApplicationListener<ApplicationReadyE
     public void onApplicationEvent(ApplicationReadyEvent event) {
         LOGGER.info("platform ApplicationReady...");
 
-        createDataSource(InitDataConsts.DATASOURCE_ID, y9Config.getApp().getPlatform().getInitTenantSchema());
+        createDataSource(InitDataConsts.DATASOURCE_ID, y9PlatformProperties.getInitTenantSchema());
         createTenant(InitDataConsts.TENANT_ID, InitDataConsts.DATASOURCE_ID);
         createSystem(InitDataConsts.SYSTEM_ID);
         // 租用系统会发送 租户租用系统事件 系统做监听做数据初始化

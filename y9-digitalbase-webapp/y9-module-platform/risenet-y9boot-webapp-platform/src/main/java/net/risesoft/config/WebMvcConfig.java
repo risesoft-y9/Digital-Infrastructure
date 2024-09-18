@@ -24,7 +24,7 @@ import net.risesoft.y9.configuration.Y9Properties;
  * @date 2022/2/10
  */
 @Configuration
-@EnableConfigurationProperties(Y9Properties.class)
+@EnableConfigurationProperties({Y9Properties.class, Y9PlatformProperties.class})
 @EnableAsync(proxyTargetClass = true, mode = AdviceMode.ASPECTJ)
 public class WebMvcConfig {
 
