@@ -16,4 +16,3 @@ y9:
                     client-secret: secret
                     introspection-uri: http://localhost:7055/sso/oauth2.0/introspect
                     profile-uri: http://localhost:7055/sso/oauth2.0/profile
-                    tokenCachedInSession: true
