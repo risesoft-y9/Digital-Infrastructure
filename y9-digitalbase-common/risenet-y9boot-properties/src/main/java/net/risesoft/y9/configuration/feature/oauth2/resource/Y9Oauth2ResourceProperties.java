@@ -1,5 +1,7 @@
 package net.risesoft.y9.configuration.feature.oauth2.resource;
 
+import java.util.List;
+
 import org.springframework.boot.context.properties.NestedConfigurationProperty;
 
 import lombok.Getter;
@@ -52,7 +54,7 @@ public class Y9Oauth2ResourceProperties {
     /**
      * 受保护 url 正则
      */
-    private String protectedUrlPatterns;
+    private List<String> protectedUrlPatterns;
 
     /**
      * baisc

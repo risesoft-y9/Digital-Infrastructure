@@ -9,6 +9,7 @@ import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.UUID;
 
 import javax.servlet.Filter;
@@ -23,7 +24,6 @@ import javax.servlet.http.HttpSession;
 
 import org.apache.commons.httpclient.NameValuePair;
 import org.apache.commons.lang3.StringUtils;
-import org.springframework.core.env.Environment;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
@@ -32,8 +32,6 @@ import org.springframework.http.RequestEntity;
 import org.springframework.http.ResponseEntity;
 import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.web.client.RestTemplate;
-import org.springframework.web.context.WebApplicationContext;
-import org.springframework.web.context.support.WebApplicationContextUtils;
 
 import lombok.extern.slf4j.Slf4j;
 
@@ -45,6 +43,9 @@ import net.risesoft.model.user.UserInfo;
 import net.risesoft.model.user.UserProfile;
 import net.risesoft.pojo.Y9Result;
 import net.risesoft.y9.Y9LoginUserHolder;
+import net.risesoft.y9.configuration.Y9Properties;
+import net.risesoft.y9.configuration.feature.log.Y9LogProperties;
+import net.risesoft.y9.configuration.feature.oauth2.resource.Y9Oauth2ResourceProperties;
 import net.risesoft.y9.json.Y9JsonUtil;
 import net.risesoft.y9.pubsub.constant.Y9TopicConst;
 import net.risesoft.y9.util.InetAddressUtil;
@@ -58,19 +59,19 @@ import net.risesoft.y9.util.Y9EnumUtil;
 @Slf4j
 public class Y9Oauth2ResourceFilter implements Filter {
     private final RestTemplate restTemplate = new RestTemplate();
-    private WebApplicationContext ctx = null;
-    private Environment env = null;
     private String serverIp = "";
-    private String systemName = "";
-    private String introspectionUri = "";
-    private String profileUri = "";
-    private boolean tokenCachedInSession = false;
-    private String clientId = "";
-    private String clientSecret = "";
-    private boolean saveLogMessage = false;
-    private boolean saveOnlineMessage = false;
-    private KafkaTemplate<String, Object> y9KafkaTemplate;
-    private String logSaveTarget = "";
+
+    private final KafkaTemplate<String, Object> y9KafkaTemplate;
+    private final Y9Properties y9Properties;
+    private final Y9Oauth2ResourceProperties y9Oauth2ResourceProperties;
+    private final Y9LogProperties y9LogProperties;
+
+    public Y9Oauth2ResourceFilter(Y9Properties y9Properties, KafkaTemplate<String, Object> y9KafkaTemplate) {
+        this.y9Properties = y9Properties;
+        this.y9Oauth2ResourceProperties = y9Properties.getFeature().getOauth2().getResource();
+        this.y9LogProperties = y9Properties.getFeature().getLog();
+        this.y9KafkaTemplate = y9KafkaTemplate;
+    }
 
     private String buildExceptionMessage(Exception ex) {
         StringWriter stringWriter = new StringWriter();
@@ -85,139 +86,86 @@ public class Y9Oauth2ResourceFilter implements Filter {
         throws IOException, ServletException {
         HttpServletRequest request = (HttpServletRequest)servletRequest;
         HttpServletResponse response = (HttpServletResponse)servletResponse;
-        // HttpSession session = request.getSession();
 
         UserInfo userInfo = null;
-        long start = System.nanoTime();
+
         String errorMessage = "";
         String throwable = "";
         String success = "成功";
-        String hostIp = "";
-        long end = System.nanoTime();
-        long elapsedTime = 0L;
-        hostIp = getIpAddr(request);
-        String userAgent = request.getHeader("User-Agent");
-        String url = request.getRequestURL().toString();
 
-        if (this.env == null) {
-            this.ctx = WebApplicationContextUtils.getWebApplicationContext(request.getServletContext());
-            this.env = this.ctx.getEnvironment();
-
-            systemName = this.env.getProperty("y9.systemName");
-            clientId = this.env.getProperty("y9.feature.oauth2.resource.opaque.client-id");
-            clientSecret = this.env.getProperty("y9.feature.oauth2.resource.opaque.client-secret");
-            introspectionUri = this.env.getProperty("y9.feature.oauth2.resource.opaque.introspection-uri");
-            profileUri = this.env.getProperty("y9.feature.oauth2.resource.opaque.profile-uri");
-
-            tokenCachedInSession = Boolean
-                .parseBoolean(this.env.getProperty("y9.feature.oauth2.resource.opaque.tokenCachedInSession", "false"));
-
-            logSaveTarget = this.env.getProperty("y9.feature.log.logSaveTarget", String.class, "kafka");
-            // restTemplateBasicAuth = new RestTemplate();
-            // restTemplateBasicAuth.getInterceptors().add(new
-            // BasicAuthenticationInterceptor(clientId, clientSecret,
-            // StandardCharsets.UTF_8));
-            boolean prop =
-                this.env.getProperty("y9.feature.oauth2.resource.saveOnlineMessage", Boolean.class, Boolean.TRUE);
-            if (prop) {
-                saveOnlineMessage = true;
-            }
-
-            prop = this.env.getProperty("y9.feature.oauth2.resource.saveLogMessage", Boolean.class, Boolean.FALSE);
-            if (prop) {
-                saveLogMessage = true;
-            }
-
-            if ((saveOnlineMessage || saveLogMessage) && logSaveTarget.equals("kafka")) {
-                try {
-                    this.y9KafkaTemplate = ctx.getBean("y9KafkaTemplate", KafkaTemplate.class);
-                } catch (Exception ex) {
-                    LOGGER.warn(ex.getMessage(), ex);
-                }
-                if (this.y9KafkaTemplate == null) {
-                    saveOnlineMessage = false;
-                    saveLogMessage = false;
-                }
-            }
-
-        }
+        long startTime = System.nanoTime();
+        long endTime;
+        long elapsedTime;
 
         try {
             HttpSession session = request.getSession(false);
-            String accessTokenInSession = session != null ? (String)session.getAttribute("access_token") : null;
 
-            // 检查HttpHeader，是否存在"Authorization: Bearer ????"，或者access_token参数
             String accessToken = getAccessTokenFromRequest(request);
-            if (accessToken != null) {
-                boolean needVerifyToken = !tokenCachedInSession;
-                if (!needVerifyToken) {
-                    if (!accessToken.equals(accessTokenInSession)) {
-                        needVerifyToken = true;
-                    }
-                }
-                if (needVerifyToken) {
-                    ResponseEntity<OAuth20IntrospectionAccessTokenSuccessResponse> introspectEntity = null;
-                    try {
-                        introspectEntity = invokeIntrospectEndpoint(accessToken);
-                    } catch (Exception ex) {
-                        LOGGER.warn(ex.getMessage(), ex);
-                        setResponse(response, HttpStatus.INTERNAL_SERVER_ERROR, GlobalErrorCodeEnum.FAILURE);
-                        return;
-                    }
-
-                    if (introspectEntity.getStatusCodeValue() == HttpStatus.OK.value()) {
-                        OAuth20IntrospectionAccessTokenSuccessResponse introspectionResponse =
-                            introspectEntity.getBody();
-                        if (!introspectionResponse.isActive()) {
-                            setResponse(response, HttpStatus.UNAUTHORIZED, GlobalErrorCodeEnum.ACCESS_TOKEN_EXPIRED);
-                            return;
-                        }
-
-                        String attr = null;
-                        try {
-                            attr = introspectionResponse.getAttr();
-                            userInfo = Y9JsonUtil.readValue(attr, UserInfo.class);
-                        } catch (Exception e) {
-                            ResponseEntity<String> profileEntity = invokeProfileEndpoint(accessToken);
-                            String profile = profileEntity.getBody();
-                            userInfo = Y9JsonUtil.readValue(profile, UserInfo.class);
-                        }
-
-                        if (userInfo != null) {
-                            if (session == null) {
-                                session = request.getSession(true);
-                            }
-                            session.setAttribute("access_token", accessToken);
-                            session.setAttribute("userInfo", userInfo);
-                            session.setAttribute("loginName", userInfo.getLoginName());
-                            session.setAttribute("positionId", userInfo.getPositionId());
-                            session.setAttribute("deptId", userInfo.getParentId());
-                            if (StringUtils.isNotBlank(userInfo.getPositionId())) {
-                                Y9LoginUserHolder.setPositionId(userInfo.getPositionId());
-                            } else if (StringUtils.isNotBlank(userInfo.getPositions())) {
-                                String[] postionList = userInfo.getPositions().split(",");
-                                Y9LoginUserHolder.setPositionId(postionList[0]);
-                            }
-                            Y9LoginUserHolder.setTenantId(userInfo.getTenantId());
-                            Y9LoginUserHolder.setTenantName(userInfo.getTenantName());
-                            Y9LoginUserHolder.setTenantShortName(userInfo.getTenantShortName());
-                            Y9LoginUserHolder.setUserInfo(userInfo);
-
-                            if (saveOnlineMessage) {
-                                remoteSaveUserOnline(userInfo);
-                            }
-                        }
-                    } else {
-                        setResponse(response, HttpStatus.UNAUTHORIZED,
-                            GlobalErrorCodeEnum.ACCESS_TOKEN_VERIFICATION_FAILED);
-                        return;
-                    }
-                }
-
-                filterChain.doFilter(request, response);
-            } else {
+            if (StringUtils.isBlank(accessToken)) {
                 setResponse(response, HttpStatus.UNAUTHORIZED, GlobalErrorCodeEnum.ACCESS_TOKEN_NOT_FOUND);
+                return;
             }
+
+            ResponseEntity<OAuth20IntrospectionAccessTokenSuccessResponse> introspectEntity = null;
+            try {
+                introspectEntity = invokeIntrospectEndpoint(accessToken);
+            } catch (Exception e) {
+                LOGGER.warn(e.getMessage(), e);
+                setResponse(response, HttpStatus.INTERNAL_SERVER_ERROR, GlobalErrorCodeEnum.FAILURE);
+                return;
+            }
+
+            if (introspectEntity.getStatusCodeValue() != HttpStatus.OK.value()) {
+                setResponse(response, HttpStatus.UNAUTHORIZED, GlobalErrorCodeEnum.ACCESS_TOKEN_VERIFICATION_FAILED);
+                return;
+            }
+
+            OAuth20IntrospectionAccessTokenSuccessResponse introspectionResponse = introspectEntity.getBody();
+            if (!introspectionResponse.isActive()) {
+                setResponse(response, HttpStatus.UNAUTHORIZED, GlobalErrorCodeEnum.ACCESS_TOKEN_EXPIRED);
+                return;
+            }
+
+            userInfo = Y9JsonUtil.readValue(introspectionResponse.getAttr(), UserInfo.class);
+            if (userInfo == null) {
+                ResponseEntity<String> profileEntity = null;
+                try {
+                    profileEntity = invokeProfileEndpoint(accessToken);
+                } catch (Exception e) {
+                    LOGGER.warn(e.getMessage(), e);
+                    setResponse(response, HttpStatus.INTERNAL_SERVER_ERROR, GlobalErrorCodeEnum.FAILURE);
+                }
+                String profile = profileEntity.getBody();
+                userInfo = Y9JsonUtil.readValue(profile, UserInfo.class);
+            }
+
+            if (userInfo != null) {
+                if (session == null) {
+                    session = request.getSession(true);
+                }
+                session.setAttribute("access_token", accessToken);
+                session.setAttribute("userInfo", userInfo);
+                session.setAttribute("loginName", userInfo.getLoginName());
+                session.setAttribute("positionId", userInfo.getPositionId());
+                session.setAttribute("deptId", userInfo.getParentId());
+                if (StringUtils.isNotBlank(userInfo.getPositionId())) {
+                    Y9LoginUserHolder.setPositionId(userInfo.getPositionId());
+                } else if (StringUtils.isNotBlank(userInfo.getPositions())) {
+                    String[] postionList = userInfo.getPositions().split(",");
+                    Y9LoginUserHolder.setPositionId(postionList[0]);
+                }
+                Y9LoginUserHolder.setTenantId(userInfo.getTenantId());
+                Y9LoginUserHolder.setTenantName(userInfo.getTenantName());
+                Y9LoginUserHolder.setTenantShortName(userInfo.getTenantShortName());
+                Y9LoginUserHolder.setUserInfo(userInfo);
+
+                if (y9Oauth2ResourceProperties.isSaveOnlineMessage()) {
+                    remoteSaveUserOnline(userInfo);
+                }
+            }
+
+            filterChain.doFilter(request, response);
+
         } catch (Exception ex) {
             success = "出错";
             errorMessage = ex.getMessage();
@@ -225,16 +173,17 @@ public class Y9Oauth2ResourceFilter implements Filter {
             throw ex;
         } finally {
             Y9LoginUserHolder.clear();
-            end = System.nanoTime();
-            elapsedTime = end - start;
+            endTime = System.nanoTime();
+            elapsedTime = endTime - startTime;
             String y9aoplog = response.getHeader("y9aoplog");
-            if (!"true".equals(y9aoplog) && saveLogMessage) {
-                remoteSaveLog(url, userInfo, hostIp, elapsedTime, success, errorMessage, throwable, userAgent);
+            if (!"true".equals(y9aoplog) && y9Oauth2ResourceProperties.isSaveLogMessage()) {
+                remoteSaveLog(request, userInfo, elapsedTime, success, errorMessage, throwable);
             }
         }
     }
 
     private String getAccessTokenFromRequest(final HttpServletRequest request) {
+        // 从请求参数或请求头中获取令牌
         String accessToken = request.getParameter("access_token");
         if (StringUtils.isBlank(accessToken)) {
             String authHeader = request.getHeader("Authorization");
@@ -242,6 +191,7 @@ public class Y9Oauth2ResourceFilter implements Filter {
                 accessToken = authHeader.substring("Bearer ".length());
             }
         }
+
         return accessToken;
     }
 
@@ -278,9 +228,10 @@ public class Y9Oauth2ResourceFilter implements Filter {
         HttpHeaders headers = new HttpHeaders();
         headers.setAccept(Collections.singletonList(MediaType.APPLICATION_JSON));
         headers.setContentType(MediaType.APPLICATION_FORM_URLENCODED);
-        headers.setBasicAuth(this.clientId, this.clientSecret, StandardCharsets.UTF_8);
+        headers.setBasicAuth(y9Oauth2ResourceProperties.getOpaque().getClientId(),
+            y9Oauth2ResourceProperties.getOpaque().getClientSecret(), StandardCharsets.UTF_8);
 
-        URI uri = URI.create(this.introspectionUri + "?token=" + accessToken);
+        URI uri = URI.create(y9Oauth2ResourceProperties.getOpaque().getIntrospectionUri() + "?token=" + accessToken);
         RequestEntity<?> requestEntity = new RequestEntity<>(headers, HttpMethod.POST, uri);
         ResponseEntity<OAuth20IntrospectionAccessTokenSuccessResponse> responseEntity =
             this.restTemplate.exchange(requestEntity, OAuth20IntrospectionAccessTokenSuccessResponse.class);
@@ -292,77 +243,76 @@ public class Y9Oauth2ResourceFilter implements Filter {
         headers.setAccept(Collections.singletonList(MediaType.APPLICATION_JSON));
         headers.set("Authorization", "Bearer " + accessToken);
 
-        URI uri = URI.create(this.profileUri + "?access_token=" + accessToken);
+        URI uri = URI.create(y9Oauth2ResourceProperties.getOpaque().getProfileUri() + "?access_token=" + accessToken);
         RequestEntity<?> requestEntity = new RequestEntity<>(headers, HttpMethod.GET, uri);
         ResponseEntity<String> responseEntity = this.restTemplate.exchange(requestEntity, String.class);
         return responseEntity;
     }
 
-    private void remoteSaveLog(String url, UserInfo userInfo, String hostIp, long elapsedTime, String success,
-        String errorMessage, String throwable, String userAgent) {
+    private void remoteSaveLog(HttpServletRequest request, UserInfo userInfo, long elapsedTime, String success,
+        String errorMessage, String throwable) {
+        String url = request.getRequestURL().toString();
+
         if (url.endsWith(".js") || url.endsWith(".css") || url.endsWith(".gif") || url.endsWith(".jpg")
             || url.endsWith(".png") || url.endsWith(".svg")) {
-            // do nothing,skip
-        } else {
-            try {
-                AccessLog log = new AccessLog();
-                log.setLogLevel("RSLOG");
-                log.setLogTime(new Date());
-                log.setRequestUrl(url);
-                // log.setMethodName(url);
-                log.setElapsedTime(String.valueOf(elapsedTime));
-                log.setSuccess(success);
-                log.setLogMessage(errorMessage);
-                log.setThrowable(throwable);
-                log.setId(UUID.randomUUID().toString().replaceAll("-", ""));
-                log.setServerIp(this.serverIp);
-                log.setUserHostIp(hostIp);
-                // log.setModularName();
-                // log.setOperateName("");
-                log.setOperateType("活动");
-                log.setUserAgent(userAgent);
-                log.setSystemName(this.systemName);
-                if (userInfo != null) {
-                    log.setUserId(userInfo.getParentId());
-                    log.setUserName(userInfo.getLoginName());
-                    log.setTenantId(userInfo.getTenantId());
-                    log.setTenantName(userInfo.getTenantName());
-                    log.setGuidPath(userInfo.getGuidPath());
-                    log.setManagerLevel(String.valueOf(userInfo.getManagerLevel().getValue()));
-                }
-                if (logSaveTarget.equals("kafka")) {
-                    if (this.y9KafkaTemplate != null) {
+            return;
+        }
 
-                        String jsonString = Y9JsonUtil.writeValueAsString(log);
-                        this.y9KafkaTemplate.send(Y9TopicConst.Y9_ACCESSLOG_MESSAGE, jsonString);
-                    }
-                } else if (logSaveTarget.equals("api")) {
-                    String logBaseUrl =
-                        env.getProperty("y9.common.logBaseUrl", String.class, "http://localhost:7056/log");
-                    String logurl = logBaseUrl + "/services/rest/v1/accessLog/asyncSaveLog";
-                    List<NameValuePair> requestBody = RemoteCallUtil.objectToNameValuePairList(log);
-                    RemoteCallUtil.post(logurl, null, requestBody, Object.class);
-                }
-            } catch (Exception e) {
-                LOGGER.warn(e.getMessage(), e);
+        try {
+            AccessLog log = new AccessLog();
+            log.setLogLevel("RSLOG");
+            log.setLogTime(new Date());
+            log.setRequestUrl(url);
+            // log.setMethodName(url);
+            log.setElapsedTime(String.valueOf(elapsedTime));
+            log.setSuccess(success);
+            log.setLogMessage(errorMessage);
+            log.setThrowable(throwable);
+            log.setId(UUID.randomUUID().toString().replaceAll("-", ""));
+            log.setServerIp(this.serverIp);
+            log.setUserHostIp(getIpAddr(request));
+            // log.setModularName();
+            // log.setOperateName("");
+            log.setOperateType("活动");
+            log.setUserAgent(request.getHeader("User-Agent"));
+            log.setSystemName(y9Properties.getSystemName());
+            if (userInfo != null) {
+                log.setUserId(userInfo.getParentId());
+                log.setUserName(userInfo.getLoginName());
+                log.setTenantId(userInfo.getTenantId());
+                log.setTenantName(userInfo.getTenantName());
+                log.setGuidPath(userInfo.getGuidPath());
+                log.setManagerLevel(String.valueOf(userInfo.getManagerLevel().getValue()));
             }
+            if (Objects.equals(y9LogProperties.getLogSaveTarget(), Y9LogProperties.LogSaveTarget.KAFKA)) {
+                if (this.y9KafkaTemplate != null) {
+                    String jsonString = Y9JsonUtil.writeValueAsString(log);
+                    this.y9KafkaTemplate.send(Y9TopicConst.Y9_ACCESSLOG_MESSAGE, jsonString);
+                }
+            } else if (Objects.equals(y9LogProperties.getLogSaveTarget(), Y9LogProperties.LogSaveTarget.API)) {
+                String logBaseUrl = y9Properties.getCommon().getLogBaseUrl();
+                String saveAccessLogUrl = logBaseUrl + "/services/rest/v1/accessLog/asyncSaveLog";
+                List<NameValuePair> requestBody = RemoteCallUtil.objectToNameValuePairList(log);
+                RemoteCallUtil.post(saveAccessLogUrl, null, requestBody, Object.class);
+            }
+        } catch (Exception e) {
+            LOGGER.warn(e.getMessage(), e);
         }
     }
 
     private void remoteSaveUserOnline(UserInfo userInfo) {
         if (userInfo != null) {
             try {
-                if (logSaveTarget.equals("kafka")) {
+                if (Objects.equals(y9LogProperties.getLogSaveTarget(), Y9LogProperties.LogSaveTarget.KAFKA)) {
                     String jsonString = Y9JsonUtil.writeValueAsString(userInfo);
                     if (this.y9KafkaTemplate != null) {
                         this.y9KafkaTemplate.send(Y9TopicConst.Y9_USERONLINE_MESSAGE, jsonString);
                     }
-                } else if (logSaveTarget.equals("api")) {
-                    String userOnlineBaseUrl = env.getProperty("y9.common.userOnlineBaseUrl", String.class,
-                        "http://localhost:7056/userOnline");
-                    String onlineurl = userOnlineBaseUrl + "/services/rest/userOnline/saveAsync";
+                } else if (Objects.equals(y9LogProperties.getLogSaveTarget(), Y9LogProperties.LogSaveTarget.API)) {
+                    String userOnlineBaseUrl = y9Properties.getCommon().getUserOnlineBaseUrl();
+                    String saveOnlineUrl = userOnlineBaseUrl + "/services/rest/userOnline/saveAsync";
                     List<NameValuePair> requestBody = RemoteCallUtil.objectToNameValuePairList(userInfo);
-                    RemoteCallUtil.post(onlineurl, null, requestBody, Object.class);
+                    RemoteCallUtil.post(saveOnlineUrl, null, requestBody, Object.class);
                 }
             } catch (Exception e) {
                 LOGGER.warn(e.getMessage(), e);
@@ -405,7 +355,7 @@ public class Y9Oauth2ResourceFilter implements Filter {
         userInfo.setTenantId((String)map.get("tenantId"));
         userInfo.setTenantShortName((String)map.get("tenantShortName"));
         userInfo.setTenantName((String)map.get("tenantName"));
-        userInfo.setGlobalManager(Boolean.valueOf(String.valueOf(map.get("globalManager"))));
+        userInfo.setGlobalManager(Boolean.parseBoolean(String.valueOf(map.get("globalManager"))));
         userInfo.setAvator((String)map.get("avator"));
         userInfo.setRoles((String)map.get("roles"));
         userInfo.setPositions((String)map.get("positions"));
