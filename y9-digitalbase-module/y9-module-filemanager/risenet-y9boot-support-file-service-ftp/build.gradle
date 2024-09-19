@@ -16,6 +16,8 @@ dependencies {
     api libs.commons.net.commons.net
     api libs.org.apache.commons.commons.pool2
     api project(':risenet-y9boot-support-file-jpa-repository')
+
+    annotationProcessor libs.org.projectlombok.lombok
 }
 
 description = 'risenet-y9boot-support-file-service-ftp'

@@ -14,10 +14,14 @@ dependencies {
     api libs.org.springframework.boot.spring.boot.configuration.processor
     api project(':risenet-y9boot-properties')
     api project(':risenet-y9boot-common-util')
-    api libs.org.springframework.cloud.spring.cloud.starter.openfeign
+    api(libs.org.springframework.cloud.spring.cloud.starter.openfeign) {
+        exclude group: 'org.springframework.cloud', module: 'spring-cloud-context'
+    }
     api libs.org.springframework.cloud.spring.cloud.starter.loadbalancer
     api libs.org.springframework.boot.spring.boot.starter.data.redis
     compileOnly libs.jakarta.servlet.jakarta.servlet.api
+
+    annotationProcessor libs.org.projectlombok.lombok
 }
 
 description = 'risenet-y9boot-starter-openfeign'

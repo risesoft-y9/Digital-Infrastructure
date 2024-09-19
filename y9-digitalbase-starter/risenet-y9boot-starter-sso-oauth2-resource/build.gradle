@@ -18,6 +18,9 @@ dependencies {
     api project(':risenet-y9boot-common-model')
     api libs.org.jodd.jodd.http
     compileOnly libs.jakarta.servlet.jakarta.servlet.api
+
+    annotationProcessor libs.org.projectlombok.lombok
+
 }
 
 description = 'risenet-y9boot-starter-sso-oauth2-resource'

@@ -17,6 +17,8 @@ dependencies {
     api project(':risenet-y9boot-starter-jpa-public')
     api libs.com.google.guava.guava
     compileOnly libs.jakarta.servlet.jakarta.servlet.api
+
+    annotationProcessor libs.org.projectlombok.lombok
 }
 
 description = 'risenet-y9boot-support-history'

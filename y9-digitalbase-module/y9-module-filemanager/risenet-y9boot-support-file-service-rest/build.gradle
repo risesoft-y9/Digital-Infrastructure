@@ -15,6 +15,8 @@ dependencies {
     api libs.org.springframework.spring.web
     api libs.org.jodd.jodd.http
     api project(':risenet-y9boot-support-file-jpa-repository')
+
+    annotationProcessor libs.org.projectlombok.lombok
 }
 
 description = 'risenet-y9boot-support-file-service-rest'

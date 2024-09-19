@@ -11,6 +11,8 @@ plugins {
 dependencies {
     api project(':risenet-y9boot-common-util')
     api libs.org.springframework.boot.spring.boot.starter.jdbc
+
+    annotationProcessor libs.org.projectlombok.lombok
 }
 
 description = 'risenet-y9boot-common-tenant-datasource'

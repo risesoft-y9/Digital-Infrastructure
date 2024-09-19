@@ -69,6 +69,8 @@ dependencies {
     api libs.com.dameng.dmdialect.for.hibernate5.v6
     api libs.com.dameng.dmjdbcdriver18
     providedCompile libs.org.projectlombok.lombok.x1
+    
+    annotationProcessor libs.org.projectlombok.lombok.x1
 }
 
 description = 'risenet-y9boot-webapp-sso-server'

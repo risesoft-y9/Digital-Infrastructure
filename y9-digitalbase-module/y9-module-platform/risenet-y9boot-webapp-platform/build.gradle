@@ -29,6 +29,10 @@ dependencies {
     testImplementation libs.org.springframework.boot.spring.boot.starter.test
     testImplementation libs.com.h2database.h2
     providedCompile libs.jakarta.servlet.jakarta.servlet.api
+
+    annotationProcessor libs.org.projectlombok.lombok
+    testCompileOnly libs.org.projectlombok.lombok
+    testAnnotationProcessor libs.org.projectlombok.lombok
 }
 
 description = 'risenet-y9boot-webapp-platform'

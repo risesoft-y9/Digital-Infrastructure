@@ -27,6 +27,8 @@ dependencies {
     api libs.com.dameng.dmjdbcdriver18
     api libs.com.oceanbase.oceanbase.client
     compileOnly libs.jakarta.servlet.jakarta.servlet.api
+
+    annotationProcessor libs.org.projectlombok.lombok
 }
 
 description = 'risenet-y9boot-starter-jpa-tenant'

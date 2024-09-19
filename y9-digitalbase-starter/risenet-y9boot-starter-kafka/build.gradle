@@ -14,6 +14,8 @@ dependencies {
     api libs.org.springframework.boot.spring.boot.configuration.processor
     api libs.org.springframework.kafka.spring.kafka
     api project(':risenet-y9boot-common-util')
+
+    annotationProcessor libs.org.projectlombok.lombok
 }
 
 description = 'risenet-y9boot-starter-kafka'

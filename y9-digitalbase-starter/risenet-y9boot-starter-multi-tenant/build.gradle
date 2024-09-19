@@ -16,6 +16,8 @@ dependencies {
     api project(':risenet-y9boot-starter-jpa-tenant')
     api project(':risenet-y9boot-starter-liquibase')
     api libs.org.springframework.kafka.spring.kafka
+
+    annotationProcessor libs.org.projectlombok.lombok
 }
 
 description = 'risenet-y9boot-starter-multi-tenant'

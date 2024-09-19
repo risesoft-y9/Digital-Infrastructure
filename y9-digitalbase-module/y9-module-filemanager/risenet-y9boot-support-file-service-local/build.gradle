@@ -12,6 +12,8 @@ dependencies {
     api libs.org.springframework.boot.spring.boot.configuration.processor
     api libs.org.slf4j.slf4j.api
     api project(':risenet-y9boot-support-file-jpa-repository')
+
+    annotationProcessor libs.org.projectlombok.lombok
 }
 
 description = 'risenet-y9boot-support-file-service-local'

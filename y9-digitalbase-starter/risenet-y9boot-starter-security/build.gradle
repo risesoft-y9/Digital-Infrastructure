@@ -17,6 +17,8 @@ dependencies {
     api project(':risenet-y9boot-common-util')
     api libs.org.owasp.antisamy.antisamy
     compileOnly libs.jakarta.servlet.jakarta.servlet.api
+
+    annotationProcessor libs.org.projectlombok.lombok
 }
 
 description = 'risenet-y9boot-starter-security'

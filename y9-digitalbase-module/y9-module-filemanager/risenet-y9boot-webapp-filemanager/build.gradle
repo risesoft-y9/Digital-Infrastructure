@@ -21,6 +21,8 @@ dependencies {
     api libs.org.imgscalr.imgscalr.lib
     api libs.com.twelvemonkeys.imageio.imageio.jpeg
     providedCompile libs.jakarta.servlet.jakarta.servlet.api
+
+    annotationProcessor libs.org.projectlombok.lombok
 }
 
 description = 'risenet-y9boot-webapp-filemanager'

@@ -16,6 +16,8 @@ dependencies {
     api project(':risenet-y9boot-api-feignclient-platform')
     api project(':risenet-y9boot-common-util')
     compileOnly libs.jakarta.servlet.jakarta.servlet.api
+
+    annotationProcessor libs.org.projectlombok.lombok
 }
 
 description = 'risenet-y9boot-starter-permission'

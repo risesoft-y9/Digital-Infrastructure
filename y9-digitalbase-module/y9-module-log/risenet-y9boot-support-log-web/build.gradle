@@ -19,6 +19,8 @@ dependencies {
     api libs.org.jxls.jxls.jexcel
     api libs.org.jxls.jxls.reader
     compileOnly libs.jakarta.servlet.jakarta.servlet.api
+
+    annotationProcessor libs.org.projectlombok.lombok
 }
 
 description = 'risenet-y9boot-support-log-web'

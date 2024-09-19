@@ -19,6 +19,7 @@ dependencies {
     api libs.org.apache.httpcomponents.httpclient
     api libs.com.ibm.etcd.etcd.java
     compileOnly libs.jakarta.servlet.jakarta.servlet.api
+    annotationProcessor libs.org.projectlombok.lombok
 }
 
 description = 'risenet-y9boot-starter-apisix'

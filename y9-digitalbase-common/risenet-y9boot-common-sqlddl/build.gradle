@@ -10,6 +10,8 @@ plugins {
 
 dependencies {
     api project(':risenet-y9boot-common-util')
+
+    annotationProcessor libs.org.projectlombok.lombok
 }
 
 description = 'risenet-y9boot-common-sqlddl'

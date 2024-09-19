@@ -24,6 +24,8 @@ dependencies {
     api libs.cn.com.kingbase.hibernate.dialect
     api libs.cn.com.kingbase.hibernate.jpa.api
     api libs.com.oceanbase.oceanbase.client
+
+    annotationProcessor libs.org.projectlombok.lombok
 }
 
 description = 'risenet-y9boot-starter-jpa-public'

@@ -18,6 +18,8 @@ dependencies {
     api libs.org.springframework.kafka.spring.kafka
     api project(':risenet-y9boot-common-tenant-datasource')
     api libs.org.springframework.cloud.spring.cloud.context
+
+    annotationProcessor libs.org.projectlombok.lombok
 }
 
 description = 'risenet-y9boot-starter-listener-kafka'

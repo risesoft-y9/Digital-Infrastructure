@@ -13,6 +13,8 @@ dependencies {
     api project(':risenet-y9boot-starter-jpa-public')
     api project(':risenet-y9boot-starter-idgenerator')
     compileOnly libs.jakarta.servlet.jakarta.servlet.api
+
+    annotationProcessor libs.org.projectlombok.lombok
 }
 
 description = 'risenet-y9boot-support-file-jpa-repository'
