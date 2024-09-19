@@ -16,6 +16,7 @@ dependencies {
     api libs.org.slf4j.slf4j.api
     testImplementation libs.org.springframework.boot.spring.boot.starter.test
     compileOnly libs.org.projectlombok.lombok
+    annotationProcessor libs.org.projectlombok.lombok
 }
 
 description = 'risenet-y9boot-idcode'

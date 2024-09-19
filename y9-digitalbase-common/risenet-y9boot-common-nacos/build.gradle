@@ -15,6 +15,7 @@ dependencies {
     api libs.com.alibaba.nacos.nacos.client
     api libs.org.springframework.boot.spring.boot.starter.web
     compileOnly libs.org.projectlombok.lombok
+    annotationProcessor libs.org.projectlombok.lombok
 }
 
 description = 'risenet-y9boot-common-nacos'

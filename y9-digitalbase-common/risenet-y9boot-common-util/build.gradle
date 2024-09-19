@@ -27,6 +27,7 @@ dependencies {
     api libs.org.bouncycastle.bcprov.ext.jdk15to18
     api libs.org.projectlombok.lombok
     compileOnly libs.jakarta.servlet.jakarta.servlet.api
+    annotationProcessor libs.org.projectlombok.lombok
 }
 
 description = 'risenet-y9boot-common-util'
