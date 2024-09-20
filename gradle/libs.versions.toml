@@ -137,6 +137,7 @@ org-springframework-spring-context = "6.1.12"
 org-springframework-spring-context-indexer = "6.1.2"
 org-springframework-spring-web = "6.1.12"
 org-springframework-spring-webmvc = "6.1.12"
+io-spring-dependency-management = "1.1.6"
 
 [libraries]
 cn-com-kingbase-hibernate-dialect = { module = "cn.com.kingbase:hibernate-dialect", version.ref = "cn-com-kingbase-hibernate-dialect" }
@@ -274,3 +275,6 @@ org-springframework-spring-context = { module = "org.springframework:spring-cont
 org-springframework-spring-context-indexer = { module = "org.springframework:spring-context-indexer", version.ref = "org-springframework-spring-context-indexer" }
 org-springframework-spring-web = { module = "org.springframework:spring-web", version.ref = "org-springframework-spring-web" }
 org-springframework-spring-webmvc = { module = "org.springframework:spring-webmvc", version.ref = "org-springframework-spring-webmvc" }
+
+[plugins]
+io-spring-dependency-management={ id = "io.spring.dependency-management", version.ref = "io-spring-dependency-management" }

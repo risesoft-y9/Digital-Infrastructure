@@ -1,0 +1,11 @@
+plugins {
+    id 'buildlogic.java-conventions'
+    alias(libs.plugins.io.spring.dependency.management)
+}
+description = 'y9-digitalbase-parent'
+
+dependencyManagement {
+    imports {
+        mavenBom 'net.risesoft:y9-digitalbase-dependencies:v9.7.0-SNAPSHOT'
+    }
+}

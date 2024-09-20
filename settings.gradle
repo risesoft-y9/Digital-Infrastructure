@@ -10,6 +10,8 @@ pluginManagement {
 }
 
 rootProject.name = 'y9-digitalbase'
+include(':y9-digitalbase-dependencies')
+include(':y9-digitalbase-parent')
 include(':risenet-y9boot-support-history')
 include(':risenet-y9boot-support-file-service-local')
 include(':y9-module-filemanager')
@@ -64,6 +66,8 @@ include(':risenet-y9boot-starter-jpa-tenant')
 include(':risenet-y9boot-api-interface-platform')
 include(':risenet-y9boot-starter-cache-redis')
 include(':risenet-y9boot-common-util')
+project(":y9-digitalbase-dependencies").projectDir = file('y9-digitalbase-dependencies')
+project(":y9-digitalbase-parent").projectDir = file('y9-digitalbase-parent')
 project(":risenet-y9boot-support-history").projectDir = file('y9-digitalbase-common/risenet-y9boot-support-history')
 project(":risenet-y9boot-support-file-service-local").projectDir = file('y9-digitalbase-module/y9-module-filemanager/risenet-y9boot-support-file-service-local')
 project(":y9-module-filemanager").projectDir = file('y9-digitalbase-module/y9-module-filemanager')
