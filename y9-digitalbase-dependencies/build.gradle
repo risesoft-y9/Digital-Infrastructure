@@ -1,7 +1,6 @@
 plugins {
     id 'buildlogic.java-conventions'
     alias(libs.plugins.io.spring.dependency.management)
-    id 'maven-publish'
 }
 description = 'y9-digitalbase-dependencies'
 
@@ -93,6 +92,38 @@ dependencyManagement {
             entry 'risenet-y9boot-support-platform-jpa-repository'
             entry 'risenet-y9boot-support-platform-service'
             entry 'risenet-y9boot-support-platform-web'
+        }
+    }
+}
+
+
+publishing {
+    publications {
+        maven(MavenPublication) {
+            // 设置打包类型为pom
+            pom {
+                packaging = 'pom'
+                name = 'y9-digitalbase-dependencies'
+                description = 'RiseSoft/Digital Infrastructure dependencies'
+                url = 'https://gitee.com/risesoft-y9/y9-core/tree/main/y9-digitalbase-dependencies'
+                licenses {
+                    license {
+                        name = 'GNU General Public License (GPL) version 3.0'
+                        url = 'https://www.gnu.org/licenses/gpl-3.0.en.html'
+                    }
+                }
+                developers {
+                    developer {
+                        name = 'dingzhaojun'
+                        email = 'dingzhaojun@risesoft.net'
+                    }
+                }
+                scm {
+                    connection = 'scm:git:https://gitee.com/risesoft-y9/y9-core.git'
+                    developerConnection = 'scm:git:https://gitee.com/risesoft-y9/y9-core.git'
+                    url = 'https://gitee.com/risesoft-y9/y9-core'
+                }
+            }
         }
     }
 }
