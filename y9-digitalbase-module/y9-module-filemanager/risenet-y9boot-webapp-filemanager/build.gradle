@@ -21,7 +21,7 @@ dependencies {
     api libs.org.imgscalr.imgscalr.lib
     api libs.com.twelvemonkeys.imageio.imageio.jpeg
     providedCompile libs.jakarta.servlet.jakarta.servlet.api
-
+    compileOnly libs.org.projectlombok.lombok
     annotationProcessor libs.org.projectlombok.lombok
 }
 

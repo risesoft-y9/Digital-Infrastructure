@@ -9,10 +9,10 @@ plugins {
 }
 
 dependencies {
+    api project(':risenet-y9boot-support-file-jpa-repository')
     api libs.org.springframework.boot.spring.boot.configuration.processor
     api libs.org.slf4j.slf4j.api
-    api project(':risenet-y9boot-support-file-jpa-repository')
-
+    compileOnly libs.org.projectlombok.lombok
     annotationProcessor libs.org.projectlombok.lombok
 }
 

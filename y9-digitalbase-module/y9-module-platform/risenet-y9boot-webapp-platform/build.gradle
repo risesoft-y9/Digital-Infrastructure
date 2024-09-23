@@ -10,17 +10,17 @@ plugins {
 }
 
 dependencies {
-    api libs.org.apache.commons.commons.pool2
     api project(':risenet-y9boot-common-util')
     api project(':risenet-y9boot-support-platform-web')
     api project(':risenet-y9boot-support-platform-jpa-repository')
     api project(':risenet-y9boot-starter-sso-oauth2-resource')
     api project(':risenet-y9boot-starter-security')
     api project(':risenet-y9boot-starter-log')
-    api libs.org.springframework.boot.spring.boot.docker.compose.x1
     api project(':risenet-y9boot-starter-cache-redis')
     api project(':risenet-y9boot-common-nacos')
     api project(':risenet-y9boot-starter-multi-tenant')
+    api libs.org.apache.commons.commons.pool2
+    api libs.org.springframework.boot.spring.boot.docker.compose.x1
     api libs.org.dom4j.dom4j
     api libs.jaxen.jaxen
     api libs.com.google.guava.guava
@@ -29,7 +29,7 @@ dependencies {
     testImplementation libs.org.springframework.boot.spring.boot.starter.test
     testImplementation libs.com.h2database.h2
     providedCompile libs.jakarta.servlet.jakarta.servlet.api
-
+    compileOnly libs.org.projectlombok.lombok
     annotationProcessor libs.org.projectlombok.lombok
     testCompileOnly libs.org.projectlombok.lombok
     testAnnotationProcessor libs.org.projectlombok.lombok

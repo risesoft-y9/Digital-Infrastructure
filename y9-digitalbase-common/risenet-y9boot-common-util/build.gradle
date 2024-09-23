@@ -25,8 +25,8 @@ dependencies {
     api libs.org.apache.poi.poi.scratchpad
     api libs.cn.hutool.hutool.all
     api libs.org.bouncycastle.bcprov.ext.jdk15to18
-    api libs.org.projectlombok.lombok
     compileOnly libs.jakarta.servlet.jakarta.servlet.api
+    compileOnly libs.org.projectlombok.lombok
     annotationProcessor libs.org.projectlombok.lombok
 }
 
