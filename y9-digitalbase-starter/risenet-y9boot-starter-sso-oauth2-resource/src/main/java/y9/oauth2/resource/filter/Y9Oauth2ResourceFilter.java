@@ -12,15 +12,15 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.UUID;
 
-import javax.servlet.Filter;
-import javax.servlet.FilterChain;
-import javax.servlet.FilterConfig;
-import javax.servlet.ServletException;
-import javax.servlet.ServletRequest;
-import javax.servlet.ServletResponse;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
+import jakarta.servlet.Filter;
+import jakarta.servlet.FilterChain;
+import jakarta.servlet.FilterConfig;
+import jakarta.servlet.ServletException;
+import jakarta.servlet.ServletRequest;
+import jakarta.servlet.ServletResponse;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpSession;
 
 import org.apache.commons.httpclient.NameValuePair;
 import org.apache.commons.lang3.StringUtils;
@@ -59,12 +59,11 @@ import net.risesoft.y9.util.Y9EnumUtil;
 @Slf4j
 public class Y9Oauth2ResourceFilter implements Filter {
     private final RestTemplate restTemplate = new RestTemplate();
-    private String serverIp = "";
-
     private final KafkaTemplate<String, Object> y9KafkaTemplate;
     private final Y9Properties y9Properties;
     private final Y9Oauth2ResourceProperties y9Oauth2ResourceProperties;
     private final Y9LogProperties y9LogProperties;
+    private String serverIp = "";
 
     public Y9Oauth2ResourceFilter(Y9Properties y9Properties, KafkaTemplate<String, Object> y9KafkaTemplate) {
         this.y9Properties = y9Properties;
@@ -106,7 +105,7 @@ public class Y9Oauth2ResourceFilter implements Filter {
                 return;
             }
 
-            ResponseEntity<OAuth20IntrospectionAccessTokenSuccessResponse> introspectEntity = null;
+            ResponseEntity<OAuth20IntrospectionAccessTokenResponse> introspectEntity = null;
             try {
                 introspectEntity = invokeIntrospectEndpoint(accessToken);
             } catch (Exception e) {
@@ -120,7 +119,7 @@ public class Y9Oauth2ResourceFilter implements Filter {
                 return;
             }
 
-            OAuth20IntrospectionAccessTokenSuccessResponse introspectionResponse = introspectEntity.getBody();
+            OAuth20IntrospectionAccessTokenResponse introspectionResponse = introspectEntity.getBody();
             if (!introspectionResponse.isActive()) {
                 setResponse(response, HttpStatus.UNAUTHORIZED, GlobalErrorCodeEnum.ACCESS_TOKEN_EXPIRED);
                 return;
@@ -223,8 +222,7 @@ public class Y9Oauth2ResourceFilter implements Filter {
         this.serverIp = InetAddressUtil.getLocalAddress().getHostAddress();
     }
 
-    private ResponseEntity<OAuth20IntrospectionAccessTokenSuccessResponse>
-        invokeIntrospectEndpoint(String accessToken) {
+    private ResponseEntity<OAuth20IntrospectionAccessTokenResponse> invokeIntrospectEndpoint(String accessToken) {
         HttpHeaders headers = new HttpHeaders();
         headers.setAccept(Collections.singletonList(MediaType.APPLICATION_JSON));
         headers.setContentType(MediaType.APPLICATION_FORM_URLENCODED);
@@ -233,8 +231,8 @@ public class Y9Oauth2ResourceFilter implements Filter {
 
         URI uri = URI.create(y9Oauth2ResourceProperties.getOpaque().getIntrospectionUri() + "?token=" + accessToken);
         RequestEntity<?> requestEntity = new RequestEntity<>(headers, HttpMethod.POST, uri);
-        ResponseEntity<OAuth20IntrospectionAccessTokenSuccessResponse> responseEntity =
-            this.restTemplate.exchange(requestEntity, OAuth20IntrospectionAccessTokenSuccessResponse.class);
+        ResponseEntity<OAuth20IntrospectionAccessTokenResponse> responseEntity =
+            this.restTemplate.exchange(requestEntity, OAuth20IntrospectionAccessTokenResponse.class);
         return responseEntity;
     }
 
@@ -357,7 +355,7 @@ public class Y9Oauth2ResourceFilter implements Filter {
         userInfo.setTenantName((String)map.get("tenantName"));
         userInfo.setGlobalManager(Boolean.parseBoolean(String.valueOf(map.get("globalManager"))));
         userInfo.setAvator((String)map.get("avator"));
-        userInfo.setRoles((String)map.get("roles"));
+        userInfo.setY9Roles((String)map.get("roles"));
         userInfo.setPositions((String)map.get("positions"));
         userInfo.setPositionId((String)map.get("positionId"));
         return userInfo;
