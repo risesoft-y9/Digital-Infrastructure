@@ -27,6 +27,5 @@
         <module>risenet-y9boot-common-util</module>
         <module>risenet-y9boot-common-tenant-datasource</module>
         <module>risenet-y9boot-common-sqlddl</module>
-        <module>risenet-y9boot-support-history</module>
     </modules>
 </project>

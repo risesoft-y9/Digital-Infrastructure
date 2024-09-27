@@ -1,17 +1,18 @@
-<project xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-         xmlns="http://maven.apache.org/POM/4.0.0"
+<project xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://maven.apache.org/POM/4.0.0"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
     <modelVersion>4.0.0</modelVersion>
     <parent>
         <groupId>net.risesoft</groupId>
-        <artifactId>y9-digitalbase-common</artifactId>
+        <artifactId>y9-digitalbase-parent</artifactId>
         <version>${revision}</version>
-        <relativePath>../pom.xml</relativePath>
+        <relativePath>../../y9-digitalbase-parent/pom.xml</relativePath>
     </parent>
-    <artifactId>risenet-y9boot-support-history</artifactId>
+    <artifactId>risenet-y9boot-support-file-jpa-repository</artifactId>
+    <version>${revision}</version>
     <packaging>jar</packaging>
-    <name>risenet-y9boot-support-history</name>
-    <description>RiseSoft/Digital Infrastructure history</description>
+
+    <name>risenet-y9boot-support-file-jpa-repository</name>
+    <description>RiseSoft/Digital Infrastructure file jpaRepository</description>
 
     <properties>
     </properties>
@@ -24,38 +25,21 @@
 
     <dependencies>
         <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-configuration-processor</artifactId>
-        </dependency>
-
-        <dependency>
             <groupId>net.risesoft</groupId>
-            <artifactId>risenet-y9boot-common-util</artifactId>
-        </dependency>
-
-        <dependency>
-            <groupId>org.springframework</groupId>
-            <artifactId>spring-web</artifactId>
-        </dependency>
-
-        <dependency>
-            <groupId>org.springframework</groupId>
-            <artifactId>spring-webmvc</artifactId>
-        </dependency>
-
-        <dependency>
-            <groupId>org.javers</groupId>
-            <artifactId>javers-spring-boot-starter-sql</artifactId>
+            <artifactId>risenet-y9boot-properties</artifactId>
+            <version>${project.version}</version>
         </dependency>
 
         <dependency>
             <groupId>net.risesoft</groupId>
             <artifactId>risenet-y9boot-starter-jpa-public</artifactId>
+            <version>${project.version}</version>
         </dependency>
 
         <dependency>
-            <groupId>com.google.guava</groupId>
-            <artifactId>guava</artifactId>
+            <groupId>net.risesoft</groupId>
+            <artifactId>risenet-y9boot-starter-idgenerator</artifactId>
+            <version>${project.version}</version>
         </dependency>
 
         <dependency>
@@ -69,6 +53,19 @@
             <artifactId>lombok</artifactId>
             <scope>provided</scope>
         </dependency>
+
+        <dependency>
+            <groupId>org.aspectj</groupId>
+            <artifactId>aspectjrt</artifactId>
+        </dependency>
     </dependencies>
 
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>dev.aspectj</groupId>
+                <artifactId>aspectj-maven-plugin</artifactId>
+            </plugin>
+        </plugins>
+    </build>
 </project>

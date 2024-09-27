@@ -15,10 +15,6 @@
     <version>${revision}</version>
 
     <modules>
-        <module>risenet-y9boot-support-file-jpa-repository</module>
-        <module>risenet-y9boot-support-file-service-ftp</module>
-        <module>risenet-y9boot-support-file-service-local</module>
-        <module>risenet-y9boot-support-file-service-rest</module>
         <module>risenet-y9boot-webapp-filemanager</module>
     </modules>
 

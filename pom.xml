@@ -98,9 +98,14 @@
 
     <modules>
         <module>y9-digitalbase-dependencies</module>
-		<module>y9-digitalbase-parent</module>
-		<module>y9-digitalbase-common</module>
+        <module>y9-digitalbase-parent</module>
+        <module>y9-digitalbase-common</module>
         <module>y9-digitalbase-starter</module>
+        <module>./y9-digitalbase-support/risenet-y9boot-support-file-jpa-repository</module>
+        <module>./y9-digitalbase-support/risenet-y9boot-support-file-service-ftp</module>
+        <module>./y9-digitalbase-support/risenet-y9boot-support-file-service-local</module>
+        <module>./y9-digitalbase-support/risenet-y9boot-support-file-service-rest</module>
+        <module>./y9-digitalbase-support/risenet-y9boot-support-history</module>
         <module>y9-digitalbase-module</module>
         <module>y9-digitalbase-example</module>
     </modules>
@@ -131,7 +136,7 @@
                 <scope>import</scope>
             </dependency>
         </dependencies>
-        
+
     </dependencyManagement>
 
     <repositories>
@@ -231,7 +236,8 @@
                     <!-- 对于多个仓库聚合不会更新 git 的信息 -->
                     <!-- <injectAllReactorProjects>true</injectAllReactorProjects> -->
                     <generateGitPropertiesFile>true</generateGitPropertiesFile>
-                    <generateGitPropertiesFilename>${project.build.outputDirectory}/git.properties</generateGitPropertiesFilename>
+                    <generateGitPropertiesFilename>${project.build.outputDirectory}/git.properties
+                    </generateGitPropertiesFilename>
                     <commitIdGenerationMode>full</commitIdGenerationMode>
                 </configuration>
             </plugin>
@@ -313,19 +319,20 @@
                         <showWarnings>true</showWarnings>
                         <showDeprecation>true</showDeprecation>
                     </configuration>
-                </plugin><plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-jar-plugin</artifactId>
-                <version>${maven-jar-plugin.version}</version>
-                <configuration>
-                    <archive>
-                        <manifest>
-                            <mainClass>${start-class}</mainClass>
-                            <addDefaultImplementationEntries>true</addDefaultImplementationEntries>
-                        </manifest>
-                    </archive>
-                </configuration>
-            </plugin>
+                </plugin>
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-jar-plugin</artifactId>
+                    <version>${maven-jar-plugin.version}</version>
+                    <configuration>
+                        <archive>
+                            <manifest>
+                                <mainClass>${start-class}</mainClass>
+                                <addDefaultImplementationEntries>true</addDefaultImplementationEntries>
+                            </manifest>
+                        </archive>
+                    </configuration>
+                </plugin>
                 <plugin>
                     <groupId>org.apache.maven.plugins</groupId>
                     <artifactId>maven-war-plugin</artifactId>
@@ -644,7 +651,7 @@
                 <activeByDefault>false</activeByDefault>
             </activation>
         </profile>
-        
+
         <profile>
             <id>deploy-private-repo</id>
             <activation>

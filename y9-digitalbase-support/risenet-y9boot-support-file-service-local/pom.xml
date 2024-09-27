@@ -4,14 +4,14 @@
     <modelVersion>4.0.0</modelVersion>
     <parent>
         <groupId>net.risesoft</groupId>
-        <artifactId>y9-module-filemanager</artifactId>
+        <artifactId>y9-digitalbase-parent</artifactId>
         <version>${revision}</version>
-        <relativePath>../pom.xml</relativePath>
+        <relativePath>../../y9-digitalbase-parent/pom.xml</relativePath>
     </parent>
-    <artifactId>risenet-y9boot-support-file-service-ftp</artifactId>
+    <artifactId>risenet-y9boot-support-file-service-local</artifactId>
     <packaging>jar</packaging>
-    <name>risenet-y9boot-support-file-service-ftp</name>
-    <description>RiseSoft/Digital Infrastructure file ftp service</description>
+    <name>risenet-y9boot-support-file-service-local</name>
+    <description>RiseSoft/Digital Infrastructure file local service</description>
 
     <properties>
     </properties>
@@ -32,23 +32,6 @@
         <dependency>
             <groupId>org.slf4j</groupId>
             <artifactId>slf4j-api</artifactId>
-        </dependency>
-
-        <dependency>
-            <groupId>org.apache.commons</groupId>
-            <artifactId>commons-lang3</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>commons-io</groupId>
-            <artifactId>commons-io</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>commons-net</groupId>
-            <artifactId>commons-net</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.apache.commons</groupId>
-            <artifactId>commons-pool2</artifactId>
         </dependency>
 
         <dependency>

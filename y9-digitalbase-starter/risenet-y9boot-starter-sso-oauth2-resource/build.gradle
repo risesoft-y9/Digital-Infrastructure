@@ -9,6 +9,7 @@ plugins {
 }
 
 dependencies {
+    api project(':risenet-y9boot-properties')
     api project(':risenet-y9boot-common-util')
     api project(':risenet-y9boot-common-model')
     api libs.org.springframework.boot.spring.boot

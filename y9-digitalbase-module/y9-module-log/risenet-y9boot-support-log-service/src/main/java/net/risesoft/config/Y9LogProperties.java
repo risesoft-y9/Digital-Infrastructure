@@ -1,10 +1,13 @@
 package net.risesoft.config;
 
+import org.springframework.boot.context.properties.ConfigurationProperties;
+
 import lombok.Getter;
 import lombok.Setter;
 
 @Getter
 @Setter
+@ConfigurationProperties(prefix = "y9.app.log", ignoreInvalidFields = true, ignoreUnknownFields = true)
 public class Y9LogProperties {
 
     private String accessLogSaveTarget = "console"; // database,console,elastic
@@ -13,10 +16,6 @@ public class Y9LogProperties {
 
     private String accessLogType = "log";
 
-    private String indexView = "index";
-
     private String kafkaEnabled = "false";
-
-    private String kafkaServer;
 
 }
