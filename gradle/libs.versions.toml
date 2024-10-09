@@ -126,6 +126,7 @@ org-springframework-boot-spring-boot-starter-jdbc = "3.3.3"
 org-springframework-boot-spring-boot-starter-test = "3.3.3"
 org-springframework-boot-spring-boot-starter-validation = "3.3.3"
 org-springframework-boot-spring-boot-starter-web = "3.3.3"
+org-springframework-boot-spring-boot-starter-tomcat = "3.3.3"
 org-springframework-cloud-spring-cloud-context = "4.1.4"
 org-springframework-cloud-spring-cloud-starter-loadbalancer = "4.1.4"
 org-springframework-cloud-spring-cloud-starter-openfeign = "4.1.3"
@@ -264,6 +265,7 @@ org-springframework-boot-spring-boot-starter-jdbc = { module = "org.springframew
 org-springframework-boot-spring-boot-starter-test = { module = "org.springframework.boot:spring-boot-starter-test", version.ref = "org-springframework-boot-spring-boot-starter-test" }
 org-springframework-boot-spring-boot-starter-validation = { module = "org.springframework.boot:spring-boot-starter-validation", version.ref = "org-springframework-boot-spring-boot-starter-validation" }
 org-springframework-boot-spring-boot-starter-web = { module = "org.springframework.boot:spring-boot-starter-web", version.ref = "org-springframework-boot-spring-boot-starter-web" }
+org-springframework-boot-spring-boot-starter-tomcat = { module = "org.springframework.boot:spring-boot-starter-tomcat", version.ref = "org-springframework-boot-spring-boot-starter-tomcat" }
 org-springframework-cloud-spring-cloud-context = { module = "org.springframework.cloud:spring-cloud-context", version.ref = "org-springframework-cloud-spring-cloud-context" }
 org-springframework-cloud-spring-cloud-starter-loadbalancer = { module = "org.springframework.cloud:spring-cloud-starter-loadbalancer", version.ref = "org-springframework-cloud-spring-cloud-starter-loadbalancer" }
 org-springframework-cloud-spring-cloud-starter-openfeign = { module = "org.springframework.cloud:spring-cloud-starter-openfeign", version.ref = "org-springframework-cloud-spring-cloud-starter-openfeign" }
@@ -278,3 +280,4 @@ org-springframework-spring-webmvc = { module = "org.springframework:spring-webmv
 
 [plugins]
 io-spring-dependency-management={ id = "io.spring.dependency-management", version.ref = "io-spring-dependency-management" }
+org-springframework-boot={ id = "org.springframework.boot", version.ref = "org-springframework-boot-spring-boot" }

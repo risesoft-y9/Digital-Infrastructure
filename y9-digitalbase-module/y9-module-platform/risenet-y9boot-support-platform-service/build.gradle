@@ -6,6 +6,8 @@
 
 plugins {
     id 'buildlogic.java-conventions'
+    id 'buildlogic.smart-doc'
+    id 'buildlogic.aspectj'
 }
 
 dependencies {
@@ -23,9 +25,6 @@ dependencies {
     api project(':risenet-y9boot-starter-web')
     api libs.org.dom4j.dom4j
     api libs.org.jodd.jodd.http
-    api libs.org.aspectj.aspectjrt
-    api libs.org.aspectj.aspectjtools
-    api libs.org.aspectj.aspectjweaver
     api libs.org.springframework.spring.aspects
     api libs.org.jxls.jxls.poi
     api libs.org.jxls.jxls.jexcel

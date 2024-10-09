@@ -13,3 +13,9 @@ repositories {
     // Use the plugin portal to apply community plugins in convention plugins.
     gradlePluginPortal()
 }
+
+dependencies {
+    implementation 'com.google.cloud.tools.jib:com.google.cloud.tools.jib.gradle.plugin:3.4.3'
+    implementation 'com.ly.smart-doc:smart-doc-gradle-plugin:3.0.0'
+    implementation 'io.freefair.gradle:aspectj-plugin:8.10.2'
+}

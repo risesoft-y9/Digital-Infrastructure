@@ -6,7 +6,9 @@
 
 plugins {
     id 'buildlogic.java-conventions'
+    id 'buildlogic.docker'
     id 'war'
+    alias(libs.plugins.org.springframework.boot)
 }
 
 dependencies {
@@ -69,8 +71,18 @@ dependencies {
     api libs.com.dameng.dmdialect.for.hibernate5.v6
     api libs.com.dameng.dmjdbcdriver18
     providedCompile libs.org.projectlombok.lombok.x1
-    
+    providedRuntime libs.org.springframework.boot.spring.boot.starter.tomcat
     annotationProcessor libs.org.projectlombok.lombok.x1
 }
 
 description = 'risenet-y9boot-webapp-sso-server'
+
+ext {
+    finalName = 'sso'
+}
+
+jib.container.appRoot = "/usr/local/tomcat/webapps/${finalName}"
+
+tasks.bootWar {
+    archiveFileName.set("${finalName}.${archiveExtension.get()}")
+}

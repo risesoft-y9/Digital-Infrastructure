@@ -6,7 +6,9 @@
 
 plugins {
     id 'buildlogic.java-conventions'
+    id 'buildlogic.docker'
     id 'war'
+    alias(libs.plugins.org.springframework.boot)
 }
 
 dependencies {
@@ -33,6 +35,17 @@ dependencies {
     annotationProcessor libs.org.projectlombok.lombok
     testCompileOnly libs.org.projectlombok.lombok
     testAnnotationProcessor libs.org.projectlombok.lombok
+    providedRuntime libs.org.springframework.boot.spring.boot.starter.tomcat
 }
 
 description = 'risenet-y9boot-webapp-platform'
+
+ext {
+    finalName = 'platform'
+}
+
+jib.container.appRoot = "/usr/local/tomcat/webapps/${finalName}"
+
+tasks.bootWar {
+    archiveFileName.set("${finalName}.${archiveExtension.get()}")
+}

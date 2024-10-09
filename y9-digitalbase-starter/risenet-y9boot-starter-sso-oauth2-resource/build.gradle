@@ -12,6 +12,7 @@ dependencies {
     api project(':risenet-y9boot-properties')
     api project(':risenet-y9boot-common-util')
     api project(':risenet-y9boot-common-model')
+    api project(':risenet-y9boot-properties')
     api libs.org.springframework.boot.spring.boot
     api libs.org.springframework.boot.spring.boot.autoconfigure
     api libs.org.springframework.boot.spring.boot.configuration.processor

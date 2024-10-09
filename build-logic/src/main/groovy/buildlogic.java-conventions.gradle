@@ -7,6 +7,7 @@
 plugins {
     id 'java-library'
     id 'maven-publish'
+    id 'signing'
 }
 
 repositories {
@@ -44,12 +45,38 @@ group = 'net.risesoft'
 version = 'v9.7.0-SNAPSHOT'
 java.sourceCompatibility = JavaVersion.VERSION_21
 
+java {
+    withJavadocJar()
+    withSourcesJar()
+}
+
+compileJava {
+    options.compilerArgs << '-parameters'
+}
+
 publishing {
     publications {
         maven(MavenPublication) {
             from(components.java)
         }
     }
+    repositories {
+        maven {
+            name = 'y9-internet-repo'
+            url = 'https://svn.youshengyun.com:9900/nexus/repository/maven-snapshots/'
+            credentials {
+                username = "${mavenUsername}"
+                password = "${mavenPassword}"
+            }
+//            name = 'myRepo'
+//            url = layout.buildDirectory.dir("repo")
+        }
+    }
+}
+
+signing {
+    useGpgCmd()
+    sign publishing.publications.maven
 }
 
 tasks.withType(JavaCompile) {
@@ -58,4 +85,10 @@ tasks.withType(JavaCompile) {
 
 tasks.withType(Javadoc) {
     options.encoding = 'UTF-8'
+    failOnError = false
+    options.addStringOption('Xdoclint:none', '-quiet')  // 禁用所有文档检查
+}
+
+tasks.withType(GenerateModuleMetadata) {
+    enabled = false
 }
