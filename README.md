@@ -76,67 +76,79 @@ webapp -- 系统公共模块
 
 安全审计员：主要负责审查系统管理员的日志和安全保密员的日志
 
-#### 系统管理员
+<table>
+<tr>
+  <td colspan="2" align="center">系统管理员</td>
+</tr>
+<tr>
+  <td>控制台</td>
+  <td>显示系统的监控统计信息，主要面向用户、应用和日志信息，可根据业务的实际需要进行增改。</td>
+</tr>
+<tr>
+  <td>组织架构</td>
+  <td>包括组织机构、部门、人员、部门领导的管理，其中组织、部门、人员树结构展现。</td>
+</tr>
+<tr>
+  <td>组织岗位</td>
+  <td>包括组织机构、部门、岗位、部门领导的管理，其中组织、部门、岗位树结构展现。</td>
+</tr>
+<tr>
+  <td>应用系统管理</td>
+  <td>需要授权的系统的管理，可以添加系统并在系统下面添加应用。</td>
+</tr>
+<tr>
+  <td>应用角色管理</td>
+  <td>对系统下面的应用的角色进行管理。</td>
+</tr>
+<tr>
+  <td>应用资源管理</td>
+  <td>对系统下面的应用的资源进行管理。</td>
+</tr>
+<tr>
+  <td>字典表管理</td>
+  <td>对系统中经常使用的一些较为固定的数据进行维护。</td>
+</tr>
+<tr>
+  <td>图标管理</td>
+  <td>对系统中的图标进行管理，系统创建应用的时候可以从该图标库中选择。</td>
+</tr>
+</table>
 
-- 控制台
+<table>
+<tr>
+  <td colspan="2" align="center">安全保密员</td>
+</tr>
+<tr>
+  <td>授权管理</td>
+  <td>针对应用中的菜单，授权给拥有某些角色的用户。</td>
+</tr>
+<tr>
+  <td>子域三员管理</td>
+  <td>对部门的三员进行管理。</td>
+</tr>
+<tr>
+  <td>用户日志</td>
+  <td>可以审查普通用户的登录日志以及操作日志。</td>
+</tr>
+<tr>
+  <td>安全审计员日志</td>
+  <td>可以审查安全审计员的登录日志以及操作日志。</td>
+</tr>
+</table>
 
-  显示系统总体信息，目前是一个模板页面，可以根据自己的实际需要进行改造。
-
-- 组织架构
-
-  包括组织机构、部门、人员、部门领导的管理，其中组织、部门、人员树结构展现。
-
-- 组织岗位
-
-  包括组织机构、部门、岗位、部门领导的管理，其中组织、部门、岗位树结构展现。
-
-- 应用系统管理
-
-  需要授权的系统的管理，可以添加系统并在系统下面添加应用。
-
-- 应用角色管理
-
-  对系统下面的应用的角色进行管理。
-
-- 应用资源管理
-
-  对系统下面的应用的资源进行管理。
-
-- 字典表管理
-
-  对系统中经常使用的一些较为固定的数据进行维护。
-
-- 图标管理
-
-  对系统中的图标进行管理，系统创建应用的时候可以从该图标库中选择。
-
-#### 安全保密员
-
-- 授权管理
-
-  针对应用中的菜单，授权给拥有某些角色的用户。
-
-- 子域三员管理
-
-  对部门的三员进行管理。
-
-- 用户日志
-
-  可以审查普通用户的登录日志以及操作日志。
-
-- 安全审计员日志
-
-  可以审查安全审计员的登录日志以及操作日志。
-
-#### 安全审计员
-
-- 系统管理员日志
-
-  可以审查系统管理员的登录日志以及操作日志。
-
-- 安全保密员日志
-
-  可以审查安全保密员的登录日志以及操作日志。
+<table>
+<tr>
+  <td colspan="2" align="center">安全审计员</td>
+</tr>
+<tr>
+  <td>系统管理员日志</td>
+  <td>可以审查系统管理员的登录日志以及操作日志。</td>
+</tr>
+<tr>
+  <td>安全保密员日志</td>
+  <td>可以审查安全保密员的登录日志以及操作日志。</td>
+</tr>
+</table>
 
 ## 逻辑架构图
 
@@ -275,32 +287,35 @@ webapp -- 系统公共模块
 > 负责审查系统管理员的日志和安全保密员的日志
 >
 
-| 序号 | 名称                                                                                                      |
-|:---|---------------------------------------------------------------------------------------------------------|
-| 1  | <a href="https://vue.youshengyun.com/files/单点登录对接文档.pdf" target="_blank">单点登录对接文档</a>                   |
-| 2  | <a href="https://vue.youshengyun.com/files/数字底座接口文档.pdf" target="_blank">数字底座接口文档</a>                   |
-| 3  | <a href="https://demo.youshengyun.com/y9vue-code/digitalBase" target="_blank">安装部署文档</a>                |
-| 4  | <a href="https://vue.youshengyun.com/files/操作使用文档（技术白皮书）.pdf" target="_blank">操作使用文档（技术白皮书）</a>         |
-| 5  | <a href="https://vue.youshengyun.com/files/数字底座数据库设计文档.pdf" target="_blank">数字底座数据库设计文档</a>             |
-| 6  | <a href="https://vue.youshengyun.com/files/内部Java开发规范手册.pdf" target="_blank">内部Java开发规范手册</a>           |
-| 7  | <a href="https://vue.youshengyun.com/files/日志组件使用文档.pdf" target="_blank">日志组件使用文档</a>                   |
-| 8  | <a href="https://vue.youshengyun.com/files/文件组件使用文档.pdf" target="_blank">文件组件使用文档</a>                   |
-| 9  | <a href="https://vue.youshengyun.com/files/代码生成器使用文档.pdf" target="_blank">代码生成器使用文档</a>                 |
-| 10 | <a href="https://vue.youshengyun.com/files/配置文件说明文档.pdf" target="_blank">配置文件说明文档</a>                   |
-| 11 | <a href="https://vue.youshengyun.com/files/常用工具类使用示例文档.pdf" target="_blank">常用工具类使用示例文档</a>             |
-| 12 | <a href="https://vue.youshengyun.com/files/有生博大Vue开发手册v1.0.pdf" target="_blank">前端开发手册</a>              |
-| 13 | <a href="https://vue.youshengyun.com/files/开发规范.pdf" target="_blank">前端开发规范</a>                         |
-| 14 | <a href="https://vue.youshengyun.com/files/代码格式化.pdf" target="_blank">前端代码格式化</a>                       |
-| 15 | <a href="https://vue.youshengyun.com/files/系统组件.pdf" target="_blank">前端系统组件</a>                         |
-| 16 | <a href="https://vue.youshengyun.com/files/通用方法.pdf" target="_blank">前端通用方法</a>                         |
-| 17 | <a href="https://vue.youshengyun.com/files/国际化.pdf" target="_blank">前端国际化</a>                           |
-| 18 | <a href="https://vue.youshengyun.com/files/Icon图标.pdf" target="_blank">前端Icon图标</a>                     |
-| 19 | <a href="https://vue.youshengyun.com/files/Oracle数据库适配文档.pdf" target="_blank">Oracle数据库适配文档</a>         |
-| 20 | <a href="https://vue.youshengyun.com/files/Dameng数据库适配文档.pdf" target="_blank">Dameng数据库适配文档</a>         |
-| 21 | <a href="https://vue.youshengyun.com/files/PostgreSQL数据库适配文档.pdf" target="_blank">PostgreSQL数据库适配文档</a> |
-| 22 | <a href="https://vue.youshengyun.com/files/Kingbase数据库适配文档.pdf" target="_blank">Kingbase数据库适配文档</a>     |
-| 23 | <a href="https://vue.youshengyun.com/files/Mariadb数据库适配文档.pdf" target="_blank">Mariadb数据库适配文档</a>       |
-| 24 | <a href="https://vue.youshengyun.com/files/OceanBase数据库适配文档.pdf" target="_blank">OceanBase数据库适配文档</a>   |
+| 序号 | 名称                                                                                                        |
+|:---|-----------------------------------------------------------------------------------------------------------|
+| 1  | <a href="https://vue.youshengyun.com/files/单点登录对接文档.pdf" target="_blank">单点登录对接文档</a>                     |
+| 2  | <a href="https://vue.youshengyun.com/files/数字底座接口文档.pdf" target="_blank">数字底座接口文档</a>                     |
+| 3  | <a href="https://demo.youshengyun.com/y9vue-code/digitalBase" target="_blank">数字底座在线文档</a>                |
+| 4  | <a href="https://vue.youshengyun.com/files/数字底座中间件安装文档（Linux）.pdf" target="_blank">数字底座中间件安装文档（Linux）</a> |
+| 5  | <a href="https://vue.youshengyun.com/files/数字底座war包部署文档.pdf" target="_blank">数字底座war包部署文档</a>             |
+| 6  | <a href="https://vue.youshengyun.com/files/数字底座源码部署文档.pdf" target="_blank">数字底座源码部署文档</a>                 |
+| 7  | <a href="https://vue.youshengyun.com/files/操作使用文档（技术白皮书）.pdf" target="_blank">操作使用文档（技术白皮书）</a>           |
+| 8  | <a href="https://vue.youshengyun.com/files/数字底座数据库设计文档.pdf" target="_blank">数字底座数据库设计文档</a>               |
+| 9  | <a href="https://vue.youshengyun.com/files/内部Java开发规范手册.pdf" target="_blank">内部Java开发规范手册</a>             |
+| 10 | <a href="https://vue.youshengyun.com/files/日志组件使用文档.pdf" target="_blank">日志组件使用文档</a>                     |
+| 11 | <a href="https://vue.youshengyun.com/files/文件组件使用文档.pdf" target="_blank">文件组件使用文档</a>                     |
+| 12 | <a href="https://vue.youshengyun.com/files/代码生成器使用文档.pdf" target="_blank">代码生成器使用文档</a>                   |
+| 13 | <a href="https://vue.youshengyun.com/files/配置文件说明文档.pdf" target="_blank">配置文件说明文档</a>                     |
+| 14 | <a href="https://vue.youshengyun.com/files/常用工具类使用示例文档.pdf" target="_blank">常用工具类使用示例文档</a>               |
+| 15 | <a href="https://vue.youshengyun.com/files/有生博大Vue开发手册v1.0.pdf" target="_blank">前端开发手册</a>                |
+| 16 | <a href="https://vue.youshengyun.com/files/开发规范.pdf" target="_blank">前端开发规范</a>                           |
+| 17 | <a href="https://vue.youshengyun.com/files/代码格式化.pdf" target="_blank">前端代码格式化</a>                         |
+| 18 | <a href="https://vue.youshengyun.com/files/系统组件.pdf" target="_blank">前端系统组件</a>                           |
+| 19 | <a href="https://vue.youshengyun.com/files/通用方法.pdf" target="_blank">前端通用方法</a>                           |
+| 20 | <a href="https://vue.youshengyun.com/files/国际化.pdf" target="_blank">前端国际化</a>                             |
+| 21 | <a href="https://vue.youshengyun.com/files/Icon图标.pdf" target="_blank">前端Icon图标</a>                       |
+| 22 | <a href="https://vue.youshengyun.com/files/Oracle数据库适配文档.pdf" target="_blank">Oracle数据库适配文档</a>           |
+| 23 | <a href="https://vue.youshengyun.com/files/Dameng数据库适配文档.pdf" target="_blank">Dameng数据库适配文档</a>           |
+| 24 | <a href="https://vue.youshengyun.com/files/PostgreSQL数据库适配文档.pdf" target="_blank">PostgreSQL数据库适配文档</a>   |
+| 25 | <a href="https://vue.youshengyun.com/files/Kingbase数据库适配文档.pdf" target="_blank">Kingbase数据库适配文档</a>       |
+| 26 | <a href="https://vue.youshengyun.com/files/Mariadb数据库适配文档.pdf" target="_blank">Mariadb数据库适配文档</a>         |
+| 27 | <a href="https://vue.youshengyun.com/files/OceanBase数据库适配文档.pdf" target="_blank">OceanBase数据库适配文档</a>     |
 
 ## 数字底座截图
 
@@ -366,8 +381,8 @@ webapp -- 系统公共模块
 
 ##### 截图
 
-<div><img src="https://vue.youshengyun.com/files/img/gongzuozhuomian.png"><div/>
-<div><img src="https://vue.youshengyun.com/files/img/neirongguanli.png"><div/>
+<div><img src="https://vue.youshengyun.com/files/img/desktop.png"><div/>
+<div><img src="https://vue.youshengyun.com/files/img/cmsManage.png"><div/>
 <div><img src="https://vue.youshengyun.com/files/img/bianjiwendang.png"><div/>
 
 #### 工作流程
@@ -386,7 +401,7 @@ webapp -- 系统公共模块
 
 ##### 简介
 
-即时通讯仿照微信的体验和界面，支持私有化部署，支持多端同步，支持组织架构，易于接入或者关联各类应用消息。
+即时通讯仿照微信的设计体验和界面交互，支持私有化部署和多端同步（Web端、PC端、手机端），支持组织架构和应用系统的动态接入，易于集成消息、邮件、待办、日程等各类信息。
 
 ##### 截图
 
