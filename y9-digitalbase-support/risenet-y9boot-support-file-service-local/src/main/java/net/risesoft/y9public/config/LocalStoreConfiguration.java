@@ -1,7 +1,6 @@
 package net.risesoft.y9public.config;
 
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
-import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
@@ -23,7 +22,6 @@ import net.risesoft.y9public.service.impl.LocalStoreServiceImpl;
 public class LocalStoreConfiguration {
 
     @Bean
-    @ConfigurationProperties(prefix = "y9.feature.file.local")
     public Y9LocalProperties y9LocalProperties() {
         return new Y9LocalProperties();
     }

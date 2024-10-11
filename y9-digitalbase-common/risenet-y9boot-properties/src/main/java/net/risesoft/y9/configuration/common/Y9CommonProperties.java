@@ -168,4 +168,9 @@ public class Y9CommonProperties {
      */
     private String attendanceBaseUrl = "https://vue.youshengyun.com/attendance";
 
+    /**
+     * 文件服务
+     */
+    private String fileManagerBaseUrl = "https://vue.youshengyun.com/fileManager";
+
 }

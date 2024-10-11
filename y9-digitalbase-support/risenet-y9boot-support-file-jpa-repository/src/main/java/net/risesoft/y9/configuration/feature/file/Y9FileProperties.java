@@ -1,17 +1,9 @@
 package net.risesoft.y9.configuration.feature.file;
 
 import org.springframework.boot.context.properties.ConfigurationProperties;
-import org.springframework.boot.context.properties.NestedConfigurationProperty;
 
 import lombok.Getter;
 import lombok.Setter;
-
-import net.risesoft.y9.configuration.feature.file.ftp.Y9FtpProperties;
-import net.risesoft.y9.configuration.feature.file.local.Y9LocalProperties;
-import net.risesoft.y9.configuration.feature.file.nfs.Y9NfsProperties;
-import net.risesoft.y9.configuration.feature.file.rest.Y9RestFileProperties;
-import net.risesoft.y9.configuration.feature.file.samba.Y9SambaProperties;
-import net.risesoft.y9.configuration.feature.file.wps.WPSProperties;
 
 /**
  * 文件存储配置
@@ -22,7 +14,6 @@ import net.risesoft.y9.configuration.feature.file.wps.WPSProperties;
 @Getter
 @Setter
 @ConfigurationProperties(prefix = "y9.feature.file", ignoreInvalidFields = true, ignoreUnknownFields = true)
-
 public class Y9FileProperties {
 
     /**
@@ -51,41 +42,5 @@ public class Y9FileProperties {
      */
     private String publicKey =
         "MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQCdx8LAhyCs9whK0Eu/jRaiwFuUhh8PieOOKM37mf0puqS1MyA5LCe//5rZgQysnX8ft3V26go3f0BmG1flwpOBZnxiR8uFqWlMDnOcIdlKAgRPUhHVzqZrxUledB3FsVJ3LHOrn6/wacuSrZLN0bGdHO95RBOhThXs3E5W7aAzIQIDAQAB";
-
-    /**
-     * ftp
-     */
-    @NestedConfigurationProperty
-    private Y9FtpProperties ftp = new Y9FtpProperties();
-
-    /**
-     * 文件属性对象
-     */
-    @NestedConfigurationProperty
-    private Y9RestFileProperties rest = new Y9RestFileProperties();
-
-    /**
-     * samba属性对象
-     */
-    @NestedConfigurationProperty
-    private Y9SambaProperties samba = new Y9SambaProperties();
-
-    /**
-     * nfs属性对象
-     */
-    @NestedConfigurationProperty
-    private Y9NfsProperties nfs = new Y9NfsProperties();
-
-    /**
-     * wps属性对象
-     */
-    @NestedConfigurationProperty
-    private WPSProperties wps = new WPSProperties();
-
-    /**
-     * 本地存储文件属性
-     */
-    @NestedConfigurationProperty
-    private Y9LocalProperties local = new Y9LocalProperties();
 
 }

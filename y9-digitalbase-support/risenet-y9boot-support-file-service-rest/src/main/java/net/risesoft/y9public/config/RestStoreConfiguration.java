@@ -1,7 +1,6 @@
 package net.risesoft.y9public.config;
 
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
-import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
@@ -17,7 +16,6 @@ import net.risesoft.y9public.service.impl.RestStoreServiceImpl;
 public class RestStoreConfiguration {
 
     @Bean
-    @ConfigurationProperties(prefix = "y9.feature.file.rest")
     public Y9RestFileProperties y9RestFileProperties() {
         return new Y9RestFileProperties();
     }
