@@ -1,5 +1,7 @@
 package net.risesoft.y9.configuration.feature.log;
 
+import org.springframework.boot.context.properties.ConfigurationProperties;
+
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
@@ -12,6 +14,7 @@ import lombok.Setter;
  */
 @Getter
 @Setter
+@ConfigurationProperties(prefix = "y9.feature.log", ignoreInvalidFields = true, ignoreUnknownFields = true)
 public class Y9LogProperties {
 
     /**
@@ -25,7 +28,7 @@ public class Y9LogProperties {
     @Getter
     @AllArgsConstructor
     public enum LogSaveTarget {
-        API, KAFKA;
+        API, KAFKA
     }
-    
+
 }

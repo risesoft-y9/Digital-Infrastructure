@@ -28,10 +28,11 @@ import org.springframework.transaction.annotation.EnableTransactionManagement;
 import com.zaxxer.hikari.HikariDataSource;
 
 import net.risesoft.y9.Y9Context;
+import net.risesoft.y9.configuration.feature.jpa.Y9JpaProperties;
 
 @Configuration
 @AutoConfigureBefore(DataSourceAutoConfiguration.class)
-@EnableConfigurationProperties(JpaProperties.class)
+@EnableConfigurationProperties({JpaProperties.class, Y9JpaProperties.class})
 @EnableTransactionManagement(proxyTargetClass = true, mode = AdviceMode.ASPECTJ)
 @EnableJpaRepositories(basePackages = {"${y9.feature.jpa.packagesToScanRepositoryPublic}"},
     includeFilters = {@ComponentScan.Filter(classes = JpaRepository.class, type = FilterType.ASSIGNABLE_TYPE)},

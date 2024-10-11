@@ -2,6 +2,7 @@ package y9.autoconfiguration;
 
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
+import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.cloud.openfeign.EnableFeignClients;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -9,7 +10,7 @@ import org.springframework.data.redis.core.RedisTemplate;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
-import net.risesoft.y9.configuration.Y9Properties;
+import net.risesoft.y9.configuration.feature.api.Y9ApiProperties;
 
 import y9.support.TokenInterceptor;
 import y9.support.Y9ErrorDecoder;
@@ -25,6 +26,7 @@ import feign.codec.ErrorDecoder;
  */
 @Configuration(proxyBeanMethods = false)
 @EnableFeignClients("y9.client")
+@EnableConfigurationProperties(Y9ApiProperties.class)
 public class Y9FeignConfiguration {
 
     @Bean
@@ -35,8 +37,9 @@ public class Y9FeignConfiguration {
 
     @Bean
     @ConditionalOnProperty(name = "y9.feature.api.token-required", havingValue = "true", matchIfMissing = false)
-    public RequestInterceptor tokenInterceptor(Y9Properties y9Properties, RedisTemplate<String, String> redisTemplate) {
-        return new TokenInterceptor(y9Properties, redisTemplate);
+    public RequestInterceptor tokenInterceptor(Y9ApiProperties y9ApiProperties,
+        RedisTemplate<String, String> redisTemplate) {
+        return new TokenInterceptor(y9ApiProperties, redisTemplate);
     }
 
 }

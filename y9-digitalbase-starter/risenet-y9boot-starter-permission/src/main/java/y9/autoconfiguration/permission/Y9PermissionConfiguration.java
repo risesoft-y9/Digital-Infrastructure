@@ -4,6 +4,7 @@ import org.springframework.aop.framework.autoproxy.AbstractAdvisorAutoProxyCreat
 import org.springframework.aop.framework.autoproxy.DefaultAdvisorAutoProxyCreator;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
+import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
@@ -20,9 +21,11 @@ import net.risesoft.permission.aop.advisor.HasPositionsAdvisor;
 import net.risesoft.permission.aop.advisor.HasRolesAdvisor;
 import net.risesoft.permission.aop.advisor.IsManagerAdvisor;
 import net.risesoft.y9.Y9Context;
+import net.risesoft.y9.configuration.feature.permission.Y9PermissionProperties;
 
 @Configuration
 @ConditionalOnProperty(name = "y9.feature.permission.enabled", havingValue = "true", matchIfMissing = true)
+@EnableConfigurationProperties(Y9PermissionProperties.class)
 public class Y9PermissionConfiguration {
 
     @Bean

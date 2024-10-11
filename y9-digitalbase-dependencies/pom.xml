@@ -24,7 +24,7 @@
             <distribution>repo</distribution>
         </license>
     </licenses>
-    
+
     <developers>
         <developer>
             <name>dingzhaojun</name>
@@ -45,7 +45,7 @@
             <organizationUrl>https://www.risesoft.net</organizationUrl>
         </developer>
     </developers>
-    
+
     <scm>
         <url>${gitee.url}</url>
         <connection>${gitee.connection}</connection>
@@ -512,6 +512,25 @@
                 <version>${revision}</version>
             </dependency>
 
+            <!-- net.risesoft webmail-->
+            <dependency>
+                <groupId>net.risesoft</groupId>
+                <artifactId>risenet-y9boot-api-feignclient-webmail</artifactId>
+                <version>${revision}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>net.risesoft</groupId>
+                <artifactId>risenet-y9boot-api-interface-webmail</artifactId>
+                <version>${revision}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>net.risesoft</groupId>
+                <artifactId>risenet-y9boot-support-webmail</artifactId>
+                <version>${revision}</version>
+            </dependency>
+
             <!-- Third Party -->
 
             <dependency>
@@ -794,7 +813,7 @@
             </plugins>
         </pluginManagement>
     </build>
-    
+
     <profiles>
         <profile>
             <id>deploy-private-repo</id>

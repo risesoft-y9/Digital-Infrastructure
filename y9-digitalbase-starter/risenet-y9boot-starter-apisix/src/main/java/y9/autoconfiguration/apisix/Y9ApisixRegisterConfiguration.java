@@ -8,14 +8,14 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.DependsOn;
 
 import net.risesoft.y9.Y9Context;
-import net.risesoft.y9.configuration.Y9Properties;
+import net.risesoft.y9.configuration.feature.apisix.Y9ApisixProperties;
 
 import y9.apisix.OnY9ApisixRegisterApplicationReady;
 import y9.apisix.endpoint.Y9ApisixEndpoint;
 import y9.apisix.register.Y9RegisterByApisixRestApi;
 
 @Configuration
-@EnableConfigurationProperties(Y9Properties.class)
+@EnableConfigurationProperties(Y9ApisixProperties.class)
 @ConditionalOnProperty(name = "y9.feature.apisix.enabled", havingValue = "true")
 public class Y9ApisixRegisterConfiguration {
 
