@@ -1,7 +1,6 @@
 package net.risesoft.config;
 
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
-import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Primary;
@@ -9,7 +8,7 @@ import org.springframework.context.annotation.Primary;
 import net.risesoft.y9public.ftp.FtpClientFactory;
 import net.risesoft.y9public.ftp.FtpClientHelper;
 import net.risesoft.y9public.ftp.FtpClientPool;
-import net.risesoft.y9public.ftp.FtpPoolConfig;
+import net.risesoft.y9.configuration.feature.file.ftp.FtpPoolConfig;
 import net.risesoft.y9public.service.StoreService;
 import net.risesoft.y9public.service.impl.FtpStoreServiceImpl;
 
@@ -18,7 +17,6 @@ import net.risesoft.y9public.service.impl.FtpStoreServiceImpl;
 public class FtpStoreConfiguration {
 
     @Bean
-    @ConfigurationProperties(prefix = "y9.feature.file.ftp")
     public FtpPoolConfig ftpPoolConfig() {
         return new FtpPoolConfig();
     }
