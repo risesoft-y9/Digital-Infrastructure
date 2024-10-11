@@ -28,12 +28,13 @@ import com.alibaba.druid.spring.boot.autoconfigure.DruidDataSourceAutoConfigure;
 import com.alibaba.druid.spring.boot.autoconfigure.DruidDataSourceBuilder;
 
 import net.risesoft.y9.Y9Context;
+import net.risesoft.y9.configuration.feature.jpa.Y9JpaProperties;
 
 import y9.jpa.extension.Y9EnableJpaRepositories;
 
 @Configuration
 @AutoConfigureBefore(DruidDataSourceAutoConfigure.class)
-@EnableConfigurationProperties(JpaProperties.class)
+@EnableConfigurationProperties({JpaProperties.class, Y9JpaProperties.class})
 @EnableTransactionManagement(proxyTargetClass = true, mode = AdviceMode.ASPECTJ)
 @Y9EnableJpaRepositories(basePackages = {"${y9.feature.jpa.packagesToScanRepositoryPublic}"},
     includeFilters = {@ComponentScan.Filter(classes = JpaRepository.class, type = FilterType.ASSIGNABLE_TYPE)},

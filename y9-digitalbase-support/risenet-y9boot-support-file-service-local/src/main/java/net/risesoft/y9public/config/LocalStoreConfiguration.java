@@ -5,6 +5,8 @@ import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
+import lombok.extern.slf4j.Slf4j;
+
 import net.risesoft.y9.configuration.feature.file.local.Y9LocalProperties;
 import net.risesoft.y9public.service.StoreService;
 import net.risesoft.y9public.service.impl.LocalStoreServiceImpl;
@@ -17,6 +19,7 @@ import net.risesoft.y9public.service.impl.LocalStoreServiceImpl;
  */
 @Configuration(proxyBeanMethods = false)
 @ConditionalOnProperty(name = "y9.feature.file.local.enabled", havingValue = "true", matchIfMissing = true)
+@Slf4j
 public class LocalStoreConfiguration {
 
     @Bean
@@ -27,6 +30,7 @@ public class LocalStoreConfiguration {
 
     @Bean
     public StoreService localStoreService(Y9LocalProperties y9LocalProperties) {
+        LOGGER.info("LocalStoreConfiguration init. basePath: {}", y9LocalProperties.getBasePath());
         return new LocalStoreServiceImpl(y9LocalProperties);
     }
 

@@ -14,7 +14,7 @@ import com.alibaba.druid.pool.DruidDataSource;
 
 import net.risesoft.liquibase.LiquibaseUtil;
 import net.risesoft.liquibase.Y9MultiTenantSpringLiquibase;
-import net.risesoft.y9.configuration.Y9Properties;
+import net.risesoft.y9.configuration.feature.liquibase.Y9LiquibaseProperties;
 import net.risesoft.y9.tenant.datasource.Y9TenantDataSourceLookup;
 
 import liquibase.integration.spring.SpringLiquibase;
@@ -26,24 +26,22 @@ import liquibase.integration.spring.SpringLiquibase;
  */
 @Configuration
 @AutoConfiguration(before = {LiquibaseAutoConfiguration.class})
-@EnableConfigurationProperties(Y9Properties.class)
+@EnableConfigurationProperties(Y9LiquibaseProperties.class)
 public class Y9LiquibaseAutoConfiguration {
 
     @Bean
     @ConditionalOnBean(name = "y9TenantDataSourceLookup")
     @ConditionalOnProperty(name = "y9.feature.liquibase.tenant-enabled", havingValue = "true")
     public Y9MultiTenantSpringLiquibase y9MultiTenantSpringLiquibase(Y9TenantDataSourceLookup y9TenantDataSourceLookup,
-        Y9Properties properties, ResourceLoader resourceLoader) {
-        return new Y9MultiTenantSpringLiquibase(y9TenantDataSourceLookup, properties.getFeature().getLiquibase(),
-            resourceLoader);
+        Y9LiquibaseProperties properties, ResourceLoader resourceLoader) {
+        return new Y9MultiTenantSpringLiquibase(y9TenantDataSourceLookup, properties, resourceLoader);
     }
 
     @Bean
     @ConditionalOnBean(name = "y9PublicDS")
-    public SpringLiquibase liquibase(Y9Properties properties, @Qualifier("y9PublicDS") DruidDataSource dataSource,
-        ResourceLoader resourceLoader) {
-        return LiquibaseUtil.getSpringLiquibase(dataSource, properties.getFeature().getLiquibase(), resourceLoader,
-            false);
+    public SpringLiquibase liquibase(Y9LiquibaseProperties properties,
+        @Qualifier("y9PublicDS") DruidDataSource dataSource, ResourceLoader resourceLoader) {
+        return LiquibaseUtil.getSpringLiquibase(dataSource, properties, resourceLoader, false);
     }
 
 }

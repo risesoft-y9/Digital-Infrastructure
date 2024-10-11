@@ -1,7 +1,6 @@
 package y9.autoconfiguration.security;
 
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
-import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.boot.web.servlet.FilterRegistrationBean;
 import org.springframework.cloud.context.config.annotation.RefreshScope;
 import org.springframework.context.annotation.Bean;
@@ -27,7 +26,6 @@ public class Y9SecurityConfiguration {
 
     @Bean
     @RefreshScope(proxyMode = ScopedProxyMode.DEFAULT)
-    @ConfigurationProperties(prefix = "y9.feature.security", ignoreInvalidFields = true)
     public Y9SecurityProperties y9SecurityProperties() {
         return new Y9SecurityProperties();
     }

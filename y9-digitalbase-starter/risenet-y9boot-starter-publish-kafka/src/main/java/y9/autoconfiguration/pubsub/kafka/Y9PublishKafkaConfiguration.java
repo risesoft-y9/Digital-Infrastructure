@@ -4,16 +4,19 @@ import javax.annotation.PostConstruct;
 
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
+import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Primary;
 import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.kafka.core.ProducerFactory;
 
+import net.risesoft.y9.configuration.feature.publish.Y9PublishProperties;
 import net.risesoft.y9.pubsub.Y9PublishService;
 
 @Configuration
 @ConditionalOnProperty(name = "y9.feature.publish.kafka.enabled", havingValue = "true", matchIfMissing = true)
+@EnableConfigurationProperties(Y9PublishProperties.class)
 public class Y9PublishKafkaConfiguration {
 
     @PostConstruct

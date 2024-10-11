@@ -1,7 +1,7 @@
 package y9.apisix.register;
 
 import java.io.IOException;
-import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -15,7 +15,7 @@ import org.springframework.util.StringUtils;
 import lombok.extern.slf4j.Slf4j;
 
 import net.risesoft.y9.Y9Context;
-import net.risesoft.y9.configuration.Y9Properties;
+import net.risesoft.y9.configuration.feature.apisix.Y9ApisixProperties;
 
 import y9.apisix.util.ApisixUtil;
 import y9.apisix.util.EtcdUtil;
@@ -39,8 +39,6 @@ import io.github.classgraph.ScanResult;
 @Slf4j
 public class Y9RegisterByApisixRestApi {
 
-    private BuildProperties buildProperties;
-
     String contextPath;
     String apiBasePackages;
     // String apiDomain;
@@ -50,10 +48,10 @@ public class Y9RegisterByApisixRestApi {
     String upstreamNodes;
     String upstreamType;
     String etcdAddress;
-
     String upstreamId;
     boolean consumerEnabled;
     String authenticationType;
+    private BuildProperties buildProperties;
 
     @Autowired
     public void setBuildProperties(BuildProperties buildProperties) {
@@ -107,14 +105,14 @@ public class Y9RegisterByApisixRestApi {
                                 ? methodAnnotationValue.substring(0, methodAnnotationValue.indexOf("{")) + "*"
                                 : methodAnnotationValue;
 
-                            String uri = new StringBuilder("/").append(contextPath).append("/services/rest")
-                                .append(classAnnotationValue).append(methodAnnotationValue).toString();
+                            String uri =
+                                "/" + contextPath + "/services/rest" + classAnnotationValue + methodAnnotationValue;
                             String routeId = upstreamId + "_cxf" + uri.replaceAll("/", "_").replaceAll("\\*", ".");
 
                             // apisx Admin API 的id长度不能超过64，
                             // 目前处理是：routeId超过64，就转成MD5 hash,也可以改apisix的代码，修改各个参数长度的限制
                             if (routeId.length() > 64) {
-                                routeId = MD5.hash(routeId, Charset.forName("UTF-8"));
+                                routeId = MD5.hash(routeId, StandardCharsets.UTF_8);
                             }
 
                             routeIdsList.add(routeId);
@@ -167,7 +165,7 @@ public class Y9RegisterByApisixRestApi {
 
     @PostConstruct
     public void init() {
-        Y9Properties y9config = Y9Context.getBean(Y9Properties.class);
+        Y9ApisixProperties y9ApisixProperties = Y9Context.getBean(Y9ApisixProperties.class);
 
         contextPath = Y9Context.getProperty("server.servlet.contextPath");
         if (contextPath == null) {
@@ -180,7 +178,7 @@ public class Y9RegisterByApisixRestApi {
             }
         }
 
-        apiVersion = y9config.getFeature().getApisix().getApiVersion();
+        apiVersion = y9ApisixProperties.getApiVersion();
         if (!StringUtils.hasText(apiVersion)) {
             if (buildProperties != null) {
                 apiVersion = buildProperties.getVersion();
@@ -193,16 +191,16 @@ public class Y9RegisterByApisixRestApi {
 
         upstreamId = (contextPath + "_api").replace(".", "_");
 
-        adminKey = y9config.getFeature().getApisix().getAdminKey();
-        adminAddress = y9config.getFeature().getApisix().getAdminAddress();
-        upstreamNodes = y9config.getFeature().getApisix().getUpstreamNodes();
-        apiBasePackages = y9config.getFeature().getApisix().getApiBasePackages();
+        adminKey = y9ApisixProperties.getAdminKey();
+        adminAddress = y9ApisixProperties.getAdminAddress();
+        upstreamNodes = y9ApisixProperties.getUpstreamNodes();
+        apiBasePackages = y9ApisixProperties.getApiBasePackages();
 
-        upstreamType = y9config.getFeature().getApisix().getUpstreamType();
-        etcdAddress = y9config.getFeature().getApisix().getEtcdAddress();
+        upstreamType = y9ApisixProperties.getUpstreamType();
+        etcdAddress = y9ApisixProperties.getEtcdAddress();
 
-        consumerEnabled = y9config.getFeature().getApisix().isConsumerEnabled();
-        authenticationType = y9config.getFeature().getApisix().getAuthenticationType();
+        consumerEnabled = y9ApisixProperties.isConsumerEnabled();
+        authenticationType = y9ApisixProperties.getAuthenticationType();
     }
 
     public List<String> registerApiToApisix() {
@@ -269,13 +267,12 @@ public class Y9RegisterByApisixRestApi {
                                         + "*"
                                     : getMappingAnnotationValue;
 
-                                String uri = new StringBuilder("/").append(contextPath)
-                                    .append(classRequestMappingAnnotationValue).append(getMappingAnnotationValue)
-                                    .toString();
+                                String uri =
+                                    "/" + contextPath + classRequestMappingAnnotationValue + getMappingAnnotationValue;
                                 String routeId = upstreamId + uri.replaceAll("/", "_").replaceAll("\\*", ".");
 
                                 if (routeId.length() > 64) {
-                                    routeId = MD5.hash(routeId, Charset.forName("UTF-8"));
+                                    routeId = MD5.hash(routeId, StandardCharsets.UTF_8);
                                 }
 
                                 routeIdsList.add(routeId);
@@ -297,13 +294,12 @@ public class Y9RegisterByApisixRestApi {
                                         + "*"
                                     : postMappingAnnotationValue;
 
-                                String uri = new StringBuilder("/").append(contextPath)
-                                    .append(classRequestMappingAnnotationValue).append(postMappingAnnotationValue)
-                                    .toString();
+                                String uri =
+                                    "/" + contextPath + classRequestMappingAnnotationValue + postMappingAnnotationValue;
                                 String routeId = upstreamId + uri.replaceAll("/", "_").replaceAll("\\*", ".");
 
                                 if (routeId.length() > 64) {
-                                    routeId = MD5.hash(routeId, Charset.forName("UTF-8"));
+                                    routeId = MD5.hash(routeId, StandardCharsets.UTF_8);
                                 }
 
                                 routeIdsList.add(routeId);
@@ -324,13 +320,12 @@ public class Y9RegisterByApisixRestApi {
                                     ? methodRequestMappingAnnotationValue.subSequence(0,
                                         methodRequestMappingAnnotationValue.indexOf("{")) + "*"
                                     : methodRequestMappingAnnotationValue;
-                                String uri = new StringBuilder("/").append(contextPath)
-                                    .append(classRequestMappingAnnotationValue)
-                                    .append(methodRequestMappingAnnotationValue).toString();
+                                String uri = "/" + contextPath + classRequestMappingAnnotationValue
+                                    + methodRequestMappingAnnotationValue;
                                 String routeId = upstreamId + uri.replaceAll("/", "_").replaceAll("\\*", ".");
 
                                 if (routeId.length() > 64) {
-                                    routeId = MD5.hash(routeId, Charset.forName("UTF-8"));
+                                    routeId = MD5.hash(routeId, StandardCharsets.UTF_8);
                                 }
 
                                 routeIdsList.add(routeId);

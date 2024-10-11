@@ -5,6 +5,7 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.nio.charset.StandardCharsets;
 import java.time.LocalDate;
 import java.util.Date;
 import java.util.concurrent.Future;
@@ -25,7 +26,7 @@ import net.risesoft.id.IdType;
 import net.risesoft.id.Y9IdGenerator;
 import net.risesoft.y9.Y9Context;
 import net.risesoft.y9.Y9LoginUserHolder;
-import net.risesoft.y9.configuration.Y9Properties;
+import net.risesoft.y9.configuration.feature.file.Y9FileProperties;
 import net.risesoft.y9.util.crypto.AesUtil;
 import net.risesoft.y9.util.crypto.RsaUtil;
 import net.risesoft.y9public.entity.Y9FileStore;
@@ -48,7 +49,7 @@ import net.risesoft.y9public.service.Y9FileStoreService;
 public class Y9FileStoreServiceImpl implements Y9FileStoreService {
 
     private final Y9FileStoreRepository y9FileStoreRepository;
-    private final Y9Properties y9Config;
+    private final Y9FileProperties y9FileProperties;
     private final StoreService storeService;
     private final ThreadPoolTaskExecutor taskExecutor;
 
@@ -121,7 +122,7 @@ public class Y9FileStoreServiceImpl implements Y9FileStoreService {
     @Override
     public String downloadFileToString(String id) throws Exception {
         byte[] bytes = this.downloadFileToBytes(id);
-        return new String(bytes, "UTF-8");
+        return new String(bytes, StandardCharsets.UTF_8);
     }
 
     @Override
@@ -131,10 +132,10 @@ public class Y9FileStoreServiceImpl implements Y9FileStoreService {
 
     @PostConstruct
     public void init() {
-        this.encryptionFileContent = this.y9Config.getFeature().getFile().isEncryptionFileContent();
-        this.privateKey = this.y9Config.getFeature().getFile().getPrivateKey();
-        this.publicKey = this.y9Config.getFeature().getFile().getPublicKey();
-        this.prefix = this.y9Config.getFeature().getFile().getPrefix();
+        this.encryptionFileContent = this.y9FileProperties.isEncryptionFileContent();
+        this.privateKey = this.y9FileProperties.getPrivateKey();
+        this.publicKey = this.y9FileProperties.getPublicKey();
+        this.prefix = this.y9FileProperties.getPrefix();
     }
 
     private Y9FileStore saveY9FileStore(String customPath, String fileName, String fileEnvelope, long fileSize) {

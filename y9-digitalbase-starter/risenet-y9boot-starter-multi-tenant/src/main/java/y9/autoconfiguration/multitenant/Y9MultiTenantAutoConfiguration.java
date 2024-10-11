@@ -38,6 +38,7 @@ import net.risesoft.schema.LiquibaseSchemaUpdater;
 import net.risesoft.schema.NoneSchemaUpdater;
 import net.risesoft.schema.SchemaUpdater;
 import net.risesoft.y9.configuration.Y9Properties;
+import net.risesoft.y9.configuration.feature.multitenant.Y9MultiTenantProperties;
 import net.risesoft.y9.tenant.datasource.Y9TenantDataSourceLookup;
 
 /**
@@ -47,7 +48,7 @@ import net.risesoft.y9.tenant.datasource.Y9TenantDataSourceLookup;
  * @date 2023/12/05
  * @since 9.6.3
  */
-@EnableConfigurationProperties(Y9Properties.class)
+@EnableConfigurationProperties(Y9MultiTenantProperties.class)
 @RequiredArgsConstructor
 @Slf4j
 @AutoConfiguration

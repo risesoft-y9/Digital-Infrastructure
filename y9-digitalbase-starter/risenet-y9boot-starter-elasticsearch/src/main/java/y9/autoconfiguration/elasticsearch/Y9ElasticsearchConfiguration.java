@@ -1,5 +1,6 @@
 package y9.autoconfiguration.elasticsearch;
 
+import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.FilterType;
@@ -8,7 +9,10 @@ import org.springframework.data.elasticsearch.repository.config.EnableElasticsea
 
 import lombok.extern.slf4j.Slf4j;
 
+import net.risesoft.y9.configuration.feature.elasticsearch.Y9ElasticProperties;
+
 @Configuration
+@EnableConfigurationProperties(Y9ElasticProperties.class)
 @EnableElasticsearchRepositories(basePackages = {"${y9.feature.elasticsearch.packagesToScanRepositoryPublic}"},
     includeFilters = {
         @ComponentScan.Filter(classes = ElasticsearchRepository.class, type = FilterType.ASSIGNABLE_TYPE)})
