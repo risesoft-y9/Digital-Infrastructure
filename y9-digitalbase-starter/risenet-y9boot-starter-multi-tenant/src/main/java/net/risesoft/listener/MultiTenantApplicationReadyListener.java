@@ -4,6 +4,7 @@ import java.util.List;
 
 import org.springframework.boot.context.event.ApplicationReadyEvent;
 import org.springframework.context.ApplicationListener;
+import org.springframework.core.annotation.Order;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -16,7 +17,12 @@ import net.risesoft.y9.configuration.Y9Properties;
 import net.risesoft.y9.pubsub.constant.Y9CommonEventConst;
 import net.risesoft.y9.pubsub.event.Y9EventCommon;
 
+/**
+ * @author shidaobang
+ * @date 2024/03/22
+ */
 @Slf4j
+@Order(1)
 @RequiredArgsConstructor
 public class MultiTenantApplicationReadyListener implements ApplicationListener<ApplicationReadyEvent> {
 
