@@ -17,7 +17,6 @@ import org.springframework.transaction.annotation.Transactional;
 
 import lombok.RequiredArgsConstructor;
 
-import net.risesoft.config.Y9PlatformProperties;
 import net.risesoft.consts.CacheNameConsts;
 import net.risesoft.entity.Y9Job;
 import net.risesoft.entity.Y9OrgBase;
@@ -37,6 +36,7 @@ import net.risesoft.repository.relation.Y9PersonsToPositionsRepository;
 import net.risesoft.util.Y9OrgUtil;
 import net.risesoft.y9.Y9Context;
 import net.risesoft.y9.Y9LoginUserHolder;
+import net.risesoft.y9.configuration.app.y9platform.Y9PlatformProperties;
 import net.risesoft.y9.exception.util.Y9ExceptionUtil;
 import net.risesoft.y9.pubsub.event.Y9EntityCreatedEvent;
 import net.risesoft.y9.pubsub.event.Y9EntityUpdatedEvent;
