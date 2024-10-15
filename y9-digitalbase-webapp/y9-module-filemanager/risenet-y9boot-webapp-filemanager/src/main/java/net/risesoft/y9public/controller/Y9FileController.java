@@ -2,6 +2,7 @@ package net.risesoft.y9public.controller;
 
 import java.io.File;
 import java.net.URLEncoder;
+import java.nio.charset.StandardCharsets;
 
 import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServletRequest;
@@ -19,7 +20,7 @@ import org.springframework.web.multipart.MultipartFile;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
-import net.risesoft.Y9FileManagerProperties;
+import net.risesoft.y9.configuration.app.y9filemanager.Y9FileManagerProperties;
 import net.risesoft.y9public.entity.Y9FileStore;
 import net.risesoft.y9public.repository.Y9FileStoreRepository;
 
@@ -88,10 +89,10 @@ public class Y9FileController {
                 if (file.exists()) {
                     String userAgent = request.getHeader("User-Agent");
                     if (userAgent.contains("MSIE") || userAgent.contains("Trident")) {
-                        fileName = URLEncoder.encode(fileName, "UTF-8");
+                        fileName = URLEncoder.encode(fileName, StandardCharsets.UTF_8);
                         fileName = fileName.replaceAll("\\+", "%20");
                     } else {
-                        fileName = new String(fileName.getBytes("UTF-8"), "ISO8859-1");
+                        fileName = new String(fileName.getBytes(StandardCharsets.UTF_8), "ISO8859-1");
                     }
 
                     response.reset();
@@ -107,13 +108,13 @@ public class Y9FileController {
 
             response.reset();
             String err = "文件不存在或路径不正确";
-            out.write(err.getBytes("UTF-8"));
+            out.write(err.getBytes(StandardCharsets.UTF_8));
         } catch (Exception e) {
             e.printStackTrace();
 
             response.reset();
             String err = "错误信息：" + e.getMessage();
-            out.write(err.getBytes("UTF-8"));
+            out.write(err.getBytes(StandardCharsets.UTF_8));
         } finally {
             out.flush();
             out.close();
@@ -142,10 +143,10 @@ public class Y9FileController {
             if (file.exists()) {
                 String userAgent = request.getHeader("User-Agent");
                 if (userAgent.contains("MSIE") || userAgent.contains("Trident")) {
-                    fileName = URLEncoder.encode(fileName, "UTF-8");
+                    fileName = URLEncoder.encode(fileName, StandardCharsets.UTF_8);
                     fileName = fileName.replaceAll("\\+", "%20");
                 } else {
-                    fileName = new String(fileName.getBytes("UTF-8"), "ISO8859-1");
+                    fileName = new String(fileName.getBytes(StandardCharsets.UTF_8), "ISO8859-1");
                 }
 
                 response.reset();

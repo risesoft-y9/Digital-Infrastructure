@@ -17,12 +17,12 @@ import com.alibaba.druid.pool.DruidDataSource;
 
 import lombok.extern.slf4j.Slf4j;
 
-import net.risesoft.config.Y9PlatformProperties;
 import net.risesoft.enums.platform.DataSourceTypeEnum;
 import net.risesoft.enums.platform.TenantTypeEnum;
 import net.risesoft.exception.DataSourceErrorCodeEnum;
 import net.risesoft.id.IdType;
 import net.risesoft.id.Y9IdGenerator;
+import net.risesoft.y9.configuration.app.y9platform.Y9PlatformProperties;
 import net.risesoft.y9.exception.Y9BusinessException;
 import net.risesoft.y9.util.Y9StringUtil;
 import net.risesoft.y9.util.base64.Y9Base64Util;
