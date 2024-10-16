@@ -12,15 +12,15 @@ plugins {
 }
 
 dependencies {
-    api project(':risenet-y9boot-common-util')
-    api project(':risenet-y9boot-support-platform-web')
-    api project(':risenet-y9boot-support-platform-jpa-repository')
-    api project(':risenet-y9boot-starter-sso-oauth2-resource')
-    api project(':risenet-y9boot-starter-security')
-    api project(':risenet-y9boot-starter-log')
-    api project(':risenet-y9boot-starter-cache-redis')
-    api project(':risenet-y9boot-common-nacos')
-    api project(':risenet-y9boot-starter-multi-tenant')
+    api project(':y9-digitalbase-common:risenet-y9boot-common-util')
+    api project(':y9-digitalbase-module:y9-module-platform:risenet-y9boot-support-platform-web')
+    api project(':y9-digitalbase-module:y9-module-platform:risenet-y9boot-support-platform-jpa-repository')
+    api project(':y9-digitalbase-starter:risenet-y9boot-starter-sso-oauth2-resource')
+    api project(':y9-digitalbase-starter:risenet-y9boot-starter-security')
+    api project(':y9-digitalbase-starter:risenet-y9boot-starter-log')
+    api project(':y9-digitalbase-starter:risenet-y9boot-starter-cache-redis')
+    api project(':y9-digitalbase-common:risenet-y9boot-common-nacos')
+    api project(':y9-digitalbase-starter:risenet-y9boot-starter-multi-tenant')
     api libs.org.apache.commons.commons.pool2
     api libs.org.springframework.boot.spring.boot.docker.compose.x1
     api libs.org.dom4j.dom4j

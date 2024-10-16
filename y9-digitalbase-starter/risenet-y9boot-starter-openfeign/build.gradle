@@ -9,8 +9,8 @@ plugins {
 }
 
 dependencies {
-    api project(':risenet-y9boot-properties')
-    api project(':risenet-y9boot-common-util')
+    api project(':y9-digitalbase-common:risenet-y9boot-properties')
+    api project(':y9-digitalbase-common:risenet-y9boot-common-util')
     api libs.org.springframework.boot.spring.boot
     api libs.org.springframework.boot.spring.boot.autoconfigure
     api libs.org.springframework.boot.spring.boot.configuration.processor

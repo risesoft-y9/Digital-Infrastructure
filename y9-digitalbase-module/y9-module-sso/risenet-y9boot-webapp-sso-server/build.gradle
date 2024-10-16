@@ -60,7 +60,7 @@ dependencies {
     api libs.org.apereo.cas.cas.server.webapp.init
     api libs.org.apereo.cas.cas.server.support.webconfig
     api libs.org.apereo.cas.cas.server.webapp.starter.tomcat
-    api project(':risenet-y9boot-common-nacos')
+    api project(':y9-digitalbase-common:risenet-y9boot-common-nacos')
     api libs.org.springframework.boot.spring.boot.docker.compose
     api libs.com.mysql.mysql.connector.j
     api libs.org.mariadb.jdbc.mariadb.java.client

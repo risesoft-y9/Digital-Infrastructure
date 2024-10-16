@@ -9,10 +9,10 @@ plugins {
 }
 
 dependencies {
-    api project(':risenet-y9boot-starter-idgenerator')
-    api project(':risenet-y9boot-common-util')
-    api project(':risenet-y9boot-starter-jpa-public')
-    api project(':risenet-y9boot-starter-multi-tenant')
+    api project(':y9-digitalbase-starter:risenet-y9boot-starter-idgenerator')
+    api project(':y9-digitalbase-common:risenet-y9boot-common-util')
+    api project(':y9-digitalbase-starter:risenet-y9boot-starter-jpa-public')
+    api project(':y9-digitalbase-starter:risenet-y9boot-starter-multi-tenant')
     api libs.org.hibernate.validator.hibernate.validator
     compileOnly libs.org.projectlombok.lombok
     annotationProcessor libs.org.projectlombok.lombok

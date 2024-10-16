@@ -12,13 +12,13 @@ plugins {
 }
 
 dependencies {
-    api project(':risenet-y9boot-support-log-web')
-    api project(':risenet-y9boot-api-interface-log')
-    api project(':risenet-y9boot-starter-security')
-    api project(':risenet-y9boot-starter-sso-oauth2-resource')
-    api project(':risenet-y9boot-starter-apisix')
-    api project(':risenet-y9boot-starter-web')
-    api project(':risenet-y9boot-common-nacos')
+    api project(':y9-digitalbase-module:y9-module-log:risenet-y9boot-support-log-web')
+    api project(':y9-digitalbase-module:y9-module-log:risenet-y9boot-api-interface-log')
+    api project(':y9-digitalbase-starter:risenet-y9boot-starter-security')
+    api project(':y9-digitalbase-starter:risenet-y9boot-starter-sso-oauth2-resource')
+    api project(':y9-digitalbase-starter:risenet-y9boot-starter-apisix')
+    api project(':y9-digitalbase-starter:risenet-y9boot-starter-web')
+    api project(':y9-digitalbase-common:risenet-y9boot-common-nacos')
     api libs.org.springframework.kafka.spring.kafka
     api libs.org.jxls.jxls
     api libs.org.jxls.jxls.poi

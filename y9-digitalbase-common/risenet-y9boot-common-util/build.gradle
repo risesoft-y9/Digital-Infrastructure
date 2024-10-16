@@ -9,7 +9,7 @@ plugins {
 }
 
 dependencies {
-    api project(':risenet-y9boot-common-model')
+    api project(':y9-digitalbase-common:risenet-y9boot-common-model')
     api libs.com.fasterxml.jackson.core.jackson.databind
     api libs.com.fasterxml.jackson.dataformat.jackson.dataformat.yaml
     api libs.com.fasterxml.jackson.dataformat.jackson.dataformat.properties
