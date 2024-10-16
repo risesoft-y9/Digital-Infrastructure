@@ -24,8 +24,8 @@ jib {
     to {
         image "docker-registry-internal.youshengyun.com/${project.name}"
         auth {
-            username = "${dockerUsername}"
-            password = "${dockerPassword}"
+            username = findProperty("dockerUsername") ?: ""
+            password = findProperty("dockerPassword") ?: ""
         }
         tags = ['v9.7.0-SNAPSHOT', 'v9.7.x', "v9.7.0-SNAPSHOT-${dateTimeStr}"]
     }
