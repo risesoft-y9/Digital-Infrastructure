@@ -1,4 +1,4 @@
-package net.risesoft.config;
+package net.risesoft.y9.configuration.app.y9platform;
 
 import org.springframework.boot.context.properties.ConfigurationProperties;
 

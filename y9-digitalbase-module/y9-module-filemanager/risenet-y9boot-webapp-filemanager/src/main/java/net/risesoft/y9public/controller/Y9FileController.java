@@ -20,7 +20,7 @@ import org.springframework.web.multipart.MultipartFile;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
-import net.risesoft.Y9FileManagerProperties;
+import net.risesoft.y9.configuration.app.y9filemanager.Y9FileManagerProperties;
 import net.risesoft.y9public.entity.Y9FileStore;
 import net.risesoft.y9public.repository.Y9FileStoreRepository;
 

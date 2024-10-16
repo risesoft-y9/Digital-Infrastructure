@@ -1,4 +1,4 @@
-package net.risesoft;
+package net.risesoft.y9.configuration.app.y9filemanager;
 
 import org.springframework.boot.context.properties.ConfigurationProperties;
 
