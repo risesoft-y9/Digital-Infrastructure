@@ -3,18 +3,17 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
 
     <modelVersion>4.0.0</modelVersion>
-    <groupId>net.risesoft</groupId>
-    <artifactId>risenet-y9boot-webapp-filemanager</artifactId>
-    <packaging>war</packaging>
-    <version>${revision}</version>
-
     <parent>
         <groupId>net.risesoft</groupId>
         <artifactId>y9-module-filemanager</artifactId>
         <version>${revision}</version>
         <relativePath>../pom.xml</relativePath>
     </parent>
-
+    <groupId>net.risesoft</groupId>
+    <artifactId>risenet-y9boot-webapp-filemanager</artifactId>
+    <packaging>war</packaging>
+    <version>${revision}</version>
+    
     <properties>
         <maven.deploy.skip>true</maven.deploy.skip>
     </properties>

@@ -10,9 +10,9 @@
         <relativePath>../pom.xml</relativePath>
     </parent>
     <groupId>net.risesoft</groupId>
-    <artifactId>y9-digitalbase-webapp</artifactId>
+    <artifactId>y9-digitalbase-module</artifactId>
     <packaging>pom</packaging>
-    <name>y9-digitalbase-webapp</name>
+    <name>y9-digitalbase-module</name>
     <description>RiseSoft/Digital Infrastructure webapp parent</description>
 
     <scm>

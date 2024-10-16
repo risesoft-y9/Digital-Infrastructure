@@ -92,7 +92,7 @@
         <module>y9-digitalbase-idcode</module>
         <module>y9-digitalbase-starter</module>
         <module>y9-digitalbase-support</module>
-        <module>y9-digitalbase-webapp</module>
+        <module>y9-digitalbase-module</module>
     </modules>
 
     <dependencyManagement>
