@@ -43,6 +43,8 @@
                                 <artifact>risenet-y9boot-webapp-log</artifact>
                                 <artifact>risenet-y9boot-webapp-platform</artifact>
                                 <artifact>y9-module-sso</artifact>
+                                <artifact>risenet-y9boot-webapp-sso-server</artifact>
+                                <artifact>risenet-y9boot-webapp-sso-server-jpa</artifact>
                             </excludeArtifacts>
                         </configuration>
                     </plugin>
