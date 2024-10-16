@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <databaseChangeLog
-        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
         xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
                       http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.9.xsd">
 
@@ -63,20 +63,27 @@
     <changeSet id="1725594463394-5" author="shidaobang" runOnChange="true">
         <preConditions onFail="MARK_RAN">
             <not>
-                <columnExists tableName="Y9_ORG_ROLE"
-                              columnName="SYSTEM_ID"/>
+                <columnExists tableName="Y9_ORG_ROLE" columnName="SYSTEM_ID"/>
             </not>
         </preConditions>
         <addColumn tableName="Y9_ORG_ROLE">
-            <column name="SYSTEM_ID" type="VARCHAR(38)" remarks="系统id" />
+            <column name="SYSTEM_ID" type="VARCHAR(38)" remarks="系统id"/>
         </addColumn>
-        <sql>
+        <sql dbms="!h2">
             UPDATE Y9_ORG_ROLE r
-                JOIN Y9_COMMON_APP_STORE a ON r.APP_ID = a.ID
+                JOIN Y9_COMMON_APP_STORE a
+            ON r.APP_ID = a.ID
                 SET r.SYSTEM_ID = a.SYSTEM_ID;
         </sql>
+        <sql dbms="h2">
+            UPDATE Y9_ORG_ROLE r
+            SET r.SYSTEM_ID = (SELECT a.SYSTEM_ID FROM Y9_COMMON_APP_STORE a WHERE r.APP_ID = a.ID)
+            WHERE EXISTS (SELECT 1 FROM Y9_COMMON_APP_STORE a WHERE r.APP_ID = a.ID);
+        </sql>
         <sql>
-            UPDATE Y9_ORG_ROLE r SET r.APP_ID = NULL where r.APP_ID = '11111111-1111-1111-1111-111111111121';
+            UPDATE Y9_ORG_ROLE r
+            SET r.APP_ID = NULL
+            where r.APP_ID = '11111111-1111-1111-1111-111111111121';
         </sql>
     </changeSet>
 
