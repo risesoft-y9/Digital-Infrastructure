@@ -65,8 +65,8 @@ publishing {
             name = 'y9-internet-repo'
             url = 'https://svn.youshengyun.com:9900/nexus/repository/maven-snapshots/'
             credentials {
-                username = "${mavenUsername}"
-                password = "${mavenPassword}"
+                username = findProperty("mavenUsername") ?: ""
+                password = findProject("mavenPassword") ?: ""
             }
 //            name = 'myRepo'
 //            url = layout.buildDirectory.dir("repo")
