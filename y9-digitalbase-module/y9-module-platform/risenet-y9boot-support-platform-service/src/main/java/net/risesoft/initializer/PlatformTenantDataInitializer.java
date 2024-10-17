@@ -1,4 +1,4 @@
-package net.risesoft;
+package net.risesoft.initializer;
 
 import org.springframework.stereotype.Component;
 
