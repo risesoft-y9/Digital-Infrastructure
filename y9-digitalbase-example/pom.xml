@@ -45,6 +45,7 @@
                                 <artifact>risenet-y9demo-data-log</artifact>
                                 <artifact>risenet-y9demo-sso-oauth2</artifact>
                                 <artifact>risenet-y9demo-sync-kafka</artifact>
+                                <artifact>risenet-y9demo-log</artifact>
                             </excludeArtifacts>
                         </configuration>
                     </plugin>
