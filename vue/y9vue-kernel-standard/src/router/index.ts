@@ -30,6 +30,7 @@ import userLogRouter from './modules/userLogRouter';
 import jobRouter from './modules/jobRouter';
 import permission from './modules/permission';
 import settingRouter from './modules/settingRouter';
+import dataCatalogRouter from './modules/dataCatalogRouter';
 
 //constantRoutes为不需要动态判断权限的路由，如登录、404、500等
 export const constantRoutes: Array<any> = [
@@ -79,13 +80,14 @@ export const asyncRoutes = [
     homeRouter,
     orgRouter,
     positionRouter,
-    grantAuthorizeRouter,
-    subDomainRouter,
     jobRouter,
     appSystemRouter,
     appRoleRouter,
     publicRoleRouter,
     appResourceRouter,
+    grantAuthorizeRouter,
+    dataCatalogRouter,
+    subDomainRouter,
     permission,
     dictionaryRouter,
     iconManagerRouter,

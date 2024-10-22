@@ -120,7 +120,7 @@
                                         @click="handlerClick('positive')"
                                     >
                                         <i class="ri-add-line"></i>
-                                        {{ $t('正权限人员') }}
+                                        {{ $t('正权限成员') }}
                                     </el-button>
                                     <el-button
                                         :size="fontSizeObj.buttonSize"
@@ -129,7 +129,7 @@
                                         @click="handlerClick('negative')"
                                     >
                                         <i class="ri-add-line"></i>
-                                        {{ $t('负权限人员') }}
+                                        {{ $t('负权限成员') }}
                                     </el-button>
                                 </div>
                                 <el-button

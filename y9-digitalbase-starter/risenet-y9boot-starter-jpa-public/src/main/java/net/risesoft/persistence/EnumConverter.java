@@ -5,6 +5,7 @@ import net.risesoft.enums.platform.AppOpenTypeEnum;
 import net.risesoft.enums.platform.AppTypeEnum;
 import net.risesoft.enums.platform.AuthorityEnum;
 import net.risesoft.enums.platform.AuthorizationPrincipalTypeEnum;
+import net.risesoft.enums.platform.DataCatalogTypeEnum;
 import net.risesoft.enums.platform.DataSourceTypeEnum;
 import net.risesoft.enums.platform.DepartmentPropCategoryEnum;
 import net.risesoft.enums.platform.GroupTypeEnum;
@@ -25,6 +26,12 @@ import net.risesoft.enums.platform.TenantTypeEnum;
  * @since 9.6.3
  */
 public class EnumConverter {
+    public static class DataCatalogTypeEnumConverter extends AbstractEnumConverter<DataCatalogTypeEnum, String> {
+        public DataCatalogTypeEnumConverter() {
+            super(DataCatalogTypeEnum.class);
+        }
+    }
+
     public static class ResourceTypeEnumConverter extends AbstractEnumConverter<ResourceTypeEnum, Integer> {
         public ResourceTypeEnumConverter() {
             super(ResourceTypeEnum.class);

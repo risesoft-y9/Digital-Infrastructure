@@ -26,6 +26,7 @@ public class CacheNameConsts {
     public static final String RESOURCE_APP = "y9cache_appResource";
     public static final String RESOURCE_MENU = "y9cache_menuResource";
     public static final String RESOURCE_OPERATION = "y9cache_operationResource";
+    public static final String RESOURCE_DATA_CATALOG = "y9cache_dataCatalogResource";
 
     public static final String SYSTEM = "y9cache_system";
 

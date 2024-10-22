@@ -13,7 +13,6 @@ import net.risesoft.entity.Y9Manager;
 import net.risesoft.entity.Y9Organization;
 import net.risesoft.entity.Y9Person;
 import net.risesoft.entity.Y9Position;
-import net.risesoft.enums.platform.TenantTypeEnum;
 import net.risesoft.log.OperationTypeEnum;
 import net.risesoft.log.annotation.RiseLog;
 import net.risesoft.pojo.Y9Result;
@@ -25,7 +24,6 @@ import net.risesoft.service.org.Y9PersonService;
 import net.risesoft.service.org.Y9PositionService;
 import net.risesoft.util.Y9PlatformUtil;
 import net.risesoft.y9.Y9LoginUserHolder;
-import net.risesoft.y9public.entity.tenant.Y9Tenant;
 
 /**
  * 同步信息
@@ -57,11 +55,8 @@ public class SyncController {
     public Y9Result<String> initManagers() {
         List<String> tenantIdList = Y9PlatformUtil.getTenantIds();
         for (String tenantId : tenantIdList) {
-            Y9Tenant tenant = Y9PlatformUtil.getTenantById(tenantId);
-            if (tenant.getTenantType().equals(TenantTypeEnum.TENANT)) {
-                Y9LoginUserHolder.setTenantId(tenantId);
-                initTenantDataService.initManagers();
-            }
+            Y9LoginUserHolder.setTenantId(tenantId);
+            initTenantDataService.initManagers();
         }
         return Y9Result.successMsg("初始化租户三员完成");
     }
@@ -76,11 +71,8 @@ public class SyncController {
     public Y9Result<String> initOptionClass() {
         List<String> tenantIdList = Y9PlatformUtil.getTenantIds();
         for (String tenantId : tenantIdList) {
-            Y9Tenant tenant = Y9PlatformUtil.getTenantById(tenantId);
-            if (TenantTypeEnum.TENANT.equals(tenant.getTenantType())) {
-                Y9LoginUserHolder.setTenantId(tenantId);
-                initTenantDataService.initOptionClass();
-            }
+            Y9LoginUserHolder.setTenantId(tenantId);
+            initTenantDataService.initOptionClass();
         }
         return Y9Result.successMsg("初始化数据字典成功");
     }
@@ -116,7 +108,7 @@ public class SyncController {
 
     /**
      * 根据租户id，同步人员信息
-     * 
+     *
      * @param tenantId 租户id
      * @return {@code Y9Result<String>}
      */
@@ -149,7 +141,7 @@ public class SyncController {
     @RequestMapping("/personInfo/{tenantId}/{loginName}")
     @RiseLog(operationName = "根据租户id和登录名称同步人员信息", operationType = OperationTypeEnum.MODIFY)
     public Y9Result<String> syncPersonByTenantIdAndLoginName(@PathVariable String tenantId,
-        @PathVariable String loginName) {
+                                                             @PathVariable String loginName) {
         Y9LoginUserHolder.setTenantId(tenantId);
         Y9Person person = y9PersonService.getPersonByLoginNameAndTenantId(loginName, tenantId);
         if (person != null && person.getId() != null) {

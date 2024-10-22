@@ -22,7 +22,9 @@ public enum ResourceTypeEnum implements ValuedEnum<Integer> {
     /** 菜单 */
     MENU(1),
     /** 操作 */
-    OPERATION(2);
+    OPERATION(2),
+    /** 数据目录 */
+    DATA_CATALOG(3);
 
     private final Integer value;
 }
