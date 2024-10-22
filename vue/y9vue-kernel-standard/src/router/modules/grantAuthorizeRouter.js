@@ -12,7 +12,7 @@ const grantAuthorizeRouter = {
     redirect: '/grantAuthorize',
     name: 'grantAuthorize',
     meta: {
-        title: '授权管理',
+        title: '应用资源授权',
         roles: ['securityAdmin', 'subSecurityAdmin']
     },
     children: [
@@ -21,7 +21,7 @@ const grantAuthorizeRouter = {
             component: () => import('@/views/grantAuthorize/index.vue'),
             name: 'grantAuthorizeIndex',
             meta: {
-                title: '授权管理',
+                title: '应用资源授权',
                 icon: 'ri-admin-line',
                 roles: ['securityAdmin', 'subSecurityAdmin']
             }

@@ -25,7 +25,6 @@ import net.risesoft.entity.permission.Y9Authorization;
 import net.risesoft.enums.platform.AuthorityEnum;
 import net.risesoft.enums.platform.AuthorizationPrincipalTypeEnum;
 import net.risesoft.enums.platform.ManagerLevelEnum;
-import net.risesoft.enums.platform.OrgTypeEnum;
 import net.risesoft.log.OperationTypeEnum;
 import net.risesoft.log.annotation.RiseLog;
 import net.risesoft.permission.annotation.IsManager;
@@ -68,7 +67,7 @@ public class AuthorizationController {
         authorizationVO.setId(y9Authorization.getId());
         authorizationVO.setOrgId(y9OrgBase.getId());
         authorizationVO.setOrgName(dn.replace("cn=", "").replace(",ou=", " >> ").replace(",o=", " >> "));
-        authorizationVO.setOrgType(OrgTypeEnum.ORG_TYPE_MAP.get(y9OrgBase.getOrgType()));
+        authorizationVO.setOrgType(y9OrgBase.getOrgType().getName());
         authorizationVO.setAuthorizer(y9Authorization.getAuthorizer() == null ? "" : y9Authorization.getAuthorizer());
         authorizationVO.setAuthorizeTime(y9Authorization.getCreateTime());
         authorizationVO.setAuthority(y9Authorization.getAuthority());

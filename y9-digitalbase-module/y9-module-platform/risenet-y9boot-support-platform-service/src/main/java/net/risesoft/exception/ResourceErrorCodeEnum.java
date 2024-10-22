@@ -20,7 +20,8 @@ public enum ResourceErrorCodeEnum implements ErrorCode {
     /** app not found */
     APP_NOT_FOUND(2, "应用[{}]不存在"),
     /** app icon not found */
-    APP_ICON_NOT_FOUND(3, "应用图标[{}]不存在"),;
+    APP_ICON_NOT_FOUND(3, "应用图标[{}]不存在"),
+    DATA_CATALOG_NOT_FOUND(4, "数据目录[{}]不存在");
 
     private final int moduleErrorCode;
     private final String description;

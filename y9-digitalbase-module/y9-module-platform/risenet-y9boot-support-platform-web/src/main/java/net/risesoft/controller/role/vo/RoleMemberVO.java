@@ -7,7 +7,6 @@ import lombok.Setter;
 
 import net.risesoft.entity.Y9OrgBase;
 import net.risesoft.entity.relation.Y9OrgBasesToRoles;
-import net.risesoft.enums.platform.OrgTypeEnum;
 
 /**
  * 角色关联组织节点
@@ -46,7 +45,7 @@ public class RoleMemberVO implements Serializable {
         roleMemberVO.setId(y9OrgBasesToRoles.getId());
         roleMemberVO.setOrgUnitId(y9OrgBasesToRoles.getOrgId());
         roleMemberVO.setUnitName(y9OrgBase.getName());
-        roleMemberVO.setUnitTypeName(OrgTypeEnum.ORG_TYPE_MAP.get(y9OrgBase.getOrgType()));
+        roleMemberVO.setUnitTypeName(y9OrgBase.getOrgType().getName());
         roleMemberVO.setUnitDn(y9OrgBase.getDn());
         roleMemberVO.setNegative(Boolean.TRUE.equals(y9OrgBasesToRoles.getNegative()) ? "是" : "否");
         return roleMemberVO;

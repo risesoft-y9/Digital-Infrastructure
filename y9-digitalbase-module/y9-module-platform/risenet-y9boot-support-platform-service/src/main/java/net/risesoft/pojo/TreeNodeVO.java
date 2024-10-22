@@ -1,9 +1,10 @@
-package net.risesoft.controller;
+package net.risesoft.pojo;
 
 import java.io.Serializable;
 
 import lombok.Getter;
 import lombok.Setter;
+import net.risesoft.enums.TreeTypeEnum;
 
 @Getter
 @Setter

@@ -14,6 +14,7 @@ import jakarta.persistence.criteria.CriteriaQuery;
 import jakarta.persistence.criteria.Predicate;
 import jakarta.persistence.criteria.Root;
 
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -133,12 +134,10 @@ public class CompositeOrgBaseServiceImpl implements CompositeOrgBaseService {
 
     private void fillWithOrgUnitsByUpwardRecursion(String parentId, Set<Y9OrgBase> orgBaseSet) {
         Y9OrgBase parent = getOrgUnit(parentId);
-        if (!orgBaseSet.contains(parent)) {
-            orgBaseSet.add(parent);
-            if (parent.getOrgType().equals(OrgTypeEnum.DEPARTMENT)) {
-                Y9Department departmentParent = (Y9Department)parent;
-                fillWithOrgUnitsByUpwardRecursion(departmentParent.getParentId(), orgBaseSet);
-            }
+        orgBaseSet.add(parent);
+        if (parent.getOrgType().equals(OrgTypeEnum.DEPARTMENT)) {
+            Y9Department departmentParent = (Y9Department)parent;
+            fillWithOrgUnitsByUpwardRecursion(departmentParent.getParentId(), orgBaseSet);
         }
     }
 
@@ -1046,5 +1045,23 @@ public class CompositeOrgBaseServiceImpl implements CompositeOrgBaseService {
     public List<Y9OrgBase> treeSearch4DeptManager(String name, OrgTreeTypeEnum treeType) {
         Y9Department y9Department = y9DepartmentManager.getById(Y9LoginUserHolder.getDeptId());
         return treeSearch(name, treeType, y9Department.getDn(), Boolean.FALSE);
+    }
+
+    @Override
+    public List<Y9OrgBase> listAllAncestors(String parentId) {
+        Set<Y9OrgBase> ancestorSet = new HashSet<>();
+        this.fillWithOrgUnitsByUpwardRecursion(parentId, ancestorSet);
+        return ancestorSet.stream().sorted().collect(Collectors.toList());
+    }
+
+    @Override
+    public List<Y9OrgBase> listOrgUnitsAsParentByParentId(String parentId) {
+        if (StringUtils.isBlank(parentId)) {
+            return new ArrayList<>(
+                y9OrganizationRepository.findByVirtualAndDisabledOrderByTabIndexAsc(Boolean.FALSE, Boolean.FALSE));
+        } else {
+            return new ArrayList<>(
+                y9DepartmentRepository.findByParentIdAndDisabledOrderByTabIndexAsc(parentId, Boolean.FALSE));
+        }
     }
 }

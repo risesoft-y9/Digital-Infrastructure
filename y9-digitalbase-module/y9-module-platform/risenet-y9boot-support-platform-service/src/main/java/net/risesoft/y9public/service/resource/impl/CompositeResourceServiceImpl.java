@@ -18,6 +18,7 @@ import lombok.RequiredArgsConstructor;
 import net.risesoft.consts.CacheNameConsts;
 import net.risesoft.enums.platform.ResourceTypeEnum;
 import net.risesoft.y9public.entity.resource.Y9App;
+import net.risesoft.y9public.entity.resource.Y9DataCatalog;
 import net.risesoft.y9public.entity.resource.Y9Menu;
 import net.risesoft.y9public.entity.resource.Y9Operation;
 import net.risesoft.y9public.entity.resource.Y9ResourceBase;
@@ -25,6 +26,7 @@ import net.risesoft.y9public.manager.resource.Y9AppManager;
 import net.risesoft.y9public.manager.resource.Y9MenuManager;
 import net.risesoft.y9public.manager.resource.Y9OperationManager;
 import net.risesoft.y9public.repository.resource.Y9AppRepository;
+import net.risesoft.y9public.repository.resource.Y9DataCatalogRepository;
 import net.risesoft.y9public.repository.resource.Y9MenuRepository;
 import net.risesoft.y9public.repository.resource.Y9OperationRepository;
 import net.risesoft.y9public.service.resource.CompositeResourceService;
@@ -43,13 +45,14 @@ public class CompositeResourceServiceImpl implements CompositeResourceService {
     private final Y9AppRepository y9AppRepository;
     private final Y9MenuRepository y9MenuRepository;
     private final Y9OperationRepository y9OperationRepository;
+    private final Y9DataCatalogRepository y9DataCatalogRepository;
 
     private final Y9AppManager y9AppManager;
     private final Y9MenuManager y9MenuManager;
     private final Y9OperationManager y9OperationManager;
 
     @Cacheable(cacheNames = CacheNameConsts.RESOURCE_APP, key = "#id", condition = "#id!=null",
-        unless = "#result==null")
+            unless = "#result==null")
     public Y9App findAppById(String id) {
         return y9AppRepository.findById(id).orElse(null);
     }
@@ -65,7 +68,7 @@ public class CompositeResourceServiceImpl implements CompositeResourceService {
 
     @Override
     public Optional<? extends Y9ResourceBase> findByCustomIdAndParentId(String customId, String parentId,
-        ResourceTypeEnum resourceType) {
+                                                                        ResourceTypeEnum resourceType) {
         if (ResourceTypeEnum.APP.equals(resourceType)) {
             return y9AppRepository.findBySystemIdAndCustomId(parentId, customId);
         } else if (ResourceTypeEnum.MENU.equals(resourceType)) {
@@ -89,6 +92,11 @@ public class CompositeResourceServiceImpl implements CompositeResourceService {
         Y9Operation y9Operation = this.findOperationById(id);
         if (y9Operation != null) {
             return y9Operation;
+        }
+
+        Y9DataCatalog y9DataCatalog = this.findDataCatalogById(id);
+        if (y9DataCatalog != null) {
+            return y9DataCatalog;
         }
         return null;
     }
@@ -168,15 +176,21 @@ public class CompositeResourceServiceImpl implements CompositeResourceService {
     }
 
     @Cacheable(cacheNames = CacheNameConsts.RESOURCE_MENU, key = "#id", condition = "#id!=null",
-        unless = "#result==null")
+            unless = "#result==null")
     public Y9Menu findMenuById(String id) {
         return y9MenuRepository.findById(id).orElse(null);
     }
 
     @Cacheable(cacheNames = CacheNameConsts.RESOURCE_OPERATION, key = "#id", condition = "#id!=null",
-        unless = "#result==null")
+            unless = "#result==null")
     public Y9Operation findOperationById(String id) {
         return y9OperationRepository.findById(id).orElse(null);
+    }
+
+    @Cacheable(cacheNames = CacheNameConsts.RESOURCE_DATA_CATALOG, key = "#id", condition = "#id!=null",
+            unless = "#result==null")
+    public Y9DataCatalog findDataCatalogById(String id) {
+        return y9DataCatalogRepository.findById(id).orElse(null);
     }
 
     private void fillResourcesRecursivelyToRoot(Y9ResourceBase y9ResourceBase, Set<Y9ResourceBase> resourceSet) {
