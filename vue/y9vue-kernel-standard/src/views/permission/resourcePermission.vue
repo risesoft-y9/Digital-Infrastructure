@@ -58,7 +58,7 @@
         getPositionResourcePermissionList,
         identityResources
     } from '@/api/permission';
-    import { ElMessage, ElNotification } from 'element-plus';
+    import { ElNotification } from 'element-plus';
     import y9_storage from '@/utils/storage';
 
     // 重新获取个人信息（登陆返回的个人信息有缺失的属性）
@@ -110,6 +110,8 @@
                             str = '<i class="ri-menu-4-line"></i> ' + str;
                         } else if (row.resourceType === 2) {
                             str = '<i class="ri-checkbox-multiple-blank-line"></i> ' + str;
+                        } else if (row.resourceType === 3) {
+                            str = '<i class="ri-file-list-2-line"></i> ' + str;
                         }
                         for (let i = 0; i < row.level; i++) {
                             str = `&nbsp;&nbsp;&nbsp;&nbsp;${str}`;

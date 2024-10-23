@@ -1,6 +1,6 @@
 {
     "name": "y9vue-kernel-standard",
-    "version": "9.6.6",
+    "version": "9.6.7",
     "scripts": {
         "serve": "vite  --mode development --host 0.0.0.0",
         "serve-local": "vite  --mode localEnv",
@@ -22,7 +22,7 @@
         "core-js": "^3.20.1",
         "dom-zindex": "^0.4.0",
         "echarts": "^5.3.2",
-        "element-plus": "^2.3.9",
+        "element-plus": "^2.8.4",
         "js-cookie": "^3.0.1",
         "lodash": "^4.17.21",
         "md5": "^2.3.0",

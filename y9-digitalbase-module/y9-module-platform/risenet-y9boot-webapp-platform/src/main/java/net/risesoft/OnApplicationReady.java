@@ -33,7 +33,7 @@ import net.risesoft.y9public.service.tenant.Y9TenantSystemService;
 /**
  * 应用启动监听器 <br>
  * 执行一系列的数据初始化
- * 
+ *
  * @author dingzhaojun
  * @author qinman
  * @author mengjuhua
@@ -59,8 +59,8 @@ public class OnApplicationReady implements ApplicationListener<ApplicationReadyE
             Y9App y9App = new Y9App();
             y9App.setId(appId);
             y9App.setSystemId(systemId);
-            y9App.setName("部门管理");
-            y9App.setAliasName("部门管理");
+            y9App.setName("数据目录");
+            y9App.setAliasName("数据目录");
             y9App.setEnabled(true);
             y9App.setHidden(false);
             y9App.setUrl(y9Properties.getCommon().getOrgBaseUrl());
@@ -124,7 +124,7 @@ public class OnApplicationReady implements ApplicationListener<ApplicationReadyE
 
     private void createTenantSystem(String tenantId, String systemId, String dataSourceId) {
         Optional<Y9TenantSystem> y9TenantSystemOptional =
-            y9TenantSystemService.getByTenantIdAndSystemId(tenantId, systemId);
+                y9TenantSystemService.getByTenantIdAndSystemId(tenantId, systemId);
         if (y9TenantSystemOptional.isEmpty()) {
             Y9TenantSystem y9TenantSystem = new Y9TenantSystem();
             y9TenantSystem.setId(Y9IdGenerator.genId(IdType.SNOWFLAKE));

@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+                      http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.9.xsd">
+
+    <changeSet id="1728464133510-1" author="shidaobang" runOnChange="true">
+        <preConditions onFail="MARK_RAN">
+            <not>
+                <tableExists tableName="Y9_COMMON_DATA_CATALOG"/>
+            </not>
+        </preConditions>
+        <createTable remarks="数据目录" tableName="Y9_COMMON_DATA_CATALOG">
+            <column name="ID" remarks="主键" type="VARCHAR(38)">
+                <constraints nullable="false" primaryKey="true"/>
+            </column>
+            <column name="CREATE_TIME" remarks="创建时间" type="datetime"/>
+            <column name="UPDATE_TIME" remarks="更新时间" type="datetime"/>
+            <column name="CUSTOM_ID" remarks="自定义id" type="VARCHAR(500)"/>
+            <column name="DESCRIPTION" remarks="描述" type="VARCHAR(255)"/>
+            <column defaultValueNumeric="1" name="ENABLED" remarks="启用状态:1=启用,0=禁用" type="INT">
+                <constraints nullable="false"/>
+            </column>
+            <column defaultValueNumeric="0" name="HIDDEN" remarks="是否隐藏:1=隐藏,0=显示" type="INT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="ICON_URL" remarks="图标地址" type="VARCHAR(400)"/>
+            <column defaultValueNumeric="0" name="INHERIT" remarks="是否为继承上级节点的权限:1=继承,0=不继承"
+                    type="INT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="NAME" remarks="名称" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="PARENT_ID" remarks="父节点ID" type="VARCHAR(38)"/>
+            <column name="ORG_UNIT_ID" remarks="组织节点ID，只有当 type 为 ORG_UNIT 时会有值" type="VARCHAR(38)"/>
+            <column name="TREE_TYPE" remarks="数据目录树类型" type="VARCHAR(50)">
+                <constraints nullable="false"/>
+            </column>
+            <column defaultValueNumeric="0" name="RESOURCE_TYPE" remarks="资源类型" type="INT">
+                <constraints nullable="false"/>
+            </column>
+            <column defaultValue="classification" name="DATA_CATALOG_TYPE" remarks="数据目录类型" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="SYSTEM_ID" remarks="系统id" type="VARCHAR(38)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="TAB_INDEX" remarks="排序" type="INT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="URL" remarks="链接地址" type="VARCHAR(400)"/>
+            <column name="URL2" remarks="链接地址2" type="VARCHAR(400)"/>
+        </createTable>
+    </changeSet>
+
+</databaseChangeLog>

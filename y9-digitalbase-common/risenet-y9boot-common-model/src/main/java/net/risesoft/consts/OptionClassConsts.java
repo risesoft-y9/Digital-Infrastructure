@@ -28,6 +28,12 @@ public class OptionClassConsts {
     /** 人员编制 */
     public static final String OFFICIAL_TYPE = "officialType";
 
+    /** 部门属性类型 */
+    public static final String DEPARTMENT_PROP_CATEGORY = "departmentPropCategory";
+
+    /** 数据目录树类型 */
+    public static final String DATA_CATALOG_TREE_TYPE = "dataCatalogTreeType";
+
     private OptionClassConsts() {
         throw new IllegalStateException("OptionClassConsts class");
     }

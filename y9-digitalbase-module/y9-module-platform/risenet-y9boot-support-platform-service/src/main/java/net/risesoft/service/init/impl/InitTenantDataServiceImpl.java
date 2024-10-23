@@ -10,6 +10,7 @@ import org.springframework.transaction.annotation.Transactional;
 import lombok.RequiredArgsConstructor;
 
 import net.risesoft.consts.InitDataConsts;
+import net.risesoft.consts.OptionClassConsts;
 import net.risesoft.entity.Y9Job;
 import net.risesoft.entity.Y9Manager;
 import net.risesoft.entity.Y9OptionClass;
@@ -47,40 +48,49 @@ public class InitTenantDataServiceImpl implements InitTenantDataService {
     private final Y9PersonsToPositionsService y9PersonsToPositionsService;
 
     public void creatOptionValue(String type) {
-        if ("duty".equals(type)) {
+        if (OptionClassConsts.DUTY.equals(type)) {
             createDutyValues(type);
             return;
         }
 
-        if ("dutyLevel".equals(type)) {
+        if (OptionClassConsts.DUTY_LEVEL.equals(type)) {
             createDutyLevelValues(type);
             return;
         }
 
-        if ("dutyType".equals(type)) {
+        if (OptionClassConsts.DUTY_TYPE.equals(type)) {
             createDutyTypeValues(type);
             return;
         }
 
-        if ("officialType".equals(type)) {
+        if (OptionClassConsts.OFFICIAL_TYPE.equals(type)) {
             createOfficialTypeValues(type);
             return;
         }
 
-        if ("organizationType".equals(type)) {
+        if (OptionClassConsts.ORGANIZATION_TYPE.equals(type)) {
             createOrganizationTypeValues(type);
             return;
         }
 
-        if ("principalIDType".equals(type)) {
+        if (OptionClassConsts.PRINCIPAL_ID_TYPE.equals(type)) {
             createPrincipalIDTypeValues(type);
             return;
         }
 
-        if ("departmentPropCategory".equals(type)) {
+        if (OptionClassConsts.DEPARTMENT_PROP_CATEGORY.equals(type)) {
             createDepartmentPropCategoryValues(type);
             return;
         }
+
+        if (OptionClassConsts.DATA_CATALOG_TREE_TYPE.equals(type)) {
+            createDataCatalogTreeType(type);
+            return;
+        }
+    }
+
+    private void createDataCatalogTreeType(String type) {
+        y9OptionValueService.create("normal", "常规", type);
     }
 
     private void createAuditManager(String parentId) {
@@ -324,12 +334,13 @@ public class InitTenantDataServiceImpl implements InitTenantDataService {
     @Override
     @Transactional(readOnly = false)
     public void initOptionClass() {
-        createOptionClass("职务", "duty");
-        createOptionClass("职级", "dutyLevel");
-        createOptionClass("编制类型", "officialType");
-        createOptionClass("机构类型", "organizationType");
-        createOptionClass("证件类型", "principalIDType");
-        createOptionClass("部门属性类型", "departmentPropCategory");
+        createOptionClass("职务", OptionClassConsts.DUTY);
+        createOptionClass("职级", OptionClassConsts.DUTY_LEVEL);
+        createOptionClass("编制类型", OptionClassConsts.OFFICIAL_TYPE);
+        createOptionClass("机构类型", OptionClassConsts.ORGANIZATION_TYPE);
+        createOptionClass("证件类型", OptionClassConsts.PRINCIPAL_ID_TYPE);
+        createOptionClass("部门属性类型", OptionClassConsts.DEPARTMENT_PROP_CATEGORY);
+        createOptionClass("数据目录树类型", OptionClassConsts.DATA_CATALOG_TREE_TYPE);
     }
 
     private void initOrg() {

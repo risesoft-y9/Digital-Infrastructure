@@ -5,6 +5,9 @@ import org.springframework.boot.context.properties.ConfigurationProperties;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.util.ArrayList;
+import java.util.List;
+
 @Getter
 @Setter
 @ConfigurationProperties(prefix = "y9.app.platform", ignoreInvalidFields = true, ignoreUnknownFields = true)
@@ -65,5 +68,15 @@ public class Y9PlatformProperties {
      * 新建的表空间存储目录 不指定一般会存储在数据库的默认路径下 例子：/u01/app/oracle/oradata/orcl/
      */
     private String newTableSpacePath = "";
+
+    /**
+     * 数据目录档案保留期限
+     */
+    private List<String> dataCatalogRetentionPeriods = List.of("永久", "30", "10");
+
+    /**
+     * 数据目录档案保密期限
+     */
+    private List<String> dataCatalogConfidentialityPeriods = List.of("10", "20", "30");
 
 }

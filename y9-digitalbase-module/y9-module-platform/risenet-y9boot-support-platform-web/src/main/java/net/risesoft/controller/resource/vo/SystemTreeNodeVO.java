@@ -6,8 +6,8 @@ import java.util.List;
 import lombok.Getter;
 import lombok.Setter;
 
-import net.risesoft.controller.TreeNodeVO;
-import net.risesoft.controller.TreeTypeEnum;
+import net.risesoft.pojo.TreeNodeVO;
+import net.risesoft.enums.TreeTypeEnum;
 import net.risesoft.y9public.entity.resource.Y9System;
 
 /**

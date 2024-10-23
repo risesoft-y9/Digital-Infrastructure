@@ -6,8 +6,8 @@ import java.util.List;
 import lombok.Getter;
 import lombok.Setter;
 
-import net.risesoft.controller.TreeNodeVO;
-import net.risesoft.controller.TreeTypeEnum;
+import net.risesoft.pojo.TreeNodeVO;
+import net.risesoft.enums.TreeTypeEnum;
 import net.risesoft.enums.platform.ResourceTypeEnum;
 import net.risesoft.enums.platform.TreeNodeType;
 import net.risesoft.y9public.entity.resource.Y9ResourceBase;
@@ -43,7 +43,7 @@ public class ResourceTreeNodeVO extends TreeNodeVO {
             resourceTreeNodeVO.setParentId(y9ResourceBase.getSystemId());
         } else {
             resourceTreeNodeVO.setParentId(y9ResourceBase.getParentId());
-        } 
+        }
         resourceTreeNodeVO.setTabIndex(y9ResourceBase.getTabIndex());
         resourceTreeNodeVO.setHasChild(true);
         resourceTreeNodeVO.setNodeType(y9ResourceBase.getResourceType().toString());
@@ -53,7 +53,7 @@ public class ResourceTreeNodeVO extends TreeNodeVO {
     }
 
     public static List<ResourceTreeNodeVO>
-        convertY9ResourceBaseList(List<? extends Y9ResourceBase> y9ResourceBaseList) {
+    convertY9ResourceBaseList(List<? extends Y9ResourceBase> y9ResourceBaseList) {
         List<ResourceTreeNodeVO> roleTreeNodeVOList = new ArrayList<>();
         for (Y9ResourceBase y9ResourceBase : y9ResourceBaseList) {
             roleTreeNodeVOList.add(convertY9ResourceBase(y9ResourceBase));

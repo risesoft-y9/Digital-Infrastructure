@@ -163,6 +163,11 @@
                     } else {
                         item.delete_icon = false;
                     }
+
+                    if (item.treeType === 'DATA_CATALOG') {
+                        item.delete_icon = false;
+                    }
+
                     break;
 
                 case 'Department': //部门
@@ -177,7 +182,7 @@
                     }
 
                     //判断是否有权限删除
-                    const guidPathArr = item.guidPath.split(',');
+                    const guidPathArr = item.guidPath ? item.guidPath.split(',') : [];
                     if (isGlobalManager) {
                         item.delete_icon = props.showNodeDelete;
                     } else if (!guidPathArr.includes(parentId) || item.id === parentId) {
@@ -185,6 +190,11 @@
                     } else {
                         item.delete_icon = props.showNodeDelete;
                     }
+
+                    if (item.treeType === 'DATA_CATALOG') {
+                        item.delete_icon = false;
+                    }
+
                     break;
 
                 case 'Group': //组
@@ -243,14 +253,19 @@
                     if (isTopLevel) {
                         item.delete_icon = false;
                     }
-                    if (item.treeType === 'ROLE') {
+
+                    if (props.showNodeDelete === true) {
+                        if (item.treeType === 'ROLE') {
+                            item.delete_icon = false;
+                            item.isManageable = managerLevel !== 2;
+                        }
+                        if (item.treeType === 'RESOURCE') {
+                            let resourceManageableByCurrentTenant = isResourceManageableByCurrentTenant(item.systemId);
+                            item.delete_icon = resourceManageableByCurrentTenant;
+                            item.isManageable = resourceManageableByCurrentTenant;
+                        }
+                    } else {
                         item.delete_icon = false;
-                        item.isManageable = managerLevel !== 2;
-                    }
-                    if (item.treeType === 'RESOURCE') {
-                        let resourceManageableByCurrentTenant = isResourceManageableByCurrentTenant(item.systemId);
-                        item.delete_icon = resourceManageableByCurrentTenant;
-                        item.isManageable = resourceManageableByCurrentTenant;
                     }
                     item.newName = item.name;
                     if (!item.enabled) {
@@ -283,6 +298,27 @@
                         item.newName = item.name + '[禁用]'; //显示名称
                     }
                     break;
+
+                case 'DATA_CATALOG':
+                    if (item.dataCatalogType === 'orgUnit') {
+                        item.title_icon = 'ri-stackshare-line';
+                    } else {
+                        item.title_icon = 'ri-file-list-2-line';
+                    }
+
+                    item.newName = item.name;
+                    if (!item.enabled) {
+                        item.newName = item.name + '[禁用]'; //显示名称
+                    }
+                    if (props.showNodeDelete === true) {
+                        let isManageable = isDataCatalogManageable();
+                        item.isManageable = isManageable;
+                        item.delete_icon = isManageable;
+                    } else {
+                        item.delete_icon = false;
+                    }
+                    break;
+
                 case 'role': //角色
                     item.title_icon = 'ri-contacts-line';
                     if (props.showNodeDelete === true) {
@@ -364,6 +400,9 @@
                 params.parentId = node.id;
                 if (node.nodeType) {
                     params.parentNodeType = node.nodeType;
+                }
+                if (node.dataCatalogTreeType) {
+                    params.treeType = node.dataCatalogTreeType;
                 }
                 //请求接口
                 const res = await props.treeApiObj?.childLevel?.api(params);
@@ -544,6 +583,20 @@
         const currentTenantId = y9_storage.getObjectItem('ssoUserInfo', 'tenantId');
         const systemNode = findNode(getTreeData(), resourceSystemId);
         return currentTenantId === systemNode.tenantId;
+    }
+
+    function isDataCatalogManageable() {
+        const managerLevel = y9_storage.getObjectItem('ssoUserInfo', 'managerLevel');
+
+        if (managerLevel === 1) {
+            return true;
+        }
+
+        if (managerLevel === 2) {
+            return false;
+        }
+
+        return false;
     }
 
     //刷新tree

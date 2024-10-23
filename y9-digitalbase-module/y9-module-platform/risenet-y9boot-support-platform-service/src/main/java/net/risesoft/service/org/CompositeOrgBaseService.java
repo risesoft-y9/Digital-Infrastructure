@@ -296,4 +296,20 @@ public interface CompositeOrgBaseService {
      * @return {@code List<Y9OrgBase>}
      */
     List<Y9OrgBase> treeSearch4DeptManager(String name, OrgTreeTypeEnum treeType);
+
+    /**
+     * 列出所有祖先节点
+     *
+     * @param parentId 父id
+     * @return {@code List<Y9OrgBase> }
+     */
+    List<Y9OrgBase> listAllAncestors(String parentId);
+
+    /**
+     * 通过父节点 id 获取作为可作为父亲节点的节点（只可能是组织机构和部门）
+     *
+     * @param parentId 父id
+     * @return {@code List<Y9OrgBase> }
+     */
+    List<Y9OrgBase> listOrgUnitsAsParentByParentId(String parentId);
 }
