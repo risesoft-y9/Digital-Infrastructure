@@ -57,37 +57,34 @@
                         @click="handleYearClick()"
                     >
                         <i class="ri-add-line"></i>
-                        {{ $t('年份目录') }}
+                        {{ $t('年份区间') }}
                     </el-button>
                     <el-button
                         :size="fontSizeObj.buttonSize"
                         :style="{ fontSize: fontSizeObj.baseFontSize }"
-                        class="global-btn-main"
-                        type="primary"
-                        @click="handleInitClick('组织架构目录', 'orgUnit')"
+                        class="global-btn-second"
+                        @click="handleInitClick('组织架构', 'orgUnit')"
                     >
                         <i class="ri-add-line"></i>
-                        {{ $t('组织架构目录') }}
+                        {{ $t('组织架构') }}
                     </el-button>
                     <el-button
                         :size="fontSizeObj.buttonSize"
                         :style="{ fontSize: fontSizeObj.baseFontSize }"
-                        class="global-btn-main"
-                        type="primary"
-                        @click="handleInitClick('档案期限目录', 'retentionPeriod')"
+                        class="global-btn-second"
+                        @click="handleInitClick('档案期限', 'retentionPeriod')"
                     >
                         <i class="ri-add-line"></i>
-                        {{ $t('档案期限目录') }}
+                        {{ $t('档案期限') }}
                     </el-button>
                     <el-button
                         :size="fontSizeObj.buttonSize"
                         :style="{ fontSize: fontSizeObj.baseFontSize }"
-                        class="global-btn-main"
-                        type="primary"
-                        @click="handleInitClick('保密期限目录', 'confidentialityPeriod')"
+                        class="global-btn-second"
+                        @click="handleInitClick('保密期限', 'confidentialityPeriod')"
                     >
                         <i class="ri-add-line"></i>
-                        {{ $t('保密期限目录') }}
+                        {{ $t('保密期限') }}
                     </el-button>
                 </span>
             </div>
