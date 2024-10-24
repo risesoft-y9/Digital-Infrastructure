@@ -15,7 +15,7 @@ import org.springframework.util.StringUtils;
 import lombok.extern.slf4j.Slf4j;
 
 import net.risesoft.y9.Y9Context;
-import net.risesoft.y9.configuration.Y9Properties;
+import net.risesoft.y9.configuration.feature.apisix.Y9ApisixProperties;
 
 import y9.apisix.util.ApisixUtil;
 import y9.apisix.util.EtcdUtil;
@@ -100,7 +100,7 @@ public class Y9RegisterByApisixRestApi {
 
     @PostConstruct
     public void init() {
-        Y9Properties y9config = Y9Context.getBean(Y9Properties.class);
+        Y9ApisixProperties y9ApisixProperties = Y9Context.getBean(Y9ApisixProperties.class);
 
         contextPath = Y9Context.getProperty("server.servlet.contextPath");
         if (contextPath == null) {
@@ -113,7 +113,7 @@ public class Y9RegisterByApisixRestApi {
             }
         }
 
-        apiVersion = y9config.getFeature().getApisix().getApiVersion();
+        apiVersion = y9ApisixProperties.getApiVersion();
         if (!StringUtils.hasText(apiVersion)) {
             if (buildProperties != null) {
                 apiVersion = buildProperties.getVersion();
@@ -126,16 +126,16 @@ public class Y9RegisterByApisixRestApi {
 
         upstreamId = (contextPath + "_api").replace(".", "_");
 
-        adminKey = y9config.getFeature().getApisix().getAdminKey();
-        adminAddress = y9config.getFeature().getApisix().getAdminAddress();
-        upstreamNodes = y9config.getFeature().getApisix().getUpstreamNodes();
-        apiBasePackages = y9config.getFeature().getApisix().getApiBasePackages();
+        adminKey = y9ApisixProperties.getAdminKey();
+        adminAddress = y9ApisixProperties.getAdminAddress();
+        upstreamNodes = y9ApisixProperties.getUpstreamNodes();
+        apiBasePackages = y9ApisixProperties.getApiBasePackages();
 
-        upstreamType = y9config.getFeature().getApisix().getUpstreamType();
-        etcdAddress = y9config.getFeature().getApisix().getEtcdAddress();
+        upstreamType = y9ApisixProperties.getUpstreamType();
+        etcdAddress = y9ApisixProperties.getEtcdAddress();
 
-        consumerEnabled = y9config.getFeature().getApisix().isConsumerEnabled();
-        authenticationType = y9config.getFeature().getApisix().getAuthenticationType();
+        consumerEnabled = y9ApisixProperties.isConsumerEnabled();
+        authenticationType = y9ApisixProperties.getAuthenticationType();
     }
 
     public List<String> registerApiToApisix() {

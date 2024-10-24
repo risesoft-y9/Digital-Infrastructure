@@ -2,6 +2,7 @@ package net.risesoft.y9public.ftp;
 
 import java.io.IOException;
 
+import net.risesoft.y9.configuration.feature.file.ftp.FtpPoolConfig;
 import org.apache.commons.net.ftp.FTPClient;
 import org.apache.commons.net.ftp.FTPReply;
 import org.apache.commons.pool2.BasePooledObjectFactory;
@@ -107,7 +108,7 @@ public class FtpClientFactory extends BasePooledObjectFactory<FTPClient> {
 
     @Override
     public PooledObject<FTPClient> wrap(FTPClient ftpClient) {
-        return new DefaultPooledObject<FTPClient>(ftpClient);
+        return new DefaultPooledObject<>(ftpClient);
     }
 
 }

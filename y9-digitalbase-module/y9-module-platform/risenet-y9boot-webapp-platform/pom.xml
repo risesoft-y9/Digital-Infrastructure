@@ -20,29 +20,15 @@
     </properties>
 
     <dependencies>
-        <dependency>
-            <groupId>org.apache.commons</groupId>
-            <artifactId>commons-pool2</artifactId>
-        </dependency>
 
-        <dependency>
-            <groupId>net.risesoft</groupId>
-            <artifactId>risenet-y9boot-common-util</artifactId>
-            <version>${project.version}</version>
-        </dependency>
+
+
 
         <dependency>
             <groupId>net.risesoft</groupId>
             <artifactId>risenet-y9boot-support-platform-web</artifactId>
             <version>${project.version}</version>
         </dependency>
-
-        <dependency>
-            <groupId>net.risesoft</groupId>
-            <artifactId>risenet-y9boot-support-platform-jpa-repository</artifactId>
-            <version>${project.version}</version>
-        </dependency>
-
         <dependency>
             <groupId>net.risesoft</groupId>
             <artifactId>risenet-y9boot-starter-sso-oauth2-resource</artifactId>
@@ -60,12 +46,6 @@
             <artifactId>risenet-y9boot-starter-log</artifactId>
             <version>${project.version}</version>
         </dependency>
-
-        <!--<dependency>
-            <groupId>net.risesoft</groupId>
-            <artifactId>risenet-y9boot-starter-health</artifactId>
-            <version>${project.version}</version>
-        </dependency>-->
 
         <!--<dependency>
             <groupId>net.risesoft</groupId>
@@ -91,21 +71,14 @@
         </dependency>
 
         <dependency>
-            <groupId>net.risesoft</groupId>
-            <artifactId>risenet-y9boot-starter-multi-tenant</artifactId>
-            <version>${project.version}</version>
-        </dependency>
-
-        <dependency>
-            <groupId>jakarta.servlet</groupId>
-            <artifactId>jakarta.servlet-api</artifactId>
-            <scope>provided</scope>
-        </dependency>
-
-        <dependency>
             <groupId>org.projectlombok</groupId>
             <artifactId>lombok</artifactId>
             <scope>provided</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>org.apache.commons</groupId>
+            <artifactId>commons-pool2</artifactId>
         </dependency>
 
         <dependency>

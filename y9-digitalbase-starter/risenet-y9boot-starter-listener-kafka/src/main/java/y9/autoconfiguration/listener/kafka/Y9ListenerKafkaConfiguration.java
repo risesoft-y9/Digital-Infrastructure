@@ -7,6 +7,7 @@ import org.springframework.boot.autoconfigure.AutoConfigureAfter;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.boot.autoconfigure.kafka.KafkaAutoConfiguration;
+import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.kafka.annotation.KafkaListener;
@@ -16,6 +17,7 @@ import org.springframework.kafka.core.ProducerFactory;
 import lombok.extern.slf4j.Slf4j;
 
 import net.risesoft.y9.Y9Context;
+import net.risesoft.y9.configuration.feature.listener.kafka.Y9ListenerKafkaProperties;
 import net.risesoft.y9.json.Y9JsonUtil;
 import net.risesoft.y9.pubsub.constant.Y9OrgEventConst;
 import net.risesoft.y9.pubsub.constant.Y9TopicConst;
@@ -27,13 +29,14 @@ import net.risesoft.y9.pubsub.message.Y9MessageOrgReply;
 @AutoConfigureAfter(KafkaAutoConfiguration.class)
 @ConditionalOnProperty(name = "y9.feature.listener.kafka.enabled", havingValue = "true", matchIfMissing = true)
 @Slf4j
+@EnableConfigurationProperties(Y9ListenerKafkaProperties.class)
 public class Y9ListenerKafkaConfiguration {
 
     private KafkaTemplate<Object, Object> y9KafkaTemplate;
 
     @KafkaListener(topics = {"y9_org_event"})
     public void messageOrgListener4kafka(ConsumerRecord<String, String> data) {
-        String value = data.value().toString();
+        String value = data.value();
         Y9MessageOrg msg = null;
         try {
             msg = Y9JsonUtil.readValue(value, Y9MessageOrg.class);
@@ -65,7 +68,7 @@ public class Y9ListenerKafkaConfiguration {
                 event.setTenantId(msg.getTenantId());
 
                 Y9Context.publishEvent(event);
-                LOGGER.info("[org]将消息中间件发过来的消息转换成spring的事件后发送：" + event.toString());
+                LOGGER.info("[org]将消息中间件发过来的消息转换成spring的事件后发送：" + event);
             } catch (Exception e) {
                 LOGGER.error(e.getMessage(), e);
             }

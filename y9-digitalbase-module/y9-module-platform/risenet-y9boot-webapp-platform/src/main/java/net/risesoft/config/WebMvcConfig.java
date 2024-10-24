@@ -16,6 +16,7 @@ import org.springframework.scheduling.annotation.EnableAsync;
 
 import net.risesoft.y9.Y9Context;
 import net.risesoft.y9.configuration.Y9Properties;
+import net.risesoft.y9.configuration.app.y9platform.Y9PlatformProperties;
 
 /**
  * @author dingzhaojun
