@@ -13,7 +13,8 @@
                     <el-option v-for="item in treeTypeList" :key="item.code" :label="item.name" :value="item.code" />
                 </el-select>
 
-                <el-button v-if="managerLevel === 1"
+                <el-button
+                    v-if="managerLevel === 1"
                     :size="fontSizeObj.buttonSize"
                     :style="{ fontSize: fontSizeObj.baseFontSize }"
                     class="global-btn-main"
@@ -238,6 +239,7 @@
 
     function treeTypeChange(value) {
         currentTreeType.value = value;
+        currData.value = { id: null };
         fixedTreeRef.value.onRefreshTree();
     }
 
@@ -269,6 +271,8 @@
                     }
                     if (clickNode) {
                         handClickNode(clickNode); //手动设置点击当前节点
+                    } else {
+                        currData.value = { id: null };
                     }
                 }
 
