@@ -16,4 +16,4 @@ dependencies {
     annotationProcessor(libs.org.projectlombok.lombok)
 }
 
-description = "risenet-y9boot-api(-interface-log")
+description = "risenet-y9boot-api-interface-log"

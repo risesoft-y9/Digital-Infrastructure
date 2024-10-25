@@ -24,20 +24,17 @@ dependencies {
     api(libs.io.micrometer.micrometer.registry.prometheus)
     testImplementation(libs.org.springframework.boot.spring.boot.starter.test)
     testImplementation(libs.com.h2database.h2)
-    providedCompile libs.jakarta.servlet.jakarta.servlet.api
+    providedCompile(libs.jakarta.servlet.jakarta.servlet.api)
     compileOnly(libs.org.projectlombok.lombok)
     annotationProcessor(libs.org.projectlombok.lombok)
     testCompileOnly(libs.org.projectlombok.lombok)
-    testAnnotationProcessor libs.org.projectlombok.lombok
-    providedRuntime libs.org.springframework.boot.spring.boot.starter.tomcat
+    testAnnotationProcessor(libs.org.projectlombok.lombok)
+    providedRuntime(libs.org.springframework.boot.spring.boot.starter.tomcat)
 }
 
 description = "risenet-y9boot-webapp-platform"
 
-ext {
-    finalName = "platform"
-}
-
+val finalName = "platform"
 jib.container.appRoot = "/usr/local/tomcat/webapps/${finalName}"
 
 tasks.bootWar {

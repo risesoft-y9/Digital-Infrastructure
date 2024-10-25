@@ -26,18 +26,15 @@ dependencies {
     api(libs.org.jxls.jxls.reader)
     api(libs.org.springframework.boot.spring.boot.starter.actuator)
     api(libs.io.micrometer.micrometer.registry.prometheus)
-    providedCompile libs.jakarta.servlet.jakarta.servlet.api
-    providedRuntime libs.org.springframework.boot.spring.boot.starter.tomcat
+    providedCompile(libs.jakarta.servlet.jakarta.servlet.api)
+    providedRuntime(libs.org.springframework.boot.spring.boot.starter.tomcat)
     compileOnly(libs.org.projectlombok.lombok)
     annotationProcessor(libs.org.projectlombok.lombok)
 }
 
 description = "risenet-y9boot-webapp-log"
 
-ext {
-    finalName = "log"
-}
-
+val finalName = "log"
 jib.container.appRoot = "/usr/local/tomcat/webapps/${finalName}"
 
 tasks.bootWar {

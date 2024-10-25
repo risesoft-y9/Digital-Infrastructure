@@ -61,20 +61,16 @@ dependencies {
     api(libs.org.postgresql.postgresql)
     api(libs.com.oracle.database.jdbc.ojdbc11)
     api(libs.cn.com.kingbase.kingbase8)
-    api(libs.cn.com.kingbase.kesdialect.for.hibernate4)
-    api(libs.com.dameng.dmdialect.for.hibernate5.v6)
+    api(libs.cn.com.kingbase.kesdialect.hibernate4)
+    api(libs.com.dameng.dmdialect.hibernate5.v6)
     api(libs.com.dameng.dmjdbcdriver18)
-    providedCompile libs.org.projectlombok.lombok.x1
-    providedRuntime libs.org.springframework.boot.spring.boot.starter.tomcat
+    providedCompile(libs.org.projectlombok.lombok.x1)
+    providedRuntime(libs.org.springframework.boot.spring.boot.starter.tomcat)
     annotationProcessor(libs.org.projectlombok.lombok.x1)
 }
 
 description = "risenet-y9boot-webapp-sso-server"
-
-ext {
-    finalName = "sso"
-}
-
+val finalName = "sso"
 jib.container.appRoot = "/usr/local/tomcat/webapps/${finalName}"
 
 tasks.bootWar {

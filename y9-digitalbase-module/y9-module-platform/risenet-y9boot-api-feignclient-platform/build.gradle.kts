@@ -10,4 +10,4 @@ dependencies {
     annotationProcessor(libs.org.projectlombok.lombok)
 }
 
-description = "risenet-y9boot-api(-feignclient-platform")
+description = "risenet-y9boot-api-feignclient-platform"

@@ -1,4 +1,4 @@
-lugins {
+plugins {
     id("buildlogic.java-conventions")
 }
 

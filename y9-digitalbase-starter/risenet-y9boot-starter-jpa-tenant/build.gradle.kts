@@ -17,7 +17,7 @@ dependencies {
     api(libs.org.mariadb.jdbc.mariadb.java.client.x1)
     api(libs.com.oracle.database.jdbc.ojdbc11.x1)
     api(libs.org.postgresql.postgresql)
-    api(libs.com.dameng.dmdialect.for.hibernate5.v6)
+    api(libs.com.dameng.dmdialect.hibernate5.v6)
     api(libs.com.dameng.dmjdbcdriver18)
     api(libs.com.oceanbase.oceanbase.client)
     compileOnly(libs.jakarta.servlet.jakarta.servlet.api)

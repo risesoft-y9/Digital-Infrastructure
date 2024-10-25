@@ -18,7 +18,7 @@ dependencies {
     compileOnly(libs.org.projectlombok.lombok)
     annotationProcessor(libs.org.projectlombok.lombok)
     testCompileOnly(libs.org.projectlombok.lombok)
-    testAnnotationProcessor libs.org.projectlombok.lombok
+    testAnnotationProcessor(libs.org.projectlombok.lombok)
 }
 
 description = "risenet-y9boot-idcode"

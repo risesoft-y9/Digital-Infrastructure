@@ -89,14 +89,14 @@ io-spring-dependency-management = "1.1.6"
 [libraries]
 cn-com-kingbase-hibernate-dialect = { module = "cn.com.kingbase:hibernate-dialect", version.ref = "cn-com-kingbase-hibernate-dialect" }
 cn-com-kingbase-hibernate-jpa-api = { module = "cn.com.kingbase:hibernate-jpa-api", version.ref = "cn-com-kingbase-hibernate-jpa-api" }
-cn-com-kingbase-kesdialect-for-hibernate4 = { module = "cn.com.kingbase:KesDialect-for-hibernate4", version.ref = "cn-com-kingbase-kesdialect-for-hibernate4" }
+cn-com-kingbase-kesdialect-hibernate4 = { module = "cn.com.kingbase:KesDialect-for-hibernate4", version.ref = "cn-com-kingbase-kesdialect-for-hibernate4" }
 cn-com-kingbase-kingbase8 = { module = "cn.com.kingbase:kingbase8", version.ref = "cn-com-kingbase-kingbase8" }
 cn-hutool-hutool-all = { module = "cn.hutool:hutool-all", version.ref = "cn-hutool-hutool-all" }
 com-alibaba-cloud-spring-cloud-starter-alibaba-nacos-config = { module = "com.alibaba.cloud:spring-cloud-starter-alibaba-nacos-config", version.ref = "com-alibaba-cloud-spring-cloud-starter-alibaba-nacos-config" }
 com-alibaba-cloud-spring-cloud-starter-alibaba-nacos-discovery = { module = "com.alibaba.cloud:spring-cloud-starter-alibaba-nacos-discovery", version.ref = "com-alibaba-cloud-spring-cloud-starter-alibaba-nacos-config" }
 com-alibaba-nacos-nacos-client = { module = "com.alibaba.nacos:nacos-client", version.ref = "com-alibaba-nacos-nacos-client" }
 com-alibaba-transmittable-thread-local = { module = "com.alibaba:transmittable-thread-local", version.ref = "com-alibaba-transmittable-thread-local" }
-com-dameng-dmdialect-for-hibernate5-v6 = { module = "com.dameng:DmDialect-for-hibernate5.6", version.ref = "com-dameng-dmdialect-for-hibernate5-v6" }
+com-dameng-dmdialect-hibernate5-v6 = { module = "com.dameng:DmDialect-for-hibernate5.6", version.ref = "com-dameng-dmdialect-for-hibernate5-v6" }
 com-dameng-dmjdbcdriver18 = { module = "com.dameng:DmJdbcDriver18", version.ref = "com-dameng-dmjdbcdriver18" }
 com-fasterxml-jackson-core-jackson-databind = { module = "com.fasterxml.jackson.core:jackson-databind", version.ref = "com-fasterxml-jackson-core-jackson-databind" }
 com-fasterxml-jackson-dataformat-jackson-dataformat-properties = { module = "com.fasterxml.jackson.dataformat:jackson-dataformat-properties", version.ref = "com-fasterxml-jackson-core-jackson-databind" }

@@ -9,7 +9,7 @@ dependencies {
     api(libs.org.springframework.boot.spring.boot.autoconfigure)
     api(libs.org.springframework.boot.spring.boot.configuration.processor)
     api(libs.org.springframework.cloud.spring.cloud.starter.openfeign) {
-        exclude(group = "org.springframework.cloud",) module = "spring-cloud-context"
+        exclude(group = "org.springframework.cloud", module = "spring-cloud-context")
     }
     api(libs.org.springframework.cloud.spring.cloud.starter.loadbalancer)
     api(libs.org.springframework.boot.spring.boot.starter.data.redis)

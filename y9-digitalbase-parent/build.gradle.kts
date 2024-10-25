@@ -6,16 +6,16 @@ description = "y9-digitalbase-parent"
 
 dependencyManagement {
     imports {
-        mavenBom "net.risesoft:y9-digitalbase-dependencies:v9.7.0-SNAPSHOT"
-        mavenBom "org.springframework.boot:spring-boot-dependencies:3.3.3"
-        mavenBom "org.springframework.cloud:spring-cloud-dependencies:2023.0.3"
+        mavenBom("net.risesoft:y9-digitalbase-dependencies:v9.7.0-SNAPSHOT")
+        mavenBom("org.springframework.boot:spring-boot-dependencies:3.3.3")
+        mavenBom("org.springframework.cloud:spring-cloud-dependencies:2023.0.3")
     }
 }
 
 
 publishing {
     publications {
-        maven(MavenPublication) {
+        create<MavenPublication>("mavenJava") {
             // 设置打包类型为pom
             pom {
                 packaging = "pom"
