@@ -20,7 +20,7 @@ import net.risesoft.controller.resource.vo.SystemTreeNodeVO;
 import net.risesoft.enums.platform.ManagerLevelEnum;
 import net.risesoft.log.OperationTypeEnum;
 import net.risesoft.log.annotation.RiseLog;
-import net.risesoft.permission.annotation.IsManager;
+import net.risesoft.permission.annotation.IsAnyManager;
 import net.risesoft.pojo.Y9Result;
 import net.risesoft.y9.Y9LoginUserHolder;
 import net.risesoft.y9public.entity.resource.Y9System;
@@ -38,8 +38,8 @@ import net.risesoft.y9public.service.tenant.Y9TenantSystemService;
 @RestController
 @RequestMapping(value = "/api/rest/system", produces = MediaType.APPLICATION_JSON_VALUE)
 @RequiredArgsConstructor
-@IsManager({ManagerLevelEnum.SYSTEM_MANAGER, ManagerLevelEnum.OPERATION_SYSTEM_MANAGER,
-        ManagerLevelEnum.SECURITY_MANAGER})
+@IsAnyManager({ManagerLevelEnum.SYSTEM_MANAGER, ManagerLevelEnum.OPERATION_SYSTEM_MANAGER,
+    ManagerLevelEnum.SECURITY_MANAGER})
 public class SystemController {
 
     private final Y9SystemService y9SystemService;
@@ -107,7 +107,7 @@ public class SystemController {
         if (ManagerLevelEnum.SYSTEM_MANAGER.equals(Y9LoginUserHolder.getUserInfo().getManagerLevel())) {
             y9SystemList = y9TenantSystemService.listSystemByTenantId(Y9LoginUserHolder.getTenantId());
         } else if (ManagerLevelEnum.OPERATION_SYSTEM_MANAGER
-                .equals(Y9LoginUserHolder.getUserInfo().getManagerLevel())) {
+            .equals(Y9LoginUserHolder.getUserInfo().getManagerLevel())) {
             y9SystemList = y9SystemService.listAll();
         }
         return Y9Result.success(SystemTreeNodeVO.convertY9SystemList(y9SystemList), "获取系统列表成功");

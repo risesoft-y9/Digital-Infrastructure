@@ -30,7 +30,7 @@ import net.risesoft.entity.Y9OrgBase;
 import net.risesoft.enums.platform.ManagerLevelEnum;
 import net.risesoft.log.OperationTypeEnum;
 import net.risesoft.log.annotation.RiseLog;
-import net.risesoft.permission.annotation.IsManager;
+import net.risesoft.permission.annotation.IsAnyManager;
 import net.risesoft.pojo.Y9Result;
 import net.risesoft.service.org.CompositeOrgBaseService;
 import net.risesoft.y9.json.Y9JsonUtil;
@@ -53,7 +53,7 @@ import net.risesoft.y9public.service.resource.Y9SystemService;
 @RequestMapping(value = "/api/rest/impExp", produces = MediaType.APPLICATION_JSON_VALUE)
 @Slf4j
 @Validated
-@IsManager({ManagerLevelEnum.SYSTEM_MANAGER, ManagerLevelEnum.OPERATION_SYSTEM_MANAGER})
+@IsAnyManager({ManagerLevelEnum.SYSTEM_MANAGER, ManagerLevelEnum.OPERATION_SYSTEM_MANAGER})
 public class ImportExportController {
 
     private final Y9OrgTreeDataHandler y9OrgTreeExcelDataHandler;

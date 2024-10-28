@@ -19,7 +19,7 @@ import net.risesoft.entity.Y9Job;
 import net.risesoft.enums.platform.ManagerLevelEnum;
 import net.risesoft.log.OperationTypeEnum;
 import net.risesoft.log.annotation.RiseLog;
-import net.risesoft.permission.annotation.IsManager;
+import net.risesoft.permission.annotation.IsAnyManager;
 import net.risesoft.pojo.Y9Result;
 import net.risesoft.service.org.Y9JobService;
 
@@ -35,7 +35,7 @@ import net.risesoft.service.org.Y9JobService;
 @RestController
 @RequestMapping("/api/rest/job")
 @RequiredArgsConstructor
-@IsManager(ManagerLevelEnum.SYSTEM_MANAGER)
+@IsAnyManager(ManagerLevelEnum.SYSTEM_MANAGER)
 public class JobController {
 
     private final Y9JobService y9JobService;

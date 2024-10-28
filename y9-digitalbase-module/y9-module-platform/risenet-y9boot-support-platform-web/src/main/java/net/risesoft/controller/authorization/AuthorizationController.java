@@ -27,7 +27,7 @@ import net.risesoft.enums.platform.AuthorizationPrincipalTypeEnum;
 import net.risesoft.enums.platform.ManagerLevelEnum;
 import net.risesoft.log.OperationTypeEnum;
 import net.risesoft.log.annotation.RiseLog;
-import net.risesoft.permission.annotation.IsManager;
+import net.risesoft.permission.annotation.IsAnyManager;
 import net.risesoft.pojo.Y9Page;
 import net.risesoft.pojo.Y9Result;
 import net.risesoft.service.authorization.Y9AuthorizationService;
@@ -51,7 +51,7 @@ import net.risesoft.y9public.service.role.Y9RoleService;
 @RequestMapping(value = "/api/rest/authorization", produces = MediaType.APPLICATION_JSON_VALUE)
 @Slf4j
 @RequiredArgsConstructor
-@IsManager(ManagerLevelEnum.SECURITY_MANAGER)
+@IsAnyManager(ManagerLevelEnum.SECURITY_MANAGER)
 public class AuthorizationController {
 
     private final Y9AuthorizationService y9AuthorizationService;

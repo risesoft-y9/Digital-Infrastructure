@@ -27,7 +27,7 @@ import net.risesoft.log.OperationTypeEnum;
 import net.risesoft.log.annotation.RiseLog;
 import net.risesoft.model.CodeAddress;
 import net.risesoft.model.IdcodeRegResult;
-import net.risesoft.permission.annotation.IsManager;
+import net.risesoft.permission.annotation.IsAnyManager;
 import net.risesoft.pojo.Y9Result;
 import net.risesoft.service.idcode.Y9IdCodeService;
 import net.risesoft.service.org.Y9PersonService;
@@ -44,7 +44,7 @@ import net.risesoft.util.Config;
 @RequestMapping(value = "/api/rest/idCode", produces = MediaType.APPLICATION_JSON_VALUE)
 @Slf4j
 @RequiredArgsConstructor
-@IsManager({ManagerLevelEnum.SYSTEM_MANAGER})
+@IsAnyManager({ManagerLevelEnum.SYSTEM_MANAGER})
 public class IdCodeController {
 
     private final Y9IdCodeService y9IdCodeService;

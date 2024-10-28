@@ -19,7 +19,7 @@ import net.risesoft.enums.platform.ManagerLevelEnum;
 import net.risesoft.log.OperationTypeEnum;
 import net.risesoft.log.annotation.RiseLog;
 import net.risesoft.model.user.UserInfo;
-import net.risesoft.permission.annotation.IsManager;
+import net.risesoft.permission.annotation.IsAnyManager;
 import net.risesoft.pojo.Y9Result;
 import net.risesoft.service.org.Y9ManagerService;
 import net.risesoft.y9.Y9LoginUserHolder;
@@ -49,7 +49,7 @@ public class DeptManagerController {
      */
     @RiseLog(operationName = "禁用/解除禁用三员", operationType = OperationTypeEnum.MODIFY)
     @PostMapping(value = "/changeDisabled")
-    @IsManager(ManagerLevelEnum.SECURITY_MANAGER)
+    @IsAnyManager(ManagerLevelEnum.SECURITY_MANAGER)
     public Y9Result<Y9Manager> changeDisabled(@RequestParam @NotBlank String id) {
         Y9Manager y9Manager = y9ManagerService.changeDisabled(id);
         return Y9Result.success(y9Manager, "禁用人员成功");
@@ -63,7 +63,7 @@ public class DeptManagerController {
      */
     @RiseLog(operationName = "根据部门id，验证该成员是否部门管理员", operationType = OperationTypeEnum.BROWSE)
     @PostMapping(value = "/checkDeptManager")
-    @IsManager(ManagerLevelEnum.SYSTEM_MANAGER)
+    @IsAnyManager(ManagerLevelEnum.SYSTEM_MANAGER)
     public Y9Result<Boolean> checkDeptManager(@RequestParam @NotBlank String deptId) {
         UserInfo userInfo = Y9LoginUserHolder.getUserInfo();
         return Y9Result.success(y9ManagerService.isDeptManager(userInfo.getPersonId(), deptId));
@@ -78,7 +78,7 @@ public class DeptManagerController {
      */
     @RiseLog(operationName = "判断登录名是否可用")
     @RequestMapping(value = "/checkLoginName")
-    @IsManager(ManagerLevelEnum.SYSTEM_MANAGER)
+    @IsAnyManager(ManagerLevelEnum.SYSTEM_MANAGER)
     public Y9Result<Boolean> checkLoginName(@RequestParam String personId, @RequestParam @NotBlank String loginName) {
         return Y9Result.success(y9ManagerService.isLoginNameAvailable(personId, loginName), "判断登录名是否可用成功");
     }
@@ -91,7 +91,7 @@ public class DeptManagerController {
      */
     @RiseLog(operationName = "根据人员id，获取人员信息")
     @RequestMapping(value = "/getManagerById")
-    @IsManager(ManagerLevelEnum.SYSTEM_MANAGER)
+    @IsAnyManager(ManagerLevelEnum.SYSTEM_MANAGER)
     public Y9Result<Y9Manager> getManagerById(@RequestParam @NotBlank String managerId) {
         return Y9Result.success(y9ManagerService.getById(managerId), "根据人员id，获取人员信息成功！");
     }
@@ -105,7 +105,7 @@ public class DeptManagerController {
      */
     @RiseLog(operationName = "获取人员列表")
     @RequestMapping(value = "/listManagersByParentId")
-    @IsManager({ManagerLevelEnum.SYSTEM_MANAGER, ManagerLevelEnum.SECURITY_MANAGER})
+    @IsAnyManager({ManagerLevelEnum.SYSTEM_MANAGER, ManagerLevelEnum.SECURITY_MANAGER})
     public Y9Result<List<Y9Manager>> listManagersByParentId(@RequestParam @NotBlank String parentId) {
         return Y9Result.success(y9ManagerService.listByParentId(parentId), "获取人员列表成功！");
     }
@@ -118,7 +118,7 @@ public class DeptManagerController {
      */
     @RiseLog(operationName = "删除部门管理员", operationType = OperationTypeEnum.DELETE)
     @PostMapping(value = "/remove")
-    @IsManager(ManagerLevelEnum.SYSTEM_MANAGER)
+    @IsAnyManager(ManagerLevelEnum.SYSTEM_MANAGER)
     public Y9Result<String> remove(@RequestParam(value = "ids") @NotEmpty List<String> ids) {
         y9ManagerService.delete(ids);
         return Y9Result.successMsg("删除人员成功");
@@ -132,7 +132,7 @@ public class DeptManagerController {
      */
     @RiseLog(operationName = "重置密码", operationType = OperationTypeEnum.MODIFY)
     @PostMapping(value = "/resetPassword")
-    @IsManager(ManagerLevelEnum.SYSTEM_MANAGER)
+    @IsAnyManager(ManagerLevelEnum.SYSTEM_MANAGER)
     public Y9Result<String> resetPassword(@NotBlank @RequestParam String personId) {
         y9ManagerService.resetDefaultPassword(personId);
         return Y9Result.successMsg("重置密码成功");
@@ -146,7 +146,7 @@ public class DeptManagerController {
      */
     @RiseLog(operationName = "新建或者更新部门管理员信息", operationType = OperationTypeEnum.ADD)
     @PostMapping(value = "/saveOrUpdate")
-    @IsManager(ManagerLevelEnum.SYSTEM_MANAGER)
+    @IsAnyManager(ManagerLevelEnum.SYSTEM_MANAGER)
     public Y9Result<Y9Manager> saveOrUpdate(Y9Manager manager) {
         Y9Manager y9Manager = y9ManagerService.saveOrUpdate(manager);
         return Y9Result.success(y9Manager, "保存人员信息成功");

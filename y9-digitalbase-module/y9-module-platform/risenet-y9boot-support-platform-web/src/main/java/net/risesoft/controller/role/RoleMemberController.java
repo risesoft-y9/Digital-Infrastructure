@@ -23,7 +23,7 @@ import net.risesoft.entity.relation.Y9OrgBasesToRoles;
 import net.risesoft.enums.platform.ManagerLevelEnum;
 import net.risesoft.log.OperationTypeEnum;
 import net.risesoft.log.annotation.RiseLog;
-import net.risesoft.permission.annotation.IsManager;
+import net.risesoft.permission.annotation.IsAnyManager;
 import net.risesoft.pojo.Y9Result;
 import net.risesoft.service.org.CompositeOrgBaseService;
 import net.risesoft.service.org.Y9DepartmentService;
@@ -44,7 +44,7 @@ import net.risesoft.y9public.entity.role.Y9Role;
 @RequestMapping(value = "/api/rest/orgBasesToRoles", produces = MediaType.APPLICATION_JSON_VALUE)
 @RequiredArgsConstructor
 @Validated
-@IsManager(ManagerLevelEnum.SECURITY_MANAGER)
+@IsAnyManager(ManagerLevelEnum.SECURITY_MANAGER)
 public class RoleMemberController {
 
     private final CompositeOrgBaseService compositeOrgBaseService;

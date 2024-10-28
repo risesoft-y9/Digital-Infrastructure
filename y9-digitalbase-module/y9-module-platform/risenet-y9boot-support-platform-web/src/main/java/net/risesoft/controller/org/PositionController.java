@@ -19,7 +19,7 @@ import net.risesoft.entity.relation.Y9PersonsToPositions;
 import net.risesoft.enums.platform.ManagerLevelEnum;
 import net.risesoft.log.OperationTypeEnum;
 import net.risesoft.log.annotation.RiseLog;
-import net.risesoft.permission.annotation.IsManager;
+import net.risesoft.permission.annotation.IsAnyManager;
 import net.risesoft.pojo.Y9Result;
 import net.risesoft.service.org.Y9PositionService;
 import net.risesoft.service.relation.Y9PersonsToPositionsService;
@@ -36,7 +36,7 @@ import net.risesoft.service.relation.Y9PersonsToPositionsService;
 @RestController
 @RequestMapping(value = "/api/rest/position", produces = MediaType.APPLICATION_JSON_VALUE)
 @RequiredArgsConstructor
-@IsManager({ManagerLevelEnum.SYSTEM_MANAGER})
+@IsAnyManager({ManagerLevelEnum.SYSTEM_MANAGER})
 public class PositionController {
 
     private final Y9PersonsToPositionsService y9PersonsToPositionsService;

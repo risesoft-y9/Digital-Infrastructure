@@ -20,7 +20,7 @@ import net.risesoft.entity.Y9OptionValue;
 import net.risesoft.enums.platform.ManagerLevelEnum;
 import net.risesoft.log.annotation.RiseLog;
 import net.risesoft.model.platform.DataCatalog;
-import net.risesoft.permission.annotation.IsManager;
+import net.risesoft.permission.annotation.IsAnyManager;
 import net.risesoft.pojo.Y9Result;
 import net.risesoft.y9public.entity.resource.Y9DataCatalog;
 import net.risesoft.y9public.service.resource.Y9DataCatalogService;
@@ -35,7 +35,7 @@ import net.risesoft.y9public.service.resource.Y9DataCatalogService;
 @Validated
 @RestController
 @RequestMapping(value = "/api/rest/dataCatalog", produces = MediaType.APPLICATION_JSON_VALUE)
-@IsManager({ManagerLevelEnum.SYSTEM_MANAGER, ManagerLevelEnum.OPERATION_SYSTEM_MANAGER,
+@IsAnyManager({ManagerLevelEnum.SYSTEM_MANAGER, ManagerLevelEnum.OPERATION_SYSTEM_MANAGER,
     ManagerLevelEnum.SECURITY_MANAGER})
 @RequiredArgsConstructor
 public class DataCatalogController {

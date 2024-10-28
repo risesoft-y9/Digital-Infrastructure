@@ -31,7 +31,7 @@ import net.risesoft.enums.platform.TreeNodeType;
 import net.risesoft.log.OperationTypeEnum;
 import net.risesoft.log.annotation.RiseLog;
 import net.risesoft.model.user.UserInfo;
-import net.risesoft.permission.annotation.IsManager;
+import net.risesoft.permission.annotation.IsAnyManager;
 import net.risesoft.pojo.Y9Result;
 import net.risesoft.y9.Y9LoginUserHolder;
 import net.risesoft.y9public.entity.resource.Y9App;
@@ -58,8 +58,8 @@ import net.risesoft.y9public.service.tenant.Y9TenantSystemService;
 @Slf4j
 @RequiredArgsConstructor
 @Validated
-@IsManager({ManagerLevelEnum.SYSTEM_MANAGER, ManagerLevelEnum.SECURITY_MANAGER,
-        ManagerLevelEnum.OPERATION_SYSTEM_MANAGER})
+@IsAnyManager({ManagerLevelEnum.SYSTEM_MANAGER, ManagerLevelEnum.SECURITY_MANAGER,
+    ManagerLevelEnum.OPERATION_SYSTEM_MANAGER})
 public class RoleController {
 
     private final Y9RoleService y9RoleService;
@@ -124,9 +124,9 @@ public class RoleController {
             accessibleAppResourceList = appResourceList;
         } else {
             List<String> appIds =
-                    y9TenantAppService.listAppIdByTenantId(Y9LoginUserHolder.getTenantId(), Boolean.TRUE, Boolean.TRUE);
+                y9TenantAppService.listAppIdByTenantId(Y9LoginUserHolder.getTenantId(), Boolean.TRUE, Boolean.TRUE);
             accessibleAppResourceList = appResourceList.stream().filter(resource -> appIds.contains(resource.getId()))
-                    .collect(Collectors.toList());
+                .collect(Collectors.toList());
         }
         return Y9Result.success(RoleTreeNodeVO.convertY9AppList(accessibleAppResourceList), "查询所有的根资源成功");
     }
@@ -210,7 +210,7 @@ public class RoleController {
     @RiseLog(operationName = "根据父节点id，父节点类型分层获取角色树")
     @GetMapping(value = "/tree")
     public Y9Result<List<RoleTreeNodeVO>> tree(@RequestParam(required = false) String parentId,
-                                               @RequestParam(required = false) TreeNodeType parentNodeType) {
+        @RequestParam(required = false) TreeNodeType parentNodeType) {
         List<RoleTreeNodeVO> roleTreeNodeVOList;
         if (ManagerLevelEnum.SYSTEM_MANAGER.equals(Y9LoginUserHolder.getUserInfo().getManagerLevel())) {
             roleTreeNodeVOList = treeBySystemManager(parentId, parentNodeType);
@@ -247,7 +247,7 @@ public class RoleController {
         } else if (TreeNodeType.SYSTEM.equals(parentNodeType)) {
             // 系统节点下为应用
             List<String> appIdList = y9TenantAppService.listAppIdBySystemIdAndTenantId(parentId,
-                    Y9LoginUserHolder.getTenantId(), true, true);
+                Y9LoginUserHolder.getTenantId(), true, true);
             List<Y9App> appList = y9AppService.listByIds(appIdList);
             roleTreeNodeVOList.addAll(RoleTreeNodeVO.convertY9AppList(appList));
         } else {
@@ -293,7 +293,7 @@ public class RoleController {
         roleTreeNodeVOList.addAll(RoleTreeNodeVO.convertY9AppList(appList));
 
         List<String> systemIdList =
-                appList.stream().map(Y9ResourceBase::getSystemId).distinct().collect(Collectors.toList());
+            appList.stream().map(Y9ResourceBase::getSystemId).distinct().collect(Collectors.toList());
         List<Y9System> y9SystemList = y9SystemService.listByIds(systemIdList);
         roleTreeNodeVOList.addAll(RoleTreeNodeVO.convertY9SystemList(y9SystemList));
 
@@ -311,7 +311,7 @@ public class RoleController {
         List<Y9Role> y9RoleList = y9RoleService.treeSearch(name);
 
         List<String> tenantedAppIdList =
-                y9TenantAppService.listAppIdByTenantId(Y9LoginUserHolder.getTenantId(), true, true);
+            y9TenantAppService.listAppIdByTenantId(Y9LoginUserHolder.getTenantId(), true, true);
         Set<String> roleRelatedAppIdSet = y9RoleList.stream().map(Y9Role::getAppId).collect(Collectors.toSet());
         Collection<String> resultAppIdCollection = CollectionUtils.intersection(tenantedAppIdList, roleRelatedAppIdSet);
         List<Y9App> appList = new ArrayList<>();
@@ -325,7 +325,7 @@ public class RoleController {
         roleTreeNodeVOList.addAll(RoleTreeNodeVO.convertY9AppList(appList));
 
         List<String> systemIdList =
-                appList.stream().map(Y9ResourceBase::getSystemId).distinct().collect(Collectors.toList());
+            appList.stream().map(Y9ResourceBase::getSystemId).distinct().collect(Collectors.toList());
         List<Y9System> y9SystemList = y9SystemService.listByIds(systemIdList);
         roleTreeNodeVOList.addAll(RoleTreeNodeVO.convertY9SystemList(y9SystemList));
 
