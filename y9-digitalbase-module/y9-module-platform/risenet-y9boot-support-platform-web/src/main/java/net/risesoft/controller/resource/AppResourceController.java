@@ -21,7 +21,7 @@ import lombok.extern.slf4j.Slf4j;
 import net.risesoft.enums.platform.ManagerLevelEnum;
 import net.risesoft.log.OperationTypeEnum;
 import net.risesoft.log.annotation.RiseLog;
-import net.risesoft.permission.annotation.IsManager;
+import net.risesoft.permission.annotation.IsAnyManager;
 import net.risesoft.pojo.Y9Page;
 import net.risesoft.pojo.Y9PageQuery;
 import net.risesoft.pojo.Y9Result;
@@ -41,7 +41,7 @@ import net.risesoft.y9public.service.resource.Y9AppService;
 @RequestMapping(value = "/api/rest/resource/app", produces = MediaType.APPLICATION_JSON_VALUE)
 @Slf4j
 @RequiredArgsConstructor
-@IsManager({ManagerLevelEnum.SYSTEM_MANAGER, ManagerLevelEnum.OPERATION_SYSTEM_MANAGER})
+@IsAnyManager({ManagerLevelEnum.SYSTEM_MANAGER, ManagerLevelEnum.OPERATION_SYSTEM_MANAGER})
 public class AppResourceController {
 
     private final Y9AppService y9AppService;
@@ -91,7 +91,7 @@ public class AppResourceController {
      */
     @RiseLog(operationName = "根据应用id获取应用详情")
     @GetMapping(value = "/{id}")
-    @IsManager({ManagerLevelEnum.SYSTEM_MANAGER, ManagerLevelEnum.SECURITY_MANAGER,
+    @IsAnyManager({ManagerLevelEnum.SYSTEM_MANAGER, ManagerLevelEnum.SECURITY_MANAGER,
         ManagerLevelEnum.OPERATION_SYSTEM_MANAGER})
     public Y9Result<Y9App> getById(@PathVariable @NotBlank String id) {
         return Y9Result.success(y9AppService.getById(id), "成功获取应用详情");

@@ -31,7 +31,7 @@ import net.risesoft.enums.platform.TreeNodeType;
 import net.risesoft.log.OperationTypeEnum;
 import net.risesoft.log.annotation.RiseLog;
 import net.risesoft.model.user.UserInfo;
-import net.risesoft.permission.annotation.IsManager;
+import net.risesoft.permission.annotation.IsAnyManager;
 import net.risesoft.pojo.Y9Result;
 import net.risesoft.y9.Y9LoginUserHolder;
 import net.risesoft.y9public.entity.resource.Y9App;
@@ -58,7 +58,7 @@ import net.risesoft.y9public.service.tenant.Y9TenantSystemService;
 @Slf4j
 @RequiredArgsConstructor
 @Validated
-@IsManager({ManagerLevelEnum.SYSTEM_MANAGER, ManagerLevelEnum.SECURITY_MANAGER,
+@IsAnyManager({ManagerLevelEnum.SYSTEM_MANAGER, ManagerLevelEnum.SECURITY_MANAGER,
     ManagerLevelEnum.OPERATION_SYSTEM_MANAGER})
 public class RoleController {
 

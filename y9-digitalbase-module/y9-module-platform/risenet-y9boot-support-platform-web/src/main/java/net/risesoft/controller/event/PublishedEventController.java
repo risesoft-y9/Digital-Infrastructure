@@ -13,7 +13,7 @@ import lombok.RequiredArgsConstructor;
 
 import net.risesoft.enums.platform.ManagerLevelEnum;
 import net.risesoft.log.annotation.RiseLog;
-import net.risesoft.permission.annotation.IsManager;
+import net.risesoft.permission.annotation.IsAnyManager;
 import net.risesoft.pojo.Y9Page;
 import net.risesoft.pojo.Y9PageQuery;
 import net.risesoft.y9.Y9LoginUserHolder;
@@ -32,7 +32,7 @@ import net.risesoft.y9public.service.event.Y9PublishedEventService;
 @RequestMapping(value = "/api/rest/publishedEvent", produces = MediaType.APPLICATION_JSON_VALUE)
 @RequiredArgsConstructor
 @Validated
-@IsManager({ManagerLevelEnum.OPERATION_SECURITY_MANAGER, ManagerLevelEnum.SECURITY_MANAGER})
+@IsAnyManager({ManagerLevelEnum.OPERATION_SECURITY_MANAGER, ManagerLevelEnum.SECURITY_MANAGER})
 public class PublishedEventController {
 
     private final Y9PublishedEventService y9PublishedEventService;

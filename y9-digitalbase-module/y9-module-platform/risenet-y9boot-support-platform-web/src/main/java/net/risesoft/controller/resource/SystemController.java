@@ -20,7 +20,7 @@ import net.risesoft.controller.resource.vo.SystemTreeNodeVO;
 import net.risesoft.enums.platform.ManagerLevelEnum;
 import net.risesoft.log.OperationTypeEnum;
 import net.risesoft.log.annotation.RiseLog;
-import net.risesoft.permission.annotation.IsManager;
+import net.risesoft.permission.annotation.IsAnyManager;
 import net.risesoft.pojo.Y9Result;
 import net.risesoft.y9.Y9LoginUserHolder;
 import net.risesoft.y9public.entity.resource.Y9System;
@@ -38,7 +38,7 @@ import net.risesoft.y9public.service.tenant.Y9TenantSystemService;
 @RestController
 @RequestMapping(value = "/api/rest/system", produces = MediaType.APPLICATION_JSON_VALUE)
 @RequiredArgsConstructor
-@IsManager({ManagerLevelEnum.SYSTEM_MANAGER, ManagerLevelEnum.OPERATION_SYSTEM_MANAGER,
+@IsAnyManager({ManagerLevelEnum.SYSTEM_MANAGER, ManagerLevelEnum.OPERATION_SYSTEM_MANAGER,
     ManagerLevelEnum.SECURITY_MANAGER})
 public class SystemController {
 

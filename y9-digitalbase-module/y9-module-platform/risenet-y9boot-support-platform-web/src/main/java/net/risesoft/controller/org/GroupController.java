@@ -18,7 +18,7 @@ import net.risesoft.entity.Y9Group;
 import net.risesoft.enums.platform.ManagerLevelEnum;
 import net.risesoft.log.OperationTypeEnum;
 import net.risesoft.log.annotation.RiseLog;
-import net.risesoft.permission.annotation.IsManager;
+import net.risesoft.permission.annotation.IsAnyManager;
 import net.risesoft.pojo.Y9Result;
 import net.risesoft.service.org.Y9GroupService;
 import net.risesoft.service.relation.Y9PersonsToGroupsService;
@@ -35,7 +35,7 @@ import net.risesoft.service.relation.Y9PersonsToGroupsService;
 @RestController
 @RequestMapping(value = "/api/rest/group", produces = MediaType.APPLICATION_JSON_VALUE)
 @RequiredArgsConstructor
-@IsManager(ManagerLevelEnum.SYSTEM_MANAGER)
+@IsAnyManager(ManagerLevelEnum.SYSTEM_MANAGER)
 public class GroupController {
 
     private final Y9PersonsToGroupsService y9PersonsToGroupsService;

@@ -19,7 +19,7 @@ import net.risesoft.entity.Y9OptionValue;
 import net.risesoft.enums.platform.ManagerLevelEnum;
 import net.risesoft.log.OperationTypeEnum;
 import net.risesoft.log.annotation.RiseLog;
-import net.risesoft.permission.annotation.IsManager;
+import net.risesoft.permission.annotation.IsAnyManager;
 import net.risesoft.pojo.Y9Result;
 import net.risesoft.service.dictionary.Y9OptionValueService;
 
@@ -35,7 +35,7 @@ import net.risesoft.service.dictionary.Y9OptionValueService;
 @RestController
 @RequestMapping(value = "/api/rest/optionValue", produces = MediaType.APPLICATION_JSON_VALUE)
 @RequiredArgsConstructor
-@IsManager(ManagerLevelEnum.SYSTEM_MANAGER)
+@IsAnyManager(ManagerLevelEnum.SYSTEM_MANAGER)
 public class OptionValueController {
 
     private final Y9OptionValueService y9OptionValueService;

@@ -20,7 +20,7 @@ import net.risesoft.enums.platform.ManagerLevelEnum;
 import net.risesoft.enums.platform.OrgTreeTypeEnum;
 import net.risesoft.log.OperationTypeEnum;
 import net.risesoft.log.annotation.RiseLog;
-import net.risesoft.permission.annotation.IsManager;
+import net.risesoft.permission.annotation.IsAnyManager;
 import net.risesoft.pojo.Y9Result;
 import net.risesoft.service.org.CompositeOrgBaseService;
 import net.risesoft.service.org.Y9DepartmentService;
@@ -37,7 +37,7 @@ import net.risesoft.service.org.Y9DepartmentService;
 @RestController
 @RequestMapping(value = "/api/rest/dept", produces = MediaType.APPLICATION_JSON_VALUE)
 @RequiredArgsConstructor
-@IsManager(ManagerLevelEnum.SYSTEM_MANAGER)
+@IsAnyManager(ManagerLevelEnum.SYSTEM_MANAGER)
 public class DeptController {
 
     private final CompositeOrgBaseService compositeOrgBaseService;

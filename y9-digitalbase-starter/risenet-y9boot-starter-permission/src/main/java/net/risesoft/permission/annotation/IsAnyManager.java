@@ -18,7 +18,7 @@ import net.risesoft.enums.platform.ManagerLevelEnum;
 @Documented
 @Target({ElementType.TYPE, ElementType.METHOD})
 @Retention(RetentionPolicy.RUNTIME)
-public @interface IsManager {
+public @interface IsAnyManager {
 
     /**
      * 管理员类型

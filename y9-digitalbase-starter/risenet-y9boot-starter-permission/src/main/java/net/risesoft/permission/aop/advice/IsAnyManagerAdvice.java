@@ -9,7 +9,7 @@ import org.springframework.core.annotation.AnnotationUtils;
 
 import net.risesoft.enums.platform.ManagerLevelEnum;
 import net.risesoft.exception.GlobalErrorCodeEnum;
-import net.risesoft.permission.annotation.IsManager;
+import net.risesoft.permission.annotation.IsAnyManager;
 import net.risesoft.y9.Y9LoginUserHolder;
 import net.risesoft.y9.exception.util.Y9ExceptionUtil;
 
@@ -19,18 +19,18 @@ import net.risesoft.y9.exception.util.Y9ExceptionUtil;
  * @author shidaobang
  * @date 2023/12/21
  */
-public class IsManagerAdvice implements MethodBeforeAdvice {
+public class IsAnyManagerAdvice implements MethodBeforeAdvice {
 
     @Override
     public void before(Method method, Object[] args, Object target) throws Throwable {
-        IsManager isManager = AnnotationUtils.findAnnotation(method, IsManager.class);
-        if (isManager != null) {
-            checkAnyManager(isManager.value(), isManager.globalOnly());
+        IsAnyManager isAnyManager = AnnotationUtils.findAnnotation(method, IsAnyManager.class);
+        if (isAnyManager != null) {
+            checkAnyManager(isAnyManager.value(), isAnyManager.globalOnly());
             return;
         }
-        isManager = AnnotationUtils.findAnnotation(method.getDeclaringClass(), IsManager.class);
-        if (isManager != null) {
-            checkAnyManager(isManager.value(), isManager.globalOnly());
+        isAnyManager = AnnotationUtils.findAnnotation(method.getDeclaringClass(), IsAnyManager.class);
+        if (isAnyManager != null) {
+            checkAnyManager(isAnyManager.value(), isAnyManager.globalOnly());
             return;
         }
     }

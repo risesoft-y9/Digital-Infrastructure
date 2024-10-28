@@ -17,7 +17,7 @@ import lombok.RequiredArgsConstructor;
 import net.risesoft.controller.identity.vo.RolePermissionVO;
 import net.risesoft.entity.identity.person.Y9PersonToRole;
 import net.risesoft.enums.platform.ManagerLevelEnum;
-import net.risesoft.permission.annotation.IsManager;
+import net.risesoft.permission.annotation.IsAnyManager;
 import net.risesoft.pojo.Y9Result;
 import net.risesoft.service.identity.Y9PersonToRoleService;
 
@@ -33,7 +33,7 @@ import net.risesoft.service.identity.Y9PersonToRoleService;
 @RestController
 @RequestMapping(value = "/api/rest/personRoles", produces = MediaType.APPLICATION_JSON_VALUE)
 @RequiredArgsConstructor
-@IsManager(ManagerLevelEnum.SYSTEM_MANAGER)
+@IsAnyManager(ManagerLevelEnum.SYSTEM_MANAGER)
 public class PersonRolesController {
 
     private final RolePermissionVOBuilder rolePermissionVOBuilder;

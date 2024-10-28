@@ -9,7 +9,7 @@ import org.springframework.core.annotation.AnnotationUtils;
 
 import lombok.extern.slf4j.Slf4j;
 
-import net.risesoft.permission.annotation.IsManager;
+import net.risesoft.permission.annotation.IsAnyManager;
 
 /**
  *
@@ -17,23 +17,23 @@ import net.risesoft.permission.annotation.IsManager;
  * @date 2023/12/22
  */
 @Slf4j
-public class IsManagerAdvisor extends StaticMethodMatcherPointcutAdvisor {
+public class IsAnyManagerAdvisor extends StaticMethodMatcherPointcutAdvisor {
 
     private static final long serialVersionUID = 1790605582584464487L;
 
-    public IsManagerAdvisor() {
+    public IsAnyManagerAdvisor() {
         LOGGER.debug("IsManagerAdvisor init............");
     }
 
     @Override
     public boolean matches(Method method, Class<?> targetClass) {
 
-        Annotation annotation = AnnotationUtils.findAnnotation(method, IsManager.class);
+        Annotation annotation = AnnotationUtils.findAnnotation(method, IsAnyManager.class);
         if (annotation != null) {
             LOGGER.info("findAnnotation IsManager: " + method.getName());
             return true;
         }
-        annotation = AnnotationUtils.findAnnotation(targetClass, IsManager.class);
+        annotation = AnnotationUtils.findAnnotation(targetClass, IsAnyManager.class);
         if (annotation != null) {
             LOGGER.info("findAnnotation IsManager: " + targetClass.getName());
             return true;

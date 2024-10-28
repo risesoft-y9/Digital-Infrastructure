@@ -11,7 +11,7 @@ import lombok.extern.slf4j.Slf4j;
 
 import net.risesoft.controller.setting.vo.TenantSettingVO;
 import net.risesoft.enums.platform.ManagerLevelEnum;
-import net.risesoft.permission.annotation.IsManager;
+import net.risesoft.permission.annotation.IsAnyManager;
 import net.risesoft.pojo.Y9Result;
 import net.risesoft.service.setting.Y9SettingService;
 
@@ -23,7 +23,7 @@ import net.risesoft.service.setting.Y9SettingService;
 @RestController
 @RequestMapping(value = "/api/rest/setting", produces = MediaType.APPLICATION_JSON_VALUE)
 @RequiredArgsConstructor
-@IsManager({ManagerLevelEnum.SYSTEM_MANAGER, ManagerLevelEnum.SECURITY_MANAGER,
+@IsAnyManager({ManagerLevelEnum.SYSTEM_MANAGER, ManagerLevelEnum.SECURITY_MANAGER,
     ManagerLevelEnum.OPERATION_SYSTEM_MANAGER})
 @Slf4j
 public class SettingController {

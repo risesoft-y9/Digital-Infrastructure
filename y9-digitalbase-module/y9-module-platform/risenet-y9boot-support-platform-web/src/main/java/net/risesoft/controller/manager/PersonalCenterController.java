@@ -21,7 +21,7 @@ import net.risesoft.entity.Y9Manager;
 import net.risesoft.enums.platform.ManagerLevelEnum;
 import net.risesoft.log.OperationTypeEnum;
 import net.risesoft.log.annotation.RiseLog;
-import net.risesoft.permission.annotation.IsManager;
+import net.risesoft.permission.annotation.IsAnyManager;
 import net.risesoft.pojo.Y9Result;
 import net.risesoft.service.org.Y9ManagerService;
 
@@ -36,7 +36,7 @@ import net.risesoft.service.org.Y9ManagerService;
 @RequestMapping(value = "/api/rest/personalCenter", produces = MediaType.APPLICATION_JSON_VALUE)
 @RequiredArgsConstructor
 @Validated
-@IsManager({ManagerLevelEnum.SYSTEM_MANAGER, ManagerLevelEnum.SECURITY_MANAGER, ManagerLevelEnum.AUDIT_MANAGER})
+@IsAnyManager({ManagerLevelEnum.SYSTEM_MANAGER, ManagerLevelEnum.SECURITY_MANAGER, ManagerLevelEnum.AUDIT_MANAGER})
 public class PersonalCenterController {
 
     private final Y9ManagerService y9ManagerService;

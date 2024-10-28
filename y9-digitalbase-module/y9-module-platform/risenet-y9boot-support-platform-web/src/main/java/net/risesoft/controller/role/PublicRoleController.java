@@ -1,6 +1,5 @@
 package net.risesoft.controller.role;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.http.MediaType;
@@ -12,13 +11,10 @@ import lombok.RequiredArgsConstructor;
 
 import net.risesoft.consts.InitDataConsts;
 import net.risesoft.controller.role.vo.RoleTreeNodeVO;
-import net.risesoft.controller.role.vo.RoleVO;
 import net.risesoft.enums.platform.ManagerLevelEnum;
-import net.risesoft.enums.platform.RoleTypeEnum;
 import net.risesoft.log.annotation.RiseLog;
-import net.risesoft.permission.annotation.IsManager;
+import net.risesoft.permission.annotation.IsAnyManager;
 import net.risesoft.pojo.Y9Result;
-import net.risesoft.y9.util.Y9ModelConvertUtil;
 import net.risesoft.y9public.entity.role.Y9Role;
 import net.risesoft.y9public.service.role.Y9RoleService;
 
@@ -32,7 +28,7 @@ import net.risesoft.y9public.service.role.Y9RoleService;
 @RestController
 @RequestMapping(value = "/api/rest/publicRole", produces = MediaType.APPLICATION_JSON_VALUE)
 @RequiredArgsConstructor
-@IsManager({ManagerLevelEnum.SYSTEM_MANAGER, ManagerLevelEnum.SECURITY_MANAGER,
+@IsAnyManager({ManagerLevelEnum.SYSTEM_MANAGER, ManagerLevelEnum.SECURITY_MANAGER,
     ManagerLevelEnum.OPERATION_SYSTEM_MANAGER})
 public class PublicRoleController {
 
