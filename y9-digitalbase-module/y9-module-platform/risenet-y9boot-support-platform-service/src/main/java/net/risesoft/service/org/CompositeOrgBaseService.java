@@ -185,7 +185,7 @@ public interface CompositeOrgBaseService {
      * @param parentId 父节点id
      * @return {@code List<Y9OrgBase>}
      */
-    List<Y9Person> listAllByParentId(String parentId);
+    List<Y9Person> listAllPersonsByParentId(String parentId);
 
     /**
      * 根据父节点id,递归获取其下所有人员
