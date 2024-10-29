@@ -715,7 +715,7 @@ public class CompositeOrgBaseServiceImpl implements CompositeOrgBaseService {
     }
 
     @Override
-    public List<Y9Person> listAllByParentId(String parentId) {
+    public List<Y9Person> listAllPersonsByParentId(String parentId) {
         List<Y9Person> persons = new ArrayList<>();
         recursionAllPersons(parentId, persons);
         return persons;
@@ -800,8 +800,6 @@ public class CompositeOrgBaseServiceImpl implements CompositeOrgBaseService {
         personList.addAll(lists);
         List<Y9Department> deptList = y9DepartmentRepository.findByParentIdOrderByTabIndexAsc(parentId);
         for (Y9Department dept : deptList) {
-            List<Y9Person> list = this.getPersonByParentId(dept.getId());
-            personList.addAll(list);
             recursionAllPersons(dept.getId(), personList);
         }
     }
