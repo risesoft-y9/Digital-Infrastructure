@@ -126,7 +126,7 @@
         <maven.compiler.target>${java.version}</maven.compiler.target>
         <maven.deploy.skip>true</maven.deploy.skip>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        
+
         <mysql-driver.version>8.2.0</mysql-driver.version>
         <mariadb-driver.version>3.2.0</mariadb-driver.version>
         <postgresql-driver.version>42.7.3</postgresql-driver.version>
@@ -434,7 +434,7 @@
             <artifactId>risenet-y9boot-common-nacos</artifactId>
             <version>${project.version}</version>
         </dependency>
-        
+
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-docker-compose</artifactId>
@@ -591,7 +591,7 @@
                 <artifactId>maven-deploy-plugin</artifactId>
                 <version>3.1.1</version>
                 <configuration>
-                    <skip>false</skip>
+                    <skip>true</skip>
                 </configuration>
             </plugin>
             <plugin>
