@@ -2,6 +2,8 @@
 # https://docs.gradle.org/current/userguide/platforms.html#sub::toml-dependencies-format
 
 [versions]
+y9-version = "9.7.0-SNAPSHOT"
+
 cas-server = "7.0.3"
 cas-spring-boot = '3.2.1'
 cas-spring-framework = '6.1.2'
