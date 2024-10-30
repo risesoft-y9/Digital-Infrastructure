@@ -20,7 +20,6 @@ import org.apereo.cas.services.ServicesManager;
 import org.apereo.cas.support.oauth.services.OAuthRegisteredService;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -44,8 +43,8 @@ public class ServiceController {
     private final ServicesManager servicesManager;
     private final CasConfigurationProperties casConfigurationProperties;
 
-    @DeleteMapping(value = "/{id}")
-    public Y9Result<RegisteredService> delete(@PathVariable long id) {
+    @PostMapping(value = "/delete")
+    public Y9Result<RegisteredService> delete(long id) {
         RegisteredService registeredService = servicesManager.delete(id);
         return Y9Result.success(registeredService);
     }
