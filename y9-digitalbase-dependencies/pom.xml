@@ -1095,8 +1095,8 @@
                     <configuration>
                         <skip>false</skip>
                         <from>
-                            <!--<image>eclipse-temurin:11-jre</image>-->
-                            <image>docker-internal.youshengyun.com/tomcat:9.0-jre11-temurin</image>
+                            <!--<image>eclipse-temurin:21-jre</image>-->
+                            <image>docker-internal.youshengyun.com/tomcat:10.1-jre21-temurin</image>
                             <platforms>
                                 <platform>
                                     <architecture>amd64</architecture>
