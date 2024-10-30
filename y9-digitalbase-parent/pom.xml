@@ -252,56 +252,6 @@
 
         <profile>
             <!-- docker环境 -->
-            <id>docker-jib</id>
-            <properties>
-                <dir>docker</dir>
-            </properties>
-            <activation>
-                <activeByDefault>false</activeByDefault>
-            </activation>
-            <dependencies>
-                <!--<dependency>
-                    <groupId>org.springframework.boot</groupId>
-                    <artifactId>spring-boot-starter-tomcat</artifactId>
-                    <scope>compile</scope>
-                </dependency>-->
-            </dependencies>
-            <build>
-                <plugins>
-                    <plugin>
-                        <groupId>com.google.cloud.tools</groupId>
-                        <artifactId>jib-maven-plugin</artifactId>
-                        <configuration>
-                            <skip>false</skip>
-                            <from>
-                                <image>eclipse-temurin:21-jre</image>
-                            </from>
-                            <to>
-                                <image>svn.youshengyun.com:9923/${project.artifactId}-jib</image>
-                                <tags>
-                                    <tag>${project.version}</tag>
-                                    <tag>latest</tag>
-                                </tags>
-                                <auth>
-                                    <username>publisher</username>
-                                    <password>83204585</password>
-                                </auth>
-                            </to>
-                        </configuration>
-                        <executions>
-                            <execution>
-                                <phase>install</phase>
-                                <goals>
-                                    <goal>build</goal>
-                                </goals>
-                            </execution>
-                        </executions>
-                    </plugin>
-                </plugins>
-            </build>
-        </profile>
-        <profile>
-            <!-- docker环境 -->
             <id>docker-jvm</id>
             <properties>
                 <dir>docker</dir>
