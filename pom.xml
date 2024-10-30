@@ -170,28 +170,6 @@
     <build>
         <plugins>
             <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-enforcer-plugin</artifactId>
-                <version>${maven-enforcer-plugin.version}</version>
-                <executions>
-                    <execution>
-                        <id>enforce-versions</id>
-                        <phase>initialize</phase>
-                        <goals>
-                            <goal>enforce</goal>
-                        </goals>
-                        <configuration>
-                            <rules>
-                                <requireJavaVersion>
-                                    <version>${java.version}</version>
-                                </requireJavaVersion>
-                            </rules>
-                        </configuration>
-                    </execution>
-                </executions>
-            </plugin>
-
-            <plugin>
                 <groupId>io.github.git-commit-id</groupId>
                 <artifactId>git-commit-id-maven-plugin</artifactId>
                 <version>${git-commit-id-maven-plugin.version}</version>
@@ -216,118 +194,38 @@
                     <commitIdGenerationMode>full</commitIdGenerationMode>
                 </configuration>
             </plugin>
-
-            <plugin>
-                <groupId>org.codehaus.mojo</groupId>
-                <artifactId>buildnumber-maven-plugin</artifactId>
-                <version>${buildnumber-maven-plugin.version}</version>
-                <executions>
-                    <execution>
-                        <goals>
-                            <goal>create-timestamp</goal>
-                        </goals>
-                    </execution>
-                </executions>
-                <configuration>
-                    <timestampFormat>yyyyMMddHHmm</timestampFormat>
-                    <timestampPropertyName>buildDate</timestampPropertyName>
-                    <timezone>GMT+8</timezone>
-                </configuration>
-            </plugin>
-
-            <plugin>
-                <groupId>org.codehaus.mojo</groupId>
-                <artifactId>flatten-maven-plugin</artifactId>
-                <version>${flatten-maven-plugin.version}</version>
-                <inherited>true</inherited>
-                <executions>
-                    <execution>
-                        <id>flatten</id>
-                        <phase>process-resources</phase>
-                        <goals>
-                            <goal>flatten</goal>
-                        </goals>
-                        <configuration>
-                            <updatePomFile>true</updatePomFile>
-                            <flattenMode>resolveCiFriendliesOnly</flattenMode>
-                            <pomElements>
-                                <scm>expand</scm>
-                                <url>expand</url>
-                                <developers>expand</developers>
-                            </pomElements>
-                        </configuration>
-                    </execution>
-                    <execution>
-                        <id>flatten.clean</id>
-                        <phase>clean</phase>
-                        <goals>
-                            <goal>clean</goal>
-                        </goals>
-                    </execution>
-                </executions>
-            </plugin>
+            <!--            <plugin>-->
+            <!--                <groupId>org.codehaus.mojo</groupId>-->
+            <!--                <artifactId>flatten-maven-plugin</artifactId>-->
+            <!--                <version>${flatten-maven-plugin.version}</version>-->
+            <!--                <inherited>true</inherited>-->
+            <!--                <executions>-->
+            <!--                    <execution>-->
+            <!--                        <id>flatten</id>-->
+            <!--                        <phase>process-resources</phase>-->
+            <!--                        <goals>-->
+            <!--                            <goal>flatten</goal>-->
+            <!--                        </goals>-->
+            <!--                        <configuration>-->
+            <!--                            <updatePomFile>true</updatePomFile>-->
+            <!--                            <flattenMode>resolveCiFriendliesOnly</flattenMode>-->
+            <!--                            <pomElements>-->
+            <!--                                <scm>expand</scm>-->
+            <!--                                <url>expand</url>-->
+            <!--                                <developers>expand</developers>-->
+            <!--                            </pomElements>-->
+            <!--                        </configuration>-->
+            <!--                    </execution>-->
+            <!--                    <execution>-->
+            <!--                        <id>flatten.clean</id>-->
+            <!--                        <phase>clean</phase>-->
+            <!--                        <goals>-->
+            <!--                            <goal>clean</goal>-->
+            <!--                        </goals>-->
+            <!--                    </execution>-->
+            <!--                </executions>-->
+            <!--            </plugin>-->
         </plugins>
-
-        <pluginManagement>
-            <plugins>
-                <plugin>
-                    <groupId>org.apache.maven.plugins</groupId>
-                    <artifactId>maven-compiler-plugin</artifactId>
-                    <version>${maven-compiler-plugin.version}</version>
-                    <configuration>
-                        <annotationProcessorPaths>
-                            <path>
-                                <groupId>org.projectlombok</groupId>
-                                <artifactId>lombok</artifactId>
-                                <version>${lombok.version}</version>
-                            </path>
-                            <path>
-                                <groupId>org.springframework.boot</groupId>
-                                <artifactId>spring-boot-configuration-processor</artifactId>
-                                <version>${spring-boot.version}</version>
-                            </path>
-                        </annotationProcessorPaths>
-                        <source>${java.version}</source>
-                        <target>${java.version}</target>
-                        <parameters>true</parameters>
-                        <compilerArgument>-Xlint:all</compilerArgument>
-                        <showWarnings>true</showWarnings>
-                        <showDeprecation>true</showDeprecation>
-                    </configuration>
-                </plugin>
-                <plugin>
-                    <groupId>org.apache.maven.plugins</groupId>
-                    <artifactId>maven-javadoc-plugin</artifactId>
-                    <version>${maven-javadoc-plugin.version}</version>
-                    <configuration>
-                        <charset>UTF-8</charset>
-                        <encoding>UTF-8</encoding>
-                        <docencoding>UTF-8</docencoding>
-                    </configuration>
-                    <executions>
-                        <execution>
-                            <id>attach-javadocs</id>
-                            <goals>
-                                <goal>jar</goal>
-                            </goals>
-                        </execution>
-                    </executions>
-                </plugin>
-                <plugin>
-                    <groupId>org.apache.maven.plugins</groupId>
-                    <artifactId>maven-source-plugin</artifactId>
-                    <version>${maven-source-plugin.version}</version>
-                    <executions>
-                        <execution>
-                            <id>attach-sources</id>
-                            <goals>
-                                <goal>jar-no-fork</goal>
-                            </goals>
-                        </execution>
-                    </executions>
-                </plugin>
-            </plugins>
-        </pluginManagement>
 
         <!-- 动态编译环境配置 -->
         <resources>
@@ -385,101 +283,5 @@
                 <activeByDefault>false</activeByDefault>
             </activation>
         </profile>
-
-        <profile>
-            <id>deploy-private-repo</id>
-            <activation>
-                <activeByDefault>false</activeByDefault>
-            </activation>
-            <build>
-                <plugins>
-                    <plugin>
-                        <groupId>org.apache.maven.plugins</groupId>
-                        <artifactId>maven-javadoc-plugin</artifactId>
-                    </plugin>
-                    <plugin>
-                        <groupId>org.apache.maven.plugins</groupId>
-                        <artifactId>maven-source-plugin</artifactId>
-                    </plugin>
-                </plugins>
-            </build>
-            <distributionManagement>
-                <repository>
-                    <id>releases</id>
-                    <url>https://svn.youshengyun.com:9900/nexus/repository/maven-releases/</url>
-                </repository>
-                <snapshotRepository>
-                    <id>snapshots</id>
-                    <url>https://svn.youshengyun.com:9900/nexus/repository/maven-snapshots/</url>
-                </snapshotRepository>
-            </distributionManagement>
-        </profile>
-
-        <profile>
-            <id>deploy-maven-central</id>
-            <activation>
-                <activeByDefault>false</activeByDefault>
-            </activation>
-            <build>
-                <plugins>
-                    <plugin>
-                        <groupId>org.apache.maven.plugins</groupId>
-                        <artifactId>maven-javadoc-plugin</artifactId>
-                    </plugin>
-                    <plugin>
-                        <groupId>org.apache.maven.plugins</groupId>
-                        <artifactId>maven-source-plugin</artifactId>
-                    </plugin>
-                    <plugin>
-                        <groupId>org.apache.maven.plugins</groupId>
-                        <artifactId>maven-gpg-plugin</artifactId>
-                        <version>${maven-gpg-plugin.version}</version>
-                        <executions>
-                            <execution>
-                                <id>sign-artifacts</id>
-                                <phase>verify</phase>
-                                <goals>
-                                    <goal>sign</goal>
-                                </goals>
-                            </execution>
-                        </executions>
-                    </plugin>
-                    <plugin>
-                        <groupId>org.sonatype.central</groupId>
-                        <artifactId>central-publishing-maven-plugin</artifactId>
-                        <version>${central-publishing-maven-plugin.version}</version>
-                        <extensions>true</extensions>
-                        <configuration>
-                            <publishingServerId>mvn-central</publishingServerId>
-                            <centralBaseUrl>https://central.sonatype.com</centralBaseUrl>
-                            <deploymentName>${project.artifactId}-${project.version}</deploymentName>
-                            <!-- <ignorePublishedComponents>true</ignorePublishedComponents> -->
-                            <skipPublishing>false</skipPublishing>
-                            <autoPublish>true</autoPublish>
-                            <waitUntil>uploaded</waitUntil><!--validated uploaded-->
-                            <checksums>required</checksums>
-                        </configuration>
-                    </plugin>
-                </plugins>
-            </build>
-        </profile>
-
-        <profile>
-            <!-- 修改注释的时候 勾选（避免有些工程没加） -->
-            <id>javadoc</id>
-            <activation>
-                <activeByDefault>false</activeByDefault>
-            </activation>
-            <build>
-                <plugins>
-                    <plugin>
-                        <groupId>org.apache.maven.plugins</groupId>
-                        <artifactId>maven-javadoc-plugin</artifactId>
-                    </plugin>
-                </plugins>
-            </build>
-        </profile>
-
-
     </profiles>
 </project>

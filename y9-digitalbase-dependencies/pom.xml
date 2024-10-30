@@ -135,8 +135,6 @@
         <lombok.version>1.18.32</lombok.version>
 
         <!-- Plugin versions -->
-        <central-publishing-maven-plugin.version>0.5.0</central-publishing-maven-plugin.version>
-        <maven-gpg-plugin.version>1.6</maven-gpg-plugin.version>
         <jib-maven-plugin.version>3.4.0</jib-maven-plugin.version>
         <smart-doc-maven-plugin.version>3.0.0</smart-doc-maven-plugin.version>
         <maven-release-plugin.version>3.0.1</maven-release-plugin.version>
@@ -151,6 +149,10 @@
         <maven-enforcer-plugin.version>3.0.0</maven-enforcer-plugin.version>
         <maven-jar-plugin.version>3.4.0</maven-jar-plugin.version>
         <maven-war-plugin.version>3.4.0</maven-war-plugin.version>
+        <central-publishing-maven-plugin.version>0.5.0</central-publishing-maven-plugin.version>
+        <maven-gpg-plugin.version>1.6</maven-gpg-plugin.version>
+        <buildnumber-maven-plugin.version>3.2.1</buildnumber-maven-plugin.version>
+        <git-commit-id-maven-plugin.version>8.0.2</git-commit-id-maven-plugin.version>
     </properties>
 
     <dependencyManagement>
@@ -840,7 +842,14 @@
                                 <goal>flatten</goal>
                             </goals>
                             <configuration>
-                                <flattenMode>bom</flattenMode>
+                                <updatePomFile>true</updatePomFile>
+                                <flattenMode>resolveCiFriendliesOnly</flattenMode>
+                                <pomElements>
+                                    <parent>expand</parent>
+                                    <scm>expand</scm>
+                                    <url>expand</url>
+                                    <developers>expand</developers>
+                                </pomElements>
                             </configuration>
                         </execution>
                         <execution>
@@ -1106,7 +1115,7 @@
                             <image>docker-registry-internal.youshengyun.com/${project.artifactId}</image>
                             <tags>
                                 <tag>${project.version}</tag>
-                                <tag>v9.6.x</tag>
+                                <tag>v9.7.x</tag>
                                 <tag>${project.version}-${buildDate}</tag>
                             </tags>
                         </to>
@@ -1120,12 +1129,128 @@
                         </execution>
                     </executions>
                 </plugin>
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-enforcer-plugin</artifactId>
+                    <version>${maven-enforcer-plugin.version}</version>
+                    <executions>
+                        <execution>
+                            <id>enforce-versions</id>
+                            <phase>initialize</phase>
+                            <goals>
+                                <goal>enforce</goal>
+                            </goals>
+                            <configuration>
+                                <rules>
+                                    <requireJavaVersion>
+                                        <version>${java.version}</version>
+                                    </requireJavaVersion>
+                                </rules>
+                            </configuration>
+                        </execution>
+                    </executions>
+                </plugin>
+                <plugin>
+                    <groupId>org.codehaus.mojo</groupId>
+                    <artifactId>buildnumber-maven-plugin</artifactId>
+                    <version>${buildnumber-maven-plugin.version}</version>
+                    <executions>
+                        <execution>
+                            <goals>
+                                <goal>create-timestamp</goal>
+                            </goals>
+                        </execution>
+                    </executions>
+                    <configuration>
+                        <timestampFormat>yyyyMMddHHmm</timestampFormat>
+                        <timestampPropertyName>buildDate</timestampPropertyName>
+                        <timezone>GMT+8</timezone>
+                    </configuration>
+                </plugin>
+                <plugin>
+                    <groupId>io.github.git-commit-id</groupId>
+                    <artifactId>git-commit-id-maven-plugin</artifactId>
+                    <version>${git-commit-id-maven-plugin.version}</version>
+                    <executions>
+                        <execution>
+                            <id>get-the-git-infos</id>
+                            <goals>
+                                <goal>revision</goal>
+                            </goals>
+                            <phase>initialize</phase>
+                        </execution>
+                    </executions>
+                    <configuration>
+                        <!-- <verbose>true</verbose> -->
+                        <dotGitDirectory>${project.basedir}/.git</dotGitDirectory>
+                        <failOnNoGitDirectory>false</failOnNoGitDirectory>
+                        <!-- 对于多个仓库聚合不会更新 git 的信息 -->
+                        <!-- <injectAllReactorProjects>true</injectAllReactorProjects> -->
+                        <generateGitPropertiesFile>true</generateGitPropertiesFile>
+                        <generateGitPropertiesFilename>${project.build.outputDirectory}/git.properties
+                        </generateGitPropertiesFilename>
+                        <commitIdGenerationMode>full</commitIdGenerationMode>
+                    </configuration>
+                </plugin>
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-gpg-plugin</artifactId>
+                    <version>${maven-gpg-plugin.version}</version>
+                    <executions>
+                        <execution>
+                            <id>sign-artifacts</id>
+                            <phase>verify</phase>
+                            <goals>
+                                <goal>sign</goal>
+                            </goals>
+                        </execution>
+                    </executions>
+                </plugin>
+                <plugin>
+                    <groupId>org.sonatype.central</groupId>
+                    <artifactId>central-publishing-maven-plugin</artifactId>
+                    <version>${central-publishing-maven-plugin.version}</version>
+                </plugin>
             </plugins>
         </pluginManagement>
         <plugins>
             <plugin>
                 <groupId>org.codehaus.mojo</groupId>
                 <artifactId>flatten-maven-plugin</artifactId>
+                <inherited>false</inherited>
+                <executions>
+                    <execution>
+                        <!-- Flatten and simplify our own POM for install/deploy -->
+                        <id>flatten</id>
+                        <phase>process-resources</phase>
+                        <goals>
+                            <goal>flatten</goal>
+                        </goals>
+                        <configuration>
+                            <flattenMode>oss</flattenMode>
+                            <pomElements>
+                                <parent>remove</parent>
+                                <dependencyManagement>interpolate</dependencyManagement>
+                                <!--                                <pluginManagement>expand</pluginManagement>-->
+                                <pluginManagement>keep</pluginManagement>
+                                <properties>keep</properties>
+                            </pomElements>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+            <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>buildnumber-maven-plugin</artifactId>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-enforcer-plugin</artifactId>
+            </plugin>
+
+            <plugin>
+                <groupId>io.github.git-commit-id</groupId>
+                <artifactId>git-commit-id-maven-plugin</artifactId>
             </plugin>
         </plugins>
     </build>
@@ -1186,21 +1311,10 @@
                     <plugin>
                         <groupId>org.apache.maven.plugins</groupId>
                         <artifactId>maven-gpg-plugin</artifactId>
-                        <version>${maven-gpg-plugin.version}</version>
-                        <executions>
-                            <execution>
-                                <id>sign-artifacts</id>
-                                <phase>verify</phase>
-                                <goals>
-                                    <goal>sign</goal>
-                                </goals>
-                            </execution>
-                        </executions>
                     </plugin>
                     <plugin>
                         <groupId>org.sonatype.central</groupId>
                         <artifactId>central-publishing-maven-plugin</artifactId>
-                        <version>${central-publishing-maven-plugin.version}</version>
                         <extensions>true</extensions>
                         <configuration>
                             <publishingServerId>mvn-central</publishingServerId>
@@ -1215,6 +1329,7 @@
                 </plugins>
             </build>
         </profile>
+
     </profiles>
 
 </project>
