@@ -153,6 +153,7 @@
         <maven-gpg-plugin.version>1.6</maven-gpg-plugin.version>
         <buildnumber-maven-plugin.version>3.2.1</buildnumber-maven-plugin.version>
         <git-commit-id-maven-plugin.version>8.0.2</git-commit-id-maven-plugin.version>
+        <native-maven-plugin.version>0.10.1</native-maven-plugin.version>
     </properties>
 
     <dependencyManagement>
@@ -1059,6 +1060,33 @@
                             <id>generate-resources</id>
                             <goals>
                                 <goal>build-info</goal>
+                            </goals>
+                        </execution>
+                        <execution>
+                            <id>process-aot</id>
+                            <goals>
+                                <goal>process-aot</goal>
+                            </goals>
+                        </execution>
+                    </executions>
+                </plugin>
+
+                <plugin>
+                    <groupId>org.graalvm.buildtools</groupId>
+                    <artifactId>native-maven-plugin</artifactId>
+                    <version>${native-maven-plugin.version}</version>
+                    <configuration>
+                        <classesDirectory>${project.build.outputDirectory}</classesDirectory>
+                        <metadataRepository>
+                            <enabled>true</enabled>
+                        </metadataRepository>
+                        <requiredVersion>22.3</requiredVersion>
+                    </configuration>
+                    <executions>
+                        <execution>
+                            <id>add-reachability-metadata</id>
+                            <goals>
+                                <goal>add-reachability-metadata</goal>
                             </goals>
                         </execution>
                     </executions>
