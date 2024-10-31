@@ -89,6 +89,48 @@ org-springframework-spring = "6.1.12"
 io-spring-dependency-management = "1.1.6"
 
 [libraries]
+risenet-y9boot-properties = { group = "net.risesoft", name = "risenet-y9boot-properties", version.ref = "y9-version" }
+risenet-y9boot-common-model = { group = "net.risesoft", name = "risenet-y9boot-common-model", version.ref = "y9-version" }
+risenet-y9boot-common-util = { group = "net.risesoft", name = "risenet-y9boot-common-util", version.ref = "y9-version" }
+risenet-y9boot-common-tenant-datasource = { group = "net.risesoft", name = "risenet-y9boot-common-tenant-datasource", version.ref = "y9-version" }
+risenet-y9boot-3rd-jpa = { group = "net.risesoft", name = "risenet-y9boot-3rd-jpa", version.ref = "y9-version" }
+risenet-y9boot-common-sqlddl = { group = "net.risesoft", name = "risenet-y9boot-common-sqlddl", version.ref = "y9-version" }
+risenet-y9boot-idcode = { group = "net.risesoft", name = "risenet-y9boot-idcode", version.ref = "y9-version" }
+risenet-y9boot-starter-cache-redis = { group = "net.risesoft", name = "risenet-y9boot-starter-cache-redis", version.ref = "y9-version" }
+risenet-y9boot-starter-idgenerator = { group = "net.risesoft", name = "risenet-y9boot-starter-idgenerator", version.ref = "y9-version" }
+risenet-y9boot-starter-jpa-public = { group = "net.risesoft", name = "risenet-y9boot-starter-jpa-public", version.ref = "y9-version" }
+risenet-y9boot-starter-kafka = { group = "net.risesoft", name = "risenet-y9boot-starter-kafka", version.ref = "y9-version" }
+risenet-y9boot-starter-liquibase = { group = "net.risesoft", name = "risenet-y9boot-starter-liquibase", version.ref = "y9-version" }
+risenet-y9boot-starter-publish-kafka = { group = "net.risesoft", name = "risenet-y9boot-starter-publish-kafka", version.ref = "y9-version" }
+risenet-y9boot-starter-listener-kafka = { group = "net.risesoft", name = "risenet-y9boot-starter-listener-kafka", version.ref = "y9-version" }
+risenet-y9boot-starter-multi-tenant = { group = "net.risesoft", name = "risenet-y9boot-starter-multi-tenant", version.ref = "y9-version" }
+risenet-y9boot-starter-log = { group = "net.risesoft", name = "risenet-y9boot-starter-log", version.ref = "y9-version" }
+risenet-y9boot-starter-permission = { group = "net.risesoft", name = "risenet-y9boot-starter-permission", version.ref = "y9-version" }
+risenet-y9boot-starter-security = { group = "net.risesoft", name = "risenet-y9boot-starter-security", version.ref = "y9-version" }
+risenet-y9boot-starter-sso-oauth2-resource = { group = "net.risesoft", name = "risenet-y9boot-starter-sso-oauth2-resource", version.ref = "y9-version" }
+risenet-y9boot-starter-elasticsearch = { group = "net.risesoft", name = "risenet-y9boot-starter-elasticsearch", version.ref = "y9-version" }
+risenet-y9boot-starter-web = { group = "net.risesoft", name = "risenet-y9boot-starter-web", version.ref = "y9-version" }
+risenet-y9boot-starter-openfeign = { group = "net.risesoft", name = "risenet-y9boot-starter-openfeign", version.ref = "y9-version" }
+risenet-y9boot-support-file-jpa-repository = { group = "net.risesoft", name = "risenet-y9boot-support-file-jpa-repository", version.ref = "y9-version" }
+risenet-y9boot-support-file-service-ftp = { group = "net.risesoft", name = "risenet-y9boot-support-file-service-ftp", version.ref = "y9-version" }
+risenet-y9boot-support-file-service-local = { group = "net.risesoft", name = "risenet-y9boot-support-file-service-local", version.ref = "y9-version" }
+risenet-y9boot-support-file-service-rest = { group = "net.risesoft", name = "risenet-y9boot-support-file-service-rest", version.ref = "y9-version" }
+risenet-y9boot-support-history = { group = "net.risesoft", name = "risenet-y9boot-support-history", version.ref = "y9-version" }
+risenet-y9boot-api-feignclient-log = { group = "net.risesoft", name = "risenet-y9boot-api-feignclient-log", version.ref = "y9-version" }
+risenet-y9boot-api-interface-log = { group = "net.risesoft", name = "risenet-y9boot-api-interface-log", version.ref = "y9-version" }
+risenet-y9boot-support-log-elasticsearch-repository = { group = "net.risesoft", name = "risenet-y9boot-support-log-elasticsearch-repository", version.ref = "y9-version" }
+risenet-y9boot-support-log-jpa-repository = { group = "net.risesoft", name = "risenet-y9boot-support-log-jpa-repository", version.ref = "y9-version" }
+risenet-y9boot-support-log-service = { group = "net.risesoft", name = "risenet-y9boot-support-log-service", version.ref = "y9-version" }
+risenet-y9boot-support-log-web = { group = "net.risesoft", name = "risenet-y9boot-support-log-web", version.ref = "y9-version" }
+risenet-y9boot-api-feignclient-platform = { group = "net.risesoft", name = "risenet-y9boot-api-feignclient-platform", version.ref = "y9-version" }
+risenet-y9boot-api-interface-platform = { group = "net.risesoft", name = "risenet-y9boot-api-interface-platform", version.ref = "y9-version" }
+risenet-y9boot-support-platform-jpa-repository = { group = "net.risesoft", name = "risenet-y9boot-support-platform-jpa-repository", version.ref = "y9-version" }
+risenet-y9boot-support-platform-service = { group = "net.risesoft", name = "risenet-y9boot-support-platform-service", version.ref = "y9-version" }
+risenet-y9boot-support-platform-web = { group = "net.risesoft", name = "risenet-y9boot-support-platform-web", version.ref = "y9-version" }
+
+
+
+
 cn-com-kingbase-hibernate-dialect = { module = "cn.com.kingbase:hibernate-dialect", version.ref = "cn-com-kingbase-hibernate-dialect" }
 cn-com-kingbase-hibernate-jpa-api = { module = "cn.com.kingbase:hibernate-jpa-api", version.ref = "cn-com-kingbase-hibernate-jpa-api" }
 cn-com-kingbase-kesdialect-hibernate4 = { module = "cn.com.kingbase:KesDialect-for-hibernate4", version.ref = "cn-com-kingbase-kesdialect-for-hibernate4" }
