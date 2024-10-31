@@ -60,4 +60,9 @@ public class DataCatalogApiImpl implements DataCatalogApi {
         return Y9Result.success(y9DataCatalogService.treeSearch(name, treeType, authority, personId));
     }
 
+    @Override
+    public Y9Result<DataCatalog> getById(@RequestParam(name = "id") @NotBlank String id) {
+        return Y9Result.success(y9DataCatalogService.getById(id));
+    }
+
 }
