@@ -53,4 +53,14 @@ public interface DataCatalogApi {
         @RequestParam("name") String name, @RequestParam("tenantId") String tenantId,
         @RequestParam(name = "personId", required = false) String personId,
         @RequestParam(name = "authority", required = false) AuthorityEnum authority);
+
+    /**
+     * 根据 id 获取目录
+     *
+     * @param id ID
+     * @return {@code Y9Result<DataCatalog> }
+     */
+    @GetMapping(value = "/get")
+    Y9Result<DataCatalog> getById(@RequestParam(name = "id") @NotBlank String id);
+
 }
