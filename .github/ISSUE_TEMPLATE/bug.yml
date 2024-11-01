@@ -3,7 +3,7 @@ description: 当你在代码中发现了一个 Bug，导致应用崩溃或抛出
 title: "[Bug]: "
 labels: ["bug"]
 assignees:
-    - risesoft-y9
+    - hongzhew
     - TobinShi
 body:
     - type: markdown
