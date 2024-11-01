@@ -55,6 +55,13 @@ public class Y9DataCatalog extends Y9ResourceBase {
     private String treeType;
 
     /**
+     * 租户ID
+     */
+    @Comment("租户ID")
+    @Column(name = "TENANT_ID", length = 38, nullable = false)
+    private String tenantId;
+
+    /**
      * 数据目录类型
      */
     @Column(name = "DATA_CATALOG_TYPE", nullable = false)

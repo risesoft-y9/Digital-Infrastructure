@@ -46,8 +46,8 @@ public class DataCatalogApiImpl implements DataCatalogApi {
         @RequestParam(name = "authority", required = false) AuthorityEnum authority) {
         Y9LoginUserHolder.setTenantId(tenantId);
 
-        return Y9Result.success(
-            y9DataCatalogService.getTree(parentId, treeType, Boolean.TRUE, includeAllDescendant, authority, personId));
+        return Y9Result.success(y9DataCatalogService.getTree(tenantId, parentId, treeType, Boolean.TRUE,
+            includeAllDescendant, authority, personId));
     }
 
     @Override
@@ -57,11 +57,14 @@ public class DataCatalogApiImpl implements DataCatalogApi {
         @RequestParam(name = "authority", required = false) AuthorityEnum authority) {
         Y9LoginUserHolder.setTenantId(tenantId);
 
-        return Y9Result.success(y9DataCatalogService.treeSearch(name, treeType, authority, personId));
+        return Y9Result.success(y9DataCatalogService.treeSearch(tenantId, name, treeType, authority, personId));
     }
 
     @Override
-    public Y9Result<DataCatalog> getById(@RequestParam(name = "id") @NotBlank String id) {
+    public Y9Result<DataCatalog> getById(@RequestParam("tenantId") String tenantId,
+        @RequestParam(name = "id") @NotBlank String id) {
+        Y9LoginUserHolder.setTenantId(tenantId);
+
         return Y9Result.success(y9DataCatalogService.getById(id));
     }
 

@@ -61,6 +61,7 @@ public interface DataCatalogApi {
      * @return {@code Y9Result<DataCatalog> }
      */
     @GetMapping(value = "/get")
-    Y9Result<DataCatalog> getById(@RequestParam(name = "id") @NotBlank String id);
+    Y9Result<DataCatalog> getById(@RequestParam("tenantId") String tenantId,
+        @RequestParam(name = "id") @NotBlank String id);
 
 }

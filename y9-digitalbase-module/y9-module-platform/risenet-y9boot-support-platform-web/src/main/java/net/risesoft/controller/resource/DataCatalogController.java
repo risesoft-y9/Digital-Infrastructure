@@ -22,6 +22,7 @@ import net.risesoft.log.annotation.RiseLog;
 import net.risesoft.model.platform.DataCatalog;
 import net.risesoft.permission.annotation.IsAnyManager;
 import net.risesoft.pojo.Y9Result;
+import net.risesoft.y9.Y9LoginUserHolder;
 import net.risesoft.y9public.entity.resource.Y9DataCatalog;
 import net.risesoft.y9public.service.resource.Y9DataCatalogService;
 
@@ -53,14 +54,16 @@ public class DataCatalogController {
     @GetMapping(value = "/tree")
     public Y9Result<List<DataCatalogTreeNodeVO>> getTree(@RequestParam(required = false) String parentId,
         @NotBlank String treeType) {
-        List<DataCatalog> dataCatalogList = y9DataCatalogService.getTree(parentId, treeType);
+        List<DataCatalog> dataCatalogList =
+            y9DataCatalogService.getTree(Y9LoginUserHolder.getTenantId(), parentId, treeType);
         return Y9Result.success(DataCatalogTreeNodeVO.convertDataCatalogList(dataCatalogList));
     }
 
     @RiseLog(operationName = "搜索数据目录树")
     @GetMapping(value = "/treeSearch")
     public Y9Result<List<DataCatalogTreeNodeVO>> treeSearch(@NotBlank String name, @NotBlank String treeType) {
-        List<DataCatalog> dataCatalogList = y9DataCatalogService.treeSearch(name, treeType);
+        List<DataCatalog> dataCatalogList =
+            y9DataCatalogService.treeSearch(Y9LoginUserHolder.getTenantId(), name, treeType);
         return Y9Result.success(DataCatalogTreeNodeVO.convertDataCatalogList(dataCatalogList));
     }
 

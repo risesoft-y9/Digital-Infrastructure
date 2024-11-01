@@ -75,8 +75,8 @@ public class Y9DataCatalogServiceImpl implements Y9DataCatalogService {
     private final Y9PositionToResourceAndAuthorityRepository y9PositionToResourceAndAuthorityRepository;
 
     @Override
-    public List<DataCatalog> getTree(String parentId, String treeType) {
-        return this.getTree(parentId, treeType, null, false, null, null);
+    public List<DataCatalog> getTree(String tenantId, String parentId, String treeType) {
+        return this.getTree(tenantId, parentId, treeType, null, false, null, null);
     }
 
     @Override
@@ -91,6 +91,7 @@ public class Y9DataCatalogServiceImpl implements Y9DataCatalogService {
     public Y9DataCatalog saveOrUpdate(Y9DataCatalog y9DataCatalog) {
         if (StringUtils.isBlank(y9DataCatalog.getId())) {
             y9DataCatalog.setId(Y9IdGenerator.genId());
+            y9DataCatalog.setTenantId(Y9LoginUserHolder.getTenantId());
             y9DataCatalog.setSystemId(InitDataConsts.SYSTEM_ID);
 
             y9DataCatalog.setTabIndex(this.getNextTabIndex(y9DataCatalog.getParentId()));
@@ -133,8 +134,8 @@ public class Y9DataCatalogServiceImpl implements Y9DataCatalogService {
     @Transactional(readOnly = false)
     public void saveByYears(Y9DataCatalog y9DataCatalog, Integer startYear, Integer endYear) {
         for (int year = startYear; year <= endYear; year++) {
-            Optional<Y9DataCatalog> y9DataCatalogOptional =
-                y9DataCatalogRepository.findByParentIdAndName(y9DataCatalog.getParentId(), String.valueOf(year));
+            Optional<Y9DataCatalog> y9DataCatalogOptional = y9DataCatalogRepository.findByTenantIdAndParentIdAndName(
+                Y9LoginUserHolder.getTenantId(), y9DataCatalog.getParentId(), String.valueOf(year));
             if (y9DataCatalogOptional.isEmpty()) {
                 Y9DataCatalog yearDataCatalog = new Y9DataCatalog();
                 Y9BeanUtil.copyProperties(y9DataCatalog, yearDataCatalog);
@@ -146,36 +147,39 @@ public class Y9DataCatalogServiceImpl implements Y9DataCatalogService {
     }
 
     @Override
-    public List<DataCatalog> treeSearch(String name, String treeType) {
-        return this.treeSearch(name, treeType, null, null);
+    public List<DataCatalog> treeSearch(String tenantId, String name, String treeType) {
+        return this.treeSearch(tenantId, name, treeType, null, null);
     }
 
     @Override
-    public List<DataCatalog> getTree(String parentId, String treeType, Boolean enabled, boolean includeAllDescendant,
-        AuthorityEnum authority, String personId) {
+    public List<DataCatalog> getTree(String tenantId, String parentId, String treeType, Boolean enabled,
+        boolean includeAllDescendant, AuthorityEnum authority, String personId) {
         List<Y9DataCatalog> y9DataCatalogList = new ArrayList<>();
-        recursivelyGetTree(y9DataCatalogList, parentId, treeType, enabled, includeAllDescendant, authority, personId);
+        recursivelyGetTree(y9DataCatalogList, tenantId, parentId, treeType, enabled, includeAllDescendant, authority,
+            personId);
         return this.convertY9DataCatalogToDataCatalog(y9DataCatalogList);
     }
 
-    private void recursivelyGetTree(List<Y9DataCatalog> resultList, String parentId, String treeType, Boolean enabled,
-        boolean includeAllDescendant, AuthorityEnum authority, String personId) {
+    private void recursivelyGetTree(List<Y9DataCatalog> resultList, String tenantId, String parentId, String treeType,
+        Boolean enabled, boolean includeAllDescendant, AuthorityEnum authority, String personId) {
         List<Y9DataCatalog> y9DataCatalogList;
         if (StringUtils.isBlank(parentId)) {
             // 根节点
             if (enabled == null) {
-                y9DataCatalogList = y9DataCatalogRepository.findByParentIdIsNullAndTreeTypeOrderByTabIndex(treeType);
+                y9DataCatalogList = y9DataCatalogRepository
+                    .findByTenantIdAndParentIdIsNullAndTreeTypeOrderByTabIndex(tenantId, treeType);
             } else {
-                y9DataCatalogList =
-                    y9DataCatalogRepository.findByParentIdIsNullAndTreeTypeAndEnabledOrderByTabIndex(treeType, enabled);
+                y9DataCatalogList = y9DataCatalogRepository
+                    .findByTenantIdAndParentIdIsNullAndTreeTypeAndEnabledOrderByTabIndex(tenantId, treeType, enabled);
             }
         } else {
             if (enabled == null) {
-                y9DataCatalogList =
-                    y9DataCatalogRepository.findByParentIdAndTreeTypeOrderByTabIndexAsc(parentId, treeType);
-            } else {
                 y9DataCatalogList = y9DataCatalogRepository
-                    .findByParentIdAndTreeTypeAndEnabledOrderByTabIndexAsc(parentId, treeType, enabled);
+                    .findByTenantIdAndParentIdAndTreeTypeOrderByTabIndexAsc(tenantId, parentId, treeType);
+            } else {
+                y9DataCatalogList =
+                    y9DataCatalogRepository.findByTenantIdAndParentIdAndTreeTypeAndEnabledOrderByTabIndexAsc(tenantId,
+                        parentId, treeType, enabled);
             }
         }
 
@@ -188,20 +192,21 @@ public class Y9DataCatalogServiceImpl implements Y9DataCatalogService {
 
         if (includeAllDescendant) {
             for (Y9DataCatalog y9DataCatalog : y9DataCatalogList) {
-                recursivelyGetTree(resultList, y9DataCatalog.getId(), treeType, enabled, includeAllDescendant,
+                recursivelyGetTree(resultList, tenantId, y9DataCatalog.getId(), treeType, enabled, includeAllDescendant,
                     authority, personId);
             }
         }
     }
 
     @Override
-    public List<DataCatalog> treeSearch(String name, String treeType, AuthorityEnum authority, String personId) {
+    public List<DataCatalog> treeSearch(String tenantId, String name, String treeType, AuthorityEnum authority,
+        String personId) {
         List<DataCatalog> dataCatalogList = new ArrayList<>();
 
         Set<DataCatalog> y9DataCatalogResultSet = new HashSet<>();
 
         List<Y9DataCatalog> y9DataCatalogList =
-            y9DataCatalogRepository.findByNameContainingAndTreeTypeOrderByTabIndex(name, treeType);
+            y9DataCatalogRepository.findByTenantIdAndNameContainingAndTreeTypeOrderByTabIndex(tenantId, name, treeType);
         if (authority != null) {
             y9DataCatalogList = y9DataCatalogList.stream().filter(y9DataCatalog -> y9PersonToResourceAndAuthorityService
                 .hasPermission(personId, y9DataCatalog.getId(), authority)).collect(Collectors.toList());
@@ -250,7 +255,8 @@ public class Y9DataCatalogServiceImpl implements Y9DataCatalogService {
         List<Y9OrgBase> y9OrgBaseList = compositeOrgBaseService.listOrgUnitsAsParentByParentId(parentOrgUnitId);
         for (Y9OrgBase y9OrgBase : y9OrgBaseList) {
             Optional<Y9DataCatalog> y9DataCatalogOptional =
-                y9DataCatalogRepository.findByParentIdAndOrgUnitId(parentDataCatalogId, y9OrgBase.getId());
+                y9DataCatalogRepository.findByTenantIdAndParentIdAndOrgUnitId(Y9LoginUserHolder.getTenantId(),
+                    parentDataCatalogId, y9OrgBase.getId());
             if (y9DataCatalogOptional.isEmpty()) {
                 Y9DataCatalog orgUnitDataCatalog = new Y9DataCatalog();
                 orgUnitDataCatalog.setName(y9OrgBase.getName());
@@ -265,14 +271,10 @@ public class Y9DataCatalogServiceImpl implements Y9DataCatalogService {
     }
 
     private void fillByUpwardRecursion(Set<DataCatalog> y9DataCatalogResultSet, String parentId) {
-        Optional<Y9DataCatalog> y9DataCatalogOptional = y9DataCatalogRepository.findById(parentId);
-        if (y9DataCatalogOptional.isPresent()) {
-            Y9DataCatalog y9DataCatalog = y9DataCatalogOptional.get();
-            y9DataCatalogResultSet.add(this.convertY9DataCatalogToDataCatalog(y9DataCatalog));
-            fillByUpwardRecursion(y9DataCatalogResultSet, y9DataCatalog.getParentId());
-        } else {
-            y9DataCatalogResultSet
-                .addAll(this.convertOrgBaseToDataCatalog(compositeOrgBaseService.listAllAncestors(parentId)));
+        if (StringUtils.isNotBlank(parentId)) {
+            DataCatalog dataCatalog = this.getById(parentId);
+            y9DataCatalogResultSet.add(dataCatalog);
+            fillByUpwardRecursion(y9DataCatalogResultSet, dataCatalog.getParentId());
         }
     }
 
@@ -298,7 +300,8 @@ public class Y9DataCatalogServiceImpl implements Y9DataCatalogService {
 
     @Transactional(readOnly = false)
     public void deleteByParentId(String id) {
-        List<Y9DataCatalog> y9DataCatalogList = y9DataCatalogRepository.findByParentId(id);
+        List<Y9DataCatalog> y9DataCatalogList =
+            y9DataCatalogRepository.findByTenantIdAndParentId(Y9LoginUserHolder.getTenantId(), id);
         for (Y9DataCatalog subY9DataCatalog : y9DataCatalogList) {
             delete(subY9DataCatalog.getId());
         }
@@ -309,7 +312,8 @@ public class Y9DataCatalogServiceImpl implements Y9DataCatalogService {
     public void onDepartmentUpdated(Y9EntityUpdatedEvent<Y9Department> event) {
         Y9Department updatedDepartment = event.getUpdatedEntity();
 
-        List<Y9DataCatalog> y9DataCatalogList = y9DataCatalogRepository.findByOrgUnitId(updatedDepartment.getId());
+        List<Y9DataCatalog> y9DataCatalogList = y9DataCatalogRepository
+            .findByTenantIdAndOrgUnitId(Y9LoginUserHolder.getTenantId(), updatedDepartment.getId());
         for (Y9DataCatalog y9DataCatalog : y9DataCatalogList) {
             y9DataCatalog.setName(updatedDepartment.getName());
             this.saveOrUpdate(y9DataCatalog);
@@ -321,8 +325,8 @@ public class Y9DataCatalogServiceImpl implements Y9DataCatalogService {
     public void onDepartmentCreated(Y9EntityCreatedEvent<Y9Department> event) {
         Y9Department createdDepartment = event.getEntity();
 
-        List<Y9DataCatalog> y9DataCatalogList =
-            y9DataCatalogRepository.findByOrgUnitId(createdDepartment.getParentId());
+        List<Y9DataCatalog> y9DataCatalogList = y9DataCatalogRepository
+            .findByTenantIdAndOrgUnitId(Y9LoginUserHolder.getTenantId(), createdDepartment.getParentId());
         for (Y9DataCatalog y9DataCatalog : y9DataCatalogList) {
             Y9DataCatalog orgUnitDataCatalog = new Y9DataCatalog();
             orgUnitDataCatalog.setName(createdDepartment.getName());
@@ -338,7 +342,8 @@ public class Y9DataCatalogServiceImpl implements Y9DataCatalogService {
     @Transactional(readOnly = false)
     public void onDepartmentDeleted(Y9EntityDeletedEvent<Y9Department> event) {
         Y9Department entity = event.getEntity();
-        List<Y9DataCatalog> y9DataCatalogList = y9DataCatalogRepository.findByOrgUnitId(entity.getId());
+        List<Y9DataCatalog> y9DataCatalogList =
+            y9DataCatalogRepository.findByTenantIdAndOrgUnitId(Y9LoginUserHolder.getTenantId(), entity.getId());
         for (Y9DataCatalog y9DataCatalog : y9DataCatalogList) {
             y9DataCatalog.setEnabled(Boolean.FALSE);
             this.saveOrUpdate(y9DataCatalog);
@@ -350,7 +355,8 @@ public class Y9DataCatalogServiceImpl implements Y9DataCatalogService {
     public void onOrganizationUpdated(Y9EntityUpdatedEvent<Y9Organization> event) {
         Y9Organization updatedOrganization = event.getUpdatedEntity();
 
-        List<Y9DataCatalog> y9DataCatalogList = y9DataCatalogRepository.findByOrgUnitId(updatedOrganization.getId());
+        List<Y9DataCatalog> y9DataCatalogList = y9DataCatalogRepository
+            .findByTenantIdAndOrgUnitId(Y9LoginUserHolder.getTenantId(), updatedOrganization.getId());
         for (Y9DataCatalog y9DataCatalog : y9DataCatalogList) {
             y9DataCatalog.setName(updatedOrganization.getName());
             this.saveOrUpdate(y9DataCatalog);
@@ -361,7 +367,8 @@ public class Y9DataCatalogServiceImpl implements Y9DataCatalogService {
     @Transactional(readOnly = false)
     public void onOrganizationDeleted(Y9EntityDeletedEvent<Y9Organization> event) {
         Y9Organization entity = event.getEntity();
-        List<Y9DataCatalog> y9DataCatalogList = y9DataCatalogRepository.findByOrgUnitId(entity.getId());
+        List<Y9DataCatalog> y9DataCatalogList =
+            y9DataCatalogRepository.findByTenantIdAndOrgUnitId(Y9LoginUserHolder.getTenantId(), entity.getId());
         for (Y9DataCatalog y9DataCatalog : y9DataCatalogList) {
             y9DataCatalog.setEnabled(Boolean.FALSE);
             this.saveOrUpdate(y9DataCatalog);
@@ -369,8 +376,9 @@ public class Y9DataCatalogServiceImpl implements Y9DataCatalogService {
     }
 
     private Integer getNextTabIndex(String parentId) {
-        return y9DataCatalogRepository.findTopByParentIdOrderByTabIndexDesc(parentId).map(Y9ResourceBase::getTabIndex)
-            .orElse(-1) + 1;
+        return y9DataCatalogRepository
+            .findTopByTenantIdAndParentIdOrderByTabIndexDesc(Y9LoginUserHolder.getTenantId(), parentId)
+            .map(Y9ResourceBase::getTabIndex).orElse(-1) + 1;
     }
 
     private DataCatalog convertY9DataCatalogToDataCatalog(Y9DataCatalog y9DataCatalog) {
@@ -388,21 +396,4 @@ public class Y9DataCatalogServiceImpl implements Y9DataCatalogService {
         return dataCatalogList;
     }
 
-    private List<DataCatalog> convertOrgBaseToDataCatalog(List<? extends Y9OrgBase> y9OrgBaseList) {
-        List<DataCatalog> dataCatalogList = new ArrayList<>();
-        for (Y9OrgBase y9OrgBase : y9OrgBaseList) {
-            dataCatalogList.add(this.convertOrgBaseToDataCatalog(y9OrgBase));
-        }
-        return dataCatalogList;
-    }
-
-    private DataCatalog convertOrgBaseToDataCatalog(Y9OrgBase y9OrgBase) {
-        DataCatalog dataCatalog = new DataCatalog();
-        dataCatalog.setId(y9OrgBase.getId());
-        dataCatalog.setParentId(y9OrgBase.getParentId());
-        dataCatalog.setName(y9OrgBase.getName());
-        dataCatalog.setTabIndex(y9OrgBase.getTabIndex());
-        dataCatalog.setNodeType(y9OrgBase.getOrgType().getEnName());
-        return dataCatalog;
-    }
 }
