@@ -1,6 +1,6 @@
 plugins {
     id("java-platform")
-    id("buildlogic.y9-repository")
+    id("maven-publish")
 }
 
 javaPlatform {
@@ -8,9 +8,16 @@ javaPlatform {
 }
 
 description = "y9-digitalbase-dependencies"
+group = "net.risesoft"
+version = libs.versions.y9.version.get()
 
 dependencies {
+    //bom
+    api(platform(libs.spring.boot.bom))
+    api(platform(libs.spring.cloud.bom))
+
     constraints {
+        // y9 component
         api(libs.risenet.y9boot.properties)
         api(libs.risenet.y9boot.common.model)
         api(libs.risenet.y9boot.common.util)
@@ -49,5 +56,54 @@ dependencies {
         api(libs.risenet.y9boot.support.platform.jpa.repository)
         api(libs.risenet.y9boot.support.platform.service)
         api(libs.risenet.y9boot.support.platform.web)
+
+        // Third Party
+        api(libs.cn.hutool.hutool.all)
+
+    }
+}
+
+publishing {
+    publications {
+        repositories {
+            maven {
+                val releasesRepoUrl = uri("https://svn.youshengyun.com:9900/nexus/repository/maven-releases/")
+                val snapshotsRepoUrl = uri("https://svn.youshengyun.com:9900/nexus/repository/maven-snapshots/")
+                url = if (version.toString().endsWith("SNAPSHOT")) snapshotsRepoUrl else releasesRepoUrl
+
+                credentials {
+                    username = findProperty("mavenUsername").toString()
+                    password  = findProperty("mavenPassword").toString()
+                }
+            }
+        }
+        create<MavenPublication>("mavenJavaPlatform") {
+            from(components["javaPlatform"])
+            artifactId = "y9-digitalbase-dependencies"
+            pom {
+                // 设置打包类型为pom
+                packaging = "pom"
+                name = "y9-digitalbase-dependencies"
+                description = "RiseSoft/Digital Infrastructure dependencies"
+                url = "https://gitee.com/risesoft-y9/y9-core/tree/main/y9-digitalbase-dependencies"
+                licenses {
+                    license {
+                        name = "GNU General Public License (GPL) version 3.0"
+                        url = "https://www.gnu.org/licenses/gpl-3.0.en.html"
+                    }
+                }
+                developers {
+                    developer {
+                        name = "dingzhaojun"
+                        email = "dingzhaojun@risesoft.net"
+                    }
+                }
+                scm {
+                    connection = "scm:git:https://gitee.com/risesoft-y9/y9-core.git"
+                    developerConnection = "scm:git:https://gitee.com/risesoft-y9/y9-core.git"
+                    url = "https://gitee.com/risesoft-y9/y9-core"
+                }
+            }
+        }
     }
 }

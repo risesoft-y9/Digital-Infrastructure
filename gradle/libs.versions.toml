@@ -4,6 +4,9 @@
 [versions]
 y9-version = "9.7.0-SNAPSHOT"
 
+spring-boot = "3.3.5"
+spring-cloud = "2023.0.3"
+
 cas-server = "7.0.3"
 cas-spring-boot = '3.2.1'
 cas-spring-framework = '6.1.2'
@@ -53,9 +56,8 @@ org-apache-commons-commons-pool2 = "2.12.0"
 org-apache-httpcomponents-httpclient = "4.5.13"
 org-apache-httpcomponents-httpmime = "4.5.14"
 org-apache-poi-poi-scratchpad = "5.2.3"
-org-aspectj-aspectjrt = "1.9.22"
-org-aspectj-aspectjtools = "1.9.22"
-org-aspectj-aspectjweaver = "1.9.22"
+
+
 org-bouncycastle-bcprov-ext-jdk15to18 = "1.76"
 org-dom4j-dom4j = "2.1.4"
 org-glassfish-jakarta-json = "2.0.1"
@@ -71,13 +73,11 @@ org-jxls-jxls-poi = "2.13.0"
 org-jxls-jxls-reader = "2.1.0"
 org-liquibase-liquibase-core = "4.27.0"
 org-mariadb-jdbc-mariadb-java-client = "3.2.0"
-org-mariadb-jdbc-mariadb-java-client-x1 = "3.1.4"
 org-owasp-antisamy-antisamy = "1.6.2"
 org-postgresql-postgresql = "42.7.3"
 org-projectlombok-lombok = "1.18.34"
 org-projectlombok-lombok-x1 = "1.18.30"
 org-slf4j-slf4j-api = "2.0.16"
-org-springframework-boot-spring-boot = "3.3.3"
 org-springframework-boot-spring-boot-docker-compose-x1 = "3.3.3"
 org-springframework-cloud-spring-cloud-context = "4.1.4"
 org-springframework-cloud-spring-cloud-starter-loadbalancer = "4.1.4"
@@ -89,6 +89,8 @@ org-springframework-spring = "6.1.12"
 io-spring-dependency-management = "1.1.6"
 
 [libraries]
+# 注意避开不允许的字符，比如：for、interface、数字开头等，同时名称尽量短小精悍
+# y9 component
 risenet-y9boot-properties = { group = "net.risesoft", name = "risenet-y9boot-properties", version.ref = "y9-version" }
 risenet-y9boot-common-model = { group = "net.risesoft", name = "risenet-y9boot-common-model", version.ref = "y9-version" }
 risenet-y9boot-common-util = { group = "net.risesoft", name = "risenet-y9boot-common-util", version.ref = "y9-version" }
@@ -128,20 +130,31 @@ risenet-y9boot-support-platform-jpa-repository = { group = "net.risesoft", name 
 risenet-y9boot-support-platform-service = { group = "net.risesoft", name = "risenet-y9boot-support-platform-service", version.ref = "y9-version" }
 risenet-y9boot-support-platform-web = { group = "net.risesoft", name = "risenet-y9boot-support-platform-web", version.ref = "y9-version" }
 
+#spring boot & cloud dependencies
+spring-boot-bom = { group = "org.springframework.boot", name = "spring-boot-dependencies", version.ref = "spring-boot" }
+spring-cloud-bom = { group = "org.springframework.cloud", name = "spring-cloud-dependencies", version.ref = "spring-cloud" }
 
-
-
+# database
 cn-com-kingbase-hibernate-dialect = { module = "cn.com.kingbase:hibernate-dialect", version.ref = "cn-com-kingbase-hibernate-dialect" }
 cn-com-kingbase-hibernate-jpa-api = { module = "cn.com.kingbase:hibernate-jpa-api", version.ref = "cn-com-kingbase-hibernate-jpa-api" }
 cn-com-kingbase-kesdialect-hibernate4 = { module = "cn.com.kingbase:KesDialect-for-hibernate4", version.ref = "cn-com-kingbase-kesdialect-for-hibernate4" }
 cn-com-kingbase-kingbase8 = { module = "cn.com.kingbase:kingbase8", version.ref = "cn-com-kingbase-kingbase8" }
+
+com-dameng-dmdialect-hibernate5-v6 = { module = "com.dameng:DmDialect-for-hibernate5.6", version.ref = "com-dameng-dmdialect-for-hibernate5-v6" }
+com-dameng-dmjdbcdriver18 = { module = "com.dameng:DmJdbcDriver18", version.ref = "com-dameng-dmjdbcdriver18" }
+
+com-h2database-h2 = { module = "com.h2database:h2", version.ref = "com-h2database-h2" }
+com-mysql-mysql-connector-j = { module = "com.mysql:mysql-connector-j", version.ref = "com-mysql-mysql-connector-j" }
+com-oceanbase-oceanbase-client = { module = "com.oceanbase:oceanbase-client", version.ref = "com-oceanbase-oceanbase-client" }
+com-oracle-database-jdbc-ojdbc11 = { module = "com.oracle.database.jdbc:ojdbc11", version.ref = "com-oracle-database-jdbc-ojdbc11" }
+com-oracle-database-jdbc-ojdbc11-x1 = { module = "com.oracle.database.jdbc:ojdbc11", version.ref = "com-oracle-database-jdbc-ojdbc11-x1" }
+
+
 cn-hutool-hutool-all = { module = "cn.hutool:hutool-all", version.ref = "cn-hutool-hutool-all" }
 com-alibaba-cloud-spring-cloud-starter-alibaba-nacos-config = { module = "com.alibaba.cloud:spring-cloud-starter-alibaba-nacos-config", version.ref = "com-alibaba-cloud-spring-cloud-starter-alibaba-nacos-config" }
 com-alibaba-cloud-spring-cloud-starter-alibaba-nacos-discovery = { module = "com.alibaba.cloud:spring-cloud-starter-alibaba-nacos-discovery", version.ref = "com-alibaba-cloud-spring-cloud-starter-alibaba-nacos-config" }
 com-alibaba-nacos-nacos-client = { module = "com.alibaba.nacos:nacos-client", version.ref = "com-alibaba-nacos-nacos-client" }
 com-alibaba-transmittable-thread-local = { module = "com.alibaba:transmittable-thread-local", version.ref = "com-alibaba-transmittable-thread-local" }
-com-dameng-dmdialect-hibernate5-v6 = { module = "com.dameng:DmDialect-for-hibernate5.6", version.ref = "com-dameng-dmdialect-for-hibernate5-v6" }
-com-dameng-dmjdbcdriver18 = { module = "com.dameng:DmJdbcDriver18", version.ref = "com-dameng-dmjdbcdriver18" }
 com-fasterxml-jackson-core-jackson-databind = { module = "com.fasterxml.jackson.core:jackson-databind", version.ref = "com-fasterxml-jackson-core-jackson-databind" }
 com-fasterxml-jackson-dataformat-jackson-dataformat-properties = { module = "com.fasterxml.jackson.dataformat:jackson-dataformat-properties", version.ref = "com-fasterxml-jackson-core-jackson-databind" }
 com-fasterxml-jackson-dataformat-jackson-dataformat-yaml = { module = "com.fasterxml.jackson.dataformat:jackson-dataformat-yaml", version.ref = "com-fasterxml-jackson-core-jackson-databind" }
@@ -150,12 +163,7 @@ com-google-code-gson-gson = { module = "com.google.code.gson:gson", version.ref 
 com-google-guava-guava = { module = "com.google.guava:guava", version.ref = "com-google-guava-guava" }
 com-google-zxing-core = { module = "com.google.zxing:core", version.ref = "com-google-zxing-core" }
 com-googlecode-cqengine-cqengine = { module = "com.googlecode.cqengine:cqengine", version.ref = "com-googlecode-cqengine-cqengine" }
-com-h2database-h2 = { module = "com.h2database:h2", version.ref = "com-h2database-h2" }
 com-ibm-etcd-etcd-java = { module = "com.ibm.etcd:etcd-java", version.ref = "com-ibm-etcd-etcd-java" }
-com-mysql-mysql-connector-j = { module = "com.mysql:mysql-connector-j", version.ref = "com-mysql-mysql-connector-j" }
-com-oceanbase-oceanbase-client = { module = "com.oceanbase:oceanbase-client", version.ref = "com-oceanbase-oceanbase-client" }
-com-oracle-database-jdbc-ojdbc11 = { module = "com.oracle.database.jdbc:ojdbc11", version.ref = "com-oracle-database-jdbc-ojdbc11" }
-com-oracle-database-jdbc-ojdbc11-x1 = { module = "com.oracle.database.jdbc:ojdbc11", version.ref = "com-oracle-database-jdbc-ojdbc11-x1" }
 com-redis-lettucemod = { module = "com.redis:lettucemod", version.ref = "com-redis-lettucemod" }
 com-twelvemonkeys-imageio-imageio-jpeg = { module = "com.twelvemonkeys.imageio:imageio-jpeg", version.ref = "com-twelvemonkeys-imageio-imageio-jpeg" }
 commons-beanutils-commons-beanutils = { module = "commons-beanutils:commons-beanutils", version.ref = "commons-beanutils-commons-beanutils" }
@@ -218,9 +226,8 @@ org-apereo-cas-cas-server-support-webconfig = { module = "org.apereo.cas:cas-ser
 org-apereo-cas-cas-server-webapp-init = { module = "org.apereo.cas:cas-server-webapp-init", version.ref = "cas-server" }
 org-apereo-cas-cas-server-webapp-starter-tomcat = { module = "org.apereo.cas:cas-server-webapp-starter-tomcat", version.ref = "cas-server" }
 org-springframework-spring-context-indexer = { module = "org.springframework:spring-context-indexer", version.ref = "cas-spring-framework" }
-org-aspectj-aspectjrt = { module = "org.aspectj:aspectjrt", version.ref = "org-aspectj-aspectjrt" }
-org-aspectj-aspectjtools = { module = "org.aspectj:aspectjtools", version.ref = "org-aspectj-aspectjtools" }
-org-aspectj-aspectjweaver = { module = "org.aspectj:aspectjweaver", version.ref = "org-aspectj-aspectjweaver" }
+
+
 org-bouncycastle-bcprov-ext-jdk15to18 = { module = "org.bouncycastle:bcprov-ext-jdk15to18", version.ref = "org-bouncycastle-bcprov-ext-jdk15to18" }
 org-dom4j-dom4j = { module = "org.dom4j:dom4j", version.ref = "org-dom4j-dom4j" }
 org-glassfish-jakarta-json = { module = "org.glassfish:jakarta.json", version.ref = "org-glassfish-jakarta-json" }
@@ -242,21 +249,21 @@ org-postgresql-postgresql = { module = "org.postgresql:postgresql", version.ref 
 org-projectlombok-lombok = { module = "org.projectlombok:lombok", version.ref = "org-projectlombok-lombok" }
 org-projectlombok-lombok-x1 = { module = "org.projectlombok:lombok", version.ref = "org-projectlombok-lombok-x1" }
 org-slf4j-slf4j-api = { module = "org.slf4j:slf4j-api", version.ref = "org-slf4j-slf4j-api" }
-org-springframework-boot-spring-boot = { module = "org.springframework.boot:spring-boot", version.ref = "org-springframework-boot-spring-boot" }
-org-springframework-boot-spring-boot-autoconfigure = { module = "org.springframework.boot:spring-boot-autoconfigure", version.ref = "org-springframework-boot-spring-boot" }
-org-springframework-boot-spring-boot-configuration-processor = { module = "org.springframework.boot:spring-boot-configuration-processor", version.ref = "org-springframework-boot-spring-boot" }
+org-springframework-boot-spring-boot = { module = "org.springframework.boot:spring-boot", version.ref = "spring-boot" }
+org-springframework-boot-spring-boot-autoconfigure = { module = "org.springframework.boot:spring-boot-autoconfigure", version.ref = "spring-boot" }
+org-springframework-boot-spring-boot-configuration-processor = { module = "org.springframework.boot:spring-boot-configuration-processor", version.ref = "spring-boot" }
 org-springframework-boot-spring-boot-docker-compose = { module = "org.springframework.boot:spring-boot-docker-compose", version.ref = "cas-spring-boot" }
 org-springframework-boot-spring-boot-docker-compose-x1 = { module = "org.springframework.boot:spring-boot-docker-compose", version.ref = "org-springframework-boot-spring-boot-docker-compose-x1" }
-org-springframework-boot-spring-boot-starter-actuator = { module = "org.springframework.boot:spring-boot-starter-actuator", version.ref = "org-springframework-boot-spring-boot" }
-org-springframework-boot-spring-boot-starter-cache = { module = "org.springframework.boot:spring-boot-starter-cache", version.ref = "org-springframework-boot-spring-boot" }
-org-springframework-boot-spring-boot-starter-data-elasticsearch = { module = "org.springframework.boot:spring-boot-starter-data-elasticsearch", version.ref = "org-springframework-boot-spring-boot" }
-org-springframework-boot-spring-boot-starter-data-jpa = { module = "org.springframework.boot:spring-boot-starter-data-jpa", version.ref = "org-springframework-boot-spring-boot" }
-org-springframework-boot-spring-boot-starter-data-redis = { module = "org.springframework.boot:spring-boot-starter-data-redis", version.ref = "org-springframework-boot-spring-boot" }
-org-springframework-boot-spring-boot-starter-jdbc = { module = "org.springframework.boot:spring-boot-starter-jdbc", version.ref = "org-springframework-boot-spring-boot" }
-org-springframework-boot-spring-boot-starter-test = { module = "org.springframework.boot:spring-boot-starter-test", version.ref = "org-springframework-boot-spring-boot" }
-org-springframework-boot-spring-boot-starter-validation = { module = "org.springframework.boot:spring-boot-starter-validation", version.ref = "org-springframework-boot-spring-boot" }
-org-springframework-boot-spring-boot-starter-web = { module = "org.springframework.boot:spring-boot-starter-web", version.ref = "org-springframework-boot-spring-boot" }
-org-springframework-boot-spring-boot-starter-tomcat = { module = "org.springframework.boot:spring-boot-starter-tomcat", version.ref = "org-springframework-boot-spring-boot" }
+org-springframework-boot-spring-boot-starter-actuator = { module = "org.springframework.boot:spring-boot-starter-actuator", version.ref = "spring-boot" }
+org-springframework-boot-spring-boot-starter-cache = { module = "org.springframework.boot:spring-boot-starter-cache", version.ref = "spring-boot" }
+org-springframework-boot-spring-boot-starter-data-elasticsearch = { module = "org.springframework.boot:spring-boot-starter-data-elasticsearch", version.ref = "spring-boot" }
+org-springframework-boot-spring-boot-starter-data-jpa = { module = "org.springframework.boot:spring-boot-starter-data-jpa", version.ref = "spring-boot" }
+org-springframework-boot-spring-boot-starter-data-redis = { module = "org.springframework.boot:spring-boot-starter-data-redis", version.ref = "spring-boot" }
+org-springframework-boot-spring-boot-starter-jdbc = { module = "org.springframework.boot:spring-boot-starter-jdbc", version.ref = "spring-boot" }
+org-springframework-boot-spring-boot-starter-test = { module = "org.springframework.boot:spring-boot-starter-test", version.ref = "spring-boot" }
+org-springframework-boot-spring-boot-starter-validation = { module = "org.springframework.boot:spring-boot-starter-validation", version.ref = "spring-boot" }
+org-springframework-boot-spring-boot-starter-web = { module = "org.springframework.boot:spring-boot-starter-web", version.ref = "spring-boot" }
+org-springframework-boot-spring-boot-starter-tomcat = { module = "org.springframework.boot:spring-boot-starter-tomcat", version.ref = "spring-boot" }
 org-springframework-cloud-spring-cloud-context = { module = "org.springframework.cloud:spring-cloud-context", version.ref = "org-springframework-cloud-spring-cloud-context" }
 org-springframework-cloud-spring-cloud-starter-loadbalancer = { module = "org.springframework.cloud:spring-cloud-starter-loadbalancer", version.ref = "org-springframework-cloud-spring-cloud-starter-loadbalancer" }
 org-springframework-cloud-spring-cloud-starter-openfeign = { module = "org.springframework.cloud:spring-cloud-starter-openfeign", version.ref = "org-springframework-cloud-spring-cloud-starter-openfeign" }
@@ -270,4 +277,4 @@ org-springframework-spring-webmvc = { module = "org.springframework:spring-webmv
 
 [plugins]
 io-spring-dependency-management = { id = "io.spring.dependency-management", version.ref = "io-spring-dependency-management" }
-org-springframework-boot = { id = "org.springframework.boot", version.ref = "org-springframework-boot-spring-boot" }
+org-springframework-boot = { id = "org.springframework.boot", version.ref = "spring-boot" }
