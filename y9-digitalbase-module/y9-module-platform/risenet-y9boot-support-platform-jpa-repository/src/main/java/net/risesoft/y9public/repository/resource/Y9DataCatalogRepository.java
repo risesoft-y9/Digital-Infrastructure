@@ -20,24 +20,27 @@ import net.risesoft.y9public.entity.resource.Y9DataCatalog;
 // @JaversSpringDataAuditable
 public interface Y9DataCatalogRepository extends JpaRepository<Y9DataCatalog, String> {
 
-    List<Y9DataCatalog> findByParentIdAndTreeTypeOrderByTabIndexAsc(String parentId, String treeType);
+    List<Y9DataCatalog> findByTenantIdAndParentIdAndTreeTypeOrderByTabIndexAsc(String tenantId, String parentId,
+        String treeType);
 
-    Optional<Y9DataCatalog> findTopByParentIdOrderByTabIndexDesc(String parentId);
+    Optional<Y9DataCatalog> findTopByTenantIdAndParentIdOrderByTabIndexDesc(String tenantId, String parentId);
 
-    Optional<Y9DataCatalog> findByParentIdAndName(String parentId, String name);
+    Optional<Y9DataCatalog> findByTenantIdAndParentIdAndName(String tenantId, String parentId, String name);
 
-    List<Y9DataCatalog> findByNameContainingAndTreeTypeOrderByTabIndex(String name, String treeType);
+    List<Y9DataCatalog> findByTenantIdAndNameContainingAndTreeTypeOrderByTabIndex(String tenantId, String name,
+        String treeType);
 
-    List<Y9DataCatalog> findByParentId(String parentId);
+    List<Y9DataCatalog> findByTenantIdAndParentId(String tenantId, String parentId);
 
-    List<Y9DataCatalog> findByParentIdIsNullAndTreeTypeAndEnabledOrderByTabIndex(String treeType, Boolean enabled);
+    List<Y9DataCatalog> findByTenantIdAndParentIdIsNullAndTreeTypeAndEnabledOrderByTabIndex(String tenantId,
+        String treeType, Boolean enabled);
 
-    Optional<Y9DataCatalog> findByParentIdAndOrgUnitId(String parentId, String id);
+    Optional<Y9DataCatalog> findByTenantIdAndParentIdAndOrgUnitId(String tenantId, String parentId, String id);
 
-    List<Y9DataCatalog> findByOrgUnitId(String orgUnitId);
+    List<Y9DataCatalog> findByTenantIdAndOrgUnitId(String tenantId, String orgUnitId);
 
-    List<Y9DataCatalog> findByParentIdIsNullAndTreeTypeOrderByTabIndex(String treeType);
+    List<Y9DataCatalog> findByTenantIdAndParentIdIsNullAndTreeTypeOrderByTabIndex(String tenantId, String treeType);
 
-    List<Y9DataCatalog> findByParentIdAndTreeTypeAndEnabledOrderByTabIndexAsc(String parentId, String treeType,
-        Boolean enabled);
+    List<Y9DataCatalog> findByTenantIdAndParentIdAndTreeTypeAndEnabledOrderByTabIndexAsc(String tenantId,
+        String parentId, String treeType, Boolean enabled);
 }

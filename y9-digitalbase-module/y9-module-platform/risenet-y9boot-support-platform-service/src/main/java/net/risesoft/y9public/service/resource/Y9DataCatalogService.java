@@ -16,22 +16,23 @@ import net.risesoft.y9public.entity.resource.Y9DataCatalog;
  */
 public interface Y9DataCatalogService {
 
-    List<DataCatalog> getTree(String parentId, String treeType);
+    void delete(String id);
 
     DataCatalog getById(String id);
 
     Y9DataCatalog saveOrUpdate(Y9DataCatalog y9DataCatalog);
 
-    void delete(String id);
-
     void saveByYears(Y9DataCatalog y9DataCatalog, Integer startYear, Integer endYear);
 
-    List<DataCatalog> treeSearch(String name, String treeType);
+    List<DataCatalog> getTree(String tenantId, String parentId, String treeType);
 
-    List<DataCatalog> getTree(String parentId, String treeType, Boolean enabled, boolean includeAllDescendant,
-        AuthorityEnum authority, String personId);
+    List<DataCatalog> getTree(String tenantId, String parentId, String treeType, Boolean enabled,
+        boolean includeAllDescendant, AuthorityEnum authority, String personId);
 
-    List<DataCatalog> treeSearch(String name, String treeType, AuthorityEnum authority, String personId);
+    List<DataCatalog> treeSearch(String tenantId, String name, String treeType);
+
+    List<DataCatalog> treeSearch(String tenantId, String name, String treeType, AuthorityEnum authority,
+        String personId);
 
     List<Y9OptionValue> getTreeTypeList();
 
