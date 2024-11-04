@@ -252,7 +252,7 @@
 
         <profile>
             <!-- docker环境 -->
-            <id>docker-jvm</id>
+            <id>build-docker-jvm</id>
             <properties>
                 <dir>docker</dir>
             </properties>
@@ -265,7 +265,6 @@
                         <groupId>org.springframework.boot</groupId>
                         <artifactId>spring-boot-maven-plugin</artifactId>
                         <configuration>
-                            <mainClass>${start-class}</mainClass>
                             <excludes>
                                 <exclude>
                                     <groupId>org.projectlombok</groupId>
@@ -290,18 +289,6 @@
                         </configuration>
                         <executions>
                             <execution>
-                                <id>package</id>
-                                <goals>
-                                    <goal>repackage</goal>
-                                </goals>
-                            </execution>
-                            <execution>
-                                <id>generate-resources</id>
-                                <goals>
-                                    <goal>build-info</goal>
-                                </goals>
-                            </execution>
-                            <execution>
                                 <phase>install</phase>
                                 <goals>
                                     <goal>build-image-no-fork</goal>
@@ -314,7 +301,7 @@
         </profile>
         <profile>
             <!-- docker环境 -->
-            <id>docker-native</id>
+            <id>build-docker-native</id>
             <properties>
                 <dir>docker</dir>
             </properties>
@@ -338,7 +325,6 @@
                         <groupId>org.springframework.boot</groupId>
                         <artifactId>spring-boot-maven-plugin</artifactId>
                         <configuration>
-                            <mainClass>${start-class}</mainClass>
                             <excludes>
                                 <exclude>
                                     <groupId>org.projectlombok</groupId>
@@ -378,7 +364,6 @@
                     <plugin>
                         <groupId>org.graalvm.buildtools</groupId>
                         <artifactId>native-maven-plugin</artifactId>
-
                     </plugin>
                 </plugins>
             </build>
@@ -401,5 +386,4 @@
         </profile>
 
     </profiles>
-
 </project>

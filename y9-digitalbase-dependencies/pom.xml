@@ -679,7 +679,6 @@
             </dependency>
 
 
-
             <dependency>
                 <groupId>net.javacrumbs.shedlock</groupId>
                 <artifactId>shedlock-spring</artifactId>
@@ -695,9 +694,6 @@
                 <artifactId>shedlock-provider-jdbc-template</artifactId>
                 <version>${shedlock.version}</version>
             </dependency>
-
-
-
 
             <dependency>
                 <groupId>com.dameng</groupId>
@@ -1010,12 +1006,6 @@
                             <id>generate-resources</id>
                             <goals>
                                 <goal>build-info</goal>
-                            </goals>
-                        </execution>
-                        <execution>
-                            <id>process-aot</id>
-                            <goals>
-                                <goal>process-aot</goal>
                             </goals>
                         </execution>
                     </executions>
