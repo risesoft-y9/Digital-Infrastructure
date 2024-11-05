@@ -1,5 +1,5 @@
 <template>
-    <div v-show="step === 1" class="person-form-div">
+    <div v-show="step === 1" class="person-form-div" v-loading="loading">
         <div class="person-form-title-base">{{ $t('基本信息') }}</div>
         <y9Form ref="y9FormBaseRef" :config="y9FormBaseConfig"></y9Form>
         <div class="person-form-title-person">{{ $t('个人信息') }}</div>
@@ -45,6 +45,8 @@
             type: Number
         }
     });
+
+    const loading = ref(false);
 
     //移动电话号码格式校验规则
     const mobileValidator = (rule, value, callback) => {
@@ -332,6 +334,7 @@
     });
 
     onMounted(async () => {
+        loading.value = true;
         await $dictionaryFunc('dutyLevel', listByType, 'dutyLevel'); //请求职级
         await $dictionaryFunc('duty', listByType, 'duty'); //请求职务
         await $dictionaryFunc('officialType', listByType, 'officialType'); //请求编制类型
@@ -405,6 +408,7 @@
 
         jobListTableConfig.value.tableData = $dictionary().jobList;
         positionListTableConfig.value.tableData = $dictionary().positionList;
+        loading.value = false;
     });
 
     const y9FormBaseRef = ref();
