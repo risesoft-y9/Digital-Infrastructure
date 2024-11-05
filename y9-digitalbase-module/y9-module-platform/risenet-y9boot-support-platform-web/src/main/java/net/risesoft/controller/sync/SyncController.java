@@ -141,7 +141,7 @@ public class SyncController {
     @RequestMapping("/personInfo/{tenantId}/{loginName}")
     @RiseLog(operationName = "根据租户id和登录名称同步人员信息", operationType = OperationTypeEnum.MODIFY)
     public Y9Result<String> syncPersonByTenantIdAndLoginName(@PathVariable String tenantId,
-                                                             @PathVariable String loginName) {
+        @PathVariable String loginName) {
         Y9LoginUserHolder.setTenantId(tenantId);
         Y9Person person = y9PersonService.getPersonByLoginNameAndTenantId(loginName, tenantId);
         if (person != null && person.getId() != null) {
@@ -166,6 +166,24 @@ public class SyncController {
                 position.setTenantId(tenantId);
                 y9PositionService.saveOrUpdate(position);
             }
+        }
+        return Y9Result.successMsg("同步岗位信息完成");
+    }
+
+    /**
+     * 同步租户岗位信息
+     * 
+     * @param tenantId 租户id
+     * @return {@code Y9Result<String>}
+     */
+    @RequestMapping("/positionInfo/{tenantId}")
+    @RiseLog(operationName = "同步岗位信息", operationType = OperationTypeEnum.MODIFY)
+    public Y9Result<String> syncPositionByTenantId(@PathVariable String tenantId) {
+        Y9LoginUserHolder.setTenantId(tenantId);
+        List<Y9Position> positions = y9PositionService.listAll();
+        for (Y9Position position : positions) {
+            position.setTenantId(tenantId);
+            y9PositionService.saveOrUpdate(position);
         }
         return Y9Result.successMsg("同步岗位信息完成");
     }
