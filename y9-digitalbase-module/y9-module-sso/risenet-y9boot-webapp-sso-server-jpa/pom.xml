@@ -22,6 +22,19 @@
         <maven.deploy.skip>true</maven.deploy.skip>
     </properties>
 
+    <repositories>
+        <repository>
+            <id>couchbase</id>
+            <url>https://maven.aliyun.com/repository/public</url>
+            <releases>
+                <enabled>true</enabled>
+            </releases>
+            <snapshots>
+                <enabled>true</enabled>
+            </snapshots>
+        </repository>
+    </repositories>
+
     <dependencyManagement>
         <dependencies>
             <dependency>
