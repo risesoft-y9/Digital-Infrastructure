@@ -121,18 +121,18 @@
                                 </div>
                             </div>
                             <BasicInfo
-                              v-if="currData.nodeType === 'folder' || currData.nodeType === 'role' || currData.nodeType === 'APP'"
+                                v-if="
+                                    currData.nodeType === 'folder' ||
+                                    currData.nodeType === 'role' ||
+                                    currData.nodeType === 'APP'
+                                "
                                 :id="currData.id"
                                 :editFlag="editBtnFlag"
                                 :saveClickFlag="saveBtnClick"
                                 :type="currData.nodeType"
                                 @getInfoData="handlerEditSave"
                             />
-                            <SystemBasicInfo
-                              v-if="currData.nodeType === 'SYSTEM'"
-                                :id="currData.id"
-                                :editFlag="true"
-                            />
+                            <SystemBasicInfo v-if="currData.nodeType === 'SYSTEM'" :id="currData.id" :editFlag="true" />
                         </template>
                     </y9Card>
                     <!-- 角色成员 -->

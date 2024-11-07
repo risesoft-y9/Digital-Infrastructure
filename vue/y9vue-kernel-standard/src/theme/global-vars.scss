@@ -23,18 +23,18 @@ $background-color: #eff1f7;
 
 // 滚轴适应性和样式
 @mixin scrollbar {
-    ::-webkit-scrollbar {
-        width: 6px;
-        height: 6px;
-    }
-    ::-webkit-scrollbar-thumb {
-        background: hsla(0,0%,100%,.2);
-        border-radius: 3px;
-        box-shadow: inset 0 0 5px hsla(0,0%,100%,.05);
-    }
-    ::-webkit-scrollbar-track {
-        background: hsla(0,0%,100%,.15);
-        border-radius: 3px;
-        box-shadow: inset 0 0 5px rgba(37,37,37,.05);
-    }
+  ::-webkit-scrollbar {
+    width: 6px;
+    height: 6px;
+  }
+  ::-webkit-scrollbar-thumb {
+    background: hsla(0, 0%, 100%, .2);
+    border-radius: 3px;
+    box-shadow: inset 0 0 5px hsla(0, 0%, 100%, .05);
+  }
+  ::-webkit-scrollbar-track {
+    background: hsla(0, 0%, 100%, .15);
+    border-radius: 3px;
+    box-shadow: inset 0 0 5px rgba(37, 37, 37, .05);
+  }
 }

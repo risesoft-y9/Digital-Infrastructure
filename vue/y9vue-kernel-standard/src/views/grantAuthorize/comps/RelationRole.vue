@@ -21,7 +21,7 @@
                     {{ $t('搜索') }}
                 </el-button>
                 <el-button
-                  v-if="appId"
+                    v-if="appId"
                     :size="fontSizeObj.buttonSize"
                     :style="{ fontSize: fontSizeObj.baseFontSize }"
                     class="global-btn-second"

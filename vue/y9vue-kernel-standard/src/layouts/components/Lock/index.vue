@@ -1,5 +1,5 @@
 <script lang="ts">
-    import { computed, defineComponent, h, onBeforeMount, onUnmounted, watch } from 'vue-demi';
+    import { computed, defineComponent, h, watch } from 'vue-demi';
     import Content from './pass.vue';
     import { useSettingStore } from '@/store/modules/settingStore';
     import { $y9_SSO } from '@/main';

@@ -81,7 +81,7 @@
     import { useI18n } from 'vue-i18n';
     import { $deepAssignObject } from '@/utils/object';
     import { getPersonsByPositionId } from '@/api/person/index';
-    import { addPersons, orderPersons, removePersons, getPositionById } from '@/api/position/index';
+    import { addPersons, getPositionById, orderPersons, removePersons } from '@/api/position/index';
     import { getTreeItemById, searchByName, treeInterface } from '@/api/org/index';
 
     const { t } = useI18n();

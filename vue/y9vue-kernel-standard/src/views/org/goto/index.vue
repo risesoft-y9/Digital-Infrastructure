@@ -5,7 +5,7 @@
 </template>
 
 <script lang="ts" setup>
-    import { ref, computed, onMounted } from 'vue';
+    import { computed, onMounted, ref } from 'vue';
     import { useSettingStore } from '@/store/modules/settingStore';
     import { useI18n } from 'vue-i18n';
     import y9_storage from '@/utils/storage';

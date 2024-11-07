@@ -1,5 +1,5 @@
 <template>
-    <div v-show="step === 1" class="person-form-div" v-loading="loading">
+    <div v-show="step === 1" v-loading="loading" class="person-form-div">
         <div class="person-form-title-base">{{ $t('基本信息') }}</div>
         <y9Form ref="y9FormBaseRef" :config="y9FormBaseConfig"></y9Form>
         <div class="person-form-title-person">{{ $t('个人信息') }}</div>

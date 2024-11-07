@@ -10,7 +10,7 @@
  * 设置 IndexLayout TopMenuWidth
  * @author LiQingSong
  */
-import { ComputedRef, onMounted, Ref, ref, watch, nextTick, computed } from 'vue';
+import { ComputedRef, nextTick, onMounted, ref, Ref, watch } from 'vue';
 
 export default function useTopMenuWidth(topNavEnable: ComputedRef<boolean> | Ref<boolean>) {
     const topMenuCon = ref<HTMLElement | null>(null);

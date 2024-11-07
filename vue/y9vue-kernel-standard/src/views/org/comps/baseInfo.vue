@@ -323,6 +323,7 @@
     import { computed, inject, reactive, toRefs, watch } from 'vue';
     import { ElMessage, ElMessageBox, ElNotification } from 'element-plus';
     import {
+        changeDisabledOrganization,
         getAllPersonsCount,
         getDepartmentById,
         getGroupById,
@@ -354,7 +355,6 @@
         savePersons
     } from '@/api/person/index';
     import { changeDisabledGroup, groupSaveOrUpdate, moveGroup } from '@/api/group/index';
-    import { changeDisabledOrganization } from '@/api/org/index';
     import { $dictionaryFunc } from '@/utils/data';
     import { ref } from '@vue/reactivity';
     import { listByType } from '@/api/dictionary/index';

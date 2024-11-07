@@ -2,19 +2,19 @@ module.exports = {
     env: {
         browser: true,
         es2021: true,
-        node: true,
+        node: true
     },
     extends: [
         'eslint:recommended',
         'plugin:vue/essential',
         'plugin:@typescript-eslint/recommended',
         'plugin:vue/vue3-recommended',
-        'prettier',
+        'prettier'
     ],
     parserOptions: {
         ecmaVersion: 'latest',
         parser: '@typescript-eslint/parser',
-        sourceType: 'module',
+        sourceType: 'module'
     },
     plugins: ['vue', '@typescript-eslint', '@babel/plugin-syntax-dynamic-import', 'html', 'prettier'],
     rules: {
@@ -48,18 +48,18 @@ module.exports = {
             'error',
             {
                 argsIgnorePattern: '^h$',
-                varsIgnorePattern: '^h$',
-            },
+                varsIgnorePattern: '^h$'
+            }
         ],
         'no-unused-vars': [
             'error',
             {
                 argsIgnorePattern: '^h$',
-                varsIgnorePattern: '^h$',
-            },
+                varsIgnorePattern: '^h$'
+            }
         ],
         'space-before-function-paren': 'off',
         quotes: ['error', 'single'],
-        'comma-dangle': ['error', 'never'],
-    },
+        'comma-dangle': ['error', 'never']
+    }
 };

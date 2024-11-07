@@ -3,8 +3,8 @@
         <fixedTreeModule
             ref="fixedTreeRef"
             :treeApiObj="treeApiObj"
-            nodeLabel="newName"
             hiddenSearch="true"
+            nodeLabel="newName"
             @onDeleteTree="dataCatalogRemove"
             @onTreeClick="handlerTreeClick"
         >
@@ -84,7 +84,6 @@
     import { useI18n } from 'vue-i18n';
     import RelationRole from '@/views/grantAuthorize/comps/RelationRole.vue';
     import RelationOrg from '@/views/grantAuthorize/comps/RelationOrg.vue';
-    import { systemList } from '@/api/system';
     // 注入 字体对象
     const fontSizeObj: any = inject('sizeObjInfo');
     const managerLevel = y9_storage.getObjectItem('ssoUserInfo', 'managerLevel');

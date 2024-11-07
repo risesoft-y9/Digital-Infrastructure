@@ -1,6 +1,6 @@
 <script lang="ts" setup>
     import echarts from '@/utils/echarts'; // echarts图表插件
-    import { inject, onBeforeUnmount, onMounted, ref, computed, watch } from 'vue';
+    import { computed, inject, onBeforeUnmount, onMounted, ref, watch } from 'vue';
     import { useI18n } from 'vue-i18n';
     import { useSettingStore } from '@/store/modules/settingStore';
 

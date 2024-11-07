@@ -18,10 +18,10 @@
 
 <script lang="ts" setup>
     import { useI18n } from 'vue-i18n';
-    import { computed, h, inject, onMounted, reactive, ref, toRefs, watch } from 'vue';
-    import { ElMessage, ElMessageBox, ElNotification } from 'element-plus';
+    import { inject, onMounted, reactive, toRefs, watch } from 'vue';
+    import { ElNotification } from 'element-plus';
     import { $deepAssignObject } from '@/utils/object';
-    import { getPersonQRcode, createPersonQRcode, getPersonInfo } from '@/api/org';
+    import { createPersonQRcode, getPersonQRcode } from '@/api/org';
 
     const { t } = useI18n();
     // 注入 字体对象
