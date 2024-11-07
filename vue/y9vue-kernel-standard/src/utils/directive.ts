@@ -1,9 +1,9 @@
 import { $validCheck } from '@/utils/validate';
 import i18n from '@/language/index';
+import { useSettingStore } from '@/store/modules/settingStore';
+import { watch } from 'vue';
 
 const { t } = i18n.global;
-import { useSettingStore } from '@/store/modules/settingStore';
-import { computed, watch } from 'vue';
 
 const directiveObj = {
     /**

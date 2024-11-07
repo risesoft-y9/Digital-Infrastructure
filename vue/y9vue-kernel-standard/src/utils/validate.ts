@@ -43,7 +43,7 @@ export function $validCheck(type: string, value: string, isCallbackMsg: boolean)
             msg = '请输入正确的身份证格式';
             break;
         case 'moreThan0':
-            regular = /^[1-9]d*$/;
+            regular = /^[1-9]\d*$/;
             msg = '请输入大于0的正整数';
             break;
         case 'url':

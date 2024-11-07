@@ -2,8 +2,6 @@ import { defineStore } from 'pinia';
 import i18n from '@/language/index';
 
 const { t } = i18n.global;
-import { listByType, getOrgTypeList } from '@/api/dictionary/index';
-import { $dataType } from '@/utils/object';
 
 export const useDictionaryStore = defineStore('dictionaryStore', {
     state: () => {

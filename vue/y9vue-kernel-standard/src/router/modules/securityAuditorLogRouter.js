@@ -19,7 +19,7 @@ const securityAuditorLogRouter = {
     children: [
         {
             path: '/securityAuditorLog/loginLogs',
-            component: () => import('@/views/securityAuditorLog/loginLogs.vue'),
+            component: () => import('@/views/y9log/securityAuditorLog/loginLogs.vue'),
             name: 'securityAuditorLogIndex-loginLogs',
             meta: {
                 title: '登录日志',
@@ -29,7 +29,7 @@ const securityAuditorLogRouter = {
         },
         {
             path: '/securityAuditorLog/operationLogs',
-            component: () => import('@/views/securityAuditorLog/operationLogs.vue'),
+            component: () => import('@/views/y9log/securityAuditorLog/operationLogs.vue'),
             name: 'securityAuditorLogIndex-operationLogs',
             meta: {
                 title: '操作日志',

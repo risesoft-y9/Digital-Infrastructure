@@ -22,7 +22,6 @@
     import { useI18n } from 'vue-i18n';
     import { computed, inject, reactive, ref } from 'vue';
     import { ElMessage, ElNotification } from 'element-plus';
-    import { $validCheck } from '@/utils/validate';
     import { useSettingStore } from '@/store/modules/settingStore';
     import { getTenantSetting, saveTenantSetting } from '@/api/setting';
 

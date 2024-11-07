@@ -1,4 +1,4 @@
-import y9_storage from "@/utils/storage";
+import y9_storage from '@/utils/storage';
 
 const managerLevel = y9_storage.getObjectItem('ssoUserInfo', 'managerLevel');
 const dataCatalogRouter = {

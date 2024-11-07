@@ -9,7 +9,7 @@
 <script lang="ts" setup>
     import { useI18n } from 'vue-i18n';
     import watermark from 'y9plugin-watermark/lib/index';
-    import { onMounted, onUnmounted, ref, provide, watch, computed } from 'vue';
+    import { computed, onMounted, onUnmounted, provide, ref, watch } from 'vue';
     // 引入字体调整的方法
     import { getConcreteSize } from '@/utils/index';
     import y9_storage from '@/utils/storage';

@@ -8,7 +8,7 @@
  */
 import { Plugin } from 'vite';
 import * as path from 'path';
-import { readFileSync, readdirSync } from 'fs';
+import { readdirSync, readFileSync } from 'fs';
 
 const svgTitle = /<svg([^>+].*?)>/;
 const clearHeightWidth = /(width|height)="([^>+].*?)"/g;

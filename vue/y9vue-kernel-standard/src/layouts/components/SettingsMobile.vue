@@ -1,8 +1,6 @@
 <script lang="ts" setup>
-    import { ref, watch, reactive, onMounted, computed } from 'vue';
+    import { computed, onMounted, reactive, ref, watch } from 'vue';
     import { useSettingStore } from '@/store/modules/settingStore';
-    import IconSvg from './IconSvg';
-    import { useI18n } from 'vue-i18n';
 
     // 数据响应
     const settingStore = useSettingStore();

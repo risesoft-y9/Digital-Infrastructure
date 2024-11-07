@@ -75,8 +75,7 @@
     import { Picture, UserFilled } from '@element-plus/icons-vue';
     import { $validCheck } from '@/utils/validate';
     import { $dictionary, $dictionaryFunc } from '@/utils/data';
-    import { getJobList, listByType } from '@/api/dictionary/index';
-    import { getPositionsByParentId } from '@/api/position/index';
+    import { listByType } from '@/api/dictionary/index';
     import { useSettingStore } from '@/store/modules/settingStore';
 
     const { t } = useI18n();

@@ -28,7 +28,7 @@
     </div>
 </template>
 <script lang="ts">
-    import { defineComponent, PropType, watch, ref, inject } from 'vue';
+    import { defineComponent, inject, PropType } from 'vue';
     import { BreadcrumbType } from '@/utils/routes';
     import ALink from '../ALink/index.vue';
 

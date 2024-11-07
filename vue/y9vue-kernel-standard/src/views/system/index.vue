@@ -129,7 +129,10 @@
                                 />
                             </template>
                         </y9Card>
-                        <y9Card v-show="currData.isManageable" :title="`${$t('应用管理')} - ${currData.cnName ? currData.cnName : ''}`">
+                        <y9Card
+                            v-show="currData.isManageable"
+                            :title="`${$t('应用管理')} - ${currData.cnName ? currData.cnName : ''}`"
+                        >
                             <template v-slot>
                                 <ApplicatManager :id="currData.id" />
                             </template>

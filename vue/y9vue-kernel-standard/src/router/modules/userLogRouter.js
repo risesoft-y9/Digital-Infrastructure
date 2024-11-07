@@ -19,7 +19,7 @@ const userLogRouter = {
     children: [
         {
             path: '/userLog/loginLogs',
-            component: () => import('@/views/userLog/loginLogs.vue'),
+            component: () => import('@/views/y9log/userLog/loginLogs.vue'),
             name: 'userLogIndex-loginLogs',
             meta: {
                 title: '登录日志',
@@ -29,7 +29,7 @@ const userLogRouter = {
         },
         {
             path: '/userLog/operationLogs',
-            component: () => import('@/views/userLog/operationLogs.vue'),
+            component: () => import('@/views/y9log/userLog/operationLogs.vue'),
             name: 'userLogIndex-operationLogs',
             meta: {
                 title: '操作日志',

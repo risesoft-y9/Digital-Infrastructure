@@ -33,7 +33,10 @@
                         <RoleRelation />
                     </y9Card>-->
 
-                    <y9Card v-if="currData.nodeType === 'SYSTEM'" :title="`${$t('基本信息')} - ${currData.name ? currData.name : ''}`">
+                    <y9Card
+                        v-if="currData.nodeType === 'SYSTEM'"
+                        :title="`${$t('基本信息')} - ${currData.name ? currData.name : ''}`"
+                    >
                         <template v-slot>
                             <SystemBasicInfo :id="currData.id" :editFlag="true" />
                         </template>

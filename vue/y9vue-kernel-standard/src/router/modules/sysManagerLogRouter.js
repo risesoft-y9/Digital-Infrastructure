@@ -19,7 +19,7 @@ const sysManagerLogRouter = {
     children: [
         {
             path: '/sysManagerLog/loginLogs',
-            component: () => import('@/views/sysManagerLog/loginLogs.vue'),
+            component: () => import('@/views/y9log/sysManagerLog/loginLogs.vue'),
             name: 'sysManagerLogIndex-loginLogs',
             meta: {
                 title: '登录日志',
@@ -29,7 +29,7 @@ const sysManagerLogRouter = {
         },
         {
             path: '/sysManagerLog/operationLogs',
-            component: () => import('@/views/sysManagerLog/operationLogs.vue'),
+            component: () => import('@/views/y9log/sysManagerLog/operationLogs.vue'),
             name: 'sysManagerLogIndex-operationLogs',
             meta: {
                 title: '操作日志',

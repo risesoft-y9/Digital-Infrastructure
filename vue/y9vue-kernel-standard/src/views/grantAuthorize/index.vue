@@ -16,27 +16,39 @@
         >
             <template v-if="currData.id" v-slot:rightContainer>
                 <!-- 右边卡片 -->
-                <y9Card :title="`${$t('基本信息')} - ${currData.name ? currData.name : ''}`">
-                    <template v-slot>
-                        <BasicInfo
-                            :id="currData.id"
-                            :editFlag="editBtnFlag"
-                            :saveClickFlag="saveBtnClick"
-                            :type="currData.nodeType"
-                            @getInfoData="handlerEditSave"
-                        />
-                    </template>
-                </y9Card>
-                <!-- 角色关联 -->
-                <y9Card :title="`${$t('角色关联')} - ${currData.name ? currData.name : ''}`">
-                    <template v-slot>
-                        <RelationRole :id="currData.id" :appId="currData.appId" />
-                    </template>
-                </y9Card>
-                <!-- 组织关联 -->
-                <y9Card :title="`${$t('组织关联')} - ${currData.name ? currData.name : ''}`">
-                    <RelationOrg :id="currData.id" />
-                </y9Card>
+                <div v-if="currData.nodeType === 'SYSTEM'">
+                    <y9Card
+                        v-if="currData.nodeType === 'SYSTEM'"
+                        :title="`${$t('基本信息')} - ${currData.name ? currData.name : ''}`"
+                    >
+                        <template v-slot>
+                            <SystemBasicInfo :id="currData.id" :editFlag="true" />
+                        </template>
+                    </y9Card>
+                </div>
+                <div v-else>
+                    <y9Card :title="`${$t('基本信息')} - ${currData.name ? currData.name : ''}`">
+                        <template v-slot>
+                            <BasicInfo
+                                :id="currData.id"
+                                :editFlag="editBtnFlag"
+                                :saveClickFlag="saveBtnClick"
+                                :type="currData.nodeType"
+                                @getInfoData="handlerEditSave"
+                            />
+                        </template>
+                    </y9Card>
+                    <!-- 角色关联 -->
+                    <y9Card :title="`${$t('角色关联')} - ${currData.name ? currData.name : ''}`">
+                        <template v-slot>
+                            <RelationRole :id="currData.id" :appId="currData.appId" />
+                        </template>
+                    </y9Card>
+                    <!-- 组织关联 -->
+                    <y9Card :title="`${$t('组织关联')} - ${currData.name ? currData.name : ''}`">
+                        <RelationOrg :id="currData.id" />
+                    </y9Card>
+                </div>
             </template>
         </fixedTreeModule>
         <!-- 制造loading效果 -->
@@ -48,7 +60,7 @@
     import { reactive, ref, toRefs } from 'vue';
     import { ElMessage, ElMessageBox, ElNotification } from 'element-plus';
     import { useI18n } from 'vue-i18n';
-    import { menuDelete, operationDel, resourceTreeList, resourceTreeRoot, treeSearch } from '@/api/resource/index';
+    import { menuDelete, operationDel, resourceTree, treeSearch } from '@/api/resource/index';
     import { applicationDel } from '@/api/system/index';
     // 基本信息
     import BasicInfo from './comps/BasicInfo.vue';
@@ -56,6 +68,7 @@
     import RelationRole from './comps/RelationRole.vue';
     // 组织 关联
     import RelationOrg from './comps/RelationOrg.vue';
+    import SystemBasicInfo from '@/views/system/comps/BasicInfo.vue';
 
     const { t } = useI18n();
 
@@ -77,10 +90,10 @@
 
         // 树的一级 子级的请求接口函数
         treeApiObj: {
-            topLevel: resourceTreeList, //一级接口
+            topLevel: resourceTree, //一级接口
             childLevel: {
                 //子级（二级及二级以上）tree接口
-                api: resourceTreeRoot,
+                api: resourceTree,
                 params: {}
             },
             search: {

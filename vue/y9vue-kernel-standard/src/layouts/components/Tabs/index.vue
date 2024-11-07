@@ -38,8 +38,8 @@
     </div>
 </template>
 <script lang="ts" setup>
-    import { computed, ref, onMounted } from 'vue';
-    import { useRoute, useRouter } from 'vue-router';
+    import { computed } from 'vue';
+    import { useRouter } from 'vue-router';
     import { useRouterStore } from '@/store/modules/routerStore';
     import { useSettingStore } from '@/store/modules/settingStore';
 
