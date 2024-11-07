@@ -66,6 +66,7 @@ public class ResourceController {
      */
     @RiseLog(operationName = "查询所有的根资源（App资源）")
     @GetMapping(value = "/allTreeRoot")
+    @Deprecated
     public Y9Result<List<ResourceBaseVO>> getAllTreeRoot() {
         List<Y9App> appResourceList = compositeResourceService.listRootResourceList();
         return Y9Result.success(Y9ModelConvertUtil.convert(appResourceList, ResourceBaseVO.class), "查询所有的根资源成功");
@@ -117,26 +118,13 @@ public class ResourceController {
     }
 
     /**
-     * 对同一级的资源进行排序
-     *
-     * @param ids 资源id数组
-     * @return {@code Y9Result<Object>}
-     */
-    @RiseLog(operationName = "对同一级的资源进行排序", operationType = OperationTypeEnum.MODIFY)
-    @GetMapping(value = "/sort")
-    public Y9Result<Object> sort(@RequestParam @NotEmpty String[] ids) {
-        compositeResourceService.sort(ids);
-        return Y9Result.successMsg("对同一级的资源进行排序成功");
-    }
-
-    /**
      * 查询所有的根资源（有权限的App资源）
      *
      * @return {@code Y9Result<List<}{@link ResourceTreeNodeVO}{@code >>}
      */
     @RiseLog(operationName = "查询所有的根资源（有权限的App资源）")
     @GetMapping(value = "/treeRoot2")
-    public Y9Result<List<ResourceTreeNodeVO>> treeRoot2() {
+    public Y9Result<List<ResourceTreeNodeVO>> rootTree2() {
         List<Y9App> appResourceList = compositeResourceService.listRootResourceList();
         List<Y9App> accessibleAppResourceList;
 
@@ -153,6 +141,19 @@ public class ResourceController {
     }
 
     /**
+     * 对同一级的资源进行排序
+     *
+     * @param ids 资源id数组
+     * @return {@code Y9Result<Object>}
+     */
+    @RiseLog(operationName = "对同一级的资源进行排序", operationType = OperationTypeEnum.MODIFY)
+    @GetMapping(value = "/sort")
+    public Y9Result<Object> sort(@RequestParam @NotEmpty String[] ids) {
+        compositeResourceService.sort(ids);
+        return Y9Result.successMsg("对同一级的资源进行排序成功");
+    }
+
+    /**
      * 根据父节点id，父节点类型分层获取资源树
      *
      * @param parentId 父节点id
@@ -164,10 +165,10 @@ public class ResourceController {
     public Y9Result<List<ResourceTreeNodeVO>> tree(@RequestParam(required = false) String parentId,
         @RequestParam(required = false) TreeNodeType parentNodeType) {
         List<ResourceTreeNodeVO> resourceTreeNodeVOList;
-        if (ManagerLevelEnum.SYSTEM_MANAGER.equals(Y9LoginUserHolder.getUserInfo().getManagerLevel())) {
-            resourceTreeNodeVOList = treeBySystemManager(parentId, parentNodeType);
-        } else {
+        if (ManagerLevelEnum.OPERATION_SYSTEM_MANAGER.equals(Y9LoginUserHolder.getUserInfo().getManagerLevel())) {
             resourceTreeNodeVOList = treeByOperationSystemManager(parentId, parentNodeType);
+        } else {
+            resourceTreeNodeVOList = treeBySystemManager(parentId, parentNodeType);
         }
         return Y9Result.success(resourceTreeNodeVOList, "查询所有的根资源成功");
     }
@@ -219,10 +220,10 @@ public class ResourceController {
     @GetMapping(value = "/treeSearch2")
     public Y9Result<List<ResourceTreeNodeVO>> treeSearch2(@RequestParam String name, String appId) {
         List<ResourceTreeNodeVO> resourceTreeNodeVOList;
-        if (ManagerLevelEnum.SYSTEM_MANAGER.equals(Y9LoginUserHolder.getUserInfo().getManagerLevel())) {
-            resourceTreeNodeVOList = treeSearchBySystemManager(name, appId);
-        } else {
+        if (ManagerLevelEnum.OPERATION_SYSTEM_MANAGER.equals(Y9LoginUserHolder.getUserInfo().getManagerLevel())) {
             resourceTreeNodeVOList = treeSearchByOperationSystemManager(name, appId);
+        } else {
+            resourceTreeNodeVOList = treeSearchBySystemManager(name, appId);
         }
 
         return Y9Result.success(resourceTreeNodeVOList, "根据名称查询资源树成功");
