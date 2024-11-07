@@ -31,4 +31,7 @@ repositories {
     maven {
         url = uri("https://build.shibboleth.net/maven/snapshots/")
     }
+
+    mavenCentral()
+    gradlePluginPortal()
 }

@@ -2,11 +2,13 @@ import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
 
 plugins {
+    id("application")
     id("com.google.cloud.tools.jib")
 }
 
 val myDateTimeFormatter = DateTimeFormatter.ofPattern("yyyyMMddHHmm")
 val dateTimeStr = myDateTimeFormatter.format(LocalDateTime.now())
+println("dateTimeStr" + dateTimeStr)
 
 jib {
     from {
@@ -25,8 +27,8 @@ jib {
     to {
         image = "docker-registry-internal.youshengyun.com/${project.name}"
         auth {
-            //username = findProperty("dockerUsername")
-            //password = findProperty("dockerPassword")
+            username = findProperty("dockerUsername").toString()
+            password = findProperty("dockerPassword").toString()
         }
         tags = setOf("v9.7.0-SNAPSHOT", "v9.7.x", "v9.7.0-SNAPSHOT-${dateTimeStr}")
     }
