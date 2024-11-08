@@ -175,7 +175,7 @@ public class RoleController {
     }
 
     /**
-     * 根据父节点id，父节点类型分层获取角色树
+     * 根据父节点id，父节点类型分层获取角色树（以系统为根节点）
      *
      * @param parentId 父节点id
      * @param parentNodeType 父节点类型
@@ -234,7 +234,7 @@ public class RoleController {
     }
 
     /**
-     * 获取角色树根节点
+     * 获取角色树根节点（以应用为根节点）
      *
      * @return {@code Y9Result<List<}{@link RoleTreeNodeVO}{@code >>}
      * @since 9.6.3
