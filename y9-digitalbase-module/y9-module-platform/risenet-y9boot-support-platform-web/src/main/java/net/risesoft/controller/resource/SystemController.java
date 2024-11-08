@@ -1,6 +1,5 @@
 package net.risesoft.controller.resource;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import jakarta.validation.constraints.NotBlank;
@@ -103,12 +102,11 @@ public class SystemController {
     @RiseLog(operationName = "获取系统列表")
     @GetMapping(value = "/list2")
     public Y9Result<List<SystemTreeNodeVO>> list2() {
-        List<Y9System> y9SystemList = new ArrayList<>();
-        if (ManagerLevelEnum.SYSTEM_MANAGER.equals(Y9LoginUserHolder.getUserInfo().getManagerLevel())) {
-            y9SystemList = y9TenantSystemService.listSystemByTenantId(Y9LoginUserHolder.getTenantId());
-        } else if (ManagerLevelEnum.OPERATION_SYSTEM_MANAGER
-            .equals(Y9LoginUserHolder.getUserInfo().getManagerLevel())) {
+        List<Y9System> y9SystemList;
+        if (ManagerLevelEnum.OPERATION_SYSTEM_MANAGER.equals(Y9LoginUserHolder.getUserInfo().getManagerLevel())) {
             y9SystemList = y9SystemService.listAll();
+        } else {
+            y9SystemList = y9TenantSystemService.listSystemByTenantId(Y9LoginUserHolder.getTenantId());
         }
         return Y9Result.success(SystemTreeNodeVO.convertY9SystemList(y9SystemList), "获取系统列表成功");
     }
