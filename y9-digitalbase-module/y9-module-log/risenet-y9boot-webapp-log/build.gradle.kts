@@ -5,8 +5,8 @@
  */
 
 plugins {
-    id("buildlogic.java-conventions")
-    id("buildlogic.docker")
+    id("net.risesoft.y9.java-conventions")
+    id("net.risesoft.y9.docker")
     id("war")
     alias(libs.plugins.org.springframework.boot)
 }

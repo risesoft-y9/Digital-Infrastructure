@@ -1,7 +1,7 @@
 plugins {
     id("maven-publish")
     id("signing")
-    id("buildlogic.y9-repository")
+    id("net.risesoft.y9.y9-repository")
 }
 
 publishing {
@@ -50,7 +50,7 @@ publishing {
 }
 
 signing {
-    if (project.hasProperty("signing.keyId") && project.property("signing.keyId") != "") {
+    if (project.hasProperty("isSigned") && project.property("isSigned") == true) {
         useGpgCmd()
         sign(publishing.publications["mavenJava"])
     }

@@ -1,7 +1,7 @@
 plugins {
-    id("buildlogic.java-conventions")
-    id("buildlogic.smart-doc")
-    id("buildlogic.aspectj")
+    id("net.risesoft.y9.java-conventions")
+    id("net.risesoft.y9.smart-doc")
+    id("net.risesoft.y9.aspectj")
 }
 
 dependencies {

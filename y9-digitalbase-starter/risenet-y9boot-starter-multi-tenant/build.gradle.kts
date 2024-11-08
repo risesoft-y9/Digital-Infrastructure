@@ -1,5 +1,5 @@
 plugins {
-    id("buildlogic.java-conventions")
+    id("net.risesoft.y9.java-conventions")
 }
 
 dependencies {

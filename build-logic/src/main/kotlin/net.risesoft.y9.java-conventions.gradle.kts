@@ -1,6 +1,6 @@
 plugins {
     id("java-library")
-    id("buildlogic.y9-publish")
+    id("net.risesoft.y9.y9-publish")
 }
 
 group = "net.risesoft"

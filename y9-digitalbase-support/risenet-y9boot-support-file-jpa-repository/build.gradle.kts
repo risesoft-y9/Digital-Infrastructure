@@ -1,6 +1,6 @@
 plugins {
-    id("buildlogic.java-conventions")
-    id("buildlogic.aspectj")
+    id("net.risesoft.y9.java-conventions")
+    id("net.risesoft.y9.aspectj")
 }
 
 dependencies {
