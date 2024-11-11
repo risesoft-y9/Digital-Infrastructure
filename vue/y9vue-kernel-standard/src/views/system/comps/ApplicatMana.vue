@@ -2,136 +2,134 @@
  * @Author: hongzhew
  * @Date: 2022-04-07 17:43:02
  * @LastEditors: mengjuhua
- * @LastEditTime: 2024-04-02 09:59:22
+ * @LastEditTime: 2024-11-08 13:53:16
  * @Description: 应用管理
 -->
 <template>
-    <div class="application">
-        <!-- 应用列表表格 -->
+    <!-- 应用列表表格 -->
+    <y9Table
+        ref="y9TableRef"
+        :config="appListTableConfig"
+        :filterConfig="filterConfig"
+        @on-change="handlerGetData"
+        @on-curr-page-change="onCurrPageChange"
+        @on-page-size-change="onPageSizeChange"
+    >
+        <template v-slot:slotSearch>
+            <el-button
+                :size="fontSizeObj.buttonSize"
+                :style="{ fontSize: fontSizeObj.baseFontSize }"
+                class="global-btn-main"
+                type="primary"
+                @click="getAppList"
+            >
+                <i class="ri-search-line"></i>
+                {{ $t('搜索') }}
+            </el-button>
+        </template>
+        <template v-slot:slotBtns>
+            <el-button
+                :size="fontSizeObj.buttonSize"
+                :style="{ fontSize: fontSizeObj.baseFontSize }"
+                class="global-btn-second"
+                @click="handlerSort"
+            >
+                <i class="ri-arrow-up-down-line"></i>
+                <span> {{ $t('排序') }}</span>
+            </el-button>
+            <el-button
+                :size="fontSizeObj.buttonSize"
+                :style="{ fontSize: fontSizeObj.baseFontSize }"
+                class="global-btn-second"
+                @click="handlerAppAdd"
+            >
+                <i class="ri-add-line"></i>
+                {{ $t('新增') }}
+            </el-button>
+            <el-button
+                v-loading.fullscreen.lock="loading"
+                :size="fontSizeObj.buttonSize"
+                :style="{ fontSize: fontSizeObj.baseFontSize }"
+                class="global-btn-second"
+                @click="handlerDelete"
+            >
+                <i class="ri-close-line" />
+                {{ $t('删除') }}
+            </el-button>
+            <el-button
+                v-loading.fullscreen.lock="loading"
+                :size="fontSizeObj.buttonSize"
+                :style="{ fontSize: fontSizeObj.baseFontSize }"
+                class="global-btn-second"
+                @click="handlerDisableEnable(1)"
+            >
+                <i class="ri-user-follow-line"></i>
+                {{ $t('启用') }}
+            </el-button>
+            <el-button
+                v-loading.fullscreen.lock="loading"
+                :size="fontSizeObj.buttonSize"
+                :style="{ fontSize: fontSizeObj.baseFontSize }"
+                class="global-btn-second"
+                @click="handlerDisableEnable(2)"
+            >
+                <i class="ri-user-unfollow-line"></i>
+                {{ $t('禁用') }}
+            </el-button>
+            <el-upload
+                :http-request="handlerUpload"
+                :show-file-list="false"
+                accept=".json"
+                style="display: inline-block; margin-left: 12px"
+            >
+                <el-button class="global-btn-second">
+                    <i class="ri-file-download-line"></i>
+                    {{ $t('导入') }}
+                </el-button>
+            </el-upload>
+            <!-- <el-button  class="global-btn-second" >
+                    <i class="ri-edit-line"></i>
+                    查看修改日志
+                </el-button> -->
+        </template>
+    </y9Table>
+    <!-- 增加应用 -->
+    <y9Dialog v-model:config="addDialogConfig">
+        <template v-slot>
+            <y9Form ref="ruleFormRef" :config="ruleFormConfig"></y9Form>
+        </template>
+    </y9Dialog>
+    <!-- 应用图标的选择 -->
+    <y9Dialog v-model:config="iconSelectDialog">
         <y9Table
-            ref="y9TableRef"
-            :config="appListTableConfig"
-            :filterConfig="filterConfig"
-            @on-change="handlerGetData"
-            @on-curr-page-change="onCurrPageChange"
-            @on-page-size-change="onPageSizeChange"
+            :config="iconSelectTable"
+            :filterConfig="filterIconConfig"
+            @on-curr-page-change="handelrPageChange"
+            @on-page-size-change="handlerSizeChange"
         >
             <template v-slot:slotSearch>
                 <el-button
                     :size="fontSizeObj.buttonSize"
                     :style="{ fontSize: fontSizeObj.baseFontSize }"
                     class="global-btn-main"
+                    style="margin-left: 15px"
                     type="primary"
-                    @click="getAppList"
+                    @click="handlerSearchIcon"
                 >
                     <i class="ri-search-line"></i>
                     {{ $t('搜索') }}
                 </el-button>
             </template>
-            <template v-slot:slotBtns>
-                <el-button
-                    :size="fontSizeObj.buttonSize"
-                    :style="{ fontSize: fontSizeObj.baseFontSize }"
-                    class="global-btn-second"
-                    @click="handlerSort"
-                >
-                    <i class="ri-arrow-up-down-line"></i>
-                    <span> {{ $t('排序') }}</span>
-                </el-button>
-                <el-button
-                    :size="fontSizeObj.buttonSize"
-                    :style="{ fontSize: fontSizeObj.baseFontSize }"
-                    class="global-btn-second"
-                    @click="handlerAppAdd"
-                >
-                    <i class="ri-add-line"></i>
-                    {{ $t('新增') }}
-                </el-button>
-                <el-button
-                    v-loading.fullscreen.lock="loading"
-                    :size="fontSizeObj.buttonSize"
-                    :style="{ fontSize: fontSizeObj.baseFontSize }"
-                    class="global-btn-second"
-                    @click="handlerDelete"
-                >
-                    <i class="ri-close-line" />
-                    {{ $t('删除') }}
-                </el-button>
-                <el-button
-                    v-loading.fullscreen.lock="loading"
-                    :size="fontSizeObj.buttonSize"
-                    :style="{ fontSize: fontSizeObj.baseFontSize }"
-                    class="global-btn-second"
-                    @click="handlerDisableEnable(1)"
-                >
-                    <i class="ri-user-follow-line"></i>
-                    {{ $t('启用') }}
-                </el-button>
-                <el-button
-                    v-loading.fullscreen.lock="loading"
-                    :size="fontSizeObj.buttonSize"
-                    :style="{ fontSize: fontSizeObj.baseFontSize }"
-                    class="global-btn-second"
-                    @click="handlerDisableEnable(2)"
-                >
-                    <i class="ri-user-unfollow-line"></i>
-                    {{ $t('禁用') }}
-                </el-button>
-                <el-upload
-                    :http-request="handlerUpload"
-                    :show-file-list="false"
-                    accept=".json"
-                    style="display: inline-block; margin: 0 15px"
-                >
-                    <el-button class="global-btn-second">
-                        <i class="ri-file-download-line"></i>
-                        {{ $t('导入') }}
-                    </el-button>
-                </el-upload>
-                <!-- <el-button  class="global-btn-second" >
-                    <i class="ri-edit-line"></i>
-                    查看修改日志
-                </el-button> -->
-            </template>
         </y9Table>
-        <!-- 增加应用 -->
-        <y9Dialog v-model:config="addDialogConfig">
-            <template v-slot>
-                <y9Form ref="ruleFormRef" :config="ruleFormConfig"></y9Form>
-            </template>
-        </y9Dialog>
-        <!-- 应用图标的选择 -->
-        <y9Dialog v-model:config="iconSelectDialog">
-            <y9Table
-                :config="iconSelectTable"
-                :filterConfig="filterIconConfig"
-                @on-curr-page-change="handelrPageChange"
-                @on-page-size-change="handlerSizeChange"
-            >
-                <template v-slot:slotSearch>
-                    <el-button
-                        :size="fontSizeObj.buttonSize"
-                        :style="{ fontSize: fontSizeObj.baseFontSize }"
-                        class="global-btn-main"
-                        style="margin-left: 15px"
-                        type="primary"
-                        @click="handlerSearchIcon"
-                    >
-                        <i class="ri-search-line"></i>
-                        {{ $t('搜索') }}
-                    </el-button>
-                </template>
-            </y9Table>
-        </y9Dialog>
-        <!-- 查看 修改日志  -->
-        <y9Dialog v-model:config="dialogModifyLog">
-            <y9Table :config="modifyLogTableConfig" border></y9Table>
-        </y9Dialog>
-        <!-- 排序 -->
-        <y9Dialog v-model:config="sortDialogConfig">
-            <treeSort ref="sortRef" :apiParams="id" :apiRequest="getApplicationList"></treeSort>
-        </y9Dialog>
-    </div>
+    </y9Dialog>
+    <!-- 查看 修改日志  -->
+    <y9Dialog v-model:config="dialogModifyLog">
+        <y9Table :config="modifyLogTableConfig" border></y9Table>
+    </y9Dialog>
+    <!-- 排序 -->
+    <y9Dialog v-model:config="sortDialogConfig">
+        <treeSort ref="sortRef" :apiParams="id" :apiRequest="getApplicationList"></treeSort>
+    </y9Dialog>
 </template>
 
 <script lang="ts" setup>

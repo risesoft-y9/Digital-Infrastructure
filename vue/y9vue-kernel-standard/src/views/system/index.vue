@@ -2,157 +2,153 @@
  * @Author: hongzhew
  * @Date: 2022-04-07 17:43:02
  * @LastEditors: mengjuhua
- * @LastEditTime: 2024-01-11 16:22:22
+ * @LastEditTime: 2024-11-08 13:58:22
  * @Description: 应用系统管理
 -->
 <template>
-    <div>
-        <div class="system-main">
-            <fixedTreeModule
-                ref="fixedTreeRef"
-                :hiddenSearch="true"
-                :treeApiObj="treeApiObj"
-                nodeLabel="cnName"
-                @onDeleteTree="systemRemove"
-                @onTreeClick="handlerTreeClick"
+    <fixedTreeModule
+        ref="fixedTreeRef"
+        :hiddenSearch="true"
+        :treeApiObj="treeApiObj"
+        nodeLabel="cnName"
+        @onDeleteTree="systemRemove"
+        @onTreeClick="handlerTreeClick"
+    >
+        <template v-slot:treeHeaderRight>
+            <el-button
+                :size="fontSizeObj.buttonSize"
+                :style="{ fontSize: fontSizeObj.baseFontSize }"
+                class="global-btn-second"
+                @click="onClickBtn('sort', '排序')"
             >
-                <template v-slot:treeHeaderRight>
-                    <el-button
-                        :size="fontSizeObj.buttonSize"
-                        :style="{ fontSize: fontSizeObj.baseFontSize }"
-                        class="global-btn-second"
-                        @click="onClickBtn('sort', '排序')"
-                    >
-                        <i class="ri-arrow-up-down-line"></i>
-                        <span> {{ $t('排序') }}</span>
-                    </el-button>
-                    <el-upload
-                        :http-request="handlerUpload"
-                        :show-file-list="false"
-                        accept=".json"
-                        style="display: inline-block; margin: 0 10px"
-                    >
-                        <el-button
-                            :size="fontSizeObj.buttonSize"
-                            :style="{ fontSize: fontSizeObj.baseFontSize }"
-                            class="global-btn-second"
-                        >
-                            <i class="ri-file-download-line"></i>
-                            {{ $t('导入') }}
-                        </el-button>
-                    </el-upload>
-                    <el-button
-                        :size="fontSizeObj.buttonSize"
-                        :style="{ fontSize: fontSizeObj.baseFontSize }"
-                        class="global-btn-main"
-                        type="primary"
-                        @click="onClickBtn('addSystem', '新增系统')"
-                    >
-                        <i class="ri-add-line"></i>
-                        <span>{{ $t('系统') }}</span>
-                    </el-button>
-                </template>
-                <template v-slot:rightContainer>
-                    <div v-if="currData.id">
-                        <y9Card :title="`${$t('基本信息')} - ${currData.cnName ? currData.cnName : ''}`">
-                            <template v-slot>
-                                <div v-show="currData.isManageable" class="basic-btns">
-                                    <span class="btn-top">
-                                        <el-button
-                                            v-if="editBtnFlag"
-                                            :size="fontSizeObj.buttonSize"
-                                            :style="{ fontSize: fontSizeObj.baseFontSize }"
-                                            class="global-btn-main"
-                                            type="primary"
-                                            @click="editBtnFlag = false"
-                                        >
-                                            <i class="ri-edit-line"></i>
-                                            {{ $t('编辑') }}
-                                        </el-button>
-                                        <span v-else>
-                                            <el-button
-                                                :loading="saveBtnLoading"
-                                                :size="fontSizeObj.buttonSize"
-                                                :style="{ fontSize: fontSizeObj.baseFontSize }"
-                                                class="global-btn-main"
-                                                type="primary"
-                                                @click="saveBtnClick = true"
-                                            >
-                                                <i class="ri-save-line"></i>
-                                                {{ $t('保存') }}
-                                            </el-button>
-                                            <el-button
-                                                :size="fontSizeObj.buttonSize"
-                                                :style="{ fontSize: fontSizeObj.baseFontSize }"
-                                                class="global-btn-second"
-                                                @click="editBtnFlag = true"
-                                            >
-                                                <i class="ri-close-line"></i>
-                                                {{ $t('取消') }}
-                                            </el-button>
-                                        </span>
-                                    </span>
-                                    <span>
-                                        <!-- <el-upload accept=".json" :http-request="handlerUpload" style="display: inline-block; margin: 0 15px" :show-file-list="false">
+                <i class="ri-arrow-up-down-line"></i>
+                <span> {{ $t('排序') }}</span>
+            </el-button>
+            <el-upload
+                :http-request="handlerUpload"
+                :show-file-list="false"
+                accept=".json"
+                style="display: inline-block; margin: 0 10px"
+            >
+                <el-button
+                    :size="fontSizeObj.buttonSize"
+                    :style="{ fontSize: fontSizeObj.baseFontSize }"
+                    class="global-btn-second"
+                >
+                    <i class="ri-file-download-line"></i>
+                    {{ $t('导入') }}
+                </el-button>
+            </el-upload>
+            <el-button
+                :size="fontSizeObj.buttonSize"
+                :style="{ fontSize: fontSizeObj.baseFontSize }"
+                class="global-btn-main"
+                type="primary"
+                @click="onClickBtn('addSystem', '新增系统')"
+            >
+                <i class="ri-add-line"></i>
+                <span>{{ $t('系统') }}</span>
+            </el-button>
+        </template>
+        <template v-slot:rightContainer>
+            <div v-if="currData.id">
+                <y9Card :title="`${$t('基本信息')} - ${currData.cnName ? currData.cnName : ''}`">
+                    <template v-slot>
+                        <div v-show="currData.isManageable" class="basic-btns">
+                            <span class="btn-top">
+                                <el-button
+                                    v-if="editBtnFlag"
+                                    :size="fontSizeObj.buttonSize"
+                                    :style="{ fontSize: fontSizeObj.baseFontSize }"
+                                    class="global-btn-main"
+                                    type="primary"
+                                    @click="editBtnFlag = false"
+                                >
+                                    <i class="ri-edit-line"></i>
+                                    {{ $t('编辑') }}
+                                </el-button>
+                                <span v-else>
+                                    <el-button
+                                        :loading="saveBtnLoading"
+                                        :size="fontSizeObj.buttonSize"
+                                        :style="{ fontSize: fontSizeObj.baseFontSize }"
+                                        class="global-btn-main"
+                                        type="primary"
+                                        @click="saveBtnClick = true"
+                                    >
+                                        <i class="ri-save-line"></i>
+                                        {{ $t('保存') }}
+                                    </el-button>
+                                    <el-button
+                                        :size="fontSizeObj.buttonSize"
+                                        :style="{ fontSize: fontSizeObj.baseFontSize }"
+                                        class="global-btn-second"
+                                        @click="editBtnFlag = true"
+                                    >
+                                        <i class="ri-close-line"></i>
+                                        {{ $t('取消') }}
+                                    </el-button>
+                                </span>
+                            </span>
+                            <span>
+                                <!-- <el-upload accept=".json" :http-request="handlerUpload" style="display: inline-block; margin: 0 15px" :show-file-list="false">
                                             <el-button class="global-btn-second" :size="fontSizeObj.buttonSize"
                                             :style="{ fontSize: fontSizeObj.baseFontSize }">
                                                 <i class="ri-file-download-line"></i>
                                                 {{ $t("导入") }}
                                             </el-button>
                                         </el-upload> -->
-                                        <el-button
-                                            :size="fontSizeObj.buttonSize"
-                                            :style="{ fontSize: fontSizeObj.baseFontSize }"
-                                            class="global-btn-second"
-                                            @click="handlerExport"
-                                        >
-                                            <i class="ri-file-upload-line" />
-                                            {{ $t('导出') }}
-                                        </el-button>
-                                        <el-button
-                                            v-loading.fullscreen.lock="loading"
-                                            :size="fontSizeObj.buttonSize"
-                                            :style="{ fontSize: fontSizeObj.baseFontSize }"
-                                            class="global-btn-second"
-                                            @click="handlerDisable"
-                                        >
-                                            <i class="ri-user-unfollow-line"></i>
-                                            {{ currData.enabled ? $t('禁用') : $t('启用') }}
-                                        </el-button>
-                                    </span>
-                                </div>
-                                <BasicInfo
-                                    :id="currData.id"
-                                    :editFlag="editBtnFlag"
-                                    :saveClickFlag="saveBtnClick"
-                                    @getSystemData="handlerEditSave"
-                                />
-                            </template>
-                        </y9Card>
-                        <y9Card
-                            v-show="currData.isManageable"
-                            :title="`${$t('应用管理')} - ${currData.cnName ? currData.cnName : ''}`"
-                        >
-                            <template v-slot>
-                                <ApplicatManager :id="currData.id" />
-                            </template>
-                        </y9Card>
-                    </div>
-                </template>
-            </fixedTreeModule>
-            <!-- 新增系统 弹框、 -->
-            <y9Dialog v-model:config="dialogConfig">
-                <y9Form v-if="dialogConfig.type === 'addSystem'" ref="ruleRef" :config="formSystem"></y9Form>
-                <treeSort
-                    v-if="dialogConfig.type == 'sort'"
-                    ref="sortRef"
-                    :apiRequest="systemList"
-                    :currInfo="currData"
-                ></treeSort>
-            </y9Dialog>
-        </div>
-        <el-button v-loading.fullscreen.lock="loading" style="display: none"></el-button>
-    </div>
+                                <el-button
+                                    :size="fontSizeObj.buttonSize"
+                                    :style="{ fontSize: fontSizeObj.baseFontSize }"
+                                    class="global-btn-second"
+                                    @click="handlerExport"
+                                >
+                                    <i class="ri-file-upload-line" />
+                                    {{ $t('导出') }}
+                                </el-button>
+                                <el-button
+                                    v-loading.fullscreen.lock="loading"
+                                    :size="fontSizeObj.buttonSize"
+                                    :style="{ fontSize: fontSizeObj.baseFontSize }"
+                                    class="global-btn-second"
+                                    @click="handlerDisable"
+                                >
+                                    <i class="ri-user-unfollow-line"></i>
+                                    {{ currData.enabled ? $t('禁用') : $t('启用') }}
+                                </el-button>
+                            </span>
+                        </div>
+                        <BasicInfo
+                            :id="currData.id"
+                            :editFlag="editBtnFlag"
+                            :saveClickFlag="saveBtnClick"
+                            @getSystemData="handlerEditSave"
+                        />
+                    </template>
+                </y9Card>
+                <y9Card
+                    v-show="currData.isManageable"
+                    :title="`${$t('应用管理')} - ${currData.cnName ? currData.cnName : ''}`"
+                >
+                    <template v-slot>
+                        <ApplicatManager :id="currData.id" />
+                    </template>
+                </y9Card>
+            </div>
+        </template>
+    </fixedTreeModule>
+    <!-- 新增系统 弹框、 -->
+    <y9Dialog v-model:config="dialogConfig">
+        <y9Form v-if="dialogConfig.type === 'addSystem'" ref="ruleRef" :config="formSystem"></y9Form>
+        <treeSort
+            v-if="dialogConfig.type == 'sort'"
+            ref="sortRef"
+            :apiRequest="systemList"
+            :currInfo="currData"
+        ></treeSort>
+    </y9Dialog>
+    <el-button v-loading.fullscreen.lock="loading" style="display: none"></el-button>
 </template>
 
 <script lang="ts" setup>
@@ -584,65 +580,10 @@
         align-items: center;
     }
 
-    .system-main {
-        .tree-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            flex-wrap: wrap;
-
-            div {
-                margin-bottom: 0.5rem;
-            }
-
-            .header-left {
-                :deep(.el-button),
-                :deep(.el-button:hover) {
-                    border: 1px solid var(--el-color-primary);
-                    margin-right: 10px;
-                    border-radius: 5px;
-
-                    i {
-                        margin-right: 5px;
-                    }
-                }
-            }
-
-            .header-right {
-                :deep(.el-button) {
-                    background-color: var(--el-color-primary);
-                    border-radius: 5px;
-                }
-            }
-
-            .header-search {
-                margin-top: -6px;
-
-                .el-input {
-                    width: 200px;
-                    height: 26px;
-                    border: 0px;
-                }
-            }
-        }
-
-        .basic-btns {
-            display: flex;
-            flex-wrap: wrap;
-            justify-content: space-between;
-            margin-bottom: 20px;
-
-            .btn-top {
-                margin-bottom: 10px;
-            }
-        }
-
-        i {
-            margin-right: 3px;
-        }
-
-        // :deep(.y9-dialog-overlay .y9-dialog .y9-dialog-body .y9-dialog-content[data-v-0c2bb858]) {
-        //     padding: 21px 45px 21px 21px !important;
-        // }
+    .basic-btns {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: space-between;
+        margin-bottom: 20px;
     }
 </style>
