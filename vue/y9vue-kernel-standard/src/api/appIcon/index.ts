@@ -56,19 +56,6 @@ export const searchIconPageByName = async ({ name, page, rows }) => {
 };
 
 /**
- * 刷新图标数据
- * @returns
- */
-export const refreshAppIconDatas = async () => {
-    return await platformRequest({
-        url: '/api/rest/appIcon/refreshAppIconDatas',
-        method: 'GET',
-        cType: false,
-        params: {}
-    });
-};
-
-/**
  * 上传图标
  * @param {*} iconFile
  * @param {*} remark
@@ -123,32 +110,5 @@ export const deleteIcon = async (id) => {
         method: 'POST',
         cType: false,
         data: data
-    });
-};
-
-/**
- * 图片文件读取
- * @returns
- */
-export const readAppIconFile = async () => {
-    return await platformRequest({
-        url: '/api/rest/appIcon/listAll',
-        method: 'GET',
-        cType: false,
-        params: {}
-    });
-};
-
-/**
- * 根据名称搜索图标
- * @param {*} name
- * @returns
- */
-export const searchAppIcon = async (name) => {
-    return await platformRequest({
-        url: '/api/rest/appIcon/searchAppIcon',
-        method: 'GET',
-        cType: false,
-        params: { name: name }
     });
 };

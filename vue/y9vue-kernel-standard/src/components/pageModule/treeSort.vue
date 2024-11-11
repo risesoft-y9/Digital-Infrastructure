@@ -1,22 +1,32 @@
 <template>
     <div class="margin-bottom-20">
-        <el-button @click="upPerson" class="global-btn-second"
-        :size="fontSizeObj.buttonSize" :style="{ fontSize: fontSizeObj.baseFontSize }">
+        <el-button
+            :size="fontSizeObj.buttonSize"
+            :style="{ fontSize: fontSizeObj.baseFontSize }"
+            class="global-btn-second"
+            @click="upPerson"
+        >
             <i class="ri-arrow-up-line"></i>
             <span>{{ $t('上移') }}</span>
         </el-button>
-        <el-button @click="downPerson" class="global-btn-second"
-        :size="fontSizeObj.buttonSize" :style="{ fontSize: fontSizeObj.baseFontSize }">
+        <el-button
+            :size="fontSizeObj.buttonSize"
+            :style="{ fontSize: fontSizeObj.baseFontSize }"
+            class="global-btn-second"
+            @click="downPerson"
+        >
             <i class="ri-arrow-down-line"></i>
             <span>{{ $t('下移') }}</span>
         </el-button>
     </div>
-    <y9Table :config="tableConfig" @on-current-change="onCurrentChange" v-model:selectedVal="selecedtVal"></y9Table>
+    <y9Table v-model:selectedVal="selecedtVal" :config="tableConfig" @on-current-change="onCurrentChange"></y9Table>
 </template>
 
 <script lang="ts" setup>
-    import { inject, nextTick, reactive, toRefs, watch } from 'vue';
+    import { ElNotification } from 'element-plus';
+    import { computed, inject, reactive, toRefs, watch } from 'vue';
     import { useI18n } from 'vue-i18n';
+
     const { t } = useI18n();
     // 注入 字体对象
     const fontSizeObj: any = inject('sizeObjInfo');
@@ -27,63 +37,60 @@
             type: Object,
             default: () => {
                 return {};
-            },
+            }
         },
         apiRequest: {
-            type: Function,
+            type: Function
         },
         apiParams: {
-            type: [Number, Object, String],
+            type: [Number, Object, String]
         },
         columns: {
-            type: Array,
+            type: Array
         },
         type: {
-            type: String,
-        },
+            type: String
+        }
     });
 
     const data = reactive({
         //当前节点信息
         tableConfig: {
             //人员列表表格配置
-            columns: [],
-            tableData: [],
-            pageConfig: false, //取消分页
+            columns: [] as any,
+            tableData: [] as any,
+            pageConfig: false //取消分页
         },
         currentRow: '',
-        selecedtVal: '',
+        selecedtVal: ''
     });
 
     let { tableConfig, currentRow, selecedtVal } = toRefs(data);
 
     let defaultColumn = [
-                {
-                    type: 'radio',
-                    title: computed(() => t('请选择')),
-                    width: 200,
-                },
-                {
-                    title: computed(() => t('名称')),
-                    key: 'name',
-                },
-            ]
+        {
+            type: 'radio',
+            title: computed(() => t('请选择')),
+            width: 200
+        },
+        {
+            title: computed(() => t('名称')),
+            key: 'name'
+        }
+    ];
     watch(
         () => props.columns,
         (newVal) => {
-            if(!newVal){
-                tableConfig.value.columns = defaultColumn
-            }else{
+            if (!newVal) {
+                tableConfig.value.columns = defaultColumn;
+            } else {
                 tableConfig.value.columns = newVal;
             }
-            
         },
         {
-            immediate: true,
+            immediate: true
         }
     );
-
-    
 
     watch(
         () => props.currInfo,
@@ -91,12 +98,12 @@
             getTableList();
         },
         {
-            immediate: true,
+            immediate: true
         }
     );
 
     defineExpose({
-        tableConfig,
+        tableConfig
     });
 
     async function getTableList() {
@@ -106,26 +113,52 @@
             let data = result.data;
             switch (props.type) {
                 case 'Person':
-                    data = await data.filter((item) => item.orgType !== 'Position');
+                    data = await data.filter((item) => item.nodeType !== 'Position');
                     break;
                 case 'Position':
-                    data = await data.filter((item) => item.orgType !== 'Person' && item.orgType !== 'Group');
+                    data = await data.filter((item) => item.nodeType !== 'Person' && item.nodeType !== 'Group');
                     break;
                 default:
                     break;
             }
             data.forEach((item) => {
-                if (item.orgType == 'Organization') {
-                    item.orgType = '组织机构';
-                }
-                if (item.orgType == 'Person') {
-                    item.orgType = '人员';
-                } else if (item.orgType == 'Department') {
-                    item.orgType = '部门';
-                } else if (item.orgType == 'Position') {
-                    item.orgType = '岗位';
-                } else if (item.orgType == 'Group') {
-                    item.orgType = '用户组';
+                switch (item.nodeType) {
+                    case 'Organization':
+                        item.nodeType = '组织机构';
+                        break;
+                    case 'Person':
+                        item.nodeType = '人员';
+                        break;
+                    case 'Department':
+                        item.nodeType = '部门';
+                        break;
+                    case 'Position':
+                        item.nodeType = '岗位';
+                        break;
+                    case 'Group':
+                        item.nodeType = '用户组';
+                        break;
+
+                    case 'APP':
+                        item.nodeType = '应用';
+                        break;
+                    case 'MENU':
+                        item.nodeType = '菜单';
+                        break;
+                    case 'OPERATION':
+                        item.nodeType = '按钮';
+                        break;
+
+                    case 'folder':
+                    case 'FOLDER':
+                        item.nodeType = '节点';
+                        break;
+                    case 'role':
+                    case 'ROLE':
+                        item.nodeType = '角色';
+                        break;
+                    default:
+                        break;
                 }
                 tableConfig.value.tableData.push(item);
             });
@@ -140,7 +173,13 @@
 
     async function upPerson() {
         if (currentRow.value == '' || currentRow.value == null) {
-            ElNotification({ title: t('失败'), message: t('请选择一行数据'), type: 'error', duration: 2000, offset: 80 });
+            ElNotification({
+                title: t('失败'),
+                message: t('请选择一行数据'),
+                type: 'error',
+                duration: 2000,
+                offset: 80
+            });
             return;
         }
         let tableData = tableConfig.value.tableData;
@@ -151,7 +190,7 @@
                     message: t('处于顶端，不能继续上移'),
                     type: 'error',
                     duration: 2000,
-                    offset: 80,
+                    offset: 80
                 });
                 return;
             }
@@ -167,7 +206,13 @@
 
     async function downPerson() {
         if (currentRow.value == '' || currentRow.value == null) {
-            ElNotification({ title: t('失败'), message: t('请选择一行数据'), type: 'error', duration: 2000, offset: 80 });
+            ElNotification({
+                title: t('失败'),
+                message: t('请选择一行数据'),
+                type: 'error',
+                duration: 2000,
+                offset: 80
+            });
             return;
         }
         let tableData = tableConfig.value.tableData;
@@ -178,7 +223,7 @@
                     message: t('处于末端，不能继续下移'),
                     type: 'error',
                     duration: 2000,
-                    offset: 80,
+                    offset: 80
                 });
                 return;
             }

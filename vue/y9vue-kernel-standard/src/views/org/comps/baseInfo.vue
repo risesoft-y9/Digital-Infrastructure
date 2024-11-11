@@ -2,7 +2,7 @@
  * @Author: fuyu
  * @Date: 2022-04-07 17:43:02
  * @LastEditors: mengjuhua
- * @LastEditTime: 2024-01-11 17:41:15
+ * @LastEditTime: 2024-11-11 15:32:19
  * @Description: 组织架构-基本信息
 -->
 <template>
@@ -963,7 +963,7 @@
                               },
                               {
                                   title: computed(() => t('类别')),
-                                  key: 'orgType'
+                                  key: 'nodeType'
                               }
                           ]
                         : []

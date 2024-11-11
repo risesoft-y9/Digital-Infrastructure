@@ -2,7 +2,7 @@
  * @Author: hongzhew
  * @Date: 2022-04-07 17:43:02
  * @LastEditors: mengjuhua
- * @LastEditTime: 2024-01-12 09:35:33
+ * @LastEditTime: 2024-11-11 15:34:57
  * @Description: 岗位基本信息
 -->
 <template>
@@ -622,7 +622,7 @@ l
                               },
                               {
                                   title: computed(() => t('类别')),
-                                  key: 'orgType'
+                                  key: 'nodeType'
                               }
                           ]
                         : []

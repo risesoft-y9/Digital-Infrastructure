@@ -25,20 +25,6 @@ export const treeInterface = async (params) => {
     });
 };
 
-/**
- * 获取组织架构列表
- * @param virtual 是否为虚拟组织
- */
-export const treeInterface2 = async (params) => {
-    return await platformRequest({
-        //url: 'http://127.0.0.1:4523/mock/891645/platform/api/rest/org/list',
-        url: '/api/rest/org/list',
-        method: 'get',
-        cType: false,
-        params: { virtual: params.virtual }
-    });
-};
-
 // 树组件 - 二（三）级接口数据
 export const getTreeItemById = async (params) => {
     return await platformRequest({
