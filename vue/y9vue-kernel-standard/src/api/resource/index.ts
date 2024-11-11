@@ -3,16 +3,6 @@ import qs from 'qs';
 
 const resourceRequest = Request();
 
-//应用树
-export const resourceAllTreeList = async () => {
-    return await resourceRequest({
-        url: '/api/rest/resource/allTreeRoot',
-        method: 'get',
-        cType: false,
-        params: {}
-    });
-};
-
 //资源树
 export const resourceTree = async (params) => {
     return await resourceRequest({
@@ -61,25 +51,13 @@ export const resourceTreeRoot = async (params) => {
     });
 };
 
-// app应用详情
-export const resourceInfo = async (id) => {
+//根据应用id查询资源（App资源树）
+export const appTreeRoot = async (id) => {
     return await resourceRequest({
-        // url: `http://127.0.0.1:4523/mock/891645/platform/api/rest/resource/app/${id}`,
-        url: `/api/rest/resource/app/${id}`,
+        // url: `http://127.0.0.1:4523/mock/891645/platform/api/rest/resource/operation/${id}`,
+        url: `/api/rest/resource/appTreeRoot/${id}`,
         method: 'get',
         cType: false
-    });
-};
-
-// 保存 应用
-export const resourceAdd = async (params) => {
-    const data = qs.stringify(params);
-    return await resourceRequest({
-        // url: 'http://127.0.0.1:4523/mock/891645/platform/api/rest/resource/app/save',
-        url: '/api/rest/resource/app/save',
-        method: 'post',
-        cType: false,
-        data
     });
 };
 
@@ -158,15 +136,5 @@ export const sort = async (ids) => {
         method: 'get',
         cType: false,
         params: { ids: ids }
-    });
-};
-
-//根据应用id查询资源（App资源）
-export const appTreeRoot = async (id) => {
-    return await resourceRequest({
-        // url: `http://127.0.0.1:4523/mock/891645/platform/api/rest/resource/operation/${id}`,
-        url: `/api/rest/resource/appTreeRoot/${id}`,
-        method: 'get',
-        cType: false
     });
 };

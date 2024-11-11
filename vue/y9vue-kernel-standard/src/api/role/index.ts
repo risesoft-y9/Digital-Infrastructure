@@ -72,16 +72,6 @@ export const saveOrder = async (ids) => {
     });
 };
 
-// 根据应用ID 获取资源树
-export const getResourceTree = async (id) => {
-    return await roleRequest({
-        // url: `http://127.0.0.1:4523/mock/891645/platform/api/rest/resource/appTreeRoot/${id}`,
-        url: `/api/rest/resource/appTreeRoot/${id}`,
-        method: 'get',
-        cType: false
-    });
-};
-
 // 获取公共角色树
 export const getPublicRoleTree = async () => {
     return await roleRequest({

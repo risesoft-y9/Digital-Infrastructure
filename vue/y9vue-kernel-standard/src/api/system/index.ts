@@ -14,16 +14,6 @@ export const systemList = async () => {
     });
 };
 
-// 系统 树 二级
-export const appSourceList = async (systemId) => {
-    return await systemRequest({
-        // url: `http://127.0.0.1:4523/mock/891645/platform/api/rest/resource/treeRoot/${systemId}`,
-        url: `/api/rest/resource/treeRoot/${systemId}`,
-        method: 'get',
-        cType: false
-    });
-};
-
 // 新增系统
 export const systemAdd = async (params) => {
     const data = qs.stringify(params);
@@ -119,7 +109,17 @@ export const applicationList = async (params) => {
     });
 };
 
-// 新增应用
+// 应用详情
+export const applicationInfoGet = async (appId) => {
+    return await systemRequest({
+        // url: `http://127.0.0.1:4523/mock/891645/platform/api/rest/resource/app/${appId}`,
+        url: `/api/rest/resource/app/${appId}`,
+        method: 'get',
+        cType: false
+    });
+};
+
+// 新增/修改 应用
 export const applicationAdd = async (params) => {
     const data = qs.stringify(params);
     return await systemRequest({
@@ -176,16 +176,6 @@ export const applicationEnable = async (idArr) => {
     });
 };
 
-// 应用详情
-export const applicationInfoGet = async (appId) => {
-    return await systemRequest({
-        // url: `http://127.0.0.1:4523/mock/891645/platform/api/rest/resource/app/${appId}`,
-        url: `/api/rest/resource/app/${appId}`,
-        method: 'get',
-        cType: false
-    });
-};
-
 // 导入 应用
 export const importAppJSON = async (file) => {
     var formData = new FormData();
@@ -195,24 +185,6 @@ export const importAppJSON = async (file) => {
         method: 'POST',
         cType: false,
         data: formData
-    });
-};
-
-// 应用中的图标 选择 列表
-export const iconSelectList = async () => {
-    return await systemRequest({
-        url: '/api/rest/app/getAppIconFileList',
-        method: 'POST',
-        cType: false
-    });
-};
-
-// 应用图标 列表搜索
-export const searchIcon = async (value) => {
-    return await systemRequest({
-        url: `/api/isvmain/app/searchAppIcon?name=${value}`,
-        method: 'POST',
-        cType: false
     });
 };
 
