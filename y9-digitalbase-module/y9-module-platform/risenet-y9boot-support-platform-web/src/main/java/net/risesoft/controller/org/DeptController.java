@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import lombok.RequiredArgsConstructor;
 
+import net.risesoft.controller.org.vo.OrgTreeNodeVO;
 import net.risesoft.entity.Y9Department;
 import net.risesoft.entity.Y9OrgBase;
 import net.risesoft.enums.platform.ManagerLevelEnum;
@@ -102,13 +103,16 @@ public class DeptController {
      *
      * @param parentId 父节点id
      * @return {@code Y9Result<List<Y9OrgBase>>}
-     * @since 9.6.1
+     * @since 9.6.8
      */
     @RiseLog(operationName = "获取部门排序列表")
     @RequestMapping(value = "/listOrderDepts")
-    public Y9Result<List<Y9OrgBase>> listOrderDepts(@RequestParam @NotBlank String parentId) {
+    public Y9Result<List<OrgTreeNodeVO>> listOrderDepts(@RequestParam @NotBlank String parentId) {
         List<Y9OrgBase> deptList = compositeOrgBaseService.getTree(parentId, OrgTreeTypeEnum.TREE_TYPE_ORG, false);
-        return Y9Result.success(deptList, "获取数据成功");
+
+        return Y9Result.success(
+            OrgTreeNodeVO.convertY9OrgBaseList(deptList, OrgTreeTypeEnum.TREE_TYPE_ORG, false, compositeOrgBaseService),
+            "获取机构树成功！");
     }
 
     /**

@@ -2,7 +2,7 @@
  * @Author: hongzhew
  * @Date: 2022-04-07 17:43:02
  * @LastEditors: mengjuhua
- * @LastEditTime: 2024-11-11 09:13:24
+ * @LastEditTime: 2024-11-11 14:50:14
  * @Description: 应用角色关联 + 应用角色管理
 -->
 <template>
@@ -237,7 +237,12 @@
     </y9Dialog>
     <!-- 排序 -->
     <y9Dialog v-model:config="sortDialogConfig">
-        <treeSort ref="sortRef" :apiParams="{ parentId: currData.id }" :apiRequest="roleTreeList"></treeSort>
+        <treeSort
+            ref="sortRef"
+            :apiParams="{ parentId: currData.id }"
+            :apiRequest="roleTreeList"
+            :columns="sortDialogConfig.columns"
+        ></treeSort>
     </y9Dialog>
     <!-- 移动 -->
     <y9Dialog v-model:config="moveConfigDialog">
@@ -348,9 +353,24 @@
     // 资源排序 弹框的变量配置 控制
     let sortDialogConfig = ref({
         show: false,
-        title: computed(() => t('资源排序')),
+        title: computed(() => t('角色排序')),
         width: '40%',
         showFooter: true, //是否显示底部
+        columns: [
+            {
+                type: 'radio',
+                title: computed(() => t('请选择')),
+                width: 200
+            },
+            {
+                title: computed(() => t('名称')),
+                key: 'name'
+            },
+            {
+                title: computed(() => t('类型')),
+                key: 'nodeType'
+            }
+        ],
         onOk: (newConfig) => {
             return new Promise(async (resolve, reject) => {
                 let tableData = sortRef.value.tableConfig.tableData;
@@ -393,7 +413,7 @@
         if (type === 'sort') {
             Object.assign(sortDialogConfig.value, {
                 show: true,
-                title: computed(() => t('资源排序'))
+                title: computed(() => t('角色排序'))
             });
         } else if (type === 'move') {
             Object.assign(moveConfigDialog.value, {

@@ -122,19 +122,6 @@
                     break;
             }
             data.forEach((item) => {
-                // if (item.nodeType == 'Organization') {
-                //     item.nodeType = '组织机构';
-                // }
-                // if (item.nodeType == 'Person') {
-                //     item.nodeType = '人员';
-                // } else if (item.nodeType == 'Department') {
-                //     item.nodeType = '部门';
-                // } else if (item.nodeType == 'Position') {
-                //     item.nodeType = '岗位';
-                // } else if (item.nodeType == 'Group') {
-                //     item.nodeType = '用户组';
-                // }
-
                 switch (item.nodeType) {
                     case 'Organization':
                         item.nodeType = '组织机构';
@@ -151,14 +138,24 @@
                     case 'Group':
                         item.nodeType = '用户组';
                         break;
+
                     case 'APP':
                         item.nodeType = '应用';
                         break;
                     case 'MENU':
-                        item.nodeType = '按钮';
+                        item.nodeType = '菜单';
                         break;
                     case 'OPERATION':
-                        item.nodeType = '菜单';
+                        item.nodeType = '按钮';
+                        break;
+
+                    case 'folder':
+                    case 'FOLDER':
+                        item.nodeType = '节点';
+                        break;
+                    case 'role':
+                    case 'ROLE':
+                        item.nodeType = '角色';
                         break;
                     default:
                         break;

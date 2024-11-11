@@ -2,7 +2,7 @@
  * @Author: hongzhew
  * @Date: 2022-04-07 17:43:02
  * @LastEditors: mengjuhua
- * @LastEditTime: 2024-11-08 11:21:49
+ * @LastEditTime: 2024-11-11 15:39:03
  * @Description: 应用资源详情
 -->
 <template>
@@ -103,6 +103,7 @@
             ref="sortRef"
             :apiParams="{ parentId: currTreeNodeInfo.id }"
             :apiRequest="resourceTreeRoot"
+            :columns="sortDialogConfig.columns"
         ></treeSort>
     </y9Dialog>
     <!-- 按钮操作 -->
@@ -550,6 +551,21 @@
         width: '40%',
         onOkLoading: true,
         showFooter: true, //是否显示底部
+        columns: [
+            {
+                type: 'radio',
+                title: computed(() => t('请选择')),
+                width: 200
+            },
+            {
+                title: computed(() => t('名称')),
+                key: 'name'
+            },
+            {
+                title: computed(() => t('类型')),
+                key: 'nodeType'
+            }
+        ],
         onOk: (newConfig) => {
             return new Promise(async (resolve, reject) => {
                 let tableData = sortRef.value.tableConfig.tableData;

@@ -9,22 +9,6 @@
 import logRequest from '@/api/lib/logRequest';
 
 /**
- * 获取用户日志
- * @param {*} userId
- * @param {*} page
- * @param {*} size
- * @returns
- */
-export const getLogInfoList4Users = async (userId, page, size) => {
-    return await logRequest({
-        url: '/admin/accessLog/pageByUsers',
-        method: 'GET',
-        cType: false,
-        params: { userId: userId, page: page, size: size }
-    });
-};
-
-/**
  * 查询用户日志
  * @param params
  * @param page
@@ -46,22 +30,6 @@ export const searchLogInfoList4Users = async (params, page, size) => {
         method: 'POST',
         cType: false,
         data: formData
-    });
-};
-
-/**
- * 获取系统管理员日志
- * @param {*} userId
- * @param {*} page
- * @param {*} size
- * @returns
- */
-export const getLogInfoList4SystemManagers = async (userId, page, size) => {
-    return await logRequest({
-        url: '/admin/accessLog/pageBySystemManagers',
-        method: 'GET',
-        cType: false,
-        params: { userId: userId, page: page, size: size }
     });
 };
 
@@ -91,22 +59,6 @@ export const searchLogInfoList4SystemManagers = async (params, page, size) => {
 };
 
 /**
- * 获取安全保密员日志
- * @param {*} userId
- * @param {*} page
- * @param {*} size
- * @returns
- */
-export const getLogInfoList4SecurityManagers = async (userId, page, size) => {
-    return await logRequest({
-        url: '/admin/accessLog/pageBySecurityManagers',
-        method: 'GET',
-        cType: false,
-        params: { userId: userId, page: page, size: size }
-    });
-};
-
-/**
  * 查询安全保密员日志
  * @param params
  * @param page
@@ -128,22 +80,6 @@ export const searchLogInfoList4SecurityManagers = async (params, page, size) => 
         method: 'POST',
         cType: false,
         data: formData
-    });
-};
-
-/**
- * 获取安全审计员日志
- * @param {*} userId
- * @param {*} page
- * @param {*} size
- * @returns
- */
-export const getLogInfoList4AuditManagers = async (userId, page, size) => {
-    return await logRequest({
-        url: '/admin/accessLog/pageByAuditManagers',
-        method: 'GET',
-        cType: false,
-        params: { userId: userId, page: page, size: size }
     });
 };
 

@@ -72,16 +72,6 @@ export const saveOrder = async (ids) => {
     });
 };
 
-// 获取公共角色树
-export const getPublicRoleTree = async () => {
-    return await roleRequest({
-        // url: `http://127.0.0.1:4523/mock/891645/platform/api/rest/publicRole/treeRoot`,
-        url: `/api/rest/publicRole/treeRoot2`,
-        method: 'get',
-        cType: false
-    });
-};
-
 // 角色的移动
 export const saveMoveRole = async (params) => {
     const data = qs.stringify(params);
@@ -127,16 +117,6 @@ export const addOrgUnits = async (roleNodeID, orgUnitIDs, negative) => {
         method: 'POST',
         cType: false,
         data: data
-    });
-};
-
-// 根据角色 id 返回角色关联的机构节点（机构，部门，用户组，岗位，人员）
-export const getListByRoleId = async (roleId) => {
-    return await roleRequest({
-        url: '/api/rest/orgBasesToRoles/listByRoleId',
-        method: 'GET',
-        cType: false,
-        params: { roleId: roleId }
     });
 };
 
@@ -188,6 +168,16 @@ export const saveOrUpdateRelateResource = async (params) => {
         method: 'POST',
         cType: false,
         data
+    });
+};
+
+// 获取公共角色树
+export const getPublicRoleTree = async () => {
+    return await roleRequest({
+        // url: `http://127.0.0.1:4523/mock/891645/platform/api/rest/publicRole/treeRoot`,
+        url: `/api/rest/publicRole/treeRoot2`,
+        method: 'get',
+        cType: false
     });
 };
 
