@@ -98,7 +98,7 @@
 
     let currentTreeType = ref(null);
 
-    let treeTypeList = ref([]);
+    let treeTypeList = ref([] as any);
 
     // 节点的 基本信息 获取
     function handlerTreeClick(data) {
@@ -333,6 +333,10 @@
         .expand-select {
             width: 150px;
             margin-right: 20px;
+
+            .el-select__wrapper {
+                font-size: v-bind('fontSizeObj.baseFontSize');
+            }
         }
     }
 </style>
