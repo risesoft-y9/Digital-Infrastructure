@@ -1,9 +1,9 @@
 <!--
  * @Author:  
  * @Date: 2022-06-06 11:47:27
- * @LastEditors: mengjuhua
- * @LastEditTime: 2024-04-07 11:36:08
- * @Description: 角色关联
+ * @LastEditors: mengjuhua 
+ * @LastEditTime: 2024-11-08 14:41:29
+ * @Description: 应用资源授权 - 角色关联
 -->
 <template>
     <div>
@@ -66,7 +66,8 @@
     import { computed, h, inject, onMounted, reactive, ref, toRefs, watch } from 'vue';
     import { ElMessage, ElMessageBox, ElNotification } from 'element-plus';
     import { getRelationRoleList, removeRole, saveOrUpdateRole } from '@/api/grantAuthorize/index';
-    import { getPublicRoleTree, getResourceTree, roleTreeList } from '@/api/role/index';
+    import { getPublicRoleTree, roleTreeList } from '@/api/role/index';
+    import { appTreeRoot } from '@/api/resource/index';
     import { useI18n } from 'vue-i18n';
     import { useSettingStore } from '@/store/modules/settingStore';
 
@@ -276,7 +277,7 @@
             topLevel: async () => {
                 let data: any = [];
                 if (roleTreeType.value === 'appRole') {
-                    const res = await getResourceTree(props.appId);
+                    const res = await appTreeRoot(props.appId);
                     data = res.data;
                     data.forEach((item) => {
                         if (item.resourceType === 0) {

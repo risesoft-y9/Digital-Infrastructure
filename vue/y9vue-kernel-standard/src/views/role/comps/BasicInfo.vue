@@ -2,7 +2,7 @@
  * @Author: hongzhew
  * @Date: 2022-04-07 17:43:02
  * @LastEditors: mengjuhua
- * @LastEditTime: 2023-12-26 11:26:01
+ * @LastEditTime: 2024-11-08 11:22:01
  * @Description: 应用角色详情
 -->
 <!--  -->
@@ -14,7 +14,7 @@
     import { computed, h, onMounted, ref, watch } from 'vue';
     import { useI18n } from 'vue-i18n';
     import { getRoleInfo } from '@/api/role/index';
-    import { resourceInfo } from '@/api/resource/index';
+    import { applicationInfoGet } from '@/api/system/index';
     import { useSettingStore } from '@/store/modules/settingStore';
 
     const settingStore = useSettingStore();
@@ -159,7 +159,7 @@
         // 请求接口 并赋予值
         let result;
         if (props.type === 'APP') {
-            result = await resourceInfo(props.id);
+            result = await applicationInfoGet(props.id);
         } else {
             result = await getRoleInfo(props.id);
         }

@@ -2,7 +2,7 @@
  * @Author: hongzhew
  * @Date: 2022-04-07 17:43:02
  * @LastEditors: mengjuhua
- * @LastEditTime: 2023-12-26 11:25:49
+ * @LastEditTime: 2024-11-08 11:21:49
  * @Description: 应用资源详情
 -->
 <template>
@@ -133,16 +133,8 @@
     import { ElNotification } from 'element-plus';
     import y9_storage from '@/utils/storage';
     import { useI18n } from 'vue-i18n';
-    import {
-        getMenuInfo,
-        getOperationInfo,
-        menuAdd,
-        operationAdd,
-        resourceAdd,
-        resourceInfo,
-        resourceTreeRoot,
-        sort
-    } from '@/api/resource/index';
+    import { getMenuInfo, getOperationInfo, menuAdd, operationAdd, resourceTreeRoot, sort } from '@/api/resource/index';
+    import { applicationAdd, applicationInfoGet } from '@/api/system/index';
     import { useSettingStore } from '@/store/modules/settingStore';
     import { $validCheck } from '@/utils/validate';
     import settings from '@/settings';
@@ -523,7 +515,7 @@
         // data 为基本信息 数据
         let result;
         if (data.resourceType === 0) {
-            result = await resourceAdd(data);
+            result = await applicationAdd(data);
         } else if (data.resourceType === 1) {
             result = await menuAdd(data);
         } else {
@@ -967,7 +959,7 @@
                     item.label = computed(() => t('应用名称'));
                 }
             });
-            responseInfo = await resourceInfo(props.currTreeNodeInfo.id);
+            responseInfo = await applicationInfoGet(props.currTreeNodeInfo.id);
         } else if (props.currTreeNodeInfo.nodeType === 'MENU') {
             // 菜单
             y9FormConfig.value.itemList = formList.filter(
@@ -1072,7 +1064,7 @@
                 // data 为基本信息 数据
                 let result;
                 if (basicInfo.value.resourceType === 0) {
-                    result = await resourceAdd(basicInfo.value);
+                    result = await applicationAdd(basicInfo.value);
                 } else if (basicInfo.value.resourceType === 1) {
                     result = await menuAdd(basicInfo.value);
                 } else {

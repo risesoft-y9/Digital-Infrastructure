@@ -2,259 +2,257 @@
  * @Author: hongzhew
  * @Date: 2022-04-07 17:43:02
  * @LastEditors: mengjuhua
- * @LastEditTime: 2023-12-26 12:56:55
+ * @LastEditTime: 2024-11-11 09:13:38
  * @Description: 公共角色管理
 -->
 <template>
-    <div>
-        <fixedTreeModule
-            ref="fixedTreeRef"
-            :treeApiObj="treeApiObj"
-            @onDeleteTree="roleRemove"
-            @onTreeClick="handlerTreeClick"
-        >
-            <template v-slot:rightContainer>
-                <!-- 右边卡片 -->
-                <div v-if="currData.id">
-                    <y9Card :title="`${$t('基本信息')} - ${currData.name ? currData.name : ''}`">
-                        <template v-slot>
-                            <div v-if="managerLevel === 1" class="basic-btns">
-                                <div class="btn-top">
-                                    <span v-if="currData.parentId !== null" style="margin-right: 15px">
-                                        <el-button
-                                            v-if="editBtnFlag"
-                                            :size="fontSizeObj.buttonSize"
-                                            :style="{ fontSize: fontSizeObj.baseFontSize }"
-                                            class="global-btn-main"
-                                            type="primary"
-                                            @click="editBtnFlag = false"
-                                        >
-                                            <i class="ri-edit-line"></i>
-                                            {{ $t('编辑') }}
-                                        </el-button>
-                                        <span v-else>
-                                            <el-button
-                                                :loading="saveBtnLoading"
-                                                :size="fontSizeObj.buttonSize"
-                                                :style="{ fontSize: fontSizeObj.baseFontSize }"
-                                                class="global-btn-main"
-                                                type="primary"
-                                                @click="saveBtnClick = true"
-                                            >
-                                                <i class="ri-save-line"></i>
-                                                {{ $t('保存') }}
-                                            </el-button>
-                                            <el-button
-                                                :size="fontSizeObj.buttonSize"
-                                                :style="{ fontSize: fontSizeObj.baseFontSize }"
-                                                class="global-btn-second"
-                                                @click="editBtnFlag = true"
-                                            >
-                                                <i class="ri-close-line"></i>
-                                                {{ $t('取消') }}
-                                            </el-button>
-                                        </span>
-                                    </span>
-                                    <span v-if="currData.nodeType !== 'role'">
-                                        <el-button
-                                            :size="fontSizeObj.buttonSize"
-                                            :style="{ fontSize: fontSizeObj.baseFontSize }"
-                                            class="global-btn-main"
-                                            type="primary"
-                                            @click="handlerAddRole"
-                                        >
-                                            <i class="ri-add-line"></i>
-                                            {{ $t('角色') }}
-                                        </el-button>
-                                    </span>
-                                </div>
-                                <div>
+    <fixedTreeModule
+        ref="fixedTreeRef"
+        :treeApiObj="treeApiObj"
+        @onDeleteTree="roleRemove"
+        @onTreeClick="handlerTreeClick"
+    >
+        <template v-slot:rightContainer>
+            <!-- 右边卡片 -->
+            <div v-if="currData.id">
+                <y9Card :title="`${$t('基本信息')} - ${currData.name ? currData.name : ''}`">
+                    <template v-slot>
+                        <div v-if="managerLevel === 1" class="basic-btns">
+                            <div class="btn-top">
+                                <span v-if="currData.parentId !== null" style="margin-right: 15px">
                                     <el-button
-                                        v-if="currData.nodeType !== 'role'"
+                                        v-if="editBtnFlag"
                                         :size="fontSizeObj.buttonSize"
                                         :style="{ fontSize: fontSizeObj.baseFontSize }"
-                                        class="global-btn-second"
-                                        @click="onSort('sort')"
+                                        class="global-btn-main"
+                                        type="primary"
+                                        @click="editBtnFlag = false"
                                     >
-                                        <i class="ri-order-play-line"></i>
-                                        {{ $t('排序') }}
+                                        <i class="ri-edit-line"></i>
+                                        {{ $t('编辑') }}
                                     </el-button>
-                                </div>
+                                    <span v-else>
+                                        <el-button
+                                            :loading="saveBtnLoading"
+                                            :size="fontSizeObj.buttonSize"
+                                            :style="{ fontSize: fontSizeObj.baseFontSize }"
+                                            class="global-btn-main"
+                                            type="primary"
+                                            @click="saveBtnClick = true"
+                                        >
+                                            <i class="ri-save-line"></i>
+                                            {{ $t('保存') }}
+                                        </el-button>
+                                        <el-button
+                                            :size="fontSizeObj.buttonSize"
+                                            :style="{ fontSize: fontSizeObj.baseFontSize }"
+                                            class="global-btn-second"
+                                            @click="editBtnFlag = true"
+                                        >
+                                            <i class="ri-close-line"></i>
+                                            {{ $t('取消') }}
+                                        </el-button>
+                                    </span>
+                                </span>
+                                <span v-if="currData.nodeType !== 'role'">
+                                    <el-button
+                                        :size="fontSizeObj.buttonSize"
+                                        :style="{ fontSize: fontSizeObj.baseFontSize }"
+                                        class="global-btn-main"
+                                        type="primary"
+                                        @click="handlerAddRole"
+                                    >
+                                        <i class="ri-add-line"></i>
+                                        {{ $t('角色') }}
+                                    </el-button>
+                                </span>
                             </div>
-                            <BasicInfo
-                                :id="currData.id"
-                                :editFlag="editBtnFlag"
-                                :saveClickFlag="saveBtnClick"
-                                :type="currData.nodeType"
-                                @getInfoData="handlerEditSave"
-                            />
-                        </template>
-                    </y9Card>
-                    <!-- 角色成员 -->
-                    <!--   -->
-                    <y9Card
-                        v-if="managerLevel === 2 && currData.nodeType === 'role'"
-                        :title="`${$t('角色成员')} - ${currData.name ? currData.name : ''}`"
-                    >
-                        <y9Table
-                            v-model:selectedVal="tableCurrSelectedVal"
-                            :config="tableConfig"
-                            :filterConfig="filterConfig"
-                        >
-                            <template v-slot:filterBtnSlot>
+                            <div>
                                 <el-button
+                                    v-if="currData.nodeType !== 'role'"
                                     :size="fontSizeObj.buttonSize"
                                     :style="{ fontSize: fontSizeObj.baseFontSize }"
-                                    class="global-btn-main"
-                                    type="primary"
-                                    @click="initList"
+                                    class="global-btn-second"
+                                    @click="onSort('sort')"
                                 >
-                                    <i class="ri-search-line"></i>
-                                    {{ $t('搜索') }}
+                                    <i class="ri-order-play-line"></i>
+                                    {{ $t('排序') }}
                                 </el-button>
-                                <div class="widthBtn">
-                                    <el-button
-                                        :size="fontSizeObj.buttonSize"
-                                        :style="{ fontSize: fontSizeObj.baseFontSize }"
-                                        class="global-btn-second"
-                                        @click="handlerClick('positive')"
-                                    >
-                                        <i class="ri-add-line"></i>
-                                        {{ $t('正权限成员') }}
-                                    </el-button>
-                                    <el-button
-                                        :size="fontSizeObj.buttonSize"
-                                        :style="{ fontSize: fontSizeObj.baseFontSize }"
-                                        class="global-btn-second"
-                                        @click="handlerClick('negative')"
-                                    >
-                                        <i class="ri-add-line"></i>
-                                        {{ $t('负权限成员') }}
-                                    </el-button>
-                                </div>
+                            </div>
+                        </div>
+                        <BasicInfo
+                            :id="currData.id"
+                            :editFlag="editBtnFlag"
+                            :saveClickFlag="saveBtnClick"
+                            :type="currData.nodeType"
+                            @getInfoData="handlerEditSave"
+                        />
+                    </template>
+                </y9Card>
+                <!-- 角色成员 -->
+                <!--   -->
+                <y9Card
+                    v-if="managerLevel === 2 && currData.nodeType === 'role'"
+                    :title="`${$t('角色成员')} - ${currData.name ? currData.name : ''}`"
+                >
+                    <y9Table
+                        v-model:selectedVal="tableCurrSelectedVal"
+                        :config="tableConfig"
+                        :filterConfig="filterConfig"
+                    >
+                        <template v-slot:filterBtnSlot>
+                            <el-button
+                                :size="fontSizeObj.buttonSize"
+                                :style="{ fontSize: fontSizeObj.baseFontSize }"
+                                class="global-btn-main"
+                                type="primary"
+                                @click="initList"
+                            >
+                                <i class="ri-search-line"></i>
+                                {{ $t('搜索') }}
+                            </el-button>
+                            <div class="widthBtn">
                                 <el-button
                                     :size="fontSizeObj.buttonSize"
                                     :style="{ fontSize: fontSizeObj.baseFontSize }"
                                     class="global-btn-second"
-                                    @click="handlerDeleteClick('roleMember')"
+                                    @click="handlerClick('positive')"
                                 >
-                                    <i class="ri-delete-bin-line"></i>
-                                    {{ $t('删除') }}
+                                    <i class="ri-add-line"></i>
+                                    {{ $t('正权限成员') }}
                                 </el-button>
-                            </template>
-                        </y9Table>
-                    </y9Card>
+                                <el-button
+                                    :size="fontSizeObj.buttonSize"
+                                    :style="{ fontSize: fontSizeObj.baseFontSize }"
+                                    class="global-btn-second"
+                                    @click="handlerClick('negative')"
+                                >
+                                    <i class="ri-add-line"></i>
+                                    {{ $t('负权限成员') }}
+                                </el-button>
+                            </div>
+                            <el-button
+                                :size="fontSizeObj.buttonSize"
+                                :style="{ fontSize: fontSizeObj.baseFontSize }"
+                                class="global-btn-second"
+                                @click="handlerDeleteClick('roleMember')"
+                            >
+                                <i class="ri-delete-bin-line"></i>
+                                {{ $t('删除') }}
+                            </el-button>
+                        </template>
+                    </y9Table>
+                </y9Card>
 
-                    <y9Card
-                        v-if="managerLevel === 2 && currData.nodeType === 'role'"
-                        :title="`${$t('资源列表')} - ${currData.name ? currData.name : ''}`"
+                <y9Card
+                    v-if="managerLevel === 2 && currData.nodeType === 'role'"
+                    :title="`${$t('资源列表')} - ${currData.name ? currData.name : ''}`"
+                >
+                    <y9Table
+                        v-model:selectedVal="resourceTableCurrSelectedVal"
+                        :config="resourceTableConfig"
+                        :filterConfig="resourcefilterConfig"
+                        @on-curr-page-change="onCurrPageChange"
+                        @on-page-size-change="onPageSizeChange"
                     >
-                        <y9Table
-                            v-model:selectedVal="resourceTableCurrSelectedVal"
-                            :config="resourceTableConfig"
-                            :filterConfig="resourcefilterConfig"
-                            @on-curr-page-change="onCurrPageChange"
-                            @on-page-size-change="onPageSizeChange"
-                        >
-                            <template v-slot:filterBtnSlot>
-                                <!-- <el-button class="global-btn-main" @click="initList" type="primary">
+                        <template v-slot:filterBtnSlot>
+                            <!-- <el-button class="global-btn-main" @click="initList" type="primary">
 					                <i class="ri-search-line"></i>
 					                {{ $t('搜索') }}
 					            </el-button> -->
-                                <div class="widthBtn">
-                                    <el-button
-                                        :size="fontSizeObj.buttonSize"
-                                        :style="{ fontSize: fontSizeObj.baseFontSize }"
-                                        class="global-btn-second"
-                                        @click="handlerClickResource"
-                                    >
-                                        <i class="ri-add-line"></i>
-                                        {{ $t('资源授权') }}
-                                    </el-button>
-                                </div>
+                            <div class="widthBtn">
                                 <el-button
                                     :size="fontSizeObj.buttonSize"
                                     :style="{ fontSize: fontSizeObj.baseFontSize }"
                                     class="global-btn-second"
-                                    @click="handlerDeleteClick('resource')"
+                                    @click="handlerClickResource"
                                 >
-                                    <i class="ri-close-line"></i>
-                                    {{ $t('删除') }}
+                                    <i class="ri-add-line"></i>
+                                    {{ $t('资源授权') }}
                                 </el-button>
-                            </template>
-                        </y9Table>
-                    </y9Card>
+                            </div>
+                            <el-button
+                                :size="fontSizeObj.buttonSize"
+                                :style="{ fontSize: fontSizeObj.baseFontSize }"
+                                class="global-btn-second"
+                                @click="handlerDeleteClick('resource')"
+                            >
+                                <i class="ri-close-line"></i>
+                                {{ $t('删除') }}
+                            </el-button>
+                        </template>
+                    </y9Table>
+                </y9Card>
+            </div>
+        </template>
+    </fixedTreeModule>
+    <!-- 新增子节点 角色 弹框 -->
+    <y9Dialog v-model:config="addChildNodeDialog">
+        <y9Form ref="roleFormRef" :config="roleFormConfig"></y9Form>
+    </y9Dialog>
+    <!-- 排序 -->
+    <y9Dialog v-model:config="sortDialogConfig">
+        <treeSort ref="sortRef" :apiParams="{ parentId: currData.id }" :apiRequest="roleTreeList"></treeSort>
+    </y9Dialog>
+    <!-- 正权限 负权限 -->
+    <y9Dialog v-model:config="negativeConfigDialog">
+        <selectTree
+            ref="selectTreeRef"
+            :selectField="selectField"
+            :treeApiObj="negativeTreeApiObj"
+            checkStrictly
+        ></selectTree>
+    </y9Dialog>
+
+    <!-- 资源授权 -->
+    <y9Dialog v-model:config="iconSourceConfigDialog">
+        <y9Filter
+            ref="resourceFilterRef"
+            :filtersValueCallBack="sourceFiltersValueCallBack"
+            :itemList="filtersListSource"
+            showBorder
+        >
+            <template #treeFilter>
+                <div class="custom-select-tree-filter">
+                    <el-button
+                        :size="fontSizeObj.buttonSize"
+                        :style="{ fontSize: fontSizeObj.baseFontSize }"
+                        class="global-btn-second refresh-btn"
+                        @click="onRefreshTree"
+                    >
+                        <i class="ri-refresh-line"></i>
+                        <span>{{ $t('刷新') }}</span>
+                    </el-button>
+
+                    <input autocomplete="new-password" hidden type="password" />
+                    <el-input
+                        v-model="searchKey"
+                        :placeholder="$t('请搜索')"
+                        :size="fontSizeObj.buttonSize"
+                        :style="{ fontSize: fontSizeObj.baseFontSize }"
+                        autocomplete
+                        class="search-input"
+                        name="select-tree-search"
+                        type="search"
+                        @input="onSearchKeyChange"
+                    >
+                        <template #prefix>
+                            <i class="ri-search-line"></i>
+                        </template>
+                    </el-input>
                 </div>
             </template>
-        </fixedTreeModule>
-        <!-- 新增子节点 角色 弹框 -->
-        <y9Dialog v-model:config="addChildNodeDialog">
-            <y9Form ref="roleFormRef" :config="roleFormConfig"></y9Form>
-        </y9Dialog>
-        <!-- 排序 -->
-        <y9Dialog v-model:config="sortDialogConfig">
-            <treeSort ref="sortRef" :apiParams="{ parentId: currData.id }" :apiRequest="roleTreeList"></treeSort>
-        </y9Dialog>
-        <!-- 正权限 负权限 -->
-        <y9Dialog v-model:config="negativeConfigDialog">
-            <selectTree
-                ref="selectTreeRef"
-                :selectField="selectField"
-                :treeApiObj="negativeTreeApiObj"
-                checkStrictly
-            ></selectTree>
-        </y9Dialog>
-
-        <!-- 资源授权 -->
-        <y9Dialog v-model:config="iconSourceConfigDialog">
-            <y9Filter
-                ref="resourceFilterRef"
-                :filtersValueCallBack="sourceFiltersValueCallBack"
-                :itemList="filtersListSource"
-                showBorder
-            >
-                <template #treeFilter>
-                    <div class="custom-select-tree-filter">
-                        <el-button
-                            :size="fontSizeObj.buttonSize"
-                            :style="{ fontSize: fontSizeObj.baseFontSize }"
-                            class="global-btn-second refresh-btn"
-                            @click="onRefreshTree"
-                        >
-                            <i class="ri-refresh-line"></i>
-                            <span>{{ $t('刷新') }}</span>
-                        </el-button>
-
-                        <input autocomplete="new-password" hidden type="password" />
-                        <el-input
-                            v-model="searchKey"
-                            :placeholder="$t('请搜索')"
-                            :size="fontSizeObj.buttonSize"
-                            :style="{ fontSize: fontSizeObj.baseFontSize }"
-                            autocomplete
-                            class="search-input"
-                            name="select-tree-search"
-                            type="search"
-                            @input="onSearchKeyChange"
-                        >
-                            <template #prefix>
-                                <i class="ri-search-line"></i>
-                            </template>
-                        </el-input>
-                    </div>
-                </template>
-            </y9Filter>
-            <!-- tree树 -->
-            <selectTree
-                ref="resourceSelectTree"
-                :selectField="selectResourceField"
-                :showHeader="false"
-                :treeApiObj="sourceTreeApiObj"
-                checkStrictly
-            ></selectTree>
-        </y9Dialog>
-        <el-button v-loading.fullscreen.lock="loading" style="display: none"></el-button>
-    </div>
+        </y9Filter>
+        <!-- tree树 -->
+        <selectTree
+            ref="resourceSelectTree"
+            :selectField="selectResourceField"
+            :showHeader="false"
+            :treeApiObj="sourceTreeApiObj"
+            checkStrictly
+        ></selectTree>
+    </y9Dialog>
+    <el-button v-loading.fullscreen.lock="loading" style="display: none"></el-button>
 </template>
 
 <script lang="ts" setup>
