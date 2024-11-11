@@ -2,29 +2,28 @@
  * @Author: hongzhew
  * @Date: 2022-04-07 17:43:02
  * @LastEditors: mengjuhua
- * @LastEditTime: 2024-04-02 14:40:13
+ * @LastEditTime: 2024-11-11 09:13:09
  * @Description: 应用资源管理
 -->
 <template>
-    <div>
-        <fixedTreeModule
-            ref="fixedTreeRef"
-            :treeApiObj="treeApiObj"
-            nodeLabel="newName"
-            @onDeleteTree="resourceRemove"
-            @onTreeClick="handlerTreeClick"
-        >
-            <template v-slot:treeHeaderRight>
-                <!-- <el-button 
+    <fixedTreeModule
+        ref="fixedTreeRef"
+        :treeApiObj="treeApiObj"
+        nodeLabel="newName"
+        @onDeleteTree="resourceRemove"
+        @onTreeClick="handlerTreeClick"
+    >
+        <template v-slot:treeHeaderRight>
+            <!-- <el-button 
                     type="primary">
                     <i class="ri-add-line"></i>
                     <span>资源</span>
                 </el-button>-->
-            </template>
-            <template v-slot:rightContainer>
-                <!-- 右边卡片 -->
-                <div v-if="currData.id">
-                    <!-- <y9Card :title="`查看修改日志 - ${ currData.name? currData.name : '' }`" >
+        </template>
+        <template v-slot:rightContainer>
+            <!-- 右边卡片 -->
+            <div v-if="currData.id">
+                <!-- <y9Card :title="`查看修改日志 - ${ currData.name? currData.name : '' }`" >
                         <y9Table 
                             :config="modifyLogTableConfig" border >
                         </y9Table>
@@ -33,29 +32,28 @@
                         <RoleRelation />
                     </y9Card>-->
 
-                    <y9Card
-                        v-if="currData.nodeType === 'SYSTEM'"
-                        :title="`${$t('基本信息')} - ${currData.name ? currData.name : ''}`"
-                    >
-                        <template v-slot>
-                            <SystemBasicInfo :id="currData.id" :editFlag="true" />
-                        </template>
-                    </y9Card>
-                    <BasicInfo
-                        v-else
-                        :currTreeNodeInfo="currData"
-                        :findNode="findNode"
-                        :getTreeData="getTreeData"
-                        :getTreeInstance="getTreeInstance"
-                        :handClickNode="handClickNode"
-                        :postNode="postNode"
-                    />
-                </div>
-            </template>
-        </fixedTreeModule>
-        <!-- 制造loading效果 -->
-        <el-button v-loading.fullscreen.lock="loading" style="display: none"></el-button>
-    </div>
+                <y9Card
+                    v-if="currData.nodeType === 'SYSTEM'"
+                    :title="`${$t('基本信息')} - ${currData.name ? currData.name : ''}`"
+                >
+                    <template v-slot>
+                        <SystemBasicInfo :id="currData.id" :editFlag="true" />
+                    </template>
+                </y9Card>
+                <BasicInfo
+                    v-else
+                    :currTreeNodeInfo="currData"
+                    :findNode="findNode"
+                    :getTreeData="getTreeData"
+                    :getTreeInstance="getTreeInstance"
+                    :handClickNode="handClickNode"
+                    :postNode="postNode"
+                />
+            </div>
+        </template>
+    </fixedTreeModule>
+    <!-- 制造loading效果 -->
+    <el-button v-loading.fullscreen.lock="loading" style="display: none"></el-button>
 </template>
 
 <script lang="ts" setup>

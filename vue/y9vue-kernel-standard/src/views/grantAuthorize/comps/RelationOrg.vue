@@ -3,7 +3,7 @@
  * @Date: 2022-06-06 11:47:27
  * @LastEditors: mengjuhua
  * @LastEditTime: 2024-01-12 10:48:01
- * @Description: 组织关联
+ * @Description: 应用资源授权 - 组织关联
 -->
 <template>
     <div>

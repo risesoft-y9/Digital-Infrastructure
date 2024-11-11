@@ -2,8 +2,8 @@
  * @Author: fuyu
  * @Date: 2022-06-06 11:47:27
  * @LastEditors: mengjuhua
- * @LastEditTime: 2024-04-16 10:40:29
- * @Description: 授权管理
+ * @LastEditTime: 2024-11-08 14:40:48
+ * @Description: 应用资源授权
 -->
 <template>
     <div>
@@ -22,20 +22,14 @@
                         :title="`${$t('基本信息')} - ${currData.name ? currData.name : ''}`"
                     >
                         <template v-slot>
-                            <SystemBasicInfo :id="currData.id" :editFlag="true" />
+                            <BasicInfo :id="currData.id" :type="currData.nodeType" />
                         </template>
                     </y9Card>
                 </div>
                 <div v-else>
                     <y9Card :title="`${$t('基本信息')} - ${currData.name ? currData.name : ''}`">
                         <template v-slot>
-                            <BasicInfo
-                                :id="currData.id"
-                                :editFlag="editBtnFlag"
-                                :saveClickFlag="saveBtnClick"
-                                :type="currData.nodeType"
-                                @getInfoData="handlerEditSave"
-                            />
+                            <BasicInfo :id="currData.id" :type="currData.nodeType" />
                         </template>
                     </y9Card>
                     <!-- 角色关联 -->
@@ -68,7 +62,6 @@
     import RelationRole from './comps/RelationRole.vue';
     // 组织 关联
     import RelationOrg from './comps/RelationOrg.vue';
-    import SystemBasicInfo from '@/views/system/comps/BasicInfo.vue';
 
     const { t } = useI18n();
 

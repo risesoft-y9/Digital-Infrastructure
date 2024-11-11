@@ -2,28 +2,27 @@
  * @Author: hongzhew
  * @Date: 2022-04-07 17:43:02
  * @LastEditors: mengjuhua
- * @LastEditTime: 2023-12-26 11:23:04
- * @Description: 
+ * @LastEditTime: 2024-11-08 14:40:13
+ * @Description: 应用资源授权 -基本信息
 -->
 <template>
-    <y9Form ref="y9FormRef" :config="y9FormConfig"></y9Form>
+    <y9Form ref="y9SystemFormRef" :config="y9SystemFormConfig" v-if="type == 'SYSTEM'"></y9Form>
+    <y9Form ref="y9FormRef" :config="y9FormConfig" v-else></y9Form>
 </template>
 
 <script lang="ts" setup>
     import { computed, h, onMounted, ref, watch } from 'vue';
     import { useI18n } from 'vue-i18n';
-    import { getMenuInfo, getOperationInfo, resourceInfo } from '@/api/resource/index';
+    import { getMenuInfo, getOperationInfo } from '@/api/resource/index';
+    import { applicationInfoGet, systemInfoGet } from '@/api/system/index';
     import { useSettingStore } from '@/store/modules/settingStore';
 
     const settingStore = useSettingStore();
     const { t } = useI18n();
     const props = defineProps({
         id: String, // id
-        type: String, // 应用0 菜单1 按钮2的区分
-        editFlag: Boolean, // 编辑 与 查看 的对应显示变量
-        saveClickFlag: Boolean // 是否点击保存 的变量
+        type: String // 应用0 菜单1 按钮2的区分
     });
-    const emits = defineEmits(['getInfoData']);
 
     // 基本信息
     let basicInfo = ref({} as any);
@@ -157,12 +156,129 @@
         ]
     });
 
+    let y9SystemFormRef = ref();
+
+    //表单配置
+    let y9SystemFormConfig = ref({
+        descriptionsFormConfig: {
+            //描述表单配置
+            column: settingStore.device === 'mobile' ? 1 : 2,
+            labelAlign: 'center',
+            labelWidth: '150px',
+            contentWidth: '200px'
+        },
+        model: {},
+        rules: {}, //表单验证规则
+        itemList: [
+            //表单显示列表
+            {
+                type: 'text',
+                type1: 'input', //自定义字段-编辑时显示的类型
+                type2: 'text', //自定义字段-非编辑状态显示文本类型
+                prop: 'name',
+                label: computed(() => t('系统名称')),
+                props: {
+                    render: () => {
+                        //text类型渲染的内容
+                        return h('span', basicInfo.value?.name);
+                    }
+                }
+            },
+            {
+                type: 'text',
+                type1: 'input', //自定义字段-编辑时显示的类型
+                type2: 'text', //自定义字段-非编辑状态显示文本类型
+                prop: 'cnName',
+                label: computed(() => t('系统中文名称')),
+                props: {
+                    render: () => {
+                        //text类型渲染的内容
+                        return h('span', basicInfo.value?.cnName);
+                    }
+                }
+            },
+            {
+                type: 'text',
+                type1: 'text', //自定义字段-编辑时显示的类型
+                type2: 'text', //自定义字段-非编辑状态显示文本类型
+                prop: 'id',
+                label: computed(() => t('唯一标识')),
+                props: {
+                    render: () => {
+                        //text类型渲染的内容
+                        return h('span', basicInfo.value?.id);
+                    }
+                }
+            },
+            {
+                type: 'text',
+                type1: 'radio', //自定义字段-编辑时显示的类型
+                type2: 'text', //自定义字段-非编辑状态显示文本类型
+                prop: 'enabled',
+                label: computed(() => t('是否启用')),
+                props: {
+                    options: [
+                        { label: computed(() => t('是')), value: true },
+                        { label: computed(() => t('否')), value: false }
+                    ],
+                    render: () => {
+                        //text类型渲染的内容
+                        return h('span', basicInfo.value?.enabled ? t('是') : t('否'));
+                    }
+                }
+            },
+            {
+                type: 'text',
+                type1: 'input', //自定义字段-编辑时显示的类型
+                type2: 'text', //自定义字段-非编辑状态显示文本类型
+                prop: 'contextPath',
+                label: computed(() => t('应用上下文')),
+                props: {
+                    render: () => {
+                        //text类型渲染的内容
+                        return h('span', basicInfo.value?.contextPath);
+                    }
+                }
+            },
+            {
+                type: 'text',
+                type1: 'input', //自定义字段-编辑时显示的类型
+                type2: 'text', //自定义字段-非编辑状态显示文本类型
+                prop: 'tabIndex',
+                label: computed(() => t('类型')),
+                props: {
+                    options: [],
+                    render: () => {
+                        //text类型渲染的内容
+                        return h('span', t('系统'));
+                    }
+                }
+            },
+            {
+                type: 'text',
+                type1: 'textarea', //自定义字段-编辑时显示的类型
+                type2: 'text', //自定义字段-非编辑状态显示文本类型
+                prop: 'description',
+                label: computed(() => t('系统概述')),
+                props: {
+                    render: () => {
+                        //text类型渲染的内容
+                        return h('span', basicInfo.value?.description);
+                    }
+                }
+            }
+        ]
+    });
+
     // 请求详情 函数
     async function getInfo() {
         let responseInfo;
-        if (props.type === 'APP') {
+        if (props.type === 'SYSTEM') {
             // 应用
-            responseInfo = await resourceInfo(props.id);
+            responseInfo = await systemInfoGet(props.id);
+        } else if (props.type === 'APP') {
+            // 应用
+            responseInfo = await applicationInfoGet(props.id);
         } else if (props.type === 'MENU') {
             // 菜单
             responseInfo = await getMenuInfo(props.id);
@@ -185,43 +301,5 @@
             }
         }
     );
-
-    // 监听 saveClicFlag 当为true 时 将对象传给 index
-    watch(
-        () => props.saveClickFlag,
-        async (new_, old_) => {
-            if (new_) {
-                basicInfo.value = y9FormRef.value?.model;
-                emits('getInfoData', basicInfo.value);
-            }
-        }
-    );
-
-    watch(
-        () => props.editFlag,
-        (new_, old_) => {
-            y9FormConfig.value.model = basicInfo.value;
-            changeY9FormType(!new_);
-        }
-    );
-
-    //改变y9Form显示类型
-    function changeY9FormType(isEdit) {
-        if (isEdit) {
-            //编辑状态设置表单校验规则
-            // y9FormConfig.value.rules = {
-            //     name:[
-            //         { required: true, message: t('请输入名称'), trigger: 'blur' }
-            //     ],
-            // }
-        } else {
-            y9FormConfig.value.rules = {};
-        }
-
-        //编辑模式显示type1类型 非编辑模式显示type2类型
-        y9FormConfig.value.itemList.forEach((item) => {
-            item.type = isEdit ? item.type1 : item.type2;
-        });
-    }
 </script>
 <style lang="scss" scoped></style>
