@@ -2,7 +2,7 @@
  * @Author: shidaobang
  * @Date: 2022-04-07 17:43:02
  * @LastEditors: mengjuhua
- * @LastEditTime: 2024-03-11 16:05:58
+ * @LastEditTime: 2024-11-11 16:27:04
  * @Description: 资源权限树
 -->
 <template>
@@ -19,7 +19,13 @@
                             @window-height-change="windowHeightChange"
                         >
                             <template v-slot:slotsync>
-                                <el-button class="global-btn-main" type="primary" @click="syncPosition()">
+                                <el-button
+                                    :size="fontSizeObj.buttonSize"
+                                    :style="{ fontSize: fontSizeObj.baseFontSize }"
+                                    class="global-btn-main"
+                                    type="primary"
+                                    @click="syncPosition()"
+                                >
                                     <i class="ri-refresh-line"></i>
                                     {{ $t('权限') }}
                                 </el-button>
@@ -29,6 +35,8 @@
                     <template v-else>
                         <div style="height: 213px">
                             <el-button
+                                :size="fontSizeObj.buttonSize"
+                                :style="{ fontSize: fontSizeObj.baseFontSize }"
                                 class="global-btn-main"
                                 style="margin-bottom: 10px"
                                 type="primary"

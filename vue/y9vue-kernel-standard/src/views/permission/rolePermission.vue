@@ -19,7 +19,13 @@
                             @window-height-change="windowHeightChange"
                         >
                             <template v-slot:slotsync>
-                                <el-button class="global-btn-main" type="primary" @click="syncPosition()">
+                                <el-button
+                                    :size="fontSizeObj.buttonSize"
+                                    :style="{ fontSize: fontSizeObj.baseFontSize }"
+                                    class="global-btn-main"
+                                    type="primary"
+                                    @click="syncPosition()"
+                                >
                                     <i class="ri-refresh-line"></i>
                                     {{ $t('权限') }}
                                 </el-button>
@@ -29,6 +35,8 @@
                     <template v-else>
                         <div style="height: 213px">
                             <el-button
+                                :size="fontSizeObj.buttonSize"
+                                :style="{ fontSize: fontSizeObj.baseFontSize }"
                                 class="global-btn-main"
                                 style="margin-bottom: 10px"
                                 type="primary"
