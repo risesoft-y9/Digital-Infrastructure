@@ -2,7 +2,7 @@
  * @Author: hongzhew
  * @Date: 2022-04-07 17:43:02
  * @LastEditors: mengjuhua
- * @LastEditTime: 2024-11-08 13:58:22
+ * @LastEditTime: 2024-11-11 16:13:31
  * @Description: 应用系统管理
 -->
 <template>
@@ -145,6 +145,7 @@
             v-if="dialogConfig.type == 'sort'"
             ref="sortRef"
             :apiRequest="systemList"
+            :columns="dialogConfig.columns"
             :currInfo="currData"
         ></treeSort>
     </y9Dialog>
@@ -385,6 +386,7 @@
         width: '40%',
         onOkLoading: true,
         type: '',
+        columns: [],
         onOk: (newConfig) => {
             return new Promise(async (resolve, reject) => {
                 if (newConfig.value.type == 'addSystem') {
@@ -462,6 +464,10 @@
                           },
                           {
                               title: '名称',
+                              key: 'name'
+                          },
+                          {
+                              title: '中文名称',
                               key: 'cnName'
                           }
                       ]
