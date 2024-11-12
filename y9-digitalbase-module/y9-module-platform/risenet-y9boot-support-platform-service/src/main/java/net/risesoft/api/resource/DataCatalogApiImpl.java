@@ -40,9 +40,10 @@ public class DataCatalogApiImpl implements DataCatalogApi {
 
     @Override
     public Y9Result<List<DataCatalog>> getTree(@RequestParam(name = "treeType") @NotBlank String treeType,
-        @RequestParam(required = false) String parentId,
+        @RequestParam(required = false, name = "parentId") String parentId,
         @RequestParam(name = "includeAllDescendant", required = false) boolean includeAllDescendant,
-        @RequestParam("tenantId") String tenantId, @RequestParam(name = "personId", required = false) String personId,
+        @RequestParam(name = "tenantId") String tenantId,
+        @RequestParam(name = "personId", required = false) String personId,
         @RequestParam(name = "authority", required = false) AuthorityEnum authority) {
         Y9LoginUserHolder.setTenantId(tenantId);
 
@@ -61,11 +62,19 @@ public class DataCatalogApiImpl implements DataCatalogApi {
     }
 
     @Override
-    public Y9Result<DataCatalog> getById(@RequestParam("tenantId") String tenantId,
+    public Y9Result<DataCatalog> getById(@RequestParam(name = "tenantId") String tenantId,
         @RequestParam(name = "id") @NotBlank String id) {
         Y9LoginUserHolder.setTenantId(tenantId);
 
         return Y9Result.success(y9DataCatalogService.getById(id));
+    }
+
+    @Override
+    public Y9Result<DataCatalog> getTreeRoot(@RequestParam("tenantId") String tenantId,
+        @RequestParam(name = "id") @NotBlank String id) {
+        Y9LoginUserHolder.setTenantId(tenantId);
+
+        return Y9Result.success(y9DataCatalogService.getTreeRoot(id));
     }
 
 }
