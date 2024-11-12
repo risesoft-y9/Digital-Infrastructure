@@ -1,10 +1,12 @@
 package net.risesoft.api.customgroup;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotEmpty;
 
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.context.annotation.Primary;
 import org.springframework.data.domain.Page;
 import org.springframework.http.MediaType;
@@ -27,6 +29,7 @@ import net.risesoft.model.platform.Person;
 import net.risesoft.pojo.Y9Page;
 import net.risesoft.pojo.Y9PageQuery;
 import net.risesoft.pojo.Y9Result;
+import net.risesoft.service.org.CompositeOrgBaseService;
 import net.risesoft.service.org.Y9CustomGroupService;
 import net.risesoft.service.relation.Y9CustomGroupMembersService;
 import net.risesoft.y9.Y9LoginUserHolder;
@@ -51,6 +54,7 @@ public class CustomGroupApiImpl implements CustomGroupApi {
 
     private final Y9CustomGroupMembersService customGroupMembersService;
     private final Y9CustomGroupService customGroupService;
+    private final CompositeOrgBaseService compositeOrgBaseService;
 
     /**
      * 添加组成员
@@ -69,6 +73,19 @@ public class CustomGroupApiImpl implements CustomGroupApi {
 
         customGroupMembersService.save(orgUnitList, customGroupId);
         return Y9Result.success();
+    }
+
+    private List<CustomGroup> convertCustomGroupList(List<Y9CustomGroup> y9CustomGroupList) {
+        List<CustomGroup> customGroupList = Y9ModelConvertUtil.convert(y9CustomGroupList, CustomGroup.class);
+        return customGroupList.stream().map(group -> {
+            if (StringUtils.isNotBlank(group.getPersonId())) {
+                group.setPersonName(compositeOrgBaseService.getOrgUnit(group.getPersonId()).getName());
+            }
+            if (StringUtils.isNotBlank(group.getShareId())) {
+                group.setShareName(compositeOrgBaseService.getOrgUnit(group.getShareId()).getName());
+            }
+            return group;
+        }).collect(Collectors.toList());
     }
 
     /**
@@ -154,7 +171,10 @@ public class CustomGroupApiImpl implements CustomGroupApi {
         Y9LoginUserHolder.setTenantId(tenantId);
 
         List<Y9CustomGroup> y9CustomGroupList = customGroupService.listByPersonId(personId);
-        return Y9Result.success(Y9ModelConvertUtil.convert(y9CustomGroupList, CustomGroup.class));
+        if (!y9CustomGroupList.isEmpty()) {
+            return Y9Result.success(this.convertCustomGroupList(y9CustomGroupList));
+        }
+        return Y9Result.success();
     }
 
     /**
@@ -212,9 +232,12 @@ public class CustomGroupApiImpl implements CustomGroupApi {
         Y9LoginUserHolder.setTenantId(tenantId);
 
         Page<Y9CustomGroup> y9CustomGroupPage = customGroupService.pageByPersonId(personId, pageQuery);
-        return Y9Page.success(pageQuery.getPage(), y9CustomGroupPage.getTotalPages(),
-            y9CustomGroupPage.getTotalElements(),
-            Y9ModelConvertUtil.convert(y9CustomGroupPage.getContent(), CustomGroup.class));
+        List<Y9CustomGroup> y9CustomGroupList = y9CustomGroupPage.getContent();
+        if (!y9CustomGroupList.isEmpty()) {
+            return Y9Page.success(pageQuery.getPage(), y9CustomGroupPage.getTotalPages(),
+                y9CustomGroupPage.getTotalElements(), this.convertCustomGroupList(y9CustomGroupList));
+        }
+        return Y9Page.success(0, 0, 0, null);
     }
 
     /**
