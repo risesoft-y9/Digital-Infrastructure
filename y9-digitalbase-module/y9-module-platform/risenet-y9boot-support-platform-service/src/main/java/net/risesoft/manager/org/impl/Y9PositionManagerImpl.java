@@ -1,14 +1,16 @@
 package net.risesoft.manager.org.impl;
 
-import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
 import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.text.StringSubstitutor;
 import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
@@ -63,9 +65,11 @@ public class Y9PositionManagerImpl implements Y9PositionManager {
     public String buildName(Y9Job y9Job, List<Y9PersonsToPositions> personsToPositionsList) {
         String name;
         String pattern = y9PlatformProperties.getPositionNamePattern();
+        Map<String, Object> keyValueMap = new HashMap<>();
+        keyValueMap.put("jobName", y9Job.getName());
 
         if (personsToPositionsList.isEmpty()) {
-            name = MessageFormat.format(pattern, y9Job.getName(), "空缺");
+            keyValueMap.put("personNames", "空缺");
         } else {
             List<Y9Person> personList = new ArrayList<>();
             for (Y9PersonsToPositions y9PersonsToPositions : personsToPositionsList) {
@@ -74,8 +78,9 @@ public class Y9PositionManagerImpl implements Y9PositionManager {
             }
             String personNames = personList.stream().sorted((Comparator.comparing(Y9Person::getOrderedPath)))
                 .map(Y9OrgBase::getName).collect(Collectors.joining("，"));
-            name = MessageFormat.format(pattern, y9Job.getName(), personNames);
+            keyValueMap.put("personNames", personNames);
         }
+        name = StringSubstitutor.replace(pattern, keyValueMap);
         return name;
     }
 

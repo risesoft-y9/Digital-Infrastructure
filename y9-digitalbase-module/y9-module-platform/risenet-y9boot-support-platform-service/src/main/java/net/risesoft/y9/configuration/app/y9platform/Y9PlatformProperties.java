@@ -1,12 +1,11 @@
 package net.risesoft.y9.configuration.app.y9platform;
 
+import java.util.List;
+
 import org.springframework.boot.context.properties.ConfigurationProperties;
 
 import lombok.Getter;
 import lombok.Setter;
-
-import java.util.ArrayList;
-import java.util.List;
 
 @Getter
 @Setter
@@ -25,9 +24,10 @@ public class Y9PlatformProperties {
     private String systemName = "riseplatform";
 
     /**
-     * 岗位名称格式，默认格式为 职位名称（人员名称），例 总经理（张三） {0} 职位名称 {1} 人员名称
+     * 岗位名称格式，默认格式为：${jobName}（${personNames}），变量 jobName 会替换为职位名 ，变量 personNames 会替换为人员名称 <br>
+     * 最终的岗位名称例子：总经理（张三）
      */
-    private String positionNamePattern = "{0}（{1}）";
+    private String positionNamePattern = "${jobName}（${personNames}）";
 
     /**
      * 三员修改密码周期（天）
