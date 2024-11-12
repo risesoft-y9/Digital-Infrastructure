@@ -1,5 +1,5 @@
 group = "net.risesoft"
-version = "v9.7.0-SNAPSHOT"
+//version = "v9.7.0-SNAPSHOT"
 
 repositories {
     mavenLocal()

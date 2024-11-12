@@ -1,7 +1,7 @@
 import io.freefair.gradle.plugins.aspectj.AjcAction
 
 plugins {
-    //id("java-library")
+    id("java-library")
     id("io.freefair.aspectj.post-compile-weaving")
 }
 

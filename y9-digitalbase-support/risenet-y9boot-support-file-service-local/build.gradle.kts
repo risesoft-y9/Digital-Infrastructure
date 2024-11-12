@@ -1,5 +1,6 @@
 plugins {
     id("net.risesoft.y9.java-conventions")
+    id("net.risesoft.y9.aspectj")
 }
 
 dependencies {

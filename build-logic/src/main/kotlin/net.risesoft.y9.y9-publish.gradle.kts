@@ -13,8 +13,8 @@ publishing {
                 url = if (version.toString().endsWith("SNAPSHOT")) snapshotsRepoUrl else releasesRepoUrl
 
                 credentials {
-                    username = findProperty("mavenUsername").toString()
-                    password  = findProperty("mavenPassword").toString()
+                    username = findProperty("mavenUsername") as String? ?: ""
+                    password  = findProperty("mavenPassword") as String? ?: ""
                 }
             }
         }

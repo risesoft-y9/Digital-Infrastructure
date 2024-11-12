@@ -15,7 +15,7 @@ dependencyManagement {
 
 publishing {
     publications {
-        create<MavenPublication>("mavenJava") {
+        create<MavenPublication>("mavenJava2") {
             // 设置打包类型为pom
             pom {
                 packaging = "pom"

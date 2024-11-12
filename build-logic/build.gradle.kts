@@ -14,4 +14,5 @@ dependencies {
     implementation("com.ly.smart-doc:smart-doc-gradle-plugin:3.0.8")
     implementation("io.freefair.gradle:aspectj-plugin:8.10.2")
     implementation("io.freefair.gradle:lombok-plugin:8.10.2")
+    implementation("org.jreleaser:jreleaser-gradle-plugin:1.15.0")
 }

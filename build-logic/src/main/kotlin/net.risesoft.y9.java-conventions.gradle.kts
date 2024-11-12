@@ -39,7 +39,7 @@ tasks.withType<Javadoc> {
     doclet.encoding = "UTF-8"
     doclet.docEncoding = "UTF-8"
     doclet.addBooleanOption("html5", true)
-    //options.addStringOption("Xdoclint:all,-missing", "-quiet")
+    //doclet.addStringOption("Xdoclint:all,-missing", "-quiet")
     doclet.addStringOption("Xdoclint:none", "-quiet")  // 禁用所有文档检查
 }
 
