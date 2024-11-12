@@ -250,6 +250,17 @@ public class Y9DataCatalogServiceImpl implements Y9DataCatalogService {
         }
     }
 
+    @Override
+    public DataCatalog getTreeRoot(String id) {
+        DataCatalog dataCatalog = getById(id);
+
+        if (StringUtils.isNotBlank(dataCatalog.getParentId())) {
+            return getTreeRoot(dataCatalog.getParentId());
+        } else {
+            return dataCatalog;
+        }
+    }
+
     @Transactional(readOnly = false)
     public void recursivelySaveOrgUnitDataCatalog(String parentDataCatalogId, String treeType, String parentOrgUnitId) {
         List<Y9OrgBase> y9OrgBaseList = compositeOrgBaseService.listOrgUnitsAsParentByParentId(parentOrgUnitId);

@@ -33,9 +33,10 @@ public interface DataCatalogApi {
      */
     @GetMapping(value = "/tree")
     Y9Result<List<DataCatalog>> getTree(@RequestParam(name = "treeType") @NotBlank String treeType,
-        @RequestParam(required = false) String parentId,
+        @RequestParam(required = false, name = "parentId") String parentId,
         @RequestParam(name = "includeAllDescendant", required = false) boolean includeAllDescendant,
-        @RequestParam("tenantId") String tenantId, @RequestParam(name = "personId", required = false) String personId,
+        @RequestParam(name = "tenantId") String tenantId,
+        @RequestParam(name = "personId", required = false) String personId,
         @RequestParam(name = "authority", required = false) AuthorityEnum authority);
 
     /**
@@ -50,7 +51,7 @@ public interface DataCatalogApi {
      */
     @GetMapping(value = "/treeSearch")
     Y9Result<List<DataCatalog>> treeSearch(@RequestParam(name = "treeType") @NotBlank String treeType,
-        @RequestParam("name") String name, @RequestParam("tenantId") String tenantId,
+        @RequestParam("name") String name, @RequestParam(name = "tenantId") String tenantId,
         @RequestParam(name = "personId", required = false) String personId,
         @RequestParam(name = "authority", required = false) AuthorityEnum authority);
 
@@ -61,7 +62,17 @@ public interface DataCatalogApi {
      * @return {@code Y9Result<DataCatalog> }
      */
     @GetMapping(value = "/get")
-    Y9Result<DataCatalog> getById(@RequestParam("tenantId") String tenantId,
+    Y9Result<DataCatalog> getById(@RequestParam(name = "tenantId") String tenantId,
+        @RequestParam(name = "id") @NotBlank String id);
+
+    /**
+     * 根据目录 id 获取其顶级节点的信息
+     *
+     * @param id ID
+     * @return {@code Y9Result<DataCatalog> }
+     */
+    @GetMapping(value = "/getTreeRoot")
+    Y9Result<DataCatalog> getTreeRoot(@RequestParam(name = "tenantId") String tenantId,
         @RequestParam(name = "id") @NotBlank String id);
 
 }

@@ -37,4 +37,6 @@ public interface Y9DataCatalogService {
     List<Y9OptionValue> getTreeTypeList();
 
     void saveByType(Y9DataCatalog y9DataCatalog);
+
+    DataCatalog getTreeRoot(String id);
 }
