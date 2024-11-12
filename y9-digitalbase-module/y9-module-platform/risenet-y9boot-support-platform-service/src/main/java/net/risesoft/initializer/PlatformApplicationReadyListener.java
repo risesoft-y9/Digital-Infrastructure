@@ -1,4 +1,4 @@
-package net.risesoft;
+package net.risesoft.initializer;
 
 import java.util.Optional;
 
@@ -42,7 +42,7 @@ import net.risesoft.y9public.service.tenant.Y9TenantSystemService;
 @Component
 @Slf4j
 @RequiredArgsConstructor
-public class OnApplicationReady implements ApplicationListener<ApplicationReadyEvent> {
+public class PlatformApplicationReadyListener implements ApplicationListener<ApplicationReadyEvent> {
 
     private final Y9TenantService y9TenantService;
     private final Y9SystemService y9SystemService;
@@ -124,7 +124,7 @@ public class OnApplicationReady implements ApplicationListener<ApplicationReadyE
 
     private void createTenantSystem(String tenantId, String systemId, String dataSourceId) {
         Optional<Y9TenantSystem> y9TenantSystemOptional =
-                y9TenantSystemService.getByTenantIdAndSystemId(tenantId, systemId);
+            y9TenantSystemService.getByTenantIdAndSystemId(tenantId, systemId);
         if (y9TenantSystemOptional.isEmpty()) {
             Y9TenantSystem y9TenantSystem = new Y9TenantSystem();
             y9TenantSystem.setId(Y9IdGenerator.genId(IdType.SNOWFLAKE));
