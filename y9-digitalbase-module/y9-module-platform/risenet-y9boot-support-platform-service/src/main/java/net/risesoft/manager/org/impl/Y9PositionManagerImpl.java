@@ -36,6 +36,7 @@ import net.risesoft.manager.org.Y9PersonManager;
 import net.risesoft.manager.org.Y9PositionManager;
 import net.risesoft.repository.Y9PositionRepository;
 import net.risesoft.repository.relation.Y9PersonsToPositionsRepository;
+import net.risesoft.service.setting.Y9SettingService;
 import net.risesoft.util.Y9OrgUtil;
 import net.risesoft.y9.Y9Context;
 import net.risesoft.y9.Y9LoginUserHolder;
@@ -59,12 +60,10 @@ public class Y9PositionManagerImpl implements Y9PositionManager {
     private final Y9PersonManager y9PersonManager;
     private final CompositeOrgBaseManager compositeOrgBaseManager;
 
-    private final Y9PlatformProperties y9PlatformProperties;
+    private final Y9SettingService y9SettingService;
 
     @Override
     public String buildName(Y9Job y9Job, List<Y9PersonsToPositions> personsToPositionsList) {
-        String name;
-        String pattern = y9PlatformProperties.getPositionNamePattern();
         Map<String, Object> keyValueMap = new HashMap<>();
         keyValueMap.put("jobName", y9Job.getName());
 
@@ -80,8 +79,7 @@ public class Y9PositionManagerImpl implements Y9PositionManager {
                 .map(Y9OrgBase::getName).collect(Collectors.joining("，"));
             keyValueMap.put("personNames", personNames);
         }
-        name = StringSubstitutor.replace(pattern, keyValueMap);
-        return name;
+        return StringSubstitutor.replace(y9SettingService.getTenantSetting().getPositionNameTemplate(), keyValueMap);
     }
 
     @Override

@@ -24,7 +24,6 @@ import net.risesoft.entity.Y9Organization;
 import net.risesoft.entity.Y9Person;
 import net.risesoft.entity.Y9PersonExt;
 import net.risesoft.entity.Y9Position;
-import net.risesoft.enums.SettingEnum;
 import net.risesoft.enums.platform.OrgTypeEnum;
 import net.risesoft.exception.OrgUnitErrorCodeEnum;
 import net.risesoft.id.IdType;
@@ -392,7 +391,7 @@ public class Y9PersonServiceImpl implements Y9PersonService {
         final Y9Person person = this.getById(personId);
 
         Y9Person updatedPerson = Y9ModelConvertUtil.convert(person, Y9Person.class);
-        String password = y9SettingService.get(SettingEnum.USER_DEFAULT_PASSWORD, String.class);
+        String password = y9SettingService.getTenantSetting().getUserDefaultPassword();
         updatedPerson.setPassword(Y9MessageDigest.bcrypt(password));
         y9PersonManager.saveOrUpdate(updatedPerson, null);
     }
@@ -481,7 +480,7 @@ public class Y9PersonServiceImpl implements Y9PersonService {
             person.setParentId(parent.getId());
 
             if (StringUtils.isBlank(person.getPassword())) {
-                String password = y9SettingService.get(SettingEnum.USER_DEFAULT_PASSWORD, String.class);
+                String password = y9SettingService.getTenantSetting().getUserDefaultPassword();
                 person.setPassword(Y9MessageDigest.bcrypt(password));
             }
             person = save(person);

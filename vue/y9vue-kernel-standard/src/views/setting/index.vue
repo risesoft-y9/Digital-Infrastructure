@@ -65,7 +65,8 @@
 
         // 设置默认值
         const model = {
-            userDefaultPassword: result.data.userDefaultPassword
+            userDefaultPassword: result.data.userDefaultPassword,
+            positionNameTemplate: result.data.positionNameTemplate
         };
 
         const edit_itemList = [
@@ -73,6 +74,15 @@
                 type: 'input',
                 label: computed(() => t('默认用户密码')),
                 prop: 'userDefaultPassword'
+            },
+            {
+                type: 'input',
+                label: computed(() => t('岗位名称格式')),
+                prop: 'positionNameTemplate',
+                props: {
+                    placeholder:
+                        '默认格式为：${jobName}（${personNames}），变量 jobName 会替换为职位名 ，变量 personNames 会替换为人员名称。最终的岗位名称例子：总经理（张三）'
+                }
             },
             {
                 type: 'slot', //插槽类型,

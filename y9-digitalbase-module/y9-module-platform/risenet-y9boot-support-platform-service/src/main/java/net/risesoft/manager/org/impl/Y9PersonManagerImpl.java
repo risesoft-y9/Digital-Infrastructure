@@ -21,7 +21,6 @@ import net.risesoft.entity.Y9Person;
 import net.risesoft.entity.Y9PersonExt;
 import net.risesoft.entity.relation.Y9PersonsToGroups;
 import net.risesoft.entity.relation.Y9PersonsToPositions;
-import net.risesoft.enums.SettingEnum;
 import net.risesoft.enums.platform.OrgTypeEnum;
 import net.risesoft.exception.OrgUnitErrorCodeEnum;
 import net.risesoft.id.IdType;
@@ -188,7 +187,7 @@ public class Y9PersonManagerImpl implements Y9PersonManager {
         person.setTabIndex(compositeOrgBaseManager.getNextSubTabIndex(parent.getId()));
         person.setOrderedPath(compositeOrgBaseManager.buildOrderedPath(person));
 
-        String password = y9SettingService.get(SettingEnum.USER_DEFAULT_PASSWORD, String.class);
+        String password = y9SettingService.getTenantSetting().getUserDefaultPassword();
         person.setPassword(Y9MessageDigest.bcrypt(password));
 
         final Y9Person savedPerson = save(person);

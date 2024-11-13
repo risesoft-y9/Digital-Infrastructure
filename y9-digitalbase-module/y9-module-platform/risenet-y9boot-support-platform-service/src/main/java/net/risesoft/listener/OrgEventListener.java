@@ -15,7 +15,6 @@ import net.risesoft.entity.Y9Person;
 import net.risesoft.entity.Y9Position;
 import net.risesoft.entity.relation.Y9PersonsToGroups;
 import net.risesoft.entity.relation.Y9PersonsToPositions;
-import net.risesoft.enums.SettingEnum;
 import net.risesoft.enums.platform.OrgTypeEnum;
 import net.risesoft.manager.org.Y9GroupManager;
 import net.risesoft.manager.org.Y9PersonManager;
@@ -165,7 +164,7 @@ public class OrgEventListener {
                 if (!Objects.equals(originPerson.getPassword(), updatedPerson.getPassword())) {
                     eventName = "修改密码";
                     eventDescription = Y9StringUtil.format("修改[{}]密码", updatedOrgUnit.getName());
-                    String defaultPassword = y9SettingService.get(SettingEnum.USER_DEFAULT_PASSWORD, String.class);
+                    String defaultPassword = y9SettingService.getTenantSetting().getUserDefaultPassword();
                     if (Y9MessageDigest.bcryptMatch(defaultPassword, updatedPerson.getPassword())) {
                         eventName = "重置密码";
                         eventDescription = Y9StringUtil.format("重置[{}]密码", updatedOrgUnit.getName());

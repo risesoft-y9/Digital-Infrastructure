@@ -15,7 +15,6 @@ import lombok.RequiredArgsConstructor;
 import net.risesoft.entity.Y9Department;
 import net.risesoft.entity.Y9Manager;
 import net.risesoft.entity.Y9OrgBase;
-import net.risesoft.enums.SettingEnum;
 import net.risesoft.enums.platform.ManagerLevelEnum;
 import net.risesoft.enums.platform.OrgTypeEnum;
 import net.risesoft.exception.OrgUnitErrorCodeEnum;
@@ -126,20 +125,20 @@ public class Y9ManagerServiceImpl implements Y9ManagerService {
 
     @Override
     public int getPasswordModifiedCycle(ManagerLevelEnum managerLevel) {
-        return y9SettingService.get(SettingEnum.MANAGER_MODIFY_PASSWORD_CYCLE, Integer.class);
+        return y9SettingService.getTenantSetting().getManagerModifyPasswordCycle();
     }
 
     @Override
     public int getReviewLogCycle(ManagerLevelEnum managerLevel) {
         int checkCycle = 0;
         if (ManagerLevelEnum.SYSTEM_MANAGER.equals(managerLevel)) {
-            checkCycle = y9SettingService.get(SettingEnum.SYSTEM_MANAGER_REVIEW_LOG_CYCLE, Integer.class);
+            checkCycle = y9SettingService.getTenantSetting().getSystemManagerReviewLogCycle();
         }
         if (ManagerLevelEnum.SECURITY_MANAGER.equals(managerLevel)) {
-            checkCycle = y9SettingService.get(SettingEnum.SECURITY_MANAGER_REVIEW_LOG_CYCLE, Integer.class);
+            checkCycle = y9SettingService.getTenantSetting().getSecurityManagerReviewLogCycle();
         }
         if (ManagerLevelEnum.AUDIT_MANAGER.equals(managerLevel)) {
-            checkCycle = y9SettingService.get(SettingEnum.AUDIT_MANAGER_REVIEW_LOG_CYCLE, Integer.class);
+            checkCycle = y9SettingService.getTenantSetting().getAuditManagerReviewLogCycle();
         }
         return checkCycle;
     }
@@ -201,7 +200,7 @@ public class Y9ManagerServiceImpl implements Y9ManagerService {
     @Transactional(readOnly = false)
     public Y9Manager resetDefaultPassword(String id) {
         Y9Manager y9Manager = this.getById(id);
-        String defaultPassword = y9SettingService.get(SettingEnum.USER_DEFAULT_PASSWORD, String.class);
+        String defaultPassword = y9SettingService.getTenantSetting().getUserDefaultPassword();
         y9Manager.setPassword(Y9MessageDigest.bcrypt(defaultPassword));
         y9Manager = y9ManagerRepository.save(y9Manager);
 
@@ -212,7 +211,7 @@ public class Y9ManagerServiceImpl implements Y9ManagerService {
     @Override
     @Transactional(readOnly = false)
     public Y9Manager saveOrUpdate(Y9Manager y9Manager) {
-        String defaultPassword = y9SettingService.get(SettingEnum.USER_DEFAULT_PASSWORD, String.class);
+        String defaultPassword = y9SettingService.getTenantSetting().getUserDefaultPassword();
         Y9OrgBase parent = compositeOrgBaseManager.getOrgUnitAsParent(y9Manager.getParentId());
         if (StringUtils.isNotBlank(y9Manager.getId())) {
             Y9Manager oldManager = y9ManagerRepository.findById(y9Manager.getId()).orElse(null);

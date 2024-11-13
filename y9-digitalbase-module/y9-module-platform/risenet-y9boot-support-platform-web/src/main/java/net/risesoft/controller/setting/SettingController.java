@@ -9,11 +9,11 @@ import org.springframework.web.bind.annotation.RestController;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
-import net.risesoft.controller.setting.vo.TenantSettingVO;
 import net.risesoft.enums.platform.ManagerLevelEnum;
 import net.risesoft.permission.annotation.IsAnyManager;
 import net.risesoft.pojo.Y9Result;
 import net.risesoft.service.setting.Y9SettingService;
+import net.risesoft.service.setting.impl.TenantSetting;
 
 /**
  * 系统设置
@@ -36,19 +36,19 @@ public class SettingController {
      * @return {@code Y9Result<TenantSettingVO>}
      */
     @GetMapping("/getTenantSetting")
-    public Y9Result<TenantSettingVO> getTenantSetting() {
-        return Y9Result.success(y9SettingService.getObjectFromSetting(TenantSettingVO.class));
+    public Y9Result<TenantSetting> getTenantSetting() {
+        return Y9Result.success(y9SettingService.getTenantSetting());
     }
 
     /**
      * 保存租户设置
      * 
-     * @param tenantSettingVO 租户设置信息
+     * @param tenantSetting 租户设置信息
      * @return {@code Y9Result<Object>}
      */
     @PostMapping("/saveTenantSetting")
-    public Y9Result<Object> saveTenantSetting(TenantSettingVO tenantSettingVO) {
-        y9SettingService.saveObjectFiledAsSetting(tenantSettingVO);
+    public Y9Result<Object> saveTenantSetting(TenantSetting tenantSetting) {
+        y9SettingService.saveTenantSetting(tenantSetting);
         return Y9Result.success();
     }
 }
