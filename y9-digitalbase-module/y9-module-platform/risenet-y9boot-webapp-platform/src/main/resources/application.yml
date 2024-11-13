@@ -154,7 +154,7 @@ y9:
     app:
         platform:
             systemName: riseplatform
-            position-name-pattern: "${jobName}（${personNames}）"
+            positionNameTemplate: "${jobName}（${personNames}）"
             managerModifyPasswordCycle: 7
             userDefaultPassword: Risesoft@2022
     service:
