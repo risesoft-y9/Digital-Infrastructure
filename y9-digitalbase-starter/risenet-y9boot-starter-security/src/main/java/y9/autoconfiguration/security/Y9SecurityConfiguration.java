@@ -6,10 +6,10 @@ import org.springframework.cloud.context.config.annotation.RefreshScope;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.ScopedProxyMode;
-import org.springframework.core.Ordered;
 
 import lombok.extern.slf4j.Slf4j;
 
+import net.risesoft.consts.FilterOrderConsts;
 import net.risesoft.filters.ApiTokenFilter;
 import net.risesoft.filters.CorsFilter;
 import net.risesoft.filters.CsrfFilter;
@@ -36,7 +36,7 @@ public class Y9SecurityConfiguration {
         LOGGER.info("CorsFilter init. Configuration:{}", Y9JsonUtil.writeValueAsString(y9SecurityProperties.getCors()));
         FilterRegistrationBean<CorsFilter> filterBean = new FilterRegistrationBean<>();
         filterBean.setFilter(new CorsFilter());
-        filterBean.setOrder(Ordered.HIGHEST_PRECEDENCE);
+        filterBean.setOrder(FilterOrderConsts.CORS_ORDER);
         return filterBean;
     }
 
@@ -48,7 +48,7 @@ public class Y9SecurityConfiguration {
         FilterRegistrationBean<CsrfFilter> filterBean = new FilterRegistrationBean<>();
         filterBean.setFilter(new CsrfFilter());
         filterBean.setAsyncSupported(false);
-        filterBean.setOrder(Ordered.HIGHEST_PRECEDENCE + 1);
+        filterBean.setOrder(FilterOrderConsts.CSRF_ORDER);
         filterBean.addUrlPatterns("/*");
         return filterBean;
     }
@@ -61,7 +61,7 @@ public class Y9SecurityConfiguration {
         FilterRegistrationBean<XssFilter> filterBean = new FilterRegistrationBean<>();
         filterBean.setFilter(new XssFilter());
         filterBean.setAsyncSupported(false);
-        filterBean.setOrder(Ordered.HIGHEST_PRECEDENCE + 2);
+        filterBean.setOrder(FilterOrderConsts.XSS_ORDER);
         filterBean.addUrlPatterns("/*");
         return filterBean;
     }
@@ -75,8 +75,8 @@ public class Y9SecurityConfiguration {
         FilterRegistrationBean<ApiTokenFilter> filterBean = new FilterRegistrationBean<>();
         filterBean.setFilter(new ApiTokenFilter(y9SecurityProperties));
         filterBean.setAsyncSupported(false);
-        filterBean.setOrder(Ordered.HIGHEST_PRECEDENCE + 3);
-        filterBean.addUrlPatterns(y9ApiProperties.getUrlPatterns().toArray(new String[0]));
+        filterBean.setOrder(FilterOrderConsts.API_TOKEN_ORDER);
+        filterBean.setUrlPatterns(y9ApiProperties.getUrlPatterns());
         return filterBean;
     }
 
@@ -89,7 +89,7 @@ public class Y9SecurityConfiguration {
         FilterRegistrationBean<SqlInjectionFilter> filterBean = new FilterRegistrationBean<>();
         filterBean.setFilter(new SqlInjectionFilter());
         filterBean.setAsyncSupported(false);
-        filterBean.setOrder(Ordered.HIGHEST_PRECEDENCE + 4);
+        filterBean.setOrder(FilterOrderConsts.SQL_INJECTION_ORDER);
         filterBean.addUrlPatterns("/*");
         filterBean.addInitParameter("skip", y9SecurityProperties.getSqlIn().getSkipUrl());
         return filterBean;

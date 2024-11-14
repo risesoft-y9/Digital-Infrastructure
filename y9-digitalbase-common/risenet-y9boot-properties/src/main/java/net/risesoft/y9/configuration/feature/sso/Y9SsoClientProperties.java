@@ -67,11 +67,6 @@ public class Y9SsoClientProperties {
     private List<String> casFilterUrlPatterns = new ArrayList<>();
 
     /**
-     * 是否保存日志消息
-     */
-    private boolean saveLogMessage = false;
-
-    /**
      * 是否保存在线消息
      */
     private boolean saveOnlineMessage = true;

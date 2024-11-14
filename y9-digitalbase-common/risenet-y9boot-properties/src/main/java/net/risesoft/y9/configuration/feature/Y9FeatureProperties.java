@@ -6,7 +6,6 @@ import lombok.Getter;
 import lombok.Setter;
 
 import net.risesoft.y9.configuration.feature.jwt.Y9JwtProperties;
-import net.risesoft.y9.configuration.feature.log.Y9LogProperties;
 import net.risesoft.y9.configuration.feature.oauth2.Y9Oauth2Properties;
 import net.risesoft.y9.configuration.feature.sso.Y9SsoClientProperties;
 
@@ -19,12 +18,6 @@ import net.risesoft.y9.configuration.feature.sso.Y9SsoClientProperties;
 @Getter
 @Setter
 public class Y9FeatureProperties {
-
-    /**
-     * 日志
-     */
-    @NestedConfigurationProperty
-    private Y9LogProperties log = new Y9LogProperties();
 
     /**
      * sso
