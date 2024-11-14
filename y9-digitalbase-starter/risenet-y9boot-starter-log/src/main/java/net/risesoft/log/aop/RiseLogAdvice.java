@@ -7,7 +7,6 @@ import java.util.Date;
 import java.util.Map;
 import java.util.UUID;
 
-import javax.annotation.PostConstruct;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
@@ -22,7 +21,7 @@ import lombok.extern.slf4j.Slf4j;
 
 import net.risesoft.log.LogLevelEnum;
 import net.risesoft.log.annotation.RiseLog;
-import net.risesoft.log.service.AsyncSaveLogInfo;
+import net.risesoft.log.service.AccessLogPusher;
 import net.risesoft.model.log.AccessLog;
 import net.risesoft.model.user.UserInfo;
 import net.risesoft.y9.Y9Context;
@@ -40,17 +39,12 @@ import net.risesoft.y9.util.InetAddressUtil;
 @Slf4j
 public class RiseLogAdvice implements MethodInterceptor {
 
-    private String serverIp = "";
+    private final AccessLogPusher accessLogPusher;
+    private final String serverIp;
 
-    private AsyncSaveLogInfo asyncSaveLogInfo;
-
-    public RiseLogAdvice() {
+    public RiseLogAdvice(AccessLogPusher accessLogPusher) {
+        this.accessLogPusher = accessLogPusher;
         this.serverIp = InetAddressUtil.getLocalAddress().getHostAddress();
-    }
-
-    @PostConstruct
-    public void init() {
-        this.asyncSaveLogInfo = Y9Context.getBean(AsyncSaveLogInfo.class);
     }
 
     @Override
@@ -152,10 +146,7 @@ public class RiseLogAdvice implements MethodInterceptor {
                         log.setManagerLevel(String.valueOf(userInfo.getManagerLevel().getValue()));
                     }
 
-                    if (asyncSaveLogInfo == null) {
-                        this.asyncSaveLogInfo = Y9Context.getBean(AsyncSaveLogInfo.class);
-                    }
-                    asyncSaveLogInfo.asyncSave(log);
+                    accessLogPusher.push(log);
                     if (response != null) {
                         // Y9CommonFilter 见到这个标志后，就不再记录日志了，因为这里已经写了日志，不需要重复写。
                         response.addHeader("y9aoplog", "true");

@@ -11,6 +11,7 @@ import org.springframework.boot.autoconfigure.kafka.KafkaAutoConfiguration;
 import org.springframework.boot.autoconfigure.web.servlet.ConditionalOnMissingFilterBean;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.boot.task.TaskExecutorBuilder;
+import org.springframework.boot.web.servlet.FilterRegistrationBean;
 import org.springframework.boot.web.servlet.filter.OrderedRequestContextFilter;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -25,11 +26,16 @@ import com.alibaba.ttl.threadpool.TtlExecutors;
 
 import lombok.extern.slf4j.Slf4j;
 
+import net.risesoft.consts.FilterOrderConsts;
+import net.risesoft.log.LogFilter;
 import net.risesoft.log.aop.RiseLogAdvice;
 import net.risesoft.log.aop.RiseLogAdvisor;
-import net.risesoft.log.service.AsyncSaveLogInfo;
+import net.risesoft.log.service.AccessLogPusher;
+import net.risesoft.log.service.impl.AccessLogApiPusher;
+import net.risesoft.log.service.impl.AccessLogKafkaPusher;
 import net.risesoft.y9.Y9Context;
 import net.risesoft.y9.configuration.Y9Properties;
+import net.risesoft.y9.configuration.feature.log.Y9LogProperties;
 
 /**
  * @author dzj
@@ -38,7 +44,7 @@ import net.risesoft.y9.configuration.Y9Properties;
 @Configuration
 @ConditionalOnProperty(name = "y9.feature.log.enabled", havingValue = "true", matchIfMissing = true)
 @EnableAsync
-@EnableConfigurationProperties(Y9Properties.class)
+@EnableConfigurationProperties({Y9Properties.class, Y9LogProperties.class})
 public class Y9LogConfiguration {
 
     // https://github.com/spring-projects/spring-boot/issues/2637
@@ -60,22 +66,16 @@ public class Y9LogConfiguration {
     @Bean
     @ConditionalOnMissingBean(RiseLogAdvice.class)
     @DependsOn({"y9Context"})
-    public RiseLogAdvice riseLogAdvice() {
-        RiseLogAdvice bean = new RiseLogAdvice();
-        return bean;
+    public RiseLogAdvice riseLogAdvice(AccessLogPusher accessLogPusher) {
+        return new RiseLogAdvice(accessLogPusher);
     }
 
     @Bean
     @ConditionalOnMissingBean(RiseLogAdvisor.class)
-    public RiseLogAdvisor riseLogAdvisor() {
+    public RiseLogAdvisor riseLogAdvisor(RiseLogAdvice riseLogAdvice) {
         RiseLogAdvisor bean = new RiseLogAdvisor();
-        bean.setAdvice(riseLogAdvice());
+        bean.setAdvice(riseLogAdvice);
         return bean;
-    }
-
-    @Bean
-    public AsyncSaveLogInfo asyncSaveLogInfo(Y9Properties y9Properties) {
-        return new AsyncSaveLogInfo(y9Properties);
     }
 
     @Bean
@@ -96,6 +96,35 @@ public class Y9LogConfiguration {
             LOGGER.info("Y9LogKafkaConfiguration y9KafkaTemplate init ......");
             return new KafkaTemplate<>(kafkaProducerFactory);
         }
+
+        @Bean
+        public AccessLogPusher accessLogKafkaPusher(KafkaTemplate<String, Object> y9KafkaTemplate) {
+            return new AccessLogKafkaPusher(y9KafkaTemplate);
+        }
+
+    }
+
+    @Configuration
+    @ConditionalOnProperty(value = "y9.feature.log.logSaveTarget", havingValue = "api")
+    static class Y9LogApiConfiguration {
+
+        @Bean
+        public AccessLogPusher accessLogApiPusher(Y9Properties y9Properties) {
+            return new AccessLogApiPusher(y9Properties);
+        }
+
+    }
+
+    @Bean
+    @ConditionalOnMissingBean(name = "y9LogFilter")
+    public FilterRegistrationBean<LogFilter> y9LogFilter(AccessLogPusher accessLogPusher) {
+        final FilterRegistrationBean<LogFilter> filterBean = new FilterRegistrationBean<>();
+        filterBean.setFilter(new LogFilter(accessLogPusher));
+        filterBean.setAsyncSupported(false);
+        filterBean.addUrlPatterns("/*");
+        filterBean.setOrder(FilterOrderConsts.LOG_ORDER);
+
+        return filterBean;
     }
 
     @Bean(name = {"y9ThreadPoolTaskExecutor"})

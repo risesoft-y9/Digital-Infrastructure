@@ -4,6 +4,7 @@ import java.util.List;
 
 import org.springframework.boot.context.properties.NestedConfigurationProperty;
 
+import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -27,14 +28,14 @@ public class Y9Oauth2ResourceProperties {
     private boolean enabled;
 
     /**
-     * 是否保存日志消息
-     */
-    private boolean saveLogMessage = false;
-
-    /**
      * 是否保存在线消息
      */
     private boolean saveOnlineMessage = true;
+
+    /**
+     * 在线消息推送方式
+     */
+    private OnlineMessagePushType onlineMessagePushType = OnlineMessagePushType.API;
 
     /**
      * 是否允许从请求体参数中获取访问令牌
@@ -74,4 +75,9 @@ public class Y9Oauth2ResourceProperties {
     @NestedConfigurationProperty
     private Y9Oauth2ResourceOpaqueTokenProperties opaque = new Y9Oauth2ResourceOpaqueTokenProperties();
 
+    @Getter
+    @AllArgsConstructor
+    public enum OnlineMessagePushType {
+        API, KAFKA
+    }
 }
