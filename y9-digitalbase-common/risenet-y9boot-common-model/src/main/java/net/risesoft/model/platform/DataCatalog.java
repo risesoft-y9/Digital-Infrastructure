@@ -57,4 +57,9 @@ public class DataCatalog implements Serializable {
      * 是否启用
      */
     public Boolean enabled;
+
+    /**
+     * 自定义 ID
+     */
+    protected String customId;
 }
