@@ -1,20 +1,21 @@
 plugins {
     id("net.risesoft.y9.java-conventions")
+    id("net.risesoft.y9.lombok")
 }
 
 dependencies {
+    api(platform(libs.spring.boot.bom))
     api(project(":y9-digitalbase-common:risenet-y9boot-properties"))
     api(project(":y9-digitalbase-common:risenet-y9boot-common-util"))
-    api(libs.org.springframework.boot.spring.boot)
-    api(libs.org.springframework.boot.spring.boot.autoconfigure)
-    api(libs.org.springframework.boot.spring.boot.configuration.processor)
-    api(libs.org.springframework.boot.spring.boot.starter.actuator)
-    api(libs.io.github.classgraph.classgraph)
-    api(libs.org.apache.httpcomponents.httpclient)
-    api(libs.com.ibm.etcd.etcd.java)
-    compileOnly(libs.jakarta.servlet.jakarta.servlet.api)
-    compileOnly(libs.org.projectlombok.lombok)
-    annotationProcessor(libs.org.projectlombok.lombok)
+
+    api("org.springframework.boot:spring-boot")
+    api("org.springframework.boot:spring-boot-autoconfigure")
+    api("org.springframework.boot:spring-boot-configuration-processor")
+    api("org.springframework.boot:spring-boot-starter-actuator")
+    api(libs.classgraph)
+    api(libs.httpcomponents.httpclient)
+    api(libs.etcd.java)
+    compileOnly("jakarta.servlet:jakarta.servlet-api")
 }
 
 description = "risenet-y9boot-starter-apisix"

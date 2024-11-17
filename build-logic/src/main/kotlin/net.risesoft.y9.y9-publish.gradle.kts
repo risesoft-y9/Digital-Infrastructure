@@ -4,6 +4,9 @@ plugins {
     id("net.risesoft.y9.y9-repository")
 }
 
+var PROJECT_GIT_URL = "https://gitee.com/risesoft-y9/y9-core"
+val PROJECT_SCM_URL = "scm:git:${PROJECT_GIT_URL}.git"
+
 publishing {
     publications {
         repositories {
@@ -24,9 +27,9 @@ publishing {
             pom {
                 // 设置打包类型为pom
                 //packaging = "pom"
-                //name = "y9-digitalbase-dependencies"
-                //description = "RiseSoft/Digital Infrastructure dependencies"
-                url = "https://gitee.com/risesoft-y9/y9-core/tree/main/y9-digitalbase-dependencies"
+                name = project.name
+                description = "RiseSoft/Digital Infrastructure： " + project.name
+                url = PROJECT_GIT_URL
                 licenses {
                     license {
                         name = "GNU General Public License (GPL) version 3.0"
@@ -40,9 +43,9 @@ publishing {
                     }
                 }
                 scm {
-                    connection = "scm:git:https://gitee.com/risesoft-y9/y9-core.git"
-                    developerConnection = "scm:git:https://gitee.com/risesoft-y9/y9-core.git"
-                    url = "https://gitee.com/risesoft-y9/y9-core"
+                    connection = PROJECT_SCM_URL
+                    developerConnection = PROJECT_SCM_URL
+                    url = PROJECT_GIT_URL
                 }
             }
         }

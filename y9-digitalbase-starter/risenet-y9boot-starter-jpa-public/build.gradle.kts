@@ -1,25 +1,25 @@
 plugins {
     id("net.risesoft.y9.java-conventions")
+    id("net.risesoft.y9.lombok")
 }
 
 dependencies {
     api(project(":y9-digitalbase-common:risenet-y9boot-common-util"))
-    api(libs.org.springframework.boot.spring.boot)
-    api(libs.org.springframework.boot.spring.boot.autoconfigure)
-    api(libs.org.springframework.boot.spring.boot.configuration.processor)
-    api(libs.org.springframework.boot.spring.boot.starter.data.jpa)
-    api(libs.com.mysql.mysql.connector.j)
-    api(libs.org.mariadb.jdbc.mariadb.java.client.x1)
-    api(libs.com.oracle.database.jdbc.ojdbc11.x1)
-    api(libs.org.postgresql.postgresql)
-    api(libs.com.dameng.dmdialect.hibernate5.v6)
-    api(libs.com.dameng.dmjdbcdriver18)
-    api(libs.cn.com.kingbase.kingbase8)
-    api(libs.cn.com.kingbase.hibernate.dialect)
-    api(libs.cn.com.kingbase.hibernate.jpa.api)
-    api(libs.com.oceanbase.oceanbase.client)
-    compileOnly(libs.org.projectlombok.lombok)
-    annotationProcessor(libs.org.projectlombok.lombok)
+    api(platform(libs.spring.boot.bom))
+    api(platform(libs.ojdbc.bom))
+    api("org.springframework.boot:spring-boot")
+    api("org.springframework.boot:spring-boot-autoconfigure")
+    api("org.springframework.boot:spring-boot-configuration-processor")
+    api("org.springframework.boot:spring-boot-starter-data-jpa")
+    api(libs.mysql.connector.j)
+    api(libs.mariadb.java.client)
+    api("com.oracle.database.jdbc:ojdbc17")
+    api(libs.postgresql)
+    api(libs.dameng.dmdialect.hibernate62)
+    api(libs.dameng.dmjdbcdriver18)
+    api(libs.kingbase.kingbase8)
+    api(libs.kingbase.kesdialect.hibernate4)
+    api(libs.oceanbase.client)
 }
 
 description = "risenet-y9boot-starter-jpa-public"

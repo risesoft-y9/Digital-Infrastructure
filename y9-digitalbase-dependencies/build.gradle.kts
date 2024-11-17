@@ -15,6 +15,7 @@ dependencies {
     //bom
     api(platform(libs.spring.boot.bom))
     api(platform(libs.spring.cloud.bom))
+    api(platform(libs.cas.server.bom))
 
     constraints {
         // y9 component
@@ -58,7 +59,7 @@ dependencies {
         api(libs.risenet.y9boot.support.platform.web)
 
         // Third Party
-        api(libs.cn.hutool.hutool.all)
+        api(libs.hutool.all)
 
     }
 }
@@ -85,7 +86,7 @@ publishing {
                 packaging = "pom"
                 name = "y9-digitalbase-dependencies"
                 description = "RiseSoft/Digital Infrastructure dependencies"
-                url = "https://gitee.com/risesoft-y9/y9-core/tree/main/y9-digitalbase-dependencies"
+                url = "https://github.com/risesoft-y9/Digital-Infrastructure"
                 licenses {
                     license {
                         name = "GNU General Public License (GPL) version 3.0"
@@ -97,11 +98,23 @@ publishing {
                         name = "dingzhaojun"
                         email = "dingzhaojun@risesoft.net"
                     }
+                    developer {
+                        name = "qinman"
+                        email = "qinman@risesoft.net"
+                    }
+                    developer {
+                        name = "mengjuhua"
+                        email = "mengjuhua@risesoft.net"
+                    }
+                    developer {
+                        name = "shidaobang"
+                        email = "shidaobang@risesoft.net"
+                    }
                 }
                 scm {
-                    connection = "scm:git:https://gitee.com/risesoft-y9/y9-core.git"
-                    developerConnection = "scm:git:https://gitee.com/risesoft-y9/y9-core.git"
-                    url = "https://gitee.com/risesoft-y9/y9-core"
+                    connection = "scm:git:https://github.com/risesoft-y9/Digital-Infrastructure.git"
+                    developerConnection = "scm:git:https://github.com/risesoft-y9/Digital-Infrastructure.git"
+                    url = "https://github.com/risesoft-y9/Digital-Infrastructure"
                 }
             }
         }

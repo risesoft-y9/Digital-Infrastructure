@@ -1,5 +1,6 @@
 plugins {
     id("net.risesoft.y9.java-conventions")
+    id("net.risesoft.y9.lombok")
     id("net.risesoft.y9.smart-doc")
     id("net.risesoft.y9.aspectj")
 }
@@ -17,21 +18,19 @@ dependencies {
     api(project(":y9-digitalbase-support:risenet-y9boot-support-file-service-local"))
     api(project(":y9-digitalbase-starter:risenet-y9boot-starter-permission"))
     api(project(":y9-digitalbase-starter:risenet-y9boot-starter-web"))
-    api(libs.org.dom4j.dom4j)
-    api(libs.org.jodd.jodd.http)
-    api(libs.org.springframework.spring.aspects)
-    api(libs.org.jxls.jxls.poi)
-    api(libs.org.jxls.jxls.jexcel)
-    api(libs.org.jxls.jxls.reader)
-    api(libs.net.javacrumbs.shedlock.shedlock.spring)
-    api(libs.net.javacrumbs.shedlock.shedlock.provider.jdbc.template)
-    api(libs.com.google.guava.guava)
-    testImplementation(libs.org.springframework.boot.spring.boot.starter.test)
-    compileOnly(libs.jakarta.servlet.jakarta.servlet.api)
-    compileOnly(libs.org.projectlombok.lombok)
-    annotationProcessor(libs.org.projectlombok.lombok)
-    testCompileOnly(libs.org.projectlombok.lombok)
-    testAnnotationProcessor(libs.org.projectlombok.lombok)
+    
+    api(platform(libs.spring.boot.bom))
+    api(libs.dom4j)
+    api(libs.jodd.http)
+    api("org.springframework:spring-aspects")
+    api(libs.jxls.poi)
+    api(libs.jxls.jexcel)
+    api(libs.jxls.reader)
+    api(libs.shedlock.spring)
+    api(libs.shedlock.provider.jdbc.template)
+    api(libs.google.guava)
+    testImplementation("org.springframework.boot:spring-boot-starter-test")
+    compileOnly("jakarta.servlet:jakarta.servlet-api")
 }
 
 description = "risenet-y9boot-support-platform-service"

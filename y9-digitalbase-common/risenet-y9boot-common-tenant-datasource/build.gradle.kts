@@ -6,13 +6,14 @@
 
 plugins {
     id("net.risesoft.y9.java-conventions")
+    id("net.risesoft.y9.lombok")
 }
 
 dependencies {
+    api(platform(libs.spring.boot.bom))
+
     api(project(":y9-digitalbase-common:risenet-y9boot-common-util"))
-    api(libs.org.springframework.boot.spring.boot.starter.jdbc)
-    compileOnly(libs.org.projectlombok.lombok)
-    annotationProcessor(libs.org.projectlombok.lombok)
+    api("org.springframework.boot:spring-boot-starter-jdbc")
 }
 
 description = "risenet-y9boot-common-tenant-datasource"

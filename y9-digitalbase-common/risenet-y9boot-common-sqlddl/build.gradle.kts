@@ -6,12 +6,11 @@
 
 plugins {
     id("net.risesoft.y9.java-conventions")
+    id("net.risesoft.y9.lombok")
 }
 
 dependencies {
     api(project(":y9-digitalbase-common:risenet-y9boot-common-util"))
-    compileOnly(libs.org.projectlombok.lombok)
-    annotationProcessor(libs.org.projectlombok.lombok)
 }
 
 description = "risenet-y9boot-common-sqlddl"

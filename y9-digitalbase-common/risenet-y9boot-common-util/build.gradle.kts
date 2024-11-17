@@ -6,28 +6,31 @@
 
 plugins {
     id("net.risesoft.y9.java-conventions")
+    id("net.risesoft.y9.lombok")
 }
 
 dependencies {
+    api(platform(libs.spring.boot.bom))
+    //api(platform(libs.spring.cloud.alibaba.bom))
+
     api(project(":y9-digitalbase-common:risenet-y9boot-common-model"))
-    api(libs.com.fasterxml.jackson.core.jackson.databind)
-    api(libs.com.fasterxml.jackson.dataformat.jackson.dataformat.yaml)
-    api(libs.com.fasterxml.jackson.dataformat.jackson.dataformat.properties)
-    api(libs.org.apache.commons.commons.lang3)
-    api(libs.org.slf4j.slf4j.api)
-    api(libs.org.springframework.spring.web)
-    api(libs.org.springframework.spring.context)
-    api(libs.commons.io.commons.io)
-    api(libs.commons.httpclient.commons.httpclient)
-    api(libs.com.alibaba.transmittable.thread.local)
-    api(libs.de.svenkubiak.jbcrypt)
-    api(libs.org.jxls.jxls.poi)
-    api(libs.org.apache.poi.poi.scratchpad)
-    api(libs.cn.hutool.hutool.all)
-    api(libs.org.bouncycastle.bcprov.ext.jdk15to18)
-    compileOnly(libs.jakarta.servlet.jakarta.servlet.api)
-    compileOnly(libs.org.projectlombok.lombok)
-    annotationProcessor(libs.org.projectlombok.lombok)
+
+    api("com.fasterxml.jackson.core:jackson-databind")
+    api("com.fasterxml.jackson.dataformat:jackson-dataformat-yaml")
+    api("com.fasterxml.jackson.dataformat:jackson-dataformat-properties")
+    api("org.apache.commons:commons-lang3")
+    api("org.slf4j:slf4j-api")
+    api("org.springframework:spring-web")
+    api("org.springframework:spring-context")
+    api(libs.commons.io)
+    api(libs.commons.httpclient)
+    api(libs.alibaba.transmittable.thread.local)
+    api(libs.jbcrypt)
+    api(libs.jxls.poi)
+    api(libs.poi.scratchpad)
+    api(libs.hutool.all)
+    api(libs.bcprov.ext.jdk15to18)
+    compileOnly("jakarta.servlet:jakarta.servlet-api")
 }
 
 description = "risenet-y9boot-common-util"

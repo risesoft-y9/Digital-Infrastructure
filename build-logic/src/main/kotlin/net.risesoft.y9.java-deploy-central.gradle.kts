@@ -1,3 +1,5 @@
+@file:Suppress("SpellCheckingInspection")
+
 import org.jreleaser.gradle.plugin.tasks.JReleaserDeployTask
 import org.jreleaser.model.Active
 import org.jreleaser.model.Http
@@ -16,10 +18,25 @@ java {
     withJavadocJar()
 }
 
+ext.set("PROJECT_GIT_URL", "https://github.com/risesoft-y9/Digital-Infrastructure")
+ext.set("PROJECT_SCM_URL", "scm:git:https://github.com/risesoft-y9/Digital-Infrastructure.git")
+
 publishing {
     repositories {
         maven {
+            name = "mavenStaging"
             url = uri(layout.buildDirectory.dir("staging-deploy"))
+        }
+        maven {
+            name = "y9nexus"
+            val releasesRepoUrl = uri("https://svn.youshengyun.com:9900/nexus/repository/maven-releases/")
+            val snapshotsRepoUrl = uri("https://svn.youshengyun.com:9900/nexus/repository/maven-snapshots/")
+            url = if (version.toString().endsWith("SNAPSHOT")) snapshotsRepoUrl else releasesRepoUrl
+
+            credentials {
+                username = findProperty("mavenUsername").toString()
+                password  = findProperty("mavenPassword").toString()
+            }
         }
     }
 
@@ -28,7 +45,7 @@ publishing {
         pom {
             name = project.name
             description = project.description
-            url = "https://svn.youshengyun.com:3000/risesoft/y9demo-maven-central"
+            url = findProperty("PROJECT_GIT_URL").toString()
             licenses {
                 license {
                     name = "GNU General Public License (GPL) version 3.0"
@@ -40,11 +57,23 @@ publishing {
                     name = "dingzhaojun"
                     email = "dingzhaojun@risesoft.net"
                 }
+                developer {
+                    name = "qinman"
+                    email = "qinman@risesoft.net"
+                }
+                developer {
+                    name = "mengjuhua"
+                    email = "mengjuhua@risesoft.net"
+                }
+                developer {
+                    name = "shidaobang"
+                    email = "shidaobang@risesoft.net"
+                }
             }
             scm {
-                connection = "scm:git:https://svn.youshengyun.com:3000/risesoft/y9demo-maven-central.git"
-                developerConnection = "scm:git:https://svn.youshengyun.com:3000/risesoft/y9demo-maven-central.git"
-                url = "https://svn.youshengyun.com:3000/risesoft/y9demo-maven-central"
+                connection = findProperty("PROJECT_SCM_URL").toString()
+                developerConnection = findProperty("PROJECT_SCM_URL").toString()
+                url = findProperty("PROJECT_GIT_URL").toString()
             }
         }
     }
@@ -122,4 +151,5 @@ tasks.withType<Javadoc> {
 
 tasks.withType<JReleaserDeployTask> {
     dependsOn(tasks.named("publish").get())
+    //excludedDeployerNames = listOf("risenet-y9demo-cache","risenet-y9demo-data-jpa")
 }
