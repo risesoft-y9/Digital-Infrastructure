@@ -7,20 +7,23 @@ plugins {
 }
 
 dependencies {
-    api(project(":y9-digitalbase-support:risenet-y9boot-support-file-jpa-repository"))
-    api(project(":y9-digitalbase-support:risenet-y9boot-support-file-service-rest"))
-    api(project(":y9-digitalbase-common:risenet-y9boot-common-nacos"))
-    
-    api(platform(libs.spring.boot.bom))
-    
-    api(libs.google.gson)
-    api(libs.commons.io)
-    api(libs.commons.codec)
-    api("org.springframework.boot:spring-boot-starter-web")
-    api("jakarta.servlet.jsp.jstl:jakarta.servlet.jsp.jstl-api")
-    api(libs.imgscalr.lib)
-    api(libs.imageio.jpeg)
-    providedCompile("jakarta.servlet:jakarta.servlet-api")
+    implementation(project(":y9-digitalbase-support:risenet-y9boot-support-file-jpa-repository"))
+    implementation(project(":y9-digitalbase-support:risenet-y9boot-support-file-service-rest"))
+    implementation(project(":y9-digitalbase-common:risenet-y9boot-common-nacos"))
+
+    implementation(platform(libs.spring.boot.bom))
+    providedRuntime(platform(libs.spring.boot.bom))
+
+    implementation(libs.google.gson)
+    implementation(libs.commons.io)
+    implementation(libs.commons.codec)
+    implementation("org.springframework.boot:spring-boot-starter-web")
+    implementation("jakarta.servlet.jsp.jstl:jakarta.servlet.jsp.jstl-api")
+    implementation(libs.imgscalr.lib)
+    implementation(libs.imageio.jpeg)
+    compileOnly("jakarta.servlet:jakarta.servlet-api")
+
+    implementation("org.springframework.boot:spring-boot-starter-web")
     providedRuntime("org.springframework.boot:spring-boot-starter-tomcat")
 
 }

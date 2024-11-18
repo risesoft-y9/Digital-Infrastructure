@@ -16,6 +16,7 @@ dependencies {
     implementation(project(":y9-digitalbase-common:risenet-y9boot-common-nacos"))
 
     implementation(platform(libs.spring.boot.bom))
+    providedRuntime(platform(libs.spring.boot.bom))
 
     implementation(libs.jxls)
     implementation(libs.jxls.poi)

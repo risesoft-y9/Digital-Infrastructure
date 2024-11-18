@@ -29,7 +29,7 @@ dependencies {
     api(libs.jxls.poi)
     api(libs.poi.scratchpad)
     api(libs.hutool.all)
-    api(libs.bcprov.ext.jdk15to18)
+    api(libs.bcprov.ext.jdk18on)
     compileOnly("jakarta.servlet:jakarta.servlet-api")
 }
 
