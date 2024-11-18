@@ -1,5 +1,6 @@
 @file:Suppress("SpellCheckingInspection")
 
+import gradle.kotlin.dsl.accessors._7b186f4cc9ec3db7e784e2bd695d97b7.versionCatalogs
 import org.jreleaser.gradle.plugin.tasks.JReleaserDeployTask
 import org.jreleaser.model.Active
 import org.jreleaser.model.Http
@@ -16,6 +17,14 @@ java {
     sourceCompatibility = JavaVersion.VERSION_21
     withSourcesJar()
     withJavadocJar()
+}
+
+val versionCatalog = versionCatalogs.named("libs")
+val y9version = versionCatalog.findVersion("y9-version")
+if(y9version.isPresent) {
+    version = y9version.get().displayName
+} else {
+    version = "v9.7.0-SNAPSHOT"
 }
 
 ext.set("PROJECT_GIT_URL", "https://github.com/risesoft-y9/Digital-Infrastructure")

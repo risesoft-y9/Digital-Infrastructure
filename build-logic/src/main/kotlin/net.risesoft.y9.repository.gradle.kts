@@ -1,8 +1,9 @@
 group = "net.risesoft"
-//version = "v9.7.0-SNAPSHOT"
 
 repositories {
     mavenLocal()
+    mavenCentral()
+    gradlePluginPortal()
 
     maven {
         url = uri("https://maven.aliyun.com/repository/public")
@@ -32,6 +33,4 @@ repositories {
         url = uri("https://build.shibboleth.net/maven/snapshots/")
     }
 
-    mavenCentral()
-    gradlePluginPortal()
 }

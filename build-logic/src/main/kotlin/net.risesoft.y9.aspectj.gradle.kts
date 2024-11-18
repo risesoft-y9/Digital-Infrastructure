@@ -5,11 +5,6 @@ plugins {
     id("io.freefair.aspectj.post-compile-weaving")
 }
 
-repositories {
-    mavenCentral()
-    gradlePluginPortal()
-}
-
 dependencies {
     api("org.aspectj:aspectjrt")
     api("org.aspectj:aspectjtools")

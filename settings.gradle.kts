@@ -5,6 +5,7 @@ pluginManagement {
 
 rootProject.name = "y9-digitalbase"
 
+include(":y9-digitalbase-bom")
 include(":y9-digitalbase-dependencies")
 include(":y9-digitalbase-parent")
 

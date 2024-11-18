@@ -161,8 +161,6 @@ java-uuid-generator = { module = "com.fasterxml.uuid:java-uuid-generator", versi
 # database
 ojdbc-bom = { module = "com.oracle.database.jdbc:ojdbc-bom", version.ref = "ojdbc-bom" }
 
-#k ingbase-hibernate-dialect = { module = "cn.com.kingbase:hibernate-dialect", version.ref = "cn-com-kingbase-hibernate-dialect" }
-# kingbase-hibernate-jpa-api = { module = "cn.com.kingbase:hibernate-jpa-api", version.ref = "cn-com-kingbase-hibernate-jpa-api" }
 kingbase-kesdialect-hibernate4 = { module = "cn.com.kingbase:KesDialect-for-hibernate4", version.ref = "cn-com-kingbase-kesdialect-for-hibernate4" }
 kingbase-kingbase8 = { module = "cn.com.kingbase:kingbase8", version.ref = "cn-com-kingbase-kingbase8" }
 
@@ -173,10 +171,6 @@ h2database = { module = "com.h2database:h2", version.ref = "com-h2database-h2" }
 mysql-connector-j = { module = "com.mysql:mysql-connector-j", version.ref = "com-mysql-mysql-connector-j" }
 oceanbase-client = { module = "com.oceanbase:oceanbase-client", version.ref = "com-oceanbase-oceanbase-client" }
 
-
-
-
-
 google-gson = { module = "com.google.code.gson:gson", version.ref = "com-google-code-gson-gson" }
 google-guava = { module = "com.google.guava:guava", version.ref = "com-google-guava-guava" }
 google-zxing-core = { module = "com.google.zxing:core", version.ref = "com-google-zxing-core" }
@@ -184,8 +178,6 @@ googlecode-cqengine = { module = "com.googlecode.cqengine:cqengine", version.ref
 etcd-java = { module = "com.ibm.etcd:etcd-java", version.ref = "com-ibm-etcd-etcd-java" }
 lettucemod = { module = "com.redis:lettucemod", version.ref = "com-redis-lettucemod" }
 imageio-jpeg = { module = "com.twelvemonkeys.imageio:imageio-jpeg", version.ref = "com-twelvemonkeys-imageio-imageio-jpeg" }
-
-
 
 uasparser = { module = "cz.mallat.uasparser:uasparser", version.ref = "cz-mallat-uasparser-uasparser" }
 
@@ -195,10 +187,8 @@ micrometer-registry-prometheus = { module = "io.micrometer:micrometer-registry-p
 jaxen = { module = "jaxen:jaxen", version.ref = "jaxen-jaxen" }
 shedlock-spring = { module = "net.javacrumbs.shedlock:shedlock-spring", version.ref = "net-javacrumbs-shedlock-shedlock-spring" }
 shedlock-provider-jdbc-template = { module = "net.javacrumbs.shedlock:shedlock-provider-jdbc-template", version.ref = "net-javacrumbs-shedlock-shedlock-spring" }
-antlr4-runtime = { module = "org.antlr:antlr4-runtime", version.ref = "org-antlr-antlr4-runtime" }
 
 dom4j = { module = "org.dom4j:dom4j", version.ref = "org-dom4j-dom4j" }
-jakarta-json = { module = "org.glassfish:jakarta.json", version.ref = "org-glassfish-jakarta-json" }
 hibernate-ant = { module = "org.hibernate.orm:hibernate-ant", version.ref = "org-hibernate-orm-hibernate-ant" }
 hibernate-core = { module = "org.hibernate.orm:hibernate-core", version.ref = "org-hibernate-orm-hibernate-core" }
 hibernate-validator = { module = "org.hibernate.validator:hibernate-validator", version.ref = "org-hibernate-validator-hibernate-validator" }
@@ -207,14 +197,10 @@ imgscalr-lib = { module = "org.imgscalr:imgscalr-lib", version.ref = "org-imgsca
 javers-spring-boot-starter-sql = { module = "org.javers:javers-spring-boot-starter-sql", version.ref = "org-javers-javers-spring-boot-starter-sql" }
 jodd-http = { module = "org.jodd:jodd-http", version.ref = "org-jodd-jodd-http" }
 
-
 liquibase-core = { module = "org.liquibase:liquibase-core", version.ref = "org-liquibase-liquibase-core" }
 mariadb-java-client = { module = "org.mariadb.jdbc:mariadb-java-client", version.ref = "org-mariadb-jdbc-mariadb-java-client" }
 antisamy = { module = "org.owasp.antisamy:antisamy", version.ref = "org-owasp-antisamy-antisamy" }
 postgresql = { module = "org.postgresql:postgresql", version.ref = "org-postgresql-postgresql" }
-lombok = { module = "org.projectlombok:lombok", version.ref = "org-projectlombok-lombok" }
-lombok-x1 = { module = "org.projectlombok:lombok", version.ref = "org-projectlombok-lombok-x1" }
-slf4j-api = { module = "org.slf4j:slf4j-api", version.ref = "org-slf4j-slf4j-api" }
 
 [plugins]
 io-spring-dependency-management = { id = "io.spring.dependency-management", version.ref = "io-spring-dependency-management" }

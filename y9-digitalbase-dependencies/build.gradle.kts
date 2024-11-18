@@ -1,6 +1,6 @@
 plugins {
-    id("java-platform")
-    id("maven-publish")
+    `java-platform`
+    id("net.risesoft.y9.javaPlatform-publish")
 }
 
 javaPlatform {
@@ -61,62 +61,5 @@ dependencies {
         // Third Party
         api(libs.hutool.all)
 
-    }
-}
-
-publishing {
-    publications {
-        repositories {
-            maven {
-                val releasesRepoUrl = uri("https://svn.youshengyun.com:9900/nexus/repository/maven-releases/")
-                val snapshotsRepoUrl = uri("https://svn.youshengyun.com:9900/nexus/repository/maven-snapshots/")
-                url = if (version.toString().endsWith("SNAPSHOT")) snapshotsRepoUrl else releasesRepoUrl
-
-                credentials {
-                    username = findProperty("mavenUsername").toString()
-                    password  = findProperty("mavenPassword").toString()
-                }
-            }
-        }
-        create<MavenPublication>("mavenJavaPlatform") {
-            from(components["javaPlatform"])
-            artifactId = "y9-digitalbase-dependencies"
-            pom {
-                // 设置打包类型为pom
-                packaging = "pom"
-                name = "y9-digitalbase-dependencies"
-                description = "RiseSoft/Digital Infrastructure dependencies"
-                url = "https://github.com/risesoft-y9/Digital-Infrastructure"
-                licenses {
-                    license {
-                        name = "GNU General Public License (GPL) version 3.0"
-                        url = "https://www.gnu.org/licenses/gpl-3.0.en.html"
-                    }
-                }
-                developers {
-                    developer {
-                        name = "dingzhaojun"
-                        email = "dingzhaojun@risesoft.net"
-                    }
-                    developer {
-                        name = "qinman"
-                        email = "qinman@risesoft.net"
-                    }
-                    developer {
-                        name = "mengjuhua"
-                        email = "mengjuhua@risesoft.net"
-                    }
-                    developer {
-                        name = "shidaobang"
-                        email = "shidaobang@risesoft.net"
-                    }
-                }
-                scm {
-                    connection = "scm:git:https://github.com/risesoft-y9/Digital-Infrastructure.git"
-                    developerConnection = "scm:git:https://github.com/risesoft-y9/Digital-Infrastructure.git"
-                    url = "https://github.com/risesoft-y9/Digital-Infrastructure"
-                }
-            }
-        }
     }
 }
