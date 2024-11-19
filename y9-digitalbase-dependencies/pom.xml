@@ -102,6 +102,7 @@
         <commons-io.version>2.15.1</commons-io.version>
         <commons-net.version>3.10.0</commons-net.version>
         <commons-pool2.version>2.12.0</commons-pool2.version>
+        <commons-text.version>1.12.0</commons-text.version>
 
         <javers.version>6.14.0</javers.version>
         <org-dom4j.version>2.1.4</org-dom4j.version>
@@ -585,6 +586,12 @@
                 <groupId>org.apache.commons</groupId>
                 <artifactId>commons-pool2</artifactId>
                 <version>${commons-pool2.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>org.apache.commons</groupId>
+                <artifactId>commons-text</artifactId>
+                <version>${commons-text.version}</version>
             </dependency>
 
             <!-- jodd -->
