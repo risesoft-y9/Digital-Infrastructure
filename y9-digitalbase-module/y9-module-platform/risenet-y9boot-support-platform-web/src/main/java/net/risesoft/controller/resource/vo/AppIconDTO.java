@@ -7,6 +7,9 @@ import org.springframework.web.multipart.MultipartFile;
 import lombok.Getter;
 import lombok.Setter;
 
+/**
+ * 图标上传对象
+ */
 @Getter
 @Setter
 public class AppIconDTO implements Serializable {
