@@ -115,8 +115,8 @@
         ////自smart-doc 2.1.4 起，支持设置RequestBodyAdvice统一请求包装类，非必须
         "className": "net.risesoft.pojo.Y9Result"
     },
-    "appToken": "a9fa6c840e2a4324903e8a8268dcf284",
-    "openUrl": "https://dev.youshengyun.com/torna/api",
+    "appToken": "60e47a93312749e7ab6289c047548ffa",
+    "openUrl": "https://test.youshengyun.com/torna/api",
     "replace": true,
     "requestParamsTable": true,
     // 是否将请求参数表展示在文档中，默认true，@since 2.2.5
