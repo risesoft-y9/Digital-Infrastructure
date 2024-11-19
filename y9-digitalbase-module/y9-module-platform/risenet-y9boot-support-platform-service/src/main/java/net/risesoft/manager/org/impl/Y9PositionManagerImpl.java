@@ -78,7 +78,8 @@ public class Y9PositionManagerImpl implements Y9PositionManager {
                 .map(Y9OrgBase::getName).collect(Collectors.joining("，"));
             keyValueMap.put("personNames", personNames);
         }
-        return StringSubstitutor.replace(y9SettingService.getTenantSetting().getPositionNameTemplate(), keyValueMap);
+        return StringSubstitutor.replace(y9SettingService.getTenantSetting().getPositionNameTemplate(), keyValueMap,
+            "{{", "}}");
     }
 
     @Override

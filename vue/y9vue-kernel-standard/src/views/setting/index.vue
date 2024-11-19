@@ -81,7 +81,7 @@
                 prop: 'positionNameTemplate',
                 props: {
                     placeholder:
-                        '默认格式为：${jobName}（${personNames}），变量 jobName 会替换为职位名 ，变量 personNames 会替换为人员名称。最终的岗位名称例子：总经理（张三）'
+                        '默认格式为：{{jobName}}（{{personNames}}）， {{jobName}} 会替换为职位名 ，{{personNames}} 会替换为人员名称'
                 }
             },
             {
