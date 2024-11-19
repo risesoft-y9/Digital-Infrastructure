@@ -17,7 +17,7 @@ public class Y9PlatformProperties {
     public static final int SECURITY_MANAGER_REVIEW_LOG_CYCLE_DEFAULT = 7;
     public static final int AUDIT_MANAGER_REVIEW_LOG_CYCLE_DEFAULT = 7;
     public static final String USER_PASSWORD_DEFAULT = "Risesoft@2022";
-    public static final String POSITION_NAME_TEMPLATE_DEFAULT = "${jobName}（${personNames}）";
+    public static final String POSITION_NAME_TEMPLATE_DEFAULT = "{{jobName}}（{{personNames}}）";
 
     /**
      * 系统名称
@@ -25,7 +25,7 @@ public class Y9PlatformProperties {
     private String systemName = "riseplatform";
 
     /**
-     * 岗位名称格式，默认格式为：${jobName}（${personNames}），变量 jobName 会替换为职位名 ，变量 personNames 会替换为人员名称 <br>
+     * 岗位名称格式，默认格式为：{{jobName}}（{{personNames}}）， {{jobName}} 会替换为职位名 ，{{personNames}} 会替换为人员名称 <br>
      * 最终的岗位名称例子：总经理（张三）
      */
     private String positionNameTemplate = POSITION_NAME_TEMPLATE_DEFAULT;

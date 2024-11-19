@@ -129,7 +129,7 @@ y9:
             kafkaEnabled: true
         platform:
             systemName: riseplatform
-            positionNameTemplate: "${jobName}（${personNames}）"
+            positionNameTemplate: "{{jobName}}（{{personNames}}）"
             managerModifyPasswordCycle: 7
             userDefaultpassword: ${NACOS_PASSWORD:111111}
     service:
