@@ -44,9 +44,9 @@ public class Y9AppIcon extends BaseEntity implements Serializable {
     @Comment("名称")
     private String name;
 
-    /** 类型 */
+    /** 图片类型 */
     @Column(name = "ICON_TYPE", length = 38)
-    @Comment("类型")
+    @Comment("图片类型")
     private String type;
 
     /** 地址：Y9FileStore 的 id */
@@ -64,5 +64,15 @@ public class Y9AppIcon extends BaseEntity implements Serializable {
     @Column(name = "ICON_DATA", nullable = true)
     @Comment("图标图片的base64")
     private String iconData;
+
+    /** 颜色类型 */
+    @Column(name = "COLOR_TYPE", length = 20)
+    @Comment("颜色类型")
+    private String colorType;
+
+    /** 所属类别 */
+    @Column(name = "CATEGORY", length = 20)
+    @Comment("所属类别")
+    private String category;
 
 }

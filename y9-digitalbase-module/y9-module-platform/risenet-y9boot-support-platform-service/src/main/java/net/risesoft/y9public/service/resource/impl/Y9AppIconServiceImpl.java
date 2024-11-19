@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.Optional;
 
 import org.apache.commons.io.FilenameUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -57,8 +58,8 @@ public class Y9AppIconServiceImpl implements Y9AppIconService {
     }
 
     @Override
-    public Optional<Y9AppIcon> findByName(String name) {
-        return appIconRepository.findByName(name);
+    public Optional<Y9AppIcon> findByNameAndColorType(String name, String colorType) {
+        return appIconRepository.findByNameAndColorType(name, colorType);
     }
 
     @Override
@@ -74,6 +75,11 @@ public class Y9AppIconServiceImpl implements Y9AppIconService {
 
     @Override
     public List<Y9AppIcon> listByName(String name) {
+        return appIconRepository.findByName(name);
+    }
+
+    @Override
+    public List<Y9AppIcon> listByNameLike(String name) {
         return appIconRepository.findByNameContaining(name);
     }
 
@@ -118,20 +124,63 @@ public class Y9AppIconServiceImpl implements Y9AppIconService {
         String imgName = FilenameUtils.getName(originalFilename);
         // 文件类型
         String imgType = FilenameUtils.getExtension(imgName);
-        Optional<Y9AppIcon> y9AppIconOptional = appIconRepository.findByName(imgName);
+        List<Y9AppIcon> y9AppIconList = appIconRepository.findByName(imgName);
         Y9AppIcon appIcon = null;
-        if (y9AppIconOptional.isEmpty()) {
+        if (y9AppIconList.isEmpty()) {
             appIcon = new Y9AppIcon();
             appIcon.setId(Y9IdGenerator.genId(IdType.SNOWFLAKE));
             appIcon.setName(imgName);
         } else {
-            appIcon = y9AppIconOptional.get();
+            appIcon = y9AppIconList.get(0);
         }
         appIcon.setRemark(remark);
         appIcon.setType(imgType);
         String fullPath = Y9FileStore.buildPath("riseplatform", "public", "appIcon");
         try {
             appIcon.setPath(y9FileStoreService.uploadFile(iconFile, fullPath, imgName).getId());
+            appIcon.setIconData(Base64.encodeToString(iconData));
+            return appIconRepository.save(appIcon);
+        } catch (Exception e) {
+            e.printStackTrace();
+            throw new Y9BusinessException(500, "上传文件异常,错误信息为：" + e.getMessage());
+        }
+
+    }
+
+    @Override
+    @Transactional(readOnly = false)
+    public Y9AppIcon save(String name, String category, String colorType, String remark, MultipartFile iconFile)
+        throws Y9BusinessException {
+        byte[] iconData = null;
+        try {
+            if (!iconFile.isEmpty()) {
+                iconData = iconFile.getBytes();
+            }
+        } catch (IOException e1) {
+            LOGGER.warn(e1.getMessage(), e1);
+            throw new Y9BusinessException(500, "上传文件异常,错误信息为：" + e1.getMessage());
+        }
+        if (StringUtils.isNotBlank(category)) {
+            category = "default";
+        }
+        // 文件类型
+        String imgType = FilenameUtils.getExtension(iconFile.getOriginalFilename());
+        Optional<Y9AppIcon> y9AppIconOptional = appIconRepository.findByNameAndColorType(name, colorType);
+        Y9AppIcon appIcon = null;
+        if (y9AppIconOptional.isEmpty()) {
+            appIcon = new Y9AppIcon();
+            appIcon.setId(Y9IdGenerator.genId(IdType.SNOWFLAKE));
+            appIcon.setName(name);
+            appIcon.setColorType(colorType);
+        } else {
+            appIcon = y9AppIconOptional.get();
+        }
+        appIcon.setRemark(remark);
+        appIcon.setType(imgType);
+        appIcon.setCategory(category);
+        String fullPath = Y9FileStore.buildPath("riseplatform", "public", "appIcon", category, colorType);
+        try {
+            appIcon.setPath(y9FileStoreService.uploadFile(iconFile, fullPath, name).getId());
             appIcon.setIconData(Base64.encodeToString(iconData));
             return appIconRepository.save(appIcon);
         } catch (Exception e) {

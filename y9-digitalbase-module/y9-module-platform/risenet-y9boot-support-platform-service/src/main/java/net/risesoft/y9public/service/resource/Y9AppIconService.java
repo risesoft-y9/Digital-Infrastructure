@@ -47,7 +47,7 @@ public interface Y9AppIconService {
      * @param name 图标名称
      * @return {@code Optional<Y9AppIcon>}
      */
-    Optional<Y9AppIcon> findByName(String name);
+    Optional<Y9AppIcon> findByNameAndColorType(String name, String colorType);
 
     /**
      * 根据 id 获取应用图标
@@ -74,6 +74,14 @@ public interface Y9AppIconService {
     List<Y9AppIcon> listByName(String name);
 
     /**
+     * 根据名称查询应用图标列表
+     *
+     * @param name 图标名称
+     * @return {@code List<Y9AppIcon>}
+     */
+    List<Y9AppIcon> listByNameLike(String name);
+
+    /**
      * 分页获取图标列表
      *
      * @param pageQuery 分页查询参数
@@ -96,6 +104,20 @@ public interface Y9AppIconService {
      * @see Y9BusinessException
      */
     Y9AppIcon save(MultipartFile iconFile, String remark) throws Y9BusinessException;
+
+    /**
+     * 保存应用程序图标
+     *
+     * @param name 图标名称
+     * @param category 类别
+     * @param colorType 颜色类别
+     * @param remark 备注
+     * @param iconFile 图标文件
+     * @return {@link Y9AppIcon}
+     * @throws Y9BusinessException 业务异常
+     */
+    Y9AppIcon save(String name, String category, String colorType, String remark, MultipartFile iconFile)
+        throws Y9BusinessException;
 
     /**
      * 保存图标
