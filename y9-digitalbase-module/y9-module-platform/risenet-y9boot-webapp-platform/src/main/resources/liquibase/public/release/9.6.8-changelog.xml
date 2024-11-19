@@ -66,4 +66,17 @@
         </addColumn>
     </changeSet>
 
+
+    <changeSet id="add-column-app-icon-1" author="mengjuhua" runOnChange="true">
+        <preConditions onFail="MARK_RAN">
+            <not>
+                <columnExists tableName="Y9_COMMON_APP_ICON" columnName="COLOR_TYPE"/>
+            </not>
+        </preConditions>
+        <addColumn tableName="Y9_COMMON_APP_ICON">
+            <column name="COLOR_TYPE" type="VARCHAR(20)" remarks="颜色类型"/>
+            <column name="CATEGORY" type="VARCHAR(20)" remarks="所属类别"/>
+        </addColumn>
+    </changeSet>
+
 </databaseChangeLog>

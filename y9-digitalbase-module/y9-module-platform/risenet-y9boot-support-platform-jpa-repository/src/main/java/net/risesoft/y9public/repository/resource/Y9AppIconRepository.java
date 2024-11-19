@@ -14,10 +14,12 @@ import net.risesoft.y9public.entity.resource.Y9AppIcon;
 @Transactional(value = "rsPublicTransactionManager", readOnly = true)
 public interface Y9AppIconRepository extends JpaRepository<Y9AppIcon, String>, JpaSpecificationExecutor<Y9AppIcon> {
 
-    Optional<Y9AppIcon> findByName(String name);
+    List<Y9AppIcon> findByName(String name);
 
     List<Y9AppIcon> findByNameContaining(String name);
 
     Page<Y9AppIcon> findByNameContaining(String name, Pageable pageable);
+
+    Optional<Y9AppIcon> findByNameAndColorType(String name, String colorType);
 
 }

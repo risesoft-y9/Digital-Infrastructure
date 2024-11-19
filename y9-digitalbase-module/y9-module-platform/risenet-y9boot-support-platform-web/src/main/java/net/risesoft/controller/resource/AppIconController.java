@@ -6,6 +6,7 @@ import java.util.Optional;
 import jakarta.validation.constraints.NotBlank;
 
 import org.apache.commons.io.FilenameUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.data.domain.Page;
 import org.springframework.http.MediaType;
 import org.springframework.validation.annotation.Validated;
@@ -18,6 +19,7 @@ import org.springframework.web.multipart.MultipartFile;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
+import net.risesoft.controller.resource.vo.AppIconDTO;
 import net.risesoft.enums.platform.ManagerLevelEnum;
 import net.risesoft.log.OperationTypeEnum;
 import net.risesoft.log.annotation.RiseLog;
@@ -84,8 +86,21 @@ public class AppIconController {
     @RiseLog(operationName = "图片列表的读取")
     @RequestMapping(value = "/listAll")
     public Y9Result<List<Y9AppIcon>> listAll() {
-        List<Y9AppIcon> list = appIconService.listAll();
-        return Y9Result.success(list, "图片列表的读取！");
+        return Y9Result.success(appIconService.listAll(), "图片列表的读取！");
+    }
+
+    /**
+     * 根据名称，获取图片列表
+     *
+     * @param name 图标名称
+     *
+     * @return {@code Y9Result<List<Y9AppIcon>>}
+     * @since 9.6.8
+     */
+    @RiseLog(operationName = "根据名称，获取图片列表")
+    @RequestMapping(value = "/listByName")
+    public Y9Result<List<Y9AppIcon>> listByName(@RequestParam @NotBlank String name) {
+        return Y9Result.success(appIconService.listByName(name), "图片列表的读取！");
     }
 
     /**
@@ -190,13 +205,61 @@ public class AppIconController {
             // 图片名称
             String imgName = FilenameUtils.getName(originalFilename);
             // 文件类型
-            Optional<Y9AppIcon> y9AppIconOptional = appIconService.findByName(imgName);
+            List<Y9AppIcon> y9AppIconOptional = appIconService.listByName(imgName);
             appIconService.save(iconFile, remark);
-            if (y9AppIconOptional.isPresent()) {
+            if (!y9AppIconOptional.isEmpty()) {
                 return Y9Result.success("上传成功,文件重名，图标已被覆盖!");
             } else {
                 return Y9Result.success("上传成功");
             }
+        } else {
+            return Y9Result.failure("上传失败！请选择图标文件！");
+        }
+    }
+
+    /**
+     * 上传图标
+     *
+     * @param appIconDTO 需要上传的图标文件
+     * @return {@code Y9Result<String>}
+     * @throws Y9BusinessException 业务异常
+     * @since 9.6.8
+     */
+    @RiseLog(operationType = OperationTypeEnum.ADD, operationName = "上传图标")
+    @RequestMapping("/uploadIcon4Colors")
+    public Y9Result<String> uploadIcon4Colors(AppIconDTO appIconDTO) {
+        if (appIconDTO != null && appIconDTO.getIconFiles().length > 0) {
+            MultipartFile[] iconFiles = appIconDTO.getIconFiles();
+            String[] colors = appIconDTO.getColors();
+            StringBuilder msgBuilder = new StringBuilder();
+            for (int i = 0, len = iconFiles.length; i < len; i++) {
+                MultipartFile file = iconFiles[i];
+                if (!file.isEmpty()) {
+                    // 文件名称
+                    String originalFilename = file.getOriginalFilename();
+                    // 图片名称
+                    String imgName = FilenameUtils.getName(originalFilename);
+                    String iconName = appIconDTO.getName();
+                    if (StringUtils.isBlank(iconName)) {
+                        iconName = FilenameUtils.getName(originalFilename);
+                    }
+                    try {
+                        Optional<Y9AppIcon> y9AppIconOptional =
+                            appIconService.findByNameAndColorType(imgName, colors[i]);
+                        appIconService.save(iconName, appIconDTO.getCategory(), colors[i], appIconDTO.getRemark(),
+                            file);
+                        if (y9AppIconOptional.isPresent()) {
+                            msgBuilder.append("上传颜色：" + colors[i] + "成功,文件重名，图标已被覆盖!").append(";");
+                        }
+                    } catch (Y9BusinessException e) {
+                        msgBuilder.append("上传颜色：" + colors[i] + "失败").append(";");
+                    }
+                }
+            }
+            if (msgBuilder.length() == 0) {
+                msgBuilder.append("上传成功");
+            }
+            return Y9Result.success(msgBuilder.toString());
         } else {
             return Y9Result.failure("上传失败！请选择图标文件！");
         }
