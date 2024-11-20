@@ -25,18 +25,6 @@ public class TenantSetting extends AbstractSetting implements Serializable {
     /** 岗位名称格式 */
     private String positionNameTemplate = Y9PlatformProperties.POSITION_NAME_TEMPLATE_DEFAULT;
 
-    /** 三员修改密码周期 */
-    private Integer managerModifyPasswordCycle = Y9PlatformProperties.MANAGER_MODIFY_PASSWORD_CYCLE_DEFAULT;
-
-    /** 系统管理员审查日志周期 */
-    private Integer systemManagerReviewLogCycle = Y9PlatformProperties.SYSTEM_MANAGER_REVIEW_LOG_CYCLE_DEFAULT;
-
-    /** 安全保密员审查日志周期 */
-    private Integer securityManagerReviewLogCycle = Y9PlatformProperties.SECURITY_MANAGER_REVIEW_LOG_CYCLE_DEFAULT;
-
-    /** 安全审计员审查日志周期 */
-    private Integer auditManagerReviewLogCycle = Y9PlatformProperties.AUDIT_MANAGER_REVIEW_LOG_CYCLE_DEFAULT;
-
     @Override
     public String getPrefix() {
         return "y9.app.platform.";
