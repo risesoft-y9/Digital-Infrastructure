@@ -112,13 +112,14 @@ public class OrgEventListener {
                 eventType = Y9OrgEventTypeConst.PERSON_DELETE;
                 break;
         }
+        if (!OrgTypeEnum.MANAGER.equals(orgType)) {
+            Y9MessageOrg<OrgUnit> msg = new Y9MessageOrg<>(ModelConvertUtil.orgBaseToOrgUnit(y9OrgBase), eventType,
+                Y9LoginUserHolder.getTenantId());
+            Y9PublishServiceUtil.persistAndPublishMessageOrg(msg, eventName, eventDescription);
 
-        Y9MessageOrg<OrgUnit> msg = new Y9MessageOrg<>(ModelConvertUtil.orgBaseToOrgUnit(y9OrgBase), eventType,
-            Y9LoginUserHolder.getTenantId());
-        Y9PublishServiceUtil.persistAndPublishMessageOrg(msg, eventName, eventDescription);
-
-        if (LOGGER.isDebugEnabled()) {
-            LOGGER.debug("删除组织节点后保存及发送消息到中间件完成");
+            if (LOGGER.isDebugEnabled()) {
+                LOGGER.debug("删除组织节点后保存及发送消息到中间件完成");
+            }
         }
     }
 
@@ -172,13 +173,14 @@ public class OrgEventListener {
                 }
                 break;
         }
+        if (!OrgTypeEnum.MANAGER.equals(orgType)) {
+            Y9MessageOrg<OrgUnit> msg = new Y9MessageOrg<>(ModelConvertUtil.orgBaseToOrgUnit(updatedOrgUnit), eventType,
+                Y9LoginUserHolder.getTenantId());
+            Y9PublishServiceUtil.persistAndPublishMessageOrg(msg, eventName, eventDescription);
 
-        Y9MessageOrg<OrgUnit> msg = new Y9MessageOrg<>(ModelConvertUtil.orgBaseToOrgUnit(updatedOrgUnit), eventType,
-            Y9LoginUserHolder.getTenantId());
-        Y9PublishServiceUtil.persistAndPublishMessageOrg(msg, eventName, eventDescription);
-
-        if (LOGGER.isDebugEnabled()) {
-            LOGGER.debug("更新组织节点后保存及发送消息到中间件完成");
+            if (LOGGER.isDebugEnabled()) {
+                LOGGER.debug("更新组织节点后保存及发送消息到中间件完成");
+            }
         }
     }
 

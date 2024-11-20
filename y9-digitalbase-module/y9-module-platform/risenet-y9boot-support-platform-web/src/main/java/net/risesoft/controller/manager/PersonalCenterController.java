@@ -24,6 +24,7 @@ import net.risesoft.log.annotation.RiseLog;
 import net.risesoft.permission.annotation.IsAnyManager;
 import net.risesoft.pojo.Y9Result;
 import net.risesoft.service.org.Y9ManagerService;
+import net.risesoft.y9.configuration.app.y9platform.Y9PlatformProperties;
 
 /**
  * 个人中心
@@ -40,6 +41,7 @@ import net.risesoft.service.org.Y9ManagerService;
 public class PersonalCenterController {
 
     private final Y9ManagerService y9ManagerService;
+    private final Y9PlatformProperties y9PlatformProperties;
 
     /**
      * 校验密码
@@ -69,6 +71,8 @@ public class PersonalCenterController {
 
         Y9Manager manager = y9ManagerService.getById(managerId);
         map.put("manager", manager);
+        map.put("passwordModifiedCycle", y9ManagerService.getPasswordModifiedCycle(manager.getManagerLevel()));
+        map.put("reviewLogCycle", y9ManagerService.getReviewLogCycle(manager.getManagerLevel()));
         if (manager.getLastModifyPasswordTime() != null) {
             Date modifyPwdTime = manager.getLastModifyPasswordTime();
             Calendar calendar = Calendar.getInstance();
