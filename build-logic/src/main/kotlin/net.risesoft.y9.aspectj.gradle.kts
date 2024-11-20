@@ -8,6 +8,7 @@ plugins {
 dependencies {
     api("org.aspectj:aspectjrt")
     api("org.aspectj:aspectjtools")
+    api("org.aspectj:aspectjweaver")
 
     aspect("org.springframework:spring-aspects")
     testAspect("org.springframework:spring-aspects")
