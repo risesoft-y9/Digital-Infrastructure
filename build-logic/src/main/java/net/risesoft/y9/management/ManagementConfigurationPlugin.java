@@ -7,6 +7,7 @@ import org.gradle.api.artifacts.ConfigurationContainer;
 import org.gradle.api.plugins.JavaPlugin;
 import org.gradle.api.plugins.JavaTestFixturesPlugin;
 import org.gradle.api.plugins.PluginContainer;
+import org.gradle.api.plugins.WarPlugin;
 import org.gradle.api.publish.PublishingExtension;
 import org.gradle.api.publish.VariantVersionMappingStrategy;
 import org.gradle.api.publish.maven.MavenPublication;
@@ -31,6 +32,11 @@ public class ManagementConfigurationPlugin implements Plugin<Project> {
 				configurations.getByName(JavaPlugin.TEST_ANNOTATION_PROCESSOR_CONFIGURATION_NAME).extendsFrom(management);
 				configurations.getByName(JavaPlugin.TEST_COMPILE_CLASSPATH_CONFIGURATION_NAME).extendsFrom(management);
 				configurations.getByName(JavaPlugin.TEST_RUNTIME_CLASSPATH_CONFIGURATION_NAME).extendsFrom(management);
+			});
+
+			plugins.withType(WarPlugin.class, (warPlugin) -> {
+				configurations.getByName("providedCompile").extendsFrom(management);
+				configurations.getByName("providedRuntime").extendsFrom(management);
 			});
 
 			plugins.withType(JavaTestFixturesPlugin.class, (javaTestFixturesPlugin) -> {
