@@ -28,6 +28,7 @@ import net.risesoft.service.setting.Y9SettingService;
 import net.risesoft.util.Y9OrgUtil;
 import net.risesoft.y9.Y9Context;
 import net.risesoft.y9.Y9LoginUserHolder;
+import net.risesoft.y9.configuration.app.y9platform.Y9PlatformProperties;
 import net.risesoft.y9.exception.util.Y9ExceptionUtil;
 import net.risesoft.y9.pubsub.event.Y9EntityCreatedEvent;
 import net.risesoft.y9.pubsub.event.Y9EntityDeletedEvent;
@@ -53,6 +54,7 @@ public class Y9ManagerServiceImpl implements Y9ManagerService {
     private final CompositeOrgBaseManager compositeOrgBaseManager;
     private final Y9DepartmentManager y9DepartmentManager;
     private final Y9SettingService y9SettingService;
+    private final Y9PlatformProperties y9PlatformProperties;
 
     @Override
     @Transactional(readOnly = false)
@@ -125,20 +127,20 @@ public class Y9ManagerServiceImpl implements Y9ManagerService {
 
     @Override
     public int getPasswordModifiedCycle(ManagerLevelEnum managerLevel) {
-        return y9SettingService.getTenantSetting().getManagerModifyPasswordCycle();
+        return y9PlatformProperties.getManagerModifyPasswordCycle();
     }
 
     @Override
     public int getReviewLogCycle(ManagerLevelEnum managerLevel) {
         int checkCycle = 0;
         if (ManagerLevelEnum.SYSTEM_MANAGER.equals(managerLevel)) {
-            checkCycle = y9SettingService.getTenantSetting().getSystemManagerReviewLogCycle();
+            checkCycle = y9PlatformProperties.getSystemManagerReviewLogCycle();
         }
         if (ManagerLevelEnum.SECURITY_MANAGER.equals(managerLevel)) {
-            checkCycle = y9SettingService.getTenantSetting().getSecurityManagerReviewLogCycle();
+            checkCycle = y9PlatformProperties.getSecurityManagerReviewLogCycle();
         }
         if (ManagerLevelEnum.AUDIT_MANAGER.equals(managerLevel)) {
-            checkCycle = y9SettingService.getTenantSetting().getAuditManagerReviewLogCycle();
+            checkCycle = y9PlatformProperties.getAuditManagerReviewLogCycle();
         }
         return checkCycle;
     }
