@@ -11,9 +11,6 @@ dependencies {
     implementation(project(":y9-digitalbase-support:risenet-y9boot-support-file-service-rest"))
     implementation(project(":y9-digitalbase-common:risenet-y9boot-common-nacos"))
 
-    implementation(platform(libs.spring.boot.bom))
-    providedRuntime(platform(libs.spring.boot.bom))
-
     implementation(libs.google.gson)
     implementation(libs.commons.io)
     implementation(libs.commons.codec)

@@ -15,9 +15,6 @@ dependencies {
     implementation(project(":y9-digitalbase-starter:risenet-y9boot-starter-web"))
     implementation(project(":y9-digitalbase-common:risenet-y9boot-common-nacos"))
 
-    implementation(platform(libs.spring.boot.bom))
-    providedRuntime(platform(libs.spring.boot.bom))
-
     implementation(libs.jxls)
     implementation(libs.jxls.poi)
     implementation(libs.jxls.jexcel)
@@ -25,10 +22,9 @@ dependencies {
     implementation(libs.micrometer.registry.prometheus)
     implementation("org.springframework.kafka:spring-kafka")
     implementation("org.springframework.boot:spring-boot-starter-actuator")
+    implementation("org.springframework.boot:spring-boot-starter-web")
 
     compileOnly("jakarta.servlet:jakarta.servlet-api")
-
-    implementation("org.springframework.boot:spring-boot-starter-web")
     providedRuntime("org.springframework.boot:spring-boot-starter-tomcat")
 }
 

@@ -1,5 +1,6 @@
 package net.risesoft.model.platform;
 
+import java.io.Serial;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
@@ -18,6 +19,7 @@ import net.risesoft.enums.platform.OrgTypeEnum;
 @Data
 public class SyncOrgUnits implements Serializable {
 
+    @Serial
     private static final long serialVersionUID = -864558419670526377L;
 
     /** 同步的组织节点id */

@@ -52,3 +52,6 @@ java.sourceSets.forEach { t ->
     t.compileClasspath +=  optional.plus(provided)
     t.runtimeClasspath +=  optional.plus(provided)
 }
+
+val dependency = project.dependencies.platform(project.dependencies.project(":y9-digitalbase-dependencies"))
+management.dependencies.add(dependency)

@@ -39,4 +39,3 @@ tasks.test {
     useJUnitPlatform()
 }
 
-

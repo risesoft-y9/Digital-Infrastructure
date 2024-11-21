@@ -6,10 +6,6 @@ plugins {
 }
 
 dependencies {
-    implementation(platform(libs.spring.boot.bom))
-    implementation(platform(libs.cas.server.bom))
-    implementation(platform(libs.ojdbc.bom))
-    
     implementation("org.apereo.cas:cas-server-core")
     implementation("org.apereo.cas:cas-server-core-authentication-api")
     implementation("org.apereo.cas:cas-server-core-authentication")
@@ -68,7 +64,6 @@ dependencies {
     implementation(libs.dameng.dmdialect.hibernate62)
     implementation(libs.dameng.dmjdbcdriver18)
 
-    providedRuntime(platform(libs.spring.boot.bom))
     providedRuntime("org.springframework.boot:spring-boot-starter-tomcat")
 }
 
