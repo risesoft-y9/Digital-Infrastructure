@@ -1,11 +1,9 @@
-import net.risesoft.y9.management.ManagementConfigurationPlugin
-
 plugins {
     id("java-library")
     id("net.risesoft.y9.project-info")
+    id("net.risesoft.y9.management")
     id("net.risesoft.y9.java-publish")
 }
-apply<ManagementConfigurationPlugin>()
 
 java {
     sourceCompatibility = JavaVersion.VERSION_21
@@ -40,6 +38,5 @@ tasks.withType<Javadoc> {
 tasks.test {
     useJUnitPlatform()
 }
-
 
 

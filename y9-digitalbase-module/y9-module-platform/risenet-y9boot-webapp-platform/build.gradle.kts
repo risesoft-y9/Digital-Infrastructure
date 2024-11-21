@@ -8,8 +8,6 @@ plugins {
 
 dependencies {
     management(platform(project(":y9-digitalbase-dependencies")))
-    //providedCompile(platform(project(":y9-digitalbase-dependencies")))
-    //providedRuntime(platform(project(":y9-digitalbase-dependencies")))
 
     implementation(project(":y9-digitalbase-common:risenet-y9boot-common-util"))
     implementation(project(":y9-digitalbase-module:y9-module-platform:risenet-y9boot-support-platform-web"))
@@ -21,10 +19,6 @@ dependencies {
     implementation(project(":y9-digitalbase-common:risenet-y9boot-common-nacos"))
     implementation(project(":y9-digitalbase-starter:risenet-y9boot-starter-multi-tenant"))
     
-    //implementation(platform(libs.spring.boot.bom))
-    //providedCompile(platform(libs.spring.boot.bom))
-    //providedRuntime(platform(libs.spring.boot.bom))
-
     implementation(libs.commons.pool2)
     implementation("org.springframework.boot:spring-boot-docker-compose")
     implementation(libs.dom4j)
