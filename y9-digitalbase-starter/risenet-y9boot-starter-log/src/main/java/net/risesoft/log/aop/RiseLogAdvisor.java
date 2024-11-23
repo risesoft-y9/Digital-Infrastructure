@@ -1,5 +1,6 @@
 package net.risesoft.log.aop;
 
+import java.io.Serial;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Method;
 
@@ -14,6 +15,7 @@ import net.risesoft.log.annotation.RiseLog;
 
 @Slf4j
 public class RiseLogAdvisor extends StaticMethodMatcherPointcutAdvisor {
+    @Serial
     private static final long serialVersionUID = -3373169665682250208L;
 
     @SuppressWarnings("unchecked")

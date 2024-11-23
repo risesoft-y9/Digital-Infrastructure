@@ -8,10 +8,7 @@ import org.springframework.boot.autoconfigure.AutoConfigureAfter;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.boot.autoconfigure.kafka.KafkaAutoConfiguration;
-import org.springframework.boot.autoconfigure.web.servlet.ConditionalOnMissingFilterBean;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
-import org.springframework.boot.task.TaskExecutorBuilder;
-import org.springframework.boot.web.servlet.filter.OrderedRequestContextFilter;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.DependsOn;
@@ -19,7 +16,6 @@ import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.kafka.core.ProducerFactory;
 import org.springframework.scheduling.annotation.EnableAsync;
 import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
-import org.springframework.web.filter.RequestContextFilter;
 
 import com.alibaba.ttl.threadpool.TtlExecutors;
 
@@ -41,14 +37,6 @@ import net.risesoft.y9.configuration.Y9Properties;
 @EnableConfigurationProperties(Y9Properties.class)
 public class Y9LogConfiguration {
 
-    // https://github.com/spring-projects/spring-boot/issues/2637
-    // https://github.com/spring-projects/spring-boot/issues/4331
-    @Bean
-    @ConditionalOnMissingFilterBean(RequestContextFilter.class)
-    public static RequestContextFilter requestContextFilter() {
-        return new OrderedRequestContextFilter();
-    }
-
     @Bean
     @ConditionalOnMissingBean(AbstractAdvisorAutoProxyCreator.class)
     public DefaultAdvisorAutoProxyCreator defaultAdvisorAutoProxyCreator() {
@@ -61,8 +49,7 @@ public class Y9LogConfiguration {
     @ConditionalOnMissingBean(RiseLogAdvice.class)
     @DependsOn({"y9Context"})
     public RiseLogAdvice riseLogAdvice() {
-        RiseLogAdvice bean = new RiseLogAdvice();
-        return bean;
+        return new RiseLogAdvice();
     }
 
     @Bean
@@ -100,8 +87,8 @@ public class Y9LogConfiguration {
 
     @Bean(name = {"y9ThreadPoolTaskExecutor"})
     @ConditionalOnMissingBean(name = "y9ThreadPoolTaskExecutor")
-    public Executor y9ThreadPoolTaskExecutor(TaskExecutorBuilder builder) {
-        ThreadPoolTaskExecutor taskExecutor = builder.build();
+    public Executor y9ThreadPoolTaskExecutor() {
+        ThreadPoolTaskExecutor taskExecutor = new ThreadPoolTaskExecutor();
         // 核心线程数
         taskExecutor.setCorePoolSize(10);
         taskExecutor.setAllowCoreThreadTimeOut(true);

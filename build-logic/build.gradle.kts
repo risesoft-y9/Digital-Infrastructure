@@ -4,7 +4,6 @@ plugins {
 }
 
 repositories {
-    // Use the plugin portal to apply community plugins in convention plugins.
     gradlePluginPortal()
     mavenCentral()
 }
@@ -19,20 +18,6 @@ dependencies {
 
 group = "net.risesoft.y9"
 version = "v9.7.0-SNAPSHOT"
-
-/*
-gradlePlugin {
-    plugins.create("managementConfiguration") {
-        id = "net.risesoft.y9.management"
-        implementationClass = "net.risesoft.y9.management.ManagementConfigurationPlugin"
-        tags = listOf<String>("risesoft","y9")
-        displayName = ""
-        description = ""
-    }
-
-    website.set("https://svn.youshengyun.com:3000/risesoft/y9-build-logic")
-    vcsUrl.set("https://svn.youshengyun.com:3000/risesoft/y9-build-logic.git")
-}*/
 
 extra.set("PROJECT_GIT_URL", "https://github.com/risesoft-y9/Digital-Infrastructure")
 extra.set("PROJECT_SCM_URL", "scm:git:https://github.com/risesoft-y9/Digital-Infrastructure.git")

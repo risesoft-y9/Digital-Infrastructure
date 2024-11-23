@@ -1,8 +1,19 @@
+import gradle.kotlin.dsl.accessors._b43a41b3a2c24e7f863347686afebb31.versionCatalogs
+
 plugins {
     id("java-library")
-    id("net.risesoft.y9.project-info")
     id("net.risesoft.y9.management")
     id("net.risesoft.y9.java-publish")
+}
+
+group = "net.risesoft"
+
+val versionCatalog = versionCatalogs.named("libs")
+val y9version = versionCatalog.findVersion("y9-version")
+if(y9version.isPresent) {
+    version = y9version.get().displayName
+} else {
+    version = "v9.7.0-SNAPSHOT"
 }
 
 java {

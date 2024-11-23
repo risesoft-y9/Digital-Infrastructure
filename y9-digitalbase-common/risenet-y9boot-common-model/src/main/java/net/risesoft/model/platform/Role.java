@@ -1,5 +1,6 @@
 package net.risesoft.model.platform;
 
+import java.io.Serial;
 import java.io.Serializable;
 import java.util.Date;
 import java.util.Map;
@@ -18,8 +19,10 @@ import net.risesoft.enums.platform.RoleTypeEnum;
  * @date 2022/4/21
  */
 @Data
+@SuppressWarnings({"serial"})
 public class Role implements Serializable {
 
+    @Serial
     private static final long serialVersionUID = -7783526250811707188L;
 
     /**
