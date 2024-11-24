@@ -1,6 +1,7 @@
 plugins {
     id("net.risesoft.y9.java-conventions")
     id("net.risesoft.y9.docker")
+    id("net.risesoft.y9.lombok")
     id("war")
     alias(libs.plugins.org.springframework.boot)
 }

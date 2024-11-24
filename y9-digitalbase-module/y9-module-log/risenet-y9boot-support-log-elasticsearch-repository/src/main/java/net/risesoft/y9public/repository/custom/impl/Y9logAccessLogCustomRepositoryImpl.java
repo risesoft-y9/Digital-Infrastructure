@@ -130,8 +130,8 @@ public class Y9logAccessLogCustomRepositoryImpl implements Y9logAccessLogCustomR
             try {
                 Date sDay = Y9Day.getStartOfDay(new SimpleDateFormat("yyyy-MM-dd").parse(startDay));
                 Date eDay = Y9Day.getEndOfDay(new SimpleDateFormat("yyyy-MM-dd").parse(endDay));
-                build.must(m -> m.range(r -> r.field(Y9LogSearchConsts.LOG_TIME).from(String.valueOf(sDay.getTime()))
-                    .to(String.valueOf(eDay.getTime()))));
+                build.must(m -> m.range(r -> r.date(d -> d.field(Y9LogSearchConsts.LOG_TIME).from(String.valueOf(sDay.getTime()))
+                    .to(String.valueOf(eDay.getTime())))));
             } catch (ParseException e) {
                 LOGGER.warn(e.getMessage(), e);
             }
@@ -188,8 +188,8 @@ public class Y9logAccessLogCustomRepositoryImpl implements Y9logAccessLogCustomR
             try {
                 Date sDay = Y9Day.getStartOfDay(new SimpleDateFormat("yyyy-MM-dd").parse(startDay));
                 Date eDay = Y9Day.getEndOfDay(new SimpleDateFormat("yyyy-MM-dd").parse(endDay));
-                builder.must(m -> m.range(r -> r.field(Y9LogSearchConsts.LOGIN_TIME)
-                    .from(String.valueOf(sDay.getTime())).to(String.valueOf(eDay.getTime()))));
+                builder.must(m -> m.range(r -> r.date(d -> d.field(Y9LogSearchConsts.LOGIN_TIME)
+                    .from(String.valueOf(sDay.getTime())).to(String.valueOf(eDay.getTime())))));
             } catch (ParseException e) {
                 LOGGER.warn(e.getMessage(), e);
             }
@@ -243,15 +243,15 @@ public class Y9logAccessLogCustomRepositoryImpl implements Y9logAccessLogCustomR
         sbuilder.must(m -> m.exists(e -> e.field(Y9LogSearchConsts.USER_NAME)));
         sbuilder.must(m -> m.queryString(qs -> qs.fields(Y9LogSearchConsts.SUCCESS).query(success)));
         sbuilder.must(m -> m
-            .range(r -> r.field(Y9LogSearchConsts.LOG_TIME).from(DATETIME_UTC_FORMAT.format(startOfTime.getTime()))
-                .to(DATETIME_UTC_FORMAT.format(endOfTime.getTime()))));
+            .range(r -> r.date(d -> d.field(Y9LogSearchConsts.LOG_TIME).from(DATETIME_UTC_FORMAT.format(startOfTime.getTime()))
+                .to(DATETIME_UTC_FORMAT.format(endOfTime.getTime())))));
 
         Builder ebuilder = new Builder();
         ebuilder.must(m -> m.exists(e -> e.field(Y9LogSearchConsts.USER_NAME)));
         ebuilder.must(m -> m.queryString(qs -> qs.fields(Y9LogSearchConsts.SUCCESS).query(error)));
         ebuilder.must(m -> m
-            .range(r -> r.field(Y9LogSearchConsts.LOG_TIME).from(DATETIME_UTC_FORMAT.format(startOfTime.getTime()))
-                .to(DATETIME_UTC_FORMAT.format(endOfTime.getTime()))));
+            .range(r -> r.date(d -> d.field(Y9LogSearchConsts.LOG_TIME).from(DATETIME_UTC_FORMAT.format(startOfTime.getTime()))
+                .to(DATETIME_UTC_FORMAT.format(endOfTime.getTime())))));
 
         if (!tenantId.equals(InitDataConsts.OPERATION_TENANT_ID)) {
             sbuilder.must(m -> m.queryString(qs -> qs.fields(Y9LogSearchConsts.TENANT_ID).query(tenantId)));
@@ -317,9 +317,9 @@ public class Y9logAccessLogCustomRepositoryImpl implements Y9logAccessLogCustomR
                         .query(q -> q.bool(b -> b
                             .must(m -> m.queryString(qs -> qs.fields(Y9LogSearchConsts.USER_NAME).query(loginName)))
                             .must(m -> m.queryString(qs -> qs.fields(Y9LogSearchConsts.TENANT_ID).query(tenantId)))
-                            .must(m -> m.range(r -> r.field(Y9LogSearchConsts.LOGIN_TIME)
+                            .must(m -> m.range(r -> r.date(d -> d.field(Y9LogSearchConsts.LOGIN_TIME)
                                 .from(DATETIME_UTC_FORMAT.format(startDate.getTime()))
-                                .to(DATETIME_UTC_FORMAT.format(endDate.getTime())))))));
+                                .to(DATETIME_UTC_FORMAT.format(endDate.getTime()))))))));
 
             try {
                 List<Hit<Y9logAccessLog>> hits =
@@ -354,19 +354,19 @@ public class Y9logAccessLogCustomRepositoryImpl implements Y9logAccessLogCustomR
                 String end = DATETIME_UTC_FORMAT.format(endDate);
                 System.out.println(start + "   " + end);
                 builder.must(m -> m.range(
-                    r -> r.field(Y9LogSearchConsts.LOG_TIME).from(start).to(end).format("yyyy-MM-dd'T'HH:mm:ss'Z'")));
+                    r -> r.date(d -> d.field(Y9LogSearchConsts.LOG_TIME).from(start).to(end).format("yyyy-MM-dd'T'HH:mm:ss'Z'"))));
             } catch (ParseException e) {
                 LOGGER.warn(e.getMessage(), e);
             }
         }
 
         List<AggregationRange> aggregationRanges = new ArrayList<>();
-        aggregationRanges.add(AggregationRange.of(ar -> ar.from("0").to("1000000")));
-        aggregationRanges.add(AggregationRange.of(ar -> ar.from("1000000").to("10000000")));
-        aggregationRanges.add(AggregationRange.of(ar -> ar.from("10000000").to("100000000")));
-        aggregationRanges.add(AggregationRange.of(ar -> ar.from("100000000").to("500000000")));
-        aggregationRanges.add(AggregationRange.of(ar -> ar.from("500000000").to("1000000000")));
-        aggregationRanges.add(AggregationRange.of(ar -> ar.from("1000000000")));
+        aggregationRanges.add(AggregationRange.of(ar -> ar.from(0d).to(1000000d)));
+        aggregationRanges.add(AggregationRange.of(ar -> ar.from(1000000d).to(10000000d)));
+        aggregationRanges.add(AggregationRange.of(ar -> ar.from(10000000d).to(100000000d)));
+        aggregationRanges.add(AggregationRange.of(ar -> ar.from(100000000d).to(500000000d)));
+        aggregationRanges.add(AggregationRange.of(ar -> ar.from(500000000d).to(1000000000d)));
+        aggregationRanges.add(AggregationRange.of(ar -> ar.from(1000000000d)));
 
         SearchRequest request = SearchRequest.of(s -> s.index(Arrays.asList(createIndexNames(startDay, endDay)))
             .query(q -> q.bool(builder.build())).aggregations("range-elapsedtime",
@@ -406,8 +406,7 @@ public class Y9logAccessLogCustomRepositoryImpl implements Y9logAccessLogCustomR
         query.setTrackTotalHits(true);
         SearchHits<Y9logAccessLog> searchHits = elasticsearchTemplate.search(query, Y9logAccessLog.class, index);
         List<Y9logAccessLog> list = searchHits.stream().map(SearchHit::getContent).collect(Collectors.toList());
-        Page<Y9logAccessLog> pageResult = new PageImpl<>(list, pageable, searchHits.getTotalHits());
-        return pageResult;
+        return new PageImpl<Y9logAccessLog>(list, pageable, searchHits.getTotalHits());
     }
 
     @Override
@@ -456,7 +455,7 @@ public class Y9logAccessLogCustomRepositoryImpl implements Y9logAccessLogCustomR
         query.setTrackTotalHits(true);
 
         SearchHits<Y9logAccessLog> searchHits = elasticsearchTemplate.search(query, Y9logAccessLog.class, index);
-        List<Y9logAccessLog> list = searchHits.stream().map(s -> s.getContent()).collect(Collectors.toList());
+        List<Y9logAccessLog> list = searchHits.stream().map(SearchHit::getContent).collect(Collectors.toList());
         long total = searchHits.getTotalHits();
         int totalPages = (int)total / rows;
         return Y9Page.success(page, total % rows == 0 ? totalPages : totalPages + 1, total,
@@ -532,8 +531,7 @@ public class Y9logAccessLogCustomRepositoryImpl implements Y9logAccessLogCustomR
 
         SearchHits<Y9logAccessLog> searchHits = elasticsearchTemplate.search(query, Y9logAccessLog.class, index);
         List<Y9logAccessLog> list = searchHits.stream().map(SearchHit::getContent).collect(Collectors.toList());
-        PageImpl<Y9logAccessLog> pageImpl = new PageImpl<>(list, pageable, searchHits.getTotalHits());
-        return pageImpl;
+        return new PageImpl<Y9logAccessLog>(list, pageable, searchHits.getTotalHits());
     }
 
     @Override
@@ -576,8 +574,7 @@ public class Y9logAccessLogCustomRepositoryImpl implements Y9logAccessLogCustomR
 
         SearchHits<Y9logAccessLog> searchHits = elasticsearchTemplate.search(query, Y9logAccessLog.class, index);
         List<Y9logAccessLog> list = searchHits.stream().map(SearchHit::getContent).collect(Collectors.toList());
-        PageImpl<Y9logAccessLog> pageImpl = new PageImpl<>(list, pageable, searchHits.getTotalHits());
-        return pageImpl;
+        return new PageImpl<Y9logAccessLog>(list, pageable, searchHits.getTotalHits());
     }
 
     @Override
@@ -623,7 +620,7 @@ public class Y9logAccessLogCustomRepositoryImpl implements Y9logAccessLogCustomR
             String start = DATETIME_UTC_FORMAT.format(startOfTime);
             String end = DATETIME_UTC_FORMAT.format(endOfTime);
 
-            LOGGER.info("start:{} end:{} fuwuqi:{}", startOfTime.getTime(), endOfTime.getTime());
+            LOGGER.info("start:{} end:{}", startOfTime.getTime(), endOfTime.getTime());
             LOGGER.info("startString:{} endString:{}", start, end);
             criteria.subCriteria(new Criteria(Y9LogSearchConsts.LOG_TIME).between(start, end));
         }
@@ -636,8 +633,7 @@ public class Y9logAccessLogCustomRepositoryImpl implements Y9logAccessLogCustomR
         IndexCoordinates index = IndexCoordinates.of(createIndexNames(date, null));
         SearchHits<Y9logAccessLog> searchHits = elasticsearchTemplate.search(query, Y9logAccessLog.class, index);
         List<Y9logAccessLog> list = searchHits.stream().map(SearchHit::getContent).collect(Collectors.toList());
-        PageImpl<Y9logAccessLog> pageImpl = new PageImpl<>(list, pageable, searchHits.getTotalHits());
-        return pageImpl;
+        return new PageImpl<Y9logAccessLog>(list, pageable, searchHits.getTotalHits());
     }
 
     @Override
@@ -690,8 +686,7 @@ public class Y9logAccessLogCustomRepositoryImpl implements Y9logAccessLogCustomR
         IndexCoordinates index = IndexCoordinates.of(createIndexNames(startTime, endTime));
         SearchHits<Y9logAccessLog> searchHits = elasticsearchTemplate.search(query, Y9logAccessLog.class, index);
         List<Y9logAccessLog> list = searchHits.stream().map(SearchHit::getContent).collect(Collectors.toList());
-        PageImpl<Y9logAccessLog> pageResult = new PageImpl<>(list, pageable, searchHits.getTotalHits());
-        return pageResult;
+        return new PageImpl<Y9logAccessLog>(list, pageable, searchHits.getTotalHits());
     }
 
     @Override
