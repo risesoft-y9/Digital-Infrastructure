@@ -123,8 +123,8 @@
     async function init() {
         const data = await getManagerById(ssoUserInfo.personId).catch((e) => e);
 
-        const { manager, nextCheckTime, nextModifyPwdTime } = data.data;
-        latestPersonalInfo.value = { manager, nextCheckTime, nextModifyPwdTime };
+        const { manager, nextCheckTime, nextModifyPwdTime, passwordModifiedCycle } = data.data;
+        latestPersonalInfo.value = { manager, nextCheckTime, nextModifyPwdTime, passwordModifiedCycle };
 
         const disabled_itemList = [
             {
@@ -178,7 +178,7 @@
                 type: 'text',
                 label: computed(() => t('密码修改周期')),
                 props: {
-                    content: computed(() => t('7天'))
+                    content: computed(() => passwordModifiedCycle + t('天'))
                 }
             },
             {
@@ -319,7 +319,7 @@
                 type: 'text',
                 label: computed(() => t('密码修改周期')),
                 props: {
-                    content: computed(() => t('7天'))
+                    content: computed(() => latestPersonalInfo.value.passwordModifiedCycle + t('天'))
                 }
             },
             {
