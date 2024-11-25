@@ -156,6 +156,7 @@ public class RiseLogAdvice implements MethodInterceptor {
                     LOGGER.warn(e.getMessage(), e);
                 }
             }
+            response.addHeader("y9aoplog", "true");
         }
 
         return ret;
