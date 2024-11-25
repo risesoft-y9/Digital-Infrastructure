@@ -202,9 +202,13 @@
     $(document).keydown(function (e) {
         // 上下选择事件
         function shooseItem(value) {
-            let activeIndex = null, lisLength = $("#toolTipsUl").children().length;
-            lisLength &&
+            let activeIndex = null, listLength = $("#toolTipsUl").children().length, scrollHeight=0, tempArr=[], totalHeight=0;
+            let speed="fast"; // slow \ fast \ normal
+            // 清除所有的active class，并找到下一个高亮的index
+            listLength &&
             $("#toolTipsUl li").each(function (index, element) {
+                tempArr.push(element.clientHeight);
+                totalHeight += element.clientHeight;
                 if (this.className.includes("active")) {
                     this.className = "";
                     activeIndex = index;
@@ -212,22 +216,42 @@
                 }
             });
 
-            if (!lisLength && activeIndex === null) {
+            if (!listLength && activeIndex === null) {
                 return false;
             }
+            // 计算滚动条位置
+            for (let i=0; i<activeIndex; i++){
+                scrollHeight+=tempArr[i];
+            }
+            // UP键 上面找到的index添加active
             if (value === 38 && activeIndex) {
+                $("#toolTipsUl").animate({
+                    scrollTop: scrollHeight-90
+                }, speed);
                 $("#toolTipsUl").children().eq(activeIndex - 1).addClass("active");
                 return true;
             }
+            // UP键，没有任何活动的class情况，给最后一个添加active
             if (value === 38 && !activeIndex) {
-                $("#toolTipsUl").children().eq(lisLength - 1).addClass("active");
+                $("#toolTipsUl").animate({
+                    scrollTop: totalHeight
+                }, speed);
+                $("#toolTipsUl").children().eq(listLength - 1).addClass("active");
                 return true;
             }
-            if (value === 40 && (activeIndex === null || activeIndex + 1 === lisLength)) {
+            // DOWN键，没有任何活动的class情况，给第一个添加active
+            if (value === 40 && (activeIndex === null || activeIndex + 1 === listLength)) {
+                $("#toolTipsUl").animate({
+                    scrollTop: 0
+                }, speed);
                 $("#toolTipsUl").children().eq(0).addClass("active");
                 return true;
             }
-            if (value === 40 && activeIndex + 1 <= lisLength) {
+            // DOWN键 上面找到的index添加active
+            if (value === 40 && activeIndex + 1 <= listLength) {
+                $("#toolTipsUl").animate({
+                    scrollTop: scrollHeight
+                }, speed);
                 $("#toolTipsUl").children().eq(activeIndex + 1).addClass("active");
                 return true;
             }

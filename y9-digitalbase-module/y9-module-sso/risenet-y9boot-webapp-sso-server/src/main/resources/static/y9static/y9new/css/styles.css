@@ -388,6 +388,8 @@ body .toolTips{
   z-index: 10;
   background: linear-gradient(45deg, #000,#dfdfdf);
   border-radius: 5px;
+  padding: 10px 0;
+  box-sizing: border-box;
 }
 body .toolTips ul{
   width: 285px;
