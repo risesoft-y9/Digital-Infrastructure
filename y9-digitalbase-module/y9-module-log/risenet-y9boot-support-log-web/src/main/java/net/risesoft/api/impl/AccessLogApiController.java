@@ -20,6 +20,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
 import net.risesoft.api.log.AccessLogApi;
+import net.risesoft.log.annotation.RiseLog;
 import net.risesoft.model.log.AccessLog;
 import net.risesoft.model.log.LogInfoModel;
 import net.risesoft.pojo.Y9Page;
@@ -53,6 +54,7 @@ public class AccessLogApiController implements AccessLogApi {
      * @return {@code Y9Result<Object>} 通用请求返回对象 - success 属性判断操作是否成功
      * @since 9.6.0
      */
+    @RiseLog(enable = false)
     @PostMapping("/asyncSaveLog")
     @Override
     public Y9Result<Object> asyncSaveLog(@RequestBody AccessLog accessLog) {
@@ -109,6 +111,7 @@ public class AccessLogApiController implements AccessLogApi {
      * @return {@code Y9Result<Object>} 通用请求返回对象 - success 属性判断操作是否成功
      * @since 9.6.0
      */
+    @RiseLog(enable = false)
     @Override
     @PostMapping("/saveLog")
     public Y9Result<Object> saveLog(@RequestBody AccessLog accessLog) {
