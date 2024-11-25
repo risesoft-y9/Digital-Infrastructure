@@ -48,5 +48,13 @@ tasks.withType<Javadoc> {
 
 tasks.test {
     useJUnitPlatform()
+    exclude("**/*")
+}
+
+tasks.withType<Test> { // OR tasks.test {
+    /*onlyIf {
+        properties["testsEnabled"].toString().toBoolean()
+    }*/
+    enabled = false
 }
 

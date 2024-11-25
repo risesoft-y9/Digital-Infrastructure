@@ -2,7 +2,7 @@ plugins {
     id("net.risesoft.y9.java-conventions")
     id("net.risesoft.y9.lombok")
     id("net.risesoft.y9.smart-doc")
-    id("net.risesoft.y9.aspectj")
+    //id("net.risesoft.y9.aspectj")
 }
 
 dependencies {
@@ -11,6 +11,7 @@ dependencies {
     api(project(":y9-digitalbase-module:y9-module-log:risenet-y9boot-api-feignclient-log"))
     api(project(":y9-digitalbase-starter:risenet-y9boot-starter-cache-redis"))
     api(project(":y9-digitalbase-starter:risenet-y9boot-starter-kafka"))
+    api(project(":y9-digitalbase-starter:risenet-y9boot-starter-multi-tenant"))
     api(project(":y9-digitalbase-starter:risenet-y9boot-starter-publish-kafka"))
     api(project(":y9-digitalbase-starter:risenet-y9boot-starter-log"))
     api(project(":y9-digitalbase-starter:risenet-y9boot-starter-idgenerator"))
@@ -18,11 +19,9 @@ dependencies {
     api(project(":y9-digitalbase-support:risenet-y9boot-support-file-service-local"))
     api(project(":y9-digitalbase-starter:risenet-y9boot-starter-permission"))
     api(project(":y9-digitalbase-starter:risenet-y9boot-starter-web"))
-    
-    api(platform(libs.spring.boot.bom))
+
     api(libs.dom4j)
     api(libs.jodd.http)
-    api("org.springframework:spring-aspects")
     api(libs.jxls.poi)
     api(libs.jxls.jexcel)
     api(libs.jxls.reader)

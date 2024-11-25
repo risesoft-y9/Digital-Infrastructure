@@ -133,8 +133,8 @@ public class Y9logUserLoginInfoCustomRepositoryImpl implements Y9logUserLoginInf
 
         SearchRequest searchRequest = SearchRequest.of(s -> s.index(Y9ESIndexConst.LOGIN_INFO_INDEX)
             .query(q -> q.bool(b -> b.must(m -> m.queryString(qs -> qs.fields(Y9LogSearchConsts.USER_ID).query(userId)))
-                .must(m -> m.range(r -> r.field(Y9LogSearchConsts.LOGIN_TIME).from(String.valueOf(startTime.getTime()))
-                    .to(String.valueOf(endTime.getTime()))))))
+                .must(m -> m.range(r -> r.date(d -> d.field(Y9LogSearchConsts.LOGIN_TIME).from(String.valueOf(startTime.getTime()))
+                    .to(String.valueOf(endTime.getTime())))))))
             .aggregations("by_userHostIp", a -> a.terms(t -> t.field(Y9LogSearchConsts.USER_HOST_IP))));
 
         try {

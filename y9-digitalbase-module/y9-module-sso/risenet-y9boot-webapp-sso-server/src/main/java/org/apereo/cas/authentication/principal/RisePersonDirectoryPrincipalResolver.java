@@ -10,15 +10,17 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
 
+import lombok.RequiredArgsConstructor;
 import org.apache.commons.lang3.tuple.Pair;
 import org.apereo.cas.authentication.AuthenticationHandler;
 import org.apereo.cas.authentication.Credential;
+import org.apereo.cas.authentication.attribute.SimplePersonAttributes;
 import org.apereo.cas.authentication.credential.RememberMeUsernamePasswordCredential;
+import org.apereo.cas.authentication.principal.attribute.PersonAttributeDao;
+import org.apereo.cas.authentication.principal.attribute.PersonAttributes;
 import org.apereo.cas.services.Y9User;
 import org.apereo.cas.util.CollectionUtils;
-import org.apereo.services.persondir.IPersonAttributeDao;
-import org.apereo.services.persondir.IPersonAttributes;
-import org.apereo.services.persondir.support.AttributeNamedPersonImpl;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,72 +32,21 @@ import lombok.val;
 import lombok.extern.slf4j.Slf4j;
 
 import y9.service.Y9UserService;
+import y9.util.Y9Context;
 
 @Slf4j
 public class RisePersonDirectoryPrincipalResolver implements PrincipalResolver {
 
     protected final Logger logger = LoggerFactory.getLogger(this.getClass());
 
-    private boolean returnNullIfNoAttributes = false;
+    private boolean isReturnNullIfNoAttributes = false;
 
     private PrincipalFactory principalFactory = new DefaultPrincipalFactory();
 
-    @Autowired
-    private Y9UserService y9UserService;
+    private Y9UserService y9UserService = null;
 
-    /**
-     * Convert person attributes to principal pair.
-     *
-     * @param extractedPrincipalId the extracted principal id
-     * @param attributes the attributes
-     * @return the pair
-     */
-    @SuppressWarnings("unchecked")
-    protected Pair<String, Map<String, List<Object>>> convertPersonAttributesToPrincipal(
-        final String extractedPrincipalId, final Map<String, List<Object>> attributes) {
-        val convertedAttributes = new LinkedHashMap<String, List<Object>>();
-        attributes.forEach((key, attrValue) -> {
-            val values = ((List<Object>)CollectionUtils.toCollection(attrValue, ArrayList.class)).stream()
-                .filter(Objects::nonNull).collect(toList());
-            LOGGER.debug("Found attribute [{}] with value(s) [{}]", key, values);
-            convertedAttributes.put(key, values);
-        });
-
-        var principalId = extractedPrincipalId;
-
-        val attrNames = org.springframework.util.StringUtils.commaDelimitedListToSet("username");
-        val result =
-            attrNames.stream().map(String::trim).filter(attributes::containsKey).map(attributes::get).findFirst();
-
-        if (result.isPresent()) {
-            val values = result.get();
-            if (!values.isEmpty()) {
-                principalId = CollectionUtils.firstElement(values).get().toString();
-                LOGGER.debug("Found principal id attribute value [{}] and removed it from the collection of attributes",
-                    principalId);
-            }
-        } else {
-            LOGGER.warn(
-                "Principal resolution is set to resolve the authenticated principal via attribute(s) [username], and yet "
-                    + "the collection of attributes retrieved [{}] do not contain any of those attributes. This is likely due to misconfiguration "
-                    + "and CAS will switch to use [{}] as the final principal id",
-                attributes.keySet(), principalId);
-        }
-
-        return Pair.of(principalId, convertedAttributes);
-    }
-
-    @Override
-    public IPersonAttributeDao getAttributeRepository() {
-        return null;
-    }
-
-    public PrincipalFactory getPrincipalFactory() {
-        return principalFactory;
-    }
-
-    public boolean isReturnNullIfNoAttributes() {
-        return returnNullIfNoAttributes;
+    public RisePersonDirectoryPrincipalResolver(){
+        this.y9UserService = Y9Context.getBean(Y9UserService.class);
     }
 
     @Override
@@ -113,7 +64,7 @@ public class RisePersonDirectoryPrincipalResolver implements PrincipalResolver {
             return null;
         }
 
-        IPersonAttributes personAttributes = null;
+        PersonAttributes personAttributes = null;
 
         List<Y9User> users = null;
         if ("mobile".equals(loginType)) {
@@ -167,7 +118,7 @@ public class RisePersonDirectoryPrincipalResolver implements PrincipalResolver {
                 attr.put("positionId", Lists.newArrayList(positionId));
             }
 
-            personAttributes = new AttributeNamedPersonImpl(username, attr);
+            personAttributes = new SimplePersonAttributes(username, attr);
         }
 
         final Map<String, List<Object>> attributes;
@@ -178,31 +129,66 @@ public class RisePersonDirectoryPrincipalResolver implements PrincipalResolver {
             attributes = personAttributes.getAttributes();
         }
 
-        if (attributes == null & !isReturnNullIfNoAttributes()) {
-            return getPrincipalFactory().createPrincipal(username);
+        if (attributes == null & !isReturnNullIfNoAttributes) {
+            return principalFactory.createPrincipal(username);
         }
 
         if (attributes == null) {
             return null;
         }
 
+        /*
         final Map<String, Object> convertedAttributes = new HashMap<String, Object>();
         for (final String key : attributes.keySet()) {
             final List<Object> values = attributes.get(key);
-            convertedAttributes.put(key, values.size() == 1 ? values.get(0) : values);
-        }
+            convertedAttributes.put(key, values.size() == 1 ? values.getFirst() : values);
+        }*/
+        //val pair = convertPersonAttributesToPrincipal(username, convertedAttributes);
 
         val pair = convertPersonAttributesToPrincipal(username, attributes);
-        val principal2 = getPrincipalFactory().createPrincipal(pair.getKey(), pair.getValue());
-        return principal2;
+        return principalFactory.createPrincipal(pair.getKey(), pair.getValue());
     }
 
-    public void setPrincipalFactory(PrincipalFactory principalFactory) {
-        this.principalFactory = principalFactory;
-    }
+    /**
+     * Convert person attributes to principal pair.
+     *
+     * @param extractedPrincipalId the extracted principal id
+     * @param attributes the attributes
+     * @return the pair
+     */
+    @SuppressWarnings("unchecked")
+    protected Pair<String, Map<String, List<Object>>> convertPersonAttributesToPrincipal(
+            final String extractedPrincipalId, final Map<String, List<Object>> attributes) {
+        val convertedAttributes = new LinkedHashMap<String, List<Object>>();
+        attributes.forEach((key, attrValue) -> {
+            val values = ((List<Object>)CollectionUtils.toCollection(attrValue, ArrayList.class)).stream()
+                    .filter(Objects::nonNull).collect(toList());
+            LOGGER.debug("Found attribute [{}] with value(s) [{}]", key, values);
+            convertedAttributes.put(key, values);
+        });
 
-    public void setReturnNullIfNoAttributes(final boolean returnNullIfNoAttributes) {
-        this.returnNullIfNoAttributes = returnNullIfNoAttributes;
+        var principalId = extractedPrincipalId;
+
+        val attrNames = org.springframework.util.StringUtils.commaDelimitedListToSet("username");
+        val result =
+                attrNames.stream().map(String::trim).filter(attributes::containsKey).map(attributes::get).findFirst();
+
+        if (result.isPresent()) {
+            val values = result.get();
+            if (!values.isEmpty()) {
+                principalId = CollectionUtils.firstElement(values).get().toString();
+                LOGGER.debug("Found principal id attribute value [{}] and removed it from the collection of attributes",
+                        principalId);
+            }
+        } else {
+            LOGGER.warn(
+                    "Principal resolution is set to resolve the authenticated principal via attribute(s) [username], and yet "
+                            + "the collection of attributes retrieved [{}] do not contain any of those attributes. This is likely due to misconfiguration "
+                            + "and CAS will switch to use [{}] as the final principal id",
+                    attributes.keySet(), principalId);
+        }
+
+        return Pair.of(principalId, convertedAttributes);
     }
 
     @Override
