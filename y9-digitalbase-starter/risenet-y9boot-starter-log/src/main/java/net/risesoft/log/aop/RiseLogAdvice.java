@@ -147,18 +147,16 @@ public class RiseLogAdvice implements MethodInterceptor {
                     }
 
                     accessLogPusher.push(log);
-                    if (response != null) {
-                        // Y9CommonFilter 见到这个标志后，就不再记录日志了，因为这里已经写了日志，不需要重复写。
-                        response.addHeader("y9aoplog", "true");
-                    }
 
                 } catch (Exception e) {
                     LOGGER.warn(e.getMessage(), e);
                 }
             }
-            response.addHeader("y9aoplog", "true");
+            if (response != null) {
+                // Y9CommonFilter 见到这个标志后，就不再记录日志了，因为这里已经写了日志，不需要重复写。
+                response.addHeader("y9aoplog", "true");
+            }
         }
-
         return ret;
     }
 
