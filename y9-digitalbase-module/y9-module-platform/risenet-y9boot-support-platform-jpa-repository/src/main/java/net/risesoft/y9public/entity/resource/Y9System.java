@@ -30,7 +30,7 @@ import net.risesoft.base.BaseEntity;
 @Comment("系统信息表")
 @NoArgsConstructor
 @Data
-public class Y9System extends BaseEntity {
+public class Y9System extends BaseEntity implements Comparable<Y9System> {
 
     private static final long serialVersionUID = 8905896381019503361L;
 
@@ -92,4 +92,9 @@ public class Y9System extends BaseEntity {
     @Comment("是否自动租用系统")
     @ColumnDefault("0")
     private Boolean autoInit = Boolean.FALSE;
+
+    @Override
+    public int compareTo(Y9System o) {
+        return this.tabIndex.compareTo(o.getTabIndex());
+    }
 }

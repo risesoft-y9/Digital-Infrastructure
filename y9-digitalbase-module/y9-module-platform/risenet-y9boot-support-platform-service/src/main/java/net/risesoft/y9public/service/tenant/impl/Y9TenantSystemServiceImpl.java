@@ -160,6 +160,6 @@ public class Y9TenantSystemServiceImpl implements Y9TenantSystemService {
                 y9SystemManager.findById(systemId).ifPresent(y9SystemList::add);
             }
         }
-        return y9SystemList;
+        return y9SystemList.stream().sorted().collect(Collectors.toList());
     }
 }
