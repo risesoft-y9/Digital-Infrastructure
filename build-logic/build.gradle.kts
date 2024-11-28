@@ -1,6 +1,12 @@
+import com.vanniktech.maven.publish.GradlePlugin
+import com.vanniktech.maven.publish.JavadocJar
+import com.vanniktech.maven.publish.SonatypeHost
+
 plugins {
     `kotlin-dsl`
     `maven-publish`
+    signing
+    id("com.vanniktech.maven.publish") version "0.30.0"
 }
 
 repositories {
@@ -13,71 +19,63 @@ dependencies {
     implementation("com.ly.smart-doc:smart-doc-gradle-plugin:3.0.8")
     implementation("io.freefair.gradle:aspectj-plugin:8.11")
     implementation("io.freefair.gradle:lombok-plugin:8.11")
-    implementation("org.jreleaser:jreleaser-gradle-plugin:1.15.0")
+    implementation("tech.yanand.gradle:maven-central-publish:1.3.0")
+    implementation("com.vanniktech:gradle-maven-publish-plugin:0.13.0")
 }
 
 group = "net.risesoft.y9"
-version = "v9.7.0-SNAPSHOT"
+version = "0.0.1"
 
-extra.set("PROJECT_GIT_URL", "https://github.com/risesoft-y9/Digital-Infrastructure")
-extra.set("PROJECT_SCM_URL", "scm:git:https://github.com/risesoft-y9/Digital-Infrastructure.git")
+signing {
+    //useGpgCmd()
+    val signingInMemoryKey: String? by project
+    val signingInMemoryKeyId: String? by project
+    val signingInMemoryKeyPassword: String? by project
+    useInMemoryPgpKeys(signingInMemoryKeyId, signingInMemoryKey, signingInMemoryKeyPassword)
 
-publishing {
-    publications {
-        repositories {
-            maven {
-                name = "mavenStaging"
-                url = uri(layout.buildDirectory.dir("staging-deploy"))
-            }
-            maven {
-                name = "y9nexus"
-                val releasesRepoUrl = uri("https://svn.youshengyun.com:9900/nexus/repository/maven-releases/")
-                val snapshotsRepoUrl = uri("https://svn.youshengyun.com:9900/nexus/repository/maven-snapshots/")
-                url = if (version.toString().endsWith("SNAPSHOT")) snapshotsRepoUrl else releasesRepoUrl
+    sign(publishing.publications)
+}
 
-                credentials {
-                    username = findProperty("mavenUsername") as String? ?: ""
-                    password  = findProperty("mavenPassword") as String? ?: ""
-                }
+mavenPublishing {
+    configure(GradlePlugin(
+        javadocJar = JavadocJar.Javadoc(),
+        sourcesJar = true,
+    ))
+    publishToMavenCentral(SonatypeHost.CENTRAL_PORTAL, automaticRelease = false)
+    signAllPublications()
+    coordinates(project.group.toString(), project.name, project.version.toString())
+    pom {
+        name = project.name
+        description = project.name
+        url = "https://github.com/risesoft-y9/Digital-Infrastructure"
+        licenses {
+            license {
+                name = "GNU General Public License (GPL) version 3.0"
+                url = "https://www.gnu.org/licenses/gpl-3.0.en.html"
             }
         }
-        create<MavenPublication>("mavenJava") {
-            from(components["java"])
-            artifactId = project.name
-            pom {
-                name = project.name
-                description = "RiseSoft/Digital Infrastructure " + project.name
-                url = findProperty("PROJECT_GIT_URL").toString()
-                licenses {
-                    license {
-                        name = "GNU General Public License (GPL) version 3.0"
-                        url = "https://www.gnu.org/licenses/gpl-3.0.en.html"
-                    }
-                }
-                developers {
-                    developer {
-                        name = "dingzhaojun"
-                        email = "dingzhaojun@risesoft.net"
-                    }
-                    developer {
-                        name = "qinman"
-                        email = "qinman@risesoft.net"
-                    }
-                    developer {
-                        name = "mengjuhua"
-                        email = "mengjuhua@risesoft.net"
-                    }
-                    developer {
-                        name = "shidaobang"
-                        email = "shidaobang@risesoft.net"
-                    }
-                }
-                scm {
-                    connection = findProperty("PROJECT_SCM_URL").toString()
-                    developerConnection = findProperty("PROJECT_SCM_URL").toString()
-                    url = findProperty("PROJECT_GIT_URL").toString()
-                }
+        developers {
+            developer {
+                name = "dingzhaojun"
+                email = "dingzhaojun@risesoft.net"
             }
+            developer {
+                name = "qinman"
+                email = "qinman@risesoft.net"
+            }
+            developer {
+                name = "mengjuhua"
+                email = "mengjuhua@risesoft.net"
+            }
+            developer {
+                name = "shidaobang"
+                email = "shidaobang@risesoft.net"
+            }
+        }
+        scm {
+            connection = "scm:git:https://github.com/risesoft-y9/Digital-Infrastructure.git"
+            developerConnection = "scm:git:https://github.com/risesoft-y9/Digital-Infrastructure.git"
+            url = "https://github.com/risesoft-y9/Digital-Infrastructure"
         }
     }
 }

@@ -5,21 +5,11 @@ plugins {
     id("net.risesoft.y9.repository")
 }
 
-val versionCatalog = versionCatalogs.named("libs")
-val y9version = versionCatalog.findVersion("y9-version")
-if(y9version.isPresent) {
-    version = y9version.get().displayName
-} else {
-    version = "v9.7.0-SNAPSHOT"
-}
-
-extra.set("PROJECT_GIT_URL", "https://github.com/risesoft-y9/Digital-Infrastructure")
-extra.set("PROJECT_SCM_URL", "scm:git:https://github.com/risesoft-y9/Digital-Infrastructure.git")
-
 publishing {
     publications {
         repositories {
             maven {
+                // jreleaser plugin using this repo
                 name = "mavenStaging"
                 url = uri(layout.buildDirectory.dir("staging-deploy"))
             }
@@ -79,10 +69,13 @@ publishing {
 }
 
 signing {
-    if (project.hasProperty("isSigned") && project.property("isSigned") == true) {
-        useGpgCmd()
-        sign(publishing.publications["mavenJavaPlatform"])
-    }
+    //useGpgCmd()
+    val signingInMemoryKey: String? by project
+    val signingInMemoryKeyId: String? by project
+    val signingInMemoryKeyPassword: String? by project
+    useInMemoryPgpKeys(signingInMemoryKeyId, signingInMemoryKey, signingInMemoryKeyPassword)
+
+    sign(publishing.publications["mavenJavaPlatform"])
 }
 
 

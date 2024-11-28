@@ -1,3 +1,6 @@
+import gradle.kotlin.dsl.accessors._7b186f4cc9ec3db7e784e2bd695d97b7.publishing
+import gradle.kotlin.dsl.accessors._7b186f4cc9ec3db7e784e2bd695d97b7.signing
+
 plugins {
     `maven-publish`
     signing
@@ -37,11 +40,6 @@ publishing {
             }
         }
         create<MavenPublication>("mavenJava") {
-            /*if(project.plugins.hasPlugin("javaPlatform")){
-                from(components["javaPlatform"])
-            }else{
-                from(components["java"])
-            }*/
             from(components["java"])
             artifactId = project.name
             pom {
@@ -85,10 +83,11 @@ publishing {
 }
 
 signing {
-    if (project.hasProperty("isSigned") && project.property("isSigned") == true) {
-        useGpgCmd()
-        sign(publishing.publications["mavenJava"])
-    }
+    //useGpgCmd()
+    val signingInMemoryKey: String? by project
+    val signingInMemoryKeyId: String? by project
+    val signingInMemoryKeyPassword: String? by project
+    useInMemoryPgpKeys(signingInMemoryKeyId, signingInMemoryKey, signingInMemoryKeyPassword)
+
+    sign(publishing.publications["mavenJava"])
 }
-
-

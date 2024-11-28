@@ -48,13 +48,13 @@ tasks.withType<Javadoc> {
 
 tasks.test {
     useJUnitPlatform()
-    exclude("**/*")
+    //exclude("**/*")
 }
 
 tasks.withType<Test> { // OR tasks.test {
-    /*onlyIf {
+    onlyIf {
         properties["testsEnabled"].toString().toBoolean()
-    }*/
-    enabled = false
+    }
+    //enabled = false
 }
 
