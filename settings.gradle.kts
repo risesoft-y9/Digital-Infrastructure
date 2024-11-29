@@ -1,6 +1,7 @@
 pluginManagement {
     // Include "plugins build" to define convention plugins.
-    includeBuild("build-logic")
+    includeBuild("risenet-gradle-build-logic")
+    includeBuild("risenet-gradle-version-catalog")
 }
 
 rootProject.name = "y9-digitalbase"
