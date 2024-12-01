@@ -1,0 +1,161 @@
+[versions]
+y9-version = "v9.7.0-SNAPSHOT"
+# spring boot & cloud bom
+spring-boot = "3.4.0"
+spring-cloud = "2023.0.3"
+io-spring-dependency-management = "1.1.6"
+# cas server bom
+cas-server-bom = "7.1.2"
+# oracle bom
+ojdbc-bom = "23.6.0.24.10"
+# hutool
+cn-hutool-hutool-all = "5.8.27"
+# alibaba
+spring-cloud-alibaba = "2023.0.1.3"
+alibaba-transmittable-thread-local = "2.14.5"
+# 人大金仓
+cn-com-kingbase-kesdialect-for-hibernate4 = "1.0.0"
+cn-com-kingbase-kingbase8 = "8.6.1"
+# 达梦数据库
+com-dameng = "8.1.3.140"
+# hibernate
+org-hibernate-orm-hibernate-ant = "6.5.2.Final"
+org-hibernate-orm-hibernate-core = "6.4.1.Final"
+org-hibernate-validator-hibernate-validator = "8.0.1.Final"
+# fasterxml
+java-uuid-generator = "5.1.0"
+# google
+com-google-code-gson-gson = "2.10.1"
+com-google-guava-guava = "33.1.0-jre"
+com-google-zxing-core = "3.5.2"
+com-googlecode-cqengine-cqengine = "3.6.0"
+# apache common
+commons-beanutils-commons-beanutils = "1.9.4"
+commons-codec-commons-codec = "1.16.1"
+commons-httpclient-commons-httpclient = "3.1"
+commons-io-commons-io = "2.13.0"
+commons-net-commons-net = "3.10.0"
+org-apache-commons-commons-lang3 = "3.13.0"
+org-apache-commons-commons-pool2 = "2.12.0"
+org-apache-httpcomponents-httpclient = "4.5.13"
+org-apache-httpcomponents-httpmime = "4.5.14"
+org-apache-poi-poi-scratchpad = "5.2.3"
+# xml
+jaxen-jaxen = "2.0.0"
+org-dom4j-dom4j = "2.1.4"
+# jdbc
+com-h2database-h2 = "2.2.224"
+com-mysql-mysql-connector-j = "8.2.0"
+com-oceanbase-oceanbase-client = "2.4.12"
+org-mariadb-jdbc-mariadb-java-client = "3.5.0"
+org-postgresql-postgresql = "42.7.3"
+# javers
+org-javers-javers-spring-boot-starter-sql = "7.4.2"
+org-jodd-jodd-http = "6.3.0"
+#liquibase
+org-liquibase-liquibase-core = "4.27.0"
+# jxls
+org-jxls-jxls = "2.13.0"
+org-jxls-jxls-jexcel = "1.0.9"
+org-jxls-jxls-poi = "2.13.0"
+org-jxls-jxls-reader = "2.1.0"
+# 其他
+com-ibm-etcd-etcd-java = "0.0.18"
+com-redis-lettucemod = "3.7.3"
+com-twelvemonkeys-imageio-imageio-jpeg = "3.9.3"
+# 浏览器UA字符串解析
+cz-mallat-uasparser-uasparser = "0.6.2"
+# 类反射
+io-github-bruce0203-reflections = "0.10.3.4"
+io-github-classgraph-classgraph = "4.8.162"
+# prometheus
+io-micrometer-micrometer-registry-prometheus = "1.13.3"
+# 安全相关
+de-svenkubiak-jbcrypt = "0.4.3"
+net-javacrumbs-shedlock-shedlock-spring = "5.13.0"
+org-bouncycastle-bcprov-ext-jdk18on = "1.78.1"
+org-imgscalr-imgscalr-lib = "4.2"
+org-owasp-antisamy-antisamy = "1.6.2"
+
+[libraries]
+#spring boot & cloud dependencies
+spring-boot-bom = { group = "org.springframework.boot", name = "spring-boot-dependencies", version.ref = "spring-boot" }
+spring-cloud-bom = { group = "org.springframework.cloud", name = "spring-cloud-dependencies", version.ref = "spring-cloud" }
+
+#cas server bom
+cas-server-bom = { module = "org.apereo.cas:cas-server-support-bom", version.ref = "cas-server-bom" }
+
+#alibaba
+spring-cloud-alibaba-bom = { group = "com.alibaba.cloud", name = "spring-cloud-alibaba-dependencies", version.ref = "spring-cloud-alibaba" }
+alibaba-transmittable-thread-local = { module = "com.alibaba:transmittable-thread-local", version.ref = "alibaba-transmittable-thread-local" }
+
+hutool-all = { module = "cn.hutool:hutool-all", version.ref = "cn-hutool-hutool-all" }
+
+commons-beanutils = { module = "commons-beanutils:commons-beanutils", version.ref = "commons-beanutils-commons-beanutils" }
+commons-codec = { module = "commons-codec:commons-codec", version.ref = "commons-codec-commons-codec" }
+commons-httpclient = { module = "commons-httpclient:commons-httpclient", version.ref = "commons-httpclient-commons-httpclient" }
+commons-io = { module = "commons-io:commons-io", version.ref = "commons-io-commons-io" }
+commons-net = { module = "commons-net:commons-net", version.ref = "commons-net-commons-net" }
+commons-lang3 = { module = "org.apache.commons:commons-lang3", version.ref = "org-apache-commons-commons-lang3" }
+commons-pool2 = { module = "org.apache.commons:commons-pool2", version.ref = "org-apache-commons-commons-pool2" }
+httpcomponents-httpclient = { module = "org.apache.httpcomponents:httpclient", version.ref = "org-apache-httpcomponents-httpclient" }
+httpcomponents-httpmime = { module = "org.apache.httpcomponents:httpmime", version.ref = "org-apache-httpcomponents-httpmime" }
+
+jbcrypt = { module = "de.svenkubiak:jBCrypt", version.ref = "de-svenkubiak-jbcrypt" }
+bcprov-ext-jdk18on = { module = "org.bouncycastle:bcprov-ext-jdk18on", version.ref = "org-bouncycastle-bcprov-ext-jdk18on" }
+
+jxls = { module = "org.jxls:jxls", version.ref = "org-jxls-jxls" }
+jxls-jexcel = { module = "org.jxls:jxls-jexcel", version.ref = "org-jxls-jxls-jexcel" }
+jxls-poi = { module = "org.jxls:jxls-poi", version.ref = "org-jxls-jxls-poi" }
+jxls-reader = { module = "org.jxls:jxls-reader", version.ref = "org-jxls-jxls-reader" }
+poi-scratchpad = { module = "org.apache.poi:poi-scratchpad", version.ref = "org-apache-poi-poi-scratchpad" }
+
+java-uuid-generator = { module = "com.fasterxml.uuid:java-uuid-generator", version.ref = "java-uuid-generator" }
+
+# database
+ojdbc-bom = { module = "com.oracle.database.jdbc:ojdbc-bom", version.ref = "ojdbc-bom" }
+
+kingbase-kesdialect-hibernate4 = { module = "cn.com.kingbase:KesDialect-for-hibernate4", version.ref = "cn-com-kingbase-kesdialect-for-hibernate4" }
+kingbase-kingbase8 = { module = "cn.com.kingbase:kingbase8", version.ref = "cn-com-kingbase-kingbase8" }
+
+dameng-dmdialect-hibernate62 = { module = "com.dameng:DmDialect-for-hibernate6.2", version.ref = "com-dameng" }
+dameng-dmjdbcdriver18 = { module = "com.dameng:DmJdbcDriver18", version.ref = "com-dameng" }
+
+h2database = { module = "com.h2database:h2", version.ref = "com-h2database-h2" }
+mysql-connector-j = { module = "com.mysql:mysql-connector-j", version.ref = "com-mysql-mysql-connector-j" }
+oceanbase-client = { module = "com.oceanbase:oceanbase-client", version.ref = "com-oceanbase-oceanbase-client" }
+
+google-gson = { module = "com.google.code.gson:gson", version.ref = "com-google-code-gson-gson" }
+google-guava = { module = "com.google.guava:guava", version.ref = "com-google-guava-guava" }
+google-zxing-core = { module = "com.google.zxing:core", version.ref = "com-google-zxing-core" }
+googlecode-cqengine = { module = "com.googlecode.cqengine:cqengine", version.ref = "com-googlecode-cqengine-cqengine" }
+etcd-java = { module = "com.ibm.etcd:etcd-java", version.ref = "com-ibm-etcd-etcd-java" }
+lettucemod = { module = "com.redis:lettucemod", version.ref = "com-redis-lettucemod" }
+imageio-jpeg = { module = "com.twelvemonkeys.imageio:imageio-jpeg", version.ref = "com-twelvemonkeys-imageio-imageio-jpeg" }
+
+uasparser = { module = "cz.mallat.uasparser:uasparser", version.ref = "cz-mallat-uasparser-uasparser" }
+
+reflections = { module = "io.github.bruce0203:reflections", version.ref = "io-github-bruce0203-reflections" }
+classgraph = { module = "io.github.classgraph:classgraph", version.ref = "io-github-classgraph-classgraph" }
+micrometer-registry-prometheus = { module = "io.micrometer:micrometer-registry-prometheus", version.ref = "io-micrometer-micrometer-registry-prometheus" }
+jaxen = { module = "jaxen:jaxen", version.ref = "jaxen-jaxen" }
+shedlock-spring = { module = "net.javacrumbs.shedlock:shedlock-spring", version.ref = "net-javacrumbs-shedlock-shedlock-spring" }
+shedlock-provider-jdbc-template = { module = "net.javacrumbs.shedlock:shedlock-provider-jdbc-template", version.ref = "net-javacrumbs-shedlock-shedlock-spring" }
+
+dom4j = { module = "org.dom4j:dom4j", version.ref = "org-dom4j-dom4j" }
+hibernate-ant = { module = "org.hibernate.orm:hibernate-ant", version.ref = "org-hibernate-orm-hibernate-ant" }
+hibernate-core = { module = "org.hibernate.orm:hibernate-core", version.ref = "org-hibernate-orm-hibernate-core" }
+hibernate-validator = { module = "org.hibernate.validator:hibernate-validator", version.ref = "org-hibernate-validator-hibernate-validator" }
+imgscalr-lib = { module = "org.imgscalr:imgscalr-lib", version.ref = "org-imgscalr-imgscalr-lib" }
+
+javers-spring-boot-starter-sql = { module = "org.javers:javers-spring-boot-starter-sql", version.ref = "org-javers-javers-spring-boot-starter-sql" }
+jodd-http = { module = "org.jodd:jodd-http", version.ref = "org-jodd-jodd-http" }
+
+liquibase-core = { module = "org.liquibase:liquibase-core", version.ref = "org-liquibase-liquibase-core" }
+mariadb-java-client = { module = "org.mariadb.jdbc:mariadb-java-client", version.ref = "org-mariadb-jdbc-mariadb-java-client" }
+antisamy = { module = "org.owasp.antisamy:antisamy", version.ref = "org-owasp-antisamy-antisamy" }
+postgresql = { module = "org.postgresql:postgresql", version.ref = "org-postgresql-postgresql" }
+
+[plugins]
+io-spring-dependency-management = { id = "io.spring.dependency-management", version.ref = "io-spring-dependency-management" }
+org-springframework-boot = { id = "org.springframework.boot", version.ref = "spring-boot" }

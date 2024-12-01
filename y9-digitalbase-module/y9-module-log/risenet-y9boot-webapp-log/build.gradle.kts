@@ -7,6 +7,8 @@ plugins {
 }
 
 dependencies {
+    management(platform(project(":y9-digitalbase-dependencies")))
+
     implementation(project(":y9-digitalbase-module:y9-module-log:risenet-y9boot-support-log-web"))
     implementation(project(":y9-digitalbase-module:y9-module-log:risenet-y9boot-api-interface-log"))
     implementation(project(":y9-digitalbase-starter:risenet-y9boot-starter-security"))

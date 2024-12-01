@@ -7,6 +7,8 @@ plugins {
 }
 
 dependencies {
+    management(platform(project(":y9-digitalbase-dependencies")))
+
     implementation(project(":y9-digitalbase-support:risenet-y9boot-support-file-jpa-repository"))
     implementation(project(":y9-digitalbase-support:risenet-y9boot-support-file-service-rest"))
     implementation(project(":y9-digitalbase-common:risenet-y9boot-common-nacos"))

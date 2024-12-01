@@ -7,6 +7,8 @@ plugins {
 }
 
 dependencies {
+    management(platform(project(":y9-digitalbase-dependencies")))
+
     implementation("org.apereo.cas:cas-server-core")
     implementation("org.apereo.cas:cas-server-core-authentication-api")
     implementation("org.apereo.cas:cas-server-core-authentication")

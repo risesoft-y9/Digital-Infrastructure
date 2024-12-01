@@ -7,7 +7,7 @@ plugins {
 }
 
 dependencies {
-    //management(platform(project(":y9-digitalbase-dependencies")))
+    management(platform(project(":y9-digitalbase-dependencies")))
 
     implementation(project(":y9-digitalbase-common:risenet-y9boot-common-util"))
     implementation(project(":y9-digitalbase-module:y9-module-platform:risenet-y9boot-support-platform-web"))

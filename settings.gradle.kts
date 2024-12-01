@@ -1,7 +1,27 @@
+import org.gradle.api.problems.internal.GradleCoreProblemGroup.versionCatalog
+
 pluginManagement {
-    // Include "plugins build" to define convention plugins.
-    includeBuild("risenet-gradle-build-logic")
-    includeBuild("risenet-gradle-version-catalog")
+    //includeBuild("risenet-gradle-build-logic")
+    //includeBuild("risenet-gradle-version-catalog")
+
+    repositories {
+        mavenCentral()
+        gradlePluginPortal()
+    }
+}
+
+dependencyResolutionManagement {
+    repositories {
+        mavenCentral()
+        gradlePluginPortal()
+    }
+
+    versionCatalogs {
+        create("libs") {
+            //from(files("../gradle/libs.versions.toml.bak"))
+            from("net.risesoft.y9:risenet-gradle-version-catalog:0.0.3")
+        }
+    }
 }
 
 rootProject.name = "y9-digitalbase"

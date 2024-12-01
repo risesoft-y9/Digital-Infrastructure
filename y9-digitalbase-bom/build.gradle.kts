@@ -1,7 +1,7 @@
 import kotlin.Boolean
 
 plugins {
-    id("java-platform")
+    `java-platform`
     id("net.risesoft.y9.javaPlatform-publish")
     id("net.risesoft.y9.javaPlatform-publish-central")
 }
