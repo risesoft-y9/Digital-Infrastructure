@@ -19,11 +19,11 @@ java {
     withJavadocJar()
 }
 
-group = "net.risesoft"
-version = "9.7.0"
+/*group = "net.risesoft"
+version = "0.0.1"
 
 extra.set("PROJECT_GIT_URL", "https://github.com/risesoft-y9/Digital-Infrastructure")
-extra.set("PROJECT_SCM_URL", "scm:git:https://github.com/risesoft-y9/Digital-Infrastructure.git")
+extra.set("PROJECT_SCM_URL", "scm:git:https://github.com/risesoft-y9/Digital-Infrastructure.git")*/
 
 publishing {
     repositories {
