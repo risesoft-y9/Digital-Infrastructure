@@ -29,8 +29,7 @@ import lombok.RequiredArgsConstructor;
 
 import net.risesoft.exception.GlobalErrorCodeEnum;
 import net.risesoft.pojo.Y9Result;
-import net.risesoft.y9.configuration.feature.security.Y9SecurityProperties;
-import net.risesoft.y9.configuration.feature.security.api.Y9ApiProperties;
+import net.risesoft.y9.configuration.feature.apiacl.Y9ApiAccessControlProperties;
 import net.risesoft.y9.exception.Y9UnauthorizedException;
 import net.risesoft.y9.json.Y9JsonUtil;
 
@@ -43,7 +42,7 @@ import net.risesoft.y9.json.Y9JsonUtil;
 @RequiredArgsConstructor
 public class ApiTokenFilter implements Filter {
 
-    private final Y9SecurityProperties y9SecurityProperties;
+    private final Y9ApiAccessControlProperties.TokenProperties tokenProperties;
 
     private RestTemplate restTemplate = new RestTemplate();
 
@@ -67,10 +66,9 @@ public class ApiTokenFilter implements Filter {
     }
 
     private boolean checkAccessToken(String accessToken) {
-        Y9ApiProperties y9ApiProperties = y9SecurityProperties.getApi();
-        String clientId = y9ApiProperties.getClientId();
-        String clientSecret = y9ApiProperties.getClientSecret();
-        String introspectionUri = y9ApiProperties.getTokenIntrospectionUri();
+        String clientId = tokenProperties.getClientId();
+        String clientSecret = tokenProperties.getClientSecret();
+        String introspectionUri = tokenProperties.getTokenIntrospectionUri();
 
         HttpHeaders headers = new HttpHeaders();
         headers.setAccept(Collections.singletonList(MediaType.APPLICATION_JSON));

@@ -1,4 +1,4 @@
-package net.risesoft.y9.configuration.feature.api;
+package net.risesoft.y9.configuration.feature.openfeign;
 
 import org.springframework.boot.context.properties.ConfigurationProperties;
 
@@ -13,11 +13,11 @@ import lombok.Setter;
  */
 @Getter
 @Setter
-@ConfigurationProperties(prefix = "y9.feature.api", ignoreInvalidFields = true, ignoreUnknownFields = true)
-public class Y9ApiProperties {
+@ConfigurationProperties(prefix = "y9.feature.openfeign.token", ignoreInvalidFields = true, ignoreUnknownFields = true)
+public class Y9TokenProperties {
 
     /** 接口调用令牌是否为接口必须的参数 */
-    private boolean tokenRequired = false;
+    private boolean enabled = false;
 
     /** 客户端ID */
     private String clientId = "clientid";

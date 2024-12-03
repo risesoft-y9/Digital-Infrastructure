@@ -35,6 +35,18 @@ public enum GlobalErrorCodeEnum implements ErrorCode {
 
     /** 权限不足拒绝访问 */
     PERMISSION_DENIED(PERMISSION_MODULE_CODE, 0, "权限不足拒绝访问"),
+    /** IP 不在允许访问的白名单中 */
+    IP_NOT_IN_WHITE_LIST(PERMISSION_MODULE_CODE, 1, "请求的 IP [{}]不在白名单中"),
+    /** IP 在不允许访问的黑名单中 */
+    IP_NOT_IN_BLACK_LIST(PERMISSION_MODULE_CODE, 2, "请求的 IP [{}]在黑名单中"),
+    /** 访问控制记录不存在 */
+    ACCESS_CONTROL_NOT_FOUND(PERMISSION_MODULE_CODE, 3, "访问控制记录[{}]不存在"),
+    /** 当前接口需验证签名，请求头不完整 */
+    API_SIGN_HEADERS_INCOMPLETE(PERMISSION_MODULE_CODE, 4, "当前接口需验证签名，请求头不完整"),
+    /** 当前接口签名不正确 */
+    API_SIGN_INCORRECT(PERMISSION_MODULE_CODE, 5, "接口签名不正确"),
+    /** 请求已失效 */
+    API_SIGN_TIMESTAMP_INVALID(PERMISSION_MODULE_CODE, 6, "请求已失效"),
     /** 当前用户不是全局系统管理员 */
     NOT_GLOBAL_SYSTEM_MANAGER(PERMISSION_MODULE_CODE, 11, "当前用户不是全局系统管理员"),
     /** 当前用户不是全局安全保密员 */

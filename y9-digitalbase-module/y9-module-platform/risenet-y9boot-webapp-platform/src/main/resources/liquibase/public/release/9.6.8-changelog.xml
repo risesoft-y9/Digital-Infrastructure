@@ -66,7 +66,6 @@
         </addColumn>
     </changeSet>
 
-
     <changeSet id="add-column-app-icon-1" author="mengjuhua" runOnChange="true">
         <preConditions onFail="MARK_RAN">
             <not>
@@ -77,6 +76,34 @@
             <column name="COLOR_TYPE" type="VARCHAR(20)" remarks="颜色类型"/>
             <column name="CATEGORY" type="VARCHAR(20)" remarks="所属类别"/>
         </addColumn>
+    </changeSet>
+
+    <changeSet id="1732590383798-1" author="shidaobang" runOnChange="true">
+        <preConditions onFail="MARK_RAN">
+            <not>
+                <tableExists tableName="Y9_COMMON_API_ACCESS_CONTROL"/>
+            </not>
+        </preConditions>
+        <createTable remarks="接口访问控制" tableName="Y9_COMMON_API_ACCESS_CONTROL">
+            <column name="ID" remarks="主键" type="VARCHAR(38)">
+                <constraints nullable="false" primaryKey="true"/>
+            </column>
+            <column name="CREATE_TIME" remarks="创建时间" type="datetime"/>
+            <column name="UPDATE_TIME" remarks="更新时间" type="datetime"/>
+            <column name="ACL_VALUE" remarks="名称" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column defaultValue="WHITE_LIST" name="TYPE" remarks="访问控制类型：白名单、黑名单、appId-secret" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column defaultValueNumeric="0" name="ENABLED" remarks="启用状态:1=启用,0=禁用" type="INT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="REMARK" remarks="备注" type="VARCHAR(255)"/>
+            <column name="TAB_INDEX" remarks="排序" type="INT">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
     </changeSet>
 
 </databaseChangeLog>
