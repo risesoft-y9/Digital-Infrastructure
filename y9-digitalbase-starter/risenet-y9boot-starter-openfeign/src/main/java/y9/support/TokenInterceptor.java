@@ -19,7 +19,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Data;
 import lombok.RequiredArgsConstructor;
 
-import net.risesoft.y9.configuration.feature.api.Y9ApiProperties;
+import net.risesoft.y9.configuration.feature.openfeign.Y9TokenProperties;
 
 import feign.RequestInterceptor;
 import feign.RequestTemplate;
@@ -35,7 +35,7 @@ public class TokenInterceptor implements RequestInterceptor {
 
     private static final String KEY_PREFIX = "y9-api-token:";
 
-    private final Y9ApiProperties y9ApiProperties;
+    private final Y9TokenProperties y9TokenProperties;
     private final RedisTemplate<String, String> redisTemplate;
 
     private final RestTemplate restTemplate = new RestTemplate();
@@ -53,15 +53,15 @@ public class TokenInterceptor implements RequestInterceptor {
     }
 
     private String getAccessTokenFromCache() {
-        String clientId = y9ApiProperties.getClientId();
+        String clientId = y9TokenProperties.getClientId();
         String key = KEY_PREFIX + clientId;
         return redisTemplate.opsForValue().get(key);
     }
 
     private String getAndCacheAccessToken() {
-        String accessTokenUri = y9ApiProperties.getTokenUrl();
-        String clientId = y9ApiProperties.getClientId();
-        String clientSecret = y9ApiProperties.getClientSecret();
+        String accessTokenUri = y9TokenProperties.getTokenUrl();
+        String clientId = y9TokenProperties.getClientId();
+        String clientSecret = y9TokenProperties.getClientSecret();
 
         HttpHeaders headers = new HttpHeaders();
         headers.setAccept(Collections.singletonList(MediaType.APPLICATION_JSON));

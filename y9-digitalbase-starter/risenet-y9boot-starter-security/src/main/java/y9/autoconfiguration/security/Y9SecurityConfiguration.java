@@ -10,13 +10,11 @@ import org.springframework.context.annotation.ScopedProxyMode;
 import lombok.extern.slf4j.Slf4j;
 
 import net.risesoft.consts.FilterOrderConsts;
-import net.risesoft.filters.ApiTokenFilter;
 import net.risesoft.filters.CorsFilter;
 import net.risesoft.filters.CsrfFilter;
 import net.risesoft.filters.SqlInjectionFilter;
 import net.risesoft.filters.XssFilter;
 import net.risesoft.y9.configuration.feature.security.Y9SecurityProperties;
-import net.risesoft.y9.configuration.feature.security.api.Y9ApiProperties;
 import net.risesoft.y9.json.Y9JsonUtil;
 
 @Configuration
@@ -63,20 +61,6 @@ public class Y9SecurityConfiguration {
         filterBean.setAsyncSupported(false);
         filterBean.setOrder(FilterOrderConsts.XSS_ORDER);
         filterBean.addUrlPatterns("/*");
-        return filterBean;
-    }
-
-    @Bean
-    @ConditionalOnProperty(name = "y9.feature.security.api.token-required", havingValue = "true")
-    public FilterRegistrationBean<ApiTokenFilter> apiTokenFilter(Y9SecurityProperties y9SecurityProperties) {
-        Y9ApiProperties y9ApiProperties = y9SecurityProperties.getApi();
-        LOGGER.info("ApiTokenFilter init. Configuration:{}", Y9JsonUtil.writeValueAsString(y9ApiProperties));
-
-        FilterRegistrationBean<ApiTokenFilter> filterBean = new FilterRegistrationBean<>();
-        filterBean.setFilter(new ApiTokenFilter(y9SecurityProperties));
-        filterBean.setAsyncSupported(false);
-        filterBean.setOrder(FilterOrderConsts.API_TOKEN_ORDER);
-        filterBean.setUrlPatterns(y9ApiProperties.getUrlPatterns());
         return filterBean;
     }
 

@@ -1,0 +1,2 @@
+# spring boot 3.0版本以下仍然支持spring.factories,2.7.0建议采用imports模式，3.0以后仅支持imports模式。
+# y9.autoconfiguration.Y9ApiAccessControlConfiguration

@@ -21,7 +21,13 @@ public class FilterOrderConsts {
 
     public static final int OAUTH2_RESOURCE_ORDER = Ordered.HIGHEST_PRECEDENCE + 4;
 
-    public static final int API_TOKEN_ORDER = Ordered.HIGHEST_PRECEDENCE + 4;
+    public static final int API_BLACK_LIST_ORDER = Ordered.HIGHEST_PRECEDENCE + 4;
+
+    public static final int API_WHITE_LIST_ORDER = Ordered.HIGHEST_PRECEDENCE + 5;
+
+    public static final int API_TOKEN_ORDER = Ordered.HIGHEST_PRECEDENCE + 6;
+
+    public static final int API_SIGN_ORDER = Ordered.HIGHEST_PRECEDENCE + 6;
 
     public static final int LOG_ORDER = 5;
 

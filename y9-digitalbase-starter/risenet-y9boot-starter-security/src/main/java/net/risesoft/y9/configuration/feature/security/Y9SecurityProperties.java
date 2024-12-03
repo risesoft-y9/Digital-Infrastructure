@@ -6,7 +6,6 @@ import org.springframework.boot.context.properties.NestedConfigurationProperty;
 import lombok.Getter;
 import lombok.Setter;
 
-import net.risesoft.y9.configuration.feature.security.api.Y9ApiProperties;
 import net.risesoft.y9.configuration.feature.security.cors.Y9CorsProperties;
 import net.risesoft.y9.configuration.feature.security.csrf.Y9CSRFProperties;
 import net.risesoft.y9.configuration.feature.security.sqlin.Y9SqlInProperties;
@@ -36,9 +35,6 @@ public class Y9SecurityProperties {
 
     @NestedConfigurationProperty
     private Y9CorsProperties cors = new Y9CorsProperties();
-
-    @NestedConfigurationProperty
-    private Y9ApiProperties api = new Y9ApiProperties();
 
     @NestedConfigurationProperty
     private Y9SqlInProperties sqlIn = new Y9SqlInProperties();
