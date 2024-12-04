@@ -16,6 +16,7 @@ import lombok.RequiredArgsConstructor;
 
 import net.risesoft.api.platform.permission.PersonResourceApi;
 import net.risesoft.enums.platform.AuthorityEnum;
+import net.risesoft.enums.platform.IdentityTypeEnum;
 import net.risesoft.model.platform.Menu;
 import net.risesoft.model.platform.Resource;
 import net.risesoft.model.platform.VueMenu;
@@ -101,7 +102,7 @@ public class PersonResourceApiImpl implements PersonResourceApi {
         Y9LoginUserHolder.setTenantId(tenantId);
 
         List<VueMenu> vueMenuList = new ArrayList<>();
-        vueMenuBuilder.buildVueMenus(personId, authority, resourceId, vueMenuList);
+        vueMenuBuilder.buildVueMenus(IdentityTypeEnum.PERSON, personId, authority, resourceId, vueMenuList);
 
         return Y9Result.success(vueMenuList);
     }
