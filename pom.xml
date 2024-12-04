@@ -57,7 +57,7 @@
         <gitee.developerConnection>scm:git:https://gitee.com/risesoft-y9/y9-core.git</gitee.developerConnection>
 
         <revision>v9.7.0-SNAPSHOT</revision>
-        
+
         <git-commit-id-maven-plugin.version>8.0.2</git-commit-id-maven-plugin.version>
     </properties>
 
@@ -77,6 +77,7 @@
         <module>./y9-digitalbase-support/risenet-y9boot-support-file-service-local</module>
         <module>./y9-digitalbase-support/risenet-y9boot-support-file-service-rest</module>
         <module>./y9-digitalbase-support/risenet-y9boot-support-history</module>
+        <module>./y9-digitalbase-support/risenet-y9boot-support-api-access-control</module>
         <module>y9-digitalbase-module</module>
         <module>y9-digitalbase-example</module>
     </modules>
