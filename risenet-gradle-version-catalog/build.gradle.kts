@@ -14,8 +14,8 @@ repositories {
 
 catalog {
     versionCatalog {
-        from(files("libs.versions.toml"))
-        //from(files("../gradle/libs.versions.toml"))
+        //from(files("libs.versions.toml"))
+        from(files("../gradle/libs.versions.toml"))
     }
 }
 

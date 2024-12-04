@@ -53,6 +53,6 @@ java.sourceSets.forEach { t ->
     t.runtimeClasspath +=  optional.plus(provided)
 }
 
-//val dependency = project.dependencies.platform(project.dependencies.project(":y9-digitalbase-dependencies"))
+val dependency = project.dependencies.platform(project.dependencies.project(":y9-digitalbase-dependencies"))
 //val dependency = project.dependencies.platform("net.risesoft.y9:y9-digitalbase-dependencies:0.0.1")
-//management.dependencies.add(dependency)
+management.dependencies.add(dependency)
