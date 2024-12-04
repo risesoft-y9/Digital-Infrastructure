@@ -324,6 +324,10 @@ body .disclaimer a:hover {
     color: rgb(255, 238, 0);
 }
 
+body .login_fields .alert {
+    color: rgb(255, 238, 0);
+}
+
 body .toolTips {
     width: 342px;
     position: relative;

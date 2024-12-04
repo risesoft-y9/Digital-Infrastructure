@@ -35,9 +35,6 @@
         <div class="login_title">OA<span class="tilte">办公平台</span></div>
         <div class="login_fields">
             <form id="fm1" method="post" th:object="${credential}">
-                <div class="alert alert-danger" th:if="${#fields.hasErrors('*')}">
-                    登录失败：<span th:each="err : ${#fields.errors('*')}" th:utext="${err}"/>
-                </div>
                 <div class="login_dev login_fields__user ">
                     <div class="form-label">用户名</div>
                     <input autocomplete="off" id="username" onBlur="inputOnBlur();" placeholder=" "
@@ -57,6 +54,9 @@
                     <input autocomplete="off" htmlescape="true" id="password1" name="password" type="hidden"/>
 
                     <div class="validation"><img alt="" th:src="@{/y9static/y9-ddyjs/img/tick.png}"/></div>
+                </div>
+                <div class="alert alert-danger" th:if="${#fields.hasErrors('*')}">
+                    登录失败：<span th:each="err : ${#fields.errors('*')}" th:utext="${err}"/>
                 </div>
                 <!-- 表单隐藏数据块开始 -->
                 <input id="loginType" name="loginType" type="hidden" value="loginName"/>
@@ -277,60 +277,35 @@
                         }
                     })
                 ).done(function () {
-                    console.log(password);
-                    $.ajax({
-                        async: false,
-                        cache: false,
-                        type: "POST",
-                        url: ctx + '/api/checkSsoLoginInfo',
-                        data: {
-                            username: encode64(username),
-                            password: encrypt($('#pwdEcodeType').val(), encode64(password)),
-                            tenantShortName: tenantShortName,
-                            pwdEcodeType: $('#pwdEcodeType').val()
-                        },
-                        dataType: "json",
-                        success: function (data) {
-                            if (data.success) {
-                                var username = $("#username").val();
-                                var password = $("#password").val();
-                                var pwdEcodeType = $('#pwdEcodeType').val();
+                    var username = $("#username").val();
+                    var password = $("#password").val();
+                    var pwdEcodeType = $('#pwdEcodeType').val();
 
-                                var encodeUserName = encode64(username);
-                                var encodePassword = encode64(password);
-                                var rsapwd = encrypt(pwdEcodeType, encodePassword);
-                                $("#username1").val(encodeUserName);
-                                $("#password1").val(rsapwd);
+                    var encodeUserName = encode64(username);
+                    var encodePassword = encode64(password);
+                    var rsapwd = encrypt(pwdEcodeType, encodePassword);
+                    $("#username1").val(encodeUserName);
+                    $("#password1").val(rsapwd);
 
-                                if ($("#checkbox1").prop("checked")) {
-                                    $.cookie("username", null);
-                                    $.cookie("username", encodeUserName, {
-                                        expires: 365
-                                    });
-                                    $.cookie("password", null);
-                                    $.cookie("password", encodePassword, {
-                                        expires: 365
-                                    });
-                                } else {
-                                    $.cookie("username", null, {
-                                        expires: 365
-                                    });
-                                    $.cookie("password", null, {
-                                        expires: 365
-                                    });
-                                }
+                    if ($("#checkbox1").prop("checked")) {
+                        $.cookie("username", null);
+                        $.cookie("username", encodeUserName, {
+                            expires: 365
+                        });
+                        $.cookie("password", null);
+                        $.cookie("password", encodePassword, {
+                            expires: 365
+                        });
+                    } else {
+                        $.cookie("username", null, {
+                            expires: 365
+                        });
+                        $.cookie("password", null, {
+                            expires: 365
+                        });
+                    }
 
-                                $("#fm1").submit();
-                            } else {
-                                var msg = data.msg;
-                                if (msg != null && msg.length > 0) {
-                                    option.type = "warn";
-                                    option.content = msg;
-                                    WfMsg(option);
-                                }
-                            }
-                        }
-                    })
+                    $("#fm1").submit();
                 }).fail(function () {
                     option.type = "warn";
                     option.content = "获取随机数失败。";

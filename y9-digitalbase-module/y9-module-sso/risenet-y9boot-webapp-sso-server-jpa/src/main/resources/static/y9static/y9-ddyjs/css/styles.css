@@ -23,7 +23,7 @@ html, body {
 }
 
 body {
-    background: #AC1E02 url("../img/loginbg-01.png") no-repeat fixed center;
+    background: #AC1E02 url("../img/loginbg-02.png") no-repeat fixed center;
     background-size: cover;
     filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#EA5C54 ',
     endColorstr='#bb6dec', GradientType=1);
@@ -67,7 +67,7 @@ body .login {
     position: absolute;
     top: 50%;
     left: 50%;
-    margin-left: 255px;
+    margin-left: 375px;
     margin-top: -70px;
 }
 
@@ -82,21 +82,22 @@ body .login_form .login_title, body .login_form .login_fields .login_dev {
 
 body .login_form .login_title {
     color: #FFFFFF;
-    font-family: AaBoruokaishuBold;
+    font-family: AdobeHeitiStd-Regular Regular, "黑体", Microsoft YaHei UI, AaBoruokaishuBold;
     font-size: 26px;
     font-style: normal;
     font-weight: 400;
     line-height: normal;
-    letter-spacing: -3.8px;
+    letter-spacing: normal;
     text-align: center;
     margin-bottom: 38px;
 }
 
 body .login_form .login_title .tilte {
     color: #FFFFFF;
-    font-family: AaBoruokaishuBold;
+    font-family: AdobeHeitiStd-Regular Regular, "黑体", Microsoft YaHei UI, AaBoruokaishuBold;
     font-size: 24px;
     font-weight: normal;
+    letter-spacing: normal;
     margin-left: 3px;
 }
 
@@ -320,6 +321,10 @@ body .disclaimer a {
 }
 
 body .disclaimer a:hover {
+    color: rgb(255, 238, 0);
+}
+
+body .login_fields .alert {
     color: rgb(255, 238, 0);
 }
 

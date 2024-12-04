@@ -50,6 +50,8 @@ import org.springframework.webflow.execution.Action;
 import lombok.val;
 
 import y9.service.Y9KeyValueService;
+import y9.service.Y9LoginUserService;
+import y9.service.Y9UserService;
 import y9.service.impl.Y9JpaKeyValueServiceImpl;
 import y9.util.Y9Context;
 
@@ -62,9 +64,10 @@ public class Y9Config {
         @Bean
         public AuthenticationEventExecutionPlanConfigurer riseAuthenticationEventExecutionPlanConfigurer(
             @Qualifier(ServicesManager.BEAN_NAME) final ServicesManager servicesManager,
-            PrincipalResolver risePersonDirectoryPrincipalResolver) {
-            RiseAuthenticationHandler handler =
-                new RiseAuthenticationHandler("y9AuthenticationHandler", servicesManager, risePrincipalFactory(), 0);
+            PrincipalResolver risePersonDirectoryPrincipalResolver, Y9UserService y9UserService,
+            Y9LoginUserService y9LoginUserService) {
+            RiseAuthenticationHandler handler = new RiseAuthenticationHandler("y9AuthenticationHandler",
+                servicesManager, risePrincipalFactory(), 0, y9UserService, y9LoginUserService);
             return plan -> plan.registerAuthenticationHandlerWithPrincipalResolver(handler,
                 risePersonDirectoryPrincipalResolver);
         }

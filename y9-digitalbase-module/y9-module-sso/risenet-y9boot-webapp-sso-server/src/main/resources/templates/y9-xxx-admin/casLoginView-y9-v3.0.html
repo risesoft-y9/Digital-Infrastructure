@@ -75,15 +75,6 @@
 					th:object="${credential}"
 					style="margin-left: -20px"
 				>
-					<div
-						class="alert alert-danger"
-						th:if="${#fields.hasErrors('*')}"
-					>
-						登录失败：<span
-							th:each="err : ${#fields.errors('*')}"
-							th:utext="${err}"
-						/>
-					</div>
 					<div class="login_fields__user">
 						<div class="icon">
 							<img
@@ -155,6 +146,15 @@
 							/>
 						</div>
 					</div>
+					<div
+							class="alert alert-danger"
+							th:if="${#fields.hasErrors('*')}"
+					>
+						登录失败：<span
+							th:each="err : ${#fields.errors('*')}"
+							th:utext="${err}"
+					/>
+					</div>
 					<!-- 表单隐藏数据块开始 -->
 					<input
 						type="hidden"
@@ -203,10 +203,8 @@
 			</div>
 			<div></div>
 			<div class="linkOtherSystem">
-				<a href="https://www.youshengyun.com/risecloud">云体验</a>
-				<a href="https://dev.youshengyun.com/admin-dev/">云开发</a>
 				<a href="https://www.youshengyun.com/y9home/">云租户</a>
-				<a href="https://www.youshengyun.com/admin-ops/">云后台</a>
+				<a href="https://www.youshengyun.com/y9DigitalBase/">云后台</a>
 				<a href="https://www.risesoft.net">有生软件</a>
 				<a href="https://www.zgcsa.net/" target="_blank">中关村软联</a>
 			</div>
@@ -479,46 +477,16 @@
 								},
 							})
 						).done(function () {
-								$.ajax({
-									async: false,
-									cache: false,
-									type: "POST",
-									url: ctx + "/api/checkSsoLoginInfo",
-									data: {
-										username: encode64(username1),
-										password: encrypt(
-											$("#pwdEcodeType").val(),
-											encode64(password)
-										),
-										tenantShortName: tenantShortName,
-										pwdEcodeType: $("#pwdEcodeType").val(),
-									},
-									dataType: "json",
-									success: function (data) {
-										if (data.success) {
-											/*$("#mpanel6").attr({
-												style: "display: block;",
-											});*/
-											var username = $("#username1").val();
-											var password = $("#password").val();
-											var pwdEcodeType=$('#pwdEcodeType').val();
+								var username = $("#username1").val();
+								var password = $("#password").val();
+								var pwdEcodeType=$('#pwdEcodeType').val();
 
-											var encodeUserName = encode64(username);
-											var encodePassword = encode64(password);
-											var rsapwd=encrypt(pwdEcodeType,encodePassword);
-											$("#username1").val(encodeUserName);
-											$("#password1").val(rsapwd);
-											$("#fm1").submit();
-										} else {
-											var msg = data.msg;
-											if (msg != null && msg.length > 0) {
-												option.type = "warn";
-												option.content = msg;
-												WfMsg(option);
-											}
-										}
-									},
-								});
+								var encodeUserName = encode64(username);
+								var encodePassword = encode64(password);
+								var rsapwd=encrypt(pwdEcodeType,encodePassword);
+								$("#username1").val(encodeUserName);
+								$("#password1").val(rsapwd);
+								$("#fm1").submit();
 							})
 							.fail(function () {
 								option.type = "warn";

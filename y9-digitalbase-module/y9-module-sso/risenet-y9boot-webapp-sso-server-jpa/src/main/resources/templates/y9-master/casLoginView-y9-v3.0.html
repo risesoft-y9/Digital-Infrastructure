@@ -8,7 +8,7 @@
     <meta http-equiv="cache-control" content="no-cache"/>
     <meta http-equiv="expires" content="0"/>
     <!-- 管局要求保持备案名称和网站使用名称一致 -->
-    <title>数智地质基础平台1.0</title>
+    <title>数智地质基础平台2.0</title>
     <link rel="stylesheet" type="text/css" th:href="@{/y9static/y9new/css/default.css}"/>
     <link rel="stylesheet" type="text/css" th:href="@{/y9static/y9new/css/styles.css}"/>
     <link rel="stylesheet" type="text/css" th:href="@{/y9static/y9new/css/demo.css}"/>
@@ -22,7 +22,7 @@
 </head>
 
 <body>
-<div class="logo" style="font-size: 20px">数智地质基础平台1.0</div>
+<div class="logo" style="font-size: 20px">数智地质基础平台2.0</div>
 <div class="login" id="tunnel">
     <div class="login_title">
         <span onclick="changeLoginType(0)">用户登录</span>
@@ -37,9 +37,6 @@
     </div>
     <div class="login_fields">
         <form method="post" id="fm1" th:object="${credential}">
-            <div class="alert alert-danger" th:if="${#fields.hasErrors('*')}">
-                登录失败：<span th:each="err : ${#fields.errors('*')}" th:utext="${err}"/>
-            </div>
             <div class="login_fields__user">
                 <div class="icon"><img alt="" th:src="@{/y9static/y9new/img/user_icon_copy.png}"/></div>
                 <input id="username" placeholder="用户名" type="text" autocomplete="off" value="" oninput="inputEvent()" onblur="getTenant();"/>
@@ -53,6 +50,9 @@
                 <input id="password1" name="password" htmlescape="true" autocomplete="off" type="hidden"/>
 
                 <div class="validation"><img alt="" th:src="@{/y9static/y9new/img/tick.png}"/></div>
+            </div>
+            <div class="alert alert-danger" th:if="${#fields.hasErrors('*')}">
+                登录失败：<span th:each="err : ${#fields.errors('*')}" th:utext="${err}"/>
             </div>
             <!-- 表单隐藏数据块开始 -->
             <input type="hidden" id="loginType" name="loginType" value="loginName"/>
@@ -72,10 +72,8 @@
     </div>
     <div></div>
     <div class="linkOtherSystem">
-        <a href="https://www.youshengyun.com/risecloud">云体验</a>
-        <a href="https://dev.youshengyun.com/admin-dev/">云开发</a>
         <a href="https://www.youshengyun.com/y9home/">云租户</a>
-        <a href="https://www.youshengyun.com/admin-ops/">云后台</a>
+        <a href="https://www.youshengyun.com/y9DigitalBase/">云后台</a>
         <a href="https://www.risesoft.net">有生软件</a>
         <a href="https://www.zgcsa.net/" target="_blank">中关村软联</a>
     </div>
@@ -188,50 +186,74 @@
         $('#password').focus();
     }
 
-    $(document).keydown(function (e) {
-        // 上下选择事件
-        function shooseItem(value) {
-            let activeIndex = null, lisLength = $("#toolTipsUl").children().length;
-            lisLength &&
-            $("#toolTipsUl li").each(function (index, element) {
-                if (this.className.includes("active")) {
-                    this.className = "";
-                    activeIndex = index;
+        $(document).keydown(function (e) {
+            // 上下选择事件
+            function shooseItem(value) {
+                let activeIndex = null, listLength = $("#toolTipsUl").children().length, scrollHeight=0, tempArr=[], totalHeight=0;
+                let speed="fast"; // slow \ fast \ normal
+                // 清除所有的active class，并找到下一个高亮的index
+                listLength &&
+                $("#toolTipsUl li").each(function (index, element) {
+                    tempArr.push(element.clientHeight);
+                    totalHeight += element.clientHeight;
+                    if (this.className.includes("active")) {
+                        this.className = "";
+                        activeIndex = index;
+                        return true;
+                    }
+                });
+
+                if (!listLength && activeIndex === null) {
+                    return false;
+                }
+                // 计算滚动条位置
+                for (let i=0; i<activeIndex; i++){
+                    scrollHeight+=tempArr[i];
+                }
+                // UP键 上面找到的index添加active
+                if (value === 38 && activeIndex) {
+                    $("#toolTipsUl").animate({
+                        scrollTop: scrollHeight-90
+                    }, speed);
+                    $("#toolTipsUl").children().eq(activeIndex - 1).addClass("active");
                     return true;
                 }
-            });
+                // UP键，没有任何活动的class情况，给最后一个添加active
+                if (value === 38 && !activeIndex) {
+                    $("#toolTipsUl").animate({
+                        scrollTop: totalHeight
+                    }, speed);
+                    $("#toolTipsUl").children().eq(listLength - 1).addClass("active");
+                    return true;
+                }
+                // DOWN键，没有任何活动的class情况，给第一个添加active
+                if (value === 40 && (activeIndex === null || activeIndex + 1 === listLength)) {
+                    $("#toolTipsUl").animate({
+                        scrollTop: 0
+                    }, speed);
+                    $("#toolTipsUl").children().eq(0).addClass("active");
+                    return true;
+                }
+                // DOWN键 上面找到的index添加active
+                if (value === 40 && activeIndex + 1 <= listLength) {
+                    $("#toolTipsUl").animate({
+                        scrollTop: scrollHeight
+                    }, speed);
+                    $("#toolTipsUl").children().eq(activeIndex + 1).addClass("active");
+                    return true;
+                }
+            }
 
-            if (!lisLength && activeIndex === null) {
-                return false;
+            // 回车键事件
+            if (e.which === 13) {
+                enterEvent();
             }
-            if (value === 38 && activeIndex) {
-                $("#toolTipsUl").children().eq(activeIndex - 1).addClass("active");
-                return true;
+            // 上下按键
+            if (e.which === 38 || e.which === 40) {
+                e.which === 38 && shooseItem(38);
+                e.which === 40 && shooseItem(40);
             }
-            if (value === 38 && !activeIndex) {
-                $("#toolTipsUl").children().eq(lisLength - 1).addClass("active");
-                return true;
-            }
-            if (value === 40 && (activeIndex === null || activeIndex + 1 === lisLength)) {
-                $("#toolTipsUl").children().eq(0).addClass("active");
-                return true;
-            }
-            if (value === 40 && activeIndex + 1 <= lisLength) {
-                $("#toolTipsUl").children().eq(activeIndex + 1).addClass("active");
-                return true;
-            }
-        }
-
-        // 回车键事件
-        if (e.which === 13) {
-            enterEvent();
-        }
-        // 上下按键
-        if (e.which === 38 || e.which === 40) {
-            e.which === 38 && shooseItem(38);
-            e.which === 40 && shooseItem(40);
-        }
-    });
+        });
 
     function enterEvent() {
         let shoseEvent = false;
@@ -300,31 +322,7 @@
                         }
                     })
                 ).done(function () {
-                    $.ajax({
-                        async: false,
-                        cache: false,
-                        type: "POST",
-                        url: ctx + '/api/checkSsoLoginInfo',
-                        data: {
-                            username: encode64(username1),
-                            password: encrypt($('#pwdEcodeType').val(), encode64(password)),
-                            tenantShortName: tenantShortName,
-                            pwdEcodeType: $('#pwdEcodeType').val()
-                        },
-                        dataType: "json",
-                        success: function (data) {
-                            if (data.success) {
-                                $("#mpanel6").attr({style: "display: block;"});
-                            } else {
-                                var msg = data.msg;
-                                if (msg != null && msg.length > 0) {
-                                    option.type = "warn";
-                                    option.content = msg;
-                                    WfMsg(option);
-                                }
-                            }
-                        }
-                    })
+                    $("#mpanel6").attr({style: "display: block;"});
                 }).fail(function () {
                     option.type = "warn";
                     option.content = "获取随机数失败。";

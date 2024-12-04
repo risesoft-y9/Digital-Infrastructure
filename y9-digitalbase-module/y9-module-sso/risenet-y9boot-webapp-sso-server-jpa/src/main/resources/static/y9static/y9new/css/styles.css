@@ -149,8 +149,8 @@ body .login_title {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-bottom:6px;
-  margin-top: 6px;
+  /*margin-bottom:6px;*/
+  /*margin-top: 6px;*/
   opacity: 0.9;
   border-radius: 8px;
   -webkit-border-radius: 8px;
@@ -351,7 +351,7 @@ body .login_fields__submit .forgot a {
 body .login_fields__submit input {
 	display: block;
 	margin: auto;
-	margin-top: 46px;
+	margin-top: 26px;
   border-radius:8px;
   background: transparent;
   padding: 10px 50px;
@@ -378,6 +378,12 @@ body .login_fields__submit input:hover {
           transition-duration: .2s;
 }
 
+body .login_fields .alert {
+  margin-left: 30px;
+  margin-top: 10px;
+  color: rgb(245, 108, 108);
+}
+
 
 body .toolTips{
   width: 285px;
@@ -388,6 +394,8 @@ body .toolTips{
   z-index: 10;
   background: linear-gradient(45deg, #000,#dfdfdf);
   border-radius: 5px;
+  padding: 10px 0;
+  box-sizing: border-box;
 }
 body .toolTips ul{
   width: 285px;
