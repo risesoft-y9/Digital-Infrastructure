@@ -17,8 +17,7 @@ import org.apereo.cas.authentication.principal.Service;
 import org.apereo.cas.authentication.principal.ServiceFactory;
 import org.apereo.cas.rest.BadRestRequestException;
 import org.apereo.cas.services.Y9User;
-import org.apereo.cas.ticket.ServiceTicket;
-import org.apereo.cas.ticket.TicketGrantingTicket;
+import org.apereo.cas.ticket.Ticket;
 import org.apereo.cas.web.cookie.CasCookieBuilder;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.HttpHeaders;
@@ -125,8 +124,8 @@ public class LoginController {
     public final ResponseEntity<Map<String, Object>> logon(RememberMeUsernamePasswordCredential credential,
         @RequestBody(required = false) final MultiValueMap<String, String> requestBody,
         final HttpServletRequest request, final HttpServletResponse response) throws Throwable {
-        Map<String, Object> ret_map = new HashMap<String, Object>();
-        ret_map.put("success", false);
+        Map<String, Object> retMap = new HashMap<>();
+        retMap.put("success", false);
 
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_JSON);
@@ -136,11 +135,11 @@ public class LoginController {
                 throw new BadRestRequestException(
                     "No credentials are provided or extracted to authenticate the REST request");
             }
-            ret_map =
+            retMap =
                 checkSsoLoginInfo(credential.getTenantShortName(), credential.getUsername(), credential.toPassword(),
                     request.getParameter("pwdEcodeType"), credential.getLoginType(), request, response);
-            if (ret_map.get("success").toString().equals("false")) {
-                return new ResponseEntity<Map<String, Object>>(ret_map, headers, HttpStatus.UNAUTHORIZED);
+            if (retMap.get("success").toString().equals("false")) {
+                return new ResponseEntity<>(retMap, headers, HttpStatus.UNAUTHORIZED);
             }
 
             final Service service = this.webApplicationServiceFactory.createService(request);
@@ -150,20 +149,20 @@ public class LoginController {
                 throw new FailedLoginException("Authentication failed");
             }
 
-            TicketGrantingTicket tgt = centralAuthenticationService.createTicketGrantingTicket(authenticationResult);
+            Ticket tgt = centralAuthenticationService.createTicketGrantingTicket(authenticationResult);
             String tgtId = tgt.getId();
             ticketGrantingTicketCookieGenerator.addCookie(request, response, tgtId);
-            final ServiceTicket serviceTicket =
+            final Ticket serviceTicket =
                 this.centralAuthenticationService.grantServiceTicket(tgtId, service, authenticationResult);
 
-            ret_map.put("success", true);
-            ret_map.put("msg", serviceTicket.getId());
-            return new ResponseEntity<Map<String, Object>>(ret_map, headers, HttpStatus.OK);
+            retMap.put("success", true);
+            retMap.put("msg", serviceTicket.getId());
+            return new ResponseEntity<>(retMap, headers, HttpStatus.OK);
         } catch (final Exception e) {
-            ret_map.put("success", false);
-            ret_map.put("msg", e.getMessage());
+            retMap.put("success", false);
+            retMap.put("msg", e.getMessage());
             LOGGER.error(e.getMessage(), e);
-            return new ResponseEntity<Map<String, Object>>(ret_map, headers, HttpStatus.UNAUTHORIZED);
+            return new ResponseEntity<>(retMap, headers, HttpStatus.UNAUTHORIZED);
         }
     }
 

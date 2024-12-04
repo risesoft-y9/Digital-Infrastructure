@@ -44,9 +44,6 @@ public class CookieRetrievingCookieGenerator extends CookieGenerator implements 
     @Serial
     private static final long serialVersionUID = -4926982428809856313L;
 
-    /**
-     * Responsible for manging and verifying the cookie value.
-     **/
     private final CookieValueManager casCookieValueManager;
 
     private final CookieGenerationContext cookieGenerationContext;
@@ -57,11 +54,11 @@ public class CookieRetrievingCookieGenerator extends CookieGenerator implements 
 
     public CookieRetrievingCookieGenerator(final CookieGenerationContext context,
         final CookieValueManager casCookieValueManager) {
-        super.setCookieName(context.getName());
-        super.setCookiePath(context.getPath());
-        super.setCookieMaxAge(context.getMaxAge());
-        super.setCookieSecure(context.isSecure());
-        super.setCookieHttpOnly(context.isHttpOnly());
+        setCookieName(context.getName());
+        setCookiePath(context.getPath());
+        setCookieMaxAge(context.getMaxAge());
+        setCookieSecure(context.isSecure());
+        setCookieHttpOnly(context.isHttpOnly());
         this.setCookieDomain(context.getDomain());
 
         this.cookieGenerationContext = context;
@@ -158,7 +155,8 @@ public class CookieRetrievingCookieGenerator extends CookieGenerator implements 
                 }
             }
 
-            if (cookie == null) {// y9 add start
+            // y9 add start
+            if (cookie == null) {
                 val cookieValue = request.getParameter("tgt");
                 if (StringUtils.isNotBlank(cookieValue)) {
                     int i = cookieValue.indexOf("TGT-");
@@ -197,6 +195,12 @@ public class CookieRetrievingCookieGenerator extends CookieGenerator implements 
                             crm.getValue());
                         response.addCookie(crm);
                     })));
+    }
+
+    @Override
+    public boolean containsCookie(final HttpServletRequest request) {
+        return request.getCookies() != null && Arrays.stream(request.getCookies())
+            .anyMatch(cookie -> StringUtils.equalsIgnoreCase(cookie.getName(), getCookieName()));
     }
 
     protected Cookie addCookieHeaderToResponse(final Cookie cookie, final HttpServletRequest request,

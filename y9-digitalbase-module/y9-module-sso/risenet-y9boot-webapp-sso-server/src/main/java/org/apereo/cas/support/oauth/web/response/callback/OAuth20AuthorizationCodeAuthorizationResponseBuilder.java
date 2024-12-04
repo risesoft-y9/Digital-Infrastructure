@@ -2,6 +2,7 @@ package org.apereo.cas.support.oauth.web.response.callback;
 
 import java.util.LinkedHashMap;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Optional;
 
 import org.apache.commons.lang3.StringUtils;
@@ -16,9 +17,11 @@ import org.apereo.cas.support.oauth.util.OAuth20Utils;
 import org.apereo.cas.support.oauth.web.endpoints.OAuth20ConfigurationContext;
 import org.apereo.cas.support.oauth.web.response.OAuth20AuthorizationRequest;
 import org.apereo.cas.support.oauth.web.response.accesstoken.ext.AccessTokenRequestContext;
+import org.apereo.cas.ticket.Ticket;
 import org.apereo.cas.ticket.TicketGrantingTicket;
 import org.apereo.cas.ticket.code.OAuth20Code;
 import org.apereo.cas.ticket.code.OAuth20CodeFactory;
+import org.apereo.cas.util.CollectionUtils;
 import org.apereo.cas.util.function.FunctionUtils;
 import org.apereo.inspektr.audit.annotation.Audit;
 import org.jooq.lambda.fi.util.function.CheckedFunction;
@@ -45,22 +48,26 @@ public class OAuth20AuthorizationCodeAuthorizationResponseBuilder
         actionResolverName = AuditActionResolvers.OAUTH2_AUTHORIZATION_RESPONSE_ACTION_RESOLVER,
         resourceResolverName = AuditResourceResolvers.OAUTH2_AUTHORIZATION_RESPONSE_RESOURCE_RESOLVER)
     @Override
-    public ModelAndView build(final AccessTokenRequestContext holder) throws Throwable {
-        val authentication = holder.getAuthentication();
+    public ModelAndView build(final AccessTokenRequestContext tokenRequestContext) throws Throwable {
+        val authentication = tokenRequestContext.getAuthentication();
         val factory = (OAuth20CodeFactory)configurationContext.getTicketFactory().get(OAuth20Code.class);
-        val code = factory.create(holder.getService(), authentication, holder.getTicketGrantingTicket(),
-            holder.getScopes(), holder.getCodeChallenge(), holder.getCodeChallengeMethod(), holder.getClientId(),
-            holder.getClaims(), holder.getResponseType(), holder.getGrantType());
+        val code = factory.create(tokenRequestContext.getService(), authentication,
+            tokenRequestContext.getTicketGrantingTicket(), tokenRequestContext.getScopes(),
+            tokenRequestContext.getCodeChallenge(), tokenRequestContext.getCodeChallengeMethod(),
+            tokenRequestContext.getClientId(), tokenRequestContext.getClaims(), tokenRequestContext.getResponseType(),
+            tokenRequestContext.getGrantType());
         LOGGER.debug("Generated OAuth code: [{}]", code);
-        configurationContext.getTicketRegistry().addTicket(code);
-        val ticketGrantingTicket = holder.getTicketGrantingTicket();
+        val addedCode = configurationContext.getTicketRegistry().addTicket(code);
+        Objects.requireNonNull(addedCode, () -> "Could not add OAuth code %s to the registry.".formatted(code.getId()));
+
+        val ticketGrantingTicket = tokenRequestContext.getTicketGrantingTicket();
         Optional.ofNullable(ticketGrantingTicket).ifPresent(tgt -> FunctionUtils.doAndHandle(ticket -> {
             configurationContext.getTicketRegistry().updateTicket(ticket);
-        }, (CheckedFunction<Throwable, TicketGrantingTicket>)throwable -> {
+        }, (CheckedFunction<Throwable, Ticket>)throwable -> {
             LOGGER.error("Unable to update ticket-granting-ticket [{}]", ticketGrantingTicket, throwable);
             return null;
         }).accept(tgt));
-        return buildCallbackViewViaRedirectUri(holder, code);
+        return buildCallbackViewViaRedirectUri(tokenRequestContext, addedCode);
     }
 
     @Override
@@ -68,26 +75,16 @@ public class OAuth20AuthorizationCodeAuthorizationResponseBuilder
         return StringUtils.equalsIgnoreCase(context.getResponseType(), OAuth20ResponseTypes.CODE.getType());
     }
 
-    /**
-     * Build callback view via redirect uri model and view.
-     *
-     * @param code the code
-     * @return the model and view
-     * @throws Exception the exception
-     */
-    protected ModelAndView buildCallbackViewViaRedirectUri(final AccessTokenRequestContext holder,
-        final OAuth20Code code) throws Exception {
+    protected ModelAndView buildCallbackViewViaRedirectUri(final AccessTokenRequestContext holder, final Ticket code)
+        throws Exception {
         val attributes = holder.getAuthentication().getAttributes();
-        val state = attributes.get(OAuth20Constants.STATE).getFirst().toString();
-        val nonce = attributes.get(OAuth20Constants.NONCE).getFirst().toString();
-
         LOGGER.debug("Authorize request successful for client [{}] with redirect uri [{}]", holder.getClientId(),
             holder.getRedirectUri());
 
         // y9 add start
         String redirectUri = holder.getRedirectUri();
         String serviceTicketId = "";
-        TicketGrantingTicket ticket = code.getTicketGrantingTicket();
+        TicketGrantingTicket ticket = (TicketGrantingTicket)holder.getToken().getTicketGrantingTicket();
         Map<String, Service> map = ticket.getServices();
         for (Map.Entry<String, Service> entry : map.entrySet()) {
             SimpleWebApplicationServiceImpl serviceImpl = (SimpleWebApplicationServiceImpl)entry.getValue();
@@ -101,15 +98,16 @@ public class OAuth20AuthorizationCodeAuthorizationResponseBuilder
 
         val params = new LinkedHashMap<String, String>();
         params.put(OAuth20Constants.CODE, code.getId());
-        if (StringUtils.isNotBlank(state)) {
-            params.put(OAuth20Constants.STATE, state);
-        }
-        if (StringUtils.isNotBlank(nonce)) {
-            params.put(OAuth20Constants.NONCE, nonce);
-        }
+        CollectionUtils.firstElement(attributes.get(OAuth20Constants.STATE))
+            .ifPresent(state -> params.put(OAuth20Constants.STATE, state.toString()));
+        CollectionUtils.firstElement(attributes.get(OAuth20Constants.NONCE))
+            .ifPresent(nonce -> params.put(OAuth20Constants.NONCE, nonce.toString()));
+
+        // y9 add start
         if (StringUtils.isNotBlank(serviceTicketId)) {
-            params.put("serviceTicketId", serviceTicketId);// y9 add
+            params.put("serviceTicketId", serviceTicketId);
         }
+        // y9 add end
         LOGGER.debug("Redirecting to URL [{}] with params [{}] for clientId [{}]", holder.getRedirectUri(),
             params.keySet(), holder.getClientId());
         val registeredService = OAuth20Utils
