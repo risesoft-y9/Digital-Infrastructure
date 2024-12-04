@@ -15,8 +15,8 @@
     <description>RiseSoft/Digital Infrastructure extend for nacos</description>
 
     <properties>
-        <alibaba-nacos.version>2.3.1</alibaba-nacos.version>
-        <alibaba-cloud.version>2023.0.0.0-RC1</alibaba-cloud.version>
+        <alibaba-nacos.version>2.4.2</alibaba-nacos.version>
+        <alibaba-cloud.version>2023.0.3.2</alibaba-cloud.version>
     </properties>
 
     <scm>
