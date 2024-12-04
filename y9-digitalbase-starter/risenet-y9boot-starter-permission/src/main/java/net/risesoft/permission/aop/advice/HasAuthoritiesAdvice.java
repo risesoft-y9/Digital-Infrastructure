@@ -10,7 +10,7 @@ import net.risesoft.api.platform.permission.PersonResourceApi;
 import net.risesoft.api.platform.permission.PositionResourceApi;
 import net.risesoft.enums.LogicalEnum;
 import net.risesoft.enums.platform.AuthorityEnum;
-import net.risesoft.enums.platform.IdentityEnum;
+import net.risesoft.enums.platform.IdentityTypeEnum;
 import net.risesoft.exception.GlobalErrorCodeEnum;
 import net.risesoft.permission.annotation.HasAuthorities;
 import net.risesoft.y9.Y9LoginUserHolder;
@@ -39,24 +39,24 @@ public class HasAuthoritiesAdvice implements MethodBeforeAdvice {
             String[] customIds = hasAuthorities.value();
             AuthorityEnum authority = hasAuthorities.authority();
             LogicalEnum logical = hasAuthorities.logical();
-            IdentityEnum identity = hasAuthorities.identity();
+            IdentityTypeEnum identity = hasAuthorities.identity();
 
-            if (IdentityEnum.PERSON.equals(identity) && LogicalEnum.AND.equals(logical)) {
+            if (IdentityTypeEnum.PERSON.equals(identity) && LogicalEnum.AND.equals(logical)) {
                 checkAllPersonPermission(customIds, authority);
                 return;
             }
 
-            if (IdentityEnum.PERSON.equals(identity) && LogicalEnum.OR.equals(logical)) {
+            if (IdentityTypeEnum.PERSON.equals(identity) && LogicalEnum.OR.equals(logical)) {
                 checkAnyPersonPermission(customIds, authority);
                 return;
             }
 
-            if (IdentityEnum.POSITION.equals(identity) && LogicalEnum.AND.equals(logical)) {
+            if (IdentityTypeEnum.POSITION.equals(identity) && LogicalEnum.AND.equals(logical)) {
                 checkAllPositionPermission(customIds, authority);
                 return;
             }
 
-            if (IdentityEnum.POSITION.equals(identity) && LogicalEnum.OR.equals(logical)) {
+            if (IdentityTypeEnum.POSITION.equals(identity) && LogicalEnum.OR.equals(logical)) {
                 checkAnyPositionPermission(customIds, authority);
                 return;
             }

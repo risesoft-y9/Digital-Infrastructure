@@ -1,5 +1,6 @@
 package net.risesoft.api.permission;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.validation.constraints.NotBlank;
@@ -15,8 +16,10 @@ import lombok.RequiredArgsConstructor;
 
 import net.risesoft.api.platform.permission.PositionResourceApi;
 import net.risesoft.enums.platform.AuthorityEnum;
+import net.risesoft.enums.platform.IdentityTypeEnum;
 import net.risesoft.enums.platform.ResourceTypeEnum;
 import net.risesoft.model.platform.Resource;
+import net.risesoft.model.platform.VueMenu;
 import net.risesoft.pojo.Y9Result;
 import net.risesoft.service.identity.Y9PositionToResourceAndAuthorityService;
 import net.risesoft.y9.Y9LoginUserHolder;
@@ -41,6 +44,7 @@ import net.risesoft.y9public.entity.resource.Y9ResourceBase;
 public class PositionResourceApiImpl implements PositionResourceApi {
 
     private final Y9PositionToResourceAndAuthorityService y9PositionToResourceAndAuthorityService;
+    private final VueMenuBuilder vueMenuBuilder;
 
     /**
      * 判断岗位对资源是否有指定的操作权限
@@ -80,6 +84,28 @@ public class PositionResourceApiImpl implements PositionResourceApi {
 
         return Y9Result
             .success(y9PositionToResourceAndAuthorityService.hasPermissionByCustomId(positionId, customId, authority));
+    }
+
+    /**
+     * 递归获得某一资源下，岗位有相应权限的菜单和按钮（树形）
+     *
+     * @param tenantId 租户id
+     * @param positionId 人员id
+     * @param authority 权限类型 {@link AuthorityEnum}
+     * @param resourceId 资源id
+     * @return {@code Y9Result<List<VueMenu>>} 通用请求返回对象 - data 是有权限的菜单和按钮（树形）
+     * @since 9.6.8
+     */
+    @Override
+    public Y9Result<List<VueMenu>> listMenusRecursively(@RequestParam("tenantId") @NotBlank String tenantId,
+        @RequestParam("positionId") @NotBlank String positionId, @RequestParam("authority") AuthorityEnum authority,
+        @RequestParam("resourceId") @NotBlank String resourceId) {
+        Y9LoginUserHolder.setTenantId(tenantId);
+
+        List<VueMenu> vueMenuList = new ArrayList<>();
+        vueMenuBuilder.buildVueMenus(IdentityTypeEnum.POSITION, positionId, authority, resourceId, vueMenuList);
+
+        return Y9Result.success(vueMenuList);
     }
 
     /**

@@ -14,7 +14,7 @@ import lombok.Getter;
  */
 @Getter
 @AllArgsConstructor
-public enum IdentityEnum {
+public enum IdentityTypeEnum {
 
     /** 人员 */
     PERSON("Person", 1),

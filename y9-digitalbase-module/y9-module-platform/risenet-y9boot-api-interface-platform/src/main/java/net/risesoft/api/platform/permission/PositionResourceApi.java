@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 import net.risesoft.enums.platform.AuthorityEnum;
 import net.risesoft.model.platform.Resource;
+import net.risesoft.model.platform.VueMenu;
 import net.risesoft.pojo.Y9Result;
 
 /**
@@ -53,6 +54,21 @@ public interface PositionResourceApi {
     Y9Result<Boolean> hasPermissionByCustomId(@RequestParam("tenantId") @NotBlank String tenantId,
         @RequestParam("positionId") @NotBlank String positionId, @RequestParam("customId") @NotBlank String customId,
         @RequestParam("authority") AuthorityEnum authority);
+
+    /**
+     * 递归获得某一资源下，岗位有相应权限的菜单和按钮（树形）
+     *
+     * @param tenantId 租户id
+     * @param positionId 人员id
+     * @param authority 权限类型 {@link AuthorityEnum}
+     * @param resourceId 资源id
+     * @return {@code Y9Result<List<VueMenu>>} 通用请求返回对象 - data 是有权限的菜单和按钮（树形）
+     * @since 9.6.8
+     */
+    @GetMapping("/listMenusRecursively")
+    Y9Result<List<VueMenu>> listMenusRecursively(@RequestParam("tenantId") @NotBlank String tenantId,
+        @RequestParam("positionId") @NotBlank String positionId, @RequestParam("authority") AuthorityEnum authority,
+        @RequestParam("resourceId") @NotBlank String resourceId);
 
     /**
      * 获得某一资源下，岗位有相应操作权限的菜单资源集合

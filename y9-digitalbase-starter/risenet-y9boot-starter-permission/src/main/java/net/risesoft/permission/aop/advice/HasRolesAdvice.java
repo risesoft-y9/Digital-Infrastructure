@@ -9,7 +9,7 @@ import org.springframework.core.annotation.AnnotationUtils;
 import net.risesoft.api.platform.permission.PersonRoleApi;
 import net.risesoft.api.platform.permission.PositionRoleApi;
 import net.risesoft.enums.LogicalEnum;
-import net.risesoft.enums.platform.IdentityEnum;
+import net.risesoft.enums.platform.IdentityTypeEnum;
 import net.risesoft.exception.GlobalErrorCodeEnum;
 import net.risesoft.permission.annotation.HasRoles;
 import net.risesoft.y9.Y9LoginUserHolder;
@@ -37,24 +37,24 @@ public class HasRolesAdvice implements MethodBeforeAdvice {
         if (hasRoles != null && hasRoles.value() != null) {
             String[] customIds = hasRoles.value();
             LogicalEnum logical = hasRoles.logical();
-            IdentityEnum identity = hasRoles.identity();
+            IdentityTypeEnum identity = hasRoles.identity();
 
-            if (IdentityEnum.PERSON.equals(identity) && LogicalEnum.AND.equals(logical)) {
+            if (IdentityTypeEnum.PERSON.equals(identity) && LogicalEnum.AND.equals(logical)) {
                 checkAllPersonRoles(customIds);
                 return;
             }
 
-            if (IdentityEnum.PERSON.equals(identity) && LogicalEnum.OR.equals(logical)) {
+            if (IdentityTypeEnum.PERSON.equals(identity) && LogicalEnum.OR.equals(logical)) {
                 checkAnyPersonRoles(customIds);
                 return;
             }
 
-            if (IdentityEnum.POSITION.equals(identity) && LogicalEnum.AND.equals(logical)) {
+            if (IdentityTypeEnum.POSITION.equals(identity) && LogicalEnum.AND.equals(logical)) {
                 checkAllPositionRoles(customIds);
                 return;
             }
 
-            if (IdentityEnum.POSITION.equals(identity) && LogicalEnum.OR.equals(logical)) {
+            if (IdentityTypeEnum.POSITION.equals(identity) && LogicalEnum.OR.equals(logical)) {
                 checkAnyPositionRoles(customIds);
                 return;
             }

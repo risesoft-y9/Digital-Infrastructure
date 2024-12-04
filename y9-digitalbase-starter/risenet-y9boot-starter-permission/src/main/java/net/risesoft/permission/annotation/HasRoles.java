@@ -7,7 +7,7 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 import net.risesoft.enums.LogicalEnum;
-import net.risesoft.enums.platform.IdentityEnum;
+import net.risesoft.enums.platform.IdentityTypeEnum;
 
 /**
  * 是否拥有角色 只有拥有相应角色，方法才能继续调用
@@ -32,7 +32,7 @@ public @interface HasRoles {
      * 
      * @return {@code IdentityEnum } 身份类型
      */
-    IdentityEnum identity() default IdentityEnum.PERSON;
+    IdentityTypeEnum identity() default IdentityTypeEnum.PERSON;
 
     /**
      * 检查角色的逻辑操作 与 和 或，默认是 与

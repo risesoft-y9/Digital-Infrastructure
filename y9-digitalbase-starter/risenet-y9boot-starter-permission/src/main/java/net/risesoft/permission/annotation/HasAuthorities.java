@@ -8,7 +8,7 @@ import java.lang.annotation.Target;
 
 import net.risesoft.enums.LogicalEnum;
 import net.risesoft.enums.platform.AuthorityEnum;
-import net.risesoft.enums.platform.IdentityEnum;
+import net.risesoft.enums.platform.IdentityTypeEnum;
 
 /**
  * 是否拥有相应的资源权限 只有拥有相应权限，方法才能继续调用
@@ -40,7 +40,7 @@ public @interface HasAuthorities {
      * 
      * @return {@code IdentityEnum } 身份类型
      */
-    IdentityEnum identity() default IdentityEnum.PERSON;
+    IdentityTypeEnum identity() default IdentityTypeEnum.PERSON;
 
     /**
      * 检查资源权限的逻辑操作 与 和 或，默认是 与
