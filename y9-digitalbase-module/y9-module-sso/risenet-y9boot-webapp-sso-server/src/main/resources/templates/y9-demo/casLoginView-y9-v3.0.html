@@ -1,33 +1,33 @@
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
     <meta charset="UTF-8"/>
-    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"/>
-    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-    <meta http-equiv="pragma" content="no-cache"/>
-    <meta http-equiv="cache-control" content="no-cache"/>
-    <meta http-equiv="expires" content="0"/>
+    <meta content="IE=edge,chrome=1" http-equiv="X-UA-Compatible"/>
+    <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+    <meta content="no-cache" http-equiv="pragma"/>
+    <meta content="no-cache" http-equiv="cache-control"/>
+    <meta content="0" http-equiv="expires"/>
     <!-- 管局要求保持备案名称和网站使用名称一致 -->
-    <title>北京首通智城科技创新有限责任公司</title>
-    <link rel="stylesheet" type="text/css" th:href="@{/y9static/y9new/css/default.css}"/>
-    <link rel="stylesheet" type="text/css" th:href="@{/y9static/y9new/css/styles.css}"/>
-    <link rel="stylesheet" type="text/css" th:href="@{/y9static/y9new/css/demo.css}"/>
-    <link rel="stylesheet" type="text/css" th:href="@{/y9static/y9new/css/loaders.css}"/>
-    <link rel="stylesheet" type="text/css" th:href="@{/y9static/y9new/css/layerMsg.css}"/>
-    <link rel="stylesheet" type="text/css" th:href="@{/y9static/y9new/css/verify.css}"/>
-    <script type="text/javascript" th:src="@{/y9static/js/base64.js}"></script>
-    <script type="text/javascript" th:src="@{/y9static/y9new/js/jquery-2.1.1.min.js}"></script>
-    <script type="text/javascript" th:src="@{/y9static/js/jquery/jquery.cookie.js}"></script>
-    <script type="text/javascript" th:src="@{/y9static/y9new/js/jsencrypt.min.js}"></script>
+    <title>北京有生博大软件股份有限公司</title>
+    <link rel="stylesheet" th:href="@{/y9static/y9new/css/default.css}" type="text/css"/>
+    <link rel="stylesheet" th:href="@{/y9static/y9new/css/styles.css}" type="text/css"/>
+    <link rel="stylesheet" th:href="@{/y9static/y9new/css/demo.css}" type="text/css"/>
+    <link rel="stylesheet" th:href="@{/y9static/y9new/css/loaders.css}" type="text/css"/>
+    <link rel="stylesheet" th:href="@{/y9static/y9new/css/layerMsg.css}" type="text/css"/>
+    <link rel="stylesheet" th:href="@{/y9static/y9new/css/verify.css}" type="text/css"/>
+    <script th:src="@{/y9static/js/base64.js}" type="text/javascript"></script>
+    <script th:src="@{/y9static/y9new/js/jquery-2.1.1.min.js}" type="text/javascript"></script>
+    <script th:src="@{/y9static/js/jquery/jquery.cookie.js}" type="text/javascript"></script>
+    <script th:src="@{/y9static/y9new/js/jsencrypt.min.js}" type="text/javascript"></script>
 </head>
 
 <body>
-<div class="logo"><img th:src="@{/y9static/y9new/img/cstit.png}" style="height: 80px;width: 80px;"></div>
+<div class="logo"><img th:src="@{/y9static/y9new/img/cloud.png}"></div>
 <div class="login" id="tunnel">
-    <div class="login_title">
+    <div class="login_title" style="justify-content: center">
         <span onclick="changeLoginType(0)">用户登录</span>
-        <!-- <span></span>
-        <span onclick="changeLoginType(1)">安信扫码</span> -->
+        <!-- <span></span> -->
+        <!-- <span onclick="changeLoginType(1)">安信扫码</span> -->
     </div>
     <div class="qvcode">
         <a href="javascript:getQRCode();" id="img_container">
@@ -36,32 +36,37 @@
         <span id="error_msg"></span>
     </div>
     <div class="login_fields">
-        <form method="post" id="fm1" th:object="${credential}">
-            <div class="alert alert-danger" th:if="${#fields.hasErrors('*')}">
-                登录失败：<span th:each="err : ${#fields.errors('*')}" th:utext="${err}"/>
-            </div>
+        <form id="fm1" method="post" th:object="${credential}">
             <div class="login_fields__user">
                 <div class="icon"><img alt="" th:src="@{/y9static/y9new/img/user_icon_copy.png}"/></div>
-                <input id="username" placeholder="用户名" type="text" autocomplete="off" value="" oninput="inputEvent()" onblur="getTenant();"/>
-                <input id="username1" name="username" style="width: 150px;" tabindex="1" autocomplete="false" htmlescape="true" type="hidden"/>
-                <input id="tenantShortName" name="tenantShortName"  value="stzc" style="width: 150px;" autocomplete="false" htmlescape="true" type="hidden"/>
+                <input autocomplete="off" id="username" oninput="inputClick()"
+                       placeholder="用户名" type="text" value=""/>
+                <input autocomplete="false" htmlescape="true" id="username1" name="username" style="width: 150px;"
+                       tabindex="1" type="hidden"/>
+                <input autocomplete="false" htmlescape="true" id="tenantShortName" name="tenantShortName"
+                       style="width: 150px;" type="hidden" value="test"/>
                 <div class="validation"><img alt="" th:src="@{/y9static/y9new/img/tick.png}"/></div>
             </div>
             <div class="login_fields__password">
                 <div class="icon"><img alt="" th:src="@{/y9static/y9new/img/lock_icon_copy.png}"/></div>
-                <input id="password" tabindex="2" type="text" htmlescape="true" autocomplete="off" placeholder="请输入您的密码" onfocus="this.type='password'"/>
-                <input id="password1" name="password" htmlescape="true" autocomplete="off" type="hidden"/>
+                <input autocomplete="off" htmlescape="true" id="password" onfocus="this.type='password'"
+                       placeholder="请输入您的密码"
+                       type="text"/>
+                <input autocomplete="off" htmlescape="true" id="password1" name="password" tabindex="2" type="hidden"/>
 
                 <div class="validation"><img alt="" th:src="@{/y9static/y9new/img/tick.png}"/></div>
             </div>
+            <div class="alert alert-danger" th:if="${#fields.hasErrors('*')}">
+                登录失败：<span th:each="err : ${#fields.errors('*')}" th:utext="${err}"/>
+            </div>
             <!-- 表单隐藏数据块开始 -->
-            <input type="hidden" id="loginType" name="loginType" value="loginName"/>
-            <input type="hidden" id="captchaKey" name="captchaKey" value=""/>
-            <input type="hidden" id="noLoginScreen" name="noLoginScreen" value="false"/>
-             <input type="hidden" id="screenDimension" name="screenDimension" value=""/>
-            <input type="hidden" id="pwdEcodeType" name="pwdEcodeType" value=""/>
-            <input type="hidden" name="execution" th:value="${flowExecutionKey}"/>
-            <input type="hidden" name="_eventId" value="submit"/> <input type="hidden" name="geolocation"/>
+            <input id="loginType" name="loginType" type="hidden" value="loginName"/>
+            <input id="captchaKey" name="captchaKey" type="hidden" value=""/>
+            <input id="noLoginScreen" name="noLoginScreen" type="hidden" value="false"/>
+            <input id="screenDimension" name="screenDimension" type="hidden" value=""/>
+            <input id="pwdEcodeType" name="pwdEcodeType" type="hidden" value=""/>
+            <input name="execution" th:value="${flowExecutionKey}" type="hidden"/>
+            <input name="_eventId" type="hidden" value="submit"/> <input name="geolocation" type="hidden"/>
             <!-- 表单隐藏数据块结束 -->
         </form>
         <!--点选验证码  -->
@@ -71,39 +76,45 @@
         </div>
     </div>
     <div></div>
-    <div class="linkOtherSystem">
-        <a href="https://www.youshengyun.com/risecloud">云体验</a>
-        <a href="https://dev.youshengyun.com/admin-dev/">云开发</a>
-        <a href="https://www.youshengyun.com/y9home/">云租户</a>
-        <a href="https://www.youshengyun.com/admin-ops/">云后台</a>
-        <a href="https://www.risesoft.net">有生软件</a>
-        <a href="https://www.zgcsa.net/" target="_blank">中关村软联</a>
-    </div>
+    <!-- <div class="linkOtherSystem"> -->
+    <!--     <a href="https://www.youshengyun.com/risecloud">云体验</a> -->
+    <!--     <a href="https://dev.youshengyun.com/admin-dev/">云开发</a> -->
+    <!--     <a href="https://www.youshengyun.com/y9home/">云租户</a> -->
+    <!--     <a href="https://www.youshengyun.com/admin-ops/">云后台</a> -->
+    <!--     <a href="https://www.risesoft.net">有生软件</a> -->
+    <!--     <a href="https://www.zgcsa.net/" target="_blank">中关村软联</a> -->
+    <!-- </div> -->
     <div class="success"></div>
-    <!-- <div class="disclaimer">
-        <p onclick="changeLoginModule(0)" style="margin-bottom: 5px">登录<span style="color: rgb(255, 238, 0)">「关联」</span>系统</p>
-        <p onclick="changeLoginModule(1)" style="margin-bottom: 5px;display: none">返回用户登录</p>
-        <a href="https://www.youshengyun.com/baas/appstore/%E5%8D%8F%E4%BD%9C%E5%B9%B3%E9%9D%A25.0" target="_blank">安信下载</a>
-    </div> -->
+    <!-- <div class="disclaimer"> -->
+    <!--     <p onclick="changeLoginModule(0)" style="margin-bottom: 5px">登录<span -->
+    <!--             style="color: rgb(255, 238, 0)">「关联」</span>系统</p> -->
+    <!--     <p onclick="changeLoginModule(1)" style="margin-bottom: 5px;display: none">返回用户登录</p> -->
+    <!--     <a href="https://www.youshengyun.com/baas/appstore/%E5%8D%8F%E4%BD%9C%E5%B9%B3%E9%9D%A25.0" -->
+    <!--        target="_blank">安信下载</a> -->
+    <!-- </div> -->
+    <!-- <div style="position: absolute;margin: auto;bottom: 25px;width: 290px;text-align: center;">
+         访问本系统需检测是否star本项目 <a href="https://gitee.com/risesoft-y9/y9-core" target="_blank">点我去start</a>
+     </div> -->
     <div class="toolTips" style="display: none">
         <ul id="toolTipsUl"></ul>
     </div>
 </div>
 <div class="footer">
-    <!--<div>
-        <span>北京首通智城科技创新有限责任公司版权所有</span>
+    <div>
+        <span>北京有生博大软件股份有限公司 版权所有</span>
         <a href="https://beian.miit.gov.cn/" target="_blank">京ICP备16060306号-4</a>
-        <a href="http://www.beian.gov.cn/portal/registerSystemInfo?recordcode=11010802026965" target="_blank"><img th:src="@{/y9static/y9new/img/police.png}"/>京公网安备11010802026965号</a>
-    </div>-->
+        <a href="http://www.beian.gov.cn/portal/registerSystemInfo?recordcode=11010802026965" target="_blank"><img
+                th:src="@{/y9static/y9new/img/police.png}"/>京公网安备11010802026965号</a>
+    </div>
     <span>建议您使用1920x1080分辨率，IE9.0或以上版本浏览器访问本站，以获得最佳用户体验。 技术支持：0755-821072292</span>
 </div>
 
-<link rel="stylesheet" type="text/css" th:href="@{/y9static/y9new/layui/css/layui.css}"/>
-<script type="text/javascript" th:src="@{/y9static/y9new/js/verify.js}"></script>
-<script type="text/javascript" th:src="@{/y9static/y9new/layui/layui.js}"></script>
-<script type="text/javascript" th:src="@{/y9static/y9new/js/layerMsg.js}" charset="utf-8"></script>
+<link rel="stylesheet" th:href="@{/y9static/y9new/layui/css/layui.css}" type="text/css"/>
+<script th:src="@{/y9static/y9new/js/verify.js}" type="text/javascript"></script>
+<script th:src="@{/y9static/y9new/layui/layui.js}" type="text/javascript"></script>
+<script charset="utf-8" th:src="@{/y9static/y9new/js/layerMsg.js}" type="text/javascript"></script>
 <script type="text/javascript">
-        var ctx = "[(${contextPath})]";
+    var ctx = "[(${contextPath})]";
     var canGetCookie = 1; //是否支持存储Cookie 0 不支持 1 支持
     var ajaxmockjax = 1; //是否启用虚拟Ajax的请求响 0 不启用  1 启用
     var inputTimer = null;
@@ -117,6 +128,10 @@
             $("#screenDimension").val(window.screen.width + '*' + window.screen.height);
         } catch (e) {
         }
+    }
+
+    function inputClick() {
+        $("#username1").val($("#username").val());
     }
 
     function inputEvent() {
@@ -145,7 +160,10 @@
                 $("#toolTipsUl").empty();
                 $(".toolTips").attr({style: "display: flex;"});
                 data.length && data.map((item) => {
-                    $("<li></li>", {text: item.loginName, id: item.tenantShortName}).appendTo("#toolTipsUl").on("click", mouseClickEvent);
+                    $("<li></li>", {
+                        text: item.loginName,
+                        id: item.tenantShortName
+                    }).appendTo("#toolTipsUl").on("click", mouseClickEvent);
                 });
             });
         }, 250);
@@ -324,31 +342,7 @@
                         }
                     })
                 ).done(function () {
-                    $.ajax({
-                        async: false,
-                        cache: false,
-                        type: "POST",
-                        url: ctx + '/api/checkSsoLoginInfo',
-                        data: {
-                            username: encode64(username1),
-                            password: encrypt($('#pwdEcodeType').val(), encode64(password)),
-                            tenantShortName: tenantShortName,
-                            pwdEcodeType: $('#pwdEcodeType').val()
-                        },
-                        dataType: "json",
-                        success: function (data) {
-                            if (data.success) {
-                                $("#mpanel6").attr({style: "display: block;"});
-                            } else {
-                                var msg = data.msg;
-                                if (msg != null && msg.length > 0) {
-                                    option.type = "warn";
-                                    option.content = msg;
-                                    WfMsg(option);
-                                }
-                            }
-                        }
-                    })
+                    $("#mpanel6").attr({style: "display: block;"});
                 }).fail(function () {
                     option.type = "warn";
                     option.content = "获取随机数失败。";
@@ -371,14 +365,40 @@
         }
     };
 </script>
-<script type="text/javascript" th:src="@{/y9static/y9new/img/ThreeWebGL.js}"></script>
-<script type="text/javascript" th:src="@{/y9static/y9new/img/ThreeExtras.js}"></script>
-<script type="text/javascript" th:src="@{/y9static/y9new/img/Detector.js}"></script>
+<script th:src="@{/y9static/y9new/img/ThreeWebGL.js}" type="text/javascript"></script>
+<script th:src="@{/y9static/y9new/img/ThreeExtras.js}" type="text/javascript"></script>
+<script th:src="@{/y9static/y9new/img/Detector.js}" type="text/javascript"></script>
 <script id="vs" type="x-shader/x-vertex">
     varying vec2 vUv; void main() { vUv = uv; gl_Position = projectionMatrix * modelViewMatrix * vec4( position, 1.0 ); }
+
+
+
+
+
+
+
+
+
+
+
+
+
 </script>
 <script id="fs" type="x-shader/x-fragment">
     uniform sampler2D map; uniform vec3 fogColor; uniform float fogNear; uniform float fogFar; varying vec2 vUv; void main() { float depth = gl_FragCoord.z / gl_FragCoord.w; float fogFactor = smoothstep( fogNear, fogFar, depth ); gl_FragColor = texture2D( map, vUv ); gl_FragColor.w *= pow( gl_FragCoord.z, 20.0 ); gl_FragColor = mix( gl_FragColor, vec4( fogColor, gl_FragColor.w ), fogFactor ); }
+
+
+
+
+
+
+
+
+
+
+
+
+
 </script>
 <script type="text/javascript">
     if (!Detector.webgl) Detector.addGetWebGLMessage();
@@ -649,11 +669,6 @@
                 }
             }
         });
-    }
-    
-    
-    function inputOnBlur(){
-    	$("#username1").val($("#username").val());
     }
 </script>
 </body>

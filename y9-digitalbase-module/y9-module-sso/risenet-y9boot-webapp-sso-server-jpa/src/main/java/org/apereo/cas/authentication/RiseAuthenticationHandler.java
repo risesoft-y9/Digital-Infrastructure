@@ -5,8 +5,7 @@ import java.util.List;
 
 import javax.security.auth.login.AccountNotFoundException;
 import javax.security.auth.login.FailedLoginException;
-
-import jakarta.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletRequest;
 
 import org.apache.commons.lang3.StringUtils;
 import org.apereo.cas.authentication.credential.RememberMeUsernamePasswordCredential;

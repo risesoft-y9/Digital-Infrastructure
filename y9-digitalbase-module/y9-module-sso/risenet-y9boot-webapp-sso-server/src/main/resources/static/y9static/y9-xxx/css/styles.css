@@ -396,6 +396,12 @@ body .login_fields__submit input:hover {
           transition-duration: .2s;
 }
 
+body .login_fields .alert {
+  position: relative;
+  top: 60px;
+  left: 20px;
+  color: rgb(245, 108, 108);
+}
 
 body .toolTips{
   width: 260px;
