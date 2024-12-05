@@ -1,19 +1,19 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0"
-         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+<project xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xmlns="http://maven.apache.org/POM/4.0.0"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
     <parent>
         <groupId>net.risesoft</groupId>
-        <artifactId>y9-digitalbase-support</artifactId>
+        <artifactId>y9-digitalbase-parent</artifactId>
         <version>${revision}</version>
-        <relativePath>../pom.xml</relativePath>
+        <relativePath>../../y9-digitalbase-parent/pom.xml</relativePath>
     </parent>
 
     <artifactId>risenet-y9boot-support-api-access-control</artifactId>
 
     <properties>
-        
+
     </properties>
 
     <scm>
@@ -21,7 +21,7 @@
         <connection>${gitee.connection}</connection>
         <developerConnection>${gitee.developerConnection}</developerConnection>
     </scm>
-    
+
     <dependencies>
 
         <dependency>
@@ -29,7 +29,7 @@
             <artifactId>risenet-y9boot-starter-jpa-public</artifactId>
             <version>${project.version}</version>
         </dependency>
-        
+
         <dependency>
             <groupId>com.github.seancfoley</groupId>
             <artifactId>ipaddress</artifactId>
@@ -37,8 +37,8 @@
         </dependency>
 
         <dependency>
-            <groupId>javax.servlet</groupId>
-            <artifactId>javax.servlet-api</artifactId>
+            <groupId>jakarta.servlet</groupId>
+            <artifactId>jakarta.servlet-api</artifactId>
             <scope>provided</scope>
         </dependency>
 

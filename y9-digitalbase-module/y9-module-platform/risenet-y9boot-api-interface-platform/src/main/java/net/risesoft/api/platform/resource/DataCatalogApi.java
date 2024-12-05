@@ -2,7 +2,7 @@ package net.risesoft.api.platform.resource;
 
 import java.util.List;
 
-import javax.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotBlank;
 
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;

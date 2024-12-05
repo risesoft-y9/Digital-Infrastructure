@@ -1,16 +1,16 @@
 package net.risesoft.y9public.entity;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.EnumType;
-import javax.persistence.Enumerated;
-import javax.persistence.Id;
-import javax.persistence.Table;
+import jakarta.persistence.Column;
+import jakarta.persistence.Convert;
+import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
+import jakarta.persistence.Id;
+import jakarta.persistence.Table;
 
 import org.hibernate.annotations.ColumnDefault;
 import org.hibernate.annotations.Comment;
 import org.hibernate.annotations.DynamicUpdate;
-import org.hibernate.annotations.Type;
 
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -28,7 +28,7 @@ import net.risesoft.enums.platform.ApiAccessControlType;
 @Entity(name = "apiAccessControl")
 @Table(name = "Y9_COMMON_API_ACCESS_CONTROL")
 @DynamicUpdate
-@org.hibernate.annotations.Table(comment = "接口访问控制", appliesTo = "Y9_COMMON_API_ACCESS_CONTROL")
+@Comment("接口访问控制")
 @NoArgsConstructor
 @Data
 public class Y9ApiAccessControl extends BaseEntity {
@@ -56,7 +56,7 @@ public class Y9ApiAccessControl extends BaseEntity {
     private ApiAccessControlType type = ApiAccessControlType.WHITE_LIST;
 
     /** 是否启用:1=启用,0=禁用 */
-    @Type(type = "numeric_boolean")
+    @Convert(converter = org.hibernate.type.NumericBooleanConverter.class)
     @ColumnDefault("0")
     @Column(name = "ENABLED", nullable = false)
     @Comment("是否启用:1=启用,0=禁用")

@@ -1,9 +1,9 @@
 package net.risesoft.y9public.entity.resource;
 
-import javax.persistence.Column;
-import javax.persistence.Convert;
-import javax.persistence.Entity;
-import javax.persistence.Table;
+import jakarta.persistence.Column;
+import jakarta.persistence.Convert;
+import jakarta.persistence.Entity;
+import jakarta.persistence.Table;
 
 import org.hibernate.annotations.Comment;
 import org.hibernate.annotations.DynamicUpdate;
@@ -26,7 +26,7 @@ import net.risesoft.persistence.EnumConverter;
 @Entity
 @Table(name = "Y9_COMMON_DATA_CATALOG")
 @DynamicUpdate
-@org.hibernate.annotations.Table(comment = "数据目录", appliesTo = "Y9_COMMON_DATA_CATALOG")
+@Comment("数据目录")
 @Data
 @SuperBuilder
 public class Y9DataCatalog extends Y9ResourceBase {
@@ -69,12 +69,12 @@ public class Y9DataCatalog extends Y9ResourceBase {
     @Convert(converter = EnumConverter.DataCatalogTypeEnumConverter.class)
     private DataCatalogTypeEnum type = DataCatalogTypeEnum.CLASSIFICATION;
 
+    public Y9DataCatalog() {
+        super.setResourceType(ResourceTypeEnum.DATA_CATALOG);
+    }
+
     @Override
     public String getAppId() {
         return InitDataConsts.APP_ID;
-    }
-
-    public Y9DataCatalog() {
-        super.setResourceType(ResourceTypeEnum.DATA_CATALOG);
     }
 }

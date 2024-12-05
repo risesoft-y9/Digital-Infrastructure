@@ -10,7 +10,6 @@ import jakarta.servlet.http.HttpServletRequest;
 
 import org.apache.commons.lang3.StringUtils;
 import org.apereo.cas.authentication.credential.RememberMeUsernamePasswordCredential;
-import org.apereo.cas.authentication.metadata.BasicCredentialMetaData;
 import org.apereo.cas.authentication.principal.PrincipalFactory;
 import org.apereo.cas.authentication.principal.Service;
 import org.apereo.cas.services.ServicesManager;
@@ -40,7 +39,7 @@ public class RiseAuthenticationHandler extends AbstractAuthenticationHandler {
 
     @Override
     public AuthenticationHandlerExecutionResult authenticate(Credential credential, Service service)
-        throws GeneralSecurityException, PreventedException {
+        throws PreventedException, Throwable {
         RememberMeUsernamePasswordCredential riseCredential = (RememberMeUsernamePasswordCredential)credential;
         String loginType = riseCredential.getLoginType();
         String tenantShortName = riseCredential.getTenantShortName();
@@ -100,7 +99,7 @@ public class RiseAuthenticationHandler extends AbstractAuthenticationHandler {
 
             } else {
                 List<Y9User> users = getUsers(loginType, deptId, tenantShortName, plainUsername);
-                if (users == null && users.isEmpty()) {
+                if (users == null || users.isEmpty()) {
                     throw new AccountNotFoundException("没有找到这个用户。");
                 } else {
                     Y9User y9User = users.get(0);
@@ -112,6 +111,8 @@ public class RiseAuthenticationHandler extends AbstractAuthenticationHandler {
             }
 
             y9LoginUserService.save(riseCredential, "true", "登录成功");
+            return new DefaultAuthenticationHandlerExecutionResult(this, riseCredential,
+                principalFactory.createPrincipal(plainUsername));
 
         } catch (GeneralSecurityException e) {
             y9LoginUserService.save(riseCredential, "false", "登录失败");
@@ -121,8 +122,6 @@ public class RiseAuthenticationHandler extends AbstractAuthenticationHandler {
             throw new FailedLoginException(e.getMessage());
         }
 
-        return new DefaultAuthenticationHandlerExecutionResult(this, new BasicCredentialMetaData(riseCredential),
-            principalFactory.createPrincipal(plainUsername));
     }
 
     private List<Y9User> getAgentUsers(String deptId, String agentTenantShortName, String agentUserName) {

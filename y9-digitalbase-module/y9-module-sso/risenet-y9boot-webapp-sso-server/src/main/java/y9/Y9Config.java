@@ -114,8 +114,8 @@ public class Y9Config {
         public AuthenticationEventExecutionPlanConfigurer riseAuthenticationEventExecutionPlanConfigurer(
             @Qualifier(ServicesManager.BEAN_NAME) final ServicesManager servicesManager, Y9UserService y9UserService,
             Y9LoginUserService y9LoginUserService) {
-            RiseAuthenticationHandler handler =
-                new RiseAuthenticationHandler("y9AuthenticationHandler", servicesManager, risePrincipalFactory(), 0);
+            RiseAuthenticationHandler handler = new RiseAuthenticationHandler("y9AuthenticationHandler",
+                servicesManager, risePrincipalFactory(), 0, y9UserService, y9LoginUserService);
             return plan -> plan.registerAuthenticationHandlerWithPrincipalResolver(handler,
                 risePersonDirectoryPrincipalResolver());
         }

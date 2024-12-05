@@ -155,7 +155,7 @@ public class OrgController {
     @RiseLog(operationName = "获取组织架构列表")
     @RequestMapping(value = "/list")
     @Deprecated
-    @IsManager({ManagerLevelEnum.SYSTEM_MANAGER, ManagerLevelEnum.SECURITY_MANAGER})
+    @IsAnyManager({ManagerLevelEnum.SYSTEM_MANAGER, ManagerLevelEnum.SECURITY_MANAGER})
     public Y9Result<List<Organization>> list(@RequestParam(required = false) boolean virtual) {
         if (Y9LoginUserHolder.getUserInfo().isGlobalManager()) {
             return Y9Result.success(
@@ -282,7 +282,7 @@ public class OrgController {
     @RiseLog(operationName = "查询机构主体")
     @RequestMapping(value = "/treeSearch")
     @Deprecated
-    @IsManager({ManagerLevelEnum.SYSTEM_MANAGER, ManagerLevelEnum.SECURITY_MANAGER})
+    @IsAnyManager({ManagerLevelEnum.SYSTEM_MANAGER, ManagerLevelEnum.SECURITY_MANAGER})
     public Y9Result<List<Y9OrgBase>> treeSearch(@RequestParam String name, @RequestParam OrgTreeTypeEnum treeType) {
         UserInfo userInfo = Y9LoginUserHolder.getUserInfo();
         List<Y9OrgBase> treeList = new ArrayList<>();

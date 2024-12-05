@@ -2,8 +2,9 @@ package y9;
 
 import java.util.List;
 
-import javax.servlet.DispatcherType;
 import javax.sql.DataSource;
+
+import jakarta.servlet.DispatcherType;
 
 import org.apereo.cas.authentication.AuthenticationEventExecutionPlanConfigurer;
 import org.apereo.cas.authentication.RiseAuthenticationHandler;
