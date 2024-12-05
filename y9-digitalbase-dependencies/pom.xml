@@ -135,6 +135,7 @@
         <aspectj.version>1.9.22</aspectj.version>
         <lombok.version>1.18.36</lombok.version>
         <httpcomponents.version>4.5.14</httpcomponents.version>
+        <jakarta.mail.version>2.0.1</jakarta.mail.version>
 
 
         <!-- Plugin versions -->
@@ -674,6 +675,13 @@
                 <version>${javers.version}</version>
             </dependency>
 
+            <!-- jakarta.mail -->
+            <dependency>
+                <groupId>com.sun.mail</groupId>
+                <artifactId>jakarta.mail</artifactId>
+                <version>${jakarta.mail.version}</version>
+            </dependency>
+
             <!-- Google guava -->
             <dependency>
                 <groupId>com.google.guava</groupId>
@@ -729,7 +737,7 @@
                  <artifactId>KesDialect-for-hibernate4</artifactId>
                  <version>1.0.0</version>
              </dependency>-->
-            
+
             <dependency>
                 <groupId>cn.com.kingbase</groupId>
                 <artifactId>hibernate-dialect</artifactId>
