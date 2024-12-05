@@ -99,7 +99,7 @@ public class RiseAuthenticationHandler extends AbstractAuthenticationHandler {
 
             } else {
                 List<Y9User> users = getUsers(loginType, deptId, tenantShortName, plainUsername);
-                if (users == null && users.isEmpty()) {
+                if (users == null || users.isEmpty()) {
                     throw new AccountNotFoundException("没有找到这个用户。");
                 } else {
                     Y9User y9User = users.get(0);
