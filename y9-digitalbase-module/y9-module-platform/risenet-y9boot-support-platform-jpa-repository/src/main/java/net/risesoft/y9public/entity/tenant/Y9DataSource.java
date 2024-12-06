@@ -73,19 +73,19 @@ public class Y9DataSource extends BaseEntity {
     @Comment("密码")
     private String password;
 
-    /** 连接池初始化大小 */
+    /** 数据库初始化大小 */
     @Column(name = "INITIAL_SIZE")
-    @Comment("连接池初始化大小")
+    @Comment("数据库初始化大小")
     private Integer initialSize;
 
-    /** 连接池最大值 */
+    /** 参数maxActive */
     @Column(name = "MAX_ACTIVE")
-    @Comment("连接池最大值")
+    @Comment("参数maxActive")
     private Integer maxActive;
 
-    /** 连接池最小值 */
+    /** 参数minIdle */
     @Column(name = "MIN_IDLE")
-    @Comment("连接池最小值")
+    @Comment("参数minIdle")
     private Integer minIdle;
 
 }

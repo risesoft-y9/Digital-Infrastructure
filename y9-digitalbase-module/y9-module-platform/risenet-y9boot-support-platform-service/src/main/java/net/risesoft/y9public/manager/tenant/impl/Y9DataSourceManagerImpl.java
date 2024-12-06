@@ -16,12 +16,12 @@ import com.zaxxer.hikari.HikariDataSource;
 
 import lombok.extern.slf4j.Slf4j;
 
-import net.risesoft.y9.configuration.app.y9platform.Y9PlatformProperties;
 import net.risesoft.enums.platform.DataSourceTypeEnum;
 import net.risesoft.enums.platform.TenantTypeEnum;
 import net.risesoft.exception.DataSourceErrorCodeEnum;
 import net.risesoft.id.IdType;
 import net.risesoft.id.Y9IdGenerator;
+import net.risesoft.y9.configuration.app.y9platform.Y9PlatformProperties;
 import net.risesoft.y9.db.DbType;
 import net.risesoft.y9.db.DbUtil;
 import net.risesoft.y9.exception.Y9BusinessException;
@@ -309,7 +309,7 @@ public class Y9DataSourceManagerImpl implements Y9DataSourceManager {
 
     /**
      * 替换 jdbc url 中的数据库名称 <br>
-     * <p>
+     *
      * 例如：replaceDatabaseNameInJdbcUrl("jdbc:mysql://localhost:3306/y9_public?allowPublicKeyRetrieval=true",
      * "y9_default") -> "jdbc:mysql://localhost:3306/y9_default?allowPublicKeyRetrieval=true"
      *

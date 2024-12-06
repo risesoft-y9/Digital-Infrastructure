@@ -68,7 +68,7 @@ public class Y9PersonToRoleServiceImpl implements Y9PersonToRoleService {
             y9RoleList = y9RoleRepository.findByNameAndSystemIdAndType(roleName, y9System.getId(), RoleTypeEnum.ROLE);
         } else {
             y9RoleList = y9RoleRepository.findByNameAndSystemIdAndPropertiesAndType(roleName, y9System.getId(),
-                    properties, RoleTypeEnum.ROLE);
+                properties, RoleTypeEnum.ROLE);
         }
 
         return y9RoleList.stream().anyMatch(y9Role -> hasRole(personId, y9Role.getId()));

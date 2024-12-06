@@ -10,7 +10,6 @@ import java.util.Objects;
 
 import jakarta.servlet.Filter;
 import jakarta.servlet.FilterChain;
-import jakarta.servlet.FilterConfig;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.ServletRequest;
 import jakarta.servlet.ServletResponse;
@@ -158,29 +157,6 @@ public class Y9Oauth2ResourceFilter implements Filter {
         }
 
         return accessToken;
-    }
-
-    private String getIpAddr(HttpServletRequest request) {
-        String addr = null;
-
-        String[] addrHeader = {"X-Real-IP", "X-Forwarded-For", "Proxy-Client-IP", "WL-Proxy-Client-IP"};
-        for (String header : addrHeader) {
-            if (StringUtils.isEmpty(addr) || "unknown".equalsIgnoreCase(addr)) {
-                addr = request.getHeader(header);
-            } else {
-                break;
-            }
-        }
-
-        if (StringUtils.isEmpty(addr) || "unknown".equalsIgnoreCase(addr)) {
-            addr = request.getRemoteAddr();
-        } else {
-            int i = addr.indexOf(",");
-            if (i > 0) {
-                addr = addr.substring(0, i);
-            }
-        }
-        return addr;
     }
 
     private ResponseEntity<OAuth20IntrospectionAccessTokenResponse> invokeIntrospectEndpoint(String accessToken) {

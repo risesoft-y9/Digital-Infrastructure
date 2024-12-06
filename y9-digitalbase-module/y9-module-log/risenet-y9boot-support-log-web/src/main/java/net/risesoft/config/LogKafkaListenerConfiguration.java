@@ -20,7 +20,7 @@ import net.risesoft.y9public.service.Y9logUserLoginInfoService;
 
 @Configuration
 @EnableKafka
-@ConditionalOnProperty(prefix = "y9.app.y9public", name = "kafkaEnabled", havingValue = "true", matchIfMissing = true)
+@ConditionalOnProperty(prefix = "y9.app.log", name = "kafkaEnabled", havingValue = "true", matchIfMissing = true)
 @Slf4j
 public class LogKafkaListenerConfiguration {
 

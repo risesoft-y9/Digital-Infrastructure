@@ -1,11 +1,11 @@
 package net.risesoft.entity;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Convert;
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
-import jakarta.persistence.Lob;
-import jakarta.persistence.Table;
+import javax.persistence.Column;
+import javax.persistence.Convert;
+import javax.persistence.Entity;
+import javax.persistence.Id;
+import javax.persistence.Lob;
+import javax.persistence.Table;
 
 import org.hibernate.annotations.Comment;
 import org.hibernate.annotations.DynamicUpdate;
@@ -28,7 +28,7 @@ import net.risesoft.persistence.EnumConverter;
 @Entity
 @Table(name = "Y9_ORGBASE_DELETED")
 @DynamicUpdate
-@Comment("删除的组织表")
+@org.hibernate.annotations.Table(comment = "删除的组织表", appliesTo = "Y9_ORGBASE_DELETED")
 @NoArgsConstructor
 @Data
 public class Y9OrgBaseDeleted extends BaseEntity {

@@ -210,6 +210,8 @@ public class InetAddressUtil {
             return false;
         }
 
+        // application.propters中y9.internalIp=192.168.1.x,10.0.x.x
+        // String ips = Y9Context.getProperty("y9.internalIp");
         if (StringUtils.hasText(ips)) {
             valid = false;
             String[] arry = ips.toLowerCase().split(",");

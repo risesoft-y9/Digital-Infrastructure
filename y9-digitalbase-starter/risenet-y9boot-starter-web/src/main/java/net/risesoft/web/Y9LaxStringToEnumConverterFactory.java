@@ -18,7 +18,7 @@ public class Y9LaxStringToEnumConverterFactory implements ConverterFactory<Strin
 
     @Override
     public <T extends Enum> Converter<String, T> getConverter(Class<T> targetType) {
-        return new Y9LaxStringToEnumConverterFactory.StringToEnum<>(targetType);
+        return new StringToEnum<>(targetType);
     }
 
     private static class StringToEnum<T extends Enum> implements Converter<String, T> {

@@ -147,7 +147,7 @@ public class Y9RoleServiceImpl implements Y9RoleService {
     @Override
     public List<Y9Role> listByParentId4Tenant(String parentId, String tenantId) {
         return y9RoleRepository.findByParentIdAndTenantIdOrParentIdAndTenantIdIsNullOrderByTabIndexAsc(parentId,
-                tenantId, parentId);
+            tenantId, parentId);
     }
 
     @Override
@@ -195,7 +195,7 @@ public class Y9RoleServiceImpl implements Y9RoleService {
                 if (parent != null) {
                     originRole.setParentId(parent.getId());
                     originRole
-                            .setDn(RoleLevelConsts.CN + y9Role.getName() + RoleLevelConsts.SEPARATOR + parent.getDn());
+                        .setDn(RoleLevelConsts.CN + y9Role.getName() + RoleLevelConsts.SEPARATOR + parent.getDn());
                     originRole.setGuidPath(parent.getGuidPath() + RoleLevelConsts.SEPARATOR + y9Role.getId());
                 } else {
                     originRole.setParentId(y9Role.getParentId());

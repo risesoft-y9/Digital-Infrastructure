@@ -13,7 +13,7 @@ public class Y9StringUtil {
     /**
      * 格式化文本, {} 表示占位符
      *
-     * {@link cn.hutool.core.util.StrUtil#format(CharSequence, Object...)}
+     * {@link StrUtil#format(CharSequence, Object...)}
      * 
      * @param template 模板
      * @param params params 参数

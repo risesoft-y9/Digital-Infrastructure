@@ -91,8 +91,7 @@ public class Y9TenantDataSourceLookup implements DataSourceLookup {
             if (ds != null) {
                 // 可能连接池的参数调整了
                 // url,username,password等属性在DruidDataSource初始化完成后不允许更改，否则抛出异常
-                boolean keepDataSourceInstance =
-                    ds.getJdbcUrl().equals(url) && ds.getUsername().equals(username)
+                boolean keepDataSourceInstance = ds.getJdbcUrl().equals(url) && ds.getUsername().equals(username)
                     && ds.getPassword().equals(password);
 
                 if (keepDataSourceInstance) {
@@ -138,9 +137,9 @@ public class Y9TenantDataSourceLookup implements DataSourceLookup {
 
         if (LOGGER.isDebugEnabled()) {
             if (previousDataSource == null) {
-                LOGGER.debug("添加租户[{}]的数据源", tenantId);
+                LOGGER.debug("添加系统[{}]的租户[{}]的数据源", systemName, tenantId);
             } else {
-                LOGGER.debug("更新租户[{}]的数据源", tenantId);
+                LOGGER.debug("更新租户[{}]的租户[{}]的数据源", systemName, tenantId);
             }
         }
     }
@@ -261,7 +260,7 @@ public class Y9TenantDataSourceLookup implements DataSourceLookup {
         }
 
         if (LOGGER.isDebugEnabled()) {
-            LOGGER.debug("移除租户[{}]的数据源", removedTenantId);
+            LOGGER.debug("移除系统[{}]租户[{}]的数据源", systemName, removedTenantId);
         }
     }
 }

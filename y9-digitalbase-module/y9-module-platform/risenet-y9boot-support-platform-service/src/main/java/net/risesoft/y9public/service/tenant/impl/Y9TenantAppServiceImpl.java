@@ -77,7 +77,7 @@ public class Y9TenantAppServiceImpl implements Y9TenantAppService {
     @Override
     public Y9TenantApp getById(String id) {
         return y9TenantAppRepository.findById(id)
-                .orElseThrow(() -> Y9ExceptionUtil.notFoundException(TenantErrorCodeEnum.TENANT_APP_NOT_FOUND, id));
+            .orElseThrow(() -> Y9ExceptionUtil.notFoundException(TenantErrorCodeEnum.TENANT_APP_NOT_FOUND, id));
     }
 
     @Override
@@ -87,16 +87,16 @@ public class Y9TenantAppServiceImpl implements Y9TenantAppService {
 
     @Override
     public List<String> listAppIdBySystemIdAndTenantId(String systemId, String tenantId, Boolean verify,
-                                                       Boolean tenancy) {
+        Boolean tenancy) {
         List<Y9TenantApp> tas =
-                y9TenantAppRepository.findByTenantIdAndSystemIdAndVerifyAndTenancy(tenantId, systemId, verify, tenancy);
+            y9TenantAppRepository.findByTenantIdAndSystemIdAndVerifyAndTenancy(tenantId, systemId, verify, tenancy);
         return tas.stream().map(Y9TenantApp::getAppId).collect(Collectors.toList());
     }
 
     @Override
     public List<String> listAppIdByTenantId(String tenantId, Boolean verify, Boolean tenancy) {
         List<Y9TenantApp> tas =
-                y9TenantAppRepository.findByTenantIdAndVerifyAndTenancyOrderByCreateTimeDesc(tenantId, verify, tenancy);
+            y9TenantAppRepository.findByTenantIdAndVerifyAndTenancyOrderByCreateTimeDesc(tenantId, verify, tenancy);
         return tas.stream().map(Y9TenantApp::getAppId).collect(Collectors.toList());
     }
 
@@ -116,21 +116,21 @@ public class Y9TenantAppServiceImpl implements Y9TenantAppService {
 
     @Override
     public Page<Y9TenantApp> page(Integer page, Integer rows, Boolean verify, String tenantName, String createTime,
-                                  String verifyTime, Boolean tenancy, String systemId) {
+        String verifyTime, Boolean tenancy, String systemId) {
         Sort sort = Sort.by(Sort.Direction.ASC, "verify").and(Sort.by(Sort.Direction.DESC, "createTime"));
         PageRequest pageable = PageRequest.of(page > 0 ? page - 1 : 0, rows, sort);
         Y9TenantAppSpecification<Y9TenantApp> spec =
-                new Y9TenantAppSpecification<>(verify, tenantName, createTime, verifyTime, tenancy, systemId);
+            new Y9TenantAppSpecification<>(verify, tenantName, createTime, verifyTime, tenancy, systemId);
         return y9TenantAppRepository.findAll(spec, pageable);
     }
 
     @Override
     public Page<Y9TenantApp> page(Integer page, Integer rows, Boolean verify, String tenantName, String createTime,
-                                  String verifyTime, Boolean tenancy, String appName, String systemIds) {
+        String verifyTime, Boolean tenancy, String appName, String systemIds) {
         Sort sort = Sort.by(Sort.Direction.DESC, "createTime").and(Sort.by(Sort.Direction.ASC, "verify"));
         PageRequest pageable = PageRequest.of(page > 0 ? page - 1 : 0, rows, sort);
         Y9TenantAppSpecification<Y9TenantApp> spec =
-                new Y9TenantAppSpecification<>(verify, tenantName, createTime, verifyTime, tenancy, systemIds, appName);
+            new Y9TenantAppSpecification<>(verify, tenantName, createTime, verifyTime, tenancy, systemIds, appName);
         return y9TenantAppRepository.findAll(spec, pageable);
     }
 
@@ -159,10 +159,10 @@ public class Y9TenantAppServiceImpl implements Y9TenantAppService {
     @Override
     @Transactional(readOnly = false)
     public int updateByAppIdAndTenantId(Boolean tenancy, String deletedName, Date deletedTime, String appId,
-                                        String tenantId, Boolean currentTenancy) {
+        String tenantId, Boolean currentTenancy) {
         try {
             Optional<Y9TenantApp> y9TenantAppOptional =
-                    y9TenantAppRepository.findByTenantIdAndAppIdAndTenancy(tenantId, appId, currentTenancy);
+                y9TenantAppRepository.findByTenantIdAndAppIdAndTenancy(tenantId, appId, currentTenancy);
             if (y9TenantAppOptional.isPresent()) {
                 Y9TenantApp ta = y9TenantAppOptional.get();
                 ta.setTenancy(tenancy);

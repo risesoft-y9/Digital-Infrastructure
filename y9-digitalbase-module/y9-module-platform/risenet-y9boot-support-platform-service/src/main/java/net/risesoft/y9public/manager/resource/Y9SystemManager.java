@@ -6,7 +6,7 @@ import net.risesoft.y9public.entity.resource.Y9System;
 
 /**
  * 系统 Manager
- *
+ * 
  * @author shidaobang
  * @date 2023/08/22
  * @since 9.6.3

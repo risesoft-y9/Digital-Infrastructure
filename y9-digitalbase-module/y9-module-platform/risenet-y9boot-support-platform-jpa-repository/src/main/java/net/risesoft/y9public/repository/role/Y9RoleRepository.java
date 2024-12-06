@@ -32,7 +32,7 @@ public interface Y9RoleRepository extends JpaRepository<Y9Role, String>, JpaSpec
     Optional<Y9Role> findByCustomIdAndParentId(String customId, String parentId);
 
     List<Y9Role> findByNameAndSystemIdAndPropertiesAndType(String name, String systemId, String properties,
-                                                           RoleTypeEnum type);
+        RoleTypeEnum type);
 
     List<Y9Role> findByNameAndSystemIdAndType(String name, String systemId, RoleTypeEnum type);
 
@@ -49,5 +49,5 @@ public interface Y9RoleRepository extends JpaRepository<Y9Role, String>, JpaSpec
     Optional<Y9Role> findTopByOrderByTabIndexDesc();
 
     List<Y9Role> findByParentIdAndTenantIdOrParentIdAndTenantIdIsNullOrderByTabIndexAsc(String parentId,
-                                                                                        String tenantId, String parentId2);
+        String tenantId, String parentId2);
 }

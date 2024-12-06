@@ -24,7 +24,6 @@
     <modules>
         <module>y9-module-filemanager</module>
         <module>y9-module-log</module>
-        <module>y9-module-idcode</module>
         <module>y9-module-platform</module>
         <module>y9-module-sso</module>
     </modules>

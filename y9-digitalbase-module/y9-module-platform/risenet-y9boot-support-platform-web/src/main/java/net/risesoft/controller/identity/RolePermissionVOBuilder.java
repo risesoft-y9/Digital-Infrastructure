@@ -20,7 +20,7 @@ import net.risesoft.y9public.service.role.Y9RoleService;
 
 /**
  * 构建 角色权限Vo 集合
- *
+ * 
  * @author shidaobang
  * @date 2023/07/20
  * @since 9.6.2
@@ -48,7 +48,7 @@ public class RolePermissionVOBuilder {
     private List<RolePermissionVO.App> buildAppList(List<Y9IdentityToRoleBase> y9IdentityToRoleBaseList) {
         List<RolePermissionVO.App> appList = new ArrayList<>();
         Map<String, List<Y9IdentityToRoleBase>> appIdY9IdentityToRoleBaseListMap =
-                y9IdentityToRoleBaseList.stream().collect(Collectors.groupingBy(Y9IdentityToRoleBase::getAppId));
+            y9IdentityToRoleBaseList.stream().collect(Collectors.groupingBy(Y9IdentityToRoleBase::getAppId));
         for (Map.Entry<String, List<Y9IdentityToRoleBase>> entry : appIdY9IdentityToRoleBaseListMap.entrySet()) {
             appList.add(buildApp(entry.getKey(), entry.getValue()));
         }
@@ -56,7 +56,7 @@ public class RolePermissionVOBuilder {
     }
 
     private List<RolePermissionVO.PermissionDetail>
-    buildPermissionDetailList(List<Y9IdentityToRoleBase> y9IdentityToRoleBaseList) {
+        buildPermissionDetailList(List<Y9IdentityToRoleBase> y9IdentityToRoleBaseList) {
         List<RolePermissionVO.PermissionDetail> permissionDetailList = new ArrayList<>();
         for (Y9IdentityToRoleBase y9IdentityToRoleBase : y9IdentityToRoleBaseList) {
             RolePermissionVO.PermissionDetail permissionDetail = new RolePermissionVO.PermissionDetail();
@@ -72,7 +72,7 @@ public class RolePermissionVOBuilder {
     }
 
     private RolePermissionVO buildRolePermissionVO(String systemId,
-                                                   List<Y9IdentityToRoleBase> y9IdentityToRoleBaseList) {
+        List<Y9IdentityToRoleBase> y9IdentityToRoleBaseList) {
         RolePermissionVO rolePermissionVO = new RolePermissionVO();
         if (StringUtils.isBlank(systemId)) {
             rolePermissionVO.setSystemCnName(null);
@@ -89,7 +89,7 @@ public class RolePermissionVOBuilder {
 
         // 系统应用角色
         Map<String,
-                List<Y9IdentityToRoleBase>> systemIdY9IdentityToRoleBaseListMap = y9IdentityToRoleBaseList.stream()
+            List<Y9IdentityToRoleBase>> systemIdY9IdentityToRoleBaseListMap = y9IdentityToRoleBaseList.stream()
                 .filter(y9IdentityToRoleBase -> StringUtils.isNotBlank(y9IdentityToRoleBase.getSystemId()))
                 .collect(Collectors.groupingBy(Y9IdentityToRoleBase::getSystemId));
         for (Map.Entry<String, List<Y9IdentityToRoleBase>> entry : systemIdY9IdentityToRoleBaseListMap.entrySet()) {
@@ -98,8 +98,8 @@ public class RolePermissionVOBuilder {
 
         // 公共角色
         List<Y9IdentityToRoleBase> identityToPublicRoleList = y9IdentityToRoleBaseList.stream()
-                .filter(y9IdentityToRoleBase -> StringUtils.isBlank(y9IdentityToRoleBase.getSystemId()))
-                .collect(Collectors.toList());
+            .filter(y9IdentityToRoleBase -> StringUtils.isBlank(y9IdentityToRoleBase.getSystemId()))
+            .collect(Collectors.toList());
         rolePermissionVOList.add(buildRolePermissionVO(null, identityToPublicRoleList));
 
         return rolePermissionVOList;

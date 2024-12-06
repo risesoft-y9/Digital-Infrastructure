@@ -1,4 +1,4 @@
-package y9.client.log;
+package y9.client.rest.log;
 
 import org.springframework.cloud.openfeign.FeignClient;
 

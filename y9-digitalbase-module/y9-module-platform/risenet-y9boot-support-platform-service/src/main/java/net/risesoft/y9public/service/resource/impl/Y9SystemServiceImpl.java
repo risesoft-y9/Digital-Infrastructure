@@ -92,7 +92,7 @@ public class Y9SystemServiceImpl implements Y9SystemService {
     @Override
     public Y9System getByName(String systemName) {
         return y9SystemRepository.findByName(systemName)
-                .orElseThrow(() -> Y9ExceptionUtil.notFoundException(SystemErrorCodeEnum.SYSTEM_NOT_FOUND, systemName));
+            .orElseThrow(() -> Y9ExceptionUtil.notFoundException(SystemErrorCodeEnum.SYSTEM_NOT_FOUND, systemName));
     }
 
     @Override
@@ -129,7 +129,7 @@ public class Y9SystemServiceImpl implements Y9SystemService {
     @Override
     public Page<Y9System> page(Y9PageQuery pageQuery) {
         Pageable pageable =
-                PageRequest.of(pageQuery.getPage4Db(), pageQuery.getSize(), Sort.by(Sort.Direction.ASC, "tabIndex"));
+            PageRequest.of(pageQuery.getPage4Db(), pageQuery.getSize(), Sort.by(Sort.Direction.ASC, "tabIndex"));
         return y9SystemRepository.findAll(pageable);
     }
 
@@ -157,7 +157,7 @@ public class Y9SystemServiceImpl implements Y9SystemService {
     @Transactional(readOnly = false)
     public Y9System saveOrUpdate(Y9System y9System) {
         Y9Assert.isTrue(isNameAvailable(y9System.getId(), y9System.getName()),
-                SystemErrorCodeEnum.SYSTEM_WITH_SPECIFIC_NAME_EXISTS, y9System.getName());
+            SystemErrorCodeEnum.SYSTEM_WITH_SPECIFIC_NAME_EXISTS, y9System.getName());
 
         if (StringUtils.isNotBlank(y9System.getId())) {
             Optional<Y9System> y9SystemOptional = y9SystemManager.findById(y9System.getId());
@@ -170,7 +170,7 @@ public class Y9SystemServiceImpl implements Y9SystemService {
             y9System.setId(Y9IdGenerator.genId(IdType.SNOWFLAKE));
             if (y9System.getTabIndex() == null) {
                 Integer maxIndex =
-                        y9SystemRepository.findTopByOrderByTabIndexDesc().map(system -> system.getTabIndex() + 1).orElse(0);
+                    y9SystemRepository.findTopByOrderByTabIndexDesc().map(system -> system.getTabIndex() + 1).orElse(0);
                 y9System.setTabIndex(maxIndex);
             }
         }

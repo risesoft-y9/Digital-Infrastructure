@@ -19,7 +19,6 @@ import org.springframework.transaction.annotation.Transactional;
 
 import lombok.RequiredArgsConstructor;
 
-import net.risesoft.y9.configuration.app.y9platform.Y9PlatformProperties;
 import net.risesoft.consts.CacheNameConsts;
 import net.risesoft.entity.Y9Job;
 import net.risesoft.entity.Y9OrgBase;

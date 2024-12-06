@@ -24,6 +24,7 @@ import net.risesoft.base.BaseEntity;
 @NoArgsConstructor
 @Data
 public class Y9IdentityToRoleBase extends BaseEntity {
+
     private static final long serialVersionUID = -1406915289962175747L;
 
     /** id */

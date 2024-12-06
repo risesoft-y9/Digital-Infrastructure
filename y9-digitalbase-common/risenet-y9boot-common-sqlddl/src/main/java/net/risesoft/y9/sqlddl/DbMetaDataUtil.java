@@ -46,7 +46,7 @@ public class DbMetaDataUtil {
      * @throws SQLException sql异常信息
      */
     public static int[] batchExecuteDdl(DataSource dataSource, List<String> sqlList) throws SQLException {
-        java.sql.Statement stmt = null;
+        Statement stmt = null;
         String dialectName = getDatabaseDialectName(dataSource);
         try (Connection connection = dataSource.getConnection()) {
             stmt = connection.createStatement();
@@ -86,7 +86,7 @@ public class DbMetaDataUtil {
      * @throws SQLException sql异常信息
      */
     public static int[] batchExecuteDdl4Kingbase(DataSource dataSource, List<String> sqlList) throws SQLException {
-        java.sql.Statement stmt = null;
+        Statement stmt = null;
         try (Connection connection = dataSource.getConnection()) {
 
             stmt = connection.createStatement();

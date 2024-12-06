@@ -66,7 +66,7 @@ public class Y9TenantSystemManagerImpl implements Y9TenantSystemManager {
     @Transactional(readOnly = false)
     public void delete(String id) {
         Y9TenantSystem y9TenantSystem = y9TenantSystemRepository.findById(id)
-                .orElseThrow(() -> Y9ExceptionUtil.notFoundException(TenantErrorCodeEnum.TENANT_SYSTEM_NOT_EXISTS, id));
+            .orElseThrow(() -> Y9ExceptionUtil.notFoundException(TenantErrorCodeEnum.TENANT_SYSTEM_NOT_EXISTS, id));
         y9TenantSystemRepository.delete(y9TenantSystem);
 
         // 注册事务同步器，在事务提交后做某些操作
@@ -82,7 +82,7 @@ public class Y9TenantSystemManagerImpl implements Y9TenantSystemManager {
                         syncDataSourceEvent.setEventObject(Y9CommonEventConst.TENANT_DATASOURCE_SYNC);
                         syncDataSourceEvent.setEventType(Y9CommonEventConst.TENANT_DATASOURCE_SYNC);
                         Y9PublishServiceUtil.publishMessageCommon(syncDataSourceEvent);
-
+                        
                         LOGGER.debug("移除租户系统后发送租户数据源同步事件：{}", syncDataSourceEvent);
                     }
                 }
@@ -93,7 +93,7 @@ public class Y9TenantSystemManagerImpl implements Y9TenantSystemManager {
     @Override
     public String getDataSourceIdByTenantIdAndSystemId(String tenantId, String systemId) {
         return y9TenantSystemRepository.findByTenantIdAndSystemId(tenantId, systemId)
-                .map(Y9TenantSystem::getTenantDataSource).orElse(null);
+            .map(Y9TenantSystem::getTenantDataSource).orElse(null);
     }
 
     @Override
@@ -105,7 +105,7 @@ public class Y9TenantSystemManagerImpl implements Y9TenantSystemManager {
             // 如果数据源切换则需重新初始化
             Optional<Y9TenantSystem> y9TenantSystemOptional = y9TenantSystemRepository.findById(y9TenantSystem.getId());
             if (y9TenantSystemOptional.isPresent() && !Objects.equals(y9TenantSystem.getTenantDataSource(),
-                    y9TenantSystemOptional.get().getTenantDataSource())) {
+                y9TenantSystemOptional.get().getTenantDataSource())) {
                 y9TenantSystem.setInitialized(false);
             }
         }
@@ -151,7 +151,7 @@ public class Y9TenantSystemManagerImpl implements Y9TenantSystemManager {
         Y9System y9System = y9SystemManager.getById(systemId);
 
         Optional<Y9TenantSystem> y9TenantSystemOptional =
-                y9TenantSystemRepository.findByTenantIdAndSystemId(tenantId, systemId);
+            y9TenantSystemRepository.findByTenantIdAndSystemId(tenantId, systemId);
         if (y9TenantSystemOptional.isPresent()) {
             return y9TenantSystemOptional.get();
         }
@@ -165,7 +165,7 @@ public class Y9TenantSystemManagerImpl implements Y9TenantSystemManager {
             String datasoureId = tenant.getDefaultDataSourceId();
             try {
                 Y9DataSource y9DataSource = y9DataSourceManager.createTenantDefaultDataSource(tenant.getShortName(),
-                        tenant.getTenantType(), y9System.getName());
+                    tenant.getTenantType(), y9System.getName());
                 datasoureId = y9DataSource.getId();
             } catch (Exception e) {
                 LOGGER.warn(e.getMessage(), e);

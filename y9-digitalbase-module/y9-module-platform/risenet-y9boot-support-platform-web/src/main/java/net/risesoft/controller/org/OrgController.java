@@ -148,31 +148,6 @@ public class OrgController {
 
     /**
      * 获取组织架构列表
-     *
-     * @param virtual 是否为虚拟组织
-     * @return {@code Y9Result<List<Organization>>}
-     */
-    @RiseLog(operationName = "获取组织架构列表")
-    @RequestMapping(value = "/list")
-    @Deprecated
-    @IsAnyManager({ManagerLevelEnum.SYSTEM_MANAGER, ManagerLevelEnum.SECURITY_MANAGER})
-    public Y9Result<List<Organization>> list(@RequestParam(required = false) boolean virtual) {
-        if (Y9LoginUserHolder.getUserInfo().isGlobalManager()) {
-            return Y9Result.success(
-                Y9ModelConvertUtil.convert(y9OrganizationService.list(virtual, null), Organization.class),
-                "获取组织架构列表成功！");
-        } else {
-            List<Y9Organization> orgList = y9OrganizationService.list(false, null);
-            Y9Department managerDept = y9DepartmentService.getById(Y9LoginUserHolder.getUserInfo().getParentId());
-            String mapping = managerDept.getGuidPath();
-            List<Y9Organization> authOrgList =
-                orgList.stream().filter(org -> mapping.contains(org.getGuidPath())).collect(Collectors.toList());
-            return Y9Result.success(Y9ModelConvertUtil.convert(authOrgList, Organization.class), "获取组织架构列表成功！");
-        }
-    }
-
-    /**
-     * 获取组织架构列表
      * 
      * @param treeType 树类型{@link OrgTreeTypeEnum}
      * @param virtual 是否为虚拟组织
@@ -269,30 +244,6 @@ public class OrgController {
         @RequestParam boolean needRecursion, String targetSystemName) {
         compositeOrgBaseService.sync(syncId, orgType, needRecursion, targetSystemName);
         return Y9Result.success(null, "发送同步数据事件完成");
-    }
-
-    /**
-     * 根据name，和结构树类型查询机构主体
-     *
-     * @param name 名称
-     * @param treeType
-     *            树类型：tree_type_org，tree_type_bureau，tree_type_dept，tree_type_group，tree_type_position，tree_type_person
-     * @return {@code Y9Result<List<Y9OrgBase>>}
-     */
-    @RiseLog(operationName = "查询机构主体")
-    @RequestMapping(value = "/treeSearch")
-    @Deprecated
-    @IsAnyManager({ManagerLevelEnum.SYSTEM_MANAGER, ManagerLevelEnum.SECURITY_MANAGER})
-    public Y9Result<List<Y9OrgBase>> treeSearch(@RequestParam String name, @RequestParam OrgTreeTypeEnum treeType) {
-        UserInfo userInfo = Y9LoginUserHolder.getUserInfo();
-        List<Y9OrgBase> treeList = new ArrayList<>();
-        if (userInfo.isGlobalManager()) {
-            treeList = compositeOrgBaseService.treeSearch(name, treeType);
-        } else if (ManagerLevelEnum.SYSTEM_MANAGER.equals(userInfo.getManagerLevel())
-            || ManagerLevelEnum.SECURITY_MANAGER.equals(userInfo.getManagerLevel())) {
-            treeList = compositeOrgBaseService.treeSearch4DeptManager(name, treeType);
-        }
-        return Y9Result.success(treeList, "获取机构树成功！");
     }
 
     /**

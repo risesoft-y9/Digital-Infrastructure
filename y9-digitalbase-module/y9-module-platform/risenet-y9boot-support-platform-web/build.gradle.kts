@@ -10,7 +10,7 @@ dependencies {
     api(project(":y9-digitalbase-module:y9-module-platform:risenet-y9boot-support-platform-service"))
     api(project(":y9-digitalbase-module:y9-module-platform:risenet-y9boot-support-platform-jpa-repository"))
     api(project(":y9-digitalbase-starter:risenet-y9boot-starter-web"))
-    api(project(":y9-digitalbase-module:y9-module-idcode:risenet-y9boot-idcode"))
+    api(project(":y9-digitalbase-idcode:risenet-y9boot-idcode"))
 
     api(libs.jodd.http)
     api(libs.commons.lang3)

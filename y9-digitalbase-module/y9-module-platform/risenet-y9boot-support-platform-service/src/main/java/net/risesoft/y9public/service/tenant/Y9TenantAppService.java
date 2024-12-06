@@ -77,7 +77,7 @@ public interface Y9TenantAppService {
      * @return {@code Page<}{@link String}{@code >}
      */
     List<String> listAppIdBySystemIdAndTenantId(String systemId, String tenantId, Boolean verify, Boolean tenancy);
-
+    
     /**
      * 根据租户id，获取已审核且还在租用的应用id列表
      *
@@ -121,7 +121,7 @@ public interface Y9TenantAppService {
      * @return {@code Page<}{@link Y9TenantApp}{@code >}
      */
     Page<Y9TenantApp> page(Integer page, Integer rows, Boolean verify, String tenantName, String createTime,
-                           String verifyTime, Boolean tenancy, String systemId);
+        String verifyTime, Boolean tenancy, String systemId);
 
     /**
      * 获取租户应用租用情况信息
@@ -138,7 +138,7 @@ public interface Y9TenantAppService {
      * @return {@code Page<}{@link Y9TenantApp}{@code >}
      */
     Page<Y9TenantApp> page(Integer page, Integer rows, Boolean verify, String tenantName, String createTime,
-                           String verifyTime, Boolean tenancy, String appName, String systemIds);
+        String verifyTime, Boolean tenancy, String appName, String systemIds);
 
     /**
      * 租户租用应用，已租用系统的应用自动审核通过
@@ -178,7 +178,7 @@ public interface Y9TenantAppService {
      * @return int
      */
     int updateByAppIdAndTenantId(Boolean tenancy, String deletedName, Date deletedTime, String appId, String tenantId,
-                                 Boolean currentTenancy);
+        Boolean currentTenancy);
 
     /**
      * 审核租户应用

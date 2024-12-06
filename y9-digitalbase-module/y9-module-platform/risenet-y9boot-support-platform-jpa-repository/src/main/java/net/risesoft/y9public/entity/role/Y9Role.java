@@ -20,7 +20,7 @@ import net.risesoft.persistence.EnumConverter;
 
 /**
  * 角色表
- *
+ * 
  * @author dingzhaojun
  * @author qinman
  * @author mengjuhua

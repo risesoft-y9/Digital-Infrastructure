@@ -9,13 +9,13 @@ import org.springframework.stereotype.Component;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
-import net.risesoft.y9.configuration.app.y9platform.Y9PlatformProperties;
 import net.risesoft.consts.InitDataConsts;
 import net.risesoft.enums.platform.RoleTypeEnum;
 import net.risesoft.enums.platform.TenantTypeEnum;
 import net.risesoft.id.IdType;
 import net.risesoft.id.Y9IdGenerator;
 import net.risesoft.y9.configuration.Y9Properties;
+import net.risesoft.y9.configuration.app.y9platform.Y9PlatformProperties;
 import net.risesoft.y9public.entity.resource.Y9App;
 import net.risesoft.y9public.entity.resource.Y9System;
 import net.risesoft.y9public.entity.role.Y9Role;

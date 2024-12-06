@@ -52,7 +52,7 @@ public class Y9logIpDeptMappingServiceImpl implements Y9logIpDeptMappingService 
     public List<Y9logIpDeptMapping> listAll() {
         List<Y9logIpDeptMapping> list = new ArrayList<>();
         Iterable<Y9logIpDeptMapping> ipDeptIterable =
-            y9logIpDeptMappingRepository.findAll(Sort.by(Sort.Direction.DESC, "tabIndex"));
+            y9logIpDeptMappingRepository.findAll(Sort.by(Direction.DESC, "tabIndex"));
         Iterator<Y9logIpDeptMapping> iterator = ipDeptIterable.iterator();
         while (iterator.hasNext()) {
             list.add(iterator.next());
@@ -64,7 +64,7 @@ public class Y9logIpDeptMappingServiceImpl implements Y9logIpDeptMappingService 
     public List<Y9logIpDeptMapping> listAllOrderByClientIpSection() {
         List<Y9logIpDeptMapping> list = new ArrayList<>();
         Iterable<Y9logIpDeptMapping> ipDeptIterable =
-            y9logIpDeptMappingRepository.findAll(Sort.by(Sort.Direction.ASC, "clientIpSection"));
+            y9logIpDeptMappingRepository.findAll(Sort.by(Direction.ASC, "clientIpSection"));
         Iterator<Y9logIpDeptMapping> iterator = ipDeptIterable.iterator();
         while (iterator.hasNext()) {
             list.add(iterator.next());

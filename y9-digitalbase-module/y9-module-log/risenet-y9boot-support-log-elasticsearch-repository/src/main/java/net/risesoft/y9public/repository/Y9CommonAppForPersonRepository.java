@@ -6,5 +6,5 @@ import net.risesoft.y9public.entity.Y9CommonAppForPerson;
 
 public interface Y9CommonAppForPersonRepository extends ElasticsearchRepository<Y9CommonAppForPerson, String> {
 
-    public Y9CommonAppForPerson findByPersonId(String personId);
+    Y9CommonAppForPerson findByPersonId(String personId);
 }

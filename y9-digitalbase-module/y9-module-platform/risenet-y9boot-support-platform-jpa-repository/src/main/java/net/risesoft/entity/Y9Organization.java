@@ -29,6 +29,7 @@ import net.risesoft.enums.platform.OrgTypeEnum;
 @Data
 @SuperBuilder
 public class Y9Organization extends Y9OrgBase {
+
     private static final long serialVersionUID = -5379834937852013780L;
 
     /** 英文名称 */

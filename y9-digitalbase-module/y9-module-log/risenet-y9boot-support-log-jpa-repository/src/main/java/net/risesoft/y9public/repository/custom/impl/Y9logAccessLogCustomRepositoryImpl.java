@@ -24,7 +24,6 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
 import org.springframework.data.domain.Sort.Direction;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -128,14 +127,14 @@ public class Y9logAccessLogCustomRepositoryImpl implements Y9logAccessLogCustomR
 
         StringBuilder sql = new StringBuilder();
         sql.append(
-            "SELECT DISTINCT(y9public.MODULAR_NAME) as modularname,count(y9public.MODULAR_NAME) as count FROM  Y9_LOG_ACCESS_LOG y9public WHERE ");
-        sql.append("y9public.USER_NAME IS NOT NULL ");
+            "SELECT DISTINCT(log.MODULAR_NAME) as modularname,count(log.MODULAR_NAME) as count FROM  Y9_LOG_ACCESS_LOG log WHERE ");
+        sql.append("log.USER_NAME IS NOT NULL ");
 
         if (StringUtils.isNotBlank(tenantId)) {
-            sql.append("AND y9public.TENANT_ID ='" + tenantId + "' ");
+            sql.append("AND log.TENANT_ID ='" + tenantId + "' ");
         }
         if (StringUtils.isNotBlank(guidPath)) {
-            sql.append("AND y9public.GUID_PATH LIKE '" + guidPath + "%' ");
+            sql.append("AND log.GUID_PATH LIKE '" + guidPath + "%' ");
         }
 
         if (StringUtils.isNotBlank(startDay) && StringUtils.isNotBlank(endDay)) {
@@ -147,10 +146,10 @@ public class Y9logAccessLogCustomRepositoryImpl implements Y9logAccessLogCustomR
             } catch (ParseException e) {
                 LOGGER.warn(e.getMessage(), e);
             }
-            sql.append("AND y9public.LOG_TIME > '" + sDay.getTime() + "' ");
-            sql.append("AND y9public.LOG_TIME < '" + eDay.getTime() + "' ");
+            sql.append("AND log.LOG_TIME > '" + sDay.getTime() + "' ");
+            sql.append("AND log.LOG_TIME < '" + eDay.getTime() + "' ");
         }
-        sql.append("GROUP BY y9public.MODULAR_NAME");
+        sql.append("GROUP BY log.MODULAR_NAME");
         List<Map<String, Object>> countModularNames = jdbcTemplate4Public.queryForList(sql.toString());
 
         int length = countModularNames.size();
@@ -358,8 +357,7 @@ public class Y9logAccessLogCustomRepositoryImpl implements Y9logAccessLogCustomR
     public Y9Page<AccessLog> pageByCondition(LogInfoModel searchDto, String startTime, String endTime, Integer page,
         Integer rows) {
 
-        Pageable pageable =
-            PageRequest.of((page < 1) ? 0 : page - 1, rows, Sort.Direction.DESC, Y9LogSearchConsts.LOG_TIME);
+        Pageable pageable = PageRequest.of((page < 1) ? 0 : page - 1, rows, Direction.DESC, Y9LogSearchConsts.LOG_TIME);
 
         Page<Y9logAccessLog> pageInfo = y9logAccessLogRepository.findAll(new Specification<Y9logAccessLog>() {
             private static final long serialVersionUID = -2210269486911993525L;
@@ -419,8 +417,7 @@ public class Y9logAccessLogCustomRepositoryImpl implements Y9logAccessLogCustomR
 
     @Override
     public Y9Page<AccessLog> pageByOperateType(String operateType, Integer page, Integer rows) {
-        Pageable pageable =
-            PageRequest.of((page < 1) ? 0 : page - 1, rows, Sort.Direction.DESC, Y9LogSearchConsts.LOG_TIME);
+        Pageable pageable = PageRequest.of((page < 1) ? 0 : page - 1, rows, Direction.DESC, Y9LogSearchConsts.LOG_TIME);
 
         Page<Y9logAccessLog> pageInfo = y9logAccessLogRepository.findByOperateType(operateType, pageable);
 

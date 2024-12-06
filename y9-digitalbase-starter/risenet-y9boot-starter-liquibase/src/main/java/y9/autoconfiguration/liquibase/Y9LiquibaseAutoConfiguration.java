@@ -33,17 +33,15 @@ public class Y9LiquibaseAutoConfiguration {
     @ConditionalOnBean(name = "y9TenantDataSourceLookup")
     @ConditionalOnProperty(name = "y9.feature.liquibase.tenant-enabled", havingValue = "true")
     public Y9MultiTenantSpringLiquibase y9MultiTenantSpringLiquibase(Y9TenantDataSourceLookup y9TenantDataSourceLookup,
-       Y9LiquibaseProperties properties, ResourceLoader resourceLoader) {
-        return new Y9MultiTenantSpringLiquibase(y9TenantDataSourceLookup, properties,
-                resourceLoader);
+        Y9LiquibaseProperties properties, ResourceLoader resourceLoader) {
+        return new Y9MultiTenantSpringLiquibase(y9TenantDataSourceLookup, properties, resourceLoader);
     }
 
     @Bean
     @ConditionalOnBean(name = "y9PublicDS")
-    public SpringLiquibase liquibase(Y9LiquibaseProperties properties, @Qualifier("y9PublicDS") HikariDataSource dataSource,
-        ResourceLoader resourceLoader) {
-        return LiquibaseUtil.getSpringLiquibase(dataSource, properties, resourceLoader,
-            false);
+    public SpringLiquibase liquibase(Y9LiquibaseProperties properties,
+        @Qualifier("y9PublicDS") HikariDataSource dataSource, ResourceLoader resourceLoader) {
+        return LiquibaseUtil.getSpringLiquibase(dataSource, properties, resourceLoader, false);
     }
 
 }

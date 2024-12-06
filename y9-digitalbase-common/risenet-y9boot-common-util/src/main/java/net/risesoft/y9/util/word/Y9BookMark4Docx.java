@@ -107,7 +107,7 @@ public class Y9BookMark4Docx {
                 Y9BookMark4Docx bookMark = bookMarks.getBookmark(bookMarkName);
                 // 进行替换
                 bookMark.insertPicAtBookMark(new FileInputStream("D:/1.png"), XWPFDocument.PICTURE_TYPE_PNG, "2.png",
-                        Units.toEMU(100), Units.toEMU(100), Y9BookMark4Docx.REPLACE);
+                    Units.toEMU(100), Units.toEMU(100), Y9BookMark4Docx.REPLACE);
             }
             document.write(out);
             out.close();
@@ -126,11 +126,11 @@ public class Y9BookMark4Docx {
             toDelete = nodeStack.elementAt(i);
             if (toDelete.getNodeName().contains(Y9BookMark4Docx.BOOKMARK_START_TAG)) {
                 bookmarkStartId = Integer.parseInt(
-                        toDelete.getAttributes().getNamedItem(Y9BookMark4Docx.BOOKMARK_ID_ATTR_NAME).getNodeValue());
+                    toDelete.getAttributes().getNamedItem(Y9BookMark4Docx.BOOKMARK_ID_ATTR_NAME).getNodeValue());
                 inNestedBookmark = true;
             } else if (toDelete.getNodeName().contains(Y9BookMark4Docx.BOOKMARK_END_TAG)) {
                 bookmarkEndId = Integer.parseInt(
-                        toDelete.getAttributes().getNamedItem(Y9BookMark4Docx.BOOKMARK_ID_ATTR_NAME).getNodeValue());
+                    toDelete.getAttributes().getNamedItem(Y9BookMark4Docx.BOOKMARK_ID_ATTR_NAME).getNodeValue());
                 if (bookmarkEndId == bookmarkStartId) {
                     inNestedBookmark = false;
                 }
@@ -170,7 +170,7 @@ public class Y9BookMark4Docx {
         if (parentNode != null) {
 
             if (parentNode.getNodeName().equalsIgnoreCase(Y9BookMark4Docx.RUN_NODE_NAME)
-                    && parentNode.hasChildNodes()) {
+                && parentNode.hasChildNodes()) {
                 childNode = parentNode.getFirstChild();
                 if ("w:rPr".equals(childNode.getNodeName())) {
                     styleNode = childNode;
@@ -202,7 +202,7 @@ public class Y9BookMark4Docx {
             if (nextNode.getNodeName().contains(Y9BookMark4Docx.BOOKMARK_END_TAG)) {
                 try {
                     endBookmarkId = Integer.parseInt(
-                            nextNode.getAttributes().getNamedItem(Y9BookMark4Docx.BOOKMARK_ID_ATTR_NAME).getNodeValue());
+                        nextNode.getAttributes().getNamedItem(Y9BookMark4Docx.BOOKMARK_ID_ATTR_NAME).getNodeValue());
                 } catch (NumberFormatException nfe) {
                     endBookmarkId = startBookmarkId;
                 }
@@ -252,7 +252,7 @@ public class Y9BookMark4Docx {
     }
 
     private void handleBookmarkedCells4pic(InputStream pictureData, int pictureType, String filename, int width,
-                                           int height, int where) throws InvalidFormatException, IOException {
+        int height, int where) throws InvalidFormatException, IOException {
         List<XWPFParagraph> paraList = null;
         XWPFParagraph para = null;
         paraList = this.tableCell.getParagraphs();
@@ -276,7 +276,7 @@ public class Y9BookMark4Docx {
             if (nextNode.getNodeName().contains(Y9BookMark4Docx.BOOKMARK_END_TAG)) {
                 try {
                     bookmarkEndId = Integer.parseInt(
-                            nextNode.getAttributes().getNamedItem(Y9BookMark4Docx.BOOKMARK_ID_ATTR_NAME).getNodeValue());
+                        nextNode.getAttributes().getNamedItem(Y9BookMark4Docx.BOOKMARK_ID_ATTR_NAME).getNodeValue());
                 } catch (NumberFormatException nfe) {
                     bookmarkEndId = bookmarkStartId;
                 }
@@ -291,7 +291,7 @@ public class Y9BookMark4Docx {
 
         if (styleNode != null) {
             run.getCTR().getDomNode().insertBefore(styleNode.cloneNode(true),
-                    run.getCTR().getDomNode().getFirstChild());
+                run.getCTR().getDomNode().getFirstChild());
         }
         if (insertBeforeNode != null) {
             this.para.getCTP().getDomNode().insertBefore(run.getCTR().getDomNode(), insertBeforeNode);
@@ -308,7 +308,7 @@ public class Y9BookMark4Docx {
             styleNode = this.getStyleNode(childNode);
             if (styleNode != null) {
                 run.getCTR().getDomNode().insertBefore(styleNode.cloneNode(true),
-                        run.getCTR().getDomNode().getFirstChild());
+                    run.getCTR().getDomNode().getFirstChild());
             }
         }
         this.para.getCTP().getDomNode().insertBefore(run.getCTR().getDomNode(), insertBeforeNode);
@@ -338,7 +338,7 @@ public class Y9BookMark4Docx {
     }
 
     public void insertPicAtBookMark(InputStream pictureData, int pictureType, String filename, int width, int height,
-                                    int where) throws InvalidFormatException, IOException {
+        int where) throws InvalidFormatException, IOException {
         // 根据标签的类型，进行不同的操作
         if (this.isCell) {
             handleBookmarkedCells4pic(pictureData, pictureType, filename, width, height, where);
@@ -384,7 +384,7 @@ public class Y9BookMark4Docx {
             if (nextNode.getNodeName().contains(Y9BookMark4Docx.BOOKMARK_END_TAG)) {
                 try {
                     bookmarkEndId = Integer.parseInt(
-                            nextNode.getAttributes().getNamedItem(Y9BookMark4Docx.BOOKMARK_ID_ATTR_NAME).getNodeValue());
+                        nextNode.getAttributes().getNamedItem(Y9BookMark4Docx.BOOKMARK_ID_ATTR_NAME).getNodeValue());
                 } catch (NumberFormatException nfe) {
                     bookmarkEndId = bookmarkStartId;
                 }
@@ -400,7 +400,7 @@ public class Y9BookMark4Docx {
                 styleNode = this.getStyleNode(lastRunNode);
                 if (styleNode != null) {
                     run.getCTR().getDomNode().insertBefore(styleNode.cloneNode(true),
-                            run.getCTR().getDomNode().getFirstChild());
+                        run.getCTR().getDomNode().getFirstChild());
                 }
             }
             this.deleteChildNodes(nodeStack);

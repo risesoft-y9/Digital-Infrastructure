@@ -51,13 +51,13 @@ public class Y9PositionToRoleServiceImpl implements Y9PositionToRoleService {
     @Override
     public Boolean hasRole(String positionId, String systemName, String roleName, String properties) {
         Y9System y9System = y9SystemManager.getByName(systemName);
-
+        
         List<Y9Role> y9RoleList;
         if (StringUtils.isBlank(properties)) {
             y9RoleList = y9RoleRepository.findByNameAndSystemIdAndType(roleName, y9System.getId(), RoleTypeEnum.ROLE);
         } else {
             y9RoleList = y9RoleRepository.findByNameAndSystemIdAndPropertiesAndType(roleName, y9System.getId(), properties,
-                    RoleTypeEnum.ROLE);
+                RoleTypeEnum.ROLE);
         }
 
         return y9RoleList.stream().anyMatch(y9Role -> hasRole(positionId, y9Role.getId()));

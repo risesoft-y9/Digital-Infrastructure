@@ -78,6 +78,7 @@
         <module>./y9-digitalbase-support/risenet-y9boot-support-file-service-rest</module>
         <module>./y9-digitalbase-support/risenet-y9boot-support-history</module>
         <module>./y9-digitalbase-support/risenet-y9boot-support-api-access-control</module>
+        <module>y9-digitalbase-idcode</module>
         <module>y9-digitalbase-module</module>
         <module>y9-digitalbase-example</module>
     </modules>

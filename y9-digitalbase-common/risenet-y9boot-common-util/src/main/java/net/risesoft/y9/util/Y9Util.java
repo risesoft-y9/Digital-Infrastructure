@@ -5,6 +5,7 @@ import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
@@ -137,11 +138,9 @@ public class Y9Util {
                 }
             }
 
-            if (exclude.length > 0) {
-                for (String name : exclude) {
-                    if (StringUtils.hasText(name)) {
-                        list.remove(name);
-                    }
+            for (String name : exclude) {
+                if (StringUtils.hasText(name)) {
+                    list.remove(name);
                 }
             }
         } catch (IllegalAccessException e) {
@@ -310,9 +309,8 @@ public class Y9Util {
             return resultList;
         }
         String[] temp = source.split(",");
-        for (int i = 0; i < temp.length; i++) {
-            resultList.add(temp[i]);
-        }
+        Collections.addAll(resultList, temp);
         return resultList;
     }
+
 }
