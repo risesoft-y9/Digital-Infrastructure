@@ -31,6 +31,7 @@ server:
 javers:
     newObjectSnapshot: true
     sqlSchemaManagementEnabled: false
+    springDataAuditableRepositoryAspectEnabled: false
 spring:
     application:
         name: platform

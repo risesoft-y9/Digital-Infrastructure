@@ -27,6 +27,7 @@ import lombok.extern.slf4j.Slf4j;
 
 import net.risesoft.pojo.Y9Result;
 import net.risesoft.y9.json.Y9JsonUtil;
+import net.risesoft.y9.util.Y9StringUtil;
 
 @RestController
 @RequestMapping(value = "/history")
@@ -112,10 +113,8 @@ public class HistoryController {
             CommitMetadata commit = shot.getCommitMetadata();
             String json = jsonConverter.toJson(state);
             map = Y9JsonUtil.readHashMap(json, String.class, Object.class);
-            map.put("commitAuthor",
-                "修改时间：" + commit.getCommitDate().format(sdf) + "  修改人员："
-                    + commit.getProperties().getOrDefault("authorName", " ") + "(IP:"
-                    + commit.getProperties().getOrDefault("hostIp", "无") + ")");
+            map.put("commitAuthor", Y9StringUtil.format("时间：{},人员：{},IP：{}", commit.getCommitDate().format(sdf),
+                commit.getAuthor(), commit.getProperties().getOrDefault("hostIp", "无")));
             columns.add(map);
         }
         return Y9Result.success(columns);
