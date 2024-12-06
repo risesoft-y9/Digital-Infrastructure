@@ -15,22 +15,19 @@ import org.springframework.web.context.request.ServletRequestAttributes;
 import net.risesoft.model.user.UserInfo;
 import net.risesoft.y9.Y9Context;
 import net.risesoft.y9.Y9LoginUserHolder;
+import net.risesoft.y9.util.Y9StringUtil;
 
 @Configuration
 public class HistoryConfig {
 
     @Bean
     public AuthorProvider authorProvider() {
-        return new AuthorProvider() {
-            @Override
-            public String provide() {
-                UserInfo userInfo = Y9LoginUserHolder.getUserInfo();
-                if (userInfo != null) {
-                    String author = userInfo.getPersonId();
-                    return author;
-                }
-                return "";
+        return () -> {
+            UserInfo userInfo = Y9LoginUserHolder.getUserInfo();
+            if (userInfo != null) {
+                return userInfo.getLoginName() + "@" + userInfo.getTenantShortName();
             }
+            return "";
         };
     }
 
@@ -40,10 +37,10 @@ public class HistoryConfig {
             @Override
             public Map<String, String> provide() {
                 Map<String, String> map = new HashMap<String, String>();
-                String tenantId = Y9LoginUserHolder.getTenantId();
+                String personId = Y9LoginUserHolder.getPersonId();
                 String deptId = Y9LoginUserHolder.getDeptId();
-                map.put("tenantId", tenantId);
-                map.put("deptId", deptId);
+                String tenantId = Y9LoginUserHolder.getTenantId();
+                map.put("ids", Y9StringUtil.format("personId:{},deptId:{},tenantId:{}", personId, deptId, tenantId));
                 String userHostIp = "";
                 try {
                     ServletRequestAttributes sra =
@@ -55,10 +52,6 @@ public class HistoryConfig {
                             userHostIp = "127.0.0.1";
                         }
                         map.put("hostIp", userHostIp);
-                    }
-                    UserInfo userInfo = Y9LoginUserHolder.getUserInfo();
-                    if (userInfo != null) {
-                        map.put("authorName", userInfo.getName());
                     }
                 } catch (Exception e) {
                 }

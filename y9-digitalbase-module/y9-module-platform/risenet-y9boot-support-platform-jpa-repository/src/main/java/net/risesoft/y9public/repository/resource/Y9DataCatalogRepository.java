@@ -17,7 +17,6 @@ import net.risesoft.y9public.entity.resource.Y9DataCatalog;
 @SuppressWarnings("AlibabaAbstractMethodOrInterfaceMethodMustUseJavadoc")
 @Repository
 @Transactional(value = "rsPublicTransactionManager", readOnly = true)
-// @JaversSpringDataAuditable
 public interface Y9DataCatalogRepository extends JpaRepository<Y9DataCatalog, String> {
 
     List<Y9DataCatalog> findByTenantIdAndParentIdAndTreeTypeOrderByTabIndexAsc(String tenantId, String parentId,

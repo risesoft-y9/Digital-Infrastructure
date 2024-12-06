@@ -3,6 +3,7 @@ package net.risesoft.repository;
 import java.util.List;
 import java.util.Optional;
 
+import org.javers.spring.annotation.JaversSpringDataAuditable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
@@ -19,7 +20,7 @@ import net.risesoft.entity.Y9Position;
 @SuppressWarnings("AlibabaAbstractMethodOrInterfaceMethodMustUseJavadoc")
 @Repository
 @Transactional(value = "rsTenantTransactionManager", readOnly = true)
-// @JaversSpringDataAuditable
+@JaversSpringDataAuditable
 public interface Y9PositionRepository extends JpaRepository<Y9Position, String> {
 
     long countByDisabledAndGuidPathContaining(Boolean disabled, String guidPath);

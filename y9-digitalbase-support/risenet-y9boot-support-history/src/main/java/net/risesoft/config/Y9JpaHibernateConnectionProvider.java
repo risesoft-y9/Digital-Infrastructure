@@ -7,13 +7,12 @@ import javax.persistence.EntityManager;
 import org.hibernate.engine.spi.SessionImplementor;
 import org.javers.repository.sql.ConnectionProvider;
 
+import lombok.RequiredArgsConstructor;
+
+@RequiredArgsConstructor
 public class Y9JpaHibernateConnectionProvider implements ConnectionProvider {
 
-    private EntityManager entityManager;
-
-    public Y9JpaHibernateConnectionProvider(EntityManager entityManager) {
-        this.entityManager = entityManager;
-    }
+    private final EntityManager entityManager;
 
     @Override
     public Connection getConnection() {
