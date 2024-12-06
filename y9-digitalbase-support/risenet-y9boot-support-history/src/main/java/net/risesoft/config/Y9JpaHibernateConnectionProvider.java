@@ -19,7 +19,7 @@ public class Y9JpaHibernateConnectionProvider implements ConnectionProvider {
 
         SessionImplementor session = entityManager.unwrap(SessionImplementor.class);
 
-        return session.connection();
+        return null;
     }
 
 }
