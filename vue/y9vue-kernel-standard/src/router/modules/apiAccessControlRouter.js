@@ -4,7 +4,7 @@ const apiAccessControlRouter = {
     redirect: '/apiAccessControl',
     name: 'apiAccessControl',
     meta: {
-        title: '访问控制',
+        title: '安全控制',
         roles: ['systemAdmin', 'securityAdmin'],
         icon: 'ri-book-2-line'
     },
