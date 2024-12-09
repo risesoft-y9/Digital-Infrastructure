@@ -155,7 +155,7 @@ y9:
     app:
         platform:
             systemName: riseplatform
-            positionNameTemplate: "{{jobName}}（{{personNames}}）"
+            positionNameTemplate: "#jobName + '（' + #personNames + '）'"
             managerModifyPasswordCycle: 7
             userDefaultPassword: Risesoft@2022
     service:
@@ -261,6 +261,7 @@ y9:
                     - name
                     - whereClause
                     - url
+                    - positionNameTemplate
         oauth2:
             resource:
                 enabled: true
