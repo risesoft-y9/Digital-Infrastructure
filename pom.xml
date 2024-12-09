@@ -69,6 +69,7 @@
 
     <modules>
         <module>y9-digitalbase-dependencies</module>
+        <module>y9-digitalbase-bom</module>
         <module>y9-digitalbase-parent</module>
         <module>y9-digitalbase-common</module>
         <module>y9-digitalbase-starter</module>
