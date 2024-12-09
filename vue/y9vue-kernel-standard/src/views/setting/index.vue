@@ -81,7 +81,7 @@
                 prop: 'positionNameTemplate',
                 props: {
                     placeholder:
-                        '默认格式为：{{jobName}}（{{personNames}}）， {{jobName}} 会替换为职位名 ，{{personNames}} 会替换为人员名称'
+                        '默认格式为：#jobName + \'（\' + #personNames + \'）\'，#jobName 会替换为职位名，#personNames 会替换为人员名称'
                 }
             },
             {

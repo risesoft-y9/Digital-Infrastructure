@@ -3,17 +3,19 @@ package net.risesoft.manager.org.impl;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
 import org.apache.commons.lang3.StringUtils;
-import org.apache.commons.text.StringSubstitutor;
 import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
+import org.springframework.expression.EvaluationContext;
+import org.springframework.expression.Expression;
+import org.springframework.expression.ExpressionParser;
+import org.springframework.expression.spel.standard.SpelExpressionParser;
+import org.springframework.expression.spel.support.StandardEvaluationContext;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -63,23 +65,40 @@ public class Y9PositionManagerImpl implements Y9PositionManager {
 
     @Override
     public String buildName(Y9Job y9Job, List<Y9PersonsToPositions> personsToPositionsList) {
-        Map<String, Object> keyValueMap = new HashMap<>();
-        keyValueMap.put("jobName", y9Job.getName());
+        String jobName = y9Job.getName();
+        String personNames;
 
         if (personsToPositionsList.isEmpty()) {
-            keyValueMap.put("personNames", "空缺");
+            personNames = "空缺";
         } else {
             List<Y9Person> personList = new ArrayList<>();
             for (Y9PersonsToPositions y9PersonsToPositions : personsToPositionsList) {
                 Y9Person person = y9PersonManager.getById(y9PersonsToPositions.getPersonId());
                 personList.add(person);
             }
-            String personNames = personList.stream().sorted((Comparator.comparing(Y9Person::getOrderedPath)))
+            personNames = personList.stream().sorted((Comparator.comparing(Y9Person::getOrderedPath)))
                 .map(Y9OrgBase::getName).collect(Collectors.joining("，"));
-            keyValueMap.put("personNames", personNames);
         }
-        return StringSubstitutor.replace(y9SettingService.getTenantSetting().getPositionNameTemplate(), keyValueMap,
-            "{{", "}}");
+
+        return parseSpringEl(y9SettingService.getTenantSetting().getPositionNameTemplate(), jobName, personNames);
+    }
+
+    /**
+     * springEL 支持，用于更灵活的岗位名称 <br>
+     * 例如：positionNameTemplate 为 "#jobName.equals('无') ? #personNames : #jobName + '（' + #personNames + '）'" <br>
+     *
+     * @param positionNameTemplate 有 springEL 表达式的职位名称模板
+     * @param jobName 职位名
+     * @param personNames 人员名称
+     * @return {@code String } 计算后的岗位名称
+     */
+    private String parseSpringEl(String positionNameTemplate, String jobName, String personNames) {
+        ExpressionParser parser = new SpelExpressionParser();
+        Expression expression = parser.parseExpression(positionNameTemplate);
+        EvaluationContext context = new StandardEvaluationContext();
+        context.setVariable("jobName", jobName);
+        context.setVariable("personNames", personNames);
+        return expression.getValue(context, String.class);
     }
 
     @Override
