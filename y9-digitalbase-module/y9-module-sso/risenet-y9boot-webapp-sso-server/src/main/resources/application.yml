@@ -269,6 +269,8 @@ server:
             min-spare: 10
         uri-encoding: UTF-8
 spring:
+    application:
+        name: sso
     cloud:
         nacos:
             config:

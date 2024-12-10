@@ -10,20 +10,16 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
 
-import lombok.RequiredArgsConstructor;
 import org.apache.commons.lang3.tuple.Pair;
 import org.apereo.cas.authentication.AuthenticationHandler;
 import org.apereo.cas.authentication.Credential;
 import org.apereo.cas.authentication.attribute.SimplePersonAttributes;
 import org.apereo.cas.authentication.credential.RememberMeUsernamePasswordCredential;
-import org.apereo.cas.authentication.principal.attribute.PersonAttributeDao;
 import org.apereo.cas.authentication.principal.attribute.PersonAttributes;
 import org.apereo.cas.services.Y9User;
 import org.apereo.cas.util.CollectionUtils;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.util.StringUtils;
 
 import com.google.common.collect.Lists;
@@ -32,7 +28,6 @@ import lombok.val;
 import lombok.extern.slf4j.Slf4j;
 
 import y9.service.Y9UserService;
-import y9.util.Y9Context;
 
 @Slf4j
 public class RisePersonDirectoryPrincipalResolver implements PrincipalResolver {
@@ -43,10 +38,10 @@ public class RisePersonDirectoryPrincipalResolver implements PrincipalResolver {
 
     private PrincipalFactory principalFactory = new DefaultPrincipalFactory();
 
-    private Y9UserService y9UserService = null;
+    private final Y9UserService y9UserService;
 
-    public RisePersonDirectoryPrincipalResolver(){
-        this.y9UserService = Y9Context.getBean(Y9UserService.class);
+    public RisePersonDirectoryPrincipalResolver(Y9UserService y9UserService) {
+        this.y9UserService = y9UserService;
     }
 
     @Override
@@ -110,7 +105,7 @@ public class RisePersonDirectoryPrincipalResolver implements PrincipalResolver {
             attr.put("globalManager",
                 Lists.newArrayList(y9User.getGlobalManager() == null ? false : y9User.getGlobalManager()));
             attr.put("managerLevel",
-                Lists.newArrayList((Object)y9User.getManagerLevel() == null ? 0 : y9User.getManagerLevel()));
+                Lists.newArrayList(y9User.getManagerLevel() == null ? 0 : y9User.getManagerLevel()));
             attr.put("roles", Lists.newArrayList(y9User.getRoles() == null ? "" : y9User.getRoles()));
             attr.put("positions", Lists.newArrayList(y9User.getPositions() == null ? "" : y9User.getPositions()));
 
@@ -143,7 +138,7 @@ public class RisePersonDirectoryPrincipalResolver implements PrincipalResolver {
             final List<Object> values = attributes.get(key);
             convertedAttributes.put(key, values.size() == 1 ? values.getFirst() : values);
         }*/
-        //val pair = convertPersonAttributesToPrincipal(username, convertedAttributes);
+        // val pair = convertPersonAttributesToPrincipal(username, convertedAttributes);
 
         val pair = convertPersonAttributesToPrincipal(username, attributes);
         return principalFactory.createPrincipal(pair.getKey(), pair.getValue());
@@ -158,11 +153,11 @@ public class RisePersonDirectoryPrincipalResolver implements PrincipalResolver {
      */
     @SuppressWarnings("unchecked")
     protected Pair<String, Map<String, List<Object>>> convertPersonAttributesToPrincipal(
-            final String extractedPrincipalId, final Map<String, List<Object>> attributes) {
+        final String extractedPrincipalId, final Map<String, List<Object>> attributes) {
         val convertedAttributes = new LinkedHashMap<String, List<Object>>();
         attributes.forEach((key, attrValue) -> {
             val values = ((List<Object>)CollectionUtils.toCollection(attrValue, ArrayList.class)).stream()
-                    .filter(Objects::nonNull).collect(toList());
+                .filter(Objects::nonNull).collect(toList());
             LOGGER.debug("Found attribute [{}] with value(s) [{}]", key, values);
             convertedAttributes.put(key, values);
         });
@@ -171,21 +166,21 @@ public class RisePersonDirectoryPrincipalResolver implements PrincipalResolver {
 
         val attrNames = org.springframework.util.StringUtils.commaDelimitedListToSet("username");
         val result =
-                attrNames.stream().map(String::trim).filter(attributes::containsKey).map(attributes::get).findFirst();
+            attrNames.stream().map(String::trim).filter(attributes::containsKey).map(attributes::get).findFirst();
 
         if (result.isPresent()) {
             val values = result.get();
             if (!values.isEmpty()) {
                 principalId = CollectionUtils.firstElement(values).get().toString();
                 LOGGER.debug("Found principal id attribute value [{}] and removed it from the collection of attributes",
-                        principalId);
+                    principalId);
             }
         } else {
             LOGGER.warn(
-                    "Principal resolution is set to resolve the authenticated principal via attribute(s) [username], and yet "
-                            + "the collection of attributes retrieved [{}] do not contain any of those attributes. This is likely due to misconfiguration "
-                            + "and CAS will switch to use [{}] as the final principal id",
-                    attributes.keySet(), principalId);
+                "Principal resolution is set to resolve the authenticated principal via attribute(s) [username], and yet "
+                    + "the collection of attributes retrieved [{}] do not contain any of those attributes. This is likely due to misconfiguration "
+                    + "and CAS will switch to use [{}] as the final principal id",
+                attributes.keySet(), principalId);
         }
 
         return Pair.of(principalId, convertedAttributes);
