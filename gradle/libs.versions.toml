@@ -50,7 +50,7 @@ com-oceanbase-oceanbase-client = "2.4.12"
 org-mariadb-jdbc-mariadb-java-client = "3.5.0"
 org-postgresql-postgresql = "42.7.3"
 # javers
-org-javers-javers-spring-boot-starter-sql = "7.4.2"
+org-javers-javers-spring-boot-starter-sql = "7.7.0"
 org-jodd-jodd-http = "6.3.0"
 #liquibase
 org-liquibase-liquibase-core = "4.27.0"
@@ -76,6 +76,7 @@ net-javacrumbs-shedlock-shedlock-spring = "5.13.0"
 org-bouncycastle-bcprov-ext-jdk18on = "1.78.1"
 org-imgscalr-imgscalr-lib = "4.2"
 org-owasp-antisamy-antisamy = "1.6.2"
+com-github-seancfoley-ipaddress = "5.5.1"
 
 [libraries]
 #spring boot & cloud dependencies
@@ -134,6 +135,8 @@ lettucemod = { module = "com.redis:lettucemod", version.ref = "com-redis-lettuce
 imageio-jpeg = { module = "com.twelvemonkeys.imageio:imageio-jpeg", version.ref = "com-twelvemonkeys-imageio-imageio-jpeg" }
 
 uasparser = { module = "cz.mallat.uasparser:uasparser", version.ref = "cz-mallat-uasparser-uasparser" }
+
+ipaddress= { module = "com.github.seancfoley:ipaddress", version.ref = "com-github-seancfoley-ipaddress" }
 
 reflections = { module = "io.github.bruce0203:reflections", version.ref = "io-github-bruce0203-reflections" }
 classgraph = { module = "io.github.classgraph:classgraph", version.ref = "io-github-classgraph-classgraph" }

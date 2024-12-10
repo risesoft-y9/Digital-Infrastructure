@@ -18,6 +18,7 @@ dependencies {
     implementation(project(":y9-digitalbase-starter:risenet-y9boot-starter-cache-redis"))
     implementation(project(":y9-digitalbase-common:risenet-y9boot-common-nacos"))
     implementation(project(":y9-digitalbase-starter:risenet-y9boot-starter-multi-tenant"))
+    implementation(project(":y9-digitalbase-support:risenet-y9boot-support-api-access-control"))
     
     implementation(libs.commons.pool2)
     implementation("org.springframework.boot:spring-boot-docker-compose")

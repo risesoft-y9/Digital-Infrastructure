@@ -60,6 +60,7 @@ include(":y9-digitalbase-support:risenet-y9boot-support-file-service-local")
 include(":y9-digitalbase-support:risenet-y9boot-support-file-service-rest")
 include(":y9-digitalbase-support:risenet-y9boot-support-file-service-ftp")
 include(":y9-digitalbase-support:risenet-y9boot-support-history")
+include(":y9-digitalbase-support:risenet-y9boot-support-api-access-control")
 
 include(":y9-digitalbase-module:y9-module-filemanager:risenet-y9boot-webapp-filemanager")
 

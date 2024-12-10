@@ -28,6 +28,7 @@ dependencies {
     api(libs.shedlock.spring)
     api(libs.shedlock.provider.jdbc.template)
     api(libs.google.guava)
+    api(libs.ipaddress)
     testImplementation("org.springframework.boot:spring-boot-starter-test")
     compileOnly("jakarta.servlet:jakarta.servlet-api")
 }
