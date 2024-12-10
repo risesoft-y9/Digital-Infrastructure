@@ -55,7 +55,10 @@ dependencies {
     implementation("org.apereo.cas:cas-server-support-pac4j-api")
     implementation("org.apereo.cas:cas-server-webapp-init")
     implementation("org.apereo.cas:cas-server-support-webconfig")
-    implementation("org.apereo.cas:cas-server-webapp-starter-tomcat")
+    implementation("org.apereo.cas:cas-server-webapp-starter-tomcat") {
+        // 排除项目依赖
+        exclude("org.springframework.cloud", "spring-cloud-config-client")
+    }
     implementation(project(":y9-digitalbase-common:risenet-y9boot-common-nacos"))
     implementation("org.springframework.boot:spring-boot-docker-compose")
     implementation(libs.mysql.connector.j)
