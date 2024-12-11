@@ -11,7 +11,7 @@ ojdbc-bom = "23.6.0.24.10"
 # hutool
 cn-hutool-hutool-all = "5.8.27"
 # alibaba
-spring-cloud-alibaba = "2023.0.1.3"
+spring-cloud-alibaba = "2023.0.3.2"
 alibaba-transmittable-thread-local = "2.14.5"
 # 人大金仓
 cn-com-kingbase-kesdialect-for-hibernate4 = "1.0.0"
@@ -136,7 +136,7 @@ imageio-jpeg = { module = "com.twelvemonkeys.imageio:imageio-jpeg", version.ref 
 
 uasparser = { module = "cz.mallat.uasparser:uasparser", version.ref = "cz-mallat-uasparser-uasparser" }
 
-ipaddress= { module = "com.github.seancfoley:ipaddress", version.ref = "com-github-seancfoley-ipaddress" }
+ipaddress = { module = "com.github.seancfoley:ipaddress", version.ref = "com-github-seancfoley-ipaddress" }
 
 reflections = { module = "io.github.bruce0203:reflections", version.ref = "io-github-bruce0203-reflections" }
 classgraph = { module = "io.github.classgraph:classgraph", version.ref = "io-github-classgraph-classgraph" }
