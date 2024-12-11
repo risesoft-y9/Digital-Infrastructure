@@ -52,7 +52,7 @@ public class CompositeResourceServiceImpl implements CompositeResourceService {
     private final Y9OperationManager y9OperationManager;
 
     @Cacheable(cacheNames = CacheNameConsts.RESOURCE_APP, key = "#id", condition = "#id!=null",
-            unless = "#result==null")
+        unless = "#result==null")
     public Y9App findAppById(String id) {
         return y9AppRepository.findById(id).orElse(null);
     }
@@ -68,7 +68,7 @@ public class CompositeResourceServiceImpl implements CompositeResourceService {
 
     @Override
     public Optional<? extends Y9ResourceBase> findByCustomIdAndParentId(String customId, String parentId,
-                                                                        ResourceTypeEnum resourceType) {
+        ResourceTypeEnum resourceType) {
         if (ResourceTypeEnum.APP.equals(resourceType)) {
             return y9AppRepository.findBySystemIdAndCustomId(parentId, customId);
         } else if (ResourceTypeEnum.MENU.equals(resourceType)) {
@@ -117,14 +117,7 @@ public class CompositeResourceServiceImpl implements CompositeResourceService {
         List<Y9ResourceBase> y9ResourceBaseList = new ArrayList<>();
         y9ResourceBaseList.addAll(y9MenuRepository.findByParentIdOrderByTabIndex(parentId));
         y9ResourceBaseList.addAll(y9OperationRepository.findByParentIdOrderByTabIndex(parentId));
-        return y9ResourceBaseList;
-    }
-
-    @Override
-    public List<Y9ResourceBase> listChildrenById(String resourceId) {
-        List<Y9ResourceBase> y9ResourceBaseList = new ArrayList<>();
-        y9ResourceBaseList.addAll(y9MenuRepository.findByParentIdOrderByTabIndex(resourceId));
-        y9ResourceBaseList.addAll(y9OperationRepository.findByParentIdOrderByTabIndex(resourceId));
+        y9ResourceBaseList.addAll(y9DataCatalogRepository.findByParentIdOrderByTabIndex(parentId));
         return y9ResourceBaseList;
     }
 
@@ -176,19 +169,19 @@ public class CompositeResourceServiceImpl implements CompositeResourceService {
     }
 
     @Cacheable(cacheNames = CacheNameConsts.RESOURCE_MENU, key = "#id", condition = "#id!=null",
-            unless = "#result==null")
+        unless = "#result==null")
     public Y9Menu findMenuById(String id) {
         return y9MenuRepository.findById(id).orElse(null);
     }
 
     @Cacheable(cacheNames = CacheNameConsts.RESOURCE_OPERATION, key = "#id", condition = "#id!=null",
-            unless = "#result==null")
+        unless = "#result==null")
     public Y9Operation findOperationById(String id) {
         return y9OperationRepository.findById(id).orElse(null);
     }
 
     @Cacheable(cacheNames = CacheNameConsts.RESOURCE_DATA_CATALOG, key = "#id", condition = "#id!=null",
-            unless = "#result==null")
+        unless = "#result==null")
     public Y9DataCatalog findDataCatalogById(String id) {
         return y9DataCatalogRepository.findById(id).orElse(null);
     }

@@ -228,7 +228,7 @@ public class IdentityResourceCalculatorImpl implements IdentityResourceCalculato
 
                     // 递归处理子资源
                     List<Y9ResourceBase> subResourceList =
-                        compositeResourceService.listChildrenById(y9ResourceBase.getId());
+                        compositeResourceService.listByParentId(y9ResourceBase.getId());
                     for (Y9ResourceBase resource : subResourceList) {
                         this.recalculateByPerson(resourceIdAuthorizationListMap, solvedResourceIdSet, resource, person,
                             y9Authorization);
@@ -242,8 +242,7 @@ public class IdentityResourceCalculatorImpl implements IdentityResourceCalculato
                     Boolean.TRUE);
 
                 // 递归处理子资源
-                List<Y9ResourceBase> subResourceList =
-                    compositeResourceService.listChildrenById(y9ResourceBase.getId());
+                List<Y9ResourceBase> subResourceList = compositeResourceService.listByParentId(y9ResourceBase.getId());
                 for (Y9ResourceBase resource : subResourceList) {
                     this.recalculateByPerson(resourceIdAuthorizationListMap, solvedResourceIdSet, resource, person,
                         inheritY9Authorization);
@@ -283,7 +282,7 @@ public class IdentityResourceCalculatorImpl implements IdentityResourceCalculato
                         Boolean.FALSE);
                     // 递归处理子资源
                     List<Y9ResourceBase> subResourceList =
-                        compositeResourceService.listChildrenById(y9ResourceBase.getId());
+                        compositeResourceService.listByParentId(y9ResourceBase.getId());
                     for (Y9ResourceBase resource : subResourceList) {
                         this.recalculateByPosition(resourceIdAuthorizationListMap, solvedResourceIdSet, resource,
                             position, y9Authorization);
@@ -298,8 +297,7 @@ public class IdentityResourceCalculatorImpl implements IdentityResourceCalculato
                     Boolean.TRUE);
 
                 // 递归处理子资源
-                List<Y9ResourceBase> subResourceList =
-                    compositeResourceService.listChildrenById(y9ResourceBase.getId());
+                List<Y9ResourceBase> subResourceList = compositeResourceService.listByParentId(y9ResourceBase.getId());
                 for (Y9ResourceBase resource : subResourceList) {
                     this.recalculateByPosition(resourceIdAuthorizationListMap, solvedResourceIdSet, resource, position,
                         inheritY9Authorization);

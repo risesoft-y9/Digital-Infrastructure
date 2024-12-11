@@ -93,7 +93,7 @@ public class Y9DataCatalogServiceImpl implements Y9DataCatalogService {
             y9DataCatalog.setId(Y9IdGenerator.genId());
             y9DataCatalog.setTenantId(Y9LoginUserHolder.getTenantId());
             y9DataCatalog.setSystemId(InitDataConsts.SYSTEM_ID);
-
+            y9DataCatalog.setInherit(Boolean.TRUE);
             y9DataCatalog.setTabIndex(this.getNextTabIndex(y9DataCatalog.getParentId()));
             return y9DataCatalogRepository.save(y9DataCatalog);
         }
