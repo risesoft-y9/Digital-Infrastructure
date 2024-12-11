@@ -42,4 +42,6 @@ public interface Y9DataCatalogRepository extends JpaRepository<Y9DataCatalog, St
 
     List<Y9DataCatalog> findByTenantIdAndParentIdAndTreeTypeAndEnabledOrderByTabIndexAsc(String tenantId,
         String parentId, String treeType, Boolean enabled);
+
+    List<Y9DataCatalog> findByParentIdOrderByTabIndex(String parentId);
 }

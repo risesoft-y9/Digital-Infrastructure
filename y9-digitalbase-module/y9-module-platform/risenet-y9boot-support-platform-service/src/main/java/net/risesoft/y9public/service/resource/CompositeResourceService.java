@@ -54,20 +54,12 @@ public interface CompositeResourceService {
     Y9ResourceBase findByIdAndResourceType(String resourceId, ResourceTypeEnum resourceType);
 
     /**
-     * 根据父资源id查找
+     * 根据父资源id查找子资源集合
      *
      * @param parentId 父资源id
      * @return {@code List<Y9ResourceBase>}
      */
     List<Y9ResourceBase> listByParentId(String parentId);
-
-    /**
-     * 通过resourceID，查找子集合
-     *
-     * @param resourceId 资源id
-     * @return {@code List<Y9ResourceBase>}
-     */
-    List<Y9ResourceBase> listChildrenById(String resourceId);
 
     /**
      * 根据系统id查询所有的根资源（App资源）
