@@ -11,7 +11,7 @@ import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.cache.CacheManager;
-import org.springframework.cache.annotation.CachingConfigurerSupport;
+import org.springframework.cache.annotation.CachingConfigurer;
 import org.springframework.cache.annotation.EnableCaching;
 import org.springframework.cache.interceptor.KeyGenerator;
 import org.springframework.context.annotation.AdviceMode;
@@ -30,7 +30,7 @@ import org.springframework.data.redis.serializer.RedisSerializationContext.Seria
 @EnableConfigurationProperties(CacheProperties.class)
 @EnableCaching(proxyTargetClass = true, mode = AdviceMode.ASPECTJ)
 @ConditionalOnProperty(name = "y9.common.cacheEnabled", havingValue = "true", matchIfMissing = true)
-public class Y9CacheRedisConfiguration extends CachingConfigurerSupport {
+public class Y9CacheRedisConfiguration implements CachingConfigurer {
 
     @Autowired
     private CacheProperties cacheProperties;
@@ -45,7 +45,7 @@ public class Y9CacheRedisConfiguration extends CachingConfigurerSupport {
     @Bean
     public CacheManager cacheManager() {
         RedisCacheManagerBuilder builder =
-            RedisCacheManager.builder(redisConnectionFactory).cacheDefaults(determineConfiguration(resourceLoader));
+                RedisCacheManager.builder(redisConnectionFactory).cacheDefaults(determineConfiguration(resourceLoader));
         List<String> cacheNames = this.cacheProperties.getCacheNames();
         if (!cacheNames.isEmpty()) {
             builder.initialCacheNames(new LinkedHashSet<>(cacheNames));
@@ -57,7 +57,7 @@ public class Y9CacheRedisConfiguration extends CachingConfigurerSupport {
         Redis redisProperties = this.cacheProperties.getRedis();
         RedisCacheConfiguration config = RedisCacheConfiguration.defaultCacheConfig();
         config = config.serializeValuesWith(
-            SerializationPair.fromSerializer(new JdkSerializationRedisSerializer(resourceLoader.getClassLoader())));
+                SerializationPair.fromSerializer(new JdkSerializationRedisSerializer(resourceLoader.getClassLoader())));
         if (redisProperties.getTimeToLive() != null) {
             config = config.entryTtl(redisProperties.getTimeToLive());
         }
@@ -86,10 +86,10 @@ public class Y9CacheRedisConfiguration extends CachingConfigurerSupport {
                 sb.append(method.getName() + ":");
                 for (Object param : params) {
                     if (param != null) {
-                        sb.append(param.toString() + ":");
+                        sb.append(param + ":");
                     }
                 }
-                return sb.toString().substring(0, sb.length() - 1);
+                return sb.substring(0, sb.length() - 1);
             }
         };
     }
