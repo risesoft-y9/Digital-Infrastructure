@@ -80,6 +80,8 @@ public class OAuth20AuthorizationCodeAuthorizationResponseBuilder
         val attributes = holder.getAuthentication().getAttributes();
         LOGGER.debug("Authorize request successful for client [{}] with redirect uri [{}]", holder.getClientId(),
             holder.getRedirectUri());
+        val params = new LinkedHashMap<String, String>();
+        params.put(OAuth20Constants.CODE, code.getId());
 
         // y9 add start
         String redirectUri = holder.getRedirectUri();
@@ -94,20 +96,15 @@ public class OAuth20AuthorizationCodeAuthorizationResponseBuilder
                 break;
             }
         }
-        // y9 add end
-
-        val params = new LinkedHashMap<String, String>();
-        params.put(OAuth20Constants.CODE, code.getId());
-        CollectionUtils.firstElement(attributes.get(OAuth20Constants.STATE))
-            .ifPresent(state -> params.put(OAuth20Constants.STATE, state.toString()));
-        CollectionUtils.firstElement(attributes.get(OAuth20Constants.NONCE))
-            .ifPresent(nonce -> params.put(OAuth20Constants.NONCE, nonce.toString()));
-
-        // y9 add start
         if (StringUtils.isNotBlank(serviceTicketId)) {
             params.put("serviceTicketId", serviceTicketId);
         }
         // y9 add end
+
+        CollectionUtils.firstElement(attributes.get(OAuth20Constants.STATE))
+            .ifPresent(state -> params.put(OAuth20Constants.STATE, state.toString()));
+        CollectionUtils.firstElement(attributes.get(OAuth20Constants.NONCE))
+            .ifPresent(nonce -> params.put(OAuth20Constants.NONCE, nonce.toString()));
         LOGGER.debug("Redirecting to URL [{}] with params [{}] for clientId [{}]", holder.getRedirectUri(),
             params.keySet(), holder.getClientId());
         val registeredService = OAuth20Utils

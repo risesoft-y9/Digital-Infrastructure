@@ -3,6 +3,7 @@ cas:
         engine:
             enabled: false
             numberOfDaysInHistory: 30
+            useServerHostAddress: true
         redis:
             enabled: false
             useSsl: false
@@ -102,8 +103,8 @@ cas:
         defaultThemeName: y9-apereo
         paramName: theme
     messageBundle:
-        useCodeMessage: false
-        fallbackSystemLocale: false
+        useCodeMessage: true
+        fallbackSystemLocale: true
     view:
         #当service参数为空时，利用defaultRedirectUrl
         defaultRedirectUrl: http://localhost:7070/home
@@ -119,8 +120,10 @@ cas:
                 key: BEAHMw9OS4eQ2jxav4S1iDSkebnC4l5sKMGget-yhbgut1aH6prVqGLNex5PVAXqT7lSl1bzV_OOu8OcgH22EA
                 keySize: 512
     logout:
-        followServiceRedirects: true
-        confirmLogout: false
+        confirm-logout: false
+        follow-service-redirects: true
+        # redirect-parameter: "service"
+        # redirect-url: http://localhost:7055/sso/login
     slo:
         asynchronous: false
     server:
@@ -145,7 +148,7 @@ cas:
             url: jdbc:mysql://localhost:3306/y9_public?serverTimezone=GMT%2B8&nullCatalogMeansCurrent=true&useUnicode=true&characterEncoding=utf-8&rewriteBatchedStatements=true&useCompression=true&useSSL=false&allowPublicKeyRetrieval=true
             user: root
             password: '111111'
-            idleTimeout: PT8M
+            idleTimeout: PT10M
             leakThreshold: 0
             autocommit: true
         schedule:
