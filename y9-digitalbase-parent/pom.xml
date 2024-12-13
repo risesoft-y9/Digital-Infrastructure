@@ -114,12 +114,6 @@
                 <scope>import</scope>
             </dependency>
 
-            <!-- Third Party -->
-            <dependency>
-                <groupId>com.github.oshi</groupId>
-                <artifactId>oshi-core-java11</artifactId>
-                <version>6.6.0</version>
-            </dependency>
         </dependencies>
     </dependencyManagement>
 
