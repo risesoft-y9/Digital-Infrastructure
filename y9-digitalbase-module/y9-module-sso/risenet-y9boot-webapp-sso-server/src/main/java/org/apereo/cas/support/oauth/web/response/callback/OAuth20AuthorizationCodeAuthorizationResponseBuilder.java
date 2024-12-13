@@ -84,7 +84,7 @@ public class OAuth20AuthorizationCodeAuthorizationResponseBuilder
         // y9 add start
         String redirectUri = holder.getRedirectUri();
         String serviceTicketId = "";
-        TicketGrantingTicket ticket = (TicketGrantingTicket)holder.getToken().getTicketGrantingTicket();
+        TicketGrantingTicket ticket = (TicketGrantingTicket)holder.getTicketGrantingTicket();
         Map<String, Service> map = ticket.getServices();
         for (Map.Entry<String, Service> entry : map.entrySet()) {
             SimpleWebApplicationServiceImpl serviceImpl = (SimpleWebApplicationServiceImpl)entry.getValue();

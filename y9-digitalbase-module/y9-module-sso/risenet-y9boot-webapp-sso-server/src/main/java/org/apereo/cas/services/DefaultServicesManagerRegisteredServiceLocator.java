@@ -10,7 +10,6 @@ import org.apereo.cas.services.query.RegisteredServiceQueryAttribute;
 import org.apereo.cas.services.query.RegisteredServiceQueryIndex;
 import org.apereo.cas.support.oauth.services.OAuthRegisteredService;
 import org.apereo.cas.util.CollectionUtils;
-import org.springframework.core.Ordered;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -30,7 +29,7 @@ import lombok.val;
 @Getter
 public class DefaultServicesManagerRegisteredServiceLocator implements ServicesManagerRegisteredServiceLocator {
 
-    private int order = Ordered.LOWEST_PRECEDENCE;
+    private int order = DEFAULT_ORDER;
 
     private BiPredicate<RegisteredService, Service> registeredServiceFilter = (registeredService, service) -> {
         val supportedType = supports(registeredService, service);

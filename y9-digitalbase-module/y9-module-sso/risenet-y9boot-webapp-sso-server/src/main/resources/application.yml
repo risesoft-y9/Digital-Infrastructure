@@ -24,16 +24,18 @@ cas:
             enabled: false
         throttle:
             failure:
+                #在上述时间段内允许的失败登录尝试次数
                 threshold: 1
+                #时间范围
                 rangeSeconds: 3
                 throttleWindowSeconds: "PT600S"
         oauth:
             crypto:
                 encryption:
-                    key: "-VXZn5YBBmZMF1IS3hUtJbDZyrbG5USRi4Tvy8wm2uY"
-                    keySize: 256
+                    key: x_kBoXCREKfjPvCe5UCm6M_HfdkrsZwx2dq47uUu8TPPa_2QT80rF4j_lhleUIgwB43kkeAjjJp7rbp51Tm3iw
+                    keySize: 512
                 signing:
-                    key: "EqOnwuhEV--lasE_nkbKq5sRz9AXbcOqx4z8BERorHmboftdiRwsVGYf9Lwz7WvfBhdhANEAWhurf4dgorCNHA"
+                    key: y_0BeZ5XmwzJ-H6CdnXAcH6cgUnrYpPZ7BD-_ug5kSt_Xc0Gubi6yuk6Zy7h9iK_5X909b2mVdiShWOctSCofg
                     keySize: 512
             refreshToken:
                 timeToKillInSeconds: P14D
@@ -41,18 +43,18 @@ cas:
                 timeToKillInSeconds: 600
                 numberOfUses: 1
             access-token:
-                timeToKillInSeconds: PT7200S
-                maxTimeToLiveInSeconds: PT28800S
+                timeToKillInSeconds: PT2H
+                maxTimeToLiveInSeconds: PT8H
                 createAsJwt: false
                 crypto:
                     enabled: true
                     encryptionEnabled: true
                     signingEnabled: true
                     encryption:
-                        key: "n7yTVThruFI2qmhPGDGfaudwO1mgSz2qTcnKPMHp2SQ"
-                        keySize: 256
+                        key: kXfCSPsgzAJRD4yDrGOiOpubDEoJ7LlR2C_MADMqloPIqUPHGTv4RCEHuKvlJVFza2X2Cri35g7MutWcvzdkRA
+                        keySize: 512
                     signing:
-                        key: "O7lkls3YXgzeHOwXEjm6kn-z8-DW0wvrmoQ2C1ayNsLd1gFhkWHCLEypl5kt-PL729C6OSQ83pVbysIrhS5ZaQ"
+                        key: 0ND7_TDKBDl7Wx2yMBO608RyBTDe1FsT4_PmC59-rwKx9sv37lUTtP5p_7miiEuZvxBN6VZGjUM5thbtwVDMIg
                         keySize: 512
             grants:
                 resourceOwner:
@@ -64,16 +66,19 @@ cas:
                 cookie:
                     crypto:
                         encryption:
-                            key: "bUBCgWJ9pPlFG1QbzWx9xaxgvp3ttxZdAs1RQPhzCig"
+                            key: 4KiqcYVJHlMEgESk0FGFiPM4aq_0HaWbRwB4wwzMWJncP9sx1h5X2jQpr4n0IhpWs-xD0Yuki7HBOSHXfofQ6Q
                         signing:
-                            key: "igxMHmvG4tAJShq_Jq_ifH20PrthGcEjIu8n-ZEnx7HH8QS0po7ETvaohbOvWEI8-RxKdaWT5cabZoTcalLMOw"
+                            key: vpfJFaaSLDudc5Gj25_Uy-xhh-AJmCByeJQDweZr-qMlf2Cov9DqFPghrxm-IA1OcftkED8c99rilt-VzwU1Dg
+                    secure: false
+                    path: /sso/
+                    sameSitePolicy: Lax
         token:
             crypto:
                 encryption:
-                    key: "56hT1RUBooVtRTm_uSTZKubvK6V26bQ0fJAN_QvPfXQ"
-                    keySize: 256
+                    key: vM-BXOlGHTSZ3MbiUSRxMH1mY75pfZa84s0uOpqShfU4sj9k6-vc2DAzl8-iFep6oOf1OcBn28shK2lpRMgJxw
+                    keySize: 512
                 signing:
-                    key: "vUkG4Wpsp8H8WGpys9-9Co6zxz1WUQvuiflbXMxvHvrN3KWPgUDEllmayek0BrqvepYY0Ha2NrOonj-2LUNbsw"
+                    key: FkK7xwk6Ol5pnO9mEwB6prQT5mS5X7hVpUToofTgEzFkDqHpWdy-XwfXA_2l6v4Ya3ZYwEvbTvnMLh21mfjh_w
                     keySize: 512
 
     httpClient:
@@ -108,10 +113,10 @@ cas:
         crypto:
             enabled: true
             encryption:
-                key: "R2wxx0EpHUz_3ZbDEovE3w"
+                key: R2wxx0EpHUz_3ZbDEovE3w
                 keySize: 16
             signing:
-                key: "BEAHMw9OS4eQ2jxav4S1iDSkebnC4l5sKMGget-yhbgut1aH6prVqGLNex5PVAXqT7lSl1bzV_OOu8OcgH22EA"
+                key: BEAHMw9OS4eQ2jxav4S1iDSkebnC4l5sKMGget-yhbgut1aH6prVqGLNex5PVAXqT7lSl1bzV_OOu8OcgH22EA
                 keySize: 512
     logout:
         followServiceRedirects: true
@@ -151,28 +156,28 @@ cas:
         crypto:
             enabled: true
             encryption:
-                key: "RloscjL5pfht024HFh6i-Sp9uIhbhplOEqTIA06v0_Q"
-                keySize: 256
+                key: xqn4eyW7zupUxhypdcA-gzGt_8eckMB0Im0EUFI0pCzfKdZv5rpSMN1ZNbt4kQjaV8uFksXYtCM7OSAMGj7g6Q
+                keySize: 512
             signing:
-                key: "im3F4MvBqkH9NCCpIy6JYD8tpoKz5kJyf-khj_-TWi0DzWO95RtBMfXRsd4pYWRCMnGyueM3JQq3SxOhHVcrOA"
+                key: ILD_gwFETInK1hNxOkQfMLSQ2T310e49M7fg2lnv03ZyiQ4CdzsomEcHESLzB_ZkRYhQir-lA3qzVmeMZEgZcQ
                 keySize: 512
         httpOnly: true
         maxAge: -1
         name: TGC
         path: /sso/
-        pinToSession: false
+        pinToSession: true
         rememberMeMaxAge: P14D
-        secure: true
-        sameSitePolicy: None
+        secure: false
+        sameSitePolicy: Lax
     ticket:
         trackDescendantTickets: true
         crypto:
             enabled: false
             encryption:
-                key: "p9PWTU6aGGD_NI8dznomSLEcRu2XIjSSgnSWaxwzCvI"
-                keySize: 256
+                key: td7YCc3pFG-uPSIDIp-RbDScqfpY1CfrJgL22ZuJOE4odlrf3p980twHJnhyqmToV1lMX4TrjFdNMRWOw7kM5w
+                keySize: 512
             signing:
-                key: "XpUZR17C_vEero3mRpeGyTsdc_QMYZb8_xYdwEFthtVz53qbvLOw0oTh9y4i2NRu_o43CNZbKVAN4m5AcWxsXw"
+                key: wzeJhwyCK0QeyF57MN2zVm35yaC7yxEj8N9BAqfFJIEep4B8mTVDdB7iW0vNLsRW5sRU-36eNKwtYrIxVsIBPQ
                 keySize: 512
         registry:
             cleaner:
@@ -217,9 +222,8 @@ cas:
             rememberMe:
                 enabled: true
                 timeToKillInSeconds: 28800
-                #supportedUserAgents: 
+                #supportedUserAgents:
                 #supportedIpAddresses: 127.0.0.1,0:0:0:0:0:0:0:1
-
 management:
     endpoint:
         health:
@@ -328,9 +332,10 @@ spring:
 y9:
     common:
         logBaseUrl: http://localhost:7055/log
+    internalIp: 192.168.x.x,10.0.x.x,172.20.x.x
     login:
         casLoginView: "casLoginView-y9-v3.0"
-        credentialPropsOptional: "isValidateIE,screenDimension,userAgent,systemName,clientIp,clientMac,clientDiskId,clientHostName,deptId,positionId,pwdEcodeType"
+        credentialPropsOptional: "screenDimension,userAgent,systemName,clientIp,clientMac,clientDiskId,clientHostName,deptId,positionId,pwdEcodeType"
         #kafka , jpa
         loginInfoSaveTarget: kafka
         encryptionRsaPublicKey: 'MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQC6DvO5m7p1Of/IkPwMRdQK7tx4wZKrbmVj2aqhlX5z+McbxeiP1XgwpiFINxigtXqU49rtCb1eyUafD4lIYZ399Z5TAZeD3kH+ggdP6xRr0G7+u1UE9qgoLXPOugZsABwSOq5w9v6qGUAY8U3doLDkjCueMbEeGG96FjqaaMLckwIDAQAB'

@@ -5,13 +5,16 @@ import java.util.List;
 
 import jakarta.servlet.http.HttpServletRequest;
 
+import org.apache.commons.lang3.BooleanUtils;
 import org.apereo.cas.authentication.Credential;
+import org.apereo.cas.authentication.RememberMeCredential;
 import org.apereo.cas.authentication.credential.RememberMeUsernamePasswordCredential;
 import org.apereo.cas.util.CollectionUtils;
 import org.springframework.util.MultiValueMap;
 
 import lombok.Getter;
 import lombok.Setter;
+import lombok.val;
 import lombok.extern.slf4j.Slf4j;
 
 /**
@@ -35,6 +38,7 @@ public class UsernamePasswordRestHttpRequestCredentialFactory implements RestHtt
         }
         final String username = requestBody.getFirst(RestHttpRequestCredentialFactory.PARAMETER_USERNAME);
         final String password = requestBody.getFirst(RestHttpRequestCredentialFactory.PARAMETER_PASSWORD);
+        val rememberMe = requestBody.getFirst(RememberMeCredential.REQUEST_PARAMETER_REMEMBER_ME);
         final String tenantShortName = requestBody.getFirst("tenantShortName");
         final String deptId = requestBody.getFirst("deptId");
         final String positionId = requestBody.getFirst("positionId");
@@ -58,6 +62,7 @@ public class UsernamePasswordRestHttpRequestCredentialFactory implements RestHtt
         riseCredential.setLoginType(loginType);
         riseCredential.setScreenDimension(screenDimension);
         riseCredential.setSystemName(systemName);
+        riseCredential.setRememberMe(BooleanUtils.toBoolean(rememberMe));
 
         return CollectionUtils.wrap(riseCredential);
     }

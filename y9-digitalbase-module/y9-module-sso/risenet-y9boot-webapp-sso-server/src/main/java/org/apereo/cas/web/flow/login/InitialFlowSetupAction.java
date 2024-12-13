@@ -19,13 +19,13 @@ import org.apereo.cas.services.ServicesManager;
 import org.apereo.cas.services.UnauthorizedServiceException;
 import org.apereo.cas.ticket.registry.TicketRegistrySupport;
 import org.apereo.cas.util.function.FunctionUtils;
+import org.apereo.cas.util.http.HttpRequestUtils;
 import org.apereo.cas.web.cookie.CasCookieBuilder;
 import org.apereo.cas.web.flow.SingleSignOnParticipationRequest;
 import org.apereo.cas.web.flow.SingleSignOnParticipationStrategy;
 import org.apereo.cas.web.flow.actions.BaseCasWebflowAction;
 import org.apereo.cas.web.support.ArgumentExtractor;
 import org.apereo.cas.web.support.WebUtils;
-import org.jooq.lambda.Unchecked;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.HttpMethod;
@@ -84,25 +84,26 @@ public class InitialFlowSetupAction extends BaseCasWebflowAction {
     }
 
     @Override
-    protected Event doExecuteInternal(final RequestContext context) {
+    protected Event doExecuteInternal(final RequestContext context) throws Throwable {
         configureCookieGenerators(context);
-        configureWebflowContext(context);
-
         configureWebflowForPostParameters(context);
         configureWebflowForCustomFields(context);
         configureWebflowForServices(context);
+        configureWebflowContext(context);
 
-        return FunctionUtils.doUnchecked(() -> {
-            val ticketGrantingTicketId = configureWebflowForTicketGrantingTicket(context);
-            configureWebflowForSsoParticipation(context, ticketGrantingTicketId);
-            return success();
-        });
+        val ticketGrantingTicketId = configureWebflowForTicketGrantingTicket(context);
+        configureWebflowForSsoParticipation(context, ticketGrantingTicketId);
+
+        return success();
     }
 
     protected String configureWebflowForTicketGrantingTicket(final RequestContext context) {
         val request = WebUtils.getHttpServletRequestFromExternalWebflowContext(context);
         val ticketGrantingTicketId = ticketGrantingTicketCookieGenerator.retrieveCookieValue(request);
+        LOGGER.trace("Retrieved the ticket-granting ticket identifier in the login webflow: [{}]",
+            ticketGrantingTicketId);
         val ticket = ticketRegistrySupport.getTicketGrantingTicket(ticketGrantingTicketId);
+        LOGGER.trace("Retrieved the ticket-granting ticket in the login webflow: [{}]", ticket);
         if (ticket != null) { // y9 add
             // 先登出才能触发重新登录
             val response = WebUtils.getHttpServletResponseFromExternalWebflowContext(context);
@@ -111,22 +112,21 @@ public class InitialFlowSetupAction extends BaseCasWebflowAction {
                 logoutManager.performLogout(SingleLogoutExecutionRequest.builder().ticketGrantingTicket(ticket)
                     .httpServletRequest(Optional.of(request)).httpServletResponse(Optional.of(response)).build());
             } else {
+                // 原代码
                 WebUtils.putTicketGrantingTicketInScopes(context, ticket.getId());
                 return ticket.getId();
             }
         } // y9 add
-        clearTicketGrantingCookieFromContext(context, null);
+
+        clearTicketGrantingCookieFromContext(context);
         return null;
     }
 
-    protected void clearTicketGrantingCookieFromContext(final RequestContext context,
-        final String ticketGrantingTicketId) {
+    protected void clearTicketGrantingCookieFromContext(final RequestContext context) {
         val request = WebUtils.getHttpServletRequestFromExternalWebflowContext(context);
         val response = WebUtils.getHttpServletResponseFromExternalWebflowContext(context);
         ticketGrantingTicketCookieGenerator.removeAll(request, response);
         WebUtils.putTicketGrantingTicketInScopes(context, StringUtils.EMPTY);
-        Optional.ofNullable(ticketGrantingTicketId)
-            .ifPresent(Unchecked.consumer(id -> ticketRegistrySupport.getTicketRegistry().deleteTicket(id)));
     }
 
     protected void configureWebflowForCustomFields(final RequestContext context) {
@@ -197,15 +197,28 @@ public class InitialFlowSetupAction extends BaseCasWebflowAction {
         WebUtils.putStaticAuthenticationIntoFlowScope(context, staticAuthEnabled);
 
         if (casProperties.getAuthn().getPolicy().isSourceSelectionEnabled()) {
-            val availableHandlers = authenticationEventExecutionPlan.getAuthenticationHandlers().stream()
-                .filter(handler -> handler.supports(UsernamePasswordCredential.class))
-                .map(handler -> StringUtils.capitalize(handler.getName().trim())).distinct().sorted()
-                .collect(Collectors.toList());
+            val availableHandlers = determineAuthenticationHandlersForSourceSelection(context);
             WebUtils.putAvailableAuthenticationHandleNames(context, availableHandlers);
         }
         context.getFlowScope().put("httpRequestSecure", request.isSecure());
         context.getFlowScope().put("httpRequestMethod", request.getMethod());
+        context.getFlowScope().put("httpRequestHeaders", HttpRequestUtils.getRequestHeaders(request));
         context.getFlowScope().put("contextPath", request.getContextPath()); // y9 add
+    }
+
+    protected List<String> determineAuthenticationHandlersForSourceSelection(final RequestContext context) {
+        val availableHandlers = authenticationEventExecutionPlan.getAuthenticationHandlers().stream()
+            .filter(handler -> handler.supports(UsernamePasswordCredential.class))
+            .map(handler -> StringUtils.capitalize(handler.getName().trim())).distinct().sorted()
+            .collect(Collectors.toList());
+        val registeredService = WebUtils.getRegisteredService(context);
+        if (registeredService != null && registeredService.getAuthenticationPolicy() != null) {
+            val requiredHandlers = registeredService.getAuthenticationPolicy().getRequiredAuthenticationHandlers();
+            if (requiredHandlers != null && !requiredHandlers.isEmpty()) {
+                availableHandlers.removeIf(handler -> !requiredHandlers.contains(handler));
+            }
+        }
+        return availableHandlers;
     }
 
     protected void configureCookieGenerators(final RequestContext context) {
