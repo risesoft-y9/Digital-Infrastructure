@@ -4,9 +4,9 @@
     <modelVersion>4.0.0</modelVersion>
     <parent>
         <groupId>net.risesoft</groupId>
-        <artifactId>y9-module-log</artifactId>
+        <artifactId>y9-digitalbase-parent</artifactId>
         <version>${revision}</version>
-        <relativePath>../pom.xml</relativePath>
+        <relativePath>../../../y9-digitalbase-parent/pom.xml</relativePath>
     </parent>
     <artifactId>risenet-y9boot-support-log-elasticsearch-repository</artifactId>
     <packaging>jar</packaging>
