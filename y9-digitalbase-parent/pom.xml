@@ -16,6 +16,23 @@
     <name>y9-digitalbase-parent</name>
     <description>RiseSoft/Digital Infrastructure dependencies parent</description>
     <url>https://gitee.com/risesoft-y9/y9-core/tree/main/y9-digitalbase-parent</url>
+    
+    <properties>
+        <gitee.url>https://gitee.com/risesoft-y9/y9-core</gitee.url>
+        <gitee.connection>scm:git:https://gitee.com/risesoft-y9/y9-core.git</gitee.connection>
+        <gitee.developerConnection>scm:git:https://gitee.com/risesoft-y9/y9-core.git</gitee.developerConnection>
+
+        <revision>v9.7.0-SNAPSHOT</revision>
+
+        <java.version>21</java.version>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
+        <resource.delimiter>@</resource.delimiter>
+        <maven.compiler.source>${java.version}</maven.compiler.source>
+        <maven.compiler.target>${java.version}</maven.compiler.target>
+        <maven.build.timestamp.format>yyyyMMddHHmmss</maven.build.timestamp.format>
+        <maven.javadoc.failOnError>false</maven.javadoc.failOnError>
+    </properties>
 
     <licenses>
         <license>
@@ -87,23 +104,6 @@
         </pluginRepository>
     </pluginRepositories>
 
-    <properties>
-        <gitee.url>https://gitee.com/risesoft-y9/y9-core</gitee.url>
-        <gitee.connection>scm:git:https://gitee.com/risesoft-y9/y9-core.git</gitee.connection>
-        <gitee.developerConnection>scm:git:https://gitee.com/risesoft-y9/y9-core.git</gitee.developerConnection>
-
-        <revision>v9.7.0-SNAPSHOT</revision>
-
-        <java.version>21</java.version>
-        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
-        <resource.delimiter>@</resource.delimiter>
-        <maven.compiler.source>${java.version}</maven.compiler.source>
-        <maven.compiler.target>${java.version}</maven.compiler.target>
-        <maven.build.timestamp.format>yyyy-MM-dd_HH_mm</maven.build.timestamp.format>
-        <maven.javadoc.failOnError>false</maven.javadoc.failOnError>
-    </properties>
-
     <dependencyManagement>
         <dependencies>
             <!-- Third Party -->
@@ -152,7 +152,7 @@
 
             <plugin>
                 <groupId>org.codehaus.mojo</groupId>
-                <artifactId>buildnumber-maven-plugin</artifactId>
+                <artifactId>build-helper-maven-plugin</artifactId>
             </plugin>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>

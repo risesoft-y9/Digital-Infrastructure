@@ -114,6 +114,7 @@
         <java.version>21</java.version>
         <maven.compiler.source>${java.version}</maven.compiler.source>
         <maven.compiler.target>${java.version}</maven.compiler.target>
+        <maven.build.timestamp.format>yyyyMMddHHmmss</maven.build.timestamp.format>
         <maven.deploy.skip>true</maven.deploy.skip>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 
@@ -870,7 +871,7 @@
                                 <tags>
                                     <tag>${project.version}</tag>
                                     <tag>v9.7.x</tag>
-                                    <tag>${project.version}-${buildDate}</tag>
+                                    <tag>${project.version}-${maven.build.timestamp}</tag>
                                 </tags>
                             </to>
                         </configuration>

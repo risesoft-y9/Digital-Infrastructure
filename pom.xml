@@ -68,19 +68,75 @@
     </scm>
 
     <modules>
-        <module>y9-digitalbase-dependencies</module>
+        <module>y9-digitalbase-bom</module>
+		<module>y9-digitalbase-dependencies</module>
         <module>y9-digitalbase-parent</module>
-        <module>y9-digitalbase-common</module>
-        <module>y9-digitalbase-starter</module>
-        <module>./y9-digitalbase-support/risenet-y9boot-support-file-jpa-repository</module>
-        <module>./y9-digitalbase-support/risenet-y9boot-support-file-service-ftp</module>
-        <module>./y9-digitalbase-support/risenet-y9boot-support-file-service-local</module>
-        <module>./y9-digitalbase-support/risenet-y9boot-support-file-service-rest</module>
-        <module>./y9-digitalbase-support/risenet-y9boot-support-history</module>
-        <module>./y9-digitalbase-support/risenet-y9boot-support-api-access-control</module>
-        <module>y9-digitalbase-idcode</module>
-        <module>y9-digitalbase-module</module>
-        <module>y9-digitalbase-example</module>
+		
+        <module>y9-digitalbase-common/risenet-y9boot-properties</module>
+		<module>y9-digitalbase-common/risenet-y9boot-common-model</module>
+		<module>y9-digitalbase-common/risenet-y9boot-common-nacos</module>
+		<module>y9-digitalbase-common/risenet-y9boot-common-util</module>
+		<module>y9-digitalbase-common/risenet-y9boot-common-tenant-datasource</module>
+		<module>y9-digitalbase-common/risenet-y9boot-common-sqlddl</module>		
+        
+        <module>y9-digitalbase-support/risenet-y9boot-support-file-jpa-repository</module>
+        <module>y9-digitalbase-support/risenet-y9boot-support-file-service-ftp</module>
+        <module>y9-digitalbase-support/risenet-y9boot-support-file-service-local</module>
+        <module>y9-digitalbase-support/risenet-y9boot-support-file-service-rest</module>
+        <module>y9-digitalbase-support/risenet-y9boot-support-history</module>
+        <module>y9-digitalbase-support/risenet-y9boot-support-api-access-control</module>
+		
+		<module>y9-digitalbase-starter/risenet-y9boot-starter-apisix</module>
+		<module>y9-digitalbase-starter/risenet-y9boot-starter-cache-redis</module>
+		<module>y9-digitalbase-starter/risenet-y9boot-starter-idgenerator</module>
+		<module>y9-digitalbase-starter/risenet-y9boot-starter-jpa-public</module>
+		<module>y9-digitalbase-starter/risenet-y9boot-starter-jpa-tenant</module>
+		<module>y9-digitalbase-starter/risenet-y9boot-starter-kafka</module>
+		<module>y9-digitalbase-starter/risenet-y9boot-starter-liquibase</module>
+		<module>y9-digitalbase-starter/risenet-y9boot-starter-publish-kafka</module>
+		<module>y9-digitalbase-starter/risenet-y9boot-starter-listener-kafka</module>
+		<module>y9-digitalbase-starter/risenet-y9boot-starter-multi-tenant</module>
+		<module>y9-digitalbase-starter/risenet-y9boot-starter-log</module>
+		<module>y9-digitalbase-starter/risenet-y9boot-starter-openfeign</module>
+		<module>y9-digitalbase-starter/risenet-y9boot-starter-permission</module>
+		<module>y9-digitalbase-starter/risenet-y9boot-starter-security</module>
+		<module>y9-digitalbase-starter/risenet-y9boot-starter-sso-oauth2-resource</module>
+		<module>y9-digitalbase-starter/risenet-y9boot-starter-web</module>
+		<module>y9-digitalbase-starter/risenet-y9boot-starter-elasticsearch</module>		
+		
+        <module>y9-digitalbase-idcode/risenet-y9boot-idcode</module>
+		
+		<module>y9-digitalbase-module/y9-module-filemanager/risenet-y9boot-webapp-filemanager</module>
+		
+		<module>y9-digitalbase-module/y9-module-log/risenet-y9boot-api-interface-log</module>
+		<module>y9-digitalbase-module/y9-module-log/risenet-y9boot-api-feignclient-log</module>
+		<module>y9-digitalbase-module/y9-module-log/risenet-y9boot-support-log-elasticsearch-repository</module>
+		<module>y9-digitalbase-module/y9-module-log/risenet-y9boot-support-log-jpa-repository</module>
+		<module>y9-digitalbase-module/y9-module-log/risenet-y9boot-support-log-service</module>
+		<module>y9-digitalbase-module/y9-module-log/risenet-y9boot-support-log-web</module>
+		<module>y9-digitalbase-module/y9-module-log/risenet-y9boot-webapp-log</module>
+		
+		<module>y9-digitalbase-module/y9-module-platform/risenet-y9boot-api-interface-platform</module>
+		<module>y9-digitalbase-module/y9-module-platform/risenet-y9boot-api-feignclient-platform</module>
+		<module>y9-digitalbase-module/y9-module-platform/risenet-y9boot-support-platform-jpa-repository</module>
+		<module>y9-digitalbase-module/y9-module-platform/risenet-y9boot-support-platform-service</module>
+		<module>y9-digitalbase-module/y9-module-platform/risenet-y9boot-support-platform-web</module>
+		<module>y9-digitalbase-module/y9-module-platform/risenet-y9boot-webapp-platform</module>
+		
+		<module>y9-digitalbase-module/y9-module-sso/risenet-y9boot-webapp-sso-server</module>
+		
+
+        <module>y9-digitalbase-example/risenet-y9demo-cache</module>
+		<module>y9-digitalbase-example/risenet-y9demo-data-jpa</module>
+		<module>y9-digitalbase-example/risenet-y9demo-elasticsearch</module>
+		<module>y9-digitalbase-example/risenet-y9demo-file</module>
+		<module>y9-digitalbase-example/risenet-y9demo-idcode</module>
+		<module>y9-digitalbase-example/risenet-y9demo-kernel-api/backend-demo</module>
+		<!--<module>y9-digitalbase-example/risenet-y9demo-kernel-api/frontend-vue3-demo</module>-->
+		<module>y9-digitalbase-example/risenet-y9demo-log</module>
+		<module>y9-digitalbase-example/risenet-y9demo-sso-oauth2/backend-demo</module>
+		<!--<module>y9-digitalbase-example/risenet-y9demo-sso-oauth2/frontend-vue3-demo</module>-->
+		<module>y9-digitalbase-example/risenet-y9demo-sync-kafka</module>
     </modules>
 
     <dependencyManagement>

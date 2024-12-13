@@ -99,11 +99,6 @@ public class SpringMultiTenantConfiguration {
         return new HibernateJpaVendorAdapter();
     }
 
-    /*@Bean
-    public OnY9MultiTenantApplicationReady onY9MultiTenantApplicationReady() {
-        return new OnY9MultiTenantApplicationReady();
-    }*/
-
     @Primary
     @Bean({"rsTenantEntityManagerFactory", "entityManagerFactory"})
     public LocalContainerEntityManagerFactoryBean rsTenantEntityManagerFactory(
@@ -161,10 +156,5 @@ public class SpringMultiTenantConfiguration {
         Environment environment) {
         return new Y9TenantDataSourceLookup(ds, environment.getProperty("y9.systemName"));
     }
-
-    /*@Bean
-    public OnY9MultiTenantApplicationReady onY9MultiTenantApplicationReady() {
-        return new OnY9MultiTenantApplicationReady();
-    }*/
 
 }

@@ -5,9 +5,9 @@
     <modelVersion>4.0.0</modelVersion>
     <parent>
         <groupId>net.risesoft</groupId>
-        <artifactId>y9-digitalbase-example</artifactId>
+        <artifactId>y9-digitalbase-parent</artifactId>
         <version>${revision}</version>
-        <relativePath>../pom.xml</relativePath>
+        <relativePath>../../y9-digitalbase-parent/pom.xml</relativePath>
     </parent>
     <groupId>net.risesoft</groupId>
     <artifactId>risenet-y9demo-cache</artifactId>
@@ -91,11 +91,39 @@
                 <artifactId>spring-boot-maven-plugin</artifactId>
             </plugin>
 
-            <plugin>
+            <!--<plugin>
                 <groupId>dev.aspectj</groupId>
                 <artifactId>aspectj-maven-plugin</artifactId>
-            </plugin>
+            </plugin>-->
         </plugins>
     </build>
+    
+    <profiles>
+        <profile>
+            <id>deploy-maven-central</id>
+            <build>
+                <plugins>
+                    <plugin>
+                        <groupId>org.sonatype.central</groupId>
+                        <artifactId>central-publishing-maven-plugin</artifactId>
+                        <configuration>
+                            <excludeArtifacts>
+                                <artifact>risenet-y9demo-cache</artifact>
+                                <artifact>risenet-y9demo-data-jpa</artifact>
+                                <artifact>risenet-y9demo-elasticsearch</artifact>
+                                <artifact>risenet-y9demo-file</artifact>
+                                <artifact>risenet-y9demo-idcode</artifact>
+                                <artifact>risenet-y9demo-kernel-api</artifact>
+                                <artifact>risenet-y9demo-data-log</artifact>
+                                <artifact>risenet-y9demo-sso-oauth2</artifact>
+                                <artifact>risenet-y9demo-sync-kafka</artifact>
+                                <artifact>risenet-y9demo-log</artifact>
+                            </excludeArtifacts>
+                        </configuration>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
+    </profiles>
 
 </project>

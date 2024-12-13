@@ -61,9 +61,9 @@ include(":y9-digitalbase-support:risenet-y9boot-support-file-service-rest")
 include(":y9-digitalbase-support:risenet-y9boot-support-file-service-ftp")
 include(":y9-digitalbase-support:risenet-y9boot-support-history")
 
-include(":y9-digitalbase-module:y9-module-filemanager:risenet-y9boot-webapp-filemanager")
-
 include(":y9-digitalbase-idcode:risenet-y9boot-idcode")
+
+include(":y9-digitalbase-module:y9-module-filemanager:risenet-y9boot-webapp-filemanager")
 
 include(":y9-digitalbase-module:y9-module-log:risenet-y9boot-api-interface-log")
 include(":y9-digitalbase-module:y9-module-log:risenet-y9boot-api-feignclient-log")
