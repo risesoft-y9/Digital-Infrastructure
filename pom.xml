@@ -66,13 +66,8 @@
     </scm>
 
     <modules>
-<<<<<<< HEAD
         <module>y9-digitalbase-bom</module>
 		<module>y9-digitalbase-dependencies</module>
-=======
-        <module>y9-digitalbase-dependencies</module>
-        <module>y9-digitalbase-bom</module>
->>>>>>> branch 'v9.7.x' of https://svn.youshengyun.com:3000/risesoft/y9-digitalbase.git
         <module>y9-digitalbase-parent</module>
 		
         <module>y9-digitalbase-common/risenet-y9boot-properties</module>
@@ -141,19 +136,6 @@
 		<!--<module>y9-digitalbase-example/risenet-y9demo-sso-oauth2/frontend-vue3-demo</module>-->
 		<module>y9-digitalbase-example/risenet-y9demo-sync-kafka</module>
     </modules>
-
-    <dependencyManagement>
-        <dependencies>
-            <!--<dependency>
-                <groupId>net.risesoft</groupId>
-                <artifactId>y9-digitalbase-dependencies</artifactId>
-                <version>${revision}</version>
-                <type>pom</type>
-                <scope>import</scope>
-            </dependency>-->
-        </dependencies>
-
-    </dependencyManagement>
 
     <repositories>
         <repository>
