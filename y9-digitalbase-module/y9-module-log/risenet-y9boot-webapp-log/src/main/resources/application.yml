@@ -37,6 +37,8 @@ spring:
                 password: ${NACOS_PASSWORD:111111}
             discovery:
                 enabled: false
+        compatibility-verifier:
+            enabled: false
     config:
         import:
             - optional:nacos:log.yml

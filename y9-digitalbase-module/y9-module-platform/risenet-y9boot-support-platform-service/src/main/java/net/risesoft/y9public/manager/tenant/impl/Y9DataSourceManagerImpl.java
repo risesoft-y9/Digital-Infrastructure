@@ -3,7 +3,6 @@ package net.risesoft.y9public.manager.tenant.impl;
 import java.util.Arrays;
 import java.util.Objects;
 import java.util.Optional;
-import java.util.Random;
 import java.util.stream.Collectors;
 
 import org.apache.commons.lang3.StringUtils;
@@ -31,6 +30,8 @@ import net.risesoft.y9public.entity.tenant.Y9DataSource;
 import net.risesoft.y9public.manager.tenant.Y9DataSourceManager;
 import net.risesoft.y9public.repository.tenant.Y9DataSourceRepository;
 
+import cn.hutool.core.util.RandomUtil;
+
 /**
  * 数据源 Manager 实现类
  *
@@ -52,26 +53,6 @@ public class Y9DataSourceManagerImpl implements Y9DataSourceManager {
         this.jdbcTemplate4Public = jdbcTemplate4Public;
         this.y9PlatformProperties = y9PlatformProperties;
         this.datasourceRepository = datasourceRepository;
-    }
-
-    /**
-     * 生成四位随机字符串
-     *
-     * @return {@link String}
-     */
-    public static String generateRandomString() {
-        String characters = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ";
-        int length = 4;
-        Random random = new Random();
-        StringBuilder sb = new StringBuilder();
-
-        for (int i = 0; i < length; i++) {
-            int index = random.nextInt(characters.length());
-            char randomChar = characters.charAt(index);
-            sb.append(randomChar);
-        }
-
-        return sb.toString();
     }
 
     private static String replaceSchemaNameInJdbcUrlParam(String originalJdbcUrl, String newSchemaName) {
@@ -97,7 +78,7 @@ public class Y9DataSourceManagerImpl implements Y9DataSourceManager {
     public String buildDataSourceName(String shortName, TenantTypeEnum tenantType, String systemName) {
         String dataSourceName = shortName;
         if (Objects.equals(tenantType, TenantTypeEnum.TENANT) && !"default".equals(shortName)) {
-            dataSourceName = "yt_" + generateRandomString() + "_" + shortName;
+            dataSourceName = "yt_" + shortName + "_" + RandomUtil.randomStringUpper(4);
         }
         if (StringUtils.isNotBlank(systemName)) {
             dataSourceName = dataSourceName + "_" + systemName;

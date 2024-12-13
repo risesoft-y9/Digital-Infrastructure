@@ -25,7 +25,7 @@ public class Y9PlatformProperties {
     private String systemName = "riseplatform";
 
     /**
-     * 岗位名称格式，默认格式为：{{jobName}}（{{personNames}}）， {{jobName}} 会替换为职位名 ，{{personNames}} 会替换为人员名称 <br>
+     * 岗位名称格式，默认格式为：#jobName + '（' + #personNames + '）'，#jobName 会替换为职位名，#personNames 会替换为人员名称 <br>
      * 最终的岗位名称例子：总经理（张三）
      */
     private String positionNameTemplate = POSITION_NAME_TEMPLATE_DEFAULT;

@@ -57,8 +57,6 @@
         <gitee.developerConnection>scm:git:https://gitee.com/risesoft-y9/y9-core.git</gitee.developerConnection>
 
         <revision>v9.7.0-SNAPSHOT</revision>
-
-        <git-commit-id-maven-plugin.version>8.0.2</git-commit-id-maven-plugin.version>
     </properties>
 
     <scm>
@@ -68,8 +66,13 @@
     </scm>
 
     <modules>
+<<<<<<< HEAD
         <module>y9-digitalbase-bom</module>
 		<module>y9-digitalbase-dependencies</module>
+=======
+        <module>y9-digitalbase-dependencies</module>
+        <module>y9-digitalbase-bom</module>
+>>>>>>> branch 'v9.7.x' of https://svn.youshengyun.com:3000/risesoft/y9-digitalbase.git
         <module>y9-digitalbase-parent</module>
 		
         <module>y9-digitalbase-common/risenet-y9boot-properties</module>
@@ -206,33 +209,6 @@
     </pluginRepositories>
 
     <build>
-        <plugins>
-            <plugin>
-                <groupId>io.github.git-commit-id</groupId>
-                <artifactId>git-commit-id-maven-plugin</artifactId>
-                <version>${git-commit-id-maven-plugin.version}</version>
-                <executions>
-                    <execution>
-                        <id>get-the-git-infos</id>
-                        <goals>
-                            <goal>revision</goal>
-                        </goals>
-                        <phase>initialize</phase>
-                    </execution>
-                </executions>
-                <configuration>
-                    <!-- <verbose>true</verbose> -->
-                    <dotGitDirectory>${project.basedir}/.git</dotGitDirectory>
-                    <failOnNoGitDirectory>false</failOnNoGitDirectory>
-                    <!-- 对于多个仓库聚合不会更新 git 的信息 -->
-                    <!-- <injectAllReactorProjects>true</injectAllReactorProjects> -->
-                    <generateGitPropertiesFile>true</generateGitPropertiesFile>
-                    <generateGitPropertiesFilename>${project.build.outputDirectory}/git.properties
-                    </generateGitPropertiesFilename>
-                    <commitIdGenerationMode>full</commitIdGenerationMode>
-                </configuration>
-            </plugin>
-        </plugins>
 
         <!-- 动态编译环境配置 -->
         <resources>

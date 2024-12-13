@@ -53,6 +53,8 @@ spring:
                 password: ${NACOS_PASSWORD:111111}
             discovery:
                 enabled: false
+        compatibility-verifier:
+            enabled: false
     config:
         import:
             - optional:nacos:platform.yml
@@ -124,13 +126,13 @@ spring:
 y9:
     systemName: riseplatform
     systemCnName: '数字底座'
-    internalIp: 192.168.x.x,10.161.x.x,10.1.x.x,172.20.x.x
+    internalIp: 192.x.x.x,10.x.x.x,172.20.x.x
     app:
         log:
             kafkaEnabled: true
         platform:
             systemName: riseplatform
-            positionNameTemplate: "{{jobName}}（{{personNames}}）"
+            positionNameTemplate: "#jobName + '（' + #personNames + '）'"
             managerModifyPasswordCycle: 7
             userDefaultpassword: ${NACOS_PASSWORD:111111}
     service:
@@ -236,6 +238,7 @@ y9:
                     - name
                     - whereClause
                     - url
+                    - positionNameTemplate
         oauth2:
             resource:
                 enabled: true

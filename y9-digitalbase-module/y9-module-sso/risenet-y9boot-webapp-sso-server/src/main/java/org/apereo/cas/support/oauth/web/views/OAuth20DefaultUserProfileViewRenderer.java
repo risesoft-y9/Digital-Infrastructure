@@ -1,15 +1,19 @@
 package org.apereo.cas.support.oauth.web.views;
 
+import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
 import jakarta.servlet.http.HttpServletResponse;
 
+import org.apereo.cas.authentication.attribute.AttributeDefinition;
+import org.apereo.cas.authentication.attribute.AttributeDefinitionStore;
 import org.apereo.cas.configuration.model.support.oauth.OAuthCoreProperties;
 import org.apereo.cas.configuration.model.support.oauth.OAuthProperties;
 import org.apereo.cas.services.ServicesManager;
 import org.apereo.cas.support.oauth.util.OAuth20Utils;
 import org.apereo.cas.ticket.accesstoken.OAuth20AccessToken;
+import org.apereo.cas.util.CollectionUtils;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 
@@ -29,6 +33,8 @@ public class OAuth20DefaultUserProfileViewRenderer implements OAuth20UserProfile
     protected final ServicesManager servicesManager;
 
     private final OAuthProperties oauthProperties;
+
+    private final AttributeDefinitionStore attributeDefinitionStore;
 
     @Override
     public ResponseEntity render(final Map<String, Object> model, final OAuth20AccessToken accessToken,
@@ -70,5 +76,12 @@ public class OAuth20DefaultUserProfileViewRenderer implements OAuth20UserProfile
             .forEach(attributeName -> flattened.put(attributeName, model.get(attributeName)));
         LOGGER.trace("Flattened user profile attributes with the final model as [{}]", model);
         return flattened;
+    }
+
+    protected Object determineAttributeValue(final String name, final Object attrValue) {
+        val values = CollectionUtils.toCollection(attrValue, ArrayList.class);
+        val result = attributeDefinitionStore.locateAttributeDefinition(name, AttributeDefinition.class);
+        return result.map(defn -> defn.toAttributeValue(values))
+            .orElseGet(() -> values.size() == 1 ? values.getFirst() : values);
     }
 }

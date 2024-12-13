@@ -117,7 +117,7 @@ public class Y9Config {
             RiseAuthenticationHandler handler = new RiseAuthenticationHandler("y9AuthenticationHandler",
                 servicesManager, risePrincipalFactory(), 0, y9UserService, y9LoginUserService);
             return plan -> plan.registerAuthenticationHandlerWithPrincipalResolver(handler,
-                risePersonDirectoryPrincipalResolver());
+                risePersonDirectoryPrincipalResolver(y9UserService));
         }
 
         @Bean
@@ -130,8 +130,8 @@ public class Y9Config {
         }
 
         @Bean
-        public PrincipalResolver risePersonDirectoryPrincipalResolver() {
-            return new RisePersonDirectoryPrincipalResolver();
+        public PrincipalResolver risePersonDirectoryPrincipalResolver(Y9UserService y9UserService) {
+            return new RisePersonDirectoryPrincipalResolver(y9UserService);
         }
 
         @Bean

@@ -106,12 +106,14 @@
 
     <dependencyManagement>
         <dependencies>
-            <!-- Third Party -->
             <dependency>
-                <groupId>com.github.oshi</groupId>
-                <artifactId>oshi-core-java11</artifactId>
-                <version>6.6.0</version>
+                <groupId>net.risesoft</groupId>
+                <artifactId>y9-digitalbase-bom</artifactId>
+                <version>${revision}</version>
+                <type>pom</type>
+                <scope>import</scope>
             </dependency>
+
         </dependencies>
     </dependencyManagement>
 

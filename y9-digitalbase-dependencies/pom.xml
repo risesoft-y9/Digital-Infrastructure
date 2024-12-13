@@ -96,6 +96,7 @@
         <maven.compiler.target>${java.version}</maven.compiler.target>
         <maven.build.timestamp.format>yyyyMMddHHmmss</maven.build.timestamp.format>
         <maven.javadoc.failOnError>false</maven.javadoc.failOnError>
+        <maven.deploy.skip>false</maven.deploy.skip>
 
         <gitee.url>https://gitee.com/risesoft-y9/y9-core</gitee.url>
         <gitee.connection>scm:git:https://gitee.com/risesoft-y9/y9-core.git</gitee.connection>
@@ -103,40 +104,39 @@
 
         <revision>v9.7.0-SNAPSHOT</revision>
 
-        <aspectj.version>1.9.22</aspectj.version>
-        <guava.version>33.1.0-jre</guava.version>
+        <spring-boot.version>3.4.0</spring-boot.version>
+        <spring-cloud.version>2024.0.0</spring-cloud.version>
 
-        <fastjson.version>2.0.49</fastjson.version>
-
-        <commons-lang3.version>3.13.0</commons-lang3.version>
-        <commons-io.version>2.13.0</commons-io.version>
-        <commons-net.version>3.10.0</commons-net.version>
+        <aspectj.version>1.9.22.1</aspectj.version>
+        <commons-io.version>2.18.0</commons-io.version>
+        <commons-net.version>3.11.1</commons-net.version>
         <commons-pool2.version>2.12.0</commons-pool2.version>
         <commons-text.version>1.12.0</commons-text.version>
-
-        <javers.version>7.4.2</javers.version>
+        <fastjson.version>2.0.53</fastjson.version>
+        <guava.version>33.3.1-jre</guava.version>
+        <httpcomponents.version>4.5.14</httpcomponents.version>
+        <hutool.version>5.8.34</hutool.version>
+        <javers.version>7.7.0</javers.version>
+        <jakarta.mail.version>2.0.1</jakarta.mail.version>
+        <jodd-mail.version>7.1.0</jodd-mail.version>
+        <jodd-bean.version>5.1.6</jodd-bean.version>
+        <jodd-http.version>6.3.0</jodd-http.version>
+        <jodd-lagarto.version>6.0.6</jodd-lagarto.version>
+        <lombok.version>1.18.36</lombok.version>
         <org-dom4j.version>2.1.4</org-dom4j.version>
-        <oshi.version>6.6.0</oshi.version>
-        <lombok.version>1.18.32</lombok.version>
+        <oshi.version>6.6.5</oshi.version>
+        <shedlock.version>6.0.2</shedlock.version>
 
-        <liquibase.version>4.27.0</liquibase.version>
-        <shedlock.version>5.13.0</shedlock.version>
-
+        <!-- db driver -->
+        <dameng-driver.version>8.1.3.140</dameng-driver.version>
         <mysql-driver.version>8.2.0</mysql-driver.version>
         <mariadb-driver.version>3.5.0</mariadb-driver.version>
         <postgresql-driver.version>42.7.3</postgresql-driver.version>
         <kingbase-driver.version>8.6.1</kingbase-driver.version>
-        <dameng-driver.version>8.1.3.140</dameng-driver.version>
+        <kingbase-hibernate-dialect.version>5.4.6.Finaldialect</kingbase-hibernate-dialect.version>
+        <kingbase-hibernate-jpa-api.version>2.1.0.Final</kingbase-hibernate-jpa-api.version>
+        <oceanbase-client.version>2.4.0</oceanbase-client.version>
         <oracle-driver.version>23.6.0.24.10</oracle-driver.version>
-
-        <spring-boot.version>3.4.0</spring-boot.version>
-        <spring-cloud.version>2023.0.3</spring-cloud.version>
-
-        <aspectj.version>1.9.22</aspectj.version>
-        <lombok.version>1.18.36</lombok.version>
-        <httpcomponents.version>4.5.14</httpcomponents.version>
-        <jakarta.mail.version>2.0.1</jakarta.mail.version>
-
 
         <!-- Plugin versions -->
         <jib-maven-plugin.version>3.4.0</jib-maven-plugin.version>
@@ -166,408 +166,6 @@
 
     <dependencyManagement>
         <dependencies>
-            <!-- net.risesoft common-->
-            <dependency>
-                <groupId>net.risesoft</groupId>
-                <artifactId>risenet-y9boot-properties</artifactId>
-                <version>${revision}</version>
-            </dependency>
-
-            <dependency>
-                <groupId>net.risesoft</groupId>
-                <artifactId>risenet-y9boot-common-model</artifactId>
-                <version>${revision}</version>
-            </dependency>
-
-            <dependency>
-                <groupId>net.risesoft</groupId>
-                <artifactId>risenet-y9boot-common-util</artifactId>
-                <version>${revision}</version>
-            </dependency>
-
-            <dependency>
-                <groupId>net.risesoft</groupId>
-                <artifactId>risenet-y9boot-common-tenant-datasource</artifactId>
-                <version>${revision}</version>
-            </dependency>
-
-            <dependency>
-                <groupId>net.risesoft</groupId>
-                <artifactId>risenet-y9boot-3rd-jpa</artifactId>
-                <version>${revision}</version>
-            </dependency>
-
-            <dependency>
-                <groupId>net.risesoft</groupId>
-                <artifactId>risenet-y9boot-common-sqlddl</artifactId>
-                <version>${revision}</version>
-            </dependency>
-
-            <!-- net.risesoft idcode-->
-            <dependency>
-                <groupId>net.risesoft</groupId>
-                <artifactId>risenet-y9boot-idcode</artifactId>
-                <version>${revision}</version>
-            </dependency>
-
-            <!-- net.risesoft starter-->
-            <dependency>
-                <groupId>net.risesoft</groupId>
-                <artifactId>risenet-y9boot-starter-apisix</artifactId>
-                <version>${revision}</version>
-            </dependency>
-
-            <dependency>
-                <groupId>net.risesoft</groupId>
-                <artifactId>risenet-y9boot-starter-cache-redis</artifactId>
-                <version>${revision}</version>
-            </dependency>
-
-            <dependency>
-                <groupId>net.risesoft</groupId>
-                <artifactId>risenet-y9boot-starter-idgenerator</artifactId>
-                <version>${revision}</version>
-            </dependency>
-
-            <dependency>
-                <groupId>net.risesoft</groupId>
-                <artifactId>risenet-y9boot-starter-jpa-public</artifactId>
-                <version>${revision}</version>
-            </dependency>
-            <dependency>
-                <groupId>net.risesoft</groupId>
-                <artifactId>risenet-y9boot-starter-jpa-tenant</artifactId>
-                <version>${revision}</version>
-            </dependency>
-
-            <dependency>
-                <groupId>net.risesoft</groupId>
-                <artifactId>risenet-y9boot-starter-kafka</artifactId>
-                <version>${revision}</version>
-            </dependency>
-
-            <dependency>
-                <groupId>net.risesoft</groupId>
-                <artifactId>risenet-y9boot-starter-liquibase</artifactId>
-                <version>${revision}</version>
-            </dependency>
-
-            <dependency>
-                <groupId>net.risesoft</groupId>
-                <artifactId>risenet-y9boot-starter-publish-kafka</artifactId>
-                <version>${revision}</version>
-            </dependency>
-            <dependency>
-                <groupId>net.risesoft</groupId>
-                <artifactId>risenet-y9boot-starter-listener-kafka</artifactId>
-                <version>${revision}</version>
-            </dependency>
-
-            <dependency>
-                <groupId>net.risesoft</groupId>
-                <artifactId>risenet-y9boot-starter-multi-tenant</artifactId>
-                <version>${revision}</version>
-            </dependency>
-
-            <dependency>
-                <groupId>net.risesoft</groupId>
-                <artifactId>risenet-y9boot-starter-log</artifactId>
-                <version>${revision}</version>
-            </dependency>
-
-            <dependency>
-                <groupId>net.risesoft</groupId>
-                <artifactId>risenet-y9boot-starter-permission</artifactId>
-                <version>${revision}</version>
-            </dependency>
-
-            <dependency>
-                <groupId>net.risesoft</groupId>
-                <artifactId>risenet-y9boot-starter-security</artifactId>
-                <version>${revision}</version>
-            </dependency>
-
-            <dependency>
-                <groupId>net.risesoft</groupId>
-                <artifactId>risenet-y9boot-starter-sso-oauth2-resource</artifactId>
-                <version>${revision}</version>
-            </dependency>
-
-            <dependency>
-                <groupId>net.risesoft</groupId>
-                <artifactId>risenet-y9boot-starter-elasticsearch</artifactId>
-                <version>${revision}</version>
-            </dependency>
-
-            <dependency>
-                <groupId>net.risesoft</groupId>
-                <artifactId>risenet-y9boot-starter-web</artifactId>
-                <version>${revision}</version>
-            </dependency>
-
-            <dependency>
-                <groupId>net.risesoft</groupId>
-                <artifactId>risenet-y9boot-starter-openfeign</artifactId>
-                <version>${revision}</version>
-            </dependency>
-
-            <!-- net.risesoft support-->
-            <dependency>
-                <groupId>net.risesoft</groupId>
-                <artifactId>risenet-y9boot-support-file-jpa-repository</artifactId>
-                <version>${revision}</version>
-            </dependency>
-
-            <dependency>
-                <groupId>net.risesoft</groupId>
-                <artifactId>risenet-y9boot-support-file-service-ftp</artifactId>
-                <version>${revision}</version>
-            </dependency>
-
-            <dependency>
-                <groupId>net.risesoft</groupId>
-                <artifactId>risenet-y9boot-support-file-service-local</artifactId>
-                <version>${revision}</version>
-            </dependency>
-
-            <dependency>
-                <groupId>net.risesoft</groupId>
-                <artifactId>risenet-y9boot-support-file-service-rest</artifactId>
-                <version>${revision}</version>
-            </dependency>
-
-            <dependency>
-                <groupId>net.risesoft</groupId>
-                <artifactId>risenet-y9boot-support-history</artifactId>
-                <version>${revision}</version>
-            </dependency>
-
-            <!-- net.risesoft log-->
-            <dependency>
-                <groupId>net.risesoft</groupId>
-                <artifactId>risenet-y9boot-api-feignclient-log</artifactId>
-                <version>${revision}</version>
-            </dependency>
-
-            <dependency>
-                <groupId>net.risesoft</groupId>
-                <artifactId>risenet-y9boot-api-interface-log</artifactId>
-                <version>${revision}</version>
-            </dependency>
-
-            <dependency>
-                <groupId>net.risesoft</groupId>
-                <artifactId>risenet-y9boot-support-log-elasticsearch-repository</artifactId>
-                <version>${revision}</version>
-            </dependency>
-
-            <dependency>
-                <groupId>net.risesoft</groupId>
-                <artifactId>risenet-y9boot-support-log-jpa-repository</artifactId>
-                <version>${revision}</version>
-            </dependency>
-
-            <dependency>
-                <groupId>net.risesoft</groupId>
-                <artifactId>risenet-y9boot-support-log-service</artifactId>
-                <version>${revision}</version>
-            </dependency>
-
-            <dependency>
-                <groupId>net.risesoft</groupId>
-                <artifactId>risenet-y9boot-support-log-web</artifactId>
-                <version>${revision}</version>
-            </dependency>
-
-            <!-- net.risesoft platform-->
-            <dependency>
-                <groupId>net.risesoft</groupId>
-                <artifactId>risenet-y9boot-api-feignclient-platform</artifactId>
-                <version>${revision}</version>
-            </dependency>
-
-            <dependency>
-                <groupId>net.risesoft</groupId>
-                <artifactId>risenet-y9boot-api-interface-platform</artifactId>
-                <version>${revision}</version>
-            </dependency>
-
-            <dependency>
-                <groupId>net.risesoft</groupId>
-                <artifactId>risenet-y9boot-support-platform-jpa-repository</artifactId>
-                <version>${revision}</version>
-            </dependency>
-
-            <dependency>
-                <groupId>net.risesoft</groupId>
-                <artifactId>risenet-y9boot-support-platform-service</artifactId>
-                <version>${revision}</version>
-            </dependency>
-
-            <dependency>
-                <groupId>net.risesoft</groupId>
-                <artifactId>risenet-y9boot-support-platform-web</artifactId>
-                <version>${revision}</version>
-            </dependency>
-
-            <!--net.risesoft.dataflow-->
-            <dependency>
-                <groupId>net.risesoft</groupId>
-                <artifactId>risenet-y9boot-beta-api</artifactId>
-                <version>${revision}</version>
-            </dependency>
-
-            <dependency>
-                <groupId>net.risesoft</groupId>
-                <artifactId>risenet-y9boot-beta-client</artifactId>
-                <version>${revision}</version>
-            </dependency>
-
-            <dependency>
-                <groupId>net.risesoft</groupId>
-                <artifactId>risenet-y9boot-data-common-tools</artifactId>
-                <version>${revision}</version>
-            </dependency>
-
-            <dependency>
-                <groupId>net.risesoft</groupId>
-                <artifactId>risenet-y9boot-data-jdbc</artifactId>
-                <version>${revision}</version>
-            </dependency>
-
-            <dependency>
-                <groupId>net.risesoft</groupId>
-                <artifactId>risenet-y9boot-data-jdbc-commons</artifactId>
-                <version>${revision}</version>
-            </dependency>
-
-            <dependency>
-                <groupId>net.risesoft</groupId>
-                <artifactId>risenet-y9boot-data-transfer-base</artifactId>
-                <version>${revision}</version>
-            </dependency>
-
-            <dependency>
-                <groupId>net.risesoft</groupId>
-                <artifactId>risenet-y9boot-data-transfer-core</artifactId>
-                <version>${revision}</version>
-            </dependency>
-
-            <dependency>
-                <groupId>net.risesoft</groupId>
-                <artifactId>risenet-y9boot-data-transfer-data</artifactId>
-                <version>${revision}</version>
-            </dependency>
-
-            <dependency>
-                <groupId>net.risesoft</groupId>
-                <artifactId>risenet-y9boot-data-transfer-elastic</artifactId>
-                <version>${revision}</version>
-            </dependency>
-
-            <dependency>
-                <groupId>net.risesoft</groupId>
-                <artifactId>risenet-y9boot-data-transfer-rdbms</artifactId>
-                <version>${revision}</version>
-            </dependency>
-
-            <dependency>
-                <groupId>net.risesoft</groupId>
-                <artifactId>risenet-y9boot-data-transfer-ftp</artifactId>
-                <version>${revision}</version>
-            </dependency>
-            <dependency>
-                <groupId>net.risesoft</groupId>
-                <artifactId>risenet-y9boot-data-transfer-stream</artifactId>
-                <version>${revision}</version>
-            </dependency>
-
-            <dependency>
-                <groupId>net.risesoft</groupId>
-                <artifactId>risenet-y9boot-rpc-commons</artifactId>
-                <version>${revision}</version>
-            </dependency>
-
-            <dependency>
-                <groupId>net.risesoft</groupId>
-                <artifactId>risenet-y9boot-rpc-consumer</artifactId>
-                <version>${revision}</version>
-            </dependency>
-
-            <dependency>
-                <groupId>net.risesoft</groupId>
-                <artifactId>risenet-y9boot-rpc-provide</artifactId>
-                <version>${revision}</version>
-            </dependency>
-
-            <dependency>
-                <groupId>net.risesoft</groupId>
-                <artifactId>risenet-y9boot-support-risedata-scheduler</artifactId>
-                <version>${revision}</version>
-            </dependency>
-
-            <!--net.risesoft.flowable-->
-            <dependency>
-                <groupId>net.risesoft</groupId>
-                <artifactId>risenet-y9boot-api-interface-itemadmin</artifactId>
-                <version>${revision}</version>
-            </dependency>
-
-            <dependency>
-                <groupId>net.risesoft</groupId>
-                <artifactId>risenet-y9boot-api-feignclient-itemadmin</artifactId>
-                <version>${revision}</version>
-            </dependency>
-
-            <dependency>
-                <groupId>net.risesoft</groupId>
-                <artifactId>risenet-y9boot-support-itemadmin-jpa-repository</artifactId>
-                <version>${revision}</version>
-            </dependency>
-
-            <dependency>
-                <groupId>net.risesoft</groupId>
-                <artifactId>risenet-y9boot-support-itemadmin-position</artifactId>
-                <version>${revision}</version>
-            </dependency>
-
-            <dependency>
-                <groupId>net.risesoft</groupId>
-                <artifactId>risenet-y9boot-api-interface-processadmin</artifactId>
-                <version>${revision}</version>
-            </dependency>
-
-            <dependency>
-                <groupId>net.risesoft</groupId>
-                <artifactId>risenet-y9boot-api-feignclient-processadmin</artifactId>
-                <version>${revision}</version>
-            </dependency>
-
-            <dependency>
-                <groupId>net.risesoft</groupId>
-                <artifactId>risenet-y9boot-support-processadmin</artifactId>
-                <version>${revision}</version>
-            </dependency>
-
-            <!-- net.risesoft webmail-->
-            <dependency>
-                <groupId>net.risesoft</groupId>
-                <artifactId>risenet-y9boot-api-feignclient-webmail</artifactId>
-                <version>${revision}</version>
-            </dependency>
-
-            <dependency>
-                <groupId>net.risesoft</groupId>
-                <artifactId>risenet-y9boot-api-interface-webmail</artifactId>
-                <version>${revision}</version>
-            </dependency>
-
-            <dependency>
-                <groupId>net.risesoft</groupId>
-                <artifactId>risenet-y9boot-support-webmail</artifactId>
-                <version>${revision}</version>
-            </dependency>
-
             <!-- Third Party -->
             <dependency>
                 <groupId>org.springframework.boot</groupId>
@@ -598,7 +196,6 @@
             </dependency>
 
             <!-- commons -->
-
             <dependency>
                 <groupId>commons-io</groupId>
                 <artifactId>commons-io</artifactId>
@@ -609,7 +206,6 @@
                 <artifactId>commons-net</artifactId>
                 <version>${commons-net.version}</version>
             </dependency>
-
             <dependency>
                 <groupId>org.apache.commons</groupId>
                 <artifactId>commons-text</artifactId>
@@ -620,22 +216,22 @@
             <dependency>
                 <groupId>org.jodd</groupId>
                 <artifactId>jodd-bean</artifactId>
-                <version>5.1.6</version>
+                <version>${jodd-bean.version}</version>
             </dependency>
             <dependency>
                 <groupId>org.jodd</groupId>
                 <artifactId>jodd-mail</artifactId>
-                <version>7.0.1</version>
+                <version>${jodd-mail.version}</version>
             </dependency>
             <dependency>
                 <groupId>org.jodd</groupId>
                 <artifactId>jodd-http</artifactId>
-                <version>6.3.0</version>
+                <version>${jodd-http.version}</version>
             </dependency>
             <dependency>
                 <groupId>org.jodd</groupId>
                 <artifactId>jodd-lagarto</artifactId>
-                <version>6.0.6</version>
+                <version>${jodd-lagarto.version}</version>
             </dependency>
             <!-- jodd  end -->
 
@@ -650,7 +246,6 @@
                     </exclusion>
                 </exclusions>
             </dependency>
-
             <dependency>
                 <groupId>org.apache.httpcomponents</groupId>
                 <artifactId>httpmime</artifactId>
@@ -661,7 +256,7 @@
             <dependency>
                 <groupId>cn.hutool</groupId>
                 <artifactId>hutool-all</artifactId>
-                <version>5.8.27</version>
+                <version>${hutool.version}</version>
             </dependency>
 
             <!-- javers -->
@@ -714,6 +309,7 @@
                 <version>${shedlock.version}</version>
             </dependency>
 
+            <!-- 达梦数据库 -->
             <dependency>
                 <groupId>com.dameng</groupId>
                 <artifactId>DmDialect-for-hibernate5.6</artifactId>
@@ -742,20 +338,20 @@
             <dependency>
                 <groupId>cn.com.kingbase</groupId>
                 <artifactId>hibernate-dialect</artifactId>
-                <version>5.4.6.Finaldialect</version>
+                <version>${kingbase-hibernate-dialect.version}</version>
             </dependency>
 
             <dependency>
                 <groupId>cn.com.kingbase</groupId>
                 <artifactId>hibernate-jpa-api</artifactId>
-                <version>2.1.0.Final</version>
+                <version>${kingbase-hibernate-jpa-api.version}</version>
             </dependency>
 
             <!-- OceanBase数据库 -->
             <dependency>
                 <groupId>com.oceanbase</groupId>
                 <artifactId>oceanbase-client</artifactId>
-                <version>2.4.0</version>
+                <version>${oceanbase-client.version}</version>
             </dependency>
 
             <!--oracle数据库  -->
@@ -806,7 +402,7 @@
                 <plugin>
                     <groupId>org.codehaus.mojo</groupId>
                     <artifactId>flatten-maven-plugin</artifactId>
-                    <version>1.6.0</version>
+                    <version>${flatten-maven-plugin.version}</version>
                     <inherited>true</inherited>
                     <executions>
                         <execution>
