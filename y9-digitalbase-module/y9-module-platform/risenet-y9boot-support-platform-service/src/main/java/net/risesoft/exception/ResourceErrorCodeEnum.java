@@ -24,7 +24,11 @@ public enum ResourceErrorCodeEnum implements ErrorCode {
     /** 数据目录不存在 */
     DATA_CATALOG_NOT_FOUND(4, "数据目录[{}]不存在"),
     /** IP 地址格式不合法 */
-    IP_NOT_VALID(5, "IP 地址[{}]格式不合法"),;
+    IP_NOT_VALID(5, "IP 地址[{}]格式不合法"),
+    /** 资源父节点不存在 */
+    RESOURCE_PARENT_NOT_FOUND(6, "资源父节点[{}]不存在"),
+    /** 资源节点不存在 */
+    RESOURCE_NOT_FOUND(7, "资源节点[{}]不存在");
 
     private final int moduleErrorCode;
     private final String description;

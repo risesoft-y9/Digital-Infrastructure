@@ -44,4 +44,7 @@ public interface Y9DataCatalogRepository extends JpaRepository<Y9DataCatalog, St
         String parentId, String treeType, Boolean enabled);
 
     List<Y9DataCatalog> findByParentIdOrderByTabIndex(String parentId);
+
+    List<Y9DataCatalog> findByParentIdIsNull();
+
 }

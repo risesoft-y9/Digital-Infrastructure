@@ -18,7 +18,7 @@ public interface Y9DataCatalogService {
 
     void delete(String id);
 
-    DataCatalog getById(String id);
+    DataCatalog getDataCatalogById(String id);
 
     Y9DataCatalog saveOrUpdate(Y9DataCatalog y9DataCatalog);
 
@@ -27,16 +27,18 @@ public interface Y9DataCatalogService {
     List<DataCatalog> getTree(String tenantId, String parentId, String treeType);
 
     List<DataCatalog> getTree(String tenantId, String parentId, String treeType, Boolean enabled,
-        boolean includeAllDescendant, AuthorityEnum authority, String personId);
+                              boolean includeAllDescendant, AuthorityEnum authority, String personId);
 
     List<DataCatalog> treeSearch(String tenantId, String name, String treeType);
 
     List<DataCatalog> treeSearch(String tenantId, String name, String treeType, AuthorityEnum authority,
-        String personId);
+                                 String personId);
 
     List<Y9OptionValue> getTreeTypeList();
 
     void saveByType(Y9DataCatalog y9DataCatalog);
 
     DataCatalog getTreeRoot(String id);
+
+    List<Y9DataCatalog> listRoot();
 }

@@ -8,20 +8,18 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 import org.apache.commons.lang3.StringUtils;
-import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import lombok.RequiredArgsConstructor;
 
-import net.risesoft.consts.CacheNameConsts;
 import net.risesoft.enums.platform.ResourceTypeEnum;
+import net.risesoft.exception.ResourceErrorCodeEnum;
+import net.risesoft.y9.exception.util.Y9ExceptionUtil;
 import net.risesoft.y9public.entity.resource.Y9App;
-import net.risesoft.y9public.entity.resource.Y9DataCatalog;
-import net.risesoft.y9public.entity.resource.Y9Menu;
-import net.risesoft.y9public.entity.resource.Y9Operation;
 import net.risesoft.y9public.entity.resource.Y9ResourceBase;
+import net.risesoft.y9public.manager.resource.CompositeResourceManager;
 import net.risesoft.y9public.manager.resource.Y9AppManager;
 import net.risesoft.y9public.manager.resource.Y9MenuManager;
 import net.risesoft.y9public.manager.resource.Y9OperationManager;
@@ -51,11 +49,7 @@ public class CompositeResourceServiceImpl implements CompositeResourceService {
     private final Y9MenuManager y9MenuManager;
     private final Y9OperationManager y9OperationManager;
 
-    @Cacheable(cacheNames = CacheNameConsts.RESOURCE_APP, key = "#id", condition = "#id!=null",
-        unless = "#result==null")
-    public Y9App findAppById(String id) {
-        return y9AppRepository.findById(id).orElse(null);
-    }
+    private final CompositeResourceManager compositeResourceManager;
 
     @Override
     public List<Y9ResourceBase> findByCustomId(String customId) {
@@ -79,36 +73,26 @@ public class CompositeResourceServiceImpl implements CompositeResourceService {
     }
 
     @Override
-    @Transactional(readOnly = true)
     public Y9ResourceBase findById(String id) {
-        Y9App y9App = this.findAppById(id);
-        if (y9App != null) {
-            return y9App;
-        }
-        Y9Menu y9Menu = this.findMenuById(id);
-        if (y9Menu != null) {
-            return y9Menu;
-        }
-        Y9Operation y9Operation = this.findOperationById(id);
-        if (y9Operation != null) {
-            return y9Operation;
-        }
+        return compositeResourceManager.findResource(id).orElse(null);
+    }
 
-        Y9DataCatalog y9DataCatalog = this.findDataCatalogById(id);
-        if (y9DataCatalog != null) {
-            return y9DataCatalog;
-        }
-        return null;
+    @Override
+    public Y9ResourceBase getById(String id) {
+        return compositeResourceManager.findResource(id)
+            .orElseThrow(() -> Y9ExceptionUtil.notFoundException(ResourceErrorCodeEnum.RESOURCE_NOT_FOUND, id));
     }
 
     @Override
     public Y9ResourceBase findByIdAndResourceType(String resourceId, ResourceTypeEnum resourceType) {
         if (ResourceTypeEnum.APP.equals(resourceType)) {
-            return this.findAppById(resourceId);
+            return compositeResourceManager.findAppById(resourceId);
         } else if (ResourceTypeEnum.MENU.equals(resourceType)) {
-            return this.findMenuById(resourceId);
+            return compositeResourceManager.findMenuById(resourceId);
+        } else if (ResourceTypeEnum.OPERATION.equals(resourceType)) {
+            return compositeResourceManager.findOperationById(resourceId);
         } else {
-            return this.findOperationById(resourceId);
+            return compositeResourceManager.findDataCatalogById(resourceId);
         }
     }
 
@@ -166,24 +150,6 @@ public class CompositeResourceServiceImpl implements CompositeResourceService {
                 }
             }
         }
-    }
-
-    @Cacheable(cacheNames = CacheNameConsts.RESOURCE_MENU, key = "#id", condition = "#id!=null",
-        unless = "#result==null")
-    public Y9Menu findMenuById(String id) {
-        return y9MenuRepository.findById(id).orElse(null);
-    }
-
-    @Cacheable(cacheNames = CacheNameConsts.RESOURCE_OPERATION, key = "#id", condition = "#id!=null",
-        unless = "#result==null")
-    public Y9Operation findOperationById(String id) {
-        return y9OperationRepository.findById(id).orElse(null);
-    }
-
-    @Cacheable(cacheNames = CacheNameConsts.RESOURCE_DATA_CATALOG, key = "#id", condition = "#id!=null",
-        unless = "#result==null")
-    public Y9DataCatalog findDataCatalogById(String id) {
-        return y9DataCatalogRepository.findById(id).orElse(null);
     }
 
     private void fillResourcesRecursivelyToRoot(Y9ResourceBase y9ResourceBase, Set<Y9ResourceBase> resourceSet) {

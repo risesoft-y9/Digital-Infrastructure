@@ -33,6 +33,7 @@ import net.risesoft.service.dictionary.Y9OptionValueService;
 import net.risesoft.service.identity.Y9PersonToResourceAndAuthorityService;
 import net.risesoft.service.identity.Y9PositionToResourceAndAuthorityService;
 import net.risesoft.service.org.CompositeOrgBaseService;
+import net.risesoft.util.Y9OrgUtil;
 import net.risesoft.y9.Y9Context;
 import net.risesoft.y9.Y9LoginUserHolder;
 import net.risesoft.y9.configuration.app.y9platform.Y9PlatformProperties;
@@ -44,6 +45,7 @@ import net.risesoft.y9.util.Y9BeanUtil;
 import net.risesoft.y9public.entity.resource.Y9DataCatalog;
 import net.risesoft.y9public.entity.resource.Y9ResourceBase;
 import net.risesoft.y9public.entity.tenant.Y9TenantApp;
+import net.risesoft.y9public.manager.resource.CompositeResourceManager;
 import net.risesoft.y9public.repository.resource.Y9DataCatalogRepository;
 import net.risesoft.y9public.repository.tenant.Y9TenantAppRepository;
 import net.risesoft.y9public.service.resource.Y9DataCatalogService;
@@ -74,49 +76,69 @@ public class Y9DataCatalogServiceImpl implements Y9DataCatalogService {
     private final Y9PersonToResourceAndAuthorityRepository y9PersonToResourceAndAuthorityRepository;
     private final Y9PositionToResourceAndAuthorityRepository y9PositionToResourceAndAuthorityRepository;
 
+    private final CompositeResourceManager compositeResourceManager;
+
     @Override
     public List<DataCatalog> getTree(String tenantId, String parentId, String treeType) {
         return this.getTree(tenantId, parentId, treeType, null, false, null, null);
     }
 
     @Override
-    public DataCatalog getById(String id) {
-        Y9DataCatalog y9DataCatalog = y9DataCatalogRepository.findById(id)
-            .orElseThrow(() -> Y9ExceptionUtil.notFoundException(ResourceErrorCodeEnum.DATA_CATALOG_NOT_FOUND, id));
+    public DataCatalog getDataCatalogById(String id) {
+        Y9DataCatalog y9DataCatalog = getById(id);
         return this.convertY9DataCatalogToDataCatalog(y9DataCatalog);
+    }
+
+    private Y9DataCatalog getById(String id) {
+        return y9DataCatalogRepository.findById(id)
+            .orElseThrow(() -> Y9ExceptionUtil.notFoundException(ResourceErrorCodeEnum.DATA_CATALOG_NOT_FOUND, id));
     }
 
     @Override
     @Transactional(readOnly = false)
     public Y9DataCatalog saveOrUpdate(Y9DataCatalog y9DataCatalog) {
-        if (StringUtils.isBlank(y9DataCatalog.getId())) {
-            y9DataCatalog.setId(Y9IdGenerator.genId());
-            y9DataCatalog.setTenantId(Y9LoginUserHolder.getTenantId());
-            y9DataCatalog.setSystemId(InitDataConsts.SYSTEM_ID);
-            y9DataCatalog.setInherit(Boolean.TRUE);
-            y9DataCatalog.setTabIndex(this.getNextTabIndex(y9DataCatalog.getParentId()));
-            return y9DataCatalogRepository.save(y9DataCatalog);
+        if (StringUtils.isNotBlank(y9DataCatalog.getId())) {
+            Optional<Y9DataCatalog> y9DataCatalogOptional = y9DataCatalogRepository.findById(y9DataCatalog.getId());
+            if (y9DataCatalogOptional.isPresent()) {
+                Y9DataCatalog originY9DataCatalog = y9DataCatalogOptional.get();
+                Y9BeanUtil.copyProperties(y9DataCatalog, originY9DataCatalog);
+
+                if (StringUtils.isEmpty(originY9DataCatalog.getParentId())) {
+                    originY9DataCatalog.setParentId(null);
+                    originY9DataCatalog.setGuidPath(Y9OrgUtil.buildGuidPath(null, originY9DataCatalog.getId()));
+                } else {
+                    Y9DataCatalog parent = getById(y9DataCatalog.getParentId());
+                    originY9DataCatalog
+                        .setGuidPath(Y9OrgUtil.buildGuidPath(parent.getGuidPath(), originY9DataCatalog.getId()));
+                }
+
+                return y9DataCatalogRepository.save(originY9DataCatalog);
+            }
         }
 
-        Optional<Y9DataCatalog> y9DataCatalogOptional = y9DataCatalogRepository.findById(y9DataCatalog.getId());
-        if (y9DataCatalogOptional.isPresent()) {
-            Y9DataCatalog originY9DataCatalog = y9DataCatalogOptional.get();
-            Y9BeanUtil.copyProperties(y9DataCatalog, originY9DataCatalog);
-            if (StringUtils.isEmpty(originY9DataCatalog.getParentId())) {
-                originY9DataCatalog.setParentId(null);
-            }
-            return y9DataCatalogRepository.save(originY9DataCatalog);
-        } else {
-            y9DataCatalog.setSystemId(InitDataConsts.SYSTEM_ID);
-            return y9DataCatalogRepository.save(y9DataCatalog);
+        if (StringUtils.isBlank(y9DataCatalog.getId())) {
+            y9DataCatalog.setId(Y9IdGenerator.genId());
         }
+
+        y9DataCatalog.setTenantId(Y9LoginUserHolder.getTenantId());
+        y9DataCatalog.setSystemId(InitDataConsts.SYSTEM_ID);
+        y9DataCatalog.setInherit(Boolean.TRUE);
+        y9DataCatalog.setTabIndex(this.getNextTabIndex(y9DataCatalog.getParentId()));
+
+        if (StringUtils.isNotBlank(y9DataCatalog.getParentId())) {
+            Y9DataCatalog parent = getById(y9DataCatalog.getParentId());
+            y9DataCatalog.setGuidPath(Y9OrgUtil.buildGuidPath(parent.getGuidPath(), y9DataCatalog.getId()));
+        } else {
+            y9DataCatalog.setGuidPath(Y9OrgUtil.buildGuidPath(null, y9DataCatalog.getId()));
+        }
+
+        return y9DataCatalogRepository.save(y9DataCatalog);
     }
 
     @Override
     @Transactional(readOnly = false)
     public void delete(String id) {
-        Y9DataCatalog y9DataCatalog = y9DataCatalogRepository.findById(id)
-            .orElseThrow(() -> Y9ExceptionUtil.notFoundException(ResourceErrorCodeEnum.DATA_CATALOG_NOT_FOUND, id));
+        Y9DataCatalog y9DataCatalog = getById(id);
         y9DataCatalogRepository.deleteById(id);
 
         // 删除租户关联数据
@@ -252,13 +274,18 @@ public class Y9DataCatalogServiceImpl implements Y9DataCatalogService {
 
     @Override
     public DataCatalog getTreeRoot(String id) {
-        DataCatalog dataCatalog = getById(id);
+        DataCatalog dataCatalog = getDataCatalogById(id);
 
         if (StringUtils.isNotBlank(dataCatalog.getParentId())) {
             return getTreeRoot(dataCatalog.getParentId());
         } else {
             return dataCatalog;
         }
+    }
+
+    @Override
+    public List<Y9DataCatalog> listRoot() {
+        return y9DataCatalogRepository.findByParentIdIsNull();
     }
 
     @Transactional(readOnly = false)
@@ -283,7 +310,7 @@ public class Y9DataCatalogServiceImpl implements Y9DataCatalogService {
 
     private void fillByUpwardRecursion(Set<DataCatalog> y9DataCatalogResultSet, String parentId) {
         if (StringUtils.isNotBlank(parentId)) {
-            DataCatalog dataCatalog = this.getById(parentId);
+            DataCatalog dataCatalog = this.getDataCatalogById(parentId);
             y9DataCatalogResultSet.add(dataCatalog);
             fillByUpwardRecursion(y9DataCatalogResultSet, dataCatalog.getParentId());
         }

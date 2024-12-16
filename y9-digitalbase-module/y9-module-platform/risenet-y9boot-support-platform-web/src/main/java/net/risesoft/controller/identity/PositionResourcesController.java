@@ -33,7 +33,7 @@ import net.risesoft.service.identity.Y9PositionToResourceAndAuthorityService;
 @RequestMapping(value = "/api/rest/positionResources", produces = MediaType.APPLICATION_JSON_VALUE)
 @RequiredArgsConstructor
 @Validated
-@IsAnyManager(ManagerLevelEnum.SYSTEM_MANAGER)
+@IsAnyManager({ManagerLevelEnum.SYSTEM_MANAGER, ManagerLevelEnum.SECURITY_MANAGER})
 public class PositionResourcesController {
 
     private final Y9PositionToResourceAndAuthorityService y9PositionToResourceAndAuthorityService;

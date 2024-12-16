@@ -61,5 +61,10 @@ public class DataCatalog implements Serializable {
     /**
      * 自定义 ID
      */
-    protected String customId;
+    public String customId;
+
+    /**
+     * 是否继承父权限
+     */
+    private Boolean inherit;
 }

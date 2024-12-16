@@ -70,19 +70,6 @@
             },
             {
                 type: 'text',
-                type1: 'text', //自定义字段-编辑时显示的类型
-                type2: 'text', //自定义字段-非编辑状态显示文本类型
-                prop: 'tenantId',
-                label: computed(() => t('租户唯一标识')),
-                props: {
-                    render: () => {
-                        //text类型渲染的内容
-                        return h('span', basicInfo.value?.tenantId);
-                    }
-                }
-            },
-            {
-                type: 'text',
                 type1: 'input', //自定义字段-编辑时显示的类型
                 type2: 'text', //自定义字段-非编辑状态显示文本类型
                 prop: 'customId',
@@ -103,6 +90,19 @@
                     render: () => {
                         //text类型渲染的内容
                         return h('span', basicInfo.value?.systemId);
+                    }
+                }
+            },
+            {
+                type: 'text',
+                type1: 'text', //自定义字段-编辑时显示的类型
+                type2: 'text', //自定义字段-非编辑状态显示文本类型
+                prop: 'inherit',
+                label: computed(() => t('是否继承父权限')),
+                props: {
+                    render: () => {
+                        //text类型渲染的内容
+                        return h('span', basicInfo.value?.inherit ? '是' : '否');
                     }
                 }
             },

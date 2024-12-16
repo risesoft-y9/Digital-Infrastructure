@@ -14,7 +14,7 @@ const grantAuthorizeRouter = {
     meta: {
         title: '权限树',
         icon: 'ri-admin-line',
-        roles: ['systemAdmin', 'subSystemAdmin']
+        roles: ['systemAdmin', 'subSystemAdmin', 'securityAdmin', 'subSecurityAdmin']
     },
     children: [
         {
@@ -24,7 +24,7 @@ const grantAuthorizeRouter = {
             meta: {
                 title: '资源权限树',
                 icon: 'ri-admin-line',
-                roles: ['systemAdmin', 'subSystemAdmin']
+                roles: ['systemAdmin', 'subSystemAdmin', 'securityAdmin', 'subSecurityAdmin']
             }
         },
         {
@@ -34,7 +34,7 @@ const grantAuthorizeRouter = {
             meta: {
                 title: '角色权限树',
                 icon: 'ri-admin-line',
-                roles: ['systemAdmin', 'subSystemAdmin']
+                roles: ['systemAdmin', 'subSystemAdmin', 'securityAdmin', 'subSecurityAdmin']
             }
         }
     ]

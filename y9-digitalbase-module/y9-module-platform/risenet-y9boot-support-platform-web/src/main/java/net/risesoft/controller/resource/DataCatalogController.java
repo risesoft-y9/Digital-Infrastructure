@@ -70,7 +70,7 @@ public class DataCatalogController {
     @RiseLog(operationName = "根据id获取数据目录详情")
     @GetMapping(value = "/{id}")
     public Y9Result<DataCatalog> getById(@PathVariable @NotBlank String id) {
-        return Y9Result.success(y9DataCatalogService.getById(id), "成功获取数据目录详情");
+        return Y9Result.success(y9DataCatalogService.getDataCatalogById(id), "成功获取数据目录详情");
     }
 
     @RiseLog(operationName = "保存数据目录")

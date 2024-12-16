@@ -18,6 +18,7 @@ import lombok.RequiredArgsConstructor;
 import net.risesoft.id.IdType;
 import net.risesoft.id.Y9IdGenerator;
 import net.risesoft.pojo.Y9PageQuery;
+import net.risesoft.util.Y9OrgUtil;
 import net.risesoft.y9.Y9Context;
 import net.risesoft.y9.Y9LoginUserHolder;
 import net.risesoft.y9.pubsub.event.Y9EntityCreatedEvent;
@@ -303,6 +304,9 @@ public class Y9AppServiceImpl implements Y9AppService {
                 Y9App updatedY9AppResource = new Y9App();
                 Y9BeanUtil.copyProperties(originY9AppResource, updatedY9AppResource);
                 Y9BeanUtil.copyProperties(y9App, updatedY9AppResource);
+
+                updatedY9AppResource.setGuidPath(Y9OrgUtil.buildGuidPath(null, updatedY9AppResource.getId()));
+
                 updatedY9AppResource = y9AppManager.save(updatedY9AppResource);
 
                 Y9Context.publishEvent(new Y9EntityUpdatedEvent<>(originY9AppResource, updatedY9AppResource));
@@ -311,6 +315,7 @@ public class Y9AppServiceImpl implements Y9AppService {
             }
         } else {
             y9App.setId(Y9IdGenerator.genId(IdType.SNOWFLAKE));
+            y9App.setGuidPath(Y9OrgUtil.buildGuidPath(null, y9App.getId()));
         }
         y9App = y9AppManager.save(y9App);
 

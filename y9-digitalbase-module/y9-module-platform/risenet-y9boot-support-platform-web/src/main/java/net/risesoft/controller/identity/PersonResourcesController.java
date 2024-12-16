@@ -33,7 +33,7 @@ import net.risesoft.service.identity.Y9PersonToResourceAndAuthorityService;
 @RequestMapping(value = "/api/rest/personResources", produces = MediaType.APPLICATION_JSON_VALUE)
 @RequiredArgsConstructor
 @Validated
-@IsAnyManager(ManagerLevelEnum.SYSTEM_MANAGER)
+@IsAnyManager({ManagerLevelEnum.SYSTEM_MANAGER, ManagerLevelEnum.SECURITY_MANAGER})
 public class PersonResourcesController {
 
     private final Y9PersonToResourceAndAuthorityService y9PersonToResourceAndAuthorityService;

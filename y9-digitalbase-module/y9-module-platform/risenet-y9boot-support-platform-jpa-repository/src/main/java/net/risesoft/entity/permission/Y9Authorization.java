@@ -84,11 +84,6 @@ public class Y9Authorization extends BaseEntity {
     @Comment("资源名称。冗余字段，纯显示用")
     private String resourceName;
 
-    /*@Convert(converter = org.hibernate.type.NumericBooleanConverter.class)
-    @Column(name = "INHERIT", nullable = false)
-    @Comment("资源是否为继承上级节点的权限。冗余字段，纯显示用")
-    private Boolean inherit;*/
-
     @Column(name = "AUTHORITY", nullable = false)
     @Comment("权限类型")
     @Convert(converter = EnumConverter.AuthorityEnumConverter.class)

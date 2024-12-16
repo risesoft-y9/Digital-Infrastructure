@@ -66,7 +66,7 @@ public class DataCatalogApiImpl implements DataCatalogApi {
         @RequestParam(name = "id") @NotBlank String id) {
         Y9LoginUserHolder.setTenantId(tenantId);
 
-        return Y9Result.success(y9DataCatalogService.getById(id));
+        return Y9Result.success(y9DataCatalogService.getDataCatalogById(id));
     }
 
     @Override
