@@ -1,14 +1,14 @@
 <project xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xmlns="http://maven.apache.org/POM/4.0.0"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
-   
-    <parent>
-        <groupId>net.risesoft</groupId>
-        <artifactId>y9-digitalbase</artifactId>
-        <version>${revision}</version>
-        <relativePath>../pom.xml</relativePath>
-    </parent>
-    
+
+    <!--    <parent>-->
+    <!--        <groupId>net.risesoft</groupId>-->
+    <!--        <artifactId>y9-digitalbase</artifactId>-->
+    <!--        <version>${revision}</version>-->
+    <!--        <relativePath>../pom.xml</relativePath>-->
+    <!--    </parent>-->
+    <!--    -->
     <modelVersion>4.0.0</modelVersion>
     <groupId>net.risesoft</groupId>
     <artifactId>y9-digitalbase-bom</artifactId>
@@ -513,7 +513,7 @@
                 <artifactId>risenet-y9boot-support-webmail</artifactId>
                 <version>${revision}</version>
             </dependency>
-            
+
         </dependencies>
     </dependencyManagement>
 </project>
