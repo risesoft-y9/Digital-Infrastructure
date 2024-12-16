@@ -128,13 +128,11 @@ y9:
     systemCnName: '数字底座'
     internalIp: 192.x.x.x,10.x.x.x,172.20.x.x
     app:
-        log:
-            kafkaEnabled: true
         platform:
             systemName: riseplatform
             positionNameTemplate: "#jobName + '（' + #personNames + '）'"
-            managerModifyPasswordCycle: 7
-            userDefaultpassword: ${NACOS_PASSWORD:111111}
+            managerModifyPasswordCycle: 30
+            userDefaultPassword: Risesoft@2022
     service:
         log:
             directUrl: http://localhost:7055
@@ -154,8 +152,8 @@ y9:
         file:
             base64FileName: false
             encryptionFileContent: false
-            #privateKey: 
-            #publicKey: 
+            #privateKey:
+            #publicKey:
             ftp:
                 enabled: false
                 host: localhost

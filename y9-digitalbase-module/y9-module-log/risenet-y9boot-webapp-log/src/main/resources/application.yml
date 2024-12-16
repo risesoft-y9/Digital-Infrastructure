@@ -26,12 +26,14 @@ spring:
     autoconfigure:
         exclude:
             - org.springframework.boot.autoconfigure.jdbc.DataSourceAutoConfiguration
+            # 需要使用 kafka 时注释掉让其能自动配置
+            - org.springframework.boot.autoconfigure.kafka.KafkaAutoConfiguration
     cloud:
         nacos:
             config:
                 enabled: false
                 group: DEFAULT_GROUP
-                namespace: local
+                namespace: test
                 server-addr: http://localhost:8848
                 username: nacos
                 password: ${NACOS_PASSWORD:111111}
@@ -101,18 +103,18 @@ spring:
         allow-bean-definition-overriding: true
 y9:
     systemName: ${spring.application.name}
-    internalIp: 192.168.x.x,10.161.x.x
+    internalIp: 192.168.x.x,10.0.x.x,172.20.x.x
     app:
         log:
             accessLogIndex: logindex
             accessLogSaveTarget: elastic
             #kafkaEnabled=true时才会初始化Kafka的事件监听（注意要将KafkaAutoConfiguration启用）
-            kafkaEnabled: true
+            kafkaEnabled: false
     service:
         org:
             directUrl: http://localhost:7055
     common:
-        kafkaEnabled: true
+        kafkaEnabled: false
         logBaseUrl: http://localhost:7056/log
         orgBaseUrl: http://localhost:7055/platform
     feature:
@@ -134,6 +136,7 @@ y9:
             public-enabled: true
         log:
             enabled: true
+            logSaveTarget: api
         security:
             enabled: true
             cors:
