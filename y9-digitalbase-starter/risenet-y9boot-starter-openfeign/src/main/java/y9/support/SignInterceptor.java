@@ -1,6 +1,7 @@
 package y9.support;
 
 import java.nio.charset.StandardCharsets;
+import java.time.Instant;
 
 import lombok.RequiredArgsConstructor;
 
@@ -34,7 +35,7 @@ public class SignInterceptor implements RequestInterceptor {
         String path = URLUtil.getPath(template.feignTarget().url() + template.path());
         String queryString = URLUtil.buildQuery(template.queries(), StandardCharsets.UTF_8);
         String body = template.body() == null ? "" : new String(template.body(), StandardCharsets.UTF_8);
-        String timestamp = String.valueOf(System.currentTimeMillis());
+        String timestamp = String.valueOf(Instant.now().getEpochSecond());
         String signature = ApiSignUtil.sign(appId, appSecret, path, queryString, body, timestamp);
 
         template.header(APP_ID_HEADER, appId);

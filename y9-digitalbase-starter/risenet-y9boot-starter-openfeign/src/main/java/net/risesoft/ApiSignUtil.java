@@ -36,7 +36,7 @@ public class ApiSignUtil {
     }
 
     private static String sign(String appSecret, String stringToSign) {
-        LOGGER.info("stringToSign:{}", stringToSign);
+        LOGGER.trace("stringToSign:{}", stringToSign);
 
         Mac mac = null;
         try {

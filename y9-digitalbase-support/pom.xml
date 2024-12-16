@@ -27,6 +27,5 @@
         <module>risenet-y9boot-support-file-service-local</module>
         <module>risenet-y9boot-support-file-service-rest</module>
         <module>risenet-y9boot-support-history</module>
-        <module>risenet-y9boot-support-api-access-control</module>
     </modules>
 </project>
