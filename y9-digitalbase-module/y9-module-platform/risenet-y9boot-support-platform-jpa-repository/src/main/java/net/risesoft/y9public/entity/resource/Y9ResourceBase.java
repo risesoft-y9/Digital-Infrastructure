@@ -112,6 +112,11 @@ public abstract class Y9ResourceBase extends BaseEntity implements Comparable<Y9
     @Comment("排序")
     protected Integer tabIndex = 0;
 
+    /** 由ID组成的父子关系列表(正序)，之间用逗号分隔 */
+    @Column(name = "GUID_PATH", unique = true, length = 400)
+    @Comment("由ID组成的父子关系列表(正序)，之间用逗号分隔")
+    protected String guidPath;
+
     @Override
     public int compareTo(Y9ResourceBase y9ResourceBase) {
         // 排序时能保证同系统中同一层级（parentId 相同）的资源能按 tabIndex 升序排列

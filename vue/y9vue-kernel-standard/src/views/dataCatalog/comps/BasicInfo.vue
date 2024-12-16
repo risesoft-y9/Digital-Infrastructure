@@ -479,15 +479,22 @@
         },
         {
             type: 'text',
-            type1: 'textarea', //自定义字段-编辑时显示的类型
+            type1: 'radio', //自定义字段-编辑时显示的类型
             type2: 'text', //自定义字段-非编辑状态显示文本类型
-            prop: 'description',
-            label: computed(() => t('描述')),
-            span: 2,
+            label: computed(() => t('是否继承父权限')),
+            prop: 'inherit',
             props: {
+                radioType: 'radio',
+                options: [{
+                    label: '是',
+                    value: true
+                }, {
+                    label: '否',
+                    value: false
+                }],
                 render: () => {
                     //text类型渲染的内容
-                    return h('span', basicInfo.value?.description);
+                    return h('span', basicInfo.value?.inherit ? t('是') : t('否'));
                 }
             }
         },
@@ -501,6 +508,20 @@
                 render: () => {
                     //text类型渲染的内容
                     return h('span', basicInfo.value?.nodeType);
+                }
+            }
+        },
+        {
+            type: 'text',
+            type1: 'textarea', //自定义字段-编辑时显示的类型
+            type2: 'text', //自定义字段-非编辑状态显示文本类型
+            prop: 'description',
+            label: computed(() => t('描述')),
+            span: 2,
+            props: {
+                render: () => {
+                    //text类型渲染的内容
+                    return h('span', basicInfo.value?.description);
                 }
             }
         }

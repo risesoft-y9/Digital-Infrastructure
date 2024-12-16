@@ -106,4 +106,48 @@
         </createTable>
     </changeSet>
 
+    <changeSet id="1734054845610-1" author="shidaobang" runOnChange="true">
+        <preConditions onFail="MARK_RAN">
+            <not>
+                <columnExists tableName="Y9_COMMON_APP_STORE" columnName="GUID_PATH"/>
+            </not>
+        </preConditions>
+        <addColumn tableName="Y9_COMMON_APP_STORE">
+            <column name="GUID_PATH" type="VARCHAR(400)" remarks="由ID组成的父子关系列表(正序)，之间用逗号分隔"/>
+        </addColumn>
+    </changeSet>
+
+    <changeSet id="1734054845610-2" author="shidaobang" runOnChange="true">
+        <preConditions onFail="MARK_RAN">
+            <not>
+                <columnExists tableName="Y9_COMMON_MENU" columnName="GUID_PATH"/>
+            </not>
+        </preConditions>
+        <addColumn tableName="Y9_COMMON_MENU">
+            <column name="GUID_PATH" type="VARCHAR(400)" remarks="由ID组成的父子关系列表(正序)，之间用逗号分隔"/>
+        </addColumn>
+    </changeSet>
+
+    <changeSet id="1734054845610-3" author="shidaobang" runOnChange="true">
+        <preConditions onFail="MARK_RAN">
+            <not>
+                <columnExists tableName="Y9_COMMON_OPERATION" columnName="GUID_PATH"/>
+            </not>
+        </preConditions>
+        <addColumn tableName="Y9_COMMON_OPERATION">
+            <column name="GUID_PATH" type="VARCHAR(400)" remarks="由ID组成的父子关系列表(正序)，之间用逗号分隔"/>
+        </addColumn>
+    </changeSet>
+
+    <changeSet id="1734054845610-4" author="shidaobang" runOnChange="true">
+        <preConditions onFail="MARK_RAN">
+            <not>
+                <columnExists tableName="Y9_COMMON_DATA_CATALOG" columnName="GUID_PATH"/>
+            </not>
+        </preConditions>
+        <addColumn tableName="Y9_COMMON_DATA_CATALOG">
+            <column name="GUID_PATH" type="VARCHAR(400)" remarks="由ID组成的父子关系列表(正序)，之间用逗号分隔"/>
+        </addColumn>
+    </changeSet>
+
 </databaseChangeLog>

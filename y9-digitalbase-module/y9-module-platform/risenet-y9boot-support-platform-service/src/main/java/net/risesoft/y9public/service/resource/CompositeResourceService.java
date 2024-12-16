@@ -37,12 +37,14 @@ public interface CompositeResourceService {
         ResourceTypeEnum resourceType);
 
     /**
-     * 根据主键ID获取资源实例 get the instance of resource by id
+     * 根据主键ID获取资源实例
      *
      * @param id 唯一标识
      * @return {@link Y9ResourceBase}资源对象 或 null
      */
     Y9ResourceBase findById(String id);
+
+    Y9ResourceBase getById(String id);
 
     /**
      * 根据资源id和资源类型查找

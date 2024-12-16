@@ -1,11 +1,9 @@
 package net.risesoft.service.identity.impl;
 
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
-import java.util.Set;
 import java.util.stream.Collectors;
 
 import org.apache.commons.lang3.StringUtils;
@@ -71,7 +69,7 @@ public class IdentityResourceCalculatorImpl implements IdentityResourceCalculato
      * @param identityId
      * @return
      */
-    private List<String> getIdentityRelatedPrincipalId(String identityId) {
+    private List<String> getIdentityRelatedPrincipalIdList(String identityId) {
         List<String> principalIdList = new ArrayList<>();
 
         List<Y9Role> y9RoleList = y9RoleManager.listOrgUnitRelatedWithoutNegative(identityId);
@@ -136,7 +134,7 @@ public class IdentityResourceCalculatorImpl implements IdentityResourceCalculato
     @Override
     public void recalculateByPerson(Y9Person person) {
         try {
-            List<String> principalIdList = getIdentityRelatedPrincipalId(person.getId());
+            List<String> principalIdList = getIdentityRelatedPrincipalIdList(person.getId());
             List<Y9Authorization> principalRelatedY9AuthorizationList =
                 y9AuthorizationRepository.getByPrincipalIdIn(principalIdList);
 
@@ -148,10 +146,10 @@ public class IdentityResourceCalculatorImpl implements IdentityResourceCalculato
 
             Map<String, List<Y9Authorization>> resourceIdAuthorizationListMap = principalRelatedY9AuthorizationList
                 .stream().collect(Collectors.groupingBy(Y9Authorization::getResourceId));
+
             for (String resourceId : resourceIdAuthorizationListMap.keySet()) {
                 Y9ResourceBase y9ResourceBase = compositeResourceService.findById(resourceId);
-                this.recalculateByPerson(resourceIdAuthorizationListMap, new HashSet<>(), y9ResourceBase, person,
-                    new Y9Authorization());
+                this.recalculateByPerson(resourceIdAuthorizationListMap, y9ResourceBase, person);
             }
         } catch (Exception e) {
             LOGGER.warn("计算人员[{}]权限发生异常", person.getId(), e);
@@ -161,7 +159,7 @@ public class IdentityResourceCalculatorImpl implements IdentityResourceCalculato
     @Override
     public void recalculateByPosition(Y9Position position) {
         try {
-            List<String> principalIdList = getIdentityRelatedPrincipalId(position.getId());
+            List<String> principalIdList = getIdentityRelatedPrincipalIdList(position.getId());
             List<Y9Authorization> principalRelatedY9AuthorizationList =
                 y9AuthorizationRepository.getByPrincipalIdIn(principalIdList);
 
@@ -173,10 +171,10 @@ public class IdentityResourceCalculatorImpl implements IdentityResourceCalculato
 
             Map<String, List<Y9Authorization>> resourceIdAuthorizationListMap = principalRelatedY9AuthorizationList
                 .stream().collect(Collectors.groupingBy(Y9Authorization::getResourceId));
+
             for (String resourceId : resourceIdAuthorizationListMap.keySet()) {
                 Y9ResourceBase y9ResourceBase = compositeResourceService.findById(resourceId);
-                this.recalculateByPosition(resourceIdAuthorizationListMap, new HashSet<>(), y9ResourceBase, position,
-                    new Y9Authorization());
+                this.recalculateByPosition(resourceIdAuthorizationListMap, y9ResourceBase, position);
             }
         } catch (Exception e) {
             LOGGER.warn("计算岗位[{}]权限发生异常", position.getId(), e);
@@ -200,109 +198,91 @@ public class IdentityResourceCalculatorImpl implements IdentityResourceCalculato
     }
 
     private void recalculateByPerson(Map<String, List<Y9Authorization>> resourceIdAuthorizationListMap,
-        final Set<String> solvedResourceIdSet, Y9ResourceBase y9ResourceBase, Y9Person person,
-        Y9Authorization inheritY9Authorization) {
+        Y9ResourceBase y9ResourceBase, Y9Person person) {
         String resourceId = y9ResourceBase.getId();
-        if (!solvedResourceIdSet.contains(resourceId)) {
-            // 对于已经处理过的资源及其子资源直接跳过
-            solvedResourceIdSet.add(resourceId);
 
-            List<Y9Authorization> resourceRelatedY9AuthorizationList = resourceIdAuthorizationListMap.get(resourceId);
-            if (resourceRelatedY9AuthorizationList != null && !resourceRelatedY9AuthorizationList.isEmpty()) {
-                // 存在对资源的直接授权 不继承权限
+        List<Y9Authorization> resourceRelatedY9AuthorizationList =
+            resourceIdAuthorizationListMap.getOrDefault(resourceId, new ArrayList<>());
+        List<Y9Authorization> inheritY9AuthorizationList =
+            getInheritY9AuthorizationList(y9ResourceBase, resourceIdAuthorizationListMap);
 
-                if (anyHidden(resourceRelatedY9AuthorizationList)) {
-                    // 隐藏权限类型优先级最高
-                    y9PersonToResourceAndAuthorityManager.deleteByPersonIdAndResourceId(person.getId(), resourceId);
-                    return;
-                }
-                // if (anyPrincipleType(resourceRelatedY9AuthorizationList, AuthorizationPrincipalTypeEnum.PERSON)) {
-                // // 对人直接授权 优先计算
-                // y9AuthorizationList =
-                // filter(resourceRelatedY9AuthorizationList, AuthorizationPrincipalTypeEnum.PERSON);
-                // }
+        boolean isInheritAuthorizations = Boolean.TRUE.equals(y9ResourceBase.getInherit());
+        if ((isInheritAuthorizations
+            && (anyHidden(resourceRelatedY9AuthorizationList) || anyHidden(inheritY9AuthorizationList)))
+            || anyHidden(resourceRelatedY9AuthorizationList)) {
+            // 隐藏权限类型优先级最高 无论是否继承 只要有一个隐藏权限对应的资源都应无权限
+            y9PersonToResourceAndAuthorityManager.deleteByPersonIdAndResourceId(person.getId(), resourceId);
+            return;
+        }
 
-                for (Y9Authorization y9Authorization : resourceRelatedY9AuthorizationList) {
-                    y9PersonToResourceAndAuthorityManager.saveOrUpdate(y9ResourceBase, person, y9Authorization,
-                        Boolean.FALSE);
+        for (Y9Authorization y9Authorization : resourceRelatedY9AuthorizationList) {
+            y9PersonToResourceAndAuthorityManager.saveOrUpdate(y9ResourceBase, person, y9Authorization, Boolean.FALSE);
+        }
 
-                    // 递归处理子资源
-                    List<Y9ResourceBase> subResourceList =
-                        compositeResourceService.listByParentId(y9ResourceBase.getId());
-                    for (Y9ResourceBase resource : subResourceList) {
-                        this.recalculateByPerson(resourceIdAuthorizationListMap, solvedResourceIdSet, resource, person,
-                            y9Authorization);
-                    }
-                }
+        for (Y9Authorization inheritY9Authorization : inheritY9AuthorizationList) {
+            y9PersonToResourceAndAuthorityManager.saveOrUpdate(y9ResourceBase, person, inheritY9Authorization,
+                Boolean.TRUE);
+        }
 
-            } else if (Boolean.TRUE.equals(y9ResourceBase.getInherit())
-                && !AuthorityEnum.HIDDEN.equals(inheritY9Authorization.getAuthority())) {
-                // 不存在对资源的直接授权 继承权限
-                y9PersonToResourceAndAuthorityManager.saveOrUpdate(y9ResourceBase, person, inheritY9Authorization,
-                    Boolean.TRUE);
-
-                // 递归处理子资源
-                List<Y9ResourceBase> subResourceList = compositeResourceService.listByParentId(y9ResourceBase.getId());
-                for (Y9ResourceBase resource : subResourceList) {
-                    this.recalculateByPerson(resourceIdAuthorizationListMap, solvedResourceIdSet, resource, person,
-                        inheritY9Authorization);
-                }
-            }
+        // 递归处理子资源
+        List<Y9ResourceBase> subResourceList = compositeResourceService.listByParentId(y9ResourceBase.getId());
+        for (Y9ResourceBase resource : subResourceList) {
+            this.recalculateByPerson(resourceIdAuthorizationListMap, resource, person);
         }
     }
 
-    private void recalculateByPosition(final Map<String, List<Y9Authorization>> resourceIdAuthorizationListMap,
-        final Set<String> solvedResourceIdSet, Y9ResourceBase y9ResourceBase, Y9Position position,
-        Y9Authorization inheritY9Authorization) {
-        String resourceId = y9ResourceBase.getId();
-        if (!solvedResourceIdSet.contains(resourceId)) {
-            // 对于已经处理过的资源及其子资源直接跳过
-            solvedResourceIdSet.add(resourceId);
+    private List<Y9Authorization> getInheritY9AuthorizationList(Y9ResourceBase currentY9ResourceBase,
+        Map<String, List<Y9Authorization>> resourceIdAuthorizationListMap) {
+        List<Y9Authorization> inheritY9AuthorizationList = new ArrayList<>();
 
-            List<Y9Authorization> resourceRelatedY9AuthorizationList =
-                resourceIdAuthorizationListMap.get(y9ResourceBase.getId());
-            if (resourceRelatedY9AuthorizationList != null && !resourceRelatedY9AuthorizationList.isEmpty()) {
-                // 存在对资源的直接授权 不继承权限
-
-                if (anyHidden(resourceRelatedY9AuthorizationList)) {
-                    // 隐藏权限类型优先级最高
-                    y9PositionToResourceAndAuthorityManager.deleteByPositionIdAndResourceId(position.getId(),
-                        resourceId);
-                    return;
-                }
-
-                // if (anyPrincipleType(resourceRelatedY9AuthorizationList, AuthorizationPrincipalTypeEnum.POSITION)) {
-                // // 对岗直接授权 优先计算
-                // y9AuthorizationList =
-                // filter(resourceRelatedY9AuthorizationList, AuthorizationPrincipalTypeEnum.POSITION);
-                // }
-
-                for (Y9Authorization y9Authorization : resourceRelatedY9AuthorizationList) {
-                    y9PositionToResourceAndAuthorityManager.saveOrUpdate(y9ResourceBase, position, y9Authorization,
-                        Boolean.FALSE);
-                    // 递归处理子资源
-                    List<Y9ResourceBase> subResourceList =
-                        compositeResourceService.listByParentId(y9ResourceBase.getId());
-                    for (Y9ResourceBase resource : subResourceList) {
-                        this.recalculateByPosition(resourceIdAuthorizationListMap, solvedResourceIdSet, resource,
-                            position, y9Authorization);
-                    }
-                }
-
-            } else if (Boolean.TRUE.equals(y9ResourceBase.getInherit())
-                && !AuthorityEnum.HIDDEN.equals(inheritY9Authorization.getAuthority())) {
-                // 不存在对资源的直接授权 继承权限
-
-                y9PositionToResourceAndAuthorityManager.saveOrUpdate(y9ResourceBase, position, inheritY9Authorization,
-                    Boolean.TRUE);
-
-                // 递归处理子资源
-                List<Y9ResourceBase> subResourceList = compositeResourceService.listByParentId(y9ResourceBase.getId());
-                for (Y9ResourceBase resource : subResourceList) {
-                    this.recalculateByPosition(resourceIdAuthorizationListMap, solvedResourceIdSet, resource, position,
-                        inheritY9Authorization);
+        if (StringUtils.isNotBlank(currentY9ResourceBase.getGuidPath()) && currentY9ResourceBase.getInherit()) {
+            String[] resourceIds = currentY9ResourceBase.getGuidPath().split(",");
+            for (int i = resourceIds.length - 1; i > 0; i--) {
+                // 如果当前资源继承权限 则取出父资源的关联授权记录
+                Y9ResourceBase ancestorY9ResourceBase = compositeResourceService.getById(resourceIds[i]);
+                if (ancestorY9ResourceBase.getInherit()) {
+                    inheritY9AuthorizationList
+                        .addAll(resourceIdAuthorizationListMap.getOrDefault(resourceIds[i - 1], new ArrayList<>()));
+                } else {
+                    break;
                 }
             }
+        }
+        return inheritY9AuthorizationList;
+    }
+
+    private void recalculateByPosition(final Map<String, List<Y9Authorization>> resourceIdAuthorizationListMap,
+        Y9ResourceBase y9ResourceBase, Y9Position position) {
+        String resourceId = y9ResourceBase.getId();
+
+        List<Y9Authorization> resourceRelatedY9AuthorizationList =
+            resourceIdAuthorizationListMap.getOrDefault(resourceId, new ArrayList<>());
+        List<Y9Authorization> inheritY9AuthorizationList =
+            getInheritY9AuthorizationList(y9ResourceBase, resourceIdAuthorizationListMap);
+
+        boolean inheritAuthorizations = Boolean.TRUE.equals(y9ResourceBase.getInherit());
+        if ((inheritAuthorizations
+            && (anyHidden(resourceRelatedY9AuthorizationList) || anyHidden(inheritY9AuthorizationList)))
+            || anyHidden(resourceRelatedY9AuthorizationList)) {
+            // 隐藏权限类型优先级最高 无论是否继承 只要有一个隐藏权限对应的资源都应无权限
+            y9PositionToResourceAndAuthorityManager.deleteByPositionIdAndResourceId(position.getId(), resourceId);
+            return;
+        }
+
+        for (Y9Authorization y9Authorization : resourceRelatedY9AuthorizationList) {
+            y9PositionToResourceAndAuthorityManager.saveOrUpdate(y9ResourceBase, position, y9Authorization,
+                Boolean.FALSE);
+        }
+
+        for (Y9Authorization inheritY9Authorization : inheritY9AuthorizationList) {
+            y9PositionToResourceAndAuthorityManager.saveOrUpdate(y9ResourceBase, position, inheritY9Authorization,
+                Boolean.TRUE);
+        }
+
+        // 递归处理子资源
+        List<Y9ResourceBase> subResourceList = compositeResourceService.listByParentId(y9ResourceBase.getId());
+        for (Y9ResourceBase resource : subResourceList) {
+            this.recalculateByPosition(resourceIdAuthorizationListMap, resource, position);
         }
     }
 }

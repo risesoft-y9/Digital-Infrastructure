@@ -92,13 +92,13 @@ export const asyncRoutes = [
     permission,
     dictionaryRouter,
     iconManagerRouter,
+    personalRouter,
+    apiAccessControlRouter,
+    settingRouter,
     userLogRouter,
     sysManagerLogRouter,
     securityUserLogRouter,
-    securityAuditorLogRouter,
-    personalRouter,
-    apiAccessControlRouter,
-    settingRouter
+    securityAuditorLogRouter
     // 引入其他模块路由
 ];
 

@@ -13,6 +13,7 @@ import net.risesoft.entity.Y9Manager;
 import net.risesoft.entity.Y9Organization;
 import net.risesoft.entity.Y9Person;
 import net.risesoft.entity.Y9Position;
+import net.risesoft.enums.platform.ResourceTypeEnum;
 import net.risesoft.log.OperationTypeEnum;
 import net.risesoft.log.annotation.RiseLog;
 import net.risesoft.pojo.Y9Result;
@@ -24,6 +25,16 @@ import net.risesoft.service.org.Y9PersonService;
 import net.risesoft.service.org.Y9PositionService;
 import net.risesoft.util.Y9PlatformUtil;
 import net.risesoft.y9.Y9LoginUserHolder;
+import net.risesoft.y9public.entity.resource.Y9App;
+import net.risesoft.y9public.entity.resource.Y9DataCatalog;
+import net.risesoft.y9public.entity.resource.Y9Menu;
+import net.risesoft.y9public.entity.resource.Y9Operation;
+import net.risesoft.y9public.entity.resource.Y9ResourceBase;
+import net.risesoft.y9public.service.resource.CompositeResourceService;
+import net.risesoft.y9public.service.resource.Y9AppService;
+import net.risesoft.y9public.service.resource.Y9DataCatalogService;
+import net.risesoft.y9public.service.resource.Y9MenuService;
+import net.risesoft.y9public.service.resource.Y9OperationService;
 
 /**
  * 同步信息
@@ -43,7 +54,14 @@ public class SyncController {
     private final Y9PersonService y9PersonService;
     private final Y9PositionService y9PositionService;
     private final Y9ManagerService y9ManagerService;
+
     private final InitTenantDataService initTenantDataService;
+
+    private final CompositeResourceService compositeResourceService;
+    private final Y9AppService y9AppService;
+    private final Y9MenuService y9MenuService;
+    private final Y9OperationService y9OperationService;
+    private final Y9DataCatalogService y9DataCatalogService;
 
     /**
      * 初始化租户三员
@@ -172,7 +190,7 @@ public class SyncController {
 
     /**
      * 同步租户岗位信息
-     * 
+     *
      * @param tenantId 租户id
      * @return {@code Y9Result<String>}
      */
@@ -187,4 +205,35 @@ public class SyncController {
         }
         return Y9Result.successMsg("同步岗位信息完成");
     }
+
+    @RequestMapping("/resourceGuidPath")
+    @RiseLog(operationName = "同步资源的 guidPath", operationType = OperationTypeEnum.MODIFY)
+    public Y9Result<String> syncResourceGuidPath() {
+        List<Y9App> y9Apps = compositeResourceService.listRootResourceList();
+        for (Y9App y9App : y9Apps) {
+            y9AppService.saveOrUpdate(y9App);
+            recursiveUpdate(y9App.getId());
+        }
+        List<Y9DataCatalog> y9DataCatalogs = y9DataCatalogService.listRoot();
+        for (Y9DataCatalog y9DataCatalog : y9DataCatalogs) {
+            y9DataCatalogService.saveOrUpdate(y9DataCatalog);
+            recursiveUpdate(y9DataCatalog.getId());
+        }
+        return Y9Result.successMsg("同步资源的 guidPath 完成");
+    }
+
+    private void recursiveUpdate(String parentId) {
+        List<Y9ResourceBase> y9ResourceBases = compositeResourceService.listByParentId(parentId);
+        for (Y9ResourceBase y9ResourceBase : y9ResourceBases) {
+            if (ResourceTypeEnum.MENU.equals(y9ResourceBase.getResourceType())) {
+                y9MenuService.saveOrUpdate((Y9Menu)y9ResourceBase);
+            } else if (ResourceTypeEnum.OPERATION.equals(y9ResourceBase.getResourceType())) {
+                y9OperationService.saveOrUpdate((Y9Operation)y9ResourceBase);
+            } else if (ResourceTypeEnum.DATA_CATALOG.equals(y9ResourceBase.getResourceType())) {
+                y9DataCatalogService.saveOrUpdate((Y9DataCatalog)y9ResourceBase);
+            }
+            recursiveUpdate(y9ResourceBase.getId());
+        }
+    }
+
 }

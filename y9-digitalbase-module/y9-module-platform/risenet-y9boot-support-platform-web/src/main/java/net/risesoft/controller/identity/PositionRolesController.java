@@ -33,7 +33,7 @@ import net.risesoft.service.identity.Y9PositionToRoleService;
 @RequestMapping(value = "/api/rest/positionRoles", produces = MediaType.APPLICATION_JSON_VALUE)
 @RequiredArgsConstructor
 @Validated
-@IsAnyManager(ManagerLevelEnum.SYSTEM_MANAGER)
+@IsAnyManager({ManagerLevelEnum.SYSTEM_MANAGER, ManagerLevelEnum.SECURITY_MANAGER})
 public class PositionRolesController {
 
     private final RolePermissionVOBuilder rolePermissionVOBuilder;

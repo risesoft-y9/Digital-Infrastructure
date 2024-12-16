@@ -17,6 +17,7 @@ import net.risesoft.id.Y9IdGenerator;
 import net.risesoft.repository.identity.person.Y9PersonToResourceAndAuthorityRepository;
 import net.risesoft.repository.identity.position.Y9PositionToResourceAndAuthorityRepository;
 import net.risesoft.repository.permission.Y9AuthorizationRepository;
+import net.risesoft.util.Y9OrgUtil;
 import net.risesoft.y9.Y9Context;
 import net.risesoft.y9.Y9LoginUserHolder;
 import net.risesoft.y9.pubsub.event.Y9EntityCreatedEvent;
@@ -25,7 +26,9 @@ import net.risesoft.y9.pubsub.event.Y9EntityUpdatedEvent;
 import net.risesoft.y9.util.Y9BeanUtil;
 import net.risesoft.y9public.entity.resource.Y9App;
 import net.risesoft.y9public.entity.resource.Y9Menu;
+import net.risesoft.y9public.entity.resource.Y9ResourceBase;
 import net.risesoft.y9public.entity.tenant.Y9TenantApp;
+import net.risesoft.y9public.manager.resource.CompositeResourceManager;
 import net.risesoft.y9public.manager.resource.Y9MenuManager;
 import net.risesoft.y9public.repository.resource.Y9MenuRepository;
 import net.risesoft.y9public.repository.tenant.Y9TenantAppRepository;
@@ -49,6 +52,7 @@ public class Y9MenuServiceImpl implements Y9MenuService {
     private final Y9PositionToResourceAndAuthorityRepository y9PositionToResourceAndAuthorityRepository;
 
     private final Y9MenuManager y9MenuManager;
+    private final CompositeResourceManager compositeResourceManager;
 
     @Override
     @Transactional(readOnly = false)
@@ -134,6 +138,8 @@ public class Y9MenuServiceImpl implements Y9MenuService {
     @Override
     @Transactional(readOnly = false)
     public Y9Menu saveOrUpdate(Y9Menu y9Menu) {
+        Y9ResourceBase parent = compositeResourceManager.getResourceAsParent(y9Menu.getParentId());
+
         if (StringUtils.isNotBlank(y9Menu.getId())) {
             Optional<Y9Menu> y9MenuOptional = y9MenuManager.findById(y9Menu.getId());
             if (y9MenuOptional.isPresent()) {
@@ -141,6 +147,10 @@ public class Y9MenuServiceImpl implements Y9MenuService {
                 Y9Menu updatedMenuResource = new Y9Menu();
                 Y9BeanUtil.copyProperties(originMenuResource, updatedMenuResource);
                 Y9BeanUtil.copyProperties(y9Menu, updatedMenuResource);
+
+                updatedMenuResource
+                    .setGuidPath(Y9OrgUtil.buildGuidPath(parent.getGuidPath(), updatedMenuResource.getId()));
+
                 updatedMenuResource = y9MenuManager.save(updatedMenuResource);
 
                 Y9Context.publishEvent(new Y9EntityUpdatedEvent<>(originMenuResource, updatedMenuResource));
@@ -149,6 +159,7 @@ public class Y9MenuServiceImpl implements Y9MenuService {
             }
         } else {
             y9Menu.setId(Y9IdGenerator.genId(IdType.SNOWFLAKE));
+            y9Menu.setGuidPath(Y9OrgUtil.buildGuidPath(parent.getGuidPath(), y9Menu.getId()));
 
             Integer maxTabIndex = getMaxIndexByParentId(y9Menu.getParentId());
             y9Menu.setTabIndex(maxTabIndex != null ? maxTabIndex + 1 : 0);

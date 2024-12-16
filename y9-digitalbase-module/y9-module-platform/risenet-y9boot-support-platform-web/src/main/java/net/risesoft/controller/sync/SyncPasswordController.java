@@ -33,7 +33,7 @@ import net.risesoft.y9.Y9LoginUserHolder;
 @RestController
 @RequestMapping(value = "/sync", produces = MediaType.APPLICATION_JSON_VALUE)
 @RequiredArgsConstructor
-public class SyncPassWordController {
+public class SyncPasswordController {
 
     private final CompositeOrgBaseService compositeOrgBaseService;
     private final Y9OrganizationService y9OrganizationService;
@@ -46,9 +46,9 @@ public class SyncPassWordController {
      * @param tenantId 租户id
      * @return {@code Y9Result<String>}
      */
-    @RequestMapping("/restPersonPwdByTenantId/{tenantId}")
+    @RequestMapping("/resetPersonPwd/{tenantId}")
     @RiseLog(operationName = "修改", operationType = OperationTypeEnum.MODIFY)
-    public Y9Result<String> restAllPersonPwdByTenantId(@PathVariable String tenantId) {
+    public Y9Result<String> resetAllPersonPwdByTenantId(@PathVariable String tenantId) {
         Y9LoginUserHolder.setTenantId(tenantId);
         List<Y9Person> persons = y9PersonService.listAll();
         for (Y9Person person : persons) {
@@ -68,9 +68,9 @@ public class SyncPassWordController {
      *
      * @return {@code Y9Result<String>}
      */
-    @RequestMapping("/restAllPersonPwd")
+    @RequestMapping("/resetAllPersonPwd")
     @RiseLog(operationName = "修改", operationType = OperationTypeEnum.MODIFY)
-    public Y9Result<String> restAllPersonPwdInAllTenants() {
+    public Y9Result<String> resetAllPersonPwdInAllTenants() {
         List<String> tenantIdList = Y9PlatformUtil.getTenantIds();
         for (String tenantId : tenantIdList) {
             Y9LoginUserHolder.setTenantId(tenantId);
@@ -97,9 +97,9 @@ public class SyncPassWordController {
      * @param loginName 登录名
      * @return {@code Y9Result<String>}
      */
-    @RequestMapping("/restPwd/{tenantId}/{loginName}")
+    @RequestMapping("/resetPwd/{tenantId}/{loginName}")
     @RiseLog(operationType = OperationTypeEnum.MODIFY, operationName = "根据租户id和登陆名称，更改个人密码")
-    public Y9Result<String> restPwdByTenantIdAndLoginName(@PathVariable String tenantId,
+    public Y9Result<String> resetPwdByTenantIdAndLoginName(@PathVariable String tenantId,
         @PathVariable String loginName) {
         Y9LoginUserHolder.setTenantId(tenantId);
         Y9Person person = y9PersonService.getPersonByLoginNameAndTenantId(loginName, tenantId);
