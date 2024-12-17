@@ -219,10 +219,32 @@ public class Y9AuthorizationServiceImpl implements Y9AuthorizationService {
     @Transactional(readOnly = false)
     public Y9Authorization saveOrUpdateOrg(Y9Authorization y9Authorization) {
         Y9OrgBase y9OrgBase = compositeOrgBaseManager.getOrgUnit(y9Authorization.getPrincipalId());
+
+        checkIfOrgUnitIncludedInResourceRelatedAuthorities(y9Authorization.getResourceId(),
+            y9Authorization.getAuthority(), y9OrgBase);
+
         y9Authorization.setPrincipalId(y9OrgBase.getId());
         y9Authorization.setPrincipalName(y9OrgBase.getName());
         y9Authorization.setPrincipalType(AuthorizationPrincipalTypeEnum.getByName(y9OrgBase.getOrgType().getName()));
         return this.saveOrUpdate(y9Authorization);
+    }
+
+    /**
+     * 检查资源的授权列表中是否已包含要添加的组织节点
+     *
+     * @param resourceId 资源id
+     * @param authority 权限类型
+     * @param y9OrgBase 组织节点
+     */
+    private void checkIfOrgUnitIncludedInResourceRelatedAuthorities(String resourceId, AuthorityEnum authority,
+        Y9OrgBase y9OrgBase) {
+        List<Y9Authorization> y9AuthorizationList =
+            y9AuthorizationRepository.findByResourceIdAndAuthority(resourceId, authority);
+        boolean included = y9AuthorizationList.stream().map(Y9Authorization::getPrincipalId)
+            .anyMatch(principalId -> y9OrgBase.getGuidPath().contains(principalId));
+        if (included) {
+            throw Y9ExceptionUtil.businessException(AuthorizationErrorCodeEnum.ORG_UNIT_INCLUDED, y9OrgBase.getId());
+        }
     }
 
     @Override
