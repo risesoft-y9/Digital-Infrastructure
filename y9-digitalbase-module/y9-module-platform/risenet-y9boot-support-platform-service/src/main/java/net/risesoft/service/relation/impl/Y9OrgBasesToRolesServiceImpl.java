@@ -31,7 +31,6 @@ import net.risesoft.y9.pubsub.event.Y9EntityCreatedEvent;
 import net.risesoft.y9.pubsub.event.Y9EntityDeletedEvent;
 
 /**
- *
  * @author dingzhaojun
  * @author qinman
  * @author mengjuhua
@@ -78,7 +77,7 @@ public class Y9OrgBasesToRolesServiceImpl implements Y9OrgBasesToRolesService {
     @Override
     public Y9OrgBasesToRoles getById(String id) {
         return y9OrgBasesToRolesRepository.findById(id)
-            .orElseThrow(() -> Y9ExceptionUtil.notFoundException(RoleErrorCodeEnum.ORGUNIT_ROLE_NOT_FOUND, id));
+            .orElseThrow(() -> Y9ExceptionUtil.notFoundException(RoleErrorCodeEnum.ORG_UNIT_ROLE_NOT_FOUND, id));
     }
 
     @Override
@@ -195,11 +194,13 @@ public class Y9OrgBasesToRolesServiceImpl implements Y9OrgBasesToRolesService {
 
     @Transactional(readOnly = false)
     public Y9OrgBasesToRoles saveOrUpdate(String roleId, String orgId, Boolean negative) {
+        Y9OrgBase orgBase = compositeOrgBaseManager.getOrgUnit(orgId);
+        checkOrgUnitIncludedInRoleRelatedMapping(roleId, negative, orgBase);
+
         Optional<Y9OrgBasesToRoles> optionalY9OrgBasesToRoles =
             y9OrgBasesToRolesRepository.findByRoleIdAndOrgIdAndNegative(roleId, orgId, negative);
         if (optionalY9OrgBasesToRoles.isEmpty()) {
             Integer maxOrgUnitsOrder = y9OrgBasesToRolesRepository.getMaxOrgOrderByRoleId(roleId);
-            Y9OrgBase orgBase = compositeOrgBaseManager.getOrgUnit(orgId);
             Integer nextOrgUnitsOrder = maxOrgUnitsOrder == null ? 0 : maxOrgUnitsOrder + 1;
             Y9OrgBasesToRoles y9OrgBasesToRoles = new Y9OrgBasesToRoles();
             y9OrgBasesToRoles.setId(Y9IdGenerator.genId());
@@ -217,5 +218,15 @@ public class Y9OrgBasesToRolesServiceImpl implements Y9OrgBasesToRolesService {
             return savedOrgBasesToRoles;
         }
         return optionalY9OrgBasesToRoles.get();
+    }
+
+    private void checkOrgUnitIncludedInRoleRelatedMapping(String roleId, Boolean negative, Y9OrgBase orgBase) {
+        List<Y9OrgBasesToRoles> y9OrgBasesToRolesList =
+            y9OrgBasesToRolesRepository.findByRoleIdAndNegativeOrderByOrgOrderDesc(roleId, negative);
+        boolean orgUnitIncluded = y9OrgBasesToRolesList.stream().map(Y9OrgBasesToRoles::getOrgId)
+            .anyMatch(orgUnitId -> orgBase.getGuidPath().contains(orgUnitId));
+        if (orgUnitIncluded) {
+            throw Y9ExceptionUtil.businessException(RoleErrorCodeEnum.ORG_UNIT_INCLUDED, orgBase.getId());
+        }
     }
 }

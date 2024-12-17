@@ -355,7 +355,7 @@
                 loading.value = false;
                 ElNotification({
                     title: result.success ? t('成功') : t('失败'),
-                    message: result.success ? t('删除成功') : t('删除失败'),
+                    message: result.msg,
                     type: result.success ? 'success' : 'error',
                     duration: 2000,
                     offset: 80
@@ -396,7 +396,8 @@
         fixedTreeRef.value?.handClickNode(currNode); //手动设置点击当前节点
 
         ElNotification({
-            message: result.success ? t('保存成功') : t('保存失败'),
+            title: result.success ? t('成功') : t('失败'),
+            message: result.msg,
             type: result.success ? 'success' : 'error',
             duration: 2000,
             offset: 80
@@ -502,7 +503,8 @@
                                 fixedTreeRef.value?.handClickNode(currNode); //手动设置点击当前节点
 
                                 ElNotification({
-                                    message: result.success ? t('新增成功') : t('新增失败'),
+                                    title: result.success ? t('成功') : t('失败'),
+                                    message: result.msg,
                                     type: result.success ? 'success' : 'error',
                                     duration: 2000,
                                     offset: 80
@@ -700,7 +702,8 @@
                         .catch(() => {});
                 }
                 ElNotification({
-                    message: result.success ? t('添加权限成功') : t('添加权限失败'),
+                    title: result.success ? t('成功') : t('失败'),
+                    message: result.msg,
                     type: result.success ? 'success' : 'error',
                     duration: 2000,
                     offset: 80
@@ -955,7 +958,8 @@
                 await saveOrUpdateRelateResource(params)
                     .then((result) => {
                         ElNotification({
-                            message: result.success ? t('添加权限成功') : t('添加权限失败'),
+                            title: result.success ? t('成功') : t('失败'),
+                            message: result.msg,
                             type: result.success ? 'success' : 'error',
                             duration: 2000,
                             offset: 80
