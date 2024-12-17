@@ -354,7 +354,7 @@ webapp -- 系统公共模块
 | 25 | <a href="https://vue.youshengyun.com/files/Kingbase数据库适配文档.pdf" target="_blank">Kingbase数据库适配文档</a>       |
 | 26 | <a href="https://vue.youshengyun.com/files/Mariadb数据库适配文档.pdf" target="_blank">Mariadb数据库适配文档</a>         |
 | 27 | <a href="https://vue.youshengyun.com/files/OceanBase数据库适配文档.pdf" target="_blank">OceanBase数据库适配文档</a>     |
-| 27 | <a href="https://vue.youshengyun.com/files/接口安全控制使用文档.pdf" target="_blank">接口安全控制使用文档</a>                     |
+| 28 | <a href="https://vue.youshengyun.com/files/接口安全控制使用文档.pdf" target="_blank">接口安全控制使用文档</a>                     |
 
 ## 数字底座截图
 
