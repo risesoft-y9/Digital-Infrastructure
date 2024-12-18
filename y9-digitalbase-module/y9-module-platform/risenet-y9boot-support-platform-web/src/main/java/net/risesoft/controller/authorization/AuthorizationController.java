@@ -68,6 +68,8 @@ public class AuthorizationController {
         authorizationVO.setOrgId(y9OrgBase.getId());
         authorizationVO.setOrgName(dn.replace("cn=", "").replace(",ou=", " >> ").replace(",o=", " >> "));
         authorizationVO.setOrgType(y9OrgBase.getOrgType().getName());
+        authorizationVO.setResourceId(y9Authorization.getResourceId());
+        authorizationVO.setResourceName(y9Authorization.getResourceName());
         authorizationVO.setAuthorizer(y9Authorization.getAuthorizer() == null ? "" : y9Authorization.getAuthorizer());
         authorizationVO.setAuthorizeTime(y9Authorization.getCreateTime());
         authorizationVO.setAuthority(y9Authorization.getAuthority());
@@ -80,9 +82,9 @@ public class AuthorizationController {
         AuthorizationVO authorizationVO = new AuthorizationVO();
         authorizationVO.setId(y9Authorization.getId());
         authorizationVO.setResourceId(acResource.getId());
+        authorizationVO.setResourceName(acResource.getName());
         authorizationVO.setAuthority(y9Authorization.getAuthority());
         authorizationVO.setAuthorityStr(y9Authorization.getAuthority().getName());
-        authorizationVO.setResourceName(acResource.getName());
         authorizationVO.setAuthorizer(y9Authorization.getAuthorizer() == null ? "" : y9Authorization.getAuthorizer());
         authorizationVO.setAuthorizeTime(y9Authorization.getCreateTime());
         authorizationVO.setUrl(acResource.getUrl() == null ? "" : acResource.getUrl());
@@ -97,6 +99,8 @@ public class AuthorizationController {
         authorizationVO.setRoleId(y9Authorization.getPrincipalId());
         authorizationVO.setRoleName(dn.replace(",cn=", " >> ").replace("cn=", ""));
         authorizationVO.setAuthorizer(y9Authorization.getAuthorizer() == null ? "" : y9Authorization.getAuthorizer());
+        authorizationVO.setResourceId(y9Authorization.getResourceId());
+        authorizationVO.setResourceName(y9Authorization.getResourceName());
         authorizationVO.setAuthorizeTime(y9Authorization.getCreateTime());
         authorizationVO.setAuthority(y9Authorization.getAuthority());
         authorizationVO.setAuthorityStr(y9Authorization.getAuthority().getName());
@@ -177,6 +181,44 @@ public class AuthorizationController {
             if (AuthorizationPrincipalTypeEnum.ROLE.equals(y9Authorization.getPrincipalType())) {
                 authorizationVOList.add(getAuthorizationVOForRole(y9Authorization));
             }
+        }
+        return Y9Result.success(authorizationVOList, "获取数据成功！");
+    }
+
+    /**
+     * 根据资源id获取继承的角色授权
+     *
+     * @param resourceId 资源id
+     * @return {@code Y9Result<List<AuthorizationVO>>}
+     */
+    @RiseLog(operationName = "根据资源id获取继承的角色授权")
+    @RequestMapping(value = "/listInheritRole")
+    public Y9Result<List<AuthorizationVO>> listInheritRole(@RequestParam("resourceId") @NotBlank String resourceId) {
+        List<AuthorizationVO> authorizationVOList = new ArrayList<>();
+        List<Y9Authorization> y9AuthorizationList = y9AuthorizationService
+            .listByPrincipalTypeAndResourceInherit(AuthorizationPrincipalTypeEnum.ROLE, resourceId);
+
+        for (Y9Authorization y9Authorization : y9AuthorizationList) {
+            authorizationVOList.add(getAuthorizationVOForRole(y9Authorization));
+        }
+        return Y9Result.success(authorizationVOList, "获取数据成功！");
+    }
+
+    /**
+     * 根据资源id获取继承的组织节点授权
+     *
+     * @param resourceId 资源id
+     * @return {@code Y9Result<List<AuthorizationVO>>}
+     */
+    @RiseLog(operationName = "根据资源id获取继承的组织节点授权")
+    @RequestMapping(value = "/listInheritOrg")
+    public Y9Result<List<AuthorizationVO>> listInheritOrg(@RequestParam("resourceId") @NotBlank String resourceId) {
+        List<AuthorizationVO> authorizationVOList = new ArrayList<>();
+        List<Y9Authorization> y9AuthorizationList = y9AuthorizationService
+            .listByPrincipalTypeNotAndResourceInherit(AuthorizationPrincipalTypeEnum.ROLE, resourceId);
+
+        for (Y9Authorization y9Authorization : y9AuthorizationList) {
+            authorizationVOList.add(getAuthorizationVOForOrgBase(y9Authorization));
         }
         return Y9Result.success(authorizationVOList, "获取数据成功！");
     }

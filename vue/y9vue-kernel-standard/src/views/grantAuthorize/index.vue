@@ -38,9 +38,25 @@
                             <RelationRole :id="currData.id" :appId="currData.appId" />
                         </template>
                     </y9Card>
+                    <!-- 角色关联授权继承 -->
+                    <y9Card
+                        v-if="currData.nodeType !== 'APP'"
+                        :title="`${$t('角色关联授权继承')} - ${currData.name ? currData.name : ''}`"
+                    >
+                        <template v-slot>
+                            <InheritRole :id="currData.id" />
+                        </template>
+                    </y9Card>
                     <!-- 组织关联 -->
                     <y9Card :title="`${$t('组织关联')} - ${currData.name ? currData.name : ''}`">
                         <RelationOrg :id="currData.id" />
+                    </y9Card>
+                    <!-- 组织关联授权继承 -->
+                    <y9Card
+                        v-if="currData.nodeType !== 'APP'"
+                        :title="`${$t('组织关联授权继承')} - ${currData.name ? currData.name : ''}`"
+                    >
+                        <InheritOrg :id="currData.id" />
                     </y9Card>
                 </div>
             </template>
@@ -62,6 +78,8 @@
     import RelationRole from './comps/RelationRole.vue';
     // 组织 关联
     import RelationOrg from './comps/RelationOrg.vue';
+    import InheritRole from '@/views/grantAuthorize/comps/InheritRole.vue';
+    import InheritOrg from '@/views/grantAuthorize/comps/InheritOrg.vue';
 
     const { t } = useI18n();
 

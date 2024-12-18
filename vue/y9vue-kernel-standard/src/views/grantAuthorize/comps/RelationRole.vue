@@ -112,7 +112,7 @@
                 // { title: '', type: 'selection', fixed: 'left' },
                 { title: computed(() => t('序号')), type: 'index', width: '100px', fixed: 'left' },
                 { title: computed(() => t('角色名称')), key: 'roleName' },
-                { title: computed(() => t('操作')), key: 'authorityStr', width: 100 },
+                { title: computed(() => t('权限类型')), key: 'authorityStr', width: 100 },
                 { title: computed(() => t('授权者')), key: 'authorizer' },
                 { title: computed(() => t('授权时间')), key: 'authorizeTime', width: settingStore.getDatetimeSpan },
                 {
