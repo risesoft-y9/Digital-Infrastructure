@@ -32,8 +32,8 @@ import net.risesoft.persistence.EnumConverter;
 @Entity
 @Table(name = "Y9_ORG_AUTHORIZATION",
     indexes = {@Index(columnList = "PRINCIPAL_ID,RESOURCE_ID,AUTHORITY", unique = true),
-        @Index(columnList = "TENANT_ID,PRINCIPAL_ID ASC", unique = false),
-        @Index(columnList = "TENANT_ID,RESOURCE_ID ASC", unique = false)})
+        @Index(name = "IDXEEFC34140C92B6E3361926E7", columnList = "PRINCIPAL_ID ASC", unique = false),
+        @Index(name = "IDX29212FB15860130314C7AD85", columnList = "RESOURCE_ID ASC", unique = false)})
 @DynamicUpdate
 @Comment("权限配置表")
 @NoArgsConstructor

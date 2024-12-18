@@ -155,16 +155,14 @@ public interface Y9AuthorizationService {
      * @param resourceId 资源id
      * @return {@code List<Y9Authorization> }
      */
-    List<Y9Authorization> listByPrincipalTypeAndResourceInherit(
+    List<Y9Authorization> listInheritByPrincipalTypeAndResourceId(
         AuthorizationPrincipalTypeEnum authorizationPrincipalType, String resourceId);
 
     /**
      * 获取资源继承的组织节点授权列表
      *
-     * @param authorizationPrincipalType 授权主体类型
      * @param resourceId 资源id
      * @return {@code List<Y9Authorization> }
      */
-    List<Y9Authorization> listByPrincipalTypeNotAndResourceInherit(
-        AuthorizationPrincipalTypeEnum authorizationPrincipalType, String resourceId);
+    List<Y9Authorization> listInheritByPrincipalTypeIsOrgUnitAndResourceId(String resourceId);
 }
