@@ -134,16 +134,18 @@ public class OAuth20IntrospectionEndpointController<T extends OAuth20Configurati
                 .generate(tokenId, accessToken);
 
             // y9 add
-            val authentication = accessToken.getAuthentication();
-            Map<String, List<Object>> attributes = authentication.getPrincipal().getAttributes();
-            Map<String, Object> map = new HashMap<String, Object>();
-            for (String key : attributes.keySet()) {
-                List<Object> values = attributes.get(key);
-                if (values != null && !values.isEmpty()) {
-                    map.put(key, attributes.get(key).get(0));
+            if (accessToken != null) {
+                val authentication = accessToken.getAuthentication();
+                Map<String, List<Object>> attributes = authentication.getPrincipal().getAttributes();
+                Map<String, Object> map = new HashMap<String, Object>();
+                for (String key : attributes.keySet()) {
+                    List<Object> values = attributes.get(key);
+                    if (values != null && !values.isEmpty()) {
+                        map.put(key, attributes.get(key).get(0));
+                    }
                 }
+                introspect.setAttr(Y9JacksonUtil.writeValueAsString(map));
             }
-            introspect.setAttr(Y9JacksonUtil.writeValueAsString(map));
             // y9 end
 
             return buildIntrospectionEntityResponse(context, introspect);

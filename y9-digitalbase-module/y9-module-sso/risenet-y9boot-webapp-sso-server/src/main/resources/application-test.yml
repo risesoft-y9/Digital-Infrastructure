@@ -1,0 +1,13 @@
+spring:
+    cloud:
+        nacos:
+            config:
+                enabled: true
+                group: DEFAULT_GROUP
+                namespace: test2
+                server-addr: nacos:8848
+                username: nacos
+                password: ${NACOS_PASSWORD:111111}
+    config:
+        import:
+            - optional:nacos:sso.yml
