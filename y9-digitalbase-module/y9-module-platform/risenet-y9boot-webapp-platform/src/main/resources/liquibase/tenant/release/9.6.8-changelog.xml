@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+                      http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.9.xsd">
+
+    <changeSet id="1734503295655-1" author="shidaobang" runOnChange="true">
+        <preConditions onFail="MARK_RAN">
+            <indexExists tableName="Y9_ORG_AUTHORIZATION" columnNames="TENANT_ID, PRINCIPAL_ID"/>
+        </preConditions>
+        <dropIndex indexName="IDX53q7nmihwr3yfeu8ribdd6sb"
+                   tableName="Y9_ORG_AUTHORIZATION"/>
+    </changeSet>
+    <changeSet id="1734503295655-2" author="shidaobang" runOnChange="true">
+        <preConditions onFail="MARK_RAN">
+            <indexExists tableName="Y9_ORG_AUTHORIZATION" columnNames="TENANT_ID, RESOURCE_ID"/>
+        </preConditions>
+        <dropIndex indexName="IDXrgw1eknlb0a7kg5xonypd52ag"
+                   tableName="Y9_ORG_AUTHORIZATION"/>
+    </changeSet>
+    <changeSet id="1734503295655-3" author="shidaobang" runOnChange="true">
+        <preConditions onFail="MARK_RAN">
+            <not>
+                <indexExists tableName="Y9_ORG_AUTHORIZATION" columnNames="PRINCIPAL_ID"/>
+            </not>
+        </preConditions>
+        <createIndex indexName="IDXEEFC34140C92B6E3361926E7" tableName="Y9_ORG_AUTHORIZATION">
+            <column name="PRINCIPAL_ID"/>
+        </createIndex>
+    </changeSet>
+    <changeSet id="1734503295655-4" author="shidaobang" runOnChange="true">
+        <preConditions onFail="MARK_RAN">
+            <not>
+                <indexExists tableName="Y9_ORG_AUTHORIZATION" columnNames="RESOURCE_ID"/>
+            </not>
+        </preConditions>
+        <createIndex indexName="IDX29212FB15860130314C7AD85" tableName="Y9_ORG_AUTHORIZATION">
+            <column name="RESOURCE_ID"/>
+        </createIndex>
+    </changeSet>
+</databaseChangeLog>

@@ -48,11 +48,11 @@ public interface Y9AuthorizationRepository extends JpaRepository<Y9Authorization
 
     List<Y9Authorization> findByPrincipalIdOrderByCreateTime(String principalId);
 
-    List<Y9Authorization> findByPrincipalTypeAndResourceId(AuthorizationPrincipalTypeEnum principalType,
-        String resourceId);
+    List<Y9Authorization> findByResourceIdAndPrincipalType(String resourceId,
+        AuthorizationPrincipalTypeEnum principalType);
 
-    List<Y9Authorization> findByPrincipalTypeNotAndResourceId(AuthorizationPrincipalTypeEnum principalType,
-        String resourceId);
+    List<Y9Authorization> findByResourceIdAndPrincipalTypeNot(String resourceId,
+        AuthorizationPrincipalTypeEnum principalType);
 
     List<Y9Authorization> findByResourceId(String resourceId);
 

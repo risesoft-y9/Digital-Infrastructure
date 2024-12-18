@@ -196,7 +196,7 @@ public class AuthorizationController {
     public Y9Result<List<AuthorizationVO>> listInheritRole(@RequestParam("resourceId") @NotBlank String resourceId) {
         List<AuthorizationVO> authorizationVOList = new ArrayList<>();
         List<Y9Authorization> y9AuthorizationList = y9AuthorizationService
-            .listByPrincipalTypeAndResourceInherit(AuthorizationPrincipalTypeEnum.ROLE, resourceId);
+            .listInheritByPrincipalTypeAndResourceId(AuthorizationPrincipalTypeEnum.ROLE, resourceId);
 
         for (Y9Authorization y9Authorization : y9AuthorizationList) {
             authorizationVOList.add(getAuthorizationVOForRole(y9Authorization));
@@ -214,8 +214,8 @@ public class AuthorizationController {
     @RequestMapping(value = "/listInheritOrg")
     public Y9Result<List<AuthorizationVO>> listInheritOrg(@RequestParam("resourceId") @NotBlank String resourceId) {
         List<AuthorizationVO> authorizationVOList = new ArrayList<>();
-        List<Y9Authorization> y9AuthorizationList = y9AuthorizationService
-            .listByPrincipalTypeNotAndResourceInherit(AuthorizationPrincipalTypeEnum.ROLE, resourceId);
+        List<Y9Authorization> y9AuthorizationList =
+            y9AuthorizationService.listInheritByPrincipalTypeIsOrgUnitAndResourceId(resourceId);
 
         for (Y9Authorization y9Authorization : y9AuthorizationList) {
             authorizationVOList.add(getAuthorizationVOForOrgBase(y9Authorization));

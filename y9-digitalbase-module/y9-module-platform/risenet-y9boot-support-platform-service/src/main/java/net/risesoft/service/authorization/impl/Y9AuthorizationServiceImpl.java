@@ -109,13 +109,13 @@ public class Y9AuthorizationServiceImpl implements Y9AuthorizationService {
     @Override
     public List<Y9Authorization> listByPrincipalTypeAndResourceId(AuthorizationPrincipalTypeEnum principalType,
         String resourceId) {
-        return y9AuthorizationRepository.findByPrincipalTypeAndResourceId(principalType, resourceId);
+        return y9AuthorizationRepository.findByResourceIdAndPrincipalType(resourceId, principalType);
     }
 
     @Override
     public List<Y9Authorization> listByPrincipalTypeNotAndResourceId(AuthorizationPrincipalTypeEnum principalType,
         String resourceId) {
-        return y9AuthorizationRepository.findByPrincipalTypeNotAndResourceId(principalType, resourceId);
+        return y9AuthorizationRepository.findByResourceIdAndPrincipalTypeNot(resourceId, principalType);
     }
 
     @Override
@@ -259,7 +259,7 @@ public class Y9AuthorizationServiceImpl implements Y9AuthorizationService {
     }
 
     @Override
-    public List<Y9Authorization> listByPrincipalTypeAndResourceInherit(
+    public List<Y9Authorization> listInheritByPrincipalTypeAndResourceId(
         AuthorizationPrincipalTypeEnum authorizationPrincipalType, String resourceId) {
         List<Y9Authorization> y9AuthorizationList = new ArrayList<>();
 
@@ -271,7 +271,7 @@ public class Y9AuthorizationServiceImpl implements Y9AuthorizationService {
                 break;
             }
             List<Y9Authorization> inheritY9AuthorizationList = y9AuthorizationRepository
-                .findByPrincipalTypeAndResourceId(authorizationPrincipalType, parentResourceId);
+                .findByResourceIdAndPrincipalType(parentResourceId, authorizationPrincipalType);
             y9AuthorizationList.addAll(inheritY9AuthorizationList);
             currentResourceId = parentResourceId;
         }
@@ -279,8 +279,7 @@ public class Y9AuthorizationServiceImpl implements Y9AuthorizationService {
     }
 
     @Override
-    public List<Y9Authorization> listByPrincipalTypeNotAndResourceInherit(
-        AuthorizationPrincipalTypeEnum authorizationPrincipalType, String resourceId) {
+    public List<Y9Authorization> listInheritByPrincipalTypeIsOrgUnitAndResourceId(String resourceId) {
         List<Y9Authorization> y9AuthorizationList = new ArrayList<>();
 
         String currentResourceId = resourceId;
@@ -291,7 +290,7 @@ public class Y9AuthorizationServiceImpl implements Y9AuthorizationService {
                 break;
             }
             List<Y9Authorization> inheritY9AuthorizationList = y9AuthorizationRepository
-                .findByPrincipalTypeNotAndResourceId(authorizationPrincipalType, parentResourceId);
+                .findByResourceIdAndPrincipalTypeNot(parentResourceId, AuthorizationPrincipalTypeEnum.ROLE);
             y9AuthorizationList.addAll(inheritY9AuthorizationList);
             currentResourceId = parentResourceId;
         }
