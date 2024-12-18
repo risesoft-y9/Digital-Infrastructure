@@ -148,4 +148,23 @@ public interface Y9AuthorizationService {
      */
     Y9Authorization saveOrUpdateRole(Y9Authorization y9Authorization);
 
+    /**
+     * 获取资源继承的角色授权列表
+     *
+     * @param authorizationPrincipalType 授权主体类型
+     * @param resourceId 资源id
+     * @return {@code List<Y9Authorization> }
+     */
+    List<Y9Authorization> listByPrincipalTypeAndResourceInherit(
+        AuthorizationPrincipalTypeEnum authorizationPrincipalType, String resourceId);
+
+    /**
+     * 获取资源继承的组织节点授权列表
+     *
+     * @param authorizationPrincipalType 授权主体类型
+     * @param resourceId 资源id
+     * @return {@code List<Y9Authorization> }
+     */
+    List<Y9Authorization> listByPrincipalTypeNotAndResourceInherit(
+        AuthorizationPrincipalTypeEnum authorizationPrincipalType, String resourceId);
 }

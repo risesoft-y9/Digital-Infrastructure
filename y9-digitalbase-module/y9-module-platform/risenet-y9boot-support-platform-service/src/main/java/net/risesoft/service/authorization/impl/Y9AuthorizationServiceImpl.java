@@ -1,5 +1,6 @@
 package net.risesoft.service.authorization.impl;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -255,6 +256,46 @@ public class Y9AuthorizationServiceImpl implements Y9AuthorizationService {
         y9Authorization.setPrincipalName(role.getName());
         y9Authorization.setPrincipalType(AuthorizationPrincipalTypeEnum.ROLE);
         return this.saveOrUpdate(y9Authorization);
+    }
+
+    @Override
+    public List<Y9Authorization> listByPrincipalTypeAndResourceInherit(
+        AuthorizationPrincipalTypeEnum authorizationPrincipalType, String resourceId) {
+        List<Y9Authorization> y9AuthorizationList = new ArrayList<>();
+
+        String currentResourceId = resourceId;
+        while (true) {
+            Y9ResourceBase y9ResourceBase = compositeResourceService.getById(currentResourceId);
+            String parentResourceId = y9ResourceBase.getParentId();
+            if (Boolean.FALSE.equals(y9ResourceBase.getInherit()) || StringUtils.isBlank(parentResourceId)) {
+                break;
+            }
+            List<Y9Authorization> inheritY9AuthorizationList = y9AuthorizationRepository
+                .findByPrincipalTypeAndResourceId(authorizationPrincipalType, parentResourceId);
+            y9AuthorizationList.addAll(inheritY9AuthorizationList);
+            currentResourceId = parentResourceId;
+        }
+        return y9AuthorizationList;
+    }
+
+    @Override
+    public List<Y9Authorization> listByPrincipalTypeNotAndResourceInherit(
+        AuthorizationPrincipalTypeEnum authorizationPrincipalType, String resourceId) {
+        List<Y9Authorization> y9AuthorizationList = new ArrayList<>();
+
+        String currentResourceId = resourceId;
+        while (true) {
+            Y9ResourceBase y9ResourceBase = compositeResourceService.getById(currentResourceId);
+            String parentResourceId = y9ResourceBase.getParentId();
+            if (Boolean.FALSE.equals(y9ResourceBase.getInherit()) || StringUtils.isBlank(parentResourceId)) {
+                break;
+            }
+            List<Y9Authorization> inheritY9AuthorizationList = y9AuthorizationRepository
+                .findByPrincipalTypeNotAndResourceId(authorizationPrincipalType, parentResourceId);
+            y9AuthorizationList.addAll(inheritY9AuthorizationList);
+            currentResourceId = parentResourceId;
+        }
+        return y9AuthorizationList;
     }
 
     private Y9Authorization getById(String id) {

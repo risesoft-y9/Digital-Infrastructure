@@ -204,7 +204,7 @@ public class IdentityResourceCalculatorImpl implements IdentityResourceCalculato
         List<Y9Authorization> resourceRelatedY9AuthorizationList =
             resourceIdAuthorizationListMap.getOrDefault(resourceId, new ArrayList<>());
         List<Y9Authorization> inheritY9AuthorizationList =
-            getInheritY9AuthorizationList(y9ResourceBase, resourceIdAuthorizationListMap);
+            getInheritY9AuthorizationList(y9ResourceBase.getId(), resourceIdAuthorizationListMap);
 
         boolean isInheritAuthorizations = Boolean.TRUE.equals(y9ResourceBase.getInherit());
         if ((isInheritAuthorizations
@@ -231,23 +231,23 @@ public class IdentityResourceCalculatorImpl implements IdentityResourceCalculato
         }
     }
 
-    private List<Y9Authorization> getInheritY9AuthorizationList(Y9ResourceBase currentY9ResourceBase,
+    private List<Y9Authorization> getInheritY9AuthorizationList(String resourceId,
         Map<String, List<Y9Authorization>> resourceIdAuthorizationListMap) {
         List<Y9Authorization> inheritY9AuthorizationList = new ArrayList<>();
 
-        if (StringUtils.isNotBlank(currentY9ResourceBase.getGuidPath()) && currentY9ResourceBase.getInherit()) {
-            String[] resourceIds = currentY9ResourceBase.getGuidPath().split(",");
-            for (int i = resourceIds.length - 1; i > 0; i--) {
-                // 如果当前资源继承权限 则取出父资源的关联授权记录
-                Y9ResourceBase ancestorY9ResourceBase = compositeResourceService.getById(resourceIds[i]);
-                if (ancestorY9ResourceBase.getInherit()) {
-                    inheritY9AuthorizationList
-                        .addAll(resourceIdAuthorizationListMap.getOrDefault(resourceIds[i - 1], new ArrayList<>()));
-                } else {
-                    break;
-                }
+        String currentResourceId = resourceId;
+        while (true) {
+            Y9ResourceBase y9ResourceBase = compositeResourceService.getById(currentResourceId);
+            String parentResourceId = y9ResourceBase.getParentId();
+            if (y9ResourceBase.getInherit() && StringUtils.isNotBlank(parentResourceId)) {
+                inheritY9AuthorizationList
+                    .addAll(resourceIdAuthorizationListMap.getOrDefault(parentResourceId, new ArrayList<>()));
+            } else {
+                break;
             }
+            currentResourceId = parentResourceId;
         }
+
         return inheritY9AuthorizationList;
     }
 
@@ -258,7 +258,7 @@ public class IdentityResourceCalculatorImpl implements IdentityResourceCalculato
         List<Y9Authorization> resourceRelatedY9AuthorizationList =
             resourceIdAuthorizationListMap.getOrDefault(resourceId, new ArrayList<>());
         List<Y9Authorization> inheritY9AuthorizationList =
-            getInheritY9AuthorizationList(y9ResourceBase, resourceIdAuthorizationListMap);
+            getInheritY9AuthorizationList(y9ResourceBase.getId(), resourceIdAuthorizationListMap);
 
         boolean inheritAuthorizations = Boolean.TRUE.equals(y9ResourceBase.getInherit());
         if ((inheritAuthorizations

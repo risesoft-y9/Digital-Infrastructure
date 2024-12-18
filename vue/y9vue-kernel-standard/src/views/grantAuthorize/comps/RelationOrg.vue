@@ -120,7 +120,7 @@
                 { title: computed(() => t('序号')), type: 'index', width: 100, fixed: 'left' },
                 { title: computed(() => t('组织名称')), key: 'orgName' },
                 { title: computed(() => t('组织类型')), key: 'orgType', width: 150 },
-                { title: computed(() => t('操作')), key: 'authorityStr', width: 100 },
+                { title: computed(() => t('权限类型')), key: 'authorityStr', width: 100 },
                 { title: computed(() => t('授权者')), key: 'authorizer', width: 200 },
                 { title: computed(() => t('授权时间')), key: 'authorizeTime', width: settingStore.getDatetimeSpan },
                 {
