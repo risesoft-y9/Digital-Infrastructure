@@ -1,6 +1,5 @@
 package net.risesoft.y9public.repository.custom.impl;
 
-import java.io.IOException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -11,12 +10,14 @@ import java.util.Map;
 import java.util.stream.Collectors;
 
 import org.apache.commons.lang3.StringUtils;
-import org.springframework.context.annotation.DependsOn;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.domain.Sort.Direction;
-import org.springframework.data.elasticsearch.client.elc.ElasticsearchTemplate;
+import org.springframework.data.elasticsearch.client.elc.ElasticsearchAggregation;
+import org.springframework.data.elasticsearch.client.elc.ElasticsearchAggregations;
+import org.springframework.data.elasticsearch.client.elc.NativeQueryBuilder;
+import org.springframework.data.elasticsearch.core.ElasticsearchOperations;
 import org.springframework.data.elasticsearch.core.SearchHit;
 import org.springframework.data.elasticsearch.core.SearchHits;
 import org.springframework.data.elasticsearch.core.mapping.IndexCoordinates;
@@ -41,12 +42,11 @@ import net.risesoft.y9public.entity.Y9logUserLoginInfo;
 import net.risesoft.y9public.repository.Y9logUserLoginInfoRepository;
 import net.risesoft.y9public.repository.custom.Y9logUserLoginInfoCustomRepository;
 
-import co.elastic.clients.elasticsearch.ElasticsearchClient;
 import co.elastic.clients.elasticsearch._types.ElasticsearchException;
+import co.elastic.clients.elasticsearch._types.aggregations.Aggregate;
+import co.elastic.clients.elasticsearch._types.aggregations.Aggregation;
 import co.elastic.clients.elasticsearch._types.aggregations.StringTermsBucket;
 import co.elastic.clients.elasticsearch._types.query_dsl.BoolQuery.Builder;
-import co.elastic.clients.elasticsearch.core.SearchRequest;
-import co.elastic.clients.elasticsearch.core.SearchResponse;
 import co.elastic.clients.elasticsearch.core.search.Hit;
 import co.elastic.clients.json.JsonData;
 
@@ -60,13 +60,11 @@ import co.elastic.clients.json.JsonData;
 @Component
 @Slf4j
 @RequiredArgsConstructor
-@DependsOn(value = "elasticsearchTemplate")
 public class Y9logUserLoginInfoCustomRepositoryImpl implements Y9logUserLoginInfoCustomRepository {
     private static final IndexCoordinates INDEX = IndexCoordinates.of(Y9ESIndexConst.LOGIN_INFO_INDEX);
 
-    private final ElasticsearchClient elasticsearchClient;
     private final Y9logUserLoginInfoRepository y9logUserLoginInfoRepository;
-    private final ElasticsearchTemplate elasticsearchTemplate;
+    private final ElasticsearchOperations elasticsearchOperations;
 
     @Override
     public long countByLoginTimeBetweenAndSuccess(Date startTime, Date endTime, String success) {
@@ -79,7 +77,7 @@ public class Y9logUserLoginInfoCustomRepositoryImpl implements Y9logUserLoginInf
             criteria.subCriteria(new Criteria(Y9LogSearchConsts.TENANT_ID).is(tenantId));
         }
         Query query = new CriteriaQueryBuilder(criteria).build();
-        return elasticsearchTemplate.count(query, INDEX);
+        return elasticsearchOperations.count(query, INDEX);
     }
 
     @Override
@@ -101,7 +99,7 @@ public class Y9logUserLoginInfoCustomRepositoryImpl implements Y9logUserLoginInf
             criteria.subCriteria(new Criteria(Y9LogSearchConsts.TENANT_ID).is(tenantId));
         }
         Query query = new CriteriaQuery(criteria);
-        return elasticsearchTemplate.count(query, INDEX);
+        return elasticsearchOperations.count(query, INDEX);
     }
 
     @Override
@@ -124,26 +122,40 @@ public class Y9logUserLoginInfoCustomRepositoryImpl implements Y9logUserLoginInf
             criteria.subCriteria(new Criteria(Y9LogSearchConsts.TENANT_ID).is(tenantId));
         }
         Query query = new CriteriaQuery(criteria);
-        return elasticsearchTemplate.count(query, INDEX);
+        return elasticsearchOperations.count(query, INDEX);
     }
 
     @Override
     public List<Object[]> listDistinctUserHostIpByUserIdAndLoginTime(String userId, Date startTime, Date endTime) {
         List<Object[]> list = new ArrayList<>();
+        Builder build = new Builder();
+        build.must(m -> m.queryString(qs -> qs.fields(Y9LogSearchConsts.USER_ID).query(userId)));
+        String st = String.valueOf(startTime.getTime());
+        String et = String.valueOf(endTime.getTime());
+        build.must(m -> m.range(r -> r.date(d -> d.field(Y9LogSearchConsts.LOGIN_TIME).from(st).to(et))));
+        String tenantId = Y9LoginUserHolder.getTenantId();
+        if (!tenantId.equals(InitDataConsts.OPERATION_TENANT_ID)) {
+            build.must(m -> m.queryString(qs -> qs.fields(Y9LogSearchConsts.TENANT_ID).query(tenantId)));
+        }
 
-        SearchRequest searchRequest = SearchRequest.of(s -> s.index(Y9ESIndexConst.LOGIN_INFO_INDEX)
-            .query(q -> q.bool(b -> b.must(m -> m.queryString(qs -> qs.fields(Y9LogSearchConsts.USER_ID).query(userId)))
-                .must(m -> m.range(r -> r.date(d -> d.field(Y9LogSearchConsts.LOGIN_TIME).from(String.valueOf(startTime.getTime()))
-                    .to(String.valueOf(endTime.getTime())))))))
-            .aggregations("by_userHostIp", a -> a.terms(t -> t.field(Y9LogSearchConsts.USER_HOST_IP))));
+        Aggregation userHostIpAggs = Aggregation.of(a -> a.terms(t -> t.field(Y9LogSearchConsts.USER_HOST_IP)));
 
+        NativeQueryBuilder querybuilder = new NativeQueryBuilder();
+        querybuilder.withQuery(build.build()._toQuery());
+        querybuilder.withAggregation("by_userHostIp", userHostIpAggs);
+        querybuilder.withTrackTotalHits(true);
         try {
-            elasticsearchClient.search(searchRequest, Y9logUserLoginInfo.class).aggregations().get("by_userHostIp")
-                .sterms().buckets().array().forEach(bucket -> {
-                    String[] userLoginInfo = {bucket.key().toString(), String.valueOf(bucket.docCount())};
-                    list.add(userLoginInfo);
-                });
-        } catch (ElasticsearchException | IOException e) {
+            SearchHits<Y9logUserLoginInfo> searchHits =
+                elasticsearchOperations.search(querybuilder.build(), Y9logUserLoginInfo.class, INDEX);
+            ElasticsearchAggregations aggregations = (ElasticsearchAggregations)searchHits.getAggregations();
+            List<StringTermsBucket> ipList =
+                aggregations.get("by_userHostIp").aggregation().getAggregate().sterms().buckets().array();
+
+            ipList.forEach(bucket -> {
+                String[] userLoginInfo = {bucket.key().toString(), String.valueOf(bucket.docCount())};
+                list.add(userLoginInfo);
+            });
+        } catch (ElasticsearchException e) {
             LOGGER.warn(e.getMessage(), e);
         }
         return list;
@@ -158,13 +170,21 @@ public class Y9logUserLoginInfoCustomRepositoryImpl implements Y9logUserLoginInf
         if (!tenantId.equals(InitDataConsts.OPERATION_TENANT_ID)) {
             build.must(m -> m.queryString(qs -> qs.fields(Y9LogSearchConsts.TENANT_ID).query(tenantId)));
         }
-        SearchRequest searchRequest =
-            SearchRequest.of(s -> s.index(Y9ESIndexConst.LOGIN_INFO_INDEX).query(build.build()._toQuery())
-                .aggregations("by_UserHostIP", a -> a.terms(t -> t.field(Y9LogSearchConsts.USER_HOST_IP))));
+
+        Aggregation userHostIpAggs = Aggregation.of(a -> a.terms(t -> t.field(Y9LogSearchConsts.USER_HOST_IP)));
+
+        NativeQueryBuilder querybuilder = new NativeQueryBuilder();
+        querybuilder.withQuery(build.build()._toQuery());
+        querybuilder.withAggregation("by_UserHostIP", userHostIpAggs);
+        querybuilder.withTrackTotalHits(true);
         try {
-            SearchResponse<Y9logUserLoginInfo> response =
-                elasticsearchClient.search(searchRequest, Y9logUserLoginInfo.class);
-            response.aggregations().get("by_UserHostIP").sterms().buckets().array().forEach(bucket -> {
+            SearchHits<Y9logUserLoginInfo> searchHits =
+                elasticsearchOperations.search(querybuilder.build(), Y9logUserLoginInfo.class, INDEX);
+            ElasticsearchAggregations aggregations = (ElasticsearchAggregations)searchHits.getAggregations();
+            List<StringTermsBucket> ipList =
+                aggregations.get("by_UserHostIP").aggregation().getAggregate().sterms().buckets().array();
+
+            ipList.forEach(bucket -> {
                 Map<String, Object> map = new HashMap<>();
                 String serverIp = bucket.key().stringValue();
                 String text = serverIp + "<span style='color:red'>(" + bucket.docCount() + ")</span>";
@@ -172,7 +192,7 @@ public class Y9logUserLoginInfoCustomRepositoryImpl implements Y9logUserLoginInf
                 map.put("text", text);
                 list.add(map);
             });
-        } catch (ElasticsearchException | IOException e) {
+        } catch (ElasticsearchException e) {
             LOGGER.warn(e.getMessage(), e);
         }
         return list;
@@ -211,7 +231,7 @@ public class Y9logUserLoginInfoCustomRepositoryImpl implements Y9logUserLoginInf
         Query query = new CriteriaQuery(criteria).setPageable(PageRequest.of(page, size))
             .addSort(Sort.by(Direction.DESC, Y9LogSearchConsts.LOGIN_TIME));
         SearchHits<Y9logUserLoginInfo> searchHits =
-            elasticsearchTemplate.search(query, Y9logUserLoginInfo.class, INDEX);
+            elasticsearchOperations.search(query, Y9logUserLoginInfo.class, INDEX);
 
         List<Y9logUserLoginInfo> list = searchHits.stream().map(SearchHit::getContent).collect(Collectors.toList());
         int totalPages = (int)searchHits.getTotalHits() / size;
@@ -238,15 +258,20 @@ public class Y9logUserLoginInfoCustomRepositoryImpl implements Y9logUserLoginInf
         if (!tenantId.equals(InitDataConsts.OPERATION_TENANT_ID)) {
             build.must(m -> m.queryString(qs -> qs.fields(Y9LogSearchConsts.TENANT_ID).query(tenantId)));
         }
-        SearchRequest searchRequest =
-            SearchRequest.of(s -> s.index(Y9ESIndexConst.LOGIN_INFO_INDEX).query(build.build()._toQuery())
-                .aggregations("username-aggs", a -> a.terms(t -> t.field(Y9LogSearchConsts.USER_NAME))
-                    .aggregations("topHits", aggs -> aggs.topHits(h -> h.size(1).explain(true)))));
 
+        Aggregation usernameAggs = Aggregation.of(a -> a.terms(t -> t.field(Y9LogSearchConsts.USER_NAME))
+            .aggregations("topHits", aggs -> aggs.topHits(h -> h.size(1).explain(true))));
+
+        NativeQueryBuilder querybuilder = new NativeQueryBuilder();
+        querybuilder.withQuery(build.build()._toQuery());
+        querybuilder.withAggregation("username-aggs", usernameAggs);
+        querybuilder.withTrackTotalHits(true);
         try {
-            SearchResponse<Y9logUserLoginInfo> response =
-                elasticsearchClient.search(searchRequest, Y9logUserLoginInfo.class);
-            List<StringTermsBucket> stbList = response.aggregations().get("username-aggs").sterms().buckets().array();
+            SearchHits<Y9logUserLoginInfo> searchHits =
+                elasticsearchOperations.search(querybuilder.build(), Y9logUserLoginInfo.class, INDEX);
+            ElasticsearchAggregations aggregations = (ElasticsearchAggregations)searchHits.getAggregations();
+            List<StringTermsBucket> stbList =
+                aggregations.get("username-aggs").aggregation().getAggregate().sterms().buckets().array();
             int totalCount = stbList.size();
             endIndex = endIndex < totalCount ? endIndex : totalCount;
             for (int i = startIndex; i < endIndex; i++) {
@@ -261,7 +286,7 @@ public class Y9logUserLoginInfoCustomRepositoryImpl implements Y9logUserLoginInf
                 strList.add(map);
             }
             return Y9Page.success(page, (int)Math.ceil((float)totalCount / (float)page), totalCount, strList);
-        } catch (ElasticsearchException | IOException e) {
+        } catch (ElasticsearchException e) {
             LOGGER.warn(e.getMessage(), e);
         }
         return null;
@@ -280,15 +305,26 @@ public class Y9logUserLoginInfoCustomRepositoryImpl implements Y9logUserLoginInf
         if (!tenantId.equals(InitDataConsts.OPERATION_TENANT_ID)) {
             build.must(m -> m.queryString(qs -> qs.fields(Y9LogSearchConsts.TENANT_ID).query(tenantId)));
         }
-        SearchRequest searchRequest =
-            SearchRequest.of(s -> s.index(Y9ESIndexConst.LOGIN_INFO_INDEX).query(build.build()._toQuery())
-                .aggregations("userNameAggs", a -> a.terms(t -> t.field(Y9LogSearchConsts.USER_NAME))
-                    .aggregations("topHits", aggs -> aggs.topHits(h -> h.size(1).explain(true)))));
+
+        Aggregation appAggs = Aggregation.of(a -> a.terms(t -> t.field(Y9LogSearchConsts.USER_NAME))
+            .aggregations("topHits", aggs -> aggs.topHits(h -> h.size(1).explain(true))));
+
+        NativeQueryBuilder querybuilder = new NativeQueryBuilder();
+        querybuilder.withQuery(build.build()._toQuery());
+        querybuilder.withAggregation("userNameAggs", appAggs);
+        querybuilder.withTrackTotalHits(true);
 
         try {
-            SearchResponse<Y9logUserLoginInfo> response =
-                elasticsearchClient.search(searchRequest, Y9logUserLoginInfo.class);
-            List<StringTermsBucket> list = response.aggregations().get("userNameAggs").sterms().buckets().array();
+            SearchHits<Y9logUserLoginInfo> searchHits =
+                elasticsearchOperations.search(querybuilder.build(), Y9logUserLoginInfo.class, INDEX);
+
+            ElasticsearchAggregations aggregations = (ElasticsearchAggregations)searchHits.getAggregations();
+            // 指定聚合的名称
+            ElasticsearchAggregation userNameAggs = aggregations.get("userNameAggs");
+            // 获得聚合
+            Aggregate aggregate = userNameAggs.aggregation().getAggregate();
+
+            List<StringTermsBucket> list = aggregate.sterms().buckets().array();
             int totalCount = list.size();
             endIndex = endIndex < totalCount ? endIndex : totalCount;
             for (StringTermsBucket bucket : list) {
@@ -305,8 +341,6 @@ public class Y9logUserLoginInfoCustomRepositoryImpl implements Y9logUserLoginInf
             }
             return Y9Page.success(page, (int)Math.ceil((float)totalCount / (float)page), totalCount, strList);
         } catch (ElasticsearchException e) {
-            LOGGER.error(e.getMessage(), e);
-        } catch (IOException e) {
             LOGGER.error(e.getMessage(), e);
         }
         return null;
@@ -334,7 +368,7 @@ public class Y9logUserLoginInfoCustomRepositoryImpl implements Y9logUserLoginInf
             .addSort(Sort.by(Direction.DESC, Y9LogSearchConsts.LOGIN_TIME));
 
         SearchHits<Y9logUserLoginInfo> searchHits =
-            elasticsearchTemplate.search(query, Y9logUserLoginInfo.class, INDEX);
+            elasticsearchOperations.search(query, Y9logUserLoginInfo.class, INDEX);
 
         List<Y9logUserLoginInfo> list = searchHits.stream().map(SearchHit::getContent).collect(Collectors.toList());
         int totalPages = (int)searchHits.getTotalHits() / rows;
@@ -387,7 +421,7 @@ public class Y9logUserLoginInfoCustomRepositoryImpl implements Y9logUserLoginInf
         }
         Query query = new CriteriaQuery(criteria).setPageable(pageable);
         SearchHits<Y9logUserLoginInfo> searchHits =
-            elasticsearchTemplate.search(query, Y9logUserLoginInfo.class, INDEX);
+            elasticsearchOperations.search(query, Y9logUserLoginInfo.class, INDEX);
         List<Y9logUserLoginInfo> list = searchHits.stream().map(SearchHit::getContent).collect(Collectors.toList());
         int totalPages = (int)searchHits.getTotalHits() / rows;
         return Y9Page.success(page, searchHits.getTotalHits() % rows == 0 ? totalPages : totalPages + 1,

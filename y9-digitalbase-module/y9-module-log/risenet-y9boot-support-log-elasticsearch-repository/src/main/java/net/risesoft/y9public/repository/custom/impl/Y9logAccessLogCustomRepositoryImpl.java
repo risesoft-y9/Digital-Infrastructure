@@ -1,12 +1,10 @@
 package net.risesoft.y9public.repository.custom.impl;
 
-import java.io.IOException;
 import java.net.UnknownHostException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Collections;
 import java.util.Date;
@@ -18,7 +16,6 @@ import java.util.stream.Collectors;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.time.FastDateFormat;
-import org.springframework.context.annotation.DependsOn;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
@@ -26,7 +23,9 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.domain.Sort.Direction;
 import org.springframework.data.domain.Sort.Order;
-import org.springframework.data.elasticsearch.client.elc.ElasticsearchTemplate;
+import org.springframework.data.elasticsearch.client.elc.ElasticsearchAggregations;
+import org.springframework.data.elasticsearch.client.elc.NativeQueryBuilder;
+import org.springframework.data.elasticsearch.core.ElasticsearchOperations;
 import org.springframework.data.elasticsearch.core.IndexOperations;
 import org.springframework.data.elasticsearch.core.SearchHit;
 import org.springframework.data.elasticsearch.core.SearchHits;
@@ -54,16 +53,18 @@ import net.risesoft.y9public.repository.Y9logAccessLogRepository;
 import net.risesoft.y9public.repository.custom.Y9logAccessLogCustomRepository;
 import net.risesoft.y9public.repository.custom.Y9logMappingCustomRepository;
 
-import co.elastic.clients.elasticsearch.ElasticsearchClient;
 import co.elastic.clients.elasticsearch._types.ElasticsearchException;
 import co.elastic.clients.elasticsearch._types.SortOrder;
+import co.elastic.clients.elasticsearch._types.aggregations.Aggregation;
 import co.elastic.clients.elasticsearch._types.aggregations.AggregationRange;
 import co.elastic.clients.elasticsearch._types.aggregations.CalendarInterval;
+import co.elastic.clients.elasticsearch._types.aggregations.DateHistogramAggregation;
+import co.elastic.clients.elasticsearch._types.aggregations.DateHistogramBucket;
 import co.elastic.clients.elasticsearch._types.aggregations.FieldDateMath;
+import co.elastic.clients.elasticsearch._types.aggregations.RangeAggregation;
+import co.elastic.clients.elasticsearch._types.aggregations.RangeBucket;
 import co.elastic.clients.elasticsearch._types.aggregations.StringTermsBucket;
 import co.elastic.clients.elasticsearch._types.query_dsl.BoolQuery.Builder;
-import co.elastic.clients.elasticsearch.core.SearchRequest;
-import co.elastic.clients.elasticsearch.core.search.Hit;
 import co.elastic.clients.util.NamedValue;
 
 /**
@@ -74,7 +75,6 @@ import co.elastic.clients.util.NamedValue;
 @Component
 @Slf4j
 @RequiredArgsConstructor
-@DependsOn(value = "elasticsearchTemplate")
 public class Y9logAccessLogCustomRepositoryImpl implements Y9logAccessLogCustomRepository {
 
     private static final FastDateFormat DATETIME_FORMAT = FastDateFormat.getInstance("yyyy-MM-dd HH:mm:ss");
@@ -82,8 +82,7 @@ public class Y9logAccessLogCustomRepositoryImpl implements Y9logAccessLogCustomR
     private static final FastDateFormat DATETIME_UTC_FORMAT = FastDateFormat.getInstance("yyyy-MM-dd'T'HH:mm:ss'Z'");
 
     private final Y9logMappingCustomRepository y9logMappingService;
-    private final ElasticsearchClient elasticsearchClient;
-    private final ElasticsearchTemplate elasticsearchTemplate;
+    private final ElasticsearchOperations elasticsearchOperations;
     private final Y9logAccessLogRepository y9logAccessLogRepository;
 
     // 目前日志查询页有两种情况：一种是有开始时间和结束时间，另一种是只选一个时间
@@ -130,21 +129,29 @@ public class Y9logAccessLogCustomRepositoryImpl implements Y9logAccessLogCustomR
             try {
                 Date sDay = Y9Day.getStartOfDay(new SimpleDateFormat("yyyy-MM-dd").parse(startDay));
                 Date eDay = Y9Day.getEndOfDay(new SimpleDateFormat("yyyy-MM-dd").parse(endDay));
-                build.must(m -> m.range(r -> r.date(d -> d.field(Y9LogSearchConsts.LOG_TIME).from(String.valueOf(sDay.getTime()))
-                    .to(String.valueOf(eDay.getTime())))));
+                build.must(m -> m.range(r -> r.date(d -> d.field(Y9LogSearchConsts.LOG_TIME)
+                    .from(String.valueOf(sDay.getTime())).to(String.valueOf(eDay.getTime())))));
             } catch (ParseException e) {
                 LOGGER.warn(e.getMessage(), e);
             }
         }
 
-        @SuppressWarnings("unchecked")
-        SearchRequest request = SearchRequest.of(s -> s.index(Arrays.asList(createIndexNames(startDay, endDay)))
-            .query(build.build()._toQuery()).aggregations("by_appName", a -> a.terms(t -> t
-                .field(Y9LogSearchConsts.MODULAR_NAME).size(10000).order(new NamedValue<>("_count", SortOrder.Desc)))));
+        List<NamedValue<SortOrder>> sortOrders = new ArrayList<>();
+        sortOrders.add(NamedValue.of("_count", SortOrder.Desc));
+        Aggregation appNameAggs =
+            Aggregation.of(a -> a.terms(t -> t.field(Y9LogSearchConsts.MODULAR_NAME).size(10000).order(sortOrders)));
 
+        NativeQueryBuilder querybuilder = new NativeQueryBuilder();
+        querybuilder.withQuery(build.build()._toQuery());
+        querybuilder.withAggregation("by_appName", appNameAggs);
+        querybuilder.withTrackTotalHits(true);
+        IndexCoordinates indexs = IndexCoordinates.of(createIndexNames(startDay, endDay));
         try {
-            List<StringTermsBucket> buckets = elasticsearchClient.search(request, Y9logAccessLog.class).aggregations()
-                .get("by_appName").sterms().buckets().array();
+            SearchHits<Y9logAccessLog> searchHits =
+                elasticsearchOperations.search(querybuilder.build(), Y9logAccessLog.class, indexs);
+            ElasticsearchAggregations aggregations = (ElasticsearchAggregations)searchHits.getAggregations();
+            List<? extends StringTermsBucket> buckets =
+                aggregations.get("by_appName").aggregation().getAggregate().sterms().buckets().array();
             int length = buckets.size();
             buckets.forEach(bucket -> {
                 String appName = bucket.key().stringValue();
@@ -156,7 +163,7 @@ public class Y9logAccessLogCustomRepositoryImpl implements Y9logAccessLogCustomR
             returnMap.put("name", strList);
             returnMap.put("value", longList);
             return returnMap;
-        } catch (ElasticsearchException | IOException e) {
+        } catch (ElasticsearchException e) {
             LOGGER.error(e.getMessage(), e);
             return Collections.emptyMap();
         }
@@ -195,28 +202,38 @@ public class Y9logAccessLogCustomRepositoryImpl implements Y9logAccessLogCustomR
             }
         }
 
-        @SuppressWarnings("unchecked")
-        SearchRequest request = SearchRequest.of(s -> s.index(Arrays.asList(createIndexNames(startDay, endDay)))
-            .query(builder.build()._toQuery()).aggregations("by_modularname", a -> a.terms(t -> t
-                .field(Y9LogSearchConsts.MODULAR_NAME).size(10000).order(new NamedValue<>("_count", SortOrder.Desc)))));
+        List<NamedValue<SortOrder>> sortOrders = new ArrayList<>();
+        sortOrders.add(NamedValue.of("_count", SortOrder.Desc));
+        Aggregation modularnameAggs =
+            Aggregation.of(a -> a.terms(t -> t.field(Y9LogSearchConsts.MODULAR_NAME).size(10000).order(sortOrders)));
 
+        NativeQueryBuilder querybuilder = new NativeQueryBuilder();
+        querybuilder.withQuery(builder.build()._toQuery());
+        querybuilder.withAggregation("by_modularname", modularnameAggs);
+        querybuilder.withTrackTotalHits(true);
+        IndexCoordinates indexs = IndexCoordinates.of(createIndexNames(startDay, endDay));
         try {
-            elasticsearchClient.search(request, Y9logAccessLog.class).aggregations().get("by_modularname").sterms()
-                .buckets().array().forEach(bucket -> {
-                    String modularName = bucket.key().stringValue();
-                    String modularCnName = y9logMappingService.getCnModularName(modularName);
-                    if (StringUtils.isNotBlank(modularCnName)) {
-                        modularName = modularCnName;
-                    }
-                    long count = bucket.docCount();
-                    strList.add(modularName);
-                    longList.add(count);
-                });
+
+            SearchHits<Y9logAccessLog> searchHits =
+                elasticsearchOperations.search(querybuilder.build(), Y9logAccessLog.class, indexs);
+            ElasticsearchAggregations aggregations = (ElasticsearchAggregations)searchHits.getAggregations();
+            List<? extends StringTermsBucket> buckets =
+                aggregations.get("by_modularname").aggregation().getAggregate().sterms().buckets().array();
+            buckets.forEach(bucket -> {
+                String modularName = bucket.key().stringValue();
+                String modularCnName = y9logMappingService.getCnModularName(modularName);
+                if (StringUtils.isNotBlank(modularCnName)) {
+                    modularName = modularCnName;
+                }
+                long count = bucket.docCount();
+                strList.add(modularName);
+                longList.add(count);
+            });
             map.put("name", strList);
             map.put("value", longList);
             map.put("number", strList.size());
             return map;
-        } catch (ElasticsearchException | IOException e1) {
+        } catch (ElasticsearchException e1) {
             LOGGER.error(e1.getMessage(), e1);
             return null;
         }
@@ -239,60 +256,74 @@ public class Y9logAccessLogCustomRepositoryImpl implements Y9logAccessLogCustomR
         }
         Date startOfTime = Y9Day.getStartOfDay(day);
         Date endOfTime = Y9Day.getEndOfDay(day);
+
+        String startTimeStr = DATETIME_UTC_FORMAT.format(startOfTime.getTime());
+        String etartTimeStr = DATETIME_UTC_FORMAT.format(endOfTime.getTime());
+        LOGGER.info("startTimeStr---->{},etartTimeStr-->{}", startTimeStr, etartTimeStr);
+
         Builder sbuilder = new Builder();
         sbuilder.must(m -> m.exists(e -> e.field(Y9LogSearchConsts.USER_NAME)));
         sbuilder.must(m -> m.queryString(qs -> qs.fields(Y9LogSearchConsts.SUCCESS).query(success)));
-        sbuilder.must(m -> m
-            .range(r -> r.date(d -> d.field(Y9LogSearchConsts.LOG_TIME).from(DATETIME_UTC_FORMAT.format(startOfTime.getTime()))
-                .to(DATETIME_UTC_FORMAT.format(endOfTime.getTime())))));
+        sbuilder.must(
+            m -> m.range(r -> r.date(d -> d.field(Y9LogSearchConsts.LOG_TIME).from(startTimeStr).to(etartTimeStr))));
 
         Builder ebuilder = new Builder();
         ebuilder.must(m -> m.exists(e -> e.field(Y9LogSearchConsts.USER_NAME)));
         ebuilder.must(m -> m.queryString(qs -> qs.fields(Y9LogSearchConsts.SUCCESS).query(error)));
-        ebuilder.must(m -> m
-            .range(r -> r.date(d -> d.field(Y9LogSearchConsts.LOG_TIME).from(DATETIME_UTC_FORMAT.format(startOfTime.getTime()))
-                .to(DATETIME_UTC_FORMAT.format(endOfTime.getTime())))));
+        ebuilder.must(
+            m -> m.range(r -> r.date(d -> d.field(Y9LogSearchConsts.LOG_TIME).from(startTimeStr).to(etartTimeStr))));
 
         if (!tenantId.equals(InitDataConsts.OPERATION_TENANT_ID)) {
             sbuilder.must(m -> m.queryString(qs -> qs.fields(Y9LogSearchConsts.TENANT_ID).query(tenantId)));
+            ebuilder.must(m -> m.queryString(qs -> qs.fields(Y9LogSearchConsts.TENANT_ID).query(tenantId)));
         }
 
-        SearchRequest sRequest =
-            SearchRequest
-                .of(s -> s.index(Arrays.asList(createIndexNames(selectedDate, null))).query(sbuilder.build()._toQuery())
-                    .aggregations("by_success_logtime", a -> a.dateHistogram(d -> d.field(Y9LogSearchConsts.LOG_TIME)
-                        .calendarInterval(CalendarInterval.Hour).minDocCount(0)
-                        .extendedBounds(bounds -> bounds
-                            .min(FieldDateMath.of(f -> f.expr(DATETIME_UTC_FORMAT.format(startOfTime.getTime()))))
-                            .max(FieldDateMath.of(f -> f.expr(DATETIME_UTC_FORMAT.format(endOfTime.getTime()))))))));
-        SearchRequest eRequest =
-            SearchRequest
-                .of(s -> s.index(Arrays.asList(createIndexNames(selectedDate, null))).query(ebuilder.build()._toQuery())
-                    .aggregations("by_error_logtime", a -> a.dateHistogram(d -> d.field(Y9LogSearchConsts.LOG_TIME)
-                        .calendarInterval(CalendarInterval.Hour).minDocCount(0)
-                        .extendedBounds(bounds -> bounds
-                            .min(FieldDateMath.of(f -> f.expr(DATETIME_UTC_FORMAT.format(startOfTime.getTime()))))
-                            .max(FieldDateMath.of(f -> f.expr(DATETIME_UTC_FORMAT.format(endOfTime.getTime()))))))));
+        IndexCoordinates indexs = IndexCoordinates.of(createIndexNames(selectedDate, null));
+
+        DateHistogramAggregation sdateHistogramAgg = DateHistogramAggregation.of(d -> d
+            .field(Y9LogSearchConsts.LOG_TIME).calendarInterval(CalendarInterval.Hour).timeZone("GMT+08:00")
+            .offset(t -> t.time("-8h")).minDocCount(0).extendedBounds(bounds -> bounds
+                .min(FieldDateMath.of(f -> f.expr(startTimeStr))).max(FieldDateMath.of(f -> f.expr(etartTimeStr)))));
+
+        NativeQueryBuilder sNativebuilder = new NativeQueryBuilder();
+        sNativebuilder.withQuery(sbuilder.build()._toQuery());
+        sNativebuilder.withAggregation("by_success_logtime", sdateHistogramAgg._toAggregation());
+
+        DateHistogramAggregation edateHistogramAgg = DateHistogramAggregation.of(d -> d
+            .field(Y9LogSearchConsts.LOG_TIME).calendarInterval(CalendarInterval.Hour).timeZone("GMT+08:00")
+            .offset(t -> t.time("-8h")).minDocCount(0).extendedBounds(bounds -> bounds
+                .min(FieldDateMath.of(f -> f.expr(startTimeStr))).max(FieldDateMath.of(f -> f.expr(etartTimeStr)))));
+        NativeQueryBuilder eNativebuilder = new NativeQueryBuilder();
+        eNativebuilder.withQuery(ebuilder.build()._toQuery());
+        eNativebuilder.withAggregation("by_error_logtime", edateHistogramAgg._toAggregation());
 
         try {
-            elasticsearchClient.search(sRequest, Void.class).aggregations().get("by_success_logtime").dateHistogram()
-                .buckets().array().forEach(bucket -> {
-                    long count = bucket.docCount();
-                    countOfSuccess.add(count);
-                });
+            SearchHits<Y9logAccessLog> searchHits =
+                elasticsearchOperations.search(sNativebuilder.build(), Y9logAccessLog.class, indexs);
+            ElasticsearchAggregations aggregations = (ElasticsearchAggregations)searchHits.getAggregations();
+            List<? extends DateHistogramBucket> buckets =
+                aggregations.get("by_success_logtime").aggregation().getAggregate().dateHistogram().buckets().array();
+            buckets.forEach(bucket -> {
+                long count = bucket.docCount();
+                countOfSuccess.add(count);
+            });
 
-        } catch (ElasticsearchException | IOException e1) {
+        } catch (ElasticsearchException e1) {
             LOGGER.error(e1.getMessage(), e1);
         }
 
         try {
-            elasticsearchClient.search(eRequest, Void.class).aggregations().get("by_error_logtime").dateHistogram()
-                .buckets().array().forEach(bucket -> {
-                    long count = bucket.docCount();
-                    countOfError.add(count);
-                });
+            SearchHits<Y9logAccessLog> searchHits =
+                elasticsearchOperations.search(eNativebuilder.build(), Y9logAccessLog.class, indexs);
+            ElasticsearchAggregations aggregations = (ElasticsearchAggregations)searchHits.getAggregations();
+            List<? extends DateHistogramBucket> buckets =
+                aggregations.get("by_error_logtime").aggregation().getAggregate().dateHistogram().buckets().array();
+            buckets.forEach(bucket -> {
+                long count = bucket.docCount();
+                countOfError.add(count);
+            });
 
-        } catch (ElasticsearchException | IOException e1) {
+        } catch (ElasticsearchException e1) {
             LOGGER.error(e1.getMessage(), e1);
         }
         for (int i = 0; i < 24; i++) {
@@ -311,26 +342,22 @@ public class Y9logAccessLogCustomRepositoryImpl implements Y9logAccessLogCustomR
             Date startDate = DATETIME_FORMAT.parse(startTime);
             Date endDate = DATETIME_FORMAT.parse(endTime);
 
-            SearchRequest request =
-                SearchRequest
-                    .of(s -> s.index(Y9ESIndexConst.ACCESS_LOG_INDEX)
-                        .query(q -> q.bool(b -> b
-                            .must(m -> m.queryString(qs -> qs.fields(Y9LogSearchConsts.USER_NAME).query(loginName)))
-                            .must(m -> m.queryString(qs -> qs.fields(Y9LogSearchConsts.TENANT_ID).query(tenantId)))
-                            .must(m -> m.range(r -> r.date(d -> d.field(Y9LogSearchConsts.LOGIN_TIME)
-                                .from(DATETIME_UTC_FORMAT.format(startDate.getTime()))
-                                .to(DATETIME_UTC_FORMAT.format(endDate.getTime()))))))));
+            String start = DATETIME_UTC_FORMAT.format(startDate.getTime());
+            String end = DATETIME_UTC_FORMAT.format(endDate.getTime());
+            Criteria criteria = new Criteria(Y9LogSearchConsts.USER_NAME).is(loginName).and(Y9LogSearchConsts.TENANT_ID)
+                .is(tenantId).and(Y9LogSearchConsts.LOGIN_TIME).between(start, end);
 
-            try {
-                List<Hit<Y9logAccessLog>> hits =
-                    elasticsearchClient.search(request, Y9logAccessLog.class).hits().hits();
-                hits.forEach(hit -> {
-                    String accesslogjson = Y9JsonUtil.writeValueAsString(hit.source());
-                    strList.add(accesslogjson);
-                });
-            } catch (ElasticsearchException | IOException e) {
-                LOGGER.error(e.getMessage(), e);
-            }
+            Query query = new CriteriaQuery(criteria);
+            query.setTrackTotalHits(true);
+
+            IndexCoordinates indexs = IndexCoordinates.of(createIndexNames(startTime, endTime));
+
+            SearchHits<Y9logAccessLog> searchHits = elasticsearchOperations.search(query, Y9logAccessLog.class, indexs);
+            List<Y9logAccessLog> list = searchHits.stream().map(SearchHit::getContent).collect(Collectors.toList());
+            list.forEach(log -> {
+                String accesslogjson = Y9JsonUtil.writeValueAsString(log);
+                strList.add(accesslogjson);
+            });
         } catch (ParseException e1) {
             LOGGER.warn(e1.getMessage(), e1);
         }
@@ -353,8 +380,8 @@ public class Y9logAccessLogCustomRepositoryImpl implements Y9logAccessLogCustomR
                 String start = DATETIME_UTC_FORMAT.format(startDate);
                 String end = DATETIME_UTC_FORMAT.format(endDate);
                 System.out.println(start + "   " + end);
-                builder.must(m -> m.range(
-                    r -> r.date(d -> d.field(Y9LogSearchConsts.LOG_TIME).from(start).to(end).format("yyyy-MM-dd'T'HH:mm:ss'Z'"))));
+                builder.must(m -> m.range(r -> r.date(
+                    d -> d.field(Y9LogSearchConsts.LOG_TIME).from(start).to(end).format("yyyy-MM-dd'T'HH:mm:ss'Z'"))));
             } catch (ParseException e) {
                 LOGGER.warn(e.getMessage(), e);
             }
@@ -368,21 +395,26 @@ public class Y9logAccessLogCustomRepositoryImpl implements Y9logAccessLogCustomR
         aggregationRanges.add(AggregationRange.of(ar -> ar.from(500000000d).to(1000000000d)));
         aggregationRanges.add(AggregationRange.of(ar -> ar.from(1000000000d)));
 
-        SearchRequest request = SearchRequest.of(s -> s.index(Arrays.asList(createIndexNames(startDay, endDay)))
-            .query(q -> q.bool(builder.build())).aggregations("range-elapsedtime",
-                a -> a.range(r -> r.field(Y9LogSearchConsts.ELAPSED_TIME).ranges(aggregationRanges))));
-
+        NativeQueryBuilder nativebuilder = new NativeQueryBuilder();
+        nativebuilder.withQuery(builder.build()._toQuery());
+        nativebuilder.withAggregation("range-elapsedtime", RangeAggregation
+            .of(r -> r.field(Y9LogSearchConsts.ELAPSED_TIME).ranges(aggregationRanges))._toAggregation());
+        IndexCoordinates indexs = IndexCoordinates.of(createIndexNames(startDay, endDay));
         try {
-            elasticsearchClient.search(request, Y9logAccessLog.class).aggregations().get("range-elapsedtime").range()
-                .buckets().array().forEach(bucket -> {
-                    long count = bucket.docCount();
-                    list.add(count);
-                });
-            return list;
-        } catch (ElasticsearchException | IOException e1) {
+            SearchHits<Y9logAccessLog> searchHits =
+                elasticsearchOperations.search(nativebuilder.build(), Y9logAccessLog.class, indexs);
+            ElasticsearchAggregations aggregations = (ElasticsearchAggregations)searchHits.getAggregations();
+            List<? extends RangeBucket> buckets =
+                aggregations.get("range-elapsedtime").aggregation().getAggregate().range().buckets().array();
+
+            buckets.forEach(bucket -> {
+                long count = bucket.docCount();
+                list.add(count);
+            });
+        } catch (ElasticsearchException e1) {
             LOGGER.error(e1.getMessage(), e1);
-            return null;
         }
+        return list;
     }
 
     @Override
@@ -404,7 +436,7 @@ public class Y9logAccessLogCustomRepositoryImpl implements Y9logAccessLogCustomR
 
         Query query = new CriteriaQuery(criteria).setPageable(pageable);
         query.setTrackTotalHits(true);
-        SearchHits<Y9logAccessLog> searchHits = elasticsearchTemplate.search(query, Y9logAccessLog.class, index);
+        SearchHits<Y9logAccessLog> searchHits = elasticsearchOperations.search(query, Y9logAccessLog.class, index);
         List<Y9logAccessLog> list = searchHits.stream().map(SearchHit::getContent).collect(Collectors.toList());
         return new PageImpl<Y9logAccessLog>(list, pageable, searchHits.getTotalHits());
     }
@@ -454,7 +486,7 @@ public class Y9logAccessLogCustomRepositoryImpl implements Y9logAccessLogCustomR
         Query query = new CriteriaQuery(criteria).setPageable(pageable);
         query.setTrackTotalHits(true);
 
-        SearchHits<Y9logAccessLog> searchHits = elasticsearchTemplate.search(query, Y9logAccessLog.class, index);
+        SearchHits<Y9logAccessLog> searchHits = elasticsearchOperations.search(query, Y9logAccessLog.class, index);
         List<Y9logAccessLog> list = searchHits.stream().map(SearchHit::getContent).collect(Collectors.toList());
         long total = searchHits.getTotalHits();
         int totalPages = (int)total / rows;
@@ -470,7 +502,7 @@ public class Y9logAccessLogCustomRepositoryImpl implements Y9logAccessLogCustomR
 
         Query query = new CriteriaQuery(criteria).setPageable(pageable);
         query.setTrackTotalHits(true);
-        SearchHits<Y9logAccessLog> searchHits = elasticsearchTemplate.search(query, Y9logAccessLog.class, index);
+        SearchHits<Y9logAccessLog> searchHits = elasticsearchOperations.search(query, Y9logAccessLog.class, index);
         List<Y9logAccessLog> list = searchHits.stream().map(SearchHit::getContent).collect(Collectors.toList());
         long total = searchHits.getTotalHits();
         int totalPages = (int)total / rows;
@@ -491,7 +523,7 @@ public class Y9logAccessLogCustomRepositoryImpl implements Y9logAccessLogCustomR
                         .addSort(Sort.by(Order.desc(Y9LogSearchConsts.LOG_TIME)));
 
                 SearchHits<Y9logAccessLog> searchHits =
-                    elasticsearchTemplate.search(criteriaQuery, Y9logAccessLog.class, index);
+                    elasticsearchOperations.search(criteriaQuery, Y9logAccessLog.class, index);
                 List<Y9logAccessLog> list = searchHits.stream().map(SearchHit::getContent).collect(Collectors.toList());
 
                 long total = searchHits.getTotalHits();
@@ -529,7 +561,7 @@ public class Y9logAccessLogCustomRepositoryImpl implements Y9logAccessLogCustomR
         Query query = new CriteriaQuery(criteria).setPageable(pageable);
         query.setTrackTotalHits(true);
 
-        SearchHits<Y9logAccessLog> searchHits = elasticsearchTemplate.search(query, Y9logAccessLog.class, index);
+        SearchHits<Y9logAccessLog> searchHits = elasticsearchOperations.search(query, Y9logAccessLog.class, index);
         List<Y9logAccessLog> list = searchHits.stream().map(SearchHit::getContent).collect(Collectors.toList());
         return new PageImpl<Y9logAccessLog>(list, pageable, searchHits.getTotalHits());
     }
@@ -572,7 +604,7 @@ public class Y9logAccessLogCustomRepositoryImpl implements Y9logAccessLogCustomR
         query.setTrackTotalHits(true);
         IndexCoordinates index = IndexCoordinates.of(createIndexNames(startDay, endDay));
 
-        SearchHits<Y9logAccessLog> searchHits = elasticsearchTemplate.search(query, Y9logAccessLog.class, index);
+        SearchHits<Y9logAccessLog> searchHits = elasticsearchOperations.search(query, Y9logAccessLog.class, index);
         List<Y9logAccessLog> list = searchHits.stream().map(SearchHit::getContent).collect(Collectors.toList());
         return new PageImpl<Y9logAccessLog>(list, pageable, searchHits.getTotalHits());
     }
@@ -631,7 +663,7 @@ public class Y9logAccessLogCustomRepositoryImpl implements Y9logAccessLogCustomR
         query.setTrackTotalHits(true);
 
         IndexCoordinates index = IndexCoordinates.of(createIndexNames(date, null));
-        SearchHits<Y9logAccessLog> searchHits = elasticsearchTemplate.search(query, Y9logAccessLog.class, index);
+        SearchHits<Y9logAccessLog> searchHits = elasticsearchOperations.search(query, Y9logAccessLog.class, index);
         List<Y9logAccessLog> list = searchHits.stream().map(SearchHit::getContent).collect(Collectors.toList());
         return new PageImpl<Y9logAccessLog>(list, pageable, searchHits.getTotalHits());
     }
@@ -684,14 +716,14 @@ public class Y9logAccessLogCustomRepositoryImpl implements Y9logAccessLogCustomR
         query.setTrackTotalHits(true);
 
         IndexCoordinates index = IndexCoordinates.of(createIndexNames(startTime, endTime));
-        SearchHits<Y9logAccessLog> searchHits = elasticsearchTemplate.search(query, Y9logAccessLog.class, index);
+        SearchHits<Y9logAccessLog> searchHits = elasticsearchOperations.search(query, Y9logAccessLog.class, index);
         List<Y9logAccessLog> list = searchHits.stream().map(SearchHit::getContent).collect(Collectors.toList());
         return new PageImpl<Y9logAccessLog>(list, pageable, searchHits.getTotalHits());
     }
 
     @Override
     public void save(Y9logAccessLog y9logAccessLog) {
-        IndexOperations indexOps = elasticsearchTemplate.indexOps(Y9logAccessLog.class);
+        IndexOperations indexOps = elasticsearchOperations.indexOps(Y9logAccessLog.class);
         if (!indexOps.exists()) {
             synchronized (this) {
                 if (!indexOps.exists()) {
@@ -762,7 +794,7 @@ public class Y9logAccessLogCustomRepositoryImpl implements Y9logAccessLogCustomR
 
         Query criteriaQuery = new CriteriaQuery(criteria).setPageable(pageable);
         criteriaQuery.setTrackTotalHits(true);
-        SearchHits<Y9logAccessLog> searchHits = elasticsearchTemplate.search(criteriaQuery, Y9logAccessLog.class);
+        SearchHits<Y9logAccessLog> searchHits = elasticsearchOperations.search(criteriaQuery, Y9logAccessLog.class);
         List<Y9logAccessLog> list = searchHits.stream().map(SearchHit::getContent).collect(Collectors.toList());
         return new PageImpl<>(list, pageable, searchHits.getTotalHits());
     }
