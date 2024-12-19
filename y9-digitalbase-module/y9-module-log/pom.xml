@@ -1,21 +1,15 @@
-<project xmlns="http://maven.apache.org/POM/4.0.0"
-         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+<project xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xmlns="http://maven.apache.org/POM/4.0.0"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
 
     <modelVersion>4.0.0</modelVersion>
-    <parent>
-        <groupId>net.risesoft</groupId>
-        <artifactId>y9-digitalbase-module</artifactId>
-        <version>${revision}</version>
-        <relativePath>../pom.xml</relativePath>
-    </parent>
     <groupId>net.risesoft</groupId>
     <artifactId>y9-module-log</artifactId>
     <packaging>pom</packaging>
     <version>${revision}</version>
     <name>y9-module-log</name>
     <description>RiseSoft/Digital Infrastructure webapp parent</description>
-    
+
     <scm>
         <url>${gitee.url}</url>
         <connection>${gitee.connection}</connection>
