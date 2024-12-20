@@ -173,7 +173,7 @@
                     key: 'disabled',
                     width: 100,
                     render: (row) => {
-                        return h('span', row.disabled ? '是' : '否');
+                        return h('div', row.disabled ? '是' : '否');
                     }
                 },
                 {

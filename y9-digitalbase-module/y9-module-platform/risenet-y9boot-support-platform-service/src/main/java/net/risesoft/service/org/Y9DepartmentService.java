@@ -115,10 +115,11 @@ public interface Y9DepartmentService {
      *
      * @param deptId 部门ID
      * @param category 部门属性类型
+     * @param inherit
      * @param disabled 是否禁用
      * @return {@code List<Y9OrgBase> }
      */
-    List<Y9OrgBase> listDepartmentPropOrgUnits(String deptId, Integer category, Boolean disabled);
+    List<Y9OrgBase> listDepartmentPropOrgUnits(String deptId, Integer category, Boolean inherit, Boolean disabled);
 
     /**
      * 获得部门树
@@ -182,4 +183,6 @@ public interface Y9DepartmentService {
      * @return {@link Y9Department}
      */
     Y9Department updateTabIndex(String id, int tabIndex);
+
+    List<Y9OrgBase> listInheritableDepartmentPropOrgUnits(String deptId, Integer category, Boolean disabled);
 }

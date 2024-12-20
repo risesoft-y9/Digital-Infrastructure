@@ -59,6 +59,7 @@
 
                 <template v-if="currTreeNodeInfo.nodeType == 'Department'">
                     <setDepartmentPropList :currTreeNodeInfo="currTreeNodeInfo" typeName="org"></setDepartmentPropList>
+                    <inheritableDepartmentPropList :currTreeNodeInfo="currTreeNodeInfo" typeName="org"></inheritableDepartmentPropList>
                 </template>
 
                 <!-- <Log :currTreeNodeInfo="currTreeNodeInfo"></Log> -->
@@ -119,6 +120,7 @@
     import { removeGroup } from '@/api/group/index';
     import { delPerson } from '@/api/person/index';
     import { useSettingStore } from '@/store/modules/settingStore';
+    import InheritableDepartmentPropList from "@/views/org/comps/inheritableDepartmentPropList.vue";
 
     const settingStore = useSettingStore();
     const { t } = useI18n();

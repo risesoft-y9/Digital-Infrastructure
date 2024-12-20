@@ -206,12 +206,23 @@ public class DepartmentApiImpl implements DepartmentApi {
         return Y9Result.success(Y9ModelConvertUtil.convert(y9DepartmentPropList, DepartmentProp.class));
     }
 
+    /**
+     * 向上递归获取部门属性对应组织节点列表
+     *
+     * @param tenantId 租户id
+     * @param departmentId 部门唯一标识
+     * @param category 部门属性类型
+     * @return {@code Y9Result<List<OrgUnit>>} 通用请求返回对象 - data 是人员或岗位对象集合
+     * @since 9.6.0
+     */
     @Override
-    public Y9Result<List<OrgUnit>> listDepartmentPropOrgUnits(String tenantId, String departmentId, Integer category) {
+    public Y9Result<List<OrgUnit>> listDepartmentPropOrgUnits(@RequestParam("tenantId") @NotBlank String tenantId,
+        @RequestParam("departmentId") @NotBlank String departmentId, @RequestParam("category") Integer category,
+        @RequestParam(name = "isInherit", required = false) Boolean isInherit) {
         Y9LoginUserHolder.setTenantId(tenantId);
 
         List<Y9OrgBase> y9OrgBaseList =
-            y9DepartmentService.listDepartmentPropOrgUnits(departmentId, category, Boolean.FALSE);
+            y9DepartmentService.listDepartmentPropOrgUnits(departmentId, category, isInherit, Boolean.FALSE);
         return Y9Result.success(ModelConvertUtil.orgBaseToOrgUnit(y9OrgBaseList));
     }
 
