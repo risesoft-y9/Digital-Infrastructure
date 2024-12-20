@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
 
-import org.springframework.context.annotation.DependsOn;
 import org.springframework.data.elasticsearch.client.elc.ElasticsearchAggregation;
 import org.springframework.data.elasticsearch.client.elc.ElasticsearchAggregations;
 import org.springframework.data.elasticsearch.client.elc.NativeQueryBuilder;
@@ -43,7 +42,6 @@ import co.elastic.clients.elasticsearch._types.query_dsl.QueryBuilders;
 @Service
 @Slf4j
 @RequiredArgsConstructor
-@DependsOn(value = "elasticsearchTemplate")
 public class Y9CommonAppForPersonCustomRepositoryImpl implements Y9CommonAppForPersonCustomRepository {
 
     private static final IndexCoordinates INDEX = IndexCoordinates.of(Y9ESIndexConst.CLICKED_APP_INDEX);
