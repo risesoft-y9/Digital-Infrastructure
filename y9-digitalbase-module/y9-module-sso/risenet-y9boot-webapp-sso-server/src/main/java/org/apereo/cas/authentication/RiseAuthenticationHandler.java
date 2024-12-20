@@ -38,8 +38,7 @@ public class RiseAuthenticationHandler extends AbstractAuthenticationHandler {
     }
 
     @Override
-    public AuthenticationHandlerExecutionResult authenticate(Credential credential, Service service)
-        throws PreventedException, Throwable {
+    public AuthenticationHandlerExecutionResult authenticate(Credential credential, Service service) throws PreventedException, Throwable {
         RememberMeUsernamePasswordCredential riseCredential = (RememberMeUsernamePasswordCredential)credential;
         String loginType = riseCredential.getLoginType();
         String tenantShortName = riseCredential.getTenantShortName();
@@ -53,7 +52,6 @@ public class RiseAuthenticationHandler extends AbstractAuthenticationHandler {
         String plainPassword;
         try {
             if (StringUtils.isNotBlank(pwdEcodeType)) {
-                // Object obj = redisTemplate.opsForValue().get(pwdEcodeType);
                 String rsaPrivateKey = Y9Context.getProperty("y9.login.encryptionRsaPrivateKey");
                 if (null != rsaPrivateKey) {
                     base64Password = RSAUtil.privateDecrypt(encryptedBase64Password, rsaPrivateKey);

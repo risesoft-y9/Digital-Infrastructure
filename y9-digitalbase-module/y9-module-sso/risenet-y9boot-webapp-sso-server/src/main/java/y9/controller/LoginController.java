@@ -78,7 +78,6 @@ public class LoginController {
             username = Base64Util.decode(username, "Unicode");
             if (StringUtils.isNotBlank(pwdEcodeType)) {
                 String privateKey = Y9Context.getProperty("y9.login.encryptionRsaPrivateKey");
-                // Object obj = redisTemplate.opsForValue().get(pwdEcodeType);
                 password = RSAUtil.privateDecrypt(password, privateKey);
             }
             password = Base64Util.decode(password, "Unicode");
@@ -106,7 +105,7 @@ public class LoginController {
                 map.put("success", false);
                 return map;
             }
-            // mongoTemplate.remove(new Query(Criteria.where("name").is(username)), LoginThrottle.class);
+
             boolean isSimplePassWord = CheckPassWord.isSimplePassWord(password);
             if (isSimplePassWord) {
                 map.put("msg", "密码过于简单,请重新设置密码！");

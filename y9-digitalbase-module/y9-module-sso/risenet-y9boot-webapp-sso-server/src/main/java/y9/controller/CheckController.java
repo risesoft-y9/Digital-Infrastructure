@@ -21,8 +21,6 @@ public class CheckController {
     @GetMapping(value = "/getRandom")
     public Y9Result<Object> getRandom() {
         try {
-            // String[] rsaArr = RSAUtil.genKeyPair();
-            // redisTemplate.opsForValue().set(rsaArr[0], rsaArr[1], 120, TimeUnit.SECONDS);
             return Y9Result.success(Y9Context.getProperty("y9.login.encryptionRsaPublicKey"), "获取成功");
         } catch (Exception e) {
             e.printStackTrace();
