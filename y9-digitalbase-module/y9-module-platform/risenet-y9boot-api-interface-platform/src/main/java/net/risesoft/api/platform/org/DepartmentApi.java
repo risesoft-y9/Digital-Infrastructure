@@ -146,12 +146,14 @@ public interface DepartmentApi {
      * @param tenantId 租户id
      * @param departmentId 部门唯一标识
      * @param category 部门属性类型
+     * @param isInherit 当前部门找不到时是否向上递归
      * @return {@code Y9Result<List<OrgUnit>>} 通用请求返回对象 - data 是人员或岗位对象集合
      * @since 9.6.0
      */
     @GetMapping("/listDepartmentPropOrgUnits")
     Y9Result<List<OrgUnit>> listDepartmentPropOrgUnits(@RequestParam("tenantId") @NotBlank String tenantId,
-        @RequestParam("departmentId") @NotBlank String departmentId, @RequestParam Integer category);
+        @RequestParam("departmentId") @NotBlank String departmentId, @RequestParam("category") Integer category,
+        @RequestParam(name = "isInherit", required = false) Boolean isInherit);
 
     /**
      * 递归获得所有层级子部门列表（不包含禁用）

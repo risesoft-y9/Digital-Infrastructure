@@ -95,7 +95,24 @@ public class DeptController {
     @RequestMapping(value = "/listDepartmentPropOrgUnits")
     public Y9Result<List<Y9OrgBase>> listDepartmentPropOrgUnits(@RequestParam @NotBlank String deptId,
         @RequestParam Integer category) {
-        return Y9Result.success(y9DepartmentService.listDepartmentPropOrgUnits(deptId, category, null), "获取部门领导列表成功");
+        return Y9Result.success(y9DepartmentService.listDepartmentPropOrgUnits(deptId, category, Boolean.FALSE, null),
+            "获取部门领导列表成功");
+    }
+
+    /**
+     * 获取可继承的部门属性对应组织节点列表
+     *
+     * @param deptId 部门id
+     * @param category 部门属性类型
+     * @return {@code Y9Result<List<Y9OrgBase>>}
+     * @since 9.6.8
+     */
+    @RiseLog(operationName = "获取可继承的部门属性对应组织节点列表")
+    @RequestMapping(value = "/listInheritableDepartmentPropOrgUnits")
+    public Y9Result<List<Y9OrgBase>> listInheritableDepartmentPropOrgUnits(@RequestParam @NotBlank String deptId,
+        @RequestParam Integer category) {
+        return Y9Result.success(y9DepartmentService.listInheritableDepartmentPropOrgUnits(deptId, category, null),
+            "获取部门领导列表成功");
     }
 
     /**

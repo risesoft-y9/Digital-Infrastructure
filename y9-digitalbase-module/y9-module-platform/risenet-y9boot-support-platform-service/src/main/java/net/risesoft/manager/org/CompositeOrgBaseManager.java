@@ -73,6 +73,8 @@ public interface CompositeOrgBaseManager {
      */
     Optional<Y9OrgBase> findOrgUnitPersonOrPosition(String orgUnitId);
 
+    Y9OrgBase getPersonOrPosition(String orgUnitId);
+
     /**
      * 根据父节点id获取子节点的下一个 tabIndex 值（获取已有子节点最大的 tabIndex + 1）
      *

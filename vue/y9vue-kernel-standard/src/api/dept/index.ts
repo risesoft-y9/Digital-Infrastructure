@@ -35,6 +35,24 @@ export const getDepartmentPropOrgUnits = async (deptId, category) => {
 };
 
 /**
+ * 获取可继承的部门属性对应组织节点列表
+ * @param {*} deptId
+ * @param {*} category
+ * @returns
+ */
+export const getInheritableDepartmentPropOrgUnits = async (deptId, category) => {
+    return await platformRequest({
+        url: '/api/rest/dept/listInheritableDepartmentPropOrgUnits',
+        method: 'GET',
+        cType: false,
+        params: {
+            deptId: deptId,
+            category: category
+        }
+    });
+};
+
+/**
  * 保存部门信息
  * @param {*} params
  * @returns

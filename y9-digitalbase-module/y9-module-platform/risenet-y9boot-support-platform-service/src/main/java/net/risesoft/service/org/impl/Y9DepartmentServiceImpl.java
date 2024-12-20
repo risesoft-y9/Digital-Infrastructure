@@ -185,17 +185,53 @@ public class Y9DepartmentServiceImpl implements Y9DepartmentService {
     }
 
     @Override
-    public List<Y9OrgBase> listDepartmentPropOrgUnits(String deptId, Integer category, Boolean disabled) {
-        List<Y9OrgBase> y9OrgBaseList = new ArrayList<>();
-        List<Y9DepartmentProp> propList =
+    public List<Y9OrgBase> listDepartmentPropOrgUnits(String deptId, Integer category, Boolean inherit,
+        Boolean disabled) {
+        List<Y9DepartmentProp> y9DepartmentPropList =
             y9DepartmentPropRepository.findByDeptIdAndCategoryOrderByTabIndex(deptId, category);
-        for (Y9DepartmentProp prop : propList) {
-            Y9OrgBase y9OrgBase = compositeOrgBaseManager.getOrgUnit(prop.getOrgBaseId());
+
+        if (!y9DepartmentPropList.isEmpty()) {
+            return getY9OrgBaseList(y9DepartmentPropList, disabled);
+        }
+
+        if (Boolean.TRUE.equals(inherit)) {
+            return this.listInheritableDepartmentPropOrgUnits(deptId, category, disabled);
+        }
+
+        return List.of();
+    }
+
+    private List<Y9OrgBase> getY9OrgBaseList(List<Y9DepartmentProp> y9DepartmentPropList, Boolean disabled) {
+        List<Y9OrgBase> y9OrgBaseList = new ArrayList<>();
+        for (Y9DepartmentProp prop : y9DepartmentPropList) {
+            Y9OrgBase y9OrgBase = compositeOrgBaseManager.getPersonOrPosition(prop.getOrgBaseId());
             if (disabled == null || disabled.equals(y9OrgBase.getDisabled())) {
                 y9OrgBaseList.add(y9OrgBase);
             }
         }
         return y9OrgBaseList;
+    }
+
+    @Override
+    public List<Y9OrgBase> listInheritableDepartmentPropOrgUnits(String deptId, Integer category, Boolean disabled) {
+        List<Y9DepartmentProp> y9DepartmentPropList = new ArrayList<>();
+
+        String currentDeptId = deptId;
+        while (true) {
+            Optional<Y9Department> currentDepartmentOptional = y9DepartmentManager.findById(currentDeptId);
+            if (currentDepartmentOptional.isEmpty()) {
+                break;
+            }
+            currentDeptId = currentDepartmentOptional.get().getParentId();
+            List<Y9DepartmentProp> currentDepartmentPropList =
+                y9DepartmentPropRepository.findByDeptIdAndCategoryOrderByTabIndex(currentDeptId, category);
+            if (!currentDepartmentPropList.isEmpty()) {
+                y9DepartmentPropList.addAll(currentDepartmentPropList);
+                break;
+            }
+        }
+
+        return getY9OrgBaseList(y9DepartmentPropList, disabled);
     }
 
     @Override

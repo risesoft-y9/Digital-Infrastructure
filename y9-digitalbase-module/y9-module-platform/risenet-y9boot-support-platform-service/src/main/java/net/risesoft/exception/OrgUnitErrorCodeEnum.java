@@ -56,7 +56,9 @@ public enum OrgUnitErrorCodeEnum implements ErrorCode {
     /** 存在未禁用的人员，禁止禁用当前节点 */
     NOT_ALL_GROUPS_DISABLED(20, "存在未禁用的用户组，禁止禁用当前节点"),
     /** 存在未禁用的人员，禁止禁用当前节点 */
-    NOT_ALL_DEPARTMENTS_DISABLED(21, "存在未禁用的部门，禁止禁用当前节点"),;
+    NOT_ALL_DEPARTMENTS_DISABLED(21, "存在未禁用的部门，禁止禁用当前节点"),
+    /** 人员或岗位[{}]不存在 */
+    PERSON_OR_POSITION_NOT_FOUND(22, "人员或岗位[{}]不存在"),;
 
     private final int moduleErrorCode;
     private final String description;

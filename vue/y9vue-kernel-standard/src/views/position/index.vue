@@ -38,6 +38,7 @@
 
             <template v-if="currTreeNodeInfo.nodeType == 'Department'">
                 <setDepartmentPropList :currTreeNodeInfo="currTreeNodeInfo"></setDepartmentPropList>
+                <inheritableDepartmentPropList :currTreeNodeInfo="currTreeNodeInfo" typeName="org"></inheritableDepartmentPropList>
             </template>
         </template>
     </fixedTreeModule>
@@ -57,6 +58,7 @@
     import { removeDept } from '@/api/dept/index';
     import { removePosition } from '@/api/position/index';
     import setDepartmentPropList from '../org/comps/setDepartmentPropList.vue';
+    import InheritableDepartmentPropList from "@/views/org/comps/inheritableDepartmentPropList.vue";
 
     const { t } = useI18n();
     let fixedTreeRef = ref(); //tree实例

@@ -295,6 +295,19 @@ public class CompositeOrgBaseManagerImpl implements CompositeOrgBaseManager {
         return Optional.empty();
     }
 
+    @Override
+    public Y9OrgBase getPersonOrPosition(String orgUnitId) {
+        Y9OrgBase y9OrgBase = this.findPositionById(orgUnitId);
+        if (y9OrgBase != null) {
+            return y9OrgBase;
+        }
+        y9OrgBase = this.findPersonById(orgUnitId);
+        if (y9OrgBase != null) {
+            return y9OrgBase;
+        }
+        throw Y9ExceptionUtil.businessException(OrgUnitErrorCodeEnum.PERSON_OR_POSITION_NOT_FOUND, orgUnitId);
+    }
+
     @Cacheable(cacheNames = CacheNameConsts.ORG_ORGANIZATION, key = "#id", condition = "#id!=null",
         unless = "#result==null")
     public Y9Organization findOrganizationById(String id) {
