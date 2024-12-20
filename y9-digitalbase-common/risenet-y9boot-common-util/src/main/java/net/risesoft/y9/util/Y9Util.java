@@ -77,7 +77,7 @@ public class Y9Util {
         if (str == null) {
             str = "";
         }
-        if ("".equals(str)) {
+        if (str.isEmpty()) {
             str = addNew;
         } else {
             str += "," + addNew;
@@ -97,7 +97,7 @@ public class Y9Util {
         if (str == null) {
             str = "";
         }
-        if ("".equals(str)) {
+        if (str.isEmpty()) {
             str = addNew;
         } else {
             str += delimiter + addNew;
@@ -109,7 +109,7 @@ public class Y9Util {
         if (stringBuffer.length() == 0) {
             stringBuffer.append(addNew);
         } else {
-            stringBuffer.append(delimiter + addNew);
+            stringBuffer.append(delimiter).append(addNew);
         }
         return stringBuffer;
     }
@@ -118,7 +118,7 @@ public class Y9Util {
         if (stringBuffer.length() == 0) {
             stringBuffer.append(addNew);
         } else {
-            stringBuffer.append(delimiter + addNew);
+            stringBuffer.append(delimiter).append(addNew);
         }
         return stringBuffer;
     }
