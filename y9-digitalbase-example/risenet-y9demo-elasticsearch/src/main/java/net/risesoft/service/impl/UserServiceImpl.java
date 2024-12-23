@@ -12,7 +12,7 @@ import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
-import org.springframework.data.elasticsearch.client.elc.ElasticsearchTemplate;
+import org.springframework.data.elasticsearch.core.ElasticsearchOperations;
 import org.springframework.data.elasticsearch.core.SearchHit;
 import org.springframework.data.elasticsearch.core.SearchHits;
 import org.springframework.data.elasticsearch.core.query.Criteria;
@@ -34,7 +34,7 @@ import net.risesoft.service.UserService;
 @Service(value = "userService")
 public class UserServiceImpl implements UserService {
 
-    private final ElasticsearchTemplate elasticsearchTemplate;
+    private final ElasticsearchOperations elasticsearchOperations;
     private final UserRepository userRepository;
 
     @Override
@@ -98,7 +98,7 @@ public class UserServiceImpl implements UserService {
         }
         Query query = new CriteriaQuery(criteria).setPageable(pageable);
         query.setTrackTotalHits(true);
-        SearchHits<User> search = elasticsearchTemplate.search(query, User.class);
+        SearchHits<User> search = elasticsearchOperations.search(query, User.class);
 
         List<User> list = search.stream().map(SearchHit::getContent).collect(Collectors.toList());
         Page<User> pageResult = new PageImpl<>(list, pageable, search.getTotalHits());
