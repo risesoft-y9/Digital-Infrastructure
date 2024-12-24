@@ -7,7 +7,9 @@ plugins {
 }
 
 dependencies {
-    management(platform(project(":y9-digitalbase-dependencies")))
+    //management(platform(project(":y9-digitalbase-dependencies")))
+    implementation(platform(project(":y9-digitalbase-dependencies")))
+    providedRuntime(platform(libs.spring.boot.bom))
 
     implementation(project(":y9-digitalbase-support:risenet-y9boot-support-file-jpa-repository"))
     implementation(project(":y9-digitalbase-support:risenet-y9boot-support-file-service-rest"))

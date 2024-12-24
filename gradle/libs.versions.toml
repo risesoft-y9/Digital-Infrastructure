@@ -1,5 +1,4 @@
 [versions]
-y9-version = "v9.7.0-SNAPSHOT"
 # spring boot & cloud bom
 spring-boot = "3.4.0"
 spring-cloud = "2024.0.0"

@@ -1,7 +1,7 @@
 plugins {
     `java-platform`
     id("net.risesoft.y9.javaPlatform-publish")
-    id("net.risesoft.y9.javaPlatform-publish-central2")
+    id("net.risesoft.y9.javaPlatform-publish-central")
 }
 
 javaPlatform {
@@ -10,8 +10,7 @@ javaPlatform {
 
 description = "y9-digitalbase-dependencies"
 group = "net.risesoft"
-//version = libs.versions.y9.version.get()
-version = "0.0.3"
+version = findProperty("Y9BOM_VERSION") as String? ?: "v9.7.0-01"
 
 dependencies {
     //bom

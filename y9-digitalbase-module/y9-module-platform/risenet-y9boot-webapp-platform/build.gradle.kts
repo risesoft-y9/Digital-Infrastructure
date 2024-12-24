@@ -7,7 +7,9 @@ plugins {
 }
 
 dependencies {
-    management(platform(project(":y9-digitalbase-dependencies")))
+    //management(platform(project(":y9-digitalbase-dependencies")))
+    implementation(platform(project(":y9-digitalbase-dependencies")))
+    providedRuntime(platform(libs.spring.boot.bom))
 
     implementation(project(":y9-digitalbase-common:risenet-y9boot-common-util"))
     implementation(project(":y9-digitalbase-module:y9-module-platform:risenet-y9boot-support-platform-web"))
@@ -26,9 +28,11 @@ dependencies {
     implementation(libs.google.guava)
     implementation("org.springframework.boot:spring-boot-starter-actuator")
     implementation("io.micrometer:micrometer-registry-prometheus")
+
     testImplementation("org.springframework.boot:spring-boot-starter-test")
     testImplementation(libs.h2database)
-    providedCompile("jakarta.servlet:jakarta.servlet-api")
+
+    compileOnly("jakarta.servlet:jakarta.servlet-api")
     providedRuntime("org.springframework.boot:spring-boot-starter-tomcat")
 }
 

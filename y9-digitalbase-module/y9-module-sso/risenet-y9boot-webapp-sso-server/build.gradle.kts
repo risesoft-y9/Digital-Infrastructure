@@ -7,7 +7,9 @@ plugins {
 }
 
 dependencies {
-    management(platform(project(":y9-digitalbase-dependencies")))
+    //management(platform(project(":y9-digitalbase-dependencies")))
+    implementation(platform(project(":y9-digitalbase-dependencies")))
+    providedRuntime(platform(libs.spring.boot.bom))
 
     implementation("org.apereo.cas:cas-server-core")
     implementation("org.apereo.cas:cas-server-core-authentication-api")

@@ -6,17 +6,6 @@ plugins {
     id("net.risesoft.y9.repository")
 }
 
-val versionCatalog = versionCatalogs.named("libs")
-val y9version = versionCatalog.findVersion("y9-version")
-if (y9version.isPresent) {
-    version = y9version.get().displayName
-} else {
-    version = "v9.7.0-SNAPSHOT"
-}
-
-extra.set("PROJECT_GIT_URL", "https://github.com/risesoft-y9/Digital-Infrastructure")
-extra.set("PROJECT_SCM_URL", "scm:git:https://github.com/risesoft-y9/Digital-Infrastructure.git")
-
 publishing {
     publications {
         repositories {
@@ -32,7 +21,7 @@ publishing {
 
                 credentials {
                     username = findProperty("mavenUsername") as String? ?: ""
-                    password = findProperty("mavenPassword") as String? ?: ""
+                    password  = findProperty("mavenPassword") as String? ?: ""
                 }
             }
         }

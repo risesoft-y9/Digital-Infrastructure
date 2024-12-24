@@ -16,7 +16,7 @@ repositories {
 
 dependencies {
     implementation("com.google.cloud.tools:jib-gradle-plugin:3.4.4")
-    implementation("com.ly.smart-doc:smart-doc-gradle-plugin:3.0.8")
+    implementation("com.ly.smart-doc:smart-doc-gradle-plugin:3.0.9")
     implementation("io.freefair.gradle:aspectj-plugin:8.11")
     implementation("io.freefair.gradle:lombok-plugin:8.11")
     implementation("tech.yanand.gradle:maven-central-publish:1.3.0")
@@ -25,7 +25,7 @@ dependencies {
 }
 
 group = "net.risesoft.y9"
-version = "0.0.6"
+version = "v9.7.0-01"
 
 signing {
     //useGpgCmd()

@@ -20,7 +20,7 @@ catalog {
 }
 
 group = "net.risesoft.y9"
-version = "0.0.6"
+version = "v9.7.0-01"
 
 signing {
     //useGpgCmd()

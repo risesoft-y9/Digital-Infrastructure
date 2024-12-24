@@ -5,7 +5,7 @@ plugins {
 }
 
 dependencies {
-    management(platform(project(":y9-digitalbase-dependencies")))
+    //management(platform(project(":y9-digitalbase-dependencies")))
 
     api(project(":y9-digitalbase-module:y9-module-platform:risenet-y9boot-support-platform-service"))
     api(project(":y9-digitalbase-module:y9-module-platform:risenet-y9boot-support-platform-jpa-repository"))
