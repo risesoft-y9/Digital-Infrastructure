@@ -22,6 +22,7 @@ import y9.service.Y9LoginUserService;
 import y9.service.Y9UserService;
 import y9.util.Y9Context;
 import y9.util.Y9MessageDigest;
+import y9.util.common.AESUtil;
 import y9.util.common.Base64Util;
 import y9.util.common.RSAUtil;
 
@@ -148,6 +149,17 @@ public class RiseAuthenticationHandler extends AbstractAuthenticationHandler {
                     Boolean.TRUE);
             }
         }
+
+        if ("qrCode".equals(loginType)) {
+            String userId = AESUtil.decrypt(username);
+            if (StringUtils.isNotBlank(userId)) {
+                return y9UserService.findByPersonIdAndOriginal(userId, Boolean.TRUE);
+            } else {
+                return List.of();
+            }
+        }
+
+        // users = y9UserDao.findByUserIdAndOriginal(userId, 1);
 
         if (StringUtils.isNotBlank(deptId)) {
             // 一人多账号

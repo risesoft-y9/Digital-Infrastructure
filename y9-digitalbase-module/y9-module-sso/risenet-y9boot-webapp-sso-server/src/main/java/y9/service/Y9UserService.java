@@ -46,4 +46,5 @@ public interface Y9UserService {
 
     List<Y9User> findByTenantNameAndLoginNameAndOriginal(String tenantName, String loginName, Boolean original);
 
+    List<Y9User> findByPersonIdAndOriginal(String personId, Boolean original);
 }

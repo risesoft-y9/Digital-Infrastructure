@@ -230,4 +230,14 @@ public class Y9UserServiceImpl implements Y9UserService {
         });
     }
 
+    @Override
+    public List<Y9User> findByPersonIdAndOriginal(String personId, Boolean original) {
+        return transactionTemplate.execute(status -> {
+            String sql = SELECT_QUERY.concat("WHERE r.personId = :personId AND r.original = :original");
+            TypedQuery<Y9User> query = entityManager.createQuery(sql, Y9User.class).setParameter("personId", personId)
+                .setParameter("original", original);
+            return query.getResultList();
+        });
+    }
+
 }
