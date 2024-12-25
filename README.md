@@ -302,13 +302,8 @@ webapp -- 系统公共模块
 
 ## 模板代码生成
 
-地址：<https://demo.youshengyun.com/y9vue-code/>
+地址：<https://gitee.com/risesoft-y9/y9-code-generator>
 > 快速生成使用了数字底座相关组件的前后端工程
-> 
-> 演示账号
-> 
-> 用户名：user 密码：Risesoft@2024
-> 
 
 ## 文档专区
 
