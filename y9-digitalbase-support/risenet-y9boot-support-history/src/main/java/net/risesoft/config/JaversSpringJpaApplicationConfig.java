@@ -90,4 +90,10 @@ public class JaversSpringJpaApplicationConfig {
             .withSnapshotTableName(javersSqlProperties.getSqlSnapshotTableName())
             .withCommitPropertyTableName(javersSqlProperties.getSqlCommitPropertyTableName()).build();
     }
+
+    @Bean(name = "JpaHibernateConnectionProvider")
+    @ConditionalOnMissingBean
+    public ConnectionProvider jpaConnectionProvider() {
+        return new Y9JpaHibernateConnectionProvider();
+    }
 }
