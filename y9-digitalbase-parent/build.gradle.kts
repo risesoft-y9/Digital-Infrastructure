@@ -1,5 +1,5 @@
 plugins {
-    id("net.risesoft.y9.java-conventions")
+    id("net.risesoft.y9.conventions-java")
     alias(libs.plugins.io.spring.dependency.management)
 }
 description = "y9-digitalbase-parent"

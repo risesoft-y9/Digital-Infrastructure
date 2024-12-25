@@ -1,13 +1,11 @@
 plugins {
-    id("net.risesoft.y9.java-conventions")
+    id("net.risesoft.y9.conventions-war")
     id("net.risesoft.y9.lombok")
     id("net.risesoft.y9.docker")
-    id("war")
     alias(libs.plugins.org.springframework.boot)
 }
 
 dependencies {
-    //management(platform(project(":y9-digitalbase-dependencies")))
     implementation(platform(project(":y9-digitalbase-dependencies")))
     providedRuntime(platform(libs.spring.boot.bom))
 

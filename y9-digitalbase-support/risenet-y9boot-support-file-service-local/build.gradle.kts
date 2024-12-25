@@ -1,5 +1,5 @@
 plugins {
-    id("net.risesoft.y9.java-conventions")
+    id("net.risesoft.y9.conventions-java")
     id("net.risesoft.y9.lombok")
     //id("net.risesoft.y9.aspectj")
 }

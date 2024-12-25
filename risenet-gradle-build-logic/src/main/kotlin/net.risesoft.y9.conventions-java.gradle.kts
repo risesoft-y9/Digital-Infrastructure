@@ -1,6 +1,7 @@
 plugins {
     `java-library`
     id("net.risesoft.y9.java-publish")
+    id("net.risesoft.y9.java-publish-central")
 }
 
 group = "net.risesoft"
