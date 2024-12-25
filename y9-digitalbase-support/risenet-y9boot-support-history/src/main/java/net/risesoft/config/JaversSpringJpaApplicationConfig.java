@@ -93,8 +93,7 @@ public class JaversSpringJpaApplicationConfig {
 
     @Bean(name = "JpaHibernateConnectionProvider")
     @ConditionalOnMissingBean
-    public ConnectionProvider jpaConnectionProvider(
-        @Qualifier(value = "rsPublicEntityManagerFactory") EntityManagerFactory entityManagerFactory) {
-        return new Y9JpaHibernateConnectionProvider(entityManagerFactory.createEntityManager());
+    public ConnectionProvider jpaConnectionProvider() {
+        return new Y9JpaHibernateConnectionProvider();
     }
 }

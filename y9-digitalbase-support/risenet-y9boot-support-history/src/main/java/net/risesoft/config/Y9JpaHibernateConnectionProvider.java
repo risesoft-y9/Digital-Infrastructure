@@ -3,16 +3,15 @@ package net.risesoft.config;
 import java.sql.Connection;
 
 import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
 
 import org.hibernate.engine.spi.SessionImplementor;
 import org.javers.repository.sql.ConnectionProvider;
 
-import lombok.RequiredArgsConstructor;
-
-@RequiredArgsConstructor
 public class Y9JpaHibernateConnectionProvider implements ConnectionProvider {
 
-    private final EntityManager entityManager;
+    @PersistenceContext(unitName = "y9Public")
+    private EntityManager entityManager;
 
     @Override
     public Connection getConnection() {
