@@ -20,7 +20,7 @@ catalog {
 }
 
 group = "net.risesoft.y9"
-version = "v9.7.0-01"
+version = findProperty("Y9PLUGIN_VERSION") as String? ?: "9.7.0-01"
 
 signing {
     //useGpgCmd()

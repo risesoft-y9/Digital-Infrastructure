@@ -27,7 +27,10 @@ dependencies {
 }
 
 group = "net.risesoft"
-version = findProperty("Y9_VERSION") as String? ?: "v9.7.0-SNAPSHUT"
+version = findProperty("Y9_VERSION") as String? ?: "9.7.0-SNAPSHUT"
+extra.set("Y9_VERSION", version)
+extra.set("Y9BOM_VERSION", findProperty("Y9BOM_VERSION") as String? ?: "9.7.0-01")
+extra.set("Y9PLUGIN_VERSION", findProperty("Y9PLUGIN_VERSION") as String? ?: "9.7.0-01")
 
 fun matchProjectNamePattern(project: Project): Boolean {
     return project.name.matches("^risenet-y9boot-(properties|common|api|starter|support|idcode).*".toRegex())

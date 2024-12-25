@@ -42,7 +42,7 @@ tasks.test {
 
 tasks.withType<Test> { // OR tasks.test {
     onlyIf {
-        properties["testsEnabled"].toString().toBoolean()
+        properties["SKIP_TEST"].toString().toBoolean()==false
     }
     //enabled = false
 }

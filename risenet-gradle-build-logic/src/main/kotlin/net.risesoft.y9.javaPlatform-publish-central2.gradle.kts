@@ -6,11 +6,11 @@ plugins {
     id("com.vanniktech.maven.publish")
 }
 
-    mavenPublishing {
+mavenPublishing {
     configure(JavaPlatform())
     publishToMavenCentral(SonatypeHost.CENTRAL_PORTAL, automaticRelease = false)
     signAllPublications()
-    coordinates(project.group.toString(), project.name, project.version.toString())
+    coordinates(project.group.toString(), project.name, project.extra.get("Y9BOM_VERSION") as String)
     pom {
         name = project.name
         description = project.name
