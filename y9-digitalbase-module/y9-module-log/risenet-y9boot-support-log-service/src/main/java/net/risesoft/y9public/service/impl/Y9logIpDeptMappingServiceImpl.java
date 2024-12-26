@@ -14,14 +14,17 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.domain.Sort.Direction;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
+import net.risesoft.consts.InitDataConsts;
 import net.risesoft.id.IdType;
 import net.risesoft.id.Y9IdGenerator;
 import net.risesoft.pojo.Y9Page;
 import net.risesoft.y9.Y9LoginUserHolder;
+import net.risesoft.y9.util.Y9BeanUtil;
 import net.risesoft.y9public.entity.Y9logIpDeptMapping;
 import net.risesoft.y9public.repository.Y9logIpDeptMappingRepository;
 import net.risesoft.y9public.repository.custom.Y9logIpDeptMappingCustomRepository;
@@ -37,6 +40,7 @@ import net.risesoft.y9public.service.Y9logIpDeptMappingService;
 @Service
 @Slf4j
 @RequiredArgsConstructor
+@Transactional(readOnly = true)
 public class Y9logIpDeptMappingServiceImpl implements Y9logIpDeptMappingService {
 
     private final Y9logIpDeptMappingRepository y9logIpDeptMappingRepository;
@@ -66,8 +70,17 @@ public class Y9logIpDeptMappingServiceImpl implements Y9logIpDeptMappingService 
         Iterable<Y9logIpDeptMapping> ipDeptIterable =
             y9logIpDeptMappingRepository.findAll(Sort.by(Direction.ASC, "clientIpSection"));
         Iterator<Y9logIpDeptMapping> iterator = ipDeptIterable.iterator();
+        String tenantId = Y9LoginUserHolder.getTenantId();
+        boolean isOperation = tenantId.equals(InitDataConsts.OPERATION_TENANT_ID);
         while (iterator.hasNext()) {
-            list.add(iterator.next());
+            Y9logIpDeptMapping mapping = iterator.next();
+            if (!isOperation) {
+                if (tenantId.equals(mapping.getTenantId())) {
+                    list.add(mapping);
+                }
+            } else {
+                list.add(mapping);
+            }
         }
         return list;
     }
@@ -78,6 +91,11 @@ public class Y9logIpDeptMappingServiceImpl implements Y9logIpDeptMappingService 
     }
 
     @Override
+    public List<Y9logIpDeptMapping> listByTenantIdAndClientIpSection(String tenantId, String clientIpSection) {
+        return y9logIpDeptMappingRepository.findByTenantIdAndClientIpSection(tenantId, clientIpSection);
+    }
+
+    @Override
     public List<String> listClientIpSections() {
         return this.listAllOrderByClientIpSection().stream().map(Y9logIpDeptMapping::getClientIpSection)
             .collect(Collectors.toList());
@@ -85,11 +103,11 @@ public class Y9logIpDeptMappingServiceImpl implements Y9logIpDeptMappingService 
 
     @Override
     public Y9Page<Y9logIpDeptMapping> pageSearchList(int page, int rows, String clientIp4Abc, String deptName) {
-
         return y9logIpDeptMappingCustomRepository.pageSearchList(page, rows, clientIp4Abc, deptName);
     }
 
     @Override
+    @Transactional(readOnly = false)
     public void removeOrganWords(String[] ipDeptMappingIds) {
         for (String id : ipDeptMappingIds) {
             y9logIpDeptMappingRepository.deleteById(id);
@@ -97,18 +115,24 @@ public class Y9logIpDeptMappingServiceImpl implements Y9logIpDeptMappingService 
     }
 
     @Override
+    @Transactional(readOnly = false)
     public void save(Y9logIpDeptMapping y9logIpDeptMapping) {
         y9logIpDeptMappingRepository.save(y9logIpDeptMapping);
     }
 
     @Override
+    @Transactional(readOnly = false)
     public Y9logIpDeptMapping saveOrUpdate(Y9logIpDeptMapping y9logIpDeptMapping) {
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         if (StringUtils.isNoneBlank(y9logIpDeptMapping.getId())) {
-            y9logIpDeptMapping.setOperator(Y9LoginUserHolder.getUserInfo().getName());
-            y9logIpDeptMapping.setUpdateTime(sdf.format(new Date()));
-            y9logIpDeptMappingRepository.save(y9logIpDeptMapping);
-            return y9logIpDeptMapping;
+            Y9logIpDeptMapping oldMapping =
+                y9logIpDeptMappingRepository.findById(y9logIpDeptMapping.getId()).orElse(null);
+            if (oldMapping != null) {
+                Y9BeanUtil.copyProperties(y9logIpDeptMapping, oldMapping);
+                oldMapping.setOperator(Y9LoginUserHolder.getUserInfo().getName());
+                oldMapping.setUpdateTime(sdf.format(new Date()));
+                return y9logIpDeptMappingRepository.save(oldMapping);
+            }
         }
 
         y9logIpDeptMapping.setId(Y9IdGenerator.genId(IdType.SNOWFLAKE));
@@ -130,6 +154,7 @@ public class Y9logIpDeptMappingServiceImpl implements Y9logIpDeptMappingService 
     }
 
     @Override
+    @Transactional(readOnly = false)
     public void update4Order(String[] idAndTabIndexs) {
         try {
             for (String s : idAndTabIndexs) {

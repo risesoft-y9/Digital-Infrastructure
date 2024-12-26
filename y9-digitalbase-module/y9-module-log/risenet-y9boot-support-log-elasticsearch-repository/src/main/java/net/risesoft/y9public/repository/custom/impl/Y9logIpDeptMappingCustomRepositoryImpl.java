@@ -17,7 +17,10 @@ import org.springframework.stereotype.Component;
 
 import lombok.RequiredArgsConstructor;
 
+import net.risesoft.consts.InitDataConsts;
+import net.risesoft.log.constant.Y9LogSearchConsts;
 import net.risesoft.pojo.Y9Page;
+import net.risesoft.y9.Y9LoginUserHolder;
 import net.risesoft.y9public.entity.Y9logIpDeptMapping;
 import net.risesoft.y9public.repository.custom.Y9logIpDeptMappingCustomRepository;
 
@@ -42,6 +45,10 @@ public class Y9logIpDeptMappingCustomRepositoryImpl implements Y9logIpDeptMappin
         }
         if (StringUtils.isNotBlank(clientIpSection)) {
             criteria.subCriteria(new Criteria("clientIpSection").contains(clientIpSection));
+        }
+        String tenantId = Y9LoginUserHolder.getTenantId();
+        if (!tenantId.equals(InitDataConsts.OPERATION_TENANT_ID)) {
+            criteria.subCriteria(new Criteria(Y9LogSearchConsts.TENANT_ID).is(tenantId));
         }
         Query query = new CriteriaQueryBuilder(criteria).withPageable(PageRequest.of((page < 1) ? 0 : page - 1, rows))
             .withSort(Sort.by(Direction.ASC, "clientIpSection")).build();
