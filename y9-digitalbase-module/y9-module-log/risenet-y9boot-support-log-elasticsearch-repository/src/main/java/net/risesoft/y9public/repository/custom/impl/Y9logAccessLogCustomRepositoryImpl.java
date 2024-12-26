@@ -12,6 +12,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.TimeZone;
 import java.util.stream.Collectors;
 
 import org.apache.commons.collections.CollectionUtils;
@@ -513,8 +514,8 @@ public class Y9logAccessLogCustomRepositoryImpl implements Y9logAccessLogCustomR
                 CriteriaQuery criteriaQuery =
                     new CriteriaQuery(new Criteria().and(new Criteria(Y9LogSearchConsts.OPERATE_TYPE).is(operateType))
                         .and(new Criteria(Y9LogSearchConsts.USER_ID).in(personIds)))
-                        .setPageable(PageRequest.of((page < 1) ? 0 : page - 1, rows))
-                        .addSort(Sort.by(Order.desc(Y9LogSearchConsts.LOG_TIME)));
+                            .setPageable(PageRequest.of((page < 1) ? 0 : page - 1, rows))
+                            .addSort(Sort.by(Order.desc(Y9LogSearchConsts.LOG_TIME)));
 
                 SearchHits<Y9logAccessLog> searchHits =
                     elasticsearchOperations.search(criteriaQuery, Y9logAccessLog.class, index);
@@ -643,11 +644,14 @@ public class Y9logAccessLogCustomRepositoryImpl implements Y9logAccessLogCustomR
             cal.add(Calendar.MILLISECOND, 999);
             Date endOfTime = cal.getTime();
 
-            String start = DATETIME_UTC_FORMAT.format(startOfTime);
-            String end = DATETIME_UTC_FORMAT.format(endOfTime);
+            FastDateFormat DATETIME_UTC_FORMAT2 =
+                FastDateFormat.getInstance("yyyy-MM-dd'T'HH:mm:ss'Z'", TimeZone.getTimeZone("UTC"));
+
+            String start = DATETIME_UTC_FORMAT2.format(startOfTime);
+            String end = DATETIME_UTC_FORMAT2.format(endOfTime);
 
             LOGGER.info("start:{} end:{} fuwuqi:{}", startOfTime.getTime(), endOfTime.getTime());
-            LOGGER.info("startString:{} endString:{}", start, end);
+            LOGGER.info("startString UTC:{} endString UTC:{}", start, end);
             criteria.subCriteria(new Criteria(Y9LogSearchConsts.LOG_TIME).between(start, end));
         }
 
