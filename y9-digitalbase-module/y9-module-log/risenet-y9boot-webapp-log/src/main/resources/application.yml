@@ -23,15 +23,17 @@ spring:
             - org.springframework.boot.autoconfigure.kafka.KafkaAutoConfiguration
     cloud:
         nacos:
+            server-addr: https://test.youshengyun.com:443
+            username: nacos
+            password: ${NACOS_PASSWORD:111111}
             config:
                 enabled: false
                 group: DEFAULT_GROUP
                 namespace: test
-                server-addr: http://localhost:8848
-                username: nacos
-                password: ${NACOS_PASSWORD:111111}
             discovery:
                 enabled: false
+                group: DEFAULT_GROUP
+                namespace: test
     config:
         import:
             - optional:nacos:log.yml
