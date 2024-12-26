@@ -9,4 +9,6 @@ import net.risesoft.y9public.entity.Y9logIpDeptMapping;
 public interface Y9logIpDeptMappingRepository extends ElasticsearchRepository<Y9logIpDeptMapping, String> {
     List<Y9logIpDeptMapping> findByClientIpSection(String clientIpSection);
 
+    List<Y9logIpDeptMapping> findByTenantIdAndClientIpSection(String tenantId, String clientIpSection);
+
 }

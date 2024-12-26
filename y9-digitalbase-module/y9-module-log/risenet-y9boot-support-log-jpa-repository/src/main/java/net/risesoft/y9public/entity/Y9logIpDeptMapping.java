@@ -67,4 +67,9 @@ public class Y9logIpDeptMapping implements Serializable {
     @Comment(value = "状态，用于表示是否有有人在该终端登录，0：表示没有，1，表示有")
     private Integer status;
 
+    /** 租户ID */
+    @Column(name = "TENANT_ID", length = 38)
+    @Comment(value = "租户ID")
+    private String tenantId;
+
 }

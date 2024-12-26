@@ -7,6 +7,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import lombok.RequiredArgsConstructor;
 
@@ -24,6 +25,7 @@ import net.risesoft.y9public.service.Y9logMappingService;
  */
 @Service
 @RequiredArgsConstructor
+@Transactional(readOnly = true)
 public class Y9logMappingServiceImpl implements Y9logMappingService {
 
     private final Y9logMappingRepository y9logMappingRepository;
@@ -31,6 +33,7 @@ public class Y9logMappingServiceImpl implements Y9logMappingService {
     private final Y9logMappingCustomRepository y9logMappingCustomRepository;
 
     @Override
+    @Transactional(readOnly = false)
     public void deleteFieldMapping(String id) {
         y9logMappingRepository.deleteById(id);
     }
@@ -62,6 +65,7 @@ public class Y9logMappingServiceImpl implements Y9logMappingService {
     }
 
     @Override
+    @Transactional(readOnly = false)
     public void save(Y9logMapping y9logMapping) {
         y9logMappingRepository.save(y9logMapping);
     }

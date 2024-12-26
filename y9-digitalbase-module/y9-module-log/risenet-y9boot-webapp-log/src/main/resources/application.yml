@@ -160,11 +160,20 @@ y9:
             packagesToScanRepositoryPublic: net.risesoft.y9public.repository
         liquibase:
             public-enabled: true
+        multi-tenant:
+            # kafka, db
+            event-source: db
         log:
             enabled: true
+            # kafka, api
             logSaveTarget: api
         security:
             enabled: true
+            csrf:
+                accepted-referer:
+                    - youshengyun.com
+                    - localhost
+                    - 127.0.0.1
             cors:
                 allowCredentials: true
                 allowedOriginPatterns:
@@ -175,8 +184,8 @@ y9:
                     - http://localhost:7070
             xss:
                 ignoreParam:
-                    - ID
-                    - properties
+                    - id
+                    - userName
         oauth2:
             resource:
                 enabled: true

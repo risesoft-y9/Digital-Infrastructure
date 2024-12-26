@@ -18,7 +18,9 @@ import org.springframework.stereotype.Component;
 
 import lombok.RequiredArgsConstructor;
 
+import net.risesoft.consts.InitDataConsts;
 import net.risesoft.pojo.Y9Page;
+import net.risesoft.y9.Y9LoginUserHolder;
 import net.risesoft.y9public.entity.Y9logIpDeptMapping;
 import net.risesoft.y9public.repository.Y9logIpDeptMappingRepository;
 import net.risesoft.y9public.repository.custom.Y9logIpDeptMappingCustomRepository;
@@ -53,13 +55,17 @@ public class Y9logIpDeptMappingCustomRepositoryImpl implements Y9logIpDeptMappin
                     List<Expression<Boolean>> list = predicate.getExpressions();
 
                     if (StringUtils.isNotBlank(deptName)) {
-                        list.add(criteriaBuilder.equal(root.get("deptName").as(String.class), "*" + deptName + "*"));
+                        list.add(criteriaBuilder.like(root.get("deptName").as(String.class), "*" + deptName + "*"));
                     }
                     if (StringUtils.isNotBlank(clientIp4Abc)) {
-                        list.add(criteriaBuilder.equal(root.get("clientIpSection").as(String.class),
+                        list.add(criteriaBuilder.like(root.get("clientIpSection").as(String.class),
                             "*" + clientIp4Abc + "*"));
                     }
 
+                    String tenantId = Y9LoginUserHolder.getTenantId();
+                    if (!tenantId.equals(InitDataConsts.OPERATION_TENANT_ID)) {
+                        list.add(criteriaBuilder.equal(root.get("tenantId").as(String.class), tenantId));
+                    }
                     return predicate;
                 }
             }, pageable);

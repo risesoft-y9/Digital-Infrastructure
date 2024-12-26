@@ -7,6 +7,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.data.domain.Page;
@@ -103,7 +104,7 @@ public class TerminalController {
             cIPMap.put("CIP", cip);
             cIPlist.add(cIPMap);
         }
-        return Y9Result.success(cIPlist, "获取数据成功");
+        return Y9Result.success(cIPlist.stream().distinct().collect(Collectors.toList()), "获取数据成功");
     }
 
     /**
@@ -148,17 +149,17 @@ public class TerminalController {
     @RiseLog(moduleName = "日志系统", operationName = "根据人员id，获取所有登陆成功的终端ip", logLevel = LogLevelEnum.RSLOG)
     @GetMapping(value = "/listUserHostIpByUserId")
     public Y9Result<List<Map<String, Object>>> listUserHostIpByUserId(@RequestParam String userId) {
-        List<Map<String, Object>> list = new ArrayList<>();
         List<String> userHostIPList = y9logUserLoginInfoService.listUserHostIpByUserId(userId, "true");
+        List<Map<String, Object>> hostList = new ArrayList<>();
         for (String userHostIP : userHostIPList) {
             // 根据userId和userHostIP查询人员登录成功的次数
             long counter = y9logUserLoginInfoService.countBySuccessAndUserHostIpAndUserId("true", userHostIP, userId);
             HashMap<String, Object> map = new HashMap<>();
             map.put("userHostIp", userHostIP);
             map.put("name", userHostIP + "(" + counter + ")");
-            list.add(map);
+            hostList.add(map);
         }
-        return Y9Result.success(list);
+        return Y9Result.success(hostList.stream().distinct().collect(Collectors.toList()));
     }
 
     /**
