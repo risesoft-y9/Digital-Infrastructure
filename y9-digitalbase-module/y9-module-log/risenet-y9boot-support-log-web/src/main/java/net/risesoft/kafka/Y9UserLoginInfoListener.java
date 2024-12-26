@@ -40,6 +40,8 @@ public class Y9UserLoginInfoListener {
                 userHostIp = "127.0.0.1";
             }
             String clientIpSection = userHostIp.substring(0, userHostIp.lastIndexOf("."));
+            String tenantId = String.valueOf(map.get("tenantId"));
+            String userName = String.valueOf(map.get("userName"));
             if (y9logUserLoginInfoService != null) {
                 Y9logUserLoginInfo userLoginInfo = new Y9logUserLoginInfo();
                 userLoginInfo.setId(String.valueOf(map.get("id")));
@@ -47,12 +49,12 @@ public class Y9UserLoginInfoListener {
                 userLoginInfo.setLoginType(String.valueOf(map.get("loginType")));
                 userLoginInfo.setUserId(String.valueOf(map.get("userId")));
                 userLoginInfo.setUserLoginName(String.valueOf(map.get("userLoginName")));
-                userLoginInfo.setUserName(String.valueOf(map.get("userName")));
+                userLoginInfo.setUserName(userName);
                 userLoginInfo.setUserHostIp(userHostIp);
                 userLoginInfo.setUserHostMac(String.valueOf(map.get("userHostMac")));
                 userLoginInfo.setUserHostName(String.valueOf(map.get("userHostName")));
                 userLoginInfo.setUserHostDiskId(String.valueOf(map.get("userHostDiskId")));
-                userLoginInfo.setTenantId(String.valueOf(map.get("tenantId")));
+                userLoginInfo.setTenantId(tenantId);
                 userLoginInfo.setTenantName(String.valueOf(map.get("tenantName")));
                 userLoginInfo.setServerIp(String.valueOf(map.get("serverIp")));
                 userLoginInfo.setSuccess(String.valueOf(map.get("success")));
@@ -71,9 +73,9 @@ public class Y9UserLoginInfoListener {
              */
             if (y9logUserHostIpInfoService != null) {
                 List<Y9logUserHostIpInfo> list = y9logUserHostIpInfoService.listByUserHostIp(userHostIp);
-                if (list == null || list.size() == 0) {
+                if (list == null || list.isEmpty()) {
                     Y9logUserHostIpInfo entity = new Y9logUserHostIpInfo();
-                    entity.setId(UUID.randomUUID().toString().replaceAll("-", ""));
+                    entity.setId(UUID.randomUUID().toString().replace("-", ""));
                     entity.setClientIpSection(clientIpSection);
                     entity.setUserHostIp(userHostIp);
                     y9logUserHostIpInfoService.save(entity);
@@ -82,17 +84,19 @@ public class Y9UserLoginInfoListener {
 
             if (y9logIpDeptMappingService != null) {
                 SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-                List<Y9logIpDeptMapping> list = y9logIpDeptMappingService.listByClientIpSection(clientIpSection);
-                if (list == null || list.size() == 0) {
+                List<Y9logIpDeptMapping> list =
+                    y9logIpDeptMappingService.listByTenantIdAndClientIpSection(tenantId, clientIpSection);
+                if (list == null || list.isEmpty()) {
                     Y9logIpDeptMapping entity = new Y9logIpDeptMapping();
-                    entity.setId(UUID.randomUUID().toString().replaceAll("-", ""));
+                    entity.setId(UUID.randomUUID().toString().replace("-", ""));
                     entity.setClientIpSection(clientIpSection);
                     entity.setDeptName("此IP未指定部门");
-                    entity.setOperator(String.valueOf(map.get("userName")));
+                    entity.setOperator(userName);
                     entity.setSaveTime(sdf.format(new Date()));
                     entity.setStatus(1);
                     entity.setTabIndex(666);
                     entity.setUpdateTime(sdf.format(new Date()));
+                    entity.setTenantId(tenantId);
                     y9logIpDeptMappingService.save(entity);
                 } else {
                     for (Y9logIpDeptMapping entity : list) {

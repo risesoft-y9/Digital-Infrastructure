@@ -7,7 +7,7 @@ import net.risesoft.y9public.entity.Y9logIpDeptMapping;
 
 /**
  * 人员登录部门配置管理
- * 
+ *
  * @author guoweijun
  * @author shidaobang
  * @author mengjuhua
@@ -22,6 +22,8 @@ public interface Y9logIpDeptMappingService {
     List<Y9logIpDeptMapping> listAllOrderByClientIpSection();
 
     List<Y9logIpDeptMapping> listByClientIpSection(String clientIpSection);
+
+    List<Y9logIpDeptMapping> listByTenantIdAndClientIpSection(String tenantId, String clientIpSection);
 
     List<String> listClientIpSections();
 

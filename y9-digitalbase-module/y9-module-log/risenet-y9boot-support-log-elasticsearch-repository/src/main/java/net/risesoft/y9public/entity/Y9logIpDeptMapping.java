@@ -44,4 +44,8 @@ public class Y9logIpDeptMapping implements Serializable {
     @Field(type = FieldType.Integer, index = true, store = true)
     private Integer status;
 
+    /** 租户ID */
+    @Field(type = FieldType.Keyword, index = true, store = true)
+    private String tenantId;
+
 }

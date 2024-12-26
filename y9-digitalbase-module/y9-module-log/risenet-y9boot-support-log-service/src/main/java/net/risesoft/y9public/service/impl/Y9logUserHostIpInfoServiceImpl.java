@@ -8,6 +8,7 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import lombok.RequiredArgsConstructor;
 
@@ -24,6 +25,7 @@ import net.risesoft.y9public.service.Y9logUserHostIpInfoService;
  */
 @Service
 @RequiredArgsConstructor
+@Transactional(readOnly = true)
 public class Y9logUserHostIpInfoServiceImpl implements Y9logUserHostIpInfoService {
 
     private final Y9logUserHostIpInfoRepository y9logUserHostIpInfoRepository;
@@ -57,6 +59,7 @@ public class Y9logUserHostIpInfoServiceImpl implements Y9logUserHostIpInfoServic
     }
 
     @Override
+    @Transactional(readOnly = false)
     public void save(Y9logUserHostIpInfo y9logUserHostIpInfo) {
         y9logUserHostIpInfoRepository.save(y9logUserHostIpInfo);
     }

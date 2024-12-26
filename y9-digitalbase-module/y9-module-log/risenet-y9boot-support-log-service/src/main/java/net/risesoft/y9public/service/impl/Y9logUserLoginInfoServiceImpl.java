@@ -13,6 +13,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import lombok.RequiredArgsConstructor;
 
@@ -37,6 +38,7 @@ import net.risesoft.y9public.service.Y9logUserLoginInfoService;
  */
 @Service
 @RequiredArgsConstructor
+@Transactional(readOnly = true)
 public class Y9logUserLoginInfoServiceImpl implements Y9logUserLoginInfoService {
 
     private final Y9logUserLoginInfoRepository y9logUserLoginInfoRepository;
@@ -171,6 +173,7 @@ public class Y9logUserLoginInfoServiceImpl implements Y9logUserLoginInfoService 
     }
 
     @Override
+    @Transactional(readOnly = false)
     public void save(Y9logUserLoginInfo y9logUserLoginInfo) {
         if (StringUtils.isBlank(y9logUserLoginInfo.getManagerLevel())) {
             y9logUserLoginInfo.setManagerLevel("0");
