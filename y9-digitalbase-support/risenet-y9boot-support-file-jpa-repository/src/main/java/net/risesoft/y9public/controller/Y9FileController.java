@@ -42,7 +42,9 @@ public class Y9FileController {
                 ContentDispositionUtil.standardizeAttachment(y9FileStore.getFileName()));
             response.setContentType(
                 MediaTypeUtils.getMediaTypeForFileName(servletContext, y9FileStore.getFileName()).toString());
-            response.setContentLengthLong(y9FileStore.getFileSize());
+
+            // 流式的处理可能导致返回的 Content-Length 跟实际不一样导致下载有问题
+            // response.setContentLengthLong(y9FileStore.getFileSize());
 
             y9FileStoreService.downloadFileToOutputStream(id, out);
             out.flush();
