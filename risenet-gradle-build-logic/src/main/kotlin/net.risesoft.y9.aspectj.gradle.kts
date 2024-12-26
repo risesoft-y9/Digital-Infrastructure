@@ -5,10 +5,16 @@ plugins {
     id("io.freefair.aspectj.post-compile-weaving")
 }
 
+val versionCatalog = versionCatalogs.named("libs")
+
+
 dependencies {
-    api("org.aspectj:aspectjrt")
-    api("org.aspectj:aspectjtools")
-    api("org.aspectj:aspectjweaver")
+    aspect(platform(versionCatalog.findLibrary("spring-boot-bom").get()))
+    testAspect(platform(versionCatalog.findLibrary("spring-boot-bom").get()))
+
+    api(versionCatalog.findLibrary("org-aspectj-aspectjrt").get())
+    api(versionCatalog.findLibrary("org-aspectj-aspectjtools").get())
+    api(versionCatalog.findLibrary("org-aspectj-aspectjweaver").get())
 
     aspect("org.springframework:spring-aspects")
     testAspect("org.springframework:spring-aspects")

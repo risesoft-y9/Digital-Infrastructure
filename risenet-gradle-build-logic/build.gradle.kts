@@ -15,13 +15,13 @@ repositories {
 }
 
 dependencies {
-    implementation("com.google.cloud.tools:jib-gradle-plugin:3.4.4")
-    implementation("com.ly.smart-doc:smart-doc-gradle-plugin:3.0.9")
-    implementation("io.freefair.gradle:aspectj-plugin:8.11")
-    implementation("io.freefair.gradle:lombok-plugin:8.11")
-    implementation("tech.yanand.gradle:maven-central-publish:1.3.0")
-    implementation("com.vanniktech:gradle-maven-publish-plugin:0.30.0")
-    implementation("org.jreleaser:jreleaser-gradle-plugin:1.15.0")
+    implementation(libs.com.google.cloud.tools.jib.gradle.plugin)
+    implementation(libs.com.ly.smart.doc.smart.doc.gradle.plugin)
+    implementation(libs.io.freefair.gradle.aspectj.plugin)
+    implementation(libs.io.freefair.gradle.lombok.plugin)
+    implementation(libs.tech.yanand.gradle.maven.central.publish)
+    implementation(libs.com.vanniktech.gradle.maven.publish.plugin)
+    implementation(libs.org.jreleaser.jreleaser.gradle.plugin)
 }
 
 group = "net.risesoft.y9"
