@@ -214,9 +214,11 @@ y9:
             tenant-enabled: true
             public-enabled: true
         multi-tenant:
+            # kafka, db
             event-source: db
         log:
             enabled: true
+            # kafka, api
             logSaveTarget: api
         publish:
             kafka:
