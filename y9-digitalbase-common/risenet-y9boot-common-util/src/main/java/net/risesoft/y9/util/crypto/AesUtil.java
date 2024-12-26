@@ -125,10 +125,7 @@ public class AesUtil {
         SecretKeySpec secretKeySpec = new SecretKeySpec(raw, ALGORITHM);
         Cipher cipher = Cipher.getInstance(AES_ECB_PADDING);
         cipher.init(Cipher.DECRYPT_MODE, secretKeySpec);
-        CipherOutputStream cout = new CipherOutputStream(out, cipher);
-        cout.close();
-        out.close();
-        return cout;
+        return new CipherOutputStream(out, cipher);
     }
 
     /**
@@ -217,10 +214,7 @@ public class AesUtil {
         SecretKeySpec secretKeySpec = new SecretKeySpec(raw, ALGORITHM);
         Cipher cipher = Cipher.getInstance(AES_ECB_PADDING);
         cipher.init(Cipher.ENCRYPT_MODE, secretKeySpec);
-        CipherInputStream cin = new CipherInputStream(in, cipher);
-        cin.close();
-        in.close();
-        return cin;
+        return new CipherInputStream(in, cipher);
     }
 
     /**
