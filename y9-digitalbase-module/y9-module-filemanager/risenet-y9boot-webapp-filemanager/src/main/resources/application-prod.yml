@@ -3,9 +3,9 @@ spring:
         nacos:
             config:
                 enabled: true
-                namespace: vue
                 group: DEFAULT_GROUP
-                server-addr: https://vue.youshengyun.com:443
+                namespace: vue
+                server-addr: nacos:8848
                 username: nacos
                 password: ${NACOS_PASSWORD:111111}
     config:
