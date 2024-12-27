@@ -30,6 +30,6 @@ jib {
             username = findProperty("dockerUsername").toString()
             password = findProperty("dockerPassword").toString()
         }
-        tags = setOf("v9.7.0-SNAPSHOT", "v9.7.x", "v9.7.0-SNAPSHOT-${dateTimeStr}")
+        tags = setOf("9.7.0-SNAPSHOT", "9.7.x", "9.7.0-SNAPSHOT-${dateTimeStr}")
     }
 }
