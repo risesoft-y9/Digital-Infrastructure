@@ -65,25 +65,13 @@ public class RiseAuthenticationHandler extends AbstractAuthenticationHandler {
             plainPassword = Base64Util.decode(base64Password, "Unicode");
             plainUsername = Base64Util.decode(base64Username, "Unicode");
 
-            riseCredential.setUsername(plainUsername);
-            riseCredential.assignPassword(plainPassword);
-
-            HttpServletRequest request = WebUtils.getHttpServletRequestFromExternalWebflowContext();
-            if (null != request) {
-                String systemName = request.getParameter("systemName");
-                if (StringUtils.isNotBlank(systemName)) {
-                    riseCredential.setSystemName(systemName);
-                }
-                riseCredential.setUserAgent(request.getHeader("User-Agent"));
-                riseCredential.setClientIp(Y9Context.getIpAddr(request));
-            }
-
             if (plainUsername.contains("&")) {
                 String agentUserName = plainUsername.substring(plainUsername.indexOf("&") + 1);
                 String agentTenantShortName = "operation";
 
                 plainUsername = plainUsername.substring(0, plainUsername.indexOf("&"));
-                riseCredential.setUsername(plainUsername);
+
+                fillCredential(riseCredential, plainUsername, plainPassword, null);
 
                 List<Y9User> agentUsers = getAgentUsers(deptId, agentTenantShortName, agentUserName);
                 if (agentUsers == null || agentUsers.isEmpty()) {
@@ -97,9 +85,16 @@ public class RiseAuthenticationHandler extends AbstractAuthenticationHandler {
                 }
 
             } else {
+
+                fillCredential(riseCredential, plainUsername, plainPassword, null);
+
                 List<Y9User> users = getUsers(loginType, deptId, tenantShortName, plainUsername);
                 if (users == null || users.isEmpty()) {
                     throw new AccountNotFoundException("没有找到这个用户。");
+                } else if ("qrCode".equals(loginType)) {
+                    Y9User y9User = users.get(0);
+                    fillCredential(riseCredential, y9User.getLoginName(), y9User.getPassword(),
+                        y9User.getTenantShortName());
                 } else {
                     Y9User y9User = users.get(0);
                     String hashed = y9User.getPassword();
@@ -121,6 +116,25 @@ public class RiseAuthenticationHandler extends AbstractAuthenticationHandler {
             throw new FailedLoginException(e.getMessage());
         }
 
+    }
+
+    private static void fillCredential(RememberMeUsernamePasswordCredential riseCredential, String username,
+        String password, String tenantShortName) {
+        riseCredential.setUsername(username);
+        riseCredential.assignPassword(password);
+        if (StringUtils.isNotBlank(tenantShortName)) {
+            riseCredential.setTenantShortName(tenantShortName);
+        }
+
+        HttpServletRequest request = WebUtils.getHttpServletRequestFromExternalWebflowContext();
+        if (null != request) {
+            String systemName = request.getParameter("systemName");
+            if (StringUtils.isNotBlank(systemName)) {
+                riseCredential.setSystemName(systemName);
+            }
+            riseCredential.setUserAgent(request.getHeader("User-Agent"));
+            riseCredential.setClientIp(Y9Context.getIpAddr(request));
+        }
     }
 
     private List<Y9User> getAgentUsers(String deptId, String agentTenantShortName, String agentUserName) {
