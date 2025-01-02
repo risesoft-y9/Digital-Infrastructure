@@ -101,7 +101,7 @@
     </y9Dialog>
     <!-- 应用图标的选择 -->
     <y9Dialog v-model:config="iconSelectDialog">
-        <y9Table
+        <!-- <y9Table
             :config="iconSelectTable"
             :filterConfig="filterIconConfig"
             @on-curr-page-change="handelrPageChange"
@@ -120,7 +120,8 @@
                     {{ $t('搜索') }}
                 </el-button>
             </template>
-        </y9Table>
+        </y9Table> -->
+        <IconList @choose-icon="handlerSearchIcon"></IconList>
     </y9Dialog>
     <!-- 查看 修改日志  -->
     <y9Dialog v-model:config="dialogModifyLog">
@@ -154,6 +155,7 @@
     import settings from '@/settings';
     import y9_storage from '@/utils/storage';
     import { importAppJSON } from '@/api/impExp';
+    import IconList from '@/views/iconManager/comps/IconList.vue';
 
     const { t } = useI18n();
     const settingStore = useSettingStore();
@@ -382,32 +384,39 @@
     }
 
     // 搜索 图标
-    function handlerSearchIcon() {
-        iconSelectTable.value.loading = true;
-        setTimeout(async () => {
-            const params = {
-                page: iconSelectTable.value.pageConfig.currentPage,
-                rows: iconSelectTable.value.pageConfig.pageSize,
-                name: name.value
-            };
-            let result;
-            if (name.value) {
-                // 有搜索条件 请求搜索接口
-                result = await searchIconPageByName(params);
-            } else {
-                result = await getAppIconPageList(params);
-            }
-            iconSelectTable.value.tableData = result.rows;
-            iconSelectTable.value.pageConfig.total = result.total;
-            iconSelectTable.value.loading = false;
-        }, 300);
+    function handlerSearchIcon(iconInfo) {
+        // iconSelectTable.value.loading = true;
+        // setTimeout(async () => {
+        //     const params = {
+        //         page: iconSelectTable.value.pageConfig.currentPage,
+        //         rows: iconSelectTable.value.pageConfig.pageSize,
+        //         name: name.value
+        //     };
+        //     let result;
+        //     if (name.value) {
+        //         // 有搜索条件 请求搜索接口
+        //         result = await searchIconPageByName(params);
+        //     } else {
+        //         result = await getAppIconPageList(params);
+        //     }
+        //     iconSelectTable.value.tableData = result.rows;
+        //     iconSelectTable.value.pageConfig.total = result.total;
+        //     iconSelectTable.value.loading = false;
+        // }, 300);
+        /**
+         * 2024-11-26
+         */
+        // console.log(iconInfo);
+        ruleFormConfig.value.model.iconData = iconInfo.iconData;
+        iconSelectDialog.value.show = false;
     }
 
     // dialog 图标选择
     let iconSelectDialog = ref({
         show: false,
         title: computed(() => t('选择图标')),
-        width: '40%',
+        width: '100%',
+        fullscreen: true,
         showFooter: false
     });
     // 选择图标 列表 配置
