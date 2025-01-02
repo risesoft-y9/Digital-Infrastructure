@@ -28,7 +28,7 @@ services:
       org.springframework.boot.readiness-check.tcp.disable: true
         
   redis:
-    image: redis:latest
+    image: redis/redis-stack-server:latest
     container_name: redis01
     restart: always
     extra_hosts:
@@ -37,7 +37,8 @@ services:
       - y9-share-net
     ports:
       - "6379:6379"
-    command: redis-server --requirepass "12345678"
+    environment:
+      REDIS_ARGS: "--requirepass 12345678"
     volumes:
       - d:/docker-data/redis:/data
     labels:

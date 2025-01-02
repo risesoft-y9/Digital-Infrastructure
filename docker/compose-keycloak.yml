@@ -25,7 +25,22 @@ services:
       retries: 8
     labels:
       org.springframework.boot.readiness-check.tcp.disable: true
-      
+  redis:
+    image: redis/redis-stack-server:latest
+    container_name: redis01
+    restart: always
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+    networks:
+      - y9-share-net
+    ports:
+      - "6379:6379"
+    environment:
+      REDIS_ARGS: "--requirepass 12345678"
+    volumes:
+      - d:/docker-data/redis:/data
+    labels:
+      org.springframework.boot.readiness-check.tcp.disable: true
   keycloak:
     image: bitnami/keycloak:latest
     container_name: kc01
