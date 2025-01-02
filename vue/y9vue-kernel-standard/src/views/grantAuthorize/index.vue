@@ -40,7 +40,7 @@
                     </y9Card>
                     <!-- 角色关联授权继承 -->
                     <y9Card
-                        v-if="currData.nodeType !== 'APP'"
+                        v-if="currData.nodeType !== 'APP' && currData.inherit"
                         :title="`${$t('角色关联授权继承')} - ${currData.name ? currData.name : ''}`"
                     >
                         <template v-slot>
@@ -53,7 +53,7 @@
                     </y9Card>
                     <!-- 组织关联授权继承 -->
                     <y9Card
-                        v-if="currData.nodeType !== 'APP'"
+                        v-if="currData.nodeType !== 'APP' && currData.inherit"
                         :title="`${$t('组织关联授权继承')} - ${currData.name ? currData.name : ''}`"
                     >
                         <InheritOrg :id="currData.id" />
