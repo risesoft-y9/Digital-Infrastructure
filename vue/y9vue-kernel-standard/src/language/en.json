@@ -1,4 +1,12 @@
 {
+    "purple": "Mountain stem purple",
+    "green": "Bamboo green",
+    "blue": "Light purple blue",
+    "red": "Pink ball flower red",
+    "black": "Ancient Ding Grey",
+    "orange": "Golden Calendula Yellow",
+    "other": "other",
+    "上传图标": "upload icon",
     "全局模块": "global module",
     "单一模块": "single module",
     "布局影响": "layout influence",
