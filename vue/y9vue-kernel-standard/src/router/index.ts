@@ -19,6 +19,7 @@ import dictionaryRouter from './modules/dictionaryRouter';
 import grantAuthorizeRouter from './modules/grantAuthorizeRouter';
 import homeRouter from './modules/homeRouter';
 import iconManagerRouter from './modules/iconManagerRouter';
+import iconManagerOldRouter from './modules/iconManagerOldRouter';
 import orgRouter from './modules/orgRouter';
 import personalRouter from './modules/personalRouter';
 import positionRouter from './modules/positionRouter';
@@ -91,6 +92,7 @@ export const asyncRoutes = [
     permission,
     dictionaryRouter,
     iconManagerRouter,
+    // iconManagerOldRouter,
     personalRouter,
     settingRouter,
     userLogRouter,

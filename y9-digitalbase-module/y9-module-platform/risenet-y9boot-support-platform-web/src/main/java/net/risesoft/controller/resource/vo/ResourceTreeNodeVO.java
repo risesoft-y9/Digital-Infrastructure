@@ -6,10 +6,10 @@ import java.util.List;
 import lombok.Getter;
 import lombok.Setter;
 
-import net.risesoft.pojo.TreeNodeVO;
 import net.risesoft.enums.TreeTypeEnum;
 import net.risesoft.enums.platform.ResourceTypeEnum;
 import net.risesoft.enums.platform.TreeNodeType;
+import net.risesoft.pojo.TreeNodeVO;
 import net.risesoft.y9public.entity.resource.Y9ResourceBase;
 import net.risesoft.y9public.entity.resource.Y9System;
 
@@ -33,6 +33,8 @@ public class ResourceTreeNodeVO extends TreeNodeVO {
     private Boolean enabled;
     /** 租户id */
     private String tenantId;
+    /** 授权是否继承 */
+    private Boolean inherit;
 
     public static ResourceTreeNodeVO convertY9ResourceBase(Y9ResourceBase y9ResourceBase) {
         ResourceTreeNodeVO resourceTreeNodeVO = new ResourceTreeNodeVO();
@@ -49,11 +51,12 @@ public class ResourceTreeNodeVO extends TreeNodeVO {
         resourceTreeNodeVO.setNodeType(y9ResourceBase.getResourceType().toString());
         resourceTreeNodeVO.setSystemId(y9ResourceBase.getSystemId());
         resourceTreeNodeVO.setEnabled(y9ResourceBase.getEnabled());
+        resourceTreeNodeVO.setInherit(y9ResourceBase.getInherit());
         return resourceTreeNodeVO;
     }
 
     public static List<ResourceTreeNodeVO>
-    convertY9ResourceBaseList(List<? extends Y9ResourceBase> y9ResourceBaseList) {
+        convertY9ResourceBaseList(List<? extends Y9ResourceBase> y9ResourceBaseList) {
         List<ResourceTreeNodeVO> roleTreeNodeVOList = new ArrayList<>();
         for (Y9ResourceBase y9ResourceBase : y9ResourceBaseList) {
             roleTreeNodeVOList.add(convertY9ResourceBase(y9ResourceBase));

@@ -4,8 +4,8 @@
  * @Author: zhangchongjie
  * @Date: 2022-07-01 10:10:01
  * @LastEditors: mengjuhua
- * @LastEditTime: 2022-12-01 11:04:24
- * @FilePath: \workspace-y9boot-9.5-vuee:\workspace-y9boot-9.6-vue\y9vue-kernel-dcat-style\src\api\appIcon\index.ts
+ * @LastEditTime: 2024-11-19 13:58:05
+ * @FilePath: \y9-vue\y9vue-kernel-standard\src\api\appIcon\index.ts
  */
 import Request from '@/api/lib/request';
 import qs from 'qs';
@@ -57,19 +57,50 @@ export const searchIconPageByName = async ({ name, page, rows }) => {
 
 /**
  * 上传图标
+ * @param {*} data
+ * @returns
+ */
+export const uploadIcon = async (data) => {
+    // var data = new FormData();
+    // for (var prop in iconFile) {
+    //     if (iconFile[prop] instanceof File) {
+    //         console.log(iconFile[prop]);
+    //         data.append('colors', prop);
+    //         data.append('iconFiles', iconFile[prop]);
+    //     }
+    // }
+    return await platformRequest({
+        url: '/api/rest/appIcon/uploadIcon4Colors',
+        method: 'POST',
+        cType: false,
+        data: data
+    });
+};
+
+/**
+ * 上传图标
  * @param {*} iconFile
  * @param {*} remark
  * @returns
  */
-export const uploadIcon = async ({ iconFile, remark }) => {
-    var data = new FormData();
-    data.append('iconFile', iconFile);
-    data.append('remark', remark);
+export const uploadIcon4Colors = async (params) => {
+    var formData = new FormData();
+
+    for (var prop in params) {
+        if (Object.prototype.hasOwnProperty.call(params, prop)) {
+            if (params[prop] instanceof File) {
+                formData.append('colors', prop);
+                formData.append('iconFiles', params[prop]);
+            } else {
+                formData.append(prop, params[prop]);
+            }
+        }
+    }
     return await platformRequest({
-        url: '/api/rest/appIcon/uploadIcon',
+        url: '/api/rest/appIcon/uploadIcon4Colors',
         method: 'POST',
         cType: false,
-        data: data
+        data: formData
     });
 };
 
