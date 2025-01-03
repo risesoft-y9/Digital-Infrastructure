@@ -140,7 +140,7 @@
 
         <!-- Plugin versions -->
         <jib-maven-plugin.version>3.4.0</jib-maven-plugin.version>
-        <smart-doc-maven-plugin.version>3.0.0</smart-doc-maven-plugin.version>
+        <smart-doc-maven-plugin.version>3.0.9</smart-doc-maven-plugin.version>
         <maven-release-plugin.version>3.0.1</maven-release-plugin.version>
         <aspectj-maven-plugin.version>1.14</aspectj-maven-plugin.version>
         <maven-dependency-plugin.version>3.6.1</maven-dependency-plugin.version>
@@ -734,24 +734,24 @@
                         <timezone>GMT+8</timezone>
                     </configuration>
                 </plugin>-->
-				<plugin>
-					<groupId>org.codehaus.mojo</groupId>
-					<artifactId>build-helper-maven-plugin</artifactId>
-					<version>${build-helper-maven-plugin.version}</version>
-					<executions>
-						<execution>
-							<id>timestamp-property</id>
-							<goals>
-								<goal>timestamp-property</goal>
-							</goals>
-							<configuration>
-								<name>buildDate</name>
-								<pattern>yyyyMMddHHmm</pattern>
-								<timeZone>GMT+8</timeZone>
-							</configuration>
-						</execution>
-					</executions>
-				</plugin>                
+                <plugin>
+                    <groupId>org.codehaus.mojo</groupId>
+                    <artifactId>build-helper-maven-plugin</artifactId>
+                    <version>${build-helper-maven-plugin.version}</version>
+                    <executions>
+                        <execution>
+                            <id>timestamp-property</id>
+                            <goals>
+                                <goal>timestamp-property</goal>
+                            </goals>
+                            <configuration>
+                                <name>buildDate</name>
+                                <pattern>yyyyMMddHHmm</pattern>
+                                <timeZone>GMT+8</timeZone>
+                            </configuration>
+                        </execution>
+                    </executions>
+                </plugin>
                 <plugin>
                     <groupId>io.github.git-commit-id</groupId>
                     <artifactId>git-commit-id-maven-plugin</artifactId>

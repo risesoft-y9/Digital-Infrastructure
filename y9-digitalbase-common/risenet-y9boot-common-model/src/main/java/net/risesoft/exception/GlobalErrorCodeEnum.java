@@ -92,6 +92,11 @@ public enum GlobalErrorCodeEnum implements ErrorCode {
     }
 
     @Override
+    public int getCode() {
+        return ErrorCode.super.formatCode();
+    }
+
+    @Override
     public int systemCode() {
         return GlobalErrorCodeConsts.SYSTEM_CODE;
     }
