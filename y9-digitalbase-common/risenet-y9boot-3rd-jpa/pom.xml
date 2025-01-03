@@ -1,0 +1,32 @@
+<project xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://maven.apache.org/POM/4.0.0"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+    <parent>
+        <groupId>net.risesoft</groupId>
+        <artifactId>y9-digitalbase-parent</artifactId>
+        <version>${revision}</version>
+        <relativePath>../../y9-digitalbase-parent/pom.xml</relativePath>
+    </parent>
+    <artifactId>risenet-y9boot-3rd-jpa</artifactId>
+    <packaging>jar</packaging>
+    <name>risenet-y9boot-3rd-jpa</name>
+    <description>RiseSoft/Digital Infrastructure extend for JpaRepositories</description>
+
+    <properties>
+    </properties>
+
+    <scm>
+        <url>${gitee.url}</url>
+        <connection>${gitee.connection}</connection>
+        <developerConnection>${gitee.developerConnection}</developerConnection>
+    </scm>
+
+    <dependencies>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-data-jpa</artifactId>
+        </dependency>
+
+    </dependencies>
+
+</project>

@@ -1,6 +1,7 @@
 package y9.autoconfiguration.jpa;
 
 import jakarta.persistence.EntityManagerFactory;
+import y9.jpa.extension.Y9EnableJpaRepositories;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -16,7 +17,6 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.FilterType;
 import org.springframework.core.env.Environment;
 import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.orm.jpa.JpaTransactionManager;
 import org.springframework.orm.jpa.JpaVendorAdapter;
@@ -33,7 +33,7 @@ import net.risesoft.y9.Y9Context;
 @AutoConfigureBefore(DataSourceAutoConfiguration.class)
 @EnableConfigurationProperties(JpaProperties.class)
 @EnableTransactionManagement(proxyTargetClass = true, mode = AdviceMode.ASPECTJ)
-@EnableJpaRepositories(basePackages = {"${y9.feature.jpa.packagesToScanRepositoryDedicated}"},
+@Y9EnableJpaRepositories(basePackages = {"${y9.feature.jpa.packagesToScanRepositoryDedicated}"},
     includeFilters = {@ComponentScan.Filter(classes = JpaRepository.class, type = FilterType.ASSIGNABLE_TYPE)},
     entityManagerFactoryRef = "rsDedicatedEntityManagerFactory",
     transactionManagerRef = "rsDedicatedTransactionManager")

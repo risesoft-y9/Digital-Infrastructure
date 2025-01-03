@@ -76,6 +76,7 @@
         <module>y9-digitalbase-common/risenet-y9boot-common-util</module>
         <module>y9-digitalbase-common/risenet-y9boot-common-tenant-datasource</module>
         <module>y9-digitalbase-common/risenet-y9boot-common-sqlddl</module>
+        <module>y9-digitalbase-common/risenet-y9boot-3rd-jpa</module>
 
         <module>y9-digitalbase-support/risenet-y9boot-support-file-jpa-repository</module>
         <module>y9-digitalbase-support/risenet-y9boot-support-file-service-ftp</module>
