@@ -16,6 +16,7 @@ import net.risesoft.enums.platform.OrgTypeEnum;
  * @date 2023/11/24
  * @since 9.6.3
  */
+@SuppressWarnings("serial")
 @Data
 public class SyncOrgUnits implements Serializable {
 

@@ -2,7 +2,7 @@ plugins {
     id("net.risesoft.y9.conventions-java")
     id("net.risesoft.y9.lombok")
     id("net.risesoft.y9.smart-doc")
-    id("net.risesoft.y9.aspectj")
+    //id("net.risesoft.y9.aspectj")
 }
 
 dependencies {

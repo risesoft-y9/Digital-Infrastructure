@@ -18,7 +18,6 @@ public class WebMvcConfig {
         MappingJackson2HttpMessageConverter converter = new MappingJackson2HttpMessageConverter();
         List<MediaType> supportedMediaTypes = new ArrayList<>();
         supportedMediaTypes.add(MediaType.parseMediaType("text/html;charset=UTF-8"));
-        supportedMediaTypes.add(MediaType.APPLICATION_JSON_UTF8);
         supportedMediaTypes.add(MediaType.APPLICATION_JSON);
         supportedMediaTypes.add(new MediaType("application", "*+json"));
         converter.setSupportedMediaTypes(supportedMediaTypes);
