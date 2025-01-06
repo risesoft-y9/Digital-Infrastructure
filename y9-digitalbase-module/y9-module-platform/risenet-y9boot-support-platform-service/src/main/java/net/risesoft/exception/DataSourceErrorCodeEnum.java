@@ -41,6 +41,11 @@ public enum DataSourceErrorCodeEnum implements ErrorCode {
     }
 
     @Override
+    public int getCode() {
+        return ErrorCode.super.formatCode();
+    }
+
+    @Override
     public String getDescription() {
         return this.description;
     }

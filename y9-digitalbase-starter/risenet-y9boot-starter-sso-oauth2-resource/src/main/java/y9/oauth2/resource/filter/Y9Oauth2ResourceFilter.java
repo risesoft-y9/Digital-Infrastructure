@@ -88,7 +88,7 @@ public class Y9Oauth2ResourceFilter implements Filter {
                 return;
             }
 
-            if (introspectEntity.getStatusCodeValue() != HttpStatus.OK.value()) {
+            if (introspectEntity.getStatusCode().value() != HttpStatus.OK.value()) {
                 setResponse(response, HttpStatus.UNAUTHORIZED, GlobalErrorCodeEnum.ACCESS_TOKEN_VERIFICATION_FAILED);
                 return;
             }

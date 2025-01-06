@@ -1,5 +1,3 @@
-import org.gradle.api.problems.internal.GradleCoreProblemGroup.versionCatalog
-
 pluginManagement {
     includeBuild("risenet-gradle-build-logic")
     includeBuild("risenet-gradle-version-catalog")
@@ -36,12 +34,14 @@ include(":y9-digitalbase-common:risenet-y9boot-common-nacos")
 include(":y9-digitalbase-common:risenet-y9boot-common-util")
 include(":y9-digitalbase-common:risenet-y9boot-common-tenant-datasource")
 include(":y9-digitalbase-common:risenet-y9boot-common-sqlddl")
+include(":y9-digitalbase-common:risenet-y9boot-3rd-jpa")
 
 include(":y9-digitalbase-starter:risenet-y9boot-starter-apisix")
 include(":y9-digitalbase-starter:risenet-y9boot-starter-cache-redis")
 include(":y9-digitalbase-starter:risenet-y9boot-starter-idgenerator")
 include(":y9-digitalbase-starter:risenet-y9boot-starter-jpa-public")
 include(":y9-digitalbase-starter:risenet-y9boot-starter-jpa-tenant")
+include(":y9-digitalbase-starter:risenet-y9boot-starter-jpa-dedicated")
 include(":y9-digitalbase-starter:risenet-y9boot-starter-kafka")
 include(":y9-digitalbase-starter:risenet-y9boot-starter-liquibase")
 include(":y9-digitalbase-starter:risenet-y9boot-starter-publish-kafka")
