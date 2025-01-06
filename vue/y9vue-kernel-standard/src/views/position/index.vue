@@ -38,8 +38,13 @@
 
             <template v-if="currTreeNodeInfo.nodeType == 'Department'">
                 <setDepartmentPropList :currTreeNodeInfo="currTreeNodeInfo"></setDepartmentPropList>
-                <inheritableDepartmentPropList :currTreeNodeInfo="currTreeNodeInfo" typeName="org"></inheritableDepartmentPropList>
+                <inheritableDepartmentPropList
+                    :currTreeNodeInfo="currTreeNodeInfo"
+                    typeName="org"
+                ></inheritableDepartmentPropList>
             </template>
+
+            <audit-log :currTreeNodeInfo="currTreeNodeInfo"></audit-log>
         </template>
     </fixedTreeModule>
     <el-button v-loading.fullscreen.lock="loading" style="display: none"></el-button>
@@ -52,13 +57,13 @@
     import baseInfo from './comps/baseInfo.vue';
     import positionRelation from './comps/positionRelation.vue';
     import personList from './comps/personList.vue';
-
+    import setDepartmentPropList from '../org/comps/setDepartmentPropList.vue';
+    import InheritableDepartmentPropList from '@/views/org/comps/inheritableDepartmentPropList.vue';
+    import auditLog from '@/views/y9log/entityAuditLog/index.vue';
     import { getAllPersonsCount, getTreeItemById, removeOrg, searchByName, treeInterface } from '@/api/org/index';
     import { checkDeptManager } from '@/api/deptManager/index';
     import { removeDept } from '@/api/dept/index';
     import { removePosition } from '@/api/position/index';
-    import setDepartmentPropList from '../org/comps/setDepartmentPropList.vue';
-    import InheritableDepartmentPropList from "@/views/org/comps/inheritableDepartmentPropList.vue";
 
     const { t } = useI18n();
     let fixedTreeRef = ref(); //tree实例

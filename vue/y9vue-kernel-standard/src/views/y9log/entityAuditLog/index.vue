@@ -1,5 +1,5 @@
 <template>
-    <y9Card :title="`${$t('操作日志信息')}${currInfo.name ? ' - ' + currInfo.name : ''}`">
+    <y9Card :title="`${$t('修改日志')}${currInfo.name ? ' - ' + currInfo.name : ''}`">
         <y9Table :config="logTableConfig"></y9Table>
     </y9Card>
 </template>
@@ -63,8 +63,20 @@
                 case 'Person':
                     entityClass = 'net.risesoft.entity.Y9Person';
                     break;
-                case 'Person':
+                case 'role':
                     entityClass = 'net.risesoft.y9public.entity.role.Y9Role';
+                    break;
+                case 'APP':
+                    entityClass = 'net.risesoft.y9public.entity.resource.Y9App';
+                    break;
+                case 'MENU':
+                    entityClass = 'net.risesoft.y9public.entity.resource.Y9Menu';
+                    break;
+                case 'OPERATION':
+                    entityClass = 'net.risesoft.y9public.entity.resource.Y9Operation';
+                    break;
+                case 'SYSTEM':
+                    entityClass = 'net.risesoft.y9public.entity.resource.Y9System';
                     break;
             }
 
