@@ -1,0 +1,21 @@
+services:
+  zipkin:
+    image: ghcr.io/openzipkin-contrib/zipkin-otel:0.1
+    container_name: zipkin01
+    restart: always
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+    networks:
+      - y9-share-net
+    ports:
+      - "9411:9411"
+    environment:
+      UI_ENABLED: "true"    
+    labels:
+      org.springframework.boot.service-connection: 'zipkin'
+      org.springframework.boot.readiness-check.tcp.disable: true      
+networks:
+  y9-share-net:
+    external: true
+    
+# docker compose -f compose-zipkin-otel.yml up -d
