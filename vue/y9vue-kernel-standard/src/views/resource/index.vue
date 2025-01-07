@@ -49,6 +49,8 @@
                     :handClickNode="handClickNode"
                     :postNode="postNode"
                 />
+
+                <audit-log v-show="currData.isManageable" :currTreeNodeInfo="currData"></audit-log>
             </div>
         </template>
     </fixedTreeModule>
@@ -64,6 +66,7 @@
     // 基本信息
     import BasicInfo from './comps/BasicInfo.vue';
     import SystemBasicInfo from '@/views/system/comps/BasicInfo.vue';
+    import auditLog from '@/views/y9log/entityAuditLog/index.vue';
     import { useI18n } from 'vue-i18n';
     // 注入 字体对象
     const fontSizeObj: any = inject('sizeObjInfo');

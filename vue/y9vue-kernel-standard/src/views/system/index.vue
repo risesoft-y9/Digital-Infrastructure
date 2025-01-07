@@ -135,6 +135,7 @@
                         <ApplicatManager :id="currData.id" />
                     </template>
                 </y9Card>
+                <audit-log v-show="currData.isManageable" :currTreeNodeInfo="currData"></audit-log>
             </div>
         </template>
     </fixedTreeModule>
@@ -163,6 +164,7 @@
     import BasicInfo from './comps/BasicInfo.vue';
     // 应用管理
     import ApplicatManager from './comps/ApplicatMana.vue';
+    import auditLog from '@/views/y9log/entityAuditLog/index.vue';
     import {
         importSystemJSON,
         removeSystem,

@@ -89,8 +89,8 @@
                         />
                     </template>
                 </y9Card>
+                <audit-log v-show="currData.isManageable" :currTreeNodeInfo="currData"></audit-log>
                 <!-- 角色成员 -->
-                <!--   -->
                 <y9Card
                     v-if="managerLevel === 2 && currData.nodeType === 'role'"
                     :title="`${$t('角色成员')} - ${currData.name ? currData.name : ''}`"
@@ -278,6 +278,7 @@
     import { resourceTreeList, resourceTreeRoot, treeSearch } from '@/api/resource/index';
     // 基本信息
     import BasicInfo from './comps/BasicInfo.vue';
+    import auditLog from '@/views/y9log/entityAuditLog/index.vue';
     import { useSettingStore } from '@/store/modules/settingStore';
 
     const settingStore = useSettingStore();
