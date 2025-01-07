@@ -1,5 +1,6 @@
 import com.vanniktech.maven.publish.SonatypeHost
 import com.vanniktech.maven.publish.VersionCatalog
+import java.util.*
 
 plugins {
     signing
@@ -20,7 +21,9 @@ catalog {
 }
 
 group = "net.risesoft.y9"
-version = findProperty("Y9PLUGIN_VERSION") as String? ?: "9.7.0-01"
+
+val rootProjectProperties = Properties().apply { load(file("../gradle.properties").inputStream()) }
+version = rootProjectProperties.get("Y9PLUGIN_VERSION") as String? ?: "9.7.0-01"
 
 signing {
     //useGpgCmd()
