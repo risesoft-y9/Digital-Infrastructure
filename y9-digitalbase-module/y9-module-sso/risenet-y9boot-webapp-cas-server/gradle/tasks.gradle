@@ -1,0 +1,480 @@
+import groovy.json.JsonSlurper
+import groovy.time.TimeCategory
+import org.apereo.cas.metadata.CasConfigurationMetadataCatalog
+import org.apereo.cas.metadata.ConfigurationMetadataCatalogQuery
+import org.gradle.internal.logging.text.StyledTextOutputFactory
+
+import java.nio.file.Files
+import java.nio.file.Paths
+import java.nio.file.StandardCopyOption
+import java.security.SecureRandom
+
+import static org.gradle.internal.logging.text.StyledTextOutput.Style
+
+buildscript {
+    repositories {
+        mavenLocal()
+        mavenCentral()
+        gradlePluginPortal()
+        maven {
+            url 'https://oss.sonatype.org/content/repositories/snapshots'
+            mavenContent { snapshotsOnly() }
+        }
+        maven {
+            url "https://repo.spring.io/milestone"
+            mavenContent { releasesOnly() }
+        }
+    }
+    dependencies {
+        classpath "org.apache.ivy:ivy:${project.ivyVersion}"
+        classpath "org.apereo.cas:cas-server-core-configuration-metadata-repository:${project.'cas.version'}"
+    }
+}
+apply plugin: "de.undercouch.download"
+
+task run(group: "build", description: "Run the CAS web application in embedded container mode") {
+    dependsOn 'build'
+    doLast {
+        def casRunArgs = Arrays.asList("-server -noverify -Xmx2048M -XX:+TieredCompilation -XX:TieredStopAtLevel=1".split(" "))
+        project.javaexec {
+            jvmArgs = casRunArgs
+            classpath = project.files("build/libs/cas.war")
+            systemProperties = System.properties
+            logger.info "Started ${commandLine}"
+        }
+    }
+}
+
+task setExecutable(group: "CAS", description: "Configure the project to run in executable mode") {
+    doFirst {
+        project.setProperty("executable", "true")
+        logger.info "Configuring the project as executable"
+    }
+}
+
+task executable(type: Exec, group: "CAS", description: "Run the CAS web application in standalone executable mode") {
+    dependsOn setExecutable, 'build'
+    doFirst {
+        workingDir "."
+        if (!Os.isFamily(Os.FAMILY_WINDOWS)) {
+            commandLine "chmod", "+x", bootWar.archivePath
+        }
+        logger.info "Running ${bootWar.archivePath}"
+        commandLine bootWar.archivePath
+    }
+}
+
+
+task debug(group: "CAS", description: "Debug the CAS web application in embedded mode on port 5005") {
+    dependsOn 'build'
+    doLast {
+        logger.info "Debugging process is started in a suspended state, listening on port 5005."
+        def casArgs = Arrays.asList("-Xmx2048M".split(" "))
+        project.javaexec {
+            jvmArgs = casArgs
+            debug = true
+            classpath = project.files("build/libs/cas.war")
+            systemProperties = System.properties
+            logger.info "Started ${commandLine}"
+        }
+    }
+}
+
+task showConfiguration(group: "CAS", description: "Show configurations for each dependency, etc") {
+    doLast() {
+        def cfg = project.hasProperty("configuration") ? project.property("configuration") : "compile"
+        configurations.getByName(cfg).each { println it }
+    }
+}
+
+task allDependenciesInsight(group: "build", type: DependencyInsightReportTask, description: "Produce insight information for all dependencies") {}
+
+task allDependencies(group: "build", type: DependencyReportTask, description: "Display a graph of all project dependencies") {}
+
+task casVersion(group: "CAS", description: "Display the current CAS version") {
+    doFirst {
+        def verbose = project.hasProperty("verbose") && Boolean.valueOf(project.getProperty("verbose"))
+        if (verbose) {
+            def out = services.get(StyledTextOutputFactory).create("CAS")
+            println "******************************************************************"
+            out.withStyle(Style.Info).println "Apereo CAS ${project.version}"
+            out.withStyle(Style.Description).println "Enterprise Single SignOn for all earthlings and beyond"
+            out.withStyle(Style.SuccessHeader).println "- GitHub: "
+            out.withStyle(Style.Success).println "https://github.com/apereo/cas"
+            out.withStyle(Style.SuccessHeader).println "- Docs: "
+            out.withStyle(Style.Success).println "https://apereo.github.io/cas"
+            out.withStyle(Style.SuccessHeader).println "- Blog: "
+            out.withStyle(Style.Success).println "https://apereo.github.io"
+            println "******************************************************************"
+        } else {
+            println project.version
+        }
+    }
+}
+
+task springBootVersion(description: "Display current Spring Boot version") {
+    doLast {
+        println rootProject.springBootVersion
+    }
+}
+
+task zip(type: Zip) {
+    from projectDir
+    exclude '**/.idea/**', '.gradle', 'tmp', '.git', '**/build/**', '**/bin/**', '**/out/**', '**/.settings/**'
+    destinationDirectory = buildDir
+    archiveFileName = "${project.name}.zip"
+    def zipFile = new File("${buildDir}/${archiveFileName}")
+    doLast {
+        if (zipFile.exists()) {
+            println "Zip archive is available at ${zipFile.absolutePath}"
+        }
+    }
+}
+
+task createKeystore(group: "CAS", description: "Create CAS keystore") {
+    def dn = "CN=cas.example.org,OU=Example,OU=Org,C=US"
+    if (project.hasProperty("certificateDn")) {
+        dn = project.getProperty("certificateDn")
+    }
+    def subjectAltName = "dns:example.org,dns:localhost,ip:127.0.0.1"
+    if (project.hasProperty("certificateSubAltName")) {
+        subjectAltName = project.getProperty("certificateSubAltName")
+    }
+
+    doFirst {
+        def certDir = project.getProperty("certDir")
+        def serverKeyStore = project.getProperty("serverKeystore")
+        def exportedServerCert = project.getProperty("exportedServerCert")
+        def storeType = project.getProperty("storeType")
+        def keystorePath = "$certDir/$serverKeyStore"
+        def serverCert = "$certDir/$exportedServerCert"
+
+        mkdir certDir
+        // this will fail if thekeystore exists and has cert with cas alias already (so delete if you want to recreate)
+        logger.info "Generating keystore for CAS with DN ${dn}"
+        exec {
+            workingDir "."
+            commandLine "keytool", "-genkeypair", "-alias", "cas",
+                    "-keyalg", "RSA",
+                    "-keypass", "changeit", "-storepass", "changeit",
+                    "-keystore", keystorePath,
+                    "-dname", dn, "-ext", "SAN=${subjectAltName}",
+                    "-storetype", storeType
+        }
+        logger.info "Exporting cert from keystore..."
+        exec {
+            workingDir "."
+            commandLine "keytool", "-exportcert", "-alias", "cas",
+                    "-storepass", "changeit", "-keystore", keystorePath,
+                    "-file", serverCert
+        }
+        logger.info "Import $serverCert into your Java truststore (\$JAVA_HOME/lib/security/cacerts)"
+    }
+}
+
+task unzipWAR(type: Copy, group: "CAS", description: "Explodes the CAS web application archive") {
+    dependsOn 'build'
+    def destination = "${buildDir}/app"
+
+    from zipTree("build/libs/cas.war")
+    into "${destination}"
+    doLast {
+        println "Unzipped WAR into ${destination}"
+    }
+}
+
+task verifyRequiredJavaVersion {
+    def currentVersion = org.gradle.api.JavaVersion.current()
+    logger.info "Checking current Java version ${currentVersion} for required Java version ${project.targetCompatibility}"
+    def targetVersion = JavaVersion.toVersion(project.targetCompatibility)
+    if (!currentVersion.isCompatibleWith(targetVersion)) {
+        logger.warn("Careful: Current Java version ${currentVersion} does not match required Java version ${project.targetCompatibility}")
+    }
+}
+
+task copyCasConfiguration(type: Copy, group: "CAS",
+        description: "Copy the CAS configuration from this project to /etc/cas/config") {
+    from "etc/cas/config"
+    into new File('/etc/cas/config').absolutePath
+    doFirst {
+        new File('/etc/cas/config').mkdirs()
+    }
+}
+
+
+def explodedDir = "${buildDir}/app"
+def explodedResourcesDir = "${buildDir}/cas-resources"
+
+def resourcesJarName = "cas-server-webapp-resources"
+def templateViewsJarName = "cas-server-support-thymeleaf"
+
+task unzip(type: Copy, group: "CAS", description: "Explodes the CAS archive and resources jar from the CAS web application archive") {
+    dependsOn unzipWAR
+    from zipTree("${explodedDir}/WEB-INF/lib/${templateViewsJarName}-${project.'cas.version'}.jar")
+    into explodedResourcesDir
+
+    from zipTree("${explodedDir}/WEB-INF/lib/${resourcesJarName}-${project.'cas.version'}.jar")
+    into explodedResourcesDir
+    duplicatesStrategy = DuplicatesStrategy.EXCLUDE
+    doLast {
+        println "Exploded WAR resources into ${explodedResourcesDir}"
+    }
+}
+
+
+task listTemplateViews(group: "CAS", description: "List all CAS views") {
+    dependsOn unzip
+
+    def templateViews = fileTree(explodedResourcesDir).matching {
+        include "**/*.html"
+    }
+    .collect {
+        return it.path.replace(explodedResourcesDir, "")
+    }
+    .toSorted()
+
+    doFirst {
+        templateViews.each { println it }
+    }
+}
+
+task getResource(group: "CAS", description: "Fetch a CAS resource and move it into the overlay") {
+    dependsOn unzip
+
+    def resourceName = project.providers.gradleProperty("resourceName").getOrNull()
+    def resourcesDirectory = fileTree(explodedResourcesDir)
+    def projectDirectory = projectDir
+
+    doFirst {
+        def results = resourcesDirectory.matching {
+            include "**/${resourceName}.*"
+            include "**/${resourceName}"
+        }
+        if (results.isEmpty()) {
+            println "No resources could be found matching ${resourceName}"
+            return
+        }
+        if (results.size() > 1) {
+            println "Multiple resources found matching ${resourceName}:\n"
+            results.each {
+                println "\t-" + it.path.replace(explodedResourcesDir, "")
+            }
+            println "\nNarrow down your search criteria and try again."
+            return
+        }
+
+        def fromFile = explodedResourcesDir
+        def resourcesDir = "src/main/resources"
+        new File(resourcesDir).mkdir()
+
+        def resourceFile = results[0].canonicalPath
+        def toResourceFile = new File("${projectDirectory}", resourceFile.replace(fromFile, resourcesDir))
+        toResourceFile.getParentFile().mkdirs()
+     
+        Files.copy(Paths.get(resourceFile), Paths.get(toResourceFile.absolutePath), StandardCopyOption.REPLACE_EXISTING)
+        println "Copied file ${resourceFile} to ${toResourceFile}"
+    }
+}
+
+task createTheme(group: "CAS", description: "Create theme directory structure in the overlay") {
+    def theme = project.providers.gradleProperty("theme").getOrNull()
+
+    doFirst {
+        def builder = new FileTreeBuilder()
+        new File("src/main/resources/${theme}.properties").delete()
+
+        builder.src {
+            main {
+                resources {
+                    "static" {
+                        themes {
+                            "${theme}" {
+                                css {
+                                    'cas.css'('')
+                                }
+                                js {
+                                    'cas.js'('')
+                                }
+                                images {
+                                    '.ignore'('')
+                                }
+                            }
+                        }
+                    }
+
+                    templates {
+                        "${theme}" {
+                            fragments {
+
+                            }
+                        }
+                    }
+
+                    "${theme}.properties"("""cas.standard.css.file=/themes/${theme}/css/cas.css
+cas.standard.js.file=/themes/${theme}/js/cas.js
+                    """)
+                }
+            }
+        }
+    }
+}
+
+def skipValidation = project.hasProperty("validate") && project.property("validate").equals("false")
+if (!skipValidation) {
+    task validateConfiguration(type: Copy, group: "CAS",
+            description: "Validate CAS configuration") {
+        def file = new File("${projectDir}/src/main/resources/application.properties")
+        if (file.exists()) {
+            throw new GradleException("This overlay project is overriding a CAS-supplied configuration file at ${file.path}. "
+                + "Overriding this file will disable all default CAS settings that are provided to the overlay, and "
+                + "generally has unintended side-effects. It's best to move your configuration inside an application.yml "
+                + "file, if you intend to keep the configuration bundled with the CAS web application. \n\nTo disable this "
+                + "validation step, run the build with -Pvalidate=false.");
+        }
+    }
+    processResources.dependsOn(validateConfiguration)
+}
+
+task duct(group: "CAS", description: "Test ticket registry functionality via the CAS REST API") {
+    def service = project.findProperty("duct.service") ?: "https://apereo.github.io"
+    def casServerNodes = providers.gradlePropertiesPrefixedBy("duct.cas").get()
+    def username = project.findProperty("duct.username") ?: "casuser"
+    def password = project.findProperty("duct.password") ?: "Mellon"
+    def debug = Boolean.parseBoolean(project.findProperty("duct.debug") ?: "false")
+    def duration = Long.parseLong(project.findProperty("duct.duration") ?: "-1")
+    def count = Long.parseLong(project.findProperty("duct.count") ?: "-1")
+
+    doLast {
+        def out = services.get(StyledTextOutputFactory).create("cas")
+
+        def getCasServerNode = {
+            def casServerNodesArray = casServerNodes.values().toArray()
+            return casServerNodesArray[new SecureRandom().nextInt(casServerNodesArray.length)] as String
+        }
+
+        def startTime = new Date()
+        def keepGoing = true
+        def executionCount = 0
+
+        while(keepGoing) {
+            executionCount++
+
+            def casServerPrefix1 = getCasServerNode()
+            def casServerPrefix2 = getCasServerNode()
+
+            if (casServerNodes.size() >= 2) {
+                while (casServerPrefix1.equals(casServerPrefix2)) {
+                    casServerPrefix2 = getCasServerNode()
+                }
+            }
+            
+            if (debug) {
+                out.withStyle(Style.Normal).println("CAS Server 1: ${casServerPrefix1}")
+                out.withStyle(Style.Normal).println("CAS Server 2: ${casServerPrefix2}")
+                out.withStyle(Style.Normal).println("Fetching ticket-granting ticket @ ${casServerPrefix1} for ${username}...")
+            }
+            def connection = new URL("${casServerPrefix1}/v1/tickets").openConnection()
+            connection.setRequestMethod("POST")
+            connection.setDoOutput(true)
+            connection.setRequestProperty("Content-Type", "application/x-www-form-urlencoded")
+            connection.getOutputStream().write("username=${username}&password=${password}".getBytes("UTF-8"))
+            def rc = connection.getResponseCode()
+            
+            if (rc == 201) {
+                def tgt = connection.getHeaderFields().get("Location").get(0).find('TGT-.*')
+
+                if (debug) {
+                    out.withStyle(Style.Normal).println("Received ticket-granting ticket ${tgt} @ ${casServerPrefix2} for ${username}...")
+                    out.withStyle(Style.Normal).println("Fetching service ticket @ ${casServerPrefix2} for ${tgt} and service ${service}...")
+                }
+                connection = new URL("${casServerPrefix2}/v1/tickets/${tgt}").openConnection()
+                connection.setRequestMethod("POST")
+                connection.setDoOutput(true)
+                connection.setRequestProperty("Content-Type", "application/x-www-form-urlencoded")
+                connection.getOutputStream().write("service=${service}".getBytes("UTF-8"))
+                rc = connection.getResponseCode()
+                
+                if (rc == 200) {
+                    def st = connection.getInputStream().getText()
+                    if (debug) {
+                        out.withStyle(Style.Normal).println("Received service ticket ${st} @ ${casServerPrefix1} for ${service}...")
+                        out.withStyle(Style.Normal).println("Validating service ticket ${st} @ ${casServerPrefix1} for service ${service}...")
+                    }
+                    connection = new URL("${casServerPrefix1}/p3/serviceValidate?service=${service}&ticket=${st}&format=json").openConnection()
+                    connection.setRequestMethod("GET")
+                    connection.setDoOutput(true)
+                    connection.setRequestProperty("Content-Type", "application/json")
+                    rc = connection.getResponseCode()
+                    
+                    if (rc == 200) {
+                        def serverResponse = connection.getInputStream().getText()
+                        def response = new JsonSlurper().parseText(serverResponse)
+                        
+                        if (response.serviceResponse["authenticationSuccess"] != null) {
+                            out.withStyle(Style.Success).println("Service ticket ${st} is successfully validated @ ${casServerPrefix1}")
+                        } else {
+                            out.withStyle(Style.Failure).println("Service ticket ${st} cannot be validated @ ${casServerPrefix1} for ${tgt}")
+                            if (debug) {
+                                out.withStyle(Style.Failure).println(serverResponse)
+                            }
+                        }
+                    } else {
+                        out.withStyle(Style.Failure).println("${rc}: Unable to validate service ticket ${st} @ ${casServerPrefix1} for ${tgt}")
+                    }
+                } else {
+                    out.withStyle(Style.Failure).println("${rc}: Unable to fetch service ticket @ ${casServerPrefix2} for ${tgt}")
+                }
+            } else {
+                out.withStyle(Style.Failure).println("${rc}: Unable to fetch ticket-granting ticket @ ${casServerPrefix1}")
+            }
+
+            if (keepGoing && duration > 0) {
+                def executionDuration = TimeCategory.minus(new Date(), startTime)
+                keepGoing = executionDuration.getSeconds() < duration
+            }
+            if (keepGoing) {
+                keepGoing = executionCount < count
+            }
+            Thread.sleep(250)
+        }
+    }
+}
+
+task exportConfigMetadata(group: "CAS", description: "Export collection of CAS properties") {
+    def file = new File(project.rootDir, 'config-metadata.properties')
+    def queryType = ConfigurationMetadataCatalogQuery.QueryTypes.CAS
+    if (project.hasProperty("queryType")) {
+        queryType = ConfigurationMetadataCatalogQuery.QueryTypes.valueOf(project.findProperty("queryType"))
+    }
+    doLast {
+        file.withWriter('utf-8') { writer ->
+            def props = CasConfigurationMetadataCatalog.query(
+                ConfigurationMetadataCatalogQuery.builder()
+                    .queryType(queryType)
+                    .build())
+                .properties()
+            props.each { property ->
+                writer.writeLine("# Type: ${property.type}");
+                writer.writeLine("# Module: ${property.module}")
+                writer.writeLine("# Owner: ${property.owner}")
+                if (property.deprecationLevel != null) {
+                    writer.writeLine("# This setting is deprecated with a severity level of ${property.deprecationLevel}.")
+                    if (property.deprecationReason != null) {
+                        writer.writeLine("# because ${property.deprecationReason}")
+                    }
+                    if (property.deprecationReason != null) {
+                        writer.writeLine("# Replace with: ${property.deprecationReason}")
+                    }
+                }
+                writer.writeLine("#")
+                def description = property.description.replace("\n", "\n# ").replace("\r", "")
+                description = org.apache.commons.text.WordUtils.wrap(description, 70, "\n# ", true)
+                writer.writeLine("# ${description}")
+                writer.writeLine("#")
+                writer.writeLine("# ${property.name}: ${property.defaultValue}")
+                writer.writeLine("")
+            }
+        }
+        println "Configuration metadata is available at ${file.absolutePath}"
+    }
+}

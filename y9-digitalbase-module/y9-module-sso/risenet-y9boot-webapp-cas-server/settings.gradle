@@ -1,0 +1,4 @@
+plugins {
+    id "org.gradle.toolchains.foojay-resolver-convention" version "${gradleFoojayPluginVersion}"
+}
+rootProject.name = 'risenet-y9boot-webapp-cas-server'
