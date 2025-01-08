@@ -5,36 +5,6 @@ cas:
     authn:
         accept:
             enabled: false
-        jdbc:
-            query[0]:
-                driver-class: org.postgresql.Driver
-                url: jdbc:postgresql://localhost:5432/postgres
-                dialect: org.hibernate.dialect.PostgresPlusDialect
-                user: root
-                password: "11111111"
-                sql: SELECT * FROM users WHERE uid=?
-                field-password: psw
-                idleTimeout: PT5M
-                #field-expired: expired
-                #field-disabled: disabled
-                #principal-attribute-list:
-        attribute-repository:
-            jdbc[0]:
-                driver-class: org.postgresql.Driver
-                url: jdbc:postgresql://localhost:5432/postgres
-                dialect: org.hibernate.dialect.PostgresPlusDialect
-                user: root
-                password: "11111111"
-                sql: SELECT * FROM USERATTRS WHERE {0}
-                single-row: false
-                username: uid
-                idleTimeout: PT5M
-                column-mappings:
-                    attrname: attrvalue
-                attributes:
-                    firstname: firstname
-                    lastname: lastname
-                    phone: phone
         oauth:
             crypto:
                 signing:
