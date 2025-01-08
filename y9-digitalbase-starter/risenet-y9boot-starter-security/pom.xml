@@ -56,7 +56,6 @@
         <dependency>
             <groupId>org.owasp.antisamy</groupId>
             <artifactId>antisamy</artifactId>
-            <version>1.6.2</version>
             <exclusions>
                 <exclusion>
                     <groupId>org.slf4j</groupId>
