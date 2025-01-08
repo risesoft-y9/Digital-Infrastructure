@@ -8,7 +8,7 @@ plugins {
 
 group = "net.risesoft"
 description = "y9-digitalbase-bom"
-version = findProperty("Y9BOM_VERSION") as String? ?: "v9.7.0-01"
+version = findProperty("Y9BOM_VERSION") as String? ?: "9.7.0-01"
 println("version=$version")
 
 fun matchProjectNamePattern(project: Project): Boolean {
