@@ -8,7 +8,6 @@ plugins {
 
 val myDateTimeFormatter = DateTimeFormatter.ofPattern("yyyyMMddHHmm")
 val dateTimeStr = myDateTimeFormatter.format(LocalDateTime.now())
-println("dateTimeStr" + dateTimeStr)
 
 jib {
     from {
