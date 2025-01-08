@@ -26,7 +26,6 @@ rootProject.name = "y9-digitalbase"
 
 include(":y9-digitalbase-bom")
 include(":y9-digitalbase-dependencies")
-include(":y9-digitalbase-parent")
 
 include(":y9-digitalbase-common:risenet-y9boot-properties")
 include(":y9-digitalbase-common:risenet-y9boot-common-model")

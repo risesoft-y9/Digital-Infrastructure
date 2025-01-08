@@ -1,14 +1,7 @@
 <project xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xmlns="http://maven.apache.org/POM/4.0.0"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
-
-    <!--    <parent>-->
-    <!--        <groupId>net.risesoft</groupId>-->
-    <!--        <artifactId>y9-digitalbase</artifactId>-->
-    <!--        <version>${revision}</version>-->
-    <!--        <relativePath>../pom.xml</relativePath>-->
-    <!--    </parent>-->
-    <!--    -->
+    
     <modelVersion>4.0.0</modelVersion>
     <groupId>net.risesoft</groupId>
     <artifactId>y9-digitalbase-bom</artifactId>
@@ -31,7 +24,12 @@
         <gitee.connection>scm:git:https://gitee.com/risesoft-y9/y9-core.git</gitee.connection>
         <gitee.developerConnection>scm:git:https://gitee.com/risesoft-y9/y9-core.git</gitee.developerConnection>
 
-        <revision>v9.7.0-SNAPSHOT</revision>
+        <revision>9.7.0-SNAPSHOT</revision>
+
+        <!-- Plugin versions -->
+        <flatten-maven-plugin.version>1.6.0</flatten-maven-plugin.version>
+        <central-publishing-maven-plugin.version>0.5.0</central-publishing-maven-plugin.version>
+        <maven-gpg-plugin.version>1.6</maven-gpg-plugin.version>
     </properties>
 
     <licenses>
@@ -516,4 +514,117 @@
 
         </dependencies>
     </dependencyManagement>
+
+    <build>
+        <pluginManagement>
+            <plugins>
+                <plugin>
+                    <groupId>org.codehaus.mojo</groupId>
+                    <artifactId>flatten-maven-plugin</artifactId>
+                    <version>${flatten-maven-plugin.version}</version>
+                    <inherited>true</inherited>
+                    <executions>
+                        <execution>
+                            <id>flatten</id>
+                            <phase>process-resources</phase>
+                            <goals>
+                                <goal>flatten</goal>
+                            </goals>
+                            <configuration>
+                                <flattenMode>bom</flattenMode>
+                            </configuration>
+                        </execution>
+                        <execution>
+                            <id>flatten.clean</id>
+                            <phase>clean</phase>
+                            <goals>
+                                <goal>clean</goal>
+                            </goals>
+                        </execution>
+                    </executions>
+                </plugin>
+                
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-gpg-plugin</artifactId>
+                    <version>${maven-gpg-plugin.version}</version>
+                    <executions>
+                        <execution>
+                            <id>sign-artifacts</id>
+                            <phase>verify</phase>
+                            <goals>
+                                <goal>sign</goal>
+                            </goals>
+                        </execution>
+                    </executions>
+                </plugin>
+                <plugin>
+                    <groupId>org.sonatype.central</groupId>
+                    <artifactId>central-publishing-maven-plugin</artifactId>
+                    <version>${central-publishing-maven-plugin.version}</version>
+                </plugin>
+
+            </plugins>
+        </pluginManagement>
+    </build>
+    
+    <profiles>
+        <profile>
+            <id>deploy-private-repo</id>
+            <activation>
+                <activeByDefault>false</activeByDefault>
+            </activation>
+            <build>
+                <plugins>
+                    <plugin>
+                        <groupId>org.codehaus.mojo</groupId>
+                        <artifactId>flatten-maven-plugin</artifactId>
+                    </plugin>
+                </plugins>
+            </build>
+            <distributionManagement>
+                <repository>
+                    <id>releases</id>
+                    <url>https://svn.youshengyun.com:9900/nexus/repository/maven-releases/</url>
+                </repository>
+                <snapshotRepository>
+                    <id>snapshots</id>
+                    <url>https://svn.youshengyun.com:9900/nexus/repository/maven-snapshots/</url>
+                </snapshotRepository>
+            </distributionManagement>
+        </profile>
+
+        <profile>
+            <id>deploy-maven-central</id>
+            <activation>
+                <activeByDefault>false</activeByDefault>
+            </activation>
+            <build>
+                <plugins>
+                    <plugin>
+                        <groupId>org.codehaus.mojo</groupId>
+                        <artifactId>flatten-maven-plugin</artifactId>
+                    </plugin>
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-gpg-plugin</artifactId>
+                    </plugin>
+                    <plugin>
+                        <groupId>org.sonatype.central</groupId>
+                        <artifactId>central-publishing-maven-plugin</artifactId>
+                        <extensions>true</extensions>
+                        <configuration>
+                            <publishingServerId>mvn-central</publishingServerId>
+                            <centralBaseUrl>https://central.sonatype.com</centralBaseUrl>
+                            <deploymentName>${project.artifactId}-${project.version}</deploymentName>
+                            <skipPublishing>false</skipPublishing>
+                            <autoPublish>true</autoPublish>
+                            <waitUntil>uploaded</waitUntil><!--validated uploaded-->
+                            <checksums>required</checksums>
+                        </configuration>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
+    </profiles>
 </project>
