@@ -1,0 +1,209 @@
+# Application properties that need to be
+# embedded within the web application can be included here
+
+cas:
+    authn:
+        accept:
+            enabled: false
+        oauth:
+            crypto:
+                signing:
+                    key: M8z5otNBibl_t5N5fFBXOdHmQTH8_zNDFmsxzCdUZB-iyBESvMidYhTJi5d9SQP5QKrFB0YxfFy9-Vz_5bqeGQ
+                encryption:
+                    key: NpqJTkfnGXMzBYycIfKO1x0m05YwE7s_nZzJ1_TQAQ-Cu88gzQiL9lZ-1vse6DZtXzWGSsny1PX73XLOY953Cw
+            access-token:
+                crypto:
+                    encryption:
+                        key: QTGrm8G1uf6rwx0arh-_DkeqorpkL-mLZQuqB8R6gGqtXqHMKZ0Kti1uegxBE0A9k3OeH3nNXy6pN4pik9G2HQ
+                    signing:
+                        key: 4i8FZ6p_Zf6QT9wk0AVpPyDjafVvQkVc05TwWa_gJrF5FxQh5nEOu5alDnstbEE1DqcCDRYAABhkQ2t_S8CrdA
+            core:
+                userProfileViewType: FLAT
+                bypassApprovalPrompt: true
+            session-replication:
+                cookie:
+                    crypto:
+                        encryption:
+                            key: SorpInDU8UOA-ml02lgVAwzxT63DTnfFBV6656W-ANasCqg8dJPWuDQIHpIaK6UCgXcUnx1i86kqF53BVxqu_g
+                        signing:
+                            key: mwNIgj-1CQf8pvMoAfEhtdg-AS-KIMcYGA5eMeU5kKNip-b3iIP_Ch4ghn5ndVQUH-KZFh_YBoFEg8zmq3Ec6A
+                    secure: false
+                    path: /sso/
+                    sameSitePolicy: Lax
+        oidc:
+            core:
+                issuer: http://localhost:7055/sso/oidc
+            jwks:
+                core:
+                    jwks-key-id: y9sso
+                    jwks-type: RSA
+                jpa:
+                    driver-class: org.postgresql.Driver
+                    url: jdbc:postgresql://localhost:5432/postgres
+                    dialect: org.hibernate.dialect.PostgresPlusDialect
+                    user: root
+                    password: "11111111"
+                    
+    server:
+        name: http://localhost:7055
+        prefix: http://localhost:7055/sso
+    service-registry:
+        cache:
+            duration: PT8H
+            cacheSize: 10000
+            initialCapacity: 1000
+        core:
+            # 建议仅用于测试（集群部署时需考虑service.json的同步，使用jpa-service-registry即可）
+            initFromJson: true
+        json:
+            location: classpath:/services
+            watcherEnabled: true
+        jpa:
+            enabled: true
+            dialect: org.hibernate.dialect.PostgresPlusDialect
+            driver-class: org.postgresql.Driver
+            ddl-auto: update
+            url: jdbc:postgresql://localhost:5432/postgres
+            user: root
+            password: '11111111'
+            idleTimeout: PT5M
+            leakThreshold: 0
+            autocommit: true
+        schedule:
+            enabled: true
+            repeatInterval: "PT30M"
+            startDelay: "PT2M"
+                            
+    ticket:
+        registry:
+            jpa:
+                crypto:
+                    encryption:
+                        key: 6vJAg4gWORY0f8dF5XIc8Q
+                    signing:
+                        key: CzPeT3D2l7C-dwR2LfV9DFHrwmPGXCSsEReZeTn76xiWNU45De8s1CAdPNXovoBpEilbeTY1PkwPQuMxZdN4mQ
+                dialect: org.hibernate.dialect.PostgresPlusDialect
+                driver-class: org.postgresql.Driver
+                url: jdbc:postgresql://localhost:5432/postgres
+                user: root
+                password: '11111111'
+                idleTimeout: PT5M
+            redis:
+                enabled: true
+                useSsl: false
+                host: "localhost"
+                port: 6379
+                database: 0
+                username: default
+                password: "12345678"
+                timeout: "PT60S"
+                pool:
+                    enabled: true
+                    testWhileIdle: true
+                    maxActive: 20
+                    maxIdle: 5
+                    maxWait: 1000
+                    minIdle: 1
+                crypto:
+                    enabled: true
+                    encryption:
+                        key: "6vJAg4gWORY0f8dF5XIc8Q"
+                        keySize: 16
+                    signing:
+                        key: "CzPeT3D2l7C-dwR2LfV9DFHrwmPGXCSsEReZeTn76xiWNU45De8s1CAdPNXovoBpEilbeTY1PkwPQuMxZdN4mQ"
+                        keySize: 512
+    tgc:
+        crypto:
+            encryption:
+                key: P0sPPaRh2CYrJbEAH-HJYZmmQJfazFUyKSzHDKKaEtitNtjeATeGgJ6rqKdhKDoSXbDOPdxS4J7A89s-xOm1fw
+            signing:
+                key: 9SlzKqi2XsI-JbI81_4ayaq9uemKLa5z4HmPDO-IjPxsWozsqZeO7wujRLNJenDp23CiZLw79qwg1xhRccZdrg
+    webflow:
+        crypto:
+            signing:
+                key: gALDjXB_HKK7u7ZduHAPBx3BQs0Rr36AVXnDm9HMG--WDJow5qdLJZsXwTsEmGcrwXTwEXm5u85z07C29ekrKw
+            encryption:
+                key: xbucxsc352uVfreOOmBttQ
+    httpClient:
+        allowLocalUrls: true
+        hostNameVerifier: none
+    httpWebRequest:
+        header:
+            xframe: false
+            xframeOptions: SAMEORIGIN
+            #contentSecurityPolicy: 'frame-ancestors http://localhost:* http://127.0.0.1:* http://192.168.56.1:*'
+        cors:
+            enabled: true
+            allowCredentials: true
+            allowHeaders: "*"
+            allowMethods: "*"
+            allowOriginPatterns: "*"
+            maxAge: 36000
+    logout:
+        confirm-logout: false
+        follow-service-redirects: true
+        # redirect-parameter: "service"
+        # redirect-url: http://localhost:7055/sso/login
+    monitor:
+        endpoints:
+            endpoint:
+                defaults:
+                    access: ANONYMOUS
+logging:
+    level:
+        org.apereo.cas: warn
+
+server:
+    port: 7055
+    servlet:
+        context-parameters:
+            isLog4jAutoInitializationDisabled: true
+        context-path: /sso
+        encoding:
+            charset: UTF-8
+            enabled: true
+            force: true
+            force-request: true
+            force-response: true
+        session:
+            cookie:
+                http-only: true
+                secure: false
+            timeout: 300
+            tracking-modes: COOKIE
+    shutdown: graceful
+    ssl:
+        enabled: false
+    tomcat:
+        accesslog:
+            enabled: true
+            pattern: '%t %a "%r" %s (%D ms)'
+            suffix: .log
+        additional-tld-skip-patterns: '*.jar'
+        background-processor-delay: 0s
+        basedir: build/tomcat
+        connection-timeout: PT20S
+        max-http-form-post-size: 2097152
+        remoteip:
+            port-header: X-Forwarded-Port
+            protocol-header: X-Forwarded-Proto
+            protocol-header-https-value: https
+            remote-ip-header: X-FORWARDED-FOR
+        threads:
+            max: 400
+            min-spare: 10
+        uri-encoding: UTF-8
+management:
+    endpoints:
+        web:
+            exposure:
+                include: '*'
+        access:
+            default: unrestricted
+spring:
+    application:
+        name: sso
+    security:
+        user:
+            name: admin
+            password: admin
