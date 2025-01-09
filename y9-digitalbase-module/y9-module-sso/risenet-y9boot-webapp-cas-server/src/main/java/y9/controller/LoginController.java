@@ -2,6 +2,7 @@ package y9.controller;
 
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import lombok.val;
 import org.apache.commons.lang3.StringUtils;
@@ -46,6 +47,7 @@ import java.util.Map;
 @RestController
 @RequestMapping("/api")
 @Slf4j
+@RequiredArgsConstructor
 public class LoginController {
 
     private final CentralAuthenticationService centralAuthenticationService;
@@ -54,18 +56,6 @@ public class LoginController {
     private final ServiceFactory webApplicationServiceFactory;
 
     private final Y9UserService y9UserService;
-
-    public LoginController(CentralAuthenticationService centralAuthenticationService,
-        @Qualifier("ticketGrantingTicketCookieGenerator") CasCookieBuilder ticketGrantingTicketCookieGenerator,
-        @Qualifier("defaultAuthenticationSystemSupport") AuthenticationSystemSupport authenticationSystemSupport,
-        @Qualifier("webApplicationServiceFactory") ServiceFactory webApplicationServiceFactory,
-        Y9UserService y9UserService) {
-        this.centralAuthenticationService = centralAuthenticationService;
-        this.ticketGrantingTicketCookieGenerator = ticketGrantingTicketCookieGenerator;
-        this.authenticationSystemSupport = authenticationSystemSupport;
-        this.webApplicationServiceFactory = webApplicationServiceFactory;
-        this.y9UserService = y9UserService;
-    }
 
     public Map<String, Object> checkSsoLoginInfo(String tenantShortName, String username, String password,
         String pwdEcodeType, String loginType, final HttpServletRequest request, final HttpServletResponse response) {

@@ -1,5 +1,7 @@
 package y9;
 
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.apereo.cas.services.Y9User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.context.event.ApplicationReadyEvent;
@@ -10,16 +12,15 @@ import y9.service.Y9UserService;
 import java.util.Date;
 
 /**
- * 用于生成测试的用户 需要使用时再取消 @Component 注释
- * 
+ * 用于生成测试的用户
  * @author dingzhaojun
  * @date 2023/8/13
  * @since 9.6.3
  */
-@Component
+@Slf4j
+@RequiredArgsConstructor
 public class OnApplicationReady implements ApplicationListener<ApplicationReadyEvent> {
-    @Autowired
-    private Y9UserService y9UserService;
+    private final Y9UserService y9UserService;
 
     @Override
     public void onApplicationEvent(ApplicationReadyEvent event) {

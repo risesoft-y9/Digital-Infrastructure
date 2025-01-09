@@ -1,6 +1,8 @@
 package y9;
 
 import jakarta.servlet.DispatcherType;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.apereo.cas.CentralAuthenticationService;
 import org.apereo.cas.authentication.AuthenticationEventExecutionPlanConfigurer;
 import org.apereo.cas.authentication.AuthenticationSystemSupport;
@@ -20,6 +22,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.Ordered;
 import org.springframework.scheduling.annotation.EnableScheduling;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.scheduling.annotation.SchedulingConfigurer;
 import org.springframework.scheduling.config.ScheduledTaskRegistrar;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
@@ -127,6 +130,11 @@ public class Y9AutoConfigService {
     }
 
     @Bean
+    public OnApplicationReady onApplicationReady(Y9UserService y9UserService) {
+        return new OnApplicationReady(y9UserService);
+    }
+
+    @Bean
     public AuthenticationEventExecutionPlanConfigurer riseAuthenticationEventExecutionPlanConfigurer(
             @Qualifier(ServicesManager.BEAN_NAME) final ServicesManager servicesManager,
             Y9UserService y9UserService,
@@ -136,21 +144,24 @@ public class Y9AutoConfigService {
         return plan -> plan.registerAuthenticationHandler(handler);
     }
 
-    @EnableScheduling
-    @Configuration(proxyBeanMethods = false)
-    class Y9KeyValueCleanupConfiguration implements SchedulingConfigurer {
-        // 每分钟执行一次
-        private final String cleanupCron = "0 * * * * *";
+    @Bean
+    public Runnable Y9KeyValueCleaner(Y9KeyValueService y9KeyValueService) {
+        return new Y9KeyValueCleaner(y9KeyValueService);
+    }
 
+    @Slf4j
+    @RequiredArgsConstructor
+    @EnableScheduling
+    static class Y9KeyValueCleaner implements Runnable {
         private final Y9KeyValueService y9KeyValueService;
 
-        public Y9KeyValueCleanupConfiguration(Y9KeyValueService y9KeyValueService) {
-            this.y9KeyValueService = y9KeyValueService;
-        }
-
         @Override
-        public void configureTasks(ScheduledTaskRegistrar taskRegistrar) {
-            taskRegistrar.addCronTask(this.y9KeyValueService::cleanUpExpiredKeyValue, this.cleanupCron);
+        @Scheduled(
+                cron = "0 * * * * *"
+        )
+        public void run() {
+            //Y9KeyValueService y9KeyValueService = Y9Context.getBean(Y9KeyValueService.class);
+            y9KeyValueService.cleanUpExpiredKeyValue();
         }
     }
 
