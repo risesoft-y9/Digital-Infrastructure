@@ -7,7 +7,7 @@ dependencies {
     api(project(":y9-digitalbase-support:risenet-y9boot-support-file-jpa-repository"))
     api("org.springframework:spring-web")
     api("org.slf4j:slf4j-api")
-    api(libs.commons.lang3)
+    api("org.apache.commons:commons-lang3")
     api(libs.commons.io)
     api(libs.jodd.http)
 }

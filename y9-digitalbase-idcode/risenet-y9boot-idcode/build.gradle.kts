@@ -9,7 +9,7 @@ dependencies {
     api(libs.httpcomponents.httpmime)
     api("com.fasterxml.jackson.core:jackson-databind")
     api(libs.commons.beanutils)
-    api(libs.commons.lang3)
+   api("org.apache.commons:commons-lang3")
     api("org.slf4j:slf4j-api")
     testImplementation("org.springframework.boot:spring-boot-starter-test")
 
