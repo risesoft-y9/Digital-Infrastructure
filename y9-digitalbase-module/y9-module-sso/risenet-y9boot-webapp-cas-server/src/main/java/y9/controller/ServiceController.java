@@ -7,7 +7,6 @@ import org.apereo.cas.authentication.principal.DefaultPrincipalAttributesReposit
 import org.apereo.cas.configuration.CasConfigurationProperties;
 import org.apereo.cas.configuration.model.support.mfa.BaseMultifactorAuthenticationProviderProperties;
 import org.apereo.cas.services.*;
-import org.apereo.cas.support.oauth.services.OAuthRegisteredService;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
 import y9.util.Y9Result;
@@ -55,45 +54,44 @@ public class ServiceController {
 
     @PostMapping(value = "/oAuthService")
     public Y9Result<String> oAuthService(@RequestParam(required = false) Long id,
-        @RequestParam(required = false) String theme, String clientId, String clientSecret, String serviceId,
-        String name, @RequestParam(required = false) String description,
-        @RequestParam(required = false) String systemId, @RequestParam(required = false) String logoutUrl) {
+                                         @RequestParam(required = false) String theme, String clientId, String clientSecret, String serviceId,
+                                         String name, @RequestParam(required = false) String description,
+                                         @RequestParam(required = false) String systemId, @RequestParam(required = false) String logoutUrl) {
         try {
-            OAuthRegisteredService oAuthRegisteredService = new OAuthRegisteredService();
+            OidcRegisteredService svc = new OidcRegisteredService();
             if (id != null) {
                 // 更新
-                oAuthRegisteredService.setId(id);
+                svc.setId(id);
             }
-            oAuthRegisteredService.setClientId(clientId);
-            oAuthRegisteredService.setClientSecret(clientSecret);
-            oAuthRegisteredService.setServiceId(serviceId);
-            oAuthRegisteredService.setName(name);
-            oAuthRegisteredService.setDescription(description);
-            oAuthRegisteredService
-                .setTheme(theme.isBlank() ? casConfigurationProperties.getTheme().getDefaultThemeName() : theme);
-            oAuthRegisteredService.setEvaluationOrder(100);
-            oAuthRegisteredService.setLogoutUrl(logoutUrl);
+            svc.setClientId(clientId);
+            svc.setClientSecret(clientSecret);
+            svc.setServiceId(serviceId);
+            svc.setName(name);
+            svc.setDescription(description);
+            svc.setTheme(theme.isBlank() ? casConfigurationProperties.getTheme().getDefaultThemeName() : theme);
+            svc.setEvaluationOrder(100);
+            svc.setLogoutUrl(logoutUrl);
             ReturnAllAttributeReleasePolicy returnAllAttributeReleasePolicy = new ReturnAllAttributeReleasePolicy();
             returnAllAttributeReleasePolicy.setAuthorizedToReleaseCredentialPassword(true);
             returnAllAttributeReleasePolicy.setAuthorizedToReleaseProxyGrantingTicket(true);
             returnAllAttributeReleasePolicy.setExcludeDefaultAttributes(false);
             DefaultPrincipalAttributesRepository defaultPrincipalAttributesRepository =
-                new DefaultPrincipalAttributesRepository();
+                    new DefaultPrincipalAttributesRepository();
             returnAllAttributeReleasePolicy.setPrincipalAttributesRepository(defaultPrincipalAttributesRepository);
-            oAuthRegisteredService.setAttributeReleasePolicy(returnAllAttributeReleasePolicy);
-            oAuthRegisteredService.setSupportedGrantTypes(
-                new HashSet<>(Arrays.asList("authorization_code", "password", "client_credentials", "refresh_token")));
-            oAuthRegisteredService.setSupportedResponseTypes(new HashSet<>(Arrays.asList("code", "token")));
-            oAuthRegisteredService.setBypassApprovalPrompt(true);
-            oAuthRegisteredService.setGenerateRefreshToken(true);
-            oAuthRegisteredService.setRenewRefreshToken(true);
-            oAuthRegisteredService.setJwtAccessToken(false);
+            svc.setAttributeReleasePolicy(returnAllAttributeReleasePolicy);
+            svc.setSupportedGrantTypes(
+                    new HashSet<>(Arrays.asList("authorization_code", "password", "client_credentials", "refresh_token")));
+            svc.setSupportedResponseTypes(new HashSet<>(Arrays.asList("code", "token")));
+            svc.setBypassApprovalPrompt(true);
+            svc.setGenerateRefreshToken(true);
+            svc.setRenewRefreshToken(true);
+            svc.setJwtAccessToken(false);
             if (StringUtils.isNotBlank(systemId)) {
                 Map<String, RegisteredServiceProperty> propertyMap = new HashMap<>();
                 propertyMap.put(SYSTEM_KEY, new DefaultRegisteredServiceProperty(systemId));
-                oAuthRegisteredService.setProperties(propertyMap);
+                svc.setProperties(propertyMap);
             }
-            servicesManager.save(oAuthRegisteredService);
+            servicesManager.save(svc);
 
             servicesManager.load();
             return Y9Result.successMsg("刷新成功,总共：" + servicesManager.count() + " 条记录");
@@ -117,13 +115,13 @@ public class ServiceController {
             returnAllAttributeReleasePolicy.setAuthorizedToReleaseProxyGrantingTicket(true);
             returnAllAttributeReleasePolicy.setExcludeDefaultAttributes(false);
             DefaultPrincipalAttributesRepository defaultPrincipalAttributesRepository =
-                new DefaultPrincipalAttributesRepository();
+                    new DefaultPrincipalAttributesRepository();
             returnAllAttributeReleasePolicy.setPrincipalAttributesRepository(defaultPrincipalAttributesRepository);
             regexRegisteredService.setAttributeReleasePolicy(returnAllAttributeReleasePolicy);
             DefaultRegisteredServiceMultifactorPolicy defaultRegisteredServiceMultifactorPolicy =
-                new DefaultRegisteredServiceMultifactorPolicy();
+                    new DefaultRegisteredServiceMultifactorPolicy();
             defaultRegisteredServiceMultifactorPolicy.setFailureMode(
-                BaseMultifactorAuthenticationProviderProperties.MultifactorAuthenticationProviderFailureModes.CLOSED);
+                    BaseMultifactorAuthenticationProviderProperties.MultifactorAuthenticationProviderFailureModes.CLOSED);
             defaultRegisteredServiceMultifactorPolicy.setBypassEnabled(false);
             regexRegisteredService.setMultifactorAuthenticationPolicy(defaultRegisteredServiceMultifactorPolicy);
             servicesManager.save(regexRegisteredService);
