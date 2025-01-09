@@ -19,7 +19,7 @@ dependencies {
     implementation(project(":y9-digitalbase-common:risenet-y9boot-common-nacos"))
     implementation(project(":y9-digitalbase-starter:risenet-y9boot-starter-multi-tenant"))
     
-    implementation(libs.commons.pool2)
+    implementation("org.apache.commons:commons-pool2")
     implementation("org.springframework.boot:spring-boot-docker-compose")
     implementation(libs.dom4j)
     implementation(libs.jaxen)

@@ -74,13 +74,11 @@
 		<dependency>
 			<groupId>io.github.bruce0203</groupId>
 			<artifactId>reflections</artifactId>
-			<version>0.10.3.4</version>
 		</dependency>
 
 		<dependency>
 			<groupId>org.hibernate.orm</groupId>
 			<artifactId>hibernate-ant</artifactId>
-			<!--<version>6.3.0.Final</version>-->
 		</dependency>
 
         <dependency>

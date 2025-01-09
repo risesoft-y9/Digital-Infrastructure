@@ -106,8 +106,6 @@ commons-codec = { module = "commons-codec:commons-codec", version.ref = "commons
 commons-httpclient = { module = "commons-httpclient:commons-httpclient", version.ref = "commons-httpclient-commons-httpclient" }
 commons-io = { module = "commons-io:commons-io", version.ref = "commons-io-commons-io" }
 commons-net = { module = "commons-net:commons-net", version.ref = "commons-net-commons-net" }
-commons-lang3 = { module = "org.apache.commons:commons-lang3", version.ref = "org-apache-commons-commons-lang3" }
-commons-pool2 = { module = "org.apache.commons:commons-pool2", version.ref = "org-apache-commons-commons-pool2" }
 httpcomponents-httpclient = { module = "org.apache.httpcomponents:httpclient", version.ref = "org-apache-httpcomponents-httpclient" }
 httpcomponents-httpmime = { module = "org.apache.httpcomponents:httpmime", version.ref = "org-apache-httpcomponents-httpmime" }
 

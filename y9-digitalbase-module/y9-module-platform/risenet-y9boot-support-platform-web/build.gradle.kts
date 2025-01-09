@@ -13,7 +13,7 @@ dependencies {
     api(project(":y9-digitalbase-idcode:risenet-y9boot-idcode"))
 
     api(libs.jodd.http)
-    api(libs.commons.lang3)
+    api("org.apache.commons:commons-lang3")
     api(libs.hibernate.validator)
     api(libs.google.guava)
     api(libs.dom4j)

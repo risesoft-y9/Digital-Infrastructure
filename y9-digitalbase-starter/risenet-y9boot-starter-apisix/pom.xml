@@ -57,19 +57,16 @@
         <dependency>
             <groupId>io.github.classgraph</groupId>
             <artifactId>classgraph</artifactId>
-            <version>4.8.162</version>
         </dependency>
 
         <dependency>
             <groupId>org.apache.httpcomponents</groupId>
             <artifactId>httpclient</artifactId>
-            <version>4.5.13</version>
         </dependency>
 
         <dependency>
             <groupId>com.ibm.etcd</groupId>
             <artifactId>etcd-java</artifactId>
-            <version>0.0.18</version>
         </dependency>
 
         <dependency>
