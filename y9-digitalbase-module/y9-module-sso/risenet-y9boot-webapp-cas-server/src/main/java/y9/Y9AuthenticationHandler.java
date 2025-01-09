@@ -1,10 +1,14 @@
-package org.apereo.cas.authentication;
+package y9;
 
 import com.google.common.collect.Lists;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.extern.slf4j.Slf4j;
 import lombok.val;
 import org.apache.commons.lang3.StringUtils;
+import org.apereo.cas.authentication.AbstractAuthenticationHandler;
+import org.apereo.cas.authentication.AuthenticationHandlerExecutionResult;
+import org.apereo.cas.authentication.Credential;
+import org.apereo.cas.authentication.DefaultAuthenticationHandlerExecutionResult;
 import org.apereo.cas.authentication.credential.RememberMeUsernamePasswordCredential;
 import org.apereo.cas.authentication.principal.PrincipalFactoryUtils;
 import org.apereo.cas.authentication.principal.Service;
@@ -27,12 +31,12 @@ import java.util.List;
 import java.util.Map;
 
 @Slf4j
-public class RiseAuthenticationHandler extends AbstractAuthenticationHandler {
+public class Y9AuthenticationHandler extends AbstractAuthenticationHandler {
     private final Y9UserService y9UserService;
     private final Y9LoginUserService y9LoginUserService;
 
-    public RiseAuthenticationHandler(String name, ServicesManager servicesManager,
-                                     Integer order, Y9UserService y9UserService, Y9LoginUserService y9LoginUserService) {
+    public Y9AuthenticationHandler(String name, ServicesManager servicesManager,
+                                   Integer order, Y9UserService y9UserService, Y9LoginUserService y9LoginUserService) {
         super(name, servicesManager, PrincipalFactoryUtils.newPrincipalFactory(), order);
         this.y9UserService = y9UserService;
         this.y9LoginUserService = y9LoginUserService;

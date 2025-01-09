@@ -13,7 +13,7 @@ import java.util.Date;
 
 @RequiredArgsConstructor
 @Slf4j
-public class Y9JpaKeyValueServiceImpl implements Y9KeyValueService {
+public class Y9KeyValueServiceImpl implements Y9KeyValueService {
 
     private final TransactionOperations transactionTemplate;
 
