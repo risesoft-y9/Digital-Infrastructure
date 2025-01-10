@@ -89,36 +89,39 @@
         <revision>v9.6.8-SNAPSHOT</revision>
 
         <aspectj.version>1.9.20.1</aspectj.version>
-
-        <fastjson.version>2.0.49</fastjson.version>
-        <rs-api.version>2.1.1</rs-api.version>
-
-        <guava.version>32.1.2-jre</guava.version>
-        <druid.version>1.2.19</druid.version>
-        <druid-starter.version>1.2.19</druid-starter.version>
-
         <commons-fileupload.version>1.5</commons-fileupload.version>
-        <commons-lang3.version>3.14.0</commons-lang3.version>
         <commons-io.version>2.15.1</commons-io.version>
         <commons-net.version>3.10.0</commons-net.version>
-        <commons-pool2.version>2.12.0</commons-pool2.version>
         <commons-text.version>1.12.0</commons-text.version>
-
+        <druid.version>1.2.19</druid.version>
+        <druid-starter.version>1.2.19</druid-starter.version>
+        <fastjson.version>2.0.49</fastjson.version>
+        <guava.version>32.1.2-jre</guava.version>
+        <hutool.version>5.8.21</hutool.version>
         <javers.version>6.14.0</javers.version>
+        <jodd-bean.version>5.1.6</jodd-bean.version>
+        <jodd-http.version>6.2.1</jodd-http.version>
+        <jodd-lagarto.version>6.0.6</jodd-lagarto.version>
+        <jodd-mail.version>6.0.5</jodd-mail.version>
+        <lombok.version>1.18.28</lombok.version>
+        <liquibase.version>4.26.0</liquibase.version>
         <org-dom4j.version>2.1.4</org-dom4j.version>
         <oshi.version>6.6.0</oshi.version>
-        <lombok.version>1.18.28</lombok.version>
-
-        <liquibase.version>4.26.0</liquibase.version>
+        <rs-api.version>2.1.1</rs-api.version>
         <shedlock.version>4.47.0</shedlock.version>
 
+        <!-- db driver -->
         <mysql-driver.version>8.2.0</mysql-driver.version>
         <mariadb-driver.version>3.1.4</mariadb-driver.version>
         <postgresql-driver.version>42.7.3</postgresql-driver.version>
         <kingbase-driver.version>8.6.0</kingbase-driver.version>
+        <kingbase-hibernate-dialect.version>5.4.6.Finaldialect</kingbase-hibernate-dialect.version>
+        <kingbase-hibernate-jpa-api.version>2.1.0.Final</kingbase-hibernate-jpa-api.version>
         <dameng-driver.version>8.1.3.140</dameng-driver.version>
+        <oceanbase-client.version>2.4.0</oceanbase-client.version>
         <oracle-driver.version>21.5.0.0</oracle-driver.version>
 
+        <!-- Plugin versions -->
         <maven-source-plugin.version>3.3.0</maven-source-plugin.version>
         <maven-javadoc-plugin.version>3.5.0</maven-javadoc-plugin.version>
         <flatten-maven-plugin.version>1.6.0</flatten-maven-plugin.version>
@@ -563,11 +566,6 @@
 
             <!-- commons -->
             <dependency>
-                <groupId>org.apache.commons</groupId>
-                <artifactId>commons-lang3</artifactId>
-                <version>${commons-lang3.version}</version>
-            </dependency>
-            <dependency>
                 <groupId>commons-fileupload</groupId>
                 <artifactId>commons-fileupload</artifactId>
                 <version>${commons-fileupload.version}</version>
@@ -582,11 +580,6 @@
                 <artifactId>commons-net</artifactId>
                 <version>${commons-net.version}</version>
             </dependency>
-            <dependency>
-                <groupId>org.apache.commons</groupId>
-                <artifactId>commons-pool2</artifactId>
-                <version>${commons-pool2.version}</version>
-            </dependency>
 
             <dependency>
                 <groupId>org.apache.commons</groupId>
@@ -598,29 +591,29 @@
             <dependency>
                 <groupId>org.jodd</groupId>
                 <artifactId>jodd-bean</artifactId>
-                <version>5.1.6</version>
+                <version>${jodd-bean.version}</version>
             </dependency>
             <dependency>
                 <groupId>org.jodd</groupId>
                 <artifactId>jodd-mail</artifactId>
-                <version>6.0.5</version>
+                <version>${jodd-mail.version}</version>
             </dependency>
             <dependency>
                 <groupId>org.jodd</groupId>
                 <artifactId>jodd-http</artifactId>
-                <version>6.2.1</version>
+                <version>${jodd-http.version}</version>
             </dependency>
             <dependency>
                 <groupId>org.jodd</groupId>
                 <artifactId>jodd-lagarto</artifactId>
-                <version>6.0.6</version>
+                <version>${jodd-lagarto.version}</version>
             </dependency>
 
             <!-- hutool -->
             <dependency>
                 <groupId>cn.hutool</groupId>
                 <artifactId>hutool-all</artifactId>
-                <version>5.8.21</version>
+                <version>${hutool.version}</version>
             </dependency>
 
             <!-- javers -->
@@ -740,20 +733,20 @@
             <dependency>
                 <groupId>cn.com.kingbase</groupId>
                 <artifactId>hibernate-dialect</artifactId>
-                <version>5.4.6.Finaldialect</version>
+                <version>${kingbase-hibernate-dialect.version}</version>
             </dependency>
 
             <dependency>
                 <groupId>cn.com.kingbase</groupId>
                 <artifactId>hibernate-jpa-api</artifactId>
-                <version>2.1.0.Final</version>
+                <version>${kingbase-hibernate-jpa-api.version}</version>
             </dependency>
 
             <!-- OceanBase数据库 -->
             <dependency>
                 <groupId>com.oceanbase</groupId>
                 <artifactId>oceanbase-client</artifactId>
-                <version>2.4.0</version>
+                <version>${oceanbase-client.version}</version>
             </dependency>
         </dependencies>
     </dependencyManagement>
