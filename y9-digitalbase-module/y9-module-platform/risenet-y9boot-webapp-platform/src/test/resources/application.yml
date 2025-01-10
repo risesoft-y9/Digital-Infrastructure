@@ -17,9 +17,11 @@ server:
             force: true
             force-request: true
             force-response: true
+        context-path: /platform
 javers:
     newObjectSnapshot: true
     sqlSchemaManagementEnabled: false
+    springDataAuditableRepositoryAspectEnabled: false
 spring:
     application:
         name: platform
@@ -32,15 +34,17 @@ spring:
             - org.springframework.boot.autoconfigure.kafka.KafkaAutoConfiguration
     cloud:
         nacos:
+            server-addr: https://test.youshengyun.com:443
+            username: nacos
+            password: ${NACOS_PASSWORD:111111}
             config:
                 enabled: false
                 group: DEFAULT_GROUP
-                namespace: dev
-                server-addr: https://dev.youshengyun.com:443
-                username: nacos
-                password: ${NACOS_PASSWORD:111111}
+                namespace: test
             discovery:
                 enabled: false
+                group: DEFAULT_GROUP
+                namespace: test
     config:
         import:
             - optional:nacos:platform.yml
@@ -118,7 +122,7 @@ spring:
                 dialect: org.hibernate.dialect.H2Dialect
                 jdbc:
                     batch_size: 100
-                show_sql: false
+                show_sql: true
     kafka:
         bootstrap-servers: localhost:9092
         consumer:
@@ -153,7 +157,7 @@ y9:
     app:
         platform:
             systemName: riseplatform
-            position-name-pattern: "{0}（{1}）"
+            positionNameTemplate: "#jobName + '（' + #personNames + '）'"
             managerModifyPasswordCycle: 7
             userDefaultPassword: Risesoft@2022
     service:
@@ -212,9 +216,11 @@ y9:
             tenant-enabled: true
             public-enabled: true
         multi-tenant:
+            # kafka, db
             event-source: db
         log:
-            enabled: false
+            enabled: true
+            # kafka, api
             logSaveTarget: api
         publish:
             kafka:
@@ -259,6 +265,7 @@ y9:
                     - name
                     - whereClause
                     - url
+                    - positionNameTemplate
         oauth2:
             resource:
                 enabled: true
@@ -272,3 +279,18 @@ y9:
                     client-secret: secret
                     introspection-uri: http://localhost:7055/sso/oauth2.0/introspect
                     profile-uri: http://localhost:7055/sso/oauth2.0/profile
+idCode:
+    #统一码接口地址
+    idCode_url: https://api.idcode.org.cn
+    #统一码解析地址
+    analyze_url: http://s.idcode.org.cn/
+    #单位主码
+    main_code: MA.156.1003.1629
+    #系统授权key
+    api_key: 9XRMKN90QA8O90SDAAAAAKJ
+    #系统授权码
+    api_code: 09DN09QA8X08XRNN9DRMXRXM9DNAK09Q
+    #统一码解析地址
+    goto_url: https://test.youshengyun.com/kernel-standard/goto
+    #统一码示例地址
+    sample_url: https://test.youshengyun.com/kernel-standard/goto
