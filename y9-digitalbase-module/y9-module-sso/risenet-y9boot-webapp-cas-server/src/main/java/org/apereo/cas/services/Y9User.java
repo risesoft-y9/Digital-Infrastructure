@@ -13,7 +13,7 @@ import java.io.Serial;
 import java.io.Serializable;
 import java.util.Date;
 
-@Entity
+@Entity(name = "y9User")
 @Table(name = "Y9_COMMON_ACCOUNT", indexes = {@Index(columnList = "LOGIN_NAME")})
 @Comment("用户账号表")
 @NoArgsConstructor

@@ -2,13 +2,12 @@
     "@class" : "org.apereo.cas.services.OidcRegisteredService",
     "clientId": "clientid_oidc",
     "clientSecret": "secret_oidc",
-    "serviceId" : "^(https?)://localhost:7099/mydemo.*",
+    "serviceId" : "^(https?)://localhost:7099/.*",
     "name" : "oidcServiceDemo",
     "description" : "oidc Authentication app demo",
     "id" : 1004,
     "evaluationOrder": 1004,
     "logoutType" : "BACK_CHANNEL",
-    "logoutUrl" : "http://localhost:7099/mydemo/public/oauth/callback",
     "scopes": [
         "java.util.HashSet",
         [

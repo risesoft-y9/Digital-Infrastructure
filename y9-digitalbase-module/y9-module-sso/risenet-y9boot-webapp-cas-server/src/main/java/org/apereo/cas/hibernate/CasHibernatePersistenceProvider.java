@@ -1,0 +1,66 @@
+package org.apereo.cas.hibernate;
+
+import org.apereo.cas.jpa.JpaPersistenceProviderContext;
+
+import lombok.Getter;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import lombok.val;
+import org.apache.commons.collections.CollectionUtils;
+import org.apereo.cas.services.JpaRegisteredServiceEntity;
+import org.apereo.cas.services.Y9KeyValue;
+import org.apereo.cas.services.Y9LoginUser;
+import org.apereo.cas.services.Y9User;
+import org.hibernate.jpa.HibernatePersistenceProvider;
+import org.hibernate.jpa.boot.internal.EntityManagerFactoryBuilderImpl;
+import org.hibernate.jpa.boot.internal.PersistenceUnitInfoDescriptor;
+import org.springframework.orm.jpa.persistenceunit.SmartPersistenceUnitInfo;
+
+import jakarta.persistence.EntityManagerFactory;
+import jakarta.persistence.spi.PersistenceUnitInfo;
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
+
+/**
+ * This is {@link CasHibernatePersistenceProvider}.
+ *
+ * @author Misagh Moayyed
+ * @since 6.3.0
+ */
+@RequiredArgsConstructor
+@Slf4j
+public class CasHibernatePersistenceProvider extends HibernatePersistenceProvider {
+    private final JpaPersistenceProviderContext providerContext;
+
+    @Override
+    public EntityManagerFactory createContainerEntityManagerFactory(final PersistenceUnitInfo info, final Map properties) {
+        val filtered = CollectionUtils.intersection(info.getManagedClassNames(), providerContext.getIncludeEntityClasses());
+        if (info.getManagedClassNames().isEmpty() && !providerContext.getIncludeEntityClasses().isEmpty()) {
+            filtered.addAll(providerContext.getIncludeEntityClasses());
+        }
+        LOGGER.trace("Filtered entity classes for entity manager are [{}]", filtered);
+        val mergedClassesAndPackages = new HashSet<String>(filtered);
+        if (info instanceof final SmartPersistenceUnitInfo sinfo) {
+            mergedClassesAndPackages.addAll(sinfo.getManagedPackages());
+        }
+        if(mergedClassesAndPackages.contains(JpaRegisteredServiceEntity.class.getName())){ //y9 add
+            mergedClassesAndPackages.add(Y9User.class.getName());
+            mergedClassesAndPackages.add(Y9LoginUser.class.getName());
+            mergedClassesAndPackages.add(Y9KeyValue.class.getName());
+        } //end
+        val persistenceUnit = new CasPersistenceUnitInfoDescriptor(info, new ArrayList<>(mergedClassesAndPackages));
+        return new EntityManagerFactoryBuilderImpl(persistenceUnit, properties).build();
+    }
+
+    @Getter
+    private static final class CasPersistenceUnitInfoDescriptor extends PersistenceUnitInfoDescriptor {
+        private final List<String> managedClassNames;
+
+        CasPersistenceUnitInfoDescriptor(final PersistenceUnitInfo info, final List<String> mergedClassesAndPackages) {
+            super(info);
+            this.managedClassNames = mergedClassesAndPackages;
+        }
+    }
+}

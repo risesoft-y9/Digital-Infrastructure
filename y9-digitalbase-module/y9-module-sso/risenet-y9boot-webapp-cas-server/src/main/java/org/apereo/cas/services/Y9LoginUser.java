@@ -15,7 +15,7 @@ import java.io.Serial;
 import java.io.Serializable;
 import java.util.Date;
 
-@Entity
+@Entity(name = "y9LoginUser")
 @Table(name = "Y9_LOGIN_USER")
 @Comment("用户登录历史表")
 @NoArgsConstructor
