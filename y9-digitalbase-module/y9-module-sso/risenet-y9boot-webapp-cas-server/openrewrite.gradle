@@ -1,0 +1,25 @@
+initscript {
+    repositories {
+        gradlePluginPortal()
+    }
+    dependencies {
+        classpath "org.openrewrite:plugin:6.28.1"
+    }
+}
+
+rootProject {
+    plugins.apply(org.openrewrite.gradle.RewritePlugin)
+    dependencies {
+        rewrite("org.apereo.cas:cas-server-support-openrewrite:${project.targetVersion}") {
+            transitive = false
+        }
+    }
+    afterEvaluate {
+        if (repositories.isEmpty()) {
+            repositories {
+                mavenLocal()
+                mavenCentral()
+            }
+        }
+    }
+}
