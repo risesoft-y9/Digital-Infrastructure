@@ -329,8 +329,9 @@ dependencies {
     implementation "org.apereo.cas:cas-server-core-services-api"
     implementation "org.apereo.cas:cas-server-core-services-registry"
 
-    implementation "org.springframework.boot:spring-boot-starter-data-jpa"
+    //implementation "org.springframework.boot:spring-boot-starter-data-jpa"
     implementation "org.springframework:spring-context"
+    implementation "org.springframework:spring-context-indexer"
     implementation "org.springframework.data:spring-data-redis"
     implementation "org.springframework.webflow:spring-webflow"
 
@@ -339,6 +340,6 @@ dependencies {
     implementation "com.google.zxing:core"
     implementation "com.zaxxer:HikariCP"
 
-    testImplementation "org.springframework.boot:spring-boot-starter-test"
+    //testImplementation "org.springframework.boot:spring-boot-starter-test"
 }
 
