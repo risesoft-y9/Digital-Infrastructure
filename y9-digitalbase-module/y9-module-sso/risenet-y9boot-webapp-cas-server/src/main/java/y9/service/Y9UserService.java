@@ -1,6 +1,6 @@
 package y9.service;
 
-import org.apereo.cas.services.Y9User;
+import y9.entity.Y9User;
 
 import java.util.List;
 

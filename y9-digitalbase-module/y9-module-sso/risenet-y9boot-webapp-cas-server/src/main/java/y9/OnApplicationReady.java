@@ -2,11 +2,9 @@ package y9;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.apereo.cas.services.Y9User;
-import org.springframework.beans.factory.annotation.Autowired;
+import y9.entity.Y9User;
 import org.springframework.boot.context.event.ApplicationReadyEvent;
 import org.springframework.context.ApplicationListener;
-import org.springframework.stereotype.Component;
 import y9.service.Y9UserService;
 
 import java.util.Date;

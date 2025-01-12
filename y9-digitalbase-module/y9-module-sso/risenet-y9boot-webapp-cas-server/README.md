@@ -5,7 +5,7 @@ WAR Overlay Type: `cas-overlay`
 
 # Versions
 
-- CAS Server `7.2.0-RC3`
+- CAS Server `7.2.0-RC4`
 - JDK `21`
 
 # Build
@@ -304,4 +304,39 @@ You may also supply the following options:
 - `duct.duration`: Number of seconds, i.e. `30` to execute the scenario.
 - `duct.count`: Number of iterations, i.e. `5` to execute the scenario.
 
+
+# OpenRewrite
+
+[OpenRewrite](https://docs.openrewrite.org/) is a tool used by the CAS in form of a Gradle plugin
+that allows the project to upgrade in place. It works by making changes to the project structure representing
+your CAS build and printing the modified files back. Modifications are packaged together in form of upgrade
+scripts called `Recipes` that are automatically packaged and presented to the build and may be discovered via:
+
+```bash
+./gradlew --init-script openrewrite.gradle rewriteDiscover -PtargetVersion=X.Y.Z --no-configuration-cache | grep "org.apereo.cas"
+```
+
+**NOTE:** All CAS specific recipes begin with `org.apereo.cas`. The `targetVersion` must be the CAS version to which you want to upgrade.
+
+OpenRewrite recipes make minimally invasive changes to your CAS build allowing you to upgrade from one version
+to the next with minimal effort. The recipe contains *almost* everything that is required for a CAS build system to navigate
+from one version to other and automated tedious aspects of the upgrade such as finding the correct versions of CAS,
+relevant libraries and plugins as well as any possible structural changes to one's CAS build.
+
+To run, you will need to find and select the name of the recipe first. Then, you can dry-run the selected recipes and see which files would be changed in the build log.
+This does not alter your source files on disk at all. This goal can be used to preview the changes that would be made by the active recipes.
+
+```bash
+./gradlew --init-script openrewrite.gradle rewriteDryRun -PtargetVersion=X.Y.Z -DactiveRecipe=[recipe name] --no-configuration-cache
+```
+
+When you are ready, you can run the actual recipe:
+
+```bash
+./gradlew --init-script openrewrite.gradle rewriteRun -PtargetVersion=X.Y.Z -DactiveRecipe=[recipe name] --no-configuration-cache
+```
+
+This will run the selected recipes and apply the changes. This will write changes locally to your source files on disk.
+Afterward, review the changes, and when you are comfortable with the changes, commit them.
+The run goal generates warnings in the build log wherever it makes changes to source files.
 

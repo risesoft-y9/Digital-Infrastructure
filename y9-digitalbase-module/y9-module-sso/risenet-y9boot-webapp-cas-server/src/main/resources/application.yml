@@ -40,7 +40,7 @@ cas:
                     dialect: org.hibernate.dialect.PostgresPlusDialect
                     user: root
                     password: "11111111"
-                    
+    
     server:
         name: http://localhost:7055
         prefix: http://localhost:7055/sso
@@ -70,7 +70,7 @@ cas:
             enabled: true
             repeatInterval: "PT30M"
             startDelay: "PT2M"
-                            
+    
     ticket:
         registry:
             jpa:

@@ -4,16 +4,13 @@ import jakarta.servlet.DispatcherType;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apereo.cas.CentralAuthenticationService;
-import org.apereo.cas.authentication.AuthenticationEventExecutionPlanConfigurer;
 import org.apereo.cas.authentication.AuthenticationSystemSupport;
 import org.apereo.cas.authentication.principal.ServiceFactory;
-import org.apereo.cas.config.CasJpaServiceRegistryAutoConfiguration;
 import org.apereo.cas.configuration.CasConfigurationProperties;
 import org.apereo.cas.services.ServicesManager;
 import org.apereo.cas.web.CasWebSecurityConfigurer;
 import org.apereo.cas.web.cookie.CasCookieBuilder;
 import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.boot.autoconfigure.AutoConfiguration;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnWarDeployment;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
@@ -23,8 +20,6 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.core.Ordered;
 import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.scheduling.annotation.Scheduled;
-import org.springframework.scheduling.annotation.SchedulingConfigurer;
-import org.springframework.scheduling.config.ScheduledTaskRegistrar;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
 import org.springframework.transaction.support.TransactionOperations;
 import org.springframework.web.filter.ForwardedHeaderFilter;
@@ -41,7 +36,7 @@ import java.util.List;
 
 @EnableConfigurationProperties(CasConfigurationProperties.class)
 @EnableTransactionManagement(proxyTargetClass = false)
-@AutoConfiguration(after = {CasJpaServiceRegistryAutoConfiguration.class})
+@Configuration
 public class Y9AutoConfigService {
     /**
      * 针对经过反向代理的请求不能正确获得一些原始的请求信息，例如不能正确获得原始的 schema 导致重定向的 url 错误 <br/>
@@ -134,15 +129,6 @@ public class Y9AutoConfigService {
         return new OnApplicationReady(y9UserService);
     }
 
-    @Bean
-    public AuthenticationEventExecutionPlanConfigurer riseAuthenticationEventExecutionPlanConfigurer(
-            @Qualifier(ServicesManager.BEAN_NAME) final ServicesManager servicesManager,
-            Y9UserService y9UserService,
-            Y9LoginUserService y9LoginUserService) {
-        Y9AuthenticationHandler handler = new Y9AuthenticationHandler("y9AuthenticationHandler",
-                servicesManager, 0, y9UserService, y9LoginUserService);
-        return plan -> plan.registerAuthenticationHandler(handler);
-    }
 
     @Bean
     public Runnable Y9KeyValueCleaner(Y9KeyValueService y9KeyValueService) {

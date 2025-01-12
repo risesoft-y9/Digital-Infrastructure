@@ -1,18 +1,6 @@
-#
-# https://help.github.com/articles/dealing-with-line-endings/
-#
-# Linux start script should use lf
-/gradlew        text eol=lf
-
-# These are Windows script files and should use crlf
-*.bat           text eol=crlf
-
-# Binary files should be left untouched
-*.jar           binary
-
-* text=auto eol=lf
-*.vue linguist-language=Java
-*.java linguist-language=Java
-*.js linguist-language=Java
-*.css linguist-language=Java
-*.html linguist-language=Java
+# Set line endings to LF, even on Windows. Otherwise, execution within Docker fails.
+# See https://help.github.com/articles/dealing-with-line-endings/
+*.sh text eol=lf
+gradlew text eol=lf
+*.cmd text eol=crlf
+*.bat text eol=crlf

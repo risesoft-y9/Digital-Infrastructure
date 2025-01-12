@@ -12,10 +12,9 @@ import org.apereo.cas.authentication.credential.RememberMeUsernamePasswordCreden
 import org.apereo.cas.authentication.principal.Service;
 import org.apereo.cas.authentication.principal.ServiceFactory;
 import org.apereo.cas.rest.BadRestRequestException;
-import org.apereo.cas.services.Y9User;
+import y9.entity.Y9User;
 import org.apereo.cas.ticket.Ticket;
 import org.apereo.cas.web.cookie.CasCookieBuilder;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;

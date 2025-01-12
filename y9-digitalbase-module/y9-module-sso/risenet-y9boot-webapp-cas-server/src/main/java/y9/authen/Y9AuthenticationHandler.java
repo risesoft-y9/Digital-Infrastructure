@@ -1,4 +1,4 @@
-package y9;
+package y9.authen;
 
 import com.google.common.collect.Lists;
 import jakarta.servlet.http.HttpServletRequest;
@@ -13,7 +13,7 @@ import org.apereo.cas.authentication.credential.RememberMeUsernamePasswordCreden
 import org.apereo.cas.authentication.principal.PrincipalFactoryUtils;
 import org.apereo.cas.authentication.principal.Service;
 import org.apereo.cas.services.ServicesManager;
-import org.apereo.cas.services.Y9User;
+import y9.entity.Y9User;
 import org.apereo.cas.web.support.WebUtils;
 import y9.service.Y9LoginUserService;
 import y9.service.Y9UserService;

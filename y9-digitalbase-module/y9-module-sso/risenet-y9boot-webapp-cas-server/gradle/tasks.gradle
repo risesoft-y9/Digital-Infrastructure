@@ -1,15 +1,14 @@
-import groovy.json.JsonSlurper
-import groovy.time.TimeCategory
-import org.apereo.cas.metadata.CasConfigurationMetadataCatalog
-import org.apereo.cas.metadata.ConfigurationMetadataCatalogQuery
-import org.gradle.internal.logging.text.StyledTextOutputFactory
-
-import java.nio.file.Files
-import java.nio.file.Paths
-import java.nio.file.StandardCopyOption
-import java.security.SecureRandom
-
 import static org.gradle.internal.logging.text.StyledTextOutput.Style
+
+import org.apereo.cas.metadata.*
+import org.gradle.internal.logging.text.*
+
+import groovy.json.*
+import groovy.time.*
+
+import java.nio.file.*
+import java.util.*
+import java.security.*
 
 buildscript {
     repositories {

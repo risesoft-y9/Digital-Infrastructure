@@ -1,4 +1,4 @@
-package org.apereo.cas.services;
+package y9.entity;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import jakarta.persistence.*;
@@ -10,7 +10,7 @@ import org.hibernate.annotations.CreationTimestamp;
 import java.io.Serializable;
 import java.util.Date;
 
-@Entity(name = "y9KeyValue")
+@Entity
 @Table(name = "Y9_COMMON_KEY_VALUE", indexes = {@Index(columnList = "EXPIRE_TIME")})
 @Comment("键值对")
 @NoArgsConstructor

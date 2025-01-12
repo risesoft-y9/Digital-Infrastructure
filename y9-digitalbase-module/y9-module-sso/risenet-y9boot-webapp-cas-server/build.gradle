@@ -1,9 +1,10 @@
-import com.bmuschko.gradle.docker.tasks.image.DockerBuildImage
-import com.bmuschko.gradle.docker.tasks.image.DockerPushImage
-import org.gradle.internal.logging.text.Style
-import org.gradle.internal.logging.text.StyledTextOutputFactory
-
-import java.lang.reflect.Modifier
+import org.apache.tools.ant.taskdefs.condition.*
+import org.gradle.internal.logging.text.*
+import org.apereo.cas.metadata.*
+import java.nio.file.*
+import java.lang.reflect.*
+import org.gradle.internal.logging.text.*
+import static org.gradle.internal.logging.text.StyledTextOutput.Style
 
 buildscript {
     repositories {
@@ -138,7 +139,7 @@ java {
         }
         if (chosenJvmVendor != null) {
             vendor = chosenJvmVendor
-            //out.withStyle(Style.Success).println("Using ${chosenJvmVendor} as the JVM vendor for the Java toolchain")
+            out.withStyle(Style.Success).println("Using ${chosenJvmVendor} as the JVM vendor for the Java toolchain")
         } else {
             out.withStyle(Style.Info).println("JVM vendor ${project.jvmVendor} is not recognized")
         }
@@ -227,6 +228,7 @@ jib {
     allowInsecureRegistries = project.allowInsecureRegistries
 }
 
+import com.bmuschko.gradle.docker.tasks.image.*
 tasks.register("casBuildDockerImage", DockerBuildImage) {
     dependsOn("build")
 
@@ -262,7 +264,7 @@ tasks.register("casPushDockerImage", DockerPushImage) {
 
 if (project.hasProperty("appServer")) {
     def appServer = project.findProperty('appServer') ?: ''
-    //out.withStyle(Style.Success).println("Building CAS version ${project.version} with application server ${appServer}")
+    out.withStyle(Style.Success).println("Building CAS version ${project.version} with application server ${appServer}")
 } else {
     out.withStyle(Style.Success).println("Building CAS version ${project.version} without an application server")
 }
@@ -295,6 +297,7 @@ dependencies {
      * plugin via the CAS bom.
      **/
     implementation "org.apereo.cas:cas-server-core-logging"
+    //implementation "org.apereo.cas:cas-server-support-logback"
     //implementation "org.apereo.cas:cas-server-support-oauth-webflow"
     implementation "org.apereo.cas:cas-server-support-oauth-services"
     implementation "org.apereo.cas:cas-server-support-oidc"
@@ -324,7 +327,9 @@ dependencies {
     implementation "org.apereo.cas:cas-server-core-webflow-api"
     implementation "org.apereo.cas:cas-server-core-authentication-attributes"
     implementation "org.apereo.cas:cas-server-core-services-api"
+    implementation "org.apereo.cas:cas-server-core-services-registry"
 
+    implementation "org.springframework.boot:spring-boot-starter-data-jpa"
     implementation "org.springframework:spring-context"
     implementation "org.springframework.data:spring-data-redis"
     implementation "org.springframework.webflow:spring-webflow"
@@ -332,6 +337,7 @@ dependencies {
     implementation "cz.mallat.uasparser:uasparser:0.6.2"
     implementation "de.svenkubiak:jBCrypt:0.4.3"
     implementation "com.google.zxing:core"
+    implementation "com.zaxxer:HikariCP"
 
     testImplementation "org.springframework.boot:spring-boot-starter-test"
 }

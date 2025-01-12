@@ -1,4 +1,4 @@
-package org.apereo.cas.services;
+package y9.entity;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import jakarta.persistence.Column;
@@ -15,7 +15,7 @@ import java.io.Serial;
 import java.io.Serializable;
 import java.util.Date;
 
-@Entity(name = "y9LoginUser")
+@Entity
 @Table(name = "Y9_LOGIN_USER")
 @Comment("用户登录历史表")
 @NoArgsConstructor

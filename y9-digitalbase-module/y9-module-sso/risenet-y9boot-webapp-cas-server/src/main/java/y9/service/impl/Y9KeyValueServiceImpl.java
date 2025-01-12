@@ -5,7 +5,7 @@ import jakarta.persistence.PersistenceContext;
 import jakarta.persistence.Query;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.apereo.cas.services.Y9KeyValue;
+import y9.entity.Y9KeyValue;
 import org.springframework.transaction.support.TransactionOperations;
 import y9.service.Y9KeyValueService;
 
