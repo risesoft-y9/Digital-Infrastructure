@@ -37,7 +37,7 @@ import java.util.List;
 @EnableScheduling
 @EnableAsync(proxyTargetClass = false)
 @NoArgsConstructor
-@ComponentScan("y9")
+@ComponentScan("org.apereo.cas.web.y9")
 public class CasWebApplication {
 
     /**

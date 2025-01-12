@@ -86,9 +86,9 @@ public class DefaultLoginWebflowConfigurer extends AbstractCasWebflowConfigurer 
                 "source", Map.of("required", "true"));
         val binder = createStateBinderConfiguration(propertiesToBind);*/
 
-        // y9 edit
+        // org.apereo.cas.web.y9 edit
         Environment environment = getApplicationContext().getEnvironment();
-        String casLoginView = environment.getProperty("y9.login.casLoginView", "login/casLoginView");
+        String casLoginView = environment.getProperty("org.apereo.cas.web.y9.login.casLoginView", "login/casLoginView");
 
         val propertiesToBind = Map.of("username", Map.of("required", "true"), "password",
                 Map.of("converter", StringToCharArrayConverter.ID), "source", Map.of("required", "true"), "rememberMe",
@@ -97,7 +97,7 @@ public class DefaultLoginWebflowConfigurer extends AbstractCasWebflowConfigurer 
 
         val binder = createStateBinderConfiguration(propertiesToBind);
 
-        String optional = environment.getProperty("y9.login.credentialPropsOptional",
+        String optional = environment.getProperty("org.apereo.cas.web.y9.login.credentialPropsOptional",
                 "isValidateIE,screenDimension,userAgent,systemName,clientIp,clientMac,clientDiskId,clientHostName,deptId,positionId");
         String[] optionalArray = optional.split(",");
         for (String prop : optionalArray) {
@@ -113,7 +113,7 @@ public class DefaultLoginWebflowConfigurer extends AbstractCasWebflowConfigurer 
                 });
 
         //val state = createViewState(flow, CasWebflowConstants.STATE_ID_VIEW_LOGIN_FORM, "login/casLoginView", binder);
-        val state = createViewState(flow, CasWebflowConstants.STATE_ID_VIEW_LOGIN_FORM, casLoginView, binder); // y9 edit
+        val state = createViewState(flow, CasWebflowConstants.STATE_ID_VIEW_LOGIN_FORM, casLoginView, binder); // org.apereo.cas.web.y9 edit
         createStateModelBinding(state, CasWebflowConstants.VAR_ID_CREDENTIAL, UsernamePasswordCredential.class);
 
         val transition = createTransitionForState(state, CasWebflowConstants.TRANSITION_ID_SUBMIT, CasWebflowConstants.STATE_ID_REAL_SUBMIT);
@@ -123,7 +123,7 @@ public class DefaultLoginWebflowConfigurer extends AbstractCasWebflowConfigurer 
         attributes.put("history", History.INVALIDATE);
     }
 
-    // y9 add
+    // org.apereo.cas.web.y9 add
     protected void createNonInteractiveLoginAction(final Flow flow) {
         val state =
                 createActionState(flow, "nonInteractiveLoginState", "riseCredentialNonInteractiveCredentialsAction");
@@ -163,7 +163,7 @@ public class DefaultLoginWebflowConfigurer extends AbstractCasWebflowConfigurer 
 
     protected void createDefaultActionStates(final Flow flow) {
         createInitialLoginAction(flow);
-        createNonInteractiveLoginAction(flow);// y9 add
+        createNonInteractiveLoginAction(flow);// org.apereo.cas.web.y9 add
         createRealSubmitAction(flow);
         createInitialAuthenticationRequestValidationCheckAction(flow);
         createCreateTicketGrantingTicketAction(flow);

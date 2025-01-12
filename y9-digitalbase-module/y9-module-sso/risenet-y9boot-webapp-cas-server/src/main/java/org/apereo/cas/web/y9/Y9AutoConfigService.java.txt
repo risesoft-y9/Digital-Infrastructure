@@ -1,98 +1,43 @@
-package org.apereo.cas.config;
+package org.apereo.cas.web.y9;
 
-//import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import jakarta.servlet.DispatcherType;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import lombok.val;
 import org.apereo.cas.CentralAuthenticationService;
-import org.apereo.cas.authentication.AuthenticationEventExecutionPlanConfigurer;
 import org.apereo.cas.authentication.AuthenticationSystemSupport;
-import org.apereo.cas.authentication.principal.PrincipalResolver;
 import org.apereo.cas.authentication.principal.ServiceFactory;
 import org.apereo.cas.configuration.CasConfigurationProperties;
-import org.apereo.cas.jpa.JpaPersistenceProviderConfigurer;
-import org.apereo.cas.services.JpaRegisteredServiceEntity;
 import org.apereo.cas.services.ServicesManager;
-import org.apereo.cas.util.CollectionUtils;
-import org.apereo.cas.util.spring.beans.BeanCondition;
-import org.apereo.cas.util.spring.beans.BeanSupplier;
 import org.apereo.cas.web.CasWebSecurityConfigurer;
 import org.apereo.cas.web.cookie.CasCookieBuilder;
-import org.apereo.cas.web.y9.OnApplicationReady;
+import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnWarDeployment;
+import org.springframework.boot.context.properties.EnableConfigurationProperties;
+import org.springframework.boot.web.servlet.FilterRegistrationBean;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.core.Ordered;
+import org.springframework.scheduling.annotation.EnableScheduling;
+import org.springframework.scheduling.annotation.Scheduled;
+import org.springframework.transaction.annotation.EnableTransactionManagement;
+import org.springframework.transaction.support.TransactionOperations;
+import org.springframework.web.filter.ForwardedHeaderFilter;
 import org.apereo.cas.web.y9.controller.*;
-import org.apereo.cas.services.y9.Y9LoginUser;
-import org.apereo.cas.services.y9.Y9User;
 import org.apereo.cas.web.y9.service.Y9KeyValueService;
+import org.apereo.cas.web.y9.service.Y9LoginUserService;
+import org.apereo.cas.web.y9.service.Y9UserService;
 import org.apereo.cas.web.y9.service.impl.Y9KeyValueServiceImpl;
 import org.apereo.cas.web.y9.service.impl.Y9LoginUserServiceImpl;
 import org.apereo.cas.web.y9.service.impl.Y9UserServiceImpl;
 import org.apereo.cas.web.y9.util.Y9Context;
-import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.boot.autoconfigure.AutoConfiguration;
-import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
-import org.springframework.boot.autoconfigure.condition.ConditionalOnWarDeployment;
-import org.springframework.boot.web.servlet.FilterRegistrationBean;
-import org.springframework.cloud.context.config.annotation.RefreshScope;
-import org.springframework.context.ConfigurableApplicationContext;
-import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.ScopedProxyMode;
-import org.apereo.cas.web.y9.authen.Y9AuthenticationHandler;
-import org.apereo.cas.web.y9.service.Y9LoginUserService;
-import org.apereo.cas.web.y9.service.Y9UserService;
-import org.springframework.core.Ordered;
-import org.springframework.scheduling.annotation.EnableScheduling;
-import org.springframework.scheduling.annotation.Scheduled;
-import org.springframework.transaction.support.TransactionOperations;
-import org.springframework.web.filter.ForwardedHeaderFilter;
 
 import java.util.List;
 
-//import org.apereo.cas.configuration.CasConfigurationProperties;
-
-@AutoConfiguration
-//@ComponentScan("org.apereo.cas.web.y9")
-//@EnableConfigurationProperties(CasConfigurationProperties.class)
-public class CasOverlayOverrideConfiguration {
-
-    @Configuration
-    static class Y9JpaConfig {
-        private static final BeanCondition CONDITION =
-                BeanCondition.on("cas.service-registry.jpa.enabled").isTrue().evenIfMissing();
-
-        @Bean
-        @RefreshScope(proxyMode = ScopedProxyMode.DEFAULT)
-        public JpaPersistenceProviderConfigurer
-        jpaServicePersistenceProviderConfigurer(final ConfigurableApplicationContext applicationContext) {
-            return BeanSupplier.of(JpaPersistenceProviderConfigurer.class)
-                    .when(CONDITION.given(applicationContext.getEnvironment())).supply(() -> context -> {
-                        String s1 = JpaRegisteredServiceEntity.class.getName();
-                        String s2 = Y9LoginUser.class.getName();
-                        String s3 = Y9User.class.getName();
-                        val entities = CollectionUtils.wrapList(s1, s2, s3);
-                        context.getIncludeEntityClasses().addAll(entities);
-                    }).otherwiseProxy().get();
-        }
-    }
-
-    @Configuration(proxyBeanMethods = false)
-    static class Y9AuthenticationConfiguration {
-        @Bean
-        @RefreshScope(proxyMode = ScopedProxyMode.DEFAULT)
-        public AuthenticationEventExecutionPlanConfigurer riseAuthenticationEventExecutionPlanConfigurer(
-                @Qualifier(PrincipalResolver.BEAN_NAME_PRINCIPAL_RESOLVER)
-                final PrincipalResolver defaultPrincipalResolver,
-                @Qualifier(ServicesManager.BEAN_NAME)
-                final ServicesManager servicesManager,
-                Y9UserService y9UserService,
-                Y9LoginUserService y9LoginUserService) {
-            Y9AuthenticationHandler handler = new Y9AuthenticationHandler("y9AuthenticationHandler",
-                    servicesManager, 0, y9UserService, y9LoginUserService);
-            return plan -> plan.registerAuthenticationHandler(handler);
-        }
-    }
-
+@EnableConfigurationProperties(CasConfigurationProperties.class)
+@EnableTransactionManagement(proxyTargetClass = false)
+@Configuration
+public class Y9AutoConfigService {
     /**
      * 针对经过反向代理的请求不能正确获得一些原始的请求信息，例如不能正确获得原始的 schema 导致重定向的 url 错误 <br/>
      * 此过滤器更多是为了减少外部 servlet 容器的配置 <br/>
@@ -179,10 +124,10 @@ public class CasOverlayOverrideConfiguration {
         return new CheckController();
     }
 
-    /*@Bean
+    @Bean
     public OnApplicationReady onApplicationReady(Y9UserService y9UserService) {
         return new OnApplicationReady(y9UserService);
-    }*/
+    }
 
 
     @Bean
