@@ -317,6 +317,7 @@ dependencies {
     implementation "org.apereo.cas:cas-server-support-saml-idp"
     implementation "org.apereo.cas:cas-server-support-redis-modules"
     implementation "org.apereo.cas:cas-server-core-authentication-api"
+    implementation "org.apereo.cas:cas-server-core-authentication-attributes"
     implementation "org.apereo.cas:cas-server-core-api-authentication"
     implementation "org.apereo.cas:cas-server-core"
     implementation "org.apereo.cas:cas-server-core-api"
@@ -326,7 +327,6 @@ dependencies {
     implementation "org.apereo.cas:cas-server-core-web-api"
     implementation "org.apereo.cas:cas-server-core-rest-api"
     implementation "org.apereo.cas:cas-server-core-webflow-api"
-    implementation "org.apereo.cas:cas-server-core-authentication-attributes"
     implementation "org.apereo.cas:cas-server-core-services-api"
     implementation "org.apereo.cas:cas-server-core-services-registry"
 

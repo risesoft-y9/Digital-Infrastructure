@@ -1,7 +1,5 @@
 package org.apereo.cas.config;
 
-//import org.springframework.boot.context.properties.EnableConfigurationProperties;
-
 import lombok.val;
 import org.apereo.cas.jpa.JpaPersistenceProviderConfigurer;
 import org.apereo.cas.services.JpaRegisteredServiceEntity;
@@ -18,11 +16,13 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.ScopedProxyMode;
 
+//import org.springframework.boot.context.properties.EnableConfigurationProperties;
 //import org.apereo.cas.configuration.CasConfigurationProperties;
 
-@AutoConfiguration
 //@EnableConfigurationProperties(CasConfigurationProperties.class)
+@AutoConfiguration
 public class CasOverlayOverrideConfiguration {
+
     @Configuration
     public static class Y9JpaConfig {
         private static final BeanCondition CONDITION =
@@ -42,4 +42,5 @@ public class CasOverlayOverrideConfiguration {
                     }).otherwiseProxy().get();
         }
     }
+
 }
