@@ -8,23 +8,24 @@ import org.apereo.cas.web.y9.service.Y9LoginUserService;
 import org.apereo.cas.web.y9.service.Y9UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
 
-@Service
+//@Component
 public class Y9AuthenticationEventExecutionPlanConfigurer implements AuthenticationEventExecutionPlanConfigurer {
 
-    @Autowired
-    @Qualifier(PrincipalResolver.BEAN_NAME_PRINCIPAL_RESOLVER)
+    //@Autowired
+    //@Qualifier(PrincipalResolver.BEAN_NAME_PRINCIPAL_RESOLVER)
     PrincipalResolver defaultPrincipalResolver;
 
-    @Autowired
-    @Qualifier(ServicesManager.BEAN_NAME)
+    //@Autowired
+    //@Qualifier(ServicesManager.BEAN_NAME)
     ServicesManager servicesManager;
 
-    @Autowired
+    //@Autowired
     Y9UserService y9UserService;
 
-    @Autowired
+    //@Autowired
     Y9LoginUserService y9LoginUserService;
 
 

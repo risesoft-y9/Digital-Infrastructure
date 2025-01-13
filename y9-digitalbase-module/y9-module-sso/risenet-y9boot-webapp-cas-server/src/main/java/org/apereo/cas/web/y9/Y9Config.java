@@ -84,7 +84,7 @@ public class Y9Config {
             Y9LoginUserService y9LoginUserService) {
         Y9AuthenticationHandler handler = new Y9AuthenticationHandler("y9AuthenticationHandler",
                 servicesManager, 0, y9UserService, y9LoginUserService);
-        return plan -> plan.registerAuthenticationHandler(handler);
+        return plan -> plan.registerAuthenticationHandlerWithPrincipalResolver(handler, defaultPrincipalResolver);
     }
 
     /**
