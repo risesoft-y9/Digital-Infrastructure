@@ -275,6 +275,7 @@ dependencies {
     **/
     implementation enforcedPlatform("org.apereo.cas:cas-server-support-bom:${project.'cas.version'}")
     implementation platform(org.springframework.boot.gradle.plugin.SpringBootPlugin.BOM_COORDINATES)
+    //annotationProcessor platform(org.springframework.boot.gradle.plugin.SpringBootPlugin.BOM_COORDINATES)
 
     /**
      * Do NOT modify the lines below or else you will risk breaking the build.
@@ -329,9 +330,11 @@ dependencies {
     implementation "org.apereo.cas:cas-server-core-services-api"
     implementation "org.apereo.cas:cas-server-core-services-registry"
 
-    //implementation "org.springframework.boot:spring-boot-starter-data-jpa"
+    /*implementation("org.springframework.boot:spring-boot-starter-data-jpa"){
+        exclude(group: "ch.qos.logback")
+    }*/
     implementation "org.springframework:spring-context"
-    //implementation "org.springframework:spring-context-indexer"
+    implementation "org.springframework:spring-context-indexer"
     implementation "org.springframework.data:spring-data-redis"
     implementation "org.springframework.webflow:spring-webflow"
 
@@ -339,6 +342,8 @@ dependencies {
     implementation "de.svenkubiak:jBCrypt:0.4.3"
     implementation "com.google.zxing:core"
     implementation "com.zaxxer:HikariCP"
+
+    annotationProcessor "org.springframework:spring-context-indexer:6.2.1"
 
     //testImplementation "org.springframework.boot:spring-boot-starter-test"
 }
