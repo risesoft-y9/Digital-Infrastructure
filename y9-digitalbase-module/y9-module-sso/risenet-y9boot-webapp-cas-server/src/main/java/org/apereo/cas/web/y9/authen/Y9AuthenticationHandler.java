@@ -42,25 +42,6 @@ public class Y9AuthenticationHandler extends AbstractAuthenticationHandler {
         this.y9LoginUserService = y9LoginUserService;
     }
 
-    private static void fillCredential(RememberMeUsernamePasswordCredential riseCredential, String username,
-                                       String password, String tenantShortName) {
-        riseCredential.setUsername(username);
-        riseCredential.assignPassword(password);
-        if (StringUtils.isNotBlank(tenantShortName)) {
-            riseCredential.setTenantShortName(tenantShortName);
-        }
-
-        HttpServletRequest request = WebUtils.getHttpServletRequestFromExternalWebflowContext();
-        if (null != request) {
-            String systemName = request.getParameter("systemName");
-            if (StringUtils.isNotBlank(systemName)) {
-                riseCredential.setSystemName(systemName);
-            }
-            riseCredential.setUserAgent(request.getHeader("User-Agent"));
-            riseCredential.setClientIp(Y9Context.getIpAddr(request));
-        }
-    }
-
     @Override
     public AuthenticationHandlerExecutionResult authenticate(Credential credential, Service service) throws Throwable {
         RememberMeUsernamePasswordCredential riseCredential = (RememberMeUsernamePasswordCredential) credential;
@@ -131,8 +112,9 @@ public class Y9AuthenticationHandler extends AbstractAuthenticationHandler {
 
             y9LoginUserService.save(riseCredential, "true", "登录成功");
 
-            val attributes = buildAttributes(riseCredential, y9User);
-            val principal = this.principalFactory.createPrincipal(plainUsername, attributes);
+            //val attributes = buildAttributes(riseCredential, y9User);
+            //val principal = this.principalFactory.createPrincipal(plainUsername, attributes);
+            val principal = this.principalFactory.createPrincipal(plainUsername);
             return new DefaultAuthenticationHandlerExecutionResult(this, riseCredential, principal);
         } catch (GeneralSecurityException e) {
             y9LoginUserService.save(riseCredential, "false", "登录失败");
@@ -142,6 +124,25 @@ public class Y9AuthenticationHandler extends AbstractAuthenticationHandler {
             throw new FailedLoginException(e.getMessage());
         }
 
+    }
+
+    private static void fillCredential(RememberMeUsernamePasswordCredential riseCredential, String username,
+                                       String password, String tenantShortName) {
+        riseCredential.setUsername(username);
+        riseCredential.assignPassword(password);
+        if (StringUtils.isNotBlank(tenantShortName)) {
+            riseCredential.setTenantShortName(tenantShortName);
+        }
+
+        HttpServletRequest request = WebUtils.getHttpServletRequestFromExternalWebflowContext();
+        if (null != request) {
+            String systemName = request.getParameter("systemName");
+            if (StringUtils.isNotBlank(systemName)) {
+                riseCredential.setSystemName(systemName);
+            }
+            riseCredential.setUserAgent(request.getHeader("User-Agent"));
+            riseCredential.setClientIp(Y9Context.getIpAddr(request));
+        }
     }
 
     private List<Y9User> getAgentUsers(String deptId, String agentTenantShortName, String agentUserName) {

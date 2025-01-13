@@ -4,6 +4,7 @@ import jakarta.servlet.DispatcherType;
 import lombok.RequiredArgsConstructor;
 import org.apereo.cas.authentication.AuthenticationEventExecutionPlanConfigurer;
 import org.apereo.cas.authentication.principal.PrincipalResolver;
+import org.apereo.cas.authentication.principal.Y9PrincipalResolver;
 import org.apereo.cas.services.ServicesManager;
 import org.apereo.cas.web.CasWebSecurityConfigurer;
 import org.apereo.cas.web.y9.authen.Y9AuthenticationHandler;
@@ -25,15 +26,13 @@ import org.springframework.context.annotation.Lazy;
 import org.springframework.core.Ordered;
 import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.scheduling.annotation.Scheduled;
-import org.springframework.scheduling.annotation.SchedulingConfigurer;
-import org.springframework.scheduling.config.ScheduledTaskRegistrar;
 import org.springframework.transaction.support.TransactionOperations;
 import org.springframework.web.filter.ForwardedHeaderFilter;
 
 import java.util.List;
 
 @Lazy(false)
-@Configuration(proxyBeanMethods = false)
+@Configuration(proxyBeanMethods = true)
 public class Y9Config {
 
     @Bean
@@ -76,15 +75,18 @@ public class Y9Config {
     }
 
     @Bean
+    public PrincipalResolver y9PrincipalResolver(Y9UserService y9UserService) {
+        return new Y9PrincipalResolver(y9UserService);
+    }
+
+    @Bean
     public AuthenticationEventExecutionPlanConfigurer riseAuthenticationEventExecutionPlanConfigurer(
-            @Qualifier(PrincipalResolver.BEAN_NAME_PRINCIPAL_RESOLVER)
-            PrincipalResolver defaultPrincipalResolver,
             @Qualifier(ServicesManager.BEAN_NAME) final ServicesManager servicesManager,
             Y9UserService y9UserService,
             Y9LoginUserService y9LoginUserService) {
         Y9AuthenticationHandler handler = new Y9AuthenticationHandler("y9AuthenticationHandler",
                 servicesManager, 0, y9UserService, y9LoginUserService);
-        return plan -> plan.registerAuthenticationHandlerWithPrincipalResolver(handler, defaultPrincipalResolver);
+        return plan -> plan.registerAuthenticationHandlerWithPrincipalResolver(handler, y9PrincipalResolver(y9UserService));
     }
 
     /**
