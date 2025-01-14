@@ -118,7 +118,7 @@ public class Y9Config {
     }
 
     @Bean
-    public Runnable Y9KeyValueCleaner(Y9KeyValueService y9KeyValueService) {
+    public Runnable y9KeyValueCleaner(Y9KeyValueService y9KeyValueService) {
         return new Y9KeyValueCleaner(y9KeyValueService);
     }
 
