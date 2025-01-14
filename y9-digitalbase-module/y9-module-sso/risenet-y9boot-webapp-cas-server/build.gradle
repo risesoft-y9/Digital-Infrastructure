@@ -298,13 +298,12 @@ dependencies {
      * plugin via the CAS bom.
      **/
     implementation "org.apereo.cas:cas-server-core-logging"
-    //implementation "org.apereo.cas:cas-server-support-logback"
     //implementation "org.apereo.cas:cas-server-support-oauth-webflow"
     implementation "org.apereo.cas:cas-server-support-oauth-services"
     implementation "org.apereo.cas:cas-server-support-oidc"
     implementation "org.apereo.cas:cas-server-support-oidc-jpa"
     implementation "org.apereo.cas:cas-server-support-oidc-services"
-    //implementation "org.apereo.cas:cas-server-support-jdbc"
+    implementation "org.apereo.cas:cas-server-support-jdbc"
     implementation "org.apereo.cas:cas-server-support-jdbc-drivers"
     implementation "org.apereo.cas:cas-server-support-jpa-util"
     implementation "org.apereo.cas:cas-server-support-jpa-hibernate"
@@ -330,9 +329,6 @@ dependencies {
     implementation "org.apereo.cas:cas-server-core-services-api"
     implementation "org.apereo.cas:cas-server-core-services-registry"
 
-    /*implementation("org.springframework.boot:spring-boot-starter-data-jpa"){
-        exclude(group: "ch.qos.logback")
-    }*/
     implementation "org.springframework:spring-context"
     implementation "org.springframework:spring-context-indexer"
     implementation "org.springframework.data:spring-data-redis"
@@ -343,8 +339,8 @@ dependencies {
     implementation "com.google.zxing:core"
     implementation "com.zaxxer:HikariCP"
 
-    annotationProcessor "org.springframework:spring-context-indexer:6.2.1"
+    annotationProcessor "org.springframework:spring-context-indexer:${project.springVersion}"
 
-    //testImplementation "org.springframework.boot:spring-boot-starter-test"
+    testImplementation "org.springframework.boot:spring-boot-starter-test"
 }
 
