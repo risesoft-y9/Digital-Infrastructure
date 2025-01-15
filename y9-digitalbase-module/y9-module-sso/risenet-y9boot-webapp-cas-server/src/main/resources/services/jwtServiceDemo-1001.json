@@ -3,6 +3,7 @@
     "serviceId" : "^(https?)://localhost:7055/jwt.*",
     "name" : "jwtServiceDemo",
     "description" : "jwt Authentication app",
+    "theme" : "y9-apereo",
     "id" : 1001,
     "evaluationOrder" : 1001,
     "logoutType" : "BACK_CHANNEL",

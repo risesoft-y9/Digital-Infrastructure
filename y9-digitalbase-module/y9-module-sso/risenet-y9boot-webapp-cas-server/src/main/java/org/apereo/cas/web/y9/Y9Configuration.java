@@ -2,12 +2,18 @@ package org.apereo.cas.web.y9;
 
 import jakarta.servlet.DispatcherType;
 import lombok.RequiredArgsConstructor;
+import org.apereo.cas.CentralAuthenticationService;
 import org.apereo.cas.authentication.AuthenticationEventExecutionPlanConfigurer;
+import org.apereo.cas.authentication.AuthenticationSystemSupport;
 import org.apereo.cas.authentication.principal.PrincipalResolver;
+import org.apereo.cas.authentication.principal.ServiceFactory;
 import org.apereo.cas.authentication.principal.Y9PrincipalResolver;
+import org.apereo.cas.configuration.CasConfigurationProperties;
 import org.apereo.cas.services.ServicesManager;
 import org.apereo.cas.web.CasWebSecurityConfigurer;
+import org.apereo.cas.web.cookie.CasCookieBuilder;
 import org.apereo.cas.web.y9.authen.Y9AuthenticationHandler;
+import org.apereo.cas.web.y9.controller.*;
 import org.apereo.cas.web.y9.service.Y9KeyValueService;
 import org.apereo.cas.web.y9.service.Y9LoginUserService;
 import org.apereo.cas.web.y9.service.Y9UserService;
@@ -121,6 +127,40 @@ public class Y9Configuration {
     public Runnable y9KeyValueCleaner(Y9KeyValueService y9KeyValueService) {
         return new Y9KeyValueCleaner(y9KeyValueService);
     }
+
+    /*@Configuration
+    static class ControllerConfiguration {
+        @Bean
+        public LoginController loginController(
+                CentralAuthenticationService centralAuthenticationService,
+                @Qualifier("ticketGrantingTicketCookieGenerator") CasCookieBuilder ticketGrantingTicketCookieGenerator,
+                @Qualifier("defaultAuthenticationSystemSupport") AuthenticationSystemSupport authenticationSystemSupport,
+                @Qualifier("webApplicationServiceFactory") ServiceFactory webApplicationServiceFactory,
+                Y9UserService y9UserService) {
+            return new LoginController(centralAuthenticationService, ticketGrantingTicketCookieGenerator, authenticationSystemSupport, webApplicationServiceFactory, y9UserService);
+        }
+
+        @Bean
+        public QRCodeController qrCodeController(Y9KeyValueService y9KeyValueService){
+            return new QRCodeController(y9KeyValueService);
+        }
+
+        @Bean
+        public RandomController randomController(){
+            return new RandomController();
+        }
+
+        @Bean
+        public ServiceController serviceController(ServicesManager servicesManager, CasConfigurationProperties casConfigurationProperties){
+            return new ServiceController(servicesManager, casConfigurationProperties);
+        }
+
+        @Bean
+        public TenantController tenantControllerenantController(Y9UserService y9UserService){
+            return new TenantController(y9UserService);
+        }
+
+    }*/
 
     @RequiredArgsConstructor
     @EnableScheduling

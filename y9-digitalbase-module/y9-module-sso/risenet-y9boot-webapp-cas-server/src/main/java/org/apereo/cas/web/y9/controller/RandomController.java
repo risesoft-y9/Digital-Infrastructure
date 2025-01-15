@@ -2,6 +2,7 @@ package org.apereo.cas.web.y9.controller;
 
 import org.apereo.cas.web.y9.util.Y9Context;
 import org.apereo.cas.web.y9.util.Y9Result;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -10,11 +11,14 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
+@Lazy(false)
 @Controller
 @RequestMapping(value = "/api")
 @Slf4j
-@RequiredArgsConstructor
-public class CheckController {
+public class RandomController {
+    public RandomController() {
+        LOGGER.info("RandomController created.");
+    }
 
     @ResponseBody
     @GetMapping(value = "/getRandom")

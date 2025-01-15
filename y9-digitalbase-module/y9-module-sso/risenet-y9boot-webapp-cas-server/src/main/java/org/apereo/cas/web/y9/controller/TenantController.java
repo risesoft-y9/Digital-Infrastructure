@@ -10,6 +10,7 @@ import org.apereo.cas.services.y9.Y9User;
 import org.apereo.cas.web.y9.service.Y9UserService;
 import org.apereo.cas.web.y9.util.MobileUtil;
 import org.apereo.cas.web.y9.util.common.XSSCheckUtil;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -24,6 +25,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
+@Lazy(false)
 @Controller
 @RequestMapping(value = "/api")
 @Slf4j

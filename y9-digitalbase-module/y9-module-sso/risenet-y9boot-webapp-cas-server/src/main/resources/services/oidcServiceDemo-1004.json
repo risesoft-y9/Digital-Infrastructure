@@ -5,6 +5,7 @@
     "serviceId" : "^(https?)://localhost:7099/.*",
     "name" : "oidcServiceDemo",
     "description" : "oidc Authentication app demo",
+    "theme" : "y9-apereo",
     "id" : 1004,
     "evaluationOrder": 1004,
     "logoutType" : "BACK_CHANNEL",

@@ -5,6 +5,7 @@
     "serviceId" : "^(https?)://localhost:7099/oauth.*",
     "name" : "oauthServiceDemo",
     "description" : "oauth Authentication app demo",
+    "theme" : "y9-apereo",
     "id" : 1002,
     "evaluationOrder": 1002,
     "logoutType" : "BACK_CHANNEL",

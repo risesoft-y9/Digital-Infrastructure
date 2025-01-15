@@ -9,6 +9,7 @@ import javax.security.auth.login.FailedLoginException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 
+import lombok.RequiredArgsConstructor;
 import org.apache.commons.lang3.StringUtils;
 import org.apereo.cas.CentralAuthenticationService;
 import org.apereo.cas.authentication.AuthenticationSystemSupport;
@@ -26,6 +27,7 @@ import org.apereo.cas.web.y9.util.common.Base64Util;
 import org.apereo.cas.web.y9.util.common.CheckPassWord;
 import org.apereo.cas.web.y9.util.common.RSAUtil;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -46,6 +48,7 @@ import lombok.extern.slf4j.Slf4j;
  * @author shidaobang
  * @author qinman
  */
+@Lazy(false)
 @RestController
 @RequestMapping("/api")
 @Slf4j
@@ -68,6 +71,7 @@ public class LoginController {
         this.authenticationSystemSupport = authenticationSystemSupport;
         this.webApplicationServiceFactory = webApplicationServiceFactory;
         this.y9UserService = y9UserService;
+        LOGGER.info("LoginController created.");
     }
 
     public Map<String, Object> checkSsoLoginInfo(String tenantShortName, String username, String password,

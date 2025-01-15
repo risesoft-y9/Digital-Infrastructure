@@ -19,6 +19,7 @@ import org.apereo.cas.services.ReturnAllAttributeReleasePolicy;
 import org.apereo.cas.services.ServicesManager;
 import org.apereo.cas.support.oauth.services.OAuthRegisteredService;
 import org.apereo.cas.web.y9.util.Y9Result;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -31,6 +32,7 @@ import org.springframework.web.bind.annotation.RestController;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
+@Lazy(false)
 @RestController
 @RequestMapping(value = "/api/service", produces = MediaType.APPLICATION_JSON_VALUE)
 @Slf4j

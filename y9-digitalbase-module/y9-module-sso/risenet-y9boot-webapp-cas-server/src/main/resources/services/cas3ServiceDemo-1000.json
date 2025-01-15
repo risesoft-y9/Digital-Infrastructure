@@ -3,6 +3,7 @@
     "serviceId" : "^(https?)://localhost:7055/test.*",
     "name" : "cas3ServiceDemo",
     "description" : "cas3 Authentication protocols app",
+    "theme" : "y9-apereo",
     "id" : 1000,
     "evaluationOrder" : 1000,
     "logoutType" : "BACK_CHANNEL",
