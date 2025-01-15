@@ -117,7 +117,7 @@ public class Y9LoginUserServiceImpl implements Y9LoginUserService {
                 user.setOsName(uaInfo.getOsName());
                 user.setManagerLevel(managerLevel);
                 Environment environment = applicationContext.getEnvironment();
-                String loginInfoSaveTarget = environment.getProperty("org.apereo.cas.web.y9.login.loginInfoSaveTarget", "jpa");
+                String loginInfoSaveTarget = environment.getProperty("y9.loginInfoSaveTarget", "jpa");
                 if ("jpa".equals(loginInfoSaveTarget)) {
                     transactionTemplate.execute(status -> {
                         entityManager.persist(user);

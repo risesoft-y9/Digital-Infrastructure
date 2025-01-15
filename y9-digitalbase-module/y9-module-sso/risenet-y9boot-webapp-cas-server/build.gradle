@@ -303,6 +303,8 @@ dependencies {
     implementation "org.apereo.cas:cas-server-support-oidc"
     implementation "org.apereo.cas:cas-server-support-oidc-jpa"
     implementation "org.apereo.cas:cas-server-support-oidc-services"
+    implementation "org.apereo.cas:cas-server-support-oidc-core-api"
+
     implementation "org.apereo.cas:cas-server-support-jdbc"
     implementation "org.apereo.cas:cas-server-support-jdbc-drivers"
     implementation "org.apereo.cas:cas-server-support-jpa-util"

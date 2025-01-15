@@ -48,9 +48,9 @@ public class InetAddressUtil {
             if (properties.isEmpty()) {
                 getApplicationProperties();
             }
-            ips = properties.getProperty("org.apereo.cas.web.y9.internalIp");
+            ips = properties.getProperty("y9.internalIp");
         } else {
-            ips = environment.getProperty("org.apereo.cas.web.y9.internalIp");
+            ips = environment.getProperty("y9.internalIp");
         }
     }
 

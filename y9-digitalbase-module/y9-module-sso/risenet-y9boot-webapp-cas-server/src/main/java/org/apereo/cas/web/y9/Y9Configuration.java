@@ -33,7 +33,7 @@ import java.util.List;
 
 @Lazy(false)
 @Configuration(proxyBeanMethods = true)
-public class Y9Config {
+public class Y9Configuration {
 
     @Bean
     @ConditionalOnMissingBean(value = Y9Context.class)
