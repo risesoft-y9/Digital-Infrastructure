@@ -5,20 +5,24 @@ plugins {
     id("io.freefair.aspectj.post-compile-weaving")
 }
 
-val versionCatalog = versionCatalogs.named("libs")
-
-
 dependencies {
-    aspect(platform(versionCatalog.findLibrary("spring-boot-bom").get()))
-    testAspect(platform(versionCatalog.findLibrary("spring-boot-bom").get()))
+    api("org.aspectj:aspectjrt:1.9.22.1")
+    api("org.aspectj:aspectjtools:1.9.22.1")
+    api("org.aspectj:aspectjweaver:1.9.22.1")
 
-    api(versionCatalog.findLibrary("org-aspectj-aspectjrt").get())
-    api(versionCatalog.findLibrary("org-aspectj-aspectjtools").get())
-    api(versionCatalog.findLibrary("org-aspectj-aspectjweaver").get())
-
-    aspect("org.springframework:spring-aspects")
-    testAspect("org.springframework:spring-aspects")
+    aspect("org.springframework:spring-aspects:6.2.0")
+    testAspect("org.springframework:spring-aspects:6.2.0")
 }
+
+interface Y9AspectjPluginExtension {
+    val aspectjVersion: Property<String>
+}
+
+// Add the 'greeting' extension object to project
+val extension = project.extensions.create<Y9AspectjPluginExtension>("y9Aspectj")
+
+// Set a default value for 'message'
+extension.aspectjVersion.convention("1.9.22.1")
 
 tasks.named("compileJava") {
     configure<AjcAction> {
