@@ -9,7 +9,8 @@ import org.apereo.cas.authentication.AbstractAuthenticationHandler;
 import org.apereo.cas.authentication.AuthenticationHandlerExecutionResult;
 import org.apereo.cas.authentication.Credential;
 import org.apereo.cas.authentication.DefaultAuthenticationHandlerExecutionResult;
-import org.apereo.cas.authentication.credential.RememberMeUsernamePasswordCredential;
+import org.apereo.cas.authentication.credential.Y9Credential;
+import org.apereo.cas.authentication.credential.UsernamePasswordCredential;
 import org.apereo.cas.authentication.principal.PrincipalFactoryUtils;
 import org.apereo.cas.authentication.principal.Service;
 import org.apereo.cas.services.ServicesManager;
@@ -44,7 +45,7 @@ public class Y9AuthenticationHandler extends AbstractAuthenticationHandler {
 
     @Override
     public AuthenticationHandlerExecutionResult authenticate(Credential credential, Service service) throws Throwable {
-        RememberMeUsernamePasswordCredential riseCredential = (RememberMeUsernamePasswordCredential) credential;
+        Y9Credential riseCredential = (Y9Credential) credential;
         String loginType = riseCredential.getLoginType();
         String tenantShortName = riseCredential.getTenantShortName();
         String deptId = riseCredential.getDeptId();
@@ -112,9 +113,9 @@ public class Y9AuthenticationHandler extends AbstractAuthenticationHandler {
 
             y9LoginUserService.save(riseCredential, "true", "登录成功");
 
-            //val attributes = buildAttributes(riseCredential, y9User);
-            //val principal = this.principalFactory.createPrincipal(plainUsername, attributes);
-            val principal = this.principalFactory.createPrincipal(plainUsername);
+            val attributes = buildAttributes(riseCredential, y9User);
+            val principal = this.principalFactory.createPrincipal(plainUsername, attributes);
+            //val principal = this.principalFactory.createPrincipal(plainUsername);
             return new DefaultAuthenticationHandlerExecutionResult(this, riseCredential, principal);
         } catch (GeneralSecurityException e) {
             y9LoginUserService.save(riseCredential, "false", "登录失败");
@@ -126,7 +127,7 @@ public class Y9AuthenticationHandler extends AbstractAuthenticationHandler {
 
     }
 
-    private static void fillCredential(RememberMeUsernamePasswordCredential riseCredential, String username,
+    private static void fillCredential(Y9Credential riseCredential, String username,
                                        String password, String tenantShortName) {
         riseCredential.setUsername(username);
         riseCredential.assignPassword(password);
@@ -191,7 +192,7 @@ public class Y9AuthenticationHandler extends AbstractAuthenticationHandler {
         }
     }
 
-    protected Map<String, List<Object>> buildAttributes(RememberMeUsernamePasswordCredential credential, Y9User y9User) {
+    protected Map<String, List<Object>> buildAttributes(Y9Credential credential, Y9User y9User) {
         String tenantShortName = credential.getTenantShortName();
         String deptId = credential.getDeptId();
         String positionId = credential.getPositionId();
@@ -236,12 +237,14 @@ public class Y9AuthenticationHandler extends AbstractAuthenticationHandler {
 
     @Override
     public boolean supports(Class<? extends Credential> clazz) {
-        return RememberMeUsernamePasswordCredential.class.isAssignableFrom(clazz);
+        boolean t = Y9Credential.class.isAssignableFrom(clazz);
+        return t;
     }
 
     @Override
     public boolean supports(final Credential credential) {
-        return credential instanceof RememberMeUsernamePasswordCredential;
+        boolean t = credential instanceof UsernamePasswordCredential;
+        return t;
     }
 
 }

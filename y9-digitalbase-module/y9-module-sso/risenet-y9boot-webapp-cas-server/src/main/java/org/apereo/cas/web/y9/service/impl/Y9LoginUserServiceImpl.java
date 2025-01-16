@@ -5,14 +5,11 @@ import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.apereo.cas.authentication.credential.RememberMeUsernamePasswordCredential;
+import org.apereo.cas.authentication.credential.Y9Credential;
 import org.apereo.cas.services.y9.Y9LoginUser;
 import org.apereo.cas.services.y9.Y9User;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.core.env.Environment;
-import org.springframework.stereotype.Service;
 import org.springframework.transaction.support.TransactionOperations;
 import org.springframework.util.StringUtils;
 import org.apereo.cas.web.y9.service.Y9LoginUserService;
@@ -46,7 +43,7 @@ public class Y9LoginUserServiceImpl implements Y9LoginUserService {
     private EntityManager entityManager;
 
     @Override
-    public void save(RememberMeUsernamePasswordCredential credential, String success, String logMessage) {
+    public void save(Y9Credential credential, String success, String logMessage) {
         try {
             String deptId = credential.getDeptId();
             String loginType = credential.getLoginType();

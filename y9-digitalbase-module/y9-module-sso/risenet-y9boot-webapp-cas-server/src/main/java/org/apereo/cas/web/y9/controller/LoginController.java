@@ -9,11 +9,10 @@ import javax.security.auth.login.FailedLoginException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 
-import lombok.RequiredArgsConstructor;
 import org.apache.commons.lang3.StringUtils;
 import org.apereo.cas.CentralAuthenticationService;
 import org.apereo.cas.authentication.AuthenticationSystemSupport;
-import org.apereo.cas.authentication.credential.RememberMeUsernamePasswordCredential;
+import org.apereo.cas.authentication.credential.Y9Credential;
 import org.apereo.cas.authentication.principal.Service;
 import org.apereo.cas.authentication.principal.ServiceFactory;
 import org.apereo.cas.rest.BadRestRequestException;
@@ -123,9 +122,9 @@ public class LoginController {
     }
 
     @PostMapping(value = "/logon", consumes = MediaType.ALL_VALUE)
-    public final ResponseEntity<Map<String, Object>> logon(RememberMeUsernamePasswordCredential credential,
-        @RequestBody(required = false) final MultiValueMap<String, String> requestBody,
-        final HttpServletRequest request, final HttpServletResponse response) throws Throwable {
+    public final ResponseEntity<Map<String, Object>> logon(Y9Credential credential,
+                                                           @RequestBody(required = false) final MultiValueMap<String, String> requestBody,
+                                                           final HttpServletRequest request, final HttpServletResponse response) throws Throwable {
         Map<String, Object> retMap = new HashMap<>();
         retMap.put("success", false);
 

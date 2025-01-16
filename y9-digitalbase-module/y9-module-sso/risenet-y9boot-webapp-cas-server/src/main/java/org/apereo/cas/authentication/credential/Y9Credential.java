@@ -15,7 +15,7 @@ import org.apereo.cas.authentication.RememberMeCredential;
 @AllArgsConstructor
 @EqualsAndHashCode(callSuper = true)
 @ToString(callSuper = true)
-public class RememberMeUsernamePasswordCredential extends UsernamePasswordCredential implements RememberMeCredential {
+public class Y9Credential extends UsernamePasswordCredential implements RememberMeCredential {
     private static final long serialVersionUID = -6710007659431302397L;
 
     private boolean rememberMe;

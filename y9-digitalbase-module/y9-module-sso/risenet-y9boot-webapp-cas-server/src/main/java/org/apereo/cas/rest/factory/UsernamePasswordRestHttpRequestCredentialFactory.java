@@ -8,7 +8,7 @@ import lombok.val;
 import org.apache.commons.lang3.BooleanUtils;
 import org.apereo.cas.authentication.Credential;
 import org.apereo.cas.authentication.RememberMeCredential;
-import org.apereo.cas.authentication.credential.RememberMeUsernamePasswordCredential;
+import org.apereo.cas.authentication.credential.Y9Credential;
 import org.apereo.cas.util.CollectionUtils;
 import org.springframework.util.MultiValueMap;
 
@@ -49,19 +49,19 @@ public class UsernamePasswordRestHttpRequestCredentialFactory implements RestHtt
             return new ArrayList<>(0);
         }
 
-        RememberMeUsernamePasswordCredential riseCredential = new RememberMeUsernamePasswordCredential();
-        riseCredential.setTenantShortName(tenantShortName);
-        riseCredential.setUsername(username);
-        riseCredential.assignPassword(password);
-        riseCredential.setNoLoginScreen("true");
+        Y9Credential c = new Y9Credential();
+        c.setTenantShortName(tenantShortName);
+        c.setUsername(username);
+        c.assignPassword(password);
+        c.setNoLoginScreen("true");
 
-        riseCredential.setDeptId(deptId);
-        riseCredential.setPositionId(positionId);
-        riseCredential.setLoginType(loginType);
-        riseCredential.setScreenDimension(screenDimension);
-        riseCredential.setSystemName(systemName);
-        riseCredential.setRememberMe(BooleanUtils.toBoolean(rememberMe));
+        c.setDeptId(deptId);
+        c.setPositionId(positionId);
+        c.setLoginType(loginType);
+        c.setScreenDimension(screenDimension);
+        c.setSystemName(systemName);
+        c.setRememberMe(BooleanUtils.toBoolean(rememberMe));
 
-        return CollectionUtils.wrap(riseCredential);
+        return CollectionUtils.wrap(c);
     }
 }

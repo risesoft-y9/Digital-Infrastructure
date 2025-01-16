@@ -3,7 +3,7 @@ package org.apereo.cas.web.flow.configurer;
 import org.apereo.cas.CasProtocolConstants;
 import org.apereo.cas.authentication.PrincipalException;
 import org.apereo.cas.authentication.adaptive.UnauthorizedAuthenticationException;
-import org.apereo.cas.authentication.credential.RememberMeUsernamePasswordCredential;
+import org.apereo.cas.authentication.credential.Y9Credential;
 import org.apereo.cas.authentication.credential.UsernamePasswordCredential;
 import org.apereo.cas.authentication.exceptions.AccountDisabledException;
 import org.apereo.cas.authentication.exceptions.AccountPasswordMustChangeException;
@@ -116,7 +116,7 @@ public class DefaultLoginWebflowConfigurer extends AbstractCasWebflowConfigurer 
 
     protected void createRememberMeAuthnWebflowConfig(final Flow flow) {
         if (casProperties.getTicket().getTgt().getRememberMe().isEnabled()) {
-            createFlowVariable(flow, CasWebflowConstants.VAR_ID_CREDENTIAL, RememberMeUsernamePasswordCredential.class);
+            createFlowVariable(flow, CasWebflowConstants.VAR_ID_CREDENTIAL, Y9Credential.class);
             val state = getState(flow, CasWebflowConstants.STATE_ID_VIEW_LOGIN_FORM, ViewState.class);
             val cfg = getViewStateBinderConfiguration(state);
             cfg.addBinding(new BinderConfiguration.Binding("rememberMe", null, false));

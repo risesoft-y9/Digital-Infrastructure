@@ -14,7 +14,7 @@ import org.apache.commons.lang3.tuple.Pair;
 import org.apereo.cas.authentication.AuthenticationHandler;
 import org.apereo.cas.authentication.Credential;
 import org.apereo.cas.authentication.attribute.SimplePersonAttributes;
-import org.apereo.cas.authentication.credential.RememberMeUsernamePasswordCredential;
+import org.apereo.cas.authentication.credential.Y9Credential;
 import org.apereo.cas.authentication.principal.attribute.PersonAttributes;
 import org.apereo.cas.services.y9.Y9User;
 import org.apereo.cas.util.CollectionUtils;
@@ -46,7 +46,7 @@ public class Y9PrincipalResolver implements PrincipalResolver {
     @Override
     public Principal resolve(Credential credential, Optional<Principal> principal,
         Optional<AuthenticationHandler> handler, Optional<Service> service) throws Throwable {
-        RememberMeUsernamePasswordCredential c = (RememberMeUsernamePasswordCredential)credential;
+        Y9Credential c = (Y9Credential)credential;
         String tenantShortName = c.getTenantShortName();
         String deptId = c.getDeptId();
         String positionId = c.getPositionId();
@@ -187,7 +187,7 @@ public class Y9PrincipalResolver implements PrincipalResolver {
 
     @Override
     public boolean supports(final Credential credential) {
-        return credential instanceof RememberMeUsernamePasswordCredential;
+        return credential instanceof Y9Credential;
     }
 
 }
