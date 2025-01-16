@@ -295,6 +295,7 @@
         };
         //非空验证
         $('input[type="button"]').click(function () {
+            alert( ctx + '/api/getRandom');
             var username = $('#username').val();
             var username1 = $('#username1').val();
             var password = $('#password').val();
@@ -318,12 +319,15 @@
                         success: function (y9Result) {
                             if (y9Result.success) {
                                 $('#pwdEcodeType').val(y9Result.data);
+                                alert("aaaaaaaaaa");
                             }
                         }
                     })
                 ).done(function () {
                     $("#mpanel6").attr({style: "display: block;"});
+                    alert("bbbbb");
                 }).fail(function () {
+                    alert("ccccc");
                     option.type = "warn";
                     option.content = "获取随机数失败。";
                     WfMsg(option);

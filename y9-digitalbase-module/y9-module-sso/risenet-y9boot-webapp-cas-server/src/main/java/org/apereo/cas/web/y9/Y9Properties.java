@@ -3,7 +3,9 @@ package org.apereo.cas.web.y9;
 import lombok.Getter;
 import lombok.Setter;
 import org.springframework.boot.context.properties.ConfigurationProperties;
+import org.springframework.boot.context.properties.ConfigurationPropertiesScan;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
+import org.springframework.context.annotation.Configuration;
 
 /**
  * 配置属性
@@ -16,8 +18,10 @@ import org.springframework.boot.context.properties.EnableConfigurationProperties
  */
 @Getter
 @Setter
+@Configuration
 @ConfigurationProperties(prefix = "y9", ignoreInvalidFields = true)
-@EnableConfigurationProperties(Y9Properties.class)
+//@ConfigurationPropertiesScan
+//@EnableConfigurationProperties(Y9Properties.class)
 public class Y9Properties {
     /** 日志保存目标：kafka、jpa */
     private String loginInfoSaveTarget = "jpa";
