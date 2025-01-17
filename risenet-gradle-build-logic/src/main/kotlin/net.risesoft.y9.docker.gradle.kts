@@ -9,6 +9,13 @@ plugins {
 val myDateTimeFormatter = DateTimeFormatter.ofPattern("yyyyMMddHHmm")
 val dateTimeStr = myDateTimeFormatter.format(LocalDateTime.now())
 
+interface Y9DockerPluginExtension {
+    val appName: Property<String>
+}
+
+val extension = project.extensions.create<Y9DockerPluginExtension>("y9Docker")
+//extension.appName.convention("app")
+
 jib {
     from {
         image = "docker-internal.youshengyun.com/tomcat:10.1-jre21-temurin"
@@ -31,4 +38,15 @@ jib {
         }
         tags = setOf("9.7.0-SNAPSHOT", "9.7.x", "9.7.0-SNAPSHOT-${dateTimeStr}")
     }
+//    container{
+//        appRoot = "/usr/local/tomcat/webapps/${extension.appName.get()}"
+//    }
+}
+
+project.afterEvaluate {
+    if (!extension.appName.isPresent) {
+        throw GradleException("y9Docker.appName must be set.")
+    }
+
+    jib.container.appRoot = "/usr/local/tomcat/webapps/${extension.appName.get()}"
 }
