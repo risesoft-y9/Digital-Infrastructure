@@ -9,8 +9,8 @@ import org.apereo.cas.authentication.AbstractAuthenticationHandler;
 import org.apereo.cas.authentication.AuthenticationHandlerExecutionResult;
 import org.apereo.cas.authentication.Credential;
 import org.apereo.cas.authentication.DefaultAuthenticationHandlerExecutionResult;
-import org.apereo.cas.authentication.credential.Y9Credential;
 import org.apereo.cas.authentication.credential.UsernamePasswordCredential;
+import org.apereo.cas.authentication.credential.Y9Credential;
 import org.apereo.cas.authentication.principal.PrincipalFactoryUtils;
 import org.apereo.cas.authentication.principal.Service;
 import org.apereo.cas.services.ServicesManager;
@@ -237,14 +237,14 @@ public class Y9AuthenticationHandler extends AbstractAuthenticationHandler {
 
     @Override
     public boolean supports(Class<? extends Credential> clazz) {
-        boolean t = Y9Credential.class.isAssignableFrom(clazz);
-        return t;
+        boolean t = clazz.isAssignableFrom(Y9Credential.class);
+        return true;
     }
 
     @Override
     public boolean supports(final Credential credential) {
         boolean t = credential instanceof UsernamePasswordCredential;
-        return t;
+        return true;
     }
 
 }

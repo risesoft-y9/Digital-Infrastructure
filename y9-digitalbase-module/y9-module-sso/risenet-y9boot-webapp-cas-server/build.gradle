@@ -275,7 +275,6 @@ dependencies {
     **/
     implementation enforcedPlatform("org.apereo.cas:cas-server-support-bom:${project.'cas.version'}")
     implementation platform(org.springframework.boot.gradle.plugin.SpringBootPlugin.BOM_COORDINATES)
-    //annotationProcessor platform(org.springframework.boot.gradle.plugin.SpringBootPlugin.BOM_COORDINATES)
 
     /**
      * Do NOT modify the lines below or else you will risk breaking the build.
@@ -287,7 +286,7 @@ dependencies {
         implementation "org.apereo.cas:cas-server-webapp-init-tomcat"
     }
     
-    developmentOnly "org.springframework.boot:spring-boot-devtools:${project.springBootVersion}"
+    //developmentOnly "org.springframework.boot:spring-boot-devtools:${project.springBootVersion}"
     // developmentOnly "org.springframework.boot:spring-boot-docker-compose:${project.springBootVersion}"
         
     /**
@@ -305,7 +304,7 @@ dependencies {
     implementation "org.apereo.cas:cas-server-support-oidc-services"
     implementation "org.apereo.cas:cas-server-support-oidc-core-api"
 
-    implementation "org.apereo.cas:cas-server-support-jdbc"
+    //implementation "org.apereo.cas:cas-server-support-jdbc"
     implementation "org.apereo.cas:cas-server-support-jdbc-drivers"
     implementation "org.apereo.cas:cas-server-support-jpa-util"
     implementation "org.apereo.cas:cas-server-support-jpa-hibernate"
@@ -319,9 +318,9 @@ dependencies {
     implementation "org.apereo.cas:cas-server-support-redis-modules"
     implementation "org.apereo.cas:cas-server-core-authentication-api"
     implementation "org.apereo.cas:cas-server-core-authentication-attributes"
-    implementation "org.apereo.cas:cas-server-core-api-authentication"
     implementation "org.apereo.cas:cas-server-core"
     implementation "org.apereo.cas:cas-server-core-api"
+    implementation "org.apereo.cas:cas-server-core-api-authentication"
     implementation "org.apereo.cas:cas-server-core-cookie"
     implementation "org.apereo.cas:cas-server-core-api-cookie"
     implementation "org.apereo.cas:cas-server-core-util-api"
