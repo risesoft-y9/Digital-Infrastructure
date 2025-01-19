@@ -37,7 +37,10 @@ dependencies {
 description = "risenet-y9boot-webapp-platform"
 
 val finalName = "platform"
-jib.container.appRoot = "/usr/local/tomcat/webapps/${finalName}"
+
+y9Docker {
+    appName = finalName
+}
 
 tasks.bootWar {
     archiveFileName.set("${finalName}.${archiveExtension.get()}")

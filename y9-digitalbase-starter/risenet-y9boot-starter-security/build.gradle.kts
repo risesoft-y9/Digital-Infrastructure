@@ -13,7 +13,9 @@ dependencies {
     api("org.springframework.boot:spring-boot-autoconfigure")
     api("org.springframework.boot:spring-boot-configuration-processor")
     api("org.springframework.cloud:spring-cloud-context")
-    api(libs.antisamy)
+    api(libs.antisamy) {
+        exclude(group = "org.slf4j", module = "slf4j-simple")
+    }
     compileOnly("jakarta.servlet:jakarta.servlet-api")
 }
 
