@@ -5,56 +5,61 @@ import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.apereo.cas.authentication.credential.Y9Credential;
+import org.apereo.cas.authentication.credential.RememberMeUsernamePasswordCredential;
 import org.apereo.cas.services.y9.Y9LoginUser;
 import org.apereo.cas.services.y9.Y9User;
-import org.springframework.context.ConfigurableApplicationContext;
-import org.springframework.core.env.Environment;
-import org.springframework.transaction.support.TransactionOperations;
-import org.springframework.util.StringUtils;
 import org.apereo.cas.web.y9.service.Y9LoginUserService;
 import org.apereo.cas.web.y9.service.Y9UserService;
 import org.apereo.cas.web.y9.util.InetAddressUtil;
 import org.apereo.cas.web.y9.util.common.UserAgentUtil;
 import org.apereo.cas.web.y9.util.json.Y9JacksonUtil;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.context.ConfigurableApplicationContext;
+import org.springframework.core.env.Environment;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.support.TransactionOperations;
+import org.springframework.util.StringUtils;
 
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 import java.util.UUID;
 
-//@Service
+@Service
 @Slf4j
 @RequiredArgsConstructor
 public class Y9LoginUserServiceImpl implements Y9LoginUserService {
 
     public static String SSO_SERVER_IP = InetAddressUtil.getLocalAddress().getHostAddress();
 
-    //@Autowired
+    @Autowired
     private final ConfigurableApplicationContext applicationContext;
 
-    //@Autowired
-    //@Qualifier("jdbcServiceRegistryTransactionTemplate")
+    @Autowired
+    @Qualifier("jdbcServiceRegistryTransactionTemplate")
     private final TransactionOperations transactionTemplate;
 
-    //@Autowired
+    @Autowired
     private final Y9UserService y9UserService;
 
     @PersistenceContext(unitName = "jpaServiceRegistryContext")
     private EntityManager entityManager;
 
     @Override
-    public void save(Y9Credential credential, String success, String logMessage) {
+    public void save(RememberMeUsernamePasswordCredential credential, String success, String logMessage) {
         try {
-            String deptId = credential.getDeptId();
-            String loginType = credential.getLoginType();
-            String tenantShortName = credential.getTenantShortName();
             String userLoginName = credential.getUsername();
-            String userHostIP = credential.getClientIp();
-            String userAgent = credential.getUserAgent();
-            String screenResolution = credential.getScreenDimension();
-            String userHostMAC = credential.getClientMac();
-            String userHostName = credential.getClientHostName();
-            String userHostDiskId = credential.getClientDiskId();
+            Map<String, Object> customFields = credential.getCustomFields();
+            String deptId = (String) customFields.get("deptId");
+            String loginType = (String) customFields.get("loginType");
+            String tenantShortName = (String) customFields.get("tenantShortName");
+            String userHostIP = (String) customFields.get("userHostIP");
+            String userAgent = (String) customFields.get("userAgent");
+            String screenResolution = (String) customFields.get("screenResolution");
+            String userHostMAC = (String) customFields.get("userHostMAC");
+            String userHostName = (String) customFields.get("userHostName");
+            String userHostDiskId = (String) customFields.get("userHostDiskId");
 
             String tenantName = "";
             String personId = "";
@@ -69,18 +74,18 @@ public class Y9LoginUserServiceImpl implements Y9LoginUserService {
                 if ("mobile".equals(loginType)) {
                     if (StringUtils.hasText(deptId)) {
                         users = y9UserService.findByTenantShortNameAndMobileAndParentId(tenantShortName, userLoginName,
-                            deptId);
+                                deptId);
                     } else {
                         users = y9UserService.findByTenantShortNameAndMobileAndOriginal(tenantShortName, userLoginName,
-                            Boolean.TRUE);
+                                Boolean.TRUE);
                     }
                 } else {
                     if (StringUtils.hasText(deptId)) {
                         users = y9UserService.findByTenantShortNameAndLoginNameAndParentId(tenantShortName,
-                            userLoginName, deptId);
+                                userLoginName, deptId);
                     } else {
                         users = y9UserService.findByTenantShortNameAndLoginNameAndOriginal(tenantShortName,
-                            userLoginName, Boolean.TRUE);
+                                userLoginName, Boolean.TRUE);
                     }
                 }
                 if (users != null && users.size() > 0) {

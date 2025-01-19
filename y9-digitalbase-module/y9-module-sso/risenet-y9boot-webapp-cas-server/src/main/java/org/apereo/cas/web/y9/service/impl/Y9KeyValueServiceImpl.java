@@ -14,13 +14,13 @@ import org.apereo.cas.web.y9.service.Y9KeyValueService;
 
 import java.util.Date;
 
-//@Service
+@Service
 @Slf4j
 @RequiredArgsConstructor
 public class Y9KeyValueServiceImpl implements Y9KeyValueService {
 
-    //@Autowired
-    //@Qualifier("jdbcServiceRegistryTransactionTemplate")
+    @Autowired
+    @Qualifier("jdbcServiceRegistryTransactionTemplate")
     private final TransactionOperations transactionTemplate;
 
     @PersistenceContext(unitName = "serviceEntityManagerFactory")

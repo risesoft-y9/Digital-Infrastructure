@@ -144,6 +144,21 @@ cas:
                     signing:
                         key: "CzPeT3D2l7C-dwR2LfV9DFHrwmPGXCSsEReZeTn76xiWNU45De8s1CAdPNXovoBpEilbeTY1PkwPQuMxZdN4mQ"
                         keySize: 512
+        st:
+            maxLength: 50
+            numberOfUses: 10
+            timeToKillInSeconds: 600
+        tgt:
+            primary:
+                maxTimeToLiveInSeconds: 28800
+                timeToKillInSeconds: 7200
+            core:
+                maxLength: 50
+            rememberMe:
+                enabled: true
+                timeToKillInSeconds: 28800
+                #supportedUserAgents:
+                #supportedIpAddresses: 127.0.0.1,0:0:0:0:0:0:0:1
     tgc:
         crypto:
             encryption:
@@ -175,6 +190,7 @@ cas:
         defaultValue: zh_CN
     theme:
         defaultThemeName: y9-apereo
+        #defaultThemeName: cas-theme-default
         paramName: theme
     messageBundle:
         useCodeMessage: true
@@ -185,34 +201,30 @@ cas:
         #当defaultRedirectUrl为空、并且service参数为空时，自动计算service
         authorizedServicesOnSuccessfulLogin: true
         custom-login-form-fields:
-            rememberMe:
-                required: false
             noLoginScreen:
                 required: true
+                messageBundleKey: customLoginFormField.noLoginScreen
             loginType:
                 required: true
+                messageBundleKey: customLoginFormField.loginType
             tenantShortName:
                 required: true
+                messageBundleKey: customLoginFormField.tenantShortName
             isValidateIE:
                 required: false
+                messageBundleKey: customLoginFormField.isValidateIE
             screenDimension:
                 required: false
-            userAgent:
-                required: false
+                messageBundleKey: customLoginFormField.screenDimension
             systemName:
                 required: false
-            clientIp:
-                required: false
-            clientMac:
-                required: false
-            clientDiskId:
-                required: false
-            clientHostName:
-                required: false
+                messageBundleKey: customLoginFormField.systemName
             deptId:
                 required: false
+                messageBundleKey: customLoginFormField.deptId
             positionId:
                 required: false
+                messageBundleKey: customLoginFormField.positionId
     logout:
         confirm-logout: false
         follow-service-redirects: true

@@ -286,7 +286,7 @@ dependencies {
         implementation "org.apereo.cas:cas-server-webapp-init-tomcat"
     }
     
-    //developmentOnly "org.springframework.boot:spring-boot-devtools:${project.springBootVersion}"
+    developmentOnly "org.springframework.boot:spring-boot-devtools:${project.springBootVersion}"
     // developmentOnly "org.springframework.boot:spring-boot-docker-compose:${project.springBootVersion}"
         
     /**

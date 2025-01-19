@@ -1,9 +1,9 @@
 package org.apereo.cas.web.y9.service;
 
-import org.apereo.cas.authentication.credential.Y9Credential;
+import org.apereo.cas.authentication.credential.RememberMeUsernamePasswordCredential;
 
 public interface Y9LoginUserService {
 
-    void save(final Y9Credential credential, String success, String logMessage);
+    void save(final RememberMeUsernamePasswordCredential credential, String success, String logMessage);
 
 }

@@ -6,17 +6,20 @@ import jakarta.persistence.TypedQuery;
 import lombok.RequiredArgsConstructor;
 import org.apereo.cas.services.y9.Y9User;
 import org.apereo.cas.web.y9.service.Y9UserService;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.stereotype.Service;
 import org.springframework.transaction.support.TransactionOperations;
 
 import java.util.List;
 
-//@Service
+@Service
 @RequiredArgsConstructor
 public class Y9UserServiceImpl implements Y9UserService {
     private static final String SELECT_QUERY = "SELECT r from Y9User r ";
 
-    //@Autowired
-    //@Qualifier("jdbcServiceRegistryTransactionTemplate")
+    @Autowired
+    @Qualifier("jdbcServiceRegistryTransactionTemplate")
     private final TransactionOperations transactionTemplate;
 
     @PersistenceContext(unitName = "jpaServiceRegistryContext")

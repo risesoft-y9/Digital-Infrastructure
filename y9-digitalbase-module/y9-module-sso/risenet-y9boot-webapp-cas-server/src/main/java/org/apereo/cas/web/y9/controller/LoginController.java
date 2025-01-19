@@ -1,18 +1,13 @@
 package org.apereo.cas.web.y9.controller;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
-import javax.security.auth.login.FailedLoginException;
-
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-
+import lombok.extern.slf4j.Slf4j;
+import lombok.val;
 import org.apache.commons.lang3.StringUtils;
 import org.apereo.cas.CentralAuthenticationService;
 import org.apereo.cas.authentication.AuthenticationSystemSupport;
-import org.apereo.cas.authentication.credential.Y9Credential;
+import org.apereo.cas.authentication.credential.RememberMeUsernamePasswordCredential;
 import org.apereo.cas.authentication.principal.Service;
 import org.apereo.cas.authentication.principal.ServiceFactory;
 import org.apereo.cas.rest.BadRestRequestException;
@@ -37,11 +32,12 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import lombok.val;
-import lombok.extern.slf4j.Slf4j;
+import javax.security.auth.login.FailedLoginException;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 /**
- *
  * @author dingzhaojun
  * @author mengjuhua
  * @author shidaobang
@@ -60,11 +56,12 @@ public class LoginController {
 
     private final Y9UserService y9UserService;
 
-    public LoginController(CentralAuthenticationService centralAuthenticationService,
-        @Qualifier("ticketGrantingTicketCookieGenerator") CasCookieBuilder ticketGrantingTicketCookieGenerator,
-        @Qualifier("defaultAuthenticationSystemSupport") AuthenticationSystemSupport authenticationSystemSupport,
-        @Qualifier("webApplicationServiceFactory") ServiceFactory webApplicationServiceFactory,
-        Y9UserService y9UserService) {
+    public LoginController(
+            CentralAuthenticationService centralAuthenticationService,
+            @Qualifier("ticketGrantingTicketCookieGenerator") CasCookieBuilder ticketGrantingTicketCookieGenerator,
+            @Qualifier("defaultAuthenticationSystemSupport") AuthenticationSystemSupport authenticationSystemSupport,
+            @Qualifier("webApplicationServiceFactory") ServiceFactory webApplicationServiceFactory,
+            Y9UserService y9UserService) {
         this.centralAuthenticationService = centralAuthenticationService;
         this.ticketGrantingTicketCookieGenerator = ticketGrantingTicketCookieGenerator;
         this.authenticationSystemSupport = authenticationSystemSupport;
@@ -73,8 +70,14 @@ public class LoginController {
         LOGGER.info("LoginController created.");
     }
 
-    public Map<String, Object> checkSsoLoginInfo(String tenantShortName, String username, String password,
-        String pwdEcodeType, String loginType, final HttpServletRequest request, final HttpServletResponse response) {
+    public Map<String, Object> checkSsoLoginInfo(
+            String tenantShortName,
+            String username,
+            String password,
+            String pwdEcodeType,
+            String loginType,
+            final HttpServletRequest request,
+            final HttpServletResponse response) {
         Map<String, Object> map = new HashMap<String, Object>();
         try {
             username = Base64Util.decode(username, "Unicode");
@@ -122,9 +125,10 @@ public class LoginController {
     }
 
     @PostMapping(value = "/logon", consumes = MediaType.ALL_VALUE)
-    public final ResponseEntity<Map<String, Object>> logon(Y9Credential credential,
-                                                           @RequestBody(required = false) final MultiValueMap<String, String> requestBody,
-                                                           final HttpServletRequest request, final HttpServletResponse response) throws Throwable {
+    public final ResponseEntity<Map<String, Object>> logon(
+            RememberMeUsernamePasswordCredential credential,
+            @RequestBody(required = false) final MultiValueMap<String, String> requestBody,
+            final HttpServletRequest request, final HttpServletResponse response) throws Throwable {
         Map<String, Object> retMap = new HashMap<>();
         retMap.put("success", false);
 
@@ -133,19 +137,22 @@ public class LoginController {
 
         try {
             if (credential == null) {
-                throw new BadRestRequestException(
-                    "No credentials are provided or extracted to authenticate the REST request");
+                throw new BadRestRequestException("No credentials are provided or extracted to authenticate the REST request");
             }
-            retMap =
-                checkSsoLoginInfo(credential.getTenantShortName(), credential.getUsername(), credential.toPassword(),
-                    request.getParameter("pwdEcodeType"), credential.getLoginType(), request, response);
+            String username = credential.getUsername();
+            String password = credential.toPassword();
+            Map<String, Object> customFields = credential.getCustomFields();
+            String tenantShortName = (String) customFields.get("tenantShortName");
+            String loginType = (String) customFields.get("loginType");
+            String pwdEcodeType = request.getParameter("pwdEcodeType");
+            retMap = checkSsoLoginInfo(tenantShortName, username, password, pwdEcodeType, loginType, request, response);
             if (retMap.get("success").toString().equals("false")) {
                 return new ResponseEntity<>(retMap, headers, HttpStatus.UNAUTHORIZED);
             }
 
             final Service service = this.webApplicationServiceFactory.createService(request);
             val authenticationResult =
-                authenticationSystemSupport.finalizeAuthenticationTransaction(service, credential);
+                    authenticationSystemSupport.finalizeAuthenticationTransaction(service, credential);
             if (authenticationResult == null) {
                 throw new FailedLoginException("Authentication failed");
             }
@@ -154,7 +161,7 @@ public class LoginController {
             String tgtId = tgt.getId();
             ticketGrantingTicketCookieGenerator.addCookie(request, response, tgtId);
             final Ticket serviceTicket =
-                this.centralAuthenticationService.grantServiceTicket(tgtId, service, authenticationResult);
+                    this.centralAuthenticationService.grantServiceTicket(tgtId, service, authenticationResult);
 
             retMap.put("success", true);
             retMap.put("msg", serviceTicket.getId());

@@ -23,7 +23,7 @@ import org.springframework.context.annotation.ScopedProxyMode;
 @AutoConfiguration
 public class CasOverlayOverrideConfiguration {
 
-    @Configuration
+    /*@Configuration
     public static class Y9JpaConfig {
         private static final BeanCondition CONDITION =
                 BeanCondition.on("cas.service-registry.jpa.enabled").isTrue().evenIfMissing();
@@ -41,6 +41,6 @@ public class CasOverlayOverrideConfiguration {
                         context.getIncludeEntityClasses().addAll(entities);
                     }).otherwiseProxy().get();
         }
-    }
+    }*/
 
 }

@@ -3,6 +3,7 @@ package org.apereo.cas.web.y9;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apereo.cas.services.y9.Y9User;
+import org.apereo.cas.web.y9.util.Y9MessageDigest;
 import org.springframework.boot.context.event.ApplicationReadyEvent;
 import org.springframework.context.ApplicationListener;
 import org.apereo.cas.web.y9.service.Y9UserService;
@@ -18,7 +19,7 @@ import java.util.Date;
  */
 @Slf4j
 @RequiredArgsConstructor
-//@Component
+@Component
 public class OnApplicationReady implements ApplicationListener<ApplicationReadyEvent> {
     private final Y9UserService y9UserService;
 
@@ -44,7 +45,7 @@ public class OnApplicationReady implements ApplicationListener<ApplicationReadyE
             y9User.setManagerLevel(1);
             y9User.setName("系统管理员");
             y9User.setOriginal(true);
-            y9User.setPassword("Risesoft@2025");
+            y9User.setPassword(Y9MessageDigest.bcrypt("Risesoft@2025"));
             y9User.setPersonType("Manager");
             y9User.setSex(1);
             y9User.setTenantName("default");

@@ -4,16 +4,18 @@ import jakarta.servlet.http.HttpServletRequest;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
-import lombok.val;
 import org.apache.commons.lang3.BooleanUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.apereo.cas.authentication.Credential;
 import org.apereo.cas.authentication.RememberMeCredential;
-import org.apereo.cas.authentication.credential.Y9Credential;
+import org.apereo.cas.authentication.credential.RememberMeUsernamePasswordCredential;
 import org.apereo.cas.util.CollectionUtils;
 import org.springframework.util.MultiValueMap;
 
 import java.util.ArrayList;
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * This is {@link UsernamePasswordRestHttpRequestCredentialFactory}.
@@ -28,15 +30,21 @@ public class UsernamePasswordRestHttpRequestCredentialFactory implements RestHtt
     private int order = Integer.MIN_VALUE;
 
     @Override
-    public List<Credential> fromRequest(final HttpServletRequest request,
-        final MultiValueMap<String, String> requestBody) {
+    public List<Credential> fromRequest(final HttpServletRequest request, final MultiValueMap<String, String> requestBody) {
+        //rememberMe screenDimension userAgent clientIp clientMac clientDiskId clientHostName  noLoginScreen
         if (requestBody == null || requestBody.isEmpty()) {
             LOGGER.debug("Skipping {} because the requestBody is null or empty", getClass().getSimpleName());
             return new ArrayList<>(0);
         }
+
         final String username = requestBody.getFirst(RestHttpRequestCredentialFactory.PARAMETER_USERNAME);
         final String password = requestBody.getFirst(RestHttpRequestCredentialFactory.PARAMETER_PASSWORD);
-        val rememberMe = requestBody.getFirst(RememberMeCredential.REQUEST_PARAMETER_REMEMBER_ME);
+        if (StringUtils.isBlank(username) || StringUtils.isBlank(password)) {
+            LOGGER.debug("Invalid payload; missing required fields.");
+            return new ArrayList<>(0);
+        }
+
+        final String rememberMe = requestBody.getFirst(RememberMeCredential.REQUEST_PARAMETER_REMEMBER_ME);
         final String tenantShortName = requestBody.getFirst("tenantShortName");
         final String deptId = requestBody.getFirst("deptId");
         final String positionId = requestBody.getFirst("positionId");
@@ -44,24 +52,22 @@ public class UsernamePasswordRestHttpRequestCredentialFactory implements RestHtt
         final String screenDimension = requestBody.getFirst("screenDimension");
         final String systemName = requestBody.getFirst("systemName");
 
-        if (username == null || password == null) {
-            LOGGER.debug("Invalid payload. 'username' and 'password' form fields are required.");
-            return new ArrayList<>(0);
-        }
+        Map<String, Object> customFields = new LinkedHashMap<>();
+        customFields.put("tenantShortName", tenantShortName);
+        customFields.put("noLoginScreen", true);
+        customFields.put("deptId", deptId);
+        customFields.put("positionId", positionId);
+        customFields.put("loginType", loginType);
+        customFields.put("screenDimension", screenDimension);
+        customFields.put("systemName", systemName);
 
-        Y9Credential c = new Y9Credential();
-        c.setTenantShortName(tenantShortName);
-        c.setUsername(username);
-        c.assignPassword(password);
-        c.setNoLoginScreen("true");
+        RememberMeUsernamePasswordCredential credential = new RememberMeUsernamePasswordCredential(BooleanUtils.toBoolean(rememberMe));
+        credential.setUsername(username);
+        credential.assignPassword(password);
+        credential.setCustomFields(customFields);
 
-        c.setDeptId(deptId);
-        c.setPositionId(positionId);
-        c.setLoginType(loginType);
-        c.setScreenDimension(screenDimension);
-        c.setSystemName(systemName);
-        c.setRememberMe(BooleanUtils.toBoolean(rememberMe));
+        prepareCredential(request, credential);
 
-        return CollectionUtils.wrap(c);
+        return CollectionUtils.wrap(credential);
     }
 }
