@@ -75,9 +75,9 @@ public class Y9AuthenticationHandler extends AbstractAuthenticationHandler {
         String base64Username = riseCredential.getUsername();
         String encryptedBase64Password = riseCredential.toPassword();
         String base64Password;
-        String plainUsername = "";
+        String plainUsername;
         String plainPassword;
-        Y9User y9User = null;
+        Y9User y9User;
         try {
             if (StringUtils.isNotBlank(pwdEcodeType)) {
                 String rsaPrivateKey = Y9Context.getProperty("y9.encryptionRsaPrivateKey");
@@ -261,13 +261,13 @@ public class Y9AuthenticationHandler extends AbstractAuthenticationHandler {
     @Override
     public boolean supports(Class<? extends Credential> clazz) {
         boolean t = clazz.isAssignableFrom(UsernamePasswordCredential.class);
-        return true;
+        return t;
     }
 
     @Override
     public boolean supports(final Credential credential) {
         boolean t = credential instanceof UsernamePasswordCredential;
-        return true;
+        return t;
     }
 
 }
