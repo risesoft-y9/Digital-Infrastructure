@@ -2,12 +2,10 @@ plugins {
     id("net.risesoft.y9.conventions-war")
     id("net.risesoft.y9.lombok")
     id("net.risesoft.y9.docker")
-    alias(libs.plugins.org.springframework.boot)
 }
 
 dependencies {
     implementation(platform(project(":y9-digitalbase-dependencies")))
-    providedRuntime(platform(libs.spring.boot.bom))
 
     implementation(project(":y9-digitalbase-support:risenet-y9boot-support-file-jpa-repository"))
     implementation(project(":y9-digitalbase-support:risenet-y9boot-support-file-service-rest"))
@@ -23,8 +21,6 @@ dependencies {
     compileOnly("jakarta.servlet:jakarta.servlet-api")
 
     implementation("org.springframework.boot:spring-boot-starter-web")
-    providedRuntime("org.springframework.boot:spring-boot-starter-tomcat")
-
 }
 
 description = "risenet-y9boot-webapp-filemanager"
@@ -35,6 +31,6 @@ y9Docker {
     appName = finalName
 }
 
-tasks.bootWar {
-    archiveFileName.set("${finalName}.${archiveExtension.get()}")
+y9War {
+    archiveBaseName = finalName
 }

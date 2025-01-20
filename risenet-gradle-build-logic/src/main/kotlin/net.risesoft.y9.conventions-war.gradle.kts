@@ -1,17 +1,22 @@
 plugins {
     id("war")
     id("net.risesoft.y9.java-publish")
+    id("org.springframework.boot")
 }
 
 group = "net.risesoft"
+
+dependencies {
+    providedRuntime("org.springframework.boot:spring-boot-starter-tomcat:3.4.0")
+}
 
 java {
     sourceCompatibility = JavaVersion.VERSION_21
     toolchain {
         languageVersion.set(JavaLanguageVersion.of(21))
     }
-    withJavadocJar()
-    withSourcesJar()
+//    withJavadocJar()
+//    withSourcesJar()
 }
 
 tasks.withType<JavaCompile> {
@@ -47,3 +52,19 @@ tasks.withType<Test> { // OR tasks.test {
     //enabled = false
 }
 
+interface Y9WarPluginExtension {
+    val archiveBaseName: Property<String>
+}
+
+val extension = project.extensions.create<Y9WarPluginExtension>("y9War")
+
+project.afterEvaluate {
+    tasks.bootWar {
+        archiveFileName.set("${extension.archiveBaseName.getOrElse(project.name)}.${archiveExtension.get()}")
+    }
+
+    tasks.war {
+        archiveFileName.set("${extension.archiveBaseName.getOrElse(project.name)}-plain.${archiveExtension.get()}")
+    }
+
+}
