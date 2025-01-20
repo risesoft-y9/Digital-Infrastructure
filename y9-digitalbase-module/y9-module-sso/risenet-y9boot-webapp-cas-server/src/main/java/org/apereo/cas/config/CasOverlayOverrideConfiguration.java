@@ -1,11 +1,25 @@
 package org.apereo.cas.config;
 
+import lombok.val;
+import org.apereo.cas.jpa.JpaPersistenceProviderConfigurer;
+import org.apereo.cas.services.JpaRegisteredServiceEntity;
+import org.apereo.cas.services.y9.Y9KeyValue;
+import org.apereo.cas.services.y9.Y9LoginUser;
+import org.apereo.cas.services.y9.Y9User;
+import org.apereo.cas.util.CollectionUtils;
+import org.apereo.cas.util.spring.beans.BeanCondition;
+import org.apereo.cas.util.spring.beans.BeanSupplier;
 import org.springframework.boot.autoconfigure.AutoConfiguration;
+import org.springframework.cloud.context.config.annotation.RefreshScope;
+import org.springframework.context.ConfigurableApplicationContext;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.ScopedProxyMode;
 
 @AutoConfiguration
 public class CasOverlayOverrideConfiguration {
 
-    /*@Configuration
+    @Configuration
     public static class Y9JpaConfig {
         private static final BeanCondition CONDITION =
                 BeanCondition.on("cas.service-registry.jpa.enabled").isTrue().evenIfMissing();
@@ -23,6 +37,6 @@ public class CasOverlayOverrideConfiguration {
                         context.getIncludeEntityClasses().addAll(entities);
                     }).otherwiseProxy().get();
         }
-    }*/
+    }
 
 }

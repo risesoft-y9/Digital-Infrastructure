@@ -191,8 +191,8 @@ cas:
     locale:
         defaultValue: zh_CN
     theme:
-        defaultThemeName: y9-apereo
-        #defaultThemeName: cas-theme-default
+        //defaultThemeName: y9-apereo
+        defaultThemeName: cas-theme-default
         paramName: theme
     messageBundle:
         useCodeMessage: true
