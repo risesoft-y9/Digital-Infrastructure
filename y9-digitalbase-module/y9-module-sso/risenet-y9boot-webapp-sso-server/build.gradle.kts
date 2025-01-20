@@ -2,12 +2,10 @@ plugins {
     id("net.risesoft.y9.conventions-war")
     id("net.risesoft.y9.docker")
     id("net.risesoft.y9.lombok")
-    alias(libs.plugins.org.springframework.boot)
 }
 
 dependencies {
     implementation(platform(project(":y9-digitalbase-dependencies")))
-    providedRuntime(platform(libs.spring.boot.bom))
 
     implementation("org.apereo.cas:cas-server-core")
     implementation("org.apereo.cas:cas-server-core-authentication-api")
@@ -69,15 +67,16 @@ dependencies {
     implementation(libs.kingbase.kesdialect.hibernate4)
     implementation(libs.dameng.dmdialect.hibernate62)
     implementation(libs.dameng.dmjdbcdriver18)
-
-    providedRuntime("org.springframework.boot:spring-boot-starter-tomcat")
 }
 
 description = "risenet-y9boot-webapp-sso-server"
+
 val finalName = "sso"
+
 y9Docker {
     appName = finalName
 }
-tasks.bootWar {
-    archiveFileName.set("${finalName}.${archiveExtension.get()}")
+
+y9War {
+    archiveBaseName = finalName
 }

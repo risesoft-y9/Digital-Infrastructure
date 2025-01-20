@@ -2,12 +2,10 @@ plugins {
     id("net.risesoft.y9.conventions-war")
     id("net.risesoft.y9.lombok")
     id("net.risesoft.y9.docker")
-    alias(libs.plugins.org.springframework.boot)
 }
 
 dependencies {
     implementation(platform(project(":y9-digitalbase-dependencies")))
-    providedRuntime(platform(libs.spring.boot.bom))
 
     implementation(project(":y9-digitalbase-common:risenet-y9boot-common-util"))
     implementation(project(":y9-digitalbase-module:y9-module-platform:risenet-y9boot-support-platform-web"))
@@ -31,7 +29,6 @@ dependencies {
     testImplementation(libs.h2database)
 
     compileOnly("jakarta.servlet:jakarta.servlet-api")
-    providedRuntime("org.springframework.boot:spring-boot-starter-tomcat")
 }
 
 description = "risenet-y9boot-webapp-platform"
@@ -42,6 +39,6 @@ y9Docker {
     appName = finalName
 }
 
-tasks.bootWar {
-    archiveFileName.set("${finalName}.${archiveExtension.get()}")
+y9War {
+    archiveBaseName = finalName
 }

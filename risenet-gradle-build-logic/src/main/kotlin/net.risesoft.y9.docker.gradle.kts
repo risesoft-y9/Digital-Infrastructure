@@ -2,7 +2,6 @@ import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
 
 plugins {
-    id("application")
     id("com.google.cloud.tools.jib")
 }
 

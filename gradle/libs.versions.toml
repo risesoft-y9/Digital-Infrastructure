@@ -177,6 +177,7 @@ io-freefair-gradle-lombok-plugin = { module = "io.freefair.gradle:lombok-plugin"
 tech-yanand-gradle-maven-central-publish = { module = "tech.yanand.gradle:maven-central-publish", version.ref = "tech-yanand-gradle-maven-central-publish" }
 com-vanniktech-gradle-maven-publish-plugin = { module = "com.vanniktech:gradle-maven-publish-plugin", version.ref = "com-vanniktech-gradle-maven-publish-plugin" }
 org-jreleaser-jreleaser-gradle-plugin = { module = "org.jreleaser:jreleaser-gradle-plugin", version.ref = "org-jreleaser-jreleaser-gradle-plugin" }
+org-springframework-boot-org-springframework-boot-gradle-plugin = { module = "org.springframework.boot:org.springframework.boot.gradle.plugin", version.ref = "spring-boot"}
 
 [plugins]
 io-spring-dependency-management = { id = "io.spring.dependency-management", version.ref = "io-spring-dependency-management" }

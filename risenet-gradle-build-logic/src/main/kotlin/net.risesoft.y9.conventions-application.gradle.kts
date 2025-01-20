@@ -10,8 +10,8 @@ java {
     toolchain {
         languageVersion.set(JavaLanguageVersion.of(21))
     }
-    withJavadocJar()
-    withSourcesJar()
+//    withJavadocJar()
+//    withSourcesJar()
 }
 
 tasks.withType<JavaCompile> {

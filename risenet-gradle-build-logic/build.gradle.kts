@@ -23,6 +23,7 @@ dependencies {
     implementation(libs.tech.yanand.gradle.maven.central.publish)
     implementation(libs.com.vanniktech.gradle.maven.publish.plugin)
     implementation(libs.org.jreleaser.jreleaser.gradle.plugin)
+    implementation(libs.org.springframework.boot.org.springframework.boot.gradle.plugin)
 }
 
 group = "net.risesoft.y9"
