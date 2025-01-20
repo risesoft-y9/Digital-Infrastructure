@@ -2,48 +2,36 @@ cas:
     authn:
         accept:
             enabled: false
-        jdbc:
-            query[0]:
-                driver-class: org.postgresql.Driver
-                url: jdbc:postgresql://localhost:5432/postgres
-                dialect: org.hibernate.dialect.PostgreSQLDialect
-                user: root
-                password: "11111111"
-                sql: SELECT * FROM users WHERE uid=?
-                field-password: psw
-                idleTimeout: PT5M
-                #field-expired: expired
-                #field-disabled: disabled
-                #principal-attribute-list:
-        attribute-repository:
-            jdbc[0]:
-                driver-class: org.postgresql.Driver
-                url: jdbc:postgresql://localhost:5432/postgres
-                dialect: org.hibernate.dialect.PostgreSQLDialect
-                user: root
-                password: "11111111"
-                sql: SELECT * FROM USERATTRS WHERE {0}
-                single-row: false
-                username: uid
-                idleTimeout: PT5M
-                column-mappings:
-                    attrname: attrvalue
-                attributes:
-                    firstname: firstname
-                    lastname: lastname
-                    phone: phone
+        throttle:
+            failure:
+                #在上述时间段内允许的失败登录尝试次数
+                threshold: 1
+                #时间范围
+                rangeSeconds: 3
+                throttleWindowSeconds: "PT600S"
         oauth:
             crypto:
                 signing:
                     key: M8z5otNBibl_t5N5fFBXOdHmQTH8_zNDFmsxzCdUZB-iyBESvMidYhTJi5d9SQP5QKrFB0YxfFy9-Vz_5bqeGQ
                 encryption:
                     key: NpqJTkfnGXMzBYycIfKO1x0m05YwE7s_nZzJ1_TQAQ-Cu88gzQiL9lZ-1vse6DZtXzWGSsny1PX73XLOY953Cw
+            refreshToken:
+                timeToKillInSeconds: P14D
+            code:
+                timeToKillInSeconds: 600
+                numberOfUses: 1
             access-token:
+                timeToKillInSeconds: PT2H
+                maxTimeToLiveInSeconds: PT8H
+                createAsJwt: false
                 crypto:
                     encryption:
                         key: QTGrm8G1uf6rwx0arh-_DkeqorpkL-mLZQuqB8R6gGqtXqHMKZ0Kti1uegxBE0A9k3OeH3nNXy6pN4pik9G2HQ
                     signing:
                         key: 4i8FZ6p_Zf6QT9wk0AVpPyDjafVvQkVc05TwWa_gJrF5FxQh5nEOu5alDnstbEE1DqcCDRYAABhkQ2t_S8CrdA
+            grants:
+                resourceOwner:
+                    requireServiceHeader: true
             core:
                 userProfileViewType: FLAT
                 bypassApprovalPrompt: true
@@ -62,7 +50,7 @@ cas:
                 issuer: http://localhost:7055/sso/oidc
             jwks:
                 core:
-                    jwks-key-id: y9sso
+                    jwks-key-id: cas
                     jwks-type: RSA
                 jpa:
                     driver-class: org.postgresql.Driver
@@ -106,7 +94,13 @@ cas:
             startDelay: "PT2M"
     
     ticket:
+        trackDescendantTickets: true
         registry:
+            cleaner:
+                schedule:
+                    enabled: true
+                    startDelay: "PT15S"
+                    repeatInterval: "PT30M"
             jpa:
                 enabled: false
                 crypto:
@@ -160,6 +154,14 @@ cas:
                 #supportedUserAgents:
                 #supportedIpAddresses: 127.0.0.1,0:0:0:0:0:0:0:1
     tgc:
+        httpOnly: true
+        maxAge: -1
+        name: TGC
+        path: /sso/
+        pinToSession: true
+        rememberMeMaxAge: P14D
+        secure: false
+        sameSitePolicy: Lax
         crypto:
             encryption:
                 key: P0sPPaRh2CYrJbEAH-HJYZmmQJfazFUyKSzHDKKaEtitNtjeATeGgJ6rqKdhKDoSXbDOPdxS4J7A89s-xOm1fw
@@ -239,8 +241,7 @@ cas:
                     access: ANONYMOUS
 logging:
     level:
-        org.apereo.cas: warn
-
+        org.apereo.cas: info
 server:
     port: 7055
     servlet:
