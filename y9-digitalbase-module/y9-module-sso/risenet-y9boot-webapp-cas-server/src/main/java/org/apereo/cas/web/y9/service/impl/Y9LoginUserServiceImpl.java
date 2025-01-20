@@ -26,7 +26,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
-@Service
+@Service("y9LoginUserService")
 @Slf4j
 @RequiredArgsConstructor
 public class Y9LoginUserServiceImpl implements Y9LoginUserService {

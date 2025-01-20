@@ -13,7 +13,7 @@ import org.springframework.transaction.support.TransactionOperations;
 
 import java.util.List;
 
-@Service
+@Service("y9UserService")
 @RequiredArgsConstructor
 public class Y9UserServiceImpl implements Y9UserService {
     private static final String SELECT_QUERY = "SELECT r from Y9User r ";

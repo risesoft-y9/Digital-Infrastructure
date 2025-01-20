@@ -52,13 +52,9 @@ cas:
                 core:
                     jwks-key-id: cas
                     jwks-type: RSA
-                jpa:
-                    driver-class: org.postgresql.Driver
-                    url: jdbc:postgresql://localhost:5432/postgres
-                    dialect: org.hibernate.dialect.PostgreSQLDialect
-                    user: root
-                    password: "11111111"
-    
+                    jwks-key-size: 2048
+                fileSystem:
+                    jwksFile: classpath:/keystore.jwks
     server:
         name: http://localhost:7055
         prefix: http://localhost:7055/sso
@@ -191,8 +187,8 @@ cas:
     locale:
         defaultValue: zh_CN
     theme:
-        //defaultThemeName: y9-apereo
-        defaultThemeName: cas-theme-default
+        defaultThemeName: y9-apereo
+        //defaultThemeName: cas-theme-default
         paramName: theme
     messageBundle:
         useCodeMessage: true

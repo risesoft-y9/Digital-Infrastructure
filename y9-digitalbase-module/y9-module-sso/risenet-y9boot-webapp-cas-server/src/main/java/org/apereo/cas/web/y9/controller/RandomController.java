@@ -16,9 +16,6 @@ import lombok.extern.slf4j.Slf4j;
 @RequestMapping(value = "/api")
 @Slf4j
 public class RandomController {
-    public RandomController() {
-        LOGGER.info("RandomController created.");
-    }
 
     @ResponseBody
     @GetMapping(value = "/getRandom")
