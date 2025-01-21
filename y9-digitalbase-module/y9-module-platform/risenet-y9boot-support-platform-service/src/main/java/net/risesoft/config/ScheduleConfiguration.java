@@ -14,7 +14,7 @@ import net.javacrumbs.shedlock.spring.annotation.EnableSchedulerLock;
 
 @Configuration
 @EnableScheduling
-@EnableSchedulerLock(defaultLockAtMostFor = "1m")
+@EnableSchedulerLock(defaultLockAtMostFor = "PT2H")
 public class ScheduleConfiguration {
 
     // @Bean
