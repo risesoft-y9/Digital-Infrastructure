@@ -236,6 +236,8 @@ cas:
         # redirect-url: http://localhost:7055/sso/login
     slo:
         asynchronous: false
+        disabled: false
+        logoutPropagationType: AJAX
     monitor:
         endpoints:
             endpoint:
