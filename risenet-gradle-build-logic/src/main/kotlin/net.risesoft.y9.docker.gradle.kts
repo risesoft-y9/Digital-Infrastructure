@@ -10,6 +10,8 @@ val dateTimeStr = myDateTimeFormatter.format(LocalDateTime.now())
 
 interface Y9DockerPluginExtension {
     val appName: Property<String>
+    val fromImage: Property<String>
+    val toImage: Property<String>
 }
 
 val extension = project.extensions.create<Y9DockerPluginExtension>("y9Docker")
@@ -46,6 +48,13 @@ project.afterEvaluate {
     if (!extension.appName.isPresent) {
         throw GradleException("y9Docker.appName must be set.")
     }
-
     jib.container.appRoot = "/usr/local/tomcat/webapps/${extension.appName.get()}"
+    
+    if (extension.fromImage.isPresent) {
+        jib.from.image = extension.fromImage.get()
+    }
+    
+    if (extension.toImage.isPresent) {
+        jib.to.image = extension.toImage.get()
+    }
 }
