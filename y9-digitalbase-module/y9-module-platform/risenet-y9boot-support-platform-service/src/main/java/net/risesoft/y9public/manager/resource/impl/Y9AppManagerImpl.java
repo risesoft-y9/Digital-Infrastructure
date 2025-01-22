@@ -11,6 +11,7 @@ import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 
 import net.risesoft.consts.CacheNameConsts;
 import net.risesoft.exception.ResourceErrorCodeEnum;
@@ -38,6 +39,7 @@ import net.risesoft.y9public.repository.tenant.Y9TenantAppRepository;
 @CacheConfig(cacheNames = CacheNameConsts.RESOURCE_APP)
 @Transactional(value = "rsPublicTransactionManager", readOnly = true)
 @RequiredArgsConstructor
+@Slf4j
 public class Y9AppManagerImpl implements Y9AppManager {
 
     private final Y9AppRepository y9AppRepository;
@@ -62,10 +64,11 @@ public class Y9AppManagerImpl implements Y9AppManager {
         Y9App y9App = this.getById(id);
         y9AppRepository.delete(y9App);
 
-        // 删除租户关联数据
+        // 删除租户与应用资源关联的数据
         List<Y9TenantApp> y9TenantAppList = y9TenantAppRepository.findByTenantIdAndTenancy(id, true);
         for (Y9TenantApp y9TenantApp : y9TenantAppList) {
             Y9LoginUserHolder.setTenantId(y9TenantApp.getTenantId());
+            LOGGER.debug("删除租户[{}]与应用资源关联的数据", y9TenantApp.getTenantId());
             this.deleteTenantRelatedByAppId(id);
         }
 

@@ -11,6 +11,7 @@ import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 
 import net.risesoft.id.IdType;
 import net.risesoft.id.Y9IdGenerator;
@@ -43,6 +44,7 @@ import net.risesoft.y9public.service.resource.Y9MenuService;
 @Service
 @Transactional(value = "rsPublicTransactionManager", readOnly = true)
 @RequiredArgsConstructor
+@Slf4j
 public class Y9MenuServiceImpl implements Y9MenuService {
 
     private final Y9MenuRepository y9MenuRepository;
@@ -68,11 +70,12 @@ public class Y9MenuServiceImpl implements Y9MenuService {
         Y9Menu y9Menu = this.getById(id);
         y9MenuManager.delete(y9Menu);
 
-        // 删除租户关联数据
+        // 删除租户与菜单资源关联的数据
         List<Y9TenantApp> y9TenantAppList =
             y9TenantAppRepository.findByAppIdAndTenancy(y9Menu.getAppId(), Boolean.TRUE);
         for (Y9TenantApp y9TenantApp : y9TenantAppList) {
             Y9LoginUserHolder.setTenantId(y9TenantApp.getTenantId());
+            LOGGER.debug("删除租户[{}]与菜单资源关联的数据", y9TenantApp.getTenantId());
             this.deleteTenantRelatedByMenuId(id);
         }
 

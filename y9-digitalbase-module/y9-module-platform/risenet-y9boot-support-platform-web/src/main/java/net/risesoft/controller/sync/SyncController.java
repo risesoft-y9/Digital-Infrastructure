@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 
 import net.risesoft.entity.Y9Manager;
 import net.risesoft.entity.Y9Organization;
@@ -47,6 +48,7 @@ import net.risesoft.y9public.service.resource.Y9OperationService;
 @RestController
 @RequestMapping(value = "/sync", produces = MediaType.APPLICATION_JSON_VALUE)
 @RequiredArgsConstructor
+@Slf4j
 public class SyncController {
 
     private final CompositeOrgBaseService compositeOrgBaseService;
@@ -74,6 +76,7 @@ public class SyncController {
         List<String> tenantIdList = Y9PlatformUtil.getTenantIds();
         for (String tenantId : tenantIdList) {
             Y9LoginUserHolder.setTenantId(tenantId);
+            LOGGER.debug("初始化租户[{}]三员", tenantId);
             initTenantDataService.initManagers();
         }
         return Y9Result.successMsg("初始化租户三员完成");
@@ -90,6 +93,7 @@ public class SyncController {
         List<String> tenantIdList = Y9PlatformUtil.getTenantIds();
         for (String tenantId : tenantIdList) {
             Y9LoginUserHolder.setTenantId(tenantId);
+            LOGGER.debug("初始化租户[{}]数据字典", tenantId);
             initTenantDataService.initOptionClass();
         }
         return Y9Result.successMsg("初始化数据字典成功");
@@ -106,6 +110,7 @@ public class SyncController {
         List<String> tenantIdList = Y9PlatformUtil.getTenantIds();
         for (String tenantId : tenantIdList) {
             Y9LoginUserHolder.setTenantId(tenantId);
+            LOGGER.debug("同步租户[{}]人员信息", tenantId);
             List<Y9Organization> y9OrganizationList = y9OrganizationService.list();
             for (Y9Organization organization : y9OrganizationList) {
                 List<Y9Person> persons = compositeOrgBaseService.listAllDescendantPersons(organization.getId());
@@ -179,6 +184,7 @@ public class SyncController {
         List<String> tenantIdList = Y9PlatformUtil.getTenantIds();
         for (String tenantId : tenantIdList) {
             Y9LoginUserHolder.setTenantId(tenantId);
+            LOGGER.debug("同步租户[{}]岗位信息", tenantId);
             List<Y9Position> positions = y9PositionService.listAll();
             for (Y9Position position : positions) {
                 position.setTenantId(tenantId);

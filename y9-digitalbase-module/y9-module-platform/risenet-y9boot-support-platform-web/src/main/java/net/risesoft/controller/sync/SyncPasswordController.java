@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 
 import net.risesoft.entity.Y9Manager;
 import net.risesoft.entity.Y9Organization;
@@ -33,6 +34,7 @@ import net.risesoft.y9.Y9LoginUserHolder;
 @RestController
 @RequestMapping(value = "/sync", produces = MediaType.APPLICATION_JSON_VALUE)
 @RequiredArgsConstructor
+@Slf4j
 public class SyncPasswordController {
 
     private final CompositeOrgBaseService compositeOrgBaseService;
@@ -64,7 +66,7 @@ public class SyncPasswordController {
     }
 
     /**
-     * 同步人员信息
+     * 重置所有租户人员密码
      *
      * @return {@code Y9Result<String>}
      */
@@ -74,6 +76,7 @@ public class SyncPasswordController {
         List<String> tenantIdList = Y9PlatformUtil.getTenantIds();
         for (String tenantId : tenantIdList) {
             Y9LoginUserHolder.setTenantId(tenantId);
+            LOGGER.debug("同步租户[{}]人员密码", tenantId);
             List<Y9Organization> y9OrganizationList = y9OrganizationService.list();
             for (Y9Organization organization : y9OrganizationList) {
                 List<Y9Person> persons = compositeOrgBaseService.listAllDescendantPersons(organization.getId());
@@ -87,11 +90,11 @@ public class SyncPasswordController {
                 y9ManagerService.resetDefaultPassword(manager.getId());
             }
         }
-        return Y9Result.successMsg("同步人员信息完成");
+        return Y9Result.successMsg("重置所有租户人员密码完成");
     }
 
     /**
-     * 根据租户id和登陆名称同步人员信息
+     * 根据租户id和登录名称重置人员密码
      *
      * @param tenantId 租户id
      * @param loginName 登录名
@@ -107,6 +110,6 @@ public class SyncPasswordController {
             y9PersonService.resetDefaultPassword(person.getId());
         }
 
-        return Y9Result.successMsg("根据租户id和登陆名称同步人员信息完成");
+        return Y9Result.successMsg("根据租户id和登录名称重置人员密码完成");
     }
 }

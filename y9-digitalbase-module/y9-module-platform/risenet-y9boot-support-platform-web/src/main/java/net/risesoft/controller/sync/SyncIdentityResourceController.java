@@ -43,13 +43,14 @@ public class SyncIdentityResourceController {
      */
     @RiseLog()
     @RequestMapping("/identityResources")
-    public Y9Result<Object> identityResources() {
+    public Y9Result<Object> allTenantIdentityResources() {
         double start = System.currentTimeMillis();
-        LOGGER.info("更新人员与（资源、权限）关系表开始时间--------------->>{}", fdf.format(new Date()));
+        LOGGER.info("更新人员与（资源、权限）关系表开始时间---->>{}", fdf.format(new Date()));
 
         List<String> tenantIdList = Y9PlatformUtil.getTenantIds();
         for (String tenantId : tenantIdList) {
             Y9LoginUserHolder.setTenantId(tenantId);
+            LOGGER.info("更新人员与（资源、权限）关系表租户id---->>{}", tenantId);
             for (Y9Organization y9Organization : y9OrganizationService.list()) {
                 this.identityResources(tenantId, y9Organization.getId());
             }
@@ -63,6 +64,30 @@ public class SyncIdentityResourceController {
     }
 
     /**
+     * 同步某个租户下人员的权限缓存
+     *
+     * @param tenantId 租户id
+     * @return {@code Y9Result<Object>}
+     */
+    @RiseLog()
+    @RequestMapping("/identityResources/{tenantId}")
+    public Y9Result<Object> tenantIdentityResources(@PathVariable String tenantId) {
+        double start = System.currentTimeMillis();
+        LOGGER.info("更新人员与（资源、权限）关系表开始时间---->>{},租户id---->>{}", fdf.format(new Date()), tenantId);
+
+        Y9LoginUserHolder.setTenantId(tenantId);
+        for (Y9Organization y9Organization : y9OrganizationService.list()) {
+            this.identityResources(tenantId, y9Organization.getId());
+        }
+
+        double end = System.currentTimeMillis();
+        double time = end - start;
+        LOGGER.info("更新人员与（资源、权限）关系表完成时间--------------->>{}", fdf.format(new Date()));
+        LOGGER.info("更新人员与（资源、权限）关系表所用时间--------------->>{}", time);
+        return Y9Result.success("更新人员与（资源、权限）关系完成！");
+    }
+
+    /**
      * 同步某个租户某个组织节点下人员的权限缓存
      *
      * @param tenantId 租户id
@@ -73,8 +98,8 @@ public class SyncIdentityResourceController {
     @RequestMapping("/identityResources/{tenantId}/{orgUnitId}")
     public Y9Result<Object> identityResources(@PathVariable String tenantId, @PathVariable String orgUnitId) {
         double start = System.currentTimeMillis();
-        LOGGER.info("更新人员与（资源、权限）关系表开始时间--------------->>{},租户id---->>{},组织id---->>>{}", fdf.format(new Date()),
-            tenantId, orgUnitId);
+        LOGGER.info("更新人员与（资源、权限）关系表开始时间---->>{},租户id---->>{},组织id---->>>{}", fdf.format(new Date()), tenantId,
+            orgUnitId);
 
         Y9LoginUserHolder.setTenantId(tenantId);
         identityResourceCalculator.recalculateByOrgUnitId(orgUnitId);

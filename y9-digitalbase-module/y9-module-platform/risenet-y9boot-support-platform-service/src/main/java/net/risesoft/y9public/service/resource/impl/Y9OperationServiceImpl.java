@@ -11,6 +11,7 @@ import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 
 import net.risesoft.id.IdType;
 import net.risesoft.id.Y9IdGenerator;
@@ -44,6 +45,7 @@ import net.risesoft.y9public.service.resource.Y9OperationService;
 @Service
 @Transactional(value = "rsPublicTransactionManager", readOnly = true)
 @RequiredArgsConstructor
+@Slf4j
 public class Y9OperationServiceImpl implements Y9OperationService {
 
     private final Y9OperationRepository y9OperationRepository;
@@ -69,11 +71,12 @@ public class Y9OperationServiceImpl implements Y9OperationService {
         Y9Operation y9Operation = this.getById(id);
         y9OperationManager.delete(y9Operation);
 
-        // 删除租户关联数据
+        // 删除租户与按钮资源关联的数据
         List<Y9TenantApp> y9TenantAppList =
             y9TenantAppRepository.findByAppIdAndTenancy(y9Operation.getAppId(), Boolean.TRUE);
         for (Y9TenantApp y9TenantApp : y9TenantAppList) {
             Y9LoginUserHolder.setTenantId(y9TenantApp.getTenantId());
+            LOGGER.debug("删除租户[{}]与按钮资源关联的数据", y9TenantApp.getTenantId());
             this.deleteTenantRelatedByOperationId(id);
         }
 

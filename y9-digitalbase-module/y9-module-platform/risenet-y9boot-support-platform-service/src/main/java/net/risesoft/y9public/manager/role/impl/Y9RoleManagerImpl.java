@@ -16,6 +16,7 @@ import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 
 import net.risesoft.consts.CacheNameConsts;
 import net.risesoft.entity.Y9Group;
@@ -53,6 +54,7 @@ import net.risesoft.y9public.repository.role.Y9RoleRepository;
 @CacheConfig(cacheNames = CacheNameConsts.ROLE)
 @Transactional(value = "rsPublicTransactionManager", readOnly = true)
 @RequiredArgsConstructor
+@Slf4j
 public class Y9RoleManagerImpl implements Y9RoleManager {
 
     private final Y9RoleRepository y9RoleRepository;
@@ -72,11 +74,13 @@ public class Y9RoleManagerImpl implements Y9RoleManager {
     public void delete(String id) {
         Y9Role y9Role = this.getById(id);
         if (RoleTypeEnum.ROLE.equals(y9Role.getType())) {
-            // 删除租户关联数据
+            // 删除租户与角色关联的数据
             List<String> tenantIds = Y9PlatformUtil.getTenantIds();
             for (String tenantId : tenantIds) {
                 Y9LoginUserHolder.setTenantId(tenantId);
-                this.deleteTenantRelatedByAppId(id);
+                LOGGER.debug("删除租户[{}]与角色关联的数据", tenantId);
+
+                this.deleteTenantRelatedByRoleId(id);
             }
         } else if (RoleTypeEnum.FOLDER.equals(y9Role.getType())) {
             List<Y9Role> roleNodeList = y9RoleRepository.findByParentIdOrderByTabIndexAsc(id);
@@ -159,7 +163,7 @@ public class Y9RoleManagerImpl implements Y9RoleManager {
      * @param roleId 角色id
      */
     @Transactional(readOnly = false, propagation = Propagation.REQUIRES_NEW)
-    public void deleteTenantRelatedByAppId(String roleId) {
+    public void deleteTenantRelatedByRoleId(String roleId) {
         y9OrgBasesToRolesRepository.deleteByRoleId(roleId);
 
         List<Y9Authorization> authorizationList =
