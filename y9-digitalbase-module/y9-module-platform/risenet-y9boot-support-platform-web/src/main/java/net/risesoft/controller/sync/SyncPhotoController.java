@@ -77,6 +77,7 @@ public class SyncPhotoController {
         List<String> tenantIdList = jdbcTemplate.queryForList(sql, String.class);
         for (String tenantId : tenantIdList) {
             Y9LoginUserHolder.setTenantId(tenantId);
+            LOGGER.debug("同步租户[{}]人员头像信息", tenantId);
             List<Y9Person> persons = y9PersonService.listAll();
             for (Y9Person person : persons) {
                 y9PersonExtService.savePersonPhoto(person, getPhotoById(person.getId()));

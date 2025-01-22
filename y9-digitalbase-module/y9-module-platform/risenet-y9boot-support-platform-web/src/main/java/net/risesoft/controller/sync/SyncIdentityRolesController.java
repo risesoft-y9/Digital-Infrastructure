@@ -55,6 +55,7 @@ public class SyncIdentityRolesController {
         List<Y9Tenant> y9TenantList = y9TenantService.listByTenantType(TenantTypeEnum.TENANT);
         for (Y9Tenant y9Tenant : y9TenantList) {
             Y9LoginUserHolder.setTenantId(y9Tenant.getId());
+            LOGGER.debug("同步租户[{}]人员/岗位角色", y9Tenant.getId());
             for (Y9Organization y9Organization : y9OrganizationService.list()) {
                 identityRoleCalculator.recalculateByOrgUnitId(y9Organization.getId());
             }

@@ -14,6 +14,7 @@ import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 
 import net.risesoft.consts.InitDataConsts;
 import net.risesoft.consts.OptionClassConsts;
@@ -60,6 +61,7 @@ import net.risesoft.y9public.service.resource.Y9DataCatalogService;
 @RequiredArgsConstructor
 @Service
 @Transactional(value = "rsPublicTransactionManager", readOnly = true)
+@Slf4j
 public class Y9DataCatalogServiceImpl implements Y9DataCatalogService {
 
     private final Y9PlatformProperties y9PlatformProperties;
@@ -141,11 +143,12 @@ public class Y9DataCatalogServiceImpl implements Y9DataCatalogService {
         Y9DataCatalog y9DataCatalog = getById(id);
         y9DataCatalogRepository.deleteById(id);
 
-        // 删除租户关联数据
+        // 删除租户与数据目录资源关联的数据
         List<Y9TenantApp> y9TenantAppList =
             y9TenantAppRepository.findByAppIdAndTenancy(y9DataCatalog.getAppId(), Boolean.TRUE);
         for (Y9TenantApp y9TenantApp : y9TenantAppList) {
             Y9LoginUserHolder.setTenantId(y9TenantApp.getTenantId());
+            LOGGER.debug("删除租户[{}]与数据目录资源关联的数据", y9TenantApp.getTenantId());
             this.deleteTenantRelatedByDataCatalogId(id);
         }
 
