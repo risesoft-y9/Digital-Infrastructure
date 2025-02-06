@@ -30,7 +30,7 @@ public class LiquibaseUtil {
         liquibase.setDatabaseChangeLogLockTable(properties.getDatabaseChangeLogLockTable());
         liquibase.setDropFirst(properties.isDropFirst());
         liquibase.setShouldRun(isTenant ? properties.isTenantEnabled() : properties.isPublicEnabled());
-        liquibase.setLabels(properties.getLabels());
+        liquibase.setLabelFilter(properties.getLabels());
         liquibase.setChangeLogParameters(properties.getParameters());
         liquibase.setRollbackFile(properties.getRollbackFile());
         liquibase.setTestRollbackOnUpdate(properties.isTestRollbackOnUpdate());

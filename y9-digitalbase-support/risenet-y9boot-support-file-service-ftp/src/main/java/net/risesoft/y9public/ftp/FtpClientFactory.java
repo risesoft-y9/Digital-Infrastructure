@@ -1,8 +1,8 @@
 package net.risesoft.y9public.ftp;
 
 import java.io.IOException;
+import java.time.Duration;
 
-import net.risesoft.y9.configuration.feature.file.ftp.FtpPoolConfig;
 import org.apache.commons.net.ftp.FTPClient;
 import org.apache.commons.net.ftp.FTPReply;
 import org.apache.commons.pool2.BasePooledObjectFactory;
@@ -10,6 +10,8 @@ import org.apache.commons.pool2.PooledObject;
 import org.apache.commons.pool2.impl.DefaultPooledObject;
 
 import lombok.extern.slf4j.Slf4j;
+
+import net.risesoft.y9.configuration.feature.file.ftp.FtpPoolConfig;
 
 @Slf4j
 public class FtpClientFactory extends BasePooledObjectFactory<FTPClient> {
@@ -48,7 +50,7 @@ public class FtpClientFactory extends BasePooledObjectFactory<FTPClient> {
 
             ftpClient.setBufferSize(ftpPoolConfig.getBufferSize());
             ftpClient.setFileType(ftpPoolConfig.getFileType());
-            ftpClient.setDataTimeout(ftpPoolConfig.getDataTimeout());
+            ftpClient.setDataTimeout(Duration.ofMillis(ftpPoolConfig.getDataTimeout()));
             ftpClient.setUseEPSVwithIPv4(ftpPoolConfig.isUseEPSVwithIPv4());
             if (ftpPoolConfig.isPassiveMode()) {
                 LOGGER.info("进入 ftp 被动模式");

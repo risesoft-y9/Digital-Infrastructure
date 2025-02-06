@@ -21,6 +21,7 @@ public class NacosAutoServiceRegistrationListener implements ApplicationListener
     private final ServerProperties serverProperties;
 
     @Override
+    @SuppressWarnings("deprecation")
     public void onApplicationEvent(ApplicationReadyEvent event) {
         registration.setPort(serverProperties.getPort());
         registration.start();
