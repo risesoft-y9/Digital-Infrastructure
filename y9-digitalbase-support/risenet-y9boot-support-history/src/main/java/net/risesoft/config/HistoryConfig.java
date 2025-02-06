@@ -35,7 +35,7 @@ public class HistoryConfig {
     public CommitPropertiesProvider commitPropertiesProvider() {
         return new CommitPropertiesProvider() {
             @Override
-            public Map<String, String> provide() {
+            public Map<String, String> provideForCommittedObject(Object domainObject) {
                 Map<String, String> map = new HashMap<String, String>();
                 String personId = Y9LoginUserHolder.getPersonId();
                 String deptId = Y9LoginUserHolder.getDeptId();

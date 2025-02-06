@@ -299,7 +299,8 @@ public class Y9FileUtil {
      */
     public static void writerLogByStr(String prefix, String message) {
         String fileName = Y9Context.getRealPath("/file/temp/") + prefix + ".log";
-        try (FileWriterWithEncoding fw = new FileWriterWithEncoding(fileName, "utf-8", true);
+        try (FileWriterWithEncoding fw =
+            FileWriterWithEncoding.builder().setCharset(StandardCharsets.UTF_8).setAppend(true).setFile(fileName).get();
             BufferedWriter bw = new BufferedWriter(fw)) {
             bw.write(message);
             bw.flush();
