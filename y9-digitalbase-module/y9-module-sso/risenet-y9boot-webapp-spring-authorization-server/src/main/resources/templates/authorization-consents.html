@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="description" content="">
+    <meta name="author" content="">
+    <link rel="icon" th:href="@{/content/images/spring-logo.png}">
+    <title th:text="#{page.consent.title}"></title>
+    <link th:href="@{/content/bootstrap/css/bootstrap.min.css}" rel="stylesheet">
+    <link th:href="@{/content/css/styles.css}" rel="stylesheet">
+  </head>
+  <body>
+    <nav class="app-bar navbar navbar-light bg-light">
+        <a class="navbar-brand" href="#">
+            <img th:src="@{/content/images/spring-logo.png}" width="30" height="30" class="d-inline-block align-top" alt=""> OAuth2 Authorization server
+        </a>
+    </nav>
+    <div class="container">
+      <div class="col-md-auto">
+        <div class="form-authorization-consents">
+          <form name="consent_form" th:action="@{${postUri}}" method="POST">
+            <h3 th:text="#{page.consent.title}">Accept authorization consents</h3>
+            <div class="client-logo-container">
+                <img th:src="@{${clientLogoUrl}}">
+            </div>
+            <input name="state" th:value="${param.state}" type="hidden">
+            <input name="client_id" th:value="${param.client_id}" type="hidden">
+            <div th:if="${userCode != null}">
+                <p>You have provided the code <span style="color:blue" th:text="${userCode}"></span>. Verify that this code matches what is shown on your device.</p>
+                <input name="user_code" th:value="${userCode}" type="hidden">
+            </div>
+            <p>The client <span style="color:blue" th:text="${clientName}"></span> want access your data.</p>
+            <div>
+              <div class="form-check form-switch" th:each="scope: ${scopesToAuthorize}">
+                <input class="form-check-input" type="checkbox" name="scope" th:value="${scope.scopeName}" th:id="${scope.scopeName}">
+                <label class="form-check-label" th:for="${scope.scopeName}" th:text="${scope.scopeDescription}"></label>
+              </div>
+              <div class="form-check form-switch" th:each="scope: ${scopesPreviouslyAuthorized}">
+                <input class="form-check-input" type="checkbox" th:id="${scope.scopeName}" th:checked="true" th:disabled="true">
+                <label class="form-check-label" th:for="${scope.scopeName}" th:text="${scope.scopeDescription}"></label>
+              </div>
+            </div>
+            <div class="form-authorization-consents-buttons">
+              <button th:text="#{page.consent.submitButton}" id="submit-consent" type="submit" class="signin-btn btn btn-primary">Submit</button>
+              <button th:text="#{page.consent.cancelButton}"class="signin-btn btn btn-primary" onclick="onClickCancel()">Cancel</button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+    <script th:src="@{/content/bootstrap/js/bootstrap.min.js}"></script>
+    <script>
+        function onClickCancel() {
+            document.consent_form.reset()
+            document.consent_form.submit()
+        }
+    </script>
+  </body>
+</html>

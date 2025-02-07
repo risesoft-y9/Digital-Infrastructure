@@ -1,0 +1,50 @@
+.form-input, .form-authorization-consents {
+  h3 {
+    text-align: center;   
+  }
+}
+
+.form-authorization-consents {
+    padding: 10px;
+    max-width: 300px;
+}
+
+.form-authorization-consents .form-authorization-consents-buttons {
+    margin: auto;
+    text-align: center;
+}
+
+.client-logo-container {
+    text-align: center;
+    padding: 7px;
+}
+
+.client-logo-container img {
+    width: 50px;
+    height: 50px;
+}
+
+.form-input {
+    padding: 10px;
+    max-width: 250px;
+}
+
+.form-input .signin-btn {
+    width: 100%;
+}
+
+.app-bar {
+    padding: 10px;
+}
+
+.form-input .inputs input, .form-input .signin-btn {
+    margin-bottom: 10px;
+}
+
+.form-input .inputs label {
+    margin-bottom: 3px;
+}
+
+.col-md-auto .form-input, .form-authorization-consents {
+    margin: auto;
+}

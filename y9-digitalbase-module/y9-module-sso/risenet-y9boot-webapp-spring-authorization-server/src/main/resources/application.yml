@@ -1,0 +1,53 @@
+spring:
+  application:
+    name: sso
+  session:
+    store-type: redis
+  mvc:
+    problemdetails:
+      enabled: true
+  data:
+    redis:
+      username: default
+      password: "12345678"
+      host: localhost
+      port: "6379"
+  datasource:
+    url: jdbc:postgresql://localhost:5432/authorization-server
+    username: root
+    password: "11111111"
+    driver-class-name: org.postgresql.Driver
+    hikari:
+      maximum-pool-size: 20
+  jpa:
+    open-in-view: false
+    hibernate:
+      ddl-auto: update
+    properties:
+      jdbc:
+        batch_size: 5
+      hibernate:
+        hbm2ddl:
+          charset_name: UTF-8
+  security:
+    oauth2:
+      client:
+        registration:
+          github-idp:
+            provider: github
+            client-id: github-client-id
+            client-secret: github-client-secret
+            scope: user:email, read:user
+            client-name: Sign in with GitHub
+        provider:
+          github:
+            user-name-attribute: login
+server:
+  port: 9000
+  forward-headers-strategy: FRAMEWORK
+logging:
+  level:
+    root: INFO
+    org.springframework.web: INFO
+    org.springframework.security: INFO
+    org.springframework.security.oauth2: INFO

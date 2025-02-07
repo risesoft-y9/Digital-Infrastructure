@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Configuration status="INFO">
+  <Properties>
+    <Property name="logPattern">%d{HH:mm:ss.SSS} [%t] %-5level %logger{36} - %msg%n</Property>
+    <Property name="logDir">./logs</Property>
+    <Property name="appName">oauth2-authorization-server</Property>
+  </Properties>
+  <Appenders>
+    <RollingFile name="FileLog" fileName="${logDir}/${appName}.log"
+        filePattern="${logDir}/${appName}-%d{yyyy-MM-dd-HH-mm-ss}.log">
+      <PatternLayout pattern="${logPattern}"/>
+      <Policies>
+        <OnStartupTriggeringPolicy/>
+        <SizeBasedTriggeringPolicy size="5 MB"/>
+      </Policies>
+      <DefaultRolloverStrategy>
+        <Delete basePath="${logDir}" maxDepth="2">
+          <IfFileName glob="${appName}-*.log" />
+          <IfLastModified age="30d" />
+        </Delete>
+      </DefaultRolloverStrategy>
+    </RollingFile>
+    <Console name="ConsoleLog" target="SYSTEM_OUT">
+      <PatternLayout pattern="${logPattern}"/>
+    </Console>
+  </Appenders>
+  <Loggers>
+    <Logger name="org.springframework.security.oauth2" level="TRACE" additivity="false">
+      <AppenderRef ref="ConsoleLog"/>
+      <AppenderRef ref="FileLog"/>
+    </Logger>
+    <Logger name="org.springframework.security" level="DEBUG" additivity="false">
+      <AppenderRef ref="ConsoleLog"/>
+      <AppenderRef ref="FileLog"/>
+    </Logger>
+    <Logger name="org.springframework.security.jackson2" level="INFO" additivity="false">
+      <AppenderRef ref="ConsoleLog"/>
+      <AppenderRef ref="FileLog"/>
+    </Logger>
+    <Logger name="net.risesoft.oidc" level="DEBUG" additivity="false">
+      <AppenderRef ref="ConsoleLog"/>
+      <AppenderRef ref="FileLog"/>
+    </Logger>
+    <Root level="INFO">
+      <AppenderRef ref="ConsoleLog"/>
+      <AppenderRef ref="FileLog"/>
+    </Root>
+  </Loggers>
+</Configuration>
