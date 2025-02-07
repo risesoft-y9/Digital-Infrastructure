@@ -3,5 +3,5 @@ plugins {
 }
 
 lombok {
-    version = "1.18.34"
+    version = "1.18.36"
 }

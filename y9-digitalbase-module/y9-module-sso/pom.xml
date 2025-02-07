@@ -14,7 +14,9 @@
     <packaging>pom</packaging>
 
     <modules>
-        <module>risenet-y9boot-webapp-sso-server</module>
+        <module>risenet-y9boot-webapp-cas-server</module>
+		<module>risenet-y9boot-webapp-sso-server</module>
+		<module>risenet-y9boot-webapp-spring-authorization-server</module>
     </modules>
 
 </project>
