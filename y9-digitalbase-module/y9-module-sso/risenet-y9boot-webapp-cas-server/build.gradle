@@ -84,10 +84,10 @@ apply plugin: "io.freefair.lombok"
 
 
 
-apply from: rootProject.file("gradle/springboot.gradle")
+apply from: file("gradle/springboot.gradle")
 apply plugin: "com.google.cloud.tools.jib"
 apply plugin: "com.bmuschko.docker-remote-api"
-apply from: rootProject.file("gradle/tasks.gradle")
+apply from: file("gradle/tasks.gradle")
 
 def out = services.get(StyledTextOutputFactory).create("cas")
 
