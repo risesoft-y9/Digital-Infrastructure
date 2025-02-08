@@ -94,9 +94,23 @@ public class AuthorizationServerConfig {
                 .clientSettings(ClientSettings.builder().requireAuthorizationConsent(true).build())
                 .build();
 
+        RegisteredClient client2 = RegisteredClient.withId("client01")
+                .clientId("clientid_oidc")
+                .clientSecret(passwordEncoder.encode("secret_oidc"))
+                .clientAuthenticationMethod(ClientAuthenticationMethod.CLIENT_SECRET_BASIC)
+                .authorizationGrantType(AuthorizationGrantType.AUTHORIZATION_CODE)
+                .authorizationGrantType(AuthorizationGrantType.REFRESH_TOKEN)
+                .redirectUri("http://localhost:7099/mydemo/login/oauth2/code/client01")
+                .postLogoutRedirectUri("http://localhost:7099/mydemo")
+                .scope(OidcScopes.OPENID)
+                .scope(OidcScopes.PROFILE)
+                .clientSettings(ClientSettings.builder().requireAuthorizationConsent(true).build())
+                .build();
+
         // Save registered client's in db as if in-memory
         JdbcRegisteredClientRepository clientRepository = new JdbcRegisteredClientRepository(jdbcTemplate);
         clientRepository.save(client1);
+        clientRepository.save(client2);
 
         return clientRepository;
     }

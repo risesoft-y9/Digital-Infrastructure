@@ -45,6 +45,42 @@ spring:
 server:
   port: 9000
   forward-headers-strategy: FRAMEWORK
+  servlet:
+    #context-path: /sso
+    encoding:
+      charset: UTF-8
+      enabled: true
+      force: true
+      force-request: true
+      force-response: true
+    session:
+      cookie:
+        http-only: true
+        secure: false
+      timeout: 300
+      tracking-modes: COOKIE
+  shutdown: graceful
+  ssl:
+    enabled: false
+  tomcat:
+    accesslog:
+      enabled: true
+      pattern: '%t %a "%r" %s (%D ms)'
+      suffix: .log
+    additional-tld-skip-patterns: '*.jar'
+    background-processor-delay: 0s
+    basedir: build/tomcat
+    connection-timeout: PT20S
+    max-http-form-post-size: 2097152
+    remoteip:
+      port-header: X-Forwarded-Port
+      protocol-header: X-Forwarded-Proto
+      protocol-header-https-value: https
+      remote-ip-header: X-FORWARDED-FOR
+    threads:
+      max: 400
+      min-spare: 10
+    uri-encoding: UTF-8
 logging:
   level:
     root: INFO
