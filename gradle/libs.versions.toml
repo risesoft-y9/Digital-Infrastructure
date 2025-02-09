@@ -4,7 +4,7 @@ spring-boot = "3.4.2"
 spring-cloud = "2024.0.0"
 io-spring-dependency-management = "1.1.6"
 # cas server bom
-cas-server-bom = "7.2.0-RC4"
+cas-server-bom = "7.2.0-RC5"
 # oracle bom
 ojdbc-bom = "23.6.0.24.10"
 # hutool
