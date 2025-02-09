@@ -3,17 +3,22 @@ server:
 
 spring:
   jpa:
-    defer-datasource-initialization: true
+    #defer-datasource-initialization: true
+    properties:
+      hibernate:
+        ddl-auto: update
+    show-sql: true
+    generate-ddl: true
+    open-in-view: false
   datasource:
-    #username: sa
-    #url: jdbc:h2:mem:customdb;DB_CLOSE_ON_EXIT=FALSE
-    url: jdbc:postgresql://localhost:5432/keycloak
-    username: root
-    password: "11111111"
-    driver-class-name: org.postgresql.Driver
-    hikari:
-      maximum-pool-size: 20
-
+    username: sa
+    #password: "11111111"
+    url: jdbc:h2:mem:customdb;DB_CLOSE_ON_EXIT=FALSE
+    #url: jdbc:postgresql://localhost:5432/keycloak
+    #username: root
+    #password: "11111111"
+    #driver-class-name: org.postgresql.Driver
+    
 keycloak:
   server:
     contextPath: /auth
