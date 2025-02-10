@@ -152,7 +152,7 @@ export const useDictionaryStore = defineStore('dictionaryStore', {
 
             this.dictionary[dictionaryName] = data.filter((item) => {
                 item.originalId = item.id;
-                item.id = item.name;
+                item.id = item.code;
                 return item;
             });
 
@@ -175,6 +175,16 @@ export const useDictionaryStore = defineStore('dictionaryStore', {
             // }
 
             // return this.dictionary[dictionaryName];//存在就使用之前的数据
+        },
+        // 根据code码获取对应的name名称
+        /**
+         * dictionaryName 存入字典仓库的名称
+         * code  数据代码
+         */
+        getCodeName(dictionaryName, code) {
+            if (!code && !this.dictionary[dictionaryName]?.length) return '';
+            const matchData = this.dictionary[dictionaryName]?.filter((item) => item.code == code);
+            return matchData?.length ? matchData[0].name : '';
         }
     }
 });

@@ -6,7 +6,7 @@
     import { useI18n } from 'vue-i18n';
     import { computed, h, inject, onMounted, ref, watch } from 'vue';
     import { $keyNameAssign } from '@/utils/object';
-    import { $dictionary, $dictionaryFunc } from '@/utils/data';
+    import { $dictionary, $dictionaryFunc, $dictionaryNameFunc } from '@/utils/data';
     import { getOrgTypeList } from '@/api/dictionary/index';
     import { useSettingStore } from '@/store/modules/settingStore';
 
@@ -147,7 +147,8 @@
                     options: [],
                     render: () => {
                         //text类型渲染的内容
-                        return h('span', props.currInfo?.organizationType);
+                        let name = $dictionaryNameFunc('organizationType', props.currInfo?.organizationType);
+                        return h('span', name);
                     }
                 }
             },

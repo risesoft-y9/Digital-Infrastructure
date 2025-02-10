@@ -3,8 +3,8 @@
  * @version: 
  * @Author:  
  * @Date: 2022-06-28 10:03:00
- * @LastEditors: mengjuhua
- * @LastEditTime: 2023-12-26 11:22:38
+ * @LastEditors: chensiwen cikl777@163.com
+ * @LastEditTime: 2025-01-11 17:14:46
 -->
 <template>
     <y9Table :config="tableConfig" :filterConfig="filterConfig">
@@ -27,7 +27,7 @@
 
         <template #type="{ row, column, index }">
             <input autocomplete="new-password" hidden type="password" />
-            <el-input v-if="editId === index" v-model="formData.type" />
+            <el-input v-if="editId === index && addType" v-model="formData.type" />
             <template v-else>{{ row.type }}</template>
         </template>
     </y9Table>
@@ -50,7 +50,8 @@
             type: ''
         },
         loading: false, // 全局loading
-        editId: -1, //编辑id
+        editId: -1, //编辑id,
+        addType: false, // 是否是添加标志
         tableConfig: {
             //表格配置
             loading: false,
@@ -80,16 +81,29 @@
                     with: 50,
                     render: (row, params) => {
                         let editActions = [
-                            h('span', {
-                                style: {
-                                    display: 'inline-flex',
-                                    alignItems: 'center'
+                            h(
+                                'span',
+                                {
+                                    style: {
+                                        display: 'inline-flex',
+                                        alignItems: 'center'
+                                    },
+                                    onClick: () => {
+                                        editId.value = params.$index;
+                                        addType.value = false;
+                                        $keyNameAssign(formData.value, row);
+                                    }
                                 },
-                                onClick: () => {
-                                    editId.value = params.$index;
-                                    $keyNameAssign(formData.value, row);
-                                }
-                            }),
+                                [
+                                    h('i', {
+                                        class: 'ri-edit-line',
+                                        style: {
+                                            marginRight: '2px'
+                                        }
+                                    }),
+                                    h('span', t('编辑'))
+                                ]
+                            ),
                             h(
                                 'span',
                                 {
@@ -172,7 +186,8 @@
 
                                             ElNotification({
                                                 title: result.success ? t('保存成功') : t('保存失败'),
-                                                message: result.msg,
+                                                message:
+                                                    !addType.value && result.success ? '编辑字典类型成功' : result.msg,
                                                 type: result.success ? 'success' : 'error',
                                                 duration: 2000,
                                                 offset: 80
@@ -191,7 +206,7 @@
                                         marginLeft: '10px'
                                     },
                                     onClick: () => {
-                                        if (editId.value === 0) {
+                                        if (addType.value) {
                                             //删除第一条数据
                                             tableConfig.value.tableData.shift();
 
@@ -199,10 +214,9 @@
                                             for (let key in formData.value) {
                                                 formData.value[key] = '';
                                             }
-
-                                            //取消编辑状态
-                                            editId.value = -1;
                                         }
+                                        //取消编辑状态
+                                        editId.value = -1;
                                     }
                                 },
                                 t('取消')
@@ -228,7 +242,7 @@
         }
     });
 
-    let { formData, editId, tableConfig, filterConfig, loading } = toRefs(data);
+    let { formData, editId, addType, tableConfig, filterConfig, loading } = toRefs(data);
 
     onMounted(() => {
         getTypeList(); //获取字典类型列表
@@ -248,7 +262,7 @@
 
     //新增字典表类型
     function onAddDictionaryType() {
-        if (editId.value === 0) {
+        if (editId.value !== -1) {
             ElMessage({
                 type: 'error',
                 message: t('请保存编辑数据后再操作'),
@@ -263,6 +277,9 @@
             name: '',
             type: ''
         });
+
+        //新增标志
+        addType.value = true;
 
         editId.value = 0; //第一行为编辑状态
 

@@ -12,3 +12,8 @@ export const $dictionary = () => {
     //获取字典表
     return useDictionaryStore().$state.dictionary;
 };
+
+export const $dictionaryNameFunc = (dictionaryName, code) => {
+    //获取code的name值
+    return useDictionaryStore().getCodeName(dictionaryName, code);
+};
