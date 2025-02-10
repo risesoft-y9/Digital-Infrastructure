@@ -12,9 +12,9 @@
                 <el-option
                     v-for="item in iconStore.searchCate"
                     :key="item.value"
-                    :label="item.label"
+                    :label="t(item.label)"
                     :value="item.value"
-                    @click="changeCate(item.label)"
+                    @click="changeCate(t(item.label))"
                 />
             </el-select>
             <div class="divider"></div>

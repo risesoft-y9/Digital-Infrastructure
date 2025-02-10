@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.context.event.EventListener;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -14,10 +15,13 @@ import lombok.RequiredArgsConstructor;
 import net.risesoft.entity.Y9Person;
 import net.risesoft.entity.relation.Y9PersonsToGroups;
 import net.risesoft.id.Y9IdGenerator;
+import net.risesoft.manager.org.Y9GroupManager;
+import net.risesoft.manager.org.Y9PersonManager;
 import net.risesoft.manager.relation.Y9PersonsToGroupsManager;
 import net.risesoft.repository.relation.Y9PersonsToGroupsRepository;
 import net.risesoft.service.relation.Y9PersonsToGroupsService;
 import net.risesoft.y9.Y9Context;
+import net.risesoft.y9.exception.Y9NotFoundException;
 import net.risesoft.y9.pubsub.event.Y9EntityCreatedEvent;
 import net.risesoft.y9.pubsub.event.Y9EntityDeletedEvent;
 import net.risesoft.y9.pubsub.event.Y9EntityUpdatedEvent;
@@ -35,6 +39,8 @@ import net.risesoft.y9.util.Y9BeanUtil;
 public class Y9PersonsToGroupsServiceImpl implements Y9PersonsToGroupsService {
 
     private final Y9PersonsToGroupsManager y9PersonsToGroupsManager;
+    private final Y9PersonManager y9PersonManager;
+    private final Y9GroupManager y9GroupManager;
 
     private final Y9PersonsToGroupsRepository y9PersonsToGroupsRepository;
 
@@ -170,20 +176,65 @@ public class Y9PersonsToGroupsServiceImpl implements Y9PersonsToGroupsService {
         }
     }
 
+    @Override
+    public List<Y9PersonsToGroups> listByPersonId(String personId) {
+        return y9PersonsToGroupsRepository.findByPersonIdOrderByGroupOrder(personId);
+    }
+
     @Transactional(readOnly = false)
-    public Y9PersonsToGroups addY9PersonsToGroups(String personId, String groupId, Integer maxGroupsOrder,
-        Integer maxPersonsOrder) {
-        Y9PersonsToGroups y9PersonsToGroups = new Y9PersonsToGroups();
-        y9PersonsToGroups.setId(Y9IdGenerator.genId());
-        y9PersonsToGroups.setGroupId(groupId);
-        y9PersonsToGroups.setPersonId(personId);
-        y9PersonsToGroups.setGroupOrder(maxGroupsOrder);
-        y9PersonsToGroups.setPersonOrder(maxPersonsOrder);
+    @Override
+    public Y9PersonsToGroups saveOrUpdate(Y9PersonsToGroups y9PersonsToGroups) {
+        checkPersonExists(y9PersonsToGroups.getPersonId());
+        checkGroupExists(y9PersonsToGroups.getGroupId());
+
+        if (StringUtils.isNotBlank(y9PersonsToGroups.getId())) {
+            Optional<Y9PersonsToGroups> y9PersonsToGroupsOptional =
+                y9PersonsToGroupsRepository.findById(y9PersonsToGroups.getId());
+            if (y9PersonsToGroupsOptional.isPresent()) {
+                Y9PersonsToGroups originY9PersonsToGroups = y9PersonsToGroupsOptional.get();
+                Y9BeanUtil.copyProperties(y9PersonsToGroups, originY9PersonsToGroups);
+                y9PersonsToGroupsRepository.save(originY9PersonsToGroups);
+            }
+        } else {
+            y9PersonsToGroups.setId(Y9IdGenerator.genId());
+        }
+
         y9PersonsToGroups = y9PersonsToGroupsRepository.save(y9PersonsToGroups);
 
         Y9Context.publishEvent(new Y9EntityCreatedEvent<>(y9PersonsToGroups));
 
         return y9PersonsToGroups;
+    }
+
+    /**
+     * 检查用户组是否存在
+     *
+     * @param groupId 用户组 id
+     * @throws Y9NotFoundException id 对应的记录不存在的情况
+     */
+    private void checkGroupExists(String groupId) {
+        y9GroupManager.getById(groupId);
+    }
+
+    /**
+     * 检查人员是否存在
+     *
+     * @param personId 人员 id
+     * @throws Y9NotFoundException id 对应的记录不存在的情况
+     */
+    private void checkPersonExists(String personId) {
+        y9PersonManager.getById(personId);
+    }
+
+    @Transactional(readOnly = false)
+    public Y9PersonsToGroups addY9PersonsToGroups(String personId, String groupId, Integer maxGroupsOrder,
+        Integer maxPersonsOrder) {
+        Y9PersonsToGroups y9PersonsToGroups = new Y9PersonsToGroups();
+        y9PersonsToGroups.setGroupId(groupId);
+        y9PersonsToGroups.setPersonId(personId);
+        y9PersonsToGroups.setGroupOrder(maxGroupsOrder);
+        y9PersonsToGroups.setPersonOrder(maxPersonsOrder);
+        return this.saveOrUpdate(y9PersonsToGroups);
     }
 
     @EventListener

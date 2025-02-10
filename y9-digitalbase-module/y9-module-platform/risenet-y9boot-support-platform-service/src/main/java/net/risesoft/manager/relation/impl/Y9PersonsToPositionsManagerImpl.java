@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -13,13 +14,16 @@ import net.risesoft.entity.Y9Position;
 import net.risesoft.entity.relation.Y9PersonsToPositions;
 import net.risesoft.exception.OrgUnitErrorCodeEnum;
 import net.risesoft.id.Y9IdGenerator;
+import net.risesoft.manager.org.Y9PersonManager;
 import net.risesoft.manager.org.Y9PositionManager;
 import net.risesoft.manager.relation.Y9PersonsToPositionsManager;
 import net.risesoft.repository.relation.Y9PersonsToPositionsRepository;
 import net.risesoft.y9.Y9Context;
+import net.risesoft.y9.exception.Y9NotFoundException;
 import net.risesoft.y9.pubsub.event.Y9EntityCreatedEvent;
 import net.risesoft.y9.pubsub.event.Y9EntityDeletedEvent;
 import net.risesoft.y9.util.Y9Assert;
+import net.risesoft.y9.util.Y9BeanUtil;
 
 /**
  * 人员岗位关联 Manager 实现类
@@ -36,6 +40,7 @@ public class Y9PersonsToPositionsManagerImpl implements Y9PersonsToPositionsMana
     private final Y9PersonsToPositionsRepository y9PersonsToPositionsRepository;
 
     private final Y9PositionManager y9PositionManager;
+    private final Y9PersonManager y9PersonManager;
 
     @Override
     @Transactional(readOnly = false)
@@ -117,6 +122,51 @@ public class Y9PersonsToPositionsManagerImpl implements Y9PersonsToPositionsMana
         Y9Context.publishEvent(new Y9EntityCreatedEvent<>(savedPersonToPositions));
 
         return savedPersonToPositions;
+    }
+
+    @Override
+    @Transactional(readOnly = false)
+    public Y9PersonsToPositions saveOrUpdate(Y9PersonsToPositions y9PersonsToPositions) {
+        checkPersonExist(y9PersonsToPositions.getPersonId());
+        checkPositionExist(y9PersonsToPositions.getPositionId());
+
+        if (StringUtils.isNotBlank(y9PersonsToPositions.getId())) {
+            Optional<Y9PersonsToPositions> y9PersonsToPositionsOptional =
+                y9PersonsToPositionsRepository.findById(y9PersonsToPositions.getId());
+            if (y9PersonsToPositionsOptional.isPresent()) {
+                Y9PersonsToPositions originY9PersonsToPositions = y9PersonsToPositionsOptional.get();
+                Y9BeanUtil.copyProperties(y9PersonsToPositions, originY9PersonsToPositions);
+                return y9PersonsToPositionsRepository.save(originY9PersonsToPositions);
+            }
+        } else {
+            y9PersonsToPositions.setId(Y9IdGenerator.genId());
+        }
+
+        Y9PersonsToPositions savedPersonToPositions = y9PersonsToPositionsRepository.save(y9PersonsToPositions);
+
+        Y9Context.publishEvent(new Y9EntityCreatedEvent<>(savedPersonToPositions));
+
+        return savedPersonToPositions;
+    }
+
+    /**
+     * 检查岗位是否存在
+     *
+     * @param positionId 岗位 id
+     * @throws Y9NotFoundException id 对应的记录不存在的情况
+     */
+    private void checkPositionExist(String positionId) {
+        y9PositionManager.getById(positionId);
+    }
+
+    /**
+     * 检查人员是否存在
+     *
+     * @param personId 人员 id
+     * @throws Y9NotFoundException id 对应的记录不存在的情况
+     */
+    private void checkPersonExist(String personId) {
+        y9PersonManager.getById(personId);
     }
 
     public Integer countByPositionId(String positionId) {

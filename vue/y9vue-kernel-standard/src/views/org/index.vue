@@ -79,7 +79,7 @@
             isAdd
         ></orgForm>
         <uploadOrgInfo
-            v-if="dialogConfig.type == 'uploadOrgXML'"
+            v-if="dialogConfig.type == 'uploadOrgJSON'"
             :refresh="refreshTree"
             @update="dialogConfig.show = false"
         ></uploadOrgInfo>
@@ -172,8 +172,8 @@
                     name: computed(() => t('组织机构排序'))
                 },
                 {
-                    id: 'uploadOrgXML',
-                    name: computed(() => t('上传'))
+                    id: 'uploadOrgJSON',
+                    name: computed(() => t('导入JSON'))
                 }
                 // {
                 // 	id:"uploadHistory",
@@ -329,12 +329,12 @@
         Object.assign(dialogConfig.value, {
             show: true,
             title:
-                currRow.id == 'uploadOrgXML'
-                    ? computed(() => t('上传架构信息XML'))
+                currRow.id == 'uploadOrgJSON'
+                    ? computed(() => t('导入组织架构JSON'))
                     : computed(() => t(`${currRow.name}`)),
             type: currRow.id,
             showFooter: currRow.id == 'addOrg' || currRow.id == 'sort' ? true : false,
-            width: currRow.id == 'uploadOrgXML' ? '30%' : '60%',
+            width: currRow.id == 'uploadOrgJSON' ? '30%' : '60%',
             columns:
                 currRow.id == 'sort'
                     ? [

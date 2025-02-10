@@ -8,24 +8,24 @@ import lombok.Setter;
 import net.risesoft.y9public.entity.role.Y9Role;
 
 /**
- * Y9RoleDTO
+ * Y9Role 导出 JSON 模型
  *
  * @author shidaobang
  * @date 2022/6/7
  */
 @Getter
 @Setter
-public class Y9RoleExportModel extends Y9Role {
+public class Y9RoleJsonModel extends Y9Role {
 
     private static final long serialVersionUID = 5734021385079857067L;
 
-    private List<Y9RoleExportModel> subRoleList;
+    private List<Y9RoleJsonModel> subRoleList;
 
-    public List<Y9RoleExportModel> getSubRoleList() {
+    public List<Y9RoleJsonModel> getSubRoleList() {
         return subRoleList;
     }
 
-    public void setSubRoleList(List<Y9RoleExportModel> subRoleList) {
+    public void setSubRoleList(List<Y9RoleJsonModel> subRoleList) {
         this.subRoleList = subRoleList;
     }
 }

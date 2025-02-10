@@ -28,4 +28,5 @@ public interface Y9PersonsToPositionsManager {
 
     Y9PersonsToPositions save(String personId, String positionId);
 
+    Y9PersonsToPositions saveOrUpdate(Y9PersonsToPositions y9PersonsToPositions);
 }

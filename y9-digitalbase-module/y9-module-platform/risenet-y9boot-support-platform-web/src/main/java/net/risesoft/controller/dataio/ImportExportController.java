@@ -11,7 +11,6 @@ import jakarta.servlet.ServletContext;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.constraints.NotBlank;
 
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.MediaType;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -20,12 +19,15 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
 import net.risesoft.dataio.org.Y9OrgTreeDataHandler;
+import net.risesoft.dataio.org.Y9PersonDataHandler;
+import net.risesoft.dataio.org.model.Y9OrganizationJsonModel;
 import net.risesoft.dataio.system.Y9SystemDataHandler;
-import net.risesoft.dataio.system.model.Y9AppExportModel;
-import net.risesoft.dataio.system.model.Y9SystemExportModel;
+import net.risesoft.dataio.system.model.Y9AppJsonModel;
+import net.risesoft.dataio.system.model.Y9SystemJsonModel;
 import net.risesoft.entity.Y9OrgBase;
 import net.risesoft.enums.platform.ManagerLevelEnum;
 import net.risesoft.log.OperationTypeEnum;
@@ -52,31 +54,20 @@ import net.risesoft.y9public.service.resource.Y9SystemService;
 @RestController
 @RequestMapping(value = "/api/rest/impExp", produces = MediaType.APPLICATION_JSON_VALUE)
 @Slf4j
+@RequiredArgsConstructor
 @Validated
 @IsAnyManager({ManagerLevelEnum.SYSTEM_MANAGER, ManagerLevelEnum.OPERATION_SYSTEM_MANAGER})
 public class ImportExportController {
 
-    private final Y9OrgTreeDataHandler y9OrgTreeExcelDataHandler;
-    private final Y9OrgTreeDataHandler y9OrgTreeXmlDataHandler;
+    private final Y9PersonDataHandler y9PersonDataHandler;
+    private final Y9SystemDataHandler y9SystemDataHandler;
+    private final Y9OrgTreeDataHandler y9OrgTreeDataHandler;
+
     private final Y9SystemService y9SystemService;
     private final Y9AppService y9AppService;
-    private final Y9SystemDataHandler y9SystemDataHandler;
-    private final ServletContext servletContext;
     private final CompositeOrgBaseService compositeOrgBaseService;
 
-    public ImportExportController(
-        @Qualifier("y9OrgTreeExcelDataHandler") Y9OrgTreeDataHandler y9OrgTreeExcelDataHandler,
-        @Qualifier("y9OrgTreeXmlDataHandler") Y9OrgTreeDataHandler y9OrgTreeXmlDataHandler,
-        Y9SystemService y9SystemService, Y9AppService y9AppService, Y9SystemDataHandler y9SystemDataHandler,
-        ServletContext servletContext, CompositeOrgBaseService compositeOrgBaseService) {
-        this.y9OrgTreeExcelDataHandler = y9OrgTreeExcelDataHandler;
-        this.y9OrgTreeXmlDataHandler = y9OrgTreeXmlDataHandler;
-        this.y9SystemService = y9SystemService;
-        this.y9AppService = y9AppService;
-        this.y9SystemDataHandler = y9SystemDataHandler;
-        this.servletContext = servletContext;
-        this.compositeOrgBaseService = compositeOrgBaseService;
-    }
+    private final ServletContext servletContext;
 
     /**
      * 导出应用JSON
@@ -103,50 +94,18 @@ public class ImportExportController {
         }
     }
 
-    /**
-     * 导出组织架构XLS
-     *
-     * @param resourceId 资源id
-     * @param response 响应
-     */
-    @RiseLog(operationName = "导出组织架构XLS", operationType = OperationTypeEnum.ADD)
-    @GetMapping(value = "/exportOrgTreeXls")
-    public void exportOrgTreeXls(@RequestParam @NotBlank String resourceId, HttpServletResponse response) {
+    @RiseLog(operationName = "导出组织架构JSON", operationType = OperationTypeEnum.ADD)
+    @GetMapping(value = "/exportOrgTreeJson")
+    public void exportOrgTreeJson(@RequestParam @NotBlank String orgId, HttpServletResponse response) {
         try (OutputStream outStream = response.getOutputStream()) {
-            Y9OrgBase base = compositeOrgBaseService.getOrgUnit(resourceId);
+            Y9OrgBase base = compositeOrgBaseService.getOrgUnit(orgId);
             String filename =
-                base.getName() + "-组织架构" + new SimpleDateFormat("yyyyMMddHHmmss").format(new Date()) + ".xlsx";
-
-            response.setHeader("Content-disposition", ContentDispositionUtil.standardizeAttachment(filename));
+                base.getName() + "-组织架构" + new SimpleDateFormat("yyyyMMddHHmmss").format(new Date()) + ".json";
             response.setContentType(MediaTypeUtils.getMediaTypeForFileName(servletContext, filename).toString());
-
-            y9OrgTreeExcelDataHandler.exportOrgTree(resourceId, outStream);
-        } catch (Exception e) {
-            LOGGER.warn(e.getMessage(), e);
-        }
-    }
-
-    /**
-     * 导出组织架构树XML
-     *
-     * @param orgBaseId 组织节点id
-     * @param response 响应
-     */
-    @RiseLog(operationName = "导出组织架构树XML", operationType = OperationTypeEnum.ADD)
-    @GetMapping(value = "/exportOrgTreeXml")
-    public void exportOrgTreeXml(@RequestParam @NotBlank String orgBaseId, HttpServletResponse response) {
-        try (OutputStream outStream = response.getOutputStream()) {
-
-            Y9OrgBase y9OrgBase = compositeOrgBaseService.getOrgUnit(orgBaseId);
-            String filename =
-                y9OrgBase.getName() + "-组织架构-" + new SimpleDateFormat("yyyyMMddHHmmss").format(new Date()) + ".xml";
-
             response.setHeader("Content-Disposition", ContentDispositionUtil.standardizeAttachment(filename));
-            response.setContentType(MediaTypeUtils.getMediaTypeForFileName(servletContext, filename).toString());
 
-            y9OrgTreeXmlDataHandler.exportOrgTree(orgBaseId, outStream);
-
-        } catch (IOException e) {
+            y9OrgTreeDataHandler.exportOrgTree(orgId, outStream);
+        } catch (Exception e) {
             LOGGER.warn(e.getMessage(), e);
         }
     }
@@ -158,7 +117,7 @@ public class ImportExportController {
      * @param response 响应
      */
     @RiseLog(operationName = "导出人员XLS", operationType = OperationTypeEnum.ADD)
-    @GetMapping(value = "/exportOrgXls")
+    @GetMapping(value = "/exportPersonXls")
     public void exportPersonXls(@RequestParam @NotBlank String orgBaseId, HttpServletResponse response) {
         try (OutputStream outStream = response.getOutputStream()) {
             Y9OrgBase base = compositeOrgBaseService.getOrgUnit(orgBaseId);
@@ -167,7 +126,7 @@ public class ImportExportController {
             response.setContentType(MediaTypeUtils.getMediaTypeForFileName(servletContext, filename).toString());
             response.setHeader("Content-Disposition", ContentDispositionUtil.standardizeAttachment(filename));
 
-            y9OrgTreeExcelDataHandler.exportPerson(orgBaseId, outStream);
+            y9PersonDataHandler.exportPerson(outStream, orgBaseId);
         } catch (Exception e) {
             LOGGER.warn(e.getMessage(), e);
         }
@@ -209,40 +168,43 @@ public class ImportExportController {
     @RequestMapping(value = "/importAppJSON")
     public Y9Result<Object> importAppJson(@RequestParam MultipartFile file, String systemId) throws IOException {
         String content = new String(file.getBytes(), StandardCharsets.UTF_8);
-        Y9AppExportModel y9AppExportModel = Y9JsonUtil.readValue(content, Y9AppExportModel.class);
-        y9SystemDataHandler.importApp(y9AppExportModel, systemId);
+        Y9AppJsonModel y9AppJsonModel = Y9JsonUtil.readValue(content, Y9AppJsonModel.class);
+        y9SystemDataHandler.importApp(y9AppJsonModel, systemId);
         return Y9Result.success(null, "导入成功");
     }
 
     /**
-     * 上传组织机构XLS
+     * 导入组织架构JSON
+     *
+     * @param file 文件
+     * @return {@code Y9Result<Object>}
+     * @throws IOException IO异常
+     */
+    @RiseLog(operationName = "导入组织架构JSON", operationType = OperationTypeEnum.ADD)
+    @RequestMapping(value = "/importOrgTreeJSON")
+    public Y9Result<Object> importOrgTreeJson(@RequestParam MultipartFile file) throws IOException {
+        String content = new String(file.getBytes(), StandardCharsets.UTF_8);
+        Y9OrganizationJsonModel y9OrganizationJsonModel = Y9JsonUtil.readValue(content, Y9OrganizationJsonModel.class);
+        y9OrgTreeDataHandler.importOrgTree(y9OrganizationJsonModel);
+        return Y9Result.success(null, "导入成功");
+    }
+
+    /**
+     * 导入人员 xls
      *
      * @param file 文件
      * @param orgId 组织id
      * @return {@code Y9Result<Object>}
      */
-    @RiseLog(operationName = "上传组织机构XLS", operationType = OperationTypeEnum.ADD)
-    @RequestMapping(value = "/importOrgTreeXls")
-    public Y9Result<Object> importOrgTreeXls(@RequestParam MultipartFile file, @RequestParam String orgId) {
-        try (InputStream datafis = file.getInputStream()) {
-            return y9OrgTreeExcelDataHandler.importPerson(datafis, orgId);
+    @RiseLog(operationName = "导入人员 xls", operationType = OperationTypeEnum.ADD)
+    @RequestMapping(value = "/importPersonXls")
+    public Y9Result<Object> importPersonXls(@RequestParam MultipartFile file, @RequestParam String orgId) {
+        try (InputStream fileInputStream = file.getInputStream()) {
+            return y9PersonDataHandler.importPerson(fileInputStream, orgId);
         } catch (Exception e) {
             LOGGER.warn(e.getMessage(), e);
             return Y9Result.failure("上传失败:" + e.getMessage());
         }
-    }
-
-    /**
-     * 导入组织机构信息XML
-     *
-     * @param upload 文件
-     * @return {@code Y9Result<Object>}
-     * @throws IOException IO异常
-     */
-    @RiseLog(operationName = "导入组织机构信息XML", operationType = OperationTypeEnum.ADD)
-    @RequestMapping(value = "/importOrgXml")
-    public Y9Result<Object> importOrgXml(@RequestParam MultipartFile upload) throws IOException {
-        return y9OrgTreeXmlDataHandler.importOrgTree(upload.getInputStream(), null);
     }
 
     /**
@@ -256,8 +218,8 @@ public class ImportExportController {
     @RequestMapping(value = "/importSystemJSON")
     public Y9Result<Object> importSystemJson(@RequestParam MultipartFile file) throws IOException {
         String content = new String(file.getBytes(), StandardCharsets.UTF_8);
-        Y9SystemExportModel y9SystemExportModel = Y9JsonUtil.readValue(content, Y9SystemExportModel.class);
-        y9SystemDataHandler.importSystem(y9SystemExportModel);
+        Y9SystemJsonModel y9SystemJsonModel = Y9JsonUtil.readValue(content, Y9SystemJsonModel.class);
+        y9SystemDataHandler.importSystem(y9SystemJsonModel);
         return Y9Result.success(null, "导入成功");
     }
 
