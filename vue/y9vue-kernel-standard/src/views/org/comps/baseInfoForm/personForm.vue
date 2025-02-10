@@ -74,7 +74,7 @@
     import settings from '@/settings';
     import { Picture, UserFilled } from '@element-plus/icons-vue';
     import { $validCheck } from '@/utils/validate';
-    import { $dictionary, $dictionaryFunc } from '@/utils/data';
+    import { $dictionary, $dictionaryFunc, $dictionaryNameFunc } from '@/utils/data';
     import { listByType } from '@/api/dictionary/index';
     import { useSettingStore } from '@/store/modules/settingStore';
 
@@ -279,7 +279,9 @@
                 props: {
                     render: () => {
                         //text类型渲染的内容
-                        return h('span', props.currInfo?.officialType);
+                        let name = $dictionaryNameFunc('officialType', props.currInfo?.officialType);
+                        //text类型渲染的内容
+                        return h('span', name);
                     }
                 }
             },
@@ -447,7 +449,8 @@
                     options: [],
                     render: () => {
                         //text类型渲染的内容
-                        return h('span', props.currInfo?.idType);
+                        let name = $dictionaryNameFunc('principalIDType', props.currInfo?.idType);
+                        return h('span', name);
                     }
                 }
             },
