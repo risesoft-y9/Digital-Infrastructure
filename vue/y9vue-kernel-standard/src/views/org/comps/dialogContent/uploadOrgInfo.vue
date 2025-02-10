@@ -5,7 +5,7 @@
             <el-upload
                 ref="uploadRef"
                 v-model:file-list="fileList"
-                :accept="type === 'xml' ? 'text/xml' : ''"
+                :accept="type === 'json' ? '.json' : '.xls,.xlsx'"
                 :auto-upload="false"
                 :headers="headers"
                 :http-request="httpRequest"
@@ -30,7 +30,7 @@
             </el-upload>
         </div>
         <div :style="{ color: '#606266', 'font-size': fontSizeObj.baseFontSize }"
-            >{{ type === 'xml' ? $t('(仅支持相应的XML文件)') : $t('(仅支持相应的XLS文件)') }}
+            >{{ type === 'json' ? $t('(仅支持相应的JSON文件)') : $t('(仅支持相应的XLS文件)') }}
         </div>
         <el-button v-loading.fullscreen.lock="loading" style="display: none"></el-button>
     </div>
@@ -41,7 +41,7 @@
     import { inject, onMounted, reactive, ref, toRefs } from 'vue';
     import type { UploadInstance } from 'element-plus';
     import { ElNotification } from 'element-plus';
-    import { impOrg4xml, impOrgTreeExcel } from '@/api/impExp/index';
+    import { importOrgTreeJSON, impOrgTreeExcel } from '@/api/impExp/index';
     import settings from '@/settings';
     import y9_storage from '@/utils/storage';
     import { useSettingStore } from '@/store/modules/settingStore';
@@ -54,14 +54,14 @@
     const data = reactive({
         fileList: [],
         headers: {},
-        actions: import.meta.env.VUE_APP_CONTEXT + 'api/rest/impExp/importOrgXml'
+        actions: import.meta.env.VUE_APP_CONTEXT + 'api/rest/impExp/importOrgTreeJSON'
     });
 
     const props = defineProps({
         refresh: Function,
         type: {
             type: String,
-            default: 'xml' //类型有xml和xls
+            default: 'json' //类型有json和xls
         },
         id: {
             //type=xls时，必传
@@ -88,8 +88,8 @@
 
         let result = { success: false, msg: '' };
 
-        if (props.type === 'xml') {
-            result = await impOrg4xml(params.file);
+        if (props.type === 'json') {
+            result = await importOrgTreeJSON(params.file);
         } else if (props.type === 'xls') {
             result = await impOrgTreeExcel(params.file, props.id);
         }

@@ -168,6 +168,12 @@ public class Y9PersonsToPositionsServiceImpl implements Y9PersonsToPositionsServ
     }
 
     @Override
+    @Transactional(readOnly = false)
+    public void saveOrUpdate(Y9PersonsToPositions y9PersonsToPositions) {
+        y9PersonsToPositionsManager.saveOrUpdate(y9PersonsToPositions);
+    }
+
+    @Override
     public String getPositionIdsByPersonId(String personId) {
         List<String> positionIdList = y9PersonsToPositionsRepository.listPositionIdsByPersonId(personId);
         return StringUtils.join(positionIdList, ",");

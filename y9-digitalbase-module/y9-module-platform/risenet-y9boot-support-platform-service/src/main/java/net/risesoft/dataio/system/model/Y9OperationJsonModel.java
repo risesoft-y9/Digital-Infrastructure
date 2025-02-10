@@ -8,19 +8,19 @@ import lombok.Setter;
 import net.risesoft.y9public.entity.resource.Y9Operation;
 
 /**
- * Y9OperationDTO
+ * Y9Operation 导出 JSON 模型
  *
  * @author shidaobang
  * @date 2022/6/7
  */
 @Getter
 @Setter
-public class Y9OperationExportModel extends Y9Operation {
+public class Y9OperationJsonModel extends Y9Operation {
 
     private static final long serialVersionUID = -7493930537365048851L;
 
-    private List<Y9MenuExportModel> subMenuList;
+    private List<Y9MenuJsonModel> subMenuList;
 
-    private List<Y9OperationExportModel> subOperationList;
+    private List<Y9OperationJsonModel> subOperationList;
 
 }

@@ -35,11 +35,11 @@ export const importAppJSON = async (file, systemId) => {
 };
 
 //导入组织机构信息XML
-export const impOrg4xml = async (file) => {
+export const importOrgTreeJSON = async (file) => {
     var data = new FormData();
-    data.append('upload', file);
+    data.append('file', file);
     return await platformRequest({
-        url: '/api/rest/impExp/importOrgXml',
+        url: '/api/rest/impExp/importOrgTreeJSON',
         method: 'POST',
         cType: false,
         data: data
@@ -52,7 +52,7 @@ export const impOrgTreeExcel = async (file, orgId) => {
     data.append('file', file);
     data.append('orgId', orgId);
     return await platformRequest({
-        url: '/api/rest/impExp/importOrgTreeXls',
+        url: '/api/rest/impExp/importPersonXls',
         method: 'POST',
         cType: false,
         data: data

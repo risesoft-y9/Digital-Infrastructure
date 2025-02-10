@@ -23,154 +23,43 @@ import lombok.extern.slf4j.Slf4j;
 import net.risesoft.consts.OrgLevelConsts;
 import net.risesoft.dataio.JxlsUtil;
 import net.risesoft.entity.Y9Department;
-import net.risesoft.entity.Y9Group;
 import net.risesoft.entity.Y9Job;
 import net.risesoft.entity.Y9OrgBase;
-import net.risesoft.entity.Y9Organization;
 import net.risesoft.entity.Y9Person;
-import net.risesoft.entity.Y9Position;
 import net.risesoft.enums.platform.OrgTypeEnum;
 import net.risesoft.enums.platform.SexEnum;
 import net.risesoft.id.IdType;
 import net.risesoft.id.Y9IdGenerator;
-import net.risesoft.pojo.ObjectSheet;
 import net.risesoft.pojo.PersonInformation;
-import net.risesoft.pojo.PersonSheet;
 import net.risesoft.pojo.Y9Result;
 import net.risesoft.service.org.CompositeOrgBaseService;
 import net.risesoft.service.org.Y9DepartmentService;
-import net.risesoft.service.org.Y9GroupService;
 import net.risesoft.service.org.Y9JobService;
-import net.risesoft.service.org.Y9OrganizationService;
 import net.risesoft.service.org.Y9PersonService;
-import net.risesoft.service.org.Y9PositionService;
 import net.risesoft.y9.Y9LoginUserHolder;
 
 import cn.hutool.core.io.resource.ClassPathResource;
 
-@Service(value = "y9OrgTreeExcelDataHandler")
+/**
+ * 人员 Excel 数据导入导出
+ *
+ * @author shidaobang
+ * @date 2025/02/10
+ */
+@Service
 @Slf4j
 @RequiredArgsConstructor
-public class Y9OrgTreeExcelDataHandlerImpl implements Y9OrgTreeDataHandler {
+public class Y9PersonExcelDataHandlerImpl implements Y9PersonDataHandler {
 
     private static final String SPLITTER = ",";
 
     private final CompositeOrgBaseService compositeOrgBaseService;
     private final Y9DepartmentService y9DepartmentService;
     private final Y9PersonService y9PersonService;
-    private final Y9OrganizationService y9OrganizationService;
-    private final Y9PositionService y9PositionService;
-    private final Y9GroupService y9GroupService;
     private final Y9JobService y9JobService;
 
-    private void executeDepartment(String parentId, List<ObjectSheet> departmentList) {
-        List<Y9Department> departments = y9DepartmentService.listByParentId(parentId, false);
-        if (!departments.isEmpty()) {
-            for (Y9Department department : departments) {
-                ObjectSheet departmentSheet = new ObjectSheet();
-                List<PersonSheet> personSheetList = new ArrayList<>();
-                List<Y9Person> personList = y9PersonService.listByParentId(department.getId(), false);
-                if (personList != null) {
-                    for (Y9Person y9Person : personList) {
-                        PersonSheet person = new PersonSheet();
-                        person.setDn(y9Person.getDn());
-                        person.setEmail(y9Person.getEmail());
-                        person.setLoginName(y9Person.getLoginName());
-                        person.setMobile(y9Person.getMobile());
-                        person.setName(y9Person.getName());
-                        person.setOfficeFax(y9Person.getOfficeFax());
-                        person.setOfficePhone(y9Person.getOfficePhone());
-                        person.setTabIndex(y9Person.getTabIndex());
-                        personSheetList.add(person);
-                    }
-                } else {
-                    PersonSheet person = new PersonSheet();
-                    person.setNum(1);
-                    personSheetList.add(person);
-                }
-                departmentSheet.setDn(department.getDn());
-                departmentSheet.setName(department.getName());
-                departmentSheet.setNum(departmentList.size() + 1);
-                departmentSheet.setPersonList(personSheetList);
-                departmentList.add(departmentSheet);
-            }
-            for (Y9Department department : departments) {
-                executeDepartment(department.getId(), departmentList);
-            }
-        }
-    }
-
-    private List<ObjectSheet> executeGroup(List<Y9Group> groupList) {
-        List<ObjectSheet> list = new ArrayList<>();
-        if (!groupList.isEmpty()) {
-            int i = 1;
-            for (Y9Group group : groupList) {
-                ObjectSheet groupSheet = new ObjectSheet();
-                List<PersonSheet> personSheetList = new ArrayList<>();
-                List<Y9Person> personList = y9PersonService.listByGroupId(group.getId(), Boolean.FALSE);
-                if (personList != null) {
-                    for (Y9Person y9Person : personList) {
-                        PersonSheet person = new PersonSheet();
-                        person.setDn(y9Person.getDn());
-                        person.setName(y9Person.getName());
-                        personSheetList.add(person);
-                    }
-                } else {
-                    PersonSheet person = new PersonSheet();
-                    personSheetList.add(person);
-                }
-                groupSheet.setDn(group.getDn());
-                groupSheet.setName(group.getName());
-                groupSheet.setPersonList(personSheetList);
-                groupSheet.setNum(i++);
-                list.add(groupSheet);
-            }
-        }
-        return list;
-    }
-
-    private List<ObjectSheet> executePosition(List<Y9Position> positionList) {
-        List<ObjectSheet> list = new ArrayList<>();
-        if (!positionList.isEmpty()) {
-            int i = 1;
-            for (Y9Position position : positionList) {
-                ObjectSheet positionSheet = new ObjectSheet();
-                List<PersonSheet> personSheetList = new ArrayList<>();
-                List<Y9Person> personList = y9PersonService.listByPositionId(position.getId(), Boolean.FALSE);
-                if (personList != null) {
-                    for (Y9Person y9Person : personList) {
-                        PersonSheet person = new PersonSheet();
-                        person.setDn(y9Person.getDn());
-                        person.setName(y9Person.getName());
-                        personSheetList.add(person);
-                    }
-                } else {
-                    PersonSheet person = new PersonSheet();
-                    personSheetList.add(person);
-                }
-                positionSheet.setDn(position.getDn());
-                positionSheet.setName(position.getName());
-                positionSheet.setPersonList(personSheetList);
-                positionSheet.setNum(i++);
-                list.add(positionSheet);
-            }
-        }
-        return list;
-    }
-
     @Override
-    public void exportOrgTree(String orgId, OutputStream outputStream) {
-        try (InputStream in = new ClassPathResource("/template/exportTemplate.xlsx").getStream()) {
-            Map<String, Object> map = xlsOrgTreeData(orgId);
-            JxlsUtil jxlsUtil = new JxlsUtil();
-            jxlsUtil.exportExcel(in, outputStream, map);
-        } catch (Exception e) {
-            LOGGER.warn(e.getMessage(), e);
-        }
-    }
-
-    @Override
-    public void exportPerson(String orgBaseId, OutputStream outputStream) {
+    public void exportPerson(OutputStream outputStream, String orgBaseId) {
         try (InputStream in = new ClassPathResource("/template/exportSimpleTemplate.xlsx").getStream()) {
             Map<String, Object> map = this.xlsPersonData(orgBaseId);
             JxlsUtil jxlsUtil = new JxlsUtil();
@@ -178,11 +67,6 @@ public class Y9OrgTreeExcelDataHandlerImpl implements Y9OrgTreeDataHandler {
         } catch (Exception e) {
             LOGGER.warn(e.getMessage(), e);
         }
-    }
-
-    @Override
-    public Y9Result<Object> importOrgTree(InputStream inputStream, String orgId) {
-        return null;
     }
 
     /**
@@ -391,42 +275,6 @@ public class Y9OrgTreeExcelDataHandlerImpl implements Y9OrgTreeDataHandler {
         }
         String newString = strBuffer.toString();
         return newString.substring(0, newString.lastIndexOf(SPLITTER));
-    }
-
-    /**
-     * 获取组织架构数据
-     *
-     * @param organizationId
-     * @return
-     */
-    private Map<String, Object> xlsOrgTreeData(String organizationId) {
-        Map<String, Object> map = new HashMap<>();
-
-        List<Y9Organization> organizationList = new ArrayList<>();
-        Y9Organization y9Organization = y9OrganizationService.getById(organizationId);
-        organizationList.add(y9Organization);
-
-        List<ObjectSheet> departmentList = new ArrayList<>();
-        executeDepartment(y9Organization.getId(), departmentList);
-        List<ObjectSheet> groupList = executeGroup(y9GroupService.listAll());
-        List<ObjectSheet> positionList = executePosition(y9PositionService.listAll());
-
-        map.put("organizationList", organizationList);
-        map.put("departmentList", departmentList);
-        map.put("groupList", groupList);
-        map.put("positionList", positionList);
-
-        List<String> listSheetNames = new ArrayList<>();
-        listSheetNames.add("组织机构");
-        listSheetNames.add("部门");
-        listSheetNames.add("人员");
-        listSheetNames.add("用户组");
-        listSheetNames.add("岗位");
-        listSheetNames.add("角色");
-
-        map.put("sheetNames", listSheetNames);
-        map.put("listSheetNames", listSheetNames);
-        return map;
     }
 
     /**
