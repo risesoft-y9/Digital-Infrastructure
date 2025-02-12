@@ -86,24 +86,41 @@
     async function httpRequest(params) {
         loading.value = true;
 
-        let result = { success: false, msg: '' };
+        let result;
 
         if (props.type === 'json') {
             result = await importOrgTreeJSON(params.file);
+            ElNotification({
+                title: result.success ? t('成功') : t('失败'),
+                message: result.msg,
+                type: result.success ? 'success' : 'error',
+                duration: 2000,
+                offset: 80
+            });
         } else if (props.type === 'xls') {
             result = await impOrgTreeExcel(params.file, props.id);
+            let message = result.msg;
+            if (!result.success) {
+                let errorList = result.data;
+                message = errorList
+                    .map((item) => {
+                        return `第 ${item.row} 行出错：${item.msg}`;
+                    })
+                    .join('<br/>');
+            }
+            ElNotification({
+                title: result.success ? t('成功') : t('失败'),
+                dangerouslyUseHTMLString: true,
+                message: message,
+                type: result.success ? 'success' : 'error',
+                duration: result.success ? 2000 : 0,
+                offset: 80
+            });
         }
-        ElNotification({
-            title: result.success ? t('成功') : t('失败'),
-            message: result.msg,
-            type: result.success ? 'success' : 'error',
-            duration: 2000,
-            offset: 80
-        });
+        loading.value = false;
         if (result.success) {
             // 重新刷新树 数据
             props.refresh && props.refresh();
-            loading.value = false;
             emits('update');
         }
     }
