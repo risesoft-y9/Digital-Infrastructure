@@ -45,6 +45,10 @@ public class Y9Result<T> implements Serializable {
         return failure(GlobalErrorCodeEnum.FAILURE, msg);
     }
 
+    public static <T> Y9Result<T> failure(T data, String msg) {
+        return new Y9Result<>(Boolean.FALSE, GlobalErrorCodeEnum.FAILURE.getCode(), msg, data);
+    }
+
     public static <T> Y9Result<T> success() {
         return success(null);
     }

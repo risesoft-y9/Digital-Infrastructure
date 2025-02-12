@@ -109,6 +109,7 @@
         <oshi.version>6.6.0</oshi.version>
         <rs-api.version>2.1.1</rs-api.version>
         <shedlock.version>4.47.0</shedlock.version>
+        <fastexcel.version>1.1.0</fastexcel.version>
 
         <!-- db driver -->
         <mysql-driver.version>8.2.0</mysql-driver.version>
@@ -747,6 +748,12 @@
                 <groupId>com.oceanbase</groupId>
                 <artifactId>oceanbase-client</artifactId>
                 <version>${oceanbase-client.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>cn.idev.excel</groupId>
+                <artifactId>fastexcel</artifactId>
+                <version>${fastexcel.version}</version>
             </dependency>
         </dependencies>
     </dependencyManagement>

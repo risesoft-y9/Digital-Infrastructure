@@ -1,27 +1,20 @@
 package net.risesoft.dataio.org;
 
-import java.io.BufferedInputStream;
 import java.io.InputStream;
 import java.io.OutputStream;
-import java.math.BigDecimal;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
 import org.apache.commons.lang3.StringUtils;
-import org.jxls.reader.ReaderBuilder;
-import org.jxls.reader.XLSReadStatus;
-import org.jxls.reader.XLSReader;
 import org.springframework.stereotype.Service;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
 import net.risesoft.consts.OrgLevelConsts;
-import net.risesoft.dataio.JxlsUtil;
+import net.risesoft.dataio.ExcelImportError;
 import net.risesoft.entity.Y9Department;
 import net.risesoft.entity.Y9Job;
 import net.risesoft.entity.Y9OrgBase;
@@ -38,7 +31,10 @@ import net.risesoft.service.org.Y9JobService;
 import net.risesoft.service.org.Y9PersonService;
 import net.risesoft.y9.Y9LoginUserHolder;
 
-import cn.hutool.core.io.resource.ClassPathResource;
+import cn.hutool.core.lang.Validator;
+import cn.idev.excel.FastExcel;
+import cn.idev.excel.context.AnalysisContext;
+import cn.idev.excel.read.listener.ReadListener;
 
 /**
  * 人员 Excel 数据导入导出
@@ -60,232 +56,10 @@ public class Y9PersonExcelDataHandlerImpl implements Y9PersonDataHandler {
 
     @Override
     public void exportPerson(OutputStream outputStream, String orgBaseId) {
-        try (InputStream in = new ClassPathResource("/template/exportSimpleTemplate.xlsx").getStream()) {
-            Map<String, Object> map = this.xlsPersonData(orgBaseId);
-            JxlsUtil jxlsUtil = new JxlsUtil();
-            jxlsUtil.exportExcel(in, outputStream, map);
-        } catch (Exception e) {
-            LOGGER.warn(e.getMessage(), e);
-        }
+        FastExcel.write(outputStream, PersonInformation.class).sheet().doWrite(getPersonList(orgBaseId));
     }
 
-    /**
-     * 导入XLS组织架构到数据库
-     *
-     */
-    @Override
-    public Y9Result<Object> importPerson(InputStream dataInputStream, String orgId) {
-        List<PersonInformation> personList = new ArrayList<>();
-        Map<String, Object> ret = new HashMap<>(16);
-        ret.put("success", false);
-        Map<String, Object> map = new HashMap<>(16);
-        map.put("personList", personList);
-        StringBuilder repeatNames = new StringBuilder();
-        StringBuilder repeatMobiles = new StringBuilder();
-        StringBuilder mobileNulls = new StringBuilder();
-        StringBuilder mobileErrors = new StringBuilder();
-        try {
-
-            InputStream xmlInputStream =
-                new BufferedInputStream(this.getClass().getResourceAsStream("/template/xmlconfig.xml"));
-            XLSReader xlsReader = ReaderBuilder.buildFromXML(xmlInputStream);
-            XLSReadStatus readStatus = xlsReader.read(dataInputStream, map);
-            if (readStatus.isStatusOK()) {
-                LOGGER.info("################成功读取到XLS文件数据##########################");
-                for (PersonInformation pf : personList) {
-                    Map<String, Object> retMap = impData2Db(pf, orgId);
-                    // 有人员重复，提示用户手动修改
-                    if ("true".equals(retMap.get("isRepeat"))) {
-                        if (StringUtils.isBlank(repeatNames)) {
-                            repeatNames.append(retMap.get("name").toString());
-                        } else {
-                            repeatNames.append(repeatNames + "、" + retMap.get("name").toString());
-                        }
-                    }
-                    // 有人员的号码为空
-                    if ("true".equals(retMap.get("isMobileNull"))) {
-                        if (StringUtils.isBlank(mobileNulls)) {
-                            mobileNulls.append(retMap.get("mobileNullNames").toString());
-                        } else {
-                            mobileNulls.append(mobileNulls + "、" + retMap.get("mobileNullNames").toString());
-                        }
-                    }
-                    // 有人员的号码错误
-                    if ("true".equals(retMap.get("isMobileError"))) {
-                        if (StringUtils.isBlank(mobileErrors)) {
-                            mobileErrors.append(retMap.get("mobileErrorNames").toString());
-                        } else {
-                            mobileErrors.append(mobileErrors + "、" + retMap.get("mobileErrorNames").toString());
-                        }
-                    }
-                    // 有手机号码重复，提示用户手动修改
-                    if ("true".equals(retMap.get("isMobileRepeat"))) {
-                        if (StringUtils.isBlank(repeatMobiles)) {
-                            repeatMobiles
-                                .append(retMap.get("mobileNames").toString() + ":" + retMap.get("mobiles").toString());
-                        } else {
-                            repeatMobiles.append(repeatMobiles + "、" + retMap.get("mobileNames").toString() + ":"
-                                + retMap.get("mobiles").toString());
-                        }
-                    }
-                }
-                ret.put("success", true);
-                if (StringUtils.isBlank(repeatNames.toString())) {
-                    ret.put("isRepeat", false);
-                } else {
-                    ret.put("isRepeat", true);
-                    ret.put("names", repeatNames.toString());
-                }
-                if (StringUtils.isBlank(mobileNulls.toString())) {
-                    ret.put("isMobileNull", false);
-                } else {
-                    ret.put("isMobileNull", true);
-                    ret.put("mobileNulls", mobileNulls.toString());
-                }
-                if (StringUtils.isBlank(mobileErrors.toString())) {
-                    ret.put("isMobileError", false);
-                } else {
-                    ret.put("isMobileError", true);
-                    ret.put("mobileErrors", mobileErrors.toString());
-                }
-                if (StringUtils.isBlank(repeatMobiles.toString())) {
-                    ret.put("isMobileRepeat", false);
-                } else {
-                    ret.put("isMobileRepeat", true);
-                    ret.put("mobiles", repeatMobiles.toString());
-                }
-                return Y9Result.success(ret, "上传组织机构XLS成功");
-            } else {
-                LOGGER.info("################读取XLS文件数据失败！！！！！！！！！##########################");
-                ret.put("success", false);
-                return Y9Result.failure("读取XLS文件数据失败！");
-            }
-        } catch (Exception e) {
-            LOGGER.warn("导入XLS组织架构发生异常", e);
-            return Y9Result.failure("上传失败:" + e.getMessage());
-        }
-    }
-
-    private Map<String, Object> impData2Db(PersonInformation pf, String orgId) {
-        String fullPath;
-        Map<String, Object> retMap = new HashMap<>();
-        retMap.put("isRepeat", "false");
-        retMap.put("isMobileRepeat", "false");
-        retMap.put("isMobileNull", "false");
-        retMap.put("isMobileError", "false");
-        if (StringUtils.isBlank(pf.getFullPath())) {
-            fullPath = pf.getName();
-        } else {
-            fullPath = pf.getFullPath() + SPLITTER + pf.getName();
-        }
-        String[] paths = fullPath.split(SPLITTER);
-        Y9OrgBase y9OrgBase = compositeOrgBaseService.getOrgUnit(orgId);
-        String dn = y9OrgBase.getDn();
-        String parentId = y9OrgBase.getId();
-        for (int i = 0, length = paths.length; i < length; i++) {
-            if (i == length - 1) {
-
-                String personName = pf.getLoginName().replaceAll("\\s*", "");
-                Optional<Y9Person> y9PersonOptional = y9PersonService.findByLoginName(personName);
-                if (y9PersonOptional.isPresent()) {
-                    // 人员重复
-                    retMap.put("isRepeat", "true");
-                    retMap.put("name", pf.getLoginName().replaceAll("\\s*", ""));
-                    continue;
-                }
-
-                if (StringUtils.isBlank(pf.getMobile())) {
-                    // 人员号码为空
-                    retMap.put("isMobileNull", "true");
-                    retMap.put("mobileNullNames", pf.getLoginName().replaceAll("\\s*", ""));
-                    continue;
-                }
-
-                // 数值类型号码
-                if (pf.getMobile().indexOf("E") > 0) {
-                    BigDecimal mobileValue = new BigDecimal(pf.getMobile());
-                    String mobile = mobileValue.toPlainString();
-                    pf.setMobile(mobile);
-                }
-                String personMobile = pf.getMobile().replaceAll("\\s*", "");
-                if (personMobile.length() == 11) {
-                    // 手机号可重复 此处暂时移除手机号重复校验
-                    // if (y9PersonService.getPersonByMobile(new BigDecimal(personMobile).toString()) != null) {
-                    // // 人员号码重复
-                    // retMap.put("isMobileRepeat", "true");
-                    // retMap.put("mobileNames", pf.getLoginName().replaceAll("\\s*", ""));
-                    // retMap.put("mobiles", new BigDecimal(pf.getMobile()).toString());
-                    // }
-                } else {
-                    // 人员号码错误
-                    retMap.put("isMobileError", "true");
-                    retMap.put("mobileErrorNames", pf.getLoginName().replaceAll("\\s*", ""));
-                    continue;
-                }
-
-                Y9Person y9Person = new Y9Person();
-                y9Person.setName(paths[i].replaceAll("\\s*", ""));
-                y9Person.setEmail(pf.getEmail());
-                y9Person.setMobile(pf.getMobile().replaceAll("\\s*", ""));
-                y9Person.setLoginName(pf.getLoginName().replaceAll("\\s*", ""));
-                y9Person.setSex("男".equals(pf.getSex()) ? SexEnum.MALE : SexEnum.FEMALE);
-                y9Person.setParentId(parentId);
-
-                String jobs = pf.getJobs();
-                if (StringUtils.isNotBlank(jobs)) {
-                    String[] jobArray = jobs.split(SPLITTER);
-                    List<String> y9JobIdList = new ArrayList<>();
-                    for (String job : jobArray) {
-                        y9JobIdList.add(y9JobService.create(job, job).getId());
-                    }
-                    y9PersonService.saveOrUpdate(y9Person, null, null, y9JobIdList);
-                } else {
-                    y9PersonService.saveOrUpdate(y9Person, null);
-                }
-
-            } else {
-                dn = OrgLevelConsts.UNIT + paths[i] + SPLITTER + dn;
-                List<Y9Department> departmentList = y9DepartmentService.listByDn(dn, false);
-                if (!departmentList.isEmpty()) {
-                    parentId = departmentList.get(0).getId();
-                } else {
-                    Y9Department department = new Y9Department();
-                    department.setId(Y9IdGenerator.genId(IdType.SNOWFLAKE));
-                    department.setTenantId(Y9LoginUserHolder.getTenantId());
-                    department.setName(paths[i].replaceAll("\\s*", ""));
-                    department.setOrgType(OrgTypeEnum.DEPARTMENT);
-                    department.setParentId(parentId);
-                    Y9Department dept = y9DepartmentService.saveOrUpdate(department);
-                    parentId = dept.getId();
-                }
-            }
-        }
-        return retMap;
-    }
-
-    private String reverseSplit(String path) {
-        if (!path.contains(SPLITTER)) {
-            return path;
-        }
-        String[] oldString = path.split(SPLITTER);
-        StringBuilder strBuffer = new StringBuilder();
-        for (int length = oldString.length; length > 0; length--) {
-            strBuffer.append(oldString[length - 1]);
-            strBuffer.append(SPLITTER);
-        }
-        String newString = strBuffer.toString();
-        return newString.substring(0, newString.lastIndexOf(SPLITTER));
-    }
-
-    /**
-     * 导出人员信息到Excel
-     *
-     * @param orgBaseId
-     * @return
-     */
-    private Map<String, Object> xlsPersonData(String orgBaseId) {
-        Map<String, Object> map = new HashMap<>();
-
+    private List<PersonInformation> getPersonList(String orgBaseId) {
         List<Y9Person> persons = compositeOrgBaseService.listAllDescendantPersons(orgBaseId);
         List<PersonInformation> personList = new ArrayList<>();
         for (Y9Person person : persons) {
@@ -305,12 +79,129 @@ public class Y9PersonExcelDataHandlerImpl implements Y9PersonDataHandler {
             personInformation.setEmail(person.getEmail());
             personInformation.setLoginName(person.getLoginName());
             personInformation.setMobile(person.getMobile());
-            personInformation.setSex(SexEnum.FEMALE.equals(person.getSex()) ? "女" : "男");
+            personInformation.setSex(person.getSex().getDescription());
             List<Y9Job> y9JobList = y9JobService.findByPersonId(person.getId());
             personInformation.setJobs(y9JobList.stream().map(Y9Job::getName).collect(Collectors.joining(SPLITTER)));
             personList.add(personInformation);
         }
-        map.put("personList", personList);
-        return map;
+        return personList;
     }
+
+    /**
+     * 导入XLS组织架构到数据库
+     *
+     */
+    @Override
+    public Y9Result<Object> importPerson(InputStream dataInputStream, String orgId) {
+        List<ExcelImportError> excelImportErrorList = new ArrayList<>();
+        FastExcel.read(dataInputStream, PersonInformation.class, new ReadListener<PersonInformation>() {
+            @Override
+            public void invoke(PersonInformation data, AnalysisContext context) {
+                try {
+                    impData2Db(data, orgId);
+                } catch (Exception e) {
+                    Integer rowNumber = context.readRowHolder().getRowIndex();
+                    excelImportErrorList.add(new ExcelImportError(rowNumber, e.getMessage()));
+                }
+            }
+
+            @Override
+            public void doAfterAllAnalysed(AnalysisContext context) {
+
+            }
+        }).sheet().doRead();
+
+        if (excelImportErrorList.isEmpty()) {
+            return Y9Result.success();
+        } else {
+            return Y9Result.failure(excelImportErrorList, "导入有错误");
+        }
+    }
+
+    private void impData2Db(PersonInformation pi, String orgId) {
+        String personName = StringUtils.trim(pi.getName());
+        String personLoginName = StringUtils.trim(pi.getLoginName());
+        String personMobile = StringUtils.trim(pi.getMobile());
+
+        if (StringUtils.isBlank(personName)) {
+            throw new IllegalArgumentException("人员中文名称不能为空");
+        }
+
+        if (StringUtils.isBlank(personLoginName)) {
+            throw new IllegalArgumentException("登录名称不能为空");
+        }
+
+        if (StringUtils.isBlank(personMobile)) {
+            throw new IllegalArgumentException("手机号不能为空");
+        }
+
+        if (!Validator.isMobile(personMobile)) {
+            throw new IllegalArgumentException("手机号不合法");
+        }
+
+        Optional<Y9Person> y9PersonOptional = y9PersonService.findByLoginName(personLoginName);
+        if (y9PersonOptional.isPresent()) {
+            throw new IllegalArgumentException("该登录名已被使用");
+        }
+
+        String fullPath = Optional.ofNullable(pi.getFullPath()).orElse("");
+        String[] departments = fullPath.split(SPLITTER);
+
+        Y9OrgBase y9OrgBase = compositeOrgBaseService.getOrgUnit(orgId);
+        String dn = y9OrgBase.getDn();
+        String parentId = y9OrgBase.getId();
+
+        for (int i = 0, length = departments.length; i < length; i++) {
+            dn = OrgLevelConsts.UNIT + departments[i] + SPLITTER + dn;
+            List<Y9Department> departmentList = y9DepartmentService.listByDn(dn, false);
+            if (!departmentList.isEmpty()) {
+                parentId = departmentList.get(0).getId();
+            } else {
+                // 不存在的部门则创建
+                Y9Department department = new Y9Department();
+                department.setId(Y9IdGenerator.genId(IdType.SNOWFLAKE));
+                department.setTenantId(Y9LoginUserHolder.getTenantId());
+                department.setName(StringUtils.trim(departments[i]));
+                department.setOrgType(OrgTypeEnum.DEPARTMENT);
+                department.setParentId(parentId);
+                Y9Department dept = y9DepartmentService.saveOrUpdate(department);
+                parentId = dept.getId();
+            }
+        }
+
+        Y9Person y9Person = new Y9Person();
+        y9Person.setName(personName);
+        y9Person.setEmail(pi.getEmail());
+        y9Person.setMobile(personMobile);
+        y9Person.setLoginName(personLoginName);
+        y9Person.setSex(SexEnum.MALE.getDescription().equals(pi.getSex()) ? SexEnum.MALE : SexEnum.FEMALE);
+        y9Person.setParentId(parentId);
+
+        String jobs = pi.getJobs();
+        if (StringUtils.isNotBlank(jobs)) {
+            String[] jobArray = jobs.split(SPLITTER);
+            List<String> y9JobIdList = new ArrayList<>();
+            for (String job : jobArray) {
+                y9JobIdList.add(y9JobService.create(job, job).getId());
+            }
+            y9PersonService.saveOrUpdate(y9Person, null, null, y9JobIdList);
+        } else {
+            y9PersonService.saveOrUpdate(y9Person, null);
+        }
+    }
+
+    private String reverseSplit(String path) {
+        if (!path.contains(SPLITTER)) {
+            return path;
+        }
+        String[] oldString = path.split(SPLITTER);
+        StringBuilder strBuffer = new StringBuilder();
+        for (int length = oldString.length; length > 0; length--) {
+            strBuffer.append(oldString[length - 1]);
+            strBuffer.append(SPLITTER);
+        }
+        String newString = strBuffer.toString();
+        return newString.substring(0, newString.lastIndexOf(SPLITTER));
+    }
+
 }
