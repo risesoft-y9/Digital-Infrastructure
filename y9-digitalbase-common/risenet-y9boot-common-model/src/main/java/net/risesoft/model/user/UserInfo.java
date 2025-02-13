@@ -18,7 +18,9 @@ import net.risesoft.enums.platform.SexEnum;
  */
 @Data
 public class UserInfo implements Serializable {
+
     private static final long serialVersionUID = -867112844100528415L;
+
     /** 租户Id */
     private String tenantId;
 
