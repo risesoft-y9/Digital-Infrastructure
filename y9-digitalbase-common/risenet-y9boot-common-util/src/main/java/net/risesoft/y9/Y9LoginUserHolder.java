@@ -145,8 +145,11 @@ public abstract class Y9LoginUserHolder {
         USER_INFO_HOLDER.set(userInfo);
 
         PERSON_ID_HOLDER.set(userInfo.getPersonId());
-        TENANT_ID_HOLDER.set(userInfo.getTenantId());
         POSITION_ID_HOLDER.set(userInfo.getPositionId());
+
+        TENANT_ID_HOLDER.set(userInfo.getTenantId());
+        TENANT_NAME_HOLDER.set(userInfo.getTenantName());
+        TENANT_SHORT_NAME_HOLDER.set(userInfo.getTenantShortName());
     }
 
     public static void setPerson(final Person person) {

@@ -29,7 +29,9 @@ import net.risesoft.persistence.EnumConverter;
  * @date 2022/2/10
  */
 @Entity
-@Table(name = "Y9_COMMON_ACCOUNT", indexes = {@Index(columnList = "LOGIN_NAME")})
+@Table(name = "Y9_COMMON_ACCOUNT",
+    indexes = {@Index(name = "IDX7d3kas0oqvn2o3sv6m7wjecr2", columnList = "LOGIN_NAME"),
+        @Index(name = "IDXzX1bP6wZ2xU1lT0aN3vE7tK9m", columnList = "PERSON_ID")})
 @DynamicUpdate
 @Comment("人员信息表")
 @NoArgsConstructor

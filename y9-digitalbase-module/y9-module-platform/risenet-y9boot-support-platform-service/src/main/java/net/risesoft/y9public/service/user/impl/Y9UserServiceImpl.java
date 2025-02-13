@@ -54,12 +54,12 @@ public class Y9UserServiceImpl implements Y9UserService {
 
     @Override
     public Optional<Y9User> findByLoginNameAndTenantId(String loginName, String tenantId) {
-        return y9UserRepository.findByTenantIdAndLoginNameAndOriginalTrue(tenantId, loginName);
+        return y9UserRepository.findByLoginNameAndTenantIdAndOriginalTrue(loginName, tenantId);
     }
 
     @Override
     public Optional<Y9User> findByPersonIdAndTenantId(String personId, String tenantId) {
-        return y9UserRepository.findByTenantIdAndPersonId(tenantId, personId);
+        return y9UserRepository.findByPersonIdAndTenantId(personId, tenantId);
     }
 
     @Override
@@ -84,8 +84,8 @@ public class Y9UserServiceImpl implements Y9UserService {
 
     @Override
     @Transactional(readOnly = false)
-    public Y9User save(Y9User orgUser) {
-        return y9UserRepository.save(orgUser);
+    public Y9User save(Y9User y9User) {
+        return y9UserRepository.save(y9User);
     }
 
     @Override

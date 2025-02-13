@@ -150,4 +150,15 @@
         </addColumn>
     </changeSet>
 
+    <changeSet id="1739431183766-1" author="shidaobang" runOnChange="true">
+        <preConditions onFail="MARK_RAN">
+            <not>
+                <indexExists tableName="Y9_COMMON_ACCOUNT" columnNames="PERSON_ID"/>
+            </not>
+        </preConditions>
+        <createIndex indexName="IDXzX1bP6wZ2xU1lT0aN3vE7tK9m" tableName="Y9_COMMON_ACCOUNT">
+            <column name="PERSON_ID"/>
+        </createIndex>
+    </changeSet>
+
 </databaseChangeLog>
