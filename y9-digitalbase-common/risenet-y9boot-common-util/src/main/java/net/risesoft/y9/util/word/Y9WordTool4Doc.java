@@ -1,5 +1,6 @@
 package net.risesoft.y9.util.word;
 
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
@@ -10,6 +11,7 @@ import java.util.Map;
 import javax.servlet.http.HttpServletResponse;
 
 import org.apache.poi.hwpf.HWPFDocument;
+import org.apache.poi.hwpf.extractor.WordExtractor;
 import org.apache.poi.hwpf.usermodel.Bookmark;
 import org.apache.poi.hwpf.usermodel.Bookmarks;
 import org.apache.poi.hwpf.usermodel.Range;
@@ -43,8 +45,29 @@ public class Y9WordTool4Doc {
     }
 
     /**
+     * 获取文档内容
+     *
+     * @param is 输入流
+     */
+    public static String getText(InputStream is) {
+        String content = "";
+        try {
+            HWPFDocument document = new HWPFDocument(is);
+            WordExtractor extractor = new WordExtractor(document);
+            // 提取文档内容
+            content = extractor.getText();
+            // 关闭资源
+            extractor.close();
+            document.close();
+        } catch (Exception e) {
+            LOGGER.warn(e.getMessage(), e);
+        }
+        return content;
+    }
+
+    /**
      * 进行标签替换的例子,传入的Map中，key表示标签名称，value是替换的信息
-     * 
+     *
      * @param is 输入流
      * @param response 响应
      * @param map 标签替换Map，key表示标签名称，value是替换的信息
@@ -67,4 +90,36 @@ public class Y9WordTool4Doc {
             LOGGER.warn(e.getMessage(), e);
         }
     }
+
+    public static byte[] replaceBookMark(InputStream is, Map<String, Object> map) {
+        ByteArrayOutputStream out = null;
+        try {
+            HWPFDocument document = new HWPFDocument(is);
+            Bookmarks bookmarks = document.getBookmarks();
+            for (int i = 0; i < bookmarks.getBookmarksCount(); i++) {
+                Bookmark bookmark = bookmarks.getBookmark(i);
+                for (Map.Entry<String, Object> entry : map.entrySet()) {
+                    if (bookmark.getName().equals(entry.getKey())) {
+                        Range range = new Range(bookmark.getStart(), bookmark.getEnd(), document);
+                        range.replaceText((String)entry.getValue(), false);
+                    }
+                }
+            }
+            out = new ByteArrayOutputStream();
+            document.write(out);
+            return out.toByteArray();
+        } catch (Exception e) {
+            LOGGER.error(e.getMessage(), e);
+        } finally {
+            try {
+                if (out != null) {
+                    out.close();
+                }
+            } catch (IOException e) {
+                LOGGER.warn(e.getMessage(), e);
+            }
+        }
+        return null;
+    }
+
 }
