@@ -1,4 +1,4 @@
-package net.risesoft.oidc.jose;
+package net.risesoft.oidc.util.jose;
 
 import com.nimbusds.jose.jwk.Curve;
 import com.nimbusds.jose.jwk.ECKey;

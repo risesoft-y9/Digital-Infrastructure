@@ -29,6 +29,18 @@ spring:
             hibernate:
                 hbm2ddl:
                     charset_name: UTF-8
+    sql:
+        init:
+            username: root
+            password: "11111111"
+            platform: postgresql
+            continue-on-error: true
+            separator: ";"
+            encoding: utf-8
+            mode: ALWAYS
+            schema-locations:
+                - optional:classpath:/sql/schema-${spring.sql.init.platform}.sql
+            data-locations: ""
     security:
         oauth2:
             client:

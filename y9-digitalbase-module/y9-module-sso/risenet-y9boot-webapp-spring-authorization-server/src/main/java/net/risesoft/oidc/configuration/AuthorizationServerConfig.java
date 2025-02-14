@@ -5,7 +5,8 @@ import com.nimbusds.jose.jwk.RSAKey;
 import com.nimbusds.jose.jwk.source.JWKSource;
 import com.nimbusds.jose.proc.SecurityContext;
 import lombok.extern.slf4j.Slf4j;
-import net.risesoft.oidc.jose.Jwks;
+import net.risesoft.oidc.util.jose.Jwks;
+import net.risesoft.oidc.y9.repository.Y9ThemeRepository;
 import net.risesoft.oidc.y9.service.Y9UserDetailsService;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -34,7 +35,9 @@ public class AuthorizationServerConfig {
 
     @Bean
     @Order(Ordered.HIGHEST_PRECEDENCE)
-    public SecurityFilterChain authorizationServerSecurityFilterChain(HttpSecurity http) throws Exception {
+    public SecurityFilterChain authorizationServerSecurityFilterChain(
+            Y9ThemeRepository y9ThemeRepository,
+            HttpSecurity http) throws Exception {
         OAuth2AuthorizationServerConfigurer authorizationServerConfigurer = OAuth2AuthorizationServerConfigurer.authorizationServer();
         http
                 .securityMatcher(authorizationServerConfigurer.getEndpointsMatcher())
@@ -50,7 +53,7 @@ public class AuthorizationServerConfig {
                         authorize.anyRequest().authenticated()
                 )
                 .exceptionHandling((exceptions) -> exceptions
-                        .authenticationEntryPoint(new ThemedAuthenticationEntryPoint())
+                        .authenticationEntryPoint(new ThemedAuthenticationEntryPoint(y9ThemeRepository))
                         /*.defaultAuthenticationEntryPointFor(
                                 new LoginUrlAuthenticationEntryPoint("/login"),
                                 new MediaTypeRequestMatcher(MediaType.TEXT_HTML)

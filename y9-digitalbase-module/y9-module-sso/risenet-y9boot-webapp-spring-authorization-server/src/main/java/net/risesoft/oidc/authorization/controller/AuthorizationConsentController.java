@@ -1,4 +1,4 @@
-package net.risesoft.oidc.controller;
+package net.risesoft.oidc.authorization.controller;
 
 import org.springframework.security.oauth2.core.endpoint.OAuth2ParameterNames;
 import org.springframework.security.oauth2.core.oidc.OidcScopes;

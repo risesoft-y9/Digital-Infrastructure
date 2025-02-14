@@ -7,6 +7,4 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface Y9LoginUserRepository extends JpaRepository<Y9LoginUser, String> {
 
-
-
 }

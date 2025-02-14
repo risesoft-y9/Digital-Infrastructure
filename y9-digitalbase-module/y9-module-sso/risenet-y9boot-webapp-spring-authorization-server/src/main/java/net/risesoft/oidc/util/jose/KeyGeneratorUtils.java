@@ -1,4 +1,4 @@
-package net.risesoft.oidc.jose;
+package net.risesoft.oidc.util.jose;
 
 import javax.crypto.KeyGenerator;
 import javax.crypto.SecretKey;

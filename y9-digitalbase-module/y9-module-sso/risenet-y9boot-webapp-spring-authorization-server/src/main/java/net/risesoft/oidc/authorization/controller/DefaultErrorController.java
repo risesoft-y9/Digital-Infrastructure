@@ -1,4 +1,4 @@
-package net.risesoft.oidc.controller;
+package net.risesoft.oidc.authorization.controller;
 
 import jakarta.servlet.RequestDispatcher;
 import jakarta.servlet.http.HttpServletRequest;
