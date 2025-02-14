@@ -1,9 +1,8 @@
-package net.risesoft.oidc.repository;
+package net.risesoft.oidc.y9.repository;
 
-import net.risesoft.oidc.entity.Y9User;
+import net.risesoft.oidc.y9.entity.Y9User;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
-import org.springframework.data.repository.CrudRepository;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 

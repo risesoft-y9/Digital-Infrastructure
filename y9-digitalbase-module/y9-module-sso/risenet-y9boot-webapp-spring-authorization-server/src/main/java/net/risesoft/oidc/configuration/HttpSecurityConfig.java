@@ -1,4 +1,4 @@
-package net.risesoft.oidc.config;
+package net.risesoft.oidc.configuration;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

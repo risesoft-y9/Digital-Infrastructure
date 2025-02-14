@@ -1,7 +1,7 @@
-package net.risesoft.oidc.service;
+package net.risesoft.oidc.y9.service;
 
-import net.risesoft.oidc.entity.Y9User;
-import net.risesoft.oidc.repository.Y9UserRepository;
+import net.risesoft.oidc.y9.entity.Y9User;
+import net.risesoft.oidc.y9.repository.Y9UserRepository;
 import net.risesoft.oidc.util.Y9BeanUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.GrantedAuthority;

@@ -1,4 +1,4 @@
-package net.risesoft.oidc.entity;
+package net.risesoft.oidc.y9.entity;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import jakarta.persistence.*;

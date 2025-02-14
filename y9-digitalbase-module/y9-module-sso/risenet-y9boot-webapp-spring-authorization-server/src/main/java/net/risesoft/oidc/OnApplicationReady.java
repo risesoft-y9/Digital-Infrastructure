@@ -2,14 +2,18 @@ package net.risesoft.oidc;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import net.risesoft.oidc.entity.Y9User;
-import net.risesoft.oidc.repository.Y9UserRepository;
+import net.risesoft.oidc.y9.entity.Y9User;
+import net.risesoft.oidc.y9.repository.Y9UserRepository;
 import org.springframework.boot.context.event.ApplicationReadyEvent;
 import org.springframework.context.ApplicationListener;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.oauth2.core.AuthorizationGrantType;
+import org.springframework.security.oauth2.core.ClientAuthenticationMethod;
+import org.springframework.security.oauth2.core.oidc.OidcScopes;
+import org.springframework.security.oauth2.server.authorization.client.JdbcRegisteredClientRepository;
+import org.springframework.security.oauth2.server.authorization.client.RegisteredClient;
+import org.springframework.security.oauth2.server.authorization.settings.ClientSettings;
 import org.springframework.stereotype.Component;
-
-import java.util.Date;
 
 /**
  * 用于生成测试的用户
@@ -23,6 +27,9 @@ import java.util.Date;
 public class OnApplicationReady implements ApplicationListener<ApplicationReadyEvent> {
     private final Y9UserRepository y9UserRepository;
     private final PasswordEncoder passwordEncoder;
+
+    private final JdbcRegisteredClientRepository clientRepository;
+    //private final JpaRegisteredClientRepository clientRepository;
 
     @Override
     public void onApplicationEvent(ApplicationReadyEvent event) {
@@ -62,5 +69,20 @@ public class OnApplicationReady implements ApplicationListener<ApplicationReadyE
             // y9User.setRoles(null);
             y9UserRepository.save(y9User);
         }
+
+        RegisteredClient client01 = RegisteredClient.withId("client01")
+                .clientId("clientid_oidc")
+                .clientSecret(passwordEncoder.encode("secret_oidc"))
+                .clientAuthenticationMethod(ClientAuthenticationMethod.CLIENT_SECRET_BASIC)
+                .authorizationGrantType(AuthorizationGrantType.AUTHORIZATION_CODE)
+                .authorizationGrantType(AuthorizationGrantType.REFRESH_TOKEN)
+                .redirectUri("http://localhost:7099/mydemo/login/oauth2/code/client01")
+                .postLogoutRedirectUri("http://localhost:7099/mydemo")
+                .scope(OidcScopes.OPENID)
+                .scope(OidcScopes.PROFILE)
+                .clientSettings(ClientSettings.builder().requireAuthorizationConsent(true).build())
+                .build();
+
+        clientRepository.save(client01);
     }
 }
