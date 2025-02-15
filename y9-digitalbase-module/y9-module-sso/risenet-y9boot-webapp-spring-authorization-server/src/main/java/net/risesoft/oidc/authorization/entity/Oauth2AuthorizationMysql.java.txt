@@ -10,7 +10,7 @@ import java.time.Instant;
 
 @Entity
 @Table(name = "jpa_oauth2_authorization")
-public class Oauth2Authorization {
+public class Oauth2AuthorizationMysql {
 
     @Id
     @Column(name = "id", length = 100, nullable = false)
@@ -26,23 +26,23 @@ public class Oauth2Authorization {
     private String authorizationGrantType;
 
     @Column(name = "authorized_scopes")
-    //@Lob
-    @JdbcTypeCode(Types.LONGVARCHAR)
+    @Lob
+    //@JdbcTypeCode(Types.LONGVARCHAR)
     private String authorizedScopes;
 
     @Column(name = "attributes")
-    //@Lob
-    @JdbcTypeCode(Types.LONGVARCHAR)
+    @Lob
+    //@JdbcTypeCode(Types.LONGVARCHAR)
     private String attributes;
 
     @Column(name = "state")
-    //@Lob
-    @JdbcTypeCode(Types.LONGVARCHAR)
+    @Lob
+    //@JdbcTypeCode(Types.LONGVARCHAR)
     private String state;
 
     @Column(name = "authorization_code_value")
-    //@Lob
-    @JdbcTypeCode(Types.LONGVARCHAR)
+    @Lob
+    //@JdbcTypeCode(Types.LONGVARCHAR)
     private String authorizationCodeValue;
 
     @Column(name = "authorization_code_issued_at")
@@ -52,13 +52,13 @@ public class Oauth2Authorization {
     private Instant authorizationCodeExpiresAt;
 
     @Column(name = "authorization_code_metadata")
-    //@Lob
-    @JdbcTypeCode(Types.LONGVARCHAR)
+    @Lob
+    //@JdbcTypeCode(Types.LONGVARCHAR)
     private String authorizationCodeMetadata;
 
     @Column(name = "access_token_value")
-    //@Lob
-    @JdbcTypeCode(Types.LONGVARCHAR)
+    @Lob
+    //@JdbcTypeCode(Types.LONGVARCHAR)
     private String accessTokenValue;
 
     @Column(name = "access_token_issued_at")
@@ -68,21 +68,21 @@ public class Oauth2Authorization {
     private Instant accessTokenExpiresAt;
 
     @Column(name = "access_token_metadata")
-    //@Lob
-    @JdbcTypeCode(Types.LONGVARCHAR)
+    @Lob
+    //@JdbcTypeCode(Types.LONGVARCHAR)
     private String accessTokenMetadata;
 
     @Column(name = "access_token_type", length = 100)
     private String accessTokenType;
 
     @Column(name = "access_token_scopes")
-    //@Lob
-    @JdbcTypeCode(Types.LONGVARCHAR)
+    @Lob
+    //@JdbcTypeCode(Types.LONGVARCHAR)
     private String accessTokenScopes;
 
     @Column(name = "oidc_id_token_value")
-    //@Lob
-    @JdbcTypeCode(Types.LONGVARCHAR)
+    @Lob
+    //@JdbcTypeCode(Types.LONGVARCHAR)
     private String oidcIdTokenValue;
 
     @Column(name = "oidc_id_token_issued_at")
@@ -93,17 +93,17 @@ public class Oauth2Authorization {
 
     @Column(name = "oidc_id_token_metadata")
     @Lob
-    //@JdbcTypeCode(Types.LONGVARCHAR)
+    ////@JdbcTypeCode(Types.LONGVARCHAR)
     private String oidcIdTokenMetadata;
 
     @Column(name = "oidc_id_token_claims")
-    //@Lob
-    @JdbcTypeCode(Types.LONGVARCHAR)
+    @Lob
+    //@JdbcTypeCode(Types.LONGVARCHAR)
     private String oidcIdTokenClaims;
 
     @Column(name = "refresh_token_value")
-    //@Lob
-    @JdbcTypeCode(Types.LONGVARCHAR)
+    @Lob
+    //@JdbcTypeCode(Types.LONGVARCHAR)
     private String refreshTokenValue;
 
     @Column(name = "refresh_token_issued_at")
@@ -113,13 +113,13 @@ public class Oauth2Authorization {
     private Instant refreshTokenExpiresAt;
 
     @Column(name = "refresh_token_metadata")
-    //@Lob
-    @JdbcTypeCode(Types.LONGVARCHAR)
+    @Lob
+    //@JdbcTypeCode(Types.LONGVARCHAR)
     private String refreshTokenMetadata;
 
     @Column(name = "user_code_value")
-    //@Lob
-    @JdbcTypeCode(Types.LONGVARCHAR)
+    @Lob
+    //@JdbcTypeCode(Types.LONGVARCHAR)
     private String userCodeValue;
 
     @Column(name = "user_code_issued_at")
@@ -129,13 +129,13 @@ public class Oauth2Authorization {
     private Instant userCodeExpiresAt;
 
     @Column(name = "user_code_metadata")
-    //@Lob
-    @JdbcTypeCode(Types.LONGVARCHAR)
+    @Lob
+    //@JdbcTypeCode(Types.LONGVARCHAR)
     private String userCodeMetadata;
 
     @Column(name = "device_code_value")
-    //@Lob
-    @JdbcTypeCode(Types.LONGVARCHAR)
+    @Lob
+    //@JdbcTypeCode(Types.LONGVARCHAR)
     private String deviceCodeValue;
 
     @Column(name = "device_code_issued_at")
@@ -145,8 +145,8 @@ public class Oauth2Authorization {
     private Instant deviceCodeExpiresAt;
 
     @Column(name = "device_code_metadata")
-    //@Lob
-    @JdbcTypeCode(Types.LONGVARCHAR)
+    @Lob
+    //@JdbcTypeCode(Types.LONGVARCHAR)
     private String deviceCodeMetadata;
 
     public String getId() {

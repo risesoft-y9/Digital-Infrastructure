@@ -5,6 +5,7 @@ import jakarta.persistence.*;
 
 // Copy this class from How-to: Implement core services with JPA documentation: https://docs.spring.io/spring-authorization-server/reference/guides/how-to-jpa.html
 
+
 @Entity
 @Table(name = "jpa_oauth2_registered_client")
 public class Oauth2RegisteredClient {
