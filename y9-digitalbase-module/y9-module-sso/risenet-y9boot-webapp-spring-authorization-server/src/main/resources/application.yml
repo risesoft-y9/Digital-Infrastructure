@@ -41,6 +41,9 @@ spring:
             schema-locations:
                 - optional:classpath:/sql/schema-${spring.sql.init.platform}.sql
             data-locations: ""
+    profiles:
+        active: jdbc # 或者 jpa
+        default: default
     security:
         oauth2:
             client:
