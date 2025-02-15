@@ -12,8 +12,8 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.oauth2.core.AuthorizationGrantType;
 import org.springframework.security.oauth2.core.ClientAuthenticationMethod;
 import org.springframework.security.oauth2.core.oidc.OidcScopes;
-import org.springframework.security.oauth2.server.authorization.client.JdbcRegisteredClientRepository;
 import org.springframework.security.oauth2.server.authorization.client.RegisteredClient;
+import org.springframework.security.oauth2.server.authorization.client.RegisteredClientRepository;
 import org.springframework.security.oauth2.server.authorization.settings.ClientSettings;
 import org.springframework.stereotype.Component;
 
@@ -32,8 +32,7 @@ public class OnApplicationReady implements ApplicationListener<ApplicationReadyE
     private final PasswordEncoder passwordEncoder;
 
     private final Y9ThemeRepository y9ThemeRepository;
-    private final JdbcRegisteredClientRepository clientRepository;
-    //private final JpaRegisteredClientRepository clientRepository;
+    private final RegisteredClientRepository clientRepository;
 
     @Override
     public void onApplicationEvent(ApplicationReadyEvent event) {
@@ -75,24 +74,27 @@ public class OnApplicationReady implements ApplicationListener<ApplicationReadyE
         }
 
         try {
-            RegisteredClient client01 = RegisteredClient.withId("client01")
-                    .clientId("clientid_oidc")
-                    .clientSecret(passwordEncoder.encode("secret_oidc"))
-                    .clientAuthenticationMethod(ClientAuthenticationMethod.CLIENT_SECRET_BASIC)
-                    .authorizationGrantType(AuthorizationGrantType.AUTHORIZATION_CODE)
-                    .authorizationGrantType(AuthorizationGrantType.REFRESH_TOKEN)
-                    .redirectUri("http://localhost:7099/mydemo/login/oauth2/code/client01")
-                    .postLogoutRedirectUri("http://localhost:7099/mydemo")
-                    .scope(OidcScopes.OPENID)
-                    .scope(OidcScopes.PROFILE)
-                    .clientSettings(ClientSettings.builder().requireAuthorizationConsent(true).build())
-                    .build();
-            clientRepository.save(client01);
+            RegisteredClient client01 = clientRepository.findById("client01");
+            if (client01 == null) {
+                client01 = RegisteredClient.withId("client01")
+                        .clientId("clientid_oidc")
+                        .clientSecret(passwordEncoder.encode("secret_oidc"))
+                        .clientAuthenticationMethod(ClientAuthenticationMethod.CLIENT_SECRET_BASIC)
+                        .authorizationGrantType(AuthorizationGrantType.AUTHORIZATION_CODE)
+                        .authorizationGrantType(AuthorizationGrantType.REFRESH_TOKEN)
+                        .redirectUri("http://localhost:7099/mydemo/login/oauth2/code/client01")
+                        .postLogoutRedirectUri("http://localhost:7099/mydemo")
+                        .scope(OidcScopes.OPENID)
+                        .scope(OidcScopes.PROFILE)
+                        .clientSettings(ClientSettings.builder().requireAuthorizationConsent(true).build())
+                        .build();
+                clientRepository.save(client01);
 
-            Y9Theme y9Theme = new Y9Theme();
-            y9Theme.setClientId(client01.getClientId());
-            y9Theme.setTheme("t01");
-            y9ThemeRepository.save(y9Theme);
+                Y9Theme y9Theme = new Y9Theme();
+                y9Theme.setClientId(client01.getClientId());
+                y9Theme.setTheme("t01");
+                y9ThemeRepository.save(y9Theme);
+            }
         } catch (Exception e) {
             e.printStackTrace();
         }

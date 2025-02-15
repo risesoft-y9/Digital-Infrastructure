@@ -8,6 +8,7 @@ import net.risesoft.oidc.authorization.service.JpaOAuth2AuthorizationConsentServ
 import net.risesoft.oidc.authorization.service.JpaOAuth2AuthorizationService;
 import net.risesoft.oidc.authorization.service.JpaRegisteredClientRepository;
 import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
 import org.springframework.security.oauth2.server.authorization.client.RegisteredClientRepository;
 
 @Slf4j
