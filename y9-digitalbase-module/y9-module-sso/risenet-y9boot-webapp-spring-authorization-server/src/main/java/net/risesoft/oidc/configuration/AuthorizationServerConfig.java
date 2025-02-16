@@ -54,10 +54,6 @@ public class AuthorizationServerConfig {
                 )
                 .exceptionHandling((exceptions) -> exceptions
                         .authenticationEntryPoint(new ThemedAuthenticationEntryPoint(y9ThemeRepository))
-                        /*.defaultAuthenticationEntryPointFor(
-                                new LoginUrlAuthenticationEntryPoint("/login"),
-                                new MediaTypeRequestMatcher(MediaType.TEXT_HTML)
-                        )*/
                 );
         return http.build();
     }

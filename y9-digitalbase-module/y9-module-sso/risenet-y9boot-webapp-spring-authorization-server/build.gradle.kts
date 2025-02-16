@@ -31,6 +31,13 @@ dependencies {
 	implementation("org.springframework.boot:spring-boot-starter-web")
 	//implementation("de.codecentric:spring-boot-admin-starter-server")
 	implementation("org.thymeleaf.extras:thymeleaf-extras-springsecurity6")
+	implementation("org.apache.commons:commons-lang3")
+	implementation("commons-codec:commons-codec")
+	implementation("cz.mallat.uasparser:uasparser:0.6.2")
+	implementation("de.svenkubiak:jBCrypt:0.4.3")
+	implementation("com.google.zxing:core:3.5.3")
+	implementation("com.zaxxer:HikariCP")
+
 	runtimeOnly("com.h2database:h2")
 	runtimeOnly("com.mysql:mysql-connector-j")
 	runtimeOnly("org.postgresql:postgresql")

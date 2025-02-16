@@ -20,13 +20,19 @@ public class HttpSecurityConfig {
                         authorize
                                 .requestMatchers(
                                         "/assets/**",
-                                        "/error*",
                                         "/content/**",
+                                        "/y9static/**",
+                                        "/error*",
+                                        "/api/**",
+                                        "/logout",
                                         "/login")
                                 .permitAll()
                                 .anyRequest()
                                 .authenticated()
                 )
+                /*.logout(logout ->
+                        logout.logoutUrl("/logout")
+                )*/
                 .formLogin(formLogin ->
                         formLogin.loginPage("/login")
                 );
