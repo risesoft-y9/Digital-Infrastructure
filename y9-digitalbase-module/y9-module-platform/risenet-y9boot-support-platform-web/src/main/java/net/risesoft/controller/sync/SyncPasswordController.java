@@ -112,4 +112,42 @@ public class SyncPasswordController {
 
         return Y9Result.successMsg("根据租户id和登录名称重置人员密码完成");
     }
+
+    /**
+     * 重置租户管理员密码
+     *
+     * @param tenantId 租户id
+     * @return {@code Y9Result<String>}
+     */
+    @RequestMapping("/resetAllManagerPwdByTenantId/{tenantId}")
+    @RiseLog(operationName = "修改", operationType = OperationTypeEnum.MODIFY)
+    public Y9Result<String> resetAllManagerPwdByTenantId(@PathVariable String tenantId) {
+        Y9LoginUserHolder.setTenantId(tenantId);
+        List<Y9Manager> manageList = y9ManagerService.listAll();
+        for (Y9Manager manager : manageList) {
+            y9ManagerService.resetDefaultPassword(manager.getId());
+        }
+
+        return Y9Result.successMsg("同步管理员信息完成");
+    }
+
+    /**
+     * 重置所有租户管理员密码
+     *
+     * @return {@code Y9Result<String>}
+     */
+    @RequestMapping("/resetAllManagerPwd")
+    @RiseLog(operationName = "修改", operationType = OperationTypeEnum.MODIFY)
+    public Y9Result<String> resetAllManagerPwdInAllTenants() {
+        List<String> tenantIdList = Y9PlatformUtil.getTenantIds();
+        for (String tenantId : tenantIdList) {
+            Y9LoginUserHolder.setTenantId(tenantId);
+            LOGGER.debug("同步租户管理员[{}]人员密码", tenantId);
+            List<Y9Manager> manageList = y9ManagerService.listAll();
+            for (Y9Manager manager : manageList) {
+                y9ManagerService.resetDefaultPassword(manager.getId());
+            }
+        }
+        return Y9Result.successMsg("重置所有租户管理员密码完成");
+    }
 }

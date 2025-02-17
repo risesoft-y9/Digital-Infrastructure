@@ -109,4 +109,8 @@ public interface Y9PersonsToGroupsService {
      * @param personIds 人员id数组
      */
     void removePersons(String groupId, String[] personIds);
+
+    List<Y9PersonsToGroups> listByPersonId(String personId);
+
+    Y9PersonsToGroups saveOrUpdate(Y9PersonsToGroups y9PersonsToGroups);
 }

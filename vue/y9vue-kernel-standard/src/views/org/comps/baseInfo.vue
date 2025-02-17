@@ -88,25 +88,25 @@
 						</el-button> -->
 
                         <el-button
-                            v-show="showBtn('exportXml')"
+                            v-show="showBtn('exportJSON')"
                             :size="fontSizeObj.buttonSize"
                             :style="{ fontSize: fontSizeObj.baseFontSize }"
                             class="global-btn-second"
-                            @click="onActions('exportXml')"
+                            @click="onActions('exportJSON')"
                         >
                             <i class="ri-file-upload-line"></i>
-                            <span>{{ $t('导出XML') }}</span>
+                            <span>{{ $t('导出JSON') }}</span>
                         </el-button>
 
                         <el-button
-                            v-show="showBtn('uploadOrgXLS')"
+                            v-show="showBtn('importPersonXLS')"
                             :size="fontSizeObj.buttonSize"
                             :style="{ fontSize: fontSizeObj.baseFontSize }"
                             class="global-btn-second"
-                            @click="onActions('uploadOrgXLS', '上传组织架构信息XLS')"
+                            @click="onActions('importPersonXLS', '导入组织架构XLS')"
                         >
                             <i class="ri-file-upload-line"></i>
-                            <span>{{ $t('上传XLS') }}</span>
+                            <span>{{ $t('导入XLS') }}</span>
                         </el-button>
 
                         <el-button
@@ -281,7 +281,7 @@
         ></extendAttr>
         <Sync v-if="dialogConfig.type == 'sync'" ref="syncRef"></Sync>
         <uploadOrgInfo
-            v-if="dialogConfig.type == 'uploadOrgXLS'"
+            v-if="dialogConfig.type == 'importPersonXLS'"
             :id="currInfo.id"
             :refresh="refreshTree"
             type="xls"
@@ -764,14 +764,14 @@
 
     const showBtn = computed(() => {
         return (btnType) => {
-            if (btnType == 'exportXml') {
-                //导出XML
+            if (btnType == 'exportJSON') {
+                //导出JSON
 
                 if (currInfo.value.orgType == 'Organization') {
                     return true;
                 }
-            } else if (btnType == 'uploadOrgXLS') {
-                //上传组织机构信息XLS
+            } else if (btnType == 'importPersonXLS') {
+                //导入组织机构XLS
                 if (currInfo.value.orgType == 'Organization') {
                     return true;
                 }
@@ -923,7 +923,7 @@
             type == 'sync' ||
             type == 'extendAttr' ||
             type == 'sort' ||
-            type == 'uploadOrgXLS'
+            type == 'importPersonXLS'
         ) {
             //点击按钮显示弹窗
             addPersonStep.value = 1;
@@ -944,11 +944,11 @@
                         : false,
                 cancelText: type == 'sync' || type == 'extendAttr' ? false : computed(() => t('关闭')),
                 width:
-                    type == 'selectPerson' || type == 'move' || type == 'sync' || type == 'uploadOrgXLS'
+                    type == 'selectPerson' || type == 'move' || type == 'sync' || type == 'importPersonXLS'
                         ? '30%'
                         : '60%',
                 type: type,
-                showFooter: type == 'uploadOrgXLS' ? false : true,
+                showFooter: type == 'importPersonXLS' ? false : true,
                 columns:
                     type == 'sort'
                         ? [
@@ -1033,13 +1033,13 @@
                         offset: 65
                     });
                 });
-        } else if (type == 'exportXml') {
+        } else if (type == 'exportJSON') {
             const aDom = document.createElement('a');
             aDom.href =
                 import.meta.env.VUE_APP_CONTEXT +
-                'api/rest/impExp/exportOrgTreeXml?orgBaseId=' +
+                'api/rest/impExp/exportOrgTreeJson?orgId=' +
                 currInfo.value.id +
-                '&resourceName=&access_token=' +
+                '&access_token=' +
                 y9_storage.getObjectItem(settings.siteTokenKey, 'access_token');
             aDom.target = 'blank';
             aDom.click();
@@ -1048,7 +1048,7 @@
 
             url.value =
                 import.meta.env.VUE_APP_CONTEXT +
-                'api/rest/impExp/exportOrgXls?orgBaseId=' +
+                'api/rest/impExp/exportPersonXls?orgBaseId=' +
                 currInfo.value.id +
                 '&access_token=' +
                 y9_storage.getObjectItem(settings.siteTokenKey, 'access_token');

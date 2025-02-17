@@ -140,7 +140,7 @@ public class AuthServiceImpl implements AuthService {
                 tenantId = tenantIds.get(0);
             }
             Optional<Y9User> y9UserOptional =
-                y9UserRepository.findByTenantIdAndLoginNameAndOriginalTrue(tenantId, fakeLoginName);
+                y9UserRepository.findByLoginNameAndTenantIdAndOriginalTrue(fakeLoginName, tenantId);
             Optional<Y9Person> y9PersonOptional = y9PersonRepository.findByLoginNameAndOriginalTrue(realLoginName);
             if (y9UserOptional.isEmpty()
                 || !(Y9MessageDigest.bcryptMatch(newpassword, y9UserOptional.get().getPassword()))
@@ -203,7 +203,7 @@ public class AuthServiceImpl implements AuthService {
                 tenantId = tenantIds.get(0);
             }
             Optional<Y9User> y9UserOptional =
-                y9UserRepository.findByTenantIdAndLoginNameAndOriginalTrue(tenantId, fakeLoginName);
+                y9UserRepository.findByLoginNameAndTenantIdAndOriginalTrue(fakeLoginName, tenantId);
             if (y9UserOptional.isEmpty()
                 || !(Y9MessageDigest.bcryptMatch(newpassword, y9UserOptional.get().getPassword()))) {
                 message.setStatus(Message.STATUS_FAIL);
@@ -366,7 +366,7 @@ public class AuthServiceImpl implements AuthService {
                 tenantId = tenantIds.get(0);
             }
             Optional<Y9User> y9UserOptional =
-                y9UserRepository.findByTenantIdAndLoginNameAndOriginalTrue(tenantId, fakeLoginName);
+                y9UserRepository.findByLoginNameAndTenantIdAndOriginalTrue(fakeLoginName, tenantId);
             if (y9UserOptional.isEmpty()
                 || !(Y9MessageDigest.bcryptMatch(newpassword, y9UserOptional.get().getPassword()))) {
                 message.setStatus(Message.STATUS_FAIL);

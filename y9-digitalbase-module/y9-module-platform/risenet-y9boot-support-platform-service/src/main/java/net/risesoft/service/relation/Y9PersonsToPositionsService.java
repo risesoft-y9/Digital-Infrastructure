@@ -111,4 +111,6 @@ public interface Y9PersonsToPositionsService {
      * @return {@code List<Y9PersonsToPositions>}
      */
     List<Y9PersonsToPositions> orderPositions(String personId, String[] positionIds);
+
+    void saveOrUpdate(Y9PersonsToPositions y9PersonsToPositions);
 }

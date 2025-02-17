@@ -14,12 +14,7 @@ export const useIconStore = defineStore('iconStore', {
             searchKey: '',
             iconList: [],
             searchCateValue: '',
-            searchCate: [
-                {
-                    label: '全部',
-                    value: '0'
-                }
-            ]
+            searchCate: []
         };
     },
     getters: {
@@ -162,6 +157,18 @@ export const useIconStore = defineStore('iconStore', {
                         cateByColorType(item);
                     } else {
                         cateByOther(item);
+                    }
+                }
+                // 调整顺序,将other放到最后面
+                console.log(this.iconList);
+                for (let i = 0; i < this.iconList.length; i++) {
+                    let item = this.iconList[i];
+                    if (item.cateName == 'other') {
+                        this.iconList.push(item);
+                        this.iconList.splice(i, 1);
+                        this.searchCate.push(this.searchCate[i]);
+                        this.searchCate.splice(i, 1);
+                        break;
                     }
                 }
             } catch (error) {
