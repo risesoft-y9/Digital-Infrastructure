@@ -1,89 +1,111 @@
 spring:
-  application:
-    name: sso
-  session:
-    store-type: redis
-  mvc:
-    problemdetails:
-      enabled: true
-  data:
-    redis:
-      username: default
-      password: "12345678"
-      host: localhost
-      port: "6379"
-  datasource:
-    url: jdbc:postgresql://localhost:5432/authorization-server
-    username: root
-    password: "11111111"
-    driver-class-name: org.postgresql.Driver
-    hikari:
-      maximum-pool-size: 20
-  jpa:
-    open-in-view: false
-    hibernate:
-      ddl-auto: update
-    properties:
-      jdbc:
-        batch_size: 5
-      hibernate:
-        hbm2ddl:
-          charset_name: UTF-8
-  security:
-    oauth2:
-      client:
-        registration:
-          github-idp:
-            provider: github
-            client-id: github-client-id
-            client-secret: github-client-secret
-            scope: user:email, read:user
-            client-name: Sign in with GitHub
-        provider:
-          github:
-            user-name-attribute: login
-server:
-  port: 9000
-  forward-headers-strategy: FRAMEWORK
-  servlet:
-    #context-path: /sso
-    encoding:
-      charset: UTF-8
-      enabled: true
-      force: true
-      force-request: true
-      force-response: true
+    application:
+        name: sso
     session:
-      cookie:
-        http-only: true
-        secure: false
-      timeout: 300
-      tracking-modes: COOKIE
-  shutdown: graceful
-  ssl:
-    enabled: false
-  tomcat:
-    accesslog:
-      enabled: true
-      pattern: '%t %a "%r" %s (%D ms)'
-      suffix: .log
-    additional-tld-skip-patterns: '*.jar'
-    background-processor-delay: 0s
-    basedir: build/tomcat
-    connection-timeout: PT20S
-    max-http-form-post-size: 2097152
-    remoteip:
-      port-header: X-Forwarded-Port
-      protocol-header: X-Forwarded-Proto
-      protocol-header-https-value: https
-      remote-ip-header: X-FORWARDED-FOR
-    threads:
-      max: 400
-      min-spare: 10
-    uri-encoding: UTF-8
+        store-type: redis
+    mvc:
+        problemdetails:
+            enabled: true
+    data:
+        redis:
+            username: default
+            password: "12345678"
+            host: localhost
+            port: "6379"
+    datasource:
+        url: jdbc:postgresql://localhost:5432/authorization-server
+        username: root
+        password: "11111111"
+        driver-class-name: org.postgresql.Driver
+        hikari:
+            maximum-pool-size: 20
+    jpa:
+        open-in-view: false
+        hibernate:
+            ddl-auto: update
+        properties:
+            jdbc:
+                batch_size: 5
+            hibernate:
+                hbm2ddl:
+                    charset_name: UTF-8
+    sql:
+        init:
+            username: root
+            password: "11111111"
+            platform: postgresql
+            continue-on-error: true
+            separator: ";"
+            encoding: utf-8
+            mode: ALWAYS
+            schema-locations:
+                - optional:classpath:/sql/schema-${spring.sql.init.platform}.sql
+            data-locations: ""
+    profiles:
+        active: jdbc # 或者 jpa
+        default: default
+    security:
+        oauth2:
+            client:
+                registration:
+                    github-idp:
+                        provider: github
+                        client-id: github-client-id
+                        client-secret: github-client-secret
+                        scope: user:email, read:user
+                        client-name: Sign in with GitHub
+                provider:
+                    github:
+                        user-name-attribute: login
+server:
+    port: 9000
+    forward-headers-strategy: FRAMEWORK
+    servlet:
+        context-path: /sso
+        encoding:
+            charset: UTF-8
+            enabled: true
+            force: true
+            force-request: true
+            force-response: true
+        session:
+            cookie:
+                http-only: true
+                secure: false
+            timeout: 300
+            tracking-modes: COOKIE
+    shutdown: graceful
+    ssl:
+        enabled: false
+    tomcat:
+        accesslog:
+            enabled: true
+            pattern: '%t %a "%r" %s (%D ms)'
+            suffix: .log
+        additional-tld-skip-patterns: '*.jar'
+        background-processor-delay: 0s
+        basedir: build/tomcat
+        connection-timeout: PT20S
+        max-http-form-post-size: 2097152
+        remoteip:
+            port-header: X-Forwarded-Port
+            protocol-header: X-Forwarded-Proto
+            protocol-header-https-value: https
+            remote-ip-header: X-FORWARDED-FOR
+        threads:
+            max: 400
+            min-spare: 10
+        uri-encoding: UTF-8
 logging:
-  level:
-    root: INFO
-    org.springframework.web: INFO
-    org.springframework.security: INFO
-    org.springframework.security.oauth2: INFO
+    level:
+        root: INFO
+        org.springframework.web: INFO
+        org.springframework.security: debug
+        org.springframework.security.oauth2: debug
+
+y9:
+    #kafka , jpa
+    loginInfoSaveTarget: jpa
+    internalIp: 192.168.x.x,10.0.x.x,172.20.x.x
+    encryptionRsaPublicKey: 'MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQC6DvO5m7p1Of/IkPwMRdQK7tx4wZKrbmVj2aqhlX5z+McbxeiP1XgwpiFINxigtXqU49rtCb1eyUafD4lIYZ399Z5TAZeD3kH+ggdP6xRr0G7+u1UE9qgoLXPOugZsABwSOq5w9v6qGUAY8U3doLDkjCueMbEeGG96FjqaaMLckwIDAQAB'
+    encryptionRsaPrivateKey: 'MIICdwIBADANBgkqhkiG9w0BAQEFAASCAmEwggJdAgEAAoGBALoO87mbunU5/8iQ/AxF1Aru3HjBkqtuZWPZqqGVfnP4xxvF6I/VeDCmIUg3GKC1epTj2u0JvV7JRp8PiUhhnf31nlMBl4PeQf6CB0/rFGvQbv67VQT2qCgtc866BmwAHBI6rnD2/qoZQBjxTd2gsOSMK54xsR4Yb3oWOppowtyTAgMBAAECgYACb5OtSGamhj3dCFjkaD2gbwQf6Jjc+bMGHaFoQCbJqeYhbPPgfjD2ohYpdd8yq22RaXJCTDBYf1YXWwK3GeARn19tYnJodqspAya3jyfSFY+IRDQ2kQ/59w1VmBiOtJsUJG4va2Bz9SRfLZuXwOyznjKk7BE89Anb3ici6u6HYQJBAONiagv+Kc8dkxoip1NWYVFjCWNHTejWTgLLgVDZi1jep/8Xx5d5E1aewcvPCJRz8A7hYEY5Uc8Mt9PB6NhLedkCQQDReSXdMdg+/lLYwdX7lRfPH7PIGNK4UwmZQ0LW7fsoy8/TD9gMnQ9sAVHILKxQuhubDHGfonVhA08WA2nvgzpLAkEA0hMmbpYPAm8MbOT/OhtgJdUd4z8JV8hGooZpnsyd1SlAhIjvuZ3+o9Rgr29DOgQzEUxfqgFi96uEWnuYJ9zzYQJBAK0SL5qmiEjj0IeO/8Gx2c4kH2KAP/pTgWbEEAGM9ysp2jhEqvkg+5D9Nhjx8B1y50Qf7/E5RUo2da12fJyMDCkCQDjBuq+dssaPGs36oijHBxzJmeaFR6vmKBUaiwYJEHg2ayi3r3/dHRrqYxXC2wblxOhkytUl/R1DErHztHHm878='
