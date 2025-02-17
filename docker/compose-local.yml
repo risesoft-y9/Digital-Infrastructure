@@ -1,0 +1,127 @@
+name: y9-local-evn
+services:
+    redis:
+        image: docker-internal.youshengyun.com/redis:latest
+        container_name: redis01
+        restart: always
+        extra_hosts:
+            - "host.docker.internal:host-gateway"
+        networks:
+            - y9-share-net
+        ports:
+            - "6379:6379"
+        environment:
+            REDIS_ARGS: "--requirepass y9i-83204585"
+        volumes:
+            - d:/docker-data/redis:/data
+        labels:
+            org.springframework.boot.readiness-check.tcp.disable: true
+
+    elasticsearch:
+        image: docker-internal.youshengyun.com/elasticsearch:7.17.16
+        container_name: y9dev-elasticsearch
+        environment:
+                - node.name=elasticsearch-node1
+                - cluster.name=y9elasticsearch
+                #- discovery.seed_hosts=elasticsearch-node1
+                - discovery.type=single-node
+                #- cluster.initial_master_nodes=elasticsearch-node1
+                - bootstrap.memory_lock=true
+                - "ES_JAVA_OPTS=-Xms1024m -Xmx4024m"
+                - xpack.security.enabled=true
+                - xpack.license.self_generated.type=basic
+                - ELASTIC_PASSWORD=Risesoft@2024
+                - http.cors.enabled=true
+                - http.cors.allow-origin=*
+                - http.cors.allow-headers=Authorization
+                - ingest.geoip.downloader.enabled=false
+        restart: always
+        extra_hosts:
+            - "host.docker.internal:host-gateway"
+        networks:
+            - y9-share-net
+        ports:
+            - '9200:9200'
+            - '9300:9300'
+        volumes:
+            - d:/docker-data/es:/usr/share/elasticsearch/data
+        labels:
+            org.springframework.boot.service-connection: elasticsearch
+            org.springframework.boot.readiness-check.tcp.disable: true
+
+    kafka:
+        image: docker-internal.youshengyun.com/bitnami/kafka:3.7.0
+        restart: always
+        extra_hosts:
+            - "host.docker.internal:host-gateway"
+        networks:
+            - y9-share-net
+        ports:
+            - "9092:9092"
+            - "9094:9094"
+        environment:
+            - KAFKA_CFG_NODE_ID=0
+            - KAFKA_CFG_PROCESS_ROLES=controller,broker
+            - KAFKA_CFG_LISTENERS=PLAINTEXT://:9092,CONTROLLER://:9093,EXTERNAL://0.0.0.0:9094
+            - KAFKA_CFG_ADVERTISED_LISTENERS=PLAINTEXT://kafka:9092,EXTERNAL://192.168.3.31:9094
+            - KAFKA_CFG_LISTENER_SECURITY_PROTOCOL_MAP=CONTROLLER:PLAINTEXT,EXTERNAL:PLAINTEXT,PLAINTEXT:PLAINTEXT
+            - KAFKA_CFG_CONTROLLER_LISTENER_NAMES=CONTROLLER
+            - KAFKA_CFG_CONTROLLER_QUORUM_VOTERS=0@kafka:9093
+            - KAFKA_CFG_MESSAGE_MAX_BYTES=1000000
+        volumes:
+            - d:/docker-data/kafka:/bitnami/kafka
+        labels:
+            org.springframework.boot.readiness-check.tcp.disable: true
+
+    ftp:
+        image: docker-internal.youshengyun.com/fauria/vsftpd
+        container_name: y9dev-ftp
+        restart: always
+        deploy:
+            mode: replicated
+            replicas: 1
+            resources:
+                limits:
+                    cpus: '0.8'
+                    memory: 512M
+                reservations:
+                    cpus: '0.5'
+                    memory: 256M
+        environment:
+            - FTP_USER=y9admin
+            - FTP_PASS=111111
+            - PASV_ADDRESS=192.168.3.5
+            - PASV_MIN_PORT=21100
+            - PASV_MAX_PORT=21110
+        ports:
+            - "20:20"
+            - "21:21"
+            - "21100-21110:21100-21110"
+        volumes:
+            - d:/docker-data/ftp:/home/vsftpd
+        networks:
+            - y9-share-net
+        extra_hosts:
+            - "host.docker.internal:host-gateway"
+        labels:
+            org.springframework.boot.readiness-check.tcp.disable: "true"
+
+
+    mongodb:
+        image: docker-internal.youshengyun.com/mongodb/mongodb-community-server:5.0.28-ubuntu2004
+        environment:
+            - MONGODB_INITDB_ROOT_USERNAME=y9admin
+            - MONGODB_INITDB_ROOT_PASSWORD=83204585
+        volumes:
+            - d:/docker-data/mongodb:/data/db
+        extra_hosts:
+            - "host.docker.internal:host-gateway"
+        ports:
+            - "27017:27017"
+        networks:
+            - y9-share-net
+networks:
+    y9-share-net:
+        external: true
+        name: y9-share-net
+        driver: overlay
