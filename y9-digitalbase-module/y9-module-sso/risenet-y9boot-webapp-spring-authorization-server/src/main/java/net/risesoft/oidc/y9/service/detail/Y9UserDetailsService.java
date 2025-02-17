@@ -1,8 +1,8 @@
-package net.risesoft.oidc.y9.service;
+package net.risesoft.oidc.y9.service.detail;
 
 import net.risesoft.oidc.y9.entity.Y9User;
-import net.risesoft.oidc.y9.repository.Y9UserRepository;
 import net.risesoft.oidc.util.Y9BeanUtil;
+import net.risesoft.oidc.y9.service.Y9UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.AuthorityUtils;
@@ -19,27 +19,17 @@ import java.util.List;
 @Service
 public class Y9UserDetailsService implements UserDetailsService {
     @Autowired
-    private Y9UserRepository y9UserRepository;
+    private Y9UserService y9UserService;
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        Y9User y9User = y9UserRepository.getUserByUsername(username);
+        Y9User y9User = y9UserService.loadUserByUsername(username);
         if (y9User == null) {
             throw new UsernameNotFoundException("Could not find user");
         }
 
-        /*UserDetails userDetails = User.withUsername(y9User.getLoginName())
-                .password(y9User.getPassword())
-                .accountExpired(false)
-                .accountLocked(false)
-                .credentialsExpired(false)
-                .disabled(false)
-                .build();
-        return userDetails;*/
-
         Y9UserDetails y9UserDetails = new Y9UserDetails();
         Y9BeanUtil.copyProperties(y9User, y9UserDetails);
-
         y9UserDetails
                 .setEnabled(true)
                 .setAccountNonExpired(true)

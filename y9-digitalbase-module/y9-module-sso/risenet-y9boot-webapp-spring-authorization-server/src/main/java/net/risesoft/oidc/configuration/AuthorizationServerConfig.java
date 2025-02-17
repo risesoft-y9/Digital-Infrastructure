@@ -7,7 +7,7 @@ import com.nimbusds.jose.proc.SecurityContext;
 import lombok.extern.slf4j.Slf4j;
 import net.risesoft.oidc.util.jose.Jwks;
 import net.risesoft.oidc.y9.repository.Y9ThemeRepository;
-import net.risesoft.oidc.y9.service.Y9UserDetailsService;
+import net.risesoft.oidc.y9.service.detail.Y9UserDetailsService;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.Ordered;

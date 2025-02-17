@@ -1,4 +1,4 @@
-package net.risesoft.oidc.y9.service;
+package net.risesoft.oidc.y9.service.detail;
 
 import java.io.Serial;
 import java.io.Serializable;
