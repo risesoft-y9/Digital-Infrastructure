@@ -132,6 +132,7 @@
         <jodd-http.version>6.3.0</jodd-http.version>
         <jodd-lagarto.version>6.0.6</jodd-lagarto.version>
         <lombok.version>1.18.36</lombok.version>
+        <liquibase.version>4.31.0</liquibase.version>
         <org-dom4j.version>2.1.4</org-dom4j.version>
         <oshi.version>6.6.5</oshi.version>
         <poi-scratchpad.version>5.2.3</poi-scratchpad.version>
