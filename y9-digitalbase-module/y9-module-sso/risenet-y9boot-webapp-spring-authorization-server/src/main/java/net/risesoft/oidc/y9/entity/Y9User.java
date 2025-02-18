@@ -62,11 +62,11 @@ public class Y9User implements Serializable {
     protected String tenantId;
 
     @Column(name = "TENANT_SHORT_NAME", length = 255, nullable = false)
-    @Comment("租户英文名称，冗余字段，为了显示用")
+    @Comment("租户英文名称")
     protected String tenantShortName;
 
     @Column(name = "TENANT_NAME", length = 255, nullable = false)
-    @Comment("租户名称，冗余字段，为了显示用")
+    @Comment("租户名称")
     protected String tenantName;
 
     @Column(name = "PERSON_ID", length = 38, nullable = false)

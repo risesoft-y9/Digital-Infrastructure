@@ -11,9 +11,6 @@ import java.util.List;
 @Repository
 public interface Y9UserRepository extends JpaRepository<Y9User, String> {
 
-	@Query("SELECT u FROM Y9User u WHERE u.loginName = :username")
-	Y9User getUserByUsername(@Param("username") String username);
-
     Y9User findByPersonIdAndTenantId(String personId, String tenantId);
 
 	List<Y9User> findByLoginNameAndOriginal(String loginName, Boolean original);

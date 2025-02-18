@@ -1,9 +1,5 @@
 package org.springframework.security.authentication;
 
-import java.util.Collection;
-import java.util.LinkedHashMap;
-import java.util.Map;
-
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.SneakyThrows;
 import net.risesoft.oidc.util.Y9Context;
@@ -15,6 +11,10 @@ import org.springframework.security.core.SpringSecurityCoreVersion;
 import org.springframework.util.Assert;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
+
+import java.util.Collection;
+import java.util.LinkedHashMap;
+import java.util.Map;
 
 /**
  * An {@link org.springframework.security.core.Authentication} implementation that is
@@ -38,47 +38,10 @@ public class UsernamePasswordAuthenticationToken extends AbstractAuthenticationT
 
     private Map<String, Object> customFields = new LinkedHashMap<>();
 
-    @SneakyThrows
-    private void updateCustomFields(){
-        HttpServletRequest request = ((ServletRequestAttributes) RequestContextHolder.currentRequestAttributes()).getRequest();
-        String loginType = request.getParameter("loginType");
-        String tenantShortName = request.getParameter("tenantShortName");
-        String deptId = request.getParameter("deptId");
-        String pwdEcodeType = request.getParameter("pwdEcodeType");
-
-        Map<String, Object> customFields = new LinkedHashMap<>();
-        customFields.put("tenantShortName", tenantShortName);
-        customFields.put("noLoginScreen", true);
-        customFields.put("deptId", deptId);
-        customFields.put("loginType", loginType);
-        customFields.put("userAgent", request.getHeader("User-Agent"));
-        customFields.put("clientIp", Y9Context.getIpAddr(request));
-
-        String base64Username = (String)this.principal;
-        String encryptedBase64Password = (String)this.credentials;
-        String base64Password = encryptedBase64Password;
-        String plainUsername;
-        String plainPassword;
-
-        if (StringUtils.isNotBlank(pwdEcodeType)) {
-            String rsaPrivateKey = Y9Context.getProperty("y9.encryptionRsaPrivateKey");
-            if (null != rsaPrivateKey) {
-                base64Password = RSAUtil.privateDecrypt(encryptedBase64Password, rsaPrivateKey);
-            }
-        }
-        plainPassword = Base64Util.decode(base64Password, "Unicode");
-        plainUsername = Base64Util.decode(base64Username, "Unicode");
-
-        this.customFields = customFields;
-        this.principal =  tenantShortName + "TTT" + plainUsername;
-        this.credentials = plainPassword;
-    }
-
     /**
      * This constructor can be safely used by any code that wishes to create a
      * <code>UsernamePasswordAuthenticationToken</code>, as the {@link #isAuthenticated()}
      * will return <code>false</code>.
-     *
      */
     public UsernamePasswordAuthenticationToken(Object principal, Object credentials) {
         super(null);
@@ -94,6 +57,7 @@ public class UsernamePasswordAuthenticationToken extends AbstractAuthenticationT
      * <code>AuthenticationProvider</code> implementations that are satisfied with
      * producing a trusted (i.e. {@link #isAuthenticated()} = <code>true</code>)
      * authentication token.
+     *
      * @param principal
      * @param credentials
      * @param authorities
@@ -104,17 +68,15 @@ public class UsernamePasswordAuthenticationToken extends AbstractAuthenticationT
         this.principal = principal;
         this.credentials = credentials;
         super.setAuthenticated(true); // must use super, as we override
-
-        //updateCustomFields();
     }
 
     /**
      * This factory method can be safely used by any code that wishes to create a
      * unauthenticated <code>UsernamePasswordAuthenticationToken</code>.
+     *
      * @param principal
      * @param credentials
      * @return UsernamePasswordAuthenticationToken with false isAuthenticated() result
-     *
      * @since 5.7
      */
     public static UsernamePasswordAuthenticationToken unauthenticated(Object principal, Object credentials) {
@@ -124,15 +86,59 @@ public class UsernamePasswordAuthenticationToken extends AbstractAuthenticationT
     /**
      * This factory method can be safely used by any code that wishes to create a
      * authenticated <code>UsernamePasswordAuthenticationToken</code>.
+     *
      * @param principal
      * @param credentials
      * @return UsernamePasswordAuthenticationToken with true isAuthenticated() result
-     *
      * @since 5.7
      */
     public static UsernamePasswordAuthenticationToken authenticated(Object principal, Object credentials,
                                                                     Collection<? extends GrantedAuthority> authorities) {
         return new UsernamePasswordAuthenticationToken(principal, credentials, authorities);
+    }
+
+    @SneakyThrows
+    private void updateCustomFields() {
+        HttpServletRequest request = ((ServletRequestAttributes) RequestContextHolder.currentRequestAttributes()).getRequest();
+        String loginType = request.getParameter("loginType");
+        String tenantShortName = request.getParameter("tenantShortName");
+        String rememberMe = request.getParameter("rememberMe");
+        String screenDimension = request.getParameter("screenDimension");
+        String pwdEcodeType = request.getParameter("pwdEcodeType");
+
+        String base64Username = (String) this.principal;
+        String encryptedBase64Password = (String) this.credentials;
+        String base64Password = encryptedBase64Password;
+        String plainUsername;
+        String plainPassword;
+
+        if (StringUtils.isNotBlank(pwdEcodeType)) {
+            String rsaPrivateKey = Y9Context.getProperty("y9.encryptionRsaPrivateKey");
+            if (null != rsaPrivateKey) {
+                base64Password = RSAUtil.privateDecrypt(encryptedBase64Password, rsaPrivateKey);
+            }
+        }
+        plainPassword = Base64Util.decode(base64Password, "Unicode");
+        plainUsername = Base64Util.decode(base64Username, "Unicode");
+
+        Map<String, Object> customFields = new LinkedHashMap<>();
+        customFields.put("loginType", loginType);
+        customFields.put("tenantShortName", tenantShortName);
+        customFields.put("loginName", plainUsername);
+        customFields.put("rememberMe", rememberMe);
+        customFields.put("screenDimension", screenDimension);
+        customFields.put("userAgent", request.getHeader("User-Agent"));
+        customFields.put("clientIp", Y9Context.getIpAddr(request));
+
+        this.customFields = customFields;
+        if (loginType == null) {
+            this.principal = base64Username;
+            this.credentials = base64Password;
+        } else {
+            this.principal = loginType + ":::" + tenantShortName + ":::" + plainUsername;
+            this.credentials = plainPassword;
+        }
+
     }
 
     @Override
@@ -145,7 +151,9 @@ public class UsernamePasswordAuthenticationToken extends AbstractAuthenticationT
         return this.principal;
     }
 
-    public Map<String, Object> getCustomFields() {return this.customFields;}
+    public Map<String, Object> getCustomFields() {
+        return this.customFields;
+    }
 
     public void setCustomFields(Map<String, Object> customFields) {
         this.customFields = customFields;

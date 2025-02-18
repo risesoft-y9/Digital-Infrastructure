@@ -23,7 +23,7 @@ cas:
             access-token:
                 timeToKillInSeconds: PT2H
                 maxTimeToLiveInSeconds: PT8H
-                createAsJwt: false
+                createAsJwt: true
                 crypto:
                     encryption:
                         key: QTGrm8G1uf6rwx0arh-_DkeqorpkL-mLZQuqB8R6gGqtXqHMKZ0Kti1uegxBE0A9k3OeH3nNXy6pN4pik9G2HQ
