@@ -247,7 +247,7 @@ logging:
     level:
         org.apereo.cas: info
 server:
-    port: 7055
+    port: 9000
     servlet:
         context-parameters:
             isLog4jAutoInitializationDisabled: true
