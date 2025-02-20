@@ -22,13 +22,11 @@ dependencies {
 
     api(libs.dom4j)
     api(libs.jodd.http)
-    api(libs.jxls.poi)
-    api(libs.jxls.jexcel)
-    api(libs.jxls.reader)
     api(libs.shedlock.spring)
     api(libs.shedlock.provider.jdbc.template)
     api(libs.google.guava)
     api(libs.ipaddress)
+    api(libs.fastexcel)
     testImplementation("org.springframework.boot:spring-boot-starter-test")
     compileOnly("jakarta.servlet:jakarta.servlet-api")
 }

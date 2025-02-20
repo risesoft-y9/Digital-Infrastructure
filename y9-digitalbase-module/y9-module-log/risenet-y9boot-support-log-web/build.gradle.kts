@@ -10,10 +10,7 @@ dependencies {
     api(project(":y9-digitalbase-starter:risenet-y9boot-starter-log"))
     api(project(":y9-digitalbase-starter:risenet-y9boot-starter-kafka"))
     api(project(":y9-digitalbase-starter:risenet-y9boot-starter-web"))
-    api(libs.jxls)
-    api(libs.jxls.poi)
-    api(libs.jxls.jexcel)
-    api(libs.jxls.reader)
+    api(libs.fastexcel)
     compileOnly("jakarta.servlet:jakarta.servlet-api")
 }
 

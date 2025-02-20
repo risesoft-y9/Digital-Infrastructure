@@ -29,7 +29,7 @@ com-google-guava-guava = "33.3.1-jre"
 com-google-zxing-core = "3.5.2"
 com-googlecode-cqengine-cqengine = "3.6.0"
 # apache common
-commons-beanutils-commons-beanutils = "1.9.4"
+commons-beanutils-commons-beanutils = "1.10.0"
 commons-codec-commons-codec = "1.16.1"
 commons-httpclient-commons-httpclient = "3.1"
 commons-io-commons-io = "2.18.0"
@@ -39,6 +39,7 @@ org-apache-commons-commons-pool2 = "2.12.0"
 org-apache-httpcomponents-httpclient = "4.5.14"
 org-apache-httpcomponents-httpmime = "4.5.14"
 org-apache-poi-poi-scratchpad = "5.2.3"
+org-apache-poi-poi-ooxml = "5.2.3"
 # xml
 jaxen-jaxen = "2.0.0"
 org-dom4j-dom4j = "2.1.4"
@@ -86,6 +87,7 @@ io-freefair-gradle-lombok-plugin = "8.11"
 tech-yanand-gradle-maven-central-publish = "1.3.0"
 com-vanniktech-gradle-maven-publish-plugin = "0.30.0"
 org-jreleaser-jreleaser-gradle-plugin = "1.15.0"
+cn-idev-excel-fastexcel = "1.1.0"
 
 [libraries]
 #spring boot & cloud dependencies
@@ -106,6 +108,7 @@ commons-codec = { module = "commons-codec:commons-codec", version.ref = "commons
 commons-httpclient = { module = "commons-httpclient:commons-httpclient", version.ref = "commons-httpclient-commons-httpclient" }
 commons-io = { module = "commons-io:commons-io", version.ref = "commons-io-commons-io" }
 commons-net = { module = "commons-net:commons-net", version.ref = "commons-net-commons-net" }
+
 httpcomponents-httpclient = { module = "org.apache.httpcomponents:httpclient", version.ref = "org-apache-httpcomponents-httpclient" }
 httpcomponents-httpmime = { module = "org.apache.httpcomponents:httpmime", version.ref = "org-apache-httpcomponents-httpmime" }
 
@@ -116,7 +119,9 @@ jxls = { module = "org.jxls:jxls", version.ref = "org-jxls-jxls" }
 jxls-jexcel = { module = "org.jxls:jxls-jexcel", version.ref = "org-jxls-jxls-jexcel" }
 jxls-poi = { module = "org.jxls:jxls-poi", version.ref = "org-jxls-jxls-poi" }
 jxls-reader = { module = "org.jxls:jxls-reader", version.ref = "org-jxls-jxls-reader" }
+
 poi-scratchpad = { module = "org.apache.poi:poi-scratchpad", version.ref = "org-apache-poi-poi-scratchpad" }
+poi-ooxml = { module = "org.apache.poi:poi-ooxml", version.ref = "org-apache-poi-poi-ooxml" }
 
 java-uuid-generator = { module = "com.fasterxml.uuid:java-uuid-generator", version.ref = "java-uuid-generator" }
 
@@ -177,7 +182,8 @@ io-freefair-gradle-lombok-plugin = { module = "io.freefair.gradle:lombok-plugin"
 tech-yanand-gradle-maven-central-publish = { module = "tech.yanand.gradle:maven-central-publish", version.ref = "tech-yanand-gradle-maven-central-publish" }
 com-vanniktech-gradle-maven-publish-plugin = { module = "com.vanniktech:gradle-maven-publish-plugin", version.ref = "com-vanniktech-gradle-maven-publish-plugin" }
 org-jreleaser-jreleaser-gradle-plugin = { module = "org.jreleaser:jreleaser-gradle-plugin", version.ref = "org-jreleaser-jreleaser-gradle-plugin" }
-org-springframework-boot-org-springframework-boot-gradle-plugin = { module = "org.springframework.boot:org.springframework.boot.gradle.plugin", version.ref = "spring-boot"}
+org-springframework-boot-org-springframework-boot-gradle-plugin = { module = "org.springframework.boot:org.springframework.boot.gradle.plugin", version.ref = "spring-boot" }
+fastexcel = { module = "cn.idev.excel:fastexcel", version.ref = "cn-idev-excel-fastexcel" }
 
 [plugins]
 io-spring-dependency-management = { id = "io.spring.dependency-management", version.ref = "io-spring-dependency-management" }
