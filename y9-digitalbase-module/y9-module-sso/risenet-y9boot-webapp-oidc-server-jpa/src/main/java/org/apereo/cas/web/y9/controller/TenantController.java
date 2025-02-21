@@ -1,4 +1,4 @@
-package y9.controller;
+package org.apereo.cas.web.y9.controller;
 
 import java.util.ArrayList;
 import java.util.Comparator;
@@ -6,7 +6,11 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.apereo.cas.services.Y9User;
+import org.apereo.cas.services.y9.Y9User;
+import org.apereo.cas.web.y9.service.Y9UserService;
+import org.apereo.cas.web.y9.util.MobileUtil;
+import org.apereo.cas.web.y9.util.common.XSSCheckUtil;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -21,10 +25,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
-import y9.service.Y9UserService;
-import y9.util.MobileUtil;
-import y9.util.common.XSSCheckUtil;
-
+@Lazy(false)
 @Controller
 @RequestMapping(value = "/api")
 @Slf4j
@@ -70,6 +71,7 @@ public class TenantController {
      * @param loginName
      * @return
      */
+
     @RequestMapping(value = "/loginNameAndTenants")
     public final ResponseEntity<String> getLoginNameAndTenants(@RequestParam String loginName) {
         List<Map<String, Object>> list = new ArrayList<Map<String, Object>>();

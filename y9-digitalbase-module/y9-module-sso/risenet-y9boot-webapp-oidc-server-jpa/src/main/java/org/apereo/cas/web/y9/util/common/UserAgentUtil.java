@@ -3,7 +3,7 @@ package org.apereo.cas.web.y9.util.common;
 import cz.mallat.uasparser.OnlineUpdater;
 import cz.mallat.uasparser.UASparser;
 import cz.mallat.uasparser.UserAgentInfo;
-import jakarta.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletRequest;
 import lombok.extern.slf4j.Slf4j;
 
 import java.io.IOException;

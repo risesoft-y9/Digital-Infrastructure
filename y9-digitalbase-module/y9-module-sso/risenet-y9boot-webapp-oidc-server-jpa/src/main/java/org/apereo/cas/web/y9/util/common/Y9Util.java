@@ -1,6 +1,6 @@
 package org.apereo.cas.web.y9.util.common;
 
-import jakarta.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpServletResponse;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.beanutils.PropertyUtils;
 import org.springframework.util.StringUtils;

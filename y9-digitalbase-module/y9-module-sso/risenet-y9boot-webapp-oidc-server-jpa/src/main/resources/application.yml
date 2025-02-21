@@ -62,7 +62,7 @@ cas:
                     ddl-auto: update
                     url: jdbc:mysql://localhost:3306/y9_public?serverTimezone=GMT%2B8&nullCatalogMeansCurrent=true&useUnicode=true&characterEncoding=utf-8&rewriteBatchedStatements=true&useCompression=true&useSSL=false&allowPublicKeyRetrieval=true
                     user: root
-                    password: 111111
+                    password: "12345678"
                     idleTimeout: PT10M
                     leakThreshold: 0
                     autocommit: true
@@ -95,7 +95,7 @@ cas:
             ddl-auto: update
             url: jdbc:mysql://localhost:3306/y9_public?serverTimezone=GMT%2B8&nullCatalogMeansCurrent=true&useUnicode=true&characterEncoding=utf-8&rewriteBatchedStatements=true&useCompression=true&useSSL=false&allowPublicKeyRetrieval=true
             user: root
-            password: 111111
+            password: "12345678"
             idleTimeout: PT10M
             leakThreshold: 0
             autocommit: true
@@ -125,7 +125,7 @@ cas:
                 ddl-auto: update
                 url: jdbc:mysql://localhost:3306/y9_public?serverTimezone=GMT%2B8&nullCatalogMeansCurrent=true&useUnicode=true&characterEncoding=utf-8&rewriteBatchedStatements=true&useCompression=true&useSSL=false&allowPublicKeyRetrieval=true
                 user: root
-                password: 111111
+                password: "12345678"
                 idleTimeout: PT10M
                 leakThreshold: 0
                 autocommit: true
