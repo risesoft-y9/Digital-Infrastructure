@@ -99,7 +99,7 @@
 </div>
 <!--<div class="bg_top_right"></div>-->
 <script type="text/javascript">
-        var ctx = "[(${contextPath})]";
+    var ctx = "sso";
     var canGetCookie = 1; //是否支持存储Cookie 0 不支持 1 支持
     var ajaxmockjax = 1; //是否启用虚拟Ajax的请求响 0 不启用  1 启用
     var inputTimer = null;
@@ -123,16 +123,31 @@
     });
 
     $(function () {
-        validateIE();
+        screenSize();
         initFormIfRemember();
     });
 
-    function validateIE() {
+    function screenSize() {
         try {
             $("#screenDimension").val(
                 window.screen.width + "*" + window.screen.height);
         } catch (e) {
         }
+    }
+    
+    function beep(freq = 660, duration = 90, vol = 50) {
+        var context = new(window.AudioContext || window.webkitAudioContext);
+        const oscillator = context.createOscillator();
+        const gain = context.createGain();
+        gain.gain.setValueAtTime(0, context.currentTime);
+        gain.gain.linearRampToValueAtTime(1, context.currentTime + 0.002);
+        oscillator.connect(gain);
+        oscillator.frequency.value = freq;
+        oscillator.type = "square";
+        gain.connect(context.destination);
+        oscillator.start(context.currentTime);
+        oscillator.stop(context.currentTime + duration * .001);
+        oscillator.onended = () => context.close();
     }
 
     function inputOnBlur() {

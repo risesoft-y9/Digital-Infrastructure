@@ -247,7 +247,7 @@ management:
         enable:
             all: false
 server:
-    port: 9001
+    port: 7055
     servlet:
         encoding:
             charset: UTF-8

@@ -7,7 +7,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
-@Transactional(readOnly = true)
+@Transactional(readOnly = true, transactionManager = "rsPublicTransactionManager")
 @Repository
 public interface Y9UserRepository extends JpaRepository<Y9User, String> {
 

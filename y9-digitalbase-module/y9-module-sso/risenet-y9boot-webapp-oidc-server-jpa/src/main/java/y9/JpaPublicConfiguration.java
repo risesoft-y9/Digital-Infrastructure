@@ -4,15 +4,14 @@ import javax.persistence.EntityManagerFactory;
 import javax.sql.DataSource;
 
 import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.boot.autoconfigure.AutoConfigureBefore;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
-import org.springframework.boot.autoconfigure.jdbc.DataSourceAutoConfiguration;
 import org.springframework.boot.autoconfigure.orm.jpa.JpaProperties;
 import org.springframework.context.annotation.AdviceMode;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.FilterType;
+import org.springframework.context.annotation.Primary;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 import org.springframework.orm.jpa.JpaTransactionManager;
@@ -34,8 +33,10 @@ public class JpaPublicConfiguration {
 		return new HibernateJpaVendorAdapter();
 	}
 
+	@Primary
 	@Bean
-	public LocalContainerEntityManagerFactoryBean rsPublicEntityManagerFactory(DataSource dataSource, JpaProperties jpaProperties) {
+	public LocalContainerEntityManagerFactoryBean rsPublicEntityManagerFactory(DataSource dataSource,
+			JpaProperties jpaProperties) {
 		LocalContainerEntityManagerFactoryBean em = new LocalContainerEntityManagerFactoryBean();
 		em.setPersistenceUnitName("y9Public");
 		em.setDataSource(dataSource);
@@ -45,6 +46,7 @@ public class JpaPublicConfiguration {
 		return em;
 	}
 
+	@Primary
 	@Bean
 	public PlatformTransactionManager rsPublicTransactionManager(
 			@Qualifier("rsPublicEntityManagerFactory") EntityManagerFactory emf) {

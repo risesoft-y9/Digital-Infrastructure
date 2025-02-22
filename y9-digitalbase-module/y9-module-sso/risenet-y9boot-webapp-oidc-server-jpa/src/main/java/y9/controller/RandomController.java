@@ -12,6 +12,10 @@ import org.springframework.web.bind.annotation.ResponseBody;
 @Controller
 @RequestMapping(value = "/api")
 public class RandomController {
+	
+	public RandomController() {
+		System.out.println("RandomController created...");
+	}
 
 	@ResponseBody
 	@GetMapping(value = "/getRandom")

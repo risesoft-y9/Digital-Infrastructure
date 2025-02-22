@@ -5,10 +5,9 @@ import java.util.List;
 import javax.servlet.DispatcherType;
 
 import org.apereo.cas.web.ProtocolEndpointWebSecurityConfigurer;
-import y9.service.Y9KeyValueService;
-import y9.util.Y9Context;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnWarDeployment;
+import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.boot.web.servlet.FilterRegistrationBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -19,8 +18,11 @@ import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.web.filter.ForwardedHeaderFilter;
 
 import lombok.RequiredArgsConstructor;
+import y9.service.Y9KeyValueService;
+import y9.util.Y9Context;
 
 @Lazy(false)
+@EnableConfigurationProperties(Y9Properties.class)
 @Configuration(proxyBeanMethods = true)
 public class Y9Configuration {
 
@@ -50,14 +52,14 @@ public class Y9Configuration {
 	}
 
 	@Bean
-    public ProtocolEndpointWebSecurityConfigurer<Void> y9ResourceConfigurer() {
-        return new ProtocolEndpointWebSecurityConfigurer<>() {
-            @Override
-            public List<String> getIgnoredEndpoints() {
-                return List.of("/y9static/**", "/api/**");
-            }
-        };
-    }
+	public ProtocolEndpointWebSecurityConfigurer<Void> y9ResourceConfigurer() {
+		return new ProtocolEndpointWebSecurityConfigurer<>() {
+			@Override
+			public List<String> getIgnoredEndpoints() {
+				return List.of("/y9static/**", "/api/**");
+			}
+		};
+	}
 
 	@Bean
 	public Runnable y9KeyValueCleaner(Y9KeyValueService y9KeyValueService) {

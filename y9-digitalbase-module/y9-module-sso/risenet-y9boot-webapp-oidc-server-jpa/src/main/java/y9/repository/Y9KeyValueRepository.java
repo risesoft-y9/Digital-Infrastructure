@@ -12,7 +12,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import y9.entity.Y9KeyValue;
 
-@Transactional(readOnly = true)
+@Transactional(transactionManager = "rsPublicTransactionManager")
 @Repository
 public interface Y9KeyValueRepository extends JpaRepository<Y9KeyValue, String> {
 

@@ -6,7 +6,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
-@Transactional(readOnly = true)
+@Transactional(readOnly = true, transactionManager = "rsPublicTransactionManager")
 @Repository
 public interface Y9LoginUserRepository extends JpaRepository<Y9LoginUser, String> {
 
