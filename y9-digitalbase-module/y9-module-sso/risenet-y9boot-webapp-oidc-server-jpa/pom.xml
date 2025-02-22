@@ -17,6 +17,7 @@
 
     <properties>
         <cas.version>6.6.15.2</cas.version>
+        <boot.version>2.7.3</boot.version>
         <pac4j.version>5.4.6</pac4j.version>
 
         <maven.deploy.skip>true</maven.deploy.skip>
@@ -143,7 +144,13 @@
             <groupId>org.apereo.cas</groupId>
             <artifactId>cas-server-support-jpa-service-registry</artifactId>
         </dependency>
-
+        
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-data-jpa</artifactId>
+            <version>${boot.version}</version>
+        </dependency>
+        
         <dependency>
             <groupId>org.apereo.cas</groupId>
             <artifactId>cas-server-core-authentication-attributes</artifactId>

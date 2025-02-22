@@ -267,9 +267,6 @@ server:
 spring:
     application:
         name: sso
-    autoconfigure:
-        exclude:
-            - org.springframework.boot.actuate.autoconfigure.metrics.KafkaMetricsAutoConfiguration
     main:
         allow-bean-definition-overriding: true
         allow-circular-references: false
@@ -278,6 +275,24 @@ spring:
         user:
             name: y9admin
             password: risesoft
+    datasource:
+        driver-class-name: com.mysql.cj.jdbc.Driver
+        url: jdbc:mysql://localhost:3306/y9_public?serverTimezone=GMT%2B8&nullCatalogMeansCurrent=true&useUnicode=true&characterEncoding=utf-8&rewriteBatchedStatements=true&useCompression=true&useSSL=false&allowPublicKeyRetrieval=true
+        username: root
+        password: "12345678"
+    jpa:
+        generate-ddl: true
+        show-sql: true
+        hibernate:
+            naming:
+                implicit-strategy: org.hibernate.boot.model.naming.ImplicitNamingStrategyLegacyHbmImpl
+                physical-strategy: org.hibernate.boot.model.naming.PhysicalNamingStrategyStandardImpl
+        open-in-view: false
+        properties:
+            hibernate:
+                hbm2ddl:
+                    auto: update
+                dialect: org.hibernate.dialect.MySQL8Dialect
     thymeleaf:
         cache: true
         mode: HTML
