@@ -1,6 +1,6 @@
 {
     "@class" : "org.apereo.cas.services.CasRegisteredService",
-    "serviceId" : "^(https?)://localhost:7055/test.*",
+    "serviceId" : "^(https?)://localhost:7099/protected.*",
     "name" : "cas3ServiceDemo",
     "description" : "cas3 Authentication protocols app",
     "theme" : "y9-apereo",

@@ -1,6 +1,6 @@
 {
     "@class" : "org.apereo.cas.services.CasRegisteredService",
-    "serviceId" : "^(https?)://localhost:7055/jwt.*",
+    "serviceId" : "^(https?)://localhost:7099/jwt.*",
     "name" : "jwtServiceDemo",
     "description" : "jwt Authentication app",
     "theme" : "y9-apereo",
