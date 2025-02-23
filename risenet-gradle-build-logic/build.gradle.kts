@@ -44,7 +44,7 @@ signing {
 mavenPublishing {
     configure(GradlePlugin(
         javadocJar = JavadocJar.Javadoc(),
-        sourcesJar = true,
+        sourcesJar = true
     ))
     publishToMavenCentral(SonatypeHost.CENTRAL_PORTAL, automaticRelease = false)
     signAllPublications()
