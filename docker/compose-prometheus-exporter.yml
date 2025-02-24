@@ -1,4 +1,3 @@
-version: '3.9'
 name: prometheus-exporter
 services:
   mysqld-exporter:

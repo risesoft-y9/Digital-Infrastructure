@@ -1,4 +1,3 @@
-version: '3.9'
 name: grafana
 #Grafana官方提供模板地址：https://grafana.com/grafana/dashboards
 services:

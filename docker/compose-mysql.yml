@@ -1,4 +1,3 @@
-version: '3.9'
 name: y9-dev-environments
 services:
   db:
