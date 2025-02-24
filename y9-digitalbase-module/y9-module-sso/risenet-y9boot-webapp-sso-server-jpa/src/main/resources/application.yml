@@ -12,10 +12,10 @@ cas:
         oauth:
             crypto:
                 encryption:
-                    key: vO3o3AOVnmpzaDqAiOYa8UOJv6AX7EBygE6fANNN1G0
+                    key: NpbBCJmZoxN-RPQBl4A80PezrpdnnDvZAZqDu4UwpJI
                     keySize: 256
                 signing:
-                    key: NXGpoAtRG60AXIh2XmxyxEPh6ZWUBeKp9n994hsGww5cPgYHRmA6Zv-2krWJ5NgZmOtbqV9dmeiaSorX6lz6tw
+                    key: eH3Fy3osA3UuifXnaseUFXrgukAPKRVNKXjiStw7N0_f4d_DOnrwnRrxfYjIIULl2KCfydUcnOf0SMBIEp8dXg
                     keySize: 512
             refreshToken:
                 timeToKillInSeconds: P14D
@@ -28,10 +28,10 @@ cas:
                 createAsJwt: false
                 crypto:
                     encryption:
-                        key: vO3o3AOVnmpzaDqAiOYa8UOJv6AX7EBygE6fANNN1G0
+                        key: ArcFIPDukjqCn8mPCQGuPXVi8e1oC7nb4gl8YfX5Sq8
                         keySize: 256
                     signing:
-                        key: NXGpoAtRG60AXIh2XmxyxEPh6ZWUBeKp9n994hsGww5cPgYHRmA6Zv-2krWJ5NgZmOtbqV9dmeiaSorX6lz6tw
+                        key: ARC9r1niou5MSjjsGDWyh1alI-JYtADObyuBpwNZYY0KRfBS43NZTYzEFh7HLckHPCpjyP_gSydNwgFBMPsXUg
                         keySize: 512
             grants:
                 resourceOwner:
@@ -47,10 +47,10 @@ cas:
         token:
             crypto:
                 encryption:
-                    key: vO3o3AOVnmpzaDqAiOYa8UOJv6AX7EBygE6fANNN1G0
+                    key: oIKTjQbNbztKkJ41FeM9muvvZs7SagQLs1uG-kPtmho
                     keySize: 256
                 signing:
-                    key: NXGpoAtRG60AXIh2XmxyxEPh6ZWUBeKp9n994hsGww5cPgYHRmA6Zv-2krWJ5NgZmOtbqV9dmeiaSorX6lz6tw
+                    key: Bp87W-mIk3vVNITgKL4hADl0KfXmFRxlnLD-nfyjShQDgJcr3fXjZcGl1RIX_rc5IwApfwNdyOLtdPa7xRk9Pw
                     keySize: 512
 
     httpClient:
@@ -78,17 +78,17 @@ cas:
         fallbackSystemLocale: true
     view:
         #当service参数为空时，利用defaultRedirectUrl
-        defaultRedirectUrl: http://localhost:7070/home
+        defaultRedirectUrl: http://localhost:7099
         #当defaultRedirectUrl为空、并且service参数为空时，自动计算service
         authorizedServicesOnSuccessfulLogin: true
     webflow:
         crypto:
             enabled: true
             encryption:
-                key: YWue7qiEmHJ42I8TMMrg5Q
+                key: y6-HKVkgwVfFEM-16NqAbw
                 keySize: 16
             signing:
-                key: CzPeT3D2l7C-dwR2LfV9DFHrwmPGXCSsEReZeTn76xiWNU45De8s1CAdPNXovoBpEilbeTY1PkwPQuMxZdN4mQ
+                key: nowZ-94qVZlbuJyjmyzuZ6TK5YdfnpSHZR04--SjT01DXHZjQrbLpS_-fC2HYsYZRidR8Tg6osN0ubQ_vl2k4A
                 keySize: 512
     logout:
         followServiceRedirects: true
@@ -116,7 +116,7 @@ cas:
             ddl-auto: update
             url: jdbc:mysql://localhost:3306/y9_public?serverTimezone=GMT%2B8&nullCatalogMeansCurrent=true&useUnicode=true&characterEncoding=utf-8&rewriteBatchedStatements=true&useCompression=true&useSSL=false&allowPublicKeyRetrieval=true
             user: root
-            password: 111111
+            password: "12345678"
             idleTimeout: PT10M
             leakThreshold: 0
             autocommit: true
@@ -128,10 +128,10 @@ cas:
         crypto:
             enabled: true
             encryption:
-                key: vO3o3AOVnmpzaDqAiOYa8UOJv6AX7EBygE6fANNN1G0
+                key: kGM8QfhqIQPRYazJCcyzOUNkf9EnIWLE7cUgobbPulY
                 keySize: 256
             signing:
-                key: NXGpoAtRG60AXIh2XmxyxEPh6ZWUBeKp9n994hsGww5cPgYHRmA6Zv-2krWJ5NgZmOtbqV9dmeiaSorX6lz6tw
+                key: Jt5MNjoxasP2N3t5cFAyWpniFSexyU6yDD89zHmkk0SAt4FKCiHeuj5LnZvLC_22nE8WUZEivjw5OUzMzfRblA
                 keySize: 512
         httpOnly: true
         maxAge: -1
@@ -143,12 +143,12 @@ cas:
         sameSitePolicy: Lax
     ticket:
         crypto:
-            enabled: false
+            enabled: true
             encryption:
-                key: vO3o3AOVnmpzaDqAiOYa8UOJv6AX7EBygE6fANNN1G0
+                key: Nmi7547QgBL29klEGh1T4whRAyy1I9-YI1AHUiGZFxM
                 keySize: 256
             signing:
-                key: NXGpoAtRG60AXIh2XmxyxEPh6ZWUBeKp9n994hsGww5cPgYHRmA6Zv-2krWJ5NgZmOtbqV9dmeiaSorX6lz6tw
+                key: yI59cuwi_7zVcFoR9S17MgS5iQNec_vjPnyohSYe8Yak4ywCYRnkLeZkTbJ2ED0-abaM2RNJDM27hb3bAn2WDQ
                 keySize: 512
         registry:
             cleaner:
@@ -158,23 +158,24 @@ cas:
                     repeatInterval: "PT30M"
             jpa:
                 enabled: true
+                ticket-lock-type: OPTIMISTIC
+                crypto:
+                    enabled: true
+                    encryption:
+                        key: OF-dl6VNBqf5brqq2iMazA
+                        keySize: 16
+                    signing:
+                        key: HegCee1P3HV-Kxf9yS7_UTExRpOwRZVE__VsnSCEuyHdA9wUxtrKJLLmFs7nFGpWJW839zGcXgSLbi9xsJWVwQ
+                        keySize: 512
                 dialect: org.hibernate.dialect.MySQL8Dialect
                 driver-class: com.mysql.cj.jdbc.Driver
                 ddl-auto: update
                 url: jdbc:mysql://localhost:3306/y9_public?serverTimezone=GMT%2B8&nullCatalogMeansCurrent=true&useUnicode=true&characterEncoding=utf-8&rewriteBatchedStatements=true&useCompression=true&useSSL=false&allowPublicKeyRetrieval=true
                 user: root
-                password: 111111
+                password: "12345678"
                 idleTimeout: PT10M
                 leakThreshold: 0
-                autocommit: true
-                crypto:
-                    enabled: true
-                    encryption:
-                        key: "6vJAg4gWORY0f8dF5XIc8Q"
-                        keySize: 16
-                    signing:
-                        key: "CzPeT3D2l7C-dwR2LfV9DFHrwmPGXCSsEReZeTn76xiWNU45De8s1CAdPNXovoBpEilbeTY1PkwPQuMxZdN4mQ"
-                        keySize: 512
+                autocommit: true                
         st:
             maxLength: 50
             numberOfUses: 10
@@ -195,7 +196,7 @@ management:
         enable:
             all: false
 server:
-    port: 8080
+    port: 7055
     servlet:
         encoding:
             charset: UTF-8
