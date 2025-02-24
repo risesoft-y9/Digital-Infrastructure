@@ -1,129 +1,142 @@
 package org.apereo.cas.services;
 
 import java.io.Serializable;
-import java.time.Instant;
+import java.util.Date;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
+import javax.persistence.Lob;
 import javax.persistence.Table;
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
 
 import org.hibernate.annotations.ColumnDefault;
 import org.hibernate.annotations.Comment;
 import org.hibernate.annotations.CreationTimestamp;
+import org.springframework.format.annotation.DateTimeFormat;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 
-import lombok.EqualsAndHashCode;
-import lombok.Getter;
+import lombok.Data;
 import lombok.NoArgsConstructor;
-import lombok.Setter;
-import lombok.ToString;
-import lombok.experimental.Accessors;
-import lombok.experimental.SuperBuilder;
 
-@Entity(name = Y9LoginUser.ENTITY_NAME)
-@Table(name = "Y9_LOGIN_USER")
-@Getter
-@Setter
-@ToString
-@EqualsAndHashCode
-@SuperBuilder
+@Entity
+@Table(name = "Y9_LOG_USER_LOGIN_INFO")
+@org.hibernate.annotations.Table(comment = "用户登录历史表", appliesTo = "Y9_LOG_USER_LOGIN_INFO")
 @NoArgsConstructor
-@Accessors(chain = true)
+@Data
 public class Y9LoginUser implements Serializable {
-	/**
-	 * Th JPA entity name.
-	 */
-	public static final String ENTITY_NAME = "Y9LoginUser";
+    private static final long serialVersionUID = -6476891120156676097L;
 
-	private static final long serialVersionUID = -6476891120156676097L;
+    @Id
+    @Column(name = "ID", length = 38, nullable = false)
+    @Comment("主键")
+    private String id;
 
-	@Id
-	@Column(name = "ID", length = 38, nullable = false)
-	@Comment("主键")
-	private String id;
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss", timezone = "GMT+8")
+    @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+    @CreationTimestamp
+    @Column(name = "LOGIN_TIME", updatable = false)
+    @Temporal(TemporalType.TIMESTAMP)
+    @Comment(value = "登录时间")
+    private Date loginTime;
 
-	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss", timezone = "GMT+8")
-	@CreationTimestamp
-	@Column(name = "LOGIN_TIME", updatable = false)
-	@Comment("登录日期")
-	private Instant loginTime;
+    @Column(name = "LOGIN_TYPE", length = 38)
+    @Comment(value = "登录方式")
+    private String loginType;
 
-	@Column(name = "LOGIN_TYPE", length = 255)
-	@Comment("登录类型")
-	private String loginType;
+    /** 用户id */
+    @Column(name = "USER_ID", length = 38)
+    @Comment(value = "用户id")
+    private String userId;
 
-	@Column(name = "USER_ID", length = 255)
-	@Comment("用户ID")
-	private String userId;
+    /** 登录名 */
+    @Column(name = "USER_NAME", length = 100)
+    @Comment(value = "登录名")
+    private String userName;
 
-	@Column(name = "USER_NAME", length = 255)
-	@Comment("用户名称")
-	private String userName;
+    /** 登录名称 */
+    @Column(name = "USER_LOGIN_NAME", length = 50)
+    @Comment(value = "登录名称")
+    private String userLoginName;
 
-	@Column(name = "USER_LOGIN_NAME", length = 255)
-	@Comment("用户登录名称")
-	private String userLoginName;
+    /** 登录用户机器IP */
+    @Column(name = "USER_HOST_IP", length = 50)
+    @Comment(value = "登录用户机器IP")
+    private String userHostIp;
 
-	@Column(name = "USER_HOST_IP", length = 255)
-	@Comment("用户主机IP")
-	private String userHostIp;
+    /** 登录用户机器MAC */
+    @Column(name = "USER_HOST_MAC", length = 100)
+    @Comment(value = "登录用户机器MAC")
+    private String userHostMac;
 
-	@Column(name = "USER_HOST_MAC", length = 255)
-	@Comment("用户主机MAC")
-	private String userHostMac;
+    /** 登录用户机器名称 */
+    @Column(name = "USER_HOST_NAME", length = 50)
+    @Comment(value = "登录用户机器名称")
+    private String userHostName;
 
-	@Column(name = "USER_HOST_NAME", length = 255)
-	@Comment("用户主机名称")
-	private String userHostName;
+    /** 登录机器的硬盘ID */
+    @Column(name = "USER_HOST_DISK_ID", length = 50)
+    @Comment(value = "登录机器的硬盘ID")
+    private String userHostDiskId;
 
-	@Column(name = "USER_HOST_DISKID", length = 255)
-	@Comment("用户主机磁盘ID")
-	private String userHostDiskId;
+    /** 租户ID */
+    @Column(name = "TENANT_ID", length = 38)
+    @Comment(value = "租户ID")
+    private String tenantId;
 
-	@Column(name = "TENANT_ID", length = 255)
-	@Comment("租户ID")
-	private String tenantId;
+    /** 租户名称 */
+    @Column(name = "TENANT_NAME", length = 50)
+    @Comment(value = "租户名称")
+    private String tenantName;
 
-	@Column(name = "TENANT_NAME", length = 255)
-	@Comment("租户名称")
-	private String tenantName;
+    /** 访问单点登录服务器IP */
+    @Column(name = "SERVER_IP", length = 50, nullable = false)
+    @Comment(value = "访问单点登录服务器IP")
+    private String serverIp;
 
-	@Column(name = "SERVER_IP", length = 255)
-	@Comment("服务器IP")
-	private String serverIp;
+    /** 登录是否成功 */
+    @Column(name = "SUCCESS", nullable = false)
+    @Comment(value = "登录是否成功")
+    private String success = "true";
 
-	@Column(name = "SUCCESS", length = 255)
-	@Comment("成功标志")
-	private String success;
+    /** 登陆日志信息 */
+    @Lob
+    @Column(name = "LOG_MESSAGE")
+    @Comment(value = "登陆日志信息")
+    private String logMessage;
 
-	@Column(name = "LOG_MESSAGE", length = 255)
-	@Comment("日志信息")
-	private String logMessage;
+    /** 浏览器名称 */
+    @Column(name = "BROWSE_NAME", length = 50)
+    @Comment(value = "浏览器名称")
+    private String browserName;
 
-	@Column(name = "BROWSER_NAME", length = 255)
-	@Comment("浏览器名称")
-	private String browserName;
+    /** 浏览器版本 */
+    @Column(name = "BROWSE_VERSION", length = 50)
+    @Comment(value = "浏览器版本")
+    private String browserVersion;
 
-	@Column(name = "BROWSER_VERSION", length = 255)
-	@Comment("浏览器版本")
-	private String browserVersion;
+    /** 客户端电脑操作系统版本信息 */
+    @Column(name = "OS_NAME", length = 30)
+    @Comment(value = "客户端电脑操作系统版本信息")
+    private String osName;
 
-	@Column(name = "OS_NAME", length = 255)
-	@Comment("OS名称")
-	private String osName;
+    /** 访问用户的电脑分辨率 */
+    @Column(name = "SCREEN_RESOLUTION", length = 30)
+    @Comment(value = "访问用户的电脑分辨率")
+    private String screenResolution;
 
-	@Column(name = "SCREEN_RESOLUTION", length = 255)
-	@Comment("用户主机屏幕分辨率")
-	private String screenResolution;
+    /** clientIp的ABC段 */
+    @Column(name = "CLIENT_IP_SECTION", length = 50)
+    @Comment(value = "ip的前三位，如ip:192.168.1.114,则clientIp4ABC为192.168.1")
+    private String clientIpSection;
 
-	@Column(name = "CLIENT_IP_SECTION", length = 50)
-	@Comment("IP地址区间段")
-	private String clientIpSection;
-
-	@Column(name = "MANAGER_LEVEL", nullable = false)
-	@Comment("管理员类型")
-	@ColumnDefault("0")
-	private String managerLevel;
+    /**
+     * 三员级别
+     */
+    @Column(name = "MANAGER_LEVEL", nullable = false)
+    @Comment("三员级别")
+    @ColumnDefault("0")
+    private String managerLevel;
 }
