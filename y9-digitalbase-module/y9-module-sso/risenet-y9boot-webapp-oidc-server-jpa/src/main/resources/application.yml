@@ -49,6 +49,11 @@ cas:
         oidc:
             core:
                 issuer: http://localhost:7055/sso/oidc
+                user-defined-scopes:
+                    y9: "tenantId,tenantShortName,tenantName,personId,loginName,sex,caid,email,mobile,guidPath,dn,loginType,name,parentId,idNum,avator,personType,password,original,originalId,globalManager,managerLevel,roles,positions,positionId,deptId"
+            discovery:
+                scopes: "openid,y9"
+                claims: "sub,tenantId,tenantShortName,tenantName,personId,loginName,sex,caid,email,mobile,guidPath,dn,loginType,name,parentId,idNum,avator,personType,password,original,originalId,globalManager,managerLevel,roles,positions,positionId,deptId"
             jwks:
                 core:
                     jwks-key-id: cas

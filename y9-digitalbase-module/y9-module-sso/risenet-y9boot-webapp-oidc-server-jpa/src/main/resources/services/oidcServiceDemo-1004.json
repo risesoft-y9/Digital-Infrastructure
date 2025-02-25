@@ -12,10 +12,8 @@
     "scopes": [
         "java.util.HashSet",
         [
-            "profile",
             "openid",
-            "email",
-            "phone"
+            "y9"
         ]
     ],
     "attributeReleasePolicy" : {
