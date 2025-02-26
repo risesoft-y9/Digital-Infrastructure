@@ -59,15 +59,15 @@ cas:
                     jwks-key-id: cas
                     jwks-type: RSA
                     jwks-key-size: 2048
-                #fileSystem:
-                #    jwksFile: classpath:/keystore.jwks
+                fileSystem:
+                    jwksFile: classpath:/keystore.jwks
                 jpa:
                     dialect: org.hibernate.dialect.MySQL8Dialect
                     driver-class: com.mysql.cj.jdbc.Driver
                     ddl-auto: update
                     url: jdbc:mysql://localhost:3306/y9_public?serverTimezone=GMT%2B8&nullCatalogMeansCurrent=true&useUnicode=true&characterEncoding=utf-8&rewriteBatchedStatements=true&useCompression=true&useSSL=false&allowPublicKeyRetrieval=true
                     user: root
-                    password: "12345678"
+                    password: 111111
                     idleTimeout: PT10M
                     leakThreshold: 0
                     autocommit: true
@@ -100,7 +100,7 @@ cas:
             ddl-auto: update
             url: jdbc:mysql://localhost:3306/y9_public?serverTimezone=GMT%2B8&nullCatalogMeansCurrent=true&useUnicode=true&characterEncoding=utf-8&rewriteBatchedStatements=true&useCompression=true&useSSL=false&allowPublicKeyRetrieval=true
             user: root
-            password: "12345678"
+            password: 111111
             idleTimeout: PT10M
             leakThreshold: 0
             autocommit: true
@@ -130,7 +130,7 @@ cas:
                 ddl-auto: update
                 url: jdbc:mysql://localhost:3306/y9_public?serverTimezone=GMT%2B8&nullCatalogMeansCurrent=true&useUnicode=true&characterEncoding=utf-8&rewriteBatchedStatements=true&useCompression=true&useSSL=false&allowPublicKeyRetrieval=true
                 user: root
-                password: "12345678"
+                password: 111111
                 idleTimeout: PT10M
                 leakThreshold: 0
                 autocommit: true
@@ -284,7 +284,7 @@ spring:
         driver-class-name: com.mysql.cj.jdbc.Driver
         url: jdbc:mysql://localhost:3306/y9_public?serverTimezone=GMT%2B8&nullCatalogMeansCurrent=true&useUnicode=true&characterEncoding=utf-8&rewriteBatchedStatements=true&useCompression=true&useSSL=false&allowPublicKeyRetrieval=true
         username: root
-        password: "12345678"
+        password: 111111
     jpa:
         generate-ddl: true
         show-sql: true
@@ -321,6 +321,9 @@ spring:
     integration:
         jdbc:
             initialize-schema: always
+    mvc:
+        pathmatch:
+            matching-strategy: ant_path_matcher
 y9:
     #kafka , jpa
     loginInfoSaveTarget: jpa

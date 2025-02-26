@@ -63,4 +63,21 @@ spring:
                 username: nacos
                 password: ${NACOS_PASSWORD:111111}
                 extension-configs:
-                    - dataId: sso.yml
+                    - dataId: sso-oidc.yml
+---
+spring:
+    config:
+        activate:
+            on-profile: demo
+    cloud:
+        enabled: true
+        nacos:
+            config:
+                enabled: true
+                group: DEFAULT_GROUP
+                namespace: demo
+                server-addr: nacos:8848
+                username: nacos
+                password: ${NACOS_PASSWORD:111111}
+                extension-configs:
+                    -   dataId: sso-oidc.yml
