@@ -99,8 +99,11 @@ public class Y9Oauth2ResourceFilter implements Filter {
                 return;
             }
 
-            UserInfo userInfo = Y9JsonUtil.readValue(introspectionResponse.getAttr(), UserInfo.class);
-            if (userInfo == null) {
+            UserInfo userInfo;
+            if (StringUtils.isNotBlank(introspectionResponse.getAttr())) {
+                // 兼容修改过的 sso 服务 后期可移除
+                userInfo = Y9JsonUtil.readValue(introspectionResponse.getAttr(), UserInfo.class);
+            } else {
                 ResponseEntity<String> profileEntity = null;
                 try {
                     profileEntity = invokeProfileEndpoint(accessToken);
