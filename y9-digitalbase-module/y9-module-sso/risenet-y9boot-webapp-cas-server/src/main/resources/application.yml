@@ -76,7 +76,7 @@ cas:
             initialCapacity: 1000
         core:
             # 建议仅用于测试（集群部署时需考虑service.json的同步，使用jpa-service-registry即可）
-            initFromJson: false
+            initFromJson: true
         json:
             location: classpath:/services
             watcherEnabled: true

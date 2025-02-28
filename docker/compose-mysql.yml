@@ -1,6 +1,6 @@
-name: y9-dev-environments
+name: y9-mysql
 services:
-  db:
+  mysql:
     image: mysql:latest
     container_name: mysql01
     restart: always
@@ -11,16 +11,11 @@ services:
     ports:
       - "3306:3306"
     environment:
-      MYSQL_ROOT_PASSWORD: '12345678'
-      MYSQL_DATABASE: 'y9_public'
+      MYSQL_ROOT_PASSWORD: "11111111"
+      MYSQL_DATABASE: "y9_public"
     volumes:
       - d:/docker-data/mysql:/var/lib/mysql
       - d:/docker-config/mysql-init:/docker-entrypoint-initdb.d
-    healthcheck:
-      test: "mysql --user=root --password=12345678 --execute='show databases;'"
-      interval: 5s
-      timeout: 10s
-      retries: 8
     labels:
       org.springframework.boot.readiness-check.tcp.disable: true
 networks:

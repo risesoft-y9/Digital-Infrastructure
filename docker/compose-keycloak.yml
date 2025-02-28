@@ -11,18 +11,11 @@ services:
     ports:
       - "3306:3306"
     environment:
-      MYSQL_ROOT_PASSWORD: '11111111'
-      MYSQL_DATABASE: 'y9_public'
-      MYSQL_USER: admin 
-      MYSQL_PASSWORD: '11111111'
+      MYSQL_ROOT_PASSWORD: "11111111"
+      MYSQL_DATABASE: "y9_public"
     volumes:
       - d:/docker-data/mysql:/var/lib/mysql
       - d:/docker-config/mysql-init:/docker-entrypoint-initdb.d
-    healthcheck:
-      test: "mysql --user=admin --password=11111111 --execute='show databases;'"
-      interval: 5s
-      timeout: 10s
-      retries: 8
     labels:
       org.springframework.boot.readiness-check.tcp.disable: true
   postgresql:
@@ -60,7 +53,7 @@ services:
     ports:
       - "6379:6379"
     environment:
-      REDIS_ARGS: "--requirepass 12345678"
+      REDIS_ARGS: "--requirepass 11111111"
     volumes:
       - d:/docker-data/redis:/data
     labels:
@@ -74,10 +67,10 @@ services:
     networks:
       - y9-share-net
     ports:
-      - 8080:8080    
+      - 8000:8000
     environment:
       #KEYCLOAK_HOSTNAME: localhost
-      KEYCLOAK_HTTP_PORT: 8080
+      KEYCLOAK_HTTP_PORT: 8000
       KEYCLOAK_ADMIN: admin
       KEYCLOAK_ADMIN_PASSWORD: 1
       
