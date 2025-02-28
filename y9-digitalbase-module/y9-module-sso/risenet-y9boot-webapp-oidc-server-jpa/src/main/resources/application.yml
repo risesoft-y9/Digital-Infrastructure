@@ -55,22 +55,9 @@ cas:
                 scopes: "openid,y9"
                 claims: "sub,tenantId,tenantShortName,tenantName,personId,loginName,sex,caid,email,mobile,guidPath,dn,loginType,name,parentId,idNum,avator,personType,password,original,originalId,globalManager,managerLevel,roles,positions,positionId,deptId"
             jwks:
-                core:
-                    jwks-key-id: cas
-                    jwks-type: RSA
-                    jwks-key-size: 2048
                 fileSystem:
                     jwksFile: classpath:/keystore.jwks
-                jpa:
-                    dialect: org.hibernate.dialect.MySQL8Dialect
-                    driver-class: com.mysql.cj.jdbc.Driver
-                    ddl-auto: update
-                    url: jdbc:mysql://localhost:3306/y9_public?serverTimezone=GMT%2B8&nullCatalogMeansCurrent=true&useUnicode=true&characterEncoding=utf-8&rewriteBatchedStatements=true&useCompression=true&useSSL=false&allowPublicKeyRetrieval=true
-                    user: root
-                    password: 111111
-                    idleTimeout: PT10M
-                    leakThreshold: 0
-                    autocommit: true
+                
         token:
             crypto:
                 encryption:
@@ -100,7 +87,7 @@ cas:
             ddl-auto: update
             url: jdbc:mysql://localhost:3306/y9_public?serverTimezone=GMT%2B8&nullCatalogMeansCurrent=true&useUnicode=true&characterEncoding=utf-8&rewriteBatchedStatements=true&useCompression=true&useSSL=false&allowPublicKeyRetrieval=true
             user: root
-            password: 111111
+            password: "11111111"
             idleTimeout: PT10M
             leakThreshold: 0
             autocommit: true
@@ -130,7 +117,7 @@ cas:
                 ddl-auto: update
                 url: jdbc:mysql://localhost:3306/y9_public?serverTimezone=GMT%2B8&nullCatalogMeansCurrent=true&useUnicode=true&characterEncoding=utf-8&rewriteBatchedStatements=true&useCompression=true&useSSL=false&allowPublicKeyRetrieval=true
                 user: root
-                password: 111111
+                password: "11111111"
                 idleTimeout: PT10M
                 leakThreshold: 0
                 autocommit: true
@@ -202,7 +189,7 @@ cas:
         defaultValue: zh_CN
     theme:
         defaultThemeName: y9-apereo
-        //defaultThemeName: cas-theme-default
+        #defaultThemeName: cas-theme-default
         paramName: theme
     messageBundle:
         useCodeMessage: true
@@ -246,7 +233,7 @@ cas:
         asynchronous: false  
 logging:
     level:
-        org.apereo.cas: info
+        "[org.apereo.cas]": info
 management:
     metrics:
         enable:
@@ -284,7 +271,7 @@ spring:
         driver-class-name: com.mysql.cj.jdbc.Driver
         url: jdbc:mysql://localhost:3306/y9_public?serverTimezone=GMT%2B8&nullCatalogMeansCurrent=true&useUnicode=true&characterEncoding=utf-8&rewriteBatchedStatements=true&useCompression=true&useSSL=false&allowPublicKeyRetrieval=true
         username: root
-        password: 111111
+        password: "11111111"
     jpa:
         generate-ddl: true
         show-sql: true
@@ -323,7 +310,7 @@ spring:
             initialize-schema: always
     mvc:
         pathmatch:
-            matching-strategy: ant_path_matcher
+            matching-strategy: ANT_PATH_MATCHER
 y9:
     #kafka , jpa
     loginInfoSaveTarget: jpa
