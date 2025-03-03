@@ -54,18 +54,8 @@ cas:
                 scopes: "openid,y9"
                 claims: "sub,tenantId,tenantShortName,tenantName,personId,loginName,sex,caid,email,mobile,guidPath,dn,loginType,name,parentId,idNum,avator,personType,password,original,originalId,globalManager,managerLevel,roles,positions,positionId,deptId"
             jwks:
-                core:
-                    jwks-key-id: cas
-                    jwks-type: RSA
-                    jwks-key-size: 2048
                 fileSystem:
                     jwksFile: classpath:/keystore.jwks
-                jpa:
-                    driver-class: org.postgresql.Driver
-                    url: jdbc:postgresql://localhost:5432/postgres
-                    dialect: org.hibernate.dialect.PostgreSQLDialect
-                    user: root
-                    password: "11111111"
     server:
         name: http://localhost:7055
         prefix: http://localhost:7055/sso
@@ -82,19 +72,19 @@ cas:
             watcherEnabled: true
         jpa:
             enabled: true
-            dialect: org.hibernate.dialect.PostgreSQLDialect
-            driver-class: org.postgresql.Driver
+            dialect: org.hibernate.dialect.MySQLDialect
+            driver-class: com.mysql.cj.jdbc.Driver
             ddl-auto: update
-            url: jdbc:postgresql://localhost:5432/postgres
+            url: jdbc:mysql://localhost:3306/y9_public?serverTimezone=GMT%2B8&nullCatalogMeansCurrent=true&useUnicode=true&characterEncoding=utf-8&rewriteBatchedStatements=true&useCompression=true&useSSL=false&allowPublicKeyRetrieval=true
             user: root
             password: '11111111'
-            idleTimeout: PT8M
-            leakThreshold: PT6S
+            idleTimeout: PT10M
+            leakThreshold: 0
             autocommit: true
             pool:
                 min-size: 6
                 max-size: 18
-                maximum-lifetime: PT10M
+                maximum-lifetime: PT15M
         schedule:
             enabled: true
             repeatInterval: "PT30M"
@@ -115,9 +105,9 @@ cas:
                         key: 6vJAg4gWORY0f8dF5XIc8Q
                     signing:
                         key: CzPeT3D2l7C-dwR2LfV9DFHrwmPGXCSsEReZeTn76xiWNU45De8s1CAdPNXovoBpEilbeTY1PkwPQuMxZdN4mQ
-                dialect: org.hibernate.dialect.PostgreSQLDialect
-                driver-class: org.postgresql.Driver
-                url: jdbc:postgresql://localhost:5432/postgres
+                dialect: org.hibernate.dialect.MySQLDialect
+                driver-class: com.mysql.cj.jdbc.Driver
+                url: jdbc:mysql://localhost:3306/y9_public?serverTimezone=GMT%2B8&nullCatalogMeansCurrent=true&useUnicode=true&characterEncoding=utf-8&rewriteBatchedStatements=true&useCompression=true&useSSL=false&allowPublicKeyRetrieval=true
                 user: root
                 password: '11111111'
                 idleTimeout: PT5M
@@ -128,7 +118,7 @@ cas:
                 port: 6379
                 database: 0
                 username: default
-                password: "12345678"
+                password: "11111111"
                 timeout: "PT60S"
                 pool:
                     enabled: true
@@ -199,14 +189,14 @@ cas:
         defaultValue: zh_CN
     theme:
         defaultThemeName: y9-apereo
-        //defaultThemeName: cas-theme-default
+        #defaultThemeName: cas-theme-default
         paramName: theme
     messageBundle:
         useCodeMessage: true
         fallbackSystemLocale: true
     view:
         #当service参数为空时，利用defaultRedirectUrl
-        defaultRedirectUrl: http://localhost:7070/home
+        #defaultRedirectUrl: http://localhost:7099
         #当defaultRedirectUrl为空、并且service参数为空时，自动计算service
         authorizedServicesOnSuccessfulLogin: true
         custom-login-form-fields:

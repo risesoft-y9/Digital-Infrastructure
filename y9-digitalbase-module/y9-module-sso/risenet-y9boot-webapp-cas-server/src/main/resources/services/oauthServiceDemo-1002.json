@@ -35,5 +35,5 @@
     "bypassApprovalPrompt": true,
     "generateRefreshToken": true,
     "renewRefreshToken": true,
-    "jwtAccessToken": false
+    "jwtAccessToken": true
 }
