@@ -44,6 +44,9 @@ import net.risesoft.y9.pubsub.constant.Y9TopicConst;
 import net.risesoft.y9.util.RemoteCallUtil;
 import net.risesoft.y9.util.Y9EnumUtil;
 
+import cn.hutool.jwt.JWT;
+import cn.hutool.jwt.JWTUtil;
+
 /**
  *
  * @author dingzhaojun
@@ -100,19 +103,24 @@ public class Y9Oauth2ResourceFilter implements Filter {
             }
 
             UserInfo userInfo;
-            if (StringUtils.isNotBlank(introspectionResponse.getAttr())) {
-                // 兼容修改过的 sso 服务 后期可移除
-                userInfo = Y9JsonUtil.readValue(introspectionResponse.getAttr(), UserInfo.class);
+            if (isJwtAccessToken(accessToken)) {
+                JWT jwt = JWTUtil.parseToken(accessToken);
+                userInfo = jwt.getPayload().getClaimsJson().toBean(UserInfo.class);
             } else {
-                ResponseEntity<String> profileEntity = null;
-                try {
-                    profileEntity = invokeProfileEndpoint(accessToken);
-                } catch (Exception e) {
-                    LOGGER.warn(e.getMessage(), e);
-                    setResponse(response, HttpStatus.INTERNAL_SERVER_ERROR, GlobalErrorCodeEnum.FAILURE);
+                if (StringUtils.isNotBlank(introspectionResponse.getAttr())) {
+                    // 兼容修改过的 sso 服务 后期可移除
+                    userInfo = Y9JsonUtil.readValue(introspectionResponse.getAttr(), UserInfo.class);
+                } else {
+                    ResponseEntity<String> profileEntity = null;
+                    try {
+                        profileEntity = invokeProfileEndpoint(accessToken);
+                    } catch (Exception e) {
+                        LOGGER.warn(e.getMessage(), e);
+                        setResponse(response, HttpStatus.INTERNAL_SERVER_ERROR, GlobalErrorCodeEnum.FAILURE);
+                    }
+                    String profile = profileEntity.getBody();
+                    userInfo = Y9JsonUtil.readValue(profile, UserInfo.class);
                 }
-                String profile = profileEntity.getBody();
-                userInfo = Y9JsonUtil.readValue(profile, UserInfo.class);
             }
 
             if (userInfo != null) {
@@ -147,6 +155,13 @@ public class Y9Oauth2ResourceFilter implements Filter {
         } finally {
             Y9LoginUserHolder.clear();
         }
+    }
+
+    private boolean isJwtAccessToken(String accessToken) {
+        if (StringUtils.isNotBlank(accessToken) && accessToken.split("\\.").length == 3) {
+            return true;
+        }
+        return false;
     }
 
     private String getAccessTokenFromRequest(final HttpServletRequest request) {
