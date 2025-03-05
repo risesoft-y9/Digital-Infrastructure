@@ -182,11 +182,11 @@ public class Y9DataSourceManagerImpl implements Y9DataSourceManager {
 
             // 创建表空间
             String sql1 =
-                Y9StringUtil.format("create tablespace {} datafile '{}' size 32 autoextend on next 32 CACHE = NORMAL;",
+                Y9StringUtil.format("create tablespace {} datafile '{}' size 128 autoextend on next 32 CACHE = NORMAL;",
                     tableSpace, dataFile);
             // 创建用户
             String sql2 = Y9StringUtil.format(
-                "create user {} identified by {} password_policy 0 PROFILE \"DEFAULT\" default tablespace {}", username,
+                "create user {} identified by \"{}\" password_policy 15 PROFILE \"DEFAULT\" default tablespace \"{}\"", username,
                 password, tableSpace);
 
             // 给用户授权
