@@ -1,12 +1,17 @@
 package y9.oauth2.resource.filter;
 
 import java.io.IOException;
+import java.net.MalformedURLException;
 import java.net.URI;
+import java.net.URL;
 import java.nio.charset.StandardCharsets;
+import java.security.PublicKey;
+import java.security.interfaces.RSAPublicKey;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
+import java.util.concurrent.TimeUnit;
 
 import javax.servlet.Filter;
 import javax.servlet.FilterChain;
@@ -19,6 +24,8 @@ import javax.servlet.http.HttpSession;
 
 import org.apache.commons.httpclient.NameValuePair;
 import org.apache.commons.lang3.StringUtils;
+import org.springframework.core.io.ClassPathResource;
+import org.springframework.core.io.Resource;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
@@ -28,6 +35,19 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.web.client.RestTemplate;
 
+import com.auth0.jwk.InvalidPublicKeyException;
+import com.auth0.jwk.Jwk;
+import com.auth0.jwk.JwkException;
+import com.auth0.jwk.JwkProvider;
+import com.auth0.jwk.JwkProviderBuilder;
+import com.auth0.jwt.JWT;
+import com.auth0.jwt.JWTVerifier;
+import com.auth0.jwt.JWTVerifier.BaseVerification;
+import com.auth0.jwt.algorithms.Algorithm;
+import com.auth0.jwt.exceptions.JWTVerificationException;
+import com.auth0.jwt.exceptions.SignatureVerificationException;
+import com.auth0.jwt.interfaces.DecodedJWT;
+
 import lombok.extern.slf4j.Slf4j;
 
 import net.risesoft.enums.platform.SexEnum;
@@ -36,6 +56,7 @@ import net.risesoft.exception.GlobalErrorCodeEnum;
 import net.risesoft.model.user.UserInfo;
 import net.risesoft.model.user.UserProfile;
 import net.risesoft.pojo.Y9Result;
+import net.risesoft.y9.Y9Context;
 import net.risesoft.y9.Y9LoginUserHolder;
 import net.risesoft.y9.configuration.Y9Properties;
 import net.risesoft.y9.configuration.feature.oauth2.resource.Y9Oauth2ResourceProperties;
@@ -43,9 +64,6 @@ import net.risesoft.y9.json.Y9JsonUtil;
 import net.risesoft.y9.pubsub.constant.Y9TopicConst;
 import net.risesoft.y9.util.RemoteCallUtil;
 import net.risesoft.y9.util.Y9EnumUtil;
-
-import cn.hutool.jwt.JWT;
-import cn.hutool.jwt.JWTUtil;
 
 /**
  *
@@ -102,10 +120,14 @@ public class Y9Oauth2ResourceFilter implements Filter {
                 return;
             }
 
-            UserInfo userInfo;
+            UserInfo userInfo = null;
             if (isJwtAccessToken(accessToken)) {
-                JWT jwt = JWTUtil.parseToken(accessToken);
-                userInfo = jwt.getPayload().getClaimsJson().toBean(UserInfo.class);
+                //JWT jwt = JWTUtil.parseToken(accessToken);
+                //userInfo = jwt.getPayload().getClaimsJson().toBean(UserInfo.class);
+            	DecodedJWT jwt = JWT.decode(accessToken);
+				if (verify(jwt)) {
+					userInfo = toUserInfo(jwt);
+				}
             } else {
                 if (StringUtils.isNotBlank(introspectionResponse.getAttr())) {
                     // 兼容修改过的 sso 服务 后期可移除
@@ -235,6 +257,100 @@ public class Y9Oauth2ResourceFilter implements Filter {
             LOGGER.warn(e.getMessage(), e);
         }
     }
+    
+    private boolean verify(DecodedJWT jwt) {
+		String kid = jwt.getKeyId();
+		URL url = null;
+		Resource resource = new ClassPathResource("keystore-public.jwks");
+		if (resource.exists()) {
+			try {
+				url = resource.getURL();
+			} catch (IOException e) {
+				e.printStackTrace();
+				return false;
+			}
+		} else {
+			String jwksUri = Y9Context.getProperty("y9.feature.oauth2.client.jwks-uri");
+			if (jwksUri != null && jwksUri.length() > 0) {
+				try {
+					url = URI.create(jwksUri).toURL();
+				} catch (MalformedURLException e) {
+					e.printStackTrace();
+					return false;
+				}
+			}
+		}
+
+		JwkProvider provider = new JwkProviderBuilder(url).cached(10, 24, TimeUnit.HOURS)
+				.rateLimited(10, 1, TimeUnit.MINUTES).build();
+
+		Jwk jwk = null;
+		try {
+			jwk = provider.get(kid);
+		} catch (JwkException e) {
+			e.printStackTrace();
+			return false;
+		}
+
+		PublicKey publicKey = null;
+		try {
+			publicKey = jwk.getPublicKey();
+		} catch (InvalidPublicKeyException e) {
+			e.printStackTrace();
+			return false;
+		}
+
+		Algorithm algorithm = null;
+		switch (jwt.getAlgorithm()) {
+		case "RS256":
+			algorithm = Algorithm.RSA256((RSAPublicKey) publicKey);
+			break;
+		case "RS512":
+			algorithm = Algorithm.RSA512((RSAPublicKey) publicKey);
+		}
+		try {
+			algorithm.verify(jwt);
+		} catch (SignatureVerificationException exception) {
+			exception.printStackTrace();
+			return false;
+		}
+
+		BaseVerification verification = (BaseVerification) JWT.require(algorithm);
+		verification.withClaimPresence("tenantId");
+		JWTVerifier verifier = verification.build();
+		try {
+			verifier.verify(jwt);
+		} catch (JWTVerificationException exception) {
+			exception.printStackTrace();
+			return false;
+		}
+
+		return true;
+	}
+
+	private UserInfo toUserInfo(DecodedJWT jwt) {
+		UserInfo userInfo = new UserInfo();
+		userInfo.setCaid(jwt.getClaim("caid").asString());
+		userInfo.setEmail(jwt.getClaim("email").asString());
+		userInfo.setGuidPath(jwt.getClaim("guidPath").asString());
+		userInfo.setLoginName(jwt.getClaim("loginName").asString());
+		userInfo.setLoginType(jwt.getClaim("loginType").asString());
+		userInfo.setMobile(jwt.getClaim("mobile").asString());
+		userInfo.setOriginal(
+				jwt.getClaim("original").asBoolean() == null ? false : jwt.getClaim("original").asBoolean());
+		userInfo.setOriginalId(jwt.getClaim("originalId").asString());
+		userInfo.setParentId(jwt.getClaim("parentId").asString());
+		userInfo.setPersonId(jwt.getClaim("personId").asString());
+		userInfo.setPositionId(jwt.getClaim("positionId").asString());
+		userInfo.setSex(jwt.getClaim("original").asInt() == null ? SexEnum.MALE
+				: Y9EnumUtil.valueOf(SexEnum.class, jwt.getClaim("original").asInt()));
+		userInfo.setTenantId(jwt.getClaim("tenantId").asString());
+		userInfo.setTenantShortName(jwt.getClaim("tenantShortName").asString());
+		userInfo.setTenantName(jwt.getClaim("tenantName").asString());
+		userInfo.setRoles(jwt.getClaim("roles").asString());
+		userInfo.setPositions(jwt.getClaim("positions").asString());
+		return userInfo;
+	}
 
     /**
      * cas.authn.oauth.userProfileViewType=FLAT(NESTED)，因此本方法不需要

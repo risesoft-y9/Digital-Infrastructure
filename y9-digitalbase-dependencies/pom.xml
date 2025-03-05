@@ -110,6 +110,10 @@
         <rs-api.version>2.1.1</rs-api.version>
         <shedlock.version>4.47.0</shedlock.version>
         <fastexcel.version>1.1.0</fastexcel.version>
+        
+        <!-- auth0 jwt jwks -->
+        <auth0-jwt.version>4.5.0</auth0-jwt.version>
+        <auth0-jwks.version>0.22.1</auth0-jwks.version>
 
         <!-- db driver -->
         <mysql-driver.version>8.2.0</mysql-driver.version>
@@ -641,6 +645,19 @@
                 <groupId>org.dom4j</groupId>
                 <artifactId>dom4j</artifactId>
                 <version>${org-dom4j.version}</version>
+            </dependency>
+            
+            <!-- jwt -->
+            <dependency>
+                <groupId>com.auth0</groupId>
+                <artifactId>java-jwt</artifactId>
+                <version>${auth0-jwt.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>com.auth0</groupId>
+                <artifactId>jwks-rsa</artifactId>
+                <version>${auth0-jwks.version}</version>
             </dependency>
 
             <dependency>
