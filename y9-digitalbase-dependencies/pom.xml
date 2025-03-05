@@ -1,6 +1,6 @@
 <project xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-         xmlns="http://maven.apache.org/POM/4.0.0"
-         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+    xmlns="http://maven.apache.org/POM/4.0.0"
+    xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
 
     <modelVersion>4.0.0</modelVersion>
     <groupId>net.risesoft</groupId>
@@ -9,9 +9,8 @@
     <version>${revision}</version>
     <name>y9-digitalbase-dependencies</name>
     <description>RiseSoft/Digital Infrastructure dependencies</description>
-    <url>https://gitee.com/risesoft-y9/y9-core/tree/main/y9-digitalbase-dependencies</url>
-
-
+    <url>
+        https://gitee.com/risesoft-y9/y9-core/tree/main/y9-digitalbase-dependencies</url>
 
     <licenses>
         <license>
@@ -96,11 +95,12 @@
 
         <gitee.url>https://gitee.com/risesoft-y9/y9-core</gitee.url>
         <gitee.connection>scm:git:https://gitee.com/risesoft-y9/y9-core.git</gitee.connection>
-        <gitee.developerConnection>scm:git:https://gitee.com/risesoft-y9/y9-core.git</gitee.developerConnection>
+        <gitee.developerConnection>
+            scm:git:https://gitee.com/risesoft-y9/y9-core.git</gitee.developerConnection>
 
         <revision>9.7.0-SNAPSHOT</revision>
 
-        <spring-boot.version>3.4.0</spring-boot.version>
+        <spring-boot.version>3.4.3</spring-boot.version>
         <spring-cloud.version>2024.0.0</spring-cloud.version>
 
         <antisamy.version>1.6.2</antisamy.version>
@@ -139,6 +139,10 @@
         <reflections.version>0.10.3.4</reflections.version>
         <shedlock.version>6.0.2</shedlock.version>
         <transmittable-thread-local.version>2.14.3</transmittable-thread-local.version>
+
+        <!-- auth0 jwt jwks -->
+        <auth0-jwt.version>4.5.0</auth0-jwt.version>
+        <auth0-jwks.version>0.22.1</auth0-jwks.version>
 
         <!-- db driver -->
         <dameng-driver.version>8.1.3.140</dameng-driver.version>
@@ -517,6 +521,18 @@
                 <version>${fastexcel.version}</version>
             </dependency>
 
+            <dependency>
+                <groupId>com.auth0</groupId>
+                <artifactId>java-jwt</artifactId>
+                <version>${auth0-jwt.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>com.auth0</groupId>
+                <artifactId>jwks-rsa</artifactId>
+                <version>${auth0-jwks.version}</version>
+            </dependency>
+
         </dependencies>
     </dependencyManagement>
 
@@ -590,11 +606,13 @@
             <distributionManagement>
                 <repository>
                     <id>releases</id>
-                    <url>https://svn.youshengyun.com:9900/nexus/repository/maven-releases/</url>
+                    <url>
+                        https://svn.youshengyun.com:9900/nexus/repository/maven-releases/</url>
                 </repository>
                 <snapshotRepository>
                     <id>snapshots</id>
-                    <url>https://svn.youshengyun.com:9900/nexus/repository/maven-snapshots/</url>
+                    <url>
+                        https://svn.youshengyun.com:9900/nexus/repository/maven-snapshots/</url>
                 </snapshotRepository>
             </distributionManagement>
         </profile>
@@ -621,7 +639,8 @@
                         <configuration>
                             <publishingServerId>mvn-central</publishingServerId>
                             <centralBaseUrl>https://central.sonatype.com</centralBaseUrl>
-                            <deploymentName>${project.artifactId}-${project.version}</deploymentName>
+                            <deploymentName>
+                                ${project.artifactId}-${project.version}</deploymentName>
                             <skipPublishing>false</skipPublishing>
                             <autoPublish>true</autoPublish>
                             <waitUntil>uploaded</waitUntil><!--validated uploaded-->

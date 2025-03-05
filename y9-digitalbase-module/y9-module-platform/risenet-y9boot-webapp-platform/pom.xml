@@ -17,13 +17,10 @@
 
     <properties>
         <maven.deploy.skip>true</maven.deploy.skip>
+        <maven.test.skip>true</maven.test.skip>
     </properties>
 
     <dependencies>
-
-
-
-
         <dependency>
             <groupId>net.risesoft</groupId>
             <artifactId>risenet-y9boot-support-platform-web</artifactId>

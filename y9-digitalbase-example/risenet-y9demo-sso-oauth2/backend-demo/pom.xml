@@ -16,6 +16,7 @@
     <description>risenet-y9demo-sso-oauth2</description>
     
     <properties>
+        <maven.install.skip>true</maven.install.skip>
         <maven.deploy.skip>true</maven.deploy.skip>
     </properties>
 

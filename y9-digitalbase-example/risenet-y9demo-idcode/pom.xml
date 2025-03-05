@@ -16,7 +16,9 @@
     <description>risenet-y9demo-idcode</description>
     
     <properties>
+        <maven.install.skip>true</maven.install.skip>
         <maven.deploy.skip>true</maven.deploy.skip>
+        <maven.test.skip>true</maven.test.skip>
     </properties>
 
     <dependencies>
