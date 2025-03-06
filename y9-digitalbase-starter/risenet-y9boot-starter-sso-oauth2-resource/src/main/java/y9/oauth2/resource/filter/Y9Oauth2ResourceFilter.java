@@ -52,7 +52,6 @@ import net.risesoft.model.user.UserInfo;
 import net.risesoft.pojo.Y9Result;
 import net.risesoft.y9.Y9Context;
 import net.risesoft.y9.Y9LoginUserHolder;
-import net.risesoft.y9.configuration.Y9Properties;
 import net.risesoft.y9.configuration.feature.oauth2.resource.Y9Oauth2ResourceProperties;
 import net.risesoft.y9.json.Y9JsonUtil;
 import net.risesoft.y9.util.Y9EnumUtil;
@@ -68,8 +67,8 @@ public class Y9Oauth2ResourceFilter implements Filter {
 
     private final Y9Oauth2ResourceProperties y9Oauth2ResourceProperties;
 
-    public Y9Oauth2ResourceFilter(Y9Properties y9Properties) {
-        this.y9Oauth2ResourceProperties = y9Properties.getFeature().getOauth2().getResource();
+    public Y9Oauth2ResourceFilter(Y9Oauth2ResourceProperties y9Oauth2ResourceProperties) {
+        this.y9Oauth2ResourceProperties = y9Oauth2ResourceProperties;
     }
 
     @Override
@@ -112,9 +111,10 @@ public class Y9Oauth2ResourceFilter implements Filter {
                 // cn.hutool.jwt.JWT jwt = cn.hutool.jwt.JWTUtil.parseToken(accessToken);
                 // userInfo = jwt.getPayload().getClaimsJson().toBean(UserInfo.class);
                 DecodedJWT jwt = JWT.decode(accessToken);
-                if (verify(jwt)) {
-                    userInfo = toUserInfo(jwt);
-                }
+                userInfo = toUserInfo(jwt);
+                // if (verify(jwt)) {
+                // userInfo = toUserInfo(jwt);
+                // }
             } else {
                 if (StringUtils.isNotBlank(introspectionResponse.getAttr())) {
                     // 兼容修改过的 sso 服务 后期可移除
@@ -151,7 +151,6 @@ public class Y9Oauth2ResourceFilter implements Filter {
                 Y9LoginUserHolder.setTenantName(userInfo.getTenantName());
                 Y9LoginUserHolder.setTenantShortName(userInfo.getTenantShortName());
                 Y9LoginUserHolder.setUserInfo(userInfo);
-
             }
 
             filterChain.doFilter(request, response);

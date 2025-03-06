@@ -12,6 +12,7 @@ import org.springframework.scheduling.annotation.EnableAsync;
 import net.risesoft.y9.Y9Context;
 import net.risesoft.y9.configuration.Y9Properties;
 import net.risesoft.y9.configuration.app.y9platform.Y9PlatformProperties;
+import net.risesoft.y9.configuration.feature.oauth2.resource.Y9Oauth2ResourceProperties;
 
 /**
  * @author dingzhaojun
@@ -27,9 +28,9 @@ public class WebMvcConfig {
     @SuppressWarnings({"unchecked", "rawtypes"})
     @DependsOn("y9Context")
     @Bean
-    public FilterRegistrationBean checkUserLoginFilter(Y9Properties y9config) {
+    public FilterRegistrationBean checkUserLoginFilter(Y9Oauth2ResourceProperties y9Oauth2ResourceProperties) {
         FilterRegistrationBean filterBean = new FilterRegistrationBean();
-        boolean enabled = y9config.getFeature().getOauth2().getResource().isEnabled();
+        boolean enabled = y9Oauth2ResourceProperties.isEnabled();
         if (enabled) {
             filterBean.setFilter(new CheckUserLoginFilter4Platform());
         } else {

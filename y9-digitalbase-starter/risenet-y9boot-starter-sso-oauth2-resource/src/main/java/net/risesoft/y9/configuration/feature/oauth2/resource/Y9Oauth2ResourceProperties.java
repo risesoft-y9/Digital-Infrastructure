@@ -2,6 +2,7 @@ package net.risesoft.y9.configuration.feature.oauth2.resource;
 
 import java.util.List;
 
+import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.boot.context.properties.NestedConfigurationProperty;
 
 import lombok.Getter;
@@ -19,6 +20,7 @@ import net.risesoft.y9.configuration.feature.oauth2.resource.opaque.Y9Oauth2Reso
  */
 @Getter
 @Setter
+@ConfigurationProperties(prefix = "y9.feature.oauth2.resource", ignoreInvalidFields = true, ignoreUnknownFields = true)
 public class Y9Oauth2ResourceProperties {
 
     /**
