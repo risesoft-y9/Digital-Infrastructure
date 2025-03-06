@@ -29,6 +29,8 @@ public class FilterOrderConsts {
 
     public static final int API_SIGN_ORDER = Ordered.HIGHEST_PRECEDENCE + 6;
 
+    public static final int USER_ONLINE_ORDER = Ordered.HIGHEST_PRECEDENCE + 7;
+
     public static final int LOG_ORDER = 5;
 
 }

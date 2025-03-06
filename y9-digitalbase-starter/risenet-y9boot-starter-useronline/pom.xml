@@ -8,10 +8,10 @@
         <version>${revision}</version>
         <relativePath>../pom.xml</relativePath>
     </parent>
-    <artifactId>risenet-y9boot-starter-sso-oauth2-resource</artifactId>
+    <artifactId>risenet-y9boot-starter-useronline</artifactId>
     <packaging>jar</packaging>
-    <name>risenet-y9boot-starter-sso-oauth2-resource</name>
-    <description>RiseSoft/Digital Infrastructure sso-oauth2 starter</description>
+    <name>risenet-y9boot-starter-useronline</name>
+    <description>RiseSoft/Digital Infrastructure useronline starter</description>
 
     <properties>
     </properties>
@@ -38,6 +38,11 @@
         </dependency>
 
         <dependency>
+            <groupId>org.springframework.kafka</groupId>
+            <artifactId>spring-kafka</artifactId>
+        </dependency>
+
+        <dependency>
             <groupId>net.risesoft</groupId>
             <artifactId>risenet-y9boot-common-util</artifactId>
         </dependency>
@@ -50,21 +55,6 @@
         <dependency>
             <groupId>net.risesoft</groupId>
             <artifactId>risenet-y9boot-properties</artifactId>
-        </dependency>
-
-        <dependency>
-            <groupId>org.jodd</groupId>
-            <artifactId>jodd-http</artifactId>
-        </dependency>
-        
-        <dependency>
-            <groupId>com.auth0</groupId>
-            <artifactId>java-jwt</artifactId>
-        </dependency>
-
-        <dependency>
-            <groupId>com.auth0</groupId>
-            <artifactId>jwks-rsa</artifactId>
         </dependency>
 
         <dependency>
