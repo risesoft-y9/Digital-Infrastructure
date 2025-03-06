@@ -6,7 +6,7 @@ y9:
         log:
             enabled: true
             # kafka 或者 api，选择其中一种方式
-            logSaveTarget: kafka
+            reportMethod: kafka
     common:
         logBaseUrl: http://localhost:7055/log
 spring:

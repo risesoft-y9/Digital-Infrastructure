@@ -30,9 +30,9 @@ import net.risesoft.consts.FilterOrderConsts;
 import net.risesoft.log.LogFilter;
 import net.risesoft.log.aop.RiseLogAdvice;
 import net.risesoft.log.aop.RiseLogAdvisor;
-import net.risesoft.log.service.AccessLogPusher;
-import net.risesoft.log.service.impl.AccessLogApiPusher;
-import net.risesoft.log.service.impl.AccessLogKafkaPusher;
+import net.risesoft.log.service.AccessLogReporter;
+import net.risesoft.log.service.impl.AccessLogApiReporter;
+import net.risesoft.log.service.impl.AccessLogKafkaReporter;
 import net.risesoft.y9.Y9Context;
 import net.risesoft.y9.configuration.Y9Properties;
 import net.risesoft.y9.configuration.feature.log.Y9LogProperties;
@@ -66,8 +66,8 @@ public class Y9LogConfiguration {
     @Bean
     @ConditionalOnMissingBean(RiseLogAdvice.class)
     @DependsOn({"y9Context"})
-    public RiseLogAdvice riseLogAdvice(AccessLogPusher accessLogPusher) {
-        return new RiseLogAdvice(accessLogPusher);
+    public RiseLogAdvice riseLogAdvice(AccessLogReporter accessLogReporter) {
+        return new RiseLogAdvice(accessLogReporter);
     }
 
     @Bean
@@ -86,7 +86,7 @@ public class Y9LogConfiguration {
 
     @Configuration
     @AutoConfigureAfter(KafkaAutoConfiguration.class)
-    @ConditionalOnProperty(value = "y9.feature.log.logSaveTarget", havingValue = "kafka", matchIfMissing = true)
+    @ConditionalOnProperty(value = "y9.feature.log.reportMethod", havingValue = "kafka", matchIfMissing = true)
     @Slf4j
     static class Y9LogKafkaConfiguration {
 
@@ -98,28 +98,28 @@ public class Y9LogConfiguration {
         }
 
         @Bean
-        public AccessLogPusher accessLogKafkaPusher(KafkaTemplate<String, Object> y9KafkaTemplate) {
-            return new AccessLogKafkaPusher(y9KafkaTemplate);
+        public AccessLogReporter accessLogKafkaPusher(KafkaTemplate<String, Object> y9KafkaTemplate) {
+            return new AccessLogKafkaReporter(y9KafkaTemplate);
         }
 
     }
 
     @Configuration
-    @ConditionalOnProperty(value = "y9.feature.log.logSaveTarget", havingValue = "api")
+    @ConditionalOnProperty(value = "y9.feature.log.reportMethod", havingValue = "api")
     static class Y9LogApiConfiguration {
 
         @Bean
-        public AccessLogPusher accessLogApiPusher(Y9Properties y9Properties) {
-            return new AccessLogApiPusher(y9Properties);
+        public AccessLogReporter accessLogApiPusher(Y9Properties y9Properties) {
+            return new AccessLogApiReporter(y9Properties);
         }
 
     }
 
     @Bean
     @ConditionalOnMissingBean(name = "y9LogFilter")
-    public FilterRegistrationBean<LogFilter> y9LogFilter(AccessLogPusher accessLogPusher) {
+    public FilterRegistrationBean<LogFilter> y9LogFilter(AccessLogReporter accessLogReporter) {
         final FilterRegistrationBean<LogFilter> filterBean = new FilterRegistrationBean<>();
-        filterBean.setFilter(new LogFilter(accessLogPusher));
+        filterBean.setFilter(new LogFilter(accessLogReporter));
         filterBean.setAsyncSupported(false);
         filterBean.addUrlPatterns("/*");
         filterBean.setOrder(FilterOrderConsts.LOG_ORDER);
