@@ -111,10 +111,9 @@ public class Y9Oauth2ResourceFilter implements Filter {
                 // cn.hutool.jwt.JWT jwt = cn.hutool.jwt.JWTUtil.parseToken(accessToken);
                 // userInfo = jwt.getPayload().getClaimsJson().toBean(UserInfo.class);
                 DecodedJWT jwt = JWT.decode(accessToken);
-                userInfo = toUserInfo(jwt);
-                // if (verify(jwt)) {
-                // userInfo = toUserInfo(jwt);
-                // }
+                if (verify(jwt)) {
+                    userInfo = toUserInfo(jwt);
+                }
             } else {
                 if (StringUtils.isNotBlank(introspectionResponse.getAttr())) {
                     // 兼容修改过的 sso 服务 后期可移除
