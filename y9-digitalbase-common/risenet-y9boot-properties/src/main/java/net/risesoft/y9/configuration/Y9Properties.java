@@ -7,7 +7,6 @@ import lombok.Getter;
 import lombok.Setter;
 
 import net.risesoft.y9.configuration.common.Y9CommonProperties;
-import net.risesoft.y9.configuration.feature.Y9FeatureProperties;
 
 /**
  * 配置属性
@@ -44,9 +43,4 @@ public class Y9Properties {
     @NestedConfigurationProperty
     private Y9CommonProperties common = new Y9CommonProperties();
 
-    /**
-     * 特性、功能配置
-     */
-    @NestedConfigurationProperty
-    private Y9FeatureProperties feature = new Y9FeatureProperties();
 }
