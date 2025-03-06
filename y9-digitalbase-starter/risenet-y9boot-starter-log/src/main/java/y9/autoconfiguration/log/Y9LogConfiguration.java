@@ -10,6 +10,7 @@ import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.boot.autoconfigure.kafka.KafkaAutoConfiguration;
 import org.springframework.boot.autoconfigure.web.servlet.ConditionalOnMissingFilterBean;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
+import org.springframework.boot.task.TaskExecutorBuilder;
 import org.springframework.boot.web.servlet.FilterRegistrationBean;
 import org.springframework.boot.web.servlet.filter.OrderedRequestContextFilter;
 import org.springframework.context.annotation.Bean;
@@ -29,9 +30,9 @@ import net.risesoft.consts.FilterOrderConsts;
 import net.risesoft.log.LogFilter;
 import net.risesoft.log.aop.RiseLogAdvice;
 import net.risesoft.log.aop.RiseLogAdvisor;
-import net.risesoft.log.service.AccessLogPusher;
-import net.risesoft.log.service.impl.AccessLogApiPusher;
-import net.risesoft.log.service.impl.AccessLogKafkaPusher;
+import net.risesoft.log.service.AccessLogReporter;
+import net.risesoft.log.service.impl.AccessLogApiReporter;
+import net.risesoft.log.service.impl.AccessLogKafkaReporter;
 import net.risesoft.y9.Y9Context;
 import net.risesoft.y9.configuration.Y9Properties;
 import net.risesoft.y9.configuration.feature.log.Y9LogProperties;
@@ -65,8 +66,8 @@ public class Y9LogConfiguration {
     @Bean
     @ConditionalOnMissingBean(RiseLogAdvice.class)
     @DependsOn({"y9Context"})
-    public RiseLogAdvice riseLogAdvice(AccessLogPusher accessLogPusher) {
-        return new RiseLogAdvice(accessLogPusher);
+    public RiseLogAdvice riseLogAdvice(AccessLogReporter accessLogReporter) {
+        return new RiseLogAdvice(accessLogReporter);
     }
 
     @Bean
@@ -83,37 +84,9 @@ public class Y9LogConfiguration {
         return new Y9Context();
     }
 
-    @Bean
-    @ConditionalOnMissingBean(name = "y9LogFilter")
-    public FilterRegistrationBean<LogFilter> y9LogFilter(AccessLogPusher accessLogPusher) {
-        final FilterRegistrationBean<LogFilter> filterBean = new FilterRegistrationBean<>();
-        filterBean.setFilter(new LogFilter(accessLogPusher));
-        filterBean.setAsyncSupported(false);
-        filterBean.addUrlPatterns("/*");
-        filterBean.setOrder(FilterOrderConsts.LOG_ORDER);
-
-        return filterBean;
-    }
-
-    @Bean(name = {"y9ThreadPoolTaskExecutor"})
-    @ConditionalOnMissingBean(name = "y9ThreadPoolTaskExecutor")
-    public Executor y9ThreadPoolTaskExecutor() {
-        ThreadPoolTaskExecutor taskExecutor = new ThreadPoolTaskExecutor();
-        // 核心线程数
-        taskExecutor.setCorePoolSize(10);
-        taskExecutor.setAllowCoreThreadTimeOut(true);
-        // 最大线程数
-        taskExecutor.setMaxPoolSize(20);
-        // 配置队列大小
-        taskExecutor.setQueueCapacity(100);
-        taskExecutor.setThreadNamePrefix("y9Log-");
-        taskExecutor.initialize();
-        return TtlExecutors.getTtlExecutor(taskExecutor);
-    }
-
     @Configuration
     @AutoConfigureAfter(KafkaAutoConfiguration.class)
-    @ConditionalOnProperty(value = "y9.feature.log.logSaveTarget", havingValue = "kafka", matchIfMissing = true)
+    @ConditionalOnProperty(value = "y9.feature.log.reportMethod", havingValue = "kafka", matchIfMissing = true)
     @Slf4j
     static class Y9LogKafkaConfiguration {
 
@@ -125,20 +98,48 @@ public class Y9LogConfiguration {
         }
 
         @Bean
-        public AccessLogPusher accessLogKafkaPusher(KafkaTemplate<String, Object> y9KafkaTemplate) {
-            return new AccessLogKafkaPusher(y9KafkaTemplate);
+        public AccessLogReporter accessLogKafkaPusher(KafkaTemplate<String, Object> y9KafkaTemplate) {
+            return new AccessLogKafkaReporter(y9KafkaTemplate);
         }
 
     }
 
     @Configuration
-    @ConditionalOnProperty(value = "y9.feature.log.logSaveTarget", havingValue = "api")
+    @ConditionalOnProperty(value = "y9.feature.log.reportMethod", havingValue = "api")
     static class Y9LogApiConfiguration {
 
         @Bean
-        public AccessLogPusher accessLogApiPusher(Y9Properties y9Properties) {
-            return new AccessLogApiPusher(y9Properties);
+        public AccessLogReporter accessLogApiPusher(Y9Properties y9Properties) {
+            return new AccessLogApiReporter(y9Properties);
         }
 
+    }
+
+    @Bean
+    @ConditionalOnMissingBean(name = "y9LogFilter")
+    public FilterRegistrationBean<LogFilter> y9LogFilter(AccessLogReporter accessLogReporter) {
+        final FilterRegistrationBean<LogFilter> filterBean = new FilterRegistrationBean<>();
+        filterBean.setFilter(new LogFilter(accessLogReporter));
+        filterBean.setAsyncSupported(false);
+        filterBean.addUrlPatterns("/*");
+        filterBean.setOrder(FilterOrderConsts.LOG_ORDER);
+
+        return filterBean;
+    }
+
+    @Bean(name = {"y9ThreadPoolTaskExecutor"})
+    @ConditionalOnMissingBean(name = "y9ThreadPoolTaskExecutor")
+    public Executor y9ThreadPoolTaskExecutor(TaskExecutorBuilder builder) {
+        ThreadPoolTaskExecutor taskExecutor = builder.build();
+        // 核心线程数
+        taskExecutor.setCorePoolSize(10);
+        taskExecutor.setAllowCoreThreadTimeOut(true);
+        // 最大线程数
+        taskExecutor.setMaxPoolSize(20);
+        // 配置队列大小
+        taskExecutor.setQueueCapacity(100);
+        taskExecutor.setThreadNamePrefix("y9Log-");
+        taskExecutor.initialize();
+        return TtlExecutors.getTtlExecutor(taskExecutor);
     }
 }

@@ -23,11 +23,11 @@ public class Y9LogProperties {
     private boolean enabled;
 
     /** 日志信息上报方式 */
-    private LogSaveTarget logSaveTarget = LogSaveTarget.KAFKA;
+    private ReportMethod reportMethod = ReportMethod.KAFKA;
 
     @Getter
     @AllArgsConstructor
-    public enum LogSaveTarget {
+    public enum ReportMethod {
         API, KAFKA
     }
 

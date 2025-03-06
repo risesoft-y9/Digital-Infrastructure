@@ -7,7 +7,7 @@ import org.apache.commons.httpclient.NameValuePair;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
-import net.risesoft.log.service.AccessLogPusher;
+import net.risesoft.log.service.AccessLogReporter;
 import net.risesoft.model.log.AccessLog;
 import net.risesoft.y9.configuration.Y9Properties;
 import net.risesoft.y9.util.RemoteCallUtil;
@@ -21,12 +21,12 @@ import net.risesoft.y9.util.RemoteCallUtil;
  */
 @Slf4j
 @RequiredArgsConstructor
-public class AccessLogApiPusher implements AccessLogPusher {
+public class AccessLogApiReporter implements AccessLogReporter {
 
     private final Y9Properties y9Properties;
 
     @Override
-    public void push(final AccessLog log) {
+    public void report(final AccessLog log) {
         String logBaseUrl = y9Properties.getCommon().getLogBaseUrl();
         String url = logBaseUrl + "/services/rest/v1/accessLog/asyncSaveLog";
         List<NameValuePair> requestBody = RemoteCallUtil.objectToNameValuePairList(log);

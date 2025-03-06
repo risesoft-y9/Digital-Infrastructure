@@ -16,7 +16,7 @@ import jakarta.servlet.http.HttpServletResponse;
 
 import lombok.extern.slf4j.Slf4j;
 
-import net.risesoft.log.service.AccessLogPusher;
+import net.risesoft.log.service.AccessLogReporter;
 import net.risesoft.model.log.AccessLog;
 import net.risesoft.model.user.UserInfo;
 import net.risesoft.y9.Y9Context;
@@ -34,11 +34,11 @@ import net.risesoft.y9.util.InetAddressUtil;
 @Slf4j
 public class LogFilter implements Filter {
 
-    private final AccessLogPusher accessLogPusher;
+    private final AccessLogReporter accessLogReporter;
     private final String serverIp;
 
-    public LogFilter(AccessLogPusher accessLogPusher) {
-        this.accessLogPusher = accessLogPusher;
+    public LogFilter(AccessLogReporter accessLogReporter) {
+        this.accessLogReporter = accessLogReporter;
         this.serverIp = InetAddressUtil.getLocalAddress().getHostAddress();
     }
 
@@ -112,7 +112,7 @@ public class LogFilter implements Filter {
                 log.setGuidPath(userInfo.getGuidPath());
                 log.setManagerLevel(String.valueOf(userInfo.getManagerLevel().getValue()));
             }
-            accessLogPusher.push(log);
+            accessLogReporter.report(log);
         } catch (Exception e) {
             LOGGER.warn(e.getMessage(), e);
         }

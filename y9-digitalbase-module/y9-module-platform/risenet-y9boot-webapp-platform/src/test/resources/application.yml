@@ -197,7 +197,7 @@ y9:
         log:
             enabled: true
             # kafka, api
-            logSaveTarget: api
+            reportMethod: api
         publish:
             kafka:
                 enabled: false

@@ -5,7 +5,7 @@ import org.springframework.kafka.core.KafkaTemplate;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
-import net.risesoft.log.service.AccessLogPusher;
+import net.risesoft.log.service.AccessLogReporter;
 import net.risesoft.model.log.AccessLog;
 import net.risesoft.y9.json.Y9JsonUtil;
 import net.risesoft.y9.pubsub.constant.Y9TopicConst;
@@ -19,12 +19,12 @@ import net.risesoft.y9.pubsub.constant.Y9TopicConst;
  */
 @Slf4j
 @RequiredArgsConstructor
-public class AccessLogKafkaPusher implements AccessLogPusher {
+public class AccessLogKafkaReporter implements AccessLogReporter {
 
     private final KafkaTemplate<String, Object> y9KafkaTemplate;
 
     @Override
-    public void push(final AccessLog log) {
+    public void report(final AccessLog log) {
         try {
             String jsonString = Y9JsonUtil.writeValueAsString(log);
             y9KafkaTemplate.send(Y9TopicConst.Y9_ACCESSLOG_MESSAGE, jsonString);

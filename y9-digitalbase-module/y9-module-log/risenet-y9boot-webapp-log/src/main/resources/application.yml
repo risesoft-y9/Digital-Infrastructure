@@ -142,7 +142,7 @@ y9:
         log:
             enabled: true
             # kafka, api
-            logSaveTarget: api
+            reportMethod: api
         security:
             enabled: true
             csrf:

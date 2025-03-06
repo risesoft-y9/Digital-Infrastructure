@@ -21,7 +21,7 @@ import lombok.extern.slf4j.Slf4j;
 
 import net.risesoft.log.LogLevelEnum;
 import net.risesoft.log.annotation.RiseLog;
-import net.risesoft.log.service.AccessLogPusher;
+import net.risesoft.log.service.AccessLogReporter;
 import net.risesoft.model.log.AccessLog;
 import net.risesoft.model.user.UserInfo;
 import net.risesoft.y9.Y9Context;
@@ -39,11 +39,11 @@ import net.risesoft.y9.util.InetAddressUtil;
 @Slf4j
 public class RiseLogAdvice implements MethodInterceptor {
 
-    private final AccessLogPusher accessLogPusher;
+    private final AccessLogReporter accessLogReporter;
     private final String serverIp;
 
-    public RiseLogAdvice(AccessLogPusher accessLogPusher) {
-        this.accessLogPusher = accessLogPusher;
+    public RiseLogAdvice(AccessLogReporter accessLogReporter) {
+        this.accessLogReporter = accessLogReporter;
         this.serverIp = InetAddressUtil.getLocalAddress().getHostAddress();
     }
 
@@ -146,7 +146,7 @@ public class RiseLogAdvice implements MethodInterceptor {
                         log.setManagerLevel(String.valueOf(userInfo.getManagerLevel().getValue()));
                     }
 
-                    accessLogPusher.push(log);
+                    accessLogReporter.report(log);
 
                 } catch (Exception e) {
                     LOGGER.warn(e.getMessage(), e);

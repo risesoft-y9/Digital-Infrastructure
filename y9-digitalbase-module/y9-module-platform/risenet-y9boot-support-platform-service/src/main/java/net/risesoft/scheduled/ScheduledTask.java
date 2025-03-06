@@ -19,7 +19,7 @@ import net.risesoft.enums.platform.TenantTypeEnum;
 import net.risesoft.id.Y9IdGenerator;
 import net.risesoft.log.LogLevelEnum;
 import net.risesoft.log.OperationTypeEnum;
-import net.risesoft.log.service.AccessLogPusher;
+import net.risesoft.log.service.AccessLogReporter;
 import net.risesoft.model.log.AccessLog;
 import net.risesoft.model.userlogininfo.LoginInfo;
 import net.risesoft.service.identity.IdentityResourceCalculator;
@@ -47,7 +47,7 @@ public class ScheduledTask {
     private final IdentityResourceCalculator identityResourceCalculator;
     private final IdentityRoleCalculator identityRoleCalculator;
 
-    private AccessLogPusher accessLogPusher;
+    private AccessLogReporter accessLogReporter;
 
     /**
      * 每天凌晨1点检查是否登录系统进行审查
@@ -100,8 +100,8 @@ public class ScheduledTask {
                         log.setOperateName("检查三员审查情况");
                         log.setOperateType(OperationTypeEnum.CHECK.getValue());
 
-                        if (accessLogPusher != null) {
-                            accessLogPusher.push(log);
+                        if (accessLogReporter != null) {
+                            accessLogReporter.report(log);
                         }
                     }
                     y9ManagerService.updateCheckTime(y9Manager.getId(), checkTime);
@@ -165,8 +165,8 @@ public class ScheduledTask {
                     log.setOperateName("检查三员密码修改");
                     log.setOperateType(OperationTypeEnum.CHECK.getValue());
 
-                    if (accessLogPusher != null) {
-                        accessLogPusher.push(log);
+                    if (accessLogReporter != null) {
+                        accessLogReporter.report(log);
                     }
                 }
             }
@@ -176,8 +176,8 @@ public class ScheduledTask {
     }
 
     @Autowired(required = false)
-    public void setAccessLogPusher(AccessLogPusher accessLogPusher) {
-        this.accessLogPusher = accessLogPusher;
+    public void setAccessLogReporter(AccessLogReporter accessLogReporter) {
+        this.accessLogReporter = accessLogReporter;
     }
 
     /**
