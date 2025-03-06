@@ -38,6 +38,7 @@
         <module>risenet-y9boot-starter-permission</module>
         <module>risenet-y9boot-starter-security</module>
         <module>risenet-y9boot-starter-sso-oauth2-resource</module>
+        <module>risenet-y9boot-starter-useronline</module>
         <module>risenet-y9boot-starter-elasticsearch</module>
         <module>risenet-y9boot-starter-web</module>
         <module>risenet-y9boot-starter-openfeign</module>

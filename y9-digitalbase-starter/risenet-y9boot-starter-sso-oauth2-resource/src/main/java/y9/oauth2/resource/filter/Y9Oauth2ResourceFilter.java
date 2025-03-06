@@ -8,7 +8,7 @@ import java.nio.charset.StandardCharsets;
 import java.security.PublicKey;
 import java.security.interfaces.RSAPublicKey;
 import java.util.Collections;
-import java.util.List;
+import java.util.Map;
 import java.util.Objects;
 import java.util.concurrent.TimeUnit;
 
@@ -53,6 +53,7 @@ import net.risesoft.enums.platform.SexEnum;
 import net.risesoft.exception.ErrorCode;
 import net.risesoft.exception.GlobalErrorCodeEnum;
 import net.risesoft.model.user.UserInfo;
+import net.risesoft.model.user.UserProfile;
 import net.risesoft.pojo.Y9Result;
 import net.risesoft.y9.Y9Context;
 import net.risesoft.y9.Y9LoginUserHolder;
@@ -72,19 +73,15 @@ public class Y9Oauth2ResourceFilter implements Filter {
 
     private final RestTemplate restTemplate = new RestTemplate();
 
-    private final KafkaTemplate<String, Object> y9KafkaTemplate;
-    private final Y9Properties y9Properties;
     private final Y9Oauth2ResourceProperties y9Oauth2ResourceProperties;
 
-    public Y9Oauth2ResourceFilter(Y9Properties y9Properties, KafkaTemplate<String, Object> y9KafkaTemplate) {
-        this.y9Properties = y9Properties;
+    public Y9Oauth2ResourceFilter(Y9Properties y9Properties) {
         this.y9Oauth2ResourceProperties = y9Properties.getFeature().getOauth2().getResource();
-        this.y9KafkaTemplate = y9KafkaTemplate;
     }
 
     @Override
     public void doFilter(ServletRequest servletRequest, ServletResponse servletResponse, FilterChain filterChain)
-        throws IOException, ServletException {
+            throws IOException, ServletException {
         HttpServletRequest request = (HttpServletRequest)servletRequest;
         HttpServletResponse response = (HttpServletResponse)servletResponse;
 
@@ -162,9 +159,6 @@ public class Y9Oauth2ResourceFilter implements Filter {
                 Y9LoginUserHolder.setTenantShortName(userInfo.getTenantShortName());
                 Y9LoginUserHolder.setUserInfo(userInfo);
 
-                if (y9Oauth2ResourceProperties.isSaveOnlineMessage()) {
-                    remoteSaveUserOnline(userInfo);
-                }
             }
 
             filterChain.doFilter(request, response);
@@ -198,12 +192,12 @@ public class Y9Oauth2ResourceFilter implements Filter {
         headers.setAccept(Collections.singletonList(MediaType.APPLICATION_JSON));
         headers.setContentType(MediaType.APPLICATION_FORM_URLENCODED);
         headers.setBasicAuth(y9Oauth2ResourceProperties.getOpaque().getClientId(),
-            y9Oauth2ResourceProperties.getOpaque().getClientSecret(), StandardCharsets.UTF_8);
+                y9Oauth2ResourceProperties.getOpaque().getClientSecret(), StandardCharsets.UTF_8);
 
         URI uri = URI.create(y9Oauth2ResourceProperties.getOpaque().getIntrospectionUri() + "?token=" + accessToken);
         RequestEntity<?> requestEntity = new RequestEntity<>(headers, HttpMethod.POST, uri);
         ResponseEntity<OAuth20IntrospectionAccessTokenResponse> responseEntity =
-            this.restTemplate.exchange(requestEntity, OAuth20IntrospectionAccessTokenResponse.class);
+                this.restTemplate.exchange(requestEntity, OAuth20IntrospectionAccessTokenResponse.class);
         return responseEntity;
     }
 
@@ -218,27 +212,6 @@ public class Y9Oauth2ResourceFilter implements Filter {
         return responseEntity;
     }
 
-    private void remoteSaveUserOnline(UserInfo userInfo) {
-        if (userInfo != null) {
-            try {
-                if (Objects.equals(y9Oauth2ResourceProperties.getOnlineMessagePushType(),
-                    Y9Oauth2ResourceProperties.OnlineMessagePushType.KAFKA)) {
-                    String jsonString = Y9JsonUtil.writeValueAsString(userInfo);
-                    if (this.y9KafkaTemplate != null) {
-                        this.y9KafkaTemplate.send(Y9TopicConst.Y9_USERONLINE_MESSAGE, jsonString);
-                    }
-                } else if (Objects.equals(y9Oauth2ResourceProperties.getOnlineMessagePushType(),
-                    Y9Oauth2ResourceProperties.OnlineMessagePushType.API)) {
-                    String userOnlineBaseUrl = y9Properties.getCommon().getUserOnlineBaseUrl();
-                    String saveOnlineUrl = userOnlineBaseUrl + "/services/rest/userOnline/saveAsync";
-                    List<NameValuePair> requestBody = RemoteCallUtil.objectToNameValuePairList(userInfo);
-                    RemoteCallUtil.post(saveOnlineUrl, null, requestBody, Object.class);
-                }
-            } catch (Exception e) {
-                LOGGER.warn(e.getMessage(), e);
-            }
-        }
-    }
 
     private void setResponse(HttpServletResponse response, HttpStatus httpStatus, ErrorCode errorCode) {
         response.addHeader("WWW-Authenticate", "Bearer realm=\"risesoft\"");
@@ -275,7 +248,7 @@ public class Y9Oauth2ResourceFilter implements Filter {
         }
 
         JwkProvider provider =
-            new JwkProviderBuilder(url).cached(10, 24, TimeUnit.HOURS).rateLimited(10, 1, TimeUnit.MINUTES).build();
+                new JwkProviderBuilder(url).cached(10, 24, TimeUnit.HOURS).rateLimited(10, 1, TimeUnit.MINUTES).build();
 
         Jwk jwk = null;
         try {
@@ -335,7 +308,7 @@ public class Y9Oauth2ResourceFilter implements Filter {
         userInfo.setPersonId(jwt.getClaim("personId").asString());
         userInfo.setPositionId(jwt.getClaim("positionId").asString());
         userInfo.setSex(jwt.getClaim("original").asInt() == null ? SexEnum.MALE
-            : Y9EnumUtil.valueOf(SexEnum.class, jwt.getClaim("original").asInt()));
+                : Y9EnumUtil.valueOf(SexEnum.class, jwt.getClaim("original").asInt()));
         userInfo.setTenantId(jwt.getClaim("tenantId").asString());
         userInfo.setTenantShortName(jwt.getClaim("tenantShortName").asString());
         userInfo.setTenantName(jwt.getClaim("tenantName").asString());
