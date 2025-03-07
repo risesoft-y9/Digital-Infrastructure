@@ -9,7 +9,6 @@ import java.security.PublicKey;
 import java.security.interfaces.RSAPublicKey;
 import java.util.Collections;
 import java.util.List;
-import java.util.Map;
 import java.util.Objects;
 import java.util.concurrent.TimeUnit;
 
@@ -52,7 +51,6 @@ import net.risesoft.enums.platform.SexEnum;
 import net.risesoft.exception.ErrorCode;
 import net.risesoft.exception.GlobalErrorCodeEnum;
 import net.risesoft.model.user.UserInfo;
-import net.risesoft.model.user.UserProfile;
 import net.risesoft.pojo.Y9Result;
 import net.risesoft.y9.Y9Context;
 import net.risesoft.y9.Y9LoginUserHolder;
@@ -119,25 +117,22 @@ public class Y9Oauth2ResourceFilter implements Filter {
 
 			UserInfo userInfo = null;
 			if (isJwtAccessToken(accessToken)) {
+				// cn.hutool.jwt.JWT jwt = cn.hutool.jwt.JWTUtil.parseToken(accessToken);
+				// userInfo = jwt.getPayload().getClaimsJson().toBean(UserInfo.class);
 				DecodedJWT jwt = JWT.decode(accessToken);
 				if (verify(jwt)) {
 					userInfo = toUserInfo(jwt);
 				}
 			} else {
-				if (StringUtils.isNotBlank(introspectionResponse.getAttr())) {
-					// 兼容修改过的 sso 服务 后期可移除
-					userInfo = Y9JsonUtil.readValue(introspectionResponse.getAttr(), UserInfo.class);
-				} else {
-					ResponseEntity<String> profileEntity = null;
-					try {
-						profileEntity = invokeProfileEndpoint(accessToken);
-					} catch (Exception e) {
-						LOGGER.warn(e.getMessage(), e);
-						setResponse(response, HttpStatus.INTERNAL_SERVER_ERROR, GlobalErrorCodeEnum.FAILURE);
-					}
-					String profile = profileEntity.getBody();
-					userInfo = Y9JsonUtil.readValue(profile, UserInfo.class);
+				ResponseEntity<String> profileEntity = null;
+				try {
+					profileEntity = invokeProfileEndpoint(accessToken);
+				} catch (Exception e) {
+					LOGGER.warn(e.getMessage(), e);
+					setResponse(response, HttpStatus.INTERNAL_SERVER_ERROR, GlobalErrorCodeEnum.FAILURE);
 				}
+				String profile = profileEntity.getBody();
+				userInfo = Y9JsonUtil.readValue(profile, UserInfo.class);
 			}
 
 			if (userInfo != null) {
@@ -343,38 +338,6 @@ public class Y9Oauth2ResourceFilter implements Filter {
 		userInfo.setTenantName(jwt.getClaim("tenantName").asString());
 		userInfo.setY9Roles(jwt.getClaim("roles").asString());
 		userInfo.setPositions(jwt.getClaim("positions").asString());
-		return userInfo;
-	}
-
-	/**
-	 * cas.authn.oauth.userProfileViewType=FLAT(NESTED)，因此本方法不需要
-	 *
-	 * @param userProfile
-	 * @return
-	 */
-	@SuppressWarnings("unused")
-	private UserInfo toUserInfo(UserProfile userProfile) {
-		UserInfo userInfo = new UserInfo();
-		Map<String, Object> map = userProfile.getAttributes();
-		userInfo.setCaid((String) map.get("caid"));
-		userInfo.setEmail((String) map.get("email"));
-		userInfo.setGuidPath((String) map.get("guidPath"));
-		userInfo.setLoginName((String) map.get("loginName"));
-		userInfo.setLoginType((String) map.get("loginType"));
-		userInfo.setMobile((String) map.get("mobile"));
-		userInfo.setOriginal(Boolean.parseBoolean(String.valueOf(map.get("original"))));
-		userInfo.setOriginalId((String) map.get("originalId"));
-		userInfo.setParentId((String) map.get("parentId"));
-		userInfo.setPersonId((String) map.get("personId"));
-		userInfo.setSex(Y9EnumUtil.valueOf(SexEnum.class, Integer.valueOf(String.valueOf(map.get("sex")))));
-		userInfo.setTenantId((String) map.get("tenantId"));
-		userInfo.setTenantShortName((String) map.get("tenantShortName"));
-		userInfo.setTenantName((String) map.get("tenantName"));
-		userInfo.setGlobalManager(Boolean.parseBoolean(String.valueOf(map.get("globalManager"))));
-		userInfo.setAvator((String) map.get("avator"));
-		userInfo.setY9Roles((String) map.get("roles"));
-		userInfo.setPositions((String) map.get("positions"));
-		userInfo.setPositionId((String) map.get("positionId"));
 		return userInfo;
 	}
 }
