@@ -20,7 +20,6 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 import org.apache.commons.lang3.StringUtils;
-import org.springframework.core.io.ClassPathResource;
 import org.springframework.core.io.Resource;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
@@ -45,12 +44,12 @@ import com.auth0.jwt.interfaces.DecodedJWT;
 
 import lombok.extern.slf4j.Slf4j;
 
+import net.risesoft.enums.platform.ManagerLevelEnum;
 import net.risesoft.enums.platform.SexEnum;
 import net.risesoft.exception.ErrorCode;
 import net.risesoft.exception.GlobalErrorCodeEnum;
 import net.risesoft.model.user.UserInfo;
 import net.risesoft.pojo.Y9Result;
-import net.risesoft.y9.Y9Context;
 import net.risesoft.y9.Y9LoginUserHolder;
 import net.risesoft.y9.configuration.feature.oauth2.resource.Y9Oauth2ResourceProperties;
 import net.risesoft.y9.json.Y9JsonUtil;
@@ -108,12 +107,13 @@ public class Y9Oauth2ResourceFilter implements Filter {
 
             UserInfo userInfo = null;
             if (isJwtAccessToken(accessToken)) {
-                // cn.hutool.jwt.JWT jwt = cn.hutool.jwt.JWTUtil.parseToken(accessToken);
-                // userInfo = jwt.getPayload().getClaimsJson().toBean(UserInfo.class);
                 DecodedJWT jwt = JWT.decode(accessToken);
-                if (verify(jwt)) {
-                    userInfo = toUserInfo(jwt);
+                if (y9Oauth2ResourceProperties.getJwt().isValidationRequired() && !verify(jwt)) {
+                    setResponse(response, HttpStatus.UNAUTHORIZED,
+                        GlobalErrorCodeEnum.ACCESS_TOKEN_VERIFICATION_FAILED);
+                    return;
                 }
+                userInfo = toUserInfo(jwt);
             } else {
                 if (StringUtils.isNotBlank(introspectionResponse.getAttr())) {
                     // 兼容修改过的 sso 服务 后期可移除
@@ -125,6 +125,7 @@ public class Y9Oauth2ResourceFilter implements Filter {
                     } catch (Exception e) {
                         LOGGER.warn(e.getMessage(), e);
                         setResponse(response, HttpStatus.INTERNAL_SERVER_ERROR, GlobalErrorCodeEnum.FAILURE);
+                        return;
                     }
                     String profile = profileEntity.getBody();
                     userInfo = Y9JsonUtil.readValue(profile, UserInfo.class);
@@ -221,7 +222,7 @@ public class Y9Oauth2ResourceFilter implements Filter {
     private boolean verify(DecodedJWT jwt) {
         String kid = jwt.getKeyId();
         URL url = null;
-        Resource resource = new ClassPathResource("keystore-public.jwks");
+        Resource resource = y9Oauth2ResourceProperties.getJwt().getJwksLocation();
         if (resource.exists()) {
             try {
                 url = resource.getURL();
@@ -230,7 +231,7 @@ public class Y9Oauth2ResourceFilter implements Filter {
                 return false;
             }
         } else {
-            String jwksUri = Y9Context.getProperty("y9.feature.oauth2.client.jwks-uri");
+            String jwksUri = y9Oauth2ResourceProperties.getJwt().getJwksUri();
             if (jwksUri != null && jwksUri.length() > 0) {
                 try {
                     url = URI.create(jwksUri).toURL();
@@ -293,22 +294,29 @@ public class Y9Oauth2ResourceFilter implements Filter {
         userInfo.setCaid(jwt.getClaim("caid").asString());
         userInfo.setEmail(jwt.getClaim("email").asString());
         userInfo.setGuidPath(jwt.getClaim("guidPath").asString());
+        userInfo.setDn(jwt.getClaim("dn").asString());
         userInfo.setLoginName(jwt.getClaim("loginName").asString());
+        userInfo.setName(jwt.getClaim("name").asString());
         userInfo.setLoginType(jwt.getClaim("loginType").asString());
         userInfo.setMobile(jwt.getClaim("mobile").asString());
-        userInfo
-            .setOriginal(jwt.getClaim("original").asBoolean() == null ? false : jwt.getClaim("original").asBoolean());
+        userInfo.setOriginal(jwt.getClaim("original").asBoolean());
         userInfo.setOriginalId(jwt.getClaim("originalId").asString());
         userInfo.setParentId(jwt.getClaim("parentId").asString());
         userInfo.setPersonId(jwt.getClaim("personId").asString());
         userInfo.setPositionId(jwt.getClaim("positionId").asString());
-        userInfo.setSex(jwt.getClaim("original").asInt() == null ? SexEnum.MALE
-            : Y9EnumUtil.valueOf(SexEnum.class, jwt.getClaim("original").asInt()));
+        userInfo.setSex(Y9EnumUtil.valueOf(SexEnum.class, jwt.getClaim("sex").asInt()));
         userInfo.setTenantId(jwt.getClaim("tenantId").asString());
         userInfo.setTenantShortName(jwt.getClaim("tenantShortName").asString());
         userInfo.setTenantName(jwt.getClaim("tenantName").asString());
         userInfo.setRoles(jwt.getClaim("roles").asString());
         userInfo.setPositions(jwt.getClaim("positions").asString());
+        userInfo.setPositionId(jwt.getClaim("positionId").asString());
+        userInfo.setIdNum(jwt.getClaim("idNum").asString());
+        userInfo.setAvator(jwt.getClaim("avator").asString());
+        userInfo.setPersonType(jwt.getClaim("personType").asString());
+        userInfo.setPassword(jwt.getClaim("password").asString());
+        userInfo.setGlobalManager(jwt.getClaim("globalManager").asBoolean());
+        userInfo.setManagerLevel(Y9EnumUtil.valueOf(ManagerLevelEnum.class, jwt.getClaim("managerLevel").asInt()));
         return userInfo;
     }
 
