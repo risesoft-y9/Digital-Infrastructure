@@ -1,5 +1,6 @@
 package net.risesoft.y9.configuration.feature.oauth2.resource.jwt;
 
+import org.springframework.core.io.ClassPathResource;
 import org.springframework.core.io.Resource;
 
 import lombok.Getter;
@@ -16,23 +17,18 @@ import lombok.Setter;
 public class Y9Oauth2ResourceJwtTokenProperties {
 
     /**
-     * jwk uri
+     * 是否验证 JWT Access Token 签名
      */
-    private String jwkSetUri;
+    private boolean validationRequired;
 
     /**
-     * jw算法
+     * JSON Web Key Set 接口路径
      */
-    private String jwsAlgorithm = "RS256";
+    private String jwksUri;
 
     /**
-     * uri
+     * JSON Web Key Set 资源路径
      */
-    private String issuerUri;
-
-    /**
-     * 公共密钥位置
-     */
-    private Resource publicKeyLocation;
+    private Resource jwksLocation = new ClassPathResource("keystore-public.jwks");
 
 }
