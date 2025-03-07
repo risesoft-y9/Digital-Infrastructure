@@ -7,7 +7,6 @@ dependencies {
     api(project(":y9-digitalbase-common:risenet-y9boot-properties"))
     api(project(":y9-digitalbase-common:risenet-y9boot-common-util"))
     api(project(":y9-digitalbase-common:risenet-y9boot-common-model"))
-    api(project(":y9-digitalbase-common:risenet-y9boot-properties"))
     
     api(platform(libs.spring.boot.bom))
     api("org.springframework.boot:spring-boot")
@@ -16,6 +15,10 @@ dependencies {
     api("org.springframework:spring-web")
     api("org.springframework.kafka:spring-kafka")
     api(libs.jodd.http)
+    api(libs.auth0.jwt)
+    api(libs.auth0.jwks)
+
+
     compileOnly("jakarta.servlet:jakarta.servlet-api")
 }
 

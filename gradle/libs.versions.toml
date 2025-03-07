@@ -88,6 +88,9 @@ tech-yanand-gradle-maven-central-publish = "1.3.0"
 com-vanniktech-gradle-maven-publish-plugin = "0.30.0"
 org-jreleaser-jreleaser-gradle-plugin = "1.15.0"
 cn-idev-excel-fastexcel = "1.1.0"
+# auth0 jwt
+auth0-jwt = "4.5.0"
+auth0-jwks = "0.22.1"
 
 [libraries]
 #spring boot & cloud dependencies
@@ -184,6 +187,9 @@ com-vanniktech-gradle-maven-publish-plugin = { module = "com.vanniktech:gradle-m
 org-jreleaser-jreleaser-gradle-plugin = { module = "org.jreleaser:jreleaser-gradle-plugin", version.ref = "org-jreleaser-jreleaser-gradle-plugin" }
 org-springframework-boot-org-springframework-boot-gradle-plugin = { module = "org.springframework.boot:org.springframework.boot.gradle.plugin", version.ref = "spring-boot" }
 fastexcel = { module = "cn.idev.excel:fastexcel", version.ref = "cn-idev-excel-fastexcel" }
+
+auth0-jwt = { module = "com.auth0:java-jwt", version.ref = "auth0-jwt" }
+auth0-jwks = { module = "com.auth0:jwks-rsa", version.ref = "auth0-jwks" }
 
 [plugins]
 io-spring-dependency-management = { id = "io.spring.dependency-management", version.ref = "io-spring-dependency-management" }

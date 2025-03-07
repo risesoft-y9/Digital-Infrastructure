@@ -70,5 +70,7 @@ dependencies {
         api(libs.mariadb.java.client)
         api(libs.antisamy)
         api(libs.postgresql)
+        api(libs.auth0.jwt)
+        api(libs.auth0.jwks)
     }
 }
