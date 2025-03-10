@@ -2,9 +2,9 @@ package y9.authen;
 
 import java.security.GeneralSecurityException;
 import java.util.HashMap;
-import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 import javax.security.auth.login.AccountNotFoundException;
 import javax.security.auth.login.FailedLoginException;
@@ -28,6 +28,7 @@ import org.springframework.web.context.request.ServletRequestAttributes;
 import com.google.common.collect.Lists;
 
 import lombok.val;
+import lombok.extern.slf4j.Slf4j;
 
 import y9.entity.Y9User;
 import y9.service.Y9LoginUserService;
@@ -38,6 +39,7 @@ import y9.util.common.AESUtil;
 import y9.util.common.Base64Util;
 import y9.util.common.RSAUtil;
 
+@Slf4j
 public class Y9AuthenticationHandler extends AbstractAuthenticationHandler {
     private final Y9UserService y9UserService;
     private final Y9LoginUserService y9LoginUserService;
@@ -52,33 +54,19 @@ public class Y9AuthenticationHandler extends AbstractAuthenticationHandler {
     @Override
     public AuthenticationHandlerExecutionResult authenticate(Credential credential, Service service)
         throws GeneralSecurityException, PreventedException {
-        // isValidateIE screenDimension userAgent clientIp clientMac clientDiskId
-        // clientHostName noLoginScreen
         RememberMeUsernamePasswordCredential riseCredential = (RememberMeUsernamePasswordCredential)credential;
-        /*
-         * Map<String, Object> customFields = riseCredential.getCustomFields(); String
-         * loginType = (String) customFields.get("loginType"); String tenantShortName =
-         * (String) customFields.get("tenantShortName"); String deptId = (String)
-         * customFields.get("deptId"); String pwdEcodeType = (String)
-         * customFields.get("pwdEcodeType");
-         */
 
+        Map<String, Object> customFields = riseCredential.getCustomFields();
         HttpServletRequest request =
             ((ServletRequestAttributes)RequestContextHolder.currentRequestAttributes()).getRequest();
-        String loginType = request.getParameter("loginType");
-        String tenantShortName = request.getParameter("tenantShortName");
-        String deptId = request.getParameter("deptId");
-        String pwdEcodeType = request.getParameter("pwdEcodeType");
 
-        Map<String, Object> customFields = new LinkedHashMap<>();
-        customFields.put("tenantShortName", tenantShortName);
-        customFields.put("noLoginScreen", true);
-        customFields.put("deptId", deptId);
-        // customFields.put("positionId", positionId);
-        customFields.put("loginType", loginType);
-        // customFields.put("screenDimension", screenDimension);
-        // customFields.put("systemName", systemName);
-        riseCredential.setCustomFields(customFields);
+        String loginType =
+            Optional.ofNullable((String)customFields.get("loginType")).orElse(request.getParameter("loginType"));
+        String tenantShortName = Optional.ofNullable((String)customFields.get("tenantShortName"))
+            .orElse(request.getParameter("tenantShortName"));
+        String deptId = Optional.ofNullable((String)customFields.get("deptId")).orElse(request.getParameter("deptId"));
+        String pwdEcodeType =
+            Optional.ofNullable((String)customFields.get("pwdEcodeType")).orElse(request.getParameter("pwdEcodeType"));
 
         String base64Username = riseCredential.getUsername();
         String encryptedBase64Password = riseCredential.toPassword();
@@ -90,7 +78,12 @@ public class Y9AuthenticationHandler extends AbstractAuthenticationHandler {
             if (StringUtils.isNotBlank(pwdEcodeType)) {
                 String rsaPrivateKey = Y9Context.getProperty("y9.encryptionRsaPrivateKey");
                 if (null != rsaPrivateKey) {
-                    base64Password = RSAUtil.privateDecrypt(encryptedBase64Password, rsaPrivateKey);
+                    try {
+                        base64Password = RSAUtil.privateDecrypt(encryptedBase64Password, rsaPrivateKey);
+                    } catch (Exception e) {
+                        LOGGER.warn("解密失败", e);
+                        throw new FailedLoginException("认证失败：加密公私钥不匹配!");
+                    }
                 } else {
                     throw new FailedLoginException("认证失败：解密私钥未配置!");
                 }
@@ -106,7 +99,7 @@ public class Y9AuthenticationHandler extends AbstractAuthenticationHandler {
 
                 plainUsername = plainUsername.substring(0, plainUsername.indexOf("&"));
 
-                updateCredential(riseCredential, plainUsername, plainPassword, null);
+                updateCredential(riseCredential, plainUsername, plainPassword, tenantShortName);
 
                 List<Y9User> agentUsers = getAgentUsers(deptId, agentTenantShortName, agentUserName);
                 if (agentUsers == null || agentUsers.isEmpty()) {
@@ -121,7 +114,7 @@ public class Y9AuthenticationHandler extends AbstractAuthenticationHandler {
 
             } else {
 
-                updateCredential(riseCredential, plainUsername, plainPassword, null);
+                updateCredential(riseCredential, plainUsername, plainPassword, tenantShortName);
 
                 List<Y9User> users = getUsers(loginType, deptId, tenantShortName, plainUsername);
                 if (users == null || users.isEmpty()) {
@@ -170,9 +163,28 @@ public class Y9AuthenticationHandler extends AbstractAuthenticationHandler {
             if (StringUtils.isNotBlank(systemName)) {
                 customFields.put("systemName", systemName);
             }
+            String loginType = request.getParameter("loginType");
+            if (StringUtils.isNotBlank(loginType)) {
+                customFields.put("loginType", loginType);
+            }
+            String deptId = request.getParameter("deptId");
+            if (StringUtils.isNotBlank(deptId)) {
+                customFields.put("deptId", deptId);
+            }
+            String pwdEcodeType = request.getParameter("pwdEcodeType");
+            if (StringUtils.isNotBlank(pwdEcodeType)) {
+                customFields.put("pwdEcodeType", pwdEcodeType);
+            }
+            String positionId = request.getParameter("positionId");
+            if (StringUtils.isNotBlank(positionId)) {
+                customFields.put("positionId", positionId);
+            }
+            String screenDimension = request.getParameter("screenDimension");
+            if (StringUtils.isNotBlank(screenDimension)) {
+                customFields.put("screenDimension", screenDimension);
+            }
             customFields.put("userAgent", request.getHeader("User-Agent"));
             customFields.put("clientIp", Y9Context.getIpAddr(request));
-            riseCredential.setCustomFields(customFields);
         }
     }
 

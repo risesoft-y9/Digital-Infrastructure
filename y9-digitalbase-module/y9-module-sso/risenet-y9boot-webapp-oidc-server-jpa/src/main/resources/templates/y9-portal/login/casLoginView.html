@@ -41,10 +41,6 @@
                 <input autocomplete="off" id="username" onblur="getTenant();" oninput="inputEvent()"
                        placeholder="用户名" type="text"
                        value=""/>
-                <input autocomplete="false" htmlescape="true" id="username1" name="username" style="width: 150px;"
-                       tabindex="1" type="hidden"/>
-                <input autocomplete="false" htmlescape="true" id="tenantShortName" name="tenantShortName"
-                       style="width: 150px;" type="hidden"/>
                 <div class="validation"><img alt="" th:src="@{/y9static/y9new/img/tick.png}"/></div>
             </div>
             <div class="login_fields__password">
@@ -52,21 +48,21 @@
                 <input autocomplete="off" htmlescape="true" id="password" onfocus="this.type='password'"
                        placeholder="请输入您的密码"
                        tabindex="2" type="text"/>
-                <input autocomplete="off" htmlescape="true" id="password1" name="password" type="hidden"/>
-
                 <div class="validation"><img alt="" th:src="@{/y9static/y9new/img/tick.png}"/></div>
             </div>
             <div class="alert alert-danger" th:if="${#fields.hasErrors('*')}">
                 登录失败：<span th:each="err : ${#fields.errors('*')}" th:utext="${err}"/>
             </div>
             <!-- 表单隐藏数据块开始 -->
+            <input type="hidden" id="username1" name="username"/>
+            <input type="hidden" id="password1" name="password"/>
+            <input type="hidden" id="tenantShortName" name="tenantShortName"/>
             <input id="loginType" name="loginType" type="hidden" value="loginName"/>
-            <input id="captchaKey" name="captchaKey" type="hidden" value=""/>
-            <input id="noLoginScreen" name="noLoginScreen" type="hidden" value="false"/>
             <input id="screenDimension" name="screenDimension" type="hidden" value=""/>
             <input id="pwdEcodeType" name="pwdEcodeType" type="hidden" value=""/>
             <input name="execution" th:value="${flowExecutionKey}" type="hidden"/>
-            <input name="_eventId" type="hidden" value="submit"/> <input name="geolocation" type="hidden"/>
+            <input name="_eventId" type="hidden" value="submit"/>
+            <input name="geolocation" type="hidden"/>
             <!-- 表单隐藏数据块结束 -->
         </form>
         <!--点选验证码  -->

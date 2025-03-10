@@ -36,30 +36,37 @@
         <span id="error_msg"></span>
     </div>
     <div class="login_fields">
-        <form method="post" id="fm1" th:action="@{/login}">
+        <form method="post" id="fm1" th:object="${credential}">
             <div class="login_fields__user">
                 <div class="icon"><img alt="" th:src="@{/y9static/y9new/img/user_icon_copy.png}"/></div>
-                <input id="username" placeholder="用户名" type="text" autocomplete="off" value="" oninput="inputEvent()" onblur="getTenant();"/>
-                <input id="username1" name="username" style="width: 150px;" tabindex="1" autocomplete="false" htmlescape="true" type="hidden"/>
-                <input id="tenantShortName" name="tenantShortName" style="width: 150px;" autocomplete="false" htmlescape="true" type="hidden"/>
+                <input id="username" placeholder="用户名" type="text" autocomplete="off" value="" oninput="inputEvent()"
+                       onblur="getTenant();"/>
                 <div class="validation"><img alt="" th:src="@{/y9static/y9new/img/tick.png}"/></div>
             </div>
             <div class="login_fields__password">
                 <div class="icon"><img alt="" th:src="@{/y9static/y9new/img/lock_icon_copy.png}"/></div>
-                <input id="password" tabindex="2" type="text" htmlescape="true" autocomplete="off" placeholder="请输入您的密码" onfocus="this.type='password'"/>
-                <input id="password1" name="password" htmlescape="true" autocomplete="off" type="hidden"/>
+                <input id="password" tabindex="2" type="text" htmlescape="true" autocomplete="off"
+                       placeholder="请输入您的密码" onfocus="this.type='password'"/>
 
                 <div class="validation"><img alt="" th:src="@{/y9static/y9new/img/tick.png}"/></div>
             </div>
-
+            <div class="alert alert-danger" th:if="${#fields.hasErrors('*')}">
+                登录失败：<span th:each="err : ${#fields.errors('*')}" th:utext="${err}"/>
+            </div>
             <!-- 表单隐藏数据块开始 -->
-            <input type="hidden" id="loginType" name="loginType" value="loginName"/>
-            <input type="hidden" id="captchaKey" name="captchaKey" value=""/>
-            <input type="hidden" id="noLoginScreen" name="noLoginScreen" value="false"/>
-             <input type="hidden" id="screenDimension" name="screenDimension" value=""/>
-            <input type="hidden" id="pwdEcodeType" name="pwdEcodeType" value=""/>
+            <input type="hidden" id="username1" name="username"/>
+            <input type="hidden" id="password1" name="password"/>
+            <!-- <input type="hidden" id="tenantShortName" name="tenantShortName"/> -->
+            <!-- <input type="hidden" id="loginType" name="loginType" value="loginName"/> -->
+            <!-- <input type="hidden" id="screenDimension" name="screenDimension" value=""/> -->
+            <!-- <input type="hidden" id="pwdEcodeType" name="pwdEcodeType" value=""/> -->
+            <input type="hidden" id="tenantShortName" name="customFields[tenantShortName]"/>
+            <input type="hidden" id="loginType" name="customFields[loginType]" value="loginName"/>
+            <input type="hidden" id="screenDimension" name="customFields[screenDimension]" value=""/>
+            <input type="hidden" id="pwdEcodeType" name="customFields[pwdEcodeType]" value=""/>
             <input type="hidden" name="execution" th:value="${flowExecutionKey}"/>
-            <input type="hidden" name="_eventId" value="submit"/> <input type="hidden" name="geolocation"/>
+            <input type="hidden" name="_eventId" value="submit"/>
+            <input type="hidden" name="geolocation"/>
             <!-- 表单隐藏数据块结束 -->
         </form>
         <!--点选验证码  -->
@@ -77,9 +84,11 @@
     </div>
     <div class="success"></div>
     <div class="disclaimer">
-        <p onclick="changeLoginModule(0)" style="margin-bottom: 5px">登录<span style="color: rgb(255, 238, 0)">「关联」</span>系统</p>
+        <p onclick="changeLoginModule(0)" style="margin-bottom: 5px">登录<span
+                style="color: rgb(255, 238, 0)">「关联」</span>系统</p>
         <p onclick="changeLoginModule(1)" style="margin-bottom: 5px;display: none">返回用户登录</p>
-        <a href="https://www.youshengyun.com/baas/appstore/%E5%8D%8F%E4%BD%9C%E5%B9%B3%E9%9D%A25.0" target="_blank">安信下载</a>
+        <a href="https://www.youshengyun.com/baas/appstore/%E5%8D%8F%E4%BD%9C%E5%B9%B3%E9%9D%A25.0"
+           target="_blank">安信下载</a>
     </div>
     <div class="toolTips" style="display: none">
         <ul id="toolTipsUl"></ul>
@@ -89,7 +98,8 @@
     <div>
         <span>北京有生博大软件股份有限公司 版权所有</span>
         <a href="https://beian.miit.gov.cn/" target="_blank">京ICP备16060306号-4</a>
-        <a href="http://www.beian.gov.cn/portal/registerSystemInfo?recordcode=11010802026965" target="_blank"><img th:src="@{/y9static/y9new/img/police.png}"/>京公网安备11010802026965号</a>
+        <a href="http://www.beian.gov.cn/portal/registerSystemInfo?recordcode=11010802026965" target="_blank"><img
+                th:src="@{/y9static/y9new/img/police.png}"/>京公网安备11010802026965号</a>
     </div>
     <span>建议您使用1920x1080分辨率，IE9.0或以上版本浏览器访问本站，以获得最佳用户体验。 技术支持：0755-821072292</span>
 </div>
@@ -117,7 +127,7 @@
     }
 
     function beep(freq = 660, duration = 90, vol = 50) {
-        var context = new(window.AudioContext || window.webkitAudioContext);
+        var context = new (window.AudioContext || window.webkitAudioContext);
         const oscillator = context.createOscillator();
         const gain = context.createGain();
         gain.gain.setValueAtTime(0, context.currentTime);
@@ -154,7 +164,10 @@
                 $("#toolTipsUl").empty();
                 $(".toolTips").attr({style: "display: flex;"});
                 data.length && data.map((item) => {
-                    $("<li></li>", {text: item.loginName, id: item.tenantShortName}).appendTo("#toolTipsUl").on("click", mouseClickEvent);
+                    $("<li></li>", {
+                        text: item.loginName,
+                        id: item.tenantShortName
+                    }).appendTo("#toolTipsUl").on("click", mouseClickEvent);
                 });
             });
         }, 250);
@@ -203,8 +216,9 @@
     $(document).keydown(function (e) {
         // 上下选择事件
         function shooseItem(value) {
-            let activeIndex = null, listLength = $("#toolTipsUl").children().length, scrollHeight=0, tempArr=[], totalHeight=0;
-            let speed="fast"; // slow \ fast \ normal
+            let activeIndex = null, listLength = $("#toolTipsUl").children().length, scrollHeight = 0, tempArr = [],
+                totalHeight = 0;
+            let speed = "fast"; // slow \ fast \ normal
             // 清除所有的active class，并找到下一个高亮的index
             listLength &&
             $("#toolTipsUl li").each(function (index, element) {
@@ -221,13 +235,13 @@
                 return false;
             }
             // 计算滚动条位置
-            for (let i=0; i<activeIndex; i++){
-                scrollHeight+=tempArr[i];
+            for (let i = 0; i < activeIndex; i++) {
+                scrollHeight += tempArr[i];
             }
             // UP键 上面找到的index添加active
             if (value === 38 && activeIndex) {
                 $("#toolTipsUl").animate({
-                    scrollTop: scrollHeight-90
+                    scrollTop: scrollHeight - 90
                 }, speed);
                 $("#toolTipsUl").children().eq(activeIndex - 1).addClass("active");
                 return true;

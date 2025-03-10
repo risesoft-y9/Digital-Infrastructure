@@ -39,10 +39,6 @@
                     <div class="form-label">用户名</div>
                     <input autocomplete="off" id="username" onBlur="inputOnBlur();" placeholder=" "
                            tabindex="1" type="text" value=""/>
-                    <input autocomplete="false" htmlescape="true" id="username1" name="username"
-                           style="width: 150px;" type="hidden"/>
-                    <input autocomplete="false" htmlescape="true" id="tenantShortName" name="tenantShortName"
-                           style="width: 150px" type="hidden" value="default"/>
                     <div class="validation">
                         <img alt="" th:src="@{/y9static/y9new/img/tick.png}"/>
                     </div>
@@ -51,17 +47,16 @@
                     <div class="form-label">密&nbsp;&nbsp;&nbsp;码</div>
                     <input autocomplete="off" htmlescape="true" id="password" onfocus="this.type='password'"
                            placeholder=" " tabindex="2" type="password"/>
-                    <input autocomplete="off" htmlescape="true" id="password1" name="password" type="hidden"/>
-
                     <div class="validation"><img alt="" th:src="@{/y9static/y9-ddyjs/img/tick.png}"/></div>
                 </div>
                 <div class="alert alert-danger" th:if="${#fields.hasErrors('*')}">
                     登录失败：<span th:each="err : ${#fields.errors('*')}" th:utext="${err}"/>
                 </div>
                 <!-- 表单隐藏数据块开始 -->
+                <input type="hidden" id="username1" name="username"/>
+                <input type="hidden" id="password1" name="password"/>
+                <input type="hidden" id="tenantShortName" name="tenantShortName"/>
                 <input id="loginType" name="loginType" type="hidden" value="loginName"/>
-                <input id="captchaKey" name="captchaKey" type="hidden" value=""/>
-                <input id="noLoginScreen" name="noLoginScreen" type="hidden" value="false"/>
                 <input id="screenDimension" name="screenDimension" type="hidden" value=""/>
                 <input id="pwdEcodeType" name="pwdEcodeType" type="hidden" value=""/>
                 <input name="execution" th:value="${flowExecutionKey}" type="hidden"/>

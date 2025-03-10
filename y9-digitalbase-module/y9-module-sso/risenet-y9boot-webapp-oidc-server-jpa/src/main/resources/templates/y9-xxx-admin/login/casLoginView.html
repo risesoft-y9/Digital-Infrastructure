@@ -90,24 +90,6 @@
                         value=""
                         onblur="inputOnBlur();"
                 />
-                <input
-                        id="username1"
-                        name="username"
-                        style="width: 150px"
-                        tabindex="1"
-                        autocomplete="false"
-                        htmlescape="true"
-                        type="hidden"
-                />
-                <input
-                        id="tenantShortName"
-                        name="tenantShortName"
-                        style="width: 150px"
-                        autocomplete="false"
-                        htmlescape="true"
-                        type="hidden"
-                        value="default"
-                />
                 <div class="validation">
                     <img
                             alt=""
@@ -131,14 +113,6 @@
                         placeholder="请输入您的密码"
                         onfocus="this.type='password'"
                 />
-                <input
-                        id="password1"
-                        name="password"
-                        htmlescape="true"
-                        autocomplete="off"
-                        type="hidden"
-                />
-
                 <div class="validation">
                     <img
                             alt=""
@@ -156,23 +130,14 @@
             />
             </div>
             <!-- 表单隐藏数据块开始 -->
+            <input type="hidden" id="username1" name="username"/>
+            <input type="hidden" id="password1" name="password"/>
+            <input type="hidden" id="tenantShortName" name="tenantShortName"/>
             <input
                     type="hidden"
                     id="loginType"
                     name="loginType"
                     value="loginName"
-            />
-            <input
-                    type="hidden"
-                    id="captchaKey"
-                    name="captchaKey"
-                    value=""
-            />
-            <input
-                    type="hidden"
-                    id="noLoginScreen"
-                    name="noLoginScreen"
-                    value="false"
             />
             <input
                     type="hidden"

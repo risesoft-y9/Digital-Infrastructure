@@ -87,7 +87,7 @@ cas:
             ddl-auto: update
             url: jdbc:mysql://localhost:3306/y9_public?serverTimezone=GMT%2B8&nullCatalogMeansCurrent=true&useUnicode=true&characterEncoding=utf-8&rewriteBatchedStatements=true&useCompression=true&useSSL=false&allowPublicKeyRetrieval=true
             user: root
-            password: "11111111"
+            password: 111111
             idleTimeout: PT10M
             leakThreshold: 0
             autocommit: true
@@ -117,7 +117,7 @@ cas:
                 ddl-auto: update
                 url: jdbc:mysql://localhost:3306/y9_public?serverTimezone=GMT%2B8&nullCatalogMeansCurrent=true&useUnicode=true&characterEncoding=utf-8&rewriteBatchedStatements=true&useCompression=true&useSSL=false&allowPublicKeyRetrieval=true
                 user: root
-                password: "11111111"
+                password: 111111
                 idleTimeout: PT10M
                 leakThreshold: 0
                 autocommit: true
@@ -200,9 +200,6 @@ cas:
         #当defaultRedirectUrl为空、并且service参数为空时，自动计算service
         authorizedServicesOnSuccessfulLogin: true
         custom-login-form-fields:
-            noLoginScreen:
-                required: true
-                messageBundleKey: customLoginFormField.noLoginScreen
             loginType:
                 required: true
                 messageBundleKey: customLoginFormField.loginType
@@ -224,6 +221,9 @@ cas:
             positionId:
                 required: false
                 messageBundleKey: customLoginFormField.positionId
+            pwdEcodeType:
+                required: false
+                messageBundleKey: customLoginFormField.pwdEcodeType
     
     logout:
         followServiceRedirects: true
@@ -271,7 +271,7 @@ spring:
         driver-class-name: com.mysql.cj.jdbc.Driver
         url: jdbc:mysql://localhost:3306/y9_public?serverTimezone=GMT%2B8&nullCatalogMeansCurrent=true&useUnicode=true&characterEncoding=utf-8&rewriteBatchedStatements=true&useCompression=true&useSSL=false&allowPublicKeyRetrieval=true
         username: root
-        password: "11111111"
+        password: 111111
     jpa:
         generate-ddl: true
         show-sql: true
