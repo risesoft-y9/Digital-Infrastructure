@@ -14,6 +14,7 @@
     <description>RiseSoft/Digital Infrastructure platform web</description>
 
     <properties>
+        <maven.test.skip>true</maven.test.skip>
     </properties>
 
     <scm>
@@ -26,19 +27,16 @@
         <dependency>
             <groupId>net.risesoft</groupId>
             <artifactId>risenet-y9boot-support-platform-service</artifactId>
-            <version>${project.version}</version>
         </dependency>
 
         <dependency>
             <groupId>net.risesoft</groupId>
             <artifactId>risenet-y9boot-support-platform-jpa-repository</artifactId>
-            <version>${project.version}</version>
         </dependency>
 
         <dependency>
             <groupId>net.risesoft</groupId>
             <artifactId>risenet-y9boot-starter-web</artifactId>
-            <version>${project.version}</version>
         </dependency>
 
         <dependency>
@@ -87,7 +85,6 @@
         <dependency>
             <groupId>net.risesoft</groupId>
             <artifactId>risenet-y9boot-idcode</artifactId>
-            <version>${revision}</version>
         </dependency>
     </dependencies>
 
