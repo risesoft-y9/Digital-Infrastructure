@@ -1,8 +1,11 @@
 package y9.util;
 
+import java.net.InetAddress;
+import java.net.UnknownHostException;
+
 import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
-import lombok.extern.slf4j.Slf4j;
+
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.NoSuchBeanDefinitionException;
@@ -13,8 +16,7 @@ import org.springframework.context.EnvironmentAware;
 import org.springframework.core.env.Environment;
 import org.springframework.web.context.ServletContextAware;
 
-import java.net.InetAddress;
-import java.net.UnknownHostException;
+import lombok.extern.slf4j.Slf4j;
 
 /**
  * 获取WebApplicationContext的一条途径

@@ -8,12 +8,6 @@ import java.util.UUID;
 import javax.servlet.http.HttpServletResponse;
 
 import org.apache.commons.lang3.StringUtils;
-import y9.service.Y9KeyValueService;
-import y9.util.Y9Base64;
-import y9.util.Y9QRCode;
-import y9.util.Y9Result;
-import y9.util.common.Y9Util;
-import y9.util.json.Y9JacksonUtil;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Controller;
@@ -23,6 +17,13 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+
+import y9.service.Y9KeyValueService;
+import y9.util.Y9Base64;
+import y9.util.Y9QRCode;
+import y9.util.Y9Result;
+import y9.util.common.Y9Util;
+import y9.util.json.Y9JacksonUtil;
 
 @Lazy(false)
 @Controller

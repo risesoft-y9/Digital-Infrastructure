@@ -10,8 +10,14 @@ import org.apache.commons.lang3.StringUtils;
 import org.apereo.cas.authentication.principal.DefaultPrincipalAttributesRepository;
 import org.apereo.cas.configuration.CasConfigurationProperties;
 import org.apereo.cas.configuration.model.support.mfa.BaseMultifactorAuthenticationProviderProperties;
-import org.apereo.cas.services.*;
-import y9.util.Y9Result;
+import org.apereo.cas.services.CasRegisteredService;
+import org.apereo.cas.services.DefaultRegisteredServiceMultifactorPolicy;
+import org.apereo.cas.services.DefaultRegisteredServiceProperty;
+import org.apereo.cas.services.OidcRegisteredService;
+import org.apereo.cas.services.RegisteredService;
+import org.apereo.cas.services.RegisteredServiceProperty;
+import org.apereo.cas.services.ReturnAllAttributeReleasePolicy;
+import org.apereo.cas.services.ServicesManager;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -24,6 +30,8 @@ import org.springframework.web.bind.annotation.RestController;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+
+import y9.util.Y9Result;
 
 @Lazy(false)
 @RestController

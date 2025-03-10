@@ -23,36 +23,37 @@ import org.springframework.transaction.annotation.EnableTransactionManagement;
 
 @Configuration
 @EnableTransactionManagement(proxyTargetClass = true, mode = AdviceMode.ASPECTJ)
-@EnableJpaRepositories(basePackages = { "y9" }, includeFilters = {
-		@ComponentScan.Filter(classes = JpaRepository.class, type = FilterType.ASSIGNABLE_TYPE) }, entityManagerFactoryRef = "rsPublicEntityManagerFactory", transactionManagerRef = "rsPublicTransactionManager")
+@EnableJpaRepositories(basePackages = {"y9"},
+    includeFilters = {@ComponentScan.Filter(classes = JpaRepository.class, type = FilterType.ASSIGNABLE_TYPE)},
+    entityManagerFactoryRef = "rsPublicEntityManagerFactory", transactionManagerRef = "rsPublicTransactionManager")
 public class JpaPublicConfiguration {
 
-	@Bean
-	@ConditionalOnMissingBean
-	public JpaVendorAdapter jpaVendorAdapter() {
-		return new HibernateJpaVendorAdapter();
-	}
+    @Bean
+    @ConditionalOnMissingBean
+    public JpaVendorAdapter jpaVendorAdapter() {
+        return new HibernateJpaVendorAdapter();
+    }
 
-	@Primary
-	@Bean
-	public LocalContainerEntityManagerFactoryBean rsPublicEntityManagerFactory(DataSource dataSource,
-			JpaProperties jpaProperties) {
-		LocalContainerEntityManagerFactoryBean em = new LocalContainerEntityManagerFactoryBean();
-		em.setPersistenceUnitName("y9Public");
-		em.setDataSource(dataSource);
-		em.setJpaVendorAdapter(jpaVendorAdapter());
-		em.setPackagesToScan("y9");
-		em.setJpaPropertyMap(jpaProperties.getProperties());
-		return em;
-	}
+    @Primary
+    @Bean
+    public LocalContainerEntityManagerFactoryBean rsPublicEntityManagerFactory(DataSource dataSource,
+        JpaProperties jpaProperties) {
+        LocalContainerEntityManagerFactoryBean em = new LocalContainerEntityManagerFactoryBean();
+        em.setPersistenceUnitName("y9Public");
+        em.setDataSource(dataSource);
+        em.setJpaVendorAdapter(jpaVendorAdapter());
+        em.setPackagesToScan("y9");
+        em.setJpaPropertyMap(jpaProperties.getProperties());
+        return em;
+    }
 
-	@Primary
-	@Bean
-	public PlatformTransactionManager rsPublicTransactionManager(
-			@Qualifier("rsPublicEntityManagerFactory") EntityManagerFactory emf) {
-		JpaTransactionManager transactionManager = new JpaTransactionManager();
-		transactionManager.setEntityManagerFactory(emf);
-		return transactionManager;
-	}
+    @Primary
+    @Bean
+    public PlatformTransactionManager
+        rsPublicTransactionManager(@Qualifier("rsPublicEntityManagerFactory") EntityManagerFactory emf) {
+        JpaTransactionManager transactionManager = new JpaTransactionManager();
+        transactionManager.setEntityManagerFactory(emf);
+        return transactionManager;
+    }
 
 }

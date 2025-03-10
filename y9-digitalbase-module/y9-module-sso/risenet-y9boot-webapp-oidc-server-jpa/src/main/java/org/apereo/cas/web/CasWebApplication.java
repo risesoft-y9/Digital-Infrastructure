@@ -15,6 +15,7 @@ import org.springframework.transaction.annotation.EnableTransactionManagement;
 
 import lombok.NoArgsConstructor;
 import lombok.val;
+
 import y9.Y9Configuration;
 
 /**
@@ -42,13 +43,9 @@ public class CasWebApplication {
     public static void main(final String[] args) {
         CasEmbeddedContainerUtils.getLoggingInitialization().ifPresent(init -> init.setMainArguments(args));
         val banner = CasEmbeddedContainerUtils.getCasBannerInstance();
-        new SpringApplicationBuilder(CasWebApplication.class)
-            .banner(banner)
-            .web(WebApplicationType.SERVLET)
-            .sources(Y9Configuration.class)
-            .logStartupInfo(true)
-            .applicationStartup(CasEmbeddedContainerUtils.getApplicationStartup())
-            .run(args);
+        new SpringApplicationBuilder(CasWebApplication.class).banner(banner).web(WebApplicationType.SERVLET)
+            .sources(Y9Configuration.class).logStartupInfo(true)
+            .applicationStartup(CasEmbeddedContainerUtils.getApplicationStartup()).run(args);
     }
 
 }

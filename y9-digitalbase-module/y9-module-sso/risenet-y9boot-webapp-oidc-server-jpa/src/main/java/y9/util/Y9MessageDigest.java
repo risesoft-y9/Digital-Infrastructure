@@ -1,9 +1,9 @@
 package y9.util;
 
-import org.mindrot.jbcrypt.BCrypt;
-
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
+
+import org.mindrot.jbcrypt.BCrypt;
 
 public class Y9MessageDigest {
     private static String byte2hexSplitWithColon(byte[] b) {

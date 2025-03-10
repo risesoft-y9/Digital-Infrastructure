@@ -16,9 +16,9 @@ import y9.entity.Y9KeyValue;
 @Repository
 public interface Y9KeyValueRepository extends JpaRepository<Y9KeyValue, String> {
 
-	@Modifying
-	@Query("delete from Y9KeyValue t where t.expireTime < :time ")
-	int deleteItem(@Param("time") Instant time);
+    @Modifying
+    @Query("delete from Y9KeyValue t where t.expireTime < :time ")
+    int deleteItem(@Param("time") Instant time);
 
-	Optional<Y9KeyValue> getByKey(String key);
+    Optional<Y9KeyValue> getByKey(String key);
 }
