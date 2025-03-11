@@ -39,12 +39,12 @@
         <form method="post" id="fm1" th:object="${credential}">
             <div class="login_fields__user">
                 <div class="icon"><img alt="" th:src="@{/y9static/y9new/img/user_icon_copy.png}"/></div>
-                <input id="username" placeholder="用户名" type="text" autocomplete="off" value="" oninput="inputEvent()" onblur="getTenant();"/>
+                <input id="username" tabindex="1" placeholder="用户名" type="text" autocomplete="off" value="" oninput="inputEvent()" onblur="getTenant();"/>
                 <div class="validation"><img alt="" th:src="@{/y9static/y9new/img/tick.png}"/></div>
             </div>
             <div class="login_fields__password">
                 <div class="icon"><img alt="" th:src="@{/y9static/y9new/img/lock_icon_copy.png}"/></div>
-                <input id="password" tabindex="2" type="text" htmlescape="true" autocomplete="off" placeholder="请输入您的密码" onfocus="this.type='password'"/>
+                <input id="password" tabindex="2" type="password" htmlescape="true" autocomplete="off" placeholder="请输入您的密码" />
                 <div class="validation"><img alt="" th:src="@{/y9static/y9new/img/tick.png}"/></div>
             </div>
             <div class="alert alert-danger" th:if="${#fields.hasErrors('*')}">

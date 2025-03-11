@@ -89,6 +89,7 @@
                         type="text"
                         autocomplete="off"
                         value=""
+                        tabindex="1"
                         oninput="inputEvent()"
                         onblur="getTenant();"
                 />
@@ -109,11 +110,10 @@
                 <input
                         id="password"
                         tabindex="2"
-                        type="text"
+                        type="password"
                         htmlescape="true"
                         autocomplete="off"
                         placeholder="请输入您的密码"
-                        onfocus="this.type='password'"
                 />
 
                 <div class="validation">
@@ -166,7 +166,7 @@
         <!--点选验证码  -->
         <div id="mpanel6"></div>
         <div class="login_fields__submit">
-            <input type="button" value="登录"/>
+            <input type="button" tabindex="3" value="登录"/>
         </div>
     </div>
     <div></div>
