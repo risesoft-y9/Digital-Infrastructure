@@ -200,6 +200,9 @@ cas:
         #当defaultRedirectUrl为空、并且service参数为空时，自动计算service
         authorizedServicesOnSuccessfulLogin: true
         custom-login-form-fields:
+            noLoginScreen:
+                required: true
+                messageBundleKey: customLoginFormField.noLoginScreen
             loginType:
                 required: true
                 messageBundleKey: customLoginFormField.loginType
