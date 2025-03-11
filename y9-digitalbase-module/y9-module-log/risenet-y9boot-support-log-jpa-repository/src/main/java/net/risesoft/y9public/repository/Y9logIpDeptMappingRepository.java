@@ -13,4 +13,6 @@ public interface Y9logIpDeptMappingRepository
     extends JpaRepository<Y9logIpDeptMapping, String>, JpaSpecificationExecutor<Y9logIpDeptMapping> {
     List<Y9logIpDeptMapping> findByClientIpSection(String clientIpSection);
 
+    List<Y9logIpDeptMapping> findByTenantIdAndClientIpSection(String tenantId, String clientIpSection);
+
 }
