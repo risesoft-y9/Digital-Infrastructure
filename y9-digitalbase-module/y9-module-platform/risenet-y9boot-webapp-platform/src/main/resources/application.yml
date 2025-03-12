@@ -270,7 +270,6 @@ y9:
         oauth2:
             resource:
                 enabled: true
-                saveOnlineMessage: false
                 allowBasicAuthentication: true
                 allowFormEncodedBodyParameter: true
                 allowUriQueryParameter: true
