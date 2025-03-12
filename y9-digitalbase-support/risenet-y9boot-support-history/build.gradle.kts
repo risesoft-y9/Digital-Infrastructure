@@ -6,8 +6,9 @@ plugins {
 dependencies {
     api(project(":y9-digitalbase-common:risenet-y9boot-common-util"))
     api(project(":y9-digitalbase-starter:risenet-y9boot-starter-jpa-public"))
-    
+
     api(platform(libs.spring.boot.bom))
+    api("org.springframework.boot:spring-boot-autoconfigure")
     api("org.springframework.boot:spring-boot-configuration-processor")
     api("org.springframework:spring-web")
     api("org.springframework:spring-webmvc")
