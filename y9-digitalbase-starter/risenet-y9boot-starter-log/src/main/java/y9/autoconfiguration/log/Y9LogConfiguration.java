@@ -10,7 +10,7 @@ import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.boot.autoconfigure.kafka.KafkaAutoConfiguration;
 import org.springframework.boot.autoconfigure.web.servlet.ConditionalOnMissingFilterBean;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
-import org.springframework.boot.task.TaskExecutorBuilder;
+import org.springframework.boot.task.ThreadPoolTaskExecutorBuilder;
 import org.springframework.boot.web.servlet.FilterRegistrationBean;
 import org.springframework.boot.web.servlet.filter.OrderedRequestContextFilter;
 import org.springframework.context.annotation.Bean;
@@ -98,7 +98,7 @@ public class Y9LogConfiguration {
         }
 
         @Bean
-        public AccessLogReporter accessLogKafkaPusher(KafkaTemplate<String, Object> y9KafkaTemplate) {
+        public AccessLogReporter accessLogKafkaReporter(KafkaTemplate<String, Object> y9KafkaTemplate) {
             return new AccessLogKafkaReporter(y9KafkaTemplate);
         }
 
@@ -109,7 +109,7 @@ public class Y9LogConfiguration {
     static class Y9LogApiConfiguration {
 
         @Bean
-        public AccessLogReporter accessLogApiPusher(Y9Properties y9Properties) {
+        public AccessLogReporter accessLogApiReporter(Y9Properties y9Properties) {
             return new AccessLogApiReporter(y9Properties);
         }
 
@@ -129,7 +129,7 @@ public class Y9LogConfiguration {
 
     @Bean(name = {"y9ThreadPoolTaskExecutor"})
     @ConditionalOnMissingBean(name = "y9ThreadPoolTaskExecutor")
-    public Executor y9ThreadPoolTaskExecutor(TaskExecutorBuilder builder) {
+    public Executor y9ThreadPoolTaskExecutor(ThreadPoolTaskExecutorBuilder builder) {
         ThreadPoolTaskExecutor taskExecutor = builder.build();
         // 核心线程数
         taskExecutor.setCorePoolSize(10);
