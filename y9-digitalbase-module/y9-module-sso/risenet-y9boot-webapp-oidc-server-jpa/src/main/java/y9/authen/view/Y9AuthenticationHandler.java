@@ -1,4 +1,4 @@
-package y9.authen;
+package y9.authen.view;
 
 import java.security.GeneralSecurityException;
 import java.util.HashMap;

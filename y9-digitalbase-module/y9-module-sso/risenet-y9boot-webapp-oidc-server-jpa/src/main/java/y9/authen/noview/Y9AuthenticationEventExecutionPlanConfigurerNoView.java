@@ -1,4 +1,4 @@
-package y9.authen;
+package y9.authen.noview;
 
 import org.apereo.cas.authentication.AuthenticationEventExecutionPlan;
 import org.apereo.cas.authentication.AuthenticationEventExecutionPlanConfigurer;
@@ -10,7 +10,7 @@ import y9.service.Y9LoginUserService;
 import y9.service.Y9UserService;
 
 @Component
-public class Y9AuthenticationEventExecutionPlanConfigurer implements AuthenticationEventExecutionPlanConfigurer {
+public class Y9AuthenticationEventExecutionPlanConfigurerNoView implements AuthenticationEventExecutionPlanConfigurer {
 
     @Autowired
     ServicesManager servicesManager;
@@ -23,7 +23,7 @@ public class Y9AuthenticationEventExecutionPlanConfigurer implements Authenticat
 
     @Override
     public void configureAuthenticationExecutionPlan(AuthenticationEventExecutionPlan plan) throws Exception {
-        Y9AuthenticationHandler handler = new Y9AuthenticationHandler("y9AuthenticationHandler", servicesManager, 0,
+        Y9AuthenticationHandlerNoView handler = new Y9AuthenticationHandlerNoView("y9AuthenticationHandlerNoView", servicesManager, 1,
             y9UserService, y9LoginUserService);
         plan.registerAuthenticationHandler(handler);
     }

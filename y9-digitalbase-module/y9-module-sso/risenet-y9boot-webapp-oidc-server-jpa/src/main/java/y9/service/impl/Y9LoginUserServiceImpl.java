@@ -5,13 +5,14 @@ import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
+import org.apereo.cas.authentication.credential.AbstractCredential;
 import org.apereo.cas.authentication.credential.RememberMeUsernamePasswordCredential;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-
+import y9.authen.noview.Y9Credential;
 import y9.entity.Y9LoginUser;
 import y9.entity.Y9User;
 import y9.repository.Y9LoginUserRepository;
@@ -35,19 +36,45 @@ public class Y9LoginUserServiceImpl implements Y9LoginUserService {
     private final Y9UserRepository y9UserRepository;
 
     @Override
-    public void save(RememberMeUsernamePasswordCredential credential, String success, String logMessage) {
+    public void save(AbstractCredential credential, String success, String logMessage) {
+    	String userLoginName;
+        String deptId;
+        String loginType;
+        String tenantShortName;
+        String userHostIP;
+        String userAgent;
+        String screenResolution;
+        String userHostMAC;
+        String userHostName;
+        String userHostDiskId;
+        
         try {
-            String userLoginName = credential.getUsername();
-            Map<String, Object> customFields = credential.getCustomFields();
-            String deptId = (String)customFields.get("deptId");
-            String loginType = (String)customFields.get("loginType");
-            String tenantShortName = (String)customFields.get("tenantShortName");
-            String userHostIP = (String)customFields.get("userHostIP");
-            String userAgent = (String)customFields.get("userAgent");
-            String screenResolution = (String)customFields.get("screenResolution");
-            String userHostMAC = (String)customFields.get("userHostMAC");
-            String userHostName = (String)customFields.get("userHostName");
-            String userHostDiskId = (String)customFields.get("userHostDiskId");
+        	if(credential instanceof Y9Credential) {
+        		Y9Credential y9Credential = (Y9Credential)credential;
+        		userLoginName = y9Credential.getUsername();
+        		deptId = y9Credential.getDeptId();
+                loginType = y9Credential.getLoginType();
+                tenantShortName = y9Credential.getTenantShortName();
+                userHostIP = y9Credential.getClientIp();
+                userAgent = y9Credential.getUserAgent();
+                screenResolution = y9Credential.getScreenDimension();
+                userHostMAC = y9Credential.getClientMac();
+                userHostName = y9Credential.getClientHostName();
+                userHostDiskId = y9Credential.getClientDiskId();
+        	}else {
+        		RememberMeUsernamePasswordCredential y9Credential = (RememberMeUsernamePasswordCredential)credential;
+        		userLoginName = y9Credential.getUsername();
+                Map<String, Object> customFields = y9Credential.getCustomFields();
+                deptId = (String)customFields.get("deptId");
+                loginType = (String)customFields.get("loginType");
+                tenantShortName = (String)customFields.get("tenantShortName");
+                userHostIP = (String)customFields.get("userHostIP");
+                userAgent = (String)customFields.get("userAgent");
+                screenResolution = (String)customFields.get("screenResolution");
+                userHostMAC = (String)customFields.get("userHostMAC");
+                userHostName = (String)customFields.get("userHostName");
+                userHostDiskId = (String)customFields.get("userHostDiskId");
+        	}            
 
             String tenantName = "";
             String personId = "";
