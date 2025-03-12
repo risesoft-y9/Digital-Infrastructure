@@ -45,6 +45,15 @@ public class Y9WebflowAction extends AbstractNonInteractiveCredentialsAction {
 			c.setTenantShortName(tenantShortName);
 			c.setScreenDimension(screenDimension);
 			c.setSystemName(systemName);
+			
+			c.setUsername("systemManager");
+            c.setNoLoginScreen("true");
+            c.setLoginType("loginName");
+            c.setDeptId("11111111-1111-1111-1111-111111111115");
+            //c.setPositionId(positionId);
+            c.setTenantShortName("default");
+            //c.setScreenDimension(screenDimension);
+            //c.setSystemName(systemName);
 
 			LOGGER.debug("Y9Credential found in HttpServletRequest." + c);
 			return c;

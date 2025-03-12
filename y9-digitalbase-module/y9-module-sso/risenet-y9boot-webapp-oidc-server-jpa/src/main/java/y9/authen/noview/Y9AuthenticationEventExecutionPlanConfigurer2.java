@@ -10,7 +10,7 @@ import y9.service.Y9LoginUserService;
 import y9.service.Y9UserService;
 
 @Component
-public class Y9AuthenticationEventExecutionPlanConfigurerNoView implements AuthenticationEventExecutionPlanConfigurer {
+public class Y9AuthenticationEventExecutionPlanConfigurer2 implements AuthenticationEventExecutionPlanConfigurer {
 
     @Autowired
     ServicesManager servicesManager;
@@ -23,8 +23,7 @@ public class Y9AuthenticationEventExecutionPlanConfigurerNoView implements Authe
 
     @Override
     public void configureAuthenticationExecutionPlan(AuthenticationEventExecutionPlan plan) throws Exception {
-        Y9AuthenticationHandlerNoView handler = new Y9AuthenticationHandlerNoView("y9AuthenticationHandlerNoView", servicesManager, 1,
-            y9UserService, y9LoginUserService);
+        Y9AuthenticationHandler2 handler = new Y9AuthenticationHandler2("y9AuthenticationHandler2", servicesManager, 1, y9UserService, y9LoginUserService);
         plan.registerAuthenticationHandler(handler);
     }
 }

@@ -1,4 +1,4 @@
-package org.apereo.cas.web.flow.configurer;
+package org.apereo.cas.web.flow2.configurer;
 
 import java.util.Map;
 
@@ -26,6 +26,7 @@ import org.apereo.cas.util.LoggingUtils;
 import org.apereo.cas.web.flow.CasWebflowConstants;
 import org.apereo.cas.web.flow.StringToCharArrayConverter;
 import org.apereo.cas.web.flow.actions.ConsumerExecutionAction;
+import org.apereo.cas.web.flow.configurer.AbstractCasWebflowConfigurer;
 import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.webflow.definition.registry.FlowDefinitionRegistry;
 import org.springframework.webflow.engine.ActionState;

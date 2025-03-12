@@ -27,11 +27,11 @@ import y9.service.Y9UserService;
 import y9.util.common.AESUtil;
 import y9.util.common.Base64Util;
 
-public class Y9AuthenticationHandlerNoView extends AbstractAuthenticationHandler {
+public class Y9AuthenticationHandlerNoView2 extends AbstractAuthenticationHandler {
 	private final Y9UserService y9UserService;
 	private final Y9LoginUserService y9LoginUserService;
 
-	public Y9AuthenticationHandlerNoView(String name, ServicesManager servicesManager, Integer order,
+	public Y9AuthenticationHandlerNoView2(String name, ServicesManager servicesManager, Integer order,
 			Y9UserService y9UserService, Y9LoginUserService y9LoginUserService) {
 		super(name, servicesManager, PrincipalFactoryUtils.newPrincipalFactory(), order);
 		this.y9UserService = y9UserService;

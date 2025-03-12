@@ -21,7 +21,7 @@ public class Y9Credential extends AbstractCredential {
 	//根据loginType，可以保存loginName、mobile、caid、email等
 	private String username;
 
-	private boolean rememberMe;
+	private String password;
 
 	// person实体类的许多属性都可以作为登录时的凭证，如身份证、邮箱、用户名、CA序列号、手机号、社保号、医保号等
 	// 这里保存的是属性名称，如loginName、mobile、caid、email等
