@@ -8,8 +8,6 @@ import java.nio.charset.StandardCharsets;
 import java.security.PublicKey;
 import java.security.interfaces.RSAPublicKey;
 import java.util.Collections;
-import java.util.Map;
-import java.util.Objects;
 import java.util.concurrent.TimeUnit;
 
 import jakarta.servlet.Filter;
@@ -21,7 +19,6 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 
-import org.apache.commons.httpclient.NameValuePair;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.core.io.Resource;
@@ -31,7 +28,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.RequestEntity;
 import org.springframework.http.ResponseEntity;
-import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.web.client.RestTemplate;
 
 import com.auth0.jwk.InvalidPublicKeyException;
@@ -53,15 +49,12 @@ import net.risesoft.enums.platform.SexEnum;
 import net.risesoft.exception.ErrorCode;
 import net.risesoft.exception.GlobalErrorCodeEnum;
 import net.risesoft.model.user.UserInfo;
-import net.risesoft.model.user.UserProfile;
 import net.risesoft.pojo.Y9Result;
 import net.risesoft.y9.Y9Context;
 import net.risesoft.y9.Y9LoginUserHolder;
 import net.risesoft.y9.configuration.Y9Properties;
 import net.risesoft.y9.configuration.feature.oauth2.resource.Y9Oauth2ResourceProperties;
 import net.risesoft.y9.json.Y9JsonUtil;
-import net.risesoft.y9.pubsub.constant.Y9TopicConst;
-import net.risesoft.y9.util.RemoteCallUtil;
 import net.risesoft.y9.util.Y9EnumUtil;
 
 /**
@@ -81,7 +74,7 @@ public class Y9Oauth2ResourceFilter implements Filter {
 
     @Override
     public void doFilter(ServletRequest servletRequest, ServletResponse servletResponse, FilterChain filterChain)
-            throws IOException, ServletException {
+        throws IOException, ServletException {
         HttpServletRequest request = (HttpServletRequest)servletRequest;
         HttpServletResponse response = (HttpServletResponse)servletResponse;
 
@@ -192,12 +185,12 @@ public class Y9Oauth2ResourceFilter implements Filter {
         headers.setAccept(Collections.singletonList(MediaType.APPLICATION_JSON));
         headers.setContentType(MediaType.APPLICATION_FORM_URLENCODED);
         headers.setBasicAuth(y9Oauth2ResourceProperties.getOpaque().getClientId(),
-                y9Oauth2ResourceProperties.getOpaque().getClientSecret(), StandardCharsets.UTF_8);
+            y9Oauth2ResourceProperties.getOpaque().getClientSecret(), StandardCharsets.UTF_8);
 
         URI uri = URI.create(y9Oauth2ResourceProperties.getOpaque().getIntrospectionUri() + "?token=" + accessToken);
         RequestEntity<?> requestEntity = new RequestEntity<>(headers, HttpMethod.POST, uri);
         ResponseEntity<OAuth20IntrospectionAccessTokenResponse> responseEntity =
-                this.restTemplate.exchange(requestEntity, OAuth20IntrospectionAccessTokenResponse.class);
+            this.restTemplate.exchange(requestEntity, OAuth20IntrospectionAccessTokenResponse.class);
         return responseEntity;
     }
 
@@ -211,7 +204,6 @@ public class Y9Oauth2ResourceFilter implements Filter {
         ResponseEntity<String> responseEntity = this.restTemplate.exchange(requestEntity, String.class);
         return responseEntity;
     }
-
 
     private void setResponse(HttpServletResponse response, HttpStatus httpStatus, ErrorCode errorCode) {
         response.addHeader("WWW-Authenticate", "Bearer realm=\"risesoft\"");
@@ -248,7 +240,7 @@ public class Y9Oauth2ResourceFilter implements Filter {
         }
 
         JwkProvider provider =
-                new JwkProviderBuilder(url).cached(10, 24, TimeUnit.HOURS).rateLimited(10, 1, TimeUnit.MINUTES).build();
+            new JwkProviderBuilder(url).cached(10, 24, TimeUnit.HOURS).rateLimited(10, 1, TimeUnit.MINUTES).build();
 
         Jwk jwk = null;
         try {
@@ -308,7 +300,7 @@ public class Y9Oauth2ResourceFilter implements Filter {
         userInfo.setPersonId(jwt.getClaim("personId").asString());
         userInfo.setPositionId(jwt.getClaim("positionId").asString());
         userInfo.setSex(jwt.getClaim("original").asInt() == null ? SexEnum.MALE
-                : Y9EnumUtil.valueOf(SexEnum.class, jwt.getClaim("original").asInt()));
+            : Y9EnumUtil.valueOf(SexEnum.class, jwt.getClaim("original").asInt()));
         userInfo.setTenantId(jwt.getClaim("tenantId").asString());
         userInfo.setTenantShortName(jwt.getClaim("tenantShortName").asString());
         userInfo.setTenantName(jwt.getClaim("tenantName").asString());

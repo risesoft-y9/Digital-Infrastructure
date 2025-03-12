@@ -102,6 +102,7 @@
         <module>y9-digitalbase-starter/risenet-y9boot-starter-sso-oauth2-resource</module>
         <module>y9-digitalbase-starter/risenet-y9boot-starter-web</module>
         <module>y9-digitalbase-starter/risenet-y9boot-starter-elasticsearch</module>
+        <module>y9-digitalbase-starter/risenet-y9boot-starter-useronline</module>
 
         <module>y9-digitalbase-idcode/risenet-y9boot-idcode</module>
 
