@@ -20,8 +20,14 @@ server:
         context-path: /platform
 javers:
     newObjectSnapshot: true
+    # 由于 javers 没有兼容达梦数据库，关闭自动生成表结构的开关，手动导入 y9-digitalbase-module/y9-module-platform/risenet-y9boot-webapp-platform/src/main/resources/javers-dm.sql
     sqlSchemaManagementEnabled: false
-    springDataAuditableRepositoryAspectEnabled: false
+    # 是否开启 javers 实体审计日志记录
+    springDataAuditableRepositoryAspectEnabled: true
+    # 是否开启 javers 自动配置
+    enabled: false
+    # 由于 javers 没有直接兼容达梦数据库，使用 oracle 方言来做间接的兼容
+    dialect: oracle
 spring:
     application:
         name: platform
@@ -73,7 +79,7 @@ spring:
                 wall:
                     config:
                         drop-table-allow: false
-                    enabled: true
+                    enabled: false
             stat-view-servlet:
                 enabled: false
                 url-pattern: /druid/*
@@ -90,10 +96,10 @@ spring:
                 #url: jdbc:oracle:thin:@127.0.0.1:1521:orcl
                 #username: Y9_PUBLIC
                 #password: '111111'
-                driver-class-name: com.mysql.cj.jdbc.Driver
-                url: jdbc:mysql://localhost:3306/y9_public?serverTimezone=GMT%2B8&nullCatalogMeansCurrent=true&useUnicode=true&characterEncoding=utf-8&rewriteBatchedStatements=true&useCompression=true&useSSL=false&allowPublicKeyRetrieval=true
-                username: root
-                password: 111111
+                driver-class-name: dm.jdbc.driver.DmDriver
+                url: jdbc:dm://localhost:5236?compatibleMode=oracle
+                username: Y9_PUBLIC
+                password: 11B77D5a22!
                 initialSize: 1
                 maxActive: 20
                 maxPoolPreparedStatementPerConnectionSize: 100
@@ -109,9 +115,9 @@ spring:
                 validationQuery: SELECT 1 FROM DUAL
     jpa:
         generate-ddl: true
-        database-platform: org.hibernate.dialect.MySQL8Dialect
+        database-platform: org.hibernate.dialect.DmDialect
         hibernate:
-            ddl-auto: none
+            ddl-auto: update
             naming:
                 implicit-strategy: org.hibernate.boot.model.naming.ImplicitNamingStrategyLegacyHbmImpl
                 physical-strategy: org.hibernate.boot.model.naming.PhysicalNamingStrategyStandardImpl
@@ -119,8 +125,8 @@ spring:
         properties:
             hibernate:
                 hbm2ddl:
-                    auto: none
-                dialect: org.hibernate.dialect.MySQL8Dialect
+                    auto: update
+                dialect: org.hibernate.dialect.DmDialect
                 jdbc:
                     batch_size: 100
                 show_sql: true
@@ -178,10 +184,12 @@ y9:
             #etcdAddress: http://localhost:2379  #有多个时逗号分隔
             apiBasePackages: net.risesoft #有多个时逗号分隔
         file:
-            base64FileName: false
-            encryptionFileContent: false
-            #privateKey: 
-            #publicKey: 
+            base64FileName: true
+            encryptionFileContent: true
+            #privateKey:
+            #publicKey:
+            rest:
+                fileManagerUrl: http://localhost:7055/fileManager
             ftp:
                 enabled: false
                 host: localhost
@@ -214,8 +222,8 @@ y9:
             packagesToScanRepositoryPublic: net.risesoft.y9public.repository
             packagesToScanRepositoryTenant: net.risesoft.repository
         liquibase:
-            tenant-enabled: true
-            public-enabled: true
+            tenant-enabled: false
+            public-enabled: false
         multi-tenant:
             # kafka, db
             event-source: db
