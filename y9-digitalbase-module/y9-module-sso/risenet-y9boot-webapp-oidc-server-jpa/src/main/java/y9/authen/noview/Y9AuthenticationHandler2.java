@@ -7,6 +7,7 @@ import java.util.Map;
 
 import javax.security.auth.login.AccountNotFoundException;
 import javax.security.auth.login.FailedLoginException;
+import javax.servlet.http.HttpServletRequest;
 
 import org.apache.commons.lang3.StringUtils;
 import org.apereo.cas.authentication.AbstractAuthenticationHandler;
@@ -17,16 +18,22 @@ import org.apereo.cas.authentication.PreventedException;
 import org.apereo.cas.authentication.principal.PrincipalFactoryUtils;
 import org.apereo.cas.authentication.principal.Service;
 import org.apereo.cas.services.ServicesManager;
+import org.apereo.cas.web.support.WebUtils;
 
 import com.google.common.collect.Lists;
 
 import lombok.val;
+import lombok.extern.slf4j.Slf4j;
 import y9.entity.Y9User;
 import y9.service.Y9LoginUserService;
 import y9.service.Y9UserService;
+import y9.util.Y9Context;
+import y9.util.Y9MessageDigest;
 import y9.util.common.AESUtil;
 import y9.util.common.Base64Util;
+import y9.util.common.RSAUtil;
 
+@Slf4j
 public class Y9AuthenticationHandler2 extends AbstractAuthenticationHandler {
     private final Y9UserService y9UserService;
     private final Y9LoginUserService y9LoginUserService;
@@ -44,11 +51,31 @@ public class Y9AuthenticationHandler2 extends AbstractAuthenticationHandler {
         String tenantShortName = riseCredential.getTenantShortName();
         String deptId = riseCredential.getDeptId();
         String noLoginScreen = riseCredential.getNoLoginScreen();
+        String pwdEcodeType = riseCredential.getPwdEcodeType();
 
         String base64Username = riseCredential.getUsername();
+        String encryptedBase64Password = riseCredential.getPassword();
+        String base64Password;
         String plainUsername;
+        String plainPassword;
         Y9User y9User;
         try {
+            if (StringUtils.isNotBlank(pwdEcodeType)) {
+                String rsaPrivateKey = Y9Context.getProperty("y9.encryptionRsaPrivateKey");
+                if (null != rsaPrivateKey) {
+                    try {
+                        base64Password = RSAUtil.privateDecrypt(encryptedBase64Password, rsaPrivateKey);
+                    } catch (Exception e) {
+                        LOGGER.warn("解密失败", e);
+                        throw new FailedLoginException("认证失败：加密公私钥不匹配!");
+                    }
+                } else {
+                    throw new FailedLoginException("认证失败：解密私钥未配置!");
+                }
+            } else {
+                base64Password = encryptedBase64Password;
+            }
+            plainPassword = Base64Util.decode(base64Password, "Unicode");
             plainUsername = Base64Util.decode(base64Username, "Unicode");
 
             if (plainUsername.contains("&")) {
@@ -57,26 +84,35 @@ public class Y9AuthenticationHandler2 extends AbstractAuthenticationHandler {
 
                 plainUsername = plainUsername.substring(0, plainUsername.indexOf("&"));
 
-                updateCredential(riseCredential, plainUsername, tenantShortName);
+                updateCredential(riseCredential, plainUsername, plainPassword, tenantShortName);
 
                 List<Y9User> agentUsers = getAgentUsers(deptId, agentTenantShortName, agentUserName);
                 if (agentUsers == null || agentUsers.isEmpty()) {
                     throw new AccountNotFoundException("没有找到这个代理用户。");
                 } else {
                     y9User = agentUsers.get(0);
+                    String hashed = y9User.getPassword();
+                    if (!Y9MessageDigest.bcryptMatch(plainPassword, hashed)) {
+                        throw new FailedLoginException("代理用户密码错误。");
+                    }
                 }
 
             } else {
-                updateCredential(riseCredential, plainUsername, tenantShortName);
+
+                updateCredential(riseCredential, plainUsername, plainPassword, tenantShortName);
 
                 List<Y9User> users = getUsers(loginType, deptId, tenantShortName, plainUsername);
                 if (users == null || users.isEmpty()) {
                     throw new AccountNotFoundException("没有找到这个用户。");
                 } else if ("qrCode".equals(loginType) || "true".equals(noLoginScreen)) {
                     y9User = users.get(0);
-                    updateCredential(riseCredential, y9User.getLoginName(), y9User.getTenantShortName());
+                    updateCredential(riseCredential, y9User.getLoginName(), y9User.getPassword(), y9User.getTenantShortName());
                 } else {
                     y9User = users.get(0);
+                    String hashed = y9User.getPassword();
+                    if (!Y9MessageDigest.bcryptMatch(plainPassword, hashed)) {
+                        throw new FailedLoginException("用户密码错误。");
+                    }
                 }
             }
 
@@ -84,7 +120,6 @@ public class Y9AuthenticationHandler2 extends AbstractAuthenticationHandler {
 
             val attributes = buildAttributes(riseCredential, y9User);
             val principal = this.principalFactory.createPrincipal(plainUsername, attributes);
-            // val principal = this.principalFactory.createPrincipal(plainUsername);
             return new DefaultAuthenticationHandlerExecutionResult(this, riseCredential, principal);
         } catch (GeneralSecurityException e) {
             y9LoginUserService.save(riseCredential, "false", "登录失败");
@@ -96,9 +131,13 @@ public class Y9AuthenticationHandler2 extends AbstractAuthenticationHandler {
 
     }
 
-    private static void updateCredential(Y9Credential riseCredential, String username, String tenantShortName) {
+    private static void updateCredential(Y9Credential riseCredential, String username, String password, String tenantShortName) {
+        HttpServletRequest request = WebUtils.getHttpServletRequestFromExternalWebflowContext();
         riseCredential.setUsername(username);
+        riseCredential.setPassword(password);
         riseCredential.setTenantShortName(tenantShortName);
+        riseCredential.setUserAgent(request.getHeader("User-Agent"));
+        riseCredential.setClientIp(Y9Context.getIpAddr(request));
     }
 
     private List<Y9User> getAgentUsers(String deptId, String agentTenantShortName, String agentUserName) {
@@ -134,8 +173,6 @@ public class Y9AuthenticationHandler2 extends AbstractAuthenticationHandler {
                 return List.of();
             }
         }
-
-        // users = y9UserDao.findByUserIdAndOriginal(userId, 1);
 
         if (StringUtils.isNotBlank(deptId)) {
             // 一人多账号

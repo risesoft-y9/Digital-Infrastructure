@@ -9,7 +9,7 @@ import org.springframework.stereotype.Component;
 import y9.service.Y9LoginUserService;
 import y9.service.Y9UserService;
 
-@Component
+//@Component
 public class Y9AuthenticationEventExecutionPlanConfigurer2 implements AuthenticationEventExecutionPlanConfigurer {
 
     @Autowired

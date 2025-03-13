@@ -16,50 +16,50 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 public class Y9WebflowAction extends AbstractNonInteractiveCredentialsAction {
 
-	public Y9WebflowAction(final CasDelegatingWebflowEventResolver initialAuthenticationAttemptWebflowEventResolver,
-			final CasWebflowEventResolver serviceTicketRequestWebflowEventResolver,
-			final AdaptiveAuthenticationPolicy adaptiveAuthenticationPolicy) {
-		super(initialAuthenticationAttemptWebflowEventResolver, serviceTicketRequestWebflowEventResolver,
-				adaptiveAuthenticationPolicy);
-	}
+    public Y9WebflowAction(final CasDelegatingWebflowEventResolver initialAuthenticationAttemptWebflowEventResolver, final CasWebflowEventResolver serviceTicketRequestWebflowEventResolver,
+        final AdaptiveAuthenticationPolicy adaptiveAuthenticationPolicy) {
+        super(initialAuthenticationAttemptWebflowEventResolver, serviceTicketRequestWebflowEventResolver, adaptiveAuthenticationPolicy);
+    }
 
-	@Override
-	protected Credential constructCredentialsFromRequest(final RequestContext requestContext) {
-		try {
-			final HttpServletRequest request = WebUtils.getHttpServletRequestFromExternalWebflowContext(requestContext);
-			String username = request.getParameter("username");
-			String noLoginScreen = request.getParameter("noLoginScreen");
-			String loginType = request.getParameter("loginType");
-			String deptId = request.getParameter("deptId");
-			String positionId = request.getParameter("positionId");
-			String tenantShortName = request.getParameter("tenantShortName");
-			String screenDimension = request.getParameter("screenDimension");
-			String systemName = request.getParameter("systemName");
+    @Override
+    protected Credential constructCredentialsFromRequest(final RequestContext requestContext) {
+        try {
+            final HttpServletRequest request = WebUtils.getHttpServletRequestFromExternalWebflowContext(requestContext);
+            String username = request.getParameter("username");
+            String password = request.getParameter("password");
+            String noLoginScreen = request.getParameter("noLoginScreen");
+            String loginType = request.getParameter("loginType");
+            String deptId = request.getParameter("deptId");
+            String positionId = request.getParameter("positionId");
+            String tenantShortName = request.getParameter("tenantShortName");
+            String screenDimension = request.getParameter("screenDimension");
+            String systemName = request.getParameter("systemName");
+            String pwdEcodeType = request.getParameter("pwdEcodeType");
 
-			Y9Credential c = new Y9Credential();
-			c.setUsername(username);
-			c.setNoLoginScreen(noLoginScreen);
-			c.setLoginType(loginType);
-			c.setDeptId(deptId);
-			c.setPositionId(positionId);
-			c.setTenantShortName(tenantShortName);
-			c.setScreenDimension(screenDimension);
-			c.setSystemName(systemName);
-			
-			c.setUsername("systemManager");
+            Y9Credential c = new Y9Credential();
+            c.setUsername(username);
+            c.setPassword(password);
+            c.setPwdEcodeType(pwdEcodeType);
+            c.setNoLoginScreen(noLoginScreen);
+            c.setLoginType(loginType);
+            c.setDeptId(deptId);
+            c.setPositionId(positionId);
+            c.setTenantShortName(tenantShortName);
+            c.setScreenDimension(screenDimension);
+            c.setSystemName(systemName);
+
+            /*c.setUsername(Base64Util.encode("systemManager", "Unicode"));
+            c.setPassword(Base64Util.encode("Risesoft@2025", "Unicode"));
             c.setNoLoginScreen("true");
             c.setLoginType("loginName");
             c.setDeptId("11111111-1111-1111-1111-111111111115");
-            //c.setPositionId(positionId);
-            c.setTenantShortName("default");
-            //c.setScreenDimension(screenDimension);
-            //c.setSystemName(systemName);
+            c.setTenantShortName("default");*/
 
-			LOGGER.debug("Y9Credential found in HttpServletRequest." + c);
-			return c;
-		} catch (final Exception e) {
-			LoggingUtils.warn(LOGGER, e);
-		}
-		return null;
-	}
+            LOGGER.debug("Y9Credential found in HttpServletRequest." + c);
+            return c;
+        } catch (final Exception e) {
+            LoggingUtils.warn(LOGGER, e);
+        }
+        return null;
+    }
 }

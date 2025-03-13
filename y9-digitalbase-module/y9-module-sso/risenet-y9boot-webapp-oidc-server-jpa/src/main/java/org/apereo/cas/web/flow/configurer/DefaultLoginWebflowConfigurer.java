@@ -1,4 +1,4 @@
-package org.apereo.cas.web.flow2.configurer;
+package org.apereo.cas.web.flow.configurer;
 
 import java.util.Map;
 

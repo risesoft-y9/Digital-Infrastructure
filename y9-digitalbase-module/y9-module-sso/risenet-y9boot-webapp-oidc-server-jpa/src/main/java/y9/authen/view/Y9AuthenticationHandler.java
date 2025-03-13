@@ -29,7 +29,6 @@ import com.google.common.collect.Lists;
 
 import lombok.val;
 import lombok.extern.slf4j.Slf4j;
-
 import y9.entity.Y9User;
 import y9.service.Y9LoginUserService;
 import y9.service.Y9UserService;
@@ -44,31 +43,24 @@ public class Y9AuthenticationHandler extends AbstractAuthenticationHandler {
     private final Y9UserService y9UserService;
     private final Y9LoginUserService y9LoginUserService;
 
-    public Y9AuthenticationHandler(String name, ServicesManager servicesManager, Integer order,
-        Y9UserService y9UserService, Y9LoginUserService y9LoginUserService) {
+    public Y9AuthenticationHandler(String name, ServicesManager servicesManager, Integer order, Y9UserService y9UserService, Y9LoginUserService y9LoginUserService) {
         super(name, servicesManager, PrincipalFactoryUtils.newPrincipalFactory(), order);
         this.y9UserService = y9UserService;
         this.y9LoginUserService = y9LoginUserService;
     }
 
     @Override
-    public AuthenticationHandlerExecutionResult authenticate(Credential credential, Service service)
-        throws GeneralSecurityException, PreventedException {
+    public AuthenticationHandlerExecutionResult authenticate(Credential credential, Service service) throws GeneralSecurityException, PreventedException {
         RememberMeUsernamePasswordCredential riseCredential = (RememberMeUsernamePasswordCredential)credential;
 
         Map<String, Object> customFields = riseCredential.getCustomFields();
-        HttpServletRequest request =
-            ((ServletRequestAttributes)RequestContextHolder.currentRequestAttributes()).getRequest();
+        HttpServletRequest request = ((ServletRequestAttributes)RequestContextHolder.currentRequestAttributes()).getRequest();
 
-        String loginType =
-            Optional.ofNullable((String)customFields.get("loginType")).orElse(request.getParameter("loginType"));
-        String tenantShortName = Optional.ofNullable((String)customFields.get("tenantShortName"))
-            .orElse(request.getParameter("tenantShortName"));
+        String loginType = Optional.ofNullable((String)customFields.get("loginType")).orElse(request.getParameter("loginType"));
+        String tenantShortName = Optional.ofNullable((String)customFields.get("tenantShortName")).orElse(request.getParameter("tenantShortName"));
         String deptId = Optional.ofNullable((String)customFields.get("deptId")).orElse(request.getParameter("deptId"));
-        String pwdEcodeType =
-            Optional.ofNullable((String)customFields.get("pwdEcodeType")).orElse(request.getParameter("pwdEcodeType"));
-        String noLoginScreen = Optional.ofNullable((String)customFields.get("noLoginScreen"))
-            .orElse(request.getParameter("noLoginScreen"));
+        String pwdEcodeType = Optional.ofNullable((String)customFields.get("pwdEcodeType")).orElse(request.getParameter("pwdEcodeType"));
+        String noLoginScreen = Optional.ofNullable((String)customFields.get("noLoginScreen")).orElse(request.getParameter("noLoginScreen"));
 
         String base64Username = riseCredential.getUsername();
         String encryptedBase64Password = riseCredential.toPassword();
@@ -123,8 +115,7 @@ public class Y9AuthenticationHandler extends AbstractAuthenticationHandler {
                     throw new AccountNotFoundException("没有找到这个用户。");
                 } else if ("qrCode".equals(loginType) || "true".equals(noLoginScreen)) {
                     y9User = users.get(0);
-                    updateCredential(riseCredential, y9User.getLoginName(), y9User.getPassword(),
-                        y9User.getTenantShortName());
+                    updateCredential(riseCredential, y9User.getLoginName(), y9User.getPassword(), y9User.getTenantShortName());
                 } else {
                     y9User = users.get(0);
                     String hashed = y9User.getPassword();
@@ -150,8 +141,7 @@ public class Y9AuthenticationHandler extends AbstractAuthenticationHandler {
 
     }
 
-    private static void updateCredential(RememberMeUsernamePasswordCredential riseCredential, String username,
-        String password, String tenantShortName) {
+    private static void updateCredential(RememberMeUsernamePasswordCredential riseCredential, String username, String password, String tenantShortName) {
         riseCredential.setUsername(username);
         riseCredential.assignPassword(password);
         Map<String, Object> customFields = riseCredential.getCustomFields();
@@ -194,8 +184,7 @@ public class Y9AuthenticationHandler extends AbstractAuthenticationHandler {
         if (StringUtils.isNotBlank(deptId)) {
             return y9UserService.findByTenantShortNameAndMobileAndParentId(agentTenantShortName, agentUserName, deptId);
         } else {
-            return y9UserService.findByTenantShortNameAndLoginNameAndOriginal(agentTenantShortName, agentUserName,
-                Boolean.TRUE);
+            return y9UserService.findByTenantShortNameAndLoginNameAndOriginal(agentTenantShortName, agentUserName, Boolean.TRUE);
         }
     }
 
@@ -212,8 +201,7 @@ public class Y9AuthenticationHandler extends AbstractAuthenticationHandler {
             if (StringUtils.isNotBlank(deptId)) {
                 return y9UserService.findByTenantShortNameAndLoginNameAndParentId(tenantShortName, username, deptId);
             } else {
-                return y9UserService.findByTenantShortNameAndLoginNameAndOriginal(tenantShortName, username,
-                    Boolean.TRUE);
+                return y9UserService.findByTenantShortNameAndLoginNameAndOriginal(tenantShortName, username, Boolean.TRUE);
             }
         }
 
@@ -236,8 +224,7 @@ public class Y9AuthenticationHandler extends AbstractAuthenticationHandler {
         }
     }
 
-    protected Map<String, List<Object>> buildAttributes(RememberMeUsernamePasswordCredential riseCredential,
-        Y9User y9User) {
+    protected Map<String, List<Object>> buildAttributes(RememberMeUsernamePasswordCredential riseCredential, Y9User y9User) {
         String username = riseCredential.getUsername();
         Map<String, Object> customFields = riseCredential.getCustomFields();
         String tenantShortName = (String)customFields.get("tenantShortName");
@@ -268,10 +255,8 @@ public class Y9AuthenticationHandler extends AbstractAuthenticationHandler {
         attributes.put("password", Lists.newArrayList(y9User.getPassword() == null ? "" : y9User.getPassword()));
         attributes.put("original", Lists.newArrayList(y9User.getOriginal() == null ? 1 : y9User.getOriginal()));
         attributes.put("originalId", Lists.newArrayList(y9User.getOriginalId() == null ? "" : y9User.getOriginalId()));
-        attributes.put("globalManager",
-            Lists.newArrayList(y9User.getGlobalManager() != null && y9User.getGlobalManager()));
-        attributes.put("managerLevel",
-            Lists.newArrayList(y9User.getManagerLevel() == null ? 0 : y9User.getManagerLevel()));
+        attributes.put("globalManager", Lists.newArrayList(y9User.getGlobalManager() != null && y9User.getGlobalManager()));
+        attributes.put("managerLevel", Lists.newArrayList(y9User.getManagerLevel() == null ? 0 : y9User.getManagerLevel()));
         attributes.put("roles", Lists.newArrayList(y9User.getRoles() == null ? "" : y9User.getRoles()));
         attributes.put("positions", Lists.newArrayList(y9User.getPositions() == null ? "" : y9User.getPositions()));
 

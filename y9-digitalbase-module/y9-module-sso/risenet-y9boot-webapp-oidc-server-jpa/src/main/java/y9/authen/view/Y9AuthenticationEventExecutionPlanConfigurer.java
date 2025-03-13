@@ -23,8 +23,7 @@ public class Y9AuthenticationEventExecutionPlanConfigurer implements Authenticat
 
     @Override
     public void configureAuthenticationExecutionPlan(AuthenticationEventExecutionPlan plan) throws Exception {
-        Y9AuthenticationHandler handler = new Y9AuthenticationHandler("y9AuthenticationHandler", servicesManager, 0,
-            y9UserService, y9LoginUserService);
+        Y9AuthenticationHandler handler = new Y9AuthenticationHandler("y9AuthenticationHandler", servicesManager, 0, y9UserService, y9LoginUserService);
         plan.registerAuthenticationHandler(handler);
     }
 }

@@ -196,7 +196,7 @@ cas:
         fallbackSystemLocale: true
     view:
         #当service参数为空时，利用defaultRedirectUrl
-        defaultRedirectUrl: http://localhost:7070/home
+        defaultRedirectUrl: http://localhost:7099/oidc/admin/test
         #当defaultRedirectUrl为空、并且service参数为空时，自动计算service
         authorizedServicesOnSuccessfulLogin: true
         custom-login-form-fields:
