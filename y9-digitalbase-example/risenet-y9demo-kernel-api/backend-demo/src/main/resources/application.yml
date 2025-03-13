@@ -11,8 +11,6 @@ y9:
             resource:
                 #是否开启OAuth2认证
                 enabled: true
-                #保存用户在线信息
-                saveOnlineMessage: false
                 #允许基本身份验证
                 allowBasicAuthentication: true
                 #是否允许从请求体参数中获取访问令牌

@@ -67,6 +67,8 @@ public class Y9AuthenticationHandler extends AbstractAuthenticationHandler {
         String deptId = Optional.ofNullable((String)customFields.get("deptId")).orElse(request.getParameter("deptId"));
         String pwdEcodeType =
             Optional.ofNullable((String)customFields.get("pwdEcodeType")).orElse(request.getParameter("pwdEcodeType"));
+        String noLoginScreen = Optional.ofNullable((String)customFields.get("noLoginScreen"))
+            .orElse(request.getParameter("noLoginScreen"));
 
         String base64Username = riseCredential.getUsername();
         String encryptedBase64Password = riseCredential.toPassword();
@@ -119,7 +121,7 @@ public class Y9AuthenticationHandler extends AbstractAuthenticationHandler {
                 List<Y9User> users = getUsers(loginType, deptId, tenantShortName, plainUsername);
                 if (users == null || users.isEmpty()) {
                     throw new AccountNotFoundException("没有找到这个用户。");
-                } else if ("qrCode".equals(loginType)) {
+                } else if ("qrCode".equals(loginType) || "true".equals(noLoginScreen)) {
                     y9User = users.get(0);
                     updateCredential(riseCredential, y9User.getLoginName(), y9User.getPassword(),
                         y9User.getTenantShortName());

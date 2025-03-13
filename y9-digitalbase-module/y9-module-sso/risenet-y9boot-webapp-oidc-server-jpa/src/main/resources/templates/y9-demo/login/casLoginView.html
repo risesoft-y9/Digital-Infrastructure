@@ -39,15 +39,15 @@
         <form id="fm1" method="post" th:object="${credential}">
             <div class="login_fields__user">
                 <div class="icon"><img alt="" th:src="@{/y9static/y9new/img/user_icon_copy.png}"/></div>
-                <input autocomplete="off" id="username" oninput="inputClick()"
+                <input autocomplete="off" tabindex="1" id="username" oninput="inputClick()"
                        placeholder="用户名" type="text" value=""/>
                 <div class="validation"><img alt="" th:src="@{/y9static/y9new/img/tick.png}"/></div>
             </div>
             <div class="login_fields__password">
                 <div class="icon"><img alt="" th:src="@{/y9static/y9new/img/lock_icon_copy.png}"/></div>
-                <input autocomplete="off" htmlescape="true" id="password" onfocus="this.type='password'"
+                <input autocomplete="off" tabindex="2" htmlescape="true" id="password"
                        placeholder="请输入您的密码"
-                       type="text"/>
+                       type="password"/>
                 <div class="validation"><img alt="" th:src="@{/y9static/y9new/img/tick.png}"/></div>
             </div>
             <div class="alert alert-danger" th:if="${#fields.hasErrors('*')}">
@@ -56,7 +56,7 @@
             <!-- 表单隐藏数据块开始 -->
             <input type="hidden" id="username1" name="username"/>
             <input type="hidden" id="password1" name="password"/>
-            <input type="hidden" id="tenantShortName" name="tenantShortName"/>
+            <input type="hidden" id="tenantShortName" name="tenantShortName" value="demo"/>
             <input id="loginType" name="loginType" type="hidden" value="loginName"/>
             <input id="screenDimension" name="screenDimension" type="hidden" value=""/>
             <input id="pwdEcodeType" name="pwdEcodeType" type="hidden" value=""/>
@@ -68,7 +68,7 @@
         <!--点选验证码  -->
         <div id="mpanel6"></div>
         <div class="login_fields__submit">
-            <input type="button" value="登录"/>
+            <input type="button" tabindex="3" value="登录"/>
         </div>
     </div>
     <div></div>
