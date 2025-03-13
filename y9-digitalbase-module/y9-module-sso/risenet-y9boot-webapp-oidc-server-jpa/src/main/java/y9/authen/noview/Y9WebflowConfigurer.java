@@ -22,7 +22,7 @@ public class Y9WebflowConfigurer extends AbstractCasWebflowConfigurer {
         if (flow != null) {
             val currentStartState = getStartState(flow).getId();
             String condition = "requestParameters.noLoginScreen != null && requestParameters.noLoginScreen == 'true'";
-            condition = "true";
+            //condition = "true";
             val decisionState = createDecisionState(flow, "selectFirstAction", condition, "nonInteractiveLoginState", currentStartState);            
             val actionState = createActionState(flow, "nonInteractiveLoginState", createEvaluateAction("y9WebflowAction"));
             

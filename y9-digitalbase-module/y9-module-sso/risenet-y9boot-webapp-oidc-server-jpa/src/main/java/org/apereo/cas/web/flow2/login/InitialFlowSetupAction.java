@@ -1,4 +1,4 @@
-package org.apereo.cas.web.flow.login;
+package org.apereo.cas.web.flow2.login;
 
 import java.util.List;
 import java.util.Optional;

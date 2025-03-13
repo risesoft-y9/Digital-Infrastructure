@@ -26,6 +26,10 @@ public class Y9WebflowAction extends AbstractNonInteractiveCredentialsAction {
         try {
             final HttpServletRequest request = WebUtils.getHttpServletRequestFromExternalWebflowContext(requestContext);
             String username = request.getParameter("username");
+            if (username == null) {
+                return null;
+            }
+
             String password = request.getParameter("password");
             String noLoginScreen = request.getParameter("noLoginScreen");
             String loginType = request.getParameter("loginType");

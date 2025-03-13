@@ -9,7 +9,7 @@ import org.springframework.stereotype.Component;
 import y9.service.Y9LoginUserService;
 import y9.service.Y9UserService;
 
-//@Component
+@Component
 public class Y9AuthenticationEventExecutionPlanConfigurer2 implements AuthenticationEventExecutionPlanConfigurer {
 
     @Autowired
@@ -23,7 +23,7 @@ public class Y9AuthenticationEventExecutionPlanConfigurer2 implements Authentica
 
     @Override
     public void configureAuthenticationExecutionPlan(AuthenticationEventExecutionPlan plan) throws Exception {
-        Y9AuthenticationHandler2 handler = new Y9AuthenticationHandler2("y9AuthenticationHandler2", servicesManager, 1, y9UserService, y9LoginUserService);
+        Y9AuthenticationHandler2 handler = new Y9AuthenticationHandler2("y9AuthenticationHandler2", servicesManager, 0, y9UserService, y9LoginUserService);
         plan.registerAuthenticationHandler(handler);
     }
 }

@@ -233,7 +233,7 @@ cas:
         removeDescendantTickets: true
         confirmLogout: false
     slo:
-        asynchronous: false  
+        asynchronous: false
 logging:
     level:
         "[org.apereo.cas]": info

@@ -17,7 +17,7 @@ import org.springframework.webflow.engine.builder.support.FlowBuilderServices;
 import org.springframework.webflow.execution.Action;
 
 @EnableConfigurationProperties(CasConfigurationProperties.class)
-//@AutoConfiguration
+@AutoConfiguration
 public class Y9WebflowExecutionPlanConfig {
 
 	@Bean
