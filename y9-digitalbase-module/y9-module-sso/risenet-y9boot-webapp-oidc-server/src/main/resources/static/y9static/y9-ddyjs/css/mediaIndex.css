@@ -1,0 +1,64 @@
+@media screen and (max-width: 1290px) {
+    body .login {
+        margin-left: 120px;
+        margin-top: -147px;
+    }
+
+    body .login_form .login_title {
+        margin-bottom: 20px;
+
+    }
+
+    body .login_fields__user, body .login_fields__password {
+        padding-bottom: 20px;
+    }
+
+}
+
+@media screen and (min-width: 1291px) and (max-width: 1399px) {
+
+    body .login {
+        margin-left: 220px;
+        margin-top: -130px;
+    }
+
+    body .login_form .login_title {
+        margin-bottom: 30px;
+
+    }
+}
+
+@media screen and (min-width: 1399px) and (max-width: 1590px) {
+
+    body .login {
+        margin-left: 250px;
+        margin-top: -108px;
+    }
+
+}
+
+@media screen and (min-width: 1590px) and (max-width: 1890px) {
+    body .login {
+        margin-left: 315px;
+        margin-top: -100px;
+    }
+}
+
+@media screen and (min-width: 1670px) and (max-width: 1890px) {
+    body .login {
+        /*margin-top: 4%;*/
+    }
+}
+
+@media screen and (min-width: 2040px) {
+    body .login {
+        /*margin-top: 5%;*/
+    }
+}
+
+@media screen and (min-width: 2500px) {
+    body .login {
+        /*margin-top: 6%;*/
+    }
+}
+
