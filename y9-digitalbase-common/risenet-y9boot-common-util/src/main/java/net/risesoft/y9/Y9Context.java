@@ -61,7 +61,8 @@ public class Y9Context implements ApplicationContextAware, EnvironmentAware, Ser
      *
      * @param name bean名字
      * @return String[] bean定义中别名
-     * @throws NoSuchBeanDefinitionException if there is no bean with the specified name
+     * @throws org.springframework.beans.factory.NoSuchBeanDefinitionException if there is no bean with the specified
+     *             name
      */
     public static String[] getAliases(String name) throws NoSuchBeanDefinitionException {
         return applicationContext.getAliases(name);
@@ -74,7 +75,7 @@ public class Y9Context implements ApplicationContextAware, EnvironmentAware, Ser
      * @param clz 类型
      * @return T an instance of the single bean matching the required type
      * @param <T> type the bean must match; can be an interface or superclass
-     * @throws BeansException if the bean could not be obtained
+     * @throws org.springframework.beans.BeansException if the bean could not be obtained
      * @see BeansException
      */
 
@@ -89,7 +90,7 @@ public class Y9Context implements ApplicationContextAware, EnvironmentAware, Ser
      * @param name bean名字
      * @return T 一个以所给名字注册的bean的实例
      * @param <T> 返回类型
-     * @throws BeansException if the bean could not be obtained
+     * @throws org.springframework.beans.BeansException if the bean could not be obtained
      */
     @SuppressWarnings("unchecked")
     public static <T> T getBean(String name) throws BeansException {
@@ -220,7 +221,8 @@ public class Y9Context implements ApplicationContextAware, EnvironmentAware, Ser
      * @param name bean名字
      * @return Class the name of the bean to query
      *
-     * @throws NoSuchBeanDefinitionException if there is no bean with the specified name
+     * @throws org.springframework.beans.factory.NoSuchBeanDefinitionException if there is no bean with the specified
+     *             name
      */
     public static Class<?> getType(String name) throws NoSuchBeanDefinitionException {
         return applicationContext.getType(name);
@@ -236,7 +238,8 @@ public class Y9Context implements ApplicationContextAware, EnvironmentAware, Ser
      *
      * @param name the name of the bean to query
      * @return boolean whether this bean corresponds to a singleton instance
-     * @throws NoSuchBeanDefinitionException if there is no bean with the specified name
+     * @throws org.springframework.beans.factory.NoSuchBeanDefinitionException if there is no bean with the specified
+     *             name
      */
     public static boolean isSingleton(String name) throws NoSuchBeanDefinitionException {
         return applicationContext.isSingleton(name);

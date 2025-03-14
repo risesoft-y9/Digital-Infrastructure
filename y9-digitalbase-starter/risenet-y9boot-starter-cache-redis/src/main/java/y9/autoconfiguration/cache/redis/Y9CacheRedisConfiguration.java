@@ -45,7 +45,7 @@ public class Y9CacheRedisConfiguration implements CachingConfigurer {
     @Bean
     public CacheManager cacheManager() {
         RedisCacheManagerBuilder builder =
-                RedisCacheManager.builder(redisConnectionFactory).cacheDefaults(determineConfiguration(resourceLoader));
+            RedisCacheManager.builder(redisConnectionFactory).cacheDefaults(determineConfiguration(resourceLoader));
         List<String> cacheNames = this.cacheProperties.getCacheNames();
         if (!cacheNames.isEmpty()) {
             builder.initialCacheNames(new LinkedHashSet<>(cacheNames));
@@ -57,7 +57,7 @@ public class Y9CacheRedisConfiguration implements CachingConfigurer {
         Redis redisProperties = this.cacheProperties.getRedis();
         RedisCacheConfiguration config = RedisCacheConfiguration.defaultCacheConfig();
         config = config.serializeValuesWith(
-                SerializationPair.fromSerializer(new JdkSerializationRedisSerializer(resourceLoader.getClassLoader())));
+            SerializationPair.fromSerializer(new JdkSerializationRedisSerializer(resourceLoader.getClassLoader())));
         if (redisProperties.getTimeToLive() != null) {
             config = config.entryTtl(redisProperties.getTimeToLive());
         }

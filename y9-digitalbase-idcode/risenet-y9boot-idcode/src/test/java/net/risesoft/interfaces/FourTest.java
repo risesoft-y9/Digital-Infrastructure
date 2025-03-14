@@ -176,14 +176,14 @@ public class FourTest {
     @DisplayName("【407】注册/备案非产品品类IDcode码")
     public void testM407() {
         /**
-         * 有形资产用途ID codeUseId: 60 {@link net.risesoft.interfaces.TwoTest#testM201()}
+         * 员工/职员名片用途ID codeUseId: 73 {@link net.risesoft.interfaces.TwoTest#testM202()}
          */
-        String codeUseId = "60";
+        String codeUseId = "73";
         Integer codePayType = CodePayTypeEnum.REGISTER.getValue();
         /**
          * 员工/职员名片 品类ID-industryCategoryId: 10127 品类码号-categoryCode: 10000000
          */
-        Integer industryCategoryId = 10166;
+        Integer industryCategoryId = 10127;
         String categoryCode = "10000000";
         String personId = "1634534857272987648";
         String personName = "统一码测试";

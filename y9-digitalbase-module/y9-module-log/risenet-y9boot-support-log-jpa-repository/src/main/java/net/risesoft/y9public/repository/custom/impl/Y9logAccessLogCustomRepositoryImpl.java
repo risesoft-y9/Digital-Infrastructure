@@ -24,6 +24,7 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.data.domain.Sort.Direction;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -357,7 +358,8 @@ public class Y9logAccessLogCustomRepositoryImpl implements Y9logAccessLogCustomR
     public Y9Page<AccessLog> pageByCondition(LogInfoModel searchDto, String startTime, String endTime, Integer page,
         Integer rows) {
 
-        Pageable pageable = PageRequest.of((page < 1) ? 0 : page - 1, rows, Direction.DESC, Y9LogSearchConsts.LOG_TIME);
+        Pageable pageable =
+            PageRequest.of((page < 1) ? 0 : page - 1, rows, Sort.Direction.DESC, Y9LogSearchConsts.LOG_TIME);
 
         Page<Y9logAccessLog> pageInfo = y9logAccessLogRepository.findAll(new Specification<Y9logAccessLog>() {
             private static final long serialVersionUID = -2210269486911993525L;
@@ -417,7 +419,8 @@ public class Y9logAccessLogCustomRepositoryImpl implements Y9logAccessLogCustomR
 
     @Override
     public Y9Page<AccessLog> pageByOperateType(String operateType, Integer page, Integer rows) {
-        Pageable pageable = PageRequest.of((page < 1) ? 0 : page - 1, rows, Direction.DESC, Y9LogSearchConsts.LOG_TIME);
+        Pageable pageable =
+            PageRequest.of((page < 1) ? 0 : page - 1, rows, Sort.Direction.DESC, Y9LogSearchConsts.LOG_TIME);
 
         Page<Y9logAccessLog> pageInfo = y9logAccessLogRepository.findByOperateType(operateType, pageable);
 

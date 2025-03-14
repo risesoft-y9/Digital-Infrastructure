@@ -289,7 +289,7 @@ public class Y9logUserLoginInfoCustomRepositoryImpl implements Y9logUserLoginInf
         } catch (ElasticsearchException e) {
             LOGGER.warn(e.getMessage(), e);
         }
-        return null;
+        return Y9Page.failure(page, page, startIndex, null, tenantId, endIndex);
     }
 
     @Override

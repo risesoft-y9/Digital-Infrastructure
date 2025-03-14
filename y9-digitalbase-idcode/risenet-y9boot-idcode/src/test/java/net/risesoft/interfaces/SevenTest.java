@@ -59,8 +59,6 @@ public class SevenTest {
     @DisplayName("【602】修改解析地址")
     public void testM602() {
         String idCode = Config.MAIN_CODE;
-        String gotoUrl = "";
-        String sampleUrl = "";
         String regId = "";
         Result result = Seven.m602(idCode, Config.GOTO_URL, Config.SAMPLE_URL, regId);
         assertEquals(result.getResultCode(), 1);

@@ -60,8 +60,7 @@ public class Y9logMappingCustomRepositoryImpl implements Y9logMappingCustomRepos
         query.setTrackTotalHits(true);
         SearchHits<Y9logMapping> search = elasticsearchOperations.search(query, Y9logMapping.class);
         List<Y9logMapping> list = search.stream().map(SearchHit::getContent).collect(Collectors.toList());
-        Page<Y9logMapping> pageResult = new PageImpl<>(list, pageable, search.getTotalHits());
-        return pageResult;
+        return new PageImpl<>(list, pageable, search.getTotalHits());
     }
 
 }

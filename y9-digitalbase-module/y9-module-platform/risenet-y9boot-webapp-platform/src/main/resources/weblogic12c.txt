@@ -1,0 +1,5 @@
+ disabled the JAX-RS support in the server by removing $ORACLE_HOME/wlserver/modules/weblogic.jaxrs.integration.jar
+ 
+ 也可以将weblogic.jaxrs.integration.jar修改为：weblogic.jaxrs.integration.jar.bak，这样weblogic启动时找不到这个类，也就不会加载了。
+ 
+还有一个方法是先部署sso工程，然后将启动次序改成1，然后再部署platform

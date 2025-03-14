@@ -20,6 +20,7 @@ import net.risesoft.y9.configuration.feature.elasticsearch.Y9ElasticProperties;
 public class Y9ElasticsearchConfiguration {
 
     public Y9ElasticsearchConfiguration() {
+        LOGGER.info("Y9ElasticsearchConfiguration init. ");
         System.setProperty("es.set.netty.runtime.available.processors", "false");
     }
 }

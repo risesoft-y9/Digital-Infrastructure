@@ -11,6 +11,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.TimeZone;
 import java.util.stream.Collectors;
 
 import org.apache.commons.collections.CollectionUtils;
@@ -233,9 +234,9 @@ public class Y9logAccessLogCustomRepositoryImpl implements Y9logAccessLogCustomR
             map.put("value", longList);
             map.put("number", strList.size());
             return map;
-        } catch (ElasticsearchException e1) {
-            LOGGER.error(e1.getMessage(), e1);
-            return null;
+        } catch (ElasticsearchException e) {
+            LOGGER.error(e.getMessage(), e);
+            return Collections.emptyMap();
         }
     }
 
@@ -338,27 +339,35 @@ public class Y9logAccessLogCustomRepositoryImpl implements Y9logAccessLogCustomR
     @Override
     public List<String> listAccessLog(String startTime, String endTime, String loginName, String tenantId) {
         List<String> strList = new ArrayList<>();
+        Criteria criteria =
+            new Criteria(Y9LogSearchConsts.USER_NAME).exists().and(Y9LogSearchConsts.USER_NAME).is(loginName);
+        if (tenantId != null) {
+            criteria.subCriteria(new Criteria(Y9LogSearchConsts.TENANT_ID).is(tenantId));
+        }
+        if (StringUtils.isNotBlank(startTime) && StringUtils.isNotBlank(endTime)) {
+            try {
+                Date startDate = DATETIME_FORMAT.parse(startTime);
+                Date endDate = DATETIME_FORMAT.parse(endTime);
+                String start = DATETIME_UTC_FORMAT.format(startDate);
+                String end = DATETIME_UTC_FORMAT.format(endDate);
+                criteria.subCriteria(new Criteria(Y9LogSearchConsts.LOG_TIME).between(start, end));
+            } catch (ParseException e) {
+                LOGGER.warn(e.getMessage(), e);
+            }
+        }
+        Query query = new CriteriaQuery(criteria);
+        query.setTrackTotalHits(true);
         try {
-            Date startDate = DATETIME_FORMAT.parse(startTime);
-            Date endDate = DATETIME_FORMAT.parse(endTime);
+            IndexCoordinates index = IndexCoordinates.of(getCurrentYearIndexName());
 
-            String start = DATETIME_UTC_FORMAT.format(startDate.getTime());
-            String end = DATETIME_UTC_FORMAT.format(endDate.getTime());
-            Criteria criteria = new Criteria(Y9LogSearchConsts.USER_NAME).is(loginName).and(Y9LogSearchConsts.TENANT_ID)
-                .is(tenantId).and(Y9LogSearchConsts.LOGIN_TIME).between(start, end);
-
-            Query query = new CriteriaQuery(criteria);
-            query.setTrackTotalHits(true);
-
-            IndexCoordinates indexs = IndexCoordinates.of(createIndexNames(startTime, endTime));
-
-            SearchHits<Y9logAccessLog> searchHits = elasticsearchOperations.search(query, Y9logAccessLog.class, indexs);
+            SearchHits<Y9logAccessLog> searchHits = elasticsearchOperations.search(query, Y9logAccessLog.class, index);
             List<Y9logAccessLog> list = searchHits.stream().map(SearchHit::getContent).collect(Collectors.toList());
-            list.forEach(log -> {
-                String accesslogjson = Y9JsonUtil.writeValueAsString(log);
+
+            list.forEach(hit -> {
+                String accesslogjson = Y9JsonUtil.writeValueAsString(hit);
                 strList.add(accesslogjson);
             });
-        } catch (ParseException e1) {
+        } catch (ElasticsearchException e1) {
             LOGGER.warn(e1.getMessage(), e1);
         }
         return strList;
@@ -379,7 +388,6 @@ public class Y9logAccessLogCustomRepositoryImpl implements Y9logAccessLogCustomR
                 Date endDate = sdf.parse(eTime);
                 String start = DATETIME_UTC_FORMAT.format(startDate);
                 String end = DATETIME_UTC_FORMAT.format(endDate);
-                System.out.println(start + "   " + end);
                 builder.must(m -> m.range(r -> r.date(
                     d -> d.field(Y9LogSearchConsts.LOG_TIME).from(start).to(end).format("yyyy-MM-dd'T'HH:mm:ss'Z'"))));
             } catch (ParseException e) {
@@ -468,18 +476,14 @@ public class Y9logAccessLogCustomRepositoryImpl implements Y9logAccessLogCustomR
             startTime = startTime + " 00:00:00";
             endTime = endTime + " 23:59:59";
             long startDate = 0;
-            try {
-                startDate = DATETIME_FORMAT.parse(startTime).getTime();
-            } catch (ParseException e) {
-                throw new RuntimeException(e);
-            }
             long endDate = 0;
             try {
+                startDate = DATETIME_FORMAT.parse(startTime).getTime();
                 endDate = DATETIME_FORMAT.parse(endTime).getTime();
+                criteria.subCriteria(new Criteria(Y9LogSearchConsts.LOG_TIME).between(startDate, endDate));
             } catch (ParseException e) {
-                throw new RuntimeException(e);
+                LOGGER.warn(e.getMessage(), e);
             }
-            criteria.subCriteria(new Criteria(Y9LogSearchConsts.LOG_TIME).between(startDate, endDate));
         }
         Pageable pageable = PageRequest.of((page < 1) ? 0 : page - 1, rows, Direction.DESC, Y9LogSearchConsts.LOG_TIME);
 
@@ -487,7 +491,7 @@ public class Y9logAccessLogCustomRepositoryImpl implements Y9logAccessLogCustomR
         query.setTrackTotalHits(true);
 
         SearchHits<Y9logAccessLog> searchHits = elasticsearchOperations.search(query, Y9logAccessLog.class, index);
-        List<Y9logAccessLog> list = searchHits.stream().map(SearchHit::getContent).collect(Collectors.toList());
+        List<Y9logAccessLog> list = searchHits.stream().map(s -> s.getContent()).collect(Collectors.toList());
         long total = searchHits.getTotalHits();
         int totalPages = (int)total / rows;
         return Y9Page.success(page, total % rows == 0 ? totalPages : totalPages + 1, total,
@@ -563,7 +567,7 @@ public class Y9logAccessLogCustomRepositoryImpl implements Y9logAccessLogCustomR
 
         SearchHits<Y9logAccessLog> searchHits = elasticsearchOperations.search(query, Y9logAccessLog.class, index);
         List<Y9logAccessLog> list = searchHits.stream().map(SearchHit::getContent).collect(Collectors.toList());
-        return new PageImpl<Y9logAccessLog>(list, pageable, searchHits.getTotalHits());
+        return new PageImpl<>(list, pageable, searchHits.getTotalHits());
     }
 
     @Override
@@ -606,7 +610,7 @@ public class Y9logAccessLogCustomRepositoryImpl implements Y9logAccessLogCustomR
 
         SearchHits<Y9logAccessLog> searchHits = elasticsearchOperations.search(query, Y9logAccessLog.class, index);
         List<Y9logAccessLog> list = searchHits.stream().map(SearchHit::getContent).collect(Collectors.toList());
-        return new PageImpl<Y9logAccessLog>(list, pageable, searchHits.getTotalHits());
+        return new PageImpl<>(list, pageable, searchHits.getTotalHits());
     }
 
     @Override
@@ -649,11 +653,14 @@ public class Y9logAccessLogCustomRepositoryImpl implements Y9logAccessLogCustomR
             cal.add(Calendar.MILLISECOND, 999);
             Date endOfTime = cal.getTime();
 
-            String start = DATETIME_UTC_FORMAT.format(startOfTime);
-            String end = DATETIME_UTC_FORMAT.format(endOfTime);
+            FastDateFormat DATETIME_UTC_FORMAT2 =
+                FastDateFormat.getInstance("yyyy-MM-dd'T'HH:mm:ss'Z'", TimeZone.getTimeZone("UTC"));
 
-            LOGGER.info("start:{} end:{}", startOfTime.getTime(), endOfTime.getTime());
-            LOGGER.info("startString:{} endString:{}", start, end);
+            String start = DATETIME_UTC_FORMAT2.format(startOfTime);
+            String end = DATETIME_UTC_FORMAT2.format(endOfTime);
+
+            LOGGER.info("start:{} end:{} fuwuqi:{}", startOfTime.getTime(), endOfTime.getTime());
+            LOGGER.info("startString UTC:{} endString UTC:{}", start, end);
             criteria.subCriteria(new Criteria(Y9LogSearchConsts.LOG_TIME).between(start, end));
         }
 
@@ -665,7 +672,7 @@ public class Y9logAccessLogCustomRepositoryImpl implements Y9logAccessLogCustomR
         IndexCoordinates index = IndexCoordinates.of(createIndexNames(date, null));
         SearchHits<Y9logAccessLog> searchHits = elasticsearchOperations.search(query, Y9logAccessLog.class, index);
         List<Y9logAccessLog> list = searchHits.stream().map(SearchHit::getContent).collect(Collectors.toList());
-        return new PageImpl<Y9logAccessLog>(list, pageable, searchHits.getTotalHits());
+        return new PageImpl<>(list, pageable, searchHits.getTotalHits());
     }
 
     @Override
@@ -718,7 +725,7 @@ public class Y9logAccessLogCustomRepositoryImpl implements Y9logAccessLogCustomR
         IndexCoordinates index = IndexCoordinates.of(createIndexNames(startTime, endTime));
         SearchHits<Y9logAccessLog> searchHits = elasticsearchOperations.search(query, Y9logAccessLog.class, index);
         List<Y9logAccessLog> list = searchHits.stream().map(SearchHit::getContent).collect(Collectors.toList());
-        return new PageImpl<Y9logAccessLog>(list, pageable, searchHits.getTotalHits());
+        return new PageImpl<>(list, pageable, searchHits.getTotalHits());
     }
 
     @Override

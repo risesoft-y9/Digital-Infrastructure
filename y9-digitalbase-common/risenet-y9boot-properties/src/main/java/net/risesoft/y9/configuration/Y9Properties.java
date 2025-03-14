@@ -16,7 +16,7 @@ import net.risesoft.y9.configuration.common.Y9CommonProperties;
  */
 @Getter
 @Setter
-@ConfigurationProperties(prefix = "y9", ignoreInvalidFields = true)
+@ConfigurationProperties(prefix = "y9", ignoreInvalidFields = true, ignoreUnknownFields = true)
 public class Y9Properties {
 
     /** 系统名称 */

@@ -2,6 +2,7 @@ package net.risesoft.y9public.repository.custom.impl;
 
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Collections;
 import java.util.List;
 
 import org.springframework.data.elasticsearch.client.elc.ElasticsearchAggregation;
@@ -80,8 +81,8 @@ public class Y9CommonAppForPersonCustomRepositoryImpl implements Y9CommonAppForP
             return list;
         } catch (ElasticsearchException e) {
             LOGGER.error(e.getMessage());
-            return null;
         }
+        return Collections.emptyList();
     }
 
     @Override
