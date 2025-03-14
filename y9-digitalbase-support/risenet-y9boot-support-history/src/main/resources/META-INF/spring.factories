@@ -1,3 +1,0 @@
-# 自动配置类列表，之间用逗号分隔。  如果一行放不下，可以用\回车分割成多行
-org.springframework.boot.autoconfigure.EnableAutoConfiguration=\
-y9.autocofiguration.Y9JaversSqlAutoConfiguration
