@@ -153,11 +153,6 @@ public class Y9User implements Serializable {
     private Integer managerLevel;
 
     @Lob
-    @Column(name = "ROLES")
-    @Comment("拥有的角色列表")
-    private String roles;
-
-    @Lob
     @Column(name = "POSITIONS")
     @Comment("拥有的岗位列表")
     private String positions;

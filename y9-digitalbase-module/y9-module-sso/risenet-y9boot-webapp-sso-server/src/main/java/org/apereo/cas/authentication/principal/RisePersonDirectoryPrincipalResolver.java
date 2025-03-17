@@ -157,7 +157,6 @@ public class RisePersonDirectoryPrincipalResolver implements PrincipalResolver {
                 Lists.newArrayList(y9User.getGlobalManager() == null ? false : y9User.getGlobalManager()));
             attr.put("managerLevel",
                 Lists.newArrayList(y9User.getManagerLevel() == null ? 0 : y9User.getManagerLevel()));
-            attr.put("roles", Lists.newArrayList(y9User.getRoles() == null ? "" : y9User.getRoles()));
 
             attr.put("positions", Lists.newArrayList(y9User.getPositions() == null ? "" : y9User.getPositions()));
             if (StringUtils.hasText(positionId)) {

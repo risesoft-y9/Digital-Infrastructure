@@ -1,6 +1,7 @@
 package y9.authen;
 
 import java.security.GeneralSecurityException;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -272,11 +273,15 @@ public class Y9AuthenticationHandler extends AbstractAuthenticationHandler {
             Lists.newArrayList(y9User.getGlobalManager() != null && y9User.getGlobalManager()));
         attributes.put("managerLevel",
             Lists.newArrayList(y9User.getManagerLevel() == null ? 0 : y9User.getManagerLevel()));
-        attributes.put("roles", Lists.newArrayList(y9User.getRoles() == null ? "" : y9User.getRoles()));
         attributes.put("positions", Lists.newArrayList(y9User.getPositions() == null ? "" : y9User.getPositions()));
 
         if (StringUtils.isNotBlank(positionId)) {
             attributes.put("positionId", Lists.newArrayList(positionId));
+        } else {
+            String[] positionIds = StringUtils.split(Optional.ofNullable(y9User.getPositions()).orElse(""), ",");
+            Optional<String> positionIdOptional = Arrays.stream(positionIds).findFirst();
+            // 当前登陆岗位默认返回排序靠前的岗位id
+            attributes.put("positionId", Lists.newArrayList(positionIdOptional.orElse("")));
         }
         if (StringUtils.isNotBlank(deptId)) {
             attributes.put("deptId", Lists.newArrayList(deptId));
