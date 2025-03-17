@@ -57,7 +57,6 @@ public class OnApplicationReady implements ApplicationListener<ApplicationReadyE
             // y9User.setMobile(null);
             // y9User.setOrderedPath(null);
             // y9User.setPositions(null);
-            // y9User.setRoles(null);
             y9UserService.save(y9User);
         }
     }

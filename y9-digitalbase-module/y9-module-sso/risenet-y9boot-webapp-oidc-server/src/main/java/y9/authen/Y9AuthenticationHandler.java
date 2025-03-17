@@ -273,7 +273,6 @@ public class Y9AuthenticationHandler extends AbstractAuthenticationHandler {
             Lists.newArrayList(y9User.getGlobalManager() != null && y9User.getGlobalManager()));
         attributes.put("managerLevel",
             Lists.newArrayList(y9User.getManagerLevel() == null ? 0 : y9User.getManagerLevel()));
-        attributes.put("roles", Lists.newArrayList(y9User.getRoles() == null ? "" : y9User.getRoles()));
         attributes.put("positions", Lists.newArrayList(y9User.getPositions() == null ? "" : y9User.getPositions()));
 
         if (StringUtils.isNotBlank(positionId)) {
