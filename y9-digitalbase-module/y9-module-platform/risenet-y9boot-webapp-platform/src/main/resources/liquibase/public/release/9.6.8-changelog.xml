@@ -161,4 +161,15 @@
         </createIndex>
     </changeSet>
 
+    <changeSet id="1742196491635-1" author="shidaobang" runOnChange="true">
+        <preConditions onFail="MARK_RAN">
+            <columnExists tableName="Y9_COMMON_ACCOUNT"
+                          columnName="ROLES"/>
+        </preConditions>
+        <dropColumn
+                tableName="Y9_COMMON_ACCOUNT"
+                columnName="ROLES">
+        </dropColumn>
+    </changeSet>
+
 </databaseChangeLog>
