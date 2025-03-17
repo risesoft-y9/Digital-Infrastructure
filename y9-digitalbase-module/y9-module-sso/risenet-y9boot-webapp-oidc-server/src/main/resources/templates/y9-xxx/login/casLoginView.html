@@ -91,7 +91,6 @@
                         value=""
                         tabindex="1"
                         oninput="inputEvent()"
-                        onblur="getTenant();"
                 />
                 <div class="validation">
                     <img
@@ -269,34 +268,6 @@
                     });
                 });
         }, 250);
-    }
-
-    function getTenant() {
-        var userName = $("#username").val();
-        if (
-            $.trim(userName).length > 0 &&
-            userName.indexOf("@") != -1
-        ) {
-            var tenantName = userName.split("@");
-            userName = tenantName[0].split("&");
-            $("#username1").val(tenantName[0]);
-            $.ajax({
-                type: "POST",
-                dataType: "json",
-                data: {
-                    loginName: userName[0],
-                    tenantName: tenantName[1],
-                },
-                url: ctx + "/api/getTenants",
-                success: function (res) {
-                    if (res.length <= 0) {
-                        layer.msg("当前用户不存在或者已禁用!");
-                        return;
-                    }
-                    $("#tenantShortName").val(res[0].tenantShortName);
-                },
-            });
-        }
     }
 
     function mouseClickEvent() {

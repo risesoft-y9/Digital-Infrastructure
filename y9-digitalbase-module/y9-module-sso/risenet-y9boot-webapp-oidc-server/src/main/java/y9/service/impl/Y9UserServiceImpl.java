@@ -111,7 +111,7 @@ public class Y9UserServiceImpl implements Y9UserService {
 
     @Override
     public List<Y9User> findByTenantNameAndLoginNameAndOriginal(String tenantName, String loginName, Boolean original) {
-        return y9UserRepository.findByTenantShortNameAndLoginNameAndOriginal(tenantName, loginName, original);
+        return y9UserRepository.findByTenantNameAndLoginNameAndOriginal(tenantName, loginName, original);
     }
 
     @Override

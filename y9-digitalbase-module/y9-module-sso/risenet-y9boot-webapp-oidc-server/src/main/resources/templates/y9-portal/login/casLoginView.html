@@ -38,7 +38,7 @@
         <form id="fm1" method="post" th:object="${credential}">
             <div class="login_fields__user">
                 <div class="icon"><img alt="" th:src="@{/y9static/y9new/img/user_icon_copy.png}"/></div>
-                <input autocomplete="off" id="username" onblur="getTenant();" oninput="inputEvent()"
+                <input autocomplete="off" id="username" oninput="inputEvent()"
                        placeholder="用户名" type="text" tabindex="1"
                        value=""/>
                 <div class="validation"><img alt="" th:src="@{/y9static/y9new/img/tick.png}"/></div>
@@ -154,31 +154,6 @@
                 });
             });
         }, 250);
-    }
-
-    function getTenant() {
-        var userName = $('#username').val();
-        if ($.trim(userName).length > 0 && userName.indexOf("@") != -1) {
-            var tenantName = userName.split("@");
-            userName = tenantName[0].split("&");
-            $("#username1").val(tenantName[0]);
-            $.ajax({
-                type: 'POST',
-                dataType: 'json',
-                data: {
-                    loginName: userName[0],
-                    tenantName: tenantName[1]
-                },
-                url: ctx + '/api/getTenants',
-                success: function (res) {
-                    if (res.length <= 0) {
-                        layer.msg("当前用户不存在或者已禁用!");
-                        return;
-                    }
-                    $('#tenantShortName').val(res[0].tenantShortName);
-                }
-            });
-        }
     }
 
     function mouseClickEvent() {

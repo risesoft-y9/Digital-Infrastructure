@@ -35,39 +35,12 @@ public class TenantController {
 
     private final Y9UserService y9UserService;
 
-    /*
-     * @RequestMapping(value = "/checkUser") public final ResponseEntity<String>
-     * checkUser(@RequestParam String loginName,
-     * 
-     * @RequestParam String tenantShortName) { List<Map<String, Object>> list = new
-     * ArrayList<Map<String, Object>>(); try { loginName =
-     * XSSCheckUtil.filter(loginName); tenantShortName =
-     * XSSCheckUtil.filter(tenantShortName);
-     * 
-     * List<Y9User> users =
-     * y9UserService.findByTenantShortNameAndLoginNameAndOriginal(tenantShortName,
-     * loginName, Boolean.TRUE); if (!users.isEmpty()) { for (Y9User user : users) {
-     * Map<String, Object> mapTemp = new HashMap<String, Object>();
-     * mapTemp.put("tenantShortName", user.getTenantShortName());
-     * mapTemp.put("tenantName", user.getTenantName()); list.add(mapTemp); } }
-     * 
-     * ObjectMapper mapper = new ObjectMapper(); String jsonStr =
-     * mapper.writeValueAsString(list);
-     * 
-     * final HttpHeaders headers = new HttpHeaders();
-     * headers.setContentType(MediaType.APPLICATION_JSON); return new
-     * ResponseEntity<String>(jsonStr, headers, HttpStatus.OK); } catch (final
-     * Throwable e) { LOGGER.error(e.getMessage(), e); return new
-     * ResponseEntity<String>(e.getMessage(), HttpStatus.BAD_REQUEST); } }
-     */
-
     /**
      * 根据登录名，获取登录信息，返回信息如（XXX@XXX）
      * 
      * @param loginName
      * @return
      */
-
     @RequestMapping(value = "/loginNameAndTenants")
     public final ResponseEntity<String> getLoginNameAndTenants(@RequestParam String loginName) {
         List<Map<String, Object>> list = new ArrayList<Map<String, Object>>();
