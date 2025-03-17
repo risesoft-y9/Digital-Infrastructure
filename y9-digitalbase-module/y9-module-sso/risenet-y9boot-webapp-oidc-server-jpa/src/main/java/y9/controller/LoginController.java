@@ -1,8 +1,8 @@
 package y9.controller;
 
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 import javax.security.auth.login.FailedLoginException;
 import javax.servlet.http.HttpServletRequest;
@@ -14,8 +14,13 @@ import org.apereo.cas.authentication.AuthenticationSystemSupport;
 import org.apereo.cas.authentication.credential.RememberMeUsernamePasswordCredential;
 import org.apereo.cas.authentication.principal.Service;
 import org.apereo.cas.authentication.principal.ServiceFactory;
+import org.apereo.cas.logout.LogoutManager;
+import org.apereo.cas.logout.SingleLogoutExecutionRequest;
 import org.apereo.cas.rest.BadRestRequestException;
+import org.apereo.cas.ticket.InvalidTicketException;
 import org.apereo.cas.ticket.Ticket;
+import org.apereo.cas.ticket.TicketGrantingTicket;
+import org.apereo.cas.ticket.registry.TicketRegistry;
 import org.apereo.cas.web.cookie.CasCookieBuilder;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Lazy;
@@ -23,22 +28,12 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.util.MultiValueMap;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import lombok.val;
 import lombok.extern.slf4j.Slf4j;
-
-import y9.entity.Y9User;
-import y9.service.Y9UserService;
-import y9.util.Y9Context;
-import y9.util.Y9MessageDigest;
-import y9.util.common.Base64Util;
-import y9.util.common.CheckPassWord;
-import y9.util.common.RSAUtil;
 
 /**
  * @author dingzhaojun
@@ -56,76 +51,28 @@ public class LoginController {
     private final CasCookieBuilder ticketGrantingTicketCookieGenerator;
     private final AuthenticationSystemSupport authenticationSystemSupport;
     private final ServiceFactory webApplicationServiceFactory;
-
-    private final Y9UserService y9UserService;
+    private final LogoutManager logoutManager;
+    private final TicketRegistry ticketRegistry;
 
     public LoginController(CentralAuthenticationService centralAuthenticationService,
         @Qualifier("ticketGrantingTicketCookieGenerator") CasCookieBuilder ticketGrantingTicketCookieGenerator,
         @Qualifier("defaultAuthenticationSystemSupport") AuthenticationSystemSupport authenticationSystemSupport,
         @Qualifier("webApplicationServiceFactory") ServiceFactory webApplicationServiceFactory,
-        Y9UserService y9UserService) {
+        @Qualifier("logoutManager") LogoutManager logoutManager,
+        @Qualifier("ticketRegistry") TicketRegistry ticketRegistry) {
         this.centralAuthenticationService = centralAuthenticationService;
         this.ticketGrantingTicketCookieGenerator = ticketGrantingTicketCookieGenerator;
         this.authenticationSystemSupport = authenticationSystemSupport;
         this.webApplicationServiceFactory = webApplicationServiceFactory;
-        this.y9UserService = y9UserService;
+        this.logoutManager = logoutManager;
+        this.ticketRegistry = ticketRegistry;
         LOGGER.info("LoginController created.");
-    }
-
-    public Map<String, Object> checkSsoLoginInfo(String tenantShortName, String username, String password,
-        String pwdEcodeType, String loginType, final HttpServletRequest request, final HttpServletResponse response) {
-        Map<String, Object> map = new HashMap<String, Object>();
-        try {
-            username = Base64Util.decode(username, "Unicode");
-            if (StringUtils.isNotBlank(pwdEcodeType)) {
-                String privateKey = Y9Context.getProperty("y9.encryptionRsaPrivateKey");
-                password = RSAUtil.privateDecrypt(password, privateKey);
-            }
-            password = Base64Util.decode(password, "Unicode");
-            if (username.contains("&")) {
-                username = username.substring(username.indexOf("&") + 1);
-                tenantShortName = "operation";
-            }
-            List<Y9User> users = null;
-            if ("mobile".equals(loginType)) {
-                users = y9UserService.findByTenantShortNameAndMobile(tenantShortName, username);
-            } else {
-                users = y9UserService.findByTenantShortNameAndLoginName(tenantShortName, username);
-            }
-
-            if (users.isEmpty()) {
-                map.put("msg", "该账号不存在，请检查账号输入是否正确！");
-                map.put("success", false);
-                return map;
-            }
-
-            Y9User y9User = users.get(0);
-            String hashed = y9User.getPassword();
-            if (!Y9MessageDigest.bcryptMatch(password, hashed)) {
-                map.put("msg", "密码错误!");
-                map.put("success", false);
-                return map;
-            }
-
-            boolean isSimplePassWord = CheckPassWord.isSimplePassWord(password);
-            if (isSimplePassWord) {
-                map.put("msg", "密码过于简单,请重新设置密码！");
-            }
-            map.put("success", true);
-        } catch (Exception e) {
-            map.put("success", false);
-            map.put("msg", "认证失败!");
-            LOGGER.warn(e.getMessage(), e);
-        }
-        return map;
     }
 
     @PostMapping(value = "/logon", consumes = MediaType.ALL_VALUE)
     public final ResponseEntity<Map<String, Object>> logon(RememberMeUsernamePasswordCredential credential,
-        @RequestBody(required = false) final MultiValueMap<String, String> requestBody,
-        final HttpServletRequest request, final HttpServletResponse response) throws Throwable {
+        final HttpServletRequest request, final HttpServletResponse response) {
         Map<String, Object> retMap = new HashMap<>();
-        retMap.put("success", false);
 
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_JSON);
@@ -135,15 +82,18 @@ public class LoginController {
                 throw new BadRestRequestException(
                     "No credentials are provided or extracted to authenticate the REST request");
             }
-            String username = credential.getUsername();
-            String password = credential.toPassword();
-            Map<String, Object> customFields = credential.getCustomFields();
-            String tenantShortName = (String)customFields.get("tenantShortName");
-            String loginType = (String)customFields.get("loginType");
-            String pwdEcodeType = request.getParameter("pwdEcodeType");
-            retMap = checkSsoLoginInfo(tenantShortName, username, password, pwdEcodeType, loginType, request, response);
-            if (retMap.get("success").toString().equals("false")) {
-                return new ResponseEntity<>(retMap, headers, HttpStatus.UNAUTHORIZED);
+
+            String logoutTgtId = ticketGrantingTicketCookieGenerator.retrieveCookieValue(request);
+            if (StringUtils.isNotBlank(logoutTgtId)) {
+                TicketGrantingTicket ticket = null;
+                try {
+                    ticket = ticketRegistry.getTicket(logoutTgtId, TicketGrantingTicket.class);
+                } catch (InvalidTicketException ignored) {
+                }
+                if (ticket != null) {
+                    logoutManager.performLogout(SingleLogoutExecutionRequest.builder().ticketGrantingTicket(ticket)
+                        .httpServletRequest(Optional.of(request)).httpServletResponse(Optional.of(response)).build());
+                }
             }
 
             final Service service = this.webApplicationServiceFactory.createService(request);
