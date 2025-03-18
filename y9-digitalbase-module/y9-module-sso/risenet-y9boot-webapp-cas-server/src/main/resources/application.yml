@@ -77,7 +77,7 @@ cas:
             ddl-auto: update
             url: jdbc:mysql://localhost:3306/y9_public?serverTimezone=GMT%2B8&nullCatalogMeansCurrent=true&useUnicode=true&characterEncoding=utf-8&rewriteBatchedStatements=true&useCompression=true&useSSL=false&allowPublicKeyRetrieval=true
             user: root
-            password: '11111111'
+            password: '111111'
             idleTimeout: PT10M
             leakThreshold: 0
             autocommit: true
@@ -109,7 +109,7 @@ cas:
                 driver-class: com.mysql.cj.jdbc.Driver
                 url: jdbc:mysql://localhost:3306/y9_public?serverTimezone=GMT%2B8&nullCatalogMeansCurrent=true&useUnicode=true&characterEncoding=utf-8&rewriteBatchedStatements=true&useCompression=true&useSSL=false&allowPublicKeyRetrieval=true
                 user: root
-                password: '11111111'
+                password: '111111'
                 idleTimeout: PT5M
             redis:
                 enabled: true
@@ -118,7 +118,7 @@ cas:
                 port: 6379
                 database: 0
                 username: default
-                password: "11111111"
+                password: "y9i-83204585"
                 timeout: "PT60S"
                 pool:
                     enabled: true
