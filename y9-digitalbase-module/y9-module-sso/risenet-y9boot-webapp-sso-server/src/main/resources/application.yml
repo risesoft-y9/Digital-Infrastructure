@@ -78,7 +78,7 @@ cas:
         fallbackSystemLocale: true
     view:
         #当service参数为空时，利用defaultRedirectUrl
-        defaultRedirectUrl: http://localhost:7070/y9vue-fgw/banli
+        defaultRedirectUrl: http://localhost:7070/home
         #当defaultRedirectUrl为空、并且service参数为空时，自动计算service
         authorizedServicesOnSuccessfulLogin: true
     webflow:
@@ -111,12 +111,12 @@ cas:
             location: classpath:/services
             watcherEnabled: true
         jpa:
-            dialect: org.hibernate.dialect.DmDialect
-            driver-class: dm.jdbc.driver.DmDriver
+            dialect: org.hibernate.dialect.MySQL8Dialect
+            driver-class: com.mysql.cj.jdbc.Driver
             ddl-auto: update
-            url: jdbc:dm://localhost:5236?compatibleMode=oracle
-            user: Y9_PUBLIC
-            password: 11B77D5a22!
+            url: jdbc:mysql://localhost:3306/y9_public?serverTimezone=GMT%2B8&nullCatalogMeansCurrent=true&useUnicode=true&characterEncoding=utf-8&rewriteBatchedStatements=true&useCompression=true&useSSL=false&allowPublicKeyRetrieval=true
+            user: root
+            password: 111111
             idleTimeout: PT10M
             leakThreshold: 0
             autocommit: true
@@ -193,7 +193,7 @@ cas:
             rememberMe:
                 enabled: true
                 timeToKillInSeconds: 28800
-                #supportedUserAgents:
+                #supportedUserAgents: 
                 #supportedIpAddresses: 127.0.0.1,0:0:0:0:0:0:0:1
 management:
     metrics:
@@ -248,7 +248,7 @@ spring:
             discovery:
                 enabled: false
 y9:
-    internalIp: 192.168.x.x,10.0.x.x,172.20.x.x,126.2.x.x
+    internalIp: 192.168.x.x,10.0.x.x,172.20.x.x
     login:
         casLoginView: "casLoginView-y9-v3.0"
         credentialPropsOptional: "screenDimension,userAgent,systemName,clientIp,clientMac,clientDiskId,clientHostName,deptId,positionId,pwdEcodeType"

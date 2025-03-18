@@ -53,7 +53,7 @@ spring:
                 wall:
                     config:
                         drop-table-allow: false
-                    enabled: false
+                    enabled: true
             stat-view-servlet:
                 enabled: false
                 url-pattern: /druid/*
@@ -70,10 +70,10 @@ spring:
                 #url: jdbc:oracle:thin:@127.0.0.1:1521:orcl
                 #username: Y9_PUBLIC
                 #password: '111111'
-                driver-class-name: dm.jdbc.driver.DmDriver
-                url: jdbc:dm://127.0.0.1:5236?compatibleMode=oracle
-                username: Y9_PUBLIC
-                password: 11B77D5a22!
+                driver-class-name: com.mysql.cj.jdbc.Driver
+                url: jdbc:mysql://localhost:3306/y9_public?serverTimezone=GMT%2B8&nullCatalogMeansCurrent=true&useUnicode=true&characterEncoding=utf-8&rewriteBatchedStatements=true&useCompression=true&useSSL=false&allowPublicKeyRetrieval=true
+                username: root
+                password: 111111
                 initialSize: 1
                 maxActive: 20
                 maxPoolPreparedStatementPerConnectionSize: 100
@@ -89,7 +89,7 @@ spring:
                 validationQuery: SELECT 1 FROM DUAL
     jpa:
         generate-ddl: true
-        database-platform: org.hibernate.dialect.DmDialect
+        database-platform: org.hibernate.dialect.MySQL8Dialect
         hibernate:
             naming:
                 implicit-strategy: org.hibernate.boot.model.naming.ImplicitNamingStrategyLegacyHbmImpl
@@ -98,8 +98,8 @@ spring:
         properties:
             hibernate:
                 hbm2ddl:
-                    auto: update
-                dialect: org.hibernate.dialect.DmDialect
+                    auto: none
+                dialect: org.hibernate.dialect.MySQL8Dialect
                 jdbc:
                     batch_size: 100
                 show_sql: true
@@ -161,7 +161,7 @@ y9:
             packagesToScanEntityPublic: net.risesoft.y9public.entity
             packagesToScanRepositoryPublic: net.risesoft.y9public.repository
         liquibase:
-            public-enabled: false
+            public-enabled: true
         multi-tenant:
             # kafka, db
             event-source: db
@@ -198,5 +198,5 @@ y9:
                 opaque:
                     client-id: clientid
                     client-secret: secret
-                    introspection-uri: http://localhost:7055/sso/oauth2.0/introspect
-                    profile-uri: http://localhost:7055/sso/oauth2.0/profile
+                    introspection-uri: https://test.youshengyun.com/sso/oauth2.0/introspect
+                    profile-uri: https://test.youshengyun.com/sso/oauth2.0/profile
