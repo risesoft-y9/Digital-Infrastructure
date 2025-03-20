@@ -16,8 +16,6 @@
     <modules>
         <module>risenet-y9boot-webapp-oidc-server</module>
         <module>risenet-y9boot-webapp-oidc-server-jpa</module>
-        <module>risenet-y9boot-webapp-sso-server</module>
-        <module>risenet-y9boot-webapp-sso-server-jpa</module>
     </modules>
 
 </project>
