@@ -6,8 +6,11 @@ import jakarta.validation.constraints.NotBlank;
 
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import net.risesoft.api.platform.org.dto.CreateOrganizationDTO;
 import net.risesoft.model.platform.Department;
 import net.risesoft.model.platform.Organization;
 import net.risesoft.pojo.Y9Result;
@@ -35,6 +38,18 @@ public interface OrganizationApi {
     @GetMapping("/get")
     Y9Result<Organization> get(@RequestParam("tenantId") @NotBlank String tenantId,
         @RequestParam("organizationId") @NotBlank String organizationId);
+
+    /**
+     * 新建组织
+     *
+     * @param tenantId 租户id
+     * @param organization 组织对象
+     * @return {@code Y9Result<Organization>} 通用请求返回对象 - data 是保存的组织
+     * @since 9.6.0
+     */
+    @PostMapping("/create")
+    Y9Result<Organization> create(@RequestParam("tenantId") @NotBlank String tenantId,
+        @Validated @RequestBody CreateOrganizationDTO organization);
 
     /**
      * 根据租户id获取组织机构列表（不包含禁用）

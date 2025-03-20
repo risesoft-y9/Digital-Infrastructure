@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.RestController;
 import lombok.RequiredArgsConstructor;
 
 import net.risesoft.api.platform.org.OrganizationApi;
+import net.risesoft.api.platform.org.dto.CreateOrganizationDTO;
 import net.risesoft.entity.Y9Department;
 import net.risesoft.entity.Y9Organization;
 import net.risesoft.model.platform.Department;
@@ -57,6 +58,15 @@ public class OrganizationApiImpl implements OrganizationApi {
         Y9LoginUserHolder.setTenantId(tenantId);
 
         Y9Organization y9Organization = orgOrganizationService.findById(organizationId).orElse(null);
+        return Y9Result.success(Y9ModelConvertUtil.convert(y9Organization, Organization.class));
+    }
+
+    @Override
+    public Y9Result<Organization> create(String tenantId, CreateOrganizationDTO organization) {
+        Y9LoginUserHolder.setTenantId(tenantId);
+
+        Y9Organization y9Organization = Y9ModelConvertUtil.convert(organization, Y9Organization.class);
+        y9Organization = orgOrganizationService.saveOrUpdate(y9Organization);
         return Y9Result.success(Y9ModelConvertUtil.convert(y9Organization, Organization.class));
     }
 
