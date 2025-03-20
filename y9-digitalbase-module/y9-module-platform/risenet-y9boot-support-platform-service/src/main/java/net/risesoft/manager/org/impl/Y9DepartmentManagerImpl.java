@@ -104,11 +104,11 @@ public class Y9DepartmentManagerImpl implements Y9DepartmentManager {
             }
         } else {
             dept.setId(Y9IdGenerator.genId(IdType.SNOWFLAKE));
+            dept.setDisabled(false);
+            dept.setTabIndex(compositeOrgBaseManager.getNextSubTabIndex(parent.getId()));
         }
         dept.setTenantId(Y9LoginUserHolder.getTenantId());
         dept.setVersion(InitDataConsts.Y9_VERSION);
-        dept.setDisabled(false);
-        dept.setTabIndex(compositeOrgBaseManager.getNextSubTabIndex(parent.getId()));
         dept.setDn(Y9OrgUtil.buildDn(OrgTypeEnum.DEPARTMENT, dept.getName(), parent.getDn()));
         dept.setParentId(parent.getId());
         dept.setGuidPath(Y9OrgUtil.buildGuidPath(parent.getGuidPath(), dept.getId()));
