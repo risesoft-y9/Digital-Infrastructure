@@ -11,7 +11,7 @@
         <relativePath>../pom.xml</relativePath>
     </parent>
     <groupId>net.risesoft</groupId>
-    <artifactId>risenet-y9boot-webapp-oidc-server</artifactId>
+    <artifactId>risenet-y9boot-webapp-sso-server-jpa</artifactId>
     <packaging>war</packaging>
     <version>${revision}</version>
 
@@ -177,7 +177,7 @@
 
         <dependency>
             <groupId>org.apereo.cas</groupId>
-            <artifactId>cas-server-support-redis-ticket-registry</artifactId>
+            <artifactId>cas-server-support-jpa-ticket-registry</artifactId>
         </dependency>
 
         <dependency>

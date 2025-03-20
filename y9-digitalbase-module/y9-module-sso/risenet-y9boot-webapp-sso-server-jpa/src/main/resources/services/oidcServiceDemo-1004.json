@@ -2,7 +2,7 @@
     "@class" : "org.apereo.cas.services.OidcRegisteredService",
     "clientId": "clientid_oidc",
     "clientSecret": "secret_oidc",
-    "serviceId" : "^(https?)://localhost:7099/.*",
+    "serviceId" : "^(https?)://.*",
     "name" : "oidcServiceDemo",
     "description" : "oidc Authentication app demo",
     "theme" : "y9-apereo",
