@@ -275,10 +275,10 @@ y9:
                 allowUriQueryParameter: true
                 protectedUrlPatterns: /api/*
                 opaque:
-                    client-id: clientid
-                    client-secret: secret
-                    introspection-uri: http://localhost:7055/sso/oauth2.0/introspect
-                    profile-uri: http://localhost:7055/sso/oauth2.0/profile
+                    client-id: clientid_oidc
+                    client-secret: secret_oidc
+                    introspection-uri: http://localhost:7055/sso/oidc/introspect
+                    profile-uri: http://localhost:7055/sso/oidc/profile
 idCode:
     #统一码接口地址
     idCode_url: https://api.idcode.org.cn

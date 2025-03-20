@@ -2,7 +2,7 @@ package y9.service;
 
 import java.util.List;
 
-import org.apereo.cas.services.Y9User;
+import y9.entity.Y9User;
 
 public interface Y9UserService {
     Y9User save(Y9User y9User);
@@ -46,4 +46,5 @@ public interface Y9UserService {
 
     List<Y9User> findByTenantNameAndLoginNameAndOriginal(String tenantName, String loginName, Boolean original);
 
+    List<Y9User> findByPersonIdAndOriginal(String personId, Boolean original);
 }

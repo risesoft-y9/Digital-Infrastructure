@@ -36,7 +36,13 @@ public class InetAddressUtil {
 
     public static Properties properties = new Properties();
 
-    public static String ips = "";
+    public static String ips = "192.168.x.x,10.161.x.x,10.1.x.x,172.20.x.x";
+
+    /*
+     * A类网络 ip地址范围:10.0.0.0~10.255.255.255     ip地址数量:16777216    网络数:1个A类网络
+     * B类网络 ip地址范围:172.16.0.0~172.31.255.255   ip地址数量:1048576     网络数:16个B类网络
+     * C类网络 ip地址范围:192.168.0.0~192.168.255.255 ip地址数量:65536       网络数:256个C类网络
+     */
 
     static {
         Environment environment = Y9Context.getEnvironment();
@@ -134,7 +140,7 @@ public class InetAddressUtil {
                 return localAddress;
             }
         } catch (Throwable e) {
-            LOGGER.warn("Failed to retriving local address by hostname:" + e);
+            LOGGER.warn("Failed to retrieve local address by hostname:" + e);
         }
         return null;
     }
@@ -154,16 +160,16 @@ public class InetAddressUtil {
                                     return address;
                                 }
                             } catch (Throwable e) {
-                                LOGGER.warn("Failed to retriving ip address, " + e.getMessage(), e);
+                                LOGGER.warn("Failed to retrieve ip address", e);
                             }
                         }
                     } catch (Throwable e) {
-                        LOGGER.warn("Failed to retriving ip address, " + e.getMessage(), e);
+                        LOGGER.warn("Failed to retrieve ip address", e);
                     }
                 }
             }
         } catch (Throwable e) {
-            LOGGER.warn("Failed to retriving ip address, " + e.getMessage(), e);
+            LOGGER.warn("Failed to retrieve ip address", e);
         }
         return null;
     }
@@ -182,15 +188,14 @@ public class InetAddressUtil {
                 return socket.getLocalAddress();
             } catch (Exception e) {
                 LOGGER.warn(String.format(
-                    "Failed to retrieving local address by connecting to dest host:port(%s:%s) false, e=%s", host, port,
-                    e));
+                    "Failed to retrieve local address by connecting to dest host:port(%s:%s) false", host, port), e);
             }
         }
         return null;
     }
 
     public static boolean isInvalidLocalHost(String host) {
-        return host == null || host.length() == 0 || host.equalsIgnoreCase("localhost") || host.equals("0.0.0.0")
+        return host == null || host.length() == 0 || "localhost".equalsIgnoreCase(host) || "0.0.0.0".equals(host)
             || (LOCAL_IP_PATTERN.matcher(host).matches());
     }
 
@@ -198,12 +203,14 @@ public class InetAddressUtil {
         if (address == null || address.isLoopbackAddress()) {
             return false;
         }
+
         String ipAddress = address.getHostAddress();
         boolean valid = ipAddress != null && !ANYHOST.equals(ipAddress) && !LOCALHOST.equals(ipAddress)
             && IP_PATTERN.matcher(ipAddress).matches();
         if (valid == false) {
             return false;
         }
+
         if (StringUtils.hasText(ips)) {
             valid = false;
             String[] arry = ips.toLowerCase().split(",");

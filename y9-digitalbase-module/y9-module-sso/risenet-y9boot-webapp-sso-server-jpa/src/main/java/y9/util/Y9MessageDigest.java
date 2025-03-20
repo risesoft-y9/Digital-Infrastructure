@@ -25,7 +25,7 @@ public class Y9MessageDigest {
 
     /**
      * SHA1加密
-     * 
+     *
      * @param str
      * @return
      * @throws NoSuchAlgorithmException

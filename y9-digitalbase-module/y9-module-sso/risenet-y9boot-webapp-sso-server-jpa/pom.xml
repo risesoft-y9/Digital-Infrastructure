@@ -16,7 +16,8 @@
     <version>${revision}</version>
 
     <properties>
-        <cas.version>6.6.9</cas.version>
+        <cas.version>6.6.15.2</cas.version>
+        <boot.version>2.7.3</boot.version>
         <pac4j.version>5.4.6</pac4j.version>
 
         <maven.deploy.skip>true</maven.deploy.skip>
@@ -129,7 +130,6 @@
             <groupId>org.apereo.cas</groupId>
             <artifactId>cas-server-support-validation</artifactId>
         </dependency>
-
         <dependency>
             <groupId>org.apereo.cas</groupId>
             <artifactId>cas-server-core-services-registry</artifactId>
@@ -139,7 +139,18 @@
             <groupId>org.apereo.cas</groupId>
             <artifactId>cas-server-support-jpa-service-registry</artifactId>
         </dependency>
-
+        
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-data-jpa</artifactId>
+            <exclusions>
+                <exclusion>
+                    <artifactId>spring-boot-starter-logging</artifactId>
+                    <groupId>org.springframework.boot</groupId>
+                </exclusion>
+            </exclusions>
+        </dependency>
+        
         <dependency>
             <groupId>org.apereo.cas</groupId>
             <artifactId>cas-server-core-authentication-attributes</artifactId>
@@ -158,6 +169,10 @@
         <dependency>
             <groupId>org.apereo.cas</groupId>
             <artifactId>cas-server-support-jpa-util</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.apereo.cas</groupId>
+            <artifactId>cas-server-support-jpa-hibernate</artifactId>
         </dependency>
 
         <dependency>
@@ -196,6 +211,22 @@
             <groupId>org.apereo.cas</groupId>
             <artifactId>cas-server-support-oauth-api</artifactId>
         </dependency>
+        
+        <dependency>
+            <groupId>org.apereo.cas</groupId>
+            <artifactId>cas-server-support-oidc</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.apereo.cas</groupId>
+            <artifactId>cas-server-support-oidc-core</artifactId>
+        </dependency><dependency>
+            <groupId>org.apereo.cas</groupId>
+            <artifactId>cas-server-support-oidc-core-api</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.apereo.cas</groupId>
+            <artifactId>cas-server-support-oidc-services</artifactId>
+        </dependency>        
 
         <dependency>
             <groupId>org.apereo.cas</groupId>
@@ -248,7 +279,6 @@
         <dependency>
             <groupId>org.springframework</groupId>
             <artifactId>spring-context-indexer</artifactId>
-            <optional>true</optional>
         </dependency>
 
         <dependency>

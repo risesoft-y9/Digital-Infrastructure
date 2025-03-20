@@ -1,63 +1,53 @@
 package y9.service.impl;
 
-import java.util.Date;
+import java.time.Instant;
 import java.util.List;
+import java.util.Map;
 import java.util.UUID;
 
-import javax.persistence.EntityManager;
-import javax.persistence.PersistenceContext;
-
 import org.apereo.cas.authentication.credential.RememberMeUsernamePasswordCredential;
-import org.apereo.cas.services.Y9LoginUser;
-import org.apereo.cas.services.Y9User;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.support.TransactionOperations;
 import org.springframework.util.StringUtils;
 
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
+import y9.entity.Y9LoginUser;
+import y9.entity.Y9User;
+import y9.repository.Y9LoginUserRepository;
+import y9.repository.Y9UserRepository;
 import y9.service.Y9LoginUserService;
-import y9.service.Y9UserService;
 import y9.util.InetAddressUtil;
+import y9.util.Y9Context;
 import y9.util.common.UserAgentUtil;
+import y9.util.json.Y9JacksonUtil;
 
 import cz.mallat.uasparser.UserAgentInfo;
 
-@Service
+@Service("y9LoginUserService")
 @Slf4j
+@RequiredArgsConstructor
 public class Y9LoginUserServiceImpl implements Y9LoginUserService {
 
     public static String SSO_SERVER_IP = InetAddressUtil.getLocalAddress().getHostAddress();
 
-    @Autowired
-    private Y9UserService y9UserService;
-
-    @Autowired
-    @Qualifier("jdbcServiceRegistryTransactionTemplate")
-    private TransactionOperations transactionTemplate;
-
-    @PersistenceContext(unitName = "jpaServiceRegistryContext")
-    private EntityManager entityManager;
-
-    @Autowired
-    private ConfigurableApplicationContext applicationContext;
+    private final Y9LoginUserRepository y9LoginUserRepository;
+    private final Y9UserRepository y9UserRepository;
 
     @Override
     public void save(RememberMeUsernamePasswordCredential credential, String success, String logMessage) {
         try {
-            String deptId = credential.getDeptId();
-            String loginType = credential.getLoginType();
-            String tenantShortName = credential.getTenantShortName();
             String userLoginName = credential.getUsername();
-            String userHostIP = credential.getClientIp();
-            String userAgent = credential.getUserAgent();
-            String screenResolution = credential.getScreenDimension();
-            String userHostMAC = credential.getClientMac();
-            String userHostName = credential.getClientHostName();
-            String userHostDiskId = credential.getClientDiskId();
+            Map<String, Object> customFields = credential.getCustomFields();
+            String deptId = (String)customFields.get("deptId");
+            String loginType = (String)customFields.get("loginType");
+            String tenantShortName = (String)customFields.get("tenantShortName");
+            String userHostIP = (String)customFields.get("userHostIP");
+            String userAgent = (String)customFields.get("userAgent");
+            String screenResolution = (String)customFields.get("screenResolution");
+            String userHostMAC = (String)customFields.get("userHostMAC");
+            String userHostName = (String)customFields.get("userHostName");
+            String userHostDiskId = (String)customFields.get("userHostDiskId");
 
             String tenantName = "";
             String personId = "";
@@ -71,18 +61,18 @@ public class Y9LoginUserServiceImpl implements Y9LoginUserService {
                 List<Y9User> users = null;
                 if ("mobile".equals(loginType)) {
                     if (StringUtils.hasText(deptId)) {
-                        users = y9UserService.findByTenantShortNameAndMobileAndParentId(tenantShortName, userLoginName,
-                            deptId);
+                        users = y9UserRepository.findByTenantShortNameAndMobileAndParentId(tenantShortName,
+                            userLoginName, deptId);
                     } else {
-                        users = y9UserService.findByTenantShortNameAndMobileAndOriginal(tenantShortName, userLoginName,
-                            Boolean.TRUE);
+                        users = y9UserRepository.findByTenantShortNameAndMobileAndOriginal(tenantShortName,
+                            userLoginName, Boolean.TRUE);
                     }
                 } else {
                     if (StringUtils.hasText(deptId)) {
-                        users = y9UserService.findByTenantShortNameAndLoginNameAndParentId(tenantShortName,
+                        users = y9UserRepository.findByTenantShortNameAndLoginNameAndParentId(tenantShortName,
                             userLoginName, deptId);
                     } else {
-                        users = y9UserService.findByTenantShortNameAndLoginNameAndOriginal(tenantShortName,
+                        users = y9UserRepository.findByTenantShortNameAndLoginNameAndOriginal(tenantShortName,
                             userLoginName, Boolean.TRUE);
                     }
                 }
@@ -96,8 +86,8 @@ public class Y9LoginUserServiceImpl implements Y9LoginUserService {
                 }
 
                 Y9LoginUser user = new Y9LoginUser();
-                user.setId(UUID.randomUUID().toString().replace("-", ""));
-                user.setLoginTime(new Date());
+                user.setId(UUID.randomUUID().toString().replaceAll("-", ""));
+                user.setLoginTime(Instant.now());
                 user.setLoginType(loginType);
                 user.setUserId(personId);
                 user.setUserLoginName(userLoginName);
@@ -116,11 +106,14 @@ public class Y9LoginUserServiceImpl implements Y9LoginUserService {
                 user.setScreenResolution(screenResolution);
                 user.setOsName(uaInfo.getOsName());
                 user.setManagerLevel(managerLevel);
-                transactionTemplate.execute(status -> {
-                    entityManager.persist(user);
-                    LOGGER.info("保存登录日志成功");
-                    return null;
-                });
+                String loginInfoSaveTarget = Y9Context.getProperty("y9.loginInfoSaveTarget");
+                if ("jpa".equals(loginInfoSaveTarget)) {
+                    y9LoginUserRepository.save(user);
+                } else {
+                    String jsonString = Y9JacksonUtil.writeValueAsString(user);
+                    // kafkaTemplate.send("y9_userLoginInfo_message", jsonString);
+                    LOGGER.info("保存登录日志成功至Kafka成功");
+                }
             }
         } catch (Exception e) {
             e.printStackTrace();

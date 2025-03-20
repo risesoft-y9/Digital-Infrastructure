@@ -11,6 +11,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.apache.commons.lang3.StringUtils;
+import org.apereo.cas.CentralAuthenticationService;
 import org.apereo.cas.audit.AuditableContext;
 import org.apereo.cas.authentication.AuthenticationManager;
 import org.apereo.cas.support.oauth.OAuth20Constants;
@@ -103,7 +104,6 @@ public class OAuth20IntrospectionEndpointController<T extends OAuth20Configurati
      * @param response the response
      * @return the response entity
      */
-    // @PostMapping('/' + OAuth20Constants.BASE_OAUTH20_URL + '/' + OAuth20Constants.INTROSPECTION_URL)
     @PostMapping(OAuth20Constants.BASE_OAUTH20_URL + '/' + OAuth20Constants.INTROSPECTION_URL)
     public ResponseEntity<? extends BaseOAuth20IntrospectionAccessTokenResponse>
         handlePostRequest(final HttpServletRequest request, final HttpServletResponse response) {
@@ -172,10 +172,10 @@ public class OAuth20IntrospectionEndpointController<T extends OAuth20Configurati
 
             // y9 add
             Map<String, List<Object>> attributes = authentication.getPrincipal().getAttributes();
-            Map<String, Object> map = new HashMap<String, Object>();
+            Map<String, Object> map = new HashMap<>();
             for (String key : attributes.keySet()) {
                 List<Object> values = attributes.get(key);
-                if (values != null && !values.isEmpty()) {
+                if (values != null && !values.isEmpty() && !key.startsWith(CentralAuthenticationService.NAMESPACE)) {
                     map.put(key, attributes.get(key).get(0));
                 }
             }

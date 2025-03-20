@@ -1,15 +1,21 @@
 {
-    "@class" : "org.apereo.cas.support.oauth.services.OAuthRegisteredService",
-    "clientId": "clientid_oauth",
-    "clientSecret": "secret_oauth",
-    "serviceId" : "^(https?)://localhost:7099/oauth.*",
-    "name" : "oauthServiceDemo",
-    "description" : "oauth Authentication app demo",
+    "@class" : "org.apereo.cas.services.OidcRegisteredService",
+    "clientId": "clientid_oidc",
+    "clientSecret": "secret_oidc",
+    "serviceId" : "^(https?)://.*",
+    "name" : "oidcServiceDemo",
+    "description" : "oidc Authentication app demo",
     "theme" : "y9-apereo",
-    "id" : 1002,
-    "evaluationOrder": 1002,
+    "id" : 1004,
+    "evaluationOrder": 1004,
     "logoutType" : "BACK_CHANNEL",
-    "logoutUrl" : "http://localhost:7099/oauth/public/oauth/callback",
+    "scopes": [
+        "java.util.HashSet",
+        [
+            "openid",
+            "y9"
+        ]
+    ],
     "attributeReleasePolicy" : {
         "@class" : "org.apereo.cas.services.ReturnAllAttributeReleasePolicy",
         "authorizedToReleaseCredentialPassword" : true,
@@ -35,5 +41,5 @@
     "bypassApprovalPrompt": true,
     "generateRefreshToken": true,
     "renewRefreshToken": true,
-    "jwtAccessToken": false
+    "jwtAccessToken": true
 }

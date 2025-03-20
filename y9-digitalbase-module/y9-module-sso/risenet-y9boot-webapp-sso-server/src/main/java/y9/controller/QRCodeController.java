@@ -9,6 +9,7 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -24,6 +25,7 @@ import y9.util.Y9Result;
 import y9.util.common.Y9Util;
 import y9.util.json.Y9JacksonUtil;
 
+@Lazy(false)
 @Controller
 @RequestMapping(value = "/api")
 @Slf4j
@@ -50,7 +52,6 @@ public class QRCodeController {
                 this.getClass().getClassLoader().getResourceAsStream("static/y9static/y9new/img/qrCodeLogo.png");
             String img = Y9QRCode.encode(url, 512, 512, imgis);
             y9KeyValueService.put("QRCode:" + uuid, "2", 2);
-            // redisTemplate.opsForValue().set("QRCode:" + uuid, 2, 120, TimeUnit.SECONDS);
             map.put("img", img);
             map.put("uuid", uuid);
             map.put("success", true);
@@ -69,7 +70,6 @@ public class QRCodeController {
         map.put("msg", "获取扫描结果失败");
         try {
             String value = y9KeyValueService.get("QRCode:" + uuid);
-            // Object value = redisTemplate.opsForValue().get("QRCode:" + uuid);
             if (null != value) {
                 if (value.contains("$")) {
                     String[] valArr = value.split("\\$");
@@ -101,7 +101,6 @@ public class QRCodeController {
                 return;
             }
             userId = Y9Base64.decode(userId);
-            // Object obj = redisTemplate.opsForValue().get("QRCode:" + uuid);
             String obj = y9KeyValueService.get("QRCode:" + uuid);
             if (null != obj) {
                 if (obj.contains("1$")) {
@@ -109,7 +108,6 @@ public class QRCodeController {
                         Y9JacksonUtil.writeValueAsString(Y9Result.failure(419, "二维码已过期：已被扫描。")));
                 } else {
                     y9KeyValueService.put("QRCode:" + uuid, 1 + "$" + userId, 5);
-                    // redisTemplate.opsForValue().set("QRCode:" + uuid, 1 + "$" + userId, 300, TimeUnit.SECONDS);
                     Y9Util.renderJson(response, Y9JacksonUtil.writeValueAsString(Y9Result.successMsg("扫码成功")));
                 }
             } else {

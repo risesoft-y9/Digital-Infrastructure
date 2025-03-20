@@ -6,7 +6,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.apereo.cas.services.Y9User;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -21,10 +21,12 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
+import y9.entity.Y9User;
 import y9.service.Y9UserService;
 import y9.util.MobileUtil;
 import y9.util.common.XSSCheckUtil;
 
+@Lazy(false)
 @Controller
 @RequestMapping(value = "/api")
 @Slf4j
@@ -32,37 +34,6 @@ import y9.util.common.XSSCheckUtil;
 public class TenantController {
 
     private final Y9UserService y9UserService;
-
-    @RequestMapping(value = "/checkUser")
-    public final ResponseEntity<String> checkUser(@RequestParam String loginName,
-        @RequestParam String tenantShortName) {
-        List<Map<String, Object>> list = new ArrayList<Map<String, Object>>();
-        try {
-            loginName = XSSCheckUtil.filter(loginName);
-            tenantShortName = XSSCheckUtil.filter(tenantShortName);
-
-            List<Y9User> users =
-                y9UserService.findByTenantShortNameAndLoginNameAndOriginal(tenantShortName, loginName, Boolean.TRUE);
-            if (!users.isEmpty()) {
-                for (Y9User user : users) {
-                    Map<String, Object> mapTemp = new HashMap<String, Object>();
-                    mapTemp.put("tenantShortName", user.getTenantShortName());
-                    mapTemp.put("tenantName", user.getTenantName());
-                    list.add(mapTemp);
-                }
-            }
-
-            ObjectMapper mapper = new ObjectMapper();
-            String jsonStr = mapper.writeValueAsString(list);
-
-            final HttpHeaders headers = new HttpHeaders();
-            headers.setContentType(MediaType.APPLICATION_JSON);
-            return new ResponseEntity<String>(jsonStr, headers, HttpStatus.OK);
-        } catch (final Throwable e) {
-            LOGGER.error(e.getMessage(), e);
-            return new ResponseEntity<String>(e.getMessage(), HttpStatus.BAD_REQUEST);
-        }
-    }
 
     /**
      * 根据登录名，获取登录信息，返回信息如（XXX@XXX）

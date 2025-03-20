@@ -21,13 +21,13 @@ y9:
                 protectedUrlPatterns: /*
                 opaque:
                     #客户端id，由数字底座运维人员分配
-                    client-id: clientid
+                    client-id: clientid_oidc
                     #客户密钥，由数字底座运维人员分配
-                    client-secret: secret
+                    client-secret: secret_oidc
                     #检测 uri，可以查询给定访问令牌的状态
-                    introspection-uri: http://localhost:7055/sso/oauth2.0/introspect
+                    introspection-uri: http://localhost:7055/sso/oidc/introspect
                     #获取用户信息 uri
-                    profile-uri: http://localhost:7055/sso/oauth2.0/profile
+                    profile-uri: http://localhost:7055/sso/oidc/profile
     service:
         org:
             #数字底座后端服务地址，调用数字底座接口信息时会用到
