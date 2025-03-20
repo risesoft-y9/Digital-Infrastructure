@@ -196,7 +196,7 @@ y9:
                 allowUriQueryParameter: true
                 protectedUrlPatterns: /admin/*
                 opaque:
-                    client-id: clientid
-                    client-secret: secret
-                    introspection-uri: https://test.youshengyun.com/sso/oauth2.0/introspect
-                    profile-uri: https://test.youshengyun.com/sso/oauth2.0/profile
+                    client-id: clientid_oidc
+                    client-secret: secret_oidc
+                    introspection-uri: https://test.youshengyun.com/sso/oidc/introspect
+                    profile-uri: https://test.youshengyun.com/sso/oidc/profile
