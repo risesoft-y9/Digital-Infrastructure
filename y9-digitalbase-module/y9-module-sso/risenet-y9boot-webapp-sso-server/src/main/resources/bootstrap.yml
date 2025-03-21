@@ -63,7 +63,7 @@ spring:
                 username: nacos
                 password: ${NACOS_PASSWORD:111111}
                 extension-configs:
-                    - dataId: sso-oidc.yml
+                    - dataId: sso.yml
 ---
 spring:
     config:
@@ -80,4 +80,4 @@ spring:
                 username: nacos
                 password: ${NACOS_PASSWORD:111111}
                 extension-configs:
-                    -   dataId: sso-oidc.yml
+                    -   dataId: sso.yml
