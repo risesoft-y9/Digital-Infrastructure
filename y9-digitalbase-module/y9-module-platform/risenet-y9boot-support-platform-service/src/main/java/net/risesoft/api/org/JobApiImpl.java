@@ -1,5 +1,7 @@
 package net.risesoft.api.org;
 
+import java.util.List;
+
 import javax.validation.constraints.NotBlank;
 
 import org.springframework.context.annotation.Primary;
@@ -55,5 +57,12 @@ public class JobApiImpl implements JobApi {
         Y9Job y9Job = Y9ModelConvertUtil.convert(job, Y9Job.class);
         y9Job = y9JobService.saveOrUpdate(y9Job);
         return Y9Result.success(Y9ModelConvertUtil.convert(y9Job, Job.class));
+    }
+
+    @Override
+    public Y9Result<List<Job>> listAll(@RequestParam("tenantId") @NotBlank String tenantId) {
+        Y9LoginUserHolder.setTenantId(tenantId);
+        List<Y9Job> jobList = y9JobService.listAll();
+        return Y9Result.success(Y9ModelConvertUtil.convert(jobList, Job.class));
     }
 }
