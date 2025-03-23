@@ -226,7 +226,7 @@
         <dependency>
             <groupId>org.apereo.cas</groupId>
             <artifactId>cas-server-support-oidc-services</artifactId>
-        </dependency>        
+        </dependency>
 
         <dependency>
             <groupId>org.apereo.cas</groupId>

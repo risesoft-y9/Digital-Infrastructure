@@ -5,6 +5,7 @@ import java.time.Instant;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.context.event.ApplicationReadyEvent;
 import org.springframework.context.ApplicationListener;
+import org.springframework.stereotype.Component;
 
 import y9.entity.Y9User;
 import y9.service.Y9UserService;
@@ -26,8 +27,7 @@ public class OnApplicationReady implements ApplicationListener<ApplicationReadyE
     public void onApplicationEvent(ApplicationReadyEvent event) {
         Y9User y9User = null;
         try {
-            y9User = y9UserService.findByPersonIdAndTenantId("11111111-1111-1111-1111-111111111117",
-                "11111111-1111-1111-1111-111111111113");
+            y9User = y9UserService.findByPersonIdAndTenantId("11111111-1111-1111-1111-111111111117", "11111111-1111-1111-1111-111111111113");
         } catch (Exception e) {
             e.printStackTrace();
         }

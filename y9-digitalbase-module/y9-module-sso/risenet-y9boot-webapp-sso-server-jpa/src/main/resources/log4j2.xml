@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <Configuration monitorInterval="300">
     <Properties>
-        <Property name="cas.log.dir">c:/logs/sso-server</Property>
+        <Property name="cas.log.dir">/temp/logs/sso-server</Property>
         <Property name="cas.log.level">debug</Property>
     </Properties>
     <Appenders>
