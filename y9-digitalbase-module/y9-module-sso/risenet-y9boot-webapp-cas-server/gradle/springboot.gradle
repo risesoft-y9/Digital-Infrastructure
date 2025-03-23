@@ -119,7 +119,7 @@ bootWar {
 
             def excludeArtifacts = ["WEB-INF/lib/servlet-api-2*.jar"]
             if (project.hasProperty("tomcatVersion")) {
-                excludes += ["WEB-INF/lib/tomcat-*.jar"]
+                excludeArtifacts += "WEB-INF/lib/tomcat-*.jar"
             }
             excludes = excludeArtifacts
 

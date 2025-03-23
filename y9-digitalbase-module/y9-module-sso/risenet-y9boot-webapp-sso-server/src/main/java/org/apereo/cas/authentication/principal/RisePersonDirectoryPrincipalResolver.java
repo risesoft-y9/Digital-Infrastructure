@@ -100,7 +100,7 @@ public class RisePersonDirectoryPrincipalResolver implements PrincipalResolver {
             attr.put("personType", Lists.newArrayList(y9User.getPersonType() == null ? "" : y9User.getPersonType()));
 
             attr.put("password", Lists.newArrayList(y9User.getPassword() == null ? "" : y9User.getPassword()));
-            attr.put("original", Lists.newArrayList(y9User.getOriginal() == null ? 1 : y9User.getOriginal()));
+            attr.put("original", Lists.newArrayList(y9User.getOriginal() == null ? true : y9User.getOriginal()));
             attr.put("originalId", Lists.newArrayList(y9User.getOriginalId() == null ? "" : y9User.getOriginalId()));
             attr.put("globalManager",
                 Lists.newArrayList(y9User.getGlobalManager() == null ? false : y9User.getGlobalManager()));

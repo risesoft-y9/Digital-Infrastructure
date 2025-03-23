@@ -118,11 +118,11 @@
         <maven.deploy.skip>true</maven.deploy.skip>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 
-        <cas.version>7.2.0-RC5</cas.version>
+        <cas.version>7.2.0</cas.version>
         <start-class>org.apereo.cas.web.CasWebApplication</start-class>
-        <spring-boot.version>3.4.0</spring-boot.version>
-        <spring-framework.version>6.2.0</spring-framework.version>
-        <spring-cloud.version>2023.0.3</spring-cloud.version>
+        <spring-boot.version>3.4.4</spring-boot.version>
+        <spring-framework.version>6.2.5</spring-framework.version>
+        <spring-cloud.version>2024.0.1</spring-cloud.version>
         <lombok.version>1.18.36</lombok.version>
         <mysql-driver.version>8.2.0</mysql-driver.version>
         <mariadb-driver.version>3.5.0</mariadb-driver.version>
@@ -132,7 +132,7 @@
         <oracle-driver.version>23.6.0.24.10</oracle-driver.version>
 
         <!-- Plugin versions -->
-        <jib-maven-plugin.version>3.4.4</jib-maven-plugin.version>
+        <jib-maven-plugin.version>3.4.5</jib-maven-plugin.version>
     </properties>
 
     <dependencyManagement>
@@ -178,10 +178,9 @@
             <artifactId>cas-server-core-authentication</artifactId>
         </dependency>
 
-        <dependency>
+        <!--<dependency>
             <groupId>org.apereo.cas</groupId>
             <artifactId>cas-server-support-person-directory</artifactId>
-            <!--排除冲突的依赖，在 macOS 中会有 redis 连接错误-->
             <exclusions>
                 <exclusion>
                     <artifactId>netty-transport-native-unix-common</artifactId>
@@ -196,7 +195,7 @@
                     <groupId>io.netty</groupId>
                 </exclusion>
             </exclusions>
-        </dependency>
+        </dependency>-->
 
         <dependency>
             <groupId>org.apereo.cas</groupId>
