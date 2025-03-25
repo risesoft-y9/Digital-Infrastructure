@@ -210,9 +210,10 @@ public class Y9RoleServiceImpl implements Y9RoleService {
                 }
                 return y9RoleManager.save(originRole);
             }
+        } else {
+            y9Role.setId(Y9IdGenerator.genId(IdType.SNOWFLAKE));
         }
-        y9Role.setId(Y9IdGenerator.genId(IdType.SNOWFLAKE));
-        y9Role.setTabIndex(getNextTabIndex());
+        y9Role.setTabIndex(null == y9Role.getTabIndex() ? getNextTabIndex() : y9Role.getTabIndex());
         if (parent != null) {
             y9Role.setParentId(parent.getId());
             y9Role.setDn(RoleLevelConsts.CN + y9Role.getName() + RoleLevelConsts.SEPARATOR + parent.getDn());
