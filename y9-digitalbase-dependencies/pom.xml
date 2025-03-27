@@ -1,6 +1,6 @@
 <project xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-    xmlns="http://maven.apache.org/POM/4.0.0"
-    xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+         xmlns="http://maven.apache.org/POM/4.0.0"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
 
     <modelVersion>4.0.0</modelVersion>
     <groupId>net.risesoft</groupId>
@@ -10,7 +10,8 @@
     <name>y9-digitalbase-dependencies</name>
     <description>RiseSoft/Digital Infrastructure dependencies</description>
     <url>
-        https://gitee.com/risesoft-y9/y9-core/tree/main/y9-digitalbase-dependencies</url>
+        https://gitee.com/risesoft-y9/y9-core/tree/main/y9-digitalbase-dependencies
+    </url>
 
     <licenses>
         <license>
@@ -96,12 +97,13 @@
         <gitee.url>https://gitee.com/risesoft-y9/y9-core</gitee.url>
         <gitee.connection>scm:git:https://gitee.com/risesoft-y9/y9-core.git</gitee.connection>
         <gitee.developerConnection>
-            scm:git:https://gitee.com/risesoft-y9/y9-core.git</gitee.developerConnection>
+            scm:git:https://gitee.com/risesoft-y9/y9-core.git
+        </gitee.developerConnection>
 
         <revision>9.7.0-SNAPSHOT</revision>
 
-        <spring-boot.version>3.4.3</spring-boot.version>
-        <spring-cloud.version>2024.0.0</spring-cloud.version>
+        <spring-boot.version>3.4.4</spring-boot.version>
+        <spring-cloud.version>2024.0.1</spring-cloud.version>
 
         <antisamy.version>1.6.2</antisamy.version>
         <aspectj.version>1.9.22.1</aspectj.version>
@@ -607,12 +609,14 @@
                 <repository>
                     <id>releases</id>
                     <url>
-                        https://svn.youshengyun.com:9900/nexus/repository/maven-releases/</url>
+                        https://svn.youshengyun.com:9900/nexus/repository/maven-releases/
+                    </url>
                 </repository>
                 <snapshotRepository>
                     <id>snapshots</id>
                     <url>
-                        https://svn.youshengyun.com:9900/nexus/repository/maven-snapshots/</url>
+                        https://svn.youshengyun.com:9900/nexus/repository/maven-snapshots/
+                    </url>
                 </snapshotRepository>
             </distributionManagement>
         </profile>
@@ -640,7 +644,8 @@
                             <publishingServerId>mvn-central</publishingServerId>
                             <centralBaseUrl>https://central.sonatype.com</centralBaseUrl>
                             <deploymentName>
-                                ${project.artifactId}-${project.version}</deploymentName>
+                                ${project.artifactId}-${project.version}
+                            </deploymentName>
                             <skipPublishing>false</skipPublishing>
                             <autoPublish>true</autoPublish>
                             <waitUntil>uploaded</waitUntil><!--validated uploaded-->

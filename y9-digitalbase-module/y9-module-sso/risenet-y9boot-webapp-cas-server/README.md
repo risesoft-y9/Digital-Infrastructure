@@ -5,7 +5,7 @@ WAR Overlay Type: `cas-overlay`
 
 # Versions
 
-- CAS Server `7.2.0-RC4`
+- CAS Server `7.2.0`
 - JDK `21`
 
 # Build
@@ -192,6 +192,13 @@ The first build might take a long time because it has to download some container
 images and the JDK, but subsequent builds should be fast.
 
 
+# CAS Command-line Shell
+
+To launch into the CAS command-line shell:
+
+```bash
+./gradlew[.bat] downloadShell runShell
+```
 
 # Retrieve Overlay Resources
 
@@ -261,6 +268,30 @@ that can later be examined. You will find a full list of CAS settings along with
 ./gradlew exportConfigMetadata
 ```                           
 
+# Puppeteer
+
+> [Puppeteer](https://pptr.dev/) is a Node.js library which provides a high-level API to control Chrome/Chromium over the DevTools Protocol.
+> Puppeteer runs in headless mode by default, but can be configured to run in full (non-headless) Chrome/Chromium.
+
+Puppeteer scenarios, used here as a form of acceptance testing, allow you to verify CAS functionality to address a particular authentication flow. The scenarios, which may be
+found inside the `./puppeteer/scenarios` directory are designed as small Node.js scripts that spin up a headless browser and walk through a test scenario. You may
+design your own test scenarios that verify functionality specific to your CAS deployment or feature.
+
+To execute Puppeteer scenarios, run:
+
+```bash
+./puppeteer/run.sh
+```
+
+This will first attempt to build your CAS deployment, will install Puppeteer and all other needed libraries. It will then launch the CAS server,
+and upon its availability, will iterate through defined scenarios and will execute them one at a time.
+
+The following defaults are assumed:
+
+- CAS will be available at `https://localhost:8443/cas/login`.
+- The CAS overlay is prepped with an embedded server container, such as Apache Tomcat.
+
+You may of course need to make adjustments to account for your specific environment and deployment settings, URLs, etc.
 
 
 # Duct

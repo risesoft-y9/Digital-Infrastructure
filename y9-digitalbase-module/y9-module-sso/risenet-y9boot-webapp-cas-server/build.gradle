@@ -9,23 +9,23 @@ import static org.gradle.internal.logging.text.StyledTextOutput.Style
 buildscript {
     repositories {
         if (project.privateRepoUrl) {
-          maven {
-            url project.privateRepoUrl
-            credentials {
-              username = project.privateRepoUsername
-              password = System.env.PRIVATE_REPO_TOKEN
+            maven {
+                url project.privateRepoUrl
+                credentials {
+                    username = project.privateRepoUsername
+                    password = System.env.PRIVATE_REPO_TOKEN
+                }
             }
-          }
         }
         mavenLocal()
         mavenCentral()
         gradlePluginPortal()
         maven {
-            url 'https://oss.sonatype.org/content/repositories/snapshots'
+            url = 'https://oss.sonatype.org/content/repositories/snapshots'
             mavenContent { snapshotsOnly() }
         }
         maven {
-            url "https://repo.spring.io/milestone"
+            url = "https://repo.spring.io/milestone"
             mavenContent { releasesOnly() }
         }
     }
@@ -37,41 +37,41 @@ buildscript {
         classpath "com.bmuschko:gradle-docker-plugin:${project.gradleDockerPluginVersion}"
         classpath "de.undercouch:gradle-download-task:${project.gradleDownloadTaskVersion}"
         classpath "org.apereo.cas:cas-server-core-api-configuration-model:${project.'cas.version'}"
-        classpath "org.apereo.cas:cas-server-core-configuration-metadata-repository:${project.'cas.version'}"
+        classpath "org.apereo.cas:cas-server-support-configuration-metadata-repository:${project.'cas.version'}"
     }
 }
 
 repositories {
     if (project.privateRepoUrl) {
-      maven {
-        url project.privateRepoUrl
-        credentials {
-          username = project.privateRepoUsername
-          password = System.env.PRIVATE_REPO_TOKEN
+        maven {
+            url project.privateRepoUrl
+            credentials {
+                username = project.privateRepoUsername
+                password = System.env.PRIVATE_REPO_TOKEN
+            }
         }
-      }
     }
     mavenLocal()
     mavenCentral()
-    maven { url 'https://oss.sonatype.org/content/repositories/releases' }
+    maven { url = 'https://oss.sonatype.org/content/repositories/releases' }
     maven {
-        url 'https://oss.sonatype.org/content/repositories/snapshots'
+        url = 'https://oss.sonatype.org/content/repositories/snapshots'
         mavenContent { snapshotsOnly() }
     }
     maven {
-        url "https://repository.apache.org/content/repositories/snapshots"
+        url = "https://repository.apache.org/content/repositories/snapshots"
         mavenContent { snapshotsOnly() }
     }
     maven {
-        url 'https://build.shibboleth.net/nexus/content/repositories/releases/'
+        url = 'https://build.shibboleth.net/nexus/content/repositories/releases/'
         mavenContent { releasesOnly() }
     }
     maven {
-        url "https://build.shibboleth.net/nexus/content/repositories/snapshots"
+        url = "https://build.shibboleth.net/nexus/content/repositories/snapshots"
         mavenContent { snapshotsOnly() }
     }
     maven {
-        url "https://repo.spring.io/milestone"
+        url = "https://repo.spring.io/milestone"
         mavenContent { releasesOnly() }
     }
 }
@@ -81,7 +81,6 @@ apply plugin: "war"
 
 apply plugin: "org.springframework.boot"
 apply plugin: "io.freefair.lombok"
-
 
 
 apply from: file("gradle/springboot.gradle")
@@ -105,7 +104,7 @@ configurations {
             if (project.hasProperty("tomcatVersion")) {
                 eachDependency { DependencyResolveDetails dependency ->
                     def requested = dependency.requested
-                    if (requested.group.startsWith("org.apache.tomcat") && requested.name != "jakartaee-migration")  {
+                    if (requested.group.startsWith("org.apache.tomcat") && requested.name != "jakartaee-migration") {
                         dependency.useVersion("${tomcatVersion}")
                     }
                 }
@@ -154,7 +153,7 @@ bootBuildImage {
 ['jibDockerBuild', 'jibBuildTar', 'jib'].each { taskName ->
     if (gradle.gradleVersion >= "8.0") {
         getTasksByName(taskName, true).each(it -> {
-            it.notCompatibleWithConfigurationCache("Jib is not compatible with configuration cache");
+            it.notCompatibleWithConfigurationCache("Jib is not compatible with configuration cache")
             it.enabled = !gradle.startParameter.isConfigurationCacheRequested()
         })
     }
@@ -187,9 +186,9 @@ jib {
     to {
         image = "${project.'containerImageOrg'}/${project.'containerImageName'}:${project.version}"
         /**
-             ecr-login: Amazon Elastic Container Registry (ECR)
-             gcr: Google Container Registry (GCR)
-             osxkeychain: Docker Hub
+         ecr-login: Amazon Elastic Container Registry (ECR)
+         gcr: Google Container Registry (GCR)
+         osxkeychain: Docker Hub
          */
         credHelper = "osxkeychain"
         if (dockerUsername != null && dockerPassword != null) {
@@ -204,31 +203,32 @@ jib {
         creationTime = "USE_CURRENT_TIMESTAMP"
         entrypoint = ['/docker/entrypoint.sh']
         ports = ['80', '443', '8080', '8443', '8444', '8761', '8888', '5000']
-        labels = [version:project.version, name:project.name, group:project.group, org:project.containerImageOrg]
+        labels = [version: project.version, name: project.name, group: project.group, org: project.containerImageOrg]
         workingDirectory = '/docker/cas/war'
     }
     extraDirectories {
         paths {
-          path {
-            from = file('src/main/jib')
-          }
-          path {
-            from = file('etc/cas')
-            into = '/etc/cas'
-          }
-          path {
-            from = file("build/libs")
-            into = "/docker/cas/war"
-          }
+            path {
+                from = file('src/main/jib')
+            }
+            path {
+                from = file('etc/cas')
+                into = '/etc/cas'
+            }
+            path {
+                from = file("build/libs")
+                into = "/docker/cas/war"
+            }
         }
         permissions = [
-            '/docker/entrypoint.sh': '755'
+                '/docker/entrypoint.sh': '755'
         ]
     }
     allowInsecureRegistries = project.allowInsecureRegistries
 }
 
 import com.bmuschko.gradle.docker.tasks.image.*
+
 tasks.register("casBuildDockerImage", DockerBuildImage) {
     dependsOn("build")
 
@@ -271,8 +271,8 @@ if (project.hasProperty("appServer")) {
 
 dependencies {
     /**
-    * Do NOT modify the lines below or else you will risk breaking dependency management.
-    **/
+     * Do NOT modify the lines below or else you will risk breaking dependency management.
+     **/
     implementation enforcedPlatform("org.apereo.cas:cas-server-support-bom:${project.'cas.version'}")
     implementation platform(org.springframework.boot.gradle.plugin.SpringBootPlugin.BOM_COORDINATES)
 
@@ -285,10 +285,10 @@ dependencies {
     if (appServer == 'tomcat') {
         implementation "org.apereo.cas:cas-server-webapp-init-tomcat"
     }
-    
+
     developmentOnly "org.springframework.boot:spring-boot-devtools:${project.springBootVersion}"
     // developmentOnly "org.springframework.boot:spring-boot-docker-compose:${project.springBootVersion}"
-        
+
     /**
      * CAS dependencies and modules may be listed here.
      *

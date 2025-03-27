@@ -1,14 +1,14 @@
-import static org.gradle.internal.logging.text.StyledTextOutput.Style
+import groovy.json.JsonSlurper
+import groovy.time.TimeCategory
+import org.apereo.cas.metadata.CasConfigurationMetadataCatalog
+import org.apereo.cas.metadata.ConfigurationMetadataCatalogQuery
+import org.gradle.internal.logging.text.Style
+import org.gradle.internal.logging.text.StyledTextOutputFactory
 
-import org.apereo.cas.metadata.*
-import org.gradle.internal.logging.text.*
-
-import groovy.json.*
-import groovy.time.*
-
-import java.nio.file.*
-import java.util.*
-import java.security.*
+import java.nio.file.Files
+import java.nio.file.Paths
+import java.nio.file.StandardCopyOption
+import java.security.SecureRandom
 
 buildscript {
     repositories {
@@ -227,10 +227,10 @@ task listTemplateViews(group: "CAS", description: "List all CAS views") {
     def templateViews = fileTree(explodedResourcesDir).matching {
         include "**/*.html"
     }
-    .collect {
-        return it.path.replace(explodedResourcesDir, "")
-    }
-    .toSorted()
+            .collect {
+                return it.path.replace(explodedResourcesDir, "")
+            }
+            .toSorted()
 
     doFirst {
         templateViews.each { println it }
@@ -269,7 +269,7 @@ task getResource(group: "CAS", description: "Fetch a CAS resource and move it in
         def resourceFile = results[0].canonicalPath
         def toResourceFile = new File("${projectDirectory}", resourceFile.replace(fromFile, resourcesDir))
         toResourceFile.getParentFile().mkdirs()
-     
+
         Files.copy(Paths.get(resourceFile), Paths.get(toResourceFile.absolutePath), StandardCopyOption.REPLACE_EXISTING)
         println "Copied file ${resourceFile} to ${toResourceFile}"
     }
@@ -325,10 +325,10 @@ if (!skipValidation) {
         def file = new File("${projectDir}/src/main/resources/application.properties")
         if (file.exists()) {
             throw new GradleException("This overlay project is overriding a CAS-supplied configuration file at ${file.path}. "
-                + "Overriding this file will disable all default CAS settings that are provided to the overlay, and "
-                + "generally has unintended side-effects. It's best to move your configuration inside an application.yml "
-                + "file, if you intend to keep the configuration bundled with the CAS web application. \n\nTo disable this "
-                + "validation step, run the build with -Pvalidate=false.");
+                    + "Overriding this file will disable all default CAS settings that are provided to the overlay, and "
+                    + "generally has unintended side-effects. It's best to move your configuration inside an application.yml "
+                    + "file, if you intend to keep the configuration bundled with the CAS web application. \n\nTo disable this "
+                    + "validation step, run the build with -Pvalidate=false.")
         }
     }
     processResources.dependsOn(validateConfiguration)
@@ -355,7 +355,7 @@ task duct(group: "CAS", description: "Test ticket registry functionality via the
         def keepGoing = true
         def executionCount = 0
 
-        while(keepGoing) {
+        while (keepGoing) {
             executionCount++
 
             def casServerPrefix1 = getCasServerNode()
@@ -366,7 +366,7 @@ task duct(group: "CAS", description: "Test ticket registry functionality via the
                     casServerPrefix2 = getCasServerNode()
                 }
             }
-            
+
             if (debug) {
                 out.withStyle(Style.Normal).println("CAS Server 1: ${casServerPrefix1}")
                 out.withStyle(Style.Normal).println("CAS Server 2: ${casServerPrefix2}")
@@ -378,7 +378,7 @@ task duct(group: "CAS", description: "Test ticket registry functionality via the
             connection.setRequestProperty("Content-Type", "application/x-www-form-urlencoded")
             connection.getOutputStream().write("username=${username}&password=${password}".getBytes("UTF-8"))
             def rc = connection.getResponseCode()
-            
+
             if (rc == 201) {
                 def tgt = connection.getHeaderFields().get("Location").get(0).find('TGT-.*')
 
@@ -392,7 +392,7 @@ task duct(group: "CAS", description: "Test ticket registry functionality via the
                 connection.setRequestProperty("Content-Type", "application/x-www-form-urlencoded")
                 connection.getOutputStream().write("service=${service}".getBytes("UTF-8"))
                 rc = connection.getResponseCode()
-                
+
                 if (rc == 200) {
                     def st = connection.getInputStream().getText()
                     if (debug) {
@@ -404,11 +404,11 @@ task duct(group: "CAS", description: "Test ticket registry functionality via the
                     connection.setDoOutput(true)
                     connection.setRequestProperty("Content-Type", "application/json")
                     rc = connection.getResponseCode()
-                    
+
                     if (rc == 200) {
                         def serverResponse = connection.getInputStream().getText()
                         def response = new JsonSlurper().parseText(serverResponse)
-                        
+
                         if (response.serviceResponse["authenticationSuccess"] != null) {
                             out.withStyle(Style.Success).println("Service ticket ${st} is successfully validated @ ${casServerPrefix1}")
                         } else {
@@ -448,12 +448,12 @@ task exportConfigMetadata(group: "CAS", description: "Export collection of CAS p
     doLast {
         file.withWriter('utf-8') { writer ->
             def props = CasConfigurationMetadataCatalog.query(
-                ConfigurationMetadataCatalogQuery.builder()
-                    .queryType(queryType)
-                    .build())
-                .properties()
+                    ConfigurationMetadataCatalogQuery.builder()
+                            .queryType(queryType)
+                            .build())
+                    .properties()
             props.each { property ->
-                writer.writeLine("# Type: ${property.type}");
+                writer.writeLine("# Type: ${property.type}")
                 writer.writeLine("# Module: ${property.module}")
                 writer.writeLine("# Owner: ${property.owner}")
                 if (property.deprecationLevel != null) {
