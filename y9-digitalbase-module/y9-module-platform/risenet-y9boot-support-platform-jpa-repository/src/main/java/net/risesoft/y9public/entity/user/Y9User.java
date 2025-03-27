@@ -179,12 +179,6 @@ public class Y9User extends BaseEntity {
     @Convert(converter = EnumConverter.ManagerLevelEnumConverter.class)
     private ManagerLevelEnum managerLevel = ManagerLevelEnum.GENERAL_USER;
 
-    /** 拥有的角色列表 */
-    @Lob
-    @Column(name = "ROLES")
-    @Comment("拥有的角色列表")
-    private String roles;
-
     /** 拥有的岗位列表 */
     @Lob
     @Column(name = "POSITIONS")

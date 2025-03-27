@@ -1,19 +1,32 @@
 package org.apereo.cas.services.y9;
 
-import com.fasterxml.jackson.annotation.JsonFormat;
-import jakarta.persistence.*;
-import lombok.*;
-import lombok.experimental.Accessors;
-import lombok.experimental.SuperBuilder;
-import lombok.extern.slf4j.Slf4j;
+import java.io.Serial;
+import java.io.Serializable;
+import java.util.Date;
+
+import jakarta.persistence.Column;
+import jakarta.persistence.Convert;
+import jakarta.persistence.Entity;
+import jakarta.persistence.Id;
+import jakarta.persistence.Index;
+import jakarta.persistence.Lob;
+import jakarta.persistence.Table;
+
 import org.hibernate.annotations.ColumnDefault;
 import org.hibernate.annotations.Comment;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
-import java.io.Serial;
-import java.io.Serializable;
-import java.util.Date;
+import com.fasterxml.jackson.annotation.JsonFormat;
+
+import lombok.EqualsAndHashCode;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+import lombok.ToString;
+import lombok.experimental.Accessors;
+import lombok.experimental.SuperBuilder;
+import lombok.extern.slf4j.Slf4j;
 
 @Entity(name = Y9User.ENTITY_NAME)
 @Table(name = "Y9_COMMON_ACCOUNT", indexes = {@Index(columnList = "LOGIN_NAME")})
@@ -34,24 +47,20 @@ public class Y9User implements Serializable {
 
     @Serial
     private static final long serialVersionUID = 1095290600488048713L;
-
-    @Id
-    @Column(name = "ID", length = 38, nullable = false)
-    @Comment("主键")
-    private String id;
-
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss", timezone = "GMT+8")
     @Comment("创建时间")
     @CreationTimestamp
     @Column(name = "CREATE_TIME", updatable = false)
     protected Date createTime;
-
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss", timezone = "GMT+8")
     @Comment("更新时间")
     @UpdateTimestamp
     @Column(name = "UPDATE_TIME")
     protected Date updateTime;
-
+    @Id
+    @Column(name = "ID", length = 38, nullable = false)
+    @Comment("主键")
+    private String id;
     @Column(name = "TENANT_ID", length = 38, nullable = false)
     @Comment("租户id")
     private String tenantId;
@@ -157,11 +166,6 @@ public class Y9User implements Serializable {
     @Comment("是否三员管理员")
     @ColumnDefault("0")
     private Integer managerLevel;
-
-    @Lob
-    @Column(name = "ROLES")
-    @Comment("拥有的角色列表")
-    private String roles;
 
     @Lob
     @Column(name = "POSITIONS")

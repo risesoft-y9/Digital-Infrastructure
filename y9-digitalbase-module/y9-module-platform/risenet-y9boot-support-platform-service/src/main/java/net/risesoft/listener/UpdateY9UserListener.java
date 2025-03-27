@@ -92,7 +92,6 @@ public class UpdateY9UserListener {
         y9User.setPersonType(PersonTypeEnum.DEPARTMENT.getValue());
         y9User.setOriginal(true);
         y9User.setOriginalId(null);
-        y9User.setRoles(null);
         y9User.setGlobalManager(y9Manager.getGlobalManager());
         y9UserService.save(y9User);
         if (LOGGER.isDebugEnabled()) {
@@ -173,7 +172,6 @@ public class UpdateY9UserListener {
         y9User.setPersonType(PersonTypeEnum.DEPARTMENT.getValue());
         y9User.setOriginal(true);
         y9User.setOriginalId(null);
-        y9User.setRoles(null);
         y9User.setGlobalManager(y9Manager.getGlobalManager());
         y9UserService.save(y9User);
         if (LOGGER.isDebugEnabled()) {
@@ -235,7 +233,6 @@ public class UpdateY9UserListener {
         y9User.setOriginalId(person.getOriginalId());
         y9User.setGlobalManager(false);
         String roleIds = y9PersonToRoleService.getRoleIdsByPersonId(person.getId());
-        y9User.setRoles(roleIds);
         String positionIds = y9PersonsToPositionsService.getPositionIdsByPersonId(person.getId());
         y9User.setPositions(positionIds);
         y9UserService.save(y9User);
@@ -320,7 +317,6 @@ public class UpdateY9UserListener {
         y9User.setOriginalId(person.getOriginalId());
         y9User.setGlobalManager(false);
         String roleIds = y9PersonToRoleService.getRoleIdsByPersonId(person.getId());
-        y9User.setRoles(roleIds);
         String positionIds = y9PersonsToPositionsService.getPositionIdsByPersonId(person.getId());
         y9User.setPositions(positionIds);
         y9UserService.save(y9User);
