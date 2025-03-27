@@ -53,7 +53,6 @@ include(":y9-digitalbase-starter:risenet-y9boot-starter-security")
 include(":y9-digitalbase-starter:risenet-y9boot-starter-sso-oauth2-resource")
 include(":y9-digitalbase-starter:risenet-y9boot-starter-web")
 include(":y9-digitalbase-starter:risenet-y9boot-starter-elasticsearch")
-include(":y9-digitalbase-starter:risenet-y9boot-starter-useronline")
 
 include(":y9-digitalbase-support:risenet-y9boot-support-file-jpa-repository")
 include(":y9-digitalbase-support:risenet-y9boot-support-file-service-local")
