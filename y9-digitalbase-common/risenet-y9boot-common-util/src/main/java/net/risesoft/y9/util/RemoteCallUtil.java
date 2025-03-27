@@ -263,6 +263,8 @@ public class RemoteCallUtil {
 
     public static <T> Y9Result<T> postXml(String url, String xmlData, Class<T> clz) {
         HttpClient client = new HttpClient();
+        client.getParams().setParameter(HttpMethodParams.BUFFER_WARN_TRIGGER_LIMIT, 1024 * 1024 * 10);
+        client.getParams().setParameter(HttpMethodParams.HTTP_CONTENT_CHARSET, StandardCharsets.UTF_8.name());
         PostMethod method = new PostMethod(url);
         try {
             StringRequestEntity requestEntity = new StringRequestEntity(xmlData, "application/xml", "UTF-8");
