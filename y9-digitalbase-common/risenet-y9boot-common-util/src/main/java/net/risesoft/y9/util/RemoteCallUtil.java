@@ -261,6 +261,43 @@ public class RemoteCallUtil {
         return post(url, params, null, clz);
     }
 
+    public static <T> Y9Result<T> postXml(String url, String xmlData, Class<T> clz) {
+        HttpClient client = new HttpClient();
+        PostMethod method = new PostMethod(url);
+        try {
+            StringRequestEntity requestEntity = new StringRequestEntity(xmlData, "application/xml", "UTF-8");
+            method.setRequestEntity(requestEntity);
+            int code = client.executeMethod(method);
+            String response = null;
+            InputStream inputStream = method.getResponseBodyAsStream();
+            if (null != inputStream) {
+                BufferedReader br = new BufferedReader(new InputStreamReader(inputStream, StandardCharsets.UTF_8));
+                StringBuilder stringBuffer = new StringBuilder();
+                String b = "";
+                while ((b = br.readLine()) != null) {
+                    stringBuffer.append(b);
+                }
+                response = stringBuffer.toString();
+            }
+            if (code == HttpStatus.SC_OK) {
+                JavaType javaType = objectMapper.getTypeFactory().constructParametricType(Y9Result.class, clz);
+                return objectMapper.readValue(response, javaType);
+            } else {
+                LOGGER.info("http status code: {}, response: {}", code, response);
+            }
+        } catch (UnsupportedEncodingException e) {
+            LOGGER.warn(e.getMessage(), e);
+        } catch (HttpException e1) {
+            LOGGER.warn(e1.getMessage(), e1);
+        } catch (IOException ioe) {
+            LOGGER.warn(ioe.getMessage(), ioe);
+        } finally {
+            method.releaseConnection();
+            ((SimpleHttpConnectionManager)client.getHttpConnectionManager()).shutdown();
+        }
+        return null;
+    }
+
     public static <T> Y9Result<T> post(String url, List<NameValuePair> params, List<NameValuePair> requestBody,
         Class<T> clz) {
         JavaType javaType = objectMapper.getTypeFactory().constructParametricType(Y9Result.class, clz);
