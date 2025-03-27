@@ -1,5 +1,6 @@
 package org.apereo.cas.authentication.principal;
 
+import java.util.Arrays;
 import static java.util.stream.Collectors.toList;
 
 import java.util.ArrayList;
@@ -107,6 +108,12 @@ public class RisePersonDirectoryPrincipalResolver implements PrincipalResolver {
 
             if (StringUtils.hasText(positionId)) {
                 attr.put("positionId", Lists.newArrayList(positionId));
+            } else {
+                String[] positionIds = org.apache.commons.lang3.StringUtils
+                    .split(Optional.ofNullable(y9User.getPositions()).orElse(""), ",");
+                Optional<String> positionIdOptional = Arrays.stream(positionIds).findFirst();
+                // 当前登陆岗位默认返回排序靠前的岗位id
+                attr.put("positionId", Lists.newArrayList(positionIdOptional.orElse("")));
             }
 
             personAttributes = new SimplePersonAttributes(username, attr);
