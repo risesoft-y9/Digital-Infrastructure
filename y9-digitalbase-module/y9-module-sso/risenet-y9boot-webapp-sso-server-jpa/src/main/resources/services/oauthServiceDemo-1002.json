@@ -1,8 +1,8 @@
 {
     "@class" : "org.apereo.cas.support.oauth.services.OAuthRegisteredService",
-    "clientId": "clientid_oauth",
-    "clientSecret": "secret_oauth",
-    "serviceId" : "^(https?)://.*",
+    "clientId": "clientid",
+    "clientSecret": "secret",
+    "serviceId" : "^(https?)://.+",
     "name" : "oauthServiceDemo",
     "description" : "oauth Authentication app demo",
     "theme" : "y9-apereo",
