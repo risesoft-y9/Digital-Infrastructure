@@ -1,11 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <databaseChangeLog
-        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
         xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
                       http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.9.xsd">
 
     <changeSet id="1715936106408-1" author="shidaobang" runOnChange="true">
+        <preConditions onFail="MARK_RAN">
+            <columnExists tableName="Y9_ORG_PERSONS_RESOURCES" columnName="RESOURCE_CUSTOM_ID"/>
+        </preConditions>
         <dropColumn
                 columnName="RESOURCE_CUSTOM_ID"
                 tableName="Y9_ORG_PERSONS_RESOURCES">
@@ -41,6 +44,9 @@
     </changeSet>
 
     <changeSet id="1715936106408-2" author="shidaobang" runOnChange="true">
+        <preConditions onFail="MARK_RAN">
+            <columnExists tableName="Y9_ORG_POSITIONS_RESOURCES" columnName="RESOURCE_CUSTOM_ID"/>
+        </preConditions>
         <dropColumn
                 columnName="RESOURCE_CUSTOM_ID"
                 tableName="Y9_ORG_POSITIONS_RESOURCES">
@@ -76,6 +82,9 @@
     </changeSet>
 
     <changeSet id="1716456512373-1" author="shidaobang" runOnChange="true">
+        <preConditions onFail="MARK_RAN">
+            <columnExists tableName="Y9_ORG_CUSTOM_GROUP" columnName="USER_NAME"/>
+        </preConditions>
         <dropColumn
                 columnName="USER_NAME"
                 tableName="Y9_ORG_CUSTOM_GROUP">
@@ -87,6 +96,9 @@
     </changeSet>
 
     <changeSet id="1717124156043-1" author="shidaobang" runOnChange="true">
+        <preConditions onFail="MARK_RAN">
+            <columnExists tableName="Y9_ORG_PERSONS_ROLES" columnName="DEPARTMENT_ID"/>
+        </preConditions>
         <dropColumn
                 columnName="DEPARTMENT_ID"
                 tableName="Y9_ORG_PERSONS_ROLES">
@@ -118,6 +130,9 @@
     </changeSet>
 
     <changeSet id="1717124156043-2" author="shidaobang" runOnChange="true">
+        <preConditions onFail="MARK_RAN">
+            <columnExists tableName="Y9_ORG_POSITIONS_ROLES" columnName="DEPARTMENT_ID"/>
+        </preConditions>
         <dropColumn
                 columnName="DEPARTMENT_ID"
                 tableName="Y9_ORG_POSITIONS_ROLES">

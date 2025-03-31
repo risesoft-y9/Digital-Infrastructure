@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <databaseChangeLog
-        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
         xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
                       http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.9.xsd">
 
@@ -20,6 +20,9 @@
     </changeSet>
 
     <changeSet id="1715936315024-1" author="shidaobang" runOnChange="true">
+        <preConditions onFail="MARK_RAN">
+            <columnExists tableName="Y9_COMMON_APP_STORE" columnName="PARENT_ID"/>
+        </preConditions>
         <dropColumn
                 columnName="PARENT_ID"
                 tableName="Y9_COMMON_APP_STORE">
