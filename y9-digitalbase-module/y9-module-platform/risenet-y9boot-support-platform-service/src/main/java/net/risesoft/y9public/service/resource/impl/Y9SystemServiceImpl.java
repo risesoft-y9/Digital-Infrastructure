@@ -136,9 +136,15 @@ public class Y9SystemServiceImpl implements Y9SystemService {
     @Override
     @Transactional(readOnly = false)
     public Y9System saveAndRegister4Tenant(Y9System y9System) {
-        Y9System savedSystem = this.saveOrUpdate(y9System);
-        y9TenantSystemManager.saveTenantSystem(savedSystem.getId(), Y9LoginUserHolder.getTenantId());
-        return savedSystem;
+        if (Y9LoginUserHolder.getUserInfo().getManagerLevel().isTenantManager()) {
+            y9System.setTenantId(Y9LoginUserHolder.getTenantId());
+            Y9System savedSystem = this.saveOrUpdate(y9System);
+            y9TenantSystemManager.saveTenantSystem(savedSystem.getId(), Y9LoginUserHolder.getTenantId());
+            return savedSystem;
+        } else {
+            y9System.setTenantId(null);
+            return this.saveOrUpdate(y9System);
+        }
     }
 
     @Override

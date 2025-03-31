@@ -120,7 +120,6 @@ public class SystemController {
     @RiseLog(operationName = "保存系统")
     @PostMapping(value = "/save")
     public Y9Result<Y9System> save(@Validated Y9System y9System) {
-        y9System.setTenantId(Y9LoginUserHolder.getTenantId());
         Y9System savedSystem = y9SystemService.saveAndRegister4Tenant(y9System);
         return Y9Result.success(savedSystem, "保存系统成功");
     }
