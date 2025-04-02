@@ -116,16 +116,8 @@ logRequest.interceptors.response.use(
                         if (isExternal(settings.serverLoginUrl)) {
                             window.location.href = settings.serverLoginUrl;
                         } else {
-                            const params = {
-                                to: { path: window.location.pathname },
-                                logoutUrl: import.meta.env.VUE_APP_SSO_LOGOUT_URL + import.meta.env.VUE_APP_NAME + '/',
-                                __y9delete__: () => {
-                                    // 删除前执行的函数
-                                    console.log('删除前执行的函数');
-                                }
-                            };
-                            $y9_SSO.ssoLogout(params);
-                            // window.location.reload();
+                            $y9_SSO.clearCurrentSessionStorage();
+                            window.location.reload();
                         }
                     }
                 });

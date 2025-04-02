@@ -1,53 +1,53 @@
 <template>
-    <y9Card key="personal" :title="$t('个人信息')" v-if="config_personal.itemList.length" :showCloseButton="false">
+    <y9Card v-if="config_personal.itemList.length" key="personal" :showCloseButton="false" :title="$t('个人信息')">
         <y9Form ref="personalY9FormRef" :config="config_personal">
             <template #slotAlterPwdButton>
                 <el-button
                     v-if="showAlterPwdCompsRef"
-                    type="danger"
                     :size="fontSizeObj.buttonSize"
                     :style="{ fontSize: fontSizeObj.baseFontSize }"
-                    @click="showAlterPwdComps"
                     class="alter-pwd"
+                    type="danger"
+                    @click="showAlterPwdComps"
                 >
                     {{ $t('修改密码') }}
                 </el-button>
                 <el-button
                     v-else
-                    @click="showAlterPwdComps"
                     :size="fontSizeObj.buttonSize"
                     :style="{ fontSize: fontSizeObj.baseFontSize }"
                     class="alter-pwd"
+                    @click="showAlterPwdComps"
                 >
                     {{ $t('修改密码') }}
                 </el-button>
                 <el-button
                     v-if="editBtnText === '保存'"
-                    type="danger"
-                    @click="onEdit"
+                    :loading="isLoading"
                     :size="fontSizeObj.buttonSize"
                     :style="{ fontSize: fontSizeObj.baseFontSize }"
                     class="alter-personInfo"
-                    :loading="isLoading"
+                    type="danger"
+                    @click="onEdit"
                 >
                     {{ $t(`${editBtnText}`) }}
                 </el-button>
                 <el-button
                     v-else
-                    @click="onEdit"
-                    class="alter-personInfo"
+                    :loading="isLoading"
                     :size="fontSizeObj.buttonSize"
                     :style="{ fontSize: fontSizeObj.baseFontSize }"
-                    :loading="isLoading"
+                    class="alter-personInfo"
+                    @click="onEdit"
                 >
                     {{ $t(`${editBtnText}`) }}
                 </el-button>
                 <el-button
                     v-show="editBtnText === '保存'"
-                    @click="onClose"
                     :size="fontSizeObj.buttonSize"
                     :style="{ fontSize: fontSizeObj.baseFontSize }"
                     class="alter-personInfo"
+                    @click="onClose"
                 >
                     {{ $t('关闭') }}
                 </el-button>
@@ -58,29 +58,29 @@
     <br />
 
     <y9Card
-        v-model:show="showAlterPwdCompsRef"
         key="pwd"
-        :title="$t('修改密码')"
-        :showFooter="true"
+        v-model:show="showAlterPwdCompsRef"
         :footerBtnConfig="pwd_footerBtnConfig"
+        :showFooter="true"
+        :title="$t('修改密码')"
     >
         <y9Form ref="passwordY9FormRef" :config="config_pwd"></y9Form>
     </y9Card>
-    <el-button style="display: none" v-loading.fullscreen.lock="loading"></el-button>
+    <el-button v-loading.fullscreen.lock="loading" style="display: none"></el-button>
 </template>
 
 <script lang="ts" setup>
     import { useI18n } from 'vue-i18n';
-    import { inject, reactive, computed, ref } from 'vue';
+    import { computed, inject, reactive, ref } from 'vue';
     import { ElMessage, ElNotification } from 'element-plus';
     import y9_storage from '@/utils/storage';
-    import { getManagerById, updateManager, checkPassword, modifyPassword } from '@/api/manager/index';
-    import { forIn } from 'lodash-es';
+    import { checkPassword, getManagerById, modifyPassword, updateManager } from '@/api/manager/index';
     import { $validCheck } from '@/utils/validate';
     import { useSettingStore } from '@/store/modules/settingStore';
+    import { $y9_SSO } from '@/main';
+
     const settingStore = useSettingStore();
     const { t } = useI18n();
-    import { $y9_SSO } from '@/main';
     // 注入 字体对象
     const fontSizeObj: any = inject('sizeObjInfo');
 
@@ -118,6 +118,7 @@
     });
 
     const latestPersonalInfo = ref({} as any);
+
     // 不可编辑状态下
     async function init() {
         const data = await getManagerById(ssoUserInfo.personId).catch((e) => e);
@@ -168,7 +169,7 @@
             },
             {
                 type: 'text',
-                label: computed(() => t('上次密码修改时间')),
+                label: computed(() => t('下次审查时间')),
                 props: {
                     content: nextCheckTime
                 }
@@ -309,7 +310,7 @@
             },
             {
                 type: 'text',
-                label: computed(() => t('上次密码修改时间')),
+                label: computed(() => t('下次审查时间')),
                 props: {
                     content: latestPersonalInfo.value.nextCheckTime
                 }
@@ -355,7 +356,8 @@
             email: '',
             mobile: '',
             pass1: '',
-            managerLevel: ssoUserInfo.managerLevel
+            managerLevel: ssoUserInfo.managerLevel,
+            globalManager: ssoUserInfo.globalManager
         });
 
         // 合并已填写的字段
@@ -473,8 +475,8 @@
             return callback(new Error(t('新密码不能和当前密码相同')));
         }
         // 验证是否符合密码规则 - 长度
-        if (value.length < 10) {
-            return callback(new Error(t('新密码不符合验证规则，长度必须大于或等于10')));
+        if (value.length < 8) {
+            return callback(new Error(t('新密码不符合验证规则，长度必须大于或等于8')));
         }
         // 验证是否符合密码规则 - 数字
         if (!/[0-9]+/.test(value)) {
@@ -520,7 +522,7 @@
             {
                 type: 'text',
                 props: {
-                    content: computed(() => t('新密码必须包含”数字“、”大写字母“、”小写字母“，长度大于或等于10'))
+                    content: computed(() => t('新密码必须包含”数字“、”大写字母“、”小写字母“，长度大于或等于8'))
                 }
             },
             {
@@ -566,6 +568,7 @@
 
     // 显示修改密码组件
     const showAlterPwdCompsRef = ref(false);
+
     function showAlterPwdComps() {
         showAlterPwdCompsRef.value = true;
     }
@@ -595,21 +598,23 @@
                         }, 3000);
                     } else {
                         // 接口状态正确，立即关闭loading动画并重新初始化数据
-                        try {
-                            const params = {
-                                to: { path: window.location.pathname },
-                                logoutUrl: import.meta.env.VUE_APP_SSO_LOGOUT_URL + import.meta.env.VUE_APP_NAME + '/',
-                                __y9delete__: () => {
-                                    // 删除前执行的函数
-                                    console.log('删除前执行的函数');
-                                }
-                            };
-                            $y9_SSO.ssoLogout(params);
-                        } catch (error) {
-                            ElMessage.error(error.msg || 'Has Error');
-                        }
                         pwd_footerBtnConfig.okLoading = false;
                         loading.value = false;
+                        ElMessageBox.confirm('密码修改成功，即将跳转登录页面重新登录', '提示', {
+                            confirmButtonText: 'OK',
+                            type: 'warning',
+                            showClose: false,
+                            showCancelButton: false,
+                            closeOnClickModal: false,
+                            closeOnPressEscape: false
+                        }).then(() => {
+                            try {
+                                const params = {};
+                                $y9_SSO.ssoLogout(params);
+                            } catch (error) {
+                                ElMessage.error(error.msg || 'Has Error');
+                            }
+                        });
                     }
                     resolve();
                 } else {

@@ -35,6 +35,8 @@ declare module '@vue/runtime-core' {
     ElSelect: typeof import('element-plus/es')['ElSelect']
     ElSubMenu: typeof import('element-plus/es')['ElSubMenu']
     ElSwitch: typeof import('element-plus/es')['ElSwitch']
+    ElText: typeof import('element-plus/es')['ElText']
+    ElTooltip: typeof import('element-plus/es')['ElTooltip']
     ElUpload: typeof import('element-plus/es')['ElUpload']
     FixedTreeModule: typeof import('./src/components/pageModule/fixedTreeModule.vue')['default']
     'FixedTreeModule copy': typeof import('./src/components/pageModule/fixedTreeModule copy.vue')['default']

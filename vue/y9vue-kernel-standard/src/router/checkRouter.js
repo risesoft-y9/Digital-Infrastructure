@@ -104,16 +104,7 @@ async function check() {
         return false;
     }
     // token在有效期且角色已获取路由
-    if (isTokenValid && isRoleValid) {
-        return true;
-    } else {
-        if (!isTokenValid || !isRoleValid) {
-            await $y9_SSO.ssoLogout({
-                logoutUrl: import.meta.env.VUE_APP_SSO_LOGOUT_URL + import.meta.env.VUE_APP_NAME + '/'
-            });
-        }
-        return false;
-    }
+    return true;
 }
 
 // 修复刷新bug
