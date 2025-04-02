@@ -46,6 +46,11 @@ cas:
                     secure: false
                     path: /sso/
                     sameSitePolicy: Lax
+                    crypto:
+                        encryption:
+                            key: fAgn8o98f1castOhD0SqC29_Th245bwCouYsnL2cWCwL3i-4pgUaskpCa2fOtxGoKI4jaNLdaMj0Z94gqDXMUw
+                        signing:
+                            key: p0pZBJ_lQD4EBSd3zXMwPc5yiqlqm32d9FM5hcpYQzUI0g4IXCiRnia7NFa8s2I_F8mpa7hZ9mLvndnABGfwiQ
         oidc:
             core:
                 issuer: http://localhost:7055/sso/oidc

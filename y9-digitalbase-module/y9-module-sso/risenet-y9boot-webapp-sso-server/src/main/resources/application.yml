@@ -11,7 +11,7 @@ cas:
             port: 6379
             database: 12
             username: default
-            password: "y9i-83204585"
+            password: "111111"
             timeout: "PT60S"
             pool:
                 enabled: true
@@ -136,7 +136,7 @@ cas:
             initialCapacity: 1000
         core:
             # 建议仅用于测试（集群部署时需考虑 service.json 的同步，使用 jpa-service-registry 即可）
-            initFromJson: true
+            initFromJson: false
         json:
             location: classpath:/services
             watcherEnabled: true
@@ -195,7 +195,7 @@ cas:
                 port: 6379
                 database: 13
                 username: default
-                password: "y9i-83204585"
+                password: "111111"
                 timeout: "PT60S"
                 pool:
                     enabled: true
@@ -304,7 +304,7 @@ spring:
             host: localhost
             port: 6379
             username: default
-            password: 'y9i-83204585'
+            password: '11111'
             ssl:
                 enabled: false
             lettuce:

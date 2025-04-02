@@ -105,12 +105,7 @@ public class RiseAuthenticationHandler extends AbstractAuthenticationHandler {
             }
 
             y9LoginUserService.save(riseCredential, "true", "登录成功");
-            return new DefaultAuthenticationHandlerExecutionResult(this, riseCredential,
-                principalFactory.createPrincipal(plainUsername));
-
-        } catch (GeneralSecurityException e) {
-            y9LoginUserService.save(riseCredential, "false", "登录失败");
-            throw e;
+            return new DefaultAuthenticationHandlerExecutionResult(this, riseCredential, principalFactory.createPrincipal(plainUsername));
         } catch (Exception e) {
             y9LoginUserService.save(riseCredential, "false", "登录失败");
             throw new FailedLoginException(e.getMessage());

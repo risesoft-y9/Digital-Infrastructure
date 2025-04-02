@@ -46,7 +46,6 @@ import com.auth0.jwt.exceptions.SignatureVerificationException;
 import com.auth0.jwt.interfaces.DecodedJWT;
 
 import lombok.extern.slf4j.Slf4j;
-
 import net.risesoft.enums.platform.ManagerLevelEnum;
 import net.risesoft.enums.platform.SexEnum;
 import net.risesoft.exception.ErrorCode;
@@ -59,7 +58,6 @@ import net.risesoft.y9.json.Y9JsonUtil;
 import net.risesoft.y9.util.Y9EnumUtil;
 
 /**
- *
  * @author dingzhaojun
  */
 @Slf4j
@@ -75,9 +73,9 @@ public class Y9Oauth2ResourceFilter implements Filter {
 
     @Override
     public void doFilter(ServletRequest servletRequest, ServletResponse servletResponse, FilterChain filterChain)
-        throws IOException, ServletException {
-        HttpServletRequest request = (HttpServletRequest)servletRequest;
-        HttpServletResponse response = (HttpServletResponse)servletResponse;
+            throws IOException, ServletException {
+        HttpServletRequest request = (HttpServletRequest) servletRequest;
+        HttpServletResponse response = (HttpServletResponse) servletResponse;
 
         try {
             HttpSession session = request.getSession(false);
@@ -113,26 +111,21 @@ public class Y9Oauth2ResourceFilter implements Filter {
                 DecodedJWT jwt = JWT.decode(accessToken);
                 if (y9Oauth2ResourceProperties.getJwt().isValidationRequired() && !verify(jwt)) {
                     setResponse(response, HttpStatus.UNAUTHORIZED,
-                        GlobalErrorCodeEnum.ACCESS_TOKEN_VERIFICATION_FAILED);
+                            GlobalErrorCodeEnum.ACCESS_TOKEN_VERIFICATION_FAILED);
                     return;
                 }
                 userInfo = toUserInfo(jwt);
             } else {
-                if (StringUtils.isNotBlank(introspectionResponse.getAttr())) {
-                    // 兼容修改过的 sso 服务 后期可移除
-                    userInfo = Y9JsonUtil.readValue(introspectionResponse.getAttr(), UserInfo.class);
-                } else {
-                    ResponseEntity<String> profileEntity = null;
-                    try {
-                        profileEntity = invokeProfileEndpoint(accessToken);
-                    } catch (Exception e) {
-                        LOGGER.warn(e.getMessage(), e);
-                        setResponse(response, HttpStatus.INTERNAL_SERVER_ERROR, GlobalErrorCodeEnum.FAILURE);
-                        return;
-                    }
-                    String profile = profileEntity.getBody();
-                    userInfo = Y9JsonUtil.readValue(profile, UserInfo.class);
+                ResponseEntity<String> profileEntity = null;
+                try {
+                    profileEntity = invokeProfileEndpoint(accessToken);
+                } catch (Exception e) {
+                    LOGGER.warn(e.getMessage(), e);
+                    setResponse(response, HttpStatus.INTERNAL_SERVER_ERROR, GlobalErrorCodeEnum.FAILURE);
+                    return;
                 }
+                String profile = profileEntity.getBody();
+                userInfo = Y9JsonUtil.readValue(profile, UserInfo.class);
             }
 
             if (userInfo != null) {
@@ -187,12 +180,12 @@ public class Y9Oauth2ResourceFilter implements Filter {
         headers.setAccept(Collections.singletonList(MediaType.APPLICATION_JSON));
         headers.setContentType(MediaType.APPLICATION_FORM_URLENCODED);
         headers.setBasicAuth(y9Oauth2ResourceProperties.getOpaque().getClientId(),
-            y9Oauth2ResourceProperties.getOpaque().getClientSecret(), StandardCharsets.UTF_8);
+                y9Oauth2ResourceProperties.getOpaque().getClientSecret(), StandardCharsets.UTF_8);
 
         URI uri = URI.create(y9Oauth2ResourceProperties.getOpaque().getIntrospectionUri() + "?token=" + accessToken);
         RequestEntity<?> requestEntity = new RequestEntity<>(headers, HttpMethod.POST, uri);
         ResponseEntity<OAuth20IntrospectionAccessTokenResponse> responseEntity =
-            this.restTemplate.exchange(requestEntity, OAuth20IntrospectionAccessTokenResponse.class);
+                this.restTemplate.exchange(requestEntity, OAuth20IntrospectionAccessTokenResponse.class);
         return responseEntity;
     }
 
@@ -252,8 +245,8 @@ public class Y9Oauth2ResourceFilter implements Filter {
 
         }
 
-        JwkProvider provider =
-            new JwkProviderBuilder(url).cached(10, 24, TimeUnit.HOURS).rateLimited(10, 1, TimeUnit.MINUTES).build();
+        JwkProvider provider = new JwkProviderBuilder(url).cached(10, 24, TimeUnit.HOURS)
+                .rateLimited(10, 1, TimeUnit.MINUTES).build();
 
         Jwk jwk = null;
         try {
@@ -274,10 +267,10 @@ public class Y9Oauth2ResourceFilter implements Filter {
         Algorithm algorithm = null;
         switch (jwt.getAlgorithm()) {
             case "RS256":
-                algorithm = Algorithm.RSA256((RSAPublicKey)publicKey);
+                algorithm = Algorithm.RSA256((RSAPublicKey) publicKey);
                 break;
             case "RS512":
-                algorithm = Algorithm.RSA512((RSAPublicKey)publicKey);
+                algorithm = Algorithm.RSA512((RSAPublicKey) publicKey);
         }
         try {
             algorithm.verify(jwt);
@@ -286,7 +279,7 @@ public class Y9Oauth2ResourceFilter implements Filter {
             return false;
         }
 
-        BaseVerification verification = (BaseVerification)JWT.require(algorithm);
+        BaseVerification verification = (BaseVerification) JWT.require(algorithm);
         verification.withClaimPresence("tenantId");
         JWTVerifier verifier = verification.build();
         try {
@@ -319,6 +312,7 @@ public class Y9Oauth2ResourceFilter implements Filter {
         userInfo.setTenantId(jwt.getClaim("tenantId").asString());
         userInfo.setTenantShortName(jwt.getClaim("tenantShortName").asString());
         userInfo.setTenantName(jwt.getClaim("tenantName").asString());
+        userInfo.setY9Roles(jwt.getClaim("roles").asString());
         userInfo.setPositions(jwt.getClaim("positions").asString());
         userInfo.setPositionId(jwt.getClaim("positionId").asString());
         userInfo.setIdNum(jwt.getClaim("idNum").asString());

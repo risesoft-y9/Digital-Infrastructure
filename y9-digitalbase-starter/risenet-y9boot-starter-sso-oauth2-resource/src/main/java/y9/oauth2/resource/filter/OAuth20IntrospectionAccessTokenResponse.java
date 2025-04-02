@@ -1,17 +1,26 @@
 package y9.oauth2.resource.filter;
 
-import java.io.Serial;
-import java.io.Serializable;
-
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
-
 import lombok.Data;
 import lombok.Getter;
 import lombok.Setter;
+import lombok.ToString;
+import lombok.experimental.Accessors;
 
+import java.io.Serial;
+import java.io.Serializable;
+
+/**
+ * This is {@link OAuth20IntrospectionAccessTokenResponse}.
+ *
+ * @author Misagh Moayyed
+ * @since 6.0.0
+ */
 @Getter
 @Setter
+@Accessors(chain = true)
+@ToString
 public class OAuth20IntrospectionAccessTokenResponse implements Serializable {
     @Serial
     private static final long serialVersionUID = -7917281748569741345L;
@@ -60,5 +69,4 @@ public class OAuth20IntrospectionAccessTokenResponse implements Serializable {
         @JsonProperty("x5t#S256")
         private String x5t;
     }
-
 }

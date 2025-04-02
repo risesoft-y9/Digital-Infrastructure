@@ -1,3 +1,8 @@
+CasFeatureModule:
+    Metrics:
+        enabled: false
+    Monitoring:
+        enabled: false
 cas:
     authn:
         accept:
@@ -52,10 +57,23 @@ cas:
                     y9: "tenantId,tenantShortName,tenantName,personId,loginName,sex,caid,email,mobile,guidPath,dn,loginType,name,parentId,idNum,avator,personType,password,original,originalId,globalManager,managerLevel,positions,positionId,deptId"
             discovery:
                 scopes: "openid,y9"
-                claims: "sub,tenantId,tenantShortName,tenantName,personId,loginName,sex,caid,email,mobile,guidPath,dn,loginType,name,parentId,idNum,avator,personType,password,original,originalId,globalManager,managerLevel,positions,positionId,deptId"
+                claims: "sub,gender,tenantId,tenantShortName,tenantName,personId,loginName,sex,caid,email,mobile,guidPath,dn,loginType,name,parentId,idNum,avator,personType,password,original,originalId,globalManager,managerLevel,positions,positionId,deptId"
             jwks:
                 fileSystem:
                     jwksFile: classpath:/keystore.jwks
+        #attribute-repository:
+        #    stub:
+                    #        attributes:
+                    #email: casuser@apereo:.org
+                    #name: CAS
+                    #gender: female
+                    #preferred_username: casuser
+        token:
+            crypto:
+                signing:
+                    key: "28T9g6Acy12Qy3x89U43btgkyRumyzMQzK6Cxl6KiVYtnfgHIaBzNP7IG6nArCzn06K_0TccfFTLan-ZPyDRcA"
+                encryption:
+                    key: "qs8_64oANNxLXHy4YAHZTahXBN8-7AKVUtVxuevpo7R7IYJ0a-nOJqpmnOgjrlBjyGgccz-VEm6LYjncyq5pEg"
     server:
         name: http://localhost:7055
         prefix: http://localhost:7055/sso
@@ -118,7 +136,7 @@ cas:
                 port: 6379
                 database: 0
                 username: default
-                password: "y9i-83204585"
+                password: "111111"
                 timeout: "PT60S"
                 pool:
                     enabled: true
@@ -282,15 +300,27 @@ server:
             min-spare: 10
         uri-encoding: UTF-8
 management:
+    auditevents:
+        enabled: false
     endpoints:
         web:
             exposure:
                 include: '*'
         access:
             default: unrestricted
+    tracing:
+        enabled: false
+    defaults:
+        metrics:
+            export:
+                enabled: false
 spring:
     application:
         name: sso
+    autoconfigure:
+        exclude:
+            - org.apereo.cas.config.CasMetricsAutoConfiguration
+            - org.apereo.cas.config.CasCoreMonitorAutoConfiguration
     cloud:
         nacos:
             config:
