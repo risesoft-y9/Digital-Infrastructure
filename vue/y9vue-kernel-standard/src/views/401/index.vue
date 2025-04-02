@@ -10,7 +10,15 @@
     <div class="login">
         <div class="form">
             <h1 class="title"> 401 Error </h1>
-            <p class="msg">抱歉，该登录账号非管理员用户账号，没有权限！！！</p>
+            <p class="msg">抱歉，该页面不存在或当前账号无权访问！！！</p>
+            <el-button
+                :size="fontSizeObj.buttonSize"
+                :style="{ fontSize: fontSizeObj.baseFontSize }"
+                type="primary"
+                @click="toIndex"
+            >
+                返回首页
+            </el-button>
             <el-button
                 :size="fontSizeObj.buttonSize"
                 :style="{ fontSize: fontSizeObj.baseFontSize }"
@@ -25,18 +33,19 @@
 <script lang="ts" setup>
     import { $y9_SSO } from '@/main';
     import { inject } from 'vue';
+    import { useRouter } from 'vue-router';
     // 注入 字体对象
     const fontSizeObj: any = inject('sizeObjInfo');
+    const router = useRouter();
+
+    function toIndex() {
+        router.push({ path: '/' });
+    }
 
     function logout() {
         try {
             const params = {
-                to: { path: window.location.pathname },
-                logoutUrl: import.meta.env.VUE_APP_SSO_LOGOUT_URL + import.meta.env.VUE_APP_NAME + '/',
-                __y9delete__: () => {
-                    // 删除前执行的函数
-                    console.log('删除前执行的函数');
-                }
+                redirect_uri: import.meta.env.VUE_APP_HOST_INDEX
             };
             $y9_SSO.ssoLogout(params);
         } catch (error) {

@@ -40,7 +40,7 @@
         "vxe-table": "^4.3.5",
         "xe-utils": "^3.5.7",
         "y9plugin-components": "^3.0.3",
-        "y9plugin-sso": "^4.1.4",
+        "y9plugin-sso": "^4.2.9",
         "y9plugin-watermark": "^1.2.0"
     },
     "devDependencies": {

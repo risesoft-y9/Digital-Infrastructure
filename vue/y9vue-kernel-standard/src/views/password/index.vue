@@ -173,13 +173,7 @@
                         }).then(() => {
                             try {
                                 const params = {
-                                    to: { path: window.location.pathname },
-                                    logoutUrl:
-                                        import.meta.env.VUE_APP_SSO_LOGOUT_URL + import.meta.env.VUE_APP_NAME + '/',
-                                    __y9delete__: () => {
-                                        // 删除前执行的函数
-                                        console.log('删除前执行的函数');
-                                    }
+                                    redirect_uri: import.meta.env.VUE_APP_HOST_INDEX
                                 };
                                 $y9_SSO.ssoLogout(params);
                             } catch (error) {

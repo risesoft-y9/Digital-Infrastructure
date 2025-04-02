@@ -40,7 +40,7 @@
                 const lockDivClassName = document.getElementsByClassName('lock-div')[0]?.className;
                 if (lockStatus.value && lockDivClassName !== 'lock-div') {
                     const params = {
-                        logoutUrl: import.meta.env.VUE_APP_SSO_LOGOUT_URL + import.meta.env.VUE_APP_NAME + '/'
+                        redirect_uri: import.meta.env.VUE_APP_HOST_INDEX
                     };
                     $y9_SSO.ssoLogout(params);
                 }
