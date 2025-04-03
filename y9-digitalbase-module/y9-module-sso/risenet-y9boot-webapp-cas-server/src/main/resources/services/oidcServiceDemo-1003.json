@@ -27,9 +27,22 @@
             "password",
             "client_credentials",
             "refresh_token",
-            "urn:ietf:params:oauth:grant-type:token-exchange"
+            "urn:ietf:params:oauth:grant-type:token-exchange",
+            "urn:ietf:params:oauth:grant-type:device_code",
+            "urn:openid:params:grant-type:ciba"
         ]
-    ]
+    ],
+    "supportedResponseTypes": [
+        "java.util.HashSet",
+        [
+            "code",
+            "token",
+            "device_code",
+            "id_token",
+            "id_token token",
+            "token id_token"
+        ]
+    ],
     "tokenExchangePolicy": {
         "@class": "org.apereo.cas.support.oauth.services.DefaultRegisteredServiceOAuthTokenExchangePolicy",
         "allowedTokenTypes": [

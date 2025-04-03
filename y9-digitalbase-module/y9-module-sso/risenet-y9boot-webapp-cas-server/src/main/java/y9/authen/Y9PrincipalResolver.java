@@ -14,7 +14,6 @@ import org.apache.commons.lang3.tuple.Pair;
 import org.apereo.cas.authentication.AuthenticationHandler;
 import org.apereo.cas.authentication.Credential;
 import org.apereo.cas.authentication.attribute.SimplePersonAttributes;
-import org.apereo.cas.authentication.credential.RememberMeUsernamePasswordCredential;
 import org.apereo.cas.authentication.credential.UsernamePasswordCredential;
 import org.apereo.cas.authentication.principal.*;
 import org.apereo.cas.authentication.principal.attribute.PersonAttributes;
@@ -51,7 +50,7 @@ public class Y9PrincipalResolver implements PrincipalResolver {
                              Optional<Principal> principal,
                              Optional<AuthenticationHandler> handler,
                              Optional<Service> service) throws Throwable {
-        RememberMeUsernamePasswordCredential riseCredential = (RememberMeUsernamePasswordCredential)credential;
+        UsernamePasswordCredential riseCredential = (UsernamePasswordCredential)credential;
         String username = riseCredential.getUsername();
         Map<String, Object> customFields = riseCredential.getCustomFields();
         String tenantShortName = (String) customFields.get("tenantShortName");
@@ -112,7 +111,7 @@ public class Y9PrincipalResolver implements PrincipalResolver {
             if (StringUtils.hasText(positionId)) {
                 attr.put("positionId", Lists.newArrayList(positionId));
             }
-            if (org.apache.commons.lang3.StringUtils.isNotBlank(deptId)) {
+            if (StringUtils.hasText(deptId)) {
                 attr.put("deptId", Lists.newArrayList(deptId));
             }
 

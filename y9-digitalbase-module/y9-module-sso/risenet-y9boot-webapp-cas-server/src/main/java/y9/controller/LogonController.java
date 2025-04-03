@@ -47,7 +47,7 @@ import java.util.Map;
 @RestController
 @RequestMapping("/api")
 @Slf4j
-public class LoginController {
+public class LogonController {
 
     private final CentralAuthenticationService centralAuthenticationService;
     private final CasCookieBuilder ticketGrantingTicketCookieGenerator;
@@ -56,7 +56,7 @@ public class LoginController {
 
     private final Y9UserService y9UserService;
 
-    public LoginController(
+    public LogonController(
             CentralAuthenticationService centralAuthenticationService,
             @Qualifier("ticketGrantingTicketCookieGenerator") CasCookieBuilder ticketGrantingTicketCookieGenerator,
             @Qualifier("defaultAuthenticationSystemSupport") AuthenticationSystemSupport authenticationSystemSupport,
@@ -74,15 +74,15 @@ public class LoginController {
             String tenantShortName,
             String username,
             String password,
-            String pwdEcodeType,
+            String rsaPublicKey,
             String loginType,
             final HttpServletRequest request,
             final HttpServletResponse response) {
         Map<String, Object> map = new HashMap<String, Object>();
         try {
             username = Base64Util.decode(username, "Unicode");
-            if (StringUtils.isNotBlank(pwdEcodeType)) {
-                String privateKey = Y9Context.getProperty("y9.encryptionRsaPrivateKey");
+            if (StringUtils.isNotBlank(rsaPublicKey)) {
+                String privateKey = Y9Context.getProperty("y9.rsaPrivateKey");
                 password = RSAUtil.privateDecrypt(password, privateKey);
             }
             password = Base64Util.decode(password, "Unicode");
@@ -144,8 +144,8 @@ public class LoginController {
             Map<String, Object> customFields = credential.getCustomFields();
             String tenantShortName = (String) customFields.get("tenantShortName");
             String loginType = (String) customFields.get("loginType");
-            String pwdEcodeType = request.getParameter("pwdEcodeType");
-            retMap = checkSsoLoginInfo(tenantShortName, username, password, pwdEcodeType, loginType, request, response);
+            String rsaPublicKey = request.getParameter("rsaPublicKey");
+            retMap = checkSsoLoginInfo(tenantShortName, username, password, rsaPublicKey, loginType, request, response);
             if (retMap.get("success").toString().equals("false")) {
                 return new ResponseEntity<>(retMap, headers, HttpStatus.UNAUTHORIZED);
             }

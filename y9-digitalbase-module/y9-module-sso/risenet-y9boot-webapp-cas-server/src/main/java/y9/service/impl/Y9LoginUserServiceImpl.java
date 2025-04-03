@@ -5,7 +5,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
-import org.apereo.cas.authentication.credential.RememberMeUsernamePasswordCredential;
+import org.apereo.cas.authentication.credential.UsernamePasswordCredential;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 
@@ -35,7 +35,7 @@ public class Y9LoginUserServiceImpl implements Y9LoginUserService {
     private final Y9UserRepository y9UserRepository;
 
     @Override
-    public void save(RememberMeUsernamePasswordCredential credential, String success, String logMessage) {
+    public void save(UsernamePasswordCredential credential, String success, String logMessage) {
         try {
             String userLoginName = credential.getUsername();
             Map<String, Object> customFields = credential.getCustomFields();

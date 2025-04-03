@@ -29,7 +29,11 @@
         "java.util.HashSet",
         [
             "code",
-            "token"
+            "token",
+            "device_code",
+            "id_token",
+            "id_token token",
+            "token id_token"
         ]
     ],
     "bypassApprovalPrompt": true,

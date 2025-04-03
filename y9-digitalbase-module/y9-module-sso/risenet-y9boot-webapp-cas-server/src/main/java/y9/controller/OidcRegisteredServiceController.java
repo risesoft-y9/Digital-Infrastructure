@@ -31,7 +31,7 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 @CrossOrigin(originPatterns = "*", allowCredentials = "true")
 @RequiredArgsConstructor
-public class ServiceController {
+public class OidcRegisteredServiceController {
     private static final String SYSTEM_KEY = "systemId";
 
     private final ServicesManager servicesManager;

@@ -125,6 +125,7 @@ public class Y9Oauth2ResourceFilter implements Filter {
                     return;
                 }
                 String profile = profileEntity.getBody();
+                profile = profile.replace("[]", "\"\"");
                 userInfo = Y9JsonUtil.readValue(profile, UserInfo.class);
             }
 
@@ -312,8 +313,6 @@ public class Y9Oauth2ResourceFilter implements Filter {
         userInfo.setTenantId(jwt.getClaim("tenantId").asString());
         userInfo.setTenantShortName(jwt.getClaim("tenantShortName").asString());
         userInfo.setTenantName(jwt.getClaim("tenantName").asString());
-        userInfo.setY9Roles(jwt.getClaim("roles").asString());
-        userInfo.setPositions(jwt.getClaim("positions").asString());
         userInfo.setPositionId(jwt.getClaim("positionId").asString());
         userInfo.setIdNum(jwt.getClaim("idNum").asString());
         userInfo.setAvator(jwt.getClaim("avator").asString());

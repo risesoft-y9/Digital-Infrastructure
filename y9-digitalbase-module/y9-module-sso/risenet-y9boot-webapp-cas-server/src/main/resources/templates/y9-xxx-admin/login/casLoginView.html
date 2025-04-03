@@ -182,8 +182,8 @@
             />
             <input
                     type="hidden"
-                    id="pwdEcodeType"
-                    name="pwdEcodeType"
+                    id="rsaPublicKey"
+                    name="rsaPublicKey"
                     value=""
             />
             <input
@@ -468,22 +468,22 @@
                         async: false,
                         cache: false,
                         type: "GET",
-                        url: ctx + "/api/getRandom",
+                        url: ctx + "/api/getRsaPublicKey",
                         dataType: "json",
                         success: function (y9Result) {
                             if (y9Result.success) {
-                                $("#pwdEcodeType").val(y9Result.data);
+                                $("#rsaPublicKey").val(y9Result.data);
                             }
                         },
                     })
                 ).done(function () {
                     var username = $("#username1").val();
                     var password = $("#password").val();
-                    var pwdEcodeType=$('#pwdEcodeType').val();
+                    var rsaPublicKey=$('#rsaPublicKey').val();
 
                     var encodeUserName = encode64(username);
                     var encodePassword = encode64(password);
-                    var rsapwd=encrypt(pwdEcodeType,encodePassword);
+                    var rsapwd=encrypt(rsaPublicKey,encodePassword);
                     $("#username1").val(encodeUserName);
                     $("#password1").val(rsapwd);
                     $("#fm1").submit();

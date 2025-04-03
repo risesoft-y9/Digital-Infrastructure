@@ -115,7 +115,6 @@ cas:
                 keySize: 512
     logout:
         followServiceRedirects: true
-        removeDescendantTickets: true
         confirmLogout: false
     slo:
         asynchronous: false
@@ -309,4 +308,4 @@ y9:
         logBaseUrl: http://localhost:7099/log
     login:
         casLoginView: "casLoginView-y9-v3.0"
-        credentialPropsOptional: "isValidateIE,screenDimension,userAgent,systemName,clientIp,clientMac,clientDiskId,clientHostName,deptId,positionId,pwdEcodeType"
+        credentialPropsOptional: "isValidateIE,screenDimension,userAgent,systemName,clientIp,clientMac,clientDiskId,clientHostName,deptId,positionId,rsaPublicKey"

@@ -64,7 +64,7 @@
             <input id="captchaKey" name="captchaKey" type="hidden" value=""/>
             <input id="noLoginScreen" name="noLoginScreen" type="hidden" value="false"/>
             <input id="screenDimension" name="screenDimension" type="hidden" value=""/>
-            <input id="pwdEcodeType" name="pwdEcodeType" type="hidden" value=""/>
+            <input id="rsaPublicKey" name="rsaPublicKey" type="hidden" value=""/>
             <input name="execution" th:value="${flowExecutionKey}" type="hidden"/>
             <input name="_eventId" type="hidden" value="submit"/> <input name="geolocation" type="hidden"/>
             <!-- 表单隐藏数据块结束 -->
@@ -324,11 +324,11 @@
                         async: false,
                         cache: false,
                         type: "GET",
-                        url: ctx + '/api/getRandom',
+                        url: ctx + '/api/getRsaPublicKey',
                         dataType: "json",
                         success: function (y9Result) {
                             if (y9Result.success) {
-                                $('#pwdEcodeType').val(y9Result.data);
+                                $('#rsaPublicKey').val(y9Result.data);
                             }
                         }
                     })

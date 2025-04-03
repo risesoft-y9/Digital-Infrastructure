@@ -9,29 +9,23 @@ import org.apereo.cas.authentication.AbstractAuthenticationHandler;
 import org.apereo.cas.authentication.AuthenticationHandlerExecutionResult;
 import org.apereo.cas.authentication.Credential;
 import org.apereo.cas.authentication.DefaultAuthenticationHandlerExecutionResult;
-import org.apereo.cas.authentication.credential.RememberMeUsernamePasswordCredential;
 import org.apereo.cas.authentication.credential.UsernamePasswordCredential;
 import org.apereo.cas.authentication.principal.PrincipalFactoryUtils;
 import org.apereo.cas.authentication.principal.Service;
 import org.apereo.cas.services.ServicesManager;
-import org.apereo.cas.web.support.WebUtils;
 import y9.entity.Y9User;
 import y9.service.Y9LoginUserService;
 import y9.service.Y9UserService;
 import y9.util.Y9Context;
 import y9.util.Y9MessageDigest;
 import y9.util.common.AESUtil;
-import y9.util.common.Base64Util;
 import y9.util.common.RSAUtil;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
 
 import javax.security.auth.login.AccountNotFoundException;
 import javax.security.auth.login.FailedLoginException;
-import java.util.HashMap;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 @Slf4j
 public class Y9AuthenticationHandler extends AbstractAuthenticationHandler {
@@ -48,56 +42,46 @@ public class Y9AuthenticationHandler extends AbstractAuthenticationHandler {
     @Override
     public AuthenticationHandlerExecutionResult authenticate(Credential credential, Service service) throws Throwable {
         //isValidateIE screenDimension userAgent clientIp clientMac clientDiskId clientHostName  noLoginScreen
-        RememberMeUsernamePasswordCredential riseCredential = (RememberMeUsernamePasswordCredential) credential;
+        UsernamePasswordCredential riseCredential = (UsernamePasswordCredential) credential;
         /*Map<String, Object> customFields = riseCredential.getCustomFields();
         String loginType = (String) customFields.get("loginType");
         String tenantShortName = (String) customFields.get("tenantShortName");
         String deptId = (String) customFields.get("deptId");
-        String pwdEcodeType = (String) customFields.get("pwdEcodeType");*/
+        String rsaPublicKey = (String) customFields.get("rsaPublicKey");*/
 
+        //HttpServletRequest request = WebUtils.getHttpServletRequestFromExternalWebflowContext();
         HttpServletRequest request = ((ServletRequestAttributes) RequestContextHolder.currentRequestAttributes()).getRequest();
         String loginType = request.getParameter("loginType");
         String tenantShortName = request.getParameter("tenantShortName");
+        String positionId = request.getParameter("positionId");
         String deptId = request.getParameter("deptId");
-        String pwdEcodeType = request.getParameter("pwdEcodeType");
+        String systemName = request.getParameter("systemName");
+        String screenDimension = request.getParameter("screenDimension");
+        //String rsaPublicKey = request.getParameter("rsaPublicKey");
 
         Map<String, Object> customFields = new LinkedHashMap<>();
         customFields.put("tenantShortName", tenantShortName);
         customFields.put("noLoginScreen", true);
         customFields.put("deptId", deptId);
-        //customFields.put("positionId", positionId);
+        customFields.put("positionId", positionId);
         customFields.put("loginType", loginType);
-        //customFields.put("screenDimension", screenDimension);
-        //customFields.put("systemName", systemName);
+        customFields.put("screenDimension", screenDimension);
+        customFields.put("systemName", systemName);
         riseCredential.setCustomFields(customFields);
 
-        String base64Username = riseCredential.getUsername();
-        String encryptedBase64Password = riseCredential.toPassword();
-        String base64Password;
-        String plainUsername;
-        String plainPassword;
+        String encryptedUsername = riseCredential.getUsername();
+        String encryptedPassword = riseCredential.toPassword();
         Y9User y9User;
         try {
-            if (StringUtils.isNotBlank(pwdEcodeType)) {
-                String rsaPrivateKey = Y9Context.getProperty("y9.encryptionRsaPrivateKey");
-                if (null != rsaPrivateKey) {
-                    base64Password = RSAUtil.privateDecrypt(encryptedBase64Password, rsaPrivateKey);
-                } else {
-                    throw new FailedLoginException("认证失败：解密私钥未配置!");
-                }
-            } else {
-                base64Password = encryptedBase64Password;
-            }
-            plainPassword = Base64Util.decode(base64Password, "Unicode");
-            plainUsername = Base64Util.decode(base64Username, "Unicode");
-
+            String rsaPrivateKey = Y9Context.getProperty("y9.rsaPrivateKey");
+            String plainUsername = RSAUtil.privateDecrypt(encryptedUsername, rsaPrivateKey);
+            String plainPassword = RSAUtil.privateDecrypt(encryptedPassword, rsaPrivateKey);
             if (plainUsername.contains("&")) {
+                plainUsername = plainUsername.substring(0, plainUsername.indexOf("&"));
                 String agentUserName = plainUsername.substring(plainUsername.indexOf("&") + 1);
                 String agentTenantShortName = "operation";
 
-                plainUsername = plainUsername.substring(0, plainUsername.indexOf("&"));
-
-                updateCredential(riseCredential, plainUsername, plainPassword, null);
+                updateCredential(request, riseCredential, plainUsername, plainPassword, null);
 
                 List<Y9User> agentUsers = getAgentUsers(deptId, agentTenantShortName, agentUserName);
                 if (agentUsers == null || agentUsers.isEmpty()) {
@@ -111,15 +95,14 @@ public class Y9AuthenticationHandler extends AbstractAuthenticationHandler {
                 }
 
             } else {
-
-                updateCredential(riseCredential, plainUsername, plainPassword, null);
+                updateCredential(request, riseCredential, plainUsername, plainPassword, null);
 
                 List<Y9User> users = getUsers(loginType, deptId, tenantShortName, plainUsername);
                 if (users == null || users.isEmpty()) {
                     throw new AccountNotFoundException("没有找到这个用户。");
                 } else if ("qrCode".equals(loginType)) {
                     y9User = users.getFirst();
-                    updateCredential(riseCredential, y9User.getLoginName(), y9User.getPassword(), y9User.getTenantShortName());
+                    updateCredential(request, riseCredential, y9User.getLoginName(), y9User.getPassword(), y9User.getTenantShortName());
                 } else {
                     y9User = users.getFirst();
                     String hashed = y9User.getPassword();
@@ -133,7 +116,6 @@ public class Y9AuthenticationHandler extends AbstractAuthenticationHandler {
 
             val attributes = buildAttributes(riseCredential, y9User);
             val principal = this.principalFactory.createPrincipal(plainUsername, attributes);
-            //val principal = this.principalFactory.createPrincipal(plainUsername);
             return new DefaultAuthenticationHandlerExecutionResult(this, riseCredential, principal);
         } catch (Exception e) {
             y9LoginUserService.save(riseCredential, "false", "登录失败");
@@ -142,7 +124,8 @@ public class Y9AuthenticationHandler extends AbstractAuthenticationHandler {
 
     }
 
-    private static void updateCredential(RememberMeUsernamePasswordCredential riseCredential,
+    private static void updateCredential(HttpServletRequest request,
+                                         UsernamePasswordCredential riseCredential,
                                          String username,
                                          String password,
                                          String tenantShortName) {
@@ -153,16 +136,9 @@ public class Y9AuthenticationHandler extends AbstractAuthenticationHandler {
             customFields.put("tenantShortName", tenantShortName);
         }
 
-        HttpServletRequest request = WebUtils.getHttpServletRequestFromExternalWebflowContext();
-        if (null != request) {
-            String systemName = request.getParameter("systemName");
-            if (StringUtils.isNotBlank(systemName)) {
-                customFields.put("systemName", systemName);
-            }
-            customFields.put("userAgent", request.getHeader("User-Agent"));
-            customFields.put("clientIp", Y9Context.getIpAddr(request));
-            riseCredential.setCustomFields(customFields);
-        }
+        customFields.put("userAgent", request.getHeader("User-Agent"));
+        customFields.put("clientIp", Y9Context.getIpAddr(request));
+        riseCredential.setCustomFields(customFields);
     }
 
     private List<Y9User> getAgentUsers(String deptId, String agentTenantShortName, String agentUserName) {
@@ -207,48 +183,57 @@ public class Y9AuthenticationHandler extends AbstractAuthenticationHandler {
         }
     }
 
-    protected Map<String, List<Object>> buildAttributes(RememberMeUsernamePasswordCredential riseCredential, Y9User y9User) {
+    protected Map<String, List<Object>> buildAttributes(UsernamePasswordCredential riseCredential, Y9User y9User) {
         String username = riseCredential.getUsername();
         Map<String, Object> customFields = riseCredential.getCustomFields();
-        String tenantShortName = (String) customFields.get("tenantShortName");
+        //String tenantShortName = (String) customFields.get("tenantShortName");
         String deptId = (String) customFields.get("deptId");
         String positionId = (String) customFields.get("positionId");
         String loginType = (String) customFields.get("loginType");
 
         val attributes = new HashMap<String, List<Object>>();
-        attributes.put("tenantId", Lists.newArrayList(y9User.getTenantId()));
-        attributes.put("tenantShortName", Lists.newArrayList(tenantShortName));
-        attributes.put("tenantName", Lists.newArrayList(y9User.getTenantName()));
-        attributes.put("personId", Lists.newArrayList(y9User.getPersonId()));
-        attributes.put("loginName", Lists.newArrayList(username));
-        attributes.put("sex", Lists.newArrayList(y9User.getSex() == null ? 0 : y9User.getSex()));
-        attributes.put("caid", Lists.newArrayList(y9User.getCaid() == null ? "" : y9User.getCaid()));
-        attributes.put("email", Lists.newArrayList(y9User.getEmail() == null ? "" : y9User.getEmail()));
-        attributes.put("mobile", Lists.newArrayList(y9User.getMobile() == null ? "" : y9User.getMobile()));
-        attributes.put("guidPath", Lists.newArrayList(y9User.getGuidPath() == null ? "" : y9User.getGuidPath()));
-        attributes.put("dn", Lists.newArrayList(y9User.getDn() == null ? "" : y9User.getDn()));
-        attributes.put("loginType", Lists.newArrayList(loginType));
+        attributes.put("tenantId", toArrayList(y9User.getTenantId()));
+        attributes.put("tenantShortName", toArrayList(y9User.getTenantShortName()));
+        attributes.put("tenantName", toArrayList(y9User.getTenantName()));
+        attributes.put("personId", toArrayList(y9User.getPersonId()));
+        attributes.put("loginName", toArrayList(username));
+        attributes.put("sex", toArrayList(y9User.getSex()));
+        attributes.put("caid", toArrayList(y9User.getCaid()));
+        attributes.put("email", toArrayList(y9User.getEmail()));
+        attributes.put("mobile", toArrayList(y9User.getMobile()));
+        attributes.put("guidPath", toArrayList(y9User.getGuidPath()));
+        attributes.put("dn", toArrayList(y9User.getDn()));
+        attributes.put("loginType", toArrayList(loginType));
 
-        attributes.put("name", Lists.newArrayList(y9User.getName()));
-        attributes.put("parentId", Lists.newArrayList(y9User.getParentId() == null ? "" : y9User.getParentId()));
-        attributes.put("idNum", Lists.newArrayList(y9User.getIdNum() == null ? "" : y9User.getIdNum()));
-        attributes.put("avator", Lists.newArrayList(y9User.getAvator() == null ? "" : y9User.getAvator()));
-        attributes.put("personType", Lists.newArrayList(y9User.getPersonType() == null ? "" : y9User.getPersonType()));
+        attributes.put("name", toArrayList(y9User.getName()));
+        attributes.put("parentId", toArrayList(y9User.getParentId()));
+        attributes.put("idNum", toArrayList(y9User.getIdNum()));
+        attributes.put("avator", toArrayList(y9User.getAvator()));
+        attributes.put("personType", toArrayList(y9User.getPersonType()));
 
-        attributes.put("password", Lists.newArrayList(y9User.getPassword() == null ? "" : y9User.getPassword()));
+        attributes.put("password", toArrayList(y9User.getPassword()));
         attributes.put("original", Lists.newArrayList(y9User.getOriginal() == null ? true : y9User.getOriginal()));
-        attributes.put("originalId", Lists.newArrayList(y9User.getOriginalId() == null ? "" : y9User.getOriginalId()));
-        attributes.put("globalManager", Lists.newArrayList(y9User.getGlobalManager() != null && y9User.getGlobalManager()));
-        attributes.put("managerLevel", Lists.newArrayList(y9User.getManagerLevel() == null ? 0 : y9User.getManagerLevel()));
-        attributes.put("positions", Lists.newArrayList(y9User.getPositions() == null ? "" : y9User.getPositions()));
+        attributes.put("originalId", toArrayList(y9User.getOriginalId()));
+        attributes.put("globalManager", Lists.newArrayList(y9User.getGlobalManager() == null ? false : y9User.getGlobalManager()));
+        attributes.put("managerLevel", toArrayList(y9User.getManagerLevel()));
+        attributes.put("positions", toArrayList(y9User.getPositions()));
 
-        if (StringUtils.isNotBlank(positionId)) {
-            attributes.put("positionId", Lists.newArrayList(positionId));
+        if (org.springframework.util.StringUtils.hasText(positionId)) {
+            attributes.put("positionId", toArrayList(positionId));
         }
-        if (StringUtils.isNotBlank(deptId)) {
-            attributes.put("deptId", Lists.newArrayList(deptId));
+        if (org.springframework.util.StringUtils.hasText(deptId)) {
+            attributes.put("deptId", toArrayList(deptId));
         }
+
         return attributes;
+    }
+
+    private List<Object> toArrayList(String str) {
+        return Lists.newArrayList(StringUtils.isEmpty(str) ? "" : str);
+    }
+
+    private List<Object> toArrayList(Integer num) {
+        return Lists.newArrayList(num == null? 0 : num);
     }
 
     @Override
