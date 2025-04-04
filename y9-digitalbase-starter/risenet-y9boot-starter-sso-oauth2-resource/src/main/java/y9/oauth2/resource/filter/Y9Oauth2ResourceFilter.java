@@ -313,11 +313,10 @@ public class Y9Oauth2ResourceFilter implements Filter {
         userInfo.setTenantId(jwt.getClaim("tenantId").asString());
         userInfo.setTenantShortName(jwt.getClaim("tenantShortName").asString());
         userInfo.setTenantName(jwt.getClaim("tenantName").asString());
-        userInfo.setPositionId(jwt.getClaim("positionId").asString());
         userInfo.setIdNum(jwt.getClaim("idNum").asString());
         userInfo.setAvator(jwt.getClaim("avator").asString());
         userInfo.setPersonType(jwt.getClaim("personType").asString());
-        userInfo.setPassword(jwt.getClaim("password").asString());
+        //userInfo.setPassword(jwt.getClaim("password").asString());
         userInfo.setGlobalManager(jwt.getClaim("globalManager").asBoolean());
         userInfo.setManagerLevel(Y9EnumUtil.valueOf(ManagerLevelEnum.class, jwt.getClaim("managerLevel").asInt()));
         return userInfo;
