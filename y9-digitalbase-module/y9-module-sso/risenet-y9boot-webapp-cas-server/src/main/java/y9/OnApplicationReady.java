@@ -52,6 +52,7 @@ public class OnApplicationReady implements ApplicationListener<ApplicationReadyE
             y9User.setTenantShortName("default");
             y9User.setCreateTime(Instant.now());
             y9User.setUpdateTime(Instant.now());
+            y9User.setPositions("0000");
             y9UserService.save(y9User);
         }
 
@@ -80,6 +81,7 @@ public class OnApplicationReady implements ApplicationListener<ApplicationReadyE
             y9User.setTenantShortName("default");
             y9User.setCreateTime(Instant.now());
             y9User.setUpdateTime(Instant.now());
+            y9User.setPositions("0001");
             y9UserService.save(y9User);
         }
     }
