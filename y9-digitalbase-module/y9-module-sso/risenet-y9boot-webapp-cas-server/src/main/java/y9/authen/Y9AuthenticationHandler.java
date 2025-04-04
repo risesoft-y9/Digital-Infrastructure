@@ -186,14 +186,14 @@ public class Y9AuthenticationHandler extends AbstractAuthenticationHandler {
     protected Map<String, List<Object>> buildAttributes(UsernamePasswordCredential riseCredential, Y9User y9User) {
         String username = riseCredential.getUsername();
         Map<String, Object> customFields = riseCredential.getCustomFields();
-        //String tenantShortName = (String) customFields.get("tenantShortName");
+        String tenantShortName = (String) customFields.get("tenantShortName");
         String deptId = (String) customFields.get("deptId");
         String positionId = (String) customFields.get("positionId");
         String loginType = (String) customFields.get("loginType");
 
         val attributes = new HashMap<String, List<Object>>();
         attributes.put("tenantId", toArrayList(y9User.getTenantId()));
-        attributes.put("tenantShortName", toArrayList(y9User.getTenantShortName()));
+        attributes.put("tenantShortName", toArrayList(tenantShortName));
         attributes.put("tenantName", toArrayList(y9User.getTenantName()));
         attributes.put("personId", toArrayList(y9User.getPersonId()));
         attributes.put("loginName", toArrayList(username));
@@ -218,12 +218,12 @@ public class Y9AuthenticationHandler extends AbstractAuthenticationHandler {
         attributes.put("managerLevel", toArrayList(y9User.getManagerLevel()));
         attributes.put("positions", toArrayList(y9User.getPositions()));
 
-        if (org.springframework.util.StringUtils.hasText(positionId)) {
+        //if (org.springframework.util.StringUtils.hasText(positionId)) {
             attributes.put("positionId", toArrayList(positionId));
-        }
-        if (org.springframework.util.StringUtils.hasText(deptId)) {
+        //}
+        //if (org.springframework.util.StringUtils.hasText(deptId)) {
             attributes.put("deptId", toArrayList(deptId));
-        }
+        //}
 
         return attributes;
     }

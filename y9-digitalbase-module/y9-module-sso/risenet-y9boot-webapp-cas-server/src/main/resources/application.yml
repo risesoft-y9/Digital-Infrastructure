@@ -227,9 +227,6 @@ cas:
             tenantShortName:
                 required: true
                 messageBundleKey: customLoginFormField.tenantShortName
-            isValidateIE:
-                required: false
-                messageBundleKey: customLoginFormField.isValidateIE
             screenDimension:
                 required: false
                 messageBundleKey: customLoginFormField.screenDimension
