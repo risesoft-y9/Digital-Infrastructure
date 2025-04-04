@@ -14,9 +14,7 @@
     <packaging>pom</packaging>
 
     <modules>		
-	<module>risenet-y9boot-webapp-keycloak-server</module>
-        <module>risenet-y9boot-webapp-sso-server</module>
-        <module>risenet-y9boot-webapp-sso-server-jdk21</module>
+	    <module>risenet-y9boot-webapp-keycloak-server</module>
     </modules>
 
 </project>

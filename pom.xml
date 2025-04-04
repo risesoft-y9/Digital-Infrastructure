@@ -122,10 +122,6 @@
         <module>y9-digitalbase-module/y9-module-platform/risenet-y9boot-support-platform-web</module>
         <module>y9-digitalbase-module/y9-module-platform/risenet-y9boot-webapp-platform</module>
 
-        <module>y9-digitalbase-module/y9-module-sso/risenet-y9boot-webapp-sso-server</module>
-        <module>y9-digitalbase-module/y9-module-sso/risenet-y9boot-webapp-sso-server-jdk21</module>
-
-
         <module>y9-digitalbase-example/risenet-y9demo-cache</module>
         <module>y9-digitalbase-example/risenet-y9demo-data-jpa</module>
         <module>y9-digitalbase-example/risenet-y9demo-elasticsearch</module>
