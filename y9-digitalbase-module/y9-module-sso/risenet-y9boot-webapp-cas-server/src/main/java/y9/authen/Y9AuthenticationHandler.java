@@ -218,13 +218,24 @@ public class Y9AuthenticationHandler extends AbstractAuthenticationHandler {
         attributes.put("managerLevel", toArrayList(y9User.getManagerLevel()));
         attributes.put("positions", toArrayList(y9User.getPositions()));
 
-        //if (org.springframework.util.StringUtils.hasText(positionId)) {
-            attributes.put("positionId", toArrayList(positionId));
-        //}
-        //if (org.springframework.util.StringUtils.hasText(deptId)) {
-            attributes.put("deptId", toArrayList(deptId));
-        //}
+        if (!org.springframework.util.StringUtils.hasText(positionId)) {
+            if (!org.springframework.util.StringUtils.hasText(y9User.getPositions())) {
+                positionId = "";
+            } else {
+                String positionsStr = y9User.getPositions();
+                positionId = positionsStr.split(",")[0];
+            }
+        }
+        attributes.put("positionId", toArrayList(positionId));
+        customFields.put("positionId", positionId);
 
+        if (!org.springframework.util.StringUtils.hasText(deptId)) {
+            deptId = "";
+        }
+        attributes.put("deptId", toArrayList(deptId));
+        customFields.put("deptId", deptId);
+
+        riseCredential.setCustomFields(customFields);
         return attributes;
     }
 
