@@ -267,7 +267,7 @@ public class Y9AuthenticationHandler extends AbstractAuthenticationHandler {
         attributes.put("personType", Lists.newArrayList(y9User.getPersonType() == null ? "" : y9User.getPersonType()));
 
         attributes.put("password", Lists.newArrayList(y9User.getPassword() == null ? "" : y9User.getPassword()));
-        attributes.put("original", Lists.newArrayList(y9User.getOriginal() == null ? 1 : y9User.getOriginal()));
+        attributes.put("original", Lists.newArrayList(y9User.getOriginal() == null ? true : y9User.getOriginal()));
         attributes.put("originalId", Lists.newArrayList(y9User.getOriginalId() == null ? "" : y9User.getOriginalId()));
         attributes.put("globalManager",
             Lists.newArrayList(y9User.getGlobalManager() != null && y9User.getGlobalManager()));

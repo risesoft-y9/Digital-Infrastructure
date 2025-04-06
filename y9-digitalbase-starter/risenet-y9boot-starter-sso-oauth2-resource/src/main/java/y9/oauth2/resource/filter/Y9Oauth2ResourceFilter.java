@@ -131,6 +131,7 @@ public class Y9Oauth2ResourceFilter implements Filter {
                         return;
                     }
                     String profile = profileEntity.getBody();
+                    profile = profile.replace("[]", "\"\"");
                     userInfo = Y9JsonUtil.readValue(profile, UserInfo.class);
                 }
             }
